@@ -1,0 +1,2 @@
+# Adapter boundary
+Current adapters accept only explicitly synthetic in-memory read-only snapshots. They do not query PostgreSQL, SQLite, HTTP or real market sources. The output is suitable for an offline UI fixture only. Source-owned production adapters must provide authenticated identity, stable schema, snapshot consistency, bounded queries, freshness, provenance and separate permissions. Historical research and Grid aggregates must never be relabeled as live L2 or real fills.
