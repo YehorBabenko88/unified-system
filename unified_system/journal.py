@@ -53,7 +53,7 @@ class Journal:
         # Single-writer only: the caller must own exclusive lifecycle authority.
         with sqlite3.connect(self.path, timeout=5) as db:
             db.execute("BEGIN IMMEDIATE")
-            current=db.execute("SELECT COUNT(*), COALESCE(MAX(digest), '') FROM transitions").fetchone()
+            current=db.execute("SELECT COUNT(*), COALESCE((SELECT digest FROM transitions ORDER BY sequence DESC LIMIT 1), '') FROM transitions").fetchone()
             if current[0]!=len(records) or (records and current[1]!=previous):
                 raise ContractError("concurrent journal change")
             db.execute("INSERT INTO transitions VALUES (?,?,?,?,?)",(body["sequence"],state,None if receipt is None else canonical(receipt).decode("ascii"),previous,digest))
