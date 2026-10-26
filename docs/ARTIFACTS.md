@@ -1,0 +1,2 @@
+# Artifact bytes verification
+Offline SHA256 verification is read-only and bounded. It proves equality with a supplied expected digest only; it does not prove authenticity, publisher identity, loaded executable identity, dependency closure, signature validity or physical execution readiness. Do not execute verified files as a consequence of this check. Local hostile filesystem race resistance and Windows reparse ancestry remain outside the current prototype's guarantee.
