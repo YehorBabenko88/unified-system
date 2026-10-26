@@ -21,6 +21,17 @@ class JournalTests(unittest.TestCase):
         self.j.append("INSTALLED")
         with sqlite3.connect(self.path) as db:db.execute("UPDATE transitions SET state='OBSERVING'")
         with self.assertRaises(ContractError):self.j.read()
+    def test_long_chain_latest_digest_not_lexical_max(self):
+        for _ in range(32):
+            self.j.append("INFRA_READY", {"iteration": _})
+        self.assertEqual(len(self.j.read()), 32)
+
+    def test_append_after_reopen(self):
+        self.j.append("INSTALLED")
+        other=Journal(self.path)
+        other.append("INFRA_READY")
+        self.assertEqual(len(self.j.read()), 2)
+
     def test_unknown_state(self):
         with self.assertRaises(ContractError):self.j.append("TRADING")
     def test_empty(self):self.assertEqual(self.j.read(),[])
