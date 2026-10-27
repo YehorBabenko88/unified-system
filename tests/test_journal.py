@@ -1,5 +1,6 @@
 import os
 import sqlite3
+from contextlib import closing
 import tempfile
 import unittest
 from pathlib import Path
@@ -19,7 +20,9 @@ class JournalTests(unittest.TestCase):
         self.assertEqual([x["state"] for x in Journal(self.path).read()],["INSTALLED","INFRA_READY"])
     def test_tamper(self):
         self.j.append("INSTALLED")
-        with sqlite3.connect(self.path) as db:db.execute("UPDATE transitions SET state='OBSERVING'")
+        with closing(sqlite3.connect(self.path)) as db:
+            db.execute("UPDATE transitions SET state=\'OBSERVING\'")
+            db.commit()
         with self.assertRaises(ContractError):self.j.read()
     def test_long_chain_latest_digest_not_lexical_max(self):
         for _ in range(32):
