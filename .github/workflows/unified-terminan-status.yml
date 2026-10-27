@@ -1,0 +1,22 @@
+name: Unified to Terminan synthetic status integration
+on:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  status-consumer:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: YehorBabenko88/Terminan
+          ref: 81793290113a457ee8c038600639c3b8cbe78020
+          path: upstream/Terminan
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: test "$(git -C upstream/Terminan rev-parse HEAD)" = "81793290113a457ee8c038600639c3b8cbe78020"
+      - run: python -m scripts.verify_unified_to_terminan upstream/Terminan
