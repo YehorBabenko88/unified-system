@@ -52,7 +52,7 @@ class ReadOnlySupervisorApp:
                         data["status"] = "AVAILABLE"
                         data["state"] = source_state
                         data["reason"] = "SOURCE_PROVENANCE_UNQUALIFIED"
-            except (OSError, ValueError, ContractError):
+            except Exception:
                 data["reason"] = "SUPERVISOR_UNAVAILABLE"
         body=json.dumps(data,sort_keys=True,separators=(",",":"),allow_nan=False).encode("utf-8")
         labels={200:"OK",400:"Bad Request",404:"Not Found",405:"Method Not Allowed",503:"Service Unavailable"}
