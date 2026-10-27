@@ -1,6 +1,7 @@
 """Crash-recoverable local SQLite journal, offline and non-authorizing."""
 import json
 import sqlite3
+from contextlib import closing
 from pathlib import Path
 from .contracts import ContractError, canonical
 
@@ -11,14 +12,14 @@ class Journal:
         self.path = Path(path)
 
     def initialize(self):
-        with sqlite3.connect(self.path, timeout=5) as db:
+        with closing(sqlite3.connect(self.path, timeout=5)) as db:
             db.execute("CREATE TABLE IF NOT EXISTS transitions (sequence INTEGER PRIMARY KEY, state TEXT NOT NULL, receipt TEXT, previous_hash TEXT NOT NULL, digest TEXT NOT NULL)")
             db.commit()
 
     def read(self):
         if not self.path.is_file():
             return []
-        with sqlite3.connect(self.path.as_uri() + "?mode=ro", uri=True, timeout=5) as db:
+        with closing(sqlite3.connect(self.path.resolve().as_uri() + "?mode=ro", uri=True, timeout=5)) as db:
             rows=db.execute("SELECT sequence,state,receipt,previous_hash,digest FROM transitions ORDER BY sequence LIMIT 100001").fetchall()
         if len(rows)>100000:
             raise ContractError("journal capacity exceeded")
@@ -51,7 +52,7 @@ class Journal:
         body={"sequence":len(records)+1,"state":state,"receipt":receipt,"previous_hash":previous}
         digest=hashlib.sha256(canonical(body)).hexdigest()
         # Single-writer only: the caller must own exclusive lifecycle authority.
-        with sqlite3.connect(self.path, timeout=5) as db:
+        with closing(sqlite3.connect(self.path, timeout=5)) as db:
             db.execute("BEGIN IMMEDIATE")
             current=db.execute("SELECT COUNT(*), COALESCE((SELECT digest FROM transitions ORDER BY sequence DESC LIMIT 1), '') FROM transitions").fetchone()
             if current[0]!=len(records) or (records and current[1]!=previous):
