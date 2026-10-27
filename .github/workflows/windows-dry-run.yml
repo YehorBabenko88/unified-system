@@ -1,0 +1,16 @@
+name: Windows manifest dry-run
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  synthetic:
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shell: [powershell, pwsh]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Offline signed fixture and security negatives
+        shell: ${{ matrix.shell }}
+        run: ./tests/windows/Test-WindowsDryRun.ps1
