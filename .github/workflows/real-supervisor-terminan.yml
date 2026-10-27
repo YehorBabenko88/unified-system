@@ -12,11 +12,11 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: YehorBabenko88/Terminan
-          ref: 98f49b37becb200e36d7bda48602dc285579dcf9
+          ref: ffddb9d52355fbd7bd8538b6a68813b6d6a644f2
           path: upstream/Terminan
           persist-credentials: false
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - run: test "$(git -C upstream/Terminan rev-parse HEAD)" = "98f49b37becb200e36d7bda48602dc285579dcf9"
+      - run: test "$(git -C upstream/Terminan rev-parse HEAD)" = "ffddb9d52355fbd7bd8538b6a68813b6d6a644f2"
       - run: python -m scripts.verify_real_supervisor_terminan upstream/Terminan
