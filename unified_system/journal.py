@@ -18,7 +18,7 @@ class Journal:
     def read(self):
         if not self.path.is_file():
             return []
-        with sqlite3.connect(f"file:{self.path.resolve().as_posix()}?mode=ro", uri=True, timeout=5) as db:
+        with sqlite3.connect(self.path.as_uri() + "?mode=ro", uri=True, timeout=5) as db:
             rows=db.execute("SELECT sequence,state,receipt,previous_hash,digest FROM transitions ORDER BY sequence LIMIT 100001").fetchall()
         if len(rows)>100000:
             raise ContractError("journal capacity exceeded")
