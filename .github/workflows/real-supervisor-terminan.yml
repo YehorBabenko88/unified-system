@@ -1,0 +1,22 @@
+name: Actual Unified Supervisor to Terminan disposable HTTP
+on:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  actual-http:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: YehorBabenko88/Terminan
+          ref: 98f49b37becb200e36d7bda48602dc285579dcf9
+          path: upstream/Terminan
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: test "$(git -C upstream/Terminan rev-parse HEAD)" = "98f49b37becb200e36d7bda48602dc285579dcf9"
+      - run: python -m scripts.verify_real_supervisor_terminan upstream/Terminan
