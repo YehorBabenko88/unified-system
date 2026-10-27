@@ -1,0 +1,2 @@
+# Integration contract matrix
+The matrix combines three externally supplied health response envelopes with historical research and Grid provenance observations. It does not call networks, open databases, trust the supplied status code, or execute services. A malformed peer is explicitly INVALID. A producer can be protocol-compatible while its source data remains UNAVAILABLE. No state combination can grant production or trading authority in this candidate.
