@@ -1,0 +1,2 @@
+# Offline journal prototype
+The SQLite transition journal is local-only, initialized explicitly, and is not an authorization source. SHA256 hash chaining detects accidental corruption against the local chain but does not prevent malicious rewrites of the whole journal, filesystem rollback, or hostile administrator modification. Do not treat journal records as owner signatures, physical evidence or trading authority. Single-writer semantics are assumed; an external process lock and durable trust anchor are prerequisites for production.
