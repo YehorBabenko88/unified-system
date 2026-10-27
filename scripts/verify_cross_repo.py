@@ -22,12 +22,12 @@ def main(root):
     root=pathlib.Path(root).resolve()
     strat=load("strat_readonly_contract",root/"strattester"/"strattester"/"readonly_api.py")
     grid=load("grid_readonly_contract",root/"grid"/"grid"/"terminan_gateway.py")
-    supervisor=load("unified_status_contract",pathlib.Path(__file__).resolve().parents[1]/"unified_system"/"status_api.py")
+    from unified_system.status_api import ReadOnlySupervisorApp
     status,s=wsgi(strat.ReadOnlyResultsApp(),"/internal/v1/health")
     assert status==503 and s["status"]=="UNAVAILABLE" and s["producer"]=="strattester"
     g=grid.qualified_snapshot("/internal/v1/capabilities","BTCUSDT",1)
     assert g["producer"]=="bybit-cluster-grid" and g["status"]=="UNAVAILABLE"
-    status,u=wsgi(supervisor.ReadOnlySupervisorApp(),"/internal/v1/health")
+    status,u=wsgi(ReadOnlySupervisorApp(),"/internal/v1/health")
     assert status==503 and u["status"]=="UNAVAILABLE" and u["trading_authorized"] is False
     print(json.dumps({"contract":"source-code-smoke-v1","strattester":"UNAVAILABLE","grid":"UNAVAILABLE",
                       "supervisor":"UNAVAILABLE","production_ready":False},sort_keys=True))
