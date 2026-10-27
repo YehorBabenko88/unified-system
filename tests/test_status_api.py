@@ -39,7 +39,10 @@ class StatusAPITests(unittest.TestCase):
         self.assertEqual(call(ReadOnlySupervisorApp(),"/internal/v1/orders")[0],404)
     def test_provider_error(self):
         def fail():raise RuntimeError("sensitive diagnostic")
-        # Unexpected provider exceptions intentionally bubble to the host,
-        # never transform into a false health PASS.
-        with self.assertRaises(RuntimeError):call(ReadOnlySupervisorApp(fail),"/internal/v1/health")
+        code, body, _ = call(ReadOnlySupervisorApp(fail), "/internal/v1/health")
+        self.assertEqual(code, 503)
+        self.assertEqual(body["status"], "UNAVAILABLE")
+        self.assertEqual(body["reason"], "SUPERVISOR_UNAVAILABLE")
+        self.assertNotIn("sensitive diagnostic", json.dumps(body))
+        self.assertIs(body["trading_authorized"], False)
 if __name__=="__main__":unittest.main()
