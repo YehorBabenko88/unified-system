@@ -29,7 +29,11 @@ def main(root):
     assert g["producer"]=="bybit-cluster-grid" and g["status"]=="UNAVAILABLE"
     status,u=wsgi(ReadOnlySupervisorApp(),"/internal/v1/health")
     assert status==503 and u["status"]=="UNAVAILABLE" and u["trading_authorized"] is False
-    from unified_system.compatibility import validate_response\n    validate_response("strattester","health",503,s)\n    validate_response("grid","health",503,g)\n    validate_response("supervisor","health",503,u)\n    print(json.dumps({"contract":"source-code-smoke-v1","strattester":"UNAVAILABLE","grid":"UNAVAILABLE",
+    from unified_system.compatibility import validate_response
+    validate_response("strattester","health",503,s)
+    validate_response("grid","health",503,g)
+    validate_response("supervisor","health",503,u)
+    print(json.dumps({"contract":"source-code-smoke-v1","strattester":"UNAVAILABLE","grid":"UNAVAILABLE",
                       "supervisor":"UNAVAILABLE","production_ready":False},sort_keys=True))
 
 if __name__=="__main__":
