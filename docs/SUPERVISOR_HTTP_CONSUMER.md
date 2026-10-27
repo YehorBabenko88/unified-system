@@ -1,0 +1,2 @@
+# Supervisor HTTP consumer candidate
+This disposable test sends an actual HTTP GET to the Supervisor WSGI health endpoint on an OS-assigned 127.0.0.1 port and validates the returned response with Unified's v1 compatibility oracle. It is a **Terminan-style** consumer, not the actual Terminan PR22 HTTP consumer. The latter still hardcodes Supervisor UNAVAILABLE and must be separately extended and independently reviewed. No persistent listener, authentication, remote binding, production source or physical operation.
