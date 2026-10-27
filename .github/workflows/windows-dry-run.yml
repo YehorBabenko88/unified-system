@@ -1,0 +1,15 @@
+name: Windows manifest dry-run
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  synthetic:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Windows PowerShell 5.1 offline security negatives
+        shell: powershell
+        run: ./tests/windows/Test-WindowsDryRun.ps1
+      - name: PowerShell 7 offline security negatives
+        shell: pwsh
+        run: ./tests/windows/Test-WindowsDryRun.ps1
