@@ -1,0 +1,6 @@
+# Supervisor read-only status contract v1 (candidate)
+Contract-only WSGI callable: GET /internal/v1/capabilities, /health, /status. It does not create or bind a listener. This is a *control-plane observation* surface, not a start/stop/trade authority.
+
+Common fields: api_version {major:1,minor:0}, producer unified-system, read_only true, status AVAILABLE|UNAVAILABLE, provenance UNVERIFIED, trading_authorized false, physical_acceptance NOT_RUN. Health/status optionally report state when a local injected provider returns an allowlisted state. Capabilities are stable and explicitly advertise trading=false, physical_deployment=false. Missing/invalid sources return HTTP 503 with UNAVAILABLE; no synthetic data is relabeled LIVE. No credentials or raw exception text are returned.
+
+Terminan PR #22 currently hardcodes supervisor UNAVAILABLE because no source-owned contract existed. Consumer integration should discover this endpoint from a separately reviewed fixed numeric loopback port; the API itself does not start a network server. Source authenticity, process binding, authorization, provenance and physical acceptance remain BLOCKED. Strattester PR #42 and Grid PR #248 similarly withhold qualified market results. No merge or production deployment.

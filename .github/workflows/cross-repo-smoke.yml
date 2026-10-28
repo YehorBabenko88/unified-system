@@ -1,0 +1,35 @@
+name: Pinned source code contract smoke
+on:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Checkout Strattester exact source
+        uses: actions/checkout@v4
+        with:
+          repository: YehorBabenko88/strattester
+          ref: 943095d00d5d56276f3832c42b36b290bea77a84
+          path: upstream/strattester
+          persist-credentials: false
+      - name: Checkout Grid exact source
+        uses: actions/checkout@v4
+        with:
+          repository: YehorBabenko88/bybit-cluster-grid
+          ref: bf9f108b6777085d6725675eac778d61ec55f42b
+          path: upstream/grid
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify pinned source revisions
+        shell: bash
+        run: |
+          test "$(git -C upstream/strattester rev-parse HEAD)" = "943095d00d5d56276f3832c42b36b290bea77a84"
+          test "$(git -C upstream/grid rev-parse HEAD)" = "bf9f108b6777085d6725675eac778d61ec55f42b"
+      - name: Run actual source contract smoke
+        run: python -m scripts.verify_cross_repo upstream
