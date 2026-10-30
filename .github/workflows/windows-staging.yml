@@ -1,0 +1,32 @@
+name: Windows staging PLAN_ONLY
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  staging:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.11', '3.13']
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Pure staging contracts and exact source receipt
+        env:
+          PYTHONPATH: .
+          STAGING_EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+          STAGING_PYTHON: ${{ matrix.python }}
+        run: python scripts/verify_staging.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: staging-${{ matrix.os }}-${{ matrix.python }}
+          path: staging-evidence/
+          if-no-files-found: error
