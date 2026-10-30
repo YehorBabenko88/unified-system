@@ -59,11 +59,11 @@ silently recreating it. SQLite connections close deterministically on Windows.
 
 ## Validation and remaining admission
 
-Ten new tests include fleet sizes 0,1,5,6,7,12; cumulative budgets; duplicate concurrent
+Eleven new tests include fleet sizes 0,1,5,6,7,12; cumulative budgets; duplicate concurrent
 placements; old epoch/sequence; identity rotation; stale/offline heartbeat; clock rollback;
 missing quorum; stale term; lost leader; old lease expiry before reissue; drain;
 restart; DB loss; actual disposable SQLite page exhaustion; backup/restore invalidation;
-and unavailable display fields. Full existing suite also runs in hosted CI.
+persisted authority tamper rejection and unavailable display fields. Full existing suite also runs in hosted CI.
 
 P0: authenticated external authority/fencing, owner-approved enrollment, physical G0,
 restored-host fencing, real failure-domain/quorum independence and PG18 restore admission.
@@ -74,3 +74,4 @@ No source deletion, cutover, live deployment or merge is proposed.
 
 SOFTWARE: disposable model verification only. SOURCE_PROVENANCE: exact source bytes inspected;
 owner authentication NOT_EVALUATED. PHYSICAL: NOT_RUN. PRODUCTION: NO_GO.
+

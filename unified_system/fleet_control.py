@@ -41,10 +41,36 @@ class FleetControl:
                 if not readonly and self.max_pages is not None: c.execute(f'PRAGMA max_page_count={integer(self.max_pages)}')
                 c.execute('BEGIN' if readonly else 'BEGIN IMMEDIATE')
                 s=json.loads(c.execute('SELECT body FROM ledger WHERE id=1').fetchone()[0])
+                self._validate(s)
                 out=fn(s)
+                self._validate(s)
                 if not readonly: c.execute('UPDATE ledger SET body=? WHERE id=1',(json.dumps(s,sort_keys=True),))
                 return copy.deepcopy(out)
-        except (sqlite3.Error,OSError,TypeError) as e: raise FleetError('ledger unavailable') from e
+        except (sqlite3.Error,OSError,TypeError,json.JSONDecodeError) as e: raise FleetError('ledger unavailable') from e
+    def _validate(self,s):
+        """Reject corrupt persisted authority/schema; hashes are not host attestation."""
+        try:
+            if set(s)!={'voters','nodes','jobs','leader','term','clock','incarnation','counter'} or s['voters']!=self.voters:
+                raise FleetError('ledger schema')
+            for key in ('term','clock','counter'): integer(s[key])
+            if type(s['incarnation']) is not str or not s['incarnation']: raise FleetError('incarnation')
+            for ident,n in s['nodes'].items():
+                if set(n)!={'id','epoch','domain','approval','state','sequence','heartbeat','available'} or n['id']!=ident or n['state'] not in ('APPROVED','ACTIVE','DRAINING'): raise FleetError('node schema')
+                if integer(n['epoch'])<1 or not n['approval'] or not n['domain']: raise FleetError('node identity')
+                integer(n['sequence'])
+                if n['heartbeat'] is not None: integer(n['heartbeat']); resources(n['available'])
+            if s['leader'] is not None:
+                if set(s['leader'])!={'id','expires'} or s['leader']['id'] not in self.voters: raise FleetError('leader schema')
+                integer(s['leader']['expires'])
+            for j in s['jobs'].values():
+                if set(j)!={'spec','lease'} or set(j['spec'])!={'requirements','avoid_domains'}: raise FleetError('job schema')
+                resources(j['spec']['requirements'])
+                if type(j['spec']['avoid_domains']) is not list or any(type(x) is not str for x in j['spec']['avoid_domains']): raise FleetError('domains')
+                lease=j['lease']
+                if lease is not None:
+                    if set(lease)!={'node','epoch','term','expires','token','execution_authorized'} or lease['execution_authorized'] is not False or lease['node'] not in s['nodes'] or type(lease['token']) is not str: raise FleetError('lease schema')
+                    for key in ('epoch','term','expires'): integer(lease[key])
+        except (KeyError,TypeError,AttributeError) as exc: raise FleetError('ledger corrupt') from exc
     @staticmethod
     def _time(s,now):
         integer(now)

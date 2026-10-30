@@ -93,3 +93,14 @@ class FleetTests(unittest.TestCase):
         with ThreadPoolExecutor(max_workers=4) as pool:
             leases=list(pool.map(lambda _:self.f.place('x',10,1),range(8)))
         self.assertEqual(len({x['token'] for x in leases}),1)
+
+    def test_persisted_authority_tamper_fails_closed(self):
+        import sqlite3,json
+        from contextlib import closing
+        self.ready(); self.f.submit('x',{'cpu':1,'memory':1,'disk':1});self.f.place('x',10,1)
+        with closing(sqlite3.connect(self.path)) as c,c:
+            state=json.loads(c.execute('SELECT body FROM ledger').fetchone()[0])
+            state['jobs']['x']['lease']['execution_authorized']=True
+            c.execute('UPDATE ledger SET body=?',(json.dumps(state),))
+        with self.assertRaises(FleetError):self.f.snapshot(11)
+        with self.assertRaises(FleetError):self.f.place('x',11,1)
