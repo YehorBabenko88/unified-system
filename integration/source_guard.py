@@ -114,8 +114,11 @@ class SourceFence:
     def file(self,raw,*,python=False):
         try:
             lexical=Path(raw).absolute()
-            lexical.relative_to(self.root)
-            if lexical.is_symlink():raise ValueError('symlink import')
+            # Windows DOS short names are lexical aliases, not escapes. Resolve
+            # containment only after rejecting symlink/reparse ancestors.
+            for component in (lexical,*lexical.parents):
+                if component.is_symlink() or getattr(component.lstat(),'st_file_attributes',0)&1024:
+                    raise ValueError('symlink or reparse import')
             path=Path(raw).resolve(strict=True)
             relative=path.relative_to(self.root).as_posix()
         except (OSError,ValueError):raise SourceQualificationError('IMPORT_ORIGIN_OUTSIDE_TREE') from None

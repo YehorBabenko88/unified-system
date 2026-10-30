@@ -87,3 +87,29 @@ class SourceGuardTests(unittest.TestCase):
             safe=importlib.util.module_from_spec(spec);spec.loader.exec_module(safe)
             self.assertEqual(safe.VALUE,1)
             fence.module(safe);fence.finish()
+    def test_lexical_short_alias_of_same_canonical_root_is_accepted(self):
+        api=self.guard();actual=self.root.resolve();alias=actual.parent/'SHORT~1'
+        absolute=Path.absolute
+        def lexical_alias(path):
+            value=absolute(path)
+            try:return alias/value.relative_to(actual)
+            except ValueError:return value
+        lstat=os.lstat
+        def alias_stat(path,*args,**kwargs):
+            try:path=actual/Path(path).relative_to(alias)
+            except ValueError:pass
+            return lstat(path,*args,**kwargs)
+        # Model Windows RUNNER~1 lexical paths while resolving/reading the actual
+        # temporary files. No alternate source bytes or import mocks are used.
+        fence=api.SourceFence(self.root);fence.check()
+        with patch.object(Path,'absolute',lexical_alias),patch('os.lstat',alias_stat):
+            fence.module(SimpleNamespace(__file__=str(self.root/'pkg/__init__.py')))
+            fence.finish()
+    def test_reparse_ancestor_is_rejected_even_if_canonical_bytes_match(self):
+        api=self.guard();fence=api.SourceFence(self.root);fence.check();lstat=os.lstat
+        def reparse_stat(path,*args,**kwargs):
+            value=lstat(path,*args,**kwargs)
+            if Path(path)==self.root/'pkg':return SimpleNamespace(st_mode=value.st_mode,st_file_attributes=1024)
+            return value
+        with patch('os.lstat',reparse_stat):
+            with self.assertRaises(api.SourceQualificationError):fence.module(SimpleNamespace(__file__=str(self.root/'pkg/__init__.py')))
