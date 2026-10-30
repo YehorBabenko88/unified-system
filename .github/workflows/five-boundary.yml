@@ -1,0 +1,41 @@
+name: Five-module source boundary
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  synthetic:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/checkout@v4
+        with:
+          repository: YehorBabenko88/strattester
+          ref: 943095d00d5d56276f3832c42b36b290bea77a84
+          path: .source/strattester
+      - uses: actions/checkout@v4
+        with:
+          repository: YehorBabenko88/bybit-cluster-grid
+          ref: bf9f108b6777085d6725675eac778d61ec55f42b
+          path: .source/grid
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m unittest discover -s tests -v
+      - run: python scripts/verify_five_boundary.py --strattester .source/strattester --grid .source/grid
+      - name: Exact-head evidence
+        shell: python
+        run: |
+          import hashlib,json,os,pathlib,subprocess
+          e={'head':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),'tree':subprocess.check_output(['git','rev-parse','HEAD^{tree}'],text=True).strip(),'run':os.environ['GITHUB_RUN_ID'],'attempt':os.environ['GITHUB_RUN_ATTEMPT'],'scope':'SYNTHETIC_ONLY','physical':'NOT_RUN','production':'NO_GO'}
+          p=pathlib.Path('boundary-evidence.json');p.write_text(json.dumps(e,sort_keys=True),encoding='utf-8');pathlib.Path('boundary-evidence.sha256').write_text(hashlib.sha256(p.read_bytes()).hexdigest())
+      - uses: actions/upload-artifact@v4
+        with:
+          name: boundary-${{ matrix.os }}
+          path: boundary-evidence.*
