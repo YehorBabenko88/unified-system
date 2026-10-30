@@ -25,15 +25,18 @@ def describe_progress(stage_status):
     for stage,value in stage_status.items():
         if type(value) is not str or value not in VALID:
             raise ContractError("invalid lifecycle status")
-    for stage,deps in DEPENDENCIES.items():
-        value=stage_status.get(stage,"NOT_STARTED")
-        if value in ("RUNNING","COMPLETE"):
-            for dep in deps:
-                previous=stage_status.get(dep,"NOT_STARTED")
-                # This view is non-authorizing. Allow historical snapshots with
-                # unknown predecessors, but reject explicit blocked dependency.
-                if previous=="BLOCKED":
-                    raise ContractError("stage progressed despite blocked dependency")
+    def blocked_ancestor(stage, visited=None):
+        visited=set() if visited is None else visited
+        if stage in visited:
+            raise ContractError("cyclic lifecycle dependencies")
+        visited.add(stage)
+        for dep in DEPENDENCIES.get(stage,()):
+            if stage_status.get(dep)=="BLOCKED" or blocked_ancestor(dep,set(visited)):
+                return True
+        return False
+    for stage in DEPENDENCIES:
+        if stage_status.get(stage) in ("RUNNING","COMPLETE") and blocked_ancestor(stage):
+            raise ContractError("stage progressed despite blocked ancestor")
     return {"schema_version":1,"mode":"READ_ONLY_PLAN_ONLY",
             "stages":[{"stage":stage,"status":stage_status.get(stage,"NOT_STARTED")} for stage in STAGES],
             "execution_authorized":False,"trading_authorized":False,
