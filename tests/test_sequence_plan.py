@@ -27,6 +27,13 @@ class SequencePlanTests(unittest.TestCase):
     def test_grid_requires_unblocked_handoff(self):
         with self.assertRaises(ContractError):
             describe_progress({"HANDOFF_VERIFY":"BLOCKED","GRID_MARKET_READY":"RUNNING"})
+    def test_transitive_block(self):
+        with self.assertRaises(ContractError):
+            describe_progress({"STRAT_HISTORY_SYNC":"BLOCKED","GRID_MARKET_READY":"RUNNING"})
+    def test_observer_independent_of_handoff_block(self):
+        x=describe_progress({"INFRA_READY":"COMPLETE","HANDOFF_VERIFY":"BLOCKED",
+                             "TERMINAN_OBSERVING":"RUNNING"})
+        self.assertEqual(x["stages"][8]["status"],"RUNNING")
     def test_unknown(self):
         with self.assertRaises(ContractError):describe_progress({"LIVE_ORDERS":"RUNNING"})
 if __name__=="__main__":unittest.main()
