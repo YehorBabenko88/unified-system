@@ -9,18 +9,23 @@ function Assert-LocalPath([string]$Path) {
     }
 }
 
+function Assert-AclFacts([string]$OwnerSid, [string]$IdentitySid, [object[]]$Rules) {
+    $trusted = @($IdentitySid, 'S-1-5-18', 'S-1-5-32-544')
+    if ($OwnerSid -notin $trusted) { throw 'Untrusted owner' }
+    if ($null -eq $Rules -or $Rules.Count -gt 4096) { throw 'ACL unavailable or oversized' }
+    $writeMask = [int64]0x000D0156
+    foreach ($ace in $Rules) {
+        if ($ace.Type -notin @('Allow','Deny') -or !$ace.Sid -or $ace.Rights -isnot [int64] -or $ace.InheritOnly -isnot [bool]) { throw 'Invalid ACL facts' }
+        if ($ace.Type -eq 'Allow' -and $ace.Sid -notin $trusted -and (($ace.Rights -band $writeMask) -ne 0) -and !$ace.InheritOnly) { throw 'Untrusted writable ACL' }
+    }
+}
+
 function Assert-ProtectedAcl([string]$Path, [string]$IdentitySid) {
     $acl = Get-Acl -LiteralPath $Path -ErrorAction Stop
-    $trusted = @($IdentitySid, 'S-1-5-18', 'S-1-5-32-544')
-    if ($acl.GetOwner([Security.Principal.SecurityIdentifier]).Value -notin $trusted) { throw 'Untrusted owner' }
-    # Reject any untrusted allow ACE capable of data, metadata, ACL or deletion changes.
-    $writeMask = [int64]0x000D0156
-    foreach ($ace in $acl.GetAccessRules($true, $true, [Security.Principal.SecurityIdentifier])) {
-        if ($ace.AccessControlType -eq 'Allow' -and $ace.IdentityReference.Value -notin $trusted -and (([int64]$ace.FileSystemRights -band $writeMask) -ne 0)) {
-            # InheritOnly cannot modify this object itself.
-            if (($ace.PropagationFlags -band [Security.AccessControl.PropagationFlags]::InheritOnly) -eq 0) { throw 'Untrusted writable ACL' }
-        }
-    }
+    $rules = @($acl.GetAccessRules($true, $true, [Security.Principal.SecurityIdentifier]) | ForEach-Object {
+        [pscustomobject]@{Type=$_.AccessControlType.ToString(); Sid=$_.IdentityReference.Value; Rights=[int64]$_.FileSystemRights; InheritOnly=(($_.PropagationFlags -band [Security.AccessControl.PropagationFlags]::InheritOnly) -ne 0)}
+    })
+    Assert-AclFacts $acl.GetOwner([Security.Principal.SecurityIdentifier]).Value $IdentitySid $rules
 }
 
 function Read-BoundedBytes([string]$Path, [long]$Limit) {

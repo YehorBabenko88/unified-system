@@ -24,5 +24,11 @@ try {
   Reject {Test-UnifiedPackageSignature $bytes $signature 'latest'}
   $module=Get-Module SecurityPackage
   foreach ($path in @('../x','//server/share','C:/outside','C:\x:ads')) {Reject {& $module {param($p) Assert-LocalPath $p} $path}}
+  & $module { Assert-AclFacts 'S-1-5-21-100' 'S-1-5-21-100' @() }
+  Reject { & $module { Assert-AclFacts 'S-1-1-0' 'S-1-5-21-100' @() } }
+  foreach ($right in @([int64]2,[int64]4,[int64]16,[int64]64,[int64]256,[int64]65536,[int64]262144,[int64]524288)) {
+    Reject { & $module { param($r) Assert-AclFacts 'S-1-5-21-100' 'S-1-5-21-100' @([pscustomobject]@{Type='Allow';Sid='S-1-1-0';Rights=$r;InheritOnly=$false}) } $right }
+  }
+  & $module { Assert-AclFacts 'S-1-5-21-100' 'S-1-5-21-100' @([pscustomobject]@{Type='Allow';Sid='S-1-1-0';Rights=[int64]2;InheritOnly=$true}) }
   Write-Output "PASS in-memory synthetic signatures ($($PSVersionTable.PSVersion)); physical NOT_RUN"
 } finally {if ($null -ne $cert) {$cert.Dispose()}; $rsa.Dispose()}

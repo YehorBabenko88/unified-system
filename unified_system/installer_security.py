@@ -61,7 +61,7 @@ def validate_package_lock(lock, package_bytes):
         data = package_bytes.get(path)
         if not isinstance(data, bytes) or len(data) != size or hashlib.sha256(data).hexdigest() != digest:
             _reject("package bytes mismatch")
-    if not REQUIRED <= names: _reject("dependency closure missing")
+    if REQUIRED != names: _reject("dependency closure missing")
     if set(package_bytes) != {a["path"] for a in artifacts}: _reject("unexpected package bytes")
     return hashlib.sha256(json.dumps(lock, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
 
