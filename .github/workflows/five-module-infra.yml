@@ -1,0 +1,23 @@
+name: Five-module fleet policy offline
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  policy:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.11','3.13']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: python -m unittest discover -s tests -p test_fleet_policy.py -v
+      - run: python -m unittest discover -s tests -p test_infra_inventory.py -v
+      - run: python -m compileall -q unified_system
