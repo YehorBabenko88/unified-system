@@ -8,7 +8,7 @@ not real quorum consensus, network partition or multiple physical machines.
 |---|---|---|
 | 0/1/5/6/7/10 nodes | Real FleetControl -> Lifecycle -> Terminan.validate -> actual HTTP -> Chromium | Physical nodes not run |
 | Add/disconnect/remove/drain/retire/restart/recovery | New integration expiry/drain/reassign and existing fleet/lifecycle regressions | Removal is retained identity tombstone, not host deletion |
-| CPU/RAM/disk pressure | Each resource independently rejects unsafe placement | No physical load generation or live rebalance |
+| CPU/RAM/disk pressure | Each resource independently rejects unsafe placement; cumulative reservations distribute two medium jobs across two hosts; after lease expiry and reduced first-host capacity, first job reassigns to second host with old-token revocation/idempotence | SOURCE_MODEL backed by real SQLite, not physical load generation or live rebalance |
 | Quorum/leader/DB loss | Real SQLite ledger, no-quorum denial, leader expiry, DB disappearance | No distributed network/production PG experiment |
 | Fenced ownership | Old lease token rejected after expiry/reassignment, restart preserves valid token | Execution remains forbidden |
 | Missing modules | All 32 inventories through actual lifecycle and consumer | Inventory is observation, no module launch |
@@ -58,6 +58,7 @@ Test identities in `integration/verify_sources.py`, class `FiveSourceTests`:
 | test_node_sizes_actual_consumer_unknown_observations | REAL SQLite + APIs + direct consumer; fixture node observations |
 | test_every_module_availability_combination_remains_read_only | REAL lifecycle/consumer, 32 inventories; no module launch |
 | test_resource_pressure_rebalance_expiry_drain_and_restart | REAL transactional SQLite ledger; modeled caller votes/resources; no execution |
+| test_each_resource_reservation_redistributes_and_expiry_rebalances | SOURCE_MODEL, REAL FleetControl/SQLite per CPU/RAM/disk: cumulative reservations force node-1, third job denies, expiry + changed heartbeat moves A to node-1 and fences old token/idempotence |
 | test_quorum_leader_db_loss_and_stale_consumer | MODEL voter quorum/clock, REAL database unlink/backup/restore, old token denied |
 | test_actual_research_sync_and_incomplete_history_denial | REAL SQLite/sync engine/research; offline history provider, no exchange |
 | test_unattested_grid_export_and_handoff_denied | REAL latest Grid export and intake; missing receipt denies |

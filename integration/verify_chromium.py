@@ -24,7 +24,7 @@ evidence_path.write_text(json.dumps(proof,sort_keys=True,indent=2),encoding='utf
 fences={'unified-system':SourceFence(ROOT,proof.get('head'),isolated_cache=cache.name),**{name:SourceFence(getattr(args,name),pins[name],isolated_cache=cache.name) for name in ('terminan','math','grid','strattester')}}
 try:
     if proof.get('qualification')!='EXACT_SOURCE_CONSISTENT':raise SourceQualificationError('SOURCE_RUN_UNQUALIFIED')
-    if (proof.get('python_tests')!=10 or any(proof.get(key)!=0 for key in ('python_failures','python_errors','python_skips','math_exit','network_attempts'))
+    if (proof.get('python_tests')!=11 or any(proof.get(key)!=0 for key in ('python_failures','python_errors','python_skips','math_exit','network_attempts'))
             or proof.get('math_counts')!={'tests':6,'pass':6,'fail':0,'cancelled':0,'skipped':0,'todo':0}):
         raise SourceQualificationError('SOURCE_TESTS_NOT_SUCCESSFUL')
     pre={name:fence.check() for name,fence in fences.items()}

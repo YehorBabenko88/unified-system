@@ -162,6 +162,32 @@ class FiveSourceTests(unittest.TestCase):
         self.assertEqual(len(recovered['nodes']),1)
         self.assertEqual(recovered['nodes'][0]['state'],'APPROVED')
         self.assertFalse(fleet.validate_lease('job',lease['token'],161))
+    def test_each_resource_reservation_redistributes_and_expiry_rebalances(self):
+        for metric,medium in (('cpu',4),('memory',16),('disk',50)):
+            with self.subTest(resource=metric):
+                fleet=FleetControl(self.path/(metric+'-reservation.db'),['v1','v2','v3'])
+                capacity={'cpu':8,'memory':32,'disk':100}
+                for node in ('node-0','node-1'):
+                    fleet.approve_node(node,1,node,'SOFTWARE_TEST_ONLY')
+                    fleet.heartbeat(node,1,1,100,capacity)
+                fleet.elect(1,'v1',['v1','v2'],100,100)
+                requirements={'cpu':0,'memory':0,'disk':0};requirements[metric]=medium
+                for job in ('A','B','C'):fleet.submit(job,requirements)
+                original=fleet.place('A',100,1,ttl=5)
+                second=fleet.place('B',100,1,ttl=5)
+                self.assertEqual(original['node'],'node-0')
+                self.assertEqual(second['node'],'node-1')
+                with self.assertRaises(FleetError):fleet.place('C',100,1)
+                reduced={**capacity,metric:0}
+                fleet.heartbeat('node-0',1,2,105,reduced)
+                fleet.heartbeat('node-1',1,2,105,capacity)
+                reassigned=fleet.place('A',105,1,ttl=5)
+                self.assertEqual(reassigned['node'],'node-1')
+                self.assertNotEqual(reassigned['token'],original['token'])
+                self.assertFalse(fleet.validate_lease('A',original['token'],105))
+                self.assertTrue(fleet.validate_lease('A',reassigned['token'],105))
+                self.assertEqual(fleet.place('A',105,1,ttl=5),reassigned)
+                self.assertIs(reassigned['execution_authorized'],False)
     def test_actual_research_sync_and_incomplete_history_denial(self):
         definition=StrategyDefinition('source-test','1',(DataRequirement('candles',('1m',)),),Research)
         for gap in (False,True):
