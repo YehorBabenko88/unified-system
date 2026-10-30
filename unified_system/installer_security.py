@@ -31,12 +31,15 @@ def validate_package_lock(lock, package_bytes):
     if not isinstance(lock.get("identity_sid"), str) or not SID.fullmatch(lock["identity_sid"]):
         _reject("signed identity required")
     sources = lock.get("sources")
-    if not isinstance(sources, dict) or set(sources) != {"grid", "strattester", "unified"}:
+    if not isinstance(sources, dict) or set(sources) != {"grid", "strattester", "unified", "terminan", "math"}:
         _reject("exact source inventory")
     for source in sources.values():
         if not isinstance(source, dict) or set(source) != {"commit", "tree"} or any(not isinstance(v, str) or not re.fullmatch(r"[0-9a-f]{40}", v) for v in source.values()):
             _reject("exact commit/tree pins")
-    if lock.get("requirements") != {"powershell": "5.1,7", "postgresql_major": 18}:
+    requirements = lock.get("requirements")
+    if (not isinstance(requirements, dict)
+            or requirements != {"powershell": "5.1,7", "postgresql_major": 18}
+            or type(requirements.get("postgresql_major")) is not int):
         _reject("PS5.1/7 and PostgreSQL18 required")
     artifacts = lock.get("artifacts")
     if not isinstance(artifacts, list) or not 1 <= len(artifacts) <= 32:

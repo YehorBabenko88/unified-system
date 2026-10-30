@@ -90,8 +90,8 @@ function Test-UnifiedSecurityPackage {
     $data = $utf8.GetString($bytes) | ConvertFrom-Json
     if ($data.schema -cne 'unified.windows-package-lock.v1' -or $data.identity_sid -cne $identity) { throw 'Manifest schema or identity mismatch' }
     if ($data.requirements.powershell -isnot [string] -or $data.requirements.powershell -cne '5.1,7' -or ($data.requirements.postgresql_major -isnot [int] -and $data.requirements.postgresql_major -isnot [long]) -or $data.requirements.postgresql_major -ne 18) { throw 'PS5.1/7 and PG18 contract required' }
-    if (@($data.sources.PSObject.Properties.Name).Count -ne 3) { throw 'Exact source inventory required' }
-    foreach ($sourceName in @('grid','strattester','unified')) {
+    if (@($data.sources.PSObject.Properties.Name).Count -ne 5) { throw 'Exact source inventory required' }
+    foreach ($sourceName in @('grid','strattester','unified','terminan','math')) {
         $source = $data.sources.$sourceName
         if (@($source.PSObject.Properties.Name).Count -ne 2 -or $source.commit -isnot [string] -or $source.tree -isnot [string] -or $source.commit -cnotmatch '^[0-9a-f]{40}$' -or $source.tree -cnotmatch '^[0-9a-f]{40}$') { throw 'Exact source commit/tree required' }
     }

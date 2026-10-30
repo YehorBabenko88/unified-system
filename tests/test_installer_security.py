@@ -11,7 +11,7 @@ def fixture():
         artifacts.append(dict(path=path, dependency=name, version="18.1" if name == "postgresql" else "1.0",
                               publisher_sha256="a"*64, sha256=hashlib.sha256(data).hexdigest(), bytes=len(data)))
     lock = dict(schema="unified.windows-package-lock.v1", identity_sid="S-1-5-21-100",
-                sources={k: dict(commit="a"*40, tree="b"*40) for k in ("grid","strattester","unified")},
+                sources={k: dict(commit="a"*40, tree="b"*40) for k in ("grid","strattester","unified","terminan","math")},
                 requirements=dict(powershell="5.1,7", postgresql_major=18), artifacts=artifacts)
     return lock, payload
 
@@ -72,3 +72,15 @@ class SecurityPlanTests(unittest.TestCase):
         for nodes in ([node(1),node(1)],[dict(node(1),identity_sid="admin")],[dict(node(1),installed={"secret":"token"})]):
             with self.assertRaises(ValueError): build_security_plan(lock,payload,nodes)
         self.assertFalse(build_security_plan(lock,payload,[node(1)])["secrets_collected"])
+
+    def test_all_five_sources_required_and_pg_major_is_integer(self):
+        for name in ("grid", "strattester", "unified", "terminan", "math"):
+            lock, payload = fixture()
+            del lock["sources"][name]
+            with self.subTest(missing=name), self.assertRaises(ValueError):
+                validate_package_lock(lock, payload)
+        for value in (18.0, True, "18"):
+            lock, payload = fixture()
+            lock["requirements"]["postgresql_major"] = value
+            with self.subTest(pg=value), self.assertRaises(ValueError):
+                validate_package_lock(lock, payload)
