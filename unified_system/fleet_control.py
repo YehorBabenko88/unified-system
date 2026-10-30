@@ -34,7 +34,9 @@ class FleetControl:
             c.execute('CREATE TABLE IF NOT EXISTS ledger(id INTEGER PRIMARY KEY CHECK(id=1), body TEXT NOT NULL)')
             state={'voters':self.voters,'nodes':{},'jobs':{},'leader':None,'term':0,'clock':0,'incarnation':uuid.uuid4().hex,'counter':0}
             c.execute('INSERT OR IGNORE INTO ledger VALUES(1,?)',(json.dumps(state),))
-            raw=c.execute('SELECT body FROM ledger').fetchone()[0]
+            row=c.execute('SELECT body FROM ledger WHERE length(body)<=4194304').fetchone()
+            if row is None: raise FleetError('ledger capacity')
+            raw=row[0]
             if type(raw) is not str or len(raw)>4*1024*1024: raise FleetError('ledger capacity')
             try:self._validate(json.loads(raw))
             except (ValueError,TypeError) as exc:raise FleetError('invalid existing ledger') from exc
@@ -43,13 +45,15 @@ class FleetControl:
             with connection(self.path.resolve().as_uri()+('?mode=ro' if readonly else '?mode=rw'),uri=True,timeout=1) as c:
                 if not readonly and self.max_pages is not None: c.execute(f'PRAGMA max_page_count={integer(self.max_pages)}')
                 c.execute('BEGIN' if readonly else 'BEGIN IMMEDIATE')
-                row=c.execute('SELECT body FROM ledger WHERE id=1').fetchone()
+                row=c.execute('SELECT body FROM ledger WHERE id=1 AND length(body)<=4194304').fetchone()
                 if row is None or type(row[0]) is not str or len(row[0])>4*1024*1024: raise FleetError('ledger size unavailable')
                 s=json.loads(row[0])
                 self._validate(s)
                 out=fn(s)
                 self._validate(s)
-                if not readonly: c.execute('UPDATE ledger SET body=? WHERE id=1',(json.dumps(s,sort_keys=True),))
+                encoded=json.dumps(s,sort_keys=True)
+                if len(encoded)>4194304: raise FleetError('ledger capacity')
+                if not readonly: c.execute('UPDATE ledger SET body=? WHERE id=1',(encoded,))
                 return copy.deepcopy(out)
         except (sqlite3.Error,OSError,TypeError,json.JSONDecodeError) as e: raise FleetError('ledger unavailable') from e
     def _validate(self,s):
