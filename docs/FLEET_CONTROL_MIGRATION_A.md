@@ -37,9 +37,10 @@ Pins prove inspected Git bytes only; they do not authenticate physical machines 
 
 `FleetControl(path, voters)` uses a disposable SQLite file; `approve_node`, `heartbeat`,
 `elect`, `submit`, `place`, `validate_lease`, `drain`, `snapshot`, `status_snapshot`,
-`backup`, `restore`. Explicit integer seconds in core; status_snapshot accepts milliseconds.
+`retire`, `backup`, `restore`. Explicit integer seconds in core; status_snapshot accepts milliseconds.
 Resources are available CPU units, RAM bytes and disk bytes using one consistent caller contract.
 Jobs reserve resources cumulatively, including unexpired leases from older terms/identities.
+Retirement requires drain and expiry of every outstanding lease; tombstones and up to 32 prior identities survive reapproval. Rosters cap at 256, jobs at 1024 and serialized ledger at 4 MiB; further growth fails closed.
 No automatic rebalance; existing healthy placement remains sticky. `avoid_domains`
 is an explicit placement requirement, not proof of independent failure domains or N+1 HA.
 
@@ -59,7 +60,7 @@ silently recreating it. SQLite connections close deterministically on Windows.
 
 ## Validation and remaining admission
 
-Eleven new tests include fleet sizes 0,1,5,6,7,12; cumulative budgets; duplicate concurrent
+Thirteen new tests include fleet sizes 0,1,5,6,7,12; cumulative budgets; duplicate concurrent
 placements; old epoch/sequence; identity rotation; stale/offline heartbeat; clock rollback;
 missing quorum; stale term; lost leader; old lease expiry before reissue; drain;
 restart; DB loss; actual disposable SQLite page exhaustion; backup/restore invalidation;

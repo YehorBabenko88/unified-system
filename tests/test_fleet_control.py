@@ -57,9 +57,14 @@ class FleetTests(unittest.TestCase):
         # SQLite max_page_count forces a real disposable disk-full transaction failure.
         import sqlite3
         self.f.max_pages=2
-        before=self.f.snapshot(10)
-        with self.assertRaises(FleetError): self.f.approve_node('large',1,'z','x'*100000)
-        self.assertEqual(before,self.f.snapshot(10))
+        for i in range(20):
+            before=self.f.snapshot(10)
+            try: self.f.approve_node('large'+str(i),1,'z','x'*1000)
+            except FleetError as error:
+                self.assertIsInstance(error.__cause__,sqlite3.DatabaseError)
+                self.assertIn('full',str(error.__cause__))
+                self.assertEqual(before,self.f.snapshot(10));break
+        else: self.fail('SQLite page limit did not exhaust')
 
     def test_clock_rollback_and_leader_loss(self):
         self.ready(); self.f.submit('x',{'cpu':1,'memory':1,'disk':1})
@@ -104,3 +109,23 @@ class FleetTests(unittest.TestCase):
             c.execute('UPDATE ledger SET body=?',(json.dumps(state),))
         with self.assertRaises(FleetError):self.f.snapshot(11)
         with self.assertRaises(FleetError):self.f.place('x',11,1)
+
+    def test_retire_readd_preserves_tombstone_and_fences(self):
+        self.ready();self.f.submit('x',{'cpu':1,'memory':1,'disk':1});lease=self.f.place('x',10,1)
+        with self.assertRaises(FleetError):self.f.retire('0',11)
+        self.f.drain('0')
+        with self.assertRaises(FleetError):self.f.retire('0',11)
+        self.f.retire('0',70)
+        self.assertEqual(self.f.snapshot(70)['nodes']['0']['state'],'RETIRED')
+        with self.assertRaises(FleetError):self.f.heartbeat('0',1,2,70,{'cpu':8,'memory':16,'disk':100})
+        with self.assertRaises(FleetError):self.f.approve_node('0',1,'zone0','approved')
+        self.f.approve_node('0',2,'zone0','approved-new');self.f.heartbeat('0',2,1,70,{'cpu':8,'memory':16,'disk':100})
+        self.assertFalse(self.f.validate_lease('x',lease['token'],70))
+        history=self.f.snapshot(70)['nodes']['0']['history']
+        self.assertEqual(history[-1]['state'],'RETIRED');self.assertEqual(history[-1]['epoch'],1)
+    def test_capacity_and_huge_numbers_fail_closed(self):
+        with self.assertRaises(FleetError):self.f.submit('huge',{'cpu':10**1000,'memory':1,'disk':1})
+        for i in range(256):self.f.approve_node(str(i),1,'z','approved')
+        with self.assertRaises(FleetError):self.f.approve_node('overflow',1,'z','approved')
+        for i in range(1024):self.f.submit(str(i),{'cpu':1,'memory':1,'disk':1})
+        with self.assertRaises(FleetError):self.f.submit('overflow',{'cpu':1,'memory':1,'disk':1})

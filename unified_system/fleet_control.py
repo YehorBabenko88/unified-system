@@ -10,7 +10,7 @@ import uuid
 class FleetError(ValueError): pass
 
 def resources(v):
-    if not isinstance(v,dict) or set(v)!={'cpu','memory','disk'} or any(type(x) not in (int,float) or not math.isfinite(x) or x<0 for x in v.values()): raise FleetError('resource schema')
+    if not isinstance(v,dict) or set(v)!={'cpu','memory','disk'} or any(type(x) not in (int,float) or abs(x)>2**53-1 or not math.isfinite(x) or x<0 for x in v.values()): raise FleetError('resource schema')
     return dict(v)
 
 def integer(v):
@@ -28,19 +28,24 @@ class FleetControl:
     def __init__(self,path,voters,*,max_pages=None):
         self.path=Path(path)
         self.max_pages=max_pages
-        if not voters or len(voters)!=len(set(voters)): raise FleetError('voters')
+        if not isinstance(voters,(list,tuple)) or not 0<len(voters)<=256 or any(type(x) is not str or not 0<len(x)<=128 for x in voters) or len(voters)!=len(set(voters)): raise FleetError('voters')
         self.voters=sorted(voters)
         with connection(self.path) as c:
             c.execute('CREATE TABLE IF NOT EXISTS ledger(id INTEGER PRIMARY KEY CHECK(id=1), body TEXT NOT NULL)')
             state={'voters':self.voters,'nodes':{},'jobs':{},'leader':None,'term':0,'clock':0,'incarnation':uuid.uuid4().hex,'counter':0}
             c.execute('INSERT OR IGNORE INTO ledger VALUES(1,?)',(json.dumps(state),))
-            if json.loads(c.execute('SELECT body FROM ledger').fetchone()[0])['voters']!=self.voters: raise FleetError('voter configuration mismatch')
+            raw=c.execute('SELECT body FROM ledger').fetchone()[0]
+            if type(raw) is not str or len(raw)>4*1024*1024: raise FleetError('ledger capacity')
+            try:self._validate(json.loads(raw))
+            except (ValueError,TypeError) as exc:raise FleetError('invalid existing ledger') from exc
     def _transaction(self,fn,*,readonly=False):
         try:
             with connection(self.path.resolve().as_uri()+('?mode=ro' if readonly else '?mode=rw'),uri=True,timeout=1) as c:
                 if not readonly and self.max_pages is not None: c.execute(f'PRAGMA max_page_count={integer(self.max_pages)}')
                 c.execute('BEGIN' if readonly else 'BEGIN IMMEDIATE')
-                s=json.loads(c.execute('SELECT body FROM ledger WHERE id=1').fetchone()[0])
+                row=c.execute('SELECT body FROM ledger WHERE id=1').fetchone()
+                if row is None or type(row[0]) is not str or len(row[0])>4*1024*1024: raise FleetError('ledger size unavailable')
+                s=json.loads(row[0])
                 self._validate(s)
                 out=fn(s)
                 self._validate(s)
@@ -52,12 +57,14 @@ class FleetControl:
         try:
             if set(s)!={'voters','nodes','jobs','leader','term','clock','incarnation','counter'} or s['voters']!=self.voters:
                 raise FleetError('ledger schema')
+            if type(s['nodes']) is not dict or len(s['nodes'])>256 or type(s['jobs']) is not dict or len(s['jobs'])>1024: raise FleetError('ledger capacity')
             for key in ('term','clock','counter'): integer(s[key])
             if type(s['incarnation']) is not str or not s['incarnation']: raise FleetError('incarnation')
             for ident,n in s['nodes'].items():
-                if set(n)!={'id','epoch','domain','approval','state','sequence','heartbeat','available'} or n['id']!=ident or n['state'] not in ('APPROVED','ACTIVE','DRAINING'): raise FleetError('node schema')
+                if set(n)!={'id','epoch','domain','approval','state','sequence','heartbeat','available','history','retired_at'} or n['id']!=ident or n['state'] not in ('APPROVED','ACTIVE','DRAINING','RETIRED'): raise FleetError('node schema')
                 if integer(n['epoch'])<1 or not n['approval'] or not n['domain']: raise FleetError('node identity')
                 integer(n['sequence'])
+                if type(n['history']) is not list or len(n['history'])>32: raise FleetError('history capacity')
                 if n['heartbeat'] is not None: integer(n['heartbeat']); resources(n['available'])
             if s['leader'] is not None:
                 if set(s['leader'])!={'id','expires'} or s['leader']['id'] not in self.voters: raise FleetError('leader schema')
@@ -77,11 +84,14 @@ class FleetControl:
         if now<s['clock']: raise FleetError('clock rollback')
         s['clock']=now
     def approve_node(self,machine_id,identity_epoch,failure_domain,owner_approval):
-        if not all(type(x) is str and x for x in (machine_id,failure_domain,owner_approval)) or integer(identity_epoch)<1: raise FleetError('approval required')
+        if not all(type(x) is str and 0<len(x)<=1024 for x in (machine_id,failure_domain,owner_approval)) or integer(identity_epoch)<1: raise FleetError('approval required')
         def op(s):
             old=s['nodes'].get(machine_id)
             if old and identity_epoch<=old['epoch']: raise FleetError('epoch must advance')
-            s['nodes'][machine_id]={'id':machine_id,'epoch':identity_epoch,'domain':failure_domain,'approval':owner_approval,'state':'APPROVED','sequence':0,'heartbeat':None,'available':None}
+            if old is None and len(s['nodes'])>=256: raise FleetError('node capacity')
+            history=[] if old is None else old['history']+[{k:v for k,v in old.items() if k!='history'}]
+            if len(history)>32: raise FleetError('identity history capacity')
+            s['nodes'][machine_id]={'id':machine_id,'epoch':identity_epoch,'domain':failure_domain,'approval':owner_approval,'state':'APPROVED','sequence':0,'heartbeat':None,'available':None,'history':history,'retired_at':None}
         return self._transaction(op)
     def heartbeat(self,machine_id,identity_epoch,sequence,now,available):
         available=resources(available); integer(sequence); integer(identity_epoch)
@@ -100,11 +110,13 @@ class FleetControl:
             s.update(term=term,leader={'id':leader,'expires':now+ttl})
         return self._transaction(op)
     def submit(self,job_id,requirements,avoid_domains=()):
+        if not isinstance(avoid_domains,(list,tuple)) or len(avoid_domains)>256: raise FleetError('domain capacity')
+        if not isinstance(job_id,str) or not 0<len(job_id)<=128 or len(avoid_domains)>256 or any(not isinstance(x,str) or not 0<len(x)<=1024 for x in avoid_domains): raise FleetError('job schema')
         spec={'requirements':resources(requirements),'avoid_domains':sorted(set(avoid_domains))}
-        if not isinstance(job_id,str) or not job_id or any(not isinstance(x,str) or not x for x in avoid_domains): raise FleetError('job schema')
         def op(s):
             old=s['jobs'].get(job_id)
             if old and old['spec']!=spec: raise FleetError('idempotency conflict')
+            if not old and len(s['jobs'])>=1024: raise FleetError('job capacity')
             if not old: s['jobs'][job_id]={'spec':spec,'lease':None}
         return self._transaction(op)
     def place(self,job_id,now,term,ttl=60):
@@ -143,7 +155,16 @@ class FleetControl:
     def drain(self,machine_id):
         def op(s):
             if machine_id not in s['nodes']: raise FleetError('unknown node')
+            if s['nodes'][machine_id]['state']=='RETIRED': raise FleetError('retired node')
             s['nodes'][machine_id]['state']='DRAINING'
+        return self._transaction(op)
+    def retire(self,machine_id,now):
+        """Keep identity tombstone; never retire ahead of outstanding lease expiry."""
+        def op(s):
+            self._time(s,now); node=s['nodes'].get(machine_id)
+            if node is None or node['state']!='DRAINING': raise FleetError('drain required')
+            if any(j['lease'] and j['lease']['node']==machine_id and j['lease']['expires']>now for j in s['jobs'].values()): raise FleetError('outstanding lease')
+            node.update(state='RETIRED',retired_at=now)
         return self._transaction(op)
     def snapshot(self,now):
         integer(now)
@@ -182,6 +203,7 @@ class FleetControl:
             def invalidate(s):
                 s.update(incarnation=uuid.uuid4().hex,leader=None)
                 for j in s['jobs'].values(): j['lease']=None
-                for n in s['nodes'].values(): n.update(state='APPROVED',heartbeat=None)
+                for n in s['nodes'].values():
+                    if n['state']!='RETIRED': n.update(state='APPROVED',heartbeat=None)
             f._transaction(invalidate); return f
         except sqlite3.Error as e: raise FleetError('restore failed') from e
