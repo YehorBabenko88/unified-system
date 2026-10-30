@@ -135,6 +135,7 @@ class Lifecycle:
         request=digest([expected_epoch,expected_sequence,stage,status,evidence,completed,total])
         with closing(self._db()) as db, db:
             db.execute('BEGIN IMMEDIATE');state,previous=self._read(db)
+            if self.recovery:raise ContractError('recovery requires source revalidation')
             if expected_epoch!=state['epoch']:raise ContractError('stale operation epoch')
             old=db.execute('SELECT request_digest,response,response_digest FROM lifecycle_operations WHERE id=?',(operation_id,)).fetchone()
             if old:

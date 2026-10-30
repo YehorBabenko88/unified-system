@@ -101,6 +101,11 @@ class LifecycleTests(unittest.TestCase):
         s=self.life.snapshot();args=('same',s['epoch'],0,STAGES[0],'COMPLETE',{'source_owned':STAGES[0]})
         self.life.apply(*args);current=self.life.snapshot();self.life.recover(current['epoch'],current['sequence'])
         with self.assertRaises(ContractError):self.life.apply(*args)
+    def test_restart_cannot_replay_cached_completion_before_revalidation(self):
+        s=self.life.snapshot();args=('same',s['epoch'],0,STAGES[0],'COMPLETE',{'source_owned':STAGES[0]})
+        self.life.apply(*args)
+        restart=Lifecycle(self.path,MODULES,verifier=verifier);restart.initialize()
+        with self.assertRaises(ContractError):restart.apply(*args)
     def test_verifier_cannot_bless_different_status(self):
         self.life.verifier=lambda stage,value,**transition:dict(verdict='VERIFIED_SYNTHETIC',stage=stage,status='RUNNING',completed=0,total=0)
         with self.assertRaises(ContractError):self.apply(STAGES[0])
