@@ -26,9 +26,20 @@ test('actual lifecycle file -> actual Terminan HTTP -> Chromium controls',async(
  await page.screenshot({path:path.join(evidence,'actual-chromium.png'),fullPage:true});expect(errors).toEqual([]);
 });
 test('cancelled stale HTTP response cannot replace latest actual source',async({page})=>{
- select(1);let first=true;
- await page.route('**/api/infrastructure',async route=>{const response=await route.fetch();if(first){first=false;await new Promise(r=>setTimeout(r,400))}try{await route.fulfill({response})}catch{}});
- await page.goto('/infrastructure');select(10);await page.getByRole('button',{name:'Refresh',exact:true}).click();await expect(page.locator('#status')).toContainText('10 observed');await page.waitForTimeout(500);await expect(page.locator('#status')).toContainText('10 observed');
+ select(1);let first=true,capturedResolve,releaseResolve,lateResolve;
+ const captured=new Promise(resolve=>{capturedResolve=resolve}),release=new Promise(resolve=>{releaseResolve=resolve}),late=new Promise(resolve=>{lateResolve=resolve});
+ const observed={old_count:null,new_count:null,late_attempt:false};
+ await page.route('**/api/infrastructure',async route=>{
+  const isOld=first;first=false;const response=await route.fetch(),body=await response.json();
+  if(isOld){observed.old_count=body.nodes.length;capturedResolve();await release;observed.late_attempt=true}else observed.new_count=body.nodes.length;
+  try{await route.fulfill({response})}catch{}finally{if(isOld)lateResolve()}
+ });
+ try{
+  await page.goto('/infrastructure');await captured;expect(observed.old_count).toBe(1);
+  select(10);await page.getByRole('button',{name:'Refresh',exact:true}).click();await expect(page.locator('#status')).toContainText('10 observed');expect(observed.new_count).toBe(10);
+  releaseResolve();await late;await page.waitForTimeout(500);await expect(page.locator('#status')).toContainText('10 observed');expect(observed.late_attempt).toBe(true);
+  observed.final_status=await page.locator('#status').textContent();fs.writeFileSync(path.join(evidence,'stale-actual-http-proof.json'),JSON.stringify(observed,null,2));
+ }finally{releaseResolve()}
 });
 test('real missing snapshot renders explicit error and recovers',async({page})=>{
  fs.unlinkSync(path.join(evidence,'current.json'));await page.goto('/infrastructure');await expect(page.locator('#status')).toContainText('SOURCE_INVALID_OR_UNAVAILABLE');select(6);await page.getByRole('button',{name:'Refresh',exact:true}).click();await expect(page.locator('#status')).toContainText('6 observed');
