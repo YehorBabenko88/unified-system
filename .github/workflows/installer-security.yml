@@ -1,0 +1,37 @@
+name: Installer security PLAN_ONLY
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  windows-security:
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shell: [powershell, pwsh]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Full offline suite
+        run: python -m unittest discover -s tests -v
+      - name: In-memory signature and fail-closed checks
+        shell: ${{ matrix.shell }}
+        run: ./tests/windows/Test-SecurityPackage.ps1
+      - name: Bind exact checkout evidence
+        shell: pwsh
+        env:
+          TEST_SHELL: ${{ matrix.shell }}
+        run: |
+          @{schema='unified.security-ci.v1';head=(git rev-parse HEAD);tree=(git rev-parse 'HEAD^{tree}');run_id=$env:GITHUB_RUN_ID;attempt=$env:GITHUB_RUN_ATTEMPT;job=$env:GITHUB_JOB;shell=$env:TEST_SHELL;runner=$env:RUNNER_NAME;source_provenance='NOT_EVALUATED';physical='NOT_RUN';production='NO_GO'} | ConvertTo-Json | Set-Content security-evidence.json -Encoding utf8
+          (Get-FileHash security-evidence.json -Algorithm SHA256).Hash | Set-Content security-evidence.sha256
+      - uses: actions/upload-artifact@v4
+        with:
+          name: security-evidence-${{ matrix.shell }}
+          path: |
+            security-evidence.json
+            security-evidence.sha256
