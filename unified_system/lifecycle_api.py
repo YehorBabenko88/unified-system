@@ -1,6 +1,7 @@
 """Additive read-only lifecycle WSGI boundary; no listener or mutating route."""
 import json
 from .lifecycle import validate, canonical
+from .fleet_snapshot import validate_fleet
 
 class ReadOnlyLifecycleApp:
     def __init__(self,provider=None):self.provider=provider
@@ -18,6 +19,7 @@ class ReadOnlyLifecycleApp:
                 if not isinstance(snapshot,dict):raise ValueError()
                 core={k:v for k,v in snapshot.items() if k not in ('recovery','fleet')}
                 validate(core)
+                validate_fleet(snapshot.get('fleet'))
                 if snapshot.get('recovery') not in ('NONE','REVALIDATION_REQUIRED'):raise ValueError()
                 if len(canonical(snapshot).encode())>1048576:raise ValueError()
                 data=json.loads(canonical(snapshot));data['status']='AVAILABLE';status=200

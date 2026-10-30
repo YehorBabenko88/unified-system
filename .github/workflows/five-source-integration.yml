@@ -1,0 +1,69 @@
+name: Actual five-source disposable integration
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+concurrency:
+  group: actual-five-source-${{ github.event.pull_request.head.sha || github.sha }}
+  cancel-in-progress: true
+jobs:
+  source-integration:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.11', '3.13']
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          repository: YehorBabenko88/Terminan
+          ref: d10cee69b4fc599e588c88ba105ef77d0c6ff0af
+          path: .source/terminan
+          persist-credentials: false
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          repository: YehorBabenko88/math
+          ref: 135b437c83a98738cddb263e0cac78b37e83d1e2
+          path: .source/math
+          persist-credentials: false
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          repository: YehorBabenko88/bybit-cluster-grid
+          ref: d2dcffb43e520db75936eb97389b66db2f3e1365
+          path: .source/grid
+          persist-credentials: false
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          repository: YehorBabenko88/strattester
+          ref: 702d285b5a5af28f0b2e1f4c9a52aeb49582cbef
+          path: .source/strattester
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+      - name: Exact checkout fence and full suite
+        shell: python
+        run: |
+          import subprocess
+          assert subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip() == '${{ github.event.pull_request.head.sha || github.sha }}'
+          subprocess.run(['python','-m','unittest','discover','-s','tests','-v'],check=True)
+      - name: Real source APIs and bounded Math worker
+        run: python integration/verify_sources.py --terminan .source/terminan --math .source/math --grid .source/grid --strattester .source/strattester --output five-source-evidence
+      - run: npm ci --prefix integration
+      - run: node integration/node_modules/@playwright/test/cli.js install --with-deps chromium
+      - name: Actual Chromium actual Terminan server actual lifecycle snapshots
+        run: python integration/verify_chromium.py --terminan .source/terminan --math .source/math --grid .source/grid --strattester .source/strattester --output five-source-evidence
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: actual-five-source-${{ matrix.os }}-${{ matrix.python }}-${{ github.run_attempt }}
+          path: five-source-evidence/
+          if-no-files-found: error
