@@ -94,22 +94,22 @@ class SourceGuardTests(unittest.TestCase):
             value=absolute(path)
             try:return alias/value.relative_to(actual)
             except ValueError:return value
-        lstat=os.lstat
-        def alias_stat(path,*args,**kwargs):
+        lstat=Path.lstat
+        def alias_stat(path):
             try:path=actual/Path(path).relative_to(alias)
             except ValueError:pass
-            return lstat(path,*args,**kwargs)
+            return lstat(path)
         # Model Windows RUNNER~1 lexical paths while resolving/reading the actual
         # temporary files. No alternate source bytes or import mocks are used.
         fence=api.SourceFence(self.root);fence.check()
-        with patch.object(Path,'absolute',lexical_alias),patch('os.lstat',alias_stat):
+        with patch.object(Path,'absolute',lexical_alias),patch.object(Path,'lstat',alias_stat):
             fence.module(SimpleNamespace(__file__=str(self.root/'pkg/__init__.py')))
             fence.finish()
     def test_reparse_ancestor_is_rejected_even_if_canonical_bytes_match(self):
-        api=self.guard();fence=api.SourceFence(self.root);fence.check();lstat=os.lstat
-        def reparse_stat(path,*args,**kwargs):
-            value=lstat(path,*args,**kwargs)
+        api=self.guard();fence=api.SourceFence(self.root);fence.check();lstat=Path.lstat
+        def reparse_stat(path):
+            value=lstat(path)
             if Path(path)==self.root/'pkg':return SimpleNamespace(st_mode=value.st_mode,st_file_attributes=1024)
             return value
-        with patch('os.lstat',reparse_stat):
+        with patch.object(Path,'lstat',reparse_stat):
             with self.assertRaises(api.SourceQualificationError):fence.module(SimpleNamespace(__file__=str(self.root/'pkg/__init__.py')))
