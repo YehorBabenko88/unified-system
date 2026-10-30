@@ -7,6 +7,7 @@ import uuid
 from contextlib import closing
 from pathlib import Path
 from .contracts import ContractError
+from .fleet_snapshot import validate_fleet
 
 STAGES=('INFRA_PREFLIGHT','INFRA_READY','STRAT_HISTORY_SYNC','STRAT_RESULT_SEALED',
         'HANDOFF_VERIFY','GRID_MARKET_READY','STEADY_STATE')
@@ -103,8 +104,8 @@ class Lifecycle:
         if self.fleet_provider is not None:
             try:
                 fleet=self.fleet_provider()
-                if isinstance(fleet,dict) and isinstance(fleet.get('nodes'),list) and len(fleet['nodes'])<=256 and len(canonical(fleet))<=524288:
-                    state['fleet']=json.loads(canonical(fleet))
+                validate_fleet(fleet)
+                state['fleet']=json.loads(canonical(fleet))
             except Exception:pass
         return state
     def _save(self,db,state,previous,operation,request):
