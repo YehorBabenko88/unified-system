@@ -19,8 +19,13 @@ jobs:
           python-version: '3.11'
       - name: Full offline suite
         run: python -m unittest discover -s tests -v
-      - name: In-memory signature and fail-closed checks
-        shell: ${{ matrix.shell }}
+      - name: In-memory signature and fail-closed checks PS5.1
+        if: matrix.shell == 'powershell'
+        shell: powershell
+        run: ./tests/windows/Test-SecurityPackage.ps1
+      - name: In-memory signature and fail-closed checks PS7
+        if: matrix.shell == 'pwsh'
+        shell: pwsh
         run: ./tests/windows/Test-SecurityPackage.ps1
       - name: Bind exact checkout evidence
         shell: pwsh
