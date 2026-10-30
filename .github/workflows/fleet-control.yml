@@ -1,0 +1,27 @@
+name: Durable fleet PLAN_ONLY evidence
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  fleet:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.11', '3.13']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: python -m scripts.verify_fleet_control
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: fleet-${{ matrix.os }}-${{ matrix.python }}-${{ github.run_attempt }}
+          path: fleet-evidence/
+          if-no-files-found: error
