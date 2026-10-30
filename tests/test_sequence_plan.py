@@ -16,6 +16,17 @@ class SequencePlanTests(unittest.TestCase):
     def test_block(self):
         with self.assertRaises(ContractError):
             describe_progress({"STRAT_RESEARCH":"BLOCKED","GRID_MARKET_READY":"RUNNING"})
+    def test_terminan_remains_available_when_research_blocked(self):
+        x=describe_progress({"INFRA_PREFLIGHT":"COMPLETE","INFRA_READY":"COMPLETE",
+            "STRAT_RESEARCH":"BLOCKED","TERMINAN_OBSERVING":"RUNNING"})
+        self.assertEqual(x["stages"][8]["status"],"RUNNING")
+        self.assertFalse(x["execution_authorized"])
+    def test_terminan_cannot_start_if_infrastructure_blocked(self):
+        with self.assertRaises(ContractError):
+            describe_progress({"INFRA_READY":"BLOCKED","TERMINAN_OBSERVING":"RUNNING"})
+    def test_grid_requires_unblocked_handoff(self):
+        with self.assertRaises(ContractError):
+            describe_progress({"HANDOFF_VERIFY":"BLOCKED","GRID_MARKET_READY":"RUNNING"})
     def test_unknown(self):
         with self.assertRaises(ContractError):describe_progress({"LIVE_ORDERS":"RUNNING"})
 if __name__=="__main__":unittest.main()
