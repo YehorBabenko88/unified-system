@@ -33,3 +33,9 @@ test('cancelled stale HTTP response cannot replace latest actual source',async({
 test('real missing snapshot renders explicit error and recovers',async({page})=>{
  fs.unlinkSync(path.join(evidence,'current.json'));await page.goto('/infrastructure');await expect(page.locator('#status')).toContainText('SOURCE_INVALID_OR_UNAVAILABLE');select(6);await page.getByRole('button',{name:'Refresh',exact:true}).click();await expect(page.locator('#status')).toContainText('6 observed');
 });
+test('actual socket disconnect becomes unavailable then recovers',async({page})=>{
+ select(6);await page.goto('/infrastructure');await expect(page.locator('#status')).toContainText('6 observed');
+ const flag=path.join(evidence,'disconnect.flag');fs.writeFileSync(flag,'TEST_TRANSPORT_CLOSE');
+ try{await page.getByRole('button',{name:'Refresh',exact:true}).click();await expect(page.locator('#status')).toContainText('UNAVAILABLE')}finally{fs.unlinkSync(flag)}
+ await page.getByRole('button',{name:'Refresh',exact:true}).click();await expect(page.locator('#status')).toContainText('6 observed');
+});

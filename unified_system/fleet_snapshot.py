@@ -30,17 +30,17 @@ def validate_fleet(value):
         if not isinstance(ident,str) or not 1 <= len(ident) <= 128 or ident in ids:
             raise ContractError('invalid fleet node identity')
         ids.add(ident)
-        if (type(node['epoch']) is not int or node['epoch'] < 1 or type(node['sequence']) is not int or node['sequence'] < 0
+        if (type(node['epoch']) is not int or not 1 <= node['epoch'] <= 2**53-1 or type(node['sequence']) is not int or not 0 <= node['sequence'] <= 2**53-1
                 or not isinstance(node['zone'],str) or not 1 <= len(node['zone']) <= 1024
                 or node['state'] not in ('APPROVED','ACTIVE','DRAINING','RETIRED','OFFLINE','SUSPECT','QUARANTINED')):
             raise ContractError('invalid fleet node state')
         heartbeat = node['last_heartbeat_ms']
-        if heartbeat is not None and (type(heartbeat) is not int or heartbeat < 0):
+        if heartbeat is not None and (type(heartbeat) is not int or not 0 <= heartbeat <= 2**53-1):
             raise ContractError('invalid fleet heartbeat')
         if node['identity_verified'] is not False or node['modules'] != [] or any(node[k] is not None for k in ('cpu','memory','disk','db_sizes')):
             raise ContractError('unqualified fleet telemetry')
         available = node['available_resources']
-        if available is not None and (not isinstance(available,dict) or set(available) != {'cpu','memory','disk'} or any(type(x) not in (int,float) or not math.isfinite(x) or not 0 <= x <= 2**53-1 for x in available.values())):
+        if available is not None and (not isinstance(available,dict) or set(available) != {'cpu','memory','disk'} or any(type(x) not in (int,float) or not 0 <= x <= 2**53-1 or not math.isfinite(x) for x in available.values())):
             raise ContractError('invalid fleet resource observation')
     encoded = json.dumps(value, allow_nan=False)
     if len(encoded.encode('utf-8')) > 524288:

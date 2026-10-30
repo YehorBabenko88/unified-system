@@ -2,6 +2,9 @@ name: Actual five-source disposable integration
 on: [push, pull_request, workflow_dispatch]
 permissions:
   contents: read
+concurrency:
+  group: actual-five-source-${{ github.event.pull_request.head.sha || github.sha }}
+  cancel-in-progress: true
 jobs:
   source-integration:
     strategy:
@@ -19,13 +22,13 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: YehorBabenko88/Terminan
-          ref: dbbc1c6c3b3982280af6f20b70980e4caf151b4c
+          ref: d10cee69b4fc599e588c88ba105ef77d0c6ff0af
           path: .source/terminan
           persist-credentials: false
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: YehorBabenko88/math
-          ref: 0b75c0a3583f9823d2b554806468fa541f20b35c
+          ref: 135b437c83a98738cddb263e0cac78b37e83d1e2
           path: .source/math
           persist-credentials: false
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
@@ -57,12 +60,7 @@ jobs:
       - run: npm ci --prefix integration
       - run: node integration/node_modules/@playwright/test/cli.js install --with-deps chromium
       - name: Actual Chromium actual Terminan server actual lifecycle snapshots
-        shell: pwsh
-        run: |
-          $env:FIVE_TERMINAN=(Resolve-Path .source/terminan).Path
-          $env:FIVE_EVIDENCE=(Resolve-Path five-source-evidence).Path
-          node integration/node_modules/@playwright/test/cli.js test --config integration/playwright.config.cjs
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+        run: python integration/verify_chromium.py --terminan .source/terminan --math .source/math --grid .source/grid --strattester .source/strattester --output five-source-evidence
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:

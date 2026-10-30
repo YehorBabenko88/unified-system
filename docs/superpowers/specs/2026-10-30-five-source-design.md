@@ -12,7 +12,9 @@ Grid latest-release endpoint returns 404; Strattester release list is empty.
 Neither is admitted. Existing five-boundary tests pin older #249/#43 and
 manufacture synthetic admission bytes. Preserve those historical regression
 tests, but label their scope separately from this exact-source suite.
-Terminan #57 and Math #103 pins remain the requested source interfaces.
+Terminan #57 is the consumer base; independent follow-up Draft #67 hardens
+nested display validation and is the new candidate pin. Math #103 remains the
+requested worker source interface.
 
 An all-pass simulation would not test consumer compatibility. A remote physical
 test violates the task boundary. Choose actual local APIs with disposable SQLite

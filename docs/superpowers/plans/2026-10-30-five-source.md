@@ -17,16 +17,17 @@ Untrusted nested authority, unsupported versions, oversized fleet bodies,
 stale lease reuse, absent dependencies must fail closed without fabricated truth.
 
 ### Task 1: Fleet/lifecycle boundary
-- [ ] Write and run negative tests for authority-bearing nested fleet snapshots.
-- [ ] Validate source-owned fleet schema at Lifecycle.snapshot and HTTP boundary.
-- [ ] Exercise actual fleet sizes, resource exhaustion, fencing and recovery.
-- [ ] Run full unittest suite.
+- [x] Write and run negative tests for authority-bearing nested fleet snapshots.
+- [x] Validate source-owned fleet schema at Lifecycle.snapshot and HTTP boundary.
+- [x] Exercise actual fleet sizes, resource exhaustion, fencing and recovery.
+- [x] Run full unittest suite (154 tests; one preexisting Windows symlink skip).
 
 ### Task 2: Five-source proof
-- [ ] Record actual source pins and verify each checkout before imports.
-- [ ] Exercise Terminan infrastructure consumer with real lifecycle snapshots,
+- [x] Record actual source pins and verify each checkout before imports.
+- [x] Exercise Terminan infrastructure consumer with real lifecycle snapshots,
   missing-module combinations, invalid versions and unavailable storage.
-- [ ] Exercise Strattester/Grid history boundary and Math bounded worker source.
-- [ ] Run Chromium controls using generated actual snapshots.
-- [ ] Add exact-head matrix artifacts and publish Draft PR.
+- [x] Exercise Strattester/Grid history boundary and Math bounded worker source.
+  Positive sealed receipt handoff is BLOCKED: current producer API lacks sealing.
+- [x] Run Chromium controls using generated actual snapshots (four tests).
+- [x] Add exact-head matrix artifacts and publish Draft PR #11.
 - [ ] Download ZIPs, SHA256, report run/attempt/jobs and remaining P0/P1/P2 gaps.

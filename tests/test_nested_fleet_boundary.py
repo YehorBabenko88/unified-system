@@ -20,7 +20,11 @@ class NestedFleetBoundaryTests(unittest.TestCase):
                          lambda f: f['nodes'][0].update(identity_verified=True),
                          lambda f: f['nodes'][0].update(execution_authorized=True),
                          lambda f: f['nodes'].append(copy.deepcopy(f['nodes'][0])),
-                         lambda f: f['nodes'][0].update(epoch=True)]
+                         lambda f: f['nodes'][0].update(epoch=True),
+                         lambda f: f['nodes'][0].update(epoch=2**53),
+                         lambda f: f['nodes'][0].update(sequence=2**53),
+                         lambda f: f['nodes'][0].update(last_heartbeat_ms=2**53),
+                         lambda f: f['nodes'][0].update(available_resources={'cpu':10**400,'memory':1,'disk':1})]
             life = Lifecycle(Path(tmp)/'life.db', [])
             life.initialize()
             for mutate in mutations:

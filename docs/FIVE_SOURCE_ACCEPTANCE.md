@@ -46,3 +46,68 @@ remain separately scoped and are not promoted by this suite.
 
 Local full suite includes one existing Windows symlink-unavailable skip; never
 claim unfiltered local zero skips. New source and browser tests require zero skips.
+
+## Exact source test mapping
+
+Standalone command (all required roots verified before import):
+`python integration/verify_sources.py --terminan .source/terminan --math .source/math --grid .source/grid --strattester .source/strattester --output five-source-evidence`.
+Test identities in `integration/verify_sources.py`, class `FiveSourceTests`:
+
+| Test name | Mechanism / qualification |
+|---|---|
+| test_node_sizes_actual_consumer_unknown_observations | REAL SQLite + APIs + direct consumer; fixture node observations |
+| test_every_module_availability_combination_remains_read_only | REAL lifecycle/consumer, 32 inventories; no module launch |
+| test_resource_pressure_rebalance_expiry_drain_and_restart | REAL transactional SQLite ledger; modeled caller votes/resources; no execution |
+| test_quorum_leader_db_loss_and_stale_consumer | MODEL voter quorum/clock, REAL database unlink/backup/restore, old token denied |
+| test_actual_research_sync_and_incomplete_history_denial | REAL SQLite/sync engine/research; offline history provider, no exchange |
+| test_unattested_grid_export_and_handoff_denied | REAL latest Grid export and intake; missing receipt denies |
+| test_latest_result_schema_cannot_substitute_for_sealed_receipt | REAL current ResultStore schema/write/read then intake denial, interface-gap artifact |
+| test_consumer_version_negotiation_denies_bool_or_future | REAL current consumer rejects bool/future versions |
+| test_actual_consumer_independently_rejects_forged_nested_observations | REAL independent Terminan candidate rejects nested forged fields |
+| test_actual_grid_collection_is_not_exchange_completeness_or_order_permission | REAL footprint producer/minute encoder/oracle, partial/stale not trading authority |
+
+Worker subprocess is exactly `node --test --test-reporter=tap .source/math/tests/bounded-experiment.test.mjs`:
+actual isolated Node workers, cancellation/capacity/deadline and actual loopback
+HTTP permission-denial tests. This is not Math's full mandatory matrix.
+
+Browser command: `node integration/node_modules/@playwright/test/cli.js test --config integration/playwright.config.cjs`.
+Four identities in `integration/actual-ui.spec.cjs`: all controls, delayed actual
+response cancellation, missing snapshot file/recovery, actual socket disconnect/
+recovery. The disconnect uses a disposable server transport wrapper that closes
+the actual TCP socket; successful requests use the actual Terminan source Handler.
+Control inventory fails if any new interactive tag/role is uncovered. No links,
+node utilization, database sizes or completed progress are invented.
+
+Terminan candidate consumer follow-up starts from #57, independently validates
+nested schema, and projects a small safe display result. Source pins record the
+candidate exact HEAD; source admission remains BLOCKED.
+
+## Source consistency qualification
+
+`integration/source_guard.py` verifies every HEAD tracked blob against actual
+working files using immutable raw Git blob reads and recorded runtime SHA256,
+before and after both API/worker and Chromium/server processes. It never invokes
+clean filters: only explicitly declared non-NUL text CRLF/LF differences are accepted, and
+tracked `-text` attributes require raw byte identity. Git replacement refs,
+local filter/include config, external worktrees/object stores and repository
+override environment variables are rejected; Git commands disable replacement
+objects and inherit a sanitized configuration/environment.
+It rejects tracked differences, staged changes, untracked executable source
+shadows (including ignored Python files), symlinks/path escapes, wrong imported
+package origins and source changes during execution. Source imports use a new
+empty bytecode cache. All source module `__file__` paths and the invoked Math
+test/runner origins must belong to their expected tracked trees.
+
+Dirty local development runs write `qualification: UNQUALIFIED` without borrowing
+the committed HEAD/tree identity, and exit nonzero before source API imports.
+Earlier local pre-guard runs are candidate observations only, not exact-head
+qualification. `tests/test_source_guard.py` uses disposable Git repositories to
+prove dirty tracked source, ignored untracked shadow, post-run mutation and wrong
+import origin rejection, plus a clean pre/post positive control. Hosted artifact
+source consistency is still separate from owner release authenticity/admission.
+
+Browser fenced command:
+`python integration/verify_chromium.py --terminan .source/terminan --math .source/math --grid .source/grid --strattester .source/strattester --output five-source-evidence`.
+It requires a qualified same-head API proof, rechecks all five trees before and
+after the server/browser subprocesses, and requires exactly four Chromium passes,
+zero skips, zero unexpected failures and zero flaky tests.
