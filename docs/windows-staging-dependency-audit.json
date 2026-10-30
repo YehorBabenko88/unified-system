@@ -1,0 +1,358 @@
+{
+  "schema": "installer.source-audit.v1",
+  "mode": "AUDIT_ONLY",
+  "staging_authoring": "DEFERRED_PENDING_ROOT_INDEPENDENT_INTEGRATION_CI_PASS",
+  "physical": "NOT_RUN",
+  "production": "NO_GO",
+  "host_inventory": "UNVERIFIED",
+  "actual_RPO": "UNVERIFIED",
+  "actual_RTO": "UNVERIFIED",
+  "source_evidence_sha256": "5ce7833eab077a5803297c17b010565c4845914077333e2550b6d2edb54a3514",
+  "source_evidence_head": "29d61fd682771f3a19a48531458f4c9d65172d3e",
+  "sources": {
+    "grid": {
+      "head": "d2dcffb43e520db75936eb97389b66db2f3e1365",
+      "integration_evidence_head": "d2dcffb43e520db75936eb97389b66db2f3e1365",
+      "matches_integration_evidence": true,
+      "tree": "78db4513bb300dd0cb4d1993a2854ddfba1ee83a",
+      "files": {
+        "requirements.txt": {
+          "blob": "47294e284d616733f231e534484bef5c0f42c167",
+          "git_blob_bytes_sha256": "d8584a6bf9c106fa49af80b3ce348c925766b5d7329f7cf692c81cb1e957fa51",
+          "bytes": 164,
+          "declared_lines": [
+            "aiohttp>=3.10",
+            "websockets>=13.0",
+            "asyncpg>=0.30",
+            "psutil>=6.0",
+            "pydantic>=2.8",
+            "pydantic-settings>=2.4",
+            "fastapi>=0.115",
+            "uvicorn[standard]>=0.30",
+            "httpx>=0.27",
+            "python-dotenv>=1.0"
+          ]
+        },
+        "requirements-ml.txt": {
+          "blob": "4644d683d55ba86e9821f8094aa146c6cde86379",
+          "git_blob_bytes_sha256": "71ee33b59a8444a86fff1c7e7986e0ecf7820c92437482056be9a6cca6a7eff6",
+          "bytes": 278,
+          "declared_lines": [
+            "# Optional heavy ML runtime. Installed by bootstrap only on ML-capable nodes.",
+            "# Keep explicit ranges so repair/upgrade is reproducible without freezing patch-level security fixes.",
+            "numpy>=2.0,<3",
+            "scipy>=1.14,<2",
+            "scikit-learn>=1.5,<2",
+            "joblib>=1.4,<2",
+            "xgboost>=3.0,<4",
+            "lightgbm>=4.5,<5"
+          ]
+        },
+        "installer/install.ps1": {
+          "blob": "013ef6fe2507926154ecb7d3599d3da2eca7ea3e",
+          "git_blob_bytes_sha256": "c7c562af5c1051f3729fda21982f7d8227c27395fd7f631864142672be271701",
+          "bytes": 6207
+        },
+        "installer/install-postgres.ps1": {
+          "blob": "a081800406e692869eb709347d3ce3f830bc72f6",
+          "git_blob_bytes_sha256": "29790d7c94d441a1a01809cc0f2d229294a3d88d0c203c8d0e05b2d42754c689",
+          "bytes": 1256
+        },
+        "installer/configure-postgres.ps1": {
+          "blob": "bd06cd7aa6bf39c8272c6bf6385f900cda52d47c",
+          "git_blob_bytes_sha256": "b99a0ec4feae58a2db161c576f26c71d95e27871ff109fefd97b73f5531d5bc6",
+          "bytes": 1720
+        },
+        "installer/configure-tailscale.ps1": {
+          "blob": "749a35449910d03491f87ca2c29709e29378f33a",
+          "git_blob_bytes_sha256": "e2c0bed93ab6770a0d5ce14803b30d72a7017b5ed3804e8aaf61b759d14a74f2",
+          "bytes": 4043
+        },
+        "installer/harden-host.ps1": {
+          "blob": "54eb2af0755562fd8d5044f0f7217a7f9faad30a",
+          "git_blob_bytes_sha256": "a4a2781b61036197cf625856041dac89ebe29bd16fe160936c9384da25693504",
+          "bytes": 1772
+        },
+        "installer/protect-service.ps1": {
+          "blob": "173ec215bfc722e06b6902806a49c05598a3baf1",
+          "git_blob_bytes_sha256": "676cc2f29054c31c7b4f9c1551f9ccab078d246690ffb35279a62b7a6b06feb0",
+          "bytes": 913
+        },
+        "installer/recover-release.ps1": {
+          "blob": "9350fdd9802a4a0357fc4cef5c914274b2411f61",
+          "git_blob_bytes_sha256": "519b86f5de04fb2b82bc756abe0d7734f6654248d011ed523afbe5f6b5b2ea71",
+          "bytes": 15147
+        },
+        "installer/uninstall.ps1": {
+          "blob": "8e8968768c4bb16cb6047fa07bfafb4f42ed3155",
+          "git_blob_bytes_sha256": "8a68960e7cc8c1a7a0b574686626235c71f09b9c5d07bbc418ee809c07505231",
+          "bytes": 2699
+        },
+        "grid/fleet_control.py": {
+          "blob": "b589e04519eea66035fd3557efbd424f0c7057bd",
+          "git_blob_bytes_sha256": "a1b41494e107e4ab6f7a52cef99896c9937a81c23c0959ab807a1ed4e61681d7",
+          "bytes": 9209
+        },
+        "grid/tailscale_provisioning.py": {
+          "blob": "d4ec06801819c4d583342c754a3c7d00d7a54239",
+          "git_blob_bytes_sha256": "9ff8cf559210a791c4fa6ac8b2af6fa4b33e41f286e01d6ebf4dda8c5b215da8",
+          "bytes": 2479
+        },
+        "grid/legacy_working_copy.py": {
+          "blob": "2729a3e81ba54ce686732700d1f49c1fbafb1c75",
+          "git_blob_bytes_sha256": "1e3c6db9582c46dac0baf3623fe0aa9d48d0a1ac8c851d0aa12b1738db3d2dd1",
+          "bytes": 576
+        }
+      },
+      "missing_selected_files": []
+    },
+    "strattester": {
+      "head": "702d285b5a5af28f0b2e1f4c9a52aeb49582cbef",
+      "integration_evidence_head": "702d285b5a5af28f0b2e1f4c9a52aeb49582cbef",
+      "matches_integration_evidence": true,
+      "tree": "191d2b87d6b30f19e7d2090f4161832c53247025",
+      "files": {
+        "pyproject.toml": {
+          "blob": "63230cb49a01c825c112507de247e71757e32c35",
+          "git_blob_bytes_sha256": "cf48d1fa28822a6f82e0828563a4192ade3cbaeb3221634ae4f9450bf62d2110",
+          "bytes": 742
+        },
+        "install.ps1": {
+          "blob": "5e4fabaeff9bd0ac432c6c6849a6be883f9d06e9",
+          "git_blob_bytes_sha256": "abbe56feb892dffe969ad28bd7068df1f79d63fae7646b4d7adbf255e53e8511",
+          "bytes": 2109
+        },
+        "ops/bootstrap-node.ps1": {
+          "blob": "f5d4600fa8c90a4411d5232e66296ebfda5b5025",
+          "git_blob_bytes_sha256": "94251931dc272ab73491e25b47b7a62519cb41c070a49e20dc146f68305aaf32",
+          "bytes": 2838
+        },
+        "ops/harden-node.ps1": {
+          "blob": "cb8d510a5865632951673dedacca7aa9fab25949",
+          "git_blob_bytes_sha256": "af13375fb1b7bf24b3351e8e5a0aef99bf53ddbde073f896a08289471c57411a",
+          "bytes": 1732
+        },
+        "service/install_windows.ps1": {
+          "blob": "fc8d67a5dc975e3ef3419afff5e0813afa870270",
+          "git_blob_bytes_sha256": "aac1cfa84d8dfeb388c121c4fb3c86caeb2923e43439e6676376c66d5b1fc8cf",
+          "bytes": 2077
+        },
+        "service/uninstall_windows.ps1": {
+          "blob": "b0c48b9c2e7e001c619c8ddd34d8d85a349123d0",
+          "git_blob_bytes_sha256": "53b9386d0c8105ac5e1bb3dd3d51c23a5cd883b4cebc6610659c7607d95ef3a4",
+          "bytes": 922
+        },
+        "strattester/runtime/service_manager.py": {
+          "blob": "4f0f4ae3ce3227abcd190065ec6d8f86e41e6eee",
+          "git_blob_bytes_sha256": "9382b9441ab47b0a9cd27a75ac2e9a40457b01d87c80b9adb18f1a01870be6d0",
+          "bytes": 2278
+        },
+        "strattester/remote/tailscale.py": {
+          "blob": "5826446daab99011c6fbe0dd379eb6b3d6465c6e",
+          "git_blob_bytes_sha256": "f14f2ff22c6e52a49a55a88f748762a75fadfdd99c850f0fa4be8a10a3ddd1d3",
+          "bytes": 610
+        }
+      },
+      "missing_selected_files": [],
+      "dependencies": {
+        "build": [
+          "setuptools>=84.1,<85"
+        ],
+        "python": ">=3.11",
+        "runtime": [
+          "requests>=2.31,<3",
+          "psutil>=5.9,<8",
+          "tzdata>=2025.2"
+        ],
+        "optional": {
+          "dev": [
+            "pytest>=8.2,<10",
+            "pytest-json-report>=1.5,<2",
+            "numpy>=2,<3",
+            "filelock>=4.2.1,<5",
+            "PyNaCl==1.6.2"
+          ],
+          "research": [
+            "torch==2.14.1",
+            "pytest-json-report>=1.5,<2",
+            "filelock>=4.2.1,<5",
+            "PyNaCl==1.6.2"
+          ],
+          "postgres": [
+            "psycopg[binary]>=3.3.6,<4"
+          ]
+        }
+      }
+    },
+    "math": {
+      "head": "135b437c83a98738cddb263e0cac78b37e83d1e2",
+      "integration_evidence_head": "135b437c83a98738cddb263e0cac78b37e83d1e2",
+      "matches_integration_evidence": true,
+      "tree": "ef5ef2159554807c1b81e1d60c7466c6e106335d",
+      "files": {
+        "package.json": {
+          "blob": "8ff337557b2e815945c50b4cf7e88312a152a6fb",
+          "git_blob_bytes_sha256": "bfc702070231f1e642344567155bf99dcc41241850109358be40ae38b9106161",
+          "bytes": 308
+        },
+        "package-lock.json": {
+          "blob": "868a72a4509232df0301b322daf87bb47ec80b59",
+          "git_blob_bytes_sha256": "944b7dcca798cb8e6fd257a89c67ab2cd619fb53fcb9952cd7761b6d1b33f523",
+          "bytes": 7914
+        },
+        "scripts/windows-bootstrap.ps1": {
+          "blob": "0f13ad7f512e7f87bd8a9e2619544756593433d8",
+          "git_blob_bytes_sha256": "142bcf3a6a2afc021df4d690e07ec7131cdeb95c90883d8ec8acb8fb8036d91f",
+          "bytes": 3253
+        },
+        "scripts/book-ingestion-requirements.txt": {
+          "blob": "559b158ff2098510fb6f99a6ed13c899be0d7a38",
+          "git_blob_bytes_sha256": "7fb8650d608b38a8e55c23826b20242d703d320794a42ce02caf8c3d985bd98b",
+          "bytes": 628,
+          "declared_lines": [
+            "# Reviewed artifact allowlist: CPython 3.12, Windows amd64 and glibc Linux x86_64 only.",
+            "# No source builds. Updating versions or artifacts requires review.",
+            "pypdf==6.20.1 \\",
+            "    --hash=sha256:aa5a55ddcffdc5e5ab291d5decb23f6383f4e56f8e3263dc39af41fff03885ad",
+            "pypdfium2==5.14.0 \\",
+            "    --hash=sha256:11f281613fa22313d9c7ab89947665e84eccf8ebe40e1198a84a88352305648d \\",
+            "    --hash=sha256:149fd5c6397b8df8bf7911a93506eff0be874f877afe7ac936cf5d37d21a6a06",
+            "pillow==12.3.0 \\",
+            "    --hash=sha256:78cb2c6865a35ab8ff8b75fd122f6033b92a62c82801110e48ddd6c936a45d91 \\",
+            "    --hash=sha256:a2b55dd6b2a4c4b7d87ffa56bdb33fdc5fdb9a462173861a7bc097f17d91cb09"
+          ]
+        },
+        "src/ingestion-service.mjs": {
+          "blob": "ace711d120a87b43918e1388ebc874994cc2b41f",
+          "git_blob_bytes_sha256": "80c67bdb7f40bd2c2702879fe4310ea855f4ab780b351e18e1122c0b75d18fac",
+          "bytes": 3224
+        },
+        "src/book-ingestion/cutover-backup.mjs": {
+          "blob": "56b5d8038e4fce77a554e34706441812fe7922c5",
+          "git_blob_bytes_sha256": "b3b0bb5d9c71408132c6efcb0d44c1a9f9bd9a7b897a85d4ded7d44f7b000675",
+          "bytes": 6205
+        },
+        ".github/workflows/postgres-integration.yml": {
+          "blob": "9a044716ba54abea81a324d6d98e5e6acc726be1",
+          "git_blob_bytes_sha256": "78d0ed46c3fac0397f1caec72cb17d2e3dda4b7ff628e45219f55ce217debb4c",
+          "bytes": 7375
+        }
+      },
+      "missing_selected_files": [],
+      "dependencies": {
+        "dependencies": null,
+        "devDependencies": {
+          "@playwright/test": "1.56.1",
+          "pg": "8.16.3"
+        },
+        "engines": null,
+        "scripts": {
+          "test": "node --test tests/*.test.mjs tests/*.windows.mjs tests/*.cross.mjs",
+          "test:e2e": "playwright test"
+        }
+      },
+      "pg_runtime_imports": [
+        {
+          "line": 19,
+          "text": "export async function startIngestionService({env=process.env,handlers={},loadPg=()=>import('pg'),onError=console.error}={}){"
+        }
+      ]
+    },
+    "terminan": {
+      "head": "d10cee69b4fc599e588c88ba105ef77d0c6ff0af",
+      "integration_evidence_head": "d10cee69b4fc599e588c88ba105ef77d0c6ff0af",
+      "matches_integration_evidence": true,
+      "tree": "ac4eaa7b7285893c0718ba3d622c90982de3481a",
+      "files": {
+        "package.json": {
+          "blob": "bb7fab6cc33f7add4ee7a500fd32fe3940e04710",
+          "git_blob_bytes_sha256": "73a8fd06b877e97e5b36f2476ac80445ba204814b4f454ebb07bba5574cd39e5",
+          "bytes": 293
+        },
+        "package-lock.json": {
+          "blob": "60ff50f0527783cb628fd36ee63ae836578eace8",
+          "git_blob_bytes_sha256": "8cfc5b4d350efe0b29e5b7bf1f89501757b0d37ce680ab6c11cfde61561a7403",
+          "bytes": 2262
+        },
+        "terminan/infrastructure.py": {
+          "blob": "bcb03c21d5924f44a887aca5c996cc72854178aa",
+          "git_blob_bytes_sha256": "fde362db9102da8aec20be081dc2a38787b9f9bb49e8d06b81199d90aaa2f102",
+          "bytes": 7962
+        },
+        "terminan/server.py": {
+          "blob": "8553281ea51a8b22626f8e42ebca8b0aaee1463f",
+          "git_blob_bytes_sha256": "b0dba4ba50523fa1751429d4fdc43006c1d8ecb46593cd7c757d369e4605e4c0",
+          "bytes": 8485
+        },
+        "terminan/r2_evidence.py": {
+          "blob": "f52c106a786350eafcb2f365c970666932eed799",
+          "git_blob_bytes_sha256": "672ef4d1c1d169988f06d9386239242102c61a60232c64e27022f80a87a0fa0d",
+          "bytes": 10464
+        },
+        "docs/five-infrastructure-dashboard.md": {
+          "blob": "d27c48a5bdf141d7f59abb02370784478502aec2",
+          "git_blob_bytes_sha256": "e9337a595624f55e1faafbde9835bf6c26761da08169d84d2dd3eeb25db1f060",
+          "bytes": 4300
+        }
+      },
+      "missing_selected_files": [],
+      "dependencies": {
+        "dependencies": null,
+        "devDependencies": {
+          "@playwright/test": "1.56.1"
+        },
+        "engines": null,
+        "scripts": {
+          "test:browser": "playwright test",
+          "test:ui": "node tests/check_ui_script.cjs && node tests/check_ui_refresh_race.cjs"
+        }
+      }
+    },
+    "unified": {
+      "head": "29d61fd682771f3a19a48531458f4c9d65172d3e",
+      "integration_evidence_head": "29d61fd682771f3a19a48531458f4c9d65172d3e",
+      "matches_integration_evidence": true,
+      "tree": "38fd6745265fc6a732280f6ed1544b0116b65a9c",
+      "files": {
+        "unified_system/installer.py": {
+          "blob": "b6fc0221484bc879ed92ac261cf6b65de7ac9959",
+          "git_blob_bytes_sha256": "91fae0d1109489854cff145560ee11b747e6c1f2e85cff75b73d301db1e64ea6",
+          "bytes": 535
+        },
+        "unified_system/installer_security.py": {
+          "blob": "87f7e3f83d5ccb302cc6b7ed3eca5d6c94122530",
+          "git_blob_bytes_sha256": "613f86c0f9acd4291bdc9fd8247d48000b2e648bf23516ac41c879add1cec9a8",
+          "bytes": 6300
+        },
+        "scripts/SecurityPackage.psm1": {
+          "blob": "b4ba768f70702f284f2e25530bd9ae51ed78565f",
+          "git_blob_bytes_sha256": "c7ffc38a09942b160a2f97f2173fd3e850eea40488ffc058bebfa3ad0ea561f9",
+          "bytes": 9997
+        },
+        "unified_system/fleet_control.py": {
+          "blob": "8b46ea4babf7fbce61010782a531185c6a504b8b",
+          "git_blob_bytes_sha256": "6a72a7c430c44bd9af1622e8f32b21480a24e1909b6fad88e1061280668eff3f",
+          "bytes": 13948
+        },
+        "unified_system/fleet_policy.py": {
+          "blob": "3ee17c43e5b95bc7ab5390b520245c1bbd92fa74",
+          "git_blob_bytes_sha256": "a36fad7e4202b7727a03652059f78edf9744fbf45627a5027062f137298ac927",
+          "bytes": 4741
+        },
+        "unified_system/fleet_snapshot.py": {
+          "blob": "bcbedf74935db32faed6c47130bef0026c25c521",
+          "git_blob_bytes_sha256": "ea15f94507e9ef96f9bfd1e884ac54730f21c83fee74644ff6b884ea85337fd2",
+          "bytes": 3105
+        },
+        "docs/WINDOWS_SECURITY_PLAN.md": {
+          "blob": "fe8e185ee2e1099d8a544aa099a8cbe4a3435dc7",
+          "git_blob_bytes_sha256": "0ef154d82e0848747f00fec37bea6eebc2b9978c7966f399fec69292151383ae",
+          "bytes": 6595
+        }
+      },
+      "missing_selected_files": []
+    }
+  },
+  "no_source_code_executed": true,
+  "no_packages_downloaded_or_installed": true
+}
