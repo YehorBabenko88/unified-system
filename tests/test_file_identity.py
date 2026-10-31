@@ -14,6 +14,16 @@ class Backend:
  def close(self,handle):self.closed.append(handle)
 
 class FileIdentityTests(unittest.TestCase):
+ def test_native_missing_open_preserves_missing_status_and_other_errors_stay_blocked(self):
+  import ctypes
+  from types import SimpleNamespace
+  from unified_system.file_identity import _WindowsAPI,FileIdentityError
+  api=_WindowsAPI.__new__(_WindowsAPI)
+  api.kernel=SimpleNamespace(CreateFileW=lambda *args:ctypes.c_void_p(-1).value)
+  for code in (2,3,5,32):
+   api.ctypes=SimpleNamespace(c_void_p=ctypes.c_void_p,get_last_error=lambda:code)
+   with self.subTest(error=code),self.assertRaises(FileNotFoundError if code in (2,3) else FileIdentityError):
+    api.open_path('inert-missing',0x80,7,0x02200000)
  def test_full_128bit_identity_and_change_times_are_preserved(self):
   from unified_system.file_identity import _windows_descriptor_identity
   backend=Backend();before=_windows_descriptor_identity(7,api=backend)

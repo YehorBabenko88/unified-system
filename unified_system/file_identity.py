@@ -47,7 +47,12 @@ class _WindowsAPI:
         handle=self.msvcrt.get_osfhandle(fd);_need(handle!=-1);return handle
     def open_path(self,path,access,sharing,flags):
         handle=self.kernel.CreateFileW(path,access,sharing,None,3,flags,None)  # OPEN_EXISTING
-        _need(handle is not None and handle!=self.ctypes.c_void_p(-1).value)
+        if handle is None or handle==self.ctypes.c_void_p(-1).value:
+            # Preserve the existing missing-artifact classification without
+            # treating access, sharing, or other native failures as absence.
+            error=self.ctypes.get_last_error()
+            if error in (2,3):raise FileNotFoundError('FILE_IDENTITY_MISSING')
+            raise FileIdentityError('FILE_IDENTITY_UNVERIFIED')
         return handle
     def query(self,handle):
         basic=self.Basic();standard=self.Standard();identifier=self.FileId()
