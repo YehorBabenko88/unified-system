@@ -125,7 +125,7 @@ def central_directory(f,size):
 def zip_path(info):
     name=info.orig_filename
     need(type(name) is str and 0<len(name)<=512 and all(32<=ord(c)<127 for c in name)
-         and not name.startswith('/') and not any(c in name for c in '\\:'),'ZIP_PATH_INVALID')
+         and not name.startswith('/') and not any(c in name for c in '\\:<>"|?*'),'ZIP_PATH_INVALID')
     path=name[:-1] if name.endswith('/') else name;parts=path.split('/')
     devices={'CON','PRN','AUX','NUL',*(f'COM{i}' for i in range(1,10)),*(f'LPT{i}' for i in range(1,10))}
     need(all(p and p not in ('.','..') and not p.endswith((' ','.')) and p.split('.')[0].upper() not in devices for p in parts),'ZIP_PATH_INVALID')

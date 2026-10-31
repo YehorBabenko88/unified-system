@@ -60,6 +60,12 @@ class WindowsWheelTests(unittest.TestCase):
                 p=self.wheel(extras=[(name,'untrusted')]);self.pin(p);self.blocked()
         info=zipfile.ZipInfo('linked');info.create_system=3;info.external_attr=0o120777<<16
         p=self.wheel(extras=[(info,'target')]);self.pin(p);self.blocked()
+    def test_windows_forbidden_filename_characters_block_even_with_correct_hash(self):
+        for character in '<>"|?*':
+            with self.subTest(character=character):
+                p=self.wheel(extras=[('demo/invalid'+character+'.py','inert')]);self.pin(p)
+                self.blocked()
+
     def test_tag_filename_agreement_and_actual_windows_compatibility(self):
         cases=[('py3-none-any',True),('cp312-cp312-win_amd64',True),('cp310-abi3-win_amd64',True),
                ('py3-none-win_amd64',True),('cp313-abi3-win_amd64',False),('cp311-cp311-win_amd64',False),
