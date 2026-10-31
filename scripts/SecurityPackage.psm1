@@ -2,10 +2,25 @@ Set-StrictMode -Version Latest
 
 function Assert-LocalPath([string]$Path) {
     if ($Path -notmatch '^[A-Za-z]:\\' -or $Path.Substring(2).Contains(':') -or $Path.Contains('/') -or $Path.Contains('..')) { throw 'Absolute local drive path required' }
-    $item = Get-Item -LiteralPath $Path -Force -ErrorAction Stop
-    while ($null -ne $item) {
+    $full=[IO.Path]::GetFullPath($Path)
+    $driveRoot=[IO.Path]::GetPathRoot($full)
+    $volume=[IO.DriveInfo]::new($driveRoot)
+    if ($volume.DriveType -ne [IO.DriveType]::Fixed) {throw 'Fixed local drive required'}
+    $drive=Get-PSDrive -Name ($driveRoot.Substring(0,1)) -ErrorAction Stop
+    if ($drive.Provider.Name -cne 'FileSystem' -or $drive.Root.TrimEnd('\') -ine $driveRoot.TrimEnd('\')) {throw 'Drive provider namespace mismatch'}
+    $ancestors=New-Object 'System.Collections.Generic.List[string]'
+    $cursor=$full
+    while ($cursor) {
+        $ancestors.Add($cursor)
+        $parent=[IO.Path]::GetDirectoryName($cursor.TrimEnd('\'))
+        if ($parent -eq $cursor) {break};$cursor=$parent
+    }
+    for ($i=$ancestors.Count-1;$i -ge 0;$i--) {
+        $current=$ancestors[$i]
+        # Require every component to exist. Inspect parents before descendants.
+        $item=Get-Item -LiteralPath $current -Force -ErrorAction Stop
         if (($item.Attributes -band [IO.FileAttributes]::ReparsePoint) -ne 0) { throw 'Reparse point forbidden' }
-        if ($item -is [IO.DirectoryInfo]) { $item = $item.Parent } else { $item = $item.Directory }
+        if ($current -ine $full -and !$item.PSIsContainer) {throw 'Non-directory ancestor forbidden'}
     }
 }
 
