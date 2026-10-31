@@ -21,6 +21,12 @@ from pathlib import Path
 from .module_catalog import MODULE_IDS
 from .runtime_process import _safe_path
 
+# Six-core baseline: five .5s delegated probes + .25s tick + .35s own
+# HTTP + .15s journal margin, rounded to four seconds. Each actual registered
+# extension adds .5s; the journal's 64-module limit bounds the age at 33s.
+# This is a fail-closed functional budget, not physical/performance qualification.
+PUBLICATION_MAX_AGE=4.0
+PUBLICATION_EXTRA_MODULE_AGE=.5
 LIMIT=1048576
 ERROR='BUILTIN_RUNTIME_REJECTED'
 
@@ -160,12 +166,16 @@ class BuiltinRuntimeDriver:
             _need(self.alive(handle) and release_id==self.identity['release_id'])
             record=self.operations[handle];_need(record['identity']==(spec.version,release_id,self.generation))
             digest,revision,stamp,generation=self.publication
-            _need(generation==self.generation and 0<=time.monotonic()-stamp<=2)
-            current,saved,state=self._own(handle)
+            _need(generation==self.generation)
+            current,modules=self._journal();saved,state=modules['unified-system']
+            _need(state['handle']==handle)
+            max_age=PUBLICATION_MAX_AGE+PUBLICATION_EXTRA_MODULE_AGE*(len(modules)-len(MODULE_IDS))
+            _need(0<=time.monotonic()-stamp<=max_age)
             _need(saved['version']==spec.version)
             _need(record['revision']<=revision<=current and state['desired']=='RUNNING' and not state['admin_stop'])
             _need(hashlib.sha256(self._file_bytes()).digest()==digest)
             _need(hashlib.sha256(self._http_bytes()).digest()==digest)
+            _need(0<=time.monotonic()-stamp<=max_age)
             return dict(module_id='unified-system',version=spec.version,release_id=release_id,ready=True)
         except Exception:return {'ready':False}
 

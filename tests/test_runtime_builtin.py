@@ -8,7 +8,7 @@ from unittest.mock import Mock
 from unified_system.module_catalog import MODULE_IDS
 from unified_system.runtime import ModuleSpec, RuntimeSupervisor
 from unified_system.runtime_cli import SnapshotView, status_server, write_snapshot
-from unified_system.runtime_builtin import BuiltinRuntimeDriver
+from unified_system.runtime_builtin import BuiltinRuntimeDriver,PUBLICATION_MAX_AGE
 
 
 class BuiltinTests(unittest.TestCase):
@@ -65,7 +65,8 @@ class BuiltinTests(unittest.TestCase):
             (self.root/'snapshot.json').unlink()
         self.publish()
         from unittest.mock import patch
-        with patch('unified_system.runtime_builtin.time.monotonic',return_value=10**15):self.runtime.tick()
+        expired=self.driver.publication[2]+PUBLICATION_MAX_AGE+.01
+        with patch('unified_system.runtime_builtin.time.monotonic',return_value=expired):self.runtime.tick()
         self.assertFalse(self.runtime.snapshot()['modules']['unified-system']['ready'])
     def test_operation_identity_stop_and_previous_instance_are_not_process_ownership(self):
         self.start();op=next(iter(self.driver.operations));spec=ModuleSpec('unified-system','1.0.0')
@@ -97,3 +98,40 @@ class BuiltinTests(unittest.TestCase):
         self.driver.authorize=lambda *_:False
         self.runtime.start_module('unified-system');self.runtime.tick()
         self.assertFalse(any(x['active'] for x in self.driver.operations.values()))
+
+    def test_five_healthy_delegates_inside_their_deadlines_allow_builtin_ready(self):
+        import time
+        self.delegate.start.side_effect=lambda spec,release,operation:operation
+        self.delegate.alive.return_value=True
+        def healthy(spec,handle,release):
+            time.sleep(.43)
+            return dict(module_id=spec.module_id,version=spec.version,release_id=release,ready=True)
+        self.delegate.ready.side_effect=healthy
+        self.runtime.start();self.runtime.tick();self.publish();self.runtime.tick()
+        snapshot=self.runtime.snapshot()
+        self.assertTrue(all(snapshot['modules'][n]['ready'] for n in MODULE_IDS-{'unified-system'}))
+        self.assertTrue(snapshot['modules']['unified-system']['ready'])
+        self.assertTrue(snapshot['ready'])
+
+    def test_publication_expiring_during_real_http_probe_is_not_ready(self):
+        from unittest.mock import patch
+        self.start();self.publish();handle=next(iter(self.driver.operations))
+        stamp=self.driver.publication[2];clock=[stamp+PUBLICATION_MAX_AGE-.05]
+        original=self.driver._http_bytes
+        def crossing():
+            raw=original();clock[0]=stamp+PUBLICATION_MAX_AGE+.01;return raw
+        with patch('unified_system.runtime_builtin.time.monotonic',side_effect=lambda:clock[0]),patch.object(self.driver,'_http_bytes',side_effect=crossing):
+            self.assertFalse(self.driver.ready(ModuleSpec('unified-system','1.0.0'),handle,'r1')['ready'])
+
+    def test_registered_extension_keeps_valid_builtin_and_bounded_freshness(self):
+        from unittest.mock import patch
+        self.runtime.register(ModuleSpec('extension','1.0.0'))
+        self.start();self.publish()
+        snapshot=self.runtime.snapshot()
+        self.assertEqual(snapshot['modules']['extension']['state'],'STOPPED')
+        self.assertFalse(snapshot['ready'])
+        handle=next(iter(self.driver.operations));stamp=self.driver.publication[2]
+        with patch('unified_system.runtime_builtin.time.monotonic',return_value=stamp+PUBLICATION_MAX_AGE+.2):
+            self.assertTrue(self.driver.ready(ModuleSpec('unified-system','1.0.0'),handle,'r1')['ready'])
+        with patch('unified_system.runtime_builtin.time.monotonic',return_value=stamp+PUBLICATION_MAX_AGE+.51):
+            self.assertFalse(self.driver.ready(ModuleSpec('unified-system','1.0.0'),handle,'r1')['ready'])

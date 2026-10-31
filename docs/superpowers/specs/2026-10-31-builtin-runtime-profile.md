@@ -45,3 +45,12 @@ All six readiness remains computed by the existing supervisor. Five STOPPED
 modules keep it false even when the builtin's journal/API are functional.
 Actual five-module functional adapters and the authenticated deployment bridge
 remain independent requirements. No physical execution is authorized here.
+
+Recovery clears persisted READY claims in the journal after a successful socket
+bind and before serving any public snapshot. Existing operation IDs, STOP intent
+and restart budgets are retained; only current-instance functional probes may
+restore READY. The six-core publication age budget is four seconds, accounting
+for five sequential bounded process probes and publication overhead. Each
+registered extension adds 0.5 seconds, bounded by the existing 64-module limit
+(maximum 33 seconds). The same bound is checked after the HTTP read. This is
+a functional deadline, not a physical performance or HA qualification.

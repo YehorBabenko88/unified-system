@@ -176,3 +176,53 @@ class CliTests(unittest.TestCase):
             began=time.monotonic();server.shutdown();server.server_close();thread.join(2)
             self.assertLess(time.monotonic()-began,2)
             self.assertFalse(thread.is_alive())
+
+    def test_recovery_invalidates_ready_before_listener_without_losing_owned_state(self):
+        from unified_system.runtime import RuntimeSupervisor,ModuleSpec
+        class Driver:
+            def start(self,spec,release,op):return op
+            def alive(self,handle):return True
+            def ready(self,spec,handle,release):return dict(module_id=spec.module_id,version=spec.version,release_id=release,ready=True)
+            def stop(self,handle):pass
+        clock=[100.]
+        args=dict(release_id='r1',release_sha256='b'*64,node_id='lab-node',clock=lambda:clock[0])
+        specs=[ModuleSpec(n,'1.0.0') for n in MODULE_IDS]
+        path=self.root/'state/runtime.sqlite'
+        prior=RuntimeSupervisor(path,Driver(),specs,**args);prior.start();prior.tick()
+        prior.stop_module('math',administrative=True)
+        with prior._db() as db:before=prior._states(db)
+        clock[0]=10000.
+        resumed=RuntimeSupervisor(path,Driver(),specs,**args)
+        entered=threading.Event();release=threading.Event();stop=threading.Event();created=[];errors=[]
+        original_start=resumed.start
+        def hold_start():entered.set();release.wait(3);original_start()
+        resumed.start=hold_start
+        original_server=cli.status_server
+        def capture(*a,**kw):
+            server=original_server(*a,**kw);created.append(server);return server
+        def run():
+            try:cli.run_runtime(self.config,resumed,stop_event=stop)
+            except Exception as exc:errors.append(type(exc).__name__)
+        with patch.object(cli,'status_server',side_effect=capture):
+            worker=threading.Thread(target=run);worker.start()
+            try:
+                self.assertTrue(entered.wait(2))
+                connection=http.client.HTTPConnection('127.0.0.1',created[0].server_port,timeout=2)
+                connection.request('GET','/internal/v2/runtime');response=connection.getresponse();body=json.loads(response.read());connection.close()
+                self.assertFalse(body['ready']);self.assertFalse(any(m['ready'] for m in body['modules'].values()))
+                with resumed._db() as db:after=resumed._states(db)
+                for name,old in before.items():
+                    for field in ('handle','admin_stop','desired','attempt','next_at'):self.assertEqual(after[name][field],old[field])
+                    if old['state']=='READY':
+                        self.assertEqual(after[name]['state'],'STARTING');self.assertEqual(after[name]['reason'],'FUNCTIONAL_READINESS_REQUIRED')
+                        self.assertEqual(after[name]['started_at'],10000.)
+                    else:self.assertEqual(after[name],old)
+            finally:stop.set();release.set();worker.join(4)
+        self.assertEqual(errors,[]);self.assertFalse(worker.is_alive())
+
+    def test_listener_bind_failure_does_not_mutate_existing_journal(self):
+        runtime=cli.make_runtime(self.config,lambda *_:False)
+        runtime.start_module('math');before=runtime.snapshot()
+        with patch.object(cli,'status_server',side_effect=OSError('occupied port')):
+            with self.assertRaises(OSError):cli.run_runtime(self.config,runtime,stop_event=threading.Event())
+        self.assertEqual(runtime.snapshot(),before)

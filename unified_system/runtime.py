@@ -151,6 +151,21 @@ class RuntimeSupervisor:
             if (name not in specs or name in MODULE_IDS or states[name]['state']!='STOPPED'
                     or any(name in s.dependencies for s in specs.values())):raise ValueError('module in use')
             db.execute('DELETE FROM modules WHERE id=?',(name,));db.execute('UPDATE identity SET revision=revision+1 WHERE id=1')
+    def recover_readiness(self):
+        """Revalidate persisted READY under this controller without new starts.
+
+        Called after binding the owned status socket and before serving. Keep
+        operation keys, desired/admin state and restart budget; only prior READY
+        claims receive a fresh functional-readiness grace period.
+        """
+        with self.lock,self._db() as db:
+            now=float(self.clock())
+            if not math.isfinite(now) or now<0:raise ValueError('invalid clock')
+            for name,state in self._states(db).items():
+                if state['state']=='READY':
+                    state.update(state='STARTING',reason='FUNCTIONAL_READINESS_REQUIRED',started_at=now)
+                    self._put(db,name,state)
+
     def start(self):
         with self.lock,self._db() as db:
             for name,state in self._states(db).items():

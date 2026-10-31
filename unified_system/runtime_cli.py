@@ -205,16 +205,22 @@ def make_runtime(c,authorize):
 
 
 def run_runtime(c,runtime,*,stop_event):
-    view=SnapshotView();view.set(runtime.snapshot())
+    view=SnapshotView()
+    # Bind before changing the journal: an occupied status port must leave a
+    # previous controller's durable state untouched.
     server=status_server(view,port=c['http_port'])
-    thread=threading.Thread(target=server.serve_forever,daemon=True);thread.start()
+    thread=threading.Thread(target=server.serve_forever,daemon=True);serving=False
     def publish():
         snapshot=runtime.snapshot();view.set(snapshot);write_snapshot(c['snapshot_path'],snapshot)
         from .runtime_builtin import BuiltinRuntimeDriver
         driver=getattr(runtime,'driver',None)
         if isinstance(driver,BuiltinRuntimeDriver):driver.published(snapshot)
     try:
+        if isinstance(runtime,RuntimeSupervisor):runtime.recover_readiness()
+        # The first complete public view is journal-backed and unready until
+        # current-instance functional validation; never expose prior READY.
         publish()
+        thread.start();serving=True
         runtime.start()
         while not stop_event.is_set():
             runtime.tick();publish()
@@ -224,7 +230,10 @@ def run_runtime(c,runtime,*,stop_event):
             try:runtime.stop(administrative=True)
             finally:
                 publish()
-        finally:server.shutdown();server.server_close();thread.join(3)
+        finally:
+            if serving:server.shutdown()
+            server.server_close()
+            if serving:thread.join(3)
 
 
 def main(argv=None):
