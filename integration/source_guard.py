@@ -5,15 +5,39 @@ import hashlib
 import os
 import subprocess
 import sys
+import stat
+import tempfile
+import time
 
 
 class SourceQualificationError(ValueError):
     pass
 
 
+def _ordinary(raw):
+    value=str(raw)
+    if value.startswith(('//',chr(92))):raise SourceQualificationError('EXTERNAL_SOURCE_NAMESPACE')
+    if os.name=='nt':
+        import ctypes,re
+        if re.match(r'^[A-Za-z]:[\\/]',value) is None:raise SourceQualificationError('EXTERNAL_SOURCE_NAMESPACE')
+        kernel=ctypes.WinDLL('kernel32',use_last_error=True);kernel.GetDriveTypeW.argtypes=[ctypes.c_wchar_p];kernel.GetDriveTypeW.restype=ctypes.c_uint
+        if kernel.GetDriveTypeW(value[:3])!=3:raise SourceQualificationError('EXTERNAL_SOURCE_NAMESPACE')
+    path=Path(raw).absolute()
+    for part in (*reversed(path.parents),path):
+        facts=part.lstat()
+        if stat.S_ISLNK(facts.st_mode) or getattr(facts,'st_file_attributes',0)&1024:
+            raise SourceQualificationError('LINKED_SOURCE_METADATA')
+    return Path(raw) if Path(raw).is_absolute() else path
+
+
 class SourceFence:
-    def __init__(self, root, expected_head=None, *, isolated_cache=None):
-        self.root=Path(root).resolve(strict=True)
+    GIT_SECONDS=15
+    GIT_BYTES=256*1024*1024
+    GIT_ERROR_BYTES=65536
+    def __init__(self, root, expected_head=None, *, isolated_cache=None, git_executable=None, git_sha256=None):
+        self.root=_ordinary(root).resolve(strict=True)
+        if (git_executable is None)!=(git_sha256 is None):raise SourceQualificationError("GIT_PIN_PAIR_REQUIRED")
+        self.git_executable=git_executable;self.git_sha256=git_sha256
         self.expected_head=expected_head
         self.before=None
         self.files={}
@@ -22,24 +46,62 @@ class SourceFence:
         self.isolated_cache=Path(isolated_cache).resolve() if isolated_cache else None
         if self.isolated_cache is not None and (sys.pycache_prefix is None or Path(sys.pycache_prefix).resolve()!=self.isolated_cache):raise SourceQualificationError('ISOLATED_CACHE_NOT_ACTIVE')
     def git(self,*args,input=None):
+        executable='git'
+        if self.git_executable is not None:
+            if not Path(self.git_executable).is_absolute():raise SourceQualificationError('GIT_RUNTIME_PIN')
+            path=_ordinary(self.git_executable)
+            if not path.is_file() or path.stat().st_size>64*1024*1024 or type(self.git_sha256) is not str or len(self.git_sha256)!=64 or hashlib.sha256(path.read_bytes()).hexdigest()!=self.git_sha256:
+                raise SourceQualificationError('GIT_RUNTIME_PIN')
+            executable=str(path)
+        if input is not None and (type(input) is not bytes or len(input)>8*1024*1024):raise SourceQualificationError('GIT_INPUT_LIMIT')
         env={key:value for key,value in os.environ.items() if not key.upper().startswith('GIT_')}
-        env.update(GIT_CONFIG_NOSYSTEM='1',GIT_CONFIG_GLOBAL=os.devnull,GIT_CONFIG_SYSTEM=os.devnull,GIT_ATTR_NOSYSTEM='1',GIT_NO_REPLACE_OBJECTS='1')
-        result=subprocess.run(['git','--no-replace-objects','-C',str(self.root),*args],input=input,capture_output=True,env=env)
-        if result.returncode:raise SourceQualificationError('GIT_CHECK_FAILED')
-        return result.stdout
+        env.update(GIT_CONFIG_NOSYSTEM='1',GIT_CONFIG_GLOBAL=os.devnull,GIT_CONFIG_SYSTEM=os.devnull,GIT_ATTR_NOSYSTEM='1',GIT_NO_REPLACE_OBJECTS='1',GIT_NO_LAZY_FETCH='1',GIT_TERMINAL_PROMPT='0')
+        with tempfile.TemporaryFile() as source,tempfile.TemporaryFile() as out,tempfile.TemporaryFile() as err:
+            if input is not None:source.write(input)
+            source.seek(0)
+            command=[executable,'--no-replace-objects','-c','core.fsmonitor=false','-c','core.hooksPath='+os.devnull,'-C',str(self.root),*args]
+            try:
+                process=subprocess.Popen(command,stdin=source,stdout=out,stderr=err,env=env)
+                began=time.monotonic()
+                try:
+                    while process.poll() is None:
+                        if time.monotonic()-began>self.GIT_SECONDS or out.tell()>self.GIT_BYTES or err.tell()>self.GIT_ERROR_BYTES:raise SourceQualificationError('GIT_RESOURCE_LIMIT')
+                        time.sleep(.005)
+                    if time.monotonic()-began>self.GIT_SECONDS or out.tell()>self.GIT_BYTES or err.tell()>self.GIT_ERROR_BYTES:raise SourceQualificationError('GIT_RESOURCE_LIMIT')
+                    if process.returncode:raise SourceQualificationError('GIT_CHECK_FAILED')
+                finally:
+                    if process.poll() is None:process.kill()
+                    process.wait(timeout=2)
+            except (OSError,subprocess.SubprocessError):raise SourceQualificationError('GIT_CHECK_FAILED') from None
+            out.seek(0);return out.read(self.GIT_BYTES+1)
     def check(self):
         overrides={'GIT_DIR','GIT_WORK_TREE','GIT_COMMON_DIR','GIT_OBJECT_DIRECTORY','GIT_ALTERNATE_OBJECT_DIRECTORIES','GIT_CONFIG_PARAMETERS','GIT_CONFIG_COUNT','GIT_INDEX_FILE','GIT_REPLACE_REF_BASE'}
         if overrides.intersection(key.upper() for key in os.environ):raise SourceQualificationError('GIT_ENV_OVERRIDE')
         gitdir=self.root/'.git'
+        _ordinary(gitdir)
+        metadata_count=0
+        for directory,dirs,names in os.walk(gitdir,followlinks=False):
+            metadata_count+=len(dirs)+len(names)
+            if metadata_count>100000:raise SourceQualificationError('METADATA_LIMIT')
+            _ordinary(directory)
+            for name in (*dirs,*names):_ordinary(Path(directory)/name)
         if not gitdir.is_dir() or gitdir.is_symlink() or (gitdir/'commondir').exists():raise SourceQualificationError('EXTERNAL_GIT_DIRECTORY')
-        if (gitdir/'objects/info/alternates').exists() or (gitdir/'info/attributes').exists():raise SourceQualificationError('EXTERNAL_OBJECTS_OR_ATTRIBUTES')
+        if any((gitdir/name).exists() for name in ('objects/info/alternates','objects/info/http-alternates','info/attributes','info/grafts')) or any((gitdir/'objects/pack').glob('*.promisor')):raise SourceQualificationError('EXTERNAL_OBJECTS_OR_ATTRIBUTES')
         config=configparser.RawConfigParser(strict=False)
-        try:config.read_string((gitdir/'config').read_text(encoding='utf-8'))
+        try:
+            config_path=_ordinary(gitdir/'config')
+            if config_path.stat().st_size>1048576:raise SourceQualificationError('LOCAL_CONFIG_INVALID')
+            config.read_string(config_path.read_text(encoding='utf-8'))
         except (OSError,configparser.Error):raise SourceQualificationError('LOCAL_CONFIG_INVALID') from None
         for section in config.sections():
             lower=section.casefold()
             if lower.startswith(('include','filter')):raise SourceQualificationError('CONFIG_INCLUDE_OR_FILTER')
-            if lower=='core' and any(key in config[section] for key in ('worktree','attributesfile')):raise SourceQualificationError('EXTERNAL_WORKTREE_OR_ATTRIBUTES')
+            if lower=='core':
+                values=config[section]
+                if 'worktree' in values:raise SourceQualificationError('EXTERNAL_WORKTREE_OR_ATTRIBUTES')
+                if any(key in values and values[key]!=os.devnull for key in ('attributesfile','hookspath')):raise SourceQualificationError('EXTERNAL_WORKTREE_OR_ATTRIBUTES')
+                if 'fsmonitor' in values and values['fsmonitor'].casefold() not in ('false','0','no','off'):raise SourceQualificationError('UNSAFE_FSMONITOR')
+            if 'promisor' in config[section] or lower=='extensions' and 'partialclone' in config[section]:raise SourceQualificationError('EXTERNAL_PROMISOR_OBJECTS')
             if lower=='extensions' and 'worktreeconfig' in config[section]:raise SourceQualificationError('EXTERNAL_WORKTREE_CONFIG')
         if self.git('for-each-ref','--format=%(refname)','refs/replace').strip():raise SourceQualificationError('REPLACE_REFS_FORBIDDEN')
         head=self.git('rev-parse','HEAD').decode().strip()
@@ -53,7 +115,9 @@ class SourceFence:
             relative=raw.decode('utf-8')
             if mode not in (b'100644',b'100755') or kind!=b'blob':
                 raise SourceQualificationError('NON_REGULAR_SOURCE:'+relative)
+            if Path(relative).is_absolute() or '..' in Path(relative).parts or '.' in Path(relative).parts:raise SourceQualificationError('SOURCE_PATH_ESCAPE')
             path=self.root/relative
+            _ordinary(path)
             try:resolved=path.resolve(strict=True);resolved.relative_to(self.root)
             except (OSError,ValueError):raise SourceQualificationError('SOURCE_PATH_ESCAPE:'+relative) from None
             if path.is_symlink() or not path.is_file() or '\n' in relative or '\r' in relative:
@@ -116,7 +180,7 @@ class SourceFence:
             lexical=Path(raw).absolute()
             # Windows DOS short names are lexical aliases, not escapes. Resolve
             # containment only after rejecting symlink/reparse ancestors.
-            for component in (lexical,*lexical.parents):
+            for component in (*reversed(lexical.parents),lexical):
                 if component.is_symlink() or getattr(component.lstat(),'st_file_attributes',0)&1024:
                     raise ValueError('symlink or reparse import')
             path=Path(raw).resolve(strict=True)

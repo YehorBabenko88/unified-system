@@ -10,7 +10,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-24.04, windows-latest]
         python: ['3.11', '3.13']
     runs-on: ${{ matrix.os }}
     timeout-minutes: 15
@@ -22,31 +22,31 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: YehorBabenko88/Terminan
-          ref: 7f23e746a3a52163c3065975ff02d6a7ae790129
+          ref: accf62692378269f0226f86439faf838849a1e4c
           path: .source/terminan
           persist-credentials: false
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: YehorBabenko88/math
-          ref: 191a119b8a00e97d61549280f9dcbe5ae9f3a7cd
+          ref: ae317baad4352de1ec7c1ea4a9446e925356bae3
           path: .source/math
           persist-credentials: false
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: YehorBabenko88/bybit-cluster-grid
-          ref: d2dcffb43e520db75936eb97389b66db2f3e1365
+          ref: 6b845f288641046744941c0c54c2e0fe3e67e6ab
           path: .source/grid
           persist-credentials: false
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: YehorBabenko88/strattester
-          ref: 1d654150b03932ac4efe7e99a6e3c50b4e020fff
+          ref: fb33f30b37316d8914e038c0fa7efa8284bf9ef3
           path: .source/strattester
           persist-credentials: false
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: YehorBabenko88/meta_analyse
-          ref: faa7a20339ef9dba5530a7bc521efb8d1469827a
+          ref: c108b8c3fc312a2035e7275dbcba7a8b308d081b
           path: .source/meta_analyse
           persist-credentials: false
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
@@ -61,19 +61,52 @@ jobs:
           import subprocess
           assert subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip() == '${{ github.event.pull_request.head.sha || github.sha }}'
           subprocess.run(['python','-m','unittest','discover','-s','tests','-v'],check=True)
+      - name: Actual owned Terminan process and independent runtime display
+        shell: python
+        run: |
+          import os,subprocess,sys
+          from pathlib import Path
+          output=Path(os.environ["RUNNER_TEMP"])/"actual-terminan-runtime"
+          subprocess.run([sys.executable,"integration/verify_terminan_runtime.py","--terminan",".source/terminan","--output",str(output),"--execute-isolated-cloud-test"],check=True)
       - name: Real source APIs and bounded Math worker
-        run: python integration/verify_sources.py --terminan .source/terminan --math .source/math --grid .source/grid --strattester .source/strattester --meta-analyse .source/meta_analyse --output five-source-evidence
+        shell: python
+        run: |
+          import subprocess,sys
+          command=[sys.executable,'integration/verify_sources.py','--terminan','.source/terminan','--math','.source/math','--grid','.source/grid','--strattester','.source/strattester','--meta-analyse','.source/meta_analyse','--output','five-source-evidence']
+          result=subprocess.run(command,capture_output=True,text=True)
+          sys.stdout.write(result.stdout);sys.stderr.write(result.stderr)
+          if result.returncode:
+              # Public synthetic CI diagnostics only; no inventory/credentials.
+              lines=(result.stdout+'\n'+result.stderr).splitlines()
+              detail=' | '.join(lines[-8:])[-1500:]
+              detail=detail.replace('%','%25').replace('\r','%0D').replace('\n','%0A')
+              print('::error title=Exact source API qualification::'+detail)
+          raise SystemExit(result.returncode)
       - name: Install historical contract test runner
         run: python -m pip install "pytest>=8.2,<10"
       - name: Actual Grid Math backtest scientific result and Terminan admission
         run: python integration/verify_pipeline.py --terminan .source/terminan --math .source/math --grid .source/grid --strattester .source/strattester --meta-analyse .source/meta_analyse --output five-source-evidence
       - run: npm ci --prefix integration
-      - run: node integration/node_modules/@playwright/test/cli.js install --with-deps chromium
+      - name: Install pinned Chromium and native dependencies
+        shell: python
+        run: |
+          import subprocess,sys
+          result=subprocess.run(['node','integration/node_modules/@playwright/test/cli.js','install','--with-deps','chromium'],capture_output=True,text=True)
+          sys.stdout.write(result.stdout);sys.stderr.write(result.stderr)
+          if result.returncode:
+              lines=(result.stdout+'\n'+result.stderr).splitlines()
+              errors=[line for line in lines if line.startswith('E: ') or 'Error:' in line or 'error:' in line or 'not found' in line]
+              detail=' | '.join((errors or lines)[-8:])[-1500:]
+              detail=detail.replace('%','%25').replace('\r','%0D').replace('\n','%0A')
+              print('::error title=Pinned browser dependency install::'+detail)
+          raise SystemExit(result.returncode)
       - name: Actual Chromium actual Terminan server actual lifecycle snapshots
         run: python integration/verify_chromium.py --terminan .source/terminan --math .source/math --grid .source/grid --strattester .source/strattester --meta-analyse .source/meta_analyse --output five-source-evidence
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
           name: actual-six-source-${{ matrix.os }}-${{ matrix.python }}-${{ github.run_attempt }}
-          path: five-source-evidence/
+          path: |
+            five-source-evidence/
+            ${{ runner.temp }}/actual-terminan-runtime/
           if-no-files-found: error

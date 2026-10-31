@@ -1,3 +1,45 @@
+# Mission 4 continuation — cloud preparation INCOMPLETE
+
+ADMINIT access is not authorized. No physical inventory, installation, services,
+database changes or acceptance tests have been performed on ADMINIT/office PCs.
+Do not request inventory or physical admission until cloud preparation completes.
+
+Last verified implementation: Unified `c20e234` (245 unique tests PASS), Grid
+`6b845f28`, Math `ae317ba`, Meta `c108b8c`, Terminan `accf626`, Strattester
+`b4e30f7` plus a pending owned-results service change. Six existing Draft PRs
+remain open; no merge or remote branch deletion. Current exact trees and logs
+are recorded under `/workspace/.onboarding/mission4`.
+
+The public runtime-v2 contract covers all six modules. A local durable journal
+and composite builtin Unified profile provide local lifecycle only; Grid retains
+fleet authority. Builtin readiness proves the actual journal, atomic snapshot
+and live HTTP output without starting another controller. Python services use
+an externally pinned isolated bootstrap and fresh private bytecode namespace.
+Source qualification now rejects unsafe local fsmonitor/config/linked metadata
+before invoking bounded Git, preserving raw-byte and hidden-index checks.
+
+Actual separate Grid, Math, Meta and Terminan cloud process proofs pass, with
+functional API checks, nonce authentication and owned cleanup. These do not yet
+prove one simultaneously integrated six-module stack. Math's four local Linux
+Node22/24 x PostgreSQL16/18 cells each pass 1182 tests without skips. Current
+native/hosted CI matrices remain pending or blocked; do not claim a current full
+CI PASS. Earlier Windows parser/CMS/agent successes are scoped to their exact
+older source SHA and are not physical service installation.
+
+Remaining: combined six-profile execution and data handoffs; complete isolated
+pinned Windows dependency/PostgreSQL provisioning, actual SCM lifecycle and
+rollback; authenticated deployment-agent to runtime bridge; owner-admitted signed
+release; outstanding native CI defects; independent OS watchdog/fencing backend.
+All authenticated ten-instrument history/OOS/live-paper/performance/recovery
+ADMINIT acceptance remains NOT_RUN. Cloud synthetic data is never authenticated
+history or physical HA evidence. Release artifact SHA/installed versions and
+ADMINIT service/DB health remain NOT_BUILT/NOT_INSTALLED/NOT_OBSERVED.
+
+The checkpoint below is historical Mission 1/2 evidence. Its network restrictions,
+counts and missing capabilities describe that earlier commit, not current state.
+
+---
+
 # Mission 1 / 2 checkpoint
 
 The project and deployment preparation are **not complete**. Physical acceptance
