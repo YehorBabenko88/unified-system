@@ -67,7 +67,10 @@ jobs:
           import os,subprocess,sys
           from pathlib import Path
           output=Path(os.environ["RUNNER_TEMP"])/"actual-terminan-runtime"
-          subprocess.run([sys.executable,"integration/verify_terminan_runtime.py","--terminan",".source/terminan","--output",str(output),"--execute-isolated-cloud-test"],check=True)
+          result=subprocess.run([sys.executable,"integration/verify_terminan_runtime.py","--terminan",".source/terminan","--output",str(output),"--execute-isolated-cloud-test"])
+          if result.returncode:
+              print("::error::TERMINAN_RUNTIME_STEP phase=OWNED_PROCESS_PROOF status=NONZERO",flush=True)
+              raise SystemExit(result.returncode)
       - name: Real source APIs and bounded Math worker
         shell: python
         run: |

@@ -33,6 +33,19 @@ def isolated_host(execute):
     return Path(os.environ['RUNNER_TEMP']).resolve(strict=True) if hosted else Path(tempfile.gettempdir()).resolve()
 
 
+
+def failure_annotation(report):
+    """Public fixed enums only; never project exception messages or paths."""
+    stages={'EXECUTION_SCOPE','SOURCE_PRECHECK','OWNED_START_AND_AUTHENTICATED_READINESS',
+            'ACTUAL_RUNTIME_DISPLAY','UNAUTHENTICATED_HEALTH_DENIAL','OWNED_STOP',
+            'SOURCE_POSTCHECK','PRIVATE_CLEANUP'}
+    kinds={'AssertionError','ValueError','OSError','PermissionError','FileNotFoundError',
+           'TimeoutError','RuntimeError','JSONDecodeError','ProcessLookupError'}
+    stage=report.get('failure_stage');kind=report.get('error_class')
+    return ('::error::TERMINAN_RUNTIME phase='+ (stage if stage in stages else 'OTHER')
+            +' exception='+(kind if kind in kinds else 'OTHER'))
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--terminan', required=True, type=Path)
@@ -209,6 +222,8 @@ def main():
                 failed = True
                 report.update(result='FAIL', failure_stage='PRIVATE_CLEANUP', error_class=type(exc).__name__)
                 save()
+    if failed and os.environ.get("GITHUB_ACTIONS") == "true":
+        print(failure_annotation(report), flush=True)
     print(json.dumps(report, sort_keys=True))
     return 1 if failed else 0
 

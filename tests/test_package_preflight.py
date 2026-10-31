@@ -27,12 +27,20 @@ class PackagePreflightTests(unittest.TestCase):
   return subprocess.run(command or self.command(),env=env,capture_output=True,text=True,timeout=20)
  def test_real_raw_preflight_all_six_artifacts_and_no_authority(self):
   before={str(p):p.read_bytes() for p in self.package.rglob('*') if p.is_file()}
-  result=self.run_preflight();self.assertEqual(result.returncode,0,result.stderr);out=json.loads(result.stdout)
-  self.assertEqual(out['manifest_sha256'],hashlib.sha256((self.package/'release.json').read_bytes()).hexdigest())
-  self.assertEqual(out['signature'],'EXTERNAL_CMS_REQUIRED');self.assertEqual(out['modules'],6);self.assertEqual(out['mode'],'PREPARE_ONLY')
-  self.assertFalse(out['execution_authority']);self.assertFalse(out['trading_authorized']);self.assertFalse(out['physical_deployment_allowed'])
-  self.assertEqual(before,{str(p):p.read_bytes() for p in self.package.rglob('*') if p.is_file()})
-  self.assertEqual(self.command_git('status','--porcelain'),'');self.assertEqual(list(self.cache_parent.iterdir()),[])
+  phase='RAW_LAUNCH'
+  try:
+   result=self.run_preflight();phase='RETURN_CODE';self.assertEqual(result.returncode,0,result.stderr);phase='JSON_DECODE';out=json.loads(result.stdout)
+   phase='CONTRACT_ASSERTIONS'
+   self.assertEqual(out['manifest_sha256'],hashlib.sha256((self.package/'release.json').read_bytes()).hexdigest())
+   self.assertEqual(out['signature'],'EXTERNAL_CMS_REQUIRED');self.assertEqual(out['modules'],6);self.assertEqual(out['mode'],'PREPARE_ONLY')
+   self.assertFalse(out['execution_authority']);self.assertFalse(out['trading_authorized']);self.assertFalse(out['physical_deployment_allowed'])
+   self.assertEqual(before,{str(p):p.read_bytes() for p in self.package.rglob('*') if p.is_file()})
+   self.assertEqual(self.command_git('status','--porcelain'),'');self.assertEqual(list(self.cache_parent.iterdir()),[])
+  except Exception as exc:
+   kinds=(subprocess.TimeoutExpired,json.JSONDecodeError,FileNotFoundError,PermissionError,AssertionError,OSError)
+   kind=next((t.__name__ for t in kinds if isinstance(exc,t)),'OTHER')
+   if os.environ.get('GITHUB_ACTIONS')=='true':print('::error::RELEASE_PREFLIGHT_FIXTURE phase='+phase+' exception='+kind,flush=True)
+   raise
  def test_poisoned_import_and_timestamp_cache_cannot_override_raw_pins(self):
   source=self.repo/'unified_system/__init__.py';honest=source.read_bytes();poison=self.home/'poison.py';malicious=b"raise RuntimeError('POISON')\n";poison.write_bytes(malicious+b' '*(len(honest)-len(malicious)));os.utime(poison,ns=(source.stat().st_atime_ns,source.stat().st_mtime_ns))
   cache=self.home/'poisoned';cache.mkdir()
