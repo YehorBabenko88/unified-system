@@ -1,5 +1,5 @@
 """Actual isolated raw launches; tiny synthetic archives are integrity fixtures."""
-import hashlib,json,shutil,unittest
+import hashlib,json,os,shutil,subprocess,unittest
 from pathlib import Path
 from tests import test_package_preflight as release_tests
 
@@ -35,7 +35,14 @@ class ToolchainPreflightTests(unittest.TestCase):
   for variant in ('missing','wrong'):
    if variant=='missing':artifact.unlink()
    else:artifact.write_bytes(b'X'*len(raw))
-   result=self.run_preflight(self.toolchain_command());self.assertNotEqual(result.returncode,0);out=json.loads(result.stdout)
+   try:
+    result=self.run_preflight(self.toolchain_command());self.assertNotEqual(result.returncode,0);out=json.loads(result.stdout)
+   except Exception as exc:
+    # Fixed public phase/type only; retain the original failure and deadline.
+    kinds=(subprocess.TimeoutExpired,json.JSONDecodeError,FileNotFoundError,PermissionError,AssertionError,OSError)
+    kind=next((t.__name__ for t in kinds if isinstance(exc,t)),'OTHER')
+    if os.environ.get('GITHUB_ACTIONS')=='true':print('::error::TOOLCHAIN_PREFLIGHT_FIXTURE phase='+variant+' exception='+kind,flush=True)
+    raise
    self.assertEqual(out['status'],'BLOCKED');self.assertFalse(out['installation_closure']);self.assertFalse(out['execution_authority']);self.assertFalse(out['integrity']['all_locked_artifacts_match'])
   self.assertEqual(list(self.cache_parent.iterdir()),[])
  def test_catalog_or_source_tamper_cannot_become_self_pinned_policy(self):
