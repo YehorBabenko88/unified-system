@@ -8,7 +8,7 @@ class ToolchainPreflightTests(unittest.TestCase):
  run_preflight=release_tests.PackagePreflightTests.run_preflight
  def setUp(self):
   release_tests.PackagePreflightTests.setUp(self)
-  for name in ('unified_system/windows_toolchain.py','unified_system/windows-toolchain.catalog.json','unified_system/owned_python.py','unified_system/runtime_process.py'):
+  for name in ('unified_system/windows_toolchain.py','unified_system/file_identity.py','unified_system/windows-toolchain.catalog.json','unified_system/owned_python.py','unified_system/runtime_process.py'):
    shutil.copyfile(release_tests.ROOT/name,self.repo/name)
   self.artifacts=self.home/'archives';self.artifacts.mkdir()
   catalog_path=self.repo/'unified_system/windows-toolchain.catalog.json';catalog=json.loads(catalog_path.read_bytes())

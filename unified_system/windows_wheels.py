@@ -19,6 +19,7 @@ import zipfile
 
 from .owned_python import reject_external_namespace
 from .runtime_process import _safe_path
+from .file_identity import descriptor_identity,path_identity
 
 LOCK_LIMIT=4*1024*1024
 WHEEL_LIMIT=1024*1024*1024
@@ -42,18 +43,16 @@ def local(path):
     return _safe_path(path)
 
 
-def identity(s):return (s.st_dev,s.st_ino,s.st_nlink,s.st_size,s.st_mtime_ns,s.st_ctime_ns)
-
 
 @contextmanager
 def opened(path,maximum):
-    path=local(path);before=path.lstat()
+    path=local(path);stamp=path_identity(path);before=path.lstat()
     need(stat.S_ISREG(before.st_mode) and before.st_nlink==1 and 0<before.st_size<=maximum,'LOCAL_FILE_UNVERIFIED')
     fd=os.open(path,os.O_RDONLY|getattr(os,'O_NOFOLLOW',0)|getattr(os,'O_NONBLOCK',0))
     with os.fdopen(fd,'rb') as f:
-        current=os.fstat(f.fileno());need(stat.S_ISREG(current.st_mode) and identity(current)==identity(before),'LOCAL_FILE_CHANGED')
+        current=os.fstat(f.fileno());need(stat.S_ISREG(current.st_mode) and descriptor_identity(f.fileno())==stamp,'LOCAL_FILE_CHANGED')
         yield f
-        need(identity(os.fstat(f.fileno()))==identity(before) and identity(local(path).lstat())==identity(before),'LOCAL_FILE_CHANGED')
+        need(descriptor_identity(f.fileno())==stamp and path_identity(local(path))==stamp,'LOCAL_FILE_CHANGED')
 
 
 def parse_compiled_lock(raw):

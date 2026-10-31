@@ -14,6 +14,7 @@ from urllib.parse import urlsplit
 
 from .owned_python import reject_external_namespace
 from .runtime_process import _safe_path
+from .file_identity import descriptor_identity,path_identity
 
 ERROR='WINDOWS_TOOLCHAIN_REJECTED'
 HOSTS={'python':'api.nuget.org','node':'nodejs.org','git':'github.com',
@@ -76,22 +77,21 @@ def unique(pairs):
 
 def _read(path,maximum,expected=None):
     """Stream a fresh unique regular leaf; do not follow/open a pipe or link."""
-    path=local(path);before=path.lstat()
+    path=local(path);stamp=path_identity(path);before=path.lstat()
     need(stat.S_ISREG(before.st_mode) and before.st_nlink==1)
     if before.st_size>maximum or expected is not None and before.st_size!=expected:return None,'SIZE_MISMATCH'
     fd=os.open(path,os.O_RDONLY|getattr(os,'O_NONBLOCK',0)|getattr(os,'O_NOFOLLOW',0))
     h=hashlib.sha256();total=0
-    def identity(s):return (s.st_dev,s.st_ino,s.st_nlink,s.st_size,s.st_mtime_ns,s.st_ctime_ns)
     with os.fdopen(fd,'rb') as f:
-        facts=os.fstat(f.fileno());need(stat.S_ISREG(facts.st_mode) and identity(facts)==identity(before))
+        facts=os.fstat(f.fileno());need(stat.S_ISREG(facts.st_mode) and descriptor_identity(f.fileno())==stamp)
         while True:
             chunk=f.read(min(1048576,maximum-total+1))
             if not chunk:break
             total+=len(chunk)
             if total>maximum:return None,'SIZE_MISMATCH'
             h.update(chunk)
-        need(identity(os.fstat(f.fileno()))==identity(before))
-    need(identity(local(path).lstat())==identity(before) and total==before.st_size)
+        need(descriptor_identity(f.fileno())==stamp)
+    need(path_identity(local(path))==stamp and total==before.st_size)
     return h.hexdigest(),None
 
 
