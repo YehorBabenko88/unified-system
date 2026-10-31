@@ -60,7 +60,7 @@ jobs:
         run: |
           import subprocess
           assert subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip() == '${{ github.event.pull_request.head.sha || github.sha }}'
-          subprocess.run(['python','-m','unittest','discover','-s','tests','-v'],check=True)
+          subprocess.run(['python','scripts/ci_unittest.py'],check=True)
       - name: Actual owned Terminan process and independent runtime display
         shell: python
         run: |

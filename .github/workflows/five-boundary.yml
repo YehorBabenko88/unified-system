@@ -27,7 +27,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: python -m unittest discover -s tests -v
+      - run: python scripts/ci_unittest.py
       - run: python scripts/verify_five_boundary.py --strattester .source/strattester --grid .source/grid
       - name: Exact-head evidence
         shell: python
