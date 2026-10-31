@@ -22,7 +22,8 @@ scoped, expiring owner grant; this ledger cannot grant it.
 `Collect-AdminitInventory.ps1` contains only local reads and JSON stdout. It has
 no remote endpoint arguments or transport. It does not create files, start
 programs, install dependencies, query network peers, or modify services. **Do not
-invoke it now.** Its eventual output contains local host/service information;
+invoke it on ADMINIT now.** The gated native CI test may collect its own disposable
+GitHub runner; that result cannot qualify ADMINIT. Its eventual output contains local host/service information;
 keep it private and publish only reviewed, sanitized summaries and hashes.
 Do not use existing credentials or collect environment variables/secrets.
 
@@ -69,8 +70,8 @@ block. No accepted record changes deployment authorization.
 | C | Ten confirmed instruments; real historical coverage; reproducible sealed input/result receipts; declared fees/slippage/funding; chronological training/validation/heldout split; availability and no-lookahead checks. |
 | D | Read-only public feed; sequence/gap/staleness diagnostics; reconnect and bounded retry; bounded queues/backpressure/drop accounting; paper-only analytics and Terminan visibility; no order endpoint or credential access. |
 | E | Controlled faults limited to receipt-listed test processes, test ports, test databases and test-root files; timeout, worker exit, malformed input, disk quota and feed interruption; recovery and no duplicate task execution. |
-| F | Immutable verified candidate update; explicit canary; health failure; rollback to preserved known-good test release; schema compatibility and reproducibility; interrupted update recovery. |
-| G | P0/P1/P2 defect triage, GitHub source fix and reviewed exact commit; targeted regression plus affected matrix; rerun failed phase and dependencies; independent evidence review and owner decision. |
+| F | Reproducible P0/P1/P2 defect; root cause; GitHub source fix and regression; required matrix; new exact verified release; failed-scenario rerun and regression evidence. Never edit only the installed copy. |
+| G | Exact six source HEAD/tree pairs; artifact SHA256; installed versions; service/DB health; historical provenance and ten instrument results/OOS metrics; live/paper diagnostics; performance/recovery evidence; open P0/P1/P2; office-cluster readiness and owner decision. |
 
 Never kill unrelated services/processes, disable host firewall/security policy,
 interrupt the physical host network, fill the system disk, reboot ADMINIT, or
@@ -79,6 +80,11 @@ inside the isolated application test boundary. Set duration/CPU/memory/disk/queu
 budgets before each future scenario, establish abort/stop criteria, and preserve
 logs/receipts. P0 blocks immediately; P1 blocks phase progression; P2 requires
 recorded disposition and retest. Do not relabel defects or skip checks for green.
+
+Phase E also requires verified immutable update/rollback, interrupted-update recovery,
+database backup/restore, hot strategy/module registration, online migrations,
+automatic cleanup and measured CPU/RAM/disk/DB/queue budgets. Tailscale diagnostics
+are permitted only after the separate ADMINIT grant and within its scope.
 
 Rollback restores **only the isolated test namespace** from a verified retained
 release. Uninstall removes only receipt-listed test services/files, preserves

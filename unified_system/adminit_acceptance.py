@@ -13,8 +13,8 @@ PHASES = {
     'C': 'ten_instrument_historical_heldout_research',
     'D': 'public_feed_diagnostics_backpressure_paper_only',
     'E': 'bounded_isolated_faults_and_recovery',
-    'F': 'verified_update_rollback_and_reproducibility',
-    'G': 'defect_retest_evidence_and_owner_review',
+    'F': 'defect_reproduction_source_fix_regression_release_retest',
+    'G': 'acceptance_report_and_owner_review',
 }
 PUBLIC_NETWORK = {
     'api.bybit.com': {'transport': 'HTTPS', 'port': 443, 'purpose': 'public market REST'},
