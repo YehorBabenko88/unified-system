@@ -36,7 +36,7 @@ evidence_path.write_text(json.dumps(proof, sort_keys=True, indent=2), encoding='
 try:
     if (proof.get('qualification') != 'EXACT_SOURCE_CONSISTENT'
             or proof.get('schema') != 'unified.six-source.v1'
-            or proof.get('python_tests') != 13
+            or proof.get('python_tests') != 14
             or any(proof.get(k) != 0 for k in
                    ('python_failures', 'python_errors', 'python_skips', 'math_exit', 'network_attempts'))):
         raise SourceQualificationError('SOURCE_TESTS_NOT_QUALIFIED')

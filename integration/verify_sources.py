@@ -103,6 +103,23 @@ class FiveSourceTests(unittest.TestCase):
         self.addCleanup(self.temp.cleanup)
         self.path=Path(self.temp.name)
     def fleet(self):return FleetControl(self.path/'fleet.db',['v1','v2','v3'])
+    def test_actual_six_module_runtime_snapshot_independent_v2_consumer(self):
+        from unified_system.runtime import ModuleSpec,RuntimeSupervisor
+        from unified_system.module_catalog import MODULE_IDS
+        from terminan.runtime_v2 import validate_runtime
+        runtime=RuntimeSupervisor(self.path/'runtime-v2.db',object(),
+            [ModuleSpec(name,'1.0.0') for name in sorted(MODULE_IDS)],
+            release_id='source-contract-only',release_sha256='a'*64,node_id='cloud-fixture')
+        snapshot=runtime.snapshot()
+        self.assertEqual(validate_runtime(snapshot),snapshot)
+        self.assertFalse(snapshot['ready'])
+        self.assertEqual(set(snapshot['modules']),MODULE_IDS)
+        self.assertTrue(all(m['state']=='STOPPED' for m in snapshot['modules'].values()))
+        for field,value in (('physical','PASS'),('physical_deployment_allowed',True),('trading_authorized',True)):
+            forged=copy.deepcopy(snapshot);forged[field]=value
+            with self.subTest(field=field),self.assertRaises(ValueError):validate_runtime(forged)
+        (args.output/'runtime-v2-stopped.json').write_text(json.dumps(snapshot),encoding='utf-8')
+
     def test_node_sizes_actual_consumer_unknown_observations(self):
         fleet=self.fleet()
         for target in (0,1,5,6,7,10):

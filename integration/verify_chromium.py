@@ -31,7 +31,7 @@ try:
             and proof.get('pipeline',{}).get('qualification')!='EXACT_SOURCE_CONTRACT_PASS'):
         raise SourceQualificationError('HISTORICAL_PIPELINE_NOT_QUALIFIED')
     if set(proof.get('sources',{}))!=set(names):raise SourceQualificationError('SOURCE_ROSTER_MISMATCH')
-    if (proof.get('python_tests')!=(13 if 'meta_analyse' in names else 12) or any(proof.get(key)!=0 for key in ('python_failures','python_errors','python_skips','math_exit','network_attempts'))
+    if (proof.get('python_tests')!=(14 if 'meta_analyse' in names else 13) or any(proof.get(key)!=0 for key in ('python_failures','python_errors','python_skips','math_exit','network_attempts'))
             or proof.get('math_counts')!={'tests':6,'pass':6,'fail':0,'cancelled':0,'skipped':0,'todo':0}):
         raise SourceQualificationError('SOURCE_TESTS_NOT_SUCCESSFUL')
     pre={name:fence.check() for name,fence in fences.items()}

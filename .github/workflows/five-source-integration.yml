@@ -22,7 +22,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: YehorBabenko88/Terminan
-          ref: 7f23e746a3a52163c3065975ff02d6a7ae790129
+          ref: a23cd77622af7bf04788fe5e32a03d930c08ebfc
           path: .source/terminan
           persist-credentials: false
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
@@ -34,7 +34,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: YehorBabenko88/bybit-cluster-grid
-          ref: d2dcffb43e520db75936eb97389b66db2f3e1365
+          ref: dd6fbede7b1f676b98a3ae56170366ba63b7cb14
           path: .source/grid
           persist-credentials: false
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
@@ -46,7 +46,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: YehorBabenko88/meta_analyse
-          ref: faa7a20339ef9dba5530a7bc521efb8d1469827a
+          ref: 58987481e337fcefadf260390c13c70324479afc
           path: .source/meta_analyse
           persist-credentials: false
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
