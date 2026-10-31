@@ -34,7 +34,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: YehorBabenko88/bybit-cluster-grid
-          ref: 6c9c2a500ec2e2346c8f928fd1018e6296cee6e9
+          ref: 1e30b49c0aaa826e5edf54d7652fd424cc7d566d
           path: .source/grid
           persist-credentials: false
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
@@ -46,7 +46,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: YehorBabenko88/meta_analyse
-          ref: 58987481e337fcefadf260390c13c70324479afc
+          ref: a61adb48bc3718efe8ec99b915e85741ae8142af
           path: .source/meta_analyse
           persist-credentials: false
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
@@ -80,7 +80,19 @@ jobs:
       - name: Actual Grid Math backtest scientific result and Terminan admission
         run: python integration/verify_pipeline.py --terminan .source/terminan --math .source/math --grid .source/grid --strattester .source/strattester --meta-analyse .source/meta_analyse --output five-source-evidence
       - run: npm ci --prefix integration
-      - run: node integration/node_modules/@playwright/test/cli.js install --with-deps chromium
+      - name: Install pinned Chromium and native dependencies
+        shell: python
+        run: |
+          import subprocess,sys
+          result=subprocess.run(['node','integration/node_modules/@playwright/test/cli.js','install','--with-deps','chromium'],capture_output=True,text=True)
+          sys.stdout.write(result.stdout);sys.stderr.write(result.stderr)
+          if result.returncode:
+              lines=(result.stdout+'\n'+result.stderr).splitlines()
+              errors=[line for line in lines if line.startswith('E: ') or 'Error:' in line or 'error:' in line or 'not found' in line]
+              detail=' | '.join((errors or lines)[-8:])[-1500:]
+              detail=detail.replace('%','%25').replace('\r','%0D').replace('\n','%0A')
+              print('::error title=Pinned browser dependency install::'+detail)
+          raise SystemExit(result.returncode)
       - name: Actual Chromium actual Terminan server actual lifecycle snapshots
         run: python integration/verify_chromium.py --terminan .source/terminan --math .source/math --grid .source/grid --strattester .source/strattester --meta-analyse .source/meta_analyse --output five-source-evidence
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
