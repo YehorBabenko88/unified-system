@@ -34,16 +34,35 @@ def isolated_host(execute):
 
 
 
+SOURCE_REASONS=frozenset(('BYTECODE_ORIGIN_OUTSIDE_ISOLATED_CACHE','CONFIG_INCLUDE_OR_FILTER',
+    'EXTERNAL_GIT_DIRECTORY','EXTERNAL_OBJECTS_OR_ATTRIBUTES','EXTERNAL_PROMISOR_OBJECTS',
+    'EXTERNAL_SOURCE_NAMESPACE','EXTERNAL_WORKTREE_CONFIG','EXTERNAL_WORKTREE_OR_ATTRIBUTES',
+    'GIT_CHECK_FAILED','GIT_ENV_OVERRIDE','GIT_INPUT_LIMIT','GIT_PIN_PAIR_REQUIRED',
+    'GIT_RESOURCE_LIMIT','GIT_RUNTIME_PIN','IMPORT_ORIGIN_MISSING','IMPORT_ORIGIN_OUTSIDE_TREE',
+    'IMPORT_ORIGIN_UNTRACKED','INDEX_DIRTY','ISOLATED_CACHE_NOT_ACTIVE','ISOLATED_CACHE_REQUIRED',
+    'LINKED_SOURCE_METADATA','LOCAL_CONFIG_INVALID','METADATA_LIMIT','NON_REGULAR_SOURCE',
+    'OBJECT_BYTES','OBJECT_IDENTITY','PRECHECK_REQUIRED','REPLACE_REFS_FORBIDDEN',
+    'SOURCE_CHANGED_DURING_RUN','SOURCE_PATH_ESCAPE','SOURCE_PIN_MISMATCH',
+    'TRACKED_BYTES_MISMATCH','UNSAFE_FSMONITOR','UNTRACKED_SOURCE'))
+
+
+def source_failure_reason(exc):
+    if type(exc).__name__ != 'SourceQualificationError':return 'OTHER'
+    prefix=str(exc).split(':',1)[0]
+    return prefix if prefix in SOURCE_REASONS else 'OTHER'
+
+
 def failure_annotation(report):
     """Public fixed enums only; never project exception messages or paths."""
-    stages={'EXECUTION_SCOPE','SOURCE_PRECHECK','OWNED_START_AND_AUTHENTICATED_READINESS',
+    stages={'EXECUTION_SCOPE','SOURCE_PRECHECK','ROOT_SOURCE_PRECHECK','TERMINAN_SOURCE_PRECHECK','OWNED_START_AND_AUTHENTICATED_READINESS',
             'ACTUAL_RUNTIME_DISPLAY','UNAUTHENTICATED_HEALTH_DENIAL','OWNED_STOP',
             'SOURCE_POSTCHECK','PRIVATE_CLEANUP'}
     kinds={'AssertionError','ValueError','OSError','PermissionError','FileNotFoundError',
-           'TimeoutError','RuntimeError','JSONDecodeError','ProcessLookupError'}
+           'TimeoutError','RuntimeError','JSONDecodeError','ProcessLookupError','SourceQualificationError'}
     stage=report.get('failure_stage');kind=report.get('error_class')
     return ('::error::TERMINAN_RUNTIME phase='+ (stage if stage in stages else 'OTHER')
-            +' exception='+(kind if kind in kinds else 'OTHER'))
+            +' exception='+(kind if kind in kinds else 'OTHER')
+            +' reason='+(report.get('source_reason') if report.get('source_reason') in SOURCE_REASONS else 'OTHER'))
 
 
 def main():
@@ -93,10 +112,15 @@ def main():
         sys.path.insert(0, str(ROOT))
         from integration.source_guard import SourceFence
         pins = json.loads((ROOT/'integration/source-pins.json').read_text(encoding='utf-8'))
+        stage = 'ROOT_SOURCE_PRECHECK'
+        fences = {'unified-system': SourceFence(ROOT, isolated_cache=cache)}
+        stage = 'TERMINAN_SOURCE_PRECHECK'
+        fences['terminan'] = SourceFence(term, pins['terminan'], isolated_cache=cache)
+        before = {}
+        for name, fence in fences.items():
+            stage = 'ROOT_SOURCE_PRECHECK' if name == 'unified-system' else 'TERMINAN_SOURCE_PRECHECK'
+            before[name] = fence.check()
         stage = 'SOURCE_PRECHECK'
-        fences = {'unified-system': SourceFence(ROOT, isolated_cache=cache),
-                  'terminan': SourceFence(term, pins['terminan'], isolated_cache=cache)}
-        before = {name: fence.check() for name, fence in fences.items()}
         fences['unified-system'].file(__file__, python=True)
         from unified_system.runtime import RuntimeSupervisor, ModuleSpec
         from unified_system.runtime_process import ProcessDriver
@@ -177,7 +201,7 @@ def main():
         failed = False
     except BaseException as exc:
         failed = True
-        report.update(failure_stage=stage, error_class=type(exc).__name__)
+        report.update(failure_stage=stage, error_class=type(exc).__name__, source_reason=source_failure_reason(exc))
         save()  # Preserve a public failure record before any owned cleanup.
     finally:
         if runtime is not None:
