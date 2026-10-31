@@ -1,4 +1,5 @@
 import json
+from contextlib import closing
 from pathlib import Path
 import tempfile
 import threading
@@ -84,9 +85,10 @@ class BuiltinTests(unittest.TestCase):
         with self.assertRaises(ValueError):self.driver.published(snapshot)
         self.publish()
         import sqlite3
-        with sqlite3.connect(self.root/'runtime.sqlite') as db:
-            identity=json.loads(db.execute('SELECT body FROM identity').fetchone()[0]);identity['node_id']='wrong'
-            db.execute('UPDATE identity SET body=?',(json.dumps(identity),))
+        with closing(sqlite3.connect(self.root/'runtime.sqlite')) as db:
+            with db:
+                identity=json.loads(db.execute('SELECT body FROM identity').fetchone()[0]);identity['node_id']='wrong'
+                db.execute('UPDATE identity SET body=?',(json.dumps(identity),))
         op=next(iter(self.driver.operations))
         self.assertFalse(self.driver.ready(ModuleSpec('unified-system','1.0.0'),op,'r1')['ready'])
     def test_delegate_methods_remain_exact_and_builtin_authorization_required(self):
@@ -135,3 +137,31 @@ class BuiltinTests(unittest.TestCase):
             self.assertTrue(self.driver.ready(ModuleSpec('unified-system','1.0.0'),handle,'r1')['ready'])
         with patch('unified_system.runtime_builtin.time.monotonic',return_value=stamp+PUBLICATION_MAX_AGE+.51):
             self.assertFalse(self.driver.ready(ModuleSpec('unified-system','1.0.0'),handle,'r1')['ready'])
+
+
+class BuiltinFixtureOwnershipTests(unittest.TestCase):
+    def test_wrong_journal_fixture_closes_all_real_sqlite_connections(self):
+        import sqlite3
+        from unittest.mock import patch
+        opened=[];connect=sqlite3.connect
+        class TrackedConnection(sqlite3.Connection):
+            explicitly_closed=False
+            def close(self):
+                self.explicitly_closed=True
+                return super().close()
+        def tracked(*args,**kwargs):
+            kwargs['factory']=TrackedConnection
+            connection=connect(*args,**kwargs);opened.append(connection)
+            return connection
+        try:
+            # Run the unchanged real HTTP/journal scenario, not a mock result.
+            with patch('sqlite3.connect',side_effect=tracked):
+                result=unittest.TestResult()
+                BuiltinTests('test_wrong_journal_identity_and_forged_publication_are_rejected').run(result)
+            self.assertTrue(result.wasSuccessful(),'real journal scenario or cleanup failed')
+            self.assertTrue(opened)
+            self.assertTrue(all(connection.explicitly_closed for connection in opened),
+                            'SQLite context managers commit but do not close file handles')
+        finally:
+            for connection in opened:
+                if not connection.explicitly_closed:connection.close()
