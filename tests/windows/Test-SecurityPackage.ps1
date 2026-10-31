@@ -23,6 +23,40 @@ try {
   Reject {Test-UnifiedPackageSignature ([byte[]]@()) $signature $pin}
   Reject {Test-UnifiedPackageSignature $bytes $signature 'latest'}
   $module=Get-Module SecurityPackage
+  # Real detached CMS signatures bind each schema and inventory before contract validation.
+  foreach ($schema in @('unified.windows-package-lock.v1','unified.windows-package-lock.v2')) {
+    $names = if ($schema.EndsWith('.v1')) { @('grid','strattester','unified','terminan','math') } else { @('unified-system','grid','strattester','math','meta_analyse','terminan') }
+    $sources = [ordered]@{}
+    foreach ($name in $names) { $sources[$name] = @{commit=('a'*40);tree=('b'*40)} }
+    $manifest = @{schema=$schema;identity_sid='S-1-5-21-100';sources=$sources;requirements=@{powershell='5.1,7';postgresql_major=18}}
+    $manifestBytes = [Text.Encoding]::UTF8.GetBytes(($manifest | ConvertTo-Json -Depth 8 -Compress))
+    $manifestCms = New-Object Security.Cryptography.Pkcs.SignedCms((New-Object Security.Cryptography.Pkcs.ContentInfo(,$manifestBytes)),$true)
+    $manifestCms.ComputeSignature($signer)
+    Test-UnifiedPackageSignature $manifestBytes $manifestCms.Encode() $pin
+    $parsed = [Text.Encoding]::UTF8.GetString($manifestBytes) | ConvertFrom-Json
+    & $module {param($data) Assert-UnifiedManifestContract $data 'S-1-5-21-100'} $parsed
+    Reject { Test-UnifiedPackageSignature ([Text.Encoding]::UTF8.GetBytes('{}')) $manifestCms.Encode() $pin }
+    foreach ($name in $names) {
+      $bad = [Text.Encoding]::UTF8.GetString($manifestBytes) | ConvertFrom-Json
+      $bad.sources.PSObject.Properties.Remove($name)
+      Reject { & $module {param($data) Assert-UnifiedManifestContract $data 'S-1-5-21-100'} $bad }
+    }
+    foreach ($mutation in @('extra','alias','schema','downgrade','source-type','pin','pg','ps','identity')) {
+      $bad = [Text.Encoding]::UTF8.GetString($manifestBytes) | ConvertFrom-Json
+      switch ($mutation) {
+        'extra' { $bad.sources | Add-Member -NotePropertyName unknown -NotePropertyValue @{commit=('a'*40);tree=('b'*40)} }
+        'alias' { $name = if ($schema.EndsWith('.v2')) {'unified-system'} else {'unified'}; $bad.sources.PSObject.Properties.Remove($name); $bad.sources | Add-Member -NotePropertyName UNIFIED -NotePropertyValue @{commit=('a'*40);tree=('b'*40)} }
+        'schema' { $bad.schema = 'unified.windows-package-lock.v3' }
+        'downgrade' { $bad.schema = if ($schema.EndsWith('.v2')) {'unified.windows-package-lock.v1'} else {'unified.windows-package-lock.v2'} }
+        'source-type' { $bad.sources = @() }
+        'pin' { $bad.sources.grid.commit = $true }
+        'pg' { $bad.requirements.postgresql_major = '18' }
+        'ps' { $bad.requirements.powershell = '7' }
+        'identity' { $bad.identity_sid = 'admin' }
+      }
+      Reject { & $module {param($data) Assert-UnifiedManifestContract $data 'S-1-5-21-100'} $bad }
+    }
+  }
   foreach ($path in @('../x','//server/share','C:/outside','C:\x:ads')) {Reject {& $module {param($p) Assert-LocalPath $p} $path}}
   & $module { Assert-AclFacts 'S-1-5-21-100' 'S-1-5-21-100' @() }
   Reject { & $module { Assert-AclFacts 'S-1-1-0' 'S-1-5-21-100' @() } }

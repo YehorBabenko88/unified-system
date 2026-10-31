@@ -1,9 +1,9 @@
-name: Actual five-source disposable integration
+name: Actual six-source disposable integration
 on: [push, pull_request, workflow_dispatch]
 permissions:
   contents: read
 concurrency:
-  group: actual-five-source-${{ github.event.pull_request.head.sha || github.sha }}
+  group: actual-six-source-${{ github.event.pull_request.head.sha || github.sha }}
   cancel-in-progress: true
 jobs:
   source-integration:
@@ -40,8 +40,14 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: YehorBabenko88/strattester
-          ref: 702d285b5a5af28f0b2e1f4c9a52aeb49582cbef
+          ref: 931f85f37469af9e8c373455b9cce5abbcff01c7
           path: .source/strattester
+          persist-credentials: false
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          repository: YehorBabenko88/meta_analyse
+          ref: 6b569fe69f4c4a1c9649443867b529cd66fa9e37
+          path: .source/meta_analyse
           persist-credentials: false
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with:
@@ -56,14 +62,14 @@ jobs:
           assert subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip() == '${{ github.event.pull_request.head.sha || github.sha }}'
           subprocess.run(['python','-m','unittest','discover','-s','tests','-v'],check=True)
       - name: Real source APIs and bounded Math worker
-        run: python integration/verify_sources.py --terminan .source/terminan --math .source/math --grid .source/grid --strattester .source/strattester --output five-source-evidence
+        run: python integration/verify_sources.py --terminan .source/terminan --math .source/math --grid .source/grid --strattester .source/strattester --meta-analyse .source/meta_analyse --output five-source-evidence
       - run: npm ci --prefix integration
       - run: node integration/node_modules/@playwright/test/cli.js install --with-deps chromium
       - name: Actual Chromium actual Terminan server actual lifecycle snapshots
-        run: python integration/verify_chromium.py --terminan .source/terminan --math .source/math --grid .source/grid --strattester .source/strattester --output five-source-evidence
+        run: python integration/verify_chromium.py --terminan .source/terminan --math .source/math --grid .source/grid --strattester .source/strattester --meta-analyse .source/meta_analyse --output five-source-evidence
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
-          name: actual-five-source-${{ matrix.os }}-${{ matrix.python }}-${{ github.run_attempt }}
+          name: actual-six-source-${{ matrix.os }}-${{ matrix.python }}-${{ github.run_attempt }}
           path: five-source-evidence/
           if-no-files-found: error

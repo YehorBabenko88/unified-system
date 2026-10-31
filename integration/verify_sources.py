@@ -20,11 +20,14 @@ PINS = json.loads((ROOT/'integration/source-pins.json').read_text())
 parser = argparse.ArgumentParser()
 for name in ('terminan','math','grid','strattester'):
     parser.add_argument('--'+name, required=True, type=Path)
+parser.add_argument('--meta-analyse', type=Path)
 parser.add_argument('--output', type=Path, required=True)
 args = parser.parse_args()
 sources = {name: getattr(args,name).resolve() for name in ('terminan','math','grid','strattester')}
+if args.meta_analyse is not None:
+    sources['meta_analyse'] = args.meta_analyse.resolve()
 args.output.mkdir(parents=True,exist_ok=True)
-(args.output/'evidence.json').write_text(json.dumps({'schema':'unified.five-source.v1','qualification':'UNQUALIFIED','reason':'RUN_INCOMPLETE','source_provenance':'BLOCKED','physical':'NOT_RUN','production':'NO_GO'}),encoding='utf-8')
+(args.output/'evidence.json').write_text(json.dumps({'schema':'unified.six-source.v1' if 'meta_analyse' in sources else 'unified.five-source.v1','qualification':'UNQUALIFIED','reason':'RUN_INCOMPLETE','source_provenance':'BLOCKED','physical':'NOT_RUN','production':'NO_GO'}),encoding='utf-8')
 # Read no preexisting source bytecode, including the guard itself.
 bytecode=tempfile.TemporaryDirectory(prefix='five-clean-bytecode-')
 sys.pycache_prefix=bytecode.name
@@ -32,7 +35,7 @@ from integration.source_guard import SourceFence, SourceQualificationError
 
 def unqualified(reason):
     # A working-tree run never borrows the committed HEAD/tree identity.
-    (args.output/'evidence.json').write_text(json.dumps({'schema':'unified.five-source.v1','qualification':'UNQUALIFIED','reason':str(reason),'source_provenance':'BLOCKED','physical':'NOT_RUN','production':'NO_GO'}),encoding='utf-8')
+    (args.output/'evidence.json').write_text(json.dumps({'schema':'unified.six-source.v1' if 'meta_analyse' in sources else 'unified.five-source.v1','qualification':'UNQUALIFIED','reason':str(reason),'source_provenance':'BLOCKED','physical':'NOT_RUN','production':'NO_GO'}),encoding='utf-8')
     raise SystemExit('SOURCE_UNQUALIFIED:'+str(reason))
 
 fences={'unified-system':SourceFence(ROOT,isolated_cache=bytecode.name),**{name:SourceFence(source,PINS[name],isolated_cache=bytecode.name) for name,source in sources.items()}}
@@ -41,6 +44,8 @@ try:
 except (SourceQualificationError,OSError) as exc:unqualified(exc)
 observed={name:value for name,value in before.items() if name!='unified-system'}
 for source in sources.values():sys.path.insert(0,str(source))
+if 'meta_analyse' in sources:
+    sys.path.insert(0, str(sources['meta_analyse'] / 'src'))
 
 from unified_system.fleet_control import FleetControl, FleetError
 from unified_system.lifecycle import Lifecycle, MODULES
@@ -56,9 +61,13 @@ from strattester.marketdata.sqlite_store import SQLiteMarketStore
 from strattester.strategies.base import StrategyDefinition, DataRequirement
 from strattester.engine.executor import ResearchExecutionPermit
 from strattester.persistence.result_store import ResultStore
+from strattester.readonly_api import ReadOnlyResultsApp
+if 'meta_analyse' in sources:
+    from meta_analyse.grid_history_adapter import analyze_grid_history
 
 def attest_imports():
     packages={'unified_system':'unified-system','integration':'unified-system','terminan':'terminan','grid':'grid','strattester':'strattester'}
+    if 'meta_analyse' in sources:packages['meta_analyse']='meta_analyse'
     origins={}
     for name,module in tuple(sys.modules.items()):
         package=name.split('.')[0]
@@ -210,18 +219,92 @@ class FiveSourceTests(unittest.TestCase):
         self.assertEqual(accept_handoff({'execution_authority':True},set())['status'],'UNAVAILABLE')
     def test_latest_result_schema_cannot_substitute_for_sealed_receipt(self):
         signature=str(inspect.signature(ResearchRunner.run))
-        self.assertNotIn('provenance',signature)
-        self.assertNotIn('result_store',signature)
+        self.assertIn('provenance',signature)
+        self.assertIn('result_store',signature)
         store=ResultStore.open(self.path/'results.db')
         try:
             tables=[r[0] for r in store.con.execute("SELECT name FROM sqlite_master WHERE type='table'")]
-            self.assertNotIn('owned_runs',tables)
+            self.assertIn('owned_runs',tables)
             store.put('software-test','BTCUSDT','source-test','1',{'sum':4},created_at=1)
             persisted=json.loads(store.con.execute('SELECT metrics FROM research_results').fetchone()[0])
             denied=accept_handoff(persisted,set())
             self.assertEqual(denied['status'],'UNAVAILABLE')
-            (args.output/'handoff-interface-gap.json').write_text(json.dumps({'signature':signature,'tables':tables,'grid_intake':denied,'positive_handoff':'BLOCKED_NO_SEALED_PRODUCER_INTERFACE'}),encoding='utf-8')
+            (args.output/'unsealed-result-denial.json').write_text(json.dumps({'signature':signature,'tables':tables,'grid_intake':denied,'unsealed_metrics_admitted':False}),encoding='utf-8')
         finally:store.close()
+    def test_actual_producer_result_api_to_grid_handoff(self):
+        definition=StrategyDefinition('owned-source-test','1',(DataRequirement('candles',('1m',)),),Research)
+        permit=ResearchExecutionPermit.for_strategy(definition,reason='Disposable software contract; no exchange execution')
+        market=SQLiteMarketStore.open(self.path/'owned-market.db')
+        results=ResultStore.open(self.path/'owned-results.db')
+        try:
+            runner=ResearchRunner(market,OfflineHistory(),clock_ms=lambda:999999)
+            runner.run(definition,{'symbol':'BTCUSDT','launchTime':'0'},start_ms=0,end_ms=60000,
+                       research_permission=permit,result_store=results,
+                       provenance={'source_identity':'synthetic:source-contract', 'market_type':'linear',
+                                   'producer_identity':'synthetic:source-owner', 'source_revision':PINS['strattester'],
+                                   'model':{'kind':'synthetic','version':'1'},
+                                   'execution_assumptions':{'execution':'none','fees':0,'slippage':0}})
+            record=json.loads(results.con.execute("SELECT record FROM owned_runs WHERE state='COMPLETE'").fetchone()[0])
+            owner=(record['producer_identity'],record['source_revision'],record['run_id'],record['completion_receipt'])
+            app=ReadOnlyResultsApp(results.path,
+                trusted_sources=[(owner[0],owner[1],record['dataset']['source_identity'])],trusted_receipts=[owner])
+            status=[]
+            page=json.loads(b''.join(app({'PATH_INFO':'/internal/v1/runs','REQUEST_METHOD':'GET'},lambda s,h:status.append(s))))
+            self.assertEqual(status,['200 OK'])
+            self.assertEqual(page['runs'],[record])
+            accepted=accept_handoff(page['runs'][0],{owner})
+            self.assertEqual(accepted['status'],'ACCEPTED_HISTORICAL')
+            self.assertFalse(accepted['trading_authorized'])
+            self.assertEqual(accept_handoff(page['runs'][0],set())['status'],'UNAVAILABLE')
+            tampered=copy.deepcopy(record);tampered['metrics']['sum']=999
+            self.assertEqual(accept_handoff(tampered,{owner})['status'],'UNAVAILABLE')
+            self.assertEqual(record['metrics'],{'sum':4})
+            (args.output/'positive-owned-handoff.json').write_text(json.dumps({
+                'mode':'SYNTHETIC_SOFTWARE_CONTRACT','dataset_fingerprint':record['dataset']['fingerprint'],
+                'producer_revision':PINS['strattester'],'grid_intake':accepted,
+                'physical':'NOT_RUN','production':'NO_GO'}),encoding='utf-8')
+        finally:
+            results.close();market.close()
+    if 'meta_analyse' in sources:
+        def test_actual_grid_export_to_meta_preserves_causality_and_no_authority(self):
+            rows=[];receipts={}
+            for i in range(3):
+                raw={'symbol':'BTCUSDT','start_ms':i*60000,'end_ms':i*60000+59999,
+                     'source_event_start_ms':i*60000+1,'source_event_end_ms':i*60000+59998,
+                     'source':{'identity':'software-fixture','source_revision':PINS['grid'],
+                               'epoch':'software-contract','market_type':'linear'},
+                     'representation':'historical_aggregate','status':'PARTIAL',
+                     'candle':{'open':100+i*.1,'high':102+i*.1,'low':99+i*.1,
+                               'close':101+i*.1,'buy_volume':2.,'sell_volume':1.}}
+                raw['dataset_fingerprint']=digest(raw);rows.append(raw)
+                receipts[raw['dataset_fingerprint']]={
+                    'fingerprint':raw['dataset_fingerprint'],'venue':'bybit','available_at_ms':(i+1)*60000,
+                    'complete':True,'watermark_ms':(i+1)*60000,
+                    'units':{'price':'USDT/BTC','volume':'BTC'},'evidence_class':'SYNTHETIC'}
+            request={'schema':'grid.history.request.v1','venue':'bybit','market_type':'linear','symbol':'BTCUSDT',
+                     'start_ms':0,'end_ms':180000,'as_of_ms':180000,'max_age_ms':60000,
+                     'units':{'price':'USDT/BTC','volume':'BTC'}}
+            trust={'identity':'software-fixture','source_revision':PINS['grid'],'epoch':'software-contract',
+                   'receipts':receipts,'receipt_pins':{k:digest(v) for k,v in receipts.items()},
+                   'evidence_class':'SYNTHETIC'}
+            exported=export_records_v11(rows,request,trust)
+            full=analyze_grid_history(exported,decision_ms=180000)
+            prefix=analyze_grid_history(exported,decision_ms=60000)
+            self.assertEqual(full['dataset_id'],exported['dataset_id'])
+            self.assertEqual(full['dataset_fingerprint'],exported['dataset_fingerprint'])
+            self.assertEqual([x['close'] for x in full['candles']],['101.0','101.1','101.2'])
+            self.assertEqual(len(prefix['candles']),1)
+            self.assertTrue(all(level['source_start_ms']==0 for level in prefix['levels']))
+            self.assertEqual(full['quality_status'],'UNKNOWN')
+            self.assertEqual(full['source_authenticity'],'NOT_EVALUATED')
+            self.assertEqual(full['evidence_class'],'SYNTHETIC')
+            for flag in ('execution_authority','trading_authorized','training_authorized'):
+                self.assertIs(full[flag],False)
+            tampered=copy.deepcopy(exported);tampered['rows'][0]['close']=999
+            with self.assertRaises(ValueError):analyze_grid_history(tampered,decision_ms=180000)
+            (args.output/'grid-meta-handoff.json').write_text(json.dumps({
+                'mode':'SYNTHETIC_SOFTWARE_CONTRACT','analysis':full,'prefix_analysis':prefix,
+                'physical':'NOT_RUN','production':'NO_GO'}),encoding='utf-8')
     def test_consumer_version_negotiation_denies_bool_or_future(self):
         life=Lifecycle(self.path/'version.db',[]);view=life.initialize()
         for version in ({'major':True,'minor':0},{'major':2,'minor':0},{'major':1,'minor':1}):
@@ -258,6 +341,6 @@ try:
     imports_after=attest_imports()
     after={name:fence.finish() for name,fence in fences.items()}
 except (SourceQualificationError,OSError) as exc:unqualified(exc)
-evidence={'schema':'unified.five-source.v1','qualification':'EXACT_SOURCE_CONSISTENT','head':before['unified-system']['head'],'tree':before['unified-system']['tree'],'source_pre':before,'source_post':after,'imports_pre':imports_before,'imports_post':imports_after,'subprocess_origin':{'math_test':math_origin,'runner':main_origin},'sources':observed,'python_tests':result.testsRun,'python_failures':len(result.failures),'python_errors':len(result.errors),'python_skips':len(result.skipped),'math_exit':math.returncode,'math_counts':math_counts,'network_attempts':len(NETWORK_ATTEMPTS),'source_provenance':'BLOCKED','physical':'NOT_RUN','production':'NO_GO','run':os.getenv('GITHUB_RUN_ID'),'attempt':os.getenv('GITHUB_RUN_ATTEMPT'),'job':os.getenv('GITHUB_JOB')}
+evidence={'schema':'unified.six-source.v1' if 'meta_analyse' in sources else 'unified.five-source.v1','qualification':'EXACT_SOURCE_CONSISTENT','head':before['unified-system']['head'],'tree':before['unified-system']['tree'],'source_pre':before,'source_post':after,'imports_pre':imports_before,'imports_post':imports_after,'subprocess_origin':{'math_test':math_origin,'runner':main_origin},'sources':observed,'python_tests':result.testsRun,'python_failures':len(result.failures),'python_errors':len(result.errors),'python_skips':len(result.skipped),'math_exit':math.returncode,'math_counts':math_counts,'network_attempts':len(NETWORK_ATTEMPTS),'source_provenance':'BLOCKED','physical':'NOT_RUN','production':'NO_GO','run':os.getenv('GITHUB_RUN_ID'),'attempt':os.getenv('GITHUB_RUN_ATTEMPT'),'job':os.getenv('GITHUB_JOB')}
 (args.output/'evidence.json').write_text(json.dumps(evidence,sort_keys=True,indent=2),encoding='utf-8')
 raise SystemExit(0 if result.wasSuccessful() and not result.skipped and math.returncode==0 and math_qualified else 1)

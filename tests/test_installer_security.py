@@ -84,3 +84,51 @@ class SecurityPlanTests(unittest.TestCase):
             lock["requirements"]["postgresql_major"] = value
             with self.subTest(pg=value), self.assertRaises(ValueError):
                 validate_package_lock(lock, payload)
+
+
+class SixModulePackageTests(unittest.TestCase):
+    def fixture(self):
+        lock, payload = fixture()
+        lock['schema'] = 'unified.windows-package-lock.v2'
+        lock['sources'] = {name: dict(commit='a'*40, tree='b'*40) for name in
+                           ('unified-system','grid','strattester','math','meta_analyse','terminan')}
+        return lock, payload
+
+    def test_v2_accepts_six_sources_and_preserves_plan_only(self):
+        lock, payload = self.fixture()
+        before = copy.deepcopy(lock)
+        self.assertEqual(len(validate_package_lock(lock, payload)), 64)
+        plan = build_security_plan(lock, payload, [node(1)])
+        self.assertEqual(plan['admission'], 'NOT_GRANTED')
+        self.assertEqual(plan['physical'], 'NOT_RUN')
+        self.assertFalse(plan['mutations_performed'])
+        self.assertEqual(lock, before)
+
+    def test_v2_rejects_missing_extra_legacy_alias_and_downgrade(self):
+        for name in ('unified-system','grid','strattester','math','meta_analyse','terminan'):
+            lock, payload = self.fixture(); del lock['sources'][name]
+            with self.subTest(missing=name), self.assertRaises(ValueError):
+                validate_package_lock(lock, payload)
+        for action in ('extra','alias','downgrade'):
+            lock, payload = self.fixture()
+            if action == 'extra': lock['sources']['unknown'] = dict(commit='a'*40,tree='b'*40)
+            elif action == 'alias': lock['sources']['unified'] = lock['sources'].pop('unified-system')
+            else: lock['schema'] = 'unified.windows-package-lock.v1'
+            with self.subTest(action=action), self.assertRaises(ValueError): validate_package_lock(lock,payload)
+
+    def test_v2_rejects_schema_types_pins_and_security_mutations(self):
+        for schema in (None, True, 2, [], {}, 'unified.windows-package-lock.v3'):
+            lock,payload=self.fixture(); lock['schema']=schema
+            with self.subTest(schema=schema),self.assertRaises(ValueError): validate_package_lock(lock,payload)
+        for value in (None, [], 'latest', {'commit':True,'tree':'b'*40}, {'commit':'a'*40,'tree':'b'*39}):
+            lock,payload=self.fixture(); lock['sources']['meta_analyse']=value
+            with self.subTest(source=value),self.assertRaises(ValueError): validate_package_lock(lock,payload)
+        for field,value in (('identity_sid','admin'),('requirements',{'powershell':'7','postgresql_major':18}),
+                            ('requirements',{'powershell':'5.1,7','postgresql_major':18.0}),('sources',[])):
+            lock,payload=self.fixture(); lock[field]=value
+            with self.subTest(field=field,value=value),self.assertRaises(ValueError): validate_package_lock(lock,payload)
+        for field,value in (('sha256','0'*64),('publisher_sha256','latest'),('bytes',True),('version','')):
+            lock,payload=self.fixture(); lock['artifacts'][0][field]=value
+            with self.subTest(artifact=field),self.assertRaises(ValueError): validate_package_lock(lock,payload)
+        lock,payload=self.fixture(); lock['artifacts'].pop()
+        with self.assertRaises(ValueError): validate_package_lock(lock,payload)

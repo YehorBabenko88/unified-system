@@ -61,6 +61,22 @@ function Test-UnifiedPackageSignature {
     if ($pin -cne $PublisherSha256) { throw 'Publisher pin mismatch' }
 }
 
+function Assert-UnifiedManifestContract($data, [string]$identity) {
+    if ($data.schema -isnot [string] -or $data.identity_sid -cne $identity) { throw 'Manifest schema or identity mismatch' }
+    switch -CaseSensitive ($data.schema) {
+        'unified.windows-package-lock.v1' { $sourceNames = @('grid','strattester','unified','terminan','math') }
+        'unified.windows-package-lock.v2' { $sourceNames = @('unified-system','grid','strattester','math','meta_analyse','terminan') }
+        default { throw 'Unknown manifest schema' }
+    }
+    if ($data.requirements.powershell -isnot [string] -or $data.requirements.powershell -cne '5.1,7' -or ($data.requirements.postgresql_major -isnot [int] -and $data.requirements.postgresql_major -isnot [long]) -or $data.requirements.postgresql_major -ne 18) { throw 'PS5.1/7 and PG18 contract required' }
+    if ($data.sources -isnot [pscustomobject] -or @($data.sources.PSObject.Properties.Name).Count -ne $sourceNames.Count) { throw 'Exact source inventory required' }
+    foreach ($sourceName in $sourceNames) {
+        if ($sourceName -cnotin @($data.sources.PSObject.Properties.Name)) { throw 'Exact source inventory required' }
+        $source = $data.sources.$sourceName
+        if (@($source.PSObject.Properties.Name).Count -ne 2 -or $source.commit -isnot [string] -or $source.tree -isnot [string] -or $source.commit -cnotmatch '^[0-9a-f]{40}$' -or $source.tree -cnotmatch '^[0-9a-f]{40}$') { throw 'Exact source commit/tree required' }
+    }
+}
+
 function Test-UnifiedSecurityPackage {
     [CmdletBinding()]
     param(
@@ -88,13 +104,7 @@ function Test-UnifiedSecurityPackage {
     Test-UnifiedPackageSignature -Bytes $bytes -SignatureBytes (Read-BoundedBytes $Signature 262144) -PublisherSha256 $PublisherSha256
     $utf8 = New-Object Text.UTF8Encoding($false, $true)
     $data = $utf8.GetString($bytes) | ConvertFrom-Json
-    if ($data.schema -cne 'unified.windows-package-lock.v1' -or $data.identity_sid -cne $identity) { throw 'Manifest schema or identity mismatch' }
-    if ($data.requirements.powershell -isnot [string] -or $data.requirements.powershell -cne '5.1,7' -or ($data.requirements.postgresql_major -isnot [int] -and $data.requirements.postgresql_major -isnot [long]) -or $data.requirements.postgresql_major -ne 18) { throw 'PS5.1/7 and PG18 contract required' }
-    if (@($data.sources.PSObject.Properties.Name).Count -ne 5) { throw 'Exact source inventory required' }
-    foreach ($sourceName in @('grid','strattester','unified','terminan','math')) {
-        $source = $data.sources.$sourceName
-        if (@($source.PSObject.Properties.Name).Count -ne 2 -or $source.commit -isnot [string] -or $source.tree -isnot [string] -or $source.commit -cnotmatch '^[0-9a-f]{40}$' -or $source.tree -cnotmatch '^[0-9a-f]{40}$') { throw 'Exact source commit/tree required' }
-    }
+    Assert-UnifiedManifestContract $data $identity
     if ($data.artifacts -isnot [Array] -or $data.artifacts.Count -lt 1 -or $data.artifacts.Count -gt 32) { throw 'Artifact count out of bounds' }
     $seen = @{}
     $dependencies = @{}

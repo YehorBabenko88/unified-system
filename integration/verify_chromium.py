@@ -14,6 +14,7 @@ sys.pycache_prefix=cache.name
 from integration.source_guard import SourceFence, SourceQualificationError
 parser=argparse.ArgumentParser()
 for name in ('terminan','math','grid','strattester'):parser.add_argument('--'+name,required=True,type=Path)
+parser.add_argument('--meta-analyse',type=Path)
 parser.add_argument('--output',required=True,type=Path)
 args=parser.parse_args();args.output=args.output.resolve()
 pins=json.loads((ROOT/'integration/source-pins.json').read_text())
@@ -21,10 +22,13 @@ evidence_path=args.output/'evidence.json'
 proof=json.loads(evidence_path.read_text())
 proof['browser']={'qualification':'NOT_RUN'}
 evidence_path.write_text(json.dumps(proof,sort_keys=True,indent=2),encoding='utf-8')
-fences={'unified-system':SourceFence(ROOT,proof.get('head'),isolated_cache=cache.name),**{name:SourceFence(getattr(args,name),pins[name],isolated_cache=cache.name) for name in ('terminan','math','grid','strattester')}}
+names=['terminan','math','grid','strattester']
+if args.meta_analyse is not None:names.append('meta_analyse')
+fences={'unified-system':SourceFence(ROOT,proof.get('head'),isolated_cache=cache.name),**{name:SourceFence(getattr(args,name),pins[name],isolated_cache=cache.name) for name in names}}
 try:
     if proof.get('qualification')!='EXACT_SOURCE_CONSISTENT':raise SourceQualificationError('SOURCE_RUN_UNQUALIFIED')
-    if (proof.get('python_tests')!=11 or any(proof.get(key)!=0 for key in ('python_failures','python_errors','python_skips','math_exit','network_attempts'))
+    if set(proof.get('sources',{}))!=set(names):raise SourceQualificationError('SOURCE_ROSTER_MISMATCH')
+    if (proof.get('python_tests')!=(13 if 'meta_analyse' in names else 12) or any(proof.get(key)!=0 for key in ('python_failures','python_errors','python_skips','math_exit','network_attempts'))
             or proof.get('math_counts')!={'tests':6,'pass':6,'fail':0,'cancelled':0,'skipped':0,'todo':0}):
         raise SourceQualificationError('SOURCE_TESTS_NOT_SUCCESSFUL')
     pre={name:fence.check() for name,fence in fences.items()}
