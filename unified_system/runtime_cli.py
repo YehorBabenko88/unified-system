@@ -37,7 +37,8 @@ def need(ok):
 def validate_config(c):
     need(type(c) is dict and set(c)=={'schema','node_id','release_id','release_sha256',
         'state_root','snapshot_path','http_port','tick_seconds','specs','programs'})
-    need(c['schema']=='unified.runtime.config.v1')
+    need(c['schema'] in ('unified.runtime.config.v1','unified.runtime.config.v2'))
+    builtin=c['schema']=='unified.runtime.config.v2'
     need(type(c['node_id']) is str and re.fullmatch('[A-Za-z0-9_-]{1,64}',c['node_id']) and c['node_id'].upper() not in ('ADMINIT','LS5','PC4'))
     need(type(c['release_id']) is str and re.fullmatch('[A-Za-z0-9_.:-]{1,128}',c['release_id']))
     need(type(c['release_sha256']) is str and re.fullmatch('[0-9a-f]{64}',c['release_sha256']))
@@ -52,9 +53,11 @@ def validate_config(c):
         spec=ModuleSpec(**item);_valid(spec)
         need(spec.module_id not in specs);specs[spec.module_id]=spec
     need(set(specs)==MODULE_IDS);RuntimeSupervisor._order(specs)
-    need(type(c['programs']) is dict and set(c['programs'])==MODULE_IDS)
+    expected=MODULE_IDS-{'unified-system'} if builtin else MODULE_IDS
+    need(type(c['programs']) is dict and set(c['programs'])==expected)
+    if builtin:need(c['http_port']>0 and c['tick_seconds']<=.25)
     for p in c['programs'].values():
-        need(type(p) is dict and {'argv','cwd','health_url','executable_sha256','file_pins'}<=set(p)<= {'argv','cwd','health_url','executable_sha256','file_pins','env','ca_file'})
+        need(type(p) is dict and {'argv','cwd','health_url','executable_sha256','file_pins'}<=set(p)<= {'argv','cwd','health_url','executable_sha256','file_pins','env','ca_file','external_file_pins'})
         argv=p['argv'];need(type(argv) is list and 1<=len(argv)<=32)
         need(all(type(x) is str and 0<len(x)<=4096 and '\0' not in x for x in argv))
         need(not any(x.casefold() in ('-c','-command','-encodedcommand','/c','-e') for x in argv[1:]))
@@ -64,6 +67,12 @@ def validate_config(c):
         for file,pin in pins.items():
             need(type(file) is str and file and not Path(file).is_absolute() and '..' not in Path(file).parts and ':' not in file and '\\' not in file)
             need(type(pin) is str and re.fullmatch('[0-9a-f]{64}',pin))
+        external=p.get('external_file_pins',{})
+        need(type(external) is dict and len(external)<=64)
+        for file,pin in external.items():
+            need(type(file) is str and len(file)<=4096 and Path(file).is_absolute())
+            _safe_path(file)
+            need(type(pin) is str and re.fullmatch('[a-f0-9]{64}',pin))
         url=urlsplit(p['health_url'])
         need(url.scheme in ('http','https') and url.hostname in ('127.0.0.1','::1') and url.port is not None and not url.username and not url.password and not url.query and not url.fragment)
         if 'env' in p:
@@ -96,6 +105,7 @@ def assert_ephemeral(c,config_path,*,env=None,platform=None,hostname=None):
     for p in c['programs'].values():
         paths.extend((p['cwd'],p['argv'][0]))
         paths.extend(str(Path(p['cwd'])/file) for file in p['file_pins'])
+        paths.extend(p.get('external_file_pins',{}))
         if 'ca_file' in p:paths.append(p['ca_file'])
     for path in paths:
         path=_safe_path(path).resolve()
@@ -185,6 +195,11 @@ def write_snapshot(path,snapshot):
 def make_runtime(c,authorize):
     root=Path(c['state_root'])
     driver=ProcessDriver(root/'private-processes',c['programs'],authorize=authorize)
+    if c['schema']=='unified.runtime.config.v2':
+        from .runtime_builtin import BuiltinRuntimeDriver
+        driver=BuiltinRuntimeDriver(driver,journal_path=root/'runtime.sqlite',snapshot_path=c['snapshot_path'],
+            http_port=c['http_port'],node_id=c['node_id'],release_id=c['release_id'],
+            release_sha256=c['release_sha256'],authorize=authorize)
     return RuntimeSupervisor(root/'runtime.sqlite',driver,[ModuleSpec(**x) for x in c['specs']],
         release_id=c['release_id'],release_sha256=c['release_sha256'],node_id=c['node_id'])
 
@@ -193,16 +208,22 @@ def run_runtime(c,runtime,*,stop_event):
     view=SnapshotView();view.set(runtime.snapshot())
     server=status_server(view,port=c['http_port'])
     thread=threading.Thread(target=server.serve_forever,daemon=True);thread.start()
+    def publish():
+        snapshot=runtime.snapshot();view.set(snapshot);write_snapshot(c['snapshot_path'],snapshot)
+        from .runtime_builtin import BuiltinRuntimeDriver
+        driver=getattr(runtime,'driver',None)
+        if isinstance(driver,BuiltinRuntimeDriver):driver.published(snapshot)
     try:
+        publish()
         runtime.start()
         while not stop_event.is_set():
-            runtime.tick();snapshot=runtime.snapshot();view.set(snapshot);write_snapshot(c['snapshot_path'],snapshot)
+            runtime.tick();publish()
             stop_event.wait(c['tick_seconds'])
     finally:
         try:
             try:runtime.stop(administrative=True)
             finally:
-                snapshot=runtime.snapshot();view.set(snapshot);write_snapshot(c['snapshot_path'],snapshot)
+                publish()
         finally:server.shutdown();server.server_close();thread.join(3)
 
 

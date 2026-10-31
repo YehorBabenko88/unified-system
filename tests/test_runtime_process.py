@@ -99,6 +99,25 @@ class ProcessTests(unittest.TestCase):
             time.sleep(.01)
         self.assertEqual(marker.read_text(),'honest')
 
+    def test_external_bootstrap_pin_is_verified_before_process_creation(self):
+        from unittest.mock import patch
+        external=self.root/'external';external.mkdir()
+        bootstrap=external/'bootstrap.py';bootstrap.write_text('# owned bootstrap\n')
+        self.program['external_file_pins']={str(bootstrap):hashlib.sha256(bootstrap.read_bytes()).hexdigest()}
+        driver=self.driver()
+        driver._verify('math')
+        bootstrap.write_text('# changed bootstrap\n')
+        with patch('unified_system.runtime_process.subprocess.Popen') as spawn:
+            with self.assertRaisesRegex(ValueError,'integrity'):
+                driver.start(ModuleSpec('math','1.0.0'),'r','2'*32)
+            spawn.assert_not_called()
+
+    def test_external_bootstrap_pin_requires_absolute_bounded_regular_paths(self):
+        self.program['external_file_pins']={'bootstrap.py':'a'*64}
+        with self.assertRaises(ValueError):self.driver()
+        self.program['external_file_pins']={str(self.root/'x'):'invalid'}
+        with self.assertRaises(ValueError):self.driver()
+
     def test_default_denied_and_tampered_program_not_executed(self):
         with self.assertRaises(ValueError):self.driver(False).start(ModuleSpec('math','1.0.0'),'r','b'*32)
         self.worker.write_text('raise RuntimeError("tampered")')

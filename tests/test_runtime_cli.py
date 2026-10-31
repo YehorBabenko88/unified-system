@@ -44,6 +44,54 @@ class CliTests(unittest.TestCase):
             with self.assertRaises(ValueError):cli.assert_ephemeral(self.config,self.path,env=env,platform='win32',hostname=host)
         c=copy.deepcopy(self.config);c['state_root']=str(self.root.parent/'outside')
         with self.assertRaises(ValueError):cli.assert_ephemeral(c,self.path,env=env,platform='win32',hostname='ci-host')
+    def test_external_bootstrap_pin_stays_inside_disposable_host_scope(self):
+        env=dict(GITHUB_ACTIONS='true',RUNNER_ENVIRONMENT='github-hosted',RUNNER_OS='Windows',RUNNER_TEMP=str(self.root))
+        c=copy.deepcopy(self.config)
+        c['programs']['math']['external_file_pins']={str(self.root/'bootstrap.py'):'a'*64}
+        cli.validate_config(c)
+        self.assertTrue(cli.assert_ephemeral(c,self.path,env=env,platform='win32',hostname='ci-host'))
+        c['programs']['math']['external_file_pins']={str(self.root.parent/'outside-bootstrap.py'):'a'*64}
+        with self.assertRaises(ValueError):cli.assert_ephemeral(c,self.path,env=env,platform='win32',hostname='ci-host')
+
+    def builtin_config(self):
+        c=copy.deepcopy(self.config);c['schema']='unified.runtime.config.v2'
+        c['programs'].pop('unified-system')
+        with socket.socket() as listener:
+            listener.bind(('127.0.0.1',0));c['http_port']=listener.getsockname()[1]
+        return c
+    def test_builtin_config_requires_one_controller_and_bounded_publish_interval(self):
+        c=self.builtin_config();cli.validate_config(c)
+        for fault in ('self_process','slow','unbound_port'):
+            invalid=copy.deepcopy(c)
+            if fault=='self_process':invalid['programs']['unified-system']=invalid['programs']['math']
+            if fault=='slow':invalid['tick_seconds']=1
+            if fault=='unbound_port':invalid['http_port']=0
+            with self.assertRaises(ValueError):cli.validate_config(invalid)
+    def test_actual_cli_builtin_uses_live_journal_snapshot_api_without_child_controller(self):
+        import time
+        c=self.builtin_config();cli.validate_config(c)
+        runtime=cli.make_runtime(c,lambda action,module:module=='unified-system')
+        # Component-only proof: keep the five unqualified processes STOPPED.
+        runtime.start=lambda:runtime.start_module('unified-system')
+        stop=threading.Event();errors=[]
+        def run():
+            try:cli.run_runtime(c,runtime,stop_event=stop)
+            except Exception as exc:errors.append(type(exc).__name__)
+        worker=threading.Thread(target=run);worker.start()
+        try:
+            deadline=time.monotonic()+4
+            while time.monotonic()<deadline:
+                if runtime.snapshot()['modules']['unified-system']['ready']:break
+                time.sleep(.025)
+            snapshot=runtime.snapshot()
+            self.assertTrue(snapshot['modules']['unified-system']['ready'])
+            self.assertFalse(snapshot['ready'])
+            self.assertFalse(runtime.driver.delegate.children,'no second controller or unauthorized child')
+        finally:stop.set();worker.join(4)
+        self.assertFalse(worker.is_alive());self.assertEqual(errors,[])
+        final=json.loads(pathlib.Path(c['snapshot_path']).read_text())
+        self.assertTrue(all(m['state']=='STOPPED' for m in final['modules'].values()))
+
     def test_cached_loopback_http_never_ticks_and_rejects_mutating_methods(self):
         view=cli.SnapshotView();view.set({'schema':'fixture','ready':False})
         server=cli.status_server(view,port=0);thread=threading.Thread(target=server.serve_forever,daemon=True);thread.start()

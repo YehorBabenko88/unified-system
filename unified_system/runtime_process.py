@@ -100,6 +100,13 @@ class ProcessDriver:
             for file,pin in p['file_pins'].items():
                 relative=Path(file)
                 if relative.is_absolute() or '..' in relative.parts or not re.fullmatch('[a-f0-9]{64}',pin):raise ValueError('invalid file pin')
+            external=p.get('external_file_pins',{})
+            if type(external) is not dict or len(external)>64:raise ValueError('invalid external file pins')
+            for file,pin in external.items():
+                if (type(file) is not str or not Path(file).is_absolute() or len(file)>4096
+                        or type(pin) is not str or not re.fullmatch('[a-f0-9]{64}',pin)):
+                    raise ValueError('invalid external file pin')
+                _safe_path(file)
     def _file(self,op):
         if type(op) is not str or not re.fullmatch('[a-f0-9-]{32,36}',op):raise ValueError('invalid operation identity')
         return _safe_path(self.root/(op+'.json'))
@@ -125,6 +132,9 @@ class ProcessDriver:
         for file,pin in p['file_pins'].items():
             target=_safe_path(cwd/file)
             if not target.is_file() or _sha(target)!=pin:raise ValueError('runtime file integrity')
+        for file,pin in p.get('external_file_pins',{}).items():
+            target=_safe_path(file)
+            if not target.is_file() or _sha(target)!=pin:raise ValueError('runtime external file integrity')
     def start(self,spec,release_id,operation_id):
         if self.authorize('start',spec.module_id) is not True:raise ValueError('runtime execution not authorized')
         self._verify(spec.module_id)
