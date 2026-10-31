@@ -1,8 +1,9 @@
 """Strict capability negotiation without importing module implementations."""
 import re
 from .contracts import ContractError
+from .module_catalog import MODULE_IDS
 
-_MODULES = frozenset(("grid", "strattester", "terminan"))
+_MODULES = MODULE_IDS
 _SHA = re.compile(r"[0-9a-f]{64}\Z")
 
 def negotiate(descriptor, *, expected_id, supported_major=1):
