@@ -79,7 +79,7 @@ try {
         [CmdletBinding()]
         param([string]$LiteralPath,[switch]$Force)
         $script:PathProbeCalls.Add($LiteralPath)
-        Microsoft.PowerShell.ManagementGet-Item -LiteralPath $LiteralPath -Force:$Force -ErrorAction Stop
+        Microsoft.PowerShell.Management\Get-Item -LiteralPath $LiteralPath -Force:$Force -ErrorAction Stop
       }
       try {
         $rejected=$false;try { Assert-LocalPath $probePath } catch {$rejected=$true}
