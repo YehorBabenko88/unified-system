@@ -10,7 +10,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-24.04, windows-latest]
         python: ['3.11', '3.13']
     runs-on: ${{ matrix.os }}
     timeout-minutes: 15
@@ -22,31 +22,31 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: YehorBabenko88/Terminan
-          ref: a23cd77622af7bf04788fe5e32a03d930c08ebfc
+          ref: accf62692378269f0226f86439faf838849a1e4c
           path: .source/terminan
           persist-credentials: false
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: YehorBabenko88/math
-          ref: 191a119b8a00e97d61549280f9dcbe5ae9f3a7cd
+          ref: ae317baad4352de1ec7c1ea4a9446e925356bae3
           path: .source/math
           persist-credentials: false
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: YehorBabenko88/bybit-cluster-grid
-          ref: 1e30b49c0aaa826e5edf54d7652fd424cc7d566d
+          ref: 6b845f288641046744941c0c54c2e0fe3e67e6ab
           path: .source/grid
           persist-credentials: false
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: YehorBabenko88/strattester
-          ref: 1d654150b03932ac4efe7e99a6e3c50b4e020fff
+          ref: b4e30f7c6d50dc4bc33a342f8970b6b165f1812b
           path: .source/strattester
           persist-credentials: false
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: YehorBabenko88/meta_analyse
-          ref: a61adb48bc3718efe8ec99b915e85741ae8142af
+          ref: c108b8c3fc312a2035e7275dbcba7a8b308d081b
           path: .source/meta_analyse
           persist-credentials: false
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
@@ -61,6 +61,13 @@ jobs:
           import subprocess
           assert subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip() == '${{ github.event.pull_request.head.sha || github.sha }}'
           subprocess.run(['python','-m','unittest','discover','-s','tests','-v'],check=True)
+      - name: Actual owned Terminan process and independent runtime display
+        shell: python
+        run: |
+          import os,subprocess,sys
+          from pathlib import Path
+          output=Path(os.environ["RUNNER_TEMP"])/"actual-terminan-runtime"
+          subprocess.run([sys.executable,"integration/verify_terminan_runtime.py","--terminan",".source/terminan","--output",str(output),"--execute-isolated-cloud-test"],check=True)
       - name: Real source APIs and bounded Math worker
         shell: python
         run: |
@@ -99,5 +106,7 @@ jobs:
         if: always()
         with:
           name: actual-six-source-${{ matrix.os }}-${{ matrix.python }}-${{ github.run_attempt }}
-          path: five-source-evidence/
+          path: |
+            five-source-evidence/
+            ${{ runner.temp }}/actual-terminan-runtime/
           if-no-files-found: error
