@@ -27,6 +27,14 @@ jobs:
         if: matrix.shell == 'pwsh'
         shell: pwsh
         run: ./tests/windows/Test-SecurityPackage.ps1
+      - name: ADMINIT preparation contract on disposable runner PS5.1
+        if: matrix.shell == 'powershell'
+        shell: powershell
+        run: ./tests/windows/Test-AdminitPreparation.ps1
+      - name: ADMINIT preparation contract on disposable runner PS7
+        if: matrix.shell == 'pwsh'
+        shell: pwsh
+        run: ./tests/windows/Test-AdminitPreparation.ps1
       - name: Bind exact checkout evidence
         shell: pwsh
         env:
