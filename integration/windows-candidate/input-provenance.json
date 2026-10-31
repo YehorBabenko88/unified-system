@@ -1,0 +1,33 @@
+{
+  "scope": "WINDOWS_CP312_CPU_SOURCE_DERIVED_CANDIDATE_NOT_ADMITTED",
+  "inputs": [
+    {
+      "path": "bybit-cluster-grid/requirements.txt",
+      "sha256": "0bea9e0fc705570d541af38d649b02f455843cdfcdbdc26a3175e15b206a7072"
+    },
+    {
+      "path": "strattester/pyproject.toml",
+      "sha256": "cf48d1fa28822a6f82e0828563a4192ade3cbaeb3221634ae4f9450bf62d2110"
+    },
+    {
+      "path": "meta_analyse/requirements.lock",
+      "sha256": "d09e2380ea9b8a5a7e4507baeb970c60856fabf06c3a8ae6bdad9c83a121a14f"
+    },
+    {
+      "path": "math/scripts/book-ingestion-requirements.txt",
+      "sha256": "7fb8650d608b38a8e55c23826b20242d703d320794a42ce02caf8c3d985bd98b"
+    }
+  ],
+  "resolver": "uv 0.12.23 (x86_64-unknown-linux-gnu)",
+  "native_test": "NOT_RUN",
+  "installation_closure": false,
+  "selected_strattester_extras": [
+    "research",
+    "postgres",
+    "dev"
+  ],
+  "lock_sha256": "7eab2508a19e5b0ac54efbb9048c6841082edf140848982d6ace2c2983ff549c",
+  "candidate_wheels": 72,
+  "resolution_command": "uv pip compile strattester/pyproject.toml bybit-cluster-grid/requirements.txt meta_analyse/requirements.lock math/scripts/book-ingestion-requirements.txt --extra research --extra postgres --extra dev --python-version 3.12.10 --python-platform x86_64-pc-windows-msvc --torch-backend cpu --only-binary :all: --generate-hashes --emit-index-annotation --default-index https://pypi.org/simple",
+  "lock_file": "requirements-cp312-win_amd64-cpu.lock"
+}

@@ -1,39 +1,45 @@
 # Mission 4 continuation — cloud preparation INCOMPLETE
 
-ADMINIT access is not authorized. No physical inventory, installation, services,
-database changes or acceptance tests have been performed on ADMINIT/office PCs.
-Do not request inventory or physical admission until cloud preparation completes.
+ADMINIT/office access is not authorized. No physical inventory, installations,
+services, databases or tests have been performed. Request separate admission only
+when cloud preparation is complete; do not request office inventory yet.
 
-Last verified implementation: Unified `c20e234` (245 unique tests PASS), Grid
-`6b845f28`, Math `ae317ba`, Meta `c108b8c`, Terminan `accf626`, Strattester
-`b4e30f7` plus a pending owned-results service change. Six existing Draft PRs
-remain open; no merge or remote branch deletion. Current exact trees and logs
-are recorded under `/workspace/.onboarding/mission4`.
+Current implementation includes three successful combined six-profile cloud
+runs: one supervisor, five real processes and the built-in Unified profile,
+actual synthetic data/API handoffs, source/dependency before-after checks,
+owned process stop and disposable database cleanup. Synthetic cloud results
+are not authenticated history, physical acceptance or multi-node HA evidence.
 
-The public runtime-v2 contract covers all six modules. A local durable journal
-and composite builtin Unified profile provide local lifecycle only; Grid retains
-fleet authority. Builtin readiness proves the actual journal, atomic snapshot
-and live HTTP output without starting another controller. Python services use
-an externally pinned isolated bootstrap and fresh private bytecode namespace.
-Source qualification now rejects unsafe local fsmonitor/config/linked metadata
-before invoking bounded Git, preserving raw-byte and hidden-index checks.
+Unified `106d143`: 276 tests PASS; all four current hosted workflows PASS.
+Grid `35b9cf69`: 1283 tests PASS, 12 platform skips, 46 subtests; independently
+reviewed feed cancellation/retained admission and uncertain WAL I/O fixes.
+Meta `fa855d3` native Windows/PostgreSQL18/coverage aggregate PASS. Terminan
+`8595443` four-cell hosted matrix PASS, 405 local Python tests and 84 actual
+Chromium/Firefox assertions plus strict browser evidence bundle PASS.
+Math `6af353a` four Linux matrix cells PASS; mandatory Windows failure remains
+under diagnosis. Strattester `798c3e3` Windows source regression now PASS;
+Ubuntu Python3.13 regression remains under diagnosis. Its system acceptance
+NO_GO is retained and must not be disabled. These are exact component results,
+not a claim that all current integration or acceptance checks pass.
 
-Actual separate Grid, Math, Meta and Terminan cloud process proofs pass, with
-functional API checks, nonce authentication and owned cleanup. These do not yet
-prove one simultaneously integrated six-module stack. Math's four local Linux
-Node22/24 x PostgreSQL16/18 cells each pass 1182 tests without skips. Current
-native/hosted CI matrices remain pending or blocked; do not claim a current full
-CI PASS. Earlier Windows parser/CMS/agent successes are scoped to their exact
-older source SHA and are not physical service installation.
+The isolated raw Python bootstrap, source fence and release/toolchain preflight
+are externally pinned. Durable readiness is revalidated after recovery before
+serving API state. Publication timing covers all bounded probes. The Windows
+wheel candidate and input provenance are tracked under
+`integration/windows-candidate`: 72 acquired wheels match offline inspection,
+but native dependency closure is NOT_RUN and installation closure stays false.
+Python/Node/Git archive checksums match; full native SDK staging and process-tree
+containment are still in development. No installer release is admitted.
 
-Remaining: combined six-profile execution and data handoffs; complete isolated
-pinned Windows dependency/PostgreSQL provisioning, actual SCM lifecycle and
-rollback; authenticated deployment-agent to runtime bridge; owner-admitted signed
-release; outstanding native CI defects; independent OS watchdog/fencing backend.
-All authenticated ten-instrument history/OOS/live-paper/performance/recovery
-ADMINIT acceptance remains NOT_RUN. Cloud synthetic data is never authenticated
-history or physical HA evidence. Release artifact SHA/installed versions and
-ADMINIT service/DB health remain NOT_BUILT/NOT_INSTALLED/NOT_OBSERVED.
+Remaining: actual hosted Windows SDK and wheel qualification; full isolated
+PostgreSQL/storage/ACL/port provisioning, six services and rollback/uninstall;
+trusted deployment-agent/runtime bridge and owner-signed release admission;
+current mandatory CI defects; raw market capture/gap/snapshot reconciliation
+and live paper capability; independent OS watchdog/fencing qualification.
+Ten authenticated instrument histories, training/OOS fees/funding/slippage,
+live/paper/performance/recovery ADMINIT results are NOT_RUN. Release installer
+SHA256 is NOT_BUILT/NOT_ADMITTED. Installed versions and ADMINIT service/DB
+health are NOT_INSTALLED/NOT_OBSERVED. Office cluster readiness remains NO_GO.
 
 The checkpoint below is historical Mission 1/2 evidence. Its network restrictions,
 counts and missing capabilities describe that earlier commit, not current state.
