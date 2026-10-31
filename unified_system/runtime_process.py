@@ -15,6 +15,7 @@ import secrets
 import signal
 import socket
 import threading
+import tempfile
 import ssl
 import stat
 import subprocess
@@ -137,6 +138,9 @@ class ProcessDriver:
                token=secrets.token_hex(32),state='STARTING')
         self._save(operation_id,d,new=True)
         p=self.programs[spec.module_id];env=os.environ.copy();env.update(p.get('env',{}))
+        cache=tempfile.mkdtemp(prefix=operation_id+'-cache-',dir=self.root)
+        os.chmod(cache,0o700)
+        env.update(PYTHONPYCACHEPREFIX=cache,PYTHONDONTWRITEBYTECODE='1',UNIFIED_PRIVATE_CACHE_ROOT=cache)
         env.update(UNIFIED_MODULE_ID=spec.module_id,UNIFIED_MODULE_VERSION=spec.version,
                    UNIFIED_RELEASE_ID=release_id,UNIFIED_INSTANCE_TOKEN=d['token'])
         proc=subprocess.Popen(p['argv'],cwd=p['cwd'],env=env,stdin=subprocess.PIPE,

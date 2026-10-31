@@ -200,8 +200,9 @@ def run_runtime(c,runtime,*,stop_event):
             stop_event.wait(c['tick_seconds'])
     finally:
         try:
-            runtime.stop(administrative=True)
-            snapshot=runtime.snapshot();view.set(snapshot);write_snapshot(c['snapshot_path'],snapshot)
+            try:runtime.stop(administrative=True)
+            finally:
+                snapshot=runtime.snapshot();view.set(snapshot);write_snapshot(c['snapshot_path'],snapshot)
         finally:server.shutdown();server.server_close();thread.join(3)
 
 

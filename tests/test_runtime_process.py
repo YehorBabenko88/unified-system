@@ -75,6 +75,30 @@ class ProcessTests(unittest.TestCase):
         self.assertFalse(d.ready(spec,op,'release-1')['ready'])
         self.assertLess(time.monotonic()-started,1.1,'health body needs an absolute deadline')
 
+    def test_seeded_timestamp_valid_dependency_cache_cannot_override_pinned_source(self):
+        import os,py_compile,subprocess
+        from unittest.mock import patch
+        helper=self.root/'helper.py';helper.write_text("VALUE='honest'\n")
+        poison=self.root/'poison.py';poison.write_text("VALUE='poison'\n")
+        cache=self.root/'seeded-cache';cache.mkdir()
+        code="import importlib.util,sys;sys.pycache_prefix=sys.argv[1];print(importlib.util.cache_from_source(sys.argv[2]))"
+        cached=Path(subprocess.check_output([sys.executable,'-c',code,str(cache),str(helper)],text=True).strip())
+        # Compile malicious bytes with honest source timestamp AND size metadata.
+        self.assertEqual(len(helper.read_bytes()),len(poison.read_bytes()))
+        os.utime(poison,ns=(helper.stat().st_atime_ns,helper.stat().st_mtime_ns))
+        cached.parent.mkdir(parents=True);py_compile.compile(str(poison),cfile=str(cached),doraise=True)
+        marker=self.root/'marker.txt'
+        self.worker.write_text("import helper\nfrom pathlib import Path\nPath("+repr(str(marker))+").write_text(helper.VALUE)\n"+WORKER)
+        self.program['file_pins']={name:hashlib.sha256((self.root/name).read_bytes()).hexdigest() for name in ('worker.py','helper.py')}
+        self.program['env']['PYTHONPYCACHEPREFIX']=str(cache)
+        d=self.driver();op='1'*32
+        with patch.dict(os.environ,{'PYTHONPYCACHEPREFIX':str(cache)}):d.start(ModuleSpec('math','1.0.0'),'r',op)
+        self.addCleanup(lambda:d.stop(op))
+        for _ in range(100):
+            if marker.exists():break
+            time.sleep(.01)
+        self.assertEqual(marker.read_text(),'honest')
+
     def test_default_denied_and_tampered_program_not_executed(self):
         with self.assertRaises(ValueError):self.driver(False).start(ModuleSpec('math','1.0.0'),'r','b'*32)
         self.worker.write_text('raise RuntimeError("tampered")')
@@ -113,3 +137,53 @@ class PathPolicyTests(unittest.TestCase):
             try:link.symlink_to(Path(temp)/'missing',target_is_directory=True)
             except OSError:self.skipTest('symlink privilege unavailable')
             with self.assertRaises(ValueError):_safe_path(link)
+
+
+class OwnedPythonTests(unittest.TestCase):
+    def test_isolated_raw_bootstrap_runs_honest_source_and_preserves_owned_identity(self):
+        import os,py_compile,subprocess
+        bootstrap=Path(__file__).resolve().parents[1]/'unified_system/owned_python.py'
+        with tempfile.TemporaryDirectory() as temp:
+            root=Path(temp).resolve();cache=root/'private';cache.mkdir(mode=0o700)
+            package=root/'src'/'demo';package.mkdir(parents=True);(package/'__init__.py').write_text('')
+            helper=package/'helper.py';helper.write_text("VALUE='honest'\n")
+            poison=root/'poison.py';poison.write_text("VALUE='poison'\n")
+            os.utime(poison,ns=(helper.stat().st_atime_ns,helper.stat().st_mtime_ns))
+            cached=Path(__import__('importlib.util',fromlist=['cache_from_source']).cache_from_source(str(helper)))
+            cached.parent.mkdir();py_compile.compile(str(poison),cfile=str(cached),doraise=True)
+            (package/'app.py').write_text("from .helper import VALUE\nimport json,os,sys\nprint(json.dumps(dict(value=VALUE,pid=os.getpid(),token=os.environ['UNIFIED_INSTANCE_TOKEN'],cache=sys.pycache_prefix,isolated=sys.flags.isolated,no_site=sys.flags.no_site,no_write=sys.dont_write_bytecode)))\n")
+            dependency=root/'dependency';dependency.mkdir();marker=root/'UNWANTED'
+            (dependency/'sitecustomize.py').write_text('raise RuntimeError("must not run")')
+            (dependency/'evil.pth').write_text('import pathlib;pathlib.Path('+repr(str(marker))+').touch()')
+            env=dict(os.environ,UNIFIED_MODULE_ID='meta_analyse',UNIFIED_MODULE_VERSION='1.0.0',UNIFIED_RELEASE_ID='r',UNIFIED_INSTANCE_TOKEN='a'*64,UNIFIED_PRIVATE_CACHE_ROOT=str(cache),PYTHONPYCACHEPREFIX=str(cached.parent))
+            command=[sys.executable,'-I','-S','-B',str(bootstrap),'--source-root',str(root),'--module','demo.app','--dependency-root',str(dependency)]
+            child=subprocess.Popen(command,env=env,stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True)
+            stdout,stderr=child.communicate(timeout=10);self.assertEqual(child.returncode,0,stderr)
+            result=json.loads(stdout);self.assertEqual(result['value'],'honest');self.assertEqual(result['pid'],child.pid)
+            self.assertEqual(result['token'],'a'*64);self.assertEqual((result['isolated'],result['no_site'],result['no_write']),(1,1,True))
+            self.assertTrue(Path(result['cache']).is_relative_to(cache));self.assertFalse(marker.exists())
+            bad_commands=[command[:1]+command[2:],command[:2]+command[3:],command[:3]+command[4:],
+                          command[:],command[:],command[:]]
+            bad_commands[3][bad_commands[3].index('--source-root')+1]='relative'
+            bad_commands[4][bad_commands[4].index('--module')+1]='..outside'
+            bad_commands[5][bad_commands[5].index('--module')+1]='missing.app'
+            for bad in bad_commands:
+                with self.subTest(command=bad):self.assertNotEqual(subprocess.run(bad,env=env,capture_output=True,timeout=10).returncode,0)
+            outside=dependency/'outside.py';outside.write_text('raise RuntimeError(\"outside source must not run\")')
+            outside_command=command.copy();outside_command[outside_command.index('--module')+1]='outside'
+            outside_result=subprocess.run(outside_command,env=env,capture_output=True,text=True,timeout=10)
+            self.assertNotEqual(outside_result.returncode,0);self.assertNotIn('outside source must not run',outside_result.stderr)
+            no_identity=dict(env,UNIFIED_INSTANCE_TOKEN='')
+            self.assertNotEqual(subprocess.run(command,env=no_identity,capture_output=True,timeout=10).returncode,0)
+
+
+class OwnedNamespaceTests(unittest.TestCase):
+    def test_network_namespace_denied_without_path_metadata(self):
+        from unittest.mock import patch
+        from unified_system.owned_python import reject_external_namespace
+        with patch.object(Path,'lstat',side_effect=AssertionError('metadata must not run')):
+            for path in ('//server/share/file',r'\\server\share\file',r'\\?\C:\file'):
+                with self.subTest(path=path),self.assertRaises(ValueError):reject_external_namespace(path)
+            with self.assertRaises(ValueError):reject_external_namespace('Z:/file',platform='nt',drive_type=lambda _:4)
+            with self.assertRaises(ValueError):reject_external_namespace('relative',platform='nt',drive_type=lambda _:3)
+            reject_external_namespace('C:/file',platform='nt',drive_type=lambda _:3)

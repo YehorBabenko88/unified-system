@@ -76,6 +76,34 @@ class RuntimeTests(unittest.TestCase):
                     ModuleSpec('bad','1.0.0',api_major=True),ModuleSpec('bad','invalid')):
             with self.assertRaises(ValueError):self.runtime().register(bad)
         self.assertEqual(self.driver.calls,[])
+    def test_restart_budget_exhaustion_is_failed_and_explicit_restart_recovers(self):
+        r=self.runtime(max_restarts=1);original=self.driver.start
+        def broken(*args):raise RuntimeError('startup failed')
+        self.driver.start=broken;r.start();r.tick();self.now+=10;r.tick()
+        self.assertEqual(r.snapshot()['modules']['math']['state'],'FAILED')
+        self.now+=100;r.tick()
+        self.assertEqual(r.snapshot()['modules']['math']['attempt'],2)
+        self.driver.start=original;r.restart();r.tick()
+        self.assertTrue(r.snapshot()['ready'])
+        self.assertEqual(r.snapshot()['modules']['math']['attempt'],0)
+
+    def test_explicit_restart_reports_unconfirmed_stop_without_restarting_peers(self):
+        r=self.runtime();r.start();r.tick();calls=len(self.driver.calls)
+        self.driver.stop=lambda *args: (_ for _ in ()).throw(RuntimeError('stop failed'))
+        with self.assertRaises(ValueError):r.restart()
+        self.assertFalse(any(op=='start' for op,name in self.driver.calls[calls:]))
+        self.assertFalse(r.snapshot()['ready'])
+
+    def test_stop_failure_is_reported_after_persistent_failure_and_admin_stop(self):
+        r=self.runtime();r.start();r.tick()
+        self.driver.stop=lambda *args: (_ for _ in ()).throw(RuntimeError('PRIVATE_STOP_ERROR'))
+        with self.assertRaises(ValueError):r.stop()
+        view=self.runtime().snapshot()
+        self.assertFalse(view['ready'])
+        self.assertEqual(view['modules']['math']['reason'],'STOP_FAILED')
+        self.assertTrue(view['modules']['math']['administrative_stop'])
+        self.assertNotIn('PRIVATE_STOP_ERROR',str(view))
+
     def test_wrong_release_and_driver_errors_never_leak_private_values(self):
         r=self.runtime();r.start();r.tick()
         self.assertFalse(r.health_release('other')['ready'])
@@ -85,7 +113,10 @@ class RuntimeTests(unittest.TestCase):
 
 if __name__=='__main__':unittest.main()
 
-class RuntimeConcurrencyTests(RuntimeTests):
+class RuntimeConcurrencyTests(unittest.TestCase):
+    # Share fixture setup without collecting every lifecycle test twice.
+    setUp=RuntimeTests.setUp
+    runtime=RuntimeTests.runtime
     def test_two_supervisors_do_not_interleave_external_effects(self):
         import threading
         first=self.runtime();second=self.runtime();first.start()

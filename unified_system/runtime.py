@@ -174,29 +174,47 @@ class RuntimeSupervisor:
             try:self.driver.stop(state['handle'])
             except Exception:
                 state.update(state='FAILED',reason='STOP_FAILED',desired='STOPPED',admin_stop=state['admin_stop'] or administrative)
-                self._put(db,name,state);return
+                self._put(db,name,state);return False
         state.update(state='STOPPED',reason='NONE',handle=None,desired='STOPPED',admin_stop=state['admin_stop'] or administrative)
         self._put(db,name,state)
+        return True
     def stop(self,administrative=True):
-        with self.lock,self._db() as db:
-            specs=self._specs(db);states=self._states(db)
-            for name in reversed(self._order(specs)):self._stop_one(db,name,states[name],administrative)
+        with self.lock:
+            failed=False
+            with self._db() as db:
+                specs=self._specs(db);states=self._states(db)
+                for name in reversed(self._order(specs)):
+                    if not self._stop_one(db,name,states[name],administrative):failed=True
+            # Persist failed cleanup and administrative STOP before signaling it.
+            if failed:raise ValueError('owned process cleanup required')
     def stop_module(self,name,*,cascade=False,administrative=True):
-        with self.lock,self._db() as db:
-            specs=self._specs(db);states=self._states(db)
-            if name not in specs:raise ValueError('unknown module')
-            targets={name}
-            while True:
-                more={n for n,s in specs.items() if targets.intersection(s.dependencies) and states[n]['desired']=='RUNNING'}
-                if more<=targets:break
-                targets|=more
-            if len(targets)>1 and not cascade:raise ValueError('running dependents')
-            for n in reversed(self._order(specs)):
-                if n in targets:self._stop_one(db,n,states[n],administrative)
+        with self.lock:
+            failed=False
+            with self._db() as db:
+                specs=self._specs(db);states=self._states(db)
+                if name not in specs:raise ValueError('unknown module')
+                targets={name}
+                while True:
+                    more={n for n,s in specs.items() if targets.intersection(s.dependencies) and
+                          (states[n]['desired']=='RUNNING' or states[n]['handle'] is not None)}
+                    if more<=targets:break
+                    targets|=more
+                if len(targets)>1 and not cascade:raise ValueError('running dependents')
+                for n in reversed(self._order(specs)):
+                    if n in targets and not self._stop_one(db,n,states[n],administrative):failed=True
+            if failed:raise ValueError('owned process cleanup required')
     def restart(self):
         with self.lock,self._db() as db:
             if any(s['admin_stop'] for s in self._states(db).values()):raise ValueError('explicit resume required')
-            self.stop(administrative=False);self.start()
+            self.stop(administrative=False)
+            with self._db() as stopped:
+                states=self._states(stopped)
+                if any(s['reason']=='STOP_FAILED' and s['handle'] is not None for s in states.values()):
+                    raise ValueError('owned process cleanup required')
+                for name,state in states.items():
+                    state.update(attempt=0,next_at=0.)
+                    self._put(stopped,name,state)
+            self.start()
     def tick(self):
         with self.lock,self._db() as db:
             now=float(self.clock())
@@ -234,7 +252,9 @@ class RuntimeSupervisor:
                         except Exception:stopped=False
                     s.update(state='BACKOFF' if stopped else 'FAILED',reason='DRIVER_FAILURE' if stopped else 'STOP_FAILED',
                              attempt=s['attempt']+1,next_at=now+min(60,2**min(s['attempt']+1,6)))
-                    if stopped:s['handle']=None
+                    if stopped:
+                        s['handle']=None
+                        if s['attempt']>self.max_restarts:s['state']='FAILED'
                 self._put(db,name,s)
     def snapshot(self):
         with self.lock,self._db() as db:

@@ -64,6 +64,19 @@ class CliTests(unittest.TestCase):
         r=Runtime()
         with self.assertRaises(RuntimeError):cli.run_runtime(self.config,r,stop_event=threading.Event())
         self.assertTrue(r.stopped)
+    def test_stop_failure_still_publishes_unready_final_snapshot(self):
+        class Runtime:
+            stopped=False
+            def start(self):pass
+            def stop(self,administrative=True):
+                self.stopped=True
+                raise ValueError('owned process cleanup required')
+            def snapshot(self):return {'schema':'fixture','ready':not self.stopped}
+        stop=threading.Event();stop.set()
+        cli.write_snapshot(self.config['snapshot_path'],{'schema':'fixture','ready':True})
+        with self.assertRaises(ValueError):cli.run_runtime(self.config,Runtime(),stop_event=stop)
+        self.assertFalse(json.loads(pathlib.Path(self.config['snapshot_path']).read_text())['ready'])
+
     def test_atomic_snapshot_has_no_partial_overwrite_and_refuses_links(self):
         path=self.root/'public.json';cli.write_snapshot(path,{'ready':False});cli.write_snapshot(path,{'ready':True})
         self.assertEqual(json.loads(path.read_text()),{'ready':True})
