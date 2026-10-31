@@ -34,7 +34,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: YehorBabenko88/bybit-cluster-grid
-          ref: dd6fbede7b1f676b98a3ae56170366ba63b7cb14
+          ref: 6c9c2a500ec2e2346c8f928fd1018e6296cee6e9
           path: .source/grid
           persist-credentials: false
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
@@ -62,7 +62,19 @@ jobs:
           assert subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip() == '${{ github.event.pull_request.head.sha || github.sha }}'
           subprocess.run(['python','-m','unittest','discover','-s','tests','-v'],check=True)
       - name: Real source APIs and bounded Math worker
-        run: python integration/verify_sources.py --terminan .source/terminan --math .source/math --grid .source/grid --strattester .source/strattester --meta-analyse .source/meta_analyse --output five-source-evidence
+        shell: python
+        run: |
+          import subprocess,sys
+          command=[sys.executable,'integration/verify_sources.py','--terminan','.source/terminan','--math','.source/math','--grid','.source/grid','--strattester','.source/strattester','--meta-analyse','.source/meta_analyse','--output','five-source-evidence']
+          result=subprocess.run(command,capture_output=True,text=True)
+          sys.stdout.write(result.stdout);sys.stderr.write(result.stderr)
+          if result.returncode:
+              # Public synthetic CI diagnostics only; no inventory/credentials.
+              lines=(result.stdout+'\n'+result.stderr).splitlines()
+              detail=' | '.join(lines[-8:])[-1500:]
+              detail=detail.replace('%','%25').replace('\r','%0D').replace('\n','%0A')
+              print('::error title=Exact source API qualification::'+detail)
+          raise SystemExit(result.returncode)
       - name: Install historical contract test runner
         run: python -m pip install "pytest>=8.2,<10"
       - name: Actual Grid Math backtest scientific result and Terminan admission
