@@ -22,6 +22,14 @@ class CliTests(unittest.TestCase):
         with patch.object(cli,'make_runtime',side_effect=AssertionError('MUST_NOT_RUN')),patch('subprocess.Popen',side_effect=AssertionError('MUST_NOT_SPAWN')):
             self.assertEqual(cli.main(['--config',str(self.path)]),0)
         self.assertFalse((self.root/'state').exists());self.assertFalse((self.root/'public').exists())
+    def test_explicit_health_budget_is_bounded_before_prepare(self):
+        c=copy.deepcopy(self.config);c['programs']['meta_analyse']['health_timeout_seconds']=1.
+        self.assertEqual(cli.validate_config(c),c)
+        c['programs']['math']['health_timeout_seconds']=1.
+        with self.assertRaises(ValueError):cli.validate_config(c)
+        for value in (True,0,1.01,float('nan'),float('inf'),'1'):
+            c=copy.deepcopy(self.config);c['programs']['meta_analyse']['health_timeout_seconds']=value
+            with self.subTest(value=value),self.assertRaises(ValueError):cli.validate_config(c)
     def test_execute_without_actual_hosted_scope_and_external_pin_is_denied(self):
         for args in (['--execute'],['--scope','ephemeral-ci','--execute'],['--scope','prepare','--execute']):
             with patch.object(cli,'make_runtime',side_effect=AssertionError('MUST_NOT_RUN')):

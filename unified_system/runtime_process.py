@@ -8,6 +8,7 @@ import ctypes
 import hashlib
 import http.client
 import json
+import math
 import os
 from pathlib import Path
 import re
@@ -86,7 +87,12 @@ class ProcessDriver:
         self.root=_safe_path(root);self.root.mkdir(parents=True,exist_ok=True)
         self.programs=programs;self.authorize=authorize or (lambda action,module:False);self.children={}
         if type(programs) is not dict or not 1<=len(programs)<=64:raise ValueError('bounded programs required')
+        extra_health_budget=0.
         for name,p in programs.items():
+            timeout=p.get('health_timeout_seconds',.5)
+            if type(timeout) not in (int,float) or not math.isfinite(timeout) or not .05<=timeout<=1.:
+                raise ValueError('invalid health deadline')
+            extra_health_budget+=max(0.,timeout-.5)
             argv=p.get('argv');url=urlsplit(p.get('health_url',''))
             if (not isinstance(argv,list) or not 1<=len(argv)<=32
                     or any(type(x) is not str or not x or len(x)>4096 or '\0' in x for x in argv)
@@ -107,6 +113,10 @@ class ProcessDriver:
                         or type(pin) is not str or not re.fullmatch('[a-f0-9]{64}',pin)):
                     raise ValueError('invalid external file pin')
                 _safe_path(file)
+        # Preserve the builtin profile's four-second baseline publication budget
+        # and its existing .5-second allowance per extension. At most .5s of
+        # additional probe time may be explicitly allocated across this driver.
+        if extra_health_budget>.5:raise ValueError('aggregate health deadline budget')
     def _file(self,op):
         if type(op) is not str or not re.fullmatch('[a-f0-9-]{32,36}',op):raise ValueError('invalid operation identity')
         return _safe_path(self.root/(op+'.json'))
@@ -177,7 +187,8 @@ class ProcessDriver:
             if (d['module_id'],d['version'],d['release_id'])!=(spec.module_id,spec.version,release_id):return result
             url=urlsplit(self.programs[spec.module_id]['health_url'])
             cls=http.client.HTTPSConnection if url.scheme=='https' else http.client.HTTPConnection
-            kwargs={'timeout':.5}
+            timeout=self.programs[spec.module_id].get('health_timeout_seconds',.5)
+            kwargs={'timeout':timeout}
             if url.scheme=='https':kwargs['context']=ssl.create_default_context(cafile=self.programs[spec.module_id].get('ca_file'))
             connection=cls(url.hostname,url.port,**kwargs)
             # Socket inactivity timeouts do not bound trickled headers/body.
@@ -190,7 +201,7 @@ class ProcessDriver:
                 if sock is not None:
                     try:sock.shutdown(socket.SHUT_RDWR)
                     except OSError:pass
-            deadline=threading.Timer(.5,expire);deadline.daemon=True;deadline.start()
+            deadline=threading.Timer(timeout,expire);deadline.daemon=True;deadline.start()
             try:
                 connection.connect();transport=connection.sock
                 if expired.is_set():return result

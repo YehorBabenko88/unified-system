@@ -60,6 +60,40 @@ class ProcessTests(unittest.TestCase):
         started=time.monotonic()
         self.assertFalse(d.ready(spec,op,'release-1')['ready'])
         self.assertLess(time.monotonic()-started,1.1,'health headers need an absolute deadline')
+    def test_explicit_bounded_budget_accepts_real_slow_verified_health(self):
+        self.worker.write_text(WORKER.replace('  b=json.dumps','  import time\n  time.sleep(.65)\n  b=json.dumps'))
+        self.program['file_pins']['worker.py']=hashlib.sha256(self.worker.read_bytes()).hexdigest()
+        self.program['health_timeout_seconds']=1.0
+        d=self.driver();spec=ModuleSpec('math','1.0.0');op='d'*32
+        d.start(spec,'release-1',op);self.addCleanup(lambda:d.stop(op))
+        for _ in range(100):
+            try:
+                with socket.create_connection(('127.0.0.1',self.port),timeout=.05):break
+            except OSError:time.sleep(.01)
+        started=time.monotonic()
+        self.assertTrue(d.ready(spec,op,'release-1')['ready'])
+        self.assertLess(time.monotonic()-started,1.5)
+    def test_health_budget_rejects_nonfinite_boolean_and_excess_total(self):
+        for value in (True,False,0,-1,1.01,float('nan'),float('inf'),'1'):
+            self.program['health_timeout_seconds']=value
+            with self.subTest(value=value),self.assertRaises(ValueError):self.driver()
+        self.program['health_timeout_seconds']=1.0
+        with self.assertRaises(ValueError):
+            ProcessDriver(self.root/'over-budget',{'math':self.program,'grid':dict(self.program)})
+    def test_explicit_health_budget_still_bounds_trickled_body(self):
+        worker=WORKER.replace('  b=json.dumps',"  import time\n  self.send_response(200);self.send_header('Content-Length','50');self.end_headers()\n  for _ in range(50):\n   self.wfile.write(b'x');self.wfile.flush();time.sleep(.05)\n  return\n  b=json.dumps")
+        self.worker.write_text(worker)
+        self.program['file_pins']['worker.py']=hashlib.sha256(self.worker.read_bytes()).hexdigest()
+        self.program['health_timeout_seconds']=1.
+        d=self.driver();spec=ModuleSpec('math','1.0.0');op='b'*32
+        d.start(spec,'release-1',op);self.addCleanup(lambda:d.stop(op))
+        for _ in range(100):
+            try:
+                with socket.create_connection(('127.0.0.1',self.port),timeout=.05):break
+            except OSError:time.sleep(.01)
+        started=time.monotonic()
+        self.assertFalse(d.ready(spec,op,'release-1')['ready'])
+        self.assertLess(time.monotonic()-started,1.6)
 
     def test_health_body_trickle_has_absolute_deadline(self):
         worker = WORKER.replace("  b=json.dumps", "  import time\n  self.send_response(200);self.send_header('Content-Length','30');self.end_headers()\n  for _ in range(30):\n   self.wfile.write(b'x');self.wfile.flush();time.sleep(.05)\n  return\n  b=json.dumps")

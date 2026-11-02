@@ -22,7 +22,8 @@ from .module_catalog import MODULE_IDS
 from .runtime_process import _safe_path
 
 # Six-core baseline: five .5s delegated probes + .25s tick + .35s own
-# HTTP + .15s journal margin, rounded to four seconds. Each actual registered
+# HTTP + .15s journal margin, plus at most .5s explicitly allocated extra probe
+# time across ProcessDriver, rounded to four seconds. Each actual registered
 # extension adds .5s; the journal's 64-module limit bounds the age at 33s.
 # This is a fail-closed functional budget, not physical/performance qualification.
 PUBLICATION_MAX_AGE=4.0

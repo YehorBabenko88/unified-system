@@ -57,7 +57,9 @@ def validate_config(c):
     need(type(c['programs']) is dict and set(c['programs'])==expected)
     if builtin:need(c['http_port']>0 and c['tick_seconds']<=.25)
     for p in c['programs'].values():
-        need(type(p) is dict and {'argv','cwd','health_url','executable_sha256','file_pins'}<=set(p)<= {'argv','cwd','health_url','executable_sha256','file_pins','env','ca_file','external_file_pins'})
+        need(type(p) is dict and {'argv','cwd','health_url','executable_sha256','file_pins'}<=set(p)<= {'argv','cwd','health_url','executable_sha256','file_pins','env','ca_file','external_file_pins','health_timeout_seconds'})
+        timeout=p.get('health_timeout_seconds',.5)
+        need(type(timeout) in (int,float) and math.isfinite(timeout) and .05<=timeout<=1.)
         argv=p['argv'];need(type(argv) is list and 1<=len(argv)<=32)
         need(all(type(x) is str and 0<len(x)<=4096 and '\0' not in x for x in argv))
         need(not any(x.casefold() in ('-c','-command','-encodedcommand','/c','-e') for x in argv[1:]))
@@ -79,6 +81,7 @@ def validate_config(c):
             need(type(p['env']) is dict and len(p['env'])<=64)
             for key,value in p['env'].items():need(type(key) is str and re.fullmatch('[A-Za-z_][A-Za-z0-9_]{0,63}',key) and type(value) is str and len(value)<=8192 and '\0' not in value)
         if 'ca_file' in p:need(type(p['ca_file']) is str and Path(p['ca_file']).is_absolute())
+    need(sum(max(0.,p.get('health_timeout_seconds',.5)-.5) for p in c['programs'].values())<=.5)
     return c
 
 
