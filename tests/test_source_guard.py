@@ -175,6 +175,20 @@ class SourceGuardTests(unittest.TestCase):
         with patch.object(api.subprocess,'Popen',side_effect=blocked):
             with self.assertRaisesRegex(api.SourceQualificationError,'GIT_RESOURCE_LIMIT'):fence.git('rev-parse','HEAD')
         self.assertLess(time.monotonic()-began,2)
+    def test_large_git_batch_output_is_not_corrupted_by_resource_polling(self):
+        api=self.guard()
+        # Exercise realistic heterogeneous blobs, including the large wheel lock.
+        # This is read-only; the source checkout is never edited by the test.
+        root=Path(__file__).resolve().parents[1]
+        fence=api.SourceFence(root)
+        tree=fence.git('ls-tree','-rz','--full-tree','HEAD').split(b'\0')
+        objects=list(dict.fromkeys(record.split(b'\t',1)[0].split()[2].decode() for record in tree if record))
+        payload=('\n'.join(objects)+'\n').encode()
+        expected=subprocess.check_output(['git','-C',str(root),'cat-file','--batch'],input=payload)
+        for attempt in range(3):
+            with self.subTest(attempt=attempt):
+                import hashlib
+                self.assertEqual(hashlib.sha256(fence.git('cat-file','--batch',input=payload)).hexdigest(),hashlib.sha256(expected).hexdigest())
     def test_root_link_is_denied_before_child_metadata(self):
         api=self.guard();link=self.root/'linked'
         try:link.symlink_to(self.root/'pkg',target_is_directory=True)

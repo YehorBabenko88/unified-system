@@ -65,9 +65,12 @@ class SourceFence:
                 began=time.monotonic()
                 try:
                     while process.poll() is None:
-                        if time.monotonic()-began>self.GIT_SECONDS or out.tell()>self.GIT_BYTES or err.tell()>self.GIT_ERROR_BYTES:raise SourceQualificationError('GIT_RESOURCE_LIMIT')
+                        # Query size without seeking the child's inherited file
+                        # handle. Buffered tell() can race Windows writes and
+                        # corrupt an otherwise valid cat-file batch stream.
+                        if time.monotonic()-began>self.GIT_SECONDS or os.fstat(out.fileno()).st_size>self.GIT_BYTES or os.fstat(err.fileno()).st_size>self.GIT_ERROR_BYTES:raise SourceQualificationError('GIT_RESOURCE_LIMIT')
                         time.sleep(.005)
-                    if time.monotonic()-began>self.GIT_SECONDS or out.tell()>self.GIT_BYTES or err.tell()>self.GIT_ERROR_BYTES:raise SourceQualificationError('GIT_RESOURCE_LIMIT')
+                    if time.monotonic()-began>self.GIT_SECONDS or os.fstat(out.fileno()).st_size>self.GIT_BYTES or os.fstat(err.fileno()).st_size>self.GIT_ERROR_BYTES:raise SourceQualificationError('GIT_RESOURCE_LIMIT')
                     if process.returncode:raise SourceQualificationError('GIT_CHECK_FAILED')
                 finally:
                     if process.poll() is None:process.kill()
