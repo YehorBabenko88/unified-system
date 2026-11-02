@@ -55,6 +55,30 @@ class SourceGuardTests(unittest.TestCase):
         fence=api.SourceFence(self.root);fence.check()
         fence.module(SimpleNamespace(__file__=str(self.root/'pkg/__init__.py')))
         fence.finish()
+    def test_pinned_lock_survives_real_autocrlf_checkout(self):
+        api=self.guard()
+        relative='integration/windows-candidate/requirements-cp312-win_amd64-cpu.lock'
+        attributes=Path(__file__).resolve().parents[1]/'.gitattributes'
+        self.assertTrue(attributes.is_file(),'exact-byte checkout policy is missing')
+        (self.root/'.gitattributes').write_bytes(attributes.read_bytes())
+        target=self.root/relative;target.parent.mkdir(parents=True)
+        original=b'example==1.0\n    --hash=sha256:'+b'a'*64+b'\n'
+        target.write_bytes(original)
+        self.git('add','.gitattributes',relative)
+        self.git('-c','user.name=Source Test','-c','user.email=source@example.invalid','commit','-qm','pinned lock fixture')
+        self.git('config','core.autocrlf','true')
+        target.unlink();(self.root/'.gitattributes').unlink()
+        self.git('checkout','HEAD','--','.gitattributes',relative)
+        self.assertEqual(target.read_bytes(),original)
+        self.assertEqual((self.root/'.gitattributes').read_bytes(),attributes.read_bytes())
+        target.write_bytes(original.replace(b'\n',b'\r\n'))
+        with self.assertRaisesRegex(api.SourceQualificationError,'TRACKED_BYTES'):
+            api.SourceFence(self.root).check()
+        target.write_bytes(original)
+        fence=api.SourceFence(self.root);fence.check()
+        target.write_bytes(original+b'# mutation\n')
+        with self.assertRaisesRegex(api.SourceQualificationError,'TRACKED_BYTES'):
+            fence.finish()
     def test_clean_filter_cannot_hide_modified_runtime_bytes(self):
         api=self.guard()
         (self.root/'.gitattributes').write_text('pkg/__init__.py filter=restore\n')
