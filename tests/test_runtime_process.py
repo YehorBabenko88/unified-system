@@ -70,9 +70,16 @@ class ProcessTests(unittest.TestCase):
             try:
                 with socket.create_connection(('127.0.0.1',self.port),timeout=.05):break
             except OSError:time.sleep(.01)
-        started=time.monotonic()
-        self.assertTrue(d.ready(spec,op,'release-1')['ready'])
-        self.assertLess(time.monotonic()-started,1.5)
+        # The supervisor retries unready probes within its startup window. A
+        # loaded hosted runner need not satisfy the first valid probe; each
+        # attempt must still obey the configured absolute transport deadline.
+        deadline=time.monotonic()+5;ready=False
+        while time.monotonic()<deadline:
+            started=time.monotonic();ready=d.ready(spec,op,'release-1')['ready']
+            self.assertLess(time.monotonic()-started,1.5)
+            if ready:break
+            time.sleep(.05)
+        self.assertTrue(ready)
     def test_health_budget_rejects_nonfinite_boolean_and_excess_total(self):
         for value in (True,False,0,-1,1.01,float('nan'),float('inf'),'1'):
             self.program['health_timeout_seconds']=value

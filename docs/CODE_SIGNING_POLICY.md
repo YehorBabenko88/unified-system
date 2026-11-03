@@ -24,6 +24,12 @@ JSON contains exactly `unified_system/__init__.py`, `module_catalog.py` and
 have the `unified_system/` prefix). Use an isolated admitted interpreter before
 connecting the signing provider.
 
+Interpreter admission includes its DLLs and standard library, not only the
+`python.exe` digest. The executable pin here does not authenticate those runtime
+dependencies or a compromised host. A complete externally admitted runtime
+archive/closure and protected installation are prerequisites for production
+signing; matching this wrapper's file pins alone cannot satisfy them.
+
 The wrapper retains read handles denying writes/deletion to the Python binary,
 preparer, source-pin file and security module through execution/signing. Python
 runs with `-I -S -B`, checks fixed-drive ordinary paths, and compiles retained
