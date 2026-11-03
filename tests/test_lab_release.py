@@ -34,6 +34,22 @@ def fixture(root):
 
 
 class LabReleaseTests(unittest.TestCase):
+    def test_pinned_vendor_filenames_allow_internal_spaces_and_parentheses(self):
+        for name in ('dependencies/site-packages/setuptools/launcher manifest.xml',
+                     'dependencies/site-packages/setuptools/script (dev).tmpl',
+                     'dependencies/site-packages/setuptools/_vendor/jaraco/text/Lorem ipsum.txt'):
+            self.assertEqual(lab.relative(name),name)
+        for name in ('a /file','a/ file','a/file ','a/file.','a/NUL .txt','a/file:stream','a/../file','a/$(command)','a/file\n'):
+            with self.subTest(name=name),self.assertRaises(ValueError):lab.relative(name)
+
+    def test_vendor_filename_bytes_are_admitted_and_still_hash_bound(self):
+        name='dependencies/site-packages/setuptools/script (dev).tmpl'
+        path=self.root/name;path.parent.mkdir(parents=True);path.write_bytes(b'pinned vendor bytes')
+        self.m['files'][name]=lab.hash_file(path)
+        self.m['directories']=sorted(set(self.m['directories'])|{p.relative_to(self.root).as_posix() for p in path.parents if p!=self.root and self.root in p.parents})
+        pin=self.publish();lab.verify_capsule(self.root,pin)
+        path.write_bytes(b'changed vendor bytes')
+        with self.assertRaises(ValueError):lab.verify_capsule(self.root,pin)
     def setUp(self):
         self.temp=tempfile.TemporaryDirectory();self.addCleanup(self.temp.cleanup)
         self.root=Path(self.temp.name);self.m=fixture(self.root)
