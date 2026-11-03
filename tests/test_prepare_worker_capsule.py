@@ -27,7 +27,11 @@ class WorkerRunTests(unittest.TestCase):
         self.auth=patch('unified_system.lab_runtime.read_grid_auth',return_value={})
         self.auth.start();self.addCleanup(self.auth.stop)
     def fixture(self,parent):
+        # Hosted Windows TEMP may use an 8.3 alias. The production path gate
+        # intentionally rejects aliases; give this positive fixture a canonical root.
+        parent=parent.resolve()
         root=parent/'code';root.mkdir();state=parent/'state';state.mkdir()
+        self.assertEqual(root,root.resolve())
         names=['sources/unified-system/unified_system/package_preflight.py','sources/unified-system/integration/source_guard.py','runtime/git.exe']
         files={}
         for name in names:
