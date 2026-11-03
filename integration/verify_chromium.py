@@ -24,7 +24,7 @@ proof['browser']={'qualification':'NOT_RUN'}
 evidence_path.write_text(json.dumps(proof,sort_keys=True,indent=2),encoding='utf-8')
 names=['terminan','math','grid','strattester']
 if args.meta_analyse is not None:names.append('meta_analyse')
-fences={'unified-system':SourceFence(ROOT,proof.get('head'),isolated_cache=cache.name),**{name:SourceFence(getattr(args,name),pins[name],isolated_cache=cache.name) for name in names}}
+fences={'unified-system':SourceFence(ROOT,proof.get('head'),isolated_cache=cache.name),**{name:SourceFence(getattr(args,name).absolute(),pins[name],isolated_cache=cache.name) for name in names}}
 try:
     if proof.get('qualification')!='EXACT_SOURCE_CONSISTENT':raise SourceQualificationError('SOURCE_RUN_UNQUALIFIED')
     if ('meta_analyse' in names
