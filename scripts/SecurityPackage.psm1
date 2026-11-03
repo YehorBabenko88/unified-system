@@ -160,4 +160,43 @@ function Test-UnifiedSecurityPackage {
     if ($dependencies.Count -ne 5) { throw 'Dependency closure missing' }
     [pscustomobject]@{mode='DRY_RUN_ONLY'; signature='PINNED_SIGNATURE_VERIFIED'; source_provenance='NOT_EVALUATED'; production='NO_GO'; namespace_trust='UNVERIFIED'; artifacts=$data.artifacts.Count; mutations_performed=$false; physical_acceptance='NOT_AUTHORIZED'; admission='NOT_GRANTED'}
 }
-Export-ModuleMember -Function Test-UnifiedSecurityPackage, Test-UnifiedPackageSignature
+function Test-UnifiedCodeSigningPublisher([Security.Cryptography.X509Certificates.X509Certificate2]$Certificate,[string]$ExpectedPublisherSha256) {
+    if($null -eq $Certificate -or $ExpectedPublisherSha256 -cnotmatch '^[0-9a-f]{64}$'){throw 'External Code Signing publisher pin required'}
+    $sha=[Security.Cryptography.SHA256]::Create()
+    try{$pin=([BitConverter]::ToString($sha.ComputeHash($certificate.RawData))).Replace('-','').ToLowerInvariant()}finally{$sha.Dispose()}
+    if($pin -cne $ExpectedPublisherSha256){throw 'Authenticode publisher pin mismatch'}
+    $codeSigning=$false
+    foreach($extension in $certificate.Extensions){
+        if($extension.Oid.Value -ceq '2.5.29.37'){
+            foreach($usage in $extension.EnhancedKeyUsages){if($usage.Value -ceq '1.3.6.1.5.5.7.3.3'){$codeSigning=$true}}
+        }
+    }
+    if(!$codeSigning){throw 'Explicit Code Signing EKU required'}
+    $now=[DateTime]::UtcNow
+    if($certificate.NotBefore.ToUniversalTime() -gt $now -or $certificate.NotAfter.ToUniversalTime() -le $now){throw 'Current publisher certificate is not valid'}
+    $chain=[Security.Cryptography.X509Certificates.X509Chain]::new()
+    try{
+        $chain.ChainPolicy.RevocationMode=[Security.Cryptography.X509Certificates.X509RevocationMode]::Online
+        $chain.ChainPolicy.RevocationFlag=[Security.Cryptography.X509Certificates.X509RevocationFlag]::EntireChain
+        $chain.ChainPolicy.VerificationFlags=[Security.Cryptography.X509Certificates.X509VerificationFlags]::NoFlag
+        $chain.ChainPolicy.UrlRetrievalTimeout=[TimeSpan]::FromSeconds(5)
+        [void]$chain.ChainPolicy.ApplicationPolicy.Add([Security.Cryptography.Oid]::new('1.3.6.1.5.5.7.3.3'))
+        if(!$chain.Build($certificate)){throw 'Publisher chain or revocation verification failed'}
+    }finally{$chain.Dispose()}
+    [pscustomobject]@{publisher_sha256=$pin;chain='SYSTEM_TRUSTED_WITH_REVOCATION';admission='NOT_GRANTED'}
+}
+function Test-UnifiedAuthenticodeArtifact([string]$Path,[string]$ExpectedPublisherSha256) {
+    if($ExpectedPublisherSha256 -cnotmatch '^[0-9a-f]{64}$'){throw 'External Authenticode publisher pin required'}
+    Assert-LocalPath $Path
+    $artifactStream=[IO.File]::Open($Path,[IO.FileMode]::Open,[IO.FileAccess]::Read,[IO.FileShare]::Read)
+    try{
+        if($artifactStream.Length -lt 1 -or $artifactStream.Length -gt 536870912){throw 'Authenticode artifact size rejected'}
+        $signature=Get-AuthenticodeSignature -LiteralPath $Path -ErrorAction Stop
+        if($signature.Status -ne [Management.Automation.SignatureStatus]::Valid -or $null -eq $signature.SignerCertificate){throw 'Authenticode signature is not valid'}
+        $publisher=Test-UnifiedCodeSigningPublisher $signature.SignerCertificate $ExpectedPublisherSha256
+        $sha=[Security.Cryptography.SHA256]::Create()
+        try{$artifactHash=([BitConverter]::ToString($sha.ComputeHash($artifactStream))).Replace('-','').ToLowerInvariant()}finally{$sha.Dispose()}
+        [pscustomobject]@{authenticode='VALID';artifact_sha256=$artifactHash;publisher_sha256=$publisher.publisher_sha256;chain=$publisher.chain;execution_authority=$false;admission='NOT_GRANTED'}
+    }finally{$artifactStream.Dispose()}
+}
+Export-ModuleMember -Function Test-UnifiedSecurityPackage, Test-UnifiedPackageSignature, Test-UnifiedAuthenticodeArtifact, Test-UnifiedCodeSigningPublisher

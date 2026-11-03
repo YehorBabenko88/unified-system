@@ -3,44 +3,69 @@ param(
  [Parameter(Mandatory=$true)][string]$Template,
  [Parameter(Mandatory=$true)][string]$ArtifactRoot,
  [Parameter(Mandatory=$true)][string]$OutputDirectory,
- [Parameter(Mandatory=$true)][string]$CertificateThumbprint,
+ [string]$CertificateThumbprint,
  [Parameter(Mandatory=$true)][string]$ExpectedPublisherSha256,
- [string]$Python = 'python'
+ [Parameter(Mandatory=$true)][string]$Python,
+ [Parameter(Mandatory=$true)][string]$PythonSha256,
+ [Parameter(Mandatory=$true)][string]$PreparationSha256,
+ [Parameter(Mandatory=$true)][string]$SourceRoot,
+ [Parameter(Mandatory=$true)][string]$SourcePinsPath,
+ [Parameter(Mandatory=$true)][string]$SourcePinsSha256,
+ [Parameter(Mandatory=$true)][string]$SecurityModuleSha256,
+ [switch]$PrepareOnly
 )
 Set-StrictMode -Version Latest
 $ErrorActionPreference='Stop'
 # Preparation/signing only; never fetch, publish, install or start a service.
 if ($ExpectedPublisherSha256 -cnotmatch '^[0-9a-f]{64}$') { throw 'External publisher pin required' }
 if (Test-Path -LiteralPath $OutputDirectory) { throw 'New output directory required' }
-$cert=Get-Item -LiteralPath ("Cert:\CurrentUser\My\"+$CertificateThumbprint)
-if (!$cert.HasPrivateKey) { throw 'Separately provisioned signing key required' }
-$sha=[Security.Cryptography.SHA256]::Create()
-try { $pin=([BitConverter]::ToString($sha.ComputeHash($cert.RawData))).Replace('-','').ToLowerInvariant() } finally {$sha.Dispose()}
-if ($pin -cne $ExpectedPublisherSha256) { throw 'Signer is not independently pinned publisher' }
-$stage=New-Item -ItemType Directory -Path $OutputDirectory
-$modules=New-Item -ItemType Directory -Path (Join-Path $stage.FullName 'modules')
+$preparer=Join-Path $PSScriptRoot 'prepare_unified_release.py'
+$securityModule=Join-Path $PSScriptRoot 'SecurityPackage.psm1'
+$locks=New-Object 'Collections.Generic.List[IDisposable]'
+function Assert-ReleaseLocalPath([string]$Path){
+ if($Path -notmatch '^[A-Za-z]:\\' -or $Path.Contains('..') -or $Path.Substring(2).Contains(':')){throw 'RELEASE_PREPARATION_REJECTED'}
+ $anchor=[IO.Path]::GetPathRoot($Path)
+ if([IO.DriveInfo]::new($anchor).DriveType -ne [IO.DriveType]::Fixed){throw 'RELEASE_PREPARATION_REJECTED'}
+ $parts=New-Object 'Collections.Generic.List[string]';$cursor=[IO.Path]::GetFullPath($Path)
+ while($cursor){$parts.Add($cursor);$next=[IO.Path]::GetDirectoryName($cursor.TrimEnd('\'));if($next -eq $cursor){break};$cursor=$next}
+ for($i=$parts.Count-1;$i -ge 0;$i--){$item=Get-Item -LiteralPath $parts[$i] -Force;if(($item.Attributes -band [IO.FileAttributes]::ReparsePoint) -ne 0){throw 'RELEASE_PREPARATION_REJECTED'}}
+}
 try {
- foreach($name in @('unified-system','grid','strattester','math','meta_analyse','terminan')) {
-  Copy-Item -LiteralPath (Join-Path $ArtifactRoot ("modules/"+$name+'.zip')) -Destination (Join-Path $modules.FullName ($name+'.zip')) -ErrorAction Stop
+ foreach($pair in @(@($Python,$PythonSha256),@($preparer,$PreparationSha256),@($SourcePinsPath,$SourcePinsSha256),@($securityModule,$SecurityModuleSha256))) {
+  Assert-ReleaseLocalPath $pair[0]
+  if($pair[1] -cnotmatch '^[0-9a-f]{64}$'){throw 'RELEASE_PREPARATION_REJECTED'}
+  # Retain read handles denying writes/deletion until execution/signing finishes.
+  $stream=[IO.File]::Open($pair[0],[IO.FileMode]::Open,[IO.FileAccess]::Read,[IO.FileShare]::Read);$locks.Add($stream)
+  if($stream.Length -lt 1 -or $stream.Length -gt 67108864){throw 'RELEASE_PREPARATION_REJECTED'}
+  $sha=[Security.Cryptography.SHA256]::Create()
+  try{$actual=([BitConverter]::ToString($sha.ComputeHash($stream))).Replace('-','').ToLowerInvariant()}finally{$sha.Dispose()}
+  if($actual -cne $pair[1]){throw 'RELEASE_PREPARATION_REJECTED'}
  }
- # Python owns canonical bytes and closure validation; avoid PS5.1 JSON ordering/encoding differences.
- $code=@'
-import hashlib,sys,pathlib,json
-from unified_system.release_manifest import canonical,validate_manifest
-m=json.loads(pathlib.Path(sys.argv[1]).read_text(encoding='utf-8'))
-validate_manifest(m,expected_publisher=sys.argv[3])
-root=pathlib.Path(sys.argv[2])
-for module in m['modules'].values():
- p=root/module['artifact']['path'];a=module['artifact']
- if p.stat().st_size!=a['bytes'] or hashlib.sha256(p.read_bytes()).hexdigest()!=a['sha256']:raise ValueError('artifact mismatch')
-(root/'release.json').write_bytes(canonical(m))
-'@
- & $Python -c $code $Template $stage.FullName $ExpectedPublisherSha256
- if ($LASTEXITCODE -ne 0) { throw 'Release closure/artifacts rejected' }
- Import-Module (Join-Path $PSScriptRoot 'SecurityPackage.psm1') -Force
+ $stage=New-Item -ItemType Directory -Path $OutputDirectory
+ # No certificate-provider or private-key access before pinned isolated closure.
+ Push-Location -LiteralPath $stage.FullName
+ try {$prepared=& $Python -I -S -B $preparer --source-root $SourceRoot --source-pins $SourcePinsPath --source-pins-sha256 $SourcePinsSha256 --template $Template --artifact-root $ArtifactRoot --output $stage.FullName --publisher $ExpectedPublisherSha256; $result=$LASTEXITCODE} finally {Pop-Location}
+ if ($result -ne 0) { throw 'RELEASE_PREPARATION_REJECTED' }
+ $proof=$prepared|ConvertFrom-Json
+ if($proof.schema -cne 'unified.release.preparation.v1' -or $proof.signed -ne $false -or $proof.modules -ne 6 -or $proof.release_sha256 -cnotmatch '^[0-9a-f]{64}$'){throw 'RELEASE_PREPARATION_REJECTED'}
+ $manifestStream=[IO.File]::Open((Join-Path $stage.FullName 'release.json'),[IO.FileMode]::Open,[IO.FileAccess]::Read,[IO.FileShare]::Read);$locks.Add($manifestStream)
+ if($manifestStream.Length -lt 1 -or $manifestStream.Length -gt 1048576){throw 'RELEASE_PREPARATION_REJECTED'}
+ $bytes=New-Object byte[] ([int]$manifestStream.Length);$offset=0
+ while($offset -lt $bytes.Length){$count=$manifestStream.Read($bytes,$offset,$bytes.Length-$offset);if($count -le 0){throw 'RELEASE_PREPARATION_REJECTED'};$offset+=$count}
+ $sha=[Security.Cryptography.SHA256]::Create()
+ try{$manifestHash=([BitConverter]::ToString($sha.ComputeHash($bytes))).Replace('-','').ToLowerInvariant()}finally{$sha.Dispose()}
+ if($manifestHash -cne $proof.release_sha256){throw 'RELEASE_PREPARATION_REJECTED'}
+ if($PrepareOnly){Write-Output 'PREPARED_UNSIGNED_RELEASE; signing=NOT_RUN; deployment=NOT_AUTHORIZED';return}
+ if($CertificateThumbprint -cnotmatch '^[0-9a-fA-F]{40}$'){throw 'Separately provisioned signing key required'}
+ Import-Module $securityModule -Force
+ $cert=Get-Item -LiteralPath ("Cert:\CurrentUser\My\"+$CertificateThumbprint)
+ [void](Test-UnifiedCodeSigningPublisher $cert $ExpectedPublisherSha256)
+ if (!$cert.HasPrivateKey) { throw 'Separately provisioned signing key required' }
+ $sha=[Security.Cryptography.SHA256]::Create()
+ try { $pin=([BitConverter]::ToString($sha.ComputeHash($cert.RawData))).Replace('-','').ToLowerInvariant() } finally {$sha.Dispose()}
+ if ($pin -cne $ExpectedPublisherSha256) { throw 'Signer is not independently pinned publisher' }
  Add-Type -AssemblyName System.Security
  if($PSVersionTable.PSEdition -eq 'Core'){Add-Type -AssemblyName System.Security.Cryptography.Pkcs}
- $bytes=[IO.File]::ReadAllBytes((Join-Path $stage.FullName 'release.json'))
  $cms=New-Object Security.Cryptography.Pkcs.SignedCms((New-Object Security.Cryptography.Pkcs.ContentInfo(,$bytes)),$true)
  $signer=New-Object Security.Cryptography.Pkcs.CmsSigner($cert)
  $signer.DigestAlgorithm=New-Object Security.Cryptography.Oid('2.16.840.1.101.3.4.2.1')
@@ -51,4 +76,6 @@ for module in m['modules'].values():
 } catch {
  # Preserve failed preparation for review; no recursive delete of user paths.
  throw
+} finally {
+ foreach($stream in $locks){$stream.Dispose()}
 }

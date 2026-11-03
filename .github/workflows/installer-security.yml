@@ -19,6 +19,11 @@ jobs:
           python-version: '3.11'
       - name: Full offline suite
         run: python scripts/ci_unittest.py
+      - name: Isolated preparation and unsigned-artifact rejection PS7
+        if: matrix.shell == 'pwsh'
+        env:
+          UNIFIED_PREPARATION_TEST_SHELL: pwsh
+        run: python -B -m unittest tests.test_release_preparation -v
       - name: In-memory signature and fail-closed checks PS5.1
         if: matrix.shell == 'powershell'
         shell: powershell
