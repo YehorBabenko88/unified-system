@@ -58,14 +58,22 @@ class LabRuntimePolicyTests(unittest.TestCase):
         import json
         state=Path(self.c['state_root']);state.mkdir()
         self.addCleanup(lambda:__import__('shutil').rmtree(state))
-        record=dict(schema='unified.lab.grid-auth.v1',node_id='LS5',role='CONTROL',release_id=self.m['release_id'],
-                    source_commit=self.m['sources']['grid']['commit'],grid_shared_token='c'*64,node_credential=None)
+        record=dict(schema='unified.lab.grid-auth.v2',node_id='LS5',role='CONTROL',release_id=self.m['release_id'],
+                    source_commit=self.m['sources']['grid']['commit'],grid_shared_token='c'*64,node_credential=None,postgres_password='d'*64)
         raw=lab.lab_release.canonical(record);path=state/'grid-auth.json';path.write_bytes(raw)
         pin=hashlib.sha256(raw).hexdigest()
         env=lab.read_grid_auth(path,pin,node_id='LS5',release_id=self.m['release_id'],source_commit='a'*40)
-        self.assertEqual(env,{'GRID_SHARED_TOKEN':'c'*64})
+        self.assertEqual(env,{'GRID_SHARED_TOKEN':'c'*64,'PGPASSWORD':'d'*64})
         with self.assertRaises(ValueError):lab.read_grid_auth(path,'0'*64,node_id='LS5',release_id=self.m['release_id'],source_commit='a'*40)
         with self.assertRaises(ValueError):lab.read_grid_auth(path,pin,node_id='PC1',release_id=self.m['release_id'],source_commit='a'*40)
+        record.update(node_id='PC1',role='WORKER',node_credential='w'*64,postgres_password=None)
+        def write_record():
+            raw=lab.lab_release.canonical(record);path.write_bytes(raw)
+            return hashlib.sha256(raw).hexdigest()
+        worker=lab.read_grid_auth(path,write_record(),node_id='PC1',release_id=self.m['release_id'],source_commit='a'*40)
+        self.assertEqual(worker,{'GRID_SHARED_TOKEN':'c'*64,'NODE_CREDENTIAL':'w'*64})
+        record['postgres_password']='d'*64
+        with self.assertRaises(ValueError):lab.read_grid_auth(path,write_record(),node_id='PC1',release_id=self.m['release_id'],source_commit='a'*40)
 
     def test_office_node_ids_bind_to_the_observed_windows_hostnames(self):
         for node,hostname in [('PC1','Easy'),('PC2','Leitstelle1'),('PC3','LS03e'),('PC4','LS4'),('LS7','LS-07')]:

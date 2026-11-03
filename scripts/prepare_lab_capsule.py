@@ -128,7 +128,7 @@ def new_auth(state,release,commit):
     actual=run([system/'WindowsPowerShell/v1.0/powershell.exe','-NoProfile','-NonInteractive','-Command',expression],env).splitlines()
     need(set(actual)=={sid,'S-1-5-18','S-1-5-32-544'},'PRIVATE_ACL_UNVERIFIED')
     private=state/'private';private.mkdir();path=private/'grid-auth.json'
-    write(path,dict(schema='unified.lab.grid-auth.v1',node_id='LS5',role='CONTROL',release_id=release,source_commit=commit,grid_shared_token=os.urandom(32).hex(),node_credential=None))
+    write(path,dict(schema='unified.lab.grid-auth.v2',node_id='LS5',role='CONTROL',release_id=release,source_commit=commit,grid_shared_token=os.urandom(32).hex(),node_credential=None,postgres_password=os.urandom(32).hex()))
     return path,sha(path)
 
 def free_ports(names):

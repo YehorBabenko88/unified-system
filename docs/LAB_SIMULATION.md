@@ -52,9 +52,13 @@ pin, generated release certificate or security-policy bypass is supported.
    enrollment record is provisioned privately outside the capsule. Its path and
    external SHA256 are bound in Grid's config (`GRID_LAB_AUTH_PATH/SHA256`); its
    node, role, release and source commit must match. It contains a random Grid
-   shared token and, for workers, a CONTROL-issued node credential. Values never
+   shared token and, for workers, a CONTROL-issued node credential. CONTROL also
+   gets an independent random password for its isolated lab PostgreSQL cluster,
+   injected as `PGPASSWORD` only into Grid. Workers must have no database password.
+   Use SCRAM authentication for the new cluster; no existing database policy changes.
+   Values never
    enter source, manifest, public logs or other components' environments. The
-   private record schema is `unified.lab.grid-auth.v1`. Provisioning is not
+   private record schema is `unified.lab.grid-auth.v2`. Provisioning is not
    implied by a successful file-only capsule check.
 
 Grid's legacy update/repair/rollback/uninstall handlers are rejected in lab mode:

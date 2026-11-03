@@ -183,14 +183,18 @@ def read_grid_auth(path,expected_sha256,*,node_id,release_id,source_commit):
         for key,value in pairs:need(key not in out);out[key]=value
         return out
     record=json.loads(raw.decode('utf8'),object_pairs_hook=unique)
-    lab_release.exact(record,('schema','node_id','role','release_id','source_commit','grid_shared_token','node_credential'))
-    need(record['schema']=='unified.lab.grid-auth.v1' and node_id.upper() in LAB_NODES)
+    lab_release.exact(record,('schema','node_id','role','release_id','source_commit','grid_shared_token','node_credential','postgres_password'))
+    need(record['schema']=='unified.lab.grid-auth.v2' and node_id.upper() in LAB_NODES)
     need(record['node_id']==node_id and record['release_id']==release_id and record['source_commit']==source_commit)
     lab_release.digest(record['grid_shared_token'])
     need(record['role']==('CONTROL' if node_id.upper()=='LS5' else 'WORKER'))
     result={'GRID_SHARED_TOKEN':record['grid_shared_token']}
-    if node_id.upper()=='LS5':need(record['node_credential'] is None)
+    if node_id.upper()=='LS5':
+        need(record['node_credential'] is None)
+        lab_release.digest(record['postgres_password'])
+        result['PGPASSWORD']=record['postgres_password']
     else:
+        need(record['postgres_password'] is None)
         need(type(record['node_credential']) is str and re.fullmatch('[A-Za-z0-9_-]{64,128}',record['node_credential']))
         result['NODE_CREDENTIAL']=record['node_credential']
     return result
