@@ -86,6 +86,7 @@ class ProcessDriver:
     def __init__(self,root,programs,*,authorize=None,child_environment=None):
         self.root=_safe_path(root);self.root.mkdir(parents=True,exist_ok=True)
         self.programs=programs;self.authorize=authorize or (lambda action,module:False);self.children={}
+        self.prestart_rejections={}
         self.child_environment=child_environment
         if type(programs) is not dict or not 1<=len(programs)<=64:raise ValueError('bounded programs required')
         extra_health_budget=0.
@@ -147,9 +148,19 @@ class ProcessDriver:
             target=_safe_path(file)
             if not target.is_file() or _sha(target)!=pin:raise ValueError('runtime external file integrity')
     def start(self,spec,release_id,operation_id):
-        if self.authorize('start',spec.module_id) is not True:raise ValueError('runtime execution not authorized')
-        self._verify(spec.module_id)
         path=self._file(operation_id)
+        phase='AUTHORIZATION_REJECTED'
+        try:
+            if self.authorize('start',spec.module_id) is not True:raise ValueError('runtime execution not authorized')
+            phase='INTEGRITY_REJECTED';self._verify(spec.module_id)
+        except Exception:
+            # This live driver witnessed rejection before the durable STARTING
+            # intent or Popen. An absent file alone is never that evidence.
+            if not path.exists() and operation_id not in self.children:
+                if len(self.prestart_rejections)>=1024:self.prestart_rejections.pop(next(iter(self.prestart_rejections)))
+                self.prestart_rejections[operation_id]=(spec.module_id,spec.version,release_id,phase)
+            raise
+        self.prestart_rejections.pop(operation_id,None)
         if path.exists():
             d=self._load(operation_id)
             if (d['module_id'],d['version'],d['release_id'])!=(spec.module_id,spec.version,release_id):raise ValueError('operation identity mismatch')
@@ -220,11 +231,21 @@ class ProcessDriver:
                 deadline.cancel();connection.close();deadline.join()
         except (OSError,ValueError,TypeError,KeyError,http.client.HTTPException):return result
     def stop(self,handle):
+        path=self._file(handle)
+        if handle in self.prestart_rejections and not path.exists() and handle not in self.children:
+            module,version,release,phase=self.prestart_rejections[handle]
+            self._save(handle,dict(pid=None,created=None,module_id=module,version=version,release_id=release,
+                                   token=secrets.token_hex(32),state='STOPPED',failure_phase=phase),new=True)
+            del self.prestart_rejections[handle]
+            return
         d=self._load(handle)
         if d['state']=='STOPPED':
             if handle in self.children:self.children[handle].wait(timeout=5)
             if handle in self.children and self.children[handle].stdin:self.children[handle].stdin.close()
             return
+        if d['pid'] is None:
+            child=self.children.get(handle)
+            if child is None or child.poll() is None:raise ValueError('ambiguous prior process start')
         identity=_identity(d['pid'])
         if identity is None:
             if handle in self.children:

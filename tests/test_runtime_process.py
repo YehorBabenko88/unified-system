@@ -163,6 +163,36 @@ class ProcessTests(unittest.TestCase):
         with self.assertRaises(ValueError):self.driver(False).start(ModuleSpec('math','1.0.0'),'r','b'*32)
         self.worker.write_text('raise RuntimeError("tampered")')
         with self.assertRaises(ValueError):self.driver().start(ModuleSpec('math','1.0.0'),'r','c'*32)
+
+    def test_live_prestart_rejection_is_cleanable_without_claiming_a_process_ran(self):
+        from unittest.mock import patch
+        d=self.driver(False);op='3'*32
+        with patch('unified_system.runtime_process.subprocess.Popen') as spawn:
+            with self.assertRaises(ValueError):d.start(ModuleSpec('math','1.0.0'),'r',op)
+            self.assertFalse(d._file(op).exists())
+            d.stop(op);d.stop(op)
+            spawn.assert_not_called()
+        self.assertEqual(d._load(op)['state'],'STOPPED')
+        self.assertEqual(d._load(op)['failure_phase'],'AUTHORIZATION_REJECTED')
+        self.assertIsNone(d._load(op)['pid']);self.assertFalse(d.alive(op))
+
+    def test_interrupted_start_without_live_rejection_witness_stays_ambiguous(self):
+        d=self.driver();op='4'*32
+        d._save(op,dict(pid=None,created=None,module_id='math',version='1.0.0',release_id='r',token='a'*64,state='STARTING'),new=True)
+        with self.assertRaisesRegex(ValueError,'ambiguous'):d.stop(op)
+        self.assertEqual(d._load(op)['state'],'STARTING')
+
+    def test_supervisor_retries_denied_starts_without_false_stop_failure_or_readiness(self):
+        from unittest.mock import patch
+        from unified_system.runtime import RuntimeSupervisor
+        from unified_system.module_catalog import MODULE_IDS
+        d=ProcessDriver(self.root/'denied-private',{n:dict(self.program) for n in MODULE_IDS},authorize=lambda *_:False)
+        r=RuntimeSupervisor(self.root/'denied.sqlite',d,[ModuleSpec(n,'1.0.0') for n in MODULE_IDS],
+                            release_id='r',release_sha256='a'*64,node_id='lab-component-test',clock=lambda:100.)
+        with patch('unified_system.runtime_process.subprocess.Popen') as spawn:
+            r.start();r.tick();snapshot=r.snapshot();r.stop();spawn.assert_not_called()
+        self.assertFalse(snapshot['ready'])
+        self.assertTrue(all(s['state']=='BACKOFF' and s['reason']=='DRIVER_FAILURE' for s in snapshot['modules'].values()))
     def test_unknown_or_reused_pid_is_never_killed(self):
         d=self.driver();op='d'*32
         (d.root/(op+'.json')).write_text(json.dumps(dict(pid=1,created=-1,module_id='math',token='x',release_id='r',version='1.0.0')))

@@ -1,7 +1,10 @@
 """Prepare a new unsigned LS5 LAB capsule. Never starts a database or service.
 
 Run only from independently reviewed builder sources. Failures retain new inactive
-output directories for inspection. No overwrite, cleanup, signing or trust bypass.
+output directories for inspection. Final verified code receives an owner-scoped
+read/execute ACL with accidental writes denied; mutable state stays separate.
+This does not attest the host or contain hostile owner code. No overwrite,
+cleanup, signing or trust bypass.
 """
 import argparse
 import hashlib
@@ -220,7 +223,9 @@ def build(args):
     wheels=windows_wheels.validate_windows_wheels(lock,cache/'wheels')
     need(wheels['result']=='CANDIDATE_BYTES_MATCH' and len(wheels['wheels'])==72 and wheels['candidate_bytes']==431771071,'WHEELS_REJECTED')
     pip_member=bundled_pip_member(cache/'python.3.12.10.nupkg')
-    root.mkdir();state.mkdir();(root/'runtime').mkdir();(root/'sources').mkdir();(root/'locks').mkdir();(root/'dependencies').mkdir()
+    from unified_system.lab_capsule_acl import FreshCodeRoot
+    owned_code=FreshCodeRoot.create(root)
+    state.mkdir();(root/'runtime').mkdir();(root/'sources').mkdir();(root/'locks').mkdir();(root/'dependencies').mkdir()
     # No executable or adjacent DLL is borrowed from an existing cache tree.
     extract(cache/'MinGit-2.56.0.4-64-bit.zip',root/'runtime/git')
     git=root/'runtime/git/ucrt64/bin/git.exe';env=environment(git)
@@ -270,7 +275,10 @@ def build(args):
     validate_config(config,manifest,root,hostname='LS5');verify_sources(root,manifest)
     # Recheck original repositories so a concurrent edit cannot silently qualify.
     for n,d in NAMES.items():need(require_clean(WORKSPACE/d,git,environment(git))==heads[n],'SOURCE_CHANGED')
-    return dict(result='PREPARED_UNSIGNED_LAB_CANDIDATE',capsule=str(root),state_root=str(state),manifest_sha256=digest,sources={n:{'commit':s['commit'],'tree':s['tree']} for n,s in sources.items()},database_provisioned=False,services_started=False)
+    # Seal only this invocation's newly created root, after complete byte/source
+    # admission. Failure retains the inactive directories, including partial ACLs.
+    owned_code.seal(digest)
+    return dict(result='PREPARED_UNSIGNED_LAB_CANDIDATE',code_acl='OWNED_READ_EXECUTE_ACCIDENTAL_WRITE_DENIED',capsule=str(root),state_root=str(state),manifest_sha256=digest,sources={n:{'commit':s['commit'],'tree':s['tree']} for n,s in sources.items()},database_provisioned=False,services_started=False)
 
 def main(argv=None):
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--output',required=True);p.add_argument('--state-root',required=True);p.add_argument('--release-id',required=True);p.add_argument('--node',default='LS5');p.add_argument('--sequence',type=int,default=1);p.add_argument('--cache',default=str(CACHE));p.add_argument('--postgres-port',type=int,default=55459);p.add_argument('--include-postgres',action='store_true');p.add_argument('--npm-cache');args=p.parse_args(argv)
