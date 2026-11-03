@@ -45,6 +45,39 @@ class LabRuntimePolicyTests(unittest.TestCase):
         self.assertTrue(all(Path(p['env']['PROGRAMDATA']).resolve().is_relative_to(Path(self.c['state_root']).resolve()) for p in result['programs'].values()))
         with self.assertRaises(ValueError):runtime_cli.assert_ephemeral(self.c,self.root/'runtime.json',hostname='LS5')
 
+    def test_worker_nodes_cannot_launch_another_coordinator(self):
+        c=copy.deepcopy(self.c);c['node_id']='PC1'
+        with self.assertRaises(ValueError):lab.validate_config(c,self.m,self.root,hostname='PC1')
+        p=c['programs']['grid'];index=p['argv'].index('--module')
+        p['argv']=p['argv'][:index]+['--module','grid.owned_worker_service','--','--execute','--port','19000']
+        p['env'].pop('POSTGRES_DSN')
+        result=lab.validate_config(c,self.m,self.root,hostname='PC1')
+        self.assertEqual(result['programs']['grid']['env']['ROLE'],'worker')
+
+    def test_private_grid_auth_is_hash_bound_and_only_contains_lab_identity(self):
+        import json
+        state=Path(self.c['state_root']);state.mkdir()
+        self.addCleanup(lambda:__import__('shutil').rmtree(state))
+        record=dict(schema='unified.lab.grid-auth.v1',node_id='LS5',role='CONTROL',release_id=self.m['release_id'],
+                    source_commit=self.m['sources']['grid']['commit'],grid_shared_token='c'*64,node_credential=None)
+        raw=lab.lab_release.canonical(record);path=state/'grid-auth.json';path.write_bytes(raw)
+        pin=hashlib.sha256(raw).hexdigest()
+        env=lab.read_grid_auth(path,pin,node_id='LS5',release_id=self.m['release_id'],source_commit='a'*40)
+        self.assertEqual(env,{'GRID_SHARED_TOKEN':'c'*64})
+        with self.assertRaises(ValueError):lab.read_grid_auth(path,'0'*64,node_id='LS5',release_id=self.m['release_id'],source_commit='a'*40)
+        with self.assertRaises(ValueError):lab.read_grid_auth(path,pin,node_id='PC1',release_id=self.m['release_id'],source_commit='a'*40)
+
+    def test_office_node_ids_bind_to_the_observed_windows_hostnames(self):
+        for node,hostname in [('PC1','Easy'),('PC2','Leitstelle1'),('PC3','LS03e'),('PC4','LS4'),('LS7','LS-07')]:
+            c=copy.deepcopy(self.c);c['node_id']=node
+            p=c['programs']['grid'];index=p['argv'].index('--module')
+            p['argv']=p['argv'][:index]+['--module','grid.owned_worker_service','--','--execute','--port','19000']
+            p['env'].pop('POSTGRES_DSN')
+            with self.subTest(node=node):
+                self.assertEqual(lab.validate_config(c,self.m,self.root,hostname=hostname)['node_id'],node)
+                with self.assertRaises(ValueError):lab.validate_config(c,self.m,self.root,hostname='LS5')
+                with self.assertRaises(ValueError):lab.validate_config(c,self.m,self.root,hostname='ADMINIT')
+
     def test_source_versions_files_state_and_node_are_bound_to_capsule(self):
         for fault in ('node','version','cwd','executable','script','pin','state','snapshot'):
             c=copy.deepcopy(self.c);p=c['programs']['math']
@@ -116,14 +149,15 @@ class LabRuntimePolicyTests(unittest.TestCase):
         programs={'math':dict(argv=[str(executable),'-I','-S','-B',str(helper),str(output)],
             cwd=str(self.root),health_url='http://127.0.0.1:19000/ready',
             executable_sha256=sha(executable),file_pins={'env_probe.py':sha(helper)})}
-        driver=ProcessDriver(self.root/'private',programs,authorize=lambda *_:True,child_environment=lab.child_environment)
+        driver=ProcessDriver(self.root/'private',programs,authorize=lambda *_:True,child_environment=lambda module:lab.child_environment())
         with patch.dict(os.environ,{'BYBIT_API_KEY':'INERT_TEST_SECRET','NODE_OPTIONS':'INERT_TEST_STARTUP'}):
             handle=driver.start(ModuleSpec('math','1.0.0'),'lab-test','a'*32)
         try:
             until=time.monotonic()+5
             while not output.exists() and time.monotonic()<until:time.sleep(.02)
+            returncode=driver.children[handle].wait(timeout=5)
+            self.assertEqual(returncode,0)
             result=json.loads(output.read_text())
-            driver.children[handle].wait(timeout=5)
             self.assertIsNone(result['BYBIT_API_KEY']);self.assertIsNone(result['NODE_OPTIONS'])
             self.assertEqual(result['UNIFIED_ORDER_MODE'],'PAPER_ONLY')
             self.assertEqual(result['UNIFIED_DEPLOYMENT_MODE'],'LAB_SIMULATION')

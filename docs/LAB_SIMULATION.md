@@ -34,17 +34,36 @@ pin, generated release certificate or security-policy bypass is supported.
 5. Source fences check all six repository origins, raw tracked bytes and exact
    HEAD/tree before launch and each restart. The admitted runtime configuration
    must bind this actual hostname and use the builtin Unified profile plus five
-   reviewed component entrypoints. Python uses isolated `owned_python.py`;
+   reviewed component entrypoints. LS5 alone runs Grid Coordinator; PC1–PC4/LS7
+   use `grid.owned_worker_service` around the existing DB-less Worker. Its health
+   requires a recent authenticated CONTROL heartbeat, not process liveness.
+   Python uses isolated `owned_python.py`;
    Node uses Math's fixed source entrypoint. No arbitrary shell/eval/loader path.
 6. Mutable journals, databases, caches and snapshots stay in a dedicated external
-   lab state directory. Grid's DSN must address a loopback `unified_lab_*` user and
-   database in a separately provisioned test cluster, never an existing database.
+   lab state directory, including per-component user profiles/temp directories
+   and Grid control journals. Only LS5 Grid receives a DSN; it must address a
+   loopback `unified_lab_*` user and database in a separately provisioned test
+   cluster, never an existing database. Workers receive no database credentials.
    Capsule admission alone does not prove ownership of a database server.
 7. Children receive a minimal OS environment, contained component paths, public
    Bybit endpoints and `PAPER_ONLY`/trading-disabled flags. Exchange credentials,
    startup injection settings, private Bybit endpoints and inherited production
    ProgramData/ProgramFiles are not admitted. A fresh private Grid authentication
-   token is generated in memory; it is not an exchange credential or manifest field.
+   enrollment record is provisioned privately outside the capsule. Its path and
+   external SHA256 are bound in Grid's config (`GRID_LAB_AUTH_PATH/SHA256`); its
+   node, role, release and source commit must match. It contains a random Grid
+   shared token and, for workers, a CONTROL-issued node credential. Values never
+   enter source, manifest, public logs or other components' environments. The
+   private record schema is `unified.lab.grid-auth.v1`. Provisioning is not
+   implied by a successful file-only capsule check.
+
+Grid's legacy update/repair/rollback/uninstall handlers are rejected in lab mode:
+they manage a different installation layout. A Grid-issued pinned lab actuator
+must perform those transitions; this capability remains pending qualification.
+Legacy PowerShell calls retain the current ExecutionPolicy rather than bypass it.
+On the office workers, a loopback `COORDINATOR_URL` can use an LS5-initiated reverse
+SSH tunnel to the private LS5 listener; no public HTTP listener or unnecessary
+peer firewall direction is required, and SSH host-key checks remain mandatory.
 
 Hash admission authorizes reviewed own lab bytes; it is not hostile-code
 containment or host attestation. Existing TLS, SSH host keys, ESET, Firewall,

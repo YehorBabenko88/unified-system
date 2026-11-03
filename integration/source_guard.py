@@ -77,7 +77,12 @@ class SourceFence:
                     process.wait(timeout=2)
             except (OSError,subprocess.SubprocessError):raise SourceQualificationError('GIT_CHECK_FAILED') from None
             out.seek(0);return out.read(self.GIT_BYTES+1)
-    def check(self):
+    def check_metadata(self):
+        """Reject executable/redirecting local Git metadata before any Git call.
+
+        Useful for developer-source inventory without importing candidate code or
+        treating ignored developer caches as release content. No admission claim.
+        """
         overrides={'GIT_DIR','GIT_WORK_TREE','GIT_COMMON_DIR','GIT_OBJECT_DIRECTORY','GIT_ALTERNATE_OBJECT_DIRECTORIES','GIT_CONFIG_PARAMETERS','GIT_CONFIG_COUNT','GIT_INDEX_FILE','GIT_REPLACE_REF_BASE'}
         if overrides.intersection(key.upper() for key in os.environ):raise SourceQualificationError('GIT_ENV_OVERRIDE')
         gitdir=self.root/'.git'
@@ -106,6 +111,8 @@ class SourceFence:
                 if 'fsmonitor' in values and values['fsmonitor'].casefold() not in ('false','0','no','off'):raise SourceQualificationError('UNSAFE_FSMONITOR')
             if 'promisor' in config[section] or lower=='extensions' and 'partialclone' in config[section]:raise SourceQualificationError('EXTERNAL_PROMISOR_OBJECTS')
             if lower=='extensions' and 'worktreeconfig' in config[section]:raise SourceQualificationError('EXTERNAL_WORKTREE_CONFIG')
+    def check(self):
+        self.check_metadata()
         if self.git('for-each-ref','--format=%(refname)','refs/replace').strip():raise SourceQualificationError('REPLACE_REFS_FORBIDDEN')
         head=self.git('rev-parse','HEAD').decode().strip()
         if self.expected_head is not None and head!=self.expected_head:

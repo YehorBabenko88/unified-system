@@ -159,7 +159,7 @@ class ProcessDriver:
                token=secrets.token_hex(32),state='STARTING')
         self._save(operation_id,d,new=True)
         p=self.programs[spec.module_id]
-        env=os.environ.copy() if self.child_environment is None else self.child_environment()
+        env=os.environ.copy() if self.child_environment is None else self.child_environment(spec.module_id)
         env.update(p.get('env',{}))
         cache=tempfile.mkdtemp(prefix=operation_id+'-cache-',dir=self.root)
         os.chmod(cache,0o700)
