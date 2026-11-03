@@ -42,7 +42,7 @@ class LabRuntimePolicyTests(unittest.TestCase):
         with self.assertRaises(ValueError):runtime_cli.validate_config(self.c)
         result=lab.validate_config(self.c,self.m,self.root,hostname='LS5')
         self.assertEqual(result['node_id'],'LS5')
-        self.assertTrue(all(Path(p['env']['PROGRAMDATA']).is_relative_to(self.c['state_root']) for p in result['programs'].values()))
+        self.assertTrue(all(Path(p['env']['PROGRAMDATA']).resolve().is_relative_to(Path(self.c['state_root']).resolve()) for p in result['programs'].values()))
         with self.assertRaises(ValueError):runtime_cli.assert_ephemeral(self.c,self.root/'runtime.json',hostname='LS5')
 
     def test_source_versions_files_state_and_node_are_bound_to_capsule(self):
@@ -112,9 +112,10 @@ class LabRuntimePolicyTests(unittest.TestCase):
         helper=self.root/'env_probe.py';output=self.root/'environment.json'
         helper.write_text('import json,os,sys\njson.dump({k:os.environ.get(k) for k in ("BYBIT_API_KEY","NODE_OPTIONS","UNIFIED_ORDER_MODE","UNIFIED_DEPLOYMENT_MODE")},open(sys.argv[1],"w"))\n')
         sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest()
-        programs={'math':dict(argv=[sys.executable,'-I','-S','-B',str(helper),str(output)],
+        executable=Path(sys.executable).resolve()
+        programs={'math':dict(argv=[str(executable),'-I','-S','-B',str(helper),str(output)],
             cwd=str(self.root),health_url='http://127.0.0.1:19000/ready',
-            executable_sha256=sha(sys.executable),file_pins={'env_probe.py':sha(helper)})}
+            executable_sha256=sha(executable),file_pins={'env_probe.py':sha(helper)})}
         driver=ProcessDriver(self.root/'private',programs,authorize=lambda *_:True,child_environment=lab.child_environment)
         with patch.dict(os.environ,{'BYBIT_API_KEY':'INERT_TEST_SECRET','NODE_OPTIONS':'INERT_TEST_STARTUP'}):
             handle=driver.start(ModuleSpec('math','1.0.0'),'lab-test','a'*32)
