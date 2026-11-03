@@ -195,6 +195,17 @@ def pip_bootstrap():
         'wheel=sys.argv.pop(1)\nsys.path.insert(0,wheel)\n'
         'runpy.run_module("pip",run_name="__main__")\n')
 
+def npm_environment(env,node,git,cache,state):
+    # npm rejects loading the same NUL path as both user and global config.
+    # Separate new empty files also avoid loading ambient account settings.
+    user=state/'npm-user.ini';global_config=state/'npm-global.ini'
+    for path in (user,global_config):
+        with path.open('xb'):pass
+    return {**env,'PATH':str(node.parent)+os.pathsep+str(git.parent),
+            'npm_config_cache':str(cache),'npm_config_userconfig':str(user),
+            'npm_config_globalconfig':str(global_config),'npm_config_update_notifier':'false',
+            'npm_config_audit':'false','npm_config_fund':'false'}
+
 def build(args):
     root,state=destinations(args.output,args.state_root)
     need(args.node=='LS5' and socket.gethostname().split('.')[0].upper()=='LS5','LS5_ONLY')
@@ -238,7 +249,7 @@ def build(args):
     with verifier.open('x',encoding='utf8') as out:out.write(native_probe(expected))
     run([python,'-I','-S','-B',verifier,target],env)
     npm=node.parent/'node_modules/npm/bin/npm-cli.js'
-    npm_env={**env,'PATH':str(node.parent)+os.pathsep+str(git.parent),'npm_config_cache':str(safe(args.npm_cache) if args.npm_cache else cache/'npm-cache'),'npm_config_userconfig':os.devnull,'npm_config_globalconfig':os.devnull,'npm_config_update_notifier':'false','npm_config_audit':'false','npm_config_fund':'false'}
+    npm_env=npm_environment(env,node,git,safe(args.npm_cache) if args.npm_cache else cache/'npm-cache',state)
     run([node,npm,'ci','--ignore-scripts','--offline','--no-audit','--no-fund'],npm_env,cwd=root/'sources/math')
     shutil.copyfile(lock,root/'locks/requirements-cp312-win_amd64-cpu.lock')
     vendor={'schema':'unified.lab.vendor-lock.v1','archives':ARCHIVES,'wheels':wheels['wheels'],'postgresql':None,'npm_package_lock_sha256':sha(root/'sources/math/package-lock.json')}

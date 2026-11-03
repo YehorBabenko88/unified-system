@@ -8,6 +8,15 @@ spec=importlib.util.spec_from_file_location('lab_capsule_builder',ROOT/'scripts/
 builder=importlib.util.module_from_spec(spec);spec.loader.exec_module(builder)
 
 class BuilderTests(unittest.TestCase):
+    def test_npm_uses_distinct_new_empty_configuration_files(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root=Path(temporary).resolve()
+            env=builder.npm_environment({'INERT':'value'},root/'node.exe',root/'git.exe',root/'cache',root)
+            user=Path(env['npm_config_userconfig']);global_config=Path(env['npm_config_globalconfig'])
+            self.assertNotEqual(user,global_config)
+            self.assertEqual(user.read_bytes(),b'');self.assertEqual(global_config.read_bytes(),b'')
+            self.assertEqual(env['INERT'],'value')
+            with self.assertRaises(FileExistsError):builder.npm_environment({},root/'node.exe',root/'git.exe',root/'cache',root)
     def test_native_probe_uses_admitted_distribution_names_and_versions(self):
         from unified_system.windows_wheels import parse_compiled_lock
         lock=parse_compiled_lock((ROOT/'integration/windows-candidate/requirements-cp312-win_amd64-cpu.lock').read_bytes())
