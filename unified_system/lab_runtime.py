@@ -232,6 +232,9 @@ def main(argv=None):
     try:
         if a.mode!='LAB_SIMULATION':
             print('BLOCKED_NO_TRUSTED_PUBLISHER; no unsigned fallback');return 1
+        if a.execute:
+            from .lab_privileges import remove_lab_write_bypass_privileges
+            remove_lab_write_bypass_privileges()
         root=_safe_path(a.root);c,report=prepare(root,a.manifest_sha256)
         if not a.execute:
             print('LAB_SIMULATION_VERIFIED; processes=NOT_STARTED; physical=NOT_RUN');return 0

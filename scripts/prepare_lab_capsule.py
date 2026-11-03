@@ -267,6 +267,9 @@ def build(args):
     auth=new_auth(state,args.release_id,heads['grid'])
     config=runtime_config(root,state,sources,snapshots,git,python,node,args.release_id,auth,args.postgres_port)
     write(root/'runtime-config.json',config)
+    # pip moves private staging directories with protected OWNER_RIGHTS ACLs.
+    # Normalize only that exact recognized shape before final byte admission.
+    owned_code.normalize_installer_acls()
     files,dirs=inventory(root)
     manifest=dict(schema='unified.lab-release.v1',mode='LAB_SIMULATION',release_id=args.release_id,sequence=args.sequence,market_access='PUBLIC_READ_ONLY',execution='PAPER_ONLY',credentials='FORBIDDEN',trading_authorized=False,sources=sources,files=files,directories=dirs,dependencies=[dict(name='python',version='3.12.10',lock_path='locks/vendor.json'),dict(name='node',version='22.23.4',lock_path='locks/vendor.json'),dict(name='mingit',version='2.56.0.4',lock_path='locks/vendor.json'),dict(name='python-packages',version='1',lock_path='locks/requirements-cp312-win_amd64-cpu.lock'),dict(name='npm',version='1',lock_path='sources/math/package-lock.json')],runtime_config='runtime-config.json',git=git.relative_to(root).as_posix(),instruments=SYMBOLS)
     write(root/'lab-release.json',manifest);digest=sha(root/'lab-release.json')

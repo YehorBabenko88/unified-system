@@ -20,6 +20,8 @@ $p=$env:UNIFIED_ACL_OWNED_ROOT
 $sid=[Security.Principal.WindowsIdentity]::GetCurrent().User
 $system=[Security.Principal.SecurityIdentifier]::new('S-1-5-18')
 $admins=[Security.Principal.SecurityIdentifier]::new('S-1-5-32-544')
+$identity=[Security.Principal.WindowsIdentity]::GetCurrent()
+$adminDefaultOwner=($identity.Owner.Value -ceq $admins.Value -and ([Security.Principal.WindowsPrincipal]::new($identity)).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
 $inherit=[Security.AccessControl.InheritanceFlags]'ContainerInherit,ObjectInherit'
 $none=[Security.AccessControl.PropagationFlags]::None
 $allow=[Security.AccessControl.AccessControlType]::Allow
@@ -63,8 +65,58 @@ function Verify-Tree($sealed){
   }
  }
 }
+function Normalize-Installer {
+ # Phase one is read-only over the complete tree. Only pip's exact protected
+ # OWNER_RIGHTS/System/Admins FullControl shape is eligible for inheritance.
+ $items=@(Get-Item -LiteralPath $p -Force)+@(Get-ChildItem -LiteralPath $p -Force -Recurse | Sort-Object { $_.FullName.Length })
+ if($items.Count -gt 300000){throw 'ACL_TREE_BUDGET'}
+ $shapes=@{};$boundaries=@();$original=@{}
+ foreach($item in $items){
+  if(($item.Attributes -band [IO.FileAttributes]::ReparsePoint) -ne 0){throw 'ACL_LINK_REJECTED'}
+  $a=Get-Acl -LiteralPath $item.FullName
+  $isRoot=$item.FullName -ceq $p
+  $owner=$a.GetOwner([Security.Principal.SecurityIdentifier]).Value
+  # An unfiltered administrator token may default newly created descendants
+  # to Builtin Administrators. This exception is derived from this token only;
+  # it never applies to the capability root or a foreign/System owner.
+  if($owner -cne $sid.Value -and ($isRoot -or !$adminDefaultOwner -or $owner -cne $admins.Value)){throw 'ACL_OWNER_REJECTED'}
+  $protected=$a.AreAccessRulesProtected
+  if($isRoot){if(!$protected){throw 'ACL_INHERITANCE_REJECTED'};$principal=$sid.Value}
+  elseif($protected){
+   if(!$item.PSIsContainer){throw 'ACL_INHERITANCE_REJECTED'}
+   $principal='S-1-3-4';$boundaries+=,$item.FullName
+  }else{
+   $parent=[IO.Path]::GetDirectoryName($item.FullName)
+   if(!$shapes.ContainsKey($parent)){throw 'ACL_INHERITANCE_REJECTED'}
+   $principal=$shapes[$parent]
+  }
+  $expected=@($principal,'S-1-5-18','S-1-5-32-544');$seen=@{}
+  $rules=@($a.GetAccessRules($true,$true,[Security.Principal.SecurityIdentifier]))
+  if($rules.Count -ne 3){throw 'ACL_RULE_COUNT_REJECTED'}
+  foreach($r in $rules){
+   $id=$r.IdentityReference.Value
+   if($id -notin $expected -or $seen.ContainsKey($id) -or $r.AccessControlType -ne $allow -or [int]$r.FileSystemRights -ne [int]$full){throw 'ACL_RIGHTS_REJECTED'}
+   if($r.IsInherited -eq $protected -or $r.PropagationFlags -ne $none){throw 'ACL_EXPLICIT_DESCENDANT_REJECTED'}
+   if($item.PSIsContainer -and $r.InheritanceFlags -ne $inherit){throw 'ACL_DIRECTORY_FLAGS_REJECTED'}
+   if(!$item.PSIsContainer -and $r.InheritanceFlags -ne [Security.AccessControl.InheritanceFlags]::None){throw 'ACL_FILE_FLAGS_REJECTED'}
+   $seen[$id]=$true
+  }
+  $shapes[$item.FullName]=$principal;$original[$item.FullName]=$a.Sddl
+ }
+ # Recheck all descriptors before the first mutation; unknown ACLs never cause
+ # a partial normalization. Each approved boundary then inherits its parent.
+ foreach($item in $items){if((Get-Acl -LiteralPath $item.FullName).Sddl -cne $original[$item.FullName]){throw 'ACL_RIGHTS_REJECTED'}}
+ foreach($path in $boundaries){
+  $a=Get-Acl -LiteralPath $path
+  foreach($r in @($a.GetAccessRules($true,$false,[Security.Principal.SecurityIdentifier]))){$a.RemoveAccessRuleSpecific($r)}
+  $a.SetAccessRuleProtection($false,$false)
+  (Get-Item -LiteralPath $path -Force).SetAccessControl($a)
+ }
+ Verify-Tree $false
+}
 switch($env:UNIFIED_ACL_OPERATION){
  'create' {Set-Root $false;Verify-Tree $false}
+ 'normalize' {Normalize-Installer}
  'seal' {Verify-Tree $false;Set-Root $true;Verify-Tree $true}
  'verify' {Verify-Tree $true}
  default {throw 'ACL_OPERATION_REJECTED'}
@@ -136,6 +188,23 @@ class FreshCodeRoot:
             raise ValueError('ACL_MANIFEST_PIN_REQUIRED')
         if hashlib.sha256(path.read_bytes()).hexdigest()!=pin:
             raise ValueError('ACL_MANIFEST_PIN_MISMATCH')
+
+    def normalize_installer_acls(self):
+        """Normalize exact pip staging ACLs only, before final byte admission."""
+        if self._sealed:raise ValueError('ACL_ALREADY_SEALED')
+        root=self._owned()
+        count=0
+        for directory,dirs,files in os.walk(root,followlinks=False):
+            for path in (Path(directory),*(Path(directory)/name for name in dirs+files)):
+                count+=1
+                if count>600000:raise ValueError('ACL_TREE_BUDGET')
+                facts=path.lstat()
+                if stat.S_ISLNK(facts.st_mode) or getattr(facts,'st_file_attributes',0)&1024:
+                    raise ValueError('ACL_LINK_REJECTED')
+                if not stat.S_ISDIR(facts.st_mode) and (not stat.S_ISREG(facts.st_mode) or facts.st_nlink!=1):
+                    raise ValueError('ACL_HARDLINK_OR_SPECIAL_REJECTED')
+        self._apply('normalize')
+        return True
 
     def seal(self,manifest_sha256):
         """Call only after full capsule verification and original-source rechecks."""
