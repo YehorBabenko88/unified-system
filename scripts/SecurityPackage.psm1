@@ -185,6 +185,28 @@ function Test-UnifiedCodeSigningPublisher([Security.Cryptography.X509Certificate
     }finally{$chain.Dispose()}
     [pscustomobject]@{publisher_sha256=$pin;chain='SYSTEM_TRUSTED_WITH_REVOCATION';admission='NOT_GRANTED'}
 }
+function Test-UnifiedAuthenticodeTimestamp([Security.Cryptography.X509Certificates.X509Certificate2]$Certificate) {
+    if($null -eq $Certificate){throw 'Trusted timestamp certificate required'}
+    $timestampEku=$false
+    foreach($extension in $Certificate.Extensions){
+        if($extension.Oid.Value -ceq '2.5.29.37'){
+            foreach($usage in $extension.EnhancedKeyUsages){if($usage.Value -ceq '1.3.6.1.5.5.7.3.8'){$timestampEku=$true}}
+        }
+    }
+    if(!$timestampEku){throw 'Explicit Time Stamping EKU required'}
+    $now=[DateTime]::UtcNow
+    if($Certificate.NotBefore.ToUniversalTime() -gt $now -or $Certificate.NotAfter.ToUniversalTime() -le $now){throw 'Current timestamp certificate is not valid'}
+    $chain=[Security.Cryptography.X509Certificates.X509Chain]::new()
+    try{
+        $chain.ChainPolicy.RevocationMode=[Security.Cryptography.X509Certificates.X509RevocationMode]::Online
+        $chain.ChainPolicy.RevocationFlag=[Security.Cryptography.X509Certificates.X509RevocationFlag]::EntireChain
+        $chain.ChainPolicy.VerificationFlags=[Security.Cryptography.X509Certificates.X509VerificationFlags]::NoFlag
+        $chain.ChainPolicy.UrlRetrievalTimeout=[TimeSpan]::FromSeconds(5)
+        [void]$chain.ChainPolicy.ApplicationPolicy.Add([Security.Cryptography.Oid]::new('1.3.6.1.5.5.7.3.8'))
+        if(!$chain.Build($Certificate)){throw 'Timestamp chain or revocation verification failed'}
+    }finally{$chain.Dispose()}
+    [pscustomobject]@{timestamp='NATIVE_AUTHENTICODE_COUNTERSIGNATURE_REQUIRED';chain='SYSTEM_TRUSTED_WITH_REVOCATION';admission='NOT_GRANTED'}
+}
 function Test-UnifiedAuthenticodeArtifact([string]$Path,[string]$ExpectedPublisherSha256) {
     if($ExpectedPublisherSha256 -cnotmatch '^[0-9a-f]{64}$'){throw 'External Authenticode publisher pin required'}
     Assert-LocalPath $Path
@@ -194,9 +216,10 @@ function Test-UnifiedAuthenticodeArtifact([string]$Path,[string]$ExpectedPublish
         $signature=Get-AuthenticodeSignature -LiteralPath $Path -ErrorAction Stop
         if($signature.Status -ne [Management.Automation.SignatureStatus]::Valid -or $null -eq $signature.SignerCertificate){throw 'Authenticode signature is not valid'}
         $publisher=Test-UnifiedCodeSigningPublisher $signature.SignerCertificate $ExpectedPublisherSha256
+        $timestamp=Test-UnifiedAuthenticodeTimestamp $signature.TimeStamperCertificate
         $sha=[Security.Cryptography.SHA256]::Create()
         try{$artifactHash=([BitConverter]::ToString($sha.ComputeHash($artifactStream))).Replace('-','').ToLowerInvariant()}finally{$sha.Dispose()}
-        [pscustomobject]@{authenticode='VALID';artifact_sha256=$artifactHash;publisher_sha256=$publisher.publisher_sha256;chain=$publisher.chain;execution_authority=$false;admission='NOT_GRANTED'}
+        [pscustomobject]@{authenticode='VALID';artifact_sha256=$artifactHash;publisher_sha256=$publisher.publisher_sha256;chain=$publisher.chain;timestamp='NATIVE_VALIDATED_WITH_TRUSTED_TSA';timestamp_chain=$timestamp.chain;execution_authority=$false;admission='NOT_GRANTED'}
     }finally{$artifactStream.Dispose()}
 }
-Export-ModuleMember -Function Test-UnifiedSecurityPackage, Test-UnifiedPackageSignature, Test-UnifiedAuthenticodeArtifact, Test-UnifiedCodeSigningPublisher
+Export-ModuleMember -Function Test-UnifiedSecurityPackage, Test-UnifiedPackageSignature, Test-UnifiedAuthenticodeArtifact, Test-UnifiedCodeSigningPublisher, Test-UnifiedAuthenticodeTimestamp

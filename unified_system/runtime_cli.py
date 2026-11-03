@@ -34,12 +34,12 @@ def need(ok):
     if not ok:raise ValueError(ERROR)
 
 
-def validate_config(c):
+def validate_config(c,*,allow_physical=False):
     need(type(c) is dict and set(c)=={'schema','node_id','release_id','release_sha256',
         'state_root','snapshot_path','http_port','tick_seconds','specs','programs'})
     need(c['schema'] in ('unified.runtime.config.v1','unified.runtime.config.v2'))
     builtin=c['schema']=='unified.runtime.config.v2'
-    need(type(c['node_id']) is str and re.fullmatch('[A-Za-z0-9_-]{1,64}',c['node_id']) and c['node_id'].upper() not in ('ADMINIT','LS5','PC4'))
+    need(type(c['node_id']) is str and re.fullmatch('[A-Za-z0-9_-]{1,64}',c['node_id']) and (allow_physical is True or c['node_id'].upper() not in ('ADMINIT','LS5','PC4')))
     need(type(c['release_id']) is str and re.fullmatch('[A-Za-z0-9_.:-]{1,128}',c['release_id']))
     need(type(c['release_sha256']) is str and re.fullmatch('[0-9a-f]{64}',c['release_sha256']))
     need(type(c['http_port']) is int and 0<=c['http_port']<=65535)
@@ -85,7 +85,7 @@ def validate_config(c):
     return c
 
 
-def read_config(path):
+def read_config(path,*,allow_physical=False):
     path=_safe_path(path)
     with path.open('rb') as f:raw=f.read(LIMIT+1)
     need(0<len(raw)<=LIMIT)
@@ -94,7 +94,7 @@ def read_config(path):
         for key,value in pairs:need(key not in out);out[key]=value
         return out
     c=json.loads(raw.decode('utf-8'),object_pairs_hook=unique,parse_constant=lambda _:need(False))
-    return validate_config(c),raw
+    return validate_config(c,allow_physical=allow_physical),raw
 
 
 def assert_ephemeral(c,config_path,*,env=None,platform=None,hostname=None):
@@ -195,9 +195,9 @@ def write_snapshot(path,snapshot):
         except FileNotFoundError:pass
 
 
-def make_runtime(c,authorize):
+def make_runtime(c,authorize,*,child_environment=None):
     root=Path(c['state_root'])
-    driver=ProcessDriver(root/'private-processes',c['programs'],authorize=authorize)
+    driver=ProcessDriver(root/'private-processes',c['programs'],authorize=authorize,child_environment=child_environment)
     if c['schema']=='unified.runtime.config.v2':
         from .runtime_builtin import BuiltinRuntimeDriver
         driver=BuiltinRuntimeDriver(driver,journal_path=root/'runtime.sqlite',snapshot_path=c['snapshot_path'],

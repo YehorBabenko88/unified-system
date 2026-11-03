@@ -6,6 +6,22 @@ from unified_system.release_manifest import canonical
 
 ROOT=Path(__file__).resolve().parents[1]
 class PackagePreflightTests(unittest.TestCase):
+ def test_lab_bootstrap_requires_raw_source_pins_before_dispatch(self):
+  marker=self.home/'lab-called'
+  module=self.repo/'unified_system/lab_runtime.py'
+  module.write_text('from pathlib import Path\ndef main(argv):\n Path('+repr(str(marker))+').write_text(str(argv))\n return 0\n')
+  self.command_git('add','.');self.command_git('-c','user.name=Test','-c','user.email=test@example.invalid','commit','-qm','reviewed lab dispatcher fixture')
+  self.head=self.command_git('rev-parse','HEAD');self.tree=self.command_git('rev-parse','HEAD^{tree}')
+  command=self.command()
+  for flag in ('--package-root','--publisher-sha256'):
+   index=command.index(flag);del command[index:index+2]
+  command+=['--operation','lab','--lab-root',str(self.package),'--lab-manifest-sha256','a'*64]
+  result=self.run_preflight(command)
+  self.assertEqual(result.returncode,0,result.stderr);self.assertTrue(marker.exists())
+  self.assertNotIn('--execute',marker.read_text())
+  marker.unlink();command[command.index('--source-head')+1]='0'*40
+  self.assertNotEqual(self.run_preflight(command).returncode,0);self.assertFalse(marker.exists())
+
  def setUp(self):
   self.temp=tempfile.TemporaryDirectory();self.addCleanup(self.temp.cleanup);self.home=Path(self.temp.name).resolve();self.repo=self.home/'trusted';self.repo.mkdir();self.package=self.home/'package';(self.package/'modules').mkdir(parents=True)
   self.cache_parent=self.home/'cache';self.cache_parent.mkdir()

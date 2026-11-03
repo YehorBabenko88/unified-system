@@ -72,6 +72,12 @@ class ReleasePreparationTests(unittest.TestCase):
         self.assertNotIn('SIGNER_TOUCHED_BEFORE_PREPARATION',r.stderr)
         self.assertIn('RELEASE_PREPARATION_REJECTED',r.stderr)
     @unittest.skipUnless(sys.platform=='win32','Windows native signature verification')
+    def test_missing_trusted_timestamp_is_rejected_without_a_generated_certificate(self):
+        quote=lambda value:"'"+str(value).replace("'","''")+"'"
+        code="Import-Module "+quote(ROOT/'scripts/SecurityPackage.psm1')+" -Force; try { Test-UnifiedAuthenticodeTimestamp -Certificate $null; exit 3 } catch { if($_.Exception.Message -ne 'Trusted timestamp certificate required'){throw}; 'MISSING_TIMESTAMP_REJECTED' }"
+        r=subprocess.run([SHELL,'-NoProfile','-NonInteractive','-Command',code],env={k:v for k,v in os.environ.items() if k.upper()!='PSMODULEPATH'},capture_output=True,text=True,timeout=20)
+        self.assertEqual(r.returncode,0,r.stderr);self.assertIn('MISSING_TIMESTAMP_REJECTED',r.stdout)
+    @unittest.skipUnless(sys.platform=='win32','Windows native signature verification')
     def test_unsigned_artifact_is_never_admitted_by_authenticode(self):
         artifact=self.root/'unsigned.ps1';artifact.write_text("Write-Output 'fixture'\n")
         quote=lambda value:"'"+str(value).replace("'","''")+"'"

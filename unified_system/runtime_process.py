@@ -83,9 +83,10 @@ def _identity(pid):
 
 
 class ProcessDriver:
-    def __init__(self,root,programs,*,authorize=None):
+    def __init__(self,root,programs,*,authorize=None,child_environment=None):
         self.root=_safe_path(root);self.root.mkdir(parents=True,exist_ok=True)
         self.programs=programs;self.authorize=authorize or (lambda action,module:False);self.children={}
+        self.child_environment=child_environment
         if type(programs) is not dict or not 1<=len(programs)<=64:raise ValueError('bounded programs required')
         extra_health_budget=0.
         for name,p in programs.items():
@@ -157,7 +158,9 @@ class ProcessDriver:
         d=dict(pid=None,created=None,module_id=spec.module_id,version=spec.version,release_id=release_id,
                token=secrets.token_hex(32),state='STARTING')
         self._save(operation_id,d,new=True)
-        p=self.programs[spec.module_id];env=os.environ.copy();env.update(p.get('env',{}))
+        p=self.programs[spec.module_id]
+        env=os.environ.copy() if self.child_environment is None else self.child_environment()
+        env.update(p.get('env',{}))
         cache=tempfile.mkdtemp(prefix=operation_id+'-cache-',dir=self.root)
         os.chmod(cache,0o700)
         env.update(PYTHONPYCACHEPREFIX=cache,PYTHONDONTWRITEBYTECODE='1',UNIFIED_PRIVATE_CACHE_ROOT=cache)
@@ -224,6 +227,9 @@ class ProcessDriver:
             return
         identity=_identity(d['pid'])
         if identity is None:
+            if handle in self.children:
+                self.children[handle].wait(timeout=5)
+                if self.children[handle].stdin:self.children[handle].stdin.close()
             d['state']='STOPPED';self._save(handle,d);return
         if identity!=d['created']:raise ValueError('refuse unrelated process stop')
         if os.name=='nt':

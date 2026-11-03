@@ -1,11 +1,15 @@
 # Code Signing state and preparation boundary
 
-Status on 2026-11-03: **BLOCKED_NO_TRUSTED_PUBLISHER**. The owner confirms no
+TRUSTED_RELEASE status on 2026-11-03: **BLOCKED_NO_TRUSTED_PUBLISHER**. The owner confirms no
 current Unified Code Signing certificate, configured signing service, public
 certificate SHA256 pin or provided private key. Another application's expired
 certificate is not a candidate. No production key or trusted test certificate
 is created by this workflow. Unsigned test builds are a separate scope and
-never qualify release publisher trust or deployment admission.
+never qualify trusted-release publisher trust. The owner now separately
+authorizes unsigned **LAB_SIMULATION** deployment, with an externally admitted
+manifest digest, complete file/dependency/source checks and paper-only execution.
+See `LAB_SIMULATION.md`. This does not alter TRUSTED_RELEASE checks or create a
+certificate/publisher pin.
 
 Prefer a protected signing service/HSM with nonexportable keys outside source
 repositories and workstations. Provision its public Code Signing certificate
@@ -55,6 +59,13 @@ not establish Windows Code Signing trust.
 `Test-UnifiedAuthenticodeArtifact` holds the artifact against write/delete,
 requires Windows Authenticode status `Valid`, applies the same publisher/chain
 checks and reports the SHA256 of that retained artifact. Its public result
+requires a native Authenticode-validated countersignature and a Time Stamping EKU
+certificate with its own system-trusted, online-revocation-checked chain. This is
+strict prospective admission: both current signer and current TSA certificates
+must be valid; historical signatures with expired leaves are not admitted by this
+release gate even if Windows accepts their old timestamp. The timestamp helper
+alone checks a certificate, not a signature/time; use the artifact verifier.
+Its public result
 still grants no runtime or deployment authority. Normal release compatibility,
 source provenance, enrollment, ACL, rollout and artifact-closure checks remain
 mandatory. Do not disable TLS or signature checks when a provider is unavailable.
