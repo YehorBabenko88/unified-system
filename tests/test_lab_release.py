@@ -99,6 +99,13 @@ class LabReleaseTests(unittest.TestCase):
         self.m['files'][name]={'sha256':hashlib.sha256(raw).hexdigest(),'bytes':len(raw)}
         with self.assertRaises(ValueError):lab.verify_capsule(self.root,self.publish())
 
+    def test_scoped_dependency_and_cpp_names_remain_inside_pinned_closure(self):
+        name='deps/@scope/pkg/c++.js';raw=b'inert dependency fixture'
+        path=self.root/name;path.parent.mkdir(parents=True);path.write_bytes(raw)
+        self.m['files'][name]={'sha256':hashlib.sha256(raw).hexdigest(),'bytes':len(raw)}
+        self.m['directories']=sorted(set(self.m['directories'])|{p.as_posix() for p in Path(name).parents if str(p)!='.'})
+        pin=self.publish();self.assertEqual(lab.verify_capsule(self.root,pin)['manifest_sha256'],pin)
+
     def test_stage_copies_verified_bytes_to_new_directory_only(self):
         pin=self.publish()
         target=self.root.parent/(self.root.name+'-staged')

@@ -36,7 +36,7 @@ def digest(value,n=64):need(type(value) is str and re.fullmatch('[a-f0-9]{'+str(
 def relative(value):
     need(type(value) is str and 0<len(value)<=240 and not value.startswith('/'))
     for p in value.split('/'):
-        need(re.fullmatch('[A-Za-z0-9_.-]+',p) and p not in ('.','..') and not p.endswith('.')
+        need(re.fullmatch('[A-Za-z0-9_.@+-]+',p) and p not in ('.','..') and not p.endswith('.')
              and not re.match(r'(?i)^(CON|PRN|AUX|NUL|COM[0-9]|LPT[0-9])(?:\.|$)',p))
     return value
 
