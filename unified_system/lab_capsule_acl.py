@@ -68,6 +68,7 @@ function Verify-Tree($sealed){
 function Normalize-Installer {
  # Phase one is read-only over the complete tree. Only pip's exact protected
  # OWNER_RIGHTS/System/Admins FullControl shape is eligible for inheritance.
+ # pip moves both package directories (OICI) and top-level files (no flags).
  $items=@(Get-Item -LiteralPath $p -Force)+@(Get-ChildItem -LiteralPath $p -Force -Recurse | Sort-Object { $_.FullName.Length })
  if($items.Count -gt 300000){throw 'ACL_TREE_BUDGET'}
  $shapes=@{};$boundaries=@();$original=@{}
@@ -83,7 +84,6 @@ function Normalize-Installer {
   $protected=$a.AreAccessRulesProtected
   if($isRoot){if(!$protected){throw 'ACL_INHERITANCE_REJECTED'};$principal=$sid.Value}
   elseif($protected){
-   if(!$item.PSIsContainer){throw 'ACL_INHERITANCE_REJECTED'}
    $principal='S-1-3-4';$boundaries+=,$item.FullName
   }else{
    $parent=[IO.Path]::GetDirectoryName($item.FullName)

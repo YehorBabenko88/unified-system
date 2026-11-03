@@ -28,6 +28,56 @@ def restore_test_root(root,parent):
 
 @unittest.skipUnless(os.name=='nt','Native Windows DACL test')
 class CapsuleAclTests(unittest.TestCase):
+    def pip_file(self,path):
+        literal="'"+str(path).replace("'","''")+"'"
+        result=ps("$ErrorActionPreference='Stop';$p="+literal+";$a=Get-Acl -LiteralPath $p;$a.SetAccessRuleProtection($true,$false);foreach($r in @($a.Access)){$a.RemoveAccessRuleSpecific($r)};foreach($id in @('S-1-3-4','S-1-5-18','S-1-5-32-544')){$s=[Security.Principal.SecurityIdentifier]::new($id);$a.AddAccessRule([Security.AccessControl.FileSystemAccessRule]::new($s,'FullControl','Allow'))};(Get-Item -LiteralPath $p -Force).SetAccessControl($a)")
+        self.assertEqual(result.returncode,0,result.stderr)
+
+    def test_pip_protected_file_is_normalized_then_sealed_without_byte_changes(self):
+        from unified_system.lab_capsule_acl import FreshCodeRoot
+        with tempfile.TemporaryDirectory(prefix='lab-acl-') as directory:
+            parent=Path(directory).resolve();root=parent/'code';owned=FreshCodeRoot.create(root)
+            try:
+                payload=root/'py.py';payload.write_bytes(b'value=73\n');self.pip_file(payload)
+                before=hashlib.sha256(payload.read_bytes()).hexdigest()
+                owned.normalize_installer_acls()
+                manifest=root/'lab-release.json';manifest.write_bytes(b'owned')
+                pin=hashlib.sha256(manifest.read_bytes()).hexdigest();owned.seal(pin)
+                self.assertTrue(owned.verify_sealed(pin))
+                self.assertEqual(hashlib.sha256(payload.read_bytes()).hexdigest(),before)
+                with self.assertRaises(PermissionError):payload.write_bytes(b'changed')
+            finally:restore_test_root(root,parent)
+
+    def test_protected_file_extra_ace_refuses_before_any_normalization(self):
+        from unified_system.lab_capsule_acl import FreshCodeRoot
+        with tempfile.TemporaryDirectory(prefix='lab-acl-') as directory:
+            parent=Path(directory).resolve();root=parent/'code';owned=FreshCodeRoot.create(root)
+            try:
+                valid=root/'a-valid.py';valid.write_bytes(b'valid');self.pip_file(valid)
+                bad=root/'z-extra.py';bad.write_bytes(b'invalid');self.pip_file(bad)
+                literal="'"+str(bad).replace("'","''")+"'"
+                result=ps("$p="+literal+";$a=Get-Acl -LiteralPath $p;$a.AddAccessRule([Security.AccessControl.FileSystemAccessRule]::new([Security.Principal.SecurityIdentifier]::new('S-1-1-0'),'Write','Allow'));(Get-Item -LiteralPath $p -Force).SetAccessControl($a)")
+                self.assertEqual(result.returncode,0,result.stderr)
+                def descriptor(path):
+                    result=ps("(Get-Acl -LiteralPath '"+str(path).replace("'","''")+"').Sddl")
+                    self.assertEqual(result.returncode,0,result.stderr);return result.stdout
+                before={path:descriptor(path) for path in (root,valid,bad)}
+                with self.assertRaisesRegex(ValueError,'ACL_'):owned.normalize_installer_acls()
+                self.assertEqual(before,{path:descriptor(path) for path in before})
+            finally:restore_test_root(root,parent)
+
+    def test_protected_file_foreign_owner_is_rejected(self):
+        from unified_system.lab_capsule_acl import FreshCodeRoot
+        with tempfile.TemporaryDirectory(prefix='lab-acl-') as directory:
+            parent=Path(directory).resolve();root=parent/'code';owned=FreshCodeRoot.create(root)
+            try:
+                bad=root/'foreign.py';bad.write_bytes(b'owned');self.pip_file(bad)
+                literal="'"+str(bad).replace("'","''")+"'"
+                result=ps("$ErrorActionPreference='Stop';$p="+literal+";$a=Get-Acl -LiteralPath $p;$a.SetOwner([Security.Principal.SecurityIdentifier]::new('S-1-5-18'));(Get-Item -LiteralPath $p -Force).SetAccessControl($a)")
+                if result.returncode:self.skipTest('Current token cannot assign SYSTEM as foreign file owner')
+                with self.assertRaisesRegex(ValueError,'ACL_OWNER_REJECTED'):owned.normalize_installer_acls()
+            finally:restore_test_root(root,parent)
+
     def pip_directory(self,path):
         literal="'"+str(path).replace("'","''")+"'"
         result=ps("$ErrorActionPreference='Stop';$p="+literal+";$a=Get-Acl -LiteralPath $p;$a.SetAccessRuleProtection($true,$false);foreach($r in @($a.Access)){$a.RemoveAccessRuleSpecific($r)};foreach($id in @('S-1-3-4','S-1-5-18','S-1-5-32-544')){$s=[Security.Principal.SecurityIdentifier]::new($id);$a.AddAccessRule([Security.AccessControl.FileSystemAccessRule]::new($s,'FullControl','ContainerInherit,ObjectInherit','None','Allow'))};(Get-Item -LiteralPath $p -Force).SetAccessControl($a)")
