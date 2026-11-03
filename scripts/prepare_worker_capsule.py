@@ -2,6 +2,8 @@
 
 Operator code/closure and lock digest must be independently pinned before launch.
 Never import this tool from an unadmitted payload. No services or runtime start.
+Enrollment stdin is exactly {"enrollment_token":"..."}; node-only WORKER v3
+never accepts or stores a fleet token or database password.
 The externally pinned operator lock has exactly schema, files, and
 source_manifest_sha256s (1..16 sorted unique owner-approved source manifest pins).
 Files map operator-relative Python source paths (including this script) to SHA256.
@@ -232,9 +234,8 @@ def read_private(stream):
     try:
         raw=stream.read(4097);need(type(raw) is bytes and 0<len(raw)<=4096)
         value=json.loads(raw,object_pairs_hook=unique)
-        need(type(value) is dict and set(value)=={'enrollment_token','grid_shared_token'})
+        need(type(value) is dict and set(value)=={'enrollment_token'})
         need(type(value['enrollment_token']) is str and re.fullmatch('[A-Za-z0-9_-]{32,256}',value['enrollment_token']))
-        need(type(value['grid_shared_token']) is str and re.fullmatch('[a-f0-9]{64}',value['grid_shared_token']))
         return value
     except Exception:raise ValueError('PRIVATE_INPUT_REJECTED') from None
 
@@ -343,8 +344,8 @@ def prepare_worker(archive,archive_pin,source_pin,target,state,node,ports,coordi
             coordinator_port=coordinator_port,auth_path=auth_path,auth_sha256='0'*64)
         lab_runtime.validate_config(candidate,m,target)
         credential=enroll(coordinator_port,node,secrets['enrollment_token'])
-        auth=dict(schema='unified.lab.grid-auth.v2',node_id=node,role='WORKER',release_id=m['release_id'],
-            source_commit=m['sources']['grid']['commit'],grid_shared_token=secrets['grid_shared_token'],
+        auth=dict(schema='unified.lab.grid-auth.v3',node_id=node,role='WORKER',release_id=m['release_id'],
+            source_commit=m['sources']['grid']['commit'],grid_shared_token=None,
             node_credential=credential,postgres_password=None)
         auth_raw=canonical(auth);auth_path.parent.mkdir()
         with auth_path.open('xb') as out:out.write(auth_raw);out.flush();os.fsync(out.fileno())

@@ -144,9 +144,10 @@ def validate_config(c,m,root,*,hostname=None):
             if key=='GRID_COORDINATION_MODE':need(value in ('legacy','consul'))
             if key=='GRID_COORDINATION_ISOLATED_LAB':need(value=='true')
             if key=='POSTGRES_DSN':
+                need(c['node_id'].upper()=='LS5' and name=='grid')
                 u=urlsplit(value)
                 need(u.scheme in ('postgres','postgresql') and u.hostname in ('127.0.0.1','::1')
-                     and u.username and u.username.startswith('unified_lab_')
+                     and u.username and u.username.startswith('unified_lab_') and u.password is None
                      and u.path.startswith('/unified_lab_') and not u.query and not u.fragment)
         # Never inherit a production ProgramData/ProgramFiles default. These
         # deterministic per-component paths also remain stable on restarts.
@@ -173,7 +174,7 @@ def validate_config(c,m,root,*,hostname=None):
 
 
 def read_grid_auth(path,expected_sha256,*,node_id,release_id,source_commit):
-    """Read operator-provisioned private lab enrollment, never exchange secrets."""
+    """Read CONTROL v2/v3 or node-only WORKER v3; never exchange secrets."""
     lab_release.digest(expected_sha256)
     path=lab_release.regular(path);need(path.stat().st_size<=8192)
     with path.open('rb') as stream:raw=stream.read(8193)
@@ -184,20 +185,22 @@ def read_grid_auth(path,expected_sha256,*,node_id,release_id,source_commit):
         return out
     record=json.loads(raw.decode('utf8'),object_pairs_hook=unique)
     lab_release.exact(record,('schema','node_id','role','release_id','source_commit','grid_shared_token','node_credential','postgres_password'))
-    need(record['schema']=='unified.lab.grid-auth.v2' and node_id.upper() in LAB_NODES)
+    need(record['schema'] in ('unified.lab.grid-auth.v2','unified.lab.grid-auth.v3') and node_id.upper() in LAB_NODES)
     need(record['node_id']==node_id and record['release_id']==release_id and record['source_commit']==source_commit)
-    lab_release.digest(record['grid_shared_token'])
     need(record['role']==('CONTROL' if node_id.upper()=='LS5' else 'WORKER'))
-    result={'GRID_SHARED_TOKEN':record['grid_shared_token']}
     if node_id.upper()=='LS5':
+        # CONTROL retains its own fleet secret and isolated database password.
         need(record['node_credential'] is None)
+        lab_release.digest(record['grid_shared_token'])
         lab_release.digest(record['postgres_password'])
-        result['PGPASSWORD']=record['postgres_password']
-    else:
-        need(record['postgres_password'] is None)
-        need(type(record['node_credential']) is str and re.fullmatch('[A-Za-z0-9_-]{64,128}',record['node_credential']))
-        result['NODE_CREDENTIAL']=record['node_credential']
-    return result
+        return {'GRID_SHARED_TOKEN':record['grid_shared_token'],'PGPASSWORD':record['postgres_password']}
+    # Existing Grid node authentication already accepts the enrolled credential.
+    # Legacy worker v2/global-token records are deliberately not upgraded here.
+    need(record['schema']=='unified.lab.grid-auth.v3')
+    need(record['grid_shared_token'] is None and record['postgres_password'] is None)
+    need(type(record['node_credential']) is str and re.fullmatch('[A-Za-z0-9_-]{64,128}',record['node_credential']))
+    return {'NODE_CREDENTIAL':record['node_credential']}
+
 
 
 def verify_sources(root,m):

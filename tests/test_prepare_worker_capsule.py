@@ -85,9 +85,9 @@ class WorkerArchiveTests(unittest.TestCase):
             with self.subTest(logical=logical,host=host),patch.object(b.socket,'gethostname',return_value=host):
                 with self.assertRaises(ValueError):b.check_worker_host(logical)
     def test_private_stdin_json_is_exact_bounded_and_never_accepts_database_credentials(self):
-        b=builder();valid={'enrollment_token':'T'*43,'grid_shared_token':'a'*64}
+        b=builder();valid={'enrollment_token':'T'*43}
         self.assertEqual(b.read_private(io.BytesIO(json.dumps(valid).encode())),valid)
-        for raw in [b'X'*4097,b'{"grid_shared_token":"a","grid_shared_token":"b"}',json.dumps({**valid,'PGPASSWORD':'forbidden'}).encode()]:
+        for raw in [b'X'*4097,b'{"enrollment_token":"a","enrollment_token":"b"}',json.dumps({**valid,'PGPASSWORD':'forbidden'}).encode(),json.dumps({**valid,'grid_shared_token':'a'*64}).encode()]:
             with self.assertRaises(ValueError):b.read_private(io.BytesIO(raw))
 
 
@@ -222,6 +222,10 @@ class NativeMockedWorkerPipelineTests(unittest.TestCase):
             raw=lab_release.canonical(m);(source/'lab-release.json').write_bytes(raw);pin=hashlib.sha256(raw).hexdigest();archive=parent/'source.zip'
             with patch.object(b,'prove_sources',return_value=None):export=b.export_archive(source,archive,pin)
             target=parent/'code';state=parent/'state';ports=dict(zip(sorted(b.MODULES),range(26000,26006)))
+            with patch.object(b.socket,'gethostname',return_value='Easy'),patch.object(b,'prove_sources',return_value=None),patch.object(b,'enroll',return_value='C'*64) as forbidden:
+                with self.assertRaises(ValueError):b.prepare_worker(archive,export['archive_sha256'],pin,parent/'rejected-code',parent/'rejected-state','PC1',ports,29000,io.BytesIO(json.dumps(dict(enrollment_token='T'*43,grid_shared_token='a'*64)).encode()))
+                forbidden.assert_not_called()
+
             listener=socket.socket();listener.bind(('127.0.0.1',0));listener.listen(1);port=listener.getsockname()[1]
             while port in ports.values():ports={k:v+10 for k,v in ports.items()}
             def mock_control():
@@ -235,12 +239,12 @@ class NativeMockedWorkerPipelineTests(unittest.TestCase):
             task=threading.Thread(target=mock_control,daemon=True);task.start()
             try:
                 with patch.object(b.socket,'gethostname',return_value='Easy'),patch.object(b,'prove_sources',return_value=None):
-                    result=b.prepare_worker(archive,export['archive_sha256'],pin,target,state,'PC1',ports,port,io.BytesIO(json.dumps(dict(enrollment_token='T'*43,grid_shared_token='a'*64)).encode()))
+                    result=b.prepare_worker(archive,export['archive_sha256'],pin,target,state,'PC1',ports,port,io.BytesIO(json.dumps(dict(enrollment_token='T'*43)).encode()))
                 final=lab_release.verify_capsule(target,result['manifest_sha256'])['manifest']
                 public=json.loads((target/'runtime.json').read_bytes());lab_runtime.validate_config(public,final,target,hostname='PC1')
                 self.assertEqual(final['sources'],m['sources']);self.assertEqual(final['directories'],m['directories'])
-                auth=json.loads((state/'private/grid-auth.json').read_bytes());self.assertEqual(auth['role'],'WORKER');self.assertIsNone(auth['postgres_password'])
-                self.assertEqual(auth['node_credential'],'C'*64);self.assertNotIn('POSTGRES_DSN',public['programs']['grid']['env'])
+                auth=json.loads((state/'private/grid-auth.json').read_bytes());self.assertEqual(auth['role'],'WORKER');self.assertEqual(auth['schema'],'unified.lab.grid-auth.v3');self.assertIsNone(auth['postgres_password']);self.assertIsNone(auth['grid_shared_token'])
+                self.assertEqual(auth['node_credential'],'C'*64);self.assertNotIn('POSTGRES_DSN',public['programs']['grid']['env']);self.assertNotIn('GRID_SHARED_TOKEN',public['programs']['grid']['env']);self.assertNotIn('PGPASSWORD',public['programs']['grid']['env'])
                 self.assertNotIn('enrollment_token',(state/'private/grid-auth.json').read_text())
                 with self.assertRaises(PermissionError):(target/'accidental.pyc').write_bytes(b'blocked')
                 (state/'own.log').write_text('writable');self.assertEqual(result['runtime_readiness'],'NOT_TESTED')
