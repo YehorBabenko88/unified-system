@@ -1,7 +1,8 @@
 """Source-only operator tool for exporting and preparing fresh LAB worker capsules.
 
 Operator code/closure and lock digest must be independently pinned before launch.
-Never import this tool from an unadmitted payload. No services or runtime start.
+Never import this tool from an unadmitted payload. No services are installed.
+The run operation is inert unless explicitly selected with --execute.
 Enrollment stdin is exactly {"enrollment_token":"..."}; node-only WORKER v3
 never accepts or stores a fleet token or database password.
 The externally pinned operator lock has exactly schema, files, and
@@ -23,6 +24,7 @@ from pathlib import Path
 import re
 import socket
 import stat
+import subprocess
 import sys
 import time
 import zipfile
@@ -369,6 +371,51 @@ def prepare_worker(archive,archive_pin,source_pin,target,state,node,ports,coordi
         runtime_readiness='NOT_TESTED',physical_acceptance='NOT_RUN')
 
 
+def run_worker(root,manifest_pin,*,execute=False):
+    """Launch an owner-pinned derived worker through its admitted raw bootstrap.
+
+    The external operator lock must authorize this individual worker manifest
+    digest, obtained from its verified preparation receipt, before this call.
+    The common CONTROL manifest pin does not authorize an arbitrary derived pin.
+    """
+    from unified_system.lab_runtime import prepare,child_environment,read_grid_auth
+    root=safe(root)
+    config,report=prepare(root,manifest_pin)
+    check_worker_host(config['node_id'])
+    need(config['programs']['grid']['env'].get('ROLE')=='worker')
+    manifest=report['manifest'];source=root/'sources/unified-system'
+    env=config['programs']['grid']['env']
+    auth=read_grid_auth(env['GRID_LAB_AUTH_PATH'],env['GRID_LAB_AUTH_SHA256'],
+        node_id=config['node_id'],release_id=config['release_id'],source_commit=manifest['sources']['grid']['commit'])
+    auth.clear()  # Never pass this reader's credential values to the bootstrap environment.
+    def pin(relative):
+        raw=read_file(root/relative,32*1024*1024)
+        expected=manifest['files'][relative]
+        digest=hashlib.sha256(raw).hexdigest()
+        need(len(raw)==expected['bytes'] and digest==expected['sha256'])
+        return digest
+    pin('sources/unified-system/unified_system/package_preflight.py')
+    guard=pin('sources/unified-system/integration/source_guard.py')
+    git=pin(manifest['git'])
+    result=dict(result='WORKER_RUNTIME_ADMITTED_NOT_STARTED',node_id=config['node_id'],
+        release_id=config['release_id'],manifest_sha256=manifest_pin,services='NOT_INSTALLED',
+        physical_acceptance='NOT_RUN',trading_authorized=False)
+    if not execute:return result
+    cache=safe(Path(config['state_root'])/'bootstrap-cache');cache.mkdir(exist_ok=True);safe(cache)
+    args=[sys.executable,'-I','-S','-B',str(source/'unified_system/package_preflight.py'),
+        '--source-root',str(source),'--source-head',manifest['sources']['unified-system']['commit'],
+        '--source-tree',manifest['sources']['unified-system']['tree'],
+        '--source-guard-sha256',guard,'--git-executable',str(root/manifest['git']),
+        '--git-sha256',git,'--cache-root',str(cache),'--operation','lab','--lab-root',str(root),
+        '--lab-manifest-sha256',manifest_pin,'--execute-lab']
+    child=subprocess.Popen(args,env=child_environment())
+    while True:
+        try:code=child.wait();break
+        except KeyboardInterrupt:continue  # Shared foreground Ctrl-C reaches owned cleanup.
+    result.update(result='WORKER_RUNTIME_EXITED',exit_code=code)
+    return result
+
+
 def main(argv=None):
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--operator-root',required=True)
@@ -381,11 +428,15 @@ def main(argv=None):
     prepare.add_argument('--source-manifest-sha256',required=True);prepare.add_argument('--target',required=True);prepare.add_argument('--state',required=True)
     prepare.add_argument('--node',required=True,choices=sorted(WORKERS));prepare.add_argument('--ports-json',required=True)
     prepare.add_argument('--coordinator-port',type=int,required=True);prepare.add_argument('--enroll',action='store_true')
+    run=sub.add_parser('run');run.add_argument('--root',required=True)
+    run.add_argument('--source-manifest-sha256',required=True,help='Owner-pinned individual worker manifest, not the common archive pin')
+    run.add_argument('--execute',action='store_true')
     args=parser.parse_args(argv)
     try:
         allowed=admit_operator(args.operator_root,args.operator_lock,args.operator_lock_sha256)
         need(args.source_manifest_sha256 in allowed,'SOURCE_MANIFEST_NOT_ADMITTED')
         if args.operation=='export':result=export_archive(Path(args.source),Path(args.archive),args.source_manifest_sha256)
+        elif args.operation=='run':result=run_worker(Path(args.root),args.source_manifest_sha256,execute=args.execute)
         elif not args.enroll:
             check_worker_host(args.node);check_archive(Path(args.archive),args.archive_sha256,args.source_manifest_sha256)
             result=dict(result='ARCHIVE_BYTES_VERIFIED_ONLY',enrollment='NOT_PERFORMED',outputs='NOT_CREATED',runtime_readiness='NOT_TESTED')
@@ -393,7 +444,7 @@ def main(argv=None):
             ports=json.loads(args.ports_json,object_pairs_hook=unique)
             result=prepare_worker(Path(args.archive),args.archive_sha256,args.source_manifest_sha256,
                 Path(args.target),Path(args.state),args.node,ports,args.coordinator_port,sys.stdin.buffer)
-        print(json.dumps(result,sort_keys=True));return 0
+        print(json.dumps(result,sort_keys=True));return 0 if result.get('exit_code',0)==0 else 1
     except Exception:
         print('WORKER_CAPSULE_REJECTED');return 1
 

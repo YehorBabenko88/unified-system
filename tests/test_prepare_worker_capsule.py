@@ -22,6 +22,87 @@ def builder():
     module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module);return module
 
 
+class WorkerRunTests(unittest.TestCase):
+    def setUp(self):
+        self.auth=patch('unified_system.lab_runtime.read_grid_auth',return_value={})
+        self.auth.start();self.addCleanup(self.auth.stop)
+    def fixture(self,parent):
+        root=parent/'code';root.mkdir();state=parent/'state';state.mkdir()
+        names=['sources/unified-system/unified_system/package_preflight.py','sources/unified-system/integration/source_guard.py','runtime/git.exe']
+        files={}
+        for name in names:
+            p=root/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(name.encode())
+            files[name]={'sha256':hashlib.sha256(p.read_bytes()).hexdigest(),'bytes':p.stat().st_size}
+        config={'node_id':'PC1','release_id':'lab-test','state_root':str(state),'programs':{'grid':{'env':{'ROLE':'worker','GRID_LAB_AUTH_PATH':str(state/'auth.json'),'GRID_LAB_AUTH_SHA256':'c'*64}}}}
+        manifest={'files':files,'git':'runtime/git.exe','sources':{'unified-system':{'commit':'a'*40,'tree':'b'*40},'grid':{'commit':'d'*40}}}
+        return root,config,{'manifest':manifest}
+
+    def test_run_admission_failure_never_starts_child(self):
+        b=builder()
+        with patch('unified_system.lab_runtime.prepare',side_effect=ValueError('rejected')),patch('subprocess.Popen') as child:
+            with self.assertRaises(ValueError):b.run_worker(Path('unused'),'a'*64,execute=True)
+            child.assert_not_called()
+
+    def test_run_is_inert_by_default_and_does_not_create_cache(self):
+        b=builder()
+        with tempfile.TemporaryDirectory(prefix='worker-run-') as directory:
+            root,config,report=self.fixture(Path(directory))
+            with patch('unified_system.lab_runtime.prepare',return_value=(config,report)),patch.object(b,'check_worker_host'),patch('subprocess.Popen') as child:
+                result=b.run_worker(root,'a'*64)
+            self.assertEqual(result['result'],'WORKER_RUNTIME_ADMITTED_NOT_STARTED')
+            self.assertFalse((Path(config['state_root'])/'bootstrap-cache').exists());child.assert_not_called()
+
+    def test_run_rejects_control_host_and_changed_bootstrap_before_spawn(self):
+        b=builder()
+        with tempfile.TemporaryDirectory(prefix='worker-run-') as directory:
+            root,config,report=self.fixture(Path(directory))
+            with patch('unified_system.lab_runtime.prepare',return_value=(config,report)),patch.object(b,'check_worker_host',side_effect=ValueError('host')),patch('subprocess.Popen') as child:
+                with self.assertRaises(ValueError):b.run_worker(root,'a'*64,execute=True)
+                child.assert_not_called()
+            (root/'sources/unified-system/unified_system/package_preflight.py').write_bytes(b'changed')
+            with patch('unified_system.lab_runtime.prepare',return_value=(config,report)),patch.object(b,'check_worker_host'),patch('subprocess.Popen') as child:
+                with self.assertRaises(ValueError):b.run_worker(root,'a'*64,execute=True)
+                child.assert_not_called()
+
+    def test_run_preserves_foreground_owned_cleanup_and_passes_exact_pins(self):
+        b=builder()
+        with tempfile.TemporaryDirectory(prefix='worker-run-') as directory:
+            root,config,report=self.fixture(Path(directory))
+            with patch('unified_system.lab_runtime.prepare',return_value=(config,report)),patch.object(b,'check_worker_host'),patch('subprocess.Popen') as spawn:
+                child=spawn.return_value;child.wait.side_effect=[KeyboardInterrupt(),0]
+                result=b.run_worker(root,'a'*64,execute=True)
+                args=spawn.call_args.args[0]
+                self.assertIn('--execute-lab',args);self.assertEqual(args[args.index('--lab-manifest-sha256')+1],'a'*64)
+                self.assertEqual(args[args.index('--source-head')+1],'a'*40)
+                self.assertEqual(args[args.index('--source-tree')+1],'b'*40)
+                self.assertEqual(child.wait.call_count,2);child.kill.assert_not_called();child.terminate.assert_not_called()
+                self.assertNotIn('PGPASSWORD',spawn.call_args.kwargs['env'])
+                self.assertEqual(result['exit_code'],0)
+
+    def test_run_denies_invalid_private_auth_before_bootstrap(self):
+        b=builder()
+        with tempfile.TemporaryDirectory(prefix='worker-run-') as directory:
+            root,config,report=self.fixture(Path(directory))
+            with patch('unified_system.lab_runtime.prepare',return_value=(config,report)),patch.object(b,'check_worker_host'),patch('unified_system.lab_runtime.read_grid_auth',side_effect=ValueError('auth')),patch('subprocess.Popen') as child:
+                with self.assertRaises(ValueError):b.run_worker(root,'a'*64,execute=True)
+                child.assert_not_called()
+
+    def test_run_rejects_guard_and_git_mutation_before_spawn(self):
+        for name in ('sources/unified-system/integration/source_guard.py','runtime/git.exe'):
+            with self.subTest(name=name),tempfile.TemporaryDirectory(prefix='worker-run-') as directory:
+                b=builder();root,config,report=self.fixture(Path(directory));(root/name).write_bytes(b'changed')
+                with patch('unified_system.lab_runtime.prepare',return_value=(config,report)),patch.object(b,'check_worker_host'),patch('subprocess.Popen') as child:
+                    with self.assertRaises(ValueError):b.run_worker(root,'a'*64,execute=True)
+                    child.assert_not_called()
+
+    def test_cli_requires_individual_derived_pin_and_propagates_nonzero_exit(self):
+        b=builder();args=['--operator-root','unused','--operator-lock','unused','--operator-lock-sha256','a'*64,'run','--root','unused','--source-manifest-sha256','b'*64,'--execute']
+        with patch.object(b,'admit_operator',return_value=frozenset(['a'*64])),patch.object(b,'run_worker') as run,patch('builtins.print'):
+            self.assertEqual(b.main(args),1);run.assert_not_called()
+        with patch.object(b,'admit_operator',return_value=frozenset(['a'*64,'b'*64])),patch.object(b,'run_worker',return_value={'exit_code':7}),patch('builtins.print'):
+            self.assertEqual(b.main(args),1)
+
+
 def synthetic_source(root):
     from tests.test_lab_release import fixture
     from unified_system.lab_release import canonical

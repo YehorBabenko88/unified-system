@@ -3,7 +3,7 @@ on: [push, pull_request, workflow_dispatch]
 permissions:
   contents: read
 concurrency:
-  group: actual-six-source-${{ github.event.pull_request.head.sha || github.sha }}
+  group: actual-six-source-${{ github.event_name }}-${{ github.event.pull_request.head.sha || github.sha }}
   cancel-in-progress: true
 jobs:
   source-integration:
@@ -13,7 +13,7 @@ jobs:
         os: [ubuntu-24.04, windows-latest]
         python: ['3.11', '3.13']
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 15
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
