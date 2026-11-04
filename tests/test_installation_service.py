@@ -35,7 +35,7 @@ class ServiceResourceTests(unittest.TestCase):
   self.source=self.root/'capsule';self.source.mkdir();manifest=fixture(self.source)
   for name,raw in {'runtime/nssm/nssm.exe':b'INERT_WRAPPER','runtime/python/python.exe':b'INERT_PYTHON','sources/unified-system/unified_system/owned_python.py':b'INERT_BOOTSTRAP'}.items():
    path=self.source/name;path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(raw)
-  entry=self.source/'sources/unified-system/unified_system/service_entry.py';entry.write_bytes((Path(__file__).resolve().parents[1]/'unified_system/service_entry.py').read_bytes())
+  entry=self.source/'sources/unified-system/unified_system/service_entry.py';entry.write_bytes((Path(__file__).resolve().parents[1]/'unified_system/service_entry.py').read_bytes().replace(b'\r\n',b'\n')) # LF Git-blob fixture, not production normalization
   from tests.test_lab_capsule_builder import builder
   manifest['files'],manifest['directories']=builder.inventory(self.source)
   raw=lab_release.canonical(manifest);(self.source/'lab-release.json').write_bytes(raw);self.pin=hashlib.sha256(raw).hexdigest()
@@ -86,6 +86,34 @@ class ServiceResourceTests(unittest.TestCase):
    with self.assertRaises(ValueError):WindowsServiceBoundary().call('BEGIN',plan,self.guard)
    child.assert_not_called()
   self.assertFalse(Path(plan['root']).exists())
+
+ def republish_entry(self,raw):
+  import json
+  entry='sources/unified-system/unified_system/service_entry.py'
+  (self.source/entry).write_bytes(raw)
+  manifest=json.loads((self.source/'lab-release.json').read_bytes())
+  manifest['files'][entry]={'sha256':hashlib.sha256(raw).hexdigest(),'bytes':len(raw)}
+  published=lab_release.canonical(manifest);(self.source/'lab-release.json').write_bytes(published);self.pin=hashlib.sha256(published).hexdigest()
+ def test_crlf_operator_checkout_accepts_exact_reviewed_lf_capsule(self):
+  import unified_system.installation_service as service
+  raw=(self.source/'sources/unified-system/unified_system/service_entry.py').read_bytes();self.assertNotIn(b'\r\n',raw)
+  operator=self.root/'crlf-operator';operator.mkdir();(operator/'service_entry.py').write_bytes(raw.replace(b'\n',b'\r\n'))
+  self.assertNotEqual(hashlib.sha256((operator/'service_entry.py').read_bytes()).hexdigest(),hashlib.sha256(raw).hexdigest())
+  manifest_before=(self.source/'lab-release.json').read_bytes()
+  with patch.object(service,'__file__',str(operator/'installation_service.py')):
+   plan=self.plan();resource=ServiceResource.create(plan,self.backend,self.guard)
+   self.assertEqual(resource.inspect(self.guard)['status'],'STOPPED_RESOURCE_RECORDED')
+  self.assertEqual((self.source/'sources/unified-system/unified_system/service_entry.py').read_bytes(),raw)
+  self.assertEqual((self.source/'lab-release.json').read_bytes(),manifest_before)
+ def test_crlf_candidate_and_executing_candidate_remain_unadmitted_even_resealed(self):
+  raw=(self.source/'sources/unified-system/unified_system/service_entry.py').read_bytes();marker=self.root/'candidate-executed'
+  executing=('from pathlib import Path\nPath('+repr(str(marker))+').write_text("EXECUTED")\n').encode()+raw
+  for modified in (raw.replace(b'\n',b'\r\n'),executing):
+   with self.subTest(crlf=modified!=executing):
+    self.republish_entry(modified)
+    self.assertEqual(lab_release.verify_capsule(self.source,self.pin)['manifest_sha256'],self.pin)
+    with self.assertRaises(ValueError):self.plan()
+    self.assertFalse(marker.exists());self.assertEqual(self.backend.calls,[]);self.assertFalse((self.root/'service').exists())
 
  def test_default_denial_precedes_mutation(self):
   plan=self.plan()

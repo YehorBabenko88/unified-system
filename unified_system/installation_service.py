@@ -18,6 +18,10 @@ from .journal import Journal
 
 MODULE=Path(__file__).resolve().parents[1]/'scripts/UnifiedOwnedService.psm1'
 NSSM_PIN='eee9c44c29c2be011f1f1e43bb8c3fca888cb81053022ec5a0060035de16d848'
+# Exact reviewed 448-byte LF Git blob, independent of operator checkout EOLs.
+# This selects the nonactivating stub; it is not publisher trust or execution
+# authority. Candidate bytes/manifest are never normalized or rewritten.
+BLOCKED_ENTRY_SHA256='55805313d6f63d213ee50a7e40be1a8fb0ff56dfa66ea6207827a01851444494'
 SCHEMA='unified.owned-stopped-service.v1'
 ACTIONS={'BEGIN','SEAL','REGISTER','INSPECT'}
 
@@ -146,7 +150,7 @@ def service_plan(capsule_root,manifest_sha256,root,installation_id,node_id,role,
  sid=boundary.sid(name);need(parse_service_sid(sid,0)==sid)
  code=root/'code';python='runtime/python/python.exe';nssm='runtime/nssm/nssm.exe';bootstrap='sources/unified-system/unified_system/owned_python.py';entry='sources/unified-system/unified_system/service_entry.py'
  need({python,nssm,bootstrap,entry}<=set(m['files']) and m['files'][nssm]['sha256']==NSSM_PIN)
- need(m['files'][entry]['sha256']==lab_release.hash_file(Path(__file__).with_name('service_entry.py'))['sha256'])
+ need(m['files'][entry]['sha256']==BLOCKED_ENTRY_SHA256)
 
  body=dict(schema=SCHEMA,installation_id=installation_id,node_id=node_id,computer_name=boundary.computer_name(),role=role,root=str(root),code=str(code),state=str(root/'state'),
   capsule_root=str(source),manifest_sha256=manifest_sha256,service_name=name,service_sid=sid,
@@ -174,7 +178,7 @@ def _check_plan(plan):
  for key,relative in [('nssm','runtime/nssm/nssm.exe'),('python','runtime/python/python.exe'),('bootstrap','sources/unified-system/unified_system/owned_python.py'),('entry','sources/unified-system/unified_system/service_entry.py')]:
   need(relative in m['files'] and plan[key]==str(root/'code'/relative) and plan[key+'_sha256']==m['files'][relative]['sha256'])
  need(plan['nssm_sha256']==NSSM_PIN and plan['executor_sha256']==hashlib.sha256(lab_release.regular(MODULE).read_bytes()).hexdigest())
- need(plan['entry_sha256']==lab_release.hash_file(Path(__file__).with_name('service_entry.py'))['sha256'])
+ need(plan['entry_sha256']==BLOCKED_ENTRY_SHA256)
  need(plan['parameters']=='-I -S -B \"'+plan['entry']+'\"')
  return copy.deepcopy(plan)
 
