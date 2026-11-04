@@ -53,7 +53,17 @@ def child_environment(input=None):
     return e
 
 
-def launch_profile(name,p,root,m,state,node_id):
+def _offline_context(context,node_id):
+    """Untrusted OFFLINE validation data; never an execution capability."""
+    if context is None:return None
+    need(type(context) is dict and set(context)=={'scope','role','node_id','computer_name','credential_root'})
+    need(context['scope']=='OFFLINE_VALIDATION_ONLY' and context['role'] in ('CONTROL','WORKER','SINGLE_PC'))
+    need(context['node_id']==node_id and type(context['computer_name']) is str and re.fullmatch('[A-Za-z0-9][A-Za-z0-9_-]{0,62}',context['computer_name']))
+    need(type(context['credential_root']) is str and Path(context['credential_root']).is_absolute())
+    return copy.deepcopy(context)
+
+
+def launch_profile(name,p,root,m,state,node_id,*,offline_context=None):
     """Closed reviewed source entrypoints, not a generic command launcher."""
     argv=p['argv'];source=root/m['sources'][name]['root']
     port=str(urlsplit(p['health_url']).port)
@@ -69,7 +79,8 @@ def launch_profile(name,p,root,m,state,node_id):
         (roots if argv[index]=='--source-root' else dependencies).append(value);index+=2
     need(len(roots)==1 and len(dependencies)==len(set(dependencies)) and len(dependencies)<=16)
     need(roots[0]==source if name!='grid' else root in roots[0].parents)
-    control=node_id.upper()=='LS5'
+    context=_offline_context(offline_context,node_id)
+    control=node_id.upper()=='LS5' if context is None else context['role'] in ('CONTROL','SINGLE_PC')
     modules={'grid':'uvicorn' if control else 'grid.owned_worker_service','meta_analyse':'meta_analyse.headless_service',
              'strattester':'strattester.owned_results_service','terminan':'terminan.unified_runner'}
     need(argv[index:index+3]==['--module',modules[name],'--']);tail=argv[index+3:]
@@ -83,16 +94,24 @@ def launch_profile(name,p,root,m,state,node_id):
         need(state in _safe_path(tail[2]).resolve().parents)
 
 
-def validate_config(c,m,root,*,hostname=None):
+def validate_config(c,m,root,*,hostname=None,offline_context=None):
     root=_safe_path(root).resolve();c=copy.deepcopy(c)
     base_config(c,allow_physical=True)
     need(c['schema']=='unified.runtime.config.v2')
-    need(c['node_id'].upper() in LAB_NODES)
+    context=_offline_context(offline_context,c['node_id'])
     actual_host=(hostname or socket.gethostname()).split('.')[0].casefold()
-    need(actual_host in (c['node_id'].casefold(),LAB_HOSTNAMES[c['node_id'].upper()].casefold()))
+    if context is None:
+        need(c['node_id'].upper() in LAB_NODES)
+        need(actual_host in (c['node_id'].casefold(),LAB_HOSTNAMES[c['node_id'].upper()].casefold()))
+    else:need(actual_host==context['computer_name'].casefold())
+    control=c['node_id'].upper()=='LS5' if context is None else context['role'] in ('CONTROL','SINGLE_PC')
     need(c['release_id']==m['release_id'])
     state=_safe_path(c['state_root']).resolve();snapshot=_safe_path(c['snapshot_path']).resolve()
     need(state!=root and root not in state.parents and state not in root.parents and state in snapshot.parents)
+    credential_root=None if context is None else _safe_path(context['credential_root']).resolve()
+    if credential_root is not None:
+        need(credential_root!=root and root not in credential_root.parents and credential_root not in root.parents)
+        need(credential_root!=state and state not in credential_root.parents and credential_root not in state.parents)
     def pin(path,sha):
         p=_safe_path(path).resolve()
         try:name=p.relative_to(root).as_posix()
@@ -104,7 +123,7 @@ def validate_config(c,m,root,*,hostname=None):
     for name,p in c['programs'].items():
         cwd=_safe_path(p['cwd']).resolve();need(cwd==root/m['sources'][name]['root'])
         pin(p['argv'][0],p['executable_sha256'])
-        launch_profile(name,p,root,m,state,c['node_id'])
+        launch_profile(name,p,root,m,state,c['node_id'],offline_context=context)
         for argument in p['argv'][1:]:
             # Paths supplied to loaders/modules must stay in the admitted
             # capsule, or in the separate mutable state namespace.
@@ -119,11 +138,14 @@ def validate_config(c,m,root,*,hostname=None):
             key=key.upper();need(key in ENVIRONMENT_KEYS)
             if key in PUBLIC_ENDPOINTS:need(value==PUBLIC_ENDPOINTS[key])
             if key in ('PROGRAMDATA','PROGRAMFILES','ML_ARTIFACT_ROOT','ARCHIVE_ROOT','STRATEGY_CACHE_DIR','TERMINAN_RUNTIME_V2_SNAPSHOT','TERMINAN_LAB_SNAPSHOT','GRID_CONTROL_JOURNAL','GRID_CONTROL_SNAPSHOTS','GRID_LAB_AUTH_PATH','TEMP','TMP','USERPROFILE','HOME','APPDATA','LOCALAPPDATA'):
-                target=_safe_path(value).resolve();need(target==state or state in target.parents)
+                target=_safe_path(value).resolve()
+                if key=='GRID_LAB_AUTH_PATH' and credential_root is not None:need(credential_root in target.parents)
+                else:need(target==state or state in target.parents)
+            if context is not None and key in ('GRID_LAB_AUTH_PATH','GRID_LAB_AUTH_SHA256'):need(name=='grid')
             if key=='GRID_LAB_AUTH_SHA256':lab_release.digest(value)
-            if key=='ROLE':need(name=='grid' and value==('coordinator' if c['node_id'].upper()=='LS5' else 'worker'))
+            if key=='ROLE':need(name=='grid' and value==('coordinator' if control else 'worker'))
             if key=='NODE_ID':need(name=='grid' and value==c['node_id'])
-            if key=='NODE_ROLE':need(name=='grid' and value==('CONTROL' if c['node_id'].upper()=='LS5' else 'WORKER'))
+            if key=='NODE_ROLE':need(name=='grid' and value==('CONTROL' if control else 'WORKER'))
             if key=='COORDINATOR_URL':
                 u=urlsplit(value);need(name=='grid' and u.scheme=='http' and u.hostname=='127.0.0.1' and u.port is not None and not u.username and not u.password and not u.path and not u.query and not u.fragment)
             if key=='GRID_INSTALL_ROOT':need(name=='grid' and _safe_path(value).resolve()==root/m['sources']['grid']['root'])
@@ -144,7 +166,7 @@ def validate_config(c,m,root,*,hostname=None):
             if key=='GRID_COORDINATION_MODE':need(value in ('legacy','consul'))
             if key=='GRID_COORDINATION_ISOLATED_LAB':need(value=='true')
             if key=='POSTGRES_DSN':
-                need(c['node_id'].upper()=='LS5' and name=='grid')
+                need(control and name=='grid')
                 u=urlsplit(value)
                 need(u.scheme in ('postgres','postgresql') and u.hostname in ('127.0.0.1','::1')
                      and u.username and u.username.startswith('unified_lab_') and u.password is None
@@ -159,12 +181,12 @@ def validate_config(c,m,root,*,hostname=None):
         for key,suffix in defaults.items():
             if key not in {k.upper() for k in env}:env[key]=str(state/name/suffix)
         if name=='grid':
-            if c['node_id'].upper()=='LS5':need(any(k.upper()=='POSTGRES_DSN' for k in env))
+            if control:need(any(k.upper()=='POSTGRES_DSN' for k in env))
             else:need(not any(k.upper()=='POSTGRES_DSN' for k in env))
             normalized={k.upper():v for k,v in env.items()}
             need(('GRID_LAB_AUTH_PATH' in normalized)==('GRID_LAB_AUTH_SHA256' in normalized))
-            env['ROLE']='coordinator' if c['node_id'].upper()=='LS5' else 'worker'
-            env['NODE_ID']=c['node_id'];env['NODE_ROLE']='CONTROL' if c['node_id'].upper()=='LS5' else 'WORKER'
+            env['ROLE']='coordinator' if control else 'worker'
+            env['NODE_ID']=c['node_id'];env['NODE_ROLE']='CONTROL' if control else 'WORKER'
             if 'GRID_CONTROL_JOURNAL' not in normalized:env['GRID_CONTROL_JOURNAL']=str(state/name/'control-state.json')
             if 'GRID_CONTROL_SNAPSHOTS' not in normalized:env['GRID_CONTROL_SNAPSHOTS']=str(state/name/'control-snapshots')
             for key,value in PUBLIC_ENDPOINTS.items():

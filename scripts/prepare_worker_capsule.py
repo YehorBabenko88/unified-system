@@ -109,7 +109,7 @@ def admit_operator(root,lock,pin):
     need(type(allowed) is list and 1<=len(allowed)<=16 and all(type(pin) is str and re.fullmatch('[a-f0-9]{64}',pin) for pin in allowed))
     need(allowed==sorted(set(allowed)),'OPERATOR_SOURCE_POLICY_REJECTED')
     need(1<=len(policy['files'])<=500)
-    required={'scripts/prepare_worker_capsule.py','unified_system/__init__.py','unified_system/lab_release.py','unified_system/lab_runtime.py','unified_system/lab_capsule_acl.py','integration/source_guard.py'}
+    required={'scripts/prepare_worker_capsule.py','unified_system/__init__.py','unified_system/lab_release.py','unified_system/lab_runtime.py','unified_system/lab_capsule_acl.py','unified_system/runtime_profile.py','integration/source_guard.py'}
     need(required<=set(policy['files']))
     files={};total=0;seen=set()
     for relative,digest in policy['files'].items():
@@ -278,43 +278,11 @@ def worker_config(config,*,node_id,old_root,new_root,new_state,ports,coordinator
     if not all(p.is_absolute() for p in (old_root,new_root,old_state,new_state,Path(auth_path))):raise ValueError('ABSOLUTE_PATH_REQUIRED')
     if new_root==new_state or new_root in new_state.parents or new_state in new_root.parents:raise ValueError('DISJOINT_STATE_REQUIRED')
     if new_state not in Path(auth_path).parents or not isinstance(auth_sha256,str) or not re.fullmatch('[a-f0-9]{64}',auth_sha256):raise ValueError('PRIVATE_AUTH_BINDING_REQUIRED')
-    def text(value):
-        if type(value) is not str:return value
-        for old,new in ((old_root,new_root),(old_state,new_state)):
-            if value==str(old):return str(new)
-            if value.startswith(str(old)+'\\') or value.startswith(str(old)+'/'):return str(new)+value[len(str(old)):]
-        return value
-    def rebase(value):
-        if isinstance(value,dict):return {text(k):rebase(v) for k,v in value.items()}
-        if isinstance(value,list):return [rebase(v) for v in value]
-        return text(value)
-    c=rebase(copy.deepcopy(config));c['node_id']=node_id;c['http_port']=ports['unified-system']
-    for name,program in c['programs'].items():
-        previous=program['health_url'].rsplit(':',1)[1].split('/',1)[0]
-        program['health_url']=f'http://127.0.0.1:{ports[name]}/internal/v2/module/health'
-        if name!='math':
-            args=program['argv'];port_index=args.index('--port')
-            if args[port_index+1]!=previous:raise ValueError('SOURCE_PORT_BINDING')
-            args[port_index+1]=str(ports[name])
-        else:program['env']['MATH_ENGINE_PORT']=str(ports[name])
-    for name,program in c['programs'].items():
-        need(not any(k.upper() in ('PGPASSWORD','NODE_CREDENTIAL','GRID_SHARED_TOKEN') for k in program['env']))
-        if name!='grid':need(not any(k.upper()=='POSTGRES_DSN' for k in program['env']))
-    grid=c['programs']['grid'];env=grid['env']
-    for key in list(env):
-        if key.upper()=='POSTGRES_DSN':del env[key]
-    for key in ('PGPASSWORD','NODE_CREDENTIAL','GRID_SHARED_TOKEN'):
-        if key in env:raise ValueError('PRIVATE_ENV_NOT_IN_PUBLIC_CONFIG')
-    env.update(ROLE='worker',NODE_ID=node_id,NODE_ROLE='WORKER',COORDINATOR_URL=f'http://127.0.0.1:{coordinator_port}',
-               GRID_LAB_AUTH_PATH=str(auth_path),GRID_LAB_AUTH_SHA256=auth_sha256)
-    args=grid['argv'];source=str(new_root/'sources/grid');deps=str(new_root/'dependencies/site-packages')
-    args[args.index('--source-root')+1]=source
-    dependency_indices=[i+1 for i,a in enumerate(args) if a=='--dependency-root']
-    if len(dependency_indices)!=1:raise ValueError('REVIEWED_GRID_DEPENDENCIES_REQUIRED')
-    args[dependency_indices[0]]=deps
-    index=args.index('--module')
-    grid['argv']=args[:index]+['--module','grid.owned_worker_service','--','--execute','--port',str(ports['grid'])]
-    return c
+    # One reviewed data transform, imported only from the pinned operator closure.
+    from unified_system.runtime_profile import rebase_config
+    return rebase_config(config,node_id=node_id,role='WORKER',old_root=old_root,new_root=new_root,new_state=new_state,
+                         ports=ports,coordinator_port=coordinator_port,auth_path=auth_path,auth_sha256=auth_sha256)
+
 
 
 def prepare_worker(archive,archive_pin,source_pin,target,state,node,ports,coordinator_port,private_stream):

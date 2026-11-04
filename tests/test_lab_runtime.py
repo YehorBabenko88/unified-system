@@ -38,6 +38,30 @@ class LabRuntimePolicyTests(unittest.TestCase):
                      file_pins={'inert.txt':self.m['files']['sources/'+n+'/inert.txt']['sha256']})
         self.c['programs']['grid']['env']={'POSTGRES_DSN':'postgresql://unified_lab_test@127.0.0.1:55449/unified_lab_test'}
 
+    def test_offline_role_context_never_changes_legacy_or_cli_admission(self):
+        c=copy.deepcopy(self.c);c['node_id']='OFFLINE_NODE'
+        context=dict(scope='OFFLINE_VALIDATION_ONLY',role='SINGLE_PC',node_id=c['node_id'],computer_name='OFFLINE_HOST',credential_root=str(self.root.parent/(self.root.name+'-credentials')))
+        admitted=lab.validate_config(c,self.m,self.root,hostname='OFFLINE_HOST',offline_context=context)
+        self.assertEqual(admitted['programs']['grid']['env']['ROLE'],'coordinator')
+        self.assertEqual(admitted['programs']['grid']['env']['NODE_ROLE'],'CONTROL')
+        with self.assertRaises(ValueError):lab.validate_config(c,self.m,self.root,hostname='OFFLINE_HOST')
+        c['offline_context']=context
+        with self.assertRaises(ValueError):lab.validate_config(c,self.m,self.root,hostname='OFFLINE_HOST',offline_context=context)
+        import io
+        with patch('sys.stderr',io.StringIO()),self.assertRaises(SystemExit) as exited:
+            lab.main(['--mode','LAB_SIMULATION','--root',str(self.root),'--manifest-sha256','a'*64,'--offline-context','{}'])
+        self.assertEqual(exited.exception.code,2)
+
+    def test_offline_context_paths_and_identity_are_only_validation_data(self):
+        c=copy.deepcopy(self.c);credential=self.root.parent/(self.root.name+'-credentials')
+        context=dict(scope='OFFLINE_VALIDATION_ONLY',role='CONTROL',node_id='LS5',computer_name='OFFLINE_HOST',credential_root=str(credential))
+        c['programs']['grid']['env'].update(GRID_LAB_AUTH_PATH=str(credential/'grid-auth.json'),GRID_LAB_AUTH_SHA256='c'*64)
+        admitted=lab.validate_config(c,self.m,self.root,hostname='OFFLINE_HOST',offline_context=context)
+        self.assertEqual(admitted['programs']['grid']['env']['GRID_LAB_AUTH_PATH'],str(credential/'grid-auth.json'))
+        with self.assertRaises(ValueError):lab.validate_config(c,self.m,self.root,hostname='LS5')
+        for changes in ({'scope':'APPROVED'},{'node_id':'other'},{'computer_name':'other'},{'credential_root':c['state_root']},{'role':'WORKER'}):
+            with self.subTest(changes=changes),self.assertRaises(ValueError):lab.validate_config(c,self.m,self.root,hostname='OFFLINE_HOST',offline_context={**context,**changes})
+
     def test_explicit_lab_config_allows_office_node_without_weakening_ci_guard(self):
         with self.assertRaises(ValueError):runtime_cli.validate_config(self.c)
         result=lab.validate_config(self.c,self.m,self.root,hostname='LS5')
