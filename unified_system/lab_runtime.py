@@ -237,11 +237,18 @@ def read_grid_auth(path,expected_sha256,*,node_id,release_id,source_commit,role_
 
 
 
-def verify_sources(root,m):
+def verify_sources(root,m,*,owner_admitted_root=None):
+    # Explicit protected-service caller data only. prepare()/CLI do not opt in;
+    # startup must separately verify kernel ownership and the complete capsule.
+    admitted_root=None
+    if owner_admitted_root is not None:
+        need(isinstance(owner_admitted_root,(str,Path)) and Path(owner_admitted_root).is_absolute() and '*' not in str(owner_admitted_root))
+        admitted_root=_safe_path(owner_admitted_root).resolve();need(admitted_root==root)
     from integration.source_guard import SourceFence
     git=root/m['git'];pin=m['files'][m['git']]['sha256'];results={}
     for name,s in m['sources'].items():
-        fence=SourceFence(root/s['root'],s['commit'],git_executable=str(git),git_sha256=pin)
+        options={} if admitted_root is None else {'owner_admitted_root':admitted_root/s['root']}
+        fence=SourceFence(root/s['root'],s['commit'],git_executable=str(git),git_sha256=pin,**options)
         snapshot=fence.check()
         need(snapshot['tree']==s['tree'] and all(p['comparison']=='RAW_IDENTICAL' for p in snapshot['runtime_files'].values()))
         origin=fence.git('config','--get','remote.origin.url').decode().strip()

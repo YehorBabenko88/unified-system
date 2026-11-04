@@ -30,3 +30,22 @@ class ServiceRoleAuthTests(unittest.TestCase):
  def test_no_context_still_rejects_nonoffice_node(self):
   raw=lab.lab_release.canonical(self.record('LAB1','CONTROL'));self.path.write_bytes(raw)
   with self.assertRaises(ValueError):lab.read_grid_auth(self.path,hashlib.sha256(raw).hexdigest(),node_id='LAB1',release_id='lab-r1',source_commit='a'*40)
+
+ def test_source_scope_is_exact_per_member_and_never_implicit(self):
+  from unittest.mock import patch
+  from tests.test_lab_release import fixture
+  manifest=fixture(self.root);root=self.root;calls=[]
+  class Fence:
+   def __init__(self,path,head,**kwargs):
+    self.source=next(s for s in manifest['sources'].values() if root/s['root']==path);calls.append((path,kwargs))
+   def check(self):return {'tree':self.source['tree'],'runtime_files':{'inert.txt':{'comparison':'RAW_IDENTICAL'}}}
+   def git(self,*args):return ('https://github.com/'+self.source['repository']).encode()
+  with patch('integration.source_guard.SourceFence',Fence):
+   self.assertEqual(set(lab.verify_sources(root,manifest,owner_admitted_root=root)),set(manifest['sources']))
+   self.assertTrue(all(kw['owner_admitted_root']==path for path,kw in calls))
+   calls.clear();lab.verify_sources(root,manifest)
+   self.assertTrue(all('owner_admitted_root' not in kw for _,kw in calls))
+  with patch('integration.source_guard.SourceFence') as child:
+   for invalid in (root.parent,Path('.'),root/'*'):
+    with self.subTest(root=str(invalid)),self.assertRaises(ValueError):lab.verify_sources(root,manifest,owner_admitted_root=invalid)
+   child.assert_not_called()
