@@ -100,9 +100,9 @@ class _Handler(WSGIRequestHandler):
                 if not self.parse_request():return
             finally:self.rfile=stream
             self.close_connection=True
-            remaining=self.server.deadline-time.monotonic()
-            if remaining<=0:return
-            self.connection.settimeout(min(self.server.request_timeout,remaining))
+            remaining=min(self.server.deadline,self._request_deadline)-time.monotonic()
+            if self.server.preview._stop.is_set() or remaining<=0:return
+            self.connection.settimeout(remaining)
             handler=ServerHandler(self.rfile,self.wfile,self.get_stderr(),self.get_environ(),multithread=False)
             handler.request_handler=self
             handler.run(self.server.get_app())
