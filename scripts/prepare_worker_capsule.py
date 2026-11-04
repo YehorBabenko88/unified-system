@@ -109,7 +109,7 @@ def admit_operator(root,lock,pin):
     need(type(allowed) is list and 1<=len(allowed)<=16 and all(type(pin) is str and re.fullmatch('[a-f0-9]{64}',pin) for pin in allowed))
     need(allowed==sorted(set(allowed)),'OPERATOR_SOURCE_POLICY_REJECTED')
     need(1<=len(policy['files'])<=500)
-    required={'scripts/prepare_worker_capsule.py','unified_system/__init__.py','unified_system/lab_release.py','unified_system/lab_runtime.py','unified_system/lab_capsule_acl.py','unified_system/runtime_profile.py','integration/source_guard.py'}
+    required={'scripts/prepare_worker_capsule.py','unified_system/__init__.py','unified_system/lab_release.py','unified_system/lab_runtime.py','unified_system/lab_capsule_acl.py','unified_system/runtime_profile.py','unified_system/data_first_policy.py','integration/source_guard.py'}
     need(required<=set(policy['files']))
     files={};total=0;seen=set()
     for relative,digest in policy['files'].items():

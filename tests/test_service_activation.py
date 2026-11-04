@@ -36,6 +36,21 @@ class FakeResource:
   return {'status':'STOPPED_RESOURCE_RECORDED'}
 
 class ActivationTests(unittest.TestCase):
+ def test_research_configuration_is_protected_but_never_self_authorizing(self):
+  from tests.test_data_first_policy import PolicyTests
+  case=PolicyTests();case.setUp();policy=case.value
+  policy['source_commit']=self.fixture.manifest['sources']['strattester']['commit']
+  lab_release.stage_capsule(self.fixture.base,self.resource.plan['code'],self.fixture.pin)
+  self.profile['data_first']=policy
+  with self.assertRaises(ActivationBlocked):self.publish(owner_phase=None)
+  self.assertFalse((self.root/'activation').exists())
+  original=policy['source_commit'];policy['source_commit']='f'*40
+  with self.assertRaises(ActivationBlocked):self.publish()
+  self.assertFalse((self.root/'activation').exists())
+  policy['source_commit']=original;self.publish()
+  grant=read_protected_activation(self.root,kernel=self.kernel)
+  self.assertEqual(grant.profile['data_first'],policy)
+  self.assertEqual(grant.profile['activation'],'BLOCKED')
  def setUp(self):
   self.fixture=profile_fixtures.RuntimeProfileTests('test_all_roles_are_pure_derived_data_never_execution_admission');self.fixture.setUp();self.addCleanup(self.fixture.doCleanups)
   self.root=self.fixture.root/'service';self.root.mkdir();self.kernel=FakeKernel();self.boundary=FakeBoundary(self.kernel);self.revision='revision-1'

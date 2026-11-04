@@ -130,6 +130,11 @@ def _derive_runtime_profile(base_config,base_manifest,*,base_manifest_sha256,tar
   activation='BLOCKED',execution_authority=False,source_proof='NOT_EVALUATED',acl_qualification='NOT_EVALUATED',credential_qualification='NOT_EVALUATED',database_ownership='NOT_EVALUATED',capacity='NOT_EVALUATED',physical_acceptance='NOT_RUN')
 
 
-def derive_runtime_profile(base_config,base_manifest,*,base_manifest_sha256,target):
- try:return _derive_runtime_profile(base_config,base_manifest,base_manifest_sha256=base_manifest_sha256,target=target)
+def derive_runtime_profile(base_config,base_manifest,*,base_manifest_sha256,target,data_first=None):
+ try:
+  result=_derive_runtime_profile(base_config,base_manifest,base_manifest_sha256=base_manifest_sha256,target=target)
+  if data_first is not None:
+   from .data_first_policy import validate_data_first_grant
+   result['data_first']=validate_data_first_grant(data_first,base_manifest)
+  return result
  except (TypeError,KeyError,IndexError,AttributeError,OverflowError) as exc:raise ValueError('RUNTIME_PROFILE_REJECTED') from exc

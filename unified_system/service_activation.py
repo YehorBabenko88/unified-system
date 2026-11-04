@@ -50,6 +50,10 @@ def _profile(resource,profile,revision_id,qualification_refs):
  need(config['node_id']==service['node_id'] and config['state_root']==service['state'] and config['release_sha256']==service['manifest_sha256'])
  need(context=={'scope':'OFFLINE_VALIDATION_ONLY','role':service['role'],'node_id':service['node_id'],'computer_name':service['computer_name'],'credential_root':str(revision/'credentials')})
  need(receipt['base_manifest_sha256']==service['manifest_sha256'] and receipt['profile_sha256']==_hash(canonical(config)) and receipt['installation_id']==service['installation_id'])
+ if 'data_first' in profile:
+  from .data_first_policy import validate_data_first_grant
+  manifest=lab_release.verify_capsule(service['code'],service['manifest_sha256'])['manifest']
+  validate_data_first_grant(profile['data_first'],manifest)
  need(config['programs']['grid']['env']['GRID_LAB_AUTH_PATH']==str(revision/'credentials/auth.json'))
  auth_hash=config['programs']['grid']['env']['GRID_LAB_AUTH_SHA256'];digest(auth_hash)
  need(type(refs) is dict and set(refs)=={'phase_id','source_evidence_sha256','capacity_evidence_sha256','database_evidence_sha256'});label(refs['phase_id'])
