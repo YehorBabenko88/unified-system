@@ -144,6 +144,20 @@ def _file(path):
     return initial, hashlib.sha256(raw).hexdigest()
 
 
+def _replace_snapshot(temporary,path,*,existing):
+    if os.name!='nt' or not existing:
+        os.replace(temporary,path);return
+    import ctypes
+    kernel=ctypes.WinDLL('kernel32',use_last_error=True)
+    replace=kernel.ReplaceFileW
+    replace.argtypes=[ctypes.c_wchar_p,ctypes.c_wchar_p,ctypes.c_wchar_p,ctypes.c_uint32,ctypes.c_void_p,ctypes.c_void_p]
+    replace.restype=ctypes.c_int
+    # ReplaceFile supports existing delete-shared readers and preserves ACLs.
+    # No ignore-ACL flags, retries, copy fallback, or foreign path adoption.
+    if not replace(str(path),str(temporary),None,0,None,None):
+        raise ctypes.WinError(ctypes.get_last_error())
+
+
 class SnapshotWriter:
     """Single lifetime writer: exclusive namespace + thread lock + sequence CAS.
 
@@ -211,7 +225,7 @@ class SnapshotWriter:
                 self._check(); _need(staged == _file(temporary))
                 # Atomic visibility for the existing Term reader. Protected
                 # parent admission excludes noncooperating path mutation races.
-                os.replace(temporary, self.path)
+                _replace_snapshot(temporary,self.path,existing=self._expected is not None)
                 _need(_file(self.path) == staged)
                 self._expected = staged; self._sequence += 1
                 return value

@@ -97,6 +97,20 @@ class WriterTests(unittest.TestCase):
         with self.assertRaises(ObservationRejected): self.publish()
         second = self.publish(1); self.assertEqual(second['sequence'], 2)
 
+    @unittest.skipUnless(os.name=='nt','Windows sharing semantics')
+    def test_open_delete_shared_reader_does_not_block_atomic_publication(self):
+        import ctypes,msvcrt
+        self.publish();kernel=ctypes.WinDLL('kernel32',use_last_error=True)
+        create=kernel.CreateFileW;create.argtypes=[ctypes.c_wchar_p,ctypes.c_uint32,ctypes.c_uint32,ctypes.c_void_p,ctypes.c_uint32,ctypes.c_uint32,ctypes.c_void_p];create.restype=ctypes.c_void_p
+        handle=create(str(self.writer.path),0x80000000,7,None,3,0x80,None)
+        self.assertNotEqual(handle,ctypes.c_void_p(-1).value)
+        fd=msvcrt.open_osfhandle(handle,os.O_RDONLY|os.O_BINARY)
+        try:
+            self.publish(expected=1)
+            self.assertEqual(json.loads(os.read(fd,2097153))['sequence'],1)
+            self.assertEqual(json.loads(self.writer.path.read_bytes())['sequence'],2)
+        finally:os.close(fd)
+
     def test_concurrent_same_sequence_has_one_winner(self):
         results = []
         barrier = threading.Barrier(3)
