@@ -1,4 +1,4 @@
-# MASTER MISSION P0–P2 implementation plan
+# MASTER MISSION P0â€“P2 implementation plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. Preserve existing Draft PRs and review each deliverable before pushing.
 
@@ -14,7 +14,7 @@
 
 - LAB_SIMULATION / PAPER ONLY; zero real orders and no production trading credentials.
 - No merge, branch deletion, security-policy bypass or unrelated data/service deletion.
-- Office topology is LS5 → PC1, PC2, PC3, PC4, LS7. ADMINIT is only a separately admitted SINGLE-PC pilot.
+- Office topology is LS5 â†’ PC1, PC2, PC3, PC4, LS7. ADMINIT is only a separately admitted SINGLE-PC pilot.
 - Source changes and isolated tests are authorized. Each physical installation, service/ACL/database mutation and destructive removal requires the owner's concrete phase confirmation.
 - External manifest SHA256, exact closure, source provenance, dependency locks and node-only worker credentials remain mandatory.
 - Missing evidence is NOT_RUN/BLOCKED; an unsigned LAB capsule is not a trusted signed release.
@@ -55,7 +55,7 @@
 - [x] Implement a durable non-authorizing progress journal and snapshot with restart/CAS/idempotence checks; connect actual installer phase producers in the next slice. Root verification: 45 tests passed, zero skips.
 - [ ] Build a thin bootstrap UI over that stream; transfer viewing to the existing Terminan after its real readiness, without starting duplicate backends.
 - [ ] Add explicit elevation boundary for creating only receipt-bound LAB services. Design LocalService code/private-state ACLs before any physical execution.
-- [ ] Verify isolated install → failure rollback → resume using fake SCM/filesystem boundaries before requesting a physical SINGLE-PC phase.
+- [ ] Verify isolated install â†’ failure rollback â†’ resume using fake SCM/filesystem boundaries before requesting a physical SINGLE-PC phase.
 
 ### Task 4: Uninstaller and first physical gate
 
@@ -63,4 +63,18 @@
 - [ ] Verify partial teardown recovery, credential revocation/drain and reinstall; full removal remains separately confirmed.
 - [ ] Produce a concrete SINGLE-PC phase plan listing computer, paths, services, ports, data and rollback. Request owner's confirmation only once the reviewable installer/uninstaller artifacts and P0 evidence are ready.
 
-P3–P12 require further subsystem plans grounded in the resulting source and receipts: sequential office rollout, one distributed authority, real historical/scientific/cluster pipelines, causal paper ledger, Terminan, existing Telegram extension, populated recovery and measured load tests. This plan is not physical acceptance and grants no infrastructure mutation.
+P3â€“P12 require further subsystem plans grounded in the resulting source and receipts: sequential office rollout, one distributed authority, real historical/scientific/cluster pipelines, causal paper ledger, Terminan, existing Telegram extension, populated recovery and measured load tests. This plan is not physical acceptance and grants no infrastructure mutation.
+
+
+## Verified implementation checkpoint — 2026-11-04
+
+- Unified `960b466c5225d9cc26c3846166b764308b9f26eb`: complete local unittest discovery ran 429 tests, zero failures, seven explicit skips. This is source verification, not physical acceptance. Preview shutdown race reproduced at 18/100 before correction; 100/100 repeated close checks passed after raw-socket deadline polling. Accepted response writes retain the same request deadline.
+- Unified `2eec728896a838f69855e6c43edd3457e4058ae1`: 45 installation tests passed after the inactive staging transaction was added. The transaction binds exact closed capsule bytes, source metadata pins, roles, exclusive roots and CAS receipts. Complete or partial children without ownership receipts are never adopted. Logical rollback preserves all resources; no service is activated/stopped by this component.
+- Public bootstrap display and bounded preview are implemented; authenticated installer controls, verified Terminan handoff and projection from the private ownership transaction remain pending. The private journal is staging ownership authority; public progress is a non-authorizing projection and is not yet connected.
+- Existing Grid SCM guard remains disposable-CI-only. Real installation activation is blocked by NSSM capsule closure, exact service SID code/state ACLs, Git admission under the runtime identity, relocatable runtime configuration, module/database ownership and readiness gates. Ordinary installer and three-mode uninstaller are not complete.
+- Terminan `d167cf61a6ee736a086733e80034b69b16404a0a`: fixed synchronous sampler event-loop starvation and visual artifact hidden-file omission. Full current CI pending; no assertion/performance-limit waiver.
+- Math `cecf04ea65f83620b00a97e8eed25a4a2f2c0c1c`: private PowerShell fixture cache experiment and read-only suspended-child desktop facts are pending hosted verification. Native cmd also failed 0xc0000142 previously, so a CLR-only cause is not established. No security/binding/deadline changes.
+- Strattester `bc942603a13e5a33756af860fb2a506a7034eab9`: 77 related quote-paper/existing execution checks passed. Local replay-bound research ledger is not distributed execution authority. First full run had nine incomplete child-environment errors; isolated-context verification is pending.
+- Read-only office audit: all five worker SSH endpoints respond under pinned host keys. PC2 observed only 5312 KiB free virtual memory and ConvertTo-Json failed 0x800705AF. PC3 Windows Firewall profiles remain disabled as a pre-existing deviation; ESET firewall service is running. No process, pagefile, policy, ACL, service or existing database was modified.
+
+No physical phase is authorized by these source milestones. The next physical plan remains gated on actual installer/uninstaller artifacts and current P0 results. Owner confirmations are required before each physical operation, as explicitly required by the MASTER MISSION.

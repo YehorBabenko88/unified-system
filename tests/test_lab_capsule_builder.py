@@ -8,6 +8,98 @@ spec=importlib.util.spec_from_file_location('lab_capsule_builder',ROOT/'scripts/
 builder=importlib.util.module_from_spec(spec);spec.loader.exec_module(builder)
 
 class BuilderTests(unittest.TestCase):
+    def nssm_fixture(self,root,*,member=None,payload=b'INERT_NSSM_TEST_NEVER_EXECUTED'):
+        import zipfile,hashlib
+        from unified_system import windows_toolchain
+        archive=root/'fixture.zip'
+        member=builder.NSSM_MEMBER if member is None else member
+        with zipfile.ZipFile(archive,'w') as z:z.writestr(member,payload)
+        catalog=windows_toolchain.read_catalog()
+        artifact=next(x for x in catalog['artifacts'] if x['component']=='nssm')
+        artifact['sha256']=hashlib.sha256(archive.read_bytes()).hexdigest();artifact['expected_bytes']=archive.stat().st_size
+        return archive,catalog,artifact,hashlib.sha256(payload).hexdigest(),len(payload)
+    def test_nssm_offline_fixed_member_vendor_and_capsule_closure(self):
+        import hashlib,json
+        from unittest.mock import patch
+        from unified_system import windows_toolchain,lab_release
+        from tests.test_lab_release import fixture
+        with tempfile.TemporaryDirectory() as temporary:
+            parent=Path(temporary).resolve();archive,catalog,artifact,member_hash,member_size=self.nssm_fixture(parent)
+            with patch.object(windows_toolchain,'read_catalog',return_value=catalog),patch.dict(builder.ARCHIVES,{builder.NSSM_FILENAME:artifact['sha256']}),patch.object(builder,'NSSM_MEMBER_SHA256',member_hash),patch.object(builder,'NSSM_MEMBER_BYTES',member_size):
+                root=parent/'capsule';root.mkdir();manifest=fixture(root);(root/'runtime').mkdir()
+                record=builder.stage_nssm(archive,root/'runtime/nssm')
+            self.assertEqual(record['archive']['url'],artifact['url']);self.assertEqual(record['archive']['sha256'],artifact['sha256'])
+            self.assertEqual(record['member']['sha256'],member_hash);self.assertEqual(record['native_execution'],'NOT_RUN')
+            lock=root/'locks/vendor.json';lock.parent.mkdir();lock.write_bytes(builder.canonical({'nssm':record}))
+            manifest['files'],manifest['directories']=builder.inventory(root)
+            manifest['dependencies'].append(dict(name='nssm',version=artifact['version'],lock_path='locks/vendor.json'))
+            raw=lab_release.canonical(manifest);(root/'lab-release.json').write_bytes(raw);pin=hashlib.sha256(raw).hexdigest()
+            admitted=lab_release.verify_capsule(root,pin)
+            self.assertEqual(admitted['manifest']['files']['runtime/nssm/nssm.exe']['sha256'],member_hash)
+            self.assertEqual(json.loads(lock.read_bytes())['nssm']['member']['path'],builder.NSSM_MEMBER)
+            staged=parent/'staged';lab_release.stage_capsule(root,staged,pin)
+            self.assertEqual((staged/'runtime/nssm/nssm.exe').read_bytes(),b'INERT_NSSM_TEST_NEVER_EXECUTED')
+            # Transport-only synthetic fixture: real closure checks, mocked Git
+            # proof because these inert members are explicitly not source repos.
+            from tests.test_prepare_worker_capsule import builder as worker_builder
+            import zipfile
+            worker=worker_builder();exported=parent/'worker.zip'
+            with patch.object(worker,'prove_sources',return_value={}):worker.export_archive(root,exported,pin)
+            with zipfile.ZipFile(exported) as worker_archive:
+                self.assertEqual(worker_archive.read('runtime/nssm/nssm.exe'),b'INERT_NSSM_TEST_NEVER_EXECUTED')
+                self.assertEqual(worker_archive.read('locks/vendor.json'),lock.read_bytes())
+    def test_nssm_missing_wrong_archive_or_member_fails_before_destination(self):
+        from unittest.mock import patch
+        from unified_system import windows_toolchain
+        with tempfile.TemporaryDirectory() as temporary:
+            root=Path(temporary).resolve();archive,catalog,artifact,member_hash,member_size=self.nssm_fixture(root)
+            target=root/'output'
+            with self.assertRaises((ValueError,FileNotFoundError)):builder.stage_nssm(root/'missing',target)
+            with self.assertRaises(ValueError):builder.stage_nssm(archive,target)
+            with patch.object(windows_toolchain,'read_catalog',return_value=catalog),patch.dict(builder.ARCHIVES,{builder.NSSM_FILENAME:artifact['sha256']}),patch.object(builder,'NSSM_MEMBER_BYTES',member_size):
+                with self.assertRaises(ValueError):builder.stage_nssm(archive,target)
+            self.assertFalse(target.exists())
+    def test_nssm_missing_fixed_member_or_alias_and_existing_target_rejected(self):
+        from unittest.mock import patch
+        from unified_system import windows_toolchain
+        for member in ('nssm-2.24-101-g897c7ad/win32/nssm.exe','unexpected/nssm.exe'):
+            with self.subTest(member=member),tempfile.TemporaryDirectory() as temporary:
+                root=Path(temporary).resolve();archive,catalog,artifact,member_hash,member_size=self.nssm_fixture(root,member=member)
+                with patch.object(windows_toolchain,'read_catalog',return_value=catalog),patch.dict(builder.ARCHIVES,{builder.NSSM_FILENAME:artifact['sha256']}),patch.object(builder,'NSSM_MEMBER_SHA256',member_hash),patch.object(builder,'NSSM_MEMBER_BYTES',member_size):
+                    with self.assertRaisesRegex(ValueError,'NSSM_MEMBER_MISSING'):builder.stage_nssm(archive,root/'output')
+                self.assertFalse((root/'output').exists())
+        with tempfile.TemporaryDirectory() as temporary:
+            root=Path(temporary).resolve();archive,catalog,artifact,member_hash,member_size=self.nssm_fixture(root)
+            target=root/'output';target.mkdir();(target/'keep').write_bytes(b'foreign')
+            with patch.object(windows_toolchain,'read_catalog',return_value=catalog),patch.dict(builder.ARCHIVES,{builder.NSSM_FILENAME:artifact['sha256']}),patch.object(builder,'NSSM_MEMBER_SHA256',member_hash),patch.object(builder,'NSSM_MEMBER_BYTES',member_size):
+                with self.assertRaisesRegex(ValueError,'NSSM_NEW_DESTINATION_REQUIRED'):builder.stage_nssm(archive,target)
+            self.assertEqual((target/'keep').read_bytes(),b'foreign')
+
+    def test_build_rejects_missing_or_bad_nssm_before_any_acl_or_output(self):
+        from types import SimpleNamespace
+        from unittest.mock import patch
+        from unified_system.lab_capsule_acl import FreshCodeRoot
+        with tempfile.TemporaryDirectory() as temporary:
+            root=Path(temporary).resolve();cache=root/'cache';cache.mkdir()
+            args=SimpleNamespace(output=root/'capsule',state_root=root/'state',node='LS5',release_id='fixture',postgres_port=55459,cache=cache,nssm_archive=None)
+            def pinned_other_inputs(path):
+                return builder.LOCK_SHA if Path(path).name.endswith('.lock') else builder.ARCHIVES[Path(path).name]
+            for invalid in (None,b'BAD_ARCHIVE_TEST_NEVER_EXECUTED'):
+                if invalid is not None:(cache/builder.NSSM_FILENAME).write_bytes(invalid)
+                with patch.object(builder.socket,'gethostname',return_value='LS5'),patch.object(builder.socket,'socket'),patch.object(builder,'sha',side_effect=pinned_other_inputs),patch.object(FreshCodeRoot,'create') as acl:
+                    with self.assertRaises((ValueError,FileNotFoundError)):builder.build(args)
+                    acl.assert_not_called()
+                self.assertFalse(args.output.exists());self.assertFalse(args.state_root.exists())
+
+    def test_nssm_real_approved_archive_read_only_extract_no_execution(self):
+        import hashlib
+        archive=Path(r'C:/Users/LS-5/Documents/Codex/2026-11-02/files-pasted-by-the-user-unified/work/release-unblock-20261103/nssm-2.24-101-g897c7ad.zip')
+        if not archive.is_file():self.skipTest('Optional already-admitted offline archive unavailable')
+        with tempfile.TemporaryDirectory() as temporary:
+            root=Path(temporary).resolve();record=builder.stage_nssm(archive,root/'nssm')
+            self.assertEqual(hashlib.sha256((root/'nssm/nssm.exe').read_bytes()).hexdigest(),builder.NSSM_MEMBER_SHA256)
+            self.assertEqual(record['archive']['bytes'],415458);self.assertEqual(record['member']['bytes'],368640)
+
     def test_npm_uses_distinct_new_empty_configuration_files(self):
         with tempfile.TemporaryDirectory() as temporary:
             root=Path(temporary).resolve()

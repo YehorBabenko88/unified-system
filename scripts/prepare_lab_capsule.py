@@ -9,6 +9,7 @@ cleanup, signing or trust bypass.
 import argparse
 import hashlib
 import importlib.metadata
+import io
 import json
 import os
 from pathlib import Path
@@ -25,6 +26,11 @@ CACHE=WORKSPACE/'.local-runs/btc-20261102-01'
 NAMES={'unified-system':'unified-system','grid':'bybit-cluster-grid','strattester':'strattester','math':'math','meta_analyse':'meta_analyse','terminan':'Terminan'}
 GRAPH={'unified-system':[],'grid':['unified-system'],'math':['unified-system'],'meta_analyse':['grid','math'],'strattester':['grid','math'],'terminan':['meta_analyse','strattester']}
 ARCHIVES={'python.3.12.10.nupkg':'0eb85c2dfccccf1b17352de4c397f69194035b7d37149eacc16f1147d93de3b8','node-v22.23.4-win-x64.zip':'cbc74b5e0982c9dbb41525fd8fb5dcd32fbee237863f7829072f4639a1ce5f20','MinGit-2.56.0.4-64-bit.zip':'e3bf78351fe777fba47ddee5950082f8a98bb0f02604fdc7ba3ee2cb68ffa877'}
+NSSM_FILENAME='nssm-2.24-101-g897c7ad.zip'
+NSSM_MEMBER='nssm-2.24-101-g897c7ad/win64/nssm.exe'
+NSSM_MEMBER_SHA256='eee9c44c29c2be011f1f1e43bb8c3fca888cb81053022ec5a0060035de16d848'
+NSSM_MEMBER_BYTES=368640
+ARCHIVES[NSSM_FILENAME]='99f5045fffbffb745d67fe3a065a953c4a3d9c253b868892d9b685b0ee7d07b8'
 LOCK_SHA='7eab2508a19e5b0ac54efbb9048c6841082edf140848982d6ace2c2983ff549c'
 SYMBOLS=['BTCUSDT','ETHUSDT','SOLUSDT','XRPUSDT','BNBUSDT','DOGEUSDT','ADAUSDT','AVAXUSDT','LINKUSDT','DOTUSDT']
 
@@ -90,6 +96,52 @@ def extract(archive,target,prefix=''):
             else:
                 dest.parent.mkdir(parents=True,exist_ok=True)
                 with z.open(info) as src,dest.open('xb') as out:shutil.copyfileobj(src,out)
+
+def nssm_payload(archive):
+    """Offline reviewed archive/member bytes only; never execute the wrapper."""
+    from unified_system import windows_toolchain
+    from unified_system.file_identity import path_identity,descriptor_identity
+    from unified_system.windows_wheels import zip_path
+    catalog=windows_toolchain.read_catalog()
+    artifact=next(item for item in catalog['artifacts'] if item['component']=='nssm')
+    need(artifact['filename']==NSSM_FILENAME and artifact['sha256']==ARCHIVES[NSSM_FILENAME], 'NSSM_CATALOG_PIN_MISMATCH')
+    path=windows_toolchain.local(archive);before=path_identity(path)
+    with path.open('rb') as stream:
+        need(descriptor_identity(stream.fileno())==before,'NSSM_ARCHIVE_IDENTITY_MISMATCH')
+        raw=stream.read(artifact['max_bytes']+1)
+        need(descriptor_identity(stream.fileno())==before,'NSSM_ARCHIVE_IDENTITY_MISMATCH')
+    need(path_identity(path)==before,'NSSM_ARCHIVE_IDENTITY_MISMATCH')
+    need(0<len(raw)<=artifact['max_bytes'] and (artifact['expected_bytes'] is None or len(raw)==artifact['expected_bytes']) and hashlib.sha256(raw).hexdigest()==artifact['sha256'],'NSSM_ARCHIVE_BYTES_MISMATCH')
+    # Parse only immutable verified bytes. Validate all names before selecting the
+    # fixed x64 executable; no adjacent DLL or architecture fallback is borrowed.
+    with zipfile.ZipFile(io.BytesIO(raw)) as archive_file:
+        members=archive_file.infolist();need(1<=len(members)<=128,'NSSM_ARCHIVE_BUDGET')
+        seen=set();total=0;selected=None
+        for info in members:
+            name,_=zip_path(info);need(name.casefold() not in seen,'NSSM_ARCHIVE_ALIAS');seen.add(name.casefold())
+            total+=info.file_size;need(total<=16*1024*1024,'NSSM_ARCHIVE_BUDGET')
+            if name==NSSM_MEMBER:
+                need(not info.is_dir() and info.file_size==NSSM_MEMBER_BYTES,'NSSM_MEMBER_SIZE_MISMATCH');selected=info
+        need(selected is not None,'NSSM_MEMBER_MISSING')
+        payload=archive_file.read(selected)
+    need(len(payload)==NSSM_MEMBER_BYTES and hashlib.sha256(payload).hexdigest()==NSSM_MEMBER_SHA256,'NSSM_MEMBER_HASH_MISMATCH')
+    record=dict(version=artifact['version'],catalog_canonical_sha256=hashlib.sha256(canonical(catalog)).hexdigest(),
+        archive={key:artifact[key] for key in ('filename','url','sha256','provenance')},
+        member=dict(path=NSSM_MEMBER,sha256=NSSM_MEMBER_SHA256,bytes=NSSM_MEMBER_BYTES),
+        capsule_path='runtime/nssm/nssm.exe',native_execution='NOT_RUN',publisher_authenticated=False,service_activation='NOT_AUTHORIZED')
+    record['archive']['bytes']=len(raw)
+    return payload,record
+
+
+def stage_nssm(archive,target):
+    payload,record=nssm_payload(archive)
+    target=safe(target);need(target.parent.is_dir() and not target.exists(),'NSSM_NEW_DESTINATION_REQUIRED')
+    target.mkdir(exist_ok=False)
+    with (target/'nssm.exe').open('xb') as stream:
+        stream.write(payload);stream.flush();os.fsync(stream.fileno())
+    need(sha(target/'nssm.exe')==NSSM_MEMBER_SHA256,'NSSM_STAGED_MEMBER_MISMATCH')
+    return record
+
 
 def environment(git=None):
     allowed={'SYSTEMROOT','WINDIR','SYSTEMDRIVE','TEMP','TMP','COMPUTERNAME','USERPROFILE','APPDATA','LOCALAPPDATA','OS','PROCESSOR_ARCHITECTURE'}
@@ -219,13 +271,17 @@ def build(args):
     from integration.source_guard import SourceFence
     cache=safe(args.cache);lock=WORKSPACE/'unified-system/integration/windows-candidate/requirements-cp312-win_amd64-cpu.lock'
     need(sha(lock)==LOCK_SHA,'LOCK_HASH_MISMATCH')
-    for name,pin in ARCHIVES.items():need(sha(cache/name)==pin,'ARCHIVE_HASH_MISMATCH:'+name)
+    for name,pin in ARCHIVES.items():
+        if name!=NSSM_FILENAME:need(sha(cache/name)==pin,'ARCHIVE_HASH_MISMATCH:'+name)
+    nssm_archive=safe(args.nssm_archive) if getattr(args,'nssm_archive',None) else cache/NSSM_FILENAME
+    nssm_payload(nssm_archive) # Fail before creating code roots, ACLs or state.
     wheels=windows_wheels.validate_windows_wheels(lock,cache/'wheels')
     need(wheels['result']=='CANDIDATE_BYTES_MATCH' and len(wheels['wheels'])==72 and wheels['candidate_bytes']==431771071,'WHEELS_REJECTED')
     pip_member=bundled_pip_member(cache/'python.3.12.10.nupkg')
     from unified_system.lab_capsule_acl import FreshCodeRoot
     owned_code=FreshCodeRoot.create(root)
     state.mkdir();(root/'runtime').mkdir();(root/'sources').mkdir();(root/'locks').mkdir();(root/'dependencies').mkdir()
+    nssm=stage_nssm(nssm_archive,root/'runtime/nssm')
     # No executable or adjacent DLL is borrowed from an existing cache tree.
     extract(cache/'MinGit-2.56.0.4-64-bit.zip',root/'runtime/git')
     git=root/'runtime/git/ucrt64/bin/git.exe';env=environment(git)
@@ -257,7 +313,7 @@ def build(args):
     npm_env=npm_environment(env,node,git,safe(args.npm_cache) if args.npm_cache else cache/'npm-cache',state)
     run([node,npm,'ci','--ignore-scripts','--offline','--no-audit','--no-fund'],npm_env,cwd=root/'sources/math')
     shutil.copyfile(lock,root/'locks/requirements-cp312-win_amd64-cpu.lock')
-    vendor={'schema':'unified.lab.vendor-lock.v1','archives':ARCHIVES,'wheels':wheels['wheels'],'postgresql':None,'npm_package_lock_sha256':sha(root/'sources/math/package-lock.json')}
+    vendor={'schema':'unified.lab.vendor-lock.v1','archives':ARCHIVES,'nssm':nssm,'wheels':wheels['wheels'],'postgresql':None,'npm_package_lock_sha256':sha(root/'sources/math/package-lock.json')}
     if args.include_postgres:
         origin=Path(r'C:\Program Files\PostgreSQL\18');dest=root/'runtime/postgresql';dest.mkdir()
         for part in ('bin','lib','share'):
@@ -271,7 +327,7 @@ def build(args):
     # Normalize only that exact recognized shape before final byte admission.
     owned_code.normalize_installer_acls()
     files,dirs=inventory(root)
-    manifest=dict(schema='unified.lab-release.v1',mode='LAB_SIMULATION',release_id=args.release_id,sequence=args.sequence,market_access='PUBLIC_READ_ONLY',execution='PAPER_ONLY',credentials='FORBIDDEN',trading_authorized=False,sources=sources,files=files,directories=dirs,dependencies=[dict(name='python',version='3.12.10',lock_path='locks/vendor.json'),dict(name='node',version='22.23.4',lock_path='locks/vendor.json'),dict(name='mingit',version='2.56.0.4',lock_path='locks/vendor.json'),dict(name='python-packages',version='1',lock_path='locks/requirements-cp312-win_amd64-cpu.lock'),dict(name='npm',version='1',lock_path='sources/math/package-lock.json')],runtime_config='runtime-config.json',git=git.relative_to(root).as_posix(),instruments=SYMBOLS)
+    manifest=dict(schema='unified.lab-release.v1',mode='LAB_SIMULATION',release_id=args.release_id,sequence=args.sequence,market_access='PUBLIC_READ_ONLY',execution='PAPER_ONLY',credentials='FORBIDDEN',trading_authorized=False,sources=sources,files=files,directories=dirs,dependencies=[dict(name='python',version='3.12.10',lock_path='locks/vendor.json'),dict(name='node',version='22.23.4',lock_path='locks/vendor.json'),dict(name='mingit',version='2.56.0.4',lock_path='locks/vendor.json'),dict(name='python-packages',version='1',lock_path='locks/requirements-cp312-win_amd64-cpu.lock'),dict(name='npm',version='1',lock_path='sources/math/package-lock.json'),dict(name='nssm',version=nssm['version'],lock_path='locks/vendor.json')],runtime_config='runtime-config.json',git=git.relative_to(root).as_posix(),instruments=SYMBOLS)
     write(root/'lab-release.json',manifest);digest=sha(root/'lab-release.json')
     lab_release.verify_capsule(root,digest)
     from unified_system.lab_runtime import validate_config,verify_sources
@@ -284,7 +340,7 @@ def build(args):
     return dict(result='PREPARED_UNSIGNED_LAB_CANDIDATE',code_acl='OWNED_READ_EXECUTE_ACCIDENTAL_WRITE_DENIED',capsule=str(root),state_root=str(state),manifest_sha256=digest,sources={n:{'commit':s['commit'],'tree':s['tree']} for n,s in sources.items()},database_provisioned=False,services_started=False)
 
 def main(argv=None):
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--output',required=True);p.add_argument('--state-root',required=True);p.add_argument('--release-id',required=True);p.add_argument('--node',default='LS5');p.add_argument('--sequence',type=int,default=1);p.add_argument('--cache',default=str(CACHE));p.add_argument('--postgres-port',type=int,default=55459);p.add_argument('--include-postgres',action='store_true');p.add_argument('--npm-cache');args=p.parse_args(argv)
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--output',required=True);p.add_argument('--state-root',required=True);p.add_argument('--release-id',required=True);p.add_argument('--node',default='LS5');p.add_argument('--sequence',type=int,default=1);p.add_argument('--cache',default=str(CACHE));p.add_argument('--postgres-port',type=int,default=55459);p.add_argument('--include-postgres',action='store_true');p.add_argument('--npm-cache');p.add_argument('--nssm-archive',help='Existing offline archive only; no download');args=p.parse_args(argv)
     need(args.sequence>0,'SEQUENCE_INVALID');print(json.dumps(build(args),sort_keys=True));return 0
 
 if __name__=='__main__':
