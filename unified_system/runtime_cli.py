@@ -207,7 +207,17 @@ def make_runtime(c,authorize,*,child_environment=None):
         release_id=c['release_id'],release_sha256=c['release_sha256'],node_id=c['node_id'])
 
 
-def run_runtime(c,runtime,*,stop_event):
+def run_runtime(c,runtime,*,stop_event,continuation=None):
+    # The optional probe is supplied by the protected service admission layer.
+    # It grants no authority by itself. Legacy callers keep their existing gate.
+    # Fail before binding/writing on initial denial; revocation during execution
+    # uses the same owned-stop/final-publish path as any runtime failure.
+    def require_continuation():
+        if continuation is None:return
+        try:allowed=callable(continuation) and continuation() is True
+        except Exception:allowed=False
+        if not allowed:raise ValueError('RUNTIME_CONTINUATION_REJECTED') from None
+    require_continuation()
     view=SnapshotView()
     # Bind before changing the journal: an occupied status port must leave a
     # previous controller's durable state untouched.
@@ -219,13 +229,16 @@ def run_runtime(c,runtime,*,stop_event):
         driver=getattr(runtime,'driver',None)
         if isinstance(driver,BuiltinRuntimeDriver):driver.published(snapshot)
     try:
+        require_continuation()
         if isinstance(runtime,RuntimeSupervisor):runtime.recover_readiness()
         # The first complete public view is journal-backed and unready until
         # current-instance functional validation; never expose prior READY.
         publish()
         thread.start();serving=True
+        require_continuation()
         runtime.start()
         while not stop_event.is_set():
+            require_continuation()
             runtime.tick();publish()
             stop_event.wait(c['tick_seconds'])
     finally:

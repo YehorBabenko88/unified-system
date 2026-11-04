@@ -120,6 +120,45 @@ class CliTests(unittest.TestCase):
         r=Runtime()
         with self.assertRaises(RuntimeError):cli.run_runtime(self.config,r,stop_event=threading.Event())
         self.assertTrue(r.stopped)
+    def test_continuation_denial_or_error_before_binding_has_no_effects(self):
+        from unittest.mock import Mock
+        for continuation in (lambda:False,lambda:1,Mock(side_effect=RuntimeError('PRIVATE_DETAIL'))):
+            with self.subTest(continuation=type(continuation).__name__):
+                runtime=Mock()
+                with patch.object(cli,'status_server') as listener,patch.object(cli,'write_snapshot') as writer:
+                    with self.assertRaisesRegex(ValueError,'RUNTIME_CONTINUATION_REJECTED'):
+                        cli.run_runtime(self.config,runtime,stop_event=threading.Event(),continuation=continuation)
+                    listener.assert_not_called();writer.assert_not_called()
+                self.assertEqual(runtime.mock_calls,[])
+
+    def test_revoked_continuation_stops_owned_runtime_before_next_tick(self):
+        class Runtime:
+            def __init__(self):self.started=False;self.stopped=False;self.ticks=0
+            def start(self):self.started=True
+            def tick(self):self.ticks+=1
+            def stop(self,administrative=True):self.stopped=administrative
+            def snapshot(self):return {'schema':'fixture','ready':self.started and not self.stopped}
+        runtime=Runtime()
+        with self.assertRaisesRegex(ValueError,'RUNTIME_CONTINUATION_REJECTED'):
+            cli.run_runtime(self.config,runtime,stop_event=threading.Event(),continuation=lambda:not runtime.started)
+        self.assertTrue(runtime.started);self.assertTrue(runtime.stopped);self.assertEqual(runtime.ticks,0)
+        self.assertFalse(json.loads(pathlib.Path(self.config['snapshot_path']).read_text())['ready'])
+
+    def test_continuation_is_rechecked_after_each_tick_and_cleanup_on_probe_exception(self):
+        class Runtime:
+            def __init__(self):self.stopped=False;self.ticks=0
+            def start(self):pass
+            def tick(self):self.ticks+=1
+            def stop(self,administrative=True):self.stopped=administrative
+            def snapshot(self):return {'schema':'fixture','ready':not self.stopped}
+        runtime=Runtime()
+        def continuation():
+            if runtime.ticks:raise RuntimeError('PRIVATE_DETAIL')
+            return True
+        with self.assertRaisesRegex(ValueError,'RUNTIME_CONTINUATION_REJECTED'):
+            cli.run_runtime(self.config,runtime,stop_event=threading.Event(),continuation=continuation)
+        self.assertEqual(runtime.ticks,1);self.assertTrue(runtime.stopped)
+        self.assertFalse(json.loads(pathlib.Path(self.config['snapshot_path']).read_text())['ready'])
     def test_stop_failure_still_publishes_unready_final_snapshot(self):
         class Runtime:
             stopped=False
