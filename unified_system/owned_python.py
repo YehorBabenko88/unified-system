@@ -24,7 +24,7 @@ def reject_external_namespace(path,*,platform=None,drive_type=None):
         if drive_type(path[:3])!=3:raise ValueError('OWNED_PYTHON_REJECTED')
 
 
-def main():
+def main(*,admitted_run=None):
     # These interpreter flags must be effective before any application imports.
     if not (sys.flags.isolated and sys.flags.no_site and sys.flags.dont_write_bytecode):
         raise ValueError('OWNED_PYTHON_REQUIRED_FLAGS')
@@ -97,6 +97,11 @@ def main():
     application=args.application_args
     if application[:1]==['--']:application=application[1:]
     sys.argv=[args.module,*application]
+    # In-process constructor injection by the already admitted raw service.
+    # CLI arguments/environment cannot select or serialize this callback.
+    if admitted_run is not None:
+        need(callable(admitted_run))
+        return admitted_run()
     runpy.run_module(args.module,run_name='__main__',alter_sys=True)
     return 0
 

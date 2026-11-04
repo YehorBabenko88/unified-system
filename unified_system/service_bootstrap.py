@@ -292,7 +292,11 @@ def run_protected_runtime(grant,*,stop_event=None):
    for key,value in program['env'].items():
     if key.upper() in ('TEMP','TMP','USERPROFILE','HOME','APPDATA','LOCALAPPDATA','PROGRAMDATA','PROGRAMFILES','ML_ARTIFACT_ROOT','ARCHIVE_ROOT','STRATEGY_CACHE_DIR','GRID_CONTROL_SNAPSHOTS'):
      target=local(value);need(Path(config['state_root'])==target or Path(config['state_root']) in target.parents);grant.require_current();target.mkdir(parents=True,exist_ok=True)
-  grant.require_current();runtime=lab_runtime.make_runtime(config,authorize,child_environment=environment)
+  effective=config
+  if grant.profile.get('data_first') is not None and grant.descriptor['service_plan']['role']=='WORKER':
+   from unified_system.data_first_service import worker_program
+   effective=worker_program(config,grant,report['manifest'])
+  grant.require_current();runtime=lab_runtime.make_runtime(effective,authorize,child_environment=environment)
   stop=threading.Event() if stop_event is None else stop_event;previous={}
   try:
    if threading.current_thread() is threading.main_thread():
@@ -307,3 +311,25 @@ def run_protected_runtime(grant,*,stop_event=None):
   if database is not None:
    try:database.close()
    except Exception:raise ActivationBlocked('ACTIVATION_DATABASE_GATE_UNAVAILABLE') from None
+
+
+def run_protected_data_first(grant,*,worker=False):
+ """One existing Grid-assigned research child; no database/controller startup.
+
+ Fixed raw mode independently repeats kernel, capsule, source and workspace
+ admission. Serialized job input never supplies construction authority.
+ """
+ try:
+  need(grant.require_current() is True)
+  report=_admit_capsule(grant);config,_auth=_runtime_admission(grant,report)
+  from unified_system.data_first_policy import validate_data_first_grant
+  cap=validate_data_first_grant(grant.profile.get('data_first'),report['manifest'])
+  from unified_system.lab_privileges import remove_lab_write_bypass_privileges
+  remove_lab_write_bypass_privileges();need(grant.require_current() is True)
+  from unified_system.data_first_service import serve_research
+  if worker:
+   from unified_system.data_first_service import serve_worker
+   return serve_worker(grant,config,report['manifest'],cap)
+  return serve_research(grant,config,report['manifest'],cap)
+ except ActivationBlocked:raise
+ except Exception:raise ActivationBlocked('ACTIVATION_RUNTIME_REJECTED') from None

@@ -5,12 +5,12 @@ for LAB simulation, never publisher authentication or a readiness assertion.
 """
 import sys
 
-BOOTSTRAP_SHA256='47986097e30dd0bdde73863eaa0b71343c8a3cdc9c57b38bbcf9cc90ee45b881'
+BOOTSTRAP_SHA256='c95775f98df6b15b37d573bf108473ef64acfed1a221652f0ea7ef76a974de39'
 
 
 def main():
  try:
-  if not (sys.flags.isolated and sys.flags.no_site and sys.flags.dont_write_bytecode and len(sys.argv)==1):raise ValueError()
+  if not (sys.flags.isolated and sys.flags.no_site and sys.flags.dont_write_bytecode and sys.argv[1:] in ([],['--data-first'],['--data-first-worker'])):raise ValueError()
   import ctypes,hashlib,importlib.util,os,stat
   from pathlib import Path
   entry=Path(__file__).absolute();helper=entry.with_name('service_bootstrap.py')
@@ -31,6 +31,7 @@ def main():
   namespace={'__name__':'_unified_protected_bootstrap','__file__':str(helper)}
   exec(compile(raw,str(helper),'exec'),namespace)
   grant=namespace['read_protected_activation'](entry.parents[4])
+  if sys.argv[1:]:return namespace['run_protected_data_first'](grant,worker=sys.argv[1]=='--data-first-worker')
   return namespace['run_protected_runtime'](grant)
  except Exception:
   print('BLOCKED_SERVICE_ACTIVATION')
