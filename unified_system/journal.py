@@ -41,10 +41,12 @@ class Journal:
             output.append(body)
         return output
 
-    def append(self, state, receipt=None):
+    def append(self, state, receipt=None, *, expected_sequence=None):
         if state not in _ALLOWED:
             raise ContractError("invalid transition")
         records=self.read()
+        if expected_sequence is not None and (type(expected_sequence) is not int or expected_sequence < 0 or expected_sequence != len(records)):
+            raise ContractError("stale journal sequence")
         if len(records)>=100000:
             raise ContractError("journal capacity exceeded")
         import hashlib
