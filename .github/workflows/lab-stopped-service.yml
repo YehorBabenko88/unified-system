@@ -1,0 +1,40 @@
+name: Disposable Windows stopped-service acceptance
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+concurrency:
+  group: stopped-service-${{ github.event_name }}-${{ github.event.pull_request.head.sha || github.sha }}
+  cancel-in-progress: true
+jobs:
+  stopped-service:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-2022, windows-2025]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    env:
+      CI_STOPPED_NAME: unified-stopped-service-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.os }}
+      CI_EXPECTED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Guard and fixed-download regressions without SCM effects
+        run: python -B -m unittest tests.test_ci_stopped_service_acceptance -v
+      - name: Disposable actual stopped service and APP_ONLY removal
+        id: acceptance
+        shell: pwsh
+        env:
+          CI_STOPPED_ROOT: ${{ runner.temp }}/${{ env.CI_STOPPED_NAME }}
+        run: python -I -S -B scripts/ci_stopped_service_acceptance.py --root "$env:CI_STOPPED_ROOT" --expected-sha "$env:CI_EXPECTED_SHA"
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() && steps.acceptance.outputs.report_root_owned == 'true' }}
+        with:
+          name: stopped-service-${{ matrix.os }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/${{ env.CI_STOPPED_NAME }}/reports/
+          if-no-files-found: warn
