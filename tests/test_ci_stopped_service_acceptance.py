@@ -36,9 +36,10 @@ class HostedStoppedServiceTests(unittest.TestCase):
         self.python.write_bytes(b'INERT_UNIT_INTERPRETER_NEVER_EXECUTED')
 
     def reviewed_entry(self):
-        raw=subprocess.check_output(['git','-C',str(ROOT),'cat-file','blob','HEAD:unified_system/service_entry.py'],timeout=10)
-        self.assertEqual(len(raw),lane.BLOCKED_ENTRY_BYTES)
-        self.assertEqual(hashlib.sha256(raw).hexdigest(),lane.service.BLOCKED_ENTRY_SHA256)
+        # Fixture snapshot only; production reads exact clean-HEAD Git blobs.
+        raw=(ROOT/'unified_system/service_entry.py').read_bytes().replace(b'\r\n',b'\n')
+        self.assertEqual(len(raw),lane.ENTRY_BYTES)
+        self.assertEqual(hashlib.sha256(raw).hexdigest(),lane.service.SERVICE_ENTRY_SHA256)
         return raw
 
     def test_only_hosted_windows_fresh_descendant_is_admitted_without_effects(self):
@@ -138,7 +139,7 @@ class HostedStoppedServiceTests(unittest.TestCase):
             # own newly-created root, before the unchanged inventory guard.
             from tests.test_installation_service import ServiceResourceTests
             result=unittest.TestResult()
-            ServiceResourceTests('test_registered_command_uses_only_reviewed_blocked_entry').run(result)
+            ServiceResourceTests('test_registered_command_uses_only_reviewed_protected_entry').run(result)
             self.assertTrue(result.wasSuccessful(),str(result.errors)+str(result.failures))
 
     def test_inert_orchestration_dry_run_uses_fakes_only_and_preserves_state(self):
@@ -164,7 +165,7 @@ class HostedStoppedServiceTests(unittest.TestCase):
             with patch.object(lane.service,'current_computer_name',return_value='TEST-PC'),patch.object(lane,'source_identity',return_value=identity):
                 with patch.object(lane.FreshCodeRoot,'create',side_effect=PrivateRoot),patch.object(lane,'download_archive',side_effect=download):
                     with patch.object(lane.builder,'nssm_payload',return_value=(payload,{'scope':'INERT_UNIT_FIXTURE'})),patch.object(lane.builder,'NSSM_MEMBER_SHA256',pin),patch.object(lane.service,'NSSM_PIN',pin):
-                        with patch.object(lane.service,'WindowsServiceBoundary',return_value=backend),patch.object(lane,'WindowsRemovalBoundary',return_value=FakeRemoval(backend)),patch.object(lane,'read_tool_versions',return_value={'scope':'INERT_UNIT_FIXTURE'}),patch.object(lane,'entry_blob',return_value=(entry,{'origin':'INERT_UNIT_FIXTURE'})),patch.object(lane,'publish_owned_reports'),redirect_stdout(captured):
+                        with patch.object(lane.service,'WindowsServiceBoundary',return_value=backend),patch.object(lane,'WindowsRemovalBoundary',return_value=FakeRemoval(backend)),patch.object(lane,'read_tool_versions',return_value={'scope':'INERT_UNIT_FIXTURE'}),patch.object(lane,'entry_blob',return_value=(entry,{'origin':'INERT_UNIT_FIXTURE'})),patch.object(lane,'bootstrap_blob',return_value=((ROOT/'unified_system/service_bootstrap.py').read_bytes().replace(b'\r\n',b'\n'),{'origin':'INERT_UNIT_FIXTURE'})),patch.object(lane,'publish_owned_reports'),redirect_stdout(captured):
                             result=lane.main(['--root',str(self.target),'--expected-sha','a'*40])
         facts=None
         if result != 0:
@@ -189,13 +190,13 @@ class HostedStoppedServiceTests(unittest.TestCase):
 
     def test_crlf_operator_file_does_not_replace_exact_lf_git_blob(self):
         entry=self.reviewed_entry()
-        self.assertEqual(len(entry),lane.BLOCKED_ENTRY_BYTES)
+        self.assertEqual(len(entry),lane.ENTRY_BYTES)
         operator=self.root/'operator';source=operator/'unified_system';source.mkdir(parents=True)
         (source/'service_entry.py').write_bytes(entry.replace(b'\n',b'\r\n'))
         (source/'owned_python.py').write_bytes(b'INERT_BOOTSTRAP')
         payload=b'INERT_NSSM';pin=hashlib.sha256(payload).hexdigest()
         with patch.object(lane,'REPO',operator),patch.object(lane,'source_identity',return_value={'head':'a'*40}),patch.object(lane.shutil,'which',return_value='git'),patch.object(lane.sys,'executable',str(self.python)):
-            with patch.object(lane.subprocess,'check_output',side_effect=[b'448\n',entry]) as git:
+            with patch.object(lane.subprocess,'check_output',side_effect=[str(lane.ENTRY_BYTES).encode()+b'\n',entry,str(lane.BOOTSTRAP_BYTES).encode()+b'\n',(ROOT/'unified_system/service_bootstrap.py').read_bytes().replace(b'\r\n',b'\n')]) as git:
                 with patch.object(lane.builder,'NSSM_MEMBER_SHA256',pin),patch.object(lane.service,'NSSM_PIN',pin):
                     manifest_pin,leaves,origin=lane.make_capsule(self.target,payload,'a'*40)
         staged=self.target/'sources/unified-system/unified_system/service_entry.py'
@@ -203,16 +204,26 @@ class HostedStoppedServiceTests(unittest.TestCase):
         self.assertEqual((self.target/'runtime/python/python.exe').read_bytes(),self.python.read_bytes())
         self.assertEqual((source/'service_entry.py').read_bytes(),entry.replace(b'\n',b'\r\n'))
         self.assertEqual(origin['origin'],'EXACT_HEAD_GIT_BLOB')
-        self.assertEqual(origin['sha256'],lane.service.BLOCKED_ENTRY_SHA256)
-        self.assertEqual(git.call_args_list[-1].args[0],['git','-C',str(operator),'cat-file','blob','a'*40+':unified_system/service_entry.py'])
+        self.assertEqual(origin['sha256'],lane.service.SERVICE_ENTRY_SHA256)
+        self.assertEqual(origin['bootstrap']['sha256'],lane.service.SERVICE_BOOTSTRAP_SHA256)
+        self.assertEqual((self.target/'sources/unified-system/unified_system/service_bootstrap.py').read_bytes(),(ROOT/'unified_system/service_bootstrap.py').read_bytes().replace(b'\r\n',b'\n'))
+        self.assertEqual(git.call_args_list[-1].args[0],['git','-C',str(operator),'cat-file','blob','a'*40+':unified_system/service_bootstrap.py'])
+        self.assertEqual(git.call_args_list[1].args[0],['git','-C',str(operator),'cat-file','blob','a'*40+':unified_system/service_entry.py'])
         manifest=lane.lab_release.verify_capsule(self.target,manifest_pin)['manifest']
         self.assertEqual(manifest['dependencies'][0]['version'],lane.platform.python_version())
 
     def test_git_blob_wrong_size_or_pin_is_rejected_without_normalization(self):
         entry=self.reviewed_entry()
-        for outputs in ([b'449\n'],[b'448\n',b'x'*448],[str(len(entry.replace(b'\n',b'\r\n'))).encode()+b'\n']):
+        for outputs in ([str(lane.ENTRY_BYTES+1).encode()+b'\n'],[str(lane.ENTRY_BYTES).encode()+b'\n',b'x'*lane.ENTRY_BYTES],[str(len(entry.replace(b'\n',b'\r\n'))).encode()+b'\n']):
             with patch.object(lane,'source_identity',return_value={'head':'a'*40}),patch.object(lane.shutil,'which',return_value='git'),patch.object(lane.subprocess,'check_output',side_effect=outputs):
                 with self.assertRaises(ValueError):lane.entry_blob('a'*40)
+
+    def test_bootstrap_blob_wrong_pin_and_unknown_source_member_fail_closed(self):
+        with patch.object(lane,'source_identity',return_value={'head':'a'*40}),patch.object(lane.shutil,'which',return_value='git'),patch.object(lane.subprocess,'check_output',side_effect=[str(lane.BOOTSTRAP_BYTES).encode()+b'\n',b'x'*lane.BOOTSTRAP_BYTES]):
+            with self.assertRaises(ValueError):lane.bootstrap_blob('a'*40)
+        with patch.object(lane.subprocess,'check_output') as child:
+            with self.assertRaises(ValueError):lane.source_blob('a'*40,'arbitrary.py')
+            child.assert_not_called()
 
     def test_workflow_scopes_disposable_matrix_and_report_artifact(self):
         text=(ROOT/'.github/workflows/lab-stopped-service.yml').read_text()

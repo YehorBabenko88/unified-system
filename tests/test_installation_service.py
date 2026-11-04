@@ -36,6 +36,7 @@ class ServiceResourceTests(unittest.TestCase):
   for name,raw in {'runtime/nssm/nssm.exe':b'INERT_WRAPPER','runtime/python/python.exe':b'INERT_PYTHON','sources/unified-system/unified_system/owned_python.py':b'INERT_BOOTSTRAP'}.items():
    path=self.source/name;path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(raw)
   entry=self.source/'sources/unified-system/unified_system/service_entry.py';entry.write_bytes((Path(__file__).resolve().parents[1]/'unified_system/service_entry.py').read_bytes().replace(b'\r\n',b'\n')) # LF Git-blob fixture, not production normalization
+  helper=self.source/'sources/unified-system/unified_system/service_bootstrap.py';helper.write_bytes((Path(__file__).resolve().parents[1]/'unified_system/service_bootstrap.py').read_bytes().replace(b'\r\n',b'\n'))
   from tests.test_lab_capsule_builder import builder
   manifest['files'],manifest['directories']=builder.inventory(self.source)
   raw=lab_release.canonical(manifest);(self.source/'lab-release.json').write_bytes(raw);self.pin=hashlib.sha256(raw).hexdigest()
@@ -44,7 +45,7 @@ class ServiceResourceTests(unittest.TestCase):
  def guard(self,action,pin):self.grants.append((action,pin));return True
  def plan(self):
   return service_plan(self.source,self.pin,self.root/'service','install','node','CONTROL',self.backend)
- def test_blocked_entry_never_imports_runtime_or_honors_caller_activation_claims(self):
+ def test_entry_denies_missing_protected_grant_or_token_and_ignores_caller_flags(self):
   import subprocess,sys
   entry=Path(__file__).resolve().parents[1]/'unified_system/service_entry.py'
   poison=self.root/'poison';poison.mkdir();marker=self.root/'unexpected-import'
@@ -52,9 +53,9 @@ class ServiceResourceTests(unittest.TestCase):
   for arguments in ([],['--execute'],['--activation-ticket','owner-approved']):
    environment=dict(os.environ,PYTHONPATH=str(poison),UNIFIED_ACTIVATED='true')
    result=subprocess.run([sys.executable,'-I','-S','-B',str(entry),*arguments],env=environment,capture_output=True,timeout=10)
-   self.assertEqual(result.returncode,78);self.assertEqual(result.stdout.replace(b'\r\n',b'\n'),b'BLOCKED_ACTIVATION_NOT_IMPLEMENTED\n');self.assertEqual(result.stderr,b'')
+   self.assertEqual(result.returncode,78);self.assertEqual(result.stdout.replace(b'\r\n',b'\n'),b'BLOCKED_SERVICE_ACTIVATION\n');self.assertEqual(result.stderr,b'')
   self.assertFalse(marker.exists())
- def test_registered_command_uses_only_reviewed_blocked_entry(self):
+ def test_registered_command_uses_only_reviewed_protected_entry(self):
   plan=self.plan();self.assertNotIn('--execute',plan['parameters']);self.assertNotIn('lab_runtime',plan['parameters'])
   self.assertIn('service_entry.py',plan['parameters'])
 
@@ -114,6 +115,19 @@ class ServiceResourceTests(unittest.TestCase):
     self.assertEqual(lab_release.verify_capsule(self.source,self.pin)['manifest_sha256'],self.pin)
     with self.assertRaises(ValueError):self.plan()
     self.assertFalse(marker.exists());self.assertEqual(self.backend.calls,[]);self.assertFalse((self.root/'service').exists())
+
+ def test_missing_or_wrong_bootstrap_member_fails_even_with_resealed_capsule(self):
+  import json
+  from tests.test_lab_capsule_builder import builder
+  helper=self.source/'sources/unified-system/unified_system/service_bootstrap.py'
+  for missing in (False,True):
+   if missing:helper.unlink()
+   else:helper.write_bytes(b'UNREVIEWED_BOOTSTRAP')
+   manifest=json.loads((self.source/'lab-release.json').read_bytes());(self.source/'lab-release.json').unlink();manifest['files'],manifest['directories']=builder.inventory(self.source)
+   raw=lab_release.canonical(manifest);(self.source/'lab-release.json').write_bytes(raw);self.pin=hashlib.sha256(raw).hexdigest()
+   self.assertEqual(lab_release.verify_capsule(self.source,self.pin)['manifest_sha256'],self.pin)
+   with self.assertRaises(ValueError):self.plan()
+   self.assertFalse((self.root/'service').exists())
 
  def test_default_denial_precedes_mutation(self):
   plan=self.plan()

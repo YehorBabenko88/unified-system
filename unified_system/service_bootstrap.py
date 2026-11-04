@@ -11,7 +11,7 @@ POINTER_SCHEMA='unified.service-activation-pointer.v1'
 DESCRIPTOR_SCHEMA='unified.service-activation.v1'
 REVOKED_SCHEMA='unified.service-activation-revoked.v1'
 
-ERROR_CODES=frozenset(('ACTIVATION_ACL_REJECTED', 'ACTIVATION_AUTH_REJECTED', 'ACTIVATION_CONCURRENT_UPDATE', 'ACTIVATION_ELEVATED_WRITER_REQUIRED', 'ACTIVATION_FILE_REJECTED', 'ACTIVATION_HOST_REJECTED', 'ACTIVATION_IDENTITY_CHANGED', 'ACTIVATION_KERNEL_REJECTED', 'ACTIVATION_LINK_REJECTED', 'ACTIVATION_NAMESPACE_REJECTED', 'ACTIVATION_NATIVE_REJECTED', 'ACTIVATION_OWNER_PHASE_REJECTED', 'ACTIVATION_OWNER_PHASE_REQUIRED', 'ACTIVATION_PATH_REJECTED', 'ACTIVATION_PLATFORM_REJECTED', 'ACTIVATION_QUALIFICATION_REJECTED', 'ACTIVATION_QUALIFICATION_REQUIRED', 'ACTIVATION_REJECTED', 'ACTIVATION_REVISION_CHANGED', 'ACTIVATION_REVOKED', 'ACTIVATION_SERVICE_TOKEN_REQUIRED', 'ACTIVATION_SIZE_REJECTED', 'ACTIVATION_UNAVAILABLE'))
+ERROR_CODES=frozenset(('ACTIVATION_AMBIENT_IMPORT_REJECTED','ACTIVATION_CODE_REJECTED','ACTIVATION_DATABASE_GATE_UNAVAILABLE','ACTIVATION_RUNTIME_REJECTED',)+('ACTIVATION_ACL_REJECTED', 'ACTIVATION_AUTH_REJECTED', 'ACTIVATION_CONCURRENT_UPDATE', 'ACTIVATION_ELEVATED_WRITER_REQUIRED', 'ACTIVATION_FILE_REJECTED', 'ACTIVATION_HOST_REJECTED', 'ACTIVATION_IDENTITY_CHANGED', 'ACTIVATION_KERNEL_REJECTED', 'ACTIVATION_LINK_REJECTED', 'ACTIVATION_NAMESPACE_REJECTED', 'ACTIVATION_NATIVE_REJECTED', 'ACTIVATION_OWNER_PHASE_REJECTED', 'ACTIVATION_OWNER_PHASE_REQUIRED', 'ACTIVATION_PATH_REJECTED', 'ACTIVATION_PLATFORM_REJECTED', 'ACTIVATION_QUALIFICATION_REJECTED', 'ACTIVATION_QUALIFICATION_REQUIRED', 'ACTIVATION_REJECTED', 'ACTIVATION_REVISION_CHANGED', 'ACTIVATION_REVOKED', 'ACTIVATION_SERVICE_TOKEN_REQUIRED', 'ACTIVATION_SIZE_REJECTED', 'ACTIVATION_UNAVAILABLE'))
 
 class ActivationBlocked(ValueError):
  def __init__(self,code='ACTIVATION_REJECTED'):
@@ -178,3 +178,114 @@ def read_protected_activation(service_root,*,kernel=None):
   result=ProtectedActivation(root,kernel,identity,descriptor,profile,paths,identities,pointer_hash);result.require_current();return result
  except ActivationBlocked:raise
  except Exception:raise ActivationBlocked('ACTIVATION_UNAVAILABLE') from None
+
+
+# Only these already pinned source bytes may be imported to obtain the existing
+# capsule verifier. This is a small import admission, not a second verifier.
+VERIFIER_IMPORTS=('__init__.py','module_catalog.py','runtime_process.py','lab_release.py')
+
+def _import_verifier(grant,manifest):
+ import importlib,importlib.abc,importlib.util,sys
+ source=grant.code_root/'sources/unified-system'
+ need(not any(name=='unified_system' or name.startswith('unified_system.') or name=='integration' or name.startswith('integration.') for name in sys.modules),'ACTIVATION_AMBIENT_IMPORT_REJECTED')
+ admitted={'sources/unified-system/unified_system/'+name for name in VERIFIER_IMPORTS};runtime_enabled=False
+ class OwnedSourceLoader(importlib.abc.MetaPathFinder,importlib.abc.Loader):
+  def find_spec(self,fullname,path=None,target=None):
+   if fullname.split('.')[0] not in ('unified_system','integration'):return None
+   relative='sources/unified-system/'+fullname.replace('.','/')
+   if fullname=='integration' and runtime_enabled and relative in manifest['directories']:
+    grant._kernel.require_readonly(grant.code_root/relative,grant.service_sid,grant.code_root)
+    spec=importlib.machinery.ModuleSpec(fullname,None,is_package=True);spec.submodule_search_locations=[str(grant.code_root/relative)];return spec
+   package=relative+'/__init__.py' in manifest['files'];relative+=('/__init__.py' if package else '.py')
+   need(relative in admitted,'ACTIVATION_CODE_REJECTED')
+   return importlib.util.spec_from_loader(fullname,self,origin=str(grant.code_root/relative),is_package=package)
+  def create_module(self,spec):return None
+  def exec_module(self,module):
+   name=module.__spec__.name;relative='sources/unified-system/'+name.replace('.','/')
+   package=module.__spec__.submodule_search_locations is not None;relative+=('/__init__.py' if package else '.py')
+   pin=manifest['files'][relative];need(type(pin) is dict and set(pin)=={'bytes','sha256'} and type(pin['bytes']) is int and 0<pin['bytes']<=1048576)
+   digest(pin['sha256']);raw,_=read_file(grant.code_root/relative,1048576,grant._kernel,grant.service_sid,grant.code_root)
+   need(len(raw)==pin['bytes'] and hashlib.sha256(raw).hexdigest()==pin['sha256'],'ACTIVATION_CODE_REJECTED')
+   module.__file__=str(grant.code_root/relative)
+   if package:module.__path__=[str(Path(module.__file__).parent)]
+   # Compile admitted source bytes directly: -B alone does not prevent reads
+   # of a candidate's forged/stale bytecode cache.
+   exec(compile(raw,module.__file__,'exec'),module.__dict__)
+  def admit_runtime(self):
+   nonlocal runtime_enabled
+   runtime_enabled=True
+   admitted.update(name for name in manifest['files'] if name.startswith(('sources/unified-system/unified_system/','sources/unified-system/integration/')) and name.endswith('.py'))
+ loader=OwnedSourceLoader();sys.meta_path.insert(0,loader)
+ try:verifier=importlib.import_module('unified_system.lab_release')
+ except Exception:
+  sys.meta_path.remove(loader);raise
+ return verifier,loader
+
+def _admit_capsule(grant):
+ grant.require_current();root=grant.code_root
+ raw,_=read_file(root/'lab-release.json',32*1024*1024,grant._kernel,grant.service_sid,root)
+ need(hashlib.sha256(raw).hexdigest()==grant.manifest_sha256,'ACTIVATION_CODE_REJECTED');manifest=parse(raw)
+ verifier,loader=_import_verifier(grant,manifest)
+ report=verifier.verify_capsule(root,grant.manifest_sha256);manifest=report['manifest']
+ # Per-service read-only code policy covers every closed file/directory, not
+ # just the entry or .git root. No host-admin containment is claimed.
+ for relative in [*manifest['directories'],*manifest['files'],'lab-release.json']:
+  grant._kernel.require_readonly(root/relative,grant.service_sid,root)
+ grant.require_current();loader.admit_runtime();return report
+
+def _runtime_admission(grant,report):
+ from unified_system import lab_runtime
+ config=grant.profile['runtime_config'];context=grant.profile['offline_context'];manifest=report['manifest']
+ config=lab_runtime.validate_config(config,manifest,grant.code_root,hostname=grant.computer_name,offline_context=context)
+ lab_runtime.verify_sources(grant.code_root,manifest,owner_admitted_root=grant.code_root)
+ auth=lab_runtime.read_grid_auth(grant.auth_path,grant.descriptor['auth_sha256'],node_id=config['node_id'],release_id=config['release_id'],source_commit=manifest['sources']['grid']['commit'],role_context=context)
+ grant.require_current();return config,auth
+
+def _repeat_admission(grant,verifier):
+ grant.require_current();report=verifier.verify_capsule(grant.code_root,grant.manifest_sha256)
+ for relative in [*report['manifest']['directories'],*report['manifest']['files'],'lab-release.json']:
+  grant._kernel.require_readonly(grant.code_root/relative,grant.service_sid,grant.code_root)
+ return _runtime_admission(grant,report)
+
+def run_protected_runtime(grant,*,stop_event=None):
+ """Existing runtime actuator after protected full admission; no readiness grant.
+
+ CONTROL/SINGLE_PC require the separately owned PostgreSQL admission module,
+ which is not implemented here. WORKER readiness still requires functional
+ coordinator/module evidence from the existing runtime, never this entry.
+ """
+ try:
+  grant.require_current();need(grant.descriptor['service_plan']['role']=='WORKER','ACTIVATION_DATABASE_GATE_UNAVAILABLE')
+  report=_admit_capsule(grant);config,auth=_runtime_admission(grant,report)
+  from unified_system import lab_release,lab_runtime
+  from unified_system.module_catalog import MODULE_IDS
+  import threading,signal
+  def authorize(action,module):
+   nonlocal auth
+   if action!='start' or module not in MODULE_IDS:return False
+   try:
+    current,current_auth=_repeat_admission(grant,lab_release)
+    need(current==config,'ACTIVATION_REVISION_CHANGED');auth=current_auth;return True
+   except Exception:return False
+  def environment(module):
+   result=lab_runtime.child_environment()
+   if module=='grid':result.update(auth)
+   return result
+  # All filesystem writes and runtime imports occur after the gates above.
+  from unified_system.lab_privileges import remove_lab_write_bypass_privileges
+  remove_lab_write_bypass_privileges();grant.require_current()
+  for program in config['programs'].values():
+   for key,value in program['env'].items():
+    if key.upper() in ('TEMP','TMP','USERPROFILE','HOME','APPDATA','LOCALAPPDATA','PROGRAMDATA','PROGRAMFILES','ML_ARTIFACT_ROOT','ARCHIVE_ROOT','STRATEGY_CACHE_DIR','GRID_CONTROL_SNAPSHOTS'):
+     target=local(value);need(Path(config['state_root'])==target or Path(config['state_root']) in target.parents);grant.require_current();target.mkdir(parents=True,exist_ok=True)
+  grant.require_current();runtime=lab_runtime.make_runtime(config,authorize,child_environment=environment)
+  stop=threading.Event() if stop_event is None else stop_event;previous={}
+  try:
+   if threading.current_thread() is threading.main_thread():
+    for sig in (signal.SIGINT,signal.SIGTERM):previous[sig]=signal.signal(sig,lambda *_:stop.set())
+   lab_runtime.run_runtime(config,runtime,stop_event=stop,continuation=grant.require_current)
+  finally:
+   for sig,handler in previous.items():signal.signal(sig,handler)
+  return 0
+ except ActivationBlocked:raise
+ except Exception:raise ActivationBlocked('ACTIVATION_RUNTIME_REJECTED') from None

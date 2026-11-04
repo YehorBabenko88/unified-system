@@ -28,7 +28,8 @@ from scripts import prepare_lab_capsule as builder
 from tests.test_lab_release import fixture
 
 ERROR = 'CI_STOPPED_SERVICE_REJECTED'
-BLOCKED_ENTRY_BYTES = 448
+ENTRY_BYTES = 2030
+BOOTSTRAP_BYTES = 21990
 
 
 def need(value):
@@ -132,30 +133,36 @@ def source_identity(expected):
                 script_sha256=lab_release.hash_file(Path(__file__))['sha256'])
 
 
-def entry_blob(expected):
+def source_blob(expected,member_name):
+    allowed={'service_entry.py':(ENTRY_BYTES,service.SERVICE_ENTRY_SHA256),'service_bootstrap.py':(BOOTSTRAP_BYTES,service.SERVICE_BOOTSTRAP_SHA256)}
+    need(member_name in allowed);size_bound,pin=allowed[member_name]
     need(source_identity(expected)['head'] == expected)
-    git = shutil.which('git')
-    need(git is not None)
-    member = expected + ':unified_system/service_entry.py'
-    arguments = [git, '-C', str(REPO), 'cat-file']
-    size = subprocess.check_output([*arguments, '-s', member], stderr=subprocess.DEVNULL, timeout=15)
-    need(size.strip() == str(BLOCKED_ENTRY_BYTES).encode('ascii'))
-    raw = subprocess.check_output([*arguments, 'blob', member], stderr=subprocess.DEVNULL, timeout=15)
-    need(len(raw) == BLOCKED_ENTRY_BYTES and hashlib.sha256(raw).hexdigest() == service.BLOCKED_ENTRY_SHA256)
-    return raw, dict(origin='EXACT_HEAD_GIT_BLOB', head=expected, path='unified_system/service_entry.py',
-                     bytes=len(raw), sha256=hashlib.sha256(raw).hexdigest())
+    git = shutil.which('git');need(git is not None)
+    path='unified_system/'+member_name;member=expected+':'+path
+    arguments=[git,'-C',str(REPO),'cat-file']
+    size=subprocess.check_output([*arguments,'-s',member],stderr=subprocess.DEVNULL,timeout=15)
+    need(size.strip()==str(size_bound).encode('ascii'))
+    raw=subprocess.check_output([*arguments,'blob',member],stderr=subprocess.DEVNULL,timeout=15)
+    need(len(raw)==size_bound and hashlib.sha256(raw).hexdigest()==pin)
+    return raw,dict(origin='EXACT_HEAD_GIT_BLOB',head=expected,path=path,bytes=len(raw),sha256=pin)
+
+
+def entry_blob(expected):return source_blob(expected,'service_entry.py')
+def bootstrap_blob(expected):return source_blob(expected,'service_bootstrap.py')
 
 
 def make_capsule(root, payload, expected):
     need(hashlib.sha256(payload).hexdigest() == builder.NSSM_MEMBER_SHA256 == service.NSSM_PIN)
     entry, origin = entry_blob(expected)
+    bootstrap,bootstrap_origin=bootstrap_blob(expected);origin={**origin,'bootstrap':bootstrap_origin}
     root.mkdir()
     manifest = fixture(root)
     manifest['dependencies'][0]['version'] = platform.python_version()
     additions = {'runtime/nssm/nssm.exe': payload,
                  'runtime/python/python.exe': lab_release.regular(sys.executable).read_bytes(),
                  'sources/unified-system/unified_system/owned_python.py': (REPO/'unified_system/owned_python.py').read_bytes(),
-                 'sources/unified-system/unified_system/service_entry.py': entry}
+                 'sources/unified-system/unified_system/service_entry.py': entry,
+                 'sources/unified-system/unified_system/service_bootstrap.py': bootstrap}
     for relative, raw in additions.items():
         path = root/relative
         path.parent.mkdir(parents=True, exist_ok=True)
