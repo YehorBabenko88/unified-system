@@ -6,10 +6,18 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference='Stop'
 $script:NativeStage='UNAVAILABLE'
 function Get-UnifiedOwnedServiceStage {return $script:NativeStage}
+function Get-UnifiedOwnedNativeExitCode {
+ if($script:NativeStage -clike 'NSSM_*' -and ('UnifiedStoppedServiceNative' -as [type])){
+  $code=[UnifiedStoppedServiceNative]::LastExitCode
+  if($code -ge 0 -and $code -le 4294967295){return $code}
+ }
+ return $null
+}
 $script:Native=@'
 using System;
 using System.Runtime.InteropServices;
 public static class UnifiedStoppedServiceNative {
+ public static long LastExitCode=-1;
  static string Drain(System.IO.StreamReader reader,System.Diagnostics.Process process){
   var result=new System.Text.StringBuilder();var buffer=new char[4096];int count;
   while((count=reader.Read(buffer,0,buffer.Length))>0){
@@ -19,6 +27,7 @@ public static class UnifiedStoppedServiceNative {
   return result.ToString();
  }
  public static string Run(string executable,string arguments){
+  LastExitCode=-1;
   using(var p=new System.Diagnostics.Process()){
    p.StartInfo.FileName=executable;p.StartInfo.Arguments=arguments;p.StartInfo.UseShellExecute=false;p.StartInfo.CreateNoWindow=true;
    p.StartInfo.RedirectStandardOutput=true;p.StartInfo.RedirectStandardError=true;
@@ -30,6 +39,7 @@ public static class UnifiedStoppedServiceNative {
    try{
     if(!p.WaitForExit(5000))throw new InvalidOperationException("CHILD_DEADLINE");
     if(!System.Threading.Tasks.Task.WaitAll(new System.Threading.Tasks.Task[]{output,errors},1000))throw new InvalidOperationException("CHILD_DRAIN_DEADLINE");
+    LastExitCode=unchecked((uint)p.ExitCode);
     if(p.ExitCode!=0)throw new InvalidOperationException("CHILD_REJECTED");return output.Result.TrimEnd('\r','\n');
    }finally{
     if(!p.HasExited){p.Kill();p.WaitForExit(1000);}
@@ -208,4 +218,4 @@ function Invoke-UnifiedOwnedService($Request){
   'INSPECT'{return Get-OwnedService $p}
  }
 }
-Export-ModuleMember -Function Invoke-UnifiedOwnedService,Get-UnifiedOwnedServiceStage
+Export-ModuleMember -Function Invoke-UnifiedOwnedService,Get-UnifiedOwnedServiceStage,Get-UnifiedOwnedNativeExitCode

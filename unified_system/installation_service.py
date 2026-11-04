@@ -32,8 +32,9 @@ NATIVE_STAGES=frozenset(('UNAVAILABLE','SID_LOOKUP','ACL_PROOF','MEMBER_PINS','S
 
 class OwnedServiceRejected(ValueError):
  """A closed diagnostic stage, never raw native output or exception text."""
- def __init__(self,native_stage='UNAVAILABLE'):
+ def __init__(self,native_stage='UNAVAILABLE',native_exit_code=None):
   self.native_stage=native_stage if type(native_stage) is str and native_stage in NATIVE_STAGES else 'UNAVAILABLE'
+  self.native_exit_code=native_exit_code if self.native_stage.startswith('NSSM_') and type(native_exit_code) is int and 0<=native_exit_code<2**32 else None
   super().__init__('OWNED_SERVICE_REJECTED')
 
 def _native_result(output,status):
@@ -41,8 +42,10 @@ def _native_result(output,status):
  except (TypeError,ValueError):raise OwnedServiceRejected() from None
  if status!=0 or type(result) is not dict or 'error' in result:
   stage='UNAVAILABLE'
-  if type(result) is dict and set(result)=={'error','native_stage'} and result['error']=='OWNED_SERVICE_REJECTED':stage=result['native_stage']
-  raise OwnedServiceRejected(stage)
+  exit_code=None
+  if type(result) is dict and set(result) in ({'error','native_stage'},{'error','native_stage','native_exit_code'}) and result['error']=='OWNED_SERVICE_REJECTED':
+   stage=result['native_stage'];exit_code=result.get('native_exit_code')
+  raise OwnedServiceRejected(stage,exit_code)
  return result
 
 
@@ -146,7 +149,7 @@ class WindowsServiceBoundary:
   need(_native_tools()==plan['native_tools'])
   need(hashlib.sha256(lab_release.regular(MODULE).read_bytes()).hexdigest()==plan['executor_sha256'])
   # Static bootstrap only. Paths/request data are never interpolated into code.
-  code="$ErrorActionPreference='Stop';[Console]::OutputEncoding=[Text.UTF8Encoding]::new($false);[Console]::InputEncoding=[Text.UTF8Encoding]::new($false);try{Import-Module -Name ([WildcardPattern]::Escape($env:UNIFIED_SERVICE_MODULE)) -Force; $r=[Console]::In.ReadToEnd()|ConvertFrom-Json; Invoke-UnifiedOwnedService $r|ConvertTo-Json -Depth 12 -Compress}catch{$stage='UNAVAILABLE';try{$stage=Get-UnifiedOwnedServiceStage}catch{};@{error='OWNED_SERVICE_REJECTED';native_stage=$stage}|ConvertTo-Json -Compress;exit 1}"
+  code="$ErrorActionPreference='Stop';[Console]::OutputEncoding=[Text.UTF8Encoding]::new($false);[Console]::InputEncoding=[Text.UTF8Encoding]::new($false);try{Import-Module -Name ([WildcardPattern]::Escape($env:UNIFIED_SERVICE_MODULE)) -Force; $r=[Console]::In.ReadToEnd()|ConvertFrom-Json; Invoke-UnifiedOwnedService $r|ConvertTo-Json -Depth 12 -Compress}catch{$stage='UNAVAILABLE';$childCode=$null;try{$stage=Get-UnifiedOwnedServiceStage;$childCode=Get-UnifiedOwnedNativeExitCode}catch{};@{error='OWNED_SERVICE_REJECTED';native_stage=$stage;native_exit_code=$childCode}|ConvertTo-Json -Compress;exit 1}"
   encoded=base64.b64encode(code.encode('utf-16le')).decode('ascii')
   env=_environment();env['UNIFIED_SERVICE_MODULE']=str(MODULE)
   request={'action':action,'plan':plan}

@@ -299,7 +299,9 @@ def execute_lane(context, expected):
         report['result'], stage = 'PASS_COMPONENT_STOPPED_SERVICE_ONLY', None
     except (Exception, KeyboardInterrupt) as exc:
         report['error_code'] = 'INTERRUPTED' if isinstance(exc, KeyboardInterrupt) else 'CLOSED_STAGE_FAILURE'
-        if isinstance(exc,service.OwnedServiceRejected):report['native_stage']=exc.native_stage
+        if isinstance(exc,service.OwnedServiceRejected):
+            report['native_stage']=exc.native_stage
+            report['native_exit_code']=exc.native_exit_code
     report['failure_stage'], report['phase_calls'] = stage, guard.calls
     if reports is not None:
         try:
