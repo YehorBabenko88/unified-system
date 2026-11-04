@@ -9,7 +9,7 @@ from unified_system.installation_service import ServiceResource,service_plan,par
 class FakeWindows:
  def __init__(self):self.calls=[];self.service=None;self.fault=None;self.acl='a'*64;self.host='TEST-PC'
  def computer_name(self):return self.host
- def native_tools(self):return {'sc':{'path':str(Path(tempfile.gettempdir())/'fixture-sc.exe'),'sha256':'a'*64},'powershell':{'path':str(Path(tempfile.gettempdir())/'fixture-powershell.exe'),'sha256':'b'*64}}
+ def native_tools(self):return {'sc':{'path':str(Path(tempfile.gettempdir()).resolve()/'fixture-sc.exe'),'sha256':'a'*64},'powershell':{'path':str(Path(tempfile.gettempdir()).resolve()/'fixture-powershell.exe'),'sha256':'b'*64}}
  def sid(self,name):return 'S-1-5-80-1-2-3-4-5'
  def call(self,action,plan,guard):
   if guard is None or guard(action,plan['plan_sha256']) is not True:raise ValueError('approval')
@@ -31,7 +31,7 @@ class FakeWindows:
 
 class ServiceResourceTests(unittest.TestCase):
  def setUp(self):
-  self.temp=tempfile.TemporaryDirectory();self.addCleanup(self.temp.cleanup);self.root=Path(self.temp.name)
+  self.temp=tempfile.TemporaryDirectory();self.addCleanup(self.temp.cleanup);self.root=Path(self.temp.name).resolve()
   self.source=self.root/'capsule';self.source.mkdir();manifest=fixture(self.source)
   for name,raw in {'runtime/nssm/nssm.exe':b'INERT_WRAPPER','runtime/python/python.exe':b'INERT_PYTHON','sources/unified-system/unified_system/owned_python.py':b'INERT_BOOTSTRAP'}.items():
    path=self.source/name;path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(raw)

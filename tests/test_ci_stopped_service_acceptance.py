@@ -118,11 +118,40 @@ class HostedStoppedServiceTests(unittest.TestCase):
             lane.publish_owned_reports({'temporary':self.root/'different-scope'})
         self.assertEqual(command.read_bytes(),before)
 
+    @unittest.skipUnless(__import__('sys').platform == 'win32', 'Windows short-name path fixture')
+    def test_inert_orchestration_accepts_canonical_fake_tools_under_short_temp_alias(self):
+        import ctypes
+        parent=self.root/'long-private-short-name-control'
+        parent.mkdir()
+        buffer=ctypes.create_unicode_buffer(32768)
+        get_short=ctypes.WinDLL('kernel32',use_last_error=True).GetShortPathNameW
+        get_short.argtypes=[ctypes.c_wchar_p,ctypes.c_wchar_p,ctypes.c_uint32]
+        get_short.restype=ctypes.c_uint32
+        count=get_short(str(parent),buffer,len(buffer))
+        self.assertGreater(count,0);self.assertLess(count,len(buffer))
+        if Path(buffer.value) == parent:
+            self.skipTest('This volume does not provide a distinct short-name alias')
+        self.assertEqual(Path(buffer.value).resolve(),parent)
+        with patch.object(tempfile,'tempdir',buffer.value):
+            self.test_inert_orchestration_dry_run_uses_fakes_only_and_preserves_state()
+            # The shared service/uninstall fixture must also canonicalize its
+            # own newly-created root, before the unchanged inventory guard.
+            from tests.test_installation_service import ServiceResourceTests
+            result=unittest.TestResult()
+            ServiceResourceTests('test_registered_command_uses_only_reviewed_blocked_entry').run(result)
+            self.assertTrue(result.wasSuccessful(),str(result.errors)+str(result.failures))
+
     def test_inert_orchestration_dry_run_uses_fakes_only_and_preserves_state(self):
         from tests.test_installation_service import FakeWindows
         from tests.test_installation_uninstall import FakeRemoval
         payload=b'INERT_TEST_ONLY_NSSM';pin=hashlib.sha256(payload).hexdigest()
-        backend=FakeWindows()
+        class CanonicalFakeWindows(FakeWindows):
+            def native_tools(self):
+                # Hosted Windows TEMP may use an 8.3 alias; fixture plans must
+                # already satisfy the production canonical-path boundary.
+                return {name:dict(tool,path=str(Path(tool['path']).resolve()))
+                        for name,tool in super().native_tools().items()}
+        backend=CanonicalFakeWindows()
         class PrivateRoot:
             def __init__(self, root):self.root=root;root.mkdir()
             def _owned(self):return self.root
@@ -130,12 +159,26 @@ class HostedStoppedServiceTests(unittest.TestCase):
             target.write_bytes(b'INERT_TEST_ARCHIVE');return {'sha256':'a'*64}
         identity=dict(head='a'*40,tree='b'*40,checkout='INERT_UNIT_FIXTURE')
         entry=self.reviewed_entry()
+        captured=io.StringIO()
         with patch.dict(lane.os.environ,self.env),patch.object(lane.sys,'platform','win32'),patch.object(lane.sys,'executable',str(self.python)):
             with patch.object(lane.service,'current_computer_name',return_value='TEST-PC'),patch.object(lane,'source_identity',return_value=identity):
                 with patch.object(lane.FreshCodeRoot,'create',side_effect=PrivateRoot),patch.object(lane,'download_archive',side_effect=download):
                     with patch.object(lane.builder,'nssm_payload',return_value=(payload,{'scope':'INERT_UNIT_FIXTURE'})),patch.object(lane.builder,'NSSM_MEMBER_SHA256',pin),patch.object(lane.service,'NSSM_PIN',pin):
-                        with patch.object(lane.service,'WindowsServiceBoundary',return_value=backend),patch.object(lane,'WindowsRemovalBoundary',return_value=FakeRemoval(backend)),patch.object(lane,'read_tool_versions',return_value={'scope':'INERT_UNIT_FIXTURE'}),patch.object(lane,'entry_blob',return_value=(entry,{'origin':'INERT_UNIT_FIXTURE'})),patch.object(lane,'publish_owned_reports'),redirect_stdout(io.StringIO()):
-                            self.assertEqual(lane.main(['--root',str(self.target),'--expected-sha','a'*40]),0)
+                        with patch.object(lane.service,'WindowsServiceBoundary',return_value=backend),patch.object(lane,'WindowsRemovalBoundary',return_value=FakeRemoval(backend)),patch.object(lane,'read_tool_versions',return_value={'scope':'INERT_UNIT_FIXTURE'}),patch.object(lane,'entry_blob',return_value=(entry,{'origin':'INERT_UNIT_FIXTURE'})),patch.object(lane,'publish_owned_reports'),redirect_stdout(captured):
+                            result=lane.main(['--root',str(self.target),'--expected-sha','a'*40])
+        facts=None
+        if result != 0:
+            facts={'stdout':captured.getvalue()[:4096]}
+            report_path=self.target/'reports/report.json'
+            if report_path.is_file():
+                failed=__import__('json').loads(report_path.read_text())
+                facts.update({key:failed.get(key) for key in ('failure_stage','error_code')})
+                facts['phase_tail']=[call['action'] for call in failed.get('phase_calls',[])[-4:]]
+            for label,path in [('temporary',self.root),('code',self.target/'stopped-resource/code')]:
+                try:
+                    stat=path.stat();facts[label]={'device':stat.st_dev,'inode':stat.st_ino,'links':stat.st_nlink}
+                except OSError:facts[label]={'present':False}
+        self.assertEqual(result,0,__import__('json').dumps(facts,sort_keys=True) if facts is not None else captured.getvalue()[:4096])
         report=__import__('json').loads((self.target/'reports/report.json').read_text())
         self.assertEqual(report['source_proof'],'NOT_EVALUATED');self.assertEqual(report['activation'],'BLOCKED')
         self.assertEqual(report['service_start'],'NOT_RUN');self.assertFalse(report['installation_closure'])
