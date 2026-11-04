@@ -32,6 +32,8 @@ class HostedStoppedServiceTests(unittest.TestCase):
         self.root = Path(self.temp.name).resolve()
         self.env = dict(GITHUB_ACTIONS='true', RUNNER_ENVIRONMENT='github-hosted', RUNNER_OS='Windows', RUNNER_TEMP=str(self.root))
         self.target = self.root/'fresh-run'
+        self.python = self.root/'inert-python.exe'
+        self.python.write_bytes(b'INERT_UNIT_INTERPRETER_NEVER_EXECUTED')
 
     def reviewed_entry(self):
         raw=subprocess.check_output(['git','-C',str(ROOT),'cat-file','blob','HEAD:unified_system/service_entry.py'],timeout=10)
@@ -128,7 +130,7 @@ class HostedStoppedServiceTests(unittest.TestCase):
             target.write_bytes(b'INERT_TEST_ARCHIVE');return {'sha256':'a'*64}
         identity=dict(head='a'*40,tree='b'*40,checkout='INERT_UNIT_FIXTURE')
         entry=self.reviewed_entry()
-        with patch.dict(lane.os.environ,self.env),patch.object(lane.sys,'platform','win32'):
+        with patch.dict(lane.os.environ,self.env),patch.object(lane.sys,'platform','win32'),patch.object(lane.sys,'executable',str(self.python)):
             with patch.object(lane.service,'current_computer_name',return_value='TEST-PC'),patch.object(lane,'source_identity',return_value=identity):
                 with patch.object(lane.FreshCodeRoot,'create',side_effect=PrivateRoot),patch.object(lane,'download_archive',side_effect=download):
                     with patch.object(lane.builder,'nssm_payload',return_value=(payload,{'scope':'INERT_UNIT_FIXTURE'})),patch.object(lane.builder,'NSSM_MEMBER_SHA256',pin),patch.object(lane.service,'NSSM_PIN',pin):
@@ -137,6 +139,7 @@ class HostedStoppedServiceTests(unittest.TestCase):
         report=__import__('json').loads((self.target/'reports/report.json').read_text())
         self.assertEqual(report['source_proof'],'NOT_EVALUATED');self.assertEqual(report['activation'],'BLOCKED')
         self.assertEqual(report['service_start'],'NOT_RUN');self.assertFalse(report['installation_closure'])
+        self.assertEqual(report['capsule_leaves']['runtime/python/python.exe']['sha256'],hashlib.sha256(self.python.read_bytes()).hexdigest())
         self.assertIsNone(backend.service)
         self.assertEqual((self.target/'stopped-resource/state/preserved-fixture.bin').read_bytes(),b'SYNTHETIC_TEST_INPUT_PRESERVE_STATE')
         self.assertFalse((self.target/'stopped-resource/code').exists())
@@ -148,12 +151,13 @@ class HostedStoppedServiceTests(unittest.TestCase):
         (source/'service_entry.py').write_bytes(entry.replace(b'\n',b'\r\n'))
         (source/'owned_python.py').write_bytes(b'INERT_BOOTSTRAP')
         payload=b'INERT_NSSM';pin=hashlib.sha256(payload).hexdigest()
-        with patch.object(lane,'REPO',operator),patch.object(lane,'source_identity',return_value={'head':'a'*40}),patch.object(lane.shutil,'which',return_value='git'):
+        with patch.object(lane,'REPO',operator),patch.object(lane,'source_identity',return_value={'head':'a'*40}),patch.object(lane.shutil,'which',return_value='git'),patch.object(lane.sys,'executable',str(self.python)):
             with patch.object(lane.subprocess,'check_output',side_effect=[b'448\n',entry]) as git:
                 with patch.object(lane.builder,'NSSM_MEMBER_SHA256',pin),patch.object(lane.service,'NSSM_PIN',pin):
                     manifest_pin,leaves,origin=lane.make_capsule(self.target,payload,'a'*40)
         staged=self.target/'sources/unified-system/unified_system/service_entry.py'
         self.assertEqual(staged.read_bytes(),entry)
+        self.assertEqual((self.target/'runtime/python/python.exe').read_bytes(),self.python.read_bytes())
         self.assertEqual((source/'service_entry.py').read_bytes(),entry.replace(b'\n',b'\r\n'))
         self.assertEqual(origin['origin'],'EXACT_HEAD_GIT_BLOB')
         self.assertEqual(origin['sha256'],lane.service.BLOCKED_ENTRY_SHA256)

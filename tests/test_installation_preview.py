@@ -1,4 +1,4 @@
-import json,socket,tempfile,time,unittest,io,threading
+import json,socket,tempfile,time,unittest,io,threading,os
 from contextlib import redirect_stdout,redirect_stderr
 from unittest.mock import patch
 from pathlib import Path
@@ -19,13 +19,26 @@ class PreviewTests(unittest.TestCase):
             return result
     def get(self,host,path='/api/v1/installation',extra=b''):
         return self.request(host,b'GET '+path.encode()+b' HTTP/1.1\r\nHost: '+host.authority.encode()+b'\r\n'+extra+b'\r\n')
+    def rebind_probe(self,address):
+        # POSIX TIME_WAIT survives listener close. Match the production server's
+        # reuse policy; on Windows keep the exclusive raw bind probe unchanged.
+        with socket.socket() as check:
+            if os.name!='nt':check.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
+            check.bind(address)
+    def test_probe_rejects_live_listener_and_accepts_closed_listener(self):
+        with InstallationPreview(self.progress) as host:
+            self.get(host)
+            with self.assertRaises(OSError):self.rebind_probe(host.address)
+        self.assertEqual(host._server.socket.fileno(),-1)
+        self.rebind_probe(host.address)
     def test_explicit_start_actual_source_and_cleanup(self):
         host=InstallationPreview(self.progress);self.assertIsNone(host.address)
         with host:
             port=host.address[1];response=self.get(host)
             self.assertTrue(response.startswith(b'HTTP/1.0 200'));self.assertIn(b'NOT_PROVEN',response)
         self.assertFalse(host.running)
-        with socket.socket() as check:check.bind(('127.0.0.1',port))
+        self.assertEqual(host._server.socket.fileno(),-1)
+        self.rebind_probe(('127.0.0.1',port))
     def test_rejections_and_no_second_pipelined_response(self):
         with InstallationPreview(self.progress) as host:
             for extra in (b'Origin: http://evil\r\n',b'Transfer-Encoding: chunked\r\n',b'Content-Length: 2\r\n',b'Host: evil\r\n',b'Content-Length: 0\r\nContent-Length: 0\r\n'):
@@ -79,7 +92,7 @@ class PreviewTests(unittest.TestCase):
         try:
             time.sleep(0.32)
             self.assertFalse(host.running,'single-line trickle escaped whole preview deadline')
-            with socket.socket() as check:check.bind(host.address)
+            self.rebind_probe(host.address)
         finally:
             stopped.set()
             try:client.shutdown(socket.SHUT_RDWR)
@@ -119,7 +132,8 @@ class PreviewTests(unittest.TestCase):
             with patch.object(InstallationProgress,'snapshot',slow):
                 client.sendall(b'GET /api/v1/installation HTTP/1.1\r\nHost: '+host.authority.encode()+b'\r\n\r\n')
                 self.assertTrue(entered.wait(1));time.sleep(0.25)
-                with socket.socket() as check:check.bind(host.address)
+                self.assertEqual(host._server.socket.fileno(),-1)
+                self.rebind_probe(host.address)
                 release.set();host.close()
         finally:release.set();client.close();host.close()
         self.assertFalse(host.running)

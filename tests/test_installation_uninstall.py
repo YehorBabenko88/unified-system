@@ -70,6 +70,7 @@ class UninstallTests(unittest.TestCase):
   member=Path(self.service_plan['code'],'runtime.json');member.unlink()
   with self.assertRaises(ValueError):self.uninstall.run(guard=self.guard)
   self.assertEqual(self.removal.calls.count('REMOVE_SERVICE'),1);self.assertTrue((self.state/'user-data').exists())
+ @unittest.skipUnless(os.name=='nt','Windows native bootstrap encoding mock; no SCM execution')
  def test_native_bootstrap_encoding_and_request_are_bound_without_execution(self):
   import base64,json
   from unified_system.installation_uninstall import WindowsRemovalBoundary
