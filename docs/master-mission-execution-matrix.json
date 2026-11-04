@@ -1,6 +1,6 @@
 {
   "schema": "unified.master-mission-execution-matrix.v1",
-  "assembled_utc": "2026-11-04T19:17:32.244919+00:00",
+  "assembled_utc": "2026-11-04T20:51:18.984555+00:00",
   "mission_status": "IN_PROGRESS",
   "final_go": "NO-GO",
   "sources": [
@@ -54,7 +54,8 @@
         "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\ci-matrix.json",
         "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
       },
-      "status": "IN_PROGRESS"
+      "status": "IN_PROGRESS",
+      "integration_milestone": "Unified e7c473b: 565 tests, 7 skipped, zero failures (local). Current mandatory CI incomplete; native Windows download FAIL. Grid new migration fix and hosted PG tests awaiting exact-head CI."
     },
     {
       "requirement_id": "P0-03",
@@ -72,7 +73,8 @@
         "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\ci-matrix.json",
         "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
       },
-      "status": "FAIL"
+      "status": "FAIL",
+      "integration_milestone": "Math220 actual Windows workers stop after PAYLOAD_VERIFIED before JSON_PARSED; separately restricted native child DLL_INITIALIZATION_FAILED. Neither cause waived; current Windows matrices fail."
     },
     {
       "requirement_id": "P0-04",
@@ -250,7 +252,8 @@
         "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\installer-report.json",
         "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
       },
-      "status": "IN_PROGRESS"
+      "status": "IN_PROGRESS",
+      "integration_milestone": "Protected immutable activation revisions, source-owner admission and pinned isolated entry implemented/tested. CONTROL/SINGLE-PC DB gate remains closed; native start/child source admission unqualified."
     },
     {
       "requirement_id": "P1-06",
@@ -286,7 +289,8 @@
         "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\installer-report.json",
         "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
       },
-      "status": "IN_PROGRESS"
+      "status": "IN_PROGRESS",
+      "integration_milestone": "Pure role profiles and protected activation auth exist. Real owned PostgreSQL source slice in progress; no office provision performed."
     },
     {
       "requirement_id": "P1-08",
@@ -686,7 +690,8 @@
         "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\orchestrator-report.json",
         "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
       },
-      "status": "IMPLEMENTED_UNVERIFIED"
+      "status": "IMPLEMENTED_UNVERIFIED",
+      "integration_milestone": "External Stratt DataFirst uses existing Grid authority; no local SQLite job claims. Actual admitted supervised worker process/provisioning still in progress."
     },
     {
       "requirement_id": "P5-03",
@@ -704,7 +709,8 @@
         "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\orchestrator-report.json",
         "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
       },
-      "status": "IMPLEMENTED_UNVERIFIED"
+      "status": "IMPLEMENTED_UNVERIFIED",
+      "integration_milestone": "Typed Grid generation/checkpoint/result fencing and permanent dedupe integrated. Migration collision fixed: old47 preserved, DataFirst48, Telegram49; actual new PG CI pending."
     },
     {
       "requirement_id": "P5-04",
@@ -1018,7 +1024,8 @@
         "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\terminan-report.json",
         "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
       },
-      "status": "BLOCKED"
+      "status": "IN_PROGRESS",
+      "integration_milestone": "Grid bounded real-source export and Term v2 partial UI implemented. Authentic runtime writer/connection in progress; physical quotes display NOT_RUN."
     },
     {
       "requirement_id": "P8-02",
@@ -1036,7 +1043,8 @@
         "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\terminan-report.json",
         "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
       },
-      "status": "BLOCKED"
+      "status": "IN_PROGRESS",
+      "integration_milestone": "Read-only verified Stratt paper export + Term v2 paper receipt view implemented. Live causal producer/open positions/account state and physical trading UI not qualified."
     },
     {
       "requirement_id": "P8-03",
@@ -1074,7 +1082,8 @@
         "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\terminan-report.json",
         "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
       },
-      "status": "BLOCKED"
+      "status": "IN_PROGRESS",
+      "integration_milestone": "Term v2 explicitly displays reported PLAN_ONLY fleet state without fabricated online workers. Actual enrolled node telemetry remains unqualified."
     },
     {
       "requirement_id": "P8-05",
@@ -1183,7 +1192,8 @@
         "head": "d167cf61a6ee736a086733e80034b69b16404a0a",
         "scope": "CURRENT_TERMINAN_CI_ONLY_26_SUCCESS_PHYSICAL_NOT_RUN"
       },
-      "status": "PASS"
+      "status": "IN_PROGRESS",
+      "integration_milestone": "Prior d167cf6 had26 verified CI checks PASS. Current4cd4986 adds v2 UI: local21 pass1 skip and2 Chromium tests pass; full current mandatory matrix pending. Prior-head PASS cannot qualify new HEAD."
     },
     {
       "requirement_id": "P9-01",
@@ -1275,7 +1285,8 @@
         "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\telegram-report.json",
         "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
       },
-      "status": "IMPLEMENTED_UNVERIFIED"
+      "status": "IMPLEMENTED_UNVERIFIED",
+      "integration_milestone": "Per-operation user-ID/chat policy, durable callback/update replay fence, receipt-bound completion, DB-clock rate limit and bounded closed audit integrated. Actual PG49 CI pending; TTL mutating intent/Control API absent."
     },
     {
       "requirement_id": "P9-06",
@@ -1597,5 +1608,17 @@
       },
       "status": "BLOCKED"
     }
-  ]
+  ],
+  "current_source_heads": {
+    "unified-system": "e7c473b64a5e3c9d32e704a390e4b912794d2ac2",
+    "bybit-cluster-grid": "80d6b16ea666fa67e77d1606757ce2fd27a80034",
+    "strattester": "d4495f82f1f336fad4e314ad37935a142f5bfad1",
+    "Terminan": "4cd4986634946970512eee9a3e83e6bcead0ad4c",
+    "math": "220d74ffb67b2995d0ee17858d8c31ae7eb2d0af",
+    "meta_analyse": "2692aa7139a904096091f11360392ffc76428a4a"
+  },
+  "parallel_ownership": {
+    "path": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\parallel-ownership.json",
+    "sha256": "05751032c2e783e6452344441426ce026251c6e25c30eff0fdf3a054ab145a56"
+  }
 }
