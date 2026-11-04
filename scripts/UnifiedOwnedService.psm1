@@ -7,7 +7,7 @@ $ErrorActionPreference='Stop'
 $script:NativeStage='UNAVAILABLE'
 function Get-UnifiedOwnedServiceStage {return $script:NativeStage}
 function Get-UnifiedOwnedNativeExitCode {
- if($script:NativeStage -clike 'NSSM_*' -and ('UnifiedStoppedServiceNative' -as [type])){
+ if($script:NativeStage -cmatch '^NSSM_(SET|GET)_' -and ('UnifiedStoppedServiceNative' -as [type])){
   $code=[UnifiedStoppedServiceNative]::LastExitCode
   if($code -ge 0 -and $code -le 4294967295){return $code}
  }
@@ -169,6 +169,21 @@ function Get-OwnedService($Plan){
  application=$application;parameters=$parameters;directory=$directory;app_exit=$appExit;
  marker=$Plan.plan_sha256;code_acl_sha256=$proof.code_acl_sha256;state_acl_sha256=$proof.state_acl_sha256;acl_policy=$proof.acl_policy}
 }
+function Write-NewOwnedNssmApplication($ServiceKey,[string]$Application){
+ # NSSM treats a service without Parameters/Application as a native service and
+ # refuses App* edits. Seed only the exact freshly created service namespace.
+ # https://git.nssm.cc/nssm/nssm/src/a2f02c89bef2c4aae9fbebc1191291e5be41380a/service.cpp
+ $existing=$ServiceKey.OpenSubKey('Parameters',$false)
+ if($null -ne $existing){$existing.Dispose();throw 'EXISTING_NSSM_PARAMETERS_REJECTED'}
+ $parameters=$ServiceKey.CreateSubKey('Parameters',[Microsoft.Win32.RegistryKeyPermissionCheck]::ReadWriteSubTree,[Microsoft.Win32.RegistryOptions]::None)
+ if($null -eq $parameters){throw 'NSSM_PARAMETERS_UNAVAILABLE'}
+ try{
+  if($parameters.ValueCount -ne 0 -or $parameters.SubKeyCount -ne 0){throw 'EXISTING_NSSM_PARAMETERS_REJECTED'}
+  $parameters.SetValue('Application',$Application,[Microsoft.Win32.RegistryValueKind]::ExpandString)
+  $parameters.Flush()
+  if($parameters.GetValue('Application',$null,[Microsoft.Win32.RegistryValueOptions]::DoNotExpandEnvironmentNames) -cne $Application -or $parameters.GetValueKind('Application') -ne [Microsoft.Win32.RegistryValueKind]::ExpandString){throw 'NSSM_APPLICATION_SEED_REJECTED'}
+ }finally{$parameters.Dispose()}
+}
 function Invoke-UnifiedOwnedService($Request){
  $p=$Request.plan
  if(-not [string]::Equals([string]$p.computer_name,[Environment]::MachineName,[StringComparison]::OrdinalIgnoreCase)){throw 'COMPUTER_BINDING_MISMATCH'}
@@ -209,6 +224,10 @@ function Invoke-UnifiedOwnedService($Request){
    Assert-OwnedFile $p.nssm $p.nssm_sha256;Assert-OwnedFile $p.python $p.python_sha256;Assert-OwnedFile $p.bootstrap $p.bootstrap_sha256;Assert-OwnedFile $p.entry $p.entry_sha256
    if([UnifiedStoppedServiceNative]::Exists($p.service_name)){throw 'EXISTING_RESOURCE_REJECTED'}
    $script:NativeStage='SCM_CREATE';[UnifiedStoppedServiceNative]::Create($p.service_name,$p.nssm)
+   $script:NativeStage='NSSM_INITIAL_APPLICATION'
+   $serviceKey=[Microsoft.Win32.Registry]::LocalMachine.OpenSubKey(('SYSTEM\CurrentControlSet\Services\'+$p.service_name),$true)
+   if($null -eq $serviceKey){throw 'NEW_SERVICE_REGISTRY_UNAVAILABLE'}
+   try{Write-NewOwnedNssmApplication $serviceKey $p.python}finally{$serviceKey.Dispose()}
    foreach($setting in @(@('Application',$p.python),@('AppParameters',$p.parameters),@('AppDirectory',$p.code),@('AppExit','Default','Exit'))){
     $script:NativeStage=@{Application='NSSM_SET_APPLICATION';AppParameters='NSSM_SET_PARAMETERS';AppDirectory='NSSM_SET_DIRECTORY';AppExit='NSSM_SET_APP_EXIT'}[$setting[0]]
     $null=Invoke-OwnedNative $p.nssm (@('set',$p.service_name)+$setting)

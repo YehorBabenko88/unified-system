@@ -27,14 +27,14 @@ BLOCKED_ENTRY_SHA256=SERVICE_ENTRY_SHA256 # Legacy public constant; entry is now
 SCHEMA='unified.owned-stopped-service.v1'
 ACTIONS={'BEGIN','SEAL','REGISTER','INSPECT'}
 NATIVE_STAGES=frozenset(('UNAVAILABLE','SID_LOOKUP','ACL_PROOF','MEMBER_PINS','SCM_CREATE','SCM_READ','SCM_PROOF',
- 'NSSM_SET_APPLICATION','NSSM_SET_PARAMETERS','NSSM_SET_DIRECTORY','NSSM_SET_APP_EXIT',
+ 'NSSM_INITIAL_APPLICATION','NSSM_SET_APPLICATION','NSSM_SET_PARAMETERS','NSSM_SET_DIRECTORY','NSSM_SET_APP_EXIT',
  'NSSM_GET_APPLICATION','NSSM_GET_PARAMETERS','NSSM_GET_DIRECTORY','NSSM_GET_APP_EXIT'))
 
 class OwnedServiceRejected(ValueError):
  """A closed diagnostic stage, never raw native output or exception text."""
  def __init__(self,native_stage='UNAVAILABLE',native_exit_code=None):
   self.native_stage=native_stage if type(native_stage) is str and native_stage in NATIVE_STAGES else 'UNAVAILABLE'
-  self.native_exit_code=native_exit_code if self.native_stage.startswith('NSSM_') and type(native_exit_code) is int and 0<=native_exit_code<2**32 else None
+  self.native_exit_code=native_exit_code if self.native_stage.startswith(('NSSM_SET_','NSSM_GET_')) and type(native_exit_code) is int and 0<=native_exit_code<2**32 else None
   super().__init__('OWNED_SERVICE_REJECTED')
 
 def _native_result(output,status):
