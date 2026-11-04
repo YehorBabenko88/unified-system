@@ -103,6 +103,25 @@ def download_archive(artifact, target, *, opener=None):
     return dict(url=artifact['url'], bytes=total, sha256=digest.hexdigest(), transport='HTTPS_SAME_HOST_FIXED_PIN')
 
 
+def staged_archive(artifact, target, source, temporary):
+    """A separately pinned CI transport may supply identical bytes, never trust."""
+    source = lab_release.regular(source)
+    need(source.parent == _safe(temporary))
+    target = _safe(target)
+    need(target.parent.is_dir() and not target.exists())
+    need(type(artifact['max_bytes']) is int and 0 < artifact['max_bytes'] <= 16*1024*1024)
+    with source.open('rb') as stream:
+        raw = stream.read(artifact['max_bytes']+1)
+    need(0 < len(raw) <= artifact['max_bytes'])
+    need(artifact['expected_bytes'] is None or len(raw) == artifact['expected_bytes'])
+    need(hashlib.sha256(raw).hexdigest() == artifact['sha256'])
+    # Validate before any destination write; package scripts are never run.
+    with target.open('xb') as output:
+        output.write(raw); output.flush(); os.fsync(output.fileno())
+    return dict(bytes=len(raw), sha256=artifact['sha256'],
+                transport='PRESTAGED_EXACT_BYTES_NOT_PUBLISHER_TRUST')
+
+
 class PhaseGuard:
     def __init__(self):
         self.plans, self.calls = {}, []
@@ -218,7 +237,9 @@ def execute_lane(context, expected):
         catalog = windows_toolchain.read_catalog()
         artifact = next(item for item in catalog['artifacts'] if item['component'] == 'nssm')
         archive = context['root']/artifact['filename']
-        report['archive'] = download_archive(artifact, archive)
+        staged = os.environ.get('CI_PINNED_NSSM_ARCHIVE')
+        report['archive'] = (staged_archive(artifact, archive, staged, context['temporary'])
+                             if staged else download_archive(artifact, archive))
         payload, report['nssm'] = builder.nssm_payload(archive)
         stage = 'synthetic_capsule'
         capsule = context['root']/'synthetic-capsule'

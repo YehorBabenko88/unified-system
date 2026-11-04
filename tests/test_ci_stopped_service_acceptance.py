@@ -82,6 +82,21 @@ class HostedStoppedServiceTests(unittest.TestCase):
         self.assertGreater(opener.timeout,0)
         with self.assertRaises((ValueError,FileExistsError)):lane.download_archive(item,target,opener=opener)
 
+    def test_staged_archive_is_only_byte_integrity_and_confined_to_runner_temp(self):
+        raw=b'PINNED_PUBLIC_ARCHIVE';source=self.root/'staged.zip';source.write_bytes(raw)
+        target=self.root/'copied.zip'
+        receipt=lane.staged_archive(self.artifact(raw),target,source,self.root)
+        self.assertEqual(target.read_bytes(),raw)
+        self.assertEqual(receipt['transport'],'PRESTAGED_EXACT_BYTES_NOT_PUBLISHER_TRUST')
+        with self.assertRaises(ValueError):
+            lane.staged_archive(self.artifact(b'wrong'),self.root/'bad.zip',source,self.root)
+        outside=self.root/'nested';outside.mkdir();foreign=outside/'staged.zip';foreign.write_bytes(raw)
+        with self.assertRaises(ValueError):
+            lane.staged_archive(self.artifact(raw),self.root/'foreign.zip',foreign,self.root)
+        link=self.root/'hardlink.zip';lane.os.link(source,link)
+        with self.assertRaises(ValueError):
+            lane.staged_archive(self.artifact(raw),self.root/'linked.zip',source,self.root)
+
     def test_download_rejects_size_hash_and_cross_host_final_response(self):
         variants=[(b'x'*65,'https://www.nssm.cc/ci/fixed.zip',None),
                   (b'BAD','https://www.nssm.cc/ci/fixed.zip',None),
@@ -238,6 +253,11 @@ class HostedStoppedServiceTests(unittest.TestCase):
         self.assertIn('always()',text)
         self.assertIn("steps.acceptance.outputs.report_root_owned == 'true'",text)
         self.assertNotIn('include-hidden-files: true',text)
+        self.assertIn('fa7323d9e1973a85856e93f4e9bf6ac41d3098a5/installer/PinnedVendorDownload.psm1',text)
+        self.assertIn('fdd893be67bf2d50a995b39d0628fbc21dae1eaae7b426c5664e52ecb1578c85',text)
+        self.assertIn('6c6b1e287fb2ac6b04cfd32be2b9ed54a283cf0847fab2326e1b3961b512d340',text)
+        self.assertIn('Expand-PinnedNssmPackage',text)
+        self.assertNotIn('ExecutionPolicy',text)
 
 
 if __name__=='__main__':unittest.main()
