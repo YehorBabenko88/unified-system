@@ -24,6 +24,24 @@ NSSM_PIN='eee9c44c29c2be011f1f1e43bb8c3fca888cb81053022ec5a0060035de16d848'
 BLOCKED_ENTRY_SHA256='55805313d6f63d213ee50a7e40be1a8fb0ff56dfa66ea6207827a01851444494'
 SCHEMA='unified.owned-stopped-service.v1'
 ACTIONS={'BEGIN','SEAL','REGISTER','INSPECT'}
+NATIVE_STAGES=frozenset(('UNAVAILABLE','SID_LOOKUP','ACL_PROOF','MEMBER_PINS','SCM_CREATE','SCM_READ','SCM_PROOF',
+ 'NSSM_SET_APPLICATION','NSSM_SET_PARAMETERS','NSSM_SET_DIRECTORY','NSSM_SET_APP_EXIT',
+ 'NSSM_GET_APPLICATION','NSSM_GET_PARAMETERS','NSSM_GET_DIRECTORY','NSSM_GET_APP_EXIT'))
+
+class OwnedServiceRejected(ValueError):
+ """A closed diagnostic stage, never raw native output or exception text."""
+ def __init__(self,native_stage='UNAVAILABLE'):
+  self.native_stage=native_stage if type(native_stage) is str and native_stage in NATIVE_STAGES else 'UNAVAILABLE'
+  super().__init__('OWNED_SERVICE_REJECTED')
+
+def _native_result(output,status):
+ try:result=json.loads(output)
+ except (TypeError,ValueError):raise OwnedServiceRejected() from None
+ if status!=0 or type(result) is not dict or 'error' in result:
+  stage='UNAVAILABLE'
+  if type(result) is dict and set(result)=={'error','native_stage'} and result['error']=='OWNED_SERVICE_REJECTED':stage=result['native_stage']
+  raise OwnedServiceRejected(stage)
+ return result
 
 
 def need(ok):
@@ -126,14 +144,14 @@ class WindowsServiceBoundary:
   need(_native_tools()==plan['native_tools'])
   need(hashlib.sha256(lab_release.regular(MODULE).read_bytes()).hexdigest()==plan['executor_sha256'])
   # Static bootstrap only. Paths/request data are never interpolated into code.
-  code="$ErrorActionPreference='Stop';[Console]::OutputEncoding=[Text.UTF8Encoding]::new($false);[Console]::InputEncoding=[Text.UTF8Encoding]::new($false);try{Import-Module -Name ([WildcardPattern]::Escape($env:UNIFIED_SERVICE_MODULE)) -Force; $r=[Console]::In.ReadToEnd()|ConvertFrom-Json; Invoke-UnifiedOwnedService $r|ConvertTo-Json -Depth 12 -Compress}catch{[Console]::Out.Write('{\"error\":\"OWNED_SERVICE_REJECTED\"}');exit 1}"
+  code="$ErrorActionPreference='Stop';[Console]::OutputEncoding=[Text.UTF8Encoding]::new($false);[Console]::InputEncoding=[Text.UTF8Encoding]::new($false);try{Import-Module -Name ([WildcardPattern]::Escape($env:UNIFIED_SERVICE_MODULE)) -Force; $r=[Console]::In.ReadToEnd()|ConvertFrom-Json; Invoke-UnifiedOwnedService $r|ConvertTo-Json -Depth 12 -Compress}catch{$stage='UNAVAILABLE';try{$stage=Get-UnifiedOwnedServiceStage}catch{};@{error='OWNED_SERVICE_REJECTED';native_stage=$stage}|ConvertTo-Json -Compress;exit 1}"
   encoded=base64.b64encode(code.encode('utf-16le')).decode('ascii')
   env=_environment();env['UNIFIED_SERVICE_MODULE']=str(MODULE)
   request={'action':action,'plan':plan}
   need(len(canonical(request))<=32768)
   ps=Path(plan['native_tools']['powershell']['path']);need(_native_hash(ps)==plan['native_tools']['powershell']['sha256'])
   output,status=_run([str(ps),'-NoProfile','-NonInteractive','-EncodedCommand',encoded],env=env,payload=canonical(request),timeout=60)
-  need(status==0);result=json.loads(output);need(type(result) is dict and 'error' not in result)
+  result=_native_result(output,status)
   if action=='BEGIN':
    need(result=={'root_created':True});facts=_safe(plan['root']).stat();return {'root_device':facts.st_dev,'root_inode':facts.st_ino}
   return result

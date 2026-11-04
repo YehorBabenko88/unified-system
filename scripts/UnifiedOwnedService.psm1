@@ -4,6 +4,8 @@
 # https://learn.microsoft.com/windows/win32/api/winsvc/ns-winsvc-service_sid_info
 Set-StrictMode -Version Latest
 $ErrorActionPreference='Stop'
+$script:NativeStage='UNAVAILABLE'
+function Get-UnifiedOwnedServiceStage {return $script:NativeStage}
 $script:Native=@'
 using System;
 using System.Runtime.InteropServices;
@@ -89,6 +91,7 @@ function Invoke-OwnedNative([string]$Exe,[string[]]$Arguments){
  return [UnifiedStoppedServiceNative]::Run($Exe,$argumentsText)
 }
 function Get-OwnedSid($Plan){
+ $script:NativeStage='SID_LOOKUP'
  $sc=Join-Path ([Environment]::SystemDirectory) 'sc.exe'
  if($Plan.native_tools.sc.path -cne $sc){throw 'OS_TOOL_PATH_MISMATCH'}
  Assert-OwnedFile $sc $Plan.native_tools.sc.sha256
@@ -132,6 +135,7 @@ function Assert-OwnedMarker($Plan){
  if(-not (Test-Path -LiteralPath $path) -or [IO.File]::ReadAllText($path) -cne $Plan.plan_sha256){throw 'OWNED_ROOT_RECEIPT_REQUIRED'}
 }
 function Get-OwnedProof($Plan){
+ $script:NativeStage='ACL_PROOF'
  Assert-OwnedMarker $Plan
  $null=Get-OwnedAclProof $Plan.root $Plan.service_sid 'ReadAndExecute' $false
  $null=Get-OwnedAclProof (Join-Path $Plan.root 'ownership') '' '' $true
@@ -140,13 +144,19 @@ function Get-OwnedProof($Plan){
  return @{code_acl_sha256=$code;state_acl_sha256=$state;acl_policy='EXACT_SERVICE_SID_V1'}
 }
 function Get-OwnedService($Plan){
+ $script:NativeStage='MEMBER_PINS'
  Assert-OwnedFile $Plan.nssm $Plan.nssm_sha256;Assert-OwnedFile $Plan.python $Plan.python_sha256;Assert-OwnedFile $Plan.bootstrap $Plan.bootstrap_sha256;Assert-OwnedFile $Plan.entry $Plan.entry_sha256
- $native=[UnifiedStoppedServiceNative]::Read($Plan.service_name)
+ $script:NativeStage='SCM_READ';$native=[UnifiedStoppedServiceNative]::Read($Plan.service_name)
+ $script:NativeStage='SCM_PROOF'
  $sid=([Security.Principal.NTAccount]::new('NT SERVICE\'+$Plan.service_name)).Translate([Security.Principal.SecurityIdentifier]).Value
  if($sid -cne $Plan.service_sid -or $native.Sid -ne 1 -or $native.State -ne 1 -or $native.Start -ne 3 -or $native.Account -ine 'NT AUTHORITY\LocalService' -or $native.Binary -cne ('"'+$Plan.nssm+'"')){throw 'LIVE_SCM_MISMATCH'}
  $proof=Get-OwnedProof $Plan
+ $script:NativeStage='NSSM_GET_APPLICATION';$application=Invoke-OwnedNative $Plan.nssm @('get',$Plan.service_name,'Application')
+ $script:NativeStage='NSSM_GET_PARAMETERS';$parameters=Invoke-OwnedNative $Plan.nssm @('get',$Plan.service_name,'AppParameters')
+ $script:NativeStage='NSSM_GET_DIRECTORY';$directory=Invoke-OwnedNative $Plan.nssm @('get',$Plan.service_name,'AppDirectory')
+ $script:NativeStage='NSSM_GET_APP_EXIT';$appExit=Invoke-OwnedNative $Plan.nssm @('get',$Plan.service_name,'AppExit','Default')
  return @{service_name=$Plan.service_name;service_sid=$sid;account='NT AUTHORITY\LocalService';start_type=[int]$native.Start;sid_type=[int]$native.Sid;state=[int]$native.State;binary_path=$native.Binary;
- application=(Invoke-OwnedNative $Plan.nssm @('get',$Plan.service_name,'Application'));parameters=(Invoke-OwnedNative $Plan.nssm @('get',$Plan.service_name,'AppParameters'));directory=(Invoke-OwnedNative $Plan.nssm @('get',$Plan.service_name,'AppDirectory'));app_exit=(Invoke-OwnedNative $Plan.nssm @('get',$Plan.service_name,'AppExit','Default'));
+ application=$application;parameters=$parameters;directory=$directory;app_exit=$appExit;
  marker=$Plan.plan_sha256;code_acl_sha256=$proof.code_acl_sha256;state_acl_sha256=$proof.state_acl_sha256;acl_policy=$proof.acl_policy}
 }
 function Invoke-UnifiedOwnedService($Request){
@@ -185,13 +195,17 @@ function Invoke-UnifiedOwnedService($Request){
   'REGISTER'{
    Assert-OwnedMarker $p
    $null=Get-OwnedProof $p
+   $script:NativeStage='MEMBER_PINS'
    Assert-OwnedFile $p.nssm $p.nssm_sha256;Assert-OwnedFile $p.python $p.python_sha256;Assert-OwnedFile $p.bootstrap $p.bootstrap_sha256;Assert-OwnedFile $p.entry $p.entry_sha256
    if([UnifiedStoppedServiceNative]::Exists($p.service_name)){throw 'EXISTING_RESOURCE_REJECTED'}
-   [UnifiedStoppedServiceNative]::Create($p.service_name,$p.nssm)
-   foreach($setting in @(@('Application',$p.python),@('AppParameters',$p.parameters),@('AppDirectory',$p.code),@('AppExit','Default','Exit'))){$null=Invoke-OwnedNative $p.nssm (@('set',$p.service_name)+$setting)}
+   $script:NativeStage='SCM_CREATE';[UnifiedStoppedServiceNative]::Create($p.service_name,$p.nssm)
+   foreach($setting in @(@('Application',$p.python),@('AppParameters',$p.parameters),@('AppDirectory',$p.code),@('AppExit','Default','Exit'))){
+    $script:NativeStage=@{Application='NSSM_SET_APPLICATION';AppParameters='NSSM_SET_PARAMETERS';AppDirectory='NSSM_SET_DIRECTORY';AppExit='NSSM_SET_APP_EXIT'}[$setting[0]]
+    $null=Invoke-OwnedNative $p.nssm (@('set',$p.service_name)+$setting)
+   }
    return Get-OwnedService $p
   }
   'INSPECT'{return Get-OwnedService $p}
  }
 }
-Export-ModuleMember -Function Invoke-UnifiedOwnedService
+Export-ModuleMember -Function Invoke-UnifiedOwnedService,Get-UnifiedOwnedServiceStage
