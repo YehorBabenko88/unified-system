@@ -3,6 +3,7 @@ from pathlib import Path
 import configparser
 import hashlib
 import os
+import re
 import subprocess
 import sys
 import stat
@@ -34,11 +35,23 @@ class SourceFence:
     GIT_SECONDS=15
     GIT_BYTES=256*1024*1024
     GIT_ERROR_BYTES=65536
-    def __init__(self, root, expected_head=None, *, isolated_cache=None, git_executable=None, git_sha256=None):
+    def __init__(self, root, expected_head=None, *, isolated_cache=None, git_executable=None, git_sha256=None, owner_admitted_root=None):
         self.root=_ordinary(root).resolve(strict=True)
         if (git_executable is None)!=(git_sha256 is None):raise SourceQualificationError("GIT_PIN_PAIR_REQUIRED")
         self.git_executable=git_executable;self.git_sha256=git_sha256
         self.expected_head=expected_head
+        # This opt-in is caller-owned protected-service admission data, not
+        # ownership/authenticity proof. Require an exact pinned source and Git;
+        # never change repository/global config or trust additional directories.
+        self.owner_admitted_root=None;self._owner_metadata_checked=False
+        if owner_admitted_root is not None:
+            if (not isinstance(owner_admitted_root,(str,Path)) or '*' in str(owner_admitted_root) or not Path(owner_admitted_root).is_absolute()
+                or type(expected_head) is not str or re.fullmatch('[a-f0-9]{40}',expected_head) is None
+                or git_executable is None or type(git_sha256) is not str or re.fullmatch('[a-f0-9]{64}',git_sha256) is None):
+                raise SourceQualificationError('OWNER_SOURCE_PIN_REQUIRED')
+            admitted=_ordinary(owner_admitted_root).resolve(strict=True)
+            if admitted!=self.root:raise SourceQualificationError('OWNER_SOURCE_ROOT_MISMATCH')
+            self.owner_admitted_root=admitted
         self.before=None
         self.files={}
         self.blobs={}
@@ -46,6 +59,7 @@ class SourceFence:
         self.isolated_cache=Path(isolated_cache).resolve() if isolated_cache else None
         if self.isolated_cache is not None and (sys.pycache_prefix is None or Path(sys.pycache_prefix).resolve()!=self.isolated_cache):raise SourceQualificationError('ISOLATED_CACHE_NOT_ACTIVE')
     def git(self,*args,input=None):
+        if self.owner_admitted_root is not None and not self._owner_metadata_checked:self.check_metadata()
         executable='git'
         if self.git_executable is not None:
             if not Path(self.git_executable).is_absolute():raise SourceQualificationError('GIT_RUNTIME_PIN')
@@ -59,7 +73,8 @@ class SourceFence:
         with tempfile.TemporaryFile() as source,tempfile.TemporaryFile() as out,tempfile.TemporaryFile() as err:
             if input is not None:source.write(input)
             source.seek(0)
-            command=[executable,'--no-replace-objects','-c','core.fsmonitor=false','-c','core.hooksPath='+os.devnull,'-C',str(self.root),*args]
+            owner_scope=[] if self.owner_admitted_root is None else ['-c','safe.directory=','-c','safe.directory='+self.owner_admitted_root.as_posix()]
+            command=[executable,'--no-replace-objects','-c','core.fsmonitor=false','-c','core.hooksPath='+os.devnull,*owner_scope,'-C',str(self.root),*args]
             try:
                 process=subprocess.Popen(command,stdin=source,stdout=out,stderr=err,env=env)
                 began=time.monotonic()
@@ -111,6 +126,7 @@ class SourceFence:
                 if 'fsmonitor' in values and values['fsmonitor'].casefold() not in ('false','0','no','off'):raise SourceQualificationError('UNSAFE_FSMONITOR')
             if 'promisor' in config[section] or lower=='extensions' and 'partialclone' in config[section]:raise SourceQualificationError('EXTERNAL_PROMISOR_OBJECTS')
             if lower=='extensions' and 'worktreeconfig' in config[section]:raise SourceQualificationError('EXTERNAL_WORKTREE_CONFIG')
+        self._owner_metadata_checked=True
     def check(self):
         self.check_metadata()
         if self.git('for-each-ref','--format=%(refname)','refs/replace').strip():raise SourceQualificationError('REPLACE_REFS_FORBIDDEN')
