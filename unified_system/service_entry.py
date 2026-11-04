@@ -5,12 +5,14 @@ for LAB simulation, never publisher authentication or a readiness assertion.
 """
 import sys
 
-BOOTSTRAP_SHA256='c95775f98df6b15b37d573bf108473ef64acfed1a221652f0ea7ef76a974de39'
+BOOTSTRAP_SHA256='b9978dd3361cabba08a9e5a52b3e14e2ced0c819cad40026606e78cbb75255c0'
 
 
 def main():
  try:
-  if not (sys.flags.isolated and sys.flags.no_site and sys.flags.dont_write_bytecode and sys.argv[1:] in ([],['--data-first'],['--data-first-worker'])):raise ValueError()
+  args=sys.argv[1:]
+  valid=args in ([],['--data-first'],['--data-first-worker']) or len(args)==2 and (args[0]=='--module-source' and args[1] in ('meta_analyse','strattester','terminan') or args==['--verify-module-source','strattester'])
+  if not (sys.flags.isolated and sys.flags.no_site and sys.flags.dont_write_bytecode and valid):raise ValueError()
   import ctypes,hashlib,importlib.util,os,stat
   from pathlib import Path
   entry=Path(__file__).absolute();helper=entry.with_name('service_bootstrap.py')
@@ -31,7 +33,8 @@ def main():
   namespace={'__name__':'_unified_protected_bootstrap','__file__':str(helper)}
   exec(compile(raw,str(helper),'exec'),namespace)
   grant=namespace['read_protected_activation'](entry.parents[4])
-  if sys.argv[1:]:return namespace['run_protected_data_first'](grant,worker=sys.argv[1]=='--data-first-worker')
+  if len(args)==2:return namespace['run_protected_module'](grant,args[1],verify_only=args[0]=='--verify-module-source')
+  if args:return namespace['run_protected_data_first'](grant,worker=args[0]=='--data-first-worker')
   return namespace['run_protected_runtime'](grant)
  except Exception:
   print('BLOCKED_SERVICE_ACTIVATION')

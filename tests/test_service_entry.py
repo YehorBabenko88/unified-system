@@ -8,6 +8,9 @@ from unified_system import service_bootstrap as bootstrap
 ROOT=Path(__file__).resolve().parents[1]
 class ProtectedRuntimeTests(unittest.TestCase):
  def setUp(self):
+  # This boundary models PG/privilege/runtime ordering; constructor routing has
+  # separate real-path tests and must not turn these fake manifests into grants.
+  routing=patch('unified_system.service_module_runtime.protected_programs',side_effect=lambda config,*_:config);routing.start();self.addCleanup(routing.stop)
   self.temp=tempfile.TemporaryDirectory();self.addCleanup(self.temp.cleanup);self.root=Path(self.temp.name).resolve()
   self.checks=0;self.active=True
   def current():
@@ -19,20 +22,20 @@ class ProtectedRuntimeTests(unittest.TestCase):
  def test_control_and_single_pc_require_actual_owned_pg_before_runtime(self):
   for role in ('CONTROL','SINGLE_PC'):
    self.grant.descriptor['service_plan']['role']=role
-   with patch.object(bootstrap,'_admit_capsule',return_value={}),patch.object(bootstrap,'_runtime_admission',return_value=(self.config,{})),patch('unified_system.service_postgres.read_postgres_ownership',side_effect=ValueError('missing-private-proof')) as read,patch('unified_system.lab_privileges.remove_lab_write_bypass_privileges') as privileges,patch('unified_system.lab_runtime.make_runtime') as make:
+   with patch.object(bootstrap,'_admit_capsule',return_value={'manifest':{}}),patch.object(bootstrap,'_runtime_admission',return_value=(self.config,{})),patch('unified_system.service_postgres.read_postgres_ownership',side_effect=ValueError('missing-private-proof')) as read,patch('unified_system.lab_privileges.remove_lab_write_bypass_privileges') as privileges,patch('unified_system.lab_runtime.make_runtime') as make:
     with self.assertRaises(bootstrap.ActivationBlocked):bootstrap.run_protected_runtime(self.grant)
     read.assert_called_once_with(self.grant);privileges.assert_not_called();make.assert_not_called()
  def test_owned_postgres_ready_precedes_make_and_closes_after_runtime_failure(self):
   events=[];self.grant.descriptor['service_plan']['role']='CONTROL'
   pg=SimpleNamespace(start=lambda:events.append('sql-ready'),require_current=lambda:True,close=lambda:events.append('close'))
   def make(*args,**kwargs):events.append('make');raise ValueError('private-runtime-error')
-  with patch.object(bootstrap,'_admit_capsule',return_value={}),patch.object(bootstrap,'_runtime_admission',return_value=(self.config,{})),patch('unified_system.service_postgres.read_postgres_ownership',side_effect=lambda grant:(events.append('read-receipt') or pg)),patch('unified_system.lab_privileges.remove_lab_write_bypass_privileges',side_effect=lambda:events.append('privilege-gate')),patch('unified_system.lab_runtime.make_runtime',side_effect=make):
+  with patch.object(bootstrap,'_admit_capsule',return_value={'manifest':{}}),patch.object(bootstrap,'_runtime_admission',return_value=(self.config,{})),patch('unified_system.service_postgres.read_postgres_ownership',side_effect=lambda grant:(events.append('read-receipt') or pg)),patch('unified_system.lab_privileges.remove_lab_write_bypass_privileges',side_effect=lambda:events.append('privilege-gate')),patch('unified_system.lab_runtime.make_runtime',side_effect=make):
    with self.assertRaises(bootstrap.ActivationBlocked):bootstrap.run_protected_runtime(self.grant)
   self.assertEqual(events,['read-receipt','privilege-gate','sql-ready','make','close'])
  def test_failed_privilege_removal_never_starts_owned_postgres(self):
   events=[];self.grant.descriptor['service_plan']['role']='CONTROL'
   pg=SimpleNamespace(start=lambda:events.append('PG-start'),close=lambda:events.append('close'))
-  with patch.object(bootstrap,'_admit_capsule',return_value={}),patch.object(bootstrap,'_runtime_admission',return_value=(self.config,{})),patch('unified_system.service_postgres.read_postgres_ownership',side_effect=lambda grant:(events.append('read-receipt') or pg)),patch('unified_system.lab_privileges.remove_lab_write_bypass_privileges',side_effect=ValueError('private-token-failure')),patch('unified_system.lab_runtime.make_runtime') as make:
+  with patch.object(bootstrap,'_admit_capsule',return_value={'manifest':{}}),patch.object(bootstrap,'_runtime_admission',return_value=(self.config,{})),patch('unified_system.service_postgres.read_postgres_ownership',side_effect=lambda grant:(events.append('read-receipt') or pg)),patch('unified_system.lab_privileges.remove_lab_write_bypass_privileges',side_effect=ValueError('private-token-failure')),patch('unified_system.lab_runtime.make_runtime') as make:
    with self.assertRaises(bootstrap.ActivationBlocked):bootstrap.run_protected_runtime(self.grant)
    make.assert_not_called()
   self.assertEqual(events,['read-receipt','close'])
@@ -44,7 +47,7 @@ class ProtectedRuntimeTests(unittest.TestCase):
    self.assertTrue(authorize('start','grid'));return object()
   def run(config,runtime,*,stop_event,continuation):
    self.assertIs(continuation(),True);self.active=False;continuation()
-  with patch.object(bootstrap,'_admit_capsule',return_value={}),patch.object(bootstrap,'_runtime_admission',return_value=(self.config,{})),patch.object(bootstrap,'_repeat_admission',return_value=(self.config,{})),patch('unified_system.service_postgres.read_postgres_ownership',return_value=pg) as read,patch('unified_system.lab_privileges.remove_lab_write_bypass_privileges'),patch('unified_system.lab_runtime.make_runtime',side_effect=make),patch('unified_system.lab_runtime.run_runtime',side_effect=run):
+  with patch.object(bootstrap,'_admit_capsule',return_value={'manifest':{}}),patch.object(bootstrap,'_runtime_admission',return_value=(self.config,{})),patch.object(bootstrap,'_repeat_admission',return_value=(self.config,{})),patch('unified_system.service_postgres.read_postgres_ownership',return_value=pg) as read,patch('unified_system.lab_privileges.remove_lab_write_bypass_privileges'),patch('unified_system.lab_runtime.make_runtime',side_effect=make),patch('unified_system.lab_runtime.run_runtime',side_effect=run):
    with self.assertRaises(bootstrap.ActivationBlocked):bootstrap.run_protected_runtime(self.grant)
    self.assertEqual(read.call_count,2)
   self.assertEqual(events[0],'sql-ready');self.assertEqual(events[-1],'close');self.assertIn('pg-current',events)
@@ -57,17 +60,17 @@ class ProtectedRuntimeTests(unittest.TestCase):
   def run(config,runtime,*,stop_event,continuation):
    events.append('run');self.assertIs(continuation(),True);self.active=False
    with self.assertRaises(bootstrap.ActivationBlocked):continuation()
-  with patch.object(bootstrap,'_admit_capsule',return_value={}) as initial,patch.object(bootstrap,'_runtime_admission',return_value=(self.config,auth)),patch.object(bootstrap,'_repeat_admission',return_value=(self.config,auth)) as restart,patch('unified_system.lab_privileges.remove_lab_write_bypass_privileges'),patch('unified_system.lab_runtime.make_runtime',side_effect=make),patch('unified_system.lab_runtime.run_runtime',side_effect=run):
+  with patch.object(bootstrap,'_admit_capsule',return_value={'manifest':{}}) as initial,patch.object(bootstrap,'_runtime_admission',return_value=(self.config,auth)),patch.object(bootstrap,'_repeat_admission',return_value=(self.config,auth)) as restart,patch('unified_system.lab_privileges.remove_lab_write_bypass_privileges'),patch('unified_system.lab_runtime.make_runtime',side_effect=make),patch('unified_system.lab_runtime.run_runtime',side_effect=run):
    self.assertEqual(bootstrap.run_protected_runtime(self.grant),0);initial.assert_called_once();restart.assert_called_once()
   self.assertEqual(events,['make','run']);self.assertFalse((self.root/'state').exists())
  def test_worker_never_reads_or_starts_postgres(self):
-  with patch.object(bootstrap,'_admit_capsule',return_value={}),patch.object(bootstrap,'_runtime_admission',return_value=(self.config,{})),patch('unified_system.service_postgres.read_postgres_ownership') as read,patch('unified_system.lab_privileges.remove_lab_write_bypass_privileges'),patch('unified_system.lab_runtime.make_runtime'),patch('unified_system.lab_runtime.run_runtime'):
+  with patch.object(bootstrap,'_admit_capsule',return_value={'manifest':{}}),patch.object(bootstrap,'_runtime_admission',return_value=(self.config,{})),patch('unified_system.service_postgres.read_postgres_ownership') as read,patch('unified_system.lab_privileges.remove_lab_write_bypass_privileges'),patch('unified_system.lab_runtime.make_runtime'),patch('unified_system.lab_runtime.run_runtime'):
    self.assertEqual(bootstrap.run_protected_runtime(self.grant),0);read.assert_not_called()
  def test_failed_pg_start_precedes_make_and_closes_owned_boundary(self):
   self.grant.descriptor['service_plan']['role']='CONTROL';events=[]
   def start():events.append('start');raise ValueError('private-pg-failure')
   pg=SimpleNamespace(start=start,close=lambda:events.append('close'))
-  with patch.object(bootstrap,'_admit_capsule',return_value={}),patch.object(bootstrap,'_runtime_admission',return_value=(self.config,{})),patch('unified_system.service_postgres.read_postgres_ownership',return_value=pg),patch('unified_system.lab_privileges.remove_lab_write_bypass_privileges'),patch('unified_system.lab_runtime.make_runtime') as make:
+  with patch.object(bootstrap,'_admit_capsule',return_value={'manifest':{}}),patch.object(bootstrap,'_runtime_admission',return_value=(self.config,{})),patch('unified_system.service_postgres.read_postgres_ownership',return_value=pg),patch('unified_system.lab_privileges.remove_lab_write_bypass_privileges'),patch('unified_system.lab_runtime.make_runtime') as make:
    with self.assertRaises(bootstrap.ActivationBlocked):bootstrap.run_protected_runtime(self.grant)
    make.assert_not_called()
   self.assertEqual(events,['start','close'])
@@ -79,10 +82,12 @@ class ProtectedRuntimeTests(unittest.TestCase):
  def test_failed_restart_admission_denies_child_start(self):
   def make(config,authorize,**kwargs):
    self.assertFalse(authorize('start','grid'));return object()
-  with patch.object(bootstrap,'_admit_capsule',return_value={}),patch.object(bootstrap,'_runtime_admission',return_value=(self.config,{})),patch.object(bootstrap,'_repeat_admission',side_effect=ValueError('private-error')),patch('unified_system.lab_privileges.remove_lab_write_bypass_privileges'),patch('unified_system.lab_runtime.make_runtime',side_effect=make),patch('unified_system.lab_runtime.run_runtime'):
+  with patch.object(bootstrap,'_admit_capsule',return_value={'manifest':{}}),patch.object(bootstrap,'_runtime_admission',return_value=(self.config,{})),patch.object(bootstrap,'_repeat_admission',side_effect=ValueError('private-error')),patch('unified_system.lab_privileges.remove_lab_write_bypass_privileges'),patch('unified_system.lab_runtime.make_runtime',side_effect=make),patch('unified_system.lab_runtime.run_runtime'):
    self.assertEqual(bootstrap.run_protected_runtime(self.grant),0)
 
 class ExistingAdmissionTests(unittest.TestCase):
+ def setUp(self):
+  routing=patch('unified_system.service_module_runtime.protected_programs',side_effect=lambda config,*_:config);routing.start();self.addCleanup(routing.stop)
  def test_actual_profile_source_failure_precedes_runtime_creation(self):
   from tests import test_service_activation as fixtures
   case=fixtures.ActivationTests('test_roundtrip_protected_artifacts_are_not_runtime_readiness');case.setUp();self.addCleanup(case.doCleanups)
@@ -117,7 +122,7 @@ class ExistingAdmissionTests(unittest.TestCase):
   def make(config,authorize,**kwargs):
    self.assertTrue(case.boundary.servers[-1].alive());self.assertIn('ready',case.boundary.calls)
    self.assertTrue(authorize('start','grid'));events.append('make');return object()
-  with patch.object(bootstrap,'_admit_capsule',return_value={}),patch.object(bootstrap,'_runtime_admission',return_value=(config,{})),patch.object(bootstrap,'_repeat_admission',return_value=(config,{})),patch('unified_system.service_postgres.WindowsPostgresBoundary',return_value=case.boundary),patch('unified_system.lab_privileges.remove_lab_write_bypass_privileges'),patch('unified_system.lab_runtime.make_runtime',side_effect=make),patch('unified_system.lab_runtime.run_runtime'):
+  with patch.object(bootstrap,'_admit_capsule',return_value={'manifest':{}}),patch.object(bootstrap,'_runtime_admission',return_value=(config,{})),patch.object(bootstrap,'_repeat_admission',return_value=(config,{})),patch('unified_system.service_postgres.WindowsPostgresBoundary',return_value=case.boundary),patch('unified_system.lab_privileges.remove_lab_write_bypass_privileges'),patch('unified_system.lab_runtime.make_runtime',side_effect=make),patch('unified_system.lab_runtime.run_runtime'):
    self.assertEqual(bootstrap.run_protected_runtime(grant),0)
   self.assertEqual(events,['make']);self.assertTrue(all(server.closed for server in case.boundary.servers));self.assertEqual(len(case.boundary.servers),2)
 

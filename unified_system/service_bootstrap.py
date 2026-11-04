@@ -292,10 +292,11 @@ def run_protected_runtime(grant,*,stop_event=None):
    for key,value in program['env'].items():
     if key.upper() in ('TEMP','TMP','USERPROFILE','HOME','APPDATA','LOCALAPPDATA','PROGRAMDATA','PROGRAMFILES','ML_ARTIFACT_ROOT','ARCHIVE_ROOT','STRATEGY_CACHE_DIR','GRID_CONTROL_SNAPSHOTS'):
      target=local(value);need(Path(config['state_root'])==target or Path(config['state_root']) in target.parents);grant.require_current();target.mkdir(parents=True,exist_ok=True)
-  effective=config
+  from unified_system.service_module_runtime import protected_programs
+  effective=protected_programs(config,grant,report['manifest'])
   if grant.profile.get('data_first') is not None and grant.descriptor['service_plan']['role']=='WORKER':
    from unified_system.data_first_service import worker_program
-   effective=worker_program(config,grant,report['manifest'])
+   effective=worker_program(effective,grant,report['manifest'])
   grant.require_current();runtime=lab_runtime.make_runtime(effective,authorize,child_environment=environment)
   stop=threading.Event() if stop_event is None else stop_event;previous={}
   try:
@@ -331,5 +332,19 @@ def run_protected_data_first(grant,*,worker=False):
    from unified_system.data_first_service import serve_worker
    return serve_worker(grant,config,report['manifest'],cap)
   return serve_research(grant,config,report['manifest'],cap)
+ except ActivationBlocked:raise
+ except Exception:raise ActivationBlocked('ACTIVATION_RUNTIME_REJECTED') from None
+
+
+def run_protected_module(grant,module_id,*,verify_only=False):
+ """Fixed Python module dispatch with independent live kernel readmission."""
+ try:
+  need(module_id in ('meta_analyse','strattester','terminan') and (not verify_only or module_id=='strattester'))
+  need(grant.require_current() is True)
+  report=_admit_capsule(grant);config,_auth=_runtime_admission(grant,report)
+  from unified_system.lab_privileges import remove_lab_write_bypass_privileges
+  remove_lab_write_bypass_privileges();need(grant.require_current() is True)
+  from unified_system.service_module_runtime import serve_module
+  return serve_module(grant,config,report['manifest'],module_id,verify_only=verify_only)
  except ActivationBlocked:raise
  except Exception:raise ActivationBlocked('ACTIVATION_RUNTIME_REJECTED') from None
