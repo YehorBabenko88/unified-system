@@ -250,13 +250,21 @@ def _repeat_admission(grant,verifier):
 def run_protected_runtime(grant,*,stop_event=None):
  """Existing runtime actuator after protected full admission; no readiness grant.
 
- CONTROL/SINGLE_PC require the separately owned PostgreSQL admission module,
- which is not implemented here. WORKER readiness still requires functional
+ CONTROL/SINGLE_PC start only the kernel/receipt-owned PostgreSQL boundary
+ before constructing the existing runtime. WORKER readiness still requires functional
  coordinator/module evidence from the existing runtime, never this entry.
  """
+ database=None
  try:
-  grant.require_current();need(grant.descriptor['service_plan']['role']=='WORKER','ACTIVATION_DATABASE_GATE_UNAVAILABLE')
+  grant.require_current()
   report=_admit_capsule(grant);config,auth=_runtime_admission(grant,report)
+  if grant.descriptor['service_plan']['role'] in ('CONTROL','SINGLE_PC'):
+   from unified_system.service_postgres import read_postgres_ownership
+   database=read_postgres_ownership(grant)
+  def continuation():
+   grant.require_current()
+   if database is not None:need(database.require_current() is True,'ACTIVATION_DATABASE_GATE_UNAVAILABLE')
+   return True
   from unified_system import lab_release,lab_runtime
   from unified_system.module_catalog import MODULE_IDS
   import threading,signal
@@ -265,7 +273,12 @@ def run_protected_runtime(grant,*,stop_event=None):
    if action!='start' or module not in MODULE_IDS:return False
    try:
     current,current_auth=_repeat_admission(grant,lab_release)
-    need(current==config,'ACTIVATION_REVISION_CHANGED');auth=current_auth;return True
+    need(current==config,'ACTIVATION_REVISION_CHANGED')
+    if database is not None:
+     # Re-read protected receipt and repeat full database admission for every
+     # child start; the already owned live job remains the process authority.
+     read_postgres_ownership(grant);need(database.require_current() is True,'ACTIVATION_DATABASE_GATE_UNAVAILABLE')
+    auth=current_auth;return True
    except Exception:return False
   def environment(module):
    result=lab_runtime.child_environment()
@@ -274,6 +287,7 @@ def run_protected_runtime(grant,*,stop_event=None):
   # All filesystem writes and runtime imports occur after the gates above.
   from unified_system.lab_privileges import remove_lab_write_bypass_privileges
   remove_lab_write_bypass_privileges();grant.require_current()
+  if database is not None:database.start()
   for program in config['programs'].values():
    for key,value in program['env'].items():
     if key.upper() in ('TEMP','TMP','USERPROFILE','HOME','APPDATA','LOCALAPPDATA','PROGRAMDATA','PROGRAMFILES','ML_ARTIFACT_ROOT','ARCHIVE_ROOT','STRATEGY_CACHE_DIR','GRID_CONTROL_SNAPSHOTS'):
@@ -283,9 +297,13 @@ def run_protected_runtime(grant,*,stop_event=None):
   try:
    if threading.current_thread() is threading.main_thread():
     for sig in (signal.SIGINT,signal.SIGTERM):previous[sig]=signal.signal(sig,lambda *_:stop.set())
-   lab_runtime.run_runtime(config,runtime,stop_event=stop,continuation=grant.require_current)
+   lab_runtime.run_runtime(config,runtime,stop_event=stop,continuation=continuation)
   finally:
    for sig,handler in previous.items():signal.signal(sig,handler)
   return 0
  except ActivationBlocked:raise
  except Exception:raise ActivationBlocked('ACTIVATION_RUNTIME_REJECTED') from None
+ finally:
+  if database is not None:
+   try:database.close()
+   except Exception:raise ActivationBlocked('ACTIVATION_DATABASE_GATE_UNAVAILABLE') from None
