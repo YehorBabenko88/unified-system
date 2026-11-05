@@ -1,5 +1,5 @@
 """Protected owner activation artifacts: model boundaries, never readiness proof."""
-import copy,hashlib,json,tempfile,unittest
+import copy,hashlib,json,stat,tempfile,unittest
 from pathlib import Path
 from unittest.mock import patch
 from tests import test_runtime_profile as profile_fixtures
@@ -189,7 +189,11 @@ class ActivationTests(unittest.TestCase):
    target=foreign.with_name('retained-junction-target') if getattr(self,'dangling_junction',False) else foreign
    self.assertEqual((target/'keep').read_text(),'retained');self.assertFalse((target/'profile.json').exists())
   finally:
-   if junction.is_junction():os.rmdir(junction)
+   try:info=junction.lstat()
+   except FileNotFoundError:pass
+   else:
+    if (getattr(info,'st_file_attributes',0)&stat.FILE_ATTRIBUTE_REPARSE_POINT
+        and getattr(info,'st_reparse_tag',None)==stat.IO_REPARSE_TAG_MOUNT_POINT):os.rmdir(junction)
 
  @unittest.skipUnless(__import__('os').name=='nt','Actual own-temp dangling Windows junction')
  def test_callback_dangling_junction_is_rejected_before_writes(self):
