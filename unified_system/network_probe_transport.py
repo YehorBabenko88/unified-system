@@ -546,4 +546,5 @@ class NetworkProbeTransport:
         if observation is None:raise ProbeTransportBlocked(receipt['reason'])
         self._current()  # Fresh after persistence, immediately before handoff.
         endpoint._current()
+        self._current()  # Endpoint callbacks may revoke the separate source grant.
         return observation

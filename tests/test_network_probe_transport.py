@@ -292,6 +292,21 @@ class TransportTests(unittest.TestCase):
         self.assertEqual(len(runner.calls),2)
         self.assertEqual(self.journal.state('PC1')['status'],'COMPLETE')
 
+    def test_source_revoked_by_final_endpoint_check_never_publishes(self):
+        from unified_system.network_probe_transport import NetworkProbeTransport
+        live=[True];original=self.lan_fixture.admit_lan_endpoint
+        def admit(node,descriptor):
+            granted=original(node,descriptor)
+            state=self.journal.state(node)
+            if state['status']=='COMPLETE' and state['generation']>0:live[0]=False
+            return granted
+        runner=FakeRunner()
+        with patch.object(self.lan_fixture,'admit_lan_endpoint',side_effect=admit):
+            with self.assertRaisesRegex(ProbeTransportBlocked,'PROBE_SOURCE_ADMISSION_REVOKED'):
+                NetworkProbeTransport(self.journal,inventory=self.inventory,require_current=lambda:live[0],runner=runner).observe('PC1')
+        self.assertEqual(len(runner.calls),2)
+        self.assertEqual(self.journal.state('PC1')['status'],'COMPLETE')
+
     def test_source_revoked_by_last_endpoint_check_precedes_runner_spawn(self):
         from unified_system.network_probe_transport import NetworkProbeTransport
         live=[True];original=self.lan_fixture.admit_lan_endpoint
