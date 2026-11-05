@@ -1,0 +1,45 @@
+name: Native operator subject negative qualification
+on:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  native-subject-compile-negative:
+    runs-on: windows-2022
+    timeout-minutes: 8
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      GIT_CONFIG_COUNT: '1'
+      GIT_CONFIG_KEY_0: core.autocrlf
+      GIT_CONFIG_VALUE_0: 'false'
+      EXPECTED_SOURCE: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - name: Offline evidence rejects upgraded authentication claims
+        run: python -I -S -B -c "import sys,unittest;sys.path.insert(0,'.');r=unittest.TextTestRunner().run(unittest.defaultTestLoader.loadTestsFromName('tests.test_operator_auth_source'));sys.exit(not r.wasSuccessful())"
+      - name: Actual Framework compile and invalid native context only
+        run: python -I -S -B scripts/verify_operator_auth_source.py --execute-ephemeral-hosted-negative-only --expected-source "$env:EXPECTED_SOURCE" --output "$env:RUNNER_TEMP/native-subject-negative.json"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        id: evidence
+        with:
+          name: native-subject-negative-${{ github.event.pull_request.head.sha || github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/native-subject-negative.json
+          if-no-files-found: error
+      - name: Publish partial qualification artifact digest
+        if: always()
+        env:
+          ARTIFACT_DIGEST: ${{ steps.evidence.outputs.artifact-digest }}
+          ARTIFACT_URL: ${{ steps.evidence.outputs.artifact-url }}
+        shell: python
+        run: |
+          import os
+          with open(os.environ['GITHUB_STEP_SUMMARY'],'a') as output:
+              output.write('Compile/invalid-context ONLY; positive extraction NOT_RUN; TLS/CBT and authentication NOT_QUALIFIED.\nArtifact SHA256: '+os.environ['ARTIFACT_DIGEST']+'\nURL: '+os.environ['ARTIFACT_URL']+'\n')
