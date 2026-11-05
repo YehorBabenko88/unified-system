@@ -1,0 +1,78 @@
+name: Operator Grid contracts
+on:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: operator-grid-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  operator-grid-contracts:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      EXPECTED_UNIFIED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      PYTEST_DISABLE_PLUGIN_AUTOLOAD: '1'
+      PYTHONDONTWRITEBYTECODE: '1'
+      GIT_CONFIG_COUNT: '1'
+      GIT_CONFIG_KEY_0: core.autocrlf
+      GIT_CONFIG_VALUE_0: 'false'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          path: unified
+          persist-credentials: false
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: YehorBabenko88/bybit-cluster-grid
+          ref: 55e74863c3c28bf4cbcb4ded4d3359f98bf93f71
+          path: grid
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - name: Create isolated evidence directory
+        run: mkdir "$RUNNER_TEMP/operator-grid-${{ github.run_id }}-${{ github.run_attempt }}"
+      - name: Verify both exact source trees before dependency setup
+        run: >-
+          python -I -S -B unified/scripts/operator_contract_ci.py
+          --unified "$GITHUB_WORKSPACE/unified" --grid "$GITHUB_WORKSPACE/grid"
+          --expected-unified "$EXPECTED_UNIFIED_SHA"
+          --report "$RUNNER_TEMP/operator-grid-${{ github.run_id }}-${{ github.run_attempt }}/source-before.json"
+      - name: Install hashlocked modeled fixture dependencies on ephemeral runner
+        run: |
+          python -m venv "$RUNNER_TEMP/operator-fixture-venv"
+          "$RUNNER_TEMP/operator-fixture-venv/bin/python" -m pip install --require-hashes --only-binary=:all: -r grid/lab/consul/requirements-three-linux.lock
+          "$RUNNER_TEMP/operator-fixture-venv/bin/python" -m pip check
+      - name: Required actual Gateway and Grid composition with exact test inventory
+        working-directory: unified
+        env:
+          GRID_TEST_ROOT: ${{ github.workspace }}/grid
+        run: |
+          "$RUNNER_TEMP/operator-fixture-venv/bin/python" -I -S -B -c 'import sys,runpy; sys.path[:0]=[".",sys.argv[1]]; sys.argv=["pytest","tests/test_operator_control_plane.py","tests/test_operator_grid_composition.py","tests/test_lifecycle.py","--noconftest","-p","no:cacheprovider","-q","--basetemp="+sys.argv[2],"--junitxml="+sys.argv[3]]; runpy.run_module("pytest",run_name="__main__")' "$RUNNER_TEMP/operator-fixture-venv/lib/python3.12/site-packages" "$RUNNER_TEMP/operator-pytest-${{ github.run_id }}-${{ github.run_attempt }}" "$RUNNER_TEMP/operator-grid-${{ github.run_id }}-${{ github.run_attempt }}/contracts.xml"
+      - name: Verify evidence helper invariants
+        working-directory: unified
+        run: python -I -S -B -c 'import sys,unittest; sys.path.insert(0,"."); r=unittest.TextTestRunner().run(unittest.defaultTestLoader.loadTestsFromName("tests.test_operator_contract_ci")); sys.exit(not r.wasSuccessful())'
+      - name: Required exact inventory and final source receipt
+        run: >-
+          python -I -S -B unified/scripts/operator_contract_ci.py
+          --unified "$GITHUB_WORKSPACE/unified" --grid "$GITHUB_WORKSPACE/grid"
+          --expected-unified "$EXPECTED_UNIFIED_SHA"
+          --junit "$RUNNER_TEMP/operator-grid-${{ github.run_id }}-${{ github.run_attempt }}/contracts.xml"
+          --report "$RUNNER_TEMP/operator-grid-${{ github.run_id }}-${{ github.run_attempt }}/source-after.json"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        id: evidence
+        with:
+          name: operator-grid-${{ github.event.pull_request.head.sha || github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/operator-grid-${{ github.run_id }}-${{ github.run_attempt }}
+          if-no-files-found: error
+      - name: Publish artifact digest receipt
+        if: always()
+        env:
+          ARTIFACT_DIGEST: ${{ steps.evidence.outputs.artifact-digest }}
+          ARTIFACT_URL: ${{ steps.evidence.outputs.artifact-url }}
+        run: |
+          printf 'SYNTHETIC_AUTH; MODELED_CONSUL; native SSPI and physical acceptance NOT_RUN\nArtifact SHA256: %s\nURL: %s\n' "$ARTIFACT_DIGEST" "$ARTIFACT_URL" >> "$GITHUB_STEP_SUMMARY"
