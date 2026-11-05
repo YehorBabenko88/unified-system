@@ -23,6 +23,9 @@ class GridCompositionTests(unittest.IsolatedAsyncioTestCase):
         sys.path.insert(0,str(root))
         self.addCleanup(lambda: sys.path.remove(str(root)))
         from grid.coordination_commands import CoordinationCommands
+        import grid.coordination_commands as actual_bridge
+        self.assertEqual(Path(actual_bridge.__file__).resolve(),root/'grid/coordination_commands.py',
+                         'composition imported a different Grid checkout')
         spec=importlib.util.spec_from_file_location('modeled_grid_commands_fixture',
             root/'tests/coordination/test_coordination_commands.py')
         fixtures=importlib.util.module_from_spec(spec);spec.loader.exec_module(fixtures)
