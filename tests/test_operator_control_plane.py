@@ -1,5 +1,7 @@
 """Offline contract evidence only; fixtures do not qualify native human auth."""
 import copy
+import hashlib
+import json
 import unittest
 from unified_system.operator_control_plane import (
     AuthenticationUnavailable, AuthorizationDenied, ContractError, CurrentPrincipal,
@@ -25,6 +27,7 @@ class FixtureVerifier:
 
 class FixtureBackend:
     """In-memory CAS/receipt seam; no persistent consensus claim."""
+    generation='00000000-0000-0000-0000-000000000007'
     def __init__(self): self.revision=0; self.receipts={}; self.effects=0
     async def submit(self, lease, envelope, session_context):
         key=(envelope['generation'], envelope['actor_id'], envelope['idempotency_key'])
@@ -34,8 +37,13 @@ class FixtureBackend:
             return receipt
         if envelope['expected_revision'] != self.revision: raise ContractError('REVISION_CONFLICT')
         self.revision+=1; self.effects+=1
-        receipt={'revision':self.revision,'command_id':envelope['command_id'],
-                 'actor_id':envelope['actor_id'],'aggregate_id':envelope['aggregate_id']}
+        receipt=dict(schema='unified.command-receipt.v1',revision=self.revision,
+            command_id=envelope['command_id'],generation=envelope['generation'],
+            actor_id=envelope['actor_id'],aggregate_id=envelope['aggregate_id'],grant_revision=3,
+            idempotency_key=envelope['idempotency_key'],
+            digest=hashlib.sha256(json.dumps(envelope,sort_keys=True).encode()).hexdigest(),
+            action=envelope['action'],commit_status='COMMITTED',effect_status='PENDING_UNWIRED',
+            leader_lock_index=10,consensus_modify_index=11)
         self.receipts[key]=(copy.deepcopy(envelope),receipt)
         return receipt
     async def get_command(self, command_id, session_context):
@@ -110,6 +118,22 @@ class OperatorTests(unittest.IsolatedAsyncioTestCase):
         with self.assertRaises(AuthorizationDenied): await OperatorGateway(self.backend,SerializedVerifier()).submit(None,intent(),object())
         self.verifier.roles=frozenset({'research.control','owner.override'})
         with self.assertRaises(AuthorizationDenied): await self.gateway.submit(None,intent(),object())
+    async def test_malformed_private_receipt_never_disclosed(self):
+        receipt=await self.gateway.submit(None,intent(),object())
+        patches=({'secret':'private'}, {'commit_status':'SUCCESS'}, {'effect_status':'EXECUTED'},
+                 {'consensus_modify_index':True},{'consensus_modify_index':0},
+                 {'consensus_modify_index':10},{'consensus_modify_index':2**53},
+                 {'command_id':'22222222-2222-4222-8222-222222222222'},
+                 {'generation':'00000000-0000-0000-0000-000000000008'},
+                 {'digest':'invalid'},{'revision':False})
+        async def result(*args): return malformed
+        self.backend.get_command=result
+        for patch in patches:
+            malformed=dict(receipt,**patch)
+            with self.assertRaises(ContractError): await self.gateway.get_command(intent()['command_id'],object())
+        malformed=dict(receipt,secret='private')
+        self.backend.submit=result
+        with self.assertRaises(ContractError): await self.gateway.submit(None,intent(),object())
 
 
 class StreamTests(unittest.IsolatedAsyncioTestCase):

@@ -110,6 +110,36 @@ def parse_envelope(raw):
         raise ContractError('JSON_INVALID') from exc
 
 
+def validate_receipt(value,command_id,generation):
+    """Reject unrecognized/private backend data rather than projecting it away."""
+    common={'schema','command_id','generation','commit_status','effect_status'}
+    known=common|{'actor_id','grant_revision','idempotency_key','digest','action',
+                  'aggregate_id','revision','leader_lock_index','consensus_modify_index'}
+    if type(value) is not dict or set(value) not in (common,known): raise ContractError('RECEIPT_FIELDS_INVALID')
+    if (value['schema']!='unified.command-receipt.v1' or value['command_id']!=command_id
+            or value['generation']!=generation): raise ContractError('RECEIPT_BINDING_INVALID')
+    try:
+        for ident in (command_id,generation):
+            if str(UUID(ident))!=ident: raise ValueError()
+    except (ValueError,TypeError,AttributeError) as exc: raise ContractError('RECEIPT_UUID_INVALID') from exc
+    if set(value)==common:
+        if value['commit_status']!='UNKNOWN' or value['effect_status']!='UNKNOWN':
+            raise ContractError('RECEIPT_STATUS_INVALID')
+    else:
+        if value['commit_status']!='COMMITTED' or value['effect_status']!='PENDING_UNWIRED':
+            raise ContractError('RECEIPT_STATUS_INVALID')
+        for field in ('actor_id','aggregate_id','idempotency_key'): _identifier(value[field])
+        for field in ('grant_revision','revision','leader_lock_index','consensus_modify_index'):
+            _integer(value[field])
+        if min(value['grant_revision'],value['revision'],value['leader_lock_index'],value['consensus_modify_index'])<1:
+            raise ContractError('RECEIPT_INDEX_INVALID')
+        if value['consensus_modify_index']<=value['leader_lock_index']:
+            raise ContractError('RECEIPT_INDEX_ORDER_INVALID')
+        if (value['action']!='SetResearchControl' or type(value['digest']) is not str
+                or re.fullmatch('[a-f0-9]{64}',value['digest']) is None): raise ContractError('RECEIPT_INTENT_INVALID')
+    return json.loads(json.dumps(value,allow_nan=False))
+
+
 class OperatorGateway:
     """Admission seam, not an authority or authenticator.
 
@@ -140,6 +170,7 @@ class OperatorGateway:
         envelope['actor_id']=principal.actor_id
         if self._backend is None: raise AuthenticationUnavailable('CONTROL_BACKEND_UNAVAILABLE')
         receipt=await self._backend.submit(lease,envelope,session_context)
+        receipt=validate_receipt(receipt,envelope['command_id'],envelope['generation'])
         current=await self._principal(session_context,envelope['action'],envelope['aggregate_id'])
         if ((current.actor_id,current.grant_revision)!=(principal.actor_id,principal.grant_revision)
                 or 'research.control' not in current.capabilities):
@@ -157,18 +188,8 @@ class OperatorGateway:
         # Backend independently enforces scope too; ownership comes from durable
         # receipt metadata, never request JSON.
         receipt=await self._backend.get_command(command_id,session_context)
-        if receipt is None:
-            current=await self._principal(session_context,'ReadCommand',command_id)
-            if ((current.actor_id,current.grant_revision)!=(principal.actor_id,principal.grant_revision)
-                    or 'control.commands.read' not in current.capabilities):
-                raise AuthorizationDenied('AUTHORIZATION_CHANGED')
-            return None
-        if type(receipt) is not dict: raise ContractError('RECEIPT_INVALID')
-        if set(receipt)=={'command_id','generation','commit_status','effect_status'}:
-            if (receipt['command_id']!=command_id or receipt['commit_status']!='UNKNOWN'
-                    or receipt['effect_status']!='UNKNOWN'):
-                raise ContractError('UNKNOWN_RECEIPT_INVALID')
-            _identifier(receipt['generation'])
+        receipt=validate_receipt(receipt,command_id,getattr(self._backend,'generation',None))
+        if receipt['commit_status']=='UNKNOWN':
             current=await self._principal(session_context,'ReadCommand',command_id)
             if ((current.actor_id,current.grant_revision)!=(principal.actor_id,principal.grant_revision)
                     or 'control.commands.read' not in current.capabilities):

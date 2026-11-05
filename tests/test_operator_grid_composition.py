@@ -53,7 +53,7 @@ class GridCompositionTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(self.state['transactions'],1)
         unknown_id='33333333-3333-4333-8333-333333333333'
         unknown=await self.gateway.get_command(unknown_id,'MODELED_HUMAN')
-        self.assertEqual(set(unknown),{'command_id','generation','commit_status','effect_status'})
+        self.assertEqual(set(unknown),{'schema','command_id','generation','commit_status','effect_status'})
         self.assertEqual(unknown['commit_status'],'UNKNOWN')
         self.provider.active=False
         with self.assertRaises(AuthorizationDenied):
