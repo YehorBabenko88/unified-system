@@ -14,7 +14,7 @@ class EvidenceTests(unittest.TestCase):
                 '<testcase classname="'+c+'" name="'+n+'">'+extra+'</testcase>' for c,n in cases)+'</testsuite></testsuites>'
         with tempfile.TemporaryDirectory() as folder:
             path=Path(folder)/'results.xml'
-            path.write_text(xml(REQUIRED_CASES));self.assertEqual(validate_junit(path),32)
+            path.write_text(xml(REQUIRED_CASES));self.assertEqual(validate_junit(path),34)
             for content in (xml(REQUIRED_CASES[:-1]),xml(REQUIRED_CASES+[REQUIRED_CASES[0]]),
                             xml(REQUIRED_CASES,'<skipped/>'),xml(REQUIRED_CASES,'<failure/>')):
                 path.write_text(content)

@@ -6,6 +6,7 @@ not authentication evidence. This module does not open listeners or store secret
 """
 from dataclasses import dataclass
 import json
+import hashlib
 import re
 from typing import Protocol
 from uuid import UUID
@@ -155,7 +156,7 @@ class OperatorGateway:
         principal=await self._provider.require_current(context,action,aggregate_id)
         try:
             _identifier(principal.actor_id); _integer(principal.grant_revision)
-            valid=(principal.principal_kind=='HUMAN' and type(principal.capabilities) is frozenset
+            valid=(principal.grant_revision>0 and principal.principal_kind=='HUMAN' and type(principal.capabilities) is frozenset
                    and bool(principal.capabilities) and principal.capabilities <= _CAPABILITIES)
         except (AttributeError,ContractError,TypeError): valid=False
         if not valid: raise AuthorizationDenied('HUMAN_CURRENT_GRANT_REQUIRED')
@@ -171,6 +172,12 @@ class OperatorGateway:
         if self._backend is None: raise AuthenticationUnavailable('CONTROL_BACKEND_UNAVAILABLE')
         receipt=await self._backend.submit(lease,envelope,session_context)
         receipt=validate_receipt(receipt,envelope['command_id'],envelope['generation'])
+        if receipt['commit_status']=='COMMITTED':
+            digest=hashlib.sha256(json.dumps(envelope,sort_keys=True,separators=(',',':'),allow_nan=False).encode()).hexdigest()
+            if (any(receipt[field]!=envelope[field] for field in
+                    ('actor_id','idempotency_key','action','aggregate_id'))
+                    or receipt['digest']!=digest or receipt['revision']!=envelope['expected_revision']+1):
+                raise ContractError('RECEIPT_INTENT_BINDING_INVALID')
         current=await self._principal(session_context,envelope['action'],envelope['aggregate_id'])
         if ((current.actor_id,current.grant_revision)!=(principal.actor_id,principal.grant_revision)
                 or 'research.control' not in current.capabilities):

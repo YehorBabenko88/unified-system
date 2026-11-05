@@ -75,4 +75,4 @@ jobs:
           ARTIFACT_DIGEST: ${{ steps.evidence.outputs.artifact-digest }}
           ARTIFACT_URL: ${{ steps.evidence.outputs.artifact-url }}
         run: |
-          printf 'SYNTHETIC_AUTH; MODELED_CONSUL; native SSPI and physical acceptance NOT_RUN\nArtifact SHA256: %s\nURL: %s\n' "$ARTIFACT_DIGEST" "$ARTIFACT_URL" >> "$GITHUB_STEP_SUMMARY"
+          printf 'SYNTHETIC_AUTH; MODELED_CONSUL; dependency integrity INSTALL_HASH_ONLY; installed wheel tree verification NOT_RUN; native SSPI and physical acceptance NOT_RUN\nArtifact SHA256: %s\nURL: %s\n' "$ARTIFACT_DIGEST" "$ARTIFACT_URL" >> "$GITHUB_STEP_SUMMARY"

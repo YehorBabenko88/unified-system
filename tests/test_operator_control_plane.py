@@ -20,9 +20,10 @@ class FixtureVerifier:
     """Explicit test-only verifier; never installed by any runtime factory."""
     def __init__(self):
         self.state='current'; self.kind='HUMAN'; self.roles=frozenset({'research.control','control.commands.read'})
+        self.grant_revision=3
     async def require_current(self, context, action, aggregate_id):
         if self.state != 'current': raise AuthorizationDenied(self.state)
-        return CurrentPrincipal('operator-1', 3, self.kind, self.roles)
+        return CurrentPrincipal('operator-1', self.grant_revision, self.kind, self.roles)
 
 
 class FixtureBackend:
@@ -41,7 +42,7 @@ class FixtureBackend:
             command_id=envelope['command_id'],generation=envelope['generation'],
             actor_id=envelope['actor_id'],aggregate_id=envelope['aggregate_id'],grant_revision=3,
             idempotency_key=envelope['idempotency_key'],
-            digest=hashlib.sha256(json.dumps(envelope,sort_keys=True).encode()).hexdigest(),
+            digest=hashlib.sha256(json.dumps(envelope,sort_keys=True,separators=(',',':')).encode()).hexdigest(),
             action=envelope['action'],commit_status='COMMITTED',effect_status='PENDING_UNWIRED',
             leader_lock_index=10,consensus_modify_index=11)
         self.receipts[key]=(copy.deepcopy(envelope),receipt)
@@ -134,6 +135,20 @@ class OperatorTests(unittest.IsolatedAsyncioTestCase):
         malformed=dict(receipt,secret='private')
         self.backend.submit=result
         with self.assertRaises(ContractError): await self.gateway.submit(None,intent(),object())
+    async def test_zero_grant_denied_before_backend_io(self):
+        self.verifier.grant_revision=0
+        async def forbidden(*args): self.fail('backend called with zero grant')
+        self.backend.submit=forbidden;self.backend.get_command=forbidden
+        with self.assertRaises(AuthorizationDenied): await self.gateway.submit(None,intent(),object())
+        with self.assertRaises(AuthorizationDenied): await self.gateway.get_command(intent()['command_id'],object())
+    async def test_submit_receipt_must_match_entire_intent(self):
+        receipt=await self.gateway.submit(None,intent(),object())
+        async def result(*args): return changed
+        self.backend.submit=result
+        for patch in ({'actor_id':'someone-else'},{'aggregate_id':'another'},
+                      {'idempotency_key':'different'},{'digest':'0'*64},{'revision':2}):
+            changed=dict(receipt,**patch)
+            with self.assertRaises(ContractError):await self.gateway.submit(None,intent(),object())
 
 
 class StreamTests(unittest.IsolatedAsyncioTestCase):

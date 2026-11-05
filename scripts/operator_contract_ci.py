@@ -21,6 +21,8 @@ REQUIRED_CASES=[('tests.test_operator_control_plane.OperatorTests', 'test_missin
  ('tests.test_operator_control_plane.OperatorTests',
   'test_serialized_or_unknown_capability_principal_denied'),
  ('tests.test_operator_control_plane.OperatorTests', 'test_malformed_private_receipt_never_disclosed'),
+ ('tests.test_operator_control_plane.OperatorTests', 'test_zero_grant_denied_before_backend_io'),
+ ('tests.test_operator_control_plane.OperatorTests', 'test_submit_receipt_must_match_entire_intent'),
  ('tests.test_operator_control_plane.StreamTests', 'test_snapshot_gap_generation_and_staleness'),
  ('tests.test_operator_control_plane.StreamTests', 'test_invalid_snapshot_cannot_mark_live'),
  ('tests.test_operator_grid_composition.GridCompositionTests',
@@ -55,7 +57,7 @@ def validate_junit(path):
     root=ET.parse(path).getroot()
     cases=root.findall('.//testcase')
     observed=[(c.get('classname'),c.get('name')) for c in cases]
-    if (len(observed)!=32 or len(set(observed))!=32 or set(observed)!=set(REQUIRED_CASES)
+    if (len(observed)!=34 or len(set(observed))!=34 or set(observed)!=set(REQUIRED_CASES)
             or root.findall('.//skipped') or root.findall('.//failure') or root.findall('.//error')):
         raise ValueError('REQUIRED_TEST_INVENTORY_FAILED')
     return len(cases)
@@ -75,6 +77,7 @@ def receipt(unified,grid,expected_unified,junit=None):
         os.chdir(previous)
     result=dict(schema='unified.operator-contract-ci.v1',unified=unified_source,grid=grid_source,
         fixture_lock_sha256=hashlib.sha256((grid/'lab/consul/requirements-three-linux.lock').read_bytes()).hexdigest(),
+        dependency_integrity='INSTALL_HASH_ONLY',installed_wheel_tree_verification='NOT_RUN',
         authentication='SYNTHETIC_AUTH',consensus='MODELED_CONSUL',native_sspi='NOT_RUN',physical='NOT_RUN',production='NO_GO')
     if junit:
         result['required_tests']=validate_junit(junit)
