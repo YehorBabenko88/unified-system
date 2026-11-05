@@ -2,10 +2,25 @@ Set-StrictMode -Version Latest
 
 function Assert-LocalPath([string]$Path) {
     if ($Path -notmatch '^[A-Za-z]:\\' -or $Path.Substring(2).Contains(':') -or $Path.Contains('/') -or $Path.Contains('..')) { throw 'Absolute local drive path required' }
-    $item = Get-Item -LiteralPath $Path -Force -ErrorAction Stop
-    while ($null -ne $item) {
+    $full=[IO.Path]::GetFullPath($Path)
+    $driveRoot=[IO.Path]::GetPathRoot($full)
+    $volume=[IO.DriveInfo]::new($driveRoot)
+    if ($volume.DriveType -ne [IO.DriveType]::Fixed) {throw 'Fixed local drive required'}
+    $drive=Get-PSDrive -Name ($driveRoot.Substring(0,1)) -ErrorAction Stop
+    if ($drive.Provider.Name -cne 'FileSystem' -or $drive.Root.TrimEnd('\') -ine $driveRoot.TrimEnd('\')) {throw 'Drive provider namespace mismatch'}
+    $ancestors=New-Object 'System.Collections.Generic.List[string]'
+    $cursor=$full
+    while ($cursor) {
+        $ancestors.Add($cursor)
+        $parent=[IO.Path]::GetDirectoryName($cursor.TrimEnd('\'))
+        if ($parent -eq $cursor) {break};$cursor=$parent
+    }
+    for ($i=$ancestors.Count-1;$i -ge 0;$i--) {
+        $current=$ancestors[$i]
+        # Require every component to exist. Inspect parents before descendants.
+        $item=Get-Item -LiteralPath $current -Force -ErrorAction Stop
         if (($item.Attributes -band [IO.FileAttributes]::ReparsePoint) -ne 0) { throw 'Reparse point forbidden' }
-        if ($item -is [IO.DirectoryInfo]) { $item = $item.Parent } else { $item = $item.Directory }
+        if ($current -ine $full -and !$item.PSIsContainer) {throw 'Non-directory ancestor forbidden'}
     }
 }
 
@@ -145,4 +160,66 @@ function Test-UnifiedSecurityPackage {
     if ($dependencies.Count -ne 5) { throw 'Dependency closure missing' }
     [pscustomobject]@{mode='DRY_RUN_ONLY'; signature='PINNED_SIGNATURE_VERIFIED'; source_provenance='NOT_EVALUATED'; production='NO_GO'; namespace_trust='UNVERIFIED'; artifacts=$data.artifacts.Count; mutations_performed=$false; physical_acceptance='NOT_AUTHORIZED'; admission='NOT_GRANTED'}
 }
-Export-ModuleMember -Function Test-UnifiedSecurityPackage, Test-UnifiedPackageSignature
+function Test-UnifiedCodeSigningPublisher([Security.Cryptography.X509Certificates.X509Certificate2]$Certificate,[string]$ExpectedPublisherSha256) {
+    if($null -eq $Certificate -or $ExpectedPublisherSha256 -cnotmatch '^[0-9a-f]{64}$'){throw 'External Code Signing publisher pin required'}
+    $sha=[Security.Cryptography.SHA256]::Create()
+    try{$pin=([BitConverter]::ToString($sha.ComputeHash($certificate.RawData))).Replace('-','').ToLowerInvariant()}finally{$sha.Dispose()}
+    if($pin -cne $ExpectedPublisherSha256){throw 'Authenticode publisher pin mismatch'}
+    $codeSigning=$false
+    foreach($extension in $certificate.Extensions){
+        if($extension.Oid.Value -ceq '2.5.29.37'){
+            foreach($usage in $extension.EnhancedKeyUsages){if($usage.Value -ceq '1.3.6.1.5.5.7.3.3'){$codeSigning=$true}}
+        }
+    }
+    if(!$codeSigning){throw 'Explicit Code Signing EKU required'}
+    $now=[DateTime]::UtcNow
+    if($certificate.NotBefore.ToUniversalTime() -gt $now -or $certificate.NotAfter.ToUniversalTime() -le $now){throw 'Current publisher certificate is not valid'}
+    $chain=[Security.Cryptography.X509Certificates.X509Chain]::new()
+    try{
+        $chain.ChainPolicy.RevocationMode=[Security.Cryptography.X509Certificates.X509RevocationMode]::Online
+        $chain.ChainPolicy.RevocationFlag=[Security.Cryptography.X509Certificates.X509RevocationFlag]::EntireChain
+        $chain.ChainPolicy.VerificationFlags=[Security.Cryptography.X509Certificates.X509VerificationFlags]::NoFlag
+        $chain.ChainPolicy.UrlRetrievalTimeout=[TimeSpan]::FromSeconds(5)
+        [void]$chain.ChainPolicy.ApplicationPolicy.Add([Security.Cryptography.Oid]::new('1.3.6.1.5.5.7.3.3'))
+        if(!$chain.Build($certificate)){throw 'Publisher chain or revocation verification failed'}
+    }finally{$chain.Dispose()}
+    [pscustomobject]@{publisher_sha256=$pin;chain='SYSTEM_TRUSTED_WITH_REVOCATION';admission='NOT_GRANTED'}
+}
+function Test-UnifiedAuthenticodeTimestamp([Security.Cryptography.X509Certificates.X509Certificate2]$Certificate) {
+    if($null -eq $Certificate){throw 'Trusted timestamp certificate required'}
+    $timestampEku=$false
+    foreach($extension in $Certificate.Extensions){
+        if($extension.Oid.Value -ceq '2.5.29.37'){
+            foreach($usage in $extension.EnhancedKeyUsages){if($usage.Value -ceq '1.3.6.1.5.5.7.3.8'){$timestampEku=$true}}
+        }
+    }
+    if(!$timestampEku){throw 'Explicit Time Stamping EKU required'}
+    $now=[DateTime]::UtcNow
+    if($Certificate.NotBefore.ToUniversalTime() -gt $now -or $Certificate.NotAfter.ToUniversalTime() -le $now){throw 'Current timestamp certificate is not valid'}
+    $chain=[Security.Cryptography.X509Certificates.X509Chain]::new()
+    try{
+        $chain.ChainPolicy.RevocationMode=[Security.Cryptography.X509Certificates.X509RevocationMode]::Online
+        $chain.ChainPolicy.RevocationFlag=[Security.Cryptography.X509Certificates.X509RevocationFlag]::EntireChain
+        $chain.ChainPolicy.VerificationFlags=[Security.Cryptography.X509Certificates.X509VerificationFlags]::NoFlag
+        $chain.ChainPolicy.UrlRetrievalTimeout=[TimeSpan]::FromSeconds(5)
+        [void]$chain.ChainPolicy.ApplicationPolicy.Add([Security.Cryptography.Oid]::new('1.3.6.1.5.5.7.3.8'))
+        if(!$chain.Build($Certificate)){throw 'Timestamp chain or revocation verification failed'}
+    }finally{$chain.Dispose()}
+    [pscustomobject]@{timestamp='NATIVE_AUTHENTICODE_COUNTERSIGNATURE_REQUIRED';chain='SYSTEM_TRUSTED_WITH_REVOCATION';admission='NOT_GRANTED'}
+}
+function Test-UnifiedAuthenticodeArtifact([string]$Path,[string]$ExpectedPublisherSha256) {
+    if($ExpectedPublisherSha256 -cnotmatch '^[0-9a-f]{64}$'){throw 'External Authenticode publisher pin required'}
+    Assert-LocalPath $Path
+    $artifactStream=[IO.File]::Open($Path,[IO.FileMode]::Open,[IO.FileAccess]::Read,[IO.FileShare]::Read)
+    try{
+        if($artifactStream.Length -lt 1 -or $artifactStream.Length -gt 536870912){throw 'Authenticode artifact size rejected'}
+        $signature=Get-AuthenticodeSignature -LiteralPath $Path -ErrorAction Stop
+        if($signature.Status -ne [Management.Automation.SignatureStatus]::Valid -or $null -eq $signature.SignerCertificate){throw 'Authenticode signature is not valid'}
+        $publisher=Test-UnifiedCodeSigningPublisher $signature.SignerCertificate $ExpectedPublisherSha256
+        $timestamp=Test-UnifiedAuthenticodeTimestamp $signature.TimeStamperCertificate
+        $sha=[Security.Cryptography.SHA256]::Create()
+        try{$artifactHash=([BitConverter]::ToString($sha.ComputeHash($artifactStream))).Replace('-','').ToLowerInvariant()}finally{$sha.Dispose()}
+        [pscustomobject]@{authenticode='VALID';artifact_sha256=$artifactHash;publisher_sha256=$publisher.publisher_sha256;chain=$publisher.chain;timestamp='NATIVE_VALIDATED_WITH_TRUSTED_TSA';timestamp_chain=$timestamp.chain;execution_authority=$false;admission='NOT_GRANTED'}
+    }finally{$artifactStream.Dispose()}
+}
+Export-ModuleMember -Function Test-UnifiedSecurityPackage, Test-UnifiedPackageSignature, Test-UnifiedAuthenticodeArtifact, Test-UnifiedCodeSigningPublisher, Test-UnifiedAuthenticodeTimestamp

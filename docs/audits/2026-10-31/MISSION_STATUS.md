@@ -1,3 +1,51 @@
+# Mission 4 continuation — cloud preparation INCOMPLETE
+
+ADMINIT/office access is not authorized. No physical inventory, installations,
+services, databases or tests have been performed. Request separate admission only
+when cloud preparation is complete; do not request office inventory yet.
+
+Current implementation includes three successful combined six-profile cloud
+runs: one supervisor, five real processes and the built-in Unified profile,
+actual synthetic data/API handoffs, source/dependency before-after checks,
+owned process stop and disposable database cleanup. Synthetic cloud results
+are not authenticated history, physical acceptance or multi-node HA evidence.
+
+Unified `106d143`: 276 tests PASS; all four current hosted workflows PASS.
+Grid `35b9cf69`: 1283 tests PASS, 12 platform skips, 46 subtests; independently
+reviewed feed cancellation/retained admission and uncertain WAL I/O fixes.
+Meta `fa855d3` native Windows/PostgreSQL18/coverage aggregate PASS. Terminan
+`8595443` four-cell hosted matrix PASS, 405 local Python tests and 84 actual
+Chromium/Firefox assertions plus strict browser evidence bundle PASS.
+Math `6af353a` four Linux matrix cells PASS; mandatory Windows failure remains
+under diagnosis. Strattester `798c3e3` Windows source regression now PASS;
+Ubuntu Python3.13 regression remains under diagnosis. Its system acceptance
+NO_GO is retained and must not be disabled. These are exact component results,
+not a claim that all current integration or acceptance checks pass.
+
+The isolated raw Python bootstrap, source fence and release/toolchain preflight
+are externally pinned. Durable readiness is revalidated after recovery before
+serving API state. Publication timing covers all bounded probes. The Windows
+wheel candidate and input provenance are tracked under
+`integration/windows-candidate`: 72 acquired wheels match offline inspection,
+but native dependency closure is NOT_RUN and installation closure stays false.
+Python/Node/Git archive checksums match; full native SDK staging and process-tree
+containment are still in development. No installer release is admitted.
+
+Remaining: actual hosted Windows SDK and wheel qualification; full isolated
+PostgreSQL/storage/ACL/port provisioning, six services and rollback/uninstall;
+trusted deployment-agent/runtime bridge and owner-signed release admission;
+current mandatory CI defects; raw market capture/gap/snapshot reconciliation
+and live paper capability; independent OS watchdog/fencing qualification.
+Ten authenticated instrument histories, training/OOS fees/funding/slippage,
+live/paper/performance/recovery ADMINIT results are NOT_RUN. Release installer
+SHA256 is NOT_BUILT/NOT_ADMITTED. Installed versions and ADMINIT service/DB
+health are NOT_INSTALLED/NOT_OBSERVED. Office cluster readiness remains NO_GO.
+
+The checkpoint below is historical Mission 1/2 evidence. Its network restrictions,
+counts and missing capabilities describe that earlier commit, not current state.
+
+---
+
 # Mission 1 / 2 checkpoint
 
 The project and deployment preparation are **not complete**. Physical acceptance

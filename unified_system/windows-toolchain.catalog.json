@@ -1,0 +1,87 @@
+{
+  "schema": "unified.windows.toolchain.catalog.v1",
+  "platform": "windows-x64",
+  "scope": "OFFLINE_BYTE_INTEGRITY_ONLY",
+  "artifacts": [
+    {
+      "component": "python",
+      "version": "3.12.10",
+      "filename": "python.3.12.10.nupkg",
+      "url": "https://api.nuget.org/v3-flatcontainer/python/3.12.10/python.3.12.10.nupkg",
+      "sha256": "0eb85c2dfccccf1b17352de4c397f69194035b7d37149eacc16f1147d93de3b8",
+      "expected_bytes": 14515433,
+      "max_bytes": 16777216,
+      "provenance": {
+        "checksum_basis": "VENDOR_METADATA_REVIEWED",
+        "reference": "Official NuGet catalog/package metadata; independently checked candidate bytes",
+        "native_execution": "NOT_RUN"
+      }
+    },
+    {
+      "component": "node",
+      "version": "22.23.4",
+      "filename": "node-v22.23.4-win-x64.zip",
+      "url": "https://nodejs.org/dist/v22.23.4/node-v22.23.4-win-x64.zip",
+      "sha256": "cbc74b5e0982c9dbb41525fd8fb5dcd32fbee237863f7829072f4639a1ce5f20",
+      "expected_bytes": 35604229,
+      "max_bytes": 67108864,
+      "provenance": {
+        "checksum_basis": "VENDOR_METADATA_REVIEWED",
+        "reference": "Official Node SHASUMS256.txt; independently checked candidate bytes",
+        "native_execution": "NOT_RUN"
+      }
+    },
+    {
+      "component": "git",
+      "version": "2.56.0.4",
+      "filename": "MinGit-2.56.0.4-64-bit.zip",
+      "url": "https://github.com/git-for-windows/git/releases/download/v2.56.0.windows.4/MinGit-2.56.0.4-64-bit.zip",
+      "sha256": "e3bf78351fe777fba47ddee5950082f8a98bb0f02604fdc7ba3ee2cb68ffa877",
+      "expected_bytes": 39846926,
+      "max_bytes": 67108864,
+      "provenance": {
+        "checksum_basis": "VENDOR_METADATA_REVIEWED",
+        "reference": "Official Git for Windows release asset metadata; independently checked candidate bytes",
+        "native_execution": "NOT_RUN"
+      }
+    },
+    {
+      "component": "postgresql",
+      "version": "18.6-5",
+      "filename": "postgresql-18.6-5-windows-x64-binaries.zip",
+      "url": "https://get.enterprisedb.com/postgresql/postgresql-18.6-5-windows-x64-binaries.zip",
+      "sha256": "e2246ba91d22345bc3d017586c09ede52d9df180b1eeb480f050445f1cad84e2",
+      "expected_bytes": null,
+      "max_bytes": 1073741824,
+      "provenance": {
+        "checksum_basis": "EXISTING_REPOSITORY_CI_PIN",
+        "reference": "MetaAnalyse c108b8c scripts/prepare-ci-postgres18.ps1; bytes not locally verified",
+        "native_execution": "NOT_RUN"
+      }
+    },
+    {
+      "component": "nssm",
+      "version": "2.24-101-g897c7ad",
+      "filename": "nssm-2.24-101-g897c7ad.zip",
+      "url": "https://www.nssm.cc/ci/nssm-2.24-101-g897c7ad.zip",
+      "sha256": "99f5045fffbffb745d67fe3a065a953c4a3d9c253b868892d9b685b0ee7d07b8",
+      "expected_bytes": null,
+      "max_bytes": 16777216,
+      "provenance": {
+        "checksum_basis": "THIRD_PARTY_VERIFICATION_PIN",
+        "reference": "Chocolatey NSSM VERIFICATION text; bytes not locally verified",
+        "native_execution": "NOT_RUN"
+      }
+    }
+  ],
+  "required_unlocked": [
+    {
+      "component": "python-wheels",
+      "reason": "NO_REVIEWED_WINDOWS_WHEEL_CLOSURE"
+    },
+    {
+      "component": "consul",
+      "reason": "NO_REVIEWED_OFFICIAL_BINARY_PIN"
+    }
+  ]
+}

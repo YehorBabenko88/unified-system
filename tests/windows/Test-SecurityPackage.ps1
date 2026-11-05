@@ -58,6 +58,43 @@ try {
     }
   }
   foreach ($path in @('../x','//server/share','C:/outside','C:\x:ads')) {Reject {& $module {param($p) Assert-LocalPath $p} $path}}
+  # Native PS5.1/7 regression: reject a real harmless local junction BEFORE
+  # Get-Item can probe a descendant. Observer stays private to this module.
+  $temporaryRoot=[IO.Path]::GetTempPath().TrimEnd('\')
+  & $module {param($p) Assert-LocalPath $p} $temporaryRoot
+  $fixture=Join-Path $temporaryRoot ('security-path-'+[Guid]::NewGuid().ToString('N'))
+  $target=Join-Path $fixture 'target'
+  $junction=Join-Path $fixture 'junction'
+  try {
+    [void][IO.Directory]::CreateDirectory($target)
+    $leaf=Join-Path $target 'innocent.txt';[IO.File]::WriteAllText($leaf,'local test fixture')
+    & $module {param($p) Assert-LocalPath $p} $leaf
+    Reject { & $module {param($p) Assert-LocalPath $p} (Join-Path $fixture 'missing.txt') }
+    [void](New-Item -ItemType Junction -Path $junction -Target $target -ErrorAction Stop)
+    $probe=Join-Path $junction 'innocent.txt'
+    & $module {
+      param($probePath,$junctionPath)
+      $script:PathProbeCalls=New-Object 'System.Collections.Generic.List[string]'
+      function script:Get-Item {
+        [CmdletBinding()]
+        param([string]$LiteralPath,[switch]$Force)
+        $script:PathProbeCalls.Add($LiteralPath)
+        Microsoft.PowerShell.Management\Get-Item -LiteralPath $LiteralPath -Force:$Force -ErrorAction Stop
+      }
+      try {
+        $rejected=$false;try { Assert-LocalPath $probePath } catch {$rejected=$true}
+        if (!$rejected) {throw 'Junction path was not rejected'}
+        if ($script:PathProbeCalls -icontains $probePath) {throw 'Descendant metadata probed before rejecting junction'}
+        if ($script:PathProbeCalls -inotcontains $junctionPath) {throw 'Actual junction metadata was not checked'}
+      } finally {
+        Remove-Item Function:script:Get-Item -ErrorAction SilentlyContinue
+        Remove-Variable PathProbeCalls -Scope Script -ErrorAction SilentlyContinue
+      }
+    } $probe $junction
+  } finally {
+    if ([IO.Directory]::Exists($junction)) {[IO.Directory]::Delete($junction)}
+    if ([IO.Directory]::Exists($fixture)) {Remove-Item -LiteralPath $fixture -Recurse -Force}
+  }
   & $module { Assert-AclFacts 'S-1-5-21-100' 'S-1-5-21-100' @() }
   Reject { & $module { Assert-AclFacts 'S-1-1-0' 'S-1-5-21-100' @() } }
   foreach ($right in @([int64]2,[int64]4,[int64]16,[int64]64,[int64]256,[int64]65536,[int64]262144,[int64]524288)) {

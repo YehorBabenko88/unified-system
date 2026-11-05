@@ -1,0 +1,1624 @@
+{
+  "schema": "unified.master-mission-execution-matrix.v1",
+  "assembled_utc": "2026-11-04T20:51:18.984555+00:00",
+  "mission_status": "IN_PROGRESS",
+  "final_go": "NO-GO",
+  "sources": [
+    {
+      "path": "C:\\Users\\LS-5\\.codex\\attachments\\92d06c12-9866-4230-8981-23b216cd26a6\\Вставленный текст.txt",
+      "sha256": "d6019b60f94aa3868faac1b9188a7ca21e48bac376d0f3f4a184cb306055cdbc"
+    },
+    {
+      "path": "C:\\Users\\LS-5\\.codex\\attachments\\0a4f7194-e399-440d-98ed-ec9f0bed94d8\\Вставленный текст.txt",
+      "sha256": "c26f792f7e06030352e3a100f327d9bf7fb13f579413857c440806e9be57e842"
+    },
+    {
+      "path": "C:\\Users\\LS-5\\.codex\\attachments\\6e8b79a8-b016-498a-87af-28796fb2c4a9\\Вставленный текст.txt",
+      "sha256": "2779d88fe9d6255b9744e2fc6035c3c81b5fceee3ef52af0e0f8bc6967c28519"
+    },
+    {
+      "path": "C:\\Users\\LS-5\\.codex\\attachments\\62558744-9b4f-41a9-8681-514799df3c7f\\Вставленный текст.txt",
+      "sha256": "edb698b975ad91a2f5d79d4c95714b5ce889a6b6097191d0ecbd80907b43a974"
+    }
+  ],
+  "requirements": [
+    {
+      "requirement_id": "P0-01",
+      "repository": "unified-system + all six",
+      "requirement": "Six repositories, HEADs, Draft PRs, dirty files, contracts and migrations; preserve existing implementations",
+      "existing_implementation": "lab_release.py; integration/source_guard.py; contract_matrix.py",
+      "missing_functionality": "Refresh exact current heads after each relevant commit; map module contract/migration compatibility",
+      "dependencies": [],
+      "concrete_code_changes": "Refresh exact current heads after each relevant commit; map module contract/migration compatibility",
+      "required_tests": "CI/source-tree/manifest negative tests; mandatory OS/Python matrices",
+      "physical_checks": "No deployment; read-only source/node inventory",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\ci-matrix.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "IN_PROGRESS"
+    },
+    {
+      "requirement_id": "P0-02",
+      "repository": "unified-system + all six",
+      "requirement": "Full mandatory CI and source-bound logs/artifacts for every fix; no synthetic PASS",
+      "existing_implementation": "lab_release.py; integration/source_guard.py; contract_matrix.py",
+      "missing_functionality": "Fix current Windows fixture failures and collect complete new matrices; preserve old failures",
+      "dependencies": [
+        "P0-01"
+      ],
+      "concrete_code_changes": "Fix current Windows fixture failures and collect complete new matrices; preserve old failures",
+      "required_tests": "CI/source-tree/manifest negative tests; mandatory OS/Python matrices",
+      "physical_checks": "No deployment; read-only source/node inventory",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\ci-matrix.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "IN_PROGRESS",
+      "integration_milestone": "Unified e7c473b: 565 tests, 7 skipped, zero failures (local). Current mandatory CI incomplete; native Windows download FAIL. Grid new migration fix and hosted PG tests awaiting exact-head CI."
+    },
+    {
+      "requirement_id": "P0-03",
+      "repository": "unified-system + all six",
+      "requirement": "Math Windows 0xC0000142 and worker early-init timeout",
+      "existing_implementation": "lab_release.py; integration/source_guard.py; contract_matrix.py",
+      "missing_functionality": "Use actual nonce evidence to locate post-payload stall; investigate native initialization without security/deadline waivers",
+      "dependencies": [
+        "P0-02"
+      ],
+      "concrete_code_changes": "Use actual nonce evidence to locate post-payload stall; investigate native initialization without security/deadline waivers",
+      "required_tests": "CI/source-tree/manifest negative tests; mandatory OS/Python matrices",
+      "physical_checks": "No deployment; read-only source/node inventory",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\ci-matrix.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "FAIL",
+      "integration_milestone": "Math220 actual Windows workers stop after PAYLOAD_VERIFIED before JSON_PARSED; separately restricted native child DLL_INITIALIZATION_FAILED. Neither cause waived; current Windows matrices fail."
+    },
+    {
+      "requirement_id": "P0-04",
+      "repository": "unified-system + all six",
+      "requirement": "Strattester strict system acceptance, real OOS, GPU and upstream-equivalence claims",
+      "existing_implementation": "lab_release.py; integration/source_guard.py; contract_matrix.py",
+      "missing_functionality": "Implement separately reviewed real-data admission/one-use OOS; obtain external evidence; preserve strict financial NO-GO",
+      "dependencies": [
+        "P7-01"
+      ],
+      "concrete_code_changes": "Implement separately reviewed real-data admission/one-use OOS; obtain external evidence; preserve strict financial NO-GO",
+      "required_tests": "CI/source-tree/manifest negative tests; mandatory OS/Python matrices",
+      "physical_checks": "No deployment; read-only source/node inventory",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\ci-matrix.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "BLOCKED"
+    },
+    {
+      "requirement_id": "P0-05",
+      "repository": "unified-system + all six",
+      "requirement": "Compatible coherent LAB release manifest, SHA256 of every file, immutable source and dependency locks",
+      "existing_implementation": "lab_release.py; integration/source_guard.py; contract_matrix.py",
+      "missing_functionality": "Build new single agreed candidate after source stabilization; validate closure/provenance before staging",
+      "dependencies": [
+        "P0-02"
+      ],
+      "concrete_code_changes": "Build new single agreed candidate after source stabilization; validate closure/provenance before staging",
+      "required_tests": "CI/source-tree/manifest negative tests; mandatory OS/Python matrices",
+      "physical_checks": "No deployment; read-only source/node inventory",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\ci-matrix.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "BLOCKED"
+    },
+    {
+      "requirement_id": "P0-06",
+      "repository": "unified-system + all six",
+      "requirement": "LAB unsigned versus independent TRUSTED_RELEASE Authenticode/EKU/chain/revocation/timestamp/certificate pin",
+      "existing_implementation": "lab_release.py; integration/source_guard.py; contract_matrix.py",
+      "missing_functionality": "Retain LAB source-integrity route; trusted publisher remains externally absent, no generated production certificates",
+      "dependencies": [
+        "P0-05"
+      ],
+      "concrete_code_changes": "Retain LAB source-integrity route; trusted publisher remains externally absent, no generated production certificates",
+      "required_tests": "CI/source-tree/manifest negative tests; mandatory OS/Python matrices",
+      "physical_checks": "No deployment; read-only source/node inventory",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\ci-matrix.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "IN_PROGRESS"
+    },
+    {
+      "requirement_id": "P0-07",
+      "repository": "unified-system + all six",
+      "requirement": "Paper-only credentials/routes; no real orders/transfers/balances; preserve TLS/SSH/ESET/Firewall/WDAC/policies",
+      "existing_implementation": "lab_release.py; integration/source_guard.py; contract_matrix.py",
+      "missing_functionality": "Carry deny-trading and secret admission through every activation/control path; verify no exchange order adapter reachable",
+      "dependencies": [
+        "P1-05"
+      ],
+      "concrete_code_changes": "Carry deny-trading and secret admission through every activation/control path; verify no exchange order adapter reachable",
+      "required_tests": "CI/source-tree/manifest negative tests; mandatory OS/Python matrices",
+      "physical_checks": "No deployment; read-only source/node inventory",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\ci-matrix.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "IN_PROGRESS"
+    },
+    {
+      "requirement_id": "P0-08",
+      "repository": "unified-system + all six",
+      "requirement": "One canonical owner for history, trades, order books, derived/science results, ledger, jobs/checkpoints; purposeful copies",
+      "existing_implementation": "lab_release.py; integration/source_guard.py; contract_matrix.py",
+      "missing_functionality": "Inventory database owners and dependency-aware retention; do not delete old data/copies to simulate deduplication",
+      "dependencies": [],
+      "concrete_code_changes": "Inventory database owners and dependency-aware retention; do not delete old data/copies to simulate deduplication",
+      "required_tests": "CI/source-tree/manifest negative tests; mandatory OS/Python matrices",
+      "physical_checks": "No deployment; read-only source/node inventory",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\ci-matrix.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "IN_PROGRESS"
+    },
+    {
+      "requirement_id": "P1-01",
+      "repository": "unified-system",
+      "requirement": "Ordinary Windows installer: role/directory/install button/progress/module check/open; no six-repo manual setup",
+      "existing_implementation": "installation_{service,transaction,progress,ui,preview}.py; lab_runtime.py; prepare_lab_capsule.py",
+      "missing_functionality": "Connect existing preparation/transaction/UI to authenticated install controller and packaged entry",
+      "dependencies": [
+        "P0-05"
+      ],
+      "concrete_code_changes": "Connect existing preparation/transaction/UI to authenticated install controller and packaged entry",
+      "required_tests": "test_installation_*; test_lab_runtime; test_runtime_profile; disposable Windows SCM/ACL lane",
+      "physical_checks": "Owner-approved isolated SINGLE-PC install then CONTROL/WORKER; real readiness and 600-second observation",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\installer-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "NOT_IMPLEMENTED"
+    },
+    {
+      "requirement_id": "P1-02",
+      "repository": "unified-system",
+      "requirement": "CONTROL role with isolated coordinator/database/management/Terminan",
+      "existing_implementation": "installation_{service,transaction,progress,ui,preview}.py; lab_runtime.py; prepare_lab_capsule.py",
+      "missing_functionality": "Finish protected derived profile and owned PG provision/activation",
+      "dependencies": [
+        "P1-05"
+      ],
+      "concrete_code_changes": "Finish protected derived profile and owned PG provision/activation",
+      "required_tests": "test_installation_*; test_lab_runtime; test_runtime_profile; disposable Windows SCM/ACL lane",
+      "physical_checks": "Owner-approved isolated SINGLE-PC install then CONTROL/WORKER; real readiness and 600-second observation",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\installer-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "IN_PROGRESS"
+    },
+    {
+      "requirement_id": "P1-03",
+      "repository": "unified-system",
+      "requirement": "WORKER role with isolated dependencies and individual node identity",
+      "existing_implementation": "installation_{service,transaction,progress,ui,preview}.py; lab_runtime.py; prepare_lab_capsule.py",
+      "missing_functionality": "Finish worker profile/source/enrollment activation using existing worker facade",
+      "dependencies": [
+        "P1-05"
+      ],
+      "concrete_code_changes": "Finish worker profile/source/enrollment activation using existing worker facade",
+      "required_tests": "test_installation_*; test_lab_runtime; test_runtime_profile; disposable Windows SCM/ACL lane",
+      "physical_checks": "Owner-approved isolated SINGLE-PC install then CONTROL/WORKER; real readiness and 600-second observation",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\installer-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "IN_PROGRESS"
+    },
+    {
+      "requirement_id": "P1-04",
+      "repository": "unified-system",
+      "requirement": "SINGLE-PC LAB role, local six-module research/paper environment",
+      "existing_implementation": "installation_{service,transaction,progress,ui,preview}.py; lab_runtime.py; prepare_lab_capsule.py",
+      "missing_functionality": "Admit local role through protected activation rather than offline context or environment flags",
+      "dependencies": [
+        "P1-05"
+      ],
+      "concrete_code_changes": "Admit local role through protected activation rather than offline context or environment flags",
+      "required_tests": "test_installation_*; test_lab_runtime; test_runtime_profile; disposable Windows SCM/ACL lane",
+      "physical_checks": "Owner-approved isolated SINGLE-PC install then CONTROL/WORKER; real readiness and 600-second observation",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\installer-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "IN_PROGRESS"
+    },
+    {
+      "requirement_id": "P1-05",
+      "repository": "unified-system",
+      "requirement": "Real service activation, protected profile/auth, immutable code, service SID, exact ownership, source Git admission",
+      "existing_implementation": "installation_{service,transaction,progress,ui,preview}.py; lab_runtime.py; prepare_lab_capsule.py",
+      "missing_functionality": "Replace blocked entry only with reviewed ACL/host/manifest/profile/credential-bound launch; repeat admission before child starts/restarts",
+      "dependencies": [
+        "P0-05"
+      ],
+      "concrete_code_changes": "Replace blocked entry only with reviewed ACL/host/manifest/profile/credential-bound launch; repeat admission before child starts/restarts",
+      "required_tests": "test_installation_*; test_lab_runtime; test_runtime_profile; disposable Windows SCM/ACL lane",
+      "physical_checks": "Owner-approved isolated SINGLE-PC install then CONTROL/WORKER; real readiness and 600-second observation",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\installer-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "IN_PROGRESS",
+      "integration_milestone": "Protected immutable activation revisions, source-owner admission and pinned isolated entry implemented/tested. CONTROL/SINGLE-PC DB gate remains closed; native start/child source admission unqualified."
+    },
+    {
+      "requirement_id": "P1-06",
+      "repository": "unified-system",
+      "requirement": "Windows/CPU architecture, CPU cores/load, RAM/disk, Python/Node/PostgreSQL/version/dependency preflight",
+      "existing_implementation": "installation_{service,transaction,progress,ui,preview}.py; lab_runtime.py; prepare_lab_capsule.py",
+      "missing_functionality": "Bind existing version/closure/resource checks to actual installer preflight and fail before effects",
+      "dependencies": [
+        "P1-01"
+      ],
+      "concrete_code_changes": "Bind existing version/closure/resource checks to actual installer preflight and fail before effects",
+      "required_tests": "test_installation_*; test_lab_runtime; test_runtime_profile; disposable Windows SCM/ACL lane",
+      "physical_checks": "Owner-approved isolated SINGLE-PC install then CONTROL/WORKER; real readiness and 600-second observation",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\installer-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "IMPLEMENTED_UNVERIFIED"
+    },
+    {
+      "requirement_id": "P1-07",
+      "repository": "unified-system",
+      "requirement": "Automatic isolated runtime/dependency setup; own directories/configuration/database migrations",
+      "existing_implementation": "installation_{service,transaction,progress,ui,preview}.py; lab_runtime.py; prepare_lab_capsule.py",
+      "missing_functionality": "Use existing capsule/runtime locks; add scoped PG ownership/provision/migration receipts, no global installs or foreign DB adoption",
+      "dependencies": [
+        "P1-05"
+      ],
+      "concrete_code_changes": "Use existing capsule/runtime locks; add scoped PG ownership/provision/migration receipts, no global installs or foreign DB adoption",
+      "required_tests": "test_installation_*; test_lab_runtime; test_runtime_profile; disposable Windows SCM/ACL lane",
+      "physical_checks": "Owner-approved isolated SINGLE-PC install then CONTROL/WORKER; real readiness and 600-second observation",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\installer-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "IN_PROGRESS",
+      "integration_milestone": "Pure role profiles and protected activation auth exist. Real owned PostgreSQL source slice in progress; no office provision performed."
+    },
+    {
+      "requirement_id": "P1-08",
+      "repository": "unified-system",
+      "requirement": "Real readiness, heartbeat and functional six-module data exchange; no PID-only RUNNING",
+      "existing_implementation": "installation_{service,transaction,progress,ui,preview}.py; lab_runtime.py; prepare_lab_capsule.py",
+      "missing_functionality": "Connect source-admitted runtime supervisor and existing module endpoints; verify actual useful work",
+      "dependencies": [
+        "P1-05",
+        "P7-01"
+      ],
+      "concrete_code_changes": "Connect source-admitted runtime supervisor and existing module endpoints; verify actual useful work",
+      "required_tests": "test_installation_*; test_lab_runtime; test_runtime_profile; disposable Windows SCM/ACL lane",
+      "physical_checks": "Owner-approved isolated SINGLE-PC install then CONTROL/WORKER; real readiness and 600-second observation",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\installer-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "BLOCKED"
+    },
+    {
+      "requirement_id": "P1-09",
+      "repository": "unified-system",
+      "requirement": "Durable bootstrap progress: environment/download/hash/dependencies/DB/modules/workers/history/science/services",
+      "existing_implementation": "installation_{service,transaction,progress,ui,preview}.py; lab_runtime.py; prepare_lab_capsule.py",
+      "missing_functionality": "Project actual private installer receipts into nonauthorizing public progress, not inferred completion",
+      "dependencies": [
+        "P1-01"
+      ],
+      "concrete_code_changes": "Project actual private installer receipts into nonauthorizing public progress, not inferred completion",
+      "required_tests": "test_installation_*; test_lab_runtime; test_runtime_profile; disposable Windows SCM/ACL lane",
+      "physical_checks": "Owner-approved isolated SINGLE-PC install then CONTROL/WORKER; real readiness and 600-second observation",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\installer-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "IN_PROGRESS"
+    },
+    {
+      "requirement_id": "P1-10",
+      "repository": "unified-system",
+      "requirement": "Continue, safe retry, stop, error and diagnostic export; authenticated controls; Terminan handoff retains state",
+      "existing_implementation": "installation_{service,transaction,progress,ui,preview}.py; lab_runtime.py; prepare_lab_capsule.py",
+      "missing_functionality": "Connect allowlisted controller operations/CAS/audit and project same journal into ready Terminan",
+      "dependencies": [
+        "P1-09",
+        "P8-07"
+      ],
+      "concrete_code_changes": "Connect allowlisted controller operations/CAS/audit and project same journal into ready Terminan",
+      "required_tests": "test_installation_*; test_lab_runtime; test_runtime_profile; disposable Windows SCM/ACL lane",
+      "physical_checks": "Owner-approved isolated SINGLE-PC install then CONTROL/WORKER; real readiness and 600-second observation",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\installer-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "NOT_IMPLEMENTED"
+    },
+    {
+      "requirement_id": "P1-11",
+      "repository": "unified-system",
+      "requirement": "Automatically open existing Terminan; Desktop/YEHOR/Terminan.lnk; never duplicate backend",
+      "existing_implementation": "installation_{service,transaction,progress,ui,preview}.py; lab_runtime.py; prepare_lab_capsule.py",
+      "missing_functionality": "Create receipt-bound user shortcut/open local admitted URL after readiness; uninstall only exact owned shortcut",
+      "dependencies": [
+        "P1-08"
+      ],
+      "concrete_code_changes": "Create receipt-bound user shortcut/open local admitted URL after readiness; uninstall only exact owned shortcut",
+      "required_tests": "test_installation_*; test_lab_runtime; test_runtime_profile; disposable Windows SCM/ACL lane",
+      "physical_checks": "Owner-approved isolated SINGLE-PC install then CONTROL/WORKER; real readiness and 600-second observation",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\installer-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "NOT_IMPLEMENTED"
+    },
+    {
+      "requirement_id": "P1-12",
+      "repository": "unified-system",
+      "requirement": "Repair/reinstall/failed-install rollback/resume; do not adopt foreign or unreceipted resources",
+      "existing_implementation": "installation_{service,transaction,progress,ui,preview}.py; lab_runtime.py; prepare_lab_capsule.py",
+      "missing_functionality": "Extend inactive staging/APP_ONLY ownership into activated repair and rollback preserving all confirmed data",
+      "dependencies": [
+        "P1-05",
+        "P2-01"
+      ],
+      "concrete_code_changes": "Extend inactive staging/APP_ONLY ownership into activated repair and rollback preserving all confirmed data",
+      "required_tests": "test_installation_*; test_lab_runtime; test_runtime_profile; disposable Windows SCM/ACL lane",
+      "physical_checks": "Owner-approved isolated SINGLE-PC install then CONTROL/WORKER; real readiness and 600-second observation",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\installer-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "IN_PROGRESS"
+    },
+    {
+      "requirement_id": "P2-01",
+      "repository": "unified-system",
+      "requirement": "APP_ONLY: own app/services/processes/temp removed, all history/research/backups preserved",
+      "existing_implementation": "installation_uninstall.py; UnifiedOwnedServiceRemoval.psm1",
+      "missing_functionality": "Current stopped-service source implementation needs native qualification and activated process/drain support",
+      "dependencies": [
+        "P1-05"
+      ],
+      "concrete_code_changes": "Current stopped-service source implementation needs native qualification and activated process/drain support",
+      "required_tests": "test_installation_uninstall; fault/retry/foreign resource tests",
+      "physical_checks": "Owner-approved install/remove/reinstall; inspect SCM, processes, paths and preserved data",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\uninstaller-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "IN_PROGRESS"
+    },
+    {
+      "requirement_id": "P2-02",
+      "repository": "unified-system",
+      "requirement": "APP_AND_CONFIG: additional own configuration/credentials removal after confirmation; data preserved",
+      "existing_implementation": "installation_uninstall.py; UnifiedOwnedServiceRemoval.psm1",
+      "missing_functionality": "Classify original receipts, revoke credentials, delete only confirmed configuration with retry intents",
+      "dependencies": [
+        "P2-01"
+      ],
+      "concrete_code_changes": "Classify original receipts, revoke credentials, delete only confirmed configuration with retry intents",
+      "required_tests": "test_installation_uninstall; fault/retry/foreign resource tests",
+      "physical_checks": "Owner-approved install/remove/reinstall; inspect SCM, processes, paths and preserved data",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\uninstaller-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "NOT_IMPLEMENTED"
+    },
+    {
+      "requirement_id": "P2-03",
+      "repository": "unified-system",
+      "requirement": "COMPLETE_REMOVAL: own DB/history/logs/checkpoints/backups; explicit separate irreversible confirmation with paths/size",
+      "existing_implementation": "installation_uninstall.py; UnifiedOwnedServiceRemoval.psm1",
+      "missing_functionality": "Prepare closed owned data inventory/size/approval binding; delete only exact admitted objects after confirmation",
+      "dependencies": [
+        "P2-02"
+      ],
+      "concrete_code_changes": "Prepare closed owned data inventory/size/approval binding; delete only exact admitted objects after confirmation",
+      "required_tests": "test_installation_uninstall; fault/retry/foreign resource tests",
+      "physical_checks": "Owner-approved install/remove/reinstall; inspect SCM, processes, paths and preserved data",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\uninstaller-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "NOT_IMPLEMENTED"
+    },
+    {
+      "requirement_id": "P2-04",
+      "repository": "unified-system",
+      "requirement": "Owned tasks/firewall rules/shortcuts; no shared dependencies, foreign services or databases",
+      "existing_implementation": "installation_uninstall.py; UnifiedOwnedServiceRemoval.psm1",
+      "missing_functionality": "Record each created resource; remove exact owned identifiers only; absence is a verified outcome, not global cleanup",
+      "dependencies": [
+        "P1-11"
+      ],
+      "concrete_code_changes": "Record each created resource; remove exact owned identifiers only; absence is a verified outcome, not global cleanup",
+      "required_tests": "test_installation_uninstall; fault/retry/foreign resource tests",
+      "physical_checks": "Owner-approved install/remove/reinstall; inspect SCM, processes, paths and preserved data",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\uninstaller-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "NOT_IMPLEMENTED"
+    },
+    {
+      "requirement_id": "P2-05",
+      "repository": "unified-system",
+      "requirement": "Installed Apps entry/own uninstaller shortcut, uninstall report, resume partial failures, verify no active leftovers",
+      "existing_implementation": "installation_uninstall.py; UnifiedOwnedServiceRemoval.psm1",
+      "missing_functionality": "Register owned uninstall entry/controller; persist intents and reconcile services/process identity/files after interruption",
+      "dependencies": [
+        "P2-01",
+        "P2-02"
+      ],
+      "concrete_code_changes": "Register owned uninstall entry/controller; persist intents and reconcile services/process identity/files after interruption",
+      "required_tests": "test_installation_uninstall; fault/retry/foreign resource tests",
+      "physical_checks": "Owner-approved install/remove/reinstall; inspect SCM, processes, paths and preserved data",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\uninstaller-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "NOT_IMPLEMENTED"
+    },
+    {
+      "requirement_id": "P2-06",
+      "repository": "unified-system",
+      "requirement": "Install -> uninstall -> reinstall, and remove one worker without stopping entire cluster",
+      "existing_implementation": "installation_uninstall.py; UnifiedOwnedServiceRemoval.psm1",
+      "missing_functionality": "Run isolated lifecycle plus distributed drain/credential revocation/reassignment/rejoin scenarios",
+      "dependencies": [
+        "P2-05",
+        "P4-06"
+      ],
+      "concrete_code_changes": "Run isolated lifecycle plus distributed drain/credential revocation/reassignment/rejoin scenarios",
+      "required_tests": "test_installation_uninstall; fault/retry/foreign resource tests",
+      "physical_checks": "Owner-approved install/remove/reinstall; inspect SCM, processes, paths and preserved data",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\uninstaller-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "BLOCKED"
+    },
+    {
+      "requirement_id": "P3-01",
+      "repository": "unified-system + all six",
+      "requirement": "LS5 read-only resources/PG/tailnet/SSH/services/firewall/ports/old installs/backups inventory",
+      "existing_implementation": "lab_runtime.py; runtime.py; runtime_process.py; infra_inventory.py",
+      "missing_functionality": "Refresh immediately before concrete owner-approved phase; retain pre-existing state evidence",
+      "dependencies": [
+        "P0-01"
+      ],
+      "concrete_code_changes": "Refresh immediately before concrete owner-approved phase; retain pre-existing state evidence",
+      "required_tests": "test_runtime*; real six-module functional exchange",
+      "physical_checks": "Separate concrete LS5 phase approval; isolated ports/data/services; 600 seconds real readiness/heartbeat",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\node-inventory.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "IN_PROGRESS"
+    },
+    {
+      "requirement_id": "P3-02",
+      "repository": "unified-system + all six",
+      "requirement": "Isolated CONTROL LS5 runs six modules, DB and monitoring for 600 seconds with real exchanges",
+      "existing_implementation": "lab_runtime.py; runtime.py; runtime_process.py; infra_inventory.py",
+      "missing_functionality": "Install current coherent candidate only after P0-P2 and owner phase approval; old candidate09 is historical component evidence",
+      "dependencies": [
+        "P1-08",
+        "P2-06"
+      ],
+      "concrete_code_changes": "Install current coherent candidate only after P0-P2 and owner phase approval; old candidate09 is historical component evidence",
+      "required_tests": "test_runtime*; real six-module functional exchange",
+      "physical_checks": "Separate concrete LS5 phase approval; isolated ports/data/services; 600 seconds real readiness/heartbeat",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\node-inventory.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "BLOCKED"
+    },
+    {
+      "requirement_id": "P3-03",
+      "repository": "unified-system + all six",
+      "requirement": "ADMINIT excluded by owner's later instruction; no office-initiated connection to ADMINIT",
+      "existing_implementation": "lab_runtime.py; runtime.py; runtime_process.py; infra_inventory.py",
+      "missing_functionality": "Keep it outside active topology; any future pilot requires explicit new scope/phase approval",
+      "dependencies": [],
+      "concrete_code_changes": "Keep it outside active topology; any future pilot requires explicit new scope/phase approval",
+      "required_tests": "test_runtime*; real six-module functional exchange",
+      "physical_checks": "Separate concrete LS5 phase approval; isolated ports/data/services; 600 seconds real readiness/heartbeat",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\node-inventory.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "IN_PROGRESS"
+    },
+    {
+      "requirement_id": "P4-01",
+      "repository": "unified-system + bybit-cluster-grid",
+      "requirement": "PC1 inventory/identity/enrollment/credentials/worker/heartbeat/useful job/Terminan",
+      "existing_implementation": "worker_transport.py; prepare_worker_capsule.py; Grid owned_worker_service",
+      "missing_functionality": "Use pinned SSH and unique scoped credentials; sequential approved WORKER phase",
+      "dependencies": [
+        "P3-02"
+      ],
+      "concrete_code_changes": "Use pinned SSH and unique scoped credentials; sequential approved WORKER phase",
+      "required_tests": "test_worker_transport; test_prepare_worker_capsule; credential/replay tests",
+      "physical_checks": "Sequential owner-approved PC1, PC2, PC3, PC4, LS7; heartbeat + useful job + UI reconciliation",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\node-inventory.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "BLOCKED"
+    },
+    {
+      "requirement_id": "P4-02",
+      "repository": "unified-system + bybit-cluster-grid",
+      "requirement": "PC2 same worker checks, capacity with Reolink closed per owner",
+      "existing_implementation": "worker_transport.py; prepare_worker_capsule.py; Grid owned_worker_service",
+      "missing_functionality": "Keep Reolink closed; 21/21 idle-memory gate is not Unified-load qualification; run approved worker phase later",
+      "dependencies": [
+        "P4-01"
+      ],
+      "concrete_code_changes": "Keep Reolink closed; 21/21 idle-memory gate is not Unified-load qualification; run approved worker phase later",
+      "required_tests": "test_worker_transport; test_prepare_worker_capsule; credential/replay tests",
+      "physical_checks": "Sequential owner-approved PC1, PC2, PC3, PC4, LS7; heartbeat + useful job + UI reconciliation",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\node-inventory.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "BLOCKED"
+    },
+    {
+      "requirement_id": "P4-03",
+      "repository": "unified-system + bybit-cluster-grid",
+      "requirement": "PC3 same worker checks and pre-existing disabled Windows Firewall profiles review",
+      "existing_implementation": "worker_transport.py; prepare_worker_capsule.py; Grid owned_worker_service",
+      "missing_functionality": "Report deviation and obtain owner decision; no automatic security-policy change",
+      "dependencies": [
+        "P4-02"
+      ],
+      "concrete_code_changes": "Report deviation and obtain owner decision; no automatic security-policy change",
+      "required_tests": "test_worker_transport; test_prepare_worker_capsule; credential/replay tests",
+      "physical_checks": "Sequential owner-approved PC1, PC2, PC3, PC4, LS7; heartbeat + useful job + UI reconciliation",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\node-inventory.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "BLOCKED"
+    },
+    {
+      "requirement_id": "P4-04",
+      "repository": "unified-system + bybit-cluster-grid",
+      "requirement": "PC4 same worker checks",
+      "existing_implementation": "worker_transport.py; prepare_worker_capsule.py; Grid owned_worker_service",
+      "missing_functionality": "Sequential unique enrollment and useful job/display proof",
+      "dependencies": [
+        "P4-03"
+      ],
+      "concrete_code_changes": "Sequential unique enrollment and useful job/display proof",
+      "required_tests": "test_worker_transport; test_prepare_worker_capsule; credential/replay tests",
+      "physical_checks": "Sequential owner-approved PC1, PC2, PC3, PC4, LS7; heartbeat + useful job + UI reconciliation",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\node-inventory.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "BLOCKED"
+    },
+    {
+      "requirement_id": "P4-05",
+      "repository": "unified-system + bybit-cluster-grid",
+      "requirement": "LS7 same worker checks",
+      "existing_implementation": "worker_transport.py; prepare_worker_capsule.py; Grid owned_worker_service",
+      "missing_functionality": "Sequential unique enrollment and useful job/display proof",
+      "dependencies": [
+        "P4-04"
+      ],
+      "concrete_code_changes": "Sequential unique enrollment and useful job/display proof",
+      "required_tests": "test_worker_transport; test_prepare_worker_capsule; credential/replay tests",
+      "physical_checks": "Sequential owner-approved PC1, PC2, PC3, PC4, LS7; heartbeat + useful job + UI reconciliation",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\node-inventory.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "BLOCKED"
+    },
+    {
+      "requirement_id": "P4-06",
+      "repository": "unified-system + bybit-cluster-grid",
+      "requirement": "Unique node identities/separate credentials/no global secrets; LS5-only initiation, host key/TLS/policy checks",
+      "existing_implementation": "worker_transport.py; prepare_worker_capsule.py; Grid owned_worker_service",
+      "missing_functionality": "Promote measured SSH environment into installer executor; rebuild closure including runtime_profile; enroll without global credentials",
+      "dependencies": [
+        "P1-03"
+      ],
+      "concrete_code_changes": "Promote measured SSH environment into installer executor; rebuild closure including runtime_profile; enroll without global credentials",
+      "required_tests": "test_worker_transport; test_prepare_worker_capsule; credential/replay tests",
+      "physical_checks": "Sequential owner-approved PC1, PC2, PC3, PC4, LS7; heartbeat + useful job + UI reconciliation",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\node-inventory.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "IN_PROGRESS"
+    },
+    {
+      "requirement_id": "P5-01",
+      "repository": "bybit-cluster-grid + unified-system + strattester",
+      "requirement": "CPU performance/cores/load, free RAM/disk, processing speed, network latency, locality, worker health, queue/failure history",
+      "existing_implementation": "Grid scheduler.py/scientific_orchestrator.py; Unified fleet_control.py",
+      "missing_functionality": "Audit existing scheduler inputs and bridge actual capacity measurements/capabilities instead of fixed symbols-per-PC",
+      "dependencies": [
+        "P4-06"
+      ],
+      "concrete_code_changes": "Audit existing scheduler inputs and bridge actual capacity measurements/capabilities instead of fixed symbols-per-PC",
+      "required_tests": "test_fleet_control; Grid test_scheduler/test_ml_resource_scheduler; duplicate/fault tests",
+      "physical_checks": "Real heterogeneous scheduling, partition/lease expiry/reassignment with single committed result",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\orchestrator-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "IMPLEMENTED_UNVERIFIED"
+    },
+    {
+      "requirement_id": "P5-02",
+      "repository": "bybit-cluster-grid + unified-system + strattester",
+      "requirement": "One distributed job authority for history/instruments/clusters/levels/backtests/training/Math/Meta/paper and Stratt downloader",
+      "existing_implementation": "Grid scheduler.py/scientific_orchestrator.py; Unified fleet_control.py",
+      "missing_functionality": "Trace existing Unified/Grid/Stratt ownership and bridge leases; prohibit independent duplicate assignment",
+      "dependencies": [
+        "P5-01"
+      ],
+      "concrete_code_changes": "Trace existing Unified/Grid/Stratt ownership and bridge leases; prohibit independent duplicate assignment",
+      "required_tests": "test_fleet_control; Grid test_scheduler/test_ml_resource_scheduler; duplicate/fault tests",
+      "physical_checks": "Real heterogeneous scheduling, partition/lease expiry/reassignment with single committed result",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\orchestrator-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "IMPLEMENTED_UNVERIFIED",
+      "integration_milestone": "External Stratt DataFirst uses existing Grid authority; no local SQLite job claims. Actual admitted supervised worker process/provisioning still in progress."
+    },
+    {
+      "requirement_id": "P5-03",
+      "repository": "bybit-cluster-grid + unified-system + strattester",
+      "requirement": "Unique job ID/instrument/range/algorithm version/owner/lease/fence/checkpoint; idempotent result commit",
+      "existing_implementation": "Grid scheduler.py/scientific_orchestrator.py; Unified fleet_control.py",
+      "missing_functionality": "Verify actual canonical job schema/adapters retain every field and stale-owner refusal",
+      "dependencies": [
+        "P5-02"
+      ],
+      "concrete_code_changes": "Verify actual canonical job schema/adapters retain every field and stale-owner refusal",
+      "required_tests": "test_fleet_control; Grid test_scheduler/test_ml_resource_scheduler; duplicate/fault tests",
+      "physical_checks": "Real heterogeneous scheduling, partition/lease expiry/reassignment with single committed result",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\orchestrator-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "IMPLEMENTED_UNVERIFIED",
+      "integration_milestone": "Typed Grid generation/checkpoint/result fencing and permanent dedupe integrated. Migration collision fixed: old47 preserved, DataFirst48, Telegram49; actual new PG CI pending."
+    },
+    {
+      "requirement_id": "P5-04",
+      "repository": "bybit-cluster-grid + unified-system + strattester",
+      "requirement": "Reassignment/checkpoint resume/fairness/backpressure; capabilities/locality/capacity",
+      "existing_implementation": "Grid scheduler.py/scientific_orchestrator.py; Unified fleet_control.py",
+      "missing_functionality": "Connect bounded queues/reservations and measure overload/fairness without duplicating scheduler",
+      "dependencies": [
+        "P5-03"
+      ],
+      "concrete_code_changes": "Connect bounded queues/reservations and measure overload/fairness without duplicating scheduler",
+      "required_tests": "test_fleet_control; Grid test_scheduler/test_ml_resource_scheduler; duplicate/fault tests",
+      "physical_checks": "Real heterogeneous scheduling, partition/lease expiry/reassignment with single committed result",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\orchestrator-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "IMPLEMENTED_UNVERIFIED"
+    },
+    {
+      "requirement_id": "P5-05",
+      "repository": "bybit-cluster-grid + unified-system + strattester",
+      "requirement": "Worker loss/rejoin and coordinator loss: no double commit/split brain; pause without qualified backup CONTROL",
+      "existing_implementation": "Grid scheduler.py/scientific_orchestrator.py; Unified fleet_control.py",
+      "missing_functionality": "Fault-test durable lease/fence and safe pause/takeover; SQLite voters are not HA proof",
+      "dependencies": [
+        "P5-04"
+      ],
+      "concrete_code_changes": "Fault-test durable lease/fence and safe pause/takeover; SQLite voters are not HA proof",
+      "required_tests": "test_fleet_control; Grid test_scheduler/test_ml_resource_scheduler; duplicate/fault tests",
+      "physical_checks": "Real heterogeneous scheduling, partition/lease expiry/reassignment with single committed result",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\orchestrator-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "BLOCKED"
+    },
+    {
+      "requirement_id": "P6-01",
+      "repository": "bybit-cluster-grid + strattester",
+      "requirement": "Public Bybit feed: BTC/ETH/SOL/XRP/BNB/DOGE/ADA/AVAX/LINK/DOT USDT; availability/status; gradual later expansion",
+      "existing_implementation": "Grid history/level_pipeline.py/level_generator.py; Stratt data_first/history_planner",
+      "missing_functionality": "Connect existing public producer to admitted runtime and canonical stores; retain exact clocks/source bytes",
+      "dependencies": [
+        "P3-02"
+      ],
+      "concrete_code_changes": "Connect existing public producer to admitted runtime and canonical stores; retain exact clocks/source bytes",
+      "required_tests": "Grid history/orderbook/level tests; Stratt history admission/export tests",
+      "physical_checks": "Ten real instruments; exact-source gaps/dedup/resume/revisions and UI reconciliation",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\history-integrity-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "IMPLEMENTED_UNVERIFIED"
+    },
+    {
+      "requirement_id": "P6-02",
+      "repository": "bybit-cluster-grid + strattester",
+      "requirement": "Maximum available history, checkpoints/resume, no repeat confirmed ranges, gaps/dedup/timestamp/integrity",
+      "existing_implementation": "Grid history/level_pipeline.py/level_generator.py; Stratt data_first/history_planner",
+      "missing_functionality": "Complete exact-source availability receipts and distributed range claims; BTC earliest exchange gap stays PARTIAL",
+      "dependencies": [
+        "P5-02"
+      ],
+      "concrete_code_changes": "Complete exact-source availability receipts and distributed range claims; BTC earliest exchange gap stays PARTIAL",
+      "required_tests": "Grid history/orderbook/level tests; Stratt history admission/export tests",
+      "physical_checks": "Ten real instruments; exact-source gaps/dedup/resume/revisions and UI reconciliation",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\history-integrity-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "IMPLEMENTED_UNVERIFIED"
+    },
+    {
+      "requirement_id": "P6-03",
+      "repository": "bybit-cluster-grid + strattester",
+      "requirement": "Trades aggregation, real bid/ask volume/delta, volume profile and footprint; never fabricate tick metrics from OHLCV",
+      "existing_implementation": "Grid history/level_pipeline.py/level_generator.py; Stratt data_first/history_planner",
+      "missing_functionality": "Admit real trades/tick availability and preserve data-class provenance in results/UI",
+      "dependencies": [
+        "P6-01"
+      ],
+      "concrete_code_changes": "Admit real trades/tick availability and preserve data-class provenance in results/UI",
+      "required_tests": "Grid history/orderbook/level tests; Stratt history admission/export tests",
+      "physical_checks": "Ten real instruments; exact-source gaps/dedup/resume/revisions and UI reconciliation",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\history-integrity-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "IMPLEMENTED_UNVERIFIED"
+    },
+    {
+      "requirement_id": "P6-04",
+      "repository": "bybit-cluster-grid + strattester",
+      "requirement": "Order book analysis, liquidity concentrations and cluster visualization",
+      "existing_implementation": "Grid history/level_pipeline.py/level_generator.py; Stratt data_first/history_planner",
+      "missing_functionality": "Bridge existing real book/cluster outputs to admitted current UI snapshot and verify reconciliation",
+      "dependencies": [
+        "P6-03"
+      ],
+      "concrete_code_changes": "Bridge existing real book/cluster outputs to admitted current UI snapshot and verify reconciliation",
+      "required_tests": "Grid history/orderbook/level tests; Stratt history admission/export tests",
+      "physical_checks": "Ten real instruments; exact-source gaps/dedup/resume/revisions and UI reconciliation",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\history-integrity-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "IMPLEMENTED_UNVERIFIED"
+    },
+    {
+      "requirement_id": "P6-05",
+      "repository": "bybit-cluster-grid + strattester",
+      "requirement": "Unbroken levels: formation time/price/instrument/strength/test count/status/break and invalidation rules",
+      "existing_implementation": "Grid history/level_pipeline.py/level_generator.py; Stratt data_first/history_planner",
+      "missing_functionality": "Qualify existing level_generator/level_pipeline on causal history and live events; persist definitions/version",
+      "dependencies": [
+        "P6-02"
+      ],
+      "concrete_code_changes": "Qualify existing level_generator/level_pipeline on causal history and live events; persist definitions/version",
+      "required_tests": "Grid history/orderbook/level tests; Stratt history admission/export tests",
+      "physical_checks": "Ten real instruments; exact-source gaps/dedup/resume/revisions and UI reconciliation",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\history-integrity-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "IMPLEMENTED_UNVERIFIED"
+    },
+    {
+      "requirement_id": "P6-06",
+      "repository": "bybit-cluster-grid + strattester",
+      "requirement": "Level changes history, no future information, chart display and source-level reconciliation",
+      "existing_implementation": "Grid history/level_pipeline.py/level_generator.py; Stratt data_first/history_planner",
+      "missing_functionality": "Connect immutable causal level events to Terminan with tested formation/break boundaries",
+      "dependencies": [
+        "P6-05",
+        "P8-01"
+      ],
+      "concrete_code_changes": "Connect immutable causal level events to Terminan with tested formation/break boundaries",
+      "required_tests": "Grid history/orderbook/level tests; Stratt history admission/export tests",
+      "physical_checks": "Ten real instruments; exact-source gaps/dedup/resume/revisions and UI reconciliation",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\history-integrity-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "BLOCKED"
+    },
+    {
+      "requirement_id": "P6-07",
+      "repository": "bybit-cluster-grid + strattester",
+      "requirement": "Database filling/backfill progress/speed/queue/gaps/local bytes visible; integrity/revisions persist after restart",
+      "existing_implementation": "Grid history/level_pipeline.py/level_generator.py; Stratt data_first/history_planner",
+      "missing_functionality": "Produce truthful admitted history-store progress, not fixture counts or claimed completeness",
+      "dependencies": [
+        "P6-02",
+        "P8-01"
+      ],
+      "concrete_code_changes": "Produce truthful admitted history-store progress, not fixture counts or claimed completeness",
+      "required_tests": "Grid history/orderbook/level tests; Stratt history admission/export tests",
+      "physical_checks": "Ten real instruments; exact-source gaps/dedup/resume/revisions and UI reconciliation",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\history-integrity-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "BLOCKED"
+    },
+    {
+      "requirement_id": "P6-08",
+      "repository": "bybit-cluster-grid + strattester",
+      "requirement": "Canonical data owners/derived/cache/replica/backup/retention purpose; no unnecessary duplicates",
+      "existing_implementation": "Grid history/level_pipeline.py/level_generator.py; Stratt data_first/history_planner",
+      "missing_functionality": "Document/store identities and retention dependencies; preserve all existing WAL/snapshots/backups",
+      "dependencies": [
+        "P0-08"
+      ],
+      "concrete_code_changes": "Document/store identities and retention dependencies; preserve all existing WAL/snapshots/backups",
+      "required_tests": "Grid history/orderbook/level tests; Stratt history admission/export tests",
+      "physical_checks": "Ten real instruments; exact-source gaps/dedup/resume/revisions and UI reconciliation",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\history-integrity-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "IN_PROGRESS"
+    },
+    {
+      "requirement_id": "P7-01",
+      "repository": "strattester + math + meta_analyse + bybit-cluster-grid",
+      "requirement": "Actual strategies/backtesting/Math/Meta/statistical/Evoformer/AlphaFold-inspired/AIM-inspired components perform real work",
+      "existing_implementation": "research/quote_paper.py; research/execution.py; financial_*; Math scientific-*",
+      "missing_functionality": "Run existing implementations with admitted datasets; preserve prototype/heuristic/upstream distinctions, no replacement algorithms",
+      "dependencies": [
+        "P6-02",
+        "P0-03"
+      ],
+      "concrete_code_changes": "Run existing implementations with admitted datasets; preserve prototype/heuristic/upstream distinctions, no replacement algorithms",
+      "required_tests": "Quote-paper/execution/replay/no-lookahead/OOS tests; Math/Meta mandatory matrices",
+      "physical_checks": "Ten-instrument real market paper run; restart and ledger/UI reconciliation; no real order route",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\paper-ledger-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "IMPLEMENTED_UNVERIFIED"
+    },
+    {
+      "requirement_id": "P7-02",
+      "repository": "strattester + math + meta_analyse + bybit-cluster-grid",
+      "requirement": "Held-out OOS/train-validation-test, immutable cuts/embargo, no leakage/lookahead; reproducibility/model versions/results",
+      "existing_implementation": "research/quote_paper.py; research/execution.py; financial_*; Math scientific-*",
+      "missing_functionality": "Implement real-data label admission/one-use OOS registry then preregister and execute real held-out run",
+      "dependencies": [
+        "P7-01",
+        "P0-04"
+      ],
+      "concrete_code_changes": "Implement real-data label admission/one-use OOS registry then preregister and execute real held-out run",
+      "required_tests": "Quote-paper/execution/replay/no-lookahead/OOS tests; Math/Meta mandatory matrices",
+      "physical_checks": "Ten-instrument real market paper run; restart and ledger/UI reconciliation; no real order route",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\paper-ledger-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "BLOCKED"
+    },
+    {
+      "requirement_id": "P7-03",
+      "repository": "strattester + math + meta_analyse + bybit-cluster-grid",
+      "requirement": "Market -> Strategy -> Signal -> Risk -> Paper Decision -> later Quote -> Fill -> Ledger -> Terminan",
+      "existing_implementation": "research/quote_paper.py; research/execution.py; financial_*; Math scientific-*",
+      "missing_functionality": "Bridge existing public events/strategy/risk/quote_paper and durable producer with original evidence clocks; no artificial fills",
+      "dependencies": [
+        "P6-01",
+        "P7-01"
+      ],
+      "concrete_code_changes": "Bridge existing public events/strategy/risk/quote_paper and durable producer with original evidence clocks; no artificial fills",
+      "required_tests": "Quote-paper/execution/replay/no-lookahead/OOS tests; Math/Meta mandatory matrices",
+      "physical_checks": "Ten-instrument real market paper run; restart and ledger/UI reconciliation; no real order route",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\paper-ledger-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "NOT_IMPLEMENTED"
+    },
+    {
+      "requirement_id": "P7-04",
+      "repository": "strattester + math + meta_analyse + bybit-cluster-grid",
+      "requirement": "Virtual balances/orders/fills/fees/slippage/funding/open/closed positions/realized-unrealized PnL/drawdown",
+      "existing_implementation": "research/quote_paper.py; research/execution.py; financial_*; Math scientific-*",
+      "missing_functionality": "Reuse quote_paper/execution costs; add admitted stateful account/positions and reconcile signed fees/funding, no double costs",
+      "dependencies": [
+        "P7-03"
+      ],
+      "concrete_code_changes": "Reuse quote_paper/execution costs; add admitted stateful account/positions and reconcile signed fees/funding, no double costs",
+      "required_tests": "Quote-paper/execution/replay/no-lookahead/OOS tests; Math/Meta mandatory matrices",
+      "physical_checks": "Ten-instrument real market paper run; restart and ledger/UI reconciliation; no real order route",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\paper-ledger-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "IN_PROGRESS"
+    },
+    {
+      "requirement_id": "P7-05",
+      "repository": "strattester + math + meta_analyse + bybit-cluster-grid",
+      "requirement": "Durable ledger, idempotency, causal post-decision quote, restart recovery and UI equality",
+      "existing_implementation": "research/quote_paper.py; research/execution.py; financial_*; Math scientific-*",
+      "missing_functionality": "Integrate existing replay-checked local ledger into one distributed authority; durable account/decision/fill reconciliation",
+      "dependencies": [
+        "P7-04",
+        "P5-03"
+      ],
+      "concrete_code_changes": "Integrate existing replay-checked local ledger into one distributed authority; durable account/decision/fill reconciliation",
+      "required_tests": "Quote-paper/execution/replay/no-lookahead/OOS tests; Math/Meta mandatory matrices",
+      "physical_checks": "Ten-instrument real market paper run; restart and ledger/UI reconciliation; no real order route",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\paper-ledger-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "IN_PROGRESS"
+    },
+    {
+      "requirement_id": "P7-06",
+      "repository": "strattester + math + meta_analyse + bybit-cluster-grid",
+      "requirement": "Zero exchange orders/production trading credentials; PAPER labels; demo scenarios explicitly TEST only",
+      "existing_implementation": "research/quote_paper.py; research/execution.py; financial_*; Math scientific-*",
+      "missing_functionality": "Verify runtime/control/effect allowlists and preserve provenance classes through ledger/UI/reports",
+      "dependencies": [
+        "P0-07",
+        "P7-05"
+      ],
+      "concrete_code_changes": "Verify runtime/control/effect allowlists and preserve provenance classes through ledger/UI/reports",
+      "required_tests": "Quote-paper/execution/replay/no-lookahead/OOS tests; Math/Meta mandatory matrices",
+      "physical_checks": "Ten-instrument real market paper run; restart and ledger/UI reconciliation; no real order route",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\paper-ledger-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "IN_PROGRESS"
+    },
+    {
+      "requirement_id": "P8-01",
+      "repository": "Terminan + unified-system + bybit-cluster-grid",
+      "requirement": "Market UI: instruments/prices/candles/volumes/clusters/footprint/levels/signals",
+      "existing_implementation": "Term lab_view.py/unified_runner; Unified status/progress; Grid snapshots",
+      "missing_functionality": "Existing consumer has no authentic market-paper snapshot writer; implement producer first then verify chart mapping",
+      "dependencies": [
+        "P6-04",
+        "P7-03"
+      ],
+      "concrete_code_changes": "Existing consumer has no authentic market-paper snapshot writer; implement producer first then verify chart mapping",
+      "required_tests": "Term R2/R4/visual/cache/lab; source-to-display and stale/missing/unauthorized tests",
+      "physical_checks": "Real operator views reconciled against actual module/node/job/ledger records",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\terminan-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "IN_PROGRESS",
+      "integration_milestone": "Grid bounded real-source export and Term v2 partial UI implemented. Authentic runtime writer/connection in progress; physical quotes display NOT_RUN."
+    },
+    {
+      "requirement_id": "P8-02",
+      "repository": "Terminan + unified-system + bybit-cluster-grid",
+      "requirement": "Trading UI: paper trades/open positions/order history/virtual balance/PnL/strategy metrics",
+      "existing_implementation": "Term lab_view.py/unified_runner; Unified status/progress; Grid snapshots",
+      "missing_functionality": "Project authentic durable ledger/account snapshots with source sequence and reconciliation",
+      "dependencies": [
+        "P7-05"
+      ],
+      "concrete_code_changes": "Project authentic durable ledger/account snapshots with source sequence and reconciliation",
+      "required_tests": "Term R2/R4/visual/cache/lab; source-to-display and stale/missing/unauthorized tests",
+      "physical_checks": "Real operator views reconciled against actual module/node/job/ledger records",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\terminan-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "IN_PROGRESS",
+      "integration_milestone": "Read-only verified Stratt paper export + Term v2 paper receipt view implemented. Live causal producer/open positions/account state and physical trading UI not qualified."
+    },
+    {
+      "requirement_id": "P8-03",
+      "repository": "Terminan + unified-system + bybit-cluster-grid",
+      "requirement": "Research UI: live/history jobs/model/symbol/node/start/duration/status/truthful progress/metrics/errors/result links",
+      "existing_implementation": "Term lab_view.py/unified_runner; Unified status/progress; Grid snapshots",
+      "missing_functionality": "Connect real scientific/Stratt/Meta job records and module states, no demo metrics",
+      "dependencies": [
+        "P7-01",
+        "P5-03"
+      ],
+      "concrete_code_changes": "Connect real scientific/Stratt/Meta job records and module states, no demo metrics",
+      "required_tests": "Term R2/R4/visual/cache/lab; source-to-display and stale/missing/unauthorized tests",
+      "physical_checks": "Real operator views reconciled against actual module/node/job/ledger records",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\terminan-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "BLOCKED"
+    },
+    {
+      "requirement_id": "P8-04",
+      "repository": "Terminan + unified-system + bybit-cluster-grid",
+      "requirement": "System UI per node: role/status/CPU/RAM/disk/network/process count/jobs/symbols/speed/local bytes/heartbeat/error/release/restarts",
+      "existing_implementation": "Term lab_view.py/unified_runner; Unified status/progress; Grid snapshots",
+      "missing_functionality": "Bind actual resource/worker observations with stale/offline semantics; no SSH equals enrolled assumption",
+      "dependencies": [
+        "P4-06",
+        "P5-01"
+      ],
+      "concrete_code_changes": "Bind actual resource/worker observations with stale/offline semantics; no SSH equals enrolled assumption",
+      "required_tests": "Term R2/R4/visual/cache/lab; source-to-display and stale/missing/unauthorized tests",
+      "physical_checks": "Real operator views reconciled against actual module/node/job/ledger records",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\terminan-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "IN_PROGRESS",
+      "integration_milestone": "Term v2 explicitly displays reported PLAN_ONLY fleet state without fabricated online workers. Actual enrolled node telemetry remains unqualified."
+    },
+    {
+      "requirement_id": "P8-05",
+      "repository": "Terminan + unified-system + bybit-cluster-grid",
+      "requirement": "Module UI: state/PID/start/readiness/heartbeat/CPU/RAM/errors/queues/last exchange",
+      "existing_implementation": "Term lab_view.py/unified_runner; Unified status/progress; Grid snapshots",
+      "missing_functionality": "Wire existing functional supervisor observations; PID alone never RUNNING",
+      "dependencies": [
+        "P1-08"
+      ],
+      "concrete_code_changes": "Wire existing functional supervisor observations; PID alone never RUNNING",
+      "required_tests": "Term R2/R4/visual/cache/lab; source-to-display and stale/missing/unauthorized tests",
+      "physical_checks": "Real operator views reconciled against actual module/node/job/ledger records",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\terminan-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "BLOCKED"
+    },
+    {
+      "requirement_id": "P8-06",
+      "repository": "Terminan + unified-system + bybit-cluster-grid",
+      "requirement": "Installation UI: phase/node/action/truthful progress/logs/warnings/errors/check result/user action; P0-P12",
+      "existing_implementation": "Term lab_view.py/unified_runner; Unified status/progress; Grid snapshots",
+      "missing_functionality": "Project same durable install journal into Terminan after readiness and preserve restart/handoff",
+      "dependencies": [
+        "P1-09"
+      ],
+      "concrete_code_changes": "Project same durable install journal into Terminan after readiness and preserve restart/handoff",
+      "required_tests": "Term R2/R4/visual/cache/lab; source-to-display and stale/missing/unauthorized tests",
+      "physical_checks": "Real operator views reconciled against actual module/node/job/ledger records",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\terminan-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "IN_PROGRESS"
+    },
+    {
+      "requirement_id": "P8-07",
+      "repository": "Terminan + unified-system + bybit-cluster-grid",
+      "requirement": "Authenticated controls: own module start/stop/restart, paper/history/backtest/science/backup/diagnostics/worker/reassignment",
+      "existing_implementation": "Term lab_view.py/unified_runner; Unified status/progress; Grid snapshots",
+      "missing_functionality": "Expose audited bounded control API via existing ownership/fence checks; no arbitrary commands",
+      "dependencies": [
+        "P1-05",
+        "P5-03"
+      ],
+      "concrete_code_changes": "Expose audited bounded control API via existing ownership/fence checks; no arbitrary commands",
+      "required_tests": "Term R2/R4/visual/cache/lab; source-to-display and stale/missing/unauthorized tests",
+      "physical_checks": "Real operator views reconciled against actual module/node/job/ledger records",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\terminan-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "NOT_IMPLEMENTED"
+    },
+    {
+      "requirement_id": "P8-08",
+      "repository": "Terminan + unified-system + bybit-cluster-grid",
+      "requirement": "Unified logs nine producers; node/module/symbol/severity/time/correlation/job filters and bounded rotation",
+      "existing_implementation": "Term lab_view.py/unified_runner; Unified status/progress; Grid snapshots",
+      "missing_functionality": "Connect actual producers to common bounded event envelope, secret redaction and retention policy",
+      "dependencies": [
+        "P10-06"
+      ],
+      "concrete_code_changes": "Connect actual producers to common bounded event envelope, secret redaction and retention policy",
+      "required_tests": "Term R2/R4/visual/cache/lab; source-to-display and stale/missing/unauthorized tests",
+      "physical_checks": "Real operator views reconciled against actual module/node/job/ledger records",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\terminan-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "IMPLEMENTED_UNVERIFIED"
+    },
+    {
+      "requirement_id": "P8-09",
+      "repository": "Terminan + unified-system + bybit-cluster-grid",
+      "requirement": "YEHOR shortcut opens one backend; stopped backend honestly reported; safe authorized startup",
+      "existing_implementation": "Term lab_view.py/unified_runner; Unified status/progress; Grid snapshots",
+      "missing_functionality": "Receipt-bound URL shortcut with no backend-spawning side effects; status/authorized control when stopped",
+      "dependencies": [
+        "P1-11",
+        "P8-07"
+      ],
+      "concrete_code_changes": "Receipt-bound URL shortcut with no backend-spawning side effects; status/authorized control when stopped",
+      "required_tests": "Term R2/R4/visual/cache/lab; source-to-display and stale/missing/unauthorized tests",
+      "physical_checks": "Real operator views reconciled against actual module/node/job/ledger records",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\terminan-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "NOT_IMPLEMENTED"
+    },
+    {
+      "requirement_id": "P8-10",
+      "repository": "Terminan + unified-system + bybit-cluster-grid",
+      "requirement": "Term current mandatory R2/R4/visual/cache/lab CI, no omitted hidden manifest member or heartbeat starvation",
+      "existing_implementation": "Term lab_view.py/unified_runner; Unified status/progress; Grid snapshots",
+      "missing_functionality": "No code change needed for verified d167cf61a6ee; repeat only if source/context changes",
+      "dependencies": [],
+      "concrete_code_changes": "No code change needed for verified d167cf61a6ee; repeat only if source/context changes",
+      "required_tests": "Term R2/R4/visual/cache/lab; source-to-display and stale/missing/unauthorized tests",
+      "physical_checks": "Real operator views reconciled against actual module/node/job/ledger records",
+      "evidence": {
+        "path": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\work\\master-mission-20261104\\ci-audit\\terminan-d167cf61a6ee\\verification-summary.json",
+        "head": "d167cf61a6ee736a086733e80034b69b16404a0a",
+        "scope": "CURRENT_TERMINAN_CI_ONLY_26_SUCCESS_PHYSICAL_NOT_RUN"
+      },
+      "status": "IN_PROGRESS",
+      "integration_milestone": "Prior d167cf6 had26 verified CI checks PASS. Current4cd4986 adds v2 UI: local21 pass1 skip and2 Chromium tests pass; full current mandatory matrix pending. Prior-head PASS cannot qualify new HEAD."
+    },
+    {
+      "requirement_id": "P9-01",
+      "repository": "bybit-cluster-grid + unified-system",
+      "requirement": "Extend existing Telegram bot -> authenticated Unified control API -> orchestrator -> workers",
+      "existing_implementation": "grid/telegram_bot.py; grid/telegram_idempotency.py; control API",
+      "missing_functionality": "Audit existing telegram_bot/idempotency; bridge unified authorization rather than second bot/direct SCM",
+      "dependencies": [
+        "P8-07"
+      ],
+      "concrete_code_changes": "Audit existing telegram_bot/idempotency; bridge unified authorization rather than second bot/direct SCM",
+      "required_tests": "test_telegram_*; authorization/replay/TTL/rate-limit/control audit tests",
+      "physical_checks": "Owner-configured bot/user IDs outside Git; real allowed/denied actions and notification delivery",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\telegram-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "IMPLEMENTED_UNVERIFIED"
+    },
+    {
+      "requirement_id": "P9-02",
+      "repository": "bybit-cluster-grid + unified-system",
+      "requirement": "Menu: system/nodes/instruments/history/science/strategies/paper/databases/logs/errors/backups/control/notifications",
+      "existing_implementation": "grid/telegram_bot.py; grid/telegram_idempotency.py; control API",
+      "missing_functionality": "Add truthful read-only views over same canonical admitted status contracts",
+      "dependencies": [
+        "P9-01"
+      ],
+      "concrete_code_changes": "Add truthful read-only views over same canonical admitted status contracts",
+      "required_tests": "test_telegram_*; authorization/replay/TTL/rate-limit/control audit tests",
+      "physical_checks": "Owner-configured bot/user IDs outside Git; real allowed/denied actions and notification delivery",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\telegram-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "NOT_IMPLEMENTED"
+    },
+    {
+      "requirement_id": "P9-03",
+      "repository": "bybit-cluster-grid + unified-system",
+      "requirement": "Six node views CPU/RAM/disk/jobs/symbols/uptime/heartbeat/errors; refresh/jobs/logs/owned restart/reassign",
+      "existing_implementation": "grid/telegram_bot.py; grid/telegram_idempotency.py; control API",
+      "missing_functionality": "Map allowlisted node actions to authenticated controls with exact node scope",
+      "dependencies": [
+        "P4-06",
+        "P9-01"
+      ],
+      "concrete_code_changes": "Map allowlisted node actions to authenticated controls with exact node scope",
+      "required_tests": "test_telegram_*; authorization/replay/TTL/rate-limit/control audit tests",
+      "physical_checks": "Owner-configured bot/user IDs outside Git; real allowed/denied actions and notification delivery",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\telegram-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "NOT_IMPLEMENTED"
+    },
+    {
+      "requirement_id": "P9-04",
+      "repository": "bybit-cluster-grid + unified-system",
+      "requirement": "History counts/range/speed/queue/gaps/disk and paper balance/positions/trades/PnL/strategies/errors",
+      "existing_implementation": "grid/telegram_bot.py; grid/telegram_idempotency.py; control API",
+      "missing_functionality": "Read real canonical store and ledger snapshots; send bounded redacted messages",
+      "dependencies": [
+        "P6-07",
+        "P7-05"
+      ],
+      "concrete_code_changes": "Read real canonical store and ledger snapshots; send bounded redacted messages",
+      "required_tests": "test_telegram_*; authorization/replay/TTL/rate-limit/control audit tests",
+      "physical_checks": "Owner-configured bot/user IDs outside Git; real allowed/denied actions and notification delivery",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\telegram-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "NOT_IMPLEMENTED"
+    },
+    {
+      "requirement_id": "P9-05",
+      "repository": "bybit-cluster-grid + unified-system",
+      "requirement": "User-ID authorization each operation; secrets outside Git; callback replay/TTL/audit/rate-limit/danger confirmation/no arbitrary commands",
+      "existing_implementation": "grid/telegram_bot.py; grid/telegram_idempotency.py; control API",
+      "missing_functionality": "Verify existing durable idempotency/auth then add missing control intent/confirmation binding",
+      "dependencies": [
+        "P9-01"
+      ],
+      "concrete_code_changes": "Verify existing durable idempotency/auth then add missing control intent/confirmation binding",
+      "required_tests": "test_telegram_*; authorization/replay/TTL/rate-limit/control audit tests",
+      "physical_checks": "Owner-configured bot/user IDs outside Git; real allowed/denied actions and notification delivery",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\telegram-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "IMPLEMENTED_UNVERIFIED",
+      "integration_milestone": "Per-operation user-ID/chat policy, durable callback/update replay fence, receipt-bound completion, DB-clock rate limit and bounded closed audit integrated. Actual PG49 CI pending; TTL mutating intent/Control API absent."
+    },
+    {
+      "requirement_id": "P9-06",
+      "repository": "bybit-cluster-grid + unified-system",
+      "requirement": "Dedup/rate-limited node loss/recovery, DB/disk/module/feed/backup/update/ledger failure notifications; bot outage nonfatal",
+      "existing_implementation": "grid/telegram_bot.py; grid/telegram_idempotency.py; control API",
+      "missing_functionality": "Wire actual event sources and outbox/retry without blocking trading research; qualify real delivery separately",
+      "dependencies": [
+        "P9-05",
+        "P10-01"
+      ],
+      "concrete_code_changes": "Wire actual event sources and outbox/retry without blocking trading research; qualify real delivery separately",
+      "required_tests": "test_telegram_*; authorization/replay/TTL/rate-limit/control audit tests",
+      "physical_checks": "Owner-configured bot/user IDs outside Git; real allowed/denied actions and notification delivery",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\telegram-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "IMPLEMENTED_UNVERIFIED"
+    },
+    {
+      "requirement_id": "P10-01",
+      "repository": "unified-system + bybit-cluster-grid + strattester",
+      "requirement": "Worker crash/network loss/lease expiry/return/CONTROL restart/checkpoint/reassignment; no duplicate commits",
+      "existing_implementation": "runtime.py; fleet_control.py backup/restore; Grid existing lifecycle; durable paper ledger",
+      "missing_functionality": "Run owned-resource fault cases with durable job/result fencing evidence",
+      "dependencies": [
+        "P5-05"
+      ],
+      "concrete_code_changes": "Run owned-resource fault cases with durable job/result fencing evidence",
+      "required_tests": "Crash/partition/stale-fence/replay/restore/rollback/integrity tests",
+      "physical_checks": "Separate owned-resource failure, restart, populated restore, update/rollback and reboot phases",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\backup-restore-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "BLOCKED"
+    },
+    {
+      "requirement_id": "P10-02",
+      "repository": "unified-system + bybit-cluster-grid + strattester",
+      "requirement": "Backup config/DB/jobs/paper ledger/manifest/checkpoints; large-history retention; integrity; separate populated restore",
+      "existing_implementation": "runtime.py; fleet_control.py backup/restore; Grid existing lifecycle; durable paper ledger",
+      "missing_functionality": "Extend quiescent component backup into coordinated populated DB+ledger checkpoint; never raw-copy active PG",
+      "dependencies": [
+        "P7-05",
+        "P5-03"
+      ],
+      "concrete_code_changes": "Extend quiescent component backup into coordinated populated DB+ledger checkpoint; never raw-copy active PG",
+      "required_tests": "Crash/partition/stale-fence/replay/restore/rollback/integrity tests",
+      "physical_checks": "Separate owned-resource failure, restart, populated restore, update/rollback and reboot phases",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\backup-restore-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "IN_PROGRESS"
+    },
+    {
+      "requirement_id": "P10-03",
+      "repository": "unified-system + bybit-cluster-grid + strattester",
+      "requirement": "Standby CONTROL: one leader/fence/durable state/safe takeover/old leader return; otherwise safe worker pause",
+      "existing_implementation": "runtime.py; fleet_control.py backup/restore; Grid existing lifecycle; durable paper ledger",
+      "missing_functionality": "Qualify real ownership/partition behavior before automatic failover; no SQLite-quorum HA claim",
+      "dependencies": [
+        "P10-01"
+      ],
+      "concrete_code_changes": "Qualify real ownership/partition behavior before automatic failover; no SQLite-quorum HA claim",
+      "required_tests": "Crash/partition/stale-fence/replay/restore/rollback/integrity tests",
+      "physical_checks": "Separate owned-resource failure, restart, populated restore, update/rollback and reboot phases",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\backup-restore-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "BLOCKED"
+    },
+    {
+      "requirement_id": "P10-04",
+      "repository": "unified-system + bybit-cluster-grid + strattester",
+      "requirement": "Agreed GitHub release only: manifest/hash/locks/compatibility/stage/health/resume/rollback, preserve data and protocol",
+      "existing_implementation": "runtime.py; fleet_control.py backup/restore; Grid existing lifecycle; durable paper ledger",
+      "missing_functionality": "Integrate existing admission/staging into active service update with checkpoint/ledger rollback boundary",
+      "dependencies": [
+        "P0-05",
+        "P1-12",
+        "P10-02"
+      ],
+      "concrete_code_changes": "Integrate existing admission/staging into active service update with checkpoint/ledger rollback boundary",
+      "required_tests": "Crash/partition/stale-fence/replay/restore/rollback/integrity tests",
+      "physical_checks": "Separate owned-resource failure, restart, populated restore, update/rollback and reboot phases",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\backup-restore-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "IMPLEMENTED_UNVERIFIED"
+    },
+    {
+      "requirement_id": "P10-05",
+      "repository": "unified-system + bybit-cluster-grid + strattester",
+      "requirement": "Paper ledger protection/reconciliation and restart recovery after Windows reboot",
+      "existing_implementation": "runtime.py; fleet_control.py backup/restore; Grid existing lifecycle; durable paper ledger",
+      "missing_functionality": "Test exact owned services/start identities and durable state recovery; separately approve reboot phase",
+      "dependencies": [
+        "P1-05",
+        "P7-05"
+      ],
+      "concrete_code_changes": "Test exact owned services/start identities and durable state recovery; separately approve reboot phase",
+      "required_tests": "Crash/partition/stale-fence/replay/restore/rollback/integrity tests",
+      "physical_checks": "Separate owned-resource failure, restart, populated restore, update/rollback and reboot phases",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\backup-restore-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "BLOCKED"
+    },
+    {
+      "requirement_id": "P10-06",
+      "repository": "unified-system + bybit-cluster-grid + strattester",
+      "requirement": "Bounded log rotation/retention/temp-staging cleanup/DB size/low-disk warnings; protect dependent WAL/history/checkpoints/backups",
+      "existing_implementation": "runtime.py; fleet_control.py backup/restore; Grid existing lifecycle; durable paper ledger",
+      "missing_functionality": "Audit existing retention, add only receipt-scoped cleanup dependency checks and bounded resource limits",
+      "dependencies": [
+        "P6-08"
+      ],
+      "concrete_code_changes": "Audit existing retention, add only receipt-scoped cleanup dependency checks and bounded resource limits",
+      "required_tests": "Crash/partition/stale-fence/replay/restore/rollback/integrity tests",
+      "physical_checks": "Separate owned-resource failure, restart, populated restore, update/rollback and reboot phases",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\backup-restore-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "IMPLEMENTED_UNVERIFIED"
+    },
+    {
+      "requirement_id": "P10-07",
+      "repository": "unified-system + bybit-cluster-grid + strattester",
+      "requirement": "Distributed uninstall: drain/reassign/revoke/remove one worker, preserve selected data, full removal confirm, rejoin",
+      "existing_implementation": "runtime.py; fleet_control.py backup/restore; Grid existing lifecycle; durable paper ledger",
+      "missing_functionality": "Execute all three owned modes with real in-flight jobs and stale credential refusal",
+      "dependencies": [
+        "P2-06",
+        "P10-01"
+      ],
+      "concrete_code_changes": "Execute all three owned modes with real in-flight jobs and stale credential refusal",
+      "required_tests": "Crash/partition/stale-fence/replay/restore/rollback/integrity tests",
+      "physical_checks": "Separate owned-resource failure, restart, populated restore, update/rollback and reboot phases",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\backup-restore-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "BLOCKED"
+    },
+    {
+      "requirement_id": "P11-01",
+      "repository": "all six",
+      "requirement": "A: ten simultaneous instruments with feed/history/clusters/levels/strategies/Math/Meta/paper/Terminan/Telegram",
+      "existing_implementation": "Existing public capture, history/science component harnesses and acceptance reports",
+      "missing_functionality": "Execute current coherent six-node acceptance after all dependent producers are real",
+      "dependencies": [
+        "P4-05",
+        "P6-06",
+        "P7-05",
+        "P8-07",
+        "P9-06"
+      ],
+      "concrete_code_changes": "Execute current coherent six-node acceptance after all dependent producers are real",
+      "required_tests": "Acceptance assertions: no gaps/duplicates/double commits; bounded overload/recovery",
+      "physical_checks": "Approved six-node ten-symbol concurrent workload, scale steps, failures and percentile measurements",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\performance-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "BLOCKED"
+    },
+    {
+      "requirement_id": "P11-02",
+      "repository": "all six",
+      "requirement": "B: resource-measured gradual instrument expansion, not fixed allocation",
+      "existing_implementation": "Existing public capture, history/science component harnesses and acceptance reports",
+      "missing_functionality": "Increase capacity-constrained load and verify scheduler/backpressure/coverage invariants",
+      "dependencies": [
+        "P11-01",
+        "P5-01"
+      ],
+      "concrete_code_changes": "Increase capacity-constrained load and verify scheduler/backpressure/coverage invariants",
+      "required_tests": "Acceptance assertions: no gaps/duplicates/double commits; bounded overload/recovery",
+      "physical_checks": "Approved six-node ten-symbol concurrent workload, scale steps, failures and percentile measurements",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\performance-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "BLOCKED"
+    },
+    {
+      "requirement_id": "P11-03",
+      "repository": "all six",
+      "requirement": "C: concurrent history/backtesting/science/market/paper/UI",
+      "existing_implementation": "Existing public capture, history/science component harnesses and acceptance reports",
+      "missing_functionality": "Run competing workloads, measure fairness/resource reserve and no confirmed data loss",
+      "dependencies": [
+        "P11-01"
+      ],
+      "concrete_code_changes": "Run competing workloads, measure fairness/resource reserve and no confirmed data loss",
+      "required_tests": "Acceptance assertions: no gaps/duplicates/double commits; bounded overload/recovery",
+      "physical_checks": "Approved six-node ten-symbol concurrent workload, scale steps, failures and percentile measurements",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\performance-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "BLOCKED"
+    },
+    {
+      "requirement_id": "P11-04",
+      "repository": "all six",
+      "requirement": "D: own worker stop/detection/lease/reassign/no double write/rejoin",
+      "existing_implementation": "Existing public capture, history/science component harnesses and acceptance reports",
+      "missing_functionality": "Inject approved node failure; compare durable committed result IDs/fences/checkpoints",
+      "dependencies": [
+        "P10-01",
+        "P11-01"
+      ],
+      "concrete_code_changes": "Inject approved node failure; compare durable committed result IDs/fences/checkpoints",
+      "required_tests": "Acceptance assertions: no gaps/duplicates/double commits; bounded overload/recovery",
+      "physical_checks": "Approved six-node ten-symbol concurrent workload, scale steps, failures and percentile measurements",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\performance-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "BLOCKED"
+    },
+    {
+      "requirement_id": "P11-05",
+      "repository": "all six",
+      "requirement": "E: backup/restore/restart/update/rollback/paper-ledger reconciliation",
+      "existing_implementation": "Existing public capture, history/science component harnesses and acceptance reports",
+      "missing_functionality": "Execute populated recovery/update cases under load with exact before/after inventories",
+      "dependencies": [
+        "P10-02",
+        "P10-04",
+        "P10-05"
+      ],
+      "concrete_code_changes": "Execute populated recovery/update cases under load with exact before/after inventories",
+      "required_tests": "Acceptance assertions: no gaps/duplicates/double commits; bounded overload/recovery",
+      "physical_checks": "Approved six-node ten-symbol concurrent workload, scale steps, failures and percentile measurements",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\performance-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "BLOCKED"
+    },
+    {
+      "requirement_id": "P11-06",
+      "repository": "all six",
+      "requirement": "CPU/RAM/disk/network/queues/event+UI latency/job time/DB throughput/gaps/duplicates/restarts/recovery/failed jobs; p50/p95/p99",
+      "existing_implementation": "Existing public capture, history/science component harnesses and acceptance reports",
+      "missing_functionality": "Capture sufficient timestamped observations with declared windows/sample counts; no invented percentiles",
+      "dependencies": [
+        "P11-03"
+      ],
+      "concrete_code_changes": "Capture sufficient timestamped observations with declared windows/sample counts; no invented percentiles",
+      "required_tests": "Acceptance assertions: no gaps/duplicates/double commits; bounded overload/recovery",
+      "physical_checks": "Approved six-node ten-symbol concurrent workload, scale steps, failures and percentile measurements",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\performance-report.json",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "BLOCKED"
+    },
+    {
+      "requirement_id": "P12-01",
+      "repository": "unified-system + all six",
+      "requirement": "18 named final artifacts with exact SHA/version/time/test result/evidence hash; distinguish PASS/FAIL/BLOCKED/NOT_RUN",
+      "existing_implementation": "outputs/master-mission-20261104 reports; release_manifest.py",
+      "missing_functionality": "Current artifacts explicitly interim; update source/evidence pins only from actual verified phase receipts",
+      "dependencies": [
+        "P11-06"
+      ],
+      "concrete_code_changes": "Current artifacts explicitly interim; update source/evidence pins only from actual verified phase receipts",
+      "required_tests": "Evidence digest/source/context verification; all mandatory requirement gates",
+      "physical_checks": "Owner review after full qualified physical acceptance; no merge/production implied",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\physical-acceptance-report.md",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "IN_PROGRESS"
+    },
+    {
+      "requirement_id": "P12-02",
+      "repository": "unified-system + all six",
+      "requirement": "All modules/workers/jobs/data/cluster/levels/science/paper/UI/Telegram/recovery/update/install verified, no P0/P1",
+      "existing_implementation": "outputs/master-mission-20261104 reports; release_manifest.py",
+      "missing_functionality": "Evaluate every requirement and full physical evidence; CI alone cannot authorize GO",
+      "dependencies": [
+        "P12-01"
+      ],
+      "concrete_code_changes": "Evaluate every requirement and full physical evidence; CI alone cannot authorize GO",
+      "required_tests": "Evidence digest/source/context verification; all mandatory requirement gates",
+      "physical_checks": "Owner review after full qualified physical acceptance; no merge/production implied",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\physical-acceptance-report.md",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "BLOCKED"
+    },
+    {
+      "requirement_id": "P12-03",
+      "repository": "unified-system + all six",
+      "requirement": "Owner handoff: installer/Terminan shortcut/real work/control/recovery; zero real orders; source in existing Draft PRs",
+      "existing_implementation": "outputs/master-mission-20261104 reports; release_manifest.py",
+      "missing_functionality": "Deliver qualified candidate and reproducible user lifecycle; merge/production require separate authorization",
+      "dependencies": [
+        "P12-02"
+      ],
+      "concrete_code_changes": "Deliver qualified candidate and reproducible user lifecycle; merge/production require separate authorization",
+      "required_tests": "Evidence digest/source/context verification; all mandatory requirement gates",
+      "physical_checks": "Owner review after full qualified physical acceptance; no merge/production implied",
+      "evidence": {
+        "report": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\physical-acceptance-report.md",
+        "qualification": "INTERIM_NOT_PROOF_OF_REQUIREMENT_PASS"
+      },
+      "status": "BLOCKED"
+    }
+  ],
+  "current_source_heads": {
+    "unified-system": "e7c473b64a5e3c9d32e704a390e4b912794d2ac2",
+    "bybit-cluster-grid": "80d6b16ea666fa67e77d1606757ce2fd27a80034",
+    "strattester": "d4495f82f1f336fad4e314ad37935a142f5bfad1",
+    "Terminan": "4cd4986634946970512eee9a3e83e6bcead0ad4c",
+    "math": "220d74ffb67b2995d0ee17858d8c31ae7eb2d0af",
+    "meta_analyse": "2692aa7139a904096091f11360392ffc76428a4a"
+  },
+  "parallel_ownership": {
+    "path": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-02\\files-pasted-by-the-user-unified\\outputs\\master-mission-20261104\\parallel-ownership.json",
+    "sha256": "05751032c2e783e6452344441426ce026251c6e25c30eff0fdf3a054ab145a56"
+  }
+}

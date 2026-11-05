@@ -1,0 +1,69 @@
+name: Disposable Windows stopped-service acceptance
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+concurrency:
+  group: stopped-service-${{ github.event_name }}-${{ github.event.pull_request.head.sha || github.sha }}
+  cancel-in-progress: true
+jobs:
+  stopped-service:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-2022, windows-2025]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    env:
+      CI_STOPPED_NAME: unified-stopped-service-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.os }}
+      CI_EXPECTED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Guard and fixed-download regressions without SCM effects
+        run: python -B -m unittest tests.test_ci_stopped_service_acceptance -v
+      - name: Fetch exact reviewed Grid transport helper outside checkout
+        shell: python
+        run: |
+          import hashlib, os, pathlib, urllib.request
+          assert os.environ.get('GITHUB_ACTIONS') == 'true' and os.environ.get('RUNNER_ENVIRONMENT') == 'github-hosted'
+          url='https://raw.githubusercontent.com/YehorBabenko88/bybit-cluster-grid/fa7323d9e1973a85856e93f4e9bf6ac41d3098a5/installer/PinnedVendorDownload.psm1'
+          class NoRedirect(urllib.request.HTTPRedirectHandler):
+              def redirect_request(self,*args): raise ValueError('CI_HELPER_REDIRECT_REJECTED')
+          opener=urllib.request.build_opener(NoRedirect())
+          with opener.open(url,timeout=30) as response:
+              assert response.geturl() == url
+              raw=response.read(32769)
+          assert 0 < len(raw) <= 32768
+          assert hashlib.sha256(raw).hexdigest() == 'fdd893be67bf2d50a995b39d0628fbc21dae1eaae7b426c5664e52ecb1578c85'
+          name='unified-nssm-helper-'+os.environ['CI_STOPPED_NAME']+'.psm1'
+          with (pathlib.Path(os.environ['RUNNER_TEMP'])/name).open('xb') as stream: stream.write(raw)
+      - name: Prepare byte-identical NSSM using pinned package without running package scripts
+        shell: pwsh
+        run: |
+          $ErrorActionPreference='Stop'
+          $helper=Join-Path $env:RUNNER_TEMP ('unified-nssm-helper-'+$env:CI_STOPPED_NAME+'.psm1')
+          if((Get-FileHash -LiteralPath $helper -Algorithm SHA256).Hash.ToLowerInvariant() -cne 'fdd893be67bf2d50a995b39d0628fbc21dae1eaae7b426c5664e52ecb1578c85'){throw 'CI_HELPER_PIN_REJECTED'}
+          Import-Module $helper -Force
+          $package=Join-Path $env:RUNNER_TEMP ($env:CI_STOPPED_NAME+'.nupkg')
+          $archive=Join-Path $env:RUNNER_TEMP ($env:CI_STOPPED_NAME+'.zip')
+          $pin='6c6b1e287fb2ac6b04cfd32be2b9ed54a283cf0847fab2326e1b3961b512d340'
+          Save-PinnedNssmMirrorPackage -Destination $package -MirrorOuterSha256 $pin
+          Expand-PinnedNssmPackage -PackageFile $package -Destination $archive -MirrorOuterSha256 $pin
+      - name: Disposable actual stopped service and APP_ONLY removal
+        id: acceptance
+        shell: pwsh
+        env:
+          CI_STOPPED_ROOT: ${{ runner.temp }}/${{ env.CI_STOPPED_NAME }}
+          CI_PINNED_NSSM_ARCHIVE: ${{ runner.temp }}/${{ env.CI_STOPPED_NAME }}.zip
+        run: python -I -S -B scripts/ci_stopped_service_acceptance.py --root "$env:CI_STOPPED_ROOT" --expected-sha "$env:CI_EXPECTED_SHA"
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() && steps.acceptance.outputs.report_root_owned == 'true' }}
+        with:
+          name: stopped-service-${{ matrix.os }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/${{ env.CI_STOPPED_NAME }}/reports/
+          if-no-files-found: warn

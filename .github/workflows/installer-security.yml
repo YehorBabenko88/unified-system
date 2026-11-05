@@ -18,15 +18,76 @@ jobs:
         with:
           python-version: '3.11'
       - name: Full offline suite
-        run: python -m unittest discover -s tests -v
+        run: python scripts/ci_unittest.py
+      - name: Isolated preparation and unsigned-artifact rejection PS7
+        if: matrix.shell == 'pwsh'
+        env:
+          UNIFIED_PREPARATION_TEST_SHELL: pwsh
+        run: python -B -m unittest tests.test_release_preparation -v
       - name: In-memory signature and fail-closed checks PS5.1
         if: matrix.shell == 'powershell'
         shell: powershell
-        run: ./tests/windows/Test-SecurityPackage.ps1
+        run: |
+          $global:LASTEXITCODE=0
+          try {
+            & ./tests/windows/Test-SecurityPackage.ps1
+            if ($LASTEXITCODE -ne 0) { throw 'NATIVE_TEST_NONZERO_EXIT' }
+          } catch {
+            $locations=@{'SecurityPackage.psm1'='scripts/SecurityPackage.psm1';'Test-SecurityPackage.ps1'='tests/windows/Test-SecurityPackage.ps1';'Test-AdminitPreparation.ps1'='tests/windows/Test-AdminitPreparation.ps1';'Collect-AdminitInventory.ps1'='scripts/Collect-AdminitInventory.ps1';'Build-UnifiedRelease.ps1'='scripts/Build-UnifiedRelease.ps1'}
+            $name=[IO.Path]::GetFileName([string]$_.InvocationInfo.ScriptName)
+            $file='tests/windows/Test-SecurityPackage.ps1';$line=1
+            if ($locations.ContainsKey($name)) {$file=$locations[$name];$candidate=[int]$_.InvocationInfo.ScriptLineNumber;if($candidate -ge 1 -and $candidate -le 100000){$line=$candidate}}
+            Write-Output ('::error file='+$file+',line='+$line+'::INSTALLER_SIGNATURE_NATIVE_FAILURE')
+            throw
+          }
       - name: In-memory signature and fail-closed checks PS7
         if: matrix.shell == 'pwsh'
         shell: pwsh
-        run: ./tests/windows/Test-SecurityPackage.ps1
+        run: |
+          $global:LASTEXITCODE=0
+          try {
+            & ./tests/windows/Test-SecurityPackage.ps1
+            if ($LASTEXITCODE -ne 0) { throw 'NATIVE_TEST_NONZERO_EXIT' }
+          } catch {
+            $locations=@{'SecurityPackage.psm1'='scripts/SecurityPackage.psm1';'Test-SecurityPackage.ps1'='tests/windows/Test-SecurityPackage.ps1';'Test-AdminitPreparation.ps1'='tests/windows/Test-AdminitPreparation.ps1';'Collect-AdminitInventory.ps1'='scripts/Collect-AdminitInventory.ps1';'Build-UnifiedRelease.ps1'='scripts/Build-UnifiedRelease.ps1'}
+            $name=[IO.Path]::GetFileName([string]$_.InvocationInfo.ScriptName)
+            $file='tests/windows/Test-SecurityPackage.ps1';$line=1
+            if ($locations.ContainsKey($name)) {$file=$locations[$name];$candidate=[int]$_.InvocationInfo.ScriptLineNumber;if($candidate -ge 1 -and $candidate -le 100000){$line=$candidate}}
+            Write-Output ('::error file='+$file+',line='+$line+'::INSTALLER_SIGNATURE_NATIVE_FAILURE')
+            throw
+          }
+      - name: ADMINIT preparation contract on disposable runner PS5.1
+        if: matrix.shell == 'powershell'
+        shell: powershell
+        run: |
+          $global:LASTEXITCODE=0
+          try {
+            & ./tests/windows/Test-AdminitPreparation.ps1
+            if ($LASTEXITCODE -ne 0) { throw 'NATIVE_TEST_NONZERO_EXIT' }
+          } catch {
+            $locations=@{'SecurityPackage.psm1'='scripts/SecurityPackage.psm1';'Test-SecurityPackage.ps1'='tests/windows/Test-SecurityPackage.ps1';'Test-AdminitPreparation.ps1'='tests/windows/Test-AdminitPreparation.ps1';'Collect-AdminitInventory.ps1'='scripts/Collect-AdminitInventory.ps1';'Build-UnifiedRelease.ps1'='scripts/Build-UnifiedRelease.ps1'}
+            $name=[IO.Path]::GetFileName([string]$_.InvocationInfo.ScriptName)
+            $file='tests/windows/Test-AdminitPreparation.ps1';$line=1
+            if ($locations.ContainsKey($name)) {$file=$locations[$name];$candidate=[int]$_.InvocationInfo.ScriptLineNumber;if($candidate -ge 1 -and $candidate -le 100000){$line=$candidate}}
+            Write-Output ('::error file='+$file+',line='+$line+'::INSTALLER_PREPARATION_NATIVE_FAILURE')
+            throw
+          }
+      - name: ADMINIT preparation contract on disposable runner PS7
+        if: matrix.shell == 'pwsh'
+        shell: pwsh
+        run: |
+          $global:LASTEXITCODE=0
+          try {
+            & ./tests/windows/Test-AdminitPreparation.ps1
+            if ($LASTEXITCODE -ne 0) { throw 'NATIVE_TEST_NONZERO_EXIT' }
+          } catch {
+            $locations=@{'SecurityPackage.psm1'='scripts/SecurityPackage.psm1';'Test-SecurityPackage.ps1'='tests/windows/Test-SecurityPackage.ps1';'Test-AdminitPreparation.ps1'='tests/windows/Test-AdminitPreparation.ps1';'Collect-AdminitInventory.ps1'='scripts/Collect-AdminitInventory.ps1';'Build-UnifiedRelease.ps1'='scripts/Build-UnifiedRelease.ps1'}
+            $name=[IO.Path]::GetFileName([string]$_.InvocationInfo.ScriptName)
+            $file='tests/windows/Test-AdminitPreparation.ps1';$line=1
+            if ($locations.ContainsKey($name)) {$file=$locations[$name];$candidate=[int]$_.InvocationInfo.ScriptLineNumber;if($candidate -ge 1 -and $candidate -le 100000){$line=$candidate}}
+            Write-Output ('::error file='+$file+',line='+$line+'::INSTALLER_PREPARATION_NATIVE_FAILURE')
+            throw
+          }
       - name: Bind exact checkout evidence
         shell: pwsh
         env:

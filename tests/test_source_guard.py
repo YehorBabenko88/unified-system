@@ -26,6 +26,45 @@ class SourceGuardTests(unittest.TestCase):
     def guard(self):
         self.assertTrue((Path(__file__).resolve().parents[1]/'integration/source_guard.py').is_file(),'source guard is missing')
         return importlib.import_module('integration.source_guard')
+    def test_exact_owner_admitted_directory_uses_per_call_git_scope_only(self):
+        import hashlib,shutil
+        api=self.guard();git=Path(shutil.which('git')).resolve();pin=hashlib.sha256(git.read_bytes()).hexdigest();head=self.git('rev-parse','HEAD')
+        before=(self.root/'.git/config').read_bytes();original=api.subprocess.Popen;commands=[]
+        def foreign_owner(command,**kwargs):
+            commands.append(command);kwargs['env']=dict(kwargs['env'],GIT_TEST_ASSUME_DIFFERENT_OWNER='1')
+            return original(command,**kwargs)
+        with patch.object(api.subprocess,'Popen',side_effect=foreign_owner):
+            with self.assertRaisesRegex(api.SourceQualificationError,'GIT_CHECK_FAILED'):
+                api.SourceFence(self.root,head,git_executable=str(git),git_sha256=pin).check()
+            fence=api.SourceFence(self.root,head,git_executable=str(git),git_sha256=pin,owner_admitted_root=self.root.resolve())
+            self.assertEqual(fence.check()['head'],head)
+        self.assertEqual((self.root/'.git/config').read_bytes(),before)
+        self.assertTrue(all('safe.directory='+self.root.resolve().as_posix() in command for command in commands[1:]))
+        self.assertFalse(any('safe.directory=*' in command for command in commands))
+
+    def test_owner_admission_requires_pins_and_exact_root_without_wildcards(self):
+        import hashlib,shutil
+        api=self.guard();git=Path(shutil.which('git')).resolve();pin=hashlib.sha256(git.read_bytes()).hexdigest();head=self.git('rev-parse','HEAD')
+        for root,expected,exe,digest in ((self.root,None,str(git),pin),(self.root,head,None,None),(self.root.parent,head,str(git),pin),('*',head,str(git),pin)):
+            with self.subTest(root=str(root)),self.assertRaises(api.SourceQualificationError):
+                api.SourceFence(self.root,expected,git_executable=exe,git_sha256=digest,owner_admitted_root=root)
+
+    def test_owner_admission_checks_metadata_before_any_git_process(self):
+        import hashlib,shutil
+        api=self.guard();git=Path(shutil.which('git')).resolve();pin=hashlib.sha256(git.read_bytes()).hexdigest();head=self.git('rev-parse','HEAD')
+        with (self.root/'.git/config').open('a') as stream:stream.write('\n[include]\n path = forbidden\n')
+        fence=api.SourceFence(self.root,head,git_executable=str(git),git_sha256=pin,owner_admitted_root=self.root.resolve())
+        with patch.object(api.subprocess,'Popen') as child:
+            with self.assertRaisesRegex(api.SourceQualificationError,'CONFIG_INCLUDE_OR_FILTER'):fence.git('rev-parse','HEAD')
+            child.assert_not_called()
+
+    def test_owner_admission_rejects_git_wildcard_paths_before_metadata(self):
+        import hashlib,shutil
+        api=self.guard();git=Path(shutil.which('git')).resolve();pin=hashlib.sha256(git.read_bytes()).hexdigest();head=self.git('rev-parse','HEAD')
+        for suffix in ('*','literal*name'):
+            with self.subTest(suffix=suffix),self.assertRaises(api.SourceQualificationError):
+                api.SourceFence(self.root,head,git_executable=str(git),git_sha256=pin,owner_admitted_root=self.root/suffix)
+
     def test_dirty_tracked_source_is_unqualified(self):
         api=self.guard();(self.root/'pkg/__init__.py').write_text('VALUE=2\n')
         with self.assertRaisesRegex(api.SourceQualificationError,'TRACKED_BYTES'):
@@ -55,6 +94,30 @@ class SourceGuardTests(unittest.TestCase):
         fence=api.SourceFence(self.root);fence.check()
         fence.module(SimpleNamespace(__file__=str(self.root/'pkg/__init__.py')))
         fence.finish()
+    def test_pinned_lock_survives_real_autocrlf_checkout(self):
+        api=self.guard()
+        relative='integration/windows-candidate/requirements-cp312-win_amd64-cpu.lock'
+        attributes=Path(__file__).resolve().parents[1]/'.gitattributes'
+        self.assertTrue(attributes.is_file(),'exact-byte checkout policy is missing')
+        (self.root/'.gitattributes').write_bytes(attributes.read_bytes())
+        target=self.root/relative;target.parent.mkdir(parents=True)
+        original=b'example==1.0\n    --hash=sha256:'+b'a'*64+b'\n'
+        target.write_bytes(original)
+        self.git('add','.gitattributes',relative)
+        self.git('-c','user.name=Source Test','-c','user.email=source@example.invalid','commit','-qm','pinned lock fixture')
+        self.git('config','core.autocrlf','true')
+        target.unlink();(self.root/'.gitattributes').unlink()
+        self.git('checkout','HEAD','--','.gitattributes',relative)
+        self.assertEqual(target.read_bytes(),original)
+        self.assertEqual((self.root/'.gitattributes').read_bytes(),attributes.read_bytes())
+        target.write_bytes(original.replace(b'\n',b'\r\n'))
+        with self.assertRaisesRegex(api.SourceQualificationError,'TRACKED_BYTES'):
+            api.SourceFence(self.root).check()
+        target.write_bytes(original)
+        fence=api.SourceFence(self.root);fence.check()
+        target.write_bytes(original+b'# mutation\n')
+        with self.assertRaisesRegex(api.SourceQualificationError,'TRACKED_BYTES'):
+            fence.finish()
     def test_clean_filter_cannot_hide_modified_runtime_bytes(self):
         api=self.guard()
         (self.root/'.gitattributes').write_text('pkg/__init__.py filter=restore\n')
@@ -113,3 +176,74 @@ class SourceGuardTests(unittest.TestCase):
             return value
         with patch.object(Path,'lstat',reparse_stat):
             with self.assertRaises(api.SourceQualificationError):fence.module(SimpleNamespace(__file__=str(self.root/'pkg/__init__.py')))
+
+    def test_local_fsmonitor_cannot_execute_during_qualification(self):
+        api=self.guard();marker=self.root/'HOOK_EXECUTED'
+        hook=self.root/'monitor';hook.write_text('#!/bin/sh\ntouch '+str(marker)+'\nprintf "token\\0"\n');hook.chmod(0o700)
+        self.git('config','core.fsmonitor',str(hook))
+        with self.assertRaisesRegex(api.SourceQualificationError,'UNSAFE_FSMONITOR'):api.SourceFence(self.root).check()
+        self.assertFalse(marker.exists(),'qualification executed local fsmonitor')
+    def test_safe_capsule_null_attributes_and_hooks_are_accepted(self):
+        api=self.guard();self.git('config','core.attributesFile',os.devnull);self.git('config','core.hooksPath',os.devnull)
+        self.assertEqual(api.SourceFence(self.root).check()['head'],self.git('rev-parse','HEAD'))
+    def test_http_alternates_promisor_and_linked_metadata_are_rejected(self):
+        api=self.guard()
+        for relative in ('objects/info/http-alternates','objects/pack/test.promisor'):
+            path=self.root/'.git'/relative;path.parent.mkdir(parents=True,exist_ok=True);path.write_text('')
+            with self.subTest(relative=relative),self.assertRaises(api.SourceQualificationError):api.SourceFence(self.root).check()
+            path.unlink()
+        config=self.root/'.git/config';saved=config.read_bytes();outside=self.root/'outside-config';outside.write_bytes(saved);config.unlink()
+        try:config.symlink_to(outside)
+        except OSError:config.write_bytes(saved);return
+        with self.assertRaises(api.SourceQualificationError):api.SourceFence(self.root).check()
+
+    def test_pinned_git_pair_tamper_and_resource_bounds(self):
+        import hashlib,shutil,time
+        api=self.guard();git=Path(shutil.which('git')).resolve();pin=hashlib.sha256(git.read_bytes()).hexdigest()
+        with self.assertRaises(api.SourceQualificationError):api.SourceFence(self.root,git_executable=str(git))
+        fence=api.SourceFence(self.root,git_executable=str(git),git_sha256=pin)
+        self.assertEqual(fence.check()['head'],self.git('rev-parse','HEAD'))
+        fence.git_sha256='0'*64
+        with self.assertRaisesRegex(api.SourceQualificationError,'GIT_RUNTIME_PIN'):fence.git('rev-parse','HEAD')
+        fence=api.SourceFence(self.root);fence.GIT_BYTES=8
+        with self.assertRaisesRegex(api.SourceQualificationError,'GIT_RESOURCE_LIMIT'):fence.git('rev-parse','HEAD')
+        fence=api.SourceFence(self.root);fence.GIT_SECONDS=.05
+        popen=subprocess.Popen
+        def blocked(*args,**kw):return popen([sys.executable,'-c','import time;time.sleep(10)'],**kw)
+        began=time.monotonic()
+        with patch.object(api.subprocess,'Popen',side_effect=blocked):
+            with self.assertRaisesRegex(api.SourceQualificationError,'GIT_RESOURCE_LIMIT'):fence.git('rev-parse','HEAD')
+        self.assertLess(time.monotonic()-began,2)
+    def test_large_git_batch_output_is_not_corrupted_by_resource_polling(self):
+        api=self.guard()
+        # Exercise realistic heterogeneous blobs, including the large wheel lock.
+        # This is read-only; the source checkout is never edited by the test.
+        root=Path(__file__).resolve().parents[1]
+        fence=api.SourceFence(root)
+        tree=fence.git('ls-tree','-rz','--full-tree','HEAD').split(b'\0')
+        objects=list(dict.fromkeys(record.split(b'\t',1)[0].split()[2].decode() for record in tree if record))
+        payload=('\n'.join(objects)+'\n').encode()
+        expected=subprocess.check_output(['git','-C',str(root),'cat-file','--batch'],input=payload)
+        for attempt in range(3):
+            with self.subTest(attempt=attempt):
+                import hashlib
+                self.assertEqual(hashlib.sha256(fence.git('cat-file','--batch',input=payload)).hexdigest(),hashlib.sha256(expected).hexdigest())
+    def test_root_link_is_denied_before_child_metadata(self):
+        api=self.guard();link=self.root/'linked'
+        try:link.symlink_to(self.root/'pkg',target_is_directory=True)
+        except OSError:return
+        child=link/'__init__.py';seen=[];lstat=Path.lstat
+        def observed(path,*a,**kw):seen.append(path);return lstat(path,*a,**kw)
+        with patch.object(Path,'lstat',observed):
+            with self.assertRaises(api.SourceQualificationError):api.SourceFence(link)
+        self.assertNotIn(child,seen)
+
+    def test_index_visibility_flags_cannot_hide_changed_runtime_bytes(self):
+        api=self.guard()
+        for flag in ('--assume-unchanged','--skip-worktree'):
+            self.git('update-index',flag,'pkg/__init__.py')
+            (self.root/'pkg/__init__.py').write_text('VALUE=8\n')
+            with self.subTest(flag=flag),self.assertRaisesRegex(api.SourceQualificationError,'TRACKED_BYTES'):
+                api.SourceFence(self.root).check()
+            (self.root/'pkg/__init__.py').write_text('VALUE=1\n')
+            self.git('update-index','--no-assume-unchanged','--no-skip-worktree','pkg/__init__.py')

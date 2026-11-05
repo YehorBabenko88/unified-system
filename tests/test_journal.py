@@ -35,6 +35,14 @@ class JournalTests(unittest.TestCase):
         other.append("INFRA_READY")
         self.assertEqual(len(self.j.read()), 2)
 
+    def test_expected_sequence_cas(self):
+        self.j.append("OBSERVING", expected_sequence=0)
+        for stale in (0, True, -1):
+            with self.assertRaises(ContractError):self.j.append("OBSERVING", expected_sequence=stale)
+        self.assertEqual(len(self.j.read()), 1)
+        self.j.append("OBSERVING", expected_sequence=1)
+        self.assertEqual(len(self.j.read()), 2)
+
     def test_unknown_state(self):
         with self.assertRaises(ContractError):self.j.append("TRADING")
     def test_empty(self):self.assertEqual(self.j.read(),[])
