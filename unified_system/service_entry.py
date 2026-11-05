@@ -5,13 +5,13 @@ for LAB simulation, never publisher authentication or a readiness assertion.
 """
 import sys
 
-BOOTSTRAP_SHA256='b9978dd3361cabba08a9e5a52b3e14e2ced0c819cad40026606e78cbb75255c0'
+BOOTSTRAP_SHA256='a8012a04c4a0507a72bd6ba38c63ad0af855d5f25efea7669ea11db1386d8d45'
 
 
 def main():
  try:
   args=sys.argv[1:]
-  valid=args in ([],['--data-first'],['--data-first-worker']) or len(args)==2 and (args[0]=='--module-source' and args[1] in ('meta_analyse','strattester','terminan') or args==['--verify-module-source','strattester'])
+  valid=args in ([],['--data-first'],['--data-first-worker']) or len(args)==2 and (args[0]=='--module-source' and args[1] in ('meta_analyse','strattester','terminan','grid') or args==['--verify-module-source','strattester'])
   if not (sys.flags.isolated and sys.flags.no_site and sys.flags.dont_write_bytecode and valid):raise ValueError()
   import ctypes,hashlib,importlib.util,os,stat
   from pathlib import Path

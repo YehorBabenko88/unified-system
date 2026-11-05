@@ -54,8 +54,79 @@ class SourceScopeTests(unittest.TestCase):
   for grant in ({},SimpleNamespace(require_current=lambda:1)):
    with self.assertRaises(ActivationBlocked):StartupSourceAdmission(grant,self.config,self.manifest)
 
+ def test_control_callback_uses_grid_source_fixed_main_and_original_dependency_root(self):
+  import os,sys
+  from unittest.mock import patch
+  from unified_system import owned_python
+  from unified_system.service_module_runtime import serve_module
+  fixture,original=RawModuleDispatchTests().control_fixture(self.root)
+  self.manifest['files'].update(fixture['files'])
+  for value in self.manifest['sources'].values():value['version']='1.0.0'
+  state=self.root/'state';cache=state/'cache';cache.mkdir(parents=True)
+  self.grant.descriptor={'service_plan':{'role':'SINGLE_PC'}}
+  config={'state_root':str(state),'release_id':'fixture','programs':{'grid':{'argv':original,'health_url':'http://127.0.0.1:8766/internal/v2/module/health'}}}
+  calls=[]
+  def main(argv,*,startup_admission):
+   self.assertEqual(startup_admission.source_scope('grid',self.root/'sources/grid','a'*40),self.root/'sources/grid')
+   calls.append(argv);return 0
+  def owned(*,admitted_run):
+   self.assertEqual(sys.argv,['owned-python','--source-root',str(self.root/'sources/grid'),'--dependency-root',str(self.root/'dependencies/site-packages'),'--module','grid.owned_control_service'])
+   return admitted_run()
+  with patch.dict(os.environ,UNIFIED_PRIVATE_CACHE_ROOT=str(cache),UNIFIED_MODULE_ID='grid',UNIFIED_MODULE_VERSION='1.0.0',UNIFIED_RELEASE_ID='fixture'),patch.object(owned_python,'main',side_effect=owned),patch('unified_system.service_module_runtime.importlib.import_module',side_effect=lambda name:SimpleNamespace(main=main) if name=='grid.owned_control_service' else self.fail('arbitrary import')):
+   self.assertEqual(serve_module(self.grant,config,self.manifest,'grid'),0)
+  self.assertEqual(calls,[['--execute','--port','8766']])
+
 
 class RawModuleDispatchTests(unittest.TestCase):
+ def test_grid_full_admission_failure_precedes_import_and_constructor(self):
+  from unittest.mock import Mock,patch
+  from unified_system import service_bootstrap as bootstrap
+  with patch.object(bootstrap,'_admit_capsule',side_effect=ActivationBlocked('ACTIVATION_CODE_REJECTED')) as admit,patch('unified_system.service_module_runtime.serve_module') as serve:
+   with self.assertRaises(ActivationBlocked) as error:bootstrap.run_protected_module(SimpleNamespace(require_current=lambda:True),'grid')
+   self.assertEqual(error.exception.code,'ACTIVATION_CODE_REJECTED');admit.assert_called_once();serve.assert_not_called()
+
+ def control_fixture(self,root):
+  entry=root/'sources/unified-system/unified_system/service_entry.py';python=root/'runtime/python.exe'
+  manifest={'sources':{'unified-system':{'root':'sources/unified-system'},'grid':{'root':'sources/grid'}},'files':{entry.relative_to(root).as_posix():{'sha256':'f'*64},python.relative_to(root).as_posix():{'sha256':'e'*64}}}
+  original=[str(python),'-I','-S','-B',str(entry.with_name('owned_python.py')),'--source-root',str(root/'dependencies/site-packages'),'--dependency-root',str(root/'sources/grid'),'--module','uvicorn','--','grid.coordinator:app','--host','127.0.0.1','--port','8766','--no-access-log']
+  return manifest,original
+
+ def test_grid_control_rejects_bootstrap_source_dependency_and_interpreter_selector_drift(self):
+  import tempfile
+  from unified_system.service_module_runtime import serve_module
+  from unittest.mock import Mock,patch
+  with tempfile.TemporaryDirectory() as temp:
+   root=Path(temp).resolve();manifest,original=self.control_fixture(root)
+   grant=Mock(code_root=root);grant.descriptor={'service_plan':{'role':'CONTROL'}}
+   for index,value in ((0,'arbitrary-python'),(4,str(root/'other.py')),(6,str(root/'sources/grid')),(8,str(root/'other-deps'))):
+    bad=list(original);bad[index]=value
+    config={'programs':{'grid':{'argv':bad,'health_url':'http://127.0.0.1:8766/internal/v2/module/health'}}}
+    with self.subTest(index=index),patch('unified_system.service_module_runtime.StartupSourceAdmission',side_effect=AssertionError('must reject selector drift before scope/import')):
+     with self.assertRaises(ActivationBlocked):serve_module(grant,config,manifest,'grid')
+
+ def test_grid_control_original_argv_checked_before_application_import(self):
+  from unittest.mock import Mock,patch
+  from unified_system.service_module_runtime import serve_module
+  for role,argv in (('WORKER',['x']),('CONTROL',['python','-I','-S','-B','legacy','--module','uvicorn','--','foreign:app','--host','127.0.0.1','--port','8766','--no-access-log']),('CONTROL',['python','-I','-S','-B','legacy','--module','uvicorn','--','grid.coordinator:app','--host','0.0.0.0','--port','8766','--no-access-log'])):
+   grant=Mock();grant.descriptor={'service_plan':{'role':role}}
+   config={'programs':{'grid':{'argv':argv,'health_url':'http://127.0.0.1:8766/internal/v2/module/health'}}}
+   with self.subTest(role=role,argv=argv),patch('unified_system.service_module_runtime.StartupSourceAdmission',side_effect=AssertionError('must reject original before constructing source scope')):
+    with self.assertRaises(ActivationBlocked):serve_module(grant,config,{},'grid')
+
+ def test_private_program_copy_rewrites_control_but_preserves_generic_worker(self):
+  import copy,tempfile
+  from unified_system.service_module_runtime import protected_programs,ENTRIES
+  with tempfile.TemporaryDirectory() as temp:
+   root=Path(temp).resolve();entry=root/'sources/unified-system/unified_system/service_entry.py'
+   manifest,original=self.control_fixture(root)
+   config={'programs':{key:{'argv':['python','legacy']} for key in ENTRIES}}
+   config['programs']['grid']={'argv':original,'health_url':'http://127.0.0.1:8766/internal/v2/module/health'}
+   before=copy.deepcopy(config);grant=SimpleNamespace(code_root=root,descriptor={'service_plan':{'role':'CONTROL'}})
+   rewritten=protected_programs(config,grant,manifest)
+   self.assertEqual(config,before);self.assertEqual(rewritten['programs']['grid']['argv'][-2:],['--module-source','grid'])
+   grant.descriptor['service_plan']['role']='WORKER'
+   self.assertEqual(protected_programs(config,grant,manifest)['programs']['grid'],before['programs']['grid'])
+
  def test_unknown_module_is_rejected_before_capsule_or_application_import(self):
   from unittest.mock import Mock,patch
   from unified_system import service_bootstrap as bootstrap

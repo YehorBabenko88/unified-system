@@ -339,7 +339,7 @@ def run_protected_data_first(grant,*,worker=False):
 def run_protected_module(grant,module_id,*,verify_only=False):
  """Fixed Python module dispatch with independent live kernel readmission."""
  try:
-  need(module_id in ('meta_analyse','strattester','terminan') and (not verify_only or module_id=='strattester'))
+  need(module_id in ('meta_analyse','strattester','terminan','grid') and (not verify_only or module_id=='strattester'))
   need(grant.require_current() is True)
   report=_admit_capsule(grant);config,_auth=_runtime_admission(grant,report)
   from unified_system.lab_privileges import remove_lab_write_bypass_privileges

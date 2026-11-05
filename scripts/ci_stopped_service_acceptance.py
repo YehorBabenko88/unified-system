@@ -28,8 +28,8 @@ from scripts import prepare_lab_capsule as builder
 from tests.test_lab_release import fixture
 
 ERROR = 'CI_STOPPED_SERVICE_REJECTED'
-ENTRY_BYTES = 2477
-BOOTSTRAP_BYTES = 25043
+ENTRY_BYTES = 2484
+BOOTSTRAP_BYTES = 25050
 
 
 def need(value):

@@ -21,8 +21,8 @@ NSSM_PIN='eee9c44c29c2be011f1f1e43bb8c3fca888cb81053022ec5a0060035de16d848'
 # Exact reviewed LF Git blobs, independent of operator checkout EOLs.
 # Protected entry still needs kernel/revision/full runtime admission; these
 # hashes are not publisher trust. Candidate bytes are never normalized.
-SERVICE_ENTRY_SHA256='fcb6f114680246dfb0d083654584bd6a8e003c69c322226f8c6fd822fa997faf'
-SERVICE_BOOTSTRAP_SHA256='b9978dd3361cabba08a9e5a52b3e14e2ced0c819cad40026606e78cbb75255c0'
+SERVICE_ENTRY_SHA256='6c01d2a0dc3e621c910d10626f803d287da75c5e4f165fd1121ef6a3943fe769'
+SERVICE_BOOTSTRAP_SHA256='a8012a04c4a0507a72bd6ba38c63ad0af855d5f25efea7669ea11db1386d8d45'
 BLOCKED_ENTRY_SHA256=SERVICE_ENTRY_SHA256 # Legacy public constant; entry is now gated.
 SCHEMA='unified.owned-stopped-service.v1'
 ACTIONS={'BEGIN','SEAL','REGISTER','INSPECT'}
