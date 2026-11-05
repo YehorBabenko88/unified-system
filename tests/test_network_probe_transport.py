@@ -150,31 +150,43 @@ class FakeRunner:
         encoded=re.search(r'-EncodedCommand ([A-Za-z0-9+/=]+)',argv[-1])[1]
         script=base64.b64decode(encoded).decode('utf-16le')
         nonce=re.search(r"\$n='([a-f0-9]{32})'",script)[1]
-        node=argv[-2].upper()
+        node=next(value for value in argv if value.startswith('HostKeyAlias=unified-lan-')).split('unified-lan-',1)[1].upper()
         if 'UNIFIED_NP_' in argv[-1]:
             self.header=owner(node,nonce)
             if self.mode=='bad_nonce':self.header['nonce']='0'*32
             if self.mode=='bad_pid':self.header['pid']=True
-            if self.mode=='missing_header':return RunResult(0,b'{}\n',b'',False,False,True)
+            if self.mode=='missing_header':return RunResult(0,b'{}\n',b'',False,False,True,True,True,True)
             header=b'UNIFIED_PROBE_OWNER '+json.dumps(self.header).encode()+b'\n'
-            if self.mode=='timeout':return RunResult(None,header,b'',True,False,True)
+            if self.mode=='timeout':return RunResult(None,header,b'',True,False,True,True,True,True)
             observation=dict(schema='unified.network-readonly-observation.v1',computer=node,mutations=False,scope='SYNTHETIC_TEST_ONLY')
             if self.mode=='bad_result':observation['computer']='WRONG_HOST'
             result=b'UNIFIED_PROBE_RESULT '+nonce.encode()+b' '+json.dumps(observation).encode()+b'\n'
-            return RunResult(0,header+result,b'',False,self.mode=='overflow',self.mode!='local_uncertain')
+            return RunResult(0,header+result,b'',False,self.mode=='overflow',self.mode!='local_uncertain',self.mode!='overflow',True,True)
         response=dict(schema='unified.network-probe-cleanup.v1',computer=node,nonce=nonce,
             pid=self.header['pid'],created_utc=self.header['created_utc'],
             owner_exit_confirmed=True,parent_exit_confirmed=True,stop_attempted=False)
         if self.mode=='cleanup_mismatch':response['nonce']='0'*32
         if self.mode=='cleanup_unknown':response['owner_exit_confirmed']=False
-        return RunResult(0,json.dumps(response).encode()+b'\n',b'',False,False,True)
+        if self.mode=='cleanup_timeout':return RunResult(None,b'',b'',True,False,True,True,True,True)
+        return RunResult(0,json.dumps(response).encode()+b'\n',b'',False,False,True,True,True,True)
 
 
 class TransportTests(unittest.TestCase):
-    setUp=JournalTests.setUp
+    def setUp(self):
+        JournalTests.setUp(self)
+        from tests.test_lan_probe_inventory import InventoryFixture
+        from unified_system.lan_probe_inventory import LanProbeInventory,_QUARANTINED
+        self.lan_fixture=InventoryFixture(Path(self.temp.name)/'private ssh assets')
+        self.inventory=LanProbeInventory(self.lan_fixture)
+        def release_only_modeled_handles():
+            # These tests create NO real SSH process; release only this exact
+            # fixture's quarantined read handles before its tempdir cleanup.
+            for key,lease in list(_QUARANTINED.items()):
+                if lease.owner is self.inventory:lease.stack.close();del _QUARANTINED[key]
+        self.addCleanup(release_only_modeled_handles)
     def transport(self,runner):
         from unified_system.network_probe_transport import NetworkProbeTransport
-        return NetworkProbeTransport(self.journal,require_current=lambda:True,runner=runner)
+        return NetworkProbeTransport(self.journal,inventory=self.inventory,require_current=lambda:True,runner=runner)
 
     def test_success_requires_second_channel_exit_evidence(self):
         runner=FakeRunner();result=self.transport(runner).observe('PC1')
@@ -202,7 +214,7 @@ class TransportTests(unittest.TestCase):
             self.assertEqual(len(runner.calls),1)
             self.assertEqual(self.journal.state(node)['status'],'UNCERTAIN')
             reopened=ProbeJournal.open(self.root,'installation-1',admit=self.admit)
-            with self.assertRaises(ProbeTransportBlocked):NetworkProbeTransport(reopened,require_current=lambda:True,runner=runner).observe(node)
+            with self.assertRaises(ProbeTransportBlocked):NetworkProbeTransport(reopened,inventory=self.inventory,require_current=lambda:True,runner=runner).observe(node)
             self.assertEqual(len(runner.calls),1)
 
     def test_timeout_with_owner_header_runs_only_exact_cleanup_then_reports_failure(self):
@@ -224,7 +236,7 @@ class TransportTests(unittest.TestCase):
     def test_full_source_admission_must_be_literal_true_before_effect(self):
         from unified_system.network_probe_transport import NetworkProbeTransport
         runner=FakeRunner()
-        with self.assertRaises(ProbeTransportBlocked):NetworkProbeTransport(self.journal,require_current=lambda:1,runner=runner).observe('PC1')
+        with self.assertRaises(ProbeTransportBlocked):NetworkProbeTransport(self.journal,inventory=self.inventory,require_current=lambda:1,runner=runner).observe('PC1')
         self.assertEqual(runner.calls,[])
         self.assertEqual(self.journal.state('PC1')['generation'],0)
 
@@ -236,15 +248,76 @@ class TransportTests(unittest.TestCase):
         runner=FakeRunner()
         with patch.object(self.journal,'begin',side_effect=begin):
             with self.assertRaisesRegex(ProbeTransportBlocked,'PROBE_SOURCE_ADMISSION_REVOKED'):
-                NetworkProbeTransport(self.journal,require_current=lambda:current[0],runner=runner).observe('PC1')
+                NetworkProbeTransport(self.journal,inventory=self.inventory,require_current=lambda:current[0],runner=runner).observe('PC1')
         self.assertEqual(runner.calls,[])
         self.assertEqual(self.journal.state('PC1')['status'],'COMPLETE')
 
-    def test_known_header_output_overflow_is_cleaned_but_never_an_observation(self):
-        runner=FakeRunner(mode='overflow')
-        with self.assertRaisesRegex(ProbeTransportBlocked,'PROBE_EXECUTION_FAILED'):self.transport(runner).observe('PC1')
+    def test_revocation_during_probe_still_cleans_but_never_publishes(self):
+        from unified_system.network_probe_transport import NetworkProbeTransport
+        live=[True]
+        class RevokingRunner(FakeRunner):
+            def run(self,*args,**kwargs):
+                result=super().run(*args,**kwargs)
+                if len(self.calls)==1:live[0]=False
+                return result
+        runner=RevokingRunner()
+        with self.assertRaisesRegex(ProbeTransportBlocked,'PROBE_SOURCE_ADMISSION_REVOKED'):
+            NetworkProbeTransport(self.journal,inventory=self.inventory,require_current=lambda:live[0],runner=runner).observe('PC1')
         self.assertEqual(len(runner.calls),2)
         self.assertEqual(self.journal.state('PC1')['status'],'COMPLETE')
+
+    def test_inventory_revocation_during_probe_uses_only_held_original_cleanup(self):
+        fixture=self.lan_fixture
+        class RevokingInventoryRunner(FakeRunner):
+            def run(self,*args,**kwargs):
+                result=super().run(*args,**kwargs)
+                if len(self.calls)==1:fixture.live=False
+                return result
+        runner=RevokingInventoryRunner()
+        with self.assertRaisesRegex(ProbeTransportBlocked,'LAN_OWNER_ADMISSION_REVOKED'):
+            self.transport(runner).observe('PC1')
+        self.assertEqual(len(runner.calls),2)
+        self.assertEqual(runner.calls[0][0][:-1],runner.calls[1][0][:-1])
+        self.assertEqual(self.journal.state('PC1')['status'],'COMPLETE')
+
+    def test_last_publication_check_after_durable_completion_rejects_revocation(self):
+        from unified_system.network_probe_transport import NetworkProbeTransport
+        live=[True];original=self.journal.finish
+        def finish(*args,**kwargs):
+            result=original(*args,**kwargs);live[0]=False;return result
+        runner=FakeRunner()
+        with patch.object(self.journal,'finish',side_effect=finish):
+            with self.assertRaisesRegex(ProbeTransportBlocked,'PROBE_SOURCE_ADMISSION_REVOKED'):
+                NetworkProbeTransport(self.journal,inventory=self.inventory,require_current=lambda:live[0],runner=runner).observe('PC1')
+        self.assertEqual(len(runner.calls),2)
+        self.assertEqual(self.journal.state('PC1')['status'],'COMPLETE')
+
+    def test_source_revoked_by_last_endpoint_check_precedes_runner_spawn(self):
+        from unified_system.network_probe_transport import NetworkProbeTransport
+        live=[True];original=self.lan_fixture.admit_lan_endpoint
+        def admit(node,descriptor):
+            granted=original(node,descriptor)
+            if self.journal.state(node)['status']=='IN_FLIGHT':live[0]=False
+            return granted
+        runner=FakeRunner()
+        with patch.object(self.lan_fixture,'admit_lan_endpoint',side_effect=admit):
+            with self.assertRaisesRegex(ProbeTransportBlocked,'PROBE_SOURCE_ADMISSION_REVOKED'):
+                NetworkProbeTransport(self.journal,inventory=self.inventory,require_current=lambda:live[0],runner=runner).observe('PC1')
+        self.assertEqual(runner.calls,[])
+        self.assertEqual(self.journal.state('PC1')['status'],'COMPLETE')
+
+    def test_cleanup_ssh_timeout_is_sticky_unknown_not_a_remote_hard_bound(self):
+        runner=FakeRunner(mode='cleanup_timeout');transport=self.transport(runner)
+        with self.assertRaisesRegex(ProbeTransportBlocked,'PROBE_CLEANUP_UNCERTAIN'):transport.observe('PC1')
+        self.assertEqual(self.journal.state('PC1')['status'],'UNCERTAIN')
+        with self.assertRaises(ProbeTransportBlocked):transport.observe('PC1')
+        self.assertEqual(len(runner.calls),2)
+
+    def test_known_header_output_overflow_is_cleaned_but_never_an_observation(self):
+        runner=FakeRunner(mode='overflow')
+        with self.assertRaisesRegex(ProbeTransportBlocked,'PROBE_LOCAL_DRAIN_UNCERTAIN'):self.transport(runner).observe('PC1')
+        self.assertEqual(len(runner.calls),2)
+        self.assertEqual(self.journal.state('PC1')['status'],'UNCERTAIN')
 
     def test_invalid_observation_is_not_returned_even_after_proven_cleanup(self):
         runner=FakeRunner(mode='bad_result')
@@ -295,7 +368,10 @@ class RunnerTests(unittest.TestCase):
         result=self.invoke(self.fake(b'A'*10000))
         self.assertIs(result.output_limit,True)
         self.assertEqual(result.stdout,b'A'*32)
-        self.assertIs(result.local_exit_confirmed,True)
+        self.assertIs(result.local_exit_confirmed,False)
+        self.assertIs(result.local_process_exit_confirmed,True)
+        self.assertIs(result.stdout_eof,False)
+        self.assertIs(result.stderr_eof,True)
 
     def test_monotonic_deadline_stops_only_retained_local_ssh_process(self):
         process=self.fake(b'OWNER_PREFIX',running=True)

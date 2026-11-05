@@ -20,6 +20,7 @@ from dataclasses import dataclass
 import gzip
 import subprocess
 import threading
+from .lan_probe_inventory import LanProbeInventory,LanInventoryBlocked
 
 
 NODES = frozenset(('LS5','PC1','PC2','PC3','PC4','LS7'))
@@ -34,6 +35,10 @@ _EVENTS = "CREATE TABLE events(sequence INTEGER PRIMARY KEY,node TEXT NOT NULL,g
 
 class ProbeTransportBlocked(ValueError):
     pass
+
+
+class _NoSpawn(ProbeTransportBlocked):
+    """Internal control-flow proof: this invocation never reached the runner."""
 
 
 def _need(value, reason='PROBE_STATE_UNAVAILABLE'):
@@ -287,7 +292,17 @@ class RunResult:
     stderr: bytes
     timed_out: bool
     output_limit: bool
-    local_exit_confirmed: bool  # Includes both owned SSH exit and pipe drain.
+    local_process_exit_confirmed: bool
+    stdout_eof: bool
+    stderr_eof: bool
+    readers_joined: bool
+
+    @property
+    def local_exit_confirmed(self):
+        # A reader returning on overflow/error is not EOF. These independent
+        # facts must all be literal True before a monitor operation can clear.
+        return all(value is True for value in (self.local_process_exit_confirmed,
+            self.stdout_eof,self.stderr_eof,self.readers_joined))
 
 
 @dataclass(frozen=True)
@@ -380,28 +395,23 @@ def _cleanup_command(recipe, owner):
     return command
 
 
-def _argv(node, command):
-    _need(type(node) is str and node in REMOTE_NODES,'PROBE_HOST_REJECTED')
-    _need(type(command) is str and len(command)<=7000 and '\n' not in command and '\r' not in command,'PROBE_COMMAND_BOUNDS')
-    return [r'C:\Windows\System32\OpenSSH\ssh.exe','-T','-o','HostKeyAlgorithms=ssh-ed25519',
-        '-o','StrictHostKeyChecking=yes','-o','BatchMode=yes','-o','ConnectTimeout=8',
-        '-o','PermitLocalCommand=no','-o','ProxyCommand=none','-o','ProxyJump=none',
-        '-o','ClearAllForwardings=yes','-o','ControlMaster=no','-o','ControlPersist=no',
-        node.lower(),command]
-
-
 class _BoundedRunner:
-    """Own one local SSH Process handle; bounded pipes, no stdin or child kill."""
+    """Own one local SSH Process handle; bounded pipes, no stdin or child kill.
+
+    Local deadlines cannot guarantee remote termination. A missing owner frame
+    or timeout of the cleanup SSH itself remains sticky UNCERTAIN, with no
+    retry or claim of a hard remote deadline. Deployment must stay blocked.
+    """
     def run(self, argv, *, timeout, stdout_limit, stderr_limit, stdin_mode):
         _need(os.name=='nt' and stdin_mode=='DEVNULL','WINDOWS_MONITOR_REQUIRED')
         from .worker_transport import windows_ssh_environment
         buffers=[bytearray(),bytearray()];limits=[stdout_limit,stderr_limit]
-        overflow=threading.Event();threads=[];proc=None;timed_out=False;exited=False
+        overflow=threading.Event();eof=[threading.Event(),threading.Event()];threads=[];proc=None;timed_out=False;exited=False
         def drain(index,stream):
             try:
                 while True:
                     data=stream.read(4096)
-                    if not data:return
+                    if not data:eof[index].set();return
                     room=limits[index]+1-len(buffers[index])
                     buffers[index].extend(data[:max(0,room)])
                     if len(buffers[index])>limits[index]:overflow.set();return
@@ -431,18 +441,20 @@ class _BoundedRunner:
                 for stream in (proc.stdout,proc.stderr):
                     if stream is not None:stream.close()
         return RunResult(proc.returncode if proc is not None else None,bytes(buffers[0][:stdout_limit]),bytes(buffers[1][:stderr_limit]),
-                         timed_out,overflow.is_set(),exited and drained)
+                         timed_out,overflow.is_set(),exited,eof[0].is_set(),eof[1].is_set(),drained)
 
 
 class NetworkProbeTransport:
     """Closed five-host observer for an already admitted LS5 controller.
 
-    No arbitrary source/command/host or cleanup API is exposed. Tests inject a
+    No ambient SSH aliases/configuration or automatic Tailscale fallback. No
+    arbitrary source/command/host or cleanup API is exposed. Tests inject a
     modeled runner; such results never qualify SSH, SCM or a real office host.
     """
-    def __init__(self, journal, *, require_current, runner=None):
-        _need(isinstance(journal,ProbeJournal) and callable(require_current))
+    def __init__(self, journal, *, inventory, require_current, runner=None):
+        _need(isinstance(journal,ProbeJournal) and isinstance(inventory,LanProbeInventory) and callable(require_current))
         self.journal=journal;self.require_current=require_current
+        self.inventory=inventory
         self.runner=runner if runner is not None else _BoundedRunner()
         _need(callable(getattr(self.runner,'run',None)))
 
@@ -451,12 +463,33 @@ class NetworkProbeTransport:
         except ProbeTransportBlocked:raise
         except Exception:raise ProbeTransportBlocked('PROBE_SOURCE_ADMISSION_REVOKED') from None
 
-    def _run(self,node,command,seconds,limit):
-        return self.runner.run(_argv(node,command),timeout=seconds,stdout_limit=limit,stderr_limit=65536,stdin_mode='DEVNULL')
+    def _run(self,endpoint,command,seconds,limit,*,cleanup=False):
+        try:argv=endpoint._argv(command,cleanup=cleanup)
+        except (ProbeTransportBlocked,LanInventoryBlocked) as exc:
+            if not cleanup:raise _NoSpawn(str(exc)) from None
+            raise
+        endpoint._channel_started();result=None;attempted=False
+        try:
+            if not cleanup:
+                try:self._current()
+                except ProbeTransportBlocked as exc:raise _NoSpawn(str(exc)) from None
+            attempted=True
+            result=self.runner.run(argv,timeout=seconds,stdout_limit=limit,stderr_limit=65536,stdin_mode='DEVNULL')
+            return result
+        finally:
+            endpoint._channel_finished(not attempted or (isinstance(result,RunResult) and result.local_process_exit_confirmed is True))
 
     def observe(self, node):
         _need(type(node) is str and node in REMOTE_NODES,'PROBE_HOST_REJECTED')
         _need(not isinstance(self.runner,_BoundedRunner) or os.name=='nt','WINDOWS_MONITOR_REQUIRED')
+        self._current()  # Source admission precedes private asset access too.
+        try:
+            with self.inventory.lease(node) as endpoint:
+                _need(endpoint.installation_id==self.journal.installation_id,'PROBE_INSTALLATION_MISMATCH')
+                return self._observe_endpoint(node,endpoint)
+        except LanInventoryBlocked as exc:raise ProbeTransportBlocked(str(exc)) from None
+
+    def _observe_endpoint(self,node,endpoint):
         self._current()
         source_path=Path(__file__).absolute().parents[1]/'scripts/network_readonly_probe.ps1'
         source,_=_regular(source_path,65536)
@@ -468,22 +501,24 @@ class NetworkProbeTransport:
             created_utc='2099-12-31T23:59:59.9999999Z',parent_created_utc='2099-12-31T23:59:59.9999999Z')
         _cleanup_command(recipe,max_owner)
         self.journal.begin(node,recipe.nonce,recipe.command_sha256)
-        try:self._current()
-        except ProbeTransportBlocked:
+        try:self._current();endpoint._current()
+        except (ProbeTransportBlocked,LanInventoryBlocked):
             self.journal.finish(node,recipe.nonce,{'reason':'ADMISSION_REVOKED_BEFORE_SPAWN'},exit_confirmed=True)
             raise
         receipt=dict(source_sha256=recipe.source_sha256,command_sha256=recipe.command_sha256,
-                     nonce=recipe.nonce,reason='PROBE_TRANSPORT_UNCERTAIN')
+                     nonce=recipe.nonce,inventory_sha256=endpoint.scope['sha256'],reason='PROBE_TRANSPORT_UNCERTAIN')
         result=None;observation=None;confirmed=False
         try:
-            result=self._run(node,recipe.command,65,1048576+4096)
+            result=self._run(endpoint,recipe.command,65,1048576+4096)
             _need(isinstance(result,RunResult),'PROBE_TRANSPORT_UNCERTAIN')
             _need(type(result.stdout) is bytes and len(result.stdout)<=1048576+4096 and type(result.stderr) is bytes and len(result.stderr)<=65536,'PROBE_OUTPUT_BOUNDS')
             receipt.update(stdout_sha256=hashlib.sha256(result.stdout).hexdigest(),stderr_sha256=hashlib.sha256(result.stderr).hexdigest(),
                 stderr_bytes=len(result.stderr),local_ssh_exit_and_drain_confirmed=result.local_exit_confirmed,
+                local_ssh_os_exit_confirmed=result.local_process_exit_confirmed,stdout_eof=result.stdout_eof,
+                stderr_eof=result.stderr_eof,readers_joined=result.readers_joined,
                 timed_out=result.timed_out,output_limit=result.output_limit)
             owner=_header(result.stdout,recipe);receipt['owner']=owner
-            cleanup=self._run(node,_cleanup_command(recipe,owner),12,8192)
+            cleanup=self._run(endpoint,_cleanup_command(recipe,owner),12,8192,cleanup=True)
             _need(isinstance(cleanup,RunResult) and cleanup.returncode==0 and cleanup.local_exit_confirmed is True and not cleanup.timed_out and not cleanup.output_limit,'PROBE_CLEANUP_UNCERTAIN')
             proof=_remote_json(cleanup.stdout,8192)
             _need(set(proof)=={'schema','computer','nonce','pid','created_utc','owner_exit_confirmed','parent_exit_confirmed','stop_attempted'},'PROBE_CLEANUP_UNCERTAIN')
@@ -493,6 +528,8 @@ class NetworkProbeTransport:
             receipt.update(cleanup=proof,cleanup_stdout_sha256=hashlib.sha256(cleanup.stdout).hexdigest(),
                 cleanup_stderr_sha256=hashlib.sha256(cleanup.stderr).hexdigest(),cleanup_stderr_bytes=len(cleanup.stderr))
             _need(confirmed,'PROBE_LOCAL_DRAIN_UNCERTAIN')
+            self._current()  # Revocation never skips cleanup of our old owner.
+            endpoint._current()
             _need(not result.timed_out,'PROBE_DEADLINE')
             _need(not result.output_limit and result.returncode==0,'PROBE_EXECUTION_FAILED')
             lines=result.stdout.splitlines()
@@ -501,9 +538,12 @@ class NetworkProbeTransport:
             candidate=_remote_json(lines[1][len(prefix):])
             _need(candidate.get('computer')==node and candidate.get('schema')=='unified.network-readonly-observation.v1' and candidate.get('mutations') is False,'PROBE_FRAME_REJECTED')
             observation=candidate
-            receipt['reason']='OBSERVED_AND_OWNED_HELPER_EXIT_CONFIRMED'
+            receipt['reason']='OWNED_HELPER_EXIT_CONFIRMED_READY_FOR_PUBLICATION_CHECK'
         except BaseException as exc:
-            receipt['reason']=str(exc) if isinstance(exc,ProbeTransportBlocked) else 'PROBE_TRANSPORT_UNCERTAIN'
+            if isinstance(exc,_NoSpawn):confirmed=True
+            receipt['reason']=str(exc) if isinstance(exc,(ProbeTransportBlocked,LanInventoryBlocked)) else 'PROBE_TRANSPORT_UNCERTAIN'
         self.journal.finish(node,recipe.nonce,receipt,exit_confirmed=confirmed)
         if observation is None:raise ProbeTransportBlocked(receipt['reason'])
+        self._current()  # Fresh after persistence, immediately before handoff.
+        endpoint._current()
         return observation
