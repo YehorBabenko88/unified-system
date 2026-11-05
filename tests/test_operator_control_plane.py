@@ -3,22 +3,22 @@ import copy
 import unittest
 from unified_system.operator_control_plane import (
     AuthenticationUnavailable, AuthorizationDenied, ContractError, CurrentPrincipal,
-    OperatorGateway, StreamView, validate_envelope,
+    OperatorGateway, StreamView, validate_envelope, parse_envelope,
 )
 
 
 def intent():
     return dict(schema='unified.command.v1', command_id='11111111-1111-4111-8111-111111111111',
-                actor_id='operator-1', idempotency_key='intent-1', generation='generation-1',
+                actor_id='operator-1', idempotency_key='intent-1', generation='00000000-0000-0000-0000-000000000007',
                 aggregate_type='research', aggregate_id='research-1', expected_revision=0,
-                action='SetResearchControl', payload={'mode':'LAB','state':'PAUSED'})
+                action='SetResearchControl', payload={'mode':'LAB_SIMULATION','state':'PAUSED'})
 
 
 class FixtureVerifier:
     """Explicit test-only verifier; never installed by any runtime factory."""
     def __init__(self):
         self.state='current'; self.kind='HUMAN'; self.roles=frozenset({'research.control','control.commands.read'})
-    def require_current(self, context, action, aggregate_id):
+    async def require_current(self, context, action, aggregate_id):
         if self.state != 'current': raise AuthorizationDenied(self.state)
         return CurrentPrincipal('operator-1', 3, self.kind, self.roles)
 
@@ -26,7 +26,7 @@ class FixtureVerifier:
 class FixtureBackend:
     """In-memory CAS/receipt seam; no persistent consensus claim."""
     def __init__(self): self.revision=0; self.receipts={}; self.effects=0
-    def submit(self, lease, envelope, session_context):
+    async def submit(self, lease, envelope, session_context):
         key=(envelope['generation'], envelope['actor_id'], envelope['idempotency_key'])
         if key in self.receipts:
             prior, receipt=self.receipts[key]
@@ -38,77 +38,82 @@ class FixtureBackend:
                  'actor_id':envelope['actor_id'],'aggregate_id':envelope['aggregate_id']}
         self.receipts[key]=(copy.deepcopy(envelope),receipt)
         return receipt
-    def get_command(self, command_id, session_context):
+    async def get_command(self, command_id, session_context):
         return next((r for e,r in self.receipts.values() if e['command_id']==command_id),None)
 
 
-class OperatorTests(unittest.TestCase):
+class OperatorTests(unittest.IsolatedAsyncioTestCase):
     def setUp(self):
         self.verifier=FixtureVerifier(); self.backend=FixtureBackend()
         self.gateway=OperatorGateway(self.backend,self.verifier)
-    def test_missing_provider_fails_closed(self):
-        with self.assertRaises(AuthenticationUnavailable): OperatorGateway(self.backend).submit(None,intent(),object())
+    async def test_missing_provider_fails_closed(self):
+        with self.assertRaises(AuthenticationUnavailable): await OperatorGateway(self.backend).submit(None,intent(),object())
         self.assertEqual(self.backend.effects,0)
-    def test_untrusted_actor_role_and_machine_denied(self):
+    async def test_untrusted_actor_role_and_machine_denied(self):
         for update in ({'actor_id':'owner'}, {'role':'SystemOwner'}):
             value=intent(); value.update(update)
-            with self.assertRaises((AuthorizationDenied,ContractError)): self.gateway.submit(None,value,object())
+            with self.assertRaises((AuthorizationDenied,ContractError)): await self.gateway.submit(None,value,object())
         for kind in ('NODE','SERVICE'):
             self.verifier.kind=kind
-            with self.assertRaises(AuthorizationDenied): self.gateway.submit(None,intent(),object())
+            with self.assertRaises(AuthorizationDenied): await self.gateway.submit(None,intent(),object())
         self.assertEqual(self.backend.effects,0)
-    def test_current_grants_checked_on_every_retry(self):
-        self.gateway.submit(None,intent(),object())
+    async def test_current_grants_checked_on_every_retry(self):
+        await self.gateway.submit(None,intent(),object())
         for state in ('expired','revoked'):
             self.verifier.state=state
-            with self.assertRaises(AuthorizationDenied): self.gateway.submit(None,intent(),object())
+            with self.assertRaises(AuthorizationDenied): await self.gateway.submit(None,intent(),object())
         self.assertEqual(self.backend.effects,1)
-    def test_role_backend_enforced_and_unknown_action_denied(self):
+    async def test_role_backend_enforced_and_unknown_action_denied(self):
         self.verifier.roles=frozenset({'cluster.snapshot.read','control.commands.read'})
-        with self.assertRaises(AuthorizationDenied): self.gateway.submit(None,intent(),object())
+        with self.assertRaises(AuthorizationDenied): await self.gateway.submit(None,intent(),object())
         value=intent();value['action']='FullPurge'
-        with self.assertRaises(ContractError): self.gateway.submit(None,value,object())
-    def test_two_windows_retry_and_conflicting_revision(self):
-        result=self.gateway.submit(None,intent(),object())
-        self.assertEqual(result,self.gateway.submit(None,intent(),object()))
+        with self.assertRaises(ContractError): await self.gateway.submit(None,value,object())
+    async def test_two_windows_retry_and_conflicting_revision(self):
+        result=await self.gateway.submit(None,intent(),object())
+        self.assertEqual(result,await self.gateway.submit(None,intent(),object()))
         value=intent();value['idempotency_key']='other';value['command_id']='22222222-2222-4222-8222-222222222222'
-        with self.assertRaisesRegex(ContractError,'REVISION_CONFLICT'): self.gateway.submit(None,value,object())
+        with self.assertRaisesRegex(ContractError,'REVISION_CONFLICT'): await self.gateway.submit(None,value,object())
         value=intent();value['payload']['state']='RUNNING'
-        with self.assertRaisesRegex(ContractError,'IDEMPOTENCY_CONFLICT'): self.gateway.submit(None,value,object())
+        with self.assertRaisesRegex(ContractError,'IDEMPOTENCY_CONFLICT'): await self.gateway.submit(None,value,object())
         self.assertEqual(self.backend.effects,1)
-    def test_strict_boundaries(self):
+    async def test_strict_boundaries(self):
         for patch in ({'expected_revision':True},{'expected_version':0},{'payload':{'mode':'LIVE','state':'RUNNING'}},
-                      {'payload':{'mode':'LAB','state':'PAUSED','extra':'x'}},{'idempotency_key':'x'*40000}):
+                      {'payload':{'mode':'LAB_SIMULATION','state':'PAUSED','extra':'x'}},{'idempotency_key':'x'*40000}):
             value=intent();value.update(patch)
             with self.assertRaises(ContractError): validate_envelope(value)
-    def test_backend_absent_never_returns_fake_receipt(self):
-        with self.assertRaises(AuthenticationUnavailable): OperatorGateway(None,self.verifier).submit(None,intent(),object())
-    def test_receipt_rechecks_current_actor_scope(self):
-        self.gateway.submit(None,intent(),object())
-        self.assertEqual(self.gateway.get_command(intent()['command_id'],object())['actor_id'],'operator-1')
+        for raw in (b'{"schema":1,"schema":2}', b'{"nested":'+b'['*10+b'0'+b']'*10+b'}',
+                    b'{"x":NaN}', b' '*32769):
+            with self.assertRaises(ContractError): parse_envelope(raw)
+        value=intent();value['generation']='generation-1'
+        with self.assertRaises(ContractError): validate_envelope(value)
+    async def test_backend_absent_never_returns_fake_receipt(self):
+        with self.assertRaises(AuthenticationUnavailable): await OperatorGateway(None,self.verifier).submit(None,intent(),object())
+    async def test_receipt_rechecks_current_actor_scope(self):
+        await self.gateway.submit(None,intent(),object())
+        self.assertEqual((await self.gateway.get_command(intent()['command_id'],object()))['actor_id'],'operator-1')
         self.verifier.state='revoked'
-        with self.assertRaises(AuthorizationDenied): self.gateway.get_command(intent()['command_id'],object())
+        with self.assertRaises(AuthorizationDenied): await self.gateway.get_command(intent()['command_id'],object())
         self.verifier.state='current'
         for _,receipt in self.backend.receipts.values(): receipt['actor_id']='operator-2'
-        with self.assertRaises(AuthorizationDenied): self.gateway.get_command(intent()['command_id'],object())
-    def test_revocation_during_receipt_query_prevents_disclosure(self):
-        self.gateway.submit(None,intent(),object())
+        with self.assertRaises(AuthorizationDenied): await self.gateway.get_command(intent()['command_id'],object())
+    async def test_revocation_during_receipt_query_prevents_disclosure(self):
+        await self.gateway.submit(None,intent(),object())
         original=self.backend.get_command
-        def revoke(command_id,context):
+        async def revoke(command_id,context):
             self.verifier.state='revoked'
-            return original(command_id,context)
+            return await original(command_id,context)
         self.backend.get_command=revoke
-        with self.assertRaises(AuthorizationDenied): self.gateway.get_command(intent()['command_id'],object())
-    def test_serialized_or_unknown_capability_principal_denied(self):
+        with self.assertRaises(AuthorizationDenied): await self.gateway.get_command(intent()['command_id'],object())
+    async def test_serialized_or_unknown_capability_principal_denied(self):
         class SerializedVerifier:
-            def require_current(self,*args): return {'actor_id':'operator-1','grant_revision':3,'principal_kind':'HUMAN'}
-        with self.assertRaises(AuthorizationDenied): OperatorGateway(self.backend,SerializedVerifier()).submit(None,intent(),object())
+            async def require_current(self,*args): return {'actor_id':'operator-1','grant_revision':3,'principal_kind':'HUMAN'}
+        with self.assertRaises(AuthorizationDenied): await OperatorGateway(self.backend,SerializedVerifier()).submit(None,intent(),object())
         self.verifier.roles=frozenset({'research.control','owner.override'})
-        with self.assertRaises(AuthorizationDenied): self.gateway.submit(None,intent(),object())
+        with self.assertRaises(AuthorizationDenied): await self.gateway.submit(None,intent(),object())
 
 
-class StreamTests(unittest.TestCase):
-    def test_snapshot_gap_generation_and_staleness(self):
+class StreamTests(unittest.IsolatedAsyncioTestCase):
+    async def test_snapshot_gap_generation_and_staleness(self):
         view=StreamView();self.assertEqual(view.status(0),'OFFLINE')
         view.snapshot('g1',4,10,100,500,True)
         self.assertEqual(view.status(100),'LIVE')
@@ -121,6 +126,6 @@ class StreamTests(unittest.TestCase):
         view.snapshot('g2',0,0,606,500,False)
         self.assertEqual(view.status(606),'NO_QUORUM')
         view.disconnect();self.assertEqual(view.status(607),'RECONNECTING')
-    def test_invalid_snapshot_cannot_mark_live(self):
+    async def test_invalid_snapshot_cannot_mark_live(self):
         for args in [('g',True,0,0,500,True),('g',0,0,0,0,True),('g',0,0,0,500,1)]:
             with self.assertRaises(ContractError): StreamView().snapshot(*args)

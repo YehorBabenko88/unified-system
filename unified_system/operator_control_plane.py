@@ -25,17 +25,17 @@ class CurrentPrincipal:
 
 
 class SessionVerifier(Protocol):
-    def require_current(self, context: object, action: str, aggregate_id: str) -> CurrentPrincipal:
+    async def require_current(self, context: object, action: str, aggregate_id: str) -> CurrentPrincipal:
         """Verify actual human session, expiry, revocation and current grant."""
 
 
 class CoordinationCommands(Protocol):
-    def submit(self, lease: object, envelope: dict, session_context: object) -> object: ...
-    def get_command(self, command_id: str, session_context: object) -> object: ...
+    async def submit(self, lease: object, envelope: dict, session_context: object) -> object: ...
+    async def get_command(self, command_id: str, session_context: object) -> object: ...
 
 
 class _UnavailableVerifier:
-    def require_current(self, context, action, aggregate_id):
+    async def require_current(self, context, action, aggregate_id):
         raise AuthenticationUnavailable('AUTHENTICATION_UNAVAILABLE')
 
 
@@ -68,6 +68,7 @@ def validate_envelope(value):
     for name in _FIELDS-{'payload','expected_revision'}: _identifier(value[name])
     try:
         if str(UUID(value['command_id']))!=value['command_id']: raise ValueError()
+        if str(UUID(value['generation']))!=value['generation']: raise ValueError()
     except (ValueError,TypeError,AttributeError) as exc:
         raise ContractError('COMMAND_ID_INVALID') from exc
     _integer(value['expected_revision'])
@@ -76,13 +77,37 @@ def validate_envelope(value):
     if value['action']!='SetResearchControl': raise ContractError('ACTION_UNSUPPORTED')
     payload=value['payload']
     if (type(payload) is not dict or set(payload)!={'mode','state'}
-            or payload['mode']!='LAB' or payload['state'] not in ('PAUSED','RUNNING')):
+            or payload['mode']!='LAB_SIMULATION' or payload['state'] not in ('PAUSED','RUNNING')):
         raise ContractError('PAYLOAD_UNSUPPORTED')
     try:
         encoded=json.dumps(value,sort_keys=True,separators=(',',':'),ensure_ascii=False,allow_nan=False).encode('utf-8')
     except (ValueError,TypeError,UnicodeError) as exc: raise ContractError('JSON_INVALID') from exc
     if len(encoded)>32768: raise ContractError('ENVELOPE_TOO_LARGE')
     return json.loads(encoded)
+
+
+def parse_envelope(raw):
+    """Strict bounded public decoding before contract validation."""
+    if type(raw) is not bytes or not 0<len(raw)<=32768: raise ContractError('WIRE_LIMIT')
+    def unique(pairs):
+        result={}
+        for key,value in pairs:
+            if key in result: raise ContractError('DUPLICATE_KEY')
+            result[key]=value
+        return result
+    def invalid(value): raise ContractError('NONFINITE_JSON')
+    try:
+        value=json.loads(raw.decode('utf-8'),object_pairs_hook=unique,parse_constant=invalid)
+        def bounded(item,depth=0):
+            if depth>8: raise ContractError('JSON_DEPTH')
+            if type(item) is dict:
+                for child in item.values(): bounded(child,depth+1)
+            elif type(item) is list:
+                for child in item: bounded(child,depth+1)
+        bounded(value)
+        return validate_envelope(value)
+    except (UnicodeError,json.JSONDecodeError,RecursionError,OverflowError) as exc:
+        raise ContractError('JSON_INVALID') from exc
 
 
 class OperatorGateway:
@@ -96,8 +121,8 @@ class OperatorGateway:
         self._backend=backend
         self._provider=principal_provider if principal_provider is not None else _UnavailableVerifier()
 
-    def _principal(self, context, action, aggregate_id):
-        principal=self._provider.require_current(context,action,aggregate_id)
+    async def _principal(self, context, action, aggregate_id):
+        principal=await self._provider.require_current(context,action,aggregate_id)
         try:
             _identifier(principal.actor_id); _integer(principal.grant_revision)
             valid=(principal.principal_kind=='HUMAN' and type(principal.capabilities) is frozenset
@@ -106,33 +131,54 @@ class OperatorGateway:
         if not valid: raise AuthorizationDenied('HUMAN_CURRENT_GRANT_REQUIRED')
         return principal
 
-    def submit(self, lease, envelope, session_context):
+    async def submit(self, lease, envelope, session_context):
         envelope=validate_envelope(envelope)
-        principal=self._principal(session_context,envelope['action'],envelope['aggregate_id'])
+        principal=await self._principal(session_context,envelope['action'],envelope['aggregate_id'])
         if principal.actor_id!=envelope['actor_id'] or 'research.control' not in principal.capabilities:
             raise AuthorizationDenied('ACTION_DENIED')
         # Canonical actor comes only from verified provider output.
         envelope['actor_id']=principal.actor_id
         if self._backend is None: raise AuthenticationUnavailable('CONTROL_BACKEND_UNAVAILABLE')
-        return self._backend.submit(lease,envelope,session_context)
+        receipt=await self._backend.submit(lease,envelope,session_context)
+        current=await self._principal(session_context,envelope['action'],envelope['aggregate_id'])
+        if ((current.actor_id,current.grant_revision)!=(principal.actor_id,principal.grant_revision)
+                or 'research.control' not in current.capabilities):
+            raise AuthorizationDenied('AUTHORIZATION_CHANGED')
+        return receipt
 
-    def get_command(self, command_id, session_context):
+    async def get_command(self, command_id, session_context):
         try:
             if str(UUID(command_id))!=command_id: raise ValueError()
         except (ValueError,TypeError,AttributeError) as exc: raise ContractError('COMMAND_ID_INVALID') from exc
-        principal=self._principal(session_context,'ReadCommand',command_id)
+        principal=await self._principal(session_context,'ReadCommand',command_id)
         if 'control.commands.read' not in principal.capabilities: raise AuthorizationDenied('ACTION_DENIED')
         if self._backend is None: raise AuthenticationUnavailable('CONTROL_BACKEND_UNAVAILABLE')
         # This intermediate result is private; no response is disclosed yet.
         # Backend independently enforces scope too; ownership comes from durable
         # receipt metadata, never request JSON.
-        receipt=self._backend.get_command(command_id,session_context)
-        if receipt is None: return None
+        receipt=await self._backend.get_command(command_id,session_context)
+        if receipt is None:
+            current=await self._principal(session_context,'ReadCommand',command_id)
+            if ((current.actor_id,current.grant_revision)!=(principal.actor_id,principal.grant_revision)
+                    or 'control.commands.read' not in current.capabilities):
+                raise AuthorizationDenied('AUTHORIZATION_CHANGED')
+            return None
         if type(receipt) is not dict: raise ContractError('RECEIPT_INVALID')
+        if set(receipt)=={'command_id','generation','commit_status','effect_status'}:
+            if (receipt['command_id']!=command_id or receipt['commit_status']!='UNKNOWN'
+                    or receipt['effect_status']!='UNKNOWN'):
+                raise ContractError('UNKNOWN_RECEIPT_INVALID')
+            _identifier(receipt['generation'])
+            current=await self._principal(session_context,'ReadCommand',command_id)
+            if ((current.actor_id,current.grant_revision)!=(principal.actor_id,principal.grant_revision)
+                    or 'control.commands.read' not in current.capabilities):
+                raise AuthorizationDenied('ACTION_DENIED')
+            return receipt
         actor=_identifier(receipt.get('actor_id'))
         aggregate=_identifier(receipt.get('aggregate_id'))
-        current=self._principal(session_context,'ReadCommand',aggregate)
-        if ('control.commands.read' not in current.capabilities or
+        current=await self._principal(session_context,'ReadCommand',aggregate)
+        if ((current.actor_id,current.grant_revision)!=(principal.actor_id,principal.grant_revision) or
+                'control.commands.read' not in current.capabilities or
                 (actor!=current.actor_id and 'control.commands.audit_all' not in current.capabilities)):
             raise AuthorizationDenied('RECEIPT_SCOPE_DENIED')
         return receipt
