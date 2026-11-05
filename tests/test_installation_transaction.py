@@ -10,7 +10,7 @@ from unified_system.installation_transaction import InstallationTransaction, sou
 
 class InstallationTransactionTests(unittest.TestCase):
  def setUp(self):
-  self.temp=tempfile.TemporaryDirectory();self.addCleanup(self.temp.cleanup);self.root=Path(self.temp.name)
+  self.temp=tempfile.TemporaryDirectory();self.addCleanup(self.temp.cleanup);self.root=Path(self.temp.name).resolve()
   self.source=self.root/'capsule';self.source.mkdir();self.manifest=fixture(self.source)
   raw=lab_release.canonical(self.manifest);(self.source/'lab-release.json').write_bytes(raw);self.pin=hashlib.sha256(raw).hexdigest()
  def plan(self,**changes):
