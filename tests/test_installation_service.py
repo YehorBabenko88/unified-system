@@ -208,12 +208,15 @@ class ServiceResourceTests(unittest.TestCase):
   command="try{Get-UnifiedPoisonProbe -ErrorAction Stop}catch{Write-Output 'POISON_NOT_FOUND'}"
   executable=service._native_tools()['powershell']['path']
   control=service._environment();control['PSModulePath']=str(modules)
-  result=subprocess.run([executable,'-NoProfile','-NonInteractive','-Command',command],env=control,capture_output=True,timeout=15)
+  from tests.native_phase_diagnostics import phase,run_phased
+  control_command=phase('ENTRY')+phase('CONTROL_LOOKUP_BEGIN')+command+';'+phase('CONTROL_LOOKUP_END')+phase('DONE')
+  result=run_phased([executable,'-NoProfile','-NonInteractive','-Command',control_command],env=control)
   self.assertEqual(result.returncode,0);self.assertTrue(marker.exists(),'control must demonstrate actual poison autoload');marker.unlink()
   with patch.dict(os.environ,{'PSModulePath':str(modules)}):safe=service._environment()
   self.assertEqual(safe['PSModulePath'],str(service._system_directory()/'WindowsPowerShell/v1.0/Modules'))
-  result=subprocess.run([executable,'-NoProfile','-NonInteractive','-Command',command],env=safe,capture_output=True,timeout=15)
-  self.assertEqual(result.returncode,0,result.stderr.decode(errors='replace'));self.assertIn(b'POISON_NOT_FOUND',result.stdout);self.assertFalse(marker.exists())
+  safe_command=phase('ENTRY')+phase('SAFE_LOOKUP_BEGIN')+command+';'+phase('SAFE_LOOKUP_END')+phase('DONE')
+  result=run_phased([executable,'-NoProfile','-NonInteractive','-Command',safe_command],env=safe)
+  self.assertEqual(result.returncode,0);self.assertIn(b'POISON_NOT_FOUND',result.stdout);self.assertFalse(marker.exists())
 
  @unittest.skipUnless(os.name=='nt','GetSystemDirectoryW native path consistency')
  def test_env_redirect_does_not_select_native_tools(self):
