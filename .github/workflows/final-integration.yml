@@ -38,7 +38,12 @@ jobs:
         run: |
           import hashlib, io, json, os, pathlib, platform, stat, subprocess, unittest
           expected_head = os.environ['EXPECTED_HEAD']
-          source_paths = tuple(name for name in subprocess.check_output(['git','ls-files'],text=True).splitlines() if name.endswith(('.py','.yml','.yaml','.json','.lock')))
+          source_objects = {}
+          for entry in subprocess.check_output(['git','ls-tree','-r','-z',expected_head]).split(b'\0'):
+              if not entry: continue
+              metadata, name = entry.split(b'\t',1)
+              source_objects[name.decode('utf-8')] = metadata.split()[2].decode('ascii')
+          source_paths = tuple(name for name in source_objects if name.endswith(('.py','.yml','.yaml','.json','.lock')) or name=='.gitattributes')
           def git(*args):
               return subprocess.check_output(['git', *args], timeout=15)
           def source_receipt():
@@ -58,11 +63,11 @@ jobs:
                       assert not getattr(metadata, 'st_file_attributes', 0) & getattr(stat, 'FILE_ATTRIBUTE_REPARSE_POINT', 1024)
                   assert path.is_file(), 'nonregular source input'
                   raw = path.read_bytes()
-                  blob = git('show', expected_head + ':' + name)
+                  blob = git('cat-file', 'blob', source_objects[name])
                   assert raw == blob, 'raw source differs from committed blob: ' + name
                   files[name] = dict(bytes=len(raw), raw_sha256=hashlib.sha256(raw).hexdigest(),
                       blob_sha256=hashlib.sha256(blob).hexdigest(),
-                      git_blob=git('rev-parse', expected_head + ':' + name).decode().strip())
+                      git_blob=source_objects[name])
               return dict(head=head, tree=tree, files=files, tracked_clean=True)
           before = source_receipt()
           inventory=json.loads(pathlib.Path('release/component-test-inventory.json').read_bytes())
