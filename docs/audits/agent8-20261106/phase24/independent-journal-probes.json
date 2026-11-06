@@ -1,0 +1,23 @@
+{
+  "head": "175b48a2a0d2882669172abc5774bd71b42e2215",
+  "unknown_request_retained": true,
+  "unknown_cancel": "DENIED_UNKNOWN",
+  "new_generation_incarnation_over_capacity": "QUEUED_NO_REQUEST",
+  "exact_remaining_capacity": "PREPARED_NOT_AUTHORIZED",
+  "incompatible_CPU_scale": "QUEUED",
+  "two_connection_cancel_seal_race": [
+    {
+      "operation": "cancel",
+      "denied": "ReconciliationRequired"
+    },
+    {
+      "operation": "seal",
+      "state": "SEALED",
+      "execution_authorized": false
+    }
+  ],
+  "final_race_state": "SEALED",
+  "all_returned_views_execution_authorized": false,
+  "actual_external_or_network_calls": 0,
+  "scope": "AUDITOR_DERIVED_LOCAL_SQLITE_ONLY_NOT_CLUSTER_AUTHORITY"
+}

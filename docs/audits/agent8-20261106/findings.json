@@ -150,5 +150,16 @@
     "verified_fix_head": "15dd9e8340cc332204ebbe6c13744f797ceca2f4",
     "fix_evidence": "phase22/provider-closed-review.json;phase22/provider-gap-review.json",
     "remaining_scope": "NO_NBM_RUNTIME_INERT_OR_PHYSICAL_ACCEPTANCE"
+  },
+  {
+    "id": "A8-F15",
+    "severity": "P2",
+    "repository": "unified-system",
+    "pr": 24,
+    "observed_head": "175b48a2a0d2882669172abc5774bd71b42e2215",
+    "status": "OPEN_PENDING_EXACT_FIX_REVIEW",
+    "title": "Scheduler CI receipt accepts hidden tracked source mutation",
+    "evidence": "phase24/scheduler-durable-review.json;hidden_comment/receipt.json+logs; harmless durable.py comment with assume-unchanged passes30tests and source before/after, despite rawhash mismatch.",
+    "required_correction": "Bind raw committed blobs/ordinary source inputs before and after CI independently of indexflags; preserve30exactIDs/no-skips/loghash, add hidden/pre-post mutation negatives. No hosted tampering alleged."
   }
 ]

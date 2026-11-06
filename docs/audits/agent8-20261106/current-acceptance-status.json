@@ -1,5 +1,5 @@
 {
-  "checked_utc": "2026-11-06T19:12:21.917288+00:00",
+  "checked_utc": "2026-11-06T19:17:26.135028+00:00",
   "RELEASE_MANIFEST_STATUS": "PRESENT_PREPARATION_ONLY_NOT_APPROVED_NOT_INSTALLABLE",
   "NODE_INVENTORY_STATUS": "SIX_REDACTED_OWNER_OBSERVATIONS_PRESENT_ORIGINAL_RAW_NOT_REACQUIRED_BY_A8_NOT_ADMITTED",
   "CONTRACT_STATUS": {
@@ -232,6 +232,17 @@
       "native_grid_export": "BLOCKED_BEFORE_IO",
       "system_acceptance": "BLOCKED",
       "new_confirmed_A8_P0": "NONE_FROM_THIS_REVIEW"
+    },
+    "Agent5_durable": {
+      "head": "175b48a2a0d2882669172abc5774bd71b42e2215",
+      "tree": "9599ae83cc5c425f80fb014376dc5fada5e85c2b",
+      "tests": 30,
+      "skips": 0,
+      "old15_ASTs": "UNCHANGED",
+      "derived_local_journal_probes": "PASS_LOCAL_ONLY",
+      "CI_guard": "F15_FAILS_HIDDEN_COMMENT_CONTROL",
+      "execution_authorization": false,
+      "hosted": "QUEUED_NOT_QUALIFIED"
     }
   },
   "WINDOWS_CI": "PENDING_CURRENT_DRAFTS; FAILED_BASELINE_MANDATORY_GATES_NOT_CLOSED",
@@ -243,14 +254,15 @@
     "P0_confirmed_defects": 0,
     "P0_absence_proven": false,
     "P1_open": 6,
-    "P2_open": 1,
+    "P2_open": 2,
     "F08": "FIX_VERIFIED_OFFLINE",
     "F09": "FIX_VERIFIED_OFFLINE_AT_42686cd",
     "F10": "FIX_VERIFIED_OFFLINE_AT_42686cd",
     "F11": "FIX_VERIFIED_OFFLINE_AT_0b3af3e",
     "F12": "FIX_VERIFIED_DOCUMENTARY_EXACT_SOURCE",
     "F13": "FIX_VERIFIED_OFFLINE_AT_ec967b3_OLD_SOURCE_UNSAFE_NOT_DEPLOYED",
-    "F14": "FIX_VERIFIED_OFFLINE_AT_15dd9e8_PROVIDER_DISABLED"
+    "F14": "FIX_VERIFIED_OFFLINE_AT_15dd9e8_PROVIDER_DISABLED",
+    "F15": "OPEN_SCHEDULER_CI_RAW_SOURCE_BINDING"
   },
   "EVIDENCE": [
     "phase4/math-source-and-compile-review.json",
@@ -287,7 +299,9 @@
     "phase21/provider-gap-review.json",
     "phase22/provider-closed-review.json",
     "phase22/provider-gap-review.json",
-    "phase23/gate-diagnosis-review.json"
+    "phase23/gate-diagnosis-review.json",
+    "phase24/scheduler-durable-review.json",
+    "phase24/independent-journal-probes.json"
   ],
   "NEXT_ACTIONS": [
     "Review terminal exact-source Windows CI logs/artifacts when available; queued/cancelled is not PASS.",
