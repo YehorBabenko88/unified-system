@@ -16,6 +16,7 @@ response with unobserved partial writes. Fixture captures must establish this.
 """
     violations = []
     high_revision = 0
+    high_epoch = 0
     committed_checkpoint = 1
     segments = set()
     for e in events:
@@ -36,13 +37,17 @@ response with unobserved partial writes. Fixture captures must establish this.
             violations.append('NO_QUORUM')
         if e['generation'] != e['current_generation']:
             violations.append('GENERATION_MISMATCH')
+        # A trace may start with an already active assignment, not its grant.
+        high_revision = max(high_revision, e['current_revision'])
+        high_epoch = max(high_epoch, e['current_epoch'])
         if op in {'grant', 'supersede'}:
             revision = e['assignment_revision']
             if revision <= max(high_revision, e['current_revision']):
                 violations.append('REVISION_REUSED')
-            if e['epoch'] <= e['current_epoch']:
+            if e['epoch'] <= high_epoch:
                 violations.append('EPOCH_REUSED')
             high_revision = max(high_revision, revision)
+            high_epoch = max(high_epoch, e['epoch'])
             continue
         if e['assignment_revision'] != e['current_revision']:
             violations.append('STALE_ASSIGNMENT')

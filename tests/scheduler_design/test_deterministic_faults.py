@@ -69,6 +69,17 @@ class FaultTraceTests(unittest.TestCase):
         restarted = event(op='grant', assignment_revision=2, current_revision=1, epoch=8)
         self.assertIn('REVISION_REUSED', audit([first, dict(op='restart'), restarted]))
 
+    def test_epoch_high_water_survives_restart(self):
+        self.assertIn('EPOCH_REUSED', audit([
+            event(op='grant', assignment_revision=3, current_revision=2, epoch=9),
+            dict(op='restart'),
+            event(op='grant', assignment_revision=4, current_revision=3, epoch=8, current_epoch=7)]))
+
+    def test_mid_assignment_trace_seeds_durable_revision_history(self):
+        self.assertIn('REVISION_REUSED', audit([
+            event(assignment_revision=100, current_revision=100), dict(op='restart'),
+            event(op='grant', assignment_revision=2, current_revision=1, epoch=9)]))
+
     def test_checkpoint_recovery(self):
         self.assertEqual([], audit([event(), dict(op='resume', checkpoint=2, verified=True)]))
         self.assertIn('UNCOMMITTED_CHECKPOINT', audit([event(),
