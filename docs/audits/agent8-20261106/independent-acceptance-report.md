@@ -150,3 +150,5 @@ LAN transport, real consensus, replication, Terminan on every node, failover, re
 Evidence index: [all PR HEAD snapshots](all-pr-head-verification.json), [all HEAD CI checks](all-head-ci-checks.json), [coverage](coverage-summary.json), [collection scope](collection-summary.json). Local raw API snapshots are retained under evidence/; remote GitHub URLs identify the original service records. SHA256SUMS.txt detects subsequent local file changes; it is an unsigned auditor manifest, not a trusted publisher signature.
 
 Latest phase29: Meta PR78 f3c01a2 and Stratt PR72 88a180b independently verify replacement conformance10/0skip each, baseline4fail/6pass each, all782/765rawfiles before/after. Narrow offline fixes only; hosted mandatory jobs queued; global F16 and overall NO-GO remain. See phase29/a7-git-provenance-review.md.
+
+Phase30 independently verifies Root final-integration F16 correction at1808556: clean75/0skip, oldblob/tree falsebinding75 reproduced, fixedblob/tree reject beforetests; post-source/wrongID/skip reject. Componentofflinefix only; globalF16open andNO-GO6P1/2P2 remain. See phase30/root-f16-review.md.

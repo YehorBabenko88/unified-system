@@ -1,5 +1,5 @@
 {
-  "checked_utc": "2026-11-06T20:27:29.935923+00:00",
+  "checked_utc": "2026-11-06T20:42:29.433360+00:00",
   "RELEASE_MANIFEST_STATUS": "PRESENT_PREPARATION_ONLY_NOT_APPROVED_NOT_INSTALLABLE",
   "NODE_INVENTORY_STATUS": "SIX_REDACTED_OWNER_OBSERVATIONS_PRESENT_ORIGINAL_RAW_NOT_REACQUIRED_BY_A8_NOT_ADMITTED",
   "CONTRACT_STATUS": {
@@ -886,6 +886,103 @@
     ],
     "scope": "Git replacement provenance only; Meta wrong-tree metadata corrected; Stratt false-dirty availability corrected. No runtime/source-authenticity or hosted CI qualification.",
     "F16_global": "OPEN",
+    "physical": "BLOCKED",
+    "tailscale_removal": "BLOCKED",
+    "overall": "NO_GO"
+  },
+  "ROOT_F16_exact_review": {
+    "head": "18085568df01bdbc4df74404e3c650ec30bb7d6b",
+    "tree": "ebdd08b00d78c0c130d78747fed717bc636793bf",
+    "parent": "dd8b4ff9ace0a75dd81d0ab654e97a1e2319259a",
+    "previous": "c9f3735c1efa2d5ae0e2dfbe52987a49c520bdf5",
+    "fix_delta": "WORKFLOW_PLUS_DOC_ONLY",
+    "prior75_inventory_tests_and_selected_product_paths_unchanged": true,
+    "source_git_subprocess_sites": 2,
+    "cases": {
+      "old_blob_RED": {
+        "head": "c9f3735c1efa2d5ae0e2dfbe52987a49c520bdf5",
+        "exit_code": 0,
+        "tests": 75,
+        "receipt_emitted": true,
+        "source_binding_passed": true,
+        "skips": 0,
+        "protected_inputs": 377,
+        "independent_common_git": true
+      },
+      "old_tree_RED": {
+        "head": "c9f3735c1efa2d5ae0e2dfbe52987a49c520bdf5",
+        "exit_code": 0,
+        "tests": 75,
+        "receipt_emitted": true,
+        "source_binding_passed": true,
+        "skips": 0,
+        "protected_inputs": 377,
+        "independent_common_git": true
+      },
+      "clean": {
+        "head": "18085568df01bdbc4df74404e3c650ec30bb7d6b",
+        "exit_code": 0,
+        "tests": 75,
+        "receipt_emitted": true,
+        "source_binding_passed": true,
+        "skips": 0,
+        "protected_inputs": 400,
+        "independent_common_git": true
+      },
+      "blob": {
+        "head": "18085568df01bdbc4df74404e3c650ec30bb7d6b",
+        "exit_code": 1,
+        "tests": 0,
+        "receipt_emitted": false,
+        "source_binding_passed": null,
+        "skips": null,
+        "protected_inputs": null,
+        "independent_common_git": true
+      },
+      "tree": {
+        "head": "18085568df01bdbc4df74404e3c650ec30bb7d6b",
+        "exit_code": 1,
+        "tests": 0,
+        "receipt_emitted": false,
+        "source_binding_passed": null,
+        "skips": null,
+        "protected_inputs": null,
+        "independent_common_git": true
+      },
+      "post_hidden": {
+        "head": "18085568df01bdbc4df74404e3c650ec30bb7d6b",
+        "exit_code": 1,
+        "tests": 75,
+        "receipt_emitted": false,
+        "source_binding_passed": null,
+        "skips": null,
+        "protected_inputs": null,
+        "independent_common_git": true
+      },
+      "wrong_id": {
+        "head": "18085568df01bdbc4df74404e3c650ec30bb7d6b",
+        "exit_code": 1,
+        "tests": 0,
+        "receipt_emitted": false,
+        "source_binding_passed": null,
+        "skips": null,
+        "protected_inputs": null,
+        "independent_common_git": true
+      },
+      "skip": {
+        "head": "18085568df01bdbc4df74404e3c650ec30bb7d6b",
+        "exit_code": 1,
+        "tests": 75,
+        "receipt_emitted": true,
+        "source_binding_passed": true,
+        "skips": 1,
+        "protected_inputs": 400,
+        "independent_common_git": true
+      }
+    },
+    "F16_root": "FIX_VERIFIED_OFFLINE_EXACT_SOURCE",
+    "F16_global": "OPEN",
+    "hosted": "NOT_QUALIFIED",
     "physical": "BLOCKED",
     "tailscale_removal": "BLOCKED",
     "overall": "NO_GO"
