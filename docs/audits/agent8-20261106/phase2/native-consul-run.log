@@ -1,0 +1,23 @@
+owned_process_started
+owned_process_started
+owned_process_started
+failure
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\outputs\run_native_consul_lab.py", line 139, in <module>
+    asyncio.run(run());report['result']='PASS'
+    ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\outputs\run_native_consul_lab.py", line 89, in run
+    voters=await healthy(client,nodes[:3]);record('three_actual_persistent_voters_one_leader',servers=voters)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\outputs\run_native_consul_lab.py", line 73, in healthy
+    raise AssertionError('LAB_QUORUM_TIMEOUT '+last)
+AssertionError: LAB_QUORUM_TIMEOUT AssertionError('owned test process exited')

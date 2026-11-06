@@ -1,0 +1,163 @@
+{
+  "schema": "agent8.native-loopback.v1",
+  "head": "71084a336520187d6e260531a2f5d15555ba0e0c",
+  "scope": "ISOLATED_WINDOWS_LOOPBACK_COMPONENTS",
+  "consul_version": "1.22.2",
+  "raft_backend": "boltdb",
+  "consul_binary_sha256": "41762ef5b98c8dd9b6852df6cfbceed37e7f0acc5760856be33100f1092475e1",
+  "consul_zip_sha256": "7b8a3bb723017d1be87decf3a7bb12661c36e43eba8283b8c04eca60501493ec",
+  "download_source": "https://releases.hashicorp.com/consul/1.22.2/",
+  "physical": "BLOCKED",
+  "tailscale_removal": "BLOCKED",
+  "production_deployment": "NOT_AUTHORIZED",
+  "human_authentication": "SYNTHETIC_PROVIDER_ONLY",
+  "peer_tls_acl": "NOT_RUN",
+  "network_partition": "NOT_RUN",
+  "events": [
+    {
+      "scenario": "owned_process_started",
+      "node": "a8-disposable-0",
+      "pid": 95496,
+      "endpoint": "http://127.0.0.1:63346"
+    },
+    {
+      "scenario": "owned_process_started",
+      "node": "a8-disposable-1",
+      "pid": 85620,
+      "endpoint": "http://127.0.0.1:63351"
+    },
+    {
+      "scenario": "owned_process_started",
+      "node": "a8-disposable-2",
+      "pid": 105680,
+      "endpoint": "http://127.0.0.1:63356"
+    },
+    {
+      "scenario": "three_actual_persistent_voters_one_leader",
+      "servers": [
+        {
+          "ID": "a084b2b4-e0cc-7724-49e2-b42307d319e8",
+          "Node": "a8-disposable-2",
+          "Address": "127.0.0.1:63353",
+          "Leader": false,
+          "ProtocolVersion": "3",
+          "Voter": true,
+          "LastIndex": 0
+        },
+        {
+          "ID": "90350df9-f733-ffcc-88b6-4dc666a37d24",
+          "Node": "a8-disposable-0",
+          "Address": "127.0.0.1:63343",
+          "Leader": true,
+          "ProtocolVersion": "3",
+          "Voter": true,
+          "LastIndex": 0
+        },
+        {
+          "ID": "eeb3d2a8-2341-593e-7cd4-b0f97819860b",
+          "Node": "a8-disposable-1",
+          "Address": "127.0.0.1:63348",
+          "Leader": false,
+          "ProtocolVersion": "3",
+          "Voter": true,
+          "LastIndex": 0
+        }
+      ]
+    },
+    {
+      "scenario": "actual_grid_commit_and_idempotent_retry",
+      "command_id": "3d9e3f1a-37f6-4581-8884-a572169a36c2",
+      "revision": 1
+    },
+    {
+      "scenario": "expired_provider_denied_no_submit"
+    },
+    {
+      "scenario": "actual_consul_snapshot_backup",
+      "sha256": "0597b60a322562d626c8d4901bab81dff6e0b8f68044339703571dd2540a83f1",
+      "bytes": 2692
+    },
+    {
+      "scenario": "owned_process_stopped",
+      "node": "a8-disposable-0",
+      "pid": 95496
+    },
+    {
+      "scenario": "actual_raft_leader_crash_successor_and_receipt_recovery"
+    },
+    {
+      "scenario": "stale_owner_fenced_successor_commits",
+      "old_fence": 11,
+      "new_fence": 17
+    },
+    {
+      "scenario": "owned_process_stopped",
+      "node": "a8-disposable-2",
+      "pid": 105680
+    },
+    {
+      "scenario": "actual_two_voter_process_loss_noquorum_command_unknown"
+    },
+    {
+      "scenario": "owned_process_stopped",
+      "node": "a8-disposable-1",
+      "pid": 85620
+    },
+    {
+      "scenario": "owned_process_started",
+      "node": "a8-disposable-0",
+      "pid": 108808,
+      "endpoint": "http://127.0.0.1:63346"
+    },
+    {
+      "scenario": "owned_process_started",
+      "node": "a8-disposable-1",
+      "pid": 108816,
+      "endpoint": "http://127.0.0.1:63351"
+    },
+    {
+      "scenario": "owned_process_started",
+      "node": "a8-disposable-2",
+      "pid": 108832,
+      "endpoint": "http://127.0.0.1:63356"
+    },
+    {
+      "scenario": "all_process_restart_persistent_receipts_recovered_noquorum_intent_absent"
+    },
+    {
+      "scenario": "owned_process_started",
+      "node": "a8-disposable-3",
+      "pid": 109332,
+      "endpoint": "http://127.0.0.1:63361"
+    },
+    {
+      "scenario": "backup_restore_to_independent_test_cluster_digest_verified",
+      "restored_revision": 1
+    },
+    {
+      "scenario": "isolated_native_component_scenarios_complete"
+    },
+    {
+      "scenario": "owned_process_stopped",
+      "node": "a8-disposable-0",
+      "pid": 108808
+    },
+    {
+      "scenario": "owned_process_stopped",
+      "node": "a8-disposable-1",
+      "pid": 108816
+    },
+    {
+      "scenario": "owned_process_stopped",
+      "node": "a8-disposable-2",
+      "pid": 108832
+    },
+    {
+      "scenario": "owned_process_stopped",
+      "node": "a8-disposable-3",
+      "pid": 109332
+    }
+  ],
+  "result": "PASS",
+  "all_owned_processes_stopped": true
+}

@@ -1,0 +1,1349 @@
+{
+  "head": "71084a336520187d6e260531a2f5d15555ba0e0c",
+  "run": 42088042386,
+  "attempt": 1,
+  "artifact": 13451546239,
+  "sha256": "1d4de71e26ffc1c958f31ebfd2f2e46bd6dd3bbd0e0afae4deb058d30cfb27a4",
+  "download_digest_match": true,
+  "source_before": {
+    "head": "71084a336520187d6e260531a2f5d15555ba0e0c",
+    "tree": "f50311e41f135dc5b4cc64693872fd4831df7afe",
+    "raw_head_blobs_verified": 662,
+    "raw_bytes": 2481952,
+    "checkout_policy": "core.autocrlf=false; raw blob equality",
+    "scope": "EPHEMERAL_LINUX_ONLY",
+    "native_windows": "NOT_RUN",
+    "physical": "NOT_RUN",
+    "human_authentication": "SYNTHETIC_AUTH"
+  },
+  "source_after": {
+    "head": "71084a336520187d6e260531a2f5d15555ba0e0c",
+    "tree": "f50311e41f135dc5b4cc64693872fd4831df7afe",
+    "raw_head_blobs_verified": 662,
+    "raw_bytes": 2481952,
+    "checkout_policy": "core.autocrlf=false; raw blob equality",
+    "scope": "EPHEMERAL_LINUX_ONLY",
+    "native_windows": "NOT_RUN",
+    "physical": "NOT_RUN",
+    "human_authentication": "SYNTHETIC_AUTH",
+    "run": "42088042386",
+    "attempt": "1",
+    "files": {
+      "coordination-tests.xml": "473e1d1cf49b8544f3c49153151fe552155b444895797c2ca37d108d3d6dc373",
+      "qualification-source-before.json": "7880b6bd4cc74a31320f9b8ec25f1b68857ed05485a622b06c91906c05d26fd9",
+      "qualification-three/evidence.json": "c5cfe51c6efb19db6d3d4c7b660b3748eeb8e9c10304c6ba64db40e69bc5f3c3",
+      "qualification-three/qualification.snap": "d0e4fc1c1062b646ff0ed63b4a53eaaa6583c1f9c7518ed4e571df088c8722c6"
+    },
+    "fixture_lock_sha256": "6654ea74257c1141553c34cef2e9de5355b9b7ddb3ab4a834ae382ae0fd47b12",
+    "production": "NO_GO",
+    "unit_inventory": {
+      "errors": 0,
+      "expected": [
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_cas409_race_reconciles_only_exact_anchor[False]"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_cas409_race_reconciles_only_exact_anchor[True]"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_create_read_advance_and_exact_reconciliation"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_forged_expected_version_cannot_advance_existing_anchor"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_forged_lease_value_does_not_grant_budget_mutation"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_lost_commit_response_reconciles_same_anchor_without_credit_or_rebase"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_malformed_storage_never_returns_missing_or_trusted_version[changes0]"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_malformed_storage_never_returns_missing_or_trusted_version[changes1]"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_malformed_storage_never_returns_missing_or_trusted_version[changes2]"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_malformed_storage_never_returns_missing_or_trusted_version[changes3]"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_no_quorum_unknown_and_read_is_not_missing"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_no_revision_gap_refund_reset_or_scope_takeover[changes0]"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_no_revision_gap_refund_reset_or_scope_takeover[changes1]"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_no_revision_gap_refund_reset_or_scope_takeover[changes2]"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_no_revision_gap_refund_reset_or_scope_takeover[changes3]"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_no_revision_gap_refund_reset_or_scope_takeover[changes4]"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_no_revision_gap_refund_reset_or_scope_takeover[changes5]"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_scope_and_source_are_rechecked_after_actual_commit_before_publication"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_source_revocation_and_lease_loss_before_disclosure_deny"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_source_revocation_during_final_lease_rpc_blocks_publication"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_strict_anchor_fields[changes0]"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_strict_anchor_fields[changes1]"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_strict_anchor_fields[changes2]"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_strict_anchor_fields[changes3]"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_strict_anchor_fields[changes4]"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_strict_anchor_fields[changes5]"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_strict_anchor_fields[changes6]"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_strict_anchor_fields[changes7]"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_strict_anchor_fields[changes8]"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_strict_anchor_fields[changes9]"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_untrusted_anchor_wire_is_bounded_and_duplicate_free[byte-bound]"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_untrusted_anchor_wire_is_bounded_and_duplicate_free[depth]"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_untrusted_anchor_wire_is_bounded_and_duplicate_free[duplicates]"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_untrusted_anchor_wire_is_bounded_and_duplicate_free[nonfinite]"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_untrusted_anchor_wire_is_bounded_and_duplicate_free[overflow]"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_untrusted_anchor_wire_is_bounded_and_duplicate_free[utf8]"
+        ],
+        [
+          "tests.coordination.test_consul_authority",
+          "test_dcs_loss_stops_existing_leader_before_pg_renewal"
+        ],
+        [
+          "tests.coordination.test_consul_authority",
+          "test_floating_leader_does_not_fall_back_when_dcs_is_unavailable"
+        ],
+        [
+          "tests.coordination.test_consul_authority",
+          "test_foreign_or_reconstructed_lease_does_not_gain_observer_authority"
+        ],
+        [
+          "tests.coordination.test_consul_authority",
+          "test_lost_dcs_after_pg_commit_does_not_expose_leadership"
+        ],
+        [
+          "tests.coordination.test_consul_authority",
+          "test_production_requires_https_mtls_and_acl"
+        ],
+        [
+          "tests.coordination.test_consul_authority",
+          "test_read_finishing_after_local_ttl_cannot_validate_lease"
+        ],
+        [
+          "tests.coordination.test_consul_authority",
+          "test_rollout_guard_binds_pg_epoch_to_current_consul_owner"
+        ],
+        [
+          "tests.coordination.test_consul_authority",
+          "test_session_owner_and_raft_index_bind_protected_write"
+        ],
+        [
+          "tests.coordination.test_consul_authority",
+          "test_stale_token_or_session_loss_never_publishes_control_state"
+        ],
+        [
+          "tests.coordination.test_consul_authority",
+          "test_unreachable_first_endpoint_does_not_hide_healthy_quorum_endpoint"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_committed_research_state_retry_and_conflicts"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_cross_actor_receipt_requires_explicit_audit_capability[False]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_cross_actor_receipt_requires_explicit_audit_capability[True]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_current_authentication_rechecked_before_commit_and_replay"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_existing_aggregate_corruption_denies_cas[change0]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_existing_aggregate_corruption_denies_cas[change1]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_existing_aggregate_corruption_denies_cas[change2]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_existing_aggregate_corruption_denies_cas[change3]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_existing_aggregate_corruption_denies_cas[change4]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_existing_aggregate_corruption_denies_cas[change5]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_no_auth_revocation_and_no_quorum_deny"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_own_receipt_read_needs_read_capability_not_mutation_capability"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_postcommit_revocation_blocks_disclosure_without_undoing_committed_intent"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_raw_public_decoder_rejects_ambiguity_depth_and_bounds[array]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_raw_public_decoder_rejects_ambiguity_depth_and_bounds[bytes]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_raw_public_decoder_rejects_ambiguity_depth_and_bounds[depth]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_raw_public_decoder_rejects_ambiguity_depth_and_bounds[duplicate]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_raw_public_decoder_rejects_ambiguity_depth_and_bounds[nonfinite]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_raw_public_decoder_rejects_ambiguity_depth_and_bounds[overflow]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_raw_public_decoder_rejects_ambiguity_depth_and_bounds[utf8]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_raw_public_decoder_roundtrip"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_receipt_decoder_rejects_private_unknown_fields"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_stored_kv_corruption_never_discloses_arbitrary_receipt[corrupt0]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_stored_kv_corruption_never_discloses_arbitrary_receipt[corrupt1]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_stored_kv_corruption_never_discloses_arbitrary_receipt[corrupt2]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_stored_kv_corruption_never_discloses_arbitrary_receipt[corrupt3]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_structural_principal_rejects_forgery_and_machine_authority[True]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_structural_principal_rejects_forgery_and_machine_authority[principal1]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_structural_principal_rejects_forgery_and_machine_authority[principal2]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_structural_principal_rejects_forgery_and_machine_authority[principal3]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_structural_principal_rejects_forgery_and_machine_authority[principal4]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_unknown_committed_response_reconciles_without_reexecution"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_untrusted_envelope_denied_without_mutation[change0]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_untrusted_envelope_denied_without_mutation[change10]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_untrusted_envelope_denied_without_mutation[change11]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_untrusted_envelope_denied_without_mutation[change1]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_untrusted_envelope_denied_without_mutation[change2]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_untrusted_envelope_denied_without_mutation[change3]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_untrusted_envelope_denied_without_mutation[change4]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_untrusted_envelope_denied_without_mutation[change5]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_untrusted_envelope_denied_without_mutation[change6]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_untrusted_envelope_denied_without_mutation[change7]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_untrusted_envelope_denied_without_mutation[change8]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_untrusted_envelope_denied_without_mutation[change9]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_untrusted_storage_json_uses_strict_decoder[bytes]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_untrusted_storage_json_uses_strict_decoder[depth]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_untrusted_storage_json_uses_strict_decoder[duplicate]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_untrusted_storage_json_uses_strict_decoder[nonfinite]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_untrusted_storage_json_uses_strict_decoder[overflow]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_zero_grant_principal_cannot_submit_or_query_private_receipt"
+        ]
+      ],
+      "failures": 0,
+      "observed": [
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_cas409_race_reconciles_only_exact_anchor[False]"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_cas409_race_reconciles_only_exact_anchor[True]"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_create_read_advance_and_exact_reconciliation"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_forged_expected_version_cannot_advance_existing_anchor"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_forged_lease_value_does_not_grant_budget_mutation"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_lost_commit_response_reconciles_same_anchor_without_credit_or_rebase"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_malformed_storage_never_returns_missing_or_trusted_version[changes0]"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_malformed_storage_never_returns_missing_or_trusted_version[changes1]"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_malformed_storage_never_returns_missing_or_trusted_version[changes2]"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_malformed_storage_never_returns_missing_or_trusted_version[changes3]"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_no_quorum_unknown_and_read_is_not_missing"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_no_revision_gap_refund_reset_or_scope_takeover[changes0]"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_no_revision_gap_refund_reset_or_scope_takeover[changes1]"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_no_revision_gap_refund_reset_or_scope_takeover[changes2]"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_no_revision_gap_refund_reset_or_scope_takeover[changes3]"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_no_revision_gap_refund_reset_or_scope_takeover[changes4]"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_no_revision_gap_refund_reset_or_scope_takeover[changes5]"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_scope_and_source_are_rechecked_after_actual_commit_before_publication"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_source_revocation_and_lease_loss_before_disclosure_deny"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_source_revocation_during_final_lease_rpc_blocks_publication"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_strict_anchor_fields[changes0]"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_strict_anchor_fields[changes1]"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_strict_anchor_fields[changes2]"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_strict_anchor_fields[changes3]"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_strict_anchor_fields[changes4]"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_strict_anchor_fields[changes5]"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_strict_anchor_fields[changes6]"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_strict_anchor_fields[changes7]"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_strict_anchor_fields[changes8]"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_strict_anchor_fields[changes9]"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_untrusted_anchor_wire_is_bounded_and_duplicate_free[byte-bound]"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_untrusted_anchor_wire_is_bounded_and_duplicate_free[depth]"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_untrusted_anchor_wire_is_bounded_and_duplicate_free[duplicates]"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_untrusted_anchor_wire_is_bounded_and_duplicate_free[nonfinite]"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_untrusted_anchor_wire_is_bounded_and_duplicate_free[overflow]"
+        ],
+        [
+          "tests.coordination.test_budget_anchor",
+          "test_untrusted_anchor_wire_is_bounded_and_duplicate_free[utf8]"
+        ],
+        [
+          "tests.coordination.test_consul_authority",
+          "test_dcs_loss_stops_existing_leader_before_pg_renewal"
+        ],
+        [
+          "tests.coordination.test_consul_authority",
+          "test_floating_leader_does_not_fall_back_when_dcs_is_unavailable"
+        ],
+        [
+          "tests.coordination.test_consul_authority",
+          "test_foreign_or_reconstructed_lease_does_not_gain_observer_authority"
+        ],
+        [
+          "tests.coordination.test_consul_authority",
+          "test_lost_dcs_after_pg_commit_does_not_expose_leadership"
+        ],
+        [
+          "tests.coordination.test_consul_authority",
+          "test_production_requires_https_mtls_and_acl"
+        ],
+        [
+          "tests.coordination.test_consul_authority",
+          "test_read_finishing_after_local_ttl_cannot_validate_lease"
+        ],
+        [
+          "tests.coordination.test_consul_authority",
+          "test_rollout_guard_binds_pg_epoch_to_current_consul_owner"
+        ],
+        [
+          "tests.coordination.test_consul_authority",
+          "test_session_owner_and_raft_index_bind_protected_write"
+        ],
+        [
+          "tests.coordination.test_consul_authority",
+          "test_stale_token_or_session_loss_never_publishes_control_state"
+        ],
+        [
+          "tests.coordination.test_consul_authority",
+          "test_unreachable_first_endpoint_does_not_hide_healthy_quorum_endpoint"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_committed_research_state_retry_and_conflicts"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_cross_actor_receipt_requires_explicit_audit_capability[False]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_cross_actor_receipt_requires_explicit_audit_capability[True]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_current_authentication_rechecked_before_commit_and_replay"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_existing_aggregate_corruption_denies_cas[change0]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_existing_aggregate_corruption_denies_cas[change1]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_existing_aggregate_corruption_denies_cas[change2]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_existing_aggregate_corruption_denies_cas[change3]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_existing_aggregate_corruption_denies_cas[change4]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_existing_aggregate_corruption_denies_cas[change5]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_no_auth_revocation_and_no_quorum_deny"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_own_receipt_read_needs_read_capability_not_mutation_capability"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_postcommit_revocation_blocks_disclosure_without_undoing_committed_intent"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_raw_public_decoder_rejects_ambiguity_depth_and_bounds[array]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_raw_public_decoder_rejects_ambiguity_depth_and_bounds[bytes]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_raw_public_decoder_rejects_ambiguity_depth_and_bounds[depth]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_raw_public_decoder_rejects_ambiguity_depth_and_bounds[duplicate]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_raw_public_decoder_rejects_ambiguity_depth_and_bounds[nonfinite]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_raw_public_decoder_rejects_ambiguity_depth_and_bounds[overflow]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_raw_public_decoder_rejects_ambiguity_depth_and_bounds[utf8]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_raw_public_decoder_roundtrip"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_receipt_decoder_rejects_private_unknown_fields"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_stored_kv_corruption_never_discloses_arbitrary_receipt[corrupt0]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_stored_kv_corruption_never_discloses_arbitrary_receipt[corrupt1]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_stored_kv_corruption_never_discloses_arbitrary_receipt[corrupt2]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_stored_kv_corruption_never_discloses_arbitrary_receipt[corrupt3]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_structural_principal_rejects_forgery_and_machine_authority[True]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_structural_principal_rejects_forgery_and_machine_authority[principal1]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_structural_principal_rejects_forgery_and_machine_authority[principal2]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_structural_principal_rejects_forgery_and_machine_authority[principal3]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_structural_principal_rejects_forgery_and_machine_authority[principal4]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_unknown_committed_response_reconciles_without_reexecution"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_untrusted_envelope_denied_without_mutation[change0]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_untrusted_envelope_denied_without_mutation[change10]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_untrusted_envelope_denied_without_mutation[change11]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_untrusted_envelope_denied_without_mutation[change1]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_untrusted_envelope_denied_without_mutation[change2]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_untrusted_envelope_denied_without_mutation[change3]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_untrusted_envelope_denied_without_mutation[change4]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_untrusted_envelope_denied_without_mutation[change5]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_untrusted_envelope_denied_without_mutation[change6]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_untrusted_envelope_denied_without_mutation[change7]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_untrusted_envelope_denied_without_mutation[change8]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_untrusted_envelope_denied_without_mutation[change9]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_untrusted_storage_json_uses_strict_decoder[bytes]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_untrusted_storage_json_uses_strict_decoder[depth]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_untrusted_storage_json_uses_strict_decoder[duplicate]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_untrusted_storage_json_uses_strict_decoder[nonfinite]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_untrusted_storage_json_uses_strict_decoder[overflow]"
+        ],
+        [
+          "tests.coordination.test_coordination_commands",
+          "test_zero_grant_principal_cannot_submit_or_query_private_receipt"
+        ]
+      ],
+      "skipped": 0
+    },
+    "unit_inventory_sha256": "2f925e09908806ed943894a79d05746d48d3ab4f9902038a940927f0d166ab25"
+  },
+  "artifact_file_hashes_verified": {
+    "coordination-tests.xml": true,
+    "qualification-source-before.json": true,
+    "qualification-three/evidence.json": true,
+    "qualification-three/qualification.snap": true
+  },
+  "scenarios": [
+    {
+      "scenario": "immutable_image_version_source_checked",
+      "image_id": "sha256:f54e8396b116a05d06f5315346bedb0369fd706c66d3bda7a53f703ab3977589",
+      "repo_digests": [
+        "hashicorp/consul@sha256:259fd02f2544fe1aa03fa49efd3b105c8dd67106d710a72f5e898110266356f7"
+      ],
+      "version_output": "Consul v2.1.0\nRevision 881572b4\nBuild Date 2026-10-21T07:34:22Z\nProtocol 2 spoken by default, understands 2 to 3 (agent will automatically use protocol >2 when speaking to compatible agents)",
+      "expected_source_commit": "881572b49b5d4d67713fa7f8ff09ed0ff2befc0f",
+      "upstream_source": "https://github.com/hashicorp/consul/releases/tag/v2.1.0",
+      "supply_chain_attestation": "NOT_VERIFIED"
+    },
+    {
+      "scenario": "persistent_voters_created"
+    },
+    {
+      "scenario": "verified_voter_configuration",
+      "servers": [
+        {
+          "ID": "c3e1e127-930e-1a0a-84ea-f3615cc54191",
+          "Node": "mission4-consul-commands-097aac06c743-ls5",
+          "Address": "172.18.0.2:8300",
+          "Leader": true,
+          "ProtocolVersion": "3",
+          "Voter": true,
+          "LastIndex": 1
+        },
+        {
+          "ID": "fabff705-ef19-14c0-5407-e90b8dfaa943",
+          "Node": "mission4-consul-commands-097aac06c743-pc4",
+          "Address": "172.18.0.3:8300",
+          "Leader": false,
+          "ProtocolVersion": "3",
+          "Voter": true,
+          "LastIndex": 0
+        },
+        {
+          "ID": "7157e1ca-3dca-d381-5328-635f02116e70",
+          "Node": "mission4-consul-commands-097aac06c743-pc3",
+          "Address": "172.18.0.4:8300",
+          "Leader": false,
+          "ProtocolVersion": "3",
+          "Voter": true,
+          "LastIndex": 1
+        }
+      ]
+    },
+    {
+      "scenario": "commit_and_duplicate",
+      "receipt": {
+        "action": "SetResearchControl",
+        "actor_id": "lab-human",
+        "aggregate_id": "main",
+        "command_id": "2a0c048b-c72f-405a-9836-061a4b688a18",
+        "commit_status": "COMMITTED",
+        "consensus_modify_index": 27,
+        "digest": "362a16963fab78608e133e0234419e8d0bf5dc18652e6293da01ddc5e1034bb6",
+        "effect_status": "PENDING_UNWIRED",
+        "generation": "c2b5b062-d2d6-4def-8897-be28a2be2b81",
+        "grant_revision": 1,
+        "idempotency_key": "first",
+        "leader_lock_index": 26,
+        "revision": 1,
+        "schema": "unified.command-receipt.v1"
+      }
+    },
+    {
+      "scenario": "budget_anchor_initial_commit",
+      "version": {
+        "anchor": {
+          "installation_id": "lab-installation",
+          "meter_id": "lab-meter",
+          "store_generation_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "revision": 1,
+          "offset": 10,
+          "journal_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        "consensus_modify_index": 28
+      }
+    },
+    {
+      "scenario": "actual_raft_stats",
+      "node": "mission4-consul-commands-097aac06c743-ls5",
+      "stats": {
+        "applied_index": "28",
+        "commit_index": "28",
+        "fsm_pending": "0",
+        "last_contact": "0",
+        "last_log_index": "28",
+        "last_log_term": "2",
+        "last_snapshot_index": "0",
+        "last_snapshot_term": "0",
+        "latest_configuration": "[{Suffrage:Voter ID:c3e1e127-930e-1a0a-84ea-f3615cc54191 Address:172.18.0.2:8300} {Suffrage:Voter ID:fabff705-ef19-14c0-5407-e90b8dfaa943 Address:172.18.0.3:8300} {Suffrage:Voter ID:7157e1ca-3dca-d381-5328-635f02116e70 Address:172.18.0.4:8300}]",
+        "latest_configuration_index": "0",
+        "num_peers": "2",
+        "protocol_version": "3",
+        "protocol_version_max": "3",
+        "protocol_version_min": "0",
+        "snapshot_version_max": "1",
+        "snapshot_version_min": "0",
+        "state": "Leader",
+        "term": "2"
+      }
+    },
+    {
+      "scenario": "actual_raft_stats",
+      "node": "mission4-consul-commands-097aac06c743-pc4",
+      "stats": {
+        "applied_index": "27",
+        "commit_index": "27",
+        "fsm_pending": "0",
+        "last_contact": "34.723823ms",
+        "last_log_index": "28",
+        "last_log_term": "2",
+        "last_snapshot_index": "0",
+        "last_snapshot_term": "0",
+        "latest_configuration": "[{Suffrage:Voter ID:c3e1e127-930e-1a0a-84ea-f3615cc54191 Address:172.18.0.2:8300} {Suffrage:Voter ID:fabff705-ef19-14c0-5407-e90b8dfaa943 Address:172.18.0.3:8300} {Suffrage:Voter ID:7157e1ca-3dca-d381-5328-635f02116e70 Address:172.18.0.4:8300}]",
+        "latest_configuration_index": "0",
+        "num_peers": "2",
+        "protocol_version": "3",
+        "protocol_version_max": "3",
+        "protocol_version_min": "0",
+        "snapshot_version_max": "1",
+        "snapshot_version_min": "0",
+        "state": "Follower",
+        "term": "2"
+      }
+    },
+    {
+      "scenario": "actual_raft_stats",
+      "node": "mission4-consul-commands-097aac06c743-pc3",
+      "stats": {
+        "applied_index": "27",
+        "commit_index": "27",
+        "fsm_pending": "0",
+        "last_contact": "52.590947ms",
+        "last_log_index": "28",
+        "last_log_term": "2",
+        "last_snapshot_index": "0",
+        "last_snapshot_term": "0",
+        "latest_configuration": "[{Suffrage:Voter ID:fabff705-ef19-14c0-5407-e90b8dfaa943 Address:172.18.0.3:8300} {Suffrage:Voter ID:c3e1e127-930e-1a0a-84ea-f3615cc54191 Address:172.18.0.2:8300} {Suffrage:Voter ID:7157e1ca-3dca-d381-5328-635f02116e70 Address:172.18.0.4:8300}]",
+        "latest_configuration_index": "0",
+        "num_peers": "2",
+        "protocol_version": "3",
+        "protocol_version_max": "3",
+        "protocol_version_min": "0",
+        "snapshot_version_max": "1",
+        "snapshot_version_min": "0",
+        "state": "Follower",
+        "term": "2"
+      }
+    },
+    {
+      "scenario": "verified_voter_configuration",
+      "servers": [
+        {
+          "ID": "c3e1e127-930e-1a0a-84ea-f3615cc54191",
+          "Node": "mission4-consul-commands-097aac06c743-ls5",
+          "Address": "172.18.0.2:8300",
+          "Leader": false,
+          "ProtocolVersion": "3",
+          "Voter": true,
+          "LastIndex": 0
+        },
+        {
+          "ID": "fabff705-ef19-14c0-5407-e90b8dfaa943",
+          "Node": "mission4-consul-commands-097aac06c743-pc4",
+          "Address": "172.18.0.3:8300",
+          "Leader": true,
+          "ProtocolVersion": "3",
+          "Voter": true,
+          "LastIndex": 28
+        },
+        {
+          "ID": "7157e1ca-3dca-d381-5328-635f02116e70",
+          "Node": "mission4-consul-commands-097aac06c743-pc3",
+          "Address": "172.18.0.4:8300",
+          "Leader": false,
+          "ProtocolVersion": "3",
+          "Voter": true,
+          "LastIndex": 28
+        }
+      ]
+    },
+    {
+      "scenario": "actual_raft_leader_crash_receipt_survives",
+      "node": "mission4-consul-commands-097aac06c743-ls5"
+    },
+    {
+      "scenario": "budget_anchor_leader_loss_read",
+      "version": {
+        "anchor": {
+          "installation_id": "lab-installation",
+          "meter_id": "lab-meter",
+          "store_generation_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "revision": 1,
+          "offset": 10,
+          "journal_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        "consensus_modify_index": 28
+      }
+    },
+    {
+      "scenario": "successor_commits_stale_owner_denied",
+      "receipt": {
+        "action": "SetResearchControl",
+        "actor_id": "lab-human",
+        "aggregate_id": "main",
+        "command_id": "5a21c663-a3a1-4dc9-8228-d49ffaa01f99",
+        "commit_status": "COMMITTED",
+        "consensus_modify_index": 38,
+        "digest": "99f6fd431f1f922fcf2a7102a70a89bcfb26ff7993128b40171222f485dd7448",
+        "effect_status": "PENDING_UNWIRED",
+        "generation": "c2b5b062-d2d6-4def-8897-be28a2be2b81",
+        "grant_revision": 1,
+        "idempotency_key": "second",
+        "leader_lock_index": 37,
+        "revision": 2,
+        "schema": "unified.command-receipt.v1"
+      }
+    },
+    {
+      "scenario": "budget_anchor_successor_cas_and_stale_denial",
+      "version": {
+        "anchor": {
+          "installation_id": "lab-installation",
+          "meter_id": "lab-meter",
+          "store_generation_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "revision": 2,
+          "offset": 20,
+          "journal_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+        },
+        "consensus_modify_index": 39
+      }
+    },
+    {
+      "scenario": "two_voter_loss_denies_new_command"
+    },
+    {
+      "scenario": "budget_anchor_noquorum_unknown"
+    },
+    {
+      "scenario": "verified_voter_configuration",
+      "servers": [
+        {
+          "ID": "c3e1e127-930e-1a0a-84ea-f3615cc54191",
+          "Node": "mission4-consul-commands-097aac06c743-ls5",
+          "Address": "172.18.0.2:8300",
+          "Leader": false,
+          "ProtocolVersion": "3",
+          "Voter": true,
+          "LastIndex": 42
+        },
+        {
+          "ID": "fabff705-ef19-14c0-5407-e90b8dfaa943",
+          "Node": "mission4-consul-commands-097aac06c743-pc4",
+          "Address": "172.18.0.3:8300",
+          "Leader": true,
+          "ProtocolVersion": "3",
+          "Voter": true,
+          "LastIndex": 42
+        },
+        {
+          "ID": "7157e1ca-3dca-d381-5328-635f02116e70",
+          "Node": "mission4-consul-commands-097aac06c743-pc3",
+          "Address": "172.18.0.4:8300",
+          "Leader": false,
+          "ProtocolVersion": "3",
+          "Voter": true,
+          "LastIndex": 42
+        }
+      ]
+    },
+    {
+      "scenario": "restarted_actual_raft_stats",
+      "node": "mission4-consul-commands-097aac06c743-ls5",
+      "stats": {
+        "applied_index": "44",
+        "commit_index": "44",
+        "fsm_pending": "0",
+        "last_contact": "16.079489ms",
+        "last_log_index": "44",
+        "last_log_term": "4",
+        "last_snapshot_index": "0",
+        "last_snapshot_term": "0",
+        "latest_configuration": "[{Suffrage:Voter ID:c3e1e127-930e-1a0a-84ea-f3615cc54191 Address:172.18.0.2:8300} {Suffrage:Voter ID:fabff705-ef19-14c0-5407-e90b8dfaa943 Address:172.18.0.3:8300} {Suffrage:Voter ID:7157e1ca-3dca-d381-5328-635f02116e70 Address:172.18.0.4:8300}]",
+        "latest_configuration_index": "0",
+        "num_peers": "2",
+        "protocol_version": "3",
+        "protocol_version_max": "3",
+        "protocol_version_min": "0",
+        "snapshot_version_max": "1",
+        "snapshot_version_min": "0",
+        "state": "Follower",
+        "term": "4"
+      }
+    },
+    {
+      "scenario": "restarted_actual_raft_stats",
+      "node": "mission4-consul-commands-097aac06c743-pc4",
+      "stats": {
+        "applied_index": "44",
+        "commit_index": "44",
+        "fsm_pending": "0",
+        "last_contact": "0",
+        "last_log_index": "44",
+        "last_log_term": "4",
+        "last_snapshot_index": "0",
+        "last_snapshot_term": "0",
+        "latest_configuration": "[{Suffrage:Voter ID:c3e1e127-930e-1a0a-84ea-f3615cc54191 Address:172.18.0.2:8300} {Suffrage:Voter ID:fabff705-ef19-14c0-5407-e90b8dfaa943 Address:172.18.0.3:8300} {Suffrage:Voter ID:7157e1ca-3dca-d381-5328-635f02116e70 Address:172.18.0.4:8300}]",
+        "latest_configuration_index": "0",
+        "num_peers": "2",
+        "protocol_version": "3",
+        "protocol_version_max": "3",
+        "protocol_version_min": "0",
+        "snapshot_version_max": "1",
+        "snapshot_version_min": "0",
+        "state": "Leader",
+        "term": "4"
+      }
+    },
+    {
+      "scenario": "restarted_actual_raft_stats",
+      "node": "mission4-consul-commands-097aac06c743-pc3",
+      "stats": {
+        "applied_index": "44",
+        "commit_index": "44",
+        "fsm_pending": "0",
+        "last_contact": "51.865913ms",
+        "last_log_index": "44",
+        "last_log_term": "4",
+        "last_snapshot_index": "0",
+        "last_snapshot_term": "0",
+        "latest_configuration": "[{Suffrage:Voter ID:fabff705-ef19-14c0-5407-e90b8dfaa943 Address:172.18.0.3:8300} {Suffrage:Voter ID:c3e1e127-930e-1a0a-84ea-f3615cc54191 Address:172.18.0.2:8300} {Suffrage:Voter ID:7157e1ca-3dca-d381-5328-635f02116e70 Address:172.18.0.4:8300}]",
+        "latest_configuration_index": "0",
+        "num_peers": "2",
+        "protocol_version": "3",
+        "protocol_version_max": "3",
+        "protocol_version_min": "0",
+        "snapshot_version_max": "1",
+        "snapshot_version_min": "0",
+        "state": "Follower",
+        "term": "4"
+      }
+    },
+    {
+      "scenario": "all_process_restart_retained_volumes_receipts_recovered"
+    },
+    {
+      "scenario": "budget_anchor_restart_recovered",
+      "version": {
+        "anchor": {
+          "installation_id": "lab-installation",
+          "meter_id": "lab-meter",
+          "store_generation_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "revision": 2,
+          "offset": 20,
+          "journal_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+        },
+        "consensus_modify_index": 39
+      }
+    },
+    {
+      "scenario": "verified_voter_configuration",
+      "servers": [
+        {
+          "ID": "c3e1e127-930e-1a0a-84ea-f3615cc54191",
+          "Node": "mission4-consul-commands-097aac06c743-ls5",
+          "Address": "172.18.0.2:8300",
+          "Leader": false,
+          "ProtocolVersion": "3",
+          "Voter": true,
+          "LastIndex": 42
+        },
+        {
+          "ID": "fabff705-ef19-14c0-5407-e90b8dfaa943",
+          "Node": "mission4-consul-commands-097aac06c743-pc4",
+          "Address": "172.18.0.3:8300",
+          "Leader": true,
+          "ProtocolVersion": "3",
+          "Voter": true,
+          "LastIndex": 42
+        },
+        {
+          "ID": "7157e1ca-3dca-d381-5328-635f02116e70",
+          "Node": "mission4-consul-commands-097aac06c743-pc3",
+          "Address": "172.18.0.4:8300",
+          "Leader": false,
+          "ProtocolVersion": "3",
+          "Voter": true,
+          "LastIndex": 42
+        }
+      ]
+    },
+    {
+      "scenario": "one_two_network_partition_majority_commits_minority_denied",
+      "receipt": {
+        "action": "SetResearchControl",
+        "actor_id": "lab-human",
+        "aggregate_id": "main",
+        "command_id": "a1c49835-8f81-4b39-b028-15f84a01c990",
+        "commit_status": "COMMITTED",
+        "consensus_modify_index": 48,
+        "digest": "53e83f992db0700a94db4730fc657f91438086cf6835d9ae1c2c1f66e9ed4303",
+        "effect_status": "PENDING_UNWIRED",
+        "generation": "c2b5b062-d2d6-4def-8897-be28a2be2b81",
+        "grant_revision": 1,
+        "idempotency_key": "third",
+        "leader_lock_index": 47,
+        "revision": 3,
+        "schema": "unified.command-receipt.v1"
+      }
+    },
+    {
+      "scenario": "budget_anchor_partition_majority_cas_minority_denied",
+      "version": {
+        "anchor": {
+          "installation_id": "lab-installation",
+          "meter_id": "lab-meter",
+          "store_generation_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "revision": 3,
+          "offset": 30,
+          "journal_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+        },
+        "consensus_modify_index": 52
+      }
+    },
+    {
+      "scenario": "verified_voter_configuration",
+      "servers": [
+        {
+          "ID": "c3e1e127-930e-1a0a-84ea-f3615cc54191",
+          "Node": "mission4-consul-commands-097aac06c743-ls5",
+          "Address": "172.18.0.2:8300",
+          "Leader": false,
+          "ProtocolVersion": "3",
+          "Voter": true,
+          "LastIndex": 42
+        },
+        {
+          "ID": "fabff705-ef19-14c0-5407-e90b8dfaa943",
+          "Node": "mission4-consul-commands-097aac06c743-pc4",
+          "Address": "172.18.0.3:8300",
+          "Leader": true,
+          "ProtocolVersion": "3",
+          "Voter": true,
+          "LastIndex": 45
+        },
+        {
+          "ID": "7157e1ca-3dca-d381-5328-635f02116e70",
+          "Node": "mission4-consul-commands-097aac06c743-pc3",
+          "Address": "172.18.0.4:8300",
+          "Leader": false,
+          "ProtocolVersion": "3",
+          "Voter": true,
+          "LastIndex": 45
+        }
+      ]
+    },
+    {
+      "scenario": "budget_anchor_heal_recovered",
+      "version": {
+        "anchor": {
+          "installation_id": "lab-installation",
+          "meter_id": "lab-meter",
+          "store_generation_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "revision": 3,
+          "offset": 30,
+          "journal_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+        },
+        "consensus_modify_index": 52
+      }
+    },
+    {
+      "scenario": "partition_healed_receipts_reconciled_no_forced_failback"
+    },
+    {
+      "scenario": "actual_persistent_snapshot",
+      "node": "mission4-consul-commands-097aac06c743-ls5",
+      "vendor_inspection": "ID           4-53-1793911057348\n Size         16464\n Index        53\n Term         4\n Version      1\n\n Type                        Count      Size\n ----                        ----       ----\n Register                    9          6.9KB\n KVS                         10         4.8KB\n ConnectCA                   1          1.2KB\n ConnectCAProviderState      1          1.1KB\n SystemMetadata              5          823B\n Index                       22         760B\n Autopilot                   1          199B\n ConnectCAConfig             1          195B\n FederationState             1          139B\n ChunkingState               1          12B\n ----                        ----       ----\n Total                                  16.1KB",
+      "sha256": "d0e4fc1c1062b646ff0ed63b4a53eaaa6583c1f9c7518ed4e571df088c8722c6"
+    },
+    {
+      "scenario": "linux_persistent_command_scenarios_complete",
+      "missing": [
+        "disk-full/corruption",
+        "native Windows",
+        "production mTLS/ACL",
+        "independent watchdog",
+        "SQL cutover",
+        "physical acceptance",
+        "snapshot_restore NOT_RUN",
+        "backup_restore NOT_RUN"
+      ]
+    }
+  ],
+  "testcases": 96,
+  "mandatory_scenario_subset_verified": [
+    "actual_persistent_snapshot",
+    "actual_raft_leader_crash_receipt_survives",
+    "actual_raft_stats",
+    "all_process_restart_retained_volumes_receipts_recovered",
+    "budget_anchor_heal_recovered",
+    "budget_anchor_initial_commit",
+    "budget_anchor_leader_loss_read",
+    "budget_anchor_noquorum_unknown",
+    "budget_anchor_partition_majority_cas_minority_denied",
+    "budget_anchor_restart_recovered",
+    "budget_anchor_successor_cas_and_stale_denial",
+    "commit_and_duplicate",
+    "immutable_image_version_source_checked",
+    "linux_persistent_command_scenarios_complete",
+    "one_two_network_partition_majority_commits_minority_denied",
+    "partition_healed_receipts_reconciled_no_forced_failback",
+    "persistent_voters_created",
+    "restarted_actual_raft_stats",
+    "successor_commits_stale_owner_denied",
+    "two_voter_loss_denies_new_command"
+  ],
+  "result": "PASS_ORIGINAL_HOSTED_LINUX_EVIDENCE_REVIEW_ONLY",
+  "independent_local_execution": "NOT_RUN_LINUX_DOCKER_UNAVAILABLE",
+  "physical": "BLOCKED",
+  "native_windows": "NOT_QUALIFIED_BY_LINUX_ARTIFACT",
+  "budget_store_integration": "NOT_WIRED",
+  "url": "https://github.com/YehorBabenko88/bybit-cluster-grid/actions/runs/42088042386/artifacts/13451546239"
+}

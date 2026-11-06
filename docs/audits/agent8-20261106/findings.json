@@ -54,5 +54,13 @@
     "title": "Mandatory skip coverage unresolved",
     "evidence": "Passing job conclusions coexist with skipped JUnit cases; no authoritative case-to-requirement map supplied to auditor.",
     "required_correction": "Publish mandatory IDs, expected counts/platforms and permitted optional skip reasons; missing/skip/cancelled cannot count as PASS."
+  },
+  {
+    "id": "A8-F08",
+    "severity": "P2",
+    "repository": "unified-system",
+    "title": "Ownership validator accepts Windows path aliases",
+    "evidence": "Exact PR22 34a2adf94b0e2170bf91f8641766e23481e269b2: case alias, dotdot and backslash probes all accepted. See phase2/coordination-probe.json.",
+    "required_correction": "Reject noncanonical repo-relative paths and Windows case aliases before ownership overlap checks; correct A7 allocation and actual A8 checkout path."
   }
 ]

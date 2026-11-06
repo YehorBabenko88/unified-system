@@ -1,3 +1,5 @@
+> Latest update: [Phase 2 isolated acceptance](phase2/independent-acceptance-addendum.md). Current findings: 6 P1 and 2 P2; physical and Tailscale removal remain BLOCKED. The baseline snapshot below is retained as historical evidence.
+
 # Independent security, CI and physical acceptance — Agent 8
 
 Snapshot: 2026-11-06T15:05:26.716427+00:00 (6 November 2026, Europe/Berlin).

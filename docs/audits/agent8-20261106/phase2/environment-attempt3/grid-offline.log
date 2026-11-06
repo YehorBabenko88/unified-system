@@ -1,0 +1,85 @@
+.............F.F........................................................ [ 47%]
+........................................................................ [ 95%]
+.......                                                                  [100%]
+================================== FAILURES ===================================
+_____ test_configured_ha_cannot_start_coordinator_via_legacy_pg_fallback ______
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002529C3B21B0>
+
+    def test_configured_ha_cannot_start_coordinator_via_legacy_pg_fallback(monkeypatch):
+        async def scenario():
+            import grid.coordinator as coordinator
+            settings = SimpleNamespace(grid_coordination_mode='legacy', grid_ha_required=True)
+            monkeypatch.setattr(coordinator, 'settings', settings)
+            async def forbidden_db(): raise AssertionError('invalid HA must be rejected before database startup')
+            monkeypatch.setattr(coordinator, 'prepare_database', forbidden_db)
+            with pytest.raises(ValueError, match='Consul'):
+                await coordinator.startup()
+>       asyncio.run(scenario())
+
+tests\coordination\test_coordinated_runtime.py:93: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\coordination\test_coordinated_runtime.py:86: in scenario
+    import grid.coordinator as coordinator
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    import asyncio,time,logging,secrets,hashlib,tempfile,os,pathlib,subprocess,json,configparser,re,stat,threading
+>   from fastapi import FastAPI,Header,HTTPException,Request
+E   ModuleNotFoundError: No module named 'fastapi'
+
+grid\coordinator.py:2: ModuleNotFoundError
+______ test_database_startup_failure_closes_created_coordination_client _______
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002529A8DA180>
+
+    def test_database_startup_failure_closes_created_coordination_client(monkeypatch):
+        async def scenario():
+            import grid.coordinator as coordinator
+            closed = []
+            class Created:
+                async def close(self): closed.append(True)
+            async def create(settings, **kwargs): return Created()
+            async def fail(): raise RuntimeError('startup database failure')
+            monkeypatch.setattr(coordinator, 'coordinator_authority', create)
+            monkeypatch.setattr(coordinator, 'prepare_database', fail)
+            monkeypatch.setattr(coordinator, 'bootstrap_logging', lambda: None)
+            with pytest.raises(RuntimeError, match='startup database failure'):
+                await coordinator.startup()
+            assert closed == [True]
+            monkeypatch.setattr(coordinator, 'coordination_authority', None)
+>       asyncio.run(scenario())
+
+tests\coordination\test_coordinated_runtime.py:117: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests\coordination\test_coordinated_runtime.py:104: in scenario
+    import grid.coordinator as coordinator
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    import asyncio,time,logging,secrets,hashlib,tempfile,os,pathlib,subprocess,json,configparser,re,stat,threading
+>   from fastapi import FastAPI,Header,HTTPException,Request
+E   ModuleNotFoundError: No module named 'fastapi'
+
+grid\coordinator.py:2: ModuleNotFoundError
+- generated xml file: C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\outputs\phase2\grid-offline.xml -
+=========================== short test summary info ===========================
+FAILED tests/coordination/test_coordinated_runtime.py::test_configured_ha_cannot_start_coordinator_via_legacy_pg_fallback
+FAILED tests/coordination/test_coordinated_runtime.py::test_database_startup_failure_closes_created_coordination_client
+2 failed, 149 passed in 4.48s
