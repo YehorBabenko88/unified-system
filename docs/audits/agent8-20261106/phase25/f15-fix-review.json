@@ -1,0 +1,113 @@
+{
+  "head": "6bcf5475023a8f6a9733d02ad899064d0d83be95",
+  "tree": "ef776ac4c484967d53dd172469ce77534ebb2216",
+  "previous": "175b48a2a0d2882669172abc5774bd71b42e2215",
+  "delta": "WORKFLOW_AND_TWO_DOCUMENTS_ONLY_PRODUCT_TEST_INVENTORY_UNCHANGED",
+  "workflow_code_sha256": "f8b33be8b57a4dbae3cb7bdbfa0e0bf7a75684a3debc9ae4bd63a6a055aa9f6b",
+  "clean_protected_files": 8,
+  "cases": {
+    "clean": {
+      "exit_code": 0,
+      "passed": true,
+      "tests_run": 30,
+      "skips": 0,
+      "source_before_valid": true,
+      "source_after_valid": true
+    },
+    "original_hidden_comment": {
+      "exit_code": 1,
+      "passed": false,
+      "tests_run": 0,
+      "skips": 0,
+      "source_before_valid": false,
+      "source_after_valid": false
+    },
+    "hidden_test_comment": {
+      "exit_code": 1,
+      "passed": false,
+      "tests_run": 0,
+      "skips": 0,
+      "source_before_valid": false,
+      "source_after_valid": false
+    },
+    "hidden_inventory_whitespace": {
+      "exit_code": 1,
+      "passed": false,
+      "tests_run": 0,
+      "skips": 0,
+      "source_before_valid": false,
+      "source_after_valid": false
+    },
+    "hidden_workflow_comment": {
+      "exit_code": 1,
+      "passed": false,
+      "tests_run": 0,
+      "skips": 0,
+      "source_before_valid": false,
+      "source_after_valid": false
+    },
+    "CRLF_source": {
+      "exit_code": 1,
+      "passed": false,
+      "tests_run": 0,
+      "skips": 0,
+      "source_before_valid": false,
+      "source_after_valid": false
+    },
+    "missing_source": {
+      "exit_code": 1,
+      "passed": false,
+      "tests_run": 0,
+      "skips": 0,
+      "source_before_valid": false,
+      "source_after_valid": false
+    },
+    "nonregular_source": {
+      "exit_code": 1,
+      "passed": false,
+      "tests_run": 0,
+      "skips": 0,
+      "source_before_valid": false,
+      "source_after_valid": false
+    },
+    "unexpected_protected_python": {
+      "exit_code": 1,
+      "passed": false,
+      "tests_run": 0,
+      "skips": 0,
+      "source_before_valid": false,
+      "source_after_valid": false
+    },
+    "hidden_post_source": {
+      "exit_code": 1,
+      "passed": false,
+      "tests_run": 30,
+      "skips": 0,
+      "source_before_valid": true,
+      "source_after_valid": false
+    },
+    "wrong_ID_same30": {
+      "exit_code": 1,
+      "passed": false,
+      "tests_run": 30,
+      "skips": 0,
+      "source_before_valid": true,
+      "source_after_valid": true
+    },
+    "skip": {
+      "exit_code": 1,
+      "passed": false,
+      "tests_run": 30,
+      "skips": 1,
+      "source_before_valid": true,
+      "source_after_valid": true
+    }
+  },
+  "original_F15_repro": "REJECTED_BEFORE_TESTS_NO_NORMALIZATION",
+  "F15": "FIX_VERIFIED_OFFLINE_EXACT_SOURCE",
+  "source_proof_scope": "REGULAR_PROTECTED_RAW_GIT_BLOBS_BEFORE_AFTER_TRUSTED_EPHEMERAL_RUNNER_NOT_NATIVE_EXECUTION_ATTESTATION",
+  "hosted": "NOT_QUALIFIED",
+  "runtime_authority": "NOT_QUALIFIED",
+  "physical": "BLOCKED",
+  "overall": "NO_GO"
+}

@@ -1,5 +1,5 @@
 {
-  "checked_utc": "2026-11-06T19:17:26.135028+00:00",
+  "checked_utc": "2026-11-06T19:27:55.126034+00:00",
   "RELEASE_MANIFEST_STATUS": "PRESENT_PREPARATION_ONLY_NOT_APPROVED_NOT_INSTALLABLE",
   "NODE_INVENTORY_STATUS": "SIX_REDACTED_OWNER_OBSERVATIONS_PRESENT_ORIGINAL_RAW_NOT_REACQUIRED_BY_A8_NOT_ADMITTED",
   "CONTRACT_STATUS": {
@@ -243,6 +243,119 @@
       "CI_guard": "F15_FAILS_HIDDEN_COMMENT_CONTROL",
       "execution_authorization": false,
       "hosted": "QUEUED_NOT_QUALIFIED"
+    },
+    "Agent5_F15_fix": {
+      "head": "6bcf5475023a8f6a9733d02ad899064d0d83be95",
+      "tree": "ef776ac4c484967d53dd172469ce77534ebb2216",
+      "previous": "175b48a2a0d2882669172abc5774bd71b42e2215",
+      "delta": "WORKFLOW_AND_TWO_DOCUMENTS_ONLY_PRODUCT_TEST_INVENTORY_UNCHANGED",
+      "workflow_code_sha256": "f8b33be8b57a4dbae3cb7bdbfa0e0bf7a75684a3debc9ae4bd63a6a055aa9f6b",
+      "clean_protected_files": 8,
+      "cases": {
+        "clean": {
+          "exit_code": 0,
+          "passed": true,
+          "tests_run": 30,
+          "skips": 0,
+          "source_before_valid": true,
+          "source_after_valid": true
+        },
+        "original_hidden_comment": {
+          "exit_code": 1,
+          "passed": false,
+          "tests_run": 0,
+          "skips": 0,
+          "source_before_valid": false,
+          "source_after_valid": false
+        },
+        "hidden_test_comment": {
+          "exit_code": 1,
+          "passed": false,
+          "tests_run": 0,
+          "skips": 0,
+          "source_before_valid": false,
+          "source_after_valid": false
+        },
+        "hidden_inventory_whitespace": {
+          "exit_code": 1,
+          "passed": false,
+          "tests_run": 0,
+          "skips": 0,
+          "source_before_valid": false,
+          "source_after_valid": false
+        },
+        "hidden_workflow_comment": {
+          "exit_code": 1,
+          "passed": false,
+          "tests_run": 0,
+          "skips": 0,
+          "source_before_valid": false,
+          "source_after_valid": false
+        },
+        "CRLF_source": {
+          "exit_code": 1,
+          "passed": false,
+          "tests_run": 0,
+          "skips": 0,
+          "source_before_valid": false,
+          "source_after_valid": false
+        },
+        "missing_source": {
+          "exit_code": 1,
+          "passed": false,
+          "tests_run": 0,
+          "skips": 0,
+          "source_before_valid": false,
+          "source_after_valid": false
+        },
+        "nonregular_source": {
+          "exit_code": 1,
+          "passed": false,
+          "tests_run": 0,
+          "skips": 0,
+          "source_before_valid": false,
+          "source_after_valid": false
+        },
+        "unexpected_protected_python": {
+          "exit_code": 1,
+          "passed": false,
+          "tests_run": 0,
+          "skips": 0,
+          "source_before_valid": false,
+          "source_after_valid": false
+        },
+        "hidden_post_source": {
+          "exit_code": 1,
+          "passed": false,
+          "tests_run": 30,
+          "skips": 0,
+          "source_before_valid": true,
+          "source_after_valid": false
+        },
+        "wrong_ID_same30": {
+          "exit_code": 1,
+          "passed": false,
+          "tests_run": 30,
+          "skips": 0,
+          "source_before_valid": true,
+          "source_after_valid": true
+        },
+        "skip": {
+          "exit_code": 1,
+          "passed": false,
+          "tests_run": 30,
+          "skips": 1,
+          "source_before_valid": true,
+          "source_after_valid": true
+        }
+      },
+      "original_F15_repro": "REJECTED_BEFORE_TESTS_NO_NORMALIZATION",
+      "F15": "FIX_VERIFIED_OFFLINE_EXACT_SOURCE",
+      "source_proof_scope": "REGULAR_PROTECTED_RAW_GIT_BLOBS_BEFORE_AFTER_TRUSTED_EPHEMERAL_RUNNER_NOT_NATIVE_EXECUTION_ATTESTATION",
+      "hosted": "NOT_QUALIFIED",
+      "runtime_authority": "NOT_QUALIFIED",
+      "physical": "BLOCKED",
+      "overall": "NO_GO"
     }
   },
   "WINDOWS_CI": "PENDING_CURRENT_DRAFTS; FAILED_BASELINE_MANDATORY_GATES_NOT_CLOSED",
@@ -254,7 +367,7 @@
     "P0_confirmed_defects": 0,
     "P0_absence_proven": false,
     "P1_open": 6,
-    "P2_open": 2,
+    "P2_open": 1,
     "F08": "FIX_VERIFIED_OFFLINE",
     "F09": "FIX_VERIFIED_OFFLINE_AT_42686cd",
     "F10": "FIX_VERIFIED_OFFLINE_AT_42686cd",
@@ -262,7 +375,7 @@
     "F12": "FIX_VERIFIED_DOCUMENTARY_EXACT_SOURCE",
     "F13": "FIX_VERIFIED_OFFLINE_AT_ec967b3_OLD_SOURCE_UNSAFE_NOT_DEPLOYED",
     "F14": "FIX_VERIFIED_OFFLINE_AT_15dd9e8_PROVIDER_DISABLED",
-    "F15": "OPEN_SCHEDULER_CI_RAW_SOURCE_BINDING"
+    "F15": "FIX_VERIFIED_OFFLINE_AT_6bcf547"
   },
   "EVIDENCE": [
     "phase4/math-source-and-compile-review.json",
@@ -301,7 +414,8 @@
     "phase22/provider-gap-review.json",
     "phase23/gate-diagnosis-review.json",
     "phase24/scheduler-durable-review.json",
-    "phase24/independent-journal-probes.json"
+    "phase24/independent-journal-probes.json",
+    "phase25/f15-fix-review.json"
   ],
   "NEXT_ACTIONS": [
     "Review terminal exact-source Windows CI logs/artifacts when available; queued/cancelled is not PASS.",
