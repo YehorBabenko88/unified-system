@@ -1,0 +1,33 @@
+{
+  "schema": "unified.causal-fixture-source-reconciliation.v1",
+  "source_head": "b8922714b99169c22ae6c14fdbc1c5a5f6c1d0f7",
+  "source_resolution": "PRIMARY_GIT_BLOBS_EXTRACTED_UNCHANGED",
+  "bindings": [
+    {
+      "path": "tests/test_ci_paper_causal.py",
+      "git_blob": "74f13efdc3ac43e93a6884929a55fdacb1f1bd13",
+      "raw_sha256": "6db1d45a71dca786158e7f8099f4f84ff469cfc838b38ef26965afeeae655935"
+    },
+    {
+      "path": "scripts/ci_paper_causal.py",
+      "git_blob": "7a434c959eccb8635efd39988ba497ba70ae6f12",
+      "raw_sha256": "e897565de8cd94462f00fae6c5bbf88df86892a50176d5fa5850824676ee66a3"
+    }
+  ],
+  "original_receipt_preserved": "result.json",
+  "original_receipt_scope": "WORKING_FILE_CRLF_SHA_NOT_COMMITTED_BLOB_SHA",
+  "original_working_raw_sha256": "0079252af2b443f4cdd7792ff52c08212c7fb9cdefa6715b34cd56c0bcc6d677",
+  "explanation": "Git text conversion removed CRLF at commit. Original raw working hash was valid for executed bytes but not a Git blob binding. Fresh run uses exact committed LF blobs, with no normalization of evidence.",
+  "fresh_result": {
+    "repeats": 200,
+    "repeat_failures": 0,
+    "module_tests": 7,
+    "errors": 0,
+    "failures": 0,
+    "skips": 0
+  },
+  "raw_prepost_equal": true,
+  "stdout_sha256": "20716b4f61b41d6ca8064ac5d6f1aa2778c172540ea5bb9971559ed4ef879624",
+  "stderr_sha256": "9aa780ef2ed7fd740d5d73ee7bb0ebc27724a57faa6617d02b19fd5f1f6d4627",
+  "full_lan_suite": "NOT_RERUN"
+}
