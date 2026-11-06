@@ -1,0 +1,107 @@
+name: Agent 5 isolated components
+on:
+  push:
+    branches: [feature/agent5-scheduler-components-20261106]
+  pull_request:
+    paths:
+      - 'scheduler_components/**'
+      - 'tests/test_agent5_scheduler_components.py'
+      - 'docs/scheduler/**'
+      - '.github/workflows/agent5-components.yml'
+permissions:
+  contents: read
+jobs:
+  components-windows:
+    runs-on: windows-latest
+    timeout-minutes: 10
+    env:
+      EXPECTED_SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install tzdata==2026.6
+      - name: Run exact-source component acceptance
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          import os
+          from pathlib import Path
+          import platform
+          import subprocess
+          import sys
+          import unittest
+
+          def git(*args):
+              return subprocess.check_output(['git', *args], text=True).strip()
+
+          def source():
+              return {'head': git('rev-parse', 'HEAD'),
+                      'tree': git('rev-parse', 'HEAD^{tree}'),
+                      'tracked_status': git('status', '--porcelain', '--untracked-files=no')}
+
+          out = Path(os.environ.get('EVIDENCE_DIR', 'agent5-component-evidence'))
+          out.mkdir(parents=True, exist_ok=True)
+          before = source()
+          expected = os.environ['EXPECTED_SOURCE_SHA']
+          receipt = {'schema': 'agent5.component-evidence.v1',
+                     'execution': 'GITHUB_ACTIONS' if os.environ.get('GITHUB_ACTIONS') == 'true' else 'LOCAL',
+                     'repository': os.environ.get('GITHUB_REPOSITORY'),
+                     'run_id': os.environ.get('GITHUB_RUN_ID'),
+                     'run_attempt': os.environ.get('GITHUB_RUN_ATTEMPT'),
+                     'event': os.environ.get('GITHUB_EVENT_NAME'),
+                     'workflow_ref': os.environ.get('GITHUB_WORKFLOW_REF'),
+                     'workflow_sha': os.environ.get('GITHUB_WORKFLOW_SHA'),
+                     'event_sha': os.environ.get('GITHUB_SHA'),
+                     'runner_os': platform.system(), 'python': sys.version,
+                     'expected_source_sha': expected, 'source_before': before,
+                     'required_tests': 15, 'required_skips': 0,
+                     'tests_run': 0, 'skips': 0, 'failures': 0, 'errors': 0,
+                     'passed': False}
+          log = out / 'component-tests.log'
+          with log.open('w', encoding='utf-8') as stream:
+              if before['head'] != expected or before['tracked_status']:
+                  stream.write('SOURCE_MISMATCH_OR_DIRTY: tests not admitted\n')
+              else:
+                  suite = unittest.defaultTestLoader.discover('tests', pattern='test_agent5_scheduler_components.py')
+                  result = unittest.TextTestRunner(stream=stream, verbosity=2).run(suite)
+                  receipt.update(tests_run=result.testsRun, skips=len(result.skipped),
+                                 failures=len(result.failures), errors=len(result.errors),
+                                 passed=result.wasSuccessful() and result.testsRun == 15 and not result.skipped)
+          receipt['source_after'] = source()
+          receipt['passed'] = receipt['passed'] and receipt['source_after'] == before
+          receipt['test_log_sha256'] = hashlib.sha256(log.read_bytes()).hexdigest()
+          (out / 'receipt.json').write_text(json.dumps(receipt, indent=2) + '\n', encoding='utf-8')
+          print(log.read_text(encoding='utf-8'))
+          print(json.dumps(receipt, indent=2))
+          raise SystemExit(0 if receipt['passed'] else 1)
+          PY
+      - name: Upload component evidence
+        id: evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: agent5-components-${{ github.event.pull_request.head.sha || github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: agent5-component-evidence/
+          if-no-files-found: error
+      - name: Publish evidence digest
+        if: always()
+        shell: pwsh
+        env:
+          ARTIFACT_ID: ${{ steps.evidence.outputs.artifact-id }}
+          ARTIFACT_URL: ${{ steps.evidence.outputs.artifact-url }}
+          ARTIFACT_DIGEST: ${{ steps.evidence.outputs.artifact-digest }}
+        run: |
+          if (-not $env:ARTIFACT_DIGEST) { throw 'Missing uploaded artifact digest' }
+          "Source HEAD: $env:EXPECTED_SOURCE_SHA" >> $env:GITHUB_STEP_SUMMARY
+          "Run/attempt: $env:GITHUB_RUN_ID / $env:GITHUB_RUN_ATTEMPT" >> $env:GITHUB_STEP_SUMMARY
+          "Artifact ID: $env:ARTIFACT_ID" >> $env:GITHUB_STEP_SUMMARY
+          "Artifact URL: $env:ARTIFACT_URL" >> $env:GITHUB_STEP_SUMMARY
+          "Artifact SHA256: $env:ARTIFACT_DIGEST" >> $env:GITHUB_STEP_SUMMARY
+          Get-Content agent5-component-evidence/receipt.json >> $env:GITHUB_STEP_SUMMARY
