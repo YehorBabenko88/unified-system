@@ -78,7 +78,7 @@ $dominates=$guard.Count -eq 1 -and $guard[0].Extent.EndOffset -lt ($primitives|S
         self.assertEqual(data['general_dns'], 'FAIL')
         # The frozen operational v1 guard must reject this blocked observation.
         # It is not inert-bootstrap evidence and cannot authorize deployment.
-        from test_network_deployment_guard import observation
+        from tests.test_network_deployment_guard import observation
         from unified_system.network_deployment_guard import NetworkDeploymentGuard, NetworkBlocked
         observed = observation()
         observed['checks'][1] = data['vectors'][0]['result']
