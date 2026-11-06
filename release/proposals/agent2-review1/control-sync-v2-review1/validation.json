@@ -1,0 +1,92 @@
+{
+  "schema": "unified.control-sync.v2-proposal-validation.v1",
+  "result": "MODEL_CHECKS_MATCH_EXPECTED",
+  "cases": [
+    {
+      "case": "snapshot",
+      "expected": "VALID",
+      "matched": true
+    },
+    {
+      "case": "metadata_jump_change",
+      "expected": "VALID",
+      "matched": true
+    },
+    {
+      "case": "liveness",
+      "expected": "VALID",
+      "matched": true
+    },
+    {
+      "case": "authority_observation",
+      "expected": "VALID",
+      "matched": true
+    },
+    {
+      "case": "error",
+      "expected": "VALID",
+      "matched": true
+    },
+    {
+      "case": "liveness_with_cursor",
+      "expected": "REJECT",
+      "matched": true
+    },
+    {
+      "case": "numeric_sequence_alias",
+      "expected": "REJECT",
+      "matched": true
+    },
+    {
+      "case": "no_quorum_with_live_expiry",
+      "expected": "REJECT",
+      "matched": true
+    },
+    {
+      "case": "old_v1_error",
+      "expected": "REJECT",
+      "matched": true
+    },
+    {
+      "case": "EXACT_U63_BOUNDARIES",
+      "matched": true
+    },
+    {
+      "case": "HIDDEN_METADATA_JUMP_WITH_CONTIGUOUS_VIEW_SEQUENCE",
+      "matched": true
+    },
+    {
+      "case": "LIVENESS_CANNOT_ADVANCE_CURSOR_OR_LIVE",
+      "matched": true
+    },
+    {
+      "case": "sequence_gap",
+      "expected": "REJECT",
+      "matched": true
+    },
+    {
+      "case": "view_changed",
+      "expected": "REJECT",
+      "matched": true
+    },
+    {
+      "case": "duplicate_resource",
+      "expected": "REJECT",
+      "matched": true
+    },
+    {
+      "case": "HIDDEN_ONLY_UPDATE_FRESH_BARRIER_UNCHANGED_VIEW",
+      "matched": true
+    },
+    {
+      "case": "OLD_BARRIER_OBSERVATION_CANNOT_REFRESH_NEW_STATE",
+      "matched": true
+    }
+  ],
+  "jsonschema_version": "4.25.1",
+  "qualification": "OUTPUT_SCHEMA_AND_BOUNDED_TRANSITION_MODELS_ONLY",
+  "a6_exact_consumer_ack": "PENDING",
+  "runtime_endpoint": "NOT_IMPLEMENTED",
+  "physical": "NOT_RUN",
+  "production_go": false
+}

@@ -1,0 +1,102 @@
+{
+  "schema": "unified.authority.bounded-api-counterexamples.v1",
+  "result": "BOUNDED_COUNTEREXAMPLES_CONFIRMED",
+  "cases": [
+    {
+      "id": "T01_CLIENT_PAUSE_AFTER_VALIDATION",
+      "kind": "COUNTEREXAMPLE",
+      "committed": true,
+      "precheck_ms": 9000,
+      "supplied_raft_admission_ms": 10001,
+      "supplied_majority_commit_ms": 10002,
+      "native_txn_apply_ms": 10003,
+      "deadline_ms": 10000,
+      "schedule_qualification": "SUPPLIED_EVENT_ORDER_NOT_RAFT_SIMULATION",
+      "schedule": "client paused before Raft admission",
+      "violation": "STRICT_COMMIT_TIME_EXPIRY",
+      "reason": "native predicate set has no apply-time wall-clock comparison"
+    },
+    {
+      "id": "T02_REQUEST_QUEUED_AFTER_SEND",
+      "kind": "COUNTEREXAMPLE",
+      "committed": true,
+      "precheck_ms": 9000,
+      "supplied_raft_admission_ms": 10001,
+      "supplied_majority_commit_ms": 10002,
+      "native_txn_apply_ms": 10003,
+      "deadline_ms": 10000,
+      "schedule_qualification": "SUPPLIED_EVENT_ORDER_NOT_RAFT_SIMULATION",
+      "schedule": "network/server queue before Raft admission",
+      "violation": "STRICT_COMMIT_TIME_EXPIRY",
+      "reason": "native predicate set has no apply-time wall-clock comparison"
+    },
+    {
+      "id": "T03_ORDERED_INVALIDATION_FIRST",
+      "kind": "PREDICATE_CONTROL",
+      "result": "REJECTED_ATOMICALLY",
+      "limitation": "only proves invalidation order, not exact wall-clock expiry"
+    },
+    {
+      "id": "T04_COMMIT_TIME_NOT_IDENTIFIABLE",
+      "kind": "INDISTINGUISHABLE_HISTORIES",
+      "supplied_majority_commit_ms": [
+        9890,
+        10000
+      ],
+      "native_apply_ms": [
+        9900,
+        10001
+      ],
+      "response_observed_ms": 11000,
+      "same_kv_receipt_and_index": true,
+      "reason": "API data and response-time metadata do not supply actual FSM apply time"
+    },
+    {
+      "id": "C01_UNCOUPLED_REVOCATION",
+      "kind": "COUNTEREXAMPLE",
+      "result": "PUBLISH_ACCEPTED_WITH_REVOKED_EVIDENCE",
+      "reason": "hold/index did not change and evidence key was not checked"
+    },
+    {
+      "id": "C02_CHECK_EVERY_DEPENDENCY_INDEX",
+      "kind": "PREDICATE_CONTROL",
+      "result": "REJECTED_ATOMICALLY"
+    },
+    {
+      "id": "C03_COUPLED_HOLD_INVALIDATION",
+      "kind": "PREDICATE_CONTROL",
+      "result": "REJECTED_ATOMICALLY"
+    },
+    {
+      "id": "C04_CONCURRENT_ALLOCATION_DEBIT",
+      "kind": "PREDICATE_CONTROL",
+      "result": "ONE_CAS_WINNER_NO_PARTIAL_SECOND_DEBIT"
+    },
+    {
+      "id": "C05_UNREPORTED_MEDIA_CORRUPTION",
+      "kind": "INDISTINGUISHABLE_HISTORIES",
+      "same_authority_records": true,
+      "physical_bytes_valid": [
+        true,
+        false
+      ],
+      "accepted": [
+        true,
+        true
+      ],
+      "reason": "KV CAS can order observed eligibility; it cannot synchronously sense external media corruption"
+    },
+    {
+      "id": "D01_PAUSED_DISPATCHER",
+      "kind": "COUNTEREXAMPLE",
+      "durable_charge": true,
+      "superseded_before_socket_write": true,
+      "old_socket_can_write": true,
+      "reason": "external provider/socket does not validate Consul fence; freezing successors does not stop old sender"
+    }
+  ],
+  "qualification": "DETERMINISTIC_API_PREDICATE_MODEL_ONLY_NOT_REAL_CONSUL_OR_HA_ACCEPTANCE",
+  "implemented_clock_or_containment": false,
+  "runtime_go": false,
+  "physical": "NOT_RUN"
+}

@@ -1,0 +1,227 @@
+{
+  "qualification": "SCHEMA_MODEL_ONLY_NO_REAL_AUTHORITY_ROOT_OR_ENDPOINT",
+  "valid": {
+    "snapshot": {
+      "schema": "unified.control.snapshot.v2",
+      "context": {
+        "cluster_id": "11111111-1111-4111-8111-111111111111",
+        "cluster_generation": "22222222-2222-4222-8222-222222222222",
+        "stream_id": "33333333-3333-4333-8333-333333333333",
+        "view_id": "model-view-1",
+        "scope": {
+          "kind": "CONTROL",
+          "dataset_id": null,
+          "source_id": null,
+          "partition_id": null
+        }
+      },
+      "metadata_revision": "25",
+      "change_sequence": "10",
+      "cursor": "MODEL_ONLY_CURSOR_10",
+      "state_root": "1111111111111111111111111111111111111111111111111111111111111111",
+      "resources": [],
+      "retention": {
+        "minimum_seconds": "600",
+        "earliest_available_sequence": "0"
+      },
+      "authority_observation": {
+        "schema": "unified.control.authority-observation.v2",
+        "context": {
+          "cluster_id": "11111111-1111-4111-8111-111111111111",
+          "cluster_generation": "22222222-2222-4222-8222-222222222222",
+          "stream_id": "33333333-3333-4333-8333-333333333333",
+          "view_id": "model-view-1",
+          "scope": {
+            "kind": "CONTROL",
+            "dataset_id": null,
+            "source_id": null,
+            "partition_id": null
+          }
+        },
+        "observation_id": "44444444-4444-4444-8444-444444444444",
+        "status": "QUORUM_CONFIRMED",
+        "metadata_revision": "25",
+        "change_sequence": "10",
+        "state_root": "1111111111111111111111111111111111111111111111111111111111111111",
+        "authority_read_ref": "MODEL_ONLY_READ",
+        "no_quorum_evidence_ref": null,
+        "read_started_at_ms": "1700000000000",
+        "read_finished_at_ms": "1700000000010",
+        "valid_until_ms": "1700000010000",
+        "clock_uncertainty_ms": "10"
+      }
+    },
+    "metadata_jump_change": {
+      "schema": "unified.control.change.v2",
+      "context": {
+        "cluster_id": "11111111-1111-4111-8111-111111111111",
+        "cluster_generation": "22222222-2222-4222-8222-222222222222",
+        "stream_id": "33333333-3333-4333-8333-333333333333",
+        "view_id": "model-view-1",
+        "scope": {
+          "kind": "CONTROL",
+          "dataset_id": null,
+          "source_id": null,
+          "partition_id": null
+        }
+      },
+      "event_id": "55555555-5555-4555-8555-555555555555",
+      "change_sequence": "11",
+      "previous_sequence": "10",
+      "metadata_revision": "30",
+      "cursor": "MODEL_ONLY_CURSOR_11",
+      "previous_state_root": "1111111111111111111111111111111111111111111111111111111111111111",
+      "state_root": "2222222222222222222222222222222222222222222222222222222222222222",
+      "upserts": [
+        {
+          "resource_type": "fixture_state",
+          "resource_id": "model-resource",
+          "domain_schema_sha256": "5555555555555555555555555555555555555555555555555555555555555555",
+          "domain_revision": "1",
+          "value": {
+            "status": "MODEL_ONLY"
+          }
+        }
+      ],
+      "deletes": []
+    },
+    "liveness": {
+      "schema": "unified.control.liveness.v2",
+      "context": {
+        "cluster_id": "11111111-1111-4111-8111-111111111111",
+        "cluster_generation": "22222222-2222-4222-8222-222222222222",
+        "stream_id": "33333333-3333-4333-8333-333333333333",
+        "view_id": "model-view-1",
+        "scope": {
+          "kind": "CONTROL",
+          "dataset_id": null,
+          "source_id": null,
+          "partition_id": null
+        }
+      },
+      "connection_id": "66666666-6666-4666-8666-666666666666"
+    },
+    "authority_observation": {
+      "schema": "unified.control.authority-observation.v2",
+      "context": {
+        "cluster_id": "11111111-1111-4111-8111-111111111111",
+        "cluster_generation": "22222222-2222-4222-8222-222222222222",
+        "stream_id": "33333333-3333-4333-8333-333333333333",
+        "view_id": "model-view-1",
+        "scope": {
+          "kind": "CONTROL",
+          "dataset_id": null,
+          "source_id": null,
+          "partition_id": null
+        }
+      },
+      "observation_id": "44444444-4444-4444-8444-444444444444",
+      "status": "QUORUM_CONFIRMED",
+      "metadata_revision": "25",
+      "change_sequence": "10",
+      "state_root": "1111111111111111111111111111111111111111111111111111111111111111",
+      "authority_read_ref": "MODEL_ONLY_READ",
+      "no_quorum_evidence_ref": null,
+      "read_started_at_ms": "1700000000000",
+      "read_finished_at_ms": "1700000000010",
+      "valid_until_ms": "1700000010000",
+      "clock_uncertainty_ms": "10"
+    },
+    "error": {
+      "schema": "unified.control.error.v2",
+      "request_id": null,
+      "code": "AUTHENTICATION_UNAVAILABLE",
+      "reason": "PROVIDER_NOT_ADMITTED",
+      "retryable": false,
+      "retry_after_ms": null,
+      "evidence_refs": []
+    }
+  },
+  "invalid": {
+    "liveness_with_cursor": {
+      "schema": "unified.control.liveness.v2",
+      "context": {
+        "cluster_id": "11111111-1111-4111-8111-111111111111",
+        "cluster_generation": "22222222-2222-4222-8222-222222222222",
+        "stream_id": "33333333-3333-4333-8333-333333333333",
+        "view_id": "model-view-1",
+        "scope": {
+          "kind": "CONTROL",
+          "dataset_id": null,
+          "source_id": null,
+          "partition_id": null
+        }
+      },
+      "connection_id": "66666666-6666-4666-8666-666666666666",
+      "cursor": "MUST_NOT_ADVANCE"
+    },
+    "numeric_sequence_alias": {
+      "schema": "unified.control.change.v2",
+      "context": {
+        "cluster_id": "11111111-1111-4111-8111-111111111111",
+        "cluster_generation": "22222222-2222-4222-8222-222222222222",
+        "stream_id": "33333333-3333-4333-8333-333333333333",
+        "view_id": "model-view-1",
+        "scope": {
+          "kind": "CONTROL",
+          "dataset_id": null,
+          "source_id": null,
+          "partition_id": null
+        }
+      },
+      "event_id": "55555555-5555-4555-8555-555555555555",
+      "change_sequence": 11,
+      "previous_sequence": "10",
+      "metadata_revision": "30",
+      "cursor": "MODEL_ONLY_CURSOR_11",
+      "previous_state_root": "1111111111111111111111111111111111111111111111111111111111111111",
+      "state_root": "2222222222222222222222222222222222222222222222222222222222222222",
+      "upserts": [
+        {
+          "resource_type": "fixture_state",
+          "resource_id": "model-resource",
+          "domain_schema_sha256": "5555555555555555555555555555555555555555555555555555555555555555",
+          "domain_revision": "1",
+          "value": {
+            "status": "MODEL_ONLY"
+          }
+        }
+      ],
+      "deletes": []
+    },
+    "no_quorum_with_live_expiry": {
+      "schema": "unified.control.authority-observation.v2",
+      "context": {
+        "cluster_id": "11111111-1111-4111-8111-111111111111",
+        "cluster_generation": "22222222-2222-4222-8222-222222222222",
+        "stream_id": "33333333-3333-4333-8333-333333333333",
+        "view_id": "model-view-1",
+        "scope": {
+          "kind": "CONTROL",
+          "dataset_id": null,
+          "source_id": null,
+          "partition_id": null
+        }
+      },
+      "observation_id": "44444444-4444-4444-8444-444444444444",
+      "status": "NO_QUORUM",
+      "metadata_revision": "25",
+      "change_sequence": "10",
+      "state_root": "1111111111111111111111111111111111111111111111111111111111111111",
+      "authority_read_ref": "MODEL_ONLY_READ",
+      "no_quorum_evidence_ref": "MODEL_ONLY_DIAG",
+      "read_started_at_ms": "1700000000000",
+      "read_finished_at_ms": "1700000000010",
+      "valid_until_ms": "1700000010000",
+      "clock_uncertainty_ms": "10"
+    },
+    "old_v1_error": {
+      "schema_version": "1.0",
+      "request_id": "old",
+      "code": "UNAVAILABLE",
+      "reason": "NONE",
+      "retry_after_ms": 0,
+      "evidence_refs": []
+    }
+  }
+}

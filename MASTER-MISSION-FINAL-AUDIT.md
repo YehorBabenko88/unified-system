@@ -68,3 +68,15 @@ A3 confirms no new lifecycle feature code and no own feature PR; existing baseli
 ## A8-F12 metadata correction
 
 Ownership now distinguishes Agent8 historical audit head from actual PR21base/main b9b03a1. Current integration is PR26; original PR13 is retained only as historical component provenance. Unified module source pin explicitly identifies the exact integration snapshot preceding this documentary correction; it is not a self-referential package commit or final admitted RC. Revision5 also corrects existing Agent2 PR25 status and records A7 A2 dependency/current research follow-ups. Prior revision ACKs are not transferred. No runtime source changed; independent correction verification pending.
+
+## Latest consolidated-source validation
+
+Existingb12 read-only deployment interlock and pinnedLANobserver were merged withoutconflict. Full local Windows suite on exact consolidatedsource 0346018b58ed612dbe62fba7861f3e0b6a63ee94:812tests,0failures/errors,14explicitunwaivedskips; Python sourcepre/post hashes unchanged. This supersedes no older receipt; original755 result and68targeted result are retained with their ownpins. No ordinaryworkload/office runtime was installed.
+
+Grid263/ec967 nowproposed instead of262: A8 independently verified original6DELETE→0poolcalls,4baseline failures→16passingcases/zero skips, unchanged schema/reconcile/signature. Disabledautomaticpurge is not a fullretentionprotocol or deployedrepair.
+
+Six-repository secret-pattern triage found four publiclycommitted historical Meta loopback TLS fixturekeys. A8 classified them test-only, not confirmedproductionsecrets, and identified nooperationaltrustinstallation. No privatebytes copied or printed. Finalruntimeartifact exclusion/inventory anddependencylicense review remain unqualified; no historyrewrite/rotation justified bythis scan.
+
+## Authority design decision remains unresolved
+
+Agent2 review1 and modelcounterexamples are published under release/proposals/agent2-review1. NativeConsul transaction predicates and sessionreaping do not supply the required strictdeadline-at-serialization timestamp guarantee. This is our designanalysis of [transaction primitives](https://developer.hashicorp.com/consul/api-docs/txn) and [session semantics](https://developer.hashicorp.com/consul/api-docs/session), not a vendor impossibilityclaim or realRafttest. Strictcontract remains unchanged; nosecondauthority orweaker event-order substitute approved. A concrete qualified serialization design is stillneeded. ControlSyncv2 is a new-major proposal awaiting exactconsumerACK, not an endpoint or runtimequalification.

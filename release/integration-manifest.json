@@ -6,8 +6,8 @@
   "modules": {
     "unified-system": {
       "repository": "YehorBabenko88/unified-system",
-      "head": "ca9e390203305c8662ddf98fb771ac0bd268ec49",
-      "tree": "dfcf0331e25da56c76a07d59bf6b84126534dff7",
+      "head": "0346018b58ed612dbe62fba7861f3e0b6a63ee94",
+      "tree": "c440a8f82db8dba9aa6ca743ce087ff84cacea69",
       "pr": 26,
       "pr_url": "https://github.com/YehorBabenko88/unified-system/pull/26",
       "branch": "mission/final-integration-20261106",
@@ -27,18 +27,19 @@
         "942e5f1d1efb28f97fb5eaae7a216424938dd738",
         "0b3af3e872b49ed1848815f7f9ffd42444f89b24",
         "8171eebd6bfbcc83fd82038c6d9f42d012ac822a",
-        "2626e939a7ed44bfb37aa354490329a7260cc24b"
+        "2626e939a7ed44bfb37aa354490329a7260cc24b",
+        "b12c6c24eeb2c59aa099f1c516d77508f36b20a6"
       ],
-      "source_pin_role": "EXACT_INTEGRATION_SOURCE_SNAPSHOT_PRECEDING_THIS_DOCUMENTARY_CORRECTION_NOT_FINAL_RC"
+      "source_pin_role": "EXACT_CONSOLIDATED_SOURCE_SNAPSHOT_BEFORE_THIS_EVIDENCE_COMMIT_NOT_FINAL_RC"
     },
     "bybit-cluster-grid": {
       "repository": "YehorBabenko88/bybit-cluster-grid",
-      "head": "a17f1db6b9aa04c105d2e993496026a83849ecfd",
-      "tree": "d45f5bf45d08f7d336fc82e376cc88915c57d84b",
-      "pr": 262,
-      "pr_url": "https://github.com/YehorBabenko88/bybit-cluster-grid/pull/262",
+      "head": "ec967b3ebb67bb9f04d0d82c78bba5b4245a3333",
+      "tree": "8dce2883766a9b492587a91dda5ff86d881d83ac",
+      "pr": 263,
+      "pr_url": "https://github.com/YehorBabenko88/bybit-cluster-grid/pull/263",
       "branch": "SEE_CURRENT_PR_METADATA",
-      "candidate_status": "OFFLINE_FIXTURE_VERIFIED_HOSTED_RUNTIME_NOT_ADMITTED",
+      "candidate_status": "OFFLINE_SAFEGUARD_AND_FIXTURE_VERIFIED_NOT_HOSTED_RUNTIME_ADMITTED",
       "default_head": "d537d525296ef34f727996e240ae6c60102c6082",
       "artifact_sha256": null,
       "schema_versions": "REVIEW_PENDING",
@@ -140,7 +141,7 @@
   "physical_fault_injection_authorized": false,
   "tailscale_removal_authorized": false,
   "go": "NO-GO",
-  "ownership_registry_sha256": "0ef0dde1f6b238e87b60e2e21eeb13466f6b5e39c3815d91b39890134c982bdd",
+  "ownership_registry_sha256": "f9779d6ac23e7321b25f4fc07bf9034838b3efd76a9682ea7c3a2eb70434d886",
   "independent_audit_checkpoint": {
     "head": "ac869aae349483050f368cc59b76cbbedd8265e6",
     "scope": "PR26_SOURCE56f4215_AND_GRIDa17f1db_ONLY",
@@ -155,5 +156,12 @@
     "number": 26,
     "url": "https://github.com/YehorBabenko88/unified-system/pull/26",
     "branch": "mission/final-integration-20261106"
+  },
+  "meta_public_loopback_fixtures": {
+    "classification": "PUBLIC_TEST_ONLY_NOT_CONFIRMED_PRODUCTION_SECRETS",
+    "recommended_runtime_payload_exclusion": "docs/commissioning_evidence_v3/tls-loopback/**",
+    "operational_identity_use": "FORBIDDEN",
+    "actual_release_artifact_scan": "NOT_RUN",
+    "historical_evidence_preserved": true
   }
 }

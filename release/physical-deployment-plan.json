@@ -1,0 +1,205 @@
+{
+  "schema": "unified.staged-physical-plan.v2",
+  "authorization": "OWNER2026_11_06_CONDITIONAL_NONDESTRUCTIVE_AFTER_READINESS_GATES",
+  "status": "BLOCKED_NOT_EXECUTABLE",
+  "mandatory_gates": [
+    "Immutable sixmodule artifactSHA256/dependencylocks/sourceprovenance/compatibility PASS",
+    "Mandatory exactsource CI/case/skip/artifactreview PASS",
+    "Windows native and securityqualification PASS",
+    "Real identity/RBAC/authority/assignment/storage/Control endpoint ACK+runtime PASS",
+    "PinnedLAN/mTLS peeridentity/admitted networkbudget PASS",
+    "Owned installer/elevatedpath/accounts/ports/DBtarget plan admitted",
+    "Current inventory/capacity/existingservices+ports conflictcheck PASS",
+    "Verified backup+actual isolatedrestore+rollback version/data compatibility PASS",
+    "PC3 existing WindowsFirewall/ESET intendedsecurityconfiguration reviewed"
+  ],
+  "required_bindings": {
+    "release_manifest_sha256": null,
+    "artifact_bundle_sha256": null,
+    "rollback_bundle_sha256": null,
+    "owned_root": null,
+    "service_account_and_acl_plan_sha256": null,
+    "service_names_and_ports_sha256": null,
+    "isolated_database_target_sha256": null,
+    "backup_restore_receipt_sha256": null
+  },
+  "stages": [
+    {
+      "id": "A",
+      "nodes_in_order": [
+        "LS5"
+      ],
+      "duration_estimate_not_measurement": "30-60min",
+      "risk": "HIGH",
+      "scenario": "Install isolated owned CONTROL components and Terminan; no distributed processing before quorum",
+      "status": "BLOCKED_NOT_RUN",
+      "before": [
+        "Verify exactbindings andpreviousstage gates",
+        "Read-onlynetwork/resource/service/port snapshot",
+        "Verify backup and rollback; preserve existing PostgreSQL/services/data"
+      ],
+      "after": [
+        "Verify actualmodulehealth/dataexchange/identity/integrity",
+        "Compare networkconfiguration snapshots; preserve evidence hashes",
+        "Verify rollback for thisstage beforecontinuing"
+      ],
+      "abort": [
+        "Any readinessgate FAIL/BLOCKED",
+        "DNS/HTTPS/SSH degradation",
+        "Unknown command outcomes orsource/hash mismatch",
+        "Disk/RAM/networkbudget breach"
+      ],
+      "recovery": [
+        "Stop only currentowned Unified deploymentoperation",
+        "Preserve logs/UNKNOWN outcomes/state/data",
+        "Restore only previously admittedcode with currentauthorityfences",
+        "Do notresetnetwork/Tailscale/ESET/firewall orreactivate staleleases"
+      ]
+    },
+    {
+      "id": "B",
+      "nodes_in_order": [
+        "PC4",
+        "PC3"
+      ],
+      "duration_estimate_not_measurement": "30-60min per node",
+      "risk": "HIGH",
+      "scenario": "Install coordinators sequentially; qualify3persistentvoters and majority2 without artificialpartition orforcedshutdown",
+      "status": "BLOCKED_NOT_RUN",
+      "before": [
+        "Verify exactbindings andpreviousstage gates",
+        "Read-onlynetwork/resource/service/port snapshot",
+        "Verify backup and rollback; preserve existing PostgreSQL/services/data"
+      ],
+      "after": [
+        "Verify actualmodulehealth/dataexchange/identity/integrity",
+        "Compare networkconfiguration snapshots; preserve evidence hashes",
+        "Verify rollback for thisstage beforecontinuing"
+      ],
+      "abort": [
+        "Any readinessgate FAIL/BLOCKED",
+        "DNS/HTTPS/SSH degradation",
+        "Unknown command outcomes orsource/hash mismatch",
+        "Disk/RAM/networkbudget breach"
+      ],
+      "recovery": [
+        "Stop only currentowned Unified deploymentoperation",
+        "Preserve logs/UNKNOWN outcomes/state/data",
+        "Restore only previously admittedcode with currentauthorityfences",
+        "Do notresetnetwork/Tailscale/ESET/firewall orreactivate staleleases"
+      ]
+    },
+    {
+      "id": "C",
+      "nodes_in_order": [
+        "PC2"
+      ],
+      "duration_estimate_not_measurement": "20-40min",
+      "risk": "MEDIUM",
+      "scenario": "Enroll firstworker, boundedusefulpaperjob and ordinarydrain/rejoin aftercoordinatorreadiness",
+      "status": "BLOCKED_NOT_RUN",
+      "before": [
+        "Verify exactbindings andpreviousstage gates",
+        "Read-onlynetwork/resource/service/port snapshot",
+        "Verify backup and rollback; preserve existing PostgreSQL/services/data"
+      ],
+      "after": [
+        "Verify actualmodulehealth/dataexchange/identity/integrity",
+        "Compare networkconfiguration snapshots; preserve evidence hashes",
+        "Verify rollback for thisstage beforecontinuing"
+      ],
+      "abort": [
+        "Any readinessgate FAIL/BLOCKED",
+        "DNS/HTTPS/SSH degradation",
+        "Unknown command outcomes orsource/hash mismatch",
+        "Disk/RAM/networkbudget breach"
+      ],
+      "recovery": [
+        "Stop only currentowned Unified deploymentoperation",
+        "Preserve logs/UNKNOWN outcomes/state/data",
+        "Restore only previously admittedcode with currentauthorityfences",
+        "Do notresetnetwork/Tailscale/ESET/firewall orreactivate staleleases"
+      ]
+    },
+    {
+      "id": "D",
+      "nodes_in_order": [
+        "PC1",
+        "LS7"
+      ],
+      "duration_estimate_not_measurement": "20-40min per node",
+      "risk": "MEDIUM",
+      "scenario": "Enroll remainingworkers sequentially; capacity/schedule/Terminan checks",
+      "status": "BLOCKED_NOT_RUN",
+      "before": [
+        "Verify exactbindings andpreviousstage gates",
+        "Read-onlynetwork/resource/service/port snapshot",
+        "Verify backup and rollback; preserve existing PostgreSQL/services/data"
+      ],
+      "after": [
+        "Verify actualmodulehealth/dataexchange/identity/integrity",
+        "Compare networkconfiguration snapshots; preserve evidence hashes",
+        "Verify rollback for thisstage beforecontinuing"
+      ],
+      "abort": [
+        "Any readinessgate FAIL/BLOCKED",
+        "DNS/HTTPS/SSH degradation",
+        "Unknown command outcomes orsource/hash mismatch",
+        "Disk/RAM/networkbudget breach"
+      ],
+      "recovery": [
+        "Stop only currentowned Unified deploymentoperation",
+        "Preserve logs/UNKNOWN outcomes/state/data",
+        "Restore only previously admittedcode with currentauthorityfences",
+        "Do notresetnetwork/Tailscale/ESET/firewall orreactivate staleleases"
+      ]
+    },
+    {
+      "id": "E",
+      "nodes_in_order": [
+        "LS5",
+        "PC4",
+        "PC3",
+        "PC2",
+        "PC1",
+        "LS7"
+      ],
+      "duration_estimate_not_measurement": "60-180min history-start estimate; actual depends on bounded dataset volume",
+      "risk": "MEDIUM",
+      "scenario": "Gradual10instrumenthistory then10minute live/paper observation; no realorders",
+      "status": "BLOCKED_NOT_RUN",
+      "before": [
+        "Verify exactbindings andpreviousstage gates",
+        "Read-onlynetwork/resource/service/port snapshot",
+        "Verify backup and rollback; preserve existing PostgreSQL/services/data"
+      ],
+      "after": [
+        "Verify actualmodulehealth/dataexchange/identity/integrity",
+        "Compare networkconfiguration snapshots; preserve evidence hashes",
+        "Verify rollback for thisstage beforecontinuing"
+      ],
+      "abort": [
+        "Any readinessgate FAIL/BLOCKED",
+        "DNS/HTTPS/SSH degradation",
+        "Unknown command outcomes orsource/hash mismatch",
+        "Disk/RAM/networkbudget breach"
+      ],
+      "recovery": [
+        "Stop only currentowned Unified deploymentoperation",
+        "Preserve logs/UNKNOWN outcomes/state/data",
+        "Restore only previously admittedcode with currentauthorityfences",
+        "Do notresetnetwork/Tailscale/ESET/firewall orreactivate staleleases"
+      ]
+    }
+  ],
+  "prohibitions": [
+    "No realorders orproductiontradingcredentials",
+    "No forcedcoordinatorshutdown/artificialpartitions/diskfill",
+    "No existingdata/service deletion",
+    "No router/DNS/DHCP/gateway/firewall/ESET changes",
+    "No Tailscaleremoval; keep reservechannel",
+    "No in-place replacement/migration of existing PostgreSQL17/18 installations"
+  ],
+  "quorum_note": "Do not lower bootstrap/quorum gates to make an incomplete cluster appear ready. Actual2of3 resilience must use separately qualified ordinarymaintenance evidence or isolatedstand; never infer physicalfailover from threshold metadata alone.",
+  "go": "NO-GO"
+}

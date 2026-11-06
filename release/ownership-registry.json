@@ -1,6 +1,6 @@
 {
   "schema": "unified.ownership.v1",
-  "revision": 5,
+  "revision": 6,
   "root_owner": "ROOT",
   "max_internal_subagents": 3,
   "execution": "EIGHT_EXISTING_USER_OWNED_THREADS_NO_DUPLICATE_INTERNAL_AGENTS",
@@ -125,7 +125,8 @@
         "A1",
         "A4",
         "A5",
-        "A7"
+        "A7",
+        "A2"
       ],
       "ack": "PENDING",
       "rules": [
@@ -136,7 +137,24 @@
         "Send exact HEAD/tree, test inventory, CI run/attempt/jobs and SHA256 evidence"
       ],
       "user_owned_thread_id": "01a1b15d-b4b1-7e60-9ee8-1ac79d1813d5",
-      "full_feature_implementation": "WAITING_EXPLICIT_OWNER_DESIGN_APPROVAL_NOT_INFERRED_FROM_FINAL_AUDIT_AUTHORIZATION"
+      "full_feature_implementation": "WAITING_EXPLICIT_OWNER_DESIGN_APPROVAL_NOT_INFERRED_FROM_FINAL_AUDIT_AUTHORIZATION",
+      "additional_allocations": [
+        {
+          "repository": "bybit-cluster-grid",
+          "branch": "fix/agent3-preserve-retired-history-20261106",
+          "worktree": "C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-3-bybit-historical-live/work/grid-retired-history-safeguard",
+          "base_head": "a17f1db6b9aa04c105d2e993496026a83849ecfd",
+          "head": "ec967b3ebb67bb9f04d0d82c78bba5b4245a3333",
+          "draft_pr": 263,
+          "allowed_files": [
+            "grid/instrument_lifecycle.py",
+            "tests/test_retired_history_preservation.py",
+            "docs/audits/retired-history-preservation.md"
+          ],
+          "allowed_new_path_prefixes": [],
+          "authorization": "OWNER2026_11_06_CONFIRMED_DEFECT_FIX_ONLY_NOT_FULL_LIFECYCLE_DESIGN_APPROVAL"
+        }
+      ]
     },
     {
       "agent_id": "A4",
@@ -375,6 +393,6 @@
     ],
     "scope": "OWN_ALLOCATION_ONLY_NOT_TRANSFERRED_TO_REVISION_3"
   },
-  "supersedes_scope_only_not_ack_transfer": "2415c81fb4099bad670312df1132cf398e70a11368eebf3c31d435626b349f38",
-  "fresh_ack_status": "PENDING_EXACT_REVISION5_NO_PRIOR_ACK_TRANSFER"
+  "supersedes_scope_only_not_ack_transfer": "0ef0dde1f6b238e87b60e2e21eeb13466f6b5e39c3815d91b39890134c982bdd",
+  "fresh_ack_status": "PENDING_EXACT_REVISION6_NO_PRIOR_ACK_TRANSFER"
 }
