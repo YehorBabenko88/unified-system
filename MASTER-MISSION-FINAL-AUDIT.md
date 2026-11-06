@@ -56,3 +56,11 @@ New final-integration workflow was independently executed locally in an owned ra
 LS5 local and all five direct-LAN pinned SSH identities completed resource/network/service/port/firewall/ExecutionPolicy inventory without component errors. Original detailed inventory and public egress IP remain owner-local; redacted summaries and original hashes are published. Six bounded HTTPS observations shared one IPv4 for that endpoint/time only, not proven Bybit routing or quota admission.
 
 PC3 Windows Firewall reports Domain/Private/Public profiles off; this existing state was observed, not changed or attributed to Unified. ESET/third-party firewall coverage and intended configuration require owner/security review before admission. PC1 and LS7 have roughly3GiB free physical RAM; capacity/load admission remains unqualified. No office installation, service/network reset, Tailscale removal or fault injection occurred.
+
+## Independent follow-up review
+
+A8 checkpoint ac869aae independently verified PR26 source56f4215:59cases/zero skips,7negative source/inventory guards reject, PR18/19 original assertions/deadline preserved. It also independently reproduced Grid pytest9.2 baseline15passing bodies+4teardown errors and verified fixture-only PR262/a17f1db:15passing/zero skips on9.2 and8.4; original test ASTs/product unchanged. This closes the fixture subproblem offline only. Full local Grid suite remains explicitly NOTPASS (39fail/1580pass/21skip), including absent ephemeral PostgreSQL, LS5 physical-host guard and unavailable symlink privilege; no guard was bypassed.
+
+A3 confirms no new lifecycle feature code and no own feature PR; existing baseline97-case result is not completion of distributed history/gap/ownership work. Full-feature human design approvals remain pending for A1/A3/A4. Confirmed safety defects are separately being investigated under the final directive.
+
+112 superseded queued CI runs on ROOT integration branch were cancelled after rechecking they were still queued and on older HEADs. Current1c05ce5 runs and all other owners were preserved; logs/plans are recorded. Cancellation is not acceptance or waiver. Subsequent documentary checkpoints do not inherit older hosted qualification.

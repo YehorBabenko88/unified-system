@@ -13,8 +13,12 @@
       "windows_verified": false,
       "physically_verified": false,
       "prior_status_not_adopted": "IN_PROGRESS",
-      "evidence": [],
-      "reason": "Current integrated candidate has not passed complete source/runtime/CI gates"
+      "evidence": [
+        "repository-inventory.json",
+        "source-path-audit.json",
+        "evidence/github-original-metadata-index.json"
+      ],
+      "reason": "Fresh metadata inventory complete; full source/contract/migration/dirty-state qualification remains incomplete"
     },
     {
       "id": "P0-02",
@@ -26,8 +30,11 @@
       "windows_verified": false,
       "physically_verified": false,
       "prior_status_not_adopted": "IN_PROGRESS",
-      "evidence": [],
-      "reason": "Current integrated candidate has not passed complete source/runtime/CI gates"
+      "evidence": [
+        "ci-matrix.json",
+        "skip-inventory.json"
+      ],
+      "reason": "Current hosted matrices queued or failed; original workflow/case/attempt/artifact qualification incomplete"
     },
     {
       "id": "P0-03",
@@ -39,8 +46,12 @@
       "windows_verified": false,
       "physically_verified": false,
       "prior_status_not_adopted": "FAIL",
-      "evidence": [],
-      "reason": "Current integrated candidate has not passed complete source/runtime/CI gates"
+      "evidence": [
+        "https://github.com/YehorBabenko88/math/actions/runs/42246112894/job/127988647557"
+      ],
+      "reason": "Actual hosted Medium-native job127988647557 reports DLL_INITIALIZATION_FAILED; inventory fix does not qualify native startup",
+      "observed_native_result": "FAIL_AT_5f93cf91acc04c6561da2e940cad87f9ac41baf2",
+      "current_candidate_native": "NOT_QUALIFIED"
     },
     {
       "id": "P0-04",
@@ -378,7 +389,7 @@
       "physically_verified": false,
       "prior_status_not_adopted": "IN_PROGRESS",
       "evidence": [],
-      "reason": "Current integrated candidate has not passed complete source/runtime/CI gates"
+      "reason": "ADMINIT excluded from all six-node probe plans; whole deployed configuration still requires audit"
     },
     {
       "id": "P4-01",
@@ -1211,5 +1222,145 @@
     "A6 actual backend workflows/auth absent; injected static consumer only"
   ],
   "physical_deployment": "BLOCKED_READINESS_GATES",
-  "destructive_physical_faults": "NOT_AUTHORIZED"
+  "destructive_physical_faults": "NOT_AUTHORIZED",
+  "final_report_fields": [
+    {
+      "name": "Repositories/exactHEAD",
+      "status": "BLOCKED",
+      "evidence": [],
+      "reason": "No complete admitted six-node candidate; component/local/metadata evidence must not be promoted"
+    },
+    {
+      "name": "IntegratedPRs",
+      "status": "BLOCKED",
+      "evidence": [],
+      "reason": "No complete admitted six-node candidate; component/local/metadata evidence must not be promoted"
+    },
+    {
+      "name": "MandatoryCI",
+      "status": "BLOCKED",
+      "evidence": [],
+      "reason": "No complete admitted six-node candidate; component/local/metadata evidence must not be promoted"
+    },
+    {
+      "name": "Windowsnative",
+      "status": "BLOCKED",
+      "evidence": [],
+      "reason": "No complete admitted six-node candidate; component/local/metadata evidence must not be promoted"
+    },
+    {
+      "name": "DirectLANwithoutTailscale",
+      "status": "BLOCKED",
+      "evidence": [],
+      "reason": "No complete admitted six-node candidate; component/local/metadata evidence must not be promoted"
+    },
+    {
+      "name": "Consensus",
+      "status": "BLOCKED",
+      "evidence": [],
+      "reason": "No complete admitted six-node candidate; component/local/metadata evidence must not be promoted"
+    },
+    {
+      "name": "Terminan6nodes",
+      "status": "BLOCKED",
+      "evidence": [],
+      "reason": "No complete admitted six-node candidate; component/local/metadata evidence must not be promoted"
+    },
+    {
+      "name": "Operatorauthorization",
+      "status": "BLOCKED",
+      "evidence": [],
+      "reason": "No complete admitted six-node candidate; component/local/metadata evidence must not be promoted"
+    },
+    {
+      "name": "Historicaldata",
+      "status": "BLOCKED",
+      "evidence": [],
+      "reason": "No complete admitted six-node candidate; component/local/metadata evidence must not be promoted"
+    },
+    {
+      "name": "Liveingestion",
+      "status": "BLOCKED",
+      "evidence": [],
+      "reason": "No complete admitted six-node candidate; component/local/metadata evidence must not be promoted"
+    },
+    {
+      "name": "Perinstrumentintegrity",
+      "status": "BLOCKED",
+      "evidence": [],
+      "reason": "No complete admitted six-node candidate; component/local/metadata evidence must not be promoted"
+    },
+    {
+      "name": "Replication",
+      "status": "BLOCKED",
+      "evidence": [],
+      "reason": "No complete admitted six-node candidate; component/local/metadata evidence must not be promoted"
+    },
+    {
+      "name": "Backuprestore",
+      "status": "BLOCKED",
+      "evidence": [],
+      "reason": "No complete admitted six-node candidate; component/local/metadata evidence must not be promoted"
+    },
+    {
+      "name": "Scheduler",
+      "status": "BLOCKED",
+      "evidence": [],
+      "reason": "No complete admitted six-node candidate; component/local/metadata evidence must not be promoted"
+    },
+    {
+      "name": "Research",
+      "status": "BLOCKED",
+      "evidence": [],
+      "reason": "No complete admitted six-node candidate; component/local/metadata evidence must not be promoted"
+    },
+    {
+      "name": "PaperSimulation",
+      "status": "BLOCKED",
+      "evidence": [],
+      "reason": "No complete admitted six-node candidate; component/local/metadata evidence must not be promoted"
+    },
+    {
+      "name": "AutoRecovery",
+      "status": "BLOCKED",
+      "evidence": [],
+      "reason": "No complete admitted six-node candidate; component/local/metadata evidence must not be promoted"
+    },
+    {
+      "name": "UpdateRollback",
+      "status": "BLOCKED",
+      "evidence": [],
+      "reason": "No complete admitted six-node candidate; component/local/metadata evidence must not be promoted"
+    },
+    {
+      "name": "Cleanup",
+      "status": "BLOCKED",
+      "evidence": [],
+      "reason": "No complete admitted six-node candidate; component/local/metadata evidence must not be promoted"
+    },
+    {
+      "name": "OpenFindings",
+      "status": "BLOCKED",
+      "evidence": [],
+      "reason": "No complete admitted six-node candidate; component/local/metadata evidence must not be promoted"
+    },
+    {
+      "name": "RemainingPhysicalTests",
+      "status": "BLOCKED",
+      "evidence": [],
+      "reason": "No complete admitted six-node candidate; component/local/metadata evidence must not be promoted"
+    },
+    {
+      "name": "TailscaleRemovalReadiness",
+      "status": "BLOCKED",
+      "evidence": [],
+      "reason": "No complete admitted six-node candidate; component/local/metadata evidence must not be promoted"
+    }
+  ],
+  "independent_component_results": {
+    "root_integration_56f4215": "A8_59PASS_ZERO_SKIP_7NEGATIVE_GUARDS_REJECT",
+    "Grid262_a17f1db": "A8_PYTEST9_2_RED15PASS4ERRORS_TO_GREEN15PASS_ZERO_SKIP",
+    "Math112_917d996": "A8_13PASS_ZERO_SKIP_RAW188_PROOF_PRESERVED",
+    "scope": "OFFLINE_ONLY_NO_HOSTED_RUNTIME_PHYSICAL_PROMOTION"
+  }
 }
