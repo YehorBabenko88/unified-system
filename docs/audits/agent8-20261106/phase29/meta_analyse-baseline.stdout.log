@@ -1,0 +1,121 @@
+....FFFF..                                                               [100%]
+================================== FAILURES ===================================
+__________ test_ci_evidence_resolves_raw_objects[tree-refs/replace] ___________
+
+tmp_path = WindowsPath('C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-8-independent-security-ci/work/a8-provenance-temp-meta_analyse-baseline/test_ci_evidence_resolves_raw_4')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001F915B078C0>
+namespace = 'refs/replace', kind = 'tree'
+
+    @pytest.mark.parametrize('namespace', ['refs/replace', 'refs/agent7-replacements'])
+    @pytest.mark.parametrize('kind', ['clean', 'blob', 'tree', 'commit'])
+    def test_ci_evidence_resolves_raw_objects(tmp_path, monkeypatch, namespace, kind):
+        f = fixture(tmp_path, monkeypatch, namespace, kind)
+        recorded = run(f, 'scripts/record_ci_source.py', GITHUB_EVENT_NAME='push', GITHUB_SHA=f.head)
+        assert recorded.returncode == 0, recorded.stderr
+        assert json.loads((f.root / 'source-sha.json').read_bytes())['tree_sha'] == f.tree
+        manifest_path = tmp_path / 'identities.json'
+        code = "from types import SimpleNamespace;from scripts.integration_synthetic_boundary import pytest_collection_finish;pytest_collection_finish(SimpleNamespace(items=[SimpleNamespace(nodeid='tests/test_inert.py::test_inert',name='test_inert')]))"
+        collected = run(f, '-c', code, META_ANALYSE_SYNTHETIC_IDENTITIES=str(manifest_path))
+        assert collected.returncode == 0, collected.stderr
+        manifest = json.loads(manifest_path.read_bytes())
+        assert (manifest['sha'], manifest['tree']) == (f.head, f.tree)
+        xml = tmp_path / 'tests.xml'
+        xml.write_bytes(b'<testsuite><testcase classname="tests.test_inert" name="test_inert"/></testsuite>')
+        checked = run(f, 'scripts/check_final_integration_junit.py', str(xml), str(manifest_path))
+        assert checked.returncode == 0, checked.stderr
+        result = platform(f, tmp_path)
+>       assert result.returncode == 0, result.stderr
+E       AssertionError: BLOCKED: PLATFORM_COVERAGE_REJECTED
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-8-independent-security-ci\\work\\au...e-baseline\\test_ci_evidence_resolves_raw_4'], returncode=1, stdout='', stderr='BLOCKED: PLATFORM_COVERAGE_REJECTED\n').returncode
+
+tests\test_ci_source_replacements.py:110: AssertionError
+____ test_ci_evidence_resolves_raw_objects[tree-refs/agent7-replacements] _____
+
+tmp_path = WindowsPath('C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-8-independent-security-ci/work/a8-provenance-temp-meta_analyse-baseline/test_ci_evidence_resolves_raw_5')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001F915B07D70>
+namespace = 'refs/agent7-replacements', kind = 'tree'
+
+    @pytest.mark.parametrize('namespace', ['refs/replace', 'refs/agent7-replacements'])
+    @pytest.mark.parametrize('kind', ['clean', 'blob', 'tree', 'commit'])
+    def test_ci_evidence_resolves_raw_objects(tmp_path, monkeypatch, namespace, kind):
+        f = fixture(tmp_path, monkeypatch, namespace, kind)
+        recorded = run(f, 'scripts/record_ci_source.py', GITHUB_EVENT_NAME='push', GITHUB_SHA=f.head)
+        assert recorded.returncode == 0, recorded.stderr
+        assert json.loads((f.root / 'source-sha.json').read_bytes())['tree_sha'] == f.tree
+        manifest_path = tmp_path / 'identities.json'
+        code = "from types import SimpleNamespace;from scripts.integration_synthetic_boundary import pytest_collection_finish;pytest_collection_finish(SimpleNamespace(items=[SimpleNamespace(nodeid='tests/test_inert.py::test_inert',name='test_inert')]))"
+        collected = run(f, '-c', code, META_ANALYSE_SYNTHETIC_IDENTITIES=str(manifest_path))
+        assert collected.returncode == 0, collected.stderr
+        manifest = json.loads(manifest_path.read_bytes())
+        assert (manifest['sha'], manifest['tree']) == (f.head, f.tree)
+        xml = tmp_path / 'tests.xml'
+        xml.write_bytes(b'<testsuite><testcase classname="tests.test_inert" name="test_inert"/></testsuite>')
+        checked = run(f, 'scripts/check_final_integration_junit.py', str(xml), str(manifest_path))
+        assert checked.returncode == 0, checked.stderr
+        result = platform(f, tmp_path)
+>       assert result.returncode == 0, result.stderr
+E       AssertionError: BLOCKED: PLATFORM_COVERAGE_REJECTED
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-8-independent-security-ci\\work\\au...e-baseline\\test_ci_evidence_resolves_raw_5'], returncode=1, stdout='', stderr='BLOCKED: PLATFORM_COVERAGE_REJECTED\n').returncode
+
+tests\test_ci_source_replacements.py:110: AssertionError
+_________ test_ci_evidence_resolves_raw_objects[commit-refs/replace] __________
+
+tmp_path = WindowsPath('C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-8-independent-security-ci/work/a8-provenance-temp-meta_analyse-baseline/test_ci_evidence_resolves_raw_6')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001F915B06990>
+namespace = 'refs/replace', kind = 'commit'
+
+    @pytest.mark.parametrize('namespace', ['refs/replace', 'refs/agent7-replacements'])
+    @pytest.mark.parametrize('kind', ['clean', 'blob', 'tree', 'commit'])
+    def test_ci_evidence_resolves_raw_objects(tmp_path, monkeypatch, namespace, kind):
+        f = fixture(tmp_path, monkeypatch, namespace, kind)
+        recorded = run(f, 'scripts/record_ci_source.py', GITHUB_EVENT_NAME='push', GITHUB_SHA=f.head)
+        assert recorded.returncode == 0, recorded.stderr
+>       assert json.loads((f.root / 'source-sha.json').read_bytes())['tree_sha'] == f.tree
+E       AssertionError: assert '4b825dc642cb...69288fbee4904' == '84c853bfc16a...2d6ff7edf17a1'
+E         
+E         - 84c853bfc16af8b1205bed09b482d6ff7edf17a1
+E         + 4b825dc642cb6eb9a060e54bf8d69288fbee4904
+
+tests\test_ci_source_replacements.py:98: AssertionError
+___ test_ci_evidence_resolves_raw_objects[commit-refs/agent7-replacements] ____
+
+tmp_path = WindowsPath('C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-8-independent-security-ci/work/a8-provenance-temp-meta_analyse-baseline/test_ci_evidence_resolves_raw_7')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001F915ADF260>
+namespace = 'refs/agent7-replacements', kind = 'commit'
+
+    @pytest.mark.parametrize('namespace', ['refs/replace', 'refs/agent7-replacements'])
+    @pytest.mark.parametrize('kind', ['clean', 'blob', 'tree', 'commit'])
+    def test_ci_evidence_resolves_raw_objects(tmp_path, monkeypatch, namespace, kind):
+        f = fixture(tmp_path, monkeypatch, namespace, kind)
+        recorded = run(f, 'scripts/record_ci_source.py', GITHUB_EVENT_NAME='push', GITHUB_SHA=f.head)
+        assert recorded.returncode == 0, recorded.stderr
+>       assert json.loads((f.root / 'source-sha.json').read_bytes())['tree_sha'] == f.tree
+E       AssertionError: assert '4b825dc642cb...69288fbee4904' == '84c853bfc16a...2d6ff7edf17a1'
+E         
+E         - 84c853bfc16af8b1205bed09b482d6ff7edf17a1
+E         + 4b825dc642cb6eb9a060e54bf8d69288fbee4904
+
+tests\test_ci_source_replacements.py:98: AssertionError
+============================== warnings summary ===============================
+..\audit-venv\Lib\site-packages\_pytest\config\__init__.py:1474
+  C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\work\audit-venv\Lib\site-packages\_pytest\config\__init__.py:1474: PytestConfigWarning: Unknown config option: asyncio_default_fixture_loop_scope
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+..\audit-venv\Lib\site-packages\_pytest\config\__init__.py:1474
+  C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\work\audit-venv\Lib\site-packages\_pytest\config\__init__.py:1474: PytestConfigWarning: Unknown config option: asyncio_mode
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+- generated xml file: C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\outputs\phase29\meta_analyse-baseline.xml -
+=========================== short test summary info ===========================
+FAILED tests/test_ci_source_replacements.py::test_ci_evidence_resolves_raw_objects[tree-refs/replace]
+FAILED tests/test_ci_source_replacements.py::test_ci_evidence_resolves_raw_objects[tree-refs/agent7-replacements]
+FAILED tests/test_ci_source_replacements.py::test_ci_evidence_resolves_raw_objects[commit-refs/replace]
+FAILED tests/test_ci_source_replacements.py::test_ci_evidence_resolves_raw_objects[commit-refs/agent7-replacements]
+4 failed, 6 passed, 2 warnings in 15.82s

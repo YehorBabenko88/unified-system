@@ -1,0 +1,99 @@
+{
+  "checked_utc": "2026-11-06T20:26:51.818013+00:00",
+  "environment": "Windows isolated clones; Python 3.12 audit venv; no native invocation",
+  "results": [
+    {
+      "repository": "meta_analyse",
+      "pr": "https://github.com/YehorBabenko88/meta_analyse/pull/78",
+      "head": "f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1",
+      "tree": "c155c935a801fa98b7c78219c9798ce1f1be8848",
+      "requirement": "F16_GIT_REPLACEMENT_CONFORMANCE",
+      "status": "FIX_VERIFIED_OFFLINE",
+      "variants": {
+        "fixed": {
+          "head": "f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1",
+          "exit_code": 0,
+          "cases": 10,
+          "failures": 0,
+          "errors": 0,
+          "skips": 0,
+          "raw_source_before": {
+            "files": 782,
+            "sha256": "b792a834a99b12d9bb00ba73ff79ff69aada1b382db1b7a5eae0bc537126fe1b"
+          },
+          "raw_source_after": {
+            "files": 782,
+            "sha256": "b792a834a99b12d9bb00ba73ff79ff69aada1b382db1b7a5eae0bc537126fe1b"
+          },
+          "independent_common_git": true
+        },
+        "baseline": {
+          "head": "88b45c328bfdc8131ff0c6d139fddd8b27a4050c",
+          "exit_code": 1,
+          "cases": 10,
+          "failures": 4,
+          "errors": 0,
+          "skips": 0,
+          "raw_source_before": {
+            "files": 780,
+            "sha256": "50fe3e050a6b350943d6a77d5ef3539b00874ce6d48723465185ff5662101286"
+          },
+          "raw_source_after": {
+            "files": 780,
+            "sha256": "50fe3e050a6b350943d6a77d5ef3539b00874ce6d48723465185ff5662101286"
+          },
+          "independent_common_git": true
+        }
+      }
+    },
+    {
+      "repository": "strattester",
+      "pr": "https://github.com/YehorBabenko88/strattester/pull/72",
+      "head": "88a180b29afe9c85ddea26ef98cbe0bec8de24a6",
+      "tree": "572e530db6fca4beff5cbfa3efc9317964fca5ef",
+      "requirement": "F16_GIT_REPLACEMENT_CONFORMANCE",
+      "status": "FIX_VERIFIED_OFFLINE",
+      "variants": {
+        "fixed": {
+          "head": "88a180b29afe9c85ddea26ef98cbe0bec8de24a6",
+          "exit_code": 0,
+          "cases": 10,
+          "failures": 0,
+          "errors": 0,
+          "skips": 0,
+          "raw_source_before": {
+            "files": 765,
+            "sha256": "a8b77e61cc202f50b8f22bca85cec84cb0c7f8b6f92556c84e1b6980be3ccc01"
+          },
+          "raw_source_after": {
+            "files": 765,
+            "sha256": "a8b77e61cc202f50b8f22bca85cec84cb0c7f8b6f92556c84e1b6980be3ccc01"
+          },
+          "independent_common_git": true
+        },
+        "baseline": {
+          "head": "1722244f42d5d71a29b89bdec0e7211f2b723158",
+          "exit_code": 1,
+          "cases": 10,
+          "failures": 4,
+          "errors": 0,
+          "skips": 0,
+          "raw_source_before": {
+            "files": 763,
+            "sha256": "74348dbddd82d40dac943ed01e9fe23bb741b74d0f5a412f14143be886e153ae"
+          },
+          "raw_source_after": {
+            "files": 763,
+            "sha256": "74348dbddd82d40dac943ed01e9fe23bb741b74d0f5a412f14143be886e153ae"
+          },
+          "independent_common_git": true
+        }
+      }
+    }
+  ],
+  "scope": "Git replacement provenance only; Meta wrong-tree metadata corrected; Stratt false-dirty availability corrected. No runtime/source-authenticity or hosted CI qualification.",
+  "F16_global": "OPEN",
+  "physical": "BLOCKED",
+  "tailscale_removal": "BLOCKED",
+  "overall": "NO_GO"
+}
