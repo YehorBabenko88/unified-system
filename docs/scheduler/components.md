@@ -62,3 +62,11 @@ python -m unittest discover -s tests -p test_agent5_scheduler_components.py -v
 Windows CI runs only these isolated component tests. It does not claim fleet
 acceptance, fault-injection on office PCs, production benchmarks or backend fencing.
 Full repository results and any inherited failures are reported separately.
+
+CI explicitly checks out the pull request head SHA (push SHA for push events).
+Acceptance requires exactly 15 component tests and zero skips, failures or errors.
+The uploaded receipt includes run/attempt, workflow/event identity, expected SHA,
+before/after source HEAD/tree and tracked status, and the test-log SHA256.
+The upload action's artifact SHA256/ID/URL are published separately in the job
+summary; a receipt cannot contain the digest of an archive containing itself.
+Local execution of the same runner is labeled LOCAL and is not GitHub CI evidence.
