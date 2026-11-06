@@ -1,0 +1,75 @@
+{
+  "head": "a17f1db6b9aa04c105d2e993496026a83849ecfd",
+  "tree": "d45f5bf45d08f7d336fc82e376cc88915c57d84b",
+  "path": "grid/instrument_lifecycle.py",
+  "git_blob": "74d462ee6865ec88ed72749b3c87803bb00ff7b5",
+  "source_sha256": "a63a8a32a9a33fa940545bc51454981e785e09da0f4e3512d80c62ee5c802464",
+  "calls": [
+    {
+      "method": "fetch",
+      "sql": "SELECT symbol FROM instruments\n          WHERE status='Retired' AND retired_at < now()-($1::int*interval '1 day')",
+      "args": [
+        30
+      ]
+    },
+    {
+      "method": "fetchval",
+      "sql": "SELECT EXISTS(\n              SELECT 1 FROM strategy_jobs\n              WHERE status IN ('queued','running') AND symbols ? $1\n            )",
+      "args": [
+        "A8_SYNTHETIC_RETIRED"
+      ]
+    },
+    {
+      "method": "execute",
+      "sql": "DELETE FROM market_events WHERE symbol=$1",
+      "args": [
+        "A8_SYNTHETIC_RETIRED"
+      ]
+    },
+    {
+      "method": "execute",
+      "sql": "DELETE FROM orderbook_snapshots WHERE symbol=$1",
+      "args": [
+        "A8_SYNTHETIC_RETIRED"
+      ]
+    },
+    {
+      "method": "execute",
+      "sql": "DELETE FROM derivatives_metrics WHERE symbol=$1",
+      "args": [
+        "A8_SYNTHETIC_RETIRED"
+      ]
+    },
+    {
+      "method": "execute",
+      "sql": "DELETE FROM footprint_1m WHERE symbol=$1",
+      "args": [
+        "A8_SYNTHETIC_RETIRED"
+      ]
+    },
+    {
+      "method": "execute",
+      "sql": "DELETE FROM candles_1m WHERE symbol=$1",
+      "args": [
+        "A8_SYNTHETIC_RETIRED"
+      ]
+    },
+    {
+      "method": "execute",
+      "sql": "DELETE FROM instruments WHERE symbol=$1",
+      "args": [
+        "A8_SYNTHETIC_RETIRED"
+      ]
+    }
+  ],
+  "returned": [
+    "A8_SYNTHETIC_RETIRED"
+  ],
+  "delete_statements_recorded": 6,
+  "environment": "IN_MEMORY_FAKE_POOL_ONLY_NO_DATABASE_NO_NETWORK",
+  "active_refresh_call": "grid/coordinator.py:953",
+  "actual_historical_data_loss": "NOT_OBSERVED_NOT_TESTED",
+  "risk": "RETIREMENT_PLUS_NO_STRATEGY_JOB_TRIGGERS_HISTORY_DELETE_WITHOUT_EXPLICIT_RETENTION_OR_REPLICA_GATES",
+  "status": "FAIL_SOURCE_SAFETY_OPEN_PENDING_EXACT_FIX_REVIEW",
+  "severity": "P1"
+}

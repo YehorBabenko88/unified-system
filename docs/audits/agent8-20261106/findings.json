@@ -104,5 +104,28 @@
     "required_correction": "Expected clean source/blob binding before and after tests; source/log hashes and exact mandatory case/count/no-skip evidence.",
     "verified_fix_head": "0b3af3e872b49ed1848815f7f9ffd42444f89b24",
     "fix_evidence": "phase9/f11-independent-guards.json; phase9/original-comment-probe/ci-source-tamper-probe.json; phase9/checkout-conversion-review.json"
+  },
+  {
+    "id": "A8-F12",
+    "severity": "P2",
+    "repository": "unified-system",
+    "pr": 26,
+    "observed_head": "ca9e390203305c8662ddf98fb771ac0bd268ec49",
+    "status": "FIX_VERIFIED_DOCUMENTARY_EXACT_SOURCE",
+    "title": "Documentary candidate and ownership source bindings stale",
+    "evidence": "phase13/documentary-review.json: A8 allocation base6f89 vs actual PR21 b9b03; integration candidate branch paired with PR13 rather than26.",
+    "required_correction": "Separate historical component PR/source from current integration PR; reconcile A8 allocation base; publish exact updated metadata SHA without transferring ACK.",
+    "verified_fix_head": "084ef2ec3b42131b12af44103f2d21845bf1c0f7",
+    "fix_evidence": "phase13/ownership-correction-review.json"
+  },
+  {
+    "id": "A8-F13",
+    "severity": "P1",
+    "repository": "bybit-cluster-grid",
+    "observed_head": "a17f1db6b9aa04c105d2e993496026a83849ecfd",
+    "status": "OPEN_PENDING_EXACT_FIX_REVIEW",
+    "title": "Active refresh may purge retired history without explicit retention protection",
+    "evidence": "phase14/retired-history-probe.json: exact Git blob74d462ee6865ec88ed72749b3c87803bb00ff7b5; six DELETE statements recorded in fake pool only.",
+    "required_correction": "Keep narrow historical deletion path disabled until explicit authorized retention/consumer/replica safeguards exist; review forthcoming isolated A3 fix exact HEAD/tests. No production cleanup authorized."
   }
 ]

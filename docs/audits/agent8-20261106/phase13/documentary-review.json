@@ -1,0 +1,93 @@
+{
+  "head": "ca9e390203305c8662ddf98fb771ac0bd268ec49",
+  "tree": "dfcf0331e25da56c76a07d59bf6b84126534dff7",
+  "reviewed_source_base": "56f4215506f3a6efb7404591753facd69204a1ee",
+  "changed_paths": [
+    "MASTER-MISSION-FINAL-AUDIT.md",
+    "release/acceptance-matrix.json",
+    "release/egress-observation.json",
+    "release/evidence/integration-guard/clean.stderr",
+    "release/evidence/integration-guard/clean.stdout",
+    "release/evidence/integration-guard/hidden_tracked_comment.stderr",
+    "release/evidence/integration-guard/hidden_tracked_comment.stdout",
+    "release/evidence/integration-guard/partial-integration-ci-evidence.json",
+    "release/evidence/integration-guard/partial-integration-ci-tests.log",
+    "release/evidence/integration-guard/probe-index.json",
+    "release/evidence/integration-guard/sha256-index.json",
+    "release/evidence/own-ci-cancel-plan.json",
+    "release/evidence/own-ci-cancellation-receipt.json",
+    "release/evidence/own-ci-queue-snapshot.json",
+    "release/evidence/source-composition-focused-receipt.json",
+    "release/evidence/source-composition-focused.stderr.log",
+    "release/evidence/source-composition-focused.stdout.log",
+    "release/evidence/source-composition-receipt.json",
+    "release/evidence/source-composition.stderr.log",
+    "release/evidence/source-composition.stdout.log",
+    "release/execution-journal.json",
+    "release/integration-manifest.json",
+    "release/node-inventory.json",
+    "release/ownership-registry.json",
+    "release/skip-inventory.json"
+  ],
+  "app_tests_workflows_unchanged": true,
+  "ownership_revision": 4,
+  "ownership_sha256": "2415c81fb4099bad670312df1132cf398e70a11368eebf3c31d435626b349f38",
+  "ownership_ACK": "A8_OWN_PATH_SCOPE_ONLY_NO_GLOBAL_ACK_NO_PRIOR_TRANSFER",
+  "original_log_pairs_verified": [
+    {
+      "name": "integrated-components",
+      "head": "235c8df09f5745f7c45f55161a31d2be91b7e2d9",
+      "exit_code": 0,
+      "hashes": "VERIFIED_ORIGINAL_NOT_INDEPENDENT_EXECUTION"
+    },
+    {
+      "name": "full-suite",
+      "head": "235c8df09f5745f7c45f55161a31d2be91b7e2d9",
+      "exit_code": 0,
+      "hashes": "VERIFIED_ORIGINAL_NOT_INDEPENDENT_EXECUTION"
+    },
+    {
+      "name": "windows-fixture-targeted",
+      "head": "b76cf0774dcaca11716931a5ec4ea482e9f297b4",
+      "exit_code": 0,
+      "hashes": "VERIFIED_ORIGINAL_NOT_INDEPENDENT_EXECUTION"
+    },
+    {
+      "name": "source-composition",
+      "head": "56f4215506f3a6efb7404591753facd69204a1ee",
+      "exit_code": 1,
+      "hashes": "VERIFIED_ORIGINAL_NOT_INDEPENDENT_EXECUTION"
+    },
+    {
+      "name": "source-composition-focused",
+      "head": "56f4215506f3a6efb7404591753facd69204a1ee",
+      "exit_code": 0,
+      "hashes": "VERIFIED_ORIGINAL_NOT_INDEPENDENT_EXECUTION"
+    }
+  ],
+  "metadata_archive_members_verified": 164,
+  "guard_evidence_members_verified": 7,
+  "declared_nodes": 6,
+  "physical_or_LAN_acceptance": "NOT_QUALIFIED_ORIGINAL_OWNER_LOCAL_NODE_DATA_NOT_REACQUIRED",
+  "PC3_firewall": "DECLARED_OFF_NOT_INDEPENDENTLY_OBSERVED_BY_A8_REQUIRES_OWNER_SECURITY_REVIEW",
+  "mandatory_skips_preserved": 14,
+  "metadata_observations": [
+    {
+      "severity": "P2_METADATA",
+      "field": "ownership.A8.base_head",
+      "recorded": "6f89abed0b18d8044c9b650c356916f244af6d39",
+      "verified_pr21_base": "b9b03a1ce9f887dbe113fd22d0bda8932f46ef80",
+      "required_correction": "Reconcile current allocation base with actual Draft21 base; label historical if intended."
+    },
+    {
+      "severity": "P2_METADATA",
+      "field": "integration-manifest.modules.unified-system.pr",
+      "recorded": 13,
+      "current_integration_pr": 26,
+      "required_correction": "Separate historical component PR13 from current integration PR26 and bind candidate HEAD/tree to the intended PR."
+    }
+  ],
+  "tests_rerun": "NONE_DOCUMENTARY_ONLY",
+  "overall": "NO_GO",
+  "tailscale_removal": "BLOCKED"
+}
