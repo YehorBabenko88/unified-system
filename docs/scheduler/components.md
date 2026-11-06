@@ -73,6 +73,8 @@ Source success additionally requires every protected source/test/inventory/workf
 regular file's raw bytes to equal its committed Git blob before and after tests,
 independently of index flags. Per-file blob OID, expected/actual SHA256 and sizes
 are recorded; LF checkout is configured before checkout, never normalized in the guard.
+Every source Git subprocess explicitly disables replacement-object resolution with
+--no-replace-objects; caller environment is not the enforcement boundary.
 The upload action's artifact SHA256/ID/URL are published separately in the job
 summary; a receipt cannot contain the digest of an archive containing itself.
 Local execution of the same runner is labeled LOCAL and is not GitHub CI evidence.
