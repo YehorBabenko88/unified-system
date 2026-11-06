@@ -21,8 +21,9 @@ not a hardware benchmark calibration. Decision.rejections supplies stable reason
 No eligible node returns candidate=None: caller queues rather than overcommits.
 
 Candidate identity is per-node aggregated worker capacity for this component.
-No active-task counter, durable reservation ledger, registry, lease, worker dispatch
-or resource mutation is implemented. Snapshot admission cannot prevent concurrent
+No authoritative active-task counter, cluster reservation ledger, lease or worker
+dispatch is implemented. The separate local preparation registry/holds are described
+in durable.md and cannot grant execution. Snapshot admission alone cannot prevent concurrent
 overcommit; authority-ordered reservation CAS and current observation validation
 must occur in a future admitted backend. Capacity freshness here uses an exact
 caller-provided time and is not a qualified distributed clock protocol.
@@ -64,9 +65,14 @@ acceptance, fault-injection on office PCs, production benchmarks or backend fenc
 Full repository results and any inherited failures are reported separately.
 
 CI explicitly checks out the pull request head SHA (push SHA for push events).
-Acceptance requires exactly 15 component tests and zero skips, failures or errors.
+The original suite had15 cases; inventory v2 adds15 durable cases and requires
+the exact30 declared IDs with zero skips, failures or errors (no loose minimum).
 The uploaded receipt includes run/attempt, workflow/event identity, expected SHA,
 before/after source HEAD/tree and tracked status, and the test-log SHA256.
+Source success additionally requires every protected source/test/inventory/workflow
+regular file's raw bytes to equal its committed Git blob before and after tests,
+independently of index flags. Per-file blob OID, expected/actual SHA256 and sizes
+are recorded; LF checkout is configured before checkout, never normalized in the guard.
 The upload action's artifact SHA256/ID/URL are published separately in the job
 summary; a receipt cannot contain the digest of an archive containing itself.
 Local execution of the same runner is labeled LOCAL and is not GitHub CI evidence.
