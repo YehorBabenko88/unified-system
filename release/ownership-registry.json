@@ -1,6 +1,6 @@
 {
   "schema": "unified.ownership.v1",
-  "revision": 7,
+  "revision": 8,
   "root_owner": "ROOT",
   "max_internal_subagents": 3,
   "execution": "EIGHT_EXISTING_USER_OWNED_THREADS_NO_DUPLICATE_INTERNAL_AGENTS",
@@ -216,7 +216,7 @@
       "repository": "unified-system",
       "branch": "feature/agent5-scheduler-components-20261106",
       "worktree": "C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-5-resource-aware-distributed/work/scheduler-components-feature",
-      "draft_pr": null,
+      "draft_pr": 24,
       "base_head": "2df6f5c2f77f4d883bad1a8623dd8375db529be0",
       "allocation_state": "AGENT_CONFIRMED_ISOLATED_FEATURE_CHECKOUT",
       "allowed_files": [
@@ -243,7 +243,20 @@
         "No edit outside this worktree or concurrent physical test",
         "Send exact HEAD/tree, test inventory, CI run/attempt/jobs and SHA256 evidence"
       ],
-      "user_owned_thread_id": "01a1b15e-92cf-7080-8745-7bcd80e5022f"
+      "user_owned_thread_id": "01a1b15e-92cf-7080-8745-7bcd80e5022f",
+      "head_before_durable_slice": "942e5f1d1efb28f97fb5eaae7a216424938dd738",
+      "current_slice": {
+        "allowed_files": [
+          "scheduler_components/durable.py",
+          "tests/test_agent5_scheduler_components.py",
+          "docs/scheduler/durable.md",
+          ".github/workflows/agent5-components.yml"
+        ],
+        "scope": "LOCAL_NONAUTHORITATIVE_PREPARATION_JOURNAL_HOLDS_OUTBOX_ONLY",
+        "existing15cases": "PRESERVE_IDS_ASSERTIONS_AND_EXACT_SOURCE_EVIDENCE",
+        "new_case_inventory": "EXPLICIT_VERSIONED_IDS_AND_EXACT_COUNT",
+        "effects": "NO_NETWORK_WORKER_DISPATCH_NO_AUTHORITY_GRANTS_NO_STORAGE_PUBLICATION_NO_SHARED_WIRING"
+      }
     },
     {
       "agent_id": "A6",
@@ -434,6 +447,6 @@
     ],
     "scope": "OWN_ALLOCATION_ONLY_NOT_TRANSFERRED_TO_REVISION_3"
   },
-  "supersedes_scope_only_not_ack_transfer": "f9779d6ac23e7321b25f4fc07bf9034838b3efd76a9682ea7c3a2eb70434d886",
-  "fresh_ack_status": "PENDING_EXACT_REVISION7_NO_PRIOR_ACK_TRANSFER"
+  "supersedes_scope_only_not_ack_transfer": "2fda0830e1f5618cadfec40ec868964bd89a8e31815e76d028d18e4ad181a0d4",
+  "fresh_ack_status": "PENDING_EXACT_REVISION8_NO_PRIOR_GLOBAL_ACK_TRANSFER"
 }

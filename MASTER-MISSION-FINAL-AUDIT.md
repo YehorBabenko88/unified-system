@@ -73,7 +73,7 @@ Ownership now distinguishes Agent8 historical audit head from actual PR21base/ma
 
 Existingb12 read-only deployment interlock and pinnedLANobserver were merged withoutconflict. Full local Windows suite on exact consolidatedsource 0346018b58ed612dbe62fba7861f3e0b6a63ee94:812tests,0failures/errors,14explicitunwaivedskips; Python sourcepre/post hashes unchanged. This supersedes no older receipt; original755 result and68targeted result are retained with their ownpins. No ordinaryworkload/office runtime was installed.
 
-Grid263/ec967 nowproposed instead of262: A8 independently verified original6DELETE→0poolcalls,4baseline failures→16passingcases/zero skips, unchanged schema/reconcile/signature. Disabledautomaticpurge is not a fullretentionprotocol or deployedrepair.
+Grid263/ec967 nowproposed instead of262: A8 independently verified original6DELETEâ†’0poolcalls,4baseline failuresâ†’16passingcases/zero skips, unchanged schema/reconcile/signature. Disabledautomaticpurge is not a fullretentionprotocol or deployedrepair.
 
 Six-repository secret-pattern triage found four publiclycommitted historical Meta loopback TLS fixturekeys. A8 classified them test-only, not confirmedproductionsecrets, and identified nooperationaltrustinstallation. No privatebytes copied or printed. Finalruntimeartifact exclusion/inventory anddependencylicense review remain unqualified; no historyrewrite/rotation justified bythis scan.
 
@@ -88,3 +88,7 @@ ROOT selected unified.authority.event-ordered.v3 as a NEW profile, with exact pr
 All 444 PR heads in the second repository snapshot now have paginated original check/run metadata archived with verified hashes in release/ci-all-open-heads.json. This is metadata coverage only: mandatory case/attempt/skip qualification and artifact-content admission remain incomplete. Math PR113 was created after that snapshot and is recorded separately.
 
 Math PR113 dbb9bb1da9b180a8bb9f1d5401f1117894256941 has independent A8 source/model review for one disposable hosted Windows owned-child loader observation. Exact source/tree/workflow, actual event-merge workflow identity, reviewer pin, limits and one-activation authorization are recorded in release/diagnostic-authorizations/math113-dbb9bb1.json. This diagnostic cannot confer native acceptance, production approval or office execution permission. Activation/result must be recorded separately; no automatic retries after an unknown result.
+
+## Selected LAN routes and bounded DNS observation
+
+A second six-node sequential read-only observation verified actual Windows selected routes: LS5 to all five workers, and every worker back to LS5, use directly connected 192.168.2.0/24 hardware interfaces with next-hop0.0.0.0. LS7 uses WLAN; other observed links use Ethernet. All six resolved one bounded www.microsoft.com A query without component errors. Original executed observer, stdout/stderr, timestamps and hashes are preserved under release/evidence/route-readonly-20261106. This strengthens point-in-time route/SSH evidence but does not prove application mTLS, discovery, sustained load, failure independence or Bybit destination egress. Tailscale stayed installed/running; removal remains BLOCKED. No network configuration or services were changed.

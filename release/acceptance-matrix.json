@@ -16,7 +16,10 @@
       "evidence": [
         "repository-inventory.json",
         "source-path-audit.json",
-        "evidence/github-original-metadata-index.json"
+        "evidence/github-original-metadata-index.json",
+        "ci-all-open-heads.json",
+        "repository-inventory-phase0-current.json",
+        "directive-requirement-register.json"
       ],
       "reason": "Fresh metadata inventory complete; full source/contract/migration/dirty-state qualification remains incomplete"
     },
@@ -32,9 +35,10 @@
       "prior_status_not_adopted": "IN_PROGRESS",
       "evidence": [
         "ci-matrix.json",
-        "skip-inventory.json"
+        "skip-inventory.json",
+        "ci-metadata-summary.json"
       ],
-      "reason": "Current hosted matrices queued or failed; original workflow/case/attempt/artifact qualification incomplete"
+      "reason": "All444 snapshot open-head check metadata collected. Mandatory source/case/attempt/skip/log/artifact-content qualification remains incomplete. Later heads require separately timestamped evidence."
     },
     {
       "id": "P0-03",
@@ -47,11 +51,14 @@
       "physically_verified": false,
       "prior_status_not_adopted": "FAIL",
       "evidence": [
-        "https://github.com/YehorBabenko88/math/actions/runs/42246112894/job/127988647557"
+        "https://github.com/YehorBabenko88/math/actions/runs/42246112894/job/127988647557",
+        "diagnostic-authorizations/math113-dbb9bb1.json",
+        "diagnostic-authorizations/math113-activation.json"
       ],
       "reason": "Actual hosted Medium-native job127988647557 reports DLL_INITIALIZATION_FAILED; inventory fix does not qualify native startup",
       "observed_native_result": "FAIL_AT_5f93cf91acc04c6561da2e940cad87f9ac41baf2",
-      "current_candidate_native": "NOT_QUALIFIED"
+      "current_candidate_native": "NOT_QUALIFIED",
+      "diagnostic_run": "42274233717_QUEUED_NONQUALIFYING"
     },
     {
       "id": "P0-04",
@@ -362,8 +369,11 @@
       "windows_verified": false,
       "physically_verified": false,
       "prior_status_not_adopted": "IN_PROGRESS",
-      "evidence": [],
-      "reason": "Current integrated candidate has not passed complete source/runtime/CI gates"
+      "evidence": [
+        "node-inventory.json",
+        "lan-route-observation.json"
+      ],
+      "reason": "Six-node read-only inventory and route/DNS/pinned SSH observations complete at stated times; installed runtime, current capacity/load and all service/backup/security admission remain unqualified."
     },
     {
       "id": "P3-02",
@@ -1362,5 +1372,11 @@
     "Grid262_a17f1db": "A8_PYTEST9_2_RED15PASS4ERRORS_TO_GREEN15PASS_ZERO_SKIP",
     "Math112_917d996": "A8_13PASS_ZERO_SKIP_RAW188_PROOF_PRESERVED",
     "scope": "OFFLINE_ONLY_NO_HOSTED_RUNTIME_PHYSICAL_PROMOTION"
+  },
+  "latest_directive_register": {
+    "path": "release/directive-requirement-register.json",
+    "sha256": "dafb89035c3947358e97b21b7971a17e14d04ec74e2be84a0ddba29f2d53ae56",
+    "items": 395,
+    "scope": "Granular latest owner directive, no requirements discarded; semantic evidence mapping incomplete"
   }
 }
