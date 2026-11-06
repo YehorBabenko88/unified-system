@@ -5,6 +5,14 @@ $started = [DateTime]::UtcNow.ToString('o')
 function Probe-Public([string]$HostName, [string]$Url, [bool]$Bybit) {
     $watch=[Diagnostics.Stopwatch]::StartNew()
     $result = [ordered]@{host=$HostName; dns='UNAVAILABLE'; tcp443='NOT_RUN'; https='NOT_RUN'; api='NOT_RUN'}
+    # Only the fixed general connectivity observation is admitted here. The
+    # provider operation has no qualified shared-quota adapter yet. Never use
+    # a caller flag, environment switch or failed check to bypass that boundary.
+    if ($Bybit -or $HostName -cne 'www.microsoft.com' -or $Url -cne 'https://www.microsoft.com/') {
+        $result.dns='NOT_RUN'
+        $result.reason='BYBIT_BUDGET_ADAPTER_NOT_ADMITTED'
+        return $result
+    }
     try {
         $task = [Net.Dns]::GetHostAddressesAsync($HostName)
         if (-not $task.Wait(5000)) { throw 'DNS_DEADLINE' }
