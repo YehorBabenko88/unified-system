@@ -1,0 +1,27 @@
+name: Agent 1 network safety MODEL ONLY
+on:
+  push:
+    branches: ['test/agent1-network-safety-models-20261106']
+  pull_request:
+    paths:
+      - 'tests/network_model/**'
+      - 'docs/network/agent1-models/**'
+      - '.github/workflows/agent1-network-model.yml'
+permissions:
+  contents: read
+jobs:
+  model:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+        python: ['3.11', '3.13']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: python -m unittest discover -s tests/network_model -v
+      - name: Synthetic report (not runtime or physical evidence)
+        run: python tests/network_model/run_evidence.py --source '${{ github.sha }}'

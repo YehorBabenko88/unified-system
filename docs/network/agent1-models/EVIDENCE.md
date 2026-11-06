@@ -1,0 +1,13 @@
+# Local evidence — MODEL_ONLY
+
+Base HEAD b12c6c24eeb2c59aa099f1c516d77508f36b20a6, tree41912cd64982d152417dcf74b250bc056142a450; separate branch test/agent1-network-safety-models-20261106. Actual workspace work/network-safety-models was clean at creation. Native app worktree API did not return/produce a worktree; explicit allocated Git fallback used. No baseline or shared files changed.
+
+Local Windows Python3.15.2: existing `python -m unittest discover -s tests -p 'test_network*.py' -v` passed44 tests,0 skipped,13.861s before model edits. This legacy suite includes inert shell/fixture observer tests; it is not actual office SSH or transport admission.
+
+RED: new model suite initially failed with ModuleNotFoundError:model before implementation. Additional behavioural RED caught cancelled-ID replay returning RESERVED instead of DENIED. A progress oracle expecting all control bytes by3s was corrected to4s after hand calculation200burst+200bytes/s*4s=1000; diagnostic at3s was8control+10live+10bulk. No actual bandwidth or production code was involved.
+
+GREEN before independent review:18 model tests,0failures/0skips via `python -m unittest discover -s tests/network_model -v`; `git diff --check` clean. Tests include conservative class denial with no partial debit, explicit queue rejection, loss charge/no automatic retry, six-node ten-instrument interval envelopes, LS5 loss/fixed ceilings/empty restart/gradual recovery, shared synthetic NAT, closed/no-quorum/unknown egress, sticky UNKNOWN through restart/failover, no consumed refund/replay send, persistent cooldown/backward time and malformed checkpoint denial. Hosted Windows/Ubuntu CI was NOT_RUN at this local record; exact final run/commit evidence is reported separately after publication.
+
+Synthetic seed41 report before review, virtual0..3000ms with LS5loss500/restart1000 and load through2000ms:217 attempted packets,182 delivered,31lost,4inflight,115still queued,928explicit backpressure rejections; peak queue3000bytes/node. Attempted bytes LS52700,each survivor3800. Synthetic latency182samples: p50=35ms,p95=p99=40ms. All are configured virtual model outcomes, not measured network performance. Cost is charged on attempts, deliveries/loss/inflight remain separate. Report prints MODEL_ONLY and source label explicitly; rerun against final commit for authoritative test-branch evidence.
+
+No real sockets/provider requests/network resets, product imports or office actions. JSON checkpoint checksum is not protected durable authority or malicious-tamper protection. No TLS/actual NBM/Bybit/Consul/Windowsnative/physical acceptance claim. Direct user full-LAN implementation design approval remains pending and untouched by this test preparation.
