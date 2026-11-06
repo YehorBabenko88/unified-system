@@ -45,13 +45,13 @@ jobs:
           import unittest
 
           def git(*args):
-              return subprocess.check_output(['git', *args], text=True).strip()
+              return subprocess.check_output(['git', '--no-replace-objects', *args], text=True).strip()
 
           def source():
               head = git('rev-parse', 'HEAD')
               prefixes = ['scheduler_components', 'tests/test_agent5_scheduler_components.py',
                           'docs/scheduler/component-test-inventory-v2.json', '.github/workflows/agent5-components.yml']
-              entries = subprocess.check_output(['git', 'ls-tree', '-rz', '--full-tree', head, '--', *prefixes])
+              entries = subprocess.check_output(['git', '--no-replace-objects', 'ls-tree', '-rz', '--full-tree', head, '--', *prefixes])
               files = []
               root = Path.cwd()
               for entry in entries.split(b'\0'):
@@ -67,7 +67,7 @@ jobs:
                   try:
                       if kind != 'blob' or mode not in ('100644', '100755'):
                           raise ValueError('Not a regular committed blob')
-                      committed = subprocess.check_output(['git', 'cat-file', 'blob', oid])
+                      committed = subprocess.check_output(['git', '--no-replace-objects', 'cat-file', 'blob', oid])
                       item.update(committed_bytes=len(committed), committed_sha256=hashlib.sha256(committed).hexdigest())
                       parts = Path(relative).parts
                       if Path(relative).is_absolute() or '..' in parts:
@@ -99,7 +99,7 @@ jobs:
                           unexpected.append(relative)
               return {'head': head, 'tree': git('rev-parse', head + '^{tree}'),
                       'tracked_status': git('status', '--porcelain', '--untracked-files=no'),
-                      'raw_binding': 'REGULAR_FILE_GIT_BLOB_V1_NO_NORMALIZATION',
+                      'raw_binding': 'REGULAR_FILE_GIT_BLOB_V2_NO_REPLACE_NO_NORMALIZATION',
                       'protected_files': sorted(files, key=lambda item: item['path']),
                       'unexpected_protected_files': sorted(unexpected),
                       'protected_inputs_valid': required <= expected_paths and not unexpected
