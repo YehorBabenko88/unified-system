@@ -1,6 +1,6 @@
 {
   "schema": "unified.ownership.v1",
-  "revision": 6,
+  "revision": 7,
   "root_owner": "ROOT",
   "max_internal_subagents": 3,
   "execution": "EIGHT_EXISTING_USER_OWNED_THREADS_NO_DUPLICATE_INTERNAL_AGENTS",
@@ -103,6 +103,28 @@
           ],
           "allowed_new_path_prefixes": [],
           "scope": "FIXTURE_ONLY_NO_PRODUCT_OR_ADMISSION_WEAKENING"
+        },
+        {
+          "repository": "bybit-cluster-grid",
+          "branch": "feature/agent2-event-ordered-v3-20261106",
+          "worktree": "C:/Users/LS-5/.codex/worktrees/agent2-grid-admission-fixture-20261106/bybit-cluster-grid",
+          "base_head": "ec967b3ebb67bb9f04d0d82c78bba5b4245a3333",
+          "draft_pr": null,
+          "allowed_files": [
+            "grid/coordination_event_v3.py",
+            "tests/coordination/test_event_ordered_v3.py",
+            "scripts/agent2-event-v3/verify_three.py",
+            "scripts/agent2-event-v3/requirements.lock",
+            "docs/coordination/event-ordered-v3.md",
+            ".github/workflows/agent2-event-v3.yml"
+          ],
+          "allowed_new_path_prefixes": [
+            "tests/coordination/event_v3/"
+          ],
+          "scope": "INDEPENDENT_NEW_PROFILE_ADAPTER_AND_ISOLATED_HARNESS_NO_EXISTING_WIRING",
+          "allocation_state": "CLEAN_EXISTING_OWNED_WORKTREE_REUSED_NEW_BRANCH_REPORTED_BY_OWNER",
+          "historical_fixture_branch": "fix/agent2-owned-control-source-teardown-20261106",
+          "historical_fixture_branch_preserved": true
         }
       ],
       "head": "0b3af3e872b49ed1848815f7f9ffd42444f89b24"
@@ -320,6 +342,25 @@
           "allowed_new_path_prefixes": [],
           "head": "88b45c328bfdc8131ff0c6d139fddd8b27a4050c",
           "draft_pr": 77
+        },
+        {
+          "repository": "math",
+          "branch": "agent7/math-loader-init-diagnostics-20261106",
+          "worktree": "C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-7-distributed-research-math/work/audit-math-loader-init-diag",
+          "base_head": "917d99672e37db59835a8ab23b03c99826b12d78",
+          "head": "dbb9bb1da9b180a8bb9f1d5401f1117894256941",
+          "draft_pr": 113,
+          "allowed_files": [
+            "tests/fixtures/agent7-loader-init/HostedLoaderInitTrace.cs",
+            "scripts/agent7-loader-init/build.ps1",
+            "scripts/agent7-loader-init/report.mjs",
+            ".github/workflows/agent7-loader-init-trace.yml",
+            "tests/agent7-replay-research.test.mjs",
+            "docs/audits/agent7-loader-init-trace-evidence.json"
+          ],
+          "scope": "ONE_NON_QUALIFYING_HOSTED_OBSERVATION_ONLY_NO_OFFICE_EXECUTION",
+          "root_authorization_path": "release/diagnostic-authorizations/math113-dbb9bb1.json",
+          "root_authorization_sha256": "3df3720c7efbf0ad71ea0ac84e7001e37ea8c2deaf105076ff473f6919ac48a2"
         }
       ],
       "head": "917d99672e37db59835a8ab23b03c99826b12d78"
@@ -393,6 +434,6 @@
     ],
     "scope": "OWN_ALLOCATION_ONLY_NOT_TRANSFERRED_TO_REVISION_3"
   },
-  "supersedes_scope_only_not_ack_transfer": "0ef0dde1f6b238e87b60e2e21eeb13466f6b5e39c3815d91b39890134c982bdd",
-  "fresh_ack_status": "PENDING_EXACT_REVISION6_NO_PRIOR_ACK_TRANSFER"
+  "supersedes_scope_only_not_ack_transfer": "f9779d6ac23e7321b25f4fc07bf9034838b3efd76a9682ea7c3a2eb70434d886",
+  "fresh_ack_status": "PENDING_EXACT_REVISION7_NO_PRIOR_ACK_TRANSFER"
 }

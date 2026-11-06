@@ -141,7 +141,7 @@
   "physical_fault_injection_authorized": false,
   "tailscale_removal_authorized": false,
   "go": "NO-GO",
-  "ownership_registry_sha256": "f9779d6ac23e7321b25f4fc07bf9034838b3efd76a9682ea7c3a2eb70434d886",
+  "ownership_registry_sha256": "2fda0830e1f5618cadfec40ec868964bd89a8e31815e76d028d18e4ad181a0d4",
   "independent_audit_checkpoint": {
     "head": "ac869aae349483050f368cc59b76cbbedd8265e6",
     "scope": "PR26_SOURCE56f4215_AND_GRIDa17f1db_ONLY",
@@ -163,5 +163,23 @@
     "operational_identity_use": "FORBIDDEN",
     "actual_release_artifact_scan": "NOT_RUN",
     "historical_evidence_preserved": true
+  },
+  "contract_design_decisions": {
+    "authority_event_ordered_v3": {
+      "profile": "unified.authority.event-ordered.v3",
+      "proposal_path": "release/contracts/authority-event-ordered-v3/PROPOSAL.md",
+      "proposal_sha256": "d9d02baec67d5efbdb3124626d6e9d017cc9d5a2d19025f9293f4cc9f789a8d5",
+      "root_approval_path": "release/contracts/authority-event-ordered-v3/ROOT-DESIGN-APPROVAL.json",
+      "root_approval_sha256": "11bca1e12f7bd482b14841e1b4252d97e46e5142875a77590185714db814297a",
+      "scope": "NEW_PROFILE_DESIGN_ONLY_EXACT_PEER_ACK_DIGESTS_IN_APPROVAL",
+      "old_profile_changed": false,
+      "wire_and_runtime_acceptance": "BLOCKED"
+    }
+  },
+  "metadata_snapshot_coverage": {
+    "path": "release/ci-all-open-heads.json",
+    "sha256": "03eaad2557e6a3cad8911601b69e1b03e8d565e085424bb4cd10121aca3ff51a",
+    "heads": 444,
+    "scope": "CHECK_RUN_METADATA_NOT_MANDATORY_LOG_CASE_ARTIFACT_QUALIFICATION"
   }
 }
