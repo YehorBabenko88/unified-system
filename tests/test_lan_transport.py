@@ -156,6 +156,55 @@ class TLSIsolationTests(unittest.TestCase):
         self.assertEqual(client.memory.used,0)
         self.assertEqual(server.memory.used,0)
 
+    def test_active_control_heartbeats_keep_idle_data_channel_healthy(self):
+        with patch('unified_system.lan_transport.HEARTBEAT_INTERVAL',.03),patch('unified_system.lan_transport.IDLE_TIMEOUT',.15):
+            client,server,c,s=self.pair()
+            time.sleep(.5)
+            self.assertFalse(c.closed,c.error);self.assertFalse(s.closed,s.error)
+            c.send(b'after idle');self.assertEqual(s.receive().payload,b'after idle')
+
+    def test_revoked_pin_during_final_hello_cannot_install_connection(self):
+        doc=self.document();server=self.transport('LS5',PeerRegistry.from_document(doc));port=server.listen()
+        doc['nodes'][0]['endpoints'][0]['port']=port
+        client=self.transport('PC1',PeerRegistry.from_document(doc));original=client._hello
+        def hello(*args,**kwargs):
+            result=original(*args,**kwargs)
+            if args[2]=='data':
+                revised=json.loads(json.dumps(doc));revised['generation']=2
+                revised['nodes'][0]['fingerprints']=['0'*64]
+                client.update_registry(PeerRegistry.from_document(revised))
+            return result
+        out=queue.Queue()
+        def accept():
+            try:out.put(server.accept(deadline=time.monotonic()+3))
+            except Exception as exc:out.put(exc)
+        t=threading.Thread(target=accept);t.start()
+        try:
+            with patch.object(client,'_hello',side_effect=hello),self.assertRaises(TransportError):
+                client.connect('LS5',deadline=time.monotonic()+3)
+        finally:t.join(4)
+
+    def test_sender_waiting_for_memory_does_not_reset_stream_created_while_waiting(self):
+        client,server,c,s=self.pair();waiting=threading.Event();result=queue.Queue()
+        held=8388608-1;self.assertTrue(client.memory.take(held));original=client.memory.take
+        def take(size):
+            if size==64:waiting.set()
+            return original(size)
+        def send():
+            try:result.put(c.send(b'w'*64,stream_id=3,deadline=time.monotonic()+3))
+            except Exception as exc:result.put(exc)
+        with patch.object(client.memory,'take',side_effect=take):
+            t=threading.Thread(target=send);t.start()
+            try:
+                self.assertTrue(waiting.wait(1))
+                c.send(b'x',stream_id=3,deadline=time.monotonic()+2)
+                self.assertEqual(s.receive().payload,b'x')
+            finally:client.memory.release(held)
+            t.join(4)
+        out=result.get(timeout=1)
+        if isinstance(out,Exception):raise out
+        self.assertEqual(s.receive().payload,b'w'*64)
+
     def test_credit_backpressure_and_control_lane_while_data_waits(self):
         client,server,c,s=self.pair()
         c.send(b'x'*65536,deadline=time.monotonic()+2)

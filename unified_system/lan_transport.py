@@ -27,6 +27,7 @@ MAX_QUEUE=64
 MAX_PEER_BYTES=1048576
 MAX_NODE_BYTES=8388608
 HEARTBEAT_INTERVAL=10
+IDLE_TIMEOUT=30
 _PREFIX=struct.Struct('!HI')
 _ROLES={'control':'control','live':'ingestion','bulk':'storage'}
 
@@ -178,10 +179,12 @@ class _Memory:
             assert self.used>=0
 
 
-def _read_exact(sock,n,deadline):
+def _read_exact(sock,n,deadline,on_idle=None):
     out=bytearray()
     while len(out)<n:
         remaining=deadline-time.monotonic()
+        if remaining<=0 and not out and on_idle is not None and on_idle():
+            deadline=time.monotonic()+IDLE_TIMEOUT;remaining=IDLE_TIMEOUT
         _need(remaining>0,'DEADLINE')
         sock.settimeout(min(remaining,.25))
         try: chunk=sock.recv(n-len(out))
@@ -190,10 +193,10 @@ def _read_exact(sock,n,deadline):
     return bytes(out)
 
 
-def _read_frame(sock,budget,peer,deadline):
-    hsize,size=_PREFIX.unpack(_read_exact(sock,_PREFIX.size,deadline))
+def _read_frame(sock,budget,peer,deadline,on_idle=None):
+    hsize,size=_PREFIX.unpack(_read_exact(sock,_PREFIX.size,deadline,on_idle))
     _need(1<=hsize<=MAX_CONTROL and 0<=size<=MAX_FRAME,'FRAME_BOUNDS')
-    body_deadline=min(deadline,time.monotonic()+5)
+    body_deadline=time.monotonic()+5 if on_idle is not None else min(deadline,time.monotonic()+5)
     header=_json(_read_exact(sock,hsize,body_deadline))
     _need(type(header) is dict and set(header)=={'kind','stream','traffic_class','message_id','value'},'PROTOCOL_REJECTED')
     _need(type(header['traffic_class']) is str and header['traffic_class'] in _ROLES and type(header['stream']) is int and 0<=header['stream']<=MAX_STREAMS)
@@ -236,9 +239,11 @@ class Delivery:
 class Connection:
     def __init__(self,owner,peer,nonce,channels):
         self.owner,self.peer_id,self.nonce=owner,peer,nonce
+        self.admitted_peer=owner.registry.peer(peer);self.admitted_local=owner.registry.peer(owner.node_id)
         self.channels=channels;self.locks={k:threading.Lock() for k in channels}
         self.cv=threading.Condition(threading.RLock());self.closed=False;self.error=None
         self.closed_event=threading.Event();self.created_at=time.monotonic()
+        self.last_rx=self.created_at
         self.outgoing=deque();self.incoming=deque();self.queued_bytes=0
         self.tx_streams={};self.rx_streams={};self.reserved=0;self.control_held=0
         self.threads=[]
@@ -257,7 +262,8 @@ class Connection:
 
     def _current(self):
         _need(not self.closed,'DISCONNECTED')
-        self.owner.registry.peer(self.peer_id)
+        registry=self.owner.registry
+        _need(registry.peer(self.peer_id)==self.admitted_peer and registry.peer(self.owner.node_id)==self.admitted_local,'POLICY_REVOKED')
 
     def _emit(self,kind,stream,cls,payload=b'',value=0,*,deadline=None,cancel=None,message_id=None):
         self._current();channel='data' if kind=='APP' and cls!='control' else 'control'
@@ -282,6 +288,11 @@ class Connection:
                 if cancel is not None and cancel.is_set():raise TransportError('CANCELLED')
                 _need(time.monotonic()<deadline,'OVERLOADED')
                 self.cv.wait(.01);self._current()
+            # Capacity wait releases cv; another sender may have opened this
+            # stream in the meantime. Never replace its cumulative credit state.
+            prior=self.tx_streams.get(stream)
+            if prior is not None and prior['cls']!=traffic_class:
+                self.owner.memory.release(len(payload));raise TransportError('STREAM_CLASS_CHANGED')
             self.outgoing.append(job);self.queued_bytes+=len(payload)
             if stream:
                 if prior is None:self.tx_streams[stream]=dict(cls=traffic_class,grant=0,sent=0,opened=False)
@@ -336,7 +347,9 @@ class Connection:
     def _reader(self,channel):
         try:
             while not self.closed:
-                h,payload=_read_frame(self.channels[channel],self.owner.budget,self.peer_id,time.monotonic()+30)
+                h,payload=_read_frame(self.channels[channel],self.owner.budget,self.peer_id,time.monotonic()+IDLE_TIMEOUT,
+                                      on_idle=lambda:time.monotonic()-self.last_rx<IDLE_TIMEOUT)
+                self.last_rx=time.monotonic()
                 self._current();kind=h['kind'];stream=h['stream'];cls=h['traffic_class']
                 if kind in ('PING','PONG'):
                     _need(channel=='control' and cls=='control' and stream==0 and h['value']==0 and not payload)
@@ -464,6 +477,7 @@ class LanTransport:
             _need(self.auth_failures.get(peer)!=self.registry.digest,'AUTH_REJECTED')
             _need(peer!=self.node_id and peer not in self.connecting,'CONNECTING')
             entry=self.registry.peer(peer)
+            admitted=self.registry
             _need(len([c for c in self.connections.values() if not c.closed])<5,'CONNECTION_LIMIT')
             self.connecting.add(peer)
         channels={};raw=None;acquired=False
@@ -477,10 +491,12 @@ class LanTransport:
                 _need(time.monotonic()<deadline,'DEADLINE')
                 raw=socket.create_connection((ep.address,ep.port),timeout=max(.001,deadline-time.monotonic()))
                 tls=self.client_context.wrap_socket(raw,server_hostname=None);raw=None
-                channels[name]=tls;self.registry.authenticate(tls,peer)
+                channels[name]=tls;admitted.authenticate(tls,peer)
                 self._hello(tls,peer,name,nonce,deadline)
-            connection=Connection(self,peer,nonce,channels)
-            with self.lock:self.connections[peer]=connection
+            with self.lock:
+                _need(self.registry.digest==admitted.digest,'POLICY_REVOKED')
+                for tls in channels.values():self.registry.authenticate(tls,peer)
+                connection=Connection(self,peer,nonce,channels);self.connections[peer]=connection
             return connection
         except ssl.SSLError as exc:
             self.auth_failures[peer]=self.registry.digest
@@ -502,12 +518,13 @@ class LanTransport:
         deadline=time.monotonic()+5 if deadline is None else deadline
         channels={};identity=None;nonce=None;raw=None
         with self.accept_lock:
+            with self.lock:admitted=self.registry
             try:
                 for expected in ('control','data'):
                     self.listener.settimeout(max(.001,deadline-time.monotonic()))
                     raw,_=self.listener.accept();raw.settimeout(max(.001,deadline-time.monotonic()))
                     tls=self.server_context.wrap_socket(raw,server_side=True);raw=None
-                    channels[expected]=tls;peer=self.registry.authenticate(tls)
+                    channels[expected]=tls;peer=admitted.authenticate(tls)
                     h,payload=_read_frame(tls,self.budget,peer,deadline);hello=_json(payload)
                     _need(type(hello) is dict and set(hello)=={'node','peer','channel','nonce','version'})
                     _need(h['kind']=='HELLO' and h['traffic_class']=='control' and h['stream']==0 and h['value']==0)
@@ -517,6 +534,8 @@ class LanTransport:
                     reply=_canonical(dict(node=self.node_id,peer=peer,channel=expected,nonce=nonce,version=1))
                     _write_frame(tls,threading.Lock(),self.budget,peer,'HELLO',0,'control',reply,0,deadline)
                 with self.lock:
+                    _need(self.registry.digest==admitted.digest,'POLICY_REVOKED')
+                    for tls in channels.values():self.registry.authenticate(tls,identity)
                     _need(identity not in self.connections or self.connections[identity].closed,'DUPLICATE_CONNECTION')
                     _need(len([c for c in self.connections.values() if not c.closed])<5,'CONNECTION_LIMIT')
                     connection=Connection(self,identity,nonce,channels);self.connections[identity]=connection
