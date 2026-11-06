@@ -1,5 +1,5 @@
 {
-  "checked_utc": "2026-11-06T17:35:42.512555+00:00",
+  "checked_utc": "2026-11-06T18:11:19.737543+00:00",
   "RELEASE_MANIFEST_STATUS": "PRESENT_PREPARATION_ONLY_NOT_APPROVED_NOT_INSTALLABLE",
   "NODE_INVENTORY_STATUS": "SIX_REDACTED_OWNER_OBSERVATIONS_PRESENT_ORIGINAL_RAW_NOT_REACQUIRED_BY_A8_NOT_ADMITTED",
   "CONTRACT_STATUS": {
@@ -150,7 +150,9 @@
     "phase14/retired-history-probe.json",
     "phase13/ownership-correction-review.json",
     "phase15/history-safeguard-review.json",
-    "phase16/tls-fixture-review.json"
+    "phase16/tls-fixture-review.json",
+    "phase17/loader-pre-dispatch-review.json",
+    "phase17/source-review-ack.json"
   ],
   "NEXT_ACTIONS": [
     "Review terminal exact-source Windows CI logs/artifacts when available; queued/cancelled is not PASS.",
@@ -167,5 +169,27 @@
     "key_bytes_exported": false,
     "system_trust_changes": false,
     "scope": "STATIC_FOUR_NAMED_PATHS_ONLY"
+  },
+  "Math113_PRE_DISPATCH_SOURCE_REVIEW": {
+    "schema": "a8.math-loader-source-review.v1",
+    "requirement": "BOUNDED_PRE_DISPATCH_SOURCE_MODEL_REVIEW_ONLY",
+    "repository": "YehorBabenko88/math",
+    "pr": 113,
+    "head": "40c158797dd22581ae20dea03b2aa9f06dda8042",
+    "tree": "09c863c289db2c1c1d0d6e158ddccc21a6334ff4",
+    "base": "917d99672e37db59835a8ab23b03c99826b12d78",
+    "workflow": ".github/workflows/agent7-loader-init-trace.yml",
+    "A8_source_review": "ACK",
+    "scope": "ONE_NONQUALIFYING_OBSERVATION_ON_DISPOSABLE_GITHUB_HOSTED_WINDOWS_ONLY",
+    "ROOT_concrete_authorization": "REQUIRED_SEPARATE_PENDING_NOT_REPLACED_BY_THIS_RECORD",
+    "dispatch_by_A8": "NOT_RUN",
+    "native_acceptance": "BLOCKED",
+    "physical": "BLOCKED",
+    "production": "NOT_AUTHORIZED",
+    "workflow_input_digest": "REFERENCE_ONLY_NOT_SELF_AUTHORIZATION",
+    "raw_git_files_verified_after": 689,
+    "source_review_sha256": "c592caf2e2c648bd32776c496b07b58e6e833b1c6f9ef36927601b87d8c458ba",
+    "test_log_sha256": "61ff75c2e8149d5510726f924c7f1d1b7ebd5dbf0d6e6b97411a642da0c75feb",
+    "model_log_sha256": "b4578e0367576e41d26ecc04b5b836ada3f64358ae31a2bcc0161f5ec4a173d0"
   }
 }
