@@ -280,5 +280,45 @@
       "native identity/authority/containment",
       "executable integration qualification"
     ]
+  },
+  "independent_stage1_review": {
+    "audit_head": "7da3c6b0b9c31205c930dbd37aea55c7748a6187",
+    "audit_tree": "d4bff2a1e01f0b0b87eb80e09d992d3b42eeebe7",
+    "evidence_class": "A8_REPORTED_INDEPENDENT_LOCAL_WINDOWS_ISOLATED_NOT_ROOT_REEXECUTED",
+    "candidates": [
+      {
+        "pr": 30,
+        "head": "1541af3b0e99fdb671f59c205696faab40e283e4",
+        "tests": 28
+      },
+      {
+        "pr": 29,
+        "head": "10157fed4d28606adf587be3494d2f6d42887ce9",
+        "tests": 26
+      },
+      {
+        "pr": 31,
+        "head": "7a0365bd0161ec619019157cf04672b513c495c6",
+        "tests": 46
+      }
+    ],
+    "synthetic_overlay": {
+      "base": "18085568df01bdbc4df74404e3c650ec30bb7d6b",
+      "unique_tests": 159,
+      "skips": 0,
+      "additional_deny_vectors": 15,
+      "original_harness_count_error": 175,
+      "count_error_preserved_and_corrected": true
+    },
+    "review_url": "https://github.com/YehorBabenko88/unified-system/blob/7da3c6b0b9c31205c930dbd37aea55c7748a6187/docs/audits/agent8-20261106/phase31/stage1-acceptance-review.md",
+    "causal_review_url": "https://github.com/YehorBabenko88/unified-system/blob/7da3c6b0b9c31205c930dbd37aea55c7748a6187/docs/audits/agent8-20261106/phase32/causal-fixture-review.md",
+    "full_suite": "NOT_RERUN_OR_QUALIFIED",
+    "hosted_ci": "NOT_QUALIFIED",
+    "runtime_admission": "BLOCKED",
+    "physical_deployment": "BLOCKED",
+    "real_provider_sends": "BLOCKED",
+    "tailscale_removal": "BLOCKED",
+    "global_f16": "OPEN",
+    "overall": "NO_GO"
   }
 }
