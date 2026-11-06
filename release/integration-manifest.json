@@ -320,5 +320,34 @@
     "tailscale_removal": "BLOCKED",
     "global_f16": "OPEN",
     "overall": "NO_GO"
+  },
+  "closed_mux_review1": {
+    "manifest_sha256": "ce7a510ab16033d7d108a06700ef0002f313bed6133a2599e273388ba296578a",
+    "status": "CHANGES_REQUESTED_NOT_ACKED",
+    "artifacts": [
+      {
+        "path": "release/contracts/control-mux-closed-review1-findings/agent1-findings.json",
+        "sha256": "1e8d92e7fed0b0213c889f06939dfa068f039d195f9913e9496799535b679d5a"
+      },
+      {
+        "path": "release/contracts/control-mux-closed-review1-findings/agent1-probes.json",
+        "sha256": "c809fb6180b0fd95d9c85c44f661caa660249389e5032f03ef3b52756e8ec0a6"
+      },
+      {
+        "path": "release/contracts/control-mux-closed-review1-findings/agent6-review.json",
+        "sha256": "8f21cfc4193fcfc0d916b9804ff43c902b29d224e276d9c24c389344d3201f65"
+      },
+      {
+        "path": "release/contracts/control-mux-closed-review1-findings/agent6-probes.json",
+        "sha256": "1dea5c767caac9791775bee233288b5149341d6cd02b1c25b1a8c341213a7daf"
+      }
+    ],
+    "blockers": [
+      "operation/state/HTTP status/result compatibility not enforced by model lookup",
+      "cross-language numeric canonical encoding undefined"
+    ],
+    "evidence_scope": "ISOLATED_MODEL_NOT_RUNTIME_EXPLOIT",
+    "next": "A2 new immutable revision with RED/GREEN and cross-language vectors, fresh A1 A6 review",
+    "runtime_admission": "BLOCKED"
   }
 }
