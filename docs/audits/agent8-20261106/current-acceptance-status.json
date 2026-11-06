@@ -1,5 +1,5 @@
 {
-  "checked_utc": "2026-11-06T20:42:29.433360+00:00",
+  "checked_utc": "2026-11-06T20:48:49.064346+00:00",
   "RELEASE_MANIFEST_STATUS": "PRESENT_PREPARATION_ONLY_NOT_APPROVED_NOT_INSTALLABLE",
   "NODE_INVENTORY_STATUS": "SIX_REDACTED_OWNER_OBSERVATIONS_PRESENT_ORIGINAL_RAW_NOT_REACQUIRED_BY_A8_NOT_ADMITTED",
   "CONTRACT_STATUS": {
@@ -985,6 +985,148 @@
     "hosted": "NOT_QUALIFIED",
     "physical": "BLOCKED",
     "tailscale_removal": "BLOCKED",
+    "overall": "NO_GO"
+  },
+  "stage1_exact_component_review": {
+    "checked_utc": "2026-11-06T20:44:23.952294+00:00",
+    "results": [
+      {
+        "repository": "unified-system",
+        "pr": "https://github.com/YehorBabenko88/unified-system/pull/30",
+        "head": "1541af3b0e99fdb671f59c205696faab40e283e4",
+        "tree": "30d32ab7b75eadcca46b41ae6809415665ef1413",
+        "environment": "Windows isolated no-hardlink clone; Python3.12; loopback-only audit hook in test process",
+        "exit_code": 0,
+        "raw_before": {
+          "files": 286,
+          "sha256": "6559761cd3b42ff94471b063ba04fb7949057c56858727b0e01334539424be97"
+        },
+        "raw_after": {
+          "files": 286,
+          "sha256": "6559761cd3b42ff94471b063ba04fb7949057c56858727b0e01334539424be97"
+        },
+        "test_count": 28,
+        "skips": 0,
+        "status": "FOCUSED_OFFLINE_PASS_ONLY",
+        "hosted": "NOT_QUALIFIED",
+        "physical": "BLOCKED"
+      },
+      {
+        "repository": "unified-system",
+        "pr": "https://github.com/YehorBabenko88/unified-system/pull/29",
+        "head": "10157fed4d28606adf587be3494d2f6d42887ce9",
+        "tree": "62564f00bd8c37b982c2ee958ff58b956c55b1be",
+        "environment": "Windows isolated no-hardlink clone; Python3.12; loopback-only audit hook in test process",
+        "exit_code": 0,
+        "raw_before": {
+          "files": 300,
+          "sha256": "e7034d2ece816cd92e3a8f772f9ddf33ac29fb1f472349144430b929fb35d79a"
+        },
+        "raw_after": {
+          "files": 300,
+          "sha256": "e7034d2ece816cd92e3a8f772f9ddf33ac29fb1f472349144430b929fb35d79a"
+        },
+        "test_count": 26,
+        "skips": 0,
+        "status": "FOCUSED_OFFLINE_PASS_ONLY",
+        "hosted": "NOT_QUALIFIED",
+        "physical": "BLOCKED"
+      },
+      {
+        "repository": "unified-system",
+        "pr": "https://github.com/YehorBabenko88/unified-system/pull/31",
+        "head": "7a0365bd0161ec619019157cf04672b513c495c6",
+        "tree": "597dbbdad1861f3e872f867dba30ad2667566d15",
+        "environment": "Windows isolated no-hardlink clone; Python3.12; loopback-only audit hook in test process",
+        "exit_code": 0,
+        "raw_before": {
+          "files": 291,
+          "sha256": "5e86fa10f9910603123b88de24425ac324633a910683da15bc377006f6a42ac1"
+        },
+        "raw_after": {
+          "files": 291,
+          "sha256": "5e86fa10f9910603123b88de24425ac324633a910683da15bc377006f6a42ac1"
+        },
+        "test_count": 46,
+        "skips": 0,
+        "status": "FOCUSED_OFFLINE_PASS_ONLY",
+        "hosted": "NOT_QUALIFIED",
+        "physical": "BLOCKED"
+      }
+    ],
+    "full_suite": "NOT_RERUN_NOT_QUALIFIED_REPORTED_AGENT1_ERROR_AND11SKIPS_NOT_WAIVED",
+    "runtime": "NOT_ADMITTED",
+    "physical": "BLOCKED",
+    "tailscale_removal": "BLOCKED",
+    "overall": "NO_GO"
+  },
+  "stage1_synthetic_composition": {
+    "tests": 159,
+    "unique_cases": 159,
+    "skips": 0,
+    "effect_boundary_vectors": 15,
+    "status": "OFFLINE_SYNTHETIC_COMPATIBILITY_ONLY"
+  },
+  "causal_fixture_correction": {
+    "head": "b8922714b99169c22ae6c14fdbc1c5a5f6c1d0f7",
+    "tree": "6871be9b692ca63ca5a041b3de00c07d4b267495",
+    "product_gate_unchanged": true,
+    "controlled_repeats": [
+      {
+        "stale_mtime_red": true,
+        "invalidated_cache_green": true,
+        "pth_rejected": true
+      },
+      {
+        "stale_mtime_red": true,
+        "invalidated_cache_green": true,
+        "pth_rejected": true
+      },
+      {
+        "stale_mtime_red": true,
+        "invalidated_cache_green": true,
+        "pth_rejected": true
+      },
+      {
+        "stale_mtime_red": true,
+        "invalidated_cache_green": true,
+        "pth_rejected": true
+      },
+      {
+        "stale_mtime_red": true,
+        "invalidated_cache_green": true,
+        "pth_rejected": true
+      },
+      {
+        "stale_mtime_red": true,
+        "invalidated_cache_green": true,
+        "pth_rejected": true
+      },
+      {
+        "stale_mtime_red": true,
+        "invalidated_cache_green": true,
+        "pth_rejected": true
+      },
+      {
+        "stale_mtime_red": true,
+        "invalidated_cache_green": true,
+        "pth_rejected": true
+      },
+      {
+        "stale_mtime_red": true,
+        "invalidated_cache_green": true,
+        "pth_rejected": true
+      },
+      {
+        "stale_mtime_red": true,
+        "invalidated_cache_green": true,
+        "pth_rejected": true
+      }
+    ],
+    "module_tests": 7,
+    "skips": 0,
+    "environment": "Windows Python3.12 isolated test metadata",
+    "scope": "FIXTURE_CACHE_INVALIDATION_ONLY_NOT_PR30_FULL_SUITE_PASS",
     "overall": "NO_GO"
   }
 }
