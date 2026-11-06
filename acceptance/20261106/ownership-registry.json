@@ -1,6 +1,6 @@
 {
   "schema": "unified.ownership.v1",
-  "revision": 2,
+  "revision": 3,
   "root_owner": "ROOT",
   "max_internal_subagents": 3,
   "execution": "EIGHT_EXISTING_USER_OWNED_THREADS_NO_DUPLICATE_INTERNAL_AGENTS",
@@ -64,7 +64,11 @@
         "unified_system/ha_authority_client.py",
         "tests/test_ha_authority_client.py",
         "tests/ha_acceptance/README.md",
-        "docs/architecture/unified-ha-authority-client.md"
+        "docs/architecture/unified-ha-authority-client.md",
+        "unified_system/control_api_readonly.py",
+        "tests/test_control_api_readonly.py",
+        "docs/architecture/control-api-readonly.md",
+        ".github/workflows/agent2-control-api.yml"
       ],
       "allowed_new_path_prefixes": [],
       "dependencies": [
@@ -81,7 +85,8 @@
         "No edit outside this worktree or concurrent physical test",
         "Send exact HEAD/tree, test inventory, CI run/attempt/jobs and SHA256 evidence"
       ],
-      "user_owned_thread_id": "01a1b15d-642e-78e1-870b-b8a2a9a7171b"
+      "user_owned_thread_id": "01a1b15d-642e-78e1-870b-b8a2a9a7171b",
+      "control_api_scope": "P0_PURE_DENY_UNAVAILABLE_NO_LISTENER_NO_IO_NO_SHARED_WIRING"
     },
     {
       "agent_id": "A3",
@@ -185,7 +190,7 @@
       "repository": "Terminan",
       "branch": "feature/terminan-sync-v1-20261106",
       "worktree": "C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-6-distributed-terminan-control/work/terminan-sync-v1-manual",
-      "draft_pr": null,
+      "draft_pr": 69,
       "base_head": "7ed3708df53c8850fd11fc8331440bdfee99aa3e",
       "allocation_state": "AGENT_CONFIRMED_ISOLATED_FEATURE_CHECKOUT",
       "allowed_files": [
@@ -198,8 +203,9 @@
         "docs/sync/"
       ],
       "dependencies": [
-        "A1",
         "A2",
+        "A3",
+        "A4",
         "A5",
         "A7"
       ],
@@ -226,7 +232,8 @@
         "tests/agent7-replay-research.test.mjs",
         "tests/adminit-loader-facts.windows.mjs",
         "scripts/platform-source-proof.json",
-        "scripts/platform-test-inventory.json"
+        "scripts/platform-test-inventory.json",
+        "docs/audits/agent7-research-regressions.json"
       ],
       "allowed_new_path_prefixes": [],
       "dependencies": [
@@ -253,7 +260,8 @@
           "base_head": "25eb939f8a816a80ac7c042ce75ec4d9173cd4ce",
           "allowed_files": [
             "tests/research/test_agent7_paper_integrity.py",
-            "tests/research/test_agent7_research_replay.py"
+            "tests/research/test_agent7_research_replay.py",
+            "docs/research/agent7-regression-evidence.json"
           ],
           "allowed_new_path_prefixes": []
         },
@@ -263,7 +271,8 @@
           "worktree": "C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-7-distributed-research-math/work/audit-meta-pr76",
           "base_head": "2c4db055e56e36384a2661d443f9abc7b2331e90",
           "allowed_files": [
-            "tests/test_agent7_ohlcv_research_contract.py"
+            "tests/test_agent7_ohlcv_research_contract.py",
+            "docs/AGENT7_RESEARCH_CONTRACT_EVIDENCE.json"
           ],
           "allowed_new_path_prefixes": []
         }
@@ -325,5 +334,16 @@
       "MetaAnalyse_research": "A7",
       "independent_acceptance": "A8"
     }
+  },
+  "prior_revision_ack_scope": {
+    "commit": "c7307afba57aa28548e483e02c3a2f390b5056e1",
+    "ownership_sha256": "72acc43445b66f9730f868f6df335dc608dfe342e550be83e47eef98789115ff",
+    "owners_reported": [
+      "A1",
+      "A2",
+      "A6",
+      "A8"
+    ],
+    "scope": "OWN_ALLOCATION_ONLY_NOT_TRANSFERRED_TO_REVISION_3"
   }
 }
