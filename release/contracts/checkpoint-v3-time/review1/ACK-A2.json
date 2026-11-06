@@ -1,0 +1,66 @@
+{
+  "schema": "agent2.checkpoint-owner-v3.exact-review.v1",
+  "decision": "SCOPED_EXACT_CONTENT_EVIDENCE_SCHEMA_DESIGN_ACK_CLAIMS_ONLY",
+  "source_raw_sha256": {
+    "schema.json": "4de720d9391e5a89c0577b5298c283e742fbfe490c4454c184e31c2348589ea4",
+    "PROTOCOL.md": "79efbcb70d1ed9204fbd8295a4990650d99582196712097280d2483298ad4f8e",
+    "golden-vectors.json": "69ef7786400030ae1bb9dbf4bd1fb30c6b6e50ac9690437536aa669a7c18b0d4"
+  },
+  "cases": [
+    {
+      "case": "confirmed-unknown-time.canonical.json",
+      "result": "CANONICAL_SCHEMA_SYNTHETIC_BINDINGS_MATCH"
+    },
+    {
+      "case": "confirmed-observed.canonical.json",
+      "result": "CANONICAL_SCHEMA_SYNTHETIC_BINDINGS_MATCH"
+    },
+    {
+      "case": "unconfirmed.canonical.json",
+      "result": "CANONICAL_SCHEMA_SYNTHETIC_BINDINGS_MATCH"
+    },
+    {
+      "case": "old_alias",
+      "result": "STRUCTURAL_REJECTION_CONFIRMED"
+    },
+    {
+      "case": "missing_exact_status",
+      "result": "STRUCTURAL_REJECTION_CONFIRMED"
+    },
+    {
+      "case": "invented_commit_time",
+      "result": "STRUCTURAL_REJECTION_CONFIRMED"
+    },
+    {
+      "case": "unconfirmed_with_content",
+      "result": "STRUCTURAL_REJECTION_CONFIRMED"
+    },
+    {
+      "case": "lifecycle_receipt_as_evidence",
+      "result": "STRUCTURAL_REJECTION_CONFIRMED"
+    },
+    {
+      "case": "old_version",
+      "result": "STRUCTURAL_REJECTION_CONFIRMED"
+    }
+  ],
+  "qualification": "JSON_SCHEMA_CANONICAL_SYNTHETIC_RELATIONSHIPS_ONLY_NO_AUTHORITY_OR_CLOCK_VERIFICATION",
+  "mapping_ack": [
+    "COMMITTED with unknown actual time is distinct from COMMIT_UNCONFIRMED",
+    "Exact owner commit_time_status; old alias rejected",
+    "External confirmed_observed_at_utc is observation only",
+    "Publication evidence must actual admitted publication receipt plus index/revisions/identity/root/full intent; lifecycle receipt cannot substitute",
+    "Native session fields canonical UUID and indices actual checked lease/leader KV provenance via future producer"
+  ],
+  "required_semantic_validation": [
+    "u63 bounds/calendar/duplicate+canonical bytes",
+    "cross-object full lineage/fence/revision/hash relationships",
+    "actual receipt/idempotency/root/evidence lookup and current authorization",
+    "independent qualified clock evidence or null"
+  ],
+  "runtime_producer": "NOT_IMPLEMENTED_NOT_ADMITTED",
+  "shared_wiring_ack": false,
+  "old_formats_changed": false,
+  "new_schema_changes_requested": [],
+  "go_no_go": "DESIGN_CLAIM_CODEC_SCOPE_ONLY_NO_RUNTIME_GO"
+}

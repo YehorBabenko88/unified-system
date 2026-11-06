@@ -12,14 +12,14 @@
 
 | Repository | Source HEAD | Draft PR |
 |---|---|---|
-| unified-system | `a7d36a471fcfcc49793041c94f93287f8e3afd21` | [#26](https://github.com/YehorBabenko88/unified-system/pull/26) |
+| unified-system | `c9f3735c1efa2d5ae0e2dfbe52987a49c520bdf5` | [#26](https://github.com/YehorBabenko88/unified-system/pull/26) |
 | bybit-cluster-grid | `ec967b3ebb67bb9f04d0d82c78bba5b4245a3333` | [#263](https://github.com/YehorBabenko88/bybit-cluster-grid/pull/263) |
 | strattester | `1722244f42d5d71a29b89bdec0e7211f2b723158` | [#71](https://github.com/YehorBabenko88/strattester/pull/71) |
 | math | `917d99672e37db59835a8ab23b03c99826b12d78` | [#112](https://github.com/YehorBabenko88/math/pull/112) |
 | meta_analyse | `88b45c328bfdc8131ff0c6d139fddd8b27a4050c` | [#77](https://github.com/YehorBabenko88/meta_analyse/pull/77) |
 | Terminan | `42686cd8fafcefaed3c5df5adaee5173d27543fd` | [#69](https://github.com/YehorBabenko88/Terminan/pull/69) |
 
-Точные tree SHA, default HEAD, provenance, component parents и незаполненные обязательные artifact/lock/migration/rollback bindings находятся в manifest. Последние незавершённые development slices перечислены отдельно: Grid PR264 `431a9be37e6e1c2d6bddbcea659b96d7211ac5c9`, Scheduler PR24 `175b48a2a0d2882669172abc5774bd71b42e2215`, диагностический Math PR113 `dbb9bb1da9b180a8bb9f1d5401f1117894256941`. Их результаты не перенесены на release candidate.
+Точные tree SHA, default HEAD, provenance, component parents и незаполненные обязательные artifact/lock/migration/rollback bindings находятся в manifest. Последние незавершённые development slices перечислены отдельно: Grid PR264 `431a9be37e6e1c2d6bddbcea659b96d7211ac5c9`, Scheduler PR24 `6bcf5475023a8f6a9733d02ad899064d0d83be95`, диагностический Math PR113 `dbb9bb1da9b180a8bb9f1d5401f1117894256941`. Их результаты не перенесены на release candidate.
 
 ## Подтверждённые исправления и границы результатов
 
@@ -39,7 +39,7 @@
 - Полная локальная Windows suite на exact15dd9e8340cc332204ebbe6c13744f797ceca2f4: **813 tests,0 failures/errors,14 явно сохранённых unwaived skips**,312.283s; Python/PowerShell raw hashes до/после совпали. Integration sourcea7d36a4 имеет тот же treef65192b. Логи/команда/source receipt: `release/evidence/full-suite-provider-*`; skips: `release/skip-inventory-provider.json`.
 - Прежние результаты755 и812 сохранены с исходными pins и не переписаны новым результатом. Модельная cross-source composition18/0skip не является реальным authority/market runtime.
 - ROOT независимо проверил Grid lifecycle076f1423:84 model/regression cases/0skip с оригинальными stdout/stderr/JUnit/raw source receipts. Current431a9be меняет только dedicated workflow YAML; hosted run42275525265 ещё не квалифицирован. Lifecycle возвращает EFFECT_UNWIRED, не publication receipt.
-- Новый A5 source175b48a: владелец сообщает30 exact cases/0skip; независимая проверка и интеграция ожидаются. Старые hosted SUCCESS на942e5f1 не переносятся на него.
+- Новый A5 source6bcf547: A8 независимо проверил30 exact cases/0skip и11 отрицательных source-guard controls. F15 raw-source дефект исправлен; source включён в integration branch, actual dispatch не подключён. Старые hosted SUCCESS на942e5f1 не переносятся на него.
 - Math native исходно FAIL: DLL_INITIALIZATION_FAILED/0xC0000142 в job127988647557. Единственный разрешённый non-qualifying hosted diagnostic run42274233717, attempt1, всё ещё QUEUED на последнем наблюдении; нет runner/trace/cleanup evidence. Повторная активация/автоматический retry запрещены. Его успех в любом случае не означает native acceptance.
 - Strattester1722244: независимый аудит подтверждает, что даже заявленные внешние PASS не открывают strict aggregate без доверенных fact producers. Native --launch и часть enforcement ещё не реализованы. Нельзя исправить это подменой aggregate PASS.
 - Полная обязательная CI-матрица всех модулей, attempts, допустимых skips и artifact contents **BLOCKED**. Отдельные visual/JUnit результаты закрывают только названные подзадачи.
@@ -52,7 +52,7 @@ Root выбрал новый профиль `unified.authority.event-ordered.v3`
 
 Полный authority/assignment/storage wire, identity/idempotency scope, actual closure/allocation/debit records и producer adapters ещё не согласованы/квалифицированы. API envelope/schema ACK не является runtime safety. Control multiplex ABI для шести узлов и нескольких окон также не завершён; degraded cap2 не принят как mission acceptance.
 
-Ownership registry revision8 содержит изолированные ветки/worktrees и отдельные scopes. Предыдущие ACK не объявлены глобальным согласием. Для A1/A3/A4 владельцы всё ещё сообщают незакрытые full-feature design gates; их независимые тесты и интерфейсные review продолжаются.
+Ownership registry сохраняет изолированные ветки/worktrees и отдельные scopes; прежние ACK не объявлены глобальным согласием. Проверка источника gate показала: A1 имеет прямое требование владельца утвердить полный LAN design перед product-кодом. A4 production restriction не запрещает выделенный независимый nonproduction prototype; blanket human blocker исправлен, Stage1 начат. A3 получил scope отдельного checkpoint V3 codec. Production/shared wiring/physical ограничения сохраняются.
 
 ## Шесть офисных узлов: наблюдения, не installation admission
 
@@ -73,7 +73,7 @@ Tailscale остаётся установленным и работающим, r
 
 P0 readiness: отсутствующие реальные LAN/budget/Storage/Control-auth/dispatch/publication/backend компоненты; Math Windows native; Strattester system acceptance; полный mandatory CI; совместимые artifact/dependency/migration/rollback bindings. Это готовность системы, а не автоматическое объявление новых security vulnerabilities.
 
-По независимому A8 checkpoint сохраняются6P1/1P2; narrow F14 закрыт offline на15dd9e8. Дополнительно подтверждён F15 P2: новый scheduler CI может не заметить assume-unchanged raw source; узкое исправление workflow передано A5, интеграция175b заблокирована до независимой перепроверки. Runtime/physical safety от этого не объявлены доказанными. P1 readiness дополнительно: PC3 security compatibility, RAM/load admission PC1/LS7/PC2, реальные durability/restore/rollback и measured bounds. P2: полный requirement→source/evidence mapping, license/secret/runtime-payload review. Четыре исторических Meta TLS keys классифицированы A8 как публичные disposable loopback fixtures; не operational identities, без вывода private bytes/изменения истории.
+По независимому A8 checkpoint сохраняются6P1/1P2; narrow F14 закрыт offline на15dd9e8. F15 P2 исправлен на6bcf547 и независимо закрыт offline; исходный175b RED сохранён. Новая интеграцияc9f3735 независимо проверена A8:75cases/0skip,377 raw inputs,10negative controls. Runtime/physical safety от этого не объявлены доказанными. P1 readiness дополнительно: PC3 security compatibility, RAM/load admission PC1/LS7/PC2, реальные durability/restore/rollback и measured bounds. P2: полный requirement→source/evidence mapping, license/secret/runtime-payload review. Четыре исторических Meta TLS keys классифицированы A8 как публичные disposable loopback fixtures; не operational identities, без вывода private bytes/изменения истории.
 
 ## LAB_SIMULATION и доверенный релиз
 
@@ -96,4 +96,8 @@ LAB_SIMULATION допускает проверенные unsigned test component
 
 `release/acceptance-matrix.json` сохраняет86 исходных requirements и22 итоговых поля. Новый `release/directive-requirement-register.json` привязывает395 content lines последней директивы к source line/attachment SHA; semantic evidence mapping ещё IN_PROGRESS. `release/cleanup-report.md` сохраняет историю/ветки/evidence, не заявляет завершённую очистку runtime. `release/execution-journal.json` содержит продолжение, текущие блокеры и запрет фиктивного PASS.
 
-Следующий допуск: независимая проверка/совместимая интеграция нового A5 slice; реальный isolated3-voter run A2; неизменённая единственная попытка Math; оставшиеся implementation/contract gates. Физическое развёртывание до их прохождения не начинается.
+Следующий допуск: checkpoint V3 codec/tests и независимые Storage/network prototypes; согласованные producer adapters/operation ledger; реальный isolated3-voter run A2; неизменённая единственная попытка Math; оставшиеся implementation/contract gates. Физическое развёртывание до их прохождения не начинается.
+
+## Последняя расширенная integration suite
+
+На exact c9f3735c1efa2d5ae0e2dfbe52987a49c520bdf5/tree d19857aa229691be6ed2c7287e79f92b16baa961 полный локальный Windows запуск завершился828tests,0failures/errors,14 сохранённых unwaived skips за293.038s. Python/PowerShell source hashes до/после одинаковы. Оригинальные813/812/755 результаты сохранены для их источников. Новая CI inventory v2 содержит75 cases, включая все прежние59,15 новых A5 и один provider AST negative. ROOT и A8 независимо исполнили фактический embedded workflow:75/0skip,377 raw source bindings; hosted matrix не объявлена PASS. Evidence: `release/evidence/full-suite-durable-*`, `release/evidence/integration-75/`, `release/skip-inventory-durable.json`; A8 audit e394045 phase26.

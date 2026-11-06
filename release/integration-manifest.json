@@ -6,8 +6,8 @@
   "modules": {
     "unified-system": {
       "repository": "YehorBabenko88/unified-system",
-      "head": "a7d36a471fcfcc49793041c94f93287f8e3afd21",
-      "tree": "f65192b65e60c9a8df2d3a404da46df641efcd0c",
+      "head": "c9f3735c1efa2d5ae0e2dfbe52987a49c520bdf5",
+      "tree": "d19857aa229691be6ed2c7287e79f92b16baa961",
       "pr": 26,
       "pr_url": "https://github.com/YehorBabenko88/unified-system/pull/26",
       "branch": "mission/final-integration-20261106",
@@ -29,7 +29,8 @@
         "8171eebd6bfbcc83fd82038c6d9f42d012ac822a",
         "2626e939a7ed44bfb37aa354490329a7260cc24b",
         "b12c6c24eeb2c59aa099f1c516d77508f36b20a6",
-        "15dd9e8340cc332204ebbe6c13744f797ceca2f4"
+        "15dd9e8340cc332204ebbe6c13744f797ceca2f4",
+        "6bcf5475023a8f6a9733d02ad899064d0d83be95"
       ],
       "source_pin_role": "EXACT_CONSOLIDATED_SOURCE_SNAPSHOT_BEFORE_THIS_EVIDENCE_COMMIT_NOT_FINAL_RC"
     },
@@ -142,7 +143,7 @@
   "physical_fault_injection_authorized": false,
   "tailscale_removal_authorized": false,
   "go": "NO-GO",
-  "ownership_registry_sha256": "1ad86a5ec63595e7d394efdd11e5126965e959cf1491b7415c21f4b89b606558",
+  "ownership_registry_sha256": "88e69f156a2e7d116e40660db4a05ba7828a33e00646ea5ec38e93788a839fd9",
   "independent_audit_checkpoint": {
     "head": "ac869aae349483050f368cc59b76cbbedd8265e6",
     "scope": "PR26_SOURCE56f4215_AND_GRIDa17f1db_ONLY",
@@ -180,9 +181,22 @@
       "decision_path": "release/contracts/checkpoint-v3-time/DECISION.json",
       "decision_sha256": "aa84f7acbe7632f8d534c96f529c7a39b9b1b26c1a49cf7a69a9366e5c04670e",
       "owner_decision": "APPROVED",
-      "schema_ack": "PENDING_NEW_V3_EXACT_ARTIFACT",
+      "schema_ack": "A2_A4_A5_ROOT_SCOPED_EXACT_DESIGN_ACKS_ONLY",
       "runtime": "NOT_AUTHORIZED_BY_THIS_DECISION",
-      "physical": "NOT_AUTHORIZED_BY_THIS_DECISION"
+      "physical": "NOT_AUTHORIZED_BY_THIS_DECISION",
+      "schema_review": {
+        "schema_raw_sha256": "4de720d9391e5a89c0577b5298c283e742fbfe490c4454c184e31c2348589ea4",
+        "protocol_raw_sha256": "79efbcb70d1ed9204fbd8295a4990650d99582196712097280d2483298ad4f8e",
+        "goldens_raw_sha256": "69ef7786400030ae1bb9dbf4bd1fb30c6b6e50ac9690437536aa669a7c18b0d4",
+        "peer_receipts_raw_sha256": {
+          "A2": "95474548aa6d7a6f7cb95c513ae2533c055cd85f76d6d1e2a3d36761f58fc528",
+          "A4": "6cef51a89ca58ba23e4a22194d8fe9fe84516d0f4edba5160b74a5a7131da762",
+          "A5": "053864bc27d325a5b0d76327e797c92e77dea7cb1d5d229833aa1145e5998ade"
+        },
+        "root_scoped_ack_sha256": "e6b0e351732cdc02cbb57d558cc7b505c151a69cd128909712660ad8ef168e7e",
+        "scope": "DESIGN_FOR_PURE_UNTRUSTED_CLAIM_CODEC_NOT_RUNTIME_CONFIRMATION"
+      },
+      "actual_implementation": "A3_IN_PROGRESS_NOT_ADOPTED"
     }
   },
   "metadata_snapshot_coverage": {
@@ -209,9 +223,10 @@
     {
       "repository": "unified-system",
       "pr": 24,
-      "head": "175b48a2a0d2882669172abc5774bd71b42e2215",
-      "tree": "9599ae83cc5c425f80fb014376dc5fada5e85c2b",
-      "scope": "LOCAL_NONAUTHORITATIVE_PREPARATION_ONLY_INDEPENDENT_REVIEW_PENDING"
+      "head": "6bcf5475023a8f6a9733d02ad899064d0d83be95",
+      "tree": "ef776ac4c484967d53dd172469ce77534ebb2216",
+      "scope": "LOCAL_PREPARATION_INTEGRATED_SOURCE_ONLY_NO_AUTHORITY_EFFECT",
+      "historical_f15_head": "175b48a2a0d2882669172abc5774bd71b42e2215"
     },
     {
       "repository": "math",
@@ -220,5 +235,10 @@
       "tree": "ade739990db8da7926bc7bdd9ed58e41acbd011e",
       "scope": "ONE_NONQUALIFYING_OBSERVATION_QUEUED_NO_RETRY"
     }
-  ]
+  ],
+  "independent_integrated_ci_checkpoint": {
+    "head": "e394045299006faf173fd3016d02fe4b21966c50",
+    "source_head": "c9f3735c1efa2d5ae0e2dfbe52987a49c520bdf5",
+    "scope": "LOCAL75_EXACT_SOURCE_377_RAW_INPUTS_10_NEGATIVE_CONTROLS_NOT_HOSTED_OR_PHYSICAL"
+  }
 }

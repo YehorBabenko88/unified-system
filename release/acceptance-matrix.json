@@ -1257,7 +1257,8 @@
       "evidence": [
         "ci-all-open-heads.json",
         "ci-current-delta.json",
-        "skip-inventory-provider.json"
+        "skip-inventory-provider.json",
+        "skip-inventory-durable.json"
       ],
       "reason": "444 snapshot check metadata plus current delta collected; full source/case/skip/artifact qualification incomplete"
     },
@@ -1334,7 +1335,7 @@
       "evidence": [
         "ownership-registry.json"
       ],
-      "reason": "New local durable preparation source175b unintegrated; F15 source evidence guard defect assigned for correction; dispatch not implemented"
+      "reason": "Local preparation source6bc integrated; A8 F15raw-source fix30cases/11negatives closed offline, actual authority dispatch not implemented"
     },
     {
       "name": "Research",
@@ -1438,13 +1439,13 @@
     }
   ],
   "current_local_full_suite": {
-    "source_head": "15dd9e8340cc332204ebbe6c13744f797ceca2f4",
-    "tests": 813,
+    "source_head": "c9f3735c1efa2d5ae0e2dfbe52987a49c520bdf5",
+    "tests": 828,
     "failures": 0,
     "errors": 0,
     "skips": 14,
     "waivers": [],
     "scope": "LOCAL_WINDOWS_NOT_MANDATORY_OR_PHYSICAL_ACCEPTANCE",
-    "receipt": "evidence/full-suite-provider-receipt.json"
+    "receipt": "evidence/full-suite-durable-receipt.json"
   }
 }
