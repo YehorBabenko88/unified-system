@@ -194,9 +194,10 @@ def _read_exact(sock,n,deadline,on_idle=None):
 
 
 def _read_frame(sock,budget,peer,deadline,on_idle=None):
-    hsize,size=_PREFIX.unpack(_read_exact(sock,_PREFIX.size,deadline,on_idle))
-    _need(1<=hsize<=MAX_CONTROL and 0<=size<=MAX_FRAME,'FRAME_BOUNDS')
+    first=_read_exact(sock,1,deadline,on_idle)
     body_deadline=time.monotonic()+5 if on_idle is not None else min(deadline,time.monotonic()+5)
+    hsize,size=_PREFIX.unpack(first+_read_exact(sock,_PREFIX.size-1,body_deadline))
+    _need(1<=hsize<=MAX_CONTROL and 0<=size<=MAX_FRAME,'FRAME_BOUNDS')
     header=_json(_read_exact(sock,hsize,body_deadline))
     _need(type(header) is dict and set(header)=={'kind','stream','traffic_class','message_id','value'},'PROTOCOL_REJECTED')
     _need(type(header['traffic_class']) is str and header['traffic_class'] in _ROLES and type(header['stream']) is int and 0<=header['stream']<=MAX_STREAMS)
@@ -450,8 +451,8 @@ class LanTransport:
         return sock.getsockname()[1]
 
     def update_registry(self,new):
-        _need(isinstance(new,PeerRegistry) and new.cluster_id==self.registry.cluster_id and new.generation>self.registry.generation,'REGISTRY_ROLLBACK')
         with self.lock:
+            _need(isinstance(new,PeerRegistry) and new.cluster_id==self.registry.cluster_id and new.generation>self.registry.generation,'REGISTRY_ROLLBACK')
             old=self.registry;self.registry=new
             for peer,c in self.connections.items():
                 if old._peers.get(peer)!=new._peers.get(peer) or old._peers.get(self.node_id)!=new._peers.get(self.node_id):c.close('POLICY_REVOKED')

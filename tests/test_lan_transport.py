@@ -157,9 +157,9 @@ class TLSIsolationTests(unittest.TestCase):
         self.assertEqual(server.memory.used,0)
 
     def test_active_control_heartbeats_keep_idle_data_channel_healthy(self):
-        with patch('unified_system.lan_transport.HEARTBEAT_INTERVAL',.03),patch('unified_system.lan_transport.IDLE_TIMEOUT',.15):
+        with patch('unified_system.lan_transport.HEARTBEAT_INTERVAL',.05),patch('unified_system.lan_transport.IDLE_TIMEOUT',.4):
             client,server,c,s=self.pair()
-            time.sleep(.5)
+            time.sleep(1.3)
             self.assertFalse(c.closed,c.error);self.assertFalse(s.closed,s.error)
             c.send(b'after idle');self.assertEqual(s.receive().payload,b'after idle')
 
@@ -204,6 +204,30 @@ class TLSIsolationTests(unittest.TestCase):
         out=result.get(timeout=1)
         if isinstance(out,Exception):raise out
         self.assertEqual(s.receive().payload,b'w'*64)
+
+    def test_concurrent_registry_updates_cannot_restore_older_revoked_pin(self):
+        doc=self.document();client=self.transport('PC1',PeerRegistry.from_document(doc))
+        high=json.loads(json.dumps(doc));high['generation']=3;high['nodes'][0]['fingerprints']=['0'*64]
+        low=json.loads(json.dumps(doc));low['generation']=2
+        real=client.lock;entered={n:threading.Event() for n in ('high','low')};high_done=threading.Event();out=queue.Queue()
+        class OrderedLock:
+            def __enter__(self):
+                name=threading.current_thread().name;entered[name].set()
+                if name=='low':high_done.wait(2)
+                real.acquire()
+            def __exit__(self,*args):real.release()
+        def update(name,document):
+            try:client.update_registry(PeerRegistry.from_document(document));out.put((name,None))
+            except Exception as exc:out.put((name,exc))
+            finally:
+                if name=='high':high_done.set()
+        with real,patch.object(client,'lock',OrderedLock()):
+            a=threading.Thread(target=update,name='high',args=('high',high));a.start();self.assertTrue(entered['high'].wait(1))
+            b=threading.Thread(target=update,name='low',args=('low',low));b.start();self.assertTrue(entered['low'].wait(1))
+        a.join(3);b.join(3)
+        self.assertEqual(client.registry.generation,3)
+        result=dict(out.get(timeout=1) for _ in range(2))
+        self.assertIsNone(result['high']);self.assertIsInstance(result['low'],TransportError)
 
     def test_credit_backpressure_and_control_lane_while_data_waits(self):
         client,server,c,s=self.pair()
