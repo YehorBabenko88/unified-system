@@ -1,0 +1,222 @@
+SOURCE_OR_RAW_BLOB_OR_INVENTORY_MISMATCH: tests not admitted
+
+{
+  "schema": "agent5.component-evidence.v2",
+  "execution": "LOCAL",
+  "repository": null,
+  "run_id": null,
+  "run_attempt": null,
+  "event": null,
+  "workflow_ref": null,
+  "workflow_sha": null,
+  "event_sha": null,
+  "runner_os": "Windows",
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "expected_source_sha": "db455c4926ddd50d0be7c3c615a8e4c073d12775",
+  "source_before": {
+    "head": "db455c4926ddd50d0be7c3c615a8e4c073d12775",
+    "tree": "dd2106a0d706791afc22e7553dedff605819d546",
+    "tracked_status": "",
+    "raw_binding": "REGULAR_FILE_GIT_BLOB_V2_NO_REPLACE_NO_NORMALIZATION",
+    "protected_files": [
+      {
+        "path": ".github/workflows/agent5-components.yml",
+        "git_mode": "100644",
+        "git_blob_oid": "095552e8da084c70f7ac49c03e53bfa0aa35659e",
+        "regular_file": true,
+        "matches_committed_blob": true,
+        "committed_sha256": "516272313cedcd47141b918875ca06903f59b27c5888cda8ba117404d1f8f497",
+        "actual_sha256": "516272313cedcd47141b918875ca06903f59b27c5888cda8ba117404d1f8f497",
+        "committed_bytes": 10404,
+        "actual_bytes": 10404
+      },
+      {
+        "path": "docs/scheduler/component-test-inventory-v2.json",
+        "git_mode": "100644",
+        "git_blob_oid": "8a36074a16d4b7ccc3bd34619b13c53114f0c8cf",
+        "regular_file": true,
+        "matches_committed_blob": true,
+        "committed_sha256": "7ecafa073ea2f60e8565c12c4523dbeea8a267c3ee8f2d7e75786fef589c8b6c",
+        "actual_sha256": "7ecafa073ea2f60e8565c12c4523dbeea8a267c3ee8f2d7e75786fef589c8b6c",
+        "committed_bytes": 4830,
+        "actual_bytes": 4830
+      },
+      {
+        "path": "scheduler_components/__init__.py",
+        "git_mode": "100644",
+        "git_blob_oid": "ee45910134508d9e736285545237107e6b9101a0",
+        "regular_file": true,
+        "matches_committed_blob": true,
+        "committed_sha256": "42f5884afcd111a1a90e1e4ce75b61a985ceb829876099e99de3520a122bd03c",
+        "actual_sha256": "42f5884afcd111a1a90e1e4ce75b61a985ceb829876099e99de3520a122bd03c",
+        "committed_bytes": 75,
+        "actual_bytes": 75
+      },
+      {
+        "path": "scheduler_components/authority_boundary.py",
+        "git_mode": "100644",
+        "git_blob_oid": "166897ef9599a6f2aa5860747e89a997fc3244ea",
+        "regular_file": true,
+        "matches_committed_blob": true,
+        "committed_sha256": "32e8c2f574f43e344ff01fe63638c5acfaee9ea7d864b677538a82d350bb5116",
+        "actual_sha256": "32e8c2f574f43e344ff01fe63638c5acfaee9ea7d864b677538a82d350bb5116",
+        "committed_bytes": 976,
+        "actual_bytes": 976
+      },
+      {
+        "path": "scheduler_components/durable.py",
+        "git_mode": "100644",
+        "git_blob_oid": "2f68318187d230733f53ad9c0fa02ec7e427641f",
+        "regular_file": true,
+        "matches_committed_blob": false,
+        "committed_sha256": "4a3d4b1f32b503a475b9520520bb82c0ef6135d3112776d41b8c551810124fe8",
+        "actual_sha256": "ab85cf40a8d96cc4b53bd760a6b69b7abae7ee09be32baddb3e2a27dfb34a14e",
+        "committed_bytes": 9648,
+        "actual_bytes": 9859
+      },
+      {
+        "path": "scheduler_components/placement.py",
+        "git_mode": "100644",
+        "git_blob_oid": "a84619aa40217b5dca8491eb33d92dd08f126969",
+        "regular_file": true,
+        "matches_committed_blob": true,
+        "committed_sha256": "b8531b959521543dba8e16807ff294cdd48b6618defd738f7874e1907aca267d",
+        "actual_sha256": "b8531b959521543dba8e16807ff294cdd48b6618defd738f7874e1907aca267d",
+        "committed_bytes": 5293,
+        "actual_bytes": 5293
+      },
+      {
+        "path": "scheduler_components/schedules.py",
+        "git_mode": "100644",
+        "git_blob_oid": "db8247691bc8b5e15404c23714b5c04449d472d8",
+        "regular_file": true,
+        "matches_committed_blob": true,
+        "committed_sha256": "baf736216ceb6ca019d3d2ac9a24654b1741a6ada6574bb6e26e729bc1230810",
+        "actual_sha256": "baf736216ceb6ca019d3d2ac9a24654b1741a6ada6574bb6e26e729bc1230810",
+        "committed_bytes": 1285,
+        "actual_bytes": 1285
+      },
+      {
+        "path": "tests/test_agent5_scheduler_components.py",
+        "git_mode": "100644",
+        "git_blob_oid": "c8a70e7423feeaacd46acb764b5ece4df32daa34",
+        "regular_file": true,
+        "matches_committed_blob": true,
+        "committed_sha256": "bd52a739826136c8f2778aae227c3dac2fcab767d079d127faa85d5301bbdce8",
+        "actual_sha256": "bd52a739826136c8f2778aae227c3dac2fcab767d079d127faa85d5301bbdce8",
+        "committed_bytes": 16178,
+        "actual_bytes": 16178
+      }
+    ],
+    "unexpected_protected_files": [],
+    "protected_inputs_valid": false
+  },
+  "required_tests": 30,
+  "required_skips": 0,
+  "test_inventory_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "expected_test_ids": [],
+  "tests_run": 0,
+  "skips": 0,
+  "failures": 0,
+  "errors": 0,
+  "passed": false,
+  "source_after": {
+    "head": "db455c4926ddd50d0be7c3c615a8e4c073d12775",
+    "tree": "dd2106a0d706791afc22e7553dedff605819d546",
+    "tracked_status": "",
+    "raw_binding": "REGULAR_FILE_GIT_BLOB_V2_NO_REPLACE_NO_NORMALIZATION",
+    "protected_files": [
+      {
+        "path": ".github/workflows/agent5-components.yml",
+        "git_mode": "100644",
+        "git_blob_oid": "095552e8da084c70f7ac49c03e53bfa0aa35659e",
+        "regular_file": true,
+        "matches_committed_blob": true,
+        "committed_sha256": "516272313cedcd47141b918875ca06903f59b27c5888cda8ba117404d1f8f497",
+        "actual_sha256": "516272313cedcd47141b918875ca06903f59b27c5888cda8ba117404d1f8f497",
+        "committed_bytes": 10404,
+        "actual_bytes": 10404
+      },
+      {
+        "path": "docs/scheduler/component-test-inventory-v2.json",
+        "git_mode": "100644",
+        "git_blob_oid": "8a36074a16d4b7ccc3bd34619b13c53114f0c8cf",
+        "regular_file": true,
+        "matches_committed_blob": true,
+        "committed_sha256": "7ecafa073ea2f60e8565c12c4523dbeea8a267c3ee8f2d7e75786fef589c8b6c",
+        "actual_sha256": "7ecafa073ea2f60e8565c12c4523dbeea8a267c3ee8f2d7e75786fef589c8b6c",
+        "committed_bytes": 4830,
+        "actual_bytes": 4830
+      },
+      {
+        "path": "scheduler_components/__init__.py",
+        "git_mode": "100644",
+        "git_blob_oid": "ee45910134508d9e736285545237107e6b9101a0",
+        "regular_file": true,
+        "matches_committed_blob": true,
+        "committed_sha256": "42f5884afcd111a1a90e1e4ce75b61a985ceb829876099e99de3520a122bd03c",
+        "actual_sha256": "42f5884afcd111a1a90e1e4ce75b61a985ceb829876099e99de3520a122bd03c",
+        "committed_bytes": 75,
+        "actual_bytes": 75
+      },
+      {
+        "path": "scheduler_components/authority_boundary.py",
+        "git_mode": "100644",
+        "git_blob_oid": "166897ef9599a6f2aa5860747e89a997fc3244ea",
+        "regular_file": true,
+        "matches_committed_blob": true,
+        "committed_sha256": "32e8c2f574f43e344ff01fe63638c5acfaee9ea7d864b677538a82d350bb5116",
+        "actual_sha256": "32e8c2f574f43e344ff01fe63638c5acfaee9ea7d864b677538a82d350bb5116",
+        "committed_bytes": 976,
+        "actual_bytes": 976
+      },
+      {
+        "path": "scheduler_components/durable.py",
+        "git_mode": "100644",
+        "git_blob_oid": "2f68318187d230733f53ad9c0fa02ec7e427641f",
+        "regular_file": true,
+        "matches_committed_blob": false,
+        "committed_sha256": "4a3d4b1f32b503a475b9520520bb82c0ef6135d3112776d41b8c551810124fe8",
+        "actual_sha256": "ab85cf40a8d96cc4b53bd760a6b69b7abae7ee09be32baddb3e2a27dfb34a14e",
+        "committed_bytes": 9648,
+        "actual_bytes": 9859
+      },
+      {
+        "path": "scheduler_components/placement.py",
+        "git_mode": "100644",
+        "git_blob_oid": "a84619aa40217b5dca8491eb33d92dd08f126969",
+        "regular_file": true,
+        "matches_committed_blob": true,
+        "committed_sha256": "b8531b959521543dba8e16807ff294cdd48b6618defd738f7874e1907aca267d",
+        "actual_sha256": "b8531b959521543dba8e16807ff294cdd48b6618defd738f7874e1907aca267d",
+        "committed_bytes": 5293,
+        "actual_bytes": 5293
+      },
+      {
+        "path": "scheduler_components/schedules.py",
+        "git_mode": "100644",
+        "git_blob_oid": "db8247691bc8b5e15404c23714b5c04449d472d8",
+        "regular_file": true,
+        "matches_committed_blob": true,
+        "committed_sha256": "baf736216ceb6ca019d3d2ac9a24654b1741a6ada6574bb6e26e729bc1230810",
+        "actual_sha256": "baf736216ceb6ca019d3d2ac9a24654b1741a6ada6574bb6e26e729bc1230810",
+        "committed_bytes": 1285,
+        "actual_bytes": 1285
+      },
+      {
+        "path": "tests/test_agent5_scheduler_components.py",
+        "git_mode": "100644",
+        "git_blob_oid": "c8a70e7423feeaacd46acb764b5ece4df32daa34",
+        "regular_file": true,
+        "matches_committed_blob": true,
+        "committed_sha256": "bd52a739826136c8f2778aae227c3dac2fcab767d079d127faa85d5301bbdce8",
+        "actual_sha256": "bd52a739826136c8f2778aae227c3dac2fcab767d079d127faa85d5301bbdce8",
+        "committed_bytes": 16178,
+        "actual_bytes": 16178
+      }
+    ],
+    "unexpected_protected_files": [],
+    "protected_inputs_valid": false
+  },
+  "test_log_sha256": "842f412e29ffec8c6490e6e66885ecfb914de0c900abcece7efeaefcb1665035"
+}

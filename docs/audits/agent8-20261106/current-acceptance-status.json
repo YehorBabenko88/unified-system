@@ -1,5 +1,5 @@
 {
-  "checked_utc": "2026-11-06T19:56:38.505553+00:00",
+  "checked_utc": "2026-11-06T20:06:22.622845+00:00",
   "RELEASE_MANIFEST_STATUS": "PRESENT_PREPARATION_ONLY_NOT_APPROVED_NOT_INSTALLABLE",
   "NODE_INVENTORY_STATUS": "SIX_REDACTED_OWNER_OBSERVATIONS_PRESENT_ORIGINAL_RAW_NOT_REACQUIRED_BY_A8_NOT_ADMITTED",
   "CONTRACT_STATUS": {
@@ -496,6 +496,166 @@
       "CI_source_guard": "F16_REPLACEMENT_NEGATIVE_ACCEPTED",
       "legacy_dispatch": "NOT_IMPLEMENTED",
       "actual_publication": "BLOCKED"
+    },
+    "A5_F16_conformance": {
+      "head": "db455c4926ddd50d0be7c3c615a8e4c073d12775",
+      "tree": "dd2106a0d706791afc22e7553dedff605819d546",
+      "previous": "6bcf5475023a8f6a9733d02ad899064d0d83be95",
+      "delta": "WORKFLOW_TWO_DOCS_ONLY_PRODUCT_TEST_INVENTORY_IDENTICAL",
+      "all_three_source_git_subprocess_sites_force_no_replace": [
+        18,
+        12,
+        34
+      ],
+      "cases": {
+        "old_blob_RED": {
+          "head": "6bcf5475023a8f6a9733d02ad899064d0d83be95",
+          "exit_code": 0,
+          "passed": true,
+          "tests": 30,
+          "skips": 0,
+          "source_valid_before": true,
+          "source_valid_after": true,
+          "own_dot_git_common_dir": true
+        },
+        "old_tree_RED": {
+          "head": "6bcf5475023a8f6a9733d02ad899064d0d83be95",
+          "exit_code": 0,
+          "passed": true,
+          "tests": 30,
+          "skips": 0,
+          "source_valid_before": true,
+          "source_valid_after": true,
+          "own_dot_git_common_dir": true
+        },
+        "clean": {
+          "head": "db455c4926ddd50d0be7c3c615a8e4c073d12775",
+          "exit_code": 0,
+          "passed": true,
+          "tests": 30,
+          "skips": 0,
+          "source_valid_before": true,
+          "source_valid_after": true,
+          "own_dot_git_common_dir": true
+        },
+        "blob_replacement": {
+          "head": "db455c4926ddd50d0be7c3c615a8e4c073d12775",
+          "exit_code": 1,
+          "passed": false,
+          "tests": 0,
+          "skips": 0,
+          "source_valid_before": false,
+          "source_valid_after": false,
+          "own_dot_git_common_dir": true
+        },
+        "tree_replacement": {
+          "head": "db455c4926ddd50d0be7c3c615a8e4c073d12775",
+          "exit_code": 1,
+          "passed": false,
+          "tests": 0,
+          "skips": 0,
+          "source_valid_before": false,
+          "source_valid_after": false,
+          "own_dot_git_common_dir": true
+        },
+        "hidden_source": {
+          "head": "db455c4926ddd50d0be7c3c615a8e4c073d12775",
+          "exit_code": 1,
+          "passed": false,
+          "tests": 0,
+          "skips": 0,
+          "source_valid_before": false,
+          "source_valid_after": false,
+          "own_dot_git_common_dir": true
+        },
+        "hidden_test": {
+          "head": "db455c4926ddd50d0be7c3c615a8e4c073d12775",
+          "exit_code": 1,
+          "passed": false,
+          "tests": 0,
+          "skips": 0,
+          "source_valid_before": false,
+          "source_valid_after": false,
+          "own_dot_git_common_dir": true
+        },
+        "hidden_inventory": {
+          "head": "db455c4926ddd50d0be7c3c615a8e4c073d12775",
+          "exit_code": 1,
+          "passed": false,
+          "tests": 0,
+          "skips": 0,
+          "source_valid_before": false,
+          "source_valid_after": false,
+          "own_dot_git_common_dir": true
+        },
+        "hidden_workflow": {
+          "head": "db455c4926ddd50d0be7c3c615a8e4c073d12775",
+          "exit_code": 1,
+          "passed": false,
+          "tests": 0,
+          "skips": 0,
+          "source_valid_before": false,
+          "source_valid_after": false,
+          "own_dot_git_common_dir": true
+        },
+        "CRLF_source": {
+          "head": "db455c4926ddd50d0be7c3c615a8e4c073d12775",
+          "exit_code": 1,
+          "passed": false,
+          "tests": 0,
+          "skips": 0,
+          "source_valid_before": false,
+          "source_valid_after": false,
+          "own_dot_git_common_dir": true
+        },
+        "missing_source": {
+          "head": "db455c4926ddd50d0be7c3c615a8e4c073d12775",
+          "exit_code": 1,
+          "passed": false,
+          "tests": 0,
+          "skips": 0,
+          "source_valid_before": false,
+          "source_valid_after": false,
+          "own_dot_git_common_dir": true
+        },
+        "hidden_post_source": {
+          "head": "db455c4926ddd50d0be7c3c615a8e4c073d12775",
+          "exit_code": 1,
+          "passed": false,
+          "tests": 30,
+          "skips": 0,
+          "source_valid_before": true,
+          "source_valid_after": false,
+          "own_dot_git_common_dir": true
+        },
+        "wrong_ID_same30": {
+          "head": "db455c4926ddd50d0be7c3c615a8e4c073d12775",
+          "exit_code": 1,
+          "passed": false,
+          "tests": 30,
+          "skips": 0,
+          "source_valid_before": true,
+          "source_valid_after": true,
+          "own_dot_git_common_dir": true
+        },
+        "skip": {
+          "head": "db455c4926ddd50d0be7c3c615a8e4c073d12775",
+          "exit_code": 1,
+          "passed": false,
+          "tests": 30,
+          "skips": 1,
+          "source_valid_before": true,
+          "source_valid_after": true,
+          "own_dot_git_common_dir": true
+        }
+      },
+      "F16_A5_scope": "FIX_VERIFIED_OFFLINE_EXACT_SOURCE",
+      "F16_global": "OPEN_A3_ROOT_AND_OTHER_APPLICABLE_GUARDS_PENDING",
+      "prior_F15_regression": "NO_REGRESSION_IN_TESTED_CONTROLS",
+      "hosted": "NOT_QUALIFIED",
+      "runtime": "NOT_QUALIFIED",
+      "physical": "BLOCKED",
+      "overall": "NO_GO"
     }
   },
   "WINDOWS_CI": "PENDING_CURRENT_DRAFTS; FAILED_BASELINE_MANDATORY_GATES_NOT_CLOSED",
@@ -558,7 +718,8 @@
     "phase24/independent-journal-probes.json",
     "phase25/f15-fix-review.json",
     "phase26/integration75-review.json",
-    "phase27/checkpoint-v3-review.json"
+    "phase27/checkpoint-v3-review.json",
+    "phase28/scheduler-f16-review.json"
   ],
   "NEXT_ACTIONS": [
     "Review terminal exact-source Windows CI logs/artifacts when available; queued/cancelled is not PASS.",
