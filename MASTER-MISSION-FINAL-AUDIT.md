@@ -38,3 +38,9 @@ release/execution-journal.json records continuation. acceptance-matrix.json reta
 ## Full local integration suite
 
 755 tests completed with no failures/errors and 14 explicitly retained baseline skips. Exact command, original stdout/stderr, source HEAD and before/after raw Python file hashes are in release/evidence/full-suite-receipt.json. This is local Windows evidence, not hosted qualification or physical cluster acceptance; skip reasons still require gate review.
+
+## Follow-up consolidation
+
+Existing Windows fixture compatibility PR18 and bounded diagnostic PR19 were reviewed and consolidated without conflict. 68 affected tests passed locally with zero skips. The diagnostic helper retains its fatal 15-second deadline and preserves native assertions. The earlier 755-test full result remains evidence for its original parent source, not a claim of a repeated full suite on this newer tree.
+
+Math registration correction at917d996 received independent A8 raw-source/188-file/13-test review; actual native DLL startup remains unresolved. Proposed follow-up source pins for all six modules are listed in the noninstallable manifest; they are not a coherent admitted runtime bundle. Original paginated API responses and their command/hash index are additionally preserved in github-original-metadata.tar.gz.
