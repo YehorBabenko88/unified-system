@@ -48,5 +48,14 @@ class RegistryTests(unittest.TestCase):
             for source in ROOT.glob('*.json'):shutil.copyfile(source,target/source.name)
             (target/'mandatory-gates.v1.json').write_text('{"go":"GO"}')
             with self.assertRaises(RegistryRejected):verify_identity(target,self.candidate,expected_manifest_sha256=self.pin)
+    def test_windows_path_aliases_and_case_collisions_rejected(self):
+        for path in ('UNIFIED_SYSTEM/LAN_TRANSPORT.PY','unified_system/../unified_system/contracts.py','unified_system\\contracts.py'):
+            owners=json.loads((ROOT/'ownership.v1.json').read_text(encoding='utf-8'))
+            owners['agents'][1]['allowed_files'].append(path)
+            with self.subTest(path=path),self.assertRaises(RegistryRejected):verify_ownership(owners)
+    def test_unsafe_repository_path_spelling_rejected(self):
+        for path in ('/unified_system/x.py','C:/x.py','unified_system//x.py','./unified_system/x.py','unified_system/x.py.','unified_system/CON.py','unified_system/x.py:stream'):
+            owners=json.loads((ROOT/'ownership.v1.json').read_text(encoding='utf-8'));owners['agents'][1]['allowed_files'].append(path)
+            with self.subTest(path=path),self.assertRaises(RegistryRejected):verify_ownership(owners)
 
 if __name__=='__main__':unittest.main()

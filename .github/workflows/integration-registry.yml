@@ -53,7 +53,7 @@ jobs:
           assert before==after
           report={'schema':'unified.registry-ci.v1','head':before['head'],'tree':before['tree'],'tests':result.testsRun,'failures':len(result.failures),'errors':len(result.errors),'skips':len(result.skipped),'source_unchanged':True,'source_files_sha256':hashlib.sha256(json.dumps(before['files'],sort_keys=True).encode()).hexdigest(),'runtime_admission':'BLOCKED','physical':'NOT_RUN','run_id':os.environ['GITHUB_RUN_ID'],'attempt':os.environ['GITHUB_RUN_ATTEMPT']}
           pathlib.Path(os.environ['RUNNER_TEMP'],'registry-evidence.json').write_text(json.dumps(report,indent=2))
-          assert result.testsRun==8 and result.wasSuccessful() and not result.skipped
+          assert result.testsRun==10 and result.wasSuccessful() and not result.skipped
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         id: evidence

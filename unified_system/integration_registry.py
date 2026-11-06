@@ -51,15 +51,29 @@ def verify_ownership(ownership):
     agents=ownership.get('agents');need(type(agents) is list and len(agents)==8,'EIGHT_OWNERS_REQUIRED')
     need({a['agent_id'] for a in agents}=={'A'+str(i) for i in range(1,9)},'UNIQUE_OWNERS_REQUIRED')
     need(len({a['branch'] for a in agents})==8 and len({a['worktree'].casefold() for a in agents})==8,'ISOLATION_COLLISION')
+    def path_key(value,*,prefix=False):
+        need(type(value) is str and re.fullmatch(r'[A-Za-z0-9_./-]+',value) is not None,'NONCANONICAL_REPOSITORY_PATH')
+        need(not value.startswith('/') and not value.endswith('/') or prefix and value.endswith('/') and not value.startswith('/'),'NONCANONICAL_REPOSITORY_PATH')
+        body=value[:-1] if prefix and value.endswith('/') else value
+        parts=body.split('/')
+        reserved={'con','prn','aux','nul',*('com'+str(i) for i in range(1,10)),*('lpt'+str(i) for i in range(1,10))}
+        need(bool(body) and all(part not in ('','.','..') and not part.endswith(('.',' ')) and part.split('.')[0].casefold() not in reserved for part in parts),'NONCANONICAL_REPOSITORY_PATH')
+        need(parts[0].casefold()!='.git','GIT_METADATA_RESERVED')
+        return value.casefold()
+    scopes={}
+    for agent in agents:
+        need(agent['repository'] in MODULES,'UNKNOWN_REPOSITORY_OWNER')
+        scopes[agent['agent_id']]=[path_key(p) for p in agent['allowed_files']]+[path_key(p,prefix=True) for p in agent['allowed_new_path_prefixes']]
+    shared_paths=[path_key(p,prefix=p.endswith('/')) for p in ownership['shared_paths']]
     def overlaps(left,right):return left==right or left.startswith(right) or right.startswith(left)
     for agent in agents:
-        for owned in agent['allowed_files']+agent['allowed_new_path_prefixes']:
-            for shared in ownership['shared_paths']:
+        for owned in scopes[agent['agent_id']]:
+            for shared in shared_paths:
                 need(not overlaps(owned,shared),'ROOT_SHARED_FILE_RESERVED')
     for i,a in enumerate(agents):
         for b in agents[i+1:]:
             if a['repository']!=b['repository']:continue
-            for left in a['allowed_files']+a['allowed_new_path_prefixes']:
-                for right in b['allowed_files']+b['allowed_new_path_prefixes']:
+            for left in scopes[a['agent_id']]:
+                for right in scopes[b['agent_id']]:
                     need(not overlaps(left,right),'FILE_OWNERSHIP_COLLISION')
     return True
