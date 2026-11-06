@@ -61,6 +61,9 @@
     "repository": "unified-system",
     "title": "Ownership validator accepts Windows path aliases",
     "evidence": "Exact PR22 34a2adf94b0e2170bf91f8641766e23481e269b2: case alias, dotdot and backslash probes all accepted. See phase2/coordination-probe.json.",
-    "required_correction": "Reject noncanonical repo-relative paths and Windows case aliases before ownership overlap checks; correct A7 allocation and actual A8 checkout path."
+    "required_correction": "Reject noncanonical repo-relative paths and Windows case aliases before ownership overlap checks; correct A7 allocation and actual A8 checkout path.",
+    "status": "FIX_VERIFIED_OFFLINE_EXACT_SOURCE",
+    "verified_fix_head": "c0965c5612227662d3673820865aeee703cb5452",
+    "fix_evidence": "phase3/f08-recheck.json; phase3/registry-regression.log"
   }
 ]

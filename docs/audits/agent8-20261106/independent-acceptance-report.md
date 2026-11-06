@@ -1,4 +1,4 @@
-> Latest update: [Phase 2 isolated acceptance](phase2/independent-acceptance-addendum.md). Current findings: 6 P1 and 2 P2; physical and Tailscale removal remain BLOCKED. The baseline snapshot below is retained as historical evidence.
+> Latest update: [F08 fix review](phase3/f08-fix-review.md). F08 fixed at exact c0965c5; current open findings: 6 P1 and 1 P2. Overall NO-GO; physical and Tailscale removal BLOCKED. Earlier snapshots below are historical.
 
 # Independent security, CI and physical acceptance — Agent 8
 
