@@ -1,0 +1,58 @@
+[
+  {
+    "id": "A8-F01",
+    "severity": "P1",
+    "repository": "unified-system",
+    "title": "Windows fixture/security acceptance fails",
+    "evidence": "ACL_CANONICAL_ROOT_REQUIRED; Python 3.11 WindowsPath.is_junction errors; missing five-source-evidence upload.",
+    "required_correction": "Rebase/include reviewed fixture fixes and independently rerun full Windows 3.11/3.13 plus PowerShell/pwsh security gates."
+  },
+  {
+    "id": "A8-F02",
+    "severity": "P1",
+    "repository": "bybit-cluster-grid",
+    "title": "Source admission regressions fail CI",
+    "evidence": "KeyError owned_source_admission in tests/test_owned_control_source.py; downloaded PG18 JUnit: 1631 cases, 4 failures, 14 skipped.",
+    "required_correction": "Restore source-admission test lifecycle isolation without skipping revocation negatives; rerun preflight and PG18 qualification."
+  },
+  {
+    "id": "A8-F03",
+    "severity": "P1",
+    "repository": "math",
+    "title": "Mandatory Windows Node 22/24 cells fail",
+    "evidence": "ERR_ASSERTION / DIAG_CHILD_STATUS / worker_phase=COMPILE; platform result tests=98, pass=97, fail=1; Full CI coverage failed.",
+    "required_correction": "Fix native compile/child-status path and run both mandatory Windows cells plus coverage aggregator."
+  },
+  {
+    "id": "A8-F04",
+    "severity": "P1",
+    "repository": "math",
+    "title": "Selected Windows evidence tests merge SHA",
+    "evidence": "PR HEAD 11c3c470ebec9f9fdb6ec1b69e77b7b8aeea653a; downloaded receipts and checkout log use f1070af8698a5ef584fece43057be049e307ef2a.",
+    "required_correction": "Run explicit exact-PR-HEAD qualification. Retain merge-result qualification as separate evidence; do not relabel it."
+  },
+  {
+    "id": "A8-F05",
+    "severity": "P1",
+    "repository": "unified-system",
+    "title": "Real operator authentication incomplete",
+    "evidence": "Native artifact verifies compile/invalid-context only: authentication NOT_QUALIFIED, runtime_factory DENY, positive subject extraction NOT_RUN.",
+    "required_correction": "Qualify actual native inbound context, TLS/CBT, operator session expiry/revocation, peer identity and per-human backend RBAC."
+  },
+  {
+    "id": "A8-F06",
+    "severity": "P1",
+    "repository": "all",
+    "title": "Coherent physical acceptance unavailable",
+    "evidence": "No independently verified coherent release manifest, real all-node cluster, fault-injection run or alternate-access recovery proof for this audit.",
+    "required_correction": "Integration Owner must publish immutable six-repo candidate and mandatory registry; obtain separate physical fault-injection authorization and execute acceptance."
+  },
+  {
+    "id": "A8-F07",
+    "severity": "P2",
+    "repository": "all",
+    "title": "Mandatory skip coverage unresolved",
+    "evidence": "Passing job conclusions coexist with skipped JUnit cases; no authoritative case-to-requirement map supplied to auditor.",
+    "required_correction": "Publish mandatory IDs, expected counts/platforms and permitted optional skip reasons; missing/skip/cancelled cannot count as PASS."
+  }
+]

@@ -1,0 +1,1313 @@
+﻿2026-11-05T20:39:12.2404306Z Current runner version: '2.338.2'
+2026-11-05T20:39:12.2432507Z ##[group]Runner Image Provisioner
+2026-11-05T20:39:12.2433369Z Hosted Compute Agent
+2026-11-05T20:39:12.2433942Z Version: 20261021.618
+2026-11-05T20:39:12.2434497Z Commit: 21505ad2541d5be6135ed84fc33697146cf75b8e
+2026-11-05T20:39:12.2435578Z Build Date: 2026-10-21T00:45:21Z
+2026-11-05T20:39:12.2436410Z Worker ID: {7e7703a9-bc12-4417-962c-2178a9bbe0c6}
+2026-11-05T20:39:12.2437075Z Region: centralus
+2026-11-05T20:39:12.2437618Z Cloud: Azure
+2026-11-05T20:39:12.2438150Z ##[endgroup]
+2026-11-05T20:39:12.2439632Z ##[group]Operating System
+2026-11-05T20:39:12.2440626Z Microsoft Windows Server 2025
+2026-11-05T20:39:12.2441524Z 10.0.26100
+2026-11-05T20:39:12.2442336Z Datacenter
+2026-11-05T20:39:12.2443284Z ##[endgroup]
+2026-11-05T20:39:12.2444386Z ##[group]Runner Image
+2026-11-05T20:39:12.2445560Z Image: windows-2025-vs2026
+2026-11-05T20:39:12.2446737Z Version: 20261030.294.1
+2026-11-05T20:39:12.2449645Z Included Software: https://github.com/actions/runner-images/blob/win25-vs2026/20261030.294/images/windows/Windows2025-VS2026-Readme.md
+2026-11-05T20:39:12.2453059Z Image Release: https://github.com/actions/runner-images/releases/tag/win25-vs2026%2F20261030.294
+2026-11-05T20:39:12.2455242Z ##[endgroup]
+2026-11-05T20:39:12.2457260Z ##[group]GITHUB_TOKEN Permissions
+2026-11-05T20:39:12.2460009Z Contents: read
+2026-11-05T20:39:12.2460907Z Metadata: read
+2026-11-05T20:39:12.2461794Z ##[endgroup]
+2026-11-05T20:39:12.2465010Z Secret source: Actions
+2026-11-05T20:39:12.2466581Z Cache mode: write
+2026-11-05T20:39:12.2467777Z Prepare workflow directory
+2026-11-05T20:39:12.2866247Z Prepare all required actions
+2026-11-05T20:39:12.2923016Z Getting action download info
+2026-11-05T20:39:12.5326112Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-11-05T20:39:12.6816103Z Download action repository 'actions/setup-python@v5' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+2026-11-05T20:39:12.9827521Z Complete job name: test (windows-latest, 3.13)
+2026-11-05T20:39:13.1651074Z ##[group]Run actions/checkout@v4
+2026-11-05T20:39:13.1652105Z with:
+2026-11-05T20:39:13.1652580Z   repository: YehorBabenko88/unified-system
+2026-11-05T20:39:13.1656875Z   token: ***
+2026-11-05T20:39:13.1657291Z   ssh-strict: true
+2026-11-05T20:39:13.1657691Z   ssh-user: git
+2026-11-05T20:39:13.1658115Z   persist-credentials: true
+2026-11-05T20:39:13.1658567Z   clean: true
+2026-11-05T20:39:13.1658978Z   sparse-checkout-cone-mode: true
+2026-11-05T20:39:13.1659463Z   fetch-depth: 1
+2026-11-05T20:39:13.1659861Z   fetch-tags: false
+2026-11-05T20:39:13.1660274Z   show-progress: true
+2026-11-05T20:39:13.1660684Z   lfs: false
+2026-11-05T20:39:13.1661052Z   submodules: false
+2026-11-05T20:39:13.1661461Z   set-safe-directory: true
+2026-11-05T20:39:13.1661927Z   allow-unsafe-pr-checkout: false
+2026-11-05T20:39:13.1662680Z ##[endgroup]
+2026-11-05T20:39:13.3243625Z Syncing repository: YehorBabenko88/unified-system
+2026-11-05T20:39:13.3247135Z ##[group]Getting Git version info
+2026-11-05T20:39:13.3248127Z Working directory is 'D:\a\unified-system\unified-system'
+2026-11-05T20:39:13.4423271Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-05T20:39:13.8281508Z git version 2.56.0.windows.4
+2026-11-05T20:39:13.8344603Z ##[endgroup]
+2026-11-05T20:39:13.8368510Z Temporarily overriding HOME='D:\a\_temp\4fe7a18f-fcc2-4ace-814e-14408d39fbec' before making global git config changes
+2026-11-05T20:39:13.8370997Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-05T20:39:13.8380924Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\unified-system\unified-system
+2026-11-05T20:39:13.9001786Z Deleting the contents of 'D:\a\unified-system\unified-system'
+2026-11-05T20:39:13.9008408Z ##[group]Initializing the repository
+2026-11-05T20:39:13.9017585Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\unified-system\unified-system
+2026-11-05T20:39:14.0238080Z Initialized empty Git repository in D:/a/unified-system/unified-system/.git/
+2026-11-05T20:39:14.0286883Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/YehorBabenko88/unified-system
+2026-11-05T20:39:14.1012891Z ##[endgroup]
+2026-11-05T20:39:14.1014105Z ##[group]Disabling automatic garbage collection
+2026-11-05T20:39:14.1021785Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2026-11-05T20:39:14.1428010Z ##[endgroup]
+2026-11-05T20:39:14.1429240Z ##[group]Setting up auth
+2026-11-05T20:39:14.1441402Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-05T20:39:14.1853095Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-05T20:39:15.8906163Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-05T20:39:15.9341951Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-05T20:39:16.5053953Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-05T20:39:16.5485916Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-05T20:39:17.1353391Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-11-05T20:39:17.1760969Z ##[endgroup]
+2026-11-05T20:39:17.1762123Z ##[group]Fetching the repository
+2026-11-05T20:39:17.1779259Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +0d2080ac431a653ef516ca89a3b8e87eab90f360:refs/remotes/pull/20/merge
+2026-11-05T20:39:18.5202860Z From https://github.com/YehorBabenko88/unified-system
+2026-11-05T20:39:18.5203818Z  * [new ref]         0d2080ac431a653ef516ca89a3b8e87eab90f360 -> pull/20/merge
+2026-11-05T20:39:18.5252348Z ##[endgroup]
+2026-11-05T20:39:18.5253041Z ##[group]Determining the checkout info
+2026-11-05T20:39:18.5255501Z ##[endgroup]
+2026-11-05T20:39:18.5266103Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2026-11-05T20:39:18.5905141Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2026-11-05T20:39:18.6362005Z ##[group]Checking out the ref
+2026-11-05T20:39:18.6372785Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force refs/remotes/pull/20/merge
+2026-11-05T20:39:18.7763060Z Note: switching to 'refs/remotes/pull/20/merge'.
+2026-11-05T20:39:18.7763382Z 
+2026-11-05T20:39:18.7763712Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-11-05T20:39:18.7764213Z changes and commit them, and you can discard any commits you make in this
+2026-11-05T20:39:18.7764684Z state without impacting any branches by switching back to a branch.
+2026-11-05T20:39:18.7764965Z 
+2026-11-05T20:39:18.7765153Z If you want to create a new branch to retain commits you create, you may
+2026-11-05T20:39:18.7765631Z do so (now or later) by using -c with the switch command. Example:
+2026-11-05T20:39:18.7765888Z 
+2026-11-05T20:39:18.7766038Z   git switch -c <new-branch-name>
+2026-11-05T20:39:18.7766206Z 
+2026-11-05T20:39:18.7766308Z Or undo this operation with:
+2026-11-05T20:39:18.7766459Z 
+2026-11-05T20:39:18.7766548Z   git switch -
+2026-11-05T20:39:18.7766662Z 
+2026-11-05T20:39:18.7766874Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-11-05T20:39:18.7767197Z 
+2026-11-05T20:39:18.7777063Z HEAD is now at 0d2080a Merge 7ac7983acd4f7a5ba10c579e706f3d1f5a800722 into 2df6f5c2f77f4d883bad1a8623dd8375db529be0
+2026-11-05T20:39:18.7850884Z ##[endgroup]
+2026-11-05T20:39:18.8326920Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2026-11-05T20:39:18.8680374Z 0d2080ac431a653ef516ca89a3b8e87eab90f360
+2026-11-05T20:39:18.9215997Z ##[group]Run actions/setup-python@v5
+2026-11-05T20:39:18.9216498Z with:
+2026-11-05T20:39:18.9216784Z   python-version: 3.13
+2026-11-05T20:39:18.9217141Z   check-latest: false
+2026-11-05T20:39:18.9221764Z   token: ***
+2026-11-05T20:39:18.9222118Z   update-environment: true
+2026-11-05T20:39:18.9222502Z   allow-prereleases: false
+2026-11-05T20:39:18.9222856Z   freethreaded: false
+2026-11-05T20:39:18.9223185Z ##[endgroup]
+2026-11-05T20:39:19.0888930Z ##[group]Installed versions
+2026-11-05T20:39:19.1139707Z (node:5104) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-05T20:39:19.1141049Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-05T20:39:19.1142627Z Successfully set up CPython (3.13.17)
+2026-11-05T20:39:19.1143741Z ##[endgroup]
+2026-11-05T20:39:19.1442879Z ##[group]Run python scripts/ci_unittest.py
+2026-11-05T20:39:19.1443348Z [36;1mpython scripts/ci_unittest.py[0m
+2026-11-05T20:39:19.2559330Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-05T20:39:19.2559850Z env:
+2026-11-05T20:39:19.2560233Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-05T20:39:19.2560941Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.13.17\x64/lib/pkgconfig
+2026-11-05T20:39:19.2561613Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-05T20:39:19.2562206Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-05T20:39:19.2562796Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-05T20:39:19.2563263Z ##[endgroup]
+2026-11-05T20:39:23.0620203Z test_both (test_adapters.AdapterTests.test_both) ... ok
+2026-11-05T20:39:23.0621172Z test_bounded (test_adapters.AdapterTests.test_bounded) ... ok
+2026-11-05T20:39:23.0622121Z test_cross_source (test_adapters.AdapterTests.test_cross_source) ... ok
+2026-11-05T20:39:23.0623048Z test_fake_real (test_adapters.AdapterTests.test_fake_real) ... ok
+2026-11-05T20:39:23.0623889Z test_missing (test_adapters.AdapterTests.test_missing) ... ok
+2026-11-05T20:39:23.0624748Z test_timestamp_bool (test_adapters.AdapterTests.test_timestamp_bool) ... ok
+2026-11-05T20:39:23.0625748Z test_unavailable_payload (test_adapters.AdapterTests.test_unavailable_payload) ... ok
+2026-11-05T20:39:23.0632308Z test_collector_stops_before_link_descendants_and_never_searches_path (test_adminit_acceptance.AdminitPreparationTests.test_collector_stops_before_link_descendants_and_never_searches_path) ... ok
+2026-11-05T20:39:23.0635624Z test_complete_claims_remain_unverified_and_any_failure_blocks (test_adminit_acceptance.AdminitPreparationTests.test_complete_claims_remain_unverified_and_any_failure_blocks) ... ok
+2026-11-05T20:39:23.0644590Z test_instruments_require_ten_unique_public_evidence_bound_real_windows (test_adminit_acceptance.AdminitPreparationTests.test_instruments_require_ten_unique_public_evidence_bound_real_windows) ... ok
+2026-11-05T20:39:23.0647444Z test_inventory_and_network_preparation_never_claim_actual_results (test_adminit_acceptance.AdminitPreparationTests.test_inventory_and_network_preparation_never_claim_actual_results) ... ok
+2026-11-05T20:39:23.0653619Z test_inventory_blocks_conflicts_missing_dependencies_and_resources (test_adminit_acceptance.AdminitPreparationTests.test_inventory_blocks_conflicts_missing_dependencies_and_resources) ... ok
+2026-11-05T20:39:23.0658506Z test_local_collector_has_no_remote_or_mutation_entry_points (test_adminit_acceptance.AdminitPreparationTests.test_local_collector_has_no_remote_or_mutation_entry_points) ... ok
+2026-11-05T20:39:23.0661738Z test_phase_record_requires_current_run_node_time_and_evidence (test_adminit_acceptance.AdminitPreparationTests.test_phase_record_requires_current_run_node_time_and_evidence) ... ok
+2026-11-05T20:39:23.0664413Z test_plan_rejects_release_pin_namespace_or_authority_mutation (test_adminit_acceptance.AdminitPreparationTests.test_plan_rejects_release_pin_namespace_or_authority_mutation) ... ok
+2026-11-05T20:39:23.0666867Z test_preparation_has_no_grant_or_execution_and_all_phases_missing (test_adminit_acceptance.AdminitPreparationTests.test_preparation_has_no_grant_or_execution_and_all_phases_missing) ... ok
+2026-11-05T20:39:23.0943759Z test_bounded (test_artifacts.ArtifactTests.test_bounded) ... ok
+2026-11-05T20:39:23.0958142Z test_invalid_digest (test_artifacts.ArtifactTests.test_invalid_digest) ... ok
+2026-11-05T20:39:23.0984274Z test_symlink (test_artifacts.ArtifactTests.test_symlink) ... ok
+2026-11-05T20:39:23.1003385Z test_valid (test_artifacts.ArtifactTests.test_valid) ... ok
+2026-11-05T20:39:23.1022768Z test_wrong_digest (test_artifacts.ArtifactTests.test_wrong_digest) ... ok
+2026-11-05T20:39:23.2346938Z test_relative_source_arguments_do_not_bypass_or_break_qualification (test_browser_source_paths.BrowserSourcePathTests.test_relative_source_arguments_do_not_bypass_or_break_qualification) ... ok
+2026-11-05T20:39:23.2440905Z test_actual_failure_cannot_be_reported_as_pass (test_ci_paper_causal.CausalGateTests.test_actual_failure_cannot_be_reported_as_pass) ... ok
+2026-11-05T20:39:23.2447060Z test_any_skip_or_missing_started_case_rejects_success (test_ci_paper_causal.CausalGateTests.test_any_skip_or_missing_started_case_rejects_success) ... ok
+2026-11-05T20:39:23.2452163Z test_closed_inventory_has_exact_sixteen_unique_cases (test_ci_paper_causal.CausalGateTests.test_closed_inventory_has_exact_sixteen_unique_cases) ... ok
+2026-11-05T20:39:23.2795284Z test_isolated_test_dependencies_reject_missing_version_or_pth_preload (test_ci_paper_causal.CausalGateTests.test_isolated_test_dependencies_reject_missing_version_or_pth_preload) ... ok
+2026-11-05T20:39:23.2823324Z test_output_must_be_outside_every_source_checkout (test_ci_paper_causal.CausalGateTests.test_output_must_be_outside_every_source_checkout) ... ok
+2026-11-05T20:39:23.2828363Z test_source_change_after_tests_rejects_qualification (test_ci_paper_causal.CausalGateTests.test_source_change_after_tests_rejects_qualification) ... ok
+2026-11-05T20:39:23.5017102Z test_source_snapshot_proves_origin_head_cleanliness_and_raw_bytes (test_ci_paper_causal.CausalGateTests.test_source_snapshot_proves_origin_head_cleanliness_and_raw_bytes) ... warning: in the working copy of 'tracked.py', LF will be replaced by CRLF the next time Git touches it
+2026-11-05T20:39:24.4837354Z ok
+2026-11-05T20:39:24.4857693Z test_all_office_and_adminit_variants_reject_os_name (test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_all_office_and_adminit_variants_reject_os_name) ... ok
+2026-11-05T20:39:24.4931720Z test_artifact_ownership_output_is_confined_to_runner_command_file (test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_artifact_ownership_output_is_confined_to_runner_command_file) ... ok
+2026-11-05T20:39:24.4952943Z test_bootstrap_blob_wrong_pin_and_unknown_source_member_fail_closed (test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_bootstrap_blob_wrong_pin_and_unknown_source_member_fail_closed) ... ok
+2026-11-05T20:39:24.6101691Z test_crlf_operator_file_does_not_replace_exact_lf_git_blob (test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_crlf_operator_file_does_not_replace_exact_lf_git_blob) ... ok
+2026-11-05T20:39:24.6218466Z test_download_rejects_size_hash_and_cross_host_final_response (test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_download_rejects_size_hash_and_cross_host_final_response) ... ok
+2026-11-05T20:39:24.6285527Z test_download_requires_pinned_bytes_and_exclusive_destination (test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_download_requires_pinned_bytes_and_exclusive_destination) ... ok
+2026-11-05T20:39:24.6333445Z test_entry_uses_os_name_and_rejects_before_network_or_acl (test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_entry_uses_os_name_and_rejects_before_network_or_acl) ... ok
+2026-11-05T20:39:24.6360592Z test_git_blob_wrong_size_or_pin_is_rejected_without_normalization (test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_git_blob_wrong_size_or_pin_is_rejected_without_normalization) ... ok
+2026-11-05T20:39:26.8559516Z test_inert_orchestration_accepts_canonical_fake_tools_under_short_temp_alias (test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_inert_orchestration_accepts_canonical_fake_tools_under_short_temp_alias) ... ok
+2026-11-05T20:39:28.9276709Z test_inert_orchestration_dry_run_uses_fakes_only_and_preserves_state (test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_inert_orchestration_dry_run_uses_fakes_only_and_preserves_state) ... ok
+2026-11-05T20:39:28.9325505Z test_only_hosted_windows_fresh_descendant_is_admitted_without_effects (test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_only_hosted_windows_fresh_descendant_is_admitted_without_effects) ... ok
+2026-11-05T20:39:28.9339891Z test_phase_guard_requires_exact_action_and_plan_digest (test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_phase_guard_requires_exact_action_and_plan_digest) ... ok
+2026-11-05T20:39:28.9355827Z test_redirects_require_https_same_host_no_credentials_and_bounded_hops (test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_redirects_require_https_same_host_no_credentials_and_bounded_hops) ... ok
+2026-11-05T20:39:28.9494146Z test_staged_archive_is_only_byte_integrity_and_confined_to_runner_temp (test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_staged_archive_is_only_byte_integrity_and_confined_to_runner_temp) ... ok
+2026-11-05T20:39:28.9509126Z test_workflow_scopes_disposable_matrix_and_report_artifact (test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_workflow_scopes_disposable_matrix_and_report_artifact) ... ok
+2026-11-05T20:39:28.9548363Z test_annotation_count_is_bounded_and_unknown_dynamic_id_is_not_printed (test_ci_unittest.PublicUnittestDiagnosticsTests.test_annotation_count_is_bounded_and_unknown_dynamic_id_is_not_printed) ... ok
+2026-11-05T20:39:29.0315142Z test_failed_real_suite_keeps_nonzero_and_only_public_annotation_ids (test_ci_unittest.PublicUnittestDiagnosticsTests.test_failed_real_suite_keeps_nonzero_and_only_public_annotation_ids) ... ok
+2026-11-05T20:39:29.1809386Z test_non_ci_preserves_failure_without_annotations_and_success_exits_zero (test_ci_unittest.PublicUnittestDiagnosticsTests.test_non_ci_preserves_failure_without_annotations_and_success_exits_zero) ... ok
+2026-11-05T20:39:29.2351345Z test_missing_modules_and_missing_source_authority_remain_blocked (test_combined_control_plane.CombinedControlPlaneTests.test_missing_modules_and_missing_source_authority_remain_blocked) ... ok
+2026-11-05T20:39:29.6397827Z test_six_node_fleet_visible_to_lifecycle_without_execution_authority (test_combined_control_plane.CombinedControlPlaneTests.test_six_node_fleet_visible_to_lifecycle_without_execution_authority) ... ok
+2026-11-05T20:39:29.6401062Z test_bool_major (test_compatibility.CompatibilityTests.test_bool_major) ... ok
+2026-11-05T20:39:29.6402106Z test_false_ready (test_compatibility.CompatibilityTests.test_false_ready) ... ok
+2026-11-05T20:39:29.6403032Z test_grid (test_compatibility.CompatibilityTests.test_grid) ... ok
+2026-11-05T20:39:29.6404039Z test_producer_mismatch (test_compatibility.CompatibilityTests.test_producer_mismatch) ... ok
+2026-11-05T20:39:29.6405168Z test_strattester (test_compatibility.CompatibilityTests.test_strattester) ... ok
+2026-11-05T20:39:29.6406347Z test_supervisor_authority (test_compatibility.CompatibilityTests.test_supervisor_authority) ... ok
+2026-11-05T20:39:29.6407521Z test_supervisor_wsgi (test_compatibility.CompatibilityTests.test_supervisor_wsgi) ... ok
+2026-11-05T20:39:29.6408913Z test_all_absent (test_contract_matrix.MatrixTests.test_all_absent) ... ok
+2026-11-05T20:39:29.6409860Z test_malformed_peer (test_contract_matrix.MatrixTests.test_malformed_peer) ... ok
+2026-11-05T20:39:29.6412225Z test_untrusted_grid_available (test_contract_matrix.MatrixTests.test_untrusted_grid_available) ... ok
+2026-11-05T20:39:29.6413293Z test_mismatch (test_contracts.Contracts.test_mismatch) ... ok
+2026-11-05T20:39:29.6414159Z test_missing_modules (test_contracts.Contracts.test_missing_modules) ... ok
+2026-11-05T20:39:29.6415049Z test_no_producer (test_contracts.Contracts.test_no_producer) ... ok
+2026-11-05T20:39:29.6415851Z test_nonfinite (test_contracts.Contracts.test_nonfinite) ... ok
+2026-11-05T20:39:29.6416749Z test_requires_preflight (test_contracts.Contracts.test_requires_preflight) ... ok
+2026-11-05T20:39:29.6417627Z test_tamper (test_contracts.Contracts.test_tamper) ... ok
+2026-11-05T20:39:29.6418358Z test_unsealed (test_contracts.Contracts.test_unsealed) ... ok
+2026-11-05T20:39:29.6419097Z test_valid (test_contracts.Contracts.test_valid) ... ok
+2026-11-05T20:39:29.7505645Z test_absent_grid_degrades (test_coordinator.CoordinatorTests.test_absent_grid_degrades) ... ok
+2026-11-05T20:39:29.8280175Z test_bad_handoff_persists_block (test_coordinator.CoordinatorTests.test_bad_handoff_persists_block) ... ok
+2026-11-05T20:39:29.9255903Z test_lifecycle (test_coordinator.CoordinatorTests.test_lifecycle) ... ok
+2026-11-05T20:39:29.9930714Z test_reboot_fail_closed (test_coordinator.CoordinatorTests.test_reboot_fail_closed) ... ok
+2026-11-05T20:39:29.9932252Z test_detached_closed_policy_matches_exact_stratt_source (test_data_first_policy.PolicyTests.test_detached_closed_policy_matches_exact_stratt_source) ... ok
+2026-11-05T20:39:29.9939282Z test_missing_unknown_or_unsafe_permissions_reject_without_private_details (test_data_first_policy.PolicyTests.test_missing_unknown_or_unsafe_permissions_reject_without_private_details) ... ok
+2026-11-05T20:39:29.9976632Z test_research_route_rejects_foreign_cwd_before_owned_import_setup (test_data_first_service.ConstructorRouteTests.test_research_route_rejects_foreign_cwd_before_owned_import_setup) ... ok
+2026-11-05T20:39:29.9989739Z test_worker_program_is_closed_and_does_not_mutate_admitted_config (test_data_first_service.ConstructorRouteTests.test_worker_program_is_closed_and_does_not_mutate_admitted_config) ... ok
+2026-11-05T20:39:29.9993230Z test_full_admission_failure_prevents_factory_import (test_data_first_service.ProtectedResearchEntryTests.test_full_admission_failure_prevents_factory_import) ... ok
+2026-11-05T20:39:29.9997303Z test_missing_policy_rejected_before_workspace_or_app (test_data_first_service.ProtectedResearchEntryTests.test_missing_policy_rejected_before_workspace_or_app) ... ok
+2026-11-05T20:39:30.0254814Z test_bounded_top_namespace_rejects_without_truncating (test_data_first_workspace.WorkspaceTests.test_bounded_top_namespace_rejects_without_truncating) ... ok
+2026-11-05T20:39:30.0577582Z test_cross_install_node_service_sid_and_host_are_rejected (test_data_first_workspace.WorkspaceTests.test_cross_install_node_service_sid_and_host_are_rejected) ... ok
+2026-11-05T20:39:30.0621508Z test_current_grant_rechecked_before_marker_write (test_data_first_workspace.WorkspaceTests.test_current_grant_rechecked_before_marker_write) ... ok
+2026-11-05T20:39:30.0704777Z test_existing_unmarked_empty_and_cli_v1_roots_are_not_adopted (test_data_first_workspace.WorkspaceTests.test_existing_unmarked_empty_and_cli_v1_roots_are_not_adopted) ... ok
+2026-11-05T20:39:30.0964298Z test_hardlinked_marker_is_rejected (test_data_first_workspace.WorkspaceTests.test_hardlinked_marker_is_rejected) ... ok
+2026-11-05T20:39:30.1285461Z test_known_directory_names_cannot_be_regular_files (test_data_first_workspace.WorkspaceTests.test_known_directory_names_cannot_be_regular_files) ... ok
+2026-11-05T20:39:30.1712349Z test_known_factory_category_junction_is_rejected_before_database_open (test_data_first_workspace.WorkspaceTests.test_known_factory_category_junction_is_rejected_before_database_open) ... ok
+2026-11-05T20:39:30.2002149Z test_marker_mutation_and_replacement_are_rejected (test_data_first_workspace.WorkspaceTests.test_marker_mutation_and_replacement_are_rejected) ... ok
+2026-11-05T20:39:30.2021432Z test_missing_or_invalid_permission_never_creates_workspace (test_data_first_workspace.WorkspaceTests.test_missing_or_invalid_permission_never_creates_workspace) ... ok
+2026-11-05T20:39:30.2735119Z test_new_marker_and_reopen_preserve_data_and_no_source_commit_binding (test_data_first_workspace.WorkspaceTests.test_new_marker_and_reopen_preserve_data_and_no_source_commit_binding) ... ok
+2026-11-05T20:39:30.3037356Z test_noncanonical_duplicate_or_oversized_marker_is_preserved_and_rejected (test_data_first_workspace.WorkspaceTests.test_noncanonical_duplicate_or_oversized_marker_is_preserved_and_rejected) ... ok
+2026-11-05T20:39:30.3110656Z test_normal_directory_replacement_in_grant_callback_has_no_marker_write (test_data_first_workspace.WorkspaceTests.test_normal_directory_replacement_in_grant_callback_has_no_marker_write) ... ok
+2026-11-05T20:39:30.3375118Z test_replaced_root_and_state_are_rejected (test_data_first_workspace.WorkspaceTests.test_replaced_root_and_state_are_rejected) ... ok
+2026-11-05T20:39:30.3615786Z test_replaced_state_inode_blocks_reopen_without_writing_new_state (test_data_first_workspace.WorkspaceTests.test_replaced_state_inode_blocks_reopen_without_writing_new_state) ... ok
+2026-11-05T20:39:30.3633702Z test_revoked_or_json_grant_has_no_effect (test_data_first_workspace.WorkspaceTests.test_revoked_or_json_grant_has_no_effect) ... ok
+2026-11-05T20:39:30.3779906Z test_symlink_or_junction_workspace_rejected_without_foreign_write (test_data_first_workspace.WorkspaceTests.test_symlink_or_junction_workspace_rejected_without_foreign_write) ... ok
+2026-11-05T20:39:30.4137222Z test_unknown_top_files_or_directories_block_without_removal (test_data_first_workspace.WorkspaceTests.test_unknown_top_files_or_directories_block_without_removal) ... ok
+2026-11-05T20:39:30.4417403Z test_changed_member_and_existing_target_are_never_accepted (test_extract_worker_operator.OperatorUnpackTests.test_changed_member_and_existing_target_are_never_accepted) ... ok
+2026-11-05T20:39:30.8232537Z test_exact_48_data_members_verify_before_new_target_extraction (test_extract_worker_operator.OperatorUnpackTests.test_exact_48_data_members_verify_before_new_target_extraction) ... ok
+2026-11-05T20:39:30.8685209Z test_extra_duplicate_link_and_traversal_members_fail_before_creation (test_extract_worker_operator.OperatorUnpackTests.test_extra_duplicate_link_and_traversal_members_fail_before_creation) ... ok
+2026-11-05T20:39:30.8752227Z test_hardlinked_archive_is_rejected (test_extract_worker_operator.OperatorUnpackTests.test_hardlinked_archive_is_rejected) ... ok
+2026-11-05T20:39:30.8904126Z test_wrong_outer_or_lock_hash_precedes_target_creation (test_extract_worker_operator.OperatorUnpackTests.test_wrong_outer_or_lock_hash_precedes_target_creation) ... ok
+2026-11-05T20:39:30.8938470Z test_actual_replaced_path_and_same_descriptor_are_distinguishable (test_file_identity.FileIdentityTests.test_actual_replaced_path_and_same_descriptor_are_distinguishable) ... ok
+2026-11-05T20:39:30.8941634Z test_external_namespace_is_denied_before_any_path_or_handle_probe (test_file_identity.FileIdentityTests.test_external_namespace_is_denied_before_any_path_or_handle_probe) ... ok
+2026-11-05T20:39:30.8975326Z test_fresh_path_handle_is_no_follow_and_closed_on_success_or_refusal (test_file_identity.FileIdentityTests.test_fresh_path_handle_is_no_follow_and_closed_on_success_or_refusal) ... ok
+2026-11-05T20:39:30.8977360Z test_full_128bit_identity_and_change_times_are_preserved (test_file_identity.FileIdentityTests.test_full_128bit_identity_and_change_times_are_preserved) ... ok
+2026-11-05T20:39:30.9241493Z test_hardlink_added_between_lstat_and_stamp_is_refused_by_both_readers (test_file_identity.FileIdentityTests.test_hardlink_added_between_lstat_and_stamp_is_refused_by_both_readers) ... ok
+2026-11-05T20:39:30.9244287Z test_native_missing_open_preserves_missing_status_and_other_errors_stay_blocked (test_file_identity.FileIdentityTests.test_native_missing_open_preserves_missing_status_and_other_errors_stay_blocked) ... ok
+2026-11-05T20:39:30.9575363Z test_validators_use_authoritative_handles_not_mixed_ctime_representations (test_file_identity.FileIdentityTests.test_validators_use_authoritative_handles_not_mixed_ctime_representations) ... ok
+2026-11-05T20:39:30.9577624Z test_false_ready (test_fixtures.PinnedFixtureTests.test_false_ready) ... ok
+2026-11-05T20:39:30.9578458Z test_grid (test_fixtures.PinnedFixtureTests.test_grid) ... ok
+2026-11-05T20:39:30.9579334Z test_strattester (test_fixtures.PinnedFixtureTests.test_strattester) ... ok
+2026-11-05T20:39:30.9580600Z test_wrong_sha (test_fixtures.PinnedFixtureTests.test_wrong_sha) ... ok
+2026-11-05T20:40:50.1596293Z test_capacity_and_huge_numbers_fail_closed (test_fleet_control.FleetTests.test_capacity_and_huge_numbers_fail_closed) ... ok
+2026-11-05T20:40:50.2950299Z test_clock_rollback_and_leader_loss (test_fleet_control.FleetTests.test_clock_rollback_and_leader_loss) ... ok
+2026-11-05T20:40:50.4982861Z test_concurrent_duplicate_placements_share_one_token (test_fleet_control.FleetTests.test_concurrent_duplicate_placements_share_one_token) ... ok
+2026-11-05T20:40:50.7163428Z test_cumulative_capacity_idempotence_and_restart (test_fleet_control.FleetTests.test_cumulative_capacity_idempotence_and_restart) ... ok
+2026-11-05T20:40:50.8964550Z test_epoch_sequence_stale_and_drain (test_fleet_control.FleetTests.test_epoch_sequence_stale_and_drain) ... ok
+2026-11-05T20:40:51.2538400Z test_failure_domain_restore_and_diskfull (test_fleet_control.FleetTests.test_failure_domain_restore_and_diskfull) ... ok
+2026-11-05T20:40:51.4402235Z test_identity_rotation_revokes_and_waits_expiry (test_fleet_control.FleetTests.test_identity_rotation_revokes_and_waits_expiry) ... ok
+2026-11-05T20:40:51.6202526Z test_persisted_authority_tamper_fails_closed (test_fleet_control.FleetTests.test_persisted_authority_tamper_fails_closed) ... ok
+2026-11-05T20:40:51.9044807Z test_quorum_splitbrain_expiry_and_db_loss (test_fleet_control.FleetTests.test_quorum_splitbrain_expiry_and_db_loss) ... ok
+2026-11-05T20:40:52.0133707Z test_read_only_adapter_does_not_infer_observations (test_fleet_control.FleetTests.test_read_only_adapter_does_not_infer_observations) ... ok
+2026-11-05T20:40:52.2695651Z test_retire_readd_preserves_tombstone_and_fences (test_fleet_control.FleetTests.test_retire_readd_preserves_tombstone_and_fences) ... ok
+2026-11-05T20:40:53.2644627Z test_sizes (test_fleet_control.FleetTests.test_sizes) ... ok
+2026-11-05T20:40:53.4278761Z test_telemetry_pressure_and_unknown_nodes (test_fleet_control.FleetTests.test_telemetry_pressure_and_unknown_nodes) ... ok
+2026-11-05T20:40:53.4280520Z test_add_remove (test_fleet_policy.FleetPolicyTests.test_add_remove) ... ok
+2026-11-05T20:40:53.4281520Z test_allows_math_only (test_fleet_policy.FleetPolicyTests.test_allows_math_only) ... ok
+2026-11-05T20:40:53.4283197Z test_drain (test_fleet_policy.FleetPolicyTests.test_drain) ... ok
+2026-11-05T20:40:53.4283878Z test_duplicate (test_fleet_policy.FleetPolicyTests.test_duplicate) ... ok
+2026-11-05T20:40:53.4285676Z test_initial_six (test_fleet_policy.FleetPolicyTests.test_initial_six) ... ok
+2026-11-05T20:40:53.4286625Z test_invalid_utilization (test_fleet_policy.FleetPolicyTests.test_invalid_utilization) ... ok
+2026-11-05T20:40:53.4287446Z test_missing_module (test_fleet_policy.FleetPolicyTests.test_missing_module) ... ok
+2026-11-05T20:40:53.4288839Z test_overload (test_fleet_policy.FleetPolicyTests.test_overload) ... ok
+2026-11-05T20:40:53.4289856Z test_quorum_fail_closed (test_fleet_policy.FleetPolicyTests.test_quorum_fail_closed) ... ok
+2026-11-05T20:40:53.4291950Z test_stale_not_assigned (test_fleet_policy.FleetPolicyTests.test_stale_not_assigned) ... ok
+2026-11-05T20:40:53.4293338Z test_duplicate_database (test_infra_inventory.InventoryTests.test_duplicate_database) ... ok
+2026-11-05T20:40:53.4293985Z test_no_fake_links (test_infra_inventory.InventoryTests.test_no_fake_links) ... ok
+2026-11-05T20:40:53.4296104Z test_six_pc_db_sizes (test_infra_inventory.InventoryTests.test_six_pc_db_sizes) ... ok
+2026-11-05T20:40:53.4298143Z test_unknown_size_negative (test_infra_inventory.InventoryTests.test_unknown_size_negative) ... ok
+2026-11-05T20:40:53.4300787Z test_failed_native_response_retains_only_known_static_stage (test_installation_native_diagnostic.NativeDiagnosticTests.test_failed_native_response_retains_only_known_static_stage) ... ok
+2026-11-05T20:41:08.4639145Z test_new_nssm_bootstrap_seeds_only_application_and_never_adopts_parameters (test_installation_native_diagnostic.NativeDiagnosticTests.test_new_nssm_bootstrap_seeds_only_application_and_never_adopts_parameters) ... 
+2026-11-05T20:41:08.4662438Z ##[error]UNITTEST_ERROR test_installation_native_diagnostic.NativeDiagnosticTests.test_new_nssm_bootstrap_seeds_only_application_and_never_adopts_parameters
+2026-11-05T20:41:08.4789029Z ERROR
+2026-11-05T20:41:08.4794657Z test_nssm_exit_code_is_bounded_numeric_fact_without_raw_output (test_installation_native_diagnostic.NativeDiagnosticTests.test_nssm_exit_code_is_bounded_numeric_fact_without_raw_output) ... ok
+2026-11-05T20:41:08.4797412Z test_private_or_malformed_native_details_are_never_promoted (test_installation_native_diagnostic.NativeDiagnosticTests.test_private_or_malformed_native_details_are_never_promoted) ... ok
+2026-11-05T20:41:23.5182929Z test_real_child_exit_code_without_service_or_acl_operations (test_installation_native_diagnostic.NativeDiagnosticTests.test_real_child_exit_code_without_service_or_acl_operations) ... 
+2026-11-05T20:41:23.5187181Z ##[error]UNITTEST_ERROR test_installation_native_diagnostic.NativeDiagnosticTests.test_real_child_exit_code_without_service_or_acl_operations
+2026-11-05T20:41:23.5193874Z ERROR
+2026-11-05T20:41:23.5197921Z test_successful_closed_backend_result_is_unchanged (test_installation_native_diagnostic.NativeDiagnosticTests.test_successful_closed_backend_result_is_unchanged) ... ok
+2026-11-05T20:41:23.9408771Z test_byte_trickle_single_line_cannot_extend_network_deadline (test_installation_preview.PreviewTests.test_byte_trickle_single_line_cannot_extend_network_deadline) ... ok
+2026-11-05T20:41:24.0342174Z test_close_does_not_depend_on_shutdown_waking_a_buffered_read (test_installation_preview.PreviewTests.test_close_does_not_depend_on_shutdown_waking_a_buffered_read) ... ok
+2026-11-05T20:41:24.0895915Z test_close_interrupts_owned_partial_request_and_joins_watchdogs (test_installation_preview.PreviewTests.test_close_interrupts_owned_partial_request_and_joins_watchdogs) ... ok
+2026-11-05T20:41:24.1343127Z test_default_cli_is_plan_only_and_request_logs_are_silent (test_installation_preview.PreviewTests.test_default_cli_is_plan_only_and_request_logs_are_silent) ... ok
+2026-11-05T20:41:24.1777152Z test_explicit_start_actual_source_and_cleanup (test_installation_preview.PreviewTests.test_explicit_start_actual_source_and_cleanup) ... ok
+2026-11-05T20:41:24.4989805Z test_lifetime_closes_listener_even_during_source_computation (test_installation_preview.PreviewTests.test_lifetime_closes_listener_even_during_source_computation) ... ok
+2026-11-05T20:41:24.5381913Z test_limits_and_plan_are_inert (test_installation_preview.PreviewTests.test_limits_and_plan_are_inert) ... ok
+2026-11-05T20:41:24.8291350Z test_partial_headers_cannot_outlive_whole_preview (test_installation_preview.PreviewTests.test_partial_headers_cannot_outlive_whole_preview) ... ok
+2026-11-05T20:41:24.8738512Z test_probe_rejects_live_listener_and_accepts_closed_listener (test_installation_preview.PreviewTests.test_probe_rejects_live_listener_and_accepts_closed_listener) ... ok
+2026-11-05T20:41:24.9772750Z test_rejections_and_no_second_pipelined_response (test_installation_preview.PreviewTests.test_rejections_and_no_second_pipelined_response) ... ok
+2026-11-05T20:41:25.5666489Z test_slow_request_and_lifetime_cleanup (test_installation_preview.PreviewTests.test_slow_request_and_lifetime_cleanup) ... ok
+2026-11-05T20:41:25.6108511Z test_unframed_body_discarded_and_bounded_headers (test_installation_preview.PreviewTests.test_unframed_body_discarded_and_bounded_headers) ... ok
+2026-11-05T20:41:25.6521114Z test_closed_public_fields_and_values (test_installation_progress.InstallationProgressTests.test_closed_public_fields_and_values) ... ok
+2026-11-05T20:41:25.7168335Z test_duplicate_idempotency_and_conflicting_reuse (test_installation_progress.InstallationProgressTests.test_duplicate_idempotency_and_conflicting_reuse) ... ok
+2026-11-05T20:41:25.7851618Z test_fences_timestamp_phase_counts_and_operation (test_installation_progress.InstallationProgressTests.test_fences_timestamp_phase_counts_and_operation) ... ok
+2026-11-05T20:41:25.8490738Z test_link_and_tamper_rejected (test_installation_progress.InstallationProgressTests.test_link_and_tamper_rejected) ... ok
+2026-11-05T20:41:25.9128421Z test_no_percentage_without_counts_or_handoff_authority (test_installation_progress.InstallationProgressTests.test_no_percentage_without_counts_or_handoff_authority) ... ok
+2026-11-05T20:41:26.0359863Z test_partial_append_failure_does_not_publish (test_installation_progress.InstallationProgressTests.test_partial_append_failure_does_not_publish) ... ok
+2026-11-05T20:41:26.1079238Z test_release_binding_unsafe_paths_and_foreign_status (test_installation_progress.InstallationProgressTests.test_release_binding_unsafe_paths_and_foreign_status) ... ok
+2026-11-05T20:41:26.1735834Z test_reopen_counts_and_honest_snapshot (test_installation_progress.InstallationProgressTests.test_reopen_counts_and_honest_snapshot) ... ok
+2026-11-05T20:41:26.2361506Z test_stale_validation_cannot_commit (test_installation_progress.InstallationProgressTests.test_stale_validation_cannot_commit) ... ok
+2026-11-05T20:41:26.2771809Z test_truncated_file_rejected (test_installation_progress.InstallationProgressTests.test_truncated_file_rejected) ... ok
+2026-11-05T20:41:26.3531840Z test_wrong_identity_existing_foreign_and_missing (test_installation_progress.InstallationProgressTests.test_wrong_identity_existing_foreign_and_missing) ... ok
+2026-11-05T20:41:27.3807199Z test_callback_mutating_original_plan_never_redirects_owned_effects (test_installation_service.ServiceResourceTests.test_callback_mutating_original_plan_never_redirects_owned_effects) ... ok
+2026-11-05T20:41:27.5183071Z test_computer_env_spoof_does_not_admit_wrong_host (test_installation_service.ServiceResourceTests.test_computer_env_spoof_does_not_admit_wrong_host) ... ok
+2026-11-05T20:41:28.1102916Z test_created_but_unreceipted_service_is_retained_and_not_adopted (test_installation_service.ServiceResourceTests.test_created_but_unreceipted_service_is_retained_and_not_adopted) ... ok
+2026-11-05T20:41:28.2784732Z test_crlf_candidate_and_executing_candidate_remain_unadmitted_even_resealed (test_installation_service.ServiceResourceTests.test_crlf_candidate_and_executing_candidate_remain_unadmitted_even_resealed) ... ok
+2026-11-05T20:41:28.8507698Z test_crlf_operator_checkout_accepts_exact_reviewed_lf_capsule (test_installation_service.ServiceResourceTests.test_crlf_operator_checkout_accepts_exact_reviewed_lf_capsule) ... ok
+2026-11-05T20:41:29.0144588Z test_default_denial_precedes_mutation (test_installation_service.ServiceResourceTests.test_default_denial_precedes_mutation) ... ok
+2026-11-05T20:41:29.0732549Z test_documented_sid_parser_localized_strict_bounded (test_installation_service.ServiceResourceTests.test_documented_sid_parser_localized_strict_bounded) ... ok
+2026-11-05T20:41:29.2323260Z test_entry_denies_missing_protected_grant_or_token_and_ignores_caller_flags (test_installation_service.ServiceResourceTests.test_entry_denies_missing_protected_grant_or_token_and_ignores_caller_flags) ... ok
+2026-11-05T20:41:29.2949970Z test_env_redirect_does_not_select_native_tools (test_installation_service.ServiceResourceTests.test_env_redirect_does_not_select_native_tools) ... ok
+2026-11-05T20:41:29.4881947Z test_exact_computer_binding_rejects_wrong_host_before_begin (test_installation_service.ServiceResourceTests.test_exact_computer_binding_rejects_wrong_host_before_begin) ... ok
+2026-11-05T20:41:30.3520726Z test_live_identity_acl_or_configuration_drift_rejected (test_installation_service.ServiceResourceTests.test_live_identity_acl_or_configuration_drift_rejected) ... ok
+2026-11-05T20:41:30.5786103Z test_missing_or_wrong_bootstrap_member_fails_even_with_resealed_capsule (test_installation_service.ServiceResourceTests.test_missing_or_wrong_bootstrap_member_fails_even_with_resealed_capsule) ... ok
+2026-11-05T20:41:30.7166918Z test_native_backend_wrong_tool_pins_fail_before_spawn (test_installation_service.ServiceResourceTests.test_native_backend_wrong_tool_pins_fail_before_spawn) ... ok
+2026-11-05T20:41:31.2736637Z test_no_candidate_byte_or_receipt_admits_execution (test_installation_service.ServiceResourceTests.test_no_candidate_byte_or_receipt_admits_execution) ... ok
+2026-11-05T20:41:31.8626884Z test_partial_failure_retains_and_never_adopts_unreceipted_service (test_installation_service.ServiceResourceTests.test_partial_failure_retains_and_never_adopts_unreceipted_service) ... ok
+2026-11-05T20:41:47.1789005Z test_poisoned_parent_module_path_cannot_autoload_user_module (test_installation_service.ServiceResourceTests.test_poisoned_parent_module_path_cannot_autoload_user_module) ... 
+2026-11-05T20:41:47.1792891Z ##[error]UNITTEST_ERROR test_installation_service.ServiceResourceTests.test_poisoned_parent_module_path_cannot_autoload_user_module
+2026-11-05T20:41:47.1801508Z ERROR
+2026-11-05T20:41:47.7996842Z test_private_recorded_copy_survives_partial_code_removal_no_authority (test_installation_service.ServiceResourceTests.test_private_recorded_copy_survives_partial_code_removal_no_authority) ... ok
+2026-11-05T20:42:17.1609401Z test_real_module_parses_and_native_declarations_compile_without_api_calls (test_installation_service.ServiceResourceTests.test_real_module_parses_and_native_declarations_compile_without_api_calls) ... ok
+2026-11-05T20:42:17.2393317Z test_real_read_only_showsid_for_nonexistent_name_no_service_created (test_installation_service.ServiceResourceTests.test_real_read_only_showsid_for_nonexistent_name_no_service_created) ... ok
+2026-11-05T20:42:17.3498707Z test_registered_command_uses_only_reviewed_protected_entry (test_installation_service.ServiceResourceTests.test_registered_command_uses_only_reviewed_protected_entry) ... ok
+2026-11-05T20:42:17.6106170Z test_stage_denial_and_resealed_arbitrary_arguments_rejected (test_installation_service.ServiceResourceTests.test_stage_denial_and_resealed_arbitrary_arguments_rejected) ... ok
+2026-11-05T20:42:17.6741844Z test_static_module_no_start_stop_delete_or_policy_bypass (test_installation_service.ServiceResourceTests.test_static_module_no_start_stop_delete_or_policy_bypass) ... ok
+2026-11-05T20:42:18.3171673Z test_stopped_owned_resource_actual_capsule_staging_and_reopen (test_installation_service.ServiceResourceTests.test_stopped_owned_resource_actual_capsule_staging_and_reopen) ... ok
+2026-11-05T20:42:18.5310059Z test_wrong_phase_grant_and_existing_service_never_adopted (test_installation_service.ServiceResourceTests.test_wrong_phase_grant_and_existing_service_never_adopted) ... ok
+2026-11-05T20:42:18.5622128Z test_actual_concurrent_rollback_fences_stage_intent (test_installation_transaction.InstallationTransactionTests.test_actual_concurrent_rollback_fences_stage_intent) ... 
+2026-11-05T20:42:18.5626527Z ##[error]UNITTEST_ERROR test_installation_transaction.InstallationTransactionTests.test_actual_concurrent_rollback_fences_stage_intent
+2026-11-05T20:42:18.5682502Z ERROR
+2026-11-05T20:42:18.6065073Z test_capacity_and_hash_tamper_fail_closed (test_installation_transaction.InstallationTransactionTests.test_capacity_and_hash_tamper_fail_closed) ... 
+2026-11-05T20:42:18.6068633Z ##[error]UNITTEST_ERROR test_installation_transaction.InstallationTransactionTests.test_capacity_and_hash_tamper_fail_closed
+2026-11-05T20:42:18.6074580Z ERROR
+2026-11-05T20:42:18.6465418Z test_changed_staged_bytes_and_root_identity_fail_closed (test_installation_transaction.InstallationTransactionTests.test_changed_staged_bytes_and_root_identity_fail_closed) ... 
+2026-11-05T20:42:18.6470665Z ##[error]UNITTEST_ERROR test_installation_transaction.InstallationTransactionTests.test_changed_staged_bytes_and_root_identity_fail_closed
+2026-11-05T20:42:18.6475001Z ERROR
+2026-11-05T20:42:18.6887584Z test_existing_foreign_roots_and_wrong_identity_rejected (test_installation_transaction.InstallationTransactionTests.test_existing_foreign_roots_and_wrong_identity_rejected) ... 
+2026-11-05T20:42:18.6890428Z ##[error]UNITTEST_ERROR test_installation_transaction.InstallationTransactionTests.test_existing_foreign_roots_and_wrong_identity_rejected
+2026-11-05T20:42:18.6895024Z ERROR
+2026-11-05T20:42:18.7342336Z test_fault_before_child_creation_can_resume (test_installation_transaction.InstallationTransactionTests.test_fault_before_child_creation_can_resume) ... 
+2026-11-05T20:42:18.7346229Z ##[error]UNITTEST_ERROR test_installation_transaction.InstallationTransactionTests.test_fault_before_child_creation_can_resume
+2026-11-05T20:42:18.7349448Z ERROR
+2026-11-05T20:42:18.7726399Z test_journal_tamper_and_foreign_status_rejected (test_installation_transaction.InstallationTransactionTests.test_journal_tamper_and_foreign_status_rejected) ... 
+2026-11-05T20:42:18.7729729Z ##[error]UNITTEST_ERROR test_installation_transaction.InstallationTransactionTests.test_journal_tamper_and_foreign_status_rejected
+2026-11-05T20:42:18.7732232Z ERROR
+2026-11-05T20:42:18.8104978Z test_links_and_oversized_foreign_journal_rejected (test_installation_transaction.InstallationTransactionTests.test_links_and_oversized_foreign_journal_rejected) ... 
+2026-11-05T20:42:18.8108241Z ##[error]UNITTEST_ERROR test_installation_transaction.InstallationTransactionTests.test_links_and_oversized_foreign_journal_rejected
+2026-11-05T20:42:18.8111357Z ERROR
+2026-11-05T20:42:18.8618558Z test_no_closure_admission_from_receipt_only (test_installation_transaction.InstallationTransactionTests.test_no_closure_admission_from_receipt_only) ... 
+2026-11-05T20:42:18.8621884Z ##[error]UNITTEST_ERROR test_installation_transaction.InstallationTransactionTests.test_no_closure_admission_from_receipt_only
+2026-11-05T20:42:18.8625277Z ERROR
+2026-11-05T20:42:18.9013051Z test_partial_or_complete_unreceipted_child_never_adopted (test_installation_transaction.InstallationTransactionTests.test_partial_or_complete_unreceipted_child_never_adopted) ... 
+2026-11-05T20:42:18.9015471Z ##[error]UNITTEST_SUBTEST_FAILURE test_installation_transaction.InstallationTransactionTests.test_partial_or_complete_unreceipted_child_never_adopted
+2026-11-05T20:42:18.9016908Z 
+2026-11-05T20:42:18.9017674Z   test_partial_or_complete_unreceipted_child_never_adopted (test_installation_transaction.InstallationTransactionTests.test_partial_or_complete_unreceipted_child_never_adopted) (complete=False) ... ERROR
+2026-11-05T20:42:18.9215738Z 
+2026-11-05T20:42:18.9218819Z ##[error]UNITTEST_SUBTEST_FAILURE test_installation_transaction.InstallationTransactionTests.test_partial_or_complete_unreceipted_child_never_adopted
+2026-11-05T20:42:18.9222871Z   test_partial_or_complete_unreceipted_child_never_adopted (test_installation_transaction.InstallationTransactionTests.test_partial_or_complete_unreceipted_child_never_adopted) (complete=True) ... ERROR
+2026-11-05T20:42:18.9791674Z test_plan_pins_overlap_and_metadata_are_closed (test_installation_transaction.InstallationTransactionTests.test_plan_pins_overlap_and_metadata_are_closed) ... 
+2026-11-05T20:42:18.9797085Z ##[error]UNITTEST_ERROR test_installation_transaction.InstallationTransactionTests.test_plan_pins_overlap_and_metadata_are_closed
+2026-11-05T20:42:18.9802203Z ERROR
+2026-11-05T20:42:19.0182503Z test_real_stage_reopen_and_preserving_logical_rollback (test_installation_transaction.InstallationTransactionTests.test_real_stage_reopen_and_preserving_logical_rollback) ... 
+2026-11-05T20:42:19.0185477Z ##[error]UNITTEST_ERROR test_installation_transaction.InstallationTransactionTests.test_real_stage_reopen_and_preserving_logical_rollback
+2026-11-05T20:42:19.0189548Z ERROR
+2026-11-05T20:42:19.0590260Z test_roles_and_closed_admission_not_execution (test_installation_transaction.InstallationTransactionTests.test_roles_and_closed_admission_not_execution) ... 
+2026-11-05T20:42:19.0593554Z ##[error]UNITTEST_ERROR test_installation_transaction.InstallationTransactionTests.test_roles_and_closed_admission_not_execution
+2026-11-05T20:42:19.0598544Z ERROR
+2026-11-05T20:42:19.0983683Z test_stale_receipt_cas_blocks_before_stage_effect (test_installation_transaction.InstallationTransactionTests.test_stale_receipt_cas_blocks_before_stage_effect) ... 
+2026-11-05T20:42:19.0986701Z ##[error]UNITTEST_ERROR test_installation_transaction.InstallationTransactionTests.test_stale_receipt_cas_blocks_before_stage_effect
+2026-11-05T20:42:19.0990300Z ERROR
+2026-11-05T20:42:19.1724273Z test_actual_append_after_app_creation_is_seen (test_installation_ui.BootstrapTests.test_actual_append_after_app_creation_is_seen) ... ok
+2026-11-05T20:42:22.2444065Z test_browser_script_counts_diagnostics_and_error_controls (test_installation_ui.BootstrapTests.test_browser_script_counts_diagnostics_and_error_controls) ... ok
+2026-11-05T20:42:22.2861733Z test_missing_and_tampered_source_503_no_false_progress (test_installation_ui.BootstrapTests.test_missing_and_tampered_source_503_no_false_progress) ... ok
+2026-11-05T20:42:22.4183414Z test_oversized_snapshot_fixed_bounded_unavailable (test_installation_ui.BootstrapTests.test_oversized_snapshot_fixed_bounded_unavailable) ... ok
+2026-11-05T20:42:22.4798561Z test_real_source_counts_and_read_only_identity (test_installation_ui.BootstrapTests.test_real_source_counts_and_read_only_identity) ... ok
+2026-11-05T20:42:22.5255690Z test_reject_provider_and_nonloopback_construction (test_installation_ui.BootstrapTests.test_reject_provider_and_nonloopback_construction) ... ok
+2026-11-05T20:42:22.5674783Z test_request_boundaries_no_body_read (test_installation_ui.BootstrapTests.test_request_boundaries_no_body_read) ... ok
+2026-11-05T20:42:22.6247741Z test_secret_or_xss_receipt_rejected_not_echoed (test_installation_ui.BootstrapTests.test_secret_or_xss_receipt_rejected_not_echoed) ... ok
+2026-11-05T20:42:22.6648599Z test_static_ui_assets_honest_disabled_controls_and_safe_dom (test_installation_ui.BootstrapTests.test_static_ui_assets_honest_disabled_controls_and_safe_dom) ... ok
+2026-11-05T20:42:22.7230756Z test_tamper_and_unknown_route (test_installation_ui.BootstrapTests.test_tamper_and_unknown_route) ... ok
+2026-11-05T20:42:23.1234499Z test_actual_native_algorithm_uses_same_verified_handle_and_rechecks_state (test_installation_uninstall.NativeRemovalTests.test_actual_native_algorithm_uses_same_verified_handle_and_rechecks_state) ... ok
+2026-11-05T20:42:25.0918454Z test_app_only_real_inert_code_removal_preserves_state_and_ownership (test_installation_uninstall.UninstallTests.test_app_only_real_inert_code_removal_preserves_state_and_ownership) ... ok
+2026-11-05T20:42:26.9760625Z test_boundary_cannot_mutate_controller_plan_or_record (test_installation_uninstall.UninstallTests.test_boundary_cannot_mutate_controller_plan_or_record) ... ok
+2026-11-05T20:42:27.8652671Z test_changed_owned_file_and_denied_code_phase_preserve_remaining_bytes (test_installation_uninstall.UninstallTests.test_changed_owned_file_and_denied_code_phase_preserve_remaining_bytes) ... ok
+2026-11-05T20:42:28.4479812Z test_changed_unknown_and_foreign_paths_block_before_service_removal (test_installation_uninstall.UninstallTests.test_changed_unknown_and_foreign_paths_block_before_service_removal) ... ok
+2026-11-05T20:42:30.3920889Z test_dangling_foreign_code_junction_is_not_observed_absence (test_installation_uninstall.UninstallTests.test_dangling_foreign_code_junction_is_not_observed_absence) ... ok
+2026-11-05T20:42:30.9785196Z test_default_denial_and_unclassified_modes_have_no_effect (test_installation_uninstall.UninstallTests.test_default_denial_and_unclassified_modes_have_no_effect) ... ok
+2026-11-05T20:42:31.8731280Z test_external_sql_rewrite_with_unchanged_tail_blocks_further_deletion (test_installation_uninstall.UninstallTests.test_external_sql_rewrite_with_unchanged_tail_blocks_further_deletion) ... ok
+2026-11-05T20:42:32.7485385Z test_foreign_name_recreated_after_intent_blocks_the_pending_unlink (test_installation_uninstall.UninstallTests.test_foreign_name_recreated_after_intent_blocks_the_pending_unlink) ... ok
+2026-11-05T20:42:35.1681298Z test_fresh_reinstall_never_adopts_or_erases_retained_state (test_installation_uninstall.UninstallTests.test_fresh_reinstall_never_adopts_or_erases_retained_state) ... ok
+2026-11-05T20:42:37.1171392Z test_guard_before_each_unlink_partial_resume_and_absence_is_not_attribution (test_installation_uninstall.UninstallTests.test_guard_before_each_unlink_partial_resume_and_absence_is_not_attribution) ... ok
+2026-11-05T20:42:37.9947849Z test_marked_pending_and_foreign_recreated_name_do_not_remove_code (test_installation_uninstall.UninstallTests.test_marked_pending_and_foreign_recreated_name_do_not_remove_code) ... ok
+2026-11-05T20:42:38.6703148Z test_missing_without_intent_and_changed_after_intent_are_rejected (test_installation_uninstall.UninstallTests.test_missing_without_intent_and_changed_after_intent_are_rejected) ... ok
+2026-11-05T20:42:39.3351771Z test_native_bootstrap_encoding_and_request_are_bound_without_execution (test_installation_uninstall.UninstallTests.test_native_bootstrap_encoding_and_request_are_bound_without_execution) ... ok
+2026-11-05T20:42:39.8910531Z test_native_boundary_default_denial_precedes_any_os_probe (test_installation_uninstall.UninstallTests.test_native_boundary_default_denial_precedes_any_os_probe) ... ok
+2026-11-05T20:42:40.5729470Z test_other_computer_rejects_before_every_effect (test_installation_uninstall.UninstallTests.test_other_computer_rejects_before_every_effect) ... ok
+2026-11-05T20:42:41.1967291Z test_parent_root_replacement_is_not_adopted (test_installation_uninstall.UninstallTests.test_parent_root_replacement_is_not_adopted) ... ok
+2026-11-05T20:42:42.1241354Z test_recorded_intent_requires_fresh_bytes_before_unlink (test_installation_uninstall.UninstallTests.test_recorded_intent_requires_fresh_bytes_before_unlink) ... ok
+2026-11-05T20:42:43.0176209Z test_resume_rejects_missing_code_without_its_own_intent (test_installation_uninstall.UninstallTests.test_resume_rejects_missing_code_without_its_own_intent) ... ok
+2026-11-05T20:42:49.4986796Z test_seventy_member_controller_admits_sources_once_and_observes_without_powershell (test_installation_uninstall.UninstallTests.test_seventy_member_controller_admits_sources_once_and_observes_without_powershell) ... ok
+2026-11-05T20:42:49.4991898Z test_all_five_sources_required_and_pg_major_is_integer (test_installer_security.SecurityPlanTests.test_all_five_sources_required_and_pg_major_is_integer) ... ok
+2026-11-05T20:42:49.4998540Z test_deltas_and_rollback (test_installer_security.SecurityPlanTests.test_deltas_and_rollback) ... ok
+2026-11-05T20:42:49.5019721Z test_each_security_observation_missing_false_string_is_blocked (test_installer_security.SecurityPlanTests.test_each_security_observation_missing_false_string_is_blocked) ... ok
+2026-11-05T20:42:49.5044376Z test_fleet_boundaries_immutability_and_no_authority (test_installer_security.SecurityPlanTests.test_fleet_boundaries_immutability_and_no_authority) ... ok
+2026-11-05T20:42:49.5049768Z test_identity_collision_invalid_input_and_no_secret_output (test_installer_security.SecurityPlanTests.test_identity_collision_invalid_input_and_no_secret_output) ... ok
+2026-11-05T20:42:49.5058209Z test_untrusted_paths_digests_versions_inventory_and_sizes (test_installer_security.SecurityPlanTests.test_untrusted_paths_digests_versions_inventory_and_sizes) ... ok
+2026-11-05T20:42:49.5062110Z test_v2_accepts_six_sources_and_preserves_plan_only (test_installer_security.SixModulePackageTests.test_v2_accepts_six_sources_and_preserves_plan_only) ... ok
+2026-11-05T20:42:49.5065762Z test_v2_rejects_missing_extra_legacy_alias_and_downgrade (test_installer_security.SixModulePackageTests.test_v2_rejects_missing_extra_legacy_alias_and_downgrade) ... ok
+2026-11-05T20:42:49.5074741Z test_v2_rejects_schema_types_pins_and_security_mutations (test_installer_security.SixModulePackageTests.test_v2_rejects_schema_types_pins_and_security_mutations) ... ok
+2026-11-05T20:42:49.6390663Z test_full_offline (test_integration.IntegrationTests.test_full_offline) ... ok
+2026-11-05T20:42:49.7662969Z test_missing_grid (test_integration.IntegrationTests.test_missing_grid) ... ok
+2026-11-05T20:42:49.8745140Z test_restart_blocked (test_integration.IntegrationTests.test_restart_blocked) ... ok
+2026-11-05T20:42:49.8803574Z test_runtime_failure_annotation_uses_only_fixed_public_enums (test_integration.IntegrationTests.test_runtime_failure_annotation_uses_only_fixed_public_enums) ... ok
+2026-11-05T20:42:49.8932232Z test_source_failure_reason_drops_private_suffix_and_rejects_forged_prefix (test_integration.IntegrationTests.test_source_failure_reason_drops_private_suffix_and_rejects_forged_prefix) ... ok
+2026-11-05T20:42:49.9496412Z test_append_after_reopen (test_journal.JournalTests.test_append_after_reopen) ... ok
+2026-11-05T20:42:49.9657934Z test_empty (test_journal.JournalTests.test_empty) ... ok
+2026-11-05T20:42:50.0292116Z test_expected_sequence_cas (test_journal.JournalTests.test_expected_sequence_cas) ... ok
+2026-11-05T20:42:50.7771420Z test_long_chain_latest_digest_not_lexical_max (test_journal.JournalTests.test_long_chain_latest_digest_not_lexical_max) ... ok
+2026-11-05T20:42:50.7924232Z test_no_implicit_creation (test_journal.JournalTests.test_no_implicit_creation) ... ok
+2026-11-05T20:42:50.8489497Z test_recovery (test_journal.JournalTests.test_recovery) ... ok
+2026-11-05T20:42:50.9249946Z test_tamper (test_journal.JournalTests.test_tamper) ... ok
+2026-11-05T20:42:50.9456826Z test_unknown_state (test_journal.JournalTests.test_unknown_state) ... ok
+2026-11-05T20:43:18.8039159Z test_created_root_identity_cannot_be_reused_for_a_replacement (test_lab_capsule_acl.CapsuleAclTests.test_created_root_identity_cannot_be_reused_for_a_replacement) ... ok
+2026-11-05T20:44:06.8342605Z test_descendant_explicit_write_ace_rejected_before_sealing (test_lab_capsule_acl.CapsuleAclTests.test_descendant_explicit_write_ace_rejected_before_sealing) ... ok
+2026-11-05T20:44:31.2107746Z test_existing_root_and_wrong_manifest_pin_are_rejected (test_lab_capsule_acl.CapsuleAclTests.test_existing_root_and_wrong_manifest_pin_are_rejected) ... ok
+2026-11-05T20:44:57.1449593Z test_foreign_owner_refuses_normalization_before_acl_changes (test_lab_capsule_acl.CapsuleAclTests.test_foreign_owner_refuses_normalization_before_acl_changes) ... skipped 'Current token cannot assign SYSTEM as foreign test owner'
+2026-11-05T20:45:21.4027804Z test_hardlink_refuses_normalization_before_acl_changes (test_lab_capsule_acl.CapsuleAclTests.test_hardlink_refuses_normalization_before_acl_changes) ... ok
+2026-11-05T20:47:06.9256672Z test_pip_protected_directory_is_normalized_then_sealed (test_lab_capsule_acl.CapsuleAclTests.test_pip_protected_directory_is_normalized_then_sealed) ... ok
+2026-11-05T20:48:40.3137946Z test_pip_protected_file_is_normalized_then_sealed_without_byte_changes (test_lab_capsule_acl.CapsuleAclTests.test_pip_protected_file_is_normalized_then_sealed_without_byte_changes) ... ok
+2026-11-05T20:49:29.9724438Z test_protected_file_extra_ace_refuses_before_any_normalization (test_lab_capsule_acl.CapsuleAclTests.test_protected_file_extra_ace_refuses_before_any_normalization) ... ok
+2026-11-05T20:49:54.4987944Z test_protected_file_foreign_owner_is_rejected (test_lab_capsule_acl.CapsuleAclTests.test_protected_file_foreign_owner_is_rejected) ... skipped 'Current token cannot assign SYSTEM as foreign file owner'
+2026-11-05T20:51:05.0003591Z test_sealed_fresh_code_reads_but_denies_cache_write_delete_rename_and_state_stays_writable (test_lab_capsule_acl.CapsuleAclTests.test_sealed_fresh_code_reads_but_denies_cache_write_delete_rename_and_state_stays_writable) ... ok
+2026-11-05T20:52:39.6292117Z test_token_default_admin_owner_descendants_are_supported_conditionally (test_lab_capsule_acl.CapsuleAclTests.test_token_default_admin_owner_descendants_are_supported_conditionally) ... ok
+2026-11-05T20:53:28.5458254Z test_unknown_ace_refuses_normalization_before_any_acl_write (test_lab_capsule_acl.CapsuleAclTests.test_unknown_ace_refuses_normalization_before_any_acl_write) ... ok
+2026-11-05T20:53:28.5607617Z test_build_rejects_missing_or_bad_nssm_before_any_acl_or_output (test_lab_capsule_builder.BuilderTests.test_build_rejects_missing_or_bad_nssm_before_any_acl_or_output) ... ok
+2026-11-05T20:53:28.5624128Z test_dangling_link_rejected (test_lab_capsule_builder.BuilderTests.test_dangling_link_rejected) ... ok
+2026-11-05T20:53:28.5685843Z test_dirty_source_rejected (test_lab_capsule_builder.BuilderTests.test_dirty_source_rejected) ... ok
+2026-11-05T20:53:28.5713886Z test_existing_destination_rejected_without_mutation (test_lab_capsule_builder.BuilderTests.test_existing_destination_rejected_without_mutation) ... ok
+2026-11-05T20:53:28.5856791Z test_generated_runtime_satisfies_real_supervisor_contract (test_lab_capsule_builder.BuilderTests.test_generated_runtime_satisfies_real_supervisor_contract) ... ok
+2026-11-05T20:53:28.5884310Z test_hardlink_rejected (test_lab_capsule_builder.BuilderTests.test_hardlink_rejected) ... ok
+2026-11-05T20:53:28.5942332Z test_inventory_binds_empty_directories (test_lab_capsule_builder.BuilderTests.test_inventory_binds_empty_directories) ... ok
+2026-11-05T20:53:28.5951551Z test_lexical_parent_alias_rejected_before_creation (test_lab_capsule_builder.BuilderTests.test_lexical_parent_alias_rejected_before_creation) ... ok
+2026-11-05T20:53:28.6063590Z test_malicious_metadata_rejected_before_git_execution (test_lab_capsule_builder.BuilderTests.test_malicious_metadata_rejected_before_git_execution) ... ok
+2026-11-05T20:53:28.6132733Z test_native_probe_uses_admitted_distribution_names_and_versions (test_lab_capsule_builder.BuilderTests.test_native_probe_uses_admitted_distribution_names_and_versions) ... ok
+2026-11-05T20:53:28.6154163Z test_npm_uses_distinct_new_empty_configuration_files (test_lab_capsule_builder.BuilderTests.test_npm_uses_distinct_new_empty_configuration_files) ... ok
+2026-11-05T20:53:28.6378807Z test_nssm_missing_fixed_member_or_alias_and_existing_target_rejected (test_lab_capsule_builder.BuilderTests.test_nssm_missing_fixed_member_or_alias_and_existing_target_rejected) ... ok
+2026-11-05T20:53:28.6502721Z test_nssm_missing_wrong_archive_or_member_fails_before_destination (test_lab_capsule_builder.BuilderTests.test_nssm_missing_wrong_archive_or_member_fails_before_destination) ... ok
+2026-11-05T20:53:28.9651591Z test_nssm_offline_fixed_member_vendor_and_capsule_closure (test_lab_capsule_builder.BuilderTests.test_nssm_offline_fixed_member_vendor_and_capsule_closure) ... ok
+2026-11-05T20:53:28.9654173Z test_nssm_real_approved_archive_read_only_extract_no_execution (test_lab_capsule_builder.BuilderTests.test_nssm_real_approved_archive_read_only_extract_no_execution) ... skipped 'Optional already-admitted offline archive unavailable'
+2026-11-05T20:53:28.9657710Z test_pinned_bundled_pip_ignores_poisoned_ambient_site (test_lab_capsule_builder.BuilderTests.test_pinned_bundled_pip_ignores_poisoned_ambient_site) ... skipped 'Optional pinned Windows archive not provisioned'
+2026-11-05T20:53:28.9659683Z test_relative_namespace_rejected (test_lab_capsule_builder.BuilderTests.test_relative_namespace_rejected) ... ok
+2026-11-05T20:53:28.9678482Z test_sibling_namespace_required (test_lab_capsule_builder.BuilderTests.test_sibling_namespace_required) ... ok
+2026-11-05T20:53:28.9683417Z test_available_payload_is_copied_and_failures_do_not_leak (test_lab_observation_writer.ProducerTests.test_available_payload_is_copied_and_failures_do_not_leak) ... ok
+2026-11-05T20:53:28.9685623Z test_invalid_payload_has_closed_failure (test_lab_observation_writer.ProducerTests.test_invalid_payload_has_closed_failure) ... ok
+2026-11-05T20:53:28.9686759Z test_missing_sources_are_unavailable_not_empty_success (test_lab_observation_writer.ProducerTests.test_missing_sources_are_unavailable_not_empty_success) ... ok
+2026-11-05T20:53:28.9687941Z test_missing_validator_and_unknown_source_fail_closed (test_lab_observation_writer.ProducerTests.test_missing_validator_and_unknown_source_fail_closed) ... ok
+2026-11-05T20:53:28.9696580Z test_nan_cycles_and_oversized_source_rejected_without_mutation (test_lab_observation_writer.ProducerTests.test_nan_cycles_and_oversized_source_rejected_without_mutation) ... ok
+2026-11-05T20:53:28.9698807Z test_real_term_validator_roundtrip_when_explicitly_supplied (test_lab_observation_writer.ProducerTests.test_real_term_validator_roundtrip_when_explicitly_supplied) ... skipped 'explicit admitted Term checkout and raw source pin not configured'
+2026-11-05T20:53:28.9701370Z test_validator_cannot_mutate_reported_values (test_lab_observation_writer.ProducerTests.test_validator_cannot_mutate_reported_values) ... ok
+2026-11-05T20:53:29.0003711Z test_atomic_snapshot_cas_and_exact_serialized_reader_input (test_lab_observation_writer.WriterTests.test_atomic_snapshot_cas_and_exact_serialized_reader_input) ... ok
+2026-11-05T20:53:29.0219295Z test_concurrent_same_sequence_has_one_winner (test_lab_observation_writer.WriterTests.test_concurrent_same_sequence_has_one_winner) ... ok
+2026-11-05T20:53:29.0312369Z test_existing_namespace_never_adopted (test_lab_observation_writer.WriterTests.test_existing_namespace_never_adopted) ... ok
+2026-11-05T20:53:29.0517692Z test_foreign_replacement_preserved_and_writer_blocked (test_lab_observation_writer.WriterTests.test_foreign_replacement_preserved_and_writer_blocked) ... ok
+2026-11-05T20:53:29.0729502Z test_hardlink_prevents_update (test_lab_observation_writer.WriterTests.test_hardlink_prevents_update) ... ok
+2026-11-05T20:53:29.0897381Z test_in_place_tamper_and_hardlinks_rejected (test_lab_observation_writer.WriterTests.test_in_place_tamper_and_hardlinks_rejected) ... ok
+2026-11-05T20:53:29.1177076Z test_open_delete_shared_reader_does_not_block_atomic_publication (test_lab_observation_writer.WriterTests.test_open_delete_shared_reader_does_not_block_atomic_publication) ... ok
+2026-11-05T20:53:29.1335477Z test_output_not_visible_while_source_is_running (test_lab_observation_writer.WriterTests.test_output_not_visible_while_source_is_running) ... ok
+2026-11-05T20:53:29.1421962Z test_replaced_lock_file_is_preserved (test_lab_observation_writer.WriterTests.test_replaced_lock_file_is_preserved) ... ok
+2026-11-05T20:53:29.1506928Z test_revocation_during_export_prevents_publication (test_lab_observation_writer.WriterTests.test_revocation_during_export_prevents_publication) ... ok
+2026-11-05T20:53:29.1574786Z test_revoked_and_closed_writer_have_no_new_side_effects (test_lab_observation_writer.WriterTests.test_revoked_and_closed_writer_have_no_new_side_effects) ... ok
+2026-11-05T20:53:29.1642391Z test_symlink_parent_rejected_before_directory_creation (test_lab_observation_writer.WriterTests.test_symlink_parent_rejected_before_directory_creation) ... ok
+2026-11-05T20:53:29.1644578Z setUpClass (test_lab_paper_pipeline.ComposedTests) ... skipped 'explicit Grid/Stratt source checkouts absent; composed runtime NOT_RUN'
+2026-11-05T20:53:29.1651837Z test_missing_kernel_source_admission_precedes_all_factories_and_files (test_lab_paper_pipeline.GuardTests.test_missing_kernel_source_admission_precedes_all_factories_and_files) ... ok
+2026-11-05T20:53:29.1659665Z test_numeric_funding_representation_is_exact_without_rounding_milliseconds (test_lab_paper_pipeline.GuardTests.test_numeric_funding_representation_is_exact_without_rounding_milliseconds) ... ok
+2026-11-05T20:53:29.1702183Z test_execute_reduces_before_prepare_but_verification_and_trusted_do_not (test_lab_privileges.LabPrivilegeEntrypointTests.test_execute_reduces_before_prepare_but_verification_and_trusted_do_not) ... ok
+2026-11-05T20:53:29.1707762Z test_failure_blocks_before_capsule_preparation (test_lab_privileges.LabPrivilegeEntrypointTests.test_failure_blocks_before_capsule_preparation) ... ok
+2026-11-05T20:53:29.1727479Z test_thread_token_is_rejected_without_adjusting_process_token (test_lab_privileges.LabPrivilegeEntrypointTests.test_thread_token_is_rejected_without_adjusting_process_token) ... ok
+2026-11-05T20:53:29.1737279Z test_token_information_rejects_oversize_count_and_truncated_records (test_lab_privileges.LabPrivilegeEntrypointTests.test_token_information_rejects_oversize_count_and_truncated_records) ... ok
+2026-11-05T20:53:29.1739537Z test_unsupported_platform_fails_closed (test_lab_privileges.LabPrivilegeEntrypointTests.test_unsupported_platform_fails_closed) ... ok
+2026-11-05T20:53:29.2267401Z test_child_removal_is_idempotent_and_parent_is_unchanged (test_lab_privileges.LabPrivilegeTests.test_child_removal_is_idempotent_and_parent_is_unchanged) ... ok
+2026-11-05T20:53:29.2679553Z test_changed_missing_or_hardlinked_files_fail_closed (test_lab_release.LabReleaseTests.test_changed_missing_or_hardlinked_files_fail_closed) ... ok
+2026-11-05T20:53:29.2892846Z test_duplicate_json_and_noncanonical_encoding_reject (test_lab_release.LabReleaseTests.test_duplicate_json_and_noncanonical_encoding_reject) ... ok
+2026-11-05T20:53:29.3093877Z test_even_hash_admitted_active_dotenv_cannot_bypass_lab_settings (test_lab_release.LabReleaseTests.test_even_hash_admitted_active_dotenv_cannot_bypass_lab_settings) ... ok
+2026-11-05T20:53:29.3659938Z test_explicit_empty_directories_are_bound_and_extra_namespaces_reject (test_lab_release.LabReleaseTests.test_explicit_empty_directories_are_bound_and_extra_namespaces_reject) ... ok
+2026-11-05T20:53:29.3914525Z test_lab_cannot_claim_trusted_release_or_enable_trading (test_lab_release.LabReleaseTests.test_lab_cannot_claim_trusted_release_or_enable_trading) ... ok
+2026-11-05T20:53:29.4198648Z test_missing_source_dependency_cycle_wrong_origin_and_unsafe_paths_reject (test_lab_release.LabReleaseTests.test_missing_source_dependency_cycle_wrong_origin_and_unsafe_paths_reject) ... ok
+2026-11-05T20:53:29.4353696Z test_pinned_vendor_filenames_allow_internal_spaces_and_parentheses (test_lab_release.LabReleaseTests.test_pinned_vendor_filenames_allow_internal_spaces_and_parentheses) ... ok
+2026-11-05T20:53:29.4787386Z test_scoped_dependency_and_cpp_names_remain_inside_pinned_closure (test_lab_release.LabReleaseTests.test_scoped_dependency_and_cpp_names_remain_inside_pinned_closure) ... ok
+2026-11-05T20:53:29.6796277Z test_stage_copies_verified_bytes_to_new_directory_only (test_lab_release.LabReleaseTests.test_stage_copies_verified_bytes_to_new_directory_only) ... ok
+2026-11-05T20:53:29.7195625Z test_unsigned_lab_requires_external_manifest_hash_and_exact_file_closure (test_lab_release.LabReleaseTests.test_unsigned_lab_requires_external_manifest_hash_and_exact_file_closure) ... ok
+2026-11-05T20:53:29.7653080Z test_vendor_filename_bytes_are_admitted_and_still_hash_bound (test_lab_release.LabReleaseTests.test_vendor_filename_bytes_are_admitted_and_still_hash_bound) ... ok
+2026-11-05T20:53:38.5699941Z test_actual_git_source_fence_checks_all_six_and_rejects_changed_bytes (test_lab_runtime.LabRuntimePolicyTests.test_actual_git_source_fence_checks_all_six_and_rejects_changed_bytes) ... ok
+2026-11-05T20:53:38.5702163Z test_actual_grid_worker_heartbeat_uses_node_only_auth_mock_control_source_fixture (test_lab_runtime.LabRuntimePolicyTests.test_actual_grid_worker_heartbeat_uses_node_only_auth_mock_control_source_fixture)
+2026-11-05T20:53:38.5834422Z Optional sibling Grid source; synthetic registry, owned loopback only. ... skipped 'Optional sibling Grid source and test dependencies not provisioned'
+2026-11-05T20:53:38.6716855Z test_actual_native_child_receives_only_lab_environment (test_lab_runtime.LabRuntimePolicyTests.test_actual_native_child_receives_only_lab_environment) ... ok
+2026-11-05T20:53:38.7071085Z test_configuration_hash_binds_the_parsed_read_not_a_second_read (test_lab_runtime.LabRuntimePolicyTests.test_configuration_hash_binds_the_parsed_read_not_a_second_read) ... ok
+2026-11-05T20:53:38.9247612Z test_control_grid_retains_password_free_isolated_loopback_dsns (test_lab_runtime.LabRuntimePolicyTests.test_control_grid_retains_password_free_isolated_loopback_dsns) ... ok
+2026-11-05T20:53:39.0487726Z test_exchange_credentials_and_unsafe_startup_settings_rejected (test_lab_runtime.LabRuntimePolicyTests.test_exchange_credentials_and_unsafe_startup_settings_rejected) ... ok
+2026-11-05T20:53:39.0889185Z test_explicit_lab_config_allows_office_node_without_weakening_ci_guard (test_lab_runtime.LabRuntimePolicyTests.test_explicit_lab_config_allows_office_node_without_weakening_ci_guard) ... ok
+2026-11-05T20:53:39.0891566Z test_legacy_or_global_worker_auth_is_denied_before_runtime_or_popen (test_lab_runtime.LabRuntimePolicyTests.test_legacy_or_global_worker_auth_is_denied_before_runtime_or_popen)
+2026-11-05T20:53:39.1180083Z Source preparation is mocked; actual private auth denial stays real. ... ok
+2026-11-05T20:53:39.1366710Z test_minimal_environment_never_inherits_exchange_or_startup_secrets (test_lab_runtime.LabRuntimePolicyTests.test_minimal_environment_never_inherits_exchange_or_startup_secrets) ... ok
+2026-11-05T20:53:39.2430219Z test_office_node_ids_bind_to_the_observed_windows_hostnames (test_lab_runtime.LabRuntimePolicyTests.test_office_node_ids_bind_to_the_observed_windows_hostnames) ... ok
+2026-11-05T20:53:39.3040255Z test_offline_context_paths_and_identity_are_only_validation_data (test_lab_runtime.LabRuntimePolicyTests.test_offline_context_paths_and_identity_are_only_validation_data) ... ok
+2026-11-05T20:53:39.3520724Z test_offline_role_context_never_changes_legacy_or_cli_admission (test_lab_runtime.LabRuntimePolicyTests.test_offline_role_context_never_changes_legacy_or_cli_admission) ... ok
+2026-11-05T20:53:39.3796721Z test_private_grid_auth_is_hash_bound_and_only_contains_lab_identity (test_lab_runtime.LabRuntimePolicyTests.test_private_grid_auth_is_hash_bound_and_only_contains_lab_identity) ... ok
+2026-11-05T20:53:39.3798804Z test_public_dsn_role_and_password_rejection_precedes_runtime_or_popen (test_lab_runtime.LabRuntimePolicyTests.test_public_dsn_role_and_password_rejection_precedes_runtime_or_popen)
+2026-11-05T20:53:40.5609282Z Mock source admission; run real config and private-auth validation. ... ok
+2026-11-05T20:53:40.6123744Z test_source_versions_files_state_and_node_are_bound_to_capsule (test_lab_runtime.LabRuntimePolicyTests.test_source_versions_files_state_and_node_are_bound_to_capsule) ... ok
+2026-11-05T20:53:40.6126056Z test_v3_worker_runtime_environment_contains_only_node_credential_auth (test_lab_runtime.LabRuntimePolicyTests.test_v3_worker_runtime_environment_contains_only_node_credential_auth)
+2026-11-05T20:53:40.6368687Z Mock runtime launch inspects the real environment callback, no Popen. ... ok
+2026-11-05T20:53:40.6805097Z test_worker_nodes_cannot_launch_another_coordinator (test_lab_runtime.LabRuntimePolicyTests.test_worker_nodes_cannot_launch_another_coordinator) ... ok
+2026-11-05T20:53:40.7543553Z test_cached_response_tamper_rejected (test_lifecycle.LifecycleTests.test_cached_response_tamper_rejected) ... ok
+2026-11-05T20:53:41.1001770Z test_cancel_retry_cannot_retain_handoff (test_lifecycle.LifecycleTests.test_cancel_retry_cannot_retain_handoff) ... ok
+2026-11-05T20:53:41.1382491Z test_completed_initial_state_cannot_be_injected (test_lifecycle.LifecycleTests.test_completed_initial_state_cannot_be_injected) ... ok
+2026-11-05T20:53:41.1945341Z test_concurrent_writer_fenced (test_lifecycle.LifecycleTests.test_concurrent_writer_fenced) ... ok
+2026-11-05T20:53:41.2314120Z test_default_verifier_denies_self_assertion (test_lifecycle.LifecycleTests.test_default_verifier_denies_self_assertion) ... ok
+2026-11-05T20:53:41.2738753Z test_failed_commit_does_not_advance (test_lifecycle.LifecycleTests.test_failed_commit_does_not_advance) ... ok
+2026-11-05T20:53:41.3262198Z test_idempotency_collision_and_sequence (test_lifecycle.LifecycleTests.test_idempotency_collision_and_sequence) ... ok
+2026-11-05T20:53:41.4800263Z test_missing_modules_zero_to_five (test_lifecycle.LifecycleTests.test_missing_modules_zero_to_five) ... ok
+2026-11-05T20:53:41.6345861Z test_monitoring_barrier_and_math_independence (test_lifecycle.LifecycleTests.test_monitoring_barrier_and_math_independence) ... ok
+2026-11-05T20:53:41.7165776Z test_old_epoch_operation_cannot_replay_after_recovery (test_lifecycle.LifecycleTests.test_old_epoch_operation_cannot_replay_after_recovery) ... ok
+2026-11-05T20:53:41.7398402Z test_read_only_api_and_safe_provider_failure (test_lifecycle.LifecycleTests.test_read_only_api_and_safe_provider_failure) ... ok
+2026-11-05T20:53:41.8935320Z test_recovery_revalidates_and_invalidates_downstream (test_lifecycle.LifecycleTests.test_recovery_revalidates_and_invalidates_downstream) ... ok
+2026-11-05T20:53:41.9373451Z test_restart_cannot_replay_cached_completion_before_revalidation (test_lifecycle.LifecycleTests.test_restart_cannot_replay_cached_completion_before_revalidation) ... ok
+2026-11-05T20:53:42.1747187Z test_sequence_and_no_authority (test_lifecycle.LifecycleTests.test_sequence_and_no_authority) ... ok
+2026-11-05T20:53:42.3232011Z test_tampered_state_rejected (test_lifecycle.LifecycleTests.test_tampered_state_rejected) ... ok
+2026-11-05T20:53:42.3417393Z test_verifier_cannot_bless_different_status (test_lifecycle.LifecycleTests.test_verifier_cannot_bless_different_status) ... ok
+2026-11-05T20:53:42.3420330Z test_bad_hash (test_lockfile.LockTests.test_bad_hash) ... ok
+2026-11-05T20:53:42.3423591Z test_dry_run (test_lockfile.LockTests.test_dry_run) ... ok
+2026-11-05T20:53:42.3424990Z test_duplicate (test_lockfile.LockTests.test_duplicate) ... ok
+2026-11-05T20:53:42.3425821Z test_nan (test_lockfile.LockTests.test_nan) ... ok
+2026-11-05T20:53:42.3427609Z test_roundtrip (test_lockfile.LockTests.test_roundtrip) ... ok
+2026-11-05T20:53:42.3429171Z test_size (test_lockfile.LockTests.test_size) ... ok
+2026-11-05T20:53:42.3430798Z test_unknown_installed (test_lockfile.LockTests.test_unknown_installed) ... ok
+2026-11-05T20:53:42.3432173Z test_valid (test_lockfile.LockTests.test_valid) ... ok
+2026-11-05T20:53:42.3433255Z test_capability_has_one_owner (test_module_catalog.SixModuleReleaseTests.test_capability_has_one_owner) ... ok
+2026-11-05T20:53:42.3435938Z test_complete_release_is_installable_without_removing_independent_modules (test_module_catalog.SixModuleReleaseTests.test_complete_release_is_installable_without_removing_independent_modules) ... ok
+2026-11-05T20:53:42.3438318Z test_duplicate_and_unknown_still_rejected (test_module_catalog.SixModuleReleaseTests.test_duplicate_and_unknown_still_rejected) ... ok
+2026-11-05T20:53:42.3440276Z test_every_module_can_negotiate (test_module_catalog.SixModuleReleaseTests.test_every_module_can_negotiate) ... ok
+2026-11-05T20:53:42.3703403Z BLOCKED: LAB_RUNTIME_REJECTED; trading_authorized=false
+2026-11-05T20:53:42.3705801Z test_inert_fixture_path_handle_field_equality_is_observed_without_identifiers (test_native_file_identity_diagnostics.NativeFileIdentityDiagnostics.test_inert_fixture_path_handle_field_equality_is_observed_without_identifiers) ... ok
+2026-11-05T20:53:42.3707807Z BLOCKED: LAB_RUNTIME_REJECTED; trading_authorized=false
+2026-11-05T20:53:42.3708366Z BLOCKED_NO_TRUSTED_PUBLISHER; no unsigned fallback
+2026-11-05T20:53:42.3708932Z BLOCKED: LAB_RUNTIME_REJECTED; trading_authorized=false
+2026-11-05T20:53:42.3709511Z BLOCKED: LAB_RUNTIME_REJECTED; trading_authorized=false
+2026-11-05T20:53:42.3710101Z BLOCKED: LAB_RUNTIME_REJECTED; trading_authorized=false
+2026-11-05T20:53:42.3710678Z BLOCKED: LAB_RUNTIME_REJECTED; trading_authorized=false
+2026-11-05T20:53:42.3711236Z BLOCKED: LAB_RUNTIME_REJECTED; trading_authorized=false
+2026-11-05T20:53:42.3721554Z ##[notice]NATIVE_FILE_IDENTITY {"observation":{"path_vs_binary_stream":{"st_ctime_ns":true,"st_dev":true,"st_ino":true,"st_mtime_ns":true,"st_nlink":true,"st_size":true},"path_vs_open":{"st_ctime_ns":true,"st_dev":true,"st_ino":true,"st_mtime_ns":true,"st_nlink":true,"st_size":true},"same_handle_after_read":{"st_ctime_ns":true,"st_dev":true,"st_ino":true,"st_mtime_ns":true,"st_nlink":true,"st_size":true},"same_path_after_close":{"st_ctime_ns":true,"st_dev":true,"st_ino":true,"st_mtime_ns":true,"st_nlink":true,"st_size":true},"toolchain_statuses":["BYTES_MATCH","BYTES_MATCH","BYTES_MATCH","BYTES_MATCH","BYTES_MATCH"],"wheel_reason":"NONE"},"platform":"nt","python":"3.13.17","qualification":"NOT_EVALUATED","schema":"unified.ci-file-identity-observation.v1"}
+2026-11-05T20:53:42.4672148Z test_forged_node_observations_are_rejected_at_both_boundaries (test_nested_fleet_boundary.NestedFleetBoundaryTests.test_forged_node_observations_are_rejected_at_both_boundaries) ... ok
+2026-11-05T20:53:42.4854136Z test_http_revalidates_nested_fleet_from_arbitrary_provider (test_nested_fleet_boundary.NestedFleetBoundaryTests.test_http_revalidates_nested_fleet_from_arbitrary_provider) ... ok
+2026-11-05T20:53:42.5535505Z test_provider_cannot_publish_nested_execution_authority (test_nested_fleet_boundary.NestedFleetBoundaryTests.test_provider_cannot_publish_nested_execution_authority) ... ok
+2026-11-05T20:53:42.5538062Z test_partial_evidence_is_explicit_and_closed (test_operator_auth_source.NativeReceiptTests.test_partial_evidence_is_explicit_and_closed) ... ok
+2026-11-05T20:53:43.1669509Z test_raw_source_rejects_changed_bytes_and_untracked_code (test_operator_auth_source.NativeReceiptTests.test_raw_source_rejects_changed_bytes_and_untracked_code) ... ok
+2026-11-05T20:53:43.1715555Z test_inventory_requires_every_unique_case_no_skip_or_failure (test_operator_contract_ci.EvidenceTests.test_inventory_requires_every_unique_case_no_skip_or_failure) ... ok
+2026-11-05T20:53:43.1717076Z test_only_exact_grid_pin_admitted (test_operator_contract_ci.EvidenceTests.test_only_exact_grid_pin_admitted) ... ok
+2026-11-05T20:53:43.1799443Z test_backend_absent_never_returns_fake_receipt (test_operator_control_plane.OperatorTests.test_backend_absent_never_returns_fake_receipt) ... ok
+2026-11-05T20:53:43.1860138Z test_current_grants_checked_on_every_retry (test_operator_control_plane.OperatorTests.test_current_grants_checked_on_every_retry) ... ok
+2026-11-05T20:53:43.1918703Z test_malformed_private_receipt_never_disclosed (test_operator_control_plane.OperatorTests.test_malformed_private_receipt_never_disclosed) ... ok
+2026-11-05T20:53:43.1965140Z test_missing_provider_fails_closed (test_operator_control_plane.OperatorTests.test_missing_provider_fails_closed) ... ok
+2026-11-05T20:53:43.2011806Z test_receipt_rechecks_current_actor_scope (test_operator_control_plane.OperatorTests.test_receipt_rechecks_current_actor_scope) ... ok
+2026-11-05T20:53:43.2058456Z test_revocation_during_receipt_query_prevents_disclosure (test_operator_control_plane.OperatorTests.test_revocation_during_receipt_query_prevents_disclosure) ... ok
+2026-11-05T20:53:43.2102411Z test_role_backend_enforced_and_unknown_action_denied (test_operator_control_plane.OperatorTests.test_role_backend_enforced_and_unknown_action_denied) ... ok
+2026-11-05T20:53:43.2149409Z test_serialized_or_unknown_capability_principal_denied (test_operator_control_plane.OperatorTests.test_serialized_or_unknown_capability_principal_denied) ... ok
+2026-11-05T20:53:43.2193529Z test_strict_boundaries (test_operator_control_plane.OperatorTests.test_strict_boundaries) ... ok
+2026-11-05T20:53:43.2243242Z test_submit_receipt_must_match_entire_intent (test_operator_control_plane.OperatorTests.test_submit_receipt_must_match_entire_intent) ... ok
+2026-11-05T20:53:43.2291070Z test_two_windows_retry_and_conflicting_revision (test_operator_control_plane.OperatorTests.test_two_windows_retry_and_conflicting_revision) ... ok
+2026-11-05T20:53:43.2335349Z test_untrusted_actor_role_and_machine_denied (test_operator_control_plane.OperatorTests.test_untrusted_actor_role_and_machine_denied) ... ok
+2026-11-05T20:53:43.2377636Z test_zero_grant_denied_before_backend_io (test_operator_control_plane.OperatorTests.test_zero_grant_denied_before_backend_io) ... ok
+2026-11-05T20:53:43.2419402Z test_invalid_snapshot_cannot_mark_live (test_operator_control_plane.StreamTests.test_invalid_snapshot_cannot_mark_live) ... ok
+2026-11-05T20:53:43.2464694Z test_snapshot_gap_generation_and_staleness (test_operator_control_plane.StreamTests.test_snapshot_gap_generation_and_staleness) ... ok
+2026-11-05T20:53:43.2482114Z test_commit_retry_read_and_unknown_reconcile_actual_bridge (test_operator_grid_composition.GridCompositionTests.test_commit_retry_read_and_unknown_reconcile_actual_bridge) ... skipped 'GRID_TEST_ROOT required for actual cross-repository composition'
+2026-11-05T20:53:43.2485344Z test_lost_response_reconciles_same_command_and_two_windows (test_operator_grid_composition.GridCompositionTests.test_lost_response_reconciles_same_command_and_two_windows) ... skipped 'GRID_TEST_ROOT required for actual cross-repository composition'
+2026-11-05T20:53:43.2487931Z test_no_quorum_unknown_has_no_invented_owner (test_operator_grid_composition.GridCompositionTests.test_no_quorum_unknown_has_no_invented_owner) ... skipped 'GRID_TEST_ROOT required for actual cross-repository composition'
+2026-11-05T20:53:43.3292908Z test_callback_runs_after_same_isolation_without_executing_module (test_owned_python_callback.OwnedCallbackTests.test_callback_runs_after_same_isolation_without_executing_module) ... ok
+2026-11-05T20:53:45.6866439Z test_lab_bootstrap_requires_raw_source_pins_before_dispatch (test_package_preflight.PackagePreflightTests.test_lab_bootstrap_requires_raw_source_pins_before_dispatch) ... ok
+2026-11-05T20:53:47.8415424Z test_poisoned_import_and_timestamp_cache_cannot_override_raw_pins (test_package_preflight.PackagePreflightTests.test_poisoned_import_and_timestamp_cache_cannot_override_raw_pins) ... ok
+2026-11-05T20:53:49.7310330Z test_real_raw_preflight_all_six_artifacts_and_no_authority (test_package_preflight.PackagePreflightTests.test_real_raw_preflight_all_six_artifacts_and_no_authority) ... ok
+2026-11-05T20:53:51.0012512Z test_required_flags_relative_namespace_and_bad_artifact_fail_closed (test_package_preflight.PackagePreflightTests.test_required_flags_relative_namespace_and_bad_artifact_fail_closed) ... ok
+2026-11-05T20:53:53.4278509Z test_tampered_source_git_guard_and_artifact_are_rejected (test_package_preflight.PackagePreflightTests.test_tampered_source_git_guard_and_artifact_are_rejected) ... ok
+2026-11-05T20:53:55.7950185Z test_all_five_bytes_match_only_scoped_component_verification (test_package_toolchain_preflight.ToolchainPreflightTests.test_all_five_bytes_match_only_scoped_component_verification) ... ok
+2026-11-05T20:53:57.0973022Z test_catalog_or_source_tamper_cannot_become_self_pinned_policy (test_package_toolchain_preflight.ToolchainPreflightTests.test_catalog_or_source_tamper_cannot_become_self_pinned_policy) ... ok
+2026-11-05T20:54:00.9593743Z test_missing_or_wrong_archive_is_nonzero_blocked_json (test_package_toolchain_preflight.ToolchainPreflightTests.test_missing_or_wrong_archive_is_nonzero_blocked_json) ... ok
+2026-11-05T20:54:00.9601640Z test_all_five_or_six_nodes_required_but_claims_never_authenticate_themselves (test_physical_acceptance.PhysicalAcceptanceTests.test_all_five_or_six_nodes_required_but_claims_never_authenticate_themselves) ... ok
+2026-11-05T20:54:00.9606954Z test_duplicate_wrong_release_wrong_run_or_cloud_cannot_qualify (test_physical_acceptance.PhysicalAcceptanceTests.test_duplicate_wrong_release_wrong_run_or_cloud_cannot_qualify) ... ok
+2026-11-05T20:54:00.9609998Z test_failure_remains_failure (test_physical_acceptance.PhysicalAcceptanceTests.test_failure_remains_failure) ... ok
+2026-11-05T20:54:00.9611682Z test_inventory_is_explicit_unique_and_five_or_six (test_physical_acceptance.PhysicalAcceptanceTests.test_inventory_is_explicit_unique_and_five_or_six) ... ok
+2026-11-05T20:54:00.9613089Z test_no_records_means_not_run (test_physical_acceptance.PhysicalAcceptanceTests.test_no_records_means_not_run) ... ok
+2026-11-05T20:54:00.9615391Z test_two_nodes_never_satisfy_six_node_acceptance (test_physical_acceptance.PhysicalAcceptanceTests.test_two_nodes_never_satisfy_six_node_acceptance) ... ok
+2026-11-05T20:54:00.9669645Z test_only_admitted_operator_policy_source_pins_reach_prepare (test_prepare_worker_capsule.ExternalSourcePolicyTests.test_only_admitted_operator_policy_source_pins_reach_prepare) ... ok
+2026-11-05T20:54:01.2529738Z test_absolute_deadline_rejects_dripping_response (test_prepare_worker_capsule.MockedControlTests.test_absolute_deadline_rejects_dripping_response) ... ok
+2026-11-05T20:54:01.2772793Z test_accepts_exact_pilot_enrollment_and_sends_only_enrollment_payload (test_prepare_worker_capsule.MockedControlTests.test_accepts_exact_pilot_enrollment_and_sends_only_enrollment_payload) ... ok
+2026-11-05T20:54:01.2845009Z test_redirect_wrong_role_duplicate_lengths_and_oversized_response_reject (test_prepare_worker_capsule.MockedControlTests.test_redirect_wrong_role_duplicate_lengths_and_oversized_response_reject) ... ok
+2026-11-05T20:54:01.2847033Z test_mocked_control_worker_capsule_is_rebased_private_and_sealed (test_prepare_worker_capsule.NativeMockedWorkerPipelineTests.test_mocked_control_worker_capsule_is_rebased_private_and_sealed)
+2026-11-05T20:55:58.3871560Z Synthetic sources plus mock CONTROL; proves staging only, no readiness. ... ok
+2026-11-05T20:55:59.8943164Z test_raw_operator_sources_ignore_poisoned_bytecode_and_changed_helper_rejects (test_prepare_worker_capsule.OperatorClosureTests.test_raw_operator_sources_ignore_poisoned_bytecode_and_changed_helper_rejects) ... ok
+2026-11-05T20:55:59.8964206Z test_device_alias_paths_are_rejected_before_open_or_creation (test_prepare_worker_capsule.WorkerArchiveTests.test_device_alias_paths_are_rejected_before_open_or_creation) ... ok
+2026-11-05T20:56:00.0641030Z test_exact_archive_roundtrip_keeps_empty_directories_without_payload_imports (test_prepare_worker_capsule.WorkerArchiveTests.test_exact_archive_roundtrip_keeps_empty_directories_without_payload_imports) ... ok
+2026-11-05T20:56:00.1598061Z test_extra_duplicate_link_and_traversal_members_reject (test_prepare_worker_capsule.WorkerArchiveTests.test_extra_duplicate_link_and_traversal_members_reject) ... ok
+2026-11-05T20:56:00.1979563Z test_failed_source_proof_precedes_archive_creation (test_prepare_worker_capsule.WorkerArchiveTests.test_failed_source_proof_precedes_archive_creation) ... ok
+2026-11-05T20:56:00.1988036Z test_private_stdin_json_is_exact_bounded_and_never_accepts_database_credentials (test_prepare_worker_capsule.WorkerArchiveTests.test_private_stdin_json_is_exact_bounded_and_never_accepts_database_credentials) ... ok
+2026-11-05T20:56:00.2004233Z test_worker_targets_require_observed_logical_or_exact_mapped_hostname (test_prepare_worker_capsule.WorkerArchiveTests.test_worker_targets_require_observed_logical_or_exact_mapped_hostname) ... ok
+2026-11-05T20:56:00.2043505Z test_cli_requires_individual_derived_pin_and_propagates_nonzero_exit (test_prepare_worker_capsule.WorkerRunTests.test_cli_requires_individual_derived_pin_and_propagates_nonzero_exit) ... ok
+2026-11-05T20:56:00.2052063Z test_run_admission_failure_never_starts_child (test_prepare_worker_capsule.WorkerRunTests.test_run_admission_failure_never_starts_child) ... ok
+2026-11-05T20:56:00.2130728Z test_run_denies_invalid_private_auth_before_bootstrap (test_prepare_worker_capsule.WorkerRunTests.test_run_denies_invalid_private_auth_before_bootstrap) ... ok
+2026-11-05T20:56:00.2393885Z test_run_is_inert_by_default_and_does_not_create_cache (test_prepare_worker_capsule.WorkerRunTests.test_run_is_inert_by_default_and_does_not_create_cache) ... ok
+2026-11-05T20:56:00.2677670Z test_run_preserves_foreground_owned_cleanup_and_passes_exact_pins (test_prepare_worker_capsule.WorkerRunTests.test_run_preserves_foreground_owned_cleanup_and_passes_exact_pins) ... ok
+2026-11-05T20:56:00.2831496Z test_run_rejects_control_host_and_changed_bootstrap_before_spawn (test_prepare_worker_capsule.WorkerRunTests.test_run_rejects_control_host_and_changed_bootstrap_before_spawn) ... ok
+2026-11-05T20:56:00.3316910Z test_run_rejects_guard_and_git_mutation_before_spawn (test_prepare_worker_capsule.WorkerRunTests.test_run_rejects_guard_and_git_mutation_before_spawn) ... ok
+2026-11-05T20:56:00.3355824Z test_invalid_archive_precedes_code_state_creation_and_private_stdin (test_prepare_worker_capsule.WorkerTransformTests.test_invalid_archive_precedes_code_state_creation_and_private_stdin) ... ok
+2026-11-05T20:56:00.3418862Z test_rebases_all_program_paths_and_removes_control_database_role (test_prepare_worker_capsule.WorkerTransformTests.test_rebases_all_program_paths_and_removes_control_database_role) ... ok
+2026-11-05T20:56:00.3421452Z test_admitted_still_not_qualified (test_provenance_v11.ProvenanceV11Tests.test_admitted_still_not_qualified) ... ok
+2026-11-05T20:56:00.3423508Z test_corrupt (test_provenance_v11.ProvenanceV11Tests.test_corrupt) ... ok
+2026-11-05T20:56:00.3425051Z test_grid_false_available (test_provenance_v11.ProvenanceV11Tests.test_grid_false_available) ... ok
+2026-11-05T20:56:00.3426665Z test_grid_partial (test_provenance_v11.ProvenanceV11Tests.test_grid_partial) ... ok
+2026-11-05T20:56:00.3428030Z test_no_trust (test_provenance_v11.ProvenanceV11Tests.test_no_trust) ... ok
+2026-11-05T20:56:00.3429342Z test_receipt_tamper (test_provenance_v11.ProvenanceV11Tests.test_receipt_tamper) ... ok
+2026-11-05T20:56:00.3430572Z test_boolean_sequence (test_registry_events.EventTests.test_boolean_sequence) ... ok
+2026-11-05T20:56:00.3431726Z test_sequence_and_gap (test_registry_events.EventTests.test_sequence_and_gap) ... ok
+2026-11-05T20:56:00.3433181Z test_boolean_major (test_registry_events.RegistryTests.test_boolean_major) ... ok
+2026-11-05T20:56:00.3434464Z test_duplicate_capability (test_registry_events.RegistryTests.test_duplicate_capability) ... ok
+2026-11-05T20:56:00.3435539Z test_valid (test_registry_events.RegistryTests.test_valid) ... ok
+2026-11-05T20:56:00.3436487Z test_wrong_module (test_registry_events.RegistryTests.test_wrong_module) ... ok
+2026-11-05T20:56:00.3441143Z test_independent_source_oracle_and_release_admission (test_release_boundary.ReleaseBoundaryTests.test_independent_source_oracle_and_release_admission) ... ok
+2026-11-05T20:56:00.3442732Z test_market_missing_completeness_and_false_available (test_release_boundary.ReleaseBoundaryTests.test_market_missing_completeness_and_false_available) ... ok
+2026-11-05T20:56:00.3448161Z test_no_pin_and_rehashed_forgery_denied (test_release_boundary.ReleaseBoundaryTests.test_no_pin_and_rehashed_forgery_denied) ... ok
+2026-11-05T20:56:00.3449624Z test_release_bytes_and_tree_are_independent (test_release_boundary.ReleaseBoundaryTests.test_release_bytes_and_tree_are_independent) ... ok
+2026-11-05T20:56:00.3457127Z test_self_consistent_gap_and_invalid_data_never_sealed (test_release_boundary.ReleaseBoundaryTests.test_self_consistent_gap_and_invalid_data_never_sealed) ... ok
+2026-11-05T20:56:00.3459527Z test_transition_proof_is_historical_only (test_release_boundary.ReleaseBoundaryTests.test_transition_proof_is_historical_only) ... ok
+2026-11-05T20:56:00.3474108Z test_valid_market_partial_requires_release_pin_and_invalid_rows_denied (test_release_boundary.ReleaseBoundaryTests.test_valid_market_partial_requires_release_pin_and_invalid_rows_denied) ... ok
+2026-11-05T20:56:03.6986713Z test_actual_source_bundle_builder_preserves_exact_git_head (test_release_manifest.ManifestTests.test_actual_source_bundle_builder_preserves_exact_git_head) ... ok
+2026-11-05T20:56:03.6994943Z test_closed_six_module_manifest_roundtrip_is_not_signature_authority (test_release_manifest.ManifestTests.test_closed_six_module_manifest_roundtrip_is_not_signature_authority) ... ok
+2026-11-05T20:56:03.6998399Z test_dependency_closure_cycles_and_casefold_paths_rejected (test_release_manifest.ManifestTests.test_dependency_closure_cycles_and_casefold_paths_rejected) ... ok
+2026-11-05T20:56:03.7002946Z test_duplicate_json_unknown_fields_and_noncanonical_bytes_rejected (test_release_manifest.ManifestTests.test_duplicate_json_unknown_fields_and_noncanonical_bytes_rejected) ... ok
+2026-11-05T20:56:03.7004835Z test_missing_alias_and_extra_module_fail (test_release_manifest.ManifestTests.test_missing_alias_and_extra_module_fail) ... ok
+2026-11-05T20:56:03.7012586Z test_release_module_versions_are_accepted_by_runtime_contract (test_release_manifest.ManifestTests.test_release_module_versions_are_accepted_by_runtime_contract) ... ok
+2026-11-05T20:56:03.7014838Z test_untrusted_publisher_downgrade_wrong_provenance_and_units (test_release_manifest.ManifestTests.test_untrusted_publisher_downgrade_wrong_provenance_and_units) ... ok
+2026-11-05T20:56:03.9013781Z test_actual_isolated_unsigned_preparation_and_source_pin_rejection (test_release_preparation.ReleasePreparationTests.test_actual_isolated_unsigned_preparation_and_source_pin_rejection) ... ok
+2026-11-05T20:56:04.0576886Z test_incomplete_artifacts_and_nonisolated_invocation_fail_closed (test_release_preparation.ReleasePreparationTests.test_incomplete_artifacts_and_nonisolated_invocation_fail_closed) ... ok
+2026-11-05T20:56:04.7785645Z test_invalid_artifact_never_reaches_certificate_provider (test_release_preparation.ReleasePreparationTests.test_invalid_artifact_never_reaches_certificate_provider) ... ok
+2026-11-05T20:56:05.0207269Z test_missing_trusted_timestamp_is_rejected_without_a_generated_certificate (test_release_preparation.ReleasePreparationTests.test_missing_trusted_timestamp_is_rejected_without_a_generated_certificate) ... ok
+2026-11-05T20:56:06.4862820Z test_prepare_only_holds_verified_script_and_never_queries_signer (test_release_preparation.ReleasePreparationTests.test_prepare_only_holds_verified_script_and_never_queries_signer) ... ok
+2026-11-05T20:56:07.1059552Z test_unsigned_artifact_is_never_admitted_by_authenticode (test_release_preparation.ReleasePreparationTests.test_unsigned_artifact_is_never_admitted_by_authenticode) ... ok
+2026-11-05T20:56:07.1061280Z test_complete (test_report.ReportTests.test_complete) ... ok
+2026-11-05T20:56:07.1062214Z test_invalid (test_report.ReportTests.test_invalid) ... ok
+2026-11-05T20:56:07.1063253Z test_missing_grid (test_report.ReportTests.test_missing_grid) ... ok
+2026-11-05T20:56:07.1063963Z test_stale (test_report.ReportTests.test_stale) ... ok
+2026-11-05T20:56:07.5718855Z test_failed_stop_is_quarantined_until_explicit_cleanup (test_runtime.RuntimeConcurrencyTests.test_failed_stop_is_quarantined_until_explicit_cleanup) ... ok
+2026-11-05T20:56:07.9150906Z test_two_supervisors_do_not_interleave_external_effects (test_runtime.RuntimeConcurrencyTests.test_two_supervisors_do_not_interleave_external_effects) ... ok
+2026-11-05T20:56:08.3578555Z test_admin_stop_survives_recreation_and_start_requires_explicit_resume (test_runtime.RuntimeTests.test_admin_stop_survives_recreation_and_start_requires_explicit_resume) ... ok
+2026-11-05T20:56:08.4428166Z test_bad_versions_cycles_and_missing_dependencies_before_side_effects (test_runtime.RuntimeTests.test_bad_versions_cycles_and_missing_dependencies_before_side_effects) ... ok
+2026-11-05T20:56:08.7522583Z test_crash_recovery_backoff_and_stale_dependents (test_runtime.RuntimeTests.test_crash_recovery_backoff_and_stale_dependents) ... ok
+2026-11-05T20:56:09.0542203Z test_explicit_restart_reports_unconfirmed_stop_without_restarting_peers (test_runtime.RuntimeTests.test_explicit_restart_reports_unconfirmed_stop_without_restarting_peers) ... ok
+2026-11-05T20:56:09.2478686Z test_port_or_pid_without_functional_identity_never_ready (test_runtime.RuntimeTests.test_port_or_pid_without_functional_identity_never_ready) ... ok
+2026-11-05T20:56:09.8092208Z test_restart_budget_exhaustion_is_failed_and_explicit_restart_recovers (test_runtime.RuntimeTests.test_restart_budget_exhaustion_is_failed_and_explicit_restart_recovers) ... ok
+2026-11-05T20:56:10.0486341Z test_six_real_driver_states_and_dependency_order (test_runtime.RuntimeTests.test_six_real_driver_states_and_dependency_order) ... ok
+2026-11-05T20:56:10.3503514Z test_stop_failure_is_reported_after_persistent_failure_and_admin_stop (test_runtime.RuntimeTests.test_stop_failure_is_reported_after_persistent_failure_and_admin_stop) ... ok
+2026-11-05T20:56:10.7443826Z test_stop_reverse_dependencies_and_hot_extension_without_global_restart (test_runtime.RuntimeTests.test_stop_reverse_dependencies_and_hot_extension_without_global_restart) ... ok
+2026-11-05T20:56:10.9931540Z test_wrong_release_and_driver_errors_never_leak_private_values (test_runtime.RuntimeTests.test_wrong_release_and_driver_errors_never_leak_private_values) ... ok
+2026-11-05T20:56:11.4971353Z test_wrong_journal_fixture_closes_all_real_sqlite_connections (test_runtime_builtin.BuiltinFixtureOwnershipTests.test_wrong_journal_fixture_closes_all_real_sqlite_connections) ... ok
+2026-11-05T20:56:12.1482716Z test_actual_journal_file_and_http_ready_without_global_readiness (test_runtime_builtin.BuiltinTests.test_actual_journal_file_and_http_ready_without_global_readiness) ... ok
+2026-11-05T20:56:12.6639070Z test_delegate_methods_remain_exact_and_builtin_authorization_required (test_runtime_builtin.BuiltinTests.test_delegate_methods_remain_exact_and_builtin_authorization_required) ... ok
+2026-11-05T20:56:17.7427772Z test_five_healthy_delegates_inside_their_deadlines_allow_builtin_ready (test_runtime_builtin.BuiltinTests.test_five_healthy_delegates_inside_their_deadlines_allow_builtin_ready) ... ok
+2026-11-05T20:56:18.4226074Z test_missing_publication_and_wrong_http_fail_closed (test_runtime_builtin.BuiltinTests.test_missing_publication_and_wrong_http_fail_closed) ... ok
+2026-11-05T20:56:19.0957051Z test_modified_snapshot_and_stale_publication_fail_closed (test_runtime_builtin.BuiltinTests.test_modified_snapshot_and_stale_publication_fail_closed) ... ok
+2026-11-05T20:56:19.7504315Z test_operation_identity_stop_and_previous_instance_are_not_process_ownership (test_runtime_builtin.BuiltinTests.test_operation_identity_stop_and_previous_instance_are_not_process_ownership) ... ok
+2026-11-05T20:56:20.4297665Z test_publication_expiring_during_real_http_probe_is_not_ready (test_runtime_builtin.BuiltinTests.test_publication_expiring_during_real_http_probe_is_not_ready) ... ok
+2026-11-05T20:56:21.1461303Z test_registered_extension_keeps_valid_builtin_and_bounded_freshness (test_runtime_builtin.BuiltinTests.test_registered_extension_keeps_valid_builtin_and_bounded_freshness) ... ok
+2026-11-05T20:56:21.6480170Z test_wrong_journal_identity_and_forged_publication_are_rejected (test_runtime_builtin.BuiltinTests.test_wrong_journal_identity_and_forged_publication_are_rejected) ... ok
+2026-11-05T20:56:22.4733084Z test_actual_cli_builtin_uses_live_journal_snapshot_api_without_child_controller (test_runtime_cli.CliTests.test_actual_cli_builtin_uses_live_journal_snapshot_api_without_child_controller) ... ok
+2026-11-05T20:56:22.4951507Z test_atomic_snapshot_has_no_partial_overwrite_and_refuses_links (test_runtime_cli.CliTests.test_atomic_snapshot_has_no_partial_overwrite_and_refuses_links) ... ok
+2026-11-05T20:56:22.4995172Z test_builtin_config_requires_one_controller_and_bounded_publish_interval (test_runtime_cli.CliTests.test_builtin_config_requires_one_controller_and_bounded_publish_interval) ... ok
+2026-11-05T20:56:23.0357390Z test_cached_loopback_http_never_ticks_and_rejects_mutating_methods (test_runtime_cli.CliTests.test_cached_loopback_http_never_ticks_and_rejects_mutating_methods) ... ok
+2026-11-05T20:56:23.0407806Z test_continuation_denial_or_error_before_binding_has_no_effects (test_runtime_cli.CliTests.test_continuation_denial_or_error_before_binding_has_no_effects) ... ok
+2026-11-05T20:56:23.5652336Z test_continuation_is_rechecked_after_each_tick_and_cleanup_on_probe_exception (test_runtime_cli.CliTests.test_continuation_is_rechecked_after_each_tick_and_cleanup_on_probe_exception) ... ok
+2026-11-05T20:56:23.5689628Z test_execute_without_actual_hosted_scope_and_external_pin_is_denied (test_runtime_cli.CliTests.test_execute_without_actual_hosted_scope_and_external_pin_is_denied) ... BLOCKED: RUNTIME_CLI_REJECTED; physical=NOT_AUTHORIZED
+2026-11-05T20:56:23.5702063Z BLOCKED: RUNTIME_CLI_REJECTED; physical=NOT_AUTHORIZED
+2026-11-05T20:56:23.5715704Z BLOCKED: RUNTIME_CLI_REJECTED; physical=NOT_AUTHORIZED
+2026-11-05T20:56:23.5727312Z ok
+2026-11-05T20:56:23.5781393Z test_explicit_health_budget_is_bounded_before_prepare (test_runtime_cli.CliTests.test_explicit_health_budget_is_bounded_before_prepare) ... ok
+2026-11-05T20:56:23.6008820Z test_external_bootstrap_pin_stays_inside_disposable_host_scope (test_runtime_cli.CliTests.test_external_bootstrap_pin_stays_inside_disposable_host_scope) ... ok
+2026-11-05T20:56:24.1187014Z test_finally_stops_owned_runtime_even_when_tick_fails (test_runtime_cli.CliTests.test_finally_stops_owned_runtime_even_when_tick_fails) ... ok
+2026-11-05T20:56:24.7043908Z test_initial_http_cache_contains_complete_actual_producer_snapshot (test_runtime_cli.CliTests.test_initial_http_cache_contains_complete_actual_producer_snapshot) ... ok
+2026-11-05T20:56:24.7938007Z test_listener_bind_failure_does_not_mutate_existing_journal (test_runtime_cli.CliTests.test_listener_bind_failure_does_not_mutate_existing_journal) ... ok
+2026-11-05T20:56:24.7982968Z test_office_target_or_external_root_cannot_be_authorized_by_config (test_runtime_cli.CliTests.test_office_target_or_external_root_cannot_be_authorized_by_config) ... ok
+2026-11-05T20:56:24.8030234Z test_prepare_default_never_constructs_driver_supervisor_or_spawns (test_runtime_cli.CliTests.test_prepare_default_never_constructs_driver_supervisor_or_spawns) ... ok
+2026-11-05T20:56:25.6706258Z test_recovery_invalidates_ready_before_listener_without_losing_owned_state (test_runtime_cli.CliTests.test_recovery_invalidates_ready_before_listener_without_losing_owned_state) ... ok
+2026-11-05T20:56:26.1920645Z test_revoked_continuation_stops_owned_runtime_before_next_tick (test_runtime_cli.CliTests.test_revoked_continuation_stops_owned_runtime_before_next_tick) ... ok
+2026-11-05T20:56:27.3202588Z test_status_connections_have_absolute_deadline_and_bounded_workers (test_runtime_cli.CliTests.test_status_connections_have_absolute_deadline_and_bounded_workers) ... ----------------------------------------
+2026-11-05T20:56:27.3204103Z Exception occurred during processing of request from ('127.0.0.1', 59515)
+2026-11-05T20:56:27.3299705Z Traceback (most recent call last):
+2026-11-05T20:56:27.3316388Z   File "C:\hostedtoolcache\windows\Python\3.13.17\x64\Lib\socketserver.py", line 697, in process_request_thread
+2026-11-05T20:56:27.3317365Z     self.finish_request(request, client_address)
+2026-11-05T20:56:27.3317853Z     ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-11-05T20:56:27.3318663Z   File "C:\hostedtoolcache\windows\Python\3.13.17\x64\Lib\socketserver.py", line 362, in finish_request
+2026-11-05T20:56:27.3319554Z     self.RequestHandlerClass(request, client_address, self)
+2026-11-05T20:56:27.3320107Z     ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-11-05T20:56:27.3320854Z   File "C:\hostedtoolcache\windows\Python\3.13.17\x64\Lib\socketserver.py", line 766, in __init__
+2026-11-05T20:56:27.3321578Z     self.handle()
+2026-11-05T20:56:27.3321895Z     ~~~~~~~~~~~^^
+2026-11-05T20:56:27.3322739Z   File "C:\hostedtoolcache\windows\Python\3.13.17\x64\Lib\http\server.py", line 451, in handle
+2026-11-05T20:56:27.3323438Z     self.handle_one_request()
+2026-11-05T20:56:27.3323803Z     ~~~~~~~~~~~~~~~~~~~~~~~^^
+2026-11-05T20:56:27.3324509Z   File "C:\hostedtoolcache\windows\Python\3.13.17\x64\Lib\http\server.py", line 419, in handle_one_request
+2026-11-05T20:56:27.3325321Z     self.raw_requestline = self.rfile.readline(65537)
+2026-11-05T20:56:27.3325846Z                            ~~~~~~~~~~~~~~~~~~~^^^^^^^
+2026-11-05T20:56:27.3326456Z   File "C:\hostedtoolcache\windows\Python\3.13.17\x64\Lib\socket.py", line 723, in readinto
+2026-11-05T20:56:27.3327006Z     return self._sock.recv_into(b)
+2026-11-05T20:56:27.3327308Z            ~~~~~~~~~~~~~~~~~~~~^^^
+2026-11-05T20:56:27.3327898Z ConnectionAbortedError: [WinError 10053] An established connection was aborted by the software in your host machine
+2026-11-05T20:56:27.3328542Z ----------------------------------------
+2026-11-05T20:56:27.3704715Z ----------------------------------------
+2026-11-05T20:56:27.3706254Z Exception occurred during processing of request from ('127.0.0.1', 59516)
+2026-11-05T20:56:27.3707364Z ----------------------------------------
+2026-11-05T20:56:27.3709144Z Exception occurred during processing of request from ('127.0.0.1', 59517)
+2026-11-05T20:56:27.3710623Z Traceback (most recent call last):
+2026-11-05T20:56:27.3717081Z   File "C:\hostedtoolcache\windows\Python\3.13.17\x64\Lib\socketserver.py", line 697, in process_request_thread
+2026-11-05T20:56:27.3718859Z     self.finish_request(request, client_address)
+2026-11-05T20:56:27.3719912Z     ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-11-05T20:56:27.3720604Z Traceback (most recent call last):
+2026-11-05T20:56:27.3726886Z   File "C:\hostedtoolcache\windows\Python\3.13.17\x64\Lib\socketserver.py", line 362, in finish_request
+2026-11-05T20:56:27.3727913Z     self.RequestHandlerClass(request, client_address, self)
+2026-11-05T20:56:27.3730995Z     ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-11-05T20:56:27.3731517Z ----------------------------------------
+2026-11-05T20:56:27.3733729Z   File "C:\hostedtoolcache\windows\Python\3.13.17\x64\Lib\socketserver.py", line 766, in __init__
+2026-11-05T20:56:27.3734583Z     self.handle()
+2026-11-05T20:56:27.3734869Z     ~~~~~~~~~~~^^
+2026-11-05T20:56:27.3735451Z Exception occurred during processing of request from ('127.0.0.1', 59518)
+2026-11-05T20:56:27.3737469Z   File "C:\hostedtoolcache\windows\Python\3.13.17\x64\Lib\socketserver.py", line 697, in process_request_thread
+2026-11-05T20:56:27.3738591Z     self.finish_request(request, client_address)
+2026-11-05T20:56:27.3739149Z     ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-11-05T20:56:27.3739941Z   File "C:\hostedtoolcache\windows\Python\3.13.17\x64\Lib\socketserver.py", line 362, in finish_request
+2026-11-05T20:56:27.3740707Z     self.RequestHandlerClass(request, client_address, self)
+2026-11-05T20:56:27.3741121Z     ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-11-05T20:56:27.3741657Z   File "C:\hostedtoolcache\windows\Python\3.13.17\x64\Lib\http\server.py", line 451, in handle
+2026-11-05T20:56:27.3742150Z     self.handle_one_request()
+2026-11-05T20:56:27.3742427Z     ~~~~~~~~~~~~~~~~~~~~~~~^^
+2026-11-05T20:56:27.3742909Z   File "C:\hostedtoolcache\windows\Python\3.13.17\x64\Lib\socketserver.py", line 766, in __init__
+2026-11-05T20:56:27.3743390Z     self.handle()
+2026-11-05T20:56:27.3743618Z     ~~~~~~~~~~~^^
+2026-11-05T20:56:27.3744131Z   File "C:\hostedtoolcache\windows\Python\3.13.17\x64\Lib\http\server.py", line 419, in handle_one_request
+2026-11-05T20:56:27.3744695Z     self.raw_requestline = self.rfile.readline(65537)
+2026-11-05T20:56:27.3745047Z                            ~~~~~~~~~~~~~~~~~~~^^^^^^^
+2026-11-05T20:56:27.3745420Z Traceback (most recent call last):
+2026-11-05T20:56:27.3746066Z   File "C:\hostedtoolcache\windows\Python\3.13.17\x64\Lib\socket.py", line 723, in readinto
+2026-11-05T20:56:27.3746791Z     return self._sock.recv_into(b)
+2026-11-05T20:56:27.3747339Z            ~~~~~~~~~~~~~~~~~~~~^^^
+2026-11-05T20:56:27.3748235Z   File "C:\hostedtoolcache\windows\Python\3.13.17\x64\Lib\http\server.py", line 451, in handle
+2026-11-05T20:56:27.3748915Z     self.handle_one_request()
+2026-11-05T20:56:27.3749478Z     ~~~~~~~~~~~~~~~~~~~~~~~^^
+2026-11-05T20:56:27.3751723Z BrokenPipeError: [WinError 10058] A request to send or receive data was disallowed because the socket had already been shut down in that direction with a previous shutdown call
+2026-11-05T20:56:27.3753223Z   File "C:\hostedtoolcache\windows\Python\3.13.17\x64\Lib\http\server.py", line 419, in handle_one_request
+2026-11-05T20:56:27.3753840Z     self.raw_requestline = self.rfile.readline(65537)
+2026-11-05T20:56:27.3754281Z                            ~~~~~~~~~~~~~~~~~~~^^^^^^^
+2026-11-05T20:56:27.3754775Z ----------------------------------------
+2026-11-05T20:56:27.3755310Z   File "C:\hostedtoolcache\windows\Python\3.13.17\x64\Lib\socket.py", line 723, in readinto
+2026-11-05T20:56:27.3755804Z     return self._sock.recv_into(b)
+2026-11-05T20:56:27.3756095Z            ~~~~~~~~~~~~~~~~~~~~^^^
+2026-11-05T20:56:27.3756829Z BrokenPipeError: [WinError 10058] A request to send or receive data was disallowed because the socket had already been shut down in that direction with a previous shutdown call
+2026-11-05T20:56:27.3757860Z   File "C:\hostedtoolcache\windows\Python\3.13.17\x64\Lib\socketserver.py", line 697, in process_request_thread
+2026-11-05T20:56:27.3758677Z     self.finish_request(request, client_address)
+2026-11-05T20:56:27.3759051Z     ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-11-05T20:56:27.3759369Z ----------------------------------------
+2026-11-05T20:56:27.3759913Z   File "C:\hostedtoolcache\windows\Python\3.13.17\x64\Lib\socketserver.py", line 362, in finish_request
+2026-11-05T20:56:27.3760503Z     self.RequestHandlerClass(request, client_address, self)
+2026-11-05T20:56:27.3760901Z     ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-11-05T20:56:27.3761435Z   File "C:\hostedtoolcache\windows\Python\3.13.17\x64\Lib\socketserver.py", line 766, in __init__
+2026-11-05T20:56:27.3761928Z     self.handle()
+2026-11-05T20:56:27.3762229Z     ~~~~~~~~~~~^^
+2026-11-05T20:56:27.3762654Z   File "C:\hostedtoolcache\windows\Python\3.13.17\x64\Lib\http\server.py", line 451, in handle
+2026-11-05T20:56:27.3763143Z     self.handle_one_request()
+2026-11-05T20:56:27.3763412Z     ~~~~~~~~~~~~~~~~~~~~~~~^^
+2026-11-05T20:56:27.3763905Z   File "C:\hostedtoolcache\windows\Python\3.13.17\x64\Lib\http\server.py", line 419, in handle_one_request
+2026-11-05T20:56:27.3764564Z     self.raw_requestline = self.rfile.readline(65537)
+2026-11-05T20:56:27.3764950Z                            ~~~~~~~~~~~~~~~~~~~^^^^^^^
+2026-11-05T20:56:27.3765479Z   File "C:\hostedtoolcache\windows\Python\3.13.17\x64\Lib\socket.py", line 723, in readinto
+2026-11-05T20:56:27.3765967Z     return self._sock.recv_into(b)
+2026-11-05T20:56:27.3766253Z            ~~~~~~~~~~~~~~~~~~~~^^^
+2026-11-05T20:56:27.3766983Z BrokenPipeError: [WinError 10058] A request to send or receive data was disallowed because the socket had already been shut down in that direction with a previous shutdown call
+2026-11-05T20:56:27.3767744Z ----------------------------------------
+2026-11-05T20:56:27.8625600Z ok
+2026-11-05T20:56:28.3904670Z test_stop_failure_still_publishes_unready_final_snapshot (test_runtime_cli.CliTests.test_stop_failure_still_publishes_unready_final_snapshot) ... ok
+2026-11-05T20:56:28.3947668Z test_strict_config_rejects_missing_extra_alias_and_self_authorization (test_runtime_cli.CliTests.test_strict_config_rejects_missing_extra_alias_and_self_authorization) ... ok
+2026-11-05T20:56:28.3951813Z test_network_namespace_denied_without_path_metadata (test_runtime_process.OwnedNamespaceTests.test_network_namespace_denied_without_path_metadata) ... ok
+2026-11-05T20:56:28.8889640Z test_isolated_raw_bootstrap_runs_honest_source_and_preserves_owned_identity (test_runtime_process.OwnedPythonTests.test_isolated_raw_bootstrap_runs_honest_source_and_preserves_owned_identity) ... ok
+2026-11-05T20:56:28.8904548Z test_dangling_links_are_not_valid_future_paths (test_runtime_process.PathPolicyTests.test_dangling_links_are_not_valid_future_paths) ... ok
+2026-11-05T20:56:28.8929534Z test_linked_ancestor_rejected_before_descendant_metadata (test_runtime_process.PathPolicyTests.test_linked_ancestor_rejected_before_descendant_metadata) ... ok
+2026-11-05T20:56:28.8986302Z test_default_denied_and_tampered_program_not_executed (test_runtime_process.ProcessTests.test_default_denied_and_tampered_program_not_executed) ... ok
+2026-11-05T20:56:29.9810509Z test_explicit_bounded_budget_accepts_real_slow_verified_health (test_runtime_process.ProcessTests.test_explicit_bounded_budget_accepts_real_slow_verified_health) ... ok
+2026-11-05T20:56:31.3876175Z test_explicit_health_budget_still_bounds_trickled_body (test_runtime_process.ProcessTests.test_explicit_health_budget_still_bounds_trickled_body) ... ok
+2026-11-05T20:56:31.3969822Z test_external_bootstrap_pin_is_verified_before_process_creation (test_runtime_process.ProcessTests.test_external_bootstrap_pin_is_verified_before_process_creation) ... ok
+2026-11-05T20:56:31.3999517Z test_external_bootstrap_pin_requires_absolute_bounded_regular_paths (test_runtime_process.ProcessTests.test_external_bootstrap_pin_requires_absolute_bounded_regular_paths) ... ok
+2026-11-05T20:56:32.3076770Z test_health_body_trickle_has_absolute_deadline (test_runtime_process.ProcessTests.test_health_body_trickle_has_absolute_deadline) ... ok
+2026-11-05T20:56:32.3131737Z test_health_budget_rejects_nonfinite_boolean_and_excess_total (test_runtime_process.ProcessTests.test_health_budget_rejects_nonfinite_boolean_and_excess_total) ... ok
+2026-11-05T20:56:33.1889415Z test_health_header_trickle_has_absolute_deadline (test_runtime_process.ProcessTests.test_health_header_trickle_has_absolute_deadline) ... ok
+2026-11-05T20:56:33.1974313Z test_interrupted_start_without_live_rejection_witness_stays_ambiguous (test_runtime_process.ProcessTests.test_interrupted_start_without_live_rejection_witness_stays_ambiguous) ... ok
+2026-11-05T20:56:33.2087341Z test_live_prestart_rejection_is_cleanable_without_claiming_a_process_ran (test_runtime_process.ProcessTests.test_live_prestart_rejection_is_cleanable_without_claiming_a_process_ran) ... ok
+2026-11-05T20:56:33.2115564Z test_non_loopback_health_and_shell_commands_rejected (test_runtime_process.ProcessTests.test_non_loopback_health_and_shell_commands_rejected) ... ok
+2026-11-05T20:56:33.7766736Z test_real_owned_child_functional_health_idempotence_and_stop (test_runtime_process.ProcessTests.test_real_owned_child_functional_health_idempotence_and_stop) ... ok
+2026-11-05T20:56:33.9723853Z test_seeded_timestamp_valid_dependency_cache_cannot_override_pinned_source (test_runtime_process.ProcessTests.test_seeded_timestamp_valid_dependency_cache_cannot_override_pinned_source) ... ok
+2026-11-05T20:56:34.2816124Z test_supervisor_retries_denied_starts_without_false_stop_failure_or_readiness (test_runtime_process.ProcessTests.test_supervisor_retries_denied_starts_without_false_stop_failure_or_readiness) ... ok
+2026-11-05T20:56:34.2858133Z test_unknown_or_reused_pid_is_never_killed (test_runtime_process.ProcessTests.test_unknown_or_reused_pid_is_never_killed) ... ok
+2026-11-05T20:56:34.9253758Z test_missing_helper_lock_rejects_even_with_ambient_workspace_then_full_lock_accepts (test_runtime_profile.ProfileOperatorClosureTests.test_missing_helper_lock_rejects_even_with_ambient_workspace_then_full_lock_accepts) ... ok
+2026-11-05T20:56:35.0629847Z test_aliases_are_snapshotted_and_extra_config_context_never_enters_cli (test_runtime_profile.RuntimeProfileTests.test_aliases_are_snapshotted_and_extra_config_context_never_enters_cli) ... ok
+2026-11-05T20:56:35.7383983Z test_all_roles_are_pure_derived_data_never_execution_admission (test_runtime_profile.RuntimeProfileTests.test_all_roles_are_pure_derived_data_never_execution_admission) ... ok
+2026-11-05T20:56:35.8222930Z test_base_link_is_not_admitted_as_a_legacy_alias (test_runtime_profile.RuntimeProfileTests.test_base_link_is_not_admitted_as_a_legacy_alias) ... ok
+2026-11-05T20:56:36.2714161Z test_closed_target_secret_fields_wrong_roles_ports_and_paths_rejected (test_runtime_profile.RuntimeProfileTests.test_closed_target_secret_fields_wrong_roles_ports_and_paths_rejected) ... ok
+2026-11-05T20:56:36.3653470Z test_existing_short_base_alias_matches_frozen_worker_without_relaxing_targets (test_runtime_profile.RuntimeProfileTests.test_existing_short_base_alias_matches_frozen_worker_without_relaxing_targets) ... ok
+2026-11-05T20:56:36.6627719Z test_optional_research_permissions_are_detached_metadata_only (test_runtime_profile.RuntimeProfileTests.test_optional_research_permissions_are_detached_metadata_only) ... ok
+2026-11-05T20:56:36.7406127Z test_unknown_base_launch_or_unbound_manifest_is_not_repaired_into_admission (test_runtime_profile.RuntimeProfileTests.test_unknown_base_launch_or_unbound_manifest_is_not_repaired_into_admission) ... ok
+2026-11-05T20:56:36.8026796Z test_worker_facade_matches_frozen_previous_output_bytes (test_runtime_profile.RuntimeProfileTests.test_worker_facade_matches_frozen_previous_output_bytes) ... ok
+2026-11-05T20:56:36.8028590Z test_block (test_sequence_plan.SequencePlanTests.test_block) ... ok
+2026-11-05T20:56:36.8029835Z test_grid_requires_unblocked_handoff (test_sequence_plan.SequencePlanTests.test_grid_requires_unblocked_handoff) ... ok
+2026-11-05T20:56:36.8031165Z test_initial (test_sequence_plan.SequencePlanTests.test_initial) ... ok
+2026-11-05T20:56:36.8033058Z test_observer_independent_of_handoff_block (test_sequence_plan.SequencePlanTests.test_observer_independent_of_handoff_block) ... ok
+2026-11-05T20:56:36.8034773Z test_research_then_grid (test_sequence_plan.SequencePlanTests.test_research_then_grid) ... ok
+2026-11-05T20:56:36.8036349Z test_terminan_cannot_start_if_infrastructure_blocked (test_sequence_plan.SequencePlanTests.test_terminan_cannot_start_if_infrastructure_blocked) ... ok
+2026-11-05T20:56:36.8037871Z test_terminan_remains_available_when_research_blocked (test_sequence_plan.SequencePlanTests.test_terminan_remains_available_when_research_blocked) ... ok
+2026-11-05T20:56:36.8039372Z test_transitive_block (test_sequence_plan.SequencePlanTests.test_transitive_block) ... ok
+2026-11-05T20:56:36.8040157Z test_unknown (test_sequence_plan.SequencePlanTests.test_unknown) ... ok
+2026-11-05T20:56:36.9439416Z test_actual_nonservice_token_cannot_admit_user_json_flags (test_service_activation.ActivationTests.test_actual_nonservice_token_cannot_admit_user_json_flags) ... ok
+2026-11-05T20:56:37.1474654Z test_bootstrap_import_is_stdlib_only_and_inert_in_isolated_child (test_service_activation.ActivationTests.test_bootstrap_import_is_stdlib_only_and_inert_in_isolated_child) ... ok
+2026-11-05T20:56:37.2972817Z test_bounded_regular_auth_source_rejects_before_revision_creation (test_service_activation.ActivationTests.test_bounded_regular_auth_source_rejects_before_revision_creation) ... ok
+2026-11-05T20:56:37.4652740Z test_callback_dangling_junction_is_rejected_before_writes (test_service_activation.ActivationTests.test_callback_dangling_junction_is_rejected_before_writes) ... ok
+2026-11-05T20:56:37.6111232Z test_callback_directory_replacement_cannot_redirect_artifact_writes (test_service_activation.ActivationTests.test_callback_directory_replacement_cannot_redirect_artifact_writes) ... ok
+2026-11-05T20:56:37.7880898Z test_callback_junction_replacement_cannot_follow_foreign_directory (test_service_activation.ActivationTests.test_callback_junction_replacement_cannot_follow_foreign_directory) ... ok
+2026-11-05T20:56:37.9829406Z test_cheap_continuation_does_not_hash_capsule_or_construct_runtime (test_service_activation.ActivationTests.test_cheap_continuation_does_not_hash_capsule_or_construct_runtime) ... ok
+2026-11-05T20:56:38.4137414Z test_control_and_single_pc_transit_credentials_use_role_context (test_service_activation.ActivationTests.test_control_and_single_pc_transit_credentials_use_role_context) ... ok
+2026-11-05T20:56:38.5956933Z test_default_denied_revoke_makes_no_new_lock_or_pointer_write (test_service_activation.ActivationTests.test_default_denied_revoke_makes_no_new_lock_or_pointer_write) ... ok
+2026-11-05T20:56:38.7511001Z test_error_codes_are_closed_and_never_echo_caller_text (test_service_activation.ActivationTests.test_error_codes_are_closed_and_never_echo_caller_text) ... ok
+2026-11-05T20:56:38.9494067Z test_missing_acl_wrong_host_token_or_extra_json_flag_never_authorizes (test_service_activation.ActivationTests.test_missing_acl_wrong_host_token_or_extra_json_flag_never_authorizes) ... ok
+2026-11-05T20:56:39.1452008Z test_namespace_reuse_and_foreign_roots_are_never_adopted (test_service_activation.ActivationTests.test_namespace_reuse_and_foreign_roots_are_never_adopted) ... ok
+2026-11-05T20:56:39.3071411Z test_no_owner_or_external_qualification_means_no_effects (test_service_activation.ActivationTests.test_no_owner_or_external_qualification_means_no_effects) ... ok
+2026-11-05T20:56:39.4956012Z test_nonservice_identity_and_mutating_callback_do_not_rebind_artifacts (test_service_activation.ActivationTests.test_nonservice_identity_and_mutating_callback_do_not_rebind_artifacts) ... ok
+2026-11-05T20:56:39.6802147Z test_publication_lock_replacement_during_callback_prevents_commit (test_service_activation.ActivationTests.test_publication_lock_replacement_during_callback_prevents_commit) ... ok
+2026-11-05T20:56:39.9139076Z test_reader_checks_profile_bindings_even_with_consistent_artifact_hashes (test_service_activation.ActivationTests.test_reader_checks_profile_bindings_even_with_consistent_artifact_hashes) ... ok
+2026-11-05T20:56:40.0624241Z test_readonly_acl_policy_rejects_service_write_owner_or_foreign_ace (test_service_activation.ActivationTests.test_readonly_acl_policy_rejects_service_write_owner_or_foreign_ace) ... ok
+2026-11-05T20:56:40.4679890Z test_research_configuration_is_protected_but_never_self_authorizing (test_service_activation.ActivationTests.test_research_configuration_is_protected_but_never_self_authorizing) ... ok
+2026-11-05T20:56:40.6673332Z test_revocation_invalidates_existing_grant_without_deleting_history (test_service_activation.ActivationTests.test_revocation_invalidates_existing_grant_without_deleting_history) ... ok
+2026-11-05T20:56:40.8652087Z test_roundtrip_protected_artifacts_are_not_runtime_readiness (test_service_activation.ActivationTests.test_roundtrip_protected_artifacts_are_not_runtime_readiness) ... ok
+2026-11-05T20:56:41.0566295Z test_tampered_immutable_profile_or_auth_is_never_admitted (test_service_activation.ActivationTests.test_tampered_immutable_profile_or_auth_is_never_admitted) ... ok
+2026-11-05T20:56:41.1935913Z test_worker_transit_auth_never_admits_database_secrets (test_service_activation.ActivationTests.test_worker_transit_auth_never_admits_database_secrets) ... ok
+2026-11-05T20:56:42.9829355Z test_all_recorded_live_fingerprint_mismatches_block (test_service_actuator.ActuatorTests.test_all_recorded_live_fingerprint_mismatches_block) ... ok
+2026-11-05T20:56:43.7101413Z test_already_target_state_is_observation_only (test_service_actuator.ActuatorTests.test_already_target_state_is_observation_only) ... ok
+2026-11-05T20:56:44.4701642Z test_bool_state_or_unexpected_transition_blocks_without_automatic_stop (test_service_actuator.ActuatorTests.test_bool_state_or_unexpected_transition_blocks_without_automatic_stop) ... ok
+2026-11-05T20:56:45.1615672Z test_corrupt_capsule_blocks_start_and_stop_without_kill (test_service_actuator.ActuatorTests.test_corrupt_capsule_blocks_start_and_stop_without_kill) ... ok
+2026-11-05T20:56:45.8769526Z test_documented_handle_adapter_never_reopens_or_controls_foreign_handle (test_service_actuator.ActuatorTests.test_documented_handle_adapter_never_reopens_or_controls_foreign_handle) ... ok
+2026-11-05T20:56:46.5438378Z test_environment_added_during_slow_metadata_is_rechecked_before_start (test_service_actuator.ActuatorTests.test_environment_added_during_slow_metadata_is_rechecked_before_start) ... ok
+2026-11-05T20:56:47.2307614Z test_guard_mutation_cannot_redirect_plan (test_service_actuator.ActuatorTests.test_guard_mutation_cannot_redirect_plan) ... ok
+2026-11-05T20:56:47.8588806Z test_missing_or_denied_phase_has_no_native_effect (test_service_actuator.ActuatorTests.test_missing_or_denied_phase_has_no_native_effect) ... ok
+2026-11-05T20:56:48.5240867Z test_native_request_exception_preserves_attempt_uncertainty (test_service_actuator.ActuatorTests.test_native_request_exception_preserves_attempt_uncertainty) ... ok
+2026-11-05T20:56:50.4685955Z test_optional_scm_actions_triggers_and_environment_block_all_native_effects (test_service_actuator.ActuatorTests.test_optional_scm_actions_triggers_and_environment_block_all_native_effects) ... ok
+2026-11-05T20:56:51.1108893Z test_pending_state_blocks_without_action (test_service_actuator.ActuatorTests.test_pending_state_blocks_without_action) ... ok
+2026-11-05T20:56:51.7720021Z test_phase_callback_host_or_capsule_mutation_blocks_before_action (test_service_actuator.ActuatorTests.test_phase_callback_host_or_capsule_mutation_blocks_before_action) ... ok
+2026-11-05T20:56:52.7945904Z test_phase_revoked_during_metadata_blocks_start_and_stop_before_effect (test_service_actuator.ActuatorTests.test_phase_revoked_during_metadata_blocks_start_and_stop_before_effect) ... ok
+2026-11-05T20:56:53.4466993Z test_poll_timeout_retains_uncertainty_without_rollback (test_service_actuator.ActuatorTests.test_poll_timeout_retains_uncertainty_without_rollback) ... ok
+2026-11-05T20:56:54.1088755Z test_second_same_handle_read_catches_last_moment_change (test_service_actuator.ActuatorTests.test_second_same_handle_read_catches_last_moment_change) ... ok
+2026-11-05T20:56:54.6824734Z test_stale_reviewed_actuator_pin_cannot_be_resealed_by_callback (test_service_actuator.ActuatorTests.test_stale_reviewed_actuator_pin_cannot_be_resealed_by_callback) ... ok
+2026-11-05T20:56:55.5083448Z test_start_and_stop_same_handle_ack_never_readiness (test_service_actuator.ActuatorTests.test_start_and_stop_same_handle_ack_never_readiness) ... ok
+2026-11-05T20:56:56.1466885Z test_wrong_host_or_tampered_plan_blocks_before_open (test_service_actuator.ActuatorTests.test_wrong_host_or_tampered_plan_blocks_before_open) ... ok
+2026-11-05T20:56:56.1472032Z test_bounded_native_config_and_status_decode_rejects_foreign_type_or_pointer (test_service_actuator.NativeBufferTests.test_bounded_native_config_and_status_decode_rejects_foreign_type_or_pointer) ... ok
+2026-11-05T20:56:56.1474896Z test_successful_optional_query_may_clear_insufficient_buffer_size_output (test_service_actuator.NativeBufferTests.test_successful_optional_query_may_clear_insufficient_buffer_size_output) ... ok
+2026-11-05T20:56:56.1477417Z test_zero_count_unused_array_pointers_must_stay_in_bounded_buffer (test_service_actuator.NativeBufferTests.test_zero_count_unused_array_pointers_must_stay_in_bounded_buffer) ... ok
+2026-11-05T20:56:56.1479564Z test_exact_raw_nssm_values_reject_unknown_hooks_environment_or_exit_overrides (test_service_actuator.RegistryClosureTests.test_exact_raw_nssm_values_reject_unknown_hooks_environment_or_exit_overrides) ... ok
+2026-11-05T20:56:56.1482428Z test_registry_reader_uses_only_exact_readonly_namespace_and_closes_handles (test_service_actuator.RegistryClosureTests.test_registry_reader_uses_only_exact_readonly_namespace_and_closes_handles) ... ok
+2026-11-05T20:56:56.4167554Z test_actual_profile_source_failure_precedes_runtime_creation (test_service_entry.ExistingAdmissionTests.test_actual_profile_source_failure_precedes_runtime_creation) ... ok
+2026-11-05T20:56:57.2775895Z test_actual_provision_receipt_is_consumed_before_make_and_owned_close (test_service_entry.ExistingAdmissionTests.test_actual_provision_receipt_is_consumed_before_make_and_owned_close) ... ok
+2026-11-05T20:56:57.2779415Z test_preloaded_candidate_package_is_refused_before_loader_or_metadata (test_service_entry.ExistingAdmissionTests.test_preloaded_candidate_package_is_refused_before_loader_or_metadata) ... ok
+2026-11-05T20:56:57.9097084Z test_protected_profile_consumes_validator_normalization_before_make (test_service_entry.ExistingAdmissionTests.test_protected_profile_consumes_validator_normalization_before_make) ... ok
+2026-11-05T20:56:57.9126506Z test_control_and_single_pc_require_actual_owned_pg_before_runtime (test_service_entry.ProtectedRuntimeTests.test_control_and_single_pc_require_actual_owned_pg_before_runtime) ... ok
+2026-11-05T20:56:57.9146520Z test_control_restart_rechecks_receipt_and_revocation_closes_owned_pg (test_service_entry.ProtectedRuntimeTests.test_control_restart_rechecks_receipt_and_revocation_closes_owned_pg) ... ok
+2026-11-05T20:56:57.9160032Z test_failed_full_admission_precedes_state_or_runtime_effects (test_service_entry.ProtectedRuntimeTests.test_failed_full_admission_precedes_state_or_runtime_effects) ... ok
+2026-11-05T20:56:57.9178262Z test_failed_pg_start_precedes_make_and_closes_owned_boundary (test_service_entry.ProtectedRuntimeTests.test_failed_pg_start_precedes_make_and_closes_owned_boundary) ... ok
+2026-11-05T20:56:57.9192653Z test_failed_privilege_removal_never_starts_owned_postgres (test_service_entry.ProtectedRuntimeTests.test_failed_privilege_removal_never_starts_owned_postgres) ... ok
+2026-11-05T20:56:57.9210275Z test_failed_restart_admission_denies_child_start (test_service_entry.ProtectedRuntimeTests.test_failed_restart_admission_denies_child_start) ... ok
+2026-11-05T20:56:57.9228833Z test_owned_postgres_ready_precedes_make_and_closes_after_runtime_failure (test_service_entry.ProtectedRuntimeTests.test_owned_postgres_ready_precedes_make_and_closes_after_runtime_failure) ... ok
+2026-11-05T20:56:57.9251489Z test_worker_never_reads_or_starts_postgres (test_service_entry.ProtectedRuntimeTests.test_worker_never_reads_or_starts_postgres) ... ok
+2026-11-05T20:56:57.9272129Z test_worker_uses_existing_runtime_full_restart_gate_and_cheap_continuation (test_service_entry.ProtectedRuntimeTests.test_worker_uses_existing_runtime_full_restart_gate_and_cheap_continuation) ... ok
+2026-11-05T20:56:57.9284783Z test_entry_and_adapter_pin_exact_lf_bootstrap_bytes (test_service_entry.RawEntryTests.test_entry_and_adapter_pin_exact_lf_bootstrap_bytes) ... ok
+2026-11-05T20:56:58.0851969Z test_exact_namespace_source_guard_import_requires_full_admission (test_service_entry.RawEntryTests.test_exact_namespace_source_guard_import_requires_full_admission) ... ok
+2026-11-05T20:56:58.1575258Z test_exact_reviewed_bootstrap_still_requires_actual_service_token_and_grant (test_service_entry.RawEntryTests.test_exact_reviewed_bootstrap_still_requires_actual_service_token_and_grant) ... ok
+2026-11-05T20:56:58.2161889Z test_raw_entry_rejects_unpinned_bootstrap_before_its_code_executes (test_service_entry.RawEntryTests.test_raw_entry_rejects_unpinned_bootstrap_before_its_code_executes) ... ok
+2026-11-05T20:56:58.3642898Z test_source_only_verifier_loader_ignores_forged_bytecode_cache (test_service_entry.RawEntryTests.test_source_only_verifier_loader_ignores_forged_bytecode_cache) ... ok
+2026-11-05T20:56:58.4726777Z test_verifier_hash_mismatch_never_executes_candidate_module (test_service_entry.RawEntryTests.test_verifier_hash_mismatch_never_executes_candidate_module) ... ok
+2026-11-05T20:56:59.2964425Z test_competing_launch_cannot_replace_active_lock_or_change_owner_journal (test_service_postgres.LaunchRecoveryTests.test_competing_launch_cannot_replace_active_lock_or_change_owner_journal) ... ok
+2026-11-05T20:57:00.3025270Z test_failed_before_ready_cleans_only_after_confirmed_job_quiescence_and_allows_retry (test_service_postgres.LaunchRecoveryTests.test_failed_before_ready_cleans_only_after_confirmed_job_quiescence_and_allows_retry) ... ok
+2026-11-05T20:57:01.1678778Z test_foreign_pid_after_start_is_preserved_even_after_own_job_is_quiescent (test_service_postgres.LaunchRecoveryTests.test_foreign_pid_after_start_is_preserved_even_after_own_job_is_quiescent) ... ok
+2026-11-05T20:57:01.9213001Z test_old_job_without_synchronous_quiescence_is_rejected_before_any_spawn (test_service_postgres.LaunchRecoveryTests.test_old_job_without_synchronous_quiescence_is_rejected_before_any_spawn) ... ok
+2026-11-05T20:57:02.7314908Z test_unconfirmed_job_retains_owned_files_and_poison_blocks_new_launch (test_service_postgres.LaunchRecoveryTests.test_unconfirmed_job_retains_owned_files_and_poison_blocks_new_launch) ... ok
+2026-11-05T20:57:02.7495675Z test_copy_replacement_or_redirection_is_not_launched_or_cleaned (test_service_postgres.NativePolicyTests.test_copy_replacement_or_redirection_is_not_launched_or_cleaned) ... ok
+2026-11-05T20:57:02.7607552Z test_owner_rights_policy_is_required_for_future_localservice_owned_files (test_service_postgres.NativePolicyTests.test_owner_rights_policy_is_required_for_future_localservice_owned_files) ... ok
+2026-11-05T20:57:02.7634999Z test_toolhelp_resumes_only_exact_owned_process_sole_thread (test_service_postgres.NativePolicyTests.test_toolhelp_resumes_only_exact_owned_process_sole_thread) ... ok
+2026-11-05T20:57:02.7690175Z test_failed_application_identity_does_not_disable_bootstrap_role (test_service_postgres.NativeSqlFencingTests.test_failed_application_identity_does_not_disable_bootstrap_role) ... ok
+2026-11-05T20:57:02.7808142Z test_foreign_backend_on_same_connection_precedes_mutating_sql (test_service_postgres.NativeSqlFencingTests.test_foreign_backend_on_same_connection_precedes_mutating_sql) ... ok
+2026-11-05T20:57:02.7861041Z test_foreign_listener_is_rejected_before_credentials_or_client_creation (test_service_postgres.NativeSqlFencingTests.test_foreign_listener_is_rejected_before_credentials_or_client_creation) ... ok
+2026-11-05T20:57:02.7919357Z test_nologin_occurs_only_after_successful_application_identity_probe (test_service_postgres.NativeSqlFencingTests.test_nologin_occurs_only_after_successful_application_identity_probe) ... ok
+2026-11-05T20:57:02.7948572Z test_typed_tcp_table_requires_exact_loopback_unique_listener (test_service_postgres.NativeSqlFencingTests.test_typed_tcp_table_requires_exact_loopback_unique_listener) ... ok
+2026-11-05T20:57:03.5294125Z test_consumed_provision_receipt_runtime_start_and_owned_close (test_service_postgres.PostgresBoundaryTests.test_consumed_provision_receipt_runtime_start_and_owned_close) ... ok
+2026-11-05T20:57:04.3250264Z test_delayed_runtime_readiness_waits_same_owned_process_without_respawn (test_service_postgres.PostgresBoundaryTests.test_delayed_runtime_readiness_waits_same_owned_process_without_respawn) ... ok
+2026-11-05T20:57:04.8637972Z test_existing_data_never_adopted_or_deleted (test_service_postgres.PostgresBoundaryTests.test_existing_data_never_adopted_or_deleted) ... ok
+2026-11-05T20:57:05.6022087Z test_exposed_record_copy_cannot_redirect_runtime_data_or_ownership (test_service_postgres.PostgresBoundaryTests.test_exposed_record_copy_cannot_redirect_runtime_data_or_ownership) ... ok
+2026-11-05T20:57:06.0887687Z test_foreign_receipt_never_becomes_database_authority (test_service_postgres.PostgresBoundaryTests.test_foreign_receipt_never_becomes_database_authority) ... ok
+2026-11-05T20:57:06.5985940Z test_missing_owner_phase_precedes_native_effects (test_service_postgres.PostgresBoundaryTests.test_missing_owner_phase_precedes_native_effects) ... ok
+2026-11-05T20:57:07.3102248Z test_partial_init_retains_data_and_no_ownership_receipt (test_service_postgres.PostgresBoundaryTests.test_partial_init_retains_data_and_no_ownership_receipt) ... ok
+2026-11-05T20:57:08.0494132Z test_receipt_hash_is_not_optional_and_no_public_pass_boolean (test_service_postgres.PostgresBoundaryTests.test_receipt_hash_is_not_optional_and_no_public_pass_boolean) ... ok
+2026-11-05T20:57:08.7926508Z test_runtime_replaced_data_root_is_not_attached (test_service_postgres.PostgresBoundaryTests.test_runtime_replaced_data_root_is_not_attached) ... ok
+2026-11-05T20:57:09.5488544Z test_wrong_runtime_identity_is_not_retried_as_startup_delay (test_service_postgres.PostgresBoundaryTests.test_wrong_runtime_identity_is_not_retried_as_startup_delay) ... ok
+2026-11-05T20:57:10.2052818Z test_wrong_sql_cluster_or_role_never_publishes_and_stops_only_own_job (test_service_postgres.PostgresBoundaryTests.test_wrong_sql_cluster_or_role_never_publishes_and_stops_only_own_job) ... ok
+2026-11-05T20:57:10.2086089Z test_mismatched_context_or_credential_root_is_rejected (test_service_role_auth.ServiceRoleAuthTests.test_mismatched_context_or_credential_root_is_rejected) ... ok
+2026-11-05T20:57:10.2099124Z test_no_context_still_rejects_nonoffice_node (test_service_role_auth.ServiceRoleAuthTests.test_no_context_still_rejects_nonoffice_node) ... ok
+2026-11-05T20:57:10.2131177Z test_single_pc_and_control_metadata_read_only_exact_control_secrets (test_service_role_auth.ServiceRoleAuthTests.test_single_pc_and_control_metadata_read_only_exact_control_secrets) ... ok
+2026-11-05T20:57:10.2292432Z test_source_scope_is_exact_per_member_and_never_implicit (test_service_role_auth.ServiceRoleAuthTests.test_source_scope_is_exact_per_member_and_never_implicit) ... ok
+2026-11-05T20:57:10.2355011Z test_worker_metadata_never_admits_fleet_or_database_secrets (test_service_role_auth.ServiceRoleAuthTests.test_worker_metadata_never_admits_fleet_or_database_secrets) ... ok
+2026-11-05T20:57:10.2359001Z test_admission_failure_precedes_application_constructor (test_service_source_admission.RawModuleDispatchTests.test_admission_failure_precedes_application_constructor) ... ok
+2026-11-05T20:57:10.2364955Z test_grid_control_original_argv_checked_before_application_import (test_service_source_admission.RawModuleDispatchTests.test_grid_control_original_argv_checked_before_application_import) ... ok
+2026-11-05T20:57:10.2392254Z test_grid_control_rejects_bootstrap_source_dependency_and_interpreter_selector_drift (test_service_source_admission.RawModuleDispatchTests.test_grid_control_rejects_bootstrap_source_dependency_and_interpreter_selector_drift) ... ok
+2026-11-05T20:57:10.2396302Z test_grid_full_admission_failure_precedes_import_and_constructor (test_service_source_admission.RawModuleDispatchTests.test_grid_full_admission_failure_precedes_import_and_constructor) ... ok
+2026-11-05T20:57:10.2408006Z test_private_program_copy_rewrites_control_but_preserves_generic_worker (test_service_source_admission.RawModuleDispatchTests.test_private_program_copy_rewrites_control_but_preserves_generic_worker) ... ok
+2026-11-05T20:57:10.2410074Z test_unknown_module_is_rejected_before_capsule_or_application_import (test_service_source_admission.RawModuleDispatchTests.test_unknown_module_is_rejected_before_capsule_or_application_import) ... ok
+2026-11-05T20:57:10.2689677Z test_control_callback_uses_grid_source_fixed_main_and_original_dependency_root (test_service_source_admission.SourceScopeTests.test_control_callback_uses_grid_source_fixed_main_and_original_dependency_root) ... ok
+2026-11-05T20:57:10.2929694Z test_fixed_verifier_launch_rechecks_bytes_and_has_no_factory_selector (test_service_source_admission.SourceScopeTests.test_fixed_verifier_launch_rechecks_bytes_and_has_no_factory_selector) ... ok
+2026-11-05T20:57:10.3063928Z test_private_program_copy_only_selects_closed_routes_with_exact_entry_pin (test_service_source_admission.SourceScopeTests.test_private_program_copy_only_selects_closed_routes_with_exact_entry_pin) ... ok
+2026-11-05T20:57:10.3214298Z test_replaced_source_namespace_and_nonliteral_grants_rejected (test_service_source_admission.SourceScopeTests.test_replaced_source_namespace_and_nonliteral_grants_rejected) ... ok
+2026-11-05T20:57:10.3581708Z test_scope_binds_module_root_commit_and_live_revision (test_service_source_admission.SourceScopeTests.test_scope_binds_module_root_commit_and_live_revision) ... ok
+2026-11-05T20:57:10.3754638Z test_source_record_and_constructor_inputs_cannot_mutate_admitted_copy (test_service_source_admission.SourceScopeTests.test_source_record_and_constructor_inputs_cannot_mutate_admitted_copy) ... ok
+2026-11-05T20:57:10.7856780Z test_clean_filter_cannot_hide_modified_runtime_bytes (test_source_guard.SourceGuardTests.test_clean_filter_cannot_hide_modified_runtime_bytes) ... ok
+2026-11-05T20:57:12.4311177Z test_clean_source_pre_post_and_import_are_qualified (test_source_guard.SourceGuardTests.test_clean_source_pre_post_and_import_are_qualified) ... ok
+2026-11-05T20:57:13.1554528Z test_dirty_tracked_source_is_unqualified (test_source_guard.SourceGuardTests.test_dirty_tracked_source_is_unqualified) ... ok
+2026-11-05T20:57:13.3666031Z test_environment_repository_override_is_rejected (test_source_guard.SourceGuardTests.test_environment_repository_override_is_rejected) ... ok
+2026-11-05T20:57:14.3452271Z test_exact_owner_admitted_directory_uses_per_call_git_scope_only (test_source_guard.SourceGuardTests.test_exact_owner_admitted_directory_uses_per_call_git_scope_only) ... ok
+2026-11-05T20:57:16.5534006Z test_forged_timestamp_bytecode_denied_and_fresh_cache_loads_real_source (test_source_guard.SourceGuardTests.test_forged_timestamp_bytecode_denied_and_fresh_cache_loads_real_source) ... ok
+2026-11-05T20:57:18.1712328Z test_git_canonical_crlf_checkout_matches_head_blob (test_source_guard.SourceGuardTests.test_git_canonical_crlf_checkout_matches_head_blob) ... ok
+2026-11-05T20:57:18.4367321Z test_http_alternates_promisor_and_linked_metadata_are_rejected (test_source_guard.SourceGuardTests.test_http_alternates_promisor_and_linked_metadata_are_rejected) ... ok
+2026-11-05T20:57:19.2416005Z test_ignored_untracked_import_shadow_is_rejected (test_source_guard.SourceGuardTests.test_ignored_untracked_import_shadow_is_rejected) ... ok
+2026-11-05T20:57:20.1214066Z test_imported_module_must_belong_to_expected_tracked_tree (test_source_guard.SourceGuardTests.test_imported_module_must_belong_to_expected_tracked_tree) ... ok
+2026-11-05T20:57:21.5449525Z test_index_visibility_flags_cannot_hide_changed_runtime_bytes (test_source_guard.SourceGuardTests.test_index_visibility_flags_cannot_hide_changed_runtime_bytes) ... ok
+2026-11-05T20:57:22.2332938Z test_large_git_batch_output_is_not_corrupted_by_resource_polling (test_source_guard.SourceGuardTests.test_large_git_batch_output_is_not_corrupted_by_resource_polling) ... ok
+2026-11-05T20:57:23.8037749Z test_lexical_short_alias_of_same_canonical_root_is_accepted (test_source_guard.SourceGuardTests.test_lexical_short_alias_of_same_canonical_root_is_accepted) ... ok
+2026-11-05T20:57:24.0578799Z test_local_fsmonitor_cannot_execute_during_qualification (test_source_guard.SourceGuardTests.test_local_fsmonitor_cannot_execute_during_qualification) ... ok
+2026-11-05T20:57:24.3186550Z test_owner_admission_checks_metadata_before_any_git_process (test_source_guard.SourceGuardTests.test_owner_admission_checks_metadata_before_any_git_process) ... ok
+2026-11-05T20:57:24.5670027Z test_owner_admission_rejects_git_wildcard_paths_before_metadata (test_source_guard.SourceGuardTests.test_owner_admission_rejects_git_wildcard_paths_before_metadata) ... ok
+2026-11-05T20:57:24.8135113Z test_owner_admission_requires_pins_and_exact_root_without_wildcards (test_source_guard.SourceGuardTests.test_owner_admission_requires_pins_and_exact_root_without_wildcards) ... ok
+2026-11-05T20:57:25.8306965Z test_pinned_git_pair_tamper_and_resource_bounds (test_source_guard.SourceGuardTests.test_pinned_git_pair_tamper_and_resource_bounds) ... ok
+2026-11-05T20:57:28.0127082Z test_pinned_lock_survives_real_autocrlf_checkout (test_source_guard.SourceGuardTests.test_pinned_lock_survives_real_autocrlf_checkout) ... ok
+2026-11-05T20:57:29.4287428Z test_post_run_mutation_is_rejected (test_source_guard.SourceGuardTests.test_post_run_mutation_is_rejected) ... ok
+2026-11-05T20:57:30.3352870Z test_reparse_ancestor_is_rejected_even_if_canonical_bytes_match (test_source_guard.SourceGuardTests.test_reparse_ancestor_is_rejected_even_if_canonical_bytes_match) ... ok
+2026-11-05T20:57:30.7699818Z test_replace_ref_is_rejected (test_source_guard.SourceGuardTests.test_replace_ref_is_rejected) ... ok
+2026-11-05T20:57:30.9798632Z test_root_link_is_denied_before_child_metadata (test_source_guard.SourceGuardTests.test_root_link_is_denied_before_child_metadata) ... ok
+2026-11-05T20:57:31.9725573Z test_safe_capsule_null_attributes_and_hooks_are_accepted (test_source_guard.SourceGuardTests.test_safe_capsule_null_attributes_and_hooks_are_accepted) ... ok
+2026-11-05T20:57:31.9727593Z test_405 (test_status_api.StatusAPITests.test_405) ... ok
+2026-11-05T20:57:31.9728704Z test_absent (test_status_api.StatusAPITests.test_absent) ... ok
+2026-11-05T20:57:31.9729593Z test_capabilities (test_status_api.StatusAPITests.test_capabilities) ... ok
+2026-11-05T20:57:31.9731247Z test_invalid_state (test_status_api.StatusAPITests.test_invalid_state) ... ok
+2026-11-05T20:57:31.9732168Z test_no_route (test_status_api.StatusAPITests.test_no_route) ... ok
+2026-11-05T20:57:31.9733851Z test_provider_error (test_status_api.StatusAPITests.test_provider_error) ... ok
+2026-11-05T20:57:31.9735136Z test_queries_fail (test_status_api.StatusAPITests.test_queries_fail) ... ok
+2026-11-05T20:57:31.9737326Z test_snapshot (test_status_api.StatusAPITests.test_snapshot) ... ok
+2026-11-05T20:57:31.9800997Z test_loopback_get_and_post (test_status_http.StatusHTTPTests.test_loopback_get_and_post) ... ok
+2026-11-05T20:57:32.4810828Z test_actual_loopback_health (test_supervisor_terminan_http.SupervisorConsumerHTTP.test_actual_loopback_health) ... ok
+2026-11-05T20:57:32.4837779Z test_catalog_duplicate_json_keys_rejected (test_windows_toolchain.ToolchainTests.test_catalog_duplicate_json_keys_rejected) ... ok
+2026-11-05T20:57:32.5085483Z test_digest_and_size_mismatch_never_qualify (test_windows_toolchain.ToolchainTests.test_digest_and_size_mismatch_never_qualify) ... ok
+2026-11-05T20:57:32.5101827Z test_external_namespace_rejected_before_metadata_and_fixed_drive_guard_reused (test_windows_toolchain.ToolchainTests.test_external_namespace_rejected_before_metadata_and_fixed_drive_guard_reused) ... ok
+2026-11-05T20:57:32.5291621Z test_hardlinks_and_unreadable_files_are_unverified (test_windows_toolchain.ToolchainTests.test_hardlinks_and_unreadable_files_are_unverified) ... ok
+2026-11-05T20:57:32.5325087Z test_malformed_catalog_and_unlocked_policy_cannot_silently_shrink (test_windows_toolchain.ToolchainTests.test_malformed_catalog_and_unlocked_policy_cannot_silently_shrink) ... ok
+2026-11-05T20:57:32.5384873Z test_missing_artifacts_and_unlocked_components_block_closure (test_windows_toolchain.ToolchainTests.test_missing_artifacts_and_unlocked_components_block_closure) ... ok
+2026-11-05T20:57:32.5546486Z test_same_bytes_are_integrity_only_even_if_every_locked_artifact_present (test_windows_toolchain.ToolchainTests.test_same_bytes_are_integrity_only_even_if_every_locked_artifact_present) ... ok
+2026-11-05T20:57:32.5695890Z test_validation_performs_no_network_process_or_output_writes (test_windows_toolchain.ToolchainTests.test_validation_performs_no_network_process_or_output_writes) ... ok
+2026-11-05T20:57:32.5910899Z test_central_directory_and_metadata_bounds_fail_before_large_parsing (test_windows_wheels.WindowsWheelTests.test_central_directory_and_metadata_bounds_fail_before_large_parsing) ... ok
+2026-11-05T20:57:32.5997317Z test_external_paths_and_multiply_linked_wheels_block (test_windows_wheels.WindowsWheelTests.test_external_paths_and_multiply_linked_wheels_block) ... ok
+2026-11-05T20:57:32.6159430Z test_missing_unknown_duplicate_and_nonwheel_files_block (test_windows_wheels.WindowsWheelTests.test_missing_unknown_duplicate_and_nonwheel_files_block) ... ok
+2026-11-05T20:57:32.6249454Z test_normal_candidate_matches_without_any_install_or_dependency_authority (test_windows_wheels.WindowsWheelTests.test_normal_candidate_matches_without_any_install_or_dependency_authority) ... ok
+2026-11-05T20:57:32.6318991Z test_replaced_path_after_hash_cannot_borrow_other_file_metadata (test_windows_wheels.WindowsWheelTests.test_replaced_path_after_hash_cannot_borrow_other_file_metadata) ... ok
+2026-11-05T20:57:32.6331839Z test_strict_compiled_lock_rejects_unpinned_options_urls_markers_and_duplicates (test_windows_wheels.WindowsWheelTests.test_strict_compiled_lock_rejects_unpinned_options_urls_markers_and_duplicates) ... ok
+2026-11-05T20:57:32.6907502Z test_tag_filename_agreement_and_actual_windows_compatibility (test_windows_wheels.WindowsWheelTests.test_tag_filename_agreement_and_actual_windows_compatibility) ... ok
+2026-11-05T20:57:32.7309133Z test_unsafe_zip_alias_and_duplicate_metadata_block (test_windows_wheels.WindowsWheelTests.test_unsafe_zip_alias_and_duplicate_metadata_block) ... ok
+2026-11-05T20:57:32.7565560Z test_vendored_metadata_is_data_not_an_alternate_wheel_identity (test_windows_wheels.WindowsWheelTests.test_vendored_metadata_is_data_not_an_alternate_wheel_identity) ... ok
+2026-11-05T20:57:32.7915379Z test_windows_forbidden_filename_characters_block_even_with_correct_hash (test_windows_wheels.WindowsWheelTests.test_windows_forbidden_filename_characters_block_even_with_correct_hash) ... ok
+2026-11-05T20:57:32.8169851Z test_wrong_hash_and_ambiguous_or_mismatched_metadata_block (test_windows_wheels.WindowsWheelTests.test_wrong_hash_and_ambiguous_or_mismatched_metadata_block) ... ok
+2026-11-05T20:57:32.8253352Z test_zip_metadata_uses_same_open_descriptor_as_streamed_hash (test_windows_wheels.WindowsWheelTests.test_zip_metadata_uses_same_open_descriptor_as_streamed_hash) ... ok
+2026-11-05T20:57:32.8257131Z test_case_aliases_and_invalid_values_are_rejected (test_worker_transport.WorkerTransportEnvironmentTests.test_case_aliases_and_invalid_values_are_rejected) ... ok
+2026-11-05T20:57:32.8259389Z test_database_exchange_and_bot_secrets_never_enter_ssh_environment (test_worker_transport.WorkerTransportEnvironmentTests.test_database_exchange_and_bot_secrets_never_enter_ssh_environment) ... ok
+2026-11-05T20:57:32.8262255Z test_missing_context_is_rejected_before_any_transport (test_worker_transport.WorkerTransportEnvironmentTests.test_missing_context_is_rejected_before_any_transport) ... ok
+2026-11-05T20:57:32.8265199Z test_returned_mapping_is_independent_of_parent (test_worker_transport.WorkerTransportEnvironmentTests.test_returned_mapping_is_independent_of_parent) ... ok
+2026-11-05T20:57:32.8267879Z test_windows_openssh_required_programdata_is_not_filtered_out (test_worker_transport.WorkerTransportEnvironmentTests.test_windows_openssh_required_programdata_is_not_filtered_out) ... ok
+2026-11-05T20:57:32.8270589Z test_never_authorize_without_quorum (test_workstream_ownership.WorkstreamOwnership.test_never_authorize_without_quorum) ... ok
+2026-11-05T20:57:32.8272336Z test_sequence_excludes_trading_authority (test_workstream_ownership.WorkstreamOwnership.test_sequence_excludes_trading_authority) ... ok
+2026-11-05T20:57:32.8273359Z 
+2026-11-05T20:57:32.8273598Z ======================================================================
+2026-11-05T20:57:32.8276223Z ERROR: test_new_nssm_bootstrap_seeds_only_application_and_never_adopts_parameters (test_installation_native_diagnostic.NativeDiagnosticTests.test_new_nssm_bootstrap_seeds_only_application_and_never_adopts_parameters)
+2026-11-05T20:57:32.8277960Z ----------------------------------------------------------------------
+2026-11-05T20:57:32.8278636Z Traceback (most recent call last):
+2026-11-05T20:57:32.8280144Z   File "D:\a\unified-system\unified-system\tests\test_installation_native_diagnostic.py", line 26, in test_new_nssm_bootstrap_seeds_only_application_and_never_adopts_parameters
+2026-11-05T20:57:32.8282020Z     child=subprocess.run([service._native_tools()['powershell']['path'],'-NoProfile','-NonInteractive','-Command',command],env=env,capture_output=True,timeout=15)
+2026-11-05T20:57:32.8283399Z   File "C:\hostedtoolcache\windows\Python\3.13.17\x64\Lib\subprocess.py", line 557, in run
+2026-11-05T20:57:32.8284008Z     stdout, stderr = process.communicate(input, timeout=timeout)
+2026-11-05T20:57:32.8284419Z                      ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+2026-11-05T20:57:32.8284987Z   File "C:\hostedtoolcache\windows\Python\3.13.17\x64\Lib\subprocess.py", line 1223, in communicate
+2026-11-05T20:57:32.8285878Z     stdout, stderr = self._communicate(input, endtime, timeout)
+2026-11-05T20:57:32.8286278Z                      ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-11-05T20:57:32.8286810Z   File "C:\hostedtoolcache\windows\Python\3.13.17\x64\Lib\subprocess.py", line 1666, in _communicate
+2026-11-05T20:57:32.8287390Z     raise TimeoutExpired(self.args, orig_timeout)
+2026-11-05T20:57:32.8294930Z subprocess.TimeoutExpired: Command '['C:\\Windows\\system32\\WindowsPowerShell\\v1.0\\powershell.exe', '-NoProfile', '-NonInteractive', '-Command', "$ErrorActionPreference='Stop';$m=Import-Module -Name ([WildcardPattern]::Escape($env:UNIFIED_TEST_MODULE)) -PassThru\n$parameters=[pscustomobject]@{ValueCount=0;SubKeyCount=0;Saved=$null;Kind=$null;Closed=$false;Flushed=$false}\n$parameters|Add-Member ScriptMethod SetValue {param($name,$value,$kind) if($name -cne 'Application'){throw 'UNEXPECTED_VALUE'};$this.Saved=$value;$this.Kind=$kind}\n$parameters|Add-Member ScriptMethod GetValue {param($name,$default,$options) $this.Saved}\n$parameters|Add-Member ScriptMethod GetValueKind {param($name) $this.Kind}\n$parameters|Add-Member ScriptMethod Flush {$this.Flushed=$true}\n$parameters|Add-Member ScriptMethod Dispose {$this.Closed=$true}\n$parent=[pscustomobject]@{Existing=$false;Creates=0;Parameter=$parameters}\n$parent|Add-Member ScriptMethod OpenSubKey {param($name,$write) if($this.Existing){return $this.Parameter};return $null}\n$parent|Add-Member ScriptMethod CreateSubKey {param($name,$check,$options) if($name -cne 'Parameters'){throw 'UNEXPECTED_KEY'};$this.Creates++;return $this.Parameter}\n& $m {param($key) Write-NewOwnedNssmApplication $key 'C:\\LAB\\python.exe'} $parent\nif($parent.Creates -ne 1 -or $parameters.Saved -cne 'C:\\LAB\\python.exe' -or !$parameters.Closed -or !$parameters.Flushed -or $parameters.Kind -ne [Microsoft.Win32.RegistryValueKind]::ExpandString){throw 'SEED_REJECTED'}\n$parent.Existing=$true;$parent.Creates=0;$parameters.Saved='FOREIGN';$rejected=$false\ntry{& $m {param($key) Write-NewOwnedNssmApplication $key 'C:\\LAB\\python.exe'} $parent}catch{$rejected=$true}\nif(!$rejected -or $parent.Creates -ne 0 -or $parameters.Saved -cne 'FOREIGN'){throw 'FOREIGN_ADOPTED'}\nWrite-Output 'INERT_NSSM_BOOTSTRAP_VERIFIED'\n"]' timed out after 15 seconds
+2026-11-05T20:57:32.8302000Z 
+2026-11-05T20:57:32.8302144Z ======================================================================
+2026-11-05T20:57:32.8303001Z ERROR: test_real_child_exit_code_without_service_or_acl_operations (test_installation_native_diagnostic.NativeDiagnosticTests.test_real_child_exit_code_without_service_or_acl_operations)
+2026-11-05T20:57:32.8303892Z ----------------------------------------------------------------------
+2026-11-05T20:57:32.8304260Z Traceback (most recent call last):
+2026-11-05T20:57:32.8305014Z   File "D:\a\unified-system\unified-system\tests\test_installation_native_diagnostic.py", line 33, in test_real_child_exit_code_without_service_or_acl_operations
+2026-11-05T20:57:32.8306726Z     child=subprocess.run([service._native_tools()['powershell']['path'],'-NoProfile','-NonInteractive','-Command',command],env=env,capture_output=True,timeout=15)
+2026-11-05T20:57:32.8307712Z   File "C:\hostedtoolcache\windows\Python\3.13.17\x64\Lib\subprocess.py", line 557, in run
+2026-11-05T20:57:32.8308270Z     stdout, stderr = process.communicate(input, timeout=timeout)
+2026-11-05T20:57:32.8308672Z                      ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+2026-11-05T20:57:32.8309204Z   File "C:\hostedtoolcache\windows\Python\3.13.17\x64\Lib\subprocess.py", line 1223, in communicate
+2026-11-05T20:57:32.8309777Z     stdout, stderr = self._communicate(input, endtime, timeout)
+2026-11-05T20:57:32.8310185Z                      ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-11-05T20:57:32.8310720Z   File "C:\hostedtoolcache\windows\Python\3.13.17\x64\Lib\subprocess.py", line 1666, in _communicate
+2026-11-05T20:57:32.8311266Z     raise TimeoutExpired(self.args, orig_timeout)
+2026-11-05T20:57:32.8314287Z subprocess.TimeoutExpired: Command '['C:\\Windows\\system32\\WindowsPowerShell\\v1.0\\powershell.exe', '-NoProfile', '-NonInteractive', '-Command', '$ErrorActionPreference=\'Stop\';$m=Import-Module -Name ([WildcardPattern]::Escape($env:UNIFIED_TEST_MODULE)) -PassThru;& $m {Add-Type -TypeDefinition $script:Native;$script:NativeStage=\'NSSM_SET_APPLICATION\'};$ps=Join-Path ([Environment]::SystemDirectory) \'WindowsPowerShell\\v1.0\\powershell.exe\';try{$null=[UnifiedStoppedServiceNative]::Run($ps,\'-NoProfile -NonInteractive -Command "exit 7"\')}catch{};if((Get-UnifiedOwnedNativeExitCode) -ne 7){throw \'EXIT_FACT_REJECTED\'};Write-Output \'EXIT_FACT_VERIFIED\'']' timed out after 15 seconds
+2026-11-05T20:57:32.8316793Z 
+2026-11-05T20:57:32.8316927Z ======================================================================
+2026-11-05T20:57:32.8317755Z ERROR: test_poisoned_parent_module_path_cannot_autoload_user_module (test_installation_service.ServiceResourceTests.test_poisoned_parent_module_path_cannot_autoload_user_module)
+2026-11-05T20:57:32.8318608Z ----------------------------------------------------------------------
+2026-11-05T20:57:32.8319057Z Traceback (most recent call last):
+2026-11-05T20:57:32.8319761Z   File "D:\a\unified-system\unified-system\tests\test_installation_service.py", line 215, in test_poisoned_parent_module_path_cannot_autoload_user_module
+2026-11-05T20:57:32.8320814Z     result=subprocess.run([executable,'-NoProfile','-NonInteractive','-Command',command],env=safe,capture_output=True,timeout=15)
+2026-11-05T20:57:32.8321580Z   File "C:\hostedtoolcache\windows\Python\3.13.17\x64\Lib\subprocess.py", line 557, in run
+2026-11-05T20:57:32.8322106Z     stdout, stderr = process.communicate(input, timeout=timeout)
+2026-11-05T20:57:32.8322496Z                      ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+2026-11-05T20:57:32.8322982Z   File "C:\hostedtoolcache\windows\Python\3.13.17\x64\Lib\subprocess.py", line 1223, in communicate
+2026-11-05T20:57:32.8323725Z     stdout, stderr = self._communicate(input, endtime, timeout)
+2026-11-05T20:57:32.8324095Z                      ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-11-05T20:57:32.8324612Z   File "C:\hostedtoolcache\windows\Python\3.13.17\x64\Lib\subprocess.py", line 1666, in _communicate
+2026-11-05T20:57:32.8325153Z     raise TimeoutExpired(self.args, orig_timeout)
+2026-11-05T20:57:32.8326269Z subprocess.TimeoutExpired: Command '['C:\\Windows\\system32\\WindowsPowerShell\\v1.0\\powershell.exe', '-NoProfile', '-NonInteractive', '-Command', "try{Get-UnifiedPoisonProbe -ErrorAction Stop}catch{Write-Output 'POISON_NOT_FOUND'}"]' timed out after 15 seconds
+2026-11-05T20:57:32.8327262Z 
+2026-11-05T20:57:32.8327376Z ======================================================================
+2026-11-05T20:57:32.8328212Z ERROR: test_actual_concurrent_rollback_fences_stage_intent (test_installation_transaction.InstallationTransactionTests.test_actual_concurrent_rollback_fences_stage_intent)
+2026-11-05T20:57:32.8329414Z ----------------------------------------------------------------------
+2026-11-05T20:57:32.8329824Z Traceback (most recent call last):
+2026-11-05T20:57:32.8330537Z   File "D:\a\unified-system\unified-system\tests\test_installation_transaction.py", line 91, in test_actual_concurrent_rollback_fences_stage_intent
+2026-11-05T20:57:32.8331753Z     plan=self.plan();tx=InstallationTransaction.create(plan);original=Journal.append;injected=False
+2026-11-05T20:57:32.8332551Z   File "D:\a\unified-system\unified-system\tests\test_installation_transaction.py", line 18, in plan
+2026-11-05T20:57:32.8333466Z     args.update(changes);return source_plan(**args)
+2026-11-05T20:57:32.8333813Z                                 ~~~~~~~~~~~^^^^^^^^
+2026-11-05T20:57:32.8334457Z   File "D:\a\unified-system\unified-system\unified_system\installation_transaction.py", line 84, in source_plan
+2026-11-05T20:57:32.8335234Z     capsule_root=str(root(capsule_root)),install_root=str(root(install_root)),state_root=str(root(state_root)),
+2026-11-05T20:57:32.8335764Z                      ~~~~^^^^^^^^^^^^^^
+2026-11-05T20:57:32.8336307Z   File "D:\a\unified-system\unified-system\unified_system\installation_transaction.py", line 35, in root
+2026-11-05T20:57:32.8336830Z     p=safe_path(path)
+2026-11-05T20:57:32.8337277Z   File "D:\a\unified-system\unified-system\unified_system\lab_capsule_acl.py", line 141, in _safe
+2026-11-05T20:57:32.8366303Z ##[error]    raise ValueError('ACL_CANONICAL_ROOT_REQUIRED')
+2026-11-05T20:57:32.8367719Z ValueError: ACL_CANONICAL_ROOT_REQUIRED
+2026-11-05T20:57:32.8367929Z 
+2026-11-05T20:57:32.8368073Z ======================================================================
+2026-11-05T20:57:32.8368837Z ERROR: test_capacity_and_hash_tamper_fail_closed (test_installation_transaction.InstallationTransactionTests.test_capacity_and_hash_tamper_fail_closed)
+2026-11-05T20:57:32.8369624Z ----------------------------------------------------------------------
+2026-11-05T20:57:32.8370024Z Traceback (most recent call last):
+2026-11-05T20:57:32.8370728Z   File "D:\a\unified-system\unified-system\tests\test_installation_transaction.py", line 110, in test_capacity_and_hash_tamper_fail_closed
+2026-11-05T20:57:32.8371434Z     plan=self.plan();tx=InstallationTransaction.create(plan)
+2026-11-05T20:57:32.8372035Z   File "D:\a\unified-system\unified-system\tests\test_installation_transaction.py", line 18, in plan
+2026-11-05T20:57:32.8372599Z     args.update(changes);return source_plan(**args)
+2026-11-05T20:57:32.8372942Z                                 ~~~~~~~~~~~^^^^^^^^
+2026-11-05T20:57:32.8374031Z   File "D:\a\unified-system\unified-system\unified_system\installation_transaction.py", line 84, in source_plan
+2026-11-05T20:57:32.8374818Z     capsule_root=str(root(capsule_root)),install_root=str(root(install_root)),state_root=str(root(state_root)),
+2026-11-05T20:57:32.8375340Z                      ~~~~^^^^^^^^^^^^^^
+2026-11-05T20:57:32.8376105Z   File "D:\a\unified-system\unified-system\unified_system\installation_transaction.py", line 35, in root
+2026-11-05T20:57:32.8376629Z     p=safe_path(path)
+2026-11-05T20:57:32.8377088Z   File "D:\a\unified-system\unified-system\unified_system\lab_capsule_acl.py", line 141, in _safe
+2026-11-05T20:57:32.8378087Z ##[error]    raise ValueError('ACL_CANONICAL_ROOT_REQUIRED')
+2026-11-05T20:57:32.8378902Z ValueError: ACL_CANONICAL_ROOT_REQUIRED
+2026-11-05T20:57:32.8379098Z 
+2026-11-05T20:57:32.8379236Z ======================================================================
+2026-11-05T20:57:32.8380092Z ERROR: test_changed_staged_bytes_and_root_identity_fail_closed (test_installation_transaction.InstallationTransactionTests.test_changed_staged_bytes_and_root_identity_fail_closed)
+2026-11-05T20:57:32.8380959Z ----------------------------------------------------------------------
+2026-11-05T20:57:32.8381323Z Traceback (most recent call last):
+2026-11-05T20:57:32.8382149Z   File "D:\a\unified-system\unified-system\tests\test_installation_transaction.py", line 66, in test_changed_staged_bytes_and_root_identity_fail_closed
+2026-11-05T20:57:32.8382971Z     plan=self.plan();tx=InstallationTransaction.create(plan);tx.stage()
+2026-11-05T20:57:32.8383605Z   File "D:\a\unified-system\unified-system\tests\test_installation_transaction.py", line 18, in plan
+2026-11-05T20:57:32.8384163Z     args.update(changes);return source_plan(**args)
+2026-11-05T20:57:32.8384500Z                                 ~~~~~~~~~~~^^^^^^^^
+2026-11-05T20:57:32.8385033Z   File "D:\a\unified-system\unified-system\unified_system\installation_transaction.py", line 84, in source_plan
+2026-11-05T20:57:32.8385790Z     capsule_root=str(root(capsule_root)),install_root=str(root(install_root)),state_root=str(root(state_root)),
+2026-11-05T20:57:32.8386332Z                      ~~~~^^^^^^^^^^^^^^
+2026-11-05T20:57:32.8386847Z   File "D:\a\unified-system\unified-system\unified_system\installation_transaction.py", line 35, in root
+2026-11-05T20:57:32.8387356Z     p=safe_path(path)
+2026-11-05T20:57:32.8387799Z   File "D:\a\unified-system\unified-system\unified_system\lab_capsule_acl.py", line 141, in _safe
+2026-11-05T20:57:32.8388723Z ##[error]    raise ValueError('ACL_CANONICAL_ROOT_REQUIRED')
+2026-11-05T20:57:32.8389460Z ValueError: ACL_CANONICAL_ROOT_REQUIRED
+2026-11-05T20:57:32.8389680Z 
+2026-11-05T20:57:32.8389812Z ======================================================================
+2026-11-05T20:57:32.8390616Z ERROR: test_existing_foreign_roots_and_wrong_identity_rejected (test_installation_transaction.InstallationTransactionTests.test_existing_foreign_roots_and_wrong_identity_rejected)
+2026-11-05T20:57:32.8391431Z ----------------------------------------------------------------------
+2026-11-05T20:57:32.8391750Z Traceback (most recent call last):
+2026-11-05T20:57:32.8392401Z   File "D:\a\unified-system\unified-system\tests\test_installation_transaction.py", line 37, in test_existing_foreign_roots_and_wrong_identity_rejected
+2026-11-05T20:57:32.8393114Z     plan=self.plan();Path(plan['state_root']).mkdir()
+2026-11-05T20:57:32.8394033Z   File "D:\a\unified-system\unified-system\tests\test_installation_transaction.py", line 18, in plan
+2026-11-05T20:57:32.8394541Z     args.update(changes);return source_plan(**args)
+2026-11-05T20:57:32.8394841Z                                 ~~~~~~~~~~~^^^^^^^^
+2026-11-05T20:57:32.8395378Z   File "D:\a\unified-system\unified-system\unified_system\installation_transaction.py", line 84, in source_plan
+2026-11-05T20:57:32.8396096Z     capsule_root=str(root(capsule_root)),install_root=str(root(install_root)),state_root=str(root(state_root)),
+2026-11-05T20:57:32.8396565Z                      ~~~~^^^^^^^^^^^^^^
+2026-11-05T20:57:32.8397038Z   File "D:\a\unified-system\unified-system\unified_system\installation_transaction.py", line 35, in root
+2026-11-05T20:57:32.8397509Z     p=safe_path(path)
+2026-11-05T20:57:32.8397908Z   File "D:\a\unified-system\unified-system\unified_system\lab_capsule_acl.py", line 141, in _safe
+2026-11-05T20:57:32.8398919Z ##[error]    raise ValueError('ACL_CANONICAL_ROOT_REQUIRED')
+2026-11-05T20:57:32.8399690Z ValueError: ACL_CANONICAL_ROOT_REQUIRED
+2026-11-05T20:57:32.8399872Z 
+2026-11-05T20:57:32.8399978Z ======================================================================
+2026-11-05T20:57:32.8400695Z ERROR: test_fault_before_child_creation_can_resume (test_installation_transaction.InstallationTransactionTests.test_fault_before_child_creation_can_resume)
+2026-11-05T20:57:32.8401431Z ----------------------------------------------------------------------
+2026-11-05T20:57:32.8401751Z Traceback (most recent call last):
+2026-11-05T20:57:32.8402361Z   File "D:\a\unified-system\unified-system\tests\test_installation_transaction.py", line 48, in test_fault_before_child_creation_can_resume
+2026-11-05T20:57:32.8403041Z     plan=self.plan();tx=InstallationTransaction.create(plan)
+2026-11-05T20:57:32.8403588Z   File "D:\a\unified-system\unified-system\tests\test_installation_transaction.py", line 18, in plan
+2026-11-05T20:57:32.8404092Z     args.update(changes);return source_plan(**args)
+2026-11-05T20:57:32.8404489Z                                 ~~~~~~~~~~~^^^^^^^^
+2026-11-05T20:57:32.8405015Z   File "D:\a\unified-system\unified-system\unified_system\installation_transaction.py", line 84, in source_plan
+2026-11-05T20:57:32.8405732Z     capsule_root=str(root(capsule_root)),install_root=str(root(install_root)),state_root=str(root(state_root)),
+2026-11-05T20:57:32.8406208Z                      ~~~~^^^^^^^^^^^^^^
+2026-11-05T20:57:32.8406670Z   File "D:\a\unified-system\unified-system\unified_system\installation_transaction.py", line 35, in root
+2026-11-05T20:57:32.8407141Z     p=safe_path(path)
+2026-11-05T20:57:32.8407541Z   File "D:\a\unified-system\unified-system\unified_system\lab_capsule_acl.py", line 141, in _safe
+2026-11-05T20:57:32.8408339Z ##[error]    raise ValueError('ACL_CANONICAL_ROOT_REQUIRED')
+2026-11-05T20:57:32.8409148Z ValueError: ACL_CANONICAL_ROOT_REQUIRED
+2026-11-05T20:57:32.8409335Z 
+2026-11-05T20:57:32.8409436Z ======================================================================
+2026-11-05T20:57:32.8410185Z ERROR: test_journal_tamper_and_foreign_status_rejected (test_installation_transaction.InstallationTransactionTests.test_journal_tamper_and_foreign_status_rejected)
+2026-11-05T20:57:32.8410951Z ----------------------------------------------------------------------
+2026-11-05T20:57:32.8411263Z Traceback (most recent call last):
+2026-11-05T20:57:32.8411888Z   File "D:\a\unified-system\unified-system\tests\test_installation_transaction.py", line 72, in test_journal_tamper_and_foreign_status_rejected
+2026-11-05T20:57:32.8412563Z     plan=self.plan();tx=InstallationTransaction.create(plan)
+2026-11-05T20:57:32.8413101Z   File "D:\a\unified-system\unified-system\tests\test_installation_transaction.py", line 18, in plan
+2026-11-05T20:57:32.8413923Z     args.update(changes);return source_plan(**args)
+2026-11-05T20:57:32.8414284Z                                 ~~~~~~~~~~~^^^^^^^^
+2026-11-05T20:57:32.8414829Z   File "D:\a\unified-system\unified-system\unified_system\installation_transaction.py", line 84, in source_plan
+2026-11-05T20:57:32.8415544Z     capsule_root=str(root(capsule_root)),install_root=str(root(install_root)),state_root=str(root(state_root)),
+2026-11-05T20:57:32.8416008Z                      ~~~~^^^^^^^^^^^^^^
+2026-11-05T20:57:32.8416473Z   File "D:\a\unified-system\unified-system\unified_system\installation_transaction.py", line 35, in root
+2026-11-05T20:57:32.8416939Z     p=safe_path(path)
+2026-11-05T20:57:32.8417339Z   File "D:\a\unified-system\unified-system\unified_system\lab_capsule_acl.py", line 141, in _safe
+2026-11-05T20:57:32.8418147Z ##[error]    raise ValueError('ACL_CANONICAL_ROOT_REQUIRED')
+2026-11-05T20:57:32.8418973Z ValueError: ACL_CANONICAL_ROOT_REQUIRED
+2026-11-05T20:57:32.8419159Z 
+2026-11-05T20:57:32.8419267Z ======================================================================
+2026-11-05T20:57:32.8420228Z ERROR: test_links_and_oversized_foreign_journal_rejected (test_installation_transaction.InstallationTransactionTests.test_links_and_oversized_foreign_journal_rejected)
+2026-11-05T20:57:32.8421010Z ----------------------------------------------------------------------
+2026-11-05T20:57:32.8421327Z Traceback (most recent call last):
+2026-11-05T20:57:32.8421966Z   File "D:\a\unified-system\unified-system\tests\test_installation_transaction.py", line 117, in test_links_and_oversized_foreign_journal_rejected
+2026-11-05T20:57:32.8422657Z     plan=self.plan();tx=InstallationTransaction.create(plan)
+2026-11-05T20:57:32.8423190Z   File "D:\a\unified-system\unified-system\tests\test_installation_transaction.py", line 18, in plan
+2026-11-05T20:57:32.8423676Z     args.update(changes);return source_plan(**args)
+2026-11-05T20:57:32.8423968Z                                 ~~~~~~~~~~~^^^^^^^^
+2026-11-05T20:57:32.8424477Z   File "D:\a\unified-system\unified-system\unified_system\installation_transaction.py", line 84, in source_plan
+2026-11-05T20:57:32.8425288Z     capsule_root=str(root(capsule_root)),install_root=str(root(install_root)),state_root=str(root(state_root)),
+2026-11-05T20:57:32.8425774Z                      ~~~~^^^^^^^^^^^^^^
+2026-11-05T20:57:32.8426252Z   File "D:\a\unified-system\unified-system\unified_system\installation_transaction.py", line 35, in root
+2026-11-05T20:57:32.8426724Z     p=safe_path(path)
+2026-11-05T20:57:32.8427123Z   File "D:\a\unified-system\unified-system\unified_system\lab_capsule_acl.py", line 141, in _safe
+2026-11-05T20:57:32.8427878Z ##[error]    raise ValueError('ACL_CANONICAL_ROOT_REQUIRED')
+2026-11-05T20:57:32.8428740Z ValueError: ACL_CANONICAL_ROOT_REQUIRED
+2026-11-05T20:57:32.8428924Z 
+2026-11-05T20:57:32.8429025Z ======================================================================
+2026-11-05T20:57:32.8429746Z ERROR: test_no_closure_admission_from_receipt_only (test_installation_transaction.InstallationTransactionTests.test_no_closure_admission_from_receipt_only)
+2026-11-05T20:57:32.8430493Z ----------------------------------------------------------------------
+2026-11-05T20:57:32.8430815Z Traceback (most recent call last):
+2026-11-05T20:57:32.8431421Z   File "D:\a\unified-system\unified-system\tests\test_installation_transaction.py", line 76, in test_no_closure_admission_from_receipt_only
+2026-11-05T20:57:32.8432080Z     plan=self.plan();tx=InstallationTransaction.create(plan)
+2026-11-05T20:57:32.8432610Z   File "D:\a\unified-system\unified-system\tests\test_installation_transaction.py", line 18, in plan
+2026-11-05T20:57:32.8433108Z     args.update(changes);return source_plan(**args)
+2026-11-05T20:57:32.8433393Z                                 ~~~~~~~~~~~^^^^^^^^
+2026-11-05T20:57:32.8433904Z   File "D:\a\unified-system\unified-system\unified_system\installation_transaction.py", line 84, in source_plan
+2026-11-05T20:57:32.8434620Z     capsule_root=str(root(capsule_root)),install_root=str(root(install_root)),state_root=str(root(state_root)),
+2026-11-05T20:57:32.8435092Z                      ~~~~^^^^^^^^^^^^^^
+2026-11-05T20:57:32.8435554Z   File "D:\a\unified-system\unified-system\unified_system\installation_transaction.py", line 35, in root
+2026-11-05T20:57:32.8436027Z     p=safe_path(path)
+2026-11-05T20:57:32.8436426Z   File "D:\a\unified-system\unified-system\unified_system\lab_capsule_acl.py", line 141, in _safe
+2026-11-05T20:57:32.8437133Z ##[error]    raise ValueError('ACL_CANONICAL_ROOT_REQUIRED')
+2026-11-05T20:57:32.8437809Z ValueError: ACL_CANONICAL_ROOT_REQUIRED
+2026-11-05T20:57:32.8437986Z 
+2026-11-05T20:57:32.8438088Z ======================================================================
+2026-11-05T20:57:32.8439363Z ERROR: test_partial_or_complete_unreceipted_child_never_adopted (test_installation_transaction.InstallationTransactionTests.test_partial_or_complete_unreceipted_child_never_adopted) (complete=False)
+2026-11-05T20:57:32.8440288Z ----------------------------------------------------------------------
+2026-11-05T20:57:32.8440611Z Traceback (most recent call last):
+2026-11-05T20:57:32.8441464Z   File "D:\a\unified-system\unified-system\tests\test_installation_transaction.py", line 55, in test_partial_or_complete_unreceipted_child_never_adopted
+2026-11-05T20:57:32.8442336Z     plan=self.plan(install_root=self.root/('install'+str(complete)),state_root=self.root/('state'+str(complete)))
+2026-11-05T20:57:32.8443034Z   File "D:\a\unified-system\unified-system\tests\test_installation_transaction.py", line 18, in plan
+2026-11-05T20:57:32.8443523Z     args.update(changes);return source_plan(**args)
+2026-11-05T20:57:32.8443815Z                                 ~~~~~~~~~~~^^^^^^^^
+2026-11-05T20:57:32.8444332Z   File "D:\a\unified-system\unified-system\unified_system\installation_transaction.py", line 84, in source_plan
+2026-11-05T20:57:32.8445056Z     capsule_root=str(root(capsule_root)),install_root=str(root(install_root)),state_root=str(root(state_root)),
+2026-11-05T20:57:32.8445519Z                      ~~~~^^^^^^^^^^^^^^
+2026-11-05T20:57:32.8445980Z   File "D:\a\unified-system\unified-system\unified_system\installation_transaction.py", line 35, in root
+2026-11-05T20:57:32.8446525Z     p=safe_path(path)
+2026-11-05T20:57:32.8446932Z   File "D:\a\unified-system\unified-system\unified_system\lab_capsule_acl.py", line 141, in _safe
+2026-11-05T20:57:32.8447725Z ##[error]    raise ValueError('ACL_CANONICAL_ROOT_REQUIRED')
+2026-11-05T20:57:32.8448440Z ValueError: ACL_CANONICAL_ROOT_REQUIRED
+2026-11-05T20:57:32.8448613Z 
+2026-11-05T20:57:32.8448720Z ======================================================================
+2026-11-05T20:57:32.8449965Z ERROR: test_partial_or_complete_unreceipted_child_never_adopted (test_installation_transaction.InstallationTransactionTests.test_partial_or_complete_unreceipted_child_never_adopted) (complete=True)
+2026-11-05T20:57:32.8450873Z ----------------------------------------------------------------------
+2026-11-05T20:57:32.8451195Z Traceback (most recent call last):
+2026-11-05T20:57:32.8451865Z   File "D:\a\unified-system\unified-system\tests\test_installation_transaction.py", line 55, in test_partial_or_complete_unreceipted_child_never_adopted
+2026-11-05T20:57:32.8452742Z     plan=self.plan(install_root=self.root/('install'+str(complete)),state_root=self.root/('state'+str(complete)))
+2026-11-05T20:57:32.8453445Z   File "D:\a\unified-system\unified-system\tests\test_installation_transaction.py", line 18, in plan
+2026-11-05T20:57:32.8453943Z     args.update(changes);return source_plan(**args)
+2026-11-05T20:57:32.8454229Z                                 ~~~~~~~~~~~^^^^^^^^
+2026-11-05T20:57:32.8454750Z   File "D:\a\unified-system\unified-system\unified_system\installation_transaction.py", line 84, in source_plan
+2026-11-05T20:57:32.8455457Z     capsule_root=str(root(capsule_root)),install_root=str(root(install_root)),state_root=str(root(state_root)),
+2026-11-05T20:57:32.8455926Z                      ~~~~^^^^^^^^^^^^^^
+2026-11-05T20:57:32.8456382Z   File "D:\a\unified-system\unified-system\unified_system\installation_transaction.py", line 35, in root
+2026-11-05T20:57:32.8456853Z     p=safe_path(path)
+2026-11-05T20:57:32.8457253Z   File "D:\a\unified-system\unified-system\unified_system\lab_capsule_acl.py", line 141, in _safe
+2026-11-05T20:57:32.8458020Z ##[error]    raise ValueError('ACL_CANONICAL_ROOT_REQUIRED')
+2026-11-05T20:57:32.8458712Z ValueError: ACL_CANONICAL_ROOT_REQUIRED
+2026-11-05T20:57:32.8458896Z 
+2026-11-05T20:57:32.8458995Z ======================================================================
+2026-11-05T20:57:32.8459737Z ERROR: test_plan_pins_overlap_and_metadata_are_closed (test_installation_transaction.InstallationTransactionTests.test_plan_pins_overlap_and_metadata_are_closed)
+2026-11-05T20:57:32.8460487Z ----------------------------------------------------------------------
+2026-11-05T20:57:32.8460803Z Traceback (most recent call last):
+2026-11-05T20:57:32.8461418Z   File "D:\a\unified-system\unified-system\tests\test_installation_transaction.py", line 103, in test_plan_pins_overlap_and_metadata_are_closed
+2026-11-05T20:57:32.8462228Z     plan=self.plan();plan['sources']['math']['commit']='f'*40
+2026-11-05T20:57:32.8462764Z   File "D:\a\unified-system\unified-system\tests\test_installation_transaction.py", line 18, in plan
+2026-11-05T20:57:32.8463253Z     args.update(changes);return source_plan(**args)
+2026-11-05T20:57:32.8463538Z                                 ~~~~~~~~~~~^^^^^^^^
+2026-11-05T20:57:32.8464043Z   File "D:\a\unified-system\unified-system\unified_system\installation_transaction.py", line 84, in source_plan
+2026-11-05T20:57:32.8464751Z     capsule_root=str(root(capsule_root)),install_root=str(root(install_root)),state_root=str(root(state_root)),
+2026-11-05T20:57:32.8465210Z                      ~~~~^^^^^^^^^^^^^^
+2026-11-05T20:57:32.8465675Z   File "D:\a\unified-system\unified-system\unified_system\installation_transaction.py", line 35, in root
+2026-11-05T20:57:32.8466136Z     p=safe_path(path)
+2026-11-05T20:57:32.8466530Z   File "D:\a\unified-system\unified-system\unified_system\lab_capsule_acl.py", line 141, in _safe
+2026-11-05T20:57:32.8467365Z ##[error]    raise ValueError('ACL_CANONICAL_ROOT_REQUIRED')
+2026-11-05T20:57:32.8468066Z ValueError: ACL_CANONICAL_ROOT_REQUIRED
+2026-11-05T20:57:32.8468248Z 
+2026-11-05T20:57:32.8468350Z ======================================================================
+2026-11-05T20:57:32.8469137Z ERROR: test_real_stage_reopen_and_preserving_logical_rollback (test_installation_transaction.InstallationTransactionTests.test_real_stage_reopen_and_preserving_logical_rollback)
+2026-11-05T20:57:32.8470363Z ----------------------------------------------------------------------
+2026-11-05T20:57:32.8470688Z Traceback (most recent call last):
+2026-11-05T20:57:32.8471342Z   File "D:\a\unified-system\unified-system\tests\test_installation_transaction.py", line 27, in test_real_stage_reopen_and_preserving_logical_rollback
+2026-11-05T20:57:32.8472092Z     plan=self.plan();tx=InstallationTransaction.create(plan);result=tx.stage()
+2026-11-05T20:57:32.8472689Z   File "D:\a\unified-system\unified-system\tests\test_installation_transaction.py", line 18, in plan
+2026-11-05T20:57:32.8473178Z     args.update(changes);return source_plan(**args)
+2026-11-05T20:57:32.8473468Z                                 ~~~~~~~~~~~^^^^^^^^
+2026-11-05T20:57:32.8473983Z   File "D:\a\unified-system\unified-system\unified_system\installation_transaction.py", line 84, in source_plan
+2026-11-05T20:57:32.8474694Z     capsule_root=str(root(capsule_root)),install_root=str(root(install_root)),state_root=str(root(state_root)),
+2026-11-05T20:57:32.8475154Z                      ~~~~^^^^^^^^^^^^^^
+2026-11-05T20:57:32.8475609Z   File "D:\a\unified-system\unified-system\unified_system\installation_transaction.py", line 35, in root
+2026-11-05T20:57:32.8476070Z     p=safe_path(path)
+2026-11-05T20:57:32.8476470Z   File "D:\a\unified-system\unified-system\unified_system\lab_capsule_acl.py", line 141, in _safe
+2026-11-05T20:57:32.8477248Z ##[error]    raise ValueError('ACL_CANONICAL_ROOT_REQUIRED')
+2026-11-05T20:57:32.8477966Z ValueError: ACL_CANONICAL_ROOT_REQUIRED
+2026-11-05T20:57:32.8478147Z 
+2026-11-05T20:57:32.8478249Z ======================================================================
+2026-11-05T20:57:32.8478972Z ERROR: test_roles_and_closed_admission_not_execution (test_installation_transaction.InstallationTransactionTests.test_roles_and_closed_admission_not_execution)
+2026-11-05T20:57:32.8479721Z ----------------------------------------------------------------------
+2026-11-05T20:57:32.8480034Z Traceback (most recent call last):
+2026-11-05T20:57:32.8480649Z   File "D:\a\unified-system\unified-system\tests\test_installation_transaction.py", line 21, in test_roles_and_closed_admission_not_execution
+2026-11-05T20:57:32.8481682Z     plan=self.plan(role=role);self.assertEqual(plan['role'],wanted);self.assertEqual(plan['source_proof'],'NOT_EVALUATED');self.assertEqual(plan['activation'],'BLOCKED')
+2026-11-05T20:57:32.8482592Z   File "D:\a\unified-system\unified-system\tests\test_installation_transaction.py", line 18, in plan
+2026-11-05T20:57:32.8483230Z     args.update(changes);return source_plan(**args)
+2026-11-05T20:57:32.8483517Z                                 ~~~~~~~~~~~^^^^^^^^
+2026-11-05T20:57:32.8484037Z   File "D:\a\unified-system\unified-system\unified_system\installation_transaction.py", line 84, in source_plan
+2026-11-05T20:57:32.8484751Z     capsule_root=str(root(capsule_root)),install_root=str(root(install_root)),state_root=str(root(state_root)),
+2026-11-05T20:57:32.8485218Z                      ~~~~^^^^^^^^^^^^^^
+2026-11-05T20:57:32.8485686Z   File "D:\a\unified-system\unified-system\unified_system\installation_transaction.py", line 35, in root
+2026-11-05T20:57:32.8486150Z     p=safe_path(path)
+2026-11-05T20:57:32.8486550Z   File "D:\a\unified-system\unified-system\unified_system\lab_capsule_acl.py", line 141, in _safe
+2026-11-05T20:57:32.8487296Z ##[error]    raise ValueError('ACL_CANONICAL_ROOT_REQUIRED')
+2026-11-05T20:57:32.8487985Z ValueError: ACL_CANONICAL_ROOT_REQUIRED
+2026-11-05T20:57:32.8488169Z 
+2026-11-05T20:57:32.8488383Z ======================================================================
+2026-11-05T20:57:32.8489149Z ERROR: test_stale_receipt_cas_blocks_before_stage_effect (test_installation_transaction.InstallationTransactionTests.test_stale_receipt_cas_blocks_before_stage_effect)
+2026-11-05T20:57:32.8490322Z ----------------------------------------------------------------------
+2026-11-05T20:57:32.8490657Z Traceback (most recent call last):
+2026-11-05T20:57:32.8491304Z   File "D:\a\unified-system\unified-system\tests\test_installation_transaction.py", line 81, in test_stale_receipt_cas_blocks_before_stage_effect
+2026-11-05T20:57:32.8491993Z     plan=self.plan();tx=InstallationTransaction.create(plan)
+2026-11-05T20:57:32.8492532Z   File "D:\a\unified-system\unified-system\tests\test_installation_transaction.py", line 18, in plan
+2026-11-05T20:57:32.8493030Z     args.update(changes);return source_plan(**args)
+2026-11-05T20:57:32.8493323Z                                 ~~~~~~~~~~~^^^^^^^^
+2026-11-05T20:57:32.8493837Z   File "D:\a\unified-system\unified-system\unified_system\installation_transaction.py", line 84, in source_plan
+2026-11-05T20:57:32.8494556Z     capsule_root=str(root(capsule_root)),install_root=str(root(install_root)),state_root=str(root(state_root)),
+2026-11-05T20:57:32.8495022Z                      ~~~~^^^^^^^^^^^^^^
+2026-11-05T20:57:32.8495485Z   File "D:\a\unified-system\unified-system\unified_system\installation_transaction.py", line 35, in root
+2026-11-05T20:57:32.8495947Z     p=safe_path(path)
+2026-11-05T20:57:32.8496343Z   File "D:\a\unified-system\unified-system\unified_system\lab_capsule_acl.py", line 141, in _safe
+2026-11-05T20:57:32.8497144Z ##[error]    raise ValueError('ACL_CANONICAL_ROOT_REQUIRED')
+2026-11-05T20:57:32.8497843Z ValueError: ACL_CANONICAL_ROOT_REQUIRED
+2026-11-05T20:57:32.8498024Z 
+2026-11-05T20:57:32.8498160Z ----------------------------------------------------------------------
+2026-11-05T20:57:32.8498484Z Ran 710 tests in 1089.768s
+2026-11-05T20:57:32.8498614Z 
+2026-11-05T20:57:32.8498710Z FAILED (errors=17, skipped=10)
+2026-11-05T20:57:32.8499185Z PREPARE_ONLY; modules=6; processes=NOT_STARTED; physical=NOT_AUTHORIZED; production_trust_bridge=UNSUPPORTED
+2026-11-05T20:57:32.9764614Z ##[error]Process completed with exit code 1.
+2026-11-05T20:57:33.0094194Z Post job cleanup.
+2026-11-05T20:57:33.2161889Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-05T20:57:33.2513692Z git version 2.56.0.windows.4
+2026-11-05T20:57:33.2579647Z Temporarily overriding HOME='D:\a\_temp\d5166663-3d51-4c60-95dc-8ca27c476b73' before making global git config changes
+2026-11-05T20:57:33.2580836Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-05T20:57:33.2592102Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\unified-system\unified-system
+2026-11-05T20:57:33.2978766Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-05T20:57:33.3363750Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-05T20:57:33.9180464Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-05T20:57:33.9555437Z http.https://github.com/.extraheader
+2026-11-05T20:57:33.9609917Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+2026-11-05T20:57:34.0042168Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-05T20:57:34.5787606Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-05T20:57:34.6170753Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-05T20:57:35.2052697Z Cleaning up orphan processes
+2026-11-05T20:57:35.2206813Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-python@v5. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

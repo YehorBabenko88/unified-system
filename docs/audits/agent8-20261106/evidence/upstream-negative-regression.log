@@ -1,0 +1,28 @@
+test_backend_absent_never_returns_fake_receipt (tests.test_operator_control_plane.OperatorTests.test_backend_absent_never_returns_fake_receipt) ... ok
+test_current_grants_checked_on_every_retry (tests.test_operator_control_plane.OperatorTests.test_current_grants_checked_on_every_retry) ... ok
+test_malformed_private_receipt_never_disclosed (tests.test_operator_control_plane.OperatorTests.test_malformed_private_receipt_never_disclosed) ... ok
+test_missing_provider_fails_closed (tests.test_operator_control_plane.OperatorTests.test_missing_provider_fails_closed) ... ok
+test_receipt_rechecks_current_actor_scope (tests.test_operator_control_plane.OperatorTests.test_receipt_rechecks_current_actor_scope) ... ok
+test_revocation_during_receipt_query_prevents_disclosure (tests.test_operator_control_plane.OperatorTests.test_revocation_during_receipt_query_prevents_disclosure) ... ok
+test_role_backend_enforced_and_unknown_action_denied (tests.test_operator_control_plane.OperatorTests.test_role_backend_enforced_and_unknown_action_denied) ... ok
+test_serialized_or_unknown_capability_principal_denied (tests.test_operator_control_plane.OperatorTests.test_serialized_or_unknown_capability_principal_denied) ... ok
+test_strict_boundaries (tests.test_operator_control_plane.OperatorTests.test_strict_boundaries) ... ok
+test_submit_receipt_must_match_entire_intent (tests.test_operator_control_plane.OperatorTests.test_submit_receipt_must_match_entire_intent) ... ok
+test_two_windows_retry_and_conflicting_revision (tests.test_operator_control_plane.OperatorTests.test_two_windows_retry_and_conflicting_revision) ... ok
+test_untrusted_actor_role_and_machine_denied (tests.test_operator_control_plane.OperatorTests.test_untrusted_actor_role_and_machine_denied) ... ok
+test_zero_grant_denied_before_backend_io (tests.test_operator_control_plane.OperatorTests.test_zero_grant_denied_before_backend_io) ... ok
+test_invalid_snapshot_cannot_mark_live (tests.test_operator_control_plane.StreamTests.test_invalid_snapshot_cannot_mark_live) ... ok
+test_snapshot_gap_generation_and_staleness (tests.test_operator_control_plane.StreamTests.test_snapshot_gap_generation_and_staleness) ... ok
+test_partial_evidence_is_explicit_and_closed (tests.test_operator_auth_source.NativeReceiptTests.test_partial_evidence_is_explicit_and_closed) ... ok
+test_raw_source_rejects_changed_bytes_and_untracked_code (tests.test_operator_auth_source.NativeReceiptTests.test_raw_source_rejects_changed_bytes_and_untracked_code) ... ok
+test_all_five_or_six_nodes_required_but_claims_never_authenticate_themselves (tests.test_physical_acceptance.PhysicalAcceptanceTests.test_all_five_or_six_nodes_required_but_claims_never_authenticate_themselves) ... ok
+test_duplicate_wrong_release_wrong_run_or_cloud_cannot_qualify (tests.test_physical_acceptance.PhysicalAcceptanceTests.test_duplicate_wrong_release_wrong_run_or_cloud_cannot_qualify) ... ok
+test_failure_remains_failure (tests.test_physical_acceptance.PhysicalAcceptanceTests.test_failure_remains_failure) ... ok
+test_inventory_is_explicit_unique_and_five_or_six (tests.test_physical_acceptance.PhysicalAcceptanceTests.test_inventory_is_explicit_unique_and_five_or_six) ... ok
+test_no_records_means_not_run (tests.test_physical_acceptance.PhysicalAcceptanceTests.test_no_records_means_not_run) ... ok
+test_two_nodes_never_satisfy_six_node_acceptance (tests.test_physical_acceptance.PhysicalAcceptanceTests.test_two_nodes_never_satisfy_six_node_acceptance) ... ok
+
+----------------------------------------------------------------------
+Ran 23 tests in 0.802s
+
+OK
