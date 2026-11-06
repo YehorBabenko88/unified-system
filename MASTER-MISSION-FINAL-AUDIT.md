@@ -64,3 +64,7 @@ A8 checkpoint ac869aae independently verified PR26 source56f4215:59cases/zero sk
 A3 confirms no new lifecycle feature code and no own feature PR; existing baseline97-case result is not completion of distributed history/gap/ownership work. Full-feature human design approvals remain pending for A1/A3/A4. Confirmed safety defects are separately being investigated under the final directive.
 
 112 superseded queued CI runs on ROOT integration branch were cancelled after rechecking they were still queued and on older HEADs. Current1c05ce5 runs and all other owners were preserved; logs/plans are recorded. Cancellation is not acceptance or waiver. Subsequent documentary checkpoints do not inherit older hosted qualification.
+
+## A8-F12 metadata correction
+
+Ownership now distinguishes Agent8 historical audit head from actual PR21base/main b9b03a1. Current integration is PR26; original PR13 is retained only as historical component provenance. Unified module source pin explicitly identifies the exact integration snapshot preceding this documentary correction; it is not a self-referential package commit or final admitted RC. Revision5 also corrects existing Agent2 PR25 status and records A7 A2 dependency/current research follow-ups. Prior revision ACKs are not transferred. No runtime source changed; independent correction verification pending.

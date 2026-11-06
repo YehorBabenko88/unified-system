@@ -1,6 +1,6 @@
 {
   "schema": "unified.ownership.v1",
-  "revision": 4,
+  "revision": 5,
   "root_owner": "ROOT",
   "max_internal_subagents": 3,
   "execution": "EIGHT_EXISTING_USER_OWNED_THREADS_NO_DUPLICATE_INTERNAL_AGENTS",
@@ -60,9 +60,9 @@
       "repository": "unified-system",
       "branch": "feature/ha-authority-client-20261106",
       "worktree": "C:/Users/LS-5/.codex/worktrees/agent2-ha-authority-client-20261106/unified-system",
-      "draft_pr": null,
+      "draft_pr": 25,
       "base_head": "2df6f5c2f77f4d883bad1a8623dd8375db529be0",
-      "allocation_state": "PLANNED_NOT_CREATED",
+      "allocation_state": "EXISTING_PUBLISHED_FEATURE_WORKTREE_VERIFIED",
       "allowed_files": [
         "unified_system/ha_authority_client.py",
         "tests/test_ha_authority_client.py",
@@ -104,7 +104,8 @@
           "allowed_new_path_prefixes": [],
           "scope": "FIXTURE_ONLY_NO_PRODUCT_OR_ADMISSION_WEAKENING"
         }
-      ]
+      ],
+      "head": "0b3af3e872b49ed1848815f7f9ffd42444f89b24"
     },
     {
       "agent_id": "A3",
@@ -261,7 +262,8 @@
         "A3",
         "A4",
         "A5",
-        "A6"
+        "A6",
+        "A2"
       ],
       "ack": "PENDING",
       "rules": [
@@ -284,7 +286,9 @@
             "tests/research/test_agent7_research_replay.py",
             "docs/research/agent7-regression-evidence.json"
           ],
-          "allowed_new_path_prefixes": []
+          "allowed_new_path_prefixes": [],
+          "head": "1722244f42d5d71a29b89bdec0e7211f2b723158",
+          "draft_pr": 71
         },
         {
           "repository": "meta_analyse",
@@ -295,7 +299,9 @@
             "tests/test_agent7_ohlcv_research_contract.py",
             "docs/AGENT7_RESEARCH_CONTRACT_EVIDENCE.json"
           ],
-          "allowed_new_path_prefixes": []
+          "allowed_new_path_prefixes": [],
+          "head": "88b45c328bfdc8131ff0c6d139fddd8b27a4050c",
+          "draft_pr": 77
         }
       ],
       "head": "917d99672e37db59835a8ab23b03c99826b12d78"
@@ -307,7 +313,7 @@
       "branch": "audit/agent8-independent-acceptance-20261106",
       "worktree": "C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-8-independent-security-ci/work/unified-audit",
       "draft_pr": 21,
-      "base_head": "6f89abed0b18d8044c9b650c356916f244af6d39",
+      "base_head": "b9b03a1ce9f887dbe113fd22d0bda8932f46ef80",
       "allocation_state": "EXISTING_PUBLISHED_AUDIT_CHECKOUT_CONFIRMED",
       "allowed_files": [],
       "allowed_new_path_prefixes": [
@@ -330,7 +336,8 @@
         "No edit outside this worktree or concurrent physical test",
         "Send exact HEAD/tree, test inventory, CI run/attempt/jobs and SHA256 evidence"
       ],
-      "user_owned_thread_id": "01a1b15c-8c40-7f12-9dea-2f8c31e3dddc"
+      "user_owned_thread_id": "01a1b15c-8c40-7f12-9dea-2f8c31e3dddc",
+      "historical_audit_head_not_base": "6f89abed0b18d8044c9b650c356916f244af6d39"
     }
   ],
   "agreement_rule": "Producer and every consumer must ACK exact contract and ownership SHA before shared integration edits. No answer is not consent. Work independently in allowed harnesses until then.",
@@ -368,6 +375,6 @@
     ],
     "scope": "OWN_ALLOCATION_ONLY_NOT_TRANSFERRED_TO_REVISION_3"
   },
-  "supersedes_scope_only_not_ack_transfer": "22150f804b1b3a0d6e2047887585b1b550d189bb410fbc894ef566c553594ebe",
-  "fresh_ack_status": "PENDING_EXACT_REVISION4_OWN_SCOPE_ONLY"
+  "supersedes_scope_only_not_ack_transfer": "2415c81fb4099bad670312df1132cf398e70a11368eebf3c31d435626b349f38",
+  "fresh_ack_status": "PENDING_EXACT_REVISION5_NO_PRIOR_ACK_TRANSFER"
 }

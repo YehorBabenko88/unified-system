@@ -2,14 +2,14 @@
   "schema": "unified.final-integration-manifest.v1",
   "status": "PROVISIONAL_NOT_INSTALLABLE",
   "mode": "LAB_SIMULATION",
-  "source_pin_scope": "PINNED_SOURCE_BEFORE_AUDIT_DOCUMENTS_NOT_FINAL_RC",
+  "source_pin_scope": "EXACT_SOURCE_SNAPSHOTS_NOT_SELF_REFERENTIAL_DOCUMENT_COMMIT_NOT_FINAL_RELEASE",
   "modules": {
     "unified-system": {
       "repository": "YehorBabenko88/unified-system",
-      "head": "b76cf0774dcaca11716931a5ec4ea482e9f297b4",
-      "tree": "5179d0e1504715a7762d5bd054a9ca96513bc425",
-      "pr": 13,
-      "pr_url": "https://github.com/YehorBabenko88/unified-system/pull/13",
+      "head": "ca9e390203305c8662ddf98fb771ac0bd268ec49",
+      "tree": "dfcf0331e25da56c76a07d59bf6b84126534dff7",
+      "pr": 26,
+      "pr_url": "https://github.com/YehorBabenko88/unified-system/pull/26",
       "branch": "mission/final-integration-20261106",
       "candidate_status": "PARTIAL_CONSOLIDATION_NOT_RELEASE",
       "default_head": "b9b03a1ce9f887dbe113fd22d0bda8932f46ef80",
@@ -28,7 +28,8 @@
         "0b3af3e872b49ed1848815f7f9ffd42444f89b24",
         "8171eebd6bfbcc83fd82038c6d9f42d012ac822a",
         "2626e939a7ed44bfb37aa354490329a7260cc24b"
-      ]
+      ],
+      "source_pin_role": "EXACT_INTEGRATION_SOURCE_SNAPSHOT_PRECEDING_THIS_DOCUMENTARY_CORRECTION_NOT_FINAL_RC"
     },
     "bybit-cluster-grid": {
       "repository": "YehorBabenko88/bybit-cluster-grid",
@@ -139,10 +140,20 @@
   "physical_fault_injection_authorized": false,
   "tailscale_removal_authorized": false,
   "go": "NO-GO",
-  "ownership_registry_sha256": "2415c81fb4099bad670312df1132cf398e70a11368eebf3c31d435626b349f38",
+  "ownership_registry_sha256": "0ef0dde1f6b238e87b60e2e21eeb13466f6b5e39c3815d91b39890134c982bdd",
   "independent_audit_checkpoint": {
     "head": "ac869aae349483050f368cc59b76cbbedd8265e6",
     "scope": "PR26_SOURCE56f4215_AND_GRIDa17f1db_ONLY",
     "url": "https://github.com/YehorBabenko88/unified-system/tree/ac869aae349483050f368cc59b76cbbedd8265e6/docs/audits/agent8-20261106"
+  },
+  "historical_component_provenance": {
+    "pr": 13,
+    "head": "8aab34342d03900ab28e6f5b78acd7558239630c",
+    "role": "ORIGINAL_COMPONENT_NOT_CURRENT_INTEGRATION_PR"
+  },
+  "integration_pr": {
+    "number": 26,
+    "url": "https://github.com/YehorBabenko88/unified-system/pull/26",
+    "branch": "mission/final-integration-20261106"
   }
 }
