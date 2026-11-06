@@ -1,0 +1,84 @@
+{
+  "head": "0346018b58ed612dbe62fba7861f3e0b6a63ee94",
+  "tree": "c440a8f82db8dba9aa6ca743ce087ff84cacea69",
+  "original_component": "b12c6c24eeb2c59aa099f1c516d77508f36b20a6",
+  "eight_raw_git_paths_equal_original": {
+    "scripts/network_readonly_probe.ps1": "0e93c6bc207b41712dae31112c8f19af3ae68ae32b7840b16d218b790c22c0dc",
+    "tests/test_lan_probe_inventory.py": "c6bdb8862bc73f7450de16c0953e83510913c138c783954d090a68eb2296e2b2",
+    "tests/test_network_broker_boundary.py": "51651c8822108e662682d5a766b703e42e757590aba41da8ab02f37e3cd604cc",
+    "tests/test_network_deployment_guard.py": "35bb771f349eaf082a5447de24ffff1f68baf19ce443ea87a9bb008b522cbe02",
+    "tests/test_network_probe_transport.py": "b78d95b89d19c364fd62964622fab7c50f8719f82d0beb886013c8a1b06c84c8",
+    "unified_system/lan_probe_inventory.py": "6c7d61baa37225bf134102560858b68f4e97252b9cce04df0150af9ffecbca24",
+    "unified_system/network_deployment_guard.py": "de9d49de92daf00de466cbab7369ddcdbc7c55de784246d91a3e7df2b4452a52",
+    "unified_system/network_probe_transport.py": "5b84ca97f7bc59f86278f8ae2b841149215d16b3baa3022e8bfdeb3f3090a7c4"
+  },
+  "source_raw_pre_post": [
+    "0db3fb61a3da3250262736f9a18709575d61bd98df85fc9aec35fc06cda4d295",
+    "0db3fb61a3da3250262736f9a18709575d61bd98df85fc9aec35fc06cda4d295"
+  ],
+  "focused_tests": 57,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "derived_endpoint_negatives": [
+    {
+      "address": "100.64.0.1",
+      "result": "REJECTED_BEFORE_ANY_CONNECTION"
+    },
+    {
+      "address": "8.8.8.8",
+      "result": "REJECTED_BEFORE_ANY_CONNECTION"
+    },
+    {
+      "address": "127.0.0.1",
+      "result": "REJECTED_BEFORE_ANY_CONNECTION"
+    },
+    {
+      "address": "169.254.1.1",
+      "result": "REJECTED_BEFORE_ANY_CONNECTION"
+    },
+    {
+      "address": "224.0.0.1",
+      "result": "REJECTED_BEFORE_ANY_CONNECTION"
+    }
+  ],
+  "local_processes": [
+    {
+      "kind": "LOCAL_SSH_G_NO_CONNECT",
+      "argv_sha256": "83415e57138ed902b4d1ddaa0d96421fc697ac9e86dcec0c4eccf52603f3eec2"
+    },
+    {
+      "kind": "LOCAL_SSH_G_NO_CONNECT",
+      "argv_sha256": "2c7c81a68aba941aa8fd32bf2f40d4717eafe6141d628cfde5c1a48c6e21f2d5"
+    },
+    {
+      "kind": "LOCAL_INERT_PARSER",
+      "argv_sha256": "83510e2e17aa7d634b8d854fe773cc418f2d59822a7d528f53a79e26692f38ea"
+    },
+    {
+      "kind": "LOCAL_INERT_PARSER",
+      "argv_sha256": "97d289cfb1f14e4406eb0b4b22243c282caad2eebb1772eaaaba2434f5f73ee0"
+    },
+    {
+      "kind": "LOCAL_INERT_PARSER",
+      "argv_sha256": "257d1866757b992bda0432ee2cc3b1da3f6f98a23b9c76ca3292fec15d11fa25"
+    }
+  ],
+  "provider_boundary": {
+    "fixed_provider_GET_present": true,
+    "payload_observed_in_fake_runner": true,
+    "actual_provider_requests_by_auditor": 0,
+    "source_and_SSH_only_admission_allows_fixed_recipe_preparation": true,
+    "per_request_budget_policy_reservation_interface_in_reviewed_paths": "ABSENT",
+    "inert_bootstrap_compatible": false,
+    "required_operational_admission": "Separate exact provider policy/budget/usage/UNKNOWN gate required before invoking probe; source/endpoint/identity authorization alone is not provider quota authorization."
+  },
+  "network_repair_or_service_privilege_expansion_identified": "NONE_IN_EIGHT_PATHS",
+  "authority_roles": "SOURCE_INVENTORY_CALLBACKS_ARE_REQUIRED_EXTERNAL_TRUST_SEAMS_NOT_NATIVE_AUTHENTICATION_PROOF",
+  "remote_cleanup": "ONLY_MATCHED_OWN_HELPER_HANDLE_UNKNOWN_STICKY_NOT_HARD_REMOTE_KILL_GUARANTEE",
+  "actual_LAN_or_mTLS_or_route_independence": "NOT_RUN_NOT_QUALIFIED",
+  "office_commands_executed": false,
+  "network_connections_by_auditor": 0,
+  "native_services_or_acl_changes": false,
+  "overall": "NO_GO"
+}

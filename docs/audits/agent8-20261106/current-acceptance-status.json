@@ -1,5 +1,5 @@
 {
-  "checked_utc": "2026-11-06T18:54:56.057319+00:00",
+  "checked_utc": "2026-11-06T19:02:41.586277+00:00",
   "RELEASE_MANIFEST_STATUS": "PRESENT_PREPARATION_ONLY_NOT_APPROVED_NOT_INSTALLABLE",
   "NODE_INVENTORY_STATUS": "SIX_REDACTED_OWNER_OBSERVATIONS_PRESENT_ORIGINAL_RAW_NOT_REACQUIRED_BY_A8_NOT_ADMITTED",
   "CONTRACT_STATUS": {
@@ -180,6 +180,17 @@
       "no_acquire_default_custom_grace": "PASS",
       "scope": "SYNTHETIC_OFFLINE_EXACT_SOURCE_ONLY",
       "integration_deployment": "NOT_QUALIFIED"
+    },
+    "network_0346018": {
+      "head": "0346018b58ed612dbe62fba7861f3e0b6a63ee94",
+      "tree": "c440a8f82db8dba9aa6ca743ce087ff84cacea69",
+      "component_origin": "b12c6c24eeb2c59aa099f1c516d77508f36b20a6",
+      "focused_tests": 57,
+      "skips": 0,
+      "derived_endpoint_negatives": 5,
+      "scope": "RAW_SOURCE_AND_ISOLATED_POLICY_STATE_PARSER_MODELS_ONLY",
+      "provider_budget_admission": "NOT_WIRED_IN_REVIEWED_PATHS_F06_OPEN",
+      "actual_LAN_mTLS_runtime": "NOT_QUALIFIED"
     }
   },
   "WINDOWS_CI": "PENDING_CURRENT_DRAFTS; FAILED_BASELINE_MANDATORY_GATES_NOT_CLOSED",
@@ -190,14 +201,15 @@
   "P0_P1_P2": {
     "P0_confirmed_defects": 0,
     "P0_absence_proven": false,
-    "P1_open": 6,
+    "P1_open": 7,
     "P2_open": 1,
     "F08": "FIX_VERIFIED_OFFLINE",
     "F09": "FIX_VERIFIED_OFFLINE_AT_42686cd",
     "F10": "FIX_VERIFIED_OFFLINE_AT_42686cd",
     "F11": "FIX_VERIFIED_OFFLINE_AT_0b3af3e",
     "F12": "FIX_VERIFIED_DOCUMENTARY_EXACT_SOURCE",
-    "F13": "FIX_VERIFIED_OFFLINE_AT_ec967b3_OLD_SOURCE_UNSAFE_NOT_DEPLOYED"
+    "F13": "FIX_VERIFIED_OFFLINE_AT_ec967b3_OLD_SOURCE_UNSAFE_NOT_DEPLOYED",
+    "F14": "OPEN_PROVIDER_PROBE_FAIL_CLOSED_CORRECTION_REQUIRED"
   },
   "EVIDENCE": [
     "phase4/math-source-and-compile-review.json",
@@ -229,7 +241,9 @@
     "phase18/label-amendment-review.json",
     "phase18/source-review-ack.json",
     "phase19/run-review.json",
-    "phase20/design-checkpoint-review.json"
+    "phase20/design-checkpoint-review.json",
+    "phase21/network-source-review.json",
+    "phase21/provider-gap-review.json"
   ],
   "NEXT_ACTIONS": [
     "Review terminal exact-source Windows CI logs/artifacts when available; queued/cancelled is not PASS.",

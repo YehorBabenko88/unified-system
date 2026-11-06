@@ -45,7 +45,13 @@
     "repository": "all",
     "title": "Coherent physical acceptance unavailable",
     "evidence": "No independently verified coherent release manifest, real all-node cluster, fault-injection run or alternate-access recovery proof for this audit.",
-    "required_correction": "Integration Owner must publish immutable six-repo candidate and mandatory registry; obtain separate physical fault-injection authorization and execute acceptance."
+    "required_correction": "Integration Owner must publish immutable six-repo candidate and mandatory registry; obtain separate physical fault-injection authorization and execute acceptance.",
+    "provider_probe_followup": {
+      "head": "0346018b58ed612dbe62fba7861f3e0b6a63ee94",
+      "evidence": "phase21/network-source-review.json",
+      "gap": "Fixed Bybit time GET is provider traffic; no per-request provider budget/policy/usage interface in reviewed probe. Must remain operationally blocked until exact external admission/wiring qualified; incompatible with INERT_BOOTSTRAP.",
+      "actual_unauthorized_traffic": "NOT_OBSERVED_NO_AUDITOR_NETWORK_CALLS"
+    }
   },
   {
     "id": "A8-F07",
@@ -130,5 +136,16 @@
     "verified_fix_head": "ec967b3ebb67bb9f04d0d82c78bba5b4245a3333",
     "fix_evidence": "phase15/history-safeguard-review.json",
     "deployment_and_integration": "NOT_QUALIFIED_OLD_SOURCE_REMAINS_UNSAFE"
+  },
+  {
+    "id": "A8-F14",
+    "severity": "P1",
+    "repository": "unified-system",
+    "pr": 26,
+    "observed_head": "0346018b58ed612dbe62fba7861f3e0b6a63ee94",
+    "status": "OPEN_PENDING_EXACT_FIX_REVIEW",
+    "title": "Fixed provider probe starts network primitives without provider-budget adapter admission",
+    "evidence": "phase21/provider-gap-review.json: actual function AST with3network primitives replaced by counter+throw reaches DNS sentinel in3provider vectors; actual network calls0.",
+    "required_correction": "Fail closed fixed provider branch before DNS/TCP/HTTP; all4checksNOT_RUN and BYBIT_BUDGET_ADAPTER_NOT_ADMITTED. No env/caller-flag bypass, budgetmint/fallback/inert claim; retain frozen v1 guard denial and original assertions. Review exact source and native-free RED/GREEN."
   }
 ]
