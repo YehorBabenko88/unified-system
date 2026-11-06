@@ -1,0 +1,88 @@
+TAP version 13
+# Subtest: agent7 durable claim survives child loss after consumption
+ok 1 - agent7 durable claim survives child loss after consumption
+  ---
+  duration_ms: 91.8752
+  type: 'test'
+  ...
+# Subtest: agent7 child loss before consumption leaves an admissible retry
+ok 2 - agent7 child loss before consumption leaves an admissible retry
+  ---
+  duration_ms: 71.7351
+  type: 'test'
+  ...
+# Subtest: agent7 incomplete consumption marker stays conservatively consumed
+ok 3 - agent7 incomplete consumption marker stays conservatively consumed
+  ---
+  duration_ms: 4.2216
+  type: 'test'
+  ...
+# Subtest: agent7 concurrent retry has one winner without granting completion
+ok 4 - agent7 concurrent retry has one winner without granting completion
+  ---
+  duration_ms: 11.2213
+  type: 'test'
+  ...
+# Subtest: agent7 malformed replay keys are rejected without path interpretation
+ok 5 - agent7 malformed replay keys are rejected without path interpretation
+  ---
+  duration_ms: 1.5016
+  type: 'test'
+  ...
+# Subtest: agent7 ephemeral attempt filter does not claim durable fencing
+ok 6 - agent7 ephemeral attempt filter does not claim durable fencing
+  ---
+  duration_ms: 0.6217
+  type: 'test'
+  ...
+# Subtest: agent7 numerical replay agrees after cancelled worker and denies authority
+ok 7 - agent7 numerical replay agrees after cancelled worker and denies authority
+  ---
+  duration_ms: 252.7175
+  type: 'test'
+  ...
+# Subtest: agent7 loader timeout and process exit remain distinct diagnostic failures
+ok 8 - agent7 loader timeout and process exit remain distinct diagnostic failures
+  ---
+  duration_ms: 7.3406
+  type: 'test'
+  ...
+# Subtest: platform identity rejects omitted extra duplicate substituted and nested terminal mutations
+ok 9 - platform identity rejects omitted extra duplicate substituted and nested terminal mutations
+  ---
+  duration_ms: 7.5273
+  type: 'test'
+  ...
+# Subtest: platform identity rejects skip todo failed cancelled and fabricated summary-only success
+ok 10 - platform identity rejects skip todo failed cancelled and fabricated summary-only success
+  ---
+  duration_ms: 0.8149
+  type: 'test'
+  ...
+# Subtest: platform inventory preserves baseline1147 identities repeated titles nested children and cross3
+ok 11 - platform inventory preserves baseline1147 identities repeated titles nested children and cross3
+  ---
+  duration_ms: 519.3259
+  type: 'test'
+  ...
+# Subtest: platform coverage rejects absent duplicate extra cells wrong pins runtimes and event hashes
+ok 12 - platform coverage rejects absent duplicate extra cells wrong pins runtimes and event hashes
+  ---
+  duration_ms: 3.3042
+  type: 'test'
+  ...
+# Subtest: platform reporter captures actual repeated and nested terminals with final summary
+ok 13 - platform reporter captures actual repeated and nested terminals with final summary
+  ---
+  duration_ms: 183.1058
+  type: 'test'
+  ...
+1..13
+# tests 13
+# suites 0
+# pass 13
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 821.5887

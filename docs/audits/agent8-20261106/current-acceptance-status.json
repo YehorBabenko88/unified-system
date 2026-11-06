@@ -1,5 +1,5 @@
 {
-  "checked_utc": "2026-11-06T16:30:54.2451335Z",
+  "checked_utc": "2026-11-06T16:56:36.002753+00:00",
   "RELEASE_MANIFEST_STATUS": "PRESENT_PREPARATION_ONLY_NOT_APPROVED_NOT_INSTALLABLE",
   "NODE_INVENTORY_STATUS": "PRESENT_DECLARED_CANDIDATES_NOT_AUTHENTICATED_NOT_CAPACITY_ADMITTED",
   "CONTRACT_STATUS": {
@@ -14,9 +14,19 @@
   "OFFLINE_TESTS": {
     "status": "SELECTED_COMPONENT_PASS_ONLY",
     "Agent7": {
-      "Math112": 8,
+      "Math112": 13,
       "Strattester71": 41,
-      "Meta77": 24
+      "Meta77": 24,
+      "Math112_current_review": {
+        "head": "917d99672e37db59835a8ab23b03c99826b12d78",
+        "tree": "0e8c7a3712fbbcddee0e0c9e5b8d5f10f34bde69",
+        "scope": "WINDOWS_EXACT_LF_SELECTED_TESTS_AND_RAW_SOURCE_PRESERVATION",
+        "original_files": 188,
+        "native": "UNRESOLVED_NOT_RUN",
+        "linux_execution": "NOT_RUN_BY_A8",
+        "hosted_run": 42256450733,
+        "hosted_snapshot": "QUEUED"
+      }
     },
     "Agent5": {
       "component_tests": 15,
@@ -73,7 +83,8 @@
     "phase8/ci-source-tamper-probe.json",
     "phase9/f11-fix-review.md",
     "phase9/f11-independent-guards.json",
-    "phase9/checkout-conversion-review.json"
+    "phase9/checkout-conversion-review.json",
+    "phase10/math-registration-review.json"
   ],
   "NEXT_ACTIONS": [
     "Review terminal exact-source Windows CI logs/artifacts when available; queued/cancelled is not PASS.",
