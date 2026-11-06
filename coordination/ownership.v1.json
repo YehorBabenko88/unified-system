@@ -1,0 +1,275 @@
+{
+  "schema": "unified.ownership.v1",
+  "revision": 1,
+  "root_owner": "ROOT",
+  "max_internal_subagents": 3,
+  "execution": "EIGHT_EXISTING_USER_OWNED_THREADS_NO_DUPLICATE_INTERNAL_AGENTS",
+  "shared_files_owner": "ROOT",
+  "shared_paths": [
+    "coordination/",
+    "unified_system/contracts.py",
+    "unified_system/integration.py",
+    "unified_system/service_bootstrap.py",
+    "unified_system/service_activation.py",
+    "unified_system/service_source_admission.py",
+    "unified_system/operator_control_plane.py",
+    "unified_system/installer_security.py",
+    "grid/coordination.py",
+    "grid/coordination_commands.py",
+    "grid/network_budget_model.py",
+    "grid/network_budget_store.py"
+  ],
+  "agents": [
+    {
+      "agent_id": "A1",
+      "scope": "LAN and network load",
+      "repository": "unified-system",
+      "branch": "agent1/direct-lan-transport-20261106",
+      "worktree": "C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-1-direct-lan-transport/work/unified-system-lan-agent1",
+      "draft_pr": null,
+      "base_head": "b12c6c24eeb2c59aa099f1c516d77508f36b20a6",
+      "allocation_state": "PLANNED_NOT_CREATED",
+      "allowed_files": [
+        "unified_system/lan_transport.py",
+        "unified_system/network_budget.py",
+        "tests/test_lan_transport.py",
+        "tests/test_network_budget.py",
+        "docs/network/lan-transport-design.md"
+      ],
+      "allowed_new_path_prefixes": [],
+      "dependencies": [
+        "A2"
+      ],
+      "ack": "PENDING",
+      "rules": [
+        "Read current source before proposing edits; do not duplicate existing modules",
+        "Any existing file outside allowed_files requires explicit ROOT approval",
+        "No protected merge, deployment, data deletion, accounts/credentials or physical/network mutation",
+        "No edit outside this worktree or concurrent physical test",
+        "Send exact HEAD/tree, test inventory, CI run/attempt/jobs and SHA256 evidence"
+      ],
+      "user_owned_thread_id": "01a1b15d-1ac2-7742-ae74-cc5a482d717b"
+    },
+    {
+      "agent_id": "A2",
+      "scope": "Unified client of existing Grid Consul authority",
+      "repository": "unified-system",
+      "branch": "feature/ha-authority-client-20261106",
+      "worktree": "C:/Users/LS-5/.codex/worktrees/agent2-ha-authority-client-20261106/unified-system",
+      "draft_pr": null,
+      "base_head": "2df6f5c2f77f4d883bad1a8623dd8375db529be0",
+      "allocation_state": "PLANNED_NOT_CREATED",
+      "allowed_files": [
+        "unified_system/ha_authority_client.py",
+        "tests/test_ha_authority_client.py",
+        "tests/ha_acceptance/README.md",
+        "docs/architecture/unified-ha-authority-client.md"
+      ],
+      "allowed_new_path_prefixes": [],
+      "dependencies": [
+        "A1",
+        "A4",
+        "A5",
+        "A6"
+      ],
+      "ack": "PENDING",
+      "rules": [
+        "Read current source before proposing edits; do not duplicate existing modules",
+        "Any existing file outside allowed_files requires explicit ROOT approval",
+        "No protected merge, deployment, data deletion, accounts/credentials or physical/network mutation",
+        "No edit outside this worktree or concurrent physical test",
+        "Send exact HEAD/tree, test inventory, CI run/attempt/jobs and SHA256 evidence"
+      ],
+      "user_owned_thread_id": "01a1b15d-642e-78e1-870b-b8a2a9a7171b"
+    },
+    {
+      "agent_id": "A3",
+      "scope": "Market data lifecycle",
+      "repository": "bybit-cluster-grid",
+      "branch": "agent3/market-data-lifecycle-20261106",
+      "worktree": "C:/Users/LS-5/.codex/worktrees/agent3-market-data-lifecycle-20261106/bybit-cluster-grid",
+      "draft_pr": null,
+      "base_head": "d537d525296ef34f727996e240ae6c60102c6082",
+      "allocation_state": "PLANNED_NOT_CREATED",
+      "allowed_files": [],
+      "allowed_new_path_prefixes": [
+        "docs/market-data/agent3/",
+        "tests/test_market_data_lifecycle_"
+      ],
+      "dependencies": [
+        "A1",
+        "A4",
+        "A5",
+        "A7"
+      ],
+      "ack": "PENDING",
+      "rules": [
+        "Read current source before proposing edits; do not duplicate existing modules",
+        "Any existing file outside allowed_files requires explicit ROOT approval",
+        "No protected merge, deployment, data deletion, accounts/credentials or physical/network mutation",
+        "No edit outside this worktree or concurrent physical test",
+        "Send exact HEAD/tree, test inventory, CI run/attempt/jobs and SHA256 evidence"
+      ],
+      "user_owned_thread_id": "01a1b15d-b4b1-7e60-9ee8-1ac79d1813d5"
+    },
+    {
+      "agent_id": "A4",
+      "scope": "Storage and per-instrument integrity",
+      "repository": "unified-system",
+      "branch": "feature/storage-integrity-20261106",
+      "worktree": "C:/Users/LS-5/.codex/worktrees/agent4-storage-integrity-20261106/unified-system",
+      "draft_pr": null,
+      "base_head": "2df6f5c2f77f4d883bad1a8623dd8375db529be0",
+      "allocation_state": "PLANNED_NOT_CREATED",
+      "allowed_files": [],
+      "allowed_new_path_prefixes": [
+        "unified_system/storage/",
+        "tests/storage/",
+        "docs/storage/"
+      ],
+      "dependencies": [
+        "A2",
+        "A3",
+        "A5",
+        "A7"
+      ],
+      "ack": "PENDING",
+      "rules": [
+        "Read current source before proposing edits; do not duplicate existing modules",
+        "Any existing file outside allowed_files requires explicit ROOT approval",
+        "No protected merge, deployment, data deletion, accounts/credentials or physical/network mutation",
+        "No edit outside this worktree or concurrent physical test",
+        "Send exact HEAD/tree, test inventory, CI run/attempt/jobs and SHA256 evidence"
+      ],
+      "user_owned_thread_id": "01a1b15e-10ad-7d40-ada4-9a3e1451a7b6"
+    },
+    {
+      "agent_id": "A5",
+      "scope": "Distributed resource scheduler",
+      "repository": "unified-system",
+      "branch": "mission-final/scheduler-20261106",
+      "worktree": "C:/Users/LS-5/.codex/worktrees/mission-final-scheduler-20261106/unified-system",
+      "draft_pr": null,
+      "base_head": "8aab34342d03900ab28e6f5b78acd7558239630c",
+      "allocation_state": "PLANNED_NOT_CREATED",
+      "allowed_files": [],
+      "allowed_new_path_prefixes": [
+        "unified_system/resource_scheduler_",
+        "tests/test_resource_scheduler_"
+      ],
+      "dependencies": [
+        "A1",
+        "A2",
+        "A3",
+        "A4",
+        "A6",
+        "A7"
+      ],
+      "ack": "PENDING",
+      "rules": [
+        "Read current source before proposing edits; do not duplicate existing modules",
+        "Any existing file outside allowed_files requires explicit ROOT approval",
+        "No protected merge, deployment, data deletion, accounts/credentials or physical/network mutation",
+        "No edit outside this worktree or concurrent physical test",
+        "Send exact HEAD/tree, test inventory, CI run/attempt/jobs and SHA256 evidence"
+      ],
+      "user_owned_thread_id": "01a1b15e-92cf-7080-8745-7bcd80e5022f"
+    },
+    {
+      "agent_id": "A6",
+      "scope": "Distributed Terminan and operator UI",
+      "repository": "Terminan",
+      "branch": "mission-final/terminan-20261106",
+      "worktree": "C:/Users/LS-5/.codex/worktrees/mission-final-terminan-20261106/Terminan",
+      "draft_pr": null,
+      "base_head": "7ed3708df53c8850fd11fc8331440bdfee99aa3e",
+      "allocation_state": "PLANNED_NOT_CREATED",
+      "allowed_files": [],
+      "allowed_new_path_prefixes": [
+        "coordination_ack_a6",
+        "tests/test_distributed_control_"
+      ],
+      "dependencies": [
+        "A1",
+        "A2",
+        "A5",
+        "A7"
+      ],
+      "ack": "PENDING",
+      "rules": [
+        "Read current source before proposing edits; do not duplicate existing modules",
+        "Any existing file outside allowed_files requires explicit ROOT approval",
+        "No protected merge, deployment, data deletion, accounts/credentials or physical/network mutation",
+        "No edit outside this worktree or concurrent physical test",
+        "Send exact HEAD/tree, test inventory, CI run/attempt/jobs and SHA256 evidence"
+      ],
+      "user_owned_thread_id": "01a1b15e-db33-70e0-b49c-43ee2fd534f3"
+    },
+    {
+      "agent_id": "A7",
+      "scope": "Research Math and paper execution",
+      "repository": "math",
+      "branch": "mission/loader-facts-coarse-diagnostics",
+      "worktree": "C:/Users/LS-5/.codex/worktrees/mission-loader-facts-coarse-diagnostics/math",
+      "draft_pr": 111,
+      "base_head": "11c3c470ebec9f9fdb6ec1b69e77b7b8aeea653a",
+      "allocation_state": "EXISTING_ISOLATED_BRANCH_TO_REVALIDATE",
+      "allowed_files": [
+        "tests/adminit-loader-facts.windows.mjs"
+      ],
+      "allowed_new_path_prefixes": [
+        "coordination_ack_a7"
+      ],
+      "dependencies": [
+        "A3",
+        "A4",
+        "A5",
+        "A6"
+      ],
+      "ack": "PENDING",
+      "rules": [
+        "Read current source before proposing edits; do not duplicate existing modules",
+        "Any existing file outside allowed_files requires explicit ROOT approval",
+        "No protected merge, deployment, data deletion, accounts/credentials or physical/network mutation",
+        "No edit outside this worktree or concurrent physical test",
+        "Send exact HEAD/tree, test inventory, CI run/attempt/jobs and SHA256 evidence"
+      ],
+      "user_owned_thread_id": "01a1b15f-356d-7363-b6b8-6acfdb3de44f"
+    },
+    {
+      "agent_id": "A8",
+      "scope": "Independent security and acceptance",
+      "repository": "unified-system",
+      "branch": "audit/agent8-independent-acceptance-20261106",
+      "worktree": "C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-8-independent-security-ci/work/unified-system",
+      "draft_pr": 21,
+      "base_head": "6f89abed0b18d8044c9b650c356916f244af6d39",
+      "allocation_state": "PUBLISHED_AUDIT_PR_WORKTREE_PATH_TO_CONFIRM",
+      "allowed_files": [],
+      "allowed_new_path_prefixes": [
+        "docs/audits/agent8-20261106/"
+      ],
+      "dependencies": [
+        "A1",
+        "A2",
+        "A3",
+        "A4",
+        "A5",
+        "A6",
+        "A7"
+      ],
+      "ack": "PENDING",
+      "rules": [
+        "Read current source before proposing edits; do not duplicate existing modules",
+        "Any existing file outside allowed_files requires explicit ROOT approval",
+        "No protected merge, deployment, data deletion, accounts/credentials or physical/network mutation",
+        "No edit outside this worktree or concurrent physical test",
+        "Send exact HEAD/tree, test inventory, CI run/attempt/jobs and SHA256 evidence"
+      ],
+      "user_owned_thread_id": "01a1b15c-8c40-7f12-9dea-2f8c31e3dddc"
+    }
+  ],
+  "agreement_rule": "Producer and every consumer must ACK exact contract and ownership SHA before shared integration edits. No answer is not consent. Work independently in allowed harnesses until then.",
+  "unallocated_existing_files": "READ_ONLY_UNTIL_ROOT_ALLOCATION",
+  "historical_workstreams": "Earlier CODEX_WORKSTREAMS.md and historical ADMINIT plans are not current edit authority."
+}

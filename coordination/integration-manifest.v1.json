@@ -1,0 +1,68 @@
+{
+  "schema": "unified.integration-manifest.v1",
+  "revision": 1,
+  "profile": "AUDIT_BASELINE_NOT_INTEGRATED_RELEASE",
+  "mode": "LAB_SIMULATION",
+  "modules": {
+    "unified-system": {
+      "repository": "YehorBabenko88/unified-system",
+      "head": "8aab34342d03900ab28e6f5b78acd7558239630c",
+      "tree": "d491dfa26d31561892232de7425eb75816b842d4",
+      "pr": 13,
+      "pr_url": "https://github.com/YehorBabenko88/unified-system/pull/13",
+      "branch": "mission3/runtime-predeploy-20261031"
+    },
+    "bybit-cluster-grid": {
+      "repository": "YehorBabenko88/bybit-cluster-grid",
+      "head": "9c6113421024777a988ba69bf2dd1f79bd712130",
+      "tree": "fc84a0363f177a2a9a44cacff872e582897f7e4c",
+      "pr": 254,
+      "pr_url": "https://github.com/YehorBabenko88/bybit-cluster-grid/pull/254",
+      "branch": "mission3/cluster-predeploy-20261031"
+    },
+    "strattester": {
+      "repository": "YehorBabenko88/strattester",
+      "head": "25eb939f8a816a80ac7c042ce75ec4d9173cd4ce",
+      "tree": "29c8bf9b4a607291d845e3026904074a33480373",
+      "pr": 70,
+      "pr_url": "https://github.com/YehorBabenko88/strattester/pull/70",
+      "branch": "mission3/ci-diagnostics-20261031"
+    },
+    "math": {
+      "repository": "YehorBabenko88/math",
+      "head": "5721987a15d20c3f9984d52eac4446704566d4b9",
+      "tree": "4dfced3be2ee08fa8a33cead814bb0b92bc5bdcd",
+      "pr": 110,
+      "pr_url": "https://github.com/YehorBabenko88/math/pull/110",
+      "branch": "mission3/pinned-browser-host-20261031"
+    },
+    "meta_analyse": {
+      "repository": "YehorBabenko88/meta_analyse",
+      "head": "2c4db055e56e36384a2661d443f9abc7b2331e90",
+      "tree": "20b1e615f6035b7b4fc83e6115eba2984900f47e",
+      "pr": 76,
+      "pr_url": "https://github.com/YehorBabenko88/meta_analyse/pull/76",
+      "branch": "mission3/meta-ci-evidence-20261031"
+    },
+    "Terminan": {
+      "repository": "YehorBabenko88/Terminan",
+      "head": "7ed3708df53c8850fd11fc8331440bdfee99aa3e",
+      "tree": "96963f7e749e73c8c81e7650bdee4f2a0a05923a",
+      "pr": 68,
+      "pr_url": "https://github.com/YehorBabenko88/Terminan/pull/68",
+      "branch": "mission3/runtime-dashboard-20261031"
+    }
+  },
+  "contracts_sha256": "ca0fc0b246e3c8da0d7b5128e7f7d132e453c4be09d9b3029d592864e01ba810",
+  "ownership_sha256": "14614ed31b0c50f2bf61dbb1bfe3a20156731276948ac7046a91e0fbc89bc656",
+  "repository_audit_sha256": "42e25087ad5570148e96ecc809ac98cdd99d0b8a9c2a6ad4038ec87ad92a9d6d",
+  "matrix_sha256": "5ae35cb7afb00034188e7cbfc7605382629ccf0be8a281b6a8fdc17425656f24",
+  "runtime_admission": "BLOCKED",
+  "requirements": [
+    "Exact module HEAD AND tree must match; missing/extra modules rejected",
+    "Source/provenance and current exact-head required jobs must be independently verified",
+    "Proposed contract ACKs, integrated runtime and owner-authorized physical gates required",
+    "Identity matching is not permission to execute/deploy; current configuration remains NO-GO"
+  ],
+  "mandatory_gates_sha256": "ef5df0d08346b38529372af57bb7b9f13161e5a4005f877910a339e0c92475a8"
+}
