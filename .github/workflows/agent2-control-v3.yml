@@ -1,0 +1,59 @@
+name: Agent2 experimental ControlV3 read boundary
+on:
+  pull_request:
+    paths:
+      - unified_system/control_v3_boundary.py
+      - unified_system/control_v3_read_adapter.py
+      - tests/test_control_v3_boundary.py
+      - tests/control_v3/**
+      - docs/architecture/control-v3-read-boundary.md
+      - .github/workflows/agent2-control-v3.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-loopback-fixture:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      EXPECTED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      GIT_CONFIG_COUNT: '2'
+      GIT_CONFIG_KEY_0: core.autocrlf
+      GIT_CONFIG_VALUE_0: 'false'
+      GIT_CONFIG_KEY_1: core.eol
+      GIT_CONFIG_VALUE_1: lf
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - name: Exact source and46 isolated cases
+        shell: python
+        run: |
+          import os,pathlib,subprocess,sys
+          p=pathlib.Path(os.environ['RUNNER_TEMP'],'control-v3-source')
+          subprocess.run([sys.executable,'tests/control_v3/source_runner.py','--expected',os.environ['EXPECTED_SHA'],'--output',str(p)],check=True)
+      - name: Negative raw source controls in independent clone
+        shell: python
+        run: |
+          import os,pathlib,subprocess,sys
+          p=pathlib.Path(os.environ['RUNNER_TEMP'],'control-v3-probes')
+          subprocess.run([sys.executable,'tests/control_v3/source_runner.py','--expected',os.environ['EXPECTED_SHA'],'--probe-scratch',str(p)],check=True)
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: experimental-control-v3-${{ matrix.os }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/control-v3-source/*.json
+            ${{ runner.temp }}/control-v3-source/tests.log
+            ${{ runner.temp }}/control-v3-source/tests.xml
+            ${{ runner.temp }}/control-v3-probes/evidence.json
+          if-no-files-found: error
