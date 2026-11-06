@@ -1,5 +1,5 @@
 {
-  "checked_utc": "2026-11-06T19:06:48.939936+00:00",
+  "checked_utc": "2026-11-06T19:12:21.917288+00:00",
   "RELEASE_MANIFEST_STATUS": "PRESENT_PREPARATION_ONLY_NOT_APPROVED_NOT_INSTALLABLE",
   "NODE_INVENTORY_STATUS": "SIX_REDACTED_OWNER_OBSERVATIONS_PRESENT_ORIGINAL_RAW_NOT_REACQUIRED_BY_A8_NOT_ADMITTED",
   "CONTRACT_STATUS": {
@@ -216,6 +216,22 @@
       "hosted": "NOT_QUALIFIED",
       "physical": "BLOCKED",
       "overall": "NO_GO"
+    },
+    "Meta_gate_diagnosis": {
+      "head": "88b45c328bfdc8131ff0c6d139fddd8b27a4050c",
+      "pure_guard_tests": 48,
+      "skips": 0,
+      "historical_cause": "PRODUCER_SKIP_ALLOWLIST_FIXED_BEFORE_PR77",
+      "current_Windows_job": "127988651137_SUCCESS_EXACT_SOURCE",
+      "full_workflow": "NOT_QUALIFIED",
+      "mandatory_skip_policy": "NO_NEW_WAIVER_FROM_A8"
+    },
+    "Stratt_system_gate_diagnosis": {
+      "head": "1722244f42d5d71a29b89bdec0e7211f2b723158",
+      "forged_all_PASS": "BLOCKED_SEVEN_EXTERNAL_FACTS",
+      "native_grid_export": "BLOCKED_BEFORE_IO",
+      "system_acceptance": "BLOCKED",
+      "new_confirmed_A8_P0": "NONE_FROM_THIS_REVIEW"
     }
   },
   "WINDOWS_CI": "PENDING_CURRENT_DRAFTS; FAILED_BASELINE_MANDATORY_GATES_NOT_CLOSED",
@@ -270,7 +286,8 @@
     "phase21/network-source-review.json",
     "phase21/provider-gap-review.json",
     "phase22/provider-closed-review.json",
-    "phase22/provider-gap-review.json"
+    "phase22/provider-gap-review.json",
+    "phase23/gate-diagnosis-review.json"
   ],
   "NEXT_ACTIONS": [
     "Review terminal exact-source Windows CI logs/artifacts when available; queued/cancelled is not PASS.",

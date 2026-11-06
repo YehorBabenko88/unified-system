@@ -1,0 +1,66 @@
+{
+  "Meta_head": "88b45c328bfdc8131ff0c6d139fddd8b27a4050c",
+  "Stratt_head": "1722244f42d5d71a29b89bdec0e7211f2b723158",
+  "raw_git_source_pre_post": [
+    {
+      "Meta": "50fe3e050a6b350943d6a77d5ef3539b00874ce6d48723465185ff5662101286",
+      "Stratt": "74348dbddd82d40dac943ed01e9fe23bb741b74d0f5a412f14143be886e153ae"
+    },
+    {
+      "Meta": "50fe3e050a6b350943d6a77d5ef3539b00874ce6d48723465185ff5662101286",
+      "Stratt": "74348dbddd82d40dac943ed01e9fe23bb741b74d0f5a412f14143be886e153ae"
+    }
+  ],
+  "artifact_sha256_matches_primary_API": true,
+  "artifact_members_hash_verified": 14,
+  "historical_JUnit_cases": 3019,
+  "historical_skipped_identity": "case_a2e39e55d3db11ee9cef3d3b524d33669736faec8caba9d76014f22816f3950b",
+  "historical_failure": "COLLECTION_PRODUCER_OMITS_EXISTING_PLATFORM_SKIP_NOT_PARSER_FAILURE",
+  "parser_projector_unchanged": true,
+  "fix_ancestors_of_approved_base": true,
+  "causal_single_case": [
+    {
+      "producer": "historical",
+      "outcome": "REJECTED",
+      "count": null,
+      "allowed_skips": []
+    },
+    {
+      "producer": "current",
+      "outcome": "ACCEPTED",
+      "count": 1,
+      "allowed_skips": [
+        "case_a2e39e55d3db11ee9cef3d3b524d33669736faec8caba9d76014f22816f3950b"
+      ]
+    }
+  ],
+  "current_meta_guard_tests": 48,
+  "guard_skips": 0,
+  "current_windows_job_success_verified": 127988651137,
+  "current_windows_source": "88b45c328bfdc8131ff0c6d139fddd8b27a4050c",
+  "current_job_JUnit_accounting": "3122PASS_1EXISTING_PLATFORM_SKIP_3123IDENTITIES",
+  "log_api_fallbacks_to_hash_verified_retained_original": [],
+  "full_meta_workflow_acceptance": "NOT_QUALIFIED",
+  "Stratt_all_pass_claims": "BLOCKED_7EXTERNAL_FACTS_UNIMPLEMENTED",
+  "Stratt_native_export": "BLOCKED_BEFORE_IO",
+  "Stratt_system_acceptance": "BLOCKED",
+  "A7_P0_labels": "NOT_ADOPTED_AS_NEW_A8_CONFIRMED_DEFECTS",
+  "scope": "SELECTED_ORIGINAL_EVIDENCE_PURE_GUARDS_AND_SOURCE_ONLY",
+  "physical": "BLOCKED",
+  "overall": "NO_GO",
+  "primary_job_log_retrieval": [
+    {
+      "job": 126034506020,
+      "sha256": "cd4140ecf034b63404d7cbecc3f785f3134ba64ca940f8a2b7057ade73a46fd7",
+      "bytes": 72888,
+      "primary_API_raw_equals_retained": true
+    },
+    {
+      "job": 127988651137,
+      "sha256": "e5a6cc909cc15e1344d9f922fb695d3ec54d2261bc78961e7000de718f6486ba",
+      "bytes": 103293,
+      "primary_API_raw_equals_retained": true
+    }
+  ],
+  "initial_log_cli_refusal": "Terminal escape rendering protection; raw bytes captured with explicit flag, never rendered/executed."
+}
