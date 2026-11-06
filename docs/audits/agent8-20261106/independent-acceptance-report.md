@@ -1,4 +1,4 @@
-> Latest update: [F08 fix review](phase3/f08-fix-review.md). F08 fixed at exact c0965c5; current open findings: 6 P1 and 1 P2. Overall NO-GO; physical and Tailscale removal BLOCKED. Earlier snapshots below are historical.
+> Latest update: [Current independent review](independent-current-review.md). Current open findings:6 P1/1 P2; F08/F09/F10 fixes verified offline at explicit source pins. Overall NO-GO; physical/Tailscale removal BLOCKED. Earlier snapshots are historical.
 
 # Independent security, CI and physical acceptance — Agent 8
 

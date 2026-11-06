@@ -65,5 +65,31 @@
     "status": "FIX_VERIFIED_OFFLINE_EXACT_SOURCE",
     "verified_fix_head": "c0965c5612227662d3673820865aeee703cb5452",
     "fix_evidence": "phase3/f08-recheck.json; phase3/registry-regression.log"
+  },
+  {
+    "id": "A8-F09",
+    "severity": "P2",
+    "repository": "Terminan",
+    "pr": 69,
+    "title": "Dataset NO_QUORUM snapshot leaves LIVE",
+    "observed_head": "166b85e888d7d0ade24bd945761ad501a94e060c",
+    "status": "FIX_VERIFIED_OFFLINE_EXACT_SOURCE",
+    "verified_fix_head": "42686cd8fafcefaed3c5df5adaee5173d27543fd",
+    "original_evidence": "phase7/sync-independent-faults.json",
+    "fix_evidence": "phase7/sync-fixed-probes.json",
+    "required_correction": "Source fix verified; hosted/runtime qualification remains separate."
+  },
+  {
+    "id": "A8-F10",
+    "severity": "P2",
+    "repository": "Terminan",
+    "pr": 69,
+    "title": "Synchronous subscription error overwrites disconnect",
+    "observed_head": "166b85e888d7d0ade24bd945761ad501a94e060c",
+    "status": "FIX_VERIFIED_OFFLINE_EXACT_SOURCE",
+    "verified_fix_head": "42686cd8fafcefaed3c5df5adaee5173d27543fd",
+    "original_evidence": "phase7/sync-independent-faults.json",
+    "fix_evidence": "phase7/sync-fixed-probes.json",
+    "required_correction": "Source fix verified; hosted/runtime qualification remains separate."
   }
 ]

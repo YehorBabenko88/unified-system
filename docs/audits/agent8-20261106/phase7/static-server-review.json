@@ -1,0 +1,39 @@
+{
+  "head": "166b85e888d7d0ade24bd945761ad501a94e060c",
+  "scope": "OWNED_LOOPBACK_STATIC_HANDLER_ONLY",
+  "cases": [
+    {
+      "case": "asset",
+      "expected": 200,
+      "actual": 200
+    },
+    {
+      "case": "unknown_api",
+      "expected": 404,
+      "actual": 404
+    },
+    {
+      "case": "path_traversal",
+      "expected": 404,
+      "actual": 404
+    },
+    {
+      "case": "mutation",
+      "expected": 501,
+      "actual": 501
+    },
+    {
+      "case": "foreign_host",
+      "expected": 403,
+      "actual": 403
+    },
+    {
+      "case": "foreign_origin",
+      "expected": 403,
+      "actual": 403
+    }
+  ],
+  "server_stopped": true,
+  "runtime_api": "ABSENT",
+  "physical": "BLOCKED"
+}

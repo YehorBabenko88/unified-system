@@ -1,0 +1,42 @@
+{
+  "head": "787c862568eb47177c21393338e743ec01b5f45f",
+  "tree": "bc815723d7961a5a956565f14c53c3ed5fe73c8a",
+  "base": "2df6f5c2f77f4d883bad1a8623dd8375db529be0",
+  "changed_files": [
+    ".github/workflows/agent5-components.yml",
+    "docs/scheduler/components-plan.md",
+    "docs/scheduler/components.md",
+    "scheduler_components/__init__.py",
+    "scheduler_components/authority_boundary.py",
+    "scheduler_components/placement.py",
+    "scheduler_components/schedules.py",
+    "tests/test_agent5_scheduler_components.py"
+  ],
+  "claimed_additive_scope_matches": true,
+  "raw_tree_sha256": "1e344d963e25275f6b620bcabcf51b3e91d4b87592bb9ec8fbc5a4707a52e681",
+  "probes": {
+    "independent_resource_boundaries": "PASS",
+    "all_six_permutations_same_advisory_candidate": "PASS",
+    "reservation_monotonicity_100_cases": "PASS",
+    "bad_snapshot_never_selected": "PASS",
+    "dst_iterator_and_draining": "PASS",
+    "nine_mutations_ignore_caller_payload_and_deny": "PASS"
+  },
+  "component_imports": {
+    "authority_boundary.py": [],
+    "placement.py": [
+      "dataclasses",
+      "fractions"
+    ],
+    "schedules.py": [
+      "datetime",
+      "zoneinfo"
+    ],
+    "__init__.py": []
+  },
+  "result": "PASS_COMPONENT_ONLY",
+  "runtime_authority": "SAFETY_GATE_CLOSED",
+  "physical": "BLOCKED",
+  "full_api_ACK": "NOT_GRANTED",
+  "Windows_CI": "PENDING_ORIGINAL_RECEIPTS"
+}
