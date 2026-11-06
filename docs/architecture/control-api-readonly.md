@@ -57,3 +57,12 @@ Run `python -m unittest discover -s tests -p test_control_api_readonly.py -v`.
 Tests exercise real WSGI responses and negative inputs without starting a service.
 The dedicated Linux/Windows matrix qualifies only this P0 component; it is not
 physical HA, Windows identity, real Control API integration or production acceptance.
+
+CI requires the exact expected HEAD, a clean tracked checkout, and raw byte equality
+against Git blobs for this workflow, test, implementation, document and imported
+package initializer before and after tests. Checkout line-ending conversion is
+disabled; mismatched raw bytes fail rather than being normalized into acceptance.
+The receipt includes both source hash sets, the exact 16 mandatory test IDs/count,
+zero skips and the original UTF-8 test-log SHA256. A matching HEAD alone is
+insufficient: harmless tracked edits, including skip-worktree-hidden edits, must
+fail. Run/attempt metadata only correlates evidence; it is not hosted attestation.
