@@ -1,0 +1,23 @@
+name: Agent 5 isolated components
+on:
+  push:
+    branches: [feature/agent5-scheduler-components-20261106]
+  pull_request:
+    paths:
+      - 'scheduler_components/**'
+      - 'tests/test_agent5_scheduler_components.py'
+      - 'docs/scheduler/**'
+      - '.github/workflows/agent5-components.yml'
+permissions:
+  contents: read
+jobs:
+  components-windows:
+    runs-on: windows-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install tzdata==2026.6
+      - run: python -m unittest discover -s tests -p test_agent5_scheduler_components.py -v
