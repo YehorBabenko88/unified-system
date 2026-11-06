@@ -91,5 +91,16 @@
     "original_evidence": "phase7/sync-independent-faults.json",
     "fix_evidence": "phase7/sync-fixed-probes.json",
     "required_correction": "Source fix verified; hosted/runtime qualification remains separate."
+  },
+  {
+    "id": "A8-F11",
+    "severity": "P2",
+    "repository": "unified-system",
+    "pr": 25,
+    "title": "CI head-only guard accepts changed tracked source",
+    "observed_head": "320b5d0894019d72aa8927dc5c4246d28c6e5f3c",
+    "status": "OPEN",
+    "evidence": "phase8/ci-source-tamper-probe.json",
+    "required_correction": "Expected clean source/blob binding before and after tests; source/log hashes and exact mandatory case/count/no-skip evidence."
   }
 ]

@@ -1,4 +1,4 @@
-> Latest update: [Current independent review](independent-current-review.md). Current open findings:6 P1/1 P2; F08/F09/F10 fixes verified offline at explicit source pins. Overall NO-GO; physical/Tailscale removal BLOCKED. Earlier snapshots are historical.
+> Latest update: [A2 P0 bounded review](phase8/control-api-review.md). Current open findings:6 P1/2 P2; F11 CI source binding remains open. Component tests do not grant hosted/runtime/physical acceptance. Overall NO-GO.
 
 # Independent security, CI and physical acceptance — Agent 8
 

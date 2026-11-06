@@ -1,3 +1,5 @@
+> Later bounded review: [A2 PR25 / F11](phase8/control-api-review.md). Current open findings:6 P1/2 P2; this earlier checkpoint below is retained as historical evidence.
+
 # Independent component and preparation review — current checkpoint
 
 **GO_NO_GO: NO-GO. PHYSICAL_TESTS: BLOCKED. TAILSCALE_REMOVAL: BLOCKED.**
