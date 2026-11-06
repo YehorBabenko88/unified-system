@@ -349,5 +349,29 @@
     "evidence_scope": "ISOLATED_MODEL_NOT_RUNTIME_EXPLOIT",
     "next": "A2 new immutable revision with RED/GREEN and cross-language vectors, fresh A1 A6 review",
     "runtime_admission": "BLOCKED"
+  },
+  "closed_mux_review4": {
+    "package": "release/contracts/control-mux-closed-review4/MANIFEST.json",
+    "manifest_raw_sha256": "1c1f0311db7204bd47cb758e7e4e4fe2d7723f7d59e90bd13b52f6fb8b1f83c3",
+    "verified_manifest_members": 27,
+    "fresh_peer_acks": [
+      {
+        "path": "release/contracts/control-mux-closed-review4/agent1-scoped-ack.json",
+        "raw_sha256": "55953d5768db51caf6b4f91325b45da0f06011c3fc0cc074b0f4b2f82d0a7d7b"
+      },
+      {
+        "path": "release/contracts/control-mux-closed-review4/agent6-scoped-ack.json",
+        "raw_sha256": "754e55e2ac89ce0d1b7ee8f8146db8bddd530cddf62729d30de57f1cb7150e2e"
+      }
+    ],
+    "ack_scope": "CLOSED_SCHEMA_CANONICAL_OPERATION_COUNTER_NODE_HOST_MODELS_ONLY",
+    "root_scope": "RAW_PACKAGE_AND_ACK_HASH_VERIFICATION_NOT_INDEPENDENT_MODEL_REEXECUTION",
+    "previous_findings": "RESOLVED_IN_A1_A6_REVIEWED_MODEL_SCOPE_PRIOR_EVIDENCE_PRESERVED",
+    "domain_compatibility": "PENDING_A3_A4_A5_A7_EXACT_UNITS_SCALE_GRAMMAR_LINEAGE",
+    "browser_adapter": "NOT_QUALIFIED_NODE_ONLY_PROXY_DETECTION",
+    "endpoint_admission": "NOT_GRANTED",
+    "runtime_admission": "BLOCKED",
+    "real_provider_sends": "BLOCKED",
+    "physical_deployment": "BLOCKED"
   }
 }

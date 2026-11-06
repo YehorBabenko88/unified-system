@@ -1,0 +1,51 @@
+{
+  "schema": "agent1.control-mux-closed-review4-review.v1",
+  "decision": "FRESH_EXACT_BYTE_SCOPED_TRANSPORT_SCHEMA_CODEC_MODEL_ACK",
+  "prior_ack_transferred": false,
+  "raw_pins": {
+    "MANIFEST.json": "1c1f0311db7204bd47cb758e7e4e4fe2d7723f7d59e90bd13b52f6fb8b1f83c3",
+    "control-mux-closed.schema.json": "335cda8e5d451fd9ab90586b6f6a4d6fbaf5f52eabb5a11762d9100ed92fefdf",
+    "codec-bounds.json": "be9a0eb518ab14683cbb8e002e18f05e03d948b8c5d1537d635736bde8789203",
+    "PROTOCOL.md": "8737de43f8cd422ea40bf30140f2d5149cd2f978955561c07fb8b3c6a6c604aa",
+    "operation-result-matrix.json": "104039ed4383ad9bd34c25aaa5e73cf7bc1606f7d789a82a1962ebe40e65d6cd"
+  },
+  "manifest": "ALL_RAW_FILE_LENGTHS_HASHES_VERIFIED_ORIGINAL_PACKAGE_UNCHANGED_AFTER_REVIEW",
+  "independent_execution": {
+    "environment": "Windows Python3.12/jsonschema4.23.0 +Nodev24.22.1",
+    "source": "exact published raw files copied to OWN SCRATCH; original generator not run or changed",
+    "model_checks": 69,
+    "cross_language_decoder_direct_writer_boundary_cases": 28,
+    "node_host_value_cases": 24,
+    "getter_calls": 0,
+    "proxy_traps": 0,
+    "qualification": "SYNTHETIC_MODELS_ONLY_NOT_ENDPOINT_NATIVE_OR_LOAD_PROOF"
+  },
+  "resolved_findings": [
+    "A1-CLOSED-R1-01 operation/state/status/result matrix and durable body/Open equality retained",
+    "A1-CLOSED-R2-01 shared container-only depth and original exactA1probe",
+    "A6-CLOSED-R2-02 keys+values node count and original exactA6probe",
+    "A1-CLOSED-R3-01 dense own data descriptor snapshot; no skipped holes/invalid JSON",
+    "A6 overridden-forEach/inherited index cases reject; no input instance iteration or prototype fill"
+  ],
+  "verified_scope": [
+    "Closed schema/request/result/frame/error structure and original full command/requestUUID binding reviewed",
+    "All5original operation RED cases still reject",
+    "12/13depth,32768/32769nodes,key/member/string/array/raw-byte boundaries retained",
+    "Encoded token byte budget checked before final aggregate buffer allocation",
+    "Sparse/allholes/partialholes/extra/symbol/hidden/accessor/proxy/unsupported host values reject; dense/frozen data roundtrip",
+    "Original corrigendum cursor/bootstrap, immutable global request index and failclosed ambiguity preserved as design requirements"
+  ],
+  "remaining_important_or_critical_in_reviewed_scope": 0,
+  "scope_limits": [
+    "Node host-value helper is Node-specific; no browser-codec qualification or protection from global intrinsic tampering claimed",
+    "C3 numeric ban/domain array32/string16384 are NEW opt-in profile; no A3/A4/A5/A7 exact units/scale/grammar/lineage/root ACK, coercion or old schema/root/cursor compatibility inferred",
+    "Smaller frame/request/domain bounds remain conjunctive; canonical codec2MiB is not mux frame allowance",
+    "No real consistent authority reads/atomic native ownership/delegation/global slot-byte-encoder ledger/containment admission",
+    "No measured8physical9logical intermodule/load or LAN/Tailscale-off/hostedCI/physical acceptance",
+    "No implicit carriage of large mux SSE inside Agent164KiB LAN frames"
+  ],
+  "final_runtime_abi_admission": false,
+  "runtime_provider_physical": "NO_GO",
+  "shared_frozen_PR31_product_files_changed": false,
+  "full_lan_suite": "NOT_RERUN"
+}
