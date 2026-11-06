@@ -1,0 +1,60 @@
+{
+  "reviewer": "Agent5",
+  "proposal": "unified.authority.event-ordered.v3 review1",
+  "input_sha256": {
+    "proposal": "d9d02baec67d5efbdb3124626d6e9d017cc9d5a2d19025f9293f4cc9f789a8d5",
+    "traceability": "66d317091a69817aa6790d0fe3f9d4b9339e2b2c268033ac1990a314883b0880",
+    "trace_evidence": "64a83ea87016d756be0eb7b612b11379392763f2522efc29c12d3e02e5484295"
+  },
+  "verdict": "FRESH_SCOPED_SEMANTIC_COMPATIBILITY_ACK_NEW_V3_PROPOSAL",
+  "requirement_provenance": {
+    "scope": "Direct owner instructions visible in Agent5 chat plus exact A2 bounded review; not an independent search of all master attachments.",
+    "direct_owner_invariants": [
+      "assignment_revision monotonic within job/partition scope; separate authority lease_epoch; incarnation is identity not authority.",
+      "Agent2 sole authority/fencing/epochs/supersession; Agent4 storage budgets/atomic publication; Agent5 placement/resource reservations.",
+      "Stale observations block new assignments; no-quorum blocks new quorum-dependent assignments/supersession.",
+      "Commit checks current assignment revision, lease epoch, fencing token and reservation.",
+      "Supersession/publication share one authority order; no expiry precheck followed by unprotected write.",
+      "Test reservation-before-lease and lease-before-reservation expiry; PC1 schedule/civil time requirements remain."
+    ],
+    "correction": "Agent5 authored F03/F04 exact t=100 rejection and half-open wall-clock-at-linearization semantics in a proposed INTEGRATION_PENDING spec. Those are not proof of a direct owner-approved physical serialization-time requirement. Earlier attribution of that stronger assumption as an established user mandate was too strong.",
+    "owner_instruction_violated_by_versioned_v3": "None identified in the direct instructions available here, provided lease/reservation expiry is explicitly defined as committed authority invalidation in the NEW profile, civil deadlines remain separately enforced and no old contract is silently reinterpreted."
+  },
+  "accepted_semantics": [
+    "Single existing Consul/Raft authority; majority required; cached observations/heartbeats/local SQLite never grant rights.",
+    "Check exact current generation, leader session/index AND actual lease session binding/index plus assignment/grant/target registration and resource revisions in one transaction.",
+    "Committed lease or reservation invalidation/revocation before publication rejects every old effect even without a successor; publication first retains historical receipt/debit.",
+    "Renew/supersede/terminal transitions change the same checked grant/assignment records; old grant versions cannot publish after those transitions.",
+    "One bounded atomic closure/eligibility/coverage/allocation/debit/checkpoint/outbox/receipt boundary; no independent SQL commit or adoption/release bypass.",
+    "UNKNOWN original outcomes reconcile against original intent/receipt before new keys, capacity release or successor reuse.",
+    "Audit metadata names submission/observation truthfully and may be null under unqualified clocks; no fabricated exact commit timestamp."
+  ],
+  "explicit_profile_difference": "A wall-clock display deadline may pass before Consul orders invalidation. In that interval a transaction with all current authority predicates may commit under v3. This does NOT pass the old strict wall-clock tests; old artifacts remain immutable. Fresh ROOT approval and explicit version/schema selection required.",
+  "remaining_implementation_decisions": [
+    "Exact native lease-session acquisition/binding layout and lifecycle API must be specified and tested, not inferred from prose.",
+    "Renewal partial/UNKNOWN outcomes must reconcile actual session renewal and grant revision before reporting success or issuing any new fence; no local inferred extension. Scope of old-current grant during partial session renewal must be explicit in the final API.",
+    "Storage and compute reservation invalidation/version/accounting protocols must be exact, including unknown allocations remaining charged.",
+    "Civil-time policy (Europe/Berlin work windows, credentials/provider deadlines/confirmations) remains separate; displayed lease estimate cannot authorize new out-of-schedule work.",
+    "Paused external writer/sender containment or resource-side fencing remains mandatory before conflicting successor reuse."
+  ],
+  "checkpoint_compatibility": "No implicit v1 committed_at_utc reinterpretation; A3/A4 exact new checkpoint/profile or explicit admitted semantic adapter required. Job resume/adoption references only committed verified checkpoint lineage.",
+  "required_v3_tests": [
+    "lease invalidation first / no successor -> reject",
+    "reservation invalidation first -> reject even with valid lease",
+    "publication first -> one receipt/debit retained",
+    "renewal and terminal CAS races -> stale grant rejects",
+    "pause before RPC with committed invalidation -> reject",
+    "display deadline elapsed without invalidation -> clearly v3-only permissible case, not strict-test PASS",
+    "minority cannot grant/renew/publish",
+    "restart/rejoin/generation preserve counters and receipt reconciliation",
+    "both renewal/session partial outcomes reconcile UNKNOWN",
+    "closure/GC/budget/coverage/adoption/debit all-mutator races"
+  ],
+  "tests_executed_for_this_review": "NONE; exact-byte semantic/requirements review only, not Consul/session/runtime acceptance.",
+  "root_design_approval": "NOT_INFERRED",
+  "full_api_ack": false,
+  "runtime_admission": false,
+  "source_and_schema_changes": "NONE; all existing strict drafts/v1/P0 artifacts unchanged",
+  "current_gates": "CLOSED_UNTIL_ROOT_APPROVAL_ALLOCATION_AND_QUALIFICATION",
+  "go_no_go": "DESIGN_REVIEW_ACK_ONLY / INTEGRATION_PENDING / NO-GO"
+}

@@ -77,6 +77,14 @@ Grid263/ec967 nowproposed instead of262: A8 independently verified original6DELE
 
 Six-repository secret-pattern triage found four publiclycommitted historical Meta loopback TLS fixturekeys. A8 classified them test-only, not confirmedproductionsecrets, and identified nooperationaltrustinstallation. No privatebytes copied or printed. Finalruntimeartifact exclusion/inventory anddependencylicense review remain unqualified; no historyrewrite/rotation justified bythis scan.
 
-## Authority design decision remains unresolved
+## Authority requirement correction and explicit new-profile design approval
 
-Agent2 review1 and modelcounterexamples are published under release/proposals/agent2-review1. NativeConsul transaction predicates and sessionreaping do not supply the required strictdeadline-at-serialization timestamp guarantee. This is our designanalysis of [transaction primitives](https://developer.hashicorp.com/consul/api-docs/txn) and [session semantics](https://developer.hashicorp.com/consul/api-docs/session), not a vendor impossibilityclaim or realRafttest. Strictcontract remains unchanged; nosecondauthority orweaker event-order substitute approved. A concrete qualified serialization design is stillneeded. ControlSyncv2 is a new-major proposal awaiting exactconsumerACK, not an endpoint or runtimequalification.
+The previous paragraph treated an agent-authored strict UTC-at-serialization interpretation as an owner requirement. Bounded review of eleven owner attachments and fresh scoped owner ACKs did not establish that literal requirement. Owner requirements still include stale-worker fencing, lease expiry authorization and auditable commit metadata. The correction does not waive those requirements.
+
+ROOT selected unified.authority.event-ordered.v3 as a NEW profile, with exact proposal/ACK hashes in release/contracts/authority-event-ordered-v3/ROOT-DESIGN-APPROVAL.json. Session invalidation/revocation versus publication is atomically ordered by the existing Consul authority. Displayed deadline estimates are not equivalent to actual session invalidation. Old strict-profile gates remain unchanged. A3/A4 checkpoint/audit compatibility, real wire adapters, three-voter tests, partition/UNKNOWN containment and consumer integration remain unqualified. No schema ACK is runtime safety evidence.
+
+## Complete open-head metadata snapshot and bounded native investigation
+
+All 444 PR heads in the second repository snapshot now have paginated original check/run metadata archived with verified hashes in release/ci-all-open-heads.json. This is metadata coverage only: mandatory case/attempt/skip qualification and artifact-content admission remain incomplete. Math PR113 was created after that snapshot and is recorded separately.
+
+Math PR113 dbb9bb1da9b180a8bb9f1d5401f1117894256941 has independent A8 source/model review for one disposable hosted Windows owned-child loader observation. Exact source/tree/workflow, actual event-merge workflow identity, reviewer pin, limits and one-activation authorization are recorded in release/diagnostic-authorizations/math113-dbb9bb1.json. This diagnostic cannot confer native acceptance, production approval or office execution permission. Activation/result must be recorded separately; no automatic retries after an unknown result.
