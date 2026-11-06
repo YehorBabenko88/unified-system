@@ -143,9 +143,12 @@
     "repository": "unified-system",
     "pr": 26,
     "observed_head": "0346018b58ed612dbe62fba7861f3e0b6a63ee94",
-    "status": "OPEN_PENDING_EXACT_FIX_REVIEW",
+    "status": "FIX_VERIFIED_OFFLINE_EXACT_SOURCE",
     "title": "Fixed provider probe starts network primitives without provider-budget adapter admission",
     "evidence": "phase21/provider-gap-review.json: actual function AST with3network primitives replaced by counter+throw reaches DNS sentinel in3provider vectors; actual network calls0.",
-    "required_correction": "Fail closed fixed provider branch before DNS/TCP/HTTP; all4checksNOT_RUN and BYBIT_BUDGET_ADAPTER_NOT_ADMITTED. No env/caller-flag bypass, budgetmint/fallback/inert claim; retain frozen v1 guard denial and original assertions. Review exact source and native-free RED/GREEN."
+    "required_correction": "Fail closed fixed provider branch before DNS/TCP/HTTP; all4checksNOT_RUN and BYBIT_BUDGET_ADAPTER_NOT_ADMITTED. No env/caller-flag bypass, budgetmint/fallback/inert claim; retain frozen v1 guard denial and original assertions. Review exact source and native-free RED/GREEN.",
+    "verified_fix_head": "15dd9e8340cc332204ebbe6c13744f797ceca2f4",
+    "fix_evidence": "phase22/provider-closed-review.json;phase22/provider-gap-review.json",
+    "remaining_scope": "NO_NBM_RUNTIME_INERT_OR_PHYSICAL_ACCEPTANCE"
   }
 ]

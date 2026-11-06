@@ -1,5 +1,5 @@
 {
-  "checked_utc": "2026-11-06T19:02:41.586277+00:00",
+  "checked_utc": "2026-11-06T19:06:48.939936+00:00",
   "RELEASE_MANIFEST_STATUS": "PRESENT_PREPARATION_ONLY_NOT_APPROVED_NOT_INSTALLABLE",
   "NODE_INVENTORY_STATUS": "SIX_REDACTED_OWNER_OBSERVATIONS_PRESENT_ORIGINAL_RAW_NOT_REACQUIRED_BY_A8_NOT_ADMITTED",
   "CONTRACT_STATUS": {
@@ -191,6 +191,31 @@
       "scope": "RAW_SOURCE_AND_ISOLATED_POLICY_STATE_PARSER_MODELS_ONLY",
       "provider_budget_admission": "NOT_WIRED_IN_REVIEWED_PATHS_F06_OPEN",
       "actual_LAN_mTLS_runtime": "NOT_QUALIFIED"
+    },
+    "provider_closed_PR27": {
+      "head": "15dd9e8340cc332204ebbe6c13744f797ceca2f4",
+      "tree": "f65192b65e60c9a8df2d3a404da46df641efcd0c",
+      "base": "2b0a500245c7bb661abdfc50c08e4aab1575ade2",
+      "diff_scope": "THREE_FILES_PS_EIGHT_INSERTED_LINES_NEW_TEST_DOC",
+      "frozen_v1_guard_unchanged": true,
+      "old_tests_assertions_unchanged": true,
+      "focused_tests": 58,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "source_raw_pre_post": [
+        "3ba0f8b375743ad34afd22359fa08fb1088ada19689c4989f83ee2f46254ce20",
+        "3ba0f8b375743ad34afd22359fa08fb1088ada19689c4989f83ee2f46254ce20"
+      ],
+      "independent_original_oracle": "phase22/provider-gap-review.json_3ZERO_SENTINEL_HITS_4NOT_RUN",
+      "new_native_free_test": "6BLOCKED_TARGETS_ZERO_IO_GENERAL_TARGET_SENTINEL1_RETURN_DOMINANCE_V1_DENIAL",
+      "actual_network_or_office_calls": 0,
+      "F14": "FIX_VERIFIED_OFFLINE_EXACT_SOURCE",
+      "provider_runtime_budget_manager": "NOT_IMPLEMENTED_NOT_QUALIFIED_PROVIDER_DISABLED",
+      "inert_bootstrap": "NOT_QUALIFIED",
+      "hosted": "NOT_QUALIFIED",
+      "physical": "BLOCKED",
+      "overall": "NO_GO"
     }
   },
   "WINDOWS_CI": "PENDING_CURRENT_DRAFTS; FAILED_BASELINE_MANDATORY_GATES_NOT_CLOSED",
@@ -201,7 +226,7 @@
   "P0_P1_P2": {
     "P0_confirmed_defects": 0,
     "P0_absence_proven": false,
-    "P1_open": 7,
+    "P1_open": 6,
     "P2_open": 1,
     "F08": "FIX_VERIFIED_OFFLINE",
     "F09": "FIX_VERIFIED_OFFLINE_AT_42686cd",
@@ -209,7 +234,7 @@
     "F11": "FIX_VERIFIED_OFFLINE_AT_0b3af3e",
     "F12": "FIX_VERIFIED_DOCUMENTARY_EXACT_SOURCE",
     "F13": "FIX_VERIFIED_OFFLINE_AT_ec967b3_OLD_SOURCE_UNSAFE_NOT_DEPLOYED",
-    "F14": "OPEN_PROVIDER_PROBE_FAIL_CLOSED_CORRECTION_REQUIRED"
+    "F14": "FIX_VERIFIED_OFFLINE_AT_15dd9e8_PROVIDER_DISABLED"
   },
   "EVIDENCE": [
     "phase4/math-source-and-compile-review.json",
@@ -243,7 +268,9 @@
     "phase19/run-review.json",
     "phase20/design-checkpoint-review.json",
     "phase21/network-source-review.json",
-    "phase21/provider-gap-review.json"
+    "phase21/provider-gap-review.json",
+    "phase22/provider-closed-review.json",
+    "phase22/provider-gap-review.json"
   ],
   "NEXT_ACTIONS": [
     "Review terminal exact-source Windows CI logs/artifacts when available; queued/cancelled is not PASS.",

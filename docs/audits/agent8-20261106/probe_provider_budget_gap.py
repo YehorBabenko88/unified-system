@@ -1,6 +1,7 @@
 """Instrument exact PowerShell AST network primitives with in-memory sentinels."""
-import base64,json,os,pathlib,subprocess
-root=pathlib.Path(__file__).resolve().parents[1];out=root/'outputs/phase21';source=root/'work/review-network-034/scripts/network_readonly_probe.ps1'
+import argparse,base64,json,os,pathlib,subprocess
+parser=argparse.ArgumentParser();parser.add_argument('--source');parser.add_argument('--fixed',action='store_true');args=parser.parse_args()
+root=pathlib.Path(__file__).resolve().parents[1];out=root/'outputs'/('phase22' if args.fixed else 'phase21');out.mkdir(exist_ok=True);source=(root/args.source) if args.source else root/'work/review-network-034/scripts/network_readonly_probe.ps1'
 ps=r'''
 $ErrorActionPreference='Stop';$ProgressPreference='SilentlyContinue'
 $tokens=$null;$errors=$null;$ast=[Management.Automation.Language.Parser]::ParseFile($env:A8_PROBE_SOURCE,[ref]$tokens,[ref]$errors)
@@ -31,6 +32,8 @@ foreach($v in @(
 env=os.environ.copy();env['A8_PROBE_SOURCE']=str(source)
 run=subprocess.run(['powershell.exe','-NoProfile','-NonInteractive','-EncodedCommand',base64.b64encode(ps.encode('utf-16le')).decode()],env=env,capture_output=True,timeout=15)
 (out/'provider-gap.stdout.log').write_bytes(run.stdout);(out/'provider-gap.stderr.log').write_bytes(run.stderr);assert run.returncode==0
-report=json.loads(run.stdout.decode('utf-8-sig'));assert all(c['sentinel_hits']==1 and c['dns']=='FAIL' and c['actual_network_calls']==0 for c in report['cases'])
-report.update(head='0346018b58ed612dbe62fba7861f3e0b6a63ee94',expected='BLOCK_BEFORE_NETWORK_PRIMITIVES_WITH_EXPLICIT_BUDGET_REASON',actual='BASELINE_REACHES_DNS_SENTINEL_WITHOUT_PROVIDER_BUDGET_ADMISSION',F14='OPEN_P1',actual_network_calls=0)
+report=json.loads(run.stdout.decode('utf-8-sig'))
+if args.fixed:assert all(c['sentinel_hits']==0 and all(c[k]=='NOT_RUN' for k in ('dns','tcp443','https','api')) and c['reason']=='BYBIT_BUDGET_ADAPTER_NOT_ADMITTED' and c['actual_network_calls']==0 for c in report['cases'])
+else:assert all(c['sentinel_hits']==1 and c['dns']=='FAIL' and c['actual_network_calls']==0 for c in report['cases'])
+report.update(head='15dd9e8340cc332204ebbe6c13744f797ceca2f4' if args.fixed else '0346018b58ed612dbe62fba7861f3e0b6a63ee94',expected='BLOCK_BEFORE_NETWORK_PRIMITIVES_WITH_EXPLICIT_BUDGET_REASON',actual='FIXED_RETURNS_4NOT_RUN_BEFORE_NETWORK' if args.fixed else 'BASELINE_REACHES_DNS_SENTINEL_WITHOUT_PROVIDER_BUDGET_ADMISSION',F14='FIX_VERIFIED_OFFLINE_AST' if args.fixed else 'OPEN_P1',actual_network_calls=0)
 (out/'provider-gap-review.json').write_text(json.dumps(report,indent=2));print(json.dumps(report))
