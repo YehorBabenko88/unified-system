@@ -53,7 +53,7 @@ jobs:
               'unified_system/__init__.py',
           )
           def git(*args):
-              return subprocess.check_output(['git', *args], timeout=15)
+              return subprocess.check_output(['git', '--no-replace-objects', *args], timeout=15)
           def source_receipt():
               head = git('rev-parse', 'HEAD').decode().strip()
               assert head == expected_head, 'unexpected source head'

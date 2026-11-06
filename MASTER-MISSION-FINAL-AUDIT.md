@@ -52,7 +52,7 @@ Root выбрал новый профиль `unified.authority.event-ordered.v3`
 
 Полный authority/assignment/storage wire, identity/idempotency scope, actual closure/allocation/debit records и producer adapters ещё не согласованы/квалифицированы. API envelope/schema ACK не является runtime safety. Control multiplex ABI для шести узлов и нескольких окон также не завершён; degraded cap2 не принят как mission acceptance.
 
-Ownership registry сохраняет изолированные ветки/worktrees и отдельные scopes; прежние ACK не объявлены глобальным согласием. Проверка источника gate показала: A1 имеет прямое требование владельца утвердить полный LAN design перед product-кодом. A4 production restriction не запрещает выделенный независимый nonproduction prototype; blanket human blocker исправлен, Stage1 начат. A3 получил scope отдельного checkpoint V3 codec. Production/shared wiring/physical ограничения сохраняются.
+Ownership registry сохраняет изолированные ветки/worktrees и отдельные scopes; прежние ACK не объявлены глобальным согласием. Проверка источника gate показала: A1 имел прямой full-design gate; владелец теперь явно утвердил пакет dd8b4ff/f0d2…/16606… и разрешил изолированную реализацию пяти файлов. Этот human blocker закрыт, runtime/physical/provider gates не открыты. A4 production restriction не запрещает выделенный независимый nonproduction prototype; blanket human blocker исправлен, Stage1 начат. A3 получил scope отдельного checkpoint V3 codec. Production/shared wiring/physical ограничения сохраняются.
 
 ## Шесть офисных узлов: наблюдения, не installation admission
 
@@ -101,3 +101,9 @@ LAB_SIMULATION допускает проверенные unsigned test component
 ## Последняя расширенная integration suite
 
 На exact c9f3735c1efa2d5ae0e2dfbe52987a49c520bdf5/tree d19857aa229691be6ed2c7287e79f92b16baa961 полный локальный Windows запуск завершился828tests,0failures/errors,14 сохранённых unwaived skips за293.038s. Python/PowerShell source hashes до/после одинаковы. Оригинальные813/812/755 результаты сохранены для их источников. Новая CI inventory v2 содержит75 cases, включая все прежние59,15 новых A5 и один provider AST negative. ROOT и A8 независимо исполнили фактический embedded workflow:75/0skip,377 raw source bindings; hosted matrix не объявлена PASS. Evidence: `release/evidence/full-suite-durable-*`, `release/evidence/integration-75/`, `release/skip-inventory-durable.json`; A8 audit e394045 phase26.
+
+## Последнее owner approval и изолированные кандидаты
+
+Полный LAN Approach A утверждён владельцем для пяти выделенных файлов от b12c6c24; запись `release/design-review/lan/OWNER-DECISION.json` сохраняет точные design/profile SHA. Agent 1 PR30 HEAD1541af3b сообщает28 focused PASS, однако полный запуск768 содержит1 ERROR и11 skips; полный PASS не заявлен. Storage PR29 и experimental Control PR31 переданы A8 вместе с LAN на независимую проверку. Их отчёты26/46 tests пока не подменяют проверку Integration Owner. Реальные provider sends, runtime/physical admission, Tailscale removal и main merge остаются закрыты.
+
+Root F16 corrected source1808556: фактический embedded workflow75 выполнился локально; независимые собственные clone blob/tree negative controls остановились до тестов. Original RED и исправленные оригинальные logs находятся в `release/evidence/f16-root/`. Это не закрывает глобальный F16 или hosted CI. Legacy A2 P0 workflow в integration copy получил только явно согласованный no-replace Git flag; старый PR25 и16 product tests сохранены.

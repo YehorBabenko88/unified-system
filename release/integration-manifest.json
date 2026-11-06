@@ -197,6 +197,16 @@
         "scope": "DESIGN_FOR_PURE_UNTRUSTED_CLAIM_CODEC_NOT_RUNTIME_CONFIRMATION"
       },
       "actual_implementation": "A3_IN_PROGRESS_NOT_ADOPTED"
+    },
+    "lan_approach_a": {
+      "owner_decision_path": "release/design-review/lan/OWNER-DECISION.json",
+      "owner_decision_sha256": "2a9227c2dd1876aa02264489a13e7bee4a43c7a00fcc2ab214b5c95f35ae573e",
+      "review_commit": "dd8b4ff9ace0a75dd81d0ab654e97a1e2319259a",
+      "design_sha256": "f0d2eb3ccd96d263bdbedc2a2bcdd43238a542807c81e7e2531dccb9225cd7f8",
+      "egress_profile_sha256": "16606dee585398ae6d92139ffc1cf2ed37a4d2e08759aaa08f0c3b85958b8049",
+      "scope": "ISOLATED_FIVE_FILE_IMPLEMENTATION_AND_TESTS_ONLY",
+      "runtime": "BLOCKED",
+      "physical": "BLOCKED"
     }
   },
   "metadata_snapshot_coverage": {
@@ -240,5 +250,10 @@
     "head": "e394045299006faf173fd3016d02fe4b21966c50",
     "source_head": "c9f3735c1efa2d5ae0e2dfbe52987a49c520bdf5",
     "scope": "LOCAL75_EXACT_SOURCE_377_RAW_INPUTS_10_NEGATIVE_CONTROLS_NOT_HOSTED_OR_PHYSICAL"
+  },
+  "isolated_handoff_register": {
+    "path": "release/isolated-handoffs-20261106.json",
+    "sha256": "3c7d28462fbb3e2d746a03af35592c9333b440e476664f7ece6a76f90971281c",
+    "admission": "NOT_GRANTED"
   }
 }

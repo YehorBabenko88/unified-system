@@ -1,0 +1,34 @@
+{
+  "schema": "unified.isolated-handoff-register.v1",
+  "status": "IN_PROGRESS_NO_GO",
+  "evidence_class": "OWNER_REPORTS_PENDING_INDEPENDENT_REVIEW_NOT_RUNTIME_ADMISSION",
+  "candidates": [
+    {
+      "pr": 30,
+      "head": "1541af3b0e99fdb671f59c205696faab40e283e4",
+      "tree": "30d32ab7b75eadcca46b41ae6809415665ef1413",
+      "scope": "LAN_APPROACH_A_ISOLATED_OWNER_AUTHORIZED",
+      "reported_focused_tests": 28,
+      "full_suite": "REPORTED_768_TESTS_1_ERROR_11_SKIPS_NOT_PASS"
+    },
+    {
+      "pr": 29,
+      "head": "10157fed4d28606adf587be3494d2f6d42887ce9",
+      "tree": "62564f00bd8c37b982c2ee958ff58b956c55b1be",
+      "scope": "STORAGE_STAGE1_PURE_NONAUTHORITATIVE",
+      "reported_focused_tests": 26,
+      "full_suite": "OWNER_REPORTED_NOT_ROOT_REEXECUTED"
+    },
+    {
+      "pr": 31,
+      "head": "7a0365bd0161ec619019157cf04672b513c495c6",
+      "tree": "597dbbdad1861f3e872f867dba30ad2667566d15",
+      "scope": "EXPERIMENTAL_CONTROL_V3_DEFAULT_CLOSED",
+      "reported_focused_tests": 46,
+      "full_suite": "OWNER_REPORTED_NOT_ROOT_REEXECUTED"
+    }
+  ],
+  "real_provider_sends": "BLOCKED",
+  "physical_deployment": "BLOCKED",
+  "main_merge": "NOT_AUTHORIZED"
+}
