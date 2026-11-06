@@ -1,0 +1,112 @@
+{
+  "schema": "unified.control-api.p0-ci.v2",
+  "head": "0b3af3e872b49ed1848815f7f9ffd42444f89b24",
+  "tree": "1769906483356ed41eb8fcd278c5545b1bbafa67",
+  "source_before": {
+    "head": "0b3af3e872b49ed1848815f7f9ffd42444f89b24",
+    "tree": "1769906483356ed41eb8fcd278c5545b1bbafa67",
+    "files": {
+      ".github/workflows/agent2-control-api.yml": {
+        "bytes": 7069,
+        "raw_sha256": "ceeca300b3da3a28c3b4a437043eb713d29e963647facf4c2b385cd60642f342",
+        "blob_sha256": "ceeca300b3da3a28c3b4a437043eb713d29e963647facf4c2b385cd60642f342",
+        "git_blob": "d0eb6d6d47b649a258e907ef18b8469b5a8268d5"
+      },
+      "docs/architecture/control-api-readonly.md": {
+        "bytes": 4519,
+        "raw_sha256": "3a1adba4f969de4b70c0aa316d4a66cacd78bb67a2cd51c7cbab0565465eaf7a",
+        "blob_sha256": "3a1adba4f969de4b70c0aa316d4a66cacd78bb67a2cd51c7cbab0565465eaf7a",
+        "git_blob": "383459f54d042831fbe37edef5d7f7a00714dc24"
+      },
+      "tests/test_control_api_readonly.py": {
+        "bytes": 8916,
+        "raw_sha256": "121ffdfa61a1a81ab165bc0b79ae7dbd4bd39b2fac05fd170497e11e9b09165f",
+        "blob_sha256": "121ffdfa61a1a81ab165bc0b79ae7dbd4bd39b2fac05fd170497e11e9b09165f",
+        "git_blob": "7ace62421aca2beb2726b8aaa3f6f72a28136461"
+      },
+      "unified_system/control_api_readonly.py": {
+        "bytes": 3931,
+        "raw_sha256": "a54da5317dabf6f7c94cca5ccaf926052c71763d86ac33b007bc04d7df56c62b",
+        "blob_sha256": "a54da5317dabf6f7c94cca5ccaf926052c71763d86ac33b007bc04d7df56c62b",
+        "git_blob": "785350c2caf3850e763db0ef8b090f3c9a7fc67c"
+      },
+      "unified_system/__init__.py": {
+        "bytes": 81,
+        "raw_sha256": "68113e881a6bce0a682d3ebe1a3a1086c176c35b889d8c852b14e75645409610",
+        "blob_sha256": "68113e881a6bce0a682d3ebe1a3a1086c176c35b889d8c852b14e75645409610",
+        "git_blob": "2a6d72d8d9591b62e636c3b4e74c0a2ba59c8298"
+      }
+    },
+    "tracked_clean": true
+  },
+  "source_after": {
+    "head": "0b3af3e872b49ed1848815f7f9ffd42444f89b24",
+    "tree": "1769906483356ed41eb8fcd278c5545b1bbafa67",
+    "files": {
+      ".github/workflows/agent2-control-api.yml": {
+        "bytes": 7069,
+        "raw_sha256": "ceeca300b3da3a28c3b4a437043eb713d29e963647facf4c2b385cd60642f342",
+        "blob_sha256": "ceeca300b3da3a28c3b4a437043eb713d29e963647facf4c2b385cd60642f342",
+        "git_blob": "d0eb6d6d47b649a258e907ef18b8469b5a8268d5"
+      },
+      "docs/architecture/control-api-readonly.md": {
+        "bytes": 4519,
+        "raw_sha256": "3a1adba4f969de4b70c0aa316d4a66cacd78bb67a2cd51c7cbab0565465eaf7a",
+        "blob_sha256": "3a1adba4f969de4b70c0aa316d4a66cacd78bb67a2cd51c7cbab0565465eaf7a",
+        "git_blob": "383459f54d042831fbe37edef5d7f7a00714dc24"
+      },
+      "tests/test_control_api_readonly.py": {
+        "bytes": 8916,
+        "raw_sha256": "121ffdfa61a1a81ab165bc0b79ae7dbd4bd39b2fac05fd170497e11e9b09165f",
+        "blob_sha256": "121ffdfa61a1a81ab165bc0b79ae7dbd4bd39b2fac05fd170497e11e9b09165f",
+        "git_blob": "7ace62421aca2beb2726b8aaa3f6f72a28136461"
+      },
+      "unified_system/control_api_readonly.py": {
+        "bytes": 3931,
+        "raw_sha256": "a54da5317dabf6f7c94cca5ccaf926052c71763d86ac33b007bc04d7df56c62b",
+        "blob_sha256": "a54da5317dabf6f7c94cca5ccaf926052c71763d86ac33b007bc04d7df56c62b",
+        "git_blob": "785350c2caf3850e763db0ef8b090f3c9a7fc67c"
+      },
+      "unified_system/__init__.py": {
+        "bytes": 81,
+        "raw_sha256": "68113e881a6bce0a682d3ebe1a3a1086c176c35b889d8c852b14e75645409610",
+        "blob_sha256": "68113e881a6bce0a682d3ebe1a3a1086c176c35b889d8c852b14e75645409610",
+        "git_blob": "2a6d72d8d9591b62e636c3b4e74c0a2ba59c8298"
+      }
+    },
+    "tracked_clean": true
+  },
+  "mandatory_test_ids": [
+    "test_control_api_readonly.ControlAPITest.test_all_protected_reads_are_unavailable_not_empty_success",
+    "test_control_api_readonly.ControlAPITest.test_boundary_does_not_open_files_sockets_or_read_system_time",
+    "test_control_api_readonly.ControlAPITest.test_claimed_principal_cookie_and_truthy_flags_do_not_authenticate",
+    "test_control_api_readonly.ControlAPITest.test_encoded_traversal_slashes_unicode_and_long_paths_are_invalid",
+    "test_control_api_readonly.ControlAPITest.test_error_envelope_has_no_fabricated_authority_or_request_identity",
+    "test_control_api_readonly.ControlAPITest.test_every_effect_route_stays_denied",
+    "test_control_api_readonly.ControlAPITest.test_head_errors_never_send_a_response_body",
+    "test_control_api_readonly.ControlAPITest.test_malformed_wsgi_fields_fail_closed",
+    "test_control_api_readonly.ControlAPITest.test_mutating_returned_json_cannot_enable_later_requests",
+    "test_control_api_readonly.ControlAPITest.test_no_provider_or_backend_activation_constructor",
+    "test_control_api_readonly.ControlAPITest.test_nonempty_and_ambiguous_body_framing_denied_without_read",
+    "test_control_api_readonly.ControlAPITest.test_oversize_body_claim_rejected_before_buffering",
+    "test_control_api_readonly.ControlAPITest.test_public_capabilities_never_claim_admitted_runtime",
+    "test_control_api_readonly.ControlAPITest.test_queries_are_not_treated_as_implemented_resume_or_barrier",
+    "test_control_api_readonly.ControlAPITest.test_unknown_route_does_not_look_like_missing_auth",
+    "test_control_api_readonly.ControlAPITest.test_wrong_method_returns_allow_without_activation"
+  ],
+  "test_log_sha256": "2ed7cfa599f6f8549000888c8ca02ea824ce26ab966e45ac36cbf64b1b0aa920",
+  "source_binding_passed": true,
+  "os": "Windows",
+  "python": "3.12.10",
+  "tests": 16,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "run": "LOCAL_AUDITOR_NOT_GITHUB",
+  "attempt": "LOCAL_ONLY",
+  "qualification": "P0_COMPONENT_ONLY_SOURCE_CHECKED_BEFORE_AFTER",
+  "run_metadata": "CORRELATION_ONLY_NOT_HOSTED_ATTESTATION",
+  "runtime_api": "NOT_QUALIFIED",
+  "physical": "NOT_RUN",
+  "production": "NO_GO"
+}

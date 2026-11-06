@@ -1,0 +1,83 @@
+{
+  "head": "0b3af3e872b49ed1848815f7f9ffd42444f89b24",
+  "tree": "1769906483356ed41eb8fcd278c5545b1bbafa67",
+  "app_and_16_tests_unchanged": true,
+  "cases": {
+    "clean": {
+      "expected": "ACCEPT_LOCAL_16",
+      "exit_code": 0,
+      "reason": [],
+      "receipt_emitted": true
+    },
+    "tracked_comment": {
+      "expected": "REJECT",
+      "exit_code": 1,
+      "reason": [
+        "AssertionError: tracked source dirty"
+      ],
+      "receipt_emitted": false
+    },
+    "hidden_tracked_comment": {
+      "expected": "REJECT",
+      "exit_code": 1,
+      "reason": [
+        "AssertionError: raw source differs from committed blob: unified_system/control_api_readonly.py"
+      ],
+      "receipt_emitted": false
+    },
+    "wrong_expected_head": {
+      "expected": "REJECT",
+      "exit_code": 1,
+      "reason": [
+        "AssertionError: unexpected source head"
+      ],
+      "receipt_emitted": false
+    },
+    "missing_id": {
+      "expected": "REJECT",
+      "exit_code": 1,
+      "reason": [
+        "AssertionError: mandatory test inventory differs"
+      ],
+      "receipt_emitted": false
+    },
+    "duplicate_id": {
+      "expected": "REJECT",
+      "exit_code": 1,
+      "reason": [
+        "AssertionError: mandatory test inventory differs"
+      ],
+      "receipt_emitted": false
+    },
+    "skip": {
+      "expected": "REJECT",
+      "exit_code": 1,
+      "reason": [
+        "AssertionError"
+      ],
+      "receipt_emitted": true
+    },
+    "post_test_tamper": {
+      "expected": "REJECT",
+      "exit_code": 1,
+      "reason": [
+        "AssertionError: tracked source dirty"
+      ],
+      "receipt_emitted": false
+    },
+    "hidden_post_test_tamper": {
+      "expected": "REJECT",
+      "exit_code": 1,
+      "reason": [
+        "AssertionError: raw source differs from committed blob: unified_system/control_api_readonly.py"
+      ],
+      "receipt_emitted": false
+    }
+  },
+  "scope": "LOCAL_EXECUTION_OF_EXACT_CI_BLOCK_WITH_AUDITOR_OWNED_NEGATIVE_FIXTURES",
+  "workflow_code_sha256": "06bdb5377932dcd8d5ff508732a2bb8b0d6fdc8ddd98299666f39dd2faae2523",
+  "F11": "FIX_VERIFIED_OFFLINE_EXACT_SOURCE",
+  "hosted_CI": "NOT_QUALIFIED",
+  "runtime_API": "NOT_QUALIFIED",
+  "physical": "BLOCKED"
+}

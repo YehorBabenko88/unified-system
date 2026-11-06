@@ -1,5 +1,5 @@
 {
-  "checked_utc": "2026-11-06T16:21:31.6527817Z",
+  "checked_utc": "2026-11-06T16:30:54.2451335Z",
   "RELEASE_MANIFEST_STATUS": "PRESENT_PREPARATION_ONLY_NOT_APPROVED_NOT_INSTALLABLE",
   "NODE_INVENTORY_STATUS": "PRESENT_DECLARED_CANDIDATES_NOT_AUTHENTICATED_NOT_CAPACITY_ADMITTED",
   "CONTRACT_STATUS": {
@@ -35,11 +35,12 @@
       "skipped": 0
     },
     "Agent2P0": {
-      "head": "320b5d0894019d72aa8927dc5c4246d28c6e5f3c",
+      "head": "0b3af3e872b49ed1848815f7f9ffd42444f89b24",
       "focused_tests": 16,
       "independent_route_method_cases": 99,
-      "CI_source_guard": "FAIL_F11_OPEN",
-      "runtime_API": "NOT_QUALIFIED"
+      "CI_source_guard": "FIX_VERIFIED_OFFLINE_EXACT_SOURCE",
+      "runtime_API": "NOT_QUALIFIED",
+      "independent_negative_guards_rejected": 8
     }
   },
   "WINDOWS_CI": "PENDING_CURRENT_DRAFTS; FAILED_BASELINE_MANDATORY_GATES_NOT_CLOSED",
@@ -51,10 +52,11 @@
     "P0_confirmed_defects": 0,
     "P0_absence_proven": false,
     "P1_open": 6,
-    "P2_open": 2,
+    "P2_open": 1,
     "F08": "FIX_VERIFIED_OFFLINE",
     "F09": "FIX_VERIFIED_OFFLINE_AT_42686cd",
-    "F10": "FIX_VERIFIED_OFFLINE_AT_42686cd"
+    "F10": "FIX_VERIFIED_OFFLINE_AT_42686cd",
+    "F11": "FIX_VERIFIED_OFFLINE_AT_0b3af3e"
   },
   "EVIDENCE": [
     "phase4/math-source-and-compile-review.json",
@@ -68,7 +70,10 @@
     "phase7/sync-fixed-probes.json",
     "phase7/sync-fixed-contract-receipt/receipt.json",
     "phase8/control-api-review.md",
-    "phase8/ci-source-tamper-probe.json"
+    "phase8/ci-source-tamper-probe.json",
+    "phase9/f11-fix-review.md",
+    "phase9/f11-independent-guards.json",
+    "phase9/checkout-conversion-review.json"
   ],
   "NEXT_ACTIONS": [
     "Review terminal exact-source Windows CI logs/artifacts when available; queued/cancelled is not PASS.",

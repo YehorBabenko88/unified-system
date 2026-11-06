@@ -1,4 +1,4 @@
-> Later bounded review: [A2 PR25 / F11](phase8/control-api-review.md). Current open findings:6 P1/2 P2; this earlier checkpoint below is retained as historical evidence.
+> Latest bounded update: [F11 fix recheck](phase9/f11-fix-review.md). Current open findings:6 P1/1 P2; F11 fixed offline at exact0b3af3e. Hosted/runtime/physical/Tailscale acceptance remains BLOCKED; earlier snapshots are historical.
 
 # Independent component and preparation review — current checkpoint
 

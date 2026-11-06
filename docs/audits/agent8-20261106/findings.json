@@ -99,8 +99,10 @@
     "pr": 25,
     "title": "CI head-only guard accepts changed tracked source",
     "observed_head": "320b5d0894019d72aa8927dc5c4246d28c6e5f3c",
-    "status": "OPEN",
+    "status": "FIX_VERIFIED_OFFLINE_EXACT_SOURCE",
     "evidence": "phase8/ci-source-tamper-probe.json",
-    "required_correction": "Expected clean source/blob binding before and after tests; source/log hashes and exact mandatory case/count/no-skip evidence."
+    "required_correction": "Expected clean source/blob binding before and after tests; source/log hashes and exact mandatory case/count/no-skip evidence.",
+    "verified_fix_head": "0b3af3e872b49ed1848815f7f9ffd42444f89b24",
+    "fix_evidence": "phase9/f11-independent-guards.json; phase9/original-comment-probe/ci-source-tamper-probe.json; phase9/checkout-conversion-review.json"
   }
 ]
