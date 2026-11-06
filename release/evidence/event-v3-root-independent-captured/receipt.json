@@ -1,0 +1,45 @@
+{
+  "schema": "unified.independent-component-receipt.v1",
+  "source_head": "076f1423dfc353b5b0604d56a10859a8efc3f54b",
+  "source_tree": "08fcdc8f0ae6ab3271ee9dcfb059a5263aa53d4d",
+  "reviewer": "ROOT",
+  "started_utc": "2026-11-06T18:59:36.073318+00:00",
+  "finished_utc": "2026-11-06T18:59:38.769568+00:00",
+  "command": [
+    "C:/Users/LS-5/AppData/Local/Python/pythoncore-3.12-64/python.exe",
+    "-I",
+    "-S",
+    "-B",
+    "-c",
+    "import sys,runpy;sys.path.insert(0,'C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-8-independent-security-ci/work/audit-venv/Lib/site-packages');import pytest,httpx;print('INDEPENDENT_FIXTURE pytest='+pytest.__version__+' httpx='+httpx.__version__,flush=True);sys.argv=['tests/coordination/event_v3/verify_offline.py','--expected','076f1423dfc353b5b0604d56a10859a8efc3f54b','--output','C:\\\\Users\\\\LS-5\\\\.codex\\\\worktrees\\\\mission-integration-registry-20261106\\\\unified-system\\\\release\\\\evidence\\\\event-v3-root-independent-captured'];runpy.run_path(sys.argv[0],run_name='__main__')"
+  ],
+  "cwd": "C:/Users/LS-5/.codex/worktrees/root-event-v3-review",
+  "environment_delta": {
+    "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1"
+  },
+  "exit_code": 0,
+  "scope": "84_OFFLINE_MODEL_REGRESSION_CASES_NOT_REAL_CONSUL_QUORUM_OR_PUBLICATION_OR_PHYSICAL",
+  "dependencies": "Existing explicit site-packages pytest8.4.2/httpx0.28.1, no install, -I -S prevents .pth loading; differs from hosted fixture lock",
+  "files": {
+    "source-after.json": {
+      "bytes": 10796,
+      "sha256": "35fd62679a1ed537ab08c31023cfacf8684fa300f7bca1c20302ddc2c50ca80f"
+    },
+    "source-before.json": {
+      "bytes": 398,
+      "sha256": "00b07522e727cf26a146dfe3ed0eb092a234838251411bc8b2e2fa7489e43a9b"
+    },
+    "stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stdout.log": {
+      "bytes": 400,
+      "sha256": "3123acd9a2640280c7a54e795ddfe7bcf7ac321fc3d5393cb075ca20ddcabaf9"
+    },
+    "tests.xml": {
+      "bytes": 12949,
+      "sha256": "519049f2518eeff1bf651c1c84e90b4fec05e1ba7360195e76dc524e854b9f5f"
+    }
+  }
+}

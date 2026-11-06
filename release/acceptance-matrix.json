@@ -1237,38 +1237,54 @@
     {
       "name": "Repositories/exactHEAD",
       "status": "BLOCKED",
-      "evidence": [],
-      "reason": "No complete admitted six-node candidate; component/local/metadata evidence must not be promoted"
+      "evidence": [
+        "integration-manifest.json",
+        "repository-inventory-phase0-current.json"
+      ],
+      "reason": "Six exact source snapshots inventoried; coherent artifact-admitted RC absent"
     },
     {
       "name": "IntegratedPRs",
       "status": "BLOCKED",
-      "evidence": [],
-      "reason": "No complete admitted six-node candidate; component/local/metadata evidence must not be promoted"
+      "evidence": [
+        "integration-manifest.json"
+      ],
+      "reason": "Compatible partial sources consolidated in PR26; operational module gaps remain"
     },
     {
       "name": "MandatoryCI",
       "status": "BLOCKED",
-      "evidence": [],
-      "reason": "No complete admitted six-node candidate; component/local/metadata evidence must not be promoted"
+      "evidence": [
+        "ci-all-open-heads.json",
+        "ci-current-delta.json",
+        "skip-inventory-provider.json"
+      ],
+      "reason": "444 snapshot check metadata plus current delta collected; full source/case/skip/artifact qualification incomplete"
     },
     {
       "name": "Windowsnative",
       "status": "BLOCKED",
-      "evidence": [],
-      "reason": "No complete admitted six-node candidate; component/local/metadata evidence must not be promoted"
+      "evidence": [
+        "diagnostic-authorizations/math113-activation.json"
+      ],
+      "reason": "Math actual Medium-native 0xC0000142 unresolved; one nonqualifying diagnostic queued"
     },
     {
       "name": "DirectLANwithoutTailscale",
       "status": "BLOCKED",
-      "evidence": [],
-      "reason": "No complete admitted six-node candidate; component/local/metadata evidence must not be promoted"
+      "evidence": [
+        "lan-route-observation.json",
+        "node-inventory.json"
+      ],
+      "reason": "Six point-in-time hardware LAN routes/DNS and five pinned SSH observations; application mTLS/budgets/failover not qualified"
     },
     {
       "name": "Consensus",
       "status": "BLOCKED",
-      "evidence": [],
-      "reason": "No complete admitted six-node candidate; component/local/metadata evidence must not be promoted"
+      "evidence": [
+        "evidence/event-v3-root-independent-captured/receipt.json"
+      ],
+      "reason": "New lifecycle adapter offline84; actual current3-voter hosted results and publication producer pending"
     },
     {
       "name": "Terminan6nodes",
@@ -1315,8 +1331,10 @@
     {
       "name": "Scheduler",
       "status": "BLOCKED",
-      "evidence": [],
-      "reason": "No complete admitted six-node candidate; component/local/metadata evidence must not be promoted"
+      "evidence": [
+        "ownership-registry.json"
+      ],
+      "reason": "New local durable preparation source175b unintegrated; F15 source evidence guard defect assigned for correction; dispatch not implemented"
     },
     {
       "name": "Research",
@@ -1363,8 +1381,10 @@
     {
       "name": "TailscaleRemovalReadiness",
       "status": "BLOCKED",
-      "evidence": [],
-      "reason": "No complete admitted six-node candidate; component/local/metadata evidence must not be promoted"
+      "evidence": [
+        "physical-deployment-plan.json"
+      ],
+      "reason": "No full physical LAN/application acceptance; Tailscale retained"
     }
   ],
   "independent_component_results": {
@@ -1378,5 +1398,53 @@
     "sha256": "dafb89035c3947358e97b21b7971a17e14d04ec74e2be84a0ddba29f2d53ae56",
     "items": 395,
     "scope": "Granular latest owner directive, no requirements discarded; semantic evidence mapping incomplete"
+  },
+  "qualified_bounded_gates": [
+    {
+      "id": "ORIGINAL_TERMINAN_VISUAL_EXIT31",
+      "status": "PASS",
+      "scope": "HOSTED_SYNTHETIC_VISUAL_ONLY_NOT_ENDPOINT_RUNTIME_PHYSICAL",
+      "source_head": "42686cd8fafcefaed3c5df5adaee5173d27543fd",
+      "run": 42248777161,
+      "attempt": 1,
+      "jobs": [
+        127997924142,
+        127997924653
+      ],
+      "evidence": [
+        "evidence/terminan-visual-ci/root-current-verification.json"
+      ]
+    },
+    {
+      "id": "ORIGINAL_META_JUNIT_MANIFEST_DEFECT",
+      "status": "PASS",
+      "scope": "TARGETED_MANIFEST_GATE_EXISTING_BASE_FIX_NOT_FULL_PLATFORM_ACCEPTANCE",
+      "source_head": "88b45c328bfdc8131ff0c6d139fddd8b27a4050c",
+      "job": 127988651137,
+      "evidence": [
+        "evidence/meta-junit-cause/owner-source-diagnosis.json",
+        "evidence/meta-junit-cause/root-verification.json"
+      ]
+    },
+    {
+      "id": "UNBUDGETED_PROVIDER_PROBE_F14",
+      "status": "PASS",
+      "scope": "SOURCE_FIXED_AND_OFFLINE_NEGATIVES_NOT_BUDGET_RUNTIME_IMPLEMENTATION",
+      "source_head": "15dd9e8340cc332204ebbe6c13744f797ceca2f4",
+      "evidence": [
+        "evidence/provider-probe-closed/committed-source-binding.json",
+        "evidence/provider-probe-closed/green-receipt.json"
+      ]
+    }
+  ],
+  "current_local_full_suite": {
+    "source_head": "15dd9e8340cc332204ebbe6c13744f797ceca2f4",
+    "tests": 813,
+    "failures": 0,
+    "errors": 0,
+    "skips": 14,
+    "waivers": [],
+    "scope": "LOCAL_WINDOWS_NOT_MANDATORY_OR_PHYSICAL_ACCEPTANCE",
+    "receipt": "evidence/full-suite-provider-receipt.json"
   }
 }

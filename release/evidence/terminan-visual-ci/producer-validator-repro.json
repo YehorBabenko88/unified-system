@@ -1,0 +1,23 @@
+{
+  "qualification": "SYNTHETIC_FIXTURE_PRODUCER_VS_UNCHANGED_REAL_VALIDATOR",
+  "unchanged_validator_sha256": "37ebf25c8166269f28206a8e0ad77fab727c5c192fd8e97c79a6fdf894b98542",
+  "results": [
+    {
+      "case": "original",
+      "head": "e05004fa366971cbada0d24deed275a9ab583d7d",
+      "producer_sha256": "078e284ab31d612fedd38aef8944c87004bb9c8062749ac2e03b6d4b4b363d70",
+      "validation": "REJECTED",
+      "reason": "LEGACY_NODE_INVALID"
+    },
+    {
+      "case": "current",
+      "head": "42686cd8fafcefaed3c5df5adaee5173d27543fd",
+      "producer_sha256": "214150bf7cb1cc8c5b81da737eb4277fdb8b5b4b9d46143e45b787fae2ab9ae9",
+      "validation": "ACCEPTED_UNVERIFIED",
+      "node_count": 7,
+      "state": "AVAILABLE_UNVERIFIED",
+      "reason": "SOURCE_UNATTESTED"
+    }
+  ],
+  "product_edits": "NONE"
+}

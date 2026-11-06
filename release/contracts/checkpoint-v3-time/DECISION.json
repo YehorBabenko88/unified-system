@@ -1,0 +1,41 @@
+{
+  "schema": "unified.checkpoint-time-owner-decision.v1",
+  "source": "DIRECT_OWNER_MESSAGE_IN_ROOT_CHAT_2026_11_06",
+  "recorded_utc": "2026-11-06T19:21:16.571383+00:00",
+  "owner_text_path": "OWNER-DECISION.md",
+  "owner_text_sha256": "924de29a15b767d1efbe335717b94ab8120a2320a6efa4f28528e801b44c15ef",
+  "decision": "OPTION_1_APPROVED",
+  "checkpoint_version": "NEW_V3_EXACT_SCHEMA_PENDING",
+  "committed_at_utc": null,
+  "commit_time_status": "UNKNOWN_COMMIT_INSTANT",
+  "commit_confirmation": "SEPARATE_AUTHORITATIVE_REVISION_IDENTITY_VERIFIABLE_EVIDENCE_REQUIRED",
+  "unconfirmed_commit_status": "COMMIT_UNCONFIRMED_OR_EXPLICITLY_AGREED_DISTINCT_EQUIVALENT",
+  "observed_time": "SEPARATE_CONFIRMED_OBSERVED_AT_UTC_OR_EXPLICITLY_AGREED_FIELD_WITH_QUALIFIED_SOURCE_SEMANTICS",
+  "compatibility": "PRESERVE_OLD_VERSIONED_READERS_AND_ORIGINAL_MEANING_NO_SILENT_V1_OR_DRAFT_V2_REINTERPRETATION",
+  "canonical_encoding": "A3_MUST_SPECIFY_NULL_TIMESTAMP_STATUS_AND_EVIDENCE_REFERENCES_AND_GET_EXACT_ACK",
+  "old_draft_field": "commit_time_semantics_NOT_AN_IMPLICIT_ALIAS_OF_commit_time_status",
+  "test_gates": [
+    "confirmed_commit_unknown_instant",
+    "unconfirmed_commit",
+    "delayed_confirmed_observation",
+    "repeated_observation",
+    "crash_restart",
+    "checkpoint_reload",
+    "incompatible_schema_version",
+    "stale_worker_fencing"
+  ],
+  "owners": {
+    "A3": "sole_schema_spec_golden_editor",
+    "A4": "storage_audit_mapping",
+    "A5": "scheduler_consumer",
+    "A2": "actual_authoritative_publication_evidence_producer",
+    "ROOT": "decision_and_integration_registry"
+  },
+  "design_decision": "APPROVED",
+  "time_semantics": "APPROVED",
+  "full_feature_scope": "UNCHANGED_PREVIOUSLY_APPROVED_SCOPE_ONLY",
+  "runtime_deployment": "NOT_AUTHORIZED_BY_THIS_DECISION",
+  "physical_installation": "NOT_AUTHORIZED_BY_THIS_DECISION",
+  "full_system_acceptance": "PENDING",
+  "runtime_evidence": "NOT_ESTABLISHED_BY_DESIGN_APPROVAL"
+}
