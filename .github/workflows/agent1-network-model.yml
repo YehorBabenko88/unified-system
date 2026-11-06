@@ -1,0 +1,79 @@
+name: Agent 1 network safety MODEL ONLY
+on:
+  push:
+    branches: ['test/agent1-network-safety-models-20261106']
+  pull_request:
+    paths:
+      - 'tests/network_model/**'
+      - 'docs/network/agent1-models/**'
+      - '.github/workflows/agent1-network-model.yml'
+permissions:
+  contents: read
+jobs:
+  model:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+        python: ['3.11', '3.13']
+    runs-on: ${{ matrix.os }}
+    env:
+      GIT_CONFIG_COUNT: '1'
+      GIT_CONFIG_KEY_0: core.autocrlf
+      GIT_CONFIG_VALUE_0: 'false'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Source-bound model tests and report (MODEL ONLY)
+        shell: python
+        env:
+          EXPECTED_MODEL_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          import hashlib, json, os, pathlib, subprocess, sys, tempfile
+          root = pathlib.Path.cwd()
+          def git(*args):
+              return subprocess.check_output(['git', '--no-replace-objects', *args], cwd=root)
+          expected = os.environ['EXPECTED_MODEL_HEAD']
+          def verify():
+              head = git('rev-parse', 'HEAD').decode().strip()
+              if head != expected:
+                  raise SystemExit('MODEL_SOURCE_HEAD_MISMATCH')
+              tree = git('rev-parse', 'HEAD^{tree}').decode().strip()
+              entries = git('ls-tree', '-rz', '--full-tree', 'HEAD', '--', 'tests/network_model', 'docs/network/agent1-models', '.github/workflows/agent1-network-model.yml')
+              inventory = []
+              for entry in entries.split(b'\0'):
+                  if not entry:
+                      continue
+                  meta, rawpath = entry.split(b'\t', 1)
+                  mode, kind, oid = meta.split()
+                  path = rawpath.decode('utf-8')
+                  if mode != b'100644' or kind != b'blob':
+                      raise SystemExit('MODEL_SOURCE_KIND_REJECTED')
+                  raw = git('cat-file', 'blob', oid.decode())
+                  actual = (root / path).read_bytes()
+                  if actual != raw:
+                      raise SystemExit('MODEL_SOURCE_RAW_MISMATCH:' + path)
+                  inventory.append({'path': path, 'blob': oid.decode(), 'sha256': hashlib.sha256(raw).hexdigest()})
+              if len(inventory) != 7:
+                  raise SystemExit('MODEL_SOURCE_INVENTORY_MISMATCH')
+              if git('status', '--porcelain', '--untracked-files=all', '--', 'tests/network_model', 'docs/network/agent1-models', '.github/workflows/agent1-network-model.yml').strip():
+                  raise SystemExit('MODEL_SOURCE_DIRTY')
+              return {'head': head, 'tree': tree, 'files': inventory}
+          before = verify()
+          print('MODEL_SOURCE_PRE=' + json.dumps(before, sort_keys=True), flush=True)
+          try:
+              with tempfile.TemporaryDirectory(prefix='model-pycache-') as cache:
+                  python = [sys.executable, '-I', '-B', '-X', 'pycache_prefix=' + cache]
+                  subprocess.run(python + ['-m', 'unittest', 'discover', '-s', 'tests/network_model', '-v'], check=True)
+                  report = "import runpy,sys; sys.path.insert(0,'tests/network_model'); sys.argv=['run_evidence.py','--source',sys.argv[1]]; runpy.run_path('tests/network_model/run_evidence.py',run_name='__main__')"
+                  subprocess.run(python + ['-c', report, before['head']], check=True)
+          finally:
+              after = verify()
+              if before != after:
+                  raise SystemExit('MODEL_SOURCE_CHANGED_DURING_TESTS')
+              print('MODEL_SOURCE_POST=' + json.dumps(after, sort_keys=True), flush=True)
