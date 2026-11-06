@@ -1,16 +1,16 @@
 {
   "schema": "unified.independent-audit-checkpoint.v1",
   "pr": 21,
-  "head": "3639575da15a715412ec1486ff0b6bef0c9b1813",
+  "head": "5a72fff828bdf4aef53580e5bde855f21ba021cd",
   "documents": [
     {
       "path": "docs/audits/agent8-20261106/current-acceptance-status.json",
-      "sha256": "a43c475316f00e660b80cbfab5d36b66ffee8db0101f43fbcc807d6931d6b7a9",
-      "url": "https://github.com/YehorBabenko88/unified-system/blob/3639575da15a715412ec1486ff0b6bef0c9b1813/docs/audits/agent8-20261106/current-acceptance-status.json"
+      "sha256": "9cce28856f911611ca1f9c67073b048cb500479c8ff3224bc33247e6d135ee30",
+      "url": "https://github.com/YehorBabenko88/unified-system/blob/5a72fff828bdf4aef53580e5bde855f21ba021cd/docs/audits/agent8-20261106/current-acceptance-status.json"
     }
   ],
   "open_p1": 6,
-  "open_p2": 2,
+  "open_p2": 1,
   "confirmed_p0": 0,
   "absence_of_p0_proven": false,
   "fix_scope": "F08_F09_F10_OFFLINE_EXACT_SOURCE_ONLY",
@@ -22,9 +22,13 @@
   "latest_finding": {
     "id": "F11",
     "scope": "PR25_CI_SOURCE_BINDING",
-    "status": "OPEN",
-    "reviewed_head": "320b5d0894019d72aa8927dc5c4246d28c6e5f3c",
-    "hosted_tampering_alleged": false
+    "status": "FIX_VERIFIED_OFFLINE",
+    "reviewed_head": "0b3af3e872b49ed1848815f7f9ffd42444f89b24",
+    "reviewed_tree": "1769906483356ed41eb8fcd278c5545b1bbafa67",
+    "tests_passed": 16,
+    "skipped": 0,
+    "negative_guards_rejected": 8,
+    "hosted_qualification": false
   },
-  "prior_checkpoint_head": "176f65b51ba1ddcca53d5d4eb2c169e5aae340ee"
+  "prior_checkpoint_head": "3639575da15a715412ec1486ff0b6bef0c9b1813"
 }
