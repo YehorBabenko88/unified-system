@@ -58,4 +58,26 @@ class RegistryTests(unittest.TestCase):
             owners=json.loads((ROOT/'ownership.v1.json').read_text(encoding='utf-8'));owners['agents'][1]['allowed_files'].append(path)
             with self.subTest(path=path),self.assertRaises(RegistryRejected):verify_ownership(owners)
 
+class AcceptanceTests(unittest.TestCase):
+    def test_package_integrity_never_grants_execution(self):
+        from unified_system.integration_registry import verify_acceptance_package
+        package=ROOT.parent/'acceptance/20261106'
+        pin=hashlib.sha256((package/'package-index.json').read_bytes()).hexdigest()
+        result=verify_acceptance_package(package,expected_index_sha256=pin)
+        self.assertFalse(result['physical_authorized']);self.assertEqual(result['go'],'NO-GO')
+    def test_modified_member_and_wrong_external_pin_rejected(self):
+        from unified_system.integration_registry import verify_acceptance_package
+        source=ROOT.parent/'acceptance/20261106'
+        pin=hashlib.sha256((source/'package-index.json').read_bytes()).hexdigest()
+        with self.assertRaises(RegistryRejected):verify_acceptance_package(source,expected_index_sha256='0'*64)
+        with tempfile.TemporaryDirectory(prefix='acceptance-owned-test-') as temporary:
+            target=Path(temporary)/'package';shutil.copytree(source,target)
+            (target/'rollback-plan.md').write_bytes(b'changed')
+            with self.assertRaises(RegistryRejected):verify_acceptance_package(target,expected_index_sha256=pin)
+    def test_additional_allocation_cannot_claim_another_scope(self):
+        owners=json.loads((ROOT/'ownership.v1.json').read_bytes())
+        duplicate=dict(owners['agents'][0]);duplicate['branch']='test-unique';duplicate['worktree']='C:/test-owned-unique'
+        owners['agents'][6]['additional_allocations']=[duplicate]
+        with self.assertRaises(RegistryRejected):verify_ownership(owners)
+
 if __name__=='__main__':unittest.main()

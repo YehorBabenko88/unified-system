@@ -1,6 +1,6 @@
 {
   "schema": "unified.integration-manifest.v1",
-  "revision": 1,
+  "revision": 2,
   "profile": "AUDIT_BASELINE_NOT_INTEGRATED_RELEASE",
   "mode": "LAB_SIMULATION",
   "modules": {
@@ -54,9 +54,9 @@
     }
   },
   "contracts_sha256": "6d3479c90a4312cdcba9befc1f06638770a74c59a9ec774a323837c143362952",
-  "ownership_sha256": "fbdac1b11a2f440da8144eb07d985e4c776127aa0e91d7e152f4a1bdd7728d4b",
+  "ownership_sha256": "72acc43445b66f9730f868f6df335dc608dfe342e550be83e47eef98789115ff",
   "repository_audit_sha256": "0241d3d3eec1d0a9596bc5197f81e86c7e3a34fe503072051bb72d8b161372f2",
-  "matrix_sha256": "2eb90bf672a1086f5abced69e275e20a0b5c8634882680e39bd7db5a5b793eba",
+  "matrix_sha256": "5db643fc6ed4df32446a3b26224b8e0d57615b85cfd2077e3561602bf49c907f",
   "runtime_admission": "BLOCKED",
   "requirements": [
     "Exact module HEAD AND tree must match; missing/extra modules rejected",
@@ -64,5 +64,48 @@
     "Proposed contract ACKs, integrated runtime and owner-authorized physical gates required",
     "Identity matching is not permission to execute/deploy; current configuration remains NO-GO"
   ],
-  "mandatory_gates_sha256": "bffdb09bbd291f1c93cffee4ceabd1e97fcf161998936070012558b92c1b959d"
+  "mandatory_gates_sha256": "bffdb09bbd291f1c93cffee4ceabd1e97fcf161998936070012558b92c1b959d",
+  "component_development_bases": {
+    "A1": {
+      "repository": "unified-system",
+      "head": "b12c6c24eeb2c59aa099f1c516d77508f36b20a6",
+      "runtime_admission": "BLOCKED"
+    },
+    "A2": {
+      "repository": "unified-system",
+      "head": "2df6f5c2f77f4d883bad1a8623dd8375db529be0",
+      "runtime_admission": "BLOCKED"
+    },
+    "A3": {
+      "repository": "bybit-cluster-grid",
+      "head": "d537d525296ef34f727996e240ae6c60102c6082",
+      "runtime_admission": "BLOCKED"
+    },
+    "A4": {
+      "repository": "unified-system",
+      "head": "2df6f5c2f77f4d883bad1a8623dd8375db529be0",
+      "runtime_admission": "BLOCKED"
+    },
+    "A5": {
+      "repository": "unified-system",
+      "head": "2df6f5c2f77f4d883bad1a8623dd8375db529be0",
+      "runtime_admission": "BLOCKED"
+    },
+    "A6": {
+      "repository": "Terminan",
+      "head": "7ed3708df53c8850fd11fc8331440bdfee99aa3e",
+      "runtime_admission": "BLOCKED"
+    },
+    "A7": {
+      "repository": "math",
+      "head": "5721987a15d20c3f9984d52eac4446704566d4b9",
+      "runtime_admission": "BLOCKED"
+    },
+    "A8": {
+      "repository": "unified-system",
+      "head": "6f89abed0b18d8044c9b650c356916f244af6d39",
+      "runtime_admission": "BLOCKED"
+    }
+  },
+  "protocol_contract_freeze": "PENDING_EXACT_OWNER_ACKS; NONE_INFERRED_FROM_DESIGN_ACK"
 }

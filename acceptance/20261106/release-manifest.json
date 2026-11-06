@@ -1,0 +1,81 @@
+{
+  "schema": "unified.release-acceptance-manifest.v1",
+  "package_id": "unified-acceptance-20261106-r1",
+  "status": "PREPARATION_ONLY_NOT_APPROVED_RELEASE",
+  "isolated_acceptance": "AUTHORIZED_DISPOSABLE_DECLARED_RESOURCES_ONLY",
+  "runtime_admission": "BLOCKED",
+  "installable": false,
+  "physical_acceptance": "BLOCKED_NO_GO",
+  "physical_fault_injection": "NOT_AUTHORIZED",
+  "production_deployment": "NOT_AUTHORIZED",
+  "tailscale_removal": "BLOCKED",
+  "code_signing_trusted_release": "BLOCKED_NO_TRUSTED_PUBLISHER",
+  "lab_unsigned": "SOURCE_MANIFEST_AND_DEPENDENCY_VERIFICATION_REQUIRED_NOT_YET_ADMITTED",
+  "final_contract_acks": "PENDING",
+  "actual_control_api_and_operator_auth": "NOT_QUALIFIED",
+  "go": "NO-GO",
+  "source_modules": {
+    "unified-system": {
+      "repository": "YehorBabenko88/unified-system",
+      "head": "8aab34342d03900ab28e6f5b78acd7558239630c",
+      "tree": "d491dfa26d31561892232de7425eb75816b842d4",
+      "pr": 13,
+      "pr_url": "https://github.com/YehorBabenko88/unified-system/pull/13",
+      "branch": "mission3/runtime-predeploy-20261031"
+    },
+    "bybit-cluster-grid": {
+      "repository": "YehorBabenko88/bybit-cluster-grid",
+      "head": "9c6113421024777a988ba69bf2dd1f79bd712130",
+      "tree": "fc84a0363f177a2a9a44cacff872e582897f7e4c",
+      "pr": 254,
+      "pr_url": "https://github.com/YehorBabenko88/bybit-cluster-grid/pull/254",
+      "branch": "mission3/cluster-predeploy-20261031"
+    },
+    "strattester": {
+      "repository": "YehorBabenko88/strattester",
+      "head": "25eb939f8a816a80ac7c042ce75ec4d9173cd4ce",
+      "tree": "29c8bf9b4a607291d845e3026904074a33480373",
+      "pr": 70,
+      "pr_url": "https://github.com/YehorBabenko88/strattester/pull/70",
+      "branch": "mission3/ci-diagnostics-20261031"
+    },
+    "math": {
+      "repository": "YehorBabenko88/math",
+      "head": "5721987a15d20c3f9984d52eac4446704566d4b9",
+      "tree": "4dfced3be2ee08fa8a33cead814bb0b92bc5bdcd",
+      "pr": 110,
+      "pr_url": "https://github.com/YehorBabenko88/math/pull/110",
+      "branch": "mission3/pinned-browser-host-20261031"
+    },
+    "meta_analyse": {
+      "repository": "YehorBabenko88/meta_analyse",
+      "head": "2c4db055e56e36384a2661d443f9abc7b2331e90",
+      "tree": "20b1e615f6035b7b4fc83e6115eba2984900f47e",
+      "pr": 76,
+      "pr_url": "https://github.com/YehorBabenko88/meta_analyse/pull/76",
+      "branch": "mission3/meta-ci-evidence-20261031"
+    },
+    "Terminan": {
+      "repository": "YehorBabenko88/Terminan",
+      "head": "7ed3708df53c8850fd11fc8331440bdfee99aa3e",
+      "tree": "96963f7e749e73c8c81e7650bdee4f2a0a05923a",
+      "pr": 68,
+      "pr_url": "https://github.com/YehorBabenko88/Terminan/pull/68",
+      "branch": "mission3/runtime-dashboard-20261031"
+    }
+  },
+  "coordination_manifest_sha256": "c57e3a96388bb2d4ef2da2c9ba4569ac65cb4516165669e1fd6790df20f46077",
+  "ownership_sha256": "72acc43445b66f9730f868f6df335dc608dfe342e550be83e47eef98789115ff",
+  "node_inventory_sha256": "94ed908acbf8117684691b3427e7917b9edec5687448cb850d669a1ac0c99d37",
+  "contract_status_sha256": "0349abf889fed24fcc8c1dd2e5f561464f6edd7449f515465ca9fc904786b2fa",
+  "ci_evidence_index_sha256": "0afa918e0c8362d4f738b33cb6cba9dbf14342164eed91161441ff015bcb67dd",
+  "rollback_plan_sha256": "624a305b34662c97a1b3b5bbde2c0834ae8722bdd4502badeb1704f7bb871793",
+  "physical_plan_sha256": "24fd80d38782c89056b6ab5ee1ae9fdc278a05fe60d942303cb9a708c20f4e6a",
+  "missing_gates": [
+    "Full exact-head workflow/case/attempt/skip policy acceptance",
+    "Final authority/assignment/storage and Egress protocol ACK",
+    "Strict commit-time expiry and sender containment qualification",
+    "Real Control API/RBAC/native Windows authentication",
+    "Integrated runtime, ten instruments, all office nodes and recovery acceptance"
+  ]
+}
