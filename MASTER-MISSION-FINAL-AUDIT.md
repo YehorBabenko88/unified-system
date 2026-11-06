@@ -44,3 +44,15 @@ release/execution-journal.json records continuation. acceptance-matrix.json reta
 Existing Windows fixture compatibility PR18 and bounded diagnostic PR19 were reviewed and consolidated without conflict. 68 affected tests passed locally with zero skips. The diagnostic helper retains its fatal 15-second deadline and preserves native assertions. The earlier 755-test full result remains evidence for its original parent source, not a claim of a repeated full suite on this newer tree.
 
 Math registration correction at917d996 received independent A8 raw-source/188-file/13-test review; actual native DLL startup remains unresolved. Proposed follow-up source pins for all six modules are listed in the noninstallable manifest; they are not a coherent admitted runtime bundle. Original paginated API responses and their command/hash index are additionally preserved in github-original-metadata.tar.gz.
+
+## Additional bounded checks
+
+18 declared cross-source scenarios passed with zero skips using exact Grid71084, Stratt1722244 and Terminan42686 sources. Their authority and market inputs remain modeled/synthetic; no real API or physical claim. A broader38-case attempt preserved two explicit skips (missing separately named Term source environment and unavailable symlink privilege); only the declared18-case rerun supplied all required source pins.
+
+New final-integration workflow was independently executed locally in an owned raw-LF clone: clean59 cases passed; a hidden assume-unchanged tracked comment was rejected. Original Windows long revision:path probe failure was preserved locally and corrected using Git tree blob IDs, without OS/security policy changes. Hosted matrices remain unqualified.
+
+## Fresh six-node read-only observation
+
+LS5 local and all five direct-LAN pinned SSH identities completed resource/network/service/port/firewall/ExecutionPolicy inventory without component errors. Original detailed inventory and public egress IP remain owner-local; redacted summaries and original hashes are published. Six bounded HTTPS observations shared one IPv4 for that endpoint/time only, not proven Bybit routing or quota admission.
+
+PC3 Windows Firewall reports Domain/Private/Public profiles off; this existing state was observed, not changed or attributed to Unified. ESET/third-party firewall coverage and intended configuration require owner/security review before admission. PC1 and LS7 have roughly3GiB free physical RAM; capacity/load admission remains unqualified. No office installation, service/network reset, Tailscale removal or fault injection occurred.
