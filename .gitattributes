@@ -1,3 +1,7 @@
 # These files are compared against externally pinned raw bytes.
 .gitattributes -text
 integration/windows-candidate/requirements-cp312-win_amd64-cpu.lock -text
+
+# Cross-file coordination digests require canonical JSON bytes.
+coordination/*.json text eol=lf
+acceptance/20261106/** -text

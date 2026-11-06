@@ -1,0 +1,34 @@
+{
+  "schema": "unified.egress-design-freeze.v1",
+  "contract_sha256": "16606dee585398ae6d92139ffc1cf2ed37a4d2e08759aaa08f0c3b85958b8049",
+  "profile": "SCOPED_PROTOCOL_DESIGN_GATES_CLOSED",
+  "owner_roles": {
+    "A1": "TRANSPORT_ENFORCEMENT_AND_DOMAIN_LEDGER",
+    "A2": "AUTHORITY_FENCING",
+    "A3": "PROVIDER_POLICY"
+  },
+  "ack_sources": {
+    "A1": {
+      "file": "egress-v2-review2-ack-register.md",
+      "sha256": "ea98f08ec33d97e9ad0790f132d2645256d248d6d51b28dcfaac2df8d74dcc0a"
+    },
+    "A2": {
+      "file": "EGRESS-V2-REVIEW2-AUTHORITY-ACK.json",
+      "sha256": "4b04507c256fe532350d7200e8ce6dde3296da5a14bf9c0f0d76a7aac0c23cdf"
+    },
+    "A3": {
+      "file": "egress-v2-review2-agent3-ack.md",
+      "sha256": "0cdd5e36303684aafa2798d0584a457b0dc5e73a111b3d48eab41f246b89af79"
+    }
+  },
+  "A1_ack_scope": "AUTHOR_OF_EXACT_REVIEW2_AND_OWNERSHIP_ACK; REGISTER_CAPTURE_PRECEDES_A2_FINAL_ACK",
+  "root_design_approval": "APPROVED_CLOSED_PROFILE_ONLY",
+  "implementation": "AUTHORIZED_A1_ISOLATED_ALLOCATED_FILES_AND_TESTS_ONLY",
+  "runtime_api_ack": false,
+  "activation_authorized": false,
+  "real_provider_send_authorized": false,
+  "strict_expiry": "CLOSED",
+  "sender_containment": "CLOSED_UNQUALIFIED",
+  "provider_policy": "DISABLED",
+  "physical_acceptance": "BLOCKED_NO_GO"
+}

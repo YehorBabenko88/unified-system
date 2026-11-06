@@ -1,0 +1,183 @@
+{
+  "contract": "unified.authority-assignment-storage.wire.v2-draft3",
+  "supersedes_draft_sha256": "ff6c9b6ef37a022f1d8346fff31679cdd80a2ea33f8e6b2d4550ba22fc92d020",
+  "status": "EXACT_BYTE_REVIEW_CANDIDATE_NOT_APPROVED",
+  "runtime_go": false,
+  "runtime_base": "2df6f5c2f77f4d883bad1a8623dd8375db529be0",
+  "authority_source": "55e74863c3c28bf4cbcb4ded4d3359f98bf93f71",
+  "authority": "Existing Grid Consul cluster and existing leader lock only. ROOT alone publishes shared integration files; Grid implementation changes require its owner.",
+  "versioning": "This explicitly new wire-v2 draft does not change existing command.v1, its numeric fields or stored receipts. No implicit alias/number conversion is permitted. A future admitted version adapter must explicitly select v2; absent that adapter return UNSUPPORTED_VERSION. No proposed route here exists at the source pin.",
+  "encoding": {
+    "canonical": "UTF-8 without BOM/newline; printable ASCII string values; unique ASCII keys sorted unsigned-byte ascending at every nesting level; no whitespace; quote/backslash escaped, slash unescaped; arrays preserve order unless explicitly sets; JSON null/booleans literal; no JSON numeric values in this wire contract; reject duplicate/unknown fields before canonicalization.",
+    "uuid": "Lowercase canonical UUIDv4 string, 36 ASCII bytes; reject aliases rather than normalize.",
+    "id": "Printable ASCII opaque string, 1..128 bytes; not a path/URL; no normalization; separate principal namespaces are provisioned by identity owner.",
+    "u63": "Decimal string 0..9223372036854775807, at most 19 digits, no leading zero except 0; positive subtype excludes 0. Parse checked integer arithmetic, no floats.",
+    "sha256": "Exactly 64 lowercase hexadecimal characters over complete canonical bytes; intent_digest excludes only its own top-level field and transport credentials that are not envelope fields.",
+    "scope": "Exact object with job_id,dataset_id,source_id,partition_id, each id. scope_hash is SHA256 of its canonical bytes. Dataset UUID is permitted as an id but must match Storage registry exactly.",
+    "time": "issued_at_ms/expires_at_ms are u63 UTC epoch milliseconds, not local timezone or cross-host monotonic time. These are policy/audit metadata while strict expiry gate is closed.",
+    "bounds": "Whole request and each encoded authority value <=32768 bytes; max nesting depth 12; max object members 48; any array <=32 entries; max transaction operations 48; max publication references 16; no inline manifests/segments; reject before mutation if any bound exceeded. Counter overflow blocks, never wraps. These are proposed integration bounds, not current deployed guarantees."
+  },
+  "identity": {
+    "cluster_id": "Provisioned UUID identifying the logical installation; stable across routine restart and recovery.",
+    "cluster_generation": "Provisioned UUID recovery namespace, exact match to sole authority generation anchor. Stable across ordinary leader failover; changes only in approved disaster recovery after containment/reconciliation. Old generations never become current by numeric comparison.",
+    "assignment_id": "UUID allocated once per committed placement; remains on renewal/drain; replacement gets a new UUID.",
+    "lease_id": "Distinct UUID allocated with assignment grant, stable on renewal, never equal to/aliased with assignment_id. Replacement/rejoin gets a new lease_id.",
+    "assignment_revision": "Positive u63 scope counter advanced on each new placement/supersession; allocated atomically with scope binding. Scope state record ModifyIndex is additionally checked on every operation.",
+    "lease_epoch": "Separate positive u63 scope fencing counter advanced on replacement owner, assignment or incarnation. Independently stored, not Raft term; checked even if currently numerically equal to assignment_revision.",
+    "grant_revision": "Positive u63 version within assignment. Starts 1; renew, drain-policy change and terminal transition advance it; any prior version fails new effects.",
+    "owner_id": "Authenticated stable worker/service principal. Explicit mapping from Scheduler worker_id only after identity provider verifies that principal; no equality to human actor or node implied.",
+    "node_id": "Provisioned machine UUID; binds worker registration and is distinct from owner_id.",
+    "worker_incarnation_id": "Fresh UUID per process registration, bound to owner_id+node_id in authority. Rejoin never reuses previous process grant.",
+    "leader_lock_index": "Positive u63 encoding of existing Consul leader lock ModifyIndex, bound to exact internal session. It is not any assignment counter or PG epoch.",
+    "fence": "Exact object {cluster_generation,leader_lock_index,assignment_id,lease_id,assignment_revision,lease_epoch,grant_revision,owner_id,node_id,worker_incarnation_id}. No bearer authority: compare against server-side current records and authenticated principal in transaction. Existing checkpoint scalar fencing_token requires explicitly versioned adapter/schema update; no silent reinterpretation.",
+    "authority_commit_index": "Positive u63 ModifyIndex of committed receipt returned after consistent lookup; observation metadata, not permission or guaranteed contiguous event number.",
+    "authority_term": "Not a required wire field; optional separately versioned diagnostics only. current_epoch is forbidden as ambiguous alias."
+  },
+  "request": {
+    "exact_fields": ["schema","cluster_id","cluster_generation","request_id","operation","actor_id","scope","expected_assignment_revision","expected_grant_revision","fence","payload","intent_digest"],
+    "schema": "unified.authority-operation.v2-draft3",
+    "request_id": "uuid; immutable idempotency identity, reused byte-identically after unknown outcome",
+    "actor_id": "id assertion matched to independently authenticated caller; permissions derived by server, never this field",
+    "expected_assignment_revision": "u63; 0 only for verified empty/genesis scope",
+    "expected_grant_revision": "u63; 0 only for initial placement; otherwise current value",
+    "fence": "null only for initial placement/read-receipt; all worker mutations carry exact typed fence",
+    "unknown_fields": "reject at envelope and every nested object; each operation selects exactly its payload fields"
+  },
+  "key_layout": {
+    "N": "Existing admitted Grid authority.config.namespace, never a new independent leader namespace.",
+    "leader": "N/leader (existing lock; no duplicate lock)",
+    "generation": "N/commands/generation (existing single generation anchor, existing shape {generation: cluster_generation}; require consistent exact match and check-index; commissioning migration belongs to ROOT)",
+    "prefix": "N/wire-v2/G where G is cluster_generation",
+    "cluster": "prefix/cluster; immutable {cluster_id,cluster_generation}, check-index",
+    "scope": "prefix/scopes/S where S is scope_hash; current assignment reference, state and scope counters in one checked record",
+    "assignment": "prefix/assignments/A where A is assignment_id; immutable binding plus current grant_revision/state/drain; terminal record retained",
+    "worker": "prefix/workers/W where W=sha256(canonical {owner_id,node_id}); current incarnation and admission state",
+    "reservation": "prefix/reservations/R; Storage-owned reservation identity, assignment binding, budget ref/revision, capacity and state",
+    "budget": "prefix/budgets/B; Storage-owned admitted volume/budget revision and counters",
+    "dataset_head": "prefix/datasets/D/head; D=sha256(canonical dataset_id)",
+    "dataset_checkpoint": "prefix/dataset-checkpoints/C; C=sha256(canonical {dataset_id,source_id,partition_id}); DATASET lineage independent of job",
+    "job_checkpoint": "prefix/job-checkpoints/J; J=sha256(canonical {job_id,dataset_id,source_id,partition_id}); JOB progress/adoption lineage",
+    "resource_reservation": "prefix/resource-reservations/R; Scheduler-owned durable capacity entitlement and binding",
+    "capacity_observation": "prefix/capacity-observations/W; W=sha256(canonical {owner_id,node_id}); authenticated observation provenance/revision/incarnation and admission dimensions, not a lease",
+    "closure_hold": "prefix/closure-holds/H; Storage-owned exact immutable candidate closure/policy digest and active pin state/revision; physical deletion must remain prohibited while protected",
+    "coverage": "prefix/coverage/K; K=sha256(canonical {dataset_id,source_id,partition_id}); authority-ordered exact source-interval/record coverage registry root/revision, independent of segment_id",
+    "segment": "prefix/segments/T; T=sha256(canonical {dataset_id,source_id,partition_id,segment_id}); job/owner excluded",
+    "command": "prefix/requests/Q; Q=sha256(canonical {actor_id,operation,request_id}); immutable complete intent digest and receipt, includes original ownership",
+    "outbox": "prefix/outbox/Q; bounded immutable committed event reference; Sync global ordering not implied"
+  },
+  "common_transaction": {
+    "actor_vs_target": "actor_id is the independently authenticated operation principal; target owner_id/node_id/worker_incarnation are a separate assignment binding. Do not require Scheduler/operator/Storage actors to impersonate the worker. Grant/Drain/Supersede/Cancel require explicitly admitted Scheduler/operator action+scope grants; ReleaseReservation requires Storage action+scope grants; Publish/Complete require worker or explicitly admitted Storage commit service acting on a verified bound worker intent; Adopt/Renew require explicitly admitted action+scope grants. Target worker registration/fence remains checked in every applicable operation regardless of actor kind. Unknown role/action mapping denies; concrete identity provider and RBAC grants remain unqualified.",
+    "preparation": "Read existing records consistently, authenticate caller and verify immutable candidate closure. Capture exact values and ModifyIndices. Recheck current caller authority before submit. Prepared data must be protected against deletion by approved Storage holds; this draft alone does not implement that protection.",
+    "predicates": [
+      "check-session existing leader with exact internal current session",
+      "check-index existing leader lock with leader_lock_index",
+      "check-index generation and cluster records; values captured match request cluster/generation",
+      "check-index scope, assignment and worker records; captured values match expected counters, fence, current state and verified target owner/node/incarnation; authenticate actor independently under actor_vs_target",
+      "check-index each referenced Storage reservation/budget and drain state through assignment record; captured contents satisfy binding, remaining capacity and approved authorization semantics",
+      "CAS command key at index 0; duplicate preexisting intent returns original authorized receipt, mismatch conflicts"
+    ],
+    "rule": "All checks and operation writes occur in one existing Consul /v1/txn; any failed check commits none. Compare semantic fields in captured records AND include check-index for every record relied upon. No client quorum/expiry boolean is trusted. No independent local SQL write is authoritative.",
+    "time_gate": "STRICT_WALL_CLOCK_EXPIRY_UNIMPLEMENTED: production grant/renew/publication actions requiring it return SAFETY_GATE_CLOSED before effects. A timestamp precheck, timer reaper or session TTL is not proof of strict linearization-time expiry."
+  },
+  "mandatory_global_safety_gates": {
+    "default": "CLOSED; this is a design requirement, not an implemented enforcement claim.",
+    "gates": ["STRICT_WALL_CLOCK_EXPIRY_UNIMPLEMENTED","CLOSURE_ELIGIBILITY_AND_ALLOCATION_PROTOCOL_UNIMPLEMENTED"],
+    "applies_to": "Every proposed mutation is disabled in this draft runtime profile until both gates are independently implemented, qualified and explicitly admitted by ROOT/operator. This includes GrantAssignment, RenewAssignment, DrainAssignment, SupersedeAssignment, CancelAssignment, CompleteAssignment, PublishSegment, AdoptCommittedSegment and ReleaseReservation; no bypass through completion, adoption, cleanup, hold conversion, metadata-only debit or checkpoint-only update.",
+    "adoption": "AdoptCommittedSegment lacks a qualified current closure-attestation binding in its proposed payload and remains disabled. A future reviewed revision must supply equivalent current replica eligibility/revocation, transitive closure/pin protection, coverage, allocation/budget and expiry predicates for every root/checkpoint/debit/hold it changes. Historical receipt or zero segment-byte debit is insufficient.",
+    "reads": "Authorized consistent receipt/diagnostic reads may proceed through a separately admitted implementation. They grant no mutation, release, renewed lease or send permission. Rejoin remains a non-authorizing reconciliation procedure; it cannot reactivate assignments while gates are closed.",
+    "no_partial_gate_open": "Approval of identity mappings or session-valid alternative alone opens neither gate; later per-operation admission requires a new explicit contract/version ACK and evidence. Draft size/count ceilings are validation/model ceilings only, not load-qualified production limits."
+  },
+  "storage_prepared_attestation": {
+    "schema": "unified.storage-prepared-closure.v2-draft2",
+    "key": "closure_hold key; mutable eligibility/state/revision with immutable referenced candidate bytes",
+    "exact_fields": ["schema","cluster_id","cluster_generation","attestation_id","attestation_revision","scope","assignment_id","lease_id","assignment_revision","lease_epoch","grant_revision","owner_id","node_id","worker_incarnation_id","intent_content_digest","manifest_content_ref","publication_root_ref","checkpoint_ref","transitive_closure_root","coverage_predecessor_revision","coverage_delta_ref","replica_policy_revision","dependency_revision_vector","allocation_vector","pin_revision_vector","eligibility_state","state"],
+    "types": "IDs/digests/counters/scope use encoding and identity definitions above; all *_ref are exact objects {object_sha256,bytes} with sha256+u63, resolved only through admitted Storage; state PREPARED or PUBLISHED or INVALIDATED; eligibility_state ELIGIBLE or INELIGIBLE; vectors <=16 entries each and whole record <=32768 bytes.",
+    "dependency_revision_vector_entry": "Exact object {record_key_digest,record_revision,object_sha256,eligibility_state}; revision u63, state ELIGIBLE/INELIGIBLE. Covers replica availability/corruption/LOST/revocation and approved freshness state for every dependency in transitive closure.",
+    "allocation_vector_entry": "Exact object {allocation_id,node_id,volume_id,volume_incarnation,storage_instance_id,reservation_id,reservation_revision,budget_revision,data_bytes,metadata_bytes,uncertain_bytes}; IDs id except node_id uuid, revisions/bytes u63. Storage verifies actual allocations, never accepts caller byte estimates as debit truth.",
+    "pin_revision_vector_entry": "Exact object {record_key_digest,record_revision,object_sha256}; binds current full-closure pin/hold eligibility, not only publication root.",
+    "publication_predicates": "check-index closure attestation and coverage registry. Match exact assignment/grant and candidate digest/roots. Check-index every dependency/allocation/pin record relied on, OR qualify a protocol where every eligibility/revocation/corruption/freshness/pin transition atomically invalidates/updates this same attestation before it can authorize publication. Uncoupled external evidence updates are not acceptable. Unknown or excessive dependency fanout denies.",
+    "actual_byte_debit": "Compute per-volume debit from verified allocation_vector, match byte_count/metadata_byte_count exactly, CAS each reservation/budget/current allocation record and retain temporary/uncertain bytes. Never credit uncertain usage on publication, restart or expiry.",
+    "coverage_predicate": "Storage/A3 verify canonical interval/record coverage against exact current coverage root; check-index coverage record and atomically install new root with publication. Different segment_id covering conflicting existing canonical records/intervals rejects. Same committed segment+digest returns prior receipt only, with no new checkpoint, revision or debit; explicit Adopt action is required to advance another job.",
+    "hold_conversion": "In same publication txn CAS attestation PREPARED->PUBLISHED and bind durable root protection for full transitive closure, preserving checked pin/hold revisions. Deletion/GC must obey these authoritative holds; immutable hashes alone do not prevent corruption/deletion.",
+    "gate": "CLOSURE_ELIGIBILITY_AND_ALLOCATION_PROTOCOL_UNIMPLEMENTED: publication remains SAFETY_GATE_CLOSED unless coupled invalidation, full-closure protection, coverage conflict enforcement and actual per-volume debit are qualified. Record presence/precheck is not proof. Any transaction/record/reference bound overflow denies."
+  },
+  "operations": {
+    "GrantAssignment": {
+      "payload_fields": ["assignment_id","lease_id","owner_id","node_id","worker_incarnation_id","resource_reservation_ref","expected_resource_reservation_revision","capacity_observation_ref","storage_reservation_ref","storage_budget_revision","issued_at_ms","expires_at_ms"],
+      "checks": "Common checks; scope absent/terminal with exact expected scope revision; current admitted worker; check-index Scheduler resource reservation with exact expected revision and target binding, quantities and PREPARED state; check-index capacity observation record, exact provenance/digest/revision/incarnation and policy dimensions. Observation freshness/clock and allocation correctness require qualified enforcement, not time precheck. Durable Storage bindings/budgets checked too; capacity binding not issued twice.",
+      "writes": "CAS scope counters+1, new assignment ACTIVE/grant_revision=1 with new IDs; atomically bind prepared reservations; immutable receipt+outbox. Initial fence is produced from captured leader binding, never caller minted."
+    },
+    "RenewAssignment": {
+      "payload_fields": ["issued_at_ms","expires_at_ms"],
+      "checks": "Common; ACTIVE/permitted DRAINING; exact current grant_revision; unchanged owner/incarnation/assignment/reservation binding; no drain deadline extension; time gate open under approved semantics.",
+      "writes": "CAS assignment grant_revision+1 and approved validity metadata; scope current binding updated if stored grant ref changes; new immutable receipt+outbox. IDs, assignment_revision and lease_epoch unchanged. Old fence cannot mutate."
+    },
+    "DrainAssignment": {
+      "payload_fields": ["deadline_ms","permitted_batch_ids","max_remaining_bytes"],
+      "checks": "Common; authorized Scheduler/operator; ACTIVE or compatible DRAINING; sorted unique batch IDs <=32, bound to admitted assignment work.",
+      "writes": "CAS assignment DRAINING, grant_revision+1, exact bounded batch allowlist and cumulative remaining debit; receipt+outbox."
+    },
+    "SupersedeAssignment": {
+      "payload_fields": ["replacement_assignment_id","replacement_lease_id","owner_id","node_id","worker_incarnation_id","resource_reservation_ref","expected_resource_reservation_revision","capacity_observation_ref","storage_reservation_ref","storage_budget_revision","issued_at_ms","expires_at_ms"],
+      "checks": "Common; independently authorized Scheduler actor; exact old scope+assignment; replacement identity and reservations admitted. Apply the same resource-reservation and capacity-observation check-index/provenance/freshness predicates as GrantAssignment to replacement. Independent containment required where protected mutable resources demand it.",
+      "writes": "CAS old assignment terminal SUPERSEDED/grant_revision+1, scope counters+1 and new reference; create replacement ACTIVE/new grant_revision=1; bind replacement reservations without freeing possibly used old bytes; receipt+outbox."
+    },
+    "CancelAssignment": {
+      "payload_fields": ["reason_code"],
+      "checks": "Common; independently authorized cancel principal; exact current nonterminal assignment. No-quorum cancellation request is not committed revocation.",
+      "writes": "CAS assignment REVOKED/grant_revision+1 and scope terminal reference; receipt+outbox. Reservation release is separate reconciled action; no automatic credit or data deletion."
+    },
+    "CompleteAssignment": {
+      "payload_fields": ["expected_checkpoint_revision","checkpoint_ref"],
+      "checks": "Common; current checkpoint exact digest/revision and finished authorized scope; current assignment nonterminal.",
+      "writes": "CAS assignment COMPLETED/grant_revision+1 and scope terminal reference; receipt+outbox. All future old publications/renewals fail."
+    },
+    "PublishSegment": {
+      "payload_fields": ["segment_id","segment_digest","byte_count","metadata_byte_count","batch_id","manifest_content_ref","publication_root_ref","checkpoint_ref","outbox_root_ref","expected_dataset_revision","expected_checkpoint_revision","expected_job_checkpoint_revision","job_checkpoint_ref","storage_reservation_id","expected_reservation_revision","storage_budget_revision","replica_evidence_root","policy_revision","closure_hold_ref"],
+      "checks": "Common; exact segment closure/replica policy and protected candidates; head/checkpoint predecessor CAS; reservation BOUND/PARTIALLY_CONSUMED, exact budget+revision, sufficient data+metadata bytes; admitted batch and cumulative drain debit; global segment key absent, or exact immutable duplicate handled without new mutation.",
+      "writes": "Atomically CAS head, DATASET source/partition checkpoint and separate JOB checkpoint, reservation+budget data/metadata counters, assignment drain remaining allowance, global segment receipt, command receipt and outbox root; check-index exact active closure-hold and bind to durable publication protection. DAG: manifest-content -> segments/coverage/gaps; dataset checkpoint -> manifest-content; outbox -> content/checkpoint/commit_id; publication-root -> content/checkpoint/outbox; external final receipt -> publication-root. No back-reference to final receipt hash."
+    },
+    "AdoptCommittedSegment": {
+      "payload_fields": ["existing_segment_receipt_ref","expected_dataset_revision","expected_job_checkpoint_revision","job_checkpoint_ref","metadata_byte_count","storage_reservation_id","expected_reservation_revision","storage_budget_revision"],
+      "checks": "Common; exact existing committed segment, manifest digest and required coverage/provenance; current job checkpoint predecessor; current reservation and metadata budget.",
+      "writes": "CAS current job checkpoint and any required dataset-root reference change under exact head CAS; debit metadata/checkpoint bytes only, never segment bytes twice; immutable adoption receipt+outbox. Never mutate original acquisition provenance."
+    },
+    "ReleaseReservation": {
+      "payload_fields": ["storage_reservation_id","expected_reservation_revision","storage_budget_revision"],
+      "checks": "Common; Storage-owner authorization; exact durable assignment binding and all original UNKNOWN publication outcomes reconciled; no active entitlement being silently reclaimed.",
+      "writes": "CAS reservation state/revision and remaining unused capacity credit only; committed used bytes, roots and receipt history preserved; receipt+outbox."
+    },
+    "Rejoin": {
+      "payload_fields": [],
+      "rule": "Not a lease mutation that revives old authority. Identity service registers a fresh incarnation under its separately admitted protocol; authorized reads reconcile original receipts/current generation/verified checkpoint, then Scheduler proposes new Grant/Supersede with new IDs/epochs. Missing identity-registration API means fail closed."
+    },
+    "ReadReceipt": {
+      "payload_fields": ["original_actor_id","original_operation","original_request_id"],
+      "rule": "Authorized consistent lookup of original immutable key; no worker-side rekey. Quorum-unavailable/ambiguous reads return UNKNOWN, not fabricated NOT_FOUND/REJECTED. Receipt replay is evidence, never renewed mutation permission."
+    }
+  },
+  "receipt": {
+    "schema": "unified.authority-receipt.v2-draft3",
+    "committed_fields": ["schema","cluster_id","cluster_generation","request_id","operation","actor_id","intent_digest","commit_status","authority_commit_index","result_ref"],
+    "commit_status": "COMMITTED only for immutable receipt durably stored by transaction and confirmed through authorized consistent lookup. authority_commit_index is attached from actual receipt ModifyIndex, not recursively stored in itself.",
+    "unknown": "Distinct result object {schema,cluster_id,cluster_generation,request_id,operation,commit_status:UNKNOWN}; never include invented receipt/index/success fields. Reconcile original full intent and authorization before disclosure or retry.",
+    "rejected": "Definite pre-admission schema/auth/safety/CAS conflict may return typed error; ambiguous transaction response remains UNKNOWN until reconciled.",
+    "idempotency": "Same generation+actor+operation+request_id and complete digest returns original authorized result. Changed payload or actor binding conflicts. Global segment identity independently prevents cross-owner/job duplicate publication. Owner/grant changes cannot justify rekeying an unknown old intent."
+  },
+  "time_semantic_decision": {
+    "strict_requirement": "BLOCKED_NOT_IMPLEMENTED: no production expiry-sensitive action enabled by this draft.",
+    "alternative_for_explicit_operator_approval": "SESSION_VALID_AT_COMMIT: publication requires exact current leader session and committed assignment/grant/revocation state at txn execution. Expiry is the committed invalidation/revocation order, not a strict wall-clock instant. issued/expires timestamps guide conservative worker stopping and audit only. This is a material weakening of strict expiry and is NOT approved here.",
+    "committed_at": "No exact linearization timestamp is promised. Timestamp assigned before submit or after observation must be labelled accordingly; cannot satisfy strict committed_at_utc producer requirement. Raft/receipt indices establish order. A mandatory strict committed_at_utc field keeps Historical Checkpoint production disabled until revised semantic approval or a qualified primitive.",
+    "bounds": "Production TTL/skew bounds NOT_QUALIFIED; no guessed numeric runtime defaults. Envelope size/counter bounds above are concrete draft validation bounds; clock correctness requires separately approved enforcement evidence."
+  },
+  "dispatch_interlock": "This assignment/storage protocol cannot fence external Bybit sends. No new reserve/dispatch admission without quorum; durable charged uncertainty and affected canonical-scope freeze survive window/leader/generation change until independently proven sender/socket containment. Agent1 domain accounting, Agent3 provider policy and ROOT ownership allocation remain separate; no full dispatch ACK.",
+  "ack_register": {
+    "Agent2": "PROPOSED_EXACT_CANDIDATE_NOT_RUNTIME_ACK",
+    "Agent4_exact_bytes": "REQUESTED_PENDING",
+    "Agent5_exact_bytes": "REQUESTED_PENDING",
+    "IntegrationOwner": "PENDING",
+    "operator_time_semantics": "NOT_APPROVED",
+    "runtime_fault_tests": "NOT_RUN",
+    "windows_physical": "NOT_RUN"
+  }
+}

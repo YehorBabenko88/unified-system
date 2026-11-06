@@ -1,0 +1,64 @@
+{
+  "schema": "unified.acceptance-node-inventory.v1",
+  "adminit": "EXCLUDED",
+  "address_source": "OWNER_SUPPLIED_CANDIDATES_REVALIDATED_ONLY_BY_READONLY_SSH_EGRESS_OBSERVATION",
+  "nodes": [
+    {
+      "node_id": "LS5",
+      "lan_ipv4_candidate": "192.168.2.173",
+      "role": "PREFERRED_COORDINATOR",
+      "identity_observation": "LOCAL_MACHINE_NAME",
+      "runtime_mutual_auth": "NOT_QUALIFIED",
+      "capacity": "NOT_ADMITTED",
+      "host_key_material": "PRIVATE_OWNER_INVENTORY_NOT_EMBEDDED"
+    },
+    {
+      "node_id": "PC1",
+      "lan_ipv4_candidate": "192.168.2.11",
+      "role": "WORKER",
+      "identity_observation": "EXISTING_PINNED_SSH_AND_EXPECTED_MACHINE_NAME",
+      "runtime_mutual_auth": "NOT_QUALIFIED",
+      "capacity": "NOT_ADMITTED",
+      "host_key_material": "PRIVATE_OWNER_INVENTORY_NOT_EMBEDDED"
+    },
+    {
+      "node_id": "PC2",
+      "lan_ipv4_candidate": "192.168.2.12",
+      "role": "WORKER",
+      "identity_observation": "EXISTING_PINNED_SSH_AND_EXPECTED_MACHINE_NAME",
+      "runtime_mutual_auth": "NOT_QUALIFIED",
+      "capacity": "NOT_ADMITTED",
+      "host_key_material": "PRIVATE_OWNER_INVENTORY_NOT_EMBEDDED"
+    },
+    {
+      "node_id": "PC3",
+      "lan_ipv4_candidate": "192.168.2.104",
+      "role": "COORDINATOR",
+      "identity_observation": "EXISTING_PINNED_SSH_AND_EXPECTED_MACHINE_NAME",
+      "runtime_mutual_auth": "NOT_QUALIFIED",
+      "capacity": "NOT_ADMITTED",
+      "host_key_material": "PRIVATE_OWNER_INVENTORY_NOT_EMBEDDED"
+    },
+    {
+      "node_id": "PC4",
+      "lan_ipv4_candidate": "192.168.2.115",
+      "role": "COORDINATOR",
+      "identity_observation": "EXISTING_PINNED_SSH_AND_EXPECTED_MACHINE_NAME",
+      "runtime_mutual_auth": "NOT_QUALIFIED",
+      "capacity": "NOT_ADMITTED",
+      "host_key_material": "PRIVATE_OWNER_INVENTORY_NOT_EMBEDDED"
+    },
+    {
+      "node_id": "LS7",
+      "lan_ipv4_candidate": "192.168.2.141",
+      "role": "WORKER",
+      "identity_observation": "EXISTING_PINNED_SSH_AND_EXPECTED_MACHINE_NAME",
+      "runtime_mutual_auth": "NOT_QUALIFIED",
+      "capacity": "NOT_ADMITTED",
+      "host_key_material": "PRIVATE_OWNER_INVENTORY_NOT_EMBEDDED"
+    }
+  ],
+  "egress_summary_sha256": "11831d6df4e0929f78f2e66becd2255557779f254f758b53f85c76b5a041daf2",
+  "office_security_changes": "NOT_AUTHORIZED",
+  "reolink_pc2": "LEAVE_CLOSED_NO_INTERVENTION"
+}
