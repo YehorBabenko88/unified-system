@@ -1,5 +1,5 @@
 {
-  "checked_utc": "2026-11-06T19:27:55.126034+00:00",
+  "checked_utc": "2026-11-06T19:40:44.789710+00:00",
   "RELEASE_MANIFEST_STATUS": "PRESENT_PREPARATION_ONLY_NOT_APPROVED_NOT_INSTALLABLE",
   "NODE_INVENTORY_STATUS": "SIX_REDACTED_OWNER_OBSERVATIONS_PRESENT_ORIGINAL_RAW_NOT_REACQUIRED_BY_A8_NOT_ADMITTED",
   "CONTRACT_STATUS": {
@@ -356,6 +356,134 @@
       "runtime_authority": "NOT_QUALIFIED",
       "physical": "BLOCKED",
       "overall": "NO_GO"
+    },
+    "integration_PR26_75": {
+      "head": "c9f3735c1efa2d5ae0e2dfbe52987a49c520bdf5",
+      "tree": "d19857aa229691be6ed2c7287e79f92b16baa961",
+      "prior_source": "56f4215506f3a6efb7404591753facd69204a1ee",
+      "all_prior59_IDs_and_test_method_ASTs_preserved": true,
+      "new_inventory": 75,
+      "new_cases": "15_A5_DURABLE_PLUS1_PROVIDER_AST",
+      "A5_product_and_PS_match_independently_reviewed_pins": true,
+      "workflow_code_sha256": "09b08ce2f37877cebf530134eee8c31b9c3521d967b26123bedd828c5ef8b640",
+      "raw_protected_inputs": 377,
+      "cases": {
+        "clean": {
+          "exit_code": 0,
+          "receipt_emitted": true,
+          "tests": 75,
+          "skipped": 0,
+          "reason": [],
+          "tests_from_log": 75
+        },
+        "hidden_PS_comment": {
+          "exit_code": 1,
+          "receipt_emitted": false,
+          "tests": null,
+          "skipped": null,
+          "reason": [
+            "AssertionError: raw source differs from committed blob: scripts/network_readonly_probe.ps1"
+          ],
+          "tests_from_log": 0
+        },
+        "hidden_A5_comment": {
+          "exit_code": 1,
+          "receipt_emitted": false,
+          "tests": null,
+          "skipped": null,
+          "reason": [
+            "AssertionError: raw source differs from committed blob: scheduler_components/durable.py"
+          ],
+          "tests_from_log": 0
+        },
+        "hidden_inventory_whitespace": {
+          "exit_code": 1,
+          "receipt_emitted": false,
+          "tests": null,
+          "skipped": null,
+          "reason": [
+            "AssertionError: raw source differs from committed blob: release/component-test-inventory.json"
+          ],
+          "tests_from_log": 0
+        },
+        "CRLF_PS": {
+          "exit_code": 1,
+          "receipt_emitted": false,
+          "tests": null,
+          "skipped": null,
+          "reason": [
+            "AssertionError: raw source differs from committed blob: scripts/network_readonly_probe.ps1"
+          ],
+          "tests_from_log": 0
+        },
+        "missing_PS": {
+          "exit_code": 1,
+          "receipt_emitted": false,
+          "tests": null,
+          "skipped": null,
+          "reason": [],
+          "tests_from_log": 0
+        },
+        "hidden_post_PS": {
+          "exit_code": 1,
+          "receipt_emitted": false,
+          "tests": null,
+          "skipped": null,
+          "reason": [
+            "AssertionError: raw source differs from committed blob: scripts/network_readonly_probe.ps1"
+          ],
+          "tests_from_log": 75
+        },
+        "missing_prior_ID": {
+          "exit_code": 1,
+          "receipt_emitted": false,
+          "tests": null,
+          "skipped": null,
+          "reason": [
+            "AssertionError"
+          ],
+          "tests_from_log": 0
+        },
+        "duplicate_prior_ID": {
+          "exit_code": 1,
+          "receipt_emitted": false,
+          "tests": null,
+          "skipped": null,
+          "reason": [
+            "AssertionError"
+          ],
+          "tests_from_log": 0
+        },
+        "same75_substituted_prior_ID": {
+          "exit_code": 1,
+          "receipt_emitted": false,
+          "tests": null,
+          "skipped": null,
+          "reason": [
+            "AssertionError: prior mandatory cases removed"
+          ],
+          "tests_from_log": 0
+        },
+        "skip": {
+          "exit_code": 1,
+          "receipt_emitted": true,
+          "tests": 75,
+          "skipped": 1,
+          "reason": [
+            "AssertionError"
+          ],
+          "tests_from_log": 75
+        }
+      },
+      "scope": "EXACT_EMBEDDED_WORKFLOW_LOCAL_WINDOWS_75_NOT_59_INHERITANCE",
+      "hosted": "NOT_QUALIFIED",
+      "runtime": "NOT_QUALIFIED",
+      "physical": "BLOCKED",
+      "overall": "NO_GO",
+      "provider_AST_assertions_unchanged_only_qualified_helper_import": true,
+      "clean_primary_raw_Git_files_verified_after": 536,
+      "local_environment": "Windows_Python3.12_tzdata2026.6_HASH_PINNED_AUDITOR_SCRATCH",
+      "mandatory_tests_in_this_review": "75_FRESH_NOT_INHERITED"
     }
   },
   "WINDOWS_CI": "PENDING_CURRENT_DRAFTS; FAILED_BASELINE_MANDATORY_GATES_NOT_CLOSED",
@@ -415,7 +543,8 @@
     "phase23/gate-diagnosis-review.json",
     "phase24/scheduler-durable-review.json",
     "phase24/independent-journal-probes.json",
-    "phase25/f15-fix-review.json"
+    "phase25/f15-fix-review.json",
+    "phase26/integration75-review.json"
   ],
   "NEXT_ACTIONS": [
     "Review terminal exact-source Windows CI logs/artifacts when available; queued/cancelled is not PASS.",
