@@ -1,0 +1,18 @@
+{
+  "schema": "unified.local-integration-test.v1",
+  "started_utc": "2026-11-06T16:48:07.380085+00:00",
+  "head": "235c8df09f5745f7c45f55161a31d2be91b7e2d9",
+  "command": [
+    "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\python.exe",
+    "-I",
+    "-S",
+    "-B",
+    "-c",
+    "import sys,unittest;sys.path[:0]=['.','C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-5-resource-aware-distributed/work/schema-tools'];import tzdata;print('tzdata='+tzdata.__version__);suite=unittest.TestSuite(unittest.defaultTestLoader.loadTestsFromName(n) for n in ['tests.test_integration_registry','tests.test_agent5_scheduler_components','tests.test_control_api_readonly','tests.test_operator_control_plane']);result=unittest.TextTestRunner(verbosity=2).run(suite);raise SystemExit(not result.wasSuccessful() or bool(result.skipped))"
+  ],
+  "exit_code": 0,
+  "dependency": "tzdata==2026.6 reused from existing Agent5 environment; no install",
+  "scope": "LOCAL_WINDOWS_COMPONENTS_NOT_PHYSICAL_NOT_HOSTED",
+  "stdout_sha256": "b2f4d447f6181ad0038f7c47668d9b63c2b0cebc3df8bc91a155dd48863ff3b1",
+  "stderr_sha256": "be173d7f51cb6101aac8352b02f38e377827cc490a3f67a9613b0139264891dc"
+}

@@ -1,0 +1,856 @@
+linux-postgres18	UNKNOWN STEP	﻿2026-11-05T20:36:55.6138292Z Current runner version: '2.338.2'
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:55.6164058Z ##[group]Runner Image Provisioner
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:55.6164887Z Hosted Compute Agent
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:55.6165522Z Version: 20261028.624
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:55.6166099Z Commit: 54898b74c23fde5556c9b3c3a2290865feef0dfe
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:55.6166787Z Build Date: 2026-10-28T21:51:42Z
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:55.6167439Z Worker ID: {ac157869-e2ab-4222-af87-7f22abf1efdc}
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:55.6168067Z Region: eastus3
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:55.6168608Z Cloud: Azure
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:55.6169100Z ##[endgroup]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:55.6170560Z ##[group]Operating System
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:55.6171175Z Ubuntu
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:55.6171647Z 24.04.5
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:55.6172182Z LTS
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:55.6172836Z ##[endgroup]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:55.6173352Z ##[group]Runner Image
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:55.6173945Z Image: ubuntu-24.04
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:55.6174467Z Version: 20261101.360.1
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:55.6175723Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261101.360/images/ubuntu/Ubuntu2404-Readme.md
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:55.6177135Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261101.360
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:55.6178043Z ##[endgroup]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:55.6179073Z ##[group]GITHUB_TOKEN Permissions
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:55.6181892Z Contents: read
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:55.6182905Z Metadata: read
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:55.6183834Z ##[endgroup]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:55.6187157Z Secret source: Actions
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:55.6188678Z Cache mode: write
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:55.6189777Z Prepare workflow directory
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:55.7053543Z Prepare all required actions
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:55.7133640Z Getting action download info
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:55.9391241Z Download action repository 'actions/checkout@11d5960a326750d5838078e36cf38b85af677262' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:56.0115695Z Download action repository 'actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:56.0758456Z Download action repository 'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:56.2707403Z Complete job name: linux-postgres18
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:56.3358501Z ##[group]Checking docker version
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:56.3371298Z ##[command]/usr/bin/docker version --format '{{.Server.APIVersion}}'
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:56.4108947Z '1.48'
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:56.4118628Z Docker daemon API version: '1.48'
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:56.4119377Z ##[command]/usr/bin/docker version --format '{{.Client.APIVersion}}'
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:56.4307872Z '1.48'
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:56.4320167Z Docker client API version: '1.48'
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:56.4326795Z ##[endgroup]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:56.4329486Z ##[group]Clean up resources from previous jobs
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:56.4335097Z ##[command]/usr/bin/docker ps --all --quiet --no-trunc --filter "label=403114"
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:56.4504183Z ##[command]/usr/bin/docker network prune --force --filter "label=403114"
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:56.4656294Z ##[endgroup]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:56.4656848Z ##[group]Create local container network
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:56.4667224Z ##[command]/usr/bin/docker network create --label 403114 github_network_d0b0058393684b1a955e5511f76dc3fc
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:56.5195664Z 9133c70d6c93b427a6a36ba4dca00a9c6f58796550153007ec00a1c5bd07ed36
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:56.5216021Z ##[endgroup]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:56.5246858Z ##[group]Starting postgres service container
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:56.5270934Z ##[command]/usr/bin/docker pull postgres:18.1
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:56.9770696Z 18.1: Pulling from library/postgres
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:57.1270563Z 0c8d55a45c0d: Pulling fs layer
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:57.1272102Z d7071d8cd1af: Pulling fs layer
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:57.1273549Z e3d994429678: Pulling fs layer
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:57.1274661Z 512b7ea3ac5d: Pulling fs layer
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:57.1275789Z c4fa1de5526b: Pulling fs layer
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:57.1276915Z 67efc7fd0cb7: Pulling fs layer
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:57.1278037Z 0b231e82c9b6: Pulling fs layer
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:57.1279136Z b61b9ed964eb: Pulling fs layer
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:57.1280644Z 6bc137f970e3: Pulling fs layer
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:57.1281773Z 46dc4e6582cd: Pulling fs layer
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:57.1283057Z b04fada31d68: Pulling fs layer
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:57.1284190Z f7652ec73b05: Pulling fs layer
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:57.1285310Z 9b8484f1a1e6: Pulling fs layer
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:57.1286450Z 512b7ea3ac5d: Waiting
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:57.1287542Z 6bc137f970e3: Waiting
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:57.1288534Z 46dc4e6582cd: Waiting
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:57.1289512Z b04fada31d68: Waiting
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:57.1290498Z f7652ec73b05: Waiting
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:57.1291483Z c4fa1de5526b: Waiting
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:57.1292650Z 67efc7fd0cb7: Waiting
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:57.1293644Z 9b8484f1a1e6: Waiting
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:57.1294655Z 0b231e82c9b6: Waiting
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:57.1295854Z b61b9ed964eb: Waiting
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:57.1947885Z d7071d8cd1af: Verifying Checksum
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:57.1952646Z d7071d8cd1af: Download complete
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:57.2169886Z e3d994429678: Verifying Checksum
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:57.2171876Z e3d994429678: Download complete
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:57.2752822Z 0c8d55a45c0d: Download complete
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:57.3044364Z 512b7ea3ac5d: Verifying Checksum
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:57.3046441Z 512b7ea3ac5d: Download complete
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:57.3158866Z c4fa1de5526b: Verifying Checksum
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:57.3161108Z c4fa1de5526b: Download complete
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:57.3817970Z b61b9ed964eb: Verifying Checksum
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:57.3818893Z b61b9ed964eb: Download complete
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:57.3874963Z 67efc7fd0cb7: Verifying Checksum
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:57.3877197Z 67efc7fd0cb7: Download complete
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:57.4010228Z 0b231e82c9b6: Verifying Checksum
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:57.4010929Z 0b231e82c9b6: Download complete
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:57.4560693Z 46dc4e6582cd: Verifying Checksum
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:57.4561466Z 46dc4e6582cd: Download complete
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:57.5000776Z b04fada31d68: Verifying Checksum
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:57.5001730Z b04fada31d68: Download complete
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:57.5238221Z f7652ec73b05: Verifying Checksum
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:57.5239968Z f7652ec73b05: Download complete
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:57.5978543Z 9b8484f1a1e6: Verifying Checksum
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:57.5979126Z 9b8484f1a1e6: Download complete
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:57.8563401Z 6bc137f970e3: Verifying Checksum
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:57.8564125Z 6bc137f970e3: Download complete
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:58.1894231Z 0c8d55a45c0d: Pull complete
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:58.4617345Z d7071d8cd1af: Pull complete
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:58.6139172Z e3d994429678: Pull complete
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:58.6506933Z 512b7ea3ac5d: Pull complete
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:58.9009149Z c4fa1de5526b: Pull complete
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:58.9513084Z 67efc7fd0cb7: Pull complete
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:58.9582356Z 0b231e82c9b6: Pull complete
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:36:58.9649594Z b61b9ed964eb: Pull complete
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:01.7089765Z 6bc137f970e3: Pull complete
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:01.7240027Z 46dc4e6582cd: Pull complete
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:01.7325899Z b04fada31d68: Pull complete
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:01.7405544Z f7652ec73b05: Pull complete
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:01.7490273Z 9b8484f1a1e6: Pull complete
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:01.7533959Z Digest: sha256:1090bc3a8ccfb0b55f78a494d76f8d603434f7e4553543d6e807bc7bd6bbd17f
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:01.7550407Z Status: Downloaded newer image for postgres:18.1
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:01.7562591Z docker.io/library/postgres:18.1
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:01.7631128Z ##[command]/usr/bin/docker create --name bd9bea12591f4caba47360cb7b500c92_postgres181_627696 --label 403114 --network github_network_d0b0058393684b1a955e5511f76dc3fc --network-alias postgres -p 5432:5432 --health-cmd "pg_isready -U grid -d grid" --health-interval 5s --health-timeout 5s --health-retries 10 -e "POSTGRES_USER=grid" -e "POSTGRES_PASSWORD=grid" -e "POSTGRES_DB=grid" -e GITHUB_ACTIONS=true -e CI=true postgres:18.1
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:01.7866189Z 457f3630685bf530bb7898e389cc12be503b7b9d9910b19b71e91b8e39b282ed
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:01.7889077Z ##[command]/usr/bin/docker start 457f3630685bf530bb7898e389cc12be503b7b9d9910b19b71e91b8e39b282ed
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:01.9728782Z 457f3630685bf530bb7898e389cc12be503b7b9d9910b19b71e91b8e39b282ed
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:01.9747678Z ##[command]/usr/bin/docker ps --all --filter id=457f3630685bf530bb7898e389cc12be503b7b9d9910b19b71e91b8e39b282ed --filter status=running --no-trunc --format "{{.ID}} {{.Status}}"
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:01.9893407Z 457f3630685bf530bb7898e389cc12be503b7b9d9910b19b71e91b8e39b282ed Up Less than a second (health: starting)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:01.9911718Z ##[command]/usr/bin/docker port 457f3630685bf530bb7898e389cc12be503b7b9d9910b19b71e91b8e39b282ed
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:02.0073388Z 5432/tcp -> 0.0.0.0:5432
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:02.0073728Z 5432/tcp -> [::]:5432
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:02.0124603Z ##[endgroup]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:02.0137221Z ##[group]Waiting for all services to be ready
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:02.0151512Z ##[command]/usr/bin/docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" 457f3630685bf530bb7898e389cc12be503b7b9d9910b19b71e91b8e39b282ed
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:02.0294873Z starting
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:02.0330070Z postgres service is starting, waiting 2 seconds before checking again.
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:04.0331802Z ##[command]/usr/bin/docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" 457f3630685bf530bb7898e389cc12be503b7b9d9910b19b71e91b8e39b282ed
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:04.0484760Z starting
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:04.0495226Z postgres service is starting, waiting 3 seconds before checking again.
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.6495784Z ##[command]/usr/bin/docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" 457f3630685bf530bb7898e389cc12be503b7b9d9910b19b71e91b8e39b282ed
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.6645219Z healthy
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.6665694Z postgres service is healthy.
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.6666488Z ##[endgroup]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.6951260Z ##[group]Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.6951939Z with:
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.6952181Z   ref: 71084a336520187d6e260531a2f5d15555ba0e0c
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.6952639Z   persist-credentials: false
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.6952928Z   repository: YehorBabenko88/bybit-cluster-grid
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.6955776Z   token: ***
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.6955987Z   ssh-strict: true
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.6956199Z   ssh-user: git
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.6956389Z   clean: true
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.6956609Z   sparse-checkout-cone-mode: true
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.6956868Z   fetch-depth: 1
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.6957063Z   fetch-tags: false
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.6957270Z   show-progress: true
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.6957472Z   lfs: false
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.6957660Z   submodules: false
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.6957867Z   set-safe-directory: true
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.6958123Z   allow-unsafe-pr-checkout: false
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.6958621Z env:
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.6958872Z   GRID_SHARED_TOKEN: disposable-ci-only
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.6959331Z   POSTGRES_DSN: ***127.0.0.1:5432/grid
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.6959731Z   HISTORY_DISPOSABLE_DSN: ***127.0.0.1:5432/grid
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.6960159Z   TERMINAN_DISPOSABLE_PG18_DSN: ***127.0.0.1:5432/grid
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.6960575Z   MISSION3_TEST_DATABASE_URL: ***127.0.0.1:5432/grid
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.6961072Z   UNIFIED_SOURCE_ROOT: /home/runner/work/bybit-cluster-grid/bybit-cluster-grid/upstream/unified-system
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.6961595Z   EXPECTED_GRID_SHA: 71084a336520187d6e260531a2f5d15555ba0e0c
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.6961904Z ##[endgroup]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.9522137Z Syncing repository: YehorBabenko88/bybit-cluster-grid
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.9524611Z ##[group]Getting Git version info
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.9525313Z Working directory is '/home/runner/work/bybit-cluster-grid/bybit-cluster-grid'
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.9526403Z [command]/usr/bin/git version
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.9607301Z git version 2.56.0
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.9627626Z ##[endgroup]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.9644258Z Temporarily overriding HOME='/home/runner/work/_temp/65c54851-a047-4e9b-bb2c-6c195ce9fe98' before making global git config changes
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.9645570Z Adding repository directory to the temporary git global config as a safe directory
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.9651547Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/bybit-cluster-grid/bybit-cluster-grid
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.9733582Z Deleting the contents of '/home/runner/work/bybit-cluster-grid/bybit-cluster-grid'
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.9741402Z ##[group]Initializing the repository
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.9742121Z [command]/usr/bin/git init /home/runner/work/bybit-cluster-grid/bybit-cluster-grid
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.9843273Z hint: Using 'master' as the name for the initial branch. This default branch name
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.9843912Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.9844943Z hint: to use in all of your new repositories, which will suppress this warning,
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.9845385Z hint: call:
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.9845748Z hint:
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.9846105Z hint: 	git config --global init.defaultBranch <name>
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.9846477Z hint:
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.9846787Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.9847430Z hint: 'development'. The just-created branch can be renamed via this command:
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.9847863Z hint:
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.9848079Z hint: 	git branch -m <name>
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.9848361Z hint:
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.9848680Z hint: Disable this message with "git config set advice.defaultBranchName false"
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.9854958Z Initialized empty Git repository in /home/runner/work/bybit-cluster-grid/bybit-cluster-grid/.git/
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.9868609Z [command]/usr/bin/git remote add origin https://github.com/YehorBabenko88/bybit-cluster-grid
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.9912448Z ##[endgroup]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.9913106Z ##[group]Disabling automatic garbage collection
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.9918148Z [command]/usr/bin/git config --local gc.auto 0
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.9949066Z ##[endgroup]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.9949688Z ##[group]Setting up auth
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.9957280Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:07.9994230Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.0343722Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.0383958Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.0605884Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.0641840Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.0845040Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.0887185Z ##[endgroup]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.0887889Z ##[group]Fetching the repository
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.0903762Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin 71084a336520187d6e260531a2f5d15555ba0e0c
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.5606732Z From https://github.com/YehorBabenko88/bybit-cluster-grid
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.5607687Z  * branch            71084a336520187d6e260531a2f5d15555ba0e0c -> FETCH_HEAD
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.5612624Z ##[endgroup]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.5613269Z ##[group]Determining the checkout info
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.5615978Z ##[endgroup]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.5622839Z [command]/usr/bin/git sparse-checkout disable
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.5678769Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.5711383Z ##[group]Checking out the ref
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.5722015Z [command]/usr/bin/git checkout --progress --force 71084a336520187d6e260531a2f5d15555ba0e0c
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.6010214Z Note: switching to '71084a336520187d6e260531a2f5d15555ba0e0c'.
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.6010606Z 
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.6011146Z You are in 'detached HEAD' state. You can look around, make experimental
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.6011611Z changes and commit them, and you can discard any commits you make in this
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.6012075Z state without impacting any branches by switching back to a branch.
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.6012608Z 
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.6013027Z If you want to create a new branch to retain commits you create, you may
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.6013742Z do so (now or later) by using -c with the switch command. Example:
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.6014171Z 
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.6014363Z   git switch -c <new-branch-name>
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.6014675Z 
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.6014845Z Or undo this operation with:
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.6015103Z 
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.6015221Z   git switch -
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.6015500Z 
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.6015855Z Turn off this advice by setting config variable advice.detachedHead to false
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.6016350Z 
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.6016771Z HEAD is now at 71084a3 Add fenced budget anchor CAS and persistent Consul fault qualification
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.6024913Z ##[endgroup]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.6072654Z [command]/usr/bin/git log -1 --format=%H
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.6098299Z 71084a336520187d6e260531a2f5d15555ba0e0c
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.6108245Z ##[group]Removing auth
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.6114509Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.6148510Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.6350468Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.6377885Z http.https://github.com/.extraheader
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.6386417Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.6423433Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.6624531Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.6659039Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.6853321Z ##[endgroup]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.7109615Z ##[group]Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.7109992Z with:
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.7110221Z   repository: YehorBabenko88/unified-system
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.7110532Z   ref: e0c2ea20aa4f1bd9476d1046e7e4b41f1b12d8e9
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.7110823Z   path: upstream/unified-system
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.7111080Z   persist-credentials: false
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.7113990Z   token: ***
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.7114203Z   ssh-strict: true
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.7114412Z   ssh-user: git
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.7114623Z   clean: true
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.7114864Z   sparse-checkout-cone-mode: true
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.7115124Z   fetch-depth: 1
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.7115329Z   fetch-tags: false
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.7115533Z   show-progress: true
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.7115736Z   lfs: false
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.7115920Z   submodules: false
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.7116126Z   set-safe-directory: true
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.7116372Z   allow-unsafe-pr-checkout: false
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.7116674Z env:
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.7116893Z   GRID_SHARED_TOKEN: disposable-ci-only
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.7117318Z   POSTGRES_DSN: ***127.0.0.1:5432/grid
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.7117714Z   HISTORY_DISPOSABLE_DSN: ***127.0.0.1:5432/grid
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.7118133Z   TERMINAN_DISPOSABLE_PG18_DSN: ***127.0.0.1:5432/grid
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.7118556Z   MISSION3_TEST_DATABASE_URL: ***127.0.0.1:5432/grid
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.7119045Z   UNIFIED_SOURCE_ROOT: /home/runner/work/bybit-cluster-grid/bybit-cluster-grid/upstream/unified-system
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.7119556Z   EXPECTED_GRID_SHA: 71084a336520187d6e260531a2f5d15555ba0e0c
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.7120046Z ##[endgroup]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.7977081Z Syncing repository: YehorBabenko88/unified-system
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.7986327Z ##[group]Getting Git version info
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.7987282Z Working directory is '/home/runner/work/bybit-cluster-grid/bybit-cluster-grid/upstream/unified-system'
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.8039778Z [command]/usr/bin/git version
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.8100145Z git version 2.56.0
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.8125718Z ##[endgroup]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.8143100Z Temporarily overriding HOME='/home/runner/work/_temp/25f46e66-16bf-4167-9ab3-d4c55ec91da7' before making global git config changes
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.8150036Z Adding repository directory to the temporary git global config as a safe directory
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.8151316Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/bybit-cluster-grid/bybit-cluster-grid/upstream/unified-system
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.8189628Z ##[group]Initializing the repository
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.8196390Z [command]/usr/bin/git init /home/runner/work/bybit-cluster-grid/bybit-cluster-grid/upstream/unified-system
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.8235852Z hint: Using 'master' as the name for the initial branch. This default branch name
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.8236809Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.8237537Z hint: to use in all of your new repositories, which will suppress this warning,
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.8238028Z hint: call:
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.8238421Z hint:
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.8238957Z hint: 	git config --global init.defaultBranch <name>
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.8239528Z hint:
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.8240135Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.8240943Z hint: 'development'. The just-created branch can be renamed via this command:
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.8241387Z hint:
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.8241669Z hint: 	git branch -m <name>
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.8241982Z hint:
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.8242624Z hint: Disable this message with "git config set advice.defaultBranchName false"
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.8244052Z Initialized empty Git repository in /home/runner/work/bybit-cluster-grid/bybit-cluster-grid/upstream/unified-system/.git/
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.8248638Z [command]/usr/bin/git remote add origin https://github.com/YehorBabenko88/unified-system
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.8283533Z ##[endgroup]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.8284190Z ##[group]Disabling automatic garbage collection
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.8291228Z [command]/usr/bin/git config --local gc.auto 0
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.8326244Z ##[endgroup]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.8326899Z ##[group]Setting up auth
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.8334154Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.8369656Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.8604524Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.8641351Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.8878650Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.9023481Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.9162657Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.9204587Z ##[endgroup]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.9205097Z ##[group]Fetching the repository
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:08.9214552Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin e0c2ea20aa4f1bd9476d1046e7e4b41f1b12d8e9
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.3185670Z From https://github.com/YehorBabenko88/unified-system
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.3186746Z  * branch            e0c2ea20aa4f1bd9476d1046e7e4b41f1b12d8e9 -> FETCH_HEAD
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.3191660Z ##[endgroup]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.3192411Z ##[group]Determining the checkout info
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.3195637Z ##[endgroup]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.3204406Z [command]/usr/bin/git sparse-checkout disable
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.3258881Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.3293627Z ##[group]Checking out the ref
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.3300375Z [command]/usr/bin/git checkout --progress --force e0c2ea20aa4f1bd9476d1046e7e4b41f1b12d8e9
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.3474050Z Note: switching to 'e0c2ea20aa4f1bd9476d1046e7e4b41f1b12d8e9'.
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.3474833Z 
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.3475327Z You are in 'detached HEAD' state. You can look around, make experimental
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.3476309Z changes and commit them, and you can discard any commits you make in this
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.3477255Z state without impacting any branches by switching back to a branch.
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.3477896Z 
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.3478340Z If you want to create a new branch to retain commits you create, you may
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.3479299Z do so (now or later) by using -c with the switch command. Example:
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.3479876Z 
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.3480173Z   git switch -c <new-branch-name>
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.3480571Z 
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.3480885Z Or undo this operation with:
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.3481298Z 
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.3481547Z   git switch -
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.3481874Z 
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.3482569Z Turn off this advice by setting config variable advice.detachedHead to false
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.3483287Z 
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.3483913Z HEAD is now at e0c2ea2 Route DataFirst constructors through protected raw service admission
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.3486042Z ##[endgroup]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.3522090Z [command]/usr/bin/git log -1 --format=%H
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.3549322Z e0c2ea20aa4f1bd9476d1046e7e4b41f1b12d8e9
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.3558363Z ##[group]Removing auth
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.3562778Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.3596245Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.3812113Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.3836501Z http.https://github.com/.extraheader
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.3843705Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.3877941Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.4094855Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.4131335Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.4340555Z ##[endgroup]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.4504047Z ##[group]Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.4504452Z with:
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.4504659Z   python-version: 3.12
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.4504883Z   check-latest: false
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.4507598Z   token: ***
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.4507812Z   update-environment: true
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.4508051Z   allow-prereleases: false
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.4508292Z   freethreaded: false
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.4508500Z env:
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.4508720Z   GRID_SHARED_TOKEN: disposable-ci-only
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.4509094Z   POSTGRES_DSN: ***127.0.0.1:5432/grid
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.4509477Z   HISTORY_DISPOSABLE_DSN: ***127.0.0.1:5432/grid
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.4509896Z   TERMINAN_DISPOSABLE_PG18_DSN: ***127.0.0.1:5432/grid
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.4510500Z   MISSION3_TEST_DATABASE_URL: ***127.0.0.1:5432/grid
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.4511004Z   UNIFIED_SOURCE_ROOT: /home/runner/work/bybit-cluster-grid/bybit-cluster-grid/upstream/unified-system
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.4511572Z   EXPECTED_GRID_SHA: 71084a336520187d6e260531a2f5d15555ba0e0c
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.4511888Z ##[endgroup]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.5922671Z ##[group]Installed versions
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.6013793Z (node:3025) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.6014710Z (Use `node --trace-deprecation ...` to show where the warning was created)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.6015428Z Successfully set up CPython (3.12.16)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.6016231Z ##[endgroup]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.6176313Z ##[group]Run python -m pip install -r requirements.txt pytest
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.6176887Z ^[[36;1mpython -m pip install -r requirements.txt pytest^[[0m
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.6206435Z shell: /usr/bin/bash -e {0}
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.6206711Z env:
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.6206946Z   GRID_SHARED_TOKEN: disposable-ci-only
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.6207483Z   POSTGRES_DSN: ***127.0.0.1:5432/grid
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.6207871Z   HISTORY_DISPOSABLE_DSN: ***127.0.0.1:5432/grid
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.6208295Z   TERMINAN_DISPOSABLE_PG18_DSN: ***127.0.0.1:5432/grid
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.6208705Z   MISSION3_TEST_DATABASE_URL: ***127.0.0.1:5432/grid
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.6209213Z   UNIFIED_SOURCE_ROOT: /home/runner/work/bybit-cluster-grid/bybit-cluster-grid/upstream/unified-system
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.6209737Z   EXPECTED_GRID_SHA: 71084a336520187d6e260531a2f5d15555ba0e0c
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.6210119Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.16/x64
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.6210609Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib/pkgconfig
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.6211021Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.6211387Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.6211758Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.6212145Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:09.6212812Z ##[endgroup]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:10.5710639Z Collecting pytest
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:10.7207149Z   Downloading pytest-9.2.0-py3-none-any.whl.metadata (7.9 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:11.2017928Z Collecting aiohttp>=3.10 (from -r requirements.txt (line 1))
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:11.2390933Z   Downloading aiohttp-3.14.5-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (8.3 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:11.3661960Z Collecting websockets>=13.0 (from -r requirements.txt (line 2))
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:11.4033640Z   Downloading websockets-17.4-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (6.3 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:11.4553708Z Collecting asyncpg>=0.30 (from -r requirements.txt (line 3))
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:11.4981540Z   Downloading asyncpg-0.32.0-cp312-cp312-manylinux_2_28_x86_64.whl.metadata (4.4 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:11.5685384Z Collecting psutil>=6.0 (from -r requirements.txt (line 4))
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:11.6141516Z   Downloading psutil-7.2.2-cp36-abi3-manylinux2010_x86_64.manylinux_2_12_x86_64.manylinux_2_28_x86_64.whl.metadata (22 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:11.7473982Z Collecting pydantic>=2.8 (from -r requirements.txt (line 5))
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:11.7862926Z   Downloading pydantic-2.14.3-py3-none-any.whl.metadata (141 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:11.8732042Z Collecting pydantic-settings>=2.4 (from -r requirements.txt (line 6))
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:11.9122600Z   Downloading pydantic_settings-2.16.2-py3-none-any.whl.metadata (4.0 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:11.9682174Z Collecting fastapi>=0.115 (from -r requirements.txt (line 7))
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:12.0058478Z   Downloading fastapi-0.162.0-py3-none-any.whl.metadata (26 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:12.0490936Z Collecting uvicorn>=0.30 (from uvicorn[standard]>=0.30->-r requirements.txt (line 8))
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:12.0915297Z   Downloading uvicorn-0.54.0-py3-none-any.whl.metadata (6.6 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:12.1224306Z Collecting httpx>=0.27 (from -r requirements.txt (line 9))
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:12.1593503Z   Downloading httpx-0.28.1-py3-none-any.whl.metadata (7.1 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:12.1876354Z Collecting python-dotenv>=1.0 (from -r requirements.txt (line 10))
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:12.2246634Z   Downloading python_dotenv-1.2.4-py3-none-any.whl.metadata (29 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:12.2549460Z Collecting psycopg==3.3.6 (from psycopg[binary]==3.3.6->-r requirements.txt (line 12))
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:12.2919068Z   Downloading psycopg-3.3.6-py3-none-any.whl.metadata (4.4 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:12.3235285Z Collecting typing-extensions>=4.6 (from psycopg==3.3.6->psycopg[binary]==3.3.6->-r requirements.txt (line 12))
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:12.3610729Z   Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:12.5044576Z Collecting psycopg-binary==3.3.6 (from psycopg[binary]==3.3.6->-r requirements.txt (line 12))
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:12.5412399Z   Downloading psycopg_binary-3.3.6-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.7 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:12.5660028Z Collecting iniconfig>=2 (from pytest)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:12.6033602Z   Downloading iniconfig-2.3.1-py3-none-any.whl.metadata (2.8 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:12.6303884Z Collecting packaging>=24 (from pytest)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:12.6669553Z   Downloading packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:12.6936279Z Collecting pluggy<2,>=1.6 (from pytest)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:12.7309742Z   Downloading pluggy-1.7.0-py3-none-any.whl.metadata (5.0 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:12.7606377Z Collecting pygments>=2.15 (from pytest)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:12.7976287Z   Downloading pygments-2.21.0-py3-none-any.whl.metadata (2.5 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:12.8303169Z Collecting aiohappyeyeballs>=2.5.0 (from aiohttp>=3.10->-r requirements.txt (line 1))
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:12.8678459Z   Downloading aiohappyeyeballs-2.7.1-py3-none-any.whl.metadata (5.9 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:12.8907675Z Collecting aiosignal>=1.4.0 (from aiohttp>=3.10->-r requirements.txt (line 1))
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:12.9277490Z   Downloading aiosignal-1.4.0-py3-none-any.whl.metadata (3.7 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:12.9543726Z Collecting attrs>=17.3.0 (from aiohttp>=3.10->-r requirements.txt (line 1))
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:12.9911510Z   Downloading attrs-26.1.0-py3-none-any.whl.metadata (8.8 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:13.0589229Z Collecting frozenlist>=1.1.1 (from aiohttp>=3.10->-r requirements.txt (line 1))
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:13.0955318Z   Downloading frozenlist-1.8.0-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (20 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:13.3664627Z Collecting multidict<8.0,>=4.5 (from aiohttp>=3.10->-r requirements.txt (line 1))
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:13.4031976Z   Downloading multidict-7.2.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (6.1 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:13.4755910Z Collecting propcache>=0.2.0 (from aiohttp>=3.10->-r requirements.txt (line 1))
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:13.5137585Z   Downloading propcache-0.5.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (25 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:13.7347590Z Collecting yarl<2.0,>=1.25.1 (from aiohttp>=3.10->-r requirements.txt (line 1))
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:13.7714900Z   Downloading yarl-1.25.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (111 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:13.8156887Z Collecting idna>=2.0 (from yarl<2.0,>=1.25.1->aiohttp>=3.10->-r requirements.txt (line 1))
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:13.8523714Z   Downloading idna-3.20-py3-none-any.whl.metadata (7.2 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:13.8826817Z Collecting annotated-types>=0.6.0 (from pydantic>=2.8->-r requirements.txt (line 5))
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:13.9197811Z   Downloading annotated_types-0.8.0-py3-none-any.whl.metadata (15 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:14.5338688Z Collecting pydantic-core==2.50.4 (from pydantic>=2.8->-r requirements.txt (line 5))
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:14.5717715Z   Downloading pydantic_core-2.50.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (6.6 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:14.5961421Z Collecting typing-inspection>=0.4.4 (from pydantic>=2.8->-r requirements.txt (line 5))
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:14.6331490Z   Downloading typing_inspection-0.4.5-py3-none-any.whl.metadata (2.6 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:14.6727062Z Collecting starlette>=0.46.0 (from fastapi>=0.115->-r requirements.txt (line 7))
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:14.7101349Z   Downloading starlette-1.10.0-py3-none-any.whl.metadata (6.6 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:14.7373063Z Collecting annotated-doc>=0.0.2 (from fastapi>=0.115->-r requirements.txt (line 7))
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:14.7741702Z   Downloading annotated_doc-0.0.5-py3-none-any.whl.metadata (6.5 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:14.8043783Z Collecting opentelemetry-api>=1.44.0 (from fastapi>=0.115->-r requirements.txt (line 7))
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:14.8411980Z   Downloading opentelemetry_api-1.45.2-py3-none-any.whl.metadata (1.4 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:14.8701819Z Collecting click>=7.0 (from uvicorn>=0.30->uvicorn[standard]>=0.30->-r requirements.txt (line 8))
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:14.9070630Z   Downloading click-8.5.0-py3-none-any.whl.metadata (2.6 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:14.9308008Z Collecting h11>=0.8 (from uvicorn>=0.30->uvicorn[standard]>=0.30->-r requirements.txt (line 8))
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:14.9676604Z   Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:14.9981929Z Collecting anyio (from httpx>=0.27->-r requirements.txt (line 9))
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:15.0353286Z   Downloading anyio-4.16.0-py3-none-any.whl.metadata (4.7 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:15.0656881Z Collecting certifi (from httpx>=0.27->-r requirements.txt (line 9))
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:15.1030572Z   Downloading certifi-2026.10.23-py3-none-any.whl.metadata (2.5 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:15.1305668Z Collecting httpcore==1.* (from httpx>=0.27->-r requirements.txt (line 9))
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:15.1673311Z   Downloading httpcore-1.0.9-py3-none-any.whl.metadata (21 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:15.2292132Z Collecting httptools>=0.8.0 (from uvicorn[standard]>=0.30->-r requirements.txt (line 8))
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:15.2662869Z   Downloading httptools-0.9.0-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (3.5 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:15.3167324Z Collecting pyyaml>=5.1 (from uvicorn[standard]>=0.30->-r requirements.txt (line 8))
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:15.3560050Z   Downloading pyyaml-6.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.4 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:15.4041593Z Collecting uvloop>=0.15.1 (from uvicorn[standard]>=0.30->-r requirements.txt (line 8))
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:15.4420755Z   Downloading uvloop-0.23.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (5.1 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:15.5241780Z Collecting watchfiles>=0.20 (from uvicorn[standard]>=0.30->-r requirements.txt (line 8))
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:15.5659830Z   Downloading watchfiles-1.3.0-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.9 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:15.6121322Z Downloading psycopg-3.3.6-py3-none-any.whl (215 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:15.6680519Z Downloading psycopg_binary-3.3.6-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (5.2 MB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:15.7975681Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.2/5.2 MB 42.8 MB/s  0:00:00
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:15.8365143Z Downloading pytest-9.2.0-py3-none-any.whl (411 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:15.8770010Z Downloading pluggy-1.7.0-py3-none-any.whl (27 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:15.9167118Z Downloading aiohttp-3.14.5-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (1.9 MB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:15.9276405Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.9/1.9 MB 196.9 MB/s  0:00:00
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:15.9650227Z Downloading multidict-7.2.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (516 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:16.0054841Z Downloading yarl-1.25.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (117 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:16.0453479Z Downloading websockets-17.4-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (226 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:16.0876461Z Downloading asyncpg-0.32.0-cp312-cp312-manylinux_2_28_x86_64.whl (3.8 MB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:16.1218620Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.8/3.8 MB 111.5 MB/s  0:00:00
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:16.1594245Z Downloading psutil-7.2.2-cp36-abi3-manylinux2010_x86_64.manylinux_2_12_x86_64.manylinux_2_28_x86_64.whl (155 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:16.1985088Z Downloading pydantic-2.14.3-py3-none-any.whl (494 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:16.2388538Z Downloading pydantic_core-2.50.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (2.3 MB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:16.2484913Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.3/2.3 MB 281.5 MB/s  0:00:00
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:16.2857486Z Downloading pydantic_settings-2.16.2-py3-none-any.whl (81 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:16.3253104Z Downloading fastapi-0.162.0-py3-none-any.whl (148 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:16.3642474Z Downloading uvicorn-0.54.0-py3-none-any.whl (87 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:16.4035797Z Downloading httpx-0.28.1-py3-none-any.whl (73 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:16.4439299Z Downloading httpcore-1.0.9-py3-none-any.whl (78 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:16.4836755Z Downloading python_dotenv-1.2.4-py3-none-any.whl (23 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:16.5236039Z Downloading aiohappyeyeballs-2.7.1-py3-none-any.whl (15 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:16.5638391Z Downloading aiosignal-1.4.0-py3-none-any.whl (7.5 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:16.6030504Z Downloading annotated_doc-0.0.5-py3-none-any.whl (5.3 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:16.6430879Z Downloading annotated_types-0.8.0-py3-none-any.whl (13 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:16.6827219Z Downloading attrs-26.1.0-py3-none-any.whl (67 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:16.7221914Z Downloading click-8.5.0-py3-none-any.whl (125 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:16.7623230Z Downloading frozenlist-1.8.0-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (242 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:16.8090990Z Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:16.8511252Z Downloading idna-3.20-py3-none-any.whl (69 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:16.8924985Z Downloading iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:16.9320096Z Downloading opentelemetry_api-1.45.2-py3-none-any.whl (60 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:16.9715654Z Downloading packaging-26.3-py3-none-any.whl (129 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:17.0109119Z Downloading propcache-0.5.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (250 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:17.0508827Z Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:17.0585976Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 201.8 MB/s  0:00:00
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:17.0972103Z Downloading starlette-1.10.0-py3-none-any.whl (80 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:17.1388917Z Downloading anyio-4.16.0-py3-none-any.whl (134 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:17.1795916Z Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:17.2198725Z Downloading typing_inspection-0.4.5-py3-none-any.whl (14 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:17.2593543Z Downloading httptools-0.9.0-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (552 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:17.2647464Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 552.8/552.8 kB 96.4 MB/s  0:00:00
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:17.3015732Z Downloading pyyaml-6.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (807 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:17.3104378Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 807.9/807.9 kB 129.8 MB/s  0:00:00
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:17.3482954Z Downloading uvloop-0.23.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (4.5 MB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:17.3691033Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.5/4.5 MB 230.8 MB/s  0:00:00
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:17.4067240Z Downloading watchfiles-1.3.0-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (458 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:17.4469285Z Downloading certifi-2026.10.23-py3-none-any.whl (135 kB)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:17.6691080Z Installing collected packages: websockets, uvloop, typing-extensions, pyyaml, python-dotenv, pygments, psycopg-binary, psutil, propcache, pluggy, packaging, multidict, iniconfig, idna, httptools, h11, frozenlist, click, certifi, attrs, asyncpg, annotated-types, annotated-doc, aiohappyeyeballs, yarl, uvicorn, typing-inspection, pytest, pydantic-core, psycopg, opentelemetry-api, httpcore, anyio, aiosignal, watchfiles, starlette, pydantic, httpx, aiohttp, pydantic-settings, fastapi
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:20.8052424Z 
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:20.8089154Z Successfully installed aiohappyeyeballs-2.7.1 aiohttp-3.14.5 aiosignal-1.4.0 annotated-doc-0.0.5 annotated-types-0.8.0 anyio-4.16.0 asyncpg-0.32.0 attrs-26.1.0 certifi-2026.10.23 click-8.5.0 fastapi-0.162.0 frozenlist-1.8.0 h11-0.16.0 httpcore-1.0.9 httptools-0.9.0 httpx-0.28.1 idna-3.20 iniconfig-2.3.1 multidict-7.2.1 opentelemetry-api-1.45.2 packaging-26.3 pluggy-1.7.0 propcache-0.5.4 psutil-7.2.2 psycopg-3.3.6 psycopg-binary-3.3.6 pydantic-2.14.3 pydantic-core-2.50.4 pydantic-settings-2.16.2 pygments-2.21.0 pytest-9.2.0 python-dotenv-1.2.4 pyyaml-6.0.3 starlette-1.10.0 typing-extensions-4.16.0 typing-inspection-0.4.5 uvicorn-0.54.0 uvloop-0.23.0 watchfiles-1.3.0 websockets-17.4 yarl-1.25.1
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:20.8098361Z 
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:20.8098797Z [notice] A new release of pip is available: 26.2.2 -> 26.3
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:20.8099399Z [notice] To update, run: pip install --upgrade pip
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:21.0253186Z ##[group]Run python - <<'PY'
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:21.0253573Z ^[[36;1mpython - <<'PY'^[[0m
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:21.0253909Z ^[[36;1mimport os,subprocess,asyncio,asyncpg^[[0m
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:21.0254531Z ^[[36;1mdef git(root,arg):return subprocess.check_output(['git','-C',root,'rev-parse',arg],text=True).strip()^[[0m
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:21.0255181Z ^[[36;1massert git('.','HEAD')==os.environ['EXPECTED_GRID_SHA']^[[0m
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:21.0255799Z ^[[36;1massert git(os.environ['UNIFIED_SOURCE_ROOT'],'HEAD')=='e0c2ea20aa4f1bd9476d1046e7e4b41f1b12d8e9'^[[0m
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:21.0256350Z ^[[36;1masync def verify():^[[0m
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:21.0256716Z ^[[36;1m    con=await asyncpg.connect(os.environ['POSTGRES_DSN'])^[[0m
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:21.0257258Z ^[[36;1m    try:assert 180000<=int(await con.fetchval('SHOW server_version_num'))<190000^[[0m
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:21.0257757Z ^[[36;1m    finally:await con.close()^[[0m
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:21.0258072Z ^[[36;1masyncio.run(verify())^[[0m
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:21.0258351Z ^[[36;1mPY^[[0m
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:21.0274652Z shell: /usr/bin/bash -e {0}
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:21.0274910Z env:
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:21.0275125Z   GRID_SHARED_TOKEN: disposable-ci-only
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:21.0275789Z   POSTGRES_DSN: ***127.0.0.1:5432/grid
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:21.0276212Z   HISTORY_DISPOSABLE_DSN: ***127.0.0.1:5432/grid
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:21.0276636Z   TERMINAN_DISPOSABLE_PG18_DSN: ***127.0.0.1:5432/grid
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:21.0277052Z   MISSION3_TEST_DATABASE_URL: ***127.0.0.1:5432/grid
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:21.0277546Z   UNIFIED_SOURCE_ROOT: /home/runner/work/bybit-cluster-grid/bybit-cluster-grid/upstream/unified-system
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:21.0278067Z   EXPECTED_GRID_SHA: 71084a336520187d6e260531a2f5d15555ba0e0c
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:21.0278450Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.16/x64
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:21.0278854Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib/pkgconfig
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:21.0279275Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:21.0279654Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:21.0280019Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:21.0280392Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:21.0280704Z ##[endgroup]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:21.2503591Z ##[group]Run python -m pytest -q --ignore=upstream --junitxml=mission3-tests.xml
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:21.2504506Z ^[[36;1mpython -m pytest -q --ignore=upstream --junitxml=mission3-tests.xml^[[0m
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:21.2525232Z shell: /usr/bin/bash -e {0}
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:21.2525672Z env:
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:21.2526019Z   GRID_SHARED_TOKEN: disposable-ci-only
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:21.2526800Z   POSTGRES_DSN: ***127.0.0.1:5432/grid
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:21.2527503Z   HISTORY_DISPOSABLE_DSN: ***127.0.0.1:5432/grid
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:21.2528226Z   TERMINAN_DISPOSABLE_PG18_DSN: ***127.0.0.1:5432/grid
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:21.2529182Z   MISSION3_TEST_DATABASE_URL: ***127.0.0.1:5432/grid
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:21.2529994Z   UNIFIED_SOURCE_ROOT: /home/runner/work/bybit-cluster-grid/bybit-cluster-grid/upstream/unified-system
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:21.2530878Z   EXPECTED_GRID_SHA: 71084a336520187d6e260531a2f5d15555ba0e0c
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:21.2531526Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.16/x64
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:21.2532504Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib/pkgconfig
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:21.2533212Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:21.2533820Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:21.2534399Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:21.2534990Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:21.2535475Z ##[endgroup]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:25.7783271Z ........................................................................ [  4%]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:26.7167163Z ........................................................................ [  8%]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:26.7959325Z ..................................................................... [ 13%]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:27.8202754Z ........................................................................ [ 17%]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:29.0478566Z .......................................s................................ [ 21%]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:34.0815355Z ............................................................... [ 25%]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:34.2161638Z ........................................................................ [ 30%]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:34.7804301Z .................................................... [ 33%]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:36.2855348Z ........................................................................ [ 37%]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:36.5492040Z ........................................................................ [ 42%]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:38.2466138Z ........................................................................ [ 46%]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:39.3577215Z ........................................................................ [ 51%]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:44.7906502Z ......................................................ssss.............. [ 55%]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:45.5201390Z ......................................s................................. [ 59%]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:46.5776128Z ..........E.E.E.E............................................. [ 63%]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:47.0772509Z .....................................................s..ss........sss......s..s.......................................................... [ 71%]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:47.1988507Z ........................................................................ [ 76%]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:47.2641138Z ........................................................................ [ 80%]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:55.6270373Z ........................................................................ [ 85%]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:55.9573711Z ........................................................................ [ 89%]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:56.4520967Z ........................................................................ [ 93%]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.2043279Z ........................................................................ [ 98%]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5379621Z ............................                                             [100%]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5380829Z ==================================== ERRORS ====================================
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5381709Z _ ERROR at teardown of test_revocation_before_next_git_and_final_binding_blocks _
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5382499Z 
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5382849Z self = <starlette.datastructures.State object at 0x7f1eca390680>
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5383532Z key = 'owned_source_admission'
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5383846Z 
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5384174Z     def __delattr__(self, key: Any) -> None:
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5384748Z >       del self._state[key]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5385214Z             ^^^^^^^^^^^^^^^^
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5385717Z E       KeyError: 'owned_source_admission'
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5386351Z 
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5386811Z /opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/starlette/datastructures.py:702: KeyError
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5387537Z ____ ERROR at teardown of test_revoked_live_health_does_not_probe_database _____
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5387871Z 
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5388090Z self = <starlette.datastructures.State object at 0x7f1eca390680>
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5388508Z key = 'owned_source_admission'
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5388697Z 
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5388825Z     def __delattr__(self, key: Any) -> None:
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5389147Z >       del self._state[key]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5389412Z             ^^^^^^^^^^^^^^^^
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5389692Z E       KeyError: 'owned_source_admission'
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5389910Z 
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5390281Z /opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/starlette/datastructures.py:702: KeyError
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5391070Z _ ERROR at teardown of test_bound_admission_cannot_disappear_or_be_revoked_during_health[removed] _
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5391495Z 
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5391700Z self = <starlette.datastructures.State object at 0x7f1eca390680>
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5392104Z key = 'owned_source_admission'
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5392528Z 
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5392655Z     def __delattr__(self, key: Any) -> None:
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5392979Z >       del self._state[key]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5393255Z             ^^^^^^^^^^^^^^^^
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5393537Z E       KeyError: 'owned_source_admission'
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5393757Z 
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5394128Z /opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/starlette/datastructures.py:702: KeyError
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5394939Z _ ERROR at teardown of test_bound_admission_cannot_disappear_or_be_revoked_during_health[during-query] _
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5395373Z 
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5395582Z self = <starlette.datastructures.State object at 0x7f1eca390680>
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5395992Z key = 'owned_source_admission'
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5396184Z 
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5396307Z     def __delattr__(self, key: Any) -> None:
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5396624Z >       del self._state[key]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5396889Z             ^^^^^^^^^^^^^^^^
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5397176Z E       KeyError: 'owned_source_admission'
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5397401Z 
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5397775Z /opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/starlette/datastructures.py:702: KeyError
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5398404Z =============================== warnings summary ===============================
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5398788Z grid/coordinator.py:928
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5399327Z   /home/runner/work/bybit-cluster-grid/bybit-cluster-grid/grid/coordinator.py:928: DeprecationWarning: 
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5399978Z           on_event is deprecated, use lifespan event handlers instead.
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5400362Z   
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5400599Z           Read more about it in the
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5401085Z           [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5401574Z           
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5401818Z     @app.on_event("startup")
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5401993Z 
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5402641Z ../../../../../opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/fastapi/applications.py:4723
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5403853Z ../../../../../opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/fastapi/applications.py:4723
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5404716Z   /opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/fastapi/applications.py:4723: DeprecationWarning: 
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5405413Z           on_event is deprecated, use lifespan event handlers instead.
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5405792Z   
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5406028Z           Read more about it in the
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5406531Z           [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5406995Z           
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5407327Z     return self.router.on_event(event_type)  # ty: ignore[deprecated]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5407728Z 
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5407845Z grid/coordinator.py:1046
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5408366Z   /home/runner/work/bybit-cluster-grid/bybit-cluster-grid/grid/coordinator.py:1046: DeprecationWarning: 
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5409002Z           on_event is deprecated, use lifespan event handlers instead.
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5409391Z   
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5409633Z           Read more about it in the
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5410104Z           [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5410574Z           
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5410808Z     @app.on_event("shutdown")
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5410986Z 
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5411226Z -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5411724Z =========================== short test summary info ============================
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5412644Z ERROR tests/test_owned_control_source.py::test_revocation_before_next_git_and_final_binding_blocks - KeyError: 'owned_source_admission'
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5413634Z ERROR tests/test_owned_control_source.py::test_revoked_live_health_does_not_probe_database - KeyError: 'owned_source_admission'
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5414685Z ERROR tests/test_owned_control_source.py::test_bound_admission_cannot_disappear_or_be_revoked_during_health[removed] - KeyError: 'owned_source_admission'
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5415839Z ERROR tests/test_owned_control_source.py::test_bound_admission_cannot_disappear_or_be_revoked_during_health[during-query] - KeyError: 'owned_source_admission'
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.5416699Z 1617 passed, 14 skipped, 4 warnings, 4 errors, 49 subtests passed in 35.69s
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.9298739Z ##[error]Process completed with exit code 1.
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.9351070Z ##[group]Run import json,os,pathlib,subprocess,hashlib,sys
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.9351546Z ^[[36;1mimport json,os,pathlib,subprocess,hashlib,sys^[[0m
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.9352084Z ^[[36;1mdef git(root,arg):return subprocess.check_output(['git','-C',root,'rev-parse',arg],text=True).strip()^[[0m
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.9353388Z ^[[36;1mdef source(root):return dict(head=git(root,'HEAD'),tree=git(root,'HEAD^{tree}'),tracked_clean=not bool(subprocess.check_output(['git','-C',root,'status','--porcelain','--untracked-files=no'])))^[[0m
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.9354137Z ^[[36;1mp=pathlib.Path('mission3-tests.xml')^[[0m
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.9354652Z ^[[36;1mif p.exists():subprocess.run([sys.executable,'scripts/annotate_test_failures.py',str(p)],check=False)^[[0m
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.9356904Z ^[[36;1mreport=dict(schema='grid.mission3.qualification.v1',grid=source('.'),unified=source(os.environ['UNIFIED_SOURCE_ROOT']),expected_grid_sha=os.environ['EXPECTED_GRID_SHA'],baseline_unified_sha='e0c2ea20aa4f1bd9476d1046e7e4b41f1b12d8e9',run=os.environ['GITHUB_RUN_ID'],attempt=os.environ['GITHUB_RUN_ATTEMPT'],job=os.environ['GITHUB_JOB'],tests=os.environ['TEST_OUTCOME'],junit_sha256=hashlib.sha256(p.read_bytes()).hexdigest() if p.exists() else None,scope='DISPOSABLE_CLOUD_POSTGRES18',physical='NOT_RUN',external_host_execution=False,service_installation='NOT_RUN',multi_node_ha='NOT_QUALIFIED')^[[0m
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.9359035Z ^[[36;1mpathlib.Path('mission3-source.json').write_text(json.dumps(report,sort_keys=True)+'\n')^[[0m
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.9359729Z ^[[36;1massert report['grid']['head']==report['expected_grid_sha'] and report['unified']['head']==report['baseline_unified_sha']^[[0m
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.9360352Z ^[[36;1massert report['grid']['tracked_clean'] and report['unified']['tracked_clean']^[[0m
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.9364461Z shell: /opt/hostedtoolcache/Python/3.12.16/x64/bin/python {0}
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.9364788Z env:
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.9365003Z   GRID_SHARED_TOKEN: disposable-ci-only
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.9365505Z   POSTGRES_DSN: ***127.0.0.1:5432/grid
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.9365895Z   HISTORY_DISPOSABLE_DSN: ***127.0.0.1:5432/grid
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.9366315Z   TERMINAN_DISPOSABLE_PG18_DSN: ***127.0.0.1:5432/grid
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.9366735Z   MISSION3_TEST_DATABASE_URL: ***127.0.0.1:5432/grid
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.9367412Z   UNIFIED_SOURCE_ROOT: /home/runner/work/bybit-cluster-grid/bybit-cluster-grid/upstream/unified-system
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.9367933Z   EXPECTED_GRID_SHA: 71084a336520187d6e260531a2f5d15555ba0e0c
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.9368306Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.16/x64
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.9368708Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib/pkgconfig
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.9369109Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.9369476Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.9369841Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.9370215Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.9370534Z   TEST_OUTCOME: failure
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:57.9370756Z ##[endgroup]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:58.0055937Z ##[error]tests.test_owned_control_source.test_revocation_before_next_git_and_final_binding_blocks: failed on teardown with "KeyError: 'owned_source_admission'"
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:58.0060526Z ##[error]tests.test_owned_control_source.test_revoked_live_health_does_not_probe_database: failed on teardown with "KeyError: 'owned_source_admission'"
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:58.0065089Z ##[error]tests.test_owned_control_source.test_bound_admission_cannot_disappear_or_be_revoked_during_health[removed]: failed on teardown with "KeyError: 'owned_source_admission'"
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:58.0069451Z ##[error]tests.test_owned_control_source.test_bound_admission_cannot_disappear_or_be_revoked_during_health[during-query]: failed on teardown with "KeyError: 'owned_source_admission'"
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:58.0521937Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:58.0522568Z with:
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:58.0522938Z   name: mission3-linux-pg18-71084a336520187d6e260531a2f5d15555ba0e0c-42088041970-1
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:58.0523406Z   path: mission3-source.json
+linux-postgres18	UNKNOWN STEP	mission3-tests.xml
+linux-postgres18	UNKNOWN STEP	
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:58.0523714Z   if-no-files-found: error
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:58.0523968Z   compression-level: 6
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:58.0524183Z   overwrite: false
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:58.0524393Z   include-hidden-files: false
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:58.0524623Z env:
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:58.0524825Z   GRID_SHARED_TOKEN: disposable-ci-only
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:58.0525285Z   POSTGRES_DSN: ***127.0.0.1:5432/grid
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:58.0525669Z   HISTORY_DISPOSABLE_DSN: ***127.0.0.1:5432/grid
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:58.0526075Z   TERMINAN_DISPOSABLE_PG18_DSN: ***127.0.0.1:5432/grid
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:58.0526501Z   MISSION3_TEST_DATABASE_URL: ***127.0.0.1:5432/grid
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:58.0527039Z   UNIFIED_SOURCE_ROOT: /home/runner/work/bybit-cluster-grid/bybit-cluster-grid/upstream/unified-system
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:58.0527561Z   EXPECTED_GRID_SHA: 71084a336520187d6e260531a2f5d15555ba0e0c
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:58.0527944Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.16/x64
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:58.0528351Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib/pkgconfig
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:58.0528750Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:58.0529128Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:58.0529512Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:58.0529884Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:58.0530207Z ##[endgroup]
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:58.2288729Z (node:5607) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:58.2289428Z (Use `node --trace-deprecation ...` to show where the warning was created)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:58.2367003Z Multiple search paths detected. Calculating the least common ancestor of all paths
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:58.2369238Z The least common ancestor is /home/runner/work/bybit-cluster-grid/bybit-cluster-grid. This will be the root directory of the artifact
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:58.2370445Z With the provided path, there will be 2 files uploaded
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:58.2371433Z Artifact name is valid!
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:58.2372437Z Root directory input is valid!
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:58.4994945Z Beginning upload of artifact content to blob storage
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:58.5346453Z (node:5607) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:58.6140796Z Uploaded bytes 33298
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:58.6384159Z Finished uploading artifact content to blob storage!
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:58.6385187Z SHA256 digest of uploaded artifact zip is 946f7a27c95110b22046812280406a843013dcd58ca35c1468a106298504bd84
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:58.6386724Z Finalizing artifact upload
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.1086145Z Artifact mission3-linux-pg18-71084a336520187d6e260531a2f5d15555ba0e0c-42088041970-1.zip successfully finalized. Artifact ID 13450499803
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.1088337Z Artifact mission3-linux-pg18-71084a336520187d6e260531a2f5d15555ba0e0c-42088041970-1 has been successfully uploaded! Final size is 33298 bytes. Artifact ID is 13450499803
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.1094406Z Artifact download URL: https://github.com/YehorBabenko88/bybit-cluster-grid/actions/runs/42088041970/artifacts/13450499803
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.1300927Z Post job cleanup.
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.2166772Z [command]/usr/bin/git version
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.2210195Z git version 2.56.0
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.2261854Z Temporarily overriding HOME='/home/runner/work/_temp/9e5783fc-5f86-4e23-b2f6-fb95547c9792' before making global git config changes
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.2262972Z Adding repository directory to the temporary git global config as a safe directory
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.2272741Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/bybit-cluster-grid/bybit-cluster-grid/upstream/unified-system
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.2317929Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.2358050Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.2602368Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.2643337Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.2893744Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.2939513Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.3316377Z Post job cleanup.
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.4234468Z [command]/usr/bin/git version
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.4285194Z git version 2.56.0
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.4334239Z Temporarily overriding HOME='/home/runner/work/_temp/a6e18ab2-3551-4f3f-a260-0457c7d78206' before making global git config changes
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.4334988Z Adding repository directory to the temporary git global config as a safe directory
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.4341745Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/bybit-cluster-grid/bybit-cluster-grid
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.4390101Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.4443126Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.4680707Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.4719018Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.4967966Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5013208Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5365846Z Print service container logs: bd9bea12591f4caba47360cb7b500c92_postgres181_627696
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5370736Z ##[command]/usr/bin/docker logs --details 457f3630685bf530bb7898e389cc12be503b7b9d9910b19b71e91b8e39b282ed
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5517440Z  initdb: warning: enabling "trust" authentication for local connections
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5518344Z  The files belonging to this database system will be owned by user "postgres".
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5519585Z  initdb: hint: You can change this by editing pg_hba.conf or using the option -A, or --auth-local and --auth-host, the next time you run initdb.
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5520509Z  2026-11-05 20:37:02.856 UTC [1] LOG:  starting PostgreSQL 18.1 (Debian 18.1-1.pgdg13+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5521220Z  2026-11-05 20:37:02.856 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5521737Z  2026-11-05 20:37:02.856 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5522432Z  2026-11-05 20:37:02.857 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5522973Z  2026-11-05 20:37:02.860 UTC [73] LOG:  database system was shut down at 2026-11-05 20:37:02 UTC
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5523473Z  2026-11-05 20:37:02.864 UTC [1] LOG:  database system is ready to accept connections
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5523973Z  2026-11-05 20:37:34.659 UTC [210] ERROR:  cannot execute CREATE TABLE in a read-only transaction
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5524509Z  2026-11-05 20:37:34.659 UTC [210] STATEMENT:  CREATE TABLE forbidden_history_write(id integer)
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5525039Z  2026-11-05 20:37:35.606 UTC [216] ERROR:  cannot execute UPDATE in a read-only transaction
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5525547Z  2026-11-05 20:37:35.606 UTC [216] STATEMENT:  UPDATE market_events SET source='forbidden'
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5526060Z  2026-11-05 20:37:36.003 UTC [218] ERROR:  index row requires 12104 bytes, maximum size is 8191
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5526726Z  2026-11-05 20:37:36.003 UTC [218] STATEMENT:  INSERT INTO market_events(symbol,event_ts,event_type,payload) VALUES($1,$2,$3,$4) RETURNING id
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5527330Z  2026-11-05 20:37:47.463 UTC [288] ERROR:  immutable provenance record
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5527838Z  2026-11-05 20:37:47.463 UTC [288] CONTEXT:  PL/pgSQL function reject_provenance_mutation() line 2 at RAISE
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5528384Z  2026-11-05 20:37:47.463 UTC [288] STATEMENT:  UPDATE provenance_minutes SET symbol='BAD'
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5528827Z  2026-11-05 20:37:47.464 UTC [288] ERROR:  immutable provenance record
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5529315Z  2026-11-05 20:37:47.464 UTC [288] CONTEXT:  PL/pgSQL function reject_provenance_mutation() line 2 at RAISE
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5529836Z  2026-11-05 20:37:47.464 UTC [288] STATEMENT:  DELETE FROM provenance_minutes
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5530210Z  This user must also own the server process.
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5530487Z  
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5530776Z  The database cluster will be initialized with locale "en_US.utf8".
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5531198Z  The default database encoding has accordingly been set to "UTF8".
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5531608Z  The default text search configuration will be set to "english".
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5531927Z  
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5532134Z  Data page checksums are enabled.
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5532562Z  
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5532867Z  fixing permissions on existing directory /var/lib/postgresql/18/docker ... ok
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5533294Z  creating subdirectories ... ok
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5533607Z  selecting dynamic shared memory implementation ... posix
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5533951Z  selecting default "max_connections" ... 100
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5534263Z  selecting default "shared_buffers" ... 128MB
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5534942Z  selecting default time zone ... Etc/UTC
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5535222Z  creating configuration files ... ok
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5535502Z  running bootstrap script ... ok
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5535955Z  performing post-bootstrap initialization ... ok
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5536262Z  syncing data to disk ... ok
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5536490Z  
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5536670Z  
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5536904Z  Success. You can now start the database server using:
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5537198Z  
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5537446Z      pg_ctl -D /var/lib/postgresql/18/docker -l logfile start
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5537759Z  
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5538355Z  waiting for server to start....2026-11-05 20:37:02.551 UTC [51] LOG:  starting PostgreSQL 18.1 (Debian 18.1-1.pgdg13+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5539173Z  2026-11-05 20:37:02.552 UTC [51] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5539794Z  2026-11-05 20:37:02.555 UTC [57] LOG:  database system was shut down at 2026-11-05 20:37:02 UTC
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5540281Z  2026-11-05 20:37:02.557 UTC [51] LOG:  database system is ready to accept connections
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5540634Z   done
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5540837Z  server started
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5541041Z  CREATE DATABASE
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5541235Z  
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5541410Z  
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5541722Z  /usr/local/bin/docker-entrypoint.sh: ignoring /docker-entrypoint-initdb.d/*
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5542096Z  
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5543108Z  waiting for server to shut down....2026-11-05 20:37:02.736 UTC [51] LOG:  received fast shutdown request
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5543917Z  2026-11-05 20:37:02.736 UTC [51] LOG:  aborting any active transactions
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5544840Z  2026-11-05 20:37:02.739 UTC [51] LOG:  background worker "logical replication launcher" (PID 60) exited with exit code 1
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5545802Z  2026-11-05 20:37:02.739 UTC [55] LOG:  shutting down
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5546513Z  2026-11-05 20:37:02.740 UTC [55] LOG:  checkpoint starting: shutdown immediate
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5548504Z  2026-11-05 20:37:02.754 UTC [55] LOG:  checkpoint complete: wrote 943 buffers (5.8%), wrote 3 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.010 s, sync=0.003 s, total=0.015 s; sync files=303, longest=0.002 s, average=0.001 s; distance=4352 kB, estimate=4352 kB; lsn=0/1B9FBA0, redo lsn=0/1B9FBA0
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5550380Z  2026-11-05 20:37:02.762 UTC [51] LOG:  database system is shut down
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5550922Z   done
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5551220Z  server stopped
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5551506Z  
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5551906Z  PostgreSQL init process complete; ready for start up.
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5552594Z  
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5567428Z Stop and remove container: bd9bea12591f4caba47360cb7b500c92_postgres181_627696
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.5573079Z ##[command]/usr/bin/docker rm --force 457f3630685bf530bb7898e389cc12be503b7b9d9910b19b71e91b8e39b282ed
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.6811583Z 457f3630685bf530bb7898e389cc12be503b7b9d9910b19b71e91b8e39b282ed
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.6836972Z Remove container network: github_network_d0b0058393684b1a955e5511f76dc3fc
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.6841173Z ##[command]/usr/bin/docker network rm github_network_d0b0058393684b1a955e5511f76dc3fc
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.7784945Z github_network_d0b0058393684b1a955e5511f76dc3fc
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.7865673Z Cleaning up orphan processes
+linux-postgres18	UNKNOWN STEP	2026-11-05T20:37:59.8216481Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@11d5960a326750d5838078e36cf38b85af677262, actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065, actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
