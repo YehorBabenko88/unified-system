@@ -164,5 +164,16 @@
     "verified_fix_head": "6bcf5475023a8f6a9733d02ad899064d0d83be95",
     "fix_evidence": "phase25/f15-fix-review.json;phase25/original_hidden_comment/receipt.json",
     "hosted_and_runtime": "NOT_QUALIFIED"
+  },
+  {
+    "id": "A8-F16",
+    "severity": "P2",
+    "repository": "bybit-cluster-grid",
+    "pr": 265,
+    "observed_head": "10adcff532b6e31c2531c4afcfd0fec1328d6b21",
+    "status": "OPEN_PENDING_EXACT_FIX_REVIEW",
+    "title": "Codec CI raw source guard honors Git blob replacement under unchanged HEAD",
+    "evidence": "phase27/checkpoint-v3-review.json and git_blob_replace/ before/test/after guard receipts/logs: changed codec bytes accepted43/0skip with originalHEAD/tree.",
+    "required_correction": "Disable Git object replacements in every source/inventory Git command, record original tree/source evidence and reject replacement negative before tests. Preserve codec/tests/pins; no actual hosted tampering alleged."
   }
 ]

@@ -1,5 +1,5 @@
 {
-  "checked_utc": "2026-11-06T19:40:44.789710+00:00",
+  "checked_utc": "2026-11-06T19:56:38.505553+00:00",
   "RELEASE_MANIFEST_STATUS": "PRESENT_PREPARATION_ONLY_NOT_APPROVED_NOT_INSTALLABLE",
   "NODE_INVENTORY_STATUS": "SIX_REDACTED_OWNER_OBSERVATIONS_PRESENT_ORIGINAL_RAW_NOT_REACQUIRED_BY_A8_NOT_ADMITTED",
   "CONTRACT_STATUS": {
@@ -484,6 +484,18 @@
       "clean_primary_raw_Git_files_verified_after": 536,
       "local_environment": "Windows_Python3.12_tzdata2026.6_HASH_PINNED_AUDITOR_SCRATCH",
       "mandatory_tests_in_this_review": "75_FRESH_NOT_INHERITED"
+    },
+    "Grid265_codec": {
+      "head": "10adcff532b6e31c2531c4afcfd0fec1328d6b21",
+      "tree": "b95ab9581cda1d6078f6c7c154f55d2bd741e3bc",
+      "cases": 43,
+      "skips": 0,
+      "scope": "PURE_UNTRUSTED_CLAIM_CODEC_ONLY",
+      "pins_verified": true,
+      "authority_promotion": "ALWAYS_DENIED",
+      "CI_source_guard": "F16_REPLACEMENT_NEGATIVE_ACCEPTED",
+      "legacy_dispatch": "NOT_IMPLEMENTED",
+      "actual_publication": "BLOCKED"
     }
   },
   "WINDOWS_CI": "PENDING_CURRENT_DRAFTS; FAILED_BASELINE_MANDATORY_GATES_NOT_CLOSED",
@@ -495,7 +507,7 @@
     "P0_confirmed_defects": 0,
     "P0_absence_proven": false,
     "P1_open": 6,
-    "P2_open": 1,
+    "P2_open": 2,
     "F08": "FIX_VERIFIED_OFFLINE",
     "F09": "FIX_VERIFIED_OFFLINE_AT_42686cd",
     "F10": "FIX_VERIFIED_OFFLINE_AT_42686cd",
@@ -503,7 +515,8 @@
     "F12": "FIX_VERIFIED_DOCUMENTARY_EXACT_SOURCE",
     "F13": "FIX_VERIFIED_OFFLINE_AT_ec967b3_OLD_SOURCE_UNSAFE_NOT_DEPLOYED",
     "F14": "FIX_VERIFIED_OFFLINE_AT_15dd9e8_PROVIDER_DISABLED",
-    "F15": "FIX_VERIFIED_OFFLINE_AT_6bcf547"
+    "F15": "FIX_VERIFIED_OFFLINE_AT_6bcf547",
+    "F16": "OPEN_GIT_REPLACEMENT_RAW_SOURCE_GUARD"
   },
   "EVIDENCE": [
     "phase4/math-source-and-compile-review.json",
@@ -544,7 +557,8 @@
     "phase24/scheduler-durable-review.json",
     "phase24/independent-journal-probes.json",
     "phase25/f15-fix-review.json",
-    "phase26/integration75-review.json"
+    "phase26/integration75-review.json",
+    "phase27/checkpoint-v3-review.json"
   ],
   "NEXT_ACTIONS": [
     "Review terminal exact-source Windows CI logs/artifacts when available; queued/cancelled is not PASS.",
