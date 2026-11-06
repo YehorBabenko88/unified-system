@@ -1,5 +1,5 @@
 {
-  "checked_utc": "2026-11-06T16:56:36.002753+00:00",
+  "checked_utc": "2026-11-06T17:09:11.543123+00:00",
   "RELEASE_MANIFEST_STATUS": "PRESENT_PREPARATION_ONLY_NOT_APPROVED_NOT_INSTALLABLE",
   "NODE_INVENTORY_STATUS": "PRESENT_DECLARED_CANDIDATES_NOT_AUTHENTICATED_NOT_CAPACITY_ADMITTED",
   "CONTRACT_STATUS": {
@@ -51,6 +51,27 @@
       "CI_source_guard": "FIX_VERIFIED_OFFLINE_EXACT_SOURCE",
       "runtime_API": "NOT_QUALIFIED",
       "independent_negative_guards_rejected": 8
+    },
+    "integration_PR26": {
+      "head": "56f4215506f3a6efb7404591753facd69204a1ee",
+      "tree": "359ba67541491a0d2d7fa63b9d2e7b5199b5f2af",
+      "component_tests": 59,
+      "skips": 0,
+      "negative_guards_rejected": 7,
+      "diagnostic_helper_tests": 3,
+      "scope": "LOCAL_WINDOWS_SYNTHETIC_COMPONENTS_NOT_RUNTIME",
+      "pr_head_at_end": "1c05ce553945dac5575860284e1cb42790f07bb2",
+      "newer_head_review": "NOT_REVIEWED",
+      "tested_head_hosted": "CANCELLED_42257673347_42257658705"
+    },
+    "Grid262": {
+      "head": "a17f1db6b9aa04c105d2e993496026a83849ecfd",
+      "tree": "d45f5bf45d08f7d336fc82e376cc88915c57d84b",
+      "pytest92": "15PASS_0SKIP_0ERROR",
+      "baseline_pytest92": "15PASS_4TEARDOWN_ERRORS",
+      "pytest842": "15PASS_0SKIP_0ERROR",
+      "scope": "FIXTURE_ONLY_PRODUCT_UNCHANGED_FULL_SUITE_NOT_QUALIFIED",
+      "hosted_snapshot": "7_RUNS_QUEUED_NOT_PASS"
     }
   },
   "WINDOWS_CI": "PENDING_CURRENT_DRAFTS; FAILED_BASELINE_MANDATORY_GATES_NOT_CLOSED",
@@ -84,7 +105,10 @@
     "phase9/f11-fix-review.md",
     "phase9/f11-independent-guards.json",
     "phase9/checkout-conversion-review.json",
-    "phase10/math-registration-review.json"
+    "phase10/math-registration-review.json",
+    "phase11/integration-review.json",
+    "phase11/original-receipt-checks.json",
+    "phase12/grid-fixture-review.json"
   ],
   "NEXT_ACTIONS": [
     "Review terminal exact-source Windows CI logs/artifacts when available; queued/cancelled is not PASS.",

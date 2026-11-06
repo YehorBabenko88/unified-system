@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="4" failures="0" skipped="0" tests="15" time="6.862" timestamp="2026-11-06T18:07:56.259521+01:00" hostname="LS5"><testcase classname="tests.test_owned_control_source" name="test_default_foreign_owner_denied_and_exact_scope_has_no_config_mutation" time="1.597" /><testcase classname="tests.test_owned_control_source" name="test_invalid_admission_rejected_before_git[json]" time="0.266" /><testcase classname="tests.test_owned_control_source" name="test_invalid_admission_rejected_before_git[revoked]" time="0.328" /><testcase classname="tests.test_owned_control_source" name="test_invalid_admission_rejected_before_git[nonliteral]" time="0.369" /><testcase classname="tests.test_owned_control_source" name="test_invalid_admission_rejected_before_git[scope]" time="0.279" /><testcase classname="tests.test_owned_control_source" name="test_invalid_admission_rejected_before_git[git]" time="0.267" /><testcase classname="tests.test_owned_control_source" name="test_invalid_admission_rejected_before_git[head]" time="0.309" /><testcase classname="tests.test_owned_control_source" name="test_revocation_before_next_git_and_final_binding_blocks" time="0.386"><error message="failed on teardown with &quot;KeyError: 'owned_source_admission'&quot;">self = &lt;starlette.datastructures.State object at 0x000001DF736A0590&gt;
+key = 'owned_source_admission'
+
+    def __delattr__(self, key: Any) -&gt; None:
+&gt;       del self._state[key]
+            ^^^^^^^^^^^^^^^^
+E       KeyError: 'owned_source_admission'
+
+..\audit-venv\Lib\site-packages\starlette\datastructures.py:702: KeyError</error></testcase><testcase classname="tests.test_owned_control_source" name="test_revoked_live_health_does_not_probe_database" time="0.544"><error message="failed on teardown with &quot;KeyError: 'owned_source_admission'&quot;">self = &lt;starlette.datastructures.State object at 0x000001DF736A0590&gt;
+key = 'owned_source_admission'
+
+    def __delattr__(self, key: Any) -&gt; None:
+&gt;       del self._state[key]
+            ^^^^^^^^^^^^^^^^
+E       KeyError: 'owned_source_admission'
+
+..\audit-venv\Lib\site-packages\starlette\datastructures.py:702: KeyError</error></testcase><testcase classname="tests.test_owned_control_source" name="test_bound_admission_cannot_disappear_or_be_revoked_during_health[removed]" time="0.469"><error message="failed on teardown with &quot;KeyError: 'owned_source_admission'&quot;">self = &lt;starlette.datastructures.State object at 0x000001DF736A0590&gt;
+key = 'owned_source_admission'
+
+    def __delattr__(self, key: Any) -&gt; None:
+&gt;       del self._state[key]
+            ^^^^^^^^^^^^^^^^
+E       KeyError: 'owned_source_admission'
+
+..\audit-venv\Lib\site-packages\starlette\datastructures.py:702: KeyError</error></testcase><testcase classname="tests.test_owned_control_source" name="test_bound_admission_cannot_disappear_or_be_revoked_during_health[during-query]" time="0.585"><error message="failed on teardown with &quot;KeyError: 'owned_source_admission'&quot;">self = &lt;starlette.datastructures.State object at 0x000001DF736A0590&gt;
+key = 'owned_source_admission'
+
+    def __delattr__(self, key: Any) -&gt; None:
+&gt;       del self._state[key]
+            ^^^^^^^^^^^^^^^^
+E       KeyError: 'owned_source_admission'
+
+..\audit-venv\Lib\site-packages\starlette\datastructures.py:702: KeyError</error></testcase><testcase classname="tests.test_owned_control_source" name="test_fixed_entry_runs_one_loopback_existing_app_after_live_scope[True]" time="0.344" /><testcase classname="tests.test_owned_control_source" name="test_fixed_entry_runs_one_loopback_existing_app_after_live_scope[False]" time="0.379" /><testcase classname="tests.test_owned_control_source" name="test_fixed_entry_rejects_missing_admission_before_application_import" time="0.001" /><testcase classname="tests.test_owned_control_source" name="test_fixed_entry_rejects_wrong_arguments_before_application_import" time="0.001" /></testsuite></testsuites>

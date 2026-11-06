@@ -1,0 +1,14 @@
+# Bounded PR26 integration review
+
+Requirement: compatible reviewed merges, assertion preservation, exact-source and mandatory CI evidence guards.
+Repository: unified-system; Draft PR26; HEAD56f4215506f3a6efb7404591753facd69204a1ee; tree359ba67541491a0d2d7fa63b9d2e7b5199b5f2af; base80c25306a7b0230a39cf1150172844ec94452529.
+
+PASS only for selected offline scope. Scheduler942e5f1/control0b3af3e/fixture8171eeb+2626e93 files match original Git blobs. All registry-base files unchanged except exact addition release/** -text. Independent source-bound CI block59/59, zero skips,59unique IDs, raw protected source before/after equal and log hash verified. Seven negative cases reject: tracked comment; assume-unchanged hidden comment; wrong expected HEAD; missing ID; duplicate ID; skip; hidden post-test tamper. Skip case emits an explicitly skipped receipt and nonzero process; this is not a PASS receipt. Matrix inspected: Ubuntu24.04/Windows-latest, Python3.11/3.12; actual hosted execution not qualified. Dependency installed into auditor scratch with exact hash lock, not a global environment.
+
+PR18 fixture changes only resolve test temporary root and Python3.11-compatible junction cleanup; retain target-retention/write-denial assertions. PR19 adds bounded static diagnostic phases:15second timeout, one child attempt, nonzero fatal result, output marker assertions retained. Independent diagnostic-helper3/3 PASS. No actual native child/service/junction suite rerun here; prior68-case result is developer evidence only. Original integrated/full-suite/targeted receipt stdout/stderr hashes independently match, but refer to older heads and are not adopted as fresh acceptance.
+
+Auditor setup attempts: initial missing optional YAML parser and overly strict base-equality assertion stopped before tests. Parser replaced with exact indentation extraction; .gitattributes delta explicitly inspected and asserted. These were auditor harness corrections, not product failures. All negative mutations occur only in independent disposable clones.
+
+No new product defect found in this bounded scope. Runtime/authentication/fencing/LAN/physical and full mandatory CI remain unqualified. Overall NO-GO; physical fault injection and Tailscale removal BLOCKED. Evidence: integration-review.json; clean/receipt.json and tests.log; individual negative stdout/stderr; original-receipt-checks.json. Reproducer: ../review_partial_integration.py.
+
+Latest bounded GitHub snapshot: both exact56f final-integration runs42257673347/42257658705 are completed CANCELLED, not PASS. PR26 now points to1c05ce553945dac5575860284e1cb42790f07bb2; that newer head has NOT been reviewed here and inherits no acceptance. Mandatory next correction: qualify exact final candidate matrix/artifacts after current source review. Severity: existing P1 integration/Windows gates remain open.

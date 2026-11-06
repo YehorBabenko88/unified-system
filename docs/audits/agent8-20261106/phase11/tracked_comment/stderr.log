@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "<string>", line 35, in <module>
+    before = source_receipt()
+  File "<string>", line 17, in source_receipt
+    assert not git('status', '--porcelain', '--untracked-files=no', '--ignore-submodules=none').strip(), 'tracked source dirty'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: tracked source dirty
