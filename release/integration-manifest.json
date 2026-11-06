@@ -255,5 +255,30 @@
     "path": "release/isolated-handoffs-20261106.json",
     "sha256": "3c7d28462fbb3e2d746a03af35592c9333b440e476664f7ece6a76f90971281c",
     "admission": "NOT_GRANTED"
+  },
+  "control_mux_review3": {
+    "artifacts": [
+      {
+        "path": "release/contracts/control-mux-review3/corrigendum.json",
+        "sha256": "d9d3529c3ab756d8cb617dda38b27e3c942d461f46761fcd56f6e256568948d8"
+      },
+      {
+        "path": "release/contracts/control-mux-review3/agent1-scoped-review.json",
+        "sha256": "875da48dfcaaf4bea3baa577964000baec9ce719fb6a2ff8f13d1f9c56499edd"
+      },
+      {
+        "path": "release/contracts/control-mux-review3/agent6-scoped-review.json",
+        "sha256": "581d3e61cbd4d77ff316e452ab1a6e2ebee407352468ff2eef231fe93218f45c"
+      }
+    ],
+    "a1_a6_scope": "THREE_NORMATIVE_CORRECTIONS_ONLY_FRESH_EXACT_BYTE_ACK",
+    "full_abi_ack": "WITHHELD",
+    "runtime_admission": "BLOCKED",
+    "remaining": [
+      "closed schema hashes/canonical encoding",
+      "receipt lookup immutable namespace and fail-closed uniqueness",
+      "native identity/authority/containment",
+      "executable integration qualification"
+    ]
   }
 }
