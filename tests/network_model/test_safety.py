@@ -207,6 +207,38 @@ class PersistentQuotaModelTests(unittest.TestCase):
         self.assertFalse(q.cancel('a'))
         self.assertEqual(q.attempts['a']['state'], 'RESERVED')
 
+    def test_deep_checkpoint_parser_failure_returns_blocked_ledger(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            p = Path(tmp) / 'state.json'
+            p.write_text('[' * 100000 + '0' + ']' * 100000, encoding='ascii')
+            self.assertTrue(QuotaLedger.load(p).blocked)
+
+    def test_frozen_scope_container_must_be_a_list_not_a_dict(self):
+        import hashlib
+        with tempfile.TemporaryDirectory() as tmp:
+            p = Path(tmp) / 'state.json'
+            QuotaLedger().save(p)
+            e = json.loads(p.read_text())
+            e['body']['frozen'] = {'nat1': False}
+            raw = json.dumps(e['body'], sort_keys=True, separators=(',', ':')).encode('ascii')
+            e['sha256'] = hashlib.sha256(raw).hexdigest()
+            p.write_text(json.dumps(e), encoding='ascii')
+            self.assertTrue(QuotaLedger.load(p).blocked)
+
+    def test_unfrozen_reserved_and_charged_debt_survives_windows_restart_failover(self):
+        for consume in (False, True):
+            with self.subTest(consume=consume), tempfile.TemporaryDirectory() as tmp:
+                q = QuotaLedger(limit=1)
+                q.reserve('old', 'PC1', 'nat1', 0)
+                if consume:
+                    q.consume('old', 0)
+                p = Path(tmp) / 'state.json'
+                q.save(p)
+                q = QuotaLedger.load(p)
+                self.assertFalse(q.frozen)
+                q.failover()
+                self.assertEqual(q.reserve('new', 'PC2', 'nat1', 100000), 'DENIED')
+
 
 if __name__ == '__main__':
     unittest.main()

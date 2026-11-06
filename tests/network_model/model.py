@@ -281,6 +281,8 @@ class QuotaLedger:
                 uint(a['cost'], 1); uint(a['at_ms'])
                 if a['state'] not in ('RESERVED','CHARGED','UNKNOWN','OBSERVED','CANCELLED'):
                     raise ValueError('bad state')
+            if type(b['cooldowns']) is not dict or type(b['frozen']) is not list:
+                raise ValueError('bad scope container')
             if set(b['cooldowns']) - {'nat1'} or set(b['frozen']) - {'nat1'}:
                 raise ValueError('unknown scope')
             for until in b['cooldowns'].values():
@@ -290,7 +292,7 @@ class QuotaLedger:
             if any(a['state'] == 'UNKNOWN' and a['nat'] not in obj.frozen for a in obj.attempts.values()):
                 raise ValueError('lost unknown freeze')
             return obj
-        except (OSError, ValueError, TypeError, KeyError, AttributeError):
+        except (OSError, ValueError, TypeError, KeyError, AttributeError, RecursionError):
             obj = cls()
             obj.blocked = True
             return obj
