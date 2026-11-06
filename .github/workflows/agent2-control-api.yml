@@ -1,0 +1,59 @@
+name: Agent 2 P0 Control API boundary
+on:
+  push:
+    paths:
+      - 'unified_system/control_api_readonly.py'
+      - 'tests/test_control_api_readonly.py'
+      - 'docs/architecture/control-api-readonly.md'
+      - '.github/workflows/agent2-control-api.yml'
+  pull_request:
+    paths:
+      - 'unified_system/control_api_readonly.py'
+      - 'tests/test_control_api_readonly.py'
+      - 'docs/architecture/control-api-readonly.md'
+      - '.github/workflows/agent2-control-api.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  boundary:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-latest]
+        python: ['3.11', '3.12']
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 5
+    env:
+      EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Denial and unavailable boundary tests (mandatory, no skips)
+        shell: python
+        run: |
+          import json, os, pathlib, platform, subprocess, unittest
+          head = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
+          assert head == os.environ['EXPECTED_HEAD'], 'unexpected source head'
+          suite = unittest.defaultTestLoader.discover('tests', pattern='test_control_api_readonly.py')
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          report = dict(schema='unified.control-api.p0-ci.v1', head=head,
+              tree=subprocess.check_output(['git', 'rev-parse', 'HEAD^{tree}'], text=True).strip(),
+              os=platform.system(), python=platform.python_version(), tests=result.testsRun,
+              failures=len(result.failures), errors=len(result.errors), skipped=len(result.skipped),
+              run=os.environ['GITHUB_RUN_ID'], attempt=os.environ['GITHUB_RUN_ATTEMPT'],
+              qualification='P0_COMPONENT_ONLY', runtime_api='NOT_QUALIFIED', physical='NOT_RUN', production='NO_GO')
+          pathlib.Path('p0-ci-evidence.json').write_text(json.dumps(report, indent=2), encoding='utf-8')
+          assert result.wasSuccessful() and result.testsRun >= 16 and not result.skipped
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: p0-control-${{ matrix.os }}-${{ matrix.python }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: p0-ci-evidence.json
+          if-no-files-found: error
