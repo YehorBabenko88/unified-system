@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="4" skipped="0" tests="4" time="0.351" timestamp="2026-11-06T18:25:44.919898+01:00" hostname="LS5"><testcase classname="history-red-regression.test_retired_history_preservation" name="test_retired_history_survives_without_separate_retention_approval" time="0.002"><failure message="assert False&#10; +  where False = all(&lt;generator object test_retired_history_survives_without_separate_retention_approval.&lt;locals&gt;.&lt;genexpr&gt; at 0x000001BF42494EE0&gt;)">def test_retired_history_survives_without_separate_retention_approval():
+        pool = RetiredHistoryPool()
+        result = asyncio.run(purge_retired(pool))
+&gt;       assert all(rows == ["retained-source-record"] for rows in pool.history.values())
+E       assert False
+E        +  where False = all(&lt;generator object test_retired_history_survives_without_separate_retention_approval.&lt;locals&gt;.&lt;genexpr&gt; at 0x000001BF42494EE0&gt;)
+
+..\history-red-regression\test_retired_history_preservation.py:47: AssertionError</failure></testcase><testcase classname="history-red-regression.test_retired_history_preservation" name="test_retired_cleanup_is_nondestructive_even_when_database_is_unavailable[kwargs0]" time="0.002"><failure message="AssertionError: Automatic retirement cleanup must not access the database">kwargs = {}
+
+    @pytest.mark.parametrize("kwargs", [{}, {"grace_days": 0}, {"grace_days": 365}])
+    def test_retired_cleanup_is_nondestructive_even_when_database_is_unavailable(kwargs):
+&gt;       assert asyncio.run(purge_retired(UnavailablePool(), **kwargs)) == []
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+..\history-red-regression\test_retired_history_preservation.py:58: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+grid\instrument_lifecycle.py:66: in purge_retired
+    async with pool.acquire() as c:
+               ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;history-red-regression.test_retired_history_preservation.UnavailablePool object at 0x000001BF425E5580&gt;
+
+    def acquire(self):
+&gt;       raise AssertionError("Automatic retirement cleanup must not access the database")
+E       AssertionError: Automatic retirement cleanup must not access the database
+
+..\history-red-regression\test_retired_history_preservation.py:53: AssertionError</failure></testcase><testcase classname="history-red-regression.test_retired_history_preservation" name="test_retired_cleanup_is_nondestructive_even_when_database_is_unavailable[kwargs1]" time="0.002"><failure message="AssertionError: Automatic retirement cleanup must not access the database">kwargs = {'grace_days': 0}
+
+    @pytest.mark.parametrize("kwargs", [{}, {"grace_days": 0}, {"grace_days": 365}])
+    def test_retired_cleanup_is_nondestructive_even_when_database_is_unavailable(kwargs):
+&gt;       assert asyncio.run(purge_retired(UnavailablePool(), **kwargs)) == []
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+..\history-red-regression\test_retired_history_preservation.py:58: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+grid\instrument_lifecycle.py:66: in purge_retired
+    async with pool.acquire() as c:
+               ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;history-red-regression.test_retired_history_preservation.UnavailablePool object at 0x000001BF425E6600&gt;
+
+    def acquire(self):
+&gt;       raise AssertionError("Automatic retirement cleanup must not access the database")
+E       AssertionError: Automatic retirement cleanup must not access the database
+
+..\history-red-regression\test_retired_history_preservation.py:53: AssertionError</failure></testcase><testcase classname="history-red-regression.test_retired_history_preservation" name="test_retired_cleanup_is_nondestructive_even_when_database_is_unavailable[kwargs2]" time="0.002"><failure message="AssertionError: Automatic retirement cleanup must not access the database">kwargs = {'grace_days': 365}
+
+    @pytest.mark.parametrize("kwargs", [{}, {"grace_days": 0}, {"grace_days": 365}])
+    def test_retired_cleanup_is_nondestructive_even_when_database_is_unavailable(kwargs):
+&gt;       assert asyncio.run(purge_retired(UnavailablePool(), **kwargs)) == []
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+..\history-red-regression\test_retired_history_preservation.py:58: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+grid\instrument_lifecycle.py:66: in purge_retired
+    async with pool.acquire() as c:
+               ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;history-red-regression.test_retired_history_preservation.UnavailablePool object at 0x000001BF425E60C0&gt;
+
+    def acquire(self):
+&gt;       raise AssertionError("Automatic retirement cleanup must not access the database")
+E       AssertionError: Automatic retirement cleanup must not access the database
+
+..\history-red-regression\test_retired_history_preservation.py:53: AssertionError</failure></testcase></testsuite></testsuites>

@@ -1,5 +1,5 @@
 {
-  "checked_utc": "2026-11-06T17:18:58.312422+00:00",
+  "checked_utc": "2026-11-06T17:26:18.151396+00:00",
   "RELEASE_MANIFEST_STATUS": "PRESENT_PREPARATION_ONLY_NOT_APPROVED_NOT_INSTALLABLE",
   "NODE_INVENTORY_STATUS": "SIX_REDACTED_OWNER_OBSERVATIONS_PRESENT_ORIGINAL_RAW_NOT_REACQUIRED_BY_A8_NOT_ADMITTED",
   "CONTRACT_STATUS": {
@@ -97,6 +97,16 @@
       "pytest842": "15PASS_0SKIP_0ERROR",
       "scope": "FIXTURE_ONLY_PRODUCT_UNCHANGED_FULL_SUITE_NOT_QUALIFIED",
       "hosted_snapshot": "7_RUNS_QUEUED_NOT_PASS"
+    },
+    "Grid263": {
+      "head": "ec967b3ebb67bb9f04d0d82c78bba5b4245a3333",
+      "tree": "8dce2883766a9b492587a91dda5ff86d881d83ac",
+      "red_regressions": "4FAIL_BASELINE",
+      "green_regressions": "16PASS_0SKIP",
+      "original_oracle": "6DELETE_BASELINE_0CALLS_FIXED",
+      "no_acquire_default_custom_grace": "PASS",
+      "scope": "SYNTHETIC_OFFLINE_EXACT_SOURCE_ONLY",
+      "integration_deployment": "NOT_QUALIFIED"
     }
   },
   "WINDOWS_CI": "PENDING_CURRENT_DRAFTS; FAILED_BASELINE_MANDATORY_GATES_NOT_CLOSED",
@@ -107,14 +117,14 @@
   "P0_P1_P2": {
     "P0_confirmed_defects": 0,
     "P0_absence_proven": false,
-    "P1_open": 7,
+    "P1_open": 6,
     "P2_open": 1,
     "F08": "FIX_VERIFIED_OFFLINE",
     "F09": "FIX_VERIFIED_OFFLINE_AT_42686cd",
     "F10": "FIX_VERIFIED_OFFLINE_AT_42686cd",
     "F11": "FIX_VERIFIED_OFFLINE_AT_0b3af3e",
     "F12": "FIX_VERIFIED_DOCUMENTARY_EXACT_SOURCE",
-    "F13": "OPEN_RETIRED_HISTORY_DELETE_SOURCE_PATH_CONFIRMED_FAKE_POOL"
+    "F13": "FIX_VERIFIED_OFFLINE_AT_ec967b3_OLD_SOURCE_UNSAFE_NOT_DEPLOYED"
   },
   "EVIDENCE": [
     "phase4/math-source-and-compile-review.json",
@@ -138,7 +148,8 @@
     "phase12/grid-fixture-review.json",
     "phase13/documentary-review.json",
     "phase14/retired-history-probe.json",
-    "phase13/ownership-correction-review.json"
+    "phase13/ownership-correction-review.json",
+    "phase15/history-safeguard-review.json"
   ],
   "NEXT_ACTIONS": [
     "Review terminal exact-source Windows CI logs/artifacts when available; queued/cancelled is not PASS.",

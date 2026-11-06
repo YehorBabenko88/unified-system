@@ -123,9 +123,12 @@
     "severity": "P1",
     "repository": "bybit-cluster-grid",
     "observed_head": "a17f1db6b9aa04c105d2e993496026a83849ecfd",
-    "status": "OPEN_PENDING_EXACT_FIX_REVIEW",
+    "status": "FIX_VERIFIED_OFFLINE_EXACT_SOURCE",
     "title": "Active refresh may purge retired history without explicit retention protection",
     "evidence": "phase14/retired-history-probe.json: exact Git blob74d462ee6865ec88ed72749b3c87803bb00ff7b5; six DELETE statements recorded in fake pool only.",
-    "required_correction": "Keep narrow historical deletion path disabled until explicit authorized retention/consumer/replica safeguards exist; review forthcoming isolated A3 fix exact HEAD/tests. No production cleanup authorized."
+    "required_correction": "Keep narrow historical deletion path disabled until explicit authorized retention/consumer/replica safeguards exist; review forthcoming isolated A3 fix exact HEAD/tests. No production cleanup authorized.",
+    "verified_fix_head": "ec967b3ebb67bb9f04d0d82c78bba5b4245a3333",
+    "fix_evidence": "phase15/history-safeguard-review.json",
+    "deployment_and_integration": "NOT_QUALIFIED_OLD_SOURCE_REMAINS_UNSAFE"
   }
 ]
