@@ -538,3 +538,27 @@ Environment own fresh detached no-hardlinks raw-LF clone, local Windows/Python3.
 Source rejects lexically present -wal/-shm/-journal (including dangling names), WAL SQLite header versions and nonDELETE journal mode. Review covers admitted quiescent private singlewriter lifecycle; no protection against hostile concurrent mode switching/local administrator is claimed. Old840bytebudget failure retained phase76, no oldtest relabel. All fixture files remain test-owned outside published source/evidence. No production implementation changes by A8.
 
 A8-F19 FIX_VERIFIED_OFFLINE_AT_a2265b0. Open6P1/3P2 restored; no globalF07/F16/F17 or native/physical closure. Overall NO-GO; Tailscale removal BLOCKED/NO-GO.
+
+
+# Phase78 — independent local Supervisor composition acceptance
+
+Requirement IDs A8-HEAD, A8-INTEGRATION, A8-NO-FAKE-AUTHORITY, A8-ARCHIVED-CI, A8-SOURCE-GUARDS, A8-WINDOWS-CI. Repository unified-system; Draft https://github.com/YehorBabenko88/unified-system/pull/43.
+Exact executed HEAD39c52ca7486760f0223cdb71001a5f3c3b454df8/tree548a4e2243a224ad86073c39bfec465e6e61251f. Base local assemblyeeb539d6e254769b5d0e7a0f5f3cb629ce673ffe/treefeee281f84e917fe4963ef4d1afbcdc29e898936; exactly5NEWpaths (workflow/doc/test/two original rawMathfixtures). Root later48bf evidenceHEAD is not this execution pin and gets no automatic test transfer.
+Environment own fresh detached no-hardlinks raw-LF clone, local Windows/Python3.12.10 -I-S-B. Own temporary SQLite, synthetic inactive capsule/plans and own subprocess crash fixtures only. No native/SCM/office/provider/truststore/network-policy action; protected Math run was not queried or actuated. Local journal writes prove only receipt behavior.
+
+| Test | Expected | Actual | Evidence | Status | Severity / correction |
+|---|---|---|---|---|---|
+| Exact source/composition |five new paths, declared component bytes retained |10component paths equal Nodea226/CI48e/Missiond226/Root4cfd andassemblyeeb;1361primaryGitOIDs independently recomputed/physicalrawmatch |independent-composition.json |PASS |source composition not approved runtime base |
+| Actual committed workflow |121unique mandatory IDs, no skip, clean raw/inventory prepost |121PASS/0skip/prepost1361equal |workflow121.original.json; workflow121.stderr.log |PASS |local Windows component integration only |
+| Six crossmodule scenarios |development/CI receipts not Nodeauthority; drain denied; install/deployinactive |6PASS within121 |workflow121.stderr.log; exacttestsource |PASS |6notadditive to121 |
+| Actual original archivedMath bytes |rawrun/jobs pins equal originalA7files |2raworiginals byteequal with SHA/length recorded, original runner0/steps[]/QUEUED/CONSUMEDreopened |independent-composition.json; workflow121.stderr.log |PASS |archived observation, not currentlive job claim |
+| Own protected tuple negatives |nonexact original identity cannot inherit consumedclassification |5mutations refused; differentrunNOT_APPLICABLE/exactoriginalCONSUMED |extra.stdout.json; extra-executed.py |PASS |authorization label not action/grant |
+| Forged positive plan/approvalreference |execute always denied despite positive flags |forgedACTIVATE/effects/trading/physical/rollbacktrue rejected; REQUEST_DRAINblocked |extra.stdout.json |PASS |no native rollout/rollback authority |
+| External effects tripwire in ownextra |no socketbind/connect/process/systemcall |no calls while extra component probes execute |extra.stdout.json |PASS |tripwire applies ownextra, not original crashfixture subprocess tests |
+| Symlink fixture |actual vector executed |Node test reports hostprivilegeUNAVAILABLE/returns; count0skip not actualsymlinkproof |workflow121.stdout.log |NOT_RUN |no mandatory waiver or fullWindowsqualification |
+| Hosted Windows/Ubuntu |terminal exact requiredjobs/artifacts |42377363299/42377246328attempt1queued/null |ci.original.json |BLOCKED |P1hosted gate,121localPASSnotCIterminalPASS |
+| Actual Home/Pro/services/rollback/nativecollector/authority |separate installed checks and qualified actuators |not supplied/executed |workflow121.original.json |NOT_RUN |physical/native/installation gates remainblocked |
+
+Unique121 breakdown: CI22, existingJournal8, Mission39, NodeSupervisor7, NodeJournal25, Deployment14, localintegration6. This independently executes the115component tests at exact39c plus6new; no separate historical component-HEAD workflow execution or actual thirdparty schema validation is inferred. Mission metadata approval/source/CI/developmentPASS cannot authorize Node operations; Node localCOMPLETED remainsLOCAL_RECEIPTS_ONLY with authority/source/freshnessUNKNOWN. Capsule bytes are verified but source provenance metadata-only and runtime trust unproved; backup hashes reference-only, execution denied, targets absent. Home/control-role logic is local plan validation, not WindowsHome/Prophysical admission.
+
+No new component defect found in this bounded integration slice; F19 remains fixed at matcheda226 bytes, no globalF07/F16/F17 closure. Confirmed open6P1/3P2 unchanged. Overall NO-GO; Tailscale removal BLOCKED/NO-GO. Physical fault injection and production deployment not authorized.
