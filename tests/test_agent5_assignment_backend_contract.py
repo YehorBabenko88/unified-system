@@ -78,6 +78,14 @@ class ActualAssignmentBackendContracts(unittest.IsolatedAsyncioTestCase):
         for count in (observed.assignment_effects, observed.publication_effects, observed.debit_effects, observed.checkpoint_effects):
             self.assertIs(type(count), int)
             self.assertGreaterEqual(count, 0)
+            self.assertLessEqual(count, 1)
+        for status, effects in ((observed.assignment_status, observed.assignment_effects),
+                                (observed.publication_status, observed.publication_effects)):
+            self.assertIn(status, ('COMMITTED', 'REJECTED', 'UNKNOWN', 'UNAVAILABLE'))
+            if status in ('COMMITTED', 'REJECTED'):
+                self.assertEqual(effects, int(status == 'COMMITTED'))
+            # UNKNOWN/UNAVAILABLE alone cannot terminate an earlier uncertain
+            # original command; scenario-specific native evidence is required.
         self.assertEqual(observed.original_request_id, observed.observed_request_id,
                          'uncertainty/conflict must not rekey the original intent')
         if name in ('SUPERSESSION_THEN_OLD_PUBLICATION',

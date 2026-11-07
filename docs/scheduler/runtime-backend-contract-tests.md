@@ -53,6 +53,12 @@ Passing assertions on caller-made observations cannot qualify actual execution.
 
 Observation counts are confirmed logical effects of the tested original commands,
 not raw KV/session/denial-receipt writes or all unrelated storage accounting.
+Each original command's logical effect count is bounded0..1. Assignment and
+publication statuses use the closed test-observation vocabulary COMMITTED,
+REJECTED, UNKNOWN, UNAVAILABLE; this is not a supported production result codec.
+COMMITTED requires1 and definitive REJECTED requires0. UNKNOWN/UNAVAILABLE
+alone does not prove0 or terminate an earlier uncertain original operation;
+scenario-specific assertions still constrain the proven no-quorum window.
 In all three ordered/concurrent publication-versus-supersession cases, the initial
 assignment is fixture preparation and excluded. assignment_status is the status
 of the tested supersession (equal to supersession_status); assignment_effects
