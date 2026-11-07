@@ -440,7 +440,18 @@
       "a5_source_delta_ack_sha256": "e70aed81b7e52ccf1171a3ac56b4e4809dad274c276b36bf5662e8e23ee5f93d",
       "scope": "ONE_GUARD_LINE_EIGHT_ASSERTIONS_EXISTING_TEST_ID",
       "native_privilege_escalation_demonstrated": false,
-      "source_qualification": "PENDING_OWNER_TERMINAL_RESULT",
+      "source_qualification": {
+        "scope": "OWNER_EXACT_SOURCE_QUALIFIED_NOT_RUNTIME_ADMITTED",
+        "tests": 15,
+        "skips": 0,
+        "primary_files": {
+          "unified": 1514,
+          "grid": 695
+        },
+        "before_after": "OWNER_REPORTED_EQUAL",
+        "root_raw_log_sha256_verified": "d66a04958fd425d80e56ae0e7bbfad8053900a414ca63ca6277661435d2bf44f",
+        "independent_a8_review": "REQUESTED"
+      },
       "independent_native_rerun_by_a5": false,
       "runtime_wiring": false
     }
