@@ -8,11 +8,13 @@ def main():
     root=Path(__file__).resolve().parents[2]
     sys.path.insert(0,str(root))
     raw=subprocess.check_output(['git','--no-replace-objects','show','cc286bce5e51e3670bd8a6cdfd3b663307268703:unified_system/security_identity_records.py'],cwd=root)
+    assert hashlib.sha256(raw).hexdigest()=='0d6b413b5654c0ff26c00bbbdcc6a47329e56dd9b8cb1cd838df8896477972cd'
     module=types.ModuleType('unified_system.security_identity_records');sys.modules[module.__name__]=module;exec(compile(raw,'<pinned-root-identity-seam>','exec'),module.__dict__)
     sys.path.insert(0,str(Path(args.grid_source).resolve()))
     from grid.coordination import ConsulConfig,ConsulSessionAuthority
     from unified_system.control_mux.consul_store import MuxAuthority,AuthorityUncertain
-    from unified_system.control_mux.commands import AdmittedContext,prepare_open
+    from unified_system.control_mux.commands import AdmittedContext,prepare_open,RawRequest
+    from unified_system.control_mux.http_api import ControlMuxRuntime
     from unified_system.control_mux.codec import encode,decode
     from consul_lab import ConsulLab
     report={'scope':'REAL_CONSUL_PRODUCT_OPEN_SYNTHETIC_NATIVE_PROVIDER_ONLY','production':'NO_GO','native_authentication':False,'events':[],'root_identity_source_sha256':hashlib.sha256(raw).hexdigest()}
@@ -22,6 +24,9 @@ def main():
             binding=module.IdentityBinding(cluster,actor,session,enrollment,policy,node)
             context=AdmittedContext(cluster,actor,session,owner,'OPERATOR_CONTROL','fixture-policy','1',frozenset({'OPEN_CONNECTION','GET_COMMAND'}),binding)
             class SyntheticNativeFixture:
+                def resolve(self,request,operation):
+                    if request.native_connection is not context.native_handle:raise ValueError('FIXTURE_CONNECTION_ONLY')
+                    return self.revalidate(context,operation)
                 def revalidate(self,c,operation):
                     if c is not context or operation not in c.permissions:raise ValueError('FIXTURE_DENIED')
                     return c
@@ -61,10 +66,42 @@ def main():
                     if not dropped_final and any(op['KV']['Verb']=='cas' and '/receipts/' in op['KV']['Key'] for op in ops):
                         dropped_final=True;raise AuthorityUncertain('FIXTURE_DROP_ACTUAL_COMMIT_RESPONSE')
                 store._txn=drop_final
-                result=await store.open(lease,context,command)
+                async def leader_provider():return lease
+                runtime=ControlMuxRuntime(store=store,admission=store.admission,leader_provider=leader_provider)
+                from http.server import BaseHTTPRequestHandler,ThreadingHTTPServer
+                from threading import Thread
+                import urllib.request
+                loop=asyncio.get_running_loop()
+                class FixtureHandler(BaseHTTPRequestHandler):
+                    def log_message(self,*args):pass
+                    def do_POST(self):
+                        size=int(self.headers.get('Content-Length','0'))
+                        if not 0<=size<=16384:self.send_error(413);return
+                        request=RawRequest('POST',self.path,tuple((k.encode('ascii'),v.encode('ascii')) for k,v in self.headers.raw_items()),self.rfile.read(size),context.native_handle)
+                        response=asyncio.run_coroutine_threadsafe(runtime.handle(request),loop).result(timeout=10)
+                        self.send_response(response.status)
+                        for k,v in response.headers:self.send_header(k,v)
+                        self.end_headers();self.wfile.write(response.body)
+                server=ThreadingHTTPServer(('127.0.0.1',0),FixtureHandler);thread=Thread(target=server.serve_forever,daemon=True);thread.start()
+                try:
+                    def send_http():
+                        opener=urllib.request.build_opener(urllib.request.ProxyHandler({}))
+                        request_http=urllib.request.Request('http://127.0.0.1:'+str(server.server_port)+'/control/v3/connections',data=body,method='POST',headers={'Content-Type':'application/json','X-Request-ID':request,'Idempotency-Key':'open-1'})
+                        with opener.open(request_http,timeout=10) as response:return response.status,response.read(16385)
+                    status,result_body=await asyncio.to_thread(send_http)
+                    assert status==201,status
+                    assert decode(result_body)['request_id']==request
+                    result=await store.reconcile(context,request)
+                    assert result.body==result_body
+                    report['events'].append('REAL_HTTP_POST_OPEN_TO_REAL_GRID_CONSUL')
+                finally:
+                    await asyncio.to_thread(server.shutdown);server.server_close();thread.join(timeout=3)
                 store._txn=native_txn
                 assert dropped_final
                 report['events'].append('LOST_FINAL_COMMIT_RESPONSE_RECONCILED_ACTUAL_RECEIPT')
+                report['actual_receipt_modify_index']=result.receipt_index
+                report['actual_open_response_sha256']=hashlib.sha256(result.body).hexdigest()
+                report['actual_original_request_id']=request
                 assert result.kind=='COMMITTED' and result.status==201 and result.receipt_index>0,result
                 assert decode(result.body)['request_id']==request
                 retry=await store.open(lease,context,command);assert retry==result

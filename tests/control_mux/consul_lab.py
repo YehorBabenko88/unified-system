@@ -1,12 +1,12 @@
 """Owned bounded loopback-only real Consul test fixture; never a service installer."""
-import hashlib,json,os,socket,subprocess,time,urllib.request,urllib.error
+import hashlib,json,os,socket,subprocess,time,urllib.request,urllib.error,sys
 from pathlib import Path
 
-BINARY_SHA='41762ef5b98c8dd9b6852df6cfbceed37e7f0acc5760856be33100f1092475e1'
+BINARY_SHA={'win32':'41762ef5b98c8dd9b6852df6cfbceed37e7f0acc5760856be33100f1092475e1','linux':'acb0a1b5b2a22a5fadb5d725f03610335e499e193eeade9df458c6c6017a77f4'}
 class ConsulLab:
     def __init__(self,binary,scratch):
         self.binary=Path(binary).resolve();self.scratch=Path(scratch).resolve()
-        if hashlib.sha256(self.binary.read_bytes()).hexdigest()!=BINARY_SHA:raise ValueError('BINARY_PIN')
+        if hashlib.sha256(self.binary.read_bytes()).hexdigest()!=BINARY_SHA.get(sys.platform):raise ValueError('BINARY_PIN')
         self.processes=[];self.logs=[];self.nodes=[]
     def __enter__(self):
         self.scratch.mkdir(parents=True,exist_ok=False)

@@ -1,5 +1,7 @@
 import unittest
-from unified_system.control_mux.http_api import ControlMuxApp
+import asyncio
+from unified_system.control_mux.http_api import ControlMuxApp, ControlMuxRuntime
+from unified_system.control_mux.commands import RawRequest
 from unified_system.control_mux.codec import decode, validate
 class DefaultClosedTests(unittest.TestCase):
     def test_missing_native_provider_never_reads_body_or_authority(self):
@@ -22,4 +24,9 @@ class DefaultClosedTests(unittest.TestCase):
     def test_head_has_no_body(self):
         result=ControlMuxApp()({'REQUEST_METHOD':'HEAD'},lambda *args:None)
         self.assertEqual(b''.join(result),b'')
+    def test_async_runtime_missing_native_provider_closed(self):
+        request=RawRequest('POST','/control/v3/connections',(),b'not-json',object())
+        result=asyncio.run(ControlMuxRuntime().handle(request))
+        self.assertEqual(result.status,503)
+        self.assertEqual(validate('error_v3',decode(result.body))['code'],'AUTHENTICATION_UNAVAILABLE')
 if __name__=='__main__':unittest.main()
