@@ -256,6 +256,9 @@ def main():
                     report['events'].append('REAL_HTTP_DELETE_REPLAYS_EXACT_DRAINING_RECEIPT')
                 finally:
                     await asyncio.to_thread(server.shutdown);server.server_close();thread.join(timeout=3)
+                from record_negatives import run_record_negatives
+                negative_records=await run_record_negatives(store,authority,context,lease,close_command,draining,pending_parent,{kind:(key,records[kind]) for kind,key in module.guard_keys(binding).items()})
+                report['events'].extend(negative_records['events']);report['identity_race_fencing']=negative_records['identity_races']
                 stale_close=str(uuid.uuid4());stale_command=prepare_close(context,b'',stale_close,'close-stale-epoch',opened['connection_id'],str(int(opened['connection_epoch'])+1))
                 stale_result=await store.close_connection(lease,context,stale_command)
                 assert stale_result.kind=='CONFLICT',stale_result
@@ -308,7 +311,7 @@ def main():
                 assert noquorum.kind=='UNKNOWN',noquorum
                 report['events'].append('ONE_OF_THREE_NO_QUORUM_NO_SUCCESS')
             finally:await authority.close()
-        async def bounded_run():return await asyncio.wait_for(run(),timeout=90)
+        async def bounded_run():return await asyncio.wait_for(run(),timeout=150)
         asyncio.run(bounded_run())
     report['owned_processes_stopped']=all(p.poll() is not None for p in lab.all_processes);report['result']='PASS'
     Path(args.output).write_bytes((json.dumps(report,indent=2)+'\n').encode());print(json.dumps(report))
