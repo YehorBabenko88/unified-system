@@ -247,6 +247,14 @@ class DisposableIdentityAuthority:
         except GatewayIdentityDenied:
             self._emit('READ_DENIED')
             raise
+    def require_issued_read(self, capability, *, tool_name, request_bytes, binding, owned_store):
+        _deny(type(self) is DisposableIdentityAuthority)
+        with self._lock:
+            if (type(capability) is not GatewayReadCapability
+                    or getattr(capability, '_issuer', None) is not self or capability not in self._caps):
+                self._emit('READ_DENIED')
+                raise GatewayIdentityDenied('GATEWAY_READ_DENIED')
+            return DisposableIdentityAuthority._check(self, capability, tool_name, request_bytes, binding, owned_store)
     def _check_read(self, cap, tool_name, request_bytes, binding, owned_store):
         with self._lock:
             _deny(type(cap) is GatewayReadCapability and cap in self._caps)

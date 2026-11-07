@@ -248,6 +248,27 @@ class GatewayIdentityTests(unittest.TestCase):
         fake = object.__new__(self.m.GatewayReadCapability)
         fake._issuer = FakeIssuer()
         with self.assertRaises(self.m.GatewayIdentityDenied): self.check(fake)
+    def test_owner_expected_issuer_rejects_legitimate_foreign_issuer_same_store(self):
+        other = self.m.DisposableIdentityAuthority(server_ssl_context=self.tls.server_context,
+                                                   profile=self.profile, audit_sink=self.audit)
+        context = other.authenticate_connection(self.tls.accepted)
+        cap = other.authorize_read(context, tool_name='unified.get_dataset_manifest', request_bytes=self.request,
+                                   binding=self.binding, owned_store=self.store)
+        args = dict(tool_name='unified.get_dataset_manifest', request_bytes=self.request,
+                    binding=self.binding, owned_store=self.store)
+        with self.assertRaises(self.m.GatewayIdentityDenied):
+            self.m.DisposableIdentityAuthority.require_issued_read(self.auth, cap, **args)
+        self.assertIsNone(self.m.DisposableIdentityAuthority.require_issued_read(other, cap, **args))
+    def test_expected_owner_method_is_one_check_and_never_fake_provider(self):
+        _, cap = self.permit()
+        args = dict(tool_name='unified.get_dataset_manifest',request_bytes=self.request,
+                    binding=self.binding, owned_store=self.store)
+        for _ in range(2):
+            self.assertIsNone(self.m.DisposableIdentityAuthority.require_issued_read(self.auth, cap, **args))
+        with self.assertRaises(self.m.GatewayIdentityDenied):
+            self.m.DisposableIdentityAuthority.require_issued_read(self.auth, cap, **args)
+        with self.assertRaises(self.m.GatewayIdentityDenied):
+            self.m.DisposableIdentityAuthority.require_issued_read(object(), cap, **args)
     def test_query_has_seven_current_checks_then_eighth_denied(self):
         profile = dict(self.profile, clients=[dict(self.profile['clients'][0], grants=[
             dict(tool_name='unified.query_market_data', binding=self.binding, owned_store=self.store)])])
