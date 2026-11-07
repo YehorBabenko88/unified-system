@@ -30,6 +30,27 @@ class AdmittedContext:
     permissions: frozenset[str]
     native_handle: object
 
+class NativeAdmissionError(RuntimeError):
+    """Typed actual native GET denial; class construction is not admission.
+
+    Root's real provider owns cause classification. Untyped exceptions remain
+    unavailable; never infer authentication status from an exception message.
+    """
+    def __init__(self,kind):
+        if type(kind) is not str or kind not in ('UNAUTHENTICATED','SESSION_EXPIRED','FORBIDDEN','UNAVAILABLE'):
+            raise ValueError('NATIVE_ADMISSION_KIND')
+        self.kind=kind
+        super().__init__(kind)
+
+
+def native_admission_kind(error):
+    """Consume only the exact internal type and closed string metadata."""
+    if type(error) is not NativeAdmissionError:return 'UNAVAILABLE'
+    kind=getattr(error,'kind',None)
+    if type(kind) is not str or kind not in ('UNAUTHENTICATED','SESSION_EXPIRED','FORBIDDEN','UNAVAILABLE'):return 'UNAVAILABLE'
+    return kind
+
+
 class NativeAdmissionProvider(Protocol):
     def resolve(self, request: RawRequest, operation: str) -> AdmittedContext: ...
     def revalidate(self, context: AdmittedContext, operation: str) -> AdmittedContext: ...

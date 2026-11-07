@@ -1,7 +1,7 @@
 name: Agent2 Control Mux real Consul incremental runtime
 on:
   push:
-    branches: [feature/agent2-control-mux-runtime-20261107]
+    branches: [feature/agent2-control-mux-runtime-20261107, feature/agent2-control-mux-get-20261107]
     paths: ['unified_system/control_mux/**', 'tests/control_mux/**', 'docs/control-mux/**', '.github/workflows/agent2-control-mux-runtime.yml']
   pull_request:
     paths: ['unified_system/control_mux/**', 'tests/control_mux/**', 'docs/control-mux/**', '.github/workflows/agent2-control-mux-runtime.yml']
