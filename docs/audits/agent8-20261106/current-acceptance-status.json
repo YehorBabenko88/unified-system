@@ -1,5 +1,5 @@
 {
-  "checked_utc": "2026-11-07T16:56:18.586319+00:00",
+  "checked_utc": "2026-11-07T17:08:59.738578+00:00",
   "RELEASE_MANIFEST_STATUS": "PRESENT_PREPARATION_ONLY_NOT_APPROVED_NOT_INSTALLABLE",
   "NODE_INVENTORY_STATUS": "SIX_REDACTED_OWNER_OBSERVATIONS_PRESENT_ORIGINAL_RAW_NOT_REACQUIRED_BY_A8_NOT_ADMITTED",
   "CONTRACT_STATUS": {
@@ -3425,6 +3425,49 @@
     "hosted": "14QUEUED_NOTPASS",
     "runtime_endpoint": "NOT_BOUND",
     "physical": "BLOCKED",
+    "overall": "NO_GO"
+  },
+  "query76_cdd_review": {
+    "head": "cddf71fab478f788d7289da9648f8a2f9287d1f8",
+    "tree": "513debc70d34b6fae74c9876dae0616a8e998c05",
+    "A8_unique_tests": 54,
+    "skips": 0,
+    "primary_raw_prepost": 819,
+    "actual_test_RED_GREEN": "OLD_DEFAULT_CWD_WRITES_CURRENT_EXPLICIT_TMP_ONLY_REALPROCESS0",
+    "owner_original_full_receipt_sha256": "fcfaa6fceb8d0d16e321410482d27446a664fd0796510d3e919246ad910310dd",
+    "owner_full": "2116PASS36SKIP35SUBTEST_NOT_A8_RERUN",
+    "owner_current_clean_snapshot": "819PRIMARY_NOEXTRAS_INDEPENDENT_READONLY",
+    "historical6e": "FAIL_PRESERVED",
+    "overall": "NO_GO"
+  },
+  "diagnostic52_static_review": {
+    "head": "06efbb904fa594fcd677c7eb3b4d2691b8f3edcd",
+    "tree": "07fc574e9d7da0da3447ee17cec73bb0fb5a9329",
+    "script_sha256": "4216c0b9b18d733b8311f9ac7466aa308f3ec2c8e83049e7e7d5798bcc577f7e",
+    "imports": 0,
+    "executions": 0,
+    "native_calls": 0,
+    "execution_authorized": false,
+    "conditions": [
+      "TRUSTED_STABLE_SOURCE_CUSTODY",
+      "CASE_VS_TOTAL_OS_PROCESS_COUNT",
+      "EXTERNAL_TOTAL_SUPERVISION"
+    ],
+    "memory_discrepancy": "OPEN_UNQUALIFIED"
+  },
+  "slice77_887_review": {
+    "head": "887e3eeaf23ef8d9d1429435bc88bbac8099c6e6",
+    "tree": "954f3364cb70369705f658e89fcc6ae8ce547eec",
+    "A8_tests": 45,
+    "skips": 0,
+    "raw_prepost": 806,
+    "A8_primary_actual_SQLite_RED_GREEN": "OLD_RETAINED_LOCK_CURRENT_RELEASE_NO_GC_NO_REPAIR",
+    "project_read": "ALWAYS_DENY",
+    "publication_receipt": null,
+    "owner_qualification_originals": "DIGEST_RAWMAP_VERIFIED_NOT_ADDITIVE",
+    "A4_ACK": "ORIGINAL_SCOPED_STATIC_SOURCE_ONLY",
+    "harness_copies_verified": 3,
+    "full_pytest_A8": false,
     "overall": "NO_GO"
   }
 }

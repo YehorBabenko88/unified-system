@@ -988,3 +988,91 @@ P0_P1_P2: confirmedopen6P1/3P2unchanged;no newmaterialscopedfinding.
 EVIDENCE: phase92primarybootstrap/ownTAP/sourceprepost/guards/originalownerJSONattributedseparately.
 NEXT_ACTIONS: IntegrationOwnerkeepsreleaseblockedpendingapprovedmanifest/terminalmandatoryCI/actualjob-storage-retrieval/nativephysicalgates;separatepinnedNodeandbrowserqualificationwhere mandatory.
 GO_NO_GO: NO-GO. TAILSCALE_REMOVAL_ACCEPTANCE: BLOCKED/NO-GO.
+
+
+## Phase93 — PR76 cdd successor, test-state isolation correction
+
+Repository strattester DraftPR76 exactHEADcddf71fab478f788d7289da9648f8a2f9287d1f8/tree513debc70d34b6fae74c9876dae0616a8e998c05. Own WindowsCP312.10 isolatedcommitted54workflow;actualpureMeta f3c pins. No service/native/office/protectedMath/providercall; originalservice-manager test uses inert SCMrunner, with an additional A8process-creation tripwire. Full8-minute pytest NOT rerun byA8.
+
+| Requirement ID | Repository / PR / Exact HEAD | Test name | Environment | Expected result | Actual result | Evidence link | Status | Severity | Required correction |
+|---|---|---|---|---|---|---|---|---|---|
+| CDD-SOURCE | strattester #76 /cddf71f | exactdelta/primaryraw | ownLFclone +ownercheckoutreadonly | onlyallocatedtestcorrection/ledger |2changedpaths vs6e: test_service_manager+executionledger;all819primaryOIDs/physicalbytesrecomputed;runtime/schema/packetunchanged | phase93/primary-verification.json;test-only-delta.original.diff | PASS | — | No transfertootherbranches |
+| CDD-WORKFLOW | strattester #76 /cddf71f | committed54workflow | own-I-S-B CP312 |54unique/no skips/prepostunchanged |actual54PASS0skip/819rawprepost;originalv1replaybyteidentical | phase93/workflow54.original.json;workflow54.stderr.log | PASS | — | Component54 notwholepytest2116 |
+| CDD-REDGREEN | strattester #76 /cddf71f | actualold/newtestfunction | ownexternalredcwd/greencwd/tmp;realprocessblocked |oldreproduce/currentisolate |original6etestcreates2statefilesinownredcwd;currentactualtestfunctioncreatesonlyexplicitexternaltmpstate, leavesgreencwd+sourceuntouched;realprocesscalls0 | phase93/service-regression.stdout.json;service-regression-executed.py | PASS | P2localobservation corrected | Full6eFAILremainsunchanged;test-onlynotservice-runtimefix |
+| CDD-OWNER-FULL | strattester #76 /cddf71f | originalreceipt/log/XML | hash/readonly | originalcounts/digestsverify |receiptfcfaa6...;log0fa1e1...6204B/XML0d5ec1...324985B verified;2152testcases/36skips/0failure/errors;owner2116PASS+35subtests | phase93/owner-full-receipt.original.json;owner-query-v2-cddf71f-full.log;owner-query-v2-cddf71f-full.xml | PASS | — | EvidenceverificationONLY;A8fullpytestNOT_RUN |
+| CDD-CLEAN | strattester #76 /cddf71f | retainedpostfullcheckoutscan | ownerfreshcheckoutreadonly/Gitprimary |819exactsource/noextras |independentlyobservedcurrent819primaryrawmatch/noextrafiles at exactcdd;ownerterminalreceiptclaimsstrictpostfullPASS | phase93/primary-verification.json | PASS | — | Currentindependentread-onlysnapshotnotindependenthistoricalpostfullrerun;6eFAILnotretroclosed |
+| CDD-SKIPS | strattester #76 /cddf71f | originalskipinventory | originalXML/receipt | explicitprerequisites/noPASSinflation |36nativebroker/CUDA/link/crossrepo skips retained;35subtestsnot35newuniquecases | owner-full-receipt.original.json | BLOCKED | mandatoryacceptancegates | Provisionandexecuteeachmandatoryscenarioinitsrequiredlevel |
+| CDD-CI | strattester #76 /cddf71f | mandatoryhostedCI | primaryREST | terminalmandatoryjobs/artifacts |no terminalmandatoryPASSadmittedatsnapshot | phase93/ci.original.json;pr.original.json | BLOCKED | existingCIgate | ExactHEADterminalWindowsmatrix/artifacts |
+| CDD-E2E | strattester #76 /cddf71f | actualjobs/publication/native/physical | notexecuted | separateactualadmission | nojob/actualA4publication/native/physical/Tailscalequalification | currentstatus | NOT_RUN | existingreleasegates | No cross-leveltransfer |
+
+RELEASE_MANIFEST_STATUS: NOT_APPROVED_NOT_INSTALLABLE.
+NODE_INVENTORY_STATUS: NOT_PHYSICALLY_ADMITTED.
+CONTRACT_STATUS: V2PURECOMPONENT_ONLY_NOT_JOB/STORAGE/RUNTIME.
+OFFLINE_TESTS: A8EXACTcdd54PASS0skip819RAW;ACTUALTESTONLYREDGREENPASS.
+WINDOWS_CI: BLOCKED_NOTTERMINALVERIFIED.
+PHYSICAL_TESTS: BLOCKED.
+P0_P1_P2: confirmedopen6P1/3P2unchanged;phase90localclean-capsuleobservationcorrectedONLYcdd/no6eretroclosure.
+EVIDENCE: phase93ownexecution/primaryobjects/originalfullreceipt/log/XML/currentownercheckoutread-onlyscan.
+NEXT_ACTIONS: Separate mandatoryCI/nativeprerequisites andnewSliceAbranch;nextPR52SOURCEONLY(noimport/noexecute) andSliceAPR77boundedreview.
+GO_NO_GO: NO-GO. TAILSCALE_REMOVAL_ACCEPTANCE: BLOCKED/NO-GO.
+
+
+## Phase94 — PR52 STRICT SOURCE-ONLY diagnostic review
+
+Repository unified-system DraftPR52 HEAD06efbb904fa594fcd677c7eb3b4d2691b8f3edcd/tree07fc574e9d7da0da3447ee17cec73bb0fb5a9329; base480109277c1e80a666f3dbba84b5807cacd2b460. Reviewed full19893B script SHA4216c0b9b18d733b8311f9ac7466aa308f3ec2c8e83049e7e7d5798bcc577f7e and6061Bplan from primaryGit. No import, compilation, harness execution, child launch or native API call performed. The following PASS entries are STATIC REVIEW ONLY, never executed test/native PASS.
+
+| Requirement ID | Repository / PR / Exact HEAD | Test name | Environment | Expected result | Actual result | Evidence link | Status | Severity | Required correction |
+|---|---|---|---|---|---|---|---|---|---|
+| D52-SOURCE | unified-system #52 /06efbb9 | primaryGitrawreview | gitdataonly |2NEWallocatedpaths/hashpin |script19893B/BLOB7e55ee47/raw4216c0...;plan6061B/BLOB957c2a52 verified;2NEWonly | phase94/source-only-receipt.json | PASS | — | Source review only |
+| D52-WORKLOAD | unified-system #52 /06efbb9 | sourcefixedcasebudget | STATIC |8MiBcontrol/320MiBoverlimit/oneallocationeach/noretries |fixedCASES/oneVirtualAllocpercase;overlimitnotcalledifcontrolalloc/freefails;no deliberatepagetouch;Jobconfigured256MiB | virtualalloc_diagnostic.py.source-only.txt | PASS | — | Not allocation/capacity/enforcementqualification |
+| D52-PRECONDITION | unified-system #52 /06efbb9 | hostprerequisitechecks | STATIC |actualavailablecommit/physicalchecks beforecase/resume |K32GetPerformanceInfo+GlobalMemoryStatusEx;commit>=2952790016/physical>=1GiB;missing/invalidrefuses | script+plan.source-only.txt | PASS | — | Preconditionnotreservation/headroomproof;actualhostvaluesNOT_RUN |
+| D52-IPC | unified-system #52 /06efbb9 | handles/phasebounds | STATIC | fixedownhandles/boundedframe/total/commands |STARTUPINFOEX2handlelist;4096Bframe/16384Btotal/16Bparentcommand;4phasehandshake;retainedprocess+creationtime/JobPIDmembershipchecks | script.source-only.txt | PASS | — | ActualWin32ABI/nativebehaviorNOT_RUN |
+| D52-CLEANUP | unified-system #52 /06efbb9 | failurebranchwatchdogownership | STATIC |joinwatchdogbeforeclose/nounknownrelease |watchdogonlyTerminatesretainedJob;normalpathstop/joinbeforeGridclose;uncertainwatchretainsJobhandle/NO_RELEASE whileownprocess/threadcloseattempts;extra/attributecleanupfinally | script.source-only.txt | PASS | — | Nativehang/cleanupterminationquiescenceNOT_RUN;external supervision required |
+| D52-CUSTODY | unified-system #52 /06efbb9 | selfsource/read-to-launch | STATIC | externaltrustedsourcecustodyexplicit |parenthashcheckedonce;childreopensmutable.py path andinternalchildentrydoesnotrecheckhash;not immutablelaunchproof | script.source-only.txt | BLOCKED | executionprerequisite | Rootmustestablishtrustedstablecapsulecustody orseparatelyapprove strongerchildsourcebinding;nohostilefilesystemclaim |
+| D52-COUNT | unified-system #52 /06efbb9 | processbudgetmeaning | STATIC | max2caseinvocationsnotambiguousOSlimit |2sequentialCreateProcessWcasecalls;venvlauncher maycreateactualreporterdescendants;Jobactivecap8, reporterboundbyPIDinventory+membership+creationtime | script+plan.source-only.txt | BLOCKED | executionprerequisite | Rootclarifiesmax2children ascaseinvocations orrequiresdirectbaseinterpreter/appropriateactualprocessbound beforeexecution |
+| D52-DEADLINE | unified-system #52 /06efbb9 | totalwallbudget | STATIC | nohardtotalclaim |10sactivecase excludesinitialhostquery/source loading/cleanup;set/readnativecanstall;cleanupjoin1s/Job5s/process5snotabsoluteparentbound | plan.source-only.txt | BLOCKED | executionprerequisite | externalboundedparent supervision/NO_RETRYrequired;notcancelquiescencePASS |
+| D52-ACTUAL | unified-system #52 /06efbb9 | diagnostic/nativeallocation | NOTEXECUTED | noexecutionwithoutseparateRootACK |imports0/executions0/nativecalls0;no3nativeprobePASS;originalPR51memorydiscrepancyOPEN | source-only-receipt.json | NOT_RUN | existingmemoryqualificationgap | ExplicitRootexecutionauthorization+aboveconditions beforeanyrun |
+
+No confirmed material source-level implementation defect found in reviewed two-file slice. Conditional static review is NOT execution authorization: stable trusted source custody, exact process-budget interpretation and external total supervision remain explicit prerequisites. Parent hash check does not cryptographically bind bytes later reopened by child; the two-case count does not guarantee two total OS processes when a Python redirector exists. These limitations were sent to Root. No unsupported attempted-versus-charged/nativepeak explanation asserted.
+
+RELEASE_MANIFEST_STATUS: NOT_APPROVED_NOT_INSTALLABLE.
+NODE_INVENTORY_STATUS: NOT_PHYSICALLY_ADMITTED.
+CONTRACT_STATUS: DIAGNOSTIC_SOURCE_ONLY_NOEXECUTIONACK.
+OFFLINE_TESTS: NOT_RUN_SOURCE_ONLY_REVIEW.
+WINDOWS_CI: NOT_ADMITTED_SOURCE_REVIEW_ONLY.
+PHYSICAL_TESTS: BLOCKED.
+P0_P1_P2: confirmedopen6P1/3P2unchanged;originalmemorydiscrepancyUNQUALIFIED.
+EVIDENCE: phase94primaryGitBLOBrawsource-onlyreceipt/fullscriptplantext.
+NEXT_ACTIONS: Rootresolvescustody/processcount/supervisionconditions andseparatelydecidesexecutionauthorization;A8doesnotrunthisscript.
+GO_NO_GO: NO-GO. TAILSCALE_REMOVAL_ACCEPTANCE: BLOCKED/NO-GO.
+
+
+## Phase95 — PR77 Slice A local SQLite staging and migration cleanup
+
+Repository strattester DraftPR77 HEAD887e3eeaf23ef8d9d1429435bc88bbac8099c6e6/tree954f3364cb70369705f658e89fcc6ae8ce547eec; baseaed8a7c8a952f96803c207d5e90b133969a47f04. Separate branch fromv2cdd;no runtime/schema/packet transfer. OwnWindowsCP312/pytest8.3.5 isolatedenvironment, automaticpluginsdisabled,cacheproviderdisabled,externalbasetemp/JUnit. AllSQLitefilesownsyntheticstores;noactualpublication/authority/office/native/protectedMathcall. A8fullpytestNOT_RUN.
+
+| Requirement ID | Repository / PR / Exact HEAD | Test name | Environment | Expected result | Actual result | Evidence link | Status | Severity | Required correction |
+|---|---|---|---|---|---|---|---|---|---|
+| S77-SOURCE | strattester #77 /887e3ee | primarysourceprepost | ownLFnohardclone |806primaryOID/raw/noextras |806primaryGitBLOB OIDsrecomputed/physicalprepostequal/noextras | phase95/primary-verification.json | PASS | — | Exactscopedsourceonly |
+| S77-LOCAL | strattester #77 /887e3ee |4committedtestfiles | ownpytest8.3.5 |45unique/no skips |45PASS0skip0fail/errors:localstage/store/recovery/service-managerfixture | phase95/own45.xml;own45.stdout.log;review_slice77_887.py | PASS | — | No fullsuite/native/mandatoryWindowsCItransfer |
+| S77-STAGING | strattester #77 /887e3ee | collision/concurrency/legacyisolation | ownactualSQLitewithcommittedfixtures |boundedbytes/retryexact/conflictrefuse/noartifactpromotion |rawdescriptorstage/reopenexact;twoconnectionserialization;crosskindconflictsrefuse;legacyrecovery/cleanup/discard/latestcannotpublish/read/deleteunknownartifact;closureboundlowercheckonly | phase95/own45.xml | PASS | — | Thisstage storesdescriptor+hashes,notartifactpublication;A4mustboundwholedependencyclosure |
+| S77-DENY | strattester #77 /887e3ee | project/readforeignobjectrefusal | ownSQLite/inertforeignobjects |noauthorityABI=>alwaysdeny |project/readraiseARTIFACT_AUTHORITY_ABI_UNAVAILABLEwithoutforeignprotocol;publication_receiptNULL;noactualauthoritypositivecallback | own45.xml;primarysource | PASS | — | ActualA2/A4publisher/registry/receiptqualificationrequired |
+| S77-MIGRATION | strattester #77 /887e3ee | ownprimaryold/newretainedtracebackREDGREEN | twoownincompatibleSQLiteDBs | oldlockreproduce/currentreleasewithoutschemarepair |old2fSHAefe340retainedOperationalErrortraceback lockssecondwriter;new887SHAb68187sameoriginalerror/traceback preserved,writeravailable/schemaunchanged;noGC/repair | phase95/lock-redgreen.stdout.json;lock-redgreen-executed.py | PASS | historicalP2correctedoffline | ActualinitializerBaseExceptionrollback/closeandoriginalidentitycontrols included45;notglobalstoragecorruptionqualification |
+| S77-OWNER | strattester #77 /887e3ee | originalowner45qualification | read/hashonly | log/XML/rawmapmatch |originald0ea64log/7bec7fXMLdigestverified;owner806rawmapmatchesA8primary;owner45notaddedtoA8counts | phase95/owner-qualification.original.json;owner-persistence-887e3ee-qualified-tests.xml | PASS | — | A8fullpytestNOT_RUN/ownerfulloutcomenotadopted |
+| S77-ACK | strattester #77 /887e3ee | A4scopedsourceACK | originalownerJSON/primarybindings | exact2modulepins/limitedscope |originalc5876f92...read/hashverified;2moduleSHAequalA8primary;A4own3checksremainattributedtoA4 | phase95/a4-source-ack.original.json | PASS | — | Localstagingsourcecompatibilityonly/noauthoritypublicationACK |
+| S77-COPY | strattester #77 /887e3ee |3allocatedharnesscopies | actualprimarycddsourcebytes |copyexactwithoutv2runtime/schema/packet |tests.yml/gatewayconftest/service-managerfixture allbyteequalcddreceiptpins | phase95/harness-copy-verified.json;primarysourceHARNESS-COPY-RECEIPT | PASS | — | Copyverificationnotfullv2admissiontransfer |
+| S77-CI | strattester #77 /887e3ee | hostedmandatoryWindows | primaryREST | terminalrequiredjobs/artifacts |no terminalmandatoryCIqualificationadmittedatsnapshot | phase95/ci.original.json;pr.original.json | BLOCKED | existingCIgate | Exactmandatorymatrix/artifacts/skipprerequisites |
+| S77-E2E | strattester #77 /887e3ee | wholejobpublication/read/native/physical | NOTEXECUTED | independentlyadmittedactualcomposition |localstagingonly;project/readdeny;fulljob/A4publication/twofailure-domain/native/physicalNOT_RUN | status/ownsource | NOT_RUN | existingreleasegates | KeepstagedUNKNOWNrowsandallwholeGatewaygatesblocked |
+
+No new material source-level defect in scopedSliceA review. Migration failure cleanup verified using originalprimaryold/new modules, retainedtracebacksandactualSQLitewriterreservation;noauto-repairordatabasecleanup. Oldbugremainsdocumentedat2f,correctedonly887. InitialA8REDGREENlauncherattempthitWindowsargvlengthlimitbeforechildcreation;passingprimarybytesoverstdinresolvedA8harnessissue,notproductfailure/testqualification. Allnegativefixturesretainedoutsideexactsource.
+
+RELEASE_MANIFEST_STATUS: NOT_APPROVED_NOT_INSTALLABLE.
+NODE_INVENTORY_STATUS: NOT_PHYSICALLY_ADMITTED.
+CONTRACT_STATUS: LOCALOPAQUESTAGING_ONLY;ACTUALAUTHORITYABIUNAVAILABLE.
+OFFLINE_TESTS: A8EXACT88745PASS0skip806RAW;OWNPRIMARYLOCKREDGREENPASS.
+WINDOWS_CI: BLOCKED_NOTTERMINALVERIFIED.
+PHYSICAL_TESTS: BLOCKED.
+P0_P1_P2: confirmedopen6P1/3P2unchanged;historicalmigrationlockP2correctionverifiedoffline/separateobservation.
+EVIDENCE: phase95ownJUnit/rawprimary/prepost/retainedtracebackREDGREEN/originalownerreceipts/A4ACK/3copyverification.
+NEXT_ACTIONS: Rootkeepsthisbranchseparatefromv2cddandPR52;requiresapprovedrelease/mandatoryterminalCIandactualauthority/storagepublicationABIbeforepositiveproject/read.
+GO_NO_GO: NO-GO. TAILSCALE_REMOVAL_ACCEPTANCE: BLOCKED/NO-GO.
