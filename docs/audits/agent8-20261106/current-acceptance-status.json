@@ -1,5 +1,5 @@
 {
-  "checked_utc": "2026-11-07T16:41:31.774069+00:00",
+  "checked_utc": "2026-11-07T16:50:21.132866+00:00",
   "RELEASE_MANIFEST_STATUS": "PRESENT_PREPARATION_ONLY_NOT_APPROVED_NOT_INSTALLABLE",
   "NODE_INVENTORY_STATUS": "SIX_REDACTED_OWNER_OBSERVATIONS_PRESENT_ORIGINAL_RAW_NOT_REACQUIRED_BY_A8_NOT_ADMITTED",
   "CONTRACT_STATUS": {
@@ -3363,6 +3363,32 @@
     "full_Gateway_matrix": "UNCHANGED",
     "physical": "BLOCKED",
     "tailscale_removal": "BLOCKED",
+    "overall": "NO_GO"
+  },
+  "query76_6e58_review": {
+    "head": "6e58eb8bfa428cf88d54abd84418b58d67569814",
+    "tree": "da616fbe5c5e6f95ae7ae76cc4997f8a920f6cb4",
+    "unique_tests": 54,
+    "skips": 0,
+    "primary_raw_prepost": 819,
+    "packet_schema_entries": 9,
+    "fresh_five_payload_files": "BYTE_IDENTICAL_ORIGINAL_5b",
+    "actual_URI_schema_checks_per_input": 30,
+    "schema_inputs": [
+      "ORIGINAL",
+      "GENERATED"
+    ],
+    "source_guard_negatives": 4,
+    "owner_full_evidence": "ORIGINAL_DIGEST_XML_VERIFIED_NOT_A8_RERUN",
+    "owner_full_passed": 2116,
+    "owner_full_skips": 36,
+    "owner_subtests": 35,
+    "owner_postfull_capsule": "FAIL_EXTRA_STATE_PRESERVED",
+    "hosted": "7QUEUED_PENDING",
+    "publication": "NONE",
+    "job_E2E": "NOT_RUN",
+    "native": false,
+    "physical": "BLOCKED",
     "overall": "NO_GO"
   }
 }
