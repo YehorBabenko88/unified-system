@@ -1,0 +1,27 @@
+{
+  "schema": "unified.failed-integration-attempt.v1",
+  "root_base": "49290143a49b4a58c6f9f98e1c9722bc6e526575",
+  "candidate": "acf4f89d70e00e0b9a2b1bd3400abe07bb720ba1",
+  "candidate_tree": "bf5e3029a5e69a234ff2b2be98b3e6abaec27d86",
+  "result": "RED_NOT_INTEGRATED",
+  "tests_run": 62,
+  "failures": 1,
+  "failing_test": "test_lan_mux_channel.MuxTlsTests.test_real_hash_failure_no_complete_payload_and_memory_cleanup",
+  "observed": "Expected HASH, received MUX_CLOSED",
+  "root_cause": "UNDER_INVESTIGATION_BY_AGENT1",
+  "earlier_driver_error": "Package-qualified test module imports failed unqualified fixture import; preserved in module-invocation-import-error.log. Correct discovery subsequently revealed actual failure.",
+  "source_integrity": "Four staged component file Git blobs matched acf4; checkout CRLF materialization normalized to primary blob LF before imports. This is not full-tree source qualification.",
+  "merge_state": "ABORTED; published Root4929014 source unchanged",
+  "fault_injection": "Owned isolated loopback test only; no office faults",
+  "provider_sends": false,
+  "indexed_logs": [
+    {
+      "path": "merged-tests.log",
+      "sha256": "9155c454def2c0264c6103285d4fab742f4bc18805855163ad5438d308ff247e"
+    },
+    {
+      "path": "module-invocation-import-error.log",
+      "sha256": "5c2948df87174a93b931adcc59e59eb50c59bac320f08becbe3e0b319b88737a"
+    }
+  ]
+}

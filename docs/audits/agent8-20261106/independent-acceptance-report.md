@@ -326,3 +326,81 @@ Overall NO-GO; Tailscale removal BLOCKED/NO-GO. Existing6P1/3P2 unchanged; archi
 
 
 Phase66 qualification correction: dedicated workflow10 had clean full pre/post receipt. Broader25 functional PASS left four ignored python/__pycache__ files from child -I-S without-B; tracked687 raw hashes still equal, but full post25 receipt independently REJECTED_CACHE before0tests. Caches retained, not cleaned. No clean-inventory PASS for25. See phase66/post25-cache-rejection.json and post25-guard.stderr.log.
+
+
+# Phase68 — independent integrated LAN MUX review
+
+Requirement IDs A8-HEAD, A8-LAN, A8-AUTH-NEGATIVE, A8-BUDGET, A8-RECONNECT, A8-WINDOWS-CI. Repository unified-system, Draft https://github.com/YehorBabenko88/unified-system/pull/26.
+Exact executed HEAD8bfa00d779438dc204b1e9ee82f496efce9e6154/tree58753c6c902afa9fe24e65480a197ae9470defc7. Source integration89932fec1821d956b9dfd0ab0011d732c5b96369/tree093b01c68b4131172169da359787af9de5bd886c.
+Environment own detached no-hardlinks raw-LF clone, local Windows/Python3.12.10/OpenSSL ephemeral CA and own loopback TLS processes/temporary SQLite only. No host trust-store or network-policy changes, office hosts, provider sends or real orders.
+
+| Test | Expected | Actual | Evidence | Status | Severity / correction |
+|---|---|---|---|---|---|
+| Exact composition |4owner blobs exact, budget/TLS fixture unchanged |9680babc/89932fec/8bfa four raw blobs equal;1318primary object OIDs recomputed and physical raw equal |primary-composition-verification.json |PASS |component scope only |
+| Actual workflow file with Windows main guard |50 exact tests, zero skip, clean pre/post |50PASS/0skip/1318raw |workflow50.original.json; workflow50.stderr.log |PASS |local Windows, not hosted |
+| Original causal race reproduction |old HASH cause replaced by CLOSED |new Event-gated actual TLS regression against primaryacf4 source loaded in memory: expected1failure,0error; fixed test PASS in50 |primary-old-regression.stderr.log; primary-old-regression-executed.py |PASS |old code not deployed/changed |
+| Closed factories/self node |reject before socket side effects |2additional tests PASS, native transport/MUX factories reject and self-connect leaves empty connection/memory state |extra.stderr.log; extra-executed.py |PASS |does not supply native identity |
+| Quota/unknown send/no automatic replay |shared debit blocks writes; partial send UNKNOWN once; reconnect not replay |actual named tests PASS within50, explicit completed replay separately charged |workflow50.stderr.log |PASS |transport not logical exactly-once or admission authority |
+| Original indexed evidence |13raw members match length/SHA, driver matches workflow |13verified, RED/import/spawn errors retained as original owner records |owner-evidence-index.original.json; owner-* |PASS |owner execution not A8 evidence substitute |
+| Windows/Ubuntu hosted matrix |terminal successful jobs and artifacts |42368972590/42368967965 attempt1queued/null |ci.original.json |BLOCKED |P1 acceptance gate: obtain original terminal jobs/artifacts |
+| Physical/Tailscale removal/native B |separate installed release admission |not exercised |current-acceptance-status.json |BLOCKED |native factory remains closed; no office acceptance |
+
+50includes deterministic regression, no additive count for repeated tests. New extra2 are separate. Workflow guards remain scoped/site-enabled; no global environment-authenticity/F16/F17 closure. All owned loopback transport/reader/process fixtures stop through test teardown. Overall NO-GO, Tailscale removal BLOCKED/NO-GO.
+
+
+# Phase69 — independent financial v2 DTO proposal review
+
+Requirement IDs A8-HEAD, A8-DATA-INTEGRITY, A8-CONTRACT-NEGATIVE, A8-SOURCE-GUARDS, A8-WINDOWS-CI. Repository strattester, Draft https://github.com/YehorBabenko88/strattester/pull/74.
+Exact executed HEAD8e1e0459a849f67eafd283080f27cb2da70ef985/tree0d9a698a5240699652166c38ae10ab831f68c3b2, basea56c24a0f25a0c5ea9222fcd953a49536c91dfc9. Four new owned proposal files plus new dedicated workflow. Schema SHA256b3d8e9f81aa19bf844c29d3c491ab4adbf3566f4e9e9d8624e5767ec87753de9. c865 is historical only.
+Environment own detached no-hardlinks raw-LF clone, local Windows/Python3.12.10; committed workflow -I-S-B. Separate own previously pinned jsonschema4.25.1 environment for actual Draft202012 checks, not newly qualified native dependencies. Synthetic profiles/trades only; no real provider profile, order/network/storage/ledger mutation.
+
+| Test | Expected | Actual | Evidence | Status | Severity / correction |
+|---|---|---|---|---|---|
+| Exact workflow and source |20mandatory/0skip, raw prepost equal |20PASS/0skip/779raw |workflow20.original.json; workflow20.stderr.log |PASS |synthetic component only |
+| Independent high-precision Decimal oracle |gross/net explicit, signed funding once, scale0/2/18, unchanged inputs |384cases PASS at precision200; produced outputs schema-valid |extra.stdout.json; extra-executed.py |PASS |no binary64 ledger conversion or profitability claim |
+| Strict code IDs and versions |ASCII codes reject LF, no v1 replay |20tests and own actual schema code-LF negatives PASS |workflow20.stderr.log; extra.stdout.json |PASS |IDs do not grant URL/path authority; profile membership caller-supplied not authenticated |
+| Canonical monetary and pin schema |reject trailing LF |all9fields with dollar-end regex accepted by actual Draft202012 validator |extra.stdout.json; extra-executed.py |FAIL |P2 A8-F18: strict-end remaining5money/4pins and actual-validator negatives |
+| Pure adapter LF refusal |reject malformed money and pins |adapter rejects; schema issue is not runtime bypass |extra.stdout.json |PASS |no endpoint/full-mapping ACK |
+| Four own source negatives |refuse cache/shadow/tracked/replace before tests |4rejected before0tests |guard-controls.json; guard-*.stderr.log |PASS |no globalF16/F17/environment authenticity closure |
+| Hosted Windows/Ubuntu |terminal mandatory jobs/artifacts |42368971093/42368968128 attempt1queued/null |ci.original.json |BLOCKED |P1 acceptance gate, obtain terminal CI |
+| Actual profile/endpoint/C3 mapping/native |explicit independent admission |absent, proposal only |PROTOCOL at exact source |BLOCKED |owners must supply references/admission, not infer from schema |
+
+A8-F18 reproducible issue handed to A7 and Root before publication; A8 did not edit production implementation. Full canonical schema ACK withheld. Open6P1/4P2 after this new issue. Overall NO-GO; physical and Tailscale removal BLOCKED.
+
+
+# Phase70 — Math116 child-bytecode correction recheck
+
+Requirement IDs A8-HEAD, A8-OFFLINE, A8-SOURCE-GUARDS, A8-WINDOWS-CI. Repository math, Draft https://github.com/YehorBabenko88/math/pull/116.
+Exact HEADb9c2f24b33285b7b0e06aebc354a9c61a909d204/treed88c75a3c367eef2cb7246c4f8dd094716f07ddd. Five allocated paths. Numerical implementation unchanged fromff1c; test child now explicitly -I-S-B, independent actual-child regression stages own synthetic source copy and checks no pyc/pyo plus Windows native newline error response.
+Environment own fresh detached no-hardlinks raw-LF clone, local Windows/Python3.12.10/Node24.22.1. Broader parity reference explicitly Grid7a83e6e1aa74001c4797e9bf7af9368d3192bfbe. Synthetic data only. Protected2446/native run not invoked or modified.
+
+| Test | Expected | Actual | Evidence | Status | Severity / correction |
+|---|---|---|---|---|---|
+| Exact HEAD/tree/five paths |exact and raw source stable |687raw equal |local-review.json; workflow10.original.json |PASS |scoped source only |
+| Actual revised committed workflow |14 exact unique tests, no skip |14PASS/0skip;10numerical+4scientific |workflow10.stderr.log; workflow10.original.json |PASS |log basename retained, actual14 |
+| Broader history |26/0skip, no child cache contamination |26PASS/0skip |stdlib25.stderr.log |PASS |basename retained, actual26 |
+| Full post26 qualification |repeat actual guarded14 without cleanup must pass |14PASS/0skip with full raw/inventory receipt, no caches introduced |post26-workflow14.stderr.log |PASS |14repeated not additive unique tests |
+| Historicalff1c postcache failure |retain original failed qualification |phase66 four ignoredpyc/guard refusal retained |../phase66/post25-cache-rejection.json |PASS |historical not relabelled; newpin correction only |
+| Hosted Windows/Ubuntu |terminal mandatory jobs and artifacts |primary snapshot separate, no terminal PASS asserted |ci.original.json |BLOCKED |P1 hosted acceptance gate |
+| Native/physical/Tailscale |separate installed admission/proof |not run |current-acceptance-status.json |BLOCKED |no2446 rerun/activation/pilot authority |
+
+Local child-cache correction is verified at exactb9 pin. No transfer of full26 qualification from historicalff1c; no new numerical oracle execution atb9 is inferred from unchanged bytes. Overall NO-GO, Tailscale removal BLOCKED/NO-GO.
+
+
+# Phase71 — financial proposal schema F18 correction independently verified
+
+Requirement IDs A8-F18, A8-HEAD, A8-CONTRACT-NEGATIVE, A8-DATA-INTEGRITY, A8-WINDOWS-CI. Repository strattester, Draft https://github.com/YehorBabenko88/strattester/pull/74.
+Exact HEAD072d22214136148b47e82d21fec9e269bd7468ac/treeffaff34af5375b23235491d92a250ccb66eb03df. Delta from8e1 modifies only owned schema, regression target and protocol notes; adapter arithmetic and shared implementation unchanged. No v2 version transfer from old candidate is inferred.
+Environment own fresh detached no-hardlinks raw-LF clone, local Windows/Python3.12.10; stdlib workflow -I-S-B. Separate actual Draft202012 validator jsonschema4.25.1 from own previously pinned environment (owner used4.26; not represented as same environment). Synthetic fixture profile only.
+
+| Test | Expected | Actual | Evidence | Status | Severity / correction |
+|---|---|---|---|---|---|
+| Exact source/workflow |20mandatory/0skip, source unchanged |20PASS/0skip/779fullrawGit inventory |workflow20.original.json; workflow20.stderr.log |PASS |local synthetic component only |
+| Own original9trailingLF regressions |all5money+4pins refuse |9independently verified actual-validator rejections |extra.stdout.json; extra-executed.py |PASS |A8-F18 FIX_VERIFIED_OFFLINE_AT_072d |
+| Committed separate actual-validator target |46checks, no skip |46PASS/0skip |actual-validator46.stdout.json; actual-validator46.stderr.log |PASS |NOT in hosted stdlib20 workflow |
+| Independent arithmetic oracle rerun |gross/net/signedfunding/scales0/2/18 unchanged |384Decimal cases PASS, no input mutation, produced schema-valid outputs |extra.stdout.json |PASS |no ledger/profitability/provider claims |
+| Post-validator source qualification |clean full receipt after all checks without cleanup |actual guarded20 PASS, full raw/inventory preserved |post-schema-workflow20.stderr.log |PASS |repeat20 not additive |
+| Hosted Windows/Ubuntu |terminal mandatory evidence/artifacts |primary snapshot saved, no terminal PASS asserted |ci.original.json |BLOCKED |P1 acceptance gate |
+| Profile/endpoint/native/physical |separate owner admission/actual references |not provided/exercised |current-acceptance-status.json |BLOCKED |full mapping/provider/native ACK withheld |
+
+F18 was independently reproduced at8e1, reported to A7/Root and corrected by owner; original nine failures remain historical phase69 evidence. Only this proposal-schema defect is closed. Open6P1/3P2 restored. Overall NO-GO; Tailscale removal BLOCKED/NO-GO. No production edits by A8, no install/service/network settings or real order actions.

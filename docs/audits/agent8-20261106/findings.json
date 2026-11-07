@@ -271,5 +271,20 @@
         "evidence": "phase42/root-source-import-review.json"
       }
     }
+  },
+  {
+    "id": "A8-F18",
+    "severity": "P2",
+    "repository": "strattester",
+    "pr": 74,
+    "observed_head": "8e1e0459a849f67eafd283080f27cb2da70ef985",
+    "status": "FIX_VERIFIED_OFFLINE_AT_072d222",
+    "title": "Financial v2 schema accepts trailing LF in canonical monetary and Git/hash pins",
+    "evidence": "phase69/extra.stdout.json; phase69/extra-executed.py",
+    "required_correction": "Use strict-end semantics for five monetary and four pin schema regexes; add actual Draft202012 validator negatives; independently verify new exact HEAD.",
+    "scope": "PROPOSAL_SCHEMA_ONLY_ADAPTER_REFUSES_NO_RUNTIME_ADMISSION_BYPASS",
+    "correction_head": "072d22214136148b47e82d21fec9e269bd7468ac",
+    "correction_tree": "ffaff34af5375b23235491d92a250ccb66eb03df",
+    "correction_evidence": "phase71/extra.stdout.json; phase71/actual-validator46.stdout.json; phase71/post-schema-workflow20.stderr.log"
   }
 ]

@@ -1,0 +1,123 @@
+{
+  "schema": "agent1.root492-additive-mux-handoff.v2",
+  "owning_source": {
+    "head": "9680babc85ca605f8450936f5410728898d5b71e",
+    "tree": "2a7f4e94ae5151f5be01fb1a143dad61c24d89b2",
+    "draft_pr": "https://github.com/YehorBabenko88/unified-system/pull/30",
+    "terminal_cause_fix_commit": "9680babc85ca605f8450936f5410728898d5b71e",
+    "original_carrier_head": "acf4f89d70e00e0b9a2b1bd3400abe07bb720ba1"
+  },
+  "root_base": {
+    "head": "49290143a49b4a58c6f9f98e1c9722bc6e526575",
+    "tree": "978e888af84e34ae9c3e4c9e958d5a4e584db038"
+  },
+  "local_additive_candidate": {
+    "head": "42e675b5dd676a201127a261dc7a3328e7d5aae2",
+    "tree": "9d255cf76ac4b0845015b01a5289111ecc2ca934",
+    "scope": "OWN_DISPOSABLE_CLONE_NOT_ROOT_RELEASE_OR_MERGE",
+    "same_four_file_bytes_as_owner": true
+  },
+  "minimal_delta": [
+    {
+      "path": "unified_system/lan_transport.py",
+      "git_blob": "78fcc80d9d8cdd851ab4f0337383f77c0d8582ee",
+      "raw_sha256": "f9b5348e120650af459c49131f396fb5629bf7f35d990a757ca317e87d7d1873",
+      "action": "MODIFY"
+    },
+    {
+      "path": "unified_system/lan_mux_channel.py",
+      "git_blob": "713124f47cbae115dd3117c0e0cb09c46581653c",
+      "raw_sha256": "d4f56cf3dc602cf19303e0e45d0661a1aedafe01afcaa2cd29436c515fed8c23",
+      "action": "ADD"
+    },
+    {
+      "path": "tests/test_lan_mux_channel.py",
+      "git_blob": "0c4d6e931f6d6ad0c504a4958149a6cb119e70cb",
+      "raw_sha256": "5c5f297f7d37fecea4edb80e68cf953349f1ca75a4d691ee79bfdb886c37099d",
+      "action": "ADD"
+    },
+    {
+      "path": "docs/network/lan-transport-design.md",
+      "git_blob": "59ede6e61b1da920de1cd2898d450dbd0273e732",
+      "raw_sha256": "da049bb03e8e19f61c8607a4657bdb6157dd7eb967269940bf2af4d75dd87cf2",
+      "action": "MODIFY"
+    }
+  ],
+  "patch": {
+    "file": "lan-mux-additive-root492-v2.patch",
+    "raw_sha256": "f10596d6e1c9146bfa143d9adb0730a40254d9a9e41c0633f065211bc45217ff",
+    "git_apply_check_on_root492": "PASS; previouscarrierpatchappliedcleanthenexactownerfixcherrypicked; noRootsharedmodification"
+  },
+  "dependencies": {
+    "runtime": "CPython3.12stdlibonly; SSL/socket/sqlite/threading/struct/hashlib/dataclasses/uuid; nojsonschema/pytest required",
+    "code": [
+      "newlan_mux_channel imports revisedlan_transport.Connection/MUX_PROTOCOL/_uuid/TransportError",
+      "lan_transport imports existingnetwork_budget.NodeBudget/BudgetError/NODES",
+      "existingnetwork_budget.py byteidenticalRoot492/A1base1541; no limiter replacement"
+    ],
+    "test": [
+      "tests/test_lan_transport.py exactexistingephemeralTLSfixture; discoverymustaddtests modulepath",
+      "OpenSSL executable via PATH orC:/Program Files/Git/usr/bin/openssl.exe, no skip/security bypass",
+      "alltemporarycertskeys areownedephemeralfixtures, notnativeofficeprovisioning"
+    ],
+    "exact_selector": [
+      "test_lan_transport.py",
+      "test_network_budget.py",
+      "test_lan_mux_channel.py"
+    ],
+    "expected_focused_count": 50,
+    "broader_pattern_warning": "test_lan*.py adds13probe tests =>63withbudget; neverassert50forbroadpattern"
+  },
+  "root_observed_bug": {
+    "test": "test_real_hash_failure_no_complete_payload_and_memory_cleanup",
+    "root_cause": "rxcloseswithHASH beforewrapper abort lock acquisition; concurrentreceive closedrx.pop raisedgenericMUX_CLOSEDandwonwrapperstate",
+    "deterministic_red": "actualmTLS Event-gatedtest_hash_terminal_cause_survives_reader_receive_interleaving beforefix; no sleeps/retries/assertionweakening",
+    "fix": "StorefirstterminalreasoninsideReassembler.close whilechannelcvheld; propagateitthroughclosedchecks andwrapperabort",
+    "regression_green": "same Event-gatedactualmTLS testPASS; independentreview1PASS/no blockers; Python3.15target1PASS"
+  },
+  "source_composition": {
+    "before": "Root92bRED1/no carrier module",
+    "after": "localRoot492+fixedcarrier42e675b GREEN1; thisisSOURCECOMPOSITIONonly"
+  },
+  "focused_guarded_execution": {
+    "qualification": "OWN_FOCUSED_F17_GUARDED_EVIDENCE_NOT_GLOBAL_F17_OR_NATIVE_CLOSURE",
+    "source": {
+      "head": "42e675b5dd676a201127a261dc7a3328e7d5aae2",
+      "tree": "9d255cf76ac4b0845015b01a5289111ecc2ca934",
+      "tracked_files": 1299,
+      "raw_sha256_manifest": "a13973c28e07fa36a27988561515b3b90a34b4875eb7ca936f97a200aed6ab6a"
+    },
+    "raw_pre_post_equal": true,
+    "tests": 50,
+    "errors": 0,
+    "failures": 0,
+    "skipped": 0,
+    "flags": "-I -S -B",
+    "pycache_prefix": null,
+    "project_paths_added_only_after_guard": true,
+    "bytecode_unexpected_py": "REJECT_BEFORE_IMPORT_AND_AFTER_TESTS"
+  },
+  "independent_review": {
+    "focused_delta": "acf4f89..9680babc",
+    "verdict": "NO_BLOCKERS",
+    "tests": 1,
+    "source_changed": false
+  },
+  "hosted_tests": {
+    "head": "9680babc85ca605f8450936f5410728898d5b71e",
+    "runs": [
+      42368556405,
+      42368552169
+    ],
+    "status": "QUEUED_NOT_PASS"
+  },
+  "remaining_native_gates": [
+    "ActualRootnativeprovider/process/source/IPC/keyhandle admission",
+    "ActualA2committedstreamattempt+currentauthorizationscope/proof",
+    "SeparateLS5localappidentity+commonaccountingmapping withoutselfpeerbypass",
+    "OldWindows3.11heartbeatfirstsendDEADLINE cause remainsopen; noCIpassinferred"
+  ],
+  "ROOT_CHECKOUT_CHANGED_BY_A1": false,
+  "GO_NO_GO": "GO_SCOPED_ADDITIVE_SOURCE_REVIEW__NO_GO_NATIVE_PROVIDER_PHYSICAL",
+  "NEXT_ACTION": "Rootapplyexact4filefixedcarrier delta andindependentlyexecuteexact50selectorundercandidateguard; keepnativefactoriesclosed"
+}
