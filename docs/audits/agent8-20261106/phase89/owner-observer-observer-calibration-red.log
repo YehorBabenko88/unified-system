@@ -1,0 +1,23 @@
+test_actual_principal_wrong_view_denied_without_object_read (test_manifest_front.ManifestFrontTests.test_actual_principal_wrong_view_denied_without_object_read) ... FAIL
+
+======================================================================
+FAIL: test_actual_principal_wrong_view_denied_without_object_read (test_manifest_front.ManifestFrontTests.test_actual_principal_wrong_view_denied_without_object_read)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\worktrees\gateway-runtime-integration-20261107\unified-system\tests/gateway_runtime\test_manifest_front.py", line 72, in test_actual_principal_wrong_view_denied_without_object_read
+    self.assertEqual(called,[1], 'positive read must calibrate observer')
+AssertionError: Lists differ: [] != [1]
+
+Second list contains 1 additional elements.
+First extra element 0:
+1
+
+- []
++ [1]
+?  +
+ : positive read must calibrate observer
+
+----------------------------------------------------------------------
+Ran 1 test in 0.148s
+
+FAILED (failures=1)

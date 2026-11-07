@@ -1,0 +1,56 @@
+{
+  "manifest_cases": [
+    {
+      "case": "positive",
+      "HTTP_status": 200,
+      "actual_class_ObjectStore_reads": 1,
+      "instance_monkeypatch_observed_reads": 0,
+      "manifest_disclosed": true
+    },
+    {
+      "case": "wrong_view",
+      "HTTP_status": 403,
+      "actual_class_ObjectStore_reads": 0,
+      "instance_monkeypatch_observed_reads": 0,
+      "manifest_disclosed": false
+    },
+    {
+      "case": "expiry",
+      "HTTP_status": 401,
+      "actual_class_ObjectStore_reads": 0,
+      "instance_monkeypatch_observed_reads": 0,
+      "manifest_disclosed": false
+    },
+    {
+      "case": "revoke_during_read",
+      "HTTP_status": 503,
+      "actual_class_ObjectStore_reads": 1,
+      "instance_monkeypatch_observed_reads": 0,
+      "manifest_disclosed": false
+    },
+    {
+      "case": "audit_corrupt",
+      "HTTP_status": 503,
+      "actual_class_ObjectStore_reads": 0,
+      "instance_monkeypatch_observed_reads": 0,
+      "manifest_disclosed": false
+    }
+  ],
+  "query": {
+    "actual_fresh_HTTPS_ONEBAR": true,
+    "actual_ObjectStore_reads": 6,
+    "actual_fixed_issuer_checks": 7,
+    "request_bytes": 917,
+    "request_sha256": "004de0e4d15860dec5d28c179bf3b4e18905e42e61ce23a85f1b28e2633a9c27",
+    "owner_bytes": 1810,
+    "owner_sha256": "f68a558021205e79b2ee61d5b4d636dc13aeefb75521e4ca11c6d28f315d73e5",
+    "HTTP_body_bytes": 2142,
+    "HTTP_body_sha256": "20375584569e4cea19c6ef761184f028ed27a18228f77f07d8954d81739acdb6",
+    "archived_owner_result_body_byte_equal": true,
+    "provider_coverage": "UNKNOWN",
+    "publication": "UNPROVEN",
+    "artifact_published": false
+  },
+  "root_manifest_counter_gap": "INSTANCE_READ_PATCH_REPORTS0_EVEN_ACTUAL_POSITIVE_CLASS_READ1",
+  "scope": "DISPOSABLE_ACTUAL_mTLS_EXPECTED_ISSUER_IMMUTABLE_SYNTHETIC_READ_ONLY_NOT_JOB_E2E"
+}

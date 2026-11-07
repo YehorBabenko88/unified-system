@@ -1,0 +1,36 @@
+{
+  "scope": "OWN_DISPOSABLE_ACTUAL_HTTPS_READ_ONLY",
+  "cases": [
+    {
+      "case": "wrong_view",
+      "status": 403,
+      "actual_ObjectStore_class_reads": 0,
+      "owner_output_withheld": true
+    },
+    {
+      "case": "unregistered_peer",
+      "status": 401,
+      "actual_ObjectStore_class_reads": 0,
+      "owner_output_withheld": true
+    },
+    {
+      "case": "revoke_after_sixth_read",
+      "status": 403,
+      "actual_ObjectStore_class_reads": 6,
+      "owner_output_withheld": true
+    },
+    {
+      "case": "audit_corrupt_after_sixth_read",
+      "status": 503,
+      "actual_ObjectStore_class_reads": 6,
+      "owner_output_withheld": true
+    },
+    {
+      "case": "injected_source_path",
+      "status": 400,
+      "actual_ObjectStore_class_reads": 0,
+      "owner_output_withheld": true
+    }
+  ],
+  "no_job_or_publication_or_native_actions": true
+}

@@ -323,5 +323,20 @@
     "correction_head": "a2265b0d53e3d6ee8814aa28f5c612d537a0f195",
     "correction_tree": "1492d725d49526bf8c83efffcb52228912d0844c",
     "correction_evidence": "phase77/held-reader.stdout.json; phase77/held-reader-executed.py; phase77/receipt.json"
+  },
+  {
+    "id": "A8-F20",
+    "severity": "P2",
+    "repository": "unified-system",
+    "pr": 46,
+    "observed_head": "815fd51d3bbba0b2ec4b87af8a085dd36bf46cf1",
+    "status": "FIX_VERIFIED_OFFLINE_AT_bcfa243",
+    "title": "Manifest wrong-view negative uses a vacuous instance read observer",
+    "evidence": "phase89/extra.stdout.json; phase89/extra-executed.py",
+    "required_correction": "Observe class-level ObjectStore.read restricted to identical owned store and calibrate with positive actual read before negative assertion.",
+    "scope": "TEST_INSTRUMENTATION_NOT_RUNTIME_AUTH_BYPASS",
+    "correction_head": "bcfa243b6ecb5389270152612217f8d89643a248",
+    "correction_tree": "5df31e286a0ae4ed21832c19387b22ad6bd1ef08",
+    "correction_evidence": "phase89/bcfa-focused-receipt.json; phase89/bcfa-focused.stderr.log"
   }
 ]
