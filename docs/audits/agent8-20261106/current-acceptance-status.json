@@ -2495,5 +2495,70 @@
     "pilot_rollback_qualified": false,
     "native_physical_admission": false,
     "overall": "NO_GO_BROADER_ACCEPTANCE"
+  },
+  "STRATT73_CORE_CI_REVIEW": {
+    "requirement": "STRATT73_CORE_WINDOWS_LINUX_CI_EXACT_SOURCE",
+    "repository": "strattester",
+    "pr": 73,
+    "head": "a56c24a0f25a0c5ea9222fcd953a49536c91dfc9",
+    "tree": "69728afcfaba28d95c8de52e5ca773b75be09a5f",
+    "run": 42343442185,
+    "attempt": 1,
+    "event": "pull_request",
+    "primary_run_conclusion": "success",
+    "workflow_raw_sha256": "96b87594ccd7313ede85f0577a1765632a93aa7d18787573cff3cb511e258655",
+    "shared_unified_source": "e0c2ea20aa4f1bd9476d1046e7e4b41f1b12d8e9",
+    "artifact_digests_verified": 4,
+    "status": "CORE_CI_SUCCESS_WITH_EXPLICIT_SKIPS",
+    "native_security_mandatory_acceptance": "BLOCKED_NOT_RUN_SKIPPED_NOT_WAIVED",
+    "history_cross_repository": "SKIPPED_NOT_ACCEPTED",
+    "node_projection78": "LOCAL_ONLY_NOT_EXECUTED_BY_THIS_WORKFLOW",
+    "F16_F17": "NOT_CLOSED_BY_JOB_OR_ARTIFACT_SUCCESS",
+    "SYSTEM_acceptance": false,
+    "Home_native_pilot_admission": false,
+    "overall": "NO_GO_BROADER_ACCEPTANCE",
+    "jobs": [
+      {
+        "job": 128315936288,
+        "name": "pytest (windows-latest, 3.11)",
+        "artifact": 13566086322,
+        "case_pass": 2090,
+        "case_skip": 28,
+        "subtests_pass": 35,
+        "testcase_nodes": 2118,
+        "junit_suite_tests": 2153
+      },
+      {
+        "job": 128315936380,
+        "name": "pytest (ubuntu-latest, 3.11)",
+        "artifact": 13566270490,
+        "case_pass": 2064,
+        "case_skip": 54,
+        "subtests_pass": 35,
+        "testcase_nodes": 2118,
+        "junit_suite_tests": 2153
+      },
+      {
+        "job": 128315936431,
+        "name": "pytest (ubuntu-latest, 3.13)",
+        "artifact": 13566260254,
+        "case_pass": 2064,
+        "case_skip": 54,
+        "subtests_pass": 35,
+        "testcase_nodes": 2118,
+        "junit_suite_tests": 2153
+      },
+      {
+        "job": 128315936497,
+        "name": "pytest (windows-latest, 3.13)",
+        "artifact": 13565693474,
+        "case_pass": 2090,
+        "case_skip": 28,
+        "subtests_pass": 35,
+        "testcase_nodes": 2118,
+        "junit_suite_tests": 2153
+      }
+    ],
+    "evidence": "phase57/independent-review.json"
   }
 }
