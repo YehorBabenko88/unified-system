@@ -1,0 +1,30 @@
+{
+  "schema": "unified.integration-review-record.v1",
+  "source_head": "5fd0ccbd28c79fb5ff040ecb1030462ac4baef35",
+  "source_tree": "ac734aade255b4b729e997239c215a2d936c4c70",
+  "audit_head": "59b8eba791627822822873368e8460921d33540c",
+  "audit_tree": "39a4a4afc40797b4e18d58c3b3238d36cb8ea95e",
+  "qualification": "REAL_HTTP_GRID_CONSUL_MUX_METADATA_HOLD_ONLY_SYNTHETIC_NATIVE_IDENTITY_ONLY",
+  "tests": {
+    "unit": 18,
+    "http_grid_consul": 28,
+    "source_negative": 8,
+    "additional_actual_assertions": 2,
+    "skips": 0,
+    "overlap_not_counted_twice": 28
+  },
+  "evidence_sha256": {
+    "source-bound.json": "16c2441a2eee0cb2ad18e124fce42f30f57d9fd27019689b6ce65c8de1b4c404",
+    "actual-supplement.json": "7910f05b1810e9d12f66a39ba598df354527ad76c34603b7b6344fc712de0431",
+    "supplement-source-verification.json": "65ee66f97ab00681be9787687f3dbacb946559f92135b87e57e63624912b42c1",
+    "independent-review.md": "3c193a9b9e1be782e34043715446b33e423a0d33be8f2e20761c389517d5a650"
+  },
+  "hosted_ci": "QUEUED_AT_AUDIT_SNAPSHOT_NOT_PASS",
+  "native_authentication": false,
+  "get_endpoint_accepted": false,
+  "live_accepted": false,
+  "release_or_slot_reuse_accepted": false,
+  "home_qualified": false,
+  "physical_admission": false,
+  "master_mission": "IN_PROGRESS_NO_GO"
+}
