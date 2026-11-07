@@ -1,0 +1,22 @@
+test_actual_tls_catalog_not_identity_or_registered_tools (test_front.FrontTests.test_actual_tls_catalog_not_identity_or_registered_tools) ... ok
+test_duplicate_headers_transfer_encoding_and_wrong_host_refused (test_front.FrontTests.test_duplicate_headers_transfer_encoding_and_wrong_host_refused) ... ok
+test_head_errors_never_emit_response_body (test_front.FrontTests.test_head_errors_never_emit_response_body) ... FAIL
+test_head_no_body_unknown_path_and_body_on_catalog (test_front.FrontTests.test_head_no_body_unknown_path_and_body_on_catalog) ... ok
+test_invalid_path_query_and_unbounded_headers_refused (test_front.FrontTests.test_invalid_path_query_and_unbounded_headers_refused) ... ok
+test_owned_shutdown_has_no_remaining_workers_or_restart (test_front.FrontTests.test_owned_shutdown_has_no_remaining_workers_or_restart) ... ok
+test_protected_route_ignores_forged_role_and_does_not_read_body (test_front.FrontTests.test_protected_route_ignores_forged_role_and_does_not_read_body) ... ok
+test_tls_peer_without_certificate_cannot_read_catalog (test_front.FrontTests.test_tls_peer_without_certificate_cannot_read_catalog) ... ok
+test_unverified_context_rejected_before_bind (test_front.FrontTests.test_unverified_context_rejected_before_bind) ... ok
+
+======================================================================
+FAIL: test_head_errors_never_emit_response_body (test_front.FrontTests.test_head_errors_never_emit_response_body)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\worktrees\gateway-runtime-integration-20261107\unified-system\tests\gateway_runtime\test_front.py", line 82, in test_head_errors_never_emit_response_body
+    self.assertEqual(response.split(b'\r\n\r\n',1)[1],b'')
+AssertionError: b'{"code":"INVALID_REQUEST"}' != b''
+
+----------------------------------------------------------------------
+Ran 9 tests in 1.116s
+
+FAILED (failures=1)
