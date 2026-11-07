@@ -1,6 +1,6 @@
 {
   "schema": "unified.staged-physical-plan.v2",
-  "authorization": "OWNER2026_11_06_CONDITIONAL_NONDESTRUCTIVE_AFTER_READINESS_GATES",
+  "authorization": "OWNER2026_11_07_PHYSICAL_PILOT_CONDITIONAL_STAGE_GATES",
   "status": "BLOCKED_NOT_EXECUTABLE",
   "mandatory_gates": [
     "Immutable sixmodule artifactSHA256/dependencylocks/sourceprovenance/compatibility PASS",
@@ -208,5 +208,20 @@
     "control_commissioning": "Separately admitted owned Consul service/account/ports/identity plan may start voters sequentially on LS5, PC4, PC3. No existing services or network policies changed. Admission does not require an already existing quorum to start its first voter.",
     "operational_admission": "After actual office quorum, verify current authority/fencing/identity/budget/Control contracts and source-bound results before any provider/history/live/research execution. No bootstrap receipt can authorize this transition.",
     "isolated_vs_physical": "Preinstallation runtime qualification is in an isolated test environment, never claimed as actual office quorum or office runtime acceptance."
+  },
+  "latest_owner_directive": {
+    "path": "directives/20261107-physical-pilot/OWNER-DIRECTIVE.txt",
+    "sha256": "1dc4bad55cc8d65919e416b1093d7a609181bb9ee997d61031862cab70ad2bf5",
+    "physical_pilot": "AUTHORIZED_SUBJECT_TO_STAGE_GATES",
+    "full_production_admission": false
+  },
+  "local_ls5_pilot": {
+    "readiness_report": "evidence/ls5-pilot-readiness-20261107/stage-report.json",
+    "install_status": "BLOCKED_PREREQUISITES_NOT_PASSED",
+    "distributed_quorum_required_for_local_only_pilot": false,
+    "other_nodes_may_join": false,
+    "real_provider_sends": false,
+    "required_manifest_scope": "Exact installed pilot subset and its complete dependency/source/artifact closure; later distributed admission separate",
+    "existing_databases_or_foreign_services_may_change": false
   }
 }
