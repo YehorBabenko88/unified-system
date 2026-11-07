@@ -1,0 +1,14 @@
+# Root GET consolidation and selected evidence binding
+
+Requirement ROOT_GET_MERGE_SOURCE_SELECTED_EVIDENCE_BINDING. Unified-system Draft26 mergef8f29bfd6041acc7b767b2a783f3576867d9bd02/tree8709216fc1bc6210a35ec14749ce55c7777fb91d; publicationeb0c6486524c7d7f4d3dc390abebc0107db2c858/tree0536eb5fa5984ea281974fec2386c547555b0ce9.
+Environment: primary Git object/raw hash and original receipt verification; no merged-source runtime execution or office probe by A8.
+
+Expected/actual: all14component paths (13GETdelta+preserved handoffdoc) byte-identical to be5cb942 and published hashes. Root1221Unified/672Grid raw source maps matched primary respective Git blobs. Six top-level Root indexed receipts/logs,21A8phase61 originals,3A6 originals all retrieved and hash-matched:30total. A8copies compared to original phase61 bytes; A6copies compared to source owner original terminan-sync-v1 files. No original content normalized or amended. Detailed indexed path/hash/length list retained.
+
+Root reported33unit/72actual groups/8guards0skip/allownedcleanup tied to f8f merge and compared mandatory IDs with originalcomponent inventory. It remains Root execution evidence, not A8 replay at merge. Borrowed A2environment not newly independently qualified.24models separate, positive204notactual. A6semantic/errorABI proof remains owner scope, not our new real-process execution. Original A8independent actual72+2 remains at componentbe5 and does not grant docs-head/fullmatrix/runtime admission.
+
+Publication explicitly selects top-level logs/receipts and excludes generated negativefixture directories retained locally; no false claim of retrievable complete fixture directory. No missing indexed member found. Publication and report bytes agree. This verifies committed objects, not independent attestation of Root precommit Git index chronology.
+
+Status PASS_SOURCE_AND_SELECTED_EVIDENCE_CONSISTENCY_ONLY. Severity: no new defect found in this bounded consolidation. Required corrections for broader admission unchanged: actual Rootnative identity/key/IPC/session and final browser/office attachment, installable package/ACL/adminbackuprestore/rollback gates, required hosted/native evidence; READY/LIVE/realACK204/release remain unavailable. DefaultWSGI503/native provider absent. No hosted/fullsuite transfer to eb0docsHEAD, no Home/pilot/fleet/physical acceptance. Overall broaderNO-GO, existing6P1/3P2 unchanged; conditional pilot preparation separate and Tailscaleremoval blocked.
+
+Evidence root-status.original.json, selected Root original6members, verified-selected-members.json and independent-review.json. Reproduction ../verify_root_get_consolidation.py. No main merge, deploy, native actuation, provider send, office filesystem/DB/service/security/network change performed by A8; Integration Owner notified.
