@@ -33,6 +33,7 @@ class QueueTests(unittest.TestCase):
         for field, value in [('run_attempt', 2), ('head_sha', 'a'*40)]:
             run = dict(self.run, **{field: value})
             with self.assertRaises(ValueError): self.observe(run=run)
+        with self.assertRaises(ValueError): self.observe(run=dict(self.run, workflow_id=123.0))
         self.assertEqual(self.c.history(), [])
 
     def test_null_and_unknown_never_success(self):

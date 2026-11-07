@@ -140,6 +140,8 @@ class Controller:
             run, job, artifacts = data['run'], data['job'], data['artifacts']
             need(type(run) is dict and type(job) is dict and type(artifacts) is list and len(artifacts) <= 100)
             p = self.pin
+            need(all(type(run.get(key)) is int for key in ('id','workflow_id','run_attempt')))
+            need(all(type(job.get(key)) is int for key in ('id','run_id','run_attempt')))
             need(run['id'] == p.run_id and run['workflow_id'] == p.workflow_id and run['run_attempt'] == p.attempt)
             need(run['head_sha'] == p.source_sha and run['repository']['full_name'] == p.repository)
             need(job['id'] == p.job_id and job['run_id'] == p.run_id and job['run_attempt'] == p.attempt and job['head_sha'] == p.source_sha)
