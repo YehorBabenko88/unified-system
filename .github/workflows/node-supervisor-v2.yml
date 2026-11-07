@@ -99,7 +99,7 @@ jobs:
           receipt=dict(schema='unified.node-supervisor-qualification.v1',head=os.environ['EXPECTED_HEAD'],tree=before['tree'],python=sys.version,platform=sys.platform,git_sha256=git_hash,tests=test_ids,count=result.testsRun,skips=len(result.skipped),errors=len(result.errors),failures=len(result.failures),source_after=after,physical_acceptance='NOT_RUN',native_authority='UNAVAILABLE')
           (output/'receipt.json').write_text(json.dumps(receipt,sort_keys=True),encoding='utf8')
           print((output/'tests.log').read_text(encoding='utf8'))
-          assert before==after and result.wasSuccessful() and result.testsRun==30 and len(test_ids)==len(set(test_ids))==30 and not result.skipped
+          assert before==after and result.wasSuccessful() and result.testsRun==32 and len(test_ids)==len(set(test_ids))==32 and not result.skipped
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:

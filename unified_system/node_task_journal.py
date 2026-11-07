@@ -111,7 +111,18 @@ class NodeTaskJournal:
             info=part.lstat()
             need(not stat.S_ISLNK(info.st_mode) and not getattr(info,'st_file_attributes',0)&1024)
             need(stat.S_ISREG(info.st_mode) if part==self.path else stat.S_ISDIR(info.st_mode))
+        # Only quiescent DELETE-mode databases are admitted. Check before any
+        # SQLite open: even a read-only WAL connection can touch shared memory.
+        # Do not checkpoint, recover, switch modes or remove foreign sidecars.
+        for suffix in ('-wal','-shm','-journal'):
+            sidecar=Path(str(self.path)+suffix)
+            need(not os.path.lexists(sidecar))
         if self.path.exists():
+            with self.path.open('rb') as stream:
+                header=stream.read(20)
+            if header:
+                need(len(header)==20 and header[:16]==b'SQLite format 3\x00'
+                     and header[18:20]==b'\x01\x01')
             need(self.path.stat().st_size <= self.max_bytes)
             identity=self._file_identity()
             if self._identity is not None: need(identity==self._identity)
@@ -119,6 +130,7 @@ class NodeTaskJournal:
     def _inventory(self):
         # Read-only schema inventory: Journal.read alone ignores foreign tables.
         with closing(sqlite3.connect(self.path.resolve().as_uri()+'?mode=ro',uri=True,timeout=5)) as db:
+            need(db.execute('PRAGMA journal_mode').fetchone()==('delete',))
             need(db.execute('PRAGMA quick_check').fetchmany(2)==[('ok',)])
             objects=db.execute('SELECT type,name,tbl_name FROM sqlite_master ORDER BY name LIMIT 3').fetchall()
             need(objects==[('table','transitions','transitions')])

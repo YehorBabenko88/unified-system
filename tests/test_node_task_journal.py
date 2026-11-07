@@ -234,3 +234,39 @@ class JournalTests(unittest.TestCase):
         with self.assertRaises(NodeJournalError): self.journal.reconcile()
         with self.assertRaises(NodeJournalError): scoped_journal(self.path)
         self.assertEqual(before,self.path.read_bytes())
+
+    def test_wal_held_reader_rejected_before_reads_and_writes(self):
+        journal=scoped_journal(self.path,max_bytes=65536)
+        journal.create(operation())
+        with closing(sqlite3.connect(self.path)) as keeper:
+            self.assertEqual(keeper.execute('PRAGMA journal_mode=WAL').fetchone(),('wal',))
+            keeper.execute('PRAGMA wal_autocheckpoint=0')
+            keeper.execute('BEGIN')
+            keeper.execute('SELECT COUNT(*) FROM transitions').fetchone()
+            def files():
+                return {p.name:p.read_bytes() for p in self.path.parent.iterdir()}
+            before=files()
+            for action in (journal.snapshot,lambda:journal.get('task1'),
+                           lambda:journal.create(operation(task_id='task2',idempotency_key='key2')),
+                           lambda:journal.transition('task1','VERIFIED'),journal.reconcile,
+                           lambda:scoped_journal(self.path)):
+                with self.subTest(action=action), self.assertRaises(NodeJournalError): action()
+                self.assertEqual(files(),before)
+
+        # WAL format persists after clean close even when sidecars disappear.
+        self.assertEqual(self.path.read_bytes()[18:20],b'\x02\x02')
+        before={p.name:p.read_bytes() for p in self.path.parent.iterdir()}
+        with self.assertRaises(NodeJournalError): journal.snapshot()
+        self.assertEqual({p.name:p.read_bytes() for p in self.path.parent.iterdir()},before)
+
+    def test_sqlite_sidecars_rejected_without_open_or_cleanup(self):
+        self.journal.create(operation())
+        for suffix in ('-wal','-shm','-journal'):
+            sidecar=Path(str(self.path)+suffix)
+            sidecar.write_bytes(b'owned synthetic sidecar')
+            before=self.path.read_bytes()
+            with self.subTest(suffix=suffix), self.assertRaises(NodeJournalError):
+                self.journal.snapshot()
+            self.assertEqual(self.path.read_bytes(),before)
+            self.assertEqual(sidecar.read_bytes(),b'owned synthetic sidecar')
+            sidecar.unlink()
