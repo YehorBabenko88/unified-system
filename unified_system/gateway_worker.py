@@ -6,6 +6,7 @@ class. Caller handles/types are not native grants. GatewayWorker.start is closed
 import ctypes
 from ctypes import wintypes as w
 import os
+import time
 
 class WorkerUnavailable(RuntimeError):
     pass
@@ -37,32 +38,45 @@ def _configure_retained_job(job,*,expected_job_type,owned_process_handle=None,
             or type(active_processes) is not int or active_processes!=8
             or type(cpu_rate) is not int or cpu_rate!=1000):
         raise WorkerUnavailable('UNQUALIFIED_LIMIT_PROFILE')
-    k=job._kernel;handle=job._job
+    k=job._kernel;handle=job._job;calls=[]
+    def observed(name,fn,*args):
+        value=fn(*args)
+        calls.append(dict(api=name,result=int(value),last_error=ctypes.get_last_error(),
+                          monotonic_ns=str(time.monotonic_ns())))
+        return value
     k.IsProcessInJob.argtypes=[w.HANDLE,w.HANDLE,ctypes.POINTER(w.BOOL)];k.IsProcessInJob.restype=w.BOOL
     k.GetProcessAffinityMask.argtypes=[w.HANDLE,ctypes.POINTER(ctypes.c_size_t),ctypes.POINTER(ctypes.c_size_t)];k.GetProcessAffinityMask.restype=w.BOOL
     k.GetActiveProcessorGroupCount.argtypes=[];k.GetActiveProcessorGroupCount.restype=w.WORD
     member=w.BOOL();process_mask=ctypes.c_size_t();system_mask=ctypes.c_size_t()
-    if not k.IsProcessInJob(owned_process_handle,handle,ctypes.byref(member)) or not member.value:
+    if not observed("IsProcessInJob",k.IsProcessInJob,owned_process_handle,handle,ctypes.byref(member)) or not member.value:
         raise WorkerUnavailable('OWNED_JOB_MEMBERSHIP_UNVERIFIED')
-    if (k.GetActiveProcessorGroupCount()!=1 or
-            not k.GetProcessAffinityMask(owned_process_handle,ctypes.byref(process_mask),ctypes.byref(system_mask))
+    if (observed("GetActiveProcessorGroupCount",k.GetActiveProcessorGroupCount)!=1 or
+            not observed("GetProcessAffinityMask",k.GetProcessAffinityMask,owned_process_handle,ctypes.byref(process_mask),ctypes.byref(system_mask))
             or not process_mask.value or process_mask.value & ~system_mask.value):
         raise WorkerUnavailable('PROCESSOR_TOPOLOGY_UNQUALIFIED')
     limits=_Extended();limits.basic.flags=0x2000|0x200|0x8
     limits.basic.active_limit=active_processes;limits.job_memory=committed_bytes
-    if not k.SetInformationJobObject(handle,9,ctypes.byref(limits),ctypes.sizeof(limits)):
+    if not observed("SetInformationJobObject:Extended9",k.SetInformationJobObject,handle,9,ctypes.byref(limits),ctypes.sizeof(limits)):
         raise WorkerUnavailable('JOB_MEMORY_PROCESS_LIMIT_FAILED')
     cpu=_CPU(5,cpu_rate)  # ENABLE|HARD_CAP, explicitly bounded native rate units.
-    if not k.SetInformationJobObject(handle,15,ctypes.byref(cpu),ctypes.sizeof(cpu)):
+    if not observed("SetInformationJobObject:CPU15",k.SetInformationJobObject,handle,15,ctypes.byref(cpu),ctypes.sizeof(cpu)):
         raise WorkerUnavailable('JOB_CPU_LIMIT_FAILED')
     actual=_Extended();actual_cpu=_CPU()
-    if (not k.QueryInformationJobObject(handle,9,ctypes.byref(actual),ctypes.sizeof(actual),None)
-            or not k.QueryInformationJobObject(handle,15,ctypes.byref(actual_cpu),ctypes.sizeof(actual_cpu),None)):
+    if (not observed("QueryInformationJobObject:Extended9",k.QueryInformationJobObject,handle,9,ctypes.byref(actual),ctypes.sizeof(actual),None)
+            or not observed("QueryInformationJobObject:CPU15",k.QueryInformationJobObject,handle,15,ctypes.byref(actual_cpu),ctypes.sizeof(actual_cpu),None)):
         raise WorkerUnavailable('JOB_LIMIT_READBACK_FAILED')
     if (actual.basic.flags & limits.basic.flags != limits.basic.flags or actual.job_memory!=committed_bytes
             or actual.basic.active_limit!=active_processes or actual_cpu.flags!=5 or actual_cpu.rate!=cpu_rate):
         raise WorkerUnavailable('JOB_LIMIT_READBACK_MISMATCH')
-    return dict(committed_memory_limit_bytes=actual.job_memory,active_process_limit=actual.basic.active_limit,
+    return dict(native_calls=calls,job_membership_verified=bool(member.value),
+                requested_limit_flags=limits.basic.flags,readback_limit_flags=actual.basic.flags,
+                requested_job_memory_bytes=limits.job_memory,
+                requested_cpu_flags=cpu.flags,readback_cpu_flags=actual_cpu.flags,
+                extended_requested_hex=bytes(limits).hex(),extended_readback_hex=bytes(actual).hex(),
+                cpu_requested_hex=bytes(cpu).hex(),cpu_readback_hex=bytes(actual_cpu).hex(),
+                layouts={name:dict(size=ctypes.sizeof(cls),offsets={field:getattr(cls,field).offset for field,*_ in cls._fields_})
+                         for name,cls in [('basic',_Basic),('io',_IO),('extended',_Extended),('cpu',_CPU)]},
+                committed_memory_limit_bytes=actual.job_memory,active_process_limit=actual.basic.active_limit,
                 cpu_hard_rate_units=actual_cpu.rate,affinity_processor_count=process_mask.value.bit_count(),
                 system_affinity_processor_count=system_mask.value.bit_count(),processor_groups=1,
                 inherited_job_capacity_qualified=False,cpu_millicore_mapping_qualified=False,

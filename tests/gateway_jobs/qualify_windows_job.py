@@ -11,12 +11,15 @@ import subprocess
 import sys
 import tempfile
 import types
+import time
+from datetime import datetime,timezone
 sys.path.insert(0,str(Path(__file__).resolve().parents[2]))
 from unified_system.gateway_worker import _configure_retained_job, _Extended, WorkerUnavailable, _retire_owned
 
 
 def qualify(grid_repository,mode="tree"):
     if mode not in ("tree","memory","bad_profile"):raise ValueError("UNKNOWN_QUALIFICATION_MODE")
+    observed_at=datetime.now(timezone.utc).isoformat();started_ns=time.monotonic_ns()
     if os.name != 'nt':
         raise RuntimeError('WINDOWS_REQUIRED_NOT_QUALIFIED')
     raw = subprocess.check_output(['git','--no-replace-objects','-C',str(grid_repository),
@@ -75,6 +78,10 @@ def qualify(grid_repository,mode="tree"):
                 return dict(classification='OWNED_COMMITTED_MEMORY_LIMIT_PROBE_NOT_RSS',mode=mode,
                     rejected_allocation_bytes=512*1024*1024,exit_code=exit_code.value,
                     native_peak_job_committed_bytes=usage.peak_job_memory,
+                    native_peak_process_memory_bytes=usage.peak_process_memory,
+                    memory_accounting_struct_hex=bytes(usage).hex(),
+                    memory_accounting_query_success=True,observation_utc=observed_at,
+                    elapsed_monotonic_ns=str(time.monotonic_ns()-started_ns),
                     peak_exceeds_configured_limit=usage.peak_job_memory>268435456,
                     memory_limit_cause_and_peak_semantics_qualified=False,
                     limit_readback_before_resume=limit_observation,terminated_job_observed_empty=True,
@@ -87,10 +94,15 @@ def qualify(grid_repository,mode="tree"):
                 if info.ActiveProcesses>=2:break
             if info.ActiveProcesses<2:raise RuntimeError('DESCENDANT_NOT_OBSERVED:'+str((info.ActiveProcesses,info.TotalProcesses,info.TotalTerminatedProcesses)))
             before=int(info.ActiveProcesses);total=int(info.TotalProcesses)
+            accounting=dict(raw_hex=bytes(info).hex(),size=ctypes.sizeof(info),
+                            offsets={field:getattr(type(info),field).offset for field,*_ in info._fields_},
+                            values={field:str(getattr(info,field)) for field,*_ in info._fields_})
             quiescent=job.terminate_and_wait(5)
             if quiescent is not True or k.WaitForSingleObject(proc.process,5000)!=0:raise RuntimeError('QUIESCENCE_NOT_PROVEN')
             return dict(classification='OWNED_DISPOSABLE_CONTAINMENT_PRIMITIVE_ONLY',
                 grid_head='40e9c8dc274a2746018bc1aa08d103cd0187cecc',source_sha256=hashlib.sha256(raw).hexdigest(),
+                observation_utc=observed_at,elapsed_monotonic_ns=str(time.monotonic_ns()-started_ns),
+                native_accounting_before_cancel=accounting,
                 assigned_before_resume=True,limit_readback_before_resume=limit_observation,active_processes_before_cancel=before,total_processes=total,
                 terminated_job_observed_empty=True,primary_handle_signaled=True,
                 cpu_memory_output_limits_qualified=False,capacity_qualified=False,native_job_admission=False)
