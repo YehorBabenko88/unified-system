@@ -39,7 +39,7 @@
       "head": "6e58eb8bfa428cf88d54abd84418b58d67569814",
       "tested_source": "5b4d9fafbc3ef64454f23e3c48621536b67f42dc",
       "owner_targeted_tests": 54,
-      "full_suite": "TESTS_PASS_BUT_STRICT_CLEAN_CAPSULE_FAILED; HOSTED_PENDING",
+      "full_suite": "LOCAL_CONFIGURED_CDD_PASS_CLEAN; HOSTED_NATIVE_CROSSREPO_GATES_PENDING",
       "job_admission": false,
       "configured_full_pytest": {
         "tests_passed": 2116,
@@ -67,7 +67,16 @@
         "source": "cddf71fab478f788d7289da9648f8a2f9287d1f8",
         "owner_narrow_tests": 1,
         "owner_targeted_tests": 54,
-        "fresh_full_suite": "IN_PROGRESS",
+        "fresh_full_suite": {
+          "source": "cddf71fab478f788d7289da9648f8a2f9287d1f8",
+          "tests_passed": 2116,
+          "skips": 36,
+          "subtests": 35,
+          "owner_strict_guard": "PASS_819_PRIMARY_NO_EXTRAS",
+          "root_log_xml_hash_verification": "PASS_2152_CASES_36_SKIP_0_FAILURE_ERROR",
+          "a8_review": "REQUESTED",
+          "native_and_crossrepo_skips": "NOT_MANDATORY_ACCEPTANCE_PASS"
+        },
         "original_6e_failure_preserved": true
       }
     }
