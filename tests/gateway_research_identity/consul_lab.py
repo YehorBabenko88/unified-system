@@ -71,4 +71,4 @@ class ConsulLab:
         print(json.dumps(dict(scope='OWNED_LOOPBACK_LAB_RETIRED',
             processes=[dict(pid=p.pid,returncode=p.returncode) for p in self.processes],
             all_owned_processes_waited=True,foreign_process_operations=0,
-            session_retirement='OWNED_DISPOSABLE_DATA_DESTROYED_WITH_TEMPORARY_DIRECTORY')),flush=True)
+            session_retirement='OWNED_SERVERS_STOPPED_TEMPORARY_DIRECTORY_CLEANUP_FOLLOWS')),flush=True)
