@@ -34,7 +34,7 @@ jobs:
       - name: Run exact-source component acceptance
         shell: bash
         run: |
-          python -B - <<'PY'
+          python -I -B - <<'PY'
           import hashlib
           import json
           import os
@@ -51,6 +51,7 @@ jobs:
           preloaded_protected = sorted(name for name in sys.modules if
               name == 'scheduler_components' or name.startswith('scheduler_components.')
               or name.startswith('test_agent5_scheduler'))
+          initial_cache_prefix = sys.pycache_prefix
           isolated_cache = tempfile.TemporaryDirectory(prefix='agent5-import-cache-')
           sys.dont_write_bytecode = True
           sys.pycache_prefix = isolated_cache.name
@@ -117,7 +118,7 @@ jobs:
                       relative = path.relative_to(root).as_posix()
                       if relative not in expected_paths:
                           unexpected.append(relative)
-              cache_policy_valid = (not preloaded_protected and not bytecode_paths
+              cache_policy_valid = (not preloaded_protected and initial_cache_prefix is None and not bytecode_paths
                   and sys.dont_write_bytecode is True and sys.pycache_prefix == isolated_cache.name
                   and os.environ.get('PYTHONDONTWRITEBYTECODE') == '1'
                   and os.environ.get('PYTHONPYCACHEPREFIX') == isolated_cache.name
@@ -172,6 +173,9 @@ jobs:
               if before['head'] != expected or before['tracked_status'] or not before['protected_inputs_valid'] or not inventory_valid:
                   stream.write('SOURCE_OR_RAW_BLOB_OR_INVENTORY_MISMATCH: tests not admitted\n')
               else:
+                  # Isolated startup excludes CWD. Admit the exact repository
+                  # only after raw source, cache and inventory checks succeed.
+                  sys.path.insert(0, str(Path.cwd()))
                   suite = unittest.TestSuite([
                       unittest.defaultTestLoader.discover('tests', pattern=pattern)
                       for pattern in ('test_agent5_scheduler_components.py', 'test_agent5_scheduler_runtime.py')])

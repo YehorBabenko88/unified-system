@@ -6,12 +6,14 @@ appended only to runtime.py's cached code executed while unchanged tracked sourc
 and all16 raw blob bindings passed; the old workflow reported52 tests/0skips/PASS.
 Disabling bytecode writes with -B does not disable bytecode reads.
 
-The evidence runner now uses -B, a fresh private empty pycache namespace and
+The evidence runner now starts with -I -B, a fresh private empty pycache namespace and
 write-disable both in the running interpreter and inherited child environment.
 Preloaded protected product/test modules reject. Any __pycache__ entry, .pyc or
 .pyo under product or tests rejects before execution and after execution; no cache
 is deleted to obtain a pass. Ambient PYTHONPYCACHEPREFIX is overridden before
 protected imports. Cache directory must remain empty and settings unchanged.
+An initial interpreter cache prefix rejects. Isolated startup excludes the working
+directory; the repository enters sys.path only after source/cache/inventory checks.
 The protected raw-file, Git no-replace, exact52 IDs, preserved30 and zero-skips
 checks remain conjunctive. Failure yields no accepted source receipt.
 
