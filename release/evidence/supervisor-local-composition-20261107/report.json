@@ -1,0 +1,33 @@
+{
+  "base": "eeb539d6e254769b5d0e7a0f5f3cb629ce673ffe",
+  "base_tree": "feee281f84e917fe4963ef4d1afbcdc29e898936",
+  "head": "39c52ca7486760f0223cdb71001a5f3c3b454df8",
+  "tree": "548a4e2243a224ad86073c39bfec465e6e61251f",
+  "branch": "feature/supervisor-local-integration-20261107",
+  "pr": "PENDING_REMOTE_ROOT_BASE_UPDATE",
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "tests": 121,
+  "skips": 0,
+  "counts": {
+    "node": 32,
+    "ci": 22,
+    "mission": 39,
+    "journal": 8,
+    "root": 14,
+    "integration": 6
+  },
+  "source_before_after_equal": true,
+  "baseline": "BASELINE_INTEGRATION_SPEC_ABSENT; no sourcebug invented",
+  "qualification": "LOCAL_COMPONENT_INTEGRATION_ONLY",
+  "runtime_admission": false,
+  "native_authority": false,
+  "physical_admission": false,
+  "symlink_qualification": "NOT_CLAIMED; original Node suite host privilege unavailable",
+  "source_sha256": {
+    ".github/workflows/supervisor-local-integration.yml": "fe7b0fc3796a1061336c331658b242ef00b4bc7f1af0d107a2f21b951e22b83a",
+    "docs/operations/supervisor-local-integration.md": "01b6b7911422b293f321682c3564cae50ca2b25b55ee97324a76db1afed49653",
+    "release/evidence/supervisor-local-integration-fixtures/math-jobs-42352374979.json": "a9447f5db6237d4811da9275202963c4dc043728188f35175787adf2f026fa6f",
+    "release/evidence/supervisor-local-integration-fixtures/math-run-42352374979.json": "24670c428528cea08c791fe31e3a7561bff78dd058006f20bdab8c2da09e03ec",
+    "tests/test_supervisor_local_integration.py": "c28d9deda0008f3b0247d3423682b6497e04daec5f4d3fa44c20357263b5a760"
+  }
+}
