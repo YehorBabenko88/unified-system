@@ -209,6 +209,15 @@
       "scope": "ISOLATED_OWN_CHILD_ONLY_EXACT_DESIGN_REVIEW_BEFORE_IMPLEMENTATION_NO_AUTHORITY_ADMISSION",
       "ownership_ack": "A5_EXPLICIT_RECEIVED",
       "design_review": "ROOT_SCOPED_ISOLATED_ACK_WITH_CPU_MAPPING_QUALIFICATION_PENDING"
+    },
+    "A7_QUERY_V2_TEST_ISOLATION": {
+      "branch": "agent7/query-meta-bridge-v2-20261107",
+      "files": [
+        "tests/runtime/test_service_manager.py"
+      ],
+      "scope": "TEST_ONLY_EXISTING_ROOT_PARAMETER_TO_TMP_PATH_NO_RUNTIME_OR_GUARD_CHANGE",
+      "reason": "REPRODUCED_CWD_TEST_STATE_WRITES",
+      "root_approval": "AUTHORIZED"
     }
   },
   "successor_scope": "ISOLATED_SLICE_A_ONLY_EXACT_SHARED_API_ACK_PENDING",
