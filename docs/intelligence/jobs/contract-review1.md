@@ -87,10 +87,10 @@ lease renewal, rekey, storage release or restart on client disconnect.
 ## Bounded disposable validation and next executable step
 
 No arbitrary backend plugin, provider injection, external process startup or
-physical controls. First executable step after exact contract ACK: focused tests
+physical controls. Independent executable closure step authorized by ROOT: focused tests
 for no-binding NOT_SUBMITTED with zero owner effects and original UNKNOWN
-identity preservation, then actual admitted disposable owner bindings plus A7
-existing offline research adapter. Synthetic DATA allowed, fake admission is not.
+identity preservation. After exact positive contract ACK, add actual admitted
+disposable owner bindings plus A7 existing offline research adapter. Synthetic DATA allowed, fake admission is not.
 Missing actual backend is dependency-unavailable, not skipped native PASS.
 Test quota/resource exhaustion, stale generation/incarnation, no quorum, duplicate
 UUID/changed intent, cancellation/publication order, unauthorized status/cancel,
@@ -106,5 +106,31 @@ Assignment/admission/cancel/reconciliation and same-order proof. A4: admitted
 immutable dataset/result provenance, storage publication and retained charges.
 A7 via ROOT: exact existing executable research adapter input/output/cancellation,
 result/experiment registry reuse and deterministic synthetic vector. Silence is
-not ACK. Keep module/workflow absent until exact contract decision; approved
-independent tests/docs may proceed without installing a backend.
+not ACK. ROOT subsequently authorized the local-only closed module and independent tests.
+Keep positive owner bindings, actual adapters and workflow admission absent until
+exact contract decision; closure tests/docs install no backend.
+
+## Implemented independent closure slice (not positive contract ACK)
+
+ROOT explicitly authorized independent strictintent/no-binding/UNKNOWN tests and
+closed module after this proposal. ResearchJobs has NO owner_bindings constructor
+and cannot execute any owner operation. Its local preparation schema is deliberately
+unified.gateway.job-local-preparation.v1: NOT the shared submission wire codec.
+It reuses existing offline plan validation (including its Math label) without
+importing/bootstrapping Math or any A7 engine; this is not the A7 execution codec.
+
+submit validates canonical bounded local bytes, returns NOT_SUBMITTED with null
+job_id and no effects. lookup/reconnect raise JobUnavailable carrying frozen
+LocalOriginal bytes/UUID/key/digest; UNKNOWN is absence of authoritative knowledge,
+not evidence a native operation occurred. status raises unavailable without an
+invented registry record. cancel also raises unavailable and does NOT parse a
+submission intent as a cancellation command. Context is ignored for authority:
+no value, typed shape or claimed role can enable this unbound shell.
+
+Seven local tests passed after an initial module-absent import RED. These cover
+strict fields/canonical identity, no-binding closure, immutable original retry
+identity, unavailable status/cancel, and rejected backend injection. They are not
+native tests, admission, workload benchmarks or runtime milestone. Existing16
+Gateway offline tests remain a separate baseline. Positive owner bindings,
+shared request/result/cancel codecs, data disclosure, quotas, Assignment, A7
+computation, publication and real registry remain unimplemented/dependencies.
