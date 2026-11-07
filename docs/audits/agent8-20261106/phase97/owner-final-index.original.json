@@ -1,0 +1,124 @@
+{
+  "date": "2026-11-07",
+  "timezone": "Europe/Berlin",
+  "scope": "LOCAL_WINDOWS_FUNCTIONAL_AND_RAW_SOURCE_EVIDENCE_NOT_HOSTED_NATIVE_DISTRIBUTED_OR_PHYSICAL_ACCEPTANCE",
+  "results": {
+    "query_v2": {
+      "head": "cddf71fab478f788d7289da9648f8a2f9287d1f8",
+      "tree": "513debc70d34b6fae74c9876dae0616a8e998c05",
+      "cwd": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-7-distributed-research-math\\outputs\\query-v2-clean-final-qualified",
+      "command": [
+        "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-7-distributed-research-math\\work\\test-env\\Scripts\\python.exe",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-rs",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-7-distributed-research-math\\outputs\\query-v2-cddf71f-full.xml",
+        "--basetemp=C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-7-distributed-research-math\\outputs\\query-v2-cddf71f-full-temp"
+      ],
+      "environment": {
+        "PYTHONPATH": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-7-distributed-research-math\\outputs\\query-v2-clean-final-qualified",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTEST_DISABLE_PLUGIN_AUTOLOAD": null,
+        "UNIFIED_SOURCE_ROOT": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-7-distributed-research-math\\work\\unified-strat",
+        "STRATTESTER_TEST_UNIFIED_ROOT": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-7-distributed-research-math\\work\\unified-strat",
+        "GATEWAY_META_SOURCE_ROOT": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-7-distributed-research-math\\outputs\\query-v2-cddf71f-runner\\gateway-meta-source-f3c",
+        "GATEWAY_FIXTURE_SOURCE_REVISION": "cddf71fab478f788d7289da9648f8a2f9287d1f8"
+      },
+      "dependency_heads": {
+        "unified": "e0c2ea20aa4f1bd9476d1046e7e4b41f1b12d8e9",
+        "meta": "f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1"
+      },
+      "passed": 2116,
+      "skipped": 36,
+      "subtests_passed": 35,
+      "exit_code": 0,
+      "raw_primary_files": 819,
+      "strict_clean_post_guard": "PASS",
+      "files": {
+        "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-7-distributed-research-math\\outputs\\query-v2-cddf71f-full-receipt.json": {
+          "bytes": 7425,
+          "sha256": "fcfaa6fceb8d0d16e321410482d27446a664fd0796510d3e919246ad910310dd"
+        },
+        "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-7-distributed-research-math\\outputs\\query-v2-cddf71f-full.log": {
+          "bytes": 6204,
+          "sha256": "0fa1e1a4b42966a39e7031d96e3b52b484b1dd81d557b805d8a00ff46430f651"
+        },
+        "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-7-distributed-research-math\\outputs\\query-v2-cddf71f-full.xml": {
+          "bytes": 324985,
+          "sha256": "0d5ec1579e49ba7d8a1dd97d5bcf07599eadeebb40cd8d3baa631b4bfff121e9"
+        },
+        "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-7-distributed-research-math\\outputs\\query-v2-cddf71f-runner\\gateway-research-component-evidence.json": {
+          "bytes": 102398,
+          "sha256": "38b40c9b5e3cdb9764c411f021fa73ec4cf2c67403a29b597beb9d88c28a148f"
+        }
+      }
+    },
+    "persistence_slice_a": {
+      "head": "887e3eeaf23ef8d9d1429435bc88bbac8099c6e6",
+      "tree": "954f3364cb70369705f658e89fcc6ae8ce547eec",
+      "cwd": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-7-distributed-research-math\\outputs\\persistence-887e3ee-qualified",
+      "command": [
+        "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-7-distributed-research-math\\work\\test-env\\Scripts\\python.exe",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-rs",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-7-distributed-research-math\\outputs\\persistence-887e3ee-full.xml",
+        "--basetemp=C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-7-distributed-research-math\\outputs\\persistence-887e3ee-full-temp"
+      ],
+      "environment": {
+        "PYTHONPATH": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-7-distributed-research-math\\outputs\\persistence-887e3ee-qualified",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTEST_DISABLE_PLUGIN_AUTOLOAD": null,
+        "UNIFIED_SOURCE_ROOT": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-7-distributed-research-math\\work\\unified-strat",
+        "STRATTESTER_TEST_UNIFIED_ROOT": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-7-distributed-research-math\\work\\unified-strat",
+        "GATEWAY_META_SOURCE_ROOT": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-7-distributed-research-math\\outputs\\query-v2-cddf71f-runner\\gateway-meta-source-f3c",
+        "GATEWAY_FIXTURE_SOURCE_REVISION": "887e3eeaf23ef8d9d1429435bc88bbac8099c6e6"
+      },
+      "dependency_heads": {
+        "unified": "e0c2ea20aa4f1bd9476d1046e7e4b41f1b12d8e9",
+        "meta": "f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1"
+      },
+      "passed": 2127,
+      "skipped": 36,
+      "subtests_passed": 35,
+      "exit_code": 0,
+      "raw_primary_files": 806,
+      "strict_clean_post_guard": "PASS",
+      "files": {
+        "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-7-distributed-research-math\\outputs\\persistence-887e3ee-full-receipt.json": {
+          "bytes": 7513,
+          "sha256": "4b98698cf0c7e66652e84f1324e58caf4ade69731839cf7d42ee84f44fcd8f63"
+        },
+        "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-7-distributed-research-math\\outputs\\persistence-887e3ee-full.log": {
+          "bytes": 6213,
+          "sha256": "94332e5486fb0e9fca5814d2b94793fdaec4241cd5e54a23ca6d39642983f45b"
+        },
+        "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-7-distributed-research-math\\outputs\\persistence-887e3ee-full.xml": {
+          "bytes": 327068,
+          "sha256": "eff250b06c0f2d7f5914bd247f46fcb3ef8ba8d594ddafb0630e42ed0cec5c52"
+        },
+        "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-7-distributed-research-math\\outputs\\persistence-887e3ee-qualification.json": {
+          "bytes": 95690,
+          "sha256": "47355b673e823e1209c59c0ba1b64a958e82da5dc3af379adf8b5909156c40d9"
+        }
+      }
+    }
+  },
+  "independent_reviews": {
+    "query_v2": "https://github.com/YehorBabenko88/unified-system/blob/d30ac89c9b22c4452f719bc39b36a74388e00b8b/docs/audits/agent8-20261106/phase93/report.md",
+    "persistence_slice_a": "https://github.com/YehorBabenko88/unified-system/blob/d30ac89c9b22c4452f719bc39b36a74388e00b8b/docs/audits/agent8-20261106/phase95/report.md"
+  },
+  "hosted_ci": "QUEUED_NOT_PASS",
+  "publication": "NONE",
+  "native_admission": false,
+  "physical_admission": false,
+  "overall": "NO-GO"
+}
