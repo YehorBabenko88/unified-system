@@ -1,0 +1,42 @@
+{
+  "schema": "agent2.get-native-denial.exact-source-proposal.v1",
+  "head": "be5cb942436f82f374375eabb255768bb139797f",
+  "tree": "3472c7324f0450bd2dbfddd27dfbd32d56c0f382",
+  "base": "0c21256e30aeb3a4184dda97a2bebf24c047acd0",
+  "native_error_class_module": "unified_system.control_mux.commands.NativeAdmissionError",
+  "closed_kinds": [
+    "UNAUTHENTICATED",
+    "SESSION_EXPIRED",
+    "FORBIDDEN",
+    "UNAVAILABLE"
+  ],
+  "consumption": "EXACT_CLASS_AND_CLOSED_STRING_ONLY_PROVIDER_BOUNDARIES_ONLY",
+  "code_parts": {
+    "NativeAdmissionError": {
+      "raw_sha256": "38d7e5bae630b8edb3f33b40206fd959db7b92155ed32210bcfbeed7204f43fe",
+      "start_line": 33
+    },
+    "native_admission_kind": {
+      "raw_sha256": "f5e096a2e9af68f777bb300f34bc5aa4e8f59076946d869f1fd01c27a149f3f1",
+      "start_line": 46
+    }
+  },
+  "source_raw_sha256": {
+    "unified_system/control_mux/commands.py": "e863764c1d5467d55163c8dbd8321ce23982f52ff99f6c01718f7432c730c9bf",
+    "unified_system/control_mux/http_api.py": "38d41c20b871465afdee198f59bc8c575a336151f95fc7056d9ba4381fa6d65b",
+    "unified_system/control_mux/consul_store.py": "53b050aebd086a9a28d633c3227f77321f0b1c902ce27cefdddc8f6b1f6176d5",
+    "unified_system/control_mux/reconciliation.py": "7916e1d25b2bd022ae52eb8730920e273d2b668cf64f80bd2bbeb4ca629ac5b2",
+    "docs/control-mux/get-reconciliation-runtime.md": "e9bad7acc6f6da178fff88d8b0f022b6b49af91cf173048c55a383017cfe5676",
+    "docs/control-mux/get-reconciliation-plan.md": "b4b582054577def69e9427dd7c6e18f9672394582d6ab31f56e05d48ca1e2ec6"
+  },
+  "frozen_review2_raw_sha256": {
+    "docs/control-mux/contracts/reconciliation-v3-review2.schema.json": "a7c9730c6125320c537bd41ddb0d364cfc08eb92ec05d9eb20e73c956868c64e",
+    "tests/control_mux/reconciliation_proposal_review2.py": "991cd9c90a2e93e9353f3b5bb93f2a1aea9e229cd4d4e9d3a1f90cb3523044f5",
+    "docs/control-mux/contracts/reconciliation-v3-review2.md": "9ca2242d692585cdc46840c760c37eda700b718c651915d3114204b56d04655d"
+  },
+  "root_identity_schema": "UNCHANGED_CC286B_0D6B413B",
+  "operation": "EXISTING_GET_COMMAND_NO_RECONCILE_PERMISSION",
+  "native_provider_implemented": false,
+  "qualification": "SOURCE_PROPOSAL_PIN_ONLY_FINAL_RAW_SOURCE_RUN_IN_PROGRESS",
+  "go_no_go": "NO_GO_NATIVE_ATTACHMENT"
+}
