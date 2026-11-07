@@ -1,0 +1,77 @@
+{
+  "requirement": "LS5_LOCAL_PILOT_EXECUTABLE_BLOCKERS",
+  "repository": "unified-system_and_pilot_components",
+  "pr": 26,
+  "reviewed_root_head": "aefa2a9039349445bd3eaee25b12f9b6bec4c01d",
+  "reviewed_root_tree": "3fb3d639a46e4ffb2bd8cc22e814651006169b8e",
+  "directive_raw_sha256": "1dc4bad55cc8d65919e416b1093d7a609181bb9ee997d61031862cab70ad2bf5",
+  "physical_pilot_authorization": "AUTHORIZED_SUBJECT_TO_STAGE_GATES",
+  "full_production": "NOT_AUTHORIZED",
+  "real_trading": "PROHIBITED",
+  "physical_fault_injection": "BLOCKED_SEPARATE_ADMISSION_REQUIRED",
+  "tailscale_removal": "BLOCKED",
+  "environment": "READ_ONLY_DIRECTIVE_AND_PRIMARY_GIT_NO_HOST_PROBES",
+  "blockers": [
+    {
+      "id": "LS5-PILOT-G1",
+      "stage": "BEFORE_INSTALL",
+      "owner": "ROOT",
+      "status": "BLOCKED_PENDING_FRESH_READINESS",
+      "requirement": "Actual LS5 identity/edition/build/service and existing-install inventory/free disk/working alternate administrative channel/approved isolated test root",
+      "executable_evidence": "Fresh read-only machine receipt with timestamp/node identity, target and service collision inventory; demonstrate alternate access without disabling current access",
+      "known_evidence": "Historical LS5 Pro/read-only inventory is not current admission; A8 has not reacquired current physical state"
+    },
+    {
+      "id": "LS5-PILOT-G2",
+      "stage": "BEFORE_INSTALL",
+      "owner": "ROOT_AND_PACKAGE_OWNERS",
+      "status": "BLOCKED_MANIFEST_NOT_INSTALLABLE",
+      "requirement": "Immutable pilot artifact manifest and exact hashes for every installed component/dependency with target/service/account/port scope",
+      "executable_evidence": "Bind source HEAD/tree/PR, artifactSHA256, dependency locks/runtime versions, exact installed subset and compatibility, Windows CI/evidence index; verify actual bytes before effects",
+      "known_evidence": "Root aefa release/integration-manifest.json explicitly PROVISIONAL_NOT_INSTALLABLE; artifact/lock/migration/rollback fields remain null or pending; not final release"
+    },
+    {
+      "id": "LS5-PILOT-G3",
+      "stage": "BEFORE_INSTALL",
+      "owner": "ROOT_INSTALLER_STORAGE",
+      "status": "BLOCKED_BACKUP_ROLLBACK_NOT_ACCEPTED",
+      "requirement": "Affected-state backup and verified rollback before limited installation",
+      "executable_evidence": "Inventory exactly affected paths/services/config, hash backup, restore and rollback rehearsal on separate test state, verify baseline contents and access; preserve existing DBs/foreign services",
+      "known_evidence": "No fresh independently verified LS5 affected-state backup/restore/rollback receipt supplied to A8"
+    },
+    {
+      "id": "LS5-PILOT-G4",
+      "stage": "CODE_SECURITY_PREREQUISITE_AND_P2_LOCAL_RUNTIME",
+      "owner": "A1_A2_A6_ROOT",
+      "status": "BLOCKED_REAL_NATIVE_COMPOSITION",
+      "requirement": "Actual nonadmin service/runtime identity and protected keys, loopback mTLS, real authenticated Local Control API and Terminan composition",
+      "executable_evidence": "Real native connection-to-principal/session binding and current grants; positive actual endpoint plus wrong peer/expired-revoked session/unauthorized command negative receipts; no fixture identity or header fallback",
+      "known_evidence": "Root aefa default WSGI503 and async503 without native provider; A8 phase49 only synthetic-native metadata hold; same-account pipe primitive is not native operator composition"
+    },
+    {
+      "id": "LS5-PILOT-G5",
+      "stage": "P2_LOCAL_RUNTIME_ACCEPTANCE",
+      "owner": "ROOT_A4_A5_A6_A7",
+      "status": "NOT_RUN",
+      "requirement": "Execute all14 P2 local checks on exact installed candidate and synthetic data only",
+      "executable_evidence": "Installation/services/processidentity/keyaccess/mTLSloopback/LocalControlAPI/Terminan/localstorage/single-node scheduler/offlineMathStrattMeta/PaperLedger/logsmetrics/controlledownedservice restart/rollback; per-case IDs expected+actual and immutable logs; no provider sends or worker join",
+      "known_evidence": "Source/model/owned Consul/local pipe tests do not establish LS5 installation or actual UI/runtime/PaperLedger"
+    },
+    {
+      "id": "LS5-PILOT-G6",
+      "stage": "EXACT_RC_WINDOWS_AND_PROTECTED_OPERATION_GATES",
+      "owner": "ROOT_A7_A8",
+      "status": "BLOCKED_EVIDENCE_AND_SINGLE_USE_GATE",
+      "requirement": "Required exact-RC Windows/native evidence and distinct protected Math single-use protocol",
+      "executable_evidence": "Map mandatory CI IDs/platform/attempts/artifacts and verify hashes/zero missing mandatory cases; for protected Math2446 create fresh Root record/current workflow parity and obtain protocol single-use authorization before operation; UNKNOWN consumed/no retry",
+      "known_evidence": "A8 phase46 source/model ACK is not native or activation authority; new mission directive is not a protected operation token; CI snapshots alone queued/noartifact are not PASS"
+    }
+  ],
+  "LS5_current_readiness": "ROOT_IN_PROGRESS_NOT_INDEPENDENTLY_REACQUIRED",
+  "install": "BLOCKED_UNTIL_G1_G2_G3_AND_REQUIRED_SECURITY_RUNTIME_GATES_PASS",
+  "runtime": "NOT_RUN_NOT_QUALIFIED",
+  "single_use_math": "BLOCKED_WITHOUT_FRESH_PROTOCOL_AUTHORIZATION",
+  "distributed_commissioning": "LATER_SEPARATE_STAGE_NOT_REQUIRED_TO_PRETEND_LOCAL_QUORUM",
+  "provider_smoke": "BLOCKED_SEPARATE_POLICY_AND_EGRESS_ADMISSION",
+  "overall": "NO_GO_FOR_INSTALL_OR_RUNTIME_ACCEPTANCE_PREPARATION_AUTHORIZED"
+}
