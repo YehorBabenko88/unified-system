@@ -18,7 +18,20 @@
   "experiment_registry_binding": null,
   "visualization_backend": null,
   "actual_engine_e2e": "BLOCKED_NO_ADMITTED_OWNER_SEAMS",
-  "independent_review": "PENDING",
+  "independent_review": {
+    "status": "PASS_BOUNDED_OFFLINE_CONTRACTS_ONLY",
+    "url": "https://github.com/YehorBabenko88/unified-system/blob/b3815b86673d0ab297ea8ace0c963fed00ccddd0/docs/audits/agent8-20261106/phase80/independent-review.md",
+    "review_commit": "b3815b86673d0ab297ea8ace0c963fed00ccddd0",
+    "tested_source": "b1261c560922ac6fc255d79809759d7d06035f0a",
+    "unique_tests": 16,
+    "skips": 0,
+    "primary_source_files": 1378,
+    "extra_invalid_cases": 26,
+    "runtime_denials": 35,
+    "sourceguard_negative_cases": 4,
+    "runtime_admission": false,
+    "hosted_pass": false
+  },
   "hosted_ci": {
     "state": "QUEUED_AT_OBSERVATION",
     "attempt": 1,
