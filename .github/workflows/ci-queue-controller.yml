@@ -79,7 +79,12 @@ jobs:
                           'test_redacts_raw_fields_and_artifact_urls', 'test_restart_preserves_backoff_and_limit',
                           'test_states_and_no_timeout_infrastructure_diagnosis', 'test_terminal_conflict_stays_unknown',
                           'test_terminal_regression_does_not_restore_success', 'test_workflow_job_consistency',
-                          'test_payload_cannot_renew_authorization'}
+                          'test_payload_cannot_renew_authorization',
+                          'test_archived_math_queue_zero_runner', 'test_ordinary_run_does_not_invent_consumed_authorization',
+                          'test_exact_pin_type_required', 'test_protected_identity_is_exact',
+                          'test_foreign_file_between_check_and_initialize_is_not_adopted',
+                          'test_initialization_failure_retains_owned_reservation',
+                          'test_simultaneous_creators_have_single_exclusive_owner'}
               sys.path.insert(0, str(root))
               suite = unittest.defaultTestLoader.discover(str(root/'tests'), pattern='test_ci_queue_controller.py')
               def ids(suite):
@@ -87,7 +92,7 @@ jobs:
                       if isinstance(test, unittest.TestSuite): yield from ids(test)
                       else: yield test.id()
               actual = list(ids(suite))
-              assert len(actual) == 15 and set(actual) == {'test_ci_queue_controller.QueueTests.'+name for name in expected}
+              assert len(actual) == 22 and set(actual) == {'test_ci_queue_controller.QueueTests.'+name for name in expected}
               result = unittest.TextTestRunner(verbosity=2).run(suite)
               after = inventory()
               assert after == before
@@ -98,7 +103,7 @@ jobs:
                              runner_os=sys.platform, python=sys.version)
               (pathlib.Path(os.environ['RUNNER_TEMP'])/'ci-queue-evidence.json').write_text(json.dumps(receipt, sort_keys=True), encoding='utf-8')
               print(json.dumps(receipt, sort_keys=True))
-              assert result.wasSuccessful() and result.testsRun == 15 and not result.skipped
+              assert result.wasSuccessful() and result.testsRun == 22 and not result.skipped
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:

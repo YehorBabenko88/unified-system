@@ -1,8 +1,12 @@
-import copy
+from concurrent.futures import ThreadPoolExecutor
+from contextlib import closing
 import json
 from pathlib import Path
+import sqlite3
 import tempfile
+import threading
 import unittest
+from unittest import mock
 
 from unified_system import ci_queue_controller as q
 from unified_system.journal import Journal
@@ -13,13 +17,13 @@ class QueueTests(unittest.TestCase):
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
         self.path = Path(self.tmp.name) / 'queue.sqlite'
-        self.pin = q.Pin('YehorBabenko88/math', 123, 42352374979, 1,
-                         '2446d04624469e34aa96ed766be7a4887d6d654c', 456)
+        self.pin = q.Pin('YehorBabenko88/math', 409676563, 42352374979, 1,
+                         '2446d04624469e34aa96ed766be7a4887d6d654c', 128343065197)
         self.c = q.Controller.create(self.path, self.pin, limit=4, initial=10, cap=40, seed=7)
-        self.run = dict(id=self.pin.run_id, workflow_id=123, run_attempt=1,
+        self.run = dict(id=self.pin.run_id, workflow_id=self.pin.workflow_id, run_attempt=1,
                         head_sha=self.pin.source_sha, repository={'full_name': self.pin.repository},
                         status='queued', conclusion=None, created_at='2026-11-07T00:00:00Z')
-        self.job = dict(id=456, run_id=self.pin.run_id, run_attempt=1, head_sha=self.pin.source_sha,
+        self.job = dict(id=self.pin.job_id, run_id=self.pin.run_id, run_attempt=1, head_sha=self.pin.source_sha,
                         status='queued', conclusion=None, runner_id=None, steps=[])
 
     def observe(self, now=100, run=None, job=None):
@@ -33,7 +37,7 @@ class QueueTests(unittest.TestCase):
         for field, value in [('run_attempt', 2), ('head_sha', 'a'*40)]:
             run = dict(self.run, **{field: value})
             with self.assertRaises(ValueError): self.observe(run=run)
-        with self.assertRaises(ValueError): self.observe(run=dict(self.run, workflow_id=123.0))
+        with self.assertRaises(ValueError): self.observe(run=dict(self.run, workflow_id=float(self.pin.workflow_id)))
         self.assertEqual(self.c.history(), [])
 
     def test_null_and_unknown_never_success(self):
@@ -85,7 +89,76 @@ class QueueTests(unittest.TestCase):
         for name in ['dispatch', 'rerun', 'cancel', 'renew', 'execute']:
             self.assertFalse(hasattr(self.c, name))
         with self.assertRaises(ValueError):
-            q.Controller.open(self.path, q.Pin(self.pin.repository, 123, self.pin.run_id, 2, self.pin.source_sha, 456))
+            q.Controller.open(self.path, q.Pin(self.pin.repository, self.pin.workflow_id, self.pin.run_id, 2, self.pin.source_sha, self.pin.job_id))
+
+    def test_archived_math_queue_zero_runner(self):
+        # Reduced verbatim scalar fields from Math115 observation-240m API
+        # snapshots; source-byte SHA256 values are pinned in the operations doc.
+        run = dict(self.run, created_at='2026-11-07T07:42:12Z')
+        job = dict(self.job, runner_id=0, created_at='2026-11-07T07:42:13Z',
+                   started_at='2026-11-07T07:42:13Z', completed_at=None)
+        result = self.observe(run=run, job=job)
+        self.assertEqual(result['state'], 'QUEUED')
+        self.assertEqual(result['runner_assignment'], 0)
+        self.assertEqual(result['runner_assignment_state'], 'UNASSIGNED')
+        self.assertEqual(result['authorization_state'], 'CONSUMED')
+
+    def test_ordinary_run_does_not_invent_consumed_authorization(self):
+        pin = q.Pin('YehorBabenko88/unified-system', 1, 2, 1, 'a'*40, 3)
+        controller = q.Controller.create(Path(self.tmp.name)/'ordinary.sqlite', pin)
+        run = dict(self.run,id=2,workflow_id=1,head_sha='a'*40,repository={'full_name':pin.repository})
+        job = dict(self.job,id=3,run_id=2,head_sha='a'*40)
+        result = controller.observe(json.dumps({'run':run,'job':job,'artifacts':[]}).encode(),now=100)
+        self.assertEqual(result['authorization_state'], 'NOT_APPLICABLE')
+        self.assertEqual(q.Controller.open(controller.journal.path,pin).history(),[result])
+
+    def test_exact_pin_type_required(self):
+        for pin in [None, asdict_for_test(self.pin), object()]:
+            path = Path(self.tmp.name)/'invalid-pin.sqlite'
+            with self.assertRaises(ValueError): q.Controller.create(path,pin)
+            self.assertFalse(path.exists())
+
+    def test_protected_identity_is_exact(self):
+        for change in [{'repository':'other/math'},{'workflow_id':1},{'job_id':1}]:
+            values = asdict_for_test(self.pin); values.update(change)
+            with self.assertRaises(ValueError): q.Pin(**values)
+
+    def test_foreign_file_between_check_and_initialize_is_not_adopted(self):
+        path = Path(self.tmp.name)/'racing-foreign.sqlite'
+        with closing(sqlite3.connect(path)) as database:
+            database.execute('CREATE TABLE foreign_owner(value TEXT)');database.commit()
+        before = path.read_bytes()
+        # A stale/non-authoritative existence check must never authorize adoption.
+        with mock.patch.object(Path,'exists',return_value=False):
+            with self.assertRaises(ValueError): q.Controller.create(path,self.pin)
+        self.assertEqual(path.read_bytes(),before)
+
+    def test_initialization_failure_retains_owned_reservation(self):
+        path = Path(self.tmp.name)/'partial.sqlite'
+        with mock.patch.object(Journal,'initialize',side_effect=RuntimeError('injected')):
+            with self.assertRaises(RuntimeError): q.Controller.create(path,self.pin)
+        self.assertTrue(path.is_file())
+        with self.assertRaises(ValueError): q.Controller.create(path,self.pin)
+        with self.assertRaises(ValueError): q.Controller.open(path,self.pin)
+
+    def test_simultaneous_creators_have_single_exclusive_owner(self):
+        path = Path(self.tmp.name)/'simultaneous.sqlite'
+        gate = threading.Barrier(2)
+        original_open = q.os.open
+        def reserve(*args, **kwargs):
+            gate.wait(timeout=5)
+            return original_open(*args, **kwargs)
+        def create():
+            try:
+                q.Controller.create(path,self.pin)
+                return 'created'
+            except ValueError:
+                return 'rejected'
+        with mock.patch.object(q.os,'open',side_effect=reserve):
+            with ThreadPoolExecutor(max_workers=2) as pool:
+                results = list(pool.map(lambda _:create(), range(2)))
+        self.assertEqual(sorted(results),['created','rejected'])
+        self.assertEqual(q.Controller.open(path,self.pin).history(),[])
 
     def test_corruption_and_foreign_journal_not_adopted(self):
         other = Path(self.tmp.name) / 'other.sqlite'
@@ -118,6 +191,11 @@ class QueueTests(unittest.TestCase):
                 result = self.c.observe(raw, now=100 + len(self.c.history())*100)
                 # Contradictory terminal outcomes are sticky UNKNOWN.
                 self.assertEqual(result['state'], 'UNKNOWN' if expected == 'CANCELLED' else expected)
+
+
+def asdict_for_test(pin):
+    from dataclasses import asdict
+    return asdict(pin)
 
 
 if __name__ == '__main__': unittest.main()
