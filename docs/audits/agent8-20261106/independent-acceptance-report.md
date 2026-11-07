@@ -177,3 +177,8 @@ Phase42e238Rootclean137/0skip/all786rawinputs+7negativesverified;correctedrealPI
 Math115 Root223c225 authorization raw355ca961… and current merge36570645 workflow parity independently verified; ACK record/parity only, direct-owner authority original not independently authenticated, no activation or API mutation. Evidence phase43/record-parity-review.json.
 
 PR32 exact3d48763/treeb410910:10unit+15real3Consul/HTTP+8source guard+5additional MODEL verifier cases PASS,0skip,658primary/672Grid raw before/after; all owned processes stopped. Only synthetic-native-identity OPEN primitive qualified; default missing-provider remains closed. First relative-output A8 invocation error preserved phase44, corrected freshclone phase45. Evidence phase45/independent-review.md and original receipts. No final native identity/GET/fleet/physical/Tailscale PASS. Overall NO-GO,6P1/3P2 unchanged.
+
+
+## Phase47 Windows Home plan boundaries
+
+Rootc510529/treec5d079 and69d3ae0 amendment independently reviewed. Six source unit cases plus43independent role/edition/foreignPASS/inventory/physicalclaim mutations PASS0skip;810rawinputs unchanged. HomePC1/LS7each14NOT_RUN/empty evidence, actual verifier NOT_IMPLEMENTED. v5inventory143preserves137; only6new tests executed here, no143/fullCI/Homefleet qualification inherited. Decision/text rawhashes match, original human authority not independently authenticated. Documentary wording clarification sent Root. Report phase47/independent-review.md. OverallNO-GO6P1/3P2unchanged.
