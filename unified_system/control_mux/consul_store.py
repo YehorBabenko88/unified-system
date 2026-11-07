@@ -9,7 +9,12 @@ import json
 import uuid
 from urllib.parse import quote
 from .codec import PROFILE_SHA,decode,encode,validate,matrix
-from .commands import prepare_open, prepare_close, prepare_subscribe, prepare_ack, validate_original, PreparedCommand
+from .reconciliation import build_document,require_fit
+from .commands import prepare_open, prepare_close, prepare_subscribe, prepare_ack, validate_original, PreparedCommand, NativeAdmissionError, native_admission_kind, AdmittedContext
+
+class _ReadNativeDenial(Exception):
+    def __init__(self,kind):self.kind=kind
+
 
 class AuthorityUncertain(Exception):
     pass
@@ -64,12 +69,17 @@ class MuxAuthority:
         except Exception as exc:raise AuthorityUncertain() from exc
         if type(result) is not dict or result.get('Errors'):raise ValueError('INVALID_TXN_RESULT')
 
-    async def _identity(self,context,operation):
+    async def _identity(self,context,operation,*,read_disclosure=False):
         if self.admission is None:raise ValueError('NATIVE_PROVIDER_UNAVAILABLE')
         from unified_system.security_identity_records import guard_keys,decode_guard_records
-        current=self.admission.revalidate(context,operation)
-        if current!=context:raise ValueError('NATIVE_CONTEXT_CHANGED')
-        binding=self.admission.identity_binding(current)
+        def native_call(name,*args):
+            if not read_disclosure:return getattr(self.admission,name)(*args)
+            try:return getattr(self.admission,name)(*args)
+            except NativeAdmissionError as exc:raise _ReadNativeDenial(native_admission_kind(exc)) from None
+            except Exception:raise _ReadNativeDenial('UNAVAILABLE') from None
+        current=native_call('revalidate',context,operation)
+        if (read_disclosure and type(current) is not AdmittedContext) or current!=context:raise ValueError('NATIVE_CONTEXT_CHANGED')
+        binding=native_call('identity_binding',current)
         if (binding.cluster_id,binding.principal_id,binding.session_id)!=(context.cluster_id,context.actor_principal_id,context.actor_session_id):
             raise ValueError('NATIVE_BINDING_MISMATCH')
         if context.role!='OPERATOR_CONTROL' or context.quota_owner_id!=binding.principal_id:
@@ -81,9 +91,16 @@ class MuxAuthority:
             if not record.index:raise ValueError('MISSING_IDENTITY_RECORD')
             records[kind]=record.raw;checks.append(_check(key,record.index))
         parsed=decode_guard_records(binding,records)
-        if (parsed['policy']['role']!=context.role or operation not in parsed['policy']['permissions']
-                or parsed['enrollment']['revision']!=context.enrollment_revision):raise ValueError('POLICY_MISMATCH')
-        if self.admission.verify_records(current,parsed) is not None:raise ValueError('NATIVE_VERIFIER_CONTRACT')
+        if read_disclosure:
+            # Verify actual current native session before classifying a valid
+            # session's missing read permission. Other identity mismatches deny.
+            if native_call('verify_records',current,parsed) is not None:raise ValueError('NATIVE_VERIFIER_CONTRACT')
+            if parsed['policy']['role']!=context.role or parsed['enrollment']['revision']!=context.enrollment_revision:raise ValueError('POLICY_MISMATCH')
+            if operation not in parsed['policy']['permissions']:raise _ReadNativeDenial('FORBIDDEN')
+        else:
+            if (parsed['policy']['role']!=context.role or operation not in parsed['policy']['permissions']
+                    or parsed['enrollment']['revision']!=context.enrollment_revision):raise ValueError('POLICY_MISMATCH')
+            if self.admission.verify_records(current,parsed) is not None:raise ValueError('NATIVE_VERIFIER_CONTRACT')
         return checks
 
     async def _fence(self,leader,context,operation='OPEN_CONNECTION'):
@@ -99,7 +116,7 @@ class MuxAuthority:
         return (self.prefix+'requests/'+request,self.prefix+'commands/'+keyhash,
                 self.prefix+'receipts/'+receipt,self.prefix+'responses/'+receipt)
 
-    async def _observe(self,context,request,checks):
+    async def _observe(self,context,request,checks,*,query_request_id=None):
         indexkey=self.prefix+'requests/'+_uuid(request)
         index=await self._read(indexkey)
         if not index.index:
@@ -130,15 +147,20 @@ class MuxAuthority:
         if any(rc[k]!=ix[k] for k in ('receipt_ref','request_id','command_digest','command_key_sha256')):raise ValueError('RECEIPT_LINK')
         digest=hashlib.sha256(response.raw).hexdigest();status=rc['http_status']
         if rc['canonical_response_sha256']!=digest or cmd['result_sha256']!=digest:raise ValueError('RECEIPT_RESULT')
+        def definitive(status):
+            if query_request_id is None:return Outcome('COMMITTED',status,response.raw,receipt.index)
+            document=build_document(context.cluster_id,query_request_id,pre,body,rc,response.raw,receipt.index)
+            return Outcome('COMMITTED',200,document,receipt.index)
+
         if cmd['state']=='DEFINITIVE_REJECTED':
             result=validate('error_v3',decode(response.raw))
             if rc['result_schema_sha256']!=PROFILE_SHA or result['request_id']!=request or result['code'] not in matrix['definitive_rejected']['status_to_codes'].get(status,[]):raise ValueError('REJECTED_MATRIX')
-            return Outcome('COMMITTED',int(status),response.raw,receipt.index)
+            return definitive(int(status))
         rule=matrix['operations'][pre['operation']]
         if cmd['state']!='COMPLETED' or status not in rule['completed']:raise ValueError('OPERATION_RESULT_MATRIX')
         if status=='204':
             if rule['completed'][status]!='EMPTY' or response.raw!=b'' or rc['result_schema_sha256'] is not None:raise ValueError('EMPTY_204')
-            return Outcome('COMMITTED',204,b'',receipt.index)
+            return definitive(204)
         if rc['result_schema_sha256']!=PROFILE_SHA:raise ValueError('RESULT_PROFILE')
         result=validate(rule['completed'][status],decode(response.raw))
         if result['request_id']!=request or result['command_digest']!=ix['command_digest']:raise ValueError('RESULT_LINK')
@@ -147,12 +169,29 @@ class MuxAuthority:
         else:
             if result['connection_id']!=pre['connection_id'] or result['connection_epoch']!=pre['expected_connection_epoch']:raise ValueError('CONNECTION_RESULT_BINDING')
             if rule['completed'][status]=='draining' and (result['subscription_id'],result['subscription_epoch'])!=(pre['subscription_id'],pre['expected_subscription_epoch']):raise ValueError('DRAINING_BINDING')
-        return Outcome('COMMITTED',int(status),response.raw,receipt.index)
+        return definitive(int(status))
 
     async def reconcile(self,context,request):
         try:return await self._observe(context,request,await self._identity(context,'GET_COMMAND'))
         except AuthorityUncertain:return Outcome('UNKNOWN')
         except Exception:return Outcome('UNAVAILABLE')
+
+    async def reconcile_document(self,context,request,query_request_id):
+        """Current GET_COMMAND disclosure; no leader or new command is acquired."""
+        try:
+            _uuid(request);_uuid(query_request_id)
+            if request==query_request_id:return Outcome('AMBIGUOUS')
+            checks=await self._identity(context,'GET_COMMAND',read_disclosure=True)
+        except _ReadNativeDenial as exc:return Outcome(exc.kind)
+        except AuthorityUncertain:return Outcome('UNKNOWN')
+        except Exception:return Outcome('UNAVAILABLE')
+        try:
+            observed=await self._observe(context,request,checks,query_request_id=query_request_id)
+            if observed.kind=='UNKNOWN':return Outcome('UNRESOLVED')
+            if observed.kind=='FORBIDDEN':return Outcome('DISCLOSURE_DENIED')
+            return observed
+        except AuthorityUncertain:return Outcome('UNKNOWN')
+        except Exception:return Outcome('AMBIGUOUS')
 
     async def _ledger(self,context):
         ledgerkey=self.prefix+'owners/'+context.quota_owner_id+'/connections'
@@ -221,6 +260,7 @@ class MuxAuthority:
                 command_digest=command.digest,http_status='201',result_schema_sha256=PROFILE_SHA,canonical_response_sha256=digest)
             cmd=dict(cmd,state='COMPLETED',result_sha256=digest)
             ledger=dict(ledger,revision=str(int(ledger['revision'])+1),connections=[dict(entry,state='OPEN') if entry['request_id']==command.request_id else entry for entry in ledger['connections']])
+            require_fit(context.cluster_id,cmd['original_preimage'],command.body,rc,result)
             originalindex=await self._read(indexkey)
             if not originalindex.index or validate('request_index',decode(originalindex.raw))!=ix:raise ValueError('INDEX_CHANGED')
             await self._txn(checks+[_check(indexkey,originalindex.index),_cas(commandkey,stored.index,encode(cmd)),_cas(keys[2],0,encode(validate('stored_receipt',rc))),_cas(keys[3],0,result),_cas(ledgerkey,ledgerrecord.index,encode(ledger))])
@@ -367,6 +407,7 @@ class MuxAuthority:
                 command_digest=command.digest,http_status='202',result_schema_sha256=PROFILE_SHA,canonical_response_sha256=digest)
             updated_ledger=dict(ledger,revision=str(int(ledger['revision'])+1),connections=[dict(x,state='DRAINING') if operation=='CLOSE_CONNECTION' and x['connection_id']==pre['connection_id'] else x for x in ledger['connections']])
             updated_pending=dict(pending,revision=str(int(pending['revision'])+1),entries=[x for x in pending['entries'] if x['request_id']!=command.request_id])
+            require_fit(context.cluster_id,pre,command.body,receipt,result)
             await self._txn(checks+[_check(indexkey,index.index),_cas(commandkey,stored.index,encode(dict(cmd,state='COMPLETED',result_sha256=digest))),
                 _cas(keys[2],0,encode(validate('stored_receipt',receipt))),_cas(keys[3],0,result),_cas(ledgerkey,ledgerrecord.index,encode(updated_ledger)),_cas(pendingkey,pendingrecord.index,encode(updated_pending))]+closing[1])
             return await self._observe(context,command.request_id,await self._identity(context,'GET_COMMAND'))
@@ -478,6 +519,7 @@ class MuxAuthority:
                 connection_id=entry['connection_id'],connection_epoch=entry['connection_epoch'],delivery_session_id=entry['delivery_session_id'],generation=self.generation,state='WAIT_SOURCE',body_sha256=None,cursor=None,view_ref=None)
             updated_subs=dict(subs,revision=str(int(subs['revision'])+1),entries=[dict(e,state='WAIT_SOURCE') if e['subscription_id']==entry['subscription_id'] else e for e in subs['entries']])
             updated_pending=dict(pending,revision=str(int(pending['revision'])+1),entries=[x for x in pending['entries'] if x['request_id']!=command.request_id])
+            require_fit(context.cluster_id,pre,command.body,receipt,result)
             await self._txn(target[3]+[_check(indexkey,index.index),_cas(commandkey,stored.index,encode(dict(cmd,state='COMPLETED',result_sha256=digest))),
                 _cas(keys[2],0,encode(validate('stored_receipt',receipt))),_cas(keys[3],0,result),_cas(subkey,subrecord.index,encode(updated_subs)),_cas(pendingkey,pendingrecord.index,encode(updated_pending)),
                 _cas(self.prefix+'subscriptions/'+entry['subscription_id'],0,encode(metadata)),_cas(self.prefix+'snapshots/'+entry['snapshot_id'],0,encode(snapshot))])

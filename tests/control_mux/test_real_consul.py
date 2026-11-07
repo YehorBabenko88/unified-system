@@ -84,6 +84,7 @@ def main():
                     def log_message(self,*args):pass
                     def do_POST(self):self.dispatch('POST')
                     def do_DELETE(self):self.dispatch('DELETE')
+                    def do_GET(self):self.dispatch('GET')
                     def dispatch(self,method):
                         size=int(self.headers.get('Content-Length','0'))
                         if not 0<=size<=16384:self.send_error(413);return
@@ -117,6 +118,28 @@ def main():
                 retry=await store.open(lease,context,command);assert retry==result
                 history=await store.reconcile(context,request);assert history==result
                 report['events'].append('OPEN_ACTUAL_ATOMIC_RECEIPT_IDEMPOTENT_RECONCILE')
+                # RED endpoint contract: actual HTTP -> actual existing Grid/Consul.
+                runtime=ControlMuxRuntime(store=store,admission=store.admission)
+                server=ThreadingHTTPServer(('127.0.0.1',0),FixtureHandler);thread=Thread(target=server.serve_forever,daemon=True);thread.start()
+                try:
+                    def get_original_http():
+                        import urllib.error
+                        query=str(uuid.uuid4())
+                        req=urllib.request.Request('http://127.0.0.1:'+str(server.server_port)+'/control/v3/commands/'+request,method='GET',headers={'X-Request-ID':query})
+                        opener=urllib.request.build_opener(urllib.request.ProxyHandler({}))
+                        try:
+                            with opener.open(req,timeout=10) as response:return response.status,response.read(16385),query
+                        except urllib.error.HTTPError as error:return error.code,error.read(16385),query
+                    get_status,get_raw,get_query=await asyncio.to_thread(get_original_http)
+                    assert get_status==200,('REAL_GET_RECONCILIATION_ENDPOINT_UNWIRED',get_status,get_raw)
+                    wrapper=decode(get_raw)
+                    assert wrapper['query_request_id']==get_query and wrapper['request_id']==request
+                    assert wrapper['receipt']['http_status']=='201' and wrapper['original_result_ascii'].encode()==result.body
+                    assert wrapper['receipt_modify_index']==str(result.receipt_index)
+                    report['events'].append('REAL_HTTP_GET200_ORIGINAL201_ACTUAL_RECEIPT_NO_LEADER')
+                finally:
+                    await asyncio.to_thread(server.shutdown);server.server_close();thread.join(timeout=3)
+
                 # Duplicate UUID under different immutable body/key must never allocate again.
                 body2=decode(body);body2['app_instance_id']=str(uuid.uuid4())
                 conflict=await store.open(lease,context,prepare_open(context,encode(body2),request,'open-other'))
@@ -259,6 +282,11 @@ def main():
                 from record_negatives import run_record_negatives
                 negative_records=await run_record_negatives(store,authority,context,lease,close_command,draining,pending_parent,{kind:(key,records[kind]) for kind,key in module.guard_keys(binding).items()})
                 report['events'].extend(negative_records['events']);report['identity_race_fencing']=negative_records['identity_races']
+                from get_real_cases import run_get_cases,get_after_leader_or_quorum_loss
+                assert await authority.renew(lease) # Explicit owned fixture lifecycle, outside any GET.
+                get_report=await run_get_cases(authority,generation,context,request,close_request,draining.body,subscribe_request,pending_sub_request,module,records)
+                report['events'].extend(get_report['events']);report['get_index_races']=get_report['index_races'];report['get_native_scope']=get_report['native_identity']
+                assert await authority.renew(lease)
                 stale_close=str(uuid.uuid4());stale_command=prepare_close(context,b'',stale_close,'close-stale-epoch',opened['connection_id'],str(int(opened['connection_epoch'])+1))
                 stale_result=await store.close_connection(lease,context,stale_command)
                 assert stale_result.kind=='CONFLICT',stale_result
@@ -291,6 +319,7 @@ def main():
                 report['events'].append('CURRENT_REVOKED_IDENTITY_REJECTED')
                 await authority._request('PUT','/v1/kv/'+module.guard_keys(binding)['policy'],content=records['policy'])
                 await authority.release(lease)
+                report['events'].append(await get_after_leader_or_quorum_loss(store,context,request))
                 sentinel=store.prefix+'probe-only/stale-leader/'+str(uuid.uuid4())
                 native_stale=[{'KV':dict(Verb='check-session',Key=authority.key,Session=lease.session_id)},
                     {'KV':dict(Verb='check-index',Key=authority.key,Index=lease.token)},
@@ -310,8 +339,9 @@ def main():
                 noquorum=await store.reconcile(context,request)
                 assert noquorum.kind=='UNKNOWN',noquorum
                 report['events'].append('ONE_OF_THREE_NO_QUORUM_NO_SUCCESS')
+                report['events'].append(await get_after_leader_or_quorum_loss(store,context,request,no_quorum=True))
             finally:await authority.close()
-        async def bounded_run():return await asyncio.wait_for(run(),timeout=150)
+        async def bounded_run():return await asyncio.wait_for(run(),timeout=180)
         asyncio.run(bounded_run())
     report['owned_processes_stopped']=all(p.poll() is not None for p in lab.all_processes);report['result']='PASS'
     Path(args.output).write_bytes((json.dumps(report,indent=2)+'\n').encode());print(json.dumps(report))
