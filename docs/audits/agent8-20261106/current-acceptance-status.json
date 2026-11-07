@@ -1,5 +1,5 @@
 {
-  "checked_utc": "2026-11-07T14:51:00.480590+00:00",
+  "checked_utc": "2026-11-07T14:58:39.919244+00:00",
   "RELEASE_MANIFEST_STATUS": "PRESENT_PREPARATION_ONLY_NOT_APPROVED_NOT_INSTALLABLE",
   "NODE_INVENTORY_STATUS": "SIX_REDACTED_OWNER_OBSERVATIONS_PRESENT_ORIGINAL_RAW_NOT_REACQUIRED_BY_A8_NOT_ADMITTED",
   "CONTRACT_STATUS": {
@@ -2900,7 +2900,8 @@
   },
   "pending_independent_reviews": [
     "Gateway isolated runtime only after source-bound package and exact API/ownership ACK; phase81 mandatory matrix prepared",
-    "No physical/production/office/fault injection/Math retry authorization"
+    "No physical/production/office/fault injection/Math retry authorization",
+    "A5 PR47 dd24a278 local job preparation only; no actual backend/API admission"
   ],
   "lan_mux_integrated_review": {
     "head": "8bfa00d779438dc204b1e9ee82f496efce9e6154",
@@ -3161,6 +3162,31 @@
     "acceptance": "BLOCKED",
     "production": "NOT_AUTHORIZED",
     "physical_fault_injection": "BLOCKED",
-    "protected_Math": "CONSUMED_NO_QUERY_RETRY_LABEL_OR_ACTIVATION"
+    "protected_Math": "CONSUMED_NO_QUERY_RETRY_LABEL_OR_ACTIVATION",
+    "future_baseline_owner_metadata": {
+      "head": "6825964bf52375b134c6eb4487808963a0d128ed",
+      "tree": "2b3988fa4cdd334b6ae63067fdb34987dd0e6840",
+      "admission": "NOT_ADMITTED_SOURCEBOUND_PACKAGE_ACK_PENDING"
+    }
+  },
+  "native_peer_f58e_primitive_review": {
+    "head": "f58e68b5893b353bd9a7438c0843cd68ec200b19",
+    "tree": "c79f3e15a30fe3d4f1d94629fbcab2fd8c99fd18",
+    "initial_venv_tests": 19,
+    "initial_venv_failures": 5,
+    "initial_venv_issue": "RETAINED_LAUNCHER_PROCESS_NOT_ACTUAL_PIPE_PEER_CORRECTLY_DENIED",
+    "direct_base_CP312_tests": 19,
+    "direct_base_skips": 0,
+    "direct_base_failures": 0,
+    "primary_raw_prepost": 1321,
+    "native_own_helper_cases": 15,
+    "ordinary_identity_restored_handles_equal": 14,
+    "production_factory": "DENY",
+    "RESOURCE_BINDING": "OBSERVATION_NOT_AUTH_ROLE_OR_LOGOFF_PROOF",
+    "TLS_certificates": "NOT_RUN",
+    "Gateway_runtime_cases_executed": 0,
+    "Gateway40row_matrix": "UNCHANGED",
+    "raw_native_context": "PRIVATE_LOCAL_ONLY",
+    "physical": "NOT_RUN"
   }
 }
