@@ -182,5 +182,21 @@
     "reason": "PRIOR_WORKTREE_DIRECTORY_ABSENT_REASON_UNKNOWN",
     "evidence_clone_unchanged": true,
     "new_runtime_test_claim": false
+  },
+  "WORKER_CONTAINMENT": {
+    "pr": 51,
+    "head": "480109277c1e80a666f3dbba84b5807cacd2b460",
+    "tree": "651fff9bb987fead6414b4492acc0891873cac27",
+    "owner_receipt_sha256": "d3470fdcba3252e568b5ee8a28747b2df69d19f6973ada25141012726486825d",
+    "owner_unit_assertions": 5,
+    "owner_native_probes": 3,
+    "owner_raw_source_files": 1400,
+    "source_guard": "OWNER_REPORTED_EQUAL_NO_EXTRAS",
+    "independent_review": "REQUESTED_A8",
+    "memory_qualification": "UNQUALIFIED_PEAK_JOB_544940032_EXCEEDS_CAP_268435456",
+    "cpu_qualification": "FIXED_NATIVE_10_PERCENT_NOT_ONE_CORE_OR_RESERVED_MILLICORES",
+    "output_deadline_headroom": "NOT_QUALIFIED",
+    "gateway_start": "DENY",
+    "worker_admission": false
   }
 }
