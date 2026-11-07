@@ -373,7 +373,7 @@
     "root_verified_delta": "ONLY_NATIVE_ID_DEFINITION_REFERENCE_AND_SCHEMA_VERSION",
     "a5_format_ack_sha256": "0e9aa7f6d5c71cb8b2cbe44ea16010172d21741abdcce8e73080aecf11c33e5b",
     "a4_ack": "aa5d1cfe8f1a59079d29f9c31456f94a0c175cb4d465efc21b6b2242956a3e60",
-    "freeze": "OWNER_FORMAT_ACKS_RECEIVED_PRIMARY_PACKET_PUBLICATION_PENDING",
+    "freeze": "FORMAT_ONLY_PRIMARY_SCHEMA_HASH_VERIFIED_JOINT_ACKS_RECEIVED",
     "counter_precision": {
       "status": "A5_CORRECTED_OWN_SUBSET_ALL_FOUR_FIELDS_VERIFIED",
       "fields": [
@@ -387,6 +387,7 @@
     },
     "native_authority_admission": false,
     "full_plan_measurement": "REQUIRED_NO_PRIOR_BUDGET_TRANSFER",
-    "root_ack": "SCOPED_FORMAT_ONLY"
+    "root_ack": "SCOPED_FORMAT_ONLY",
+    "primary_commit": "81f20c30b1a6f10663a7eb73e398305b01c0b71d"
   }
 }
