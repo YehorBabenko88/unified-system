@@ -25,3 +25,5 @@ qualified by this correction. Production/runtime/physical admission stays closed
 ## F17 product import caches
 
 A raw `.py` comparison and `-B` do not prevent reading timestamp-matched preexisting `.pyc`. Final integration runner now starts a fresh isolated Python interpreter, rejects every repository `.pyc`/`.pyo` and unexpected `.py` before product/test imports and after execution, and refuses redirected `sys.pycache_prefix`. Only then is the admitted repository added to sys.path. Nothing is cleared to turn a contaminated run green. This protects product/test source attribution, not a hardened interpreter or independent authenticity of the installed Python/stdlib/dependency supply chain. Hash-pinned dependencies remain separate.
+
+All tracked files now participate in raw primary-blob checks. Every unexpected repository file, including native extension candidates and stale result files, rejects before import. After execution only the exact bounded runner test-log path may be new; no other unexpected file is admitted. The receipt is emitted only after these checks.
