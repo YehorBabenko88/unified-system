@@ -163,7 +163,13 @@
           "A4"
         ],
         "scope": "LOCAL_STAGING_ONLY_POSITIVE_PROJECTION_AND_READ_ALWAYS_DENY"
-      }
+      },
+      "test_harness_successor_files": [
+        ".github/workflows/tests.yml",
+        "tests/gateway_adapter/conftest.py",
+        "tests/runtime/test_service_manager.py"
+      ],
+      "test_harness_scope": "EXACT_REVIEWED_PR76_MINIMAL_HARNESS_PATCHES_ONLY_NO_V2_IMPLEMENTATION_OR_BASE_CHANGE"
     },
     "A4": {
       "base": "f155126a95e80139b1b9679c1870ffd66c29360e",
