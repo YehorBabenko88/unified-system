@@ -17,3 +17,6 @@ Status: PASS_SOURCE_MODEL_ONLY. Severity: no new functional defect found in this
 Independent note: amendment phrase “separately qualified Windows11Home workers” can read as completed qualification. Its same paragraph and following paragraphs retain pending/blocked gates; machine matrix and actual validator grant no runtime admission. Prefer “workers approved for separate qualification” to avoid an isolated quotation suggesting PASS.
 
 WINDOWS_CI_ACCEPTANCE: not evaluated here; WINDOWS_HOME_RUNTIME: NOT_RUN; PHYSICAL_ACCEPTANCE: BLOCKED; TAILSCALE_REMOVAL_ACCEPTANCE: BLOCKED. No Pro/Server/source/model PASS inheritance. No office access, OS changes, Firewall/ESET/Tailscale changes, fault injection, native provisioning, real orders or deployment. Overall NO-GO, existing6P1/3P2 unchanged.
+
+
+Subsequent documentary correction independently verified: Root PR26 commit65ee966b0568a8c67129ba8e4665eb41a0b42073/tree00950e89e0d1c61cedf9e4010d1e50b05086288d changes exactly one amendment line to explicitly state runtime qualification remains pending. Matrix/validator/tests/decision bytes remain identical to original c510529 audit source. Original amendment/evidence above preserved; no test rerun or qualification transfer. Evidence documentary-correction.json and amendment.corrected.original.md. Wording remark resolved only.
