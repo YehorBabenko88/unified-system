@@ -24,6 +24,7 @@ def main():
             binding=module.IdentityBinding(cluster,actor,session,enrollment,policy,node)
             context=AdmittedContext(cluster,actor,session,owner,'OPERATOR_CONTROL','fixture-policy','1',frozenset({'OPEN_CONNECTION','GET_COMMAND'}),binding)
             class SyntheticNativeFixture:
+                return_false=False
                 def resolve(self,request,operation):
                     if request.native_connection is not context.native_handle:raise ValueError('FIXTURE_CONNECTION_ONLY')
                     return self.revalidate(context,operation)
@@ -32,6 +33,7 @@ def main():
                     return c
                 def identity_binding(self,c):return c.native_handle
                 def verify_records(self,c,records):
+                    if self.return_false:return False
                     assert c.quota_owner_id==c.native_handle.principal_id
                     assert records['principal']['sid']=='S-1-5-21-123'
                     assert records['session']['native_logon_id']=='0000000000000001'
@@ -58,6 +60,12 @@ def main():
                 context=replace(context,quota_owner_id=actor)
                 command=prepare_open(context,body,request,'open-1')
                 report['events'].append('ARBITRARY_OWNER_REJECTED_BEFORE_PREPARE')
+                store.admission.return_false=True
+                refused=await store.open(lease,context,command)
+                assert refused.kind=='UNAVAILABLE','NATIVE_VERIFIER_FALSE_IGNORED'
+                assert await authority._request('GET','/v1/kv/'+store.prefix+'requests/'+request,params={'consistent':''},missing_ok=True) is None
+                store.admission.return_false=False
+                report['events'].append('NATIVE_VERIFIER_FALSE_RETURN_DENIED')
                 native_txn=store._txn
                 dropped_final=False
                 async def drop_final(ops,**kwargs):

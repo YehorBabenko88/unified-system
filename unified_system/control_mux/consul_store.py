@@ -83,7 +83,7 @@ class MuxAuthority:
         parsed=decode_guard_records(binding,records)
         if (parsed['policy']['role']!=context.role or operation not in parsed['policy']['permissions']
                 or parsed['enrollment']['revision']!=context.enrollment_revision):raise ValueError('POLICY_MISMATCH')
-        self.admission.verify_records(current,parsed)
+        if self.admission.verify_records(current,parsed) is not None:raise ValueError('NATIVE_VERIFIER_CONTRACT')
         return checks
 
     async def _fence(self,leader,context):

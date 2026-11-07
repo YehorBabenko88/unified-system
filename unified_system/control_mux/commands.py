@@ -3,8 +3,10 @@ Constructing context is not authentication. Only Root's qualified in-process
 provider may supply it to product composition. No provider is installed here.
 """
 from dataclasses import dataclass
-from typing import Protocol
+from typing import Protocol, TYPE_CHECKING, Mapping
 import hashlib
+if TYPE_CHECKING:
+    from unified_system.security_identity_records import IdentityBinding
 import re
 from .codec import PROFILE_SHA, encode, decode, validate
 
@@ -31,6 +33,14 @@ class AdmittedContext:
 class NativeAdmissionProvider(Protocol):
     def resolve(self, request: RawRequest, operation: str) -> AdmittedContext: ...
     def revalidate(self, context: AdmittedContext, operation: str) -> AdmittedContext: ...
+    def identity_binding(self, context: AdmittedContext) -> 'IdentityBinding': ...
+    def verify_records(self, context: AdmittedContext, records: Mapping[str, Mapping[str, object]]) -> None:
+        """Actual native comparison; return None only on success, otherwise raise.
+
+        Every other return, including False/True, fails the store contract.
+        This protocol declaration does not qualify an implementation or fixture.
+        """
+        raise NotImplementedError('qualified native comparison implementation required')
 
 @dataclass(frozen=True)
 class PreparedCommand:
