@@ -7,6 +7,7 @@ import ssl
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 from datetime import datetime,timedelta,timezone
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
@@ -66,12 +67,21 @@ class ManifestFrontTests(unittest.TestCase):
         self.assertNotIn('BEGIN PRIVATE KEY',json.dumps(self.audit.read()))
 
     def test_actual_principal_wrong_view_denied_without_object_read(self):
-        front=self.start();called=[];original=self.store.read
-        self.store.read=lambda *args,**kwargs:(called.append(1),original(*args,**kwargs))[1]
-        value=dict(self.request,view_id='22222222-2222-4222-8222-222222222222')
-        headers,result=self.request_front(front,value)
-        self.assertTrue(headers.startswith(b'HTTP/1.1 403'));self.assertEqual(called,[])
-        self.assertNotIn(self.sha,json.dumps(result))
+        front=self.start();called=[];original=ObjectStore.read
+        owned_store=self.store
+        def observe(store,*args,**kwargs):
+            if store is owned_store:
+                called.append(1)
+            return original(store,*args,**kwargs)
+        with patch.object(ObjectStore,'read',observe):
+            positive_headers,_=self.request_front(front,self.request)
+            self.assertTrue(positive_headers.startswith(b'HTTP/1.1 200'))
+            self.assertEqual(called,[1], 'positive read must calibrate observer')
+            called.clear()
+            value=dict(self.request,view_id='22222222-2222-4222-8222-222222222222')
+            headers,result=self.request_front(front,value)
+            self.assertTrue(headers.startswith(b'HTTP/1.1 403'));self.assertEqual(called,[])
+            self.assertNotIn(self.sha,json.dumps(result))
 
     def test_invalid_server_leaf_profile_refused_at_commission(self):
         other=identity_fixture.TLSFixture();self.addCleanup(other.close)

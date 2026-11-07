@@ -177,6 +177,18 @@
         "docs/coordination/assignment-v1/**",
         ".github/workflows/gateway-result-authority.yml"
       ]
+    },
+    "A2_RESEARCH_IDENTITY": {
+      "base": "f155126a95e80139b1b9679c1870ffd66c29360e",
+      "branch": "feature/gateway-research-identity-20261107",
+      "ownership_ack": "A2_EXPLICIT_RECEIVED",
+      "files": [
+        "unified_system/gateway_research_identity.py",
+        "tests/gateway_research_identity/**",
+        "docs/intelligence/research-identity/**",
+        ".github/workflows/gateway-research-identity.yml"
+      ],
+      "scope": "ISOLATED_ONLY_NO_READ_UPGRADE_NO_NATIVE_ADMISSION"
     }
   },
   "successor_scope": "ISOLATED_SLICE_A_ONLY_EXACT_SHARED_API_ACK_PENDING",
