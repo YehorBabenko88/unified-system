@@ -81,13 +81,24 @@ def extract(archive,target,prefix=''):
     # Validate the entire selected archive namespace before writing any member.
     from unified_system.windows_wheels import zip_path
     with zipfile.ZipFile(archive) as z:
-        selected=[];seen=set()
+        selected=[];seen=set();namespace={}
         for info in z.infolist():
             name,_=zip_path(info)
             if prefix and not name.startswith(prefix):continue
             name=name[len(prefix):]
             if not name:continue
-            need(name.casefold() not in seen,'ARCHIVE_ALIAS');seen.add(name.casefold());selected.append((info,name))
+            need(name.casefold() not in seen,'ARCHIVE_ALIAS');seen.add(name.casefold())
+            # Implicit parents share the Windows namespace with explicit entries.
+            # Validate their spelling and type before creating the output root.
+            parts=name.split('/')
+            for index in range(1,len(parts)+1):
+                path='/'.join(parts[:index]);key=path.casefold()
+                kind='directory' if index<len(parts) or info.is_dir() else 'file'
+                previous=namespace.get(key)
+                need(previous is None or previous[0]==path,'ARCHIVE_ALIAS')
+                need(previous is None or previous[1]==kind,'ARCHIVE_NAMESPACE_CONFLICT')
+                namespace[key]=(path,kind)
+            selected.append((info,name))
         need(selected,'EMPTY_ARCHIVE_SELECTION')
         target.mkdir()
         for info,name in selected:
