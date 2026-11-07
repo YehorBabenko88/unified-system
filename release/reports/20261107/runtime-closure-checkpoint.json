@@ -68,6 +68,19 @@
       "INTEGRATION_RESULT": "UNAVAILABLE pending qualified financial profile",
       "REMAINING_DEPENDENCY": "Explicit currency/units/funding/calculationbasis and provenance agreement",
       "NEXT_ACTION": "Pure adapter RED then implementation; reject ambiguous DTO and double subtraction"
+    },
+    {
+      "BLOCKER_ID": "B_LAN_MUX_INTEGRATION_HASH_DIAGNOSTIC",
+      "OWNER": "Agent1 / Root",
+      "EXACT_FILE": "unified_system/lan_mux_channel.py::Reassembler.push;LanMuxChannel._reader/receive",
+      "ROOT_CAUSE": "Under investigation; concurrent close/error propagation suspected, not established",
+      "FIX_COMMIT": null,
+      "FAILING_TEST": "test_lan_mux_channel.MuxTlsTests.test_real_hash_failure_no_complete_payload_and_memory_cleanup",
+      "LOCAL_RESULT": "Actual62 tests,1FAIL on uncommitted component integration",
+      "HOSTED_RESULT": "NOT_RUN for new defect fix",
+      "INTEGRATION_RESULT": "Rejected attempt, merge aborted; candidate not included",
+      "REMAINING_DEPENDENCY": "Deterministic regression and owner fix plus independent review",
+      "NEXT_ACTION": "Agent1 reproduce and fix without weakening HASH assertion"
     }
   ],
   "physical_changes": false,
