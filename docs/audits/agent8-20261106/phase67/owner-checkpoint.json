@@ -1,0 +1,24 @@
+{
+  "blocker_id": "ROOT_INSTALLER_ARCHIVE_NAMESPACE",
+  "owner": "Root",
+  "exact_file": "scripts/prepare_lab_capsule.py::extract",
+  "root_cause": "Only full member paths were case-folded; implicit parents could alias or conflict with file entries.",
+  "source_base": "92b8328a65520b86e63f8052b2429422334c98b9",
+  "failing_test": "tests/test_lab_capsule_archive_namespace.py; CP312 1 PASS,1 FAIL,2 ERROR before fix",
+  "local_result": "New4 PASS; combined33 executed,32 PASS,1 SKIP Windows symlink privilege unavailable; skip not waived",
+  "hosted_result": "NOT_RUN on new candidate; Windows/Ubuntu dedicated workflow prepared",
+  "integration_result": "NOT_ADMITTED; archive validation only",
+  "remaining_dependency": "Independent exact-source review, hosted CI, installable manifest/native gates and end-to-end rollback",
+  "next_action": "Independent isolated review and exact clean-source workflow execution",
+  "changes_host_security": false,
+  "provider_sends": false,
+  "installation_authorized_by_result": false,
+  "logs": {
+    "GREEN.log": "2049e9b37dc0af9ba1ffc15f5b6fa2fe7b5d1735f4f8d077487d91d5c6560f3a",
+    "RED.log": "ac643a154a284e83f868f189cebaa456d6519f5214d3231f97225ae0e6c132bd"
+  },
+  "fix_commit": "fe0f5234a1c5eeeca02b2dad3ddfa948ef6c51cf",
+  "exact_workflow_result": "4 mandatory regressions PASS,0skip; exact clean-clone full raw-source pre/post verification",
+  "exact_workflow_source_files": 1292,
+  "independent_review": "REQUESTED_NOT_YET_PASS"
+}

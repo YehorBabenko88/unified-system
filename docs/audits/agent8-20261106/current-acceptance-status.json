@@ -1,5 +1,5 @@
 {
-  "checked_utc": "2026-11-07T06:35:27.018861+00:00",
+  "checked_utc": "2026-11-07T11:32:22.732228+00:00",
   "RELEASE_MANIFEST_STATUS": "PRESENT_PREPARATION_ONLY_NOT_APPROVED_NOT_INSTALLABLE",
   "NODE_INVENTORY_STATUS": "SIX_REDACTED_OWNER_OBSERVATIONS_PRESENT_ORIGINAL_RAW_NOT_REACQUIRED_BY_A8_NOT_ADMITTED",
   "CONTRACT_STATUS": {
@@ -2850,5 +2850,54 @@
     "audit_actions": "READ_ONLY_GIT_AND_LOCAL_EVIDENCE_NO_TEST_OR_OFFICE_PROVIDER_NATIVE_EXECUTION",
     "status": "PASS_PUBLICATION_SOURCE_PROVENANCE_AND_BOUNDED_STATUS_CONSISTENCY",
     "overall": "NO_GO_RELEASE_PHYSICAL_NATIVE_ADMISSION"
-  }
+  },
+  "math116_numerical_review": {
+    "head": "ff1c42cad883f54c06293884ef29a290dd74e306",
+    "tree": "68623befcb4de563e1d284569fea56b3d9c8de45",
+    "changed_paths": [
+      ".github/workflows/agent7-history-statistics.yml",
+      "docs/audits/agent7-history-statistics-overflow-20261107.md",
+      "python/history_statistics.py",
+      "tests/test_history_statistics_overflow.py"
+    ],
+    "workflow_tests": 10,
+    "broader_tests": 25,
+    "overlap_tests": 10,
+    "skips": 0,
+    "source_files_prepost": 687,
+    "scope": "LOCAL_WINDOWS_NUMERICAL_COMPONENT_ONLY",
+    "hosted": "NOT_QUALIFIED",
+    "physical": "BLOCKED",
+    "independent_oracle": "516 vectors,11 within1ULP;64 replayed samples",
+    "negative_guards": "4 refused before0tests",
+    "broader25_post_inventory": "REJECTED_FOUR_IGNORED_PYC",
+    "clean_prepost_receipt": "DEDICATED_WORKFLOW10_ONLY"
+  },
+  "installer_archive_namespace_review": {
+    "head": "fe0f5234a1c5eeeca02b2dad3ddfa948ef6c51cf",
+    "tree": "e48e42630f3c709292d6832a40ad8fe0a41f30fa",
+    "changed_paths": [
+      ".github/workflows/installer-archive-namespace.yml",
+      "release/evidence/installer-archive-namespace-20261107/GREEN.log",
+      "release/evidence/installer-archive-namespace-20261107/RED.log",
+      "release/evidence/installer-archive-namespace-20261107/checkpoint.json",
+      "release/master-mission/20261107/continuation-directive.txt",
+      "scripts/prepare_lab_capsule.py",
+      "tests/test_lab_capsule_archive_namespace.py"
+    ],
+    "workflow_tests": 4,
+    "broader_tests": "NOT_RUN",
+    "skips": 0,
+    "source_files_prepost": 1292,
+    "scope": "LOCAL_WINDOWS_ARCHIVE_NAMESPACE_COMPONENT_ONLY",
+    "hosted": "NOT_QUALIFIED",
+    "physical": "BLOCKED",
+    "current_head_preservation": "2590cdad three components raw identical; current full suite NOT_RUN",
+    "owner_evidence_members_verified": 6,
+    "own_extra_negatives": 5
+  },
+  "pending_independent_reviews": [
+    "LAN MUX deterministic fix: await exact candidate",
+    "Strattester74 c8659d04 financial DTO proposal"
+  ]
 }

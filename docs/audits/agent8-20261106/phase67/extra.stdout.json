@@ -1,0 +1,41 @@
+{
+  "cases": [
+    {
+      "names": [
+        "tools/Lib/a",
+        "tools/lib/b"
+      ],
+      "current_refused_before_creation": true
+    },
+    {
+      "names": [
+        "tools/A/B/a",
+        "tools/A/b/c"
+      ],
+      "current_refused_before_creation": true
+    },
+    {
+      "names": [
+        "tools/Lib",
+        "tools/Lib/a"
+      ],
+      "current_refused_before_creation": true
+    },
+    {
+      "names": [
+        "tools/Lib/a",
+        "tools/Lib"
+      ],
+      "current_refused_before_creation": true
+    },
+    {
+      "names": [
+        "tools/Lib/",
+        "tools/lib/a"
+      ],
+      "current_refused_before_creation": true
+    }
+  ],
+  "primary_parent_alias_reproduced": true,
+  "scope": "INERT_ARCHIVE_ONLY"
+}
