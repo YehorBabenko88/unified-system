@@ -243,5 +243,18 @@
     "output_deadline_headroom": "NOT_QUALIFIED",
     "gateway_start": "DENY",
     "worker_admission": false
+  },
+  "RESULT_STORE_SLICE_A": {
+    "source": "2f98f3501ea8274ebda8798a5c5b6e4f4910f2ee",
+    "tree": "79c2ab87d04f18ea78c71ace67413fffe346e177",
+    "base": "aed8a7c8a952f96803c207d5e90b133969a47f04",
+    "owner_persistence_tests": 41,
+    "owner_skips": 0,
+    "source_qualification": "PENDING",
+    "review": "REQUESTED_A4_EXACT_SOURCE",
+    "concurrent_migration": "OWNER_REPORTED_REPRODUCED_FIXED_WRITE_LOCK_BEFORE_DDL",
+    "project_and_read": "ALWAYS_DENY_NATIVE_AUTHORITY_ABI_UNAVAILABLE",
+    "publication_receipt": "NULL",
+    "native_admission": false
   }
 }
