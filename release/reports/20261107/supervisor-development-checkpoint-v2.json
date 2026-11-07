@@ -24,7 +24,16 @@
     "head": "c752dff751d964c57daf3b3afe4987ea3377839b",
     "backend_collector": "NONE"
   },
-  "independent_review": "REQUESTED_FOR_EXACT_39c52ca",
+  "independent_review": {
+    "status": "PASS_LOCAL_BOUNDED_SLICE_ONLY",
+    "review_commit": "9f71240b6fce541ccbe37a3f747f932eee12e76c",
+    "source_head": "39c52ca7486760f0223cdb71001a5f3c3b454df8",
+    "url": "https://github.com/YehorBabenko88/unified-system/blob/9f71240b6fce541ccbe37a3f747f932eee12e76c/docs/audits/agent8-20261106/phase78/independent-review.md",
+    "tests": 121,
+    "source_files": 1361,
+    "symlink_vector": "NOT_RUN_HOST_PRIVILEGE",
+    "native_or_physical_qualification": false
+  },
   "physical_installation": "NOT_AUTHORIZED_BY_DIRECTIVE",
   "trusted_release": "BLOCKED_NO_TRUSTED_PUBLISHER",
   "remaining": [
@@ -34,7 +43,7 @@
     "Bounded read-only CI collector and trustworthy dashboard producer",
     "Disposable Windows service restart/logoff and rollback execution",
     "Separate Windows Pro/Home qualification",
-    "Independent review and required hosted CI"
+    "Required terminal hosted CI; independent native/runtime qualification remains pending"
   ],
   "evidence_index": "release/evidence/supervisor-local-composition-20261107/index.json",
   "release_manifest": "PROVISIONAL_NOT_INSTALLABLE_UNCHANGED"
