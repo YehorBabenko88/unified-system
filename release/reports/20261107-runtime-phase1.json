@@ -90,6 +90,18 @@
       "failures": 0,
       "skips": 0,
       "native_home_runtime_qualification": false
+    },
+    {
+      "head": "c5105298a856b8549953ee1cf815b5392cc3afc7",
+      "tree": "c5d0792c35396902a76b9bf217ef2aaebf39739f",
+      "tests": 143,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "raw_files": 810,
+      "raw_prepost_equal": true,
+      "scope": "LOCAL_ISOLATED_CODE_AND_PLAN_NOT_HOME_RUNTIME_ACCEPTANCE",
+      "evidence": "release/evidence/runtime-143-c510529/"
     }
   ],
   "WINDOWS_CI": {
@@ -132,7 +144,8 @@
     "release/evidence/stage0-20261107/",
     "release/evidence/math112-mandatory-20261107/",
     "release/evidence/ci-snapshot-20261107/",
-    "release/evidence/runtime-137-ec18fda/"
+    "release/evidence/runtime-137-ec18fda/",
+    "release/evidence/runtime-143-c510529/"
   ],
   "OPEN_P0": [
     "Actual native operator identity/RBAC/session/CSRF/IPC admission and NodeControl delegation",
@@ -197,5 +210,6 @@
     "owner_text_raw_sha256": "9c68b0b939e824c769d545bf6c7a0fbfee16fb3b105c387ff3c1263e0c9c18be"
   },
   "EXACT_HEADS_SCOPE": "PINNED_SOURCE_SNAPSHOTS_NOT_FLOATING_DEVELOPMENT_HEADS_OR_INSTALLABLE_RELEASE",
-  "WINDOWS_EDITION_QUALIFICATION": "release/windows-edition-qualification.json"
+  "WINDOWS_EDITION_QUALIFICATION": "release/windows-edition-qualification.json",
+  "WINDOWS_EDITION_QUALIFICATION_STATUS": "PC1_AND_LS7_14_CHECKS_EACH_NOT_RUN_PHYSICAL_BLOCKED"
 }

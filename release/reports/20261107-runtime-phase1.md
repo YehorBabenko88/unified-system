@@ -256,3 +256,7 @@ false
   "After Bybit policy/native enforcement proof request separate controlled public-data smoke authorization"
 ]
 ```
+
+## Home decision follow-up
+
+§8 amended by direct owner: PC1/LS7 separateHomeworker/Terminan qualification permitted, noCoordinator role/noProPASStransfer. Both14-check matrices remainNOT_RUN/physicalBLOCKED. Exactc510529 source-bound143tests0fail/errors/skips with810rawtrackedfilespre/postequal; this is CODE/configuration evidence, not actualHomequalification. Evidence: `release/evidence/runtime-143-c510529/`.
