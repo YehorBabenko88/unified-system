@@ -11,3 +11,5 @@ Owner directive: attachment 4dd59e32-d0ba-47ad-8829-71582fd77a05, 7 November 202
 7. Provider smoke requires separate provider-policy/egress admission and applicable owner approval. Expand one to ten instruments using paper only. Start 24-hour soak only after prerequisite gates pass.
 
 Every stage report uses the owner's P9 fields. Full production admission, main merge, real trading, Tailscale removal, network partition and forced coordinator shutdown remain prohibited. Missing evidence never produces PASS.
+
+Authority clarification: the office Consul voters LS5/PC4/PC3 retain quorum 2/3. An LS5-only office voter cannot pass mutation acceptance. Any local isolated existing-Consul test triplet must have separately admitted namespace, data roots, identities and package bindings; it cannot replace office authority or count as office HA qualification. Control remains unavailable without the real Windows native identity bridge.

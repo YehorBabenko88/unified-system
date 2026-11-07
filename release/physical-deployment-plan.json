@@ -222,6 +222,19 @@
     "other_nodes_may_join": false,
     "real_provider_sends": false,
     "required_manifest_scope": "Exact installed pilot subset and its complete dependency/source/artifact closure; later distributed admission separate",
-    "existing_databases_or_foreign_services_may_change": false
+    "existing_databases_or_foreign_services_may_change": false,
+    "authority_safety": {
+      "office_voters": [
+        "LS5",
+        "PC4",
+        "PC3"
+      ],
+      "office_quorum": "2_OF_3_UNCHANGED",
+      "single_office_voter_mutations": "UNAVAILABLE_NO_QUORUM",
+      "local_test_authority": "Only separately admitted isolated test namespace and existing Consul implementation; never replacement office authority or office HA acceptance",
+      "test_namespace_manifest_and_data_roots": "NOT_ADMITTED",
+      "real_windows_native_identity_bridge": "NOT_IMPLEMENTED_OR_ADMITTED",
+      "default_control_api": "503_UNTIL_REAL_ADMISSION"
+    }
   }
 }
