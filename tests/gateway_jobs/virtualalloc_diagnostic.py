@@ -23,8 +23,38 @@ MAX_TOTAL = 16384
 WALL_SECONDS = 10
 MIN_COMMIT = 2952790016
 MIN_PHYSICAL = 1073741824
+DIRECT_PYTHON = r'C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\python.exe'
+DIRECT_PYTHON_SHA = '4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a'
+DIRECT_DLL_SHA = '9a0e3435aaa680d868150f87ab3e388ad2eebc22f87e036155c7b4eda8cd2120'
+
+def file_sha(path):
+    digest=hashlib.sha256()
+    with Path(path).open('rb') as stream:
+        for block in iter(lambda:stream.read(65536),b''):digest.update(block)
+    return digest.hexdigest()
 
 class Refused(RuntimeError): pass
+class DiagnosticFailure(Refused):
+    def __init__(self,diagnostics):
+        super().__init__('DIAGNOSTIC_FAILED_NO_QUALIFICATION')
+        self.diagnostics=diagnostics
+        self.completed_cases=[]
+
+def error_record(error,stage):
+    text=str(error)
+    return dict(stage=stage,error_type=type(error).__name__,text=text[:512],text_truncated=len(text)>512,
+                winerror=getattr(error,'winerror',None),errno=getattr(error,'errno',None),
+                **stamp())
+
+def origin_record(state,error,stage):
+    if state['origin'] is None:
+        state['origin']=error_record(error,stage);state['_origin_exception']=error
+    elif error is not state.get('_origin_exception'):
+        state['cleanup'].append(error_record(error,stage))
+
+def public_diagnostics(state):
+    return {key:value for key,value in state.items() if not key.startswith('_')}
+
 
 def need(ok, code):
     if not ok: raise Refused(code)
@@ -58,8 +88,15 @@ class Pids(c.Structure):
 
 def api():
     need(os.name=='nt' and c.sizeof(c.c_void_p)==8 and c.sizeof(w.DWORD)==4,'WINDOWS_X64_REQUIRED')
+    need(sys.version_info[:2]==(3,12) and sys.prefix==sys.base_prefix,'DIRECT_BASE_CP312_REQUIRED')
+    need(Path(sys.executable).resolve()==Path(DIRECT_PYTHON).resolve(),'DIRECT_INTERPRETER_PATH_REQUIRED')
+    need(not Path(DIRECT_PYTHON).with_name('pyvenv.cfg').exists(),'VENV_REFUSED')
+    need(file_sha(DIRECT_PYTHON)==DIRECT_PYTHON_SHA,'DIRECT_INTERPRETER_HASH_MISMATCH')
     k=c.WinDLL('kernel32',use_last_error=True)
     signatures={
+        'GetModuleHandleW':([w.LPCWSTR],w.HANDLE),
+        'GetModuleFileNameW':([w.HANDLE,w.LPWSTR,w.DWORD],w.DWORD),
+        'QueryFullProcessImageNameW':([w.HANDLE,w.DWORD,w.LPWSTR,c.POINTER(w.DWORD)],w.BOOL),
         'CreateProcessW':([w.LPCWSTR,w.LPWSTR,c.c_void_p,c.c_void_p,w.BOOL,w.DWORD,c.c_void_p,w.LPCWSTR,c.POINTER(StartupEx),c.POINTER(Process)],w.BOOL),
         'CreatePipe':([c.POINTER(w.HANDLE),c.POINTER(w.HANDLE),c.POINTER(Security),w.DWORD],w.BOOL),
         'SetHandleInformation':([w.HANDLE,w.DWORD,w.DWORD],w.BOOL),
@@ -86,6 +123,14 @@ def api():
     }
     for name,(args,result) in signatures.items():
         fn=getattr(k,name);fn.argtypes=args;fn.restype=result
+    image=c.create_unicode_buffer(32768);length=w.DWORD(len(image))
+    need(k.QueryFullProcessImageNameW(k.GetCurrentProcess(),0,image,c.byref(length)),'ACTUAL_IMAGE_QUERY_FAILED')
+    need(Path(image.value).resolve()==Path(DIRECT_PYTHON).resolve(),'ACTUAL_IMAGE_NOT_DIRECT_CP312')
+    dll=k.GetModuleHandleW('python312.dll');need(dll,'ACTUAL_PYTHON_DLL_MISSING')
+    dll_path=c.create_unicode_buffer(32768);n=k.GetModuleFileNameW(dll,dll_path,len(dll_path))
+    expected_dll=Path(DIRECT_PYTHON).with_name('python312.dll')
+    need(0<n<len(dll_path) and Path(dll_path.value).resolve()==expected_dll.resolve(),'ACTUAL_DLL_PATH_MISMATCH')
+    need(file_sha(expected_dll)==DIRECT_DLL_SHA,'ACTUAL_DLL_HASH_MISMATCH')
     return k
 
 def host_commit(k):
@@ -116,7 +161,7 @@ def command(expected):
     raw=sys.stdin.buffer.readline(17)
     need(raw==expected+b'\n','CHILD_COMMAND_REFUSED')
 
-def child(mode):
+def _child(mode,state):
     need(mode in CASES,'FIXED_CASE_REQUIRED');k=api();handle=k.GetCurrentProcess();pointer=None;free_attempted=False
     try:
         emit(dict(phase='BEFORE',pid=str(k.GetCurrentProcessId()),snapshot=process_snapshot(k,handle)))
@@ -140,11 +185,28 @@ def child(mode):
                   snapshot=process_snapshot(k,handle)))
         need(not pointer,'OWNED_VIRTUALFREE_FAILED_NO_RETRY')
         command(b'EXIT');emit(dict(phase='EXITING'));return 0
+    except BaseException as error:
+        origin_record(state,error,'child_body');raise
     finally:
         if pointer and not free_attempted:
             # This exact pointer came from our one allocation, never caller input.
             free_attempted=True
-            if not k.VirtualFree(pointer,0,0x8000):raise Refused('FINAL_OWNED_FREE_FAILED_NO_RETRY')
+            try:
+                c.set_last_error(0);released=k.VirtualFree(pointer,0,0x8000);release_error=c.get_last_error()
+                if not released:
+                    state['cleanup'].append(dict(stage='child_virtualfree',result=False,native_error=release_error,**stamp()))
+            except BaseException as error:
+                state['cleanup'].append(error_record(error,'child_virtualfree_exception'))
+
+def child(mode):
+    state=dict(origin=None,cleanup=[])
+    try:result=_child(mode,state)
+    except BaseException as error:
+        origin_record(state,error,'child_prerequisite_or_propagated_error');result=3
+    if state['origin'] is not None or state['cleanup']:
+        emit(dict(phase='CHILD_ERROR',diagnostics=public_diagnostics(state)))
+        return 3
+    return result
 
 def load_owners(grid_repository):
     source=subprocess.check_output(['git','--no-replace-objects','-C',str(grid_repository),'show',
@@ -156,8 +218,9 @@ def load_owners(grid_repository):
     worker=types.ModuleType('diagnostic_pinned_worker');exec(compile(raw,'primary-worker-wrapper','exec'),worker.__dict__)
     return grid,worker
 
-def one_case(mode,grid,worker):
+def _one_case(mode,grid,worker,state):
     need(mode in CASES,'FIXED_CASE_REQUIRED');k=api();host_before=host_commit(k)
+    state['partial']['host_before']=host_before
     proc=Process();job=None;created=False;quiescent=False;extra_handles=[];attributes=None
     stop=threading.Event();watch=None;watch_result=[];deadline=time.monotonic()+WALL_SECONDS
     def check_deadline():need(time.monotonic()<deadline and not watch_result,'PARENT_WALL_DEADLINE')
@@ -190,6 +253,7 @@ def one_case(mode,grid,worker):
                 created=True;job=grid.WindowsJob(proc.pid,resume_primary_thread=False)
                 limits=worker._configure_retained_job(job,expected_job_type=grid.WindowsJob,owned_process_handle=proc.process)
                 host_pre_resume=host_commit(k)
+                state['partial']['limits']=limits;state['partial']['host_pre_resume']=host_pre_resume
                 retained_watchdog_job_handle=job._job
                 def watchdog():
                     if not stop.wait(max(0,deadline-time.monotonic())):
@@ -218,7 +282,9 @@ def one_case(mode,grid,worker):
                         else:
                             need(k.WaitForSingleObject(proc.process,10)==258,'CHILD_EXITED_BEFORE_FRAME')
                     raw,pending=pending.split(b'\n',1);need(len(raw)+1<=MAX_FRAME,'CHILD_FRAME_CAP')
-                    return json.loads(raw.decode('ascii'))
+                    value=json.loads(raw.decode('ascii'))
+                    state['partial'].setdefault('received_frames',[]).append(value)
+                    return value
                 def job_snapshot():
                     e=worker._Extended();a=grid._BasicAccounting();ids=Pids()
                     for kind,value in ((9,e),(1,a),(3,ids)):
@@ -227,7 +293,8 @@ def one_case(mode,grid,worker):
                     return dict(**stamp(),extended_hex=bytes(e).hex(),basic_accounting_hex=bytes(a).hex(),
                                 pids=[str(ids.ids[i]) for i in range(ids.count)],
                                 sizes=dict(extended=c.sizeof(e),basic=c.sizeof(a),pids=c.sizeof(ids)))
-                before=frame();need(before.get('phase')=='BEFORE','BEFORE_PHASE_REQUIRED')
+                before=frame();state['partial']['child_before']=before
+                need(before.get('phase')=='BEFORE','BEFORE_PHASE_REQUIRED')
                 inventory=job_snapshot();pid=int(before['pid']);need(str(pid) in inventory['pids'],'REPORTED_CHILD_NOT_OWNED')
                 child_handle=k.OpenProcess(0x400|0x10,False,pid);need(child_handle,'OWNED_CHILD_HANDLE_FAILED');extra_handles.append(child_handle)
                 member=w.BOOL();need(k.IsProcessInJob(child_handle,job._job,c.byref(member)) and member.value,'CHILD_JOB_MEMBERSHIP_FAILED')
@@ -235,8 +302,10 @@ def one_case(mode,grid,worker):
                 need(actual_before['creation_filetime']==before['snapshot']['creation_filetime'],'CHILD_CREATION_MISMATCH')
                 send(b'ALLOC\n');during=frame();need(during.get('phase')=='ALLOCATED','ALLOCATED_PHASE_REQUIRED')
                 during_job=job_snapshot();during_process=process_snapshot(k,child_handle)
+                state['partial'].update(child_during=during,job_during=during_job,parent_during=during_process)
                 send(b'FREE\n');after=frame();need(after.get('phase')=='FREED','FREED_PHASE_REQUIRED')
                 after_job=job_snapshot();after_process=process_snapshot(k,child_handle)
+                state['partial'].update(child_after=after,job_after=after_job,parent_after=after_process)
                 send(b'EXIT\n');exiting=frame();need(exiting=={'phase':'EXITING'},'EXIT_PHASE_REQUIRED')
                 need(k.WaitForSingleObject(proc.process,1000)==0,'OWNED_PARENT_EXIT_UNPROVEN')
                 need(k.WaitForSingleObject(child_handle,1000)==0,'OWNED_REPORTING_CHILD_EXIT_UNPROVEN')
@@ -253,25 +322,49 @@ def one_case(mode,grid,worker):
                             child_after=after,parent_after=after_process,job_after=after_job,ipc_bytes=received,
                             primary_exit_code=parent_exit.value,reporting_child_exit_code=child_exit.value,
                             job_empty_proved=True,admission=False,qualification='UNQUALIFIED_RAW_DIAGNOSTIC')
+            except BaseException as error:
+                # Capture the body cause BEFORE retirement/tempdir/handle cleanup.
+                origin_record(state,error,'case_body');raise
             finally:
-                stop.set()
-                watch_uncertain=False
-                if watch:
-                    watch.join(1);watch_uncertain=watch.is_alive()
-                # Never close/recycle a Job handle while watchdog could use it.
-                # If native watchdog hangs, retain Job and classify NO_RELEASE;
-                # retained parent process/thread closures are still attempted.
-                worker._retire_owned(None if watch_uncertain else job,
-                                     process_handle=proc.process,thread_handle=proc.thread,
-                                     kernel=k,created=created,quiescent=quiescent)
-                need(not watch_uncertain,'WATCHDOG_OWNERSHIP_UNCERTAIN_NO_RELEASE')
+                stop.set();watch_uncertain=False
+                try:
+                    if watch:
+                        watch.join(1);watch_uncertain=watch.is_alive()
+                except BaseException as error:
+                    watch_uncertain=True;state['cleanup'].append(error_record(error,'watchdog_join'))
+                state['partial']['watchdog_calls']=list(watch_result)
+                try:
+                    # A live watchdog must never see a recycled Job HANDLE.
+                    worker._retire_owned(None if watch_uncertain else job,
+                                         process_handle=proc.process,thread_handle=proc.thread,
+                                         kernel=k,created=created,quiescent=quiescent)
+                except BaseException as error:
+                    state['cleanup'].append(error_record(error,'owned_retirement'))
+                if watch_uncertain:
+                    state['cleanup'].append(error_record(Refused('WATCHDOG_OWNERSHIP_UNCERTAIN_NO_RELEASE'),'watchdog'))
+    except BaseException as error:
+        origin_record(state,error,'setup_or_tempdir_cleanup');raise
     finally:
-        if attributes is not None:k.DeleteProcThreadAttributeList(attributes)
-        failures=[]
+        if attributes is not None:
+            try:k.DeleteProcThreadAttributeList(attributes)
+            except BaseException as error:state['cleanup'].append(error_record(error,'attribute_cleanup'))
         for handle in reversed(extra_handles):
             try:close(handle)
-            except BaseException as error:failures.append(error)
-        if failures:raise Refused('EXTRA_HANDLE_CLEANUP_FAILED') from failures[0]
+            except BaseException as error:state['cleanup'].append(error_record(error,'extra_handle_close'))
+
+
+def one_case(mode,grid,worker):
+    state=dict(mode=mode,origin=None,cleanup=[],partial={})
+    try:
+        observation=_one_case(mode,grid,worker,state)
+    except BaseException as error:
+        origin_record(state,error,'prerequisite_or_propagated_cleanup')
+        raise DiagnosticFailure(public_diagnostics(state)) from state.get('_origin_exception',error)
+    if state['cleanup']:
+        # Successful body is NOT successful diagnosis when retirement is unknown.
+        raise DiagnosticFailure(public_diagnostics(state))
+    observation['diagnostics']=public_diagnostics(state)
+    return observation
 
 def parent(grid_repository,expected_script_sha256):
     need(hashlib.sha256(Path(__file__).read_bytes()).hexdigest()==expected_script_sha256,'DIAGNOSTIC_SOURCE_MISMATCH')
@@ -281,16 +374,25 @@ def parent(grid_repository,expected_script_sha256):
     if control['child_during']['native_success'] is not True or control['child_after']['free_result'] is not True:
         return dict(classification='CONTROL_REFUSED_OVERLIMIT_NOT_RUN',
                     source_sha256=expected_script_sha256,cases=[control])
+    try:overlimit=one_case('overlimit',grid,worker)
+    except DiagnosticFailure as error:
+        error.completed_cases=[control];raise
     return dict(classification='OWNED_VIRTUALALLOC_DIAGNOSIS_NOT_ADMISSION',
-                source_sha256=expected_script_sha256,cases=[control,one_case('overlimit',grid,worker)])
+                source_sha256=expected_script_sha256,cases=[control,overlimit])
 
 if __name__=='__main__':
     if len(sys.argv)==3 and sys.argv[1]=='--internal-child':
         raise SystemExit(child(sys.argv[2]))
     if len(sys.argv)==4 and sys.argv[1]=='--root-reviewed-parent':
-        observation=parent(Path(sys.argv[2]),sys.argv[3])
+        try:observation=parent(Path(sys.argv[2]),sys.argv[3])
+        except DiagnosticFailure as error:
+            observation=dict(classification='DIAGNOSTIC_FAILED_NO_QUALIFICATION',
+                             diagnostics=error.diagnostics,completed_cases=error.completed_cases)
+        except BaseException as error:
+            observation=dict(classification='DIAGNOSTIC_PREREQUISITE_FAILED_NO_QUALIFICATION',
+                             origin=error_record(error,'parent_prerequisite'),cleanup=[])
         result=json.dumps(observation,sort_keys=True)
         need(len(result.encode('ascii'))<=131072,'PARENT_REPORT_CAP')
         print(result)
-        raise SystemExit(2 if observation['classification']=='CONTROL_REFUSED_OVERLIMIT_NOT_RUN' else 0)
+        raise SystemExit(0 if observation['classification']=='OWNED_VIRTUALALLOC_DIAGNOSIS_NOT_ADMISSION' else 2)
     raise SystemExit('SOURCE_ONLY: explicit ROOT bounded source review/execution ACK required')

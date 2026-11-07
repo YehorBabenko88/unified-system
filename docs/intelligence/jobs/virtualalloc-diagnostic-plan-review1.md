@@ -85,3 +85,65 @@ Independent reviewer read source/hash only, found no material source-level defec
 no module import, harness execution or allocation occurred. Post-review edits
 clarified error semantics and conservative control refusal, not additional workload.
 ROOT exact source execution ACK remains required.
+
+## External custody and whole-invocation supervision proposal (NOT implemented here)
+
+ROOT/A8 execution prerequisites supersede any one-time script hash assurance.
+The --internal-child entry is trusted-internal only, never a service/tool route.
+Parent file hash is only an observation: it does NOT prevent mutation before
+child rereads the .py file. ROOT must establish actual external source custody:
+fresh no-hardlink primary clone with autocrlf=false, all tracked raw Git blob/OID
+and working bytes verified; no extras/reparse/symlink/bytecode; then an exclusively
+ROOT-controlled capsule held for the entire run. Required custody mechanism is
+qualified live Windows share-deny-write/delete handles on ALL executable source
+files/dependencies and relevant source directory ancestry, with verified file/
+directory IDs and no reparse points, or an explicitly ROOT-approved equivalent
+sealed capsule. Child read access remains allowed; writes/rename/replacement denied.
+No system ACL/service/security settings change in this proposal. If exclusive
+custody cannot be established or a lock/identity is lost, REFUSE; a hash argument,
+read-only attribute, caller flag or requested path is NOT that custody. Root must
+review/qualify the actual external custody implementation, including source packs
+used by git-show and Python runtime/dependencies; this file does not provide it.
+
+Read-only local inventory found direct base interpreter candidate (NOT executed):
+C:/Users/LS-5/AppData/Local/Python/pythoncore-3.12-64/python.exe
+104952B SHA4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a;
+python312.dll6945272B SHA9a0e3435aaa680d868150f87ab3e388ad2eebc22f87e036155c7b4eda8cd2120.
+Adjacent pyvenv.cfg absent. This inventory/hash is NOT vendor/runtime qualification.
+ROOT must approve provenance/runtime capsule. DO NOT use bin/python3.12.exe,
+WindowsApps/py, a venv or PATH resolution. Script api() additionally requires3.12,
+base_prefix==prefix, exact sys.executable and native process-image path plus
+actually loaded python312.dll path/hash. No interpreter was invoked to test this.
+Max2 CASE INVOCATIONS is not max2 OS processes; each Job cap8 remains enforced,
+and every phase records actual process inventory/owned reporting PID/creationtime.
+
+ROOT-owned external supervisor must retain process/thread handles for a newly
+created SUSPENDED diagnostic parent, attach it to its own pinned outer WindowsJob
+KILL_ON_JOB_CLOSE before resume, verify membership and handle inheritance. Supervisor
+itself remains outside that Job; no existing/office process adoption. Outer Job
+must not silently add memory/CPU constraints that confound inner Job experiment:
+its exact inherited/effective limits must be recorded, accepted or the run refused.
+Nested Jobs must be supported; no breakaway flags. Actual inner caps remain256MiB/
+active8/rate1000. Outer own-process count cap16 is a proposed refusal boundary,
+not a worker capacity profile; ROOT must approve/verify it before execution.
+
+Whole invocation budget proposal: external monotonic deadline60s starting BEFORE
+creating/resuming diagnostic parent, including source loading/prerequisite checks,
+pipes/setup, BOTH cases and cleanup. Supervisor waits/polls/reads bounded stdout+
+stderr (combined262144B), independent of the child's active-case loop. At55s without
+verified parent completion, terminate the SAME retained outer Job; reserve5s until
+the60s deadline for actual ActiveProcesses0 and parent-handle signaled observation.
+If any native query/termination/handle operation stalls or quiescence is unproved,
+classify WHOLE_INVOCATION_UNKNOWN_NO_RELEASE, preserve partial logs and handles
+under owner cleanup, no automatic rerun/adoption/quota refund. Native OS stalls
+cannot be magically given a software hard completion guarantee. On supervisor
+exit, kill-on-close is fallback containment intent, NOT observed quiescence.
+Source preparation/custody qualification happens BEFORE invocation and needs its
+own bounded ROOT preparation budget. No external supervisor source is added by
+A5 because ROOT owns it. Missing approved supervisor means NO EXECUTION.
+
+Failure output successor records origin and cleanup as separate bounded objects,
+captures body cause BEFORE retirement/tempdir cleanup, preserves completed prior
+case and available phase evidence. A cleanup failure cannot replace original cause
+or turn a successful body into successful diagnosis. Runtime startup/prerequisite
+failures are distinct. No allocation/test/native execution has been performed.
