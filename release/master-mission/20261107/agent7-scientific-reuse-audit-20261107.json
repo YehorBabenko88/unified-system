@@ -1,0 +1,3623 @@
+{
+  "schema": "agent7.scientific-reuse-audit.20261107.v1",
+  "scope": "OUTPUTS_ONLY_READ_ONLY_SOURCE_AND_EXISTING_EVIDENCE_NO_NEW_CORE_LEDGER_OR_STRATEGIES",
+  "pins": [
+    {
+      "repo": "strattester",
+      "head": "a56c24a0f25a0c5ea9222fcd953a49536c91dfc9",
+      "tree": "69728afcfaba28d95c8de52e5ca773b75be09a5f",
+      "worktree": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-7-distributed-research-math\\work\\audit-strat-review4-domain",
+      "status": "EXACT_PIN_CLEAN_TRACKED_SOURCE"
+    },
+    {
+      "repo": "math",
+      "head": "917d99672e37db59835a8ab23b03c99826b12d78",
+      "tree": "0e8c7a3712fbbcddee0e0c9e5b8d5f10f34bde69",
+      "worktree": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-7-distributed-research-math\\work\\audit-math-pr110",
+      "status": "EXACT_PIN_CLEAN_TRACKED_SOURCE"
+    },
+    {
+      "repo": "meta_analyse",
+      "head": "f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1",
+      "tree": "c155c935a801fa98b7c78219c9798ce1f1be8848",
+      "worktree": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-7-distributed-research-math\\work\\audit-meta-pr76",
+      "status": "EXACT_PIN_CLEAN_TRACKED_SOURCE"
+    }
+  ],
+  "status_meaning": {
+    "IMPLEMENTED": "Nontrivial callable source exists; NOT a scientific reliability or runtime-admission claim",
+    "PARTIAL": "Reusable implementation with explicit scope/coverage/enforcement limitations",
+    "STUB": "Callable entry intentionally lacks full requested behavior",
+    "DOCUMENTED_ONLY": "Requirement exists in inspected documentation; executable implementation not established",
+    "BROKEN": "Requires concrete observed failure; no new code BROKEN conclusion from queue",
+    "NOT_VERIFIED": "Not established within bounded search/inspection; not proof of universal absence"
+  },
+  "capabilities": [
+    {
+      "repo": "strattester",
+      "capability": "paper_ledger",
+      "status": "IMPLEMENTED",
+      "entrypoints": "Direct Python API; PaperLedger.create/append/export/snapshot",
+      "dependencies": [
+        "sqlite3",
+        "stdlib"
+      ],
+      "limits": "Not distributed consensus, ownership or source authenticity; 1024 trades; snapshot checkpointed rollback-journal only.",
+      "verification": "SOURCE_INSPECTED; matched exact-head local test outcomes recorded separately; hosted aggregate scope only",
+      "matched_exact_head_local_tests": [
+        {
+          "nodeid": "tests/test_quote_paper.py::test_ledger_idempotent_conflict_and_partial_failure",
+          "outcome": "passed"
+        },
+        {
+          "nodeid": "tests/research/test_agent7_paper_integrity.py::test_agent7_rehashed_persisted_result_cannot_forge_retry_success[pnl]",
+          "outcome": "passed"
+        },
+        {
+          "nodeid": "tests/research/test_agent7_paper_integrity.py::test_agent7_rehashed_persisted_result_cannot_forge_retry_success[request_sha256]",
+          "outcome": "passed"
+        },
+        {
+          "nodeid": "tests/research/test_agent7_paper_integrity.py::test_agent7_rehashed_persisted_result_cannot_forge_retry_success[trading_authorized]",
+          "outcome": "passed"
+        }
+      ],
+      "references": [
+        {
+          "path": "strattester/research/quote_paper.py",
+          "line": 89,
+          "url": "https://github.com/YehorBabenko88/strattester/blob/a56c24a0f25a0c5ea9222fcd953a49536c91dfc9/strattester/research/quote_paper.py#L89"
+        },
+        {
+          "path": "tests/research/test_agent7_paper_integrity.py",
+          "line": 125,
+          "url": "https://github.com/YehorBabenko88/strattester/blob/a56c24a0f25a0c5ea9222fcd953a49536c91dfc9/tests/research/test_agent7_paper_integrity.py#L125"
+        },
+        {
+          "path": "tests/test_quote_paper.py",
+          "line": 47,
+          "url": "https://github.com/YehorBabenko88/strattester/blob/a56c24a0f25a0c5ea9222fcd953a49536c91dfc9/tests/test_quote_paper.py#L47"
+        }
+      ],
+      "detail_report": "agent7-reuse-strattester-a56.json"
+    },
+    {
+      "repo": "strattester",
+      "capability": "paper_account",
+      "status": "IMPLEMENTED",
+      "entrypoints": "Direct Python PaperAccount.create/open/reserve/record_decision/record_entry/record_exit_decision/close_trade",
+      "dependencies": [
+        "sqlite3",
+        "decimal",
+        "quote_paper"
+      ],
+      "limits": "LAB_SIMULATION long-only; declared complete zero-event funding interval required at account admission.",
+      "verification": "SOURCE_INSPECTED; matched exact-head local test outcomes recorded separately; hosted aggregate scope only",
+      "matched_exact_head_local_tests": [
+        {
+          "nodeid": "tests/research/test_paper_account.py::test_native_financial_result_is_the_only_settlement_calculator",
+          "outcome": "passed"
+        }
+      ],
+      "references": [
+        {
+          "path": "strattester/research/paper_account.py",
+          "line": 130,
+          "url": "https://github.com/YehorBabenko88/strattester/blob/a56c24a0f25a0c5ea9222fcd953a49536c91dfc9/strattester/research/paper_account.py#L130"
+        },
+        {
+          "path": "tests/research/test_paper_account.py",
+          "line": 59,
+          "url": "https://github.com/YehorBabenko88/strattester/blob/a56c24a0f25a0c5ea9222fcd953a49536c91dfc9/tests/research/test_paper_account.py#L59"
+        }
+      ],
+      "detail_report": "agent7-reuse-strattester-a56.json"
+    },
+    {
+      "repo": "strattester",
+      "capability": "deterministic_replay",
+      "status": "IMPLEMENTED",
+      "entrypoints": "Direct ledger and learning checkpoint APIs",
+      "dependencies": [
+        "stdlib",
+        "SQLite"
+      ],
+      "limits": "Determinism of engineering fixtures does not certify real streams or GPU determinism.",
+      "verification": "SOURCE_INSPECTED; matched exact-head local test outcomes recorded separately; hosted aggregate scope only",
+      "matched_exact_head_local_tests": [
+        {
+          "nodeid": "tests/research/test_agent7_research_replay.py::test_agent7_checkpoint_resume_matches_uninterrupted_learning_and_retry",
+          "outcome": "passed"
+        },
+        {
+          "nodeid": "tests/test_quote_paper.py::test_duplicate_retry_never_returns_a_tampered_durable_result",
+          "outcome": "passed"
+        }
+      ],
+      "references": [
+        {
+          "path": "strattester/research/quote_paper.py",
+          "line": 273,
+          "url": "https://github.com/YehorBabenko88/strattester/blob/a56c24a0f25a0c5ea9222fcd953a49536c91dfc9/strattester/research/quote_paper.py#L273"
+        },
+        {
+          "path": "tests/research/test_agent7_research_replay.py",
+          "line": 27,
+          "url": "https://github.com/YehorBabenko88/strattester/blob/a56c24a0f25a0c5ea9222fcd953a49536c91dfc9/tests/research/test_agent7_research_replay.py#L27"
+        },
+        {
+          "path": "tests/test_quote_paper.py",
+          "line": 118,
+          "url": "https://github.com/YehorBabenko88/strattester/blob/a56c24a0f25a0c5ea9222fcd953a49536c91dfc9/tests/test_quote_paper.py#L118"
+        }
+      ],
+      "detail_report": "agent7-reuse-strattester-a56.json"
+    },
+    {
+      "repo": "strattester",
+      "capability": "fees_slippage_funding",
+      "status": "IMPLEMENTED",
+      "entrypoints": "quote_paper.evaluate and PaperLedger.append",
+      "dependencies": [
+        "execution._adverse",
+        "stdlib"
+      ],
+      "limits": "Caller-admitted funding completeness; no exchange fills/depth/stream completeness. OHLC simulator execution.py:40 has fees/slippage, not equivalent funding coverage.",
+      "verification": "SOURCE_INSPECTED; matched exact-head local test outcomes recorded separately; hosted aggregate scope only",
+      "matched_exact_head_local_tests": [
+        {
+          "nodeid": "tests/research/test_agent7_paper_integrity.py::test_agent7_decimal_cost_oracle_and_no_order_authority[long-BTCUSDT]",
+          "outcome": "passed"
+        },
+        {
+          "nodeid": "tests/research/test_agent7_paper_integrity.py::test_agent7_decimal_cost_oracle_and_no_order_authority[long-ETHUSDT]",
+          "outcome": "passed"
+        },
+        {
+          "nodeid": "tests/research/test_agent7_paper_integrity.py::test_agent7_decimal_cost_oracle_and_no_order_authority[long-SOLUSDT]",
+          "outcome": "passed"
+        },
+        {
+          "nodeid": "tests/research/test_agent7_paper_integrity.py::test_agent7_decimal_cost_oracle_and_no_order_authority[long-XRPUSDT]",
+          "outcome": "passed"
+        },
+        {
+          "nodeid": "tests/research/test_agent7_paper_integrity.py::test_agent7_decimal_cost_oracle_and_no_order_authority[long-BNBUSDT]",
+          "outcome": "passed"
+        },
+        {
+          "nodeid": "tests/research/test_agent7_paper_integrity.py::test_agent7_decimal_cost_oracle_and_no_order_authority[long-DOGEUSDT]",
+          "outcome": "passed"
+        },
+        {
+          "nodeid": "tests/research/test_agent7_paper_integrity.py::test_agent7_decimal_cost_oracle_and_no_order_authority[long-ADAUSDT]",
+          "outcome": "passed"
+        },
+        {
+          "nodeid": "tests/research/test_agent7_paper_integrity.py::test_agent7_decimal_cost_oracle_and_no_order_authority[long-AVAXUSDT]",
+          "outcome": "passed"
+        },
+        {
+          "nodeid": "tests/research/test_agent7_paper_integrity.py::test_agent7_decimal_cost_oracle_and_no_order_authority[long-LINKUSDT]",
+          "outcome": "passed"
+        },
+        {
+          "nodeid": "tests/research/test_agent7_paper_integrity.py::test_agent7_decimal_cost_oracle_and_no_order_authority[long-DOTUSDT]",
+          "outcome": "passed"
+        },
+        {
+          "nodeid": "tests/research/test_agent7_paper_integrity.py::test_agent7_decimal_cost_oracle_and_no_order_authority[short-BTCUSDT]",
+          "outcome": "passed"
+        },
+        {
+          "nodeid": "tests/research/test_agent7_paper_integrity.py::test_agent7_decimal_cost_oracle_and_no_order_authority[short-ETHUSDT]",
+          "outcome": "passed"
+        },
+        {
+          "nodeid": "tests/research/test_agent7_paper_integrity.py::test_agent7_decimal_cost_oracle_and_no_order_authority[short-SOLUSDT]",
+          "outcome": "passed"
+        },
+        {
+          "nodeid": "tests/research/test_agent7_paper_integrity.py::test_agent7_decimal_cost_oracle_and_no_order_authority[short-XRPUSDT]",
+          "outcome": "passed"
+        },
+        {
+          "nodeid": "tests/research/test_agent7_paper_integrity.py::test_agent7_decimal_cost_oracle_and_no_order_authority[short-BNBUSDT]",
+          "outcome": "passed"
+        },
+        {
+          "nodeid": "tests/research/test_agent7_paper_integrity.py::test_agent7_decimal_cost_oracle_and_no_order_authority[short-DOGEUSDT]",
+          "outcome": "passed"
+        },
+        {
+          "nodeid": "tests/research/test_agent7_paper_integrity.py::test_agent7_decimal_cost_oracle_and_no_order_authority[short-ADAUSDT]",
+          "outcome": "passed"
+        },
+        {
+          "nodeid": "tests/research/test_agent7_paper_integrity.py::test_agent7_decimal_cost_oracle_and_no_order_authority[short-AVAXUSDT]",
+          "outcome": "passed"
+        },
+        {
+          "nodeid": "tests/research/test_agent7_paper_integrity.py::test_agent7_decimal_cost_oracle_and_no_order_authority[short-LINKUSDT]",
+          "outcome": "passed"
+        },
+        {
+          "nodeid": "tests/research/test_agent7_paper_integrity.py::test_agent7_decimal_cost_oracle_and_no_order_authority[short-DOTUSDT]",
+          "outcome": "passed"
+        },
+        {
+          "nodeid": "tests/test_quote_paper.py::test_equal_millisecond_funding_and_fill_has_no_declared_event_order[COMPLETE_INTERVAL-1010]",
+          "outcome": "passed"
+        },
+        {
+          "nodeid": "tests/test_quote_paper.py::test_equal_millisecond_funding_and_fill_has_no_declared_event_order[COMPLETE_INTERVAL-1210]",
+          "outcome": "passed"
+        },
+        {
+          "nodeid": "tests/test_quote_paper.py::test_equal_millisecond_funding_and_fill_has_no_declared_event_order[COMPLETE_EVENTS-1010]",
+          "outcome": "passed"
+        },
+        {
+          "nodeid": "tests/test_quote_paper.py::test_equal_millisecond_funding_and_fill_has_no_declared_event_order[COMPLETE_EVENTS-1210]",
+          "outcome": "passed"
+        }
+      ],
+      "references": [
+        {
+          "path": "strattester/research/execution.py",
+          "line": 40,
+          "url": "https://github.com/YehorBabenko88/strattester/blob/a56c24a0f25a0c5ea9222fcd953a49536c91dfc9/strattester/research/execution.py#L40"
+        },
+        {
+          "path": "strattester/research/quote_paper.py",
+          "line": 35,
+          "url": "https://github.com/YehorBabenko88/strattester/blob/a56c24a0f25a0c5ea9222fcd953a49536c91dfc9/strattester/research/quote_paper.py#L35"
+        },
+        {
+          "path": "tests/research/test_agent7_paper_integrity.py",
+          "line": 63,
+          "url": "https://github.com/YehorBabenko88/strattester/blob/a56c24a0f25a0c5ea9222fcd953a49536c91dfc9/tests/research/test_agent7_paper_integrity.py#L63"
+        },
+        {
+          "path": "tests/test_quote_paper.py",
+          "line": 250,
+          "url": "https://github.com/YehorBabenko88/strattester/blob/a56c24a0f25a0c5ea9222fcd953a49536c91dfc9/tests/test_quote_paper.py#L250"
+        }
+      ],
+      "detail_report": "agent7-reuse-strattester-a56.json"
+    },
+    {
+      "repo": "strattester",
+      "capability": "expectancy",
+      "status": "IMPLEMENTED",
+      "entrypoints": "statistics.evaluate_trades",
+      "dependencies": [
+        "dataclasses"
+      ],
+      "limits": "Input order/coverage and units remain caller responsibility; average trade PnL is not portfolio expected return.",
+      "verification": "SOURCE_INSPECTED; matched exact-head local test outcomes recorded separately; hosted aggregate scope only",
+      "matched_exact_head_local_tests": [
+        {
+          "nodeid": "tests/research/test_statistics_reporting.py::test_statistics_compute_core_metrics_drawdown_and_streaks",
+          "outcome": "passed"
+        }
+      ],
+      "references": [
+        {
+          "path": "strattester/research/statistics.py",
+          "line": 23,
+          "url": "https://github.com/YehorBabenko88/strattester/blob/a56c24a0f25a0c5ea9222fcd953a49536c91dfc9/strattester/research/statistics.py#L23"
+        },
+        {
+          "path": "tests/research/test_statistics_reporting.py",
+          "line": 9,
+          "url": "https://github.com/YehorBabenko88/strattester/blob/a56c24a0f25a0c5ea9222fcd953a49536c91dfc9/tests/research/test_statistics_reporting.py#L9"
+        }
+      ],
+      "detail_report": "agent7-reuse-strattester-a56.json"
+    },
+    {
+      "repo": "strattester",
+      "capability": "bootstrap_confidence_interval",
+      "status": "PARTIAL",
+      "entrypoints": "resampling.bootstrap_expectancy; alphafold_training.evaluation.bootstrap_mean_ci",
+      "dependencies": [
+        "random"
+      ],
+      "limits": "No calibrated coverage or multiple-testing/cross-instrument/regime adjustment; generic IID function does not validate confidence range or finiteness. Source limitation, not observed runtime failure.",
+      "verification": "SOURCE_INSPECTED; matched exact-head local test outcomes recorded separately; hosted aggregate scope only",
+      "matched_exact_head_local_tests": [
+        {
+          "nodeid": "tests/research/test_validation_resampling.py::test_bootstrap_expectancy_is_seeded_and_contains_sample_mean",
+          "outcome": "passed"
+        }
+      ],
+      "references": [
+        {
+          "path": "research/alphafold_training/evaluation.py",
+          "line": 71,
+          "url": "https://github.com/YehorBabenko88/strattester/blob/a56c24a0f25a0c5ea9222fcd953a49536c91dfc9/research/alphafold_training/evaluation.py#L71"
+        },
+        {
+          "path": "strattester/research/resampling.py",
+          "line": 18,
+          "url": "https://github.com/YehorBabenko88/strattester/blob/a56c24a0f25a0c5ea9222fcd953a49536c91dfc9/strattester/research/resampling.py#L18"
+        },
+        {
+          "path": "tests/research/test_validation_resampling.py",
+          "line": 23,
+          "url": "https://github.com/YehorBabenko88/strattester/blob/a56c24a0f25a0c5ea9222fcd953a49536c91dfc9/tests/research/test_validation_resampling.py#L23"
+        }
+      ],
+      "detail_report": "agent7-reuse-strattester-a56.json"
+    },
+    {
+      "repo": "strattester",
+      "capability": "monte_carlo",
+      "status": "PARTIAL",
+      "entrypoints": "resampling.monte_carlo_max_drawdowns",
+      "dependencies": [
+        "random"
+      ],
+      "limits": "Permutation sensitivity only, not generative market/portfolio simulation; no tail/regime/dependence model or funding process.",
+      "verification": "SOURCE_INSPECTED; matched exact-head local test outcomes recorded separately; hosted aggregate scope only",
+      "matched_exact_head_local_tests": [
+        {
+          "nodeid": "tests/research/test_validation_resampling.py::test_monte_carlo_drawdown_is_seeded",
+          "outcome": "passed"
+        }
+      ],
+      "references": [
+        {
+          "path": "strattester/research/resampling.py",
+          "line": 35,
+          "url": "https://github.com/YehorBabenko88/strattester/blob/a56c24a0f25a0c5ea9222fcd953a49536c91dfc9/strattester/research/resampling.py#L35"
+        },
+        {
+          "path": "tests/research/test_validation_resampling.py",
+          "line": 30,
+          "url": "https://github.com/YehorBabenko88/strattester/blob/a56c24a0f25a0c5ea9222fcd953a49536c91dfc9/tests/research/test_validation_resampling.py#L30"
+        }
+      ],
+      "detail_report": "agent7-reuse-strattester-a56.json"
+    },
+    {
+      "repo": "strattester",
+      "capability": "walk_forward",
+      "status": "IMPLEMENTED",
+      "entrypoints": "Direct run_walk_forward; python -m strattester.research_cli walk-forward",
+      "dependencies": [
+        "torch==2.14.1",
+        "research.alphafold_training",
+        "signature verifier/OpenSSL for signed file route"
+      ],
+      "limits": "Synthetic engineering only; bootstrap checkpoint diagnostic only; no pooled portfolio claim. Simpler validation.walk_forward_folds only slices and can overlap tests when step < test size.",
+      "verification": "SOURCE_INSPECTED; matched exact-head local test outcomes recorded separately; hosted aggregate scope only",
+      "matched_exact_head_local_tests": [
+        {
+          "nodeid": "tests/research/test_financial_experiment.py::test_neural_walk_forward_retrains_fresh_models_and_keeps_fold_evidence",
+          "outcome": "passed"
+        },
+        {
+          "nodeid": "tests/research/test_financial_walkforward_session.py::test_cli_requires_independent_trust_checkpoint_pins_and_runs_offline",
+          "outcome": "passed"
+        }
+      ],
+      "references": [
+        {
+          "path": "strattester/research/financial_experiment.py",
+          "line": 193,
+          "url": "https://github.com/YehorBabenko88/strattester/blob/a56c24a0f25a0c5ea9222fcd953a49536c91dfc9/strattester/research/financial_experiment.py#L193"
+        },
+        {
+          "path": "strattester/research/financial_walkforward_session.py",
+          "line": 121,
+          "url": "https://github.com/YehorBabenko88/strattester/blob/a56c24a0f25a0c5ea9222fcd953a49536c91dfc9/strattester/research/financial_walkforward_session.py#L121"
+        },
+        {
+          "path": "strattester/research_cli.py",
+          "line": 113,
+          "url": "https://github.com/YehorBabenko88/strattester/blob/a56c24a0f25a0c5ea9222fcd953a49536c91dfc9/strattester/research_cli.py#L113"
+        },
+        {
+          "path": "tests/research/test_financial_experiment.py",
+          "line": 87,
+          "url": "https://github.com/YehorBabenko88/strattester/blob/a56c24a0f25a0c5ea9222fcd953a49536c91dfc9/tests/research/test_financial_experiment.py#L87"
+        },
+        {
+          "path": "tests/research/test_financial_walkforward_session.py",
+          "line": 109,
+          "url": "https://github.com/YehorBabenko88/strattester/blob/a56c24a0f25a0c5ea9222fcd953a49536c91dfc9/tests/research/test_financial_walkforward_session.py#L109"
+        }
+      ],
+      "detail_report": "agent7-reuse-strattester-a56.json"
+    },
+    {
+      "repo": "strattester",
+      "capability": "out_of_sample",
+      "status": "PARTIAL",
+      "entrypoints": "financial_experiment.run_experiment/run_walk_forward",
+      "dependencies": [
+        "torch",
+        "financial_pipeline",
+        "financial_training"
+      ],
+      "limits": "Real OOS explicitly BLOCKED. Explicit allow_retraining_on_prior_oos=True labels SEQUENTIAL_RETRAINING, not independent holdout. No durable global experiment registry preventing repeated human test-set selection established.",
+      "verification": "SOURCE_INSPECTED; matched exact-head local test outcomes recorded separately; hosted aggregate scope only",
+      "matched_exact_head_local_tests": [
+        {
+          "nodeid": "tests/research/test_financial_experiment.py::test_walk_forward_rejects_overlapping_or_reused_holdouts_before_artifacts",
+          "outcome": "passed"
+        },
+        {
+          "nodeid": "tests/research/test_financial_walkforward_session.py::test_changed_future_and_holdout_labels_cannot_change_first_fold_training",
+          "outcome": "passed"
+        }
+      ],
+      "references": [
+        {
+          "path": "strattester/research/financial_experiment.py",
+          "line": 70,
+          "url": "https://github.com/YehorBabenko88/strattester/blob/a56c24a0f25a0c5ea9222fcd953a49536c91dfc9/strattester/research/financial_experiment.py#L70"
+        },
+        {
+          "path": "tests/research/test_financial_experiment.py",
+          "line": 101,
+          "url": "https://github.com/YehorBabenko88/strattester/blob/a56c24a0f25a0c5ea9222fcd953a49536c91dfc9/tests/research/test_financial_experiment.py#L101"
+        },
+        {
+          "path": "tests/research/test_financial_walkforward_session.py",
+          "line": 150,
+          "url": "https://github.com/YehorBabenko88/strattester/blob/a56c24a0f25a0c5ea9222fcd953a49536c91dfc9/tests/research/test_financial_walkforward_session.py#L150"
+        }
+      ],
+      "detail_report": "agent7-reuse-strattester-a56.json"
+    },
+    {
+      "repo": "strattester",
+      "capability": "pattern_walk_forward",
+      "status": "PARTIAL",
+      "entrypoints": "pattern_evaluation.evaluate_entry_signals",
+      "dependencies": [
+        "execution",
+        "statistics",
+        "entry_screening",
+        "resampling"
+      ],
+      "limits": "Does not train/refit a model per fold; precomputed signals require independent causal lineage. Pooled IID bootstrap and screening do not correct selection.",
+      "verification": "SOURCE_INSPECTED; matched exact-head local test outcomes recorded separately; hosted aggregate scope only",
+      "matched_exact_head_local_tests": [],
+      "references": [
+        {
+          "path": "strattester/research/pattern_evaluation.py",
+          "line": 17,
+          "url": "https://github.com/YehorBabenko88/strattester/blob/a56c24a0f25a0c5ea9222fcd953a49536c91dfc9/strattester/research/pattern_evaluation.py#L17"
+        }
+      ],
+      "detail_report": "agent7-reuse-strattester-a56.json"
+    },
+    {
+      "repo": "strattester",
+      "capability": "multiple_testing",
+      "status": "DOCUMENTED_ONLY",
+      "entrypoints": "No callable correction found in bounded search",
+      "dependencies": [],
+      "limits": "Search is bounded, not proof of absence throughout every dependency.",
+      "verification": "SOURCE_INSPECTED; matched exact-head local test outcomes recorded separately; hosted aggregate scope only",
+      "matched_exact_head_local_tests": [],
+      "references": [
+        {
+          "path": "docs/financial-real-oos-protocol.md",
+          "line": 83,
+          "url": "https://github.com/YehorBabenko88/strattester/blob/a56c24a0f25a0c5ea9222fcd953a49536c91dfc9/docs/financial-real-oos-protocol.md#L83"
+        },
+        {
+          "path": "research/alphafold_training/ACCEPTANCE.md",
+          "line": 24,
+          "url": "https://github.com/YehorBabenko88/strattester/blob/a56c24a0f25a0c5ea9222fcd953a49536c91dfc9/research/alphafold_training/ACCEPTANCE.md#L24"
+        }
+      ],
+      "detail_report": "agent7-reuse-strattester-a56.json"
+    },
+    {
+      "repo": "strattester",
+      "capability": "risk_controls",
+      "status": "IMPLEMENTED",
+      "entrypoints": "PaperAccount.reserve",
+      "dependencies": [
+        "decimal",
+        "SQLite"
+      ],
+      "limits": "Finite laboratory policy; realized cash accounting, no live marks/liquidation/exchange collateral.",
+      "verification": "SOURCE_INSPECTED; matched exact-head local test outcomes recorded separately; hosted aggregate scope only",
+      "matched_exact_head_local_tests": [
+        {
+          "nodeid": "tests/research/test_paper_account.py::test_short_unknown_funding_stale_and_wide_quote_are_actual_risk_denials",
+          "outcome": "passed"
+        },
+        {
+          "nodeid": "tests/research/test_paper_account.py::test_same_symbol_and_concurrent_cash_reservations_cannot_overspend",
+          "outcome": "passed"
+        }
+      ],
+      "references": [
+        {
+          "path": "strattester/research/paper_account.py",
+          "line": 390,
+          "url": "https://github.com/YehorBabenko88/strattester/blob/a56c24a0f25a0c5ea9222fcd953a49536c91dfc9/strattester/research/paper_account.py#L390"
+        },
+        {
+          "path": "tests/research/test_paper_account.py",
+          "line": 96,
+          "url": "https://github.com/YehorBabenko88/strattester/blob/a56c24a0f25a0c5ea9222fcd953a49536c91dfc9/tests/research/test_paper_account.py#L96"
+        },
+        {
+          "path": "tests/research/test_paper_account.py",
+          "line": 109,
+          "url": "https://github.com/YehorBabenko88/strattester/blob/a56c24a0f25a0c5ea9222fcd953a49536c91dfc9/tests/research/test_paper_account.py#L109"
+        }
+      ],
+      "detail_report": "agent7-reuse-strattester-a56.json"
+    },
+    {
+      "repo": "strattester",
+      "capability": "portfolio_correlation_risk",
+      "status": "NOT_VERIFIED",
+      "entrypoints": "No callable portfolio covariance/correlation risk gate found in bounded search",
+      "dependencies": [],
+      "limits": "Same-symbol exclusion and max positions do not implement cross-asset correlation. Docs history-pipeline-v1.md:32 mentions Math correlations integration as separate reuse direction.",
+      "verification": "SOURCE_INSPECTED; matched exact-head local test outcomes recorded separately; hosted aggregate scope only",
+      "matched_exact_head_local_tests": [],
+      "references": [
+        {
+          "path": "docs/integration/history-pipeline-v1.md",
+          "line": 32,
+          "url": "https://github.com/YehorBabenko88/strattester/blob/a56c24a0f25a0c5ea9222fcd953a49536c91dfc9/docs/integration/history-pipeline-v1.md#L32"
+        }
+      ],
+      "detail_report": "agent7-reuse-strattester-a56.json"
+    },
+    {
+      "repo": "strattester",
+      "capability": "crash_idempotency_uncertain_collateral",
+      "status": "IMPLEMENTED",
+      "entrypoints": "PaperAccount.close_trade/mark_uncertain/reconcile",
+      "dependencies": [
+        "SQLite",
+        "PaperLedger"
+      ],
+      "limits": "Node-local fixtures; not multi-node failover or physical power-loss acceptance.",
+      "verification": "SOURCE_INSPECTED; matched exact-head local test outcomes recorded separately; hosted aggregate scope only",
+      "matched_exact_head_local_tests": [
+        {
+          "nodeid": "tests/research/test_paper_account.py::test_crash_after_native_commit_reconciles_once_without_reexecution",
+          "outcome": "passed"
+        },
+        {
+          "nodeid": "tests/research/test_agent7_paper_integrity.py::test_agent7_actual_worker_loss_and_retry_has_one_durable_trade[before]",
+          "outcome": "passed"
+        },
+        {
+          "nodeid": "tests/research/test_agent7_paper_integrity.py::test_agent7_actual_worker_loss_and_retry_has_one_durable_trade[after]",
+          "outcome": "passed"
+        },
+        {
+          "nodeid": "tests/research/test_agent7_paper_integrity.py::test_agent7_actual_worker_loss_and_retry_has_one_durable_trade[uncommitted]",
+          "outcome": "passed"
+        },
+        {
+          "nodeid": "tests/research/test_agent7_research_replay.py::test_agent7_uncertain_collateral_survives_reopen_and_reconcile",
+          "outcome": "passed"
+        }
+      ],
+      "references": [
+        {
+          "path": "strattester/research/paper_account.py",
+          "line": 490,
+          "url": "https://github.com/YehorBabenko88/strattester/blob/a56c24a0f25a0c5ea9222fcd953a49536c91dfc9/strattester/research/paper_account.py#L490"
+        },
+        {
+          "path": "strattester/research/paper_account.py",
+          "line": 523,
+          "url": "https://github.com/YehorBabenko88/strattester/blob/a56c24a0f25a0c5ea9222fcd953a49536c91dfc9/strattester/research/paper_account.py#L523"
+        },
+        {
+          "path": "tests/research/test_agent7_paper_integrity.py",
+          "line": 83,
+          "url": "https://github.com/YehorBabenko88/strattester/blob/a56c24a0f25a0c5ea9222fcd953a49536c91dfc9/tests/research/test_agent7_paper_integrity.py#L83"
+        },
+        {
+          "path": "tests/research/test_agent7_research_replay.py",
+          "line": 62,
+          "url": "https://github.com/YehorBabenko88/strattester/blob/a56c24a0f25a0c5ea9222fcd953a49536c91dfc9/tests/research/test_agent7_research_replay.py#L62"
+        },
+        {
+          "path": "tests/research/test_paper_account.py",
+          "line": 135,
+          "url": "https://github.com/YehorBabenko88/strattester/blob/a56c24a0f25a0c5ea9222fcd953a49536c91dfc9/tests/research/test_paper_account.py#L135"
+        }
+      ],
+      "detail_report": "agent7-reuse-strattester-a56.json"
+    },
+    {
+      "repo": "strattester",
+      "capability": "stale_worker_noquorum",
+      "status": "PARTIAL",
+      "entrypoints": "result_persistence.persist_report_fenced; engine.grid_data_first_worker._IPCLease; PaperAccount require_current callback",
+      "dependencies": [
+        "local state store",
+        "IPC framing"
+      ],
+      "limits": "Not authenticated Assignment v1 endpoint ACK or actual quorum integration.",
+      "verification": "SOURCE_INSPECTED; matched exact-head local test outcomes recorded separately; hosted aggregate scope only",
+      "matched_exact_head_local_tests": [
+        {
+          "nodeid": "tests/runtime/test_concurrency_isolation.py::test_stale_worker_cannot_complete_after_takeover",
+          "outcome": "passed"
+        },
+        {
+          "nodeid": "tests/research/test_agent7_research_replay.py::test_agent7_model_authority_denial_blocks_paper_commit_without_freeing_cash[STALE_WORKER]",
+          "outcome": "passed"
+        },
+        {
+          "nodeid": "tests/research/test_agent7_research_replay.py::test_agent7_model_authority_denial_blocks_paper_commit_without_freeing_cash[NO_QUORUM]",
+          "outcome": "passed"
+        },
+        {
+          "nodeid": "tests/research/test_agent7_research_replay.py::test_agent7_model_authority_denial_blocks_paper_commit_without_freeing_cash[REVOKED]",
+          "outcome": "passed"
+        },
+        {
+          "nodeid": "tests/research/test_agent7_research_replay.py::test_agent7_model_no_quorum_ack_cannot_publish_completion",
+          "outcome": "passed"
+        }
+      ],
+      "references": [
+        {
+          "path": "strattester/engine/grid_data_first_worker.py",
+          "line": 42,
+          "url": "https://github.com/YehorBabenko88/strattester/blob/a56c24a0f25a0c5ea9222fcd953a49536c91dfc9/strattester/engine/grid_data_first_worker.py#L42"
+        },
+        {
+          "path": "strattester/research/result_persistence.py",
+          "line": 20,
+          "url": "https://github.com/YehorBabenko88/strattester/blob/a56c24a0f25a0c5ea9222fcd953a49536c91dfc9/strattester/research/result_persistence.py#L20"
+        },
+        {
+          "path": "tests/research/test_agent7_research_replay.py",
+          "line": 78,
+          "url": "https://github.com/YehorBabenko88/strattester/blob/a56c24a0f25a0c5ea9222fcd953a49536c91dfc9/tests/research/test_agent7_research_replay.py#L78"
+        },
+        {
+          "path": "tests/research/test_agent7_research_replay.py",
+          "line": 107,
+          "url": "https://github.com/YehorBabenko88/strattester/blob/a56c24a0f25a0c5ea9222fcd953a49536c91dfc9/tests/research/test_agent7_research_replay.py#L107"
+        },
+        {
+          "path": "tests/runtime/test_concurrency_isolation.py",
+          "line": 73,
+          "url": "https://github.com/YehorBabenko88/strattester/blob/a56c24a0f25a0c5ea9222fcd953a49536c91dfc9/tests/runtime/test_concurrency_isolation.py#L73"
+        }
+      ],
+      "detail_report": "agent7-reuse-strattester-a56.json"
+    },
+    {
+      "repo": "strattester",
+      "capability": "native_research_process_launch",
+      "status": "STUB",
+      "entrypoints": "native/windows/Broker.cs Main --launch branch",
+      "dependencies": [
+        "Windows .NET native broker"
+      ],
+      "limits": "Intentional fail-closed safety guard is implemented; full research process launch is not. Hosted component PASS explicitly has native_enforcement=false/research_process_created=false.",
+      "verification": {
+        "local": "EXPLICIT_SKIP_IF_NATIVE_BROKER_UNCONFIGURED",
+        "WindowsCI": "19 native-broker skips in A8-reviewed core inventory; separate component-only CI cannot qualify launch",
+        "actualintegration": "NOT_ESTABLISHED",
+        "physical": "NOT_RUN"
+      },
+      "matched_exact_head_local_tests": [
+        {
+          "nodeid": "tests/native/test_native_build.py::NativeCliTests::test_launch_does_not_execute_arbitrary_command",
+          "outcome": "skipped"
+        }
+      ],
+      "references": [
+        {
+          "path": "native/windows/Broker.cs",
+          "line": 99,
+          "url": "https://github.com/YehorBabenko88/strattester/blob/a56c24a0f25a0c5ea9222fcd953a49536c91dfc9/native/windows/Broker.cs#L99"
+        },
+        {
+          "path": "tests/native/test_native_build.py",
+          "line": 60,
+          "url": "https://github.com/YehorBabenko88/strattester/blob/a56c24a0f25a0c5ea9222fcd953a49536c91dfc9/tests/native/test_native_build.py#L60"
+        }
+      ],
+      "detail_report": "agent7-reuse-strattester-a56.json"
+    },
+    {
+      "repo": "strattester",
+      "capability": "causal_history_scientific_display_handoff",
+      "status": "PARTIAL",
+      "entrypoints": "history_scientific_handoff.handoff_packet",
+      "dependencies": [
+        "grid_math_history canonical/digest/number"
+      ],
+      "limits": "scientific_api NOT_EXECUTED, source UNATTESTED; published timestamp optional declared/unattested. Not actual Math executable source or market admission.",
+      "verification": {
+        "local": "Source and exact-head mapped test outcomes below",
+        "WindowsCI": "NOT_MAPPED_PER_CAPABILITY",
+        "actualintegration": "NOT_ESTABLISHED",
+        "physical": "NOT_RUN"
+      },
+      "matched_exact_head_local_tests": [],
+      "references": [
+        {
+          "path": "strattester/research/history_scientific_handoff.py",
+          "line": 11,
+          "url": "https://github.com/YehorBabenko88/strattester/blob/a56c24a0f25a0c5ea9222fcd953a49536c91dfc9/strattester/research/history_scientific_handoff.py#L11"
+        },
+        {
+          "path": "strattester/research/history_scientific_handoff.py",
+          "line": 37,
+          "url": "https://github.com/YehorBabenko88/strattester/blob/a56c24a0f25a0c5ea9222fcd953a49536c91dfc9/strattester/research/history_scientific_handoff.py#L37"
+        },
+        {
+          "path": "tests/research/test_history_scientific_handoff.py",
+          "line": 24,
+          "url": "https://github.com/YehorBabenko88/strattester/blob/a56c24a0f25a0c5ea9222fcd953a49536c91dfc9/tests/research/test_history_scientific_handoff.py#L24"
+        }
+      ],
+      "detail_report": "agent7-reuse-strattester-a56.json"
+    },
+    {
+      "repo": "math",
+      "capability": "return-domain-research",
+      "status": "IMPLEMENTED",
+      "entrypoints": "src/returns-research.mjs:4 evaluateReturnResearch",
+      "dependencies": [
+        "ECMAScript built-ins"
+      ],
+      "limits": [
+        "RMSE/MAE forecast comparison, not trade expectancy or fills.",
+        "stride may be less than windowSize; overlapping windows reuse observations across roles. No global dataset split registry, purge, embargo or repeated-research control.",
+        "No timestamp/availability/provenance admission in raw-price API."
+      ],
+      "verification": {
+        "local_execution": "NOT_RUN_THIS_AUDIT",
+        "windows_exact_pin": "NOT_MAPPED_PER_CAPABILITY",
+        "test_evidence": "Listed test identities inspected as source; existing aggregate platform receipt is not a per-capability numerical oracle",
+        "actual_external_integration": "NOT_VERIFIED",
+        "native_acceptance": "NOT_VERIFIED",
+        "physical": "NOT_VERIFIED"
+      },
+      "matched_exact_head_local_tests": [],
+      "references": [
+        {
+          "path": "src/math-engine-server.mjs",
+          "line": 30,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/src/math-engine-server.mjs#L30"
+        },
+        {
+          "path": "src/math-engine-server.mjs",
+          "line": 134,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/src/math-engine-server.mjs#L134"
+        },
+        {
+          "path": "src/math-engine-server.mjs",
+          "line": 171,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/src/math-engine-server.mjs#L171"
+        },
+        {
+          "path": "src/returns-research.mjs",
+          "line": 4,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/src/returns-research.mjs#L4"
+        },
+        {
+          "path": "tests/returns-research.test.mjs",
+          "line": 5,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/tests/returns-research.test.mjs#L5"
+        },
+        {
+          "path": "tests/returns-research.test.mjs",
+          "line": 18,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/tests/returns-research.test.mjs#L18"
+        }
+      ],
+      "detail_report": "agent7-reuse-math-917.json"
+    },
+    {
+      "repo": "math",
+      "capability": "walk-forward-and-guarded-selection",
+      "status": "IMPLEMENTED",
+      "entrypoints": "src/walk-forward.mjs:23 evaluateWalkForward; src/guarded-selection.mjs:6 evaluateGuardedSelection",
+      "dependencies": [
+        "src/model-fitting.mjs:5 fitLandauMap",
+        "src/cross-domain.mjs normalizeSeries",
+        "src/walk-forward.mjs:8 forecastLandauStep"
+      ],
+      "limits": [
+        "Default stride100/window500 reuses observations across windows; holdout isolation is per-window only.",
+        "One-step OOS forecasts use observed previous OOS value; this is causal online evaluation, not autonomous multi-step prediction.",
+        "No split search accounting or correction of repeated validation/parameter comparisons."
+      ],
+      "verification": {
+        "local_execution": "NOT_RUN_THIS_AUDIT",
+        "windows_exact_pin": "NOT_MAPPED_PER_CAPABILITY",
+        "test_evidence": "Listed test identities inspected as source; existing aggregate platform receipt is not a per-capability numerical oracle",
+        "actual_external_integration": "NOT_VERIFIED",
+        "native_acceptance": "NOT_VERIFIED",
+        "physical": "NOT_VERIFIED"
+      },
+      "matched_exact_head_local_tests": [],
+      "references": [
+        {
+          "path": "scripts/numerical/walk-forward-guard-comparison.mjs",
+          "line": 8,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/scripts/numerical/walk-forward-guard-comparison.mjs#L8"
+        },
+        {
+          "path": "src/guarded-selection.mjs",
+          "line": 6,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/src/guarded-selection.mjs#L6"
+        },
+        {
+          "path": "src/model-fitting.mjs",
+          "line": 5,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/src/model-fitting.mjs#L5"
+        },
+        {
+          "path": "src/walk-forward.mjs",
+          "line": 8,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/src/walk-forward.mjs#L8"
+        },
+        {
+          "path": "src/walk-forward.mjs",
+          "line": 23,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/src/walk-forward.mjs#L23"
+        },
+        {
+          "path": "tests/guarded-selection.test.mjs",
+          "line": 22,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/tests/guarded-selection.test.mjs#L22"
+        },
+        {
+          "path": "tests/model-fitting.test.mjs",
+          "line": 3,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/tests/model-fitting.test.mjs#L3"
+        },
+        {
+          "path": "tests/walk-forward.test.mjs",
+          "line": 19,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/tests/walk-forward.test.mjs#L19"
+        }
+      ],
+      "detail_report": "agent7-reuse-math-917.json"
+    },
+    {
+      "repo": "math",
+      "capability": "causal-feature-screen",
+      "status": "IMPLEMENTED",
+      "entrypoints": "src/causal-feature-screen.mjs:3 screenCausalFeatures",
+      "dependencies": [
+        "ECMAScript built-ins"
+      ],
+      "limits": [
+        "Four individual exploratory features; no validation partition or multiple-testing correction.",
+        "Provenance NOT_VERIFIED at48; no exchange attestation."
+      ],
+      "verification": {
+        "local_execution": "NOT_RUN_THIS_AUDIT",
+        "windows_exact_pin": "NOT_MAPPED_PER_CAPABILITY",
+        "test_evidence": "Listed test identities inspected as source; existing aggregate platform receipt is not a per-capability numerical oracle",
+        "actual_external_integration": "NOT_VERIFIED",
+        "native_acceptance": "NOT_VERIFIED",
+        "physical": "NOT_VERIFIED"
+      },
+      "matched_exact_head_local_tests": [],
+      "references": [
+        {
+          "path": "src/causal-feature-screen.mjs",
+          "line": 3,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/src/causal-feature-screen.mjs#L3"
+        },
+        {
+          "path": "tests/causal-feature-screen.test.mjs",
+          "line": 18,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/tests/causal-feature-screen.test.mjs#L18"
+        },
+        {
+          "path": "tests/causal-feature-screen.test.mjs",
+          "line": 24,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/tests/causal-feature-screen.test.mjs#L24"
+        }
+      ],
+      "detail_report": "agent7-reuse-math-917.json"
+    },
+    {
+      "repo": "math",
+      "capability": "bootstrap-confidence-expectancy",
+      "status": "PARTIAL",
+      "entrypoints": "python/history_statistics.py:7 paired_expectancy_bootstrap; :36 block_bootstrap_expectancy",
+      "dependencies": [
+        "Python stdlib random, statistics, math",
+        "Parity tests require external GRID_REFERENCE or sibling grid source"
+      ],
+      "limits": [
+        "Existing callable Python kernels, no JS/HTTP statistics endpoint found.",
+        "_net at4-5 defaults missing pnl/fees/slippage to zero; funding omitted.",
+        "Paired bootstrap uses intersection only, silently omits missing ids; iid resampling may ignore temporal dependence.",
+        "Block bootstrap uses non-overlapping complete blocks, discards remainder when creating pool; no block-size calibration.",
+        "runs and trade count lack upper bounds in direct functions; seed reproducibility is not statistical calibration.",
+        "No exact-pin Python execution receipt inspected; parity is a test definition."
+      ],
+      "verification": {
+        "local_execution": "NOT_RUN_THIS_AUDIT",
+        "windows_exact_pin": "NOT_MAPPED_PER_CAPABILITY",
+        "test_evidence": "Listed test identities inspected as source; existing aggregate platform receipt is not a per-capability numerical oracle",
+        "actual_external_integration": "NOT_VERIFIED",
+        "native_acceptance": "NOT_VERIFIED",
+        "physical": "NOT_VERIFIED"
+      },
+      "matched_exact_head_local_tests": [],
+      "references": [
+        {
+          "path": "python/history_statistics.py",
+          "line": 7,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/python/history_statistics.py#L7"
+        },
+        {
+          "path": "python/history_statistics.py",
+          "line": 36,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/python/history_statistics.py#L36"
+        },
+        {
+          "path": "tests/test_history_kernels.py",
+          "line": 24,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/tests/test_history_kernels.py#L24"
+        }
+      ],
+      "detail_report": "agent7-reuse-math-917.json"
+    },
+    {
+      "repo": "math",
+      "capability": "risk-correlation",
+      "status": "PARTIAL",
+      "entrypoints": "python/history_sizing.py:1 apply_sizing; :21 ruin_stats; python/history_timeseries.py:9 acf; :22 rolling_volatility; :29 distributed_lag_correlations; :39 volatility_regime; :49 pair_error_correction; python/history_stochastic.py:9 lag1_autocorrelation",
+      "dependencies": [
+        "Python stdlib"
+      ],
+      "limits": [
+        "Research sizing scales existing trade fields, does not enforce live risk or create fills/cash ledger.",
+        "Ruin is realized deterministic equity-path threshold, not Monte Carlo ruin probability.",
+        "Costs omit funding and default missing fees/slippage to zero.",
+        "Lag correlation is exploratory; pair_error_correction explicitly proxy, not formal cointegration test; no significance/correction.",
+        "Direct kernels generally lack complete finite/parameter/resource admission."
+      ],
+      "verification": {
+        "local_execution": "NOT_RUN_THIS_AUDIT",
+        "windows_exact_pin": "NOT_MAPPED_PER_CAPABILITY",
+        "test_evidence": "Listed test identities inspected as source; existing aggregate platform receipt is not a per-capability numerical oracle",
+        "actual_external_integration": "NOT_VERIFIED",
+        "native_acceptance": "NOT_VERIFIED",
+        "physical": "NOT_VERIFIED"
+      },
+      "matched_exact_head_local_tests": [],
+      "references": [
+        {
+          "path": "python/history_sizing.py",
+          "line": 1,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/python/history_sizing.py#L1"
+        },
+        {
+          "path": "python/history_sizing.py",
+          "line": 21,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/python/history_sizing.py#L21"
+        },
+        {
+          "path": "python/history_stochastic.py",
+          "line": 9,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/python/history_stochastic.py#L9"
+        },
+        {
+          "path": "python/history_timeseries.py",
+          "line": 9,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/python/history_timeseries.py#L9"
+        },
+        {
+          "path": "python/history_timeseries.py",
+          "line": 22,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/python/history_timeseries.py#L22"
+        },
+        {
+          "path": "python/history_timeseries.py",
+          "line": 29,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/python/history_timeseries.py#L29"
+        },
+        {
+          "path": "python/history_timeseries.py",
+          "line": 39,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/python/history_timeseries.py#L39"
+        },
+        {
+          "path": "python/history_timeseries.py",
+          "line": 49,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/python/history_timeseries.py#L49"
+        },
+        {
+          "path": "tests/test_history_kernels.py",
+          "line": 24,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/tests/test_history_kernels.py#L24"
+        },
+        {
+          "path": "tests/test_history_kernels.py",
+          "line": 40,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/tests/test_history_kernels.py#L40"
+        }
+      ],
+      "detail_report": "agent7-reuse-math-917.json"
+    },
+    {
+      "repo": "math",
+      "capability": "monte-carlo-general",
+      "status": "NOT_VERIFIED",
+      "entrypoints": null,
+      "dependencies": [],
+      "limits": [
+        "Seeded bootstrap resampling exists; no separate general Monte Carlo market/path execution simulator found within bounded search. Absence is bounded, not repository-wide proof."
+      ],
+      "verification": {
+        "local_execution": "NOT_RUN_THIS_AUDIT",
+        "windows_exact_pin": "NOT_MAPPED_PER_CAPABILITY",
+        "test_evidence": "Listed test identities inspected as source; existing aggregate platform receipt is not a per-capability numerical oracle",
+        "actual_external_integration": "NOT_VERIFIED",
+        "native_acceptance": "NOT_VERIFIED",
+        "physical": "NOT_VERIFIED"
+      },
+      "matched_exact_head_local_tests": [],
+      "references": [],
+      "detail_report": "agent7-reuse-math-917.json"
+    },
+    {
+      "repo": "math",
+      "capability": "multiple-testing-and-global-dataset-separation",
+      "status": "DOCUMENTED_ONLY",
+      "entrypoints": "docs/integration/history-pipeline-v1.md:65",
+      "dependencies": [],
+      "limits": [
+        "Documentation requires freeze on validation, purging overlapping labels, explicit embargo; inspected runtime functions do not implement global dataset role reuse tracking/purge/embargo.",
+        "No Bonferroni/FDR/deflated-Sharpe or multiple-testing mechanism found in bounded src/python/tests/integration-doc search."
+      ],
+      "verification": {
+        "local_execution": "NOT_RUN_THIS_AUDIT",
+        "windows_exact_pin": "NOT_MAPPED_PER_CAPABILITY",
+        "test_evidence": "Listed test identities inspected as source; existing aggregate platform receipt is not a per-capability numerical oracle",
+        "actual_external_integration": "NOT_VERIFIED",
+        "native_acceptance": "NOT_VERIFIED",
+        "physical": "NOT_VERIFIED"
+      },
+      "matched_exact_head_local_tests": [],
+      "references": [
+        {
+          "path": "docs/integration/history-pipeline-v1.md",
+          "line": 65,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/docs/integration/history-pipeline-v1.md#L65"
+        }
+      ],
+      "detail_report": "agent7-reuse-math-917.json"
+    },
+    {
+      "repo": "math",
+      "capability": "timestamp-aware-history-prefix",
+      "status": "IMPLEMENTED",
+      "entrypoints": "python/history_contract.py:15 evaluate_timed_request; python/history_worker.py:34 evaluate; :19 frozen_analog_forecast",
+      "dependencies": [
+        "Python stdlib",
+        "python/history_nonlinear.py delay_vectors",
+        "python/history_timeseries.py"
+      ],
+      "limits": [
+        "No validation-set selection or cross-request immutable train split registry.",
+        "Dataset digest/source revision/receipt hashes are syntactically checked; source_authenticity NOT_EVALUATED_BY_MATH, no independent content/authentication verification.",
+        "No trade fills/costs/PaperAccount integration."
+      ],
+      "verification": {
+        "local_execution": "NOT_RUN_THIS_AUDIT",
+        "windows_exact_pin": "NOT_MAPPED_PER_CAPABILITY",
+        "test_evidence": "Listed test identities inspected as source; existing aggregate platform receipt is not a per-capability numerical oracle",
+        "actual_external_integration": "NOT_VERIFIED",
+        "native_acceptance": "NOT_VERIFIED",
+        "physical": "NOT_VERIFIED"
+      },
+      "matched_exact_head_local_tests": [],
+      "references": [
+        {
+          "path": "python/history_contract.py",
+          "line": 15,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/python/history_contract.py#L15"
+        },
+        {
+          "path": "python/history_worker.py",
+          "line": 19,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/python/history_worker.py#L19"
+        },
+        {
+          "path": "python/history_worker.py",
+          "line": 34,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/python/history_worker.py#L34"
+        },
+        {
+          "path": "tests/test_history_kernels.py",
+          "line": 60,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/tests/test_history_kernels.py#L60"
+        },
+        {
+          "path": "tests/test_history_timed.py",
+          "line": 37,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/tests/test_history_timed.py#L37"
+        },
+        {
+          "path": "tests/test_history_timed.py",
+          "line": 46,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/tests/test_history_timed.py#L46"
+        }
+      ],
+      "detail_report": "agent7-reuse-math-917.json"
+    },
+    {
+      "repo": "math",
+      "capability": "joint-python-js-scientific-composition",
+      "status": "IMPLEMENTED",
+      "entrypoints": "python/history_scientific_worker.py:19 evaluate_joint; scripts/history/scientific-stdio.mjs:1",
+      "dependencies": [
+        "Python stdlib subprocess",
+        "Operator-pinned Node executable",
+        "Existing src/scientific-engine.mjs"
+      ],
+      "limits": [
+        "Test definitions establish intended composition; no new execution performed or exact-pin Python receipt inspected.",
+        "capture_output can accumulate before stdout limit checked; timeout/heap bound subprocess but not all parent memory.",
+        "No Grid source authentication, real DB/replay execution, native/physical acceptance claim."
+      ],
+      "verification": {
+        "local_execution": "NOT_RUN_THIS_AUDIT",
+        "windows_exact_pin": "NOT_MAPPED_PER_CAPABILITY",
+        "test_evidence": "tests/test_history_scientific.py defines real subprocess composition with synthetic inputs; not merely a mocked graph contract. Its execution at exact917 is NOT_VERIFIED in inspected receipts.",
+        "actual_external_integration": "NOT_VERIFIED",
+        "native_acceptance": "NOT_VERIFIED",
+        "physical": "NOT_VERIFIED"
+      },
+      "matched_exact_head_local_tests": [],
+      "references": [
+        {
+          "path": "python/history_scientific_worker.py",
+          "line": 19,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/python/history_scientific_worker.py#L19"
+        },
+        {
+          "path": "scripts/history/scientific-stdio.mjs",
+          "line": 1,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/scripts/history/scientific-stdio.mjs#L1"
+        },
+        {
+          "path": "tests/scientific-history-clocks.test.mjs",
+          "line": 5,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/tests/scientific-history-clocks.test.mjs#L5"
+        },
+        {
+          "path": "tests/test_history_scientific.py",
+          "line": 36,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/tests/test_history_scientific.py#L36"
+        },
+        {
+          "path": "tests/test_history_scientific.py",
+          "line": 55,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/tests/test_history_scientific.py#L55"
+        },
+        {
+          "path": "tests/test_history_scientific.py",
+          "line": 71,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/tests/test_history_scientific.py#L71"
+        }
+      ],
+      "detail_report": "agent7-reuse-math-917.json"
+    },
+    {
+      "repo": "math",
+      "capability": "scientific-DAG-contract-and-provenance",
+      "status": "IMPLEMENTED",
+      "entrypoints": "src/scientific-engine.mjs:52 executeScientificGraph; :115 scientificCapabilities",
+      "dependencies": [
+        "node:crypto",
+        "node:util",
+        "src/scientific-operations.mjs",
+        "src/scientific-data.mjs"
+      ],
+      "limits": [
+        "Global asOf cutoff is not a per-output decision-time forecasting guarantee: delayed data can have availableAt later than its event timestamp but <=asOf; consumers must honor propagated availableAt.",
+        "Caller provenance SHA is accepted metadata, not proof actual values hash to admitted upstream data; output source CALLER_SUPPLIED_UNATTESTED.",
+        "Fixed models/descriptive output summaries, no training or inferential confidence."
+      ],
+      "verification": {
+        "local_execution": "NOT_RUN_THIS_AUDIT",
+        "windows_exact_pin": "NOT_MAPPED_PER_CAPABILITY",
+        "test_evidence": "Listed test identities inspected as source; existing aggregate platform receipt is not a per-capability numerical oracle",
+        "actual_external_integration": "NOT_VERIFIED",
+        "native_acceptance": "NOT_VERIFIED",
+        "physical": "NOT_VERIFIED"
+      },
+      "matched_exact_head_local_tests": [],
+      "references": [
+        {
+          "path": "src/math-engine-server.mjs",
+          "line": 171,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/src/math-engine-server.mjs#L171"
+        },
+        {
+          "path": "src/scientific-engine.mjs",
+          "line": 52,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/src/scientific-engine.mjs#L52"
+        },
+        {
+          "path": "src/scientific-engine.mjs",
+          "line": 115,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/src/scientific-engine.mjs#L115"
+        },
+        {
+          "path": "tests/scientific-engine.test.mjs",
+          "line": 29,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/tests/scientific-engine.test.mjs#L29"
+        },
+        {
+          "path": "tests/scientific-engine.test.mjs",
+          "line": 40,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/tests/scientific-engine.test.mjs#L40"
+        },
+        {
+          "path": "tests/scientific-engine.test.mjs",
+          "line": 67,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/tests/scientific-engine.test.mjs#L67"
+        }
+      ],
+      "detail_report": "agent7-reuse-math-917.json"
+    },
+    {
+      "repo": "math",
+      "capability": "bounded-research-worker",
+      "status": "IMPLEMENTED",
+      "entrypoints": "src/bounded-experiment.mjs:4 runBoundedExperiment",
+      "dependencies": [
+        "node:worker_threads",
+        "src/bounded-experiment-worker.mjs",
+        "existing Math request engine"
+      ],
+      "limits": [
+        "Process-local capacity, not distributed resource quota; JSON.stringify direct-call boundary differs from inert scientific snapshot.",
+        "Numerical replay is deterministic re-execution, not market execution simulator."
+      ],
+      "verification": {
+        "local_execution": "NOT_RUN_THIS_AUDIT",
+        "windows_exact_pin": "NOT_MAPPED_PER_CAPABILITY",
+        "test_evidence": "Listed test identities inspected as source; existing aggregate platform receipt is not a per-capability numerical oracle",
+        "actual_external_integration": "NOT_VERIFIED",
+        "native_acceptance": "NOT_VERIFIED",
+        "physical": "NOT_VERIFIED"
+      },
+      "matched_exact_head_local_tests": [],
+      "references": [
+        {
+          "path": "src/bounded-experiment.mjs",
+          "line": 4,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/src/bounded-experiment.mjs#L4"
+        },
+        {
+          "path": "src/math-engine-server.mjs",
+          "line": 171,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/src/math-engine-server.mjs#L171"
+        },
+        {
+          "path": "tests/agent7-replay-research.test.mjs",
+          "line": 74,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/tests/agent7-replay-research.test.mjs#L74"
+        },
+        {
+          "path": "tests/bounded-experiment.test.mjs",
+          "line": 6,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/tests/bounded-experiment.test.mjs#L6"
+        },
+        {
+          "path": "tests/bounded-experiment.test.mjs",
+          "line": 9,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/tests/bounded-experiment.test.mjs#L9"
+        },
+        {
+          "path": "tests/bounded-experiment.test.mjs",
+          "line": 12,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/tests/bounded-experiment.test.mjs#L12"
+        }
+      ],
+      "detail_report": "agent7-reuse-math-917.json"
+    },
+    {
+      "repo": "math",
+      "capability": "anti-replay-not-paper-ledger",
+      "status": "IMPLEMENTED",
+      "entrypoints": "src/ai-orchestrator/replay.mjs:5 newReplayFilter; :6 observeClaim; src/knowledge/file-replay-ledger.mjs:6 FileReplayLedger",
+      "dependencies": [
+        "Node filesystem/crypto; optional SQLite registry elsewhere"
+      ],
+      "limits": [
+        "Ephemeral filter capped10000 and offline-only; file replay ledger single-host crash-resistant consume fence.",
+        "These are receipt/request replay ledgers, not fill/position/cash PaperLedger/PaperAccount."
+      ],
+      "verification": {
+        "local_execution": "NOT_RUN_THIS_AUDIT",
+        "windows_exact_pin": "NOT_MAPPED_PER_CAPABILITY",
+        "test_evidence": "Listed test identities inspected as source; existing aggregate platform receipt is not a per-capability numerical oracle",
+        "actual_external_integration": "NOT_VERIFIED",
+        "native_acceptance": "NOT_VERIFIED",
+        "physical": "NOT_VERIFIED"
+      },
+      "matched_exact_head_local_tests": [],
+      "references": [
+        {
+          "path": "src/ai-orchestrator/replay.mjs",
+          "line": 5,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/src/ai-orchestrator/replay.mjs#L5"
+        },
+        {
+          "path": "src/ai-orchestrator/replay.mjs",
+          "line": 6,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/src/ai-orchestrator/replay.mjs#L6"
+        },
+        {
+          "path": "src/knowledge/file-replay-ledger.mjs",
+          "line": 6,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/src/knowledge/file-replay-ledger.mjs#L6"
+        },
+        {
+          "path": "tests/agent7-replay-research.test.mjs",
+          "line": 19,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/tests/agent7-replay-research.test.mjs#L19"
+        },
+        {
+          "path": "tests/agent7-replay-research.test.mjs",
+          "line": 66,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/tests/agent7-replay-research.test.mjs#L66"
+        },
+        {
+          "path": "tests/knowledge-file-replay-ledger.test.mjs",
+          "line": 7,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/tests/knowledge-file-replay-ledger.test.mjs#L7"
+        }
+      ],
+      "detail_report": "agent7-reuse-math-917.json"
+    },
+    {
+      "repo": "math",
+      "capability": "PaperLedger-PaperAccount",
+      "status": "NOT_VERIFIED",
+      "entrypoints": null,
+      "dependencies": [],
+      "limits": [
+        "Exact names absent in bounded src/python/tests/docs-integration search; no new core proposed.",
+        "docs/integration/history-pipeline-v1.md:65 assigns position/cash ledger and execution policy to Strattester. Existing Math source does not establish end-to-end trade ledger integration."
+      ],
+      "verification": {
+        "local_execution": "NOT_RUN_THIS_AUDIT",
+        "windows_exact_pin": "NOT_MAPPED_PER_CAPABILITY",
+        "test_evidence": "Listed test identities inspected as source; existing aggregate platform receipt is not a per-capability numerical oracle",
+        "actual_external_integration": "NOT_VERIFIED",
+        "native_acceptance": "NOT_VERIFIED",
+        "physical": "NOT_VERIFIED"
+      },
+      "matched_exact_head_local_tests": [],
+      "references": [
+        {
+          "path": "docs/integration/history-pipeline-v1.md",
+          "line": 65,
+          "url": "https://github.com/YehorBabenko88/math/blob/917d99672e37db59835a8ab23b03c99826b12d78/docs/integration/history-pipeline-v1.md#L65"
+        }
+      ],
+      "detail_report": "agent7-reuse-math-917.json"
+    },
+    {
+      "repo": "meta_analyse",
+      "capability": "OHLCV contract and digest",
+      "status": "IMPLEMENTED",
+      "entrypoints": "See detail code refs",
+      "dependencies": [
+        "stdlib copy/datetime/decimal/hashlib/json/math/re/time",
+        "core.Candle",
+        "core.untouched_levels"
+      ],
+      "limits": "Exact v1 field sets, ten symbols, original units, finite numeric OHLC constraints, canonical SHA256 dataset and decision-bound request. Caller-provided raw_sha256/source_revision are syntactic declarations, not verified raw source.",
+      "verification": {
+        "hosted_suite": "Exact f3c suite success only; individual test identity/runner receipt not independently mapped",
+        "local_current_pin": "NOT_RUN",
+        "windows_per_capability": "NOT_MAPPED",
+        "physical": "NOT_RUN"
+      },
+      "matched_exact_head_local_tests": [],
+      "references": [
+        {
+          "path": "src/meta_analyse/ohlcv_research_adapter.py",
+          "line": 33,
+          "url": "https://github.com/YehorBabenko88/meta_analyse/blob/f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1/src/meta_analyse/ohlcv_research_adapter.py#L33"
+        },
+        {
+          "path": "src/meta_analyse/ohlcv_research_adapter.py",
+          "line": 38,
+          "url": "https://github.com/YehorBabenko88/meta_analyse/blob/f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1/src/meta_analyse/ohlcv_research_adapter.py#L38"
+        },
+        {
+          "path": "src/meta_analyse/ohlcv_research_adapter.py",
+          "line": 51,
+          "url": "https://github.com/YehorBabenko88/meta_analyse/blob/f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1/src/meta_analyse/ohlcv_research_adapter.py#L51"
+        },
+        {
+          "path": "tests/test_agent7_ohlcv_research_contract.py",
+          "line": 78,
+          "url": "https://github.com/YehorBabenko88/meta_analyse/blob/f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1/tests/test_agent7_ohlcv_research_contract.py#L78"
+        },
+        {
+          "path": "tests/test_ohlcv_research_adapter.py",
+          "line": 59,
+          "url": "https://github.com/YehorBabenko88/meta_analyse/blob/f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1/tests/test_ohlcv_research_adapter.py#L59"
+        },
+        {
+          "path": "tests/test_ohlcv_research_adapter.py",
+          "line": 71,
+          "url": "https://github.com/YehorBabenko88/meta_analyse/blob/f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1/tests/test_ohlcv_research_adapter.py#L71"
+        }
+      ],
+      "detail_report": "agent7-reuse-meta-f3c.json"
+    },
+    {
+      "repo": "meta_analyse",
+      "capability": "OHLCV features and budgets",
+      "status": "IMPLEMENTED",
+      "entrypoints": "See detail code refs",
+      "dependencies": [
+        "stdlib copy/datetime/decimal/hashlib/json/math/re/time",
+        "core.Candle",
+        "core.untouched_levels"
+      ],
+      "limits": "Reuses closed candle untouched high/low rules, equal wick invalidates. 1..2000 contiguous minute rows, 8MiB canonical input, 16MiB output. Input object exists before callable budget; HTTP body limit is separate. No indicators or eight strategies inferred.",
+      "verification": {
+        "hosted_suite": "Exact f3c suite success only; individual test identity/runner receipt not independently mapped",
+        "local_current_pin": "NOT_RUN",
+        "windows_per_capability": "NOT_MAPPED",
+        "physical": "NOT_RUN"
+      },
+      "matched_exact_head_local_tests": [],
+      "references": [
+        {
+          "path": "src/meta_analyse/core.py",
+          "line": 36,
+          "url": "https://github.com/YehorBabenko88/meta_analyse/blob/f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1/src/meta_analyse/core.py#L36"
+        },
+        {
+          "path": "src/meta_analyse/ohlcv_research_adapter.py",
+          "line": 66,
+          "url": "https://github.com/YehorBabenko88/meta_analyse/blob/f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1/src/meta_analyse/ohlcv_research_adapter.py#L66"
+        },
+        {
+          "path": "src/meta_analyse/ohlcv_research_adapter.py",
+          "line": 79,
+          "url": "https://github.com/YehorBabenko88/meta_analyse/blob/f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1/src/meta_analyse/ohlcv_research_adapter.py#L79"
+        },
+        {
+          "path": "tests/test_agent7_ohlcv_research_contract.py",
+          "line": 41,
+          "url": "https://github.com/YehorBabenko88/meta_analyse/blob/f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1/tests/test_agent7_ohlcv_research_contract.py#L41"
+        },
+        {
+          "path": "tests/test_agent7_ohlcv_research_contract.py",
+          "line": 89,
+          "url": "https://github.com/YehorBabenko88/meta_analyse/blob/f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1/tests/test_agent7_ohlcv_research_contract.py#L89"
+        },
+        {
+          "path": "tests/test_ohlcv_research_adapter.py",
+          "line": 114,
+          "url": "https://github.com/YehorBabenko88/meta_analyse/blob/f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1/tests/test_ohlcv_research_adapter.py#L114"
+        }
+      ],
+      "detail_report": "agent7-reuse-meta-f3c.json"
+    },
+    {
+      "repo": "meta_analyse",
+      "capability": "OHLCV causal availability",
+      "status": "PARTIAL",
+      "entrypoints": "See detail code refs",
+      "dependencies": [
+        "stdlib copy/datetime/decimal/hashlib/json/math/re/time",
+        "core.Candle",
+        "core.untouched_levels"
+      ],
+      "limits": "end<=declared retrieval<=decision<=asof<=now, exact row boundaries and gap rejection. Whole backfill available only at declared retrieval; no row-level historical observation availability. Using output as historical-at-bar feature would introduce unlicensed lookahead. Feature survival depends on later wicks through the full accepted window.",
+      "verification": {
+        "hosted_suite": "Exact f3c suite success only; individual test identity/runner receipt not independently mapped",
+        "local_current_pin": "NOT_RUN",
+        "windows_per_capability": "NOT_MAPPED",
+        "physical": "NOT_RUN"
+      },
+      "matched_exact_head_local_tests": [],
+      "references": [
+        {
+          "path": "src/meta_analyse/ohlcv_research_adapter.py",
+          "line": 38,
+          "url": "https://github.com/YehorBabenko88/meta_analyse/blob/f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1/src/meta_analyse/ohlcv_research_adapter.py#L38"
+        },
+        {
+          "path": "src/meta_analyse/ohlcv_research_adapter.py",
+          "line": 67,
+          "url": "https://github.com/YehorBabenko88/meta_analyse/blob/f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1/src/meta_analyse/ohlcv_research_adapter.py#L67"
+        },
+        {
+          "path": "src/meta_analyse/ohlcv_research_adapter.py",
+          "line": 97,
+          "url": "https://github.com/YehorBabenko88/meta_analyse/blob/f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1/src/meta_analyse/ohlcv_research_adapter.py#L97"
+        },
+        {
+          "path": "tests/test_agent7_ohlcv_research_contract.py",
+          "line": 63,
+          "url": "https://github.com/YehorBabenko88/meta_analyse/blob/f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1/tests/test_agent7_ohlcv_research_contract.py#L63"
+        },
+        {
+          "path": "tests/test_ohlcv_research_adapter.py",
+          "line": 67,
+          "url": "https://github.com/YehorBabenko88/meta_analyse/blob/f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1/tests/test_ohlcv_research_adapter.py#L67"
+        }
+      ],
+      "detail_report": "agent7-reuse-meta-f3c.json"
+    },
+    {
+      "repo": "meta_analyse",
+      "capability": "research replay / Grid point-in-time feature prefix",
+      "status": "PARTIAL",
+      "entrypoints": "See detail code refs",
+      "dependencies": [
+        "stdlib copy/datetime/decimal/hashlib/json/math/re/time",
+        "core.Candle",
+        "core.untouched_levels"
+      ],
+      "limits": "Callable decision-prefix analysis for Grid v1.1: event_end and available_at <= decision, gaps suppress levels, survival availability binds all observed wicks. Not a trading replay/backtest runner; declared quality/authenticity remains unknown.",
+      "verification": {
+        "hosted_suite": "Exact f3c suite success only; individual test identity/runner receipt not independently mapped",
+        "local_current_pin": "NOT_RUN",
+        "windows_per_capability": "NOT_MAPPED",
+        "physical": "NOT_RUN"
+      },
+      "matched_exact_head_local_tests": [],
+      "references": [
+        {
+          "path": "src/meta_analyse/grid_history_adapter.py",
+          "line": 51,
+          "url": "https://github.com/YehorBabenko88/meta_analyse/blob/f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1/src/meta_analyse/grid_history_adapter.py#L51"
+        },
+        {
+          "path": "src/meta_analyse/grid_history_adapter.py",
+          "line": 131,
+          "url": "https://github.com/YehorBabenko88/meta_analyse/blob/f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1/src/meta_analyse/grid_history_adapter.py#L131"
+        },
+        {
+          "path": "src/meta_analyse/grid_history_adapter.py",
+          "line": 139,
+          "url": "https://github.com/YehorBabenko88/meta_analyse/blob/f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1/src/meta_analyse/grid_history_adapter.py#L139"
+        },
+        {
+          "path": "tests/test_grid_history_adapter.py",
+          "line": 47,
+          "url": "https://github.com/YehorBabenko88/meta_analyse/blob/f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1/tests/test_grid_history_adapter.py#L47"
+        },
+        {
+          "path": "tests/test_grid_history_adapter.py",
+          "line": 98,
+          "url": "https://github.com/YehorBabenko88/meta_analyse/blob/f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1/tests/test_grid_history_adapter.py#L98"
+        },
+        {
+          "path": "tests/test_grid_history_adapter.py",
+          "line": 117,
+          "url": "https://github.com/YehorBabenko88/meta_analyse/blob/f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1/tests/test_grid_history_adapter.py#L117"
+        },
+        {
+          "path": "tests/test_grid_history_adapter.py",
+          "line": 124,
+          "url": "https://github.com/YehorBabenko88/meta_analyse/blob/f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1/tests/test_grid_history_adapter.py#L124"
+        }
+      ],
+      "detail_report": "agent7-reuse-meta-f3c.json"
+    },
+    {
+      "repo": "meta_analyse",
+      "capability": "authenticated OHLCV route and capability denial",
+      "status": "IMPLEMENTED",
+      "entrypoints": "See detail code refs",
+      "dependencies": [
+        "stdlib copy/datetime/decimal/hashlib/json/math/re/time",
+        "core.Candle",
+        "core.untouched_levels"
+      ],
+      "limits": "POST /internal/v1/research/ohlcv/analyze attests module before call, validates nonpromotion. Tests launch real local HTTP fixture with synthetic data and auth/origin/content-type/size/mutation refusals. Not physical or external-source integration.",
+      "verification": {
+        "hosted_suite": "Exact f3c suite success only; individual test identity/runner receipt not independently mapped",
+        "local_current_pin": "NOT_RUN",
+        "windows_per_capability": "NOT_MAPPED",
+        "physical": "NOT_RUN"
+      },
+      "matched_exact_head_local_tests": [],
+      "references": [
+        {
+          "path": "src/meta_analyse/headless_service.py",
+          "line": 338,
+          "url": "https://github.com/YehorBabenko88/meta_analyse/blob/f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1/src/meta_analyse/headless_service.py#L338"
+        },
+        {
+          "path": "src/meta_analyse/headless_service.py",
+          "line": 425,
+          "url": "https://github.com/YehorBabenko88/meta_analyse/blob/f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1/src/meta_analyse/headless_service.py#L425"
+        },
+        {
+          "path": "src/meta_analyse/headless_service.py",
+          "line": 432,
+          "url": "https://github.com/YehorBabenko88/meta_analyse/blob/f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1/src/meta_analyse/headless_service.py#L432"
+        },
+        {
+          "path": "tests/test_ohlcv_research_adapter.py",
+          "line": 90,
+          "url": "https://github.com/YehorBabenko88/meta_analyse/blob/f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1/tests/test_ohlcv_research_adapter.py#L90"
+        },
+        {
+          "path": "tests/test_ohlcv_research_adapter.py",
+          "line": 121,
+          "url": "https://github.com/YehorBabenko88/meta_analyse/blob/f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1/tests/test_ohlcv_research_adapter.py#L121"
+        }
+      ],
+      "detail_report": "agent7-reuse-meta-f3c.json"
+    },
+    {
+      "repo": "meta_analyse",
+      "capability": "paper fills and costs",
+      "status": "PARTIAL",
+      "entrypoints": "See detail code refs",
+      "dependencies": [
+        "decimal",
+        "datetime",
+        "core.PaperEngine",
+        "runtime.Runtime",
+        "storage.Store (psycopg)"
+      ],
+      "limits": "Existing disabled-by-default next-minute POC mean reversion: fixed notional, stop percentage, slippage bps, entry+exit fees, gross/net fill, one position per symbol. Runtime feeds trades and optionally persists fills. No exchange fills, funding, latency, liquidity/partial fills, capital accounting or calibrated cost model established.",
+      "verification": {
+        "hosted_suite": "Exact f3c suite success only; individual test identity/runner receipt not independently mapped",
+        "local_current_pin": "NOT_RUN",
+        "windows_per_capability": "NOT_MAPPED",
+        "physical": "NOT_RUN"
+      },
+      "matched_exact_head_local_tests": [],
+      "references": [
+        {
+          "path": "src/meta_analyse/core.py",
+          "line": 121,
+          "url": "https://github.com/YehorBabenko88/meta_analyse/blob/f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1/src/meta_analyse/core.py#L121"
+        },
+        {
+          "path": "src/meta_analyse/core.py",
+          "line": 134,
+          "url": "https://github.com/YehorBabenko88/meta_analyse/blob/f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1/src/meta_analyse/core.py#L134"
+        },
+        {
+          "path": "src/meta_analyse/core.py",
+          "line": 140,
+          "url": "https://github.com/YehorBabenko88/meta_analyse/blob/f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1/src/meta_analyse/core.py#L140"
+        },
+        {
+          "path": "src/meta_analyse/runtime.py",
+          "line": 32,
+          "url": "https://github.com/YehorBabenko88/meta_analyse/blob/f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1/src/meta_analyse/runtime.py#L32"
+        },
+        {
+          "path": "src/meta_analyse/storage.py",
+          "line": 83,
+          "url": "https://github.com/YehorBabenko88/meta_analyse/blob/f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1/src/meta_analyse/storage.py#L83"
+        },
+        {
+          "path": "tests/test_core.py",
+          "line": 25,
+          "url": "https://github.com/YehorBabenko88/meta_analyse/blob/f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1/tests/test_core.py#L25"
+        },
+        {
+          "path": "tests/test_core.py",
+          "line": 36,
+          "url": "https://github.com/YehorBabenko88/meta_analyse/blob/f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1/tests/test_core.py#L36"
+        },
+        {
+          "path": "tests/test_core.py",
+          "line": 43,
+          "url": "https://github.com/YehorBabenko88/meta_analyse/blob/f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1/tests/test_core.py#L43"
+        },
+        {
+          "path": "tests/test_core.py",
+          "line": 57,
+          "url": "https://github.com/YehorBabenko88/meta_analyse/blob/f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1/tests/test_core.py#L57"
+        }
+      ],
+      "detail_report": "agent7-reuse-meta-f3c.json"
+    },
+    {
+      "repo": "meta_analyse",
+      "capability": "risk controls",
+      "status": "PARTIAL",
+      "entrypoints": "See detail code refs",
+      "dependencies": [
+        "decimal",
+        "datetime",
+        "core.PaperEngine",
+        "runtime.Runtime",
+        "storage.Store (psycopg)"
+      ],
+      "limits": "Per-symbol paper stop/target and fixed notional exist. No portfolio risk budget, equity/drawdown/margin limits or correlation sizing found.",
+      "verification": {
+        "hosted_suite": "Exact f3c suite success only; individual test identity/runner receipt not independently mapped",
+        "local_current_pin": "NOT_RUN",
+        "windows_per_capability": "NOT_MAPPED",
+        "physical": "NOT_RUN"
+      },
+      "matched_exact_head_local_tests": [],
+      "references": [
+        {
+          "path": "src/meta_analyse/core.py",
+          "line": 123,
+          "url": "https://github.com/YehorBabenko88/meta_analyse/blob/f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1/src/meta_analyse/core.py#L123"
+        },
+        {
+          "path": "src/meta_analyse/core.py",
+          "line": 145,
+          "url": "https://github.com/YehorBabenko88/meta_analyse/blob/f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1/src/meta_analyse/core.py#L145"
+        },
+        {
+          "path": "tests/test_core.py",
+          "line": 43,
+          "url": "https://github.com/YehorBabenko88/meta_analyse/blob/f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1/tests/test_core.py#L43"
+        }
+      ],
+      "detail_report": "agent7-reuse-meta-f3c.json"
+    },
+    {
+      "repo": "meta_analyse",
+      "capability": "expectancy estimator",
+      "status": "NOT_VERIFIED",
+      "entrypoints": "See detail code refs",
+      "dependencies": [],
+      "limits": "No corresponding callable implementation/test located in bounded Python source searches. Unrelated process-bootstrap/SCM correlation/replay evidence terms excluded. Absence is bounded-search evidence, not proof over every artifact.",
+      "verification": {
+        "hosted_suite": "Exact f3c suite success only; individual test identity/runner receipt not independently mapped",
+        "local_current_pin": "NOT_RUN",
+        "windows_per_capability": "NOT_MAPPED",
+        "physical": "NOT_RUN"
+      },
+      "matched_exact_head_local_tests": [],
+      "references": [],
+      "detail_report": "agent7-reuse-meta-f3c.json"
+    },
+    {
+      "repo": "meta_analyse",
+      "capability": "statistical confidence intervals",
+      "status": "NOT_VERIFIED",
+      "entrypoints": "See detail code refs",
+      "dependencies": [],
+      "limits": "No corresponding callable implementation/test located in bounded Python source searches. Unrelated process-bootstrap/SCM correlation/replay evidence terms excluded. Absence is bounded-search evidence, not proof over every artifact.",
+      "verification": {
+        "hosted_suite": "Exact f3c suite success only; individual test identity/runner receipt not independently mapped",
+        "local_current_pin": "NOT_RUN",
+        "windows_per_capability": "NOT_MAPPED",
+        "physical": "NOT_RUN"
+      },
+      "matched_exact_head_local_tests": [],
+      "references": [],
+      "detail_report": "agent7-reuse-meta-f3c.json"
+    },
+    {
+      "repo": "meta_analyse",
+      "capability": "statistical bootstrap",
+      "status": "NOT_VERIFIED",
+      "entrypoints": "See detail code refs",
+      "dependencies": [],
+      "limits": "No corresponding callable implementation/test located in bounded Python source searches. Unrelated process-bootstrap/SCM correlation/replay evidence terms excluded. Absence is bounded-search evidence, not proof over every artifact.",
+      "verification": {
+        "hosted_suite": "Exact f3c suite success only; individual test identity/runner receipt not independently mapped",
+        "local_current_pin": "NOT_RUN",
+        "windows_per_capability": "NOT_MAPPED",
+        "physical": "NOT_RUN"
+      },
+      "matched_exact_head_local_tests": [],
+      "references": [],
+      "detail_report": "agent7-reuse-meta-f3c.json"
+    },
+    {
+      "repo": "meta_analyse",
+      "capability": "Monte Carlo simulation",
+      "status": "NOT_VERIFIED",
+      "entrypoints": "See detail code refs",
+      "dependencies": [],
+      "limits": "No corresponding callable implementation/test located in bounded Python source searches. Unrelated process-bootstrap/SCM correlation/replay evidence terms excluded. Absence is bounded-search evidence, not proof over every artifact.",
+      "verification": {
+        "hosted_suite": "Exact f3c suite success only; individual test identity/runner receipt not independently mapped",
+        "local_current_pin": "NOT_RUN",
+        "windows_per_capability": "NOT_MAPPED",
+        "physical": "NOT_RUN"
+      },
+      "matched_exact_head_local_tests": [],
+      "references": [],
+      "detail_report": "agent7-reuse-meta-f3c.json"
+    },
+    {
+      "repo": "meta_analyse",
+      "capability": "walk-forward evaluation",
+      "status": "NOT_VERIFIED",
+      "entrypoints": "See detail code refs",
+      "dependencies": [],
+      "limits": "No corresponding callable implementation/test located in bounded Python source searches. Unrelated process-bootstrap/SCM correlation/replay evidence terms excluded. Absence is bounded-search evidence, not proof over every artifact.",
+      "verification": {
+        "hosted_suite": "Exact f3c suite success only; individual test identity/runner receipt not independently mapped",
+        "local_current_pin": "NOT_RUN",
+        "windows_per_capability": "NOT_MAPPED",
+        "physical": "NOT_RUN"
+      },
+      "matched_exact_head_local_tests": [],
+      "references": [],
+      "detail_report": "agent7-reuse-meta-f3c.json"
+    },
+    {
+      "repo": "meta_analyse",
+      "capability": "out-of-sample evaluation",
+      "status": "NOT_VERIFIED",
+      "entrypoints": "See detail code refs",
+      "dependencies": [],
+      "limits": "No corresponding callable implementation/test located in bounded Python source searches. Unrelated process-bootstrap/SCM correlation/replay evidence terms excluded. Absence is bounded-search evidence, not proof over every artifact.",
+      "verification": {
+        "hosted_suite": "Exact f3c suite success only; individual test identity/runner receipt not independently mapped",
+        "local_current_pin": "NOT_RUN",
+        "windows_per_capability": "NOT_MAPPED",
+        "physical": "NOT_RUN"
+      },
+      "matched_exact_head_local_tests": [],
+      "references": [],
+      "detail_report": "agent7-reuse-meta-f3c.json"
+    },
+    {
+      "repo": "meta_analyse",
+      "capability": "multiple-testing correction",
+      "status": "NOT_VERIFIED",
+      "entrypoints": "See detail code refs",
+      "dependencies": [],
+      "limits": "No corresponding callable implementation/test located in bounded Python source searches. Unrelated process-bootstrap/SCM correlation/replay evidence terms excluded. Absence is bounded-search evidence, not proof over every artifact.",
+      "verification": {
+        "hosted_suite": "Exact f3c suite success only; individual test identity/runner receipt not independently mapped",
+        "local_current_pin": "NOT_RUN",
+        "windows_per_capability": "NOT_MAPPED",
+        "physical": "NOT_RUN"
+      },
+      "matched_exact_head_local_tests": [],
+      "references": [],
+      "detail_report": "agent7-reuse-meta-f3c.json"
+    },
+    {
+      "repo": "meta_analyse",
+      "capability": "train/validation/test isolation or reuse controls",
+      "status": "NOT_VERIFIED",
+      "entrypoints": "See detail code refs",
+      "dependencies": [],
+      "limits": "No corresponding callable implementation/test located in bounded Python source searches. Unrelated process-bootstrap/SCM correlation/replay evidence terms excluded. Absence is bounded-search evidence, not proof over every artifact.",
+      "verification": {
+        "hosted_suite": "Exact f3c suite success only; individual test identity/runner receipt not independently mapped",
+        "local_current_pin": "NOT_RUN",
+        "windows_per_capability": "NOT_MAPPED",
+        "physical": "NOT_RUN"
+      },
+      "matched_exact_head_local_tests": [],
+      "references": [],
+      "detail_report": "agent7-reuse-meta-f3c.json"
+    },
+    {
+      "repo": "meta_analyse",
+      "capability": "portfolio/return correlation",
+      "status": "NOT_VERIFIED",
+      "entrypoints": "See detail code refs",
+      "dependencies": [],
+      "limits": "No corresponding callable implementation/test located in bounded Python source searches. Unrelated process-bootstrap/SCM correlation/replay evidence terms excluded. Absence is bounded-search evidence, not proof over every artifact.",
+      "verification": {
+        "hosted_suite": "Exact f3c suite success only; individual test identity/runner receipt not independently mapped",
+        "local_current_pin": "NOT_RUN",
+        "windows_per_capability": "NOT_MAPPED",
+        "physical": "NOT_RUN"
+      },
+      "matched_exact_head_local_tests": [],
+      "references": [],
+      "detail_report": "agent7-reuse-meta-f3c.json"
+    },
+    {
+      "repo": "meta_analyse",
+      "capability": "PaperLedger",
+      "status": "NOT_VERIFIED",
+      "entrypoints": "See detail code refs",
+      "dependencies": [],
+      "limits": "No corresponding callable implementation/test located in bounded Python source searches. Unrelated process-bootstrap/SCM correlation/replay evidence terms excluded. Absence is bounded-search evidence, not proof over every artifact.",
+      "verification": {
+        "hosted_suite": "Exact f3c suite success only; individual test identity/runner receipt not independently mapped",
+        "local_current_pin": "NOT_RUN",
+        "windows_per_capability": "NOT_MAPPED",
+        "physical": "NOT_RUN"
+      },
+      "matched_exact_head_local_tests": [],
+      "references": [],
+      "detail_report": "agent7-reuse-meta-f3c.json"
+    },
+    {
+      "repo": "meta_analyse",
+      "capability": "PaperAccount",
+      "status": "NOT_VERIFIED",
+      "entrypoints": "See detail code refs",
+      "dependencies": [],
+      "limits": "No corresponding callable implementation/test located in bounded Python source searches. Unrelated process-bootstrap/SCM correlation/replay evidence terms excluded. Absence is bounded-search evidence, not proof over every artifact.",
+      "verification": {
+        "hosted_suite": "Exact f3c suite success only; individual test identity/runner receipt not independently mapped",
+        "local_current_pin": "NOT_RUN",
+        "windows_per_capability": "NOT_MAPPED",
+        "physical": "NOT_RUN"
+      },
+      "matched_exact_head_local_tests": [],
+      "references": [],
+      "detail_report": "agent7-reuse-meta-f3c.json"
+    }
+  ],
+  "source_reference_validation": {
+    "checks": 146,
+    "all_file_line_references_in_range": true,
+    "scope": "File/line and raw Git blob identity only, not semantic proof or execution attestation"
+  },
+  "reference_checks": [
+    {
+      "repo": "strattester",
+      "path": "docs/financial-real-oos-protocol.md",
+      "line": 83,
+      "line_count": 108,
+      "valid": true
+    },
+    {
+      "repo": "strattester",
+      "path": "docs/integration/history-pipeline-v1.md",
+      "line": 32,
+      "line_count": 128,
+      "valid": true
+    },
+    {
+      "repo": "strattester",
+      "path": "native/windows/Broker.cs",
+      "line": 99,
+      "line_count": 434,
+      "valid": true
+    },
+    {
+      "repo": "strattester",
+      "path": "research/alphafold_training/ACCEPTANCE.md",
+      "line": 24,
+      "line_count": 40,
+      "valid": true
+    },
+    {
+      "repo": "strattester",
+      "path": "research/alphafold_training/evaluation.py",
+      "line": 71,
+      "line_count": 110,
+      "valid": true
+    },
+    {
+      "repo": "strattester",
+      "path": "strattester/engine/grid_data_first_worker.py",
+      "line": 42,
+      "line_count": 101,
+      "valid": true
+    },
+    {
+      "repo": "strattester",
+      "path": "strattester/research/execution.py",
+      "line": 40,
+      "line_count": 191,
+      "valid": true
+    },
+    {
+      "repo": "strattester",
+      "path": "strattester/research/financial_experiment.py",
+      "line": 70,
+      "line_count": 267,
+      "valid": true
+    },
+    {
+      "repo": "strattester",
+      "path": "strattester/research/financial_experiment.py",
+      "line": 193,
+      "line_count": 267,
+      "valid": true
+    },
+    {
+      "repo": "strattester",
+      "path": "strattester/research/financial_walkforward_session.py",
+      "line": 121,
+      "line_count": 198,
+      "valid": true
+    },
+    {
+      "repo": "strattester",
+      "path": "strattester/research/history_scientific_handoff.py",
+      "line": 11,
+      "line_count": 111,
+      "valid": true
+    },
+    {
+      "repo": "strattester",
+      "path": "strattester/research/history_scientific_handoff.py",
+      "line": 37,
+      "line_count": 111,
+      "valid": true
+    },
+    {
+      "repo": "strattester",
+      "path": "strattester/research/paper_account.py",
+      "line": 130,
+      "line_count": 558,
+      "valid": true
+    },
+    {
+      "repo": "strattester",
+      "path": "strattester/research/paper_account.py",
+      "line": 390,
+      "line_count": 558,
+      "valid": true
+    },
+    {
+      "repo": "strattester",
+      "path": "strattester/research/paper_account.py",
+      "line": 490,
+      "line_count": 558,
+      "valid": true
+    },
+    {
+      "repo": "strattester",
+      "path": "strattester/research/paper_account.py",
+      "line": 523,
+      "line_count": 558,
+      "valid": true
+    },
+    {
+      "repo": "strattester",
+      "path": "strattester/research/pattern_evaluation.py",
+      "line": 17,
+      "line_count": 50,
+      "valid": true
+    },
+    {
+      "repo": "strattester",
+      "path": "strattester/research/quote_paper.py",
+      "line": 35,
+      "line_count": 289,
+      "valid": true
+    },
+    {
+      "repo": "strattester",
+      "path": "strattester/research/quote_paper.py",
+      "line": 89,
+      "line_count": 289,
+      "valid": true
+    },
+    {
+      "repo": "strattester",
+      "path": "strattester/research/quote_paper.py",
+      "line": 273,
+      "line_count": 289,
+      "valid": true
+    },
+    {
+      "repo": "strattester",
+      "path": "strattester/research/resampling.py",
+      "line": 18,
+      "line_count": 41,
+      "valid": true
+    },
+    {
+      "repo": "strattester",
+      "path": "strattester/research/resampling.py",
+      "line": 35,
+      "line_count": 41,
+      "valid": true
+    },
+    {
+      "repo": "strattester",
+      "path": "strattester/research/result_persistence.py",
+      "line": 20,
+      "line_count": 28,
+      "valid": true
+    },
+    {
+      "repo": "strattester",
+      "path": "strattester/research/statistics.py",
+      "line": 23,
+      "line_count": 45,
+      "valid": true
+    },
+    {
+      "repo": "strattester",
+      "path": "strattester/research_cli.py",
+      "line": 113,
+      "line_count": 158,
+      "valid": true
+    },
+    {
+      "repo": "strattester",
+      "path": "tests/native/test_native_build.py",
+      "line": 60,
+      "line_count": 156,
+      "valid": true
+    },
+    {
+      "repo": "strattester",
+      "path": "tests/research/test_agent7_paper_integrity.py",
+      "line": 63,
+      "line_count": 147,
+      "valid": true
+    },
+    {
+      "repo": "strattester",
+      "path": "tests/research/test_agent7_paper_integrity.py",
+      "line": 83,
+      "line_count": 147,
+      "valid": true
+    },
+    {
+      "repo": "strattester",
+      "path": "tests/research/test_agent7_paper_integrity.py",
+      "line": 125,
+      "line_count": 147,
+      "valid": true
+    },
+    {
+      "repo": "strattester",
+      "path": "tests/research/test_agent7_research_replay.py",
+      "line": 27,
+      "line_count": 119,
+      "valid": true
+    },
+    {
+      "repo": "strattester",
+      "path": "tests/research/test_agent7_research_replay.py",
+      "line": 62,
+      "line_count": 119,
+      "valid": true
+    },
+    {
+      "repo": "strattester",
+      "path": "tests/research/test_agent7_research_replay.py",
+      "line": 78,
+      "line_count": 119,
+      "valid": true
+    },
+    {
+      "repo": "strattester",
+      "path": "tests/research/test_agent7_research_replay.py",
+      "line": 107,
+      "line_count": 119,
+      "valid": true
+    },
+    {
+      "repo": "strattester",
+      "path": "tests/research/test_financial_experiment.py",
+      "line": 87,
+      "line_count": 176,
+      "valid": true
+    },
+    {
+      "repo": "strattester",
+      "path": "tests/research/test_financial_experiment.py",
+      "line": 101,
+      "line_count": 176,
+      "valid": true
+    },
+    {
+      "repo": "strattester",
+      "path": "tests/research/test_financial_walkforward_session.py",
+      "line": 109,
+      "line_count": 160,
+      "valid": true
+    },
+    {
+      "repo": "strattester",
+      "path": "tests/research/test_financial_walkforward_session.py",
+      "line": 150,
+      "line_count": 160,
+      "valid": true
+    },
+    {
+      "repo": "strattester",
+      "path": "tests/research/test_history_scientific_handoff.py",
+      "line": 24,
+      "line_count": 57,
+      "valid": true
+    },
+    {
+      "repo": "strattester",
+      "path": "tests/research/test_paper_account.py",
+      "line": 59,
+      "line_count": 292,
+      "valid": true
+    },
+    {
+      "repo": "strattester",
+      "path": "tests/research/test_paper_account.py",
+      "line": 96,
+      "line_count": 292,
+      "valid": true
+    },
+    {
+      "repo": "strattester",
+      "path": "tests/research/test_paper_account.py",
+      "line": 109,
+      "line_count": 292,
+      "valid": true
+    },
+    {
+      "repo": "strattester",
+      "path": "tests/research/test_paper_account.py",
+      "line": 135,
+      "line_count": 292,
+      "valid": true
+    },
+    {
+      "repo": "strattester",
+      "path": "tests/research/test_statistics_reporting.py",
+      "line": 9,
+      "line_count": 33,
+      "valid": true
+    },
+    {
+      "repo": "strattester",
+      "path": "tests/research/test_validation_resampling.py",
+      "line": 23,
+      "line_count": 34,
+      "valid": true
+    },
+    {
+      "repo": "strattester",
+      "path": "tests/research/test_validation_resampling.py",
+      "line": 30,
+      "line_count": 34,
+      "valid": true
+    },
+    {
+      "repo": "strattester",
+      "path": "tests/runtime/test_concurrency_isolation.py",
+      "line": 73,
+      "line_count": 97,
+      "valid": true
+    },
+    {
+      "repo": "strattester",
+      "path": "tests/test_quote_paper.py",
+      "line": 47,
+      "line_count": 270,
+      "valid": true
+    },
+    {
+      "repo": "strattester",
+      "path": "tests/test_quote_paper.py",
+      "line": 118,
+      "line_count": 270,
+      "valid": true
+    },
+    {
+      "repo": "strattester",
+      "path": "tests/test_quote_paper.py",
+      "line": 250,
+      "line_count": 270,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "docs/integration/history-pipeline-v1.md",
+      "line": 65,
+      "line_count": 106,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "python/history_contract.py",
+      "line": 15,
+      "line_count": 58,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "python/history_scientific_worker.py",
+      "line": 19,
+      "line_count": 77,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "python/history_sizing.py",
+      "line": 1,
+      "line_count": 29,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "python/history_sizing.py",
+      "line": 21,
+      "line_count": 29,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "python/history_statistics.py",
+      "line": 7,
+      "line_count": 53,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "python/history_statistics.py",
+      "line": 36,
+      "line_count": 53,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "python/history_stochastic.py",
+      "line": 9,
+      "line_count": 52,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "python/history_timeseries.py",
+      "line": 9,
+      "line_count": 59,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "python/history_timeseries.py",
+      "line": 22,
+      "line_count": 59,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "python/history_timeseries.py",
+      "line": 29,
+      "line_count": 59,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "python/history_timeseries.py",
+      "line": 39,
+      "line_count": 59,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "python/history_timeseries.py",
+      "line": 49,
+      "line_count": 59,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "python/history_worker.py",
+      "line": 19,
+      "line_count": 55,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "python/history_worker.py",
+      "line": 34,
+      "line_count": 55,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "scripts/history/scientific-stdio.mjs",
+      "line": 1,
+      "line_count": 14,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "scripts/numerical/walk-forward-guard-comparison.mjs",
+      "line": 8,
+      "line_count": 12,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "src/ai-orchestrator/replay.mjs",
+      "line": 5,
+      "line_count": 13,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "src/ai-orchestrator/replay.mjs",
+      "line": 6,
+      "line_count": 13,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "src/bounded-experiment.mjs",
+      "line": 4,
+      "line_count": 22,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "src/causal-feature-screen.mjs",
+      "line": 3,
+      "line_count": 49,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "src/guarded-selection.mjs",
+      "line": 6,
+      "line_count": 76,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "src/knowledge/file-replay-ledger.mjs",
+      "line": 6,
+      "line_count": 43,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "src/math-engine-server.mjs",
+      "line": 30,
+      "line_count": 183,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "src/math-engine-server.mjs",
+      "line": 134,
+      "line_count": 183,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "src/math-engine-server.mjs",
+      "line": 171,
+      "line_count": 183,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "src/model-fitting.mjs",
+      "line": 5,
+      "line_count": 25,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "src/returns-research.mjs",
+      "line": 4,
+      "line_count": 67,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "src/scientific-engine.mjs",
+      "line": 52,
+      "line_count": 115,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "src/scientific-engine.mjs",
+      "line": 115,
+      "line_count": 115,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "src/walk-forward.mjs",
+      "line": 8,
+      "line_count": 73,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "src/walk-forward.mjs",
+      "line": 23,
+      "line_count": 73,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "tests/agent7-replay-research.test.mjs",
+      "line": 19,
+      "line_count": 104,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "tests/agent7-replay-research.test.mjs",
+      "line": 66,
+      "line_count": 104,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "tests/agent7-replay-research.test.mjs",
+      "line": 74,
+      "line_count": 104,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "tests/bounded-experiment.test.mjs",
+      "line": 6,
+      "line_count": 15,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "tests/bounded-experiment.test.mjs",
+      "line": 9,
+      "line_count": 15,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "tests/bounded-experiment.test.mjs",
+      "line": 12,
+      "line_count": 15,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "tests/causal-feature-screen.test.mjs",
+      "line": 18,
+      "line_count": 33,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "tests/causal-feature-screen.test.mjs",
+      "line": 24,
+      "line_count": 33,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "tests/guarded-selection.test.mjs",
+      "line": 22,
+      "line_count": 36,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "tests/knowledge-file-replay-ledger.test.mjs",
+      "line": 7,
+      "line_count": 19,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "tests/model-fitting.test.mjs",
+      "line": 3,
+      "line_count": 4,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "tests/returns-research.test.mjs",
+      "line": 5,
+      "line_count": 31,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "tests/returns-research.test.mjs",
+      "line": 18,
+      "line_count": 31,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "tests/scientific-engine.test.mjs",
+      "line": 29,
+      "line_count": 89,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "tests/scientific-engine.test.mjs",
+      "line": 40,
+      "line_count": 89,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "tests/scientific-engine.test.mjs",
+      "line": 67,
+      "line_count": 89,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "tests/scientific-history-clocks.test.mjs",
+      "line": 5,
+      "line_count": 13,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "tests/test_history_kernels.py",
+      "line": 24,
+      "line_count": 69,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "tests/test_history_kernels.py",
+      "line": 40,
+      "line_count": 69,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "tests/test_history_kernels.py",
+      "line": 60,
+      "line_count": 69,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "tests/test_history_scientific.py",
+      "line": 36,
+      "line_count": 83,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "tests/test_history_scientific.py",
+      "line": 55,
+      "line_count": 83,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "tests/test_history_scientific.py",
+      "line": 71,
+      "line_count": 83,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "tests/test_history_timed.py",
+      "line": 37,
+      "line_count": 56,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "tests/test_history_timed.py",
+      "line": 46,
+      "line_count": 56,
+      "valid": true
+    },
+    {
+      "repo": "math",
+      "path": "tests/walk-forward.test.mjs",
+      "line": 19,
+      "line_count": 33,
+      "valid": true
+    },
+    {
+      "repo": "meta_analyse",
+      "path": "src/meta_analyse/core.py",
+      "line": 36,
+      "line_count": 212,
+      "valid": true
+    },
+    {
+      "repo": "meta_analyse",
+      "path": "src/meta_analyse/core.py",
+      "line": 121,
+      "line_count": 212,
+      "valid": true
+    },
+    {
+      "repo": "meta_analyse",
+      "path": "src/meta_analyse/core.py",
+      "line": 123,
+      "line_count": 212,
+      "valid": true
+    },
+    {
+      "repo": "meta_analyse",
+      "path": "src/meta_analyse/core.py",
+      "line": 134,
+      "line_count": 212,
+      "valid": true
+    },
+    {
+      "repo": "meta_analyse",
+      "path": "src/meta_analyse/core.py",
+      "line": 140,
+      "line_count": 212,
+      "valid": true
+    },
+    {
+      "repo": "meta_analyse",
+      "path": "src/meta_analyse/core.py",
+      "line": 145,
+      "line_count": 212,
+      "valid": true
+    },
+    {
+      "repo": "meta_analyse",
+      "path": "src/meta_analyse/grid_history_adapter.py",
+      "line": 51,
+      "line_count": 155,
+      "valid": true
+    },
+    {
+      "repo": "meta_analyse",
+      "path": "src/meta_analyse/grid_history_adapter.py",
+      "line": 131,
+      "line_count": 155,
+      "valid": true
+    },
+    {
+      "repo": "meta_analyse",
+      "path": "src/meta_analyse/grid_history_adapter.py",
+      "line": 139,
+      "line_count": 155,
+      "valid": true
+    },
+    {
+      "repo": "meta_analyse",
+      "path": "src/meta_analyse/headless_service.py",
+      "line": 338,
+      "line_count": 469,
+      "valid": true
+    },
+    {
+      "repo": "meta_analyse",
+      "path": "src/meta_analyse/headless_service.py",
+      "line": 425,
+      "line_count": 469,
+      "valid": true
+    },
+    {
+      "repo": "meta_analyse",
+      "path": "src/meta_analyse/headless_service.py",
+      "line": 432,
+      "line_count": 469,
+      "valid": true
+    },
+    {
+      "repo": "meta_analyse",
+      "path": "src/meta_analyse/ohlcv_research_adapter.py",
+      "line": 33,
+      "line_count": 109,
+      "valid": true
+    },
+    {
+      "repo": "meta_analyse",
+      "path": "src/meta_analyse/ohlcv_research_adapter.py",
+      "line": 38,
+      "line_count": 109,
+      "valid": true
+    },
+    {
+      "repo": "meta_analyse",
+      "path": "src/meta_analyse/ohlcv_research_adapter.py",
+      "line": 51,
+      "line_count": 109,
+      "valid": true
+    },
+    {
+      "repo": "meta_analyse",
+      "path": "src/meta_analyse/ohlcv_research_adapter.py",
+      "line": 66,
+      "line_count": 109,
+      "valid": true
+    },
+    {
+      "repo": "meta_analyse",
+      "path": "src/meta_analyse/ohlcv_research_adapter.py",
+      "line": 67,
+      "line_count": 109,
+      "valid": true
+    },
+    {
+      "repo": "meta_analyse",
+      "path": "src/meta_analyse/ohlcv_research_adapter.py",
+      "line": 79,
+      "line_count": 109,
+      "valid": true
+    },
+    {
+      "repo": "meta_analyse",
+      "path": "src/meta_analyse/ohlcv_research_adapter.py",
+      "line": 97,
+      "line_count": 109,
+      "valid": true
+    },
+    {
+      "repo": "meta_analyse",
+      "path": "src/meta_analyse/runtime.py",
+      "line": 32,
+      "line_count": 142,
+      "valid": true
+    },
+    {
+      "repo": "meta_analyse",
+      "path": "src/meta_analyse/storage.py",
+      "line": 83,
+      "line_count": 88,
+      "valid": true
+    },
+    {
+      "repo": "meta_analyse",
+      "path": "tests/test_agent7_ohlcv_research_contract.py",
+      "line": 41,
+      "line_count": 94,
+      "valid": true
+    },
+    {
+      "repo": "meta_analyse",
+      "path": "tests/test_agent7_ohlcv_research_contract.py",
+      "line": 63,
+      "line_count": 94,
+      "valid": true
+    },
+    {
+      "repo": "meta_analyse",
+      "path": "tests/test_agent7_ohlcv_research_contract.py",
+      "line": 78,
+      "line_count": 94,
+      "valid": true
+    },
+    {
+      "repo": "meta_analyse",
+      "path": "tests/test_agent7_ohlcv_research_contract.py",
+      "line": 89,
+      "line_count": 94,
+      "valid": true
+    },
+    {
+      "repo": "meta_analyse",
+      "path": "tests/test_core.py",
+      "line": 25,
+      "line_count": 67,
+      "valid": true
+    },
+    {
+      "repo": "meta_analyse",
+      "path": "tests/test_core.py",
+      "line": 36,
+      "line_count": 67,
+      "valid": true
+    },
+    {
+      "repo": "meta_analyse",
+      "path": "tests/test_core.py",
+      "line": 43,
+      "line_count": 67,
+      "valid": true
+    },
+    {
+      "repo": "meta_analyse",
+      "path": "tests/test_core.py",
+      "line": 57,
+      "line_count": 67,
+      "valid": true
+    },
+    {
+      "repo": "meta_analyse",
+      "path": "tests/test_grid_history_adapter.py",
+      "line": 47,
+      "line_count": 135,
+      "valid": true
+    },
+    {
+      "repo": "meta_analyse",
+      "path": "tests/test_grid_history_adapter.py",
+      "line": 98,
+      "line_count": 135,
+      "valid": true
+    },
+    {
+      "repo": "meta_analyse",
+      "path": "tests/test_grid_history_adapter.py",
+      "line": 117,
+      "line_count": 135,
+      "valid": true
+    },
+    {
+      "repo": "meta_analyse",
+      "path": "tests/test_grid_history_adapter.py",
+      "line": 124,
+      "line_count": 135,
+      "valid": true
+    },
+    {
+      "repo": "meta_analyse",
+      "path": "tests/test_ohlcv_research_adapter.py",
+      "line": 59,
+      "line_count": 126,
+      "valid": true
+    },
+    {
+      "repo": "meta_analyse",
+      "path": "tests/test_ohlcv_research_adapter.py",
+      "line": 67,
+      "line_count": 126,
+      "valid": true
+    },
+    {
+      "repo": "meta_analyse",
+      "path": "tests/test_ohlcv_research_adapter.py",
+      "line": 71,
+      "line_count": 126,
+      "valid": true
+    },
+    {
+      "repo": "meta_analyse",
+      "path": "tests/test_ohlcv_research_adapter.py",
+      "line": 90,
+      "line_count": 126,
+      "valid": true
+    },
+    {
+      "repo": "meta_analyse",
+      "path": "tests/test_ohlcv_research_adapter.py",
+      "line": 114,
+      "line_count": 126,
+      "valid": true
+    },
+    {
+      "repo": "meta_analyse",
+      "path": "tests/test_ohlcv_research_adapter.py",
+      "line": 121,
+      "line_count": 126,
+      "valid": true
+    }
+  ],
+  "referenced_raw_git_files": [
+    {
+      "repo": "strattester",
+      "path": "docs/financial-real-oos-protocol.md",
+      "git_blob": "ed3c0066413a8b2b469e36c04466a6c678522368",
+      "raw_sha256": "f1d06017d09015d6446b4e8e815e85872d45761f7672731966443e40c58eb441",
+      "bytes": 6831
+    },
+    {
+      "repo": "strattester",
+      "path": "docs/integration/history-pipeline-v1.md",
+      "git_blob": "531f015a465a15290d2c1b3bf73014cf4c5e8776",
+      "raw_sha256": "31677cb271d619d5dec2c7d5201a4cf09f66c2448574ce8ba8c83745de817aab",
+      "bytes": 14476
+    },
+    {
+      "repo": "strattester",
+      "path": "native/windows/Broker.cs",
+      "git_blob": "22f372f1f6377b0fafb7072c92cd4bf77ddcab29",
+      "raw_sha256": "3552ff45175d551cba070b352f380cdd8af48872751d94dc5b87bd42b131caac",
+      "bytes": 35397
+    },
+    {
+      "repo": "strattester",
+      "path": "research/alphafold_training/ACCEPTANCE.md",
+      "git_blob": "f33769a589e4315cb0124b2cc607da8eb7285a72",
+      "raw_sha256": "b87c357d59e36dbeb5a77163767647fa367ec4c7b0863bea14c610d88c164e72",
+      "bytes": 2227
+    },
+    {
+      "repo": "strattester",
+      "path": "research/alphafold_training/evaluation.py",
+      "git_blob": "99daba35514f30f1c9a750726dafbf1a11cdbcda",
+      "raw_sha256": "e4efa9c2e005b8290f182f0d6a0112556b163dd139976a5de4da93254a305b9e",
+      "bytes": 5188
+    },
+    {
+      "repo": "strattester",
+      "path": "strattester/engine/grid_data_first_worker.py",
+      "git_blob": "f5ca0baa2626c255b18956e92b2904313e80bab2",
+      "raw_sha256": "4679a7fce9c58030caca39a50a749b26ca869ee33ff0bac964121eb4b8e65d9d",
+      "bytes": 6275
+    },
+    {
+      "repo": "strattester",
+      "path": "strattester/research/execution.py",
+      "git_blob": "da3d4f66d8debcd770392ab36c4e123f310fc2db",
+      "raw_sha256": "99c1a3a7907b0481c0f2a4f239fb6808f137834b39fffaf7885ef60f66246832",
+      "bytes": 8502
+    },
+    {
+      "repo": "strattester",
+      "path": "strattester/research/financial_experiment.py",
+      "git_blob": "a6767c4d69c54bfa28af204c71cd36606bf7c947",
+      "raw_sha256": "d23679d3d480174aba63ea040092dcc1961a1ddf13dd25fdb8f5ea449d996132",
+      "bytes": 17350
+    },
+    {
+      "repo": "strattester",
+      "path": "strattester/research/financial_walkforward_session.py",
+      "git_blob": "3e7eae1cf9d7bee392c9fd669fb50549b89ea559",
+      "raw_sha256": "03ebb5387796225abf49c932831e1d813138e8869cb65f5b2ca9e9389df12a50",
+      "bytes": 13485
+    },
+    {
+      "repo": "strattester",
+      "path": "strattester/research/history_scientific_handoff.py",
+      "git_blob": "c2903ff3d83aae6ee7c572f0c22f30d2fbc3a465",
+      "raw_sha256": "f49ab74a43ee09242e9eda86e23a47ffa33532316480fed499fc54a4b57a3609",
+      "bytes": 5787
+    },
+    {
+      "repo": "strattester",
+      "path": "strattester/research/paper_account.py",
+      "git_blob": "fe284e7dfe12b4cc00be8cbe020a2503bd5806f9",
+      "raw_sha256": "39391046999ec427751e2e5371e3cf56e4dbb58ef5d0406ba21be35157aad989",
+      "bytes": 39122
+    },
+    {
+      "repo": "strattester",
+      "path": "strattester/research/pattern_evaluation.py",
+      "git_blob": "118eedbe15c3ad01fc0ff618431fd8d72b50332b",
+      "raw_sha256": "dae7ec661950dd4b2b4ba0d567be8981e4ec0163825916825acbe61036173709",
+      "bytes": 2467
+    },
+    {
+      "repo": "strattester",
+      "path": "strattester/research/quote_paper.py",
+      "git_blob": "77687980026485c9db5cc883f6135978bc72f933",
+      "raw_sha256": "c0afdec0472c17ef022657662facac04b45a58309251badf442ee39055517d81",
+      "bytes": 20137
+    },
+    {
+      "repo": "strattester",
+      "path": "strattester/research/resampling.py",
+      "git_blob": "3858a98a6bd4272a9632ca74e6fed2dab2838400",
+      "raw_sha256": "795b77b9e68d0265813645d48c277f379d0e1c6e27cbf33524d1a41c4cceef21",
+      "bytes": 1411
+    },
+    {
+      "repo": "strattester",
+      "path": "strattester/research/result_persistence.py",
+      "git_blob": "2b77c53bfc23486c8c9dc9927ba493dd38d84f8b",
+      "raw_sha256": "b2a86a54f91f4b86604a9d67cda837be7aad1efe83d93699c88acf2e8598daeb",
+      "bytes": 1454
+    },
+    {
+      "repo": "strattester",
+      "path": "strattester/research/statistics.py",
+      "git_blob": "fab928cde9976cf3fd9c9d2811e6b1b29e26cff2",
+      "raw_sha256": "dc5a03194c57d1f0c6151462787b0836490aa157a5b4f1c65988c70e60b6269e",
+      "bytes": 1887
+    },
+    {
+      "repo": "strattester",
+      "path": "strattester/research_cli.py",
+      "git_blob": "4b5c09431fcd7f5195575d1b17d8e304c971007d",
+      "raw_sha256": "dc8db1617054777c759b69481b284446e0752b059830c9af473bca378420ab35",
+      "bytes": 11779
+    },
+    {
+      "repo": "strattester",
+      "path": "tests/native/test_native_build.py",
+      "git_blob": "6fb1978e116a2475224fd3c5075d33645c1be80b",
+      "raw_sha256": "7e1ffb60321435d21c7c5f6c7a791ebff0735bb9af8342c5e648b90f89603615",
+      "bytes": 7328
+    },
+    {
+      "repo": "strattester",
+      "path": "tests/research/test_agent7_paper_integrity.py",
+      "git_blob": "0a9ffb343fe4918b9c8b8bbd3541bdd2920b84a8",
+      "raw_sha256": "e39fe6f3fd96a05bf02c5101b801a17ecb873937c780a7a8cbc9d66a6f5188fe",
+      "bytes": 7532
+    },
+    {
+      "repo": "strattester",
+      "path": "tests/research/test_agent7_research_replay.py",
+      "git_blob": "3c4e340bccd6f32db0684940bb173f0b9d66bb1e",
+      "raw_sha256": "141713bc650b8eb0c0d594e3876e4cd1410e4f0fffcb13e86954aed6e927bc67",
+      "bytes": 6627
+    },
+    {
+      "repo": "strattester",
+      "path": "tests/research/test_financial_experiment.py",
+      "git_blob": "2eba3713fa541f7a0559d812a6bce75e0cc9eeee",
+      "raw_sha256": "847f34422e1e3d85315bae2c4b9c4f49d30d34de0e59a3bf3d3b5b6cd66264a5",
+      "bytes": 9015
+    },
+    {
+      "repo": "strattester",
+      "path": "tests/research/test_financial_walkforward_session.py",
+      "git_blob": "3c52cf5b4de42d9e5c9e27c34ee144d29a2da8ad",
+      "raw_sha256": "4b7e65d32cf065a90ff3d4e54c4ed817013ab32b3b0d66d05f9ecb050d59ede6",
+      "bytes": 11359
+    },
+    {
+      "repo": "strattester",
+      "path": "tests/research/test_history_scientific_handoff.py",
+      "git_blob": "0fcb733d68f9f4a9e8ee1d3c0802aeabc072bf77",
+      "raw_sha256": "35cef3e34c47f7626c6c27af836db956252230e0f78c31822abb1c9690d60437",
+      "bytes": 2553
+    },
+    {
+      "repo": "strattester",
+      "path": "tests/research/test_paper_account.py",
+      "git_blob": "4637c62565b9c97dc4738a84cc090e8cec62e8c6",
+      "raw_sha256": "0635ae9249b75483cbc82d9aa8ea05a28cccdee695bea032ad2ffbac83001336",
+      "bytes": 18636
+    },
+    {
+      "repo": "strattester",
+      "path": "tests/research/test_statistics_reporting.py",
+      "git_blob": "7548936243b2e32c94ff0ddb35d022afe71d1a61",
+      "raw_sha256": "2cfddb71a8925ec5989ed666e341b760cefb60a57cef39ea8949afcc58b5473a",
+      "bytes": 1654
+    },
+    {
+      "repo": "strattester",
+      "path": "tests/research/test_validation_resampling.py",
+      "git_blob": "03b8ceac2018580db4c1bc52ef457ad46f60e661",
+      "raw_sha256": "abebf46ae3a067f011e7732d7c674c949cc842a292cf648aa56e9e90c9bd5a71",
+      "bytes": 1418
+    },
+    {
+      "repo": "strattester",
+      "path": "tests/runtime/test_concurrency_isolation.py",
+      "git_blob": "1310f4489c478476118c72e372d83b2fb93cba1e",
+      "raw_sha256": "c69b823815db145ff0400e776b3ccaf5809fa4d451a4168f3c9f9a678b48dc41",
+      "bytes": 4894
+    },
+    {
+      "repo": "strattester",
+      "path": "tests/test_quote_paper.py",
+      "git_blob": "e11dc7f988fec137683270aa6b91b52b5a5c0dd5",
+      "raw_sha256": "22803ce9d10af8849fc05e62a3fc13f5de44e71f4a4a1f4bcde259cbd8b09c98",
+      "bytes": 16096
+    },
+    {
+      "repo": "math",
+      "path": "docs/integration/history-pipeline-v1.md",
+      "git_blob": "db4c653ce3586cf300edc7e2e9f4821b3f7f9203",
+      "raw_sha256": "0c84f18f44fa4734c51471b5cd5791dd8783ed37ae1ecb9ed9da86fd1a88abaf",
+      "bytes": 13111
+    },
+    {
+      "repo": "math",
+      "path": "python/history_contract.py",
+      "git_blob": "129631b64ce98da1ff31654098df4bc1399a2e10",
+      "raw_sha256": "5b1c013704f58b8b7f5c75413e17fcc3eed19ab104489b4881b2af978d8a9729",
+      "bytes": 4494
+    },
+    {
+      "repo": "math",
+      "path": "python/history_scientific_worker.py",
+      "git_blob": "836c886d69c878c31d014acf8da3dd4234694999",
+      "raw_sha256": "88a0557d86d94c851ddacdcc9a22618f653ee132b75c50cd6066c7a2c17ec5fb",
+      "bytes": 3707
+    },
+    {
+      "repo": "math",
+      "path": "python/history_sizing.py",
+      "git_blob": "322289e3f9c5017c9b67babda68920c36ff5228e",
+      "raw_sha256": "ad050a83871842d9fa77559738dee7b71fd5ba75325bc3f633956729d460ef73",
+      "bytes": 1573
+    },
+    {
+      "repo": "math",
+      "path": "python/history_statistics.py",
+      "git_blob": "43dc51fb22ddff1cc40b1313140b84f658d9d6d8",
+      "raw_sha256": "c34418236c92f9cc47653efcd53a07d61ecc6b5f3de52b5ec99f8ff60f0f4ea4",
+      "bytes": 2553
+    },
+    {
+      "repo": "math",
+      "path": "python/history_stochastic.py",
+      "git_blob": "a494df163860b695fa46ff9b7e79067ebd2706ac",
+      "raw_sha256": "cda119031acf375f3f7226722fe2eeccb292eaa93519a3781ad798d209cb5f65",
+      "bytes": 2232
+    },
+    {
+      "repo": "math",
+      "path": "python/history_timeseries.py",
+      "git_blob": "44209867d0083fb9e19d50f7c871ad69aa2e4e76",
+      "raw_sha256": "0fe1848d0ba8b341c374456817f65ad4f3d86b7833bce3510d509a373b76729a",
+      "bytes": 2592
+    },
+    {
+      "repo": "math",
+      "path": "python/history_worker.py",
+      "git_blob": "9e081c38b4f8de95306cf6738bdb3560fd6aa5c1",
+      "raw_sha256": "c0f3f47f9613cd3bfde6e2b0a96e8f6a3c8699bfa9d162c98ad0f3166f9ddaba",
+      "bytes": 2759
+    },
+    {
+      "repo": "math",
+      "path": "scripts/history/scientific-stdio.mjs",
+      "git_blob": "b10cf69a7c6dea42f7809a58110d89fb633320a6",
+      "raw_sha256": "15133a6d5e2ae243899e8476ba1b30b370b9bbc8234046033958dfe891e202d3",
+      "bytes": 639
+    },
+    {
+      "repo": "math",
+      "path": "scripts/numerical/walk-forward-guard-comparison.mjs",
+      "git_blob": "1f6d4ac5242432f903f1e419108518db40f3935a",
+      "raw_sha256": "82bbf8ca86637074737749ee405a4b8166f9635b397968f67c69a9f069cb7840",
+      "bytes": 1067
+    },
+    {
+      "repo": "math",
+      "path": "src/ai-orchestrator/replay.mjs",
+      "git_blob": "bcb2c48ca13467b08b4a254c9155bc7fe0123b89",
+      "raw_sha256": "e62bd551752b132e1c557ad5dd8179bdbe774bb50d5c500fe98e5c38f1ff9902",
+      "bytes": 1017
+    },
+    {
+      "repo": "math",
+      "path": "src/bounded-experiment.mjs",
+      "git_blob": "22844e8d2912e955cea2e0ea553b63a0b4eaf458",
+      "raw_sha256": "dd3c2531ac2003fceaa9f941b30d80e20a4c1f6ef450537e12488534b666ab83",
+      "bytes": 1558
+    },
+    {
+      "repo": "math",
+      "path": "src/causal-feature-screen.mjs",
+      "git_blob": "e717b371ea85c89277b82eb6b7d596a78d9bf33c",
+      "raw_sha256": "b497e754af94107b1381c4ffa498a83f25c250bb1226ce8b4c98190db9d845be",
+      "bytes": 2703
+    },
+    {
+      "repo": "math",
+      "path": "src/guarded-selection.mjs",
+      "git_blob": "3faaa7d2bdd22c72bd8de0c4306611b3b10435a6",
+      "raw_sha256": "e5685485c2b0f942f144ea73048edb784f93a01beba361d6beec85dd0abd483f",
+      "bytes": 4032
+    },
+    {
+      "repo": "math",
+      "path": "src/knowledge/file-replay-ledger.mjs",
+      "git_blob": "6fcda98a90004abb018e240fc10f660f65640735",
+      "raw_sha256": "5b9bfd9e40a09a919349a433f0dfbb3064f28fbd6fa82faa38389a589d72a08d",
+      "bytes": 1777
+    },
+    {
+      "repo": "math",
+      "path": "src/math-engine-server.mjs",
+      "git_blob": "8884eeb75f96e8b1c22e4d794b732552fb0fdf59",
+      "raw_sha256": "5bed24421aa2088770ecd524acceb4fc2c8ffaa074aa1862b22da782b591c08e",
+      "bytes": 15626
+    },
+    {
+      "repo": "math",
+      "path": "src/model-fitting.mjs",
+      "git_blob": "6261fc94c23877000d17a88450db211929968cb4",
+      "raw_sha256": "3d7396061ca172d68953c570c1570955357a20f813d928ff1660c831d7013883",
+      "bytes": 2403
+    },
+    {
+      "repo": "math",
+      "path": "src/returns-research.mjs",
+      "git_blob": "78c1c1a2a58bccc25a3552f33cab661304b77c94",
+      "raw_sha256": "309575fe0bcf1080d4d72207b64ac1f99b3218a7618f69acd6e40278cb30958d",
+      "bytes": 3559
+    },
+    {
+      "repo": "math",
+      "path": "src/scientific-engine.mjs",
+      "git_blob": "cc16a42531d2627fc8ca1956629f2c1ebe01f815",
+      "raw_sha256": "75f39fd2d2ff5917c4213c6d6399070924b62ab5d8d63266f40053ae75dd0ea9",
+      "bytes": 12855
+    },
+    {
+      "repo": "math",
+      "path": "src/walk-forward.mjs",
+      "git_blob": "87c181b5cb0e3d73df55d4bc1c3361448de0d394",
+      "raw_sha256": "6b67f4f9f12d2f0991eba8257038b765759fb2e86912eb278d51f940890b6fdd",
+      "bytes": 4880
+    },
+    {
+      "repo": "math",
+      "path": "tests/agent7-replay-research.test.mjs",
+      "git_blob": "a962da282660ee744706960ca6d136bd318cd7fc",
+      "raw_sha256": "44d0489aad2e6ed37f108a336c1aa5aed8420b688d1a52d709626cd59b6bd697",
+      "bytes": 6330
+    },
+    {
+      "repo": "math",
+      "path": "tests/bounded-experiment.test.mjs",
+      "git_blob": "6f2c8597c6e595591cc4b0fb8a1f071f10102307",
+      "raw_sha256": "fdabbf929e7053503796a4049e3081a65b6c7e209912aeeb579bdb7f36ba6fb5",
+      "bytes": 3183
+    },
+    {
+      "repo": "math",
+      "path": "tests/causal-feature-screen.test.mjs",
+      "git_blob": "3784da92ff377052463f2bc56ddc4537c6961471",
+      "raw_sha256": "9d46755b5a6ef157e5f14c1208acf40fe07cd3fba9c63cc05fc01011b42004e3",
+      "bytes": 1732
+    },
+    {
+      "repo": "math",
+      "path": "tests/guarded-selection.test.mjs",
+      "git_blob": "887f0fe2878f4b546696303d0e54aa2c43387fd0",
+      "raw_sha256": "df6d659ddc330f56f2086980daf841b47d64df9cbe6a59e8b0fb6f5e72a06f58",
+      "bytes": 1925
+    },
+    {
+      "repo": "math",
+      "path": "tests/knowledge-file-replay-ledger.test.mjs",
+      "git_blob": "28bf04c09527f16492e3e43946dd5c967046a5e3",
+      "raw_sha256": "f2d8114aef37d34b73196255c668b1804fc1b5fdfe9a01337bdc5b5f057efa0d",
+      "bytes": 908
+    },
+    {
+      "repo": "math",
+      "path": "tests/model-fitting.test.mjs",
+      "git_blob": "a37219fc23cc752cc39efd838d6147f160f112cf",
+      "raw_sha256": "041985c7e393f991205a4260919b36e65bcce02bcb59401838cf44a3fc24a4d0",
+      "bytes": 952
+    },
+    {
+      "repo": "math",
+      "path": "tests/returns-research.test.mjs",
+      "git_blob": "3e6c96777495f5ce50c7cac0858fa5ae73eda46e",
+      "raw_sha256": "ed3fd9a722af2801b3cf1eb887b10e7f945d9931ecbb54a659da40b159812111",
+      "bytes": 1578
+    },
+    {
+      "repo": "math",
+      "path": "tests/scientific-engine.test.mjs",
+      "git_blob": "db83910290c32296e625e058333ccd0ea26adc45",
+      "raw_sha256": "f8868570b6508d80046d85d1946d1311f582abbbe722dd5ce591f5478a7efa11",
+      "bytes": 10251
+    },
+    {
+      "repo": "math",
+      "path": "tests/scientific-history-clocks.test.mjs",
+      "git_blob": "6f79c4f5e2d9aa61c121f6809acc9af21a93e76d",
+      "raw_sha256": "04825013417e0d90ce9836d258f616c2fa13f14eac1f91388738197191a9d286",
+      "bytes": 962
+    },
+    {
+      "repo": "math",
+      "path": "tests/test_history_kernels.py",
+      "git_blob": "7e01bd2d3015d59c5d78fd1fcb38efd953886800",
+      "raw_sha256": "7b752a1a3caf55462461499b5cf878b502c4f0cdd4eb1d513ca16db06638f288",
+      "bytes": 3794
+    },
+    {
+      "repo": "math",
+      "path": "tests/test_history_scientific.py",
+      "git_blob": "2bf390a7f19df57e28e4a34fb0799ce610bf8ae5",
+      "raw_sha256": "bb4c4adce6fc9aeaf861ada1bd0be57358bbbb9b0266a1f143d8fb00f03c46da",
+      "bytes": 4590
+    },
+    {
+      "repo": "math",
+      "path": "tests/test_history_timed.py",
+      "git_blob": "01603b9f60012e1298a4262583b1da2903e0570e",
+      "raw_sha256": "99dd9080c44467ccafb620f64e037e694fd2315a9781385444366e2483cffcbe",
+      "bytes": 3226
+    },
+    {
+      "repo": "math",
+      "path": "tests/walk-forward.test.mjs",
+      "git_blob": "6832e3c28fa8a671caada9add1668357152af636",
+      "raw_sha256": "89b0a86533e2bfa45226290275eecc18f5929adeff1e0478c0e2a9e902ed3ca7",
+      "bytes": 1782
+    },
+    {
+      "repo": "meta_analyse",
+      "path": "src/meta_analyse/core.py",
+      "git_blob": "d75c40244f5a486f87d710e818c2194212a74f67",
+      "raw_sha256": "caa15e51394d3c204ecbcf557cd13ce7a6853b5c8005c4d266971f3f14177170",
+      "bytes": 8145
+    },
+    {
+      "repo": "meta_analyse",
+      "path": "src/meta_analyse/grid_history_adapter.py",
+      "git_blob": "71787bcad2edb53b17533954a8a1a3def2517f0d",
+      "raw_sha256": "2927ed52f5dc81428983ef67bac17e35a6ebb8bf16a05ffc5554c076fff1dc0c",
+      "bytes": 8515
+    },
+    {
+      "repo": "meta_analyse",
+      "path": "src/meta_analyse/headless_service.py",
+      "git_blob": "d90e2c2e12f3585edac73a5dc51212c1dae6c623",
+      "raw_sha256": "2fdc8ff7dec19f83fa3c38ccaad4dbeb78e36fc3792bb4dc67f5dd9d247b5745",
+      "bytes": 24885
+    },
+    {
+      "repo": "meta_analyse",
+      "path": "src/meta_analyse/ohlcv_research_adapter.py",
+      "git_blob": "e1e4c28e28039a61a69a311ed65f1e102c2f2db5",
+      "raw_sha256": "39b165c945f4d5c00fdf96c460d9bf4e34a32c9cb30483d9be6d88f45403a90f",
+      "bytes": 6252
+    },
+    {
+      "repo": "meta_analyse",
+      "path": "src/meta_analyse/runtime.py",
+      "git_blob": "aab8e5159bf6983afabb9b0b121db1fed8a2a982",
+      "raw_sha256": "9fe0e5d9a0c5e975e72194aff811b7343a80d5c7a08453c5ec907c698438efa0",
+      "bytes": 6819
+    },
+    {
+      "repo": "meta_analyse",
+      "path": "src/meta_analyse/storage.py",
+      "git_blob": "4dfeda0fa3904949f5bf466fe6f6b384a0e8c8df",
+      "raw_sha256": "4fc3a6b5bff9a8ecd15c0db7dd90941b61edc94eb146a636c536213a6556cd20",
+      "bytes": 4603
+    },
+    {
+      "repo": "meta_analyse",
+      "path": "tests/test_agent7_ohlcv_research_contract.py",
+      "git_blob": "054557521918d9a892950a39c177315a1e36a810",
+      "raw_sha256": "07f8a7a0a925105c738435add7999924d39605d998b26755644053bb396c3d08",
+      "bytes": 4999
+    },
+    {
+      "repo": "meta_analyse",
+      "path": "tests/test_core.py",
+      "git_blob": "de1156c8eb39da5e1db2ec58831b58403cd741bc",
+      "raw_sha256": "394d92df6b5293570ced5a117a34fdd32997106fcd8fc979040243c08916d606",
+      "bytes": 2522
+    },
+    {
+      "repo": "meta_analyse",
+      "path": "tests/test_grid_history_adapter.py",
+      "git_blob": "7c927c36c4e2e86d5c105bc3786c7a84c82d0e45",
+      "raw_sha256": "bd090829a7d015d5b705371f47c7b8945840d51b1c58ec805eedf543ac2cf0c8",
+      "bytes": 5869
+    },
+    {
+      "repo": "meta_analyse",
+      "path": "tests/test_ohlcv_research_adapter.py",
+      "git_blob": "d4f006f8de428f2f25d491e9ab979d4c0e036a1d",
+      "raw_sha256": "180cb604f8a27bfa6cf8d4cfe32a5b30959d05f5a1f1622a3e4ae3e948d06a61",
+      "bytes": 9337
+    }
+  ],
+  "audit_inputs": [
+    {
+      "file": "agent7-reuse-strattester-a56.json",
+      "bytes": 22826,
+      "sha256": "245cc1ba6822c6f5c64755bf27e97b05468831dac57e31e25e243679dca066a1"
+    },
+    {
+      "file": "agent7-reuse-math-917.json",
+      "bytes": 24423,
+      "sha256": "7efdafece21bf4033b96c15058e8f4e4c746af88852d0639204fa915e5755b0e"
+    },
+    {
+      "file": "agent7-reuse-meta-f3c.json",
+      "bytes": 22585,
+      "sha256": "06c3c1d203700fa9ec5b70fca7f625f66fcf42b990eac7595e6199a5586083ef"
+    }
+  ],
+  "limitations": [
+    "No tests rerun by this audit; exact-head existing receipts and source/test definitions used",
+    "Repo CI success is not per-function verification; explicit skips are not mandatory waivers",
+    "Synthetic replay/fixtures establish engineering properties, not profitability, calibrated inference or full scientific reliability",
+    "No original source repository edits, installs, new strategies, new Python research core, or new ledger",
+    "Actual A2/A3/A4/A5/A6 endpoint and physical/native acceptance are separate; diagnostics2446 are not runtime917PASS"
+  ],
+  "diagnostic": {
+    "head": "2446d04624469e34aa96ed766be7a4887d6d654c",
+    "tree": "12c4e3cbd3557c7f4f634f5241c7e4b51eafba4f",
+    "run": "42352374979",
+    "job": "128343065197",
+    "attempt": "1",
+    "scope": "SEPARATE_NONQUALIFYING_SINGLE_USE_DIAGNOSTIC",
+    "authorization": "CONSUMED",
+    "watcher_session": "30275",
+    "watcher": "ORIGINAL_READ_ONLY_STILL_ACTIVE",
+    "native_runtime_pass": false,
+    "queue_cause": "UNKNOWN"
+  },
+  "causal_and_reuse_summary": [
+    {
+      "repo": "strattester",
+      "scope": "financial_experiment.run_experiment and run_walk_forward, not every utility",
+      "enforced": "Purged train/validation/test, cross-label-overlap refusal, validation-only calibration/threshold then test, fresh fold models; no prior-OOS reuse by default, explicit sequential opt-in and no pooled-portfolio claim",
+      "refs": [
+        "strattester/research/financial_experiment.py:104",
+        "strattester/research/financial_experiment.py:112",
+        "strattester/research/financial_experiment.py:150",
+        "strattester/research/financial_experiment.py:152",
+        "strattester/research/financial_experiment.py:193",
+        "strattester/research/financial_experiment.py:234",
+        "strattester/research/financial_experiment.py:266"
+      ],
+      "gap": "No global immutable cross-experiment human test-lockbox registry established; simple split/freezer utilities have weaker guarantees. Fold publication is private staging plus exclusive per-file links, not proof all-or-none publication under OS failure."
+    },
+    {
+      "repo": "math",
+      "scope": "Raw-price WF/return APIs versus timestamp-aware history/scientific paths",
+      "enforced": "Train-only fitting and validation-only local selection exist; timestamp-aware prefix uses declared availability, scientific nodes propagate availableAt",
+      "gap": "Per-window holdout isolation does not prevent cross-window/cross-run role reuse. Graph global asOf alone is not forecast decision-time admission; consumer must honor each propagated availability. Purge/embargo/multiple-testing global enforcement not established."
+    },
+    {
+      "repo": "meta_analyse",
+      "scope": "ohlcv_research_adapter historical backfill",
+      "enforced": "Contiguous closed minute bars and end<=declared retrieval<=decision<=asof<=now; current calculation time separate",
+      "gap": "Historical observation times NOT_PROVIDED. Untouched levels use the full accepted window, so cannot assign the result to each historical bar as if then known; no train/validation/test governance established."
+    }
+  ],
+  "cross_module_cost_probe": {
+    "file": "agent7-scientific-reuse-cost-semantics-probe.json",
+    "result": "Direct PaperLedger result dictionary into Math _net subtracts fees/slippage again. NOT evidence existing pipeline is wired this way or BROKEN.",
+    "required": "Explicit typed gross/net/cost/funding/unit interface before reuse; preserve original artifacts. PaperAccount Decimal balances do not establish exact tick/lot/fill policy."
+  },
+  "P0_table": [
+    {
+      "id": "P0_NATIVE_RUNTIME_ACCEPTANCE",
+      "type": "ACCEPTANCE_BLOCKER_NOT_NEW_CODE_FAILURE",
+      "scope": "Math917 native runtime and Stratt full native worker",
+      "evidence": "Native launch broker is intentionally BLOCKED/78; diagnostic2446 is separate, consumed single-use and nonqualifying; current original run not terminal",
+      "status": "NOT_VERIFIED"
+    },
+    {
+      "id": "P0_REAL_SOURCE_PIT_OOS",
+      "type": "SCIENTIFIC_ADMISSION_GAP",
+      "scope": "Any real-market validity/reliability claim",
+      "evidence": "Declared historical availability and caller provenance do not establish observed PIT; synthetic OOS is not real OOS",
+      "status": "PARTIAL"
+    },
+    {
+      "id": "P0_AUTHORITY_DISTRIBUTED_PAPER",
+      "type": "INTEGRATION_ACCEPTANCE_GAP",
+      "scope": "Actual worker reassignment/stale/noquorum/durable cross-worker publication",
+      "evidence": "Strong local ledger/account tests and model callbacks exist; actual authenticated endpoint/quorum/Assignment1/Storage integration ACK absent",
+      "status": "NOT_VERIFIED"
+    },
+    {
+      "id": "P0_FINANCIAL_PROFILES",
+      "type": "DOMAIN_ADMISSION_GAP",
+      "scope": "Exact financial amounts/tick/lot/minmax/notional across10 instruments",
+      "evidence": "Root-relayed A3 confirmation: no admitted profiles; retain UNAVAILABLE_A3_A4_UNIT_DECIMAL_PROFILE_PENDING; no new profile invented",
+      "status": "NOT_VERIFIED"
+    }
+  ],
+  "P1_gaps": [
+    "Typed cross-module gross/net/cost semantics before reusing Math helpers on PaperLedger output",
+    "Bootstrap CI coverage/calibration/dependence and resource admission beyond narrow seeded reproducibility tests",
+    "Global repeated-experiment holdout governance and multiple-testing correction not established",
+    "Correlation/ruin helpers are descriptive/proxy, not validated portfolio stress or generative market Monte Carlo",
+    "Actual domain/view identity, financial profiles, storage retrieval and authority/scheduler endpoint ACK remain separate"
+  ],
+  "reuse_decision": "Reuse existing callable kernels and ledger/account; no new Python research core, no new ledger, no eight new strategies. Reuse is conditional on explicit interface/causality/admission contracts.",
+  "overall": "NO-GO",
+  "observed_at_utc": "2026-11-07T10:55:57.789Z",
+  "audit_directive_id": "e0b9d9a5-519b-46d0-bd11-e9831fd193ee",
+  "focused_probe": {
+    "file": "agent7-scientific-reuse-cost-semantics-probe.json",
+    "exit_code": 0,
+    "scope": "ONE_TINY_PURE_EXISTING_HELPER_INTERFACE_PROBE_ONLY_NO_CORE_TEST_RERUN",
+    "existing_pipeline_broken_claim": false
+  },
+  "source_edits": 0
+}

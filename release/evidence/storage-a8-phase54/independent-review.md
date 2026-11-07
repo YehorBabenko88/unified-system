@@ -1,0 +1,17 @@
+# A8 isolated filesystem acceptance, Draft PR34
+
+Requirement ID STORAGE_ISOLATED_FILESYSTEM_EXACT_HEAD. Repository unified-system; PR34 https://github.com/YehorBabenko88/unified-system/pull/34.
+Exact HEADcd0286dee5fc41cb7a35b0b6ac431a7ebfc25dfb/tree84b714253c3e10017046e1a7a5981738a05e06e6; base10157fed4d28606adf587be3494d2f6d42887ce9.
+Environment: own no-hardlink clone, Python3.12.10 -I-B, own workspace temporary roots, synthetic bytes. No office filesystem/DB/service change.
+
+Expected/actual: exactly7new allocated files, all baseline/Stage1 files unchanged. Fresh43cases=26Stage1+17filesystem PASS0skip; all307tracked raw inputs independently matched primary Git before/after; clean clone/no source bytecode. Original suite.stdout.json and suite.stderr.log retained. Owner handoff raw5409817a0014173df3ddbe5cf1edfe1f68110c0b335c8c4329170950c4dde85d verified for correlation. Full751/14skip pre-amendment result NOT_RUN here and not transferred to committed HEAD.
+
+Four independent additional actual filesystem cases PASS0skip: multiobject/empty/binary3root copy+restore with full bytes/hash/inventory equality; real Windows junction replacing staging rejected before any foreign-target write; modified root marker and5invalid max-byte types/bounds rejected; same-read identity regression. Race uses real replacement file with distinct native identity after verified read; legacy stat-after-read implementation constructed only in memory produces one expected assertion RED/0errors, committed implementation GREEN and subsequent corrupt read fails. No product/test source edited. Original RED/GREEN logs and independent-extra.json retained; all307source bytes unchanged.
+
+Read receipt is an observation of the file identity/content actually read, not a lease guaranteeing pathname content cannot change afterward. Copy observations bind explicit local inventory only; no content publication authority. Existing tests independently rerun actual corruption/no overwrite, hardlink rejection, missing/wrong length/size, interrupted link/flush and short writes. OSError/ENOSPC/short-write cases are injected syscall faults on own fixtures, not real disk-full/media fault acceptance. Windows namespace durability is explicitly unqualified. Own temp roots/junction retained outside evidence package; no office namespace touched.
+
+Status PASS_ISOLATED_FILESYSTEM_ONLY. No media/crash durability, independent backup media, dataset closure, Consul publication, pilot backup/rollback, native/runtime admission, fullsuite/Windows CI/fleet qualification. Supplied runner binds storage files before/after; A8 uses separate full primary-Git verification and does not qualify that runner as a complete source/import authenticity guard. Global F16/F17 acceptance gaps unchanged.
+
+Severity: no new defect found in this bounded slice. Required correction before pilot use: actual admitted root/OS ACL/current grant, complete selected package dependency closure, applicable Windows evidence and pilot-specific affected-state backup/restore/rollback. Not all such mechanisms are implemented by this primitive. Overall broader acceptance NO-GO, existing6P1/3P2 unchanged. Conditional physical pilot preparation separate; destructive faults/Tailscale removal still BLOCKED.
+
+Evidence exact-review.json, suite original stdout/stderr, independent-extra.json and independent RED/GREEN logs. Reproduction ../review_storage34_exact.py and ../review_storage34_extra.py. Owner and Integration Owner notified.

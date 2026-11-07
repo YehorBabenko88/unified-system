@@ -1,0 +1,803 @@
+# CODEX — UNIFIED MASTER MISSION
+## Integrated Runtime, Scientific Research, Physical Commissioning & Continuous Stabilization
+
+**Date:** 2026-11-07  
+**Mode:** CONTINUOUS EXECUTION WITH EXPLICIT SAFETY GATES  
+**Overall status:** IN_PROGRESS / NO-GO
+
+## 0. Главная цель
+
+Завершить существующую распределённую систему Unified, объединяющую:
+
+1. `bybit-cluster-grid`
+2. `strattester`
+3. `math`
+4. `meta_analyse`
+5. `Terminan`
+6. `unified-system`
+
+Система должна работать на шести Windows-компьютерах, собирать исторические и текущие публичные рыночные данные Bybit, исследовать торговые закономерности, выполнять воспроизводимые исторические эксперименты, симулировать сделки, измерять статистическую достоверность результатов и отображать всё в Terminan.
+
+Никакой реальной торговли.
+
+**Главный научный критерий: положительное математическое ожидание после всех моделируемых издержек при контролируемом риске.**
+
+Не оптимизировать исключительно win rate, количество сделок или историческую прибыль.
+
+Не гарантировать прибыльность стратегий.
+
+Не создавать новую платформу вместо существующей. Сохранять проверенные runtime, ledger, security gates и контракты.
+
+---
+
+# PART I — CURRENT EXECUTION STATE
+
+## 1. Актуальные исходные данные
+
+### Unified
+
+Draft PR #26:
+
+`https://github.com/YehorBabenko88/unified-system/pull/26`
+
+Последний проверенный HEAD:
+
+`9c585129200cb3510c78b0f4f791eec5b7d85e8a`
+
+PR является integration candidate, но пока не подтверждён как installable release.
+
+### Control Mux
+
+Review4 commit:
+
+`360c5cdc9dae88416d69f8765f3dff5ab8828945`
+
+Schema, codec и модельные правила получили scoped ACK.
+
+Реальные endpoint, authority, domain integration и Windows runtime admission требуют отдельной проверки.
+
+### LAN
+
+Approach A утверждён для изолированной реализации:
+
+- mTLS.
+- Pinned SSH observer.
+- Bounded queues.
+- Network budgets.
+- Shared Bybit Egress accounting.
+
+Это не означает физический или provider-send допуск.
+
+### Storage
+
+Checkpoint V3 time semantics утверждены:
+
+- `committed_at_utc: null`, когда точное время commit неизвестно.
+- Явный `UNKNOWN_COMMIT_INSTANT`.
+- Отдельное достоверное время наблюдения подтверждённой записи.
+
+Нельзя заменять commit instant временем последующего наблюдения.
+
+### Windows
+
+PC1 и LS7 — Windows 11 Home workers, требующие отдельной квалификации.
+
+LS5, PC4 и PC3 — предполагаемые координаторы; фактические роли и ОС подтвердить inventory.
+
+### Math / Agent 7
+
+Последний отчёт:
+
+- A8 scoped ACK.
+- 13 pure/model PASS.
+- 33 PS5 vectors PASS.
+- 0 skips.
+- Source frozen.
+- CI runner не назначен.
+- Выполненных шагов нет.
+- Native PASS не установлен.
+- Single-use authorization использована.
+
+**Не повторять защищённую операцию и не создавать новую authorization автоматически.**
+
+Продолжать наблюдение за оригинальным run.
+
+---
+
+# PART II — PRIORITY AND DEPENDENCY LOGIC
+
+## 2. Разделить работы на независимые потоки
+
+### TRACK A — Infrastructure Runtime
+
+Owners: Agents 1, 2, 4, 5, 6 + ROOT.
+
+Завершить:
+
+- LAN mTLS.
+- Identity.
+- Authority/Consul.
+- Control API.
+- Storage.
+- Scheduler.
+- Terminan.
+- Windows services.
+- Installer.
+- Recovery.
+
+### TRACK B — Scientific Research Runtime
+
+Owners: Agents 3, 7 + ROOT.
+
+Завершить:
+
+- Historical datasets.
+- Live ingestion.
+- Order book/tape preservation.
+- Historical replay.
+- Execution simulation.
+- Strategy testing.
+- Statistical validation.
+- PaperLedger.
+- Result export.
+
+### TRACK C — Independent Acceptance
+
+Owner: Agent 8.
+
+Проверять:
+
+- Source integrity.
+- Contract compatibility.
+- Negative tests.
+- Windows CI.
+- Native security.
+- Determinism.
+- No-real-orders.
+- Physical evidence.
+
+### TRACK D — Physical Commissioning
+
+Owner: ROOT.
+
+Подготавливать LS5 и остальные узлы параллельно с разработкой.
+
+Не устанавливать неготовый distributed runtime.
+
+Не блокировать read-only inventory из-за ожидающего Math CI.
+
+---
+
+# PART III — COMPLETE SCIENTIFIC ARCHITECTURE AUDIT
+
+## 3. Проверить существующие функции, не дублировать их
+
+Для каждого из шести репозиториев установить:
+
+- Exact HEAD/tree.
+- Реальную точку входа.
+- Реализованные функции.
+- Тесты.
+- Зависимости.
+- Ограничения.
+- Владельца.
+- Runtime status.
+- Evidence.
+
+Использовать состояния:
+
+IMPLEMENTED / PARTIAL / STUB / DOCUMENTED_ONLY / BROKEN / NOT_VERIFIED.
+
+Дополнительно отдельно фиксировать:
+
+TESTED / INTEGRATED / WINDOWS_VERIFIED / PHYSICALLY_VERIFIED.
+
+Не считать наличие исходного файла доказательством работающего механизма.
+
+## 4. Grid — Market Data and Microstructure
+
+Проверить существующие реализации:
+
+- Public trades.
+- Order book snapshots/deltas.
+- Footprint.
+- Volume profile.
+- POC/VAH/VAL.
+- Cumulative Volume Delta.
+- Order flow imbalance.
+- Liquidity walls.
+- Absorption.
+- Historical levels.
+- Scientific pattern mining.
+- ML evaluation.
+- Historical experiments.
+- Paper simulation.
+
+Особенно проверить существующие файлы, если они присутствуют в утверждённой базе:
+
+- `grid/scientific_simulation.py`
+- `grid/book_tape_paper.py`
+- `grid/historical_experiment_runner.py`
+- `grid/scientific_pattern_miner.py`
+- `grid/ml_evaluation_pipeline.py`
+- `grid/strategy_statistics.py`
+
+### Критический инвариант
+
+Историческое воспроизведение стакана допускается только при наличии достаточной последовательности:
+
+INITIAL SNAPSHOT → ORDERED DELTAS → GAP DETECTION → RESYNC.
+
+Хранить:
+
+- Exchange timestamp.
+- Receive timestamp.
+- Sequence/update identity.
+- Snapshot identity.
+- Gap markers.
+- Resync markers.
+- Source provenance.
+- Instrument identity.
+- Dataset version.
+- Content hashes.
+
+Не восстанавливать отсутствующие события вымышленными данными.
+
+Если история стакана неполная, помечать соответствующий research capability как недоступный.
+
+Оценить нагрузку для 10, 50, 100 и 500 инструментов, но не запускать масштабирование без ресурсных и provider-budget gates.
+
+---
+
+# PART IV — HISTORICAL REPLAY AND STRATEGY RESEARCH
+
+## 5. Единый исследовательский процесс
+
+Обеспечить логическую совместимость трёх режимов:
+
+HISTORICAL BACKTEST → HISTORICAL EVENT REPLAY → LIVE PAPER.
+
+Сохранять одну версию торговой логики там, где входные capabilities позволяют использовать её без изменения смысла.
+
+Не вводить новый универсальный wire contract, если существующие контракты уже обеспечивают необходимую семантику.
+
+Адаптеры должны использовать exact schema/version и подтверждённые field mappings.
+
+### Причинность
+
+Каждое решение стратегии может использовать только информацию, доступную на соответствующий момент симулируемого времени.
+
+Проверить:
+
+- Look-ahead bias.
+- Timestamp ordering.
+- Publication delay.
+- Receive-time uncertainty.
+- Feature availability.
+- Missing market events.
+- Reproducibility.
+- Strategy version.
+- Configuration digest.
+
+В историческом replay нельзя использовать будущие значения индикаторов или пересчитанные уровни, недоступные в момент решения.
+
+## 6. Simulation fidelity
+
+Разделить результаты на уровни:
+
+**L1 — OHLCV:** грубая оценка, без достоверного восстановления intrabar execution.
+
+**L2 — Trades:** последовательность публичных сделок.
+
+**L3 — Trades + Order Book:** более детальная оценка ликвидности и исполнения.
+
+**L4 — Live Paper:** работа на текущем публичном потоке без отправки настоящих ордеров.
+
+Уровень L4 не означает доказанного реального исполнения.
+
+Для каждого эксперимента фиксировать уровень достоверности, ограничения данных и модель исполнения.
+
+Проверить:
+
+- Market orders.
+- Limit orders.
+- Partial fills.
+- Maker/taker fees.
+- Spread.
+- Slippage.
+- Latency.
+- Funding.
+- Queue-position uncertainty.
+- Position sizing.
+- Stop loss.
+- Take profit.
+- Liquidation and collateral assumptions where applicable.
+
+**Простое касание цены не должно автоматически означать гарантированное исполнение лимитного ордера.**
+
+Симулятор обязан учитывать неопределённость исполнения.
+
+---
+
+# PART V — SCIENTIFIC VALIDATION
+
+## 7. Статистическая достоверность
+
+Использовать существующий Math runtime.
+
+Не создавать новое Python-ядро и не обходить native security gates.
+
+Проверить поддержку:
+
+- Expectancy after costs.
+- Confidence intervals.
+- Bootstrap.
+- Monte Carlo.
+- Walk-forward.
+- Out-of-sample testing.
+- Multiple-comparison control.
+- Parameter sensitivity.
+- Regime stability.
+- Drawdown.
+- Profit factor.
+- Trade correlation.
+- Uncertainty estimation.
+
+Разделить:
+
+- Gross returns.
+- Net returns.
+- Fees.
+- Slippage.
+- Funding.
+- Risk-adjusted results.
+
+Отдельно учитывать survivorship bias, data snooping, overfitting, selection bias и data gaps.
+
+### Обязательное правило
+
+Тестовый период нельзя использовать для настройки параметров с последующим объявлением его независимой проверкой.
+
+При повторной настройке требуется новый независимый validation dataset.
+
+## 8. Исследовательский жизненный цикл
+
+Использовать состояния:
+
+DISCOVERED → BACKTESTED → OOS_PASSED → LIVE_VALIDATED → PAPER_ACTIVE.
+
+Дополнительные состояния:
+
+DEGRADED / SUSPENDED / REJECTED.
+
+Каждый переход требует evidence.
+
+Нельзя переводить стратегию в PAPER_ACTIVE только по высокой исторической доходности.
+
+Для каждой стратегии сохранять:
+
+- Strategy ID/version.
+- Hypothesis.
+- Dataset identity.
+- Training/validation/test windows.
+- Execution model.
+- Cost model.
+- Parameter selection history.
+- Results.
+- Confidence interval.
+- Rejection reasons.
+- Provenance.
+- Approval status.
+
+## 9. Приоритетные стратегии
+
+Проверить архитектурную поддержку:
+
+1. Ложный пробой уровня.
+2. Поглощение агрессивных ордеров.
+3. Пробой с подтверждением потока сделок.
+4. Пробой и ретест.
+5. Возврат к VWAP.
+6. Дисбаланс стакана.
+7. Импульс по скорости исполнения.
+8. Реакция на крупные лимитные плотности.
+
+На текущем этапе **не реализовывать все восемь стратегий автоматически**.
+
+Сначала создать capability matrix:
+
+STRATEGY → REQUIRED DATA → EXISTING FEATURES → MISSING INPUTS → SIMULATION LEVEL → ACCEPTANCE STATUS.
+
+После стабилизации платформы выбирать конкретные реализации по подтверждённой доступности данных и исследовательской ценности.
+
+---
+
+# PART VI — PAPER EXECUTION AND LEDGER
+
+## 10. Strattester / MetaAnalyse
+
+Переиспользовать существующие PaperLedger, PaperAccount и research components.
+
+Проверить:
+
+- Logical trade identity.
+- Duplicate rejection.
+- Idempotent retries.
+- Durable intents.
+- Checkpoint/replay.
+- Crash before commit.
+- Crash after commit.
+- Funding/fees/slippage.
+- Position accounting.
+- PnL.
+- Collateral reservations.
+- Stale worker rejection.
+- No-quorum refusal.
+
+Не создавать второй ledger.
+
+Не считать node-local SQLite распределённым exactly-once механизмом.
+
+Не освобождать collateral при неопределённом исходе операции без проверенного reconciliation.
+
+Никаких реальных exchange order endpoints.
+
+---
+
+# PART VII — TERMINAN RESEARCH DASHBOARD
+
+## 11. Отображение научных результатов
+
+Помимо инфраструктурных вкладок Terminan должен отображать:
+
+- Strategy ID/version.
+- Market regime.
+- Trades.
+- Win rate.
+- Expectancy.
+- Profit factor.
+- Max drawdown.
+- Confidence intervals.
+- Data quality.
+- Simulation fidelity.
+- Strategy status.
+- Historical versus live-paper performance.
+- Virtual positions.
+- Virtual trades.
+- Rejected signals.
+- Reason for each decision.
+- Dataset and evidence references.
+
+Раздельно показывать:
+
+- Byte integrity.
+- Source completeness.
+- Replication health.
+- Authority freshness.
+
+Не объединять их в один недостоверный зелёный статус.
+
+UI должен отображать только подтверждённые backend results, без локальной выдуманной статистики.
+
+---
+
+# PART VIII — RUNTIME INTEGRATION
+
+## 12. Закрыть P0 runtime blockers
+
+ROOT обязан создать единую таблицу интеграционных блокировок.
+
+Для каждого блокера:
+
+- Exact owner.
+- Repository.
+- File/function.
+- Required contract.
+- Failing test.
+- Evidence.
+- Fix plan.
+- Acceptance criteria.
+
+Приоритет:
+
+P0-A: Control API / Consul / identity / fencing.
+
+P0-B: LAN mTLS / budget enforcement.
+
+P0-C: Storage publication / checkpoints.
+
+P0-D: Scheduler / Assignment v1.
+
+P0-E: Terminan real endpoints.
+
+P0-F: Windows/native admission.
+
+P0-G: No-real-orders and PaperLedger integrity.
+
+P0-H: Reproducible market data/research integration.
+
+Не объявлять system GO, пока обязательные P0 не закрыты.
+
+---
+
+# PART IX — MATH CI WAITING POLICY
+
+## 13. Agent 7 — pending CI
+
+Math остаётся отдельным блокером.
+
+Текущий статус по последнему сообщению:
+
+- A8 ACK verified.
+- Model/PS5 PASS.
+- Runner not assigned.
+- No executed steps.
+- Native PASS unknown.
+- Single-use authorization consumed.
+
+Обязательное поведение:
+
+1. Сохранить исходный run ID.
+2. Наблюдать оригинальный run без повторов.
+3. Проверять runner availability и queue status read-only.
+4. Не менять frozen source.
+5. Не создавать новую authorization автоматически.
+6. Не приписывать queue failure исходному коду Math.
+7. При завершении run получить оригинальные logs и artifacts.
+8. Разделить инфраструктурную ошибку, native failure и application defect.
+9. При необходимости нового protected execution подготовить отдельный запрос с evidence.
+
+Пока Math CI ожидает runner:
+
+- Продолжать Grid.
+- Продолжать Strattester.
+- Продолжать MetaAnalyse.
+- Продолжать Terminan.
+- Продолжать LAN/Control API.
+- Продолжать Storage/Scheduler.
+- Продолжать LS5 read-only commissioning.
+
+Не останавливать всю MASTER MISSION из-за одной ожидающей проверки.
+
+Однако Math-dependent native qualification остаётся BLOCKED.
+
+---
+
+# PART X — PHYSICAL COMMISSIONING
+
+## 14. Этапы
+
+### Stage 0 — read-only inventory
+
+Начать сейчас на всех шести ПК.
+
+Проверить:
+
+- Host identity.
+- Windows edition/build.
+- CPU/RAM.
+- Disk.
+- SSH.
+- LAN.
+- Existing services.
+- Security policies.
+- Port collisions.
+- Installed runtimes.
+- Backup/rollback readiness.
+
+Сохранять Tailscale как резервный канал.
+
+ADMINIT может инициировать соединения с офисными узлами. Не создавать обратный доступ офисных узлов к ADMINIT.
+
+### Stage 1 — LS5 local pilot
+
+После выполнения обязательных gates:
+
+- Immutable installable release.
+- Installer security.
+- Windows native prerequisites для выбранных компонентов.
+- Rollback.
+- Backup.
+- Local identity.
+- No production-state conflicts.
+
+Установить ограниченный тестовый runtime.
+
+Проверить локальные службы, Terminan, offline research и paper fixtures.
+
+Не включать реальный Bybit provider traffic без отдельного допуска.
+
+### Stage 2 — coordinator cluster
+
+После отдельной HA readiness:
+
+LS5 → PC4 → PC3.
+
+Проверить реальный quorum, fencing и восстановление.
+
+Не проводить разрушительные fault-injection сценарии.
+
+### Stage 3 — workers
+
+PC2 → PC1 → LS7.
+
+Windows 11 Home на PC1/LS7 квалифицировать отдельно.
+
+### Stage 4 — market data
+
+Только после provider policy/egress admission:
+
+- Один инструмент.
+- Проверка истории.
+- Проверка live continuity.
+- Десять инструментов.
+- Scientific research.
+- Paper simulation.
+
+### Stage 5 — stability
+
+После полного допуска:
+
+- Ограниченный 24-hour soak.
+- Проверка data gaps.
+- Queue/memory/disk bounds.
+- PaperLedger uniqueness.
+- Recovery.
+- Terminan consistency.
+- No-quorum safety.
+- Backup/restore.
+- Rolling update/rollback.
+
+Не считать один успешный запуск доказательством стабильности.
+
+---
+
+# PART XI — CONTINUOUS FIX LOOP
+
+## 15. Исправление реальных дефектов
+
+Для каждого выявленного дефекта:
+
+REPRODUCE
+→ COLLECT EVIDENCE
+→ CLASSIFY P0/P1/P2
+→ ASSIGN OWNER
+→ WRITE FAILING TEST
+→ FIX ROOT CAUSE
+→ RUN LOCAL TESTS
+→ RUN WINDOWS CI
+→ INDEPENDENT REVIEW
+→ UPDATE RELEASE CANDIDATE
+→ RETEST.
+
+Не исправлять только локальную копию на физическом ПК без фиксации изменений в GitHub.
+
+Не ослаблять security tests.
+
+Не объявлять fixture PASS физической приёмкой.
+
+Не проводить merge в main без отдельного разрешения.
+
+---
+
+# PART XII — REQUIRED DELIVERABLES
+
+## 16. Подготовить семь итоговых артефактов
+
+**A — Current Architecture**
+
+Фактические компоненты, их владельцы, зависимости и runtime status.
+
+**B — Gap Analysis**
+
+Что существует, что отсутствует, что сломано, что требует интеграции.
+
+**C — Data Architecture**
+
+Bybit → Grid → Storage → Research → Simulation → Statistics → Terminan.
+
+С указанием происхождения, версий, единиц измерения и integrity.
+
+**D — Implementation Roadmap**
+
+P0/P1/P2/P3 с конкретными файлами, owners, dependencies, tests и критериями приёмки.
+
+**E — Existing Functionality Reuse**
+
+Какие существующие функции используются без дублирования.
+
+**F — Scientific Reliability**
+
+Статистические ограничения, качество данных, simulation fidelity, риск ложноположительных стратегий.
+
+**G — Physical Acceptance & Release Readiness**
+
+Exact release pins, Windows CI, node admission, rollback, фактические результаты по каждому из шести ПК.
+
+---
+
+# PART XIII — EXECUTION AND REPORTING
+
+## 17. Политика автономного продолжения
+
+ROOT является единым Integration Owner.
+
+Не создавать параллельных независимых release baselines.
+
+Агенты продолжают работу в собственных выделенных ветках и файлах.
+
+Если агент завершил задачу, ROOT проверяет результат и назначает следующую конкретную работу в пределах его scope.
+
+Если CI ожидает runner, не создавать бесконечные повторные запуски.
+
+Если один компонент заблокирован, продолжать независимые компоненты.
+
+Если отсутствует контракт, реализовать согласованную часть и подготовить конкретный минимальный запрос на решение.
+
+Не повторять уже полученные owner approvals.
+
+Не выполнять физические операции, запрещённые текущими gates.
+
+Не обещать фонового выполнения без реального механизма возобновления.
+
+## 18. Единый статусный отчёт
+
+После каждого значимого checkpoint публиковать:
+
+MASTER_MISSION_PHASE:
+INTEGRATION_HEAD:
+SIX_REPOSITORY_HEADS:
+CONTROL_API:
+LAN_MTLS:
+CONSUL_AUTHORITY:
+STORAGE:
+SCHEDULER:
+TERMINAN:
+GRID_HISTORY:
+GRID_LIVE:
+STRATTESTER:
+MATH_NATIVE:
+METAANALYSE:
+PAPER_LEDGER:
+SCIENTIFIC_VALIDATION:
+GITHUB_CI:
+AGENT7_RUN_ID:
+AGENT7_RUNNER_STATUS:
+AGENT7_AUTHORIZATION_STATUS:
+LS5_STAGE0:
+PHYSICAL_DEPLOYMENT:
+OPEN_P0:
+OPEN_P1:
+OPEN_P2:
+NEXT_ACTION:
+GO_NO_GO:
+
+Каждому PASS сопоставлять exact evidence.
+
+## 19. Критерий завершения
+
+MASTER MISSION можно объявить COMPLETE только после доказательства:
+
+1. Все обязательные компоненты реализованы и интегрированы.
+2. Шесть репозиториев имеют совместимый release manifest.
+3. Обязательные Windows/security gates пройдены.
+4. Unified работает на всех шести физических узлах.
+5. LAN runtime не требует Tailscale.
+6. Authority и fencing работают корректно.
+7. Storage сохраняет и восстанавливает данные без неподтверждённой потери.
+8. Scheduler безопасно распределяет задания.
+9. Terminan показывает реальное состояние с любого узла.
+10. Historical replay причинно корректен.
+11. Paper simulation не отправляет реальные ордера.
+12. Статистика стратегий воспроизводима и содержит оценку неопределённости.
+13. Выполнена независимая приёмка Agent 8.
+14. Выполнен ограниченный stability soak.
+15. Подготовлен и проверен rollback.
+
+Отдельные экспериментальные стратегии и исследования P3 могут оставаться в roadmap и не должны искусственно блокировать завершение стабильной платформы.
+
+**START NEXT: продолжить runtime integration, наблюдать существующий Math CI, выполнить read-only commissioning LS5 и создать единую scientific capability/gap matrix.**
+
+Не останавливать работу на новом design report.
+
+Не объявлять GO до фактической приёмки.

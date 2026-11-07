@@ -1,0 +1,1342 @@
+{
+  "schema": "agent6.scientific-capability-audit.outputs-only.v1",
+  "date": "2026-11-07",
+  "directive": "direct owner relay e0b9d9a5-519b-46d0-bd11-e9831fd193ee",
+  "scope": "OBSERVATION_ONLY_NO_NEW_WIRE_STRATEGY_OR_SHARED_SOURCE",
+  "HEAD": "10e07ef108d155b9ca2278eec6a8361cb92fa488",
+  "TREE": "899ab6ec331784aa4e512050c75665cecfa9385e",
+  "branch": "feature/terminan-sync-v1-20261106",
+  "source_clean": true,
+  "root_owns_global_matrix": true,
+  "entrypoints": [
+    {
+      "route": "/sync.html",
+      "owner": "A6 standalone static harness",
+      "source": "terminan/sync/serve.py:6",
+      "status": "IMPLEMENTED_UNAVAILABLE_WITHOUT_NATIVE_ADAPTER"
+    },
+    {
+      "route": "/saved + /api/saved/catalog + /api/saved/page",
+      "owner": "existing saved read-only workspace",
+      "source": "terminan/saved_server.py:13",
+      "status": "IMPLEMENTED_HISTORICAL_OR_EXPLICIT_SYNTHETIC_ONLY"
+    },
+    {
+      "route": "/ + /api/research",
+      "owner": "existing legacy terminal/g0 adapter",
+      "source": "terminan/server.py:115",
+      "status": "IMPLEMENTED_GENERIC_STORED_JSON_NOT_SYNC"
+    },
+    {
+      "route": "/lab + /api/lab/overview",
+      "owner": "existing reported market/paper snapshot view",
+      "source": "terminan/unified_server.py:75",
+      "status": "IMPLEMENTED_REPORTED_UNATTESTED_NOT_NATIVE_CONTROL"
+    },
+    {
+      "route": "/math + /api/math/*",
+      "owner": "existing Math laboratory",
+      "source": "terminan/server.py:54",
+      "status": "EXISTING_RESEARCH_GRAPH_TRACE_UI_NOT_STRATEGY_STATISTICAL_DASHBOARD"
+    }
+  ],
+  "capabilities": [
+    {
+      "id": "strategy_id",
+      "capability": "Strategy ID",
+      "implementation": "PARTIAL",
+      "entrypoints": [
+        "/saved",
+        "/api/saved/catalog",
+        "/api/saved/page",
+        "/lab",
+        "/api/lab/overview",
+        "/api/research"
+      ],
+      "existing_fields": [
+        "research_results.strategy_id",
+        "g0 rows[].strategy",
+        "sections.paper.payload.rows[].result.strategy"
+      ],
+      "source_refs": [
+        "terminan/saved.js:221",
+        "terminan/g0_sources.py:69",
+        "terminan/lab_view.html:27"
+      ],
+      "missing_exact_backend_mapping": [
+        "No admitted Control resource_type/resource_id/domain_revision mapping",
+        "A7 Review4 reference does not inline strategy ID; full artifact retrieval/mapping pending"
+      ],
+      "existing_tests": [
+        "tests/test_saved_sources.py:SavedTests.test_multi_candle_and_research",
+        "tests/test_research_adapter_safety.py:ResearchAdapterSafetyTests.test_no_fencing_token_leak_and_bad_metrics_isolated",
+        "tests/test_lab_view_v2.py:LabV2Tests (15 local fixture tests PASS)"
+      ],
+      "notes": "Legacy stored/reported identity only; no auto-strategy creation or execution authorization.",
+      "tested": "FIXTURE_ADAPTER_ONLY",
+      "integrated": "NO_ADMITTED_SYNC_CONTROL_MAPPING",
+      "windows": "LOCAL_FIXTURE_EVIDENCE_ONLY_NO_FEATURE_OR_HOME_ACCEPTANCE",
+      "physical": "NOT_RUN",
+      "current_sync_ui": "UNAVAILABLE"
+    },
+    {
+      "id": "strategy_version",
+      "capability": "Strategy version/revision",
+      "implementation": "PARTIAL",
+      "entrypoints": [
+        "/saved",
+        "/api/saved/catalog",
+        "/api/saved/page",
+        "/lab",
+        "/api/lab/overview"
+      ],
+      "existing_fields": [
+        "strategy_version",
+        "g0 rows[].version",
+        "paper result.strategy_revision (40hex)"
+      ],
+      "source_refs": [
+        "terminan/saved.js:221",
+        "terminan/lab_view.py:202",
+        "terminan/lab_view.html:27"
+      ],
+      "missing_exact_backend_mapping": [
+        "No approved equivalence between strategy_version and strategy_revision or producer implementation pin",
+        "No admitted dataset/root/run/version tuple in Sync"
+      ],
+      "existing_tests": [
+        "tests/test_saved_sources.py:SavedTests.test_multi_candle_and_research",
+        "tests/test_research_adapter_safety.py:ResearchAdapterSafetyTests.test_no_fencing_token_leak_and_bad_metrics_isolated",
+        "tests/test_lab_view_v2.py:LabV2Tests (15 local fixture tests PASS)"
+      ],
+      "notes": "Do not silently rename semver/version into a Git revision or use producing implementation hash as strategy version.",
+      "tested": "FIXTURE_ADAPTER_ONLY",
+      "integrated": "NO_ADMITTED_SYNC_CONTROL_MAPPING",
+      "windows": "LOCAL_FIXTURE_EVIDENCE_ONLY_NO_FEATURE_OR_HOME_ACCEPTANCE",
+      "physical": "NOT_RUN",
+      "current_sync_ui": "UNAVAILABLE"
+    },
+    {
+      "id": "regime",
+      "capability": "Market regime",
+      "implementation": "NOT_VERIFIED",
+      "entrypoints": [
+        "/sync.html",
+        "/saved",
+        "/api/saved/catalog",
+        "/api/saved/page"
+      ],
+      "existing_fields": [
+        "Generic metrics JSON can be inspected; no dedicated regime field/renderer located"
+      ],
+      "source_refs": [
+        "terminan/saved.js:223",
+        "terminan/sync/view.js:38"
+      ],
+      "missing_exact_backend_mapping": [
+        "Regime enum, detector/version, decision timestamp, confidence and dataset lineage absent"
+      ],
+      "existing_tests": [],
+      "notes": "Generic JSON detail is not typed regime support. No regime calculation or classification is invented.",
+      "tested": "NOT_VERIFIED",
+      "integrated": "NO_ADMITTED_SYNC_CONTROL_MAPPING",
+      "windows": "LOCAL_FIXTURE_EVIDENCE_ONLY_NO_FEATURE_OR_HOME_ACCEPTANCE",
+      "physical": "NOT_RUN",
+      "current_sync_ui": "UNAVAILABLE"
+    },
+    {
+      "id": "trades",
+      "capability": "Trades/counts/closed research rows",
+      "implementation": "PARTIAL",
+      "entrypoints": [
+        "/saved",
+        "/api/saved/catalog",
+        "/api/saved/page",
+        "/lab",
+        "/api/lab/overview"
+      ],
+      "existing_fields": [
+        "metrics.trades",
+        "metrics.wins",
+        "metrics.losses",
+        "paper rows[].result.trade_id/side/entry/exit/qty/fees/funding/slippage/pnl",
+        "returned_count/validated_count/has_more"
+      ],
+      "source_refs": [
+        "terminan/saved.js:221",
+        "terminan/saved_sources.py:190",
+        "terminan/lab_view.py:187",
+        "terminan/lab_view.html:25"
+      ],
+      "missing_exact_backend_mapping": [
+        "No admitted Sync research/paper resource mapping",
+        "No full trade history guarantee; closed results are not actual fills or open portfolio"
+      ],
+      "existing_tests": [
+        "tests/test_saved_sources.py:SavedTests.test_multi_candle_and_research",
+        "tests/test_research_adapter_safety.py:ResearchAdapterSafetyTests.test_no_fencing_token_leak_and_bad_metrics_isolated",
+        "tests/test_lab_view_v2.py:LabV2Tests (15 local fixture tests PASS)"
+      ],
+      "notes": "Historical aggregate counts and bounded closed paper row display exist. TradeEvent dataclass in contracts.py is not an active paper/portfolio feed.",
+      "tested": "FIXTURE_ADAPTER_ONLY",
+      "integrated": "NO_ADMITTED_SYNC_CONTROL_MAPPING",
+      "windows": "LOCAL_FIXTURE_EVIDENCE_ONLY_NO_FEATURE_OR_HOME_ACCEPTANCE",
+      "physical": "NOT_RUN",
+      "current_sync_ui": "UNAVAILABLE"
+    },
+    {
+      "id": "win_rate",
+      "capability": "Win rate",
+      "implementation": "PARTIAL",
+      "entrypoints": [
+        "/saved",
+        "/api/saved/catalog",
+        "/api/saved/page",
+        "/api/research"
+      ],
+      "existing_fields": [
+        "metrics.win_rate",
+        "Saved fixed table column"
+      ],
+      "source_refs": [
+        "terminan/saved_sources.py:190",
+        "terminan/saved.js:221",
+        "terminan/saved.js:223"
+      ],
+      "missing_exact_backend_mapping": [
+        "Definition/denominator, wins/losses population, interval, costs and unit absent",
+        "No admitted exact numeric domain schema/units/scale and Control field mapping"
+      ],
+      "existing_tests": [
+        "tests/test_saved_sources.py:SavedTests.test_multi_candle_and_research",
+        "tests/test_research_adapter_safety.py:ResearchAdapterSafetyTests.test_no_fencing_token_leak_and_bad_metrics_isolated"
+      ],
+      "notes": "Finite-number/pass-through validation only; Terminan does not compute, prove or statistically validate this metric. Generic /api/research returns upstream metrics without a dedicated typed metric dashboard.",
+      "tested": "FIXTURE_ADAPTER_ONLY",
+      "integrated": "NO_ADMITTED_SYNC_CONTROL_MAPPING",
+      "windows": "LOCAL_FIXTURE_EVIDENCE_ONLY_NO_FEATURE_OR_HOME_ACCEPTANCE",
+      "physical": "NOT_RUN",
+      "current_sync_ui": "UNAVAILABLE"
+    },
+    {
+      "id": "expectancy",
+      "capability": "Expectancy",
+      "implementation": "PARTIAL",
+      "entrypoints": [
+        "/saved",
+        "/api/saved/catalog",
+        "/api/saved/page",
+        "/api/research"
+      ],
+      "existing_fields": [
+        "metrics.expectancy",
+        "Row-detail JSON only, not a fixed summary column"
+      ],
+      "source_refs": [
+        "terminan/saved_sources.py:190",
+        "terminan/saved.js:221",
+        "terminan/saved.js:223"
+      ],
+      "missing_exact_backend_mapping": [
+        "Per-trade normalization, cost inclusion, currency/unit and population absent",
+        "No admitted exact numeric domain schema/units/scale and Control field mapping"
+      ],
+      "existing_tests": [
+        "tests/test_saved_sources.py:SavedTests.test_multi_candle_and_research",
+        "tests/test_research_adapter_safety.py:ResearchAdapterSafetyTests.test_no_fencing_token_leak_and_bad_metrics_isolated"
+      ],
+      "notes": "Finite-number/pass-through validation only; Terminan does not compute, prove or statistically validate this metric. Generic /api/research returns upstream metrics without a dedicated typed metric dashboard.",
+      "tested": "FIXTURE_ADAPTER_ONLY",
+      "integrated": "NO_ADMITTED_SYNC_CONTROL_MAPPING",
+      "windows": "LOCAL_FIXTURE_EVIDENCE_ONLY_NO_FEATURE_OR_HOME_ACCEPTANCE",
+      "physical": "NOT_RUN",
+      "current_sync_ui": "UNAVAILABLE"
+    },
+    {
+      "id": "profit_factor",
+      "capability": "Profit factor",
+      "implementation": "PARTIAL",
+      "entrypoints": [
+        "/saved",
+        "/api/saved/catalog",
+        "/api/saved/page",
+        "/api/research"
+      ],
+      "existing_fields": [
+        "metrics.profit_factor",
+        "Saved fixed table column"
+      ],
+      "source_refs": [
+        "terminan/saved_sources.py:190",
+        "terminan/saved.js:221",
+        "terminan/saved.js:223"
+      ],
+      "missing_exact_backend_mapping": [
+        "Gross win/loss definition, zero-loss/infinity treatment, costs and population absent",
+        "No admitted exact numeric domain schema/units/scale and Control field mapping"
+      ],
+      "existing_tests": [
+        "tests/test_saved_sources.py:SavedTests.test_multi_candle_and_research",
+        "tests/test_research_adapter_safety.py:ResearchAdapterSafetyTests.test_no_fencing_token_leak_and_bad_metrics_isolated"
+      ],
+      "notes": "Finite-number/pass-through validation only; Terminan does not compute, prove or statistically validate this metric. Generic /api/research returns upstream metrics without a dedicated typed metric dashboard.",
+      "tested": "FIXTURE_ADAPTER_ONLY",
+      "integrated": "NO_ADMITTED_SYNC_CONTROL_MAPPING",
+      "windows": "LOCAL_FIXTURE_EVIDENCE_ONLY_NO_FEATURE_OR_HOME_ACCEPTANCE",
+      "physical": "NOT_RUN",
+      "current_sync_ui": "UNAVAILABLE"
+    },
+    {
+      "id": "drawdown",
+      "capability": "Drawdown",
+      "implementation": "PARTIAL",
+      "entrypoints": [
+        "/saved",
+        "/api/saved/catalog",
+        "/api/saved/page",
+        "/api/research"
+      ],
+      "existing_fields": [
+        "metrics.max_drawdown",
+        "Saved fixed table column"
+      ],
+      "source_refs": [
+        "terminan/saved_sources.py:190",
+        "terminan/saved.js:221",
+        "terminan/saved.js:223"
+      ],
+      "missing_exact_backend_mapping": [
+        "Equity curve, amount vs percent, period, marks/closed-only basis and peak policy absent",
+        "No admitted exact numeric domain schema/units/scale and Control field mapping"
+      ],
+      "existing_tests": [
+        "tests/test_saved_sources.py:SavedTests.test_multi_candle_and_research",
+        "tests/test_research_adapter_safety.py:ResearchAdapterSafetyTests.test_no_fencing_token_leak_and_bad_metrics_isolated"
+      ],
+      "notes": "Finite-number/pass-through validation only; Terminan does not compute, prove or statistically validate this metric. Generic /api/research returns upstream metrics without a dedicated typed metric dashboard.",
+      "tested": "FIXTURE_ADAPTER_ONLY",
+      "integrated": "NO_ADMITTED_SYNC_CONTROL_MAPPING",
+      "windows": "LOCAL_FIXTURE_EVIDENCE_ONLY_NO_FEATURE_OR_HOME_ACCEPTANCE",
+      "physical": "NOT_RUN",
+      "current_sync_ui": "UNAVAILABLE"
+    },
+    {
+      "id": "confidence_intervals",
+      "capability": "Statistical confidence intervals",
+      "implementation": "NOT_VERIFIED",
+      "entrypoints": [
+        "/sync.html",
+        "/saved",
+        "/api/saved/catalog",
+        "/api/saved/page"
+      ],
+      "existing_fields": [
+        "No dedicated lower/upper/level/method/sample_size schema or renderer located"
+      ],
+      "source_refs": [
+        "terminan/lab_catalog.js:15",
+        "terminan/saved.js:221"
+      ],
+      "missing_exact_backend_mapping": [
+        "CI estimator/method/level/sample/population and bounds schema absent"
+      ],
+      "existing_tests": [],
+      "notes": "Math knowledge confidence=NOT_VERIFIED is source attribution metadata, not a statistical confidence interval. No intervals are fabricated.",
+      "tested": "NOT_VERIFIED",
+      "integrated": "NO_ADMITTED_SYNC_CONTROL_MAPPING",
+      "windows": "LOCAL_FIXTURE_EVIDENCE_ONLY_NO_FEATURE_OR_HOME_ACCEPTANCE",
+      "physical": "NOT_RUN",
+      "current_sync_ui": "UNAVAILABLE"
+    },
+    {
+      "id": "data_quality",
+      "capability": "Data quality",
+      "implementation": "PARTIAL",
+      "entrypoints": [
+        "/lab",
+        "/api/lab/overview",
+        "/saved",
+        "/api/saved/catalog",
+        "/api/saved/page"
+      ],
+      "existing_fields": [
+        "market rows[].payload._quality.feeds/missing_counts/last_update",
+        "source_completeness=NOT_EVALUATED",
+        "field_freshness=unknown",
+        "saved coverage.complete=false/scope=PAGE_ONLY_NOT_FULL_HISTORY"
+      ],
+      "source_refs": [
+        "terminan/lab_view.py:149",
+        "terminan/lab_view.py:165",
+        "terminan/lab_view.html:19",
+        "terminan/saved_sources.py:129"
+      ],
+      "missing_exact_backend_mapping": [
+        "A3 expected intervals/gaps and quality schema/revision mapping",
+        "A4 verified integrity/evidence mapping",
+        "Per-field current freshness not established by event age"
+      ],
+      "existing_tests": [
+        "tests/test_lab_view_v2.py:LabV2Tests (15 local fixture tests PASS)",
+        "tests/test_saved_sources.py:SavedTests.test_complete_and_gap_states"
+      ],
+      "notes": "Reported feed quality and page bounds are not source authentication, full source completeness or byte integrity.",
+      "tested": "FIXTURE_ADAPTER_ONLY",
+      "integrated": "NO_ADMITTED_SYNC_CONTROL_MAPPING",
+      "windows": "LOCAL_FIXTURE_EVIDENCE_ONLY_NO_FEATURE_OR_HOME_ACCEPTANCE",
+      "physical": "NOT_RUN",
+      "current_sync_ui": "UNAVAILABLE"
+    },
+    {
+      "id": "simulation_fidelity",
+      "capability": "Simulation fidelity",
+      "implementation": "NOT_VERIFIED",
+      "entrypoints": [
+        "/lab",
+        "/api/lab/overview",
+        "/saved",
+        "/api/saved/catalog",
+        "/api/saved/page"
+      ],
+      "existing_fields": [
+        "paper fill_selection/missing_capabilities/units/cost fields in raw envelope",
+        "No dedicated fidelity score/model schema located"
+      ],
+      "source_refs": [
+        "terminan/lab_view.py:200",
+        "terminan/lab_view.html:23",
+        "terminan/lab_view.html:27"
+      ],
+      "missing_exact_backend_mapping": [
+        "Fill-model version/orderbook/event granularity/latency/slippage limitations and domain mapping absent"
+      ],
+      "existing_tests": [
+        "tests/test_lab_view_v2.py:LabV2Tests (15 local fixture tests PASS)"
+      ],
+      "notes": "Existing disclosed simulation limitations are partial metadata, not a validated fidelity score. No green fidelity or financial exactness inference.",
+      "tested": "FIXTURE_ADAPTER_ONLY",
+      "integrated": "NO_ADMITTED_SYNC_CONTROL_MAPPING",
+      "windows": "LOCAL_FIXTURE_EVIDENCE_ONLY_NO_FEATURE_OR_HOME_ACCEPTANCE",
+      "physical": "NOT_RUN",
+      "current_sync_ui": "UNAVAILABLE"
+    },
+    {
+      "id": "status",
+      "capability": "Status",
+      "implementation": "PARTIAL",
+      "entrypoints": [
+        "/sync.html",
+        "/lab",
+        "/api/lab/overview",
+        "/saved",
+        "/api/saved/catalog",
+        "/api/saved/page"
+      ],
+      "existing_fields": [
+        "Sync status/authority/generation/revision",
+        "lab state/section_states/error",
+        "paper CLOSED",
+        "legacy strategies[].status/error_code",
+        "saved publication_state=PUBLISHED_UNVERIFIED"
+      ],
+      "source_refs": [
+        "terminan/sync/view.js:95",
+        "terminan/lab_view.py:27",
+        "terminan/lab_view.py:241",
+        "terminan/saved_sources.py:189"
+      ],
+      "missing_exact_backend_mapping": [
+        "No admitted native session/authority/source lifecycle-to-domain status mapping"
+      ],
+      "existing_tests": [
+        "tests/sync/test_contract.cjs",
+        "tests/sync/test_client.cjs",
+        "tests/sync/test_browser.spec.cjs",
+        "tests/test_lab_view_v2.py:LabV2Tests (15 local fixture tests PASS)",
+        "tests/test_saved_sources.py:SavedTests.test_multi_candle_and_research",
+        "tests/test_research_adapter_safety.py:ResearchAdapterSafetyTests.test_no_fencing_token_leak_and_bad_metrics_isolated"
+      ],
+      "notes": "AVAILABLE/READY/LIVE in a legacy reported record or evidence_class never grants current authority. Current standalone Sync starts UNAVAILABLE.",
+      "tested": "FIXTURE_ADAPTER_ONLY",
+      "integrated": "NO_ADMITTED_SYNC_CONTROL_MAPPING",
+      "windows": "LOCAL_FIXTURE_EVIDENCE_ONLY_NO_FEATURE_OR_HOME_ACCEPTANCE",
+      "physical": "NOT_RUN",
+      "current_sync_ui": "UNAVAILABLE"
+    },
+    {
+      "id": "historical_vs_live",
+      "capability": "Historical versus live classification",
+      "implementation": "PARTIAL",
+      "entrypoints": [
+        "/saved",
+        "/api/saved/catalog",
+        "/api/saved/page",
+        "/lab",
+        "/api/lab/overview",
+        "/sync.html"
+      ],
+      "existing_fields": [
+        "saved mode=HISTORICAL or SYNTHETIC",
+        "authority=HISTORICAL_ONLY/SYNTHETIC_ONLY",
+        "paper result.evidence_class=SYNTHETIC/HISTORICAL/LIVE",
+        "market observation_status/field_freshness"
+      ],
+      "source_refs": [
+        "terminan/saved_sources.py:129",
+        "terminan/lab_view.py:202",
+        "terminan/lab_view.html:19",
+        "terminan/sync/view.js:95"
+      ],
+      "missing_exact_backend_mapping": [
+        "No admitted live stream/domain revision/barrier or source-authenticity mapping"
+      ],
+      "existing_tests": [
+        "tests/test_lab_view_v2.py:LabV2Tests (15 local fixture tests PASS)",
+        "tests/test_saved_sources.py:SavedTests.test_multi_candle_and_research",
+        "tests/test_research_adapter_safety.py:ResearchAdapterSafetyTests.test_no_fencing_token_leak_and_bad_metrics_isolated",
+        "tests/sync/test_contract.cjs",
+        "tests/sync/test_client.cjs",
+        "tests/sync/test_browser.spec.cjs"
+      ],
+      "notes": "Paper LIVE evidence class denotes source claim only; historical quote selection and event age are not a current live execution feed. No uncommitted observations presented as Sync LIVE.",
+      "tested": "FIXTURE_ADAPTER_ONLY",
+      "integrated": "NO_ADMITTED_SYNC_CONTROL_MAPPING",
+      "windows": "LOCAL_FIXTURE_EVIDENCE_ONLY_NO_FEATURE_OR_HOME_ACCEPTANCE",
+      "physical": "NOT_RUN",
+      "current_sync_ui": "UNAVAILABLE"
+    },
+    {
+      "id": "virtual_positions",
+      "capability": "Virtual/open positions",
+      "implementation": "STUB",
+      "entrypoints": [
+        "/lab",
+        "/api/lab/overview",
+        "/sync.html"
+      ],
+      "existing_fields": [
+        "Paper Trading tab title",
+        "v1 reported trades.status may OPEN/REJECTED",
+        "v2 missing_state includes OPEN_POSITIONS,ACCOUNT_EQUITY,BALANCE,UNREALIZED_PNL"
+      ],
+      "source_refs": [
+        "terminan/sync/view.js:18",
+        "terminan/lab_view.py:45",
+        "terminan/lab_view.py:188",
+        "terminan/lab_view.html:24"
+      ],
+      "missing_exact_backend_mapping": [
+        "A7 admitted open position/account model, mark/valuation/position lifecycle schema and exact backend endpoint absent"
+      ],
+      "existing_tests": [
+        "tests/test_lab_view_v2.py:LabV2Tests (15 local fixture tests PASS)"
+      ],
+      "notes": "v2 accepts CLOSED results only. v1 OPEN is a reported row, not an implemented virtual position book; no reconstruction from closed trades.",
+      "tested": "FIXTURE_ADAPTER_ONLY",
+      "integrated": "NO_ADMITTED_SYNC_CONTROL_MAPPING",
+      "windows": "LOCAL_FIXTURE_EVIDENCE_ONLY_NO_FEATURE_OR_HOME_ACCEPTANCE",
+      "physical": "NOT_RUN",
+      "current_sync_ui": "UNAVAILABLE"
+    },
+    {
+      "id": "reject_reasons",
+      "capability": "Per-trade reject reasons",
+      "implementation": "PARTIAL",
+      "entrypoints": [
+        "/lab",
+        "/api/lab/overview",
+        "/sync.html"
+      ],
+      "existing_fields": [
+        "v1 strategies[].error_code and top-level errors[].code",
+        "v1 trade.status=REJECTED",
+        "v2 section.error_code"
+      ],
+      "source_refs": [
+        "terminan/lab_view.py:40",
+        "terminan/lab_view.py:45",
+        "terminan/lab_view.py:60",
+        "terminan/lab_view.html:16"
+      ],
+      "missing_exact_backend_mapping": [
+        "Per-trade rejected intent/result ID, typed reason enum, strategy/risk/market/authority cause and evidence mapping absent"
+      ],
+      "existing_tests": [
+        "tests/test_lab_view_v2.py:LabV2Tests (15 local fixture tests PASS)"
+      ],
+      "notes": "Operational errors/REJECTED status do not constitute a full per-trade reject reason field. v2 paper result is CLOSED only.",
+      "tested": "FIXTURE_ADAPTER_ONLY",
+      "integrated": "NO_ADMITTED_SYNC_CONTROL_MAPPING",
+      "windows": "LOCAL_FIXTURE_EVIDENCE_ONLY_NO_FEATURE_OR_HOME_ACCEPTANCE",
+      "physical": "NOT_RUN",
+      "current_sync_ui": "UNAVAILABLE"
+    },
+    {
+      "id": "evidence",
+      "capability": "Evidence/provenance",
+      "implementation": "PARTIAL",
+      "entrypoints": [
+        "/lab",
+        "/api/lab/overview",
+        "/saved",
+        "/api/saved/catalog",
+        "/api/saved/page",
+        "/sync.html"
+      ],
+      "existing_fields": [
+        "paper request_id/request_sha256/result_sha256/receipt_bindings",
+        "saved source_sha/schema_sha/provenance/publication",
+        "Sync envelope evidence_refs"
+      ],
+      "source_refs": [
+        "terminan/lab_view.py:194",
+        "terminan/lab_view.html:9",
+        "terminan/saved_sources.py:129",
+        "terminan/sync/protocol.js:210"
+      ],
+      "missing_exact_backend_mapping": [
+        "Admitted evidence resolution/storage retrievability/authenticity/lineage mapping absent",
+        "Native Control/view/domain source absent"
+      ],
+      "existing_tests": [
+        "tests/test_lab_view_v2.py:LabV2Tests (15 local fixture tests PASS)",
+        "tests/test_saved_sources.py:SavedTests.test_multi_candle_and_research",
+        "tests/test_research_adapter_safety.py:ResearchAdapterSafetyTests.test_no_fencing_token_leak_and_bad_metrics_isolated",
+        "tests/sync/test_contract.cjs",
+        "tests/sync/test_client.cjs",
+        "tests/sync/test_browser.spec.cjs"
+      ],
+      "notes": "Raw detail is reported evidence, not verification/admission. A7 reference preserves full raw artifact hash but separately admitted retrieval remains pending; no secrets/tokens in references/logs.",
+      "tested": "FIXTURE_ADAPTER_ONLY",
+      "integrated": "NO_ADMITTED_SYNC_CONTROL_MAPPING",
+      "windows": "LOCAL_FIXTURE_EVIDENCE_ONLY_NO_FEATURE_OR_HOME_ACCEPTANCE",
+      "physical": "NOT_RUN",
+      "current_sync_ui": "UNAVAILABLE"
+    },
+    {
+      "id": "byte_integrity",
+      "capability": "Byte integrity",
+      "implementation": "PARTIAL",
+      "entrypoints": [
+        "/sync.html"
+      ],
+      "existing_fields": [
+        "integrity.value.byte_integrity.state",
+        "UNKNOWN default"
+      ],
+      "source_refs": [
+        "terminan/sync/protocol.js:630",
+        "terminan/sync/view.js:113"
+      ],
+      "missing_exact_backend_mapping": [
+        "A4 segment/content hash verification/corruption evidence and actual source schema",
+        "No admitted native production endpoint/domain mapping"
+      ],
+      "existing_tests": [
+        "tests/sync/test_contract.cjs",
+        "tests/sync/test_client.cjs",
+        "tests/sync/test_browser.spec.cjs"
+      ],
+      "notes": "Independent card exists; actual current data remains UNKNOWN. No combined health score. Source event age, local hash, page coverage and replica count must not substitute for another dimension.",
+      "tested": "FIXTURE_ADAPTER_ONLY",
+      "integrated": "NO_ADMITTED_SYNC_CONTROL_MAPPING",
+      "windows": "LOCAL_FIXTURE_EVIDENCE_ONLY_NO_FEATURE_OR_HOME_ACCEPTANCE",
+      "physical": "NOT_RUN",
+      "current_sync_ui": "UNAVAILABLE"
+    },
+    {
+      "id": "source_completeness",
+      "capability": "Source completeness",
+      "implementation": "PARTIAL",
+      "entrypoints": [
+        "/sync.html"
+      ],
+      "existing_fields": [
+        "integrity.value.source_completeness.state",
+        "UNKNOWN default"
+      ],
+      "source_refs": [
+        "terminan/sync/protocol.js:630",
+        "terminan/sync/view.js:113"
+      ],
+      "missing_exact_backend_mapping": [
+        "A3 expected intervals/gaps/unrecoverable-gap rules and complete-source scope",
+        "No admitted native production endpoint/domain mapping"
+      ],
+      "existing_tests": [
+        "tests/sync/test_contract.cjs",
+        "tests/sync/test_client.cjs",
+        "tests/sync/test_browser.spec.cjs"
+      ],
+      "notes": "Independent card exists; actual current data remains UNKNOWN. No combined health score. Source event age, local hash, page coverage and replica count must not substitute for another dimension.",
+      "tested": "FIXTURE_ADAPTER_ONLY",
+      "integrated": "NO_ADMITTED_SYNC_CONTROL_MAPPING",
+      "windows": "LOCAL_FIXTURE_EVIDENCE_ONLY_NO_FEATURE_OR_HOME_ACCEPTANCE",
+      "physical": "NOT_RUN",
+      "current_sync_ui": "UNAVAILABLE"
+    },
+    {
+      "id": "replication",
+      "capability": "Replication/redundancy",
+      "implementation": "PARTIAL",
+      "entrypoints": [
+        "/sync.html"
+      ],
+      "existing_fields": [
+        "integrity.value.redundancy.state",
+        "UNKNOWN default"
+      ],
+      "source_refs": [
+        "terminan/sync/protocol.js:630",
+        "terminan/sync/view.js:113"
+      ],
+      "missing_exact_backend_mapping": [
+        "A4 independently verified replicas/storage placement/restore readiness",
+        "No admitted native production endpoint/domain mapping"
+      ],
+      "existing_tests": [
+        "tests/sync/test_contract.cjs",
+        "tests/sync/test_client.cjs",
+        "tests/sync/test_browser.spec.cjs"
+      ],
+      "notes": "Independent card exists; actual current data remains UNKNOWN. No combined health score. Source event age, local hash, page coverage and replica count must not substitute for another dimension.",
+      "tested": "FIXTURE_ADAPTER_ONLY",
+      "integrated": "NO_ADMITTED_SYNC_CONTROL_MAPPING",
+      "windows": "LOCAL_FIXTURE_EVIDENCE_ONLY_NO_FEATURE_OR_HOME_ACCEPTANCE",
+      "physical": "NOT_RUN",
+      "current_sync_ui": "UNAVAILABLE"
+    },
+    {
+      "id": "authority_freshness",
+      "capability": "Authority freshness",
+      "implementation": "PARTIAL",
+      "entrypoints": [
+        "/sync.html"
+      ],
+      "existing_fields": [
+        "integrity.value.authority_freshness.state",
+        "UNKNOWN default"
+      ],
+      "source_refs": [
+        "terminan/sync/protocol.js:630",
+        "terminan/sync/view.js:113"
+      ],
+      "missing_exact_backend_mapping": [
+        "A2/ROOT authenticated generation/revision/read barrier/fresh-until/verified-update semantics",
+        "No admitted native production endpoint/domain mapping"
+      ],
+      "existing_tests": [
+        "tests/sync/test_contract.cjs",
+        "tests/sync/test_client.cjs",
+        "tests/sync/test_browser.spec.cjs"
+      ],
+      "notes": "Independent card exists; actual current data remains UNKNOWN. No combined health score. Source event age, local hash, page coverage and replica count must not substitute for another dimension.",
+      "tested": "FIXTURE_ADAPTER_ONLY",
+      "integrated": "NO_ADMITTED_SYNC_CONTROL_MAPPING",
+      "windows": "LOCAL_FIXTURE_EVIDENCE_ONLY_NO_FEATURE_OR_HOME_ACCEPTANCE",
+      "physical": "NOT_RUN",
+      "current_sync_ui": "UNAVAILABLE"
+    },
+    {
+      "id": "sync_research_tab",
+      "capability": "Sync Research workflow",
+      "implementation": "STUB",
+      "entrypoints": [
+        "/sync.html"
+      ],
+      "existing_fields": [
+        "Research tab name and shared resource table columns resource/type/revision/observation"
+      ],
+      "source_refs": [
+        "terminan/sync/view.js:17",
+        "terminan/sync/view.js:38",
+        "terminan/sync/view.js:150"
+      ],
+      "missing_exact_backend_mapping": [
+        "Dedicated scientific dashboard renderer/filter/drilldown and exact admitted research resource mapping"
+      ],
+      "existing_tests": [
+        "tests/sync/test_contract.cjs",
+        "tests/sync/test_client.cjs",
+        "tests/sync/test_browser.spec.cjs"
+      ],
+      "notes": "Navigation changes headings only; no hidden independent scientific strategy dashboard. Controls disabled; no default API adapter.",
+      "tested": "FIXTURE_ADAPTER_ONLY",
+      "integrated": "NO_ADMITTED_SYNC_CONTROL_MAPPING",
+      "windows": "LOCAL_FIXTURE_EVIDENCE_ONLY_NO_FEATURE_OR_HOME_ACCEPTANCE",
+      "physical": "NOT_RUN",
+      "current_sync_ui": "UNAVAILABLE"
+    },
+    {
+      "id": "sync_paper_tab",
+      "capability": "Sync Paper Trading workflow",
+      "implementation": "STUB",
+      "entrypoints": [
+        "/sync.html"
+      ],
+      "existing_fields": [
+        "Paper Trading tab name and shared resource table"
+      ],
+      "source_refs": [
+        "terminan/sync/view.js:18",
+        "terminan/sync/view.js:38",
+        "terminan/sync/view.js:174"
+      ],
+      "missing_exact_backend_mapping": [
+        "Native auth/Control attachment and admitted paper schema/resource identity/view/domain revision"
+      ],
+      "existing_tests": [
+        "tests/sync/test_contract.cjs",
+        "tests/sync/test_client.cjs",
+        "tests/sync/test_browser.spec.cjs"
+      ],
+      "notes": "No new financial calculations, order placement, virtual portfolio or auto-strategy added.",
+      "tested": "FIXTURE_ADAPTER_ONLY",
+      "integrated": "NO_ADMITTED_SYNC_CONTROL_MAPPING",
+      "windows": "LOCAL_FIXTURE_EVIDENCE_ONLY_NO_FEATURE_OR_HOME_ACCEPTANCE",
+      "physical": "NOT_RUN",
+      "current_sync_ui": "UNAVAILABLE"
+    }
+  ],
+  "tests": {
+    "focused": {
+      "qualification": "FOCUSED_LOCAL_FIXTURE_ADAPTER_TESTS_NOT_RUNTIME_SCIENCE_OR_PHYSICAL_ACCEPTANCE",
+      "head": "10e07ef108d155b9ca2278eec6a8361cb92fa488",
+      "platform": "Windows-11-10.0.26300-SP0",
+      "python": "3.15.2",
+      "patterns": [
+        "test_research_adapter_safety.py",
+        "test_saved_sources.py",
+        "test_saved_http.py",
+        "test_g0_sources.py",
+        "test_contracts.py"
+      ],
+      "tests": 33,
+      "failures": 1,
+      "errors": 11,
+      "skips": 0,
+      "successful": false
+    },
+    "lab_v2": {
+      "qualification": "LOCAL_FIXTURE_REPORTED_LAB_VIEW_ONLY_NOT_RUNTIME_AUTHORITY",
+      "head": "10e07ef108d155b9ca2278eec6a8361cb92fa488",
+      "tests": 15,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "successful": true,
+      "platform": "Windows-11-10.0.26300-SP0"
+    },
+    "focused_pass_count": 21,
+    "focused_failure_cause": "Pinned source checkout required (test_catalog_source_hashes)",
+    "focused_error_cause": "11 G0 setUp imports missing sibling work/strattester/strattester/marketdata/schema.py",
+    "sync_previous_exact_source_evidence": "84Node0skip+4receiptguards+4Chromium+3schemas and current exact-source hosted receipts; not scientific metric accuracy/native/Home/physical proof"
+  },
+  "dependencies": [
+    {
+      "owner": "ROOT",
+      "missing": "Actual native Terminan bridge, trusted operator/session/IPC/cookie/CSRF and admitted view/barrier producer"
+    },
+    {
+      "owner": "A2",
+      "missing": "Production attached snapshot/event/domain projections; real GET component alone does not supply research metric feeds"
+    },
+    {
+      "owner": "A3",
+      "missing": "Exact instrument/unit/data-quality/completeness/regime source schema and committed metadata mapping"
+    },
+    {
+      "owner": "A4",
+      "missing": "Integrity/replica/evidence/storage publication/retrieval mapping"
+    },
+    {
+      "owner": "A5",
+      "missing": "Admitted job/assignment/lease/run lineage to resources"
+    },
+    {
+      "owner": "A7",
+      "missing": "Research/paper metric definitions, fidelity, CI, open state/reject schema and exact resource/view identity; scoped reference ACK is not runtime mapping"
+    }
+  ],
+  "severity": {
+    "P0": [
+      "Native Control/identity/view/barrier attachment absent",
+      "Exact scientific domain field/resource/revision/numeric unit mappings absent"
+    ],
+    "P1": [
+      "Regime/CI/fidelity/open virtual positions/per-trade reject reasons missing or unverified",
+      "Full historical-vs-live/domain/backend/WindowsHome/physical acceptance NOT_RUN"
+    ],
+    "P2": [
+      "Dedicated scientific table/filter/drilldown/accessibility/visual coverage after admitted data contracts"
+    ]
+  },
+  "no_new_auto_strategies": true,
+  "no_production_data_or_statistics_invented": true,
+  "source_or_contract_changes": false,
+  "WINDOWS_NATIVE_STATUS": "NOT_RUN",
+  "PHYSICAL_STATUS": "NOT_RUN",
+  "GO_NO_GO": "NO-GO",
+  "source_pins": {
+    "terminan/contracts.py": {
+      "git_blob_sha256": "a94d26a647c1a43ca4ed4f5e3cc17c29ee16b6f51eafd33265ef2931fd5ecc87",
+      "git_blob": "4a658d33b38c90944a57e96cf7b1e766803e72ab"
+    },
+    "terminan/data.py": {
+      "git_blob_sha256": "a9c55abfcbedde4fe2dc68dc4e733881c624bd3a683c8ff38a51be9e59c21f96",
+      "git_blob": "33056cf66e5cafc566b43cb0e452a4a2e2d82255"
+    },
+    "terminan/g0_sources.py": {
+      "git_blob_sha256": "968d904775ccb58f08f0db70a723444f9aa2c58ebc1e34deadf660c0fb2cafc2",
+      "git_blob": "d5b4a076bb0a740f376436e6d230c84c859a6318"
+    },
+    "terminan/lab_catalog.js": {
+      "git_blob_sha256": "94e46bcdf20a03039d39480168d56377ad1cc8e9a15c8984ce1b4f9c6b24caa9",
+      "git_blob": "f36671fca842ced9b061c2e59775384a4b9524d9"
+    },
+    "terminan/lab_protocol.js": {
+      "git_blob_sha256": "c09c1a15ca76746c5a82124e0c3010ef46985628b550d668ac9559d5af51b533",
+      "git_blob": "092564d5706428f3ee66880ee7a23ea99005db3e"
+    },
+    "terminan/lab_results.js": {
+      "git_blob_sha256": "11a53461cd1e657edef1c7271645bf66869f075210f949eb9830ee981504b0bc",
+      "git_blob": "841e7554b334032344bd5ee175a4de967e0e6daf"
+    },
+    "terminan/lab_view.html": {
+      "git_blob_sha256": "05404e23e9fd5f73cc1f855efd02e1c6632321b8ddb394712f5b772c586b6f30",
+      "git_blob": "fd923cf7d2bd4799ad6d257abf9bf0ec6b7742c9"
+    },
+    "terminan/lab_view.py": {
+      "git_blob_sha256": "c835d8107d35079f259f9ac1e9c1b53d86b7a139d4dba5dc5285e56857735ece",
+      "git_blob": "c8b8328cc2df327d98d6bd4543232a55f8ddf30d"
+    },
+    "terminan/saved.js": {
+      "git_blob_sha256": "58cf72d238252a700c83401bdc44dae9ec1f0a7e78d3b82155415f89f23d079f",
+      "git_blob": "be238ea7823a240300e3105a1b99646abbf47342"
+    },
+    "terminan/saved_server.py": {
+      "git_blob_sha256": "46827a2d9e48d9cb84d1ef949fa035e81f7168d41308bfcb60fb6987e1e8420b",
+      "git_blob": "5699d13c7bab23bcdab6a1ba9e3efcb0f6beb18e"
+    },
+    "terminan/saved_sources.py": {
+      "git_blob_sha256": "648a0858d31fa5471b87246806cba09f0e604d64a3741a289b3d7780d2b7c289",
+      "git_blob": "21875ee0bd0b992285dcc2ce97deac8264f6f158"
+    },
+    "terminan/server.py": {
+      "git_blob_sha256": "b1a319df8311813f8f3383fa9a76ef4c5974b133efe6147f5c12d914610f0c6f",
+      "git_blob": "ee38014b00477252bfdd4ea1597ee28cc0c8a9ed"
+    },
+    "terminan/sync/client.js": {
+      "git_blob_sha256": "5eac011e84f135a7148082fbead4432147a05622330c3653d1b8f27140d645bc",
+      "git_blob": "9b498465a42b935eae62ecce5b6c8d2ff6e8e5e5"
+    },
+    "terminan/sync/protocol.js": {
+      "git_blob_sha256": "8d023858cb170e1840d3b1ce8c386920a85382f66a349dc15862eab45de452a1",
+      "git_blob": "8fa05a391052df49fa1211e42045d0755cd00555"
+    },
+    "terminan/sync/serve.py": {
+      "git_blob_sha256": "62e64fc2520ff68c8324d4253b7feb6fb1681b850a60bd62920a065eacbf5283",
+      "git_blob": "9bae5c3b8dd9cfa67333cc92e798aa5097e58311"
+    },
+    "terminan/sync/view.js": {
+      "git_blob_sha256": "42105e5a8958aff051ea0135a9231fe6aa7ae40baf19da2cd95f846a8115b871",
+      "git_blob": "85f17ee822c7bd2e7edd809225ae452f62f9be54"
+    },
+    "terminan/unified_server.py": {
+      "git_blob_sha256": "f95cb55ee9e8923c9ec4f18cee56594049cbc59cbe7fc52d3028516c5ef49d9a",
+      "git_blob": "ea76d42a0e6174772df343e6ec739d5a7d6d99c2"
+    },
+    "tests/test_contracts.py": {
+      "git_blob_sha256": "7836324bcac4fd82cfcb757184c00bb1e3f2f21bda34ab3c8d26264c2e06e015",
+      "git_blob": "951b4015f29f92e5d89ffcfba6c56ffd01a040e2"
+    },
+    "tests/test_g0_sources.py": {
+      "git_blob_sha256": "feb5d0be1544048ddc37eae28047932df2f7ac41b1e461fb1716651fb93dc088",
+      "git_blob": "1ba755b083568d084c4101a39668107409cd6978"
+    },
+    "tests/test_lab_view_v2.py": {
+      "git_blob_sha256": "1aa9c17e7f3ed403de40faebcb28c75e43a74de88a6593ee1b63b8e28eb82639",
+      "git_blob": "42ee611f34c18b0439b6ec7465e9c300a22eaf89"
+    },
+    "tests/test_research_adapter_safety.py": {
+      "git_blob_sha256": "7c2fa744f6eb3da9edeb1ab3700822f2cb2f132a0cd15efa94531324eff3bb2f",
+      "git_blob": "c139b015e1522a6f88eea78d3f999fb09f376451"
+    },
+    "tests/test_saved_http.py": {
+      "git_blob_sha256": "f782fc0422c287188307e4e8eb78a44786d9d2f6ed59c0af19d9c44fd52e1fb5",
+      "git_blob": "d11a6b1a10507decfe0161a65cae2c70be8bcb04"
+    },
+    "tests/test_saved_sources.py": {
+      "git_blob_sha256": "454aab5fc14be316f108f7ca9dedd089b3a2a45744beb0f4a4a665e2fb288eb9",
+      "git_blob": "91586dfc5c96ac2d4e1915de9ecc6406f02b716e"
+    }
+  },
+  "existing_function_inventory": {
+    "terminan/data.py": [
+      {
+        "name": "validate",
+        "line": 11
+      },
+      {
+        "name": "sqlite_ro",
+        "line": 15
+      },
+      {
+        "name": "candles",
+        "line": 21
+      },
+      {
+        "name": "instruments",
+        "line": 43
+      },
+      {
+        "name": "research",
+        "line": 52
+      },
+      {
+        "name": "grid_available",
+        "line": 96
+      },
+      {
+        "name": "results_available",
+        "line": 99
+      },
+      {
+        "name": "grid_query",
+        "line": 106
+      },
+      {
+        "name": "grid_candles",
+        "line": 116
+      },
+      {
+        "name": "footprint",
+        "line": 121
+      }
+    ],
+    "terminan/g0_sources.py": [
+      {
+        "name": "number",
+        "line": 23
+      },
+      {
+        "name": "milliseconds",
+        "line": 31
+      },
+      {
+        "name": "sqlite_rows",
+        "line": 35
+      },
+      {
+        "name": "grid_rows",
+        "line": 77
+      },
+      {
+        "name": "snapshot",
+        "line": 103
+      },
+      {
+        "name": "all_sources",
+        "line": 167
+      }
+    ],
+    "terminan/saved_sources.py": [
+      {
+        "name": "SourceError.__init__",
+        "line": 19
+      },
+      {
+        "name": "digest",
+        "line": 21
+      },
+      {
+        "name": "fail",
+        "line": 22
+      },
+      {
+        "name": "number",
+        "line": 23
+      },
+      {
+        "name": "utc",
+        "line": 26
+      },
+      {
+        "name": "safe_json",
+        "line": 29
+      },
+      {
+        "name": "demo_config",
+        "line": 48
+      },
+      {
+        "name": "SavedSources.__init__",
+        "line": 52
+      },
+      {
+        "name": "SavedSources.catalog",
+        "line": 70
+      },
+      {
+        "name": "SavedSources._cursor",
+        "line": 73
+      },
+      {
+        "name": "SavedSources.page",
+        "line": 85
+      },
+      {
+        "name": "SavedSources._row",
+        "line": 138
+      },
+      {
+        "name": "SavedSources._epoch",
+        "line": 194
+      },
+      {
+        "name": "SavedSources._shard",
+        "line": 207
+      },
+      {
+        "name": "SavedSources._pg",
+        "line": 219
+      },
+      {
+        "name": "SavedSources._database",
+        "line": 228
+      }
+    ],
+    "terminan/saved_server.py": [
+      {
+        "name": "SavedServer.__init__",
+        "line": 8
+      },
+      {
+        "name": "SavedHandler.do_GET",
+        "line": 11
+      }
+    ],
+    "terminan/server.py": [
+      {
+        "name": "source_rows",
+        "line": 18
+      },
+      {
+        "name": "ThreadingHTTPServer.__init__",
+        "line": 28
+      },
+      {
+        "name": "ThreadingHTTPServer.get_request",
+        "line": 31
+      },
+      {
+        "name": "ThreadingHTTPServer.process_request",
+        "line": 35
+      },
+      {
+        "name": "ThreadingHTTPServer.process_request_thread",
+        "line": 43
+      },
+      {
+        "name": "Handler.do_POST",
+        "line": 48
+      },
+      {
+        "name": "Handler.log_message",
+        "line": 84
+      },
+      {
+        "name": "Handler.do_GET",
+        "line": 86
+      },
+      {
+        "name": "run",
+        "line": 166
+      }
+    ],
+    "terminan/unified_server.py": [
+      {
+        "name": "UnifiedServer.server_bind",
+        "line": 21
+      },
+      {
+        "name": "UnifiedServer.__init__",
+        "line": 24
+      },
+      {
+        "name": "UnifiedServer.process_request_thread",
+        "line": 27
+      },
+      {
+        "name": "UnifiedServer.server_close",
+        "line": 39
+      },
+      {
+        "name": "UnifiedHandler.gate",
+        "line": 49
+      },
+      {
+        "name": "UnifiedHandler.send_header",
+        "line": 61
+      },
+      {
+        "name": "UnifiedHandler.do_GET",
+        "line": 66
+      },
+      {
+        "name": "UnifiedHandler.module_health",
+        "line": 111
+      },
+      {
+        "name": "UnifiedHandler.terminal",
+        "line": 138
+      },
+      {
+        "name": "UnifiedHandler.mount",
+        "line": 142
+      },
+      {
+        "name": "UnifiedHandler.legacy",
+        "line": 146
+      },
+      {
+        "name": "UnifiedHandler.do_POST",
+        "line": 150
+      }
+    ],
+    "terminan/lab_view.py": [
+      {
+        "name": "require",
+        "line": 11
+      },
+      {
+        "name": "closed",
+        "line": 13
+      },
+      {
+        "name": "label",
+        "line": 14
+      },
+      {
+        "name": "code",
+        "line": 15
+      },
+      {
+        "name": "integer",
+        "line": 16
+      },
+      {
+        "name": "number",
+        "line": 17
+      },
+      {
+        "name": "stamp",
+        "line": 18
+      },
+      {
+        "name": "rows",
+        "line": 19
+      },
+      {
+        "name": "unique",
+        "line": 20
+      },
+      {
+        "name": "pairs",
+        "line": 21
+      },
+      {
+        "name": "validate",
+        "line": 27
+      },
+      {
+        "name": "_snapshot_fd",
+        "line": 63
+      },
+      {
+        "name": "read_snapshot",
+        "line": 78
+      },
+      {
+        "name": "overview",
+        "line": 93
+      },
+      {
+        "name": "bounded_v2",
+        "line": 124
+      },
+      {
+        "name": "source_label",
+        "line": 137
+      },
+      {
+        "name": "source_hash",
+        "line": 138
+      },
+      {
+        "name": "source_number",
+        "line": 139
+      },
+      {
+        "name": "source_scalar",
+        "line": 140
+      },
+      {
+        "name": "source_time",
+        "line": 142
+      },
+      {
+        "name": "quality_v2",
+        "line": 149
+      },
+      {
+        "name": "market_v2",
+        "line": 162
+      },
+      {
+        "name": "paper_v2",
+        "line": 187
+      },
+      {
+        "name": "fleet_v2",
+        "line": 214
+      },
+      {
+        "name": "validate_v2",
+        "line": 229
+      },
+      {
+        "name": "overview_v2",
+        "line": 242
+      }
+    ],
+    "terminan/contracts.py": [
+      {
+        "name": "TradeEvent.parse",
+        "line": 23
+      },
+      {
+        "name": "align_trades",
+        "line": 52
+      },
+      {
+        "name": "aggregate_footprint",
+        "line": 57
+      },
+      {
+        "name": "poc_close_events",
+        "line": 78
+      }
+    ]
+  },
+  "entrypoint_caveat": "These routes belong to separate legacy/saved/unified/static harnesses; no claim all are served by one admitted process or a common native authenticated session.",
+  "environment_resolution": {
+    "status": "RESOLVED_EXACT_SCRATCH_FIXTURE_INPUTS",
+    "report": "scientific-isolated-stand-20261107/ENVIRONMENT-RESOLUTION.json",
+    "focused33_pass": 33,
+    "lab15_pass": 15,
+    "skips": 0,
+    "original_failed_attempt_retained": true,
+    "runtime_admission": false
+  }
+}

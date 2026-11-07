@@ -1,0 +1,83 @@
+{
+  "schema": "unified.readonly-route-observation.v1",
+  "started_utc": "2026-11-07T05:15:50.729899+00:00",
+  "script_sha256": "016f1b04a02c005e2960cd6863ea8a7b0bfaf68f3ccac1b4a8096c42e1d7cb5f",
+  "source_config_sha256": "a66fe8fff9eff8011bbd54704c0f543fd6d7b44026b0f7996b56b587e3bcd540",
+  "prior_known_hosts_sha256": "7bfcff98d0ec28cf23a7e2782ac26ce0a3024520fd60822f25de063e83f0233b",
+  "physical_fault_injection": false,
+  "configuration_mutations": false,
+  "adminit_contacted": false,
+  "results": [
+    {
+      "node": "LS5",
+      "started_utc": "2026-11-07T05:15:50.729899+00:00",
+      "finished_utc": "2026-11-07T05:15:51.290721+00:00",
+      "duration_ms": 563,
+      "process_exit_code": 1,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "503ca9a4e93a52fede17caacac49895fa41c7ad968ea92b7bb33d5c795e4bff3",
+      "stderr_bytes": 1631,
+      "status": "FAIL"
+    },
+    {
+      "node": "PC1",
+      "started_utc": "2026-11-07T05:15:51.291764+00:00",
+      "finished_utc": "2026-11-07T05:15:51.922044+00:00",
+      "duration_ms": 625,
+      "process_exit_code": 1,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "8fd2ba1be1e090b899924f28fde98682d3354f94d4831967ba20b8738921aef7",
+      "stderr_bytes": 1630,
+      "status": "FAIL"
+    },
+    {
+      "node": "PC2",
+      "started_utc": "2026-11-07T05:15:51.923939+00:00",
+      "finished_utc": "2026-11-07T05:15:52.507741+00:00",
+      "duration_ms": 594,
+      "process_exit_code": 1,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "8fd2ba1be1e090b899924f28fde98682d3354f94d4831967ba20b8738921aef7",
+      "stderr_bytes": 1630,
+      "status": "FAIL"
+    },
+    {
+      "node": "PC3",
+      "started_utc": "2026-11-07T05:15:52.507741+00:00",
+      "finished_utc": "2026-11-07T05:15:53.162915+00:00",
+      "duration_ms": 656,
+      "process_exit_code": 1,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "8fd2ba1be1e090b899924f28fde98682d3354f94d4831967ba20b8738921aef7",
+      "stderr_bytes": 1630,
+      "status": "FAIL"
+    },
+    {
+      "node": "PC4",
+      "started_utc": "2026-11-07T05:15:53.164916+00:00",
+      "finished_utc": "2026-11-07T05:15:53.641091+00:00",
+      "duration_ms": 469,
+      "process_exit_code": 1,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "8fd2ba1be1e090b899924f28fde98682d3354f94d4831967ba20b8738921aef7",
+      "stderr_bytes": 1630,
+      "status": "FAIL"
+    },
+    {
+      "node": "LS7",
+      "started_utc": "2026-11-07T05:15:53.643597+00:00",
+      "finished_utc": "2026-11-07T05:15:54.347803+00:00",
+      "duration_ms": 718,
+      "process_exit_code": 1,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "8fd2ba1be1e090b899924f28fde98682d3354f94d4831967ba20b8738921aef7",
+      "stderr_bytes": 1630,
+      "status": "FAIL"
+    }
+  ],
+  "bybit_route_equivalence": "NOT_PROVEN",
+  "finished_utc": "2026-11-07T05:15:54.347803+00:00",
+  "observed_nodes": 0,
+  "runtime_readiness": "NOT_QUALIFIED",
+  "installation_authorized": false
+}

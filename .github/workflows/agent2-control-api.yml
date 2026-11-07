@@ -1,0 +1,134 @@
+name: Agent 2 P0 Control API boundary
+on:
+  push:
+    paths:
+      - 'unified_system/control_api_readonly.py'
+      - 'tests/test_control_api_readonly.py'
+      - 'docs/architecture/control-api-readonly.md'
+      - '.github/workflows/agent2-control-api.yml'
+  pull_request:
+    paths:
+      - 'unified_system/control_api_readonly.py'
+      - 'tests/test_control_api_readonly.py'
+      - 'docs/architecture/control-api-readonly.md'
+      - '.github/workflows/agent2-control-api.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  boundary:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-latest]
+        python: ['3.11', '3.12']
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 5
+    env:
+      EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+      PYTHONDONTWRITEBYTECODE: '1'
+      GIT_CONFIG_COUNT: '2'
+      GIT_CONFIG_KEY_0: core.autocrlf
+      GIT_CONFIG_VALUE_0: 'false'
+      GIT_CONFIG_KEY_1: core.eol
+      GIT_CONFIG_VALUE_1: lf
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Denial and unavailable boundary tests (mandatory, no skips)
+        shell: python
+        run: |
+          import hashlib, io, json, os, pathlib, platform, stat, subprocess, unittest
+          expected_head = os.environ['EXPECTED_HEAD']
+          source_paths = (
+              '.github/workflows/agent2-control-api.yml',
+              'docs/architecture/control-api-readonly.md',
+              'tests/test_control_api_readonly.py',
+              'unified_system/control_api_readonly.py',
+              'unified_system/__init__.py',
+          )
+          def git(*args):
+              return subprocess.check_output(['git', '--no-replace-objects', *args], timeout=15)
+          def source_receipt():
+              head = git('rev-parse', 'HEAD').decode().strip()
+              assert head == expected_head, 'unexpected source head'
+              tree = git('rev-parse', 'HEAD^{tree}').decode().strip()
+              assert tree == git('rev-parse', expected_head + '^{tree}').decode().strip()
+              assert not git('status', '--porcelain', '--untracked-files=no', '--ignore-submodules=none').strip(), 'tracked source dirty'
+              files = {}
+              for name in source_paths:
+                  path = pathlib.Path(name)
+                  current = pathlib.Path('.')
+                  for part in path.parts:
+                      current = current / part
+                      metadata = current.lstat()
+                      assert not stat.S_ISLNK(metadata.st_mode)
+                      assert not getattr(metadata, 'st_file_attributes', 0) & getattr(stat, 'FILE_ATTRIBUTE_REPARSE_POINT', 1024)
+                  assert path.is_file(), 'nonregular source input'
+                  raw = path.read_bytes()
+                  blob = git('show', expected_head + ':' + name)
+                  assert raw == blob, 'raw source differs from committed blob: ' + name
+                  files[name] = dict(bytes=len(raw), raw_sha256=hashlib.sha256(raw).hexdigest(),
+                      blob_sha256=hashlib.sha256(blob).hexdigest(),
+                      git_blob=git('rev-parse', expected_head + ':' + name).decode().strip())
+              return dict(head=head, tree=tree, files=files, tracked_clean=True)
+          before = source_receipt()
+          expected_names = (
+              'test_all_protected_reads_are_unavailable_not_empty_success',
+              'test_boundary_does_not_open_files_sockets_or_read_system_time',
+              'test_claimed_principal_cookie_and_truthy_flags_do_not_authenticate',
+              'test_encoded_traversal_slashes_unicode_and_long_paths_are_invalid',
+              'test_error_envelope_has_no_fabricated_authority_or_request_identity',
+              'test_every_effect_route_stays_denied',
+              'test_head_errors_never_send_a_response_body',
+              'test_malformed_wsgi_fields_fail_closed',
+              'test_mutating_returned_json_cannot_enable_later_requests',
+              'test_no_provider_or_backend_activation_constructor',
+              'test_nonempty_and_ambiguous_body_framing_denied_without_read',
+              'test_oversize_body_claim_rejected_before_buffering',
+              'test_public_capabilities_never_claim_admitted_runtime',
+              'test_queries_are_not_treated_as_implemented_resume_or_barrier',
+              'test_unknown_route_does_not_look_like_missing_auth',
+              'test_wrong_method_returns_allow_without_activation',
+          )
+          suite = unittest.defaultTestLoader.discover('tests', pattern='test_control_api_readonly.py')
+          def cases(value):
+              for item in value:
+                  if isinstance(item, unittest.TestSuite):
+                      yield from cases(item)
+                  else:
+                      yield item
+          test_ids = [case.id() for case in cases(suite)]
+          expected_ids = ['test_control_api_readonly.ControlAPITest.' + name for name in expected_names]
+          assert sorted(test_ids) == sorted(expected_ids), 'mandatory test inventory differs'
+          stream = io.StringIO()
+          result = unittest.TextTestRunner(stream=stream, verbosity=2).run(suite)
+          log = stream.getvalue().encode('utf-8')
+          pathlib.Path('p0-ci-tests.log').write_bytes(log)
+          print(stream.getvalue(), end='')
+          after = source_receipt()
+          assert before == after, 'source changed during tests'
+          report = dict(schema='unified.control-api.p0-ci.v2', head=before['head'], tree=before['tree'],
+              source_before=before, source_after=after, mandatory_test_ids=test_ids,
+              test_log_sha256=hashlib.sha256(log).hexdigest(), source_binding_passed=True,
+              os=platform.system(), python=platform.python_version(), tests=result.testsRun,
+              failures=len(result.failures), errors=len(result.errors), skipped=len(result.skipped),
+              run=os.environ['GITHUB_RUN_ID'], attempt=os.environ['GITHUB_RUN_ATTEMPT'],
+              qualification='P0_COMPONENT_ONLY_SOURCE_CHECKED_BEFORE_AFTER',
+              run_metadata='CORRELATION_ONLY_NOT_HOSTED_ATTESTATION',
+              runtime_api='NOT_QUALIFIED', physical='NOT_RUN', production='NO_GO')
+          pathlib.Path('p0-ci-evidence.json').write_text(json.dumps(report, indent=2), encoding='utf-8')
+          assert result.wasSuccessful() and result.testsRun == 16 and not result.skipped
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: p0-control-${{ matrix.os }}-${{ matrix.python }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            p0-ci-evidence.json
+            p0-ci-tests.log
+          if-no-files-found: error

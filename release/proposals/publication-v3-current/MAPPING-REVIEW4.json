@@ -1,0 +1,88 @@
+{
+  "schema": "unified.publication-v3.canonical-mapping-review4",
+  "status": "FRESH_EXACT_A3_A4_A5_ROOT_ACK_PENDING_NOT_IMPLEMENTED_WIRING",
+  "normative_precedence": "This immutable corrigendum overrides ONLY the enumerated conflicting legacy paragraphs in raw review3 and owner-time companion. Other requirements stay. No legacy bytes modified or prior ACK transferred.",
+  "inputs": [
+    {
+      "path": "AUTHORITY-PUBLICATION-V3-WIRE-REVIEW3.md",
+      "sha256_raw": "133d922df1edef3694120e204223049edae19b84a914bb528f2368fdb6f30d77"
+    },
+    {
+      "path": "AUTHORITY-PUBLICATION-EVIDENCE-V3-OWNER-TIME-REVIEW1.md",
+      "sha256_raw": "b9b0c02ea11940c941d628f3f15890583214602a76686a7ce5855f2083bc3584"
+    }
+  ],
+  "errata": [
+    {
+      "topic": "job identity",
+      "superseded_text": "No job_id, job checkpoint CAS ...",
+      "normative": "job_id IS REQUIRED in publication request and checked authoritative assignment scope/provenance. Dataset/source/partition checkpoint ONLY is mutated; NO job checkpoint CAS, job completion, adoption, ownership transfer or capacity release is inferred. Global segment/coverage dedup remains job-independent."
+    },
+    {
+      "topic": "checkpoint version",
+      "superseded_reference": "event-v2 schema141d1842 / protocol4f1acf74",
+      "normative": "Only the pinned NEW owner V3 checkpoint schema/protocol/goldens below are the proposed consumer shape for this mapping. Old v1/event-v2 readers and semantics remain isolated; no auto-conversion."
+    },
+    {
+      "topic": "confirmation tag",
+      "superseded_proposal": "COMMIT_CONFIRMED",
+      "normative": "COMMIT_CONFIRMED is NOT a V3 consumer tag or alias. Exact A3 successful claim tag is commit_status=COMMITTED and evidence.publication_status=DATA_PUBLICATION_COMMITTED. Both remain UNTRUSTED CLAIMS until actual admitted proof verification. No extra fields outside the closed schema."
+    }
+  ],
+  "owner_decision": {
+    "repository": "YehorBabenko88/unified-system",
+    "commit": "381b18bab7f1162db4eef7f348b6e1c921e76403",
+    "path": "release/contracts/checkpoint-v3-time/DECISION.json",
+    "sha256_raw": "aa84f7acbe7632f8d534c96f529c7a39b9b1b26c1a49cf7a69a9366e5c04670e",
+    "scope": "TIME_SEMANTICS_ONLY_NOT_FULL_FEATURE_OR_RUNTIME"
+  },
+  "checkpoint_candidate": {
+    "directory": "C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-3-bybit-historical-live/outputs/historical-checkpoint-v3-review1",
+    "schema_sha256_raw": "4de720d9391e5a89c0577b5298c283e742fbfe490c4454c184e31c2348589ea4",
+    "protocol_sha256_raw": "79efbcb70d1ed9204fbd8295a4990650d99582196712097280d2483298ad4f8e",
+    "golden_vectors_sha256_raw": "69ef7786400030ae1bb9dbf4bd1fb30c6b6e50ac9690437536aa669a7c18b0d4",
+    "schema_editor": "A3"
+  },
+  "exact_time_mapping": {
+    "publication_content.committed_at_utc": null,
+    "publication_content.commit_time_status": "UNKNOWN_COMMIT_INSTANT",
+    "confirmed_observed_at_utc": "external qualified post-consistent-read observation or null; not original commit instant",
+    "rejected_aliases": [
+      "commit_time_semantics",
+      "observed_committed_at_utc",
+      "COMMIT_CONFIRMED"
+    ]
+  },
+  "producer_consumer_mapping": [
+    {
+      "producer": "Verified PublicationOutcome status=COMMITTED and effect_status=DATA_PUBLICATION_COMMITTED",
+      "consumer": "commit_status=COMMITTED; publication_evidence.publication_status=DATA_PUBLICATION_COMMITTED",
+      "conditions": "Actual admitted publication receipt/idempotency/root/content/revision/identity/provenance verified; never lifecycle receipt. Supply exact closed A3 fields only."
+    },
+    {
+      "producer": "UNKNOWN reason AUTHORITY_UNAVAILABLE",
+      "consumer": "commit_status=COMMIT_UNCONFIRMED, reason=AUTHORITY_UNAVAILABLE",
+      "conditions": "Original cluster/generation/request_id=commit_id/full_intent_sha256 only per exact closed schema; no content, success index, time or publication evidence."
+    },
+    {
+      "producer": "UNKNOWN reason RECEIPT_UNVERIFIED",
+      "consumer": "commit_status=COMMIT_UNCONFIRMED, reason=RECEIPT_UNVERIFIED",
+      "conditions": "Preserve original pending identity/accounting; no rekey or success."
+    },
+    {
+      "producer": "Evidence cannot be verified due to conflicting lineage/provenance",
+      "consumer": "commit_status=COMMIT_UNCONFIRMED, reason=CONFLICTING_EVIDENCE",
+      "conditions": "Do not equate to an authoritative transaction rejection or permit effects."
+    },
+    {
+      "producer": "Authoritatively reconciled REJECTED or idempotency CONFLICT",
+      "consumer": "Separate explicit producer error/outcome; do not encode as COMMITTED or COMMIT_UNCONFIRMED",
+      "conditions": "A3 result schema has no rejected variant; endpoint/error ABI needs separate exact ACK."
+    }
+  ],
+  "limits": "Structure and tag mapping do not qualify authority proof, clocks, civil-time policies, external containment, full fence/closure/accounting, operation bounds or runtime.",
+  "code_changes": false,
+  "old_bytes_changed": false,
+  "shared_wiring": false,
+  "runtime_ack": false
+}

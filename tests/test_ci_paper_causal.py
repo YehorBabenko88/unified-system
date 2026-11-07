@@ -1,6 +1,8 @@
 """Adversarial checks for the mandatory synthetic causal CI gate."""
 import importlib.util
+import importlib
 import io
+import os
 from pathlib import Path
 import subprocess
 import tempfile
@@ -73,10 +75,15 @@ class CausalGateTests(unittest.TestCase):
         m=self.module()
         with tempfile.TemporaryDirectory() as temporary:
             root=Path(temporary)
+            original_stat=root.stat()
             with self.assertRaises(m.GateRejected):m.dependencies_snapshot(root)
             for name,version in m.TEST_DEPENDENCIES.items():
                 info=root/(name+'-'+version+'.dist-info');info.mkdir()
                 (info/'METADATA').write_text('Metadata-Version: 2.1\nName: '+name+'\nVersion: '+version+'\n')
+            # Simulate coarse Windows directory timestamps: fixture mutation must
+            # invalidate discovery caches even when directory mtime is unchanged.
+            os.utime(root,ns=(original_stat.st_atime_ns,original_stat.st_mtime_ns))
+            importlib.invalidate_caches()
             one=m.dependencies_snapshot(root);self.assertEqual(one['versions'],m.TEST_DEPENDENCIES)
             (root/'preload.pth').write_text('import unexpected')
             with self.assertRaises(m.GateRejected):m.dependencies_snapshot(root)

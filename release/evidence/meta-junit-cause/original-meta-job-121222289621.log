@@ -1,0 +1,371 @@
+﻿2026-10-25T23:34:20.0122811Z Current runner version: '2.338.0'
+2026-10-25T23:34:20.0140943Z ##[group]Runner Image Provisioner
+2026-10-25T23:34:20.0141494Z Hosted Compute Agent
+2026-10-25T23:34:20.0142060Z Version: 20261021.618
+2026-10-25T23:34:20.0142515Z Commit: 21505ad2541d5be6135ed84fc33697146cf75b8e
+2026-10-25T23:34:20.0142940Z Build Date: 2026-10-21T00:45:21Z
+2026-10-25T23:34:20.0143335Z Worker ID: {0fd9e639-e18c-490a-926b-c32b58604bc1}
+2026-10-25T23:34:20.0143795Z Region: southcentralus
+2026-10-25T23:34:20.0144199Z Cloud: Azure
+2026-10-25T23:34:20.0144557Z ##[endgroup]
+2026-10-25T23:34:20.0145349Z ##[group]Operating System
+2026-10-25T23:34:20.0145702Z Ubuntu
+2026-10-25T23:34:20.0146069Z 24.04.5
+2026-10-25T23:34:20.0146378Z LTS
+2026-10-25T23:34:20.0146742Z ##[endgroup]
+2026-10-25T23:34:20.0147080Z ##[group]Runner Image
+2026-10-25T23:34:20.0147430Z Image: ubuntu-24.04
+2026-10-25T23:34:20.0147805Z Version: 20261012.334.1
+2026-10-25T23:34:20.0148596Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261012.334/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-25T23:34:20.0149491Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261012.334
+2026-10-25T23:34:20.0150044Z ##[endgroup]
+2026-10-25T23:34:20.0150741Z ##[group]GITHUB_TOKEN Permissions
+2026-10-25T23:34:20.0152402Z Contents: read
+2026-10-25T23:34:20.0152818Z Metadata: read
+2026-10-25T23:34:20.0153151Z ##[endgroup]
+2026-10-25T23:34:20.0154548Z Secret source: Actions
+2026-10-25T23:34:20.0155124Z Cache mode: write
+2026-10-25T23:34:20.0155824Z Prepare workflow directory
+2026-10-25T23:34:20.0397105Z Prepare all required actions
+2026-10-25T23:34:20.0438962Z Getting action download info
+2026-10-25T23:34:20.2871953Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-10-25T23:34:20.3942472Z Download action repository 'actions/setup-python@v5' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+2026-10-25T23:34:20.4829508Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-10-25T23:34:20.6953466Z Complete job name: synthetic (ubuntu-latest)
+2026-10-25T23:34:20.7426450Z ##[group]Run actions/checkout@v4
+2026-10-25T23:34:20.7426851Z with:
+2026-10-25T23:34:20.7427103Z   ref: b595a3a88d32eb6e93c94bbe5d26abeacb4712de
+2026-10-25T23:34:20.7427431Z   repository: YehorBabenko88/meta_analyse
+2026-10-25T23:34:20.7429710Z   token: ***
+2026-10-25T23:34:20.7429935Z   ssh-strict: true
+2026-10-25T23:34:20.7430159Z   ssh-user: git
+2026-10-25T23:34:20.7430394Z   persist-credentials: true
+2026-10-25T23:34:20.7430647Z   clean: true
+2026-10-25T23:34:20.7430882Z   sparse-checkout-cone-mode: true
+2026-10-25T23:34:20.7431150Z   fetch-depth: 1
+2026-10-25T23:34:20.7431379Z   fetch-tags: false
+2026-10-25T23:34:20.7431787Z   show-progress: true
+2026-10-25T23:34:20.7432022Z   lfs: false
+2026-10-25T23:34:20.7432235Z   submodules: false
+2026-10-25T23:34:20.7432469Z   set-safe-directory: true
+2026-10-25T23:34:20.7432738Z   allow-unsafe-pr-checkout: false
+2026-10-25T23:34:20.7433101Z env:
+2026-10-25T23:34:20.7433326Z   META_ANALYSE_IDENTITY_SYNTHETIC_ONLY: 1
+2026-10-25T23:34:20.7433642Z   QT_QPA_PLATFORM: offscreen
+2026-10-25T23:34:20.7433892Z ##[endgroup]
+2026-10-25T23:34:20.8065632Z Syncing repository: YehorBabenko88/meta_analyse
+2026-10-25T23:34:20.8067312Z ##[group]Getting Git version info
+2026-10-25T23:34:20.8067946Z Working directory is '/home/runner/work/meta_analyse/meta_analyse'
+2026-10-25T23:34:20.8068873Z [command]/usr/bin/git version
+2026-10-25T23:34:20.8128171Z git version 2.55.0
+2026-10-25T23:34:20.8141364Z ##[endgroup]
+2026-10-25T23:34:20.8153357Z Temporarily overriding HOME='/home/runner/work/_temp/d477e381-5687-4d38-a386-1bb41245d885' before making global git config changes
+2026-10-25T23:34:20.8154531Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-25T23:34:20.8157765Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/meta_analyse/meta_analyse
+2026-10-25T23:34:20.8204496Z Deleting the contents of '/home/runner/work/meta_analyse/meta_analyse'
+2026-10-25T23:34:20.8206361Z ##[group]Initializing the repository
+2026-10-25T23:34:20.8213929Z [command]/usr/bin/git init /home/runner/work/meta_analyse/meta_analyse
+2026-10-25T23:34:20.8471515Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-25T23:34:20.8472633Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-25T23:34:20.8473234Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-25T23:34:20.8473870Z hint: call:
+2026-10-25T23:34:20.8474339Z hint:
+2026-10-25T23:34:20.8474924Z hint: 	git config --global init.defaultBranch <name>
+2026-10-25T23:34:20.8475380Z hint:
+2026-10-25T23:34:20.8475788Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-25T23:34:20.8476371Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-25T23:34:20.8476851Z hint:
+2026-10-25T23:34:20.8477176Z hint: 	git branch -m <name>
+2026-10-25T23:34:20.8477586Z hint:
+2026-10-25T23:34:20.8478038Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-25T23:34:20.8478829Z Initialized empty Git repository in /home/runner/work/meta_analyse/meta_analyse/.git/
+2026-10-25T23:34:20.8481294Z [command]/usr/bin/git remote add origin https://github.com/YehorBabenko88/meta_analyse
+2026-10-25T23:34:20.8527001Z ##[endgroup]
+2026-10-25T23:34:20.8527451Z ##[group]Disabling automatic garbage collection
+2026-10-25T23:34:20.8529594Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-25T23:34:20.8557552Z ##[endgroup]
+2026-10-25T23:34:20.8557952Z ##[group]Setting up auth
+2026-10-25T23:34:20.8561982Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-25T23:34:20.8588363Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-25T23:34:20.8851906Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-25T23:34:20.8880272Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-25T23:34:20.9046693Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-25T23:34:20.9074034Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-25T23:34:20.9240458Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-25T23:34:20.9274946Z ##[endgroup]
+2026-10-25T23:34:20.9275450Z ##[group]Fetching the repository
+2026-10-25T23:34:20.9280460Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin b595a3a88d32eb6e93c94bbe5d26abeacb4712de
+2026-10-25T23:34:21.5607673Z From https://github.com/YehorBabenko88/meta_analyse
+2026-10-25T23:34:21.5608750Z  * branch            b595a3a88d32eb6e93c94bbe5d26abeacb4712de -> FETCH_HEAD
+2026-10-25T23:34:21.5610887Z ##[endgroup]
+2026-10-25T23:34:21.5611777Z ##[group]Determining the checkout info
+2026-10-25T23:34:21.5612698Z ##[endgroup]
+2026-10-25T23:34:21.5632458Z [command]/usr/bin/git sparse-checkout disable
+2026-10-25T23:34:21.5841145Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-25T23:34:21.5873293Z ##[group]Checking out the ref
+2026-10-25T23:34:21.5875503Z [command]/usr/bin/git checkout --progress --force b595a3a88d32eb6e93c94bbe5d26abeacb4712de
+2026-10-25T23:34:21.6201829Z Note: switching to 'b595a3a88d32eb6e93c94bbe5d26abeacb4712de'.
+2026-10-25T23:34:21.6202813Z 
+2026-10-25T23:34:21.6203380Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-10-25T23:34:21.6204798Z changes and commit them, and you can discard any commits you make in this
+2026-10-25T23:34:21.6206526Z state without impacting any branches by switching back to a branch.
+2026-10-25T23:34:21.6207396Z 
+2026-10-25T23:34:21.6207953Z If you want to create a new branch to retain commits you create, you may
+2026-10-25T23:34:21.6209010Z do so (now or later) by using -c with the switch command. Example:
+2026-10-25T23:34:21.6209676Z 
+2026-10-25T23:34:21.6210001Z   git switch -c <new-branch-name>
+2026-10-25T23:34:21.6210418Z 
+2026-10-25T23:34:21.6210726Z Or undo this operation with:
+2026-10-25T23:34:21.6211147Z 
+2026-10-25T23:34:21.6211368Z   git switch -
+2026-10-25T23:34:21.6211845Z 
+2026-10-25T23:34:21.6212397Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-10-25T23:34:21.6213117Z 
+2026-10-25T23:34:21.6213822Z HEAD is now at b595a3a Isolate optimized port refusal regression from ambient libpq variables
+2026-10-25T23:34:21.6216322Z ##[endgroup]
+2026-10-25T23:34:21.6248228Z [command]/usr/bin/git log -1 --format=%H
+2026-10-25T23:34:21.6270329Z b595a3a88d32eb6e93c94bbe5d26abeacb4712de
+2026-10-25T23:34:21.6459591Z ##[group]Run git fetch --no-tags --depth=1 origin 4a92643c00a7e4d113025e1df427d8f4850f0981
+2026-10-25T23:34:21.6461195Z [36;1mgit fetch --no-tags --depth=1 origin 4a92643c00a7e4d113025e1df427d8f4850f0981[0m
+2026-10-25T23:34:21.6667764Z shell: /usr/bin/bash -e {0}
+2026-10-25T23:34:21.6668499Z env:
+2026-10-25T23:34:21.6669115Z   META_ANALYSE_IDENTITY_SYNTHETIC_ONLY: 1
+2026-10-25T23:34:21.6669948Z   QT_QPA_PLATFORM: offscreen
+2026-10-25T23:34:21.6670649Z ##[endgroup]
+2026-10-25T23:34:22.2783725Z From https://github.com/YehorBabenko88/meta_analyse
+2026-10-25T23:34:22.2784141Z  * branch            4a92643c00a7e4d113025e1df427d8f4850f0981 -> FETCH_HEAD
+2026-10-25T23:34:22.2860542Z ##[group]Run actions/setup-python@v5
+2026-10-25T23:34:22.2860734Z with:
+2026-10-25T23:34:22.2860878Z   python-version: 3.12
+2026-10-25T23:34:22.2861034Z   check-latest: false
+2026-10-25T23:34:22.2862589Z   token: ***
+2026-10-25T23:34:22.2862735Z   update-environment: true
+2026-10-25T23:34:22.2862921Z   allow-prereleases: false
+2026-10-25T23:34:22.2863079Z   freethreaded: false
+2026-10-25T23:34:22.2863228Z env:
+2026-10-25T23:34:22.2863373Z   META_ANALYSE_IDENTITY_SYNTHETIC_ONLY: 1
+2026-10-25T23:34:22.2863557Z   QT_QPA_PLATFORM: offscreen
+2026-10-25T23:34:22.2863718Z ##[endgroup]
+2026-10-25T23:34:22.3686318Z ##[group]Installed versions
+2026-10-25T23:34:22.3743814Z (node:2074) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-25T23:34:22.3744403Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-25T23:34:22.3744832Z Successfully set up CPython (3.12.15)
+2026-10-25T23:34:22.3745392Z ##[endgroup]
+2026-10-25T23:34:22.3893805Z ##[group]Run python scripts/record_ci_source.py
+2026-10-25T23:34:22.3894216Z [36;1mpython scripts/record_ci_source.py[0m
+2026-10-25T23:34:22.3982503Z shell: /usr/bin/bash -e {0}
+2026-10-25T23:34:22.3982754Z env:
+2026-10-25T23:34:22.3982966Z   META_ANALYSE_IDENTITY_SYNTHETIC_ONLY: 1
+2026-10-25T23:34:22.3983187Z   QT_QPA_PLATFORM: offscreen
+2026-10-25T23:34:22.3983458Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-25T23:34:22.3983893Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+2026-10-25T23:34:22.3984215Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-25T23:34:22.3984457Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-25T23:34:22.3984722Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-25T23:34:22.3985007Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+2026-10-25T23:34:22.3985227Z ##[endgroup]
+2026-10-25T23:34:22.4573020Z Verified source SHA: b595a3a88d32eb6e93c94bbe5d26abeacb4712de
+2026-10-25T23:34:22.4638835Z ##[group]Run python -m pip install -c requirements.lock -e .[test]
+2026-10-25T23:34:22.4639149Z [36;1mpython -m pip install -c requirements.lock -e .[test][0m
+2026-10-25T23:34:22.4695056Z shell: /usr/bin/bash -e {0}
+2026-10-25T23:34:22.4695473Z env:
+2026-10-25T23:34:22.4695626Z   META_ANALYSE_IDENTITY_SYNTHETIC_ONLY: 1
+2026-10-25T23:34:22.4695818Z   QT_QPA_PLATFORM: offscreen
+2026-10-25T23:34:22.4696021Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-25T23:34:22.4696291Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+2026-10-25T23:34:22.4696551Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-25T23:34:22.4696791Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-25T23:34:22.4697030Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-25T23:34:22.4697272Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+2026-10-25T23:34:22.4697484Z ##[endgroup]
+2026-10-25T23:34:23.0132667Z Obtaining file:///home/runner/work/meta_analyse/meta_analyse
+2026-10-25T23:34:23.0146215Z   Installing build dependencies: started
+2026-10-25T23:34:23.7961483Z   Installing build dependencies: finished with status 'done'
+2026-10-25T23:34:23.7966156Z   Checking if build backend supports build_editable: started
+2026-10-25T23:34:24.0067888Z   Checking if build backend supports build_editable: finished with status 'done'
+2026-10-25T23:34:24.0074956Z   Getting requirements to build editable: started
+2026-10-25T23:34:24.2246014Z   Getting requirements to build editable: finished with status 'done'
+2026-10-25T23:34:24.2253124Z   Preparing editable metadata (pyproject.toml): started
+2026-10-25T23:34:24.3475291Z   Preparing editable metadata (pyproject.toml): finished with status 'done'
+2026-10-25T23:34:24.4226339Z Collecting httpx<1,>=0.27 (from meta-analyse==0.1.0)
+2026-10-25T23:34:24.4821837Z   Downloading httpx-0.28.1-py3-none-any.whl.metadata (7.1 kB)
+2026-10-25T23:34:24.6100263Z Collecting websockets<16,>=13 (from meta-analyse==0.1.0)
+2026-10-25T23:34:24.6221972Z   Downloading websockets-15.0.1-cp312-cp312-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.8 kB)
+2026-10-25T23:34:24.6419636Z Collecting psycopg<4,>=3.2 (from psycopg[binary]<4,>=3.2->meta-analyse==0.1.0)
+2026-10-25T23:34:24.6538755Z   Downloading psycopg-3.3.6-py3-none-any.whl.metadata (4.4 kB)
+2026-10-25T23:34:24.6791225Z Collecting PySide6<7,>=6.8 (from meta-analyse==0.1.0)
+2026-10-25T23:34:24.6952850Z   Downloading pyside6-6.12.0-cp310-abi3-manylinux_2_34_x86_64.whl.metadata (5.5 kB)
+2026-10-25T23:34:24.7199001Z Collecting pytest<10,>=8 (from meta-analyse==0.1.0)
+2026-10-25T23:34:24.7338133Z   Downloading pytest-9.1.1-py3-none-any.whl.metadata (7.6 kB)
+2026-10-25T23:34:24.7705495Z Collecting pytest-asyncio<2,>=0.24 (from meta-analyse==0.1.0)
+2026-10-25T23:34:24.7842789Z   Downloading pytest_asyncio-1.4.0-py3-none-any.whl.metadata (4.1 kB)
+2026-10-25T23:34:24.9879721Z Collecting hypothesis==6.170.6 (from meta-analyse==0.1.0)
+2026-10-25T23:34:25.0032584Z   Downloading hypothesis-6.170.6-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (5.6 kB)
+2026-10-25T23:34:25.0231749Z Collecting sortedcontainers<3.0.0,>=2.1.0 (from hypothesis==6.170.6->meta-analyse==0.1.0)
+2026-10-25T23:34:25.0352386Z   Downloading sortedcontainers-2.4.0-py2.py3-none-any.whl.metadata (10 kB)
+2026-10-25T23:34:25.0560572Z Collecting anyio (from httpx<1,>=0.27->meta-analyse==0.1.0)
+2026-10-25T23:34:25.0688328Z   Downloading anyio-4.15.1-py3-none-any.whl.metadata (4.7 kB)
+2026-10-25T23:34:25.0882694Z Collecting certifi (from httpx<1,>=0.27->meta-analyse==0.1.0)
+2026-10-25T23:34:25.1006741Z   Downloading certifi-2026.7.22-py3-none-any.whl.metadata (2.5 kB)
+2026-10-25T23:34:25.1192353Z Collecting httpcore==1.* (from httpx<1,>=0.27->meta-analyse==0.1.0)
+2026-10-25T23:34:25.1317060Z   Downloading httpcore-1.0.9-py3-none-any.whl.metadata (21 kB)
+2026-10-25T23:34:25.1543812Z Collecting idna (from httpx<1,>=0.27->meta-analyse==0.1.0)
+2026-10-25T23:34:25.1665105Z   Downloading idna-3.20-py3-none-any.whl.metadata (7.2 kB)
+2026-10-25T23:34:25.1838876Z Collecting h11>=0.16 (from httpcore==1.*->httpx<1,>=0.27->meta-analyse==0.1.0)
+2026-10-25T23:34:25.1958768Z   Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+2026-10-25T23:34:25.2274718Z Collecting typing-extensions>=4.6 (from psycopg<4,>=3.2->psycopg[binary]<4,>=3.2->meta-analyse==0.1.0)
+2026-10-25T23:34:25.2414255Z   Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+2026-10-25T23:34:25.3577967Z Collecting psycopg-binary==3.3.6 (from psycopg[binary]<4,>=3.2->meta-analyse==0.1.0)
+2026-10-25T23:34:25.3717085Z   Downloading psycopg_binary-3.3.6-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.7 kB)
+2026-10-25T23:34:25.3951044Z Collecting PySide6_Essentials==6.12.0 (from PySide6<7,>=6.8->meta-analyse==0.1.0)
+2026-10-25T23:34:25.4108382Z   Downloading pyside6_essentials-6.12.0-cp310-abi3-manylinux_2_34_x86_64.whl.metadata (3.7 kB)
+2026-10-25T23:34:25.4430195Z Collecting PySide6_Addons==6.12.0 (from PySide6<7,>=6.8->meta-analyse==0.1.0)
+2026-10-25T23:34:25.4564449Z   Downloading pyside6_addons-6.12.0-cp310-abi3-manylinux_2_34_x86_64.whl.metadata (4.3 kB)
+2026-10-25T23:34:25.4756314Z Collecting PySide6_WebEngine==6.12.0.140 (from PySide6<7,>=6.8->meta-analyse==0.1.0)
+2026-10-25T23:34:25.4892236Z   Downloading pyside6_webengine-6.12.0.140-cp310-abi3-manylinux_2_34_x86_64.whl.metadata (3.5 kB)
+2026-10-25T23:34:25.5073853Z Collecting PySide6_Pdf==6.12.0.140 (from PySide6<7,>=6.8->meta-analyse==0.1.0)
+2026-10-25T23:34:25.5207443Z   Downloading pyside6_pdf-6.12.0.140-cp310-abi3-manylinux_2_34_x86_64.whl.metadata (3.4 kB)
+2026-10-25T23:34:25.5462001Z Collecting shiboken6==6.12.0 (from PySide6_Essentials==6.12.0->PySide6<7,>=6.8->meta-analyse==0.1.0)
+2026-10-25T23:34:25.5613472Z   Downloading shiboken6-6.12.0-cp310-abi3-manylinux_2_34_x86_64.whl.metadata (2.5 kB)
+2026-10-25T23:34:25.5788491Z Collecting iniconfig>=1.0.1 (from pytest<10,>=8->meta-analyse==0.1.0)
+2026-10-25T23:34:25.5908043Z   Downloading iniconfig-2.3.1-py3-none-any.whl.metadata (2.8 kB)
+2026-10-25T23:34:25.5971464Z Collecting packaging>=22 (from pytest<10,>=8->meta-analyse==0.1.0)
+2026-10-25T23:34:25.5980155Z   Using cached packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+2026-10-25T23:34:25.6135823Z Collecting pluggy<2,>=1.5 (from pytest<10,>=8->meta-analyse==0.1.0)
+2026-10-25T23:34:25.6253187Z   Downloading pluggy-1.7.0-py3-none-any.whl.metadata (5.0 kB)
+2026-10-25T23:34:25.6650737Z Collecting pygments>=2.7.2 (from pytest<10,>=8->meta-analyse==0.1.0)
+2026-10-25T23:34:25.6860141Z   Downloading pygments-2.21.0-py3-none-any.whl.metadata (2.5 kB)
+2026-10-25T23:34:25.7080009Z Downloading hypothesis-6.170.6-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (1.2 MB)
+2026-10-25T23:34:25.7662935Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.2/1.2 MB 27.7 MB/s  0:00:00
+2026-10-25T23:34:25.7793968Z Downloading httpx-0.28.1-py3-none-any.whl (73 kB)
+2026-10-25T23:34:25.7942624Z Downloading httpcore-1.0.9-py3-none-any.whl (78 kB)
+2026-10-25T23:34:25.8092410Z Downloading psycopg-3.3.6-py3-none-any.whl (215 kB)
+2026-10-25T23:34:25.8261387Z Downloading psycopg_binary-3.3.6-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (5.2 MB)
+2026-10-25T23:34:25.8903338Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.2/5.2 MB 80.4 MB/s  0:00:00
+2026-10-25T23:34:25.9126828Z Downloading pyside6-6.12.0-cp310-abi3-manylinux_2_34_x86_64.whl (577 kB)
+2026-10-25T23:34:25.9172613Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 577.7/577.7 kB 114.4 MB/s  0:00:00
+2026-10-25T23:34:25.9301826Z Downloading pyside6_addons-6.12.0-cp310-abi3-manylinux_2_34_x86_64.whl (59.2 MB)
+2026-10-25T23:34:26.7406253Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 59.2/59.2 MB 72.9 MB/s  0:00:00
+2026-10-25T23:34:26.7535111Z Downloading pyside6_essentials-6.12.0-cp310-abi3-manylinux_2_34_x86_64.whl (84.3 MB)
+2026-10-25T23:34:27.8357616Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 84.3/84.3 MB 77.8 MB/s  0:00:01
+2026-10-25T23:34:27.8602892Z Downloading pyside6_pdf-6.12.0.140-cp310-abi3-manylinux_2_34_x86_64.whl (2.8 MB)
+2026-10-25T23:34:27.8777995Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.8/2.8 MB 162.6 MB/s  0:00:00
+2026-10-25T23:34:27.8901740Z Downloading pyside6_webengine-6.12.0.140-cp310-abi3-manylinux_2_34_x86_64.whl (116.7 MB)
+2026-10-25T23:34:29.1342819Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 116.7/116.7 MB 93.8 MB/s  0:00:01
+2026-10-25T23:34:29.1499971Z Downloading shiboken6-6.12.0-cp310-abi3-manylinux_2_34_x86_64.whl (279 kB)
+2026-10-25T23:34:29.1644691Z Downloading pytest-9.1.1-py3-none-any.whl (386 kB)
+2026-10-25T23:34:29.1791850Z Downloading pluggy-1.7.0-py3-none-any.whl (27 kB)
+2026-10-25T23:34:29.1944782Z Downloading pytest_asyncio-1.4.0-py3-none-any.whl (16 kB)
+2026-10-25T23:34:29.2174240Z Downloading sortedcontainers-2.4.0-py2.py3-none-any.whl (29 kB)
+2026-10-25T23:34:29.2323714Z Downloading websockets-15.0.1-cp312-cp312-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl (182 kB)
+2026-10-25T23:34:29.2594486Z Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+2026-10-25T23:34:29.2758232Z Downloading iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
+2026-10-25T23:34:29.2779363Z Using cached packaging-26.3-py3-none-any.whl (129 kB)
+2026-10-25T23:34:29.2913602Z Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+2026-10-25T23:34:29.2975578Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 214.8 MB/s  0:00:00
+2026-10-25T23:34:29.3101984Z Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+2026-10-25T23:34:29.3238818Z Downloading anyio-4.15.1-py3-none-any.whl (132 kB)
+2026-10-25T23:34:29.3378238Z Downloading idna-3.20-py3-none-any.whl (69 kB)
+2026-10-25T23:34:29.3517854Z Downloading certifi-2026.7.22-py3-none-any.whl (136 kB)
+2026-10-25T23:34:29.5283279Z Building wheels for collected packages: meta-analyse
+2026-10-25T23:34:29.5289396Z   Building editable for meta-analyse (pyproject.toml): started
+2026-10-25T23:34:29.6746731Z   Building editable for meta-analyse (pyproject.toml): finished with status 'done'
+2026-10-25T23:34:29.6750835Z   Created wheel for meta-analyse: filename=meta_analyse-0.1.0-0.editable-py3-none-any.whl size=1725 sha256=6b684304e417e91aa878b34f63278b1d6beff2b9d8a8390bb6fcc4a32131a525
+2026-10-25T23:34:29.6752170Z   Stored in directory: /tmp/pip-ephem-wheel-cache-dc2lbmz2/wheels/2e/de/7a/6b35fd9d28f6c8050447e45df5d1d5321468525e41483293ef
+2026-10-25T23:34:29.6762473Z Successfully built meta-analyse
+2026-10-25T23:34:29.7117710Z Installing collected packages: sortedcontainers, websockets, typing-extensions, shiboken6, pygments, psycopg-binary, pluggy, packaging, iniconfig, idna, hypothesis, h11, certifi, pytest, PySide6_Essentials, psycopg, httpcore, anyio, pytest-asyncio, PySide6_Pdf, PySide6_Addons, httpx, PySide6_WebEngine, PySide6, meta-analyse
+2026-10-25T23:34:34.2457795Z 
+2026-10-25T23:34:34.2479152Z Successfully installed PySide6-6.12.0 PySide6_Addons-6.12.0 PySide6_Essentials-6.12.0 PySide6_Pdf-6.12.0.140 PySide6_WebEngine-6.12.0.140 anyio-4.15.1 certifi-2026.7.22 h11-0.16.0 httpcore-1.0.9 httpx-0.28.1 hypothesis-6.170.6 idna-3.20 iniconfig-2.3.1 meta-analyse-0.1.0 packaging-26.3 pluggy-1.7.0 psycopg-3.3.6 psycopg-binary-3.3.6 pygments-2.21.0 pytest-9.1.1 pytest-asyncio-1.4.0 shiboken6-6.12.0 sortedcontainers-2.4.0 typing-extensions-4.16.0 websockets-15.0.1
+2026-10-25T23:34:34.2485618Z 
+2026-10-25T23:34:34.2488005Z [notice] A new release of pip is available: 26.2.1 -> 26.2.2
+2026-10-25T23:34:34.2488594Z [notice] To update, run: pip install --upgrade pip
+2026-10-25T23:34:34.4803540Z ##[group]Run python -m pytest --noconftest -q -p no:cacheprovider -p scripts.integration_synthetic_boundary tests/test_kernel_identity_evidence.py tests/test_process_inventory_identity.py tests/test_host_identity_authorization.py tests/test_diagnostic_hardening.py tests/test_windows_service_contracts.py tests/test_service_host_fallback.py tests/test_process_identity_acceptance.py tests/test_pr20_security.py tests/test_evidence_schema_properties.py tests/test_synthetic_artifact_projection.py tests/test_pr22_boundary.py tests/test_pr23_transaction.py tests/test_native_scm_adapter.py tests/test_scm_cooccurrence_independent.py tests/test_windows_native_abi_source.py tests/test_inventory_refusal_projection.py tests/test_public_junit.py tests/test_project_public_ci_evidence.py tests/test_public_evidence_workflows.py tests/test_pg_cluster_attestation.py tests/test_pg_cluster_plan.py tests/test_pg_cluster_connection.py tests/test_pg_commissioning_binding.py tests/test_public_bybit_e2e_probe.py tests/test_bybit_stream_witness.py tests/test_bybit_collector_witness.py tests/test_stage_acceptance.py tests/test_orderbook_recovery.py tests/test_orderbook_autonomous_recovery.py tests/test_market_collector.py tests/test_market_health.py tests/test_pipeline.py tests/test_pipeline_callbacks.py tests/test_integration_contract_shutdown.py tests/test_desktop_service.py tests/test_desktop_telemetry.py tests/test_adminit_commissioning.py tests/test_adminit_preparation_contract.py tests/test_pg_checkpoint_witness.py tests/test_final_integration_workflow.py tests/test_final_integration_junit.py tests/test_pg_catalog_binding.py tests/test_bybit_trade_validation.py tests/test_pg_provisioning_regressions.py tests/test_readiness_desktop_health.py tests/test_feed_watchdog.py tests/test_pg18_disposable_driver.py tests/test_analysis_session.py tests/test_session_lifecycle.py tests/test_feed_freshness.py tests/test_readiness_commit_failures.py tests/test_desktop_lifecycle.py tests/test_qt_diagnostics.py -k 'not test_private_evidence_real_dpapi_roundtrip_or_platform_refusal and not test_windows_dpapi_tamper_or_other_platform_fails_closed' --junitxml=integration-tests.xml
+2026-10-25T23:34:34.4815930Z [36;1mpython -m pytest --noconftest -q -p no:cacheprovider -p scripts.integration_synthetic_boundary tests/test_kernel_identity_evidence.py tests/test_process_inventory_identity.py tests/test_host_identity_authorization.py tests/test_diagnostic_hardening.py tests/test_windows_service_contracts.py tests/test_service_host_fallback.py tests/test_process_identity_acceptance.py tests/test_pr20_security.py tests/test_evidence_schema_properties.py tests/test_synthetic_artifact_projection.py tests/test_pr22_boundary.py tests/test_pr23_transaction.py tests/test_native_scm_adapter.py tests/test_scm_cooccurrence_independent.py tests/test_windows_native_abi_source.py tests/test_inventory_refusal_projection.py tests/test_public_junit.py tests/test_project_public_ci_evidence.py tests/test_public_evidence_workflows.py tests/test_pg_cluster_attestation.py tests/test_pg_cluster_plan.py tests/test_pg_cluster_connection.py tests/test_pg_commissioning_binding.py tests/test_public_bybit_e2e_probe.py tests/test_bybit_stream_witness.py tests/test_bybit_collector_witness.py tests/test_stage_acceptance.py tests/test_orderbook_recovery.py tests/test_orderbook_autonomous_recovery.py tests/test_market_collector.py tests/test_market_health.py tests/test_pipeline.py tests/test_pipeline_callbacks.py tests/test_integration_contract_shutdown.py tests/test_desktop_service.py tests/test_desktop_telemetry.py tests/test_adminit_commissioning.py tests/test_adminit_preparation_contract.py tests/test_pg_checkpoint_witness.py tests/test_final_integration_workflow.py tests/test_final_integration_junit.py tests/test_pg_catalog_binding.py tests/test_bybit_trade_validation.py tests/test_pg_provisioning_regressions.py tests/test_readiness_desktop_health.py tests/test_feed_watchdog.py tests/test_pg18_disposable_driver.py tests/test_analysis_session.py tests/test_session_lifecycle.py tests/test_feed_freshness.py tests/test_readiness_commit_failures.py tests/test_desktop_lifecycle.py tests/test_qt_diagnostics.py -k 'not test_private_evidence_real_dpapi_roundtrip_or_platform_refusal and not test_windows_dpapi_tamper_or_other_platform_fails_closed' --junitxml=integration-tests.xml[0m
+2026-10-25T23:34:34.4874940Z shell: /usr/bin/bash -e {0}
+2026-10-25T23:34:34.4875090Z env:
+2026-10-25T23:34:34.4893018Z   META_ANALYSE_IDENTITY_SYNTHETIC_ONLY: 1
+2026-10-25T23:34:34.4893301Z   QT_QPA_PLATFORM: offscreen
+2026-10-25T23:34:34.4893537Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-25T23:34:34.4893875Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+2026-10-25T23:34:34.4894197Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-25T23:34:34.4894739Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-25T23:34:34.4895027Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-25T23:34:34.4895333Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+2026-10-25T23:34:34.4895725Z   META_ANALYSE_SYNTHETIC_IDENTITIES: /home/runner/work/_temp/integration-identities.json
+2026-10-25T23:34:34.4896057Z ##[endgroup]
+2026-10-25T23:34:39.5868643Z 
+2026-10-25T23:34:39.5869130Z ==================================== ERRORS ====================================
+2026-10-25T23:34:39.5869478Z _______________ ERROR collecting tests/test_desktop_lifecycle.py _______________
+2026-10-25T23:34:39.5869824Z ImportError while importing test module '/home/runner/work/meta_analyse/meta_analyse/tests/test_desktop_lifecycle.py'.
+2026-10-25T23:34:39.5870151Z Hint: make sure your test modules/packages have valid Python names.
+2026-10-25T23:34:39.5870333Z Traceback:
+2026-10-25T23:34:39.5870548Z /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/importlib/__init__.py:90: in import_module
+2026-10-25T23:34:39.5870870Z     return _bootstrap._gcd_import(name[level:], package, level)
+2026-10-25T23:34:39.5871077Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-25T23:34:39.5871253Z tests/test_desktop_lifecycle.py:5: in <module>
+2026-10-25T23:34:39.5871426Z     from PySide6.QtWidgets import QApplication
+2026-10-25T23:34:39.5871807Z E   ImportError: libEGL.so.1: cannot open shared object file: No such file or directory
+2026-10-25T23:34:39.5872079Z ________________ ERROR collecting tests/test_qt_diagnostics.py _________________
+2026-10-25T23:34:39.5872395Z ImportError while importing test module '/home/runner/work/meta_analyse/meta_analyse/tests/test_qt_diagnostics.py'.
+2026-10-25T23:34:39.5872701Z Hint: make sure your test modules/packages have valid Python names.
+2026-10-25T23:34:39.5872879Z Traceback:
+2026-10-25T23:34:39.5873075Z /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/importlib/__init__.py:90: in import_module
+2026-10-25T23:34:39.5873349Z     return _bootstrap._gcd_import(name[level:], package, level)
+2026-10-25T23:34:39.5873533Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-25T23:34:39.5873696Z tests/test_qt_diagnostics.py:6: in <module>
+2026-10-25T23:34:39.5873855Z     from meta_analyse.desktop import Window
+2026-10-25T23:34:39.5874007Z src/meta_analyse/desktop.py:11: in <module>
+2026-10-25T23:34:39.5874159Z     from PySide6.QtGui import QColor, QBrush
+2026-10-25T23:34:39.5874375Z E   ImportError: libEGL.so.1: cannot open shared object file: No such file or directory
+2026-10-25T23:34:39.5874617Z =========================== short test summary info ============================
+2026-10-25T23:34:39.5874800Z ERROR tests/test_desktop_lifecycle.py
+2026-10-25T23:34:39.5874948Z ERROR tests/test_qt_diagnostics.py
+2026-10-25T23:34:39.5875125Z !!!!!!!!!!!!!!!!!!! Interrupted: 2 errors during collection !!!!!!!!!!!!!!!!!!!!
+2026-10-25T23:34:39.5875315Z 2 deselected, 2 errors in 2.33s
+2026-10-25T23:34:39.7068402Z ##[error]Process completed with exit code 2.
+2026-10-25T23:34:39.7258370Z ##[group]Run git diff --exit-code HEAD
+2026-10-25T23:34:39.7258591Z [36;1mgit diff --exit-code HEAD[0m
+2026-10-25T23:34:39.7310054Z shell: /usr/bin/bash -e {0}
+2026-10-25T23:34:39.7310193Z env:
+2026-10-25T23:34:39.7310309Z   META_ANALYSE_IDENTITY_SYNTHETIC_ONLY: 1
+2026-10-25T23:34:39.7310464Z   QT_QPA_PLATFORM: offscreen
+2026-10-25T23:34:39.7310632Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-25T23:34:39.7310861Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+2026-10-25T23:34:39.7311082Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-25T23:34:39.7311286Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-25T23:34:39.7311487Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-25T23:34:39.7311764Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+2026-10-25T23:34:39.7312086Z ##[endgroup]
+2026-10-25T23:34:39.7655381Z ##[group]Run set -euo pipefail
+2026-10-25T23:34:39.7655567Z [36;1mset -euo pipefail[0m
+2026-10-25T23:34:39.7655869Z [36;1mpython scripts/project_public_ci_evidence.py --output public-evidence --source source-sha.json --junit integration-tests.xml[0m
+2026-10-25T23:34:39.7656244Z [36;1mpython scripts/project_public_ci_evidence.py --validate public-evidence[0m
+2026-10-25T23:34:39.7710010Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-25T23:34:39.7710195Z env:
+2026-10-25T23:34:39.7710312Z   META_ANALYSE_IDENTITY_SYNTHETIC_ONLY: 1
+2026-10-25T23:34:39.7710466Z   QT_QPA_PLATFORM: offscreen
+2026-10-25T23:34:39.7710633Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-25T23:34:39.7710858Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+2026-10-25T23:34:39.7711078Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-25T23:34:39.7711278Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-25T23:34:39.7711525Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-25T23:34:39.7711891Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+2026-10-25T23:34:39.7712065Z ##[endgroup]
+2026-10-25T23:34:39.8298903Z BLOCKED: public CI evidence rejected
+2026-10-25T23:34:39.8354273Z ##[error]Process completed with exit code 1.
+2026-10-25T23:34:39.8577191Z Post job cleanup.
+2026-10-25T23:34:39.9182496Z [command]/usr/bin/git version
+2026-10-25T23:34:39.9215417Z git version 2.55.0
+2026-10-25T23:34:39.9242263Z Temporarily overriding HOME='/home/runner/work/_temp/35d9080b-7190-4626-b18f-7e76064cbaea' before making global git config changes
+2026-10-25T23:34:39.9242823Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-25T23:34:39.9246884Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/meta_analyse/meta_analyse
+2026-10-25T23:34:39.9299088Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-25T23:34:39.9325898Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-25T23:34:39.9524654Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-25T23:34:39.9551219Z http.https://github.com/.extraheader
+2026-10-25T23:34:39.9560394Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-10-25T23:34:39.9774421Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-25T23:34:39.9964844Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-25T23:34:39.9996768Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-25T23:34:40.0312278Z Cleaning up orphan processes
+2026-10-25T23:34:40.0519401Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-python@v5. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

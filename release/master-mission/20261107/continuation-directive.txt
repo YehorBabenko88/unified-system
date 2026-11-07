@@ -1,0 +1,259 @@
+# CODEX — MASTER MISSION EXECUTION DIRECTIVE
+## P0 Runtime Closure, Scientific Correctness & Physical Readiness
+
+**STATUS: IN_PROGRESS / NO-GO**
+
+Продолжай действующую MASTER MISSION с последнего подтверждённого checkpoint.
+
+Unified Draft PR #26:
+`92b8328a65520b86e63f8052b2429422334c98b9`
+
+Reference:
+`release/master-mission/20261107/`
+
+Опубликованные семь отчётов, scientific capability matrix и integration-blockers.json принять как рабочую базу текущего этапа.
+
+Не начинать аудит заново. Не повторять уже завершённую инвентаризацию без обнаруженного drift.
+
+## 1. Главный приоритет — закрывать код, а не отчёты
+
+Переходи к исправлению подтверждённых дефектов и реализации отсутствующих интеграционных adapters.
+
+Каждое изменение должно иметь:
+
+- Exact owning repository/file.
+- Failing regression test.
+- Source commit SHA.
+- Исправление первопричины.
+- Local test results.
+- Windows CI.
+- Independent review.
+- Integration evidence.
+
+Не считать публикацию нового Markdown-документа завершением задачи.
+
+## 2. Agent 2 + Agent 4 + Agent 5 — закрыть Authority/Storage/Scheduler
+
+Параллельно согласовать и реализовать:
+
+- Native Consul identity/admission.
+- Atomic authoritative transactions.
+- Lease/fencing.
+- Real assignment backend.
+- Storage reservation validation.
+- Atomic publication.
+- Checkpoint recovery.
+- Stale writer rejection.
+- No-quorum behavior.
+- Supersession/publication race.
+
+Не использовать фиктивные boolean capabilities или самостоятельно созданный второй consensus.
+
+Сначала исполняемые isolated contract tests, затем Windows runtime integration.
+
+## 3. Agent 7 — Math и Paper Correctness
+
+### Math native
+
+Оригинальный run:
+`42352374979`
+
+- Продолжать read-only наблюдение.
+- Не создавать retry.
+- Не переиспользовать consumed single-use authorization.
+- Не изменять frozen native source.
+- При появлении runner собирать оригинальные logs/artifacts.
+- При infrastructure failure сохранять BLOCKED и готовить evidence.
+
+### Независимый Math helper
+
+Отдельно исправить подтверждённый helper overflow в новой выделенной ветке.
+
+Не смешивать исправление helper с защищённым native admission.
+
+Проверить extreme values, nonfinite arithmetic, cancellation, bootstrap, deterministic replay.
+
+### Financial units
+
+Закрыть несовместимость:
+
+Strattester PaperLedger net PnL ≠ Math gross PnL.
+
+Создать явно версионированный DTO/adapter с указанием:
+
+- gross_pnl
+- net_pnl
+- fees
+- slippage
+- funding
+- currency
+- units
+- provenance
+- calculation basis
+
+Запретить двойное вычитание издержек.
+
+Добавить положительные и отрицательные contract tests.
+
+## 4. Agent 3 — Grid Data Integrity
+
+### PR #267
+
+Проверить:
+
+- Exact HEAD.
+- Independent reviewer ACK.
+- Windows/Ubuntu CI.
+- Overflow regression.
+- Numeric stability.
+- Source integrity.
+
+Не считать 21 локальный PASS полной приёмкой.
+
+### PR #268
+
+Исправление неполного стакана является частичным.
+
+Открытый дефект: устаревшая доступность стакана может сохраняться до пяти секунд.
+
+Не объявлять temporal integrity PASS.
+
+Нужно:
+
+1. Выявить точный путь invalidation.
+2. Установить место, где stale book остаётся доступным.
+3. Добавить regression на границе producer → persistence → consumer.
+4. Обеспечить немедленную или строго ограниченную подтверждённую invalidation semantics.
+5. Проверить restart, reconnect, gap и out-of-order events.
+6. Согласовать изменение с владельцами Storage и downstream research.
+
+Не выдавать данные с неподтверждённой актуальностью за пригодный L3 research input.
+
+## 5. Agent 1 + Agent 2 + ROOT — LAN/runtime
+
+Завершить реальные mTLS и Control endpoints.
+
+Проверить:
+
+- Node identity.
+- Certificate chain/SAN/EKU.
+- Secure keys.
+- Native IPC.
+- Bounded frames and queues.
+- Quota accounting.
+- Control Mux binding.
+- Real authority proofs.
+- Session expiration.
+- Failure recovery.
+
+Не проводить реальные Bybit provider sends до admission.
+
+## 6. Agent 6 — Terminan
+
+Подключить реальные backend endpoints.
+
+Проверить:
+
+- Authentication/RBAC.
+- Cluster snapshots.
+- Event streams.
+- Cursor/resume.
+- Multiple Terminan clients.
+- Authority freshness.
+- Data integrity.
+- Storage and scheduler status.
+- Strategy metrics.
+- Paper trades.
+
+Никаких фиктивных LIVE/HEALTHY статусов.
+
+## 7. ROOT — Release Readiness
+
+Главный практический блокер LS5:
+
+- Недоверенный writable installation root.
+- Неполный release manifest.
+- Не подтверждённые native/installer gates.
+- Не проверенный end-to-end rollback.
+
+Исправлять причину, не ослаблять ACL или source integrity policy.
+
+Подготовить:
+
+- Installable artifact set.
+- Exact six-repository source manifest.
+- Artifact SHA256.
+- Dependency locks.
+- Migration plan.
+- Service identity.
+- Port allocation.
+- Backup.
+- Rollback.
+
+Физическую установку начинать только после PASS соответствующего gate.
+
+До этого продолжать read-only commissioning.
+
+## 8. Agent 8 — Independent Acceptance
+
+Проверить:
+
+- Семь опубликованных отчётов.
+- Все 88 capability rows.
+- Grid PR #267/#268.
+- Math helper fix.
+- Financial DTO correctness.
+- Authority/Storage/Scheduler integration.
+- Installable release.
+- Windows native gates.
+
+Разделять:
+
+MODEL_PASS
+SOURCE_PASS
+ENDPOINT_PASS
+WINDOWS_PASS
+PHYSICAL_PASS
+
+Не повышать статус автоматически.
+
+## 9. Автономное продолжение
+
+Не останавливаться после очередного NO-GO.
+
+При каждом блокере выбирать следующее действие:
+
+- Если дефект воспроизводим — исправить.
+- Если отсутствует adapter — реализовать в согласованном scope.
+- Если CI queued — расследовать очередь и продолжать независимые работы.
+- Если нужен owner decision — подготовить один конкретный вопрос с вариантами.
+- Если физический gate закрыт — не обходить его, но продолжать подготовку.
+- Если новая версия исправлена — повторять соответствующие тесты.
+
+Использовать execution journal, checkpoints и возобновление задач.
+
+Не запускать массовые workflow reruns.
+
+## 10. Следующий checkpoint
+
+Предоставить не повторение семи отчётов, а таблицу:
+
+BLOCKER_ID:
+OWNER:
+EXACT_FILE:
+ROOT_CAUSE:
+FIX_COMMIT:
+FAILING_TEST:
+LOCAL_RESULT:
+HOSTED_RESULT:
+INTEGRATION_RESULT:
+REMAINING_DEPENDENCY:
+NEXT_ACTION:
+
+Приоритет закрытия:
+
+A → C/D → G → B/E → F/H.
+
+Это порядок основных зависимостей, а не запрет параллельного выполнения независимых задач.
+
+**Начинай исправления сейчас. MASTER MISSION продолжается до фактической end-to-end приёмки, но физические операции выполняются только после соответствующих security и release gates.**

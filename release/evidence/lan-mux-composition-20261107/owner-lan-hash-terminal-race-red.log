@@ -1,0 +1,34 @@
+test_hash_terminal_cause_survives_reader_receive_interleaving (test_lan_mux_channel.MuxTlsTests.test_hash_terminal_cause_survives_reader_receive_interleaving) ... FAIL
+
+======================================================================
+FAIL: test_hash_terminal_cause_survives_reader_receive_interleaving (test_lan_mux_channel.MuxTlsTests.test_hash_terminal_cause_survives_reader_receive_interleaving)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-1-direct-lan-transport\work\unified-system-lan-agent1\unified_system\lan_mux_channel.py", line 263, in receive
+    result=self.rx.pop()
+           ^^^^^^^^^^^^^
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-1-direct-lan-transport\work\unified-system-lan-agent1\unified_system\lan_mux_channel.py", line 143, in pop
+    self.check_deadline()
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-1-direct-lan-transport\work\unified-system-lan-agent1\unified_system\lan_mux_channel.py", line 117, in check_deadline
+    _need(not self.closed,'MUX_CLOSED')
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-1-direct-lan-transport\work\unified-system-lan-agent1\unified_system\lan_mux_channel.py", line 22, in _need
+    if not value:raise MuxError(code)
+                 ^^^^^^^^^^^^^^^^^^^^
+unified_system.lan_mux_channel.MuxError: MUX_CLOSED
+
+The above exception was the direct cause of the following exception:
+
+unified_system.lan_mux_channel.MuxError: MUX_CLOSED
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-1-direct-lan-transport\work\unified-system-lan-agent1\tests\test_lan_mux_channel.py", line 299, in test_hash_terminal_cause_survives_reader_receive_interleaving
+    with self.assertRaisesRegex(mux.MuxError,'MUX_MESSAGE_HASH_REJECTED'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "MUX_MESSAGE_HASH_REJECTED" does not match "MUX_CLOSED"
+
+----------------------------------------------------------------------
+Ran 1 test in 1.273s
+
+FAILED (failures=1)

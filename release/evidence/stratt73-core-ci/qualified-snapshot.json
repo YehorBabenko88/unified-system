@@ -1,0 +1,67 @@
+{
+  "schema": "unified.qualified-ci-snapshot.v1",
+  "repository": "YehorBabenko88/strattester",
+  "pr": 73,
+  "source_head": "a56c24a0f25a0c5ea9222fcd953a49536c91dfc9",
+  "source_tree": "69728afcfaba28d95c8de52e5ca773b75be09a5f",
+  "run_id": 42343442185,
+  "attempt": 1,
+  "qualification": "CORE_CI_SUCCESS_WITH_EXPLICIT_SKIPS",
+  "matrix": [
+    {
+      "os": "Windows",
+      "python": "3.11",
+      "job_conclusion": "SUCCESS",
+      "passed": 2090,
+      "skipped": 28,
+      "successful_subtests": 35
+    },
+    {
+      "os": "Windows",
+      "python": "3.13",
+      "job_conclusion": "SUCCESS",
+      "passed": 2090,
+      "skipped": 28,
+      "successful_subtests": 35
+    },
+    {
+      "os": "Linux",
+      "python": "3.11",
+      "job_conclusion": "SUCCESS",
+      "passed": 2064,
+      "skipped": 54,
+      "successful_subtests": 35
+    },
+    {
+      "os": "Linux",
+      "python": "3.13",
+      "job_conclusion": "SUCCESS",
+      "passed": 2064,
+      "skipped": 54,
+      "successful_subtests": 35
+    }
+  ],
+  "unique_xml_nodes_per_cell": 2118,
+  "suite_counter_including_subtests": 2153,
+  "mandatory_skip_waivers": false,
+  "windows_skip_groups": {
+    "history_collection": 5,
+    "native_broker": 19,
+    "CUDA": 2,
+    "source_owner": 1,
+    "Grid_contract": 1
+  },
+  "node_projection_78_cases": "LOCAL_ONLY_NOT_IN_THIS_WORKFLOW",
+  "independent_audit": {
+    "head": "b38421ec0fb0c04f87568c2d4ec61cd8b04ba148",
+    "path": "docs/audits/agent8-20261106/phase57/independent-review.md",
+    "raw_sha256": "f0f5f7956cc42eeeec81fdae5984b111a57ea15c61dddf6609256da514b6755a",
+    "primary_logs_and_zips_checked_by": "AGENT8"
+  },
+  "system_acceptance": false,
+  "native_worker_accepted": false,
+  "home_qualified": false,
+  "pilot_admission": false,
+  "global_F16_F17_closed": false,
+  "master_mission": "IN_PROGRESS_NO_GO"
+}

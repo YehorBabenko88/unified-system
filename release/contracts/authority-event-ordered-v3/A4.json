@@ -1,0 +1,37 @@
+{
+  "reviewer": "Agent4",
+  "proposal_sha256": "d9d02baec67d5efbdb3124626d6e9d017cc9d5a2d19025f9293f4cc9f789a8d5",
+  "trace_review_sha256": "66d317091a69817aa6790d0fe3f9d4b9339e2b2c268033ac1990a314883b0880",
+  "trace_evidence_sha256": "64a83ea87016d756be0eb7b612b11379392763f2522efc29c12d3e02e5484295",
+  "hashes_independently_verified": true,
+  "scoped_semantic_design_ack": true,
+  "owner_requirement_reconciliation": {
+    "direct_agent4_user_requirements": "Existing Grid authority; current owner and generation checked for each mutation; lease duration alone insufficient; exact supersession/publication linearization; stale worker cannot publish; no dangerous metadata mutation without quorum; preserve retired history and verified-copy protection.",
+    "literal_wall_clock_at_commit_requirement_found_in_this_chat": false,
+    "exact_physical_commit_utc_requirement_found_in_this_chat": false,
+    "correction": "Earlier strict expiry/exact-time blockers described dependencies of unapproved agent drafts. They are not established direct human requirements in this chat. The paused-request counterexample remains valid for that stronger guarantee; it does not make owner-required fenced Consul ordering impossible.",
+    "bounded_scope": "Agent4 directly inspected its user instructions and Agent2 trace review. ROOT's search of original mission attachments is attributed to ROOT, not independently repeated by Agent4."
+  },
+  "accepted_semantic_scope": [
+    "Sole existing Consul authority and actual majority transaction admission, no cached/heartbeat/SQLite authorization",
+    "Real lease session AND leader session/index plus exact generation/grant/worker/resource predicates in same atomic publication transaction",
+    "Committed invalidation/revocation/supersession/renewal changes checked state and rejects later stale publication even without successor",
+    "Publication-first retains historical receipt; invalidation-first rejects all writes; response timing does not change order",
+    "Event-ordered expiry explicitly permits a valid transaction after displayed wall-time estimate until authoritative invalidation; must not be advertised as literal not_after enforcement",
+    "Truthful submitted/observed audit timestamps and authority ordering indices, no fabricated exact UTC commit",
+    "Every mutator retains closure/pin/evidence/coverage/allocation protection and original UNKNOWN receipt reconciliation"
+  ],
+  "compatibility_gates": [
+    "New explicit version/profile selection and final ROOT/operator design approval; old draft3 and checkpoint-v1 bytes remain frozen",
+    "New checkpoint audit-time schema or explicit reviewed adapter; committed_at_utc cannot silently mean observed time",
+    "Exact native session/grant binding and renewal failure/recovery key layout, bounded transaction validation and actual adapter fault tests",
+    "Civil-time schedule/provider/credential/confirmation expiry remains independently enforced; not replaced by session events",
+    "Paused external writer/sender containment, real identity, closure/allocation and native/physical acceptance remain separate requirements"
+  ],
+  "exact_owner_invariant_conflict_identified_for_this_semantic_proposal": null,
+  "runtime_gate_changed": false,
+  "full_wire_schema_ack": false,
+  "runtime_ack": false,
+  "physical_tests": "NOT_RUN",
+  "verdict": "SCOPED_NEW_EVENT_ORDERED_SEMANTICS_DESIGN_ACK_NO_AUTOMATIC_ADMISSION"
+}

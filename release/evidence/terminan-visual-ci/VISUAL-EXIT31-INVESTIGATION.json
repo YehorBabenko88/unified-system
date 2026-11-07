@@ -1,0 +1,132 @@
+{
+  "schema": "terminan.original-visual-exit31-investigation.v1",
+  "original": {
+    "run_id": 41669714074,
+    "attempt": 1,
+    "head": "e05004fa366971cbada0d24deed275a9ab583d7d",
+    "tree": "35112be1e03fb662d4cd0ab609053eb52b90e694",
+    "jobs": {
+      "ubuntu": 126035459050,
+      "windows": 126035459806
+    },
+    "artifacts": {
+      "ubuntu": 13249020303,
+      "windows": 13247593485
+    },
+    "failure": "All3DPR projects perOS: visual.spec.cjs:40 expected7 #nodes button, received0; visual wrapper exit31",
+    "raw_logs_and_original_zip_digests": "VERIFIED",
+    "original_manifest_gap": "Hidden results/.last-run.json absent from both original uploads; remaining declared files verified"
+  },
+  "cause": "Original synthetic lifecycle fixture contains forbidden legacy node state/memory/disk and unknown top-level evidence_class. Strict unchanged consumer rejects LEGACY_NODE_INVALID, resulting in unavailable nodes; runner correctly refuses success.",
+  "repro": "Original/current producer scripts executed from exact Git bytes into separate owned fixture directories. Original rejected; current validates7 AVAILABLE_UNVERIFIED nodes; production validator bytes identical.",
+  "existing_fix": {
+    "head": "cbf7ce65446561bd1caf10b8d4d17efa223a3dbc",
+    "files": [
+      "scripts/prepare_visual_qa.py",
+      "tests/test_visual_fixture_contract.py"
+    ],
+    "included_in_approved_base": true,
+    "later_readiness_fix": "0cbef0341df324f65b37de0813cdc619fbafcfa8"
+  },
+  "pr69_assessment": "PR69 inherits these fixes from PR68; it adds no producer/runner/visual validator edits. Its small sync UI tests alone would not prove repair.",
+  "current": {
+    "head": "42686cd8fafcefaed3c5df5adaee5173d27543fd",
+    "tree": "81c684c85bda2b64dc9a327d3667f56eeb8defc1",
+    "run_id": 42248777161,
+    "attempt": 1,
+    "jobs": {
+      "windows": 127997924142,
+      "ubuntu": 127997924653
+    },
+    "verified_artifacts": [
+      {
+        "artifact_id": 13526868216,
+        "name": "visual-windows-latest-1",
+        "zip_sha256": "0180c29e3f06791950cedcaaee4fd56be882d29c343058b6ff0ec44c957315e5",
+        "zip_bytes": 15476920,
+        "head": "42686cd8fafcefaed3c5df5adaee5173d27543fd",
+        "tree": "81c684c85bda2b64dc9a327d3667f56eeb8defc1",
+        "invocation": "2a48f2dd716a4b0b813ea85c065b4354",
+        "result": "EXACT_HEAD_HOSTED_VISUAL_EVIDENCE_VERIFIED",
+        "matrix_cases": 108,
+        "screenshots_validated": 114,
+        "projects": 3,
+        "skipped": 0,
+        "manifest_members_verified": 130,
+        "physical": "NOT_RUN"
+      },
+      {
+        "artifact_id": 13526087491,
+        "name": "visual-ubuntu-24.04-1",
+        "zip_sha256": "c01688eee2819450f1e77a5bb45d819ebc5b2ccde36d3e9bbab1062ced3160d9",
+        "zip_bytes": 19935236,
+        "head": "42686cd8fafcefaed3c5df5adaee5173d27543fd",
+        "tree": "81c684c85bda2b64dc9a327d3667f56eeb8defc1",
+        "invocation": "c6ae518cb99a43aaa24fa3ee241c60f8",
+        "result": "EXACT_HEAD_HOSTED_VISUAL_EVIDENCE_VERIFIED",
+        "matrix_cases": 108,
+        "screenshots_validated": 114,
+        "projects": 3,
+        "skipped": 0,
+        "manifest_members_verified": 130,
+        "physical": "NOT_RUN"
+      }
+    ],
+    "local_unfiltered_full_visual_summary": {
+      "version": 1,
+      "invocation": "d9ee34dbb6f34921b96ba5636aac56f6",
+      "candidate_sha": "42686cd8fafcefaed3c5df5adaee5173d27543fd",
+      "tree": "81c684c85bda2b64dc9a327d3667f56eeb8defc1",
+      "result": "AUTOMATED_VISUAL_PASS",
+      "physical": "PENDING",
+      "scope": "HEADLESS_CHROMIUM_REAL_TAB_ZOOM",
+      "exit_code": 0,
+      "python": "3.12.10",
+      "shell": "DIRECT",
+      "screenshots_verified": 114,
+      "matrix_cases": 108,
+      "failure_stage": null,
+      "error_class": null
+    }
+  },
+  "source_hashes": {
+    "scripts/prepare_visual_qa.py": {
+      "failure": "078e284ab31d612fedd38aef8944c87004bb9c8062749ac2e03b6d4b4b363d70",
+      "base": "214150bf7cb1cc8c5b81da737eb4277fdb8b5b4b9d46143e45b787fae2ab9ae9",
+      "current": "214150bf7cb1cc8c5b81da737eb4277fdb8b5b4b9d46143e45b787fae2ab9ae9"
+    },
+    "scripts/visual_qa.py": {
+      "failure": "9bdfca20f207bace3a1d9a8f54f500d43fcabeff7b9d5f5525ebef2be9e61382",
+      "base": "9bdfca20f207bace3a1d9a8f54f500d43fcabeff7b9d5f5525ebef2be9e61382",
+      "current": "9bdfca20f207bace3a1d9a8f54f500d43fcabeff7b9d5f5525ebef2be9e61382"
+    },
+    "terminan/infrastructure.py": {
+      "failure": "37ebf25c8166269f28206a8e0ad77fab727c5c192fd8e97c79a6fdf894b98542",
+      "base": "37ebf25c8166269f28206a8e0ad77fab727c5c192fd8e97c79a6fdf894b98542",
+      "current": "37ebf25c8166269f28206a8e0ad77fab727c5c192fd8e97c79a6fdf894b98542"
+    },
+    "tests/browser/visual.spec.cjs": {
+      "failure": "bf80f39b1c7396f1c05e35f5fffdde50006d0dced815844e00d89a68ae645483",
+      "base": "c54948ff1f2189c0e96a3b1834dd7e4beed363a2649ec39d2dc39c89e8ed3004",
+      "current": "c54948ff1f2189c0e96a3b1834dd7e4beed363a2649ec39d2dc39c89e8ed3004"
+    },
+    "tests/test_visual_fixture_contract.py": {
+      "failure": "ABSENT",
+      "base": "7931f2e331c90202b2ee50ad2e64bc5d8d34292944eb743483c7805d8890911d",
+      "current": "7931f2e331c90202b2ee50ad2e64bc5d8d34292944eb743483c7805d8890911d"
+    },
+    ".github/workflows/visual-qa.yml": {
+      "failure": "a187721142c964538ea36ad9fdf1fc68f59de9efac923d0b37a72e9487992676",
+      "base": "01597e8766715d603c7bd9778ecc3a64c7ba24b363efd607fb3dc2d26f0a1e6d",
+      "current": "01597e8766715d603c7bd9778ecc3a64c7ba24b363efd607fb3dc2d26f0a1e6d"
+    }
+  },
+  "edit_plan": "NONE_NEEDED_NO_UNRESOLVED_CURRENT_DEFECT_IN_TARGETED_FAILURE",
+  "product_edits": "NONE",
+  "assertion_inventory_changes": "NONE; original wrapper requires3passed0skipped,108matrixcases114screenshots; unchanged from approvedbase",
+  "result": "ORIGINAL_VISUAL_CI_BLOCKER_VERIFIED_RESOLVED_AT_42686_ON_WINDOWS_AND_UBUNTU",
+  "qualification": "HOSTED_SYNTHETIC_VISUAL_QA_ONLY_NOT_REAL_CONTROL_API_OR_PHYSICAL_ACCEPTANCE",
+  "runtime_endpoint_ack": "NOT_AVAILABLE",
+  "physical_acceptance": "NOT_RUN",
+  "overall_go_no_go": "NO-GO"
+}

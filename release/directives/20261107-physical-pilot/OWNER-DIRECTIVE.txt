@@ -1,0 +1,222 @@
+# CODEX — MASTER MISSION PHYSICAL PILOT & CONTINUOUS STABILIZATION
+
+## Новое решение владельца
+
+Разрешаю начать подготовку и проведение поэтапного физического пилота Unified с последующим непрерывным исправлением выявленных ошибок.
+
+Цель — не ограничиваться CI и design reviews, а добиться доказанной стабильной работы Unified на всех шести Windows-компьютерах.
+
+**PHYSICAL PILOT: AUTHORIZED SUBJECT TO STAGE GATES.**
+
+**FULL CLUSTER PRODUCTION ADMISSION: NOT AUTHORIZED.**
+
+**REAL TRADING: PROHIBITED.**
+
+## P0 — Закрыть текущий Math activation
+
+Agent 7 сообщил:
+
+- Source `2446d046…` frozen.
+- A8 ACK verified.
+- 13 pure/model PASS.
+- 33 PS5 vectors PASS.
+- 0 skips.
+- Event parity confirmed.
+
+ROOT должен:
+
+1. Проверить полный source HEAD, workflow identity и A8 receipt.
+2. Подготовить новую ROOT activation record.
+3. Проверить обязательные native/security prerequisites.
+4. Получить предусмотренную протоколом single-use authorization перед защищённой операцией.
+5. Не переиспользовать authorization.
+6. Не считать PS5/model PASS физическим native PASS.
+
+Если authorization отсутствует, сохранить BLOCKED и продолжить независимые работы.
+
+## P1 — Создать физический пилот LS5
+
+До установки:
+
+- Проверить фактическую identity LS5.
+- Зафиксировать состояние Windows и служб.
+- Проверить свободное место.
+- Проверить существующие установки.
+- Проверить доступность резервного административного канала.
+- Подготовить отдельный тестовый каталог.
+- Создать backup затрагиваемого состояния.
+- Проверить rollback.
+- Зафиксировать exact release manifest и SHA256 всех пакетов.
+
+После PASS этих условий разрешаю ограниченную установку на LS5 в изолированном тестовом режиме.
+
+Установка не должна изменять существующие production databases или чужие службы.
+
+Первоначально разрешены только локальные проверки без реальных provider sends и без присоединения других ПК к рабочему кластеру.
+
+## P2 — Реальный запуск
+
+На LS5 проверить:
+
+1. Установку компонентов.
+2. Запуск Windows Services.
+3. Process identity.
+4. Protected key access.
+5. mTLS loopback.
+6. Local Control API.
+7. Terminan UI.
+8. Local Storage.
+9. Scheduler в single-node test mode.
+10. Math/Strattester/MetaAnalyse offline fixtures.
+11. PaperLedger.
+12. Logs/metrics.
+13. Controlled service restart.
+14. Rollback.
+
+Если обязательный runtime endpoint ещё не реализован, исправить код в репозитории и повторить проверку, не подменяя endpoint mock-ответом.
+
+## P3 — Continuous Fix Loop
+
+Для каждой обнаруженной ошибки:
+
+1. Зафиксировать воспроизводимый сценарий.
+2. Сохранить logs и evidence.
+3. Определить точный repository/owner.
+4. Создать failing regression test.
+5. Исправить первопричину в feature-ветке.
+6. Запустить локальные тесты.
+7. Запустить обязательный Windows CI.
+8. Провести независимый review.
+9. Обновить immutable release candidate.
+10. Выполнить контролируемое обновление пилота.
+11. Повторить исходный сценарий.
+12. Проверить отсутствие регрессий.
+
+Не исправлять ошибки непосредственно на физических компьютерах без отражения изменений в GitHub.
+
+Не отключать security gates ради запуска.
+
+## P4 — Расширение на координаторы
+
+После PASS локального LS5 и обязательных distributed runtime gates подготовить отдельный commissioning record для PC4 и PC3.
+
+Проверить:
+
+- Consul identity.
+- Quorum.
+- Leader election.
+- Fencing.
+- Real Control API.
+- LAN mTLS.
+- Durable command reconciliation.
+- No-quorum safety.
+- Restart/rejoin.
+- Rollback.
+
+Переходить к следующему узлу только после успешной приёмки предыдущего этапа.
+
+## P5 — Подключение workers
+
+После подтверждения безопасного distributed control plane:
+
+- PC2.
+- PC1.
+- LS7.
+
+Для PC1 и LS7 использовать Windows 11 Home qualification.
+
+Проверить:
+
+- Node enrollment.
+- Resource scheduler.
+- Assignment v1.
+- Storage reservation.
+- Checkpoint/resume.
+- Worker rejoin.
+- Replication.
+- Terminan visibility.
+
+Не назначать задачи узлам, не прошедшим admission.
+
+## P6 — Market Data & Scientific Simulation
+
+После отдельного подтверждения provider policy и egress enforcement:
+
+1. Контролируемый public-data smoke.
+2. Один инструмент.
+3. Проверка history/live continuity.
+4. Десять инструментов.
+5. Distributed research.
+6. Math computation.
+7. Strattester strategies.
+8. MetaAnalyse.
+9. Paper execution.
+10. Проверка отображения simulated trades в Terminan.
+
+Реальные ордера запрещены.
+
+## P7 — Stability Soak
+
+После прохождения всех предыдущих gates выполнить ограниченный непрерывный тест.
+
+Предлагаемые критерии:
+
+- 24 часа стабильной работы.
+- Нет необработанных P0.
+- Нет split-brain.
+- Нет двойных paper commits.
+- Нет неподтверждённой потери данных.
+- Нет неограниченного роста памяти, логов и очередей.
+- Нет нарушения budget limits.
+- Все активные узлы корректно отображаются.
+- Terminan сохраняет согласованное состояние.
+- Службы восстанавливаются после штатного restart.
+- Ошибки документируются и исправляются.
+
+Если тест прерван дефектом, после исправления повторить соответствующую часть проверки. Не объявлять стабильность по одному успешному запуску.
+
+## P8 — Границы разрешения
+
+Не выполнять без отдельного допуска:
+
+- Реальные Bybit requests до provider admission.
+- Protected Math activation без single-use authorization.
+- Удаление Tailscale.
+- Изменение ESET/Firewall/роутера.
+- Принудительное выключение координаторов.
+- Network partition.
+- Удаление существующих баз.
+- Merge в main.
+- Real trading.
+
+## P9 — Обязательный отчёт
+
+После каждого этапа:
+
+STAGE:
+NODE:
+OS_EDITION:
+RELEASE_SHA:
+INSTALL_STATUS:
+RUNTIME_STATUS:
+WINDOWS_NATIVE_STATUS:
+CONTROL_API:
+STORAGE:
+SCHEDULER:
+TERMINAN:
+MARKET_DATA:
+PAPER_SIMULATION:
+OPEN_P0:
+OPEN_P1:
+ROLLBACK_STATUS:
+EVIDENCE:
+NEXT_ACTION:
+GO_NO_GO:
+
+Не завершать MASTER MISSION после первого успешного пилота.
+
+Продолжать исправления и проверки до выполнения полной приёмочной матрицы всех шести компьютеров.
+
+Если физический этап BLOCKED, продолжать разработку, тесты и подготовку следующих этапов, но не обходить блокировку.
+
+**START NOW: проверить readiness LS5 и подготовить первый физический пилот.**

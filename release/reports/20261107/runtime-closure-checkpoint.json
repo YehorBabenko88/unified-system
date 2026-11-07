@@ -1,0 +1,128 @@
+{
+  "schema": "unified.execution-checkpoint.v1",
+  "observed_at_utc": "2026-11-07T11:46:36.469843+00:00",
+  "baseline": "92b8328a65520b86e63f8052b2429422334c98b9",
+  "status": "IN_PROGRESS_NO_GO",
+  "blockers": [
+    {
+      "BLOCKER_ID": "ROOT_INSTALLER_ARCHIVE_NAMESPACE",
+      "OWNER": "Root",
+      "EXACT_FILE": "scripts/prepare_lab_capsule.py::extract",
+      "ROOT_CAUSE": "Only full member paths were case-folded; implicit parents could alias or conflict with file entries.",
+      "FIX_COMMIT": "fe0f5234a1c5eeeca02b2dad3ddfa948ef6c51cf",
+      "FAILING_TEST": "tests/test_lab_capsule_archive_namespace.py; CP312 1 PASS,1 FAIL,2 ERROR before fix",
+      "LOCAL_RESULT": "New4 PASS; combined33 executed,32 PASS,1 SKIP Windows symlink privilege unavailable; skip not waived; exact clean-source 4PASS0skip",
+      "HOSTED_RESULT": "PENDING first automatic run after push; no manual retry",
+      "INTEGRATION_RESULT": "Draft26 source only, installer admission NOT_GRANTED",
+      "REMAINING_DEPENDENCY": "Independent exact-source review, hosted CI, installable manifest/native gates and end-to-end rollback",
+      "NEXT_ACTION": "Independent review of exact fe0f523; Windows/Ubuntu hosted results"
+    },
+    {
+      "BLOCKER_ID": "F_MATH_HELPER_OVERFLOW",
+      "OWNER": "Agent7",
+      "EXACT_FILE": "math/python/history_statistics.py",
+      "ROOT_CAUSE": "Finite inputs overflow intermediate arithmetic; CI may become infinity",
+      "FIX_COMMIT": "b9c2f24b33285b7b0e06aebc354a9c61a909d204",
+      "FAILING_TEST": "Agent7 reported original3PASS7FAIL",
+      "LOCAL_RESULT": "Owner26fullPASS0skip; A8 fresh committed14/full26/post26guarded14PASS,687raw stable without cleanup; includes no-bytecode actual-child regression",
+      "HOSTED_RESULT": "42369095582/42369091985 attempt1 queued at A8 observation; NOT_PASS",
+      "INTEGRATION_RESULT": "Independent bounded helper/source qualification; no protected native or canonical release admission",
+      "REMAINING_DEPENDENCY": "Hosted Windows/Ubuntu; actual protected2446 native qualification; verified multi-repo integration",
+      "NEXT_ACTION": "Observe original protected run only; no authorization reuse or retry",
+      "INDEPENDENT_REVIEW": "https://github.com/YehorBabenko88/unified-system/blob/0f9b4708ddd600e4feb914052b3219c75f233763/docs/audits/agent8-20261106/phase70/independent-review.md"
+    },
+    {
+      "BLOCKER_ID": "H_STALE_BOOK_AVAILABILITY",
+      "OWNER": "Agent3 with Agent4/7",
+      "EXACT_FILE": "grid/microstructure.py;grid/unified_features.py; proposed grid/book_availability.py",
+      "ROOT_CAUSE": "Invalidated in-memory orderbook does not persist immediate availability barrier; old available row eligible<=5s",
+      "FIX_COMMIT": null,
+      "FAILING_TEST": "Draft269 exact648a2ed90a8805077da177d463585c8daa65223d:7expectedF06FAIL/1validcontrolPASS0skip; fakeSQL not realPG durability",
+      "LOCAL_RESULT": "RED preserved; no real PG durability claim",
+      "HOSTED_RESULT": "No temporal fix candidate yet",
+      "INTEGRATION_RESULT": "NOT_IMPLEMENTED",
+      "REMAINING_DEPENDENCY": "A3v2 cut-binding and candidate/inhibition semantics need exact A4/A7 ACK; actual persistence/barrier seam absent",
+      "NEXT_ACTION": "Bind both event/knowledge cuts in challenge/barrier/checkpoint and reject cross-cut replay before product hook"
+    },
+    {
+      "BLOCKER_ID": "A_C_D_REAL_AUTHORITY_ASSIGNMENT_STORAGE",
+      "OWNER": "Agent2/4/5",
+      "EXACT_FILE": "NEW grid/authority_assignment_v1.py; NEW unified_system/storage/{publication,budgets,checkpoints}.py; reserved scheduler_components/assignment_backend.py",
+      "ROOT_CAUSE": "Supported native backend/proof and assignment/publication adapters absent; GET metadata cannot grant execution",
+      "FIX_COMMIT": null,
+      "FAILING_TEST": "Owner harness RED_UNAVAILABLE; exact contract tests being created, no fabricated semantic failure counts",
+      "LOCAL_RESULT": "Implementation in progress; no runtime success",
+      "HOSTED_RESULT": "NOT_RUN",
+      "INTEGRATION_RESULT": "NOT_ADMITTED",
+      "REMAINING_DEPENDENCY": "Actual typed authority producer/key/preimage ABI and native identity; mutual exact schema ACK",
+      "NEXT_ACTION": "Implement real isolated transaction tests and supported adapter; native success stays blocked"
+    },
+    {
+      "BLOCKER_ID": "G_FINANCIAL_DTO",
+      "OWNER": "Agent7 with Agent3/6",
+      "EXACT_FILE": "NEW strattester/contracts/agent7-financial-boundary/{financial-calculation.schema.json,adapter.py,test_adapter.py,PROTOCOL.txt}",
+      "ROOT_CAUSE": "PaperLedger net PnL is incompatible with Math gross-PnL input without explicit cost/unit mapping",
+      "FIX_COMMIT": "072d22214136148b47e82d21fec9e269bd7468ac",
+      "FAILING_TEST": "Positive/negative contract cases pending; mismatch reproduced previously",
+      "LOCAL_RESULT": "A8 exact20stdlibPASS0skip/779raw;46actualschema checks and9LF negatives reject;384Decimal comparisons. Root historical c86518 and8e120 receipts not promoted to latest source.",
+      "HOSTED_RESULT": "42369291686/42369288354 queued at A8 observation; schema46 NOT hosted qualification",
+      "INTEGRATION_RESULT": "Pure v2 conversion/schema verified offline; actual profile/ledger producer/native endpoint mapping NOT_ADMITTED",
+      "REMAINING_DEPENDENCY": "Actual A3/A4 admitted units/source basis/provenance; supported producer mapping and native channel",
+      "NEXT_ACTION": "Obtain exact admitted profile/producer contract, retain UI metrics unavailable",
+      "INDEPENDENT_REVIEW": "https://github.com/YehorBabenko88/unified-system/blob/0f9b4708ddd600e4feb914052b3219c75f233763/docs/audits/agent8-20261106/phase71/independent-review.md"
+    },
+    {
+      "BLOCKER_ID": "B_LAN_MUX_INTEGRATION_HASH_DIAGNOSTIC",
+      "OWNER": "Agent1 / Root",
+      "EXACT_FILE": "unified_system/lan_mux_channel.py::Reassembler.push;LanMuxChannel._reader/receive",
+      "ROOT_CAUSE": "First terminal cause retained before releasing channel lock; deterministic event-gated mTLS regression.",
+      "FIX_COMMIT": "9680babc85ca605f8450936f5410728898d5b71e",
+      "FAILING_TEST": "test_lan_mux_channel.MuxTlsTests.test_real_hash_failure_no_complete_payload_and_memory_cleanup",
+      "LOCAL_RESULT": "50 mandatory tests PASS/0skip on exact integrated89932fec in freshclone; full raw pre/post1302",
+      "HOSTED_RESULT": "42368972590/42368967965 attempt1queued/null at independent observation; NOT_PASS",
+      "INTEGRATION_RESULT": "Root89932fec source integrated; A8 exact8bfa50mandatoryPASS0skip plus2independent denial probes,1318raw pre/post; native factories remain denied",
+      "REMAINING_DEPENDENCY": "Actual native peer/key/IPC/provider, committed stream proof and containment, hosted/physical gates",
+      "NEXT_ACTION": "A1 narrow native-peer capture plan; Root native admission remains separate",
+      "INDEPENDENT_REVIEW": "https://github.com/YehorBabenko88/unified-system/blob/0f9b4708ddd600e4feb914052b3219c75f233763/docs/audits/agent8-20261106/phase68/independent-review.md"
+    }
+  ],
+  "physical_changes": false,
+  "inventory_repeated": false,
+  "protected_math_retry": false,
+  "integration_source_head": "89932fec1821d956b9dfd0ab0011d732c5b96369",
+  "independent_reviews": {
+    "Math116": "https://github.com/YehorBabenko88/unified-system/blob/32292bcdccaa26cc4fd32ce3a49b5319307f4b6f/docs/audits/agent8-20261106/phase66/independent-review.md",
+    "installer_archive": "https://github.com/YehorBabenko88/unified-system/blob/32292bcdccaa26cc4fd32ce3a49b5319307f4b6f/docs/audits/agent8-20261106/phase67/independent-review.md",
+    "LAN_integrated": "https://github.com/YehorBabenko88/unified-system/blob/0f9b4708ddd600e4feb914052b3219c75f233763/docs/audits/agent8-20261106/phase68/independent-review.md",
+    "Math116_latest": "https://github.com/YehorBabenko88/unified-system/blob/0f9b4708ddd600e4feb914052b3219c75f233763/docs/audits/agent8-20261106/phase70/independent-review.md",
+    "financial74_latest": "https://github.com/YehorBabenko88/unified-system/blob/0f9b4708ddd600e4feb914052b3219c75f233763/docs/audits/agent8-20261106/phase71/independent-review.md"
+  },
+  "verified_integration_head": "8bfa00d779438dc204b1e9ee82f496efce9e6154",
+  "native_math": {
+    "run_id": 42352374979,
+    "job_id": 128343065197,
+    "source": "2446d04624469e34aa96ed766be7a4887d6d654c",
+    "attempt": 1,
+    "last_primary_status": "queued",
+    "runner_id": 0,
+    "executed_steps": 0,
+    "authorization": "CONSUMED",
+    "retry_created": false
+  },
+  "remaining_gate_groups": {
+    "A": "Native authority issuer/provider and runtime actor policy exact ABI",
+    "C_D": "Actual reservation/publication/assignment effects and checkpoint proof adapters",
+    "G": "Admitted financial source/unit profile and actual producer mapping",
+    "B_E": "Native key/IPC/channel and committed streaming endpoint/client binding",
+    "F": "Hosted and protected native Windows qualification",
+    "H": "Immediate plus durable book invalidation, typed event/knowledge cuts",
+    "ROOT_RELEASE": "Installation root ACL denial, installable package closure, native gates and actual backup/rollback remain blocked"
+  },
+  "auditor_open_findings": {
+    "P1": 6,
+    "P2": 3,
+    "source": "0f9b4708ddd600e4feb914052b3219c75f233763",
+    "count_note": "Independent issue register; not equivalent to integration gate group count."
+  },
+  "canonical_release_manifest_repin": false
+}

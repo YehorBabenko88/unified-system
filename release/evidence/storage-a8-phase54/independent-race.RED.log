@@ -1,0 +1,18 @@
+test_legacy_stat_after_verified_read (__main__.Red.test_legacy_stat_after_verified_read) ... FAIL
+
+======================================================================
+FAIL: test_legacy_stat_after_verified_read (__main__.Red.test_legacy_stat_after_verified_read)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\outputs\review_storage34_extra.py", line 27, in test_legacy_stat_after_verified_read
+    def test_legacy_stat_after_verified_read(self):race(legacy)
+                                                   ^^^^^^^^^^^^
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\outputs\review_storage34_extra.py", line 21, in race
+    assert path.read_bytes()==b'corrupt-replacement' and observed.file_identity==ref.file_identity,'OBSERVATION_BOUND_TO_UNVERIFIED_REPLACEMENT'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: OBSERVATION_BOUND_TO_UNVERIFIED_REPLACEMENT
+
+----------------------------------------------------------------------
+Ran 1 test in 0.036s
+
+FAILED (failures=1)

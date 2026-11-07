@@ -1,0 +1,705 @@
+﻿2026-11-03T16:02:12.4765768Z Current runner version: '2.338.2'
+2026-11-03T16:02:12.4800947Z ##[group]Runner Image Provisioner
+2026-11-03T16:02:12.4802274Z Hosted Compute Agent
+2026-11-03T16:02:12.4803341Z Version: 20261028.624
+2026-11-03T16:02:12.4804759Z Commit: 54898b74c23fde5556c9b3c3a2290865feef0dfe
+2026-11-03T16:02:12.4806111Z Build Date: 2026-10-28T21:51:42Z
+2026-11-03T16:02:12.4807552Z Worker ID: {da97d2a3-a3e6-49da-b085-845e9d977420}
+2026-11-03T16:02:12.4809186Z Region: eastus2
+2026-11-03T16:02:12.4810152Z Cloud: Azure
+2026-11-03T16:02:12.4811307Z ##[endgroup]
+2026-11-03T16:02:12.4814106Z ##[group]Operating System
+2026-11-03T16:02:12.4815260Z Ubuntu
+2026-11-03T16:02:12.4816148Z 24.04.5
+2026-11-03T16:02:12.4817015Z LTS
+2026-11-03T16:02:12.4818198Z ##[endgroup]
+2026-11-03T16:02:12.4819500Z ##[group]Runner Image
+2026-11-03T16:02:12.4820653Z Image: ubuntu-24.04
+2026-11-03T16:02:12.4821650Z Version: 20261101.360.1
+2026-11-03T16:02:12.4824054Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261101.360/images/ubuntu/Ubuntu2404-Readme.md
+2026-11-03T16:02:12.4827124Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261101.360
+2026-11-03T16:02:12.4829203Z ##[endgroup]
+2026-11-03T16:02:12.4831124Z ##[group]GITHUB_TOKEN Permissions
+2026-11-03T16:02:12.4834240Z Contents: read
+2026-11-03T16:02:12.4835309Z Metadata: read
+2026-11-03T16:02:12.4836334Z ##[endgroup]
+2026-11-03T16:02:12.4839818Z Secret source: Actions
+2026-11-03T16:02:12.4841469Z Cache mode: write
+2026-11-03T16:02:12.4843095Z Prepare workflow directory
+2026-11-03T16:02:12.5410694Z Prepare all required actions
+2026-11-03T16:02:12.5481015Z Getting action download info
+2026-11-03T16:02:12.8030881Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-11-03T16:02:12.9069867Z Download action repository 'actions/setup-python@v5' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+2026-11-03T16:02:12.9930804Z Download action repository 'actions/setup-node@v4' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+2026-11-03T16:02:13.0789617Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-11-03T16:02:13.3011671Z Complete job name: visual (ubuntu-24.04)
+2026-11-03T16:02:13.4106261Z ##[group]Run actions/checkout@v4
+2026-11-03T16:02:13.4107165Z with:
+2026-11-03T16:02:13.4107584Z   path: candidate
+2026-11-03T16:02:13.4108088Z   ref: e05004fa366971cbada0d24deed275a9ab583d7d
+2026-11-03T16:02:13.4109087Z   persist-credentials: false
+2026-11-03T16:02:13.4109643Z   repository: YehorBabenko88/Terminan
+2026-11-03T16:02:13.4113292Z   token: ***
+2026-11-03T16:02:13.4113721Z   ssh-strict: true
+2026-11-03T16:02:13.4114161Z   ssh-user: git
+2026-11-03T16:02:13.4114583Z   clean: true
+2026-11-03T16:02:13.4115047Z   sparse-checkout-cone-mode: true
+2026-11-03T16:02:13.4115574Z   fetch-depth: 1
+2026-11-03T16:02:13.4116009Z   fetch-tags: false
+2026-11-03T16:02:13.4116456Z   show-progress: true
+2026-11-03T16:02:13.4116905Z   lfs: false
+2026-11-03T16:02:13.4117322Z   submodules: false
+2026-11-03T16:02:13.4117798Z   set-safe-directory: true
+2026-11-03T16:02:13.4118593Z   allow-unsafe-pr-checkout: false
+2026-11-03T16:02:13.4119465Z ##[endgroup]
+2026-11-03T16:02:13.7356097Z Syncing repository: YehorBabenko88/Terminan
+2026-11-03T16:02:13.7358179Z ##[group]Getting Git version info
+2026-11-03T16:02:13.7359362Z Working directory is '/home/runner/work/Terminan/Terminan/candidate'
+2026-11-03T16:02:13.7360581Z [command]/usr/bin/git version
+2026-11-03T16:02:13.7458004Z git version 2.56.0
+2026-11-03T16:02:13.7482130Z ##[endgroup]
+2026-11-03T16:02:13.7495571Z Temporarily overriding HOME='/home/runner/work/_temp/35a83397-41d6-4c6b-8cf2-9bc33685638f' before making global git config changes
+2026-11-03T16:02:13.7497866Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-03T16:02:13.7501762Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Terminan/Terminan/candidate
+2026-11-03T16:02:13.7561385Z ##[group]Initializing the repository
+2026-11-03T16:02:13.7563240Z [command]/usr/bin/git init /home/runner/work/Terminan/Terminan/candidate
+2026-11-03T16:02:13.7681448Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-11-03T16:02:13.7683078Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-11-03T16:02:13.7684587Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-11-03T16:02:13.7685804Z hint: call:
+2026-11-03T16:02:13.7686457Z hint:
+2026-11-03T16:02:13.7687255Z hint: 	git config --global init.defaultBranch <name>
+2026-11-03T16:02:13.7688474Z hint:
+2026-11-03T16:02:13.7689443Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-11-03T16:02:13.7691114Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-11-03T16:02:13.7692428Z hint:
+2026-11-03T16:02:13.7693156Z hint: 	git branch -m <name>
+2026-11-03T16:02:13.7693993Z hint:
+2026-11-03T16:02:13.7695105Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-11-03T16:02:13.7709313Z Initialized empty Git repository in /home/runner/work/Terminan/Terminan/candidate/.git/
+2026-11-03T16:02:13.7723496Z [command]/usr/bin/git remote add origin https://github.com/YehorBabenko88/Terminan
+2026-11-03T16:02:13.7774843Z ##[endgroup]
+2026-11-03T16:02:13.7776674Z ##[group]Disabling automatic garbage collection
+2026-11-03T16:02:13.7778603Z [command]/usr/bin/git config --local gc.auto 0
+2026-11-03T16:02:13.7814328Z ##[endgroup]
+2026-11-03T16:02:13.7815435Z ##[group]Setting up auth
+2026-11-03T16:02:13.7822647Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-03T16:02:13.7863504Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-03T16:02:13.8319980Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-03T16:02:13.8364190Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-03T16:02:13.8611034Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-03T16:02:13.8654149Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-03T16:02:13.8894657Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-03T16:02:13.8944246Z ##[endgroup]
+2026-11-03T16:02:13.8945101Z ##[group]Fetching the repository
+2026-11-03T16:02:13.8959993Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin e05004fa366971cbada0d24deed275a9ab583d7d
+2026-11-03T16:02:14.3773775Z From https://github.com/YehorBabenko88/Terminan
+2026-11-03T16:02:14.3776131Z  * branch            e05004fa366971cbada0d24deed275a9ab583d7d -> FETCH_HEAD
+2026-11-03T16:02:14.3780880Z ##[endgroup]
+2026-11-03T16:02:14.3782100Z ##[group]Determining the checkout info
+2026-11-03T16:02:14.3783483Z ##[endgroup]
+2026-11-03T16:02:14.3793780Z [command]/usr/bin/git sparse-checkout disable
+2026-11-03T16:02:14.3854565Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-11-03T16:02:14.3894995Z ##[group]Checking out the ref
+2026-11-03T16:02:14.3898818Z [command]/usr/bin/git checkout --progress --force e05004fa366971cbada0d24deed275a9ab583d7d
+2026-11-03T16:02:14.4104865Z Note: switching to 'e05004fa366971cbada0d24deed275a9ab583d7d'.
+2026-11-03T16:02:14.4106050Z 
+2026-11-03T16:02:14.4107016Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-11-03T16:02:14.4109705Z changes and commit them, and you can discard any commits you make in this
+2026-11-03T16:02:14.4112310Z state without impacting any branches by switching back to a branch.
+2026-11-03T16:02:14.4114581Z 
+2026-11-03T16:02:14.4115852Z If you want to create a new branch to retain commits you create, you may
+2026-11-03T16:02:14.4119163Z do so (now or later) by using -c with the switch command. Example:
+2026-11-03T16:02:14.4120767Z 
+2026-11-03T16:02:14.4121417Z   git switch -c <new-branch-name>
+2026-11-03T16:02:14.4122469Z 
+2026-11-03T16:02:14.4123103Z Or undo this operation with:
+2026-11-03T16:02:14.4124134Z 
+2026-11-03T16:02:14.4124743Z   git switch -
+2026-11-03T16:02:14.4125625Z 
+2026-11-03T16:02:14.4126946Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-11-03T16:02:14.4129153Z 
+2026-11-03T16:02:14.4130929Z HEAD is now at e05004f Provision immutable sibling sources for runtime and visual contract workflows
+2026-11-03T16:02:14.4136601Z ##[endgroup]
+2026-11-03T16:02:14.4170958Z [command]/usr/bin/git log -1 --format=%H
+2026-11-03T16:02:14.4205151Z e05004fa366971cbada0d24deed275a9ab583d7d
+2026-11-03T16:02:14.4216607Z ##[group]Removing auth
+2026-11-03T16:02:14.4221329Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-03T16:02:14.4263687Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-03T16:02:14.4506882Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-03T16:02:14.4545806Z http.https://github.com/.extraheader
+2026-11-03T16:02:14.4554640Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-03T16:02:14.4598702Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-03T16:02:14.4842594Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-03T16:02:14.4885277Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-03T16:02:14.5119252Z ##[endgroup]
+2026-11-03T16:02:14.5536532Z ##[group]Run actions/checkout@v4
+2026-11-03T16:02:14.5537637Z with:
+2026-11-03T16:02:14.5538747Z   repository: YehorBabenko88/bybit-cluster-grid
+2026-11-03T16:02:14.5540118Z   ref: d537d525296ef34f727996e240ae6c60102c6082
+2026-11-03T16:02:14.5541352Z   path: grid
+2026-11-03T16:02:14.5542213Z   persist-credentials: false
+2026-11-03T16:02:14.5552017Z   token: ***
+2026-11-03T16:02:14.5552853Z   ssh-strict: true
+2026-11-03T16:02:14.5553703Z   ssh-user: git
+2026-11-03T16:02:14.5554523Z   clean: true
+2026-11-03T16:02:14.5555407Z   sparse-checkout-cone-mode: true
+2026-11-03T16:02:14.5556495Z   fetch-depth: 1
+2026-11-03T16:02:14.5557342Z   fetch-tags: false
+2026-11-03T16:02:14.5558332Z   show-progress: true
+2026-11-03T16:02:14.5559228Z   lfs: false
+2026-11-03T16:02:14.5560036Z   submodules: false
+2026-11-03T16:02:14.5560930Z   set-safe-directory: true
+2026-11-03T16:02:14.5561983Z   allow-unsafe-pr-checkout: false
+2026-11-03T16:02:14.5563039Z ##[endgroup]
+2026-11-03T16:02:14.6472779Z Syncing repository: YehorBabenko88/bybit-cluster-grid
+2026-11-03T16:02:14.6480969Z ##[group]Getting Git version info
+2026-11-03T16:02:14.6483650Z Working directory is '/home/runner/work/Terminan/Terminan/grid'
+2026-11-03T16:02:14.6525844Z [command]/usr/bin/git version
+2026-11-03T16:02:14.6573956Z git version 2.56.0
+2026-11-03T16:02:14.6599943Z ##[endgroup]
+2026-11-03T16:02:14.6615228Z Temporarily overriding HOME='/home/runner/work/_temp/ed9e2b8d-3ef0-46ca-99a9-0db3f92e59c1' before making global git config changes
+2026-11-03T16:02:14.6619153Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-03T16:02:14.6621891Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Terminan/Terminan/grid
+2026-11-03T16:02:14.6661794Z ##[group]Initializing the repository
+2026-11-03T16:02:14.6666546Z [command]/usr/bin/git init /home/runner/work/Terminan/Terminan/grid
+2026-11-03T16:02:14.6717570Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-11-03T16:02:14.6721543Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-11-03T16:02:14.6725102Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-11-03T16:02:14.6727865Z hint: call:
+2026-11-03T16:02:14.6729590Z hint:
+2026-11-03T16:02:14.6731512Z hint: 	git config --global init.defaultBranch <name>
+2026-11-03T16:02:14.6734016Z hint:
+2026-11-03T16:02:14.6736281Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-11-03T16:02:14.6740820Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-11-03T16:02:14.6743878Z hint:
+2026-11-03T16:02:14.6745566Z hint: 	git branch -m <name>
+2026-11-03T16:02:14.6747396Z hint:
+2026-11-03T16:02:14.6749885Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-11-03T16:02:14.6763325Z Initialized empty Git repository in /home/runner/work/Terminan/Terminan/grid/.git/
+2026-11-03T16:02:14.6769773Z [command]/usr/bin/git remote add origin https://github.com/YehorBabenko88/bybit-cluster-grid
+2026-11-03T16:02:14.6774490Z ##[endgroup]
+2026-11-03T16:02:14.6776150Z ##[group]Disabling automatic garbage collection
+2026-11-03T16:02:14.6778829Z [command]/usr/bin/git config --local gc.auto 0
+2026-11-03T16:02:14.6814756Z ##[endgroup]
+2026-11-03T16:02:14.6816123Z ##[group]Setting up auth
+2026-11-03T16:02:14.6823504Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-03T16:02:14.6864979Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-03T16:02:14.7151827Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-03T16:02:14.7199055Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-03T16:02:14.7466296Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-03T16:02:14.7527932Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-03T16:02:14.7770733Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-03T16:02:14.7859810Z ##[endgroup]
+2026-11-03T16:02:14.7862286Z ##[group]Fetching the repository
+2026-11-03T16:02:14.7871514Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin d537d525296ef34f727996e240ae6c60102c6082
+2026-11-03T16:02:15.1892242Z From https://github.com/YehorBabenko88/bybit-cluster-grid
+2026-11-03T16:02:15.1893551Z  * branch            d537d525296ef34f727996e240ae6c60102c6082 -> FETCH_HEAD
+2026-11-03T16:02:15.1899331Z ##[endgroup]
+2026-11-03T16:02:15.1900434Z ##[group]Determining the checkout info
+2026-11-03T16:02:15.1903012Z ##[endgroup]
+2026-11-03T16:02:15.1909052Z [command]/usr/bin/git sparse-checkout disable
+2026-11-03T16:02:15.1964040Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-11-03T16:02:15.2002433Z ##[group]Checking out the ref
+2026-11-03T16:02:15.2005654Z [command]/usr/bin/git checkout --progress --force d537d525296ef34f727996e240ae6c60102c6082
+2026-11-03T16:02:15.2304328Z Note: switching to 'd537d525296ef34f727996e240ae6c60102c6082'.
+2026-11-03T16:02:15.2304886Z 
+2026-11-03T16:02:15.2305279Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-11-03T16:02:15.2306164Z changes and commit them, and you can discard any commits you make in this
+2026-11-03T16:02:15.2307020Z state without impacting any branches by switching back to a branch.
+2026-11-03T16:02:15.2307533Z 
+2026-11-03T16:02:15.2308558Z If you want to create a new branch to retain commits you create, you may
+2026-11-03T16:02:15.2310167Z do so (now or later) by using -c with the switch command. Example:
+2026-11-03T16:02:15.2311121Z 
+2026-11-03T16:02:15.2311586Z   git switch -c <new-branch-name>
+2026-11-03T16:02:15.2312236Z 
+2026-11-03T16:02:15.2312725Z Or undo this operation with:
+2026-11-03T16:02:15.2313365Z 
+2026-11-03T16:02:15.2313867Z   git switch -
+2026-11-03T16:02:15.2314489Z 
+2026-11-03T16:02:15.2315199Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-11-03T16:02:15.2316019Z 
+2026-11-03T16:02:15.2316588Z HEAD is now at d537d52 Run Windows bundle CI on every main commit (#165)
+2026-11-03T16:02:15.2319626Z ##[endgroup]
+2026-11-03T16:02:15.2361794Z [command]/usr/bin/git log -1 --format=%H
+2026-11-03T16:02:15.2398574Z d537d525296ef34f727996e240ae6c60102c6082
+2026-11-03T16:02:15.2407882Z ##[group]Removing auth
+2026-11-03T16:02:15.2411622Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-03T16:02:15.2451589Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-03T16:02:15.2693247Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-03T16:02:15.2726081Z http.https://github.com/.extraheader
+2026-11-03T16:02:15.2733563Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-03T16:02:15.2775451Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-03T16:02:15.3014470Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-03T16:02:15.3057680Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-03T16:02:15.3292625Z ##[endgroup]
+2026-11-03T16:02:15.3561445Z ##[group]Run actions/checkout@v4
+2026-11-03T16:02:15.3561942Z with:
+2026-11-03T16:02:15.3562353Z   repository: YehorBabenko88/strattester
+2026-11-03T16:02:15.3588444Z   ref: 37ff7e9d12a4d2dccd788fc493c28557dbe8bcea
+2026-11-03T16:02:15.3589251Z   path: strattester
+2026-11-03T16:02:15.3589900Z   persist-credentials: false
+2026-11-03T16:02:15.3594992Z   token: ***
+2026-11-03T16:02:15.3595707Z   ssh-strict: true
+2026-11-03T16:02:15.3596387Z   ssh-user: git
+2026-11-03T16:02:15.3597047Z   clean: true
+2026-11-03T16:02:15.3597749Z   sparse-checkout-cone-mode: true
+2026-11-03T16:02:15.3598863Z   fetch-depth: 1
+2026-11-03T16:02:15.3599552Z   fetch-tags: false
+2026-11-03T16:02:15.3600248Z   show-progress: true
+2026-11-03T16:02:15.3600948Z   lfs: false
+2026-11-03T16:02:15.3601598Z   submodules: false
+2026-11-03T16:02:15.3602294Z   set-safe-directory: true
+2026-11-03T16:02:15.3603161Z   allow-unsafe-pr-checkout: false
+2026-11-03T16:02:15.3603999Z ##[endgroup]
+2026-11-03T16:02:15.4481900Z Syncing repository: YehorBabenko88/strattester
+2026-11-03T16:02:15.4489328Z ##[group]Getting Git version info
+2026-11-03T16:02:15.4490658Z Working directory is '/home/runner/work/Terminan/Terminan/strattester'
+2026-11-03T16:02:15.4534582Z [command]/usr/bin/git version
+2026-11-03T16:02:15.4612380Z git version 2.56.0
+2026-11-03T16:02:15.4633785Z ##[endgroup]
+2026-11-03T16:02:15.4648185Z Temporarily overriding HOME='/home/runner/work/_temp/3c49e424-41b0-40f3-9bd6-165c09198a71' before making global git config changes
+2026-11-03T16:02:15.4650231Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-03T16:02:15.4653336Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Terminan/Terminan/strattester
+2026-11-03T16:02:15.4691366Z ##[group]Initializing the repository
+2026-11-03T16:02:15.4696933Z [command]/usr/bin/git init /home/runner/work/Terminan/Terminan/strattester
+2026-11-03T16:02:15.4757436Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-11-03T16:02:15.4759385Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-11-03T16:02:15.4760775Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-11-03T16:02:15.4761845Z hint: call:
+2026-11-03T16:02:15.4762493Z hint:
+2026-11-03T16:02:15.4763237Z hint: 	git config --global init.defaultBranch <name>
+2026-11-03T16:02:15.4763783Z hint:
+2026-11-03T16:02:15.4764338Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-11-03T16:02:15.4765124Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-11-03T16:02:15.4765752Z hint:
+2026-11-03T16:02:15.4766168Z hint: 	git branch -m <name>
+2026-11-03T16:02:15.4766625Z hint:
+2026-11-03T16:02:15.4767240Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-11-03T16:02:15.4768743Z Initialized empty Git repository in /home/runner/work/Terminan/Terminan/strattester/.git/
+2026-11-03T16:02:15.4770944Z [command]/usr/bin/git remote add origin https://github.com/YehorBabenko88/strattester
+2026-11-03T16:02:15.4810640Z ##[endgroup]
+2026-11-03T16:02:15.4811513Z ##[group]Disabling automatic garbage collection
+2026-11-03T16:02:15.4814651Z [command]/usr/bin/git config --local gc.auto 0
+2026-11-03T16:02:15.4850466Z ##[endgroup]
+2026-11-03T16:02:15.4851414Z ##[group]Setting up auth
+2026-11-03T16:02:15.4859339Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-03T16:02:15.4901027Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-03T16:02:15.5209284Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-03T16:02:15.5256520Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-03T16:02:15.5531174Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-03T16:02:15.5578775Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-03T16:02:15.5825387Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-03T16:02:15.5875081Z ##[endgroup]
+2026-11-03T16:02:15.5875845Z ##[group]Fetching the repository
+2026-11-03T16:02:15.5885040Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin 37ff7e9d12a4d2dccd788fc493c28557dbe8bcea
+2026-11-03T16:02:15.9187451Z From https://github.com/YehorBabenko88/strattester
+2026-11-03T16:02:15.9191350Z  * branch            37ff7e9d12a4d2dccd788fc493c28557dbe8bcea -> FETCH_HEAD
+2026-11-03T16:02:15.9194273Z ##[endgroup]
+2026-11-03T16:02:15.9194952Z ##[group]Determining the checkout info
+2026-11-03T16:02:15.9196880Z ##[endgroup]
+2026-11-03T16:02:15.9205159Z [command]/usr/bin/git sparse-checkout disable
+2026-11-03T16:02:15.9269305Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-11-03T16:02:15.9312096Z ##[group]Checking out the ref
+2026-11-03T16:02:15.9316490Z [command]/usr/bin/git checkout --progress --force 37ff7e9d12a4d2dccd788fc493c28557dbe8bcea
+2026-11-03T16:02:15.9492263Z Note: switching to '37ff7e9d12a4d2dccd788fc493c28557dbe8bcea'.
+2026-11-03T16:02:15.9492955Z 
+2026-11-03T16:02:15.9493409Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-11-03T16:02:15.9494336Z changes and commit them, and you can discard any commits you make in this
+2026-11-03T16:02:15.9495196Z state without impacting any branches by switching back to a branch.
+2026-11-03T16:02:15.9495714Z 
+2026-11-03T16:02:15.9496064Z If you want to create a new branch to retain commits you create, you may
+2026-11-03T16:02:15.9497231Z do so (now or later) by using -c with the switch command. Example:
+2026-11-03T16:02:15.9497709Z 
+2026-11-03T16:02:15.9497902Z   git switch -c <new-branch-name>
+2026-11-03T16:02:15.9498457Z 
+2026-11-03T16:02:15.9498655Z Or undo this operation with:
+2026-11-03T16:02:15.9498954Z 
+2026-11-03T16:02:15.9499113Z   git switch -
+2026-11-03T16:02:15.9499332Z 
+2026-11-03T16:02:15.9499735Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-11-03T16:02:15.9500341Z 
+2026-11-03T16:02:15.9500880Z HEAD is now at 37ff7e9 fix: harden lease recovery, market integrity and service intent (#8)
+2026-11-03T16:02:15.9502870Z ##[endgroup]
+2026-11-03T16:02:15.9549878Z [command]/usr/bin/git log -1 --format=%H
+2026-11-03T16:02:15.9584699Z 37ff7e9d12a4d2dccd788fc493c28557dbe8bcea
+2026-11-03T16:02:15.9595183Z ##[group]Removing auth
+2026-11-03T16:02:15.9599828Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-03T16:02:15.9642054Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-03T16:02:15.9907060Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-03T16:02:15.9941825Z http.https://github.com/.extraheader
+2026-11-03T16:02:15.9950774Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-03T16:02:15.9997442Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-03T16:02:16.0282767Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-03T16:02:16.0362886Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-03T16:02:16.0700787Z ##[endgroup]
+2026-11-03T16:02:16.0930379Z ##[group]Run actions/setup-python@v5
+2026-11-03T16:02:16.0930686Z with:
+2026-11-03T16:02:16.0930886Z   python-version: 3.12
+2026-11-03T16:02:16.0931122Z   check-latest: false
+2026-11-03T16:02:16.0933432Z   token: ***
+2026-11-03T16:02:16.0933646Z   update-environment: true
+2026-11-03T16:02:16.0933888Z   allow-prereleases: false
+2026-11-03T16:02:16.0934128Z   freethreaded: false
+2026-11-03T16:02:16.0934337Z ##[endgroup]
+2026-11-03T16:02:16.2461362Z ##[group]Installed versions
+2026-11-03T16:02:16.2569520Z (node:2811) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-03T16:02:16.2570745Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-03T16:02:16.2589680Z Successfully set up CPython (3.12.16)
+2026-11-03T16:02:16.2590656Z ##[endgroup]
+2026-11-03T16:02:16.2740167Z ##[group]Run actions/setup-node@v4
+2026-11-03T16:02:16.2740493Z with:
+2026-11-03T16:02:16.2740689Z   node-version: 24
+2026-11-03T16:02:16.2740904Z   always-auth: false
+2026-11-03T16:02:16.2741120Z   check-latest: false
+2026-11-03T16:02:16.2743464Z   token: ***
+2026-11-03T16:02:16.2743660Z env:
+2026-11-03T16:02:16.2743917Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-03T16:02:16.2744364Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib/pkgconfig
+2026-11-03T16:02:16.2744792Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-03T16:02:16.2745171Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-03T16:02:16.2745554Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-03T16:02:16.2745935Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib
+2026-11-03T16:02:16.2746252Z ##[endgroup]
+2026-11-03T16:02:16.4354409Z Found in cache @ /opt/hostedtoolcache/node/24.22.2/x64
+2026-11-03T16:02:16.4362790Z (node:2823) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-03T16:02:16.4364859Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-03T16:02:16.4369314Z ##[group]Environment details
+2026-11-03T16:02:16.8753303Z node: v24.22.2
+2026-11-03T16:02:16.8754025Z npm: 11.19.1
+2026-11-03T16:02:16.8754525Z yarn: 1.22.22
+2026-11-03T16:02:16.8755295Z ##[endgroup]
+2026-11-03T16:02:16.8911762Z ##[group]Run npm ci --ignore-scripts
+2026-11-03T16:02:16.8912169Z [36;1mnpm ci --ignore-scripts[0m
+2026-11-03T16:02:16.8947216Z shell: /usr/bin/bash -e {0}
+2026-11-03T16:02:16.8947475Z env:
+2026-11-03T16:02:16.8947752Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-03T16:02:16.8948463Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib/pkgconfig
+2026-11-03T16:02:16.8948955Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-03T16:02:16.8949347Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-03T16:02:16.8949752Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-03T16:02:16.8950157Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib
+2026-11-03T16:02:16.8950479Z ##[endgroup]
+2026-11-03T16:02:17.9153492Z 
+2026-11-03T16:02:17.9161126Z added 3 packages, and audited 4 packages in 960ms
+2026-11-03T16:02:17.9162118Z 
+2026-11-03T16:02:17.9162608Z found 0 vulnerabilities
+2026-11-03T16:02:17.9604259Z ##[group]Run node node_modules/@playwright/test/cli.js install --with-deps chromium
+2026-11-03T16:02:17.9620781Z [36;1mnode node_modules/@playwright/test/cli.js install --with-deps chromium[0m
+2026-11-03T16:02:17.9642901Z shell: /usr/bin/bash -e {0}
+2026-11-03T16:02:17.9643157Z env:
+2026-11-03T16:02:17.9643437Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-03T16:02:17.9643956Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib/pkgconfig
+2026-11-03T16:02:17.9644655Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-03T16:02:17.9645051Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-03T16:02:17.9645452Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-03T16:02:17.9645836Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib
+2026-11-03T16:02:17.9646164Z ##[endgroup]
+2026-11-03T16:02:18.5084626Z Installing dependencies...
+2026-11-03T16:02:18.5239781Z Switching to root user to install dependencies...
+2026-11-03T16:02:18.5989780Z Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [144 B]
+2026-11-03T16:02:18.6323763Z Hit:2 http://azure.archive.ubuntu.com/ubuntu noble InRelease
+2026-11-03T16:02:18.6345710Z Get:6 https://packages.microsoft.com/ubuntu/24.04/prod noble InRelease [3600 B]
+2026-11-03T16:02:18.6379157Z Get:3 http://azure.archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]
+2026-11-03T16:02:18.6418648Z Get:4 http://azure.archive.ubuntu.com/ubuntu noble-backports InRelease [126 kB]
+2026-11-03T16:02:18.6456437Z Get:5 http://azure.archive.ubuntu.com/ubuntu noble-security InRelease [126 kB]
+2026-11-03T16:02:18.7833877Z Get:7 https://packages.microsoft.com/ubuntu/24.04/prod noble/main amd64 Packages [685 kB]
+2026-11-03T16:02:18.8010322Z Get:8 https://packages.microsoft.com/ubuntu/24.04/prod noble/main arm64 Packages [617 kB]
+2026-11-03T16:02:18.9324038Z Get:9 http://azure.archive.ubuntu.com/ubuntu noble-security/main amd64 Packages [1153 kB]
+2026-11-03T16:02:18.9386943Z Get:10 http://azure.archive.ubuntu.com/ubuntu noble-security/main Translation-en [232 kB]
+2026-11-03T16:02:18.9403980Z Get:11 http://azure.archive.ubuntu.com/ubuntu noble-security/universe amd64 Packages [1224 kB]
+2026-11-03T16:02:18.9475846Z Get:12 http://azure.archive.ubuntu.com/ubuntu noble-security/universe Translation-en [246 kB]
+2026-11-03T16:02:18.9497823Z Get:13 http://azure.archive.ubuntu.com/ubuntu noble-security/restricted amd64 Packages [1721 kB]
+2026-11-03T16:02:18.9615163Z Get:14 http://azure.archive.ubuntu.com/ubuntu noble-security/restricted Translation-en [394 kB]
+2026-11-03T16:02:18.9641207Z Get:15 http://azure.archive.ubuntu.com/ubuntu noble-security/multiverse Translation-en [12.4 kB]
+2026-11-03T16:02:21.6895611Z Fetched 6668 kB in 1s (8048 kB/s)
+2026-11-03T16:02:22.7363033Z Reading package lists...
+2026-11-03T16:02:22.7686546Z Reading package lists...
+2026-11-03T16:02:22.9606067Z Building dependency tree...
+2026-11-03T16:02:22.9612988Z Reading state information...
+2026-11-03T16:02:23.1021953Z libasound2t64 is already the newest version (1.2.11-1ubuntu0.3).
+2026-11-03T16:02:23.1022910Z libasound2t64 set to manually installed.
+2026-11-03T16:02:23.1023836Z libatk-bridge2.0-0t64 is already the newest version (2.52.0-1build1).
+2026-11-03T16:02:23.1024780Z libatk-bridge2.0-0t64 set to manually installed.
+2026-11-03T16:02:23.1025577Z libatk1.0-0t64 is already the newest version (2.52.0-1build1).
+2026-11-03T16:02:23.1026288Z libatk1.0-0t64 set to manually installed.
+2026-11-03T16:02:23.1027023Z libatspi2.0-0t64 is already the newest version (2.52.0-1build1).
+2026-11-03T16:02:23.1027812Z libatspi2.0-0t64 set to manually installed.
+2026-11-03T16:02:23.1028489Z libcairo2 is already the newest version (1.18.0-3build1).
+2026-11-03T16:02:23.1029100Z libcairo2 set to manually installed.
+2026-11-03T16:02:23.1029523Z libcups2t64 is already the newest version (2.4.7-1.2ubuntu7.14).
+2026-11-03T16:02:23.1029938Z libcups2t64 set to manually installed.
+2026-11-03T16:02:23.1030873Z libdbus-1-3 is already the newest version (1.14.10-4ubuntu4.1).
+2026-11-03T16:02:23.1031433Z libdbus-1-3 set to manually installed.
+2026-11-03T16:02:23.1031860Z libdrm2 is already the newest version (2.4.125-1ubuntu0.1~24.04.2).
+2026-11-03T16:02:23.1032265Z libdrm2 set to manually installed.
+2026-11-03T16:02:23.1032662Z libgbm1 is already the newest version (25.2.8-0ubuntu0.24.04.4).
+2026-11-03T16:02:23.1033088Z libgbm1 set to manually installed.
+2026-11-03T16:02:23.1033501Z libglib2.0-0t64 is already the newest version (2.80.0-6ubuntu3.10).
+2026-11-03T16:02:23.1033982Z libglib2.0-0t64 set to manually installed.
+2026-11-03T16:02:23.1034542Z libnspr4 is already the newest version (2:4.35-1.1build1).
+2026-11-03T16:02:23.1034933Z libnspr4 set to manually installed.
+2026-11-03T16:02:23.1035316Z libnss3 is already the newest version (2:3.98-1ubuntu0.3).
+2026-11-03T16:02:23.1035689Z libnss3 set to manually installed.
+2026-11-03T16:02:23.1036088Z libpango-1.0-0 is already the newest version (1.52.1+ds-1build1).
+2026-11-03T16:02:23.1036501Z libpango-1.0-0 set to manually installed.
+2026-11-03T16:02:23.1036995Z libx11-6 is already the newest version (2:1.8.7-1ubuntu0.1).
+2026-11-03T16:02:23.1037633Z libx11-6 set to manually installed.
+2026-11-03T16:02:23.1038495Z libxcb1 is already the newest version (1.15-1ubuntu2).
+2026-11-03T16:02:23.1039212Z libxcb1 set to manually installed.
+2026-11-03T16:02:23.1039947Z libxcomposite1 is already the newest version (1:0.4.5-1build3).
+2026-11-03T16:02:23.1040470Z libxcomposite1 set to manually installed.
+2026-11-03T16:02:23.1040889Z libxdamage1 is already the newest version (1:1.1.6-1build1).
+2026-11-03T16:02:23.1041278Z libxdamage1 set to manually installed.
+2026-11-03T16:02:23.1041674Z libxext6 is already the newest version (2:1.3.4-1build2).
+2026-11-03T16:02:23.1042054Z libxext6 set to manually installed.
+2026-11-03T16:02:23.1042440Z libxfixes3 is already the newest version (1:6.0.0-2build1).
+2026-11-03T16:02:23.1042824Z libxfixes3 set to manually installed.
+2026-11-03T16:02:23.1043495Z libxkbcommon0 is already the newest version (1.6.0-1build1).
+2026-11-03T16:02:23.1044249Z libxkbcommon0 set to manually installed.
+2026-11-03T16:02:23.1045031Z libxrandr2 is already the newest version (2:1.5.2-2build1).
+2026-11-03T16:02:23.1045463Z libxrandr2 set to manually installed.
+2026-11-03T16:02:23.1045872Z xvfb is already the newest version (2:21.1.12-1ubuntu1.9).
+2026-11-03T16:02:23.1046419Z fonts-noto-color-emoji is already the newest version (2.047-0ubuntu0.24.04.1).
+2026-11-03T16:02:23.1046978Z libfontconfig1 is already the newest version (2.15.0-1.1ubuntu2).
+2026-11-03T16:02:23.1047405Z libfontconfig1 set to manually installed.
+2026-11-03T16:02:23.1048141Z libfreetype6 is already the newest version (2.13.2+dfsg-1ubuntu0.2).
+2026-11-03T16:02:23.1049560Z libfreetype6 set to manually installed.
+2026-11-03T16:02:23.1050342Z fonts-liberation is already the newest version (1:2.1.5-3).
+2026-11-03T16:02:23.1051125Z fonts-liberation set to manually installed.
+2026-11-03T16:02:23.1051868Z The following additional packages will be installed:
+2026-11-03T16:02:23.1052784Z   xfonts-encodings xfonts-utils
+2026-11-03T16:02:23.1053302Z Recommended packages:
+2026-11-03T16:02:23.1053788Z   fonts-ipafont-mincho fonts-tlwg-loma
+2026-11-03T16:02:23.1219870Z The following NEW packages will be installed:
+2026-11-03T16:02:23.1221103Z   fonts-freefont-ttf fonts-ipafont-gothic fonts-tlwg-loma-otf fonts-unifont
+2026-11-03T16:02:23.1226694Z   fonts-wqy-zenhei xfonts-cyrillic xfonts-encodings xfonts-scalable
+2026-11-03T16:02:23.1227440Z   xfonts-utils
+2026-11-03T16:02:23.1425633Z 0 upgraded, 9 newly installed, 0 to remove and 1 not upgraded.
+2026-11-03T16:02:23.1426431Z Need to get 21.1 MB of archives.
+2026-11-03T16:02:23.1427271Z After this operation, 79.5 MB of additional disk space will be used.
+2026-11-03T16:02:23.1428157Z Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [144 B]
+2026-11-03T16:02:23.1795178Z Get:2 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 fonts-ipafont-gothic all 00303-21ubuntu1 [3513 kB]
+2026-11-03T16:02:23.8257983Z Get:3 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 fonts-freefont-ttf all 20211204+svn4273-2 [5641 kB]
+2026-11-03T16:02:24.9584544Z Get:4 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 fonts-tlwg-loma-otf all 1:0.7.3-1 [107 kB]
+2026-11-03T16:02:25.0069196Z Get:5 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 fonts-unifont all 1:15.1.01-1build1 [2993 kB]
+2026-11-03T16:02:25.7720417Z Get:6 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 fonts-wqy-zenhei all 0.9.45-8 [7472 kB]
+2026-11-03T16:02:27.9579344Z Get:7 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 xfonts-encodings all 1:1.0.5-0ubuntu2 [578 kB]
+2026-11-03T16:02:28.1519658Z Get:8 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 xfonts-utils amd64 1:7.7+6build3 [94.4 kB]
+2026-11-03T16:02:28.2033461Z Get:9 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 xfonts-cyrillic all 1:1.0.5+nmu1 [384 kB]
+2026-11-03T16:02:28.3360899Z Get:10 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 xfonts-scalable all 1:1.0.3-1.3 [304 kB]
+2026-11-03T16:02:28.6930434Z Fetched 21.1 MB in 5s (3981 kB/s)
+2026-11-03T16:02:28.7210739Z Selecting previously unselected package fonts-ipafont-gothic.
+2026-11-03T16:02:28.7557475Z (Reading database ... 
+2026-11-03T16:02:28.7558530Z (Reading database ... 5%
+2026-11-03T16:02:28.7559152Z (Reading database ... 10%
+2026-11-03T16:02:28.7559735Z (Reading database ... 15%
+2026-11-03T16:02:28.7560497Z (Reading database ... 20%
+2026-11-03T16:02:28.7561081Z (Reading database ... 25%
+2026-11-03T16:02:28.7561566Z (Reading database ... 30%
+2026-11-03T16:02:28.7561887Z (Reading database ... 35%
+2026-11-03T16:02:28.7562206Z (Reading database ... 40%
+2026-11-03T16:02:28.7562752Z (Reading database ... 45%
+2026-11-03T16:02:28.7563153Z (Reading database ... 50%
+2026-11-03T16:02:28.7616160Z (Reading database ... 55%
+2026-11-03T16:02:28.9272998Z (Reading database ... 60%
+2026-11-03T16:02:29.0900327Z (Reading database ... 65%
+2026-11-03T16:02:29.3229308Z (Reading database ... 70%
+2026-11-03T16:02:29.4972909Z (Reading database ... 75%
+2026-11-03T16:02:29.6435117Z (Reading database ... 80%
+2026-11-03T16:02:29.8367843Z (Reading database ... 85%
+2026-11-03T16:02:30.0488676Z (Reading database ... 90%
+2026-11-03T16:02:30.2337961Z (Reading database ... 95%
+2026-11-03T16:02:30.2338716Z (Reading database ... 100%
+2026-11-03T16:02:30.2339466Z (Reading database ... 215960 files and directories currently installed.)
+2026-11-03T16:02:30.2382304Z Preparing to unpack .../0-fonts-ipafont-gothic_00303-21ubuntu1_all.deb ...
+2026-11-03T16:02:30.2487066Z Unpacking fonts-ipafont-gothic (00303-21ubuntu1) ...
+2026-11-03T16:02:30.4989311Z Selecting previously unselected package fonts-freefont-ttf.
+2026-11-03T16:02:30.5130295Z Preparing to unpack .../1-fonts-freefont-ttf_20211204+svn4273-2_all.deb ...
+2026-11-03T16:02:30.5140423Z Unpacking fonts-freefont-ttf (20211204+svn4273-2) ...
+2026-11-03T16:02:30.6005395Z Selecting previously unselected package fonts-tlwg-loma-otf.
+2026-11-03T16:02:30.6145971Z Preparing to unpack .../2-fonts-tlwg-loma-otf_1%3a0.7.3-1_all.deb ...
+2026-11-03T16:02:30.6155425Z Unpacking fonts-tlwg-loma-otf (1:0.7.3-1) ...
+2026-11-03T16:02:30.6389580Z Selecting previously unselected package fonts-unifont.
+2026-11-03T16:02:30.6531084Z Preparing to unpack .../3-fonts-unifont_1%3a15.1.01-1build1_all.deb ...
+2026-11-03T16:02:30.6540253Z Unpacking fonts-unifont (1:15.1.01-1build1) ...
+2026-11-03T16:02:30.7675546Z Selecting previously unselected package fonts-wqy-zenhei.
+2026-11-03T16:02:30.7819126Z Preparing to unpack .../4-fonts-wqy-zenhei_0.9.45-8_all.deb ...
+2026-11-03T16:02:30.7931445Z Unpacking fonts-wqy-zenhei (0.9.45-8) ...
+2026-11-03T16:02:31.2756338Z Selecting previously unselected package xfonts-encodings.
+2026-11-03T16:02:31.2897134Z Preparing to unpack .../5-xfonts-encodings_1%3a1.0.5-0ubuntu2_all.deb ...
+2026-11-03T16:02:31.2905275Z Unpacking xfonts-encodings (1:1.0.5-0ubuntu2) ...
+2026-11-03T16:02:31.3213429Z Selecting previously unselected package xfonts-utils.
+2026-11-03T16:02:31.3354238Z Preparing to unpack .../6-xfonts-utils_1%3a7.7+6build3_amd64.deb ...
+2026-11-03T16:02:31.3362147Z Unpacking xfonts-utils (1:7.7+6build3) ...
+2026-11-03T16:02:31.3746412Z Selecting previously unselected package xfonts-cyrillic.
+2026-11-03T16:02:31.3889001Z Preparing to unpack .../7-xfonts-cyrillic_1%3a1.0.5+nmu1_all.deb ...
+2026-11-03T16:02:31.3897770Z Unpacking xfonts-cyrillic (1:1.0.5+nmu1) ...
+2026-11-03T16:02:31.4267837Z Selecting previously unselected package xfonts-scalable.
+2026-11-03T16:02:31.4409859Z Preparing to unpack .../8-xfonts-scalable_1%3a1.0.3-1.3_all.deb ...
+2026-11-03T16:02:31.4423004Z Unpacking xfonts-scalable (1:1.0.3-1.3) ...
+2026-11-03T16:02:31.4882072Z Setting up fonts-wqy-zenhei (0.9.45-8) ...
+2026-11-03T16:02:31.5017342Z Setting up fonts-freefont-ttf (20211204+svn4273-2) ...
+2026-11-03T16:02:31.5040076Z Setting up fonts-tlwg-loma-otf (1:0.7.3-1) ...
+2026-11-03T16:02:31.5064410Z Setting up xfonts-encodings (1:1.0.5-0ubuntu2) ...
+2026-11-03T16:02:31.5087543Z Setting up fonts-ipafont-gothic (00303-21ubuntu1) ...
+2026-11-03T16:02:31.5155767Z update-alternatives: using /usr/share/fonts/opentype/ipafont-gothic/ipag.ttf to provide /usr/share/fonts/truetype/fonts-japanese-gothic.ttf (fonts-japanese-gothic.ttf) in auto mode
+2026-11-03T16:02:31.5176083Z Setting up fonts-unifont (1:15.1.01-1build1) ...
+2026-11-03T16:02:31.5203190Z Setting up xfonts-utils (1:7.7+6build3) ...
+2026-11-03T16:02:31.5249848Z Setting up xfonts-cyrillic (1:1.0.5+nmu1) ...
+2026-11-03T16:02:31.5554417Z Setting up xfonts-scalable (1:1.0.3-1.3) ...
+2026-11-03T16:02:31.5842998Z Processing triggers for man-db (2.12.0-4build2) ...
+2026-11-03T16:02:31.5865434Z Not building database; man-db/auto-update is not 'true'.
+2026-11-03T16:02:31.5880840Z Processing triggers for fontconfig (2.15.0-1.1ubuntu2) ...
+2026-11-03T16:02:32.3548336Z 
+2026-11-03T16:02:32.3549225Z Running kernel seems to be up-to-date.
+2026-11-03T16:02:32.3549732Z 
+2026-11-03T16:02:32.3550068Z No services need to be restarted.
+2026-11-03T16:02:32.3550461Z 
+2026-11-03T16:02:32.3550719Z No containers need to be restarted.
+2026-11-03T16:02:32.3550982Z 
+2026-11-03T16:02:32.3551239Z No user sessions are running outdated binaries.
+2026-11-03T16:02:32.3551549Z 
+2026-11-03T16:02:32.3551967Z No VM guests are running outdated hypervisor (qemu) binaries on this host.
+2026-11-03T16:02:33.2620316Z Downloading Chromium 141.0.7390.37 (playwright build v1194) from https://cdn.playwright.dev/dbazure/download/playwright/builds/chromium/1194/chromium-linux.zip
+2026-11-03T16:02:33.4195415Z |                                                                                |   0% of 173.9 MiB
+2026-11-03T16:02:33.5445599Z |■■■■■■■■                                                                        |  10% of 173.9 MiB
+2026-11-03T16:02:33.6192571Z |■■■■■■■■■■■■■■■■                                                                |  20% of 173.9 MiB
+2026-11-03T16:02:33.7012128Z |■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 173.9 MiB
+2026-11-03T16:02:33.7727108Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 173.9 MiB
+2026-11-03T16:02:33.8409220Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 173.9 MiB
+2026-11-03T16:02:33.8897395Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 173.9 MiB
+2026-11-03T16:02:33.9397914Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 173.9 MiB
+2026-11-03T16:02:34.0079580Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 173.9 MiB
+2026-11-03T16:02:34.0661665Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 173.9 MiB
+2026-11-03T16:02:34.1174430Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 173.9 MiB
+2026-11-03T16:02:37.3268374Z Chromium 141.0.7390.37 (playwright build v1194) downloaded to /home/runner/.cache/ms-playwright/chromium-1194
+2026-11-03T16:02:37.3272480Z Downloading FFMPEG playwright build v1011 from https://cdn.playwright.dev/dbazure/download/playwright/builds/ffmpeg/1011/ffmpeg-linux.zip
+2026-11-03T16:02:37.4859036Z |                                                                                |   0% of 2.3 MiB
+2026-11-03T16:02:37.4964466Z |■■■■■■■■                                                                        |  10% of 2.3 MiB
+2026-11-03T16:02:37.5009460Z |■■■■■■■■■■■■■■■■                                                                |  20% of 2.3 MiB
+2026-11-03T16:02:37.5041073Z |■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 2.3 MiB
+2026-11-03T16:02:37.5064584Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 2.3 MiB
+2026-11-03T16:02:37.5086151Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 2.3 MiB
+2026-11-03T16:02:37.5104176Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 2.3 MiB
+2026-11-03T16:02:37.5137137Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 2.3 MiB
+2026-11-03T16:02:37.5148895Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 2.3 MiB
+2026-11-03T16:02:37.5166699Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 2.3 MiB
+2026-11-03T16:02:37.5176642Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 2.3 MiB
+2026-11-03T16:02:37.5719342Z FFMPEG playwright build v1011 downloaded to /home/runner/.cache/ms-playwright/ffmpeg-1011
+2026-11-03T16:02:37.5723291Z Downloading Chromium Headless Shell 141.0.7390.37 (playwright build v1194) from https://cdn.playwright.dev/dbazure/download/playwright/builds/chromium/1194/chromium-headless-shell-linux.zip
+2026-11-03T16:02:37.7276835Z |                                                                                |   0% of 104.3 MiB
+2026-11-03T16:02:37.8137370Z |■■■■■■■■                                                                        |  10% of 104.3 MiB
+2026-11-03T16:02:37.8674950Z |■■■■■■■■■■■■■■■■                                                                |  20% of 104.3 MiB
+2026-11-03T16:02:37.9149943Z |■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 104.3 MiB
+2026-11-03T16:02:37.9627517Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 104.3 MiB
+2026-11-03T16:02:38.0121754Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 104.3 MiB
+2026-11-03T16:02:38.0610361Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 104.3 MiB
+2026-11-03T16:02:38.1087974Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 104.3 MiB
+2026-11-03T16:02:38.1491997Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 104.3 MiB
+2026-11-03T16:02:38.1764046Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 104.3 MiB
+2026-11-03T16:02:38.2085250Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 104.3 MiB
+2026-11-03T16:02:39.9125732Z Chromium Headless Shell 141.0.7390.37 (playwright build v1194) downloaded to /home/runner/.cache/ms-playwright/chromium_headless_shell-1194
+2026-11-03T16:02:40.0242705Z ##[group]Run python -m unittest discover -s tests -q
+2026-11-03T16:02:40.0243109Z [36;1mpython -m unittest discover -s tests -q[0m
+2026-11-03T16:02:40.0265802Z shell: /usr/bin/bash -e {0}
+2026-11-03T16:02:40.0266161Z env:
+2026-11-03T16:02:40.0266649Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-03T16:02:40.0267389Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib/pkgconfig
+2026-11-03T16:02:40.0268152Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-03T16:02:40.0269655Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-03T16:02:40.0270255Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-03T16:02:40.0270883Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib
+2026-11-03T16:02:40.0271549Z ##[endgroup]
+2026-11-03T16:03:15.6027199Z /opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/traceback.py:241: ResourceWarning: unclosed file <_io.BufferedReader name=5>
+2026-11-03T16:03:15.6029026Z   tb.tb_frame.clear()
+2026-11-03T16:03:15.6030098Z ResourceWarning: Enable tracemalloc to get the object allocation traceback
+2026-11-03T16:03:15.6032139Z /opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/traceback.py:241: ResourceWarning: unclosed file <_io.BufferedReader name=7>
+2026-11-03T16:03:15.6033459Z   tb.tb_frame.clear()
+2026-11-03T16:03:15.6034074Z ResourceWarning: Enable tracemalloc to get the object allocation traceback
+2026-11-03T16:03:19.3506463Z ----------------------------------------------------------------------
+2026-11-03T16:03:19.3507160Z Ran 406 tests in 37.893s
+2026-11-03T16:03:19.3507402Z 
+2026-11-03T16:03:19.3507532Z OK
+2026-11-03T16:03:19.3529502Z Terminan read-only: http://127.0.0.1:8766
+2026-11-03T16:03:19.3829357Z ##[group]Run python scripts/visual_qa.py --expected-sha "$(git rev-parse HEAD)" --out reports/visual-ci
+2026-11-03T16:03:19.3830107Z [36;1mpython scripts/visual_qa.py --expected-sha "$(git rev-parse HEAD)" --out reports/visual-ci[0m
+2026-11-03T16:03:19.3853103Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-03T16:03:19.3853437Z env:
+2026-11-03T16:03:19.3853698Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-03T16:03:19.3854135Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib/pkgconfig
+2026-11-03T16:03:19.3854571Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-03T16:03:19.3854939Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-03T16:03:19.3855319Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-03T16:03:19.3855712Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib
+2026-11-03T16:03:19.3856029Z ##[endgroup]
+2026-11-03T16:04:08.4152292Z {"exit_code": 31, "result": "FAIL", "invocation": "63d2359e5d8b48a3b815a3cc8ebe51d1"}
+2026-11-03T16:04:08.4239898Z ##[error]Process completed with exit code 31.
+2026-11-03T16:04:08.4325860Z ##[group]Run actions/upload-artifact@v4
+2026-11-03T16:04:08.4326154Z with:
+2026-11-03T16:04:08.4326360Z   name: visual-ubuntu-24.04-1
+2026-11-03T16:04:08.4326619Z   path: candidate/reports/
+2026-11-03T16:04:08.4326865Z   if-no-files-found: warn
+2026-11-03T16:04:08.4327096Z   compression-level: 6
+2026-11-03T16:04:08.4327309Z   overwrite: false
+2026-11-03T16:04:08.4327536Z   include-hidden-files: false
+2026-11-03T16:04:08.4327777Z env:
+2026-11-03T16:04:08.4328031Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-03T16:04:08.4328772Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib/pkgconfig
+2026-11-03T16:04:08.4329205Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-03T16:04:08.4329584Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-03T16:04:08.4329968Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-03T16:04:08.4330347Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib
+2026-11-03T16:04:08.4330698Z ##[endgroup]
+2026-11-03T16:04:08.6069448Z (node:4955) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-03T16:04:08.6070283Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-03T16:04:08.6147340Z With the provided path, there will be 4 files uploaded
+2026-11-03T16:04:08.6169076Z Artifact name is valid!
+2026-11-03T16:04:08.6175481Z Root directory input is valid!
+2026-11-03T16:04:08.9791458Z Beginning upload of artifact content to blob storage
+2026-11-03T16:04:09.0275783Z (node:4955) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-11-03T16:04:09.0581569Z Uploaded bytes 72507
+2026-11-03T16:04:09.0712063Z Finished uploading artifact content to blob storage!
+2026-11-03T16:04:09.0713582Z SHA256 digest of uploaded artifact zip is 15fae4d99d3946a310faae86e64385e7ac5155bcc66e41f1811cb86fac49ba5b
+2026-11-03T16:04:09.0714899Z Finalizing artifact upload
+2026-11-03T16:04:09.4961867Z Artifact visual-ubuntu-24.04-1.zip successfully finalized. Artifact ID 13249020303
+2026-11-03T16:04:09.4963646Z Artifact visual-ubuntu-24.04-1 has been successfully uploaded! Final size is 72507 bytes. Artifact ID is 13249020303
+2026-11-03T16:04:09.4970199Z Artifact download URL: https://github.com/YehorBabenko88/Terminan/actions/runs/41669714074/artifacts/13249020303
+2026-11-03T16:04:09.5198907Z Post job cleanup.
+2026-11-03T16:04:09.6087848Z [command]/usr/bin/git version
+2026-11-03T16:04:09.6136983Z git version 2.56.0
+2026-11-03T16:04:09.6176679Z Temporarily overriding HOME='/home/runner/work/_temp/ffb48822-4daf-4aed-981a-58c8a05e25b2' before making global git config changes
+2026-11-03T16:04:09.6178437Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-03T16:04:09.6182923Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Terminan/Terminan/strattester
+2026-11-03T16:04:09.6226488Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-03T16:04:09.6266800Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-03T16:04:09.6540443Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-03T16:04:09.6583859Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-03T16:04:09.6874391Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-03T16:04:09.6922618Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-03T16:04:09.7342714Z Post job cleanup.
+2026-11-03T16:04:09.8253482Z [command]/usr/bin/git version
+2026-11-03T16:04:09.8301900Z git version 2.56.0
+2026-11-03T16:04:09.8341816Z Temporarily overriding HOME='/home/runner/work/_temp/54ab94dc-0bde-4ff7-a879-b2b5eb98bf56' before making global git config changes
+2026-11-03T16:04:09.8343743Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-03T16:04:09.8347430Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Terminan/Terminan/grid
+2026-11-03T16:04:09.8390121Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-03T16:04:09.8430084Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-03T16:04:09.8696000Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-03T16:04:09.8742108Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-03T16:04:09.9042291Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-03T16:04:09.9088023Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-03T16:04:09.9596001Z Post job cleanup.
+2026-11-03T16:04:10.0554609Z [command]/usr/bin/git version
+2026-11-03T16:04:10.0603792Z git version 2.56.0
+2026-11-03T16:04:10.0650360Z Temporarily overriding HOME='/home/runner/work/_temp/00912144-214c-43a1-95fc-272d1b2f8167' before making global git config changes
+2026-11-03T16:04:10.0651993Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-03T16:04:10.0656514Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Terminan/Terminan/candidate
+2026-11-03T16:04:10.0698188Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-03T16:04:10.0737716Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-03T16:04:10.1008661Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-03T16:04:10.1086166Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-03T16:04:10.1387658Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-03T16:04:10.1434781Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-03T16:04:10.1878825Z Cleaning up orphan processes
+2026-11-03T16:04:10.2386244Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-node@v4, actions/setup-python@v5, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

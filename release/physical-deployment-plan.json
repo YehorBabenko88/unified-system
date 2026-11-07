@@ -1,0 +1,248 @@
+{
+  "schema": "unified.staged-physical-plan.v2",
+  "authorization": "OWNER2026_11_07_PHYSICAL_PILOT_CONDITIONAL_STAGE_GATES",
+  "status": "BLOCKED_NOT_EXECUTABLE",
+  "mandatory_gates": [
+    "Immutable sixmodule artifactSHA256/dependencylocks/sourceprovenance/compatibility PASS",
+    "Mandatory exactsource CI/case/skip/artifactreview PASS",
+    "Windows native and securityqualification PASS",
+    "Real identity/RBAC/authority/assignment/storage/Control endpoint ACK+runtime PASS",
+    "PinnedLAN/mTLS peeridentity/admitted networkbudget PASS",
+    "Owned installer/elevatedpath/accounts/ports/DBtarget plan admitted",
+    "Current inventory/capacity/existingservices+ports conflictcheck PASS",
+    "Verified backup+actual isolatedrestore+rollback version/data compatibility PASS",
+    "PC3 existing WindowsFirewall/ESET intendedsecurityconfiguration reviewed"
+  ],
+  "required_bindings": {
+    "release_manifest_sha256": null,
+    "artifact_bundle_sha256": null,
+    "rollback_bundle_sha256": null,
+    "owned_root": null,
+    "service_account_and_acl_plan_sha256": null,
+    "service_names_and_ports_sha256": null,
+    "isolated_database_target_sha256": null,
+    "backup_restore_receipt_sha256": null
+  },
+  "stages": [
+    {
+      "id": "A",
+      "nodes_in_order": [
+        "LS5"
+      ],
+      "duration_estimate_not_measurement": "30-60min",
+      "risk": "HIGH",
+      "scenario": "Install isolated owned CONTROL components and Terminan; no distributed processing before quorum",
+      "status": "BLOCKED_NOT_RUN",
+      "before": [
+        "Verify exactbindings andpreviousstage gates",
+        "Read-onlynetwork/resource/service/port snapshot",
+        "Verify backup and rollback; preserve existing PostgreSQL/services/data"
+      ],
+      "after": [
+        "Verify actualmodulehealth/dataexchange/identity/integrity",
+        "Compare networkconfiguration snapshots; preserve evidence hashes",
+        "Verify rollback for thisstage beforecontinuing"
+      ],
+      "abort": [
+        "Any readinessgate FAIL/BLOCKED",
+        "DNS/HTTPS/SSH degradation",
+        "Unknown command outcomes orsource/hash mismatch",
+        "Disk/RAM/networkbudget breach"
+      ],
+      "recovery": [
+        "Stop only currentowned Unified deploymentoperation",
+        "Preserve logs/UNKNOWN outcomes/state/data",
+        "Restore only previously admittedcode with currentauthorityfences",
+        "Do notresetnetwork/Tailscale/ESET/firewall orreactivate staleleases"
+      ]
+    },
+    {
+      "id": "B",
+      "nodes_in_order": [
+        "PC4",
+        "PC3"
+      ],
+      "duration_estimate_not_measurement": "30-60min per node",
+      "risk": "HIGH",
+      "scenario": "Install coordinators sequentially; qualify3persistentvoters and majority2 without artificialpartition orforcedshutdown",
+      "status": "BLOCKED_NOT_RUN",
+      "before": [
+        "Verify exactbindings andpreviousstage gates",
+        "Read-onlynetwork/resource/service/port snapshot",
+        "Verify backup and rollback; preserve existing PostgreSQL/services/data"
+      ],
+      "after": [
+        "Verify actualmodulehealth/dataexchange/identity/integrity",
+        "Compare networkconfiguration snapshots; preserve evidence hashes",
+        "Verify rollback for thisstage beforecontinuing"
+      ],
+      "abort": [
+        "Any readinessgate FAIL/BLOCKED",
+        "DNS/HTTPS/SSH degradation",
+        "Unknown command outcomes orsource/hash mismatch",
+        "Disk/RAM/networkbudget breach"
+      ],
+      "recovery": [
+        "Stop only currentowned Unified deploymentoperation",
+        "Preserve logs/UNKNOWN outcomes/state/data",
+        "Restore only previously admittedcode with currentauthorityfences",
+        "Do notresetnetwork/Tailscale/ESET/firewall orreactivate staleleases"
+      ]
+    },
+    {
+      "id": "C",
+      "nodes_in_order": [
+        "PC2"
+      ],
+      "duration_estimate_not_measurement": "20-40min",
+      "risk": "MEDIUM",
+      "scenario": "Enroll firstworker, boundedusefulpaperjob and ordinarydrain/rejoin aftercoordinatorreadiness",
+      "status": "BLOCKED_NOT_RUN",
+      "before": [
+        "Verify exactbindings andpreviousstage gates",
+        "Read-onlynetwork/resource/service/port snapshot",
+        "Verify backup and rollback; preserve existing PostgreSQL/services/data"
+      ],
+      "after": [
+        "Verify actualmodulehealth/dataexchange/identity/integrity",
+        "Compare networkconfiguration snapshots; preserve evidence hashes",
+        "Verify rollback for thisstage beforecontinuing"
+      ],
+      "abort": [
+        "Any readinessgate FAIL/BLOCKED",
+        "DNS/HTTPS/SSH degradation",
+        "Unknown command outcomes orsource/hash mismatch",
+        "Disk/RAM/networkbudget breach"
+      ],
+      "recovery": [
+        "Stop only currentowned Unified deploymentoperation",
+        "Preserve logs/UNKNOWN outcomes/state/data",
+        "Restore only previously admittedcode with currentauthorityfences",
+        "Do notresetnetwork/Tailscale/ESET/firewall orreactivate staleleases"
+      ]
+    },
+    {
+      "id": "D",
+      "nodes_in_order": [
+        "PC1",
+        "LS7"
+      ],
+      "duration_estimate_not_measurement": "20-40min per node",
+      "risk": "MEDIUM",
+      "scenario": "Enroll remainingworkers sequentially; capacity/schedule/Terminan checks",
+      "status": "BLOCKED_NOT_RUN",
+      "before": [
+        "Verify exactbindings andpreviousstage gates",
+        "Read-onlynetwork/resource/service/port snapshot",
+        "Verify backup and rollback; preserve existing PostgreSQL/services/data"
+      ],
+      "after": [
+        "Verify actualmodulehealth/dataexchange/identity/integrity",
+        "Compare networkconfiguration snapshots; preserve evidence hashes",
+        "Verify rollback for thisstage beforecontinuing"
+      ],
+      "abort": [
+        "Any readinessgate FAIL/BLOCKED",
+        "DNS/HTTPS/SSH degradation",
+        "Unknown command outcomes orsource/hash mismatch",
+        "Disk/RAM/networkbudget breach"
+      ],
+      "recovery": [
+        "Stop only currentowned Unified deploymentoperation",
+        "Preserve logs/UNKNOWN outcomes/state/data",
+        "Restore only previously admittedcode with currentauthorityfences",
+        "Do notresetnetwork/Tailscale/ESET/firewall orreactivate staleleases"
+      ]
+    },
+    {
+      "id": "E",
+      "nodes_in_order": [
+        "LS5",
+        "PC4",
+        "PC3",
+        "PC2",
+        "PC1",
+        "LS7"
+      ],
+      "duration_estimate_not_measurement": "60-180min history-start estimate; actual depends on bounded dataset volume",
+      "risk": "MEDIUM",
+      "scenario": "Gradual10instrumenthistory then10minute live/paper observation; no realorders",
+      "status": "BLOCKED_NOT_RUN",
+      "before": [
+        "Verify exactbindings andpreviousstage gates",
+        "Read-onlynetwork/resource/service/port snapshot",
+        "Verify backup and rollback; preserve existing PostgreSQL/services/data"
+      ],
+      "after": [
+        "Verify actualmodulehealth/dataexchange/identity/integrity",
+        "Compare networkconfiguration snapshots; preserve evidence hashes",
+        "Verify rollback for thisstage beforecontinuing"
+      ],
+      "abort": [
+        "Any readinessgate FAIL/BLOCKED",
+        "DNS/HTTPS/SSH degradation",
+        "Unknown command outcomes orsource/hash mismatch",
+        "Disk/RAM/networkbudget breach"
+      ],
+      "recovery": [
+        "Stop only currentowned Unified deploymentoperation",
+        "Preserve logs/UNKNOWN outcomes/state/data",
+        "Restore only previously admittedcode with currentauthorityfences",
+        "Do notresetnetwork/Tailscale/ESET/firewall orreactivate staleleases"
+      ]
+    }
+  ],
+  "prohibitions": [
+    "No realorders orproductiontradingcredentials",
+    "No forcedcoordinatorshutdown/artificialpartitions/diskfill",
+    "No existingdata/service deletion",
+    "No router/DNS/DHCP/gateway/firewall/ESET changes",
+    "No Tailscaleremoval; keep reservechannel",
+    "No in-place replacement/migration of existing PostgreSQL17/18 installations"
+  ],
+  "quorum_note": "Do not lower bootstrap/quorum gates to make an incomplete cluster appear ready. Actual2of3 resilience must use separately qualified ordinarymaintenance evidence or isolatedstand; never infer physicalfailover from threshold metadata alone.",
+  "go": "NO-GO",
+  "bootstrap_order_clarification": {
+    "preinstallation": "All artifact/source/mandatory CI/native/security/isolated integration gates remain required. An office quorum is not required merely to copy inert owned files.",
+    "stage_A_inert": "Only exact admitted offline owned files; no listener, autostart, provider call, distributed mutation or budget claim. Missing Bybit observation is NOT_RUN. New profile needs actual native implementation/tests before use.",
+    "control_commissioning": "Separately admitted owned Consul service/account/ports/identity plan may start voters sequentially on LS5, PC4, PC3. No existing services or network policies changed. Admission does not require an already existing quorum to start its first voter.",
+    "operational_admission": "After actual office quorum, verify current authority/fencing/identity/budget/Control contracts and source-bound results before any provider/history/live/research execution. No bootstrap receipt can authorize this transition.",
+    "isolated_vs_physical": "Preinstallation runtime qualification is in an isolated test environment, never claimed as actual office quorum or office runtime acceptance."
+  },
+  "latest_owner_directive": {
+    "path": "directives/20261107-physical-pilot/OWNER-DIRECTIVE.txt",
+    "sha256": "1dc4bad55cc8d65919e416b1093d7a609181bb9ee997d61031862cab70ad2bf5",
+    "physical_pilot": "AUTHORIZED_SUBJECT_TO_STAGE_GATES",
+    "full_production_admission": false
+  },
+  "local_ls5_pilot": {
+    "readiness_report": "evidence/ls5-pilot-readiness-20261107/stage-report.json",
+    "install_status": "BLOCKED_PREREQUISITES_NOT_PASSED",
+    "distributed_quorum_required_for_local_only_pilot": false,
+    "other_nodes_may_join": false,
+    "real_provider_sends": false,
+    "required_manifest_scope": "Exact installed pilot subset and its complete dependency/source/artifact closure; later distributed admission separate",
+    "existing_databases_or_foreign_services_may_change": false,
+    "authority_safety": {
+      "office_voters": [
+        "LS5",
+        "PC4",
+        "PC3"
+      ],
+      "office_quorum": "2_OF_3_UNCHANGED",
+      "single_office_voter_mutations": "UNAVAILABLE_NO_QUORUM",
+      "local_test_authority": "Only separately admitted isolated test namespace and existing Consul implementation; never replacement office authority or office HA acceptance",
+      "test_namespace_manifest_and_data_roots": "NOT_ADMITTED",
+      "real_windows_native_identity_bridge": "NOT_IMPLEMENTED_OR_ADMITTED",
+      "default_control_api": "503_UNTIL_REAL_ADMISSION"
+    }
+  },
+  "stage0_current": {
+    "report": "reports/20261107/ls5-stage0.json",
+    "prepared_unadmitted_test_root": "C:\\Users\\LS-5\\Documents\\Codex\\UnifiedPilot\\LS5-20261107-4b4d98ef222b4f80af346e3c1975840a",
+    "actual_acl_gate": "REJECTED_UNTRUSTED_WRITABLE_ACL",
+    "installer_plan_only": "BLOCKED_NO_INSTALLABLE_PACKAGE_LOCK",
+    "backup_admin_channel": "NOT_DEMONSTRATED",
+    "installation_performed": false
+  }
+}

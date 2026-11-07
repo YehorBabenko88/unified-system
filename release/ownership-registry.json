@@ -1,0 +1,563 @@
+{
+  "schema": "unified.ownership.v1",
+  "revision": 10,
+  "root_owner": "ROOT",
+  "max_internal_subagents": 3,
+  "execution": "EIGHT_EXISTING_USER_OWNED_THREADS_NO_DUPLICATE_INTERNAL_AGENTS",
+  "shared_files_owner": "ROOT",
+  "shared_paths": [
+    "coordination/",
+    "unified_system/contracts.py",
+    "unified_system/integration.py",
+    "unified_system/service_bootstrap.py",
+    "unified_system/service_activation.py",
+    "unified_system/service_source_admission.py",
+    "unified_system/operator_control_plane.py",
+    "unified_system/installer_security.py",
+    "grid/coordination.py",
+    "grid/coordination_commands.py",
+    "grid/network_budget_model.py",
+    "grid/network_budget_store.py",
+    "acceptance/",
+    "release/",
+    ".github/workflows/final-integration.yml"
+  ],
+  "agents": [
+    {
+      "agent_id": "A1",
+      "scope": "LAN and network load",
+      "repository": "unified-system",
+      "branch": "agent1/direct-lan-transport-20261106",
+      "worktree": "C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-1-direct-lan-transport/work/unified-system-lan-agent1",
+      "draft_pr": 30,
+      "base_head": "b12c6c24eeb2c59aa099f1c516d77508f36b20a6",
+      "allocation_state": "EXACT_PR30_INTEGRATED_NEW_CHANNEL_OWNERSHIP_ACK",
+      "allowed_files": [
+        "unified_system/lan_transport.py",
+        "unified_system/network_budget.py",
+        "tests/test_lan_transport.py",
+        "tests/test_network_budget.py",
+        "docs/network/lan-transport-design.md",
+        "unified_system/lan_mux_channel.py",
+        "tests/test_lan_mux_channel.py"
+      ],
+      "allowed_new_path_prefixes": [],
+      "dependencies": [
+        "A2"
+      ],
+      "ack": "A1_NEW_CHANNEL_ALLOCATION_CONFIRMED",
+      "rules": [
+        "Read current source before proposing edits; do not duplicate existing modules",
+        "Any existing file outside allowed_files requires explicit ROOT approval",
+        "No protected merge, deployment, data deletion, accounts/credentials or physical/network mutation",
+        "No edit outside this worktree or concurrent physical test",
+        "Send exact HEAD/tree, test inventory, CI run/attempt/jobs and SHA256 evidence"
+      ],
+      "user_owned_thread_id": "01a1b15d-1ac2-7742-ae74-cc5a482d717b",
+      "full_feature_implementation": "OWNER_AUTHORIZED_ISOLATED_RUNTIME_20261107",
+      "additional_allocations": [
+        {
+          "repository": "unified-system",
+          "branch": "test/agent1-network-safety-models-20261106",
+          "worktree": "C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-1-direct-lan-transport/work/network-safety-models",
+          "base_head": "b12c6c24eeb2c59aa099f1c516d77508f36b20a6",
+          "allowed_files": [
+            ".github/workflows/agent1-network-model.yml"
+          ],
+          "allowed_new_path_prefixes": [
+            "tests/network_model/",
+            "docs/network/agent1-models/"
+          ],
+          "scope": "MODEL_ONLY_NO_PRODUCT_NETWORK_SOCKETS_OR_OFFICE_EFFECTS",
+          "allocation_state": "ACTUAL_CLEAN_BASE_REPORTED_MANUAL_FALLBACK",
+          "late_native_checkout": "UNKNOWN_READ_ONLY_NOT_SELECTED_IF_RETURNED"
+        }
+      ]
+    },
+    {
+      "agent_id": "A2",
+      "scope": "Unified client of existing Grid Consul authority",
+      "repository": "unified-system",
+      "branch": "feature/ha-authority-client-20261106",
+      "worktree": "C:/Users/LS-5/.codex/worktrees/agent2-ha-authority-client-20261106/unified-system",
+      "draft_pr": 25,
+      "base_head": "2df6f5c2f77f4d883bad1a8623dd8375db529be0",
+      "allocation_state": "EXISTING_PUBLISHED_FEATURE_WORKTREE_VERIFIED",
+      "allowed_files": [
+        "unified_system/ha_authority_client.py",
+        "tests/test_ha_authority_client.py",
+        "tests/ha_acceptance/README.md",
+        "docs/architecture/unified-ha-authority-client.md",
+        "unified_system/control_api_readonly.py",
+        "tests/test_control_api_readonly.py",
+        "docs/architecture/control-api-readonly.md",
+        ".github/workflows/agent2-control-api.yml"
+      ],
+      "allowed_new_path_prefixes": [],
+      "dependencies": [
+        "A1",
+        "A4",
+        "A5",
+        "A6"
+      ],
+      "ack": "PENDING",
+      "rules": [
+        "Read current source before proposing edits; do not duplicate existing modules",
+        "Any existing file outside allowed_files requires explicit ROOT approval",
+        "No protected merge, deployment, data deletion, accounts/credentials or physical/network mutation",
+        "No edit outside this worktree or concurrent physical test",
+        "Send exact HEAD/tree, test inventory, CI run/attempt/jobs and SHA256 evidence"
+      ],
+      "user_owned_thread_id": "01a1b15d-642e-78e1-870b-b8a2a9a7171b",
+      "control_api_scope": "P0_PURE_DENY_UNAVAILABLE_NO_LISTENER_NO_IO_NO_SHARED_WIRING",
+      "additional_allocations": [
+        {
+          "repository": "bybit-cluster-grid",
+          "branch": "fix/agent2-owned-control-source-teardown-20261106",
+          "worktree": "C:/Users/LS-5/.codex/worktrees/agent2-grid-admission-fixture-20261106/bybit-cluster-grid",
+          "base_head": "71084a336520187d6e260531a2f5d15555ba0e0c",
+          "draft_pr": 262,
+          "head": "a17f1db6b9aa04c105d2e993496026a83849ecfd",
+          "allowed_files": [
+            "tests/test_owned_control_source.py"
+          ],
+          "allowed_new_path_prefixes": [],
+          "scope": "FIXTURE_ONLY_NO_PRODUCT_OR_ADMISSION_WEAKENING"
+        },
+        {
+          "repository": "bybit-cluster-grid",
+          "branch": "feature/agent2-event-ordered-v3-20261106",
+          "worktree": "C:/Users/LS-5/.codex/worktrees/agent2-grid-admission-fixture-20261106/bybit-cluster-grid",
+          "base_head": "ec967b3ebb67bb9f04d0d82c78bba5b4245a3333",
+          "draft_pr": 264,
+          "allowed_files": [
+            "grid/coordination_event_v3.py",
+            "tests/coordination/test_event_ordered_v3.py",
+            "scripts/agent2-event-v3/verify_three.py",
+            "scripts/agent2-event-v3/requirements.lock",
+            "docs/coordination/event-ordered-v3.md",
+            ".github/workflows/agent2-event-v3.yml"
+          ],
+          "allowed_new_path_prefixes": [
+            "tests/coordination/event_v3/"
+          ],
+          "scope": "INDEPENDENT_NEW_PROFILE_ADAPTER_AND_ISOLATED_HARNESS_NO_EXISTING_WIRING",
+          "allocation_state": "CLEAN_EXISTING_OWNED_WORKTREE_REUSED_NEW_BRANCH_REPORTED_BY_OWNER",
+          "historical_fixture_branch": "fix/agent2-owned-control-source-teardown-20261106",
+          "historical_fixture_branch_preserved": true,
+          "head": "431a9be37e6e1c2d6bddbcea659b96d7211ac5c9"
+        },
+        {
+          "branch": "feature/agent2-control-mux-runtime-20261107",
+          "base_head": "360c5cdc9dae88416d69f8765f3dff5ab8828945",
+          "allowed_files": [
+            "unified_system/control_mux/__init__.py",
+            "unified_system/control_mux/codec.py",
+            "unified_system/control_mux/commands.py",
+            "unified_system/control_mux/consul_store.py",
+            "unified_system/control_mux/http_api.py",
+            "unified_system/control_mux/stream.py"
+          ],
+          "allowed_new_path_prefixes": [
+            "tests/control_mux/",
+            "docs/control-mux/"
+          ],
+          "scope": "ACTUAL_CONSUL_RUNTIME_NO_SHARED_OR_PR31_EDITS",
+          "ack": "A2_EXPLICIT_ALLOCATION_ACK"
+        }
+      ],
+      "head": "0b3af3e872b49ed1848815f7f9ffd42444f89b24"
+    },
+    {
+      "agent_id": "A3",
+      "scope": "Market data lifecycle",
+      "repository": "bybit-cluster-grid",
+      "branch": "agent3/market-data-lifecycle-20261106",
+      "worktree": "C:/Users/LS-5/.codex/worktrees/agent3-market-data-lifecycle-20261106/bybit-cluster-grid",
+      "draft_pr": null,
+      "base_head": "d537d525296ef34f727996e240ae6c60102c6082",
+      "allocation_state": "PLANNED_NOT_CREATED",
+      "allowed_files": [],
+      "allowed_new_path_prefixes": [
+        "docs/market-data/agent3/",
+        "tests/test_market_data_lifecycle_"
+      ],
+      "dependencies": [
+        "A1",
+        "A4",
+        "A5",
+        "A7",
+        "A2"
+      ],
+      "ack": "PENDING",
+      "rules": [
+        "Read current source before proposing edits; do not duplicate existing modules",
+        "Any existing file outside allowed_files requires explicit ROOT approval",
+        "No protected merge, deployment, data deletion, accounts/credentials or physical/network mutation",
+        "No edit outside this worktree or concurrent physical test",
+        "Send exact HEAD/tree, test inventory, CI run/attempt/jobs and SHA256 evidence"
+      ],
+      "user_owned_thread_id": "01a1b15d-b4b1-7e60-9ee8-1ac79d1813d5",
+      "full_feature_implementation": "FULL_PIPELINE_NOT_ADMITTED_CURRENT_INDEPENDENT_CODEC_SLICE_APPROVED",
+      "additional_allocations": [
+        {
+          "repository": "bybit-cluster-grid",
+          "branch": "fix/agent3-preserve-retired-history-20261106",
+          "worktree": "C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-3-bybit-historical-live/work/grid-retired-history-safeguard",
+          "base_head": "a17f1db6b9aa04c105d2e993496026a83849ecfd",
+          "head": "ec967b3ebb67bb9f04d0d82c78bba5b4245a3333",
+          "draft_pr": 263,
+          "allowed_files": [
+            "grid/instrument_lifecycle.py",
+            "tests/test_retired_history_preservation.py",
+            "docs/audits/retired-history-preservation.md"
+          ],
+          "allowed_new_path_prefixes": [],
+          "authorization": "OWNER2026_11_06_CONFIRMED_DEFECT_FIX_ONLY_NOT_FULL_LIFECYCLE_DESIGN_APPROVAL"
+        },
+        {
+          "repository": "bybit-cluster-grid",
+          "branch": "feature/agent3-checkpoint-v3-20261106",
+          "worktree": "C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-3-bybit-historical-live/work/grid-checkpoint-v3",
+          "base_head": "ec967b3ebb67bb9f04d0d82c78bba5b4245a3333",
+          "head": "10adcff532b6e31c2531c4afcfd0fec1328d6b21",
+          "tree": "b95ab9581cda1d6078f6c7c154f55d2bd741e3bc",
+          "draft_pr": 265,
+          "allowed_files": [
+            "grid/checkpoint_v3_codec.py",
+            "tests/test_market_data_lifecycle_checkpoint_v3.py",
+            "docs/market-data/agent3/checkpoint-v3.md",
+            ".github/workflows/agent3-checkpoint-v3.yml"
+          ],
+          "allowed_new_path_prefixes": [
+            "tests/fixtures/agent3-checkpoint-v3/"
+          ],
+          "scope": "UNTRUSTED_CLAIM_CODEC_ONLY_AUTHORITY_PROMOTION_ALWAYS_DENIED",
+          "allocation_state": "ACTUAL_CLEAN_PUBLISHED_SOURCE_REPORTED"
+        },
+        {
+          "allowed_files": [
+            "grid/market_ingestion_domain.py"
+          ],
+          "allowed_new_path_prefixes": [
+            "tests/fixtures/agent3-market-domain/",
+            "tests/market_data/agent3/",
+            "docs/market-data/agent3/"
+          ],
+          "scope": "EXACT_DOMAIN_ADAPTER_NO_PROVIDER_SENDS",
+          "ack": "A3_REQUEST_ROOT_ACK"
+        }
+      ]
+    },
+    {
+      "agent_id": "A4",
+      "scope": "Storage and per-instrument integrity",
+      "repository": "unified-system",
+      "branch": "feature/storage-integrity-20261106",
+      "worktree": "C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-4-distributed-storage-integrity/work/unified-system",
+      "draft_pr": null,
+      "base_head": "2df6f5c2f77f4d883bad1a8623dd8375db529be0",
+      "allocation_state": "ACTUAL_OWN_CLEAN_CHECKOUT_REUSED_NEW_FEATURE_BRANCH_REPORTED",
+      "allowed_files": [
+        "unified_system/storage/__init__.py",
+        "unified_system/storage/contracts.py",
+        "unified_system/storage/segments.py",
+        "unified_system/storage/retention.py"
+      ],
+      "allowed_new_path_prefixes": [
+        "tests/storage/",
+        "docs/storage/"
+      ],
+      "dependencies": [
+        "A2",
+        "A3",
+        "A5",
+        "A7"
+      ],
+      "ack": "PENDING",
+      "rules": [
+        "Read current source before proposing edits; do not duplicate existing modules",
+        "Any existing file outside allowed_files requires explicit ROOT approval",
+        "No protected merge, deployment, data deletion, accounts/credentials or physical/network mutation",
+        "No edit outside this worktree or concurrent physical test",
+        "Send exact HEAD/tree, test inventory, CI run/attempt/jobs and SHA256 evidence"
+      ],
+      "user_owned_thread_id": "01a1b15e-10ad-7d40-ada4-9a3e1451a7b6",
+      "full_feature_implementation": "PRODUCTION_AFTER_DESIGN_APPROVAL_INDEPENDENT_STAGE1_PROTOTYPE_AUTHORIZED",
+      "independent_slice": "PURE_BYTES_CONTRACTS_NONEXECUTING_RETENTION_ONLY_DISPOSABLE_IO_FIXTURES_IN_TESTS",
+      "native_creation": "PENDING_UNKNOWN_LATE_CHECKOUT_READ_ONLY_NOT_SELECTED",
+      "direct_user_restriction_scope": "PRODUCTION_IMPLEMENTATION_NOT_ALL_INDEPENDENT_NONPRODUCTION_CODE",
+      "additional_allocations": [
+        {
+          "branch": "feature/storage-runtime-20261107",
+          "base_head": "10157fed4d28606adf587be3494d2f6d42887ce9",
+          "allowed_files": [
+            "unified_system/storage/manifest.py",
+            "unified_system/storage/object_store.py",
+            "unified_system/storage/integrity.py",
+            "unified_system/storage/replication.py",
+            "unified_system/storage/checkpoints.py",
+            "unified_system/storage/backup.py",
+            "unified_system/storage/budgets.py",
+            "unified_system/storage/publication.py"
+          ],
+          "allowed_new_path_prefixes": [
+            "tests/storage/runtime/",
+            "docs/storage/runtime/"
+          ],
+          "scope": "LOCAL_OWN_OBJECTS_PLUS_EXACT_ATOMIC_A2_SEAM_NOT_REMOTE_AUTHORIZE_LOCAL_COMMIT",
+          "ack": "A4_REQUEST_ROOT_ACK"
+        }
+      ]
+    },
+    {
+      "agent_id": "A5",
+      "scope": "Distributed resource scheduler",
+      "repository": "unified-system",
+      "branch": "feature/agent5-scheduler-components-20261106",
+      "worktree": "C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-5-resource-aware-distributed/work/scheduler-components-feature",
+      "draft_pr": 24,
+      "base_head": "2df6f5c2f77f4d883bad1a8623dd8375db529be0",
+      "allocation_state": "AGENT_CONFIRMED_ISOLATED_FEATURE_CHECKOUT",
+      "allowed_files": [
+        "tests/test_agent5_scheduler_components.py",
+        ".github/workflows/agent5-components.yml"
+      ],
+      "allowed_new_path_prefixes": [
+        "scheduler_components/",
+        "docs/scheduler/"
+      ],
+      "dependencies": [
+        "A1",
+        "A2",
+        "A3",
+        "A4",
+        "A6",
+        "A7"
+      ],
+      "ack": "PENDING",
+      "rules": [
+        "Read current source before proposing edits; do not duplicate existing modules",
+        "Any existing file outside allowed_files requires explicit ROOT approval",
+        "No protected merge, deployment, data deletion, accounts/credentials or physical/network mutation",
+        "No edit outside this worktree or concurrent physical test",
+        "Send exact HEAD/tree, test inventory, CI run/attempt/jobs and SHA256 evidence"
+      ],
+      "user_owned_thread_id": "01a1b15e-92cf-7080-8745-7bcd80e5022f",
+      "head_before_durable_slice": "942e5f1d1efb28f97fb5eaae7a216424938dd738",
+      "current_slice": {
+        "allowed_files": [
+          "scheduler_components/durable.py",
+          "tests/test_agent5_scheduler_components.py",
+          "docs/scheduler/durable.md",
+          ".github/workflows/agent5-components.yml"
+        ],
+        "scope": "LOCAL_NONAUTHORITATIVE_PREPARATION_JOURNAL_HOLDS_OUTBOX_ONLY",
+        "existing15cases": "PRESERVE_IDS_ASSERTIONS_AND_EXACT_SOURCE_EVIDENCE",
+        "new_case_inventory": "EXPLICIT_VERSIONED_IDS_AND_EXACT_COUNT",
+        "effects": "NO_NETWORK_WORKER_DISPATCH_NO_AUTHORITY_GRANTS_NO_STORAGE_PUBLICATION_NO_SHARED_WIRING"
+      },
+      "head": "6bcf5475023a8f6a9733d02ad899064d0d83be95",
+      "independent_f15_fix": "A8_f31fc6b_SOURCE_SCOPED_30CASES_11NEGATIVES_NOT_HOSTED"
+    },
+    {
+      "agent_id": "A6",
+      "scope": "Distributed Terminan and operator UI",
+      "repository": "Terminan",
+      "branch": "feature/terminan-sync-v1-20261106",
+      "worktree": "C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-6-distributed-terminan-control/work/terminan-sync-v1-manual",
+      "draft_pr": 69,
+      "base_head": "7ed3708df53c8850fd11fc8331440bdfee99aa3e",
+      "allocation_state": "AGENT_CONFIRMED_ISOLATED_FEATURE_CHECKOUT",
+      "allowed_files": [
+        "terminan/sync.html",
+        ".github/workflows/terminan-sync.yml"
+      ],
+      "allowed_new_path_prefixes": [
+        "terminan/sync/",
+        "tests/sync/",
+        "docs/sync/"
+      ],
+      "dependencies": [
+        "A2",
+        "A3",
+        "A4",
+        "A5",
+        "A7"
+      ],
+      "ack": "PENDING",
+      "rules": [
+        "Read current source before proposing edits; do not duplicate existing modules",
+        "Any existing file outside allowed_files requires explicit ROOT approval",
+        "No protected merge, deployment, data deletion, accounts/credentials or physical/network mutation",
+        "No edit outside this worktree or concurrent physical test",
+        "Send exact HEAD/tree, test inventory, CI run/attempt/jobs and SHA256 evidence"
+      ],
+      "user_owned_thread_id": "01a1b15e-db33-70e0-b49c-43ee2fd534f3"
+    },
+    {
+      "agent_id": "A7",
+      "scope": "Research Math and paper execution",
+      "repository": "math",
+      "branch": "agent7/math-native-research-20261106",
+      "worktree": "C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-7-distributed-research-math/work/audit-math-pr110",
+      "draft_pr": 112,
+      "base_head": "5721987a15d20c3f9984d52eac4446704566d4b9",
+      "allocation_state": "EXISTING_FEATURE_BRANCH_VERIFIED",
+      "allowed_files": [
+        "tests/agent7-replay-research.test.mjs",
+        "tests/adminit-loader-facts.windows.mjs",
+        "scripts/platform-source-proof.json",
+        "scripts/platform-test-inventory.json",
+        "docs/audits/agent7-research-regressions.json",
+        "tests/platform-coverage.test.mjs"
+      ],
+      "allowed_new_path_prefixes": [],
+      "dependencies": [
+        "A3",
+        "A4",
+        "A5",
+        "A6",
+        "A2"
+      ],
+      "ack": "PENDING",
+      "rules": [
+        "Read current source before proposing edits; do not duplicate existing modules",
+        "Any existing file outside allowed_files requires explicit ROOT approval",
+        "No protected merge, deployment, data deletion, accounts/credentials or physical/network mutation",
+        "No edit outside this worktree or concurrent physical test",
+        "Send exact HEAD/tree, test inventory, CI run/attempt/jobs and SHA256 evidence"
+      ],
+      "user_owned_thread_id": "01a1b15f-356d-7363-b6b8-6acfdb3de44f",
+      "comparative_pr_read_only": 111,
+      "additional_allocations": [
+        {
+          "repository": "strattester",
+          "branch": "agent7/research-paper-recovery-20261106",
+          "worktree": "C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-7-distributed-research-math/work/audit-strat-pr70",
+          "base_head": "25eb939f8a816a80ac7c042ce75ec4d9173cd4ce",
+          "allowed_files": [
+            "tests/research/test_agent7_paper_integrity.py",
+            "tests/research/test_agent7_research_replay.py",
+            "docs/research/agent7-regression-evidence.json"
+          ],
+          "allowed_new_path_prefixes": [],
+          "head": "1722244f42d5d71a29b89bdec0e7211f2b723158",
+          "draft_pr": 71
+        },
+        {
+          "repository": "meta_analyse",
+          "branch": "agent7/meta-research-contract-20261106",
+          "worktree": "C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-7-distributed-research-math/work/audit-meta-pr76",
+          "base_head": "2c4db055e56e36384a2661d443f9abc7b2331e90",
+          "allowed_files": [
+            "tests/test_agent7_ohlcv_research_contract.py",
+            "docs/AGENT7_RESEARCH_CONTRACT_EVIDENCE.json"
+          ],
+          "allowed_new_path_prefixes": [],
+          "head": "88b45c328bfdc8131ff0c6d139fddd8b27a4050c",
+          "draft_pr": 77
+        },
+        {
+          "repository": "math",
+          "branch": "agent7/math-loader-init-diagnostics-20261106",
+          "worktree": "C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-7-distributed-research-math/work/audit-math-loader-init-diag",
+          "base_head": "917d99672e37db59835a8ab23b03c99826b12d78",
+          "head": "dbb9bb1da9b180a8bb9f1d5401f1117894256941",
+          "draft_pr": 113,
+          "allowed_files": [
+            "tests/fixtures/agent7-loader-init/HostedLoaderInitTrace.cs",
+            "scripts/agent7-loader-init/build.ps1",
+            "scripts/agent7-loader-init/report.mjs",
+            ".github/workflows/agent7-loader-init-trace.yml",
+            "tests/agent7-replay-research.test.mjs",
+            "docs/audits/agent7-loader-init-trace-evidence.json"
+          ],
+          "scope": "ONE_NON_QUALIFYING_HOSTED_OBSERVATION_ONLY_NO_OFFICE_EXECUTION",
+          "root_authorization_path": "release/diagnostic-authorizations/math113-dbb9bb1.json",
+          "root_authorization_sha256": "3df3720c7efbf0ad71ea0ac84e7001e37ea8c2deaf105076ff473f6919ac48a2"
+        },
+        {
+          "scope": "NEW_BRANCH_FROM_DBB_BUILD_ARGUMENT_FIX_NO_DIAGNOSTIC_RETRY",
+          "allowed_files": [
+            "scripts/agent7-loader-init/build.ps1",
+            "tests/agent7-replay-research.test.mjs"
+          ],
+          "ack": "A7_REQUEST_ROOT_ACK",
+          "protected_old_source": "dbb9bb1da9b180a8bb9f1d5401f1117894256941"
+        }
+      ],
+      "head": "917d99672e37db59835a8ab23b03c99826b12d78"
+    },
+    {
+      "agent_id": "A8",
+      "scope": "Independent security and acceptance",
+      "repository": "unified-system",
+      "branch": "audit/agent8-independent-acceptance-20261106",
+      "worktree": "C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-8-independent-security-ci/work/unified-audit",
+      "draft_pr": 21,
+      "base_head": "b9b03a1ce9f887dbe113fd22d0bda8932f46ef80",
+      "allocation_state": "EXISTING_PUBLISHED_AUDIT_CHECKOUT_CONFIRMED",
+      "allowed_files": [],
+      "allowed_new_path_prefixes": [
+        "docs/audits/agent8-20261106/"
+      ],
+      "dependencies": [
+        "A1",
+        "A2",
+        "A3",
+        "A4",
+        "A5",
+        "A6",
+        "A7"
+      ],
+      "ack": "PENDING",
+      "rules": [
+        "Read current source before proposing edits; do not duplicate existing modules",
+        "Any existing file outside allowed_files requires explicit ROOT approval",
+        "No protected merge, deployment, data deletion, accounts/credentials or physical/network mutation",
+        "No edit outside this worktree or concurrent physical test",
+        "Send exact HEAD/tree, test inventory, CI run/attempt/jobs and SHA256 evidence"
+      ],
+      "user_owned_thread_id": "01a1b15c-8c40-7f12-9dea-2f8c31e3dddc",
+      "historical_audit_head_not_base": "6f89abed0b18d8044c9b650c356916f244af6d39"
+    }
+  ],
+  "agreement_rule": "Producer and every consumer must ACK exact contract and ownership SHA before shared integration edits. No answer is not consent. Work independently in allowed harnesses until then.",
+  "unallocated_existing_files": "READ_ONLY_UNTIL_ROOT_ALLOCATION",
+  "historical_workstreams": "Earlier CODEX_WORKSTREAMS.md and historical ADMINIT plans are not current edit authority.",
+  "cross_agent_domain_owners": {
+    "bybit_egress": {
+      "transport_enforcement": "A1",
+      "reservation_usage_cooldown_domain_ledger": "A1",
+      "provider_quota_policy": "A3",
+      "authority_fencing": "A2",
+      "published_registry_and_native_installer_admission": "ROOT"
+    },
+    "authority_assignment_storage": {
+      "wire_draft_editor": "A2",
+      "assignment_and_capacity": "A5",
+      "storage_and_publication": "A4",
+      "historical_checkpoint": "A3"
+    },
+    "research_blockers": {
+      "Math_Windows_native": "A7",
+      "Strattester_system_acceptance": "A7",
+      "MetaAnalyse_research": "A7",
+      "independent_acceptance": "A8"
+    }
+  },
+  "prior_revision_ack_scope": {
+    "commit": "c7307afba57aa28548e483e02c3a2f390b5056e1",
+    "ownership_sha256": "72acc43445b66f9730f868f6df335dc608dfe342e550be83e47eef98789115ff",
+    "owners_reported": [
+      "A1",
+      "A2",
+      "A6",
+      "A8"
+    ],
+    "scope": "OWN_ALLOCATION_ONLY_NOT_TRANSFERRED_TO_REVISION_3"
+  },
+  "supersedes_scope_only_not_ack_transfer": "1ad86a5ec63595e7d394efdd11e5126965e959cf1491b7415c21f4b89b606558",
+  "fresh_ack_status": "PENDING_EXACT_REVISION9_OWN_ALLOCATIONS_NO_PRIOR_GLOBAL_ACK_TRANSFER"
+}

@@ -1,0 +1,624 @@
+﻿2026-10-25T23:33:29.7233092Z Current runner version: '2.338.0'
+2026-10-25T23:33:29.7262648Z ##[group]Runner Image Provisioner
+2026-10-25T23:33:29.7263481Z Hosted Compute Agent
+2026-10-25T23:33:29.7264076Z Version: 20261021.618
+2026-10-25T23:33:29.7264684Z Commit: 21505ad2541d5be6135ed84fc33697146cf75b8e
+2026-10-25T23:33:29.7265436Z Build Date: 2026-10-21T00:45:21Z
+2026-10-25T23:33:29.7266090Z Worker ID: {98917e7f-4a15-48c9-bf57-9997d77d6e54}
+2026-10-25T23:33:29.7266776Z Region: eastus
+2026-10-25T23:33:29.7267302Z Cloud: Azure
+2026-10-25T23:33:29.7267799Z ##[endgroup]
+2026-10-25T23:33:29.7269237Z ##[group]Operating System
+2026-10-25T23:33:29.7269884Z Microsoft Windows Server 2025
+2026-10-25T23:33:29.7270461Z 10.0.26100
+2026-10-25T23:33:29.7271000Z Datacenter
+2026-10-25T23:33:29.7271492Z ##[endgroup]
+2026-10-25T23:33:29.7272052Z ##[group]Runner Image
+2026-10-25T23:33:29.7272626Z Image: windows-2025-vs2026
+2026-10-25T23:33:29.7273186Z Version: 20261021.278.1
+2026-10-25T23:33:29.7275090Z Included Software: https://github.com/actions/runner-images/blob/win25-vs2026/20261021.278/images/windows/Windows2025-VS2026-Readme.md
+2026-10-25T23:33:29.7276838Z Image Release: https://github.com/actions/runner-images/releases/tag/win25-vs2026%2F20261021.278
+2026-10-25T23:33:29.7277856Z ##[endgroup]
+2026-10-25T23:33:29.7278931Z ##[group]GITHUB_TOKEN Permissions
+2026-10-25T23:33:29.7280814Z Contents: read
+2026-10-25T23:33:29.7281441Z Metadata: read
+2026-10-25T23:33:29.7282016Z ##[endgroup]
+2026-10-25T23:33:29.7284083Z Secret source: Actions
+2026-10-25T23:33:29.7285016Z Cache mode: write
+2026-10-25T23:33:29.7285666Z Prepare workflow directory
+2026-10-25T23:33:29.7708299Z Prepare all required actions
+2026-10-25T23:33:29.7772739Z Getting action download info
+2026-10-25T23:33:29.9313156Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-10-25T23:33:30.0713695Z Download action repository 'actions/setup-python@v5' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+2026-10-25T23:33:30.2244971Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-10-25T23:33:30.5792337Z Complete job name: synthetic (windows-latest)
+2026-10-25T23:33:30.7263523Z ##[group]Run actions/checkout@v4
+2026-10-25T23:33:30.7264834Z with:
+2026-10-25T23:33:30.7265451Z   ref: b595a3a88d32eb6e93c94bbe5d26abeacb4712de
+2026-10-25T23:33:30.7266243Z   repository: YehorBabenko88/meta_analyse
+2026-10-25T23:33:30.7270886Z   token: ***
+2026-10-25T23:33:30.7271319Z   ssh-strict: true
+2026-10-25T23:33:30.7271755Z   ssh-user: git
+2026-10-25T23:33:30.7272198Z   persist-credentials: true
+2026-10-25T23:33:30.7272683Z   clean: true
+2026-10-25T23:33:30.7273133Z   sparse-checkout-cone-mode: true
+2026-10-25T23:33:30.7273660Z   fetch-depth: 1
+2026-10-25T23:33:30.7274107Z   fetch-tags: false
+2026-10-25T23:33:30.7274545Z   show-progress: true
+2026-10-25T23:33:30.7275004Z   lfs: false
+2026-10-25T23:33:30.7275413Z   submodules: false
+2026-10-25T23:33:30.7275860Z   set-safe-directory: true
+2026-10-25T23:33:30.7276395Z   allow-unsafe-pr-checkout: false
+2026-10-25T23:33:30.7277207Z env:
+2026-10-25T23:33:30.7277653Z   META_ANALYSE_IDENTITY_SYNTHETIC_ONLY: 1
+2026-10-25T23:33:30.7278270Z   QT_QPA_PLATFORM: offscreen
+2026-10-25T23:33:30.7278751Z ##[endgroup]
+2026-10-25T23:33:30.8820639Z Syncing repository: YehorBabenko88/meta_analyse
+2026-10-25T23:33:30.8822584Z ##[group]Getting Git version info
+2026-10-25T23:33:30.8823281Z Working directory is 'D:\a\meta_analyse\meta_analyse'
+2026-10-25T23:33:30.9803170Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-10-25T23:33:31.2858062Z git version 2.56.0.windows.2
+2026-10-25T23:33:31.2903587Z ##[endgroup]
+2026-10-25T23:33:31.2922807Z Temporarily overriding HOME='D:\a\_temp\6d719116-1f3e-49d2-9e2d-4dfc88f5f34a' before making global git config changes
+2026-10-25T23:33:31.2925596Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-25T23:33:31.2933866Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\meta_analyse\meta_analyse
+2026-10-25T23:33:31.3563363Z Deleting the contents of 'D:\a\meta_analyse\meta_analyse'
+2026-10-25T23:33:31.3569662Z ##[group]Initializing the repository
+2026-10-25T23:33:31.3578917Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\meta_analyse\meta_analyse
+2026-10-25T23:33:31.4500694Z Initialized empty Git repository in D:/a/meta_analyse/meta_analyse/.git/
+2026-10-25T23:33:31.4546944Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/YehorBabenko88/meta_analyse
+2026-10-25T23:33:31.5185056Z ##[endgroup]
+2026-10-25T23:33:31.5186472Z ##[group]Disabling automatic garbage collection
+2026-10-25T23:33:31.5194694Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2026-10-25T23:33:31.5563732Z ##[endgroup]
+2026-10-25T23:33:31.5565435Z ##[group]Setting up auth
+2026-10-25T23:33:31.5575245Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-10-25T23:33:31.6018237Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-10-25T23:33:32.9811895Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-25T23:33:33.0200370Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-10-25T23:33:33.5796452Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-25T23:33:33.6317200Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-10-25T23:33:34.2093655Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-10-25T23:33:34.2500013Z ##[endgroup]
+2026-10-25T23:33:34.2504153Z ##[group]Fetching the repository
+2026-10-25T23:33:34.2514661Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin b595a3a88d32eb6e93c94bbe5d26abeacb4712de
+2026-10-25T23:33:35.1495359Z From https://github.com/YehorBabenko88/meta_analyse
+2026-10-25T23:33:35.1496462Z  * branch            b595a3a88d32eb6e93c94bbe5d26abeacb4712de -> FETCH_HEAD
+2026-10-25T23:33:35.1536656Z ##[endgroup]
+2026-10-25T23:33:35.1537276Z ##[group]Determining the checkout info
+2026-10-25T23:33:35.1539775Z ##[endgroup]
+2026-10-25T23:33:35.1550378Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2026-10-25T23:33:35.2094518Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2026-10-25T23:33:35.2593075Z ##[group]Checking out the ref
+2026-10-25T23:33:35.2603326Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force b595a3a88d32eb6e93c94bbe5d26abeacb4712de
+2026-10-25T23:33:35.5353259Z Note: switching to 'b595a3a88d32eb6e93c94bbe5d26abeacb4712de'.
+2026-10-25T23:33:35.5354038Z 
+2026-10-25T23:33:35.5354407Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-10-25T23:33:35.5355250Z changes and commit them, and you can discard any commits you make in this
+2026-10-25T23:33:35.5356203Z state without impacting any branches by switching back to a branch.
+2026-10-25T23:33:35.5356543Z 
+2026-10-25T23:33:35.5356728Z If you want to create a new branch to retain commits you create, you may
+2026-10-25T23:33:35.5357236Z do so (now or later) by using -c with the switch command. Example:
+2026-10-25T23:33:35.5357621Z 
+2026-10-25T23:33:35.5357843Z   git switch -c <new-branch-name>
+2026-10-25T23:33:35.5358167Z 
+2026-10-25T23:33:35.5358275Z Or undo this operation with:
+2026-10-25T23:33:35.5359346Z 
+2026-10-25T23:33:35.5359451Z   git switch -
+2026-10-25T23:33:35.5359573Z 
+2026-10-25T23:33:35.5359802Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-10-25T23:33:35.5360110Z 
+2026-10-25T23:33:35.5360595Z HEAD is now at b595a3a Isolate optimized port refusal regression from ambient libpq variables
+2026-10-25T23:33:35.5432226Z ##[endgroup]
+2026-10-25T23:33:35.5909327Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2026-10-25T23:33:35.6260003Z b595a3a88d32eb6e93c94bbe5d26abeacb4712de
+2026-10-25T23:33:35.6693828Z ##[group]Run git fetch --no-tags --depth=1 origin 4a92643c00a7e4d113025e1df427d8f4850f0981
+2026-10-25T23:33:35.6694616Z [36;1mgit fetch --no-tags --depth=1 origin 4a92643c00a7e4d113025e1df427d8f4850f0981[0m
+2026-10-25T23:33:35.7325841Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-10-25T23:33:35.7326340Z env:
+2026-10-25T23:33:35.7326614Z   META_ANALYSE_IDENTITY_SYNTHETIC_ONLY: 1
+2026-10-25T23:33:35.7327014Z   QT_QPA_PLATFORM: offscreen
+2026-10-25T23:33:35.7327312Z ##[endgroup]
+2026-10-25T23:33:36.4043641Z From https://github.com/YehorBabenko88/meta_analyse
+2026-10-25T23:33:36.4044523Z  * branch            4a92643c00a7e4d113025e1df427d8f4850f0981 -> FETCH_HEAD
+2026-10-25T23:33:36.5536590Z ##[group]Run actions/setup-python@v5
+2026-10-25T23:33:36.5536912Z with:
+2026-10-25T23:33:36.5537096Z   python-version: 3.12
+2026-10-25T23:33:36.5537322Z   check-latest: false
+2026-10-25T23:33:36.5539981Z   token: ***
+2026-10-25T23:33:36.5540189Z   update-environment: true
+2026-10-25T23:33:36.5540412Z   allow-prereleases: false
+2026-10-25T23:33:36.5540619Z   freethreaded: false
+2026-10-25T23:33:36.5540805Z env:
+2026-10-25T23:33:36.5540982Z   META_ANALYSE_IDENTITY_SYNTHETIC_ONLY: 1
+2026-10-25T23:33:36.5541238Z   QT_QPA_PLATFORM: offscreen
+2026-10-25T23:33:36.5541444Z ##[endgroup]
+2026-10-25T23:33:36.7113574Z ##[group]Installed versions
+2026-10-25T23:33:36.7278141Z (node:7712) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-25T23:33:36.7278940Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-25T23:33:36.7280167Z Successfully set up CPython (3.12.10)
+2026-10-25T23:33:36.7281433Z ##[endgroup]
+2026-10-25T23:33:36.7574416Z ##[group]Run python scripts/record_ci_source.py
+2026-10-25T23:33:36.7574847Z [36;1mpython scripts/record_ci_source.py[0m
+2026-10-25T23:33:36.7675493Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-10-25T23:33:36.7675831Z env:
+2026-10-25T23:33:36.7676034Z   META_ANALYSE_IDENTITY_SYNTHETIC_ONLY: 1
+2026-10-25T23:33:36.7676303Z   QT_QPA_PLATFORM: offscreen
+2026-10-25T23:33:36.7676605Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-25T23:33:36.7677082Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-10-25T23:33:36.7677540Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-25T23:33:36.7677958Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-25T23:33:36.7678352Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-25T23:33:36.7678669Z ##[endgroup]
+2026-10-25T23:33:37.8775204Z Verified source SHA: b595a3a88d32eb6e93c94bbe5d26abeacb4712de
+2026-10-25T23:33:38.0012111Z ##[group]Run python -m pip install -c requirements.lock -e .[test]
+2026-10-25T23:33:38.0012658Z [36;1mpython -m pip install -c requirements.lock -e .[test][0m
+2026-10-25T23:33:38.0085297Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-10-25T23:33:38.0085628Z env:
+2026-10-25T23:33:38.0085811Z   META_ANALYSE_IDENTITY_SYNTHETIC_ONLY: 1
+2026-10-25T23:33:38.0086078Z   QT_QPA_PLATFORM: offscreen
+2026-10-25T23:33:38.0086385Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-25T23:33:38.0086828Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-10-25T23:33:38.0087260Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-25T23:33:38.0087828Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-25T23:33:38.0088217Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-25T23:33:38.0088516Z ##[endgroup]
+2026-10-25T23:33:41.9993338Z Obtaining file:///D:/a/meta_analyse/meta_analyse
+2026-10-25T23:33:42.0025415Z   Installing build dependencies: started
+2026-10-25T23:33:45.5018765Z   Installing build dependencies: finished with status 'done'
+2026-10-25T23:33:45.5034796Z   Checking if build backend supports build_editable: started
+2026-10-25T23:33:46.0240503Z   Checking if build backend supports build_editable: finished with status 'done'
+2026-10-25T23:33:46.0266345Z   Getting requirements to build editable: started
+2026-10-25T23:33:46.5844081Z   Getting requirements to build editable: finished with status 'done'
+2026-10-25T23:33:46.5875544Z   Preparing editable metadata (pyproject.toml): started
+2026-10-25T23:33:46.9271798Z   Preparing editable metadata (pyproject.toml): finished with status 'done'
+2026-10-25T23:33:47.2875917Z Collecting httpx<1,>=0.27 (from meta-analyse==0.1.0)
+2026-10-25T23:33:47.6682244Z   Downloading httpx-0.28.1-py3-none-any.whl.metadata (7.1 kB)
+2026-10-25T23:33:47.9941348Z Collecting websockets<16,>=13 (from meta-analyse==0.1.0)
+2026-10-25T23:33:48.0564178Z   Downloading websockets-15.0.1-cp312-cp312-win_amd64.whl.metadata (7.0 kB)
+2026-10-25T23:33:48.1427085Z Collecting psycopg<4,>=3.2 (from psycopg[binary]<4,>=3.2->meta-analyse==0.1.0)
+2026-10-25T23:33:48.2027383Z   Downloading psycopg-3.3.6-py3-none-any.whl.metadata (4.4 kB)
+2026-10-25T23:33:48.2962887Z Collecting PySide6<7,>=6.8 (from meta-analyse==0.1.0)
+2026-10-25T23:33:48.3614856Z   Downloading pyside6-6.12.0-cp310-abi3-win_amd64.whl.metadata (5.7 kB)
+2026-10-25T23:33:48.4547443Z Collecting pytest<10,>=8 (from meta-analyse==0.1.0)
+2026-10-25T23:33:48.5179215Z   Downloading pytest-9.1.1-py3-none-any.whl.metadata (7.6 kB)
+2026-10-25T23:33:48.6055561Z Collecting pytest-asyncio<2,>=0.24 (from meta-analyse==0.1.0)
+2026-10-25T23:33:48.6658840Z   Downloading pytest_asyncio-1.4.0-py3-none-any.whl.metadata (4.1 kB)
+2026-10-25T23:33:49.1627259Z Collecting hypothesis==6.170.6 (from meta-analyse==0.1.0)
+2026-10-25T23:33:49.2241464Z   Downloading hypothesis-6.170.6-cp312-cp312-win_amd64.whl.metadata (5.6 kB)
+2026-10-25T23:33:49.3101445Z Collecting sortedcontainers<3.0.0,>=2.1.0 (from hypothesis==6.170.6->meta-analyse==0.1.0)
+2026-10-25T23:33:49.3691719Z   Downloading sortedcontainers-2.4.0-py2.py3-none-any.whl.metadata (10 kB)
+2026-10-25T23:33:49.4606580Z Collecting anyio (from httpx<1,>=0.27->meta-analyse==0.1.0)
+2026-10-25T23:33:49.5208878Z   Downloading anyio-4.15.1-py3-none-any.whl.metadata (4.7 kB)
+2026-10-25T23:33:49.6018903Z Collecting certifi (from httpx<1,>=0.27->meta-analyse==0.1.0)
+2026-10-25T23:33:49.6617245Z   Downloading certifi-2026.7.22-py3-none-any.whl.metadata (2.5 kB)
+2026-10-25T23:33:49.7465766Z Collecting httpcore==1.* (from httpx<1,>=0.27->meta-analyse==0.1.0)
+2026-10-25T23:33:49.8059794Z   Downloading httpcore-1.0.9-py3-none-any.whl.metadata (21 kB)
+2026-10-25T23:33:49.9082172Z Collecting idna (from httpx<1,>=0.27->meta-analyse==0.1.0)
+2026-10-25T23:33:49.9670777Z   Downloading idna-3.20-py3-none-any.whl.metadata (7.2 kB)
+2026-10-25T23:33:50.0433690Z Collecting h11>=0.16 (from httpcore==1.*->httpx<1,>=0.27->meta-analyse==0.1.0)
+2026-10-25T23:33:50.1029571Z   Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+2026-10-25T23:33:50.1923906Z Collecting typing-extensions>=4.6 (from psycopg<4,>=3.2->psycopg[binary]<4,>=3.2->meta-analyse==0.1.0)
+2026-10-25T23:33:50.2525138Z   Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+2026-10-25T23:33:50.3438715Z Collecting tzdata (from psycopg<4,>=3.2->psycopg[binary]<4,>=3.2->meta-analyse==0.1.0)
+2026-10-25T23:33:50.4026455Z   Downloading tzdata-2026.5-py2.py3-none-any.whl.metadata (1.4 kB)
+2026-10-25T23:33:50.6642783Z Collecting psycopg-binary==3.3.6 (from psycopg[binary]<4,>=3.2->meta-analyse==0.1.0)
+2026-10-25T23:33:50.7299204Z   Downloading psycopg_binary-3.3.6-cp312-cp312-win_amd64.whl.metadata (2.8 kB)
+2026-10-25T23:33:50.8188282Z Collecting PySide6_Essentials==6.12.0 (from PySide6<7,>=6.8->meta-analyse==0.1.0)
+2026-10-25T23:33:50.8799495Z   Downloading pyside6_essentials-6.12.0-cp310-abi3-win_amd64.whl.metadata (3.9 kB)
+2026-10-25T23:33:50.9737847Z Collecting PySide6_Addons==6.12.0 (from PySide6<7,>=6.8->meta-analyse==0.1.0)
+2026-10-25T23:33:51.0398058Z   Downloading pyside6_addons-6.12.0-cp310-abi3-win_amd64.whl.metadata (4.4 kB)
+2026-10-25T23:33:51.1168655Z Collecting PySide6_WebEngine==6.12.0.140 (from PySide6<7,>=6.8->meta-analyse==0.1.0)
+2026-10-25T23:33:51.1904297Z   Downloading pyside6_webengine-6.12.0.140-cp310-abi3-win_amd64.whl.metadata (3.7 kB)
+2026-10-25T23:33:51.2660924Z Collecting PySide6_Pdf==6.12.0.140 (from PySide6<7,>=6.8->meta-analyse==0.1.0)
+2026-10-25T23:33:51.3310622Z   Downloading pyside6_pdf-6.12.0.140-cp310-abi3-win_amd64.whl.metadata (3.6 kB)
+2026-10-25T23:33:51.4168168Z Collecting shiboken6==6.12.0 (from PySide6_Essentials==6.12.0->PySide6<7,>=6.8->meta-analyse==0.1.0)
+2026-10-25T23:33:51.5020561Z   Downloading shiboken6-6.12.0-cp310-abi3-win_amd64.whl.metadata (2.6 kB)
+2026-10-25T23:33:51.5243997Z Requirement already satisfied: colorama>=0.4 in C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\site-packages (from pytest<10,>=8->meta-analyse==0.1.0) (0.4.6)
+2026-10-25T23:33:51.5797492Z Collecting iniconfig>=1.0.1 (from pytest<10,>=8->meta-analyse==0.1.0)
+2026-10-25T23:33:51.6629473Z   Downloading iniconfig-2.3.1-py3-none-any.whl.metadata (2.8 kB)
+2026-10-25T23:33:51.6837227Z Requirement already satisfied: packaging>=22 in C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\site-packages (from pytest<10,>=8->meta-analyse==0.1.0) (26.3)
+2026-10-25T23:33:51.7389861Z Collecting pluggy<2,>=1.5 (from pytest<10,>=8->meta-analyse==0.1.0)
+2026-10-25T23:33:51.7982643Z   Downloading pluggy-1.7.0-py3-none-any.whl.metadata (5.0 kB)
+2026-10-25T23:33:51.8771935Z Collecting pygments>=2.7.2 (from pytest<10,>=8->meta-analyse==0.1.0)
+2026-10-25T23:33:51.9401777Z   Downloading pygments-2.21.0-py3-none-any.whl.metadata (2.5 kB)
+2026-10-25T23:33:52.0401427Z Downloading hypothesis-6.170.6-cp312-cp312-win_amd64.whl (687 kB)
+2026-10-25T23:33:52.3064878Z    ---------------------------------------- 687.7/687.7 kB 4.6 MB/s  0:00:00
+2026-10-25T23:33:52.3785763Z Downloading httpx-0.28.1-py3-none-any.whl (73 kB)
+2026-10-25T23:33:52.4614195Z Downloading httpcore-1.0.9-py3-none-any.whl (78 kB)
+2026-10-25T23:33:52.5368367Z Downloading psycopg-3.3.6-py3-none-any.whl (215 kB)
+2026-10-25T23:33:52.6252477Z Downloading psycopg_binary-3.3.6-cp312-cp312-win_amd64.whl (3.7 MB)
+2026-10-25T23:33:52.7941888Z    ---------------------------------------- 3.7/3.7 MB 21.6 MB/s  0:00:00
+2026-10-25T23:33:52.8547287Z Downloading pyside6-6.12.0-cp310-abi3-win_amd64.whl (578 kB)
+2026-10-25T23:33:52.8814936Z    ---------------------------------------- 579.0/579.0 kB 19.8 MB/s  0:00:00
+2026-10-25T23:33:52.9490616Z Downloading pyside6_addons-6.12.0-cp310-abi3-win_amd64.whl (40.5 MB)
+2026-10-25T23:33:53.9074295Z    ---------------------------------------- 40.5/40.5 MB 42.2 MB/s  0:00:00
+2026-10-25T23:33:53.9737484Z Downloading pyside6_essentials-6.12.0-cp310-abi3-win_amd64.whl (82.2 MB)
+2026-10-25T23:33:56.3627528Z    ---------------------------------------- 82.2/82.2 MB 34.3 MB/s  0:00:02
+2026-10-25T23:33:56.4304449Z Downloading pyside6_pdf-6.12.0.140-cp310-abi3-win_amd64.whl (3.0 MB)
+2026-10-25T23:33:56.4659290Z    ---------------------------------------- 3.0/3.0 MB 85.0 MB/s  0:00:00
+2026-10-25T23:33:56.5413994Z Downloading pyside6_webengine-6.12.0.140-cp310-abi3-win_amd64.whl (131.7 MB)
+2026-10-25T23:34:00.4002362Z    ---------------------------------------- 131.7/131.7 MB 34.1 MB/s  0:00:03
+2026-10-25T23:34:00.4711773Z Downloading shiboken6-6.12.0-cp310-abi3-win_amd64.whl (1.3 MB)
+2026-10-25T23:34:00.5011311Z    ---------------------------------------- 1.3/1.3 MB 32.4 MB/s  0:00:00
+2026-10-25T23:34:00.5607068Z Downloading pytest-9.1.1-py3-none-any.whl (386 kB)
+2026-10-25T23:34:00.6484524Z Downloading pluggy-1.7.0-py3-none-any.whl (27 kB)
+2026-10-25T23:34:00.7330591Z Downloading pytest_asyncio-1.4.0-py3-none-any.whl (16 kB)
+2026-10-25T23:34:00.8142985Z Downloading sortedcontainers-2.4.0-py2.py3-none-any.whl (29 kB)
+2026-10-25T23:34:00.8991170Z Downloading websockets-15.0.1-cp312-cp312-win_amd64.whl (176 kB)
+2026-10-25T23:34:00.9798374Z Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+2026-10-25T23:34:01.0601777Z Downloading iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
+2026-10-25T23:34:01.1470327Z Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+2026-10-25T23:34:01.1861606Z    ---------------------------------------- 1.3/1.3 MB 31.9 MB/s  0:00:00
+2026-10-25T23:34:01.2470086Z Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+2026-10-25T23:34:01.3270558Z Downloading anyio-4.15.1-py3-none-any.whl (132 kB)
+2026-10-25T23:34:01.4208358Z Downloading idna-3.20-py3-none-any.whl (69 kB)
+2026-10-25T23:34:01.4972523Z Downloading certifi-2026.7.22-py3-none-any.whl (136 kB)
+2026-10-25T23:34:01.5791628Z Downloading tzdata-2026.5-py2.py3-none-any.whl (347 kB)
+2026-10-25T23:34:01.9722889Z Building wheels for collected packages: meta-analyse
+2026-10-25T23:34:01.9760695Z   Building editable for meta-analyse (pyproject.toml): started
+2026-10-25T23:34:02.3620862Z   Building editable for meta-analyse (pyproject.toml): finished with status 'done'
+2026-10-25T23:34:02.3661629Z   Created wheel for meta-analyse: filename=meta_analyse-0.1.0-0.editable-py3-none-any.whl size=1719 sha256=56bd49086a2145fd9daa67efe295103040c249d02127d98de4586fa7078d0873
+2026-10-25T23:34:02.3664005Z   Stored in directory: C:\Users\runneradmin\AppData\Local\Temp\pip-ephem-wheel-cache-803r758t\wheels\38\0c\e1\e688da28e98c4d43cf692adff69edd6418e5ddde31bb2b3aaf
+2026-10-25T23:34:02.3689244Z Successfully built meta-analyse
+2026-10-25T23:34:02.4522865Z Installing collected packages: sortedcontainers, websockets, tzdata, typing-extensions, shiboken6, pygments, psycopg-binary, pluggy, iniconfig, idna, hypothesis, h11, certifi, pytest, PySide6_Essentials, psycopg, httpcore, anyio, pytest-asyncio, PySide6_Pdf, PySide6_Addons, httpx, PySide6_WebEngine, PySide6, meta-analyse
+2026-10-25T23:34:21.5735504Z 
+2026-10-25T23:34:21.5773881Z Successfully installed PySide6-6.12.0 PySide6_Addons-6.12.0 PySide6_Essentials-6.12.0 PySide6_Pdf-6.12.0.140 PySide6_WebEngine-6.12.0.140 anyio-4.15.1 certifi-2026.7.22 h11-0.16.0 httpcore-1.0.9 httpx-0.28.1 hypothesis-6.170.6 idna-3.20 iniconfig-2.3.1 meta-analyse-0.1.0 pluggy-1.7.0 psycopg-3.3.6 psycopg-binary-3.3.6 pygments-2.21.0 pytest-9.1.1 pytest-asyncio-1.4.0 shiboken6-6.12.0 sortedcontainers-2.4.0 typing-extensions-4.16.0 tzdata-2026.5 websockets-15.0.1
+2026-10-25T23:34:21.9759555Z ##[group]Run python -m pytest --noconftest -q -p no:cacheprovider -p scripts.integration_synthetic_boundary tests/test_kernel_identity_evidence.py tests/test_process_inventory_identity.py tests/test_host_identity_authorization.py tests/test_diagnostic_hardening.py tests/test_windows_service_contracts.py tests/test_service_host_fallback.py tests/test_process_identity_acceptance.py tests/test_pr20_security.py tests/test_evidence_schema_properties.py tests/test_synthetic_artifact_projection.py tests/test_pr22_boundary.py tests/test_pr23_transaction.py tests/test_native_scm_adapter.py tests/test_scm_cooccurrence_independent.py tests/test_windows_native_abi_source.py tests/test_inventory_refusal_projection.py tests/test_public_junit.py tests/test_project_public_ci_evidence.py tests/test_public_evidence_workflows.py tests/test_pg_cluster_attestation.py tests/test_pg_cluster_plan.py tests/test_pg_cluster_connection.py tests/test_pg_commissioning_binding.py tests/test_public_bybit_e2e_probe.py tests/test_bybit_stream_witness.py tests/test_bybit_collector_witness.py tests/test_stage_acceptance.py tests/test_orderbook_recovery.py tests/test_orderbook_autonomous_recovery.py tests/test_market_collector.py tests/test_market_health.py tests/test_pipeline.py tests/test_pipeline_callbacks.py tests/test_integration_contract_shutdown.py tests/test_desktop_service.py tests/test_desktop_telemetry.py tests/test_adminit_commissioning.py tests/test_adminit_preparation_contract.py tests/test_pg_checkpoint_witness.py tests/test_final_integration_workflow.py tests/test_final_integration_junit.py tests/test_pg_catalog_binding.py tests/test_bybit_trade_validation.py tests/test_pg_provisioning_regressions.py tests/test_readiness_desktop_health.py tests/test_feed_watchdog.py tests/test_pg18_disposable_driver.py tests/test_analysis_session.py tests/test_session_lifecycle.py tests/test_feed_freshness.py tests/test_readiness_commit_failures.py tests/test_desktop_lifecycle.py tests/test_qt_diagnostics.py -k 'not test_private_evidence_real_dpapi_roundtrip_or_platform_refusal and not test_windows_dpapi_tamper_or_other_platform_fails_closed' --junitxml=integration-tests.xml
+2026-10-25T23:34:21.9776420Z [36;1mpython -m pytest --noconftest -q -p no:cacheprovider -p scripts.integration_synthetic_boundary tests/test_kernel_identity_evidence.py tests/test_process_inventory_identity.py tests/test_host_identity_authorization.py tests/test_diagnostic_hardening.py tests/test_windows_service_contracts.py tests/test_service_host_fallback.py tests/test_process_identity_acceptance.py tests/test_pr20_security.py tests/test_evidence_schema_properties.py tests/test_synthetic_artifact_projection.py tests/test_pr22_boundary.py tests/test_pr23_transaction.py tests/test_native_scm_adapter.py tests/test_scm_cooccurrence_independent.py tests/test_windows_native_abi_source.py tests/test_inventory_refusal_projection.py tests/test_public_junit.py tests/test_project_public_ci_evidence.py tests/test_public_evidence_workflows.py tests/test_pg_cluster_attestation.py tests/test_pg_cluster_plan.py tests/test_pg_cluster_connection.py tests/test_pg_commissioning_binding.py tests/test_public_bybit_e2e_probe.py tests/test_bybit_stream_witness.py tests/test_bybit_collector_witness.py tests/test_stage_acceptance.py tests/test_orderbook_recovery.py tests/test_orderbook_autonomous_recovery.py tests/test_market_collector.py tests/test_market_health.py tests/test_pipeline.py tests/test_pipeline_callbacks.py tests/test_integration_contract_shutdown.py tests/test_desktop_service.py tests/test_desktop_telemetry.py tests/test_adminit_commissioning.py tests/test_adminit_preparation_contract.py tests/test_pg_checkpoint_witness.py tests/test_final_integration_workflow.py tests/test_final_integration_junit.py tests/test_pg_catalog_binding.py tests/test_bybit_trade_validation.py tests/test_pg_provisioning_regressions.py tests/test_readiness_desktop_health.py tests/test_feed_watchdog.py tests/test_pg18_disposable_driver.py tests/test_analysis_session.py tests/test_session_lifecycle.py tests/test_feed_freshness.py tests/test_readiness_commit_failures.py tests/test_desktop_lifecycle.py tests/test_qt_diagnostics.py -k 'not test_private_evidence_real_dpapi_roundtrip_or_platform_refusal and not test_windows_dpapi_tamper_or_other_platform_fails_closed' --junitxml=integration-tests.xml[0m
+2026-10-25T23:34:21.9857050Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-10-25T23:34:21.9857391Z env:
+2026-10-25T23:34:21.9857585Z   META_ANALYSE_IDENTITY_SYNTHETIC_ONLY: 1
+2026-10-25T23:34:21.9857849Z   QT_QPA_PLATFORM: offscreen
+2026-10-25T23:34:21.9858157Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-25T23:34:21.9858940Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-10-25T23:34:21.9859409Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-25T23:34:21.9859808Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-25T23:34:21.9860212Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-25T23:34:21.9860646Z   META_ANALYSE_SYNTHETIC_IDENTITIES: D:\a\_temp/integration-identities.json
+2026-10-25T23:34:21.9861014Z ##[endgroup]
+2026-10-25T23:34:30.2055284Z ........................................................................ [  4%]
+2026-10-25T23:34:30.6217647Z ........................................................................ [  8%]
+2026-10-25T23:34:33.1577159Z ........................................................................ [ 12%]
+2026-10-25T23:34:36.3432938Z ........................................................................ [ 16%]
+2026-10-25T23:34:36.4654290Z ........................................................................ [ 20%]
+2026-10-25T23:34:36.6319303Z ........................................................................ [ 24%]
+2026-10-25T23:34:36.7618277Z ........................................................................ [ 28%]
+2026-10-25T23:34:36.8869623Z ........................................................................ [ 33%]
+2026-10-25T23:34:37.0068378Z ........................................................................ [ 37%]
+2026-10-25T23:34:37.1116956Z ........................................................................ [ 41%]
+2026-10-25T23:34:37.2492174Z ........................................................................ [ 45%]
+2026-10-25T23:34:39.5058033Z ........................................................................ [ 49%]
+2026-10-25T23:34:40.9533572Z ........................................................................ [ 53%]
+2026-10-25T23:34:41.1392179Z ........................................................................ [ 57%]
+2026-10-25T23:34:42.2045447Z ........................................................................ [ 62%]
+2026-10-25T23:34:42.5490129Z ........................................................................ [ 66%]
+2026-10-25T23:34:43.8215439Z ........................................................................ [ 70%]
+2026-10-25T23:34:44.6345127Z ........................................................................ [ 74%]
+2026-10-25T23:34:44.8698213Z ........................................................................ [ 78%]
+2026-10-25T23:34:45.1894496Z ..F...F................................................................. [ 82%]
+2026-10-25T23:34:45.7767449Z ........................................................................ [ 86%]
+2026-10-25T23:34:45.9449764Z ........................................FF.............................. [ 91%]
+2026-10-25T23:34:46.2435317Z ........................................................................ [ 95%]
+2026-10-25T23:34:48.0866089Z ..........F.FF.......................................................... [ 99%]
+2026-10-25T23:34:53.1808140Z ............                                                             [100%]
+2026-10-25T23:34:53.1808879Z ================================== FAILURES ===================================
+2026-10-25T23:34:53.1810660Z ___________ test_commissioning_store_attests_every_fresh_connection ___________
+2026-10-25T23:34:53.1811039Z 
+2026-10-25T23:34:53.1811276Z monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001FE6B7C9550>
+2026-10-25T23:34:53.1811617Z 
+2026-10-25T23:34:53.1811825Z     def test_commissioning_store_attests_every_fresh_connection(monkeypatch):
+2026-10-25T23:34:53.1812196Z         connections=[]
+2026-10-25T23:34:53.1812428Z         def connect(*a,**k):
+2026-10-25T23:34:53.1812731Z             conn=FakeConn(GOOD);connections.append(conn);return conn
+2026-10-25T23:34:53.1813140Z         monkeypatch.setattr(initializer.psycopg,'connect',connect)
+2026-10-25T23:34:53.1813730Z         store=Store('host=127.0.0.1 port=55480 dbname=meta_commission_test user=meta_commission_test',expected_cluster=POLICY)
+2026-10-25T23:34:53.1814252Z         for _ in range(2):
+2026-10-25T23:34:53.1815058Z >           with store.connect() as conn:conn.execute('INSERT INTO synthetic VALUES (1)')
+2026-10-25T23:34:53.1815449Z                  ^^^^^^^^^^^^^^^
+2026-10-25T23:34:53.1815600Z 
+2026-10-25T23:34:53.1815721Z tests\test_pg_commissioning_binding.py:40: 
+2026-10-25T23:34:53.1816039Z _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+2026-10-25T23:34:53.1816594Z src\meta_analyse\storage.py:52: in connect
+2026-10-25T23:34:53.1816995Z     validate_connection_parameters(conninfo_to_dict(self.dsn), self.expected_cluster)
+2026-10-25T23:34:53.1817436Z _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+2026-10-25T23:34:53.1817663Z 
+2026-10-25T23:34:53.1818028Z config = {'user': 'meta_commission_test', 'dbname': 'meta_commission_test', 'host': '127.0.0.1', 'port': '55480'}
+2026-10-25T23:34:53.1818898Z expected = ExpectedCluster(system_identifier='12345678901234567890', database='meta_commission_test', role='meta_commission_test', port=55480, version_num=180001)
+2026-10-25T23:34:53.1819473Z 
+2026-10-25T23:34:53.1819609Z     def validate_connection_parameters(config, expected):
+2026-10-25T23:34:53.1820016Z         """Pre-connect rejection; secrets never appear in refusal messages."""
+2026-10-25T23:34:53.1820413Z         if not isinstance(expected, ExpectedCluster):
+2026-10-25T23:34:53.1820766Z             raise AttestationRefused("INVALID_EXPECTED_CLUSTER")
+2026-10-25T23:34:53.1821195Z         # libpq can inherit routing, service, startup-option and credential values.
+2026-10-25T23:34:53.1821672Z         # The commissioning connection must depend only on the approved config.
+2026-10-25T23:34:53.1822179Z         if any(name.upper().startswith("PG") and value for name, value in os.environ.items()):
+2026-10-25T23:34:53.1822656Z >           raise AttestationRefused("PG_ENVIRONMENT_FORBIDDEN")
+2026-10-25T23:34:53.1823135Z E           meta_analyse.pg_cluster_attestation.AttestationRefused: PG_ENVIRONMENT_FORBIDDEN
+2026-10-25T23:34:53.1823484Z 
+2026-10-25T23:34:53.1823652Z src\meta_analyse\pg_authorized_connection.py:42: AttestationRefused
+2026-10-25T23:34:53.1824126Z ________ test_preflight_database_connection_is_freshly_attested[False] ________
+2026-10-25T23:34:53.1824414Z 
+2026-10-25T23:34:53.1824624Z monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001FE6B7CB530>
+2026-10-25T23:34:53.1824997Z wrong = False
+2026-10-25T23:34:53.1825154Z 
+2026-10-25T23:34:53.1825275Z     @pytest.mark.parametrize('wrong',[False,True])
+2026-10-25T23:34:53.1825716Z     def test_preflight_database_connection_is_freshly_attested(monkeypatch,wrong):
+2026-10-25T23:34:53.1826108Z         import preflight
+2026-10-25T23:34:53.1826312Z         row=list(GOOD)
+2026-10-25T23:34:53.1826516Z         if wrong:row[5]='111'
+2026-10-25T23:34:53.1826897Z         conn=FakeConn(row);monkeypatch.setattr(initializer.psycopg,'connect',lambda **k:conn)
+2026-10-25T23:34:53.1827591Z         calls=[];monkeypatch.setattr(preflight,'verify_database_role',lambda *a:calls.append('role') or (180001,('synthetic',)))
+2026-10-25T23:34:53.1828361Z         config=dict(host='127.0.0.1',port='55480',dbname=POLICY.database,user=POLICY.role)
+2026-10-25T23:34:53.1828748Z         if wrong:
+2026-10-25T23:34:53.1829168Z             with pytest.raises(AttestationRefused):preflight.inspect_database(config,{},POLICY.system_identifier)
+2026-10-25T23:34:53.1829662Z             assert calls==[]
+2026-10-25T23:34:53.1829870Z         else:
+2026-10-25T23:34:53.1830202Z >           assert preflight.inspect_database(config,{},POLICY.system_identifier)[0]==180001
+2026-10-25T23:34:53.1830642Z                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-25T23:34:53.1830847Z 
+2026-10-25T23:34:53.1830956Z tests\test_pg_commissioning_binding.py:74: 
+2026-10-25T23:34:53.1831275Z _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+2026-10-25T23:34:53.1831614Z commissioning\preflight.py:93: in inspect_database
+2026-10-25T23:34:53.1831943Z     validate_connection_parameters(config,expected)
+2026-10-25T23:34:53.1832280Z _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+2026-10-25T23:34:53.1832508Z 
+2026-10-25T23:34:53.1832767Z config = {'host': '127.0.0.1', 'port': '55480', 'dbname': 'meta_commission_test', 'user': 'meta_commission_test'}
+2026-10-25T23:34:53.1834264Z expected = ExpectedCluster(system_identifier='12345678901234567890', database='meta_commission_test', role='meta_commission_test', port=55480, version_num=180001)
+2026-10-25T23:34:53.1835255Z 
+2026-10-25T23:34:53.1835412Z     def validate_connection_parameters(config, expected):
+2026-10-25T23:34:53.1835853Z         """Pre-connect rejection; secrets never appear in refusal messages."""
+2026-10-25T23:34:53.1836258Z         if not isinstance(expected, ExpectedCluster):
+2026-10-25T23:34:53.1836604Z             raise AttestationRefused("INVALID_EXPECTED_CLUSTER")
+2026-10-25T23:34:53.1837034Z         # libpq can inherit routing, service, startup-option and credential values.
+2026-10-25T23:34:53.1837521Z         # The commissioning connection must depend only on the approved config.
+2026-10-25T23:34:53.1838039Z         if any(name.upper().startswith("PG") and value for name, value in os.environ.items()):
+2026-10-25T23:34:53.1838501Z >           raise AttestationRefused("PG_ENVIRONMENT_FORBIDDEN")
+2026-10-25T23:34:53.1838968Z E           meta_analyse.pg_cluster_attestation.AttestationRefused: PG_ENVIRONMENT_FORBIDDEN
+2026-10-25T23:34:53.1839320Z 
+2026-10-25T23:34:53.1839496Z src\meta_analyse\pg_authorized_connection.py:42: AttestationRefused
+2026-10-25T23:34:53.1839952Z _______ test_new_schema_check_and_ddl_share_transaction_and_lock[True] ________
+2026-10-25T23:34:53.1840248Z 
+2026-10-25T23:34:53.1840451Z monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001FE71BEFA40>
+2026-10-25T23:34:53.1840825Z existing = True
+2026-10-25T23:34:53.1840940Z 
+2026-10-25T23:34:53.1841072Z     @pytest.mark.parametrize('existing',[True,False])
+2026-10-25T23:34:53.1841506Z     def test_new_schema_check_and_ddl_share_transaction_and_lock(monkeypatch,existing):
+2026-10-25T23:34:53.1841917Z         import importlib.util
+2026-10-25T23:34:53.1842426Z         spec=importlib.util.spec_from_file_location('schema_setup',Path(h.__file__).with_name('initialize-private-schema.py'))
+2026-10-25T23:34:53.1843091Z         module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+2026-10-25T23:34:53.1843522Z         from test_pg_cluster_connection import POLICY,GOOD
+2026-10-25T23:34:53.1843940Z         config=dict(host='127.0.0.1',port='55480',dbname=POLICY.database,user=POLICY.role)
+2026-10-25T23:34:53.1844325Z         calls=[]
+2026-10-25T23:34:53.1844509Z         class Connection:
+2026-10-25T23:34:53.1844775Z             def __enter__(self):calls.append('begin');return self
+2026-10-25T23:34:53.1845181Z             def __exit__(self,*args):calls.append('rollback' if args[0] else 'commit')
+2026-10-25T23:34:53.1845612Z             def execute(self,sql,*args):calls.append(sql);return self
+2026-10-25T23:34:53.1845934Z             def transaction(self):
+2026-10-25T23:34:53.1846326Z                 from contextlib import nullcontext
+2026-10-25T23:34:53.1846613Z                 return nullcontext()
+2026-10-25T23:34:53.1847014Z             def fetchone(self):return GOOD if 'pg_control_system()' in calls[-1] else (existing,)
+2026-10-25T23:34:53.1847563Z         monkeypatch.setattr(module.psycopg,'connect',lambda **kwargs:Connection())
+2026-10-25T23:34:53.1848125Z         monkeypatch.setattr(module,'verify_database_role',lambda *args:calls.append('verify_role'))
+2026-10-25T23:34:53.1848554Z         if existing:
+2026-10-25T23:34:53.1848894Z             with pytest.raises(ValueError):module.initialize_new_schema(config, {}, POLICY)
+2026-10-25T23:34:53.1849300Z >           assert calls[-1]=='rollback'
+2026-10-25T23:34:53.1849544Z                    ^^^^^^^^^
+2026-10-25T23:34:53.1849775Z E           IndexError: list index out of range
+2026-10-25T23:34:53.1849969Z 
+2026-10-25T23:34:53.1850085Z tests\test_adminit_commissioning.py:76: IndexError
+2026-10-25T23:34:53.1850481Z _______ test_new_schema_check_and_ddl_share_transaction_and_lock[False] _______
+2026-10-25T23:34:53.1850774Z 
+2026-10-25T23:34:53.1850984Z monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001FE6B782480>
+2026-10-25T23:34:53.1851456Z existing = False
+2026-10-25T23:34:53.1851562Z 
+2026-10-25T23:34:53.1851692Z     @pytest.mark.parametrize('existing',[True,False])
+2026-10-25T23:34:53.1852121Z     def test_new_schema_check_and_ddl_share_transaction_and_lock(monkeypatch,existing):
+2026-10-25T23:34:53.1852524Z         import importlib.util
+2026-10-25T23:34:53.1853043Z         spec=importlib.util.spec_from_file_location('schema_setup',Path(h.__file__).with_name('initialize-private-schema.py'))
+2026-10-25T23:34:53.1853696Z         module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+2026-10-25T23:34:53.1854135Z         from test_pg_cluster_connection import POLICY,GOOD
+2026-10-25T23:34:53.1854557Z         config=dict(host='127.0.0.1',port='55480',dbname=POLICY.database,user=POLICY.role)
+2026-10-25T23:34:53.1855283Z         calls=[]
+2026-10-25T23:34:53.1855481Z         class Connection:
+2026-10-25T23:34:53.1855753Z             def __enter__(self):calls.append('begin');return self
+2026-10-25T23:34:53.1856176Z             def __exit__(self,*args):calls.append('rollback' if args[0] else 'commit')
+2026-10-25T23:34:53.1856614Z             def execute(self,sql,*args):calls.append(sql);return self
+2026-10-25T23:34:53.1856940Z             def transaction(self):
+2026-10-25T23:34:53.1857193Z                 from contextlib import nullcontext
+2026-10-25T23:34:53.1857468Z                 return nullcontext()
+2026-10-25T23:34:53.1857866Z             def fetchone(self):return GOOD if 'pg_control_system()' in calls[-1] else (existing,)
+2026-10-25T23:34:53.1858409Z         monkeypatch.setattr(module.psycopg,'connect',lambda **kwargs:Connection())
+2026-10-25T23:34:53.1858984Z         monkeypatch.setattr(module,'verify_database_role',lambda *args:calls.append('verify_role'))
+2026-10-25T23:34:53.1859417Z         if existing:
+2026-10-25T23:34:53.1859758Z             with pytest.raises(ValueError):module.initialize_new_schema(config, {}, POLICY)
+2026-10-25T23:34:53.1860183Z             assert calls[-1]=='rollback'
+2026-10-25T23:34:53.1860421Z         else:
+2026-10-25T23:34:53.1860648Z >           module.initialize_new_schema(config, {}, POLICY)
+2026-10-25T23:34:53.1860865Z 
+2026-10-25T23:34:53.1860973Z tests\test_adminit_commissioning.py:78: 
+2026-10-25T23:34:53.1861276Z _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+2026-10-25T23:34:53.1861704Z commissioning\initialize-private-schema.py:13: in initialize_new_schema
+2026-10-25T23:34:53.1862140Z     validate_connection_parameters(config, expected_cluster)
+2026-10-25T23:34:53.2890055Z _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+2026-10-25T23:34:53.2890528Z 
+2026-10-25T23:34:53.2891968Z config = {'host': '127.0.0.1', 'port': '55480', 'dbname': 'meta_commission_test', 'user': 'meta_commission_test'}
+2026-10-25T23:34:53.2892932Z expected = ExpectedCluster(system_identifier='12345678901234567890', database='meta_commission_test', role='meta_commission_test', port=55480, version_num=180001)
+2026-10-25T23:34:53.2893568Z 
+2026-10-25T23:34:53.2893721Z     def validate_connection_parameters(config, expected):
+2026-10-25T23:34:53.2894154Z         """Pre-connect rejection; secrets never appear in refusal messages."""
+2026-10-25T23:34:53.2894577Z         if not isinstance(expected, ExpectedCluster):
+2026-10-25T23:34:53.2894945Z             raise AttestationRefused("INVALID_EXPECTED_CLUSTER")
+2026-10-25T23:34:53.2895409Z         # libpq can inherit routing, service, startup-option and credential values.
+2026-10-25T23:34:53.2895918Z         # The commissioning connection must depend only on the approved config.
+2026-10-25T23:34:53.2896474Z         if any(name.upper().startswith("PG") and value for name, value in os.environ.items()):
+2026-10-25T23:34:53.2896979Z >           raise AttestationRefused("PG_ENVIRONMENT_FORBIDDEN")
+2026-10-25T23:34:53.2897499Z E           meta_analyse.pg_cluster_attestation.AttestationRefused: PG_ENVIRONMENT_FORBIDDEN
+2026-10-25T23:34:53.2898028Z 
+2026-10-25T23:34:53.2898213Z src\meta_analyse\pg_authorized_connection.py:42: AttestationRefused
+2026-10-25T23:34:53.2898716Z _________ test_initializer_repins_catalog_after_identity_transaction __________
+2026-10-25T23:34:53.2899031Z 
+2026-10-25T23:34:53.2899256Z monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001FE6B1D6E10>
+2026-10-25T23:34:53.2899579Z 
+2026-10-25T23:34:53.2899805Z     def test_initializer_repins_catalog_after_identity_transaction(monkeypatch):
+2026-10-25T23:34:53.2900273Z         from test_pg_commissioning_binding import initializer
+2026-10-25T23:34:53.2900676Z         from test_pg_cluster_connection import FakeConn, GOOD, POLICY
+2026-10-25T23:34:53.2901026Z         conn = FakeConn(GOOD)
+2026-10-25T23:34:53.2901393Z         monkeypatch.setattr(initializer.psycopg, 'connect', lambda **kw: conn)
+2026-10-25T23:34:53.2902055Z         def before_role(*args):
+2026-10-25T23:34:53.2902379Z             assert conn.queries[3] == 'SET search_path TO pg_catalog'
+2026-10-25T23:34:53.2902820Z             assert conn.queries[4] == 'SET LOCAL search_path TO pg_catalog'
+2026-10-25T23:34:53.2903300Z             raise ValueError('guard verified')
+2026-10-25T23:34:53.2903844Z         monkeypatch.setattr(initializer, 'verify_database_role', before_role)
+2026-10-25T23:34:53.2904327Z >       with pytest.raises(ValueError, match='guard verified'):
+2026-10-25T23:34:53.2904674Z              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-25T23:34:53.2904996Z E       AssertionError: Regex pattern did not match.
+2026-10-25T23:34:53.2905316Z E         Expected regex: 'guard verified'
+2026-10-25T23:34:53.2905618Z E         Actual message: 'PG_ENVIRONMENT_FORBIDDEN'
+2026-10-25T23:34:53.2905843Z 
+2026-10-25T23:34:53.2906013Z tests\test_pg_provisioning_regressions.py:49: AssertionError
+2026-10-25T23:34:53.2906535Z _ test_operator_pg_connections_have_fixed_connection_statement_and_lock_bounds[initializer] _
+2026-10-25T23:34:53.2906914Z 
+2026-10-25T23:34:53.2907130Z monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001FE6B1D4080>
+2026-10-25T23:34:53.2907503Z caller = 'initializer'
+2026-10-25T23:34:53.2907637Z 
+2026-10-25T23:34:53.2907808Z     @pytest.mark.parametrize('caller', ['initializer', 'preflight'])
+2026-10-25T23:34:53.2908367Z     def test_operator_pg_connections_have_fixed_connection_statement_and_lock_bounds(monkeypatch, caller):
+2026-10-25T23:34:53.2908903Z         from test_pg_commissioning_binding import initializer
+2026-10-25T23:34:53.2909294Z         from test_pg_cluster_connection import FakeConn, GOOD, POLICY
+2026-10-25T23:34:53.2909621Z         import preflight
+2026-10-25T23:34:53.2909827Z         captured = []
+2026-10-25T23:34:53.2910027Z         def connect(**kwargs):
+2026-10-25T23:34:53.2910382Z             captured.append(kwargs)
+2026-10-25T23:34:53.2910638Z             return FakeConn(GOOD)
+2026-10-25T23:34:53.2910958Z         monkeypatch.setattr(initializer.psycopg, 'connect', connect)
+2026-10-25T23:34:53.2911377Z         module = initializer if caller == 'initializer' else preflight
+2026-10-25T23:34:53.2911718Z         def stop_after_connection(*args):
+2026-10-25T23:34:53.2912005Z             raise ValueError('bounded synthetic stop')
+2026-10-25T23:34:53.2912421Z         monkeypatch.setattr(module, 'verify_database_role', stop_after_connection)
+2026-10-25T23:34:53.2912895Z         config = dict(host='127.0.0.1', port='55480', dbname=POLICY.database,
+2026-10-25T23:34:53.2913301Z                       user=POLICY.role, connect_timeout=9999)
+2026-10-25T23:34:53.2913671Z >       with pytest.raises(ValueError, match='bounded synthetic stop'):
+2026-10-25T23:34:53.2914028Z              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-25T23:34:53.2914345Z E       AssertionError: Regex pattern did not match.
+2026-10-25T23:34:53.2914657Z E         Expected regex: 'bounded synthetic stop'
+2026-10-25T23:34:53.2914966Z E         Actual message: 'PG_ENVIRONMENT_FORBIDDEN'
+2026-10-25T23:34:53.2915159Z 
+2026-10-25T23:34:53.2915414Z tests\test_pg_provisioning_regressions.py:83: AssertionError
+2026-10-25T23:34:53.2915901Z _ test_operator_pg_connections_have_fixed_connection_statement_and_lock_bounds[preflight] _
+2026-10-25T23:34:53.2916253Z 
+2026-10-25T23:34:53.2916472Z monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001FE6B1D76E0>
+2026-10-25T23:34:53.2916849Z caller = 'preflight'
+2026-10-25T23:34:53.2916973Z 
+2026-10-25T23:34:53.2917136Z     @pytest.mark.parametrize('caller', ['initializer', 'preflight'])
+2026-10-25T23:34:53.2917686Z     def test_operator_pg_connections_have_fixed_connection_statement_and_lock_bounds(monkeypatch, caller):
+2026-10-25T23:34:53.2918222Z         from test_pg_commissioning_binding import initializer
+2026-10-25T23:34:53.2918598Z         from test_pg_cluster_connection import FakeConn, GOOD, POLICY
+2026-10-25T23:34:53.2918921Z         import preflight
+2026-10-25T23:34:53.2919120Z         captured = []
+2026-10-25T23:34:53.2919322Z         def connect(**kwargs):
+2026-10-25T23:34:53.2919563Z             captured.append(kwargs)
+2026-10-25T23:34:53.2919813Z             return FakeConn(GOOD)
+2026-10-25T23:34:53.2920132Z         monkeypatch.setattr(initializer.psycopg, 'connect', connect)
+2026-10-25T23:34:53.2920550Z         module = initializer if caller == 'initializer' else preflight
+2026-10-25T23:34:53.2920904Z         def stop_after_connection(*args):
+2026-10-25T23:34:53.2921191Z             raise ValueError('bounded synthetic stop')
+2026-10-25T23:34:53.2921792Z         monkeypatch.setattr(module, 'verify_database_role', stop_after_connection)
+2026-10-25T23:34:53.2922277Z         config = dict(host='127.0.0.1', port='55480', dbname=POLICY.database,
+2026-10-25T23:34:53.2922659Z                       user=POLICY.role, connect_timeout=9999)
+2026-10-25T23:34:53.2923032Z >       with pytest.raises(ValueError, match='bounded synthetic stop'):
+2026-10-25T23:34:53.2923500Z              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-25T23:34:53.2923912Z E       AssertionError: Regex pattern did not match.
+2026-10-25T23:34:53.2924231Z E         Expected regex: 'bounded synthetic stop'
+2026-10-25T23:34:53.2924542Z E         Actual message: 'PG_ENVIRONMENT_FORBIDDEN'
+2026-10-25T23:34:53.2924737Z 
+2026-10-25T23:34:53.2924892Z tests\test_pg_provisioning_regressions.py:83: AssertionError
+2026-10-25T23:34:53.2925272Z =========================== short test summary info ===========================
+2026-10-25T23:34:53.2926150Z FAILED tests/test_pg_commissioning_binding.py::test_commissioning_store_attests_every_fresh_connection - meta_analyse.pg_cluster_attestation.AttestationRefused: PG_ENVIRONMENT_FORBIDDEN
+2026-10-25T23:34:53.2927592Z FAILED tests/test_pg_commissioning_binding.py::test_preflight_database_connection_is_freshly_attested[False] - meta_analyse.pg_cluster_attestation.AttestationRefused: PG_ENVIRONMENT_FORBIDDEN
+2026-10-25T23:34:53.2928731Z FAILED tests/test_adminit_commissioning.py::test_new_schema_check_and_ddl_share_transaction_and_lock[True] - IndexError: list index out of range
+2026-10-25T23:34:53.2929852Z FAILED tests/test_adminit_commissioning.py::test_new_schema_check_and_ddl_share_transaction_and_lock[False] - meta_analyse.pg_cluster_attestation.AttestationRefused: PG_ENVIRONMENT_FORBIDDEN
+2026-10-25T23:34:53.2931017Z FAILED tests/test_pg_provisioning_regressions.py::test_initializer_repins_catalog_after_identity_transaction - AssertionError: Regex pattern did not match.
+2026-10-25T23:34:53.2931683Z   Expected regex: 'guard verified'
+2026-10-25T23:34:53.2931948Z   Actual message: 'PG_ENVIRONMENT_FORBIDDEN'
+2026-10-25T23:34:53.2932719Z FAILED tests/test_pg_provisioning_regressions.py::test_operator_pg_connections_have_fixed_connection_statement_and_lock_bounds[initializer] - AssertionError: Regex pattern did not match.
+2026-10-25T23:34:53.2933498Z   Expected regex: 'bounded synthetic stop'
+2026-10-25T23:34:53.2933790Z   Actual message: 'PG_ENVIRONMENT_FORBIDDEN'
+2026-10-25T23:34:53.2934554Z FAILED tests/test_pg_provisioning_regressions.py::test_operator_pg_connections_have_fixed_connection_statement_and_lock_bounds[preflight] - AssertionError: Regex pattern did not match.
+2026-10-25T23:34:53.2935411Z   Expected regex: 'bounded synthetic stop'
+2026-10-25T23:34:53.2935703Z   Actual message: 'PG_ENVIRONMENT_FORBIDDEN'
+2026-10-25T23:34:53.2935997Z 7 failed, 1733 passed, 2 deselected in 29.37s
+2026-10-25T23:34:53.5975573Z ##[error]Process completed with exit code 1.
+2026-10-25T23:34:53.6166435Z ##[group]Run git diff --exit-code HEAD
+2026-10-25T23:34:53.6166806Z [36;1mgit diff --exit-code HEAD[0m
+2026-10-25T23:34:53.6240960Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-10-25T23:34:53.6241306Z env:
+2026-10-25T23:34:53.6241498Z   META_ANALYSE_IDENTITY_SYNTHETIC_ONLY: 1
+2026-10-25T23:34:53.6241768Z   QT_QPA_PLATFORM: offscreen
+2026-10-25T23:34:53.6242079Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-25T23:34:53.6242555Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-10-25T23:34:53.6243040Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-25T23:34:53.6243450Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-25T23:34:53.6243856Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-25T23:34:53.6244171Z ##[endgroup]
+2026-10-25T23:34:54.2184215Z ##[group]Run set -euo pipefail
+2026-10-25T23:34:54.2184590Z [36;1mset -euo pipefail[0m
+2026-10-25T23:34:54.2185234Z [36;1mpython scripts/project_public_ci_evidence.py --output public-evidence --source source-sha.json --junit integration-tests.xml[0m
+2026-10-25T23:34:54.2185969Z [36;1mpython scripts/project_public_ci_evidence.py --validate public-evidence[0m
+2026-10-25T23:34:54.2206188Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-10-25T23:34:54.2206574Z env:
+2026-10-25T23:34:54.2206761Z   META_ANALYSE_IDENTITY_SYNTHETIC_ONLY: 1
+2026-10-25T23:34:54.2207023Z   QT_QPA_PLATFORM: offscreen
+2026-10-25T23:34:54.2207349Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-25T23:34:54.2207812Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-10-25T23:34:54.2208249Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-25T23:34:54.2208699Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-25T23:34:54.2209389Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-25T23:34:54.2209705Z ##[endgroup]
+2026-10-25T23:34:54.8561320Z ##[group]Run actions/upload-artifact@v4
+2026-10-25T23:34:54.8561665Z with:
+2026-10-25T23:34:54.8561870Z   name: adminit-final-windows-latest
+2026-10-25T23:34:54.8562132Z   if-no-files-found: error
+2026-10-25T23:34:54.8562356Z   path: public-evidence/
+2026-10-25T23:34:54.8562564Z   compression-level: 6
+2026-10-25T23:34:54.8562761Z   overwrite: false
+2026-10-25T23:34:54.8562953Z   include-hidden-files: false
+2026-10-25T23:34:54.8563165Z env:
+2026-10-25T23:34:54.8563364Z   META_ANALYSE_IDENTITY_SYNTHETIC_ONLY: 1
+2026-10-25T23:34:54.8563619Z   QT_QPA_PLATFORM: offscreen
+2026-10-25T23:34:54.8563918Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-25T23:34:54.8564434Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-10-25T23:34:54.8564877Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-25T23:34:54.8565265Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-25T23:34:54.8565700Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-10-25T23:34:54.8566016Z ##[endgroup]
+2026-10-25T23:34:55.0551421Z (node:2076) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-25T23:34:55.0552259Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-25T23:34:55.0624845Z With the provided path, there will be 3 files uploaded
+2026-10-25T23:34:55.0630590Z Artifact name is valid!
+2026-10-25T23:34:55.0632333Z Root directory input is valid!
+2026-10-25T23:34:55.2665161Z Beginning upload of artifact content to blob storage
+2026-10-25T23:34:55.2989963Z (node:2076) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-25T23:34:55.3529313Z Uploaded bytes 65887
+2026-10-25T23:34:55.3712540Z Finished uploading artifact content to blob storage!
+2026-10-25T23:34:55.3714004Z SHA256 digest of uploaded artifact zip is 2835aad8541a7452d54e882d0436ba3b13ae49f3cfd15fd781ea99e6b574a08a
+2026-10-25T23:34:55.3716665Z Finalizing artifact upload
+2026-10-25T23:34:55.7884136Z Artifact adminit-final-windows-latest.zip successfully finalized. Artifact ID 12618626554
+2026-10-25T23:34:55.7885521Z Artifact adminit-final-windows-latest has been successfully uploaded! Final size is 65887 bytes. Artifact ID is 12618626554
+2026-10-25T23:34:55.7896071Z Artifact download URL: https://github.com/YehorBabenko88/meta_analyse/actions/runs/40211096616/artifacts/12618626554
+2026-10-25T23:34:55.8274278Z Post job cleanup.
+2026-10-25T23:34:56.0413437Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-10-25T23:34:56.0793107Z git version 2.56.0.windows.2
+2026-10-25T23:34:56.0868778Z Temporarily overriding HOME='D:\a\_temp\88baac12-b994-4571-b723-1c2284682a3e' before making global git config changes
+2026-10-25T23:34:56.0870163Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-25T23:34:56.0881266Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\meta_analyse\meta_analyse
+2026-10-25T23:34:56.1291213Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-10-25T23:34:56.1709467Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-10-25T23:34:56.7920816Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-25T23:34:56.8270716Z http.https://github.com/.extraheader
+2026-10-25T23:34:56.8320218Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+2026-10-25T23:34:56.8732223Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-10-25T23:34:57.4325415Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-25T23:34:57.4724514Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-10-25T23:34:58.0987425Z Cleaning up orphan processes
+2026-10-25T23:34:58.1615995Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-python@v5, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

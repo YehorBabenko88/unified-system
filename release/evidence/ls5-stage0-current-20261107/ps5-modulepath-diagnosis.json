@@ -1,0 +1,38 @@
+{
+    "powershell":  "5.1.26100.9711",
+    "inherited_module_search_paths":  [
+                                          "C:\\Users\\LS-5\\Documents\\PowerShell\\Modules",
+                                          "C:\\Program Files\\PowerShell\\Modules",
+                                          "c:\\users\\ls-5\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell\\Modules",
+                                          "C:\\Users\\LS-5\\Documents\\WindowsPowerShell\\Modules",
+                                          "C:\\Program Files\\WindowsPowerShell\\Modules",
+                                          "C:\\WINDOWS\\system32\\WindowsPowerShell\\v1.0\\Modules"
+                                      ],
+    "security_modules":  [
+                             {
+                                 "Version":  {
+                                                 "Major":  7,
+                                                 "Minor":  0,
+                                                 "Build":  0,
+                                                 "Revision":  0,
+                                                 "MajorRevision":  0,
+                                                 "MinorRevision":  0
+                                             },
+                                 "Path":  "C:\\users\\ls-5\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell\\Modules\\Microsoft.PowerShell.Security\\Microsoft.PowerShell.Security.psd1"
+                             },
+                             {
+                                 "Version":  {
+                                                 "Major":  3,
+                                                 "Minor":  0,
+                                                 "Build":  0,
+                                                 "Revision":  0,
+                                                 "MajorRevision":  0,
+                                                 "MinorRevision":  0
+                                             },
+                                 "Path":  "C:\\WINDOWS\\system32\\WindowsPowerShell\\v1.0\\Modules\\Microsoft.PowerShell.Security\\Microsoft.PowerShell.Security.psd1"
+                             }
+                         ],
+    "import":  "FAILED",
+    "exception_type":  "System.Management.Automation.RuntimeException",
+    "exception":  "System.Management.Automation.RuntimeException: Fehler beim Laden der Datendatei des erweiterten Typs: Fehler in den Typdaten \"System.Security.AccessControl.ObjectSecurity\": Das Element \"AuditToString\" ist bereits vorhanden.\nFehler in den Typdaten \"System.Security.AccessControl.ObjectSecurity\": Das Element \"AccessToString\" ist bereits vorhanden.\nFehler in den Typdaten \"System.Security.AccessControl.ObjectSecurity\": Das Element \"Sddl\" ist bereits vorhanden.\nFehler in den Typdaten \"System.Security.AccessControl.ObjectSecurity\": Das Element \"Access\" ist bereits vorhanden.\nFehler in den Typdaten \"System.Security.AccessControl.ObjectSecurity\": Das Element \"Group\" ist bereits vorhanden.\nFehler in den Typdaten \"System.Security.AccessControl.ObjectSecurity\": Das Element \"Owner\" ist bereits vorhanden.\nFehler in den Typdaten \"System.Security.AccessControl.ObjectSecurity\": Das Element \"Path\" ist bereits vorhanden.\n\r\n   bei System.Management.Automation.Runspaces.InitialSessionState.ThrowTypeOrFormatErrors(String resourceString, String errorMsg, String errorId)\r\n   bei System.Management.Automation.Runspaces.InitialSessionState.UpdateTypes(ExecutionContext context, Boolean updateOnly)\r\n   bei System.Management.Automation.Runspaces.InitialSessionState.Bind_UpdateTypes(ExecutionContext context, Boolean updateOnly)\r\n   bei System.Management.Automation.Runspaces.InitialSessionState.Bind(ExecutionContext context, Boolean updateOnly, PSModuleInfo module, Boolean noClobber, Boolean local)\r\n   bei System.Management.Automation.Runspaces.InitialSessionState.Bind(ExecutionContext context, Boolean updateOnly)\r\n   bei Microsoft.PowerShell.Commands.ModuleCmdletBase.LoadModuleManifest(String moduleManifestPath, ExternalScriptInfo manifestScriptInfo, Hashtable data, Hashtable localizedData, ManifestProcessingFlags manifestProcessingFlags, Version minimumVersion, Version maximumVersion, Version requiredVersion, Nullable`1 requiredModuleGuid, ImportModuleOptions\u0026 options, Boolean\u0026 containedErrors)"
+}

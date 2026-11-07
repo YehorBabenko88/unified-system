@@ -1,0 +1,34 @@
+{
+  "status": "DESIGN_PENDING_OWNER_REVIEW",
+  "BASE_SHA": "2df6f5c2f77f4d883bad1a8623dd8375db529be0",
+  "BASE_TREE": "f10c13d2dd8a2a88fd7db9a4cf0d0e7a1cd6d0d4",
+  "GRID_CONSUL_SOURCE": {
+    "original_design_sha": "55e74863c3c28bf4cbcb4ded4d3359f98bf93f71",
+    "later_analysis_sha": "71084a336520187d6e260531a2f5d15555ba0e0c",
+    "later_analysis_tree": "f50311e41f135dc5b4cc64693872fd4831df7afe",
+    "release_pin_substitution": false
+  },
+  "AUTHORITY_DESIGN": "HA-AUTHORITY-DESIGN.md plus authority-feasibility-review1/DECISION.md",
+  "FLEETCONTROL_MIGRATION": "Client of existing Grid authority only; no independent election; PLAN_ONLY remains non-consensus",
+  "API_CONTRACTS": "control-sync-v2-review1/PROTOCOL.md and schema: exact ACK PENDING; v1 preserved",
+  "WINDOWS_SUPPORT": "Physical quorum NOT_RUN; source-level offline fixture evidence does not qualify Windows HA",
+  "CONSENSUS_TEST_PLAN": "Design matrix plus ten bounded API predicate counterexamples and seventeen schema/model checks; real Consul/partition acceptance NOT_RUN",
+  "RISKS": [
+    "strict deadline and actual committed_at unavailable from native KV predicates",
+    "closure correctness requires every mutator and bounded atomic transaction",
+    "provider identity, consistent projection, domain schemas and cursor durability pending"
+  ],
+  "BLOCKERS": [
+    "Owner decision strict-time primitive versus explicit event-ordered contract change",
+    "Exact v2 producer/consumer ACK and source allocation",
+    "Real Linux/Windows CI and physical quorum evidence"
+  ],
+  "GO_NO_GO": "NO_GO_FOR_HA_OR_MUTATIONS; DESIGN_REVIEW_ONLY",
+  "physical_changes": false,
+  "merge": false,
+  "deployment": false,
+  "existing_draft_prs": {
+    "unified_p0": "https://github.com/YehorBabenko88/unified-system/pull/25",
+    "grid_fixture_only": "https://github.com/YehorBabenko88/bybit-cluster-grid/pull/262"
+  }
+}

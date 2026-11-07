@@ -1,0 +1,40 @@
+{
+  "schema": "unified.lan-owner-design-decision.v1",
+  "source": "DIRECT_OWNER_MESSAGE_ROOT_2026_11_06",
+  "recorded_utc": "2026-11-06T20:08:06.019032+00:00",
+  "transcribed_owner_text": "OWNER-APPROVAL-20261106.md",
+  "owner_text_sha256": "fbfcc95600b4650389358d978dda18c93712d5ddce5e279eea5d55d1a464d3c6",
+  "review_commit": "dd8b4ff9ace0a75dd81d0ab654e97a1e2319259a",
+  "full_design_sha256": "f0d2eb3ccd96d263bdbedc2a2bcdd43238a542807c81e7e2531dccb9225cd7f8",
+  "egress_profile_sha256": "16606dee585398ae6d92139ffc1cf2ed37a4d2e08759aaa08f0c3b85958b8049",
+  "component_base": "b12c6c24eeb2c59aa099f1c516d77508f36b20a6",
+  "owner_decision": "APPROVED",
+  "isolated_implementation": "AUTHORIZED",
+  "isolated_testing": "AUTHORIZED",
+  "allocated_files": [
+    "unified_system/lan_transport.py",
+    "unified_system/network_budget.py",
+    "tests/test_lan_transport.py",
+    "tests/test_network_budget.py",
+    "docs/network/lan-transport-design.md"
+  ],
+  "real_provider_sends": "BLOCKED",
+  "production_runtime": "BLOCKED",
+  "physical_deployment": "BLOCKED_BY_THIS_APPROVAL",
+  "tailscale_removal": "BLOCKED",
+  "main_merge": "NOT_AUTHORIZED",
+  "physical_trust_store_or_key_provisioning": "NOT_AUTHORIZED",
+  "security_and_network_config_changes": "NOT_AUTHORIZED",
+  "actual_runtime_proof": "NOT_ESTABLISHED_BY_DESIGN_APPROVAL",
+  "remaining_runtime_integrations": [
+    "native_identity_key_IPC",
+    "exact_Control_multiplex_ABI",
+    "actual_A2_authority_fencing",
+    "Bybit_provider_time_policy",
+    "common_NAT_accounting",
+    "paused_sender_containment",
+    "installer_commissioning_rollback",
+    "Windows_native_acceptance",
+    "independent_integration_tests"
+  ]
+}

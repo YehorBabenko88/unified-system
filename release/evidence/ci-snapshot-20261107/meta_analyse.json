@@ -1,0 +1,39 @@
+{
+  "schema": "unified.ci-source-snapshot.v1",
+  "scope": "CONNECTOR_PR_TRIGGERED_FIRST_PAGE_ONLY_NOT_FULL_MATRIX_ACCEPTANCE",
+  "repository": "meta_analyse",
+  "source_head": "f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1",
+  "response": {
+    "content": [
+      {
+        "type": "text",
+        "text": "Action completed."
+      }
+    ],
+    "structuredContent": {
+      "workflow_runs": [
+        {
+          "id": 42287346090,
+          "name": "ADMINIT final integration synthetic",
+          "status": "completed",
+          "conclusion": "skipped",
+          "run_number": 98,
+          "jobs_url": "https://api.github.com/repos/YehorBabenko88/meta_analyse/actions/runs/42287346090/jobs",
+          "logs_url": "https://api.github.com/repos/YehorBabenko88/meta_analyse/actions/runs/42287346090/logs",
+          "workflow_id": 396073670
+        },
+        {
+          "id": 42287345977,
+          "name": "CI",
+          "status": "completed",
+          "conclusion": "success",
+          "run_number": 1644,
+          "jobs_url": "https://api.github.com/repos/YehorBabenko88/meta_analyse/actions/runs/42287345977/jobs",
+          "logs_url": "https://api.github.com/repos/YehorBabenko88/meta_analyse/actions/runs/42287345977/logs",
+          "workflow_id": 385431554
+        }
+      ]
+    },
+    "isError": false
+  }
+}

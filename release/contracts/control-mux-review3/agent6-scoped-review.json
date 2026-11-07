@@ -1,0 +1,40 @@
+{
+  "schema": "terminan.control-mux-corrigendum-review.v1",
+  "reviewed_raw_sha256": "d9d3529c3ab756d8cb617dda38b27e3c942d461f46761fcd56f6e256568948d8",
+  "reviewed_base_raw_sha256": "456a133b91385f6d5fa0e86d201d5eb72040d1dc2d824d96ee321d1450ba9042",
+  "ack_inherited": false,
+  "scope_ack": "ACK_FRESH_EXACT_BYTE_THREE_NORMATIVE_CORRECTIONS_ONLY",
+  "topic_disposition": {
+    "BOOTSTRAP_MUX_CURSOR": {
+      "status": "RESOLVED_IN_NORMATIVE_PROPOSAL",
+      "basis": "Durable OPENED returns separately bound initial_mux_cursor/sequence0; first frame1; exact per-connection epoch/attempt and contiguous sequence rules including last-identical duplicate inert/conflict-gap-old failure. Snapshot ACK cannot reset mux order; historical result cannot revive socket or expired cursor."
+    },
+    "IDEMPOTENCY_TARGET_BINDING": {
+      "status": "RESOLVED_IN_NORMATIVE_PROPOSAL",
+      "basis": "Digest covers profile/quotaowner/originalactor+session/request/key/method/operation/path/targetIDs/expectedepochs/bodyhash. DELETE rejects body and hashes empty bytes. Lookup quotaowner+actor+key detects cross-target reuse; UNKNOWN not409-rejection; authorized receipt read/new explicit drain command does not impersonate old session/rekey."
+    },
+    "UNATTRIBUTABLE_FRAME_FAILURE": {
+      "status": "RESOLVED_IN_NORMATIVE_PROPOSAL",
+      "basis": "Bad outer framing/assembly/identity/epoch/sequence or unvalidated target clears all connection subscriptions LIVE and stops epoch; identified valid inner failures isolate only affected subscription. Other admitted connections stay independent; no slot reuse before qualified containment."
+    }
+  },
+  "full_abi_ack": "STILL_WITHHELD_CLOSED_CODECS_AND_PROVIDER_DEPENDENCIES",
+  "remaining_conditions": [
+    "Pinned closed request/result/error/frame/payload schemas, canonical encoding/hash preimage and enum/header/type/null rules still required; this prose does not implement a codec.",
+    "GETcommands/request_uuid lookup must have an explicit immutable namespace/uniqueness index and fail closed on ambiguity across original actor/quota/generation/request bindings; never select a successor or infer outcome from missing data. This remains part of final closed receipt/index ABI, not a claimed implemented resolver.",
+    "Original actor session/request/key bindings cannot change during retry. New session historical read requires actual current ReconcileControlAdmission capability; new drain command is explicit new intent, not silent retry of old effect.",
+    "Stream attempt/socket/slot containment and distributed admission/byte/encoder/fairness are still qualified provider dependencies, not session/heartbeat assumptions.",
+    "Body/wire/depth/domain/time/root/retention/identity/CSRF transport gates and two-producer8physical9logical load/relocation evidence remain pending."
+  ],
+  "verification": {
+    "corrigendum_and_base_hashes": "MATCH",
+    "json_parse": "PASS",
+    "new_model_or_runtime_tests": "NOT_RUN_NO_IMPLEMENTED_V3_CODEC_OR_ADMISSION_PROVIDER",
+    "qualification": "SCOPED_DOCUMENT_SEMANTIC_REVIEW_ONLY"
+  },
+  "product_head_unchanged": "42686cd8fafcefaed3c5df5adaee5173d27543fd",
+  "source_or_frozen_schema_changes": "NONE",
+  "runtime_endpoint_ack": "NOT_AVAILABLE",
+  "native_or_physical_acceptance": "NOT_RUN",
+  "go_no_go": "NO-GO"
+}
