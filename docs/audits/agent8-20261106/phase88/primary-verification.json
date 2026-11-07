@@ -1,0 +1,94 @@
+{
+  "head": "aed8a7c8a952f96803c207d5e90b133969a47f04",
+  "tree": "eed3a87c6e33f0993424f20b49ab5af93bd09b9a",
+  "NEW_paths": [
+    "A\t.github/workflows/gateway-research.yml",
+    "A\tdocs/gateway/research/DESIGN.txt",
+    "A\tdocs/gateway/research/ERRORS.txt",
+    "A\tdocs/gateway/research/EXECUTION.txt",
+    "A\tdocs/gateway/research/OWNER_COACK.txt",
+    "A\tdocs/gateway/research/PLAN.txt",
+    "A\tdocs/gateway/research/api-proposal-review1.json",
+    "A\tdocs/gateway/research/evidence/btc-v1/MANIFEST.json",
+    "A\tdocs/gateway/research/evidence/btc-v1/computation-receipt.json",
+    "A\tdocs/gateway/research/evidence/btc-v1/descriptor.json",
+    "A\tdocs/gateway/research/evidence/btc-v1/meta-result.json",
+    "A\tdocs/gateway/research/evidence/btc-v1/request.json",
+    "A\tdocs/gateway/research/evidence/corrected-callable-replay-f11f393.json",
+    "A\tdocs/gateway/research/meta-result.schema.json",
+    "A\tdocs/gateway/research/request.schema.json",
+    "A\tdocs/gateway/research/result.schema.json",
+    "A\tstrattester/research/gateway_adapter.py",
+    "A\ttests/gateway_adapter/generate_evidence.py",
+    "A\ttests/gateway_adapter/support.py",
+    "A\ttests/gateway_adapter/test_gateway_adapter.py",
+    "A\ttests/gateway_adapter/validate_artifacts.py"
+  ],
+  "primary_raw_objects": 800,
+  "adapter_sha256": "689bd82be39cdc15725fcefbe2cefc248c4feb51c27822f9813558f5587e81dd",
+  "adapter_byte_equal_corrected_f11": true,
+  "original_packet_and_schemas": [
+    {
+      "path": "docs/gateway/research/evidence/btc-v1/request.json",
+      "bytes": 1126,
+      "sha256": "c548e2ffcd542d5d741682303694b3c6d06507740f158a6e30089b2d5355f648",
+      "original_packet_commit_raw_equal": true
+    },
+    {
+      "path": "docs/gateway/research/evidence/btc-v1/meta-result.json",
+      "bytes": 2070,
+      "sha256": "f4997d7d26211676cd8664e53d7999f8b71f203510f3b9a275b439c403e03940",
+      "original_packet_commit_raw_equal": true
+    },
+    {
+      "path": "docs/gateway/research/evidence/btc-v1/descriptor.json",
+      "bytes": 2122,
+      "sha256": "664d34f06721b3d62404ea2f05b6b929a59b9e3eeecc281a71d2ca927c802cda",
+      "original_packet_commit_raw_equal": true
+    },
+    {
+      "path": "docs/gateway/research/evidence/btc-v1/computation-receipt.json",
+      "bytes": 1609,
+      "sha256": "f990b0627b7ca2a618731ebef22d5842dcccbb51456838d66518618665afd679",
+      "original_packet_commit_raw_equal": true
+    },
+    {
+      "path": "docs/gateway/research/request.schema.json",
+      "bytes": 7233,
+      "sha256": "7338a91675611c8f5ead41f334f657e0fe682ab6c5567b5a16387d90dbc928ac",
+      "original_packet_commit_raw_equal": true
+    },
+    {
+      "path": "docs/gateway/research/meta-result.schema.json",
+      "bytes": 8054,
+      "sha256": "8a831f84129eb3ba06034ca88e081703d2c07db4da96281d555021f4961a156e",
+      "original_packet_commit_raw_equal": true
+    },
+    {
+      "path": "docs/gateway/research/result.schema.json",
+      "bytes": 10766,
+      "sha256": "a14286cdf1fdeb3cb0b826575f231346a517706a8cf39f7b5727b78811e4eef4",
+      "original_packet_commit_raw_equal": true
+    }
+  ],
+  "Meta_head": "f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1",
+  "Meta_tree": "c155c935a801fa98b7c78219c9798ce1f1be8848",
+  "Meta_actual_three_primary_blobs": [
+    {
+      "path": "src/meta_analyse/__init__.py",
+      "blob_oid": "5a2d4cc5464a036a82852ddb0ab78f349608cc03",
+      "sha256": "70d2201e97a9d8b57973b8328ce7e2938e85096035a867aab8b37b35ee1e1883"
+    },
+    {
+      "path": "src/meta_analyse/core.py",
+      "blob_oid": "d75c40244f5a486f87d710e818c2194212a74f67",
+      "sha256": "caa15e51394d3c204ecbcf557cd13ce7a6853b5c8005c4d266971f3f14177170"
+    },
+    {
+      "path": "src/meta_analyse/ohlcv_research_adapter.py",
+      "blob_oid": "e1e4c28e28039a61a69a311ed65f1e102c2f2db5",
+      "sha256": "39b165c945f4d5c00fdf96c460d9bf4e34a32c9cb30483d9be6d88f45403a90f"
+    }
+  ],
+  "whole_Meta_native_qualification": false
+}
