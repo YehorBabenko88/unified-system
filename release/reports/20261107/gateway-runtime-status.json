@@ -7,26 +7,21 @@
     "native_tls_auth_admission": false
   },
   "AUTH_IDENTITY": {
-    "pr": 48,
-    "head": "2cb6b21eac5617ff39ad7a96b7e1c73118e0af00",
-    "module_sha256": "84093865e8477ef6562100d41137922785446c9cb4e024c9ba7105593a2b36c1",
-    "root_independent_local_tests": 24,
-    "scope": "DISPOSABLE_MTLS_COMPONENT_ONLY",
-    "abi": "OWNER_REQUIRE_ISSUED_READ_REVIEW3",
-    "cross_owner_positive": "PENDING",
-    "ci_pin_inventory_fixes": "SUCCESSOR_PENDING",
-    "native_human_authentication": false
+    "component_pr": 48,
+    "head": "9428e3d8a74e5ee93dcd6c3caef59dcd7b98c8ab",
+    "actual_stand_mtls": "PASS_LOCAL",
+    "native_human": false
   },
   "DATA_QUERY": {
-    "pr": 271,
-    "head": "7e4b06b4cbf75328de5e18dc963c2f1fa4289b67",
-    "state": "PURE_PREPARATION_NOT_EXECUTED"
+    "head": "f19f7feee0f63da34a20607a8cae59191180aa7c",
+    "actual_gateway_https": "PASS_LOCAL_EXACT_F155",
+    "provider_coverage": "UNKNOWN"
   },
   "STORAGE_DISCLOSURE": {
-    "manifest_codec": "f9f2d04595cf2360dab78980996ae6c34c9e26fc",
-    "authenticated_gateway_adapter": "IN_PROGRESS",
-    "query_fixture_graph": "EIGHT_CANONICAL_PREIMAGES_HASH_MATCHED_LOCAL_ONLY",
-    "actual_dataset_publication": "UNPROVEN"
+    "pr": 49,
+    "head": "ec5ee6feadc4977af8b0fbaee7f82927d777ab94",
+    "actual_gateway_https": "PASS_LOCAL_EXACT_F155",
+    "publication": "UNPROVEN"
   },
   "JOB_SUBMISSION": {
     "pr": 47,
@@ -35,17 +30,19 @@
   },
   "JOB_CANCELLATION": "PENDING",
   "RESEARCH_ADAPTER": {
-    "proposal": "f5df21350f633f523dc7a53cf694741f2d335d47",
-    "chosen_operation": "meta.ohlcv.untouched_levels.v1",
-    "actual_engine": "Meta f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1",
-    "status": "IMPLEMENTATION_IN_PROGRESS_NOT_YET_EXECUTED"
+    "pr": 75,
+    "head": "aed8a7c8a952f96803c207d5e90b133969a47f04",
+    "local_component": "ACTUAL_META_COMPUTED_TEST_ONLY",
+    "a8_review": "88684052f5adf3ef418dbd2b874f96bdbb13664a",
+    "query_bridge_v2": "DESIGN_ACK_IN_PROGRESS"
   },
   "VISUALIZATION_API": {
     "pr": 71,
-    "head": "853239ac67f93e3d58935a04c8cb48f778fb9984",
-    "state": "UNATTESTED_METADATA_ONLY_NO_COMPUTED_CHART"
+    "head": "8eef1a256081d987ff7c1b4024efe2cb16048680",
+    "local_chart": "ACTUAL_COMPUTED_IMMUTABLE_ARTIFACT",
+    "authenticated_retrieval": "NONE"
   },
-  "VERTICAL_E2E": "PENDING",
+  "VERTICAL_E2E": "NOT_COMPLETE_JOB_AUTHORITY_PUBLICATION_REGISTRY_BLOCKED",
   "A8_REVIEW": {
     "entry_matrix": "121ad998ae68c8da60cb55aa991be2f602f7c788",
     "runtime_cases_executed": 0,
@@ -77,17 +74,28 @@
     ],
     "queue_root_cause": "UNKNOWN",
     "retries": 0,
-    "runner_report": "release/evidence/gateway-runtime-runner-blocker-20261107/RUNNER-BLOCKER-REPORT.json"
+    "runner_report": "release/evidence/gateway-runtime-runner-blocker-20261107/RUNNER-BLOCKER-REPORT.json",
+    "identity_corrected_yaml": {
+      "head": "9428e3d8a74e5ee93dcd6c3caef59dcd7b98c8ab",
+      "run": 42386792204,
+      "state": "QUEUED_AT_LAST_OBSERVATION",
+      "jobs": [
+        128445767814,
+        128445767843
+      ]
+    },
+    "old_identity_invalid_yaml": "LOCALLY_REPRODUCED_FIXED; ORIGINAL_GITHUB_FAILURE_ANNOTATION_UNAVAILABLE"
   },
   "REMAINING_P0": [
-    "Exact owner-auth capability/disclosure/submit/publication/renderer API ACKs",
-    "Actual executable vertical composition and independently verified provenance"
+    "Actual SUBMIT_RESEARCH/Assignment/fencing/dispatch contract and implementation",
+    "Actual result publication/receipt projection and independent two-domain lab admission",
+    "New query-to-Meta v2 shared contract plus actual job/renderer integration"
   ],
   "REMAINING_P1": [
     "Terminal exact-head hosted CI",
     "Native Windows and Home/Pro qualification separate"
   ],
-  "NEXT_ACTION": "Compose actual READ_DATA only after A2/A3/A4 exact contract ACK; independent owner implementations continue",
+  "NEXT_ACTION": "Independent exact F155 HTTP read review; continue actual job/publication/bridge/chart adapters",
   "GO_NO_GO": "IN_PROGRESS / NO-GO",
   "OFFLINE_EVIDENCE": "UNCHANGED",
   "OWNERSHIP": "A1_A7_ACK_RECEIVED",
@@ -117,5 +125,13 @@
     "source_files": 1461,
     "qualification": "LOCAL_COMPONENTS_ONLY_NOT_VERTICAL_E2E",
     "driver": "EXTERNAL_TARGETED_SELECTOR"
+  },
+  "ROOT_READ_QUALIFICATION": {
+    "head": "f155126a95e80139b1b9679c1870ffd66c29360e",
+    "tree": "e129873c435c8b11d2126307a67b604601e7e4b8",
+    "tests": 146,
+    "skips": 0,
+    "source_files": 1497,
+    "scope": "DISPOSABLE_AUTHENTICATED_READ_ONLY_NOT_JOB_VERTICAL_E2E"
   }
 }

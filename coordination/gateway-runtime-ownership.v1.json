@@ -74,7 +74,8 @@
       "release/evidence/gateway-runtime-*/**",
       "release/reports/20261107/gateway-runtime-*.json",
       ".github/workflows/gateway-runtime-integration.yml",
-      "release/owner-directives/gateway-runtime-20261107.txt"
+      "release/owner-directives/gateway-runtime-20261107.txt",
+      "coordination/gateway-runtime-contracts.v1.json"
     ],
     "A1": [
       "unified_system/native_peer_identity.py",
@@ -142,5 +143,42 @@
     "A6": "c752dff751d964c57daf3b3afe4987ea3377839b",
     "A7": "072d22214136148b47e82d21fec9e269bd7468ac"
   },
-  "shared_api_ack": "PENDING_EXACT_BYTES_OWNER_ACKS"
+  "shared_api_ack": "PENDING_EXACT_BYTES_OWNER_ACKS",
+  "isolated_successor_allocations": {
+    "A7": {
+      "base": "aed8a7c8a952f96803c207d5e90b133969a47f04",
+      "branch": "feature/artifact-result-store-successor-20261107",
+      "files": [
+        "strattester/persistence/result_store.py",
+        "strattester/research/result_persistence.py",
+        "tests/persistence/test_result_store.py",
+        "tests/persistence/test_result_store_recovery.py",
+        "tests/research/gateway_artifact_persistence/**",
+        "docs/gateway/research/persistence/**"
+      ]
+    },
+    "A4": {
+      "base": "f155126a95e80139b1b9679c1870ffd66c29360e",
+      "branch": "feature/storage-result-publication-20261107",
+      "files": [
+        "unified_system/storage/result_publication.py",
+        "unified_system/storage/replica_evidence.py",
+        "tests/storage/result_publication/**",
+        "docs/storage/result-publication/**",
+        ".github/workflows/gateway-result-publication.yml"
+      ]
+    },
+    "A2": {
+      "base": "40e9c8dc274a2746018bc1aa08d103cd0187cecc",
+      "branch": "feature/authority-result-publication-20261107",
+      "files": [
+        "grid/authority_assignment_v1.py",
+        "tests/coordination/assignment_v1/**",
+        "docs/coordination/assignment-v1/**",
+        ".github/workflows/gateway-result-authority.yml"
+      ]
+    }
+  },
+  "successor_scope": "ISOLATED_SLICE_A_ONLY_EXACT_SHARED_API_ACK_PENDING",
+  "two_domain_lab": "NOT_ADMITTED_NO_SAME_VOLUME_SUBSTITUTION"
 }
