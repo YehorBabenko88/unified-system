@@ -1,5 +1,5 @@
 {
-  "checked_utc": "2026-11-07T17:16:04.929157+00:00",
+  "checked_utc": "2026-11-07T17:36:57.588813+00:00",
   "RELEASE_MANIFEST_STATUS": "PRESENT_PREPARATION_ONLY_NOT_APPROVED_NOT_INSTALLABLE",
   "NODE_INVENTORY_STATUS": "SIX_REDACTED_OWNER_OBSERVATIONS_PRESENT_ORIGINAL_RAW_NOT_REACQUIRED_BY_A8_NOT_ADMITTED",
   "CONTRACT_STATUS": {
@@ -3504,6 +3504,28 @@
     "index_members_verified": 8,
     "A8_full_rerun": false,
     "A8_prior_scoped_tests": 45,
+    "overall": "NO_GO"
+  },
+  "broker53_c02_independent_review": {
+    "head": "c02b110a8939674adc676cb203e0d71ffab800d0",
+    "tree": "49af2d81b17297aa3f45aa718a24ec2d121c9c4d",
+    "A8_committed_unique_tests": 15,
+    "skips": 0,
+    "A8_extra_methods": 2,
+    "Unified_raw_prepost": 1511,
+    "Grid_raw_prepost": 695,
+    "actual_TLS_Consul": true,
+    "own_Consul_processes_started_and_waited": 6,
+    "foreign_process_operations": 0,
+    "real_elapsed_expiry": "PASS_NO_CLOCK_PATCH",
+    "foreign_broker_scope_copy": "DENIED",
+    "actual_native_destroy_targetCAS": "DENIED_WRITE_ABSENT_LOCAL_CAPTURE_READ_EVIDENCE_ONLY",
+    "historical_expiry_RED_GREEN": "WIP_NO_SOURCE_PIN_NOT_PRIMARY",
+    "historical_P2": "STATIC_FINDING_NO_SOURCE_PINNED_RED",
+    "capacity_fullboundary": "NOT_RUN",
+    "sync_binder": "STRICT_TYPE_LENGTH_HARDENING_ADVISORY_NO_REPRODUCED_BYPASS",
+    "target_adapter": "NOT_BOUND",
+    "job_worker_nativeUTCatcommit_twodomain": "NOT_ADMITTED",
     "overall": "NO_GO"
   }
 }
