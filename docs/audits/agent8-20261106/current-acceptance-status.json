@@ -1,5 +1,5 @@
 {
-  "checked_utc": "2026-11-07T05:45:42.654550+00:00",
+  "checked_utc": "2026-11-07T06:20:16.147073+00:00",
   "RELEASE_MANIFEST_STATUS": "PRESENT_PREPARATION_ONLY_NOT_APPROVED_NOT_INSTALLABLE",
   "NODE_INVENTORY_STATUS": "SIX_REDACTED_OWNER_OBSERVATIONS_PRESENT_ORIGINAL_RAW_NOT_REACQUIRED_BY_A8_NOT_ADMITTED",
   "CONTRACT_STATUS": {
@@ -677,7 +677,7 @@
     "F14": "FIX_VERIFIED_OFFLINE_AT_15dd9e8_PROVIDER_DISABLED",
     "F15": "FIX_VERIFIED_OFFLINE_AT_6bcf547",
     "F16": "OPEN_GIT_REPLACEMENT_RAW_SOURCE_GUARD",
-    "F17": "OPEN_PARTIAL_CACHE_FIX_UNTRACKED_ROOT_IMPORT_REMAINS"
+    "F17": "A5_ROOT_EXACT_FIXES_VERIFIED_OTHER_APPLICABLE_GUARDS_PENDING"
   },
   "EVIDENCE": [
     "phase4/math-source-and-compile-review.json",
@@ -1581,6 +1581,369 @@
     "scope": "LOCAL_SAME_ACCOUNT_WINDOWS_NATIVE_PRIMITIVE_ONLY",
     "native_operator_bridge": "NOT_IMPLEMENTED",
     "kernel_PID_mismatch_acceptance": "NOT_RUN",
+    "cross_account_DACL_negative": "NOT_RUN",
+    "RBAC_expiry": "NOT_RUN",
+    "WINDOWS_ACCEPTANCE": "BLOCKED",
+    "PHYSICAL_ACCEPTANCE": "BLOCKED",
+    "overall": "NO_GO"
+  },
+  "math115_preparation_review": {
+    "head": "63a0036d406042bee2d3434aac34dd6a15138ae3",
+    "tree": "803c3a28bb6e3e489b315fac703ea094d6030e09",
+    "base": "9f08b237b9d0a47abfb03ee4741c7f1688081fbd",
+    "workflow_git_blob": "855ce9686d85577c0ebab8e7e68e63fcc4997b19",
+    "workflow_raw_sha256": "d3884ca15fb2721da1c3c1b2df19fdb2494db246d2bf6449d6a576b8d851d00c",
+    "delta": "THREE_PATHS_WORKFLOW_RETARGET_ONLY_SECURITY_BUILDER_NATIVE_UNCHANGED",
+    "original188_reconstruction_verified": true,
+    "raw_before": {
+      "files": 691,
+      "sha256": "64de8886ba517a6d33e234e153c483352ce79dd58626025f1951d9f357801776"
+    },
+    "raw_after": {
+      "files": 691,
+      "sha256": "64de8886ba517a6d33e234e153c483352ce79dd58626025f1951d9f357801776"
+    },
+    "model_pure_tests": 13,
+    "skips": 0,
+    "independent_event_vectors": 31,
+    "event_vectors_scope": "TYPED_GITHUB_METADATA_MODEL_POWERSHELL5_ONLY",
+    "review_ack": "SOURCE_MODEL_PREPARATION_ONLY",
+    "activation": "NOT_AUTHORIZED_NOT_PERFORMED",
+    "old113_consumed_authorization": "UNCHANGED_NOT_REUSED",
+    "new_root_record_and_explicit_one_event_required": true,
+    "durable_once_only": "NOT_PROVIDED_BY_CONCURRENCY_EXTERNAL_OWNER_LEDGER_REQUIRED",
+    "label_digest": "REFERENCE_ONLY_NOT_CONSENT_PROOF",
+    "native_backend": "NOT_RUN",
+    "hosted": "NOT_QUALIFIED",
+    "physical": "BLOCKED",
+    "overall": "NO_GO"
+  },
+  "scheduler_F17_A5_full_fix": {
+    "guard_pin": {
+      "head": "d4b7475be79331f9e2d739b51aebc9442223e298",
+      "tree": "4505a761949e2af1a03a7ae3bf487c68ec6a5769",
+      "product_tests_inventory_unchanged": true,
+      "cases": {
+        "clean": {
+          "exit_code": 0,
+          "passed": true,
+          "tests": 52,
+          "skips": 0,
+          "source_valid_before": true,
+          "source_valid_after": true,
+          "marker_executed": false,
+          "own_common_dot_git": true,
+          "raw_tracked_match": true,
+          "tracked_file_count": 302
+        },
+        "repo_cache": {
+          "exit_code": 1,
+          "passed": false,
+          "tests": 0,
+          "skips": 0,
+          "source_valid_before": false,
+          "source_valid_after": false,
+          "marker_executed": false,
+          "own_common_dot_git": true,
+          "raw_tracked_match": true,
+          "tracked_file_count": 302
+        },
+        "ambient_cache": {
+          "exit_code": 0,
+          "passed": true,
+          "tests": 52,
+          "skips": 0,
+          "source_valid_before": true,
+          "source_valid_after": true,
+          "marker_executed": false,
+          "own_common_dot_git": true,
+          "raw_tracked_match": true,
+          "tracked_file_count": 302
+        },
+        "explicit_cache_prefix": {
+          "exit_code": 1,
+          "passed": false,
+          "tests": 0,
+          "skips": 0,
+          "source_valid_before": false,
+          "source_valid_after": false,
+          "marker_executed": false,
+          "own_common_dot_git": true,
+          "raw_tracked_match": true,
+          "tracked_file_count": 302
+        },
+        "preloaded_runtime": {
+          "exit_code": 1,
+          "passed": false,
+          "tests": 0,
+          "skips": 0,
+          "source_valid_before": false,
+          "source_valid_after": false,
+          "marker_executed": false,
+          "own_common_dot_git": true,
+          "raw_tracked_match": true,
+          "tracked_file_count": 302
+        },
+        "post_cache": {
+          "exit_code": 1,
+          "passed": false,
+          "tests": 52,
+          "skips": 0,
+          "source_valid_before": true,
+          "source_valid_after": false,
+          "marker_executed": false,
+          "own_common_dot_git": true,
+          "raw_tracked_match": true,
+          "tracked_file_count": 302
+        },
+        "untracked_test": {
+          "exit_code": 1,
+          "passed": false,
+          "tests": 0,
+          "skips": 0,
+          "source_valid_before": false,
+          "source_valid_after": false,
+          "marker_executed": false,
+          "own_common_dot_git": true,
+          "raw_tracked_match": true,
+          "tracked_file_count": 302
+        },
+        "root_shadow_typing": {
+          "exit_code": 1,
+          "passed": false,
+          "tests": 0,
+          "skips": 0,
+          "source_valid_before": false,
+          "source_valid_after": false,
+          "marker_executed": false,
+          "own_common_dot_git": true,
+          "raw_tracked_match": true,
+          "tracked_file_count": 302
+        },
+        "blob_replace": {
+          "exit_code": 1,
+          "passed": false,
+          "tests": 0,
+          "skips": 0,
+          "source_valid_before": false,
+          "source_valid_after": false,
+          "marker_executed": false,
+          "own_common_dot_git": true,
+          "raw_tracked_match": false,
+          "tracked_file_count": 302
+        },
+        "tree_replace": {
+          "exit_code": 1,
+          "passed": false,
+          "tests": 0,
+          "skips": 0,
+          "source_valid_before": false,
+          "source_valid_after": false,
+          "marker_executed": false,
+          "own_common_dot_git": true,
+          "raw_tracked_match": false,
+          "tracked_file_count": 302
+        },
+        "wrong_ID": {
+          "exit_code": 1,
+          "passed": false,
+          "tests": 52,
+          "skips": 0,
+          "source_valid_before": true,
+          "source_valid_after": true,
+          "marker_executed": false,
+          "own_common_dot_git": true,
+          "raw_tracked_match": true,
+          "tracked_file_count": 302
+        },
+        "skip": {
+          "exit_code": 1,
+          "passed": false,
+          "tests": 52,
+          "skips": 1,
+          "source_valid_before": true,
+          "source_valid_after": true,
+          "marker_executed": false,
+          "own_common_dot_git": true,
+          "raw_tracked_match": true,
+          "tracked_file_count": 302
+        }
+      },
+      "bytecode_vector": "FIX_VERIFIED_OFFLINE_EXACT_SOURCE",
+      "F17_A5": "FIX_VERIFIED_OFFLINE_EXACT_SOURCE",
+      "F17_global": "OPEN_PENDING_ROOT_AND_OTHER_APPLICABLE_GUARD_REVIEW",
+      "qualification": "SOURCE_IMPORT_CONTROLS_VERIFIED_OFFLINE_NOT_NATIVE_OR_HOSTED",
+      "hosted": "NOT_QUALIFIED",
+      "native_authority": "ABSENT",
+      "physical": "BLOCKED",
+      "overall": "NO_GO"
+    },
+    "current_documentary_pin": {
+      "head": "d7ea091da714829edf19400df60fad18970bfa1c",
+      "tree": "58e52d3853fedacf293f6bad3818332b30461ec3",
+      "product_tests_inventory_unchanged": true,
+      "cases": {
+        "clean": {
+          "exit_code": 0,
+          "passed": true,
+          "tests": 52,
+          "skips": 0,
+          "source_valid_before": true,
+          "source_valid_after": true,
+          "marker_executed": false,
+          "raw_tracked_match": true,
+          "own_common_dot_git": true,
+          "tracked_file_count": 317
+        },
+        "repo_cache": {
+          "exit_code": 1,
+          "passed": false,
+          "tests": 0,
+          "skips": 0,
+          "source_valid_before": false,
+          "source_valid_after": false,
+          "marker_executed": false,
+          "raw_tracked_match": true,
+          "own_common_dot_git": true,
+          "tracked_file_count": 317
+        },
+        "root_shadow_typing": {
+          "exit_code": 1,
+          "passed": false,
+          "tests": 0,
+          "skips": 0,
+          "source_valid_before": false,
+          "source_valid_after": false,
+          "marker_executed": false,
+          "raw_tracked_match": true,
+          "own_common_dot_git": true,
+          "tracked_file_count": 317
+        }
+      },
+      "bytecode_vector": "FIX_VERIFIED_OFFLINE_EXACT_SOURCE",
+      "F17_A5": "FIX_VERIFIED_OFFLINE_EXACT_SOURCE",
+      "F17_global": "OPEN_PENDING_ROOT_AND_OTHER_APPLICABLE_GUARD_REVIEW",
+      "qualification": "SOURCE_IMPORT_CONTROLS_VERIFIED_OFFLINE_NOT_NATIVE_OR_HOSTED",
+      "hosted": "NOT_QUALIFIED",
+      "native_authority": "ABSENT",
+      "physical": "BLOCKED",
+      "overall": "NO_GO"
+    },
+    "global_status": "OPEN_ROOT_OTHER_GUARDS_PENDING",
+    "later_d563": "REPORTED_NOT_QUALIFIED_BY_D4_D7_RESULTS"
+  },
+  "HOME_POLICY_STEERING": {
+    "status": "REPORTED_DIRECT_OWNER_DECISION_PENDING_INDEPENDENT_RAW_POLICY_REVIEW",
+    "workers_terminan": [
+      "PC1",
+      "LS7"
+    ],
+    "home_coordinators": "NOT_ADMITTED",
+    "physical": "BLOCKED",
+    "pro_pass_inheritance": false,
+    "configuration_changes": "NONE_BY_A8"
+  },
+  "ROOT_F17_source_import_review": {
+    "head": "e238558a1d5bc44128b4541531a2cb9e194155e9",
+    "tree": "0ab27ebdc4da8e2a3fa8613b4bac4add1c9c949c",
+    "source_workflow_sha256": "c0f89792f4da47b50f8ea886083003f38f185bc4175c676bc503a1605bb78ae1",
+    "cases": {
+      "clean": {
+        "exit_code": 0,
+        "tests": 137,
+        "receipt_emitted": true,
+        "marker_executed": false,
+        "tracked_inputs": 786,
+        "all_source_files_bound": true
+      },
+      "repo_cache": {
+        "exit_code": 1,
+        "tests": 0,
+        "receipt_emitted": false,
+        "marker_executed": false,
+        "tracked_inputs": null,
+        "all_source_files_bound": null
+      },
+      "root_shadow": {
+        "exit_code": 1,
+        "tests": 0,
+        "receipt_emitted": false,
+        "marker_executed": false,
+        "tracked_inputs": null,
+        "all_source_files_bound": null
+      },
+      "unknown_native": {
+        "exit_code": 1,
+        "tests": 0,
+        "receipt_emitted": false,
+        "marker_executed": false,
+        "tracked_inputs": null,
+        "all_source_files_bound": null
+      },
+      "stale_receipt": {
+        "exit_code": 1,
+        "tests": 0,
+        "receipt_emitted": false,
+        "marker_executed": false,
+        "tracked_inputs": null,
+        "all_source_files_bound": null
+      },
+      "redirected_cache": {
+        "exit_code": 1,
+        "tests": 0,
+        "receipt_emitted": false,
+        "marker_executed": false,
+        "tracked_inputs": null,
+        "all_source_files_bound": null
+      },
+      "blob_replace": {
+        "exit_code": 1,
+        "tests": 0,
+        "receipt_emitted": false,
+        "marker_executed": false,
+        "tracked_inputs": null,
+        "all_source_files_bound": null
+      },
+      "post_cache": {
+        "exit_code": 1,
+        "tests": 137,
+        "receipt_emitted": false,
+        "marker_executed": false,
+        "tracked_inputs": null,
+        "all_source_files_bound": null
+      }
+    },
+    "preserved_prior129": true,
+    "F17_Root": "FIX_VERIFIED_OFFLINE_EXACT_SOURCE",
+    "F17_global": "PENDING_OTHER_APPLICABLE_GUARDS",
+    "F16_global": "OPEN",
+    "qualification": "SOURCE_ONLY_COMPONENT_WORKFLOW_NOT_HOSTED_NATIVE_OR_PHYSICAL",
+    "overall": "NO_GO"
+  },
+  "windows_pipe_real_PID_recheck": {
+    "head": "e238558a1d5bc44128b4541531a2cb9e194155e9",
+    "tree": "0ab27ebdc4da8e2a3fa8613b4bac4add1c9c949c",
+    "raw_before": {
+      "files": 786,
+      "sha256": "c95ae7e3a15bafe3c5568491d6d4ee36ec78b6bc3968cc713879c1108ac3cf1d"
+    },
+    "raw_after": {
+      "files": 786,
+      "sha256": "c95ae7e3a15bafe3c5568491d6d4ee36ec78b6bc3968cc713879c1108ac3cf1d"
+    },
+    "executed_cases": 4,
+    "skips": 0,
+    "script_primary_blob_sha256": "06905cbc80ac712db4ad09f350b7c5da453147d9e861a3ab45d2eb944ed5b00d",
+    "actual_positive": "REAL_KERNEL_PIPE_PID_SAME_ACCOUNT_SID_IDENTIFICATION_TOKEN_AND_REVERT",
+    "actual_negative_levels": [
+      "Anonymous",
+      "Impersonation"
+    ],
+    "wrong_pid_case": "REAL_KERNEL_PID_DIFFERS_FROM_EXPECTED_STILL_LIVE_PARENT_PID",
+    "all_owned_children_stopped": true,
+    "scope": "LOCAL_SAME_ACCOUNT_WINDOWS_NATIVE_PRIMITIVE_ONLY",
+    "native_operator_bridge": "NOT_IMPLEMENTED",
+    "kernel_PID_mismatch_acceptance": "PASS_LOCAL_NATIVE_COMPARISON_ONLY",
     "cross_account_DACL_negative": "NOT_RUN",
     "RBAC_expiry": "NOT_RUN",
     "WINDOWS_ACCEPTANCE": "BLOCKED",

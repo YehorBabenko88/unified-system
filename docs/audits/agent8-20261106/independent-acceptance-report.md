@@ -1,4 +1,4 @@
-> Latest bounded update (2026-11-07): [F17 partial fix / remaining root import](phase38/f17-partial-review.md). Current open findings:6 P1/3 P2; F16/F17 OPEN. Cache vector fixed at0d6 but untracked root typing.py still executes with accepted raw-source receipt. Overall NO-GO; earlier snapshots historical.
+> Latest completed updates (2026-11-07): [A5 scoped F17 fix](phase41/f17-full-fix-review.md), [Math115 preparation ACK](phase40/math115-event-review.md), [Windows pipe primitive](phase39/windows-pipe-review.md). Current open findings:6 P1/3 P2; F16/F17 global OPEN. Overall NO-GO; earlier snapshots historical.
 
 # Independent security, CI and physical acceptance — Agent 8
 
@@ -166,3 +166,7 @@ Phase37 latestPR24 462935b independently52/0skip,8replacement/raw/ID/skipnegativ
 Phase38 independently verifies0d6cachevectorfix and11conformance controls, but root_shadow_typingstill52PASS/raw16/beforeaftervalid with inertmarkerexecuted. F17PARTIAL/OPEN; no newfindingcount;6P1/3P2/NO-GO.
 
 Phase39 exact4416localWindowsnativepipe4casesexecuted0skip/allownchildrenstopped/744rawfilesunchanged. IdentificationSID/PID/token/Revertand2actuallevelnegativesqualifiedprimitiveonly;WrongPidflagforceddenialnotactualkernelmismatch. Nativeoperatorbridge/Windowsfleet/physicalBLOCKED;6P1/3P2/NO-GO.
+
+Phase40Math11563a source/modelACKonly13cases+31pureeventvectors,691rawfiles/188proofpreserved,noactivation/newRootauthorizationrequired. Phase41A5d4F17cache+rootimportvectorsfixed/52cases302bindings;d7fresh52+criticalnegatives317bindings. GlobalF17pendingotherguards;6P1/3P2/NO-GO.
+
+Phase42e238Rootclean137/0skip/all786rawinputs+7negativesverified;correctedrealPID4actualcases/0skip/allownchildrenstopped andPIDinequalityproven. Initialharnessmissedjobenv137numericalPASS/postguardfailurepreserved;freshcorrectjobenvpasses. KnownA5/RootF17fixesverified,otherapplicableguardsassessmentpending;6P1/3P2/NO-GO.

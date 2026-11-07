@@ -1,0 +1,92 @@
+{
+  "schema": "unified.windows-pipe-identification.qualification.v1",
+  "scope": "LOCAL_OWNED_SAME_ACCOUNT_PRIMITIVE_NOT_CROSS_ACCOUNT_OR_RUNTIME",
+  "script_raw_sha256": "06905cbc80ac712db4ad09f350b7c5da453147d9e861a3ab45d2eb944ed5b00d",
+  "cases": [
+    {
+      "case": "identification",
+      "exit": 0,
+      "result": {
+        "status": "OBSERVED_NATIVE_IDENTIFICATION_ONLY",
+        "reason": null,
+        "sid_sha256": "dde0e37206607afa25e487aedbdfd251609c764daad7a5d025a2adeed9459220",
+        "native_logon_id": "00000000000436ee",
+        "impersonation_level": 1,
+        "kernel_client_pid": 118504,
+        "expected_client_pid": 118504,
+        "restored_server_identity": true,
+        "client_pid_matches_owned_child": true,
+        "observer_is_administrator": false,
+        "owned_child_stopped": true,
+        "runtime_admission": false
+      },
+      "stdout_sha256": "fa222eae5a1a008eb50607af688d8f4915154aa5c987d7a1155efec7314cce9a",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "wrong-pid",
+      "exit": 2,
+      "result": {
+        "status": "REJECTED",
+        "reason": "CLIENT_PID_MISMATCH",
+        "sid_sha256": null,
+        "native_logon_id": null,
+        "impersonation_level": 0,
+        "kernel_client_pid": 118980,
+        "expected_client_pid": 73024,
+        "restored_server_identity": false,
+        "client_pid_matches_owned_child": true,
+        "observer_is_administrator": false,
+        "owned_child_stopped": true,
+        "runtime_admission": false
+      },
+      "stdout_sha256": "3a66e2fa068dfb621e76a4b6ac7c0c5363ad137751b6cb4de0fa3c5683458825",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "anonymous",
+      "exit": 2,
+      "result": {
+        "status": "REJECTED",
+        "reason": "IDENTIFICATION_LEVEL_REQUIRED",
+        "sid_sha256": null,
+        "native_logon_id": null,
+        "impersonation_level": 0,
+        "kernel_client_pid": 119912,
+        "expected_client_pid": 119912,
+        "restored_server_identity": false,
+        "client_pid_matches_owned_child": true,
+        "observer_is_administrator": false,
+        "owned_child_stopped": true,
+        "runtime_admission": false
+      },
+      "stdout_sha256": "70dd8fee194d98c480071493e4c80443c3ce55b37e26bb66fc40dfa8bb02d6d2",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "impersonation",
+      "exit": 2,
+      "result": {
+        "status": "REJECTED",
+        "reason": "IDENTIFICATION_LEVEL_REQUIRED",
+        "sid_sha256": null,
+        "native_logon_id": null,
+        "impersonation_level": 2,
+        "kernel_client_pid": 119080,
+        "expected_client_pid": 119080,
+        "restored_server_identity": false,
+        "client_pid_matches_owned_child": true,
+        "observer_is_administrator": false,
+        "owned_child_stopped": true,
+        "runtime_admission": false
+      },
+      "stdout_sha256": "60a209dcdcf535326ef38149380813c2d591a5e21d1489b142eae725b07b481d",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "tests": 4,
+  "skipped": 0,
+  "native_operator_bridge": "NOT_IMPLEMENTED",
+  "runtime_admission": false,
+  "physical_installation": false
+}
