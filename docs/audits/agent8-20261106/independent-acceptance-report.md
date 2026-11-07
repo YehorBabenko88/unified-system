@@ -164,3 +164,5 @@ Phase36 Math1149f08b23 preparationfix independently verified: actualunchangedver
 Phase37 latestPR24 462935b independently52/0skip,8replacement/raw/ID/skipnegativesreject,5localstatevectors+1boundedmeasurementpass. NewF17P2confirmed: untracked timestampmatchedCPythoncacheexecutesharmlessmarker while16rawbindings/beforeafterand52PASSaccept. Sourceevidencerobustnessonly, nohostedtampering/nativebypassclaim; ownersnotified. Current6P1/3P2,NO-GO,F16/F17open.
 
 Phase38 independently verifies0d6cachevectorfix and11conformance controls, but root_shadow_typingstill52PASS/raw16/beforeaftervalid with inertmarkerexecuted. F17PARTIAL/OPEN; no newfindingcount;6P1/3P2/NO-GO.
+
+Phase39 exact4416localWindowsnativepipe4casesexecuted0skip/allownchildrenstopped/744rawfilesunchanged. IdentificationSID/PID/token/Revertand2actuallevelnegativesqualifiedprimitiveonly;WrongPidflagforceddenialnotactualkernelmismatch. Nativeoperatorbridge/Windowsfleet/physicalBLOCKED;6P1/3P2/NO-GO.
