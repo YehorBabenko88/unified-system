@@ -36,3 +36,12 @@ Successor guard inventory: eight methods, one clean positive plus nine negative
 conditions. Prior six-method/seven-negative logs remain scoped to the earlier
 helper. No global source-qualification finding closure is claimed; A8 independently
 retests its original exact cryptography-shadow vector against the successor.
+
+Hosted observation update: original2cb, intermediateeed4 and final063a identity
+runs completed failure/attempt1; jobs API returned no jobs. A2 separately reproduced
+a concrete workflow YAML parser failure at the pip command's unquoted colon-space
+in --only-binary=:all:. Fixed by a run block scalar. Actual isolated PyYAML6.0.3
+parser RED/green logs retained; validation-only environment is separate from the
+hashlocked crypto runtime. This establishes the local invalid-YAML defect, not an
+invented hosted annotation or successful runner/test execution. No rerun requested;
+new pushed source naturally generates its own original workflow event.
