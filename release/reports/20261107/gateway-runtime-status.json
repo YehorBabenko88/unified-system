@@ -251,19 +251,27 @@
     "owner_persistence_tests": 41,
     "owner_skips": 0,
     "source_qualification": "PENDING",
-    "review": "A4_REPRODUCED_P2_MIGRATION_EXCEPTION_RETAINS_WRITE_LOCK_ACK_WITHHELD",
+    "review": "A4_SCOPED_LOCAL_STAGING_SOURCE_COMPATIBILITY_ACK_AT_887E",
     "concurrent_migration": "OWNER_REPORTED_REPRODUCED_FIXED_WRITE_LOCK_BEFORE_DDL",
     "project_and_read": "ALWAYS_DENY_NATIVE_AUTHORITY_ABI_UNAVAILABLE",
     "publication_receipt": "NULL",
     "native_admission": false,
-    "required_correction": "EXCEPTION_SAFE_ROLLBACK_CLOSE_PRESERVE_ORIGINAL_EXCEPTION_AND_RETAINED_TRACEBACK_REGRESSION",
+    "required_correction": "MIGRATION_EXCEPTION_WRITE_LOCK_P2_CLOSED_BY_A4_TARGETED_VERIFICATION",
     "fix_candidate": {
       "source": "887e3eeaf23ef8d9d1429435bc88bbac8099c6e6",
       "tree": "954f3364cb70369705f658e89fcc6ae8ce547eec",
       "owner_tests": 45,
       "skips": 0,
       "owner_regressions": "RETAINED_TRACEBACK_WRITER_AVAILABLE; BASEEXCEPTION_CLEANUP; CLEANUP_FAILURE_PRESERVES_ORIGINAL",
-      "independent_review": "REQUESTED_A4",
+      "independent_review": {
+        "owner": "A4",
+        "targeted_sqlite_checks": 3,
+        "passed": 3,
+        "sha256": "c5876f92d8f3a7d5c3042ad481a0ea7b5effe624a90db7923e092fa3a8d54152",
+        "source": "887e3eeaf23ef8d9d1429435bc88bbac8099c6e6",
+        "owner45_counts_transferred": false,
+        "native_admission": false
+      },
       "source_qualification": "PENDING"
     }
   }
