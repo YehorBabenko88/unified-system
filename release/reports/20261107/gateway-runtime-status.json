@@ -74,7 +74,17 @@
           "subtests": 35,
           "owner_strict_guard": "PASS_819_PRIMARY_NO_EXTRAS",
           "root_log_xml_hash_verification": "PASS_2152_CASES_36_SKIP_0_FAILURE_ERROR",
-          "a8_review": "REQUESTED",
+          "a8_review": {
+            "report": {
+              "commit": "d30ac89c9b22c4452f719bc39b36a74388e00b8b",
+              "path": "docs/audits/agent8-20261106/phase93/report.md",
+              "sha256": "adea87ede9bafa47b896ab987ee1156e62b944b40ef7912dba7943c94c09f4d6"
+            },
+            "independent_targeted_tests": 54,
+            "source": "cddf71fab478f788d7289da9648f8a2f9287d1f8",
+            "full2116_rerun": false,
+            "owner_original_receipts_and_current_819_clean_inventory_verified": true
+          },
           "native_and_crossrepo_skips": "NOT_MANDATORY_ACCEPTANCE_PASS"
         },
         "original_6e_failure_preserved": true
@@ -282,6 +292,21 @@
         "native_admission": false
       },
       "source_qualification": "PENDING"
+    },
+    "independent_review": {
+      "report": {
+        "commit": "d30ac89c9b22c4452f719bc39b36a74388e00b8b",
+        "path": "docs/audits/agent8-20261106/phase95/report.md",
+        "sha256": "fcd157fa3efaec250de6ac80600588844021c571878c8a24e08131c7530426d0"
+      },
+      "source": "887e3eeaf23ef8d9d1429435bc88bbac8099c6e6",
+      "tests": 45,
+      "skips": 0,
+      "primary_files": 806,
+      "no_extras": true,
+      "full_suite_rerun": false,
+      "project_read": "DENY",
+      "native_admission": false
     }
   },
   "WORKER_MEMORY_DIAGNOSTIC": {
@@ -297,6 +322,11 @@
       "EXTERNAL_WHOLE_INVOCATION_WATCHDOG_INCLUDING_SETUP_CLEANUP"
     ],
     "memory_rca": "NOT_ESTABLISHED",
-    "runtime_admission": false
+    "runtime_admission": false,
+    "a8_report": {
+      "commit": "d30ac89c9b22c4452f719bc39b36a74388e00b8b",
+      "path": "docs/audits/agent8-20261106/phase94/report.md",
+      "sha256": "c46b59e5f13b891305f89e472959132582afcb2300c39aebf6c222b56cbc4741"
+    }
   }
 }
