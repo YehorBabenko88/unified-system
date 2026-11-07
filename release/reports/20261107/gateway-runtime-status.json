@@ -54,7 +54,19 @@
     "entry_matrix": "121ad998ae68c8da60cb55aa991be2f602f7c788",
     "offline_pass_not_transferred": true,
     "latest_read_review": "ACTUAL_815_HTTP_PROBES_EXECUTED_REPORT_PENDING; TEST_OBSERVER_P2_FIXED_BCFA243",
-    "full_40_row_acceptance": "NOT_CLOSED"
+    "full_40_row_acceptance": "NOT_CLOSED",
+    "observer_fix": {
+      "finding": "A8-F20_P2_TEST_INSTRUMENTATION",
+      "status": "FIX_VERIFIED_OFFLINE",
+      "source": "bcfa243b6ecb5389270152612217f8d89643a248",
+      "tree": "5df31e286a0ae4ed21832c19387b22ad6bd1ef08",
+      "independent_manifest_tls_tests": 3,
+      "skips": 0,
+      "primary_raw_files": 1516,
+      "source_before_after_equal": true,
+      "full146_independent_at_this_source": false,
+      "phase89_primary_report": "PENDING_PUBLICATION_LINK"
+    }
   },
   "GATEWAY_BASE_SHA": "6825964bf52375b134c6eb4487808963a0d128ed",
   "SUPERVISOR_COMPATIBILITY": {
@@ -148,5 +160,12 @@
     "manifest": "A4_NEW_STATIC_815_SOURCE_ACK_4f54649e879694e69574223568bbd3dd386d0a2c3f25ed99a557b706ab0a8b96",
     "query": "A3_NEW_STATIC_815_SOURCE_ACK_64b3f3a13503f49433d6a512f0bd93b2127a94589f9cea0bd3a195d29ee0c383",
     "historical_ack_scope": "COMPONENT_OR_WIP_DIRECTION_NOT_EXACT_CAPSULE_ADMISSION"
+  },
+  "WORKSPACE_RECOVERY": {
+    "remote_source": "698477486746848c4b530b2b29d29cc6021e30cc",
+    "method": "FRESH_SEPARATE_CLONE_FROM_GITHUB",
+    "reason": "PRIOR_WORKTREE_DIRECTORY_ABSENT_REASON_UNKNOWN",
+    "evidence_clone_unchanged": true,
+    "new_runtime_test_claim": false
   }
 }
