@@ -53,10 +53,14 @@ Passing assertions on caller-made observations cannot qualify actual execution.
 
 Observation counts are confirmed logical effects of the tested original commands,
 not raw KV/session/denial-receipt writes or all unrelated storage accounting.
-The publication scenarios require one FRESH unique stored blob/physical allocation
-and held entitlement, so their expected confirmed debit count is1. Dedup/replica
-reuse with legitimate zero additional physical charge needs a separately defined
-case; it must not be accidentally classified as a failed fresh-allocation test.
+The publication scenarios require one FRESH logical segment with the complete
+replica/hold set required by an explicitly admitted policy. The debit count1 means
+ONE logical atomic publication-debit event across ALL required participants, not
+one physical replica/charge or one byte. Actual per-node physical charges must
+all be evidenced and checked; dedup/reuse needs a separately defined case. A4
+review4 N1-only reservation candidate cannot lower a required2-copy policy or
+fabricate independent failure domains. Positive native vectors stay NOT_RUN until
+the complete policy-compliant participant/closure contract and stand are admitted.
 Prepared/uncertain physical charges remain charged, including after rejection;
 zero publication debit does not mean those bytes were refunded or never existed.
 
