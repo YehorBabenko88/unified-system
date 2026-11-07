@@ -51,7 +51,7 @@ Local receipt marker `unified.node-task-journal.v2` includes an immutable scope 
 
 Existing journal constructors and every read, create, transition, snapshot and reconciliation validate the entire persisted chain against configured scope. A controller constructor and each entrypoint verify its context against the journal. A foreign scope fails before receipt mutation; recovery never relabels another node/incarnation. Old receipt.v1/unbound histories, including historical b6f58f4, reject unchanged without migration or fake ownership. NodeOperation.v2 reference-generation semantics remain unchanged. Scope strings are local data references, not authenticated node enrollment, native ownership, producer ACK or permission grants.
 
-The current mandatory inventory has 30 tests. Scope regression RED captured the original foreign-controller acceptance plus missing mandatory scope API, followed by tests for all three scope dimensions, mixed persisted chains, concurrent empty writers, immutable projections, swapped controller contexts and old receipt refusal. Historical b6f58f4 evidence and ROOT reproduction remain distinct from the new candidate.
+The current mandatory inventory has 32 tests. Scope regression RED captured the original foreign-controller acceptance plus missing mandatory scope API, followed by tests for all three scope dimensions, mixed persisted chains, concurrent empty writers, immutable projections, swapped controller contexts and old receipt refusal. Historical b6f58f4 evidence and ROOT reproduction remain distinct from the new candidate.
 
 
 SQLite resource-bound admission: NodeTaskJournal accepts only a quiescent,
