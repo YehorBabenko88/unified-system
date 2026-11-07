@@ -154,3 +154,5 @@ Latest phase29: Meta PR78 f3c01a2 and Stratt PR72 88a180b independently verify r
 Phase30 independently verifies Root final-integration F16 correction at1808556: clean75/0skip, oldblob/tree falsebinding75 reproduced, fixedblob/tree reject beforetests; post-source/wrongID/skip reject. Componentofflinefix only; globalF16open andNO-GO6P1/2P2 remain. See phase30/root-f16-review.md.
 
 Phase31 exact PR30/29/31 focused28/26/46pass0skip; synthetic composition159unique pass plus15deny-onlyvectors, no runtime admission. Phase32 independently verifies causal fixture b892271 with10controlled cacheRED/GREEN+7modulecases, product gate unchanged; originalLAN768/1ERROR/11skips not waived. OverallNO-GO6P1/2P2, physical/TailscaleBLOCKED.
+
+2026-11-07 phase34: executable isolated real3-voter ConsulCAS/consistentreads, actual3mTLS cases and defaultHTTP503 pass separately.10mandatory IDs/zero skips retained; MODELNOT_RUN,CODEharnesschecksPASS,integratedENDPOINT/WINDOWS/PHYSICALBLOCKED. AllownPopenstopped. No productionbridge/auth/source/runtime transfer; NO-GO6P1/2P2/F16open.

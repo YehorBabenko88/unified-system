@@ -1,0 +1,23 @@
+==> Starting Consul agent...
+               Version: '1.22.2'
+            Build Date: '2025-12-17 05:40:06 +0000 UTC'
+               Node ID: '76ecbb86-1ef7-ff2f-c935-b92da8107930'
+             Node name: 'a8-phased-1'
+            Datacenter: 'a8-phased' (Segment: '<all>')
+                Server: true (Bootstrap: false)
+           Client Addr: [127.0.0.1] (HTTP: 63222, HTTPS: -1, gRPC: -1, gRPC-TLS: -1, DNS: -1)
+          Cluster Addr: 127.0.0.1 (LAN: 63220, WAN: 63221)
+     Gossip Encryption: false
+      Auto-Encrypt-TLS: false
+           ACL Enabled: false
+     Reporting Enabled: false
+    ACL Default Policy: allow
+             HTTPS TLS: Verify Incoming: false, Verify Outgoing: false, Min Version: TLSv1_2
+              gRPC TLS: Verify Incoming: false, Min Version: TLSv1_2
+      Internal RPC TLS: Verify Incoming: false, Verify Outgoing: false (Verify Hostname: false), Min Version: TLSv1_2
+
+==> Log data will now stream in as it occurs:
+
+2026-11-07T06:06:16.784+0100 [WARN]  agent: bootstrap_expect > 0: expecting 3 servers
+2026-11-07T06:06:17.006+0100 [WARN]  agent.auto_config: bootstrap_expect > 0: expecting 3 servers
+2026-11-07T06:06:20.647+0100 [ERROR] agent.server.rpc: multiplex conn accept failed: conn=from=127.0.0.1:63242 error="read tcp 127.0.0.1:63219->127.0.0.1:63242: wsarecv: An existing connection was forcibly closed by the remote host."

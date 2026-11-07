@@ -1,5 +1,5 @@
 {
-  "checked_utc": "2026-11-06T20:48:49.064346+00:00",
+  "checked_utc": "2026-11-07T05:08:13.430763+00:00",
   "RELEASE_MANIFEST_STATUS": "PRESENT_PREPARATION_ONLY_NOT_APPROVED_NOT_INSTALLABLE",
   "NODE_INVENTORY_STATUS": "SIX_REDACTED_OWNER_OBSERVATIONS_PRESENT_ORIGINAL_RAW_NOT_REACQUIRED_BY_A8_NOT_ADMITTED",
   "CONTRACT_STATUS": {
@@ -1128,5 +1128,22 @@
     "environment": "Windows Python3.12 isolated test metadata",
     "scope": "FIXTURE_CACHE_INVALIDATION_ONLY_NOT_PR30_FULL_SUITE_PASS",
     "overall": "NO_GO"
+  },
+  "phased_isolated_preparation": {
+    "source": "phase34/phased-acceptance.json",
+    "phase_status": {
+      "MODEL": "NOT_RUN",
+      "CODE": "PASS",
+      "ENDPOINT": "BLOCKED",
+      "WINDOWS": "BLOCKED",
+      "PHYSICAL": "BLOCKED"
+    },
+    "mandatory_cases": 10,
+    "skips": [],
+    "real_consul_voters": 3,
+    "owned_processes_stopped": true,
+    "integrated_endpoint": "BLOCKED_PENDING_EXACT_REAL_ADAPTER",
+    "root_review4_pin": "360c5cdc9dae88416d69f8765f3dff5ab8828945",
+    "review4_manifest_raw_sha256": "1c1f0311db7204bd47cb758e7e4e4fe2d7723f7d59e90bd13b52f6fb8b1f83c3"
   }
 }
