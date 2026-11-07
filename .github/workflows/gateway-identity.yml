@@ -18,14 +18,24 @@ jobs:
             lock: linux
     runs-on: ${{ matrix.os }}
     timeout-minutes: 10
+    env:
+      EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
     steps:
-      - shell: bash
-        run: git config --global core.autocrlf false
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        env:
+          GIT_CONFIG_COUNT: '1'
+          GIT_CONFIG_KEY_0: core.autocrlf
+          GIT_CONFIG_VALUE_0: 'false'
+        with:
+          ref: ${{ env.EXPECTED_HEAD }}
+          persist-credentials: false
+          fetch-depth: 0
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with:
           python-version: '3.12.10'
       - shell: bash
         run: python -m pip install --only-binary=:all: --require-hashes -r docs/intelligence/identity/requirements-${{ matrix.lock }}.lock
       - shell: bash
-        run: python -I -B docs/intelligence/identity/run_qualification.py --expected-head "$(git rev-parse HEAD)"
+        run: python -I -B docs/intelligence/identity/guard_controls.py
+      - shell: bash
+        run: python -I -B docs/intelligence/identity/run_qualification.py --expected-head "$EXPECTED_HEAD"

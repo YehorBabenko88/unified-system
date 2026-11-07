@@ -33,8 +33,9 @@ PKI/TLS positive and negatives are real disposable loopback; controlled-clock
 and corrupted-private-binding controls are unit tests, not OS/native acceptance.
 No cross-owner read, research/mutation/cancellation/native/physical permission.
 
-Root additionally reproduced a forged exact-type handle pointing to a fake issuer
-whose _check returned None. Fixed by exact admitted authority TYPE check and direct
+Root identified by source review a forged exact-type handle pointing to a fake
+issuer whose _check returned None; A2 reproduced the requested vector in its own
+RED test. Fixed by exact admitted authority TYPE check and direct
 fixed-class verifier dispatch, followed by actual issuer inventory membership;
 no receiver-selected _check callback. Root must STILL bind its actual qualified
 authority instance/issuance in the same trusted callchain before invoking owner
