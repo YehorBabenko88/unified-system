@@ -2560,5 +2560,31 @@
       }
     ],
     "evidence": "phase57/independent-review.json"
+  },
+  "GRID_CI142_FRESH_WORKFLOW_REVIEW": {
+    "head": "7a19ab40c30efef431bb16f0ddc91960608bf597",
+    "tree": "e7adbc40562e962ae529d157eebeacd550c5b7f6",
+    "workflow_raw_sha256": "fa8b2ea7982f11aeaa68edac8bbdf6c13fc30b1e53de626fbba8055a3936e2e4",
+    "only_delta_from9d71": "WORKFLOW",
+    "all_product_profile_policy_inventories_raw_unchanged": true,
+    "actual_tests": [
+      43,
+      55,
+      44
+    ],
+    "total": 142,
+    "skips": 0,
+    "protected_raw_files": 27,
+    "all_primary_raw_files_before_after": 689,
+    "interpreter": "Python3.12-I-B-pytest8.3.5-own-venv",
+    "scope": "LOCAL_WINDOWS_COMMITTED_WORKFLOW_NOT_HOSTED",
+    "hosted": "NOT_QUALIFIED",
+    "permission": false,
+    "provider_or_native_admission": false,
+    "source_negative_controls": 11,
+    "injected_JUnit_models_not_pytest": 15,
+    "hosted_run": 42354101781,
+    "hosted_snapshot": "QUEUED_NOT_PASS",
+    "evidence": "phase58/independent-review.md"
   }
 }
