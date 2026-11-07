@@ -2729,5 +2729,31 @@
     "status": "PASS_SOURCE_AND_SELECTED_EVIDENCE_CONSISTENCY_ONLY",
     "hosted_fullmatrix_native_browser_office_READY_release_physical": "NOT_ADMITTED_NOT_TRANSFERRED",
     "overall": "NO_GO_BROADER_ACCEPTANCE"
+  },
+  "GRID_PR267_NUMERICAL_REVIEW": {
+    "local": {
+      "head": "7a83e6e1aa74001c4797e9bf7af9368d3192bfbe",
+      "tree": "246a30296803de4c0f2e41a35f2cf6e3faf88a9d",
+      "changed_paths": [
+        ".github/workflows/mission-bootstrap-overflow.yml",
+        "docs/audits/mission-bootstrap-overflow-20261107.md",
+        "grid/strategy_statistics.py",
+        "tests/test_strategy_statistics_overflow.py"
+      ],
+      "workflow_actual_stdlib_tests": 10,
+      "old_new_regressions": 21,
+      "skips": 0,
+      "raw_source_files_before_after": 692,
+      "scope": "LOCAL_NUMERICAL_COMPONENT_ONLY",
+      "hosted": "PENDING_SEPARATE_REVIEW",
+      "profitability_native_provider_admission": false
+    },
+    "source_controls": 4,
+    "independent_exact_fraction_vectors": 516,
+    "observed_normal_mean_1ULP_differences": 11,
+    "direct_boundary_probes": 8,
+    "independent_seeded_oracle_samples": 64,
+    "hosted": "BOTH_QUEUED_NOT_PASS",
+    "evidence": "phase63/independent-review.md"
   }
 }
