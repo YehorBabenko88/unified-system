@@ -36,11 +36,22 @@
     "a8_review": "88684052f5adf3ef418dbd2b874f96bdbb13664a",
     "query_bridge_v2": {
       "pr": 76,
-      "head": "1610e149643c1a6817cd739b26fbb2bec4ce2cc2",
+      "head": "6e58eb8bfa428cf88d54abd84418b58d67569814",
       "tested_source": "5b4d9fafbc3ef64454f23e3c48621536b67f42dc",
       "owner_targeted_tests": 54,
-      "full_suite": "ENVIRONMENT_FAILURES_REPRODUCED_CONFIGURED_RERUN_PENDING",
-      "job_admission": false
+      "full_suite": "TESTS_PASS_BUT_STRICT_CLEAN_CAPSULE_FAILED; HOSTED_PENDING",
+      "job_admission": false,
+      "configured_full_pytest": {
+        "tests_passed": 2116,
+        "skips": 36,
+        "subtests_passed": 35,
+        "failures": 0,
+        "errors": 0,
+        "primary_source_files": 819,
+        "primary_source_unchanged": true,
+        "clean_capsule_guard": "FAILED_OWN_STATE_FILES_CREATED",
+        "source_capsule_admission": false
+      }
     }
   },
   "VISUALIZATION_API": {
