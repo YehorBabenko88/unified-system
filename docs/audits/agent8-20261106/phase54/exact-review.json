@@ -1,0 +1,33 @@
+{
+  "requirement": "STORAGE_ISOLATED_FILESYSTEM_EXACT_HEAD",
+  "repository": "unified-system",
+  "pr": 34,
+  "head": "cd0286dee5fc41cb7a35b0b6ac431a7ebfc25dfb",
+  "tree": "84b714253c3e10017046e1a7a5981738a05e06e6",
+  "base": "10157fed4d28606adf587be3494d2f6d42887ce9",
+  "added_paths": [
+    "A\tdocs/storage/runtime/ISOLATED-FS.md",
+    "A\ttests/storage/runtime/__init__.py",
+    "A\ttests/storage/runtime/run_isolated.py",
+    "A\ttests/storage/runtime/test_backup.py",
+    "A\ttests/storage/runtime/test_object_store.py",
+    "A\tunified_system/storage/backup.py",
+    "A\tunified_system/storage/object_store.py"
+  ],
+  "Stage1_raw_unchanged": true,
+  "unit_fs_cases": 43,
+  "stage1_cases": 26,
+  "new_filesystem_cases": 17,
+  "skips": 0,
+  "all_primary_raw_inputs_before_after": 307,
+  "raw_manifest_sha256": "1d505f1e8902bb8355372ac66dc06e8fa195d505048612ce2918a14ff2dbfe1a",
+  "owner_handoff_sha256": "5409817a0014173df3ddbe5cf1edfe1f68110c0b335c8c4329170950c4dde85d",
+  "full751_precommit": "NOT_TRANSFERRED_NOT_RUN_HERE",
+  "qualification": "ISOLATED_FILESYSTEM_ONLY",
+  "media_durability": false,
+  "dataset_closure": false,
+  "Consul_publication": false,
+  "pilot_rollback_qualified": false,
+  "native_admission": false,
+  "overall": "NO_GO_BROADER_ACCEPTANCE"
+}

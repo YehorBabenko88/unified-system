@@ -2384,5 +2384,55 @@
     "native_acceptance": "BLOCKED",
     "home_physical_acceptance": "BLOCKED",
     "overall": "NO_GO_ACCEPTANCE"
+  },
+  "A4_PR34_FS_REVIEW": {
+    "exact": {
+      "requirement": "STORAGE_ISOLATED_FILESYSTEM_EXACT_HEAD",
+      "repository": "unified-system",
+      "pr": 34,
+      "head": "cd0286dee5fc41cb7a35b0b6ac431a7ebfc25dfb",
+      "tree": "84b714253c3e10017046e1a7a5981738a05e06e6",
+      "base": "10157fed4d28606adf587be3494d2f6d42887ce9",
+      "added_paths": [
+        "A\tdocs/storage/runtime/ISOLATED-FS.md",
+        "A\ttests/storage/runtime/__init__.py",
+        "A\ttests/storage/runtime/run_isolated.py",
+        "A\ttests/storage/runtime/test_backup.py",
+        "A\ttests/storage/runtime/test_object_store.py",
+        "A\tunified_system/storage/backup.py",
+        "A\tunified_system/storage/object_store.py"
+      ],
+      "Stage1_raw_unchanged": true,
+      "unit_fs_cases": 43,
+      "stage1_cases": 26,
+      "new_filesystem_cases": 17,
+      "skips": 0,
+      "all_primary_raw_inputs_before_after": 307,
+      "raw_manifest_sha256": "1d505f1e8902bb8355372ac66dc06e8fa195d505048612ce2918a14ff2dbfe1a",
+      "owner_handoff_sha256": "5409817a0014173df3ddbe5cf1edfe1f68110c0b335c8c4329170950c4dde85d",
+      "full751_precommit": "NOT_TRANSFERRED_NOT_RUN_HERE",
+      "qualification": "ISOLATED_FILESYSTEM_ONLY",
+      "media_durability": false,
+      "dataset_closure": false,
+      "Consul_publication": false,
+      "pilot_rollback_qualified": false,
+      "native_admission": false,
+      "overall": "NO_GO_BROADER_ACCEPTANCE"
+    },
+    "additional": {
+      "head": "cd0286dee5fc41cb7a35b0b6ac431a7ebfc25dfb",
+      "independent_extra_cases": 4,
+      "skips": 0,
+      "legacy_race_RED": "1_EXPECTED_ASSERTION_FAILURE_0_ERRORS",
+      "current_GREEN": true,
+      "actual_windows_junction": true,
+      "real_three_root_multiobject_restore": true,
+      "raw_files_before_after": 307,
+      "owned_scratch_retained": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-8-independent-security-ci\\work\\storage34-a8-extra-97c1728a",
+      "production_admission": false,
+      "pilot_rollback_qualified": false,
+      "media_durability": false
+    },
+    "evidence": "phase54/independent-review.md"
   }
 }
