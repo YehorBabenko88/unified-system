@@ -1,5 +1,5 @@
 {
-  "checked_utc": "2026-11-07T05:08:13.430763+00:00",
+  "checked_utc": "2026-11-07T05:15:44.011520+00:00",
   "RELEASE_MANIFEST_STATUS": "PRESENT_PREPARATION_ONLY_NOT_APPROVED_NOT_INSTALLABLE",
   "NODE_INVENTORY_STATUS": "SIX_REDACTED_OWNER_OBSERVATIONS_PRESENT_ORIGINAL_RAW_NOT_REACQUIRED_BY_A8_NOT_ADMITTED",
   "CONTRACT_STATUS": {
@@ -1145,5 +1145,81 @@
     "integrated_endpoint": "BLOCKED_PENDING_EXACT_REAL_ADAPTER",
     "root_review4_pin": "360c5cdc9dae88416d69f8765f3dff5ab8828945",
     "review4_manifest_raw_sha256": "1c1f0311db7204bd47cb758e7e4e4fe2d7723f7d59e90bd13b52f6fb8b1f83c3"
+  },
+  "root_composition129_identity_guards_review": {
+    "composed_head": "237722bb1d5c8bc671a498609729261bdd3c9fce",
+    "composed_tree": "0bc635d822a3702e43b45fbd513a8e0bf2cb3ab6",
+    "guard_head": "cc286bce5e51e3670bd8a6cdfd3b663307268703",
+    "guard_tree": "6255c0620a4257d7f8fd82e0fee5d944e052a1b6",
+    "owner_component_paths_match": true,
+    "prior75_ids_and_whole_test_module_bytes_preserved": true,
+    "independent_composed_tests": 129,
+    "skips": 0,
+    "composed_raw_before": {
+      "files": 664,
+      "sha256": "b6ec2be8e44e150f3347157383c9a8812ae8d32a457386b9db8db54c781394de"
+    },
+    "composed_raw_after": {
+      "files": 664,
+      "sha256": "b6ec2be8e44e150f3347157383c9a8812ae8d32a457386b9db8db54c781394de"
+    },
+    "owner_receipt_original_log_and_primary_inputs_verified": true,
+    "independent_guard_tests": 8,
+    "independent_guard_negative_vectors": 60,
+    "guard_raw_before": {
+      "files": 671,
+      "sha256": "69748133319c412bc183c9a03b4c072e87879f2a5121593676e5760dfe046b49"
+    },
+    "guard_raw_after": {
+      "files": 671,
+      "sha256": "69748133319c412bc183c9a03b4c072e87879f2a5121593676e5760dfe046b49"
+    },
+    "qualification": "EXACT_CODE_AND_ISOLATED_COMPONENTS_ONLY",
+    "native_authentication": "NOT_QUALIFIED",
+    "atomic_guard_CAS": "NOT_IMPLEMENTED_OR_TESTED",
+    "integrated_endpoint": "BLOCKED",
+    "windows_hosted": "NOT_QUALIFIED",
+    "physical": "BLOCKED",
+    "F16_global": "OPEN",
+    "overall": "NO_GO",
+    "owner_receipt_raw_sha256": "12c4b4efc9a3ad8baef57042c63f32260db50e1d568f8cff73e5dcc8c4ef83eb",
+    "ownership_revision10": {
+      "raw_sha256": "33dc610291ec927f9677792b0ce4fb0acd198d3e7de250889e8e14beee6ef734",
+      "A8_ACK": "OWN_PATH_SCOPE_ONLY_NOT_GLOBAL_OR_RUNTIME",
+      "allocation": {
+        "agent_id": "A8",
+        "scope": "Independent security and acceptance",
+        "repository": "unified-system",
+        "branch": "audit/agent8-independent-acceptance-20261106",
+        "worktree": "C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-8-independent-security-ci/work/unified-audit",
+        "draft_pr": 21,
+        "base_head": "b9b03a1ce9f887dbe113fd22d0bda8932f46ef80",
+        "allocation_state": "EXISTING_PUBLISHED_AUDIT_CHECKOUT_CONFIRMED",
+        "allowed_files": [],
+        "allowed_new_path_prefixes": [
+          "docs/audits/agent8-20261106/"
+        ],
+        "dependencies": [
+          "A1",
+          "A2",
+          "A3",
+          "A4",
+          "A5",
+          "A6",
+          "A7"
+        ],
+        "ack": "PENDING",
+        "rules": [
+          "Read current source before proposing edits; do not duplicate existing modules",
+          "Any existing file outside allowed_files requires explicit ROOT approval",
+          "No protected merge, deployment, data deletion, accounts/credentials or physical/network mutation",
+          "No edit outside this worktree or concurrent physical test",
+          "Send exact HEAD/tree, test inventory, CI run/attempt/jobs and SHA256 evidence"
+        ],
+        "user_owned_thread_id": "01a1b15c-8c40-7f12-9dea-2f8c31e3dddc",
+        "historical_audit_head_not_base": "6f89abed0b18d8044c9b650c356916f244af6d39"
+      }
+    },
+    "workflow_source_guard_and_case_functions_AST_unchanged_from_1808556": true
   }
 }
