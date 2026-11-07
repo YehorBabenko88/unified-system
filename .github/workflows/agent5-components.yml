@@ -109,10 +109,13 @@ jobs:
               required = set(prefixes[1:]) | {'scheduler_components/__init__.py'}
               unexpected = []
               bytecode_paths = []
+              committed_test_paths = set(git('ls-tree', '-r', '--name-only', head, '--', 'tests').splitlines())
               for base in ('scheduler_components', 'tests'):
                   for path in (root / base).rglob('*'):
                       if '__pycache__' in path.parts or path.suffix.lower() in ('.pyc', '.pyo'):
                           bytecode_paths.append(path.relative_to(root).as_posix())
+                      if base == 'tests' and path.suffix == '.py' and path.relative_to(root).as_posix() not in committed_test_paths:
+                          unexpected.append(path.relative_to(root).as_posix())
               for path in (root / 'scheduler_components').rglob('*'):
                   if '__pycache__' not in path.parts and (path.is_file() or path.is_symlink()):
                       relative = path.relative_to(root).as_posix()
