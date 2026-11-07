@@ -34,7 +34,7 @@ jobs:
       - name: Run exact-source component acceptance
         shell: bash
         run: |
-          python - <<'PY'
+          python -B - <<'PY'
           import hashlib
           import json
           import os
@@ -43,7 +43,19 @@ jobs:
           import stat
           import subprocess
           import sys
+          import tempfile
           import unittest
+
+          # -B prevents writes, not reads. Pin all imports to a newly-created
+          # empty cache namespace, and reject repository caches before/after.
+          preloaded_protected = sorted(name for name in sys.modules if
+              name == 'scheduler_components' or name.startswith('scheduler_components.')
+              or name.startswith('test_agent5_scheduler'))
+          isolated_cache = tempfile.TemporaryDirectory(prefix='agent5-import-cache-')
+          sys.dont_write_bytecode = True
+          sys.pycache_prefix = isolated_cache.name
+          os.environ['PYTHONDONTWRITEBYTECODE'] = '1'
+          os.environ['PYTHONPYCACHEPREFIX'] = isolated_cache.name
 
           def git(*args):
               return subprocess.check_output(['git', '--no-replace-objects', *args], text=True).strip()
@@ -95,17 +107,31 @@ jobs:
               expected_paths = {item['path'] for item in files}
               required = set(prefixes[1:]) | {'scheduler_components/__init__.py'}
               unexpected = []
+              bytecode_paths = []
+              for base in ('scheduler_components', 'tests'):
+                  for path in (root / base).rglob('*'):
+                      if '__pycache__' in path.parts or path.suffix.lower() in ('.pyc', '.pyo'):
+                          bytecode_paths.append(path.relative_to(root).as_posix())
               for path in (root / 'scheduler_components').rglob('*'):
                   if '__pycache__' not in path.parts and (path.is_file() or path.is_symlink()):
                       relative = path.relative_to(root).as_posix()
                       if relative not in expected_paths:
                           unexpected.append(relative)
+              cache_policy_valid = (not preloaded_protected and not bytecode_paths
+                  and sys.dont_write_bytecode is True and sys.pycache_prefix == isolated_cache.name
+                  and os.environ.get('PYTHONDONTWRITEBYTECODE') == '1'
+                  and os.environ.get('PYTHONPYCACHEPREFIX') == isolated_cache.name
+                  and not any(Path(isolated_cache.name).iterdir()))
               return {'head': head, 'tree': git('rev-parse', head + '^{tree}'),
                       'tracked_status': git('status', '--porcelain', '--untracked-files=no'),
                       'raw_binding': 'REGULAR_FILE_GIT_BLOB_V2_NO_REPLACE_NO_NORMALIZATION',
+                      'bytecode_policy': 'EMPTY_PRIVATE_CACHE_NO_WRITES_REJECT_REPOSITORY_CACHES_V1',
+                      'bytecode_policy_valid': cache_policy_valid,
+                      'preloaded_protected_modules': preloaded_protected,
+                      'repository_bytecode_paths': sorted(bytecode_paths),
                       'protected_files': sorted(files, key=lambda item: item['path']),
                       'unexpected_protected_files': sorted(unexpected),
-                      'protected_inputs_valid': required <= expected_paths and not unexpected
+                      'protected_inputs_valid': required <= expected_paths and not unexpected and cache_policy_valid
                           and all(item['matches_committed_blob'] for item in files)}
 
           out = Path(os.environ.get('EVIDENCE_DIR', 'agent5-component-evidence'))
