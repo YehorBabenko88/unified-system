@@ -46,6 +46,9 @@ class ConsulLab:
                         assert status==200
                         voters=json.loads(raw)['Servers']
                         assert len(voters)==3 and all(v['Voter'] for v in voters) and sum(v['Leader'] for v in voters)==1
+                    print(json.dumps(dict(scope='OWNED_LOOPBACK_LAB_STARTED',voters=3,
+                        processes=[p.pid for p in self.processes],endpoints=self.nodes,
+                        binary_sha256=PINS[sys.platform],acl_default='deny')),flush=True)
                     return self
                 except (OSError,ValueError,KeyError,AssertionError): time.sleep(.2)
             raise RuntimeError('OWNED_ACL_CONSUL_START_TIMEOUT')
@@ -64,3 +67,8 @@ class ConsulLab:
             if process.poll() is None: process.kill()
         for process in self.processes: process.wait(timeout=10)
         for log in self.logs: log.close()
+        assert all(process.poll() is not None for process in self.processes)
+        print(json.dumps(dict(scope='OWNED_LOOPBACK_LAB_RETIRED',
+            processes=[dict(pid=p.pid,returncode=p.returncode) for p in self.processes],
+            all_owned_processes_waited=True,foreign_process_operations=0,
+            session_retirement='OWNED_DISPOSABLE_DATA_DESTROYED_WITH_TEMPORARY_DIRECTORY')),flush=True)
