@@ -1,0 +1,266 @@
+name: Agent 5 isolated components
+on:
+  push:
+    branches: [feature/agent5-scheduler-components-20261106]
+  pull_request:
+    paths:
+      - 'scheduler_components/**'
+      - 'tests/test_agent5_scheduler_components.py'
+      - 'tests/test_agent5_scheduler_runtime.py'
+      - 'docs/scheduler/**'
+      - '.github/workflows/agent5-components.yml'
+permissions:
+  contents: read
+jobs:
+  components-windows:
+    runs-on: windows-latest
+    timeout-minutes: 10
+    env:
+      EXPECTED_SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      GIT_CONFIG_COUNT: '2'
+      GIT_CONFIG_KEY_0: core.autocrlf
+      GIT_CONFIG_VALUE_0: 'false'
+      GIT_CONFIG_KEY_1: core.eol
+      GIT_CONFIG_VALUE_1: lf
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install tzdata==2026.6
+      - name: Run exact-source component acceptance
+        shell: bash
+        run: |
+          python -I -B - <<'PY'
+          import hashlib
+          import io
+          import json
+          import os
+          from pathlib import Path
+          import platform
+          import stat
+          import subprocess
+          import sys
+          import tempfile
+          import unittest
+
+          # -B prevents writes, not reads. Pin all imports to a newly-created
+          # empty cache namespace, and reject repository caches before/after.
+          preloaded_protected = sorted(name for name in sys.modules if
+              name == 'scheduler_components' or name.startswith('scheduler_components.')
+              or name.startswith('test_agent5_scheduler'))
+          initial_cache_prefix = sys.pycache_prefix
+          isolated_cache = tempfile.TemporaryDirectory(prefix='agent5-import-cache-')
+          sys.dont_write_bytecode = True
+          sys.pycache_prefix = isolated_cache.name
+          os.environ['PYTHONDONTWRITEBYTECODE'] = '1'
+          os.environ['PYTHONPYCACHEPREFIX'] = isolated_cache.name
+
+          def git(*args):
+              return subprocess.check_output(['git', '--no-replace-objects', *args], text=True).strip()
+
+          def source(after_tests=False):
+              head = git('rev-parse', 'HEAD')
+              prefixes = ['scheduler_components', 'tests/test_agent5_scheduler_components.py',
+                          'tests/test_agent5_scheduler_runtime.py',
+                          'docs/scheduler/component-test-inventory-v2.json',
+                          'docs/scheduler/component-test-inventory-v3.json', '.github/workflows/agent5-components.yml']
+              entries = subprocess.check_output(['git', '--no-replace-objects', 'ls-tree', '-rz', '--full-tree', head])
+              files = []
+              root = Path.cwd()
+              import_suffixes = {'.py', '.pyc', '.pyo', '.pyd', '.so', '.dll', '.zip', '.egg', '.pth'}
+              parsed_entries = []
+              for entry in entries.split(b'\0'):
+                  if entry:
+                      metadata, name = entry.split(b'\t', 1)
+                      mode, kind, oid = metadata.decode('ascii').split()
+                      parsed_entries.append((mode, kind, oid, name.decode('utf-8')))
+              blob_oids = sorted({oid for mode, kind, oid, name in parsed_entries if kind == 'blob'})
+              blob_stream = io.BytesIO(subprocess.run(['git', '--no-replace-objects', 'cat-file', '--batch'],
+                  input=('\n'.join(blob_oids) + '\n').encode('ascii'), stdout=subprocess.PIPE, check=True).stdout)
+              blobs = {}
+              for expected_oid in blob_oids:
+                  oid, kind, size = blob_stream.readline().decode('ascii').strip().split()
+                  if oid != expected_oid or kind != 'blob' or not size.isdecimal():
+                      raise ValueError('Invalid original Git blob batch')
+                  blob = blob_stream.read(int(size))
+                  if len(blob) != int(size) or blob_stream.read(1) != b'\n':
+                      raise ValueError('Truncated original Git blob batch')
+                  blobs[oid] = blob
+              if blob_stream.read(1):
+                  raise ValueError('Unexpected original Git blob batch data')
+              for entry in entries.split(b'\0'):
+                  if not entry:
+                      continue
+                  metadata, name = entry.split(b'\t', 1)
+                  mode, kind, oid = metadata.decode('ascii').split()
+                  relative = name.decode('utf-8')
+                  item = {'path': relative, 'git_mode': mode, 'git_blob_oid': oid,
+                          'regular_file': False, 'matches_committed_blob': False,
+                          'committed_sha256': None, 'actual_sha256': None,
+                          'committed_bytes': None, 'actual_bytes': None}
+                  try:
+                      if kind != 'blob' or mode not in ('100644', '100755'):
+                          raise ValueError('Not a regular committed blob')
+                      committed = blobs[oid]
+                      item.update(committed_bytes=len(committed), committed_sha256=hashlib.sha256(committed).hexdigest())
+                      parts = Path(relative).parts
+                      if Path(relative).is_absolute() or '..' in parts:
+                          raise ValueError('Unsafe protected path')
+                      current = root
+                      for component in parts[:-1]:
+                          current = current / component
+                          info = current.lstat()
+                          if not stat.S_ISDIR(info.st_mode) or getattr(info, 'st_file_attributes', 0) & 0x400:
+                              raise ValueError('Non-directory/reparse protected parent')
+                      target = root / relative
+                      info = target.lstat()
+                      if not stat.S_ISREG(info.st_mode) or getattr(info, 'st_file_attributes', 0) & 0x400:
+                          raise ValueError('Non-regular/reparse protected file')
+                      actual = target.read_bytes()
+                      item.update(regular_file=True, actual_bytes=len(actual),
+                                  actual_sha256=hashlib.sha256(actual).hexdigest(),
+                                  matches_committed_blob=actual == committed)
+                  except (OSError, ValueError, subprocess.CalledProcessError) as error:
+                      item['binding_error'] = type(error).__name__
+                  files.append(item)
+              expected_paths = {item['path'] for item in files}
+              required = set(prefixes[1:]) | {'scheduler_components/__init__.py'}
+              unexpected = []
+              bytecode_paths = []
+              # CWD is a complete import root, not just the owned package. A root
+              # typing.py (or another package/extension) can shadow a dependency.
+              for directory, directories, names in os.walk(root, followlinks=False):
+                  directories[:] = [name for name in directories if name != '.git']
+                  for name in list(directories) + names:
+                      path = Path(directory) / name
+                      if path == root / '.git':
+                          continue  # Native worktree Git control file is metadata.
+                      relative = path.relative_to(root).as_posix()
+                      info = path.lstat()
+                      if stat.S_ISLNK(info.st_mode) or getattr(info, 'st_file_attributes', 0) & 0x400:
+                          unexpected.append(relative)
+                          if name in directories: directories.remove(name)
+                      if name == '__pycache__' or path.suffix.lower() in ('.pyc', '.pyo'):
+                          bytecode_paths.append(relative)
+                      if path.suffix.lower() in import_suffixes and relative not in expected_paths:
+                          unexpected.append(relative)
+                      if path.is_file() and relative not in expected_paths:
+                          allowed_log = after_tests and path == out / 'component-tests.log' and stat.S_ISREG(info.st_mode)
+                          if not allowed_log:
+                              unexpected.append(relative)
+              for path in (root / 'scheduler_components').rglob('*'):
+                  if '__pycache__' not in path.parts and (path.is_file() or path.is_symlink()):
+                      relative = path.relative_to(root).as_posix()
+                      if relative not in expected_paths:
+                          unexpected.append(relative)
+              cache_policy_valid = (not initial_evidence_entries and not preloaded_protected and initial_cache_prefix is None and not bytecode_paths
+                  and sys.dont_write_bytecode is True and sys.pycache_prefix == isolated_cache.name
+                  and os.environ.get('PYTHONDONTWRITEBYTECODE') == '1'
+                  and os.environ.get('PYTHONPYCACHEPREFIX') == isolated_cache.name
+                  and not any(Path(isolated_cache.name).iterdir()))
+              return {'head': head, 'tree': git('rev-parse', head + '^{tree}'),
+                      'tracked_status': git('status', '--porcelain', '--untracked-files=no'),
+                      'raw_binding': 'REGULAR_FILE_GIT_BLOB_V2_NO_REPLACE_NO_NORMALIZATION',
+                      'bytecode_policy': 'EMPTY_PRIVATE_CACHE_NO_WRITES_REJECT_REPOSITORY_CACHES_V1',
+                      'bytecode_policy_valid': cache_policy_valid,
+                      'preloaded_protected_modules': preloaded_protected,
+                      'repository_bytecode_paths': sorted(bytecode_paths),
+                      'initial_evidence_entries': initial_evidence_entries,
+                      'protected_files': sorted(files, key=lambda item: item['path']),
+                      'unexpected_protected_files': sorted(unexpected),
+                      'protected_inputs_valid': required <= expected_paths and not unexpected and cache_policy_valid
+                          and all(item['matches_committed_blob'] for item in files)}
+
+          out = Path(os.environ.get('EVIDENCE_DIR', 'agent5-component-evidence')).resolve()
+          out.mkdir(parents=True, exist_ok=True)
+          initial_evidence_entries = sorted(path.name for path in out.iterdir())
+          before = source()
+          expected = os.environ['EXPECTED_SOURCE_SHA']
+          inventory_bytes, expected_ids, inventory_valid = b'', [], False
+          if before['protected_inputs_valid']:
+              inventory_bytes = Path('docs/scheduler/component-test-inventory-v3.json').read_bytes()
+              inventory = json.loads(inventory_bytes)
+              previous_inventory = json.loads(Path('docs/scheduler/component-test-inventory-v2.json').read_bytes())
+              expected_ids = inventory['expected_ids']
+              inventory_valid = (inventory['schema'] == 'agent5.component-test-inventory.v3'
+                                 and inventory['expected_count'] == 52 and len(expected_ids) == 52
+                                 and len(set(expected_ids)) == 52
+                                 and len(previous_inventory['expected_ids']) == 30
+                                 and inventory['preserved_v2_ids'] == previous_inventory['expected_ids']
+                                 and set(previous_inventory['expected_ids']) <= set(expected_ids))
+          receipt = {'schema': 'agent5.component-evidence.v3',
+                     'execution': 'GITHUB_ACTIONS' if os.environ.get('GITHUB_ACTIONS') == 'true' else 'LOCAL',
+                     'repository': os.environ.get('GITHUB_REPOSITORY'),
+                     'run_id': os.environ.get('GITHUB_RUN_ID'),
+                     'run_attempt': os.environ.get('GITHUB_RUN_ATTEMPT'),
+                     'event': os.environ.get('GITHUB_EVENT_NAME'),
+                     'workflow_ref': os.environ.get('GITHUB_WORKFLOW_REF'),
+                     'workflow_sha': os.environ.get('GITHUB_WORKFLOW_SHA'),
+                     'event_sha': os.environ.get('GITHUB_SHA'),
+                     'runner_os': platform.system(), 'python': sys.version,
+                     'expected_source_sha': expected, 'source_before': before,
+                     'required_tests': 52, 'required_skips': 0,
+                     'qualification': 'LOCAL_CODE_AND_SYNTHETIC_PORTS_NOT_NATIVE_AUTHORITY',
+                     'test_inventory_sha256': hashlib.sha256(inventory_bytes).hexdigest(),
+                     'expected_test_ids': expected_ids,
+                     'tests_run': 0, 'skips': 0, 'failures': 0, 'errors': 0,
+                     'passed': False}
+          log = out / 'component-tests.log'
+          with log.open('w', encoding='utf-8') as stream:
+              if before['head'] != expected or before['tracked_status'] or not before['protected_inputs_valid'] or not inventory_valid:
+                  stream.write('SOURCE_OR_RAW_BLOB_OR_INVENTORY_MISMATCH: tests not admitted\n')
+              else:
+                  # Isolated startup excludes CWD. Admit the exact repository
+                  # only after raw source, cache and inventory checks succeed.
+                  sys.path.insert(0, str(Path.cwd()))
+                  suite = unittest.TestSuite([
+                      unittest.defaultTestLoader.discover('tests', pattern=pattern)
+                      for pattern in ('test_agent5_scheduler_components.py', 'test_agent5_scheduler_runtime.py')])
+                  def case_ids(tests):
+                      for test in tests:
+                          if isinstance(test, unittest.TestSuite):
+                              yield from case_ids(test)
+                          else:
+                              yield test.id()
+                  discovered_ids = list(case_ids(suite))
+                  receipt['discovered_test_ids'] = discovered_ids
+                  result = unittest.TextTestRunner(stream=stream, verbosity=2).run(suite)
+                  receipt.update(tests_run=result.testsRun, skips=len(result.skipped),
+                                 failures=len(result.failures), errors=len(result.errors),
+                                 passed=result.wasSuccessful() and result.testsRun == 52 and not result.skipped
+                                 and sorted(discovered_ids) == sorted(expected_ids))
+          receipt['source_after'] = source(after_tests=True)
+          receipt['passed'] = receipt['passed'] and receipt['source_after']['protected_inputs_valid'] and receipt['source_after'] == before
+          receipt['test_log_sha256'] = hashlib.sha256(log.read_bytes()).hexdigest()
+          (out / 'receipt.json').write_text(json.dumps(receipt, indent=2) + '\n', encoding='utf-8')
+          print(log.read_text(encoding='utf-8'))
+          print(json.dumps(receipt, indent=2))
+          raise SystemExit(0 if receipt['passed'] else 1)
+          PY
+      - name: Upload component evidence
+        id: evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: agent5-components-${{ github.event.pull_request.head.sha || github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: agent5-component-evidence/
+          if-no-files-found: error
+      - name: Publish evidence digest
+        if: always()
+        shell: pwsh
+        env:
+          ARTIFACT_ID: ${{ steps.evidence.outputs.artifact-id }}
+          ARTIFACT_URL: ${{ steps.evidence.outputs.artifact-url }}
+          ARTIFACT_DIGEST: ${{ steps.evidence.outputs.artifact-digest }}
+        run: |
+          if (-not $env:ARTIFACT_DIGEST) { throw 'Missing uploaded artifact digest' }
+          "Source HEAD: $env:EXPECTED_SOURCE_SHA" >> $env:GITHUB_STEP_SUMMARY
+          "Run/attempt: $env:GITHUB_RUN_ID / $env:GITHUB_RUN_ATTEMPT" >> $env:GITHUB_STEP_SUMMARY
+          "Artifact ID: $env:ARTIFACT_ID" >> $env:GITHUB_STEP_SUMMARY
+          "Artifact URL: $env:ARTIFACT_URL" >> $env:GITHUB_STEP_SUMMARY
+          "Artifact SHA256: $env:ARTIFACT_DIGEST" >> $env:GITHUB_STEP_SUMMARY
+          Get-Content agent5-component-evidence/receipt.json >> $env:GITHUB_STEP_SUMMARY
