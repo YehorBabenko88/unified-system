@@ -1,0 +1,26 @@
+{
+  "schema": "unified.evidence-correction.v1",
+  "original_head": "07354924b71ad5e40b2a51a7b8489e0915236336",
+  "original_evidence_sha256": "175c200fef1b72b1e8c3898fe838f517ebebc89663b2059b6b3dcfb78ca9f3d1",
+  "original_preserved": "runtime-closure-evidence-worktree-original.json",
+  "reason": "Selected evidence index read local working-tree bytes; builder was CRLF-materialized while committed Git blob is LF. Corrected index derives every record from fixed primary Git raw blobs.",
+  "mismatches": [
+    {
+      "path": "scripts/prepare_lab_capsule.py",
+      "original_sha256": "c8264e94926ec9204788c089fdf869a2e659643c90056a4269fb83e526cd1b1f",
+      "committed_sha256": "d3dd49802107eaef20c51114f11e2bef4b70bf89992437b3cf536ee4abe219c9",
+      "original_bytes": 26509,
+      "committed_bytes": 26148
+    },
+    {
+      "path": "tests/test_lab_capsule_archive_namespace.py",
+      "original_sha256": "66afa4ba0d8ebe4f7f98740004111c0946de85777a99dd6e243771cc3f8b98ef",
+      "committed_sha256": "6fd1b4562414409d54351c13e069a690252680cc8563b66d6694c1f87901aecc",
+      "original_bytes": 2187,
+      "committed_bytes": 2141
+    }
+  ],
+  "source_code_changed": false,
+  "test_result_relabelled": false,
+  "native_or_deployment_admission": false
+}
