@@ -374,7 +374,17 @@
     "a5_format_ack_sha256": "0e9aa7f6d5c71cb8b2cbe44ea16010172d21741abdcce8e73080aecf11c33e5b",
     "a4_ack": "aa5d1cfe8f1a59079d29f9c31456f94a0c175cb4d465efc21b6b2242956a3e60",
     "freeze": "OWNER_FORMAT_ACKS_RECEIVED_PRIMARY_PACKET_PUBLICATION_PENDING",
-    "counter_precision": "LEASE_HAS_3_ACTUAL_UUIDV4_FIELDS_A2_FOUR_VECTOR_CLAIM_CLARIFICATION_REQUESTED",
+    "counter_precision": {
+      "status": "A5_CORRECTED_OWN_SUBSET_ALL_FOUR_FIELDS_VERIFIED",
+      "fields": [
+        "assignment",
+        "attempt",
+        "lease",
+        "realm"
+      ],
+      "original_a2_a4_four_count_defect": false,
+      "addendum_sha256": "00256bc9f558ba9d716fd665b209762c099806274e050370feca903def247703"
+    },
     "native_authority_admission": false,
     "full_plan_measurement": "REQUIRED_NO_PRIOR_BUDGET_TRANSFER",
     "root_ack": "SCOPED_FORMAT_ONLY"
