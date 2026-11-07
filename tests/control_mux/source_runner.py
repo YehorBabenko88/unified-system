@@ -57,16 +57,16 @@ UNITS={
  'test_http_api.DefaultClosedTests.test_missing_native_provider_never_reads_body_or_authority',
  'test_http_api.DefaultClosedTests.test_error_envelope_and_head',
  'test_http_api.DefaultClosedTests.test_head_has_no_body',
- 'test_http_api.DefaultClosedTests.test_async_runtime_missing_native_provider_closed'}
-EVENTS=['ARBITRARY_OWNER_REJECTED_BEFORE_PREPARE','NATIVE_VERIFIER_FALSE_RETURN_DENIED','REAL_HTTP_POST_OPEN_TO_REAL_GRID_CONSUL',
- 'LOST_FINAL_COMMIT_RESPONSE_RECONCILED_ACTUAL_RECEIPT','OPEN_ACTUAL_ATOMIC_RECEIPT_IDEMPOTENT_RECONCILE',
- 'GLOBAL_REQUEST_UUID_CONFLICT','LOST_PREPARE_RESPONSE_PENDING_HOLD_AND_ADAPTER_RESTART_RESUME',
- 'TWO_OF_THREE_COMPLETE_OPEN_AFTER_RAFT_LEADER_LOSS',
- 'RESTORED_THREE_VOTERS_KEEP_ORIGINAL_RECEIPT',
- 'SIMULTANEOUS_THREE_RESTART_DURABLE_RECEIPT_AND_SLOT_LEDGER',
- 'CAPACITY_PREPARATION_ATOMIC_BOUND_NO_DURABLE_OVERFLOW','CURRENT_REVOKED_IDENTITY_REJECTED',
- 'ACTUAL_NATIVE_STALE_LEADER_TRANSACTION_REJECTED',
- 'DESTROYED_LEADER_SESSION_NEW_INTENT_DENIED','ONE_OF_THREE_NO_QUORUM_NO_SUCCESS']
+ 'test_http_api.DefaultClosedTests.test_async_runtime_missing_native_provider_closed',
+ 'test_other_commands.OtherCommandTests.test_positive_subscribe_and_ack_originals',
+ 'test_other_commands.OtherCommandTests.test_subscribe_epoch_header_mismatch',
+ 'test_other_commands.OtherCommandTests.test_selector_kind_mismatch',
+ 'test_other_commands.OtherCommandTests.test_hash_consistent_subscribe_body_epoch_mismatch',
+ 'test_other_commands.OtherCommandTests.test_hash_consistent_ack_snapshot_mismatch',
+ 'test_other_commands.OtherCommandTests.test_hash_consistent_ack_epoch_mismatch',
+ 'test_other_commands.OtherCommandTests.test_empty_close_targets_and_epochs_bind_digest',
+ 'test_other_commands.OtherCommandTests.test_nonempty_delete_rejected'}
+EVENTS=['ARBITRARY_OWNER_REJECTED_BEFORE_PREPARE', 'NATIVE_VERIFIER_FALSE_RETURN_DENIED', 'REAL_HTTP_POST_OPEN_TO_REAL_GRID_CONSUL', 'LOST_FINAL_COMMIT_RESPONSE_RECONCILED_ACTUAL_RECEIPT', 'OPEN_ACTUAL_ATOMIC_RECEIPT_IDEMPOTENT_RECONCILE', 'GLOBAL_REQUEST_UUID_CONFLICT', 'LOST_PREPARE_RESPONSE_PENDING_HOLD_AND_ADAPTER_RESTART_RESUME', 'TWO_OF_THREE_COMPLETE_OPEN_AFTER_RAFT_LEADER_LOSS', 'RESTORED_THREE_VOTERS_KEEP_ORIGINAL_RECEIPT', 'SIMULTANEOUS_THREE_RESTART_DURABLE_RECEIPT_AND_SLOT_LEDGER', 'ACTUAL_SUBSCRIBE_CONTROL_SLOT_AND_IMMUTABLE_REPLAY', 'SECOND_CONTROL_SUBSCRIPTION_DENIED_WITHOUT_INTENT', 'NO_SNAPSHOT_SOURCE_NO_ACK204_OR_INTENT', 'CLOSE_SUB202_RETAINS_PARENT_AND_SUBSCRIPTION_DEBT', 'CLOSED_PENDING_SUB_CANNOT_REACTIVATE_AFTER_LOST_PREPARE', 'ACTUAL_CLOSE202_IMMUTABLE_REPLAY_AND_DEBT_RETAINED', 'HISTORICAL_SUB201_RETRY_DOES_NOT_REACTIVATE_DRAINING_PARENT', 'REAL_HTTP_SUB_HISTORY_WITHOUT_REACTIVATION', 'REAL_HTTP_ACK_WITHOUT_SOURCE_FAILS_CLOSED', 'REAL_HTTP_CLOSE_SUB202_REPLAY', 'REAL_HTTP_DELETE_REPLAYS_EXACT_DRAINING_RECEIPT', 'STALE_CLOSE_EPOCH_NO_INTENT_OR_RELEASE', 'CAPACITY_PREPARATION_ATOMIC_BOUND_NO_DURABLE_OVERFLOW', 'NEW_GENERATION_CANNOT_REACTIVATE_OLD_CONNECTION', 'CURRENT_REVOKED_IDENTITY_REJECTED', 'ACTUAL_NATIVE_STALE_LEADER_TRANSACTION_REJECTED', 'DESTROYED_LEADER_SESSION_NEW_INTENT_DENIED', 'ONE_OF_THREE_NO_QUORUM_NO_SUCCESS']
 
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('--real-only',action='store_true');p.add_argument('--expected-head',required=True);p.add_argument('--grid-source',type=Path,required=True);p.add_argument('--binary',required=True);p.add_argument('--scratch',required=True);p.add_argument('--output',type=Path,required=True);a=p.parse_args()
@@ -97,6 +97,11 @@ if __name__=='__main__':
     suite=unittest.defaultTestLoader.discover(str(root/'tests/control_mux'))
     result=unittest.TextTestRunner(verbosity=1,resultclass=Result).run(suite)
     assert result.wasSuccessful() and not result.skipped and set(executed)==UNITS and len(executed)==len(UNITS),'MANDATORY_UNIT_INVENTORY'
+    import runpy,contextlib
+    supplement_output=io.StringIO()
+    with contextlib.redirect_stdout(supplement_output):runpy.run_path(str(root/'tests/control_mux/reconciliation_proposal_review2.py'),run_name='__main__')
+    supplement=json.loads(supplement_output.getvalue());assert supplement['cases']==24 and supplement['result']=='MODEL_MATCH_ONLY_NOT_ENDPOINT_OR_AUTHORITY'
+    (a.output/'reconciliation-review2-models.json').write_bytes((json.dumps(supplement,indent=2)+'\n').encode())
     command=[sys.executable,'-I','-B',str(root/'tests/control_mux/source_runner.py'),'--real-only','--expected-head',a.expected_head,'--binary',a.binary,'--scratch',a.scratch,'--grid-source',str(grid),'--output',str(a.output)]
     env=os.environ.copy();env['PYTHONDONTWRITEBYTECODE']='1';env['GIT_NO_REPLACE_OBJECTS']='1'
     completed=subprocess.run(command,cwd=root,env=env,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,timeout=240)
@@ -104,5 +109,5 @@ if __name__=='__main__':
     assert completed.returncode==0,completed.stdout.decode(errors='replace')[-4000:]
     real=json.loads((a.output/'real-consul.json').read_bytes());assert real['events']==EVENTS and real['result']=='PASS' and real['owned_processes_stopped'] is True
     assert before==source_receipt(root,a.expected_head,excluded=exclusions) and grid_before==source_receipt(grid,'58cfe0f51bc05bb0ee2ed09368a9b64679358c63')
-    report=dict(schema='agent2.control-mux.incremental-source-bound.v1',result='PASS',qualification='REAL_HTTP_GRID_CONSUL_OPEN_PRIMITIVE_SYNTHETIC_NATIVE_IDENTITY_ONLY',python=platform.python_version(),platform=platform.platform(),primary=before,grid=grid_before,executed_unit_ids=executed,executed_real_case_ids=real['events'],executed_source_guard_case_ids=guard_report['cases'],skips=[],native_authentication=False,final_endpoint_integrated=False,windows_runtime_accepted=False,physical_qualified=False,production='NO_GO')
+    report=dict(schema='agent2.control-mux.incremental-source-bound.v1',result='PASS',qualification='REAL_HTTP_GRID_CONSUL_MUX_METADATA_HOLD_ONLY_SYNTHETIC_NATIVE_IDENTITY_ONLY',python=platform.python_version(),platform=platform.platform(),primary=before,grid=grid_before,executed_unit_ids=executed,executed_real_case_ids=real['events'],executed_source_guard_case_ids=guard_report['cases'],supplemental_get_model_cases=supplement['cases'],skips=[],native_authentication=False,final_endpoint_integrated=False,windows_runtime_accepted=False,physical_qualified=False,production='NO_GO')
     (a.output/'source-bound.json').write_bytes((json.dumps(report,indent=2)+'\n').encode());print(json.dumps(dict(result='PASS',unit_cases=len(executed),real_cases=len(EVENTS),primary_raw_files=len(before['raw_files']),grid_raw_files=len(grid_before['raw_files']),production='NO_GO')))
