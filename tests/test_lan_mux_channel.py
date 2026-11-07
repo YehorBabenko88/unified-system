@@ -278,4 +278,31 @@ class MuxTlsTests(unittest.TestCase):
             self.assertGreater(server.budget.counters()['rx']-beforerx,len(raw))
 
 
+    def test_hash_terminal_cause_survives_reader_receive_interleaving(self):
+        import threading,time
+        from unittest.mock import patch
+        client,server,c,s,left,right,binding=self.channels()
+        failed=threading.Event();resume=threading.Event();original=right._abort
+        def pause_reader_abort(reason):
+            if reason=='MUX_MESSAGE_HASH_REJECTED' and threading.current_thread() is right.thread:
+                failed.set()
+                if not resume.wait(3):raise AssertionError('test synchronization release missing')
+            return original(reason)
+        try:
+            with patch.object(right,'_abort',side_effect=pause_reader_abort):
+                payload=b'x'*133128;transfer=str(uuid.uuid4())
+                for i in range((len(payload)+mux.CHUNK_SIZE-1)//mux.CHUNK_SIZE):
+                    chunk=payload[i*mux.CHUNK_SIZE:(i+1)*mux.CHUNK_SIZE]
+                    c.send_mux_fragment(mux.encode_fragment(binding,c.nonce,transfer,3,len(payload),i,b'0'*32,chunk),deadline=time.monotonic()+2)
+                self.assertTrue(failed.wait(2),'reader must reach the actual hash failure')
+                try:
+                    with self.assertRaisesRegex(mux.MuxError,'MUX_MESSAGE_HASH_REJECTED'):
+                        right.receive(deadline=time.monotonic()+1)
+                finally:
+                    resume.set();right.thread.join(2)
+                self.assertEqual(right.error,'MUX_MESSAGE_HASH_REJECTED')
+                self.assertEqual(server.memory.used,0)
+        finally:resume.set()
+
+
 if __name__=='__main__':unittest.main()

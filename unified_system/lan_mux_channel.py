@@ -106,17 +106,18 @@ class Reassembler:
         _need(type(expected_kinds) in (set,frozenset) and expected_kinds
               and all(type(k) is int and k in MESSAGE_LIMITS for k in expected_kinds))
         self.binding,self.nonce,self.memory,self.expected_kinds=binding,nonce,memory,frozenset(expected_kinds)
-        self.clock=clock;self.closed=False;self.active=None;self.buffer=None;self.completed=None
+        self.clock=clock;self.closed=False;self.error=None;self.active=None;self.buffer=None;self.completed=None
         self.next_index=0;self.deadline=None;self.reserved=0
 
-    def close(self):
+    def close(self,reason='MUX_CLOSED'):
+        if not self.closed:self.error=reason
         self.closed=True;self.active=None;self.buffer=None;self.completed=None;self.deadline=None
         if self.reserved:self.memory.release(self.reserved);self.reserved=0
 
     def check_deadline(self):
-        _need(not self.closed,'MUX_CLOSED')
+        _need(not self.closed,self.error or 'MUX_CLOSED')
         if self.deadline is not None and self.clock()>=self.deadline:
-            self.close();raise MuxError('MUX_ASSEMBLY_DEADLINE')
+            self.close('MUX_ASSEMBLY_DEADLINE');raise MuxError(self.error)
 
     def push(self,raw):
         try:
@@ -136,8 +137,10 @@ class Reassembler:
                 _need(hashlib.sha256(self.buffer).digest()==part.digest,'MUX_MESSAGE_HASH_REJECTED')
                 self.completed=MuxMessage(part.kind,part.transfer_id,bytes(self.buffer))
                 self.active=None;self.buffer=None;self.deadline=None
-        except (TransportError,MemoryError):
-            self.close();raise
+        except (TransportError,MemoryError) as exc:
+            # Preserve the first terminal cause BEFORE the channel lock can be
+            # released; a concurrent receiver must not turn HASH into CLOSED.
+            self.close(str(exc) or 'MUX_MEMORY_LIMIT');raise
 
     def pop(self):
         self.check_deadline()
@@ -179,8 +182,9 @@ class LanMuxChannel:
     def _abort(self,reason):
         with self.cv:
             if self.closed:return
-            self.closed=True;self.error=reason;self.rx.close();self.closed_event.set();self.cv.notify_all()
-        self.connection.close(reason)
+            self.closed=True;self.rx.close(reason);self.error=self.rx.error
+            self.closed_event.set();self.cv.notify_all()
+        self.connection.close(self.error)
 
     def close(self):
         self._abort('MUX_CLOSED')
