@@ -1,0 +1,107 @@
+name: Bounded CI queue observer
+on:
+  pull_request:
+    paths: ['unified_system/ci_queue_controller.py', 'tests/test_ci_queue_controller.py', 'docs/operations/ci-queue-controller.md', '.github/workflows/ci-queue-controller.yml']
+  push:
+    branches: [feature/ci-queue-controller-20261107]
+permissions:
+  contents: read
+jobs:
+  offline:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    env:
+      EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+      GIT_NO_REPLACE_OBJECTS: '1'
+      GIT_CONFIG_COUNT: '2'
+      GIT_CONFIG_KEY_0: core.autocrlf
+      GIT_CONFIG_VALUE_0: 'false'
+      GIT_CONFIG_KEY_1: core.eol
+      GIT_CONFIG_VALUE_1: lf
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12.10'
+      - name: Exact-source mandatory offline tests
+        shell: python -I -S -B {0}
+        run: |
+          if __name__ == "__main__":
+              import hashlib, json, os, pathlib, stat, subprocess, sys, unittest
+              root = pathlib.Path.cwd()
+              git = 'C:/Program Files/Git/cmd/git.exe' if sys.platform == 'win32' else '/usr/bin/git'
+              def g(*args):
+                  return subprocess.check_output([git, '--no-replace-objects', '--no-optional-locks', '-c', 'core.fsmonitor=false', *args], cwd=root)
+              assert sys.flags.isolated and sys.flags.no_site and sys.dont_write_bytecode
+              assert sys.version_info[:3] == (3, 12, 10)
+              assert g('rev-parse', 'HEAD').decode().strip() == os.environ['EXPECTED_HEAD']
+              def inventory():
+                  files = []
+                  for row in g('ls-tree', '-rz', '--full-tree', 'HEAD').split(b'\0'):
+                      if not row: continue
+                      meta, name = row.split(b'\t', 1)
+                      mode, kind, oid = meta.decode().split()
+                      if kind == 'commit': continue  # Foreign submodule source is not primary source.
+                      assert kind == 'blob' and mode in ('100644', '100755')
+                      relative = name.decode('utf-8')
+                      target = root / relative
+                      for parent in [target, *target.parents]:
+                          if parent == root: break
+                          info = parent.lstat()
+                          assert not stat.S_ISLNK(info.st_mode) and not getattr(info, 'st_file_attributes', 0) & 0x400
+                      assert target.is_file()
+                      raw = g('cat-file', 'blob', oid)
+                      actual = target.read_bytes()
+                      assert actual == raw, relative
+                      files.append({'path':relative, 'oid':oid, 'sha256':hashlib.sha256(raw).hexdigest(), 'bytes':len(raw)})
+                  assert g('status', '--porcelain', '--untracked-files=no') == b''
+                  known = {item['path'] for item in files}
+                  for path in root.rglob('*'):
+                      rel = path.relative_to(root)
+                      if '.git' in rel.parts: continue
+                      info = path.lstat()
+                      assert not stat.S_ISLNK(info.st_mode) and not getattr(info, 'st_file_attributes', 0) & 0x400
+                      if path.is_file(): assert rel.as_posix() in known and path.suffix not in ('.pyc', '.pyo')
+                  return files
+              before = inventory()
+              expected = {'test_attempt_and_head_mismatch', 'test_bounds_and_existing_creation',
+                          'test_clock_rollback_cannot_observe', 'test_consumed_authorization_and_no_executor',
+                          'test_corruption_and_foreign_journal_not_adopted', 'test_duplicate_and_old_observation',
+                          'test_null_and_unknown_never_success', 'test_queued_without_runner_or_steps',
+                          'test_redacts_raw_fields_and_artifact_urls', 'test_restart_preserves_backoff_and_limit',
+                          'test_states_and_no_timeout_infrastructure_diagnosis', 'test_terminal_conflict_stays_unknown',
+                          'test_terminal_regression_does_not_restore_success', 'test_workflow_job_consistency',
+                          'test_payload_cannot_renew_authorization'}
+              sys.path.insert(0, str(root))
+              suite = unittest.defaultTestLoader.discover(str(root/'tests'), pattern='test_ci_queue_controller.py')
+              def ids(suite):
+                  for test in suite:
+                      if isinstance(test, unittest.TestSuite): yield from ids(test)
+                      else: yield test.id()
+              actual = list(ids(suite))
+              assert len(actual) == 15 and set(actual) == {'test_ci_queue_controller.QueueTests.'+name for name in expected}
+              result = unittest.TextTestRunner(verbosity=2).run(suite)
+              after = inventory()
+              assert after == before
+              receipt = dict(schema='unified.ci-queue-test.v1', head=g('rev-parse','HEAD').decode().strip(),
+                             tree=g('rev-parse','HEAD^{tree}').decode().strip(), source_before=before,
+                             source_after=after, mandatory_test_ids=actual, tests_run=result.testsRun,
+                             skips=len(result.skipped), failures=len(result.failures), errors=len(result.errors),
+                             runner_os=sys.platform, python=sys.version)
+              (pathlib.Path(os.environ['RUNNER_TEMP'])/'ci-queue-evidence.json').write_text(json.dumps(receipt, sort_keys=True), encoding='utf-8')
+              print(json.dumps(receipt, sort_keys=True))
+              assert result.wasSuccessful() and result.testsRun == 15 and not result.skipped
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: ci-queue-${{ matrix.os }}
+          path: ${{ runner.temp }}/ci-queue-evidence.json
+          if-no-files-found: error
