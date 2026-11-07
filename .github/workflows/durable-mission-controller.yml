@@ -1,0 +1,110 @@
+name: Durable development mission controller
+on:
+  pull_request:
+    paths: ['unified_system/mission_controller.py', 'unified_system/journal.py', 'unified_system/contracts.py', 'tests/test_mission_controller.py', 'tests/test_journal.py', 'docs/operations/development-task.schema.json', '.github/workflows/durable-mission-controller.yml']
+  push:
+    branches: [feature/durable-mission-controller-20261107]
+permissions:
+  contents: read
+jobs:
+  component:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    env:
+      EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+      PYTHONDONTWRITEBYTECODE: '1'
+      GIT_NO_REPLACE_OBJECTS: '1'
+      GIT_CONFIG_COUNT: '2'
+      GIT_CONFIG_KEY_0: core.autocrlf
+      GIT_CONFIG_VALUE_0: 'false'
+      GIT_CONFIG_KEY_1: core.eol
+      GIT_CONFIG_VALUE_1: lf
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12.10'
+      - name: Fresh stdlib exact-source mandatory and primary regressions
+        shell: python -I -S -B {0}
+        run: |
+          import hashlib,io,json,os,pathlib,subprocess,sys
+
+          def main():
+              root=pathlib.Path.cwd()
+              git=pathlib.Path('C:/Program Files/Git/cmd/git.exe' if sys.platform=='win32' else '/usr/bin/git')
+              def g(*args,input=None):
+                  return subprocess.check_output([str(git),'--no-replace-objects','--no-optional-locks','-c','core.fsmonitor=false',*args],cwd=root,input=input)
+              assert sys.version_info[:3]==(3,12,10)
+              assert sys.flags.isolated and sys.flags.no_site and sys.dont_write_bytecode and sys.pycache_prefix is None
+              assert g('rev-parse','HEAD').decode().strip()==os.environ['EXPECTED_HEAD']
+              def inventory():
+                  entries=[];dirs={''}
+                  for row in g('ls-tree','-rz','--full-tree','HEAD').split(b'\0'):
+                      if not row: continue
+                      meta,name=row.split(b'\t',1);mode,kind,oid=meta.split()
+                      assert mode in (b'100644',b'100755') and kind==b'blob'
+                      name=name.decode();entries.append((name,oid.decode()))
+                      dirs.update(p.as_posix() for p in pathlib.PurePosixPath(name).parents if p.as_posix()!='.')
+                  raw=g('cat-file','--batch',input=''.join(oid+'\n' for _,oid in entries).encode())
+                  stream=io.BytesIO(raw);result={}
+                  for name,oid in entries:
+                      actual,kind,size=stream.readline().split();data=stream.read(int(size))
+                      assert actual.decode()==oid and kind==b'blob' and stream.read(1)==b'\n'
+                      path=root/name
+                      assert path.is_file() and not path.is_symlink() and path.read_bytes()==data,name
+                      result[name]=hashlib.sha256(data).hexdigest()
+                  assert not stream.read()
+                  for path in root.rglob('*'):
+                      rel=path.relative_to(root)
+                      if rel.parts[0]=='.git': continue
+                      assert not path.is_symlink() and not (getattr(path.lstat(),'st_file_attributes',0)&1024),str(rel)
+                      if path.is_file(): assert rel.as_posix() in result and path.suffix not in ('.pyc','.pyo'),str(rel)
+                      elif path.is_dir(): assert rel.as_posix() in dirs,str(rel)
+                      else: raise AssertionError(str(rel))
+                  return result
+              before=inventory()
+              required=['test_journal.JournalTests.test_append_after_reopen', 'test_journal.JournalTests.test_empty', 'test_journal.JournalTests.test_expected_sequence_cas', 'test_journal.JournalTests.test_long_chain_latest_digest_not_lexical_max', 'test_journal.JournalTests.test_no_implicit_creation', 'test_journal.JournalTests.test_recovery', 'test_journal.JournalTests.test_tamper', 'test_journal.JournalTests.test_unknown_state', 'test_mission_controller.MissionTests.test_actual_process_exit_after_commit_reopens', 'test_mission_controller.MissionTests.test_arbitrary_existing_database_not_adopted', 'test_mission_controller.MissionTests.test_base_identity_collision_rejected', 'test_mission_controller.MissionTests.test_boolean_marker_version_rejected', 'test_mission_controller.MissionTests.test_bounds_and_safe_paths', 'test_mission_controller.MissionTests.test_closed_fields_and_canonical_ids', 'test_mission_controller.MissionTests.test_concurrent_stale_writer_rejected', 'test_mission_controller.MissionTests.test_corruption_rejected_without_repair', 'test_mission_controller.MissionTests.test_crash_before_append_keeps_last_commit', 'test_mission_controller.MissionTests.test_cycle_rejected', 'test_mission_controller.MissionTests.test_duplicate_is_idempotent', 'test_mission_controller.MissionTests.test_evidence_and_ci_are_typed_and_bounded', 'test_mission_controller.MissionTests.test_fake_ci_success_never_physical_approval', 'test_mission_controller.MissionTests.test_owner_and_scope_identity_immutable', 'test_mission_controller.MissionTests.test_process_dies_during_uncommitted_transaction', 'test_mission_controller.MissionTests.test_projection_is_copy', 'test_mission_controller.MissionTests.test_record_bytes_bounded', 'test_mission_controller.MissionTests.test_reopen_preserves_receipts', 'test_mission_controller.MissionTests.test_replay_rejects_semantic_identity_collision', 'test_mission_controller.MissionTests.test_same_task_updates_keep_failed_ci_history', 'test_mission_controller.MissionTests.test_simultaneous_writers_have_one_commit', 'test_mission_controller.MissionTests.test_truncated_database_rejected', 'test_mission_controller.MissionTests.test_unknown_dependency_rejected', 'test_mission_controller.MissionTests.test_unknown_receipt_rejected_even_with_valid_chain', 'test_mission_controller.MissionTests.test_unknown_schema_refused']
+              child="""import json,pathlib,sys,unittest
+          assert sys.flags.isolated and sys.flags.no_site and sys.dont_write_bytecode and sys.pycache_prefix is None
+          root=pathlib.Path(sys.argv[1]);sys.path.insert(0,str(root))
+          suite=unittest.TestSuite()
+          for name in ('test_mission_controller.py','test_journal.py'):
+              suite.addTests(unittest.defaultTestLoader.discover(str(root/'tests'),pattern=name))
+          def collect(s):
+              result=[]
+              for item in s:
+                  result.extend(collect(item) if isinstance(item,unittest.TestSuite) else [item.id()])
+              return result
+          ids=collect(suite);required=json.loads(sys.argv[2])
+          assert len(ids)==len(set(ids)) and set(ids)==set(required),(ids,required)
+          result=unittest.TextTestRunner(verbosity=2).run(suite)
+          assert result.wasSuccessful() and result.testsRun==len(required) and not result.skipped
+          """
+              result=None;after=None
+              output=pathlib.Path(os.environ['RUNNER_TEMP'])/'durable-mission-controller-evidence.json'
+              try:
+                  result=subprocess.run([sys.executable,'-I','-S','-B','-c',child,str(root),json.dumps(required)],cwd=root,timeout=180)
+                  assert result.returncode==0,result.returncode
+              finally:
+                  try:
+                      after=inventory()
+                      assert before==after
+                  finally:
+                      output.write_text(json.dumps(dict(head=os.environ['EXPECTED_HEAD'],python=sys.version,tests=required,returncode=None if result is None else result.returncode,source_before=before,source_after=after,qualification='DEVELOPMENT_COMPONENT_ONLY',native_authority=False,grants_node_operations=False),indent=2)+'\n',encoding='utf-8')
+
+          if __name__=='__main__':
+              main()
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: durable-mission-controller-${{ matrix.os }}
+          path: ${{ runner.temp }}/durable-mission-controller-evidence.json
+          if-no-files-found: error
