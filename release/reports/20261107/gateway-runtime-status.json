@@ -251,10 +251,11 @@
     "owner_persistence_tests": 41,
     "owner_skips": 0,
     "source_qualification": "PENDING",
-    "review": "REQUESTED_A4_EXACT_SOURCE",
+    "review": "A4_REPRODUCED_P2_MIGRATION_EXCEPTION_RETAINS_WRITE_LOCK_ACK_WITHHELD",
     "concurrent_migration": "OWNER_REPORTED_REPRODUCED_FIXED_WRITE_LOCK_BEFORE_DDL",
     "project_and_read": "ALWAYS_DENY_NATIVE_AUTHORITY_ABI_UNAVAILABLE",
     "publication_receipt": "NULL",
-    "native_admission": false
+    "native_admission": false,
+    "required_correction": "EXCEPTION_SAFE_ROLLBACK_CLOSE_PRESERVE_ORIGINAL_EXCEPTION_AND_RETAINED_TRACEBACK_REGRESSION"
   }
 }
