@@ -2145,5 +2145,30 @@
     "tailscale_removal": "BLOCKED",
     "evidence": "phase48/independent-review.md",
     "overall": "NO_GO"
+  },
+  "A2_PR32_TEST_EXTENSION_FRESH_REVIEW": {
+    "head": "08d6f01d94feb44a17338be8ef3f8871995c284a",
+    "tree": "18db861452f82978806a3f4d81a70b033ce53b02",
+    "unit_tests": 18,
+    "real_cases": 42,
+    "retained_real_ids": 28,
+    "new_real_ids": 14,
+    "source_negatives": 8,
+    "supplement_repeated_original_cases_not_additional_unique": 42,
+    "enhanced_native_identity_windows": 8,
+    "GET_models_only": 24,
+    "skips": 0,
+    "raw_inputs": [
+      667,
+      672
+    ],
+    "all_owned_processes_stopped": true,
+    "native_security_qualified": false,
+    "current_CI_snapshot": "BOTH_QUEUED_NOT_PASS",
+    "qualification": "ISOLATED_TRUSTED_RECORD_CONSISTENCY_AND_INDEX_FENCING_SYNTHETIC_NATIVE_ONLY",
+    "evidence": "phase49/independent-review.md",
+    "physical": "BLOCKED",
+    "tailscale_removal": "BLOCKED",
+    "overall": "NO_GO"
   }
 }
