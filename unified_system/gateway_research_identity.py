@@ -279,6 +279,7 @@ class ResearchIdentityBroker:
         return capture
     def require_capture(self,capture,*,expected_authority,scope,request_bytes):
         _require(type(self) is ResearchIdentityBroker and self._authority is expected_authority)
+        _require(type(scope) is str and scope in SCOPES and type(request_bytes) is bytes and 0<len(request_bytes)<=16384)
         _require(type(capture) is ResearchIdentityCapture and capture in self._captures)
         context,original_scope,digest,snapshot,expiry,deadline=self._captures[capture]
         self._context(context)

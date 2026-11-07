@@ -82,6 +82,14 @@ class NativeBrokerTests(unittest.IsolatedAsyncioTestCase):
         snapshot=ResearchIdentityBroker.require_capture(self.broker,capture,expected_authority=self.authority,
             scope='SUBMIT_RESEARCH',request_bytes=b'original-intent')
         self.assertEqual(snapshot.actor_id,self.actor)
+        class ScopeEqualityClaim:
+            def __eq__(self,other):return True
+        with self.assertRaises(ResearchIdentityDenied):
+            self.broker.require_capture(capture,expected_authority=self.authority,
+                scope=ScopeEqualityClaim(),request_bytes=b'original-intent')
+        with self.assertRaises(ResearchIdentityDenied):
+            self.broker.require_capture(capture,expected_authority=self.authority,
+                scope='SUBMIT_RESEARCH',request_bytes=b'x'*16385)
         lock=snapshot.records[-1]
         schema_dir=ROOT/'docs/intelligence/research-identity'
         for name,record in zip(('profile','principal','policy','principal_session'),snapshot.records[1:],strict=True):
