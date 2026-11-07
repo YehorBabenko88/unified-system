@@ -2,6 +2,7 @@
 import copy
 from contextlib import closing
 import json
+import os
 import sqlite3
 import subprocess
 import sys
@@ -9,9 +10,10 @@ import tempfile
 import unittest
 from concurrent.futures import ThreadPoolExecutor
 from threading import Barrier
+from unittest.mock import patch
 from pathlib import Path
 
-from unified_system.contracts import ContractError
+from unified_system.contracts import ContractError, canonical, seal
 from unified_system.journal import Journal
 from unified_system.mission_controller import MissionController
 
@@ -120,7 +122,7 @@ class MissionTests(unittest.TestCase):
         self.assertEqual(before,path.read_bytes())
 
     def test_unknown_schema_refused(self):
-        path=Path(self.tmp.name)/"future.db";journal=Journal(path);journal.initialize();journal.append("OBSERVING",dict(kind="development-mission",schema_version=2))
+        path=Path(self.tmp.name)/"future.db";journal=Journal(path);journal.initialize();journal.append("OBSERVING",dict(kind="development-mission",schema_version=3,max_bytes=16*1024*1024,max_records=1024))
         with self.assertRaises(ContractError): MissionController.open(path)
 
     def test_crash_before_append_keeps_last_commit(self):
@@ -187,6 +189,109 @@ class MissionTests(unittest.TestCase):
         self.put();changed=task();changed["base_sha"]="b"*40
         Journal(self.path).append("OBSERVING",dict(kind="development-task",schema_version=1,task=changed),expected_sequence=2)
         with self.assertRaises(ContractError): MissionController.open(self.path)
+
+    def test_sparse_file_rejected_before_journal_materialization(self):
+        with self.path.open("r+b") as stream: stream.truncate(17*1024*1024)
+        with patch.object(Journal,"read",side_effect=AssertionError("unbounded read")):
+            with self.assertRaises(ContractError): MissionController.open(self.path)
+
+    def test_relative_path_refused_without_creation(self):
+        with self.assertRaises(ContractError): MissionController.create(Path("relative-mission.db"))
+
+    def test_hardlink_refused_without_writing(self):
+        alias=Path(self.tmp.name)/"alias.db";os.link(self.path,alias)
+        before=self.path.read_bytes()
+        with self.assertRaises(ContractError): MissionController.open(alias)
+        with self.assertRaises(ContractError): self.put()
+        self.assertEqual(before,self.path.read_bytes())
+
+    def test_legacy_version_one_refused_without_rewrite(self):
+        path=Path(self.tmp.name)/"v1.db";journal=Journal(path);journal.initialize()
+        journal.append("OBSERVING",dict(kind="development-mission",schema_version=1))
+        before=path.read_bytes()
+        with self.assertRaises(ContractError): MissionController.open(path)
+        self.assertEqual(before,path.read_bytes())
+
+    def test_persisted_record_capacity_refuses_append(self):
+        path=Path(self.tmp.name)/"small.db";controller=MissionController.create(path,max_records=2)
+        controller.put(task(),expected_sequence=1)
+        before=path.read_bytes()
+        with self.assertRaises(ContractError): controller.put(task("task-2"),expected_sequence=2)
+        self.assertEqual(before,path.read_bytes())
+        reopened=MissionController.open(path)
+        with self.assertRaises(ContractError): reopened.put(task("task-2"),expected_sequence=2)
+
+    def test_oversized_receipt_rejected_before_journal_materialization(self):
+        with closing(sqlite3.connect(self.path)) as db:
+            db.execute("UPDATE transitions SET receipt=? WHERE sequence=1",("x"*70000,));db.commit()
+        with patch.object(Journal,"read",side_effect=AssertionError("unbounded read")):
+            with self.assertRaises(ContractError): MissionController.open(self.path)
+
+    def test_invalid_capacity_refused_before_reservation(self):
+        for limits in (dict(max_bytes=True),dict(max_bytes=1023),dict(max_bytes=65*1024*1024),dict(max_records=True),dict(max_records=1),dict(max_records=100001)):
+            path=Path(self.tmp.name)/"invalid.db"
+            with self.subTest(limits=limits),self.assertRaises(ContractError): MissionController.create(path,**limits)
+            self.assertFalse(path.exists())
+
+    def test_legacy_wal_sidecar_refused_before_create(self):
+        path=Path(self.tmp.name)/"orphan.db";sidecar=Path(str(path)+"-wal");sidecar.write_bytes(b"foreign")
+        with self.assertRaises(ContractError): MissionController.create(path)
+        self.assertFalse(path.exists());self.assertEqual(sidecar.read_bytes(),b"foreign")
+
+    def test_wal_sidecar_refused_before_read(self):
+        Path(str(self.path)+"-wal").write_bytes(b"foreign")
+        with patch.object(Journal,"read",side_effect=AssertionError("unbounded read")):
+            with self.assertRaises(ContractError): MissionController.open(self.path)
+
+    def test_conservative_byte_reserve_before_append(self):
+        path=Path(self.tmp.name)/"bytes.db";controller=MissionController.create(path,max_bytes=1024*1024)
+        with path.open("r+b") as stream: stream.truncate(1024*1024-32768)
+        before=path.read_bytes()
+        with self.assertRaises(ContractError): controller.put(task(),expected_sequence=1)
+        self.assertEqual(before,path.read_bytes())
+
+    def test_foreign_schema_refused_before_read(self):
+        with closing(sqlite3.connect(self.path)) as db:
+            db.execute("CREATE TABLE foreign_data (secret TEXT)");db.commit()
+        with patch.object(Journal,"read",side_effect=AssertionError("unbounded read")):
+            with self.assertRaises(ContractError): MissionController.open(self.path)
+
+    def test_maximum_task_dag_replays_and_cycle_revision_refused(self):
+        path=Path(self.tmp.name)/"dag.db";controller=MissionController.create(path,max_records=1030)
+        marker=Journal(path).read()[0];previous=seal(marker);rows=[]
+        # Maximum supported identities and dependency fan-in, without recursive
+        # graph traversal or repeated revalidation of the complete prior DAG.
+        for index in range(1024):
+            value=task("task-"+str(index),["task-"+str(n) for n in range(max(0,index-128),index)])
+            receipt=dict(kind="development-task",schema_version=1,task=value)
+            body=dict(sequence=index+2,state="OBSERVING",receipt=receipt,previous_hash=previous)
+            digest=seal(body);rows.append((index+2,"OBSERVING",canonical(receipt).decode(),previous,digest));previous=digest
+        with closing(sqlite3.connect(path)) as db:
+            db.executemany("INSERT INTO transitions VALUES (?,?,?,?,?)",rows);db.commit()
+        reopened=MissionController.open(path)
+        self.assertEqual(len(reopened.projection()["tasks"]),1024)
+        with self.assertRaises(ContractError): reopened.put(task("overflow"),expected_sequence=1025)
+        with self.assertRaises(ContractError): reopened.put(task("task-0",["task-1023"]),expected_sequence=1025)
+
+    def test_directory_symlink_or_junction_refused(self):
+        target=Path(self.tmp.name)/"real";target.mkdir()
+        MissionController.create(target/"mission.db")
+        alias=Path(self.tmp.name)/"alias"
+        try:
+            alias.symlink_to(target,target_is_directory=True)
+        except OSError:
+            self.assertEqual(sys.platform,"win32")
+            result=subprocess.run(["cmd.exe","/d","/c","mklink","/J",str(alias),str(target)],capture_output=True,timeout=10)
+            self.assertEqual(result.returncode,0,result.stderr)
+        with self.assertRaises(ContractError): MissionController.open(alias/"mission.db")
+
+    def test_persisted_bounds_are_recovered_and_closed(self):
+        marker=Journal(self.path).read()[0]["receipt"]
+        self.assertEqual(marker,dict(kind="development-mission",schema_version=2,max_bytes=16*1024*1024,max_records=1024))
+        path=Path(self.tmp.name)/"bad-marker.db";journal=Journal(path);journal.initialize()
+        journal.append("OBSERVING",dict(marker,max_records=True))
+        with patch.object(Journal,"read",side_effect=AssertionError("unbounded read")):
+            with self.assertRaises(ContractError): MissionController.open(path)
 
 
 if __name__ == "__main__": unittest.main()

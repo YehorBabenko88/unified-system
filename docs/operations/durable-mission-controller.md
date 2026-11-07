@@ -18,7 +18,11 @@ Approved source base: `49a970270570548e5d4f0c5a440d30e238bb21f1`.
 
 The controller persists development requirements and work items as typed
 `OBSERVING` Journal receipts. The first receipt must be the exact
-`{"kind":"development-mission","schema_version":1}` marker. Each following
+`{"kind":"development-mission","schema_version":2,"max_bytes":16777216,"max_records":1024}`
+marker by default. Create may configure persisted bounds: 1..64 MiB and
+2..100000 records (including the marker). Task receipts remain schema v1.
+The previous controller marker v1 is explicitly unsupported; no migration or
+rewrite is performed. Each following
 receipt has exactly `kind=development-task`, integer `schema_version=1`, and
 `task`. Opening always validates the existing Journal hash chain and replays
 every receipt. Legacy or unknown schemas are refused, including valid old
@@ -27,7 +31,8 @@ it never adopts or overwrites an existing database.
 
 ## Python interface
 
-`MissionController.create(path)` creates an explicitly new development journal.
+`MissionController.create(path, max_bytes=16777216, max_records=1024)` creates
+an explicitly new development journal.
 `MissionController.open(path)` validates an existing journal without modifying it.
 `put(task, expected_sequence=n)` validates and atomically appends using existing
 Journal CAS. `projection()` returns a detached JSON-compatible dictionary:
@@ -64,11 +69,27 @@ success cannot qualify Windows Pro/Home or physical installations.
 
 Lists have at most 128 items, IDs at most 128 characters, text at most 2048,
 repository-relative file paths at most 256, and task receipts at most 65536
-canonical JSON bytes. There are at most 1024 task identities and Journal's
-existing 100000 transitions. Canonical IDs and SHAs reject trailing LF. Absolute,
+canonical JSON bytes. There are at most 1024 task identities and the persisted transition limit
+(default 1024, hard maximum 100000). Higher record limits do not promise that
+the byte budget can contain that many receipts. Canonical IDs and SHAs reject trailing LF. Absolute,
 drive, traversal and empty-component file paths are rejected. JSON Schema is
 the structural companion; Python additionally checks semantic/path/byte/graph/
 identity constraints. No third-party validator is required.
+
+Before calling Journal.read, preflight checks physical database plus rollback
+journal bytes, the exact ordinary transitions schema (no foreign tables,
+views or triggers), row count, aggregate receipt bytes and maximum column bytes.
+The hard 64 MiB ceiling applies before reading the bounded marker; persisted
+limits apply before Journal materialization. WAL/SHM files and orphan sidecars
+on create are refused. Append reserves twice the receipt bytes plus 64 KiB
+against remaining physical capacity, then existing Journal CAS commits and
+replay checks the resulting bounds. Refusal can occur early due to conservative
+reserve. No connection-local SQLite page limit is claimed to persist.
+
+Replay validates immutable identity and known dependencies on every receipt.
+New identities cannot form a cycle in the prior validated DAG; changed edges
+use an iterative reachable-subgraph check. A maximum 1024-identity, 128-fan-in
+DAG fixture verifies replay and cycle/identity overflow refusal.
 
 Updates append complete validated snapshots; every original receipt, including
 failed CI and approval observations, remains in the integrity chain. Latest
@@ -81,8 +102,13 @@ A crash before commit leaves the last committed record; a crash after commit
 replays it on reopen. A crash during first initialization may leave an unusable
 reserved file, which open refuses; the implementation never silently adopts or
 deletes it. Filesystem write errors are surfaced to the caller and no retry
-loop exists. The caller must protect the journal directory against replacement
-and other local writers. Hash chains detect corruption, not malicious rewrites
+loop exists. Paths must be absolute canonical local paths with ordinary single-link files;
+symlink/reparse parents and files, hardlinks, UNC paths and foreign databases
+are refused. The caller must still protect the journal directory against
+replacement and other local writers. Parent ACL verification remains UNKNOWN;
+these checks do not establish private Windows ACLs or atomic protection from a
+hostile parent-directory owner. Preflight and Journal operate through separate
+connections, so trusted-directory/no-hostile-writer assumptions remain required. Hash chains detect corruption, not malicious rewrites
 by an attacker who controls the whole file; there is no external signed anchor.
 
 ## Qualification scope
