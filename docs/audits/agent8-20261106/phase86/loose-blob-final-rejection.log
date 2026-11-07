@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\outputs\review_identity063a_loose.py", line 11, in <module>
+    try:inventory();raise RuntimeError('INVALID_OID_ACCEPTED')
+        ^^^^^^^^^^^
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\outputs\review_identity063a_loose.py", line 6, in inventory
+    def inventory():return ns['inventory']() if label=='old2cb' else ns['inventory'](repo)
+                                                                     ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\work\review-identity063a\docs\intelligence\identity\run_qualification.py", line 96, in inventory
+    assert hashlib.sha1(b'blob '+str(len(raw)).encode()+b'\0'+raw).hexdigest().encode()==oid
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

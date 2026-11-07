@@ -1,0 +1,6 @@
+from pathlib import Path
+_A8_REAL='C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-8-independent-security-ci\\work\\identity-a8-env\\Lib\\site-packages\\cryptography'
+__path__=[_A8_REAL]
+__file__=str(Path(_A8_REAL)/'__init__.py')
+Path('C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-8-independent-security-ci\\work\\identity-a8-shadow-executed.txt').write_text('INERT_A8_IMPORT_MARKER',encoding='ascii')
+exec(compile(Path(__file__).read_bytes(),__file__,'exec'),globals())

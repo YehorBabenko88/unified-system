@@ -1,0 +1,4 @@
+import pathlib,subprocess,os,json
+r=pathlib.Path.cwd();repo=r/'work/review-identityeed4';o=r/'outputs/phase85';o.mkdir(exist_ok=True);env={k:v for k,v in os.environ.items() if not k.upper().startswith('GIT_')};env['PYTHONDONTWRITEBYTECODE']='1';py=r/'work/identity-a8-env/Scripts/python.exe'
+for name,script,args in [('guard-controls6','guard_controls.py',[]),('qualification24','run_qualification.py',['--expected-head','eed4f5b14e2b940f67a4cbe5d6eb5f17d90887cf'])]:
+ p=subprocess.run([str(py),'-I','-B',str(repo/'docs/intelligence/identity'/script),*args],cwd=repo,env=env,capture_output=True,timeout=150);(o/(name+'.stdout.log')).write_bytes(p.stdout);(o/(name+'.stderr.log')).write_bytes(p.stderr);assert p.returncode==0,p.stderr.decode(errors='replace')[-1800:];print(name,p.stdout.decode()[-400:])
