@@ -1,0 +1,107 @@
+{
+  "schema": "unified.supervisor-development-checkpoint.v1",
+  "observed_at_utc": "2026-11-07T13:20:16.593940+00:00",
+  "base_head": "49a970270570548e5d4f0c5a440d30e238bb21f1",
+  "status": "IN_PROGRESS_NO_GO",
+  "source_candidates": {
+    "node_supervisor": {
+      "pr": 38,
+      "head": "a2265b0d53e3d6ee8814aa28f5c612d537a0f195",
+      "tree": "1492d725d49526bf8c83efffcb52228912d0844c",
+      "owner_local_tests": 32,
+      "skips": 0,
+      "qualification": "ISOLATED_LOCAL_JOURNAL_ONLY",
+      "implemented_operations": [
+        "REPORT_STATUS_LOCAL_JOURNAL",
+        "CHECK_HEALTH_LOCAL_JOURNAL"
+      ],
+      "other_allowlisted_operations": "11_BLOCKED_PLAN_ONLY",
+      "windows_symlink_fixture": "UNAVAILABLE_NOT_NATIVE_PASS",
+      "root_review": "Earlier cross-node mutation reproduced; 840 rejects foreign context without mutation. A8 F19 WAL budget correction independently verified at a226.",
+      "independent_review": "https://github.com/YehorBabenko88/unified-system/blob/c5d4beccdb78724ebea9885d1a3165b3ffa3ce62/docs/audits/agent8-20261106/phase77/independent-review.md",
+      "unapproved_journal_modes": "WAL_SHM_ROLLBACK_SIDECARS_REJECTED_BEFORE_SQLITE_OPEN",
+      "old_unbound_or_v1_journal": "REJECTED_NO_MIGRATION"
+    },
+    "ci_queue": {
+      "pr": 39,
+      "head": "48e38a2eeea32ddb3836a27871959814843bb6c6",
+      "tree": "8124ac9c31c0fa35399aef755764f1b2be106d4d",
+      "owner_local_tests": 22,
+      "skips": 0,
+      "real_archived_math_capture": "QUEUED_RUNNER_0_UNASSIGNED",
+      "authorization": "PROTECTED_EXACT_ORIGINAL_CONSUMED_ORDINARY_NOT_APPLICABLE",
+      "network_collection": "NOT_IMPLEMENTED_CAPTURE_INGESTION_ONLY",
+      "github_mutations": false
+    },
+    "mission": {
+      "pr": 40,
+      "head": "d22677736dc862c344a54fe9105d336fa02abe83",
+      "tree": "14fdfefa67d7296708645ecd16630e69f29f45c4",
+      "owner_local_tests": 47,
+      "included_legacy_journal_tests": 8,
+      "skips": 0,
+      "scope": "DEVELOPMENT_RECORDS_NOT_NODE_AUTHORITY",
+      "legacy_marker_v1": "REJECTED_NO_MIGRATION",
+      "marker_v2": "PERSISTED_CAPACITY_BEFORE_FETCH"
+    },
+    "deployment_plan": {
+      "pr": 42,
+      "head": "4cfdc31f63ff32ab251464e89ff1aa6becd471fa",
+      "tree": "e7904c9ffc76971395ab1965067b75f1adbc03aa",
+      "root_local_tests": 14,
+      "skips": 0,
+      "primary_raw_files_before_after": 1328,
+      "scope": "ACTUAL_BYTE_VERIFICATION_AND_INACTIVE_PLAN_ONLY",
+      "service_lifecycle": "EXISTING_PLAN_REVALIDATION_NOT_RUNNING_SUPERVISOR_SERVICE"
+    }
+  },
+  "independent_review": "REQUESTED_FROM_EXISTING_AGENT8_NOT_YET_ACCEPTED",
+  "hosted_ci": "QUEUED_NOT_PASS",
+  "physical_installation": "NOT_AUTHORIZED",
+  "windows_pro_home_qualification": "NOT_RUN",
+  "actual_native_authority": "UNAVAILABLE",
+  "actual_control_scheduler_storage_adapters": "P0_IN_PROGRESS",
+  "local_dashboard": {
+    "repository": "Terminan",
+    "pr": 70,
+    "head": "c752dff751d964c57daf3b3afe4987ea3377839b",
+    "tree": "8e19a76b13893f5e6d3103fd599f7fcec25644ca",
+    "owner_node_tests": 22,
+    "mode": "LOCAL_TEST_ONLY_OR_CAPTURE_UNVERIFIED",
+    "actual_backend_collector": "NONE",
+    "effects_authorized": false,
+    "hosted_ci": "PENDING_NOT_PASS"
+  },
+  "canonical_release_manifest_repin": false,
+  "installable_package": "NOT_ADMITTED",
+  "source_code_signing_mode": "LAB_UNSIGNED_INTEGRITY_ONLY",
+  "trusted_release": "BLOCKED_NO_TRUSTED_PUBLISHER",
+  "autonomous_node_actions": "NOT_GRANTED",
+  "queue_root_cause": "UNKNOWN",
+  "original_math_run": 42352374979,
+  "protected_authorization": "CONSUMED_NO_RETRY",
+  "notes": [
+    "Counts are separate owner component receipts, not an integrated full-suite sum.",
+    "No observations imply native/hosted/Home/physical qualification.",
+    "Unnecessary broad agent test attempts stopped; incomplete outputs not PASS.",
+    "Parent directory ACL and real service/backup/rollback gates remain unresolved."
+  ],
+  "additional_verified_dependency": {
+    "repository": "unified-system",
+    "pr": 41,
+    "source_head": "f9f2d04595cf2360dab78980996ae6c34c9e26fc",
+    "tree": "7fa3c8ad67c4efece7e2a692f48fb63a9e40ffd3",
+    "windows_job": 128405376902,
+    "run": 42373201327,
+    "attempt": 1,
+    "windows_status": "SUCCESS",
+    "artifact_id": 13574636937,
+    "artifact_sha256": "268caaf55c4ee3a6a2b563c5b398ba6e92c122b82d2ef8e4381d7fbc28d329a4",
+    "tests": 62,
+    "skips": 0,
+    "ubuntu": "QUEUED_AT_LAST_OBSERVATION",
+    "native_publication_qualified": false,
+    "physical_qualification": false,
+    "root_verified": "PrimaryGitHubjob+artifactmetadata and downloadedZIPdigest matched; no extraction"
+  }
+}

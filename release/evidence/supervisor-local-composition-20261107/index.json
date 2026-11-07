@@ -1,0 +1,31 @@
+{
+  "source_head": "39c52ca7486760f0223cdb71001a5f3c3b454df8",
+  "qualification": "LOCAL_COMPONENT_INTEGRATION_ONLY",
+  "raw_files": {
+    "exact-workflow-attempt1.log": {
+      "sha256": "ca275a5db7a1046fac1dd5f89fa0a7ccf2b7a019446fe7686e003cbc2c88e562",
+      "bytes": 16804
+    },
+    "exact-workflow.py": {
+      "sha256": "b8885ce7a20b74bb316371f3faf4ef67c71d41d2d58199800bd48179715c3959",
+      "bytes": 14296
+    },
+    "supervisor-local-integration-evidence.json": {
+      "sha256": "efa3603a0cce3a67ab927e416a96c3fb918b9fa414f629b5390baf7680017048",
+      "bytes": 375870
+    },
+    "report.json": {
+      "sha256": "1c316833c8fc497da4179f7d23147647a13fea1948afb187a8f9a13ca00a3560",
+      "bytes": 1662
+    },
+    "evidence-sha256-v2.json": {
+      "sha256": "bdc5f33c44530c2343ee95d64970d58481f00509d4ce46165863960d1c3dc2a0",
+      "bytes": 1435
+    }
+  },
+  "notes": [
+    "Original report predates PR43 creation; current PR is https://github.com/YehorBabenko88/unified-system/pull/43",
+    "Windows symlink creation unavailable due host privilege, not qualified",
+    "No native authority, service lifecycle, Home/Pro, rollback or physical acceptance"
+  ]
+}

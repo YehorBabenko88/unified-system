@@ -1,0 +1,42 @@
+{
+  "schema": "unified.supervisor-v2-ownership.v1",
+  "base_head": "49a970270570548e5d4f0c5a440d30e238bb21f1",
+  "base_ack": "ROOT_APPROVED_FOR_ISOLATED_DEVELOPMENT",
+  "shared_files_owner": "ROOT",
+  "entries": {
+    "supervisor_owner": [
+      "unified_system/node_supervisor_v2.py",
+      "unified_system/node_task_journal.py",
+      "tests/test_node_supervisor_v2.py",
+      "tests/test_node_task_journal.py",
+      "docs/operations/node-supervisor-v2.md",
+      ".github/workflows/node-supervisor-v2.yml"
+    ],
+    "mission_owner": [
+      "unified_system/mission_controller.py",
+      "tests/test_mission_controller.py",
+      "docs/operations/development-task.schema.json",
+      "docs/operations/durable-mission-controller.md",
+      ".github/workflows/durable-mission-controller.yml"
+    ],
+    "ci_owner": [
+      "unified_system/ci_queue_controller.py",
+      "tests/test_ci_queue_controller.py",
+      "docs/operations/ci-queue-controller.md",
+      ".github/workflows/ci-queue-controller.yml"
+    ],
+    "ROOT": [
+      "unified_system/supervisor_deployment.py",
+      "tests/test_supervisor_deployment.py",
+      "docs/operations/supervisor-v2-reuse.md",
+      "docs/superpowers/plans/2026-11-07-supervisor-v2.md",
+      "coordination/supervisor-v2-ownership.v1.json",
+      ".github/workflows/supervisor-deployment-plan.yml",
+      "release/owner-directives/supervisor-v2-20261107.txt"
+    ]
+  },
+  "existing_agents_A1_A8": "UNCHANGED_NO_DUPLICATE_SCOPE",
+  "physical_installation": "NOT_AUTHORIZED",
+  "runtime_admission": "NOT_GRANTED",
+  "global_manifest_repin": false
+}
