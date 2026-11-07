@@ -269,19 +269,36 @@ def _one_case(mode,grid,worker,state):
                     need(k.WriteFile(in_write,data,len(data),c.byref(n),None) and n.value==len(data),'PARENT_COMMAND_WRITE_FAILED')
                 def frame():
                     nonlocal received,pending
+                    def ipc_snapshot(raw_frame=None,**native):
+                        snapshot=state['partial'].setdefault('ipc',{})
+                        snapshot.update(received_total_bytes=received,pending_bytes=len(pending),
+                                        pending_hex=pending[:MAX_FRAME].hex(),**native)
+                        if raw_frame is not None:
+                            snapshot.update(last_raw_frame_bytes=len(raw_frame),
+                                            last_raw_frame_hex=raw_frame[:MAX_FRAME].hex())
+                    ipc_snapshot()
                     while b'\n' not in pending:
                         check_deadline();available=w.DWORD()
-                        need(k.PeekNamedPipe(out_read,None,0,None,c.byref(available),None),'CHILD_PIPE_QUERY_FAILED')
+                        peek_result=k.PeekNamedPipe(out_read,None,0,None,c.byref(available),None)
+                        peek_error=c.get_last_error()
+                        ipc_snapshot(peek_result=bool(peek_result),peek_last_error=peek_error,
+                                     available_bytes=available.value)
+                        need(peek_result,'CHILD_PIPE_QUERY_FAILED')
                         need(available.value<=MAX_TOTAL-received,'CHILD_TOTAL_CAP')
                         if available.value:
                             size=min(available.value,MAX_FRAME-len(pending));need(size>0,'CHILD_FRAME_CAP')
                             data=c.create_string_buffer(size);n=w.DWORD()
-                            need(k.ReadFile(out_read,data,size,c.byref(n),None) and n.value>0,'CHILD_PIPE_READ_FAILED')
-                            received+=n.value;pending+=data.raw[:n.value]
+                            read_result=k.ReadFile(out_read,data,size,c.byref(n),None);read_error=c.get_last_error()
+                            received+=n.value;pending+=data.raw[:min(n.value,size)]
+                            ipc_snapshot(read_result=bool(read_result),read_last_error=read_error,
+                                         read_requested_bytes=size,read_returned_bytes=n.value)
+                            need(read_result and 0<n.value<=size,'CHILD_PIPE_READ_FAILED')
                             need(received<=MAX_TOTAL and len(pending)<=MAX_FRAME,'CHILD_IPC_CAP')
                         else:
                             need(k.WaitForSingleObject(proc.process,10)==258,'CHILD_EXITED_BEFORE_FRAME')
-                    raw,pending=pending.split(b'\n',1);need(len(raw)+1<=MAX_FRAME,'CHILD_FRAME_CAP')
+                    raw,pending=pending.split(b'\n',1)
+                    ipc_snapshot(raw_frame=raw)  # Preserve BEFORE cap/decode refusal.
+                    need(len(raw)+1<=MAX_FRAME,'CHILD_FRAME_CAP')
                     value=json.loads(raw.decode('ascii'))
                     state['partial'].setdefault('received_frames',[]).append(value)
                     return value

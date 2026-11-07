@@ -147,3 +147,10 @@ captures body cause BEFORE retirement/tempdir cleanup, preserves completed prior
 case and available phase evidence. A cleanup failure cannot replace original cause
 or turn a successful body into successful diagnosis. Runtime startup/prerequisite
 failures are distinct. No allocation/test/native execution has been performed.
+
+Source-only P2 followup: preserve bounded pending bytes and last raw frame hex,
+received/available/read-requested/returned byte counts BEFORE cap checks/JSON
+decode, so timeout/broken pipe/malformed JSON does not erase partial IPC evidence.
+Native read/peek result/error are captured immediately; success-side error remains
+informational. No bytes beyond4096pending/last-frame or16384total are read to
+collect a larger diagnostic. All source review/AST preparation remains unexecuted.
