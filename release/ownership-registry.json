@@ -1,6 +1,6 @@
 {
   "schema": "unified.ownership.v1",
-  "revision": 9,
+  "revision": 10,
   "root_owner": "ROOT",
   "max_internal_subagents": 3,
   "execution": "EIGHT_EXISTING_USER_OWNED_THREADS_NO_DUPLICATE_INTERNAL_AGENTS",
@@ -29,21 +29,23 @@
       "repository": "unified-system",
       "branch": "agent1/direct-lan-transport-20261106",
       "worktree": "C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-1-direct-lan-transport/work/unified-system-lan-agent1",
-      "draft_pr": null,
+      "draft_pr": 30,
       "base_head": "b12c6c24eeb2c59aa099f1c516d77508f36b20a6",
-      "allocation_state": "PLANNED_NOT_CREATED",
+      "allocation_state": "EXACT_PR30_INTEGRATED_NEW_CHANNEL_OWNERSHIP_ACK",
       "allowed_files": [
         "unified_system/lan_transport.py",
         "unified_system/network_budget.py",
         "tests/test_lan_transport.py",
         "tests/test_network_budget.py",
-        "docs/network/lan-transport-design.md"
+        "docs/network/lan-transport-design.md",
+        "unified_system/lan_mux_channel.py",
+        "tests/test_lan_mux_channel.py"
       ],
       "allowed_new_path_prefixes": [],
       "dependencies": [
         "A2"
       ],
-      "ack": "PENDING",
+      "ack": "A1_NEW_CHANNEL_ALLOCATION_CONFIRMED",
       "rules": [
         "Read current source before proposing edits; do not duplicate existing modules",
         "Any existing file outside allowed_files requires explicit ROOT approval",
@@ -52,7 +54,7 @@
         "Send exact HEAD/tree, test inventory, CI run/attempt/jobs and SHA256 evidence"
       ],
       "user_owned_thread_id": "01a1b15d-1ac2-7742-ae74-cc5a482d717b",
-      "full_feature_implementation": "WAITING_EXPLICIT_OWNER_DESIGN_APPROVAL_NOT_INFERRED_FROM_FINAL_AUDIT_AUTHORIZATION",
+      "full_feature_implementation": "OWNER_AUTHORIZED_ISOLATED_RUNTIME_20261107",
       "additional_allocations": [
         {
           "repository": "unified-system",
@@ -144,6 +146,24 @@
           "historical_fixture_branch": "fix/agent2-owned-control-source-teardown-20261106",
           "historical_fixture_branch_preserved": true,
           "head": "431a9be37e6e1c2d6bddbcea659b96d7211ac5c9"
+        },
+        {
+          "branch": "feature/agent2-control-mux-runtime-20261107",
+          "base_head": "360c5cdc9dae88416d69f8765f3dff5ab8828945",
+          "allowed_files": [
+            "unified_system/control_mux/__init__.py",
+            "unified_system/control_mux/codec.py",
+            "unified_system/control_mux/commands.py",
+            "unified_system/control_mux/consul_store.py",
+            "unified_system/control_mux/http_api.py",
+            "unified_system/control_mux/stream.py"
+          ],
+          "allowed_new_path_prefixes": [
+            "tests/control_mux/",
+            "docs/control-mux/"
+          ],
+          "scope": "ACTUAL_CONSUL_RUNTIME_NO_SHARED_OR_PR31_EDITS",
+          "ack": "A2_EXPLICIT_ALLOCATION_ACK"
         }
       ],
       "head": "0b3af3e872b49ed1848815f7f9ffd42444f89b24"
@@ -214,6 +234,18 @@
           ],
           "scope": "UNTRUSTED_CLAIM_CODEC_ONLY_AUTHORITY_PROMOTION_ALWAYS_DENIED",
           "allocation_state": "ACTUAL_CLEAN_PUBLISHED_SOURCE_REPORTED"
+        },
+        {
+          "allowed_files": [
+            "grid/market_ingestion_domain.py"
+          ],
+          "allowed_new_path_prefixes": [
+            "tests/fixtures/agent3-market-domain/",
+            "tests/market_data/agent3/",
+            "docs/market-data/agent3/"
+          ],
+          "scope": "EXACT_DOMAIN_ADAPTER_NO_PROVIDER_SENDS",
+          "ack": "A3_REQUEST_ROOT_ACK"
         }
       ]
     },
@@ -254,7 +286,29 @@
       "full_feature_implementation": "PRODUCTION_AFTER_DESIGN_APPROVAL_INDEPENDENT_STAGE1_PROTOTYPE_AUTHORIZED",
       "independent_slice": "PURE_BYTES_CONTRACTS_NONEXECUTING_RETENTION_ONLY_DISPOSABLE_IO_FIXTURES_IN_TESTS",
       "native_creation": "PENDING_UNKNOWN_LATE_CHECKOUT_READ_ONLY_NOT_SELECTED",
-      "direct_user_restriction_scope": "PRODUCTION_IMPLEMENTATION_NOT_ALL_INDEPENDENT_NONPRODUCTION_CODE"
+      "direct_user_restriction_scope": "PRODUCTION_IMPLEMENTATION_NOT_ALL_INDEPENDENT_NONPRODUCTION_CODE",
+      "additional_allocations": [
+        {
+          "branch": "feature/storage-runtime-20261107",
+          "base_head": "10157fed4d28606adf587be3494d2f6d42887ce9",
+          "allowed_files": [
+            "unified_system/storage/manifest.py",
+            "unified_system/storage/object_store.py",
+            "unified_system/storage/integrity.py",
+            "unified_system/storage/replication.py",
+            "unified_system/storage/checkpoints.py",
+            "unified_system/storage/backup.py",
+            "unified_system/storage/budgets.py",
+            "unified_system/storage/publication.py"
+          ],
+          "allowed_new_path_prefixes": [
+            "tests/storage/runtime/",
+            "docs/storage/runtime/"
+          ],
+          "scope": "LOCAL_OWN_OBJECTS_PLUS_EXACT_ATOMIC_A2_SEAM_NOT_REMOTE_AUTHORIZE_LOCAL_COMMIT",
+          "ack": "A4_REQUEST_ROOT_ACK"
+        }
+      ]
     },
     {
       "agent_id": "A5",
@@ -422,6 +476,15 @@
           "scope": "ONE_NON_QUALIFYING_HOSTED_OBSERVATION_ONLY_NO_OFFICE_EXECUTION",
           "root_authorization_path": "release/diagnostic-authorizations/math113-dbb9bb1.json",
           "root_authorization_sha256": "3df3720c7efbf0ad71ea0ac84e7001e37ea8c2deaf105076ff473f6919ac48a2"
+        },
+        {
+          "scope": "NEW_BRANCH_FROM_DBB_BUILD_ARGUMENT_FIX_NO_DIAGNOSTIC_RETRY",
+          "allowed_files": [
+            "scripts/agent7-loader-init/build.ps1",
+            "tests/agent7-replay-research.test.mjs"
+          ],
+          "ack": "A7_REQUEST_ROOT_ACK",
+          "protected_old_source": "dbb9bb1da9b180a8bb9f1d5401f1117894256941"
         }
       ],
       "head": "917d99672e37db59835a8ab23b03c99826b12d78"

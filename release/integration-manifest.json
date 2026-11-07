@@ -373,5 +373,35 @@
     "runtime_admission": "BLOCKED",
     "real_provider_sends": "BLOCKED",
     "physical_deployment": "BLOCKED"
+  },
+  "control_mux_phase_states": {
+    "SCHEMA_APPROVED": {
+      "status": "SCOPED_REVIEW4_MODEL_ACKS_VERIFIED",
+      "immutable_commit": "360c5cdc9dae88416d69f8765f3dff5ab8828945",
+      "manifest_raw_sha256": "1c1f0311db7204bd47cb758e7e4e4fe2d7723f7d59e90bd13b52f6fb8b1f83c3",
+      "scope": "SCHEMA_CODEC_MODELS_ONLY_NOT_DOMAIN_OR_NATIVE_ADMISSION"
+    },
+    "PRODUCT_IMPLEMENTED": {
+      "status": "IN_PROGRESS",
+      "components_integrated": [
+        "PR30_EXACT_LAN_TRANSPORT",
+        "PR29_EXACT_PURE_STORAGE"
+      ],
+      "real_consul_mux": "A2_IMPLEMENTING_NO_EXECUTABLE_HANDOFF_YET"
+    },
+    "ENDPOINT_INTEGRATED": {
+      "status": "PENDING",
+      "PR31": "EXPERIMENTAL_NOT_FINAL_ABI"
+    },
+    "WINDOWS_RUNTIME_ACCEPTED": {
+      "status": "PENDING"
+    }
+  },
+  "directive_20261107": {
+    "path": "release/directives/20261107/OWNER-CONTINUATION.txt",
+    "raw_sha256": "281116b8dfce7b6ee9f78089e3b41771422119a537ab6b9f9796328050e8b02c",
+    "runtime_implementation": "AUTHORIZED",
+    "physical_installation": "GATED_NOT_CURRENTLY_READY",
+    "first_public_data_smoke": "SEPARATE_OWNER_APPROVAL_REQUIRED_AFTER_PROVIDER_ADMISSION"
   }
 }
