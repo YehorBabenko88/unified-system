@@ -403,7 +403,15 @@
     },
     "owner_native_process_cleanup": "REPORTED_OWN_THREE_VOTERS_RETIRED",
     "a8_review": "REQUESTED",
-    "a5_api_review": "REQUESTED",
+    "a5_api_review": {
+      "scope": "CAPTURE_ABI_COMPATIBILITY_ACK_ONLY_NO_ASSIGNMENT_OR_WIRING",
+      "source": "c02b110a8939674adc676cb203e0d71ffab800d0",
+      "artifact_sha256": "1efd383aad31dcde68049a65dca3b83a0069c4e8bb396e480020f6eb35254e84",
+      "native_calls_by_reviewer": 0,
+      "hardening_recommendation": "SYMMETRIC_REQUIRE_CAPTURE_SCOPE_TYPE_AND_PREHASH_REQUEST_BOUND",
+      "scope_bypass_reproduced": false,
+      "owner_investigation": "REQUESTED"
+    },
     "pr_mergeability_snapshot": "MERGEABLE_UNSTABLE_NOT_MERGED",
     "public_submit": "DENY",
     "native_job_admission": false,

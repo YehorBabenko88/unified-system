@@ -1,0 +1,39 @@
+{
+  "status": "SCOPED_PRINCIPAL_CAPTURE_API_ASSIGNMENT_ADAPTER_COMPATIBILITY_ACK",
+  "source_head": "c02b110a8939674adc676cb203e0d71ffab800d0",
+  "tree": "49af2d81b17297aa3f45aa718a24ec2d121c9c4d",
+  "module_sha256": "81ca69e9de3789c21beb96176efc2e4c60106e240f96562017bbd5cc3b89d961",
+  "api_sha256": "549abfe795b922b90692ab6c34edbbfd992c479113cc2fd816a5c3faba98a2c0",
+  "four_record_schemas": "RAW_HASH_METASCHEMA_LOCALREF_VALID",
+  "actual_broker_api": [
+    "await expected_broker.open_session(actual_server_socket,leader=same_grid_lease)",
+    "await expected_broker.capture_current(context,scope=fixed_operation,request_bytes=exact_original_bytes)",
+    "ResearchIdentityBroker.require_capture(expected_broker,capture,expected_authority=same_grid,scope=fixed_operation,request_bytes=exact_original_bytes)",
+    "await expected_broker.invalidate_context(own_context); await expected_broker.close()"
+  ],
+  "reviewed": [
+    "Distinct research source, no READ capability upgrade",
+    "Fixed issuer/type/inventory/authority operation/requestdigest verification; snapshot raw/index/session readonly DATA not permission",
+    "Context/capture retain original absolute expiry and monotonic deadline; current policy/profile/peer checked, close latches before awaited serialization",
+    "Native session canonical format separate UUIDv4 actors/client IDs",
+    "No Assignment/resource/worker/dispatch/publication proof minted"
+  ],
+  "mandatory_adapter_rules": [
+    "Use fixed class require_capture with server-selected expected broker and SAME actualGrid authority, never receiver callback/JSON/Noneproof",
+    "Require exact operation and bounded canonical original bytes; broker quota grammar may be broader than submit envelope, use exact registry-equal supported quota with no normalization",
+    "Validate full raw generation/cluster/realm/profile/actor/quota/session joins and exact backend-derived expected record key set",
+    "Mutation SAME transaction checks every captured generation/profile/principal/policy index and principal session lock index+check-session, plus leader/Assignment/attempt/resource/job preconditions",
+    "Capture and snapshot are NOT dispatch permit or storage publication/projection capability",
+    "Honor errors/expiry/invalidation with original UNKNOWN identity and no grant/refund; current historical read separate dispatch"
+  ],
+  "nonblocking_hardening_note": "require_capture verifier currently lacks explicit type(scope) is str/SCOPES and len(request_bytes)<=16384 before hash; capture_current already bounds and mutation adapter must fixedscope+bound ingress. Recommend symmetric guard; no actual scope bypass or native failure reproduced.",
+  "gates": [
+    "ROOT actual loaded TLS/server-DER/provisioning/ACL/sourcecapsule and fixedbroker mapping",
+    "Owner15counts remain ownercounts, no independentnative rerun claimed",
+    "Actual Assignment issuer/jobcommand/workerqualification and publication still separate",
+    "No runtime wiring before exact joint coACK"
+  ],
+  "actual_native_calls_this_review": 0,
+  "worker_native_admission": "NOT_GRANTED",
+  "go_no_go": "NO_GO"
+}
