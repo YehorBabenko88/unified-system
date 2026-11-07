@@ -1,5 +1,5 @@
 {
-  "checked_utc": "2026-11-07T15:29:30.466932+00:00",
+  "checked_utc": "2026-11-07T15:35:00.900372+00:00",
   "RELEASE_MANIFEST_STATUS": "PRESENT_PREPARATION_ONLY_NOT_APPROVED_NOT_INSTALLABLE",
   "NODE_INVENTORY_STATUS": "SIX_REDACTED_OWNER_OBSERVATIONS_PRESENT_ORIGINAL_RAW_NOT_REACQUIRED_BY_A8_NOT_ADMITTED",
   "CONTRACT_STATUS": {
@@ -3265,5 +3265,42 @@
     "nativehuman": false,
     "physical": "NOT_RUN",
     "Gateway40row_matrix": "UNCHANGED6BLOCKED34NOT_RUN"
+  },
+  "gateway_identity9428_YAML_review": {
+    "head": "9428e3d8a74e5ee93dcd6c3caef59dcd7b98c8ab",
+    "tree": "58d0e3950529139897ffa540a5766c1db2878395",
+    "local_parser": "OWN_OFFLINE_HASH_LOCKED_PYYAML6.0.3",
+    "old063_syntax": "FAIL_SCANNERERROR_LINE37_COLUMN54",
+    "new_syntax": "PASS_LOCAL_ONLY",
+    "source_delta": "WORKFLOW_AND_DOC_ONLY",
+    "runtime_tests_guards_API_locks": "RAW_BYTES_UNCHANGED",
+    "new_HEAD_runtime_24_guard_8": "NOT_RUN_BY_A8_NO_TRANSFER",
+    "hosted": {
+      "run_id": 42386792204,
+      "head": "9428e3d8a74e5ee93dcd6c3caef59dcd7b98c8ab",
+      "attempt": 1,
+      "status": "queued",
+      "conclusion": null,
+      "jobs": [
+        {
+          "id": 128445767814,
+          "name": "identity (windows-latest, windows)",
+          "status": "queued",
+          "conclusion": null,
+          "runner_id": 0
+        },
+        {
+          "id": 128445767843,
+          "name": "identity (ubuntu-24.04, linux)",
+          "status": "queued",
+          "conclusion": null,
+          "runner_id": 0
+        }
+      ],
+      "hosted_qualification": "NO_TERMINAL_PASS",
+      "previous_GitHub_failure_cause": "UNKNOWN_WITHOUT_ORIGINAL_ANNOTATION"
+    },
+    "previous_GitHub_failure_cause": "UNKNOWN_NO_PRIMARY_ANNOTATION",
+    "Gateway40row_matrix": "UNCHANGED"
   }
 }
