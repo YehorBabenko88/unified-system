@@ -1,0 +1,13 @@
+# Executable Review4 runtime plan
+Base 360c5cdc9dae88416d69f8765f3dff5ab8828945 tree c8cc05a06cd2c9cfca6317ad06e1af1efefd0050. Frozen dependency release/contracts/control-mux-closed-review4, manifest 1c1f0311db7204bd47cb758e7e4e4fe2d7723f7d59e90bd13b52f6fb8b1f83c3.
+Owner directive attachment dab38860 (2026-11-07); ROOT allocation NEW control_mux package, tests/control_mux, docs/control-mux only. Existing code and frozen dependency untouched.
+
+1. Codec and identity seam: tests first using immutable vectors; bounded canonical writer/parser and pinned schema validator. Native identity missing => 503. Unit checks do not qualify authority.
+2. Real Consul OPEN/reconcile vertical slice: actual consistent reads, durable immutable UUID index and PENDING command; one native transaction checks leader session/index, generation and authenticated identity record indices, writes admission/receipt/command. Global durable slot ledger CAS, no local fallback. Unknown response => reconcile same original UUID/key. Test on owned isolated real three-voter stand; no mock qualification.
+3. Subscription, snapshot ACK, draining close and containment: all state transitions fenced and CAS; no release until independent delivery termination proof. No heartbeat/TTL release shortcut. Domains unavailable until exact owner schema agreement.
+4. HTTP strict raw front and bounded streams: Root native auth revalidation, CSRF, RBAC, duplicate headers, methods, epochs; A1 fragmentation adapter preserves exact body/SSE bytes and reconnect boundaries. Default no provider.
+5. Contract and real Consul fault tests: UUID/idempotency races, stale session/leader, quorum loss, UNKNOWN recovery, restart; dedicated Linux/Windows CI allocation requested before workflow edits. Independent review and Draft PR; no merge/deployment.
+
+Pre-flight: codec supplies exact bytes to command hashes; native identity supplies current captured authorization predicates to same-transaction store; store supplies actual receipts to HTTP, never boolean authority. Historical reconcile checks current permission but retains original actor/session/digest. Publication and scheduler full fencing tuples remain separate unimplemented dependency, not lifecycle receipt promotion.
+
+Review focus: hostile host shapes, size/depth/node quotas; UUID and key collision races; current permission revocation between prepare/commit; terminal receipt corruption; no-quorum and ambiguous transport outcomes; containment before slot reuse; cross-owner receipt leakage.
