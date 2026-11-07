@@ -32,3 +32,10 @@ are new isolated implementation regressions, not preexisting production bugs.
 PKI/TLS positive and negatives are real disposable loopback; controlled-clock
 and corrupted-private-binding controls are unit tests, not OS/native acceptance.
 No cross-owner read, research/mutation/cancellation/native/physical permission.
+
+Root additionally reproduced a forged exact-type handle pointing to a fake issuer
+whose _check returned None. Fixed by exact admitted authority TYPE check and direct
+fixed-class verifier dispatch, followed by actual issuer inventory membership;
+no receiver-selected _check callback. Root must STILL bind its actual qualified
+authority instance/issuance in the same trusted callchain before invoking owner
+read; class type alone does not qualify a fabricated issuer or hostile Python.

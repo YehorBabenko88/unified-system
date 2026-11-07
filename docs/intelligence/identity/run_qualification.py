@@ -40,11 +40,11 @@ def inventory():
 before = inventory()
 sys.path.insert(0,str(root))
 suite = unittest.defaultTestLoader.discover(str(root/'tests'),pattern='test_gateway_identity.py')
-assert suite.countTestCases()==21
+assert suite.countTestCases()==22
 result = unittest.TextTestRunner(verbosity=2).run(suite)
 after = inventory()
-assert before==after and result.testsRun==21 and not result.skipped
+assert before==after and result.testsRun==22 and not result.skipped
 assert result.wasSuccessful()
-print(json.dumps(dict(result='PASS',head=args.expected_head,tests=21,skips=0,
+print(json.dumps(dict(result='PASS',head=args.expected_head,tests=22,skips=0,
                       raw_files_before_after=len(before),scope='DISPOSABLE_MTLS_AND_LOCAL_READ_CAPABILITY_ONLY',
                       cross_owner_read='NOT_RUN',nativeauthentication=False)))

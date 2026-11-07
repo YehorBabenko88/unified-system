@@ -242,6 +242,12 @@ class GatewayIdentityTests(unittest.TestCase):
         fake = object.__new__(self.m.GatewayReadCapability)
         fake._issuer = self.auth
         with self.assertRaises(self.m.GatewayIdentityDenied): self.check(fake)
+    def test_forged_capability_cannot_delegate_to_method_shaped_none_provider(self):
+        class FakeIssuer:
+            def _check(self, *args): return None
+        fake = object.__new__(self.m.GatewayReadCapability)
+        fake._issuer = FakeIssuer()
+        with self.assertRaises(self.m.GatewayIdentityDenied): self.check(fake)
     def test_query_has_seven_current_checks_then_eighth_denied(self):
         profile = dict(self.profile, clients=[dict(self.profile['clients'][0], grants=[
             dict(tool_name='unified.query_market_data', binding=self.binding, owned_store=self.store)])])

@@ -105,7 +105,9 @@ class GatewayReadCapability:
     def __reduce__(self):
         raise TypeError('CAPABILITY_NOT_SERIALIZABLE')
     def check_current(self, *, tool_name, request_bytes, binding, owned_store):
-        return self._issuer._check(self, tool_name, request_bytes, binding, owned_store)
+        issuer = getattr(self, '_issuer', None)
+        _deny(type(self) is GatewayReadCapability and type(issuer) is DisposableIdentityAuthority)
+        return DisposableIdentityAuthority._check(issuer, self, tool_name, request_bytes, binding, owned_store)
 
 class DisposableIdentityAuthority:
     """Trusted fixture owner only. No HTTP endpoint and no public policy writes.
