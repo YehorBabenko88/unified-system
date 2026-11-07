@@ -2,6 +2,8 @@
 from pathlib import Path
 import tempfile
 import unittest
+import gc
+import warnings
 
 from scheduler_components.attempt_registry import AttemptRegistry
 from scheduler_components.domain_v1 import encode_command
@@ -15,7 +17,7 @@ def uid(n): return '00000000-0000-4000-8000-' + str(n).zfill(12)
 def context(**changes):
     value = dict(node_name='LS5', mode='SINGLE_NODE_LOCAL_OFFLINE', cluster_id=uid(1),
                  cluster_generation=uid(2), node_id=uid(3), worker_incarnation_id=uid(4),
-                 authority_namespace='isolated/ls5/pilot')
+                 authority_namespace='unified/'+uid(1))
     value.update(changes); return PilotContext(**value)
 
 
@@ -41,7 +43,7 @@ class ModelWorker:
 class ModelOwners:
     """Control-path simulation only; all forged/fixture grants fail verification."""
     def __init__(self):
-        self.worker = ModelWorker(); self.calls = []; self.namespace = 'isolated/ls5/pilot'
+        self.worker = ModelWorker(); self.calls = []; self.namespace = 'unified/'+uid(1)
         self.fail = set(); self.outcome = ('UNKNOWN', None)
     def require_current_pilot(self, ctx, operation):
         self.calls.append(('pilot', operation))
@@ -87,9 +89,9 @@ class SingleNodeModelTests(unittest.TestCase):
             with self.assertRaises((ValueError,Unavailable)): self.pilot().attach_owned_worker(b'MODEL_REF',proof)
         with self.assertRaises((ValueError,Unavailable)): self.pilot().attach_owned_worker(self.owners.worker,b'MODEL_CONTROL_ONLY')
     def test_foreign_namespace_fails_owner_admission(self):
-        pilot = SingleNodeScheduler(context(authority_namespace='office/live'),self.registry,
-            admission=self.owners,authority=self.owners,storage=self.owners,native=self.owners)
-        with self.assertRaises(Unavailable): pilot.attach_owned_worker(b'MODEL_REF',b'MODEL_CONTROL_ONLY')
+        with self.assertRaises(ValueError):context(authority_namespace='office/live')
+        self.owners.namespace='unified/'+uid(99)
+        with self.assertRaises(Unavailable):self.pilot().attach_owned_worker(b'MODEL_REF',b'MODEL_CONTROL_ONLY')
     def test_other_node_and_nonoffline_mode_reject(self):
         for change in ({'node_name':'PC1'},{'mode':'OFFICE_CLUSTER'},{'node_id':'LS5'}):
             with self.assertRaises(ValueError): context(**change)
@@ -121,10 +123,12 @@ class SingleNodeModelTests(unittest.TestCase):
         self.assertFalse(any(x[0]=='execute' for x in self.owners.calls))
     def test_unknown_reconciliation_uses_original_intent_and_does_not_restart(self):
         pilot=self.attached();pilot.submit(request());pilot.submit(request());pilot.reconcile(uid(5))
+        without_worker=self.pilot();without_worker.reconcile(uid(5))
         executed=[x[1] for x in self.owners.calls if x[0]=='execute'];reconciled=[x[1] for x in self.owners.calls if x[0]=='reconcile']
-        self.assertEqual(executed,[encode_command(request())]);self.assertEqual(reconciled,executed)
+        self.assertEqual(executed,[encode_command(request())]);self.assertEqual(reconciled,executed*2)
     def test_native_proof_revocation_blocks_without_worker_effect(self):
-        pilot=self.attached();self.owners.fail.add('native')
+        pilot=self.attached();pilot.submit(request());self.owners.fail.add('native')
+        self.assertEqual(pilot.reconcile(uid(5))['state'],'UNKNOWN')
         with self.assertRaises(Unavailable):pilot.submit(request())
     def test_drain_intent_persists_without_attachment(self):
         self.registry.prepare(encode_command(request()));pilot=self.pilot()
@@ -134,23 +138,45 @@ class SingleNodeModelTests(unittest.TestCase):
         pilot=self.attached();pilot.submit(request());self.owners.fail.add('capability')
         pilot.drain(uid(5));self.assertEqual(self.owners.worker.pauses,[uid(5)])
     def test_bound_journal_cannot_move_to_another_namespace(self):
-        self.attached();self.owners.namespace='another/isolated/pilot'
-        pilot=SingleNodeScheduler(context(authority_namespace=self.owners.namespace),self.registry,
+        self.attached();self.owners.namespace='unified/'+uid(99)
+        pilot=SingleNodeScheduler(context(cluster_id=uid(99),authority_namespace=self.owners.namespace),self.registry,
             admission=self.owners,authority=self.owners,storage=self.owners,native=self.owners)
         with self.assertRaises(Unavailable):pilot.attach_owned_worker(b'MODEL_REF',b'MODEL_CONTROL_ONLY')
     def test_legacy_unscoped_attempts_cannot_be_adopted(self):
         self.registry.prepare(encode_command(request()))
         with self.assertRaises(Unavailable):self.pilot().attach_owned_worker(b'MODEL_REF',b'MODEL_CONTROL_ONLY')
     def test_foreign_namespace_cannot_mark_bound_intent_draining(self):
-        pilot=self.attached();pilot.submit(request());self.owners.namespace='another/pilot'
-        other=SingleNodeScheduler(context(authority_namespace=self.owners.namespace),self.registry,
+        pilot=self.attached();pilot.submit(request());self.owners.namespace='unified/'+uid(99)
+        other=SingleNodeScheduler(context(cluster_id=uid(99),authority_namespace=self.owners.namespace),self.registry,
             admission=self.owners,authority=self.owners,storage=self.owners,native=self.owners)
-        with self.assertRaises(Unavailable):other.drain(uid(5))
+        with self.assertRaises((ValueError,Unavailable)):other.drain(uid(5))
         self.assertEqual(self.registry.get(uid(5))['drain_requested'],0)
     def test_boolean_owner_result_is_not_current_capability(self):
         for flag in (True,False):
             self.owners.require_current_pilot=lambda *args:flag
             with self.assertRaises(Unavailable):self.pilot().attach_owned_worker(b'MODEL_REF',b'MODEL_CONTROL_ONLY')
+        class Pending:
+            def __await__(self):yield
+        self.owners.require_current_pilot=lambda *args:Pending()
+        with self.assertRaises(Unavailable):self.pilot().attach_owned_worker(b'MODEL_REF',b'MODEL_CONTROL_ONLY')
+        class AsyncGuard:
+            async def __call__(self,*args):return None
+        self.owners.require_current_pilot=AsyncGuard()
+        with warnings.catch_warnings(record=True) as notices:
+            warnings.simplefilter('always',RuntimeWarning)
+            with self.assertRaises(Unavailable):self.pilot().attach_owned_worker(b'MODEL_REF',b'MODEL_CONTROL_ONLY')
+            gc.collect()
+        self.assertEqual([w for w in notices if issubclass(w.category,RuntimeWarning)],[])
+        finalized=[]
+        async def owner_pending():
+            try:await Pending()
+            finally:finalized.append('OWNER_FINALLY')
+        pending=owner_pending();pending.send(None)
+        self.owners.require_current_pilot=lambda *args:pending
+        try:
+            with self.assertRaises(Unavailable):self.pilot().attach_owned_worker(b'MODEL_REF',b'MODEL_CONTROL_ONLY')
+            self.assertEqual(finalized,[])  # Do not run an owner's suspended cleanup.
+        finally:pending.close()
 
 
 if __name__=='__main__':unittest.main()

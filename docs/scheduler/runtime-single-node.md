@@ -30,7 +30,9 @@ authority or implicit single-node office quorum. Full production is not admitted
    New hosted acceptance needs ROOT allocation/integration; no test count transfer.
 
 Context is LS5, SINGLE_NODE_LOCAL_OFFLINE, registered cluster/generation/node/
-parent-incarnation UUIDs and exact admitted authority namespace. Context values,
+parent-incarnation UUIDs and exact existing authority.config.namespace
+`unified/<cluster_id>`, selected from a separately admitted local deployment.
+The selector does not create/configure an authority or grant namespace admission. Context values,
 readiness dictionaries, references and port presence do not prove identity or
 admission. The callback contracts below are proposals needing A2/A4/ROOT ACK.
 
@@ -41,8 +43,10 @@ current stage authorization, LS5 identity, exact release/install manifest, names
 admission, backup/rollback/alternate admin gates and local/offline containment.
 Readiness data and boolean returns cannot satisfy this guard.
 
-A2 authority adapter: existing execute/reconcile/verify_outcome/require_dispatch
-plus require_single_node_capability(context, operation)->None. A2 must verify the
+A2 authority adapter PROPOSAL: execute/reconcile/verify_outcome/require_dispatch
+are EXISTING A5 consumer Protocol names, NOT implemented A2 assignment backend
+methods. require_single_node_capability(context, operation)->None is also NEW
+and unapproved. A2 must verify the
 actual isolated namespace/topology and current admitted runtime capability, then
 perform grant/resource/storage checks in its sole native transaction. No local
 precheck replaces publication/supersession ordering. Request codec remains the
@@ -133,3 +137,37 @@ The18 single-node cases are MODEL_ONLY, with zero worker starts. Existing52 IDs,
 inventory, workflow and contracts remain byte-unchanged. Hosted52 evidence cannot
 be relabeled as hosted18/new native acceptance. Shared runtime integration is
 BLOCKED pending actual owner implementations and exact agreement of these seams.
+
+## A2 actual inventory correction and synchronous ABI limit
+
+A2 evidence A5-SINGLE-NODE-A2-ACTUAL-SEAMS-REVIEW1.json raw
+9e1ce799668fa5b8f074d8b2a6b02ddae56fb66d13053e64529c7c75b3e7b602
+and typed response4b947551892c5b254a9dbd3bd13a9c1ff5d0050d69cddb8521e14bbf22d2eb23
+were raw-read/verified. A2 explicitly REJECTED these names as an existing assignment
+implementation; no runtime/source ACK. Grid acquire/renew/validate/release are
+async lease primitives, CoordinationCommands research-control is metadata,
+EventAuthority effect_status is UNWIRED, Mux metadata receipts are not worker
+execution grants. RuntimeLayout/key/size helpers likewise do not issue grants.
+
+This composition is synchronous. Async functions/callable objects and returned
+awaitables are rejected, never treated as proof/worker/receipt/pause success.
+Unstarted plain coroutines are discarded without awaiting; no asyncio.run,
+background bridge, event-loop fallback or timeout-success interpretation exists.
+An actual bounded owner facade or async consumer needs separate exact ABI review
+and implementation; neither is allocated or provided here.
+Suspended awaitables remain owner-managed: this wrapper does not cancel/close them
+or execute their finally blocks as a fallback/release mechanism.
+
+Proposed closed operation labels for owner review: ATTACH, SUBMIT, EXECUTE,
+RECONCILE, RECONCILE_COMMAND, VERIFY_OUTCOME, DISPATCH. They are proposal labels,
+not a published native wire enum. Historical reconciliation/verifying a receipt
+checks ORIGINAL immutable intent/identity/disclosure, without current worker or
+storage liveness or rebasing issuance to current indices. It never gains dispatch
+permission. Current dispatch independently requires all current owners and actual
+worker revalidation. New-incarnation rejoin/migration remains a separate blocked
+contract; no automatic journal adoption is introduced.
+
+The18 case IDs remain unchanged: added subchecks cover True/False, awaitables and
+async-callable rejection without unawaited-coroutine warnings, exact namespace
+syntax and historical reconciliation after worker proof loss/without attachment.
+Missing current dispatch proof still prevents every model worker start.
