@@ -3,6 +3,7 @@ import asyncio,base64,copy,hashlib,json,os,sys,tempfile,types,unittest,uuid
 from datetime import datetime,timedelta,timezone
 from pathlib import Path
 from unittest.mock import patch
+from jsonschema import Draft202012Validator
 import subprocess
 
 GRID=Path(os.environ.get('A2_RESEARCH_GRID_SOURCE','C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-2-high-availability-distributed/work/grid-assignment-native-20261107'))
@@ -82,6 +83,11 @@ class NativeBrokerTests(unittest.IsolatedAsyncioTestCase):
             scope='SUBMIT_RESEARCH',request_bytes=b'original-intent')
         self.assertEqual(snapshot.actor_id,self.actor)
         lock=snapshot.records[-1]
+        schema_dir=ROOT/'docs/intelligence/research-identity'
+        for name,record in zip(('profile','principal','policy','principal_session'),snapshot.records[1:],strict=True):
+            schema=json.loads((schema_dir/(name+'.schema.json')).read_bytes())
+            Draft202012Validator.check_schema(schema)
+            Draft202012Validator(schema).validate(json.loads(record.raw))
         self.assertEqual(lock.session,snapshot.session_id);self.assertGreater(lock.index,0)
         native=await self.authority._request('GET','/v1/session/info/'+snapshot.session_id)
         self.assertEqual(native[0]['ID'],snapshot.session_id)
