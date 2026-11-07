@@ -1,0 +1,330 @@
+# CODEX — INTELLIGENCE GATEWAY RUNTIME INTEGRATION DIRECTIVE
+
+**MASTER MISSION: IN_PROGRESS / NO-GO**
+
+**Reference:** Unified Draft PR #44, HEAD `6825964bf52375b134c6eb4487808963a0d128ed`
+
+## 1. Решение владельца
+
+Принимаю результаты восьми агентов и независимый offline review Agent 8.
+
+Утверждаю переход к следующему этапу: поэтапная реализация настоящих Gateway endpoints с сохранением всех security, authority, provenance и runtime gates.
+
+Не повторять общий архитектурный аудит Gateway.
+
+Не считать 34 описанных инструмента работающими API.
+
+**Приоритет — законченный вертикальный исследовательский сценарий, а не количество endpoints.**
+
+## 2. ROOT — единая интеграционная база
+
+Перед изменениями:
+
+1. Проверить exact HEAD/tree PR #44 и его stacked base.
+2. Зафиксировать совместимость с Supervisor PR #38.
+3. Получить текущие exact pins шести репозиториев.
+4. Опубликовать ownership registry для Gateway runtime adapters.
+5. Создать отдельную интеграционную ветку.
+6. Сохранить неизменными опубликованные offline-contract evidence.
+7. Не выполнять merge в main.
+
+Новые адаптеры должны использовать существующие runtime/ledger/storage компоненты.
+
+## 3. Agent 1 — Native Transport
+
+Продолжить отдельную ветку:
+
+`agent1/native-peer-capture-20261107`
+
+Исходный HEAD:
+
+`8bfa00d779438dc204b1e9ee82f496efce9e6154`
+
+PR #38 не изменять.
+
+Завершить:
+
+- Native peer capture module.
+- Focused tests.
+- Design document.
+- Source-bound evidence.
+- Independent review.
+- Draft PR.
+
+Проверить certificate/SAN/EKU/fingerprint binding и невозможность подмены identity.
+
+Не изменять системные ACL, сертификаты и физическую сеть.
+
+## 4. Agent 2 — Authenticated Gateway Identity
+
+Создать минимальный Gateway authentication contract.
+
+Обязательные элементы:
+
+- Client principal identity.
+- Service identity.
+- Tool-specific scopes.
+- Delegated user authority.
+- Session/credential expiration.
+- Revocation.
+- Read disclosure policy.
+- Audit record.
+- Quota ownership.
+- Fencing boundary.
+
+Разделить:
+
+READ_DATA
+SUBMIT_RESEARCH
+READ_RESEARCH
+CANCEL_OWN_JOB
+PUBLISH_VISUALIZATION
+PROPOSE_CHANGE
+OPERATE_NODE.
+
+Gateway не должен самостоятельно интерпретировать текст запроса как разрешение на операцию.
+
+Реализовать и проверить read-only identity/disclosure сначала, без research dispatch.
+
+## 5. Agent 3 — Market Data Query
+
+Создать или адаптировать версионированный read-only API для:
+
+- Instrument catalog.
+- Dataset capabilities.
+- Coverage.
+- Gap reporting.
+- Bounded OHLCV queries.
+- Trade queries при наличии достоверных данных.
+- Order book history только при подтверждённой полноте.
+- Exchange/event/observation time semantics.
+
+Запрос должен явно указывать instrument identity, диапазон, dataset version и лимиты.
+
+Не использовать доступ к произвольным SQL-запросам.
+
+Не выдавать исторические OHLCV за восстановленный L3 order book.
+
+Первоначально допускаются только immutable synthetic datasets и изолированные тестовые хранилища.
+
+До реального disclosure ACK возвращать NOT_EXECUTED.
+
+## 6. Agent 4 — Storage Disclosure
+
+Создать authenticated read-only manifest capability.
+
+Подтверждать:
+
+- Dataset identity.
+- Schema/version.
+- Committed revision.
+- Content digest.
+- Coverage/gaps.
+- Publication status.
+- Source provenance.
+- Integrity.
+- Access scope.
+
+Локальный codec не является доказательством авторизованного доступа.
+
+Запрещать ссылаться на uncommitted или неподтверждённые данные как VERIFIED.
+
+Не создавать второй experiment registry, пока не проверена возможность переиспользовать существующее хранилище результатов.
+
+## 7. Agent 5 — Research Job API
+
+Согласовать с Agent 2 и Agent 4:
+
+- Submit admission.
+- Job owner.
+- Quotas.
+- Assignment v1.
+- Lease/fencing.
+- Status.
+- Cancellation ordering.
+- Restart recovery.
+- Idempotent request lookup.
+- Completion identity.
+
+Первоначально реализовать synthetic/offline job submission через настоящий ограниченный backend в disposable environment.
+
+Без admission возвращать NOT_SUBMITTED.
+
+Отмена задачи не должна отменять уже зафиксированные финансовые или storage events.
+
+## 8. Agent 7 — Research and Financial Adapters
+
+Переиспользовать:
+
+- Strattester research/runtime.
+- Existing PaperLedger.
+- Math numerical/statistical functions.
+- MetaAnalyse supported analysis adapters.
+
+Обязательно определить:
+
+- Gross versus net PnL.
+- Fees.
+- Slippage.
+- Funding.
+- Currency.
+- Scale.
+- Strategy version.
+- Dataset version.
+- Experiment identity.
+- Result provenance.
+
+Предотвратить двойное вычитание торговых издержек.
+
+Не создавать новую математическую платформу.
+
+Не выполнять повторный protected Math native diagnostic.
+
+## 9. Agent 6 — Visualization Artifacts
+
+Подготовить authenticated Visualization Artifact API.
+
+Минимальный контракт:
+
+- artifact_id
+- artifact_schema_version
+- experiment_id
+- dataset_revision
+- result_digest
+- instrument_id
+- time range
+- units
+- simulation_fidelity
+- provenance
+- integrity_status
+- rendering_spec
+
+Terminan должен получать настоящие проверенные данные, а не сырые результаты генерации модели.
+
+Предусмотреть:
+
+- Candlestick + signal overlay.
+- Virtual entries/exits.
+- Equity curve.
+- Drawdown.
+- Strategy comparison.
+- Confidence intervals.
+- Data quality overlay.
+
+Использовать текущую модель Terminan Sync.
+
+До endpoint ACK показывать UNATTESTED/UNAVAILABLE.
+
+## 10. Vertical E2E — первый обязательный сценарий
+
+Реализовать в disposable environment:
+
+**User request → Gateway → Dataset Query → Research Job → Result Registry → Terminan Visualization.**
+
+Сценарий:
+
+«Исследовать BTCUSDT на утверждённом синтетическом датасете, рассчитать заранее определённую статистику и построить график результата в Terminan».
+
+Использовать реально исполняемые backend adapters.
+
+Никаких mock SUCCESS в production-коде.
+
+Проверить:
+
+1. Authenticated principal.
+2. Read scope.
+3. Exact dataset identity.
+4. Coverage.
+5. Job admission.
+6. Quota.
+7. Deterministic computation.
+8. Result digest.
+9. Artifact publication.
+10. Terminan rendering.
+11. Duplicate request handling.
+12. Unauthorized request rejection.
+13. Restart/reconciliation.
+14. Audit trail.
+
+Затем повторить сценарий на реальном историческом dataset только после соответствующего data access и source admission.
+
+## 11. Security и независимая приёмка
+
+Agent 8 должен проверить:
+
+- Взаимное соответствие schemas.
+- Реальную authentication.
+- Unauthorized disclosure rejection.
+- Tool-level RBAC.
+- Resource limits.
+- Idempotency.
+- Fencing.
+- Provenance.
+- Prompt injection isolation.
+- No-real-orders.
+- Source integrity.
+- Windows/Ubuntu CI.
+- Actual executable E2E.
+
+Не переносить offline PASS на runtime.
+
+## 12. CI queue blocker
+
+На текущем PR #44 обнаружены 35 workflow runs, в основном queued; на PR #38 — 33 queued.
+
+Проверить runner availability, workflow labels, Actions permissions и concurrency.
+
+Не создавать массовые retries.
+
+Не останавливать независимую локальную разработку из-за queued CI.
+
+Protected Math single-use authorization не переиспользовать.
+
+## 13. Exit criteria
+
+Первый Gateway milestone считается выполненным, только когда:
+
+- Authenticated read-only API реально работает.
+- Bounded dataset query реально работает.
+- Один research job выполняется через утверждённый backend.
+- Result provenance подтверждён.
+- Terminan отображает проверенный результат.
+- Negative tests PASS.
+- Exact-head CI выполнен.
+- Agent 8 дал независимый runtime-scope review.
+
+После этого последовательно открывать остальные Gateway tools.
+
+## 14. Report
+
+GATEWAY_BASE_SHA:
+SUPERVISOR_COMPATIBILITY:
+AGENT1_NATIVE_PR:
+AUTH_IDENTITY:
+DATA_QUERY:
+STORAGE_DISCLOSURE:
+JOB_SUBMISSION:
+JOB_CANCELLATION:
+RESEARCH_ADAPTER:
+VISUALIZATION_API:
+VERTICAL_E2E:
+CI_STATUS:
+A8_REVIEW:
+REMAINING_P0:
+REMAINING_P1:
+NEXT_ACTION:
+GO_NO_GO:
+
+**Continue MASTER MISSION.**
+
+**GATEWAY_OFFLINE_CONTRACTS: ACCEPTED**
+
+**ISOLATED_RUNTIME_IMPLEMENTATION: AUTHORIZED AFTER OWNERSHIP ACK**
+
+**PRODUCTION_RUNTIME: BLOCKED**
+
+**PHYSICAL_DEPLOYMENT: BLOCKED BY THIS DIRECTIVE**
+
+**REAL_TRADING: PROHIBITED**
+
+Не останавливай работу после публикации очередного отчёта. Переходи к реальным исполняемым адаптерам и контрактным тестам.

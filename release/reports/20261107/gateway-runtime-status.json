@@ -1,0 +1,52 @@
+{
+  "AGENT1_NATIVE_PR": "PENDING",
+  "AUTH_IDENTITY": "PENDING",
+  "DATA_QUERY": "PENDING",
+  "STORAGE_DISCLOSURE": "PENDING",
+  "JOB_SUBMISSION": "PENDING",
+  "JOB_CANCELLATION": "PENDING",
+  "RESEARCH_ADAPTER": "PENDING",
+  "VISUALIZATION_API": "PENDING",
+  "VERTICAL_E2E": "PENDING",
+  "A8_REVIEW": "PENDING",
+  "GATEWAY_BASE_SHA": "6825964bf52375b134c6eb4487808963a0d128ed",
+  "SUPERVISOR_COMPATIBILITY": {
+    "pr": 38,
+    "head": "a2265b0d53e3d6ee8814aa28f5c612d537a0f195",
+    "four_source_test_files": "RAW_GIT_EQUAL",
+    "native_service_qualification": false
+  },
+  "CI_STATUS": {
+    "gateway44": {
+      "total": 35,
+      "queued": 33,
+      "pending": 2
+    },
+    "supervisor38": {
+      "total": 33,
+      "queued": 32,
+      "pending": 1
+    },
+    "actions_enabled": true,
+    "self_hosted_runners": 0,
+    "selected_labels": [
+      "windows-latest",
+      "ubuntu-24.04"
+    ],
+    "queue_root_cause": "UNKNOWN",
+    "retries": 0
+  },
+  "REMAINING_P0": [
+    "Exact owner-auth capability/disclosure/submit/publication/renderer API ACKs",
+    "Actual executable vertical composition and independently verified provenance"
+  ],
+  "REMAINING_P1": [
+    "Terminal exact-head hosted CI",
+    "Native Windows and Home/Pro qualification separate"
+  ],
+  "NEXT_ACTION": "Compose actual READ_DATA only after A2/A3/A4 exact contract ACK; independent owner implementations continue",
+  "GO_NO_GO": "IN_PROGRESS / NO-GO",
+  "OFFLINE_EVIDENCE": "UNCHANGED",
+  "OWNERSHIP": "A1_A7_ACK_RECEIVED",
+  "ACTUAL_E2E_PASS": false
+}
