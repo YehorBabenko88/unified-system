@@ -53,6 +53,13 @@ Passing assertions on caller-made observations cannot qualify actual execution.
 
 Observation counts are confirmed logical effects of the tested original commands,
 not raw KV/session/denial-receipt writes or all unrelated storage accounting.
+In all three ordered/concurrent publication-versus-supersession cases, the initial
+assignment is fixture preparation and excluded. assignment_status is the status
+of the tested supersession (equal to supersession_status); assignment_effects
+counts that ONE original supersession's logical assignment mutation: exactly1
+when COMMITTED, exactly0 when REJECTED. Rejection leaves the assignment revision
+unchanged; commit must advance it. Count99, missing committed mutation or a
+contradictory assignment status rejects even if publication counts are correct.
 The publication scenarios require one FRESH logical segment with the complete
 replica/hold set required by an explicitly admitted policy. The debit count1 means
 ONE logical atomic publication-debit event across ALL required participants, not

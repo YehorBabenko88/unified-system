@@ -80,6 +80,18 @@ class ActualAssignmentBackendContracts(unittest.IsolatedAsyncioTestCase):
             self.assertGreaterEqual(count, 0)
         self.assertEqual(observed.original_request_id, observed.observed_request_id,
                          'uncertainty/conflict must not rekey the original intent')
+        if name in ('SUPERSESSION_THEN_OLD_PUBLICATION',
+                    'PUBLICATION_THEN_SUPERSESSION',
+                    'CONCURRENT_SUPERSESSION_PUBLICATION'):
+            # Initial assignment is fixture preparation, not a tested effect.
+            # Here the sole tested assignment mutation is this supersession.
+            self.assertIn(observed.supersession_status, ('COMMITTED', 'REJECTED'))
+            self.assertEqual(observed.assignment_status, observed.supersession_status)
+            self.assertEqual(observed.assignment_effects,
+                             int(observed.supersession_status == 'COMMITTED'))
+            if observed.supersession_status == 'REJECTED':
+                self.assertEqual(observed.assignment_revision_before,
+                                 observed.assignment_revision_after)
         if observed.supersession_status == 'COMMITTED':
             self.assertGreater(positive_revision(observed.assignment_revision_after), positive_revision(observed.assignment_revision_before))
         return observed
