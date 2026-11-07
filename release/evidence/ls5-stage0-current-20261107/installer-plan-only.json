@@ -1,0 +1,22 @@
+{
+  "mode": "PLAN_ONLY",
+  "candidate_manifest_sha256": "3ba41b08735693608b9457e8518169605e1b338f9b5f6cacbe840146389a4a9f",
+  "candidate_status": "PROVISIONAL_NOT_INSTALLABLE",
+  "package_lock_available": false,
+  "package_bytes_available": false,
+  "actual_plan_created": false,
+  "mutations_performed": false,
+  "installation_performed": false,
+  "security_admission": "NOT_GRANTED",
+  "qualification": "ACTUAL_CANDIDATE_INPUT_REFUSAL_NOT_INSTALLER_ACCEPTANCE",
+  "status": "BLOCKED_NO_INSTALLABLE_PACKAGE_LOCK",
+  "rejection": "lock schema",
+  "rejection_scope": "Input manifest is provisional integration schema, not an installer package lock. No converted/fabricated lock or publisher pin supplied.",
+  "separate_pure_model_regressions": {
+    "tests": 9,
+    "skips": 0,
+    "success": true,
+    "scope": "MODEL_ONLY_NOT_LS5_SECURITY_ADMISSION"
+  },
+  "executed_source_head": "9d6857a26842b1c4ce6375a69cef4cdba832b7b1"
+}

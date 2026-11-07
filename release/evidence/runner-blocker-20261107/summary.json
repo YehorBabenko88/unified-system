@@ -1,0 +1,2740 @@
+{
+  "schema": "unified.runner-blocker-observation.v1",
+  "inspected_head": "9c585129200cb3510c78b0f4f791eec5b7d85e8a",
+  "collection_finished_utc": "2026-11-07T09:08:48.889645+00:00",
+  "head_runs_total": 35,
+  "head_run_status_counts": {
+    "queued": 34,
+    "pending": 1
+  },
+  "queries": {
+    "owner": {
+      "path": "users/YehorBabenko88",
+      "observed_at_utc": "2026-11-07T09:08:29.677974+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "ded15e00495c1e08d28f058c3800ec5c8feac2e47637333b36da1cf829b083a4",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "math-run": {
+      "path": "repos/YehorBabenko88/math/actions/runs/42352374979",
+      "observed_at_utc": "2026-11-07T09:08:29.678565+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "b7a648f5a4b4be61f9882fa582aa690f054b16486fd5c1ac7d29cc97afc3172b",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "math-jobs": {
+      "path": "repos/YehorBabenko88/math/actions/runs/42352374979/jobs?per_page=100",
+      "observed_at_utc": "2026-11-07T09:08:30.051116+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "a9447f5db6237d4811da9275202963c4dc043728188f35175787adf2f026fa6f",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unified-head-runs": {
+      "path": "repos/YehorBabenko88/unified-system/actions/runs?head_sha=9c585129200cb3510c78b0f4f791eec5b7d85e8a&per_page=100",
+      "observed_at_utc": "2026-11-07T09:08:30.085734+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "d02a849986212a3e60b4059bc1cc9ac99dcbe2abbbfd0d8c4a4e07094e5fc396",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "billing-usage": {
+      "path": "users/YehorBabenko88/settings/billing/usage?year=2026&month=11",
+      "observed_at_utc": "2026-11-07T09:08:30.516812+00:00",
+      "exit_code": 1,
+      "stdout_sha256": "bc2c998e5b213f550158efffcede10cfb84da4aa38b7ac793e6d0e9426111e53",
+      "stderr_sha256": "89cf56d6e2bcbd9dd334109f9d866e3890ad1defb7c74fcc58086fc0a7b61421"
+    },
+    "unified-system-repo": {
+      "path": "repos/YehorBabenko88/unified-system",
+      "observed_at_utc": "2026-11-07T09:08:30.910296+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "09072a7be3c80fbce9848e3cd4c0aa9a56892e3e71994993864338779d45aa43",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unified-system-permissions": {
+      "path": "repos/YehorBabenko88/unified-system/actions/permissions",
+      "observed_at_utc": "2026-11-07T09:08:31.123894+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "0bffee97e4ad52676c0127aacb5b4b304a2675f5c524de641acf1326e0b0e857",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unified-system-workflow-permissions": {
+      "path": "repos/YehorBabenko88/unified-system/actions/permissions/workflow",
+      "observed_at_utc": "2026-11-07T09:08:31.352331+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "f6e178fc1e56cf43900da383f85398b61de9ae61c6b8433116c1856605745924",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unified-system-runners": {
+      "path": "repos/YehorBabenko88/unified-system/actions/runners?per_page=100",
+      "observed_at_utc": "2026-11-07T09:08:31.442330+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "3f0ea89dee64544046623ff19c82d9443bdc098ade1db35a4c9be094b13cfd47",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unified-system-recent-runs": {
+      "path": "repos/YehorBabenko88/unified-system/actions/runs?per_page=50",
+      "observed_at_utc": "2026-11-07T09:08:31.683683+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "11638f06684193fa9f1218a43f83089319026806f264634bcf32f07d2c26e2f8",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "bybit-cluster-grid-repo": {
+      "path": "repos/YehorBabenko88/bybit-cluster-grid",
+      "observed_at_utc": "2026-11-07T09:08:32.017405+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "50b32dacd318626209bd8f181f92ff3a10c49d28212481eead18b41f5e26556e",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "bybit-cluster-grid-permissions": {
+      "path": "repos/YehorBabenko88/bybit-cluster-grid/actions/permissions",
+      "observed_at_utc": "2026-11-07T09:08:32.435851+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "0bffee97e4ad52676c0127aacb5b4b304a2675f5c524de641acf1326e0b0e857",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "bybit-cluster-grid-workflow-permissions": {
+      "path": "repos/YehorBabenko88/bybit-cluster-grid/actions/permissions/workflow",
+      "observed_at_utc": "2026-11-07T09:08:32.790672+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "f6e178fc1e56cf43900da383f85398b61de9ae61c6b8433116c1856605745924",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "bybit-cluster-grid-runners": {
+      "path": "repos/YehorBabenko88/bybit-cluster-grid/actions/runners?per_page=100",
+      "observed_at_utc": "2026-11-07T09:08:32.938190+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "3f0ea89dee64544046623ff19c82d9443bdc098ade1db35a4c9be094b13cfd47",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "bybit-cluster-grid-recent-runs": {
+      "path": "repos/YehorBabenko88/bybit-cluster-grid/actions/runs?per_page=50",
+      "observed_at_utc": "2026-11-07T09:08:33.123449+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "36786f6f7ea0f89e7900ac5d057dc91e313896dcb1e933d96f74140305b7a19e",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "strattester-repo": {
+      "path": "repos/YehorBabenko88/strattester",
+      "observed_at_utc": "2026-11-07T09:08:33.458574+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "a06c1a2e1897e4b7505bf6c5baa5d3403e8cda8c8f0f33dce00c516941880e7a",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "strattester-permissions": {
+      "path": "repos/YehorBabenko88/strattester/actions/permissions",
+      "observed_at_utc": "2026-11-07T09:08:33.873673+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "0bffee97e4ad52676c0127aacb5b4b304a2675f5c524de641acf1326e0b0e857",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "strattester-workflow-permissions": {
+      "path": "repos/YehorBabenko88/strattester/actions/permissions/workflow",
+      "observed_at_utc": "2026-11-07T09:08:34.224954+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "f6e178fc1e56cf43900da383f85398b61de9ae61c6b8433116c1856605745924",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "strattester-runners": {
+      "path": "repos/YehorBabenko88/strattester/actions/runners?per_page=100",
+      "observed_at_utc": "2026-11-07T09:08:34.592477+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "3f0ea89dee64544046623ff19c82d9443bdc098ade1db35a4c9be094b13cfd47",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "strattester-recent-runs": {
+      "path": "repos/YehorBabenko88/strattester/actions/runs?per_page=50",
+      "observed_at_utc": "2026-11-07T09:08:34.598552+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "1b04ad35794765ba84d8c01c8e05e4eaca9784535c4fc72a2d26825d6684bada",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "math-repo": {
+      "path": "repos/YehorBabenko88/math",
+      "observed_at_utc": "2026-11-07T09:08:35.115657+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "d7ce15ffabad5a626aff952cab1e61d0eb2233fc0e320ba8f61587b067d66416",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "math-permissions": {
+      "path": "repos/YehorBabenko88/math/actions/permissions",
+      "observed_at_utc": "2026-11-07T09:08:35.559591+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "0bffee97e4ad52676c0127aacb5b4b304a2675f5c524de641acf1326e0b0e857",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "math-workflow-permissions": {
+      "path": "repos/YehorBabenko88/math/actions/permissions/workflow",
+      "observed_at_utc": "2026-11-07T09:08:35.901711+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "f6e178fc1e56cf43900da383f85398b61de9ae61c6b8433116c1856605745924",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "math-runners": {
+      "path": "repos/YehorBabenko88/math/actions/runners?per_page=100",
+      "observed_at_utc": "2026-11-07T09:08:35.969133+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "3f0ea89dee64544046623ff19c82d9443bdc098ade1db35a4c9be094b13cfd47",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "math-recent-runs": {
+      "path": "repos/YehorBabenko88/math/actions/runs?per_page=50",
+      "observed_at_utc": "2026-11-07T09:08:36.244045+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "87246c0d79bcca002b53ed96691fbac37ab951b0240ec4d09a007d856f6d34b6",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "meta_analyse-repo": {
+      "path": "repos/YehorBabenko88/meta_analyse",
+      "observed_at_utc": "2026-11-07T09:08:36.501604+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "190ca3c9ec5d5eb3ce57efac8b6b4142abada28c888fed83a40b0650c13f9e28",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "meta_analyse-permissions": {
+      "path": "repos/YehorBabenko88/meta_analyse/actions/permissions",
+      "observed_at_utc": "2026-11-07T09:08:36.939096+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "0bffee97e4ad52676c0127aacb5b4b304a2675f5c524de641acf1326e0b0e857",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "meta_analyse-workflow-permissions": {
+      "path": "repos/YehorBabenko88/meta_analyse/actions/permissions/workflow",
+      "observed_at_utc": "2026-11-07T09:08:37.284906+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "f6e178fc1e56cf43900da383f85398b61de9ae61c6b8433116c1856605745924",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "meta_analyse-runners": {
+      "path": "repos/YehorBabenko88/meta_analyse/actions/runners?per_page=100",
+      "observed_at_utc": "2026-11-07T09:08:37.476592+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "3f0ea89dee64544046623ff19c82d9443bdc098ade1db35a4c9be094b13cfd47",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "meta_analyse-recent-runs": {
+      "path": "repos/YehorBabenko88/meta_analyse/actions/runs?per_page=50",
+      "observed_at_utc": "2026-11-07T09:08:37.615729+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "67c04148981866f56a6ad56e9bb4109a4dd3298848ab5c666b67c16df178ef7a",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "Terminan-repo": {
+      "path": "repos/YehorBabenko88/Terminan",
+      "observed_at_utc": "2026-11-07T09:08:38.018810+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "91fe53f534761625426e51705d4e954c706b8faf7288b039832d2744a8c7e7aa",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "Terminan-permissions": {
+      "path": "repos/YehorBabenko88/Terminan/actions/permissions",
+      "observed_at_utc": "2026-11-07T09:08:38.557411+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "0bffee97e4ad52676c0127aacb5b4b304a2675f5c524de641acf1326e0b0e857",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "Terminan-workflow-permissions": {
+      "path": "repos/YehorBabenko88/Terminan/actions/permissions/workflow",
+      "observed_at_utc": "2026-11-07T09:08:38.903933+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "f6e178fc1e56cf43900da383f85398b61de9ae61c6b8433116c1856605745924",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "Terminan-runners": {
+      "path": "repos/YehorBabenko88/Terminan/actions/runners?per_page=100",
+      "observed_at_utc": "2026-11-07T09:08:39.084196+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "3f0ea89dee64544046623ff19c82d9443bdc098ade1db35a4c9be094b13cfd47",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "Terminan-recent-runs": {
+      "path": "repos/YehorBabenko88/Terminan/actions/runs?per_page=50",
+      "observed_at_utc": "2026-11-07T09:08:39.243038+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "3385dec80e12dad9aebd60d8c9fe74776a2729640e91d34e1b244d41aee30b0f",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "run-42356673112-jobs": {
+      "path": "repos/YehorBabenko88/unified-system/actions/runs/42356673112/jobs?per_page=100",
+      "observed_at_utc": "2026-11-07T09:08:40.790705+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "6bea88c37b5a0f3032b456da2773ec6a6c86687a1175112fa661015078df4743",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "run-42356673086-jobs": {
+      "path": "repos/YehorBabenko88/unified-system/actions/runs/42356673086/jobs?per_page=100",
+      "observed_at_utc": "2026-11-07T09:08:40.790871+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "6ed2ce6eec221e6d113d4182e441d9b5b0a569bd0333c8d2b78046b786670402",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "run-42356673141-jobs": {
+      "path": "repos/YehorBabenko88/unified-system/actions/runs/42356673141/jobs?per_page=100",
+      "observed_at_utc": "2026-11-07T09:08:41.226145+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "e09326026582b111c4d9af832dd234f2e0810cdfadfea62354b78763fec2da78",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "run-42356673074-jobs": {
+      "path": "repos/YehorBabenko88/unified-system/actions/runs/42356673074/jobs?per_page=100",
+      "observed_at_utc": "2026-11-07T09:08:41.260055+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "87387b01ade4a2c5648295262f1bbc0f6e50dc9dedcb40da174679c75e01a549",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "run-42356673115-jobs": {
+      "path": "repos/YehorBabenko88/unified-system/actions/runs/42356673115/jobs?per_page=100",
+      "observed_at_utc": "2026-11-07T09:08:41.703864+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "e245cbe46fbd01debf99193a8b2e11bb67a3e10333e51cd9f9d047b486c38a3b",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "run-42356673099-jobs": {
+      "path": "repos/YehorBabenko88/unified-system/actions/runs/42356673099/jobs?per_page=100",
+      "observed_at_utc": "2026-11-07T09:08:41.723308+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "495a15ea90e9190479b8b181db8f79d2fbe79f67f67b2958e69a85921f009a86",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "run-42356673149-jobs": {
+      "path": "repos/YehorBabenko88/unified-system/actions/runs/42356673149/jobs?per_page=100",
+      "observed_at_utc": "2026-11-07T09:08:42.142658+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "8da13b2fcec8e09eb66ac302ee3294d6fa31b0e32060f850b2382bde6b9ffa18",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "run-42356673097-jobs": {
+      "path": "repos/YehorBabenko88/unified-system/actions/runs/42356673097/jobs?per_page=100",
+      "observed_at_utc": "2026-11-07T09:08:42.169352+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "3cae5b076343e6c76798ae5b089c32f4d6797f32fc1fea1dbca10757809b820d",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "run-42356673122-jobs": {
+      "path": "repos/YehorBabenko88/unified-system/actions/runs/42356673122/jobs?per_page=100",
+      "observed_at_utc": "2026-11-07T09:08:42.602060+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "fe144ae8295d665cdb70c6cdf69c5f2309b29edb4cbe80c3a1fcdaade2ec887b",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "run-42356673128-jobs": {
+      "path": "repos/YehorBabenko88/unified-system/actions/runs/42356673128/jobs?per_page=100",
+      "observed_at_utc": "2026-11-07T09:08:42.603474+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "63ca861d5095cec7c8369bf8f79f80044ef0e8e5f77840b543886c36fdd27d88",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "run-42356673078-jobs": {
+      "path": "repos/YehorBabenko88/unified-system/actions/runs/42356673078/jobs?per_page=100",
+      "observed_at_utc": "2026-11-07T09:08:43.032583+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "457bf04c47998855243bb64c76db3778b878d65e0cd4ac8bbd1c8cdd85fed6ae",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "run-42356673153-jobs": {
+      "path": "repos/YehorBabenko88/unified-system/actions/runs/42356673153/jobs?per_page=100",
+      "observed_at_utc": "2026-11-07T09:08:43.100311+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "cadf9acb5b6a3c24c6ce64ae5b4a0115eeb08c50e6ea162d22bd3d43170e45ef",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "run-42356673113-jobs": {
+      "path": "repos/YehorBabenko88/unified-system/actions/runs/42356673113/jobs?per_page=100",
+      "observed_at_utc": "2026-11-07T09:08:43.469789+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "410c6ad5068924769a9fc862cd9f1e11f6b41e3ebe50b9ade38c698c256f92d5",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "run-42356673134-jobs": {
+      "path": "repos/YehorBabenko88/unified-system/actions/runs/42356673134/jobs?per_page=100",
+      "observed_at_utc": "2026-11-07T09:08:43.557502+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "4e1d85c6f4694e9567b93c9851a0287886fef14b4b74f8ea08d4388cf2b01343",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "run-42356673173-jobs": {
+      "path": "repos/YehorBabenko88/unified-system/actions/runs/42356673173/jobs?per_page=100",
+      "observed_at_utc": "2026-11-07T09:08:43.926897+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "933198c35da86dbbec85584fbfd8975e9cfb4a9ed67261a2b53f4397c2d1793f",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "run-42356673145-jobs": {
+      "path": "repos/YehorBabenko88/unified-system/actions/runs/42356673145/jobs?per_page=100",
+      "observed_at_utc": "2026-11-07T09:08:44.008189+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "100f9b303e2408e861e0502fa49c4233af03cb8dda4736f80f847ad28f5076f1",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "run-42356673136-jobs": {
+      "path": "repos/YehorBabenko88/unified-system/actions/runs/42356673136/jobs?per_page=100",
+      "observed_at_utc": "2026-11-07T09:08:44.352795+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "61196697630e144b3226ba3b7dcdf7a9264f7722ca5a51cb29fbe5cf7b92c5af",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "run-42356673158-jobs": {
+      "path": "repos/YehorBabenko88/unified-system/actions/runs/42356673158/jobs?per_page=100",
+      "observed_at_utc": "2026-11-07T09:08:44.497872+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "41f56c77f3d4069dccf2b298d0064007327650e4ee15057d4bbcefa5f006e708",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "run-42356673117-jobs": {
+      "path": "repos/YehorBabenko88/unified-system/actions/runs/42356673117/jobs?per_page=100",
+      "observed_at_utc": "2026-11-07T09:08:44.847320+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "e85fb83a34ccad9b49674eb9240e60b288e71d20424b88e90ca202db31a1aed7",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "run-42356673167-jobs": {
+      "path": "repos/YehorBabenko88/unified-system/actions/runs/42356673167/jobs?per_page=100",
+      "observed_at_utc": "2026-11-07T09:08:44.942405+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "11e9f9add1ad17ebd2f07141a026caeba06ced0e9879bea38c9659a44df16d9c",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "run-42356673154-jobs": {
+      "path": "repos/YehorBabenko88/unified-system/actions/runs/42356673154/jobs?per_page=100",
+      "observed_at_utc": "2026-11-07T09:08:45.292105+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "9209f36874642707fa7f132b6f11cec4aaf499b7e5c2cb15453bc2cab78a4640",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "run-42356673140-jobs": {
+      "path": "repos/YehorBabenko88/unified-system/actions/runs/42356673140/jobs?per_page=100",
+      "observed_at_utc": "2026-11-07T09:08:45.397897+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "6b6c341dcb459f2bcc0d0e70bef937b338cb0611d7378c41166310a1711bf290",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "run-42356673174-jobs": {
+      "path": "repos/YehorBabenko88/unified-system/actions/runs/42356673174/jobs?per_page=100",
+      "observed_at_utc": "2026-11-07T09:08:45.736554+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "c941f87d3083f53f7933d566c32a706fa5448db5075d3a1b01337178a84338c4",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "run-42356673093-jobs": {
+      "path": "repos/YehorBabenko88/unified-system/actions/runs/42356673093/jobs?per_page=100",
+      "observed_at_utc": "2026-11-07T09:08:45.836131+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "b3dab5870ff3a8209160335de7c1077b89e461d875d9041ac9d8b8ed7c1666f6",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "run-42356669110-jobs": {
+      "path": "repos/YehorBabenko88/unified-system/actions/runs/42356669110/jobs?per_page=100",
+      "observed_at_utc": "2026-11-07T09:08:46.152792+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "e3ed08159112a662aca093ecb1562263344800c72879fe32b0e4d096b948bc05",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "run-42356669129-jobs": {
+      "path": "repos/YehorBabenko88/unified-system/actions/runs/42356669129/jobs?per_page=100",
+      "observed_at_utc": "2026-11-07T09:08:46.284922+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "d0170a7e9c218a2f163386b454bda45c01fadf51021bc05a012ff50b93b43c22",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "run-42356669185-jobs": {
+      "path": "repos/YehorBabenko88/unified-system/actions/runs/42356669185/jobs?per_page=100",
+      "observed_at_utc": "2026-11-07T09:08:46.616633+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "a781d2542ceccfa41e150cfcae675461c39004c1edc921294daae14f1b44113a",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "run-42356669114-jobs": {
+      "path": "repos/YehorBabenko88/unified-system/actions/runs/42356669114/jobs?per_page=100",
+      "observed_at_utc": "2026-11-07T09:08:46.714570+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "e7369d101ca18ba1d596779b346909cf699889b5c735caf864bff01bb53e9fae",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "run-42356669188-jobs": {
+      "path": "repos/YehorBabenko88/unified-system/actions/runs/42356669188/jobs?per_page=100",
+      "observed_at_utc": "2026-11-07T09:08:47.024637+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "a86ab0074d7badf9ddfdd3c67b234331211cbc079a17ca5f77fb8f41f015213c",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "run-42356669358-jobs": {
+      "path": "repos/YehorBabenko88/unified-system/actions/runs/42356669358/jobs?per_page=100",
+      "observed_at_utc": "2026-11-07T09:08:47.137920+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "cc8b76ccdb691189526df4398ef376a80b452187784588f0c2ee334ccf3559ca",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "run-42356669124-jobs": {
+      "path": "repos/YehorBabenko88/unified-system/actions/runs/42356669124/jobs?per_page=100",
+      "observed_at_utc": "2026-11-07T09:08:47.480895+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "31b632aa52f7fb4d0dc0fdecf2af9bd69903f510af88b9e140d7c73d3af8ef43",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "run-42356669078-jobs": {
+      "path": "repos/YehorBabenko88/unified-system/actions/runs/42356669078/jobs?per_page=100",
+      "observed_at_utc": "2026-11-07T09:08:47.599548+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "1d3d19b36bb65f951366ae6149267d9c852bfaebd3b17b3df737938c1d402e11",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "run-42356669117-jobs": {
+      "path": "repos/YehorBabenko88/unified-system/actions/runs/42356669117/jobs?per_page=100",
+      "observed_at_utc": "2026-11-07T09:08:47.930456+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "e7c8112ff2cc23bdc3800cfb5e11ab0c15def893e76a1495169910e11a2e3ddf",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "run-42356669196-jobs": {
+      "path": "repos/YehorBabenko88/unified-system/actions/runs/42356669196/jobs?per_page=100",
+      "observed_at_utc": "2026-11-07T09:08:48.102612+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "31d76af247f3492ee9f4e527ad62efdc1613927b4ba3a0e7d3abfaf82b8d658b",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "run-42356669128-jobs": {
+      "path": "repos/YehorBabenko88/unified-system/actions/runs/42356669128/jobs?per_page=100",
+      "observed_at_utc": "2026-11-07T09:08:48.397001+00:00",
+      "exit_code": 0,
+      "stdout_sha256": "668aa05e4a9e066d0c0289a6332b2f5425eced50aa05edeeadf4987f83fd885f",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "head_runs": [
+    {
+      "id": 42356673112,
+      "name": "Pinned synthetic A-B handoff roundtrip",
+      "status": "queued",
+      "conclusion": null,
+      "event": "pull_request",
+      "run_attempt": 1,
+      "head_sha": "9c585129200cb3510c78b0f4f791eec5b7d85e8a",
+      "created_at": "2026-11-07T08:43:17Z",
+      "updated_at": "2026-11-07T08:43:17Z",
+      "path": ".github/workflows/handoff-roundtrip.yml",
+      "html_url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42356673112",
+      "jobs": [
+        {
+          "id": 128356150098,
+          "name": "source-roundtrip",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:18Z",
+          "started_at": "2026-11-07T08:43:18Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "ubuntu-latest"
+          ],
+          "executed_steps": 0
+        }
+      ]
+    },
+    {
+      "id": 42356673086,
+      "name": "Mandatory synthetic causal paper composition",
+      "status": "queued",
+      "conclusion": null,
+      "event": "pull_request",
+      "run_attempt": 1,
+      "head_sha": "9c585129200cb3510c78b0f4f791eec5b7d85e8a",
+      "created_at": "2026-11-07T08:43:17Z",
+      "updated_at": "2026-11-07T08:43:17Z",
+      "path": ".github/workflows/paper-causal.yml",
+      "html_url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42356673086",
+      "jobs": [
+        {
+          "id": 128356150479,
+          "name": "paper-causal (ubuntu-24.04)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:18Z",
+          "started_at": "2026-11-07T08:43:18Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "ubuntu-24.04"
+          ],
+          "executed_steps": 0
+        },
+        {
+          "id": 128356150774,
+          "name": "paper-causal (windows-2025)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:18Z",
+          "started_at": "2026-11-07T08:43:18Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "windows-2025"
+          ],
+          "executed_steps": 0
+        }
+      ]
+    },
+    {
+      "id": 42356673141,
+      "name": "Unified to Terminan synthetic status integration",
+      "status": "queued",
+      "conclusion": null,
+      "event": "pull_request",
+      "run_attempt": 1,
+      "head_sha": "9c585129200cb3510c78b0f4f791eec5b7d85e8a",
+      "created_at": "2026-11-07T08:43:17Z",
+      "updated_at": "2026-11-07T08:43:17Z",
+      "path": ".github/workflows/unified-terminan-status.yml",
+      "html_url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42356673141",
+      "jobs": [
+        {
+          "id": 128356150359,
+          "name": "status-consumer",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:18Z",
+          "started_at": "2026-11-07T08:43:18Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "ubuntu-latest"
+          ],
+          "executed_steps": 0
+        }
+      ]
+    },
+    {
+      "id": 42356673074,
+      "name": "Agent 2 P0 Control API boundary",
+      "status": "queued",
+      "conclusion": null,
+      "event": "pull_request",
+      "run_attempt": 1,
+      "head_sha": "9c585129200cb3510c78b0f4f791eec5b7d85e8a",
+      "created_at": "2026-11-07T08:43:17Z",
+      "updated_at": "2026-11-07T08:43:17Z",
+      "path": ".github/workflows/agent2-control-api.yml",
+      "html_url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42356673074",
+      "jobs": [
+        {
+          "id": 128356150072,
+          "name": "boundary (windows-latest, 3.12)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:18Z",
+          "started_at": "2026-11-07T08:43:18Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "windows-latest"
+          ],
+          "executed_steps": 0
+        },
+        {
+          "id": 128356150246,
+          "name": "boundary (ubuntu-24.04, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:18Z",
+          "started_at": "2026-11-07T08:43:18Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "ubuntu-24.04"
+          ],
+          "executed_steps": 0
+        },
+        {
+          "id": 128356150261,
+          "name": "boundary (windows-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:18Z",
+          "started_at": "2026-11-07T08:43:18Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "windows-latest"
+          ],
+          "executed_steps": 0
+        },
+        {
+          "id": 128356150342,
+          "name": "boundary (ubuntu-24.04, 3.12)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:18Z",
+          "started_at": "2026-11-07T08:43:18Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "ubuntu-24.04"
+          ],
+          "executed_steps": 0
+        }
+      ]
+    },
+    {
+      "id": 42356673115,
+      "name": "Pinned Terminan consumer wrong-producer HTTP negative",
+      "status": "queued",
+      "conclusion": null,
+      "event": "pull_request",
+      "run_attempt": 1,
+      "head_sha": "9c585129200cb3510c78b0f4f791eec5b7d85e8a",
+      "created_at": "2026-11-07T08:43:17Z",
+      "updated_at": "2026-11-07T08:43:17Z",
+      "path": ".github/workflows/terminan-supervisor-http.yml",
+      "html_url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42356673115",
+      "jobs": [
+        {
+          "id": 128356150192,
+          "name": "wrong-producer",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:18Z",
+          "started_at": "2026-11-07T08:43:18Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "ubuntu-latest"
+          ],
+          "executed_steps": 0
+        }
+      ]
+    },
+    {
+      "id": 42356673099,
+      "name": "Disposable Windows stopped-service acceptance",
+      "status": "queued",
+      "conclusion": null,
+      "event": "pull_request",
+      "run_attempt": 1,
+      "head_sha": "9c585129200cb3510c78b0f4f791eec5b7d85e8a",
+      "created_at": "2026-11-07T08:43:17Z",
+      "updated_at": "2026-11-07T08:43:17Z",
+      "path": ".github/workflows/lab-stopped-service.yml",
+      "html_url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42356673099",
+      "jobs": [
+        {
+          "id": 128356150289,
+          "name": "stopped-service (windows-2025)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:18Z",
+          "started_at": "2026-11-07T08:43:18Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "windows-2025"
+          ],
+          "executed_steps": 0
+        },
+        {
+          "id": 128356150441,
+          "name": "stopped-service (windows-2022)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:18Z",
+          "started_at": "2026-11-07T08:43:18Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "windows-2022"
+          ],
+          "executed_steps": 0
+        }
+      ]
+    },
+    {
+      "id": 42356673149,
+      "name": "Actual six-source disposable integration",
+      "status": "queued",
+      "conclusion": null,
+      "event": "pull_request",
+      "run_attempt": 1,
+      "head_sha": "9c585129200cb3510c78b0f4f791eec5b7d85e8a",
+      "created_at": "2026-11-07T08:43:17Z",
+      "updated_at": "2026-11-07T08:43:17Z",
+      "path": ".github/workflows/five-source-integration.yml",
+      "html_url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42356673149",
+      "jobs": [
+        {
+          "id": 128356150429,
+          "name": "source-integration (ubuntu-24.04, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:18Z",
+          "started_at": "2026-11-07T08:43:18Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "ubuntu-24.04"
+          ],
+          "executed_steps": 0
+        },
+        {
+          "id": 128356150608,
+          "name": "source-integration (ubuntu-24.04, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:18Z",
+          "started_at": "2026-11-07T08:43:18Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "ubuntu-24.04"
+          ],
+          "executed_steps": 0
+        },
+        {
+          "id": 128356150620,
+          "name": "source-integration (windows-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:18Z",
+          "started_at": "2026-11-07T08:43:18Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "windows-latest"
+          ],
+          "executed_steps": 0
+        },
+        {
+          "id": 128356150708,
+          "name": "source-integration (windows-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:18Z",
+          "started_at": "2026-11-07T08:43:18Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "windows-latest"
+          ],
+          "executed_steps": 0
+        }
+      ]
+    },
+    {
+      "id": 42356673097,
+      "name": "Five-module source boundary",
+      "status": "queued",
+      "conclusion": null,
+      "event": "pull_request",
+      "run_attempt": 1,
+      "head_sha": "9c585129200cb3510c78b0f4f791eec5b7d85e8a",
+      "created_at": "2026-11-07T08:43:17Z",
+      "updated_at": "2026-11-07T08:43:17Z",
+      "path": ".github/workflows/five-boundary.yml",
+      "html_url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42356673097",
+      "jobs": [
+        {
+          "id": 128356150092,
+          "name": "synthetic (windows-latest)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:18Z",
+          "started_at": "2026-11-07T08:43:18Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "windows-latest"
+          ],
+          "executed_steps": 0
+        },
+        {
+          "id": 128356150243,
+          "name": "synthetic (ubuntu-latest)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:18Z",
+          "started_at": "2026-11-07T08:43:18Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "ubuntu-latest"
+          ],
+          "executed_steps": 0
+        }
+      ]
+    },
+    {
+      "id": 42356673122,
+      "name": "Agent2 Control Mux real Consul incremental runtime",
+      "status": "queued",
+      "conclusion": null,
+      "event": "pull_request",
+      "run_attempt": 1,
+      "head_sha": "9c585129200cb3510c78b0f4f791eec5b7d85e8a",
+      "created_at": "2026-11-07T08:43:17Z",
+      "updated_at": "2026-11-07T08:43:17Z",
+      "path": ".github/workflows/agent2-control-mux-runtime.yml",
+      "html_url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42356673122",
+      "jobs": [
+        {
+          "id": 128356150368,
+          "name": "isolated (ubuntu-24.04)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:18Z",
+          "started_at": "2026-11-07T08:43:18Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "ubuntu-24.04"
+          ],
+          "executed_steps": 0
+        },
+        {
+          "id": 128356150557,
+          "name": "isolated (windows-latest)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:18Z",
+          "started_at": "2026-11-07T08:43:18Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "windows-latest"
+          ],
+          "executed_steps": 0
+        }
+      ]
+    },
+    {
+      "id": 42356673128,
+      "name": "Pinned Terminan source contract smoke",
+      "status": "queued",
+      "conclusion": null,
+      "event": "pull_request",
+      "run_attempt": 1,
+      "head_sha": "9c585129200cb3510c78b0f4f791eec5b7d85e8a",
+      "created_at": "2026-11-07T08:43:17Z",
+      "updated_at": "2026-11-07T08:43:17Z",
+      "path": ".github/workflows/terminan-contract-smoke.yml",
+      "html_url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42356673128",
+      "jobs": [
+        {
+          "id": 128356150480,
+          "name": "consumer-contract",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:18Z",
+          "started_at": "2026-11-07T08:43:18Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "ubuntu-latest"
+          ],
+          "executed_steps": 0
+        }
+      ]
+    },
+    {
+      "id": 42356673078,
+      "name": "Pinned historical handoff negative smoke",
+      "status": "queued",
+      "conclusion": null,
+      "event": "pull_request",
+      "run_attempt": 1,
+      "head_sha": "9c585129200cb3510c78b0f4f791eec5b7d85e8a",
+      "created_at": "2026-11-07T08:43:17Z",
+      "updated_at": "2026-11-07T08:43:17Z",
+      "path": ".github/workflows/provenance-handoff-smoke.yml",
+      "html_url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42356673078",
+      "jobs": [
+        {
+          "id": 128356150071,
+          "name": "handoff-negative",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:18Z",
+          "started_at": "2026-11-07T08:43:18Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "ubuntu-latest"
+          ],
+          "executed_steps": 0
+        }
+      ]
+    },
+    {
+      "id": 42356673153,
+      "name": "Five-module lifecycle evidence",
+      "status": "queued",
+      "conclusion": null,
+      "event": "pull_request",
+      "run_attempt": 1,
+      "head_sha": "9c585129200cb3510c78b0f4f791eec5b7d85e8a",
+      "created_at": "2026-11-07T08:43:17Z",
+      "updated_at": "2026-11-07T08:43:17Z",
+      "path": ".github/workflows/lifecycle-evidence.yml",
+      "html_url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42356673153",
+      "jobs": [
+        {
+          "id": 128356150318,
+          "name": "synthetic (windows-latest)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:18Z",
+          "started_at": "2026-11-07T08:43:18Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "windows-latest"
+          ],
+          "executed_steps": 0
+        },
+        {
+          "id": 128356150573,
+          "name": "synthetic (ubuntu-latest)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:18Z",
+          "started_at": "2026-11-07T08:43:18Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "ubuntu-latest"
+          ],
+          "executed_steps": 0
+        }
+      ]
+    },
+    {
+      "id": 42356673113,
+      "name": "Pinned A-B-C synthetic integration chain",
+      "status": "queued",
+      "conclusion": null,
+      "event": "pull_request",
+      "run_attempt": 1,
+      "head_sha": "9c585129200cb3510c78b0f4f791eec5b7d85e8a",
+      "created_at": "2026-11-07T08:43:17Z",
+      "updated_at": "2026-11-07T08:43:17Z",
+      "path": ".github/workflows/three-module-chain.yml",
+      "html_url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42356673113",
+      "jobs": [
+        {
+          "id": 128356150304,
+          "name": "chain",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:18Z",
+          "started_at": "2026-11-07T08:43:18Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "ubuntu-latest"
+          ],
+          "executed_steps": 0
+        }
+      ]
+    },
+    {
+      "id": 42356673134,
+      "name": "Durable fleet PLAN_ONLY evidence",
+      "status": "queued",
+      "conclusion": null,
+      "event": "pull_request",
+      "run_attempt": 1,
+      "head_sha": "9c585129200cb3510c78b0f4f791eec5b7d85e8a",
+      "created_at": "2026-11-07T08:43:17Z",
+      "updated_at": "2026-11-07T08:43:17Z",
+      "path": ".github/workflows/fleet-control.yml",
+      "html_url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42356673134",
+      "jobs": [
+        {
+          "id": 128356150443,
+          "name": "fleet (windows-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:18Z",
+          "started_at": "2026-11-07T08:43:18Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "windows-latest"
+          ],
+          "executed_steps": 0
+        },
+        {
+          "id": 128356150650,
+          "name": "fleet (ubuntu-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:18Z",
+          "started_at": "2026-11-07T08:43:18Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "ubuntu-latest"
+          ],
+          "executed_steps": 0
+        },
+        {
+          "id": 128356150652,
+          "name": "fleet (windows-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:18Z",
+          "started_at": "2026-11-07T08:43:18Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "windows-latest"
+          ],
+          "executed_steps": 0
+        },
+        {
+          "id": 128356150781,
+          "name": "fleet (ubuntu-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:18Z",
+          "started_at": "2026-11-07T08:43:18Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "ubuntu-latest"
+          ],
+          "executed_steps": 0
+        }
+      ]
+    },
+    {
+      "id": 42356673173,
+      "name": "Pinned source code contract smoke",
+      "status": "queued",
+      "conclusion": null,
+      "event": "pull_request",
+      "run_attempt": 1,
+      "head_sha": "9c585129200cb3510c78b0f4f791eec5b7d85e8a",
+      "created_at": "2026-11-07T08:43:17Z",
+      "updated_at": "2026-11-07T08:43:17Z",
+      "path": ".github/workflows/cross-repo-smoke.yml",
+      "html_url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42356673173",
+      "jobs": [
+        {
+          "id": 128356150380,
+          "name": "source-contract",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:18Z",
+          "started_at": "2026-11-07T08:43:18Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "ubuntu-latest"
+          ],
+          "executed_steps": 0
+        }
+      ]
+    },
+    {
+      "id": 42356673145,
+      "name": "Installer security PLAN_ONLY",
+      "status": "queued",
+      "conclusion": null,
+      "event": "pull_request",
+      "run_attempt": 1,
+      "head_sha": "9c585129200cb3510c78b0f4f791eec5b7d85e8a",
+      "created_at": "2026-11-07T08:43:17Z",
+      "updated_at": "2026-11-07T08:43:17Z",
+      "path": ".github/workflows/installer-security.yml",
+      "html_url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42356673145",
+      "jobs": [
+        {
+          "id": 128356150383,
+          "name": "windows-security (powershell)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:18Z",
+          "started_at": "2026-11-07T08:43:18Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "windows-latest"
+          ],
+          "executed_steps": 0
+        },
+        {
+          "id": 128356150643,
+          "name": "windows-security (pwsh)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:18Z",
+          "started_at": "2026-11-07T08:43:18Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "windows-latest"
+          ],
+          "executed_steps": 0
+        }
+      ]
+    },
+    {
+      "id": 42356673136,
+      "name": "Five-module fleet policy offline",
+      "status": "queued",
+      "conclusion": null,
+      "event": "pull_request",
+      "run_attempt": 1,
+      "head_sha": "9c585129200cb3510c78b0f4f791eec5b7d85e8a",
+      "created_at": "2026-11-07T08:43:17Z",
+      "updated_at": "2026-11-07T08:43:17Z",
+      "path": ".github/workflows/five-module-infra.yml",
+      "html_url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42356673136",
+      "jobs": [
+        {
+          "id": 128356150345,
+          "name": "policy (windows-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:18Z",
+          "started_at": "2026-11-07T08:43:18Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "windows-latest"
+          ],
+          "executed_steps": 0
+        },
+        {
+          "id": 128356150524,
+          "name": "policy (ubuntu-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:18Z",
+          "started_at": "2026-11-07T08:43:18Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "ubuntu-latest"
+          ],
+          "executed_steps": 0
+        },
+        {
+          "id": 128356150584,
+          "name": "policy (ubuntu-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:18Z",
+          "started_at": "2026-11-07T08:43:18Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "ubuntu-latest"
+          ],
+          "executed_steps": 0
+        },
+        {
+          "id": 128356150648,
+          "name": "policy (windows-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:18Z",
+          "started_at": "2026-11-07T08:43:18Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "windows-latest"
+          ],
+          "executed_steps": 0
+        }
+      ]
+    },
+    {
+      "id": 42356673158,
+      "name": "Agent 5 isolated components",
+      "status": "queued",
+      "conclusion": null,
+      "event": "pull_request",
+      "run_attempt": 1,
+      "head_sha": "9c585129200cb3510c78b0f4f791eec5b7d85e8a",
+      "created_at": "2026-11-07T08:43:17Z",
+      "updated_at": "2026-11-07T08:43:17Z",
+      "path": ".github/workflows/agent5-components.yml",
+      "html_url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42356673158",
+      "jobs": [
+        {
+          "id": 128356150514,
+          "name": "components-windows",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:18Z",
+          "started_at": "2026-11-07T08:43:18Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "windows-latest"
+          ],
+          "executed_steps": 0
+        }
+      ]
+    },
+    {
+      "id": 42356673117,
+      "name": "Final partial integration source-bound components",
+      "status": "queued",
+      "conclusion": null,
+      "event": "pull_request",
+      "run_attempt": 1,
+      "head_sha": "9c585129200cb3510c78b0f4f791eec5b7d85e8a",
+      "created_at": "2026-11-07T08:43:17Z",
+      "updated_at": "2026-11-07T08:43:17Z",
+      "path": ".github/workflows/final-integration.yml",
+      "html_url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42356673117",
+      "jobs": [
+        {
+          "id": 128356150395,
+          "name": "boundary (windows-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:18Z",
+          "started_at": "2026-11-07T08:43:18Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "windows-latest"
+          ],
+          "executed_steps": 0
+        },
+        {
+          "id": 128356150506,
+          "name": "boundary (windows-latest, 3.12)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:18Z",
+          "started_at": "2026-11-07T08:43:18Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "windows-latest"
+          ],
+          "executed_steps": 0
+        },
+        {
+          "id": 128356150546,
+          "name": "boundary (ubuntu-24.04, 3.12)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:18Z",
+          "started_at": "2026-11-07T08:43:18Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "ubuntu-24.04"
+          ],
+          "executed_steps": 0
+        },
+        {
+          "id": 128356150581,
+          "name": "boundary (ubuntu-24.04, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:18Z",
+          "started_at": "2026-11-07T08:43:18Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "ubuntu-24.04"
+          ],
+          "executed_steps": 0
+        }
+      ]
+    },
+    {
+      "id": 42356673167,
+      "name": "Combined infrastructure cross-stream smoke",
+      "status": "queued",
+      "conclusion": null,
+      "event": "pull_request",
+      "run_attempt": 1,
+      "head_sha": "9c585129200cb3510c78b0f4f791eec5b7d85e8a",
+      "created_at": "2026-11-07T08:43:17Z",
+      "updated_at": "2026-11-07T08:43:17Z",
+      "path": ".github/workflows/combined-infrastructure.yml",
+      "html_url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42356673167",
+      "jobs": [
+        {
+          "id": 128356150362,
+          "name": "combined (windows-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:18Z",
+          "started_at": "2026-11-07T08:43:18Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "windows-latest"
+          ],
+          "executed_steps": 0
+        },
+        {
+          "id": 128356150534,
+          "name": "combined (ubuntu-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:18Z",
+          "started_at": "2026-11-07T08:43:18Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "ubuntu-latest"
+          ],
+          "executed_steps": 0
+        },
+        {
+          "id": 128356150610,
+          "name": "combined (ubuntu-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:18Z",
+          "started_at": "2026-11-07T08:43:18Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "ubuntu-latest"
+          ],
+          "executed_steps": 0
+        },
+        {
+          "id": 128356150653,
+          "name": "combined (windows-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:18Z",
+          "started_at": "2026-11-07T08:43:18Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "windows-latest"
+          ],
+          "executed_steps": 0
+        }
+      ]
+    },
+    {
+      "id": 42356673154,
+      "name": "Offline contract tests",
+      "status": "queued",
+      "conclusion": null,
+      "event": "pull_request",
+      "run_attempt": 1,
+      "head_sha": "9c585129200cb3510c78b0f4f791eec5b7d85e8a",
+      "created_at": "2026-11-07T08:43:17Z",
+      "updated_at": "2026-11-07T08:43:17Z",
+      "path": ".github/workflows/tests.yml",
+      "html_url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42356673154",
+      "jobs": [
+        {
+          "id": 128356150444,
+          "name": "test (windows-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:18Z",
+          "started_at": "2026-11-07T08:43:18Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "windows-latest"
+          ],
+          "executed_steps": 0
+        },
+        {
+          "id": 128356150636,
+          "name": "test (ubuntu-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:18Z",
+          "started_at": "2026-11-07T08:43:18Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "ubuntu-latest"
+          ],
+          "executed_steps": 0
+        },
+        {
+          "id": 128356150679,
+          "name": "test (ubuntu-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:18Z",
+          "started_at": "2026-11-07T08:43:18Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "ubuntu-latest"
+          ],
+          "executed_steps": 0
+        },
+        {
+          "id": 128356150711,
+          "name": "test (windows-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:18Z",
+          "started_at": "2026-11-07T08:43:18Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "windows-latest"
+          ],
+          "executed_steps": 0
+        }
+      ]
+    },
+    {
+      "id": 42356673140,
+      "name": "Actual Unified Supervisor to Terminan disposable HTTP",
+      "status": "queued",
+      "conclusion": null,
+      "event": "pull_request",
+      "run_attempt": 1,
+      "head_sha": "9c585129200cb3510c78b0f4f791eec5b7d85e8a",
+      "created_at": "2026-11-07T08:43:17Z",
+      "updated_at": "2026-11-07T08:43:17Z",
+      "path": ".github/workflows/real-supervisor-terminan.yml",
+      "html_url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42356673140",
+      "jobs": [
+        {
+          "id": 128356150468,
+          "name": "actual-http",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:18Z",
+          "started_at": "2026-11-07T08:43:18Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "ubuntu-latest"
+          ],
+          "executed_steps": 0
+        }
+      ]
+    },
+    {
+      "id": 42356673174,
+      "name": "Disposable loopback Supervisor status transport",
+      "status": "queued",
+      "conclusion": null,
+      "event": "pull_request",
+      "run_attempt": 1,
+      "head_sha": "9c585129200cb3510c78b0f4f791eec5b7d85e8a",
+      "created_at": "2026-11-07T08:43:17Z",
+      "updated_at": "2026-11-07T08:43:17Z",
+      "path": ".github/workflows/loopback-status.yml",
+      "html_url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42356673174",
+      "jobs": [
+        {
+          "id": 128356150513,
+          "name": "loopback (ubuntu-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:18Z",
+          "started_at": "2026-11-07T08:43:18Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "ubuntu-latest"
+          ],
+          "executed_steps": 0
+        },
+        {
+          "id": 128356150609,
+          "name": "loopback (ubuntu-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:18Z",
+          "started_at": "2026-11-07T08:43:18Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "ubuntu-latest"
+          ],
+          "executed_steps": 0
+        },
+        {
+          "id": 128356150725,
+          "name": "loopback (windows-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:18Z",
+          "started_at": "2026-11-07T08:43:18Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "windows-latest"
+          ],
+          "executed_steps": 0
+        },
+        {
+          "id": 128356150755,
+          "name": "loopback (windows-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:18Z",
+          "started_at": "2026-11-07T08:43:18Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "windows-latest"
+          ],
+          "executed_steps": 0
+        }
+      ]
+    },
+    {
+      "id": 42356673093,
+      "name": "Operator Grid contracts",
+      "status": "pending",
+      "conclusion": null,
+      "event": "pull_request",
+      "run_attempt": 1,
+      "head_sha": "9c585129200cb3510c78b0f4f791eec5b7d85e8a",
+      "created_at": "2026-11-07T08:43:17Z",
+      "updated_at": "2026-11-07T08:43:18Z",
+      "path": ".github/workflows/operator-grid-contracts.yml",
+      "html_url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42356673093",
+      "jobs": []
+    },
+    {
+      "id": 42356669110,
+      "name": "Actual six-source disposable integration",
+      "status": "queued",
+      "conclusion": null,
+      "event": "push",
+      "run_attempt": 1,
+      "head_sha": "9c585129200cb3510c78b0f4f791eec5b7d85e8a",
+      "created_at": "2026-11-07T08:43:14Z",
+      "updated_at": "2026-11-07T08:43:14Z",
+      "path": ".github/workflows/five-source-integration.yml",
+      "html_url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42356669110",
+      "jobs": [
+        {
+          "id": 128356136942,
+          "name": "source-integration (ubuntu-24.04, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:14Z",
+          "started_at": "2026-11-07T08:43:14Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "ubuntu-24.04"
+          ],
+          "executed_steps": 0
+        },
+        {
+          "id": 128356137146,
+          "name": "source-integration (windows-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:14Z",
+          "started_at": "2026-11-07T08:43:14Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "windows-latest"
+          ],
+          "executed_steps": 0
+        },
+        {
+          "id": 128356137182,
+          "name": "source-integration (ubuntu-24.04, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:14Z",
+          "started_at": "2026-11-07T08:43:14Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "ubuntu-24.04"
+          ],
+          "executed_steps": 0
+        },
+        {
+          "id": 128356137186,
+          "name": "source-integration (windows-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:14Z",
+          "started_at": "2026-11-07T08:43:14Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "windows-latest"
+          ],
+          "executed_steps": 0
+        }
+      ]
+    },
+    {
+      "id": 42356669129,
+      "name": "Installer security PLAN_ONLY",
+      "status": "queued",
+      "conclusion": null,
+      "event": "push",
+      "run_attempt": 1,
+      "head_sha": "9c585129200cb3510c78b0f4f791eec5b7d85e8a",
+      "created_at": "2026-11-07T08:43:14Z",
+      "updated_at": "2026-11-07T08:43:14Z",
+      "path": ".github/workflows/installer-security.yml",
+      "html_url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42356669129",
+      "jobs": [
+        {
+          "id": 128356136944,
+          "name": "windows-security (pwsh)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:14Z",
+          "started_at": "2026-11-07T08:43:14Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "windows-latest"
+          ],
+          "executed_steps": 0
+        },
+        {
+          "id": 128356137204,
+          "name": "windows-security (powershell)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:14Z",
+          "started_at": "2026-11-07T08:43:14Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "windows-latest"
+          ],
+          "executed_steps": 0
+        }
+      ]
+    },
+    {
+      "id": 42356669185,
+      "name": "Disposable Windows stopped-service acceptance",
+      "status": "queued",
+      "conclusion": null,
+      "event": "push",
+      "run_attempt": 1,
+      "head_sha": "9c585129200cb3510c78b0f4f791eec5b7d85e8a",
+      "created_at": "2026-11-07T08:43:14Z",
+      "updated_at": "2026-11-07T08:43:14Z",
+      "path": ".github/workflows/lab-stopped-service.yml",
+      "html_url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42356669185",
+      "jobs": [
+        {
+          "id": 128356137421,
+          "name": "stopped-service (windows-2025)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:14Z",
+          "started_at": "2026-11-07T08:43:14Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "windows-2025"
+          ],
+          "executed_steps": 0
+        },
+        {
+          "id": 128356137536,
+          "name": "stopped-service (windows-2022)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:14Z",
+          "started_at": "2026-11-07T08:43:14Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "windows-2022"
+          ],
+          "executed_steps": 0
+        }
+      ]
+    },
+    {
+      "id": 42356669114,
+      "name": "Five-module fleet policy offline",
+      "status": "queued",
+      "conclusion": null,
+      "event": "push",
+      "run_attempt": 1,
+      "head_sha": "9c585129200cb3510c78b0f4f791eec5b7d85e8a",
+      "created_at": "2026-11-07T08:43:14Z",
+      "updated_at": "2026-11-07T08:43:14Z",
+      "path": ".github/workflows/five-module-infra.yml",
+      "html_url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42356669114",
+      "jobs": [
+        {
+          "id": 128356136714,
+          "name": "policy (windows-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:14Z",
+          "started_at": "2026-11-07T08:43:14Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "windows-latest"
+          ],
+          "executed_steps": 0
+        },
+        {
+          "id": 128356136822,
+          "name": "policy (windows-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:14Z",
+          "started_at": "2026-11-07T08:43:14Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "windows-latest"
+          ],
+          "executed_steps": 0
+        },
+        {
+          "id": 128356136842,
+          "name": "policy (ubuntu-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:14Z",
+          "started_at": "2026-11-07T08:43:14Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "ubuntu-latest"
+          ],
+          "executed_steps": 0
+        },
+        {
+          "id": 128356136869,
+          "name": "policy (ubuntu-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:14Z",
+          "started_at": "2026-11-07T08:43:14Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "ubuntu-latest"
+          ],
+          "executed_steps": 0
+        }
+      ]
+    },
+    {
+      "id": 42356669188,
+      "name": "Offline contract tests",
+      "status": "queued",
+      "conclusion": null,
+      "event": "push",
+      "run_attempt": 1,
+      "head_sha": "9c585129200cb3510c78b0f4f791eec5b7d85e8a",
+      "created_at": "2026-11-07T08:43:14Z",
+      "updated_at": "2026-11-07T08:43:14Z",
+      "path": ".github/workflows/tests.yml",
+      "html_url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42356669188",
+      "jobs": [
+        {
+          "id": 128356137168,
+          "name": "test (windows-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:14Z",
+          "started_at": "2026-11-07T08:43:14Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "windows-latest"
+          ],
+          "executed_steps": 0
+        },
+        {
+          "id": 128356137365,
+          "name": "test (windows-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:14Z",
+          "started_at": "2026-11-07T08:43:14Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "windows-latest"
+          ],
+          "executed_steps": 0
+        },
+        {
+          "id": 128356137366,
+          "name": "test (ubuntu-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:14Z",
+          "started_at": "2026-11-07T08:43:14Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "ubuntu-latest"
+          ],
+          "executed_steps": 0
+        },
+        {
+          "id": 128356137381,
+          "name": "test (ubuntu-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:14Z",
+          "started_at": "2026-11-07T08:43:14Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "ubuntu-latest"
+          ],
+          "executed_steps": 0
+        }
+      ]
+    },
+    {
+      "id": 42356669358,
+      "name": "Final partial integration source-bound components",
+      "status": "queued",
+      "conclusion": null,
+      "event": "push",
+      "run_attempt": 1,
+      "head_sha": "9c585129200cb3510c78b0f4f791eec5b7d85e8a",
+      "created_at": "2026-11-07T08:43:14Z",
+      "updated_at": "2026-11-07T08:43:14Z",
+      "path": ".github/workflows/final-integration.yml",
+      "html_url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42356669358",
+      "jobs": [
+        {
+          "id": 128356137800,
+          "name": "boundary (windows-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:14Z",
+          "started_at": "2026-11-07T08:43:14Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "windows-latest"
+          ],
+          "executed_steps": 0
+        },
+        {
+          "id": 128356137892,
+          "name": "boundary (ubuntu-24.04, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:14Z",
+          "started_at": "2026-11-07T08:43:14Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "ubuntu-24.04"
+          ],
+          "executed_steps": 0
+        },
+        {
+          "id": 128356137911,
+          "name": "boundary (windows-latest, 3.12)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:14Z",
+          "started_at": "2026-11-07T08:43:14Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "windows-latest"
+          ],
+          "executed_steps": 0
+        },
+        {
+          "id": 128356137960,
+          "name": "boundary (ubuntu-24.04, 3.12)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:14Z",
+          "started_at": "2026-11-07T08:43:14Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "ubuntu-24.04"
+          ],
+          "executed_steps": 0
+        }
+      ]
+    },
+    {
+      "id": 42356669124,
+      "name": "Five-module lifecycle evidence",
+      "status": "queued",
+      "conclusion": null,
+      "event": "push",
+      "run_attempt": 1,
+      "head_sha": "9c585129200cb3510c78b0f4f791eec5b7d85e8a",
+      "created_at": "2026-11-07T08:43:14Z",
+      "updated_at": "2026-11-07T08:43:14Z",
+      "path": ".github/workflows/lifecycle-evidence.yml",
+      "html_url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42356669124",
+      "jobs": [
+        {
+          "id": 128356136902,
+          "name": "synthetic (ubuntu-latest)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:14Z",
+          "started_at": "2026-11-07T08:43:14Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "ubuntu-latest"
+          ],
+          "executed_steps": 0
+        },
+        {
+          "id": 128356137009,
+          "name": "synthetic (windows-latest)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:14Z",
+          "started_at": "2026-11-07T08:43:14Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "windows-latest"
+          ],
+          "executed_steps": 0
+        }
+      ]
+    },
+    {
+      "id": 42356669078,
+      "name": "Five-module source boundary",
+      "status": "queued",
+      "conclusion": null,
+      "event": "push",
+      "run_attempt": 1,
+      "head_sha": "9c585129200cb3510c78b0f4f791eec5b7d85e8a",
+      "created_at": "2026-11-07T08:43:14Z",
+      "updated_at": "2026-11-07T08:43:14Z",
+      "path": ".github/workflows/five-boundary.yml",
+      "html_url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42356669078",
+      "jobs": [
+        {
+          "id": 128356136607,
+          "name": "synthetic (ubuntu-latest)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:14Z",
+          "started_at": "2026-11-07T08:43:14Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "ubuntu-latest"
+          ],
+          "executed_steps": 0
+        },
+        {
+          "id": 128356136801,
+          "name": "synthetic (windows-latest)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:14Z",
+          "started_at": "2026-11-07T08:43:14Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "windows-latest"
+          ],
+          "executed_steps": 0
+        }
+      ]
+    },
+    {
+      "id": 42356669117,
+      "name": "Durable fleet PLAN_ONLY evidence",
+      "status": "queued",
+      "conclusion": null,
+      "event": "push",
+      "run_attempt": 1,
+      "head_sha": "9c585129200cb3510c78b0f4f791eec5b7d85e8a",
+      "created_at": "2026-11-07T08:43:14Z",
+      "updated_at": "2026-11-07T08:43:14Z",
+      "path": ".github/workflows/fleet-control.yml",
+      "html_url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42356669117",
+      "jobs": [
+        {
+          "id": 128356136823,
+          "name": "fleet (windows-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:14Z",
+          "started_at": "2026-11-07T08:43:14Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "windows-latest"
+          ],
+          "executed_steps": 0
+        },
+        {
+          "id": 128356136941,
+          "name": "fleet (windows-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:14Z",
+          "started_at": "2026-11-07T08:43:14Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "windows-latest"
+          ],
+          "executed_steps": 0
+        },
+        {
+          "id": 128356136977,
+          "name": "fleet (ubuntu-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:14Z",
+          "started_at": "2026-11-07T08:43:14Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "ubuntu-latest"
+          ],
+          "executed_steps": 0
+        },
+        {
+          "id": 128356137053,
+          "name": "fleet (ubuntu-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:14Z",
+          "started_at": "2026-11-07T08:43:14Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "ubuntu-latest"
+          ],
+          "executed_steps": 0
+        }
+      ]
+    },
+    {
+      "id": 42356669196,
+      "name": "Mandatory synthetic causal paper composition",
+      "status": "queued",
+      "conclusion": null,
+      "event": "push",
+      "run_attempt": 1,
+      "head_sha": "9c585129200cb3510c78b0f4f791eec5b7d85e8a",
+      "created_at": "2026-11-07T08:43:14Z",
+      "updated_at": "2026-11-07T08:43:14Z",
+      "path": ".github/workflows/paper-causal.yml",
+      "html_url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42356669196",
+      "jobs": [
+        {
+          "id": 128356137932,
+          "name": "paper-causal (windows-2025)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:14Z",
+          "started_at": "2026-11-07T08:43:14Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "windows-2025"
+          ],
+          "executed_steps": 0
+        },
+        {
+          "id": 128356138141,
+          "name": "paper-causal (ubuntu-24.04)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:14Z",
+          "started_at": "2026-11-07T08:43:14Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "ubuntu-24.04"
+          ],
+          "executed_steps": 0
+        }
+      ]
+    },
+    {
+      "id": 42356669128,
+      "name": "Combined infrastructure cross-stream smoke",
+      "status": "queued",
+      "conclusion": null,
+      "event": "push",
+      "run_attempt": 1,
+      "head_sha": "9c585129200cb3510c78b0f4f791eec5b7d85e8a",
+      "created_at": "2026-11-07T08:43:14Z",
+      "updated_at": "2026-11-07T08:43:14Z",
+      "path": ".github/workflows/combined-infrastructure.yml",
+      "html_url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42356669128",
+      "jobs": [
+        {
+          "id": 128356136818,
+          "name": "combined (ubuntu-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:14Z",
+          "started_at": "2026-11-07T08:43:14Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "ubuntu-latest"
+          ],
+          "executed_steps": 0
+        },
+        {
+          "id": 128356137070,
+          "name": "combined (windows-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:14Z",
+          "started_at": "2026-11-07T08:43:14Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "windows-latest"
+          ],
+          "executed_steps": 0
+        },
+        {
+          "id": 128356137087,
+          "name": "combined (ubuntu-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:14Z",
+          "started_at": "2026-11-07T08:43:14Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "ubuntu-latest"
+          ],
+          "executed_steps": 0
+        },
+        {
+          "id": 128356137093,
+          "name": "combined (windows-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-07T08:43:14Z",
+          "started_at": "2026-11-07T08:43:14Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "windows-latest"
+          ],
+          "executed_steps": 0
+        }
+      ]
+    }
+  ],
+  "repository_settings": {
+    "unified-system": {
+      "repo": {
+        "exit_code": 0,
+        "data": {
+          "private": false,
+          "visibility": "public",
+          "archived": false,
+          "disabled": false
+        }
+      },
+      "permissions": {
+        "exit_code": 0,
+        "data": {
+          "enabled": true,
+          "allowed_actions": "all",
+          "sha_pinning_required": false
+        }
+      },
+      "workflow-permissions": {
+        "exit_code": 0,
+        "data": {
+          "default_workflow_permissions": "read",
+          "can_approve_pull_request_reviews": false
+        }
+      },
+      "runners": {
+        "exit_code": 0,
+        "data": {
+          "total_count": 0,
+          "runners": [],
+          "message": null
+        }
+      }
+    },
+    "bybit-cluster-grid": {
+      "repo": {
+        "exit_code": 0,
+        "data": {
+          "private": false,
+          "visibility": "public",
+          "archived": false,
+          "disabled": false
+        }
+      },
+      "permissions": {
+        "exit_code": 0,
+        "data": {
+          "enabled": true,
+          "allowed_actions": "all",
+          "sha_pinning_required": false
+        }
+      },
+      "workflow-permissions": {
+        "exit_code": 0,
+        "data": {
+          "default_workflow_permissions": "read",
+          "can_approve_pull_request_reviews": false
+        }
+      },
+      "runners": {
+        "exit_code": 0,
+        "data": {
+          "total_count": 0,
+          "runners": [],
+          "message": null
+        }
+      }
+    },
+    "strattester": {
+      "repo": {
+        "exit_code": 0,
+        "data": {
+          "private": false,
+          "visibility": "public",
+          "archived": false,
+          "disabled": false
+        }
+      },
+      "permissions": {
+        "exit_code": 0,
+        "data": {
+          "enabled": true,
+          "allowed_actions": "all",
+          "sha_pinning_required": false
+        }
+      },
+      "workflow-permissions": {
+        "exit_code": 0,
+        "data": {
+          "default_workflow_permissions": "read",
+          "can_approve_pull_request_reviews": false
+        }
+      },
+      "runners": {
+        "exit_code": 0,
+        "data": {
+          "total_count": 0,
+          "runners": [],
+          "message": null
+        }
+      }
+    },
+    "math": {
+      "repo": {
+        "exit_code": 0,
+        "data": {
+          "private": false,
+          "visibility": "public",
+          "archived": false,
+          "disabled": false
+        }
+      },
+      "permissions": {
+        "exit_code": 0,
+        "data": {
+          "enabled": true,
+          "allowed_actions": "all",
+          "sha_pinning_required": false
+        }
+      },
+      "workflow-permissions": {
+        "exit_code": 0,
+        "data": {
+          "default_workflow_permissions": "read",
+          "can_approve_pull_request_reviews": false
+        }
+      },
+      "runners": {
+        "exit_code": 0,
+        "data": {
+          "total_count": 0,
+          "runners": [],
+          "message": null
+        }
+      }
+    },
+    "meta_analyse": {
+      "repo": {
+        "exit_code": 0,
+        "data": {
+          "private": false,
+          "visibility": "public",
+          "archived": false,
+          "disabled": false
+        }
+      },
+      "permissions": {
+        "exit_code": 0,
+        "data": {
+          "enabled": true,
+          "allowed_actions": "all",
+          "sha_pinning_required": false
+        }
+      },
+      "workflow-permissions": {
+        "exit_code": 0,
+        "data": {
+          "default_workflow_permissions": "read",
+          "can_approve_pull_request_reviews": false
+        }
+      },
+      "runners": {
+        "exit_code": 0,
+        "data": {
+          "total_count": 0,
+          "runners": [],
+          "message": null
+        }
+      }
+    },
+    "Terminan": {
+      "repo": {
+        "exit_code": 0,
+        "data": {
+          "private": false,
+          "visibility": "public",
+          "archived": false,
+          "disabled": false
+        }
+      },
+      "permissions": {
+        "exit_code": 0,
+        "data": {
+          "enabled": true,
+          "allowed_actions": "all",
+          "sha_pinning_required": false
+        }
+      },
+      "workflow-permissions": {
+        "exit_code": 0,
+        "data": {
+          "default_workflow_permissions": "read",
+          "can_approve_pull_request_reviews": false
+        }
+      },
+      "runners": {
+        "exit_code": 0,
+        "data": {
+          "total_count": 0,
+          "runners": [],
+          "message": null
+        }
+      }
+    }
+  },
+  "billing_access": {
+    "exit_code": 1,
+    "provider_message": "Not Found"
+  },
+  "established_root_cause": "UNKNOWN",
+  "owner_type": "User",
+  "math": {
+    "id": 42352374979,
+    "status": "queued",
+    "conclusion": null,
+    "run_attempt": 1,
+    "head_sha": "2446d04624469e34aa96ed766be7a4887d6d654c",
+    "created_at": "2026-11-07T07:42:12Z",
+    "updated_at": "2026-11-07T07:42:12Z",
+    "jobs": [
+      {
+        "id": 128343065197,
+        "status": "queued",
+        "conclusion": null,
+        "runner_id": 0,
+        "labels": [
+          "windows-latest"
+        ],
+        "steps": []
+      }
+    ]
+  }
+}
