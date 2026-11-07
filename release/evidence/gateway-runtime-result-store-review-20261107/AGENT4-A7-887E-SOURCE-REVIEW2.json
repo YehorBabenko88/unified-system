@@ -1,0 +1,35 @@
+{
+  "broad_suite_rerun": false,
+  "finding": "P2_MIGRATION_FAILURE_LOCK_CLOSED",
+  "harness_three_files_unchanged_and_source_identical": true,
+  "head": "887e3eeaf23ef8d9d1429435bc88bbac8099c6e6",
+  "implementation": {
+    "strattester/persistence/result_store.py": {
+      "blob": "9914915f30e017c685739fb9013de38f01c4ef5f",
+      "bytes": 15441,
+      "sha256": "b68187ac8b36ae61d680ff36ad2a41c08bd0791d9562274ef31558ca9d34c51f"
+    },
+    "strattester/research/result_persistence.py": {
+      "blob": "3d00d704902d9c8f5dda4e4da32f91a0fc443a1f",
+      "bytes": 5552,
+      "sha256": "c32b8e7ed6e61e3097bea05d390a6bf4d8a5803d672ff2b984acc3e9f1bd6aa6"
+    }
+  },
+  "independent_targeted_checks": [
+    "retained_traceback_writer_immediately_available_schema_unchanged",
+    "baseexception_rolls_back_and_closes_actual_writer",
+    "cleanup_failure_preserves_original_exception_identity"
+  ],
+  "independent_targeted_passes": 3,
+  "native_publication_admitted": false,
+  "previous_review_head": "2f98f3501ea8274ebda8798a5c5b6e4f4910f2ee",
+  "production_admitted": false,
+  "project_read_authority_paths": "ALWAYS_DENY_UNCHANGED",
+  "projection_admitted": false,
+  "publication_receipt": "NULL_NO_NATIVE_POSITIVE",
+  "retained_owner_counts_transferred": false,
+  "schema": "agent4.a7-local-slice-source-review-successor.v1",
+  "tree": "954f3364cb70369705f658e89fcc6ae8ce547eec",
+  "two_domain_qualified": false,
+  "verdict": "SCOPED_LOCAL_STAGING_SOURCE_COMPATIBILITY_ACK"
+}

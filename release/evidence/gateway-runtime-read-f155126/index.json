@@ -1,0 +1,54 @@
+{
+  "tested_source": "f155126a95e80139b1b9679c1870ffd66c29360e",
+  "tested_tree": "e129873c435c8b11d2126307a67b604601e7e4b8",
+  "tests": 146,
+  "source_files": 1497,
+  "files": {
+    "original.log": {
+      "sha256": "64158148f1f7c6eb3d8e26c4978e739000e70a285aef6420fde9cc34b6ccc70c",
+      "bytes": 24361
+    },
+    "gateway-read-qualification.json": {
+      "sha256": "aab2cd45a530bdd86e828ce3062002307705e40d22dc9f124ea03ec8b7778441",
+      "bytes": 416272
+    },
+    "manifest-module-RED.log": {
+      "sha256": "d634f7037d1a3f26c613e2cc6198774101d88c7545826812a00bb9652f93eeaa",
+      "bytes": 1390
+    },
+    "manifest-missing-backend-RED.log": {
+      "sha256": "d812afd675e7f831f6ed82ea93c283a9f960909cbee7140a0784401eb74eb362",
+      "bytes": 1954
+    },
+    "query-module-RED.log": {
+      "sha256": "232351fc6fff72da86c3b7d67f4be932a12b271e4cf062da281b5fdc286057a2",
+      "bytes": 1366
+    },
+    "query-first-GREEN.log": {
+      "sha256": "d5d8c1573beab050e100e16a52f21163a77e70a6868cdf578978d99a746730c4",
+      "bytes": 638
+    },
+    "audit-corruption-RED.log": {
+      "sha256": "6f6a682070dab2f1fc06fd1a57d84d09956d26dce61a7d7c152c2b5e6f6d830d",
+      "bytes": 3587
+    },
+    "audit-corruption-GREEN.log": {
+      "sha256": "1c120773ee4ac11b0b6a4d31ea5630ba368da9e470dcfab6ffe33c4f3bfd987e",
+      "bytes": 1014
+    }
+  },
+  "scope": "DISPOSABLE_AUTHENTICATED_READ_ONLY_NOT_JOB_VERTICAL_E2E",
+  "counts": {
+    "Root_TLS_HTTP": 17,
+    "offline": 16,
+    "identity": 24,
+    "storage": 62,
+    "storage_disclosure": 27
+  },
+  "notes": [
+    "Original REDs include missing modules/backends and one actual SQLite handler regression; no fabricated pass",
+    "Ephemeral keys are never exported",
+    "Zero unittest skips is not Home/Pro/native/physical qualification",
+    "Pinned cryptography site allowed; global environment findings remain open"
+  ]
+}
