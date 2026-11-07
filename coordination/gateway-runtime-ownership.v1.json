@@ -155,7 +155,15 @@
         "tests/persistence/test_result_store_recovery.py",
         "tests/research/gateway_artifact_persistence/**",
         "docs/gateway/research/persistence/**"
-      ]
+      ],
+      "local_design_ack": {
+        "sha256": "c543fdced8e36fdb1ac9821719e5165ab37bdea6e7a8629eebc6a647002d6c21",
+        "owners": [
+          "ROOT",
+          "A4"
+        ],
+        "scope": "LOCAL_STAGING_ONLY_POSITIVE_PROJECTION_AND_READ_ALWAYS_DENY"
+      }
     },
     "A4": {
       "base": "f155126a95e80139b1b9679c1870ffd66c29360e",
@@ -189,6 +197,17 @@
         ".github/workflows/gateway-research-identity.yml"
       ],
       "scope": "ISOLATED_ONLY_NO_READ_UPGRADE_NO_NATIVE_ADMISSION"
+    },
+    "A5_WORKER_CONTAINMENT": {
+      "base": "3e498de973536c2d6393f83abe7d59cb1452a9b4",
+      "branch": "feature/gateway-worker-containment-20261107",
+      "files": [
+        "unified_system/gateway_worker.py",
+        "tests/gateway_jobs/**",
+        "docs/intelligence/jobs/**"
+      ],
+      "scope": "ISOLATED_OWN_CHILD_ONLY_EXACT_DESIGN_REVIEW_BEFORE_IMPLEMENTATION_NO_AUTHORITY_ADMISSION",
+      "ownership_ack": "REQUESTED"
     }
   },
   "successor_scope": "ISOLATED_SLICE_A_ONLY_EXACT_SHARED_API_ACK_PENDING",
