@@ -34,7 +34,8 @@ jobs:
         with:
           python-version: '3.12.10'
       - shell: bash
-        run: python -m pip install --only-binary=:all: --require-hashes -r docs/intelligence/identity/requirements-${{ matrix.lock }}.lock
+        run: |
+          python -m pip install --only-binary=:all: --require-hashes -r docs/intelligence/identity/requirements-${{ matrix.lock }}.lock
       - shell: bash
         run: python -I -B docs/intelligence/identity/guard_controls.py
       - shell: bash
