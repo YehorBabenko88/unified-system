@@ -256,6 +256,15 @@
     "project_and_read": "ALWAYS_DENY_NATIVE_AUTHORITY_ABI_UNAVAILABLE",
     "publication_receipt": "NULL",
     "native_admission": false,
-    "required_correction": "EXCEPTION_SAFE_ROLLBACK_CLOSE_PRESERVE_ORIGINAL_EXCEPTION_AND_RETAINED_TRACEBACK_REGRESSION"
+    "required_correction": "EXCEPTION_SAFE_ROLLBACK_CLOSE_PRESERVE_ORIGINAL_EXCEPTION_AND_RETAINED_TRACEBACK_REGRESSION",
+    "fix_candidate": {
+      "source": "887e3eeaf23ef8d9d1429435bc88bbac8099c6e6",
+      "tree": "954f3364cb70369705f658e89fcc6ae8ce547eec",
+      "owner_tests": 45,
+      "skips": 0,
+      "owner_regressions": "RETAINED_TRACEBACK_WRITER_AVAILABLE; BASEEXCEPTION_CLEANUP; CLEANUP_FAILURE_PRESERVES_ORIGINAL",
+      "independent_review": "REQUESTED_A4",
+      "source_qualification": "PENDING"
+    }
   }
 }
