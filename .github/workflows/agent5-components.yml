@@ -137,6 +137,8 @@ jobs:
                   directories[:] = [name for name in directories if name != '.git']
                   for name in list(directories) + names:
                       path = Path(directory) / name
+                      if path == root / '.git':
+                          continue  # Native worktree Git control file is metadata.
                       relative = path.relative_to(root).as_posix()
                       info = path.lstat()
                       if stat.S_ISLNK(info.st_mode) or getattr(info, 'st_file_attributes', 0) & 0x400:
@@ -155,7 +157,7 @@ jobs:
                       relative = path.relative_to(root).as_posix()
                       if relative not in expected_paths:
                           unexpected.append(relative)
-              cache_policy_valid = (not preloaded_protected and initial_cache_prefix is None and not bytecode_paths
+              cache_policy_valid = (not initial_evidence_entries and not preloaded_protected and initial_cache_prefix is None and not bytecode_paths
                   and sys.dont_write_bytecode is True and sys.pycache_prefix == isolated_cache.name
                   and os.environ.get('PYTHONDONTWRITEBYTECODE') == '1'
                   and os.environ.get('PYTHONPYCACHEPREFIX') == isolated_cache.name
@@ -167,6 +169,7 @@ jobs:
                       'bytecode_policy_valid': cache_policy_valid,
                       'preloaded_protected_modules': preloaded_protected,
                       'repository_bytecode_paths': sorted(bytecode_paths),
+                      'initial_evidence_entries': initial_evidence_entries,
                       'protected_files': sorted(files, key=lambda item: item['path']),
                       'unexpected_protected_files': sorted(unexpected),
                       'protected_inputs_valid': required <= expected_paths and not unexpected and cache_policy_valid
@@ -174,6 +177,7 @@ jobs:
 
           out = Path(os.environ.get('EVIDENCE_DIR', 'agent5-component-evidence')).resolve()
           out.mkdir(parents=True, exist_ok=True)
+          initial_evidence_entries = sorted(path.name for path in out.iterdir())
           before = source()
           expected = os.environ['EXPECTED_SOURCE_SHA']
           inventory_bytes, expected_ids, inventory_valid = b'', [], False

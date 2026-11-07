@@ -28,3 +28,10 @@ is now raw-blob bound, all untracked importable files anywhere below root reject
 all repository cache entries reject, and symlink/reparse entries reject without
 following them. .git internals are excluded from traversal. Generated evidence
 JSON/logs are permitted; an importable file is never exempted as an output.
+
+Final hardening binds every tracked file, rejects every unexpected repository
+file, and requires the evidence directory initially empty even when outside the
+repository. Only the runner's exact component-tests.log may be newly present at
+the post-check; receipt.json is emitted after that check. Native .git control-file
+metadata is excluded. Original blobs are fetched with no-replace batch mode and
+OID/type/length/framing checks to avoid one Git process per tracked input.
