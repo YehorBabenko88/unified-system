@@ -1,5 +1,7 @@
 """Bounded typed node receipts over Journal. No authorization or consensus."""
 import copy
+import os
+from contextlib import closing
 import re
 import sqlite3
 import stat
@@ -7,7 +9,7 @@ from pathlib import Path
 from .contracts import canonical, ContractError
 from .journal import Journal
 
-SCHEMA = 'unified.node-operation.v1'
+SCHEMA = 'unified.node-operation.v2'
 RECEIPT_SCHEMA = 'unified.node-task-journal.v1'
 OPERATIONS = frozenset(('READ_INVENTORY','VERIFY_ARTIFACT','VERIFY_CONFIGURATION','CHECK_SERVICE','CHECK_HEALTH','PREPARE_INSTALL','PREPARE_UPDATE','VERIFY_RELEASE','COLLECT_LOGS','REPORT_STATUS','REQUEST_DRAIN','VERIFY_BACKUP','PREPARE_ROLLBACK'))
 FIELDS = frozenset(('schema','task_id','cluster_id','node_id','node_incarnation','release_id','artifact_sha256','operation_type','approval_reference','authority_generation','lease_fencing_proof','preconditions','expected_postconditions','timeout_seconds','rollback_policy','idempotency_key','result_receipt'))
@@ -37,7 +39,8 @@ class NodeOperation:
             identifier(value[name])
         need(type(value['artifact_sha256']) is str and re.fullmatch('[a-f0-9]{64}',value['artifact_sha256']) is not None)
         need(type(value['operation_type']) is str and value['operation_type'] in OPERATIONS)
-        need(type(value['authority_generation']) is int and 0 <= value['authority_generation'] < 2**63)
+        # Canonical UUIDv4 reference only; provenance UNKNOWN, never authority.
+        need(type(value['authority_generation']) is str and re.fullmatch('[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}',value['authority_generation']) is not None)
         need(type(value['timeout_seconds']) is int and 1 <= value['timeout_seconds'] <= 60)
         need(type(value['rollback_policy']) is str and value['rollback_policy'] in ('NONE','PLAN_ONLY'))
         # References only: opaque proof payloads and arbitrary predicates are not accepted.
@@ -78,23 +81,45 @@ class NodeTaskJournal:
         self.path=Path(path).absolute()
         self.max_records=max_records;self.max_bytes=max_bytes
         self._journal=Journal(self.path)
+        self._identity=None
         self._safe_path()
+        if self.path.exists(): self._identity=self._file_identity()
+
+    def _file_identity(self):
+        info=self.path.lstat()
+        need(info.st_nlink==1 and info.st_ino!=0)
+        return (info.st_dev,info.st_ino)
 
     def _safe_path(self):
         need(len(str(self.path)) <= 1024 and not str(self.path).startswith(('\\\\','//')))
         for part in (*reversed(self.path.parents),self.path):
             if not part.exists() and not part.is_symlink():
-                need(part == self.path)
+                need(part == self.path and self._identity is None)
                 continue
             info=part.lstat()
             need(not stat.S_ISLNK(info.st_mode) and not getattr(info,'st_file_attributes',0)&1024)
             need(stat.S_ISREG(info.st_mode) if part==self.path else stat.S_ISDIR(info.st_mode))
-        if self.path.exists(): need(self.path.stat().st_size <= self.max_bytes)
+        if self.path.exists():
+            need(self.path.stat().st_size <= self.max_bytes)
+            identity=self._file_identity()
+            if self._identity is not None: need(identity==self._identity)
+
+    def _inventory(self):
+        # Read-only schema inventory: Journal.read alone ignores foreign tables.
+        with closing(sqlite3.connect(self.path.resolve().as_uri()+'?mode=ro',uri=True,timeout=5)) as db:
+            need(db.execute('PRAGMA quick_check').fetchmany(2)==[('ok',)])
+            objects=db.execute('SELECT type,name,tbl_name FROM sqlite_master ORDER BY name LIMIT 3').fetchall()
+            need(objects==[('table','transitions','transitions')])
+            columns=db.execute('PRAGMA table_info(transitions)').fetchall()
+            need(columns==[(0,'sequence','INTEGER',0,None,1),(1,'state','TEXT',1,None,0),(2,'receipt','TEXT',0,None,0),(3,'previous_hash','TEXT',1,None,0),(4,'digest','TEXT',1,None,0)])
+
 
     def _records(self):
         try:
             self._safe_path()
+            if self.path.exists(): self._inventory()
             rows=self._journal.read()
+            if self.path.exists(): need(bool(rows))
             need(len(rows) <= self.max_records)
             latest={};keys={}
             for row in rows:
@@ -125,12 +150,25 @@ class NodeTaskJournal:
         # Reserve worst-case SQLite page growth before writes. No deletion/rotation.
         current=self.path.stat().st_size if self.path.exists() else 0
         need(current + 32768 <= self.max_bytes)
+        descriptor=None
         try:
             self._safe_path()
-            self._journal.initialize()
+            if self._identity is None:
+                descriptor=os.open(self.path,os.O_CREAT|os.O_EXCL|os.O_RDWR,0o600)
+                facts=os.fstat(descriptor)
+                need(facts.st_nlink==1 and facts.st_ino!=0)
+                self._identity=(facts.st_dev,facts.st_ino)
+                self._safe_path()
+                self._journal.initialize()
+                self._safe_path()
+            self._inventory()
+            self._safe_path()
             self._journal.append('OBSERVING',record,expected_sequence=count)
         except (OSError,sqlite3.Error,ContractError):
             raise NodeJournalError('NODE_JOURNAL_WRITE_FAILED') from None
+        finally:
+            if descriptor is not None: os.close(descriptor)
+        self._safe_path()
         return copy.deepcopy(record)
 
     def create(self,intent):

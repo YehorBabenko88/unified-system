@@ -9,7 +9,7 @@ from unified_system.node_task_journal import NodeTaskJournal, NodeOperation, Nod
 
 
 def operation(**changes):
-    data = dict(schema='unified.node-operation.v1', task_id='task1', cluster_id='cluster1', node_id='node1', node_incarnation='inc1', release_id='release1', artifact_sha256='a'*64, operation_type='REPORT_STATUS', approval_reference='approval1', authority_generation=1, lease_fencing_proof={'reference':'unverified'}, preconditions=[], expected_postconditions=[], timeout_seconds=5, rollback_policy='NONE', idempotency_key='key1', result_receipt=None)
+    data = dict(schema='unified.node-operation.v2', task_id='task1', cluster_id='cluster1', node_id='node1', node_incarnation='inc1', release_id='release1', artifact_sha256='a'*64, operation_type='REPORT_STATUS', approval_reference='approval1', authority_generation='12345678-1234-4234-8234-123456789abc', lease_fencing_proof={'reference':'unverified'}, preconditions=[], expected_postconditions=[], timeout_seconds=5, rollback_policy='NONE', idempotency_key='key1', result_receipt=None)
     data.update(changes)
     return data
 
@@ -99,3 +99,70 @@ class JournalTests(unittest.TestCase):
         for receipt in ({'effects_authorized':True},{'authority':'PASS'},{'command':'bad'},{'code':'x'*65}):
             with self.assertRaises(NodeJournalError): restarted.transition('task1','VERIFIED',receipt)
         self.assertEqual(restarted.get('task1')['state'],'CREATED')
+
+    def test_atomic_reservation_refuses_racing_file(self):
+        original=self.journal._append
+        def raced(record,count):
+            with closing(sqlite3.connect(self.path)) as db:
+                db.execute('CREATE TABLE foreign_data (value TEXT)');db.commit()
+            before=self.path.read_bytes()
+            try: return original(record,count)
+            finally: self.assertEqual(self.path.read_bytes(),before)
+        with patch.object(self.journal,'_append',side_effect=raced):
+            with self.assertRaises(NodeJournalError): self.journal.create(operation())
+
+    def test_replaced_inode_and_hardlink_refused(self):
+        import os
+        self.journal.create(operation())
+        moved=self.path.with_name('original.db');self.path.rename(moved)
+        self.path.write_bytes(moved.read_bytes())
+        with self.assertRaises(NodeJournalError): self.journal.get('task1')
+        alias=self.path.with_name('alias.db');os.link(self.path,alias)
+        with self.assertRaises(NodeJournalError): NodeTaskJournal(alias)
+
+    def test_foreign_schema_in_valid_chain_untouched(self):
+        self.journal.create(operation())
+        with closing(sqlite3.connect(self.path)) as db:
+            db.execute('CREATE TABLE foreign_data (value TEXT)');db.commit()
+        before=self.path.read_bytes()
+        with self.assertRaises(NodeJournalError): self.journal.transition('task1','VERIFIED')
+        self.assertEqual(self.path.read_bytes(),before)
+
+    def test_failed_reservation_is_retained(self):
+        with patch.object(self.journal._journal,'initialize',side_effect=sqlite3.OperationalError('full')):
+            with self.assertRaises(NodeJournalError): self.journal.create(operation())
+        self.assertTrue(self.path.exists())
+        with self.assertRaises(NodeJournalError): NodeTaskJournal(self.path).create(operation())
+
+    def test_generation_v2_reference_only_strict_uuid(self):
+        valid='12345678-1234-4234-8234-123456789abc'
+        parsed=NodeOperation.parse(operation(schema='unified.node-operation.v2',authority_generation=valid))
+        self.assertEqual(parsed['authority_generation'],valid)
+        for value in (1,True,0,'00000000-0000-0000-0000-000000000000',valid.upper(),'12345678-1234-1234-8234-123456789abc'):
+            with self.assertRaises(NodeJournalError):
+                NodeOperation.parse(operation(schema='unified.node-operation.v2',authority_generation=value))
+        with self.assertRaises(NodeJournalError): NodeOperation.parse(operation(schema='unified.node-operation.v1',authority_generation=1))
+
+    def test_generation_change_is_immutable_collision(self):
+        self.journal.create(operation(schema='unified.node-operation.v2',authority_generation='12345678-1234-4234-8234-123456789abc'))
+        with self.assertRaises(NodeJournalError):
+            self.journal.create(operation(schema='unified.node-operation.v2',authority_generation='12345678-1234-4234-8234-123456789abd'))
+
+    def test_symlink_not_adopted_where_available(self):
+        import os
+        self.journal.create(operation())
+        alias=self.path.with_name('symbolic.db')
+        try: os.symlink(self.path,alias)
+        except OSError:
+            # Host lacks privilege: record unsupported, never mark symlink acceptance.
+            self.assertFalse(alias.exists())
+            print('SYMLINK_CREATION_UNAVAILABLE: host privilege; no symlink qualification claimed')
+            return
+        with self.assertRaises(NodeJournalError): NodeTaskJournal(alias)
+
+    def test_empty_legacy_database_not_adopted(self):
+        from unified_system.journal import Journal
+        legacy=Journal(self.path);legacy.initialize()
+        before=self.path.read_bytes()
+        with self.assertRaises(NodeJournalError): NodeTaskJournal(self.path).create(operation())
+        self.assertEqual(before,self.path.read_bytes())
