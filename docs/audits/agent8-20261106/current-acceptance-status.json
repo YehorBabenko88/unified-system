@@ -2755,5 +2755,59 @@
     "independent_seeded_oracle_samples": 64,
     "hosted": "BOTH_QUEUED_NOT_PASS",
     "evidence": "phase63/independent-review.md"
+  },
+  "GRID_PR268_NARROW_BOOK_REVIEW": {
+    "exact": {
+      "head": "1f08e24dd9f554e4c4dfa49fb3815345cf27044a",
+      "tree": "fe885700161e027b8e017b826c32dc06b0c904b4",
+      "base": "7a19ab40c30efef431bb16f0ddc91960608bf597",
+      "changed_paths": [
+        "docs/audits/agent3-book-capability-20261107.md",
+        "grid/microstructure.py",
+        "grid/unified_features.py",
+        "tests/test_scientific_book_capability.py",
+        "tests/test_unified_features.py"
+      ],
+      "positive_fixture_assertions_preserved": true,
+      "focused_passed": 40,
+      "focused_skips": 0,
+      "broader_passed": 259,
+      "broader_skips": 1,
+      "broader_contains_focused_not_additive": true,
+      "skip": "EXPLICIT_DISPOSABLE_PG18_NOT_PROVISIONED_NO_WAIVER",
+      "raw_primary_files_before_after": 691,
+      "provider_or_real_DB_connections": 0,
+      "scope": "LOCAL_SOURCE_BOUND_FAKE_FEED_SQL_ONLY",
+      "residual_gap": "OPEN_NOT_CLOSED_BY_THIS_FIX",
+      "hosted": "NOT_ADMITTED",
+      "overall": "NO_GO_END_TO_END_L3_NATIVE_PHYSICAL"
+    },
+    "extra": {
+      "independent_positive_negative_cases": [
+        "missing_quality",
+        "nonfinite_spread",
+        "boolean_depth",
+        "infinite_qty",
+        "over200levels",
+        "duplicate_price",
+        "SQL_asof_future",
+        "SQL_asof_older_than5s",
+        "SQL_asof_exact5s",
+        "SQL_error_propagates_no_feature_success"
+      ],
+      "count": 10,
+      "skips": 0,
+      "network_provider_real_DB_connections": 0,
+      "known_residual": {
+        "status": "OPEN_P1_REPRODUCED_NOT_CLOSED",
+        "persisted_available_snapshots_after_empty_side_gap": 1,
+        "query_age_seconds": 2,
+        "orderbook_capability_still_true": true,
+        "scope": "PREVIOUS_VALID_ROW_QUERY_ELIGIBLE_UNTIL5S_NO_PERSISTED_INVALIDATION"
+      },
+      "summary_metrics_derivation_or_provenance": "NOT_QUALIFIED_BY_THIS_GATE"
+    },
+    "hosted": "42366033121_QUEUED_NOT_PASS_NEW29_NOT_MAPPED",
+    "evidence": "phase64/independent-review.md"
   }
 }
