@@ -6,13 +6,28 @@
     "a8_review": "c1b04c2d776f43976e1af550f5e8b15adbf05bf0",
     "native_tls_auth_admission": false
   },
-  "AUTH_IDENTITY": "PENDING",
+  "AUTH_IDENTITY": {
+    "pr": 48,
+    "head": "2cb6b21eac5617ff39ad7a96b7e1c73118e0af00",
+    "module_sha256": "84093865e8477ef6562100d41137922785446c9cb4e024c9ba7105593a2b36c1",
+    "root_independent_local_tests": 24,
+    "scope": "DISPOSABLE_MTLS_COMPONENT_ONLY",
+    "abi": "OWNER_REQUIRE_ISSUED_READ_REVIEW3",
+    "cross_owner_positive": "PENDING",
+    "ci_pin_inventory_fixes": "SUCCESSOR_PENDING",
+    "native_human_authentication": false
+  },
   "DATA_QUERY": {
     "pr": 271,
     "head": "7e4b06b4cbf75328de5e18dc963c2f1fa4289b67",
     "state": "PURE_PREPARATION_NOT_EXECUTED"
   },
-  "STORAGE_DISCLOSURE": "PENDING",
+  "STORAGE_DISCLOSURE": {
+    "manifest_codec": "f9f2d04595cf2360dab78980996ae6c34c9e26fc",
+    "authenticated_gateway_adapter": "IN_PROGRESS",
+    "query_fixture_graph": "EIGHT_CANONICAL_PREIMAGES_HASH_MATCHED_LOCAL_ONLY",
+    "actual_dataset_publication": "UNPROVEN"
+  },
   "JOB_SUBMISSION": {
     "pr": 47,
     "head": "dd24a27816832354a20fc76e90f9a0cbeca71219",
@@ -94,5 +109,13 @@
       "sourceguard_negatives": 4,
       "runtime_milestone": false
     }
+  },
+  "COMPONENT_COMPOSITION": {
+    "source": "fafeb8e16c01e1973594a21d5e55d10110e2c6fa",
+    "tests": 111,
+    "skips": 0,
+    "source_files": 1461,
+    "qualification": "LOCAL_COMPONENTS_ONLY_NOT_VERTICAL_E2E",
+    "driver": "EXTERNAL_TARGETED_SELECTOR"
   }
 }
