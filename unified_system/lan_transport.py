@@ -19,6 +19,8 @@ import uuid
 from types import MappingProxyType
 from .network_budget import BudgetError, NodeBudget, NODES
 
+LEGACY_PROTOCOL='unified-lan-v1'
+MUX_PROTOCOL='unified-lan-mux-v1'
 MAX_FRAME=65536
 MAX_CONTROL=4096
 WINDOW=65536
@@ -135,8 +137,8 @@ class PeerRegistry:
         _need(node in self._peers and self._peers[node].enabled,'PEER_NOT_ADMITTED')
         return self._peers[node]
 
-    def authenticate(self,tls,expected=None):
-        _need(tls.selected_alpn_protocol()=='unified-lan-v1','AUTH_REJECTED')
+    def authenticate(self,tls,expected=None,*,application_protocol=LEGACY_PROTOCOL):
+        _need(application_protocol in (LEGACY_PROTOCOL,MUX_PROTOCOL) and tls.selected_alpn_protocol()==application_protocol,'AUTH_REJECTED')
         cert=tls.getpeercert();der=tls.getpeercert(binary_form=True)
         _need(type(cert) is dict and type(der) is bytes and bool(der),'AUTH_REJECTED')
         pin=hashlib.sha256(der).hexdigest()
@@ -147,7 +149,8 @@ class PeerRegistry:
         return matches[0]
 
 
-def tls_context(ca,cert,key,*,server=False):
+def tls_context(ca,cert,key,*,server=False,application_protocol=LEGACY_PROTOCOL):
+    _need(application_protocol in (LEGACY_PROTOCOL,MUX_PROTOCOL),'TLS_POLICY_REJECTED')
     purpose=ssl.Purpose.CLIENT_AUTH if server else ssl.Purpose.SERVER_AUTH
     ctx=ssl.create_default_context(purpose=purpose,cafile=str(ca))
     ctx.check_hostname=False
@@ -155,7 +158,7 @@ def tls_context(ca,cert,key,*,server=False):
     ctx.minimum_version=ssl.TLSVersion.TLSv1_2
     ctx.options|=ssl.OP_NO_COMPRESSION
     ctx.load_cert_chain(str(cert),str(key))
-    ctx.set_alpn_protocols(['unified-lan-v1'])
+    ctx.set_alpn_protocols([application_protocol])
     return ctx
 
 
@@ -201,9 +204,9 @@ def _read_frame(sock,budget,peer,deadline,on_idle=None):
     header=_json(_read_exact(sock,hsize,body_deadline))
     _need(type(header) is dict and set(header)=={'kind','stream','traffic_class','message_id','value'},'PROTOCOL_REJECTED')
     _need(type(header['traffic_class']) is str and header['traffic_class'] in _ROLES and type(header['stream']) is int and 0<=header['stream']<=MAX_STREAMS)
-    _need(header['kind'] in ('HELLO','OPEN','CREDIT','APP','PING','PONG') and type(header['value']) is int and 0<=header['value']<2**63)
+    _need(header['kind'] in ('HELLO','OPEN','CREDIT','APP','PING','PONG','MUX_FRAGMENT') and type(header['value']) is int and 0<=header['value']<2**63)
     _need(_uuid(header['message_id']))
-    _need(header['traffic_class']!='control' or size<=MAX_CONTROL,'FRAME_BOUNDS')
+    _need(header['traffic_class']!='control' or header['kind']=='MUX_FRAGMENT' or size<=MAX_CONTROL,'FRAME_BOUNDS')
     _need(header['kind'] not in ('OPEN','CREDIT','PING','PONG') or size==0,'FRAME_BOUNDS')
     budget.wait_take('rx',peer,header['traffic_class'],_PREFIX.size+hsize+size,deadline=body_deadline)
     payload=_read_exact(sock,size,body_deadline)
@@ -235,6 +238,7 @@ class Delivery:
     traffic_class: str
     message_id: str
     payload: bytes
+    record_kind: str='APP'
 
 
 class Connection:
@@ -267,19 +271,27 @@ class Connection:
         _need(registry.peer(self.peer_id)==self.admitted_peer and registry.peer(self.owner.node_id)==self.admitted_local,'POLICY_REVOKED')
 
     def _emit(self,kind,stream,cls,payload=b'',value=0,*,deadline=None,cancel=None,message_id=None):
-        self._current();channel='data' if kind=='APP' and cls!='control' else 'control'
+        self._current();channel='data' if kind=='MUX_FRAGMENT' or kind=='APP' and cls!='control' else 'control'
         _write_frame(self.channels[channel],self.locks[channel],self.owner.budget,self.peer_id,
                      kind,stream,cls,payload,value,deadline or time.monotonic()+5,cancel,message_id)
 
     def send(self,payload,traffic_class='live',*,stream_id=None,deadline=None,cancel=None):
-        _need(type(payload) is bytes and 1<=len(payload)<=(MAX_CONTROL if traffic_class=='control' else MAX_FRAME),'FRAME_BOUNDS')
+        return self._send(payload,traffic_class,stream_id=stream_id,deadline=deadline,cancel=cancel,kind='APP')
+
+    def send_mux_fragment(self,payload,*,deadline=None,cancel=None):
+        _need(self.owner.application_protocol==MUX_PROTOCOL,'MUX_NOT_NEGOTIATED')
+        return self._send(payload,'control',stream_id=16,deadline=deadline,cancel=cancel,kind='MUX_FRAGMENT')
+
+    def _send(self,payload,traffic_class,*,stream_id,deadline,cancel,kind):
+        _need(type(payload) is bytes and 1<=len(payload)<=(MAX_CONTROL if kind=='APP' and traffic_class=='control' else MAX_FRAME),'FRAME_BOUNDS')
         _need(traffic_class in _ROLES and _ROLES[traffic_class] in self.owner.registry.peer(self.owner.node_id).roles,'CLASS_NOT_ADMITTED')
-        stream=0 if traffic_class=='control' else (stream_id or (1 if traffic_class=='live' else 2))
-        _need(type(stream) is int and ((traffic_class=='control' and stream==0) or 1<=stream<=MAX_STREAMS))
+        stream=16 if kind=='MUX_FRAGMENT' else (0 if traffic_class=='control' else (stream_id or (1 if traffic_class=='live' else 2)))
+        _need(type(stream) is int and ((traffic_class=='control' and stream==0) or 1<=stream<=MAX_STREAMS)
+              and not(kind=='APP' and self.owner.application_protocol==MUX_PROTOCOL and stream==16))
         deadline=time.monotonic()+5 if deadline is None else deadline
         _need(type(deadline) in (int,float) and math.isfinite(deadline) and deadline>time.monotonic(),'DEADLINE')
         if cancel is not None and cancel.is_set():raise TransportError('CANCELLED')
-        job=dict(payload=payload,cls=traffic_class,stream=stream,deadline=deadline,cancel=cancel,
+        job=dict(kind=kind,payload=payload,cls=traffic_class,stream=stream,deadline=deadline,cancel=cancel,
                  done=threading.Event(),error=None,started=False,id=str(uuid.uuid4()))
         with self.cv:
             self._current()
@@ -314,7 +326,7 @@ class Connection:
                 with self.cv:
                     if self.closed:return
                     job=None;open_stream=None
-                    candidates=(j for j in self.outgoing if (j['cls']=='control')==control_only)
+                    candidates=(j for j in self.outgoing if (j['kind']=='APP' and j['cls']=='control')==control_only)
                     for candidate in sorted(candidates,key=lambda j:('control','live','bulk').index(j['cls'])):
                         if candidate['error'] or time.monotonic()>=candidate['deadline'] or candidate['cancel'] is not None and candidate['cancel'].is_set():
                             job=candidate;break
@@ -332,11 +344,11 @@ class Connection:
                             if job['stream']:self.tx_streams[job['stream']]['sent']+=len(job['payload'])
                         else:job['error']=job['error'] or 'DEADLINE'
                 if open_stream:
-                    self._emit('OPEN',open_stream[0],'control',value={'live':1,'bulk':2}[open_stream[1]])
+                    self._emit('OPEN',open_stream[0],'control',value={'live':1,'bulk':2,'control':3}[open_stream[1]])
                     continue
                 try:
                     if not job['error']:
-                        self._emit('APP',job['stream'],job['cls'],job['payload'],deadline=job['deadline'],cancel=job['cancel'],message_id=job['id'])
+                        self._emit(job['kind'],job['stream'],job['cls'],job['payload'],deadline=job['deadline'],cancel=job['cancel'],message_id=job['id'])
                 except (OSError,ValueError) as exc:
                     job['error']='DELIVERY_UNKNOWN';self.close(str(exc))
                 finally:
@@ -356,8 +368,11 @@ class Connection:
                     _need(channel=='control' and cls=='control' and stream==0 and h['value']==0 and not payload)
                     if kind=='PING':self._emit('PONG',0,'control')
                 elif kind=='OPEN':
-                    _need(channel=='control' and cls=='control' and not payload and 1<=stream<=MAX_STREAMS and h['value'] in (1,2))
-                    stream_class='live' if h['value']==1 else 'bulk'
+                    _need(channel=='control' and cls=='control' and not payload and 1<=stream<=MAX_STREAMS and h['value'] in (1,2,3))
+                    is_mux=h['value']==3
+                    _need(not is_mux or self.owner.application_protocol==MUX_PROTOCOL and stream==16,'MUX_NOT_NEGOTIATED')
+                    _need(is_mux or self.owner.application_protocol!=MUX_PROTOCOL or stream!=16)
+                    stream_class={1:'live',2:'bulk',3:'control'}[h['value']]
                     _need(_ROLES[stream_class] in self.owner.registry.peer(self.peer_id).roles,'CLASS_NOT_ADMITTED')
                     with self.cv:
                         self._current()
@@ -375,7 +390,10 @@ class Connection:
                             s['grant']=h['value']
                         self.cv.notify_all()
                 else:
-                    _need(kind=='APP' and h['value']==0 and len(payload)>0)
+                    _need(kind in ('APP','MUX_FRAGMENT') and h['value']==0 and len(payload)>0)
+                    if kind=='MUX_FRAGMENT':
+                        _need(self.owner.application_protocol==MUX_PROTOCOL and channel=='data' and cls=='control' and stream==16,'MUX_NOT_NEGOTIATED')
+                    elif channel=='data':_need(cls!='control' and (self.owner.application_protocol!=MUX_PROTOCOL or stream!=16))
                     _need(_ROLES[cls] in self.owner.registry.peer(self.peer_id).roles,'CLASS_NOT_ADMITTED')
                     with self.cv:
                         self._current()
@@ -388,18 +406,25 @@ class Connection:
                             s=self.rx_streams.get(stream)
                             _need(s is not None and s['cls']==cls and s['received']+len(payload)<=s['grant'],'CREDIT_BOUNDS')
                             s['received']+=len(payload)
-                        self.incoming.append(Delivery(self.peer_id,stream,cls,h['message_id'],payload));self.cv.notify_all()
+                        self.incoming.append(Delivery(self.peer_id,stream,cls,h['message_id'],payload,kind));self.cv.notify_all()
         except (OSError,ValueError) as exc:self.close(str(exc))
 
     def receive(self,*,deadline=None,cancel=None):
+        return self._receive('APP',deadline=deadline,cancel=cancel)
+
+    def receive_mux_fragment(self,*,deadline=None,cancel=None):
+        _need(self.owner.application_protocol==MUX_PROTOCOL,'MUX_NOT_NEGOTIATED')
+        return self._receive('MUX_FRAGMENT',deadline=deadline,cancel=cancel)
+
+    def _receive(self,record_kind,*,deadline=None,cancel=None):
         deadline=time.monotonic()+5 if deadline is None else deadline
         with self.cv:
-            while not self.incoming:
+            while not any(d.record_kind==record_kind for d in self.incoming):
                 self._current()
                 if cancel is not None and cancel.is_set():raise TransportError('CANCELLED')
                 _need(time.monotonic()<deadline,'DEADLINE');self.cv.wait(.01)
             self._current()
-            delivery=min(self.incoming,key=lambda d:('control','live','bulk').index(d.traffic_class))
+            delivery=min((d for d in self.incoming if d.record_kind==record_kind),key=lambda d:('control','live','bulk').index(d.traffic_class))
             self.incoming.remove(delivery)
             if delivery.stream_id:
                 stream=self.rx_streams[delivery.stream_id];stream['grant']+=len(delivery.payload);grant=stream['grant']
@@ -430,10 +455,12 @@ class LanTransport:
         raise TransportError('NATIVE_RUNTIME_ADMISSION_REQUIRED')
 
     @classmethod
-    def isolated(cls,node,registry,*,client_context,server_context,budget):
-        return cls(node,registry,client_context,server_context,budget)
+    def isolated(cls,node,registry,*,client_context,server_context,budget,application_protocol=LEGACY_PROTOCOL):
+        return cls(node,registry,client_context,server_context,budget,application_protocol=application_protocol)
 
-    def __init__(self,node,registry,client_context,server_context,budget):
+    def __init__(self,node,registry,client_context,server_context,budget,*,application_protocol=LEGACY_PROTOCOL):
+        _need(application_protocol in (LEGACY_PROTOCOL,MUX_PROTOCOL),'TLS_POLICY_REJECTED')
+        self.application_protocol=application_protocol;self.hello_version=2 if application_protocol==MUX_PROTOCOL else 1
         _need(isinstance(registry,PeerRegistry) and isinstance(budget,NodeBudget) and budget.node==node)
         registry.peer(node)
         for ctx in (client_context,server_context):
@@ -459,13 +486,13 @@ class LanTransport:
 
     def _hello(self,tls,peer,channel,nonce,deadline,*,receive_first=False):
         def send():
-            payload=_canonical(dict(node=self.node_id,peer=peer,channel=channel,nonce=nonce,version=1))
+            payload=_canonical(dict(node=self.node_id,peer=peer,channel=channel,nonce=nonce,version=self.hello_version))
             _write_frame(tls,threading.Lock(),self.budget,peer,'HELLO',0,'control',payload,0,deadline)
         if not receive_first:send()
         header,raw=_read_frame(tls,self.budget,peer,deadline)
         doc=_json(raw)
         _need(header['kind']=='HELLO' and header['stream']==0 and header['traffic_class']=='control' and header['value']==0 and len(raw)<=MAX_CONTROL)
-        _need(doc==dict(node=peer,peer=self.node_id,channel=channel,nonce=nonce,version=1),'SESSION_BINDING_REJECTED')
+        _need(doc==dict(node=peer,peer=self.node_id,channel=channel,nonce=nonce,version=self.hello_version),'SESSION_BINDING_REJECTED')
         if receive_first:send()
 
     def connect(self,peer,*,deadline=None,cancel=None):
@@ -492,11 +519,11 @@ class LanTransport:
                 _need(time.monotonic()<deadline,'DEADLINE')
                 raw=socket.create_connection((ep.address,ep.port),timeout=max(.001,deadline-time.monotonic()))
                 tls=self.client_context.wrap_socket(raw,server_hostname=None);raw=None
-                channels[name]=tls;admitted.authenticate(tls,peer)
+                channels[name]=tls;admitted.authenticate(tls,peer,application_protocol=self.application_protocol)
                 self._hello(tls,peer,name,nonce,deadline)
             with self.lock:
                 _need(self.registry.digest==admitted.digest,'POLICY_REVOKED')
-                for tls in channels.values():self.registry.authenticate(tls,peer)
+                for tls in channels.values():self.registry.authenticate(tls,peer,application_protocol=self.application_protocol)
                 connection=Connection(self,peer,nonce,channels);self.connections[peer]=connection
             return connection
         except ssl.SSLError as exc:
@@ -525,18 +552,18 @@ class LanTransport:
                     self.listener.settimeout(max(.001,deadline-time.monotonic()))
                     raw,_=self.listener.accept();raw.settimeout(max(.001,deadline-time.monotonic()))
                     tls=self.server_context.wrap_socket(raw,server_side=True);raw=None
-                    channels[expected]=tls;peer=admitted.authenticate(tls)
+                    channels[expected]=tls;peer=admitted.authenticate(tls,application_protocol=self.application_protocol)
                     h,payload=_read_frame(tls,self.budget,peer,deadline);hello=_json(payload)
                     _need(type(hello) is dict and set(hello)=={'node','peer','channel','nonce','version'})
                     _need(h['kind']=='HELLO' and h['traffic_class']=='control' and h['stream']==0 and h['value']==0)
-                    _need(hello['node']==peer and hello['peer']==self.node_id and hello['channel']==expected and hello['version']==1 and _uuid(hello['nonce']),'SESSION_BINDING_REJECTED')
+                    _need(hello['node']==peer and hello['peer']==self.node_id and hello['channel']==expected and type(hello['version']) is int and hello['version']==self.hello_version and _uuid(hello['nonce']),'SESSION_BINDING_REJECTED')
                     if identity is None:identity,nonce=peer,hello['nonce']
                     _need(identity==peer and nonce==hello['nonce'],'SESSION_BINDING_REJECTED')
-                    reply=_canonical(dict(node=self.node_id,peer=peer,channel=expected,nonce=nonce,version=1))
+                    reply=_canonical(dict(node=self.node_id,peer=peer,channel=expected,nonce=nonce,version=self.hello_version))
                     _write_frame(tls,threading.Lock(),self.budget,peer,'HELLO',0,'control',reply,0,deadline)
                 with self.lock:
                     _need(self.registry.digest==admitted.digest,'POLICY_REVOKED')
-                    for tls in channels.values():self.registry.authenticate(tls,identity)
+                    for tls in channels.values():self.registry.authenticate(tls,identity,application_protocol=self.application_protocol)
                     _need(identity not in self.connections or self.connections[identity].closed,'DUPLICATE_CONNECTION')
                     _need(len([c for c in self.connections.values() if not c.closed])<5,'CONNECTION_LIMIT')
                     connection=Connection(self,identity,nonce,channels);self.connections[identity]=connection
