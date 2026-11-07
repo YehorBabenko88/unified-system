@@ -1,8 +1,10 @@
-"""Bounded own-loopback TLS front, pending actual identity/owner composition.
+"""Disposable TLS front and explicit Root-owned scoped READ composition.
 
-No caller/provider injection, store, research engine, credentials or activation
-flag. TLS peer chain validation alone is NOT Gateway principal authorization.
-Only public static capabilities are served; resource routes remain closed.
+Network requests accept no callbacks, paths, identity objects or activation flags.
+The default front serves static capabilities with resource routes closed. The
+explicit disposable factories compose actual A2 identities and fixed owner readers
+over a commissioned store and local audit journal. No job engine or production
+admission is provided. TLS chain validation alone is not principal authorization.
 """
 import json
 import re
