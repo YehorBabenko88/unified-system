@@ -202,7 +202,7 @@ class MuxTlsTests(unittest.TestCase):
         with self.assertRaisesRegex(mux.MuxError,'HASH'):right.receive(deadline=time.monotonic()+3)
         self.assertEqual(server.memory.used,0)
 
-    def test_real_partial_disconnect_rejects_old_attempt_on_new_channel(self):
+    def test_real_partial_disconnect_discards_incomplete_transfer(self):
         import time
         client,server,c,s,left,right,binding=self.channels();payload=b'x'*133128
         raw=mux.encode_fragment(binding,c.nonce,str(uuid.uuid4()),3,len(payload),0,hashlib.sha256(payload).digest(),payload[:mux.CHUNK_SIZE])
@@ -262,6 +262,20 @@ class MuxTlsTests(unittest.TestCase):
             c.send_mux_fragment(raw,deadline=time.monotonic()+2)
             with self.assertRaisesRegex(mux.MuxError,'BINDING'):right.receive(deadline=time.monotonic()+2)
             self.assertEqual(server.memory.used,0)
+
+
+    def test_explicit_completed_transfer_replay_charged_without_transport_exactly_once(self):
+        import time
+        client,server,c,s,left,right,binding=self.channels()
+        payload=b'explicit-replay';transfer=str(uuid.uuid4())
+        raw=mux.encode_fragment(binding,c.nonce,transfer,3,len(payload),0,hashlib.sha256(payload).digest(),payload)
+        for _ in range(2):
+            beforetx=client.budget.counters()['tx'];beforerx=server.budget.counters()['rx']
+            c.send_mux_fragment(raw,deadline=time.monotonic()+2)
+            message=right.receive(deadline=time.monotonic()+2)
+            self.assertEqual((message.transfer_id,message.payload),(transfer,payload))
+            self.assertGreater(client.budget.counters()['tx']-beforetx,len(raw))
+            self.assertGreater(server.budget.counters()['rx']-beforerx,len(raw))
 
 
 if __name__=='__main__':unittest.main()
