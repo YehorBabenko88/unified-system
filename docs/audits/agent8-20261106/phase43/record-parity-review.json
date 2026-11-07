@@ -1,0 +1,29 @@
+{
+  "root_pin": "223c225bbf17cf6c8eaeb8d39d933620b9c1c098",
+  "authorization_sha256": "355ca961ac39edb3c9a0f5505467610926a9abaaafc1bb54bc9275ce56e61442",
+  "source_head": "63a0036d406042bee2d3434aac34dd6a15138ae3",
+  "source_tree": "803c3a28bb6e3e489b315fac703ea094d6030e09",
+  "current_merge": "3657064503382a6c1445d342866f422c4490a9f7",
+  "workflow_sha256": "d3884ca15fb2721da1c3c1b2df19fdb2494db246d2bf6449d6a576b8d851d00c",
+  "preparation_ack_raw_equal": true,
+  "ledger_snapshot": {
+    "schema": "unified.diagnostic-dispatch-ledger.v1",
+    "source_head": "63a0036d406042bee2d3434aac34dd6a15138ae3",
+    "authorization_sha256": "355ca961ac39edb3c9a0f5505467610926a9abaaafc1bb54bc9275ce56e61442",
+    "operation_id": "5e25f980-8835-40e0-8e3a-78c663f0e7c6",
+    "state": "RESERVED_NOT_DISPATCHED",
+    "allowed_api_label_add_calls": 1,
+    "api_label_add_calls_attempted": 0,
+    "read_only_preflight_prior_diagnostic_runs": 0,
+    "preflight_label_applied": false,
+    "native_observation_started": false,
+    "unknown_is_consumed_until_reconciled": true
+  },
+  "review": "ACK_RECORD_AND_CURRENT_EVENT_PARITY_ONLY",
+  "authority": "ROOT_RECORD_DECLARATION_NOT_INDEPENDENTLY_AUTHENTICATED_OWNER_DIRECTIVE",
+  "activation_performed": false,
+  "api_mutations": 0,
+  "native_acceptance": "BLOCKED",
+  "overall": "NO_GO",
+  "dispatch_conditions": "Root must independently validate owner authority, recheck refs, persist intent before one API call; UNKNOWN consumed; no retry"
+}
