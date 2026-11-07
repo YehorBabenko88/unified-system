@@ -19,7 +19,16 @@
   "visualization_backend": null,
   "actual_engine_e2e": "BLOCKED_NO_ADMITTED_OWNER_SEAMS",
   "independent_review": "PENDING",
-  "hosted_ci": "NOT_YET_OBSERVED",
+  "hosted_ci": {
+    "state": "QUEUED_AT_OBSERVATION",
+    "attempt": 1,
+    "runs": [
+      42382136861,
+      42382109787
+    ],
+    "source_head": "e2fa604a6b39852db1075efc2ced07b8120801a2",
+    "terminal_pass": false
+  },
   "master_mission": "IN_PROGRESS / NO-GO",
   "scope": [
     "DEVELOPMENT",
@@ -36,8 +45,32 @@
     "A6": {
       "authenticated_visualization_artifact": "NONE",
       "local_projection": "NOT_A_BACKEND_OR_AUTHENTICATION"
+    },
+    "A3": {
+      "query": "NONE",
+      "authorized_identity_lookup": "NONE",
+      "coverage_gap_time_read": "NONE",
+      "offline_candidates": "claim parsing / prepare_kline_page are not query or completeness admission"
+    },
+    "A4": {
+      "authenticated_manifest_query": "NONE",
+      "experiment_result_registry_binding": "NONE",
+      "offline_candidate_head": "f9f2d04595cf2360dab78980996ae6c34c9e26fc",
+      "offline_candidate_tree": "7fa3c8ad67c4efece7e2a692f48fb63a9e40ffd3",
+      "local_functions": [
+        "decode_manifest",
+        "validate_manifest_successor",
+        "read_manifest_object"
+      ],
+      "admission_from_hash_syntax": false
+    },
+    "A7": {
+      "admitted_gateway_job_experiment_results": "NONE",
+      "admitted_fee_funding_profile": "NONE",
+      "offline_candidates": "Existing local research APIs exist; exact candidate index pending. Do not call them absent or authenticated."
     }
   },
   "real_trading": "PROHIBITED",
-  "physical_deployment": "NOT_AUTHORIZED"
+  "physical_deployment": "NOT_AUTHORIZED",
+  "pr": "https://github.com/YehorBabenko88/unified-system/pull/44"
 }
