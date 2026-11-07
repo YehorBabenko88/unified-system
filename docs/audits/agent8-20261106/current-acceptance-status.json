@@ -2460,5 +2460,40 @@
     "clock_deadline": false,
     "native_admission": false,
     "overall": "NO_GO_BROADER_ADMISSION"
+  },
+  "ROOT_STORAGE_CONSOLIDATION_REVIEW": {
+    "requirement": "ROOT_STORAGE_MERGE_EVIDENCE_BINDING",
+    "repository": "unified-system",
+    "pr": 26,
+    "merge_head": "9d6857a26842b1c4ce6375a69cef4cdba832b7b1",
+    "merge_tree": "0f01ef2f6bf1b9a5963d02665daf775338b18bac",
+    "publication_head": "32f6b1996d7e810e1ecc84025e850ef62c28802f",
+    "publication_tree": "16f8ee50ca278313b5bc0cb3a2901b3f9349e0b6",
+    "component_head": "cd0286dee5fc41cb7a35b0b6ac431a7ebfc25dfb",
+    "component_paths_raw_equal": 7,
+    "owner_raw_manifest_matched_primary_Git": 944,
+    "publication_members_hash_matched": 3,
+    "original_A8_phase54_copies_raw_equal": [
+      "exact-review.json",
+      "independent-extra.GREEN.log",
+      "independent-extra.json",
+      "independent-race.RED.log",
+      "independent-review.md",
+      "suite.stderr.log",
+      "suite.stdout.json"
+    ],
+    "owner_execution": {
+      "cases": 43,
+      "skips": 0
+    },
+    "A8_merged_execution": "NOT_RUN",
+    "owner_interpreter": "REUSED_READ_ONLY_A2_ENV_NOT_NEWLY_INDEPENDENTLY_QUALIFIED",
+    "status": "PASS_PRIMARY_SOURCE_RECEIPT_CONSISTENCY_ONLY",
+    "fullsuite_hosted_matrix": "NOT_EVALUATED_NOT_TRANSFERRED",
+    "media_namespace_crash_durability": false,
+    "dataset_authority": false,
+    "pilot_rollback_qualified": false,
+    "native_physical_admission": false,
+    "overall": "NO_GO_BROADER_ACCEPTANCE"
   }
 }
