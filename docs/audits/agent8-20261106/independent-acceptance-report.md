@@ -1,12 +1,12 @@
-> Latest bounded update: [F11 fix recheck](phase9/f11-fix-review.md). Current open findings:6 P1/1 P2; F11 fixed offline at exact0b3af3e. Hosted/runtime/physical/Tailscale acceptance remains BLOCKED; earlier snapshots are historical.
+> Latest bounded update (2026-11-07): [A5 runtime v3 / new F17](phase37/scheduler-runtime-v3-review.md). Current open findings:6 P1/3 P2; F16 and F17 OPEN. Overall NO-GO; hosted/native/integrated/physical/Tailscale gates remain unqualified or BLOCKED. Earlier snapshots are historical.
 
 # Independent security, CI and physical acceptance — Agent 8
 
-Snapshot: 2026-11-06T15:05:26.716427+00:00 (6 November 2026, Europe/Berlin).
+Initial historical snapshot: 2026-11-06T15:05:26.716427+00:00 (6 November 2026, Europe/Berlin).
 
 **Overall: NO-GO. TAILSCALE_REMOVAL: BLOCKED / NO-GO.** No merge, deployment, network reconfiguration, Tailscale removal, real orders or destructive cleanup performed by this audit.
 
-Open findings: **P0: 0 independently confirmed defects; P1: 6; P2: 1.** This is not proof that no P0 exists. Failed mandatory gates and unperformed physical qualification independently prevent GO.
+Initial snapshot findings: **P0: 0 independently confirmed defects; P1: 6; P2: 1.** This is not proof that no P0 exists. Failed mandatory gates and unperformed physical qualification independently prevent GO.
 
 This is an interim independent acceptance report. It does not assert completion of the physical mission. Findings are assigned to the repository owner via Integration Owner; production implementation was not edited.
 
@@ -160,3 +160,5 @@ Phase31 exact PR30/29/31 focused28/26/46pass0skip; synthetic composition159uniqu
 Phase35: exactcomposed237722b independently129unique/0skip,664rawtrackedfilesbefore/after;cc286bcidentityguard8purecases+60independentnegatives,671rawfilesbefore/after. Ownrevision10pathACKonly, sourceguardASTpreserved, owneroriginalreceipt/logbindingsverified. Nativeidentity/atomicguardCAS/integratedendpoint/hosted/physicalNOTQUALIFIED; overallNO-GO6P1/2P2/F16open.
 
 Phase36 Math1149f08b23 preparationfix independently verified: actualunchangedverifierPSoldRED1/newGREEN0/hiddeneditdenied;13pure/modelcases0skip,690rawfilespre/post,188originalproof preserved. Originalconsumed42274233717attempt1terminalfailure/sourceCLIerror,0artifacts/ownedchildSKIPPED primaryrawlogverified. No native/activation, no renewedauthorization; NO-GO6P1/2P2/F16open.
+
+Phase37 latestPR24 462935b independently52/0skip,8replacement/raw/ID/skipnegativesreject,5localstatevectors+1boundedmeasurementpass. NewF17P2confirmed: untracked timestampmatchedCPythoncacheexecutesharmlessmarker while16rawbindings/beforeafterand52PASSaccept. Sourceevidencerobustnessonly, nohostedtampering/nativebypassclaim; ownersnotified. Current6P1/3P2,NO-GO,F16/F17open.

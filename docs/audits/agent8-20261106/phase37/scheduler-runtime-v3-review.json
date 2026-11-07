@@ -1,0 +1,146 @@
+{
+  "head": "462935b53ef25d4d9be2371bad1cd7230c65f2e7",
+  "tree": "8c7f7d8d3cd5a6b77817d9e7a1761672484e921c",
+  "old30module_and_product_bytes_unchanged": true,
+  "new_inventory": 52,
+  "all_three_source_git_sites_no_replace": [
+    20,
+    12,
+    36
+  ],
+  "raw_tracked_files": 301,
+  "raw_tracked_sha256": "fe9955ec5905075d76632101c9e1bd9493debd73977b412b0c6535deb147919d",
+  "cases": {
+    "clean": {
+      "exit_code": 0,
+      "passed": true,
+      "tests": 52,
+      "skips": 0,
+      "source_valid_before": true,
+      "source_valid_after": true,
+      "bytecode_marker_executed": false,
+      "bytecode_sha256": null,
+      "own_common_dot_git": true
+    },
+    "blob_replace": {
+      "exit_code": 1,
+      "passed": false,
+      "tests": 0,
+      "skips": 0,
+      "source_valid_before": false,
+      "source_valid_after": false,
+      "bytecode_marker_executed": false,
+      "bytecode_sha256": null,
+      "own_common_dot_git": true
+    },
+    "tree_replace": {
+      "exit_code": 1,
+      "passed": false,
+      "tests": 0,
+      "skips": 0,
+      "source_valid_before": false,
+      "source_valid_after": false,
+      "bytecode_marker_executed": false,
+      "bytecode_sha256": null,
+      "own_common_dot_git": true
+    },
+    "hidden_benchmark": {
+      "exit_code": 1,
+      "passed": false,
+      "tests": 0,
+      "skips": 0,
+      "source_valid_before": false,
+      "source_valid_after": false,
+      "bytecode_marker_executed": false,
+      "bytecode_sha256": null,
+      "own_common_dot_git": true
+    },
+    "hidden_inventory": {
+      "exit_code": 1,
+      "passed": false,
+      "tests": 0,
+      "skips": 0,
+      "source_valid_before": false,
+      "source_valid_after": false,
+      "bytecode_marker_executed": false,
+      "bytecode_sha256": null,
+      "own_common_dot_git": true
+    },
+    "missing_runtime": {
+      "exit_code": 1,
+      "passed": false,
+      "tests": 0,
+      "skips": 0,
+      "source_valid_before": false,
+      "source_valid_after": false,
+      "bytecode_marker_executed": false,
+      "bytecode_sha256": null,
+      "own_common_dot_git": true
+    },
+    "hidden_post_runtime": {
+      "exit_code": 1,
+      "passed": false,
+      "tests": 52,
+      "skips": 0,
+      "source_valid_before": true,
+      "source_valid_after": false,
+      "bytecode_marker_executed": false,
+      "bytecode_sha256": null,
+      "own_common_dot_git": true
+    },
+    "wrong_ID_same52": {
+      "exit_code": 1,
+      "passed": false,
+      "tests": 52,
+      "skips": 0,
+      "source_valid_before": true,
+      "source_valid_after": true,
+      "bytecode_marker_executed": false,
+      "bytecode_sha256": null,
+      "own_common_dot_git": true
+    },
+    "skip": {
+      "exit_code": 1,
+      "passed": false,
+      "tests": 52,
+      "skips": 1,
+      "source_valid_before": true,
+      "source_valid_after": true,
+      "bytecode_marker_executed": false,
+      "bytecode_sha256": null,
+      "own_common_dot_git": true
+    },
+    "bytecode_only": {
+      "exit_code": 0,
+      "passed": true,
+      "tests": 52,
+      "skips": 0,
+      "source_valid_before": true,
+      "source_valid_after": true,
+      "bytecode_marker_executed": true,
+      "bytecode_sha256": "4a7c9778bf4035bf879ee2efb0ed918e4a8f99794321341ba3b9d36d5b1fc73c",
+      "own_common_dot_git": true
+    }
+  },
+  "F16_A5": "NO_REGRESSION_IN_TESTED_REPLACEMENT_CONTROLS",
+  "new_source_evidence_gap": "UNTRACKED_CPYTHON_BYTECODE_EXECUTED_WITH_CLEAN_RAW_SOURCE_RECEIPT",
+  "native_authority": "ABSENT_SYNTHETIC_PORTS_ONLY",
+  "hosted": "NOT_QUALIFIED",
+  "physical": "BLOCKED",
+  "overall": "NO_GO",
+  "primary_exact_head_runs": [
+    {
+      "id": 42342185393,
+      "status": "queued",
+      "conclusion": null,
+      "head": "462935b53ef25d4d9be2371bad1cd7230c65f2e7"
+    },
+    {
+      "id": 42342189464,
+      "status": "queued",
+      "conclusion": null,
+      "head": "462935b53ef25d4d9be2371bad1cd7230c65f2e7"
+    }
+  ],
+  "finding": "A8-F17_OPEN_P2"
+}
