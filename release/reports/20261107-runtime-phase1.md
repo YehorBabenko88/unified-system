@@ -1,0 +1,258 @@
+# MASTER MISSION — runtime increment 1, 7 ноября 2026
+
+**IN_PROGRESS / NO-GO.** Выполненный этап разработки; вся миссия не завершена. Windows Home отдельно разрешена для PC1/LS7, физический допуск закрыт.
+
+Полные exact HEAD/tree, contract SHA и evidence — в [машинном отчёте](20261107-runtime-phase1.json). Снимки компоновки не являются installable RC.
+
+## PHASE
+
+```json
+"EXECUTABLE_RUNTIME_INCREMENT_1_AND_STAGE0_READ_ONLY"
+```
+
+## RELEASE_MANIFEST
+
+```json
+{
+  "path": "release/integration-manifest.json",
+  "status": "PROVISIONAL_NOT_INSTALLABLE"
+}
+```
+
+## EXACT_HEADS
+
+```json
+{
+  "unified-system": {
+    "head": "cc286bce5e51e3670bd8a6cdfd3b663307268703",
+    "tree": "6255c0620a4257d7f8fd82e0fee5d944e052a1b6",
+    "pr": 26
+  },
+  "bybit-cluster-grid": {
+    "head": "ec967b3ebb67bb9f04d0d82c78bba5b4245a3333",
+    "tree": "8dce2883766a9b492587a91dda5ff86d881d83ac",
+    "pr": 263
+  },
+  "strattester": {
+    "head": "1722244f42d5d71a29b89bdec0e7211f2b723158",
+    "tree": "c484fff43f8b248c87a56af633f2fcd8715a3a0c",
+    "pr": 71
+  },
+  "math": {
+    "head": "917d99672e37db59835a8ab23b03c99826b12d78",
+    "tree": "0e8c7a3712fbbcddee0e0c9e5b8d5f10f34bde69",
+    "pr": 112
+  },
+  "meta_analyse": {
+    "head": "88b45c328bfdc8131ff0c6d139fddd8b27a4050c",
+    "tree": "83304074f9cc3f90c09615c7f6920e1a07eab0c6",
+    "pr": 77
+  },
+  "Terminan": {
+    "head": "42686cd8fafcefaed3c5df5adaee5173d27543fd",
+    "tree": "81c684c85bda2b64dc9a327d3667f56eeb8defc1",
+    "pr": 69
+  }
+}
+```
+
+## CONTRACT_HASHES
+
+```json
+{
+  "review4_immutable_commit": "360c5cdc9dae88416d69f8765f3dff5ab8828945",
+  "review4_manifest_sha256": "1c1f0311db7204bd47cb758e7e4e4fe2d7723f7d59e90bd13b52f6fb8b1f83c3",
+  "review4_schema_sha256": "335cda8e5d451fd9ab90586b6f6a4d6fbaf5f52eabb5a11762d9100ed92fefdf",
+  "lan_fragment_v3_sha256": "5f77089694f6611d48177bf42c31882a54d8791aaf8f670c64c7652839ff95d4"
+}
+```
+
+## IMPLEMENTED
+
+```json
+[
+  "Integrated exact audited PR30 initial LAN transport and PR29 pure Storage without changing owner product bytes",
+  "Strict fixed-key identity Consul record decoder, not native authentication",
+  "Disposable unelevated Windows pipe/kernel identity fixture with actual PID and token-level checks",
+  "Isolated source-only integration runner, all tracked raw objects, no cache/unexpected-file admission"
+]
+```
+
+## TESTED
+
+```json
+[
+  {
+    "source": "cc286bce5e51e3670bd8a6cdfd3b663307268703",
+    "suite": "FULL_LOCAL_WINDOWS",
+    "tests": 890,
+    "unittest_failures": 0,
+    "unittest_errors": 0,
+    "unwaived_skips": 14,
+    "raw_python_powershell_prepost_equal": true
+  },
+  {
+    "source": "fb5839ab0e83cedfed0faf6a1131e93b03ac1beb",
+    "suite": "ACTUAL_EMBEDDED_WORKFLOW",
+    "tests": 137,
+    "skips": 0,
+    "raw_tracked_files": 744,
+    "negative_controls": "cached/unexpected-python/redirect/post-cache/native-overlay/stale-receipt reject; own clones only"
+  },
+  {
+    "suite": "DISPOSABLE_LOCAL_WINDOWS_KERNEL_PIPE",
+    "tests": 4,
+    "skips": 0,
+    "scope": "SAME_ACCOUNT_PRIMITIVE_NOT_OPERATOR_BRIDGE",
+    "latest_evidence": "release/evidence/native-pipe-cleanup-observation-20261107/"
+  },
+  {
+    "source": "ec18fda51a7945607dd8a1095da1ef8e4eeca7a8",
+    "suite": "ISOLATED_ACTUAL_EMBEDDED_WORKFLOW_WITH_EXTERNAL_GIT_BOOTSTRAP",
+    "tests": 137,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "raw_tracked_files": 799,
+    "raw_prepost_equal": true
+  },
+  {
+    "suite": "EDITION_ROLE_QUALIFICATION_PLAN_VALIDATOR",
+    "tests": 6,
+    "failures": 0,
+    "skips": 0,
+    "native_home_runtime_qualification": false
+  }
+]
+```
+
+## WINDOWS_CI
+
+```json
+{
+  "math112": {
+    "head": "917d99672e37db59835a8ab23b03c99826b12d78",
+    "run": 42256450733,
+    "jobs_success": 7,
+    "windows_cells": 2,
+    "tests_per_windows_cell": 106,
+    "skip": 0,
+    "native_worker_acceptance": "BLOCKED"
+  },
+  "all_six_complete_required_matrices": "NOT_PASSED",
+  "other_current_development_runs": "QUEUED_OR_FAILED_METADATA_ONLY",
+  "snapshot_scope": "PR_TRIGGERED_FIRST_PAGE_ONLY_NO_FULL_MATRIX_CLAIM"
+}
+```
+
+## RUNTIME_ENDPOINTS
+
+```json
+{
+  "A2_PR32": "1c3b8ad57afb4de56d512c28876a9e5e40969f6d",
+  "isolated_OPEN_HTTP_3_CONSUL": "A2_REPORTED_10_REAL_CASES_PENDING_ROOT_A8_ACCEPTANCE",
+  "default_application": "503_AUTHENTICATION_UNAVAILABLE",
+  "GET": "NEW_ADDITIVE_SCHEMA_REVIEW_PENDING",
+  "subscriptions_ACK_close_stream": "NOT_IMPLEMENTED_OR_NOT_INTEGRATED",
+  "production_endpoint_admission": "BLOCKED"
+}
+```
+
+## PHYSICAL_NODES
+
+```json
+{
+  "inventory": "release/node-inventory-20261107.json",
+  "nodes": 6,
+  "pinned_LAN_SSH_from_LS5": 5,
+  "DNS_and_TLS_HTTPS200": 6,
+  "new_installations": 0,
+  "configuration_changes": 0,
+  "ADMINIT": "EXCLUDED",
+  "Tailscale": "RETAINED_SERVICE_OBSERVED_NOT_REMOVED"
+}
+```
+
+## EVIDENCE
+
+```json
+[
+  "release/evidence/runtime-129-237722b/",
+  "release/evidence/full-suite-runtime-cc286bc/",
+  "release/evidence/f17-root/",
+  "release/evidence/native-pipe-cleanup-observation-20261107/",
+  "release/evidence/stage0-20261107/",
+  "release/evidence/math112-mandatory-20261107/",
+  "release/evidence/ci-snapshot-20261107/",
+  "release/evidence/runtime-137-ec18fda/"
+]
+```
+
+## OPEN_P0
+
+```json
+[
+  "Actual native operator identity/RBAC/session/CSRF/IPC admission and NodeControl delegation",
+  "Complete real Control Mux operations/streaming plus admitted Terminan attachment",
+  "Atomic full Assignment/Storage publication producer, same supersession keys, exact compound fencing and budget lifecycle mapping",
+  "Global Bybit policy/atomic consume/native containment/provider-time admission; no public provider send allowed yet",
+  "Math restricted native worker and Strattester authoritative system acceptance",
+  "Immutable six-module release artifacts/locks/migrations/installer/backup and rollback qualification"
+]
+```
+
+## OPEN_P1
+
+```json
+[
+  "PC1/LS7 separateWindowsHome qualification APPROVED,14mandatorychecks each PENDING; not coordinator-approved",
+  "PC3 preexisting WindowsFirewall profiles OFF with ESET running requires intended-policy review; unchanged",
+  "Full current six-repository mandatory Windows/Linux matrices not qualified; old PR30 heartbeat deadline failure remains unresolved",
+  "Multi-client authenticated UI/job continuity/failover, actual replicas and Windows durability not accepted"
+]
+```
+
+## OPEN_P2
+
+```json
+[
+  "Global F16/F17 independent closure pending; Root offline controls do not close other owners",
+  "Completed transfer replay has no global transport UUID seen-set; actual application idempotency/outer sequence integration must prevent duplicate effects"
+]
+```
+
+## BLOCKERS
+
+```json
+[
+  "Schema ACK is not runtime admission",
+  "No real native admission provider currently attached",
+  "Exact shared resource/fencing/budget contracts not all ACKed",
+  "No provider admission/public smoke authorization",
+  "No qualified installable package or rollback proof"
+]
+```
+
+## ROLLBACK_READY
+
+```json
+false
+```
+
+## GO_NO_GO
+
+```json
+"IN_PROGRESS_NO_GO"
+```
+
+## NEXT_ACTION
+
+```json
+[
+  "Independently verify and consolidate PR32 OPEN real-Consul slice with native provider still closed",
+  "Review current PR30 fragmentation49 and Terminan browser codec84 with exact source/CI evidence",
+  "Close new shared Assignment/Storage record contract then implement real atomic producer",
+  "Complete native identity bridge and Windows/installer/rollback gates before any office installation",
+  "After Bybit policy/native enforcement proof request separate controlled public-data smoke authorization"
+]
+```

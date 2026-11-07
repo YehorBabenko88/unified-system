@@ -444,7 +444,8 @@
     "runtime_admission": "BLOCKED",
     "evidence": "release/evidence/native-pipe-identification-20261107/",
     "corrected_pid_evidence": "release/evidence/native-pipe-identification-pid-correction-20261107/",
-    "original_wrong_pid_claim": "RECLASSIFIED_FORCED_PREDICATE_ONLY"
+    "original_wrong_pid_claim": "RECLASSIFIED_FORCED_PREDICATE_ONLY",
+    "latest_cleanup_evidence": "release/evidence/native-pipe-cleanup-observation-20261107/"
   },
   "stage0_20261107": {
     "path": "release/node-inventory-20261107.json",
@@ -467,5 +468,34 @@
     "scope": "OWN_OFFLINE_CORRECTED_CONTROLS_NOT_GLOBAL_CLOSURE",
     "evidence": "release/evidence/f17-root/",
     "independent_a8_review": "PENDING"
+  },
+  "windows_edition_qualification": {
+    "registry": "release/windows-edition-qualification.json",
+    "owner_decision": "release/decisions/windows-home-20261107/OWNER-DECISION.json",
+    "decision_raw_sha256": "7b8e090452b5fa3f070b3439e5c344a50c0cecb4b22bac0a006ff25dc4af2f95",
+    "home_nodes": [
+      "PC1",
+      "LS7"
+    ],
+    "home_roles": [
+      "WORKER",
+      "TERMINAN"
+    ],
+    "home_coordinator": "NOT_ADMITTED",
+    "home_physical": "BLOCKED",
+    "pro_home_pass_transfer": "FORBIDDEN",
+    "configuration_validator_tests": 6,
+    "configuration_tests_are_not_home_runtime_tests": true
+  },
+  "latest_component_workflow": {
+    "head": "ec18fda51a7945607dd8a1095da1ef8e4eeca7a8",
+    "tree": "6b84e47604a62ad8a4a3063860296d8d450e9f76",
+    "tests": 137,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "raw_files": 799,
+    "raw_prepost_equal": true,
+    "evidence": "release/evidence/runtime-137-ec18fda/"
   }
 }

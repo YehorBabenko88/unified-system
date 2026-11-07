@@ -51,7 +51,7 @@
     {
       "node": "PC1",
       "os": "Microsoft Windows 11 Home",
-      "windows11_pro_requirement": "MISMATCH_HOME",
+      "windows11_pro_requirement": "OWNER_APPROVED_SEPARATE_HOME_QUALIFICATION_PENDING",
       "resources": {
         "os": "Microsoft Windows 11 Home",
         "build": "26200",
@@ -104,7 +104,12 @@
         }
       ],
       "installation": "BLOCKED_GATES_NOT_MET",
-      "rollback_ready": false
+      "rollback_ready": false,
+      "allowed_roles": [
+        "WORKER",
+        "TERMINAN"
+      ],
+      "coordinator_role": "NOT_ADMITTED"
     },
     {
       "node": "PC2",
@@ -283,7 +288,7 @@
     {
       "node": "LS7",
       "os": "Microsoft Windows 11 Home",
-      "windows11_pro_requirement": "MISMATCH_HOME",
+      "windows11_pro_requirement": "OWNER_APPROVED_SEPARATE_HOME_QUALIFICATION_PENDING",
       "resources": {
         "os": "Microsoft Windows 11 Home",
         "build": "26200",
@@ -336,7 +341,12 @@
         }
       ],
       "installation": "BLOCKED_GATES_NOT_MET",
-      "rollback_ready": false
+      "rollback_ready": false,
+      "allowed_roles": [
+        "WORKER",
+        "TERMINAN"
+      ],
+      "coordinator_role": "NOT_ADMITTED"
     }
   ],
   "observed_nodes": 6,
@@ -360,7 +370,7 @@
   ],
   "readiness": "NOT_QUALIFIED",
   "new_blockers": [
-    "PC1_AND_LS7_WINDOWS_11_HOME_NOT_PRO",
-    "PC3_PREEXISTING_FIREWALL_PROFILES_OFF_ESET_RUNNING_NEEDS_POLICY_REVIEW"
+    "PC3_PREEXISTING_FIREWALL_PROFILES_OFF_ESET_RUNNING_NEEDS_POLICY_REVIEW",
+    "PC1_AND_LS7_HOME_QUALIFICATION_APPROVED_BUT_NOT_COMPLETED"
   ]
 }
