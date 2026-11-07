@@ -60,10 +60,12 @@ SUBMIT_RESEARCH. No manual fixture-seeding of fake issued records as authority.
 4. A7 implements exact pinned execute_synthetic_research with strict bool cancel
    observation before/after bounded Meta call. After-return cancellation is still
    guarded at commit. It returns raw artifact+digest, no registry receipt.
-5. A4 reuses actual existing result storage/persist_report_fenced candidate ONLY
-   after store.promote/actual lease verifier/experiment identity codec is qualified.
-   Current supported Gateway result-store binding NONE. A4 identifies exact existing
-   registry/table/object/version API; no replacement registry. A2 implements actual
+5. A7 supplies exact existing result_persistence.persist_report_fenced and
+   provenance.execute_owned/ReadOnlyResultsApp candidate source. Actual owned
+   store.stage/promote, lease verifier and experiment identity binding are NONE
+   until qualified; these are NOT existing A4 APIs. A4 explicitly has NO admitted
+   result/experiment registry or promote API. ObjectStore.put/local copy/codec
+   is not fenced result publication. No replacement registry. A2 implements actual
    result publication authorization with all eligible closure/hold/debit checks,
    original command/receipt and same assignment/cancellation order. A5 never writes
    storage publication or marks COMPLETED from computed bytes alone.
@@ -84,8 +86,9 @@ A2: confirm exact reuse vs successor of frozen v3; implement issued Assignment,
 current dispatch, durable command/result proof, owned cancel/status/reconcile and
 native current policy/leader/generation checks. Publish typed request/results,
 keys, proof lifetime, actual transaction operation/encoded-byte ledger <=64/32768.
-A4: exact existing result registry source and genuine promote/receipt integration,
-actual storage reservations/closure/replica policy; one disposable volume may NOT
+A7: exact existing result registry candidates and actual store.stage/promote
+plus genuine lease-proof implementation/source or explicit NONE.
+A4: actual storage reservations/closure/replica policy and same-Consul publication; one disposable volume may NOT
 silently reduce required two-copy policy. If unsupported, publication stays closed.
 A7: exact callable source, exception/result/cancel contract and pinned deterministic
 vector; strict nonbool/awaitable/error cancellation refusal, no authority callback.
