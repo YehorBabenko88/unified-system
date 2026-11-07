@@ -1,6 +1,6 @@
 {
   "schema": "unified.execution-checkpoint.v1",
-  "observed_at_utc": "2026-11-07T11:25:58.256190+00:00",
+  "observed_at_utc": "2026-11-07T11:37:08.973984+00:00",
   "baseline": "92b8328a65520b86e63f8052b2429422334c98b9",
   "status": "IN_PROGRESS_NO_GO",
   "blockers": [
@@ -24,10 +24,10 @@
       "ROOT_CAUSE": "Finite inputs overflow intermediate arithmetic; CI may become infinity",
       "FIX_COMMIT": "ff1c42cad883f54c06293884ef29a290dd74e306",
       "FAILING_TEST": "Agent7 reported original3PASS7FAIL",
-      "LOCAL_RESULT": "Owner reported10regressions and25combined PASS0skip; Root independent review delegated to Agent8",
+      "LOCAL_RESULT": "A8 independently10cleanPASS0skip;25functionalPASS but4ignoredchildpyc cause postguard refusal; preserve distinction",
       "HOSTED_RESULT": "queued at owner observation, not PASS",
-      "INTEGRATION_RESULT": "Draft116; not canonical release",
-      "REMAINING_DEPENDENCY": "Agent8 exact independent review and hosted qualification",
+      "INTEGRATION_RESULT": "Draft116 bounded helper reviewed; native/release not admitted",
+      "REMAINING_DEPENDENCY": "Agent7 narrow ordinary child -B fix; original protected native2446 unchanged; hosted qualification",
       "NEXT_ACTION": "Verify candidate without invoking protected native source"
     },
     {
@@ -61,29 +61,34 @@
       "OWNER": "Agent7 with Agent3/6",
       "EXACT_FILE": "NEW strattester/contracts/agent7-financial-boundary/{financial-calculation.schema.json,adapter.py,test_adapter.py,PROTOCOL.txt}",
       "ROOT_CAUSE": "PaperLedger net PnL is incompatible with Math gross-PnL input without explicit cost/unit mapping",
-      "FIX_COMMIT": null,
+      "FIX_COMMIT": "c8659d04a2a2eff5282769c2520cce76476c17b1",
       "FAILING_TEST": "Positive/negative contract cases pending; mismatch reproduced previously",
-      "LOCAL_RESULT": "Ownership allocated; schema proposal not API ACK",
+      "LOCAL_RESULT": "Root18PASS0skip/fullrawprepost; A6reported240Decimal checks; arithmetic only",
       "HOSTED_RESULT": "NOT_RUN",
       "INTEGRATION_RESULT": "UNAVAILABLE pending qualified financial profile",
-      "REMAINING_DEPENDENCY": "Explicit currency/units/funding/calculationbasis and provenance agreement",
-      "NEXT_ACTION": "Pure adapter RED then implementation; reject ambiguous DTO and double subtraction"
+      "REMAINING_DEPENDENCY": "C3 label encoding gap requires separately versioned ASCII proposal/profile; actual unit/provenance source admission absent",
+      "NEXT_ACTION": "Agent7 implement v2 ASCII constraints and dedicated Windows/Ubuntu workflow then exact owner review"
     },
     {
       "BLOCKER_ID": "B_LAN_MUX_INTEGRATION_HASH_DIAGNOSTIC",
       "OWNER": "Agent1 / Root",
       "EXACT_FILE": "unified_system/lan_mux_channel.py::Reassembler.push;LanMuxChannel._reader/receive",
-      "ROOT_CAUSE": "Under investigation; concurrent close/error propagation suspected, not established",
-      "FIX_COMMIT": null,
+      "ROOT_CAUSE": "First terminal cause retained before releasing channel lock; deterministic event-gated mTLS regression.",
+      "FIX_COMMIT": "9680babc85ca605f8450936f5410728898d5b71e",
       "FAILING_TEST": "test_lan_mux_channel.MuxTlsTests.test_real_hash_failure_no_complete_payload_and_memory_cleanup",
-      "LOCAL_RESULT": "Actual62 tests,1FAIL on uncommitted component integration",
+      "LOCAL_RESULT": "50 mandatory tests PASS/0skip on exact integrated89932fec in freshclone; full raw pre/post1302",
       "HOSTED_RESULT": "NOT_RUN for new defect fix",
-      "INTEGRATION_RESULT": "Rejected attempt, merge aborted; candidate not included",
+      "INTEGRATION_RESULT": "Isolated component source integrated; native admission NOT_GRANTED",
       "REMAINING_DEPENDENCY": "Deterministic regression and owner fix plus independent review",
-      "NEXT_ACTION": "Agent1 reproduce and fix without weakening HASH assertion"
+      "NEXT_ACTION": "Agent8 review exactsource; await dedicated Windows/Ubuntu CI"
     }
   ],
   "physical_changes": false,
   "inventory_repeated": false,
-  "protected_math_retry": false
+  "protected_math_retry": false,
+  "integration_source_head": "89932fec1821d956b9dfd0ab0011d732c5b96369",
+  "independent_reviews": {
+    "Math116": "https://github.com/YehorBabenko88/unified-system/blob/32292bcdccaa26cc4fd32ce3a49b5319307f4b6f/docs/audits/agent8-20261106/phase66/independent-review.md",
+    "installer_archive": "https://github.com/YehorBabenko88/unified-system/blob/32292bcdccaa26cc4fd32ce3a49b5319307f4b6f/docs/audits/agent8-20261106/phase67/independent-review.md"
+  }
 }
