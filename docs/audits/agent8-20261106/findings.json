@@ -61,12 +61,29 @@
     "evidence": "Passing job conclusions coexist with skipped JUnit cases; no authoritative case-to-requirement map supplied to auditor.",
     "required_correction": "Publish mandatory IDs, expected counts/platforms and permitted optional skip reasons; missing/skip/cancelled cannot count as PASS.",
     "root_38c3909_evidence_subitem": {
-      "status": "OPEN",
+      "status": "CORRECTION_VERIFIED_SUBITEM_CLOSED",
       "severity": "P2",
       "expected": "16 indexed members retrievable with matching rawSHA",
       "actual": "15 retrievable/hashmatch; indexed pyc absent",
       "evidence": "phase50/independent-review.json",
-      "required_correction": "Preserve originalreceipt and explicitly distinguish local-only index or publish bound fixture"
+      "required_correction": "Preserve originalreceipt and explicitly distinguish local-only index or publish bound fixture",
+      "correction": {
+        "requirement": "F07_ROOT_EVIDENCE_PUBLICATION_SUBITEM",
+        "head": "aefa2a9039349445bd3eaee25b12f9b6bec4c01d",
+        "tree": "3fb3d639a46e4ffb2bd8cc22e814651006169b8e",
+        "original_receipt_unchanged": true,
+        "direct_original_members_hash_verified": 15,
+        "archived_fixture_decoded_bytes": 259,
+        "decoded_sha256": "7e33742ba7689af9acad63c0a1b17551182b10b9dc723f2afcac95a0afd850a3",
+        "encoded_sha256": "7b50b2aa3a50d1ffbb7848c40da46aee82d43a04b49ce6dbe3edeb0519a9a273",
+        "bytecode_executed_or_imported": false,
+        "original_38c_completeness_failure_preserved": true,
+        "status": "CORRECTION_VERIFIED_PUBLICATION_SUBITEM_CLOSED",
+        "global_F07": "OPEN_OTHER_EVIDENCE_GAPS",
+        "A8_merged_runtime_execution": "NOT_RUN",
+        "test_rerun": "NONE_BYTE_VERIFICATION_ONLY",
+        "overall": "NO_GO"
+      }
     }
   },
   {

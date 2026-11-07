@@ -12,3 +12,6 @@ FAIL/P2 existing F07 evidence completeness: Root root-result.json indexes16evide
 Evidence: independent-review.json, root-result.original.json and original top-level Root receipts/logs in this directory. Reproduction ../verify_root_mux_consolidation.py. Root initial linked-worktree rejection was reported by owner; not independently replayed or promoted to a test result here.
 
 Native/security provider synthetic, GET unwired, no LIVE/resource release/Windows Home/fleet acceptance. PHYSICAL and TAILSCALE_REMOVAL BLOCKED; Overall NO-GO. Existing6P1/3P2 counts unchanged; this is a concrete subitem under open F07. No production/main merge, real orders, install, native provisioning, host/security/network changes or fault injection performed by A8.
+
+
+Subsequent correction independently verified: aefa2a9039349445bd3eaee25b12f9b6bec4c01d/tree3fb3d639a46e4ffb2bd8cc22e814651006169b8e preserves original root-result bytes, clearly distinguishes15direct members and one original local-only fixture, publishes safe RFC4648base64. All15rawhashes, encodedhash, strictdecoded259bytes/rawhash7e33742b… and roundtrip verified. Bytecode never imported/executed. Evidence publication-correction-review.json/original correction/base64archive. This publication subitem is CLOSED; original38c failure historical, globalF07 stillOPEN. No runtime rerun, no result/qualification transfer.
