@@ -1,0 +1,19 @@
+test_supervisor_deployment (unittest.loader._FailedTest.test_supervisor_deployment) ... ERROR
+
+======================================================================
+ERROR: test_supervisor_deployment (unittest.loader._FailedTest.test_supervisor_deployment)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_supervisor_deployment
+Traceback (most recent call last):
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\unittest\loader.py", line 137, in loadTestsFromName
+    module = __import__(module_name)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\.codex\worktrees\supervisor-root-adapters-20261107\unified-system\tests\test_supervisor_deployment.py", line 10, in <module>
+    from unified_system.supervisor_deployment import DeploymentControllerAdapter, DeploymentBlocked
+ModuleNotFoundError: No module named 'unified_system.supervisor_deployment'
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+FAILED (errors=1)
