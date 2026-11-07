@@ -51,6 +51,24 @@ transaction records must use the supported A2/A4 APIs, not these observation nam
 ScenarioObservation is untrusted test data, never a native proof/permission.
 Passing assertions on caller-made observations cannot qualify actual execution.
 
+Observation counts are confirmed logical effects of the tested original commands,
+not raw KV/session/denial-receipt writes or all unrelated storage accounting.
+The publication scenarios require one FRESH unique stored blob/physical allocation
+and held entitlement, so their expected confirmed debit count is1. Dedup/replica
+reuse with legitimate zero additional physical charge needs a separately defined
+case; it must not be accidentally classified as a failed fresh-allocation test.
+Prepared/uncertain physical charges remain charged, including after rejection;
+zero publication debit does not mean those bytes were refunded or never existed.
+
+No-quorum observations refer to committed effects DURING the proved isolated
+quorum-loss window, derived from actual stand/native commit evidence, not a boolean
+or an impossible consistent read. UNKNOWN may later reconcile as committed after
+quorum returns; record that separately under the SAME identity. The test does not
+assert that an original uncertain proposal can never commit after recovery.
+Race order likewise comes from native mutation commit indices/receipts, not client
+wall clocks. Other admission/lease/closure gates must be controlled and stable;
+unresolved outcomes remain unavailable/inconclusive, never guessed definitive.
+
 The actual fixture must retain raw source/endpoint/schema/native record and
 receipt evidence. It must use the SAME existing Consul transaction order and stable
 partition assignment key for publication/supersession, verify actual current lease/
