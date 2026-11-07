@@ -1,0 +1,66 @@
+name: Agent2 Control Mux real Consul incremental runtime
+on:
+  push:
+    branches: [feature/agent2-control-mux-runtime-20261107]
+    paths: ['unified_system/control_mux/**', 'tests/control_mux/**', 'docs/control-mux/**', '.github/workflows/agent2-control-mux-runtime.yml']
+  pull_request:
+    paths: ['unified_system/control_mux/**', 'tests/control_mux/**', 'docs/control-mux/**', '.github/workflows/agent2-control-mux-runtime.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  isolated:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    env:
+      EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+      PYTHONDONTWRITEBYTECODE: '1'
+      GIT_NO_REPLACE_OBJECTS: '1'
+      GIT_CONFIG_COUNT: '2'
+      GIT_CONFIG_KEY_0: core.autocrlf
+      GIT_CONFIG_VALUE_0: 'false'
+      GIT_CONFIG_KEY_1: core.eol
+      GIT_CONFIG_VALUE_1: lf
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: YehorBabenko88/bybit-cluster-grid
+          ref: 58cfe0f51bc05bb0ee2ed09368a9b64679358c63
+          path: .deps/grid
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12.10'
+      - name: Pinned dependencies and pure Root seam object
+        shell: python
+        run: |
+          import pathlib,subprocess,sys
+          subprocess.run([sys.executable,'-m','venv','.runtime-env'],check=True)
+          py=pathlib.Path('.runtime-env')/('Scripts/python.exe' if sys.platform=='win32' else 'bin/python')
+          subprocess.run([str(py),'-m','pip','install','--no-compile','--require-hashes','--only-binary=:all:','-r','tests/control_mux/requirements.lock'],check=True)
+          subprocess.run(['git','--no-replace-objects','fetch','origin','cc286bce5e51e3670bd8a6cdfd3b663307268703'],check=True)
+      - name: Download pinned isolated Consul binary (not installation)
+        shell: bash
+        run: python -I -B tests/control_mux/fetch_consul.py --output .lab-bin
+      - name: Exact-source mandatory unit and three-voter HTTP/Consul cases
+        shell: python
+        run: |
+          import os,pathlib,subprocess,sys
+          binary=pathlib.Path('.lab-bin')/('consul.exe' if sys.platform=='win32' else 'consul')
+          py=pathlib.Path('.runtime-env')/('Scripts/python.exe' if sys.platform=='win32' else 'bin/python')
+          subprocess.run([str(py),'-I','-B','tests/control_mux/source_runner.py','--expected-head',os.environ['EXPECTED_HEAD'],'--grid-source','.deps/grid','--binary',str(binary.resolve()),'--scratch',str(pathlib.Path('.lab-data').resolve()),'--output','.lab-evidence'],check=True)
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: agent2-control-mux-${{ matrix.os }}
+          path: .lab-evidence
+          if-no-files-found: error
