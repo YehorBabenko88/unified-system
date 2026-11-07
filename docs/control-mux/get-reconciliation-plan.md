@@ -33,23 +33,23 @@
 - Missing/PENDING/UNKNOWN and oversized wrapper must503 with no digest fabrication, mutation, truncation or hold release.
 - GET parser duplicates/framing/query-original alias/command-only headers and no-leader history; default closed before provider/read.
 
-## Task1 â€” RED endpoint and semantic tests
-- [ ] Add unit parser/default-closed tests; actual HTTP GET201 history test fails503 on current source before implementation. Preserve RED log.
-- [ ] Add runtime validator conformance24vectors and independently varied cap/link negatives; no actual204 production write path.
+## Task1 — RED endpoint and semantic tests
+- [x] Add unit parser/default-closed tests; actual HTTP GET201 history test fails503 on current source before implementation. Preserve RED log.
+- [x] Add runtime validator conformance24vectors and independently varied cap/link negatives; no actual204 production write path.
 
-## Task2 â€” Actual observation/wrapper and HTTP GET
-- [ ] New product reconciliation.py pins exact schema, validates full review2 semantics and cap, no authority by schema alone.
-- [ ] Extend _observe privately with current query correlation; definitive wrapper built only from same captured/validated native index+command+receipt+response. Existing reconcile/mutation responses unchanged.
-- [ ] Add read method using existing _identity GET_COMMAND; distinguish missing/ambiguous from provider/quorum failure without fake digest. Keep existing owner redaction.
-- [ ] Add terminal wrapper-size preflight before actual final receipt commit for implemented OPEN/SUB/CLOSE; max-index size bound never used as observed evidence.
-- [ ] Wire GET raw parsing -> native resolve GET_COMMAND -> actual store observation -> separate200 or existing503/403; no lease-provider call on GET.
+## Task2 — Actual observation/wrapper and HTTP GET
+- [x] New product reconciliation.py pins exact schema, validates full review2 semantics and cap, no authority by schema alone.
+- [x] Extend _observe privately with current query correlation; definitive wrapper built only from same captured/validated native index+command+receipt+response. Existing reconcile/mutation responses unchanged.
+- [x] Add read method using existing _identity GET_COMMAND; distinguish missing/ambiguous from provider/quorum failure without fake digest. Keep existing owner redaction.
+- [x] Add terminal wrapper-size preflight before actual final receipt commit for implemented OPEN/SUB/CLOSE; max-index size bound never used as observed evidence.
+- [x] Wire GET raw parsing -> native resolve GET_COMMAND -> actual store observation -> separate200 or existing503/403; no lease-provider call on GET.
 
-## Task3 â€” Actual HTTP/Grid/Consul fault evidence
-- [ ] Real HTTP wrapper original201/202, current/original query correlation, exact original bytes/digests/receipt native index, no private KV changes on GET.
-- [ ] Real HTTP missing/PENDING/corruption/index-race/revoked-current/cross-owner/no-quorum failures; no original mutation writes or digest invention. Positive historical reads need no active app leader.
-- [ ] Preserve prior42case IDs/18unit; append exact new mandatory inventory and pin model vectors. Source guard8 unchanged.
+## Task3 — Actual HTTP/Grid/Consul fault evidence
+- [x] Real HTTP wrapper original201/202, current/original query correlation, exact original bytes/digests/receipt native index, no private KV changes on GET.
+- [x] Real HTTP missing/PENDING/corruption/index-race/revoked-current/cross-owner/no-quorum failures; no original mutation writes or digest invention. Positive historical reads need no active app leader.
+- [x] Preserve prior42case IDs/18unit; append exact new mandatory inventory and pin model vectors. Source guard8 unchanged.
 
-## Task4 â€” Publish exact source and review
+## Task4 — Publish exact source and review
 - [ ] Dedicated branch/workflow selection, new owned docs/progress only. Fresh raw Git materialization and -I-B complete source-bound unit/real/guards run; no skips or cached-bytecode substitution.
 - [ ] Independent focused review, fix observed defects, exact raw evidence/output hashes, separate Draft PR. Current Linux/Windows hosted status recorded honestly.
 - [ ] Root/A6 current-auth/error/correlation mapping and fresh A8 exact-source audit before owner integration; no native/office/production admission.
@@ -58,3 +58,5 @@
 Root/A6 chose clean missing/PENDING503/NONE; actual ambiguity RECEIPT_AMBIGUOUS; provider/quorum uncertainty503. Actual native invalid/expired401 only via exact closed NativeAdmissionError kind; unknown/subclass/malformed/foreign/untyped503. Owner/actor disclosure403/NONE vs actualRBAC403/ROLE_DENIED. Four provider signatures, Root schema and GET_COMMAND unchanged. Current valid query correlation on401/403/503, invalidnull. Only native callback boundaries preserve typed denials; post-read storage/hash faults cannot become session denials. This is internal proposed error-class ABI only pending exact source/native-owner review.
 RED logs preserved in A2workspace work/mux-get-{parser,document,endpoint}-RED.log: actual initial HTTPGET503 expected200 observed. First green iteration caught wrapper-local raw shadowing via model vectors, and lost-prepare resume exposed size-preflight access to a branch-local preimage; fixed to use original captured stored preimage. Second real iteration correctly failed fault harness assumption: Consul same-valuePUT is a no-op. Actual separate probe first10/same10/changed12; race now changes policy revision or explicitly recreates SAME receipt bytes, not fabricated indices. No old failed run relabeledPASS.
 Local preliminary execution:33unit PASS;68real cases PASS (42retained+26GET), native identity explicitlysynthetic; current-source mandatory inventory further adds4negative classification cases for72total pending fresh final qualification. Actual Root provider remainsabsent/default503. maxindex2**63-1 appears only in discarded pure SIZE preflight, never stored/returned/claimedobserved.
+
+Complete current-source local72real/33unit PASS; clean independentp0review/33unitrerun. Final immutable source qualification, hostedCI and Root/A6/A8 exactsource reviews remain pending.
