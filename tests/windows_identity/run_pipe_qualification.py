@@ -31,6 +31,10 @@ def run(output):
         else:
             assert value['status']=='REJECTED' and value['owned_child_stopped']
             assert value['reason'] in ('CLIENT_PID_MISMATCH','IDENTIFICATION_LEVEL_REQUIRED')
+            if name=='wrong-pid':
+                assert value['kernel_client_pid']!=value['expected_client_pid']
+        if name!='wrong-pid':
+            assert value['kernel_client_pid']==value['expected_client_pid']
         cases.append({'case':name,'exit':result.returncode,'result':value,
             'stdout_sha256':hashlib.sha256(result.stdout).hexdigest(),
             'stderr_sha256':hashlib.sha256(result.stderr).hexdigest()})

@@ -50,6 +50,7 @@ public static class UnifiedPipeLab {
     public sealed class Result {
         public string status, reason, sid_sha256, native_logon_id;
         public int impersonation_level;
+        public uint kernel_client_pid, expected_client_pid;
         public bool restored_server_identity, client_pid_matches_owned_child,
             observer_is_administrator, owned_child_stopped, runtime_admission=false;
     }
@@ -108,8 +109,12 @@ public static class UnifiedPipeLab {
             Need(Encoding.ASCII.GetString(bytes)=="USI1","HANDSHAKE_REJECTED");
             uint pid,session;
             Need(GetNamedPipeClientProcessId(handle,out pid),"CLIENT_PID_UNAVAILABLE");
-            Need(pid==(uint)child.Id&&!wrongPid,"CLIENT_PID_MISMATCH");
-            result.client_pid_matches_owned_child=true;
+            // The negative case compares the REAL kernel client PID with the
+            // still-live parent PID, not an unconditional false predicate.
+            uint expectedPid=wrongPid?(uint)Process.GetCurrentProcess().Id:(uint)child.Id;
+            result.kernel_client_pid=pid;result.expected_client_pid=expectedPid;
+            result.client_pid_matches_owned_child=pid==(uint)child.Id;
+            Need(pid==expectedPid,"CLIENT_PID_MISMATCH");
             Need(GetNamedPipeClientSessionId(handle,out session),"CLIENT_SESSION_UNAVAILABLE");
             IntPtr token;
             if(OpenThreadToken(GetCurrentThread(),8,true,out token)) {

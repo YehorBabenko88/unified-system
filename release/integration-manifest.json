@@ -442,10 +442,30 @@
     "skipped": 0,
     "scope": "SAME_ACCOUNT_DISPOSABLE_KERNEL_IDENTIFICATION_NOT_OPERATOR_AUTH_BRIDGE",
     "runtime_admission": "BLOCKED",
-    "evidence": "release/evidence/native-pipe-identification-20261107/"
+    "evidence": "release/evidence/native-pipe-identification-20261107/",
+    "corrected_pid_evidence": "release/evidence/native-pipe-identification-pid-correction-20261107/",
+    "original_wrong_pid_claim": "RECLASSIFIED_FORCED_PREDICATE_ONLY"
   },
   "stage0_20261107": {
     "path": "release/node-inventory-20261107.json",
     "status": "READ_ONLY_SIX_NODES_OBSERVED_NOT_INSTALLATION_READY"
+  },
+  "math112_mandatory_ci": {
+    "head": "917d99672e37db59835a8ab23b03c99826b12d78",
+    "run": 42256450733,
+    "attempt": 1,
+    "actual_github_jobs_success": 7,
+    "windows_cells_106_each_verified": true,
+    "native_acceptance": "BLOCKED",
+    "evidence": "release/evidence/math112-mandatory-20261107/"
+  },
+  "root_f17_controls": {
+    "source_head": "fb5839ab0e83cedfed0faf6a1131e93b03ac1beb",
+    "clean_mandatory_tests": 137,
+    "raw_files": 744,
+    "raw_prepost_equal": true,
+    "scope": "OWN_OFFLINE_CORRECTED_CONTROLS_NOT_GLOBAL_CLOSURE",
+    "evidence": "release/evidence/f17-root/",
+    "independent_a8_review": "PENDING"
   }
 }

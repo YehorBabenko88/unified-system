@@ -1,0 +1,54 @@
+{
+  "source_head": "4416eaf5350215d0f13609adfdbd8b295a68377d",
+  "scope": "OWN_INDEPENDENT_CLONE_LOCAL_WINDOWS_NOT_HOSTED",
+  "controls": [
+    {
+      "case": "clean",
+      "exit": 0,
+      "marker_executed": false,
+      "receipt_emitted": true,
+      "test_log_emitted": true,
+      "stdout_sha256": "0f3b3a49e745e78b0fefe66dd13f84789ba67b131d612fd15b13eae90bed8412",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tests": 137
+    },
+    {
+      "case": "cached",
+      "exit": 1,
+      "marker_executed": false,
+      "receipt_emitted": false,
+      "test_log_emitted": false,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "c8919269cc6d437fa74e40a6803da152b9e0d11c27e239292f1d99e199346bb7"
+    },
+    {
+      "case": "unexpected-py",
+      "exit": 1,
+      "marker_executed": false,
+      "receipt_emitted": false,
+      "test_log_emitted": false,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "14a5e5f50a9d694a6f3baf6aaa2ff09c448c4276a6153916a970c8cb8b7274ba"
+    },
+    {
+      "case": "redirected-cache",
+      "exit": 1,
+      "marker_executed": false,
+      "receipt_emitted": false,
+      "test_log_emitted": false,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "102df09e344b5847e733c4aac243afa5bcd37ce9d871a1baa579ca3225528e31"
+    },
+    {
+      "case": "post-cache",
+      "exit": 1,
+      "marker_executed": false,
+      "receipt_emitted": false,
+      "test_log_emitted": true,
+      "stdout_sha256": "450163fcdba3862e52d46c31728fc367f7216b69fb26a770aabefc7cfc8fd859",
+      "stderr_sha256": "e382924b57857844e9b525c7f8b5702e8c098c723df3fa9ab886aabc579bb7ca"
+    }
+  ],
+  "post_hook": "CONTROLLED_TEST_RUNNER_WRITE_NOT_PRODUCT_DEFECT",
+  "primary_refs_changed": false
+}
