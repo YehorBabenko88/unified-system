@@ -67,15 +67,20 @@ jobs:
                           'tests/test_agent5_scheduler_runtime.py',
                           'docs/scheduler/component-test-inventory-v2.json',
                           'docs/scheduler/component-test-inventory-v3.json', '.github/workflows/agent5-components.yml']
-              entries = subprocess.check_output(['git', '--no-replace-objects', 'ls-tree', '-rz', '--full-tree', head, '--', *prefixes])
+              entries = subprocess.check_output(['git', '--no-replace-objects', 'ls-tree', '-rz', '--full-tree', head])
               files = []
               root = Path.cwd()
+              import_suffixes = {'.py', '.pyc', '.pyo', '.pyd', '.so', '.dll', '.zip', '.egg', '.pth'}
               for entry in entries.split(b'\0'):
                   if not entry:
                       continue
                   metadata, name = entry.split(b'\t', 1)
                   mode, kind, oid = metadata.decode('ascii').split()
                   relative = name.decode('utf-8')
+                  protected = (Path(relative).suffix.lower() in import_suffixes or
+                      any(relative == prefix or relative.startswith(prefix + '/') for prefix in prefixes))
+                  if not protected:
+                      continue
                   item = {'path': relative, 'git_mode': mode, 'git_blob_oid': oid,
                           'regular_file': False, 'matches_committed_blob': False,
                           'committed_sha256': None, 'actual_sha256': None,
@@ -109,13 +114,21 @@ jobs:
               required = set(prefixes[1:]) | {'scheduler_components/__init__.py'}
               unexpected = []
               bytecode_paths = []
-              committed_test_paths = set(git('ls-tree', '-r', '--name-only', head, '--', 'tests').splitlines())
-              for base in ('scheduler_components', 'tests'):
-                  for path in (root / base).rglob('*'):
-                      if '__pycache__' in path.parts or path.suffix.lower() in ('.pyc', '.pyo'):
-                          bytecode_paths.append(path.relative_to(root).as_posix())
-                      if base == 'tests' and path.suffix == '.py' and path.relative_to(root).as_posix() not in committed_test_paths:
-                          unexpected.append(path.relative_to(root).as_posix())
+              # CWD is a complete import root, not just the owned package. A root
+              # typing.py (or another package/extension) can shadow a dependency.
+              for directory, directories, names in os.walk(root, followlinks=False):
+                  directories[:] = [name for name in directories if name != '.git']
+                  for name in list(directories) + names:
+                      path = Path(directory) / name
+                      relative = path.relative_to(root).as_posix()
+                      info = path.lstat()
+                      if stat.S_ISLNK(info.st_mode) or getattr(info, 'st_file_attributes', 0) & 0x400:
+                          unexpected.append(relative)
+                          if name in directories: directories.remove(name)
+                      if name == '__pycache__' or path.suffix.lower() in ('.pyc', '.pyo'):
+                          bytecode_paths.append(relative)
+                      if path.suffix.lower() in import_suffixes and relative not in expected_paths:
+                          unexpected.append(relative)
               for path in (root / 'scheduler_components').rglob('*'):
                   if '__pycache__' not in path.parts and (path.is_file() or path.is_symlink()):
                       relative = path.relative_to(root).as_posix()

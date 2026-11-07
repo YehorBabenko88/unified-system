@@ -20,3 +20,11 @@ checks remain conjunctive. Failure yields no accepted source receipt.
 Scope is source-evidence robustness for the controlled test process, not a sandbox
 against arbitrary hostile native code/interpreter/site hooks or an authority proof.
 Native grants/storage/Windows fleet acceptance remain separate blocked gates.
+
+Follow-up: A8 reproduced an untracked root typing.py shadow after CWD admission.
+A5 independently reproduced52/PASS plus inert marker at0d6eb43. The import root
+must be guarded as a whole: every tracked Python/extension/archive/path-hook file
+is now raw-blob bound, all untracked importable files anywhere below root reject,
+all repository cache entries reject, and symlink/reparse entries reject without
+following them. .git internals are excluded from traversal. Generated evidence
+JSON/logs are permitted; an importable file is never exempted as an output.
