@@ -1,6 +1,9 @@
 {
   "scope": "HISTORICAL_COMPONENT_OR_WIP_DIRECTION_ONLY_NOT_EXACT_815_CAPSULE_APPROVAL",
-  "exact_capsule_owner_review": "PENDING_CURRENT_EXACT_SOURCE_ACK",
+  "exact_capsule_owner_review": {
+    "A4": "STATIC_SOURCE_ABI_ACK_815; RUNTIME_UNCHANGED_BCFA243",
+    "A3": "REQUESTED"
+  },
   "files": [
     {
       "path": "a3-original-direction-review.md",
@@ -16,6 +19,12 @@
       "path": "a4-component-bindings.json",
       "sha256": "67626a7c6dae5c3f8ebe7b10e4989316bfbb54e3714e6a9794a664b9fa03f1f1",
       "bytes": 194960
+    },
+    {
+      "path": "AGENT4-ROOT815-MANIFEST-SOURCE-REVIEW1.json",
+      "sha256": "4f54649e879694e69574223568bbd3dd386d0a2c3f25ed99a557b706ab0a8b96",
+      "bytes": 5051,
+      "scope": "NEW_CURRENT_STATIC_A4_815_OWNER_ACK_NOT_ROUTE_EXECUTION"
     }
   ]
 }

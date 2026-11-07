@@ -25,7 +25,7 @@
   },
   "JOB_SUBMISSION": {
     "pr": 47,
-    "head": "dd24a27816832354a20fc76e90f9a0cbeca71219",
+    "head": "3e498de973536c2d6393f83abe7d59cb1452a9b4",
     "state": "NOT_SUBMITTED_PREPARATION_ONLY"
   },
   "JOB_CANCELLATION": "PENDING",
@@ -34,7 +34,14 @@
     "head": "aed8a7c8a952f96803c207d5e90b133969a47f04",
     "local_component": "ACTUAL_META_COMPUTED_TEST_ONLY",
     "a8_review": "88684052f5adf3ef418dbd2b874f96bdbb13664a",
-    "query_bridge_v2": "DESIGN_ACK_IN_PROGRESS"
+    "query_bridge_v2": {
+      "pr": 76,
+      "head": "1610e149643c1a6817cd739b26fbb2bec4ce2cc2",
+      "tested_source": "5b4d9fafbc3ef64454f23e3c48621536b67f42dc",
+      "owner_targeted_tests": 54,
+      "full_suite": "ENVIRONMENT_FAILURES_REPRODUCED_CONFIGURED_RERUN_PENDING",
+      "job_admission": false
+    }
   },
   "VISUALIZATION_API": {
     "pr": 71,
@@ -45,8 +52,9 @@
   "VERTICAL_E2E": "NOT_COMPLETE_JOB_AUTHORITY_PUBLICATION_REGISTRY_BLOCKED",
   "A8_REVIEW": {
     "entry_matrix": "121ad998ae68c8da60cb55aa991be2f602f7c788",
-    "runtime_cases_executed": 0,
-    "offline_pass_not_transferred": true
+    "offline_pass_not_transferred": true,
+    "latest_read_review": "ACTUAL_815_HTTP_PROBES_EXECUTED_REPORT_PENDING; TEST_OBSERVER_P2_FIXED_BCFA243",
+    "full_40_row_acceptance": "NOT_CLOSED"
   },
   "GATEWAY_BASE_SHA": "6825964bf52375b134c6eb4487808963a0d128ed",
   "SUPERVISOR_COMPATIBILITY": {
@@ -95,7 +103,7 @@
     "Terminal exact-head hosted CI",
     "Native Windows and Home/Pro qualification separate"
   ],
-  "NEXT_ACTION": "Independent exact F155 HTTP read review; continue actual job/publication/bridge/chart adapters",
+  "NEXT_ACTION": "Finish exact source owner review; implement isolated native research broker/dispatch and v2 chart; qualify existing registry projection",
   "GO_NO_GO": "IN_PROGRESS / NO-GO",
   "OFFLINE_EVIDENCE": "UNCHANGED",
   "OWNERSHIP": "A1_A7_ACK_RECEIVED",
@@ -127,13 +135,18 @@
     "driver": "EXTERNAL_TARGETED_SELECTOR"
   },
   "ROOT_READ_QUALIFICATION": {
-    "head": "815fd51d3bbba0b2ec4b87af8a085dd36bf46cf1",
-    "tree": "d25d762a8f9ac712c518862e63b494baec98cb10",
+    "head": "bcfa243b6ecb5389270152612217f8d89643a248",
     "tests": 146,
     "skips": 0,
-    "source_files": 1513,
-    "scope": "DISPOSABLE_AUTHENTICATED_READ_ONLY_NOT_JOB_VERTICAL_E2E"
+    "source_inventory_equal": true,
+    "scope": "DISPOSABLE_AUTHENTICATED_READ_ONLY_NOT_JOB_VERTICAL_E2E",
+    "evidence": "release/evidence/gateway-runtime-observer-fix-20261107/index.json"
   },
   "remaining_expiry_gate": "STRICT_UTC_AT_CONSENSUS_COMMIT_NOT_ESTABLISHED_NO_DISPATCH_ON_UNCERTAIN",
-  "two_domain_lab": "NOT_ADMITTED_SAME_VOLUME_COPIES_NOT_SUFFICIENT"
+  "two_domain_lab": "NOT_ADMITTED_SAME_VOLUME_COPIES_NOT_SUFFICIENT",
+  "CURRENT_OWNER_REVIEW": {
+    "manifest": "A4_NEW_STATIC_815_SOURCE_ACK_4f54649e879694e69574223568bbd3dd386d0a2c3f25ed99a557b706ab0a8b96",
+    "query": "A3_CURRENT_EXACT_SOURCE_ACK_REQUESTED",
+    "historical_ack_scope": "COMPONENT_OR_WIP_DIRECTION_NOT_EXACT_CAPSULE_ADMISSION"
+  }
 }
