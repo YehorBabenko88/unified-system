@@ -1,0 +1,55 @@
+{
+  "cases": [
+    {
+      "name": "duplicate_case_header",
+      "result": "REJECTED"
+    },
+    {
+      "name": "plus_seconds",
+      "result": "REJECTED"
+    },
+    {
+      "name": "unicode_digits",
+      "result": "REJECTED"
+    },
+    {
+      "name": "control_header",
+      "result": "REJECTED"
+    },
+    {
+      "name": "escaped_duplicate_body",
+      "result": "REJECTED"
+    },
+    {
+      "name": "unicode_message",
+      "result": "REJECTED"
+    },
+    {
+      "name": "33members",
+      "result": "REJECTED"
+    },
+    {
+      "name": "mixed403_UID_remains_ambiguous",
+      "result": "PASS"
+    },
+    {
+      "name": "system_priority_delta_increases_floor",
+      "result": "PASS"
+    },
+    {
+      "name": "ban_floor_not_cleared_by_zero",
+      "result": "PASS"
+    },
+    {
+      "name": "past_date_not_clock_resolved",
+      "result": "PASS"
+    },
+    {
+      "name": "max_remaining_not_permission",
+      "result": "PASS"
+    }
+  ],
+  "skips": [],
+  "profile_sha256": "10a85b32e4f4485467bb5d74077d7efb40e9f23e033adcbfb64c2e04974b0921",
+  "scope": "PURE_ADVICE_NO_IO_CLOCK_AUTHORITY"
+}

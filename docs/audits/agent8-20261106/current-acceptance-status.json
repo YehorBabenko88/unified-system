@@ -2434,5 +2434,31 @@
       "media_durability": false
     },
     "evidence": "phase54/independent-review.md"
+  },
+  "GRID_RESPONSE_ADVICE_REVIEW": {
+    "head": "9d71ee33b35048f5bb27875f5f81d151a1184c32",
+    "tree": "8a05f8f6fe21f38328aeecd9a1c0288067003061",
+    "added_paths": [
+      "A\tdocs/market-data/bybit-response-advice-v1.md",
+      "A\tgrid/bybit_response_advice.py",
+      "A\ttests/fixtures/agent3-bybit-response/profile.json",
+      "A\ttests/fixtures/agent3-bybit-response/test-inventory.json",
+      "A\ttests/test_bybit_response_advice.py"
+    ],
+    "exact_tests": 44,
+    "additional_cases": 12,
+    "skips": 0,
+    "primary_raw_files_before_after": 689,
+    "profile_sha256": "10a85b32e4f4485467bb5d74077d7efb40e9f23e033adcbfb64c2e04974b0921",
+    "inventory_sha256": "abaf41c29beb4476a89191ea7023fdfe9bfed87a9b1700c3b557897ac8aa515d",
+    "network_or_provider_calls": 0,
+    "qualification": "PURE_UNTRUSTED_ADVICE_ONLY",
+    "provenance": "PROJECTION_HASHES_NOT_SOURCE_OR_ATTEMPT_ATTESTATION",
+    "rate_enforcement": false,
+    "consumer_wiring": false,
+    "permission": false,
+    "clock_deadline": false,
+    "native_admission": false,
+    "overall": "NO_GO_BROADER_ADMISSION"
   }
 }
