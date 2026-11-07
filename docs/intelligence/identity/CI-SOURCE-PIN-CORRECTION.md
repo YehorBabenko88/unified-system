@@ -25,3 +25,14 @@ are unchanged by this CI/qualification/documentation correction.
 
 Hosted event-pinned Windows/Linux PASS still requires terminal original job logs;
 local qualification and Root component source ACK do not imply hosted acceptance.
+
+Additional primary-object control: A2 reproduced a corrupted loose blob stored
+under the original OID and matching altered tracked bytes; header-only comparison
+accepted it. Qualification now independently recomputes commit, recursive tree
+and every blob Git OID from actual bytes, in addition to SHA256 source manifests.
+Tree-corruption fixture was already refused by Git on this platform (not a newly
+reproduced helper bypass); explicit tree recomputation is still required.
+Successor guard inventory: eight methods, one clean positive plus nine negative
+conditions. Prior six-method/seven-negative logs remain scoped to the earlier
+helper. No global source-qualification finding closure is claimed; A8 independently
+retests its original exact cryptography-shadow vector against the successor.

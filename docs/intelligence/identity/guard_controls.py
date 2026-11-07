@@ -1,5 +1,6 @@
 """Exercise actual qualification helpers with owned negative source fixtures."""
 import ast
+import hashlib
 import inspect
 import json
 import os
@@ -7,6 +8,7 @@ from pathlib import Path
 import subprocess
 import tempfile
 import unittest
+import zlib
 
 runner = Path(__file__).with_name('run_qualification.py')
 raw = runner.read_bytes()
@@ -45,7 +47,7 @@ class SourceControls(unittest.TestCase):
     def test_clean_positive_and_tracked_mutation_negative(self):
         self.assertEqual(len(self.inventory()),1)
         (self.root/'tracked.txt').write_bytes(b'changed\n')
-        with self.assertRaises((AssertionError,ValueError)): self.inventory()
+        with self.assertRaises((AssertionError,ValueError,subprocess.CalledProcessError)): self.inventory()
     def test_unexpected_shadow_rejected(self):
         (self.root/'ssl.py').write_bytes(b'raise RuntimeError("SHADOW_EXECUTED")\n')
         with self.assertRaises((AssertionError,ValueError)): self.inventory()
@@ -63,6 +65,29 @@ class SourceControls(unittest.TestCase):
         alias = self.base/'alias'
         self.junction(alias,self.root)
         with self.assertRaises((AssertionError,ValueError)): self.inventory(alias)
+    def corrupt_object(self, oid, kind, raw):
+        path=self.root/'.git'/'objects'/oid[:2]/oid[2:]
+        path.parent.mkdir(exist_ok=True)
+        if path.exists(): path.chmod(0o600)
+        path.write_bytes(zlib.compress(kind.encode()+b' '+str(len(raw)).encode()+b'\0'+raw))
+    def git(self,*args):
+        return subprocess.check_output(['git','--no-replace-objects','-C',str(self.root),*args])
+    def test_tampered_primary_blob_oid_rejected(self):
+        oid=self.git('rev-parse','HEAD:tracked.txt').decode().strip()
+        changed=b'changed\n'
+        self.corrupt_object(oid,'blob',changed)
+        (self.root/'tracked.txt').write_bytes(changed)
+        with self.assertRaises((AssertionError,ValueError)): self.inventory()
+    def test_tampered_primary_tree_oid_rejected(self):
+        oldblob=self.git('rev-parse','HEAD:tracked.txt').decode().strip()
+        treeoid=self.git('rev-parse','HEAD^{tree}').decode().strip()
+        treeraw=self.git('cat-file','tree',treeoid)
+        changed=b'changed\n'
+        bloboid=hashlib.sha1(b'blob '+str(len(changed)).encode()+b'\0'+changed).hexdigest()
+        self.corrupt_object(bloboid,'blob',changed)
+        self.corrupt_object(treeoid,'tree',treeraw.replace(bytes.fromhex(oldblob),bytes.fromhex(bloboid)))
+        (self.root/'tracked.txt').write_bytes(changed)
+        with self.assertRaises((AssertionError,ValueError,subprocess.CalledProcessError)): self.inventory()
     def test_missing_and_duplicate_test_ids_rejected(self):
         names = namespace['EXPECTED_TEST_NAMES']
         class Case(unittest.TestCase):
@@ -81,5 +106,5 @@ class SourceControls(unittest.TestCase):
 if __name__=='__main__':
     result=unittest.TextTestRunner(verbosity=2).run(unittest.defaultTestLoader.loadTestsFromTestCase(SourceControls))
     if not result.wasSuccessful(): raise SystemExit(1)
-    print(json.dumps(dict(result='PASS',positive_controls=1,negative_controls=7,
+    print(json.dumps(dict(result='PASS',positive_controls=1,negative_controls=9,
                          scope='OWNED_SOURCE_GUARDS_NOT_NATIVE_ADMISSION')))

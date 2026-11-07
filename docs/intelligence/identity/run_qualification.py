@@ -43,9 +43,38 @@ def ordinary(path):
     info = path.lstat()
     assert not path.is_symlink() and not getattr(info,'st_file_attributes',0) & 0x400, str(path)
 
+def primary_objects(root):
+    # Recompute actual Git object IDs, not merely cat-file's reported OID header.
+    head=git(root,'rev-parse','HEAD').decode().strip()
+    commit=git(root,'cat-file','commit',head)
+    assert hashlib.sha1(b'commit '+str(len(commit)).encode()+b'\0'+commit).hexdigest()==head
+    tree=commit.split(b'\n',1)[0]
+    assert tree.startswith(b'tree ')
+    root_oid=tree[5:].decode('ascii')
+    assert git(root,'rev-parse','HEAD^{tree}').decode().strip()==root_oid
+    visited=set()
+    def verify(oid):
+        if oid in visited: return
+        raw=git(root,'cat-file','tree',oid)
+        assert hashlib.sha1(b'tree '+str(len(raw)).encode()+b'\0'+raw).hexdigest()==oid
+        visited.add(oid)
+        offset=0
+        while offset<len(raw):
+            space=raw.index(b' ',offset)
+            end=raw.index(b'\0',space)
+            mode,name=raw[offset:space],raw[space+1:end]
+            child=raw[end+1:end+21]
+            assert len(child)==20 and name not in (b'',b'.',b'..') and b'/' not in name
+            if mode==b'40000': verify(child.hex())
+            else: assert mode in (b'100644',b'100755')
+            offset=end+21
+        assert offset==len(raw)
+    verify(root_oid)
+
 def inventory(root):
     root = Path(root).absolute()
     for ancestor in (root,*root.parents): ordinary(ancestor)
+    primary_objects(root)
     result = {}
     process = subprocess.Popen(['git','--no-replace-objects','-C',str(root),'cat-file','--batch'],
                                stdin=subprocess.PIPE, stdout=subprocess.PIPE)
@@ -64,6 +93,7 @@ def inventory(root):
             header = process.stdout.readline().split()
             assert header[0] == oid and header[1] == b'blob'
             raw = process.stdout.read(int(header[2])); assert process.stdout.read(1)==b'\n'
+            assert hashlib.sha1(b'blob '+str(len(raw)).encode()+b'\0'+raw).hexdigest().encode()==oid
             assert path.read_bytes() == raw, name
             result[name.decode()] = hashlib.sha256(raw).hexdigest()
     finally:
