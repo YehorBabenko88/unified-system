@@ -1,0 +1,1653 @@
+{
+  "schema": "unified.readonly-route-observation.v1",
+  "started_utc": "2026-11-07T10:51:18.555607+00:00",
+  "script_sha256": "503666d2a3d9a3129ab73738834d9e3b9fc55f201fe585960799e3903d6a32e9",
+  "source_config_sha256": "a66fe8fff9eff8011bbd54704c0f543fd6d7b44026b0f7996b56b587e3bcd540",
+  "prior_known_hosts_sha256": "7bfcff98d0ec28cf23a7e2782ac26ce0a3024520fd60822f25de063e83f0233b",
+  "physical_fault_injection": false,
+  "configuration_mutations": false,
+  "adminit_contacted": false,
+  "results": [
+    {
+      "node": "LS5",
+      "started_utc": "2026-11-07T10:51:18.555647+00:00",
+      "finished_utc": "2026-11-07T10:51:25.991245+00:00",
+      "duration_ms": 7436,
+      "process_exit_code": 0,
+      "stdout_sha256": "16fe3191a67062ffc14cc1c463778085fd24c37c027b56d2f917ea7372011715",
+      "stderr_sha256": "f5bd6f75859de63a920e1d38e39431cdac56b7edae95827f0ca12ca41be00f1e",
+      "stderr_bytes": 2494,
+      "status": "OBSERVED_READ_ONLY_INVENTORY",
+      "observation": {
+        "schema": "unified.route-readonly-inventory.v1",
+        "node": "LS5",
+        "observed_utc": "2026-11-07T10:51:25.9115894Z",
+        "exit_code": 0,
+        "resources": {
+          "os": "Microsoft Windows 11 Pro",
+          "build": "26300",
+          "ram_kib": 66425480,
+          "free_ram_kib": 37381856,
+          "free_virtual_kib": 36899320,
+          "disk_bytes": 1999291445248,
+          "disk_free_bytes": 1601963425792,
+          "cpu": [
+            {
+              "Name": "AMD Ryzen 7 5700G with Radeon Graphics         ",
+              "NumberOfCores": 8,
+              "NumberOfLogicalProcessors": 16
+            }
+          ]
+        },
+        "runtime_candidates": [
+          {
+            "path": "C:\\Python315\\python.exe",
+            "version": "3.15.2"
+          },
+          {
+            "path": "C:\\Program Files\\nodejs\\node.exe",
+            "version": "24.22.1"
+          },
+          {
+            "path": "C:\\Windows\\System32\\OpenSSH\\ssh.exe",
+            "version": "OpenSSH_9.5p2 for Windows"
+          }
+        ],
+        "powershell": "5.1.26100.9711",
+        "services": [
+          {
+            "Name": "postgresql-x64-18",
+            "State": "Running",
+            "StartMode": "Auto",
+            "ProcessId": 5112
+          },
+          {
+            "Name": "sshd",
+            "State": "Running",
+            "StartMode": "Auto",
+            "ProcessId": 4180
+          },
+          {
+            "Name": "Tailscale",
+            "State": "Running",
+            "StartMode": "Auto",
+            "ProcessId": 5660
+          }
+        ],
+        "firewall": [
+          {
+            "Name": "Domain",
+            "Enabled": 1,
+            "DefaultInboundAction": 0,
+            "DefaultOutboundAction": 0
+          },
+          {
+            "Name": "Private",
+            "Enabled": 1,
+            "DefaultInboundAction": 0,
+            "DefaultOutboundAction": 0
+          },
+          {
+            "Name": "Public",
+            "Enabled": 1,
+            "DefaultInboundAction": 0,
+            "DefaultOutboundAction": 0
+          }
+        ],
+        "execution_policy": [
+          {
+            "Scope": 4,
+            "ExecutionPolicy": 5
+          },
+          {
+            "Scope": 3,
+            "ExecutionPolicy": 5
+          },
+          {
+            "Scope": 0,
+            "ExecutionPolicy": 5
+          },
+          {
+            "Scope": 1,
+            "ExecutionPolicy": 1
+          },
+          {
+            "Scope": 2,
+            "ExecutionPolicy": 5
+          }
+        ],
+        "ports": [
+          {
+            "LocalAddress": "::",
+            "LocalPort": 61234,
+            "OwningProcess": 7572
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 55432,
+            "OwningProcess": 6916
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 49674,
+            "OwningProcess": 1676
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 49668,
+            "OwningProcess": 4712
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 49667,
+            "OwningProcess": 3048
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 49666,
+            "OwningProcess": 2392
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 49665,
+            "OwningProcess": 1536
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 49664,
+            "OwningProcess": 1704
+          },
+          {
+            "LocalAddress": "::1",
+            "LocalPort": 42050,
+            "OwningProcess": 41956
+          },
+          {
+            "LocalAddress": "fd7a:115c:a1e0::2431:a06f",
+            "LocalPort": 38549,
+            "OwningProcess": 7260
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 21077,
+            "OwningProcess": 14708
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 7680,
+            "OwningProcess": 22488
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 5357,
+            "OwningProcess": 4
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 445,
+            "OwningProcess": 4
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 135,
+            "OwningProcess": 2012
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 22,
+            "OwningProcess": 4180
+          },
+          {
+            "LocalAddress": "127.0.0.1",
+            "LocalPort": 62783,
+            "OwningProcess": 7572
+          },
+          {
+            "LocalAddress": "100.103.160.110",
+            "LocalPort": 62465,
+            "OwningProcess": 7260
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 61234,
+            "OwningProcess": 7572
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 55432,
+            "OwningProcess": 6916
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 49674,
+            "OwningProcess": 1676
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 49668,
+            "OwningProcess": 4712
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 49667,
+            "OwningProcess": 3048
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 49666,
+            "OwningProcess": 2392
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 49665,
+            "OwningProcess": 1536
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 49664,
+            "OwningProcess": 1704
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 33333,
+            "OwningProcess": 7572
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 21077,
+            "OwningProcess": 14708
+          },
+          {
+            "LocalAddress": "127.0.0.1",
+            "LocalPort": 5939,
+            "OwningProcess": 18564
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 5040,
+            "OwningProcess": 8212
+          },
+          {
+            "LocalAddress": "192.168.2.173",
+            "LocalPort": 139,
+            "OwningProcess": 4
+          },
+          {
+            "LocalAddress": "100.103.160.110",
+            "LocalPort": 139,
+            "OwningProcess": 4
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 135,
+            "OwningProcess": 2012
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 22,
+            "OwningProcess": 4180
+          }
+        ],
+        "dns": "23.37.194.81",
+        "https": {
+          "http_status": "200",
+          "exit": 0,
+          "latency_ms": 122
+        },
+        "component_errors": [],
+        "configuration_mutations": false,
+        "service_mutations": false,
+        "bybit_http_requests": 0
+      }
+    },
+    {
+      "node": "PC1",
+      "started_utc": "2026-11-07T10:51:25.992081+00:00",
+      "finished_utc": "2026-11-07T10:51:30.611128+00:00",
+      "duration_ms": 4619,
+      "process_exit_code": 0,
+      "stdout_sha256": "da1a3310b9bd701ebd82c0ddebe16bab778f013870ca13aa50e96be8bfa2a6ff",
+      "stderr_sha256": "ebbf6af0a7f8a2b06a3c5d76e49275e4a944bc8fa4757d2379df8bcba14c06e5",
+      "stderr_bytes": 2488,
+      "status": "OBSERVED_READ_ONLY_INVENTORY",
+      "observation": {
+        "schema": "unified.route-readonly-inventory.v1",
+        "node": "PC1",
+        "observed_utc": "2026-11-07T10:51:30.9027189Z",
+        "exit_code": 0,
+        "resources": {
+          "os": "Microsoft Windows 11 Home",
+          "build": "26200",
+          "ram_kib": 8252684,
+          "free_ram_kib": 3513784,
+          "free_virtual_kib": 4815496,
+          "disk_bytes": 254735806464,
+          "disk_free_bytes": 121062981632,
+          "cpu": [
+            {
+              "Name": "Intel(R) Core(TM) i5-8400 CPU @ 2.80GHz",
+              "NumberOfCores": 6,
+              "NumberOfLogicalProcessors": 6
+            }
+          ]
+        },
+        "runtime_candidates": [
+          {
+            "path": "C:\\Windows\\System32\\OpenSSH\\ssh.exe",
+            "version": "OpenSSH_9.5p2 for Windows"
+          }
+        ],
+        "powershell": "5.1.26100.9711",
+        "services": [
+          {
+            "Name": "ekrn",
+            "State": "Running",
+            "StartMode": "Auto",
+            "ProcessId": 2700
+          },
+          {
+            "Name": "ekrnEpfw",
+            "State": "Running",
+            "StartMode": "Auto",
+            "ProcessId": 2700
+          },
+          {
+            "Name": "postgresql-x64-17",
+            "State": "Running",
+            "StartMode": "Auto",
+            "ProcessId": 5948
+          },
+          {
+            "Name": "sshd",
+            "State": "Running",
+            "StartMode": "Auto",
+            "ProcessId": 5940
+          },
+          {
+            "Name": "Tailscale",
+            "State": "Running",
+            "StartMode": "Auto",
+            "ProcessId": 6084
+          }
+        ],
+        "firewall": [
+          {
+            "Name": "Domain",
+            "Enabled": 1,
+            "DefaultInboundAction": 0,
+            "DefaultOutboundAction": 0
+          },
+          {
+            "Name": "Private",
+            "Enabled": 1,
+            "DefaultInboundAction": 0,
+            "DefaultOutboundAction": 0
+          },
+          {
+            "Name": "Public",
+            "Enabled": 1,
+            "DefaultInboundAction": 0,
+            "DefaultOutboundAction": 0
+          }
+        ],
+        "execution_policy": [
+          {
+            "Scope": 4,
+            "ExecutionPolicy": 5
+          },
+          {
+            "Scope": 3,
+            "ExecutionPolicy": 5
+          },
+          {
+            "Scope": 0,
+            "ExecutionPolicy": 5
+          },
+          {
+            "Scope": 1,
+            "ExecutionPolicy": 1
+          },
+          {
+            "Scope": 2,
+            "ExecutionPolicy": 5
+          }
+        ],
+        "ports": [
+          {
+            "LocalAddress": "::",
+            "LocalPort": 61234,
+            "OwningProcess": 6952
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 49684,
+            "OwningProcess": 572
+          },
+          {
+            "LocalAddress": "::1",
+            "LocalPort": 49677,
+            "OwningProcess": 5684
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 49676,
+            "OwningProcess": 5488
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 49669,
+            "OwningProcess": 3000
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 49666,
+            "OwningProcess": 1848
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 49665,
+            "OwningProcess": 996
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 49664,
+            "OwningProcess": 1056
+          },
+          {
+            "LocalAddress": "::1",
+            "LocalPort": 42050,
+            "OwningProcess": 13524
+          },
+          {
+            "LocalAddress": "fd7a:115c:a1e0::6831:511",
+            "LocalPort": 33282,
+            "OwningProcess": 7912
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 21077,
+            "OwningProcess": 6508
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 7680,
+            "OwningProcess": 17364
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 5938,
+            "OwningProcess": 5224
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 5432,
+            "OwningProcess": 7856
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 5357,
+            "OwningProcess": 4
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 445,
+            "OwningProcess": 4
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 135,
+            "OwningProcess": 1376
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 22,
+            "OwningProcess": 5940
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 61234,
+            "OwningProcess": 6952
+          },
+          {
+            "LocalAddress": "100.85.5.16",
+            "LocalPort": 53608,
+            "OwningProcess": 7912
+          },
+          {
+            "LocalAddress": "127.0.0.1",
+            "LocalPort": 52402,
+            "OwningProcess": 6952
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 49684,
+            "OwningProcess": 572
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 49676,
+            "OwningProcess": 5488
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 49669,
+            "OwningProcess": 3000
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 49666,
+            "OwningProcess": 1848
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 49665,
+            "OwningProcess": 996
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 49664,
+            "OwningProcess": 1056
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 33333,
+            "OwningProcess": 6952
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 21077,
+            "OwningProcess": 6508
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 8080,
+            "OwningProcess": 6000
+          },
+          {
+            "LocalAddress": "127.0.0.1",
+            "LocalPort": 5939,
+            "OwningProcess": 5224
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 5938,
+            "OwningProcess": 5224
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 5432,
+            "OwningProcess": 7856
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 5040,
+            "OwningProcess": 9768
+          },
+          {
+            "LocalAddress": "192.168.2.11",
+            "LocalPort": 139,
+            "OwningProcess": 4
+          },
+          {
+            "LocalAddress": "100.85.5.16",
+            "LocalPort": 139,
+            "OwningProcess": 4
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 135,
+            "OwningProcess": 1376
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 22,
+            "OwningProcess": 5940
+          }
+        ],
+        "dns": "23.37.194.81",
+        "https": {
+          "http_status": "200",
+          "exit": 0,
+          "latency_ms": 109
+        },
+        "component_errors": [],
+        "configuration_mutations": false,
+        "service_mutations": false,
+        "bybit_http_requests": 0
+      }
+    },
+    {
+      "node": "PC2",
+      "started_utc": "2026-11-07T10:51:30.613910+00:00",
+      "finished_utc": "2026-11-07T10:51:34.423664+00:00",
+      "duration_ms": 3810,
+      "process_exit_code": 0,
+      "stdout_sha256": "3c8efd95ed264508843afe49c18374bf23b61ee81ecae4453f5fa3331b4ee8d9",
+      "stderr_sha256": "09f6ddc051ce7431c908845d86effff4293791dec46941cf13790a2c40ceb04e",
+      "stderr_bytes": 2489,
+      "status": "OBSERVED_READ_ONLY_INVENTORY",
+      "observation": {
+        "schema": "unified.route-readonly-inventory.v1",
+        "node": "PC2",
+        "observed_utc": "2026-11-07T10:51:34.5355802Z",
+        "exit_code": 0,
+        "resources": {
+          "os": "Microsoft Windows 11 Pro",
+          "build": "26300",
+          "ram_kib": 16477408,
+          "free_ram_kib": 4986484,
+          "free_virtual_kib": 29789032,
+          "disk_bytes": 254468419584,
+          "disk_free_bytes": 58199638016,
+          "cpu": [
+            {
+              "Name": "Intel(R) Core(TM) i7-10700 CPU @ 2.90GHz",
+              "NumberOfCores": 8,
+              "NumberOfLogicalProcessors": 16
+            }
+          ]
+        },
+        "runtime_candidates": [
+          {
+            "path": "C:\\Windows\\System32\\OpenSSH\\ssh.exe",
+            "version": "OpenSSH_9.5p2 for Windows"
+          }
+        ],
+        "powershell": "5.1.26100.9818",
+        "services": [
+          {
+            "Name": "ekrn",
+            "State": "Running",
+            "StartMode": "Auto",
+            "ProcessId": 2628
+          },
+          {
+            "Name": "ekrnEpfw",
+            "State": "Running",
+            "StartMode": "Auto",
+            "ProcessId": 2628
+          },
+          {
+            "Name": "postgresql-x64-17",
+            "State": "Running",
+            "StartMode": "Auto",
+            "ProcessId": 4428
+          },
+          {
+            "Name": "sshd",
+            "State": "Running",
+            "StartMode": "Auto",
+            "ProcessId": 4484
+          },
+          {
+            "Name": "Tailscale",
+            "State": "Running",
+            "StartMode": "Auto",
+            "ProcessId": 5328
+          }
+        ],
+        "firewall": [
+          {
+            "Name": "Domain",
+            "Enabled": 1,
+            "DefaultInboundAction": 0,
+            "DefaultOutboundAction": 0
+          },
+          {
+            "Name": "Private",
+            "Enabled": 1,
+            "DefaultInboundAction": 0,
+            "DefaultOutboundAction": 0
+          },
+          {
+            "Name": "Public",
+            "Enabled": 1,
+            "DefaultInboundAction": 0,
+            "DefaultOutboundAction": 0
+          }
+        ],
+        "execution_policy": [
+          {
+            "Scope": 4,
+            "ExecutionPolicy": 5
+          },
+          {
+            "Scope": 3,
+            "ExecutionPolicy": 5
+          },
+          {
+            "Scope": 0,
+            "ExecutionPolicy": 5
+          },
+          {
+            "Scope": 1,
+            "ExecutionPolicy": 5
+          },
+          {
+            "Scope": 2,
+            "ExecutionPolicy": 1
+          }
+        ],
+        "ports": [
+          {
+            "LocalAddress": "::",
+            "LocalPort": 21077,
+            "OwningProcess": 4932
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 8001,
+            "OwningProcess": 9340
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 5938,
+            "OwningProcess": 4940
+          },
+          {
+            "LocalAddress": "192.168.2.12",
+            "LocalPort": 61478,
+            "OwningProcess": 19924
+          },
+          {
+            "LocalAddress": "192.168.2.12",
+            "LocalPort": 7680,
+            "OwningProcess": 0
+          },
+          {
+            "LocalAddress": "192.168.2.12",
+            "LocalPort": 7680,
+            "OwningProcess": 0
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 623,
+            "OwningProcess": 4592
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 135,
+            "OwningProcess": 1640
+          }
+        ],
+        "dns": "23.37.194.81",
+        "https": {
+          "http_status": "200",
+          "exit": 0,
+          "latency_ms": 95
+        },
+        "component_errors": [],
+        "configuration_mutations": false,
+        "service_mutations": false,
+        "bybit_http_requests": 0
+      }
+    },
+    {
+      "node": "PC3",
+      "started_utc": "2026-11-07T10:51:34.424998+00:00",
+      "finished_utc": "2026-11-07T10:51:37.745065+00:00",
+      "duration_ms": 3320,
+      "process_exit_code": 0,
+      "stdout_sha256": "25a4b6fc2c904a51411a655bcacd1a8b6bf19f1fc9605425b26af7eddf0b4a57",
+      "stderr_sha256": "42d4b9c792975959e5070a28277a2df91eee1a2122e24ee41e192dc3e5a23af6",
+      "stderr_bytes": 2487,
+      "status": "OBSERVED_READ_ONLY_INVENTORY",
+      "observation": {
+        "schema": "unified.route-readonly-inventory.v1",
+        "node": "PC3",
+        "observed_utc": "2026-11-07T10:51:39.2375315Z",
+        "exit_code": 0,
+        "resources": {
+          "os": "Microsoft Windows 11 Pro",
+          "build": "26300",
+          "ram_kib": 33396912,
+          "free_ram_kib": 24678808,
+          "free_virtual_kib": 25426128,
+          "disk_bytes": 496771264512,
+          "disk_free_bytes": 361298006016,
+          "cpu": [
+            {
+              "Name": "Intel(R) Core(TM) i5-8600 CPU @ 3.10GHz",
+              "NumberOfCores": 6,
+              "NumberOfLogicalProcessors": 6
+            }
+          ]
+        },
+        "runtime_candidates": [
+          {
+            "path": "C:\\Windows\\System32\\OpenSSH\\ssh.exe",
+            "version": "OpenSSH_9.5p2 for Windows"
+          }
+        ],
+        "powershell": "5.1.26100.9818",
+        "services": [
+          {
+            "Name": "ekrn",
+            "State": "Running",
+            "StartMode": "Auto",
+            "ProcessId": 2636
+          },
+          {
+            "Name": "ekrnEpfw",
+            "State": "Running",
+            "StartMode": "Auto",
+            "ProcessId": 2636
+          },
+          {
+            "Name": "postgresql-x64-18",
+            "State": "Running",
+            "StartMode": "Auto",
+            "ProcessId": 4248
+          },
+          {
+            "Name": "sshd",
+            "State": "Running",
+            "StartMode": "Auto",
+            "ProcessId": 4200
+          },
+          {
+            "Name": "Tailscale",
+            "State": "Running",
+            "StartMode": "Auto",
+            "ProcessId": 5276
+          }
+        ],
+        "firewall": [
+          {
+            "Name": "Domain",
+            "Enabled": 0,
+            "DefaultInboundAction": 0,
+            "DefaultOutboundAction": 0
+          },
+          {
+            "Name": "Private",
+            "Enabled": 0,
+            "DefaultInboundAction": 0,
+            "DefaultOutboundAction": 0
+          },
+          {
+            "Name": "Public",
+            "Enabled": 0,
+            "DefaultInboundAction": 0,
+            "DefaultOutboundAction": 0
+          }
+        ],
+        "execution_policy": [
+          {
+            "Scope": 4,
+            "ExecutionPolicy": 5
+          },
+          {
+            "Scope": 3,
+            "ExecutionPolicy": 5
+          },
+          {
+            "Scope": 0,
+            "ExecutionPolicy": 5
+          },
+          {
+            "Scope": 1,
+            "ExecutionPolicy": 5
+          },
+          {
+            "Scope": 2,
+            "ExecutionPolicy": 1
+          }
+        ],
+        "ports": [
+          {
+            "LocalAddress": "::",
+            "LocalPort": 49673,
+            "OwningProcess": 3776
+          },
+          {
+            "LocalAddress": "::1",
+            "LocalPort": 42050,
+            "OwningProcess": 11356
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 7680,
+            "OwningProcess": 5524
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 2179,
+            "OwningProcess": 2348
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 49665,
+            "OwningProcess": 912
+          },
+          {
+            "LocalAddress": "127.0.0.1",
+            "LocalPort": 49615,
+            "OwningProcess": 14672
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 5432,
+            "OwningProcess": 6092
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 135,
+            "OwningProcess": 1276
+          }
+        ],
+        "dns": "23.37.194.81",
+        "https": {
+          "http_status": "200",
+          "exit": 0,
+          "latency_ms": 140
+        },
+        "component_errors": [],
+        "configuration_mutations": false,
+        "service_mutations": false,
+        "bybit_http_requests": 0
+      }
+    },
+    {
+      "node": "PC4",
+      "started_utc": "2026-11-07T10:51:37.747018+00:00",
+      "finished_utc": "2026-11-07T10:51:40.746692+00:00",
+      "duration_ms": 3000,
+      "process_exit_code": 0,
+      "stdout_sha256": "d96e216a63d7b77d6bd54046ca3f17ac137fed10088a2e8ce9e833ee7e92ef78",
+      "stderr_sha256": "507d5904e8e7ed4cb98caa950671a377953e28d8a0a8fe0f9ada5f53482a0c3d",
+      "stderr_bytes": 2488,
+      "status": "OBSERVED_READ_ONLY_INVENTORY",
+      "observation": {
+        "schema": "unified.route-readonly-inventory.v1",
+        "node": "PC4",
+        "observed_utc": "2026-11-07T10:51:43.5257176Z",
+        "exit_code": 0,
+        "resources": {
+          "os": "Microsoft Windows 11 Pro",
+          "build": "26200",
+          "ram_kib": 32679288,
+          "free_ram_kib": 21460868,
+          "free_virtual_kib": 22437836,
+          "disk_bytes": 999027634176,
+          "disk_free_bytes": 853255782400,
+          "cpu": [
+            {
+              "Name": "AMD Ryzen 7 7800X3D 8-Core Processor           ",
+              "NumberOfCores": 8,
+              "NumberOfLogicalProcessors": 16
+            }
+          ]
+        },
+        "runtime_candidates": [
+          {
+            "path": "C:\\Program Files\\nodejs\\node.exe",
+            "version": "23.6.0"
+          },
+          {
+            "path": "C:\\Windows\\System32\\OpenSSH\\ssh.exe",
+            "version": "OpenSSH_9.5p2 for Windows"
+          }
+        ],
+        "powershell": "5.1.26100.9711",
+        "services": [
+          {
+            "Name": "ekrn",
+            "State": "Running",
+            "StartMode": "Auto",
+            "ProcessId": 3396
+          },
+          {
+            "Name": "ekrnEpfw",
+            "State": "Running",
+            "StartMode": "Auto",
+            "ProcessId": 3396
+          },
+          {
+            "Name": "postgresql-x64-18",
+            "State": "Running",
+            "StartMode": "Auto",
+            "ProcessId": 5896
+          },
+          {
+            "Name": "sshd",
+            "State": "Running",
+            "StartMode": "Auto",
+            "ProcessId": 6032
+          },
+          {
+            "Name": "Tailscale",
+            "State": "Running",
+            "StartMode": "Auto",
+            "ProcessId": 2436
+          }
+        ],
+        "firewall": [
+          {
+            "Name": "Domain",
+            "Enabled": 1,
+            "DefaultInboundAction": 0,
+            "DefaultOutboundAction": 0
+          },
+          {
+            "Name": "Private",
+            "Enabled": 1,
+            "DefaultInboundAction": 0,
+            "DefaultOutboundAction": 0
+          },
+          {
+            "Name": "Public",
+            "Enabled": 1,
+            "DefaultInboundAction": 0,
+            "DefaultOutboundAction": 0
+          }
+        ],
+        "execution_policy": [
+          {
+            "Scope": 4,
+            "ExecutionPolicy": 5
+          },
+          {
+            "Scope": 3,
+            "ExecutionPolicy": 5
+          },
+          {
+            "Scope": 0,
+            "ExecutionPolicy": 5
+          },
+          {
+            "Scope": 1,
+            "ExecutionPolicy": 1
+          },
+          {
+            "Scope": 2,
+            "ExecutionPolicy": 5
+          }
+        ],
+        "ports": [
+          {
+            "LocalAddress": "::",
+            "LocalPort": 61234,
+            "OwningProcess": 26504
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 49691,
+            "OwningProcess": 1596
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 49672,
+            "OwningProcess": 4776
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 49669,
+            "OwningProcess": 3888
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 49666,
+            "OwningProcess": 2336
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 49665,
+            "OwningProcess": 1516
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 49664,
+            "OwningProcess": 1692
+          },
+          {
+            "LocalAddress": "::1",
+            "LocalPort": 42050,
+            "OwningProcess": 1364
+          },
+          {
+            "LocalAddress": "fd7a:115c:a1e0::4731:3015",
+            "LocalPort": 33965,
+            "OwningProcess": 16440
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 21077,
+            "OwningProcess": 27192
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 7680,
+            "OwningProcess": 4684
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 5432,
+            "OwningProcess": 7584
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 5357,
+            "OwningProcess": 4
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 2179,
+            "OwningProcess": 3124
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 445,
+            "OwningProcess": 4
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 135,
+            "OwningProcess": 1992
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 22,
+            "OwningProcess": 6032
+          },
+          {
+            "LocalAddress": "100.91.48.20",
+            "LocalPort": 64205,
+            "OwningProcess": 16440
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 61234,
+            "OwningProcess": 26504
+          },
+          {
+            "LocalAddress": "127.0.0.1",
+            "LocalPort": 60918,
+            "OwningProcess": 26504
+          },
+          {
+            "LocalAddress": "127.0.0.1",
+            "LocalPort": 53005,
+            "OwningProcess": 13520
+          },
+          {
+            "LocalAddress": "127.0.0.1",
+            "LocalPort": 53000,
+            "OwningProcess": 13520
+          },
+          {
+            "LocalAddress": "127.0.0.1",
+            "LocalPort": 51100,
+            "OwningProcess": 12052
+          },
+          {
+            "LocalAddress": "127.0.0.1",
+            "LocalPort": 50100,
+            "OwningProcess": 5592
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 49691,
+            "OwningProcess": 1596
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 49672,
+            "OwningProcess": 4776
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 49669,
+            "OwningProcess": 3888
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 49666,
+            "OwningProcess": 2336
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 49665,
+            "OwningProcess": 1516
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 49664,
+            "OwningProcess": 1692
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 33333,
+            "OwningProcess": 26504
+          },
+          {
+            "LocalAddress": "127.0.0.1",
+            "LocalPort": 27339,
+            "OwningProcess": 4
+          },
+          {
+            "LocalAddress": "127.0.0.1",
+            "LocalPort": 22112,
+            "OwningProcess": 5916
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 21077,
+            "OwningProcess": 27192
+          },
+          {
+            "LocalAddress": "127.0.0.1",
+            "LocalPort": 13032,
+            "OwningProcess": 5592
+          },
+          {
+            "LocalAddress": "127.0.0.1",
+            "LocalPort": 13031,
+            "OwningProcess": 5592
+          },
+          {
+            "LocalAddress": "127.0.0.1",
+            "LocalPort": 13030,
+            "OwningProcess": 5916
+          },
+          {
+            "LocalAddress": "127.0.0.1",
+            "LocalPort": 11001,
+            "OwningProcess": 5632
+          },
+          {
+            "LocalAddress": "127.0.0.1",
+            "LocalPort": 9013,
+            "OwningProcess": 16820
+          },
+          {
+            "LocalAddress": "127.0.0.1",
+            "LocalPort": 9012,
+            "OwningProcess": 16820
+          },
+          {
+            "LocalAddress": "127.0.0.1",
+            "LocalPort": 6850,
+            "OwningProcess": 18716
+          },
+          {
+            "LocalAddress": "127.0.0.1",
+            "LocalPort": 5939,
+            "OwningProcess": 6308
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 5432,
+            "OwningProcess": 7584
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 5040,
+            "OwningProcess": 13740
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 2179,
+            "OwningProcess": 3124
+          },
+          {
+            "LocalAddress": "127.0.0.1",
+            "LocalPort": 1042,
+            "OwningProcess": 11156
+          },
+          {
+            "LocalAddress": "192.168.160.1",
+            "LocalPort": 139,
+            "OwningProcess": 4
+          },
+          {
+            "LocalAddress": "192.168.2.115",
+            "LocalPort": 139,
+            "OwningProcess": 4
+          },
+          {
+            "LocalAddress": "100.91.48.20",
+            "LocalPort": 139,
+            "OwningProcess": 4
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 135,
+            "OwningProcess": 1992
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 22,
+            "OwningProcess": 6032
+          }
+        ],
+        "dns": "23.37.194.81",
+        "https": {
+          "http_status": "200",
+          "exit": 0,
+          "latency_ms": 80
+        },
+        "component_errors": [],
+        "configuration_mutations": false,
+        "service_mutations": false,
+        "bybit_http_requests": 0
+      }
+    },
+    {
+      "node": "LS7",
+      "started_utc": "2026-11-07T10:51:40.748310+00:00",
+      "finished_utc": "2026-11-07T10:51:46.691791+00:00",
+      "duration_ms": 5943,
+      "process_exit_code": 0,
+      "stdout_sha256": "b52a9d7047e8e1c535087ee039340536b23c44fa80f2d18a8e620de17aebd56a",
+      "stderr_sha256": "3ef2e27287d686827af602d7d1d1db8383da065da3850e156681bc424e8a8d43",
+      "stderr_bytes": 2487,
+      "status": "OBSERVED_READ_ONLY_INVENTORY",
+      "observation": {
+        "schema": "unified.route-readonly-inventory.v1",
+        "node": "LS7",
+        "observed_utc": "2026-11-07T10:51:47.7174694Z",
+        "exit_code": 0,
+        "resources": {
+          "os": "Microsoft Windows 11 Home",
+          "build": "26200",
+          "ram_kib": 8151360,
+          "free_ram_kib": 3034872,
+          "free_virtual_kib": 3667580,
+          "disk_bytes": 486731149312,
+          "disk_free_bytes": 408083791872,
+          "cpu": [
+            {
+              "Name": "Intel(R) Core(TM) 5 120U",
+              "NumberOfCores": 10,
+              "NumberOfLogicalProcessors": 12
+            }
+          ]
+        },
+        "runtime_candidates": [
+          {
+            "path": "C:\\Windows\\System32\\OpenSSH\\ssh.exe",
+            "version": "OpenSSH_9.5p2 for Windows"
+          }
+        ],
+        "powershell": "5.1.26100.9711",
+        "services": [
+          {
+            "Name": "ekrn",
+            "State": "Running",
+            "StartMode": "Auto",
+            "ProcessId": 2952
+          },
+          {
+            "Name": "ekrnEpfw",
+            "State": "Running",
+            "StartMode": "Auto",
+            "ProcessId": 2952
+          },
+          {
+            "Name": "postgresql-x64-18",
+            "State": "Running",
+            "StartMode": "Auto",
+            "ProcessId": 4828
+          },
+          {
+            "Name": "sshd",
+            "State": "Running",
+            "StartMode": "Auto",
+            "ProcessId": 4564
+          },
+          {
+            "Name": "Tailscale",
+            "State": "Running",
+            "StartMode": "Auto",
+            "ProcessId": 5376
+          }
+        ],
+        "firewall": [
+          {
+            "Name": "Domain",
+            "Enabled": 1,
+            "DefaultInboundAction": 0,
+            "DefaultOutboundAction": 0
+          },
+          {
+            "Name": "Private",
+            "Enabled": 1,
+            "DefaultInboundAction": 0,
+            "DefaultOutboundAction": 0
+          },
+          {
+            "Name": "Public",
+            "Enabled": 1,
+            "DefaultInboundAction": 0,
+            "DefaultOutboundAction": 0
+          }
+        ],
+        "execution_policy": [
+          {
+            "Scope": 4,
+            "ExecutionPolicy": 5
+          },
+          {
+            "Scope": 3,
+            "ExecutionPolicy": 5
+          },
+          {
+            "Scope": 0,
+            "ExecutionPolicy": 5
+          },
+          {
+            "Scope": 1,
+            "ExecutionPolicy": 5
+          },
+          {
+            "Scope": 2,
+            "ExecutionPolicy": 1
+          }
+        ],
+        "ports": [
+          {
+            "LocalAddress": "fd7a:115c:a1e0::a31:194c",
+            "LocalPort": 61974,
+            "OwningProcess": 6964
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 61234,
+            "OwningProcess": 14664
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 49685,
+            "OwningProcess": 1252
+          },
+          {
+            "LocalAddress": "::1",
+            "LocalPort": 49675,
+            "OwningProcess": 4968
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 49674,
+            "OwningProcess": 2740
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 49671,
+            "OwningProcess": 3112
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 49666,
+            "OwningProcess": 2108
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 49665,
+            "OwningProcess": 1144
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 49664,
+            "OwningProcess": 1304
+          },
+          {
+            "LocalAddress": "::1",
+            "LocalPort": 42050,
+            "OwningProcess": 8788
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 21077,
+            "OwningProcess": 2600
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 7680,
+            "OwningProcess": 16728
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 5432,
+            "OwningProcess": 6540
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 5357,
+            "OwningProcess": 4
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 445,
+            "OwningProcess": 4
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 135,
+            "OwningProcess": 1564
+          },
+          {
+            "LocalAddress": "::",
+            "LocalPort": 22,
+            "OwningProcess": 4564
+          },
+          {
+            "LocalAddress": "127.0.0.1",
+            "LocalPort": 65046,
+            "OwningProcess": 14664
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 61234,
+            "OwningProcess": 14664
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 49685,
+            "OwningProcess": 1252
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 49674,
+            "OwningProcess": 2740
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 49671,
+            "OwningProcess": 3112
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 49666,
+            "OwningProcess": 2108
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 49665,
+            "OwningProcess": 1144
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 49664,
+            "OwningProcess": 1304
+          },
+          {
+            "LocalAddress": "127.0.0.1",
+            "LocalPort": 33683,
+            "OwningProcess": 8268
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 33333,
+            "OwningProcess": 14664
+          },
+          {
+            "LocalAddress": "100.112.25.75",
+            "LocalPort": 32834,
+            "OwningProcess": 6964
+          },
+          {
+            "LocalAddress": "127.0.0.1",
+            "LocalPort": 32683,
+            "OwningProcess": 8268
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 21077,
+            "OwningProcess": 2600
+          },
+          {
+            "LocalAddress": "127.0.0.1",
+            "LocalPort": 5939,
+            "OwningProcess": 4940
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 5432,
+            "OwningProcess": 6540
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 5040,
+            "OwningProcess": 9316
+          },
+          {
+            "LocalAddress": "192.168.2.141",
+            "LocalPort": 139,
+            "OwningProcess": 4
+          },
+          {
+            "LocalAddress": "100.112.25.75",
+            "LocalPort": 139,
+            "OwningProcess": 4
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 135,
+            "OwningProcess": 1564
+          },
+          {
+            "LocalAddress": "0.0.0.0",
+            "LocalPort": 22,
+            "OwningProcess": 4564
+          }
+        ],
+        "dns": "23.37.194.81",
+        "https": {
+          "http_status": "200",
+          "exit": 0,
+          "latency_ms": 161
+        },
+        "component_errors": [],
+        "configuration_mutations": false,
+        "service_mutations": false,
+        "bybit_http_requests": 0
+      }
+    }
+  ],
+  "bybit_route_equivalence": "NOT_PROVEN",
+  "finished_utc": "2026-11-07T10:51:46.692859+00:00",
+  "observed_nodes": 6,
+  "runtime_readiness": "NOT_QUALIFIED",
+  "installation_authorized": false
+}
