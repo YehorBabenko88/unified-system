@@ -111,3 +111,16 @@ schema hashes do not grant authority or automatically authorize Control Mux data
 Fixture tests qualify local CODE only. Real Consul concurrent supersession versus
 publication, real storage reservation expiry/budget changes, native checkpoint
 recovery, Windows hosted acceptance and physical runtime are separate gates.
+
+## Opt-in local measurement
+
+ROOT additionally allocated benchmarks.py: explicit opt-in, single-process SHA256
+loop <=2s requested duration, private TemporaryDirectory file <=8MiB, IPv4
+127.0.0.1 ephemeral transfer <=1MiB with common 2s deadline, and read-only Windows
+GlobalMemoryStatusEx. No import/service startup invokes it. Each result records
+actual bytes, elapsed monotonic nanoseconds and explicitly floored byte/second
+ratio. CPU benchmark units do not imply millicores; fsync includes OS/filesystem
+behavior, not raw-device guarantees; loopback is explicitly not LAN bandwidth.
+The one local sample cannot qualify production payload, concurrency, TTL or fleet
+capacity limits. Zero, negative, boolean and oversized configuration reject before
+any measurement. Only own scratch files are removed.

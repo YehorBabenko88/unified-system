@@ -1,6 +1,6 @@
 {
   "schema": "agent5.component-test-inventory.v3",
-  "expected_count": 50,
+  "expected_count": 52,
   "expected_ids": [
     "test_agent5_scheduler_components.AuthorityBoundaryTests.test_every_proposed_mutation_is_closed",
     "test_agent5_scheduler_components.AuthorityBoundaryTests.test_reads_do_not_invent_receipts_or_mutate",
@@ -33,6 +33,8 @@
     "test_agent5_scheduler_components.ScheduleTests.test_invalid_schedule",
     "test_agent5_scheduler_components.ScheduleTests.test_weekday_iterator_not_consumed_by_validation",
     "test_agent5_scheduler_runtime.RuntimeTests.test_actual_synthetic_subprocess_idempotent_control",
+    "test_agent5_scheduler_runtime.RuntimeTests.test_benchmark_rejects_unbounded_cpu_and_io",
+    "test_agent5_scheduler_runtime.RuntimeTests.test_benchmark_requires_explicit_opt_in",
     "test_agent5_scheduler_runtime.RuntimeTests.test_crash_after_seal_never_resubmits",
     "test_agent5_scheduler_runtime.RuntimeTests.test_drain_before_dispatch_survives_restart",
     "test_agent5_scheduler_runtime.RuntimeTests.test_draining_pauses_but_never_calls_storage_publication",

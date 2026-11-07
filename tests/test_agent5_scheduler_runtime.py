@@ -11,6 +11,7 @@ from scheduler_components.domain_v1 import encode_command, decode_command
 from scheduler_components.attempt_registry import AttemptRegistry, IntentConflict
 from scheduler_components.runtime import SchedulerRuntime, Unavailable
 from scheduler_components.worker_control import SyntheticWorker
+from scheduler_components.benchmarks import measure_local
 
 
 def command(request='00000000-0000-4000-8000-000000000001'):
@@ -223,6 +224,15 @@ class RuntimeTests(unittest.TestCase):
             worker.pause('one')
             self.assertEqual(worker.inspect('one'), b'PAUSED')
             self.assertIsNone(worker.inspect('missing'))
+
+    def test_benchmark_requires_explicit_opt_in(self):
+        with self.assertRaises(ValueError): measure_local()
+
+    def test_benchmark_rejects_unbounded_cpu_and_io(self):
+        for options in ({'cpu_duration_ms': 2001}, {'cpu_duration_ms': True},
+                        {'scratch_bytes': 8 * 1024 * 1024 + 1},
+                        {'loopback_bytes': 1024 * 1024 + 1}, {'loopback_bytes': 0}):
+            with self.assertRaises(ValueError): measure_local(allow_local_measurement=True, **options)
 
 
 if __name__ == '__main__': unittest.main()
