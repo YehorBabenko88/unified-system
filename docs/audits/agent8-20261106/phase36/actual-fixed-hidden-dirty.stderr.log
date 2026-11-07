@@ -1,0 +1,17 @@
+file:///C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-8-independent-security-ci/work/review-math114-9bf59061/scripts/verify-source-identity.mjs:35
+ const error=Error(message);
+             ^
+
+Error: Noncanonical tracked source EOL: scripts/agent7-loader-init/build.ps1
+    at sourceMismatch (file:///C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-8-independent-security-ci/work/review-math114-9bf59061/scripts/verify-source-identity.mjs:35:14)
+    at verifySourceIdentity (file:///C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-8-independent-security-ci/work/review-math114-9bf59061/scripts/verify-source-identity.mjs:97:48)
+    at file:///C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-8-independent-security-ci/work/review-math114-9bf59061/[eval1]:1:139 {
+  sourceMismatch: {
+    expectedBlob: 'ce1ac9eff76360a28b6911f22c45bfba327e108c',
+    observedRawBlob: '1562cbf61dbe761290615ce74478a486e2152057',
+    rawBytes: 4061,
+    mismatch: 'EOL'
+  }
+}
+
+Node.js v24.22.1

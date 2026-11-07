@@ -1,0 +1,16 @@
+✔ agent7 durable claim survives child loss after consumption (80.4543ms)
+✔ agent7 child loss before consumption leaves an admissible retry (72.3208ms)
+✔ agent7 incomplete consumption marker stays conservatively consumed (3.275ms)
+✔ agent7 concurrent retry has one winner without granting completion (11.5206ms)
+✔ agent7 malformed replay keys are rejected without path interpretation (1.7463ms)
+✔ agent7 ephemeral attempt filter does not claim durable fencing (0.49ms)
+✔ agent7 numerical replay agrees after cancelled worker and denies authority (235.9374ms)
+✔ agent7 loader timeout and process exit remain distinct diagnostic failures (4426.4472ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4934.5205
