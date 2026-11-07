@@ -10,7 +10,8 @@ from .contracts import canonical, ContractError
 from .journal import Journal
 
 SCHEMA = 'unified.node-operation.v2'
-RECEIPT_SCHEMA = 'unified.node-task-journal.v1'
+RECEIPT_SCHEMA = 'unified.node-task-journal.v2'
+SCOPE_FIELDS = ('cluster_id','node_id','node_incarnation')
 OPERATIONS = frozenset(('READ_INVENTORY','VERIFY_ARTIFACT','VERIFY_CONFIGURATION','CHECK_SERVICE','CHECK_HEALTH','PREPARE_INSTALL','PREPARE_UPDATE','VERIFY_RELEASE','COLLECT_LOGS','REPORT_STATUS','REQUEST_DRAIN','VERIFY_BACKUP','PREPARE_ROLLBACK'))
 FIELDS = frozenset(('schema','task_id','cluster_id','node_id','node_incarnation','release_id','artifact_sha256','operation_type','approval_reference','authority_generation','lease_fencing_proof','preconditions','expected_postconditions','timeout_seconds','rollback_policy','idempotency_key','result_receipt'))
 CHAIN = ('CREATED','VERIFIED','AUTHORIZED','PREPARED','RUNNING','VERIFYING','COMPLETED')
@@ -75,7 +76,9 @@ class NodeTaskJournal:
     Parent directory ownership/ACL is a deployment prerequisite. File checks are
     namespace hygiene, not protection against a hostile local administrator.
     """
-    def __init__(self,path,*,max_records=10000,max_bytes=16*1024*1024):
+    def __init__(self,path,*,cluster_id,node_id,node_incarnation,max_records=10000,max_bytes=16*1024*1024):
+        for value in (cluster_id,node_id,node_incarnation): identifier(value)
+        self._scope_values=(cluster_id,node_id,node_incarnation)
         need(type(max_records) is int and 1 <= max_records <= 100000)
         need(type(max_bytes) is int and 4096 <= max_bytes <= 64*1024*1024)
         self.path=Path(path).absolute()
@@ -83,7 +86,16 @@ class NodeTaskJournal:
         self._journal=Journal(self.path)
         self._identity=None
         self._safe_path()
-        if self.path.exists(): self._identity=self._file_identity()
+        if self.path.exists():
+            self._identity=self._file_identity()
+            self._records()
+
+    @property
+    def scope(self):
+        return dict(zip(SCOPE_FIELDS,self._scope_values))
+
+    def _check_scope(self,intent):
+        need(all(intent[name]==value for name,value in zip(SCOPE_FIELDS,self._scope_values)))
 
     def _file_identity(self):
         info=self.path.lstat()
@@ -124,9 +136,10 @@ class NodeTaskJournal:
             latest={};keys={}
             for row in rows:
                 record=row['receipt']
-                need(row['state']=='OBSERVING' and type(record) is dict and set(record)=={'schema','intent','state','receipt'})
+                need(row['state']=='OBSERVING' and type(record) is dict and set(record)=={'schema','scope','intent','state','receipt'})
                 need(record['schema']==RECEIPT_SCHEMA and record['state'] in STATES)
-                intent=NodeOperation.parse(record['intent']);validate_receipt(record['receipt'])
+                need(type(record['scope']) is dict and record['scope']==self.scope)
+                intent=NodeOperation.parse(record['intent']);self._check_scope(intent);validate_receipt(record['receipt'])
                 task=intent['task_id'];key=intent['idempotency_key']
                 if task in latest:
                     need(latest[task]['intent']==intent)
@@ -145,6 +158,8 @@ class NodeTaskJournal:
         need(new in TERMINAL-{'COMPLETED'} or (old in CHAIN[:-1] and new==CHAIN[CHAIN.index(old)+1]))
 
     def _append(self,record,count):
+        need(record['scope']==self.scope)
+        self._check_scope(record['intent'])
         need(count < self.max_records)
         need(len(canonical(record)) <= 12288)
         # Reserve worst-case SQLite page growth before writes. No deletion/rotation.
@@ -173,12 +188,13 @@ class NodeTaskJournal:
 
     def create(self,intent):
         intent=NodeOperation.parse(intent)
+        self._check_scope(intent)
         rows,latest,keys=self._records();task=intent['task_id'];key=intent['idempotency_key']
         if task in latest:
             need(latest[task]['intent']==intent)
             return copy.deepcopy(latest[task])
         need(key not in keys)
-        return self._append(dict(schema=RECEIPT_SCHEMA,intent=intent,state='CREATED',receipt={}),len(rows))
+        return self._append(dict(schema=RECEIPT_SCHEMA,scope=self.scope,intent=intent,state='CREATED',receipt={}),len(rows))
 
     def get(self,task_id):
         identifier(task_id)

@@ -6,19 +6,32 @@ class NodeSupervisorV2:
         need(type(journal) is NodeTaskJournal)
         for value in (node_id,node_incarnation,cluster_id): identifier(value)
         self.journal=journal
-        self.identity=dict(node_id=node_id,node_incarnation=node_incarnation,cluster_id=cluster_id)
+        self._identity=(cluster_id,node_id,node_incarnation)
+        self._check_scope()
+
+    @property
+    def identity(self):
+        return dict(zip(('cluster_id','node_id','node_incarnation'),self._identity))
+
+    def _check_scope(self):
+        need(type(self.journal) is NodeTaskJournal and self.journal.scope==self.identity)
+        self.journal.snapshot()
 
     def submit(self,intent):
+        self._check_scope()
         need(type(intent) is dict and all(intent.get(key)==value for key,value in self.identity.items()))
         return self.journal.create(intent)
 
     def inspect(self,task_id):
+        self._check_scope()
         return self.journal.get(task_id)
 
     def reconcile(self):
+        self._check_scope()
         return self.journal.reconcile()
 
     def run_readonly(self,task_id):
+        self._check_scope()
         record=self.journal.get(task_id)
         need(all(record['intent'][key]==value for key,value in self.identity.items()))
         receipt=dict(code='LOCAL_RECEIPTS_ONLY',authority='UNKNOWN',source='UNKNOWN',freshness='UNKNOWN',effects_authorized=False,journal_integrity='PASS',physical_acceptance='NOT_RUN')

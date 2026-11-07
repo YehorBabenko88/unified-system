@@ -6,7 +6,7 @@ Base: `49a970270570548e5d4f0c5a440d30e238bb21f1`. Development implementation onl
 
 | Existing component | Decision |
 | --- | --- |
-| `journal.Journal` | Reuse SQLite transactions, hash chain, CAS append, 100000-record hard cap. Typed v1 receipts use existing OBSERVING envelope without altering legacy states. |
+| `journal.Journal` | Reuse SQLite transactions, hash chain, CAS append, 100000-record hard cap. Typed versioned receipts use existing OBSERVING envelope without altering legacy states. |
 | `supervisor.Supervisor` | Preserve pure research handoff behavior. Separate local receipt lifecycle has no process launcher. |
 | `fleet_control` | Model only; never accepts or produces native authorization. |
 | `installation_service`, `service_actuator`, service bootstrap/entry | Existing owned-resource mechanisms remain authoritative for their own scopes. No invocation or replacement; deployment adapter belongs to integration owner. |
@@ -17,7 +17,7 @@ Decision: no second SQLite engine/schema, generic executor, native service insta
 
 ## API and bounds
 
-`NodeTaskJournal(path, max_records=10000, max_bytes=16777216)` exposes create/get/transition/snapshot/reconcile. Thirteen operation names are allowlisted. Identifiers are bounded ASCII references, never paths. No file-content, command, token, secret, network endpoint or executable payload is accepted. Preconditions/postconditions are limited to local receipt/journal checks; unknown expectations block completion. Proof is a bounded reference only and never validated as authority. Timeout is 1..60 seconds; initial deterministic handlers do bounded journal work only, with no external process or polling.
+`NodeTaskJournal(path, cluster_id=..., node_id=..., node_incarnation=..., max_records=10000, max_bytes=16777216)` exposes create/get/transition/snapshot/reconcile. Thirteen operation names are allowlisted. Identifiers are bounded ASCII references, never paths. No file-content, command, token, secret, network endpoint or executable payload is accepted. Preconditions/postconditions are limited to local receipt/journal checks; unknown expectations block completion. Proof is a bounded reference only and never validated as authority. Timeout is 1..60 seconds; initial deterministic handlers do bounded journal work only, with no external process or polling.
 
 `NodeSupervisorV2(journal, node_id=..., node_incarnation=..., cluster_id=...)` exposes submit/inspect/run_readonly/reconcile. REPORT_STATUS and CHECK_HEALTH observe only this local journal's verified receipt chain. They do not assert OS, service, disk, installed release or remote health. All other operations block with PLAN_ONLY_NATIVE_AUTHORITY_UNAVAILABLE. No physical operation, shell execution, service mutation, provisioning, orders or arbitrary log collection exists.
 
@@ -44,3 +44,11 @@ Local intent schema `unified.node-operation.v2` requires a lowercase canonical U
 New-file creation uses O_CREAT|O_EXCL, retains the reservation descriptor through initialization/append and checks single-link device/inode identity before/after. A failed reservation remains for owner inspection, never automatically deleted. Empty preexisting legacy databases also reject without adoption. Existing databases require read-only quick_check, exact legacy schema inventory and the complete typed hash-chain inventory before writes. Foreign tables, replacement, hardlinks and symlinks reject. Stat checks do not establish hostile-parent/kernel namespace atomicity or protected ACLs; a protected parent and actual native authority remain unresolved deployment gates.
 
 Review regressions: 24 mandatory local tests. Four new actual RED failures reproduced creation-race adoption, failed-reservation deletion/absence, foreign-table adoption and inode replacement; two UUID-v2 RED errors preceded the local schema correction. Raw logs are retained outside checkout. Symlink test reports SYMLINK_CREATION_UNAVAILABLE when host privileges do not permit creating one; that result is not a native symlink/Home qualification. Two read-only local observations and eleven explicitly blocked operations remain the implemented scope.
+
+## Immutable local journal scope, receipt v2
+
+Local receipt marker `unified.node-task-journal.v2` includes an immutable scope `{cluster_id,node_id,node_incarnation}` in every hashchained record, equal to the complete intent scope. All three constructor keywords are mandatory, including for an absent/empty path. The first successful CREATED append establishes persisted scope using exclusive reservation and Journal CAS sequence zero. Different-scope concurrent first writers cannot both append; the losing writer rejects. Scope projections are copies backed by a private tuple, and may not rebind journal or controller identity.
+
+Existing journal constructors and every read, create, transition, snapshot and reconciliation validate the entire persisted chain against configured scope. A controller constructor and each entrypoint verify its context against the journal. A foreign scope fails before receipt mutation; recovery never relabels another node/incarnation. Old receipt.v1/unbound histories, including historical b6f58f4, reject unchanged without migration or fake ownership. NodeOperation.v2 reference-generation semantics remain unchanged. Scope strings are local data references, not authenticated node enrollment, native ownership, producer ACK or permission grants.
+
+The current mandatory inventory has 30 tests. Scope regression RED captured the original foreign-controller acceptance plus missing mandatory scope API, followed by tests for all three scope dimensions, mixed persisted chains, concurrent empty writers, immutable projections, swapped controller contexts and old receipt refusal. Historical b6f58f4 evidence and ROOT reproduction remain distinct from the new candidate.
