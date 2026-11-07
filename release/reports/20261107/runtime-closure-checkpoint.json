@@ -1,0 +1,76 @@
+{
+  "schema": "unified.execution-checkpoint.v1",
+  "observed_at_utc": "2026-11-07T11:25:58.256190+00:00",
+  "baseline": "92b8328a65520b86e63f8052b2429422334c98b9",
+  "status": "IN_PROGRESS_NO_GO",
+  "blockers": [
+    {
+      "BLOCKER_ID": "ROOT_INSTALLER_ARCHIVE_NAMESPACE",
+      "OWNER": "Root",
+      "EXACT_FILE": "scripts/prepare_lab_capsule.py::extract",
+      "ROOT_CAUSE": "Only full member paths were case-folded; implicit parents could alias or conflict with file entries.",
+      "FIX_COMMIT": "fe0f5234a1c5eeeca02b2dad3ddfa948ef6c51cf",
+      "FAILING_TEST": "tests/test_lab_capsule_archive_namespace.py; CP312 1 PASS,1 FAIL,2 ERROR before fix",
+      "LOCAL_RESULT": "New4 PASS; combined33 executed,32 PASS,1 SKIP Windows symlink privilege unavailable; skip not waived; exact clean-source 4PASS0skip",
+      "HOSTED_RESULT": "PENDING first automatic run after push; no manual retry",
+      "INTEGRATION_RESULT": "Draft26 source only, installer admission NOT_GRANTED",
+      "REMAINING_DEPENDENCY": "Independent exact-source review, hosted CI, installable manifest/native gates and end-to-end rollback",
+      "NEXT_ACTION": "Independent review of exact fe0f523; Windows/Ubuntu hosted results"
+    },
+    {
+      "BLOCKER_ID": "F_MATH_HELPER_OVERFLOW",
+      "OWNER": "Agent7",
+      "EXACT_FILE": "math/python/history_statistics.py",
+      "ROOT_CAUSE": "Finite inputs overflow intermediate arithmetic; CI may become infinity",
+      "FIX_COMMIT": "ff1c42cad883f54c06293884ef29a290dd74e306",
+      "FAILING_TEST": "Agent7 reported original3PASS7FAIL",
+      "LOCAL_RESULT": "Owner reported10regressions and25combined PASS0skip; Root independent review delegated to Agent8",
+      "HOSTED_RESULT": "queued at owner observation, not PASS",
+      "INTEGRATION_RESULT": "Draft116; not canonical release",
+      "REMAINING_DEPENDENCY": "Agent8 exact independent review and hosted qualification",
+      "NEXT_ACTION": "Verify candidate without invoking protected native source"
+    },
+    {
+      "BLOCKER_ID": "H_STALE_BOOK_AVAILABILITY",
+      "OWNER": "Agent3 with Agent4/7",
+      "EXACT_FILE": "grid/microstructure.py;grid/unified_features.py; proposed grid/book_availability.py",
+      "ROOT_CAUSE": "Invalidated in-memory orderbook does not persist immediate availability barrier; old available row eligible<=5s",
+      "FIX_COMMIT": null,
+      "FAILING_TEST": "Owner reported producer\u2192fakeSQL\u2192consumer7expectedFAIL1controlPASS0skip on1f08",
+      "LOCAL_RESULT": "RED preserved; no real PG durability claim",
+      "HOSTED_RESULT": "No temporal fix candidate yet",
+      "INTEGRATION_RESULT": "NOT_IMPLEMENTED",
+      "REMAINING_DEPENDENCY": "Exact order/epoch/persistence and downstream replay/reset contract ACK",
+      "NEXT_ACTION": "A3/A4/A7 close semantics then implement allocated adapter"
+    },
+    {
+      "BLOCKER_ID": "A_C_D_REAL_AUTHORITY_ASSIGNMENT_STORAGE",
+      "OWNER": "Agent2/4/5",
+      "EXACT_FILE": "NEW grid/authority_assignment_v1.py; NEW unified_system/storage/{publication,budgets,checkpoints}.py; reserved scheduler_components/assignment_backend.py",
+      "ROOT_CAUSE": "Supported native backend/proof and assignment/publication adapters absent; GET metadata cannot grant execution",
+      "FIX_COMMIT": null,
+      "FAILING_TEST": "Owner harness RED_UNAVAILABLE; exact contract tests being created, no fabricated semantic failure counts",
+      "LOCAL_RESULT": "Implementation in progress; no runtime success",
+      "HOSTED_RESULT": "NOT_RUN",
+      "INTEGRATION_RESULT": "NOT_ADMITTED",
+      "REMAINING_DEPENDENCY": "Actual typed authority producer/key/preimage ABI and native identity; mutual exact schema ACK",
+      "NEXT_ACTION": "Implement real isolated transaction tests and supported adapter; native success stays blocked"
+    },
+    {
+      "BLOCKER_ID": "G_FINANCIAL_DTO",
+      "OWNER": "Agent7 with Agent3/6",
+      "EXACT_FILE": "NEW strattester/contracts/agent7-financial-boundary/{financial-calculation.schema.json,adapter.py,test_adapter.py,PROTOCOL.txt}",
+      "ROOT_CAUSE": "PaperLedger net PnL is incompatible with Math gross-PnL input without explicit cost/unit mapping",
+      "FIX_COMMIT": null,
+      "FAILING_TEST": "Positive/negative contract cases pending; mismatch reproduced previously",
+      "LOCAL_RESULT": "Ownership allocated; schema proposal not API ACK",
+      "HOSTED_RESULT": "NOT_RUN",
+      "INTEGRATION_RESULT": "UNAVAILABLE pending qualified financial profile",
+      "REMAINING_DEPENDENCY": "Explicit currency/units/funding/calculationbasis and provenance agreement",
+      "NEXT_ACTION": "Pure adapter RED then implementation; reject ambiguous DTO and double subtraction"
+    }
+  ],
+  "physical_changes": false,
+  "inventory_repeated": false,
+  "protected_math_retry": false
+}
