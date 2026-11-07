@@ -1,0 +1,318 @@
+{
+  "source_head": "480109277c1e80a666f3dbba84b5807cacd2b460",
+  "tree": "651fff9bb987fead6414b4492acc0891873cac27",
+  "primary_raw_tracked_files_verified_prepost": 1400,
+  "source_guard": "Fresh nohardlinkclone, autocrlf=false, framed primary cat-file--batch+OIDcheck, allworkingbytes prepost, noextrafiles",
+  "unit_tests": 5,
+  "actual_owned_windows_probes": [
+    {
+      "mode": "tree",
+      "exit": 0,
+      "observation": {
+        "active_processes_before_cancel": 4,
+        "assigned_before_resume": true,
+        "capacity_qualified": false,
+        "classification": "OWNED_DISPOSABLE_CONTAINMENT_PRIMITIVE_ONLY",
+        "cpu_memory_output_limits_qualified": false,
+        "elapsed_monotonic_ns": "167236100",
+        "grid_head": "40e9c8dc274a2746018bc1aa08d103cd0187cecc",
+        "limit_readback_before_resume": {
+          "active_process_limit": 8,
+          "affinity_processor_count": 16,
+          "committed_memory_limit_bytes": 268435456,
+          "cpu_hard_rate_units": 1000,
+          "cpu_millicore_mapping_qualified": false,
+          "cpu_readback_hex": "05000000e8030000",
+          "cpu_requested_hex": "05000000e8030000",
+          "extended_readback_hex": "000000000000000000000000000000000822000000000000000000000000000000000000000000000800000000000000000000000000000020000000050000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000f005000000000000f0050000000000",
+          "extended_requested_hex": "000000000000000000000000000000000822000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000",
+          "inherited_job_capacity_qualified": false,
+          "job_membership_verified": true,
+          "layouts": {
+            "basic": {
+              "offsets": {
+                "active_limit": 40,
+                "affinity": 48,
+                "flags": 16,
+                "job_time": 8,
+                "max_working_set": 32,
+                "min_working_set": 24,
+                "priority": 56,
+                "process_time": 0,
+                "scheduling": 60
+              },
+              "size": 64
+            },
+            "cpu": {
+              "offsets": {
+                "flags": 0,
+                "rate": 4
+              },
+              "size": 8
+            },
+            "extended": {
+              "offsets": {
+                "basic": 0,
+                "io": 64,
+                "job_memory": 120,
+                "peak_job_memory": 136,
+                "peak_process_memory": 128,
+                "process_memory": 112
+              },
+              "size": 144
+            },
+            "io": {
+              "offsets": {
+                "other_bytes": 40,
+                "others": 16,
+                "read_bytes": 24,
+                "reads": 0,
+                "write_bytes": 32,
+                "writes": 8
+              },
+              "size": 48
+            }
+          },
+          "native_calls": [
+            {
+              "api": "IsProcessInJob",
+              "last_error": 0,
+              "monotonic_ns": "706820700994900",
+              "result": 1
+            },
+            {
+              "api": "GetActiveProcessorGroupCount",
+              "last_error": 122,
+              "monotonic_ns": "706820701006700",
+              "result": 1
+            },
+            {
+              "api": "GetProcessAffinityMask",
+              "last_error": 122,
+              "monotonic_ns": "706820701012900",
+              "result": 1
+            },
+            {
+              "api": "SetInformationJobObject:Extended9",
+              "last_error": 122,
+              "monotonic_ns": "706820701032100",
+              "result": 1
+            },
+            {
+              "api": "SetInformationJobObject:CPU15",
+              "last_error": 122,
+              "monotonic_ns": "706820701077400",
+              "result": 1
+            },
+            {
+              "api": "QueryInformationJobObject:Extended9",
+              "last_error": 122,
+              "monotonic_ns": "706820701084000",
+              "result": 1
+            },
+            {
+              "api": "QueryInformationJobObject:CPU15",
+              "last_error": 122,
+              "monotonic_ns": "706820701086500",
+              "result": 1
+            }
+          ],
+          "processor_groups": 1,
+          "readback_cpu_flags": 5,
+          "readback_limit_flags": 8712,
+          "requested_cpu_flags": 5,
+          "requested_job_memory_bytes": 268435456,
+          "requested_limit_flags": 8712,
+          "resident_memory_mapping_qualified": false,
+          "system_affinity_processor_count": 16
+        },
+        "native_accounting_before_cancel": {
+          "offsets": {
+            "ActiveProcesses": 40,
+            "ThisPeriodTotalKernelTime": 24,
+            "ThisPeriodTotalUserTime": 16,
+            "TotalKernelTime": 8,
+            "TotalPageFaultCount": 32,
+            "TotalProcesses": 36,
+            "TotalTerminatedProcesses": 44,
+            "TotalUserTime": 0
+          },
+          "raw_hex": "1c4e0e00000000005a620200000000001c4e0e00000000005a62020000000000122d0000040000000400000000000000",
+          "size": 48,
+          "values": {
+            "ActiveProcesses": "4",
+            "ThisPeriodTotalKernelTime": "156250",
+            "ThisPeriodTotalUserTime": "937500",
+            "TotalKernelTime": "156250",
+            "TotalPageFaultCount": "11538",
+            "TotalProcesses": "4",
+            "TotalTerminatedProcesses": "0",
+            "TotalUserTime": "937500"
+          }
+        },
+        "native_job_admission": false,
+        "observation_utc": "2026-11-07T16:49:19.549620+00:00",
+        "primary_handle_signaled": true,
+        "source_sha256": "7fd6223de3e28052b1254fa9e33e638132c6db89388bbb2d994b35970802a25c",
+        "terminated_job_observed_empty": true,
+        "total_processes": 4
+      }
+    },
+    {
+      "mode": "memory",
+      "exit": 0,
+      "observation": {
+        "classification": "OWNED_COMMITTED_MEMORY_LIMIT_PROBE_NOT_RSS",
+        "elapsed_monotonic_ns": "99550300",
+        "exit_code": 42,
+        "limit_readback_before_resume": {
+          "active_process_limit": 8,
+          "affinity_processor_count": 16,
+          "committed_memory_limit_bytes": 268435456,
+          "cpu_hard_rate_units": 1000,
+          "cpu_millicore_mapping_qualified": false,
+          "cpu_readback_hex": "05000000e8030000",
+          "cpu_requested_hex": "05000000e8030000",
+          "extended_readback_hex": "000000000000000000000000000000000822000000000000000000000000000000000000000000000800000000000000000000000000000020000000050000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000d005000000000000d0050000000000",
+          "extended_requested_hex": "000000000000000000000000000000000822000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000",
+          "inherited_job_capacity_qualified": false,
+          "job_membership_verified": true,
+          "layouts": {
+            "basic": {
+              "offsets": {
+                "active_limit": 40,
+                "affinity": 48,
+                "flags": 16,
+                "job_time": 8,
+                "max_working_set": 32,
+                "min_working_set": 24,
+                "priority": 56,
+                "process_time": 0,
+                "scheduling": 60
+              },
+              "size": 64
+            },
+            "cpu": {
+              "offsets": {
+                "flags": 0,
+                "rate": 4
+              },
+              "size": 8
+            },
+            "extended": {
+              "offsets": {
+                "basic": 0,
+                "io": 64,
+                "job_memory": 120,
+                "peak_job_memory": 136,
+                "peak_process_memory": 128,
+                "process_memory": 112
+              },
+              "size": 144
+            },
+            "io": {
+              "offsets": {
+                "other_bytes": 40,
+                "others": 16,
+                "read_bytes": 24,
+                "reads": 0,
+                "write_bytes": 32,
+                "writes": 8
+              },
+              "size": 48
+            }
+          },
+          "native_calls": [
+            {
+              "api": "IsProcessInJob",
+              "last_error": 0,
+              "monotonic_ns": "706821002377700",
+              "result": 1
+            },
+            {
+              "api": "GetActiveProcessorGroupCount",
+              "last_error": 122,
+              "monotonic_ns": "706821002387900",
+              "result": 1
+            },
+            {
+              "api": "GetProcessAffinityMask",
+              "last_error": 122,
+              "monotonic_ns": "706821002396200",
+              "result": 1
+            },
+            {
+              "api": "SetInformationJobObject:Extended9",
+              "last_error": 122,
+              "monotonic_ns": "706821002414900",
+              "result": 1
+            },
+            {
+              "api": "SetInformationJobObject:CPU15",
+              "last_error": 122,
+              "monotonic_ns": "706821002440300",
+              "result": 1
+            },
+            {
+              "api": "QueryInformationJobObject:Extended9",
+              "last_error": 122,
+              "monotonic_ns": "706821002447900",
+              "result": 1
+            },
+            {
+              "api": "QueryInformationJobObject:CPU15",
+              "last_error": 122,
+              "monotonic_ns": "706821002451000",
+              "result": 1
+            }
+          ],
+          "processor_groups": 1,
+          "readback_cpu_flags": 5,
+          "readback_limit_flags": 8712,
+          "requested_cpu_flags": 5,
+          "requested_job_memory_bytes": 268435456,
+          "requested_limit_flags": 8712,
+          "resident_memory_mapping_qualified": false,
+          "system_affinity_processor_count": 16
+        },
+        "memory_accounting_query_success": true,
+        "memory_accounting_struct_hex": "000000000000000000000000000000000822000000000000000000000000000000000000000000000800000000000000000000000000000020000000050000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000c068200000000000207b2000000000",
+        "memory_limit_cause_and_peak_semantics_qualified": false,
+        "mode": "memory",
+        "native_job_admission": false,
+        "native_peak_job_committed_bytes": 544940032,
+        "native_peak_process_memory_bytes": 543735808,
+        "observation_utc": "2026-11-07T16:49:19.844684+00:00",
+        "peak_exceeds_configured_limit": true,
+        "rejected_allocation_bytes": 536870912,
+        "rss_capacity_qualified": false,
+        "terminated_job_observed_empty": true
+      }
+    },
+    {
+      "mode": "bad_profile",
+      "exit": 0,
+      "observation": {
+        "classification": "OWNED_SETUP_DENIAL_BEFORE_RESUME",
+        "mode": "bad_profile",
+        "native_job_admission": false,
+        "resumed": false,
+        "terminated_job_observed_empty": true
+      }
+    }
+  ],
+  "original_discrepancy_preserved": {
+    "source": "uncommitted initial bounded memoryprobe",
+    "peak_job_memory_bytes": 544940032,
+    "configured_job_memory_bytes": 268435456
+  },
+  "admission": false,
+  "resource_profile_qualified": false,
+  "hosted_ci": "NOT_RUN",
+  "source_hashes": {
+    "docs/intelligence/jobs/worker-containment-design-review1.md": "64a3c7232f1c2f3bde032347f532f4865b5eaa58a8a6d63d1bf50270cc3eaa12",
+    "tests/gateway_jobs/qualify_windows_job.py": "a814f2a4c203c913ddd74477791d94d044a2ce667634822d044afa911a303b66",
+    "tests/gateway_jobs/test_worker_limits.py": "a054c441d54da5e9990807bf1c162985161035e38fbec3388613deee7093c7fa",
+    "unified_system/gateway_worker.py": "5458dc5de7cfcdb9d9b77e904b6c1161fff375b3de3dc9bd759ae726e5290436"
+  }
+}

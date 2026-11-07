@@ -1,0 +1,59 @@
+{
+  "branch": "feature/gateway-query-v2-chart-20261107",
+  "worktree": "C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-6-distributed-terminan-control/work/gateway-query-v2-chart-20261107",
+  "base": "8eef1a256081d987ff7c1b4024efe2cb16048680",
+  "base_tree": "4b2d48ff361eb2817b4cac15eaa63e2adeeaa742",
+  "head": "b70725220eed43e371a3c08f1c87fcabd984a45d",
+  "tree": "fb1859899a41a6976f39023ff1caeb4323b519bb",
+  "draft_pr": "https://github.com/YehorBabenko88/Terminan/pull/72",
+  "design_sha256": "9717e9bd1917dcfd833854d484d6a3f94bfd47abdac6f4f89b293780ff6fb42a",
+  "local_design_ack": "ROOT_SCOPED_LOCAL_ONLY",
+  "schema_validation": "pinned exact query-v2 request/result and Meta schemas, closed consumer; original owner3+3schema checks recorded separately",
+  "contract_tests": "41PASS0skip; original27 IDs plus14new (14RED thenGREEN)",
+  "raw_source_files": 371,
+  "raw_before_after_equal": true,
+  "source_guards": "8 rejected before tests, final HEAD",
+  "browser": {
+    "qualification": "LOCAL_QUERY_V2_COMPUTED_CHART_NOT_AUTH_JOB_RETRIEVAL_RUNTIME",
+    "source_sha256": "f3c4b5bf8a407e4b1895fa778d1171ef251f3d6d9694fcce87b87876128d0d2e",
+    "artifact_sha256": "4c6b5b3a07e51dabfbeadd9173d2224c87dfc664f95fe23258ad29d4294d1c82",
+    "computed_markers": 2,
+    "raw_dependencies": 5,
+    "flags_unverified": true,
+    "input_replay_separate": true,
+    "keyboard_horizontal_scroll": true,
+    "mobile_overflow": false,
+    "real_webcrypto_stale_metadata_reset": "PASS",
+    "external_requests": 0
+  },
+  "visual_regression_against_source8eef": {
+    "computed-levels-desktop.png": true,
+    "computed-levels-mobile.png": true,
+    "metadata-desktop.png": true,
+    "metadata-mobile.png": true
+  },
+  "independent_review": "No actionable P0/P1/P2; independently41PASS0skip exactLFclone",
+  "dependency_ack_matrix": {
+    "ROOT": "local design ACK, no runtime composition",
+    "A7": "exact schema/packet scoped ACK; publication1610/execution5b4; successor6e58 adapter/schema/packet byte unchanged",
+    "A3": "retained actual query004de/f68a; A6 hash/join verification only, no HTTPS reexecution",
+    "A2": "no UI authenticated retrieval/command transport binding",
+    "A4": "upstream publication/registry/completeness UNPROVEN; Meta dataset revision UNAVAILABLE",
+    "A5": "no dispatch/job/fencing admission"
+  },
+  "A7_successor_full_suite": "owner executed2116PASS36SKIP35SUBTESTPASS; log/XML/extra state hashes verified; strict postfull clean capsule FAIL retained; no global source/native ACK",
+  "windows_ci": "QUEUED exact-head runs42393332588/42393327749; no hosted PASS",
+  "runtime_endpoint_ack": "NOT_BOUND",
+  "windows_acceptance": "NOT_RUN",
+  "physical_acceptance": "NOT_RUN",
+  "P0": [
+    "No admitted end-to-end authenticated retrieval/job/storage/runtime path"
+  ],
+  "P1": [
+    "Hosted CI pending",
+    "Windows runtime/physical acceptance NOT_RUN"
+  ],
+  "P2": [],
+  "local_component": "PASS_ENGINEERING_ONLY",
+  "GO_NO_GO": "NO_GO"
+}
