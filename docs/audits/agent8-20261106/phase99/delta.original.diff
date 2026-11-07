@@ -1,0 +1,172 @@
+diff --git a/.github/workflows/gateway-research-identity.yml b/.github/workflows/gateway-research-identity.yml
+new file mode 100644
+index 0000000..55c453f
+--- /dev/null
++++ b/.github/workflows/gateway-research-identity.yml
+@@ -0,0 +1,66 @@
++name: Gateway research principal native Consul
++on:
++  push:
++    paths: ['unified_system/gateway_research_identity.py', 'tests/gateway_research_identity/**', 'docs/intelligence/research-identity/**', '.github/workflows/gateway-research-identity.yml']
++  pull_request:
++    paths: ['unified_system/gateway_research_identity.py', 'tests/gateway_research_identity/**', 'docs/intelligence/research-identity/**', '.github/workflows/gateway-research-identity.yml']
++permissions:
++  contents: read
++jobs:
++  research-principal:
++    strategy:
++      fail-fast: false
++      matrix:
++        include:
++          - os: windows-latest
++            lock: windows
++            executable: consul.exe
++          - os: ubuntu-24.04
++            lock: linux
++            executable: consul
++    runs-on: ${{ matrix.os }}
++    timeout-minutes: 15
++    env:
++      EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
++      A2_RESEARCH_CONSUL_BINARY: ${{ runner.temp }}/a2-research-consul/${{ matrix.executable }}
++    steps:
++      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
++        env:
++          GIT_CONFIG_COUNT: '1'
++          GIT_CONFIG_KEY_0: core.autocrlf
++          GIT_CONFIG_VALUE_0: 'false'
++        with:
++          ref: ${{ env.EXPECTED_HEAD }}
++          path: unified
++          persist-credentials: false
++          fetch-depth: 0
++      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
++        env:
++          GIT_CONFIG_COUNT: '1'
++          GIT_CONFIG_KEY_0: core.autocrlf
++          GIT_CONFIG_VALUE_0: 'false'
++        with:
++          repository: YehorBabenko88/bybit-cluster-grid
++          ref: 40e9c8dc274a2746018bc1aa08d103cd0187cecc
++          path: grid
++          persist-credentials: false
++          fetch-depth: 0
++      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
++        with:
++          python-version: '3.12.10'
++      - shell: bash
++        run: |
++          python -m pip install --only-binary=:all: --require-hashes -r unified/docs/intelligence/research-identity/requirements-${{ matrix.lock }}.lock
++      - shell: bash
++        run: |
++          python -I -B unified/docs/intelligence/research-identity/fetch_consul.py --directory "$RUNNER_TEMP/a2-research-consul"
++      - shell: bash
++        run: |
++          set -o pipefail
++          python -I -B unified/docs/intelligence/research-identity/run_qualification.py --expected-head "$EXPECTED_HEAD" --grid-source "$GITHUB_WORKSPACE/grid" 2>&1 | tee "$RUNNER_TEMP/research-principal.log"
++      - if: always()
++        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
++        with:
++          name: research-principal-${{ matrix.lock }}-${{ env.EXPECTED_HEAD }}
++          path: ${{ runner.temp }}/research-principal.log
++          if-no-files-found: warn
+diff --git a/docs/intelligence/research-identity/fetch_consul.py b/docs/intelligence/research-identity/fetch_consul.py
+new file mode 100644
+index 0000000..24ced6c
+--- /dev/null
++++ b/docs/intelligence/research-identity/fetch_consul.py
+@@ -0,0 +1,28 @@
++"""Fetch one pinned disposable test binary; never installs a service."""
++import argparse
++import hashlib
++import io
++from pathlib import Path
++import sys
++import urllib.request
++import zipfile
++
++PINS={
++    'win32':('windows','consul.exe','41762ef5b98c8dd9b6852df6cfbceed37e7f0acc5760856be33100f1092475e1'),
++    'linux':('linux','consul','acb0a1b5b2a22a5fadb5d725f03610335e499e193eeade9df458c6c6017a77f4'),
++}
++parser=argparse.ArgumentParser();parser.add_argument('--directory',required=True);args=parser.parse_args()
++platform,name,pin=PINS[sys.platform]
++destination=Path(args.directory).absolute();destination.mkdir(parents=True,exist_ok=False)
++url='https://releases.hashicorp.com/consul/1.22.2/consul_1.22.2_'+platform+'_amd64.zip'
++with urllib.request.urlopen(url,timeout=60) as response:
++    raw=response.read(128*1024*1024+1)
++assert len(raw)<=128*1024*1024
++with zipfile.ZipFile(io.BytesIO(raw)) as archive:
++    member=archive.getinfo(name);assert member.file_size<=256*1024*1024
++    binary=archive.read(member)
++assert hashlib.sha256(binary).hexdigest()==pin
++target=destination/name
++with target.open('xb') as stream:stream.write(binary)
++if sys.platform=='linux':target.chmod(0o700)
++print(str(target))
+diff --git a/docs/intelligence/research-identity/requirements-linux.lock b/docs/intelligence/research-identity/requirements-linux.lock
+new file mode 100644
+index 0000000..cdbf25a
+--- /dev/null
++++ b/docs/intelligence/research-identity/requirements-linux.lock
+@@ -0,0 +1,15 @@
++anyio==4.16.0 --hash=sha256:c66ae634e0b8228396b801741beb3294326d4b6102f7bba4041c0dfb58c29026
++attrs==26.1.0 --hash=sha256:c647aa4a12dfbad9333ca4e71fe62ddc36f4e63b2d260a37a8b83d2f043ac309
++certifi==2026.10.23 --hash=sha256:e9b54de76e530bb6cf0ccd036787103acb58fd42ba930ea8bf948ddbaa2f61d1
++h11==0.16.0 --hash=sha256:63cf8bbe7522de3bf65932fda1d9c2772064ffb3dae62d55932da54b31cb6c86
++httpcore==1.0.9 --hash=sha256:2d400746a40668fc9dec9810239072b40b4484b640a8c38fd654a024c7a1bf55
++httpx==0.28.1 --hash=sha256:d909fcccc110f8c7faf814ca82a9a4d816bc5a6dbfea25d6591d6985b8ba59ad
++idna==3.20 --hash=sha256:ab7ae7122974553370f0bdb919e1a960b2cd1bc1ef0276416d896db81c14582c
++jsonschema==4.25.1 --hash=sha256:3fba0169e345c7175110351d456342c364814cfcf3b964ba4587f22915230a63
++jsonschema-specifications==2025.9.1 --hash=sha256:98802fee3a11ee76ecaca44429fda8a41bff98b00a0f2838151b113f210cc6fe
++referencing==0.37.0 --hash=sha256:381329a9f99628c9069361716891d34ad94af76e461dcb0335825aecc7692231
++rpds-py==2026.9.1 --hash=sha256:5ce8943f79c2210f7abcc28e86367b03b28d95027fd01c46d2472373ae70c86f --hash=sha256:addeda51556dac7c1a2f14cda62db8b621cd12afba3091d03a96c72932387eab
++typing-extensions==4.16.0 --hash=sha256:481caa481374e813c1b176ada14e97f1f67a4539ce9cfeb3f350d78d6370c2e8
++cryptography==46.0.3 --hash=sha256:a2c0cd47381a3229c403062f764160d57d4d175e022c1df84e168c6251a22eec
++cffi==2.0.0 --hash=sha256:3e17ed538242334bf70832644a32a7aae3d83b57567f9fd60a26257e992b79ba
++pycparser==2.23 --hash=sha256:e5c6e8d3fbad53479cab09ac03729e0a9faf2bee3db8208a550daf5af81a5934
+diff --git a/tests/gateway_research_identity/test_native_broker.py b/tests/gateway_research_identity/test_native_broker.py
+index b68d955..d897b8d 100644
+--- a/tests/gateway_research_identity/test_native_broker.py
++++ b/tests/gateway_research_identity/test_native_broker.py
+@@ -3,6 +3,7 @@ import asyncio,base64,copy,hashlib,json,os,sys,tempfile,types,unittest,uuid
+ from datetime import datetime,timedelta,timezone
+ from pathlib import Path
+ from unittest.mock import patch
++from jsonschema import Draft202012Validator
+ import subprocess
+ 
+ GRID=Path(os.environ.get('A2_RESEARCH_GRID_SOURCE','C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-2-high-availability-distributed/work/grid-assignment-native-20261107'))
+@@ -81,7 +82,20 @@ class NativeBrokerTests(unittest.IsolatedAsyncioTestCase):
+         snapshot=ResearchIdentityBroker.require_capture(self.broker,capture,expected_authority=self.authority,
+             scope='SUBMIT_RESEARCH',request_bytes=b'original-intent')
+         self.assertEqual(snapshot.actor_id,self.actor)
++        class ScopeEqualityClaim:
++            def __eq__(self,other):return True
++        with self.assertRaises(ResearchIdentityDenied):
++            self.broker.require_capture(capture,expected_authority=self.authority,
++                scope=ScopeEqualityClaim(),request_bytes=b'original-intent')
++        with self.assertRaises(ResearchIdentityDenied):
++            self.broker.require_capture(capture,expected_authority=self.authority,
++                scope='SUBMIT_RESEARCH',request_bytes=b'x'*16385)
+         lock=snapshot.records[-1]
++        schema_dir=ROOT/'docs/intelligence/research-identity'
++        for name,record in zip(('profile','principal','policy','principal_session'),snapshot.records[1:],strict=True):
++            schema=json.loads((schema_dir/(name+'.schema.json')).read_bytes())
++            Draft202012Validator.check_schema(schema)
++            Draft202012Validator(schema).validate(json.loads(record.raw))
+         self.assertEqual(lock.session,snapshot.session_id);self.assertGreater(lock.index,0)
+         native=await self.authority._request('GET','/v1/session/info/'+snapshot.session_id)
+         self.assertEqual(native[0]['ID'],snapshot.session_id)
+diff --git a/unified_system/gateway_research_identity.py b/unified_system/gateway_research_identity.py
+index fbb4089..3bb311f 100644
+--- a/unified_system/gateway_research_identity.py
++++ b/unified_system/gateway_research_identity.py
+@@ -279,6 +279,7 @@ class ResearchIdentityBroker:
+         return capture
+     def require_capture(self,capture,*,expected_authority,scope,request_bytes):
+         _require(type(self) is ResearchIdentityBroker and self._authority is expected_authority)
++        _require(type(scope) is str and scope in SCOPES and type(request_bytes) is bytes and 0<len(request_bytes)<=16384)
+         _require(type(capture) is ResearchIdentityCapture and capture in self._captures)
+         context,original_scope,digest,snapshot,expiry,deadline=self._captures[capture]
+         self._context(context)
