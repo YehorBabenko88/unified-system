@@ -1,5 +1,5 @@
 {
-  "checked_utc": "2026-11-07T12:22:46.513022+00:00",
+  "checked_utc": "2026-11-07T12:59:11.026806+00:00",
   "RELEASE_MANIFEST_STATUS": "PRESENT_PREPARATION_ONLY_NOT_APPROVED_NOT_INSTALLABLE",
   "NODE_INVENTORY_STATUS": "SIX_REDACTED_OWNER_OBSERVATIONS_PRESENT_ORIGINAL_RAW_NOT_REACQUIRED_BY_A8_NOT_ADMITTED",
   "CONTRACT_STATUS": {
@@ -667,7 +667,7 @@
     "P0_confirmed_defects": 0,
     "P0_absence_proven": false,
     "P1_open": 6,
-    "P2_open": 3,
+    "P2_open": 4,
     "F08": "FIX_VERIFIED_OFFLINE",
     "F09": "FIX_VERIFIED_OFFLINE_AT_42686cd",
     "F10": "FIX_VERIFIED_OFFLINE_AT_42686cd",
@@ -678,7 +678,8 @@
     "F15": "FIX_VERIFIED_OFFLINE_AT_6bcf547",
     "F16": "OPEN_GIT_REPLACEMENT_RAW_SOURCE_GUARD",
     "F17": "A5_ROOT_EXACT_FIXES_VERIFIED_OTHER_APPLICABLE_GUARDS_PENDING",
-    "F18": "FIX_VERIFIED_OFFLINE_AT_072d222"
+    "F18": "FIX_VERIFIED_OFFLINE_AT_072d222",
+    "F19": "OPEN_NODE_JOURNAL_WAL_BYTE_BUDGET"
   },
   "EVIDENCE": [
     "phase4/math-source-and-compile-review.json",
@@ -3006,5 +3007,19 @@
     "uncertain_zero_one_metaprobes_allowed": 8,
     "native": "NOT_RUN",
     "actual_supported_API": "PENDING"
+  },
+  "node_supervisor840_review": {
+    "head": "840511a8567e8b016733d7dc2566d7890dff39b9",
+    "tree": "5529a7fe006f430ec11a72791ecca37bd2e94544",
+    "mandatory": 30,
+    "skips": 0,
+    "raw_prepost": 1327,
+    "scope_constructor_refusals": 6,
+    "original_PC1_preserved": true,
+    "symlink_qualification": "NOT_RUN_HOST_PRIVILEGE",
+    "resource_bound": "FAIL_A8_F19_65536_LIMIT_156352_ACTUAL_DB_WAL_SHM",
+    "native": "UNAVAILABLE",
+    "physical": "NOT_RUN",
+    "acceptance": "HOLD_RESOURCE_CORRECTION_PENDING"
   }
 }

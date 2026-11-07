@@ -286,5 +286,17 @@
     "correction_head": "072d22214136148b47e82d21fec9e269bd7468ac",
     "correction_tree": "ffaff34af5375b23235491d92a250ccb66eb03df",
     "correction_evidence": "phase71/extra.stdout.json; phase71/actual-validator46.stdout.json; phase71/post-schema-workflow20.stderr.log"
+  },
+  {
+    "id": "A8-F19",
+    "severity": "P2",
+    "repository": "unified-system",
+    "pr": 38,
+    "observed_head": "840511a8567e8b016733d7dc2566d7890dff39b9",
+    "status": "OPEN_OWNER_CORRECTION_REQUESTED",
+    "title": "NodeTaskJournal max_bytes ignores WAL and SHM state",
+    "evidence": "phase76/wal-budget.stdout.json; phase76/wal-budget-executed.py",
+    "required_correction": "Reject nonapproved WAL/SHM/mode before reads/writes or implement complete resource accounting; actual held-reader SQLite negative regression; exact independent successor verification.",
+    "scope": "OWN_SYNTHETIC_SQLITE_RESOURCE_BOUND_NOT_NATIVE_AUTHORITY_BYPASS"
   }
 ]
