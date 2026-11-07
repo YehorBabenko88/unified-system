@@ -1,5 +1,5 @@
 {
-  "checked_utc": "2026-11-07T11:44:50.058631+00:00",
+  "checked_utc": "2026-11-07T12:10:01.056529+00:00",
   "RELEASE_MANIFEST_STATUS": "PRESENT_PREPARATION_ONLY_NOT_APPROVED_NOT_INSTALLABLE",
   "NODE_INVENTORY_STATUS": "SIX_REDACTED_OWNER_OBSERVATIONS_PRESENT_ORIGINAL_RAW_NOT_REACQUIRED_BY_A8_NOT_ADMITTED",
   "CONTRACT_STATUS": {
@@ -2898,7 +2898,10 @@
     "own_extra_negatives": 5
   },
   "pending_independent_reviews": [
-    "Exact mandatory hosted CI and original artifacts for candidates; native/physical gates unchanged"
+    "Supervisor PR38 b82af6d journal/status helper",
+    "Supervisor PR40 03b4505 mission development records",
+    "Supervisor PR39 93cd921 readonly CI metadata helper",
+    "Exact mandatory hosted CI/artifacts/native/physical gates remain"
   ],
   "lan_mux_integrated_review": {
     "head": "8bfa00d779438dc204b1e9ee82f496efce9e6154",
@@ -2953,5 +2956,23 @@
     "post_schema_guarded20": "PASS_CLEAN_NO_CLEANUP",
     "hosted": "NOT_QUALIFIED",
     "full_runtime_mapping": false
+  },
+  "assignment40e9_review": {
+    "head": "40e9c8dc274a2746018bc1aa08d103cd0187cecc",
+    "tree": "a67f969d95934fe39c4206021a9aabcde6b6ccab",
+    "units": 11,
+    "actual_consul_raw_groups": 8,
+    "source_guards": 8,
+    "raw_files": {
+      "Grid": 695,
+      "Unified": 674
+    },
+    "primary_objects_recomputed": 1369,
+    "extra_HTTP200_empty": "DENIED_OVER_ACTUAL_LOOPBACK_HTTP",
+    "public_positive_shape": "EXECUTE_RECONCILE_CLOSED_WITH_NO_IO",
+    "issued_assignment": false,
+    "native": false,
+    "physical": "BLOCKED",
+    "hosted": "QUEUED_NOT_PASS"
   }
 }

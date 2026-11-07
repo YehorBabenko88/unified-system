@@ -1,0 +1,22 @@
+# Phase72 — independent Assignment substrate exact review
+
+Requirement IDs A8-HEAD, A8-CONSENSUS-FENCING, A8-RESTART, A8-SECURITY-NEGATIVE, A8-SOURCE-GUARDS, A8-WINDOWS-CI. Repository bybit-cluster-grid; Draft https://github.com/YehorBabenko88/bybit-cluster-grid/pull/270.
+Exact HEAD40e9c8dc274a2746018bc1aa08d103cd0187cecc/treea67f969d95934fe39c4206021a9aabcde6b6ccab; basebe6335a2e8cfac9483213a6a215bc29e32808b0c. All11changed paths NEW, existing implementation untouched. Support unified-system be5cb942436f82f374375eabb255768bb139797f/674raw files. Policyreview2 SHA256fa0c069c30ba498443f0af5e1624f94e9cea25cf2cd9e76bb8e5f6a5a7ba324f.
+
+Environment local Windows/Python3.12.10 from own previously pinned mux-independent-env (not new dependency/native qualification); isolated no-hardlinks raw-LF clone; own pinned Consul1.22.2 binary SHA25641762ef5b98c8dd9b6852df6cfbceed37e7f0acc5760856be33100f1092475e1; three new loopback-only processes and synthetic stores/records. No office hosts, provider sends, real orders, firewall/ESET/Tailscale/service/trust-store change. Public Assignment execution/reconciliation stay closed.
+
+| Test | Expected | Actual | Evidence | Status | Severity / correction |
+|---|---|---|---|---|---|
+| Exact source/dependency |pinned HEAD/tree, allraw pre/post |695Grid+674Unified raw equal; independently recomputed1369primary object OIDs and physical bytes |source-bound.json; independent-primary-verification.json |PASS |scope excludes interpreter/native authenticity |
+| Exact unit inventory |11mandatory/0skip |11PASS/0skip incl malicious valid helperpyc positive control then checked direct-byte bootstrap |units.log; source-bound.json |PASS |expected not-a-git diagnostic from negative helper fixture is not product failure |
+| Actual Consul raw transactions |8exact scenario groups, original durable receipt |8PASS:defaultdeny, checkedcommit,staleleader409,stalegeneration409, supersession-firstdeny/publication-firstretained,simultaneousrestartreceiptindex,noquorum-no-cache |real-native.json; real-native.log |PASS |raw untrusted probe records NOT issued Assignment/provider/storage publication or HA acceptance |
+| Source negative inventory |8guards refuse alias inputs |8PASS/cache+shadow+hiddenindex+blob/tree replace+CRLF+prefix+ancestorlink; fixture receipts retained outside published bundle |guard-controls.json; guard-controls.log |PASS |globalF16/F17 unchanged |
+| Actual HTTP200empty body |no commit confirmation from200{} |one real loopback HTTP PUT /v1/txn returns200{}; actual ConsulSessionAuthority request path returns result and Assignment rejects OUTCOME_UNKNOWN |extra.stdout.json; extra-executed.py |PASS |not mocked _request success |
+| Positive provider shape cannot grant |no public effects or provider callbacks |execute/reconcile with object having both async methods deny, no extra HTTP request |extra.stdout.json |PASS |no native admission implied by method presence |
+| Policycanonical/u63 |acceptmaxu63;reject aliases/overflow |ownmaxu63accepted/eightrevision negatives rejected by runtime andactualDraft202012; ownerinventory13LF/namespace/sortedops/jobs tests independently executed |extra.stdout.json; units.log |PASS |untrusted data only, no commissioner/native issuance |
+| Windows/Ubuntu hosted |terminal mandatory jobs/artifacts |42370984011/42370964121attempt1queued/null |ci.original.json |BLOCKED |P1 acceptance gate: original terminal jobs/artifacts required |
+| Native/Assignment/storage/physical |actual positive binding plus approved release |absent/NOT_RUN |source-bound.json |BLOCKED |execute/reconcile must remain closed pending exact schemas/Rootnative/A4/A5 binding |
+
+Own real server stopped; ConsulLab receipt owned_processes_stopped=true. guard-controls fixture directory initially generated inside output by committed runner was safely moved intact to own work scratch before publication; no .git/pyc fixture payloads are bundled. Commands executed source_runner.py -I-B --expected-head40e9 --support-source ownbe5 --binary ownConsul --scratch newownpath --output phase72. No dependency installation or hosted workflow dispatch/rerun.
+
+No new component defect found in this bounded substrate slice; open6P1/3P2 unchanged. Root documentary073/49a hash correction remains owner-reported, not new A8verification/globalF07closure. Supervisor38/39/40 are queued separately; their unrelated broad baseline outputs are NOTPASS and no full-suite readiness is inferred. Overall NO-GO; Tailscale removal BLOCKED/NO-GO. Physical faults/production deployment remain unauthorized.

@@ -1,0 +1,21 @@
+{
+  "actual_HTTP_200_empty_dict_refused": true,
+  "actual_HTTP_requests": [
+    {
+      "path": "/v1/txn",
+      "body": [
+        {
+          "KV": {
+            "Verb": "check-not-exists",
+            "Key": "a8-inert-probe"
+          }
+        }
+      ]
+    }
+  ],
+  "provider_method_shape_public_execute_and_reconcile_denied_without_IO": true,
+  "u63_max_accepted": true,
+  "negative_revisions": 8,
+  "owned_server_stopped": true,
+  "scope": "RAW_SUBSTRATE_AND_UNTRUSTED_POLICY_ONLY_NO_ASSIGNMENT_GRANT"
+}
