@@ -59,3 +59,18 @@ reported allocation512MiB refused but native peak committed counter544940032;
 limit readback was268435456. Do not infer safe peak/headroom from that counter or
 claim cause of MemoryError conclusively. This probe remains unqualified for RSS,
 CPU share, pressure, bounded output and admission. Worker start stays denied.
+
+ROOT requested diagnostic successor preserves original544940032 discrepancy
+unchanged. Actual e86b4cc fresh-clone repeat reported544903168 (a separate sample,
+not a replacement): both exceed configured limit. Source-bound1400 tracked raw
+files matched before/after unit4 and3actual probes. These receipts apply ONLY to
+e86b4cc. Diagnostic successor logs requested/readback native flags/limit bytes,
+CPU fields, raw Extended/CPU/accounting structs and sizes/offsets, membership,
+monotonic/UTC observation times and native return values. Last-error after a
+successful API call is stale/informational, NOT evidence of failure. No inferred
+attempted-versus-charged explanation is asserted. Win32 memory definitions:
+https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-jobobject_extended_limit_information
+CPU rate units/flags:
+https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-jobobject_cpu_rate_control_information
+Fault-injection assertion controls deny failed memory setup, failed CPU setup,
+failed readback and readback mismatch. These are not native failure reproductions.
