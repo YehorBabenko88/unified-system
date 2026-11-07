@@ -403,5 +403,24 @@
     "runtime_implementation": "AUTHORIZED",
     "physical_installation": "GATED_NOT_CURRENTLY_READY",
     "first_public_data_smoke": "SEPARATE_OWNER_APPROVAL_REQUIRED_AFTER_PROVIDER_ADMISSION"
+  },
+  "composed_component_run": {
+    "source_head": "237722bb1d5c8bc671a498609729261bdd3c9fce",
+    "tree": "0bc635d822a3702e43b45fbd513a8e0bf2cb3ab6",
+    "mandatory_unique_tests": 129,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "scope": "LOCAL_WINDOWS_ACTUAL_EMBEDDED_WORKFLOW_REAL_LOOPBACK_TLS_NOT_HOSTED_OR_NATIVE_RUNTIME",
+    "raw_source_prepost_equal": true,
+    "evidence": "release/evidence/runtime-129-237722b/"
+  },
+  "security_identity_guard_code": {
+    "module": "unified_system/security_identity_records.py",
+    "raw_working_sha256": "0d6b413b5654c0ff26c00bbbdcc6a47329e56dd9b8cb1cd838df8896477972cd",
+    "tests": 8,
+    "scope": "STRICT_FIXED_KEY_STRUCTURAL_GUARDS_NOT_NATIVE_AUTHENTICATION",
+    "atomic_adapter_ack": "PENDING_A2",
+    "native_provider": "NOT_IMPLEMENTED_OR_ADMITTED"
   }
 }
