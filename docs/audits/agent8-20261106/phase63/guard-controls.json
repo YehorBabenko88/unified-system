@@ -1,0 +1,47 @@
+{
+  "own_source_controls": [
+    {
+      "case": "cache",
+      "rejected": true,
+      "tests_executed": 0,
+      "stderr_sha256": "da8069c0cdb7d1075308229d146a641e5f2daea608f15a918343d0b7d6a0e588"
+    },
+    {
+      "case": "shadow",
+      "rejected": true,
+      "tests_executed": 0,
+      "stderr_sha256": "da8069c0cdb7d1075308229d146a641e5f2daea608f15a918343d0b7d6a0e588"
+    },
+    {
+      "case": "tracked",
+      "rejected": true,
+      "tests_executed": 0,
+      "stderr_sha256": "4f83da6c04f10933a41c07185259f2e01d4fbea97a14a610f93029dbfa755982"
+    },
+    {
+      "case": "replace",
+      "rejected": true,
+      "tests_executed": 0,
+      "stderr_sha256": "4f83da6c04f10933a41c07185259f2e01d4fbea97a14a610f93029dbfa755982"
+    }
+  ],
+  "hosted_snapshot": [
+    {
+      "id": 42365574486,
+      "head_sha": "7a83e6e1aa74001c4797e9bf7af9368d3192bfbe",
+      "run_attempt": 1,
+      "status": "queued",
+      "conclusion": null,
+      "event": "pull_request"
+    },
+    {
+      "id": 42365571505,
+      "head_sha": "7a83e6e1aa74001c4797e9bf7af9368d3192bfbe",
+      "run_attempt": 1,
+      "status": "queued",
+      "conclusion": null,
+      "event": "push"
+    }
+  ],
+  "scope": "GUARDS_NOT_ACTUAL_PYTEST_OR_HOSTED_RESULT"
+}

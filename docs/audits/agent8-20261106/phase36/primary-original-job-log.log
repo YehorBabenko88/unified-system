@@ -1,0 +1,243 @@
+﻿2026-11-06T21:39:05.1170084Z Current runner version: '2.338.2'
+2026-11-06T21:39:05.1205107Z ##[group]Runner Image Provisioner
+2026-11-06T21:39:05.1206223Z Hosted Compute Agent
+2026-11-06T21:39:05.1207009Z Version: 20261103.629
+2026-11-06T21:39:05.1207836Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+2026-11-06T21:39:05.1208740Z Build Date: 2026-11-03T17:26:59Z
+2026-11-06T21:39:05.1209744Z Worker ID: {ed56e4d4-a309-44af-9376-b8cd1410cb64}
+2026-11-06T21:39:05.1210764Z Region: eastus2
+2026-11-06T21:39:05.1211712Z Cloud: Azure
+2026-11-06T21:39:05.1212594Z ##[endgroup]
+2026-11-06T21:39:05.1214385Z ##[group]Operating System
+2026-11-06T21:39:05.1215196Z Microsoft Windows Server 2025
+2026-11-06T21:39:05.1216028Z 10.0.26100
+2026-11-06T21:39:05.1216727Z Datacenter
+2026-11-06T21:39:05.1217546Z ##[endgroup]
+2026-11-06T21:39:05.1218963Z ##[group]Runner Image
+2026-11-06T21:39:05.1219845Z Image: windows-2025-vs2026
+2026-11-06T21:39:05.1220714Z Version: 20261103.298.1
+2026-11-06T21:39:05.1222404Z Included Software: https://github.com/actions/runner-images/blob/win25-vs2026/20261103.298/images/windows/Windows2025-VS2026-Readme.md
+2026-11-06T21:39:05.1224440Z Image Release: https://github.com/actions/runner-images/releases/tag/win25-vs2026%2F20261103.298
+2026-11-06T21:39:05.1225609Z ##[endgroup]
+2026-11-06T21:39:05.1227100Z ##[group]GITHUB_TOKEN Permissions
+2026-11-06T21:39:05.1229686Z Contents: read
+2026-11-06T21:39:05.1230528Z Metadata: read
+2026-11-06T21:39:05.1231282Z ##[endgroup]
+2026-11-06T21:39:05.1233638Z Secret source: Actions
+2026-11-06T21:39:05.1234844Z Cache mode: write
+2026-11-06T21:39:05.1235731Z Prepare workflow directory
+2026-11-06T21:39:05.1737977Z Prepare all required actions
+2026-11-06T21:39:05.1793919Z Getting action download info
+2026-11-06T21:39:05.3112204Z Download action repository 'actions/checkout@11d5960a326750d5838078e36cf38b85af677262' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-11-06T21:39:05.7909871Z Download action repository 'actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+2026-11-06T21:39:06.3075677Z Complete job name: observation
+2026-11-06T21:39:06.8603048Z ##[group]Run $ErrorActionPreference='Stop'
+2026-11-06T21:39:06.8605158Z [36;1m$ErrorActionPreference='Stop'[0m
+2026-11-06T21:39:06.8608080Z [36;1m# BEGIN_PURE_EVENT_ADMISSION[0m
+2026-11-06T21:39:06.8609618Z [36;1mfunction Admit-TraceEvent($c) {[0m
+2026-11-06T21:39:06.8615153Z [36;1m  if($c.eventName -cne 'pull_request' -or $c.action -cne 'labeled' -or $c.actor -cne 'YehorBabenko88' -or $c.triggeringActor -cne 'YehorBabenko88' -or $c.attempt -cne '1' -or $c.repository -cne 'YehorBabenko88/math' -or $c.pr -ne 113){throw 'EVENT_TRACE_BLOCKED'}[0m
+2026-11-06T21:39:06.8620880Z [36;1m  if($c.branch -cne 'agent7/math-loader-init-diagnostics-20261106' -or $c.base -cne 'agent7/math-native-research-20261106' -or $c.headRepo -cne 'YehorBabenko88/math' -or $c.baseRepo -cne 'YehorBabenko88/math'){throw 'EVENT_TRACE_BLOCKED'}[0m
+2026-11-06T21:39:06.8625785Z [36;1m  if($c.head -cnotmatch '\A[0-9a-f]{40}\z' -or $c.eventSha -cnotmatch '\A[0-9a-f]{40}\z' -or $c.label -cne ('diag-'+$c.head) -or $c.description -cnotmatch '\Areview-sha256:[0-9a-f]{64}\z'){throw 'EVENT_TRACE_BLOCKED'}[0m
+2026-11-06T21:39:06.8629530Z [36;1m  return [pscustomobject]@{SourceHead=$c.head;EventSha=$c.eventSha;ReviewRecordSha256=$c.description.Split(':')[1]}[0m
+2026-11-06T21:39:06.8631265Z [36;1m}[0m
+2026-11-06T21:39:06.8632869Z [36;1m# END_PURE_EVENT_ADMISSION[0m
+2026-11-06T21:39:06.8635184Z [36;1mif($env:GITHUB_ACTIONS -cne 'true' -or $env:RUNNER_ENVIRONMENT -cne 'github-hosted' -or (Get-Item -LiteralPath $env:GITHUB_EVENT_PATH).Length -gt 131072){throw 'EVENT_TRACE_BLOCKED'}[0m
+2026-11-06T21:39:06.8638358Z [36;1m$e=Get-Content -LiteralPath $env:GITHUB_EVENT_PATH -Raw | ConvertFrom-Json[0m
+2026-11-06T21:39:06.8640699Z [36;1mif($e.number -ne 113 -or $e.pull_request.number -ne 113 -or $e.repository.full_name -cne $env:GITHUB_REPOSITORY){throw 'EVENT_TRACE_BLOCKED'}[0m
+2026-11-06T21:39:06.8649670Z [36;1m$c=[pscustomobject]@{eventName=$env:GITHUB_EVENT_NAME;actor=$env:GITHUB_ACTOR;triggeringActor=$env:EVENT_TRIGGERING_ACTOR;attempt=$env:GITHUB_RUN_ATTEMPT;eventSha=$env:GITHUB_SHA;repository=$env:GITHUB_REPOSITORY;action=$e.action;pr=$e.number;head=$e.pull_request.head.sha;branch=$e.pull_request.head.ref;base=$e.pull_request.base.ref;headRepo=$e.pull_request.head.repo.full_name;baseRepo=$e.pull_request.base.repo.full_name;label=$e.label.name;description=$e.label.description}[0m
+2026-11-06T21:39:06.8655147Z [36;1m$r=Admit-TraceEvent $c[0m
+2026-11-06T21:39:06.8656353Z [36;1m# Only validated hex strings cross into later action/env inputs.[0m
+2026-11-06T21:39:06.8658304Z [36;1mAdd-Content -LiteralPath $env:GITHUB_ENV -Value ('SOURCE_HEAD='+$r.SourceHead)[0m
+2026-11-06T21:39:06.8660100Z [36;1mAdd-Content -LiteralPath $env:GITHUB_ENV -Value ('EVENT_SHA='+$r.EventSha)[0m
+2026-11-06T21:39:06.8662176Z [36;1mAdd-Content -LiteralPath $env:GITHUB_ENV -Value ('REVIEW_RECORD_SHA256='+$r.ReviewRecordSha256)[0m
+2026-11-06T21:39:06.8664111Z [36;1m# Persist no executable code or private event data between steps.[0m
+2026-11-06T21:39:07.0090596Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-06T21:39:07.0092310Z env:
+2026-11-06T21:39:07.0093108Z   EVENT_TRIGGERING_ACTOR: YehorBabenko88
+2026-11-06T21:39:07.0094047Z ##[endgroup]
+2026-11-06T21:39:07.6034496Z ##[group]Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+2026-11-06T21:39:07.6035571Z with:
+2026-11-06T21:39:07.6036179Z   ref: dbb9bb1da9b180a8bb9f1d5401f1117894256941
+2026-11-06T21:39:07.6036804Z   persist-credentials: false
+2026-11-06T21:39:07.6038868Z   repository: YehorBabenko88/math
+2026-11-06T21:39:07.6043861Z   token: ***
+2026-11-06T21:39:07.6044364Z   ssh-strict: true
+2026-11-06T21:39:07.6044895Z   ssh-user: git
+2026-11-06T21:39:07.6045364Z   clean: true
+2026-11-06T21:39:07.6045829Z   sparse-checkout-cone-mode: true
+2026-11-06T21:39:07.6046384Z   fetch-depth: 1
+2026-11-06T21:39:07.6046897Z   fetch-tags: false
+2026-11-06T21:39:07.6047378Z   show-progress: true
+2026-11-06T21:39:07.6047850Z   lfs: false
+2026-11-06T21:39:07.6048339Z   submodules: false
+2026-11-06T21:39:07.6049242Z   set-safe-directory: true
+2026-11-06T21:39:07.6049808Z   allow-unsafe-pr-checkout: false
+2026-11-06T21:39:07.6050354Z env:
+2026-11-06T21:39:07.6051011Z   EVENT_TRIGGERING_ACTOR: YehorBabenko88
+2026-11-06T21:39:07.6051662Z   SOURCE_HEAD: dbb9bb1da9b180a8bb9f1d5401f1117894256941
+2026-11-06T21:39:07.6052393Z   EVENT_SHA: f4a8b400a1298bc4f86eaaf15c560070f322c7f7
+2026-11-06T21:39:07.6053259Z   REVIEW_RECORD_SHA256: 3df3720c7efbf0ad71ea0ac84e7001e37ea8c2deaf105076ff473f6919ac48a2
+2026-11-06T21:39:07.6054160Z ##[endgroup]
+2026-11-06T21:39:07.7532248Z Syncing repository: YehorBabenko88/math
+2026-11-06T21:39:07.7533817Z ##[group]Getting Git version info
+2026-11-06T21:39:07.7534299Z Working directory is 'D:\a\math\math'
+2026-11-06T21:39:07.8770767Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-06T21:39:08.7512945Z git version 2.56.0.windows.4
+2026-11-06T21:39:08.7571691Z ##[endgroup]
+2026-11-06T21:39:08.7593498Z Temporarily overriding HOME='D:\a\_temp\550e614b-4241-47b2-9c38-cdcf92f5cfed' before making global git config changes
+2026-11-06T21:39:08.7594253Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-06T21:39:08.7604549Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\math\math
+2026-11-06T21:39:08.9024900Z Deleting the contents of 'D:\a\math\math'
+2026-11-06T21:39:08.9031988Z ##[group]Initializing the repository
+2026-11-06T21:39:08.9041033Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\math\math
+2026-11-06T21:39:09.0395135Z Initialized empty Git repository in D:/a/math/math/.git/
+2026-11-06T21:39:09.0451399Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/YehorBabenko88/math
+2026-11-06T21:39:09.1557217Z ##[endgroup]
+2026-11-06T21:39:09.1558176Z ##[group]Disabling automatic garbage collection
+2026-11-06T21:39:09.1567739Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2026-11-06T21:39:09.2038953Z ##[endgroup]
+2026-11-06T21:39:09.2039953Z ##[group]Setting up auth
+2026-11-06T21:39:09.2055133Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-06T21:39:09.2468976Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-06T21:39:12.0563793Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-06T21:39:12.0958856Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-06T21:39:12.6656241Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-06T21:39:12.7040351Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-06T21:39:13.2553239Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-11-06T21:39:13.2949989Z ##[endgroup]
+2026-11-06T21:39:13.2950759Z ##[group]Fetching the repository
+2026-11-06T21:39:13.2963738Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin dbb9bb1da9b180a8bb9f1d5401f1117894256941
+2026-11-06T21:39:15.3529857Z From https://github.com/YehorBabenko88/math
+2026-11-06T21:39:15.3530750Z  * branch            dbb9bb1da9b180a8bb9f1d5401f1117894256941 -> FETCH_HEAD
+2026-11-06T21:39:15.3587501Z ##[endgroup]
+2026-11-06T21:39:15.3588070Z ##[group]Determining the checkout info
+2026-11-06T21:39:15.3589492Z ##[endgroup]
+2026-11-06T21:39:15.3604759Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2026-11-06T21:39:15.4656719Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2026-11-06T21:39:15.5042112Z ##[group]Checking out the ref
+2026-11-06T21:39:15.5054525Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force dbb9bb1da9b180a8bb9f1d5401f1117894256941
+2026-11-06T21:39:15.7347140Z Note: switching to 'dbb9bb1da9b180a8bb9f1d5401f1117894256941'.
+2026-11-06T21:39:15.7347628Z 
+2026-11-06T21:39:15.7348674Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-11-06T21:39:15.7349851Z changes and commit them, and you can discard any commits you make in this
+2026-11-06T21:39:15.7350763Z state without impacting any branches by switching back to a branch.
+2026-11-06T21:39:15.7351273Z 
+2026-11-06T21:39:15.7351629Z If you want to create a new branch to retain commits you create, you may
+2026-11-06T21:39:15.7353478Z do so (now or later) by using -c with the switch command. Example:
+2026-11-06T21:39:15.7353915Z 
+2026-11-06T21:39:15.7354087Z   git switch -c <new-branch-name>
+2026-11-06T21:39:15.7354396Z 
+2026-11-06T21:39:15.7354559Z Or undo this operation with:
+2026-11-06T21:39:15.7354864Z 
+2026-11-06T21:39:15.7355053Z   git switch -
+2026-11-06T21:39:15.7355253Z 
+2026-11-06T21:39:15.7355587Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-11-06T21:39:15.7356045Z 
+2026-11-06T21:39:15.7356422Z HEAD is now at dbb9bb1 Gate one diagnostic PR label event on exact source identity
+2026-11-06T21:39:15.7583205Z ##[endgroup]
+2026-11-06T21:39:15.8186506Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2026-11-06T21:39:15.8713961Z dbb9bb1da9b180a8bb9f1d5401f1117894256941
+2026-11-06T21:39:15.8809264Z ##[group]Removing auth
+2026-11-06T21:39:15.8819033Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-06T21:39:15.9241277Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-06T21:39:16.4938326Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-06T21:39:16.5275399Z http.https://github.com/.extraheader
+2026-11-06T21:39:16.5323674Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+2026-11-06T21:39:16.5718595Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-06T21:39:17.1330840Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-06T21:39:17.1718912Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-06T21:39:17.7208523Z ##[endgroup]
+2026-11-06T21:39:17.7593717Z ##[group]Run actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+2026-11-06T21:39:17.7594449Z with:
+2026-11-06T21:39:17.7594790Z   node-version: 24
+2026-11-06T21:39:17.7595160Z   always-auth: false
+2026-11-06T21:39:17.7595529Z   check-latest: false
+2026-11-06T21:39:17.7598178Z   token: ***
+2026-11-06T21:39:17.7598666Z env:
+2026-11-06T21:39:17.7599132Z   EVENT_TRIGGERING_ACTOR: YehorBabenko88
+2026-11-06T21:39:17.7599767Z   SOURCE_HEAD: dbb9bb1da9b180a8bb9f1d5401f1117894256941
+2026-11-06T21:39:17.7600463Z   EVENT_SHA: f4a8b400a1298bc4f86eaaf15c560070f322c7f7
+2026-11-06T21:39:17.7601052Z   REVIEW_RECORD_SHA256: 3df3720c7efbf0ad71ea0ac84e7001e37ea8c2deaf105076ff473f6919ac48a2
+2026-11-06T21:39:17.7601686Z ##[endgroup]
+2026-11-06T21:39:17.9449851Z Found in cache @ C:\hostedtoolcache\windows\node\24.22.2\x64
+2026-11-06T21:39:17.9458227Z (node:8572) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-06T21:39:17.9459939Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-06T21:39:17.9462185Z ##[group]Environment details
+2026-11-06T21:39:28.7498888Z node: v24.22.2
+2026-11-06T21:39:28.7499313Z npm: 11.19.1
+2026-11-06T21:39:28.7500320Z yarn: 1.22.22
+2026-11-06T21:39:28.7501284Z ##[endgroup]
+2026-11-06T21:39:28.7793887Z ##[group]Run $ErrorActionPreference='Stop'
+2026-11-06T21:39:28.7794432Z [36;1m$ErrorActionPreference='Stop'[0m
+2026-11-06T21:39:28.7795230Z [36;1mif($env:SOURCE_HEAD -cnotmatch '\A[0-9a-f]{40}\z' -or $env:EVENT_SHA -cnotmatch '\A[0-9a-f]{40}\z' -or $env:REVIEW_RECORD_SHA256 -cnotmatch '\A[0-9a-f]{64}\z'){throw 'SOURCE_TRACE_BLOCKED'}[0m
+2026-11-06T21:39:28.7795993Z [36;1m$head=git --no-replace-objects rev-parse HEAD[0m
+2026-11-06T21:39:28.7796492Z [36;1mif($LASTEXITCODE -ne 0 -or $head -cne $env:SOURCE_HEAD){throw 'SOURCE_TRACE_BLOCKED'}[0m
+2026-11-06T21:39:28.7797035Z [36;1m$tree=git --no-replace-objects rev-parse 'HEAD^{tree}'[0m
+2026-11-06T21:39:28.7797632Z [36;1mif($LASTEXITCODE -ne 0 -or $tree -cnotmatch '\A[0-9a-f]{40}\z'){throw 'SOURCE_TRACE_BLOCKED'}[0m
+2026-11-06T21:39:28.7798255Z [36;1mAdd-Content -LiteralPath $env:GITHUB_ENV -Value ('SOURCE_TREE='+$tree)[0m
+2026-11-06T21:39:28.7798900Z [36;1m# Source tree comes from the pinned Git commit, never GITHUB_SHA's merge.[0m
+2026-11-06T21:39:28.7799871Z [36;1m@{schema='math.loader-init-event.v1';sourceHead=$head;sourceTree=$tree;eventSha=$env:EVENT_SHA;reviewRecordSha256=$env:REVIEW_RECORD_SHA256;qualification='NONE';nativeAcceptance='BLOCKED'} | ConvertTo-Json -Compress[0m
+2026-11-06T21:39:28.7800840Z [36;1mnode scripts/prepare-exact-checkout.mjs --expected-head $env:SOURCE_HEAD[0m
+2026-11-06T21:39:28.7801862Z [36;1mif($LASTEXITCODE -ne 0){exit $LASTEXITCODE}[0m
+2026-11-06T21:39:28.7802318Z [36;1mnode --test tests/agent7-replay-research.test.mjs[0m
+2026-11-06T21:39:28.7802767Z [36;1mif($LASTEXITCODE -ne 0){exit $LASTEXITCODE}[0m
+2026-11-06T21:39:28.7870100Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-06T21:39:28.7870635Z env:
+2026-11-06T21:39:28.7871011Z   EVENT_TRIGGERING_ACTOR: YehorBabenko88
+2026-11-06T21:39:28.7872006Z   SOURCE_HEAD: dbb9bb1da9b180a8bb9f1d5401f1117894256941
+2026-11-06T21:39:28.7872462Z   EVENT_SHA: f4a8b400a1298bc4f86eaaf15c560070f322c7f7
+2026-11-06T21:39:28.7872974Z   REVIEW_RECORD_SHA256: 3df3720c7efbf0ad71ea0ac84e7001e37ea8c2deaf105076ff473f6919ac48a2
+2026-11-06T21:39:28.7873468Z ##[endgroup]
+2026-11-06T21:39:29.2957562Z {"schema":"math.loader-init-event.v1","qualification":"NONE","nativeAcceptance":"BLOCKED","sourceTree":"ade739990db8da7926bc7bdd9ed58e41acbd011e","eventSha":"f4a8b400a1298bc4f86eaaf15c560070f322c7f7","reviewRecordSha256":"3df3720c7efbf0ad71ea0ac84e7001e37ea8c2deaf105076ff473f6919ac48a2","sourceHead":"dbb9bb1da9b180a8bb9f1d5401f1117894256941"}
+2026-11-06T21:39:30.6878572Z {"schema":"math.exact-checkout-preparation.v1","head":"dbb9bb1da9b180a8bb9f1d5401f1117894256941","files":689,"rewritten":671}
+2026-11-06T21:39:34.1639233Z ✔ agent7 durable claim survives child loss after consumption (103.3981ms)
+2026-11-06T21:39:34.2840338Z ✔ agent7 child loss before consumption leaves an admissible retry (122.263ms)
+2026-11-06T21:39:34.2878686Z ✔ agent7 incomplete consumption marker stays conservatively consumed (3.9972ms)
+2026-11-06T21:39:34.3079545Z ✔ agent7 concurrent retry has one winner without granting completion (20.0346ms)
+2026-11-06T21:39:34.3421665Z ✔ agent7 malformed replay keys are rejected without path interpretation (13.0064ms)
+2026-11-06T21:39:34.3422882Z ✔ agent7 ephemeral attempt filter does not claim durable fencing (0.688ms)
+2026-11-06T21:39:35.7512146Z ✔ agent7 numerical replay agrees after cancelled worker and denies authority (1424.962ms)
+2026-11-06T21:39:45.2658949Z ✔ agent7 loader timeout and process exit remain distinct diagnostic failures (9518.6631ms)
+2026-11-06T21:39:45.2872803Z ℹ tests 8
+2026-11-06T21:39:45.2873545Z ℹ suites 0
+2026-11-06T21:39:45.2874329Z ℹ pass 8
+2026-11-06T21:39:45.2874772Z ℹ fail 0
+2026-11-06T21:39:45.2876047Z ℹ cancelled 0
+2026-11-06T21:39:45.2876788Z ℹ skipped 0
+2026-11-06T21:39:45.2877226Z ℹ todo 0
+2026-11-06T21:39:45.2877835Z ℹ duration_ms 14033.952
+2026-11-06T21:39:45.3459695Z ##[group]Run $root=Join-Path $env:RUNNER_TEMP 'agent7-loader-init-build'
+2026-11-06T21:39:45.3460445Z [36;1m$root=Join-Path $env:RUNNER_TEMP 'agent7-loader-init-build'[0m
+2026-11-06T21:39:45.3461152Z [36;1m& ./scripts/agent7-loader-init/build.ps1 -OutputRoot $root -ExpectedHead $env:SOURCE_HEAD -ExpectedTree $env:SOURCE_TREE[0m
+2026-11-06T21:39:45.3461853Z [36;1mif($LASTEXITCODE -ne 0){exit $LASTEXITCODE}[0m
+2026-11-06T21:39:45.3524377Z shell: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.EXE -command ". '{0}'"
+2026-11-06T21:39:45.3524918Z env:
+2026-11-06T21:39:45.3525229Z   EVENT_TRIGGERING_ACTOR: YehorBabenko88
+2026-11-06T21:39:45.3525753Z   SOURCE_HEAD: dbb9bb1da9b180a8bb9f1d5401f1117894256941
+2026-11-06T21:39:45.3526181Z   EVENT_SHA: f4a8b400a1298bc4f86eaaf15c560070f322c7f7
+2026-11-06T21:39:45.3526686Z   REVIEW_RECORD_SHA256: 3df3720c7efbf0ad71ea0ac84e7001e37ea8c2deaf105076ff473f6919ac48a2
+2026-11-06T21:39:45.3527388Z   SOURCE_TREE: ade739990db8da7926bc7bdd9ed58e41acbd011e
+2026-11-06T21:39:45.3527751Z ##[endgroup]
+2026-11-06T21:39:45.9633737Z ##[error]SOURCE_IDENTITY_FAILURE stage=CLI_ARGUMENTS reason=CLI_ARGUMENTS_REJECTED
+2026-11-06T21:39:46.3890372Z SOURCE_TRACE_BLOCKED
+2026-11-06T21:39:46.3891559Z At D:\a\math\math\scripts\agent7-loader-init\build.ps1:18 char:65
+2026-11-06T21:39:46.3892665Z + ... or $before -cnotmatch '^[a-f0-9]{64}$'){throw 'SOURCE_TRACE_BLOCKED'}
+2026-11-06T21:39:46.3893565Z +                                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+2026-11-06T21:39:46.3896089Z     + CategoryInfo          : OperationStopped: (SOURCE_TRACE_BLOCKED:String) [], RuntimeException
+2026-11-06T21:39:46.3897015Z     + FullyQualifiedErrorId : SOURCE_TRACE_BLOCKED
+2026-11-06T21:39:46.3897571Z  
+2026-11-06T21:39:46.4107265Z ##[error]Process completed with exit code 1.
+2026-11-06T21:39:46.4358109Z Post job cleanup.
+2026-11-06T21:39:46.6163058Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-06T21:39:46.6520121Z git version 2.56.0.windows.4
+2026-11-06T21:39:46.6591894Z Temporarily overriding HOME='D:\a\_temp\438a9f4b-ac82-40c7-b12c-6301c6f23202' before making global git config changes
+2026-11-06T21:39:46.6592934Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-06T21:39:46.6603219Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\math\math
+2026-11-06T21:39:46.6999159Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-06T21:39:46.7440142Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-06T21:39:47.3064171Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-06T21:39:47.3459268Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-06T21:39:47.9090689Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-06T21:39:47.9488853Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-06T21:39:48.5139661Z Cleaning up orphan processes
+2026-11-06T21:39:48.5237178Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@11d5960a326750d5838078e36cf38b85af677262, actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

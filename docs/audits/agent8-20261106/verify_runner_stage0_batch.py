@@ -1,0 +1,31 @@
+"""Historical primary Git evidence consistency only; no office/billing/runner actions."""
+import collections,hashlib,io,json,pathlib,subprocess
+r=pathlib.Path(__file__).resolve().parents[1];repo=r/'work/unified-audit';out=r/'outputs/phase60';out.mkdir(exist_ok=True);head='5182d669685aa2398be3ef8b0804d22866c313d2'
+def git(*a):return subprocess.check_output(['git','--no-replace-objects','-C',str(repo),*a])
+def read(path):return git('show',head+':'+path)
+reports={}
+for name in ['runner-blocker.json','ls5-stage0.json','CONTINUATION-STATUS.json']:
+ raw=read('release/reports/20261107/'+name);(out/('root-'+name)).write_bytes(raw);reports[name]=json.loads(raw)
+runner=reports['runner-blocker.json'];stage=reports['ls5-stage0.json'];members=[]
+for report,prefix in [(runner,'release/evidence/runner-blocker-20261107/'),(stage,'release/evidence/ls5-stage0-current-20261107/')]:
+ for name,digest in report['evidence_sha256'].items():members.append((prefix+name,digest))
+assert len(members)==len(set(p for p,d in members))==248
+stream=io.BytesIO(subprocess.check_output(['git','--no-replace-objects','-C',str(repo),'cat-file','--batch'],input=''.join(head+':'+p+'\n' for p,d in members).encode()));verified=[];payload={}
+for path,digest in members:
+ oid,kind,size=stream.readline().split();assert kind==b'blob';raw=stream.read(int(size));assert stream.read(1)==b'\n' and hashlib.sha256(raw).hexdigest()==digest,path;verified.append(dict(path=path,git_blob=oid.decode(),bytes=len(raw),sha256=digest));payload[path]=raw
+excluded='release/evidence/runner-blocker-20261107/authenticated-plan.stdout.json';assert excluded not in git('ls-tree','-r','--name-only',head).decode().splitlines()
+runs=runner['runs'];assert len(runs)==35 and collections.Counter(x['status'] for x in runs)=={'queued':34,'pending':1} and all(x['head_sha']==runner['inspected_head'] for x in runs)
+jobs=[j for run in runs for j in run['jobs']];assert len(jobs)==87 and all(j['status']=='queued' and j['runner_id']==0 and j['executed_steps']==0 for j in jobs);labels=collections.Counter(str(j['labels']) for j in jobs);assert dict(labels)==runner['facts']['runner_labels']
+assert runner['root_cause']=='UNKNOWN' and runner['facts']['concurrency_saturation']=='NOT_ESTABLISHED' and all(x==0 for x in runner['mutations'].values())
+active=runner['active_jobs'];assigned=[j for j in active if j.get('status')=='in_progress' and j.get('runner_id',0)>0];assert len(assigned)==12
+for name in ['unified-system','bybit-cluster-grid','strattester','math','meta_analyse','Terminan']:
+ prefix='release/evidence/runner-blocker-20261107/';info=json.loads(payload[prefix+name+'-repo.stdout.json']);permissions=json.loads(payload[prefix+name+'-permissions.stdout.json']);runners=json.loads(payload[prefix+name+'-runners.stdout.json']);assert info['private'] is False and info['owner']['type']=='User' and permissions['enabled'] is True and runners['total_count']==0
+prefix='release/evidence/ls5-stage0-current-20261107/';before=json.loads(payload[prefix+'observation.json']);after=json.loads(payload[prefix+'observation-after.json']);assert all(before[k]==after[k] for k in ['network','firewall','policies']) and stage['network_security_configuration_before_after_equal']
+acl=json.loads(payload[prefix+'actual-staging-acl-v2.json']);assert acl==stage['actual_ps5_acl_check'] and acl['acl']=='REJECTED' and acl['acl_error']=='Untrusted writable ACL' and acl['acl_changed'] is False and acl['admission']=='NOT_GRANTED';assert payload[prefix+'SecurityPackage.psm1']==git('show',stage['source_head_inspected']+':scripts/SecurityPackage.psm1')
+plan=json.loads(payload[prefix+'installer-plan-only.json']);assert plan==stage['installer_plan_only'] and plan['status']=='BLOCKED_NO_INSTALLABLE_PACKAGE_LOCK' and plan['rejection']=='lock schema' and not plan['installation_performed'];assert hashlib.sha256(git('show',stage['source_head_inspected']+':release/integration-manifest.json')).hexdigest()==plan['candidate_manifest_sha256']
+targets=json.loads(payload[prefix+'test-directory-v2.json']);assert targets==stage['test_directory'] and all(not v['exists'] for v in targets['future_targets_exist']) and targets['marker_sha256']==hashlib.sha256(payload[prefix+'staging-marker.json']).hexdigest();assert stage['installation_gate']=='BLOCKED' and not stage['installation_performed'] and not stage['runtime_or_physical_acceptance']
+assert plan['separate_pure_model_regressions']==dict(tests=9,skips=0,success=True,scope='MODEL_ONLY_NOT_LS5_SECURITY_ADMISSION')
+math=runner['latest_math_observation'];assert math['run_id']==42352374979 and math['attempt']==1 and math['status']=='queued' and all(j['runner_id']==0 and j['steps']==[] for j in math['jobs'])
+(out/'verified-primary-members.json').write_text(json.dumps(verified,indent=2),encoding='utf-8')
+report=dict(requirement='RUNNER_BLOCKER_AND_LS5_STAGE0_REPORT_EVIDENCE_CONSISTENCY',repository='unified-system',pr=26,head=head,tree=git('rev-parse',head+'^{tree}').decode().strip(),snapshot_scope='HISTORICAL_ROOT_PRIMARY_GIT_EVIDENCE_NOT_CURRENT_REACQUISITION',selected_members_verified=248,unrelated_authenticated_profile_not_published=True,queue=dict(runs=35,queued=34,pending=1,queued_jobs=87,assigned_old_jobs=12,root_cause='UNKNOWN',account_saturation='NOT_ESTABLISHED',filtered_inventory_not_account_complete=True),six_public_repos_actions_enabled_no_selfhosted=True,UI_plan_budget='ROOT_READ_ONLY_UI_OBSERVATION_NOT_INDEPENDENTLY_REACQUIRED_NOT_CAUSAL_PROOF',stage0=dict(snapshot_network_firewall_policies_equal=True,actual_ACL='REJECTED_UNTRUSTED_WRITABLE_NOT_BYPASSED',copied_PS_security_module_matches_source=True,PLAN_ONLY='ACTUAL_PROVISIONAL_LOCK_REFUSAL_NOT_ACCEPTANCE',model9='OWNER_REPORTED_SEPARATE_MODEL_ONLY_NOT_RERUN',future_code_state_backup_absent=True,admin_recovery='NOT_DEMONSTRATED',installation='BLOCKED_NOT_PERFORMED',physical_acceptance=False),Math='SAME_CONSUMED_RUN_QUEUED_NO_RUNNER_STEPS_IN_SNAPSHOT',A8_office_probes=0,A8_reruns_cancels_runner_billing_permission_mutations=0,status='PASS_PRIMARY_EVIDENCE_AND_REPORT_CONSISTENCY_ONLY',overall='NO_GO_INSTALL_RUNTIME_NATIVE_PHYSICAL_ACCEPTANCE')
+(out/'independent-review.json').write_text(json.dumps(report,indent=2),encoding='utf-8');print(json.dumps(report,indent=2))

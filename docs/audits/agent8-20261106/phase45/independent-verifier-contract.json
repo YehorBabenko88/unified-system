@@ -1,0 +1,34 @@
+{
+  "scope": "MODEL_SYNTHETIC_IDENTITY_RECORDS_NOT_NATIVE_AUTH",
+  "head": "3d48763288a2ff2a4337000943a15f03a9ac45c1",
+  "cases": [
+    {
+      "name": "false",
+      "expected_allowed": false,
+      "actual_allowed": false
+    },
+    {
+      "name": "true",
+      "expected_allowed": false,
+      "actual_allowed": false
+    },
+    {
+      "name": "none",
+      "expected_allowed": true,
+      "actual_allowed": true
+    },
+    {
+      "name": "error",
+      "expected_allowed": false,
+      "actual_allowed": false
+    },
+    {
+      "name": "inherited_protocol_stub",
+      "expected_allowed": false,
+      "actual_allowed": false
+    }
+  ],
+  "skips": [],
+  "result": "PASS",
+  "native_authentication": false
+}

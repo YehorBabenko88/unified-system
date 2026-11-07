@@ -1,0 +1,42 @@
+{
+  "cases": [
+    {
+      "case": "fixed_provider_true",
+      "sentinel_hits": 0,
+      "actual_network_calls": 0,
+      "reason": "BYBIT_BUDGET_ADAPTER_NOT_ADMITTED",
+      "dns": "NOT_RUN",
+      "api": "NOT_RUN",
+      "https": "NOT_RUN",
+      "tcp443": "NOT_RUN"
+    },
+    {
+      "case": "provider_false_flag",
+      "sentinel_hits": 0,
+      "actual_network_calls": 0,
+      "reason": "BYBIT_BUDGET_ADAPTER_NOT_ADMITTED",
+      "dns": "NOT_RUN",
+      "api": "NOT_RUN",
+      "https": "NOT_RUN",
+      "tcp443": "NOT_RUN"
+    },
+    {
+      "case": "provider_url_false_flag",
+      "sentinel_hits": 0,
+      "actual_network_calls": 0,
+      "reason": "BYBIT_BUDGET_ADAPTER_NOT_ADMITTED",
+      "dns": "NOT_RUN",
+      "api": "NOT_RUN",
+      "https": "NOT_RUN",
+      "tcp443": "NOT_RUN"
+    }
+  ],
+  "instrumented_actual_source_ast": true,
+  "schema": "a8.provider-native-free-probe.v1",
+  "network_primitive_nodes": 3,
+  "head": "15dd9e8340cc332204ebbe6c13744f797ceca2f4",
+  "expected": "BLOCK_BEFORE_NETWORK_PRIMITIVES_WITH_EXPLICIT_BUDGET_REASON",
+  "actual": "FIXED_RETURNS_4NOT_RUN_BEFORE_NETWORK",
+  "F14": "FIX_VERIFIED_OFFLINE_AST",
+  "actual_network_calls": 0
+}

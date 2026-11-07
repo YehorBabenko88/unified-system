@@ -1,0 +1,160 @@
+{
+  "head": "db455c4926ddd50d0be7c3c615a8e4c073d12775",
+  "tree": "dd2106a0d706791afc22e7553dedff605819d546",
+  "previous": "6bcf5475023a8f6a9733d02ad899064d0d83be95",
+  "delta": "WORKFLOW_TWO_DOCS_ONLY_PRODUCT_TEST_INVENTORY_IDENTICAL",
+  "all_three_source_git_subprocess_sites_force_no_replace": [
+    18,
+    12,
+    34
+  ],
+  "cases": {
+    "old_blob_RED": {
+      "head": "6bcf5475023a8f6a9733d02ad899064d0d83be95",
+      "exit_code": 0,
+      "passed": true,
+      "tests": 30,
+      "skips": 0,
+      "source_valid_before": true,
+      "source_valid_after": true,
+      "own_dot_git_common_dir": true
+    },
+    "old_tree_RED": {
+      "head": "6bcf5475023a8f6a9733d02ad899064d0d83be95",
+      "exit_code": 0,
+      "passed": true,
+      "tests": 30,
+      "skips": 0,
+      "source_valid_before": true,
+      "source_valid_after": true,
+      "own_dot_git_common_dir": true
+    },
+    "clean": {
+      "head": "db455c4926ddd50d0be7c3c615a8e4c073d12775",
+      "exit_code": 0,
+      "passed": true,
+      "tests": 30,
+      "skips": 0,
+      "source_valid_before": true,
+      "source_valid_after": true,
+      "own_dot_git_common_dir": true
+    },
+    "blob_replacement": {
+      "head": "db455c4926ddd50d0be7c3c615a8e4c073d12775",
+      "exit_code": 1,
+      "passed": false,
+      "tests": 0,
+      "skips": 0,
+      "source_valid_before": false,
+      "source_valid_after": false,
+      "own_dot_git_common_dir": true
+    },
+    "tree_replacement": {
+      "head": "db455c4926ddd50d0be7c3c615a8e4c073d12775",
+      "exit_code": 1,
+      "passed": false,
+      "tests": 0,
+      "skips": 0,
+      "source_valid_before": false,
+      "source_valid_after": false,
+      "own_dot_git_common_dir": true
+    },
+    "hidden_source": {
+      "head": "db455c4926ddd50d0be7c3c615a8e4c073d12775",
+      "exit_code": 1,
+      "passed": false,
+      "tests": 0,
+      "skips": 0,
+      "source_valid_before": false,
+      "source_valid_after": false,
+      "own_dot_git_common_dir": true
+    },
+    "hidden_test": {
+      "head": "db455c4926ddd50d0be7c3c615a8e4c073d12775",
+      "exit_code": 1,
+      "passed": false,
+      "tests": 0,
+      "skips": 0,
+      "source_valid_before": false,
+      "source_valid_after": false,
+      "own_dot_git_common_dir": true
+    },
+    "hidden_inventory": {
+      "head": "db455c4926ddd50d0be7c3c615a8e4c073d12775",
+      "exit_code": 1,
+      "passed": false,
+      "tests": 0,
+      "skips": 0,
+      "source_valid_before": false,
+      "source_valid_after": false,
+      "own_dot_git_common_dir": true
+    },
+    "hidden_workflow": {
+      "head": "db455c4926ddd50d0be7c3c615a8e4c073d12775",
+      "exit_code": 1,
+      "passed": false,
+      "tests": 0,
+      "skips": 0,
+      "source_valid_before": false,
+      "source_valid_after": false,
+      "own_dot_git_common_dir": true
+    },
+    "CRLF_source": {
+      "head": "db455c4926ddd50d0be7c3c615a8e4c073d12775",
+      "exit_code": 1,
+      "passed": false,
+      "tests": 0,
+      "skips": 0,
+      "source_valid_before": false,
+      "source_valid_after": false,
+      "own_dot_git_common_dir": true
+    },
+    "missing_source": {
+      "head": "db455c4926ddd50d0be7c3c615a8e4c073d12775",
+      "exit_code": 1,
+      "passed": false,
+      "tests": 0,
+      "skips": 0,
+      "source_valid_before": false,
+      "source_valid_after": false,
+      "own_dot_git_common_dir": true
+    },
+    "hidden_post_source": {
+      "head": "db455c4926ddd50d0be7c3c615a8e4c073d12775",
+      "exit_code": 1,
+      "passed": false,
+      "tests": 30,
+      "skips": 0,
+      "source_valid_before": true,
+      "source_valid_after": false,
+      "own_dot_git_common_dir": true
+    },
+    "wrong_ID_same30": {
+      "head": "db455c4926ddd50d0be7c3c615a8e4c073d12775",
+      "exit_code": 1,
+      "passed": false,
+      "tests": 30,
+      "skips": 0,
+      "source_valid_before": true,
+      "source_valid_after": true,
+      "own_dot_git_common_dir": true
+    },
+    "skip": {
+      "head": "db455c4926ddd50d0be7c3c615a8e4c073d12775",
+      "exit_code": 1,
+      "passed": false,
+      "tests": 30,
+      "skips": 1,
+      "source_valid_before": true,
+      "source_valid_after": true,
+      "own_dot_git_common_dir": true
+    }
+  },
+  "F16_A5_scope": "FIX_VERIFIED_OFFLINE_EXACT_SOURCE",
+  "F16_global": "OPEN_A3_ROOT_AND_OTHER_APPLICABLE_GUARDS_PENDING",
+  "prior_F15_regression": "NO_REGRESSION_IN_TESTED_CONTROLS",
+  "hosted": "NOT_QUALIFIED",
+  "runtime": "NOT_QUALIFIED",
+  "physical": "BLOCKED",
+  "overall": "NO_GO"
+}

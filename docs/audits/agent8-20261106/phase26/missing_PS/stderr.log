@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "<string>", line 35, in <module>
+  File "<string>", line 24, in source_receipt
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\pathlib.py", line 847, in lstat
+    return self.stat(follow_symlinks=False)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\pathlib.py", line 840, in stat
+    return os.stat(self, follow_symlinks=follow_symlinks)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [WinError 2] Das System kann die angegebene Datei nicht finden: 'scripts\\network_readonly_probe.ps1'

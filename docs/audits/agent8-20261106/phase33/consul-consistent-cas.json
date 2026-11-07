@@ -1,0 +1,48 @@
+{
+  "voters": [
+    {
+      "ID": "0b37e989-edec-5018-56ad-1f6f322fd6c5",
+      "Node": "a8-phased-2",
+      "Address": "127.0.0.1:63223",
+      "Leader": true,
+      "ProtocolVersion": "3",
+      "Voter": true,
+      "LastIndex": 0
+    },
+    {
+      "ID": "76ecbb86-1ef7-ff2f-c935-b92da8107930",
+      "Node": "a8-phased-1",
+      "Address": "127.0.0.1:63219",
+      "Leader": false,
+      "ProtocolVersion": "3",
+      "Voter": true,
+      "LastIndex": 0
+    },
+    {
+      "ID": "c43070be-5cbf-2f75-934e-8761236a8f7a",
+      "Node": "a8-phased-0",
+      "Address": "127.0.0.1:63215",
+      "Leader": false,
+      "ProtocolVersion": "3",
+      "Voter": true,
+      "LastIndex": 0
+    }
+  ],
+  "reads": [
+    {
+      "port": 63218,
+      "modify_index": 8,
+      "value_sha256": "ffb5796a574e4041a63b1f7936b6bf59a9fd9eee84fc8732e78a8e12eabb509d"
+    },
+    {
+      "port": 63222,
+      "modify_index": 8,
+      "value_sha256": "ffb5796a574e4041a63b1f7936b6bf59a9fd9eee84fc8732e78a8e12eabb509d"
+    },
+    {
+      "port": 63226,
+      "modify_index": 8,
+      "value_sha256": "ffb5796a574e4041a63b1f7936b6bf59a9fd9eee84fc8732e78a8e12eabb509d"
+    }
+  ]
+}

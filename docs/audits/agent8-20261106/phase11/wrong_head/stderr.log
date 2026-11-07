@@ -1,0 +1,14 @@
+fatal: not a tree object
+Traceback (most recent call last):
+  File "<string>", line 5, in <module>
+    for entry in subprocess.check_output(['git','ls-tree','-r','-z',expected_head]).split(b'\0'):
+                 ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python315\Lib\subprocess.py", line 587, in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+           ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+               **kwargs).stdout
+               ^^^^^^^^^
+  File "C:\Python315\Lib\subprocess.py", line 692, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command ['git', 'ls-tree', '-r', '-z', '0000000000000000000000000000000000000000'] returned non-zero exit status 128.

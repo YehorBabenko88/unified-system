@@ -1,0 +1,266 @@
+﻿2026-11-05T18:08:18.2350832Z Current runner version: '2.338.2'
+2026-11-05T18:08:18.2376559Z ##[group]Runner Image Provisioner
+2026-11-05T18:08:18.2377597Z Hosted Compute Agent
+2026-11-05T18:08:18.2378196Z Version: 20261028.624
+2026-11-05T18:08:18.2379242Z Commit: 54898b74c23fde5556c9b3c3a2290865feef0dfe
+2026-11-05T18:08:18.2380104Z Build Date: 2026-10-28T21:51:42Z
+2026-11-05T18:08:18.2381138Z Worker ID: {d21962fb-70f2-468e-abfd-c9c51bccfc1c}
+2026-11-05T18:08:18.2381981Z Region: eastus
+2026-11-05T18:08:18.2382529Z Cloud: Azure
+2026-11-05T18:08:18.2383052Z ##[endgroup]
+2026-11-05T18:08:18.2384674Z ##[group]Operating System
+2026-11-05T18:08:18.2385400Z Ubuntu
+2026-11-05T18:08:18.2386040Z 26.04.1
+2026-11-05T18:08:18.2386556Z LTS
+2026-11-05T18:08:18.2387063Z ##[endgroup]
+2026-11-05T18:08:18.2387684Z ##[group]Runner Image
+2026-11-05T18:08:18.2388290Z Image: ubuntu-26.04
+2026-11-05T18:08:18.2388918Z Version: 20261101.186.1
+2026-11-05T18:08:18.2390540Z Included Software: https://github.com/actions/runner-images/blob/ubuntu26/20261101.186/images/ubuntu/Ubuntu2604-Readme.md
+2026-11-05T18:08:18.2392271Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu26%2F20261101.186
+2026-11-05T18:08:18.2393275Z ##[endgroup]
+2026-11-05T18:08:18.2394521Z ##[group]GITHUB_TOKEN Permissions
+2026-11-05T18:08:18.2396635Z Contents: read
+2026-11-05T18:08:18.2397379Z Metadata: read
+2026-11-05T18:08:18.2397971Z ##[endgroup]
+2026-11-05T18:08:18.2400989Z Secret source: Actions
+2026-11-05T18:08:18.2402008Z Cache mode: write
+2026-11-05T18:08:18.2402796Z Prepare workflow directory
+2026-11-05T18:08:18.2744015Z Prepare all required actions
+2026-11-05T18:08:18.2792617Z Getting action download info
+2026-11-05T18:08:18.5024151Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-11-05T18:08:18.6229559Z Download action repository 'actions/setup-python@v5' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+2026-11-05T18:08:18.6826845Z Download action repository 'actions/download-artifact@v4' (SHA:d3f86a106a0bac45b974a628896c90dbdf5c8093)
+2026-11-05T18:08:18.8708256Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-11-05T18:08:19.0556107Z Complete job name: system-acceptance-NO-GO
+2026-11-05T18:08:19.1483304Z ##[group]Run actions/checkout@v4
+2026-11-05T18:08:19.1484209Z with:
+2026-11-05T18:08:19.1484707Z   ref: 25eb939f8a816a80ac7c042ce75ec4d9173cd4ce
+2026-11-05T18:08:19.1485350Z   persist-credentials: false
+2026-11-05T18:08:19.1485923Z   repository: YehorBabenko88/strattester
+2026-11-05T18:08:19.1490770Z   token: ***
+2026-11-05T18:08:19.1491237Z   ssh-strict: true
+2026-11-05T18:08:19.1491705Z   ssh-user: git
+2026-11-05T18:08:19.1492149Z   clean: true
+2026-11-05T18:08:19.1492618Z   sparse-checkout-cone-mode: true
+2026-11-05T18:08:19.1493176Z   fetch-depth: 1
+2026-11-05T18:08:19.1493630Z   fetch-tags: false
+2026-11-05T18:08:19.1494098Z   show-progress: true
+2026-11-05T18:08:19.1494567Z   lfs: false
+2026-11-05T18:08:19.1495014Z   submodules: false
+2026-11-05T18:08:19.1495512Z   set-safe-directory: true
+2026-11-05T18:08:19.1496049Z   allow-unsafe-pr-checkout: false
+2026-11-05T18:08:19.1496852Z ##[endgroup]
+2026-11-05T18:08:19.4843493Z Syncing repository: YehorBabenko88/strattester
+2026-11-05T18:08:19.4845614Z ##[group]Getting Git version info
+2026-11-05T18:08:19.4846420Z Working directory is '/home/runner/work/strattester/strattester'
+2026-11-05T18:08:19.4847500Z [command]/usr/bin/git version
+2026-11-05T18:08:19.4879893Z git version 2.56.0
+2026-11-05T18:08:19.4904034Z ##[endgroup]
+2026-11-05T18:08:19.4919897Z Temporarily overriding HOME='/home/runner/work/_temp/8f304ad7-ff30-456a-a0e1-5096a151351b' before making global git config changes
+2026-11-05T18:08:19.4925438Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-05T18:08:19.4927075Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/strattester/strattester
+2026-11-05T18:08:19.5015112Z Deleting the contents of '/home/runner/work/strattester/strattester'
+2026-11-05T18:08:19.5020332Z ##[group]Initializing the repository
+2026-11-05T18:08:19.5026507Z [command]/usr/bin/git init /home/runner/work/strattester/strattester
+2026-11-05T18:08:19.5158376Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-11-05T18:08:19.5159962Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-11-05T18:08:19.5162303Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-11-05T18:08:19.5163522Z hint: call:
+2026-11-05T18:08:19.5164169Z hint:
+2026-11-05T18:08:19.5164917Z hint: 	git config --global init.defaultBranch <name>
+2026-11-05T18:08:19.5165993Z hint:
+2026-11-05T18:08:19.5166874Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-11-05T18:08:19.5168288Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-11-05T18:08:19.5169212Z hint:
+2026-11-05T18:08:19.5169782Z hint: 	git branch -m <name>
+2026-11-05T18:08:19.5170606Z hint:
+2026-11-05T18:08:19.5171375Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-11-05T18:08:19.5180814Z Initialized empty Git repository in /home/runner/work/strattester/strattester/.git/
+2026-11-05T18:08:19.5195448Z [command]/usr/bin/git remote add origin https://github.com/YehorBabenko88/strattester
+2026-11-05T18:08:19.5257514Z ##[endgroup]
+2026-11-05T18:08:19.5259339Z ##[group]Disabling automatic garbage collection
+2026-11-05T18:08:19.5262260Z [command]/usr/bin/git config --local gc.auto 0
+2026-11-05T18:08:19.5392958Z ##[endgroup]
+2026-11-05T18:08:19.5394814Z ##[group]Setting up auth
+2026-11-05T18:08:19.5396189Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-05T18:08:19.5400020Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-05T18:08:19.5923633Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-05T18:08:19.5960651Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-05T18:08:19.6244729Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-05T18:08:19.6285494Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-05T18:08:19.6569696Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-05T18:08:19.6612884Z ##[endgroup]
+2026-11-05T18:08:19.6622382Z ##[group]Fetching the repository
+2026-11-05T18:08:19.6624228Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin 25eb939f8a816a80ac7c042ce75ec4d9173cd4ce
+2026-11-05T18:08:20.0595561Z From https://github.com/YehorBabenko88/strattester
+2026-11-05T18:08:20.0598614Z  * branch            25eb939f8a816a80ac7c042ce75ec4d9173cd4ce -> FETCH_HEAD
+2026-11-05T18:08:20.0604469Z ##[endgroup]
+2026-11-05T18:08:20.0606947Z ##[group]Determining the checkout info
+2026-11-05T18:08:20.0609699Z ##[endgroup]
+2026-11-05T18:08:20.0611384Z [command]/usr/bin/git sparse-checkout disable
+2026-11-05T18:08:20.0672831Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-11-05T18:08:20.0713426Z ##[group]Checking out the ref
+2026-11-05T18:08:20.0717809Z [command]/usr/bin/git checkout --progress --force 25eb939f8a816a80ac7c042ce75ec4d9173cd4ce
+2026-11-05T18:08:20.1217774Z Note: switching to '25eb939f8a816a80ac7c042ce75ec4d9173cd4ce'.
+2026-11-05T18:08:20.1219970Z 
+2026-11-05T18:08:20.1221717Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-11-05T18:08:20.1225010Z changes and commit them, and you can discard any commits you make in this
+2026-11-05T18:08:20.1227311Z state without impacting any branches by switching back to a branch.
+2026-11-05T18:08:20.1228684Z 
+2026-11-05T18:08:20.1229672Z If you want to create a new branch to retain commits you create, you may
+2026-11-05T18:08:20.1231817Z do so (now or later) by using -c with the switch command. Example:
+2026-11-05T18:08:20.1233097Z 
+2026-11-05T18:08:20.1233606Z   git switch -c <new-branch-name>
+2026-11-05T18:08:20.1234213Z 
+2026-11-05T18:08:20.1234594Z Or undo this operation with:
+2026-11-05T18:08:20.1235142Z 
+2026-11-05T18:08:20.1235477Z   git switch -
+2026-11-05T18:08:20.1235931Z 
+2026-11-05T18:08:20.1236822Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-11-05T18:08:20.1237902Z 
+2026-11-05T18:08:20.1238745Z HEAD is now at 25eb939 Accept live protected source admission for owned runtime startup
+2026-11-05T18:08:20.1242363Z ##[endgroup]
+2026-11-05T18:08:20.1283754Z [command]/usr/bin/git log -1 --format=%H
+2026-11-05T18:08:20.1310629Z 25eb939f8a816a80ac7c042ce75ec4d9173cd4ce
+2026-11-05T18:08:20.1321095Z ##[group]Removing auth
+2026-11-05T18:08:20.1324478Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-05T18:08:20.1358684Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-05T18:08:20.1647009Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-05T18:08:20.1672532Z http.https://github.com/.extraheader
+2026-11-05T18:08:20.1683163Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-05T18:08:20.1718563Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-05T18:08:20.1994718Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-05T18:08:20.2029200Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-05T18:08:20.2307211Z ##[endgroup]
+2026-11-05T18:08:20.2679352Z ##[group]Run actions/setup-python@v5
+2026-11-05T18:08:20.2680800Z with:
+2026-11-05T18:08:20.2681716Z   python-version: 3.12
+2026-11-05T18:08:20.2682758Z   check-latest: false
+2026-11-05T18:08:20.2692571Z   token: ***
+2026-11-05T18:08:20.2693527Z   update-environment: true
+2026-11-05T18:08:20.2694631Z   allow-prereleases: false
+2026-11-05T18:08:20.2695722Z   freethreaded: false
+2026-11-05T18:08:20.2696717Z ##[endgroup]
+2026-11-05T18:08:20.4145356Z ##[group]Installed versions
+2026-11-05T18:08:20.4282342Z (node:2503) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-05T18:08:20.4289563Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-05T18:08:20.4303211Z Successfully set up CPython (3.12.16)
+2026-11-05T18:08:20.4306390Z ##[endgroup]
+2026-11-05T18:08:20.4560083Z ##[group]Run actions/download-artifact@v4
+2026-11-05T18:08:20.4561623Z with:
+2026-11-05T18:08:20.4562773Z   pattern: financial-*-25eb939f8a816a80ac7c042ce75ec4d9173cd4ce
+2026-11-05T18:08:20.4564208Z   path: results/financial-ci
+2026-11-05T18:08:20.4565259Z   merge-multiple: true
+2026-11-05T18:08:20.4566448Z   repository: YehorBabenko88/strattester
+2026-11-05T18:08:20.4567623Z   run-id: 42052514344
+2026-11-05T18:08:20.4568554Z env:
+2026-11-05T18:08:20.4569632Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-05T18:08:20.4571630Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib/pkgconfig
+2026-11-05T18:08:20.4573336Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-05T18:08:20.4574862Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-05T18:08:20.4576424Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-05T18:08:20.4577989Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib
+2026-11-05T18:08:20.4579738Z ##[endgroup]
+2026-11-05T18:08:20.6484957Z (node:2511) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-05T18:08:20.6487371Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-05T18:08:20.7631685Z Found 8 artifact(s)
+2026-11-05T18:08:20.7632808Z Filtering artifacts by pattern 'financial-*-25eb939f8a816a80ac7c042ce75ec4d9173cd4ce'
+2026-11-05T18:08:20.7657753Z Preparing to download the following artifacts:
+2026-11-05T18:08:20.7659309Z - financial-core-25eb939f8a816a80ac7c042ce75ec4d9173cd4ce (ID: 13433051613, Size: 81524, Expected Digest: sha256:051ef9cb2743a2fe67246663f09ce5f333146a32e2e07bf44c97c24bf9384173)
+2026-11-05T18:08:20.7661949Z - financial-security-25eb939f8a816a80ac7c042ce75ec4d9173cd4ce (ID: 13432296622, Size: 56672, Expected Digest: sha256:8e3b85543ca1df16ff0b358d10084c90634290ef3fa99d20e24e7d98f9b074f8)
+2026-11-05T18:08:20.7663644Z - financial-math-25eb939f8a816a80ac7c042ce75ec4d9173cd4ce (ID: 13431635297, Size: 22014, Expected Digest: sha256:fb6d5648c791e787bcc66685ea2aab9a2b990713b31e30e906ed2b9ee0df5985)
+2026-11-05T18:08:20.7665151Z - financial-training-25eb939f8a816a80ac7c042ce75ec4d9173cd4ce (ID: 13431207591, Size: 12256, Expected Digest: sha256:e0b4dd3304fd27d95c89345533dc7c02b822f202bf52aaf9a781f310d998f514)
+2026-11-05T18:08:20.7666734Z - financial-integration-25eb939f8a816a80ac7c042ce75ec4d9173cd4ce (ID: 13431104484, Size: 18625, Expected Digest: sha256:a90e9d28b6e2aa59f7553a2a484d95de0c3dd815b662d0589b1752be00489bc7)
+2026-11-05T18:08:20.7668443Z - financial-data-25eb939f8a816a80ac7c042ce75ec4d9173cd4ce (ID: 13430858024, Size: 26329, Expected Digest: sha256:8dc019529e531570c451c435b8ab46fd8cf0987733aa158151d6b19dfa7cd9f1)
+2026-11-05T18:08:20.7669975Z - financial-cpu-25eb939f8a816a80ac7c042ce75ec4d9173cd4ce (ID: 13427884290, Size: 16977, Expected Digest: sha256:b2b558e3e95d33b72472a07dac237a5197f708dae6660dffdc24db9a844a859a)
+2026-11-05T18:08:20.9060536Z Redirecting to blob download url: https://productionresultssa13.blob.core.windows.net/actions-results/ac08f764-1f99-8bf7-94a3-b18c21483b0c/workflow-job-run-defe2d6f-d629-559e-9055-6c117bdf00db/artifacts/7dee9ff40e1ce7ca3029b9245bca007acf02a6bef2e7afa6d965a5e2df24385e.zip
+2026-11-05T18:08:20.9169401Z Starting download of artifact to: /home/runner/work/strattester/strattester/results/financial-ci
+2026-11-05T18:08:20.9177927Z Redirecting to blob download url: https://productionresultssa13.blob.core.windows.net/actions-results/ac08f764-1f99-8bf7-94a3-b18c21483b0c/workflow-job-run-01f80636-3012-56a8-a7eb-18215dc741c5/artifacts/01eb318b65cb5f7041020e6d766230e4817e439b56f7aed0fdbe919e8a633b17.zip
+2026-11-05T18:08:20.9183127Z Starting download of artifact to: /home/runner/work/strattester/strattester/results/financial-ci
+2026-11-05T18:08:20.9211468Z Redirecting to blob download url: https://productionresultssa13.blob.core.windows.net/actions-results/ac08f764-1f99-8bf7-94a3-b18c21483b0c/workflow-job-run-9ad00759-cfdc-5560-906a-98ae9e4deb54/artifacts/5c6638bf511eda8eefa7615ebbb1e6be551927aa569c5fb181ef91b992e1010b.zip
+2026-11-05T18:08:20.9213658Z Starting download of artifact to: /home/runner/work/strattester/strattester/results/financial-ci
+2026-11-05T18:08:20.9226429Z Redirecting to blob download url: https://productionresultssa13.blob.core.windows.net/actions-results/ac08f764-1f99-8bf7-94a3-b18c21483b0c/workflow-job-run-946452f9-cbd3-5adf-bb70-a01e562717b6/artifacts/19ce8a66adbef202dd1f0623ec3b20a3163bc3e914bae343ed019560bee50869.zip
+2026-11-05T18:08:20.9228796Z Starting download of artifact to: /home/runner/work/strattester/strattester/results/financial-ci
+2026-11-05T18:08:20.9266097Z Redirecting to blob download url: https://productionresultssa13.blob.core.windows.net/actions-results/ac08f764-1f99-8bf7-94a3-b18c21483b0c/workflow-job-run-b4cce504-abe0-511c-953d-cd2a7e1195f0/artifacts/9cc0a1ff507c077ce7538ebbceb2420bf4140f48a614bac2b5dae07f76c1d03a.zip
+2026-11-05T18:08:20.9268037Z Starting download of artifact to: /home/runner/work/strattester/strattester/results/financial-ci
+2026-11-05T18:08:20.9285059Z Redirecting to blob download url: https://productionresultssa13.blob.core.windows.net/actions-results/ac08f764-1f99-8bf7-94a3-b18c21483b0c/workflow-job-run-bd514ee5-89e0-5956-890b-4a72a0d93a30/artifacts/c0fad2244420dd5f6f3932f2266223f3f7980685d824e06670508131b4bbd470.zip
+2026-11-05T18:08:20.9287099Z Starting download of artifact to: /home/runner/work/strattester/strattester/results/financial-ci
+2026-11-05T18:08:20.9482977Z (node:2511) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.
+2026-11-05T18:08:20.9671397Z Redirecting to blob download url: https://productionresultssa13.blob.core.windows.net/actions-results/ac08f764-1f99-8bf7-94a3-b18c21483b0c/workflow-job-run-58785058-b5d0-5d33-aea3-1679f32a9ecc/artifacts/de8c19c7a9c5478120d533d8b6e6f182c99b59722064f9380fcae164982dedb8.zip
+2026-11-05T18:08:20.9674890Z Starting download of artifact to: /home/runner/work/strattester/strattester/results/financial-ci
+2026-11-05T18:08:20.9784321Z SHA256 digest of downloaded artifact is e0b4dd3304fd27d95c89345533dc7c02b822f202bf52aaf9a781f310d998f514
+2026-11-05T18:08:20.9785620Z Artifact download completed successfully.
+2026-11-05T18:08:20.9789312Z SHA256 digest of downloaded artifact is a90e9d28b6e2aa59f7553a2a484d95de0c3dd815b662d0589b1752be00489bc7
+2026-11-05T18:08:20.9790709Z Artifact download completed successfully.
+2026-11-05T18:08:20.9803345Z SHA256 digest of downloaded artifact is 8dc019529e531570c451c435b8ab46fd8cf0987733aa158151d6b19dfa7cd9f1
+2026-11-05T18:08:20.9804530Z Artifact download completed successfully.
+2026-11-05T18:08:20.9806188Z SHA256 digest of downloaded artifact is fb6d5648c791e787bcc66685ea2aab9a2b990713b31e30e906ed2b9ee0df5985
+2026-11-05T18:08:20.9807363Z Artifact download completed successfully.
+2026-11-05T18:08:20.9832708Z SHA256 digest of downloaded artifact is 8e3b85543ca1df16ff0b358d10084c90634290ef3fa99d20e24e7d98f9b074f8
+2026-11-05T18:08:20.9833965Z Artifact download completed successfully.
+2026-11-05T18:08:20.9834895Z SHA256 digest of downloaded artifact is 051ef9cb2743a2fe67246663f09ce5f333146a32e2e07bf44c97c24bf9384173
+2026-11-05T18:08:20.9835695Z Artifact download completed successfully.
+2026-11-05T18:08:20.9902479Z SHA256 digest of downloaded artifact is b2b558e3e95d33b72472a07dac237a5197f708dae6660dffdc24db9a844a859a
+2026-11-05T18:08:20.9903662Z Artifact download completed successfully.
+2026-11-05T18:08:20.9904386Z Total of 7 artifact(s) downloaded
+2026-11-05T18:08:20.9908034Z Download artifact has finished successfully
+2026-11-05T18:08:21.0162649Z ##[group]Run python scripts/financial_gate.py --gate aggregate --sha '25eb939f8a816a80ac7c042ce75ec4d9173cd4ce' --output results/financial-ci
+2026-11-05T18:08:21.0164112Z [36;1mpython scripts/financial_gate.py --gate aggregate --sha '25eb939f8a816a80ac7c042ce75ec4d9173cd4ce' --output results/financial-ci[0m
+2026-11-05T18:08:21.0232614Z shell: /usr/bin/bash -e {0}
+2026-11-05T18:08:21.0233171Z env:
+2026-11-05T18:08:21.0233725Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-05T18:08:21.0234584Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib/pkgconfig
+2026-11-05T18:08:21.0235419Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-05T18:08:21.0236166Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-05T18:08:21.0236930Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-05T18:08:21.0237640Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib
+2026-11-05T18:08:21.0238313Z   ENGINEERING_RESULT: success
+2026-11-05T18:08:21.0238789Z   NATIVE_RESULT: success
+2026-11-05T18:08:21.0239229Z ##[endgroup]
+2026-11-05T18:08:21.1871203Z {"schema": 1, "sha": "25eb939f8a816a80ac7c042ce75ec4d9173cd4ce", "status": "BLOCKED", "trading": "NO-GO", "physical_g1": "NOT_AUTHORIZED", "failed": [], "external": {"physical_g0": "BLOCKED", "real_oos": "BLOCKED", "owner_g1_authorization": "BLOCKED", "grid_coherent_snapshot": "BLOCKED", "windows_native_isolation": "BLOCKED", "gpu": "BLOCKED", "full_upstream_equivalence": "BLOCKED"}, "claimed_external": {"grid_coherent_snapshot": "BLOCKED", "real_oos": "BLOCKED", "gpu": "BLOCKED", "full_upstream_equivalence": "BLOCKED"}, "evidence_authenticity": "UNVERIFIED_SELF_REPORT", "gates": {"core": "PASS", "data": "PASS", "math": "PASS", "cpu": "PASS", "training": "PASS", "security": "PASS", "integration": "PASS"}}
+2026-11-05T18:08:21.1969864Z ##[error]Process completed with exit code 2.
+2026-11-05T18:08:21.2127256Z ##[group]Run actions/upload-artifact@v4
+2026-11-05T18:08:21.2127765Z with:
+2026-11-05T18:08:21.2128273Z   name: financial-acceptance-25eb939f8a816a80ac7c042ce75ec4d9173cd4ce
+2026-11-05T18:08:21.2128913Z   path: results/financial-ci/acceptance.json
+2026-11-05T18:08:21.2129397Z   if-no-files-found: error
+2026-11-05T18:08:21.2129806Z   compression-level: 6
+2026-11-05T18:08:21.2130503Z   overwrite: false
+2026-11-05T18:08:21.2130942Z   include-hidden-files: false
+2026-11-05T18:08:21.2131325Z env:
+2026-11-05T18:08:21.2131696Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-05T18:08:21.2132291Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib/pkgconfig
+2026-11-05T18:08:21.2132884Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-05T18:08:21.2133419Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-05T18:08:21.2133948Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-05T18:08:21.2134525Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib
+2026-11-05T18:08:21.2134987Z ##[endgroup]
+2026-11-05T18:08:21.3817340Z (node:2527) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-05T18:08:21.3819159Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-05T18:08:21.3877673Z With the provided path, there will be 1 file uploaded
+2026-11-05T18:08:21.3884207Z Artifact name is valid!
+2026-11-05T18:08:21.3885301Z Root directory input is valid!
+2026-11-05T18:08:21.6156585Z Beginning upload of artifact content to blob storage
+2026-11-05T18:08:21.6395143Z (node:2527) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-11-05T18:08:21.6683039Z Uploaded bytes 503
+2026-11-05T18:08:21.6845157Z Finished uploading artifact content to blob storage!
+2026-11-05T18:08:21.6847061Z SHA256 digest of uploaded artifact zip is 93833129f2af749909117d6c68b21f22acb58dd8f1b8286c64c208b5d51e8578
+2026-11-05T18:08:21.6848444Z Finalizing artifact upload
+2026-11-05T18:08:22.1605501Z Artifact financial-acceptance-25eb939f8a816a80ac7c042ce75ec4d9173cd4ce.zip successfully finalized. Artifact ID 13440532124
+2026-11-05T18:08:22.1609743Z Artifact financial-acceptance-25eb939f8a816a80ac7c042ce75ec4d9173cd4ce has been successfully uploaded! Final size is 503 bytes. Artifact ID is 13440532124
+2026-11-05T18:08:22.1613957Z Artifact download URL: https://github.com/YehorBabenko88/strattester/actions/runs/42052514344/artifacts/13440532124
+2026-11-05T18:08:22.1899268Z Post job cleanup.
+2026-11-05T18:08:22.2826917Z [command]/usr/bin/git version
+2026-11-05T18:08:22.2873210Z git version 2.56.0
+2026-11-05T18:08:22.2914159Z Temporarily overriding HOME='/home/runner/work/_temp/c53919ac-e3e6-4f83-94e8-3c556e850d12' before making global git config changes
+2026-11-05T18:08:22.2916068Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-05T18:08:22.2919405Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/strattester/strattester
+2026-11-05T18:08:22.2963473Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-05T18:08:22.3004266Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-05T18:08:22.3330860Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-05T18:08:22.3405192Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-05T18:08:22.3727776Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-05T18:08:22.3774276Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-05T18:08:22.4236982Z Cleaning up orphan processes
+2026-11-05T18:08:22.4643690Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/download-artifact@v4, actions/setup-python@v5, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

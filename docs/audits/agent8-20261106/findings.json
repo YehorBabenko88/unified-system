@@ -1,0 +1,305 @@
+[
+  {
+    "id": "A8-F01",
+    "severity": "P1",
+    "repository": "unified-system",
+    "title": "Windows fixture/security acceptance fails",
+    "evidence": "ACL_CANONICAL_ROOT_REQUIRED; Python 3.11 WindowsPath.is_junction errors; missing five-source-evidence upload.",
+    "required_correction": "Rebase/include reviewed fixture fixes and independently rerun full Windows 3.11/3.13 plus PowerShell/pwsh security gates."
+  },
+  {
+    "id": "A8-F02",
+    "severity": "P1",
+    "repository": "bybit-cluster-grid",
+    "title": "Source admission regressions fail CI",
+    "evidence": "KeyError owned_source_admission in tests/test_owned_control_source.py; downloaded PG18 JUnit: 1631 cases, 4 failures, 14 skipped.",
+    "required_correction": "Restore source-admission test lifecycle isolation without skipping revocation negatives; rerun preflight and PG18 qualification."
+  },
+  {
+    "id": "A8-F03",
+    "severity": "P1",
+    "repository": "math",
+    "title": "Mandatory Windows Node 22/24 cells fail",
+    "evidence": "ERR_ASSERTION / DIAG_CHILD_STATUS / worker_phase=COMPILE; platform result tests=98, pass=97, fail=1; Full CI coverage failed.",
+    "required_correction": "Fix native compile/child-status path and run both mandatory Windows cells plus coverage aggregator."
+  },
+  {
+    "id": "A8-F04",
+    "severity": "P1",
+    "repository": "math",
+    "title": "Selected Windows evidence tests merge SHA",
+    "evidence": "PR HEAD 11c3c470ebec9f9fdb6ec1b69e77b7b8aeea653a; downloaded receipts and checkout log use f1070af8698a5ef584fece43057be049e307ef2a.",
+    "required_correction": "Run explicit exact-PR-HEAD qualification. Retain merge-result qualification as separate evidence; do not relabel it."
+  },
+  {
+    "id": "A8-F05",
+    "severity": "P1",
+    "repository": "unified-system",
+    "title": "Real operator authentication incomplete",
+    "evidence": "Native artifact verifies compile/invalid-context only: authentication NOT_QUALIFIED, runtime_factory DENY, positive subject extraction NOT_RUN.",
+    "required_correction": "Qualify actual native inbound context, TLS/CBT, operator session expiry/revocation, peer identity and per-human backend RBAC."
+  },
+  {
+    "id": "A8-F06",
+    "severity": "P1",
+    "repository": "all",
+    "title": "Coherent physical acceptance unavailable",
+    "evidence": "No independently verified coherent release manifest, real all-node cluster, fault-injection run or alternate-access recovery proof for this audit.",
+    "required_correction": "Integration Owner must publish immutable six-repo candidate and mandatory registry; obtain separate physical fault-injection authorization and execute acceptance.",
+    "provider_probe_followup": {
+      "head": "0346018b58ed612dbe62fba7861f3e0b6a63ee94",
+      "evidence": "phase21/network-source-review.json",
+      "gap": "Fixed Bybit time GET is provider traffic; no per-request provider budget/policy/usage interface in reviewed probe. Must remain operationally blocked until exact external admission/wiring qualified; incompatible with INERT_BOOTSTRAP.",
+      "actual_unauthorized_traffic": "NOT_OBSERVED_NO_AUDITOR_NETWORK_CALLS"
+    },
+    "book_gap_followup": {
+      "status": "OPEN_KNOWN_RESIDUAL_REPRODUCED",
+      "severity": "P1",
+      "repository": "bybit-cluster-grid",
+      "PR": 268,
+      "head": "1f08e24dd9f554e4c4dfa49fb3815345cf27044a",
+      "actual": "Previous valid row remains capabilitytrue atage2s after unpersistedempty-sidegap",
+      "required_correction": "Root separate quality propagation/consumer contract allocation; no full L3/live gap closure from narrow fix",
+      "evidence": "phase64/independent-extra.json"
+    }
+  },
+  {
+    "id": "A8-F07",
+    "severity": "P2",
+    "repository": "all",
+    "title": "Mandatory skip coverage unresolved",
+    "evidence": "Passing job conclusions coexist with skipped JUnit cases; no authoritative case-to-requirement map supplied to auditor.",
+    "required_correction": "Publish mandatory IDs, expected counts/platforms and permitted optional skip reasons; missing/skip/cancelled cannot count as PASS.",
+    "root_38c3909_evidence_subitem": {
+      "status": "CORRECTION_VERIFIED_SUBITEM_CLOSED",
+      "severity": "P2",
+      "expected": "16 indexed members retrievable with matching rawSHA",
+      "actual": "15 retrievable/hashmatch; indexed pyc absent",
+      "evidence": "phase50/independent-review.json",
+      "required_correction": "Preserve originalreceipt and explicitly distinguish local-only index or publish bound fixture",
+      "correction": {
+        "requirement": "F07_ROOT_EVIDENCE_PUBLICATION_SUBITEM",
+        "head": "aefa2a9039349445bd3eaee25b12f9b6bec4c01d",
+        "tree": "3fb3d639a46e4ffb2bd8cc22e814651006169b8e",
+        "original_receipt_unchanged": true,
+        "direct_original_members_hash_verified": 15,
+        "archived_fixture_decoded_bytes": 259,
+        "decoded_sha256": "7e33742ba7689af9acad63c0a1b17551182b10b9dc723f2afcac95a0afd850a3",
+        "encoded_sha256": "7b50b2aa3a50d1ffbb7848c40da46aee82d43a04b49ce6dbe3edeb0519a9a273",
+        "bytecode_executed_or_imported": false,
+        "original_38c_completeness_failure_preserved": true,
+        "status": "CORRECTION_VERIFIED_PUBLICATION_SUBITEM_CLOSED",
+        "global_F07": "OPEN_OTHER_EVIDENCE_GAPS",
+        "A8_merged_runtime_execution": "NOT_RUN",
+        "test_rerun": "NONE_BYTE_VERIFICATION_ONLY",
+        "overall": "NO_GO"
+      }
+    }
+  },
+  {
+    "id": "A8-F08",
+    "severity": "P2",
+    "repository": "unified-system",
+    "title": "Ownership validator accepts Windows path aliases",
+    "evidence": "Exact PR22 34a2adf94b0e2170bf91f8641766e23481e269b2: case alias, dotdot and backslash probes all accepted. See phase2/coordination-probe.json.",
+    "required_correction": "Reject noncanonical repo-relative paths and Windows case aliases before ownership overlap checks; correct A7 allocation and actual A8 checkout path.",
+    "status": "FIX_VERIFIED_OFFLINE_EXACT_SOURCE",
+    "verified_fix_head": "c0965c5612227662d3673820865aeee703cb5452",
+    "fix_evidence": "phase3/f08-recheck.json; phase3/registry-regression.log"
+  },
+  {
+    "id": "A8-F09",
+    "severity": "P2",
+    "repository": "Terminan",
+    "pr": 69,
+    "title": "Dataset NO_QUORUM snapshot leaves LIVE",
+    "observed_head": "166b85e888d7d0ade24bd945761ad501a94e060c",
+    "status": "FIX_VERIFIED_OFFLINE_EXACT_SOURCE",
+    "verified_fix_head": "42686cd8fafcefaed3c5df5adaee5173d27543fd",
+    "original_evidence": "phase7/sync-independent-faults.json",
+    "fix_evidence": "phase7/sync-fixed-probes.json",
+    "required_correction": "Source fix verified; hosted/runtime qualification remains separate."
+  },
+  {
+    "id": "A8-F10",
+    "severity": "P2",
+    "repository": "Terminan",
+    "pr": 69,
+    "title": "Synchronous subscription error overwrites disconnect",
+    "observed_head": "166b85e888d7d0ade24bd945761ad501a94e060c",
+    "status": "FIX_VERIFIED_OFFLINE_EXACT_SOURCE",
+    "verified_fix_head": "42686cd8fafcefaed3c5df5adaee5173d27543fd",
+    "original_evidence": "phase7/sync-independent-faults.json",
+    "fix_evidence": "phase7/sync-fixed-probes.json",
+    "required_correction": "Source fix verified; hosted/runtime qualification remains separate."
+  },
+  {
+    "id": "A8-F11",
+    "severity": "P2",
+    "repository": "unified-system",
+    "pr": 25,
+    "title": "CI head-only guard accepts changed tracked source",
+    "observed_head": "320b5d0894019d72aa8927dc5c4246d28c6e5f3c",
+    "status": "FIX_VERIFIED_OFFLINE_EXACT_SOURCE",
+    "evidence": "phase8/ci-source-tamper-probe.json",
+    "required_correction": "Expected clean source/blob binding before and after tests; source/log hashes and exact mandatory case/count/no-skip evidence.",
+    "verified_fix_head": "0b3af3e872b49ed1848815f7f9ffd42444f89b24",
+    "fix_evidence": "phase9/f11-independent-guards.json; phase9/original-comment-probe/ci-source-tamper-probe.json; phase9/checkout-conversion-review.json"
+  },
+  {
+    "id": "A8-F12",
+    "severity": "P2",
+    "repository": "unified-system",
+    "pr": 26,
+    "observed_head": "ca9e390203305c8662ddf98fb771ac0bd268ec49",
+    "status": "FIX_VERIFIED_DOCUMENTARY_EXACT_SOURCE",
+    "title": "Documentary candidate and ownership source bindings stale",
+    "evidence": "phase13/documentary-review.json: A8 allocation base6f89 vs actual PR21 b9b03; integration candidate branch paired with PR13 rather than26.",
+    "required_correction": "Separate historical component PR/source from current integration PR; reconcile A8 allocation base; publish exact updated metadata SHA without transferring ACK.",
+    "verified_fix_head": "084ef2ec3b42131b12af44103f2d21845bf1c0f7",
+    "fix_evidence": "phase13/ownership-correction-review.json"
+  },
+  {
+    "id": "A8-F13",
+    "severity": "P1",
+    "repository": "bybit-cluster-grid",
+    "observed_head": "a17f1db6b9aa04c105d2e993496026a83849ecfd",
+    "status": "FIX_VERIFIED_OFFLINE_EXACT_SOURCE",
+    "title": "Active refresh may purge retired history without explicit retention protection",
+    "evidence": "phase14/retired-history-probe.json: exact Git blob74d462ee6865ec88ed72749b3c87803bb00ff7b5; six DELETE statements recorded in fake pool only.",
+    "required_correction": "Keep narrow historical deletion path disabled until explicit authorized retention/consumer/replica safeguards exist; review forthcoming isolated A3 fix exact HEAD/tests. No production cleanup authorized.",
+    "verified_fix_head": "ec967b3ebb67bb9f04d0d82c78bba5b4245a3333",
+    "fix_evidence": "phase15/history-safeguard-review.json",
+    "deployment_and_integration": "NOT_QUALIFIED_OLD_SOURCE_REMAINS_UNSAFE"
+  },
+  {
+    "id": "A8-F14",
+    "severity": "P1",
+    "repository": "unified-system",
+    "pr": 26,
+    "observed_head": "0346018b58ed612dbe62fba7861f3e0b6a63ee94",
+    "status": "FIX_VERIFIED_OFFLINE_EXACT_SOURCE",
+    "title": "Fixed provider probe starts network primitives without provider-budget adapter admission",
+    "evidence": "phase21/provider-gap-review.json: actual function AST with3network primitives replaced by counter+throw reaches DNS sentinel in3provider vectors; actual network calls0.",
+    "required_correction": "Fail closed fixed provider branch before DNS/TCP/HTTP; all4checksNOT_RUN and BYBIT_BUDGET_ADAPTER_NOT_ADMITTED. No env/caller-flag bypass, budgetmint/fallback/inert claim; retain frozen v1 guard denial and original assertions. Review exact source and native-free RED/GREEN.",
+    "verified_fix_head": "15dd9e8340cc332204ebbe6c13744f797ceca2f4",
+    "fix_evidence": "phase22/provider-closed-review.json;phase22/provider-gap-review.json",
+    "remaining_scope": "NO_NBM_RUNTIME_INERT_OR_PHYSICAL_ACCEPTANCE"
+  },
+  {
+    "id": "A8-F15",
+    "severity": "P2",
+    "repository": "unified-system",
+    "pr": 24,
+    "observed_head": "175b48a2a0d2882669172abc5774bd71b42e2215",
+    "status": "FIX_VERIFIED_OFFLINE_EXACT_SOURCE",
+    "title": "Scheduler CI receipt accepts hidden tracked source mutation",
+    "evidence": "phase24/scheduler-durable-review.json;hidden_comment/receipt.json+logs; harmless durable.py comment with assume-unchanged passes30tests and source before/after, despite rawhash mismatch.",
+    "required_correction": "Bind raw committed blobs/ordinary source inputs before and after CI independently of indexflags; preserve30exactIDs/no-skips/loghash, add hidden/pre-post mutation negatives. No hosted tampering alleged.",
+    "verified_fix_head": "6bcf5475023a8f6a9733d02ad899064d0d83be95",
+    "fix_evidence": "phase25/f15-fix-review.json;phase25/original_hidden_comment/receipt.json",
+    "hosted_and_runtime": "NOT_QUALIFIED"
+  },
+  {
+    "id": "A8-F16",
+    "severity": "P2",
+    "repository": "bybit-cluster-grid",
+    "pr": 265,
+    "observed_head": "10adcff532b6e31c2531c4afcfd0fec1328d6b21",
+    "status": "OPEN_PENDING_EXACT_FIX_REVIEW",
+    "title": "Codec CI raw source guard honors Git blob replacement under unchanged HEAD",
+    "evidence": "phase27/checkpoint-v3-review.json and git_blob_replace/ before/test/after guard receipts/logs: changed codec bytes accepted43/0skip with originalHEAD/tree.",
+    "required_correction": "Disable Git object replacements in every source/inventory Git command, record original tree/source evidence and reject replacement negative before tests. Preserve codec/tests/pins; no actual hosted tampering alleged.",
+    "component_corrections": {
+      "A5_PR24": {
+        "head": "db455c4926ddd50d0be7c3c615a8e4c073d12775",
+        "status": "FIX_VERIFIED_OFFLINE_EXACT_SOURCE",
+        "evidence": "phase28/scheduler-f16-review.json"
+      },
+      "A3_ROOT_and_other_applicable_guards": "PENDING_SEPARATE_EXACT_REVIEW",
+      "meta_analyse_PR78": {
+        "head": "f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1",
+        "tree": "c155c935a801fa98b7c78219c9798ce1f1be8848",
+        "status": "FIX_VERIFIED_OFFLINE",
+        "evidence": "phase29/a7-git-provenance-review.json"
+      },
+      "strattester_PR72": {
+        "head": "88a180b29afe9c85ddea26ef98cbe0bec8de24a6",
+        "tree": "572e530db6fca4beff5cbfa3efc9317964fca5ef",
+        "status": "FIX_VERIFIED_OFFLINE",
+        "evidence": "phase29/a7-git-provenance-review.json"
+      },
+      "ROOT_FINAL_INTEGRATION": {
+        "head": "18085568df01bdbc4df74404e3c650ec30bb7d6b",
+        "tree": "ebdd08b00d78c0c130d78747fed717bc636793bf",
+        "status": "FIX_VERIFIED_OFFLINE_EXACT_SOURCE",
+        "evidence": "phase30/root-f16-review.json"
+      }
+    }
+  },
+  {
+    "id": "A8-F17",
+    "severity": "P2",
+    "repository": "unified-system",
+    "pr": 24,
+    "observed_head": "462935b53ef25d4d9be2371bad1cd7230c65f2e7",
+    "status": "OPEN_KNOWN_A5_ROOT_FIXES_VERIFIED_OTHER_GUARD_ASSESSMENT_PENDING",
+    "title": "Scheduler source-evidence guard permits untracked executable import inputs",
+    "evidence": "phase37/bytecode_only/receipt.json; component-tests.log; bytecode-executed.txt; scheduler-runtime-v3-review.json",
+    "required_correction": "A5 confirmed original cache and root-import vectors fixed at d4/d7; independently verify Root/other applicable guards before global closure. Later source changes require new source binding; no hosted/native/physical transfer.",
+    "scope": "OWN_INDEPENDENT_WINDOWS_PYTHON312_CLONE_NO_HOSTED_TAMPERING_OR_NATIVE_AUTHORITY_BYPASS_ALLEGED",
+    "partial_fix_head": "0d6eb4386a721e2bbd6e5e9f6808573a4cfbe267",
+    "partial_fix_evidence": "phase38/f17-recheck.json",
+    "component_corrections": {
+      "A5_d4": {
+        "head": "d4b7475be79331f9e2d739b51aebc9442223e298",
+        "tree": "4505a761949e2af1a03a7ae3bf487c68ec6a5769",
+        "status": "FIX_VERIFIED_OFFLINE_EXACT_SOURCE",
+        "evidence": "phase41/f17-recheck.json"
+      },
+      "A5_d7": {
+        "head": "d7ea091da714829edf19400df60fad18970bfa1c",
+        "tree": "58e52d3853fedacf293f6bad3818332b30461ec3",
+        "status": "FRESH_CLEAN_AND_CRITICAL_NEGATIVES_VERIFIED_OFFLINE",
+        "evidence": "phase41/current_d7/f17-recheck.json"
+      },
+      "ROOT_OTHER_APPLICABLE_GUARDS": "PENDING_SEPARATE_INDEPENDENT_REVIEW",
+      "ROOT_e238": {
+        "head": "e238558a1d5bc44128b4541531a2cb9e194155e9",
+        "tree": "0ab27ebdc4da8e2a3fa8613b4bac4add1c9c949c",
+        "status": "FIX_VERIFIED_OFFLINE_EXACT_SOURCE",
+        "evidence": "phase42/root-source-import-review.json"
+      }
+    }
+  },
+  {
+    "id": "A8-F18",
+    "severity": "P2",
+    "repository": "strattester",
+    "pr": 74,
+    "observed_head": "8e1e0459a849f67eafd283080f27cb2da70ef985",
+    "status": "FIX_VERIFIED_OFFLINE_AT_072d222",
+    "title": "Financial v2 schema accepts trailing LF in canonical monetary and Git/hash pins",
+    "evidence": "phase69/extra.stdout.json; phase69/extra-executed.py",
+    "required_correction": "Use strict-end semantics for five monetary and four pin schema regexes; add actual Draft202012 validator negatives; independently verify new exact HEAD.",
+    "scope": "PROPOSAL_SCHEMA_ONLY_ADAPTER_REFUSES_NO_RUNTIME_ADMISSION_BYPASS",
+    "correction_head": "072d22214136148b47e82d21fec9e269bd7468ac",
+    "correction_tree": "ffaff34af5375b23235491d92a250ccb66eb03df",
+    "correction_evidence": "phase71/extra.stdout.json; phase71/actual-validator46.stdout.json; phase71/post-schema-workflow20.stderr.log"
+  },
+  {
+    "id": "A8-F19",
+    "severity": "P2",
+    "repository": "unified-system",
+    "pr": 38,
+    "observed_head": "840511a8567e8b016733d7dc2566d7890dff39b9",
+    "status": "FIX_VERIFIED_OFFLINE_AT_a2265b0",
+    "title": "NodeTaskJournal max_bytes ignores WAL and SHM state",
+    "evidence": "phase76/wal-budget.stdout.json; phase76/wal-budget-executed.py",
+    "required_correction": "Reject nonapproved WAL/SHM/mode before reads/writes or implement complete resource accounting; actual held-reader SQLite negative regression; exact independent successor verification.",
+    "scope": "OWN_SYNTHETIC_SQLITE_RESOURCE_BOUND_NOT_NATIVE_AUTHORITY_BYPASS",
+    "correction_head": "a2265b0d53e3d6ee8814aa28f5c612d537a0f195",
+    "correction_tree": "1492d725d49526bf8c83efffcb52228912d0844c",
+    "correction_evidence": "phase77/held-reader.stdout.json; phase77/held-reader-executed.py; phase77/receipt.json"
+  }
+]

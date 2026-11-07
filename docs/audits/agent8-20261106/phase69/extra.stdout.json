@@ -1,0 +1,50 @@
+{
+  "decimal_oracle_cases": 384,
+  "scales": [
+    0,
+    2,
+    18
+  ],
+  "input_unchanged": true,
+  "schema_trailing_LF_mismatch": [
+    {
+      "path": "gross_pnl",
+      "trailing_LF_schema_accepted": true
+    },
+    {
+      "path": "net_pnl",
+      "trailing_LF_schema_accepted": true
+    },
+    {
+      "path": "fees",
+      "trailing_LF_schema_accepted": true
+    },
+    {
+      "path": "slippage",
+      "trailing_LF_schema_accepted": true
+    },
+    {
+      "path": "funding",
+      "trailing_LF_schema_accepted": true
+    },
+    {
+      "path": "profile_sha256",
+      "trailing_LF_schema_accepted": true
+    },
+    {
+      "path": "provenance.source_head",
+      "trailing_LF_schema_accepted": true
+    },
+    {
+      "path": "provenance.source_tree",
+      "trailing_LF_schema_accepted": true
+    },
+    {
+      "path": "provenance.input_manifest_sha256",
+      "trailing_LF_schema_accepted": true
+    }
+  ],
+  "code_LF_correctly_refused": true,
+  "adapter_monetary_LF_correctly_refused": true,
+  "scope": "PROPOSAL_SCHEMA_P2_NOT_RUNTIME_ADMISSION_BYPASS"
+}

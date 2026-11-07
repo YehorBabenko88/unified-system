@@ -1,0 +1,15 @@
+{
+  "scope": "WINDOWS_LOCAL_FIXTURE_CACHE_NOT_LAN_FULL_SUITE",
+  "base_head": "872f8791f436d74738b0fe9591ca2fcbca49f10c",
+  "original_failures_in_200": 92,
+  "deterministic_red": "fixed original directory mtime after fixture mutation produced TEST_DEPENDENCY_VERSION_REJECTED",
+  "correction": "test fixture calls public importlib.invalidate_caches after metadata creation; product dependency enforcement unchanged",
+  "corrected_repeats": 200,
+  "corrected_repeat_failures": 0,
+  "module_tests": 7,
+  "module_failures": 0,
+  "module_errors": 0,
+  "module_skips": 0,
+  "test_source_sha256": "0079252af2b443f4cdd7792ff52c08212c7fb9cdefa6715b34cd56c0bcc6d677",
+  "full_lan_suite": "NOT_RERUN_BY_THIS_EVIDENCE"
+}

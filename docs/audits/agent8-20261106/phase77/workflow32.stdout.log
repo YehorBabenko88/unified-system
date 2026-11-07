@@ -1,0 +1,39 @@
+SYMLINK_CREATION_UNAVAILABLE: host privilege; no symlink qualification claimed
+test_atomic_reservation_refuses_racing_file (test_node_task_journal.JournalTests.test_atomic_reservation_refuses_racing_file) ... ok
+test_capacity_preserves_existing_receipts (test_node_task_journal.JournalTests.test_capacity_preserves_existing_receipts) ... ok
+test_closed_schema_and_strict_types (test_node_task_journal.JournalTests.test_closed_schema_and_strict_types) ... ok
+test_concurrent_empty_scope_writers_one_scope_wins (test_node_task_journal.JournalTests.test_concurrent_empty_scope_writers_one_scope_wins) ... ok
+test_corrupt_chain_fails_closed (test_node_task_journal.JournalTests.test_corrupt_chain_fails_closed) ... ok
+test_duplicate_after_restart_and_closed_receipts (test_node_task_journal.JournalTests.test_duplicate_after_restart_and_closed_receipts) ... ok
+test_duplicate_retains_original_and_collision_refused (test_node_task_journal.JournalTests.test_duplicate_retains_original_and_collision_refused) ... ok
+test_empty_legacy_database_not_adopted (test_node_task_journal.JournalTests.test_empty_legacy_database_not_adopted) ... ok
+test_failed_reservation_is_retained (test_node_task_journal.JournalTests.test_failed_reservation_is_retained) ... ok
+test_foreign_database_untouched (test_node_task_journal.JournalTests.test_foreign_database_untouched) ... ok
+test_foreign_schema_in_valid_chain_untouched (test_node_task_journal.JournalTests.test_foreign_schema_in_valid_chain_untouched) ... ok
+test_full_database_does_not_advance (test_node_task_journal.JournalTests.test_full_database_does_not_advance) ... ok
+test_generation_change_is_immutable_collision (test_node_task_journal.JournalTests.test_generation_change_is_immutable_collision) ... ok
+test_generation_v2_reference_only_strict_uuid (test_node_task_journal.JournalTests.test_generation_v2_reference_only_strict_uuid) ... ok
+test_invalid_transition_and_receipt_mutation (test_node_task_journal.JournalTests.test_invalid_transition_and_receipt_mutation) ... ok
+test_journal_rejects_mixed_node_cluster_incarnation (test_node_task_journal.JournalTests.test_journal_rejects_mixed_node_cluster_incarnation) ... ok
+test_legacy_receipt_cannot_be_adopted (test_node_task_journal.JournalTests.test_legacy_receipt_cannot_be_adopted) ... ok
+test_mixed_scope_hashchain_rejected_before_replay (test_node_task_journal.JournalTests.test_mixed_scope_hashchain_rejected_before_replay) ... ok
+test_overlength_and_byte_capacity (test_node_task_journal.JournalTests.test_overlength_and_byte_capacity) ... ok
+test_replaced_inode_and_hardlink_refused (test_node_task_journal.JournalTests.test_replaced_inode_and_hardlink_refused) ... ok
+test_restart_before_during_after (test_node_task_journal.JournalTests.test_restart_before_during_after) ... ok
+test_scope_projections_cannot_rebind_and_old_receipts_refuse (test_node_task_journal.JournalTests.test_scope_projections_cannot_rebind_and_old_receipts_refuse) ... ok
+test_sqlite_sidecars_rejected_without_open_or_cleanup (test_node_task_journal.JournalTests.test_sqlite_sidecars_rejected_without_open_or_cleanup) ... ok
+test_symlink_not_adopted_where_available (test_node_task_journal.JournalTests.test_symlink_not_adopted_where_available) ... ok
+test_wal_held_reader_rejected_before_reads_and_writes (test_node_task_journal.JournalTests.test_wal_held_reader_rejected_before_reads_and_writes) ... ok
+test_all_other_operations_fail_closed (test_node_supervisor_v2.SupervisorTests.test_all_other_operations_fail_closed) ... ok
+test_foreign_supervisor_scope_cannot_reconcile_or_inspect (test_node_supervisor_v2.SupervisorTests.test_foreign_supervisor_scope_cannot_reconcile_or_inspect) ... ok
+test_identity_mismatch_and_no_proof_injection (test_node_supervisor_v2.SupervisorTests.test_identity_mismatch_and_no_proof_injection) ... ok
+test_identity_projection_and_swapped_context_entrypoints (test_node_supervisor_v2.SupervisorTests.test_identity_projection_and_swapped_context_entrypoints) ... ok
+test_interrupted_read_is_not_blindly_replayed (test_node_supervisor_v2.SupervisorTests.test_interrupted_read_is_not_blindly_replayed) ... ok
+test_persisted_authorized_is_not_admission (test_node_supervisor_v2.SupervisorTests.test_persisted_authorized_is_not_admission) ... ok
+test_readonly_durable_completion_and_duplicate (test_node_supervisor_v2.SupervisorTests.test_readonly_durable_completion_and_duplicate) ... ok
+
+----------------------------------------------------------------------
+Ran 32 tests in 1.804s
+
+OK
+

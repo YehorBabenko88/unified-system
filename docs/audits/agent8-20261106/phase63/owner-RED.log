@@ -1,0 +1,74 @@
+test_large_mixed_sign_block_samples_remain_finite_and_seeded (test_strategy_statistics_overflow.BootstrapOverflowTests.test_large_mixed_sign_block_samples_remain_finite_and_seeded) ... FAIL
+test_many_finite_values_do_not_overflow_before_division (test_strategy_statistics_overflow.BootstrapOverflowTests.test_many_finite_values_do_not_overflow_before_division) ... FAIL
+test_ordinary_supported_delta_is_preserved (test_strategy_statistics_overflow.BootstrapOverflowTests.test_ordinary_supported_delta_is_preserved) ... ok
+test_refusal_does_not_mutate_original_trade_records (test_strategy_statistics_overflow.BootstrapOverflowTests.test_refusal_does_not_mutate_original_trade_records) ... FAIL
+test_representable_large_block_mean_is_finite (test_strategy_statistics_overflow.BootstrapOverflowTests.test_representable_large_block_mean_is_finite) ... FAIL
+test_representable_large_paired_mean_is_finite (test_strategy_statistics_overflow.BootstrapOverflowTests.test_representable_large_paired_mean_is_finite) ... FAIL
+test_unrepresentable_paired_difference_is_refused (test_strategy_statistics_overflow.BootstrapOverflowTests.test_unrepresentable_paired_difference_is_refused) ... FAIL
+test_zero_delta_does_not_become_directional_support (test_strategy_statistics_overflow.BootstrapOverflowTests.test_zero_delta_does_not_become_directional_support) ... ok
+
+======================================================================
+FAIL: test_large_mixed_sign_block_samples_remain_finite_and_seeded (test_strategy_statistics_overflow.BootstrapOverflowTests.test_large_mixed_sign_block_samples_remain_finite_and_seeded)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\worktrees\mission-science-bootstrap-overflow-20261107\bybit-cluster-grid\tests\test_strategy_statistics_overflow.py", line 43, in test_large_mixed_sign_block_samples_remain_finite_and_seeded
+    self.assertTrue(all(math.isfinite(value) for value in first["ci95"]))
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_many_finite_values_do_not_overflow_before_division (test_strategy_statistics_overflow.BootstrapOverflowTests.test_many_finite_values_do_not_overflow_before_division)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\worktrees\mission-science-bootstrap-overflow-20261107\bybit-cluster-grid\tests\test_strategy_statistics_overflow.py", line 35, in test_many_finite_values_do_not_overflow_before_division
+    self.assertTrue(math.isfinite(result["delta_mean"]))
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_refusal_does_not_mutate_original_trade_records (test_strategy_statistics_overflow.BootstrapOverflowTests.test_refusal_does_not_mutate_original_trade_records)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\worktrees\mission-science-bootstrap-overflow-20261107\bybit-cluster-grid\tests\test_strategy_statistics_overflow.py", line 49, in test_refusal_does_not_mutate_original_trade_records
+    with self.assertRaises(ValueError):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_representable_large_block_mean_is_finite (test_strategy_statistics_overflow.BootstrapOverflowTests.test_representable_large_block_mean_is_finite)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\worktrees\mission-science-bootstrap-overflow-20261107\bybit-cluster-grid\tests\test_strategy_statistics_overflow.py", line 29, in test_representable_large_block_mean_is_finite
+    self.assertEqual(result["ci95"], [1e308, 1e308])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [inf, inf] != [1e+308, 1e+308]
+
+First differing element 0:
+inf
+1e+308
+
+- [inf, inf]
++ [1e+308, 1e+308]
+
+======================================================================
+FAIL: test_representable_large_paired_mean_is_finite (test_strategy_statistics_overflow.BootstrapOverflowTests.test_representable_large_paired_mean_is_finite)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\worktrees\mission-science-bootstrap-overflow-20261107\bybit-cluster-grid\tests\test_strategy_statistics_overflow.py", line 24, in test_representable_large_paired_mean_is_finite
+    self.assertEqual(result["delta_mean"], 1e308)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: inf != 1e+308
+
+======================================================================
+FAIL: test_unrepresentable_paired_difference_is_refused (test_strategy_statistics_overflow.BootstrapOverflowTests.test_unrepresentable_paired_difference_is_refused)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\worktrees\mission-science-bootstrap-overflow-20261107\bybit-cluster-grid\tests\test_strategy_statistics_overflow.py", line 17, in test_unrepresentable_paired_difference_is_refused
+    with self.assertRaisesRegex(ValueError, "finite|representable"):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.003s
+
+FAILED (failures=6)

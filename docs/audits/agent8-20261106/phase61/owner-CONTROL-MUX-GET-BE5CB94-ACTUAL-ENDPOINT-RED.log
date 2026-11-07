@@ -1,0 +1,29 @@
+Traceback (most recent call last):
+  File "<stdin>", line 4, in <module>
+  File "<frozen runpy>", line 287, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\LS-5\.codex\worktrees\agent2-ha-authority-client-20261106\unified-system\tests\control_mux\test_real_consul.py", line 341, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "C:\Users\LS-5\.codex\worktrees\agent2-ha-authority-client-20261106\unified-system\tests\control_mux\test_real_consul.py", line 338, in main
+    asyncio.run(bounded_run())
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\.codex\worktrees\agent2-ha-authority-client-20261106\unified-system\tests\control_mux\test_real_consul.py", line 337, in bounded_run
+    async def bounded_run():return await asyncio.wait_for(run(),timeout=150)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\tasks.py", line 520, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "C:\Users\LS-5\.codex\worktrees\agent2-ha-authority-client-20261106\unified-system\tests\control_mux\test_real_consul.py", line 134, in run
+    assert get_status==200,('REAL_GET_RECONCILIATION_ENDPOINT_UNWIRED',get_status,get_raw)
+           ^^^^^^^^^^^^^^^
+AssertionError: ('REAL_GET_RECONCILIATION_ENDPOINT_UNWIRED', 503, b'{"code":"ADMISSION_UNAVAILABLE","evidence_refs":[],"reason":"PROVIDER_UNAVAILABLE","request_id":null,"retry_after_ms":null,"retryable":false,"schema":"unified.control.error.v3"}')

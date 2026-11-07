@@ -1,0 +1,54 @@
+{
+  "head": "ec967b3ebb67bb9f04d0d82c78bba5b4245a3333",
+  "tree": "8dce2883766a9b492587a91dda5ff86d881d83ac",
+  "base": "a17f1db6b9aa04c105d2e993496026a83849ecfd",
+  "original_six_DELETE_oracle": "BASELINE_6_FIXED_0",
+  "fixed_pool_calls": [],
+  "returned": [],
+  "no_acquire_graces": [
+    {},
+    {
+      "grace_days": 0
+    },
+    {
+      "grace_days": 365
+    },
+    {
+      "grace_days": -1
+    },
+    {
+      "grace_days": 1000000
+    }
+  ],
+  "none_pool": "NO_IO_EMPTY_RESULT",
+  "AST_other_code_and_signature_unchanged": true,
+  "all_other_tracked_files_unchanged": true,
+  "source_raw_pre_post": [
+    "11245db8a57226efbc3667c1043dd0366d9e33a592536d042e658e26878aa28c",
+    "11245db8a57226efbc3667c1043dd0366d9e33a592536d042e658e26878aa28c"
+  ],
+  "regressions": {
+    "red": {
+      "head": "a17f1db6b9aa04c105d2e993496026a83849ecfd",
+      "exit_code": 1,
+      "tests": 4,
+      "failures": 4,
+      "errors": 0,
+      "skips": 0
+    },
+    "green": {
+      "head": "ec967b3ebb67bb9f04d0d82c78bba5b4245a3333",
+      "exit_code": 0,
+      "tests": 16,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0
+    }
+  },
+  "F13": "FIX_VERIFIED_OFFLINE_EXACT_SOURCE",
+  "production_affected": "NOT_DEPLOYED_BY_A8",
+  "broader_retention_protocol": "NOT_IMPLEMENTED_NOT_QUALIFIED",
+  "hosted": "NOT_QUALIFIED",
+  "physical": "BLOCKED",
+  "overall": "NO_GO"
+}

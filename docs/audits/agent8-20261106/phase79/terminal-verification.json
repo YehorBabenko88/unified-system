@@ -1,0 +1,79 @@
+{
+  "requirement": "ORIGINAL_SINGLE_USE_TERMINAL_RECONCILIATION_ONLY",
+  "run_id": 42352374979,
+  "attempt": 1,
+  "job_id": 128343065197,
+  "source_head": "2446d04624469e34aa96ed766be7a4887d6d654c",
+  "source_tree": "12c4e3cbd3557c7f4f634f5241c7e4b51eafba4f",
+  "event": {
+    "sourceTree": "12c4e3cbd3557c7f4f634f5241c7e4b51eafba4f",
+    "eventSha": "d5d5d7ac9ba31d9d13f246a6d1d293570001ad4f",
+    "schema": "math.loader-init-event.v1",
+    "nativeAcceptance": "BLOCKED",
+    "reviewRecordSha256": "2d438482c5242e4fe69fe54b1f195524fca1141adc6fc5e588d9bff330cc2e74",
+    "qualification": "NONE",
+    "sourceHead": "2446d04624469e34aa96ed766be7a4887d6d654c"
+  },
+  "trace": {
+    "schema": "math.loader-init-trace.v1",
+    "head": "2446d04624469e34aa96ed766be7a4887d6d654c",
+    "tree": "12c4e3cbd3557c7f4f634f5241c7e4b51eafba4f",
+    "qualification": "NONE",
+    "nativeAcceptance": "BLOCKED",
+    "outcome": "DLL_INITIALIZATION_FAILED",
+    "events": 7,
+    "breakpointHandled": false,
+    "firstException": "NONE",
+    "lastModule": "OS_KERNELBASE",
+    "cleanup": "CONFIRMED"
+  },
+  "CI_status": "completed",
+  "CI_conclusion": "success",
+  "job_started_UTC": "2026-11-07T14:18:35Z",
+  "job_completed_UTC": "2026-11-07T14:19:20Z",
+  "successful_steps": 10,
+  "hosted_MODEL_counts": {
+    "tests": 8,
+    "suites": 0,
+    "pass": 8,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "artifacts": 0,
+  "original_primary_files_reacquired_and_owner_byte_equal": [
+    {
+      "name": "run.json",
+      "bytes": 12905,
+      "sha256": "bcc048a5043cb1d5b0d89da7987cea2827ded13fe431dd12f987e4f6f291b751"
+    },
+    {
+      "name": "jobs.json",
+      "bytes": 2882,
+      "sha256": "06a2f39a6bcd0b8f8c036322be5c7d01139f9ff5b37f8686052da32075e35b33"
+    },
+    {
+      "name": "artifacts.json",
+      "bytes": 32,
+      "sha256": "244563f989470892c537c9a4622920af0d228ee4528f7d00c64a06d6cd95856c"
+    },
+    {
+      "name": "job-original.log",
+      "bytes": 24392,
+      "sha256": "95fae6fc41ff57e312f050b1525208ca06db2c13d8d360e427531ec2a12cc2d9"
+    }
+  ],
+  "compile_actual_output_markers": 1,
+  "parser": "ORIGINAL_PRIMARY2446_EXPORT_ONLY_NO_RUN_ENTRYPOINT",
+  "parser_raw_sha256": "50746c7b245a3eaafd558cf4a6d9d30ae5c3339b0cc43d93763840d77f924d25",
+  "trace_raw_sha256": "ba38dc522ee45b09f00a31a2b20b8f1c1390e6230b1c353f5ea4dc5065a5ff5e",
+  "event_raw_sha256": "1a99ca5ecc38de9ed2a413aed6dabe028819fd657372cc7991fba5ebea4cc063",
+  "raw_log_publication": "PRIVATE_LOCAL_ONLY_NO_PRIVACY_REVIEW_NO_UPLOAD",
+  "authorization": "CONSUMED_NO_RETRY_OR_ACTIVATION",
+  "native_acceptance": "BLOCKED",
+  "qualification": "NONE",
+  "RCA": "NOT_ESTABLISHED_BY_LAST_MODULE",
+  "event_merge_contains_exact_source_parent": true,
+  "prior_A8_review_record_original_raw_hash_matches": true
+}

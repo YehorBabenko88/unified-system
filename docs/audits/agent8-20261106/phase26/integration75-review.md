@@ -1,0 +1,14 @@
+# New integration75 exact-source independent review
+
+Requirements: explicit mandatory75 inventory, preservation of prior59, raw PS/Python/metadata binding and negative controls without evidence inheritance.
+Repository: unified-system Draft PR26; HEADc9f3735c1efa2d5ae0e2dfbe52987a49c520bdf5; treed19857aa229691be6ed2c7287e79f92b16baa961; PRbase80c25306a7b0230a39cf1150172844ec94452529. Environment: independent Windows exact-LF clones, Python3.12/tzdata2026.6 hash-pinned scratch, actual embedded workflow Python block; two disjoint local cases at a time, no office/network/backend actions.
+
+PASS selected offline integration scope:75fresh cases0skip/error/failure, not59+30receipt arithmetic. Exact unique75IDs and v2inventory checked; preserved_prior_ids equals original56f59inventory, and every prior59test-method AST remains unchanged. New cases are15A5durable+1providerAST. A5durable bytes match independently reviewed6bc and PS bytes match reviewed15dd. Provider test has only qualified helper import change; normalizing that import makes whole AST equal to original15ddtest. No assertion/policy relaxation.
+
+Clean actual CI receipt has377protected raw committed inputs, including all.ps1, with exact source/head/tree, per-file GitOID/SHA/length and source_before==source_after. Whole primary raw Git checkout independently verified after. Existing Ubuntu24.04/Windows-latest Python3.11/3.12 matrix remains; only local Windows3.12 ran here. Log hash verified. Actual local child crash/SQLite race and native-free PS AST fixture are part of the75; no provider traffic or physical effect.
+
+Ten negative controls reject: hiddenPScomment, hiddenA5comment, hiddeninventorywhitespace, CRLFPS, missingPS, hiddenpostPS, missingpriorID, duplicatepriorID, substitutedpriorID withsame75, skip. First source/ID failures execute0tests; hiddenpost executes75then source mismatch prevents receipt. Skip executes75with1skip and exitsnonzero; emitted source_binding_passed means raw source binding only, not a mandatory-case PASS. Every control stdout/stderr/testlog/receipt where produced is preserved; no malformed or failed receipt promoted.
+
+No new blocking defect identified in this scoped CI75 review. Earlier59/A5receipts are historical anchors for preservation only; no hosted or full-suite evidence transfer. Hosted exact-c9 source run metadata in hosted-snapshot.json is separately unqualified. No full828rerun or original owner fullsuite acceptance adopted. Source-bound model success is not authentication/authority/storage/LAN/mTLS/deployment/physical qualification. Overall NO-GO6P1/1P2; physical/Tailscale removal BLOCKED.
+
+Evidence: integration75-review.json; clean/receipt.json/tests.log; ten negative directories; reproducible checker ../review_integration75.py. ROOT receives exact-pin source/CI75 review only; no mainmerge/production deployment authorization or A8 production changes.

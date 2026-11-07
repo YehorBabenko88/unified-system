@@ -1,0 +1,45 @@
+{
+  "head": "942e5f1d1efb28f97fb5eaae7a216424938dd738",
+  "tree": "1b2fc3757d0ff2c6f1a1b7c6d5e56dc3ff9646d3",
+  "delta_only_workflow_and_docs": [
+    ".github/workflows/agent5-components.yml",
+    "docs/scheduler/components.md"
+  ],
+  "exact_pr_head_checkout": "VERIFIED",
+  "local_real_suite_and_negative_guards": {
+    "actual15": {
+      "exit_code": 0,
+      "passed": true,
+      "tests_run": 15,
+      "skips": 0
+    },
+    "zero_tests": {
+      "exit_code": 1,
+      "passed": false,
+      "tests_run": 0,
+      "skips": 0
+    },
+    "fourteen_tests": {
+      "exit_code": 1,
+      "passed": false,
+      "tests_run": 14,
+      "skips": 0
+    },
+    "fifteen_with_skip": {
+      "exit_code": 1,
+      "passed": false,
+      "tests_run": 15,
+      "skips": 1
+    },
+    "wrong_expected_source": {
+      "exit_code": 1,
+      "passed": false,
+      "tests_run": 0,
+      "skips": 0
+    }
+  },
+  "source_guard_scope": "HEAD_TREE_TRACKED_STATUS_ONLY_NOT_RAW_BYTE_ATTESTATION",
+  "workflow_code_sha256": "38f2355888d739f9f29c9e4f3f1416570d6a2fc747a43aac7c877c91c8fc1fed",
+  "Windows_CI": "QUEUED_NOT_QUALIFIED",
+  "global_acceptance": "NO-GO"
+}

@@ -1,0 +1,69 @@
+{
+  "events": [
+    {
+      "name": "unknown_restart_original_bytes_no_reexecute",
+      "scope": "LOCAL_CODE_AND_SYNTHETIC_PORTS_ONLY",
+      "execute_calls": 1,
+      "reconcile_calls": 1
+    },
+    {
+      "name": "incarnation_change_conflicts_without_new_start",
+      "scope": "LOCAL_CODE_AND_SYNTHETIC_PORTS_ONLY"
+    },
+    {
+      "name": "second_connection_drain_before_claim_blocks_start",
+      "scope": "LOCAL_CODE_AND_SYNTHETIC_PORTS_ONLY"
+    },
+    {
+      "name": "lost_start_reply_new_worker_inspect_none_never_restarts",
+      "scope": "LOCAL_CODE_AND_SYNTHETIC_PORTS_ONLY"
+    },
+    {
+      "name": "synthetic_dispatch_admission_denial_keeps_nonexecuted_committed_intent",
+      "scope": "LOCAL_CODE_AND_SYNTHETIC_PORTS_ONLY"
+    },
+    {
+      "name": "explicit_bounded_private_5ms_CPU_4KiB_scratch_4KiB_loopback_measurement",
+      "scope": "LOCAL_CODE_AND_SYNTHETIC_PORTS_ONLY",
+      "qualification": "NOT_MILLICORES_OR_LAN_CAPACITY"
+    }
+  ],
+  "measurement": {
+    "schema": "unified.scheduler.local-benchmark.v1",
+    "run_id": "fbac3b7e-6042-4063-993d-8e635c2245a9",
+    "provenance": {
+      "scope": "LOCAL_PROCESS_TEMPFILE_LOOPBACK_NOT_FLEET_CAPACITY",
+      "platform": "Windows",
+      "python": "3.12.10",
+      "pid": "119012"
+    },
+    "cpu": {
+      "profile": "SHA256_1M_SINGLE_PROCESS_BYTES_PER_SECOND",
+      "bytes": "19922944",
+      "elapsed_ns": "16000000",
+      "bytes_per_second_floor": "1245184000"
+    },
+    "scratch": {
+      "profile": "PRIVATE_TEMPFILE_WRITE_FLUSH_FSYNC",
+      "bytes": "4096",
+      "elapsed_ns": "0",
+      "bytes_per_second_floor": "4096000000000"
+    },
+    "network": {
+      "profile": "IPV4_LOOPBACK_EPHEMERAL_NOT_LAN",
+      "bytes": "4096",
+      "elapsed_ns": "0",
+      "bytes_per_second_floor": "4096000000000"
+    },
+    "memory": {
+      "status": "MEASURED",
+      "source": "GlobalMemoryStatusEx",
+      "total_physical_bytes": "68019691520",
+      "available_physical_bytes": "42222157824",
+      "memory_load_percent": "37"
+    }
+  },
+  "native_authority": "NOT_RUN",
+  "native_storage": "NOT_RUN",
+  "physical": "BLOCKED"
+}

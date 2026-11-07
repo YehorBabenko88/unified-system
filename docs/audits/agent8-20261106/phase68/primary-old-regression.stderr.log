@@ -1,0 +1,28 @@
+test_hash_terminal_cause_survives_reader_receive_interleaving (test_lan_mux_channel.MuxTlsTests.test_hash_terminal_cause_survives_reader_receive_interleaving) ... FAIL
+
+======================================================================
+FAIL: test_hash_terminal_cause_survives_reader_receive_interleaving (test_lan_mux_channel.MuxTlsTests.test_hash_terminal_cause_survives_reader_receive_interleaving)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<A8-primary-acf4-in-memory-only>", line 263, in receive
+  File "<A8-primary-acf4-in-memory-only>", line 143, in pop
+  File "<A8-primary-acf4-in-memory-only>", line 117, in check_deadline
+  File "<A8-primary-acf4-in-memory-only>", line 22, in _need
+unified_system.lan_mux_channel.MuxError: MUX_CLOSED
+
+The above exception was the direct cause of the following exception:
+
+unified_system.lan_mux_channel.MuxError: MUX_CLOSED
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\work\review-lanmux-8bfa\tests\test_lan_mux_channel.py", line 299, in test_hash_terminal_cause_survives_reader_receive_interleaving
+    with self.assertRaisesRegex(mux.MuxError,'MUX_MESSAGE_HASH_REJECTED'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "MUX_MESSAGE_HASH_REJECTED" does not match "MUX_CLOSED"
+
+----------------------------------------------------------------------
+Ran 1 test in 1.137s
+
+FAILED (failures=1)

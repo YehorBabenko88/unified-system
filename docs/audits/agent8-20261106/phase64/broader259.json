@@ -1,0 +1,1576 @@
+{
+  "label": "broader259",
+  "passed": 259,
+  "skips": [
+    {
+      "id": "tests/test_source_provenance.py::test_disposable_pg_immutability_and_idempotency",
+      "phase": "call",
+      "outcome": "skipped",
+      "detail": "('C:\\\\Users\\\\LS-5\\\\Documents\\\\Codex\\\\2026-11-06\\\\codex-agent-8-independent-security-ci\\\\work\\\\review-book268-1f08\\\\tests\\\\test_source_provenance.py', 96, 'Skipped: explicit disposable PG18 required')"
+    }
+  ],
+  "cases": [
+    {
+      "id": "tests/test_accumulated_orderbook_limit.py::test_accumulated_book_levels_reset_and_fresh_snapshot_recovers",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_book_velocity_nonmonotonic.py::test_duplicate_and_backward_timestamps_do_not_fabricate_rates",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_book_velocity_nonmonotonic.py::test_independent_symbol_baselines",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_continuity.py::test_book_sequence_accepts_contiguous_updates",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_continuity.py::test_book_cross_sequence_can_jump_forward_without_false_gap",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_continuity.py::test_book_backward_sequence_invalidates_until_snapshot",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_continuity.py::test_stale_update_invalidates_book",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_continuity.py::test_trade_continuity_marks_time_gap_without_claiming_missing_count",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_continuity.py::test_book_snapshot_requires_sequence_and_update_id",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_continuity.py::test_book_delta_missing_metadata_invalidates_until_snapshot",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_continuity.py::test_replayed_snapshot_cannot_roll_back_valid_book",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_continuity.py::test_snapshot_restart_marker_can_reset_sequence",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_empty_microstructure_batch.py::test_empty_batch_skips_network_and_returns",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_future_orderbook_timestamp_guard.py::test_future_orderbook_snapshot_does_not_poison_sequence",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_invalid_market_envelope.py::test_invalid_market_envelope_keeps_socket_alive[bad_frame0]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_invalid_market_envelope.py::test_invalid_market_envelope_keeps_socket_alive[bad_frame1]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_invalid_market_envelope.py::test_invalid_market_envelope_keeps_socket_alive[bad_frame2]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_invalid_market_envelope.py::test_invalid_market_envelope_keeps_socket_alive[bad_frame3]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_invalid_market_envelope.py::test_invalid_market_envelope_keeps_socket_alive[bad_frame4]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_invalid_market_envelope.py::test_invalid_market_envelope_keeps_socket_alive[bad_frame5]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_invalid_market_frame_continuity.py::test_non_object_market_frame_does_not_reconnect[None]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_invalid_market_frame_continuity.py::test_non_object_market_frame_does_not_reconnect[invalid_frame1]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_invalid_market_frame_continuity.py::test_non_object_market_frame_does_not_reconnect[123]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_invalid_market_frame_continuity.py::test_non_object_market_frame_does_not_reconnect[invalid]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_invalid_market_json_recovery.py::test_invalid_market_json_keeps_socket_and_next_snapshot[{invalid]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_invalid_market_json_recovery.py::test_invalid_market_json_keeps_socket_and_next_snapshot[]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_invalid_market_json_recovery.py::test_invalid_market_json_keeps_socket_and_next_snapshot[\\xff]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_book_stall_watch.py::test_stall_one_symbol_while_another_continues",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_book_stall_watch.py::test_reconnect_creates_fresh_watchdog_epoch",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_book_stall_watch.py::test_unknown_topic_does_not_expand_watchdog",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_book_stall_watch.py::test_collector_wires_monotonic_watchdog_and_idle_poll",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_crossed_book_recovery.py::test_locked_or_crossed_book_requires_fresh_snapshot[101]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_crossed_book_recovery.py::test_locked_or_crossed_book_requires_fresh_snapshot[102]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_empty_ticker_delta.py::test_empty_ticker_delta_does_not_advance_timestamp[bad_data0]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_empty_ticker_delta.py::test_empty_ticker_delta_does_not_advance_timestamp[bad_data1]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_empty_ticker_delta.py::test_empty_ticker_delta_does_not_advance_timestamp[bad_data2]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_generator_symbols.py::test_generator_symbols_preserved_and_deduplicated",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_generator_symbols.py::test_empty_generator_does_not_connect",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_invalid_snapshot_recovery.py::test_invalid_snapshot_metadata_requires_recovery[None-11]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_invalid_snapshot_recovery.py::test_invalid_snapshot_metadata_requires_recovery[101-None]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_invalid_snapshot_recovery.py::test_invalid_snapshot_metadata_requires_recovery[True-11]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_invalid_snapshot_recovery.py::test_invalid_snapshot_metadata_requires_recovery[101-False]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_invalid_snapshot_recovery.py::test_invalid_snapshot_metadata_requires_recovery[-1-11]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_invalid_snapshot_recovery.py::test_invalid_snapshot_metadata_requires_recovery[101--1]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_malformed_delta_recovery.py::test_malformed_delta_levels_require_recovery[bad_levels0]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_malformed_delta_recovery.py::test_malformed_delta_levels_require_recovery[bad_levels1]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_malformed_delta_recovery.py::test_malformed_delta_levels_require_recovery[bad_levels2]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_malformed_delta_recovery.py::test_malformed_delta_levels_require_recovery[bad_levels3]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_malformed_delta_recovery.py::test_malformed_delta_levels_require_recovery[bad_levels4]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_malformed_levels_recovery.py::test_malformed_snapshot_levels_require_recovery[bad_levels0]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_malformed_levels_recovery.py::test_malformed_snapshot_levels_require_recovery[bad_levels1]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_malformed_levels_recovery.py::test_malformed_snapshot_levels_require_recovery[bad_levels2]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_malformed_levels_recovery.py::test_malformed_snapshot_levels_require_recovery[bad_levels3]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_malformed_levels_recovery.py::test_malformed_snapshot_levels_require_recovery[bad_levels4]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_malformed_stale_delta.py::test_malformed_stale_delta_does_not_clear_valid_book",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_malformed_stale_snapshot.py::test_malformed_stale_snapshot_does_not_clear_valid_book",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_mapping_symbols.py::test_mapping_rejected_as_symbol_collection[invalid0]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_mapping_symbols.py::test_mapping_rejected_as_symbol_collection[invalid1]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_mapping_symbols.py::test_mapping_rejected_as_symbol_collection[invalid2]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_mapping_symbols.py::test_mapping_rejected_as_symbol_collection[invalid3]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_mixed_sequence_recovery.py::test_conflicting_delta_requires_new_snapshot[101-9]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_mixed_sequence_recovery.py::test_conflicting_delta_requires_new_snapshot[99-11]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_noniterable_symbols.py::test_noniterable_symbols_rejected_before_network[0]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_noniterable_symbols.py::test_noniterable_symbols_rejected_before_network[42]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_noniterable_symbols.py::test_noniterable_symbols_rejected_before_network[1.5]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_noniterable_symbols.py::test_noniterable_symbols_rejected_before_network[True]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_noniterable_symbols.py::test_noniterable_symbols_rejected_before_network[False]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_noniterable_symbols.py::test_noniterable_symbols_rejected_before_network[invalid5]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_null_symbol_collection.py::test_null_symbol_collection_rejected_before_network",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_oversized_frame_recovery.py::test_oversized_orderbook_frame_requires_recovery[snapshot]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_oversized_frame_recovery.py::test_oversized_orderbook_frame_requires_recovery[delta]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_reconnect_reset.py::test_microstructure_resets_state_before_each_connection",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_snapshot_interval.py::test_invalid_snapshot_interval_rejected[0]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_snapshot_interval.py::test_invalid_snapshot_interval_rejected[-1]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_snapshot_interval.py::test_invalid_snapshot_interval_rejected[True]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_snapshot_interval.py::test_invalid_snapshot_interval_rejected[False]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_snapshot_interval.py::test_invalid_snapshot_interval_rejected[1.5]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_snapshot_interval.py::test_invalid_snapshot_interval_rejected[1000]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_snapshot_interval.py::test_invalid_snapshot_interval_rejected[None]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_snapshot_interval.py::test_invalid_snapshot_interval_rejected[invalid7]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_snapshot_interval.py::test_invalid_snapshot_interval_rejected[invalid8]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_snapshot_interval.py::test_positive_integer_snapshot_interval_accepted[1]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_snapshot_interval.py::test_positive_integer_snapshot_interval_accepted[1000]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_snapshot_interval.py::test_positive_integer_snapshot_interval_accepted[60000]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_stale_delta_guard.py::test_old_delta_replay_is_stale_without_mutating_guard",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_stale_delta_guard.py::test_mixed_ordering_or_invalid_metadata_not_classified_as_stale",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_stale_delta_guard.py::test_uninitialized_guard_does_not_suppress_delta",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_stall_reconnect_integration.py::test_stalled_one_symbol_reconnects_and_resubscribes",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_string_symbol_collection.py::test_string_instead_of_symbol_collection_rejected[BTCUSDT0]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_string_symbol_collection.py::test_string_instead_of_symbol_collection_rejected[0]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_string_symbol_collection.py::test_string_instead_of_symbol_collection_rejected[BTCUSDT1]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_string_symbol_collection.py::test_string_instead_of_symbol_collection_rejected[1]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_symbol_deduplication.py::test_duplicate_symbols_only_subscribed_once",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_symbol_validation.py::test_invalid_symbol_rejected_before_network[None]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_symbol_validation.py::test_invalid_symbol_rejected_before_network[0]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_symbol_validation.py::test_invalid_symbol_rejected_before_network[True]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_symbol_validation.py::test_invalid_symbol_rejected_before_network[]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_symbol_validation.py::test_invalid_symbol_rejected_before_network[BTC.USDT]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_symbol_validation.py::test_invalid_symbol_rejected_before_network[BTC USDT]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_symbol_validation.py::test_invalid_symbol_rejected_before_network[BTC/USDT]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_symbol_validation.py::test_invalid_symbol_rejected_before_network[\\u0411\\u0422\\u041a]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_symbol_validation.py::test_invalid_symbol_rejected_before_network[BTC_USDT]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_symbol_validation.py::test_empty_symbols_still_return_without_network",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_wall_event_ratio.py::test_invalid_wall_event_ratio_rejected[0]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_wall_event_ratio.py::test_invalid_wall_event_ratio_rejected[-1]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_wall_event_ratio.py::test_invalid_wall_event_ratio_rejected[True]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_wall_event_ratio.py::test_invalid_wall_event_ratio_rejected[False]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_wall_event_ratio.py::test_invalid_wall_event_ratio_rejected[nan]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_wall_event_ratio.py::test_invalid_wall_event_ratio_rejected[inf]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_wall_event_ratio.py::test_invalid_wall_event_ratio_rejected[-inf]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_wall_event_ratio.py::test_invalid_wall_event_ratio_rejected[6]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_wall_event_ratio.py::test_invalid_wall_event_ratio_rejected[None]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_wall_event_ratio.py::test_invalid_wall_event_ratio_rejected[invalid9]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_wall_event_ratio.py::test_invalid_wall_event_ratio_rejected[invalid10]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_wall_event_ratio.py::test_positive_finite_wall_event_ratio_accepted[0.5]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_wall_event_ratio.py::test_positive_finite_wall_event_ratio_accepted[1]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_wall_event_ratio.py::test_positive_finite_wall_event_ratio_accepted[6.0]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_microstructure_wall_event_ratio.py::test_positive_finite_wall_event_ratio_accepted[100]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_orderbook_duplicate_levels.py::test_duplicate_price_levels_are_rejected[True]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_orderbook_duplicate_levels.py::test_duplicate_price_levels_are_rejected[False]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_orderbook_duplicate_levels.py::test_distinct_price_levels_remain_valid",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_orderbook_duplicate_levels.py::test_single_delta_zero_quantity_is_valid",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_orderbook_gap_derived_reset.py::test_book_gap_invalidates_velocity_and_wall_baselines",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_orderbook_gap_derived_reset.py::test_new_snapshot_after_invalid_guard_resets_derived_baselines",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_orderbook_level_limit.py::test_orderbook_frame_level_limit_rejects_oversized_input",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_orderbook_level_limit.py::test_orderbook_frame_level_limit_allows_valid_depth_50",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_orderbook_level_limit.py::test_orderbook_frame_level_limit_applies_to_deltas",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_orderbook_level_validation.py::test_parse_book_levels_accepts_valid_snapshot_and_zero_removal_delta",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_orderbook_level_validation.py::test_parse_book_levels_rejects_invalid_values[None]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_orderbook_level_validation.py::test_parse_book_levels_rejects_invalid_values[levels1]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_orderbook_level_validation.py::test_parse_book_levels_rejects_invalid_values[levels2]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_orderbook_level_validation.py::test_parse_book_levels_rejects_invalid_values[levels3]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_orderbook_level_validation.py::test_parse_book_levels_rejects_invalid_values[levels4]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_orderbook_level_validation.py::test_parse_book_levels_rejects_invalid_values[levels5]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_orderbook_level_validation.py::test_parse_book_levels_rejects_invalid_values[levels6]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_orderbook_level_validation.py::test_parse_book_levels_rejects_invalid_values[levels7]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_orderbook_level_validation.py::test_parse_book_levels_rejects_invalid_values[levels8]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_orderbook_level_validation.py::test_parse_book_levels_rejects_invalid_values[levels9]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_orderbook_level_validation.py::test_parse_book_levels_rejects_invalid_values[levels10]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_orderbook_level_validation.py::test_parse_book_levels_rejects_invalid_values[levels11]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_orderbook_level_validation.py::test_snapshot_rejects_zero_quantity",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_scientific_book_capability.py::test_incomplete_snapshot_never_publishes_available_book[bids0-asks0]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_scientific_book_capability.py::test_incomplete_snapshot_never_publishes_available_book[bids1-asks1]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_scientific_book_capability.py::test_incomplete_snapshot_never_publishes_available_book[bids2-asks2]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_scientific_book_capability.py::test_delta_emptying_one_side_requires_fresh_snapshot[bids0-asks0]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_scientific_book_capability.py::test_delta_emptying_one_side_requires_fresh_snapshot[bids1-asks1]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_scientific_book_capability.py::test_legacy_or_explicit_bad_quality_masks_book_metrics[None]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_scientific_book_capability.py::test_legacy_or_explicit_bad_quality_masks_book_metrics[quality1]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_scientific_book_capability.py::test_legacy_or_explicit_bad_quality_masks_book_metrics[available]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_scientific_book_capability.py::test_legacy_or_explicit_bad_quality_masks_book_metrics[quality3]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_scientific_book_capability.py::test_legacy_or_explicit_bad_quality_masks_book_metrics[quality4]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_scientific_book_capability.py::test_legacy_or_explicit_bad_quality_masks_book_metrics[quality5]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_scientific_book_capability.py::test_legacy_or_explicit_bad_quality_masks_book_metrics[quality6]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_scientific_book_capability.py::test_legacy_or_explicit_bad_quality_masks_book_metrics[quality7]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_scientific_book_capability.py::test_legacy_or_explicit_bad_quality_masks_book_metrics[quality8]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_scientific_book_capability.py::test_legacy_or_explicit_bad_quality_masks_book_metrics[quality9]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_scientific_book_capability.py::test_legacy_or_explicit_bad_quality_masks_book_metrics[quality10]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_scientific_book_capability.py::test_legacy_or_explicit_bad_quality_masks_book_metrics[quality11]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_scientific_book_capability.py::test_legacy_or_explicit_bad_quality_masks_book_metrics[quality12]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_scientific_book_capability.py::test_available_flag_without_complete_valid_sides_is_not_capability[None]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_scientific_book_capability.py::test_available_flag_without_complete_valid_sides_is_not_capability[book1]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_scientific_book_capability.py::test_available_flag_without_complete_valid_sides_is_not_capability[book2]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_scientific_book_capability.py::test_available_flag_without_complete_valid_sides_is_not_capability[book3]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_scientific_book_capability.py::test_available_flag_without_complete_valid_sides_is_not_capability[book4]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_scientific_book_capability.py::test_available_flag_without_complete_valid_sides_is_not_capability[book5]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_scientific_book_capability.py::test_valid_existing_producer_payload_preserves_book_features",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_scientific_book_capability.py::test_boolean_price_or_quantity_cannot_enable_capability[bids-0]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_scientific_book_capability.py::test_boolean_price_or_quantity_cannot_enable_capability[bids-1]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_scientific_book_capability.py::test_boolean_price_or_quantity_cannot_enable_capability[asks-0]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_scientific_book_capability.py::test_boolean_price_or_quantity_cannot_enable_capability[asks-1]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_source_provenance.py::test_owner_declaration_and_digest_are_not_completeness_attestation",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_source_provenance.py::test_bad_attestations_fail_closed[<lambda>0]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_source_provenance.py::test_bad_attestations_fail_closed[<lambda>1]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_source_provenance.py::test_bad_attestations_fail_closed[<lambda>2]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_source_provenance.py::test_bad_attestations_fail_closed[<lambda>3]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_source_provenance.py::test_bad_attestations_fail_closed[<lambda>4]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_source_provenance.py::test_bad_attestations_fail_closed[<lambda>5]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_source_provenance.py::test_restart_has_new_epoch",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_source_provenance.py::test_gateway_integrity_gaps_stale_and_restart",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_source_provenance.py::test_research_handoff_requires_trust_and_never_trades",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_source_provenance.py::test_handoff_adversarial[<lambda>0]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_source_provenance.py::test_handoff_adversarial[<lambda>1]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_source_provenance.py::test_handoff_adversarial[<lambda>2]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_source_provenance.py::test_handoff_adversarial[<lambda>3]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_source_provenance.py::test_event_time_ohlc_duplicate_and_late_trades",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_source_provenance.py::test_cancellation_during_snapshot_write_propagates",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_source_provenance.py::test_disposable_pg_immutability_and_idempotency",
+      "phase": "call",
+      "outcome": "skipped",
+      "detail": "('C:\\\\Users\\\\LS-5\\\\Documents\\\\Codex\\\\2026-11-06\\\\codex-agent-8-independent-security-ci\\\\work\\\\review-book268-1f08\\\\tests\\\\test_source_provenance.py', 96, 'Skipped: explicit disposable PG18 required')"
+    },
+    {
+      "id": "tests/test_source_provenance.py::test_market_integrity_fail_closed[<lambda>0]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_source_provenance.py::test_market_integrity_fail_closed[<lambda>1]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_source_provenance.py::test_market_integrity_fail_closed[<lambda>2]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_source_provenance.py::test_market_integrity_fail_closed[<lambda>3]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_source_provenance.py::test_http_absolute_deadline_closes_slow_header_or_body[False]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_source_provenance.py::test_http_absolute_deadline_closes_slow_header_or_body[True]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_source_provenance.py::test_real_strattester_producer_export_compatibility",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_source_provenance.py::test_http_invalid_query_does_not_echo_or_log_secret",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_source_provenance.py::test_additive_capabilities_do_not_claim_source_readiness",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_source_provenance.py::test_actual_builder_decimal_tick_rounding_retains_integrity",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_strict_market_timestamps.py::test_bad_timestamp_does_not_poison_ticker_state[True]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_strict_market_timestamps.py::test_bad_timestamp_does_not_poison_ticker_state[False]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_strict_market_timestamps.py::test_bad_timestamp_does_not_poison_ticker_state[0_0]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_strict_market_timestamps.py::test_bad_timestamp_does_not_poison_ticker_state[-1_0]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_strict_market_timestamps.py::test_bad_timestamp_does_not_poison_ticker_state[1.5_0]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_strict_market_timestamps.py::test_bad_timestamp_does_not_poison_ticker_state[1.5_1]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_strict_market_timestamps.py::test_bad_timestamp_does_not_poison_ticker_state[0_1]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_strict_market_timestamps.py::test_bad_timestamp_does_not_poison_ticker_state[-1_1]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_strict_market_timestamps.py::test_bad_timestamp_does_not_poison_ticker_state[ 123 ]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_strict_market_timestamps.py::test_bad_timestamp_does_not_poison_ticker_state[99999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_subscription_ack_arg_types.py::test_subscription_ack_args_are_type_checked_before_set_conversion",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_subscription_ack_args_recovery.py::test_bad_subscription_args_reconnect_and_recover[orderbook.50.BTCUSDT]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_subscription_ack_args_recovery.py::test_bad_subscription_args_reconnect_and_recover[123]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_subscription_ack_args_recovery.py::test_bad_subscription_args_reconnect_and_recover[bad_args2]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_subscription_ack_args_recovery.py::test_bad_subscription_args_reconnect_and_recover[bad_args3]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_subscription_ack_disconnect.py::test_disconnect_during_ack_retries_new_socket[failure0]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_subscription_ack_disconnect.py::test_disconnect_during_ack_retries_new_socket[failure1]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_subscription_ack_disconnect.py::test_disconnect_during_ack_retries_new_socket[failure2]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_subscription_ack_success_type.py::test_nonboolean_subscription_success_forces_retry[1]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_subscription_ack_success_type.py::test_nonboolean_subscription_success_forces_retry[0]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_subscription_ack_success_type.py::test_nonboolean_subscription_success_forces_retry[true]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_subscription_ack_success_type.py::test_nonboolean_subscription_success_forces_retry[false]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_subscription_ack_success_type.py::test_nonboolean_subscription_success_forces_retry[None]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_subscription_ack_success_type.py::test_nonboolean_subscription_success_forces_retry[bad_success5]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_subscription_ack_success_type.py::test_nonboolean_subscription_success_forces_retry[bad_success6]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_subscription_ack_timeout_recovery.py::test_missing_subscription_ack_times_out_and_retries",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_subscription_buffer_overflow.py::test_early_market_frame_buffer_overflow_reconnects",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_subscription_invalid_frame_recovery.py::test_non_object_subscription_response_reconnects[None]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_subscription_invalid_frame_recovery.py::test_non_object_subscription_response_reconnects[invalid_frame1]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_subscription_invalid_frame_recovery.py::test_non_object_subscription_response_reconnects[123]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_subscription_invalid_frame_recovery.py::test_non_object_subscription_response_reconnects[invalid]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_subscription_malformed_json_reconnect.py::test_malformed_subscription_json_forces_reconnect[{]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_subscription_malformed_json_reconnect.py::test_malformed_subscription_json_forces_reconnect[not json]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_subscription_malformed_json_reconnect.py::test_malformed_subscription_json_forces_reconnect[]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_subscription_malformed_json_reconnect.py::test_malformed_subscription_json_forces_reconnect[[]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_subscription_malformed_json_reconnect.py::test_malformed_subscription_json_forces_reconnect[{\"op\":\"subscribe\",]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_subscription_market_frame_buffer.py::test_subscription_frames_buffered_before_ack",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_subscription_rejection_recovery.py::test_rejected_subscription_reconnects_and_retries",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_trade_tape_connection_context.py::test_only_closed_actual_public_endpoints_receive_declared_context",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_trade_tape_connection_context.py::test_trade_reconnect_discards_only_own_open_bucket_and_attaches_actual_context",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_trade_tape_connection_context.py::test_trade_context_binds_endpoint_used_before_handshake[wss://unrecognized.example/public/linear-wss://stream.bybit.com/v5/public/linear]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_trade_tape_connection_context.py::test_trade_context_binds_endpoint_used_before_handshake[wss://stream.bybit.com/v5/public/linear-wss://stream.bybit.com/v5/public/spot]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_unified_features.py::test_unified_features_preserve_missing_capabilities_as_null",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_unified_features.py::test_unified_features_merge_microstructure",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_unified_features.py::test_degraded_candle_is_hard_ineligible_even_with_microstructure",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_unified_features.py::test_payload_dict_accepts_mapping",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_unified_features.py::test_payload_dict_decodes_json_string",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_unified_features.py::test_payload_dict_handles_none",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_unified_features.py::test_payload_dict_rejects_malformed_json",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_unified_features.py::test_payload_dict_rejects_non_object_json",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_unified_features.py::test_unified_feature_consumer_registers_market_events",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_unified_features.py::test_persist_advances_market_event_watermark_only_after_feature_write",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_unified_features.py::test_feature_builder_hydrates_restart_state_and_resets_on_minute_gap",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_unsubscribed_market_topics.py::test_unsubscribed_market_topic_is_ignored[tickers.UNEXPECTEDUSDT]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_unsubscribed_market_topics.py::test_unsubscribed_market_topic_is_ignored[orderbook.50.UNEXPECTEDUSDT]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_unsubscribed_market_topics.py::test_unsubscribed_market_topic_is_ignored[orderbook.200.BTCUSDT]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_unsubscribed_market_topics.py::test_unsubscribed_market_topic_is_ignored[tickers.]",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_wall_tracker.py::test_wall_tracker_measures_lifetime_and_replenishment",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_wall_tracker.py::test_wall_tracker_emits_removed_wall_without_calling_it_execution",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_wall_tracker_empty_epoch_replay.py::test_replayed_wall_cannot_resurrect_after_empty_epoch",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_wall_tracker_empty_epoch_replay.py::test_empty_first_epoch_blocks_older_replay_but_not_other_symbol",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_wall_tracker_nonmonotonic.py::test_duplicate_and_backward_timestamps_do_not_corrupt_wall_history",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    },
+    {
+      "id": "tests/test_wall_tracker_nonmonotonic.py::test_independent_symbols_are_not_blocked_by_other_symbol_timestamps",
+      "phase": "call",
+      "outcome": "passed",
+      "detail": null
+    }
+  ],
+  "scope": "FAKE_FEED_FAKE_SQL_NO_REAL_PROVIDER_OR_DB",
+  "environment": "BORROWED_A3_PY312_PYTEST835_NOT_NEWLY_QUALIFIED"
+}

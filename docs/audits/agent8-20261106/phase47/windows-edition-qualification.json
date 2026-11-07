@@ -1,0 +1,652 @@
+{
+  "schema": "unified.windows-edition-qualification.v1",
+  "decision": "decisions/windows-home-20261107/OWNER-DECISION.json",
+  "tracks": {
+    "WINDOWS_PRO_QUALIFICATION": {
+      "status": "PENDING",
+      "pass_inheritance": "FORBIDDEN_BETWEEN_EDITIONS_OR_NODES",
+      "nodes": {
+        "LS5": {
+          "edition": "Windows 11 Pro",
+          "role": "COORDINATOR",
+          "physical_deployment": "BLOCKED",
+          "checks": [
+            {
+              "id": "SSH",
+              "requirement": "OpenSSH client/server and pinned LAN authentication",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": "PINNED_LAN_SSH_OBSERVED_NOT_FULL_QUALIFICATION"
+            },
+            {
+              "id": "SERVICES",
+              "requirement": "Unified Windows Services and startup",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "NONADMIN",
+              "requirement": "Runtime without persistent administrative rights",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "MTLS_KEYS",
+              "requirement": "mTLS and protected key storage",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "PIPE_IPC",
+              "requirement": "Named Pipe ACL and IPC",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "FIREWALL_ESET",
+              "requirement": "Firewall and ESET compatibility without changing policy",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "RUNTIMES",
+              "requirement": "Pinned Python/Node/native runtimes",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "RESEARCH_WORKER",
+              "requirement": "Math/Strattester/MetaAnalyse worker execution",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "SCHEDULER",
+              "requirement": "Scheduler checkpoint/resume and recovery",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "STORAGE",
+              "requirement": "Storage integrity and disk budgets",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "TERMINAN",
+              "requirement": "Terminan UI RBAC and Control API",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "RESTART_LOGOFF",
+              "requirement": "Recovery after restart and user logoff",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "DIRECT_LAN",
+              "requirement": "LAN operation independent of mandatory Tailscale",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "NO_PRO_ONLY",
+              "requirement": "No unqualified Pro-only dependency",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            }
+          ]
+        },
+        "PC4": {
+          "edition": "Windows 11 Pro",
+          "role": "COORDINATOR",
+          "physical_deployment": "BLOCKED",
+          "checks": [
+            {
+              "id": "SSH",
+              "requirement": "OpenSSH client/server and pinned LAN authentication",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": "PINNED_LAN_SSH_OBSERVED_NOT_FULL_QUALIFICATION"
+            },
+            {
+              "id": "SERVICES",
+              "requirement": "Unified Windows Services and startup",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "NONADMIN",
+              "requirement": "Runtime without persistent administrative rights",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "MTLS_KEYS",
+              "requirement": "mTLS and protected key storage",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "PIPE_IPC",
+              "requirement": "Named Pipe ACL and IPC",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "FIREWALL_ESET",
+              "requirement": "Firewall and ESET compatibility without changing policy",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "RUNTIMES",
+              "requirement": "Pinned Python/Node/native runtimes",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "RESEARCH_WORKER",
+              "requirement": "Math/Strattester/MetaAnalyse worker execution",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "SCHEDULER",
+              "requirement": "Scheduler checkpoint/resume and recovery",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "STORAGE",
+              "requirement": "Storage integrity and disk budgets",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "TERMINAN",
+              "requirement": "Terminan UI RBAC and Control API",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "RESTART_LOGOFF",
+              "requirement": "Recovery after restart and user logoff",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "DIRECT_LAN",
+              "requirement": "LAN operation independent of mandatory Tailscale",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "NO_PRO_ONLY",
+              "requirement": "No unqualified Pro-only dependency",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            }
+          ]
+        },
+        "PC3": {
+          "edition": "Windows 11 Pro",
+          "role": "COORDINATOR",
+          "physical_deployment": "BLOCKED",
+          "checks": [
+            {
+              "id": "SSH",
+              "requirement": "OpenSSH client/server and pinned LAN authentication",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": "PINNED_LAN_SSH_OBSERVED_NOT_FULL_QUALIFICATION"
+            },
+            {
+              "id": "SERVICES",
+              "requirement": "Unified Windows Services and startup",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "NONADMIN",
+              "requirement": "Runtime without persistent administrative rights",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "MTLS_KEYS",
+              "requirement": "mTLS and protected key storage",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "PIPE_IPC",
+              "requirement": "Named Pipe ACL and IPC",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "FIREWALL_ESET",
+              "requirement": "Firewall and ESET compatibility without changing policy",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "RUNTIMES",
+              "requirement": "Pinned Python/Node/native runtimes",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "RESEARCH_WORKER",
+              "requirement": "Math/Strattester/MetaAnalyse worker execution",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "SCHEDULER",
+              "requirement": "Scheduler checkpoint/resume and recovery",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "STORAGE",
+              "requirement": "Storage integrity and disk budgets",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "TERMINAN",
+              "requirement": "Terminan UI RBAC and Control API",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "RESTART_LOGOFF",
+              "requirement": "Recovery after restart and user logoff",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "DIRECT_LAN",
+              "requirement": "LAN operation independent of mandatory Tailscale",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "NO_PRO_ONLY",
+              "requirement": "No unqualified Pro-only dependency",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            }
+          ]
+        },
+        "PC2": {
+          "edition": "Windows 11 Pro",
+          "role": "WORKER",
+          "physical_deployment": "BLOCKED",
+          "checks": [
+            {
+              "id": "SSH",
+              "requirement": "OpenSSH client/server and pinned LAN authentication",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": "PINNED_LAN_SSH_OBSERVED_NOT_FULL_QUALIFICATION"
+            },
+            {
+              "id": "SERVICES",
+              "requirement": "Unified Windows Services and startup",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "NONADMIN",
+              "requirement": "Runtime without persistent administrative rights",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "MTLS_KEYS",
+              "requirement": "mTLS and protected key storage",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "PIPE_IPC",
+              "requirement": "Named Pipe ACL and IPC",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "FIREWALL_ESET",
+              "requirement": "Firewall and ESET compatibility without changing policy",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "RUNTIMES",
+              "requirement": "Pinned Python/Node/native runtimes",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "RESEARCH_WORKER",
+              "requirement": "Math/Strattester/MetaAnalyse worker execution",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "SCHEDULER",
+              "requirement": "Scheduler checkpoint/resume and recovery",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "STORAGE",
+              "requirement": "Storage integrity and disk budgets",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "TERMINAN",
+              "requirement": "Terminan UI RBAC and Control API",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "RESTART_LOGOFF",
+              "requirement": "Recovery after restart and user logoff",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "DIRECT_LAN",
+              "requirement": "LAN operation independent of mandatory Tailscale",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "NO_PRO_ONLY",
+              "requirement": "No unqualified Pro-only dependency",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            }
+          ]
+        }
+      }
+    },
+    "WINDOWS_HOME_QUALIFICATION": {
+      "status": "PENDING",
+      "pass_inheritance": "FORBIDDEN_BETWEEN_EDITIONS_OR_NODES",
+      "nodes": {
+        "PC1": {
+          "edition": "Windows 11 Home",
+          "role": "WORKER_TERMINAN",
+          "physical_deployment": "BLOCKED",
+          "checks": [
+            {
+              "id": "SSH",
+              "requirement": "OpenSSH client/server and pinned LAN authentication",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": "PINNED_LAN_SSH_OBSERVED_NOT_FULL_QUALIFICATION"
+            },
+            {
+              "id": "SERVICES",
+              "requirement": "Unified Windows Services and startup",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "NONADMIN",
+              "requirement": "Runtime without persistent administrative rights",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "MTLS_KEYS",
+              "requirement": "mTLS and protected key storage",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "PIPE_IPC",
+              "requirement": "Named Pipe ACL and IPC",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "FIREWALL_ESET",
+              "requirement": "Firewall and ESET compatibility without changing policy",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "RUNTIMES",
+              "requirement": "Pinned Python/Node/native runtimes",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "RESEARCH_WORKER",
+              "requirement": "Math/Strattester/MetaAnalyse worker execution",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "SCHEDULER",
+              "requirement": "Scheduler checkpoint/resume and recovery",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "STORAGE",
+              "requirement": "Storage integrity and disk budgets",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "TERMINAN",
+              "requirement": "Terminan UI RBAC and Control API",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "RESTART_LOGOFF",
+              "requirement": "Recovery after restart and user logoff",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "DIRECT_LAN",
+              "requirement": "LAN operation independent of mandatory Tailscale",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "NO_PRO_ONLY",
+              "requirement": "No unqualified Pro-only dependency",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            }
+          ]
+        },
+        "LS7": {
+          "edition": "Windows 11 Home",
+          "role": "WORKER_TERMINAN",
+          "physical_deployment": "BLOCKED",
+          "checks": [
+            {
+              "id": "SSH",
+              "requirement": "OpenSSH client/server and pinned LAN authentication",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": "PINNED_LAN_SSH_OBSERVED_NOT_FULL_QUALIFICATION"
+            },
+            {
+              "id": "SERVICES",
+              "requirement": "Unified Windows Services and startup",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "NONADMIN",
+              "requirement": "Runtime without persistent administrative rights",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "MTLS_KEYS",
+              "requirement": "mTLS and protected key storage",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "PIPE_IPC",
+              "requirement": "Named Pipe ACL and IPC",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "FIREWALL_ESET",
+              "requirement": "Firewall and ESET compatibility without changing policy",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "RUNTIMES",
+              "requirement": "Pinned Python/Node/native runtimes",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "RESEARCH_WORKER",
+              "requirement": "Math/Strattester/MetaAnalyse worker execution",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "SCHEDULER",
+              "requirement": "Scheduler checkpoint/resume and recovery",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "STORAGE",
+              "requirement": "Storage integrity and disk budgets",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "TERMINAN",
+              "requirement": "Terminan UI RBAC and Control API",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "RESTART_LOGOFF",
+              "requirement": "Recovery after restart and user logoff",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "DIRECT_LAN",
+              "requirement": "LAN operation independent of mandatory Tailscale",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            },
+            {
+              "id": "NO_PRO_ONLY",
+              "requirement": "No unqualified Pro-only dependency",
+              "status": "NOT_RUN",
+              "evidence": [],
+              "read_only_observation": null
+            }
+          ]
+        }
+      }
+    }
+  },
+  "pro_only_function_rule": "EQUIVALENT_SECURITY_ALTERNATIVE_OR_SPECIFIC_FUNCTION_BLOCKED",
+  "isolated_and_windows_ci_before_physical": true,
+  "overall": "IN_PROGRESS_NO_GO",
+  "decision_raw_sha256": "7b8e090452b5fa3f070b3439e5c344a50c0cecb4b22bac0a006ff25dc4af2f95"
+}

@@ -1,0 +1,767 @@
+﻿2026-11-03T16:02:25.5914992Z Current runner version: '2.338.2'
+2026-11-03T16:02:25.5940843Z ##[group]Runner Image Provisioner
+2026-11-03T16:02:25.5941654Z Hosted Compute Agent
+2026-11-03T16:02:25.5942189Z Version: 20261021.618
+2026-11-03T16:02:25.5942788Z Commit: 21505ad2541d5be6135ed84fc33697146cf75b8e
+2026-11-03T16:02:25.5943475Z Build Date: 2026-10-21T00:45:21Z
+2026-11-03T16:02:25.5944672Z Worker ID: {5048140f-c052-4a0d-a581-6d2e0b039051}
+2026-11-03T16:02:25.5945385Z Region: westus2
+2026-11-03T16:02:25.5945904Z Cloud: Azure
+2026-11-03T16:02:25.5946412Z ##[endgroup]
+2026-11-03T16:02:25.5947802Z ##[group]Operating System
+2026-11-03T16:02:25.5948420Z Microsoft Windows Server 2025
+2026-11-03T16:02:25.5949087Z 10.0.26100
+2026-11-03T16:02:25.5949585Z Datacenter
+2026-11-03T16:02:25.5950076Z ##[endgroup]
+2026-11-03T16:02:25.5950644Z ##[group]Runner Image
+2026-11-03T16:02:25.5951247Z Image: windows-2025-vs2026
+2026-11-03T16:02:25.5951840Z Version: 20261030.294.1
+2026-11-03T16:02:25.5953377Z Included Software: https://github.com/actions/runner-images/blob/win25-vs2026/20261030.294/images/windows/Windows2025-VS2026-Readme.md
+2026-11-03T16:02:25.5955085Z Image Release: https://github.com/actions/runner-images/releases/tag/win25-vs2026%2F20261030.294
+2026-11-03T16:02:25.5956062Z ##[endgroup]
+2026-11-03T16:02:25.5957151Z ##[group]GITHUB_TOKEN Permissions
+2026-11-03T16:02:25.5958985Z Contents: read
+2026-11-03T16:02:25.5959711Z Metadata: read
+2026-11-03T16:02:25.5960385Z ##[endgroup]
+2026-11-03T16:02:25.5962638Z Secret source: Actions
+2026-11-03T16:02:25.5964615Z Cache mode: write
+2026-11-03T16:02:25.5965921Z Prepare workflow directory
+2026-11-03T16:02:25.6712621Z Prepare all required actions
+2026-11-03T16:02:25.6760411Z Getting action download info
+2026-11-03T16:02:26.0412626Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-11-03T16:02:26.2023435Z Download action repository 'actions/setup-python@v5' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+2026-11-03T16:02:26.3727251Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-11-03T16:02:26.7604209Z Complete job name: windows
+2026-11-03T16:02:27.0383186Z ##[group]Run actions/checkout@v4
+2026-11-03T16:02:27.0384645Z with:
+2026-11-03T16:02:27.0385356Z   ref: fa487affd99310bd523f31f8c6935132a57e745a
+2026-11-03T16:02:27.0386259Z   repository: YehorBabenko88/meta_analyse
+2026-11-03T16:02:27.0392599Z   token: ***
+2026-11-03T16:02:27.0393183Z   ssh-strict: true
+2026-11-03T16:02:27.0393765Z   ssh-user: git
+2026-11-03T16:02:27.0394360Z   persist-credentials: true
+2026-11-03T16:02:27.0395014Z   clean: true
+2026-11-03T16:02:27.0395604Z   sparse-checkout-cone-mode: true
+2026-11-03T16:02:27.0396335Z   fetch-depth: 1
+2026-11-03T16:02:27.0396919Z   fetch-tags: false
+2026-11-03T16:02:27.0397520Z   show-progress: true
+2026-11-03T16:02:27.0398120Z   lfs: false
+2026-11-03T16:02:27.0398670Z   submodules: false
+2026-11-03T16:02:27.0399268Z   set-safe-directory: true
+2026-11-03T16:02:27.0400042Z   allow-unsafe-pr-checkout: false
+2026-11-03T16:02:27.0401072Z env:
+2026-11-03T16:02:27.0401739Z   UNIFIED_SOURCE_ROOT: D:\a\meta_analyse\meta_analyse/.source/unified-system
+2026-11-03T16:02:27.0402821Z   QT_QPA_PLATFORM: offscreen
+2026-11-03T16:02:27.0403320Z   PYTHONASYNCIODEBUG: 1
+2026-11-03T16:02:27.0403764Z ##[endgroup]
+2026-11-03T16:02:27.2278972Z Syncing repository: YehorBabenko88/meta_analyse
+2026-11-03T16:02:27.2280869Z ##[group]Getting Git version info
+2026-11-03T16:02:27.2281582Z Working directory is 'D:\a\meta_analyse\meta_analyse'
+2026-11-03T16:02:27.3473037Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-03T16:02:27.9389158Z git version 2.56.0.windows.4
+2026-11-03T16:02:27.9444510Z ##[endgroup]
+2026-11-03T16:02:27.9467692Z Temporarily overriding HOME='D:\a\_temp\1e47f055-22b3-4bac-90d3-49cee6734e4f' before making global git config changes
+2026-11-03T16:02:27.9472075Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-03T16:02:27.9479709Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\meta_analyse\meta_analyse
+2026-11-03T16:02:28.0269915Z Deleting the contents of 'D:\a\meta_analyse\meta_analyse'
+2026-11-03T16:02:28.0276103Z ##[group]Initializing the repository
+2026-11-03T16:02:28.0284952Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\meta_analyse\meta_analyse
+2026-11-03T16:02:28.2141674Z Initialized empty Git repository in D:/a/meta_analyse/meta_analyse/.git/
+2026-11-03T16:02:28.2194879Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/YehorBabenko88/meta_analyse
+2026-11-03T16:02:28.3141721Z ##[endgroup]
+2026-11-03T16:02:28.3143122Z ##[group]Disabling automatic garbage collection
+2026-11-03T16:02:28.3151330Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2026-11-03T16:02:28.3561087Z ##[endgroup]
+2026-11-03T16:02:28.3572091Z ##[group]Setting up auth
+2026-11-03T16:02:28.3590006Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-03T16:02:28.4088666Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-03T16:02:30.1051691Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-03T16:02:30.1446075Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-03T16:02:30.7313891Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-03T16:02:30.7722228Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-03T16:02:31.3811221Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-11-03T16:02:31.4248902Z ##[endgroup]
+2026-11-03T16:02:31.4249514Z ##[group]Fetching the repository
+2026-11-03T16:02:31.4269529Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin fa487affd99310bd523f31f8c6935132a57e745a
+2026-11-03T16:02:32.6515591Z From https://github.com/YehorBabenko88/meta_analyse
+2026-11-03T16:02:32.6516899Z  * branch            fa487affd99310bd523f31f8c6935132a57e745a -> FETCH_HEAD
+2026-11-03T16:02:32.6563066Z ##[endgroup]
+2026-11-03T16:02:32.6563748Z ##[group]Determining the checkout info
+2026-11-03T16:02:32.6566309Z ##[endgroup]
+2026-11-03T16:02:32.6575725Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2026-11-03T16:02:32.7160743Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2026-11-03T16:02:32.7564659Z ##[group]Checking out the ref
+2026-11-03T16:02:32.7574511Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force fa487affd99310bd523f31f8c6935132a57e745a
+2026-11-03T16:02:33.0412136Z Note: switching to 'fa487affd99310bd523f31f8c6935132a57e745a'.
+2026-11-03T16:02:33.0412567Z 
+2026-11-03T16:02:33.0412804Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-11-03T16:02:33.0413861Z changes and commit them, and you can discard any commits you make in this
+2026-11-03T16:02:33.0414849Z state without impacting any branches by switching back to a branch.
+2026-11-03T16:02:33.0416406Z 
+2026-11-03T16:02:33.0416697Z If you want to create a new branch to retain commits you create, you may
+2026-11-03T16:02:33.0417529Z do so (now or later) by using -c with the switch command. Example:
+2026-11-03T16:02:33.0417853Z 
+2026-11-03T16:02:33.0417992Z   git switch -c <new-branch-name>
+2026-11-03T16:02:33.0419282Z 
+2026-11-03T16:02:33.0419402Z Or undo this operation with:
+2026-11-03T16:02:33.0419622Z 
+2026-11-03T16:02:33.0419740Z   git switch -
+2026-11-03T16:02:33.0419888Z 
+2026-11-03T16:02:33.0420264Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-11-03T16:02:33.0420826Z 
+2026-11-03T16:02:33.0421448Z HEAD is now at fa487af Accept bounded Windows overload transport refusal without losing recovery checks
+2026-11-03T16:02:33.0501192Z ##[endgroup]
+2026-11-03T16:02:33.1002984Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2026-11-03T16:02:33.1359260Z fa487affd99310bd523f31f8c6935132a57e745a
+2026-11-03T16:02:33.1917491Z ##[group]Run actions/checkout@v4
+2026-11-03T16:02:33.1917852Z with:
+2026-11-03T16:02:33.1918101Z   repository: YehorBabenko88/unified-system
+2026-11-03T16:02:33.1918437Z   ref: d065537d880295282eb2a157579813958417407e
+2026-11-03T16:02:33.1918749Z   path: .source/unified-system
+2026-11-03T16:02:33.1919018Z   persist-credentials: false
+2026-11-03T16:02:33.1921641Z   token: ***
+2026-11-03T16:02:33.1921851Z   ssh-strict: true
+2026-11-03T16:02:33.1922073Z   ssh-user: git
+2026-11-03T16:02:33.1922272Z   clean: true
+2026-11-03T16:02:33.1922493Z   sparse-checkout-cone-mode: true
+2026-11-03T16:02:33.1922777Z   fetch-depth: 1
+2026-11-03T16:02:33.1922981Z   fetch-tags: false
+2026-11-03T16:02:33.1923199Z   show-progress: true
+2026-11-03T16:02:33.1923437Z   lfs: false
+2026-11-03T16:02:33.1923638Z   submodules: false
+2026-11-03T16:02:33.1923858Z   set-safe-directory: true
+2026-11-03T16:02:33.1924114Z   allow-unsafe-pr-checkout: false
+2026-11-03T16:02:33.1924381Z env:
+2026-11-03T16:02:33.1924830Z   UNIFIED_SOURCE_ROOT: D:\a\meta_analyse\meta_analyse/.source/unified-system
+2026-11-03T16:02:33.1925277Z   QT_QPA_PLATFORM: offscreen
+2026-11-03T16:02:33.1925533Z   PYTHONASYNCIODEBUG: 1
+2026-11-03T16:02:33.1925764Z ##[endgroup]
+2026-11-03T16:02:33.3087106Z Syncing repository: YehorBabenko88/unified-system
+2026-11-03T16:02:33.3100564Z ##[group]Getting Git version info
+2026-11-03T16:02:33.3101499Z Working directory is 'D:\a\meta_analyse\meta_analyse\.source\unified-system'
+2026-11-03T16:02:33.4003795Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-03T16:02:33.4361365Z git version 2.56.0.windows.4
+2026-11-03T16:02:33.4413634Z ##[endgroup]
+2026-11-03T16:02:33.4430758Z Temporarily overriding HOME='D:\a\_temp\274d3e93-8d87-4149-af42-04153a5a2a7d' before making global git config changes
+2026-11-03T16:02:33.4431676Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-03T16:02:33.4441095Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\meta_analyse\meta_analyse\.source\unified-system
+2026-11-03T16:02:33.4839332Z ##[group]Initializing the repository
+2026-11-03T16:02:33.4849772Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\meta_analyse\meta_analyse\.source\unified-system
+2026-11-03T16:02:33.5296900Z Initialized empty Git repository in D:/a/meta_analyse/meta_analyse/.source/unified-system/.git/
+2026-11-03T16:02:33.5349337Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/YehorBabenko88/unified-system
+2026-11-03T16:02:33.5752377Z ##[endgroup]
+2026-11-03T16:02:33.5752857Z ##[group]Disabling automatic garbage collection
+2026-11-03T16:02:33.5762475Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2026-11-03T16:02:33.6163018Z ##[endgroup]
+2026-11-03T16:02:33.6163623Z ##[group]Setting up auth
+2026-11-03T16:02:33.6179358Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-03T16:02:33.6641822Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-03T16:02:34.2795918Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-03T16:02:34.3222398Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-03T16:02:34.9189413Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-03T16:02:34.9607132Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-03T16:02:35.5989535Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-11-03T16:02:35.6423413Z ##[endgroup]
+2026-11-03T16:02:35.6423999Z ##[group]Fetching the repository
+2026-11-03T16:02:35.6436608Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin d065537d880295282eb2a157579813958417407e
+2026-11-03T16:02:36.0187895Z From https://github.com/YehorBabenko88/unified-system
+2026-11-03T16:02:36.0188435Z  * branch            d065537d880295282eb2a157579813958417407e -> FETCH_HEAD
+2026-11-03T16:02:36.0229585Z ##[endgroup]
+2026-11-03T16:02:36.0230195Z ##[group]Determining the checkout info
+2026-11-03T16:02:36.0232828Z ##[endgroup]
+2026-11-03T16:02:36.0242121Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2026-11-03T16:02:36.0728828Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2026-11-03T16:02:36.1109860Z ##[group]Checking out the ref
+2026-11-03T16:02:36.1121072Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force d065537d880295282eb2a157579813958417407e
+2026-11-03T16:02:36.1976922Z Note: switching to 'd065537d880295282eb2a157579813958417407e'.
+2026-11-03T16:02:36.1977430Z 
+2026-11-03T16:02:36.1977786Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-11-03T16:02:36.1978674Z changes and commit them, and you can discard any commits you make in this
+2026-11-03T16:02:36.1979527Z state without impacting any branches by switching back to a branch.
+2026-11-03T16:02:36.1980031Z 
+2026-11-03T16:02:36.1980352Z If you want to create a new branch to retain commits you create, you may
+2026-11-03T16:02:36.1981125Z do so (now or later) by using -c with the switch command. Example:
+2026-11-03T16:02:36.1981584Z 
+2026-11-03T16:02:36.1981752Z   git switch -c <new-branch-name>
+2026-11-03T16:02:36.1982054Z 
+2026-11-03T16:02:36.1982219Z Or undo this operation with:
+2026-11-03T16:02:36.1982496Z 
+2026-11-03T16:02:36.1982644Z   git switch -
+2026-11-03T16:02:36.1982817Z 
+2026-11-03T16:02:36.1983166Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-11-03T16:02:36.1984055Z 
+2026-11-03T16:02:36.1984511Z HEAD is now at d065537 Isolate owned Python imports and persist failed runtime cleanup
+2026-11-03T16:02:36.2047890Z ##[endgroup]
+2026-11-03T16:02:36.2458358Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2026-11-03T16:02:36.2803915Z d065537d880295282eb2a157579813958417407e
+2026-11-03T16:02:36.2852417Z ##[group]Removing auth
+2026-11-03T16:02:36.2862052Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-03T16:02:36.3259511Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-03T16:02:36.9078762Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-03T16:02:36.9418169Z http.https://github.com/.extraheader
+2026-11-03T16:02:36.9466390Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+2026-11-03T16:02:36.9864120Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-03T16:02:37.5413066Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-03T16:02:37.5792142Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-03T16:02:38.1492003Z ##[endgroup]
+2026-11-03T16:02:38.1856633Z ##[group]Run import os, pathlib, subprocess
+2026-11-03T16:02:38.1857162Z [36;1mimport os, pathlib, subprocess[0m
+2026-11-03T16:02:38.1857573Z [36;1mroot=pathlib.Path(os.environ['UNIFIED_SOURCE_ROOT'])[0m
+2026-11-03T16:02:38.1858291Z [36;1mactual=subprocess.check_output(['git','--no-replace-objects','-C',str(root),'rev-parse','HEAD'],text=True).strip()[0m
+2026-11-03T16:02:38.1858996Z [36;1massert actual=='d065537d880295282eb2a157579813958417407e'[0m
+2026-11-03T16:02:38.1859494Z [36;1massert (root/'unified_system/owned_python.py').is_file()[0m
+2026-11-03T16:02:38.1956410Z shell: C:\hostedtoolcache\windows\Python\3.12.10\x64\python.EXE {0}
+2026-11-03T16:02:38.1956894Z env:
+2026-11-03T16:02:38.1957743Z   UNIFIED_SOURCE_ROOT: D:\a\meta_analyse\meta_analyse/.source/unified-system
+2026-11-03T16:02:38.1958314Z   QT_QPA_PLATFORM: offscreen
+2026-11-03T16:02:38.1958616Z   PYTHONASYNCIODEBUG: 1
+2026-11-03T16:02:38.1958879Z ##[endgroup]
+2026-11-03T16:02:39.1358411Z ##[group]Run python scripts/record_ci_source.py
+2026-11-03T16:02:39.1358913Z [36;1mpython scripts/record_ci_source.py[0m
+2026-11-03T16:02:39.2155422Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-03T16:02:39.2156048Z env:
+2026-11-03T16:02:39.2156571Z   UNIFIED_SOURCE_ROOT: D:\a\meta_analyse\meta_analyse/.source/unified-system
+2026-11-03T16:02:39.2157265Z   QT_QPA_PLATFORM: offscreen
+2026-11-03T16:02:39.2157698Z   PYTHONASYNCIODEBUG: 1
+2026-11-03T16:02:39.2158061Z ##[endgroup]
+2026-11-03T16:02:39.7366477Z Verified source SHA: fa487affd99310bd523f31f8c6935132a57e745a
+2026-11-03T16:02:39.9008987Z ##[group]Run actions/setup-python@v5
+2026-11-03T16:02:39.9009504Z with:
+2026-11-03T16:02:39.9009813Z   python-version: 3.12
+2026-11-03T16:02:39.9010178Z   cache: pip
+2026-11-03T16:02:39.9010532Z   cache-dependency-path: requirements.lock
+2026-11-03T16:02:39.9010991Z   check-latest: false
+2026-11-03T16:02:39.9014994Z   token: ***
+2026-11-03T16:02:39.9015327Z   update-environment: true
+2026-11-03T16:02:39.9015717Z   allow-prereleases: false
+2026-11-03T16:02:39.9016086Z   freethreaded: false
+2026-11-03T16:02:39.9016402Z env:
+2026-11-03T16:02:39.9016882Z   UNIFIED_SOURCE_ROOT: D:\a\meta_analyse\meta_analyse/.source/unified-system
+2026-11-03T16:02:39.9017526Z   QT_QPA_PLATFORM: offscreen
+2026-11-03T16:02:39.9017914Z   PYTHONASYNCIODEBUG: 1
+2026-11-03T16:02:39.9018257Z ##[endgroup]
+2026-11-03T16:02:40.0693338Z ##[group]Installed versions
+2026-11-03T16:02:40.0941574Z (node:2200) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-03T16:02:40.0942391Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-03T16:02:40.0943795Z Successfully set up CPython (3.12.10)
+2026-11-03T16:02:40.0944427Z ##[endgroup]
+2026-11-03T16:02:42.2785338Z pip cache is not found
+2026-11-03T16:02:42.3182097Z ##[group]Run python -m pip install -c requirements.lock -e ".[test,archive]"
+2026-11-03T16:02:42.3182955Z [36;1mpython -m pip install -c requirements.lock -e ".[test,archive]"[0m
+2026-11-03T16:02:42.3283758Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-03T16:02:42.3284113Z env:
+2026-11-03T16:02:42.3284418Z   UNIFIED_SOURCE_ROOT: D:\a\meta_analyse\meta_analyse/.source/unified-system
+2026-11-03T16:02:42.3284893Z   QT_QPA_PLATFORM: offscreen
+2026-11-03T16:02:42.3285325Z   PYTHONASYNCIODEBUG: 1
+2026-11-03T16:02:42.3287056Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:02:42.3287787Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-11-03T16:02:42.3288482Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:02:42.3289149Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:02:42.3289857Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:02:42.3290373Z ##[endgroup]
+2026-11-03T16:02:45.3814556Z Obtaining file:///D:/a/meta_analyse/meta_analyse
+2026-11-03T16:02:45.3849452Z   Installing build dependencies: started
+2026-11-03T16:02:50.9768299Z   Installing build dependencies: finished with status 'done'
+2026-11-03T16:02:50.9785934Z   Checking if build backend supports build_editable: started
+2026-11-03T16:02:51.6070571Z   Checking if build backend supports build_editable: finished with status 'done'
+2026-11-03T16:02:51.6098570Z   Getting requirements to build editable: started
+2026-11-03T16:02:52.1407877Z   Getting requirements to build editable: finished with status 'done'
+2026-11-03T16:02:52.1440471Z   Preparing editable metadata (pyproject.toml): started
+2026-11-03T16:02:52.5083110Z   Preparing editable metadata (pyproject.toml): finished with status 'done'
+2026-11-03T16:02:52.7775670Z Collecting httpx<1,>=0.27 (from meta-analyse==0.1.0)
+2026-11-03T16:02:52.9948436Z   Downloading httpx-0.28.1-py3-none-any.whl.metadata (7.1 kB)
+2026-11-03T16:02:53.2414223Z Collecting websockets<16,>=13 (from meta-analyse==0.1.0)
+2026-11-03T16:02:53.2517541Z   Downloading websockets-15.0.1-cp312-cp312-win_amd64.whl.metadata (7.0 kB)
+2026-11-03T16:02:53.3068418Z Collecting psycopg<4,>=3.2 (from psycopg[binary]<4,>=3.2->meta-analyse==0.1.0)
+2026-11-03T16:02:53.3145875Z   Downloading psycopg-3.3.6-py3-none-any.whl.metadata (4.4 kB)
+2026-11-03T16:02:53.3795952Z Collecting PySide6<7,>=6.8 (from meta-analyse==0.1.0)
+2026-11-03T16:02:53.3872521Z   Downloading pyside6-6.12.0-cp310-abi3-win_amd64.whl.metadata (5.7 kB)
+2026-11-03T16:02:53.4595474Z Collecting pytest<10,>=8 (from meta-analyse==0.1.0)
+2026-11-03T16:02:53.4705688Z   Downloading pytest-9.1.1-py3-none-any.whl.metadata (7.6 kB)
+2026-11-03T16:02:53.5273085Z Collecting pytest-asyncio<2,>=0.24 (from meta-analyse==0.1.0)
+2026-11-03T16:02:53.5359099Z   Downloading pytest_asyncio-1.4.0-py3-none-any.whl.metadata (4.1 kB)
+2026-11-03T16:02:54.0121830Z Collecting hypothesis==6.170.6 (from meta-analyse==0.1.0)
+2026-11-03T16:02:54.6340616Z   Downloading hypothesis-6.170.6-cp312-cp312-win_amd64.whl.metadata (5.6 kB)
+2026-11-03T16:02:55.2684029Z Collecting aiohttp<4,>=3.10 (from meta-analyse==0.1.0)
+2026-11-03T16:02:55.2784548Z   Downloading aiohttp-3.14.5-cp312-cp312-win_amd64.whl.metadata (8.5 kB)
+2026-11-03T16:02:55.3293990Z Collecting sortedcontainers<3.0.0,>=2.1.0 (from hypothesis==6.170.6->meta-analyse==0.1.0)
+2026-11-03T16:02:55.3386019Z   Downloading sortedcontainers-2.4.0-py2.py3-none-any.whl.metadata (10 kB)
+2026-11-03T16:02:55.3850560Z Collecting aiohappyeyeballs>=2.5.0 (from aiohttp<4,>=3.10->meta-analyse==0.1.0)
+2026-11-03T16:02:55.3930580Z   Downloading aiohappyeyeballs-2.7.1-py3-none-any.whl.metadata (5.9 kB)
+2026-11-03T16:02:55.4386632Z Collecting aiosignal>=1.4.0 (from aiohttp<4,>=3.10->meta-analyse==0.1.0)
+2026-11-03T16:02:55.4470220Z   Downloading aiosignal-1.4.0-py3-none-any.whl.metadata (3.7 kB)
+2026-11-03T16:02:55.4958819Z Collecting attrs>=17.3.0 (from aiohttp<4,>=3.10->meta-analyse==0.1.0)
+2026-11-03T16:02:55.5042695Z   Downloading attrs-26.1.0-py3-none-any.whl.metadata (8.8 kB)
+2026-11-03T16:02:55.6070436Z Collecting frozenlist>=1.1.1 (from aiohttp<4,>=3.10->meta-analyse==0.1.0)
+2026-11-03T16:02:55.6153257Z   Downloading frozenlist-1.8.0-cp312-cp312-win_amd64.whl.metadata (21 kB)
+2026-11-03T16:02:55.9586799Z Collecting multidict<8.0,>=4.5 (from aiohttp<4,>=3.10->meta-analyse==0.1.0)
+2026-11-03T16:02:55.9722840Z   Downloading multidict-7.2.1-cp312-cp312-win_amd64.whl.metadata (6.3 kB)
+2026-11-03T16:02:56.1071999Z Collecting propcache>=0.2.0 (from aiohttp<4,>=3.10->meta-analyse==0.1.0)
+2026-11-03T16:02:56.1195759Z   Downloading propcache-0.5.4-cp312-cp312-win_amd64.whl.metadata (25 kB)
+2026-11-03T16:02:56.1722368Z Collecting typing_extensions>=4.4 (from aiohttp<4,>=3.10->meta-analyse==0.1.0)
+2026-11-03T16:02:56.1840695Z   Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+2026-11-03T16:02:56.5175580Z Collecting yarl<2.0,>=1.25.1 (from aiohttp<4,>=3.10->meta-analyse==0.1.0)
+2026-11-03T16:02:56.5305814Z   Downloading yarl-1.25.1-cp312-cp312-win_amd64.whl.metadata (115 kB)
+2026-11-03T16:02:56.6088083Z Collecting anyio (from httpx<1,>=0.27->meta-analyse==0.1.0)
+2026-11-03T16:02:56.6171992Z   Downloading anyio-4.15.1-py3-none-any.whl.metadata (4.7 kB)
+2026-11-03T16:02:56.6652997Z Collecting certifi (from httpx<1,>=0.27->meta-analyse==0.1.0)
+2026-11-03T16:02:56.6742043Z   Downloading certifi-2026.7.22-py3-none-any.whl.metadata (2.5 kB)
+2026-11-03T16:02:56.7205474Z Collecting httpcore==1.* (from httpx<1,>=0.27->meta-analyse==0.1.0)
+2026-11-03T16:02:56.7291923Z   Downloading httpcore-1.0.9-py3-none-any.whl.metadata (21 kB)
+2026-11-03T16:02:56.7799549Z Collecting idna (from httpx<1,>=0.27->meta-analyse==0.1.0)
+2026-11-03T16:02:56.7883766Z   Downloading idna-3.20-py3-none-any.whl.metadata (7.2 kB)
+2026-11-03T16:02:56.8294381Z Collecting h11>=0.16 (from httpcore==1.*->httpx<1,>=0.27->meta-analyse==0.1.0)
+2026-11-03T16:02:56.8373140Z   Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+2026-11-03T16:02:56.8819094Z Collecting tzdata (from psycopg<4,>=3.2->psycopg[binary]<4,>=3.2->meta-analyse==0.1.0)
+2026-11-03T16:02:56.8900272Z   Downloading tzdata-2026.5-py2.py3-none-any.whl.metadata (1.4 kB)
+2026-11-03T16:02:57.0960262Z Collecting psycopg-binary==3.3.6 (from psycopg[binary]<4,>=3.2->meta-analyse==0.1.0)
+2026-11-03T16:02:57.1073027Z   Downloading psycopg_binary-3.3.6-cp312-cp312-win_amd64.whl.metadata (2.8 kB)
+2026-11-03T16:02:57.1643670Z Collecting PySide6_Essentials==6.12.0 (from PySide6<7,>=6.8->meta-analyse==0.1.0)
+2026-11-03T16:02:57.1728107Z   Downloading pyside6_essentials-6.12.0-cp310-abi3-win_amd64.whl.metadata (3.9 kB)
+2026-11-03T16:02:57.2256435Z Collecting PySide6_Addons==6.12.0 (from PySide6<7,>=6.8->meta-analyse==0.1.0)
+2026-11-03T16:02:57.2338632Z   Downloading pyside6_addons-6.12.0-cp310-abi3-win_amd64.whl.metadata (4.4 kB)
+2026-11-03T16:02:57.2767792Z Collecting PySide6_WebEngine==6.12.0.140 (from PySide6<7,>=6.8->meta-analyse==0.1.0)
+2026-11-03T16:02:57.2849703Z   Downloading pyside6_webengine-6.12.0.140-cp310-abi3-win_amd64.whl.metadata (3.7 kB)
+2026-11-03T16:02:57.3271184Z Collecting PySide6_Pdf==6.12.0.140 (from PySide6<7,>=6.8->meta-analyse==0.1.0)
+2026-11-03T16:02:57.3374468Z   Downloading pyside6_pdf-6.12.0.140-cp310-abi3-win_amd64.whl.metadata (3.6 kB)
+2026-11-03T16:02:57.3960965Z Collecting shiboken6==6.12.0 (from PySide6_Essentials==6.12.0->PySide6<7,>=6.8->meta-analyse==0.1.0)
+2026-11-03T16:02:57.4060027Z   Downloading shiboken6-6.12.0-cp310-abi3-win_amd64.whl.metadata (2.6 kB)
+2026-11-03T16:02:57.4330449Z Requirement already satisfied: colorama>=0.4 in C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\site-packages (from pytest<10,>=8->meta-analyse==0.1.0) (0.4.6)
+2026-11-03T16:02:57.4565775Z Collecting iniconfig>=1.0.1 (from pytest<10,>=8->meta-analyse==0.1.0)
+2026-11-03T16:02:57.4681359Z   Downloading iniconfig-2.3.1-py3-none-any.whl.metadata (2.8 kB)
+2026-11-03T16:02:57.4893898Z Requirement already satisfied: packaging>=22 in C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\site-packages (from pytest<10,>=8->meta-analyse==0.1.0) (26.3)
+2026-11-03T16:02:57.5155029Z Collecting pluggy<2,>=1.5 (from pytest<10,>=8->meta-analyse==0.1.0)
+2026-11-03T16:02:57.5240601Z   Downloading pluggy-1.7.0-py3-none-any.whl.metadata (5.0 kB)
+2026-11-03T16:02:57.5738145Z Collecting pygments>=2.7.2 (from pytest<10,>=8->meta-analyse==0.1.0)
+2026-11-03T16:02:57.5820095Z   Downloading pygments-2.21.0-py3-none-any.whl.metadata (2.5 kB)
+2026-11-03T16:02:57.6305435Z Downloading hypothesis-6.170.6-cp312-cp312-win_amd64.whl (687 kB)
+2026-11-03T16:02:57.6681763Z    ---------------------------------------- 687.7/687.7 kB 13.7 MB/s  0:00:00
+2026-11-03T16:02:57.6829336Z Downloading aiohttp-3.14.5-cp312-cp312-win_amd64.whl (506 kB)
+2026-11-03T16:02:57.7096652Z Downloading httpx-0.28.1-py3-none-any.whl (73 kB)
+2026-11-03T16:02:57.7342855Z Downloading httpcore-1.0.9-py3-none-any.whl (78 kB)
+2026-11-03T16:02:57.7573677Z Downloading multidict-7.2.1-cp312-cp312-win_amd64.whl (95 kB)
+2026-11-03T16:02:57.7849179Z Downloading psycopg-3.3.6-py3-none-any.whl (215 kB)
+2026-11-03T16:02:57.8099840Z Downloading psycopg_binary-3.3.6-cp312-cp312-win_amd64.whl (3.7 MB)
+2026-11-03T16:02:57.8609057Z    ---------------------------------------- 3.7/3.7 MB 72.3 MB/s  0:00:00
+2026-11-03T16:02:57.8738162Z Downloading pyside6-6.12.0-cp310-abi3-win_amd64.whl (578 kB)
+2026-11-03T16:02:57.8988224Z    ---------------------------------------- 579.0/579.0 kB 19.8 MB/s  0:00:00
+2026-11-03T16:02:57.9088532Z Downloading pyside6_addons-6.12.0-cp310-abi3-win_amd64.whl (40.5 MB)
+2026-11-03T16:02:58.4260927Z    ---------------------------------------- 40.5/40.5 MB 78.0 MB/s  0:00:00
+2026-11-03T16:02:58.4377177Z Downloading pyside6_essentials-6.12.0-cp310-abi3-win_amd64.whl (82.2 MB)
+2026-11-03T16:03:00.2222317Z    ---------------------------------------- 82.2/82.2 MB 46.0 MB/s  0:00:01
+2026-11-03T16:03:00.2340282Z Downloading pyside6_pdf-6.12.0.140-cp310-abi3-win_amd64.whl (3.0 MB)
+2026-11-03T16:03:00.2730051Z    ---------------------------------------- 3.0/3.0 MB 87.8 MB/s  0:00:00
+2026-11-03T16:03:00.2832275Z Downloading pyside6_webengine-6.12.0.140-cp310-abi3-win_amd64.whl (131.7 MB)
+2026-11-03T16:03:03.5359958Z    ---------------------------------------- 131.7/131.7 MB 40.4 MB/s  0:00:03
+2026-11-03T16:03:03.5487103Z Downloading shiboken6-6.12.0-cp310-abi3-win_amd64.whl (1.3 MB)
+2026-11-03T16:03:03.5761929Z    ---------------------------------------- 1.3/1.3 MB 32.4 MB/s  0:00:00
+2026-11-03T16:03:03.5844752Z Downloading pytest-9.1.1-py3-none-any.whl (386 kB)
+2026-11-03T16:03:03.6122156Z Downloading pluggy-1.7.0-py3-none-any.whl (27 kB)
+2026-11-03T16:03:03.6345309Z Downloading pytest_asyncio-1.4.0-py3-none-any.whl (16 kB)
+2026-11-03T16:03:03.6596932Z Downloading sortedcontainers-2.4.0-py2.py3-none-any.whl (29 kB)
+2026-11-03T16:03:03.6827189Z Downloading websockets-15.0.1-cp312-cp312-win_amd64.whl (176 kB)
+2026-11-03T16:03:03.7075468Z Downloading yarl-1.25.1-cp312-cp312-win_amd64.whl (102 kB)
+2026-11-03T16:03:03.7329408Z Downloading aiohappyeyeballs-2.7.1-py3-none-any.whl (15 kB)
+2026-11-03T16:03:03.7583564Z Downloading aiosignal-1.4.0-py3-none-any.whl (7.5 kB)
+2026-11-03T16:03:03.7772692Z Downloading attrs-26.1.0-py3-none-any.whl (67 kB)
+2026-11-03T16:03:03.8012881Z Downloading frozenlist-1.8.0-cp312-cp312-win_amd64.whl (44 kB)
+2026-11-03T16:03:03.8218496Z Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+2026-11-03T16:03:03.8475477Z Downloading idna-3.20-py3-none-any.whl (69 kB)
+2026-11-03T16:03:03.8700103Z Downloading iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
+2026-11-03T16:03:03.8954432Z Downloading propcache-0.5.4-cp312-cp312-win_amd64.whl (46 kB)
+2026-11-03T16:03:03.9216082Z Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+2026-11-03T16:03:03.9532011Z    ---------------------------------------- 1.3/1.3 MB 31.9 MB/s  0:00:00
+2026-11-03T16:03:03.9614136Z Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+2026-11-03T16:03:03.9865304Z Downloading anyio-4.15.1-py3-none-any.whl (132 kB)
+2026-11-03T16:03:04.0098387Z Downloading certifi-2026.7.22-py3-none-any.whl (136 kB)
+2026-11-03T16:03:04.0344364Z Downloading tzdata-2026.5-py2.py3-none-any.whl (347 kB)
+2026-11-03T16:03:04.4867213Z Building wheels for collected packages: meta-analyse
+2026-11-03T16:03:04.4901030Z   Building editable for meta-analyse (pyproject.toml): started
+2026-11-03T16:03:04.8765182Z   Building editable for meta-analyse (pyproject.toml): finished with status 'done'
+2026-11-03T16:03:04.8803096Z   Created wheel for meta-analyse: filename=meta_analyse-0.1.0-0.editable-py3-none-any.whl size=1719 sha256=622df3c8143a85eb986b9153771976a45640aadbb3b74fdc7b2aa360c44b4ff6
+2026-11-03T16:03:04.8805027Z   Stored in directory: C:\Users\runneradmin\AppData\Local\Temp\pip-ephem-wheel-cache-3skr6uc_\wheels\38\0c\e1\e688da28e98c4d43cf692adff69edd6418e5ddde31bb2b3aaf
+2026-11-03T16:03:04.8830585Z Successfully built meta-analyse
+2026-11-03T16:03:05.0233738Z Installing collected packages: sortedcontainers, websockets, tzdata, typing_extensions, shiboken6, pygments, psycopg-binary, propcache, pluggy, multidict, iniconfig, idna, hypothesis, h11, frozenlist, certifi, attrs, aiohappyeyeballs, yarl, pytest, PySide6_Essentials, psycopg, httpcore, anyio, aiosignal, pytest-asyncio, PySide6_Pdf, PySide6_Addons, httpx, aiohttp, PySide6_WebEngine, PySide6, meta-analyse
+2026-11-03T16:03:21.3026883Z 
+2026-11-03T16:03:21.3071530Z Successfully installed PySide6-6.12.0 PySide6_Addons-6.12.0 PySide6_Essentials-6.12.0 PySide6_Pdf-6.12.0.140 PySide6_WebEngine-6.12.0.140 aiohappyeyeballs-2.7.1 aiohttp-3.14.5 aiosignal-1.4.0 anyio-4.15.1 attrs-26.1.0 certifi-2026.7.22 frozenlist-1.8.0 h11-0.16.0 httpcore-1.0.9 httpx-0.28.1 hypothesis-6.170.6 idna-3.20 iniconfig-2.3.1 meta-analyse-0.1.0 multidict-7.2.1 pluggy-1.7.0 propcache-0.5.4 psycopg-3.3.6 psycopg-binary-3.3.6 pygments-2.21.0 pytest-9.1.1 pytest-asyncio-1.4.0 shiboken6-6.12.0 sortedcontainers-2.4.0 typing_extensions-4.16.0 tzdata-2026.5 websockets-15.0.1 yarl-1.25.1
+2026-11-03T16:03:21.3087415Z 
+2026-11-03T16:03:21.3089765Z [notice] A new release of pip is available: 26.2.2 -> 26.3
+2026-11-03T16:03:21.3090771Z [notice] To update, run: python.exe -m pip install --upgrade pip
+2026-11-03T16:03:21.7289914Z ##[group]Run python -m pip check
+2026-11-03T16:03:21.7290296Z [36;1mpython -m pip check[0m
+2026-11-03T16:03:21.7456715Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-03T16:03:21.7457230Z env:
+2026-11-03T16:03:21.7457757Z   UNIFIED_SOURCE_ROOT: D:\a\meta_analyse\meta_analyse/.source/unified-system
+2026-11-03T16:03:21.7458381Z   QT_QPA_PLATFORM: offscreen
+2026-11-03T16:03:21.7458651Z   PYTHONASYNCIODEBUG: 1
+2026-11-03T16:03:21.7458991Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:03:21.7459503Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-11-03T16:03:21.7460009Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:03:21.7460472Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:03:21.7460925Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:03:21.7461286Z ##[endgroup]
+2026-11-03T16:03:22.6102610Z No broken requirements found.
+2026-11-03T16:03:22.9307933Z ##[group]Run python -m pytest -q tests/test_diagnostic_hardening.py tests/test_process_inventory_identity.py tests/test_host_identity_authorization.py tests/test_windows_service_contracts.py --junitxml=diagnostic-tests.xml
+2026-11-03T16:03:22.9309764Z [36;1mpython -m pytest -q tests/test_diagnostic_hardening.py tests/test_process_inventory_identity.py tests/test_host_identity_authorization.py tests/test_windows_service_contracts.py --junitxml=diagnostic-tests.xml[0m
+2026-11-03T16:03:22.9387447Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-03T16:03:22.9387857Z env:
+2026-11-03T16:03:22.9388207Z   UNIFIED_SOURCE_ROOT: D:\a\meta_analyse\meta_analyse/.source/unified-system
+2026-11-03T16:03:22.9388671Z   QT_QPA_PLATFORM: offscreen
+2026-11-03T16:03:22.9388931Z   PYTHONASYNCIODEBUG: 1
+2026-11-03T16:03:22.9389260Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:03:22.9389817Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-11-03T16:03:22.9390322Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:03:22.9390775Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:03:22.9391245Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:03:22.9392373Z ##[endgroup]
+2026-11-03T16:03:27.0873866Z ........................................................................ [ 18%]
+2026-11-03T16:03:27.6286185Z ........................................................................ [ 36%]
+2026-11-03T16:03:27.7466185Z ........................................................................ [ 54%]
+2026-11-03T16:03:27.8567862Z ........................................................................ [ 72%]
+2026-11-03T16:03:27.9677800Z ........................................................................ [ 90%]
+2026-11-03T16:03:29.3199218Z ........................................                                 [100%]
+2026-11-03T16:03:29.3199822Z 400 passed in 4.44s
+2026-11-03T16:03:29.5267631Z ##[group]Run python scripts/check_integration_junit.py diagnostic-tests.xml --minimum 169 --require-exact test_exact_refusal_predicate_remains_unresolved --require-exact test_dpapi_input_retains_evidence_for_replay_without_public_leak --require-exact test_no_elevation_blocks_before_powershell --require-exact test_candidate_binding_rejects_wrong_sha_dirty_and_untracked_collector --require-exact test_nonelevated_diagnose_emits_single_safe_failure --require-exact test_observation_contains_collector_binding_only_privately --require-exact test_collector_change_during_collection_blocks_observation --require-exact test_artifact_gate_rejects_raw_private_payload_without_echo --require-exact test_child_missing_elevation_is_not_trusted --require-exact test_private_evidence_real_dpapi_roundtrip_or_platform_refusal --require-exact test_complete_named_service_implementation_proof_can_verify --require-exact test_unproved_or_spoofed_service_implementation_stays_unresolved --require-exact test_native_format_and_kernel_label_never_authorize_error31 --require-exact test_combined_lsa_membership_requires_every_implementation
+2026-11-03T16:03:29.5276327Z [36;1mpython scripts/check_integration_junit.py diagnostic-tests.xml --minimum 169 --require-exact test_exact_refusal_predicate_remains_unresolved --require-exact test_dpapi_input_retains_evidence_for_replay_without_public_leak --require-exact test_no_elevation_blocks_before_powershell --require-exact test_candidate_binding_rejects_wrong_sha_dirty_and_untracked_collector --require-exact test_nonelevated_diagnose_emits_single_safe_failure --require-exact test_observation_contains_collector_binding_only_privately --require-exact test_collector_change_during_collection_blocks_observation --require-exact test_artifact_gate_rejects_raw_private_payload_without_echo --require-exact test_child_missing_elevation_is_not_trusted --require-exact test_private_evidence_real_dpapi_roundtrip_or_platform_refusal --require-exact test_complete_named_service_implementation_proof_can_verify --require-exact test_unproved_or_spoofed_service_implementation_stays_unresolved --require-exact test_native_format_and_kernel_label_never_authorize_error31 --require-exact test_combined_lsa_membership_requires_every_implementation[0m
+2026-11-03T16:03:29.5353210Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-03T16:03:29.5353596Z env:
+2026-11-03T16:03:29.5353915Z   UNIFIED_SOURCE_ROOT: D:\a\meta_analyse\meta_analyse/.source/unified-system
+2026-11-03T16:03:29.5354322Z   QT_QPA_PLATFORM: offscreen
+2026-11-03T16:03:29.5354569Z   PYTHONASYNCIODEBUG: 1
+2026-11-03T16:03:29.5354879Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:03:29.5355365Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-11-03T16:03:29.5355852Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:03:29.5356292Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:03:29.5356728Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:03:29.5357075Z ##[endgroup]
+2026-11-03T16:03:29.8636255Z collected=400 skipped=0 failed=0
+2026-11-03T16:03:29.9882735Z ##[group]Run ./commissioning/check-process-probe.ps1 -Output process-probe.json
+2026-11-03T16:03:29.9883654Z [36;1m./commissioning/check-process-probe.ps1 -Output process-probe.json[0m
+2026-11-03T16:03:29.9955449Z shell: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.EXE -command ". '{0}'"
+2026-11-03T16:03:29.9955940Z env:
+2026-11-03T16:03:29.9956276Z   UNIFIED_SOURCE_ROOT: D:\a\meta_analyse\meta_analyse/.source/unified-system
+2026-11-03T16:03:29.9956717Z   QT_QPA_PLATFORM: offscreen
+2026-11-03T16:03:29.9956983Z   PYTHONASYNCIODEBUG: 1
+2026-11-03T16:03:29.9957312Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:03:29.9957826Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-11-03T16:03:29.9958336Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:03:29.9958812Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:03:29.9959305Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:03:29.9959684Z ##[endgroup]
+2026-11-03T16:03:38.8478009Z ##[group]Run python -m pip install -c requirements.lock aiohttp
+2026-11-03T16:03:38.8478578Z [36;1mpython -m pip install -c requirements.lock aiohttp[0m
+2026-11-03T16:03:38.8478955Z [36;1mpython -c "import aiohttp"[0m
+2026-11-03T16:03:38.8479442Z [36;1mpython -m pytest -q tests/test_archive_http_server.py tests/test_archive_resumable_faults.py[0m
+2026-11-03T16:03:38.8553627Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-03T16:03:38.8554016Z env:
+2026-11-03T16:03:38.8554351Z   UNIFIED_SOURCE_ROOT: D:\a\meta_analyse\meta_analyse/.source/unified-system
+2026-11-03T16:03:38.8554786Z   QT_QPA_PLATFORM: offscreen
+2026-11-03T16:03:38.8555057Z   PYTHONASYNCIODEBUG: 1
+2026-11-03T16:03:38.8555393Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:03:38.8555906Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-11-03T16:03:38.8556463Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:03:38.8556917Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:03:38.8557364Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:03:38.8557722Z ##[endgroup]
+2026-11-03T16:03:40.2871441Z Requirement already satisfied: aiohttp in C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\site-packages (3.14.5)
+2026-11-03T16:03:40.2884102Z Requirement already satisfied: aiohappyeyeballs>=2.5.0 in C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\site-packages (from aiohttp) (2.7.1)
+2026-11-03T16:03:40.2889470Z Requirement already satisfied: aiosignal>=1.4.0 in C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\site-packages (from aiohttp) (1.4.0)
+2026-11-03T16:03:40.2895766Z Requirement already satisfied: attrs>=17.3.0 in C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\site-packages (from aiohttp) (26.1.0)
+2026-11-03T16:03:40.2901283Z Requirement already satisfied: frozenlist>=1.1.1 in C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\site-packages (from aiohttp) (1.8.0)
+2026-11-03T16:03:40.2907162Z Requirement already satisfied: multidict<8.0,>=4.5 in C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\site-packages (from aiohttp) (7.2.1)
+2026-11-03T16:03:40.2912099Z Requirement already satisfied: propcache>=0.2.0 in C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\site-packages (from aiohttp) (0.5.4)
+2026-11-03T16:03:40.2918991Z Requirement already satisfied: typing_extensions>=4.4 in C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\site-packages (from aiohttp) (4.16.0)
+2026-11-03T16:03:40.2926413Z Requirement already satisfied: yarl<2.0,>=1.25.1 in C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\site-packages (from aiohttp) (1.25.1)
+2026-11-03T16:03:40.2977093Z Requirement already satisfied: idna>=2.0 in C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\site-packages (from yarl<2.0,>=1.25.1->aiohttp) (3.20)
+2026-11-03T16:03:40.3693574Z 
+2026-11-03T16:03:40.3695925Z [notice] A new release of pip is available: 26.2.2 -> 26.3
+2026-11-03T16:03:40.3696659Z [notice] To update, run: python.exe -m pip install --upgrade pip
+2026-11-03T16:03:42.6509032Z ........                                                                 [100%]
+2026-11-03T16:03:42.6509605Z 8 passed in 1.31s
+2026-11-03T16:03:42.8367253Z ##[group]Run ./scripts/prepare-ci-postgres18.ps1
+2026-11-03T16:03:42.8367732Z [36;1m./scripts/prepare-ci-postgres18.ps1[0m
+2026-11-03T16:03:42.8439390Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-03T16:03:42.8439764Z env:
+2026-11-03T16:03:42.8440081Z   UNIFIED_SOURCE_ROOT: D:\a\meta_analyse\meta_analyse/.source/unified-system
+2026-11-03T16:03:42.8440488Z   QT_QPA_PLATFORM: offscreen
+2026-11-03T16:03:42.8440743Z   PYTHONASYNCIODEBUG: 1
+2026-11-03T16:03:42.8441063Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:03:42.8442006Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-11-03T16:03:42.8442500Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:03:42.8442925Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:03:42.8443359Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:03:42.8443731Z ##[endgroup]
+2026-11-03T16:04:21.8244346Z ##[group]Run ./scripts/test-windows.ps1 -PgBin "D:\a\_temp\meta-analyse-pg18\pgsql\bin"
+2026-11-03T16:04:21.8245105Z [36;1m./scripts/test-windows.ps1 -PgBin "D:\a\_temp\meta-analyse-pg18\pgsql\bin"[0m
+2026-11-03T16:04:21.8321013Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-03T16:04:21.8321403Z env:
+2026-11-03T16:04:21.8321722Z   UNIFIED_SOURCE_ROOT: D:\a\meta_analyse\meta_analyse/.source/unified-system
+2026-11-03T16:04:21.8322133Z   QT_QPA_PLATFORM: offscreen
+2026-11-03T16:04:21.8322383Z   PYTHONASYNCIODEBUG: 1
+2026-11-03T16:04:21.8322708Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:04:21.8323222Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-11-03T16:04:21.8323705Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:04:21.8324135Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:04:21.8324606Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:04:21.8324947Z ##[endgroup]
+2026-11-03T16:04:22.2962333Z Selected Windows PostgreSQL: postgres (PostgreSQL) 18.6
+2026-11-03T16:04:22.3685096Z The files belonging to this database system will be owned by user "runneradmin".
+2026-11-03T16:04:22.3685671Z This user must also own the server process.
+2026-11-03T16:04:22.3685922Z 
+2026-11-03T16:04:22.3688714Z The database cluster will be initialized with locale "C".
+2026-11-03T16:04:22.3689431Z The default text search configuration will be set to "english".
+2026-11-03T16:04:22.3689892Z 
+2026-11-03T16:04:22.3690089Z Data page checksums are enabled.
+2026-11-03T16:04:22.3690413Z 
+2026-11-03T16:04:22.3698607Z creating directory D:/a/_temp/meta-analyse-ci/pgdata ... ok
+2026-11-03T16:04:22.3721421Z creating subdirectories ... ok
+2026-11-03T16:04:22.3724846Z selecting dynamic shared memory implementation ... windows
+2026-11-03T16:04:22.4081811Z selecting default "max_connections" ... 100
+2026-11-03T16:04:22.4468280Z selecting default "shared_buffers" ... 128MB
+2026-11-03T16:04:22.4475153Z selecting default time zone ... UTC
+2026-11-03T16:04:22.4504164Z creating configuration files ... ok
+2026-11-03T16:04:22.7211624Z running bootstrap script ... ok
+2026-11-03T16:04:23.4176881Z performing post-bootstrap initialization ... ok
+2026-11-03T16:04:23.7232252Z syncing data to disk ... ok
+2026-11-03T16:04:23.7232676Z 
+2026-11-03T16:04:23.7233000Z Success. You can now start the database server using:
+2026-11-03T16:04:23.7233474Z 
+2026-11-03T16:04:23.7234062Z     ^"D^:^\a^\^_temp^\meta^-analyse^-pg18^\pgsql^\bin^\pg^_ctl^" -D ^"D^:^\a^\^_temp^\meta^-analyse^-ci^\pgdata^" -l logfile start
+2026-11-03T16:04:23.7235088Z 
+2026-11-03T16:04:23.9953062Z waiting for server to start.... done
+2026-11-03T16:04:23.9953643Z server started
+2026-11-03T16:04:34.0783263Z Lifecycle repetition 1/10: exit 0
+2026-11-03T16:04:34.0783797Z ...................................................................      [100%]
+2026-11-03T16:04:34.0784320Z 67 passed in 9.21s
+2026-11-03T16:04:43.0577415Z Lifecycle repetition 2/10: exit 0
+2026-11-03T16:04:43.0577974Z ...................................................................      [100%]
+2026-11-03T16:04:51.9027366Z 67 passed in 8.39s
+2026-11-03T16:04:51.9027698Z Lifecycle repetition 3/10: exit 0
+2026-11-03T16:04:51.9028102Z ...................................................................      [100%]
+2026-11-03T16:04:51.9028499Z 67 passed in 8.26s
+2026-11-03T16:05:00.7659763Z Lifecycle repetition 4/10: exit 0
+2026-11-03T16:05:00.7660348Z ...................................................................      [100%]
+2026-11-03T16:05:00.7660966Z 67 passed in 8.27s
+2026-11-03T16:05:09.7158896Z Lifecycle repetition 5/10: exit 0
+2026-11-03T16:05:09.7159316Z ...................................................................      [100%]
+2026-11-03T16:05:09.7159814Z 67 passed in 8.37s
+2026-11-03T16:05:18.5656345Z Lifecycle repetition 6/10: exit 0
+2026-11-03T16:05:18.5660710Z ...................................................................      [100%]
+2026-11-03T16:05:18.5661338Z 67 passed in 8.27s
+2026-11-03T16:05:28.0729518Z Lifecycle repetition 7/10: exit 0
+2026-11-03T16:05:28.0730186Z ...................................................................      [100%]
+2026-11-03T16:05:28.0730722Z 67 passed in 8.92s
+2026-11-03T16:05:36.8657039Z Lifecycle repetition 8/10: exit 0
+2026-11-03T16:05:36.8657844Z ...................................................................      [100%]
+2026-11-03T16:05:36.8658727Z 67 passed in 8.19s
+2026-11-03T16:05:46.7536651Z Lifecycle repetition 9/10: exit 0
+2026-11-03T16:05:46.7537409Z ...................................................................      [100%]
+2026-11-03T16:05:46.7538129Z 67 passed in 9.27s
+2026-11-03T16:05:55.9917479Z Lifecycle repetition 10/10: exit 0
+2026-11-03T16:05:55.9918040Z ...................................................................      [100%]
+2026-11-03T16:05:55.9918622Z 67 passed in 8.64s
+2026-11-03T16:06:06.4254106Z ........................................................................ [  2%]
+2026-11-03T16:06:08.9359410Z ........................................................................ [  4%]
+2026-11-03T16:06:09.1655975Z ........................................................................ [  7%]
+2026-11-03T16:06:09.6698053Z ........................................................................ [  9%]
+2026-11-03T16:06:14.3149847Z ........................................................................ [ 11%]
+2026-11-03T16:06:15.9617793Z ........................................................................ [ 14%]
+2026-11-03T16:06:18.5921719Z ........................................................................ [ 16%]
+2026-11-03T16:06:18.9266107Z ........................................................................ [ 19%]
+2026-11-03T16:06:42.3073293Z ........................................................................ [ 21%]
+2026-11-03T16:06:42.4358581Z ........................................................................ [ 23%]
+2026-11-03T16:06:42.5572905Z ........................................................................ [ 26%]
+2026-11-03T16:06:42.6898921Z ........................................................................ [ 28%]
+2026-11-03T16:07:23.7144586Z ..................................................s..................... [ 31%]
+2026-11-03T16:07:24.0519375Z ........................................................................ [ 33%]
+2026-11-03T16:07:31.3043994Z ........................................................................ [ 35%]
+2026-11-03T16:07:32.5730545Z ........................................................................ [ 38%]
+2026-11-03T16:07:32.8585148Z ........................................................................ [ 40%]
+2026-11-03T16:07:32.9653792Z ........................................................................ [ 42%]
+2026-11-03T16:07:34.0499548Z ........................................................................ [ 45%]
+2026-11-03T16:07:55.7890792Z ........................................................................ [ 47%]
+2026-11-03T16:07:55.9816992Z ........................................................................ [ 50%]
+2026-11-03T16:07:56.8896980Z ........................................................................ [ 52%]
+2026-11-03T16:07:57.1969510Z ........................................................................ [ 54%]
+2026-11-03T16:07:58.9538038Z ........................................................................ [ 57%]
+2026-11-03T16:07:59.0604633Z ........................................................................ [ 59%]
+2026-11-03T16:08:00.6146689Z ........................................................................ [ 62%]
+2026-11-03T16:08:00.8022269Z ........................................................................ [ 64%]
+2026-11-03T16:08:01.0321660Z ........................................................................ [ 66%]
+2026-11-03T16:08:02.2748345Z ........................................................................ [ 69%]
+2026-11-03T16:08:02.4067678Z ........................................................................ [ 71%]
+2026-11-03T16:08:02.5266282Z ........................................................................ [ 73%]
+2026-11-03T16:08:02.7184055Z ........................................................................ [ 76%]
+2026-11-03T16:08:03.2065496Z ........................................................................ [ 78%]
+2026-11-03T16:08:05.6692259Z ........................................................................ [ 81%]
+2026-11-03T16:08:28.2553468Z ........................................................................ [ 83%]
+2026-11-03T16:08:29.0378954Z ........................................................................ [ 85%]
+2026-11-03T16:08:45.9717648Z ........................................................................ [ 88%]
+2026-11-03T16:08:52.8187646Z ........................................................................ [ 90%]
+2026-11-03T16:08:52.9462819Z ........................................................................ [ 93%]
+2026-11-03T16:08:53.0600194Z ........................................................................ [ 95%]
+2026-11-03T16:08:53.1818277Z ........................................................................ [ 97%]
+2026-11-03T16:08:56.7091976Z ...................................................................      [100%]
+2026-11-03T16:08:56.7092980Z 3018 passed, 1 skipped in 180.07s (0:03:00)
+2026-11-03T16:08:57.2812477Z BLOCKED: FINAL_INTEGRATION_JUNIT_REJECTED
+2026-11-03T16:08:57.4253671Z waiting for server to shut down.... done
+2026-11-03T16:08:57.4254267Z server stopped
+2026-11-03T16:08:57.5571257Z [31;1mException: [0mD:\a\meta_analyse\meta_analyse\scripts\test-windows.ps1:56[0m
+2026-11-03T16:08:57.5572254Z [31;1m[0m[36;1mLine |[0m
+2026-11-03T16:08:57.5573290Z [31;1m[0m[36;1m[36;1m  56 | [0m …  if ($LASTEXITCODE -ne 0) { [36;1mthrow 'Exact full identity gate failed'[0m }[0m
+2026-11-03T16:08:57.5574290Z [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+2026-11-03T16:08:57.5575849Z [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mExact full identity gate failed[0m
+2026-11-03T16:08:57.5796564Z ##[error]Process completed with exit code 1.
+2026-11-03T16:08:57.5991649Z ##[group]Run import os, re, xml.etree.ElementTree as ET
+2026-11-03T16:08:57.5992180Z [36;1mimport os, re, xml.etree.ElementTree as ET[0m
+2026-11-03T16:08:57.5992540Z [36;1mfrom pathlib import Path[0m
+2026-11-03T16:08:57.5993311Z [36;1mreports = [Path("diagnostic-tests.xml"), Path(os.environ["RUNNER_TEMP"]) / "meta-analyse-ci" / "tests.xml"][0m
+2026-11-03T16:08:57.5993862Z [36;1m[0m
+2026-11-03T16:08:57.5994067Z [36;1mdef safe(value, limit):[0m
+2026-11-03T16:08:57.5994808Z [36;1m    text = re.sub(r"(?i)\bbearer\s+\S+", "***", str(value))[0m
+2026-11-03T16:08:57.5995320Z [36;1m    text = re.sub(r"(?i)\b(?:[a-z][a-z0-9+.-]*://|www\.)[^\s<>\"']+", "[URL REDACTED]", text)[0m
+2026-11-03T16:08:57.5996133Z [36;1m    text = re.sub(r"""(?i)\b[\w.-]*(?:password|passwd|pwd|token|secret|authorization)[\w.-]*['"]?\s*[:=]\s*(?:"[^"]*"|'[^']*'|[^\s,;]+)""", "[CREDENTIAL REDACTED]", text)[0m
+2026-11-03T16:08:57.5996936Z [36;1m    text = re.sub(r"[\x00-\x09\x0b\x0c\x0e-\x1f\x7f-\x9f]", " ", text)[:limit][0m
+2026-11-03T16:08:57.5997453Z [36;1m    return text.replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")[0m
+2026-11-03T16:08:57.5997846Z [36;1m[0m
+2026-11-03T16:08:57.5998039Z [36;1mshown = 0[0m
+2026-11-03T16:08:57.5998263Z [36;1mfor path in reports:[0m
+2026-11-03T16:08:57.5998501Z [36;1m    try:[0m
+2026-11-03T16:08:57.5998731Z [36;1m        with path.open("rb") as stream:[0m
+2026-11-03T16:08:57.5999079Z [36;1m            raw = stream.read(16 * 1024 * 1024 + 1)[0m
+2026-11-03T16:08:57.5999403Z [36;1m        if len(raw) > 16 * 1024 * 1024:[0m
+2026-11-03T16:08:57.5999703Z [36;1m            raise ValueError("size")[0m
+2026-11-03T16:08:57.6000007Z [36;1m        text = raw.decode("utf-8-sig")[0m
+2026-11-03T16:08:57.6000436Z [36;1m        if "\x00" in text or "<!doctype" in text.lower() or "<!entity" in text.lower():[0m
+2026-11-03T16:08:57.6000886Z [36;1m            raise ValueError("DTD/entity")[0m
+2026-11-03T16:08:57.6001199Z [36;1m        root = ET.fromstring(text)[0m
+2026-11-03T16:08:57.6001502Z [36;1m    except FileNotFoundError:[0m
+2026-11-03T16:08:57.6001810Z [36;1m        continue[0m
+2026-11-03T16:08:57.6002135Z [36;1m    except (OSError, UnicodeError, ValueError, ET.ParseError):[0m
+2026-11-03T16:08:57.6002672Z [36;1m        print("::error::Native JUnit diagnostics refused an unsafe or invalid report")[0m
+2026-11-03T16:08:57.6003133Z [36;1m        continue[0m
+2026-11-03T16:08:57.6003380Z [36;1m    for case in root.iter("testcase"):[0m
+2026-11-03T16:08:57.6003845Z [36;1m        failure = next((child for child in case if child.tag in ("failure", "error")), None)[0m
+2026-11-03T16:08:57.6004323Z [36;1m        if failure is None or shown >= 10:[0m
+2026-11-03T16:08:57.6004611Z [36;1m            continue[0m
+2026-11-03T16:08:57.6004973Z [36;1m        identity = case.get("classname", "") + "." + case.get("name", "unknown")[0m
+2026-11-03T16:08:57.6005594Z [36;1m        print("::error::" + safe(identity, 200) + " | " + safe(failure.get("message", "No failure message"), 360))[0m
+2026-11-03T16:08:57.6006093Z [36;1m        shown += 1[0m
+2026-11-03T16:08:57.6009938Z shell: C:\hostedtoolcache\windows\Python\3.12.10\x64\python.EXE {0}
+2026-11-03T16:08:57.6010838Z env:
+2026-11-03T16:08:57.6011150Z   UNIFIED_SOURCE_ROOT: D:\a\meta_analyse\meta_analyse/.source/unified-system
+2026-11-03T16:08:57.6011540Z   QT_QPA_PLATFORM: offscreen
+2026-11-03T16:08:57.6011777Z   PYTHONASYNCIODEBUG: 1
+2026-11-03T16:08:57.6012073Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:08:57.6012525Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-11-03T16:08:57.6012972Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:08:57.6013380Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:08:57.6013779Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:08:57.6014112Z ##[endgroup]
+2026-11-03T16:08:57.6909098Z ##[group]Run git diff --exit-code HEAD
+2026-11-03T16:08:57.6909545Z [36;1mgit diff --exit-code HEAD[0m
+2026-11-03T16:08:57.6988260Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-03T16:08:57.6988881Z env:
+2026-11-03T16:08:57.6989264Z   UNIFIED_SOURCE_ROOT: D:\a\meta_analyse\meta_analyse/.source/unified-system
+2026-11-03T16:08:57.6989745Z   QT_QPA_PLATFORM: offscreen
+2026-11-03T16:08:57.6990058Z   PYTHONASYNCIODEBUG: 1
+2026-11-03T16:08:57.6990432Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:08:57.6991010Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-11-03T16:08:57.6991561Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:08:57.6992106Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:08:57.6992638Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:08:57.6993043Z ##[endgroup]
+2026-11-03T16:08:58.1574645Z ##[group]Run python scripts/project_public_ci_evidence.py --output public-evidence --source source-sha.json --junit diagnostic-tests.xml --junit "$env:RUNNER_TEMP/meta-analyse-ci/tests.xml" --junit-glob "$env:RUNNER_TEMP/meta-analyse-ci/repeat-lifecycle/*/tests.xml" --postgres-version "$env:RUNNER_TEMP/meta-analyse-pg18/provenance.json"
+2026-11-03T16:08:58.1577285Z [36;1mpython scripts/project_public_ci_evidence.py --output public-evidence --source source-sha.json --junit diagnostic-tests.xml --junit "$env:RUNNER_TEMP/meta-analyse-ci/tests.xml" --junit-glob "$env:RUNNER_TEMP/meta-analyse-ci/repeat-lifecycle/*/tests.xml" --postgres-version "$env:RUNNER_TEMP/meta-analyse-pg18/provenance.json"[0m
+2026-11-03T16:08:58.1578726Z [36;1mif ($LASTEXITCODE -ne 0) { throw 'Public projection blocked' }[0m
+2026-11-03T16:08:58.1579272Z [36;1mpython scripts/project_public_ci_evidence.py --validate public-evidence[0m
+2026-11-03T16:08:58.1579828Z [36;1mif ($LASTEXITCODE -ne 0) { throw 'Public inventory blocked' }[0m
+2026-11-03T16:08:58.1655083Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-03T16:08:58.1655473Z env:
+2026-11-03T16:08:58.1655793Z   UNIFIED_SOURCE_ROOT: D:\a\meta_analyse\meta_analyse/.source/unified-system
+2026-11-03T16:08:58.1656226Z   QT_QPA_PLATFORM: offscreen
+2026-11-03T16:08:58.1656485Z   PYTHONASYNCIODEBUG: 1
+2026-11-03T16:08:58.1656810Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:08:58.1657298Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-11-03T16:08:58.1657774Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:08:58.1658216Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:08:58.1658645Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:08:58.1658995Z ##[endgroup]
+2026-11-03T16:08:59.2027959Z ##[group]Run python scripts/project_ui_benchmark.py --output public-benchmark --source source-sha.json --benchmark "$env:RUNNER_TEMP/meta-analyse-ci/ui-performance.json" --expected-outcome "skipped"
+2026-11-03T16:08:59.2029632Z [36;1mpython scripts/project_ui_benchmark.py --output public-benchmark --source source-sha.json --benchmark "$env:RUNNER_TEMP/meta-analyse-ci/ui-performance.json" --expected-outcome "skipped"[0m
+2026-11-03T16:08:59.2106635Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-03T16:08:59.2107080Z env:
+2026-11-03T16:08:59.2107467Z   UNIFIED_SOURCE_ROOT: D:\a\meta_analyse\meta_analyse/.source/unified-system
+2026-11-03T16:08:59.2107944Z   QT_QPA_PLATFORM: offscreen
+2026-11-03T16:08:59.2108265Z   PYTHONASYNCIODEBUG: 1
+2026-11-03T16:08:59.2108646Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:08:59.2109189Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-11-03T16:08:59.2109827Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:08:59.2110323Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:08:59.2110816Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:08:59.2111227Z ##[endgroup]
+2026-11-03T16:08:59.5699815Z usage: project_ui_benchmark.py [-h] --output OUTPUT --source SOURCE
+2026-11-03T16:08:59.5700645Z                                --benchmark BENCHMARK --expected-outcome
+2026-11-03T16:08:59.5701275Z                                {success,failure}
+2026-11-03T16:08:59.6788830Z project_ui_benchmark.py: error: argument --expected-outcome: invalid choice: 'skipped' (choose from success, failure)
+2026-11-03T16:08:59.6793030Z ##[error]Process completed with exit code 1.
+2026-11-03T16:08:59.6985992Z ##[group]Run actions/upload-artifact@v4
+2026-11-03T16:08:59.6986366Z with:
+2026-11-03T16:08:59.6986581Z   name: windows-test-evidence
+2026-11-03T16:08:59.6986842Z   if-no-files-found: error
+2026-11-03T16:08:59.6987078Z   path: public-evidence/
+2026-11-03T16:08:59.6987315Z   compression-level: 6
+2026-11-03T16:08:59.6987524Z   overwrite: false
+2026-11-03T16:08:59.6987731Z   include-hidden-files: false
+2026-11-03T16:08:59.6987959Z env:
+2026-11-03T16:08:59.6988248Z   UNIFIED_SOURCE_ROOT: D:\a\meta_analyse\meta_analyse/.source/unified-system
+2026-11-03T16:08:59.6988648Z   QT_QPA_PLATFORM: offscreen
+2026-11-03T16:08:59.6988877Z   PYTHONASYNCIODEBUG: 1
+2026-11-03T16:08:59.6989166Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:08:59.6989622Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-11-03T16:08:59.6990132Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:08:59.6990561Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:08:59.6990958Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:08:59.6991276Z ##[endgroup]
+2026-11-03T16:08:59.8929510Z (node:5876) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-03T16:08:59.8930233Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-03T16:08:59.9037286Z With the provided path, there will be 15 files uploaded
+2026-11-03T16:08:59.9043057Z Artifact name is valid!
+2026-11-03T16:08:59.9044987Z Root directory input is valid!
+2026-11-03T16:09:00.2971963Z Beginning upload of artifact content to blob storage
+2026-11-03T16:09:00.3545992Z (node:5876) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-11-03T16:09:00.9086787Z Uploaded bytes 156375
+2026-11-03T16:09:00.9878796Z Finished uploading artifact content to blob storage!
+2026-11-03T16:09:00.9880413Z SHA256 digest of uploaded artifact zip is f64d9fccd4a8491ab49329f61a7bd47b65a20ca2daba315882ad1904d598bcbc
+2026-11-03T16:09:00.9883121Z Finalizing artifact upload
+2026-11-03T16:09:01.5116293Z Artifact windows-test-evidence.zip successfully finalized. Artifact ID 13247288810
+2026-11-03T16:09:01.5117769Z Artifact windows-test-evidence has been successfully uploaded! Final size is 156375 bytes. Artifact ID is 13247288810
+2026-11-03T16:09:01.5129609Z Artifact download URL: https://github.com/YehorBabenko88/meta_analyse/actions/runs/41669712005/artifacts/13247288810
+2026-11-03T16:09:01.5541104Z Post job cleanup.
+2026-11-03T16:09:01.7670422Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-03T16:09:01.8027866Z git version 2.56.0.windows.4
+2026-11-03T16:09:01.8103371Z Temporarily overriding HOME='D:\a\_temp\d59af0df-2b5f-49d1-90dc-a75aa23bd7f5' before making global git config changes
+2026-11-03T16:09:01.8105398Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-03T16:09:01.8114941Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\meta_analyse\meta_analyse\.source\unified-system
+2026-11-03T16:09:01.8516723Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-03T16:09:01.8914691Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-03T16:09:02.4596365Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-03T16:09:02.4997337Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-03T16:09:03.0737835Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-03T16:09:03.1131034Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-03T16:09:03.7138898Z Post job cleanup.
+2026-11-03T16:09:03.9073987Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-03T16:09:03.9453910Z git version 2.56.0.windows.4
+2026-11-03T16:09:03.9541599Z Temporarily overriding HOME='D:\a\_temp\911d7959-d3b1-431f-9b3c-8472fbbb9723' before making global git config changes
+2026-11-03T16:09:03.9544562Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-03T16:09:03.9558184Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\meta_analyse\meta_analyse
+2026-11-03T16:09:03.9981799Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-03T16:09:04.0380229Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-03T16:09:04.6320169Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-03T16:09:04.6664639Z http.https://github.com/.extraheader
+2026-11-03T16:09:04.6720714Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+2026-11-03T16:09:04.7143741Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-03T16:09:05.2852805Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-03T16:09:05.3256127Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-03T16:09:05.8972209Z Cleaning up orphan processes
+2026-11-03T16:09:05.9509310Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-python@v5, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

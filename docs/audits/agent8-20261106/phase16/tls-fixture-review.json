@@ -1,0 +1,61 @@
+{
+  "head": "88b45c328bfdc8131ff0c6d139fddd8b27a4050c",
+  "tree": "83304074f9cc3f90c09615c7f6920e1a07eab0c6",
+  "scope": "STATIC_FOUR_NAMED_FIXTURES_ONLY_NO_KEY_EXPORT_NO_RUNTIME_EXECUTION",
+  "keys": [
+    {
+      "path": "docs/commissioning_evidence_v3/tls-loopback/ca.key",
+      "git_blob": "e6a2a225a163b74eedbe3a60858822ddfce6866a",
+      "sha256": "318a10f4d5d16b6581aef2382b2d764eb2e35b462f1cddffe9c0b8b485a6e139",
+      "historical_hash_matches_git_bytes": true,
+      "historical_evidence_reference_present": true
+    },
+    {
+      "path": "docs/commissioning_evidence_v3/tls-loopback/good.key",
+      "git_blob": "ad2f5c5145e3d01d83ea996b4740d564447e6c5f",
+      "sha256": "6d759dda7e789da996a270476e1b5fce2c859f3d71a41c057fa9227c770d082c",
+      "historical_hash_matches_git_bytes": true,
+      "historical_evidence_reference_present": true
+    },
+    {
+      "path": "docs/commissioning_evidence_v3/tls-loopback/self.key",
+      "git_blob": "8610511efbcc03b5a942b498ccf712dd0096813a",
+      "sha256": "88e556dc12a689772eeacdd9a598193178917eac089205537d3b39c98e647b1c",
+      "historical_hash_matches_git_bytes": true,
+      "historical_evidence_reference_present": true
+    },
+    {
+      "path": "docs/commissioning_evidence_v3/tls-loopback/wrong.key",
+      "git_blob": "05d3bc39ab1d81d8ac233ff722d89d55b7145821",
+      "sha256": "7d8fb5cd023b35ec54df7e93d8ec1c66c7a251bc2a7276d33802000a99c6d1cc",
+      "historical_hash_matches_git_bytes": true,
+      "historical_evidence_reference_present": true
+    }
+  ],
+  "purpose": "PUBLICLY_COMMITTED_DISPOSABLE_LOOPBACK_TLS_TEST_FIXTURES",
+  "source_notice": "docs/commissioning_evidence_v3/TLS_FIXTURES.txt",
+  "fixture_generator": "audit.py generates2day localhost/wrong.invalid/selfsigned fixtures,loopback listener,explicit context trust",
+  "runtime_reference_files": {
+    "scripts/s1_source_reference.json": [
+      "tls-loopback",
+      "ca.pem",
+      "good.pem",
+      "self.pem",
+      "wrong.pem"
+    ]
+  },
+  "system_trust_installation_in_fixture_script": "NO_CALL_IDENTIFIED_STATIC_ONLY",
+  "production_secret_or_deployment_usage": "NOT_ESTABLISHED",
+  "package_scope": {
+    "Git_source_snapshot": "INCLUDES_FOUR_TRACKED_FIXTURES",
+    "setuptools_discovery": "src_ONLY_STATIC_CONFIG",
+    "built_wheel_installer_release_payload": "NOT_INSPECTED_NOT_QUALIFIED",
+    "primary_CI_artifact_paths": "public-platform/public-evidence/public-benchmark projections; four historical fixture paths not explicitly selected in main CI"
+  },
+  "required_release_rule": "Exclude exact historical TLS fixture prefix from deployable payload; reject these fixture credentials/testCA as operational trust material, verify final artifact inventory; preserve original evidence/sourceproof hashes and repository history. Source/audit archives may retain clearly labeled fixtures outside runtime installation.",
+  "severity": "INFORMATIONAL_HYGIENE_RECOMMENDATION_NO_CONFIRMED_PRODUCTION_SECRET_INCIDENT",
+  "key_material_exported": false,
+  "keys_regenerated": false,
+  "trust_or_network_changes": false,
+  "overall": "NO_GO_EXISTING_GATES_UNCHANGED"
+}

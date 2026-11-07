@@ -1,0 +1,160 @@
+{
+  "base": "18085568df01bdbc4df74404e3c650ec30bb7d6b",
+  "composition": {
+    "docs/network/lan-transport-design.md": {
+      "source": "1541af3b0e99fdb671f59c205696faab40e283e4",
+      "sha256": "f9934f380ef72827df2836868c18f5dbde05400eedb69c1bcdb5dcede9e13004"
+    },
+    "tests/test_lan_transport.py": {
+      "source": "1541af3b0e99fdb671f59c205696faab40e283e4",
+      "sha256": "955b6ece5a0dbb82cf2c40d15d41cb694afe933444dac36c4925b24d2ff912c7"
+    },
+    "tests/test_network_budget.py": {
+      "source": "1541af3b0e99fdb671f59c205696faab40e283e4",
+      "sha256": "31d631f050f4a0f697b8eb735749697595c4264f3cd5cadd1ac94e3ecc66eae7"
+    },
+    "unified_system/lan_transport.py": {
+      "source": "1541af3b0e99fdb671f59c205696faab40e283e4",
+      "sha256": "627433659201d0b303535f67695d4544462308ff27a038ea871b359d36779611"
+    },
+    "unified_system/network_budget.py": {
+      "source": "1541af3b0e99fdb671f59c205696faab40e283e4",
+      "sha256": "f12d713c732b38e9d7ad656e7219b07ba6d82adeb289cceab6079b3680d73113"
+    },
+    "docs/storage/STAGE1.md": {
+      "source": "10157fed4d28606adf587be3494d2f6d42887ce9",
+      "sha256": "5f564ff8c22a5f7f81887cce1f544793ddbf531cab5b98f3c626256944355186"
+    },
+    "docs/storage/progress.md": {
+      "source": "10157fed4d28606adf587be3494d2f6d42887ce9",
+      "sha256": "152f3883a81c253b8a59c03a16629c6211a91541722630b431de8669997609df"
+    },
+    "docs/storage/stage1-plan.md": {
+      "source": "10157fed4d28606adf587be3494d2f6d42887ce9",
+      "sha256": "3d086ff4da859970bf0226e4295c7240d3aba6750775758c60c47b98fa7a33c0"
+    },
+    "tests/storage/.gitattributes": {
+      "source": "10157fed4d28606adf587be3494d2f6d42887ce9",
+      "sha256": "76e1413fcfc05dbbe361f7823d5e28558f979ca7a12d3f224536f48f3c0a8313"
+    },
+    "tests/storage/__init__.py": {
+      "source": "10157fed4d28606adf587be3494d2f6d42887ce9",
+      "sha256": "35382deb265c37f89b23b2cb455d5d30569af8d4d852a053129cb3f161880a05"
+    },
+    "tests/storage/fixtures/checkpoint_v3/confirmed-observed.canonical.json": {
+      "source": "10157fed4d28606adf587be3494d2f6d42887ce9",
+      "sha256": "ab4b0d7d2af33576943dab2f65abb2b533cdc8da77cff5ed7552aef7f867db4f"
+    },
+    "tests/storage/fixtures/checkpoint_v3/confirmed-unknown-time.canonical.json": {
+      "source": "10157fed4d28606adf587be3494d2f6d42887ce9",
+      "sha256": "71f0be33ccd96448c95574d7127d04792db2862a4fdad8161ff819c80aae5329"
+    },
+    "tests/storage/fixtures/checkpoint_v3/golden-vectors.json": {
+      "source": "10157fed4d28606adf587be3494d2f6d42887ce9",
+      "sha256": "69ef7786400030ae1bb9dbf4bd1fb30c6b6e50ac9690437536aa669a7c18b0d4"
+    },
+    "tests/storage/fixtures/checkpoint_v3/producer-mapping-review4.json": {
+      "source": "10157fed4d28606adf587be3494d2f6d42887ce9",
+      "sha256": "570437ac72c718b46d620db04e58b768dc962db34df856cc7ad25313462ac539"
+    },
+    "tests/storage/fixtures/checkpoint_v3/publication-content.canonical.json": {
+      "source": "10157fed4d28606adf587be3494d2f6d42887ce9",
+      "sha256": "230d90d91183a17b268fcf157e0d5e7ebbe0c15cdeedf0ed4b650bf960cbe8b3"
+    },
+    "tests/storage/fixtures/checkpoint_v3/schema.json": {
+      "source": "10157fed4d28606adf587be3494d2f6d42887ce9",
+      "sha256": "4de720d9391e5a89c0577b5298c283e742fbfe490c4454c184e31c2348589ea4"
+    },
+    "tests/storage/fixtures/checkpoint_v3/unconfirmed.canonical.json": {
+      "source": "10157fed4d28606adf587be3494d2f6d42887ce9",
+      "sha256": "44afdcc9c2981575653c11a0e611eba6e8a0925a5c5eeb84be5850c252a3e5a0"
+    },
+    "tests/storage/probe_runner_guard.py": {
+      "source": "10157fed4d28606adf587be3494d2f6d42887ce9",
+      "sha256": "78d50d27c194d69b351c3190b9098f5787bc7439726bcef6db07f3ee6a2a57b3"
+    },
+    "tests/storage/run_stage1.py": {
+      "source": "10157fed4d28606adf587be3494d2f6d42887ce9",
+      "sha256": "75f30201c2d2c4d24ac8c373c76800f4b472a11f32639fa5e1d27dfb52be1a08"
+    },
+    "tests/storage/test_checkpoint_vectors.py": {
+      "source": "10157fed4d28606adf587be3494d2f6d42887ce9",
+      "sha256": "5e5638781ca54e080ecdd76a65a80dd1bc749b5cd70d220da3e4dc2a8457bbfb"
+    },
+    "tests/storage/test_contracts.py": {
+      "source": "10157fed4d28606adf587be3494d2f6d42887ce9",
+      "sha256": "6bb4796e8c0c63e30a548a4033a0f34b0f8fd74773757475e8e3f99950ad8bec"
+    },
+    "tests/storage/test_retention.py": {
+      "source": "10157fed4d28606adf587be3494d2f6d42887ce9",
+      "sha256": "61679b66855d9b6d2b52d58ffb909f8c5d2e45f2293b1478a6f533d414aba4ec"
+    },
+    "tests/storage/test_segments.py": {
+      "source": "10157fed4d28606adf587be3494d2f6d42887ce9",
+      "sha256": "a1d7486ca1fcdac310b64b01ca9c64c44bc9491acb36267e8637201efbbe5b50"
+    },
+    "unified_system/storage/__init__.py": {
+      "source": "10157fed4d28606adf587be3494d2f6d42887ce9",
+      "sha256": "b1e9fb9689b449be9532be0393a6ea52fc5c70f9b3ef6aa598937b313b9bddee"
+    },
+    "unified_system/storage/contracts.py": {
+      "source": "10157fed4d28606adf587be3494d2f6d42887ce9",
+      "sha256": "1c9225b15a59b5f6c706de30664ea00094d3b293034e594e4113db9a76cb0e38"
+    },
+    "unified_system/storage/retention.py": {
+      "source": "10157fed4d28606adf587be3494d2f6d42887ce9",
+      "sha256": "69861ec2006d91d98091d35512700a5f8f322f1c33580fcc2a7150cc3644bc23"
+    },
+    "unified_system/storage/segments.py": {
+      "source": "10157fed4d28606adf587be3494d2f6d42887ce9",
+      "sha256": "e4a0a40d228a26d1c99388961b5afa1709686664ac57ef0d7842a80657e48eb9"
+    },
+    ".github/workflows/agent2-control-v3.yml": {
+      "source": "7a0365bd0161ec619019157cf04672b513c495c6",
+      "sha256": "705beba1b77ee9ca4665bd6ac3398c9b1962b938a31e199fa83637ebcb2d903d"
+    },
+    "docs/architecture/control-v3-read-boundary.md": {
+      "source": "7a0365bd0161ec619019157cf04672b513c495c6",
+      "sha256": "d142ba5797b3d83f2e36b6ad4db54b0ae9cc92dfa63bcdd5a88d77cc5a444870"
+    },
+    "tests/control_v3/__init__.py": {
+      "source": "7a0365bd0161ec619019157cf04672b513c495c6",
+      "sha256": "0f0fb059678f3fa4733e8963921a0925b1db7b7bb9f6f0d083d1c33c3ad3a86c"
+    },
+    "tests/control_v3/fixture_server.py": {
+      "source": "7a0365bd0161ec619019157cf04672b513c495c6",
+      "sha256": "e65d18f77d5d08c879cc9e250f980216ce76c9a866dc4834e934bf71028c8781"
+    },
+    "tests/control_v3/inventory.py": {
+      "source": "7a0365bd0161ec619019157cf04672b513c495c6",
+      "sha256": "9dc34a0dae92efbf906ece76e0d3a4fcd5505c77e568543c2f02c2d0b3c79bdc"
+    },
+    "tests/control_v3/source_runner.py": {
+      "source": "7a0365bd0161ec619019157cf04672b513c495c6",
+      "sha256": "3f720ad106b42af97665f47ef3c3bd2abbd1c8a4bce2aaa1dc4bfd9fd9b1695c"
+    },
+    "tests/test_control_v3_boundary.py": {
+      "source": "7a0365bd0161ec619019157cf04672b513c495c6",
+      "sha256": "77e28a73208e07587479b1230dc3ed581cdcfe94886c450c0a14ee39242ae8b3"
+    },
+    "unified_system/control_v3_boundary.py": {
+      "source": "7a0365bd0161ec619019157cf04672b513c495c6",
+      "sha256": "c85a0fb461d2bb7ad4e97b71e869618d455626b7faff1af7f954410289385d81"
+    },
+    "unified_system/control_v3_read_adapter.py": {
+      "source": "7a0365bd0161ec619019157cf04672b513c495c6",
+      "sha256": "739033ce09493aa5bc263de20dcdea2a80c7a1f7b4f7f9bfa93f57cb5b2bab20"
+    }
+  },
+  "tests": 159,
+  "unique_cases": 159,
+  "control_inventory_reuses_16_existing_root_cases": true,
+  "skips": 0,
+  "independent_effect_boundary_vectors": 15,
+  "raw_overlay_unchanged": true,
+  "raw_base_blobs_unchanged": true,
+  "status": "SYNTHETIC_OFFLINE_COMPATIBILITY_PASS_ONLY",
+  "runtime_admission": false,
+  "physical": "BLOCKED",
+  "overall": "NO_GO"
+}

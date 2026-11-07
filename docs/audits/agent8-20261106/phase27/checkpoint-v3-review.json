@@ -1,0 +1,135 @@
+{
+  "head": "10adcff532b6e31c2531c4afcfd0fec1328d6b21",
+  "tree": "b95ab9581cda1d6078f6c7c154f55d2bd741e3bc",
+  "base": "ec967b3ebb67bb9f04d0d82c78bba5b4245a3333",
+  "eleven_new_paths_only": true,
+  "schema_protocol_goldens_pins_verified": true,
+  "owner_decision_raw_sha256_verified": true,
+  "parsed_claims": [
+    {
+      "fixture": "confirmed-unknown-time.canonical.json",
+      "claimed_status": "COMMITTED",
+      "actual_promotion": "DENIED"
+    },
+    {
+      "fixture": "confirmed-observed.canonical.json",
+      "claimed_status": "COMMITTED",
+      "actual_promotion": "DENIED"
+    },
+    {
+      "fixture": "unconfirmed.canonical.json",
+      "claimed_status": "COMMIT_UNCONFIRMED",
+      "actual_promotion": "DENIED"
+    }
+  ],
+  "forged_promotion_always_denied": true,
+  "legacy_existing_readers_unchanged": true,
+  "cases": {
+    "clean": {
+      "before_exit": 0,
+      "tests_exit": 0,
+      "after_exit": 0,
+      "cases": 43,
+      "skips": 0,
+      "expected": "ACCEPT_LOCAL43"
+    },
+    "hidden_codec": {
+      "before_exit": 1,
+      "tests_executed": 0,
+      "expected": "REJECT"
+    },
+    "hidden_inventory": {
+      "before_exit": 1,
+      "tests_executed": 0,
+      "expected": "REJECT"
+    },
+    "CRLF_codec": {
+      "before_exit": 1,
+      "tests_executed": 0,
+      "expected": "REJECT"
+    },
+    "hidden_post": {
+      "before_exit": 0,
+      "tests_exit": 0,
+      "after_exit": 1,
+      "cases": 43,
+      "skips": 0,
+      "expected": "REJECT"
+    },
+    "git_blob_replace": {
+      "before_exit": 0,
+      "tests_exit": 0,
+      "after_exit": 0,
+      "cases": 43,
+      "skips": 0,
+      "expected": "SOURCE_BINDING_NEGATIVE_SHOULD_REJECT"
+    }
+  },
+  "scope": "PURE_CODEC_MODEL_STRUCTURE_NOT_ACTUAL_PUBLICATION_PROOF",
+  "raw_guard_git_replace_control": "ACCEPTED_CHANGED_BYTES_UNDER_ORIGINAL_HEAD",
+  "F16": "P2_OPEN_GIT_REPLACEMENT_SOURCE_BINDING",
+  "hosted": "NOT_QUALIFIED",
+  "physical": "BLOCKED",
+  "overall": "NO_GO",
+  "git_replacement_evidence": {
+    "original_blob_oid": "eb2048b1235e8cbb44e0a815cc6ab4215a0f844a",
+    "replacement_blob_oid": "c171e3118a95a711bb196cbdc04acfe3dd4f9a4f",
+    "original_raw_sha256": "b6ba6186c25f1586614dc2e29d0208ce8bf21d64239aa14281cd8f0c878395d4",
+    "executed_raw_sha256": "4ccf7b6c0cd93e39d7a04e3913c88da20c296d0508032adb1ea3dc5b890de11b",
+    "HEAD_without_replacements": "10adcff532b6e31c2531c4afcfd0fec1328d6b21",
+    "tree_without_replacements": "b95ab9581cda1d6078f6c7c154f55d2bd741e3bc",
+    "before_test_after_all_exit": 0,
+    "actual_hosted_tampering": "NOT_ALLEGED_AUDITOR_OWNED_CLONE_ONLY"
+  },
+  "primary_clean_raw_Git_files_verified_after": 675,
+  "eight_owner_regression_scope": [
+    {
+      "id": "CK3-01",
+      "requirement": "confirmed commit unknown time",
+      "offline": "STRUCTURAL_CLAIM_PASS",
+      "actual_publication": "BLOCKED"
+    },
+    {
+      "id": "CK3-02",
+      "requirement": "unconfirmed commit",
+      "offline": "CLOSED_SHAPE_NO_CONTENT_PASS",
+      "actual_reconciliation": "BLOCKED"
+    },
+    {
+      "id": "CK3-03",
+      "requirement": "delayed observation",
+      "offline": "IMMUTABLE_CONTENT_HASH_PASS",
+      "qualified_observer_clock": "NOT_RUN"
+    },
+    {
+      "id": "CK3-04",
+      "requirement": "repeated observation",
+      "offline": "DETERMINISTIC_CLAIM_REPARSE_PASS",
+      "single_real_publication_effect": "NOT_RUN"
+    },
+    {
+      "id": "CK3-05",
+      "requirement": "crash/restart",
+      "offline": "SEPARATE_CLEAN_PROCESS_RELOAD_UNTRUSTED_PASS",
+      "actual_authority_crash_durability": "NOT_RUN"
+    },
+    {
+      "id": "CK3-06",
+      "requirement": "checkpoint reload",
+      "offline": "LOCAL_FIXTURE_AND_LEGACY_FAKE_POOL_PASS",
+      "real_SQL_WAL_recovery": "NOT_RUN"
+    },
+    {
+      "id": "CK3-07",
+      "requirement": "incompatible versions",
+      "offline": "LEGACY_INPUT_REJECTION_PASS",
+      "legacy_to_v3_dispatch_migration": "BLOCKED_UNIMPLEMENTED"
+    },
+    {
+      "id": "CK3-08",
+      "requirement": "stale worker fencing",
+      "offline": "FENCE_CONSISTENCY_AND_UNCONDITIONAL_PROMOTION_DENIAL_PASS",
+      "actual_atomic_invalidation_and_resource_fencing": "BLOCKED"
+    }
+  ]
+}
