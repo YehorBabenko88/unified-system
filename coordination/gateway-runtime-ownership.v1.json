@@ -1,0 +1,146 @@
+{
+  "schema": "unified.gateway.runtime-ownership.v1",
+  "integration_base": "6825964bf52375b134c6eb4487808963a0d128ed",
+  "tree": "2b3988fa4cdd334b6ae63067fdb34987dd0e6840",
+  "status": "ISOLATED_DEVELOPMENT_ONLY_NOT_RUNTIME_APPROVED",
+  "six_repository_snapshot": [
+    {
+      "repository": "YehorBabenko88/unified-system",
+      "pr": 44,
+      "head": "6825964bf52375b134c6eb4487808963a0d128ed",
+      "tree": "2b3988fa4cdd334b6ae63067fdb34987dd0e6840",
+      "base": "55ebd47934a5bc521120deea7ce9e0d48cf1935d",
+      "ref": "feature/intelligence-gateway-20261107",
+      "state": "open",
+      "draft": true
+    },
+    {
+      "repository": "YehorBabenko88/bybit-cluster-grid",
+      "pr": 270,
+      "head": "40e9c8dc274a2746018bc1aa08d103cd0187cecc",
+      "tree": "a67f969d95934fe39c4206021a9aabcde6b6ccab",
+      "base": "be6335a2e8cfac9483213a6a215bc29e32808b0c",
+      "ref": "feature/agent2-assignment-native-20261107",
+      "state": "open",
+      "draft": true
+    },
+    {
+      "repository": "YehorBabenko88/strattester",
+      "pr": 74,
+      "head": "072d22214136148b47e82d21fec9e269bd7468ac",
+      "tree": "ffaff34af5375b23235491d92a250ccb66eb03df",
+      "base": "a56c24a0f25a0c5ea9222fcd953a49536c91dfc9",
+      "ref": "agent7/financial-calculation-boundary-20261107",
+      "state": "open",
+      "draft": true
+    },
+    {
+      "repository": "YehorBabenko88/math",
+      "pr": 116,
+      "head": "b9c2f24b33285b7b0e06aebc354a9c61a909d204",
+      "tree": "d88c75a3c367eef2cb7246c4f8dd094716f07ddd",
+      "base": "917d99672e37db59835a8ab23b03c99826b12d78",
+      "ref": "agent7/math-history-statistics-overflow-20261107",
+      "state": "open",
+      "draft": true
+    },
+    {
+      "repository": "YehorBabenko88/meta_analyse",
+      "pr": 78,
+      "head": "f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1",
+      "tree": "c155c935a801fa98b7c78219c9798ce1f1be8848",
+      "base": "88b45c328bfdc8131ff0c6d139fddd8b27a4050c",
+      "ref": "agent7/meta-git-sourceproof-20261106",
+      "state": "open",
+      "draft": true
+    },
+    {
+      "repository": "YehorBabenko88/Terminan",
+      "pr": 70,
+      "head": "c752dff751d964c57daf3b3afe4987ea3377839b",
+      "tree": "8e19a76b13893f5e6d3103fd599f7fcec25644ca",
+      "base": "10e07ef108d155b9ca2278eec6a8361cb92fa488",
+      "ref": "feature/terminan-operations-dashboard-20261107",
+      "state": "open",
+      "draft": true
+    }
+  ],
+  "owners": {
+    "ROOT": [
+      "unified_system/gateway_runtime_composition.py",
+      "tests/gateway_runtime/**",
+      "docs/intelligence/runtime-integration/**",
+      "coordination/gateway-runtime-ownership.v1.json",
+      "release/evidence/gateway-runtime-*/**",
+      "release/reports/20261107/gateway-runtime-*.json",
+      ".github/workflows/gateway-runtime-integration.yml",
+      "release/owner-directives/gateway-runtime-20261107.txt"
+    ],
+    "A1": [
+      "unified_system/native_peer_identity.py",
+      "tests/test_native_peer_identity.py",
+      "docs/control-mux/native-peer-capture.md"
+    ],
+    "A2": [
+      "unified_system/gateway_identity.py",
+      "tests/test_gateway_identity.py",
+      "docs/intelligence/identity/**",
+      ".github/workflows/gateway-identity.yml"
+    ],
+    "A3": [
+      "grid/gateway_query.py",
+      "tests/gateway_query/**",
+      "docs/gateway/query/**",
+      ".github/workflows/gateway-query.yml"
+    ],
+    "A4": [
+      "unified_system/storage/gateway_disclosure.py",
+      "tests/storage/gateway_disclosure/**",
+      "docs/intelligence/storage-disclosure/**",
+      ".github/workflows/gateway-storage-disclosure.yml"
+    ],
+    "A5": [
+      "unified_system/gateway_jobs.py",
+      "tests/gateway_jobs/**",
+      "docs/intelligence/jobs/**",
+      ".github/workflows/gateway-jobs.yml"
+    ],
+    "A6": [
+      "terminan/gateway_artifacts.js",
+      "tests/gateway_artifacts/**",
+      "docs/gateway/artifacts/**",
+      ".github/workflows/gateway-artifacts.yml"
+    ],
+    "A7": [
+      "strattester/research/gateway_adapter.py",
+      "tests/gateway_adapter/**",
+      "docs/gateway/research/**",
+      ".github/workflows/gateway-research.yml"
+    ],
+    "A8": [
+      "INDEPENDENT_AUDIT_BRANCH_ONLY"
+    ]
+  },
+  "ownership_state": "ACK_A1_A2_A3_A4_A5_A6_A7_RECEIVED",
+  "shared_contracts": "EXACT_OWNER_ACK_REQUIRED_NO_SILENCE_IMPLIED_ACK",
+  "supervisor_compatibility": {
+    "pr": 38,
+    "head": "a2265b0d53e3d6ee8814aa28f5c612d537a0f195",
+    "four_source_test_files": "RAW_GIT_EQUAL",
+    "native_service_qualification": false
+  },
+  "offline_evidence": "UNCHANGED",
+  "main_merge": false,
+  "production": false,
+  "physical": false,
+  "component_bases": {
+    "A1": "8bfa00d779438dc204b1e9ee82f496efce9e6154",
+    "A2": "6825964bf52375b134c6eb4487808963a0d128ed",
+    "A3": "1f08e24dd9f554e4c4dfa49fb3815345cf27044a",
+    "A4": "f9f2d04595cf2360dab78980996ae6c34c9e26fc",
+    "A5": "6825964bf52375b134c6eb4487808963a0d128ed",
+    "A6": "c752dff751d964c57daf3b3afe4987ea3377839b",
+    "A7": "072d22214136148b47e82d21fec9e269bd7468ac"
+  },
+  "shared_api_ack": "PENDING_EXACT_BYTES_OWNER_ACKS"
+}
