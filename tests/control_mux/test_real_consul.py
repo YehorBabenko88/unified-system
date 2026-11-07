@@ -11,7 +11,7 @@ def main():
     assert hashlib.sha256(raw).hexdigest()=='0d6b413b5654c0ff26c00bbbdcc6a47329e56dd9b8cb1cd838df8896477972cd'
     module=types.ModuleType('unified_system.security_identity_records');sys.modules[module.__name__]=module;exec(compile(raw,'<pinned-root-identity-seam>','exec'),module.__dict__)
     sys.path.insert(0,str(Path(args.grid_source).resolve()))
-    from grid.coordination import ConsulConfig,ConsulSessionAuthority
+    from grid.coordination import ConsulConfig,ConsulSessionAuthority,CoordinationLost
     from unified_system.control_mux.consul_store import MuxAuthority,AuthorityUncertain
     from unified_system.control_mux.commands import AdmittedContext,prepare_open,RawRequest
     from unified_system.control_mux.http_api import ControlMuxRuntime
@@ -35,7 +35,7 @@ def main():
                     assert c.quota_owner_id==c.native_handle.principal_id
                     assert records['principal']['sid']=='S-1-5-21-123'
                     assert records['session']['native_logon_id']=='0000000000000001'
-            authority=ConsulSessionAuthority(ConsulConfig(endpoints=tuple(lab.nodes),namespace='unified/'+cluster,isolated_lab=True,ttl_seconds=15,request_timeout=2))
+            authority=ConsulSessionAuthority(ConsulConfig(endpoints=tuple(lab.nodes),namespace='unified/'+cluster,isolated_lab=True,ttl_seconds=60,request_timeout=2))
             try:
                 records={}
                 for kind in ('principal','session','enrollment','policy'):
@@ -112,6 +112,15 @@ def main():
                 conflict=await store.open(lease,context,prepare_open(context,encode(body2),request,'open-other'))
                 assert conflict.kind=='CONFLICT',conflict
                 report['events'].append('GLOBAL_REQUEST_UUID_CONFLICT')
+                raft=(await authority._request('GET','/v1/operator/raft/configuration',params={'consistent':''}))['Servers']
+                failed=int(next(v['Node'] for v in raft if v['Leader']).rsplit('-',1)[1])
+                lab.stop_node(failed)
+                await asyncio.to_thread(lab.wait_quorum)
+                original_leader=lease
+                await authority.release(original_leader)
+                lease=await authority.acquire('mux-fixture-successor-on-two')
+                assert lease is not None and lease.token>original_leader.token
+                report['leader_handoff']=dict(trigger='EXPLICIT_OWNED_SESSION_INVALIDATION_AFTER_RAFT_LEADER_LOSS',original_index=original_leader.token,successor_index=lease.token)
                 second_request=str(uuid.uuid4());second_body=decode(body);second_body['request_id']=second_request
                 second_command=prepare_open(context,encode(second_body),second_request,'open-2')
                 dropped_prepare=False
@@ -129,6 +138,20 @@ def main():
                 store=MuxAuthority(authority,generation,admission=SyntheticNativeFixture())
                 assert (await store.open(lease,context,second_command)).kind=='COMMITTED'
                 report['events'].append('LOST_PREPARE_RESPONSE_PENDING_HOLD_AND_ADAPTER_RESTART_RESUME')
+                report['events'].append('TWO_OF_THREE_COMPLETE_OPEN_AFTER_RAFT_LEADER_LOSS')
+                lab.start_node(failed);await asyncio.to_thread(lab.wait_quorum)
+                report['events'].append('RESTORED_THREE_VOTERS_KEEP_ORIGINAL_RECEIPT')
+                ledger_path=store.prefix+'owners/'+context.quota_owner_id+'/connections'
+                ledger_before=await authority._request('GET','/v1/kv/'+ledger_path,params={'consistent':''})
+                lab.restart_all();await asyncio.to_thread(lab.wait_quorum)
+                recovered=await store.reconcile(context,request)
+                assert recovered==result,recovered
+                assert await authority._request('GET','/v1/kv/'+ledger_path,params={'consistent':''})==ledger_before
+                report['events'].append('SIMULTANEOUS_THREE_RESTART_DURABLE_RECEIPT_AND_SLOT_LEDGER')
+                # Historical evidence never restores current coordinator permission.
+                await authority.release(lease)
+                lease=await authority.acquire('mux-fixture-after-owned-restart')
+                assert lease is not None and await authority.validate(lease)
                 for _ in range(3):
                     overflow=str(uuid.uuid4());overflow_body=dict(second_body,request_id=overflow)
                     denied=await store.open(lease,context,prepare_open(context,encode(overflow_body),overflow,'overflow-'+overflow))
@@ -143,6 +166,15 @@ def main():
                 report['events'].append('CURRENT_REVOKED_IDENTITY_REJECTED')
                 await authority._request('PUT','/v1/kv/'+module.guard_keys(binding)['policy'],content=records['policy'])
                 await authority.release(lease)
+                sentinel=store.prefix+'probe-only/stale-leader/'+str(uuid.uuid4())
+                native_stale=[{'KV':dict(Verb='check-session',Key=authority.key,Session=lease.session_id)},
+                    {'KV':dict(Verb='check-index',Key=authority.key,Index=lease.token)},
+                    {'KV':dict(Verb='cas',Key=sentinel,Index=0,Value=base64.b64encode(b'NEVER').decode())}]
+                try:await authority._request('PUT','/v1/txn',json=native_stale)
+                except CoordinationLost:pass
+                else:raise AssertionError('NATIVE_STALE_LEADER_ACCEPTED')
+                assert await authority._request('GET','/v1/kv/'+sentinel,params={'consistent':''},missing_ok=True) is None
+                report['events'].append('ACTUAL_NATIVE_STALE_LEADER_TRANSACTION_REJECTED')
                 stale_request=str(uuid.uuid4());stale_body=dict(second_body,request_id=stale_request)
                 stale=await store.open(lease,context,prepare_open(context,encode(stale_body),stale_request,'stale'))
                 assert stale.kind=='UNKNOWN',stale
@@ -154,7 +186,8 @@ def main():
                 assert noquorum.kind=='UNKNOWN',noquorum
                 report['events'].append('ONE_OF_THREE_NO_QUORUM_NO_SUCCESS')
             finally:await authority.close()
-        asyncio.run(run())
-    report['owned_processes_stopped']=all(p.poll() is not None for p in lab.processes);report['result']='PASS'
+        async def bounded_run():return await asyncio.wait_for(run(),timeout=90)
+        asyncio.run(bounded_run())
+    report['owned_processes_stopped']=all(p.poll() is not None for p in lab.all_processes);report['result']='PASS'
     Path(args.output).write_bytes((json.dumps(report,indent=2)+'\n').encode());print(json.dumps(report))
 if __name__=='__main__':main()

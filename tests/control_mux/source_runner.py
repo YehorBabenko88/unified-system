@@ -61,7 +61,11 @@ UNITS={
 EVENTS=['ARBITRARY_OWNER_REJECTED_BEFORE_PREPARE','REAL_HTTP_POST_OPEN_TO_REAL_GRID_CONSUL',
  'LOST_FINAL_COMMIT_RESPONSE_RECONCILED_ACTUAL_RECEIPT','OPEN_ACTUAL_ATOMIC_RECEIPT_IDEMPOTENT_RECONCILE',
  'GLOBAL_REQUEST_UUID_CONFLICT','LOST_PREPARE_RESPONSE_PENDING_HOLD_AND_ADAPTER_RESTART_RESUME',
+ 'TWO_OF_THREE_COMPLETE_OPEN_AFTER_RAFT_LEADER_LOSS',
+ 'RESTORED_THREE_VOTERS_KEEP_ORIGINAL_RECEIPT',
+ 'SIMULTANEOUS_THREE_RESTART_DURABLE_RECEIPT_AND_SLOT_LEDGER',
  'CAPACITY_PREPARATION_ATOMIC_BOUND_NO_DURABLE_OVERFLOW','CURRENT_REVOKED_IDENTITY_REJECTED',
+ 'ACTUAL_NATIVE_STALE_LEADER_TRANSACTION_REJECTED',
  'DESTROYED_LEADER_SESSION_NEW_INTENT_DENIED','ONE_OF_THREE_NO_QUORUM_NO_SUCCESS']
 
 if __name__=='__main__':
@@ -95,7 +99,7 @@ if __name__=='__main__':
     assert result.wasSuccessful() and not result.skipped and set(executed)==UNITS and len(executed)==len(UNITS),'MANDATORY_UNIT_INVENTORY'
     command=[sys.executable,'-I','-B',str(root/'tests/control_mux/source_runner.py'),'--real-only','--expected-head',a.expected_head,'--binary',a.binary,'--scratch',a.scratch,'--grid-source',str(grid),'--output',str(a.output)]
     env=os.environ.copy();env['PYTHONDONTWRITEBYTECODE']='1';env['GIT_NO_REPLACE_OBJECTS']='1'
-    completed=subprocess.run(command,cwd=root,env=env,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,timeout=120)
+    completed=subprocess.run(command,cwd=root,env=env,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,timeout=240)
     (a.output/'real-consul.log').write_bytes(completed.stdout)
     assert completed.returncode==0,completed.stdout.decode(errors='replace')[-4000:]
     real=json.loads((a.output/'real-consul.json').read_bytes());assert real['events']==EVENTS and real['result']=='PASS' and real['owned_processes_stopped'] is True

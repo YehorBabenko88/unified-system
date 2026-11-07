@@ -7,7 +7,7 @@ class ConsulLab:
     def __init__(self,binary,scratch):
         self.binary=Path(binary).resolve();self.scratch=Path(scratch).resolve()
         if hashlib.sha256(self.binary.read_bytes()).hexdigest()!=BINARY_SHA.get(sys.platform):raise ValueError('BINARY_PIN')
-        self.processes=[];self.logs=[];self.nodes=[]
+        self.processes=[];self.all_processes=[];self.logs=[];self.nodes=[]
     def __enter__(self):
         self.scratch.mkdir(parents=True,exist_ok=False)
         sockets=[]
@@ -33,7 +33,7 @@ class ConsulLab:
                 env=os.environ.copy();env['CHECKPOINT_DISABLE']='1'
                 proc=subprocess.Popen([str(self.binary),'agent','-config-file',str(path)],stdout=log,stderr=subprocess.STDOUT,
                     env=env,creationflags=getattr(subprocess,'CREATE_NO_WINDOW',0))
-                self.processes.append(proc);self.nodes.append('http://127.0.0.1:'+str(http))
+                self.processes.append(proc);self.all_processes.append(proc);self.nodes.append('http://127.0.0.1:'+str(http))
             deadline=time.monotonic()+45
             while time.monotonic()<deadline:
                 if any(p.poll() is not None for p in self.processes):raise RuntimeError('OWNED_CONSUL_EXITED')
@@ -47,6 +47,37 @@ class ConsulLab:
             raise RuntimeError('OWNED_CONSUL_QUORUM_TIMEOUT')
         except BaseException:
             self.__exit__(None,None,None);raise
+    def stop_node(self,index):
+        if type(index) is not int or not 0<=index<len(self.processes):raise ValueError('OWNED_NODE_INDEX')
+        proc=self.processes[index]
+        if proc.poll() is None:proc.kill()
+        proc.wait(timeout=10)
+    def start_node(self,index):
+        if type(index) is not int or not 0<=index<len(self.processes) or self.processes[index].poll() is None:raise ValueError('OWNED_STOPPED_NODE_REQUIRED')
+        if hashlib.sha256(self.binary.read_bytes()).hexdigest()!=BINARY_SHA.get(sys.platform):raise ValueError('BINARY_PIN')
+        folder=self.scratch/str(index);path=folder/'config.json';config=json.loads(path.read_bytes())
+        if config['bind_addr']!='127.0.0.1' or config['client_addr']!='127.0.0.1' or Path(config['data_dir'])!=folder/'data':raise ValueError('OWNED_CONFIG_CHANGED')
+        log=(folder/'consul.log').open('ab');self.logs.append(log)
+        env=os.environ.copy();env['CHECKPOINT_DISABLE']='1'
+        proc=subprocess.Popen([str(self.binary),'agent','-config-file',str(path)],stdout=log,stderr=subprocess.STDOUT,env=env,creationflags=getattr(subprocess,'CREATE_NO_WINDOW',0))
+        self.processes[index]=proc;self.all_processes.append(proc)
+    def restart_all(self):
+        for i in range(len(self.processes)):self.stop_node(i)
+        for i in range(len(self.processes)):self.start_node(i)
+    def wait_quorum(self):
+        deadline=time.monotonic()+45
+        while time.monotonic()<deadline:
+            live=[i for i,p in enumerate(self.processes) if p.poll() is None]
+            if len(live)<2:raise RuntimeError('OWNED_LAB_HAS_NO_MAJORITY')
+            try:
+                for i in live:
+                    status,raw=self.request(self.nodes[i],'GET','/v1/operator/raft/configuration?consistent')
+                    assert status==200
+                    voters=json.loads(raw)['Servers']
+                    assert len(voters)==3 and all(v['Voter'] for v in voters) and sum(v['Leader'] for v in voters)==1
+                return
+            except (OSError,ValueError,KeyError,AssertionError):time.sleep(.2)
+        raise RuntimeError('OWNED_CONSUL_QUORUM_TIMEOUT')
     @staticmethod
     def request(endpoint,method,path,data=None):
         opener=urllib.request.build_opener(urllib.request.ProxyHandler({}))
@@ -56,7 +87,7 @@ class ConsulLab:
         except urllib.error.HTTPError as e:return e.code,e.read(4*1024*1024)
     def __exit__(self,*args):
         # Popen owns handles to exact created process objects; never enumerate/kill names or foreign PIDs.
-        for p in self.processes:
+        for p in self.all_processes:
             if p.poll() is None:p.kill()
-        for p in self.processes:p.wait(timeout=10)
+        for p in self.all_processes:p.wait(timeout=10)
         for log in self.logs:log.close()
