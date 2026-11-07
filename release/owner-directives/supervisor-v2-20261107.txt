@@ -1,0 +1,624 @@
+# CODEX — UNIFIED AUTONOMOUS OPERATIONS & DEVELOPMENT ACCELERATION
+## Node Supervisor V2 + Durable Mission Controller
+
+**Репозиторий:** `YehorBabenko88/unified-system`
+
+**Режим:** DEVELOPMENT / ISOLATED EXECUTION / PLAN_ONLY FOR PHYSICAL OPERATIONS
+
+**Статус:** MASTER MISSION IN_PROGRESS / NO-GO
+
+## 1. Цель
+
+Встроить в существующий Unified устойчивый механизм автоматизации, который позволит:
+
+- Разрабатывать и интегрировать компоненты параллельно.
+- Автоматически проверять готовность новых версий.
+- Обнаруживать проблемы на каждом Windows-узле.
+- Восстанавливать работу после сбоев.
+- Безопасно устанавливать и обновлять компоненты.
+- Сохранять историю всех действий.
+- Продолжать незавершённые задания после restart.
+- Снижать необходимость ручного управления через Codex.
+- Управлять всей инфраструктурой из Terminan.
+
+Не создавать новый независимый оркестратор вместо Unified.
+
+Не устанавливать Codex Desktop на каждый компьютер как обязательную часть системы.
+
+Codex остаётся инструментом разработки и анализа. Node Supervisor — детерминированный эксплуатационный компонент с ограниченными полномочиями.
+
+## 2. Не повторять уже выполненную работу
+
+Сначала проверить текущий Unified PR #26 и результаты Agents 1–8.
+
+Использовать актуальные exact HEAD/tree, ownership registry и integration manifest.
+
+Особенно проверить существующие:
+
+- FleetControl.
+- Scheduler.
+- Consul authority.
+- Control Mux Review4.
+- LAN Approach A.
+- Storage V3.
+- Assignment v1.
+- Installer security.
+- Terminan Sync.
+- Windows service lifecycle.
+- Recovery mechanisms.
+
+Создать краткую reuse matrix.
+
+Если механизм уже существует, расширять его. Не писать дубликат.
+
+Не начинать новый полный аудит всех шести репозиториев без конкретного source drift.
+
+## 3. Архитектура
+
+### A. Unified Node Supervisor
+
+Локальная Windows-служба на каждом узле.
+
+Отвечает только за собственный компьютер:
+
+- Inventory.
+- Local health.
+- Installed release.
+- Process supervision.
+- Service lifecycle.
+- Local task execution.
+- Disk/resource observations.
+- Update preparation.
+- Recovery.
+- Local logs.
+- Durable journal.
+
+Supervisor не избирает лидера, не распределяет глобальные задания и не выдаёт себе полномочия.
+
+### B. Durable Task Journal
+
+Локальный SQLite допустим для записи собственных операций узла.
+
+Использовать:
+
+- Transactional updates.
+- Schema versioning.
+- Integrity checks.
+- Bounded retention.
+- Checkpoints.
+- Recovery receipts.
+- Idempotency.
+- Atomic local state transitions.
+
+SQLite не является распределённым consensus.
+
+Глобальная авторизация заданий остаётся за существующим authority.
+
+### C. Deployment Controller
+
+Логический компонент Unified Control Plane.
+
+Использует существующий Scheduler и Consul authority.
+
+Отвечает за:
+
+- Release rollout plans.
+- Node admission.
+- Compatibility.
+- Task assignment.
+- Version tracking.
+- Health verification.
+- Controlled rollback.
+- Update history.
+
+Не создавать второй лидерский сервис.
+
+### D. Durable Mission Controller
+
+Новый компонент управления разработкой, не физическим исполнением.
+
+Он должен хранить:
+
+- MASTER MISSION requirements.
+- Work items.
+- Dependency graph.
+- Owners.
+- Repository and PR references.
+- Exact source SHA.
+- CI run/attempt/job.
+- Evidence hashes.
+- Blockers.
+- Approvals.
+- Next actions.
+- Completion criteria.
+
+Этот компонент не заменяет GitHub или Codex.
+
+Он позволяет восстановить контекст разработки после остановки сессии.
+
+## 4. Две независимые модели заданий
+
+### Development Task
+
+Исполняется Codex в разрешённой среде.
+
+Содержит:
+
+- Task ID.
+- Repository.
+- Owner.
+- Base SHA.
+- Allowed files.
+- Dependencies.
+- Acceptance tests.
+- Evidence requirements.
+- PR reference.
+- Blockers.
+
+Development Task не предоставляет полномочий на физические операции.
+
+### Node Operation
+
+Исполняется Supervisor.
+
+Содержит:
+
+- Task ID.
+- Cluster ID.
+- Node ID.
+- Node incarnation.
+- Release ID.
+- Artifact SHA256.
+- Operation type.
+- Approval reference.
+- Authority generation.
+- Lease/fencing proof.
+- Preconditions.
+- Expected postconditions.
+- Timeout.
+- Rollback policy.
+- Idempotency key.
+- Result receipt.
+
+Нельзя преобразовывать Development Task в Node Operation автоматически без отдельного release/admission решения.
+
+## 5. Автоматизация разработки
+
+Реализовать workflow:
+
+ISSUE DETECTED
+→ EVIDENCE CAPTURED
+→ OWNER ASSIGNED
+→ REPRODUCER CREATED
+→ REGRESSION TEST
+→ CODE FIX
+→ CI
+→ INDEPENDENT REVIEW
+→ RELEASE CANDIDATE
+→ DEPLOYMENT ADMISSION
+→ CONTROLLED ROLLOUT
+→ RUNTIME VERIFICATION.
+
+Система должна автоматически собирать технические факты, но не утверждать безопасность собственных исправлений.
+
+Разрешённая автоматизация:
+
+- Source inventory.
+- Dependency analysis.
+- Test execution.
+- CI status collection.
+- Artifact verification.
+- Draft PR preparation.
+- Issue classification.
+- Evidence indexing.
+- Release candidate preparation.
+
+Запрещено автоматически:
+
+- Обходить failed security gates.
+- Перезапускать protected single-use operations.
+- Подменять native evidence модельными тестами.
+- Выполнять merge в main.
+- Запускать реальные торговые операции.
+- Удалять production data.
+
+## 6. CI Queue Controller
+
+Учитывая текущую проблему Agent 7, реализовать read-only контроль очередей CI.
+
+Хранить:
+
+- Workflow ID.
+- Run ID.
+- Attempt.
+- Job ID.
+- Source SHA.
+- Queue timestamp.
+- Runner assignment.
+- Started timestamp.
+- Completed timestamp.
+- Exit/conclusion.
+- Artifact references.
+- Authorization state.
+
+Различать:
+
+QUEUED / RUNNING / SUCCESS / FAILURE / CANCELLED / INFRA_BLOCKED / UNKNOWN.
+
+Не считать очередь ошибкой кода.
+
+Не создавать повторный run, если single-use authorization уже использована.
+
+Для Math Agent 7 сохранить исходный run и ожидать его результата без автоматического повтора.
+
+Не выполнять бесконечные polling loops: использовать ограниченную периодичность и backoff.
+
+## 7. Локальная диагностика
+
+Supervisor должен собирать ограниченные сведения:
+
+- Windows edition/build.
+- CPU/RAM.
+- Disk usage.
+- Service status.
+- Process exits.
+- Application error codes.
+- Local connectivity.
+- Component versions.
+- Queue sizes.
+- Checkpoint age.
+- Storage health.
+- Last successful operation.
+
+Не собирать секреты, приватные ключи, токены или пользовательские документы.
+
+В случае ошибки создавать диагностический пакет с redaction, source/version identity и воспроизводимым контекстом.
+
+Supervisor не должен самостоятельно исправлять произвольные ошибки Windows.
+
+Автоматическое восстановление ограничить заранее утверждёнными действиями.
+
+## 8. Allowlisted Operations
+
+Первоначально реализовать:
+
+- READ_INVENTORY
+- VERIFY_ARTIFACT
+- VERIFY_CONFIGURATION
+- CHECK_SERVICE
+- CHECK_HEALTH
+- PREPARE_INSTALL
+- PREPARE_UPDATE
+- VERIFY_RELEASE
+- COLLECT_LOGS
+- REPORT_STATUS
+- REQUEST_DRAIN
+- VERIFY_BACKUP
+- PREPARE_ROLLBACK
+
+Операции, меняющие состояние, должны быть отдельно авторизованы и ограничены собственными ресурсами Unified.
+
+Запретить arbitrary shell execution через Control API.
+
+Никаких универсальных удалённых PowerShell-команд от оператора или LLM.
+
+## 9. Recovery State Machine
+
+Использовать состояния:
+
+CREATED
+→ VERIFIED
+→ AUTHORIZED
+→ PREPARED
+→ RUNNING
+→ VERIFYING
+→ COMPLETED.
+
+Дополнительно:
+
+BLOCKED
+FAILED
+INTERRUPTED
+RECOVERY_REQUIRED
+ROLLBACK_REQUIRED
+CANCELLED
+UNKNOWN_OUTCOME.
+
+После перезапуска:
+
+1. Проверить журнал.
+2. Проверить фактическое состояние системы.
+3. Проверить authority и fencing.
+4. Сопоставить исходное задание с реальным результатом.
+5. Продолжить только доказанно идемпотентные операции.
+6. Не повторять неопределённую установку или protected execution вслепую.
+7. Сохранить оригинальные receipts.
+8. Отправить проверенный статус в Control Plane.
+
+Локальные часы не заменяют authority proof.
+
+## 10. Windows Pro/Home
+
+Supervisor должен проектироваться для:
+
+- LS5 — coordinator.
+- PC4 — coordinator.
+- PC3 — coordinator.
+- PC2 — worker.
+- PC1 — Windows 11 Home worker.
+- LS7 — Windows 11 Home worker.
+
+Фактические роли и редакции подтвердить inventory.
+
+Проверить:
+
+- Windows Service startup.
+- Service identity.
+- Key protection.
+- Named Pipe ACL.
+- Process isolation.
+- User logoff independence.
+- Restart recovery.
+- Resource limits.
+- Installer compatibility.
+
+Не предполагать автоматическую совместимость Windows Home с каждым security primitive.
+
+Не менять редакцию ОС.
+
+## 11. Release Management
+
+Создать единый release pipeline:
+
+SOURCE PIN
+→ BUILD
+→ SIGN/VERIFY
+→ TEST
+→ INDEPENDENT REVIEW
+→ RELEASE MANIFEST
+→ NODE ADMISSION
+→ STAGED ROLLOUT
+→ HEALTH VERIFICATION.
+
+Release manifest должен содержать exact SHA всех шести репозиториев, artifacts, dependencies, schemas и compatibility.
+
+Не обновлять узлы непосредственно из floating GitHub branches.
+
+Использовать immutable packages.
+
+Для каждой версии хранить совместимость с предыдущей и rollback identity.
+
+## 12. Rollout Strategy
+
+Будущий порядок:
+
+1. Disposable Windows test environment.
+2. LS5 isolated pilot.
+3. PC4.
+4. PC3.
+5. PC2.
+6. PC1.
+7. LS7.
+
+Не обновлять одновременно все coordinator nodes.
+
+При обновлении координаторов сохранять необходимый quorum.
+
+Перед изменением worker проверять drain/checkpoint.
+
+При failed health gate останавливать дальнейший rollout.
+
+Не выполнять автоматический destructive rollback.
+
+Не удалять существующие базы или чужие каталоги.
+
+## 13. Terminan Integration
+
+Добавить read-only Operations Dashboard:
+
+- Cluster overview.
+- Node inventory.
+- Supervisor version.
+- Installed release.
+- Service health.
+- Current tasks.
+- Pending approvals.
+- Blocked operations.
+- Recovery state.
+- Update progress.
+- Rollback readiness.
+- CI status.
+- Evidence references.
+
+Показывать отдельно:
+
+- Local health.
+- Authority freshness.
+- Release compatibility.
+- Data integrity.
+- Replication status.
+
+Не показывать UNKNOWN как HEALTHY.
+
+В дальнейшем управляющие операции должны идти через существующий авторизованный Control API.
+
+## 14. Security
+
+Обязательно:
+
+- mTLS.
+- Enrolled node identity.
+- Least privilege.
+- Artifact integrity.
+- Signature verification.
+- Fencing.
+- Replay protection.
+- Task allowlist.
+- Bounded execution.
+- Protected local journal.
+- Redacted logs.
+- Audit trail.
+- No-quorum restrictions.
+
+ADMINIT может инициировать соединения с офисными ПК.
+
+Офисные узлы не должны инициировать подключения к ADMINIT.
+
+Tailscale сохранить как резервный административный канал до отдельного решения.
+
+Не изменять ESET, Firewall, маршруты или роутер этим заданием.
+
+## 15. Failure Tests
+
+Изолированно проверить:
+
+- Crash before task.
+- Crash during task.
+- Crash after commit.
+- Duplicate task.
+- Stale lease.
+- Revoked authority.
+- No quorum.
+- Corrupt journal.
+- Full disk.
+- Interrupted update.
+- Corrupt artifact.
+- Wrong signature.
+- Node identity mismatch.
+- Worker rejoin.
+- Leader change.
+- Partial installation.
+- Failed rollback.
+- Missing Terminan.
+- Missing Math.
+- Missing Grid.
+- Unavailable Control Plane.
+- Windows restart.
+- User logoff.
+- Home/Pro compatibility.
+
+Использовать deterministic fixtures и disposable Windows environments.
+
+Не проводить разрушительные fault-injection тесты на офисных компьютерах.
+
+## 16. Integration with Current MASTER MISSION
+
+Не останавливать текущие P0 задачи ради Supervisor.
+
+Выполнять параллельно:
+
+**Agent 2:** Authority/Control API.
+
+**Agent 1:** LAN/mTLS and budgets.
+
+**Agent 4:** Storage publication.
+
+**Agent 5:** Scheduler.
+
+**Agent 6:** Terminan.
+
+**Agent 3:** Market data integrity.
+
+**Agent 7:** Math/research/paper correctness.
+
+**Agent 8:** Independent acceptance.
+
+ROOT назначает отдельного владельца Node Supervisor и утверждает file ownership.
+
+Если отдельного агента нет, выделить независимую feature-ветку и ограничить изменения.
+
+Не допускать конфликтующих правок shared files.
+
+## 17. Implementation Phases
+
+### Phase A — Reuse and Design
+
+Краткий аудит существующих механизмов, ownership, exact integration base.
+
+### Phase B — Durable Journal
+
+Реализовать task schema, state machine, idempotency и recovery.
+
+### Phase C — Disposable Supervisor
+
+Реализовать ограниченное исполнение в изолированном окружении.
+
+### Phase D — Windows Service Prototype
+
+Реализовать service lifecycle, защищённую конфигурацию и тестовый installer.
+
+### Phase E — Integration
+
+Подключить существующие Control API, Scheduler и Terminan без создания второго authority.
+
+### Phase F — Release Qualification
+
+Windows CI, negative tests, independent Agent 8 review.
+
+### Phase G — Physical Commissioning
+
+Подготовить отдельный node-specific план.
+
+Физическая установка Supervisor этим заданием не разрешена.
+
+## 18. Deliverables
+
+Предоставить:
+
+1. Reuse matrix.
+2. Architecture decision record.
+3. Node Supervisor source.
+4. Durable Task Journal.
+5. Deployment Controller adapter.
+6. Mission Controller schema.
+7. Windows Service prototype.
+8. PLAN_ONLY installer.
+9. Recovery and rollback tests.
+10. Terminan Operations Dashboard contract.
+11. CI Queue Controller.
+12. Exact feature branch/Draft PR.
+13. Source and artifact SHA256.
+14. Independent security review.
+15. Physical commissioning plan.
+
+## 19. Acceptance Criteria
+
+Supervisor v2 считается программно готовым только если:
+
+- Все обязательные tests PASS.
+- Windows Pro/Home qualification подтверждена в соответствующем scope.
+- Journal recovery проверен.
+- Duplicate/replay execution заблокирован.
+- Fencing работает.
+- Нет arbitrary command execution.
+- Нет второго consensus.
+- Release packages immutable.
+- Rollback проверен в disposable environment.
+- Terminan получает достоверные статусы.
+- Agent 8 завершил независимый review.
+
+MODEL PASS не означает PHYSICAL PASS.
+
+## 20. Execution Directive
+
+Продолжай MASTER MISSION.
+
+Не создавай новую платформу с нуля.
+
+Не повторяй завершённые аудиты.
+
+Начни с существующего Unified integration baseline и проверь наличие Supervisor-подобных механизмов.
+
+Затем создай отдельную feature-ветку и реализуй отсутствующие компоненты.
+
+Параллельно продолжай закрывать текущие Authority/Storage/Scheduler/Math/Grid блокировки.
+
+Публикуй конкретные исправления и исполняемые тесты, а не только архитектурные документы.
+
+**NODE_SUPERVISOR_DESIGN_DIRECTION: APPROVED**
+
+**ISOLATED_IMPLEMENTATION: AUTHORIZED AFTER OWNERSHIP/BASE ACK**
+
+**PHYSICAL_INSTALLATION: NOT AUTHORIZED BY THIS DIRECTIVE**
+
+**MASTER_MISSION: IN_PROGRESS / NO-GO**
