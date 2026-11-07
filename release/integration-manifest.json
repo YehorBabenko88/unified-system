@@ -6,8 +6,8 @@
   "modules": {
     "unified-system": {
       "repository": "YehorBabenko88/unified-system",
-      "head": "c9f3735c1efa2d5ae0e2dfbe52987a49c520bdf5",
-      "tree": "d19857aa229691be6ed2c7287e79f92b16baa961",
+      "head": "cc286bce5e51e3670bd8a6cdfd3b663307268703",
+      "tree": "6255c0620a4257d7f8fd82e0fee5d944e052a1b6",
       "pr": 26,
       "pr_url": "https://github.com/YehorBabenko88/unified-system/pull/26",
       "branch": "mission/final-integration-20261106",
@@ -30,7 +30,9 @@
         "2626e939a7ed44bfb37aa354490329a7260cc24b",
         "b12c6c24eeb2c59aa099f1c516d77508f36b20a6",
         "15dd9e8340cc332204ebbe6c13744f797ceca2f4",
-        "6bcf5475023a8f6a9733d02ad899064d0d83be95"
+        "6bcf5475023a8f6a9733d02ad899064d0d83be95",
+        "1541af3b0e99fdb671f59c205696faab40e283e4",
+        "10157fed4d28606adf587be3494d2f6d42887ce9"
       ],
       "source_pin_role": "EXACT_CONSOLIDATED_SOURCE_SNAPSHOT_BEFORE_THIS_EVIDENCE_COMMIT_NOT_FINAL_RC"
     },
@@ -422,5 +424,28 @@
     "scope": "STRICT_FIXED_KEY_STRUCTURAL_GUARDS_NOT_NATIVE_AUTHENTICATION",
     "atomic_adapter_ack": "PENDING_A2",
     "native_provider": "NOT_IMPLEMENTED_OR_ADMITTED"
+  },
+  "full_suite_runtime_snapshot": {
+    "head": "cc286bce5e51e3670bd8a6cdfd3b663307268703",
+    "tree": "6255c0620a4257d7f8fd82e0fee5d944e052a1b6",
+    "tests": 890,
+    "unittest_failures": 0,
+    "unittest_errors": 0,
+    "unwaived_skips": 14,
+    "raw_python_powershell_prepost_equal": true,
+    "scope": "LOCAL_WINDOWS_NOT_HOSTED_OR_RUNTIME",
+    "stderr": "PRESERVED_CONTAINS_LOOPBACK_BROKEN_PIPE_SERVER_TRACES_NOT_RECLASSIFIED_AS_PASS",
+    "evidence": "release/evidence/full-suite-runtime-cc286bc/"
+  },
+  "native_pipe_primitive": {
+    "tests": 4,
+    "skipped": 0,
+    "scope": "SAME_ACCOUNT_DISPOSABLE_KERNEL_IDENTIFICATION_NOT_OPERATOR_AUTH_BRIDGE",
+    "runtime_admission": "BLOCKED",
+    "evidence": "release/evidence/native-pipe-identification-20261107/"
+  },
+  "stage0_20261107": {
+    "path": "release/node-inventory-20261107.json",
+    "status": "READ_ONLY_SIX_NODES_OBSERVED_NOT_INSTALLATION_READY"
   }
 }

@@ -1,0 +1,366 @@
+{
+  "schema": "unified.stage0.inventory.v2",
+  "evidence": "release/evidence/stage0-20261107/",
+  "nodes": [
+    {
+      "node": "LS5",
+      "os": "Microsoft Windows 11 Pro",
+      "windows11_pro_requirement": "OBSERVED_PRO_NOT_RUNTIME_QUALIFIED",
+      "resources": {
+        "os": "Microsoft Windows 11 Pro",
+        "build": "26300",
+        "ram_kib": 66425480,
+        "free_ram_kib": 41564196,
+        "free_virtual_kib": 41201404,
+        "disk_bytes": 1999291445248,
+        "disk_free_bytes": 1607276384256,
+        "cpu": [
+          {
+            "Name": "AMD Ryzen 7 5700G with Radeon Graphics         ",
+            "NumberOfCores": 8,
+            "NumberOfLogicalProcessors": 16
+          }
+        ]
+      },
+      "dns": "OBSERVED",
+      "https": "OBSERVED_200_TLS_VERIFIED",
+      "ssh": "LOCAL",
+      "services": [
+        {
+          "Name": "postgresql-x64-18",
+          "State": "Running",
+          "StartMode": "Auto",
+          "ProcessId": 5112
+        },
+        {
+          "Name": "sshd",
+          "State": "Running",
+          "StartMode": "Auto",
+          "ProcessId": 4180
+        },
+        {
+          "Name": "Tailscale",
+          "State": "Running",
+          "StartMode": "Auto",
+          "ProcessId": 5660
+        }
+      ],
+      "installation": "BLOCKED_GATES_NOT_MET",
+      "rollback_ready": false
+    },
+    {
+      "node": "PC1",
+      "os": "Microsoft Windows 11 Home",
+      "windows11_pro_requirement": "MISMATCH_HOME",
+      "resources": {
+        "os": "Microsoft Windows 11 Home",
+        "build": "26200",
+        "ram_kib": 8252684,
+        "free_ram_kib": 3370584,
+        "free_virtual_kib": 4734724,
+        "disk_bytes": 254735806464,
+        "disk_free_bytes": 120963555328,
+        "cpu": [
+          {
+            "Name": "Intel(R) Core(TM) i5-8400 CPU @ 2.80GHz",
+            "NumberOfCores": 6,
+            "NumberOfLogicalProcessors": 6
+          }
+        ]
+      },
+      "dns": "OBSERVED",
+      "https": "OBSERVED_200_TLS_VERIFIED",
+      "ssh": "PINNED_LAN_OBSERVED",
+      "services": [
+        {
+          "Name": "ekrn",
+          "State": "Running",
+          "StartMode": "Auto",
+          "ProcessId": 2700
+        },
+        {
+          "Name": "ekrnEpfw",
+          "State": "Running",
+          "StartMode": "Auto",
+          "ProcessId": 2700
+        },
+        {
+          "Name": "postgresql-x64-17",
+          "State": "Running",
+          "StartMode": "Auto",
+          "ProcessId": 5948
+        },
+        {
+          "Name": "sshd",
+          "State": "Running",
+          "StartMode": "Auto",
+          "ProcessId": 5940
+        },
+        {
+          "Name": "Tailscale",
+          "State": "Running",
+          "StartMode": "Auto",
+          "ProcessId": 6084
+        }
+      ],
+      "installation": "BLOCKED_GATES_NOT_MET",
+      "rollback_ready": false
+    },
+    {
+      "node": "PC2",
+      "os": "Microsoft Windows 11 Pro",
+      "windows11_pro_requirement": "OBSERVED_PRO_NOT_RUNTIME_QUALIFIED",
+      "resources": {
+        "os": "Microsoft Windows 11 Pro",
+        "build": "26300",
+        "ram_kib": 16477408,
+        "free_ram_kib": 5242496,
+        "free_virtual_kib": 30050364,
+        "disk_bytes": 254468419584,
+        "disk_free_bytes": 61591400448,
+        "cpu": [
+          {
+            "Name": "Intel(R) Core(TM) i7-10700 CPU @ 2.90GHz",
+            "NumberOfCores": 8,
+            "NumberOfLogicalProcessors": 16
+          }
+        ]
+      },
+      "dns": "OBSERVED",
+      "https": "OBSERVED_200_TLS_VERIFIED",
+      "ssh": "PINNED_LAN_OBSERVED",
+      "services": [
+        {
+          "Name": "ekrn",
+          "State": "Running",
+          "StartMode": "Auto",
+          "ProcessId": 2628
+        },
+        {
+          "Name": "ekrnEpfw",
+          "State": "Running",
+          "StartMode": "Auto",
+          "ProcessId": 2628
+        },
+        {
+          "Name": "postgresql-x64-17",
+          "State": "Running",
+          "StartMode": "Auto",
+          "ProcessId": 4428
+        },
+        {
+          "Name": "sshd",
+          "State": "Running",
+          "StartMode": "Auto",
+          "ProcessId": 4484
+        },
+        {
+          "Name": "Tailscale",
+          "State": "Running",
+          "StartMode": "Auto",
+          "ProcessId": 5328
+        }
+      ],
+      "installation": "BLOCKED_GATES_NOT_MET",
+      "rollback_ready": false
+    },
+    {
+      "node": "PC3",
+      "os": "Microsoft Windows 11 Pro",
+      "windows11_pro_requirement": "OBSERVED_PRO_NOT_RUNTIME_QUALIFIED",
+      "resources": {
+        "os": "Microsoft Windows 11 Pro",
+        "build": "26300",
+        "ram_kib": 33396912,
+        "free_ram_kib": 24691032,
+        "free_virtual_kib": 25383912,
+        "disk_bytes": 496771264512,
+        "disk_free_bytes": 361686552576,
+        "cpu": [
+          {
+            "Name": "Intel(R) Core(TM) i5-8600 CPU @ 3.10GHz",
+            "NumberOfCores": 6,
+            "NumberOfLogicalProcessors": 6
+          }
+        ]
+      },
+      "dns": "OBSERVED",
+      "https": "OBSERVED_200_TLS_VERIFIED",
+      "ssh": "PINNED_LAN_OBSERVED",
+      "services": [
+        {
+          "Name": "ekrn",
+          "State": "Running",
+          "StartMode": "Auto",
+          "ProcessId": 2636
+        },
+        {
+          "Name": "ekrnEpfw",
+          "State": "Running",
+          "StartMode": "Auto",
+          "ProcessId": 2636
+        },
+        {
+          "Name": "postgresql-x64-18",
+          "State": "Running",
+          "StartMode": "Auto",
+          "ProcessId": 4248
+        },
+        {
+          "Name": "sshd",
+          "State": "Running",
+          "StartMode": "Auto",
+          "ProcessId": 4200
+        },
+        {
+          "Name": "Tailscale",
+          "State": "Running",
+          "StartMode": "Auto",
+          "ProcessId": 5276
+        }
+      ],
+      "installation": "BLOCKED_GATES_NOT_MET",
+      "rollback_ready": false
+    },
+    {
+      "node": "PC4",
+      "os": "Microsoft Windows 11 Pro",
+      "windows11_pro_requirement": "OBSERVED_PRO_NOT_RUNTIME_QUALIFIED",
+      "resources": {
+        "os": "Microsoft Windows 11 Pro",
+        "build": "26200",
+        "ram_kib": 32679288,
+        "free_ram_kib": 22411152,
+        "free_virtual_kib": 22768004,
+        "disk_bytes": 999027634176,
+        "disk_free_bytes": 853280731136,
+        "cpu": [
+          {
+            "Name": "AMD Ryzen 7 7800X3D 8-Core Processor           ",
+            "NumberOfCores": 8,
+            "NumberOfLogicalProcessors": 16
+          }
+        ]
+      },
+      "dns": "OBSERVED",
+      "https": "OBSERVED_200_TLS_VERIFIED",
+      "ssh": "PINNED_LAN_OBSERVED",
+      "services": [
+        {
+          "Name": "ekrn",
+          "State": "Running",
+          "StartMode": "Auto",
+          "ProcessId": 3396
+        },
+        {
+          "Name": "ekrnEpfw",
+          "State": "Running",
+          "StartMode": "Auto",
+          "ProcessId": 3396
+        },
+        {
+          "Name": "postgresql-x64-18",
+          "State": "Running",
+          "StartMode": "Auto",
+          "ProcessId": 5896
+        },
+        {
+          "Name": "sshd",
+          "State": "Running",
+          "StartMode": "Auto",
+          "ProcessId": 6032
+        },
+        {
+          "Name": "Tailscale",
+          "State": "Running",
+          "StartMode": "Auto",
+          "ProcessId": 2436
+        }
+      ],
+      "installation": "BLOCKED_GATES_NOT_MET",
+      "rollback_ready": false
+    },
+    {
+      "node": "LS7",
+      "os": "Microsoft Windows 11 Home",
+      "windows11_pro_requirement": "MISMATCH_HOME",
+      "resources": {
+        "os": "Microsoft Windows 11 Home",
+        "build": "26200",
+        "ram_kib": 8151360,
+        "free_ram_kib": 3134968,
+        "free_virtual_kib": 3811556,
+        "disk_bytes": 486731149312,
+        "disk_free_bytes": 408412487680,
+        "cpu": [
+          {
+            "Name": "Intel(R) Core(TM) 5 120U",
+            "NumberOfCores": 10,
+            "NumberOfLogicalProcessors": 12
+          }
+        ]
+      },
+      "dns": "OBSERVED",
+      "https": "OBSERVED_200_TLS_VERIFIED",
+      "ssh": "PINNED_LAN_OBSERVED",
+      "services": [
+        {
+          "Name": "ekrn",
+          "State": "Running",
+          "StartMode": "Auto",
+          "ProcessId": 2952
+        },
+        {
+          "Name": "ekrnEpfw",
+          "State": "Running",
+          "StartMode": "Auto",
+          "ProcessId": 2952
+        },
+        {
+          "Name": "postgresql-x64-18",
+          "State": "Running",
+          "StartMode": "Auto",
+          "ProcessId": 4828
+        },
+        {
+          "Name": "sshd",
+          "State": "Running",
+          "StartMode": "Auto",
+          "ProcessId": 4564
+        },
+        {
+          "Name": "Tailscale",
+          "State": "Running",
+          "StartMode": "Auto",
+          "ProcessId": 5376
+        }
+      ],
+      "installation": "BLOCKED_GATES_NOT_MET",
+      "rollback_ready": false
+    }
+  ],
+  "observed_nodes": 6,
+  "physical_installation": false,
+  "fault_injection": false,
+  "bybit_requests": 0,
+  "tailscale_removed": false,
+  "prior_attempts": [
+    {
+      "attempt": "extended_v1",
+      "result": "COMMAND_SIZE_PREFLIGHT_REJECTED_BEFORE_SUBPROCESS"
+    },
+    {
+      "attempt": "extended_v2",
+      "result": "COLLECTOR_ALIAS_R_RESOLVED_TO_INVOKE_HISTORY_NO_INVENTORY_SUCCESS"
+    },
+    {
+      "attempt": "extended_v3",
+      "result": "SIX_NODES_OBSERVED_AFTER_RENAMING_HELPER_AND_STOP_ON_FAILURE"
+    }
+  ],
+  "readiness": "NOT_QUALIFIED",
+  "new_blockers": [
+    "PC1_AND_LS7_WINDOWS_11_HOME_NOT_PRO",
+    "PC3_PREEXISTING_FIREWALL_PROFILES_OFF_ESET_RUNNING_NEEDS_POLICY_REVIEW"
+  ]
+}
