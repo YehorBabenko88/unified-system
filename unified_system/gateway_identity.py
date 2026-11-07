@@ -162,7 +162,7 @@ class DisposableIdentityAuthority:
                     _deny(grant['owned_store'] is not None and type(grant['owned_store']) not in (bool,dict,str,bytes))
                     grants.append((grant['tool_name'], _binding(grant['binding']), grant['owned_store']))
                 _deny(entry['certificate_sha256'] not in self._clients)
-                self._clients[entry['certificate_sha256']] = dict(service=entry['service_id'], user=entry['delegated_user_id'],
+                self._clients[entry['certificate_sha256']] = dict(fingerprint=entry['certificate_sha256'], service=entry['service_id'], user=entry['delegated_user_id'],
                     quota=entry['quota_owner_id'], uri=entry['uri'], expiry=expiry,
                     deadline=self._mono + min(expiry,self._server_expiry)-self._wall, grants=tuple(grants))
         except (GatewayIdentityDenied, ValueError, TypeError, KeyError, x509.ExtensionNotFound, InvalidSignature, UnsupportedAlgorithm) as exc:
@@ -176,9 +176,9 @@ class DisposableIdentityAuthority:
             raise GatewayIdentityUnavailable('CLOCK_UNCERTAIN')
         self._last_wall, self._last_mono = wall, mono
         return wall, mono
-    def _emit(self, decision, *, entry=None, tool='', request=b'', binding=b''):
+    def _emit(self, decision, *, entry=None, tool='', request=b'', binding=b'', target=None):
         self._audit._append(dict(schema='unified.gateway.disposable-audit.v1', realm_id=self._realm,
-            decision=decision, service_id=entry['service'] if entry else None,
+            decision=decision, reason=decision, target_service_id=target, service_id=entry['service'] if entry else None,
             delegated_user_id=entry['user'] if entry else None, quota_owner_id=entry['quota'] if entry else None,
             tool_name=tool, request_sha256=hashlib.sha256(request).hexdigest() if request else None,
             binding_sha256=hashlib.sha256(binding).hexdigest() if binding else None))
@@ -189,7 +189,7 @@ class DisposableIdentityAuthority:
               and mono < min(entry['deadline'],deadline))
         _deny(type(sock) is ssl.SSLSocket and sock.fileno() >= 0 and sock.context is self._ssl and sock.server_side)
         try:
-            _deny(hashlib.sha256(sock.getpeercert(binary_form=True)).hexdigest() in self._clients)
+            _deny(hashlib.sha256(sock.getpeercert(binary_form=True)).hexdigest() == entry['fingerprint'])
         except (ValueError, OSError, TypeError):
             raise GatewayIdentityDenied('GATEWAY_READ_DENIED') from None
     def authenticate_connection(self, server_ssl_socket):
@@ -218,6 +218,13 @@ class DisposableIdentityAuthority:
                 self._emit('AUTHENTICATION_DENIED')
                 raise GatewayIdentityDenied('GATEWAY_READ_DENIED') from None
     def authorize_read(self, context, *, tool_name, request_bytes, binding, owned_store):
+        try:
+            return self._authorize_read(context, tool_name=tool_name, request_bytes=request_bytes,
+                                        binding=binding, owned_store=owned_store)
+        except GatewayIdentityDenied:
+            self._emit('READ_DENIED')
+            raise
+    def _authorize_read(self, context, *, tool_name, request_bytes, binding, owned_store):
         with self._lock:
             if len(self._caps) >= 256:
                 raise GatewayIdentityUnavailable('READ_CAPACITY_UNAVAILABLE')
@@ -233,6 +240,12 @@ class DisposableIdentityAuthority:
             self._caps[cap] = [state,tool_name,hashlib.sha256(request_bytes).digest(),bound,owned_store,0]
             return cap
     def _check(self, cap, tool_name, request_bytes, binding, owned_store):
+        try:
+            return self._check_read(cap, tool_name, request_bytes, binding, owned_store)
+        except GatewayIdentityDenied:
+            self._emit('READ_DENIED')
+            raise
+    def _check_read(self, cap, tool_name, request_bytes, binding, owned_store):
         with self._lock:
             _deny(type(cap) is GatewayReadCapability and cap in self._caps)
             record = self._caps[cap]
@@ -240,12 +253,14 @@ class DisposableIdentityAuthority:
             _deny(type(request_bytes) is bytes and 0 < len(request_bytes) <= 32768)
             bound = _binding(binding)
             _deny(tool_name == record[1] and hashlib.sha256(request_bytes).digest() == record[2]
-                  and bound == record[3] and owned_store is record[4] and record[5] < 2)
+                  and bound == record[3] and owned_store is record[4]
+                  and record[5] < (2 if record[1]=='unified.get_dataset_manifest' else 7))
             self._emit('READ_CURRENT_CHECK', entry=record[0][0], tool=tool_name, request=request_bytes, binding=bound)
             record[5] += 1
             return None
     def revoke_service(self, service_id):
         with self._lock:
             _uuid(service_id)
-            self._emit('SERVICE_REVOKED')
+            # Negative security state must latch even if required audit is full.
             self._revoked.add(service_id)
+            self._emit('SERVICE_REVOKED', target=service_id)

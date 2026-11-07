@@ -220,6 +220,19 @@ class GatewayIdentityTests(unittest.TestCase):
             auth.authorize_read(context, tool_name='unified.get_dataset_manifest',request_bytes=self.request,
                                 binding=self.binding, owned_store=self.store)
         self.assertEqual(len(sink.drain()), 1)
+    def test_revocation_latches_even_when_audit_full(self):
+        _, cap = self.permit()
+        self.audit._max = len(self.audit._events)
+        with self.assertRaises(self.m.GatewayIdentityUnavailable): self.auth.revoke_service(U)
+        self.audit.drain()
+        with self.assertRaises(self.m.GatewayIdentityDenied): self.check(cap)
+    def test_denial_and_revocation_target_are_audited(self):
+        _, cap = self.permit()
+        with self.assertRaises(self.m.GatewayIdentityDenied): self.check(cap, owned_store=object())
+        self.auth.revoke_service(U)
+        events = self.audit.drain()
+        self.assertTrue(any(e['decision']=='READ_DENIED' for e in events))
+        self.assertTrue(any(e['decision']=='SERVICE_REVOKED' and e['target_service_id']==U for e in events))
     def test_nonread_commissioning_grant_unavailable(self):
         profile = dict(self.profile, clients=[dict(self.profile['clients'][0], grants=[
             dict(tool_name='unified.submit_backtest', binding=self.binding, owned_store=self.store)])])
@@ -229,6 +242,22 @@ class GatewayIdentityTests(unittest.TestCase):
         fake = object.__new__(self.m.GatewayReadCapability)
         fake._issuer = self.auth
         with self.assertRaises(self.m.GatewayIdentityDenied): self.check(fake)
+    def test_query_has_seven_current_checks_then_eighth_denied(self):
+        profile = dict(self.profile, clients=[dict(self.profile['clients'][0], grants=[
+            dict(tool_name='unified.query_market_data', binding=self.binding, owned_store=self.store)])])
+        auth = self.m.DisposableIdentityAuthority(server_ssl_context=self.tls.server_context, profile=profile, audit_sink=self.audit)
+        context = auth.authenticate_connection(self.tls.accepted)
+        cap = auth.authorize_read(context, tool_name='unified.query_market_data', request_bytes=self.request,
+                                  binding=self.binding, owned_store=self.store)
+        for _ in range(7):
+            self.assertIsNone(self.check(cap, tool_name='unified.query_market_data'))
+        with self.assertRaises(self.m.GatewayIdentityDenied): self.check(cap, tool_name='unified.query_market_data')
+    def test_context_exact_original_peer_pin_not_other_registered_entry(self):
+        context, _ = self.permit()
+        state = self.auth._contexts[context]
+        # Controlled corrupted binding control, not an in-process attacker claim.
+        corrupted = (dict(state[0], fingerprint='f'*64),) + state[1:]
+        with self.assertRaises(self.m.GatewayIdentityDenied): self.auth._current(corrupted)
     def test_wrong_actual_san_denies(self):
         other = TLSFixture(client_uri='urn:wrong')
         self.addCleanup(other.close)
