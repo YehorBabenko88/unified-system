@@ -71,3 +71,33 @@ New stdlib tests and exact-source Windows/Ubuntu workflow only. Independent A8
 review requested after publication. No actual-engine E2E, authenticated MCP,
 Windows Home/Pro, service, physical, provider or runtime PASS claimed. No install,
 network changes, main merge or real trading. MASTER MISSION IN_PROGRESS / NO-GO.
+
+## A7 exact local reuse candidates (owner inventory, not runtime ACK)
+
+Raw owner inventory: release/evidence/intelligence-gateway-20261107/agent7-seams-original.json.
+It includes 14 owner-verified Git OID/SHA256 source entries; ROOT has preserved
+that inventory, not independently repeated its whole source verification.
+
+- Strattester a56c24a0f25a0c5ea9222fcd953a49536c91dfc9: stream_offline_jobs,
+  typed OfflineJob/AttestedInferenceRequest, run_experiment/run_walk_forward,
+  execute_owned and persist_report_fenced. These can execute/train/write; never
+  call for query preparation or replace missing lease validation/default trust.
+- Existing opt-in ReadOnlyResultsApp GET /internal/v1/runs and run metrics routes
+  require actual source/receipt trust; default capabilities false. They are not
+  authenticated Gateway disclosure endpoints.
+- Math 917d99672e37db59835a8ab23b03c99826b12d78: math.history request/result v1.1,
+  math.history.scientific request/result v1, API history-1.1+scientific-2.1.
+  Existing stdio mechanisms, not a cluster job/native admission. The b9 fix is
+  separate and must not be silently substituted into this source pin.
+- MetaAnalyse f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1:
+  analyze_ohlcv_research and guarded loopback POST /internal/v1/research/ohlcv/analyze.
+  Preserve startup/scientific/bearer/Host gates. No fabricated token/session.
+- Signed funding verifier and FundingPolicy exist, decimal_bps/(entry,exit],
+  fixed entry notional. No externally provisioned admitted producer profile or
+  keys supplied. Digest membership in PR74 is not signature authentication;
+  retain existing gross/net distinctions and never subtract costs twice.
+
+Actual Gateway submission, execution and retrieval seams remain NONE; signed
+admitted fee/slippage/funding/currency profiles remain NONE. These are existing
+capabilities to integrate after exact owner API/source/caller/view/cut ACK plus
+A2/A4/A5 admission, not missing engines to rewrite.
