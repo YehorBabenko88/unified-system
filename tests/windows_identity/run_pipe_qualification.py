@@ -23,6 +23,7 @@ def run(output):
         (output/(name+'.stderr.log')).write_bytes(result.stderr)
         if result.returncode!=expected:raise RuntimeError(f'NATIVE_CASE_REJECTED:{name}:{result.returncode}')
         value=json.loads(result.stdout.decode('utf-8-sig'))
+        assert value['restored_server_identity'], 'server identity must be checked after every outcome'
         if expected==0:
             assert value['status']=='OBSERVED_NATIVE_IDENTIFICATION_ONLY'
             assert value['impersonation_level']==1 and value['restored_server_identity']

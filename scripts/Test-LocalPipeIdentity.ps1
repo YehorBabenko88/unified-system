@@ -154,6 +154,15 @@ public static class UnifiedPipeLab {
         } catch(Exception error) {
             result.status="REJECTED";result.reason=error.GetBaseException().Message;
         } finally {
+            // Observe cleanup after BOTH positive and negative outcomes. A false
+            // default field is not evidence that RevertToSelf failed or ran.
+            IntPtr residual;
+            bool stillImpersonating=OpenThreadToken(GetCurrentThread(),8,true,out residual);
+            int tokenError=Marshal.GetLastWin32Error();
+            if(stillImpersonating)CloseHandle(residual);
+            using(var identity=WindowsIdentity.GetCurrent())
+                result.restored_server_identity=!stillImpersonating&&tokenError==1008&&identity.User.Value==ownSid;
+            if(!result.restored_server_identity)Environment.FailFast("SERVER_IDENTITY_CLEANUP_NOT_CONFIRMED");
             if(pipe!=null)pipe.Dispose();
             if(descriptor!=IntPtr.Zero)LocalFree(descriptor);
             if(child!=null) {

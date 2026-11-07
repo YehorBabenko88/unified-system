@@ -38,7 +38,9 @@ jobs:
         run: |
           import hashlib, io, json, os, pathlib, platform, stat, subprocess, sys, unittest
           expected_head = os.environ['EXPECTED_HEAD']
-          source_git = ['git', '--no-replace-objects']
+          git_executable = pathlib.Path('C:/Program Files/Git/cmd/git.exe' if os.name=='nt' else '/usr/bin/git').resolve(strict=True)
+          assert git_executable.is_file() and not git_executable.is_relative_to(pathlib.Path.cwd().resolve(strict=True)), 'unadmitted Git bootstrap executable'
+          source_git = [str(git_executable), '--no-replace-objects', '--no-optional-locks', '-c', 'core.fsmonitor=false']
           source_objects = {}
           for entry in subprocess.check_output([*source_git,'ls-tree','-r','-z',expected_head]).split(b'\0'):
               if not entry: continue
@@ -114,6 +116,7 @@ jobs:
               run=os.environ['GITHUB_RUN_ID'], attempt=os.environ['GITHUB_RUN_ATTEMPT'],
               qualification='PARTIAL_INTEGRATION_COMPONENTS_ONLY_SOURCE_CHECKED_BEFORE_AFTER',
               product_import_policy='ISOLATED_REJECT_REPO_BYTECODE_UNEXPECTED_PY_AND_CACHE_REDIRECT_PRE_POST',
+              bootstrap_git_path=str(git_executable), bootstrap_git_raw_sha256=hashlib.sha256(git_executable.read_bytes()).hexdigest(),
               run_metadata='CORRELATION_ONLY_NOT_HOSTED_ATTESTATION',
               runtime_api='NOT_QUALIFIED', physical='NOT_RUN', production='NO_GO')
           pathlib.Path('partial-integration-ci-evidence.json').write_text(json.dumps(report, indent=2), encoding='utf-8')
