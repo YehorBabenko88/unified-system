@@ -1,0 +1,59 @@
+{
+  "requirement": "ROOT_DRAFT26_MERGE_AND_EVIDENCE_BINDING",
+  "repository": "unified-system",
+  "pr": 26,
+  "merge_head": "a77a5bdb70ca08acbc2f3a3d806866f0d0cb228e",
+  "merge_tree": "9b259f5600d5ef08c2cb275751328df3be391bba",
+  "evidence_head": "38c39092a30be51f8f554bac48f3fad5a87a6c25",
+  "evidence_tree": "2f5bb5146b5746773f5fb68e6318ae975d806b23",
+  "component_head": "08d6f01d94feb44a17338be8ef3f8871995c284a",
+  "merged_paths_exact_component_bytes": 32,
+  "primary_reported_raw_files_matched_git": 872,
+  "grid_reported_raw_files_matched_git": 672,
+  "original_A8_phase49_copied_raw_equal": [
+    "ci-42350745758.original.json",
+    "ci-42350749074.original.json",
+    "independent-review.md",
+    "invocation.json",
+    "invocation.stderr.log",
+    "invocation.stdout.log",
+    "mandatory-inventory-delta.json",
+    "native-rejection-supplement.json",
+    "native-supplement-source-verification.json",
+    "native-supplement.stderr.log",
+    "native-supplement.stdout.log",
+    "primary-pin-review.json",
+    "real-consul.json",
+    "real-consul.log",
+    "reconciliation-review2-models.json",
+    "source-bound.json",
+    "source-guard-controls.json",
+    "source-guard-controls.log"
+  ],
+  "owner_reported_execution": {
+    "unit": 18,
+    "real": 42,
+    "source_guards": 8,
+    "skips": 0,
+    "owned_processes_stopped": true
+  },
+  "owner_environment": "REUSED_A2_ENV_NOT_NEWLY_INDEPENDENTLY_QUALIFIED",
+  "A8_execution_on_merged_source": "NOT_RUN",
+  "owner_evidence_members_hash_verified": 15,
+  "evidence_index_errors": [
+    {
+      "path": "source-guard-controls/cache/__pycache__/poc.cpython-312.pyc",
+      "error": "INDEXED_FILE_ABSENT_FROM_COMMIT",
+      "expected_sha256": "7e33742ba7689af9acad63c0a1b17551182b10b9dc723f2afcac95a0afd850a3"
+    }
+  ],
+  "original_A8_phase49_scope": "PRESERVED_NO_TRANSFER_TO_MERGE_OR_DOCS_HEAD",
+  "evidence_completeness": "FAIL_INDEXED_FILE_MISSING",
+  "severity": "P2_EXISTING_F07_EVIDENCE_COMPLETENESS",
+  "qualification": "PRIMARY_GIT_SOURCE_AND_OWNER_RECEIPT_CONSISTENCY_ONLY",
+  "native_authentication": false,
+  "full_windows_matrix": false,
+  "physical": "BLOCKED",
+  "tailscale_removal": "BLOCKED",
+  "overall": "NO_GO"
+}

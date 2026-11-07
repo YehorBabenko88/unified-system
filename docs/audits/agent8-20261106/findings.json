@@ -59,7 +59,15 @@
     "repository": "all",
     "title": "Mandatory skip coverage unresolved",
     "evidence": "Passing job conclusions coexist with skipped JUnit cases; no authoritative case-to-requirement map supplied to auditor.",
-    "required_correction": "Publish mandatory IDs, expected counts/platforms and permitted optional skip reasons; missing/skip/cancelled cannot count as PASS."
+    "required_correction": "Publish mandatory IDs, expected counts/platforms and permitted optional skip reasons; missing/skip/cancelled cannot count as PASS.",
+    "root_38c3909_evidence_subitem": {
+      "status": "OPEN",
+      "severity": "P2",
+      "expected": "16 indexed members retrievable with matching rawSHA",
+      "actual": "15 retrievable/hashmatch; indexed pyc absent",
+      "evidence": "phase50/independent-review.json",
+      "required_correction": "Preserve originalreceipt and explicitly distinguish local-only index or publish bound fixture"
+    }
   },
   {
     "id": "A8-F08",
