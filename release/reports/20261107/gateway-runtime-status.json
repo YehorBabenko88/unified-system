@@ -334,7 +334,14 @@
       "script_sha256": "cc7508827c738193357e4a7af9bad2694239f7fd99998da626d7ee122e5fca5b",
       "owner_source_receipt_sha256": "c10a63d6c325e45da70060a1b69b35e1bb1ec741d92fafb2735f8f72dc055c1b",
       "owner_primary_files": 1402,
-      "review": "REQUESTED_A8_STATIC_ONLY",
+      "review": {
+        "commit": "02d73bf24913c2fe36b346768a39089f0238058d",
+        "path": "docs/audits/agent8-20261106/phase96/report.md",
+        "sha256": "958fd13de59706094380544bc5a150a197f7ea37281a2078a3da7eaaea0f6794",
+        "scope": "STATIC_READ_ONLY_NO_IMPORT_EXECUTION_NATIVE_CALL",
+        "confirmed_material_source_findings": 0,
+        "execution_ack": false
+      },
       "execution_authorized": false,
       "custody_mechanism": "NOT_IMPLEMENTED_NOT_QUALIFIED",
       "external_supervisor": "PLAN_ONLY_NOT_QUALIFIED",
