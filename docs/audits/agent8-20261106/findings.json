@@ -208,10 +208,13 @@
     "repository": "unified-system",
     "pr": 24,
     "observed_head": "462935b53ef25d4d9be2371bad1cd7230c65f2e7",
-    "status": "OPEN",
-    "title": "Scheduler exact raw-source receipt ignores executable CPython cache input",
+    "status": "OPEN_PARTIAL_BYTECODE_FIX_VERIFIED",
+    "title": "Scheduler source-evidence guard permits untracked executable import inputs",
     "evidence": "phase37/bytecode_only/receipt.json; component-tests.log; bytecode-executed.txt; scheduler-runtime-v3-review.json",
-    "required_correction": "Prevent untracked/ambient bytecode from supplying executed product/test modules; reject preexisting caches or use a verified controlled import policy; add cached-marker negatives preserving52exact IDs/no skips/F15/F16 guards. -B alone disables writes, not reads.",
-    "scope": "OWN_INDEPENDENT_WINDOWS_PYTHON312_CLONE_NO_HOSTED_TAMPERING_OR_NATIVE_AUTHORITY_BYPASS_ALLEGED"
+    "required_correction": "Retain fixed bytecode policy and reject/contain undeclared importable files throughout the admitted source root before/after, not only owned product/tests; validate root import-shadow negative while preserving52IDs/F15/F16. No native/hosted tampering alleged.",
+    "scope": "OWN_INDEPENDENT_WINDOWS_PYTHON312_CLONE_NO_HOSTED_TAMPERING_OR_NATIVE_AUTHORITY_BYPASS_ALLEGED",
+    "partial_fix_head": "0d6eb4386a721e2bbd6e5e9f6808573a4cfbe267",
+    "partial_fix_evidence": "phase38/f17-recheck.json",
+    "remaining_variant": "Untracked root typing.py imports actual stdlib implementation and writes inert marker; exact52/no-skip/raw16/before==after receipt still accepts at0d6."
   }
 ]

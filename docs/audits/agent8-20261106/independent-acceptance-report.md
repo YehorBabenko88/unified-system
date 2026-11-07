@@ -1,4 +1,4 @@
-> Latest bounded update (2026-11-07): [A5 runtime v3 / new F17](phase37/scheduler-runtime-v3-review.md). Current open findings:6 P1/3 P2; F16 and F17 OPEN. Overall NO-GO; hosted/native/integrated/physical/Tailscale gates remain unqualified or BLOCKED. Earlier snapshots are historical.
+> Latest bounded update (2026-11-07): [F17 partial fix / remaining root import](phase38/f17-partial-review.md). Current open findings:6 P1/3 P2; F16/F17 OPEN. Cache vector fixed at0d6 but untracked root typing.py still executes with accepted raw-source receipt. Overall NO-GO; earlier snapshots historical.
 
 # Independent security, CI and physical acceptance — Agent 8
 
@@ -162,3 +162,5 @@ Phase35: exactcomposed237722b independently129unique/0skip,664rawtrackedfilesbef
 Phase36 Math1149f08b23 preparationfix independently verified: actualunchangedverifierPSoldRED1/newGREEN0/hiddeneditdenied;13pure/modelcases0skip,690rawfilespre/post,188originalproof preserved. Originalconsumed42274233717attempt1terminalfailure/sourceCLIerror,0artifacts/ownedchildSKIPPED primaryrawlogverified. No native/activation, no renewedauthorization; NO-GO6P1/2P2/F16open.
 
 Phase37 latestPR24 462935b independently52/0skip,8replacement/raw/ID/skipnegativesreject,5localstatevectors+1boundedmeasurementpass. NewF17P2confirmed: untracked timestampmatchedCPythoncacheexecutesharmlessmarker while16rawbindings/beforeafterand52PASSaccept. Sourceevidencerobustnessonly, nohostedtampering/nativebypassclaim; ownersnotified. Current6P1/3P2,NO-GO,F16/F17open.
+
+Phase38 independently verifies0d6cachevectorfix and11conformance controls, but root_shadow_typingstill52PASS/raw16/beforeaftervalid with inertmarkerexecuted. F17PARTIAL/OPEN; no newfindingcount;6P1/3P2/NO-GO.
