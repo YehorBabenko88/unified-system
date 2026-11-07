@@ -6,6 +6,7 @@ on:
     paths:
       - 'scheduler_components/**'
       - 'tests/test_agent5_scheduler_components.py'
+      - 'tests/test_agent5_scheduler_runtime.py'
       - 'docs/scheduler/**'
       - '.github/workflows/agent5-components.yml'
 permissions:
@@ -50,7 +51,9 @@ jobs:
           def source():
               head = git('rev-parse', 'HEAD')
               prefixes = ['scheduler_components', 'tests/test_agent5_scheduler_components.py',
-                          'docs/scheduler/component-test-inventory-v2.json', '.github/workflows/agent5-components.yml']
+                          'tests/test_agent5_scheduler_runtime.py',
+                          'docs/scheduler/component-test-inventory-v2.json',
+                          'docs/scheduler/component-test-inventory-v3.json', '.github/workflows/agent5-components.yml']
               entries = subprocess.check_output(['git', '--no-replace-objects', 'ls-tree', '-rz', '--full-tree', head, '--', *prefixes])
               files = []
               root = Path.cwd()
@@ -111,12 +114,17 @@ jobs:
           expected = os.environ['EXPECTED_SOURCE_SHA']
           inventory_bytes, expected_ids, inventory_valid = b'', [], False
           if before['protected_inputs_valid']:
-              inventory_bytes = Path('docs/scheduler/component-test-inventory-v2.json').read_bytes()
+              inventory_bytes = Path('docs/scheduler/component-test-inventory-v3.json').read_bytes()
               inventory = json.loads(inventory_bytes)
+              previous_inventory = json.loads(Path('docs/scheduler/component-test-inventory-v2.json').read_bytes())
               expected_ids = inventory['expected_ids']
-              inventory_valid = (inventory['schema'] == 'agent5.component-test-inventory.v2'
-                                 and inventory['expected_count'] == 30 and len(set(expected_ids)) == 30)
-          receipt = {'schema': 'agent5.component-evidence.v2',
+              inventory_valid = (inventory['schema'] == 'agent5.component-test-inventory.v3'
+                                 and inventory['expected_count'] == 50 and len(expected_ids) == 50
+                                 and len(set(expected_ids)) == 50
+                                 and len(previous_inventory['expected_ids']) == 30
+                                 and inventory['preserved_v2_ids'] == previous_inventory['expected_ids']
+                                 and set(previous_inventory['expected_ids']) <= set(expected_ids))
+          receipt = {'schema': 'agent5.component-evidence.v3',
                      'execution': 'GITHUB_ACTIONS' if os.environ.get('GITHUB_ACTIONS') == 'true' else 'LOCAL',
                      'repository': os.environ.get('GITHUB_REPOSITORY'),
                      'run_id': os.environ.get('GITHUB_RUN_ID'),
@@ -127,7 +135,8 @@ jobs:
                      'event_sha': os.environ.get('GITHUB_SHA'),
                      'runner_os': platform.system(), 'python': sys.version,
                      'expected_source_sha': expected, 'source_before': before,
-                     'required_tests': 30, 'required_skips': 0,
+                     'required_tests': 50, 'required_skips': 0,
+                     'qualification': 'LOCAL_CODE_AND_SYNTHETIC_PORTS_NOT_NATIVE_AUTHORITY',
                      'test_inventory_sha256': hashlib.sha256(inventory_bytes).hexdigest(),
                      'expected_test_ids': expected_ids,
                      'tests_run': 0, 'skips': 0, 'failures': 0, 'errors': 0,
@@ -137,7 +146,9 @@ jobs:
               if before['head'] != expected or before['tracked_status'] or not before['protected_inputs_valid'] or not inventory_valid:
                   stream.write('SOURCE_OR_RAW_BLOB_OR_INVENTORY_MISMATCH: tests not admitted\n')
               else:
-                  suite = unittest.defaultTestLoader.discover('tests', pattern='test_agent5_scheduler_components.py')
+                  suite = unittest.TestSuite([
+                      unittest.defaultTestLoader.discover('tests', pattern=pattern)
+                      for pattern in ('test_agent5_scheduler_components.py', 'test_agent5_scheduler_runtime.py')])
                   def case_ids(tests):
                       for test in tests:
                           if isinstance(test, unittest.TestSuite):
@@ -149,7 +160,7 @@ jobs:
                   result = unittest.TextTestRunner(stream=stream, verbosity=2).run(suite)
                   receipt.update(tests_run=result.testsRun, skips=len(result.skipped),
                                  failures=len(result.failures), errors=len(result.errors),
-                                 passed=result.wasSuccessful() and result.testsRun == 30 and not result.skipped
+                                 passed=result.wasSuccessful() and result.testsRun == 50 and not result.skipped
                                  and sorted(discovered_ids) == sorted(expected_ids))
           receipt['source_after'] = source()
           receipt['passed'] = receipt['passed'] and receipt['source_after']['protected_inputs_valid'] and receipt['source_after'] == before
