@@ -50,6 +50,18 @@ Its normal completed export is not successor error-path/runtime qualification.
 Root's combined working pure suite is101 unique tests, zero skips; exact-source
 qualification and A8 helper/package review remain pending.
 
+Root pre-run ruling: candidate b is frozen and NOT executed. Although the prior
+source bounded individual cleanup waits, they did not share the intended10s
+aggregate budget. Root added an actual common monotonic cleanup deadline across
+Job wait, each retained-process wait, watchdog join and pipe-reader joins. Expiry
+still attempts own-only termination but never opens another wait window. The
+receipt now records work/cleanup/process-family elapsed nanoseconds; exceeding
+20/10/30s cannot return PASS. Package verification before/after is explicitly
+outside the application-family timing window. OS/supervisor freeze is still not
+solved by a cooperative deadline. RED `ls5-shared-cleanup-deadline-red.log` is
+retained;103 combined pure tests pass. This source successor requires a NEW
+immutable package and review; candidate b will never be hotpatched or started.
+
 The intended source family is Unified runtime ba2b1cec0c2b114586afb73696e282117eede987,
 Strattester aed8a7c8a952f96803c207d5e90b133969a47f04, MetaAnalyse
 f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1 and A6 PR77. The harness itself must also

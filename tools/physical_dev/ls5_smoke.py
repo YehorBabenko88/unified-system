@@ -145,13 +145,20 @@ def offline_repository(root):
         else:raise SmokeBlocked('NONCANONICAL_OR_UNSUPPORTED_GIT_SECTION')
         need(keys<=allowed,'UNSUPPORTED_GIT_CONFIG_KEY')
 
-def retire_unassigned(processes):
+def cleanup_seconds(deadline,cap):
+    need(type(deadline) is int and type(cap) in (int,float) and 0<cap<=10,'CLEANUP_DEADLINE_SHAPE')
+    remaining=(deadline-time.perf_counter_ns())/1000000000
+    need(remaining>0,'CLEANUP_DEADLINE_EXCEEDED');return min(cap,remaining)
+
+def retire_unassigned(processes,deadline=None):
     """Never let one own-handle cleanup failure skip the remaining evidence."""
     errors=[]
     for process in processes:
         try:
             if process.poll() is None:
-                process.terminate();process.wait(timeout=5)
+                process.terminate()
+                remaining=5 if deadline is None else max(0,min(5,(deadline-time.perf_counter_ns())/1000000000))
+                process.wait(timeout=remaining)
                 errors.append('PREASSIGN_BOOTSTRAP_ABORTED')
         except BaseException as error:errors.append(type(error).__name__)
     return errors
@@ -180,8 +187,10 @@ class Capture:
                         else:self.ready.put_nowait(frame)
                     elif len(pending)>256:self.error='BOOTSTRAP_BOUND';first=False
         except BaseException:self.error='CAPTURE_FAILED'
-    def save(self,root,name):
-        for thread in self.threads:thread.join(2)
+    def save(self,root,name,deadline=None):
+        for thread in self.threads:
+            remaining=2 if deadline is None else max(0,min(2,(deadline-time.perf_counter_ns())/1000000000))
+            thread.join(remaining)
         need(all(not thread.is_alive() for thread in self.threads),'OWN_PIPE_NOT_RETIRED')
         for label,raw in self.logs.items():(root/(name+'.'+label+'.log')).write_bytes(raw)
 
@@ -279,12 +288,14 @@ def execute(package,manifest_raw,pin,root):
     except BaseException as error:
         failure=error;result['failure_type']=type(error).__name__;result['failure_code']=str(error) if isinstance(error,SmokeBlocked) else 'DETAILS_WITHHELD'
     finally:
+        cleanup_started=time.perf_counter_ns();cleanup_deadline=cleanup_started+10000000000
+        result['work_elapsed_ns']=cleanup_started-started
         if job is not None:
             try:
                 if job.accounting()['active']:
                     job.terminate_own()
-                result['accounting']=job.wait_empty(10)
-                for process in processes:process.wait(timeout=5)
+                result['accounting']=job.wait_empty(cleanup_seconds(cleanup_deadline,10))
+                for process in processes:process.wait(timeout=cleanup_seconds(cleanup_deadline,5))
                 result['cleanup']=cleanup_summary(result['accounting']['active'],[p.returncode for p in processes])
             except BaseException as error:
                 result['cleanup']='FAILED_OR_UNCONFIRMED';result['cleanup_error']=type(error).__name__
@@ -292,7 +303,7 @@ def execute(package,manifest_raw,pin,root):
             finally:
                 safe_to_close=True
                 if watchdog is not None:
-                    try:watchdog.finish()
+                    try:watchdog.finish(timeout=max(0,min(1,(cleanup_deadline-time.perf_counter_ns())/1000000000)))
                     except BaseException as error:
                         failure=failure or error;result['watchdog']='EXPIRED_FAILED_OR_UNCONFIRMED'
                         safe_to_close=not watchdog.thread.is_alive()
@@ -304,16 +315,21 @@ def execute(package,manifest_raw,pin,root):
                     result['job_close']='FAILED_OR_UNCONFIRMED';failure=failure or error
         # A pre-Assign failure still owns a direct bootstrap handle. No target/child
         # is allowed before GO; terminate ONLY that retained Popen if still alive.
-        orphan_errors=retire_unassigned(processes)
+        orphan_errors=retire_unassigned(processes,deadline=cleanup_deadline)
         if orphan_errors:
             result['retained_process_cleanup_errors']=orphan_errors;failure=failure or SmokeBlocked('OWN_PROCESS_CLEANUP_FAILED_OR_ABORTED')
         for name,capture in captures:
-            try:capture.save(root,name)
+            try:capture.save(root,name,deadline=cleanup_deadline)
             except BaseException as error:
                 failure=failure or error;result['pipe_cleanup']='FAILED_OR_UNCONFIRMED'
         try:validate_captures(captures)
         except BaseException as error:
             failure=failure or error;result['capture_status']='FAILED_OR_OVERFLOW'
+        retired_at=time.perf_counter_ns()
+        result['cleanup_elapsed_ns']=retired_at-cleanup_started;result['family_elapsed_ns']=retired_at-started
+        if result['work_elapsed_ns']>20000000000 or result['cleanup_elapsed_ns']>10000000000 or result['family_elapsed_ns']>30000000000:
+            failure=failure or SmokeBlocked('PROCESS_FAMILY_TIME_BUDGET_EXCEEDED');result['time_budget']='EXCEEDED'
+        else:result['time_budget']='OBSERVED_WITHIN_SCOPED_FAMILY_WINDOW'
         try:
             after=verify_package(package,manifest_raw,pin);need(before==after,'PROTECTED_PACKAGE_CHANGED')
             result['package_before_after_equal']=True

@@ -84,8 +84,9 @@ class OwnWatchdog:
         try:self.job.terminate_own()
         except BaseException as error:self.error=type(error).__name__
     def start(self):self.thread.start()
-    def finish(self):
-        self.stop.set();self.thread.join(1)
+    def finish(self,timeout=1):
+        _need(type(timeout) in (int,float) and math.isfinite(timeout) and 0<=timeout<=1,'WATCHDOG_JOIN_BUDGET')
+        self.stop.set();self.thread.join(timeout)
         _need(not self.thread.is_alive(),'OWN_WATCHDOG_NOT_RETIRED')
         _need(not self.expired.is_set() and self.error is None,'OWN_WATCHDOG_EXPIRED_OR_FAILED')
 

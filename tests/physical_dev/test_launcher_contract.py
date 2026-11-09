@@ -4,6 +4,21 @@ from pathlib import Path
 from unittest.mock import patch
 
 class LauncherContractTests(unittest.TestCase):
+    def test_one_cleanup_deadline_is_shared_by_all_waits(self):
+        from tools.physical_dev.ls5_smoke import cleanup_seconds,SmokeBlocked
+        with patch('time.perf_counter_ns',return_value=100):self.assertEqual(cleanup_seconds(1000000100,5),1)
+        with patch('time.perf_counter_ns',return_value=1000000100):
+            with self.assertRaises(SmokeBlocked):cleanup_seconds(1000000100,5)
+        with patch('time.perf_counter_ns',return_value=100):self.assertEqual(cleanup_seconds(10000000100,2),2)
+
+    def test_expired_cleanup_still_attempts_own_termination_without_another_wait_window(self):
+        from tools.physical_dev.ls5_smoke import retire_unassigned
+        from unittest.mock import Mock
+        process=Mock();process.poll.return_value=None
+        with patch('time.perf_counter_ns',return_value=100):errors=retire_unassigned([process],deadline=99)
+        process.terminate.assert_called_once_with();process.wait.assert_called_once_with(timeout=0)
+        self.assertTrue(errors)
+
     def test_offline_source_rejects_promisor_alternate_and_include_config(self):
         from tools.physical_dev.ls5_smoke import offline_repository,SmokeBlocked
         import tempfile
