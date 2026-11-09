@@ -1,0 +1,107 @@
+{
+  "committed_cases": 25,
+  "A8_additional_postawait_probe": 1,
+  "skips": 0,
+  "full_suite_process_lifecycles": 12,
+  "probe_process_lifecycles": 3,
+  "all_retirements": [
+    {
+      "scope": "OWNED_LOOPBACK_LAB_RETIRED",
+      "processes": [
+        {
+          "pid": 17780,
+          "returncode": 1
+        },
+        {
+          "pid": 139212,
+          "returncode": 1
+        },
+        {
+          "pid": 100808,
+          "returncode": 1
+        }
+      ],
+      "all_owned_processes_waited": true,
+      "foreign_process_operations": 0,
+      "session_retirement": "OWNED_SERVERS_STOPPED_TEMPORARY_DIRECTORY_CLEANUP_FOLLOWS"
+    },
+    {
+      "scope": "OWNED_LOOPBACK_LAB_RETIRED",
+      "processes": [
+        {
+          "pid": 137688,
+          "returncode": 1
+        },
+        {
+          "pid": 136700,
+          "returncode": 1
+        },
+        {
+          "pid": 124404,
+          "returncode": 1
+        },
+        {
+          "pid": 135380,
+          "returncode": 1
+        },
+        {
+          "pid": 134020,
+          "returncode": 1
+        },
+        {
+          "pid": 136284,
+          "returncode": 1
+        },
+        {
+          "pid": 133932,
+          "returncode": 1
+        },
+        {
+          "pid": 102480,
+          "returncode": 1
+        },
+        {
+          "pid": 132484,
+          "returncode": 1
+        }
+      ],
+      "all_owned_processes_waited": true,
+      "foreign_process_operations": 0,
+      "session_retirement": "OWNED_SERVERS_STOPPED_TEMPORARY_DIRECTORY_CLEANUP_FOLLOWS"
+    },
+    {
+      "scope": "OWNED_LOOPBACK_LAB_RETIRED",
+      "processes": [
+        {
+          "pid": 138332,
+          "returncode": 1
+        },
+        {
+          "pid": 137460,
+          "returncode": 1
+        },
+        {
+          "pid": 131540,
+          "returncode": 1
+        }
+      ],
+      "all_owned_processes_waited": true,
+      "foreign_process_operations": 0,
+      "session_retirement": "OWNED_SERVERS_STOPPED_TEMPORARY_DIRECTORY_CLEANUP_FOLLOWS"
+    }
+  ],
+  "actual_postawait_observation": {
+    "scope": "A8_ACTUAL_POST_AWAIT_CONTEXT_INVALIDATION_NEGATIVE_ONLY",
+    "observations": [
+      {
+        "actual_read_operations": 7,
+        "job_key_in_same_read": true,
+        "response_untouched": true
+      }
+    ],
+    "actual_exception": "ResearchIdentityDenied",
+    "resource_observation_returned": false,
+    "job_key_absent": true,
+    "native_effect_permission": false
+  }
+}
