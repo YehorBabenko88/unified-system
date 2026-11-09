@@ -17,6 +17,18 @@ maps the existing adapter's Git source reads to the admitted exact Git executabl
 A6 owns Terminan PR77 commit161ea1e0fc3a3a4cd64783b0e111e1e119e14d71.
 Its fresh renderer, not a stored fixture, is the intended second stage.
 
+Root imported six assembly/materialize code/test/plan paths byte-exact from PR71
+45f03d46e5e42e7bd7225accc046ff50c9d3987a. Its source-owner qualification was60
+unique tests, including24 package tests. Root's combined working suite is81
+unique tests (45 existing Root/package +21 assembly +15 materialize), zero skips;
+these overlapping counts must not be added as independent runtime results.
+The copier requires an externally pinned canonical plan, exclusively new fixed
+private-parent destination, source identity/digest checks and complete copied
+file verification. It preserves partial evidence on failure and grants no
+runtime/physical authority. Directory-prefix sharing is admitted only when
+actual complete file maps are disjoint; duplicate/case/file-ancestor collisions
+deny. No complete physical package has been materialized or executed yet.
+
 The intended source family is Unified runtime ba2b1cec0c2b114586afb73696e282117eede987,
 Strattester aed8a7c8a952f96803c207d5e90b133969a47f04, MetaAnalyse
 f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1 and A6 PR77. The harness itself must also

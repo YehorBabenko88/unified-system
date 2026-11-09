@@ -1054,6 +1054,37 @@
   },
   "read_only_inventory": "COMPLETED",
   "readiness_outcome": "READ_ONLY_BASELINE_COMPLETED_EXECUTION_GATE_STILL_PENDING",
+  "refresh_20261109": {
+    "commit_available_bytes": 33292120064,
+    "cpu_current_load": "NOT_REMEASURED",
+    "disk_free_bytes": 1592165359616,
+    "effective_administrator": false,
+    "memory_available_bytes": 34030280704,
+    "os_version_revalidated_this_refresh": false,
+    "policies_acl_services_changed": false,
+    "raw_evidence": {
+      "LS5-RESOURCE-REFRESH-VALID-20261109.json": {
+        "bytes": 578,
+        "sha256": "a40e1d962ef278dc7eeb83612ce37a72b439b48b2e1042bf6d83f67457f02d50"
+      },
+      "LS5-TOKEN-ACL-REFRESH-VALID-20261109.json": {
+        "bytes": 1249,
+        "sha256": "7595a0eca1419a4c659dbc77e82e618285983b2d0930b3c6e8539fdb8a222ab1"
+      },
+      "LS5-TOKEN-RESOURCE-ACL-REFRESH-20261109.json": {
+        "bytes": 1496,
+        "sha256": "e5031e8da104b18e222bd5fcc53bfa5ee48c2a16e51e3b22c8f67a4dee3b5e6e"
+      }
+    },
+    "rejected_resource_collection": {
+      "file": "LS5-TOKEN-RESOURCE-ACL-REFRESH-20261109.json",
+      "reason": "CIM_QUERIES_ABORTED_METRICS_NOT_ACCEPTED_AS_FRESH",
+      "replacement": "LS5-RESOURCE-REFRESH-VALID-20261109.json"
+    },
+    "resource_observed_at_utc": "2026-11-09T21:09:38.692185+00:00",
+    "resources_scope": "SNAPSHOT_NOT_RESERVATION",
+    "token_observed_at_utc": "2026-11-09T21:09:38.4677508Z"
+  },
   "running_application_attribution": "CANDIDATE_COMMANDLINE_TERMS_ONLY_NO_RAW_COMMANDLINES_RETAINED_NOT_NATIVE_IDENTITY",
   "schema": "unified.ls5.physical-dev.readiness.v1",
   "security_services_observed": [
@@ -1083,6 +1114,14 @@
     "strattester": "aed8a7c8a952f96803c207d5e90b133969a47f04",
     "terminan_render_baseline": "22e6e7230d2f66fd22dda648a77910579812bd60",
     "unified": "ba2b1cec0c2b114586afb73696e282117eede987"
+  },
+  "source_preparation": {
+    "assembly_materialize_source_head": "45f03d46e5e42e7bd7225accc046ff50c9d3987a",
+    "independent_source_review": "IN_PROGRESS_NOT_EXECUTION_ADMISSION",
+    "native_job_or_target_or_browser_executed": false,
+    "package_sha256": null,
+    "root_source_head": "495c7ad2da78a431d21d976b4996f288ffb6cdbf",
+    "terminan_fresh_source_head": "161ea1e0fc3a3a4cd64783b0e111e1e119e14d71"
   },
   "ssh": {
     "authentication_test": "NOT_RUN_THIS_READINESS",
