@@ -667,7 +667,7 @@
     "P0_confirmed_defects": 0,
     "P0_absence_proven": false,
     "P1_open": 7,
-    "P2_open": 6,
+    "P2_open": 7,
     "F08": "FIX_VERIFIED_OFFLINE",
     "F09": "FIX_VERIFIED_OFFLINE_AT_42686cd",
     "F10": "FIX_VERIFIED_OFFLINE_AT_42686cd",
@@ -3959,7 +3959,7 @@
     "mandatory_hosted": "NOT_QUALIFIED",
     "overall": "NO_GO"
   },
-  "latest_addendum_scope": "phase140 exact PR74 source correction only; owner80/Root101 not transferred",
+  "latest_addendum_scope": "phase141 frozen package b read-only full bytes/source/tool origins; newF32 aggregate cleanup budget source blocker",
   "PR54_b144_terminal_CI_20261109": {
     "head": "b144a5e0fd3af90c975bfc0f0123234628dbb696",
     "direct_run": 42646665067,
@@ -4227,5 +4227,14 @@
     "runtime": "NOT_RUN_BY_A8",
     "physical_execution_admission": "NOT_GRANTED",
     "F31": "SOURCE_CORRECTION_ACK_AT_E5_RUNTIME_QUALIFICATION_PENDING"
+  },
+  "frozen_package_b_review": {
+    "manifest_sha256": "ed0dea586b53d5d6a3c3c5436ba9792d91c92da1b2686a8426a69fdfda3bf7bb",
+    "file_count": 19777,
+    "bytes": 1013589929,
+    "source_primary_files": 5292,
+    "result": "FILE_AND_SOURCE_BYTES_ONLY",
+    "execution_admission": "NOT_GRANTED_F32_SOURCE_BLOCKER",
+    "A8_app_native_browser_tests": 0
   }
 }

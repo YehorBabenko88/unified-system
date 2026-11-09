@@ -2609,3 +2609,47 @@ P0_P1_P2:7 open P1 /6 P2; F31 source corrected, independent runtime qualificatio
 EVIDENCE: exact original PR metadata,1654-file raw map, reviewed AST and module digests.
 NEXT_ACTIONS: review concrete assembled package, external SHA, invocation and fresh isolation readiness; independently qualify admitted runtime fault regressions separately.
 GO_NO_GO: NO-GO. TAILSCALE_REMOVAL_ACCEPTANCE: BLOCKED; no automatic removal.
+
+
+# Frozen package b: independent read-only bytes, origins and invocation review
+
+Candidate `C:/Users/LS-5/.codex/native-e2e-evidence-20261109/ls5-package-461ee1d-b`. External manifest SHA256 `ed0dea586b53d5d6a3c3c5436ba9792d91c92da1b2686a8426a69fdfda3bf7bb`; activation-plan SHA256 `594965484fd40846e8edad04897ebda8f901eccc9e85ff953fa1deaf7f95e243`; full-copy receipt SHA256 `933b9e491cf375c65a4b1b3ce7ac3b8bd59d5a044ad17ca7fae49b709d1bf267`. Original files independently read/hash-verified. A8 used only own standard-library read/hash/AST orchestration and read-only Git object queries in own clones. No project/helper import or execution, PLAN_ONLY call, target, Job/native API, SDK, browser or physical fixture by A8.
+
+| Requirement ID | Repository / PR / exact HEAD | Test / Environment | Expected | Actual / status | Evidence | Severity / Required correction |
+|---|---|---|---|---|---|---|
+| A8-PACKAGE-B | Unified harness PR69 /461ee1d51f432dc1ccf419f22fd7c1cd41095a8e tree62f3440a89b63e7454afebdeeb93c38b013a2f75 | Independent file-table traversal/hash/stat / frozen candidate | Complete ordinary single-link bytes match external manifest | PASS_FILE_BYTES_ONLY:19777 files,1013589929B,2277 directories; no extras/reparse/hardlinks observed | [verification](phase141/read-only-package-verification.json), [manifest](phase141/ls5-package-461-b.manifest.json) | No runtime or custody grant |
+| A8-SOURCE-B | Five exact source pairs below | Own Git blob SHA1 + raw SHA256 comparison / no packaged Git execution | All primary files match commits/trees; no non-Git extras | PASS_SOURCE_BYTES:5292 primary files total; extras only .git metadata | Same verification | Git metadata execution-time offline guard not run |
+| A8-TOOLS-B | Descriptive dependency versions in manifest; no PR | Copied selected file bytes versus current originals and f6 receipt / read-only | Full selected tool bytes bound | PASS_SELECTED_BYTES; not publisher/loaded-DLL proof | [tool origins](phase141/tool-origin-verification.json), [SDK scope](phase141/SDK-scope-reconciliation.json) | External source trust and fresh custody remain separate |
+| A8-F32 | Unified PR69 /461 above | Static cleanup ordering versus activation cleanup_seconds10 | One aggregate cleanup budget with elapsed/unknown evidence | FAIL_SOURCE: independent sequential waits/joins do not establish aggregate10 | [AST and core hashes](phase141/source-cleanup-and-reference-review.json), [activation](phase141/ls5-package461-b.activation-plan.json), [finding](phase141/finding.json) | P2 OPEN; separate immutable source successor, no hotpatch b |
+| A8-EXECUTION-B | Exact same frozen candidate | Execution admission / all app/native/browser tests | Correct source, concrete isolation and authorized lane | BLOCKED; no A8 application tests, no execution admission | This report | Root already held candidate; no launch authorized by this review |
+
+Source pairs independently verified against raw Git objects in A8-owned databases:
+
+- runtime-unified PR68:ba2b1cec0c2b114586afb73696e282117eede987 /tree4e5c535367e4e7711a64096ff6e9c78038c55717,1642 primary files.
+- harness PR69:461ee1d51f432dc1ccf419f22fd7c1cd41095a8e /tree62f3440a89b63e7454afebdeeb93c38b013a2f75,1668 primary files.
+- strattester (PR number not independently re-established here):aed8a7c8a952f96803c207d5e90b133969a47f04 /treeeed3a87c6e33f0993424f20b49ab5af93bd09b9a,800 files.
+- meta_analyse (PR number not independently re-established here):f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1 /treec155c935a801fa98b7c78219c9798ce1f1be8848,782 files.
+- Terminan PR77:161ea1e0fc3a3a4cd64783b0e111e1e119e14d71 /tree5b84ecbeb86dc897c9e9362790da9f0e6ade668a,400 files.
+
+bybit-cluster-grid and math are not copied source components of this scoped direct-target/render candidate. Their absence is not six-repository, distributed or full physical acceptance. All primary extra files in the five source namespaces are Git metadata only; this independent comparison does not execute or qualify packaged .git config, refs, alternates or batch provenance code. The existing controller must still deny unsupported Git configuration during its own gated provenance check. One initial audit pass could not find strattester aed8 in the selected own object database; after fetching the exact object from its repository, the complete pass succeeded. The failed attempt was audit preparation, not application failure/PASS.
+
+All selected current original tool files match copied manifest bytes: CPython3404/115011589B; Git9593/423632674B; Chromium16/212298204B; node_modules528/12135158B; tooling seeds2/93917804B. Original f6 export receipt file table equals the complete copied Git table, including its reported172 hardlinked source paths; target package files are all independently observed single-link. Receipt authentication confirms the recorded data and current bytes, not historical process behavior, f6/e5 close-fault qualification, publisher validation or loaded-DLL custody. Owner copy duration501.297s and owner PLAN_ONLY result are not independently timed/replayed by A8.
+
+The528 SDK files include521 files in the three package namespaces plus6 .bin wrappers and .package-lock.json. Copied/current-original528-file maps match, and the two selected SDK source hashes from phase138 match. No full historical521-file map equality is asserted from its aggregate digest alone; the older scope is not silently transferred. Nothing was imported or launched.
+
+Invocation binds system CPython4d6f5f81..., -I -S -B, external controller ls5-source-qualified-461ee1d/tools/physical_dev/ls5_smoke.py, exact package/manifest SHA, new sibling state ls5-smoke-461-b, --execute and shell=false. External controller bytes match packaged700c core; the other reviewed core bootstrap1b3c/supervisorc20d/package5bd7 are unchanged. Corrected materialize451ad/export6e7 are both present. State path was absent when checked. The execution flag is mode DATA, not consent or admission. Parent executable file hash does not establish loaded DLLs, current effective token, full parent Job chain or source/path custody throughout execution.
+
+F32 independently confirms Root's own pre-launch concern: finally calls wait_empty(10), then Popen.wait(5) for each retained process, watchdog.finish joins1, orphan fallback may wait5 each, and each capture has two joins2. They use separate fresh budgets rather than one remaining deadline. No aggregate cleanup10 or combined20+10 bound follows. Ordinary native calls and final package verification are additional cooperative/OS limitations, not hard-real-time deadlines. No actual timeout, leaked process or physical incident was observed. Root had already frozen b and proposed a separate committed successor; A8 did not edit implementation or run it. Prior core SOURCE_ONLY_ACK is restricted by this newly identified source-preparation blocker.
+
+Existing pre-materialize ACL snapshot was read and hash-referenced, not reacquired: it reports nonadmin, parent owner LS5/LS-5, user/admin/system full control and CodexSandboxUsers1179817 (read/execute) inherited. No fresh per-package/ancestor ACL, token, resource-headroom or full-chain admission was performed. Manifest/hash checks detect the observed file bytes; they do not prove exclusive namespace custody against a concurrent writer. No current release-wide approved release-manifest/inventory/contracts are inferred from this local disposable package manifest.
+
+RELEASE_MANIFEST_STATUS: scoped package manifest bytes verified; unified approved release package NOT_ESTABLISHED.
+NODE_INVENTORY_STATUS: existing ACL snapshot reference only; no fresh A8 physical inventory/admission.
+CONTRACT_STATUS: pinned source bytes verified; F32 cleanup source correction pending.
+OFFLINE_TESTS: read-only bytes/source checks PASS within scope; application/helper/fault tests NOT_RUN.
+WINDOWS_CI: unchanged; Root101 LOCAL_NOT_HOSTED not accepted as mandatory hosted CI; F26 open.
+PHYSICAL_TESTS: no app/native/SDK/browser executed by A8; physical fault injection BLOCKED.
+P0_P1_P2:7 open P1 /7 P2; new F32P2, F31 source-corrected/runtime qualification pending; absence of P0 not proven.
+EVIDENCE: original external manifest/activation/copy/export receipts, independent full file and source verification, selected tool origin comparisons, static cleanup AST.
+NEXT_ACTIONS: Root/owner publish separate aggregate-cleanup source successor and evidence; review exact successor and newly assembled immutable package/invocation plus fresh isolation conditions before any execution admission. Keep b frozen.
+GO_NO_GO: NO-GO. TAILSCALE_REMOVAL_ACCEPTANCE: BLOCKED.
