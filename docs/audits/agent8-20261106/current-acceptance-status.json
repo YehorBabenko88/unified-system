@@ -3959,7 +3959,7 @@
     "mandatory_hosted": "NOT_QUALIFIED",
     "overall": "NO_GO"
   },
-  "latest_addendum_scope": "phase129 actual failed context entry resource/lock leak; prior12 observed PASS retained, unconditional cleanup not accepted",
+  "latest_addendum_scope": "phase130 exact278 owned Core proxy correction only; Root consumer and F28 remain open, no fresh global recheck",
   "PR54_b144_terminal_CI_20261109": {
     "head": "b144a5e0fd3af90c975bfc0f0123234628dbb696",
     "direct_run": 42646665067,
@@ -4057,5 +4057,23 @@
     "actual_contender": "DENIED_UNTIL_EXPLICIT_OWN_CLOSE",
     "manual_cleanup_completed": true,
     "native_rpc": 0
+  },
+  "Grid278_owned_proxy_fix": {
+    "head": "b0ddb78fed04cc29c7b0290ae75d1d8af84fcfec",
+    "tree": "308ff8bba75911853f5edc8f14ea63b4218f8a40",
+    "A8_unique_tests": 2,
+    "skips": 0,
+    "raw_primary_files": {
+      "Grid": 820,
+      "Unified1f6": 1519
+    },
+    "actual_native_read": "THREE_VOTERS_ONE_LEADER",
+    "trap_requests": 0,
+    "all_3_own_Consul_retired": true,
+    "two_own_children": "RETURN0",
+    "F27": "CORE_COMPONENT_FIX_VERIFIED_ROOT_CONSUMER_PENDING",
+    "F28": "OPEN_UNCHANGED",
+    "hosted": "NOT_QUALIFIED_HERE",
+    "overall": "NO_GO"
   }
 }
