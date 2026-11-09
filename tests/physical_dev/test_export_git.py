@@ -7,6 +7,8 @@ import unittest
 from unittest.mock import patch
 
 from tools.physical_dev import export_git
+from tools.physical_dev import package as integrity
+from test_materialize import assert_owned_close_failure
 
 
 class GitExportTests(unittest.TestCase):
@@ -131,6 +133,24 @@ class GitExportTests(unittest.TestCase):
         receipt=export_git.export_git(self.destination)
         self.assertTrue((self.destination/"empty/subdirectory").is_dir())
         self.assertIn("empty/subdirectory",receipt["directories"])
+
+    def test_export_target_close_failure_still_attempts_source_close(self):
+        target=self.root/"export-target-close.exe"
+        identity=integrity._signature(self.main.lstat())
+        assert_owned_close_failure(self,lambda:export_git._hash_copy(self.main,identity,target))
+        self.assertTrue(target.exists())
+
+    def test_export_prior_write_failure_preserved_despite_target_close_failure(self):
+        target=self.root/"export-write-close.exe"
+        identity=integrity._signature(self.main.lstat())
+        assert_owned_close_failure(self,lambda:export_git._hash_copy(self.main,identity,target),write_failure=True)
+        self.assertTrue(target.exists())
+
+    def test_export_caller_handled_exception_cannot_hide_new_close_failure(self):
+        target=self.root/"export-caller-except.exe";identity=integrity._signature(self.main.lstat())
+        try:raise LookupError("inert caller handled error")
+        except LookupError:
+            assert_owned_close_failure(self,lambda:export_git._hash_copy(self.main,identity,target))
 
 
 if __name__=="__main__":unittest.main()

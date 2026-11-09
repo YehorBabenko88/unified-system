@@ -11,6 +11,34 @@ from tools.physical_dev import assembly, materialize
 from tools.physical_dev import package as integrity
 
 
+def assert_owned_close_failure(testcase,copy_call,*,write_failure=False):
+    """Inject on owned inert descriptors and close any retained test FDs safely."""
+    real_open=os.open;real_close=os.close;opened=[];attempts=[];pending=set()
+    close_error=OSError("inert target close failure");write_error=OSError("inert prior write failure")
+    def open_owned(*args,**kwargs):
+        descriptor=real_open(*args,**kwargs);opened.append(descriptor);pending.add(descriptor);return descriptor
+    def close_owned(descriptor):
+        attempts.append(descriptor)
+        if len(opened)==2 and descriptor==opened[1]:raise close_error
+        real_close(descriptor);pending.discard(descriptor)
+    captured=None
+    try:
+        with patch.object(materialize.os,"open",side_effect=open_owned),patch.object(materialize.os,"close",side_effect=close_owned):
+            try:
+                if write_failure:
+                    with patch.object(materialize.os,"write",side_effect=write_error):copy_call()
+                else:copy_call()
+            except OSError as exc:captured=exc
+    finally:
+        # The injected close never closes its target. This test's own fallback
+        # closes only the still-pending owned descriptors, with no fd retry loop.
+        for descriptor in pending:real_close(descriptor)
+    testcase.assertEqual(len(opened),2)
+    testcase.assertEqual(attempts,[opened[1],opened[0]])
+    testcase.assertIs(captured,write_error if write_failure else close_error)
+    testcase.assertTrue(any("OWNED_FD_CLOSE_FAILED" in note for note in getattr(captured,"__notes__",[])))
+
+
 class MaterializeTests(unittest.TestCase):
     def setUp(self):
         self.temp=tempfile.TemporaryDirectory();self.addCleanup(self.temp.cleanup)
@@ -132,6 +160,25 @@ class MaterializeTests(unittest.TestCase):
         with patch.object(materialize.assembly,"MAX_PLAN_BYTES",1),patch.object(materialize.json,"loads",side_effect=AssertionError("oversized parse")):
             with self.assertRaises(materialize.MaterializeError):self.call()
         self.assertFalse(self.destination.exists())
+
+    def test_target_close_failure_still_attempts_source_close_and_cannot_pass(self):
+        source=self.source/"inert.bin";target=self.root/"target-close.bin"
+        record=dict(bytes=source.stat().st_size,sha256=hashlib.sha256(source.read_bytes()).hexdigest())
+        assert_owned_close_failure(self,lambda:materialize._copy_file(source,target,record))
+        self.assertTrue(target.exists())
+
+    def test_prior_write_failure_survives_target_close_failure_with_note(self):
+        source=self.source/"inert.bin";target=self.root/"write-close.bin"
+        record=dict(bytes=source.stat().st_size,sha256=hashlib.sha256(source.read_bytes()).hexdigest())
+        assert_owned_close_failure(self,lambda:materialize._copy_file(source,target,record),write_failure=True)
+        self.assertTrue(target.exists())
+
+    def test_caller_handled_exception_cannot_hide_new_close_failure(self):
+        source=self.source/"inert.bin";target=self.root/"caller-except.bin"
+        record=dict(bytes=source.stat().st_size,sha256=hashlib.sha256(source.read_bytes()).hexdigest())
+        try:raise LookupError("inert caller handled error")
+        except LookupError:
+            assert_owned_close_failure(self,lambda:materialize._copy_file(source,target,record))
 
 
 if __name__=="__main__":unittest.main()
