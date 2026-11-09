@@ -42,9 +42,16 @@ An unknown ancestor Job can be stricter. Parent/OS freeze is not solved here.
 
 Source/package provenance preparation precedes the target-family timer and does
 not start an application target; it can take longer than the proposed30s family
-window. Its read-only Git calls have individual bounds, not a proven whole-tree
-wall bound. Independent review must settle this remaining custody/deadline gate
-before physical execution; no blanket watchdog qualification is claimed.
+window. A5 correctly identified that the old batch reader's wait(timeout15)
+occurred AFTER blocking reads. The prepared successor gives actual read/write/
+flush exchanges15s timers against their original retained Git Popen, followed by
+own-only terminate/wait5 and join-before-custody-release. A monotonic300s source
+preparation deadline is checked before each command/exchange; no new operation
+starts after it. Context cleanup attempts every retained batch even on failure.
+Global/system Git configuration and lazy fetch are disabled only in the child
+environment; fixed built-in read commands do not request providers or hooks.
+This is cooperative bounded preparation plus cleanup, not hard real-time or
+survival of a frozen supervisor/OS. Fresh exact-source review remains required.
 
 Only retained own Job/Popen handles may be terminated. SDK cleanup denial or
 unconfirmed exit remains failure even if Root later tears down its own Job.
@@ -68,8 +75,8 @@ deterministic no-child unit coverage, not physical enforcement proof.
 Retained original RED logs under the private evidence root:
 `ls5-primary-git-capture-red.log`, `ls5-cleanup-red.log`,
 `ls5-watchdog-red.log`, `ls5-bootstrap-git-red.log`.
-Working source suite:42 unique tests, zero skips. Original package24 tests are
-included in that count; they are not42 new runtime tests. Exact committed source
+Working source suite:44 unique tests, zero skips. Original package24 tests are
+included in that count; they are not44 new runtime tests. Exact committed source
 qualification and independent review are still required.
 
 The assembly preparer reproduced Windows pathname/descriptor mode differences

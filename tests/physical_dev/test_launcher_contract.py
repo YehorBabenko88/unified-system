@@ -4,6 +4,28 @@ from pathlib import Path
 from unittest.mock import patch
 
 class LauncherContractTests(unittest.TestCase):
+    def test_primary_source_deadline_denies_before_creating_process(self):
+        from tools.physical_dev.ls5_smoke import PrimaryGit,SmokeBlocked
+        root=Path('C:/qualified-source');gate=PrimaryGit(Path('C:/pinned/git.exe'),{}, {str(root)})
+        gate.deadline=0
+        with patch('subprocess.Popen',side_effect=AssertionError('must not launch after deadline')):
+            with self.assertRaises(SmokeBlocked):gate.Popen(['git','--no-replace-objects','-C',str(root),'cat-file','--batch'],stdin=-1,stdout=-1)
+
+    def test_primary_pipe_timeout_retires_only_its_retained_process(self):
+        from tools.physical_dev.ls5_smoke import TimedPrimaryStream,SmokeBlocked
+        from unittest.mock import Mock
+        process=Mock();stream=Mock();stream.read.return_value=b'late'
+        class Timer:
+            def __init__(self,seconds,callback):self.callback=callback
+            def start(self):self.callback()
+            def cancel(self):pass
+            def join(self,seconds):pass
+            def is_alive(self):return False
+        with patch('threading.Timer',Timer):
+            bounded=TimedPrimaryStream(stream,process,lambda:1)
+            with self.assertRaises(SmokeBlocked):bounded.read(4)
+        process.terminate.assert_called_once_with();process.wait.assert_called_once_with(timeout=5)
+
     def test_cleanup_failure_is_retained_without_skipping_next_own_process(self):
         from tools.physical_dev.ls5_smoke import retire_unassigned
         from unittest.mock import Mock

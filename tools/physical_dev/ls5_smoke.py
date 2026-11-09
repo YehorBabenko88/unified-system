@@ -21,6 +21,50 @@ def digest(path):
         while chunk:=source.read(65536):result.update(chunk)
     return result.hexdigest()
 
+class TimedPrimaryStream:
+    """Bound blocking pipe exchanges, retaining the ORIGINAL source-Git Popen.
+
+    A timer requests termination of that handle only, then bounded wait. This
+    does not survive supervisor/OS freeze and does not confer worker authority.
+    """
+    def __init__(self,stream,process,remaining):self.stream=stream;self.process=process;self.remaining=remaining
+    def _call(self,method,*args):
+        expired=threading.Event();errors=[]
+        def abort():
+            expired.set()
+            try:self.process.terminate()
+            except BaseException as error:errors.append(type(error).__name__)
+            try:self.process.wait(timeout=5)
+            except BaseException as error:errors.append(type(error).__name__)
+        timer=threading.Timer(self.remaining(),abort);timer.daemon=True;timer.start();original=None
+        try:return getattr(self.stream,method)(*args)
+        except BaseException as error:original=error;raise
+        finally:
+            timer.cancel();timer.join(6)
+            if timer.is_alive() or expired.is_set() or errors:
+                if original is not None:original.add_note('Primary Git pipe timeout or cleanup unknown')
+                else:raise SmokeBlocked('PRIMARY_BATCH_PIPE_TIMEOUT_OR_UNKNOWN')
+    def read(self,size):return self._call('read',size)
+    def readline(self):return self._call('readline')
+    def write(self,raw):return self._call('write',raw)
+    def flush(self):return self._call('flush')
+    def close(self):return self.stream.close()
+
+class PrimaryBatch:
+    def __init__(self,process,remaining):
+        self.process=process;self.remaining=remaining
+        self.stdin=TimedPrimaryStream(process.stdin,process,remaining);self.stdout=TimedPrimaryStream(process.stdout,process,remaining)
+    @property
+    def returncode(self):return self.process.returncode
+    def wait(self,timeout):
+        try:return self.process.wait(timeout=min(timeout,self.remaining()))
+        except BaseException:
+            self.retire();raise
+    def retire(self):
+        try:
+            if self.process.poll() is None:self.process.terminate()
+        finally:self.process.wait(timeout=5)
+
 class PrimaryGit:
     """The old verifier's batch subprocess also gets the pinned executable.
 
@@ -30,12 +74,31 @@ class PrimaryGit:
     PIPE=subprocess.PIPE
     def __init__(self,executable,environment,roots):
         self.executable=str(executable);self.environment=dict(environment);self.roots=frozenset(roots)
+        self.deadline=time.monotonic()+300;self.batches=[]
+    def remaining(self):
+        remaining=self.deadline-time.monotonic();need(remaining>0,'PRIMARY_SOURCE_PREPARATION_DEADLINE')
+        return min(15,remaining)
     def Popen(self,argv,**options):
         need(type(argv) is list and len(argv)==6 and argv[:3]==['git','--no-replace-objects','-C']
              and argv[3] in self.roots and argv[4:]==['cat-file','--batch'],'PRIMARY_BATCH_COMMAND')
         need(set(options)=={'stdin','stdout'} and all(v==subprocess.PIPE for v in options.values()),'PRIMARY_BATCH_OPTIONS')
-        return subprocess.Popen([self.executable,'--no-replace-objects','--no-optional-locks','-c','core.fsmonitor=false',*argv[2:]],
+        self.remaining()
+        process=subprocess.Popen([self.executable,'--no-replace-objects','--no-optional-locks','-c','core.fsmonitor=false',*argv[2:]],
             **options,env=self.environment,shell=False,close_fds=True,cwd=argv[3])
+        batch=PrimaryBatch(process,self.remaining);self.batches.append(batch);return batch
+    def __enter__(self):return self
+    def __exit__(self,kind,original,traceback):
+        errors=[]
+        for batch in self.batches:
+            try:batch.retire()
+            except BaseException as error:errors.append(type(error).__name__)
+            for stream in (batch.stdin,batch.stdout):
+                try:stream.close()
+                except BaseException as error:errors.append(type(error).__name__)
+        if errors:
+            if original is not None:original.add_note('Primary Git cleanup unknown: '+','.join(errors))
+            else:raise SmokeBlocked('PRIMARY_BATCH_CLEANUP_UNKNOWN')
+        return False
 
 def validate_captures(captures):
     need(all(capture.error is None for _,capture in captures),'CAPTURE_FAILED_OR_OVERFLOW')
@@ -105,15 +168,18 @@ def source_bindings(package,manifest):
     helper=package/'sources/runtime-unified/docs/intelligence/identity/run_qualification.py'
     raw=helper.read_bytes();need(hashlib.sha256(raw).hexdigest()=='e3733379da5e0cde84573f3279d265c91e16eceb8c94aeeda8983b51031216fe','PRIMARY_GUARD_PIN')
     namespace={'__name__':'physical_pilot_primary_guard','__file__':str(helper)};exec(compile(raw,str(helper),'exec'),namespace)
-    clean={'SystemRoot':os.environ.get('SystemRoot','C:\\Windows'),'PATH':str(trusted.parent)+';C:\\Windows\\System32','GIT_OPTIONAL_LOCKS':'0'}
-    def git(root,*args):return subprocess.check_output([str(trusted),'--no-replace-objects','--no-optional-locks','-c','core.fsmonitor=false','-C',str(root),*args],env=clean,timeout=15)
+    clean={'SystemRoot':os.environ.get('SystemRoot','C:\\Windows'),'PATH':str(trusted.parent)+';C:\\Windows\\System32','GIT_OPTIONAL_LOCKS':'0',
+           'GIT_CONFIG_NOSYSTEM':'1','GIT_CONFIG_GLOBAL':'NUL','GIT_NO_LAZY_FETCH':'1'}
+    primary=PrimaryGit(trusted,clean,{str(package/'sources'/name) for name in ('runtime-unified','strattester','meta_analyse','terminan','harness')})
+    def git(root,*args):return subprocess.check_output([str(trusted),'--no-replace-objects','--no-optional-locks','-c','core.fsmonitor=false','-C',str(root),*args],env=clean,timeout=primary.remaining())
     namespace['git']=git
-    namespace['subprocess']=PrimaryGit(trusted,clean,{str(package/'sources'/name) for name in ('runtime-unified','strattester','meta_analyse','terminan','harness')})
-    for name in ('runtime-unified','strattester','meta_analyse','terminan','harness'):
-        source=package/'sources'/name;head=git(source,'rev-parse','HEAD').decode().strip()
-        need(head==refs.get(name,{}).get('commit'),'ACTUAL_PRIMARY_SOURCE_HEAD')
-        need(git(source,'rev-parse','HEAD^{tree}').decode().strip()==refs[name]['tree'],'ACTUAL_PRIMARY_SOURCE_TREE')
-        namespace['inventory'](source)
+    namespace['subprocess']=primary
+    with primary:
+        for name in ('runtime-unified','strattester','meta_analyse','terminan','harness'):
+            source=package/'sources'/name;head=git(source,'rev-parse','HEAD').decode().strip()
+            need(head==refs.get(name,{}).get('commit'),'ACTUAL_PRIMARY_SOURCE_HEAD')
+            need(git(source,'rev-parse','HEAD^{tree}').decode().strip()==refs[name]['tree'],'ACTUAL_PRIMARY_SOURCE_TREE')
+            namespace['inventory'](source)
     return refs
 
 def launch(job,argv,image,env,root,name,started,all_processes,all_captures):
