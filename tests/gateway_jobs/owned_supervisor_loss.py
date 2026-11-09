@@ -9,6 +9,8 @@ import json
 import os
 from pathlib import Path
 import re
+import shutil
+import stat
 import subprocess
 import sys
 import tempfile
@@ -25,6 +27,11 @@ class SupervisorLossError(RuntimeError):
         self.origin_diagnostic=origin
         self.cleanup_diagnostics=tuple(cleanup)
         self.observation=observation
+
+class OwnFrameError(ValueError):
+    def __init__(self,code,raw):
+        super().__init__(code)
+        self.bounded_frame=(raw[:512]+(b'...BOUNDED...' if len(raw)>1024 else b'')+raw[-512:] if len(raw)>1024 else raw).decode('ascii','backslashreplace')
 
 def _need(ok,code):
     if not ok:raise ValueError(code)
@@ -88,8 +95,18 @@ def _api():
         fn=getattr(k,name);fn.argtypes=args;fn.restype=result
     return k
 
+def _git_path():
+    path=shutil.which('git')
+    _need(path is not None,'OWN_GIT_EXECUTABLE_UNAVAILABLE')
+    return Path(path).resolve()
+
+def _environment(private):
+    env={key:os.environ[key] for key in ('SYSTEMROOT','WINDIR') if key in os.environ}
+    env.update(TEMP=str(private),TMP=str(private),PATH=str(_git_path().parent))
+    return env
+
 def _grid(repository):
-    raw=subprocess.check_output(['git','--no-replace-objects','-C',str(repository),'cat-file','blob',
+    raw=subprocess.check_output([str(_git_path()),'--no-replace-objects','-C',str(repository),'cat-file','blob',
         '40e9c8dc274a2746018bc1aa08d103cd0187cecc:grid/ml_windows_job.py'],timeout=10)
     _need(hashlib.sha256(raw).hexdigest()==gw._GRID_JOB_SHA,'GRID_PRIMARY_PIN')
     module=types.ModuleType('owned_loss_primary_grid');exec(compile(raw,'primary-grid-custody','exec'),module.__dict__)
@@ -122,15 +139,26 @@ def _frame(k,process,deadline):
     pipe=w.HANDLE(msvcrt.get_osfhandle(process.stdout.fileno()));raw=b''
     while True:
         _milliseconds(deadline)
+        if process.stderr is not None:
+            errpipe=w.HANDLE(msvcrt.get_osfhandle(process.stderr.fileno()));errsize=w.DWORD()
+            err_ok=k.PeekNamedPipe(errpipe,None,0,None,ctypes.byref(errsize),None)
+            _need(err_ok or ctypes.get_last_error() in (109,232),'OWN_STDERR_PIPE_UNAVAILABLE')
+            if errsize.value:
+                raise OwnFrameError('OWN_CHILD_STDERR_NOT_PROTOCOL',os.read(process.stderr.fileno(),min(errsize.value,1024)))
         available=w.DWORD()
         _need(k.PeekNamedPipe(pipe,None,0,None,ctypes.byref(available),None),'OWN_PIPE_UNAVAILABLE')
+        if not available.value:
+            status=k.WaitForSingleObject(int(process._handle),_milliseconds(deadline,10))
+            if status==0:
+                _need(k.PeekNamedPipe(pipe,None,0,None,ctypes.byref(available),None) and available.value,'OWN_PROCESS_EXITED_BEFORE_FRAME')
+            else:_need(status==258,'OWN_PROCESS_WAIT_FAILED')
         if available.value:
             raw+=os.read(process.stdout.fileno(),min(available.value,16385-len(raw)))
             _need(len(raw)<=16384,'OWN_FRAME_TOO_LARGE')
             if b'\n' in raw:
-                body,rest=raw.split(b'\n',1);_need(not rest,'MULTIPLE_OWN_FRAMES');return body
-        else:
-            _need(k.WaitForSingleObject(int(process._handle),_milliseconds(deadline,10))==258,'OWN_PROCESS_EXITED_BEFORE_FRAME')
+                body,rest=raw.split(b'\n',1)
+                if rest:raise OwnFrameError('MULTIPLE_OWN_FRAMES',raw)
+                return body
 
 def _accounting(module,k,job):
     value=module._BasicAccounting()
@@ -154,6 +182,10 @@ def _child(role,private_root,grid):
         try:_emit(dict(ok=True,observation=_qualify_owner_loss_core(grid)))
         except SupervisorLossError as error:
             _emit(dict(ok=False,origin=error.origin_diagnostic,cleanup=error.cleanup_diagnostics,observation=error.observation))
+            raise SystemExit(1)
+        except BaseException as error:
+            _emit(dict(ok=False,origin=(type(error).__name__,str(error)[:2048]),cleanup=[],
+                observation=dict(stage='UNWRAPPED_CORE_ERROR_NOT_QUALIFIED',outcome='UNKNOWN')))
             raise SystemExit(1)
         return
     if role=='restart':
@@ -191,8 +223,20 @@ def _retire_owner(process,deadline):
     attempt('own_owner_wait',lambda:process.wait(timeout=_milliseconds(deadline)/1000))
     attempt('own_stdin_close',process.stdin.close)
     attempt('own_stdout_close',process.stdout.close)
+    if getattr(process,'stderr',None) is not None:attempt('own_stderr_close',process.stderr.close)
     attempt('own_process_handle_close',process._handle.Close)
     return errors
+
+def _rmdir_empty_bounded(path,identity,k,deadline):
+    """Only verified empty own directory; tolerate bounded Windows close settling."""
+    while True:
+        st=path.lstat()
+        _need((st.st_dev,st.st_ino)==identity and stat.S_ISDIR(st.st_mode) and not getattr(st,'st_file_attributes',0)&1024,'OWN_DIRECTORY_IDENTITY_CHANGED')
+        _need(not any(path.iterdir()),'OWN_DIRECTORY_NOT_EMPTY')
+        try:path.rmdir();return
+        except OSError as error:
+            if getattr(error,'winerror',None) not in (32,145):raise
+            k.WaitForSingleObject(k.GetCurrentProcess(),_milliseconds(deadline,10))
 
 def _qualify_owner_loss_core(grid_repository):
     """Only own processes; local observations never authorize distributed effects."""
@@ -203,12 +247,12 @@ def _qualify_owner_loss_core(grid_repository):
         resource_admitted_fields=[],rescue_needed=False,source_grid_sha256=gw._GRID_JOB_SHA,
         worker_source_sha256=hashlib.sha256(Path(gw.__file__).read_bytes()).hexdigest(),
         fixture_source_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest())
+    result['git_executable']=dict(path=str(_git_path()),sha256=hashlib.sha256(_git_path().read_bytes()).hexdigest())
     origin=None;cleanup=[]
     def spawn(role):
-        env={key:os.environ[key] for key in ('SYSTEMROOT','WINDIR') if key in os.environ}
-        env.update(TEMP=str(private),TMP=str(private))
+        env=_environment(private)
         p=subprocess.Popen([str(gw._DIRECT_INTERPRETER),'-I','-B',str(Path(__file__).resolve()),'--fixture-child',role,str(private),str(grid_repository)],
-            stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,cwd=private,env=env,close_fds=True,creationflags=0x08000000)
+            stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE,cwd=private,env=env,close_fds=True,creationflags=0x08000000)
         processes.append(p);_need(k.GetProcessId(int(p._handle))==p.pid,'OWN_RETAINED_OWNER_PID')
         owner_identity=gw._attempt_identity(k,int(p._handle))
         _need(Path(owner_identity[1])==gw._DIRECT_INTERPRETER.resolve(),'OWN_RETAINED_OWNER_IMAGE')
@@ -241,6 +285,7 @@ def _qualify_owner_loss_core(grid_repository):
         result['restart']=restart;result['restart_accounting']=_empty(module,k,restart_job,deadline)
     except BaseException as error:
         origin=(type(error).__name__,str(error));result['rescue_needed']=True
+        if isinstance(error,OwnFrameError):result['bounded_failed_frame']=error.bounded_frame
     finally:
         cleanup_deadline=time.monotonic()+10
         def record(stage,fn):
@@ -265,8 +310,8 @@ def _qualify_owner_loss_core(grid_repository):
                 if path.name=='old-ready.json':path.unlink()
                 else:
                     _need(path.name.startswith('a5-owned-suspended-') and path.is_dir(),'UNEXPECTED_PRIVATE_CHILD')
-                    path.rmdir()  # Empty only; never recursive.
-            private.rmdir()
+                    _rmdir_empty_bounded(path,(ps.st_dev,ps.st_ino),k,cleanup_deadline)
+            _rmdir_empty_bounded(private,(identity.st_dev,identity.st_ino),k,cleanup_deadline)
         record('private_empty_cleanup',clean_directory)
     if origin or cleanup:raise SupervisorLossError(origin,cleanup,result)
     result['elapsed_seconds']=round(time.monotonic()-started,6);result['retained_handles_closed']=True
@@ -284,10 +329,11 @@ def qualify_owner_loss(grid_repository):
     private=Path(tempfile.mkdtemp(prefix='a5-loss-watchdog-'));private_id=private.stat()
     process=None;job=None;origin=None;cleanup=[];result={}
     try:
-        env={key:os.environ[key] for key in ('SYSTEMROOT','WINDIR') if key in os.environ};env.update(TEMP=str(private),TMP=str(private))
+        env=_environment(private)
         process=subprocess.Popen([str(gw._DIRECT_INTERPRETER),'-I','-B',str(Path(__file__).resolve()),'--fixture-child','supervisor',str(private),str(grid_repository)],
-            stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,cwd=private,env=env,close_fds=True,creationflags=0x08000000)
+            stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE,cwd=private,env=env,close_fds=True,creationflags=0x08000000)
         identity=gw._attempt_identity(k,int(process._handle))
+        result['watchdog_initial']=dict(pid=process.pid,creation_filetime=identity[0],image=identity[1])
         _need(k.GetProcessId(int(process._handle))==process.pid and Path(identity[1])==gw._DIRECT_INTERPRETER.resolve(),'WATCHDOG_RETAINED_INTERPRETER_IDENTITY')
         job=_outer_job(module,k,int(process._handle))
         _need(k.WaitForSingleObject(int(process._handle),0)==258,'QUALIFIER_NOT_LIVE_BEFORE_ARM')
@@ -303,20 +349,25 @@ def qualify_owner_loss(grid_repository):
         result['watchdog']=dict(qualification_pid=process.pid,creation_filetime=identity[0],image=identity[1],
             outer_job_assigned_before_arm=True,outer_accounting=_empty(module,k,job,read_deadline),
             total_budget_seconds=50,read_budget_seconds=40,cleanup_reserve_seconds=10)
-    except BaseException as error:origin=(type(error).__name__,str(error))
+    except BaseException as error:
+        origin=(type(error).__name__,str(error))
+        if isinstance(error,OwnFrameError):result['bounded_failed_frame']=error.bounded_frame
     finally:
         def record(stage,fn):
             try:fn()
             except BaseException as error:cleanup.append((stage,type(error).__name__,str(error)))
         if job is not None:
-            record('watchdog_outer_retire',lambda:job.terminate_and_wait(_milliseconds(hard_deadline)/1000))
-            record('watchdog_outer_close',job.close)
+            def retire_retaining_custody():
+                _need(k.TerminateJobObject(job._job,1),'WATCHDOG_OUTER_TERMINATE')
+                result['watchdog_cleanup_accounting']=_empty(module,k,job,hard_deadline)
+            record('watchdog_outer_retire',retire_retaining_custody)
         if process is not None:cleanup.extend(_retire_owner(process,hard_deadline))
         def clean_private():
             st=private.lstat()
             _need((st.st_dev,st.st_ino)==(private_id.st_dev,private_id.st_ino) and not getattr(st,'st_file_attributes',0)&1024,'WATCHDOG_PRIVATE_IDENTITY')
-            private.rmdir()  # Failure artifacts remain; never recursively delete.
+            _rmdir_empty_bounded(private,(private_id.st_dev,private_id.st_ino),k,hard_deadline)
         record('watchdog_private_empty_cleanup',clean_private)
+        if job is not None:record('watchdog_outer_close',job.close)
     if origin or cleanup:raise SupervisorLossError(origin,cleanup,result)
     result['watchdog']['elapsed_seconds']=round(time.monotonic()-started,6)
     return result

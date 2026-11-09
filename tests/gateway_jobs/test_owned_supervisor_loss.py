@@ -4,7 +4,9 @@ import hashlib
 import os
 from pathlib import Path
 import sys
+import stat
 import time
+import types
 import unittest
 import uuid
 from unittest.mock import patch, MagicMock
@@ -19,6 +21,44 @@ def ready():
         inner_kill_on_close=True,resource_admitted_fields=[])
 
 class SupervisorBoundary(unittest.TestCase):
+    def test_stderr_is_never_accepted_as_protocol(self):
+        process=MagicMock();process.stdout.fileno.return_value=1;process.stderr.fileno.return_value=2
+        streams={1:b'{"ok":true}\n',2:b'own synthetic error\n'};kernel=MagicMock()
+        def peek(handle,buffer,size,read,available,left):available._obj.value=len(streams[handle.value]);return True
+        kernel.PeekNamedPipe.side_effect=peek
+        with patch.dict(sys.modules,{'msvcrt':types.SimpleNamespace(get_osfhandle=lambda fd:fd)}),patch.object(fixture.os,'read',side_effect=lambda fd,size:streams[fd]):
+            with self.assertRaisesRegex(fixture.OwnFrameError,'STDERR'):fixture._frame(kernel,process,time.monotonic()+1)
+    def test_nonempty_directory_is_never_retried_or_deleted(self):
+        path=MagicMock();path.lstat.return_value.st_dev=1;path.lstat.return_value.st_ino=2
+        path.lstat.return_value.st_file_attributes=0;path.lstat.return_value.st_mode=stat.S_IFDIR
+        path.iterdir.return_value=iter([object()])
+        with self.assertRaises(ValueError):fixture._rmdir_empty_bounded(path,(1,2),MagicMock(),time.monotonic()+1)
+        path.rmdir.assert_not_called()
+    def test_frame_written_just_before_process_exit_is_drained(self):
+        # Inert retained-process/pipe race, no native process is created.
+        raw=b'{"ok":true}\n';calls=[];kernel=MagicMock();process=MagicMock();process.stderr=None
+        def peek(handle,buffer,size,read,available,left):
+            calls.append(1);available._obj.value=0 if len(calls)==1 else len(raw);return True
+        kernel.PeekNamedPipe.side_effect=peek;kernel.WaitForSingleObject.return_value=0
+        with patch.dict(sys.modules,{'msvcrt':types.SimpleNamespace(get_osfhandle=lambda fd:123)}),patch.object(fixture.os,'read',return_value=raw):
+            self.assertEqual(fixture._frame(kernel,process,time.monotonic()+1),b'{"ok":true}')
+    def test_minimal_child_environment_retains_only_git_search_directory(self):
+        executable=Path(sys.executable).resolve()
+        with patch.object(fixture,'_git_path',return_value=executable),patch.dict(os.environ,{'SYSTEMROOT':'test-root','UNRELATED_SECRET':'not inherited'},clear=True):
+            env=fixture._environment(Path('own-private-root'))
+        self.assertEqual(env,dict(SYSTEMROOT='test-root',TEMP='own-private-root',TMP='own-private-root',PATH=str(executable.parent)))
+    def test_transient_directory_close_is_bounded_and_identity_checked(self):
+        path=MagicMock();path.lstat.return_value.st_dev=1;path.lstat.return_value.st_ino=2;path.lstat.return_value.st_file_attributes=0
+        path.lstat.return_value.st_mode=stat.S_IFDIR;path.iterdir.side_effect=lambda:iter(())
+        transient=OSError('Windows close settling');transient.winerror=32
+        path.rmdir.side_effect=[transient,None];kernel=MagicMock()
+        fixture._rmdir_empty_bounded(path,(1,2),kernel,time.monotonic()+1)
+        self.assertEqual(path.rmdir.call_count,2)
+        path.rmdir.reset_mock();path.rmdir.side_effect=transient
+        with self.assertRaises(TimeoutError):fixture._rmdir_empty_bounded(path,(1,2),kernel,time.monotonic()-1)
+        path.rmdir.reset_mock()
+        with self.assertRaises(ValueError):fixture._rmdir_empty_bounded(path,(9,9),kernel,time.monotonic()+1)
+        path.rmdir.assert_not_called()
     def test_failed_identity_or_outer_assignment_never_sends_arm(self):
         # Inert process/API refusal assertions, not Windows custody evidence.
         executable=Path(sys.executable).resolve()
