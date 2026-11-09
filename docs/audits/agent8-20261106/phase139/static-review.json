@@ -1,0 +1,29 @@
+{
+  "PR71_head": "45f03d46e5e42e7bd7225accc046ff50c9d3987a",
+  "PR71_tree": "956b670b9c7640f88e61d3d3113795fe9d2bcb43",
+  "PR73_head": "f6f3418b0aa262863322c81f30cf290ad2fb2c08",
+  "PR73_tree": "3c68d66bcb3125478e60604aa68f5ae619c6bd70",
+  "shared_three_helpers_byte_equal": true,
+  "shared_package_hardlink_policy_unchanged": true,
+  "cleanup_findings": [
+    {
+      "file": "tools/physical_dev/materialize.py",
+      "function": "_copy_file",
+      "line": 84,
+      "finally_source": "if target_fd is not None:\n    os.close(target_fd)\nos.close(source_fd)",
+      "result": "TARGET_CLOSE_ERROR_SKIPS_SOURCE_CLOSE_SOURCE_INFERENCE_NO_FAULT_EXECUTION",
+      "sha256": "9c0c073c6103b7096ff642016cc180c397ce02b0217314669707733f10d913ce"
+    },
+    {
+      "file": "tools/physical_dev/export_git.py",
+      "function": "_hash_copy",
+      "line": 86,
+      "finally_source": "if target_fd is not None:\n    os.close(target_fd)\nos.close(source_fd)",
+      "result": "TARGET_CLOSE_ERROR_SKIPS_SOURCE_CLOSE_SOURCE_INFERENCE_NO_FAULT_EXECUTION",
+      "sha256": "d6c5589dd3d41f503a58b076fe6a3edcb226ebb2175d8208e1e7294e9d426848"
+    }
+  ],
+  "helper_imports": 0,
+  "copy_export_materialize_calls": 0,
+  "physical_tests": 0
+}

@@ -667,7 +667,7 @@
     "P0_confirmed_defects": 0,
     "P0_absence_proven": false,
     "P1_open": 7,
-    "P2_open": 5,
+    "P2_open": 6,
     "F08": "FIX_VERIFIED_OFFLINE",
     "F09": "FIX_VERIFIED_OFFLINE_AT_42686cd",
     "F10": "FIX_VERIFIED_OFFLINE_AT_42686cd",
@@ -3959,7 +3959,7 @@
     "mandatory_hosted": "NOT_QUALIFIED",
     "overall": "NO_GO"
   },
-  "latest_addendum_scope": "phase138 core495/four matching435 files +Terminan161 source-only review; no new runtime, copied-package or physical admission",
+  "latest_addendum_scope": "phase139 exact71/73 helper source closure only; F31 source cleanup blocker, no export/materialization/physical test by A8",
   "PR54_b144_terminal_CI_20261109": {
     "head": "b144a5e0fd3af90c975bfc0f0123234628dbb696",
     "direct_run": 42646665067,
@@ -4201,6 +4201,21 @@
     "A8_product_or_physical_runtime_tests": 0,
     "installedSDK_reference_files": 521,
     "exact_assembled_package_SHA": "PENDING",
+    "physical_execution_admission": "NOT_GRANTED",
+    "overall": "NO_GO"
+  },
+  "PR71_73_helper_source_review": {
+    "PR71_head": "45f03d46e5e42e7bd7225accc046ff50c9d3987a",
+    "PR73_head": "f6f3418b0aa262863322c81f30cf290ad2fb2c08",
+    "primary_files": {
+      "PR71": 1651,
+      "PR73": 1654
+    },
+    "shared_package_5bd7": "UNCHANGED_SINGLE_LINK_DENY",
+    "F31": "OPEN_P2_SOURCE_ONLY_DESCRIPTOR_CLEANUP",
+    "A8_helper_calls_or_fault_tests": 0,
+    "actual_export_package_receipts": "NOT_AUTHENTICATED_HERE",
+    "phase138_core_ACK": "PRESERVED_SCOPED_ONLY",
     "physical_execution_admission": "NOT_GRANTED",
     "overall": "NO_GO"
   }

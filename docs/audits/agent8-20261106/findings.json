@@ -521,5 +521,19 @@
     "status": "OPEN_PRE_ACTIVATION_SOURCE_BLOCKER_NOT_RUNTIME_REPRODUCED",
     "evidence": "phase136/static-review.json;phase136/report.md",
     "required_correction": "Require exact non-boolean int LockDelay==0 and explicit typed session-info grammar, with pure negative regression; keep native gate closed pending independently released actual qualification."
+  },
+  {
+    "id": "A8-F31",
+    "severity": "P2",
+    "repository": "unified-system",
+    "pr": 73,
+    "observed_head": "f6f3418b0aa262863322c81f30cf290ad2fb2c08",
+    "also_affected_pr": 71,
+    "also_affected_head": "45f03d46e5e42e7bd7225accc046ff50c9d3987a",
+    "title": "Copy-helper target descriptor close failure skips source descriptor cleanup",
+    "status": "OPEN_SOURCE_ONLY_COPY_CLEANUP_NOT_RUNTIME_REPRODUCED",
+    "test": "AST/source finally ordering in materialize._copy_file and export_git._hash_copy",
+    "evidence": "phase139/static-review.json;phase139/report.md",
+    "required_correction": "Attempt closing both own descriptors independently. Preserve original copy/validation failure as primary and retain cleanup errors/unknown state; do not delete partial output or retry ambiguous descriptor numbers. Add inert close-report fault regressions and separately qualify exact successor."
   }
 ]
