@@ -379,6 +379,14 @@ class ResearchIdentityBroker:
         wall,mono=self._clock();_require(wall<expiry and mono<deadline)
         _require(type(request_bytes) is bytes and scope==original_scope and hashlib.sha256(request_bytes).digest()==digest)
         return snapshot
+    def invalidate_context_local_only(self,context):
+        """Latch OWN local context only; no native retirement or permission."""
+        _require(type(self) is ResearchIdentityBroker and type(context) is ResearchPrincipalContext and context in self._contexts)
+        session=self._contexts[context][3]
+        if session in self._invalid:return None
+        self._invalid.add(session)  # Before audit; never roll back this latch.
+        self._emit('PRINCIPAL_SESSION_LOCALLY_INVALIDATED')
+
     async def invalidate_context(self,context):
         _require(type(context) is ResearchPrincipalContext and context in self._contexts)
         session=self._contexts[context][3];self._invalid.add(session)
