@@ -1,0 +1,53 @@
+{
+  "originals": {
+    "LS5-PRE-SMOKE-ED4-F-READONLY.json": {
+      "original": "C:\\Users\\LS-5\\.codex\\native-e2e-evidence-20261109\\LS5-PRE-SMOKE-ED4-F-READONLY.json",
+      "bytes": 8728,
+      "sha256": "f74f3dffd6cbf66cb0b3c7439e6caa0f46dc3cb00ff60204dca9c4e7e65d55cd",
+      "projection": {
+        "observed_at_utc": "2026-11-09T23:45:03.9024791Z",
+        "effective_administrator": false,
+        "new_state_absent": true,
+        "existing_acl_changed": false,
+        "scope": "READ_ONLY_SNAPSHOT_NOT_RUNTIME_ADMISSION"
+      },
+      "ancestor_rows": [
+        {
+          "path": "C:/Users/LS-5/.codex/native-e2e-evidence-20261109",
+          "attributes": 16
+        },
+        {
+          "path": "C:/Users/LS-5/.codex",
+          "attributes": 16
+        },
+        {
+          "path": "C:/Users/LS-5",
+          "attributes": 16
+        },
+        {
+          "path": "C:/Users",
+          "attributes": 17
+        },
+        {
+          "path": "C:/",
+          "attributes": 22
+        }
+      ]
+    },
+    "LS5-RESOURCE-PRE-SMOKE-ED4F.json": {
+      "original": "C:\\Users\\LS-5\\.codex\\native-e2e-evidence-20261109\\LS5-RESOURCE-PRE-SMOKE-ED4F.json",
+      "bytes": 310,
+      "sha256": "4e6b400bd1b709a09cd41f21aa89c3bc7f57c236e5bd2429f8d6f963a0ac62c7",
+      "projection": {
+        "observed_at_utc": "2026-11-09T23:46:45.385984+00:00",
+        "api": "GlobalMemoryStatusEx",
+        "memory_available_bytes": 44685783040,
+        "commit_available_bytes": 43184132096,
+        "disk_free_bytes": 1579904258048,
+        "scope": "READ_ONLY_SNAPSHOT_NOT_RESERVATION",
+        "existing_services_or_policies_changed": false
+      }
+    }
+  },
+  "scope": "ROOT_ORIGINAL_DATA_AUTHENTICATED_NOT_A8_TOKEN_RESOURCE_OR_ANCESTOR_API_QUERY_OR_RESERVATION"
+}
