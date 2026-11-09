@@ -32,3 +32,32 @@ Original e remains backend scoped PASS, full smoke/render FAIL, F36 cause UNKNOW
 Actual successor performance and behavior await exact-source qualification,
 immutable package review and the owner-authorized Root-only disposable lane.
 MASTER MISSION IN_PROGRESS / NO-GO; all native/distributed/production gates remain.
+
+## Subsequent independent finding: 458 must not execute
+
+A8 phase152 withheld source ACK after finding F37 P2: cleanup checked remaining
+time before operations but did not reject a late completion or final elapsed
+deadline. A delayed event-loop timer could therefore leave local confirmed=true
+after its budget. This is a source finding, not established e root cause or a
+demonstrated bypass of Root's outer watchdog. Root accepted the finding; A6 owns
+an immutable successor with common monotonic deadline, completion/final checks
+and inert regressions. No package/application is admitted for 458.
+
+Audit commit `43b42eea1a1dbfcfb514a2068dcd4b46336d45b0`, phase152/report.md,
+SHA256 `027fb44d793cecaf32dd56a8fca36997f8a5841b872e28f45c679149cbefcad1`.
+The earlier Root scoped direction review and 106 pure tests do not override it.
+
+## F37 successor preparation
+
+Root read exact PR79 HEAD `47530d81e8b6f297a060a206bea6f783ccd0702e`,
+tree `6f47cda8aba93ca87a377b15aae1118351237e8e`, complete lifecycle,
+five new virtual-clock regressions and deadline design. Common absolute and
+per-operation monotonic deadlines now apply before invocation, after completion,
+after telemetry and at final confirmation; expiration is sticky and equality
+rejects. No new termination capability, weakened check or changed budget.
+Root pins this successor instead of 458. A8 exact-source ACK remains separately
+required; no physical package is executed by this source review.
+
+Received A6 evidence: 23 pure/mock tests, zero skips, 406 unchanged raw files;
+three exact SHA256-checked files retained under terminan-475-source-review.
+This supersedes neither the original e outcome nor pending runtime qualification.
