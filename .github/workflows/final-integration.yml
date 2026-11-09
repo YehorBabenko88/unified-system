@@ -96,9 +96,9 @@ jobs:
                       else: yield item
               test_ids=[case.id() for case in cases(suite)]
               assert inventory['schema']=='unified.integration-component-tests.v5'
-              assert inventory['expected_count']==144
-              assert len(test_ids)==len(set(test_ids))==144
-              assert len(inventory['preserved_prior_ids'])==137
+              assert inventory['expected_count']==145
+              assert len(test_ids)==len(set(test_ids))==145
+              assert len(inventory['preserved_prior_ids'])==144
               assert set(inventory['preserved_prior_ids'])<=set(test_ids), 'prior mandatory cases removed'
               assert sorted(test_ids)==inventory['expected_test_ids'], 'mandatory test inventory differs'
               stream = io.StringIO()
@@ -121,7 +121,7 @@ jobs:
                   run_metadata='CORRELATION_ONLY_NOT_HOSTED_ATTESTATION',
                   runtime_api='NOT_QUALIFIED', physical='NOT_RUN', production='NO_GO')
               pathlib.Path('partial-integration-ci-evidence.json').write_text(json.dumps(report, indent=2), encoding='utf-8')
-              assert result.wasSuccessful() and result.testsRun == 144 and not result.skipped
+              assert result.wasSuccessful() and result.testsRun == 145 and not result.skipped
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:

@@ -1,0 +1,47 @@
+{
+  "schema": "unified.ci-heartbeat-fixture-integration.v1",
+  "original_head": "b144a5e0fd3af90c975bfc0f0123234628dbb696",
+  "original_run": 42646665234,
+  "attempt": 1,
+  "failed_jobs": {
+    "129261629678": {
+      "os": "Ubuntu3.12",
+      "error": "DEADLINE",
+      "raw_log_sha256": "1fb3fbb80fbebdfbb19e014a53b87e5326f2f997531b35cefe88ac3e71d86f23"
+    },
+    "129261630066": {
+      "os": "Windows3.12",
+      "error": "DEADLINE",
+      "raw_log_sha256": "3cc136daaa77d9f9b8e2ff7f52b226a680a79959d59413631fa66c3f455349e5"
+    },
+    "129261630160": {
+      "os": "Windows3.11",
+      "error": "DISCONNECTED",
+      "raw_log_sha256": "e55a1ea689da9cbc8e69585792e9a637363d14e082510201f7dfbd0954a3459f"
+    }
+  },
+  "case": "tests.test_lan_transport.TLSIsolationTests.test_active_control_heartbeats_keep_idle_data_channel_healthy",
+  "source_owner_pr": 66,
+  "source_owner_head": "4e297c264e1c81d1cdb3bbb8161c281b76bb0613",
+  "exact_import_sha256": "9d8099ed5aeca90c3bb8cb7acd8fd08fa8b21bb8c4c2682267084075ef4ae59d",
+  "controlled_repro": "OWN_HEARTBEAT_THREAD_DELAY_600MS_EXCEEDS_FIXTURE_IDLE_400MS",
+  "historical_hosted_delay_causality": "NOT_ESTABLISHED",
+  "production_transport_changed": false,
+  "fix": "REAL_TLS_CONTROL_REFRESH_READINESS_THEN_EXPIRED_OLD_DATA_READ_DEADLINE_TWO_REAL_ON_IDLE_RENEWALS_AND_BIDIRECTIONAL_PAYLOAD",
+  "new_negative": "EXPIRED_OLD_DATA_READ_DEADLINE_WITH_INJECTED_ON_IDLE_FALSE_NOT_NATURALLY_ELAPSED_PEER_INACTIVITY",
+  "previous_144_cases_preserved": true,
+  "new_mandatory_count": 145,
+  "a8_owner_source_review": "FOCUSED_TWO_CASES_PASS_WITH_600MS_DELAY_NOT_FULL_52_OR_145",
+  "local_working_component_suite": {
+    "tests": 145,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "provenance": "WORKING_SOURCE_NOT_FRESH_COMMITTED_QUALIFICATION"
+  },
+  "earlier_local_stdin_attempt": "FAIL_RETAINED_WINDOWS_MULTIPROCESSING_CANNOT_LOAD_STDIN_NO_BUDGET_SOURCE_FIX",
+  "exact_integrated_source_qualification": "PENDING",
+  "hosted_new_source": "PENDING",
+  "overall": "NO_GO",
+  "physical": "NOT_RUN"
+}
