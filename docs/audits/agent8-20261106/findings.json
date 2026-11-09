@@ -591,11 +591,28 @@
     "pr": 69,
     "observed_head": "9f55260f1e3c0ff83512bbd307a6ccc3366a386e",
     "title": "Windows subprocess audit callback rejects canonical string emitted by CPython after list2cmdline",
-    "status": "SOURCE_CORRECTION_ACK_AT_E203_RUNTIME_QUALIFICATION_PENDING",
+    "status": "FIX_VERIFIED_SCOPED_ORIGINAL_ROOT_E_BACKEND_POSITIVE_AT_E203_NOT_A8_RUNTIME",
     "test": "Pinned CPython3.12 Lib/subprocess.py Windows _execute_child transformation ordering versus bootstrap subprocess.Popen audit predicate",
     "evidence": "phase147/evidence-verification.json;phase147/report.md",
     "required_correction": "Owner reproduce with controlled platform-frame negatives/positives before RCA. Publish separate committed narrow Windows canonical issued-command frame validation without allowing arbitrary strings, shell, roots, commands, providers or unpinned executables. Preserve frozen d and original generic failure; no automatic rerun/hotpatch.",
     "successor_head": "e203c0bbeaa176a843a7d80b2eadfefe8fce7385",
-    "successor_evidence": "phase148/report.md;phase148/source-verification.json"
+    "successor_evidence": "phase148/report.md;phase148/source-verification.json",
+    "fixed_evidence": "phase150/report.md;phase150/evidence-verification.json;phase150/fresh-artifact.json",
+    "fixed_scope": "EXISTING_WINDOWS_BACKEND_FIXED_SOURCE_GIT_POSITIVE_PATH_NOT_ALL_NEGATIVE_AUDIT_FRAMES"
+  },
+  {
+    "id": "A8-F36",
+    "severity": "P2",
+    "repository": "Terminan",
+    "pr": 77,
+    "observed_head": "161ea1e0fc3a3a4cd64783b0e111e1e119e14d71",
+    "integration_repository": "unified-system",
+    "integration_pr": 69,
+    "integration_head": "e203c0bbeaa176a843a7d80b2eadfefe8fce7385",
+    "title": "Scoped fresh render e lacks DOM completion and full smoke fails at observed work budget breach",
+    "status": "OPEN_SCOPED_RENDER_ACCEPTANCE_FAILURE_RCA_AND_PHASE_ORDER_UNKNOWN",
+    "test": "Original Root e render receipt generic failure/no screenshot, primary render73, work20.0489629s exceeds20",
+    "evidence": "phase150/render-receipt.json;phase150/smoke-receipt.json;phase150/evidence-verification.json;phase150/report.md",
+    "required_correction": "Owner source-only timing/phase analysis and safe design. Preserve e originals and fixed caps/no privilege or policy escalation; no automatic retry. Establish precise cause/ordered phase evidence before choosing separate committed correction; no assumption that PowerShell or CPU/memory cap caused it."
   }
 ]
