@@ -1,0 +1,58 @@
+name: Gateway direct disposable target qualification
+on:
+  pull_request:
+    paths: ['unified_system/gateway_target_adapter.py', 'tests/gateway_target_adapter/**', 'docs/intelligence/target-adapter/**', '.github/workflows/gateway-target-adapter.yml']
+permissions:
+  contents: read
+jobs:
+  direct-target:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-24.04]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    env:
+      EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+      PYTHONDONTWRITEBYTECODE: '1'
+      GIT_NO_REPLACE_OBJECTS: '1'
+      GIT_CONFIG_COUNT: '2'
+      GIT_CONFIG_KEY_0: core.autocrlf
+      GIT_CONFIG_VALUE_0: 'false'
+      GIT_CONFIG_KEY_1: core.eol
+      GIT_CONFIG_VALUE_1: lf
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12.10'
+      - name: Provision exact public target source outside Unified checkout
+        env:
+          TARGET_STRATT_ROOT: ${{ runner.temp }}/target-stratt-aed8
+          TARGET_META_ROOT: ${{ runner.temp }}/target-meta-f3
+        shell: python -I -S -B {0}
+        run: |
+          import os,pathlib,subprocess
+          for key,repo,head in [('TARGET_STRATT_ROOT','strattester','aed8a7c8a952f96803c207d5e90b133969a47f04'),('TARGET_META_ROOT','meta_analyse','f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1')]:
+              root=pathlib.Path(os.environ[key]);assert not root.exists();root.mkdir()
+              def run(*args):subprocess.run(['git','--no-replace-objects','-C',str(root),*args],check=True,timeout=120)
+              run('init');run('config','core.autocrlf','false')
+              run('remote','add','origin','https://github.com/YehorBabenko88/'+repo+'.git')
+              run('fetch','--depth=1','origin',head);run('checkout','--detach',head)
+      - name: Actual fixed existing target and local failure semantics
+        env:
+          TARGET_STRATT_ROOT: ${{ runner.temp }}/target-stratt-aed8
+          TARGET_META_ROOT: ${{ runner.temp }}/target-meta-f3
+        shell: bash
+        run: |
+          python -I -S -B docs/intelligence/target-adapter/run_qualification.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: direct-target-${{ matrix.os }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/target-adapter-evidence
+          if-no-files-found: error

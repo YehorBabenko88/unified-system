@@ -353,5 +353,22 @@
     "correction_tree": "0b064c8291cb4030e0a4a97ca3296b69883576a6",
     "correction_evidence": "phase101/correction-focused-receipt.json; phase101/correction-own1.stderr.log",
     "scope": "TEST_ORACLE_NOT_PRODUCTION_EXTERNAL_WRITE_OR_AUTH_BYPASS"
+  },
+  {
+    "id": "A8-F22",
+    "severity": "P1",
+    "repository": "unified-system",
+    "pr": 54,
+    "observed_head": "cf7dad91bf0d3a24073c91e0d3e326e6d9e7d2db",
+    "status": "FIX_VERIFIED_CONFIGURATION_AT_83d35ce_JOB_REGISTRATION_ONLY",
+    "title": "Mandatory target workflow rejected before jobs due runner context in job-level env",
+    "evidence": "phase102/run42631650396.original.json;phase102/jobs.original.json;phase102/annotation.original.txt;phase102/invalid-workflow.original.yml",
+    "required_correction": "Move runner.temp path expressions into legal execution-step context; preserve exact-source inputs and source/dependency checks; independently verify new original GitHub configuration/jobs, not a rerun of failed source.",
+    "scope": "WORKFLOW_CONFIGURATION_ONLY_NOT_TARGET_RUNTIME_TEST_FAILURE",
+    "original_run": 42631650396,
+    "correction_head": "83d35ce4b18cb6adc556c8e1412ad7b0cffef2e8",
+    "correction_tree": "7f2ed11497ee89c2188efb44d8b205180c5c3954",
+    "correction_evidence": "phase102/correction-verification.json;phase102/correction-jobs.original.json",
+    "mandatory_target_CI": "BLOCKED_QUEUED_NOT_EXECUTED"
   }
 ]

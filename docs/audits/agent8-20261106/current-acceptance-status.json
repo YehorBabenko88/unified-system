@@ -1,5 +1,5 @@
 {
-  "checked_utc": "2026-11-09T14:12:08.483712+00:00",
+  "checked_utc": "2026-11-09T14:18:03.287791+00:00",
   "RELEASE_MANIFEST_STATUS": "PRESENT_PREPARATION_ONLY_NOT_APPROVED_NOT_INSTALLABLE",
   "NODE_INVENTORY_STATUS": "SIX_REDACTED_OWNER_OBSERVATIONS_PRESENT_ORIGINAL_RAW_NOT_REACQUIRED_BY_A8_NOT_ADMITTED",
   "CONTRACT_STATUS": {
@@ -3610,6 +3610,26 @@
     "authenticated_gateway": "NOT_RUN",
     "physical": "BLOCKED",
     "tailscale_removal": "BLOCKED",
+    "overall": "NO_GO"
+  },
+  "target_CI_phase102": {
+    "original_head": "cf7dad91bf0d3a24073c91e0d3e326e6d9e7d2db",
+    "original_failed_run": 42631650396,
+    "original_jobs": 0,
+    "original_annotation": "RUNNER_CONTEXT_UNRECOGNIZED_JOB_ENV_LINES24_25_INDEPENDENT_PUBLIC_ORIGINAL",
+    "correction_head": "83d35ce4b18cb6adc556c8e1412ad7b0cffef2e8",
+    "correction_tree": "7f2ed11497ee89c2188efb44d8b205180c5c3954",
+    "new_original_PR_run": 42632828686,
+    "windows_job": 129213210871,
+    "ubuntu_job": 129213210753,
+    "jobs_status": "BOTH_QUEUED_NULL_CONCLUSION_NO_RUNNER",
+    "F22": "P1_CONFIG_FIX_VERIFIED_JOB_REGISTRATION_ONLY_NOT_EXECUTION_PASS",
+    "protected_paths_equal": 6,
+    "explicit_readonly_REST_public_page_requests": 6,
+    "manual_reruns": 0,
+    "settings_changes": 0,
+    "own_new_workflows": 0,
+    "Windows_CI": "BLOCKED",
     "overall": "NO_GO"
   }
 }

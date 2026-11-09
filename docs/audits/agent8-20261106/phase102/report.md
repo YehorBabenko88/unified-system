@@ -1,0 +1,29 @@
+
+
+## Phase102 — original mandatory CI configuration failure and narrow correction
+
+Unified DraftPR54 originalpublicationcf7dad91bf0d3a24073c91e0d3e326e6d9e7d2db. Failed original run [42631650396](https://github.com/YehorBabenko88/unified-system/actions/runs/42631650396) eventPUSH/checksuite115465225936 was independently reacquired. New correction HEAD83d35ce4b18cb6adc556c8e1412ad7b0cffef2e8/tree7f2ed11497ee89c2188efb44d8b205180c5c3954. New original PR-run [42632828686](https://github.com/YehorBabenko88/unified-system/actions/runs/42632828686) has two real jobs created; both still QUEUED/no runner at snapshot. No manualrerun/settings/sourceimplementationchange byA8. Six explicit read-only REST/public-page requests; separate Gitobjectfetches not included in that requestcount.
+
+| Requirement ID | Repository / PR / Exact HEAD | Test name | Environment | Expected result | Actual result | Evidence link | Status | Severity | Required correction |
+|---|---|---|---|---|---|---|---|---|---|
+| A8-F22-ORIGINAL | unified-system #54 /cf7dad9 | originalworkflowvalidation | originalGitHubREST/publicannotation | workflowcreatesmandatoryWindows/Ubuntujobs |run42631650396completedFAILURE/eventpush/namefilepath;/jobs0/check-runs0;originalannotationrunnercontextunrecognizedline24col27+line25col25;exactprimaryworkflowjobenvcontainsrunner.tempthere | phase102/run42631650396.original.json;jobs.original.json;check-runs.original.json;annotation.original.txt;invalid-workflow.original.yml | FAIL | P1CIconfiguration | MovepathvarsintosupportedSTEPenvwithoutweakeningchecks;originalrunmuststayunchanged |
+| A8-F22-CORRECTION | unified-system #54 /83d35ce | workflowcontextplacement+GitHubvalidation | primaryGitdelta+neworiginalrun | correctplacement/actualnewjobsregistered |only2varsremovedjobenvandaddedtobothprovision+qualifySTEPenv;newrun42632828686eventPRexact83d/nameactualdriver;actual2jobscreated | correction-verification.json;workflow-correction.original.diff;corrected-workflow.original.yml;correction-runs.original.json;correction-jobs.original.json | PASS | P1CONFIG_FIX_VERIFIED_JOB_REGISTRATION_ONLY | ConfigurationcausecorrectedONLY83d;notterminaltestexecutionPASS |
+| C102-WINDOWS | unified-system #54 /83d35ce | mandatoryWindowsdriverexecution | GitHubwindows-latest | terminalmandatorytests/artifactsPASS |job129213210871queued/conclusionnull/runner_idnull;noactualdriver21executionresult | correction-jobs.original.json | BLOCKED | existingmandatoryCIgate | Waitfororiginalterminaljobandverifyactualtests/logs/artifacts/exactHEAD;nooldrunretry |
+| C102-UBUNTU | unified-system #54 /83d35ce | mandatoryUbuntudriverexecution | GitHububuntu-24.04 | terminalmandatorytests/artifactsPASS |job129213210753queued/conclusionnull/runner_idnull | correction-jobs.original.json | BLOCKED | existingmandatoryCIgate | Independentlyverifyoriginalterminaloutcome/artifacts |
+| C102-SOURCE | unified-system #54 /83d35ce | protectedsourceequality | primaryGitobjects | runtime/test/driver/schemasunchanged |6protectedpathsbyteequalcf7/a84runtime775976/test2571d8/driver771b51/request2a7a93/success68ef43/refusalce8fee | correction-verification.json | PASS | — | SourceequalitydoesnottransfernewHEADexecution/CIcounts |
+| C102-EVIDENCE | unified-system #54 /cf7dad9+83d35ce | raworiginalevidencecustody | independentreadonly | noinferredcausefrom0jobsalone |RESToriginalsandfaithfulannotationretained;publicHTMLsha2482c13d...rawlocalworkretained/unpublished;primaryworkflowlinesmatchannotation | verification.json;annotation.original.txt | PASS | — | Originalannotationiscausalevidence;0jobsalonewasnotusedasinference |
+| C102-OWNERSHIP | unified-system audit #21 | ownworkflowaudit/remediationboundary | A8auditdocs-onlyscope | nootherownerfileedit/retries/securitychange |A8introducesNOnewworkflows;onlyownedreport/harness/evidencepaths;Rootcorrecteditsownworkflow;manualreruns0/settings0 | correction-verification.json;ownershipverification | PASS | — | No sharedworkflowrewrite/no assumedotherworkflowfix |
+| C102-LEVELS | allreleaselevels | acceptancepreservation | independentlevels | noPASSfromotherworkflow/localdriver |otherA-BhandoffSUCCESSdoesnotproveNEWdriver;phase101own21belongs8dc/focused1a84;83dmandatoryCIexecutionnotadmitted;higherlevelsunchanged | phase101/report.md;phase100checklist | BLOCKED | existingreleasegates | SeparatemandatoryWindows/direct/scheduler/authenticated/physical/Tailscaleproof |
+
+A8-F22 is narrowly the invalid workflow expression/context defect. It is FIX_VERIFIED_CONFIGURATION_AT_83d35ce_JOB_REGISTRATION_ONLY because GitHub actually accepted the corrected workflow and produced both matrixjobs. This closes that configurationcause, not the mandatoryCIacceptancegate, which remains BLOCKED until actual terminaltests/artifacts. Existingopen6P1/3P2 therefore unchanged;F22originalP1andcorrectionscopepreservedseparately. No originalfailedrunorpriorauditrewritten. No polling/retry-loop/cancellation or new production/source tests were performed during this CI evidence review.
+
+RELEASE_MANIFEST_STATUS: TARGET_PR54_SOURCEPINS_KNOWN_GLOBAL_RELEASE_NOT_APPROVED.
+NODE_INVENTORY_STATUS: NOT_NEWLY_ADMITTED.
+CONTRACT_STATUS: DIRECT_LOCAL_ONLY_HIGHERLEVELS_BLOCKED.
+OFFLINE_TESTS: NO_NEW_PRODUCT_TESTS_PHASE102;PRIOR21AT8dc_AND_FOCUSED1a84_NOTTRANSFERRED.
+WINDOWS_CI: BLOCKED_NEW_WINDOWS_JOB_QUEUED_NO_RUNNER.
+PHYSICAL_TESTS: BLOCKED.
+P0_P1_P2: confirmedopen6P1/3P2unchanged;F22P1configurationcausefixed83d/jobregistrationonly.
+EVIDENCE: phase102originalREST+annotation+primaryworkflow/neworiginalPRrun2jobs/sourceequality.
+NEXT_ACTIONS: RootCIcontrollerverifiesoriginalterminalrun/jobs/artifactswithinitsreadbudget;no manualrerunorunrelatedworkflowPASStransfer. A8doesnotmerge/deploy/changeoffice/networksecurity/Tailscale.
+GO_NO_GO: NO-GO. TAILSCALE_REMOVAL_ACCEPTANCE: BLOCKED/NO-GO.
