@@ -57,7 +57,7 @@ def _inventory(root):
 def _hash_copy(source,expected,target=None,pinned=None):
     integrity._directory(source.parent)
     initial=source.lstat();_source_regular(initial);_need(integrity._signature(initial)==expected)
-    source_fd=os.open(source,os.O_RDONLY|getattr(os,"O_BINARY",0)|getattr(os,"O_NOFOLLOW",0));target_fd=None
+    source_fd=os.open(source,os.O_RDONLY|getattr(os,"O_BINARY",0)|getattr(os,"O_NOFOLLOW",0));target_fd=None;original=None
     try:
         held=os.fstat(source_fd);_source_regular(held);held_before=integrity._signature(held)
         _need(stat.S_IFMT(held_before[2])==stat.S_IFMT(expected[2]))
@@ -82,9 +82,11 @@ def _hash_copy(source,expected,target=None,pinned=None):
             _need((held_target.st_dev,held_target.st_ino)==(named_target.st_dev,named_target.st_ino))
             _need(held_target.st_size==named_target.st_size==count)
         return result
+    except BaseException as exc:
+        original=exc
+        raise
     finally:
-        if target_fd is not None:os.close(target_fd)
-        os.close(source_fd)
+        materialize._close_owned_fds(target_fd,source_fd,original)
 
 
 def _snapshot(root):
