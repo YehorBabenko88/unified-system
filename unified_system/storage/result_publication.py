@@ -10,7 +10,7 @@ import json
 
 from .contracts import _decode, digest, require, u63, StorageBlocked
 from .object_store import ObjectStore
-from .replica_evidence import LocalReplicaObservation
+from .replica_evidence import LocalReplicaObservation, _issue_local_inventory_readback
 
 MAX_OBJECTS = 16
 MAX_TOTAL_BYTES = 1024*1024
@@ -159,3 +159,22 @@ def commit_result(original_intent_bytes):
 
 def reconcile_result(original_intent_bytes):
     raise StorageBlocked('NATIVE_RESULT_RECONCILIATION_UNAVAILABLE')
+
+
+def readback_local_closure(owned_store, claim):
+    """Read/hash every declared object/root with same-read filesystem identities.
+
+    This does not validate payload schemas, source/dependency semantics, current
+    authority holds, domain independence or access rights for disclosure.
+    A2 native capture/commit remain unavailable; no boolean can promote this fact.
+    """
+    require(type(owned_store) is ObjectStore, 'EXACT_OWNED_STORE_REQUIRED')
+    inventory = _inventory(claim)
+    ObjectStore._check(owned_store)
+    observations = []
+    for sha, size in inventory:
+        observation = ObjectStore.verify(owned_store, sha, max_bytes=size)
+        require(observation.byte_length == size, 'READBACK_LENGTH_MISMATCH')
+        observations.append(observation)
+    ObjectStore._check(owned_store)
+    return _issue_local_inventory_readback(owned_store.store_id, claim.sha256, observations)

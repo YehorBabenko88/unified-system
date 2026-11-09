@@ -41,3 +41,64 @@ class ReplicaClosureInventory:
 
     def capture_result_closure(self, original_intent_bytes, *, expected_authority):
         raise StorageBlocked('NATIVE_CLOSURE_CAPTURE_UNAVAILABLE')
+
+
+class LocalInventoryReadback:
+    """Point-in-time local bytes only, NOT native closure/capture/replica proof.
+
+ROOT commissioning and the future A2 native snapshot/issuer contract are separate.
+This object cannot establish source trust against arbitrary hostile Python.
+"""
+    __slots__ = ('_store_id', '_closure_sha256', '_objects')
+
+    def __new__(cls, *args, **kwargs):
+        raise TypeError('READBACK_CREATED_BY_FIXED_LOCAL_READER_ONLY')
+
+    def __setattr__(self, name, value):
+        raise TypeError('LOCAL_READBACK_IMMUTABLE')
+
+    def __copy__(self):
+        raise TypeError('LOCAL_READBACK_NOT_TRANSFERABLE_PROOF')
+
+    def __deepcopy__(self, memo):
+        raise TypeError('LOCAL_READBACK_NOT_TRANSFERABLE_PROOF')
+
+    def __reduce__(self):
+        raise TypeError('LOCAL_READBACK_NOT_SERIALIZABLE_PROOF')
+
+    @property
+    def store_id(self):
+        return self._store_id
+
+    @property
+    def closure_sha256(self):
+        return self._closure_sha256
+
+    @property
+    def objects(self):
+        return self._objects
+
+    @property
+    def native_replica_eligible(self):
+        return False
+
+    @property
+    def failure_domain_qualified(self):
+        return False
+
+    @property
+    def semantic_closure_verified(self):
+        return False
+
+    @property
+    def publication_confirmed(self):
+        return False
+
+
+def _issue_local_inventory_readback(store_id, closure_sha256, observations):
+    # Private construction is data provenance hygiene, not an authority boundary.
+    result = object.__new__(LocalInventoryReadback)
+    object.__setattr__(result, '_store_id', store_id)
+    object.__setattr__(result, '_closure_sha256', closure_sha256)
+    object.__setattr__(result, '_objects', tuple(observations))
+    return result
