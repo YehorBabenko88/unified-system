@@ -196,7 +196,7 @@ class Capture:
 
 def source_bindings(package,manifest):
     expected={'runtime-unified':'ba2b1cec0c2b114586afb73696e282117eede987',
-        'strattester':'aed8a7c8a952f96803c207d5e90b133969a47f04','meta_analyse':'f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1','terminan':'161ea1e0fc3a3a4cd64783b0e111e1e119e14d71'}
+        'strattester':'aed8a7c8a952f96803c207d5e90b133969a47f04','meta_analyse':'f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1','terminan':'458de55b7170d23f2e7ab3a5d72597b2a0124653'}
     refs={entry['name']:entry for entry in manifest['source_metadata']['sources']}
     for name,commit in expected.items():need(refs.get(name,{}).get('commit')==commit,'FIXED_SOURCE_REFERENCE')
     # Exact executable/source admission, not a claimed loaded-DLL attestation.
@@ -204,8 +204,10 @@ def source_bindings(package,manifest):
         ('tooling/git/cmd/git.exe','78211c7ed73988da93a6d8a33d47ec6187f464d7ea2a9a00c182bbd7a1ecf30f'),
         ('tooling/node/node.exe','d702daa815eabbff763c7d3808e235cf031cf2ca70211b56847bc72f51e240e5'),
         ('tooling/chromium/chrome-win/headless_shell.exe','ed19d88b4486c39c0265b0c07cbf1d6835d06069e600bede1adb09db0df46c8e'),
-        ('sources/terminan/tests/fresh_render/bootstrap.cjs','50ad787d3c506e1fc4ce247891ee716f108b8f2cab20b64d9af2e691527b92b4'),
-        ('sources/terminan/tests/fresh_render/harness.cjs','f9566565cfc4cd0b09067900defec274a833b6850d05d39945baffb4c0dbbce1'),
+        ('sources/terminan/tests/fresh_render/bootstrap.cjs','9f6dc64e4087089ec6b989924a1a449ebc2cce985b10532f0eb556130c0ef9df'),
+        ('sources/terminan/tests/fresh_render/harness.cjs','661294b79b243aab74fc51ba56caadd988e81435447aa0afed020f03c4016b3f'),
+        ('sources/terminan/tests/fresh_render/diagnostics.cjs','1de4447a0955e6df3e3fdc8837092c037acde711aa673d65f8e6da6c693875c8'),
+        ('sources/terminan/tests/fresh_render/owned_lifecycle.cjs','2f0e10d191f882d39b7c18ef2d434f18c1094e287f7882d2f198c5ba19aed01a'),
         ('sources/terminan/tests/fresh_render/sync_spawn_guard.cjs','f14689e5a92c1704f974fdf8cf9cc9aaf79881ca7a6b16f1bcc7487037580810'),
         ('sources/terminan/terminan/target_adapter_result.js','574dbf0882577708ab1e4c0ed73d6401eb6fabce3b3dc1b1375fc5952689241f')]:
         need(digest(package/relative)==sha,'FIXED_TOOL_OR_RENDERER_PIN')
