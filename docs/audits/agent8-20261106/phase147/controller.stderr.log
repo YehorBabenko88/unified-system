@@ -1,0 +1,24 @@
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\native-e2e-evidence-20261109\ls5-source-qualified-9f55260\tools\physical_dev\ls5_smoke.py", line 283, in execute
+    result['backend_identity']=launch(job,[str(python),'-I','-S','-B',str(backend),'ROOT_NONCE',str(package),str(root),str(git),'SYNTHETIC_DIRECT_ONLY'],python,env,root,'backend',started,processes,captures,result['stages'])
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\.codex\native-e2e-evidence-20261109\ls5-source-qualified-9f55260\tools\physical_dev\ls5_smoke.py", line 256, in launch
+    need(process.returncode==0,'OWN_STAGE_EXIT_FAILED')
+  File "C:\Users\LS-5\.codex\native-e2e-evidence-20261109\ls5-source-qualified-9f55260\tools\physical_dev\ls5_smoke.py", line 16, in need
+    if not value:raise SmokeBlocked(code)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^
+tools.physical_dev.supervisor.SmokeBlocked: OWN_STAGE_EXIT_FAILED
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\native-e2e-evidence-20261109\ls5-source-qualified-9f55260\tools\physical_dev\ls5_smoke.py", line 359, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "C:\Users\LS-5\.codex\native-e2e-evidence-20261109\ls5-source-qualified-9f55260\tools\physical_dev\ls5_smoke.py", line 357, in main
+    print(json.dumps(execute(args.package,raw,args.sha256,Path(args.state))))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\.codex\native-e2e-evidence-20261109\ls5-source-qualified-9f55260\tools\physical_dev\ls5_smoke.py", line 347, in execute
+    if failure is not None:raise SmokeBlocked('DISPOSABLE_SMOKE_FAILED') from failure
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tools.physical_dev.supervisor.SmokeBlocked: DISPOSABLE_SMOKE_FAILED

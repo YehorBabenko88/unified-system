@@ -667,7 +667,7 @@
     "P0_confirmed_defects": 0,
     "P0_absence_proven": false,
     "P1_open": 7,
-    "P2_open": 9,
+    "P2_open": 8,
     "F08": "FIX_VERIFIED_OFFLINE",
     "F09": "FIX_VERIFIED_OFFLINE_AT_42686cd",
     "F10": "FIX_VERIFIED_OFFLINE_AT_42686cd",
@@ -3959,7 +3959,7 @@
     "mandatory_hosted": "NOT_QUALIFIED",
     "overall": "NO_GO"
   },
-  "latest_addendum_scope": "phase145 exact9f F33-F34 source correction only; no fixture/helper/native runtime execution",
+  "latest_addendum_scope": "phase147 original failedd/source/stdlb/readonlySQLite review; F33-F34 scoped fixes via original evidence, newF35, no A8 runtime replay",
   "PR54_b144_terminal_CI_20261109": {
     "head": "b144a5e0fd3af90c975bfc0f0123234628dbb696",
     "direct_run": 42646665067,
@@ -4278,5 +4278,26 @@
     "Root105_and_inert_reproduction": "NOT_AUTHENTICATED_OR_EXECUTED_BY_A8_HERE",
     "execution_admission": "NOT_GRANTED",
     "new_d_package": "PENDING"
+  },
+  "immutable_package_d_review": {
+    "manifest_sha256": "67bcc2f0fd13b9d7363d4847e511d233a11a7be9c001e4a57411e0ea0bfa02bd",
+    "file_count": 19567,
+    "bytes": 1008122981,
+    "primary_files": 5292,
+    "non_harness_rows_equal_c": 17872,
+    "external_controller_primary_match": 1668,
+    "result": "SCOPED_FILE_SOURCE_INVOCATION_ACK_NO_NEW_STATIC_BLOCKER",
+    "execution_admission": "NOT_GRANTED",
+    "root_fresh_provenance_readiness": "PROVENANCE_ORIGINAL_9F5310_AUTHENTICATED_FRESH_READINESS_AND_DYNAMIC_GATES_SEPARATE",
+    "A8_app_helper_native_fixture_calls": 0
+  },
+  "d_original_failure_evidence_review": {
+    "receipt_sha256": "145ff6f9acec46fb467d7ca0a1fff6753bbe9c583d2e8d9d83ba04e05532b4b9",
+    "result": "AUTHENTICATED_ORIGINAL_ROOT_FAIL_NOT_A8_RUNTIME_REPLAY",
+    "family_elapsed_ns": 402272600,
+    "F33_F34": "SCOPED_FIX_VERIFIED_ORIGINAL_D_NONZERO_PATH",
+    "F35": "SOURCE_WINDOWS_AUDIT_FORMAT_MISMATCH_PRECISE_RCA_NOT_REPRODUCED_BY_A8",
+    "journal": "READ_ONLY_ORIGINAL_CHAIN_VALID_UNKNOWN_RESULT",
+    "A8_app_helper_native_fixture_calls": 0
   }
 }

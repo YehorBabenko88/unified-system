@@ -559,12 +559,14 @@
     "pr": 69,
     "observed_head": "453cb6d60efbdb8a34a7237053d69b6d631ed488",
     "title": "Backend bootstrap omits caller-owned direct-state directory required by DisposableTargetStand",
-    "status": "SOURCE_CORRECTION_ACK_AT_9F_RUNTIME_QUALIFICATION_PENDING",
+    "status": "FIX_VERIFIED_SCOPED_ORIGINAL_ROOT_D_EVIDENCE_AT_9F_NOT_A8_RUNTIME_REPLAY",
     "test": "bootstrap main versus ba2 DisposableTargetStand.__init__ lstat precondition; original c absent direct-state",
     "evidence": "phase144/evidence-verification.json;phase144/report.md",
     "required_correction": "Owner independently reproduce in authorized isolated context. Separate committed caller/bootstrap fix creates and validates only its new own stand directory before construction; preserve adapter policy and c evidence; no hotpatch/retry implied.",
     "successor_head": "9f55260f1e3c0ff83512bbd307a6ccc3366a386e",
-    "successor_evidence": "phase145/report.md;phase145/source-verification.json"
+    "successor_evidence": "phase145/report.md;phase145/source-verification.json",
+    "fixed_evidence": "phase147/report.md;phase147/evidence-verification.json;phase147/smoke-receipt.json",
+    "fixed_scope": "CALLER_STAND_PRECONDITION"
   },
   {
     "id": "A8-F34",
@@ -573,11 +575,25 @@
     "pr": 69,
     "observed_head": "453cb6d60efbdb8a34a7237053d69b6d631ed488",
     "title": "Failed stage drops completed child identity and numeric exit/wait evidence from final receipt",
-    "status": "SOURCE_CORRECTION_ACK_AT_9F_RUNTIME_QUALIFICATION_PENDING",
+    "status": "FIX_VERIFIED_SCOPED_ORIGINAL_ROOT_D_EVIDENCE_AT_9F_NOT_A8_RUNTIME_REPLAY",
     "test": "launch returns identity only after successful exit; execute assignment absent on failure; strict cleanup_summary raises before evidence assignment",
     "evidence": "phase144/smoke-receipt.json;phase144/evidence-verification.json;phase144/report.md",
     "required_correction": "Separate source successor persist per-stage identity/readback/membership facts before GO and numeric child exit/retirement observations even on failure, distinct from strict success qualification. No weakening of nonzero-exit failure; no reconstructed evidence inserted into original c receipt.",
     "successor_head": "9f55260f1e3c0ff83512bbd307a6ccc3366a386e",
-    "successor_evidence": "phase145/report.md;phase145/source-verification.json"
+    "successor_evidence": "phase145/report.md;phase145/source-verification.json",
+    "fixed_evidence": "phase147/report.md;phase147/evidence-verification.json;phase147/smoke-receipt.json",
+    "fixed_scope": "ACTUAL_NONZERO_STAGE_IDENTITY_EXIT_AND_SEPARATE_RETIREMENT_FACTS_NOT_EVERY_ABORT"
+  },
+  {
+    "id": "A8-F35",
+    "severity": "P2",
+    "repository": "unified-system",
+    "pr": 69,
+    "observed_head": "9f55260f1e3c0ff83512bbd307a6ccc3366a386e",
+    "title": "Windows subprocess audit callback rejects canonical string emitted by CPython after list2cmdline",
+    "status": "OPEN_SOURCE_CONTRACT_MISMATCH_ACTUAL_D_FAILURE_RCA_NOT_RUNTIME_REPRODUCED_BY_A8",
+    "test": "Pinned CPython3.12 Lib/subprocess.py Windows _execute_child transformation ordering versus bootstrap subprocess.Popen audit predicate",
+    "evidence": "phase147/evidence-verification.json;phase147/report.md",
+    "required_correction": "Owner reproduce with controlled platform-frame negatives/positives before RCA. Publish separate committed narrow Windows canonical issued-command frame validation without allowing arbitrary strings, shell, roots, commands, providers or unpinned executables. Preserve frozen d and original generic failure; no automatic rerun/hotpatch."
   }
 ]

@@ -1,0 +1,114 @@
+{
+  "scope": "READ_ONLY_ORIGINAL_ROOT_ARTIFACTS_STDLIB_AST_AND_SQLITE_RO_IMMUTABLE_NO_PROJECT_HELPER_FIXTURE_JOB_SDK_CALL",
+  "references": {
+    "smoke-receipt.json": {
+      "original": "C:\\Users\\LS-5\\.codex\\native-e2e-evidence-20261109\\ls5-smoke-9f5-d\\smoke-receipt.json",
+      "bytes": 3707,
+      "sha256": "145ff6f9acec46fb467d7ca0a1fff6753bbe9c583d2e8d9d83ba04e05532b4b9"
+    },
+    "backend.stderr.log": {
+      "original": "C:\\Users\\LS-5\\.codex\\native-e2e-evidence-20261109\\ls5-smoke-9f5-d\\backend.stderr.log",
+      "bytes": 58,
+      "sha256": "cc60028e352b1929d7c5bf93041f677e3514809492e12f1834a851bb774a1d11"
+    },
+    "controller.stderr.log": {
+      "original": "C:\\Users\\LS-5\\.codex\\native-e2e-evidence-20261109\\ls5-smoke9f5-d-controller.stderr.log",
+      "bytes": 2128,
+      "sha256": "3054ee1ecaaad92f2420a290784d5b44e34fc87e71d5de968ad6a7d8013185c7"
+    },
+    "controller.stdout.log": {
+      "original": "C:\\Users\\LS-5\\.codex\\native-e2e-evidence-20261109\\ls5-smoke9f5-d-controller.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "driver-receipt.json": {
+      "original": "C:\\Users\\LS-5\\.codex\\native-e2e-evidence-20261109\\ls5-smoke9f5-d-driver-receipt.json",
+      "bytes": 428,
+      "sha256": "caaea953447512dacb3731594be71b0562d9fce2504b6e2a01b9156fd0467b41"
+    },
+    "source-bindings.json": {
+      "original": "C:\\Users\\LS-5\\.codex\\native-e2e-evidence-20261109\\ls5-package9f5-d-source-bindings.json",
+      "bytes": 1332,
+      "sha256": "9f5310bf55cb54b97ae7e81917d60eb76f3c755f751416e447afd25ad2e727ca"
+    },
+    "resource.original.json": {
+      "original": "C:\\Users\\LS-5\\.codex\\native-e2e-evidence-20261109\\LS5-RESOURCE-PRE-SMOKE-9F5D.json",
+      "bytes": 310,
+      "sha256": "a1abdcbec46b2243ae2fb0125f45a43b1ff3c93ee375794084d75f5d0b818beb"
+    },
+    "direct-journal.original.db": {
+      "original": "C:\\Users\\LS-5\\.codex\\native-e2e-evidence-20261109\\ls5-smoke-9f5-d\\direct-state\\direct-journal.db",
+      "bytes": 16384,
+      "sha256": "e8c371dff4fa761abfc89a7e25e777a27e4202848f2cc81c36d38c844b958add"
+    }
+  },
+  "preflight": {
+    "original": "C:\\Users\\LS-5\\.codex\\native-e2e-evidence-20261109\\LS5-PRE-SMOKE-9f5-d-READONLY.json",
+    "sha256": "31413d6a9129efbb71db9383f778a2b6e70d03ff073cd3c1c0533da1aa5ffd47",
+    "bytes": 8778,
+    "observed_at_utc": "2026-11-09T22:49:41.0014504Z",
+    "effective_administrator": false,
+    "state_exists": false,
+    "existing_acl_changes": false,
+    "ancestor_rows": [
+      {
+        "path": "C:/Users/LS-5/.codex/native-e2e-evidence-20261109",
+        "attributes": 16
+      },
+      {
+        "path": "C:/Users/LS-5/.codex",
+        "attributes": 16
+      },
+      {
+        "path": "C:/Users/LS-5",
+        "attributes": 16
+      },
+      {
+        "path": "C:/Users",
+        "attributes": 17
+      },
+      {
+        "path": "C:/",
+        "attributes": 22
+      }
+    ]
+  },
+  "sqlite_quick_check": "ok",
+  "sqlite_mode": "ro&immutable=1",
+  "journal_schema": [
+    [
+      "transitions",
+      "CREATE TABLE transitions (sequence INTEGER PRIMARY KEY, state TEXT NOT NULL, receipt TEXT, previous_hash TEXT NOT NULL, digest TEXT NOT NULL)"
+    ]
+  ],
+  "journal_phases": [
+    {
+      "sequence": 1,
+      "state": "OBSERVING",
+      "phase": "STARTED",
+      "request_sha256": "4cf1df7beb92853123db57742ceb0bc788d2ad129288b8f1777de7f55a1bb232",
+      "result_sha256": null,
+      "result_status": null,
+      "result_error": null
+    },
+    {
+      "sequence": 2,
+      "state": "OBSERVING",
+      "phase": "FINISHED",
+      "request_sha256": "4cf1df7beb92853123db57742ceb0bc788d2ad129288b8f1777de7f55a1bb232",
+      "result_sha256": "d24fd624add199275f4237c1c73ae0734efe65b9bbaf18ab245ccde53b285e17",
+      "result_status": "UNKNOWN",
+      "result_error": "TARGET_RESULT_UNAVAILABLE"
+    }
+  ],
+  "stdlib_sha256": "e9886605ccac88bcfe2330a1b4cd8f132cbaf97ebb6834b1dcb5a69b127b8d5b",
+  "stdlib_win_function_line": 1436,
+  "stdlib_win_function_source": "def _execute_child(self, args, executable, preexec_fn, close_fds, pass_fds, cwd, env, startupinfo, creationflags, shell, p2cread, p2cwrite, c2pread, c2pwrite, errread, errwrite, unused_restore_signals, unused_gid, unused_gids, unused_uid, unused_umask, unused_start_new_session, unused_process_group):\n    \"\"\"Execute program (MS Windows version)\"\"\"\n    assert not pass_fds, 'pass_fds not supported on Windows.'\n    if isinstance(args, str):\n        pass\n    elif isinstance(args, bytes):\n        if shell:\n            raise TypeError('bytes args is not allowed on Windows')\n        args = list2cmdline([args])\n    elif isinstance(args, os.PathLike):\n        if shell:\n            raise TypeError('path-like args is not allowed when shell is true')\n        args = list2cmdline([args])\n    else:\n        args = list2cmdline(args)\n    if executable is not None:\n        executable = os.fsdecode(executable)\n    if startupinfo is None:\n        startupinfo = STARTUPINFO()\n    else:\n        startupinfo = startupinfo.copy()\n    use_std_handles = -1 not in (p2cread, c2pwrite, errwrite)\n    if use_std_handles:\n        startupinfo.dwFlags |= _winapi.STARTF_USESTDHANDLES\n        startupinfo.hStdInput = p2cread\n        startupinfo.hStdOutput = c2pwrite\n        startupinfo.hStdError = errwrite\n    attribute_list = startupinfo.lpAttributeList\n    have_handle_list = bool(attribute_list and 'handle_list' in attribute_list and attribute_list['handle_list'])\n    if have_handle_list or (use_std_handles and close_fds):\n        if attribute_list is None:\n            attribute_list = startupinfo.lpAttributeList = {}\n        handle_list = attribute_list['handle_list'] = list(attribute_list.get('handle_list', []))\n        if use_std_handles:\n            handle_list += [int(p2cread), int(c2pwrite), int(errwrite)]\n        handle_list[:] = self._filter_handle_list(handle_list)\n        if handle_list:\n            if not close_fds:\n                warnings.warn(\"startupinfo.lpAttributeList['handle_list'] overriding close_fds\", RuntimeWarning)\n            close_fds = False\n    if shell:\n        startupinfo.dwFlags |= _winapi.STARTF_USESHOWWINDOW\n        startupinfo.wShowWindow = _winapi.SW_HIDE\n        if not executable:\n            comspec = os.environ.get('ComSpec')\n            if not comspec:\n                system_root = os.environ.get('SystemRoot', '')\n                comspec = os.path.join(system_root, 'System32', 'cmd.exe')\n                if not os.path.isabs(comspec):\n                    raise FileNotFoundError('shell not found: neither %ComSpec% nor %SystemRoot% is set')\n            if os.path.isabs(comspec):\n                executable = comspec\n        else:\n            comspec = executable\n        args = '{} /c \"{}\"'.format(comspec, args)\n    if cwd is not None:\n        cwd = os.fsdecode(cwd)\n    sys.audit('subprocess.Popen', executable, args, cwd, env)\n    try:\n        hp, ht, pid, tid = _winapi.CreateProcess(executable, args, None, None, int(not close_fds), creationflags, env, cwd, startupinfo)\n    finally:\n        self._close_pipe_fds(p2cread, p2cwrite, c2pread, c2pwrite, errread, errwrite)\n    self._child_created = True\n    self._handle = Handle(hp)\n    self.pid = pid\n    _winapi.CloseHandle(ht)",
+  "bootstrap_sha256": "06811b08ab9e577f4a8c5beaaaa72abe1a348791b5df3004e967426790e1f2b4",
+  "F35": "SOURCE_WINDOWS_AUDIT_STRING_VS_LIST_CONTRACT_MISMATCH_NOT_ACTUAL_FAILURE_RCA_REPRO",
+  "F33": "ORIGINAL_D_STATE_AND_JOURNAL_SHOW_STAND_PRECONDITION_PASSED",
+  "F34": "ORIGINAL_D_NONZERO_STAGE_FIELDS_PRESENT_STRICT_FAIL_RETAINED",
+  "A8_app_helper_native_fixture_calls": 0,
+  "A8_full_postrun_package_rehash": false,
+  "independent_journal_chain_and_request_result_digests": "PASS_READ_ONLY_ORIGINAL_TWO_ROWS_NOT_STORAGE_RECOVERY_ACCEPTANCE"
+}
