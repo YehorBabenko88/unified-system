@@ -43,6 +43,11 @@ class PackageTests(unittest.TestCase):
         for root in (Path("relative"),self.root/"walk"/"..",self.root/"source.py"):
             with self.subTest(root=root),self.assertRaises(package.PackageError):package.snapshot_files(root)
 
+    def test_oversized_or_control_root_refused_before_resolution(self):
+        with patch.object(Path,"resolve",side_effect=AssertionError("unsafe root resolved")):
+            for value in (str(self.root)+"/"+"x"*4097,str(self.root)+"\0bad"):
+                with self.subTest(length=len(value)),self.assertRaises(package.PackageError):package.snapshot_files(value)
+
     def test_hardlinks_rejected(self):
         os.link(self.root/"source.py",self.root/"alias")
         with self.assertRaises(package.PackageError): package.snapshot_files(self.root)

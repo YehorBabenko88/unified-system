@@ -75,6 +75,7 @@ def _signature(info):
 
 def _directory(raw):
     path=Path(raw)
+    _text(str(path),4096)
     _need(path.is_absolute() and not str(path).startswith(("\\\\","//")))
     _need(str(path)==str(path.resolve(strict=True)))
     for item in (*reversed(path.parents),path): _ordinary(item.lstat(),"directory")
