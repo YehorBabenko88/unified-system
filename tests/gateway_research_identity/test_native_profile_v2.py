@@ -1,6 +1,7 @@
 """Actual own mTLS/Consul profile-v2 source; no issued jobs or grants seeded."""
 import base64,copy,hashlib,json,uuid,unittest
-from test_native_broker import NativeBrokerTests,canonical
+import test_native_broker as native_fixture
+canonical=native_fixture.canonical
 from unified_system.gateway_research_identity import ResearchIdentityBroker,ResearchIdentityDenied,ResearchIdentityUnavailable
 
 TARGET_SCHEMA_SHA='faf01152678c5b066145dcafebe92f593a641a54dac84da3ce1e1df94c0fb261'
@@ -10,12 +11,12 @@ def target_bytes(value):return json.dumps(value,sort_keys=True,separators=(',','
 
 class NativeProfileV2Tests(unittest.IsolatedAsyncioTestCase):
     @classmethod
-    def setUpClass(cls):NativeBrokerTests.setUpClass.__func__(cls)
+    def setUpClass(cls):native_fixture.NativeBrokerTests.setUpClass.__func__(cls)
     @classmethod
-    def tearDownClass(cls):NativeBrokerTests.tearDownClass.__func__(cls)
-    put=NativeBrokerTests.put
+    def tearDownClass(cls):native_fixture.NativeBrokerTests.tearDownClass.__func__(cls)
+    put=native_fixture.NativeBrokerTests.put
     async def asyncSetUp(self):
-        await NativeBrokerTests.asyncSetUp(self)
+        await native_fixture.NativeBrokerTests.asyncSetUp(self)
         self.job=str(uuid.uuid4());self.original=str(uuid.uuid4())
         self.target=dict(schema='unified.gateway.target-native-request.v1-review1',request_id=self.original,
             target_kind='MetaAnalyse',target_capability='meta.ohlcv.untouched_levels.v1',target_version='f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1',

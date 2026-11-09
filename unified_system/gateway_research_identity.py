@@ -28,6 +28,10 @@ except ImportError:
     ConsulSessionAuthority = None
 
 SCOPES=frozenset(('SUBMIT_RESEARCH','READ_RESEARCH','CANCEL_OWN_JOB'))
+_PROFILE_V2='unified.authority.target-bound-research-profile.v2-review1'
+_TARGET_SCHEMA_SHA='faf01152678c5b066145dcafebe92f593a641a54dac84da3ce1e1df94c0fb261'
+_INPUT_SHA='c548e2ffcd542d5d741682303694b3c6d06507740f158a6e30089b2d5355f648'
+_PRODUCER='aed8a7c8a952f96803c207d5e90b133969a47f04'
 
 class ResearchIdentityDenied(RuntimeError): pass
 class ResearchIdentityUnavailable(RuntimeError): pass
@@ -60,6 +64,90 @@ def _decode(raw):
     value=json.loads(raw.decode('ascii'),object_pairs_hook=pairs,parse_int=number,parse_float=number,parse_constant=number)
     _require(type(value) is dict and canonical(value)==raw)
     return value
+
+def _lab_id(value):
+    _require(type(value) is str and re.fullmatch(r'[A-Za-z0-9_-]{1,128}',value) is not None)
+
+def _decode_target(raw):
+    """Separate target codec retains numeric input caps; never native C3 coercion."""
+    _require(type(raw) is bytes and 0<len(raw)<=16384)
+    depth=0;quoted=False;escaped=False
+    for char in raw:
+        if quoted:
+            if escaped:escaped=False
+            elif char==92:escaped=True
+            elif char==34:quoted=False
+        elif char==34:quoted=True
+        elif char in (91,123):
+            depth+=1;_require(depth<=12)
+        elif char in (93,125):
+            depth-=1;_require(depth>=0)
+    _require(depth==0 and not quoted)
+    def pairs(items):
+        result={}
+        for key,value in items:
+            _require(key not in result);result[key]=value
+        return result
+    def constant(_):raise ValueError('TARGET_NONFINITE_NUMBER')
+    value=json.loads(raw.decode('ascii'),object_pairs_hook=pairs,parse_constant=constant)
+    _require(type(value) is dict and json.dumps(value,sort_keys=True,separators=(',',':'),ensure_ascii=True,allow_nan=False).encode('ascii')==raw)
+    return value
+
+def _target_binding(profile,*,generation,actor,quota_owner):
+    """Data joins for actual commissioned profile, not resource/job qualification."""
+    binding=profile['target_binding']
+    _fields(binding,'target_request_schema_sha256 target_request_canonical_base64 target_request_sha256 request_id job_id idempotency_key cluster_generation actor_principal_id quota_owner_id producer_request_sha256 producer_head')
+    _require(binding['target_request_schema_sha256']==_TARGET_SCHEMA_SHA)
+    _sha(binding['target_request_sha256'])
+    encoded=binding['target_request_canonical_base64']
+    _require(type(encoded) is str and 0<len(encoded)<=21848)
+    raw=base64.b64decode(encoded,validate=True)
+    _require(base64.b64encode(raw).decode('ascii')==encoded and hashlib.sha256(raw).hexdigest()==binding['target_request_sha256'])
+    target=_decode_target(raw)
+    _fields(target,'schema request_id target_kind target_capability target_version dataset_manifest_id dataset_revision experiment_id strategy_version parameters_digest execution_mode resource_budget quota_owner principal_id authority_generation assignment_revision fencing_token idempotency_key result_schema result_artifact_ref')
+    expected=dict(schema='unified.gateway.target-native-request.v1-review1',target_kind='MetaAnalyse',
+        target_capability='meta.ohlcv.untouched_levels.v1',target_version='f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1',
+        dataset_manifest_id='local-sha256:33d5bf0f918884c8908795b384e0964a48a1351c808800964b8cacf3f83e28b6',
+        dataset_revision='LOCAL_FIXTURE_1',experiment_id='fixture.gateway.btc.levels',strategy_version=None,
+        parameters_digest=_INPUT_SHA,execution_mode='NATIVE_RESEARCH_ADMISSION_REQUEST_NOT_PERMISSION',
+        assignment_revision=None,fencing_token=None,result_schema='unified.gateway.native-target-observation.v1-review1',result_artifact_ref=None)
+    for key,value in expected.items():
+        _require(type(target[key]) is type(value) and target[key]==value)
+    caps=target['resource_budget'];_fields(caps,'max_input_bytes max_output_bytes max_rows max_executions')
+    for key,value in dict(max_input_bytes=16384,max_output_bytes=16384,max_rows=3,max_executions=1).items():
+        _require(type(caps[key]) is int and caps[key]==value)
+    for key in ('request_id','job_id','cluster_generation','actor_principal_id'):_uuid(binding[key])
+    _lab_id(binding['idempotency_key']);_lab_id(binding['quota_owner_id'])
+    _require(binding['cluster_generation']==generation==target['authority_generation'])
+    _require(binding['actor_principal_id']==actor==target['principal_id'])
+    _require(binding['quota_owner_id']==quota_owner==target['quota_owner'])
+    _require(binding['request_id']==target['request_id'] and binding['idempotency_key']==target['idempotency_key'])
+    _require(binding['producer_request_sha256']==profile['input_request_sha256']==_INPUT_SHA)
+    _require(binding['producer_head']==profile['producer_head']==_PRODUCER)
+    _require(len(profile['principal_registry'])==1)
+    return binding
+
+def _profile_request(profile,profile_sha,*,scope,raw):
+    """Bind current identity capture to the ONE original; never issue a job."""
+    b=profile['target_binding']
+    submit=dict(schema='unified.gateway.lab-job-submit.v1-review1',operation='SUBMIT_RESEARCH',
+        cluster_id=profile['cluster_id'],cluster_generation=b['cluster_generation'],request_id=b['request_id'],
+        job_id=b['job_id'],original_actor_principal_id=b['actor_principal_id'],quota_owner_id=b['quota_owner_id'],
+        idempotency_key=b['idempotency_key'],commissioned_profile_sha256=profile_sha,
+        input_request_sha256=profile['input_request_sha256'],producer_head=profile['producer_head'],resources=profile['resources'])
+    if scope in ('SUBMIT_RESEARCH','READ_RESEARCH'):
+        _require(raw==canonical(submit))
+        return
+    cancel=_decode(raw)
+    _fields(cancel,'schema operation cluster_id cluster_generation request_id job_id original_actor_principal_id quota_owner_id idempotency_key commissioned_profile_sha256 original_submit_request_id original_submit_intent_sha256')
+    _uuid(cancel['request_id']);_lab_id(cancel['idempotency_key'])
+    _require(cancel['request_id']!=b['request_id'])
+    expected=dict(schema='unified.gateway.lab-job-cancel.v1-review1',operation='CANCEL_OWN_JOB',
+        cluster_id=profile['cluster_id'],cluster_generation=b['cluster_generation'],job_id=b['job_id'],
+        original_actor_principal_id=b['actor_principal_id'],quota_owner_id=b['quota_owner_id'],
+        commissioned_profile_sha256=profile_sha,original_submit_request_id=b['request_id'],
+        original_submit_intent_sha256=hashlib.sha256(canonical(submit)).hexdigest())
+    for key,value in expected.items():_require(cancel[key]==value)
 def _leaf(cert,eku,uri=None):
     _require(not cert.extensions.get_extension_for_class(x509.BasicConstraints).value.ca)
     _require(list(cert.extensions.get_extension_for_class(x509.ExtendedKeyUsage).value)==[eku])
@@ -170,8 +258,10 @@ class ResearchIdentityBroker:
         profile=await self._read(self._prefix+'profile-registry/'+self._profile_sha)
         _require(hashlib.sha256(profile.raw).hexdigest()==self._profile_sha)
         p=_decode(profile.raw)
-        _fields(p,'schema cluster_id realm_id principal_registry input_request_sha256 producer_head resources expiry_semantics expires_utc')
-        _require(p['schema']=='unified.authority.research-lab-profile.v1-review1' and p['cluster_id']==self._cluster and p['realm_id']==self._realm)
+        profile_fields='schema cluster_id realm_id principal_registry input_request_sha256 producer_head resources expiry_semantics expires_utc'
+        v2=p.get('schema')==_PROFILE_V2
+        _fields(p,profile_fields+(' target_binding' if v2 else ''))
+        _require(p['schema'] in ('unified.authority.research-lab-profile.v1-review1',_PROFILE_V2) and p['cluster_id']==self._cluster and p['realm_id']==self._realm)
         _require(p['expiry_semantics']=='NATIVE_SESSION_INVALIDATION_NOT_UTC_AT_COMMIT')
         _require(type(p['principal_registry']) is dict and 1<=len(p['principal_registry'])<=32)
         for key,value in p['principal_registry'].items(): _sha(key);_uuid(value)
@@ -184,6 +274,7 @@ class ResearchIdentityBroker:
         _require(a['schema']=='unified.authority.research-lab-principal.v1-review1' and a['actor_id']==actor
                  and a['service_id']==service and a['certificate_sha256']==fingerprint and a['profile_sha256']==self._profile_sha and a['state']=='ACTIVE')
         _id(a['quota_owner_id']);_uuid(a['policy_id'])
+        if v2:_target_binding(p,generation=self._generation,actor=actor,quota_owner=a['quota_owner_id'])
         policy=await self._read(self._prefix+'policies/'+a['policy_id']);r=_decode(policy.raw)
         _fields(r,'schema policy_id actor_id profile_sha256 revision state scopes expires_utc')
         _require(r['schema']=='unified.authority.research-lab-policy.v1-review1' and r['policy_id']==a['policy_id']
@@ -264,6 +355,8 @@ class ResearchIdentityBroker:
         if len(self._captures)>=256: raise ResearchIdentityUnavailable('CAPTURE_CAPACITY')
         state=self._context(context)
         records,a,r,policy_expiry=await self._policy(state[1],state[2]);_require(scope in r['scopes'])
+        profile=_decode(records[1].raw)
+        if profile['schema']==_PROFILE_V2:_profile_request(profile,self._profile_sha,scope=scope,raw=request_bytes)
         _require((a['actor_id'],a['policy_id'],a['quota_owner_id'])==(state[5],state[6],state[7]))
         lock=await self._read(self._prefix+'principal-sessions/'+state[3]+'/lock')
         expected=dict(schema='unified.authority.research-lab-principal-session.v1-review1',actor_id=state[5],
