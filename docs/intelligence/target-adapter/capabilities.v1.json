@@ -1,0 +1,94 @@
+[
+  {
+    "owning_repository": "strattester",
+    "capability": "historical_backtest",
+    "availability": "UNAVAILABLE",
+    "entrypoint": null,
+    "input_schema": null,
+    "output_schema": null,
+    "dataset": null,
+    "resource_budget": null,
+    "authority_scope": null,
+    "cancellation": "UNAVAILABLE",
+    "recovery": "UNAVAILABLE",
+    "scheduler_admission": "BLOCKED",
+    "limitations": [
+      "NOT_QUALIFIED_FOR_THIS_ADAPTER"
+    ]
+  },
+  {
+    "owning_repository": "strattester",
+    "capability": "historical_replay",
+    "availability": "UNAVAILABLE",
+    "entrypoint": null,
+    "input_schema": null,
+    "output_schema": null,
+    "dataset": null,
+    "resource_budget": null,
+    "authority_scope": null,
+    "cancellation": "UNAVAILABLE",
+    "recovery": "UNAVAILABLE",
+    "scheduler_admission": "BLOCKED",
+    "limitations": [
+      "NOT_QUALIFIED_FOR_THIS_ADAPTER"
+    ]
+  },
+  {
+    "owning_repository": "math",
+    "capability": "statistical_computation",
+    "availability": "UNAVAILABLE",
+    "entrypoint": null,
+    "input_schema": null,
+    "output_schema": null,
+    "dataset": null,
+    "resource_budget": null,
+    "authority_scope": null,
+    "cancellation": "UNAVAILABLE",
+    "recovery": "UNAVAILABLE",
+    "scheduler_admission": "BLOCKED",
+    "limitations": [
+      "NOT_QUALIFIED_FOR_THIS_ADAPTER"
+    ]
+  },
+  {
+    "owning_repository": "meta_analyse",
+    "capability": "meta.ohlcv.untouched_levels.v1",
+    "availability": "DIRECT_DISPOSABLE_ONLY",
+    "entrypoint": "strattester.research.gateway_adapter.execute_synthetic_research -> meta_analyse.ohlcv_research_adapter.analyze_ohlcv_research",
+    "input_schema": "stratt.gateway.synthetic.research.request.v1-review1",
+    "output_schema": "meta.ohlcv.research.result.v1",
+    "dataset": "local-sha256:33d5bf0f918884c8908795b384e0964a48a1351c808800964b8cacf3f83e28b6",
+    "resource_budget": {
+      "max_input_bytes": 16384,
+      "max_output_bytes": 16384,
+      "max_rows": 3,
+      "max_executions": 1
+    },
+    "authority_scope": "LOCAL_TEST_SCOPE_NOT_AUTHENTICATED",
+    "cancellation": "COOPERATIVE_DISCARD_BEFORE_RESULT_COMMIT",
+    "recovery": "ORIGINAL_INTENT_UNKNOWN_NO_REEXECUTION",
+    "scheduler_admission": "BLOCKED",
+    "limitations": [
+      "NO_NATIVE_CPU_RSS_CONTAINMENT",
+      "NO_SCHEDULER_OR_PUBLICATION",
+      "SYNTHETIC_LOCAL_ONLY"
+    ]
+  },
+  {
+    "owning_repository": "UNRESOLVED",
+    "capability": "trader_intelligence.offline_reconstruction",
+    "availability": "UNAVAILABLE",
+    "entrypoint": null,
+    "input_schema": null,
+    "output_schema": null,
+    "dataset": null,
+    "resource_budget": null,
+    "authority_scope": null,
+    "cancellation": "UNAVAILABLE",
+    "recovery": "UNAVAILABLE",
+    "scheduler_admission": "BLOCKED",
+    "limitations": [
+      "NOT_QUALIFIED_FOR_THIS_ADAPTER"
+    ]
+  }
+]
