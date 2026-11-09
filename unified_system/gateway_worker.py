@@ -35,6 +35,35 @@ class CpuHardCapPolicyV1:
     admission_supported: bool=False
     behaviorally_qualified: bool=False
 
+@dataclass(frozen=True)
+class CapacityFreshnessV1:
+    """Pure local clock-span evaluation, never qualified remote capacity."""
+    state: str
+    reason: str
+    age_ns: int | None=None
+    query_duration_ns: int | None=None
+    policy_version: str='local-capacity-clock-span.v1'
+    admission_supported: bool=False
+    resources_reserved: bool=False
+
+def capacity_freshness_v1(*,observed_start_ns,observed_end_ns,now_ns,
+        observation_incarnation_id,expected_incarnation_id,max_age_ns=None):
+    """No max-age default; same-incarnation DATA only, no issuer proof."""
+    def result(state,reason,age=None,duration=None):return CapacityFreshnessV1(state,reason,age,duration)
+    try:
+        _worker_uuid(observation_incarnation_id);_worker_uuid(expected_incarnation_id)
+    except WorkerUnavailable:return result('UNSUPPORTED','INVALID_OBSERVATION_CLOCK_SCOPE')
+    if observation_incarnation_id!=expected_incarnation_id:
+        return result('FOREIGN_CLOCK_SCOPE','CROSS_INCARNATION_MONOTONIC_COMPARISON_FORBIDDEN')
+    values=(observed_start_ns,observed_end_ns,now_ns)
+    if any(type(v) is not int or v<0 for v in values):return result('UNSUPPORTED','NONNEGATIVE_INTEGER_CLOCK_REQUIRED')
+    if observed_start_ns>observed_end_ns or observed_end_ns>now_ns:
+        return result('CLOCK_UNCERTAIN','CLOCK_ROLLBACK_OR_FUTURE_OBSERVATION')
+    if type(max_age_ns) is not int or max_age_ns<=0:return result('UNSUPPORTED','EXPLICIT_VALID_MAX_AGE_POLICY_REQUIRED')
+    age=now_ns-observed_start_ns;duration=observed_end_ns-observed_start_ns
+    if age>=max_age_ns:return result('STALE','OLDEST_OBSERVATION_AT_OR_BEYOND_POLICY_BOUNDARY',age,duration)
+    return result('FRESH_LOCAL_DATA_NOT_ADMISSION','LOCAL_SPAN_ONLY_NOT_CAPACITY_RESERVATION',age,duration)
+
 def cpu_hard_cap_policy_v1(requested_millicores,*,processor_groups,active_processor_count,
         process_affinity_mask,system_affinity_mask,already_reserved_millicores,
         parent_cpu_control,dfss_state):
@@ -237,11 +266,18 @@ def _attempt_identity(k,handle):
 
 def _attempt_host(k):
     info=_AttemptPerformance();info.cb=ctypes.sizeof(info)
-    _worker_need(k.K32GetPerformanceInfo(ctypes.byref(info),ctypes.sizeof(info)),'OWNED_HOST_OBSERVATION_UNAVAILABLE')
+    started=time.monotonic_ns()
+    success=k.K32GetPerformanceInfo(ctypes.byref(info),ctypes.sizeof(info))
+    completed=time.monotonic_ns()
+    _worker_need(success,'OWNED_HOST_OBSERVATION_UNAVAILABLE')
+    _worker_need(completed>=started,'OWNED_HOST_OBSERVATION_CLOCK_ROLLBACK')
     _worker_need(info.page_size>0 and info.commit_limit>=info.commit_total,'OWNED_HOST_OBSERVATION_INVALID')
     return dict(available_commit_bytes=str((info.commit_limit-info.commit_total)*info.page_size),
                 available_physical_bytes=str(info.physical_available*info.page_size),
-                observation_utc=datetime.now(timezone.utc).isoformat(),monotonic_ns=str(time.monotonic_ns()),
+                observation_utc=datetime.now(timezone.utc).isoformat(),monotonic_ns=str(completed),
+                monotonic_ns_semantics='QUERY_COMPLETION_DIAGNOSTIC_ONLY_NOT_FRESHNESS',
+                observation_started_monotonic_ns=str(started),observation_completed_monotonic_ns=str(completed),
+                query_duration_ns=str(completed-started),observation_incarnation_id=_PROCESS_INCARNATION,
                 qualified_for_native_admission=False)
 
 def _attempt_cpu_topology(k,handle):
