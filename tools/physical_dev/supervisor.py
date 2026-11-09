@@ -181,7 +181,8 @@ class WindowsSmokeJob:
         self._owned();handle,identity=self.api.process_identity(process,expected_image)
         self.api.check(self.api.k.AssignProcessToJobObject(self.handle,handle),'OWN_JOB_ASSIGN')
         member=c.c_int();self.api.check(self.api.k.IsProcessInJob(handle,self.handle,c.byref(member)),'OWN_MEMBERSHIP_QUERY');_need(member.value==1,'OWN_MEMBERSHIP_MISSING')
-        validate_readback(self.read_limits());self.processes.append(process)
+        readback=self.read_limits();validate_readback(readback);self.processes.append(process)
+        identity['own_job_membership_before_go']=member.value;identity['own_job_readback_before_go']=readback
         return identity
     def terminate_own(self):
         self._owned();self.api.check(self.api.k.TerminateJobObject(self.handle,73),'OWN_JOB_TERMINATE');self.terminated=True

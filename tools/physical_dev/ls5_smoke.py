@@ -232,19 +232,23 @@ def source_bindings(package,manifest):
             namespace['inventory'](source)
     return refs
 
-def launch(job,argv,image,env,root,name,started,all_processes,all_captures):
+def launch(job,argv,image,env,root,name,started,all_processes,all_captures,stages):
     nonce=secrets.token_hex(16);argv=[nonce if value=='ROOT_NONCE' else value for value in argv]
     process=subprocess.Popen(argv,stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE,
         cwd=root,env=env,shell=False,close_fds=True,creationflags=subprocess.CREATE_NO_WINDOW)
     all_processes.append(process);capture=Capture(process);all_captures.append((name,capture))
+    stage={'reported_pid':process.pid,'go_status':'NOT_ATTEMPTED','identity':None,'returncode':None};stages[name]=stage
     try:
         try:frame=capture.ready.get(timeout=5)
         except queue.Empty:raise SmokeBlocked('BOOTSTRAP_READY_TIMEOUT') from None
         validate_bootstrap(frame,process.pid,nonce)
         validate_captures(all_captures)
         identity=job.attach_before_go(process,image)
+        stage['identity']=identity
         need(stop_reason(started,time.perf_counter_ns(),sum(c.count for _,c in all_captures)) is None,'BEFORE_GO_BUDGET')
+        stage['go_status']='ATTEMPTED_OUTCOME_UNKNOWN'
         process.stdin.write(('GO '+nonce+'\n').encode('ascii'));process.stdin.flush()
+        stage['go_status']='FLUSH_COMPLETED_NOT_EXECUTION_ACK'
         while process.poll() is None:
             reason=stop_reason(started,time.perf_counter_ns(),sum(c.count for _,c in all_captures))
             need(not reason and not capture.error,reason or capture.error or 'CAPTURE_UNKNOWN')
@@ -253,6 +257,7 @@ def launch(job,argv,image,env,root,name,started,all_processes,all_captures):
         need(stop_reason(started,time.perf_counter_ns(),sum(c.count for _,c in all_captures)) is None,'STAGE_COMPLETION_BUDGET')
         return identity
     finally:
+        stage['returncode']=process.poll()
         if process.poll() is not None and process.stdin:process.stdin.close()
 
 def execute(package,manifest_raw,pin,root):
@@ -267,7 +272,7 @@ def execute(package,manifest_raw,pin,root):
     result={'schema':'unified.ls5.disposable-smoke.v1','package_sha256':pin,'source_refs':refs,
         'public_submit':'DENY','publication':'LOCAL_UNATTESTED','resource_qualification':'NOT_GRANTED',
         'parent_chain':'UNKNOWN_MAY_BE_STRICTER','native_job_admission':False,'physical_cluster_admission':False,
-        'target':'NOT_RUN','render':'NOT_RUN','cleanup':'PENDING','result':'NOT_PASSED'}
+        'target':'NO_COMPLETION_EVIDENCE','render':'NO_COMPLETION_EVIDENCE','cleanup':'PENDING','result':'NOT_PASSED','stages':{}}
     started=time.perf_counter_ns()
     try:
         # This is the FIRST mutating Job call; sources/isolation must be reviewed.
@@ -275,12 +280,12 @@ def execute(package,manifest_raw,pin,root):
         watchdog=OwnWatchdog(job,started);watchdog.start()
         python=package/'tooling/python/python.exe';git=package/'tooling/git/cmd/git.exe';node=package/'tooling/node/node.exe'
         backend=package/'sources/harness/tools/physical_dev/bootstrap.py'
-        result['backend_identity']=launch(job,[str(python),'-I','-S','-B',str(backend),'ROOT_NONCE',str(package),str(root),str(git),'SYNTHETIC_DIRECT_ONLY'],python,env,root,'backend',started,processes,captures)
+        result['backend_identity']=launch(job,[str(python),'-I','-S','-B',str(backend),'ROOT_NONCE',str(package),str(root),str(git),'SYNTHETIC_DIRECT_ONLY'],python,env,root,'backend',started,processes,captures,result['stages'])
         request=root/'fresh-request.json';envelope=root/'fresh-envelope.json';artifact=root/'fresh-artifact.json'
         need(artifact.stat().st_size==2070 and digest(artifact)==ARTIFACT,'ACTUAL_TARGET_ARTIFACT')
         result['target']='ACTUAL_DIRECT_TARGET_BYTES_MATCH';result['artifact_sha256']=ARTIFACT
         bootstrap=package/'sources/terminan/tests/fresh_render/bootstrap.cjs';module=package/'tooling/node_modules/@playwright/test';browser=package/'tooling/chromium/chrome-win/headless_shell.exe'
-        result['render_identity']=launch(job,[str(node),'--no-addons',str(bootstrap),'ROOT_NONCE',str(root),str(request),str(envelope),str(artifact),digest(request),digest(envelope),digest(artifact),str(module),str(browser)],node,env,root,'render',started,processes,captures)
+        result['render_identity']=launch(job,[str(node),'--no-addons',str(bootstrap),'ROOT_NONCE',str(root),str(request),str(envelope),str(artifact),digest(request),digest(envelope),digest(artifact),str(module),str(browser)],node,env,root,'render',started,processes,captures,result['stages'])
         receipts=list(root.glob('fresh-render-*/render-receipt.json'));need(len(receipts)==1,'FRESH_RENDER_RECEIPT_REQUIRED')
         view=json.loads(receipts[0].read_bytes());need(view.get('result')=='LOCAL_RENDER_PASS_NOT_AUTH_OR_PHYSICAL_ACCEPTANCE' and view.get('cleanup',{}).get('confirmed') is True,'FRESH_RENDER_OR_SDK_CLEANUP_NOT_PASSED')
         need(view.get('input_sha256')==dict(request=digest(request),envelope=digest(envelope),artifact=digest(artifact)),'FRESH_RENDER_INPUT_BINDING')
@@ -296,6 +301,8 @@ def execute(package,manifest_raw,pin,root):
                     job.terminate_own()
                 result['accounting']=job.wait_empty(cleanup_seconds(cleanup_deadline,10))
                 for process in processes:process.wait(timeout=cleanup_seconds(cleanup_deadline,5))
+                result['primary_exit_codes']=[p.returncode for p in processes]
+                result['retirement_evidence']={'own_job_active':result['accounting']['active'],'all_retained_primaries_exited':all(type(p.returncode) is int for p in processes),'workload_success_is_separate':True}
                 result['cleanup']=cleanup_summary(result['accounting']['active'],[p.returncode for p in processes])
             except BaseException as error:
                 result['cleanup']='FAILED_OR_UNCONFIRMED';result['cleanup_error']=type(error).__name__

@@ -2,6 +2,18 @@ import unittest,tempfile
 from pathlib import Path
 
 class BootstrapPathTests(unittest.TestCase):
+    def test_allocate_existing_stand_contract_requires_new_empty_directory(self):
+        from tools.physical_dev.bootstrap import allocate_stand_root
+        from unified_system.gateway_target_adapter import DisposableTargetStand,TargetRejected
+        with tempfile.TemporaryDirectory(prefix='pure-stand-root-') as tmp:
+            root=Path(tmp).resolve()
+            with self.assertRaises(TargetRejected):DisposableTargetStand(str(root/'direct-state'),stratt_source_root=str(root),meta_source_root=str(root))
+            state=allocate_stand_root(root)
+            stand=DisposableTargetStand(str(state),stratt_source_root=str(root),meta_source_root=str(root))
+            try:self.assertEqual(stand.invocations,0);self.assertTrue((state/'direct-journal.db').is_file())
+            finally:stand.close()
+            with self.assertRaises(FileExistsError):allocate_stand_root(root)
+
     def test_source_git_selection_pins_executable_without_rewriting_target_source(self):
         from tools.physical_dev.bootstrap import source_git_argv
         root=Path('C:/sources/stratt');git=Path('C:/tooling/git/cmd/git.exe')

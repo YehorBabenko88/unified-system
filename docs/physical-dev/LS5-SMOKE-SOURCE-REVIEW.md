@@ -62,6 +62,30 @@ solved by a cooperative deadline. RED `ls5-shared-cleanup-deadline-red.log` is
 retained;103 combined pure tests pass. This source successor requires a NEW
 immutable package and review; candidate b will never be hotpatched or started.
 
+First actual c attempt: source453/package2ffadb31cc16dd4044d6fb1455c976f0988e4e0c565a1d0d5c6201cf28355ed7
+returned FAIL_OR_UNCONFIRMED, never PASS. Original receipt SHA256
+9fae4e0d06e4911568ed6d3c78f890ee00014ef0ea5e4bbd6608db6a63a59bd6;
+backend exited nonzero with TargetRejected; active0,total1, family371147100ns,
+package unchanged. The original receipt's NOT_RUN markers mean no completion
+evidence, not proof that no adapter code executed. It lacked per-child admission
+data because launch returned identity only after a successful zero exit.
+
+Root reproduced the caller contract defect independently with an inert SQLite
+fixture: DisposableTargetStand requires an already-existing empty own directory;
+bootstrap passed missing direct-state. Existing constructor rejects that path
+before research invocation. The new caller allocates the directory exclusively
+before invoking the unchanged existing constructor; reuse still refuses. RED
+ls5-stand-directory-contract-red.log and original physical RED are retained.
+Known fixed rejection codes can now be logged without arbitrary exception text.
+
+The new evidence path records per-child retained-handle identity/token/actual
+own-Job membership and limit readback BEFORE attempting GO, and persists it on
+failure. GO attempt/flush are distinguished from execution acknowledgement.
+Numeric primary exits and retirement evidence are separate from workload success;
+nonzero still prevents PASS. Pure failed-child regression verifies evidence
+survives that outcome. No c snapshot changes or automatic rerun occurred. New
+source qualification, new package and independent review are required.
+
 The intended source family is Unified runtime ba2b1cec0c2b114586afb73696e282117eede987,
 Strattester aed8a7c8a952f96803c207d5e90b133969a47f04, MetaAnalyse
 f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1 and A6 PR77. The harness itself must also

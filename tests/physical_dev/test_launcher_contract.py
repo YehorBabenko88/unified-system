@@ -4,6 +4,21 @@ from pathlib import Path
 from unittest.mock import patch
 
 class LauncherContractTests(unittest.TestCase):
+    def test_failed_child_keeps_before_go_identity_and_numeric_exit(self):
+        from tools.physical_dev.ls5_smoke import launch,SmokeBlocked
+        from unittest.mock import Mock
+        import subprocess
+        nonce='a'*32;process=Mock();process.pid=1234;process.returncode=71;process.poll.return_value=71
+        capture=Mock();capture.ready.get.return_value=json.dumps({'pid':1234,'nonce':nonce}).encode()+b'\n';capture.count=0;capture.error=None
+        job=Mock();job.attach_before_go.return_value={'pid':1234,'token':{'elevated':False},'own_job_membership_before_go':1}
+        stages={}
+        with patch('subprocess.Popen',return_value=process),patch('subprocess.CREATE_NO_WINDOW',0,create=True),patch('tools.physical_dev.ls5_smoke.Capture',return_value=capture),patch('secrets.token_hex',return_value=nonce),patch('time.perf_counter_ns',return_value=0):
+            with self.assertRaises(SmokeBlocked):launch(job,['fixed','ROOT_NONCE'],Path('fixed'),{},Path('.'),'backend',0,[],[],stages)
+        self.assertEqual(stages['backend']['identity']['pid'],1234)
+        self.assertEqual(stages['backend']['identity']['own_job_membership_before_go'],1)
+        self.assertEqual(stages['backend']['returncode'],71)
+        self.assertEqual(stages['backend']['go_status'],'FLUSH_COMPLETED_NOT_EXECUTION_ACK')
+
     def test_one_cleanup_deadline_is_shared_by_all_waits(self):
         from tools.physical_dev.ls5_smoke import cleanup_seconds,SmokeBlocked
         with patch('time.perf_counter_ns',return_value=100):self.assertEqual(cleanup_seconds(1000000100,5),1)

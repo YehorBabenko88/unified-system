@@ -2,6 +2,12 @@
 import json,os,queue,re,sys,threading
 from pathlib import Path
 
+def allocate_stand_root(root):
+    root=Path(root)
+    if not root.is_absolute() or root!=root.resolve(strict=True):raise RuntimeError('OWN_CANONICAL_STATE_REQUIRED')
+    state=root/'direct-state';state.mkdir()  # Existing stand expects caller-owned empty directory.
+    return state
+
 def source_git_argv(argv,git,roots):
     if not(isinstance(argv,(list,tuple)) and len(argv)==6 and argv[0]=='git'
             and list(argv[1:3])==['--no-replace-objects','-C'] and argv[4]=='show'
@@ -76,7 +82,8 @@ def main():
     sys.addaudithook(audit)
     from unified_system.gateway_target_adapter import DisposableTargetStand,prepare_target,template_request
     request=json.dumps(template_request(),sort_keys=True,separators=(',',':'),allow_nan=False).encode('ascii')
-    stand=DisposableTargetStand(str(root/'direct-state'),stratt_source_root=str(stratt),meta_source_root=str(meta))
+    state=allocate_stand_root(root)
+    stand=DisposableTargetStand(str(state),stratt_source_root=str(stratt),meta_source_root=str(meta))
     try:
         value=stand.execute(prepare_target(request),context=stand.local_test_context())
         if value['status']!='DIRECT_TARGET_PASS' or stand.invocations!=1:raise RuntimeError('ACTUAL_DIRECT_TARGET_NOT_COMPLETED')
@@ -93,4 +100,6 @@ def main():
 if __name__=='__main__':
     try:main()
     except BaseException as error:
-        print('SYNTHETIC_BOOTSTRAP_FAILED:'+type(error).__name__,file=sys.stderr,flush=True);raise SystemExit(71)
+        known={'DISPOSABLE_STAND_UNAVAILABLE','LOCAL_TEST_SCOPE_DENIED','TARGET_CONTRACT_REJECTED','TARGET_SOURCE_UNAVAILABLE','TARGET_INPUT_UNAVAILABLE','TARGET_DATASET_UNAVAILABLE'}
+        code=str(error) if str(error) in known else 'DETAILS_WITHHELD'
+        print('SYNTHETIC_BOOTSTRAP_FAILED:'+type(error).__name__+':'+code,file=sys.stderr,flush=True);raise SystemExit(71)
