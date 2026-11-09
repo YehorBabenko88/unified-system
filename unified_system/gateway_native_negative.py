@@ -106,7 +106,13 @@ def _negative_observation(original,value,*,operation):
     return value
 
 class DisposableNativeNegativeGateway:
-    """One in-flight call on its owner loop; no queue, issuer or public endpoint."""
+    """One in-flight call; no queue, issuer or public endpoint.
+
+    Caller grants exclusive authority/client/config lifecycle for the entire
+    operation AND cleanup, including shutdown ordering. Entry checks are not
+    protection against supported concurrent reconfiguration (none is provided).
+    Deliberate custody loss is tested at an error-return boundary only.
+    """
     def __init__(self,authority,generation,*,broker):
         authority_type,broker_type,native_type,_=_fixed_types()
         if type(self) is not DisposableNativeNegativeGateway or type(authority) is not authority_type or type(broker) is not broker_type or type(generation) is not str:
@@ -156,8 +162,17 @@ class DisposableNativeNegativeGateway:
         finally:
             try:
                 if context is not None:
-                    try:await broker_type.invalidate_context(self._broker,context)
-                    except BaseException:
+                    try:
+                        try:_owned_client(self._authority,config=self._config,client=self._client)
+                        except BaseException as custody_loss:
+                            # Never send cleanup through a changed/unknown client.
+                            # This fixed local latch is NOT native retirement.
+                            try:broker_type.invalidate_context_local_only(self._broker,context)
+                            except BaseException:custody_loss.add_note('LOCAL_CONTEXT_INVALIDATION_UNKNOWN')
+                            raise
+                        await broker_type.invalidate_context(self._broker,context)
+                    except BaseException as cleanup_error:
+                        cleanup_error.add_note('NATIVE_NEGATIVE_CONTEXT_INVALIDATION_UNKNOWN')
                         if failure is None:raise
                         failure.add_note('NATIVE_NEGATIVE_CONTEXT_INVALIDATION_UNKNOWN')
             finally:self._busy=False

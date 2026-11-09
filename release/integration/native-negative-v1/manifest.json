@@ -4,7 +4,7 @@
   "root_base": "3af06455b601a328e94339327a0597eada802c38",
   "grid_head": "2f94da511681811588e0f850a0a0e9dc4479c8b8",
   "scope": "REAL_MTLS_INTERNAL_NEGATIVE_COMPOSITION_NO_HTTP_ENDPOINT",
-  "root_module_sha256": "b561ae2329a9719c5135dad8e968bc1a74f3de054e40606efe30bb0c63136b36",
+  "root_module_sha256": "bb56a83189839ee054cdb2fb233884b7ed4f88d61cff74bac3dd066ab91e40a2",
   "grid_module_sha256": "5b972b6d81eeaf6f2283584c5b0482552fa9bf0717a4379838900a72da791491",
   "broker_module_sha256": "481724cd2efca312773fa4152d1c223b46ced6529d96b2d74f452cdf57932d7f",
   "a2_api_doc_sha256": "a8261b30d12b4924e4f501ee6474dc6a2c0c3704eabe5353ebc48938fa2c7d3a",
@@ -18,9 +18,12 @@
   "physical": "BLOCKED",
   "production": "NO_GO",
   "tests_expected": 21,
-  "source_qualification": "RED_EXPECTED_LOST_CUSTODY_NATIVE_CLEANUP_ROUTE",
-  "proxy_client_gate": "ENTRY_GUARDS_IMPLEMENTED_FULL_ADMISSION_AND_A8_PENDING",
-  "local_only_cleanup_api": "EXACT_OWNER_CANDIDATE_IMPORTED_ROOT_CLEANUP_USAGE_NOT_YET_FIXED",
+  "source_qualification": "REQUIRES_EXACT_COMMITTED_HEAD_AND_A8_REVIEW",
+  "proxy_client_gate": "IMPLEMENTED_CANDIDATE_A8_AND_HOSTED_QUALIFICATION_PENDING",
+  "local_only_cleanup_api": "EXACT_A2_PR67_FIXED_SYNC_API_USED_ON_LOST_CUSTODY",
   "local_custody_adoption_sha256": "a613b64ae570df621784874ea89da5faa9c459def14fff2c88d5be37b9ff98a3",
-  "broker_import_head": "327a3e2ca6106d2d39eb8f0da3802560e63b09e6"
+  "broker_import_head": "327a3e2ca6106d2d39eb8f0da3802560e63b09e6",
+  "a2_api_import_coack": "EXACT_327_RUNTIME_FILE_ONLY_INTERNAL_NEGATIVE_COMPONENT",
+  "lifecycle": "EXCLUSIVE_AUTHORITY_CLIENT_CONFIG_CALL_AND_CLEANUP_NO_CONCURRENT_RECONFIGURATION",
+  "broker_local_only_api_doc_sha256": "e007e127761edf27eef7adff6c38bfaac30861ae16e2e097164e93d8043813ab"
 }

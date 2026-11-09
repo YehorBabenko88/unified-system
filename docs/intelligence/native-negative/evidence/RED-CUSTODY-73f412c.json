@@ -1,0 +1,38 @@
+{
+  "schema": "unified.native-negative.cleanup-route-red.v1",
+  "head": "73f412c1ccea7a3fbd99a40fa7051c9975a69d1d",
+  "tree": "c793ab83c5231a835dab6cd20b748ebfd917b929",
+  "grid_head": "2f94da511681811588e0f850a0a0e9dc4479c8b8",
+  "tests": 21,
+  "errors": 0,
+  "failures": 1,
+  "skips": 0,
+  "source_binding_passed": true,
+  "source_files": {
+    "unified": 1640,
+    "grid": 821
+  },
+  "failed_case": "test_actual.GatewayNegativeTests.test_actual_lost_client_custody_preserves_error_without_proxy_cleanup",
+  "observed_own_proxy_cleanup_requests": 3,
+  "expected_own_proxy_cleanup_requests": 0,
+  "source_qualification_sha256": "7211db75cf91b6e34838092ffe4adbe7c06c8787d0f232ca144af2d9cb063f3d",
+  "original_test_log_sha256": "47c22fcee6ca2a2e3dad36fafc272da9d3490dbbd4e881b75e743c242b5cdcb8",
+  "owned_consul_processes_retired": [
+    {
+      "pid": 70512,
+      "returncode": 1
+    },
+    {
+      "pid": 139416,
+      "returncode": 1
+    },
+    {
+      "pid": 136428,
+      "returncode": 1
+    }
+  ],
+  "scope": "OWN_LOOPBACK_FAULT_AT_ERROR_RETURN_BOUNDARY_NOT_SUPPORTED_INFLIGHT_RECONFIGURATION",
+  "no_external_provider_sends": true,
+  "public_submit": "DENY",
+  "native_job_permission": false
+}
