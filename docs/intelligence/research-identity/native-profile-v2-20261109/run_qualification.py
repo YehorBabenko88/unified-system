@@ -1,4 +1,4 @@
-"""Exact primary old15+new7 native profile-v2 source qualification; no job grants."""
+"""Exact primary old15+new8 native profile-v2 source qualification; no job grants."""
 import argparse,hashlib,json,os
 from pathlib import Path
 import re,subprocess,sys,types,unittest
@@ -28,10 +28,10 @@ def main():
             if isinstance(item,unittest.TestSuite):yield from ids(item)
             else:yield item.id()
     actual=list(ids(suite));expected=json.loads((script.parent/'EXPECTED-TESTS.json').read_bytes())
-    assert len(actual)==len(set(actual))==len(expected)==len(set(expected))==22
+    assert len(actual)==len(set(actual))==len(expected)==len(set(expected))==23
     assert sorted(actual)==sorted(expected)
     result=unittest.TextTestRunner(verbosity=2).run(suite)
     assert guard.inventory(root)==before and guard.inventory(grid)==grid_before
-    assert result.wasSuccessful() and result.testsRun==22 and not result.skipped
-    print(json.dumps(dict(result='PASS',scope='ACTUAL_DISPOSABLE_PROFILE_V2_PRINCIPAL_NOT_JOB_RESOURCE_DISPATCH_OR_STORAGE_GRANT',head=args.expected_head,tree=git(root,'rev-parse','HEAD^{tree}').decode().strip(),grid_head=args.expected_grid_head,raw_files=len(before),grid_raw_files=len(grid_before),tests=22,skips=0,exact_unique_ids=True,module_sha256=before['unified_system/gateway_research_identity.py'],read840_unchanged=before['unified_system/gateway_identity.py']=='84093865e8477ef6562100d41137922785446c9cb4e024c9ba7105593a2b36c1')))
+    assert result.wasSuccessful() and result.testsRun==23 and not result.skipped
+    print(json.dumps(dict(result='PASS',scope='ACTUAL_DISPOSABLE_PROFILE_V2_PRINCIPAL_NOT_JOB_RESOURCE_DISPATCH_OR_STORAGE_GRANT',head=args.expected_head,tree=git(root,'rev-parse','HEAD^{tree}').decode().strip(),grid_head=args.expected_grid_head,raw_files=len(before),grid_raw_files=len(grid_before),tests=23,skips=0,exact_unique_ids=True,module_sha256=before['unified_system/gateway_research_identity.py'],read840_unchanged=before['unified_system/gateway_identity.py']=='84093865e8477ef6562100d41137922785446c9cb4e024c9ba7105593a2b36c1')))
 if __name__=='__main__':main()
