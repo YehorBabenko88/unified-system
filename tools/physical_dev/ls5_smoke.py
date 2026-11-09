@@ -4,7 +4,7 @@ The --execute option is a local test mode, NOT authorization. Root must first
 review exact GitHub sources/package/isolation and retain that evidence. Package
 integrity DATA itself grants neither physical nor native runtime permission.
 """
-import argparse,hashlib,json,os,queue,secrets,subprocess,sys,threading,time
+import argparse,hashlib,json,os,queue,re,secrets,subprocess,sys,threading,time
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[2]))
 from tools.physical_dev.package import verify_package
@@ -133,11 +133,17 @@ def offline_repository(root):
     parser=configparser.RawConfigParser(strict=True)
     try:parser.read_string(config.read_text(encoding='utf-8'))
     except (ValueError,configparser.Error):raise SmokeBlocked('GIT_CONFIG_UNAVAILABLE') from None
+    need(not parser.defaults(),'GIT_CONFIG_DEFAULTS_DENIED')
     for section in parser.sections():
-        lowered=section.casefold();keys={key.casefold() for key in parser[section]}
-        need(lowered!='include' and not lowered.startswith('includeif '),'EXTERNAL_GIT_CONFIG_DENIED')
-        need(not(lowered=='extensions' and 'partialclone' in keys),'PARTIAL_CLONE_DENIED')
-        need(not(lowered.startswith('remote ') and keys&{'promisor','partialclonefilter'}),'PROMISOR_REMOTE_DENIED')
+        # Deliberately admit only canonical minimal independent-clone sections.
+        # Python INI parsing is NOT Git's grammar (tabs/dotted subsection syntax
+        # can otherwise evade negative-prefix checks). Unknown forms fail closed.
+        keys=set(parser[section])
+        if section=='core':allowed={'repositoryformatversion','filemode','bare','logallrefupdates','symlinks','ignorecase','autocrlf','longpaths'}
+        elif re.fullmatch(r'remote "[A-Za-z0-9_.-]{1,128}"',section):allowed={'url','fetch','pushurl'}
+        elif re.fullmatch(r'branch "[A-Za-z0-9_./-]{1,256}"',section):allowed={'remote','merge'}
+        else:raise SmokeBlocked('NONCANONICAL_OR_UNSUPPORTED_GIT_SECTION')
+        need(keys<=allowed,'UNSUPPORTED_GIT_CONFIG_KEY')
 
 def retire_unassigned(processes):
     """Never let one own-handle cleanup failure skip the remaining evidence."""

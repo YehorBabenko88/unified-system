@@ -95,6 +95,12 @@ partial/promisor markers/config, alternate object stores, common-dir/worktree
 config, grafts and include config deny before Git launch. Inert-file regression
 RED `ls5-git-offline-red.log` is retained. No remote/fetch test was executed and
 no historical network activity is attributed from this static finding.
+The next A8 source review found that Python INI section-prefix checks do not
+implement Git's whitespace/deprecated subsection grammar. Original
+`ls5-git-config-grammar-red.log` reproduces the missed tab/dotted forms. Admission
+now accepts only a minimal canonical independent-clone section/key allowlist;
+unknown sections, include forms, promisors and executable config keys deny.
+This is a restrictive package policy, not a general Git config parser.
 
 The assembly preparer reproduced Windows pathname/descriptor mode differences
 on inert `.exe` bytes: lstat33279 versus fstat33206. Package73 incorrectly compared

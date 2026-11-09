@@ -11,7 +11,11 @@ class LauncherContractTests(unittest.TestCase):
             root=Path(tmp).resolve();git=root/'.git';(git/'objects/info').mkdir(parents=True);(git/'objects/pack').mkdir()
             config=git/'config';config.write_text('[core]\nrepositoryformatversion = 0\n')
             self.assertIsNone(offline_repository(root))
-            for raw in ['[remote "origin"]\npromisor = true\n','[extensions]\npartialClone = origin\n','[include]\npath = C:/foreign\n']:
+            config.write_text('[core]\nautocrlf = false\n[remote "origin"]\nurl = C:/pinned-local\nfetch = +refs/heads/*:refs/remotes/origin/*\n[branch "feature/smoke"]\nremote = origin\nmerge = refs/heads/feature/smoke\n')
+            self.assertIsNone(offline_repository(root))
+            for raw in ['[remote "origin"]\npromisor = true\n','[extensions]\npartialClone = origin\n','[include]\npath = C:/foreign\n',
+                        '[includeIf\t"gitdir:**"]\npath = C:/foreign\n','[remote\t"origin"]\npromisor = true\n',
+                        '[remote.origin]\npromisor = true\n','[core]\nsshCommand = arbitrary\n']:
                 config.write_text(raw)
                 with self.assertRaises(SmokeBlocked):offline_repository(root)
             config.write_text('[core]\nrepositoryformatversion = 0\n')
