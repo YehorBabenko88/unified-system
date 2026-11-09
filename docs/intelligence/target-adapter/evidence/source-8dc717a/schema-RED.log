@@ -1,0 +1,91 @@
+{
+  "checks": [
+    {
+      "name": "actual_success",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "success-result:request_id:''",
+      "expected": false,
+      "actual": true
+    },
+    {
+      "name": "success-result:request_id:'not-an-issued-request'",
+      "expected": false,
+      "actual": true
+    },
+    {
+      "name": "success-result:request_id:'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa\\n'",
+      "expected": false,
+      "actual": true
+    },
+    {
+      "name": "success-result:request_sha256:'4cf1df7beb92853123db57742ceb0bc788d2ad129288b8f1777de7f55a1bb232\\n'",
+      "expected": false,
+      "actual": true
+    },
+    {
+      "name": "refusal-result:request_id:''",
+      "expected": false,
+      "actual": true
+    },
+    {
+      "name": "refusal-result:request_id:'not-an-issued-request'",
+      "expected": false,
+      "actual": true
+    },
+    {
+      "name": "refusal-result:request_id:'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa\\n'",
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\worktrees\gateway-target-adapter-20261109\gateway-runtime-recovery-20261107\tests\gateway_target_adapter\check_schemas.py", line 26, in <module>
+    assert all(x['expected']==x['actual'] for x in checks)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+      "expected": false,
+      "actual": true
+    },
+    {
+      "name": "refusal-result:request_sha256:'4cf1df7beb92853123db57742ceb0bc788d2ad129288b8f1777de7f55a1bb232\\n'",
+      "expected": false,
+      "actual": true
+    },
+    {
+      "name": "CANCELLED:LOCAL_CANCELLED",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "FAILED:TARGET_RESULT_UNAVAILABLE",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "UNKNOWN:TARGET_RESULT_UNAVAILABLE",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "UNKNOWN:ORIGINAL_INTENT_OUTCOME_UNKNOWN_NO_REEXECUTION",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "UNKNOWN:LOCAL_CANCELLED",
+      "expected": false,
+      "actual": true
+    },
+    {
+      "name": "CANCELLED:ORIGINAL_INTENT_OUTCOME_UNKNOWN_NO_REEXECUTION",
+      "expected": false,
+      "actual": true
+    },
+    {
+      "name": "FAILED:LOCAL_CANCELLED",
+      "expected": false,
+      "actual": true
+    }
+  ],
+  "passed": 5,
+  "total": 16
+}

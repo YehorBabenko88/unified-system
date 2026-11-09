@@ -1,0 +1,160 @@
+{
+  "schema": "agent5.target-adapter-api-map.report.v1",
+  "as_of_berlin_date": "2026-11-09",
+  "scope": "SOURCE_READ_AND_COORDINATION_ONLY_NOT_SHARED_WIRE_SCHEMA",
+  "source_bindings": {
+    "authority": {
+      "head": "f7ecdc1415e8a77f6c5cf709c3da71c0139859a4",
+      "path": "grid/authority_assignment_v1.py",
+      "sha256": "7d9f7c8488407b6ed60e781f75748a89c5d77cfce5925a16df583468ebd1895c",
+      "bytes": 9026
+    },
+    "control_lease": {
+      "head": "f7ecdc1415e8a77f6c5cf709c3da71c0139859a4",
+      "path": "grid/coordination.py",
+      "sha256": "86814ec2519c272740ac8fae6fb4eae73d14ba51ccec091053ab260c7c024f73",
+      "bytes": 15068
+    },
+    "research_broker": {
+      "head": "65169396d550989b6b9fc78d4f3a64a1c906172b",
+      "path": "unified_system/gateway_research_identity.py",
+      "sha256": "1e9f4bb1c7a563b3cf5e19f432f5799941448df212a2ddb9a7de9df1d99cb543",
+      "bytes": 19496
+    },
+    "jobs": {
+      "head": "3e498de973536c2d6393f83abe7d59cb1452a9b4",
+      "path": "unified_system/gateway_jobs.py",
+      "sha256": "6e12a0ec03989749a6fc5359ff6e4d72c820be1c8561eb721ac7b962c458211e",
+      "bytes": 3202
+    },
+    "worker": {
+      "head": "480109277c1e80a666f3dbba84b5807cacd2b460",
+      "path": "unified_system/gateway_worker.py",
+      "sha256": "5458dc5de7cfcdb9d9b77e904b6c1161fff375b3de3dc9bd759ae726e5290436",
+      "bytes": 7696
+    }
+  },
+  "rows": [
+    {
+      "area": "Research principal/current capture",
+      "owner": "A2/ROOT",
+      "actual_methods": [
+        "await broker.open_session(actual_server_ssl_socket, leader=actual_same_Grid_ConsulLease)",
+        "await broker.capture_current(context, scope=FIXED_RESEARCH_SCOPE, request_bytes=EXACT_BOUNDED_ORIGINAL)",
+        "ResearchIdentityBroker.require_capture(expected_broker,capture,expected_authority=actual_same_Grid,scope=FIXED_SCOPE,request_bytes=EXACT_ORIGINAL)",
+        "await broker.invalidate_context(own_context); await broker.close()"
+      ],
+      "status": "AVAILABLE_SOURCE_COMMISSIONED_LAB_ONLY; TARGET_ADAPTER_BINDING_NOT_ACKED",
+      "boundary": "Principal/session read evidence only; no job grant, quota/resource hold, Assignment, dispatch or completion. Actual source/expected issuer and all native current CAS/session joins mandatory."
+    },
+    {
+      "area": "Existing control lease",
+      "owner": "A2",
+      "actual_methods": [
+        "await ConsulSessionAuthority.acquire(owner)",
+        "await authority.validate(actual_own_lease)",
+        "await authority.renew(actual_own_lease)",
+        "await authority.release(actual_own_lease)"
+      ],
+      "status": "AVAILABLE_CONTROL_AUTHORITY_PRIMITIVE_ONLY",
+      "boundary": "Real control leader session/token is not issued worker Assignment lease/epoch or job permission; no second authority/standalone lease source."
+    },
+    {
+      "area": "Admission/issued Assignment",
+      "owner": "A2/A5",
+      "actual_methods": [
+        "await AssignmentAuthority.execute(original_request_bytes,context=actual_context,leader=actual_leader)"
+      ],
+      "status": "BLOCKED_ASSIGNMENT_ISSUER",
+      "actual_errors": [
+        "ACTUAL_NATIVE_PROVIDER_UNAVAILABLE",
+        "ASSIGNMENT_DOMAIN_PROFILE_NOT_APPROVED"
+      ],
+      "boundary": "ResearchLabAuthority submit/begin_dispatch/record_computed/cancel/lookup remain exact machine/API proposals, no implementing class in inspected authority module."
+    },
+    {
+      "area": "Original assignment reconciliation",
+      "owner": "A2",
+      "actual_methods": [
+        "await AssignmentAuthority.reconcile(original_request_bytes,context=actual_context)"
+      ],
+      "status": "BLOCKED_DISTRIBUTED_RECONCILIATION",
+      "actual_errors": [
+        "ASSIGNMENT_RECEIPT_PROFILE_NOT_APPROVED"
+      ],
+      "boundary": "No original job/Assignment receipt may be reconstructed from local Journal or JSON/native flags."
+    },
+    {
+      "area": "A5 job preparation",
+      "owner": "A5",
+      "actual_methods": [
+        "await ResearchJobs().submit(local_preparation_bytes,context=untrusted_context)"
+      ],
+      "status": "LOCAL_ONLY_NOT_SUBMITTED",
+      "boundary": "Valid local intent => NOT_SUBMITTED, job_id null, effects_authorized false. No owner binding or job registry; original local Math-labelled plan is not A7 producer or v2 bridge admission."
+    },
+    {
+      "area": "Job owner/quota/resource reservations",
+      "owner": "ROOT/A2/A5",
+      "actual_methods": [],
+      "status": "BLOCKED_ACTUAL_QUOTA_RESOURCE_ASSIGNMENT_TRANSACTION",
+      "boundary": "Current broker actor/quota association and pure placement/resource vectors do not reserve quota/resources. Commissioned worker/current observations/actual atomic ledger holds not qualified."
+    },
+    {
+      "area": "Worker dispatch",
+      "owner": "A2/A5",
+      "actual_methods": [
+        "GatewayWorker().start(*args,**kwargs)"
+      ],
+      "status": "DENY_ACTUAL_DISPATCH_PERMIT_AND_WORKER_PROFILE_UNAVAILABLE",
+      "boundary": "PR51 setup/readback/quiescence probes are not qualified CPU-millicore/RSS/headroom/output/deadline worker profile. Actual oneuse permit/owned-attempt binding absent; no dummy grant or callback."
+    },
+    {
+      "area": "Status",
+      "owner": "A2/A5",
+      "actual_methods": [
+        "await ResearchJobs().status(job_id,context=...)"
+      ],
+      "status": "BLOCKED_AUTHORITATIVE_JOB_STATUS",
+      "boundary": "Raises JobUnavailable, outcome UNKNOWN, no fabricated registry observation. Directstand may expose explicit local-only state under ROOT contract, never label distributed scheduler status."
+    },
+    {
+      "area": "Owned cancellation",
+      "owner": "A2/A5",
+      "actual_methods": [
+        "await ResearchJobs().cancel(original_cancel_bytes,context=...)"
+      ],
+      "status": "BLOCKED_OWNED_JOB_CANCEL_MUTATION",
+      "boundary": "Raises JobUnavailable; no supported cancellation codec/effective cancel/hold release. broker.invalidate_context invalidates principal session, not CANCELLED job or refund. Native owned Job kill/quiescence likewise not authority cancellation."
+    },
+    {
+      "area": "Restart/lookup/reconnect",
+      "owner": "A2/A5",
+      "actual_methods": [
+        "await ResearchJobs().lookup(local_original_bytes,context=...)",
+        "await ResearchJobs().reconnect(local_original_bytes,context=...)"
+      ],
+      "status": "BLOCKED_DISTRIBUTED_RESTART_RECONCILIATION",
+      "boundary": "Raises JobUnavailable(UNKNOWN) preserving frozen exact local bytes/requestUUID/idempotency/digest. This is not original durable native job receipt proof; no auto rekey/resubmit/regrant/restart."
+    },
+    {
+      "area": "Publication/completion",
+      "owner": "A2/A4/A7/A5",
+      "actual_methods": [],
+      "status": "BLOCKED_NATIVE_PUBLICATION_TWO_DOMAIN_CLOSURE_AND_PROJECTION",
+      "boundary": "COMPUTED artifact/metadata and local Journal/SQLite receipt not COMPLETED. Need sole A2 publication order + A4 actual two-domain closure/retention + A7 durable idempotent projection/current read rights."
+    }
+  ],
+  "report_labels_not_shared_api_enums": true,
+  "directstand_rule": "Existing local Journal crash/idempotency receipts are LOCAL_ONLY, NOT distributed scheduler/Assignment/fencing/quorum PASS. Do not create second scheduler/consensus/ledger or pretend READ_DATA upgrades to SUBMIT_RESEARCH.",
+  "integration_next": [
+    "A2 confirms current owner method availability and exact head delta",
+    "ROOT owns TargetAdapter/contract and maps explicit BLOCKED/local-only outcomes under its own ACKed schema",
+    "Before positive wiring require implemented actual issued job/Assignment/holds/lease+fence/status/cancel/restart with exact joint ABI/source/proof ACK",
+    "Worker continues separately: PR51 frozen480; PR52 sourceonly16b, no execution authorization/external custody/supervisor yet"
+  ],
+  "native_calls_or_tests_this_report": 0,
+  "root_adapter_shared_contract_edits": false,
+  "worker_diagnostic_execution_authorized": false,
+  "go_no_go": "INTEGRATION_PENDING_NO_GO"
+}
