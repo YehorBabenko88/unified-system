@@ -1,0 +1,36 @@
+{
+  "TARGET_ADAPTER_PR": "https://github.com/YehorBabenko88/unified-system/pull/54",
+  "EXACT_HEAD": "a84eabb533865f6a422a03bf096222ee51052e8f",
+  "EXACT_TREE": "0b064c8291cb4030e0a4a97ca3296b69883576a6",
+  "TARGET_CAPABILITY": "meta.ohlcv.untouched_levels.v1",
+  "REAL_ENTRYPOINT": "strattester.research.gateway_adapter.execute_synthetic_research -> meta_analyse.ohlcv_research_adapter.analyze_ohlcv_research",
+  "DATASET_SHA256": "33d5bf0f918884c8908795b384e0964a48a1351c808800964b8cacf3f83e28b6",
+  "INPUT_SCHEMA": "unified.gateway.target-request.v1",
+  "OUTPUT_SCHEMA": "unified.gateway.direct-target-result.v1",
+  "DIRECT_TARGET_RESULT": "OWNER_EXACT_A84_SOURCE_21_PASS_0_SKIP_SCOPED_LOCAL_FUNCTIONAL_ONLY",
+  "SCHEDULER_RESULT": "BLOCKED_NO_ACTUAL_ADMITTED_ISSUER",
+  "AUTHORITY_RESULT": "LOCAL_TEST_SCOPE_NOT_AUTHENTICATED; NATIVE_TARGET_ADAPTER_NOT_BOUND",
+  "STORAGE_RESULT": "LOCAL_UNATTESTED_ONLY_NO_NATIVE_COMMIT_OR_REPLICA",
+  "TERMINAN_RESULT": "A6_INDEPENDENT_DISPOSABLE_RENDERER_IN_PROGRESS_NO_AUTH_VIS_API",
+  "NEGATIVE_TESTS": "LOCAL_NEGATIVES_AND_OWN_PROCESS_CRASHES_EXECUTED; NATIVE_LEASE_FENCE_NOT_SIMULATED_PASS",
+  "WINDOWS_CI": {
+    "local": "PASS_EXACT_A84_CP312_10",
+    "original_run": 42631650396,
+    "original_result": "INVALID_WORKFLOW_RUNNER_CONTEXT_JOB_ENV_ZERO_JOBS",
+    "corrective_change": "MOVE_SOURCE_ROOT_ENV_TO_STEP_LEVEL_SUPPORTED_RUNNER_CONTEXT",
+    "hosted_terminal_result": "PENDING_ORIGINAL_CORRECTED_HEAD_TRIGGER_NO_RERUN"
+  },
+  "A8_REVIEW": {
+    "commit": "2cf1cd5d02506beebd129d0fb5b8f8a67bc2355e",
+    "report": "docs/audits/agent8-20261106/phase101/report.md",
+    "sha256": "52b5122f4105f60637f6e6f21f17097f1b2299061c8ace36410e6c28d294f1c6",
+    "full21_source": "8dc717ab85681d71711783df3ff11bfa8d9a2d87",
+    "focused_observer_fix_source": "a84eabb533865f6a422a03bf096222ee51052e8f",
+    "focused_tests": 1,
+    "runtime_sha256": "775976b3d344409d6c25ba96f2a475f5085695edf9947f482440c263355d6a8f",
+    "higher_level_admission": false
+  },
+  "PUBLIC_SUBMIT": "DENY",
+  "NEXT_ACTION": "A8_EXACT_CORRECTION_REVIEW; A6_ACTUAL_PACKET_RENDER; HOSTED_CI_TERMINAL_EVIDENCE",
+  "GO_NO_GO": "IN_PROGRESS / NO-GO"
+}

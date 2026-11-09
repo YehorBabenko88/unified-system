@@ -26,7 +26,7 @@ def fingerprint(blob):return 'SHA256:'+base64.b64encode(hashlib.sha256(blob).dig
 class InventoryFixture:
     """No private key and no actual office IP/key is used in these fixtures."""
     def __init__(self,root):
-        self.root=root;root.mkdir();self.live=True;self.identity_calls=[];self.endpoint_calls=[]
+        self.root=root=Path(root).resolve();root.mkdir();self.live=True;self.identity_calls=[];self.endpoint_calls=[]
         self.path=root/'inventory.json';self.empty=root/'empty config';self.empty.write_bytes(b'')
         self.identity=root/'inert identity';self.identity.write_bytes(b'INERT_NOT_A_PRIVATE_KEY')
         self.data=dict(schema='unified.lan-probe-inventory.v1',installation_id='installation-1',empty_config=str(self.empty),nodes=[])
@@ -53,8 +53,30 @@ class InventoryFixture:
 class InventoryTests(unittest.TestCase):
     def setUp(self):
         self.temp=tempfile.TemporaryDirectory();self.addCleanup(self.temp.cleanup)
-        self.fixture=InventoryFixture(Path(self.temp.name)/'private owner assets')
+        self.fixture=InventoryFixture(Path(self.temp.name).resolve()/'private owner assets')
         self.inventory=LanProbeInventory(self.fixture)
+
+    def test_owned_fixture_alias_is_resolved_before_guarded_assets(self):
+        parent=Path(self.temp.name).resolve()/"owned canonical fixture parent";parent.mkdir()
+        (parent/"walk").mkdir();alias=parent/"walk"/".."
+        if os.name=="nt":
+            import ctypes
+            function=ctypes.WinDLL("kernel32",use_last_error=True).GetShortPathNameW
+            function.argtypes=[ctypes.c_wchar_p,ctypes.c_wchar_p,ctypes.c_uint];function.restype=ctypes.c_uint
+            buffer=ctypes.create_unicode_buffer(32768)
+            length=function(str(parent),buffer,len(buffer))
+            if 0<length<len(buffer) and "~" in buffer.value: alias=Path(buffer.value)
+        self.assertNotEqual(str(alias),str(alias.resolve()))
+        fixture=InventoryFixture(alias/"private owner assets")
+        self.assertEqual(str(fixture.root),str((parent/"private owner assets").resolve()))
+        inventory=LanProbeInventory(fixture)
+        with inventory.lease("PC1") as endpoint:
+            self.assertEqual(endpoint._argv("INERT_NOT_EXECUTED",cleanup=False)[-2],"192.0.2.11")
+
+    def test_forbidden_literal_alias_is_still_rejected_before_path_io(self):
+        from unified_system import lan_probe_inventory as mod
+        with patch.object(Path,"lstat",side_effect=AssertionError("forbidden path probed")):
+            with self.assertRaises(LanInventoryBlocked): mod._ordinary(self.fixture.root/"forbidden~alias")
 
     def test_fixed_direct_ip_user_and_exact_files_replace_all_ambient_aliases(self):
         with self.inventory.lease('PC1') as endpoint:

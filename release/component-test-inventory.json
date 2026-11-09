@@ -109,6 +109,7 @@
     "tests.test_lan_transport.TLSIsolationTests.test_concurrent_registry_updates_cannot_restore_older_revoked_pin",
     "tests.test_lan_transport.TLSIsolationTests.test_control_writer_progresses_while_data_budget_waits",
     "tests.test_lan_transport.TLSIsolationTests.test_credit_backpressure_and_control_lane_while_data_waits",
+    "tests.test_lan_transport.TLSIsolationTests.test_expired_idle_peer_without_activity_still_closes_real_tls",
     "tests.test_lan_transport.TLSIsolationTests.test_fingerprint_and_wrong_uri_cert_rejected",
     "tests.test_lan_transport.TLSIsolationTests.test_isolation_rejects_nonloopback_even_if_registry_admits_it",
     "tests.test_lan_transport.TLSIsolationTests.test_malformed_frame_rejected_before_payload_allocation",
@@ -121,6 +122,7 @@
     "tests.test_lan_transport.TLSIsolationTests.test_six_real_isolated_nodes_independent_of_tailscale",
     "tests.test_lan_transport.TLSIsolationTests.test_untrusted_ca_rejected_even_with_correct_leaf_pin",
     "tests.test_lan_transport.TLSIsolationTests.test_wrong_eku_and_expired_cert_rejected",
+    "tests.test_network_budget.BudgetCleanupTests.test_failed_child_cleans_all_owned_siblings_before_directory_cleanup",
     "tests.test_network_budget.BudgetTests.test_backward_clock_or_changed_policy_fail_closed",
     "tests.test_network_budget.BudgetTests.test_clock_sample_is_inside_store_transaction_not_before_lock_wait",
     "tests.test_network_budget.BudgetTests.test_cluster_allocations_cannot_expand",
@@ -160,8 +162,8 @@
     "tests.test_windows_qualification.WindowsQualificationTests.test_unqualified_physical_admission_cannot_be_enabled",
     "tests.test_windows_qualification.WindowsQualificationTests.test_valid_pending_matrix_never_admits_installation"
   ],
-  "expected_count": 143,
-  "prior_inventory_sha256": "84fa3c63e87fab44da39dcdde27e5f7a7a5ebcf2c33e6ddd3abde7cec12d6cce",
+  "expected_count": 145,
+  "prior_inventory_sha256": "a69eb60b1ebd6b961ec3b104985c0d01f4382afb0d726f3c6ce203178e1a8ae7",
   "preserved_prior_ids": [
     "tests.storage.test_checkpoint_vectors.CheckpointVectorTests.test_confirmed_unknown_time_is_still_only_an_untrusted_claim",
     "tests.storage.test_checkpoint_vectors.CheckpointVectorTests.test_disposable_file_corruption_is_checked_by_real_bytes",
@@ -268,6 +270,7 @@
     "tests.test_lan_transport.TLSIsolationTests.test_six_real_isolated_nodes_independent_of_tailscale",
     "tests.test_lan_transport.TLSIsolationTests.test_untrusted_ca_rejected_even_with_correct_leaf_pin",
     "tests.test_lan_transport.TLSIsolationTests.test_wrong_eku_and_expired_cert_rejected",
+    "tests.test_network_budget.BudgetCleanupTests.test_failed_child_cleans_all_owned_siblings_before_directory_cleanup",
     "tests.test_network_budget.BudgetTests.test_backward_clock_or_changed_policy_fail_closed",
     "tests.test_network_budget.BudgetTests.test_clock_sample_is_inside_store_transaction_not_before_lock_wait",
     "tests.test_network_budget.BudgetTests.test_cluster_allocations_cannot_expand",
@@ -299,9 +302,15 @@
     "tests.test_security_identity_records.IdentityRecordTests.test_permissions_and_revision_are_strict",
     "tests.test_security_identity_records.IdentityRecordTests.test_result_deeply_immutable_and_independent",
     "tests.test_security_identity_records.IdentityRecordTests.test_revoked_unknown_missing_and_extra_denied",
-    "tests.test_security_identity_records.IdentityRecordTests.test_sid_and_native_logon_id_not_free_form"
+    "tests.test_security_identity_records.IdentityRecordTests.test_sid_and_native_logon_id_not_free_form",
+    "tests.test_windows_qualification.WindowsQualificationTests.test_all_fourteen_unique_checks_required_independently",
+    "tests.test_windows_qualification.WindowsQualificationTests.test_home_cannot_be_assigned_coordinator",
+    "tests.test_windows_qualification.WindowsQualificationTests.test_missing_node_or_unknown_track_rejected",
+    "tests.test_windows_qualification.WindowsQualificationTests.test_pro_receipt_or_status_cannot_be_adopted_for_home",
+    "tests.test_windows_qualification.WindowsQualificationTests.test_unqualified_physical_admission_cannot_be_enabled",
+    "tests.test_windows_qualification.WindowsQualificationTests.test_valid_pending_matrix_never_admits_installation"
   ],
-  "new_case_scope": "EDITION_ROLE_PLAN_VALIDATION_NOT_HOME_RUNTIME_ACCEPTANCE",
+  "new_case_scope": "REAL_TLS_EXPIRED_READ_DEADLINE_WITH_FORCED_INACTIVE_CALLBACK_NOT_NATURAL_PEER_INACTIVITY_OR_PHYSICAL_ACCEPTANCE",
   "qualification": "PARTIAL_COMPONENTS_NOT_FULL_RUNTIME_OR_PHYSICAL",
   "preserved_v1_ids": [
     "tests.test_agent5_scheduler_components.AuthorityBoundaryTests.test_every_proposed_mutation_is_closed",

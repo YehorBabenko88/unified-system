@@ -1,0 +1,122 @@
+[
+  {
+    "owning_repository": "strattester",
+    "capability": "historical_backtest",
+    "availability": "UNAVAILABLE",
+    "entrypoint": null,
+    "input_schema": null,
+    "output_schema": null,
+    "dataset": null,
+    "resource_budget": null,
+    "authority_scope": null,
+    "cancellation": "COOPERATIVE_DATA_ITERATION_NOT_NATIVE_CHILD_EXIT",
+    "recovery": "STRATEGY_CHECKPOINT_NOT_ADMITTED_DISTRIBUTED_RESUME",
+    "scheduler_admission": "BLOCKED",
+    "limitations": [
+      "NOT_QUALIFIED_FOR_THIS_ADAPTER"
+    ],
+    "candidate_entrypoint": "strattester/engine/executor.py:execute_strategy",
+    "candidate_source": "cddf71fab478f788d7289da9648f8a2f9287d1f8",
+    "candidate_input": "TYPED_StrategyDefinition_store_research_permission_NOT_JSON_JOB_ABI",
+    "candidate_output": "StrategyResult_STRATEGY_SPECIFIC_NOT_FROZEN_WIRE",
+    "required_dataset": "COHERENT_CLOSED_SNAPSHOT_AND_COVERAGE",
+    "required_resource_budget": "UNQUALIFIED_NO_COMMON_NATIVE_LIMIT",
+    "required_authority_scope": "ACTUAL_RESEARCH_ASSIGNMENT_NOT_AVAILABLE"
+  },
+  {
+    "owning_repository": "strattester",
+    "capability": "historical_replay",
+    "availability": "UNAVAILABLE",
+    "entrypoint": null,
+    "input_schema": null,
+    "output_schema": null,
+    "dataset": null,
+    "resource_budget": null,
+    "authority_scope": null,
+    "cancellation": "COOPERATIVE_DATA_ITERATION_NOT_NATIVE_CHILD_EXIT",
+    "recovery": "STRATEGY_CHECKPOINT_NOT_ADMITTED_DISTRIBUTED_RESUME",
+    "scheduler_admission": "BLOCKED",
+    "limitations": [
+      "NOT_QUALIFIED_FOR_THIS_ADAPTER"
+    ],
+    "candidate_entrypoint": "strattester/engine/executor.py:execute_strategy",
+    "candidate_source": "cddf71fab478f788d7289da9648f8a2f9287d1f8",
+    "candidate_input": "TYPED_StrategyDefinition_store_research_permission_NOT_JSON_JOB_ABI",
+    "candidate_output": "StrategyResult_STRATEGY_SPECIFIC_NOT_FROZEN_WIRE",
+    "required_dataset": "COHERENT_CLOSED_SNAPSHOT_AND_COVERAGE",
+    "required_resource_budget": "UNQUALIFIED_NO_COMMON_NATIVE_LIMIT",
+    "required_authority_scope": "ACTUAL_RESEARCH_ASSIGNMENT_NOT_AVAILABLE"
+  },
+  {
+    "owning_repository": "math",
+    "capability": "statistical_computation",
+    "availability": "UNAVAILABLE",
+    "entrypoint": null,
+    "input_schema": null,
+    "output_schema": null,
+    "dataset": null,
+    "resource_budget": null,
+    "authority_scope": null,
+    "cancellation": "NO_HOOK",
+    "recovery": "SAME_INPUT_ORDER_AND_SEED_REPLAY_NOT_CROSS_PLATFORM_BITWISE",
+    "scheduler_admission": "BLOCKED",
+    "limitations": [
+      "NOT_QUALIFIED_FOR_THIS_ADAPTER"
+    ],
+    "candidate_entrypoint": "math/python/history_statistics.py:paired_expectancy_bootstrap;block_bootstrap_expectancy",
+    "candidate_source": "b9c2f24b33285b7b0e06aebc354a9c61a909d204",
+    "candidate_input": "ORDERED_TYPED_TRADE_LIST_NO_FROZEN_WIRE",
+    "candidate_output": "UNTYPED_STATISTICS_DICT_NO_FROZEN_WIRE",
+    "required_dataset": "PAIRED_GROSS_TRADES_WITH_EXPLICIT_COST_BASIS",
+    "required_resource_budget": "UNAVAILABLE_UPPER_RUNS_TRADE_COUNT_CANCEL_BOUNDS",
+    "required_authority_scope": "ACTUAL_RESEARCH_ASSIGNMENT_NOT_AVAILABLE"
+  },
+  {
+    "owning_repository": "meta_analyse",
+    "capability": "meta.ohlcv.untouched_levels.v1",
+    "availability": "DIRECT_DISPOSABLE_ONLY",
+    "entrypoint": "strattester.research.gateway_adapter.execute_synthetic_research -> meta_analyse.ohlcv_research_adapter.analyze_ohlcv_research",
+    "input_schema": "stratt.gateway.synthetic.research.request.v1-review1",
+    "output_schema": "meta.ohlcv.research.result.v1",
+    "dataset": "local-sha256:33d5bf0f918884c8908795b384e0964a48a1351c808800964b8cacf3f83e28b6",
+    "resource_budget": {
+      "max_input_bytes": 16384,
+      "max_output_bytes": 16384,
+      "max_rows": 3,
+      "max_executions": 1
+    },
+    "authority_scope": "LOCAL_TEST_SCOPE_NOT_AUTHENTICATED",
+    "cancellation": "COOPERATIVE_DISCARD_BEFORE_RESULT_COMMIT",
+    "recovery": "ORIGINAL_INTENT_UNKNOWN_NO_REEXECUTION",
+    "scheduler_admission": "BLOCKED",
+    "limitations": [
+      "NO_NATIVE_CPU_RSS_CONTAINMENT",
+      "NO_SCHEDULER_OR_PUBLICATION",
+      "SYNTHETIC_LOCAL_ONLY"
+    ]
+  },
+  {
+    "owning_repository": "UNRESOLVED",
+    "capability": "trader_intelligence.offline_reconstruction",
+    "availability": "UNAVAILABLE",
+    "entrypoint": null,
+    "input_schema": null,
+    "output_schema": null,
+    "dataset": null,
+    "resource_budget": null,
+    "authority_scope": null,
+    "cancellation": "UNAVAILABLE",
+    "recovery": "UNAVAILABLE",
+    "scheduler_admission": "BLOCKED",
+    "limitations": [
+      "NO_EXACT_TRADER_INTELLIGENCE_OWNER_SOURCE_ESTABLISHED",
+      "BOUNDED_SEARCH_NOT_ABSENCE_PROOF",
+      "NO_NETWORK_INGESTION_ACCOUNT_CREATION_OR_LIVE_ORDERS"
+    ],
+    "candidate_entrypoint": null,
+    "candidate_source": null,
+    "required_dataset": "SYNTHETIC_OR_AUTHORIZED_LOCAL_SAMPLES_ONLY",
+    "required_resource_budget": "UNKNOWN",
+    "required_authority_scope": "UNAVAILABLE"
+  }
+]

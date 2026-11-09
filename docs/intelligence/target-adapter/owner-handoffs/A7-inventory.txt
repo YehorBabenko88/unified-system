@@ -1,0 +1,157 @@
+AGENT 7 — READ-ONLY TARGET INVENTORY, 2026-11-09 Europe/Berlin
+
+Scope: source review only. No target imported or executed, tests run, job submitted,
+provider/native/office program invoked, shared source edited or authority created.
+Machine companion JSON pins 25 actual Git blobs with SHA256, length, Git OID,
+tree and parsed public signatures. Remote owner refs were rechecked today.
+These 25 files are a bounded seam inventory, not the complete transitive source
+capsule for every target. Root must admit each actual dependency/runtime closure;
+neither these hashes nor the Meta three-file check grant global/native admission.
+
+CURRENT AUDITED OWNER SOURCES
+Strattester PR76: cddf71fab478f788d7289da9648f8a2f9287d1f8
+tree513debc70d34b6fae74c9876dae0616a8e998c05.
+Separate local staging PR77:887e3eeaf23ef8d9d1429435bc88bbac8099c6e6,
+tree954f3364cb70369705f658e89fcc6ae8ce547eec; not silently combined with PR76.
+Math PR116:b9c2f24b33285b7b0e06aebc354a9c61a909d204,
+treed88c75a3c367eef2cb7246c4f8dd094716f07ddd.
+Meta PR78:f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1,
+treec155c935a801fa98b7c78219c9798ce1f1be8848.
+Remote main refs differ: Stratt37ff7e9/Mathccfe97d/Meta2317c79. They are metadata
+observations, not substitutes for these audited owner pins or runtime admission.
+
+RECOMMENDED FIRST TARGET — EXISTING PURE META THROUGH EXISTING A7 WRAPPER
+Operation: meta.ohlcv.untouched_levels.v1.
+Clean entrypoint: strattester/research/gateway_adapter.py
+execute_synthetic_research(request_bytes, *, meta_source_root, cancel_check).
+Wrapper raw SHA25645657294beed5284f7f08416e70637e9b914907353d0c331c7bff224057dbddb
+at Stratt cdd. Root must admit/pin the wrapper itself and its source capsule.
+It calls unchanged Meta analyze_ohlcv_research(payload, *, decision_ms, now_ms).
+Do not import Meta headless_service/package bootstrap or call its HTTP route.
+
+Exact THREE Meta source pins checked before even the inert __init__ executes:
+src/meta_analyse/__init__.py
+70d2201e97a9d8b57973b8328ce7e2938e85096035a867aab8b37b35ee1e1883
+src/meta_analyse/core.py
+caa15e51394d3c204ecbcf557cd13ce7a6853b5c8005c4d266971f3f14177170
+src/meta_analyse/ohlcv_research_adapter.py
+39b165c945f4d5c00fdf96c460d9bf4e34a32c9cb30483d9be6d88f45403a90f
+Unique import namespace, raw source recheck after compute, linked/cache/preloaded
+unsafe namespace refusal are already implemented. Reuse, do not duplicate them.
+
+Input closed schema stratt.gateway.synthetic.research.request.v1-review1 has
+schema/operation/experiment/payload/decision_ms/analysis_now_ms. Meta payload uses
+meta.ohlcv.research.request.v1 and content digest meta.ohlcv.dataset.v1.
+Output local return is exactly descriptor dict + artifact_bytes bytes; schemas
+stratt.gateway.synthetic.research.result.v1-review1 and meta.ohlcv.research.result.v1.
+Request <=128KiB; rows1..256; levels<=512; artifact <=1MiB. V1 descriptor uses
+bounded fields; v2 additionally checks the encoded descriptor's explicit1MiB cap.
+Explicit logical clocks, finite OHLCV, contiguous closed minutes and synthetic-only
+scope. Direct Meta has broader 2000-row/8MiB input/16MiB output limits; use stricter
+A7 limits. Scalar source labels accept letters/digits/_/- only in unchanged Meta.
+Meta itself supports ten declared symbols and computes whole-window untouched
+high/low levels. It does not produce historical signals, fills, PnL, provider truth
+or point-in-time availability. Price strings, input replay rows, UNKNOWN quality,
+declared-unverified coverage, NOT_EVALUATED authenticity and null finance remain.
+
+Deterministic golden candidate: existing immutable btc-v1/request.json1126B,
+SHA256c548e2ffcd542d5d741682303694b3c6d06507740f158a6e30089b2d5355f648.
+Expected existing artifact2070B/f4997d7d26211676cd8664e53d7999f8b71f203510f3b9a275b439c403e03940;
+levels low8@0,low9@60000,high12@120000,low10@120000. Historical packet receipt
+pins its original6360 producer; a new Root execution requires its own separate
+receipt and must not relabel old bytes/receipt as a new execution. No execution
+of this candidate was performed for today's inventory.
+Cancellation: required exact bool hook before/after validation and computation;
+non-bool/error/foreign awaitable refuses without await/close/cancel. Cooperative
+only: Meta's bounded O(n^2) call has no inner cancellation or checkpoint. Recovery
+is full deterministic replay with identical bytes/source pins/logical clocks;
+Root owns deadlines/process containment, attempt identity and commit fencing.
+Neither successful compute nor matching hash is COMMITTED/storage authority.
+
+If actual A3 query lineage is required, reuse separate existing
+execute_query_synthetic_research(request_bytes, *, upstream_query_request_bytes,
+upstream_query_result_bytes, meta_source_root, cancel_check), v2-review1 schemas.
+Preflight exact bytes/size before hashing: wrapper128KiB, query16KiB/result1MiB,
+all six financial columns integral <=1e15, <=256 PRESENT cells/rows. Preserve full
+raw dependencies/typed request/result metadata. Do not extend six-field v1 silently.
+
+STRATTESTER BACKTEST / REPLAY / PAPER
+engine/executor.py:execute_strategy(definition,store,symbol,checkpoint=None,
+start_ms=None,end_ms=None, *, research_permission=None,cancel,closed_before_ms=None).
+Input is typed StrategyDefinition/store/permission, not a closed JSON job ABI.
+It requires coherent snapshots/coverage and strategy permission; output is
+StrategyResult(strategy_id,strategy_version,fingerprint,output), where output is
+strategy-specific. A generic output schema must not be invented by this inventory.
+Use an explicit closed_before_ms clock for deterministic backtests, never its
+implicit wall-clock fallback. Cancellation is cooperative while iterating data.
+No common native resource budget
+or walltime bound exists here. Checkpoint interpretation belongs to each strategy.
+engine/checkpoints.py binds job_id/config_hash/strategy_fingerprint/cursor; this
+object is not an A2 lease receipt or an admitted distributed resume protocol.
+research/provenance.py:execute_owned additionally seals input/result and writes an
+owned run, but explicitly refuses checkpoint/parameters/lookback bindings that
+are unavailable. Its default lease_validator is NOT actual authority. Do not use
+that default or unfenced persistence for Root publication.
+research/runner.py:ResearchRunner.run calls SyncEngine before execution and can
+use its client. It is unsuitable as the first provider-free target.
+research/quote_paper.py:evaluate(p, *, now_ms) uses stratt.paper.quote.request.v1
+and result.v1, including fees/slippage/funding from declared inputs. PaperLedger
+append(p, *, now_ms) stores unique node-local requests/receipts, validates duplicate
+results at original admission clock and refuses conflicts/corruption. Snapshot
+defaults limit200/max_bytes1MiB/validation_seconds2; ledger cap1024 trades and
+canonical packet256KiB. This is local paper recovery, not A2 fencing or distributed
+consensus. No cancel hook/general checkpoint; local SQLite side effects mean it
+is not the minimal pure target. Preserve fees/PnL basis/profile distinction.
+
+MATH STATISTICS
+python/history_statistics.py at b9 has paired_expectancy_bootstrap(base_trades,
+variant_trades,key='signal_id',runs=1000,seed=17) and block_bootstrap_expectancy
+(trades,block_size=20,runs=1000,seed=23). Dict outputs carry sample/pair counts,
+means/CI bounds; there is no versioned wire envelope. Positive integer run/block
+validation and finite-safe mean exist, but no upper run/trade-count budget,
+cancellation hook or checkpoint. Root must propose/approve finite wrapper budgets;
+do not add an unbounded registry target. Fixed seed + same ordered typed input
+allows replay, not cross-version/platform bitwise qualification. _net assumes
+gross pnl minus fees/slippage; directly feeding already-net PaperLedger pnl would
+double costs. No signed numerical profile is supplied by these functions.
+Existing richer API: history_contract.evaluate_timed_request(q) uses
+math.history.request/result.v1.1, 20..2000 rows and2MiB input. Joint worker
+history_scientific_worker.evaluate_joint(q,node) uses math.history.scientific
+request/result.v1 plus graph/result.v2, revision history-1.1+scientific-2.1;
+graph256KiB, Node heap128MiB/timeout8s, result<=4MiB. Node is an explicitly pinned
+executable argument, never a JSON command. It starts a process and lacks a cancel
+hook/checkpoint; do not execute during this inventory or transfer native acceptance.
+
+EXISTING STRATT OFFLINE INFERENCE / EXPERIMENT SEAMS
+financial_attested_inference.run_attested_offline(request, *, policy,verifier,
+max_work_bytes=512MiB,cancel): typed AttestedInferenceRequest contains manifest,
+snapshot,checkpoint,trust paths/hashes, Instrument,timeframe/horizon/availability.
+Output OfflineInferenceResult(prediction,provenance); Prediction binds instrument,
+origin/available/horizon,mu/scale,dataset/model hashes. No generic submit ABI.
+Manifest/export schema version1, model checkpoint version1/equations version2.
+Input limits: snapshot8MiB, checkpoint8MiB, manifest256KiB, trust64KiB; aggregate
+work admitted16MiB..1GiB with serialized-copy accounting, not OS RSS containment.
+Actual pinned verifier/policy/trust are required; no fake verifier may substitute.
+stream_offline_jobs uses typed OfflineJob, default32 requests/512MiB input budget,
+conservative17MiB charge/request, hard ceiling256 requests; output<=1MiB.
+Optional publish_result writes caller-owned scratch only, recomputes exact bytes
+before replay/recovery, caps directory membership64; its PUBLISHED/RECOVERED states
+are not A4/A2 COMMITTED. Cancellation is cooperative at explicit boundaries.
+run_experiment_file requires enable_research=True and SYNTHETIC_ENGINEERING_ONLY;
+source4MiB, <=1024 examples/100000 bars/1000 steps, aggregate512MiB work/output4MiB.
+It writes model/result and verifies checkpoint reload. inspect_checkpoint_recovery
+returns VERIFIED_MODEL_ONLY_RESTART_REQUIRED: optimizer moments/step cursor absent,
+optimizer_resume=False, orphan adoption NEVER. Restart fresh with same pins.
+
+TRADERINTELLIGENCE OFFLINE — SOURCE IDENTITY PENDING
+No separate repository/path/pin was supplied or resolved in the bounded owned-repo
+and connected-repository search. Above Stratt offline seams are real candidates,
+not an asserted alias for a separate TraderIntelligence service. Root was asked
+for its exact source identity. This blocks that target's compatibility inventory,
+not the pure Meta recommendation. No production endpoint is invented.
+
+ACK STATUS
+Existing owner pins/source semantics reviewed. New Root Target Adapter v1 exact
+contract/source has not yet been received: source compatibility ACK PENDING.
+No authority, submit, result-store, native, provider, physical or release ACK is
+implied. Await exact new contract before reviewing schema/signature compatibility.

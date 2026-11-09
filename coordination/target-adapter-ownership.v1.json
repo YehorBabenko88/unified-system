@@ -1,0 +1,29 @@
+{
+  "schema": "unified.target-adapter.ownership.v1",
+  "base": "1b205595479cf2b4998bf98209615bba14a91581",
+  "branch": "feature/gateway-target-adapter-v1-20261109",
+  "owners": {
+    "ROOT": [
+      "unified_system/gateway_target_adapter.py",
+      "tests/gateway_target_adapter/**",
+      "docs/intelligence/target-adapter/**",
+      ".github/workflows/gateway-target-adapter.yml",
+      "coordination/target-adapter-ownership.v1.json",
+      "coordination/target-adapter-integration.v1.json"
+    ],
+    "A7": "EXISTING_RESEARCH_SOURCE_READ_ONLY_FOR_ROOT",
+    "A2_A5": "NATIVE_JOB_ADMISSION_NOT_BOUND",
+    "A4": "PUBLICATION_AND_RESULT_CONTRACT_ACK_PENDING",
+    "A6": [
+      "terminan/target_adapter_result.js",
+      "tests/target_adapter_result/**",
+      "docs/gateway/target-adapter/**",
+      ".github/workflows/target-adapter-result.yml"
+    ],
+    "A8": "INDEPENDENT_AUDIT_BRANCH_ONLY"
+  },
+  "shared_runtime_edits": false,
+  "public_submit": "DENY",
+  "scheduler": "BLOCKED",
+  "physical": "BLOCKED"
+}
