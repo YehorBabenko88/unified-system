@@ -408,9 +408,13 @@
     "repository": "unified-system",
     "pr": 54,
     "observed_head": "68761aecacb6cc60113dd23f036c57efddcb0367",
-    "status": "OPEN",
+    "status": "FIX_VERIFIED_OFFLINE_CONFIGURATION_AT_b144a5e",
     "title": "Five mandatory workflows invalid YAML after unquoted colon-space pip command",
     "evidence": "phase107/yaml-negative-results.json;phase107/ci-current.original.json;phase107/jobs-*.original.json",
-    "required_correction": "Quote entire run command or use block scalar; exact source parser regression and naturally triggered mandatory original jobs/artifacts."
+    "required_correction": "Quote entire run command or use block scalar; exact source parser regression and naturally triggered mandatory original jobs/artifacts.",
+    "correction_head": "b144a5e0fd3af90c975bfc0f0123234628dbb696",
+    "correction_tree": "01537daf676f3d9e4e924ba80026b531912cabd7",
+    "correction_evidence": "phase108/own2.stderr.log;phase108/primary-verification.json",
+    "mandatory_CI": "BLOCKED_QUEUED_NOT_HOSTED_PASS"
   }
 ]

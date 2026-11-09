@@ -1630,3 +1630,54 @@ P0_P1_P2: new F25/P1 OPEN; prior baseline6P1/3P2 becomes7P1/3P2 pending exact co
 EVIDENCE: this directory; every published member included in bundle SHA256SUMS.txt.
 NEXT_ACTIONS: exact F25 correction; preserve originals; terminal exact mandatory Windows/Linux jobs + artifacts; approved integration package and scoped owner ACKs.
 GO_NO_GO: NO-GO. TAILSCALE_REMOVAL: BLOCKED. No merge/deploy/office faults/provider orders/network-security changes/Math diagnostic execution.
+
+
+# Agent8 phase108 — exact F25 configuration correction
+
+| Requirement ID | Repository | PR | Exact HEAD | Test name | Environment | Expected | Actual | Evidence | Status | Severity | Required correction |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| F25-FIX108 | unified-system |54|b144a5e0fd3af90c975bfc0f0123234628dbb696|actual committed workflow YAML tests|A8 own Windows CPython3.12.10/PyYAML6.0.3 -I -B|all actual workflow run commands are valid strings; colon negative rejected|2PASS0skip; five pip commands now block scalars;1587primaryraw/noextras pre/post equal|own2.stderr.log;primary-verification.json;source.diff|PASS|P1 corrected offline|No hosted PASS inference|
+| CI108-PRESERVATION | unified-system |54|b144a5e0fd3af90c975bfc0f0123234628dbb696|protected source equality|primary Git objects|runtime/direct tests/driver/144inventory unchanged|all4 byteequal68761ae; new files only YAML test+lock metadata/triage plus five scoped workflow fixes|primary-verification.json;source.diff|PASS|—|A8 prior22 stays exact687, no rerun/new runtime claim|
+| CI108-HOSTED | unified-system |54|b144a5e0fd3af90c975bfc0f0123234628dbb696|original hosted workflow registration|read-only GitHub REST|terminal mandatory Windows/Linux/artifacts qualified|38run snapshot/0conclusionFAIL; named originals queued, not terminal acceptance|ci-current.original.json;ci-summary.json|BLOCKED|existing mandatory gate|Verify terminal exact jobs/artifacts separately|
+
+Tree01537daf676f3d9e4e924ba80026b531912cabd7. F25 status FIX_VERIFIED_OFFLINE_CONFIGURATION_AT_b144. Original687 five parser failures/jobs0 remain immutable in phase107; original83d Windows RED remains historical. These two new tests cover actual all-workflow documents and generic colon parsing, not native execution or GitHub semantic context validation. PyYAML6.0.3 dependency was already present in A8 own environment; no new package installation in this phase. Six platform wheel hashes in owner source are not independently downloaded/qualified by A8 here.
+
+RELEASE_MANIFEST_STATUS: global approved integrated package NOT_RECEIVED.
+NODE_INVENTORY_STATUS: no new approved inventory.
+CONTRACT_STATUS: integrated exact owner ACKs/actual chain absent.
+OFFLINE_TESTS:2PASS0skip,1587rawprimarypre/post/noextras.
+WINDOWS_CI:BLOCKED_QUEUED_NOT_HOSTED_PASS.
+PHYSICAL_TESTS:BLOCKED.
+P0_P1_P2:F25 narrowfixverified; prior baseline6P1/3P2 remains; owner-labelled P0 native gates OPEN.
+EVIDENCE:this directory and bundle SHA256SUMS.txt.
+NEXT_ACTIONS:terminal exact mandatory CI/artifacts; integrated actual source/owner ACKs.
+GO_NO_GO:NO-GO. TAILSCALE_REMOVAL:BLOCKED. No reruns/Math diagnostics/office or network changes.
+
+
+# Agent8 phase109 — independent PR57 suspended owned attempt review
+
+| Requirement ID | Repository | PR | Exact HEAD | Test name | Environment | Expected | Actual | Evidence | Status | Severity | Required correction |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| WA109-SOURCE | unified-system |57|7338a80fba4453b55420fdb5254d5a4dbdda6fde|exact source/scope|A8 fresh LF no-hardlinks clone/primaryGitobjects|six owned source paths/no cross-owner edits|exact tree dccf8e403fc16045140aee6b079a9af8a8ed9f80;1417rawfiles/noextras pre/post equal;six owned paths only vsPR55c741|source.diff;primary-verification.json;owner-source-verification.json|PASS|—|No integrated base/ABI assumption|
+| WA109-BOUNDARY | unified-system |57|7338a80fba4453b55420fdb5254d5a4dbdda6fde|six committed OwnedAttemptBoundary tests|A8 CPython3.12.10 -I -S -B|deny default start/forged/foreign/malformed13/missing node/headroom/pin faults|6PASS0skip within13; invalid fields denied before API access; inert fault assertions explicitly not native failure evidence|own13.stderr.log;own13.stdout.json;executed-child.py|PASS|—|Current native authority/expiry/RBAC not supplied by these cases|
+| WA109-NATIVE | unified-system |57|7338a80fba4453b55420fdb5254d5a4dbdda6fde|two explicitly selected NativeOwnedAttempt tests|A8 own Windowsx64 child processes only; own exact Grid40e9 source|prepare suspended/actual readback/inspect/dupe same/foreign deny/abort empty|2actualPASS within13; no Resume, original changed/foreign inventory denied; copied/pickled attempt denied; after abort duplicate retired/no auto-retry|own13.stderr.log;own13.stdout.json;primary-verification.json|PASS|—|Not worker profile/permit/actual research execution|
+| WA109-FAULTS | unified-system |57|7338a80fba4453b55420fdb5254d5a4dbdda6fde|five committed WorkerLimits tests|inert API failure assertions|failed cleanup/setup/readback cannot authorize start/release|5PASS within13; retained thread/process close assertions; bad setup/readback refused|own13.stderr.log|PASS|—|Not actual native-failure injection/physical acceptance|
+| WA109-OWNER | unified-system |57|7338a80fba4453b55420fdb5254d5a4dbdda6fde|owner original receipt/log/source hashes|read-only original owner evidence|original pins/hash bind current code|receiptSHA67f5337e193b2b1fdd1fd0957edc330fcd618f3cbc4fcd2df21bdfc319e23f56; two source binds/log verified;owner13 separate from A8 actual13|owner-receipt.original.json;owner-tests.original.log;owner-source-verification.json|PASS|—|Owner receipt not replacement for full A8 primary verification|
+| WA109-CUSTODY | unified-system |57|7338a80fba4453b55420fdb5254d5a4dbdda6fde|native source/interpreter boundary|source review+own actual native tests|only commissioned child/image/source; no resume authority|hardcoded direct interpreter SHA checked; pinned Grid source read as primary40e9 blob SHA7fd6223de3e28052b1254fa9e33e638132c6db89388bbb2d994b35970802a25c; retained process/thread/Job membership+creation/image observed|source.diff;executed-child.py;primary-verification.json|PASS|—|Source custody explicitly NOT_QUALIFIED_FOR_RESUME; no hostile local-admin containment claim|
+| WA109-RESOURCE | unified-system |57|7338a80fba4453b55420fdb5254d5a4dbdda6fde|actual resource/UTC/enrollment/one-use permit|not available|qualified native policy/holds/current rights before resume|start unconditionalDENY; readbacks diagnostic only; CPUrate1000=10percent not1000m; committed256MiB notRSS; declared node not enrolled worker|exact source gateway_worker.py;source.diff|BLOCKED|existing owner-labelled P0 gates|Actual issuer ABI/resource semantics/UTC/sourcecustody/current worker enrollment/holds required|
+| WA109-INTEGRATION | six repos |unadmitted|no integrated exact package|scheduler→actual worker→publication→read|NOT_RUN|phase106 actual native gate qualification|no issuer/Assignment/permit/Meta execution/publication/readrights in this slice; no physical/hosted qualification|qualification scope/source docs;ci-current.original.json|BLOCKED|existing native release gates|Approved exact source package/owner ACKs/terminal CI/actual connected E2E|
+
+Own fresh execution:13uniquePASS/0skip/exit0=6boundary+2real suspended own-child+5fault tests. The nested mutation checks remain subcases, not extra jobs. Own wrapper explicitly replaced only the test module GRID runtime path with A8 own exact40e9 primary repository, leaving committed test/product bytes untouched. It selected only test_owned_attempt.py and test_worker_limits.py. tests/gateway_jobs/qualify_windows_job.py was READ ONLY and never imported/invoked; its tree/memory/bad_profile entrypoints and PR52 diagnostic were not executed. There was no512MiB allocation test, research workload, ResumeThread or authority call. The hardcoded interpreter pin is a local stand restriction, not portable Windows CI qualification.
+
+Source review: one process-wide preparation gate,32 retained-original cap and exact raw original matching; same original duplicate returns existing process-local attempt, terminal attempt refuses auto-retry. Opaque object is only accepted in the exact owner's inventory; descriptors are DATA. Retained process identity/image/membership and live wait are checked for require_owned_attempt. Own abort latches before termination, requires Job empty+retained process signaled; uncertainty poisons/restricts release. Process-local inventory is not durable fencing/restart registry. Numeric CPU/RSS/UTC conversion, inherited Job capacity, actual worker enrollment and source-read-to-resume custody remain explicitly unqualified. No new independently reproduced material defect in this slice; this does not close prior sourceguard findings/global gates.
+
+RELEASE_MANIFEST_STATUS:exactPR57 independentlybound; no approved integrated release.
+NODE_INVENTORY_STATUS:declared synthetic UUID only; no physical enrolled nodes accepted.
+CONTRACT_STATUS:A2 positive issuer/worker shared ABI absent/notcoACKed.
+OFFLINE_TESTS:13PASS0skip including2own suspended Windows cases;1417rawpre/post/noextras.
+WINDOWS_CI:terminal hosted mandatory PASS NOT_VERIFIED; ci snapshot retained.
+PHYSICAL_TESTS:BLOCKED.
+P0_P1_P2:no new material finding; baseline6P1/3P2 after F25 correction; existing owner-labelled P0 native positive gates OPEN.
+EVIDENCE:this directory and SHA256SUMS.txt.
+NEXT_ACTIONS:owner actual issuer/worker ABI+resource/UTC/enrollment/custody qualification, terminal exact CI, connected isolated native negatives/positive E2E.
+GO_NO_GO:NO-GO. TAILSCALE_REMOVAL:BLOCKED. No office faults/production/provider/networksecurity changes/Math or PR52 diagnostic invocation.
