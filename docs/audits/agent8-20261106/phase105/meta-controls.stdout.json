@@ -1,0 +1,12 @@
+{
+  "source_primary_sha256": "88bb577c8f830d79824326b8001d177d431094302109e27b813971c86e479fab",
+  "scratch_sha256": "2e52be05cf3a995a3ee1a70dba057ddb56ff57a93947ec6e82f5fa614a629a5e",
+  "guards_deleted": [
+    "    if native['original_actor_principal_id'] not in profile['principal_registry'].values():raise ValueError('ACTOR_REGISTRY_JOIN')\n",
+    "    if outer_bytes(q['resource_budget'])!=outer_bytes(load('target-v1-request.source.json')['resource_budget']):raise ValueError('PREFLIGHT_BUDGET_TYPES')\n"
+  ],
+  "expected_meta_failures": 2,
+  "observed_meta_failures": 2,
+  "native_calls": 0,
+  "scope": "SYNTHETIC_FINAL_SOURCE_GUARD_DELETION_NOT_HISTORICAL_RED_NOT_NATIVE_BUG"
+}
