@@ -622,9 +622,12 @@
     "pr": 78,
     "observed_head": "458de55b7170d23f2e7ab3a5d72597b2a0124653",
     "title": "Owned lifecycle can confirm late cleanup without post-completion or final monotonic deadline check",
-    "status": "OPEN_SOURCE_ONLY_LATE_CLEANUP_ACCEPTANCE_GAP_NO_A8_RUNTIME_REPRO",
+    "status": "SOURCE_CORRECTION_ACK_AT_PR79_475_RUNTIME_QUALIFICATION_PENDING",
     "test": "cleanupIssued remaining/Promise.race versus final r.confirmed predicate",
     "evidence": "phase152/report.md;phase152/source-verification.json",
-    "required_correction": "Separate immutable common monotonic deadline and postcompletion/final elapsed rejection; delayed-event-loop mock regression, preserve own handles/no kill/fixed budgets/no native run."
+    "required_correction": "Separate immutable common monotonic deadline and postcompletion/final elapsed rejection; delayed-event-loop mock regression, preserve own handles/no kill/fixed budgets/no native run.",
+    "successor_pr": 79,
+    "successor_head": "47530d81e8b6f297a060a206bea6f783ccd0702e",
+    "successor_evidence": "phase153/report.md;phase153/source-verification.json"
   }
 ]

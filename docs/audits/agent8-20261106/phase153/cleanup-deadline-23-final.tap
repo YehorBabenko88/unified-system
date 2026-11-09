@@ -1,0 +1,148 @@
+TAP version 13
+# Subtest: late synchronous final HTTP completion rejects even before timeout callback runs
+ok 1 - late synchronous final HTTP completion rejects even before timeout callback runs
+  ---
+  duration_ms: 1.7453
+  type: 'test'
+  ...
+# Subtest: per-operation 5s deadline also rejects before common 10s is exhausted
+ok 2 - per-operation 5s deadline also rejects before common 10s is exhausted
+  ---
+  duration_ms: 1.1052
+  type: 'test'
+  ...
+# Subtest: final monotonic confirmation rejects time consumed after operation completes
+ok 3 - final monotonic confirmation rejects time consumed after operation completes
+  ---
+  duration_ms: 0.4281
+  type: 'test'
+  ...
+# Subtest: under-deadline completion remains separately confirmed with bounded elapsed evidence
+ok 4 - under-deadline completion remains separately confirmed with bounded elapsed evidence
+  ---
+  duration_ms: 0.3755
+  type: 'test'
+  ...
+# Subtest: final confirmation independently rejects microtask delay after last attempt postcheck
+ok 5 - final confirmation independently rejects microtask delay after last attempt postcheck
+  ---
+  duration_ms: 0.5199
+  type: 'test'
+  ...
+# Subtest: failure taxonomy returns only closed enums and never raw error material
+ok 6 - failure taxonomy returns only closed enums and never raw error material
+  ---
+  duration_ms: 2.0083
+  type: 'test'
+  ...
+# Subtest: error getters are not invoked by sanitizer
+ok 7 - error getters are not invoked by sanitizer
+  ---
+  duration_ms: 0.3186
+  type: 'test'
+  ...
+# Subtest: fixed internal errors survive, arbitrary HTTP or error strings cannot enter trace
+ok 8 - fixed internal errors survive, arbitrary HTTP or error strings cannot enter trace
+  ---
+  duration_ms: 0.6833
+  type: 'test'
+  ...
+# Subtest: trace records monotonic phase boundary and safe failure while preserving thrown error
+ok 9 - trace records monotonic phase boundary and safe failure while preserving thrown error
+  ---
+  duration_ms: 0.3911
+  type: 'test'
+  ...
+# Subtest: trace caps below64 events and6144 bytes and overflow is explicit failure
+ok 10 - trace caps below64 events and6144 bytes and overflow is explicit failure
+  ---
+  duration_ms: 0.5456
+  type: 'test'
+  ...
+# Subtest: telemetry write failure stays unknown without exposing error
+ok 11 - telemetry write failure stays unknown without exposing error
+  ---
+  duration_ms: 0.2687
+  type: 'test'
+  ...
+# Subtest: late telemetry failure or overflow refuses final success assertion
+ok 12 - late telemetry failure or overflow refuses final success assertion
+  ---
+  duration_ms: 0.3598
+  type: 'test'
+  ...
+# Subtest: opaque throwing descriptor/prototype proxies sanitize to UNKNOWN
+ok 13 - opaque throwing descriptor/prototype proxies sanitize to UNKNOWN
+  ---
+  duration_ms: 0.2582
+  type: 'test'
+  ...
+# Subtest: final telemetry failure prevents publishing any PASS receipt
+ok 14 - final telemetry failure prevents publishing any PASS receipt
+  ---
+  duration_ms: 0.4
+  type: 'test'
+  ...
+# Subtest: final receipt observes diagnostic snapshot with no mandatory telemetry after its write
+ok 15 - final receipt observes diagnostic snapshot with no mandatory telemetry after its write
+  ---
+  duration_ms: 0.4693
+  type: 'test'
+  ...
+# Subtest: owned teardown separately closes context, disconnects client, observes server exit and HTTP close
+ok 16 - owned teardown separately closes context, disconnects client, observes server exit and HTTP close
+  ---
+  duration_ms: 1.769
+  type: 'test'
+  ...
+# Subtest: client close fulfilled without disconnect is UNKNOWN even when browser process exits
+ok 17 - client close fulfilled without disconnect is UNKNOWN even when browser process exits
+  ---
+  duration_ms: 1.8153
+  type: 'test'
+  ...
+# Subtest: teardown records failure then still attempts other issued handles
+ok 18 - teardown records failure then still attempts other issued handles
+  ---
+  duration_ms: 0.4422
+  type: 'test'
+  ...
+# Subtest: missing issued browserServer or undefined exit fields never confirm retirement
+ok 19 - missing issued browserServer or undefined exit fields never confirm retirement
+  ---
+  duration_ms: 0.3294
+  type: 'test'
+  ...
+# Subtest: cleanup timeout is nonPASS and never calls PID or SDK kill fallback
+ok 20 - cleanup timeout is nonPASS and never calls PID or SDK kill fallback
+  ---
+  duration_ms: 20.5775
+  type: 'test'
+  ...
+# Subtest: owned GO input is destroyed and observed closed using inert stream only
+ok 21 - owned GO input is destroyed and observed closed using inert stream only
+  ---
+  duration_ms: 0.7745
+  type: 'test'
+  ...
+# Subtest: GO input closure error refuses before harness import
+ok 22 - GO input closure error refuses before harness import
+  ---
+  duration_ms: 0.4149
+  type: 'test'
+  ...
+# Subtest: source preserves fixed bootstrap and security, tracks public issued client finally, no forced exit
+ok 23 - source preserves fixed bootstrap and security, tracks public issued client finally, no forced exit
+  ---
+  duration_ms: 2.8031
+  type: 'test'
+  ...
+1..23
+# tests 23
+# suites 0
+# pass 23
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 141.0228
