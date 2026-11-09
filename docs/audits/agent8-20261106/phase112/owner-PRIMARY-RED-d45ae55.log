@@ -1,0 +1,40 @@
+{"scope": "OWNED_LOOPBACK_LAB_STARTED", "voters": 3, "processes": [136216, 133596, 132528], "endpoints": ["http://127.0.0.1:53551", "http://127.0.0.1:53555", "http://127.0.0.1:53559"], "binary_sha256": "41762ef5b98c8dd9b6852df6cfbceed37e7f0acc5760856be33100f1092475e1", "acl_default": "deny"}
+test_00_actual_v2_principal_and_exact_submit_read_capture (test_native_profile_v2.NativeProfileV2Tests.test_00_actual_v2_principal_and_exact_submit_read_capture) ... Executing <Task pending name='Task-1' coro=<NativeProfileV2Tests.asyncSetUp() running at C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-2-high-availability-distributed\work\research-profile-v2-RED-d45ae55\tests\gateway_research_identity\test_native_profile_v2.py:18> cb=[_run_until_complete_cb() at C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\base_events.py:181] created at C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\runners.py:100> took 0.250 seconds
+Executing <Task pending name='Task-1' coro=<NativeProfileV2Tests.asyncSetUp() running at C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-2-high-availability-distributed\work\research-profile-v2-RED-d45ae55\tests\gateway_research_identity\test_native_profile_v2.py:18> wait_for=<Future pending cb=[Task.task_wakeup()] created at C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\base_events.py:448> cb=[_run_until_complete_cb() at C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\base_events.py:181] created at C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\runners.py:100> took 0.125 seconds
+ERROR
+{"scope": "OWNED_LOOPBACK_LAB_RETIRED", "processes": [{"pid": 136216, "returncode": 1}, {"pid": 133596, "returncode": 1}, {"pid": 132528, "returncode": 1}], "all_owned_processes_waited": true, "foreign_process_operations": 0, "session_retirement": "OWNED_SERVERS_STOPPED_TEMPORARY_DIRECTORY_CLEANUP_FOLLOWS"}
+
+======================================================================
+ERROR: test_00_actual_v2_principal_and_exact_submit_read_capture (test_native_profile_v2.NativeProfileV2Tests.test_00_actual_v2_principal_and_exact_submit_read_capture)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-2-high-availability-distributed\work\research-profile-v2-RED-d45ae55\tests\gateway_research_identity\test_native_profile_v2.py", line 58, in test_00_actual_v2_principal_and_exact_submit_read_capture
+    context=await self.broker.open_session(self.tls.accepted,leader=self.leader)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-2-high-availability-distributed\work\research-profile-v2-RED-d45ae55\unified_system\gateway_research_identity.py", line 201, in open_session
+    return await self._open_session(server_ssl_socket,leader=leader)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-2-high-availability-distributed\work\research-profile-v2-RED-d45ae55\unified_system\gateway_research_identity.py", line 210, in _open_session
+    records,a,r,policy_expiry=await self._policy(fingerprint,service)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-2-high-availability-distributed\work\research-profile-v2-RED-d45ae55\unified_system\gateway_research_identity.py", line 173, in _policy
+    _fields(p,'schema cluster_id realm_id principal_registry input_request_sha256 producer_head resources expiry_semantics expires_utc')
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-2-high-availability-distributed\work\research-profile-v2-RED-d45ae55\unified_system\gateway_research_identity.py", line 47, in _fields
+    def _fields(value,names): _require(type(value) is dict and set(value)==set(names.split()))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-2-high-availability-distributed\work\research-profile-v2-RED-d45ae55\unified_system\gateway_research_identity.py", line 36, in _require
+    if not value: raise ResearchIdentityDenied('RESEARCH_IDENTITY_DENIED')
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+unified_system.gateway_research_identity.ResearchIdentityDenied: RESEARCH_IDENTITY_DENIED
+
+----------------------------------------------------------------------
+Ran 1 test in 4.335s
+
+FAILED (errors=1)
+{"scope": "PRIMARY_PINNED_EXPECTED_RED_NOT_RUNTIME_PASS", "head": "d45ae55a953f57f92b35ada506ceccde44877e7b", "raw_files": 1516, "tests": 1, "errors": 1, "failures": 0, "skips": 0, "module_sha256": "1e9f4bb1c7a563b3cf5e19f432f5799941448df212a2ddb9a7de9df1d99cb543", "test_sha256": "cc138c0ae3cf98428238bf636637ab9e4cae01754398ba8871d5919f56644b7a"}

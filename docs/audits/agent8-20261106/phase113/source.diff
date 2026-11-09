@@ -1,0 +1,264 @@
+diff --git a/docs/intelligence/jobs/2026-11-09-native-scheduler-adapter-plan.md b/docs/intelligence/jobs/2026-11-09-native-scheduler-adapter-plan.md
+index cb4669c..1d8a571 100644
+--- a/docs/intelligence/jobs/2026-11-09-native-scheduler-adapter-plan.md
++++ b/docs/intelligence/jobs/2026-11-09-native-scheduler-adapter-plan.md
+@@ -71,3 +71,9 @@ Task1 source-bound receipt and final review remain required before completion. T
+ ROOT acknowledged PR57/7338a80 and authorized standalone negative recovery/cancel tests. Current ROOT CI branch is not an integration runtime base. Implement a local DATA-only canonical capabilities report in GatewayWorker: admitted_fields empty, unsupported_fields explicit for CPU millicores/share, RSS, committed memory, commit/physical headroom. Each field records actual observation/configuration scope and the unresolved enforcement/mapping gap. Include this report in local OS observations; never return a grant or qualification PASS. Keep a machine-readable documentation mirror with exact equality tests.
+ 
+ TDD: test missing report RED, add report, verify report is immutable bytes and all six unsupported dimensions remain unsupported. Add isolated negative tests for fresh ResearchJobs instances retaining the same original during lookup/reconnect UNKNOWN, cancellation before/after failed lookup staying UNKNOWN, and reconstructed/foreign local observation failing inventory checks. These are local closed-boundary tests, not native restart/cancel acceptance. Re-run focused tests with exact source guard, fresh review, update existing Draft PR57 and notify ROOT/A2/A8. No resume, PR52 execution, authority fallback or shared API wiring.
++
++## Follow-up: CPU hard-cap pure policy v1
++
++ROOT requested executable conversion/qualification matrix, no CPU workload or resume. Add frozen pure-policy result and strict integer-only conversion in gateway_worker.py; tests in test_cpu_policy.py. Constrain v1 to one active group, full process/system affinity, matching active CPU count, known no CPU-controlled parent and DFSS disabled. Unknown/restricted/multi-group topology returns UNSUPPORTED. Bound total requested+already-reserved millicores by 1000*N. Derive rate=floor(10*m/N), reject zero quantum; represent delivered nominal bound as exact numerator rate*N / denominator 10 millicores, never floating point. Result always admission_supported=False/behaviorally_qualified=False. Caller topology/reservation inputs are DATA, not attestation or an atomic hold.
++
++Observe actual retained suspended child's group/count/affinity in local snapshots, with before/after equality; do not set a derived rate or resume. Regression matrix checks rounding, boundary and aggregate no-oversubscription, unknown ancestry/DFSS and topology restrictions. Existing 1000-rate set/query stays diagnostic only. Add official Microsoft sources and qualification matrix; keep admitted_fields empty and RSS/commit distinct. Capture RED/GREEN, read-only review, exact-source tests and update PR57; notify ROOT/A2/A8.
+diff --git a/docs/intelligence/jobs/windows-cpu-policy-v1.md b/docs/intelligence/jobs/windows-cpu-policy-v1.md
+new file mode 100644
+index 0000000..0b8b971
+--- /dev/null
++++ b/docs/intelligence/jobs/windows-cpu-policy-v1.md
+@@ -0,0 +1,30 @@
++# Windows CPU hard-cap policy v1: arithmetic only
++
++Version: `windows-hard-cap-logical-mcpu.v1`. This is local pure policy, not an Assignment/API freeze, resource hold or admission capability. `admitted_fields` stays empty.
++
++## Source and derivation
++
++Microsoft documents CpuRate in 1/10000 cycle units, with ENABLE plus HARD_CAP flags (`5`). Zero is invalid. Without a CPU-controlled ancestor the denominator is the whole system; otherwise it is parent-relative. DFSS can make this facility unavailable. See [CPU rate control](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-jobobject_cpu_rate_control_information).
++
++Policy inference: define one logical CPU as 1000 nominal millicores and let N be the complete active logical CPU count. Then `r = floor(10*m/N)`. The represented nominal bound is exactly `r*N/10 <= m`; rounding loss is less than `N/10` millicores. Reject `r=0` instead of rounding up. Example: m=1000, N=16 gives r=625, not 1000. No claim about benchmark-normalized throughput, wall-clock utilization, heterogeneous cores or performance guarantees follows.
++
++V1 conservatively accepts only one group, identical nonzero process/system masks with at most 64 bits and popcount N. N comes from [GetActiveProcessorCount](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getactiveprocessorcount); [GetProcessAffinityMask](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getprocessaffinitymask) supplies group-sensitive masks. Restricted affinity, multiple groups, count mismatch, unknown/CPU-controlled parent and unknown/enabled DFSS are unsupported. This restriction avoids inventing a partial-affinity denominator.
++
++Require `m > 0`, nonnegative already-reserved millicores and `m + reserved <= 1000*N`; reject excess, never clamp. All numeric inputs must be exact integers, excluding bool. This prevents oversubscription in the supplied arithmetic snapshot only. Actual admission still needs A2 atomic current holds, verified identity/session, topology custody and freshness. Caller-provided totals/flags cannot prove these facts. Affinity equality before/after observation does not prevent later topology changes.
++
++## Executable qualification matrix
++
++`tests/gateway_jobs/test_cpu_policy.py` exercises integer floor bounds across N=1,2,3,8,16,32,64, below-quantum rejection, exact capacity/excess, invalid/coercible types, topology restrictions and parent/DFSS unknowns. Every result keeps `admission_supported=False` and `behaviorally_qualified=False`.
++
++| Gate | Executable evidence | Current qualification |
++| --- | --- | --- |
++| Integer conversion and supplied aggregate bound | Pure regression matrix | Arithmetic only |
++| Actual child topology | Retained-handle group/count/affinity reads before/after local observation | Snapshot only, not pinned |
++| Actual Job CPU rate | Query existing suspended Job, verify flags=5/rate=1000 unchanged | Set/query only; derived rate not applied |
++| Parent CPU denominator / DFSS | UNKNOWN in actual local observation | Unsupported; no guessed attestation |
++| Behavioral CPU cap | No workload executed or resumed | Not qualified |
++| Distributed reservations / sessions / UTC | Actual A2 API pending | Not qualified |
++| RSS hard bound | Working-set snapshot; no RSS enforcement | Unsupported |
++| Committed-memory cap | Existing native set/query, PR51 peak discrepancy open | Not qualified; never substituted for RSS |
++
++Native tests create/inspect/abort only an owned suspended child. No ResumeThread, CPU load probe or PR52 execution. Passing the test matrix does not change any qualification status. Root must separately authorize any behavioral probe; exact topology, parent/DFSS provenance and source custody must be qualified before permit wiring.
+diff --git a/docs/intelligence/jobs/worker-resource-capabilities.v1.json b/docs/intelligence/jobs/worker-resource-capabilities.v1.json
+index 94a5f68..6e52376 100644
+--- a/docs/intelligence/jobs/worker-resource-capabilities.v1.json
++++ b/docs/intelligence/jobs/worker-resource-capabilities.v1.json
+@@ -22,7 +22,8 @@
+     },
+     "cpu_millicores": {
+       "admission": "UNSUPPORTED",
+-      "gap": "NATIVE_CPU_RATE_1000_IS_NOT_1000_MILLICORES",
++      "conversion_policy": "windows-hard-cap-logical-mcpu.v1",
++      "gap": "PURE_FLOOR_CONVERSION_AVAILABLE_BUT_TOPOLOGY_AND_ENFORCEMENT_UNQUALIFIED",
+       "observation": "NONE"
+     },
+     "cpu_share": {
+diff --git a/tests/gateway_jobs/test_cpu_policy.py b/tests/gateway_jobs/test_cpu_policy.py
+new file mode 100644
+index 0000000..191cc79
+--- /dev/null
++++ b/tests/gateway_jobs/test_cpu_policy.py
+@@ -0,0 +1,54 @@
++"""Pure integer policy regressions, never resource enforcement qualification."""
++import dataclasses
++import unittest
++from unified_system.gateway_worker import cpu_hard_cap_policy_v1
++
++def policy(m=1000,**changes):
++    args=dict(processor_groups=1,active_processor_count=16,process_affinity_mask=65535,
++              system_affinity_mask=65535,already_reserved_millicores=0,
++              parent_cpu_control='NONE',dfss_state='DISABLED')
++    args.update(changes)
++    return cpu_hard_cap_policy_v1(m,**args)
++
++class CpuPolicy(unittest.TestCase):
++    def test_floor_bound_and_quantum_across_single_group_sizes(self):
++        for n in (1,2,3,8,16,32,64):
++            for m in (1,7,100,999,1000,n*1000):
++                with self.subTest(n=n,m=m):
++                    result=policy(m,active_processor_count=n,process_affinity_mask=(1<<n)-1,system_affinity_mask=(1<<n)-1)
++                    rate=10*m//n
++                    if rate==0:self.assertEqual(result.reason,'BELOW_NATIVE_QUANTUM');continue
++                    self.assertEqual(result.state,'CONVERTIBLE_NOT_ADMITTED')
++                    self.assertEqual(result.cpu_rate,rate)
++                    self.assertEqual(result.control_flags,5)
++                    self.assertEqual(result.nominal_millicores_numerator,rate*n)
++                    self.assertEqual(result.nominal_millicores_denominator,10)
++                    self.assertLessEqual(rate*n,m*10)
++                    self.assertLess(m*10-rate*n,n)
++                    self.assertFalse(result.admission_supported)
++                    self.assertFalse(result.behaviorally_qualified)
++    def test_no_oversubscription_or_implicit_clamp(self):
++        for m,reserved in ((16001,0),(1000,15001),(1,16000)):
++            self.assertEqual(policy(m,already_reserved_millicores=reserved).reason,'CPU_CAPACITY_EXHAUSTED')
++        self.assertEqual(policy(1000,already_reserved_millicores=15000).cpu_rate,625)
++    def test_unsupported_topology_ancestry_and_dfss(self):
++        cases=[dict(processor_groups=2),dict(process_affinity_mask=255),dict(system_affinity_mask=0),
++               dict(active_processor_count=15),dict(process_affinity_mask=1<<64),
++               dict(parent_cpu_control='UNKNOWN'),dict(parent_cpu_control='RATE_CONTROLLED'),
++               dict(dfss_state='UNKNOWN'),dict(dfss_state='ENABLED')]
++        for changes in cases:
++            with self.subTest(changes=changes):
++                result=policy(**changes)
++                self.assertEqual(result.state,'UNSUPPORTED')
++                self.assertIsNone(result.cpu_rate)
++                self.assertFalse(result.admission_supported)
++    def test_invalid_numeric_inputs_never_coerce(self):
++        for m in (True,1.0,'1000',0,-1,None):
++            self.assertEqual(policy(m).state,'UNSUPPORTED')
++        for field in ('processor_groups','active_processor_count','process_affinity_mask','system_affinity_mask','already_reserved_millicores'):
++            for value in (True,1.0,'1',-1,None):
++                with self.subTest(field=field,value=value):self.assertEqual(policy(**{field:value}).state,'UNSUPPORTED')
++    def test_frozen_result_is_not_a_dispatch_capability(self):
++        result=policy()
++        with self.assertRaises(dataclasses.FrozenInstanceError):result.admission_supported=True
++        self.assertEqual(result.policy_version,'windows-hard-cap-logical-mcpu.v1')
+diff --git a/tests/gateway_jobs/test_owned_attempt.py b/tests/gateway_jobs/test_owned_attempt.py
+index bc5e88c..dd699e3 100644
+--- a/tests/gateway_jobs/test_owned_attempt.py
++++ b/tests/gateway_jobs/test_owned_attempt.py
+@@ -10,7 +10,7 @@ import unittest
+ import uuid
+ from unittest.mock import patch
+ import unified_system.gateway_worker as worker_module
+-from unified_system.gateway_worker import GatewayWorker, OwnedWorkerAttempt, WorkerUnavailable
++from unified_system.gateway_worker import GatewayWorker, OwnedWorkerAttempt, WorkerUnavailable, cpu_hard_cap_policy_v1
+ 
+ FIX=Path(__file__).with_name('target_native_mapping_fixtures')
+ GRID='C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-2-high-availability-distributed/work/grid-assignment-native-20261107'
+@@ -76,6 +76,13 @@ class NativeOwnedAttempt(unittest.TestCase):
+         details=json.loads(snapshot.os_observation_json)
+         self.assertTrue(details['job_membership']);self.assertEqual(details['resume_calls'],0)
+         self.assertFalse(details['resource_profile_qualified'])
++        self.assertEqual(details['cpu_limit_query']['control_flags'],5)
++        self.assertEqual(details['cpu_limit_query']['cpu_rate'],1000)
++        self.assertFalse(details['cpu_limit_query']['derived_rate_applied'])
++        topology=details['cpu_topology'].copy();self.assertFalse(topology.pop('qualified_for_admission'))
++        candidate=cpu_hard_cap_policy_v1(1000,already_reserved_millicores=0,**topology)
++        self.assertEqual(candidate.state,'UNSUPPORTED')
++        self.assertFalse(candidate.admission_supported)
+         for operation in (copy.copy,copy.deepcopy,pickle.dumps):
+             with self.assertRaises(TypeError):operation(attempt)
+         retired=worker.abort_attempt(attempt);self.assertEqual(retired.state,'OWNED_QUIESCENCE_CONFIRMED')
+diff --git a/unified_system/gateway_worker.py b/unified_system/gateway_worker.py
+index 929a3b9..817c39c 100644
+--- a/unified_system/gateway_worker.py
++++ b/unified_system/gateway_worker.py
+@@ -22,6 +22,46 @@ from datetime import datetime, timezone
+ class WorkerUnavailable(RuntimeError):
+     pass
+ 
++@dataclass(frozen=True)
++class CpuHardCapPolicyV1:
++    """Pure arithmetic result from untrusted inputs, never OS/authority proof."""
++    state: str
++    reason: str
++    cpu_rate: int | None=None
++    control_flags: int | None=None
++    nominal_millicores_numerator: int | None=None
++    nominal_millicores_denominator: int=10
++    policy_version: str='windows-hard-cap-logical-mcpu.v1'
++    admission_supported: bool=False
++    behaviorally_qualified: bool=False
++
++def cpu_hard_cap_policy_v1(requested_millicores,*,processor_groups,active_processor_count,
++        process_affinity_mask,system_affinity_mask,already_reserved_millicores,
++        parent_cpu_control,dfss_state):
++    """Floor logical CPU-cycle share; no benchmark/throughput or hold claim.
++
++    Only a single full-affinity group with known non-parent-relative denominator
++    is representable in v1. Inputs are DATA, not verified topology/reservations.
++    """
++    def unsupported(reason):return CpuHardCapPolicyV1('UNSUPPORTED',reason)
++    values=(requested_millicores,processor_groups,active_processor_count,
++            process_affinity_mask,system_affinity_mask,already_reserved_millicores)
++    if any(type(v) is not int for v in values):return unsupported('INTEGER_INPUT_REQUIRED')
++    if requested_millicores<=0 or already_reserved_millicores<0:return unsupported('INVALID_CPU_BUDGET')
++    if processor_groups!=1:return unsupported('SINGLE_PROCESSOR_GROUP_REQUIRED')
++    if not 1<=active_processor_count<=64:return unsupported('ACTIVE_CPU_COUNT_UNSUPPORTED')
++    if (not 0<system_affinity_mask<1<<64 or process_affinity_mask!=system_affinity_mask
++            or system_affinity_mask.bit_count()!=active_processor_count):
++        return unsupported('FULL_AFFINITY_TOPOLOGY_REQUIRED')
++    if type(parent_cpu_control) is not str or parent_cpu_control!='NONE':return unsupported('PARENT_CPU_DENOMINATOR_UNKNOWN_OR_RELATIVE')
++    if type(dfss_state) is not str or dfss_state!='DISABLED':return unsupported('DFSS_UNKNOWN_OR_ENABLED')
++    if requested_millicores+already_reserved_millicores>1000*active_processor_count:
++        return unsupported('CPU_CAPACITY_EXHAUSTED')
++    rate=(10*requested_millicores)//active_processor_count
++    if rate==0:return unsupported('BELOW_NATIVE_QUANTUM')
++    return CpuHardCapPolicyV1('CONVERTIBLE_NOT_ADMITTED','FLOOR_BOUND_ONLY_NOT_ENFORCEMENT',
++        rate,5,rate*active_processor_count)
++
+ class _Basic(ctypes.Structure):
+     _fields_=[('process_time',ctypes.c_int64),('job_time',ctypes.c_int64),('flags',w.DWORD),
+         ('min_working_set',ctypes.c_size_t),('max_working_set',ctypes.c_size_t),
+@@ -179,6 +219,10 @@ def _attempt_api():
+         'GetProcessTimes':([w.HANDLE,*([ctypes.POINTER(w.FILETIME)]*4)],w.BOOL),
+         'QueryFullProcessImageNameW':([w.HANDLE,w.DWORD,w.LPWSTR,ctypes.POINTER(w.DWORD)],w.BOOL),
+         'IsProcessInJob':([w.HANDLE,w.HANDLE,ctypes.POINTER(w.BOOL)],w.BOOL),
++        'GetActiveProcessorGroupCount':([],w.WORD),
++        'GetActiveProcessorCount':([w.WORD],w.DWORD),
++        'GetProcessAffinityMask':([w.HANDLE,ctypes.POINTER(ctypes.c_size_t),ctypes.POINTER(ctypes.c_size_t)],w.BOOL),
++        'QueryInformationJobObject':([w.HANDLE,ctypes.c_int,ctypes.c_void_p,w.DWORD,ctypes.c_void_p],w.BOOL),
+         'K32GetProcessMemoryInfo':([w.HANDLE,ctypes.POINTER(_AttemptProcessMemory),w.DWORD],w.BOOL),
+         'K32GetPerformanceInfo':([ctypes.POINTER(_AttemptPerformance),w.DWORD],w.BOOL)}
+     for name,(args,result) in signatures.items():
+@@ -200,6 +244,16 @@ def _attempt_host(k):
+                 observation_utc=datetime.now(timezone.utc).isoformat(),monotonic_ns=str(time.monotonic_ns()),
+                 qualified_for_native_admission=False)
+ 
++def _attempt_cpu_topology(k,handle):
++    """Retained-handle observation, no topology pin or resource reservation."""
++    groups=int(k.GetActiveProcessorGroupCount());active=int(k.GetActiveProcessorCount(0xffff))
++    process_mask=ctypes.c_size_t();system_mask=ctypes.c_size_t()
++    _worker_need(groups>0 and active>0 and k.GetProcessAffinityMask(handle,ctypes.byref(process_mask),ctypes.byref(system_mask)),
++                 'OWNED_CPU_TOPOLOGY_OBSERVATION_UNAVAILABLE')
++    return dict(processor_groups=groups,active_processor_count=active,
++                process_affinity_mask=int(process_mask.value),system_affinity_mask=int(system_mask.value),
++                parent_cpu_control='UNKNOWN',dfss_state='UNKNOWN',qualified_for_admission=False)
++
+ class GatewayWorker:
+     """Own process-local preparation inventory, NOT a scheduler or durable ledger.
+ 
+@@ -219,7 +273,8 @@ class GatewayWorker:
+         """Canonical local DATA only. No resource is qualified for admission."""
+         fields={
+             'cpu_millicores':dict(admission='UNSUPPORTED',observation='NONE',
+-                gap='NATIVE_CPU_RATE_1000_IS_NOT_1000_MILLICORES'),
++                conversion_policy='windows-hard-cap-logical-mcpu.v1',
++                gap='PURE_FLOOR_CONVERSION_AVAILABLE_BUT_TOPOLOGY_AND_ENFORCEMENT_UNQUALIFIED'),
+             'cpu_share':dict(admission='UNSUPPORTED',observation='JOB_RATE_SET_QUERY_ONLY',
+                 native_rate_units='1000',native_rate_denominator='10000',
+                 gap='EFFECTIVE_CAPACITY_INHERITED_JOB_AND_LOAD_ENFORCEMENT_UNQUALIFIED'),
+@@ -318,6 +373,7 @@ class GatewayWorker:
+         if state['phase']=='QUIESCENT':return state['snapshot']
+         _worker_need(state['phase']=='PREPARED','OWNED_ATTEMPT_NOT_PREPARED')
+         k=state['kernel'];proc=state['proc'];member=w.BOOL()
++        cpu_topology=_attempt_cpu_topology(k,proc.process)
+         _worker_need(_attempt_identity(k,proc.process)==state['identity'],'OWNED_PROCESS_IDENTITY_CHANGED')
+         _worker_need(k.WaitForSingleObject(proc.process,0)==258,'OWNED_PROCESS_NOT_LIVE')
+         _worker_need(k.IsProcessInJob(proc.process,state['job']._job,ctypes.byref(member)) and member.value,'OWNED_JOB_MEMBERSHIP_LOST')
+@@ -328,6 +384,15 @@ class GatewayWorker:
+                      limit_readback=state['limits'],host_observation=_attempt_host(k),grid_source_sha256=_GRID_JOB_SHA,
+                      interpreter_sha256=_DIRECT_INTERPRETER_SHA,source_custody='NOT_QUALIFIED_FOR_RESUME')
+         details['resource_capabilities']=json.loads(GatewayWorker.resource_capabilities())
++        current_cpu=_CPU()
++        _worker_need(k.QueryInformationJobObject(state['job']._job,15,ctypes.byref(current_cpu),ctypes.sizeof(current_cpu),None),
++                     'OWNED_CURRENT_CPU_QUERY_UNAVAILABLE')
++        _worker_need(current_cpu.flags==5 and current_cpu.rate==state['limits']['cpu_hard_rate_units'],
++                     'OWNED_CURRENT_CPU_QUERY_CHANGED')
++        details['cpu_limit_query']=dict(control_flags=int(current_cpu.flags),cpu_rate=int(current_cpu.rate),
++            behaviorally_qualified=False,derived_rate_applied=False)
++        _worker_need(cpu_topology==_attempt_cpu_topology(k,proc.process),'OWNED_CPU_TOPOLOGY_CHANGED_DURING_OBSERVATION')
++        details['cpu_topology']=cpu_topology
+         snapshot=OwnedAttemptObservation('PREPARED_SUSPENDED_LOCAL_ONLY',state['rid'],state['digest'],state['job_label'],self._node,
+             _PROCESS_INCARNATION,state['attempt_id'],int(proc.pid),*state['identity'],state['entry_sha'],_worker_canonical(details))
+         state['snapshot']=snapshot;return snapshot

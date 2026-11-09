@@ -1730,3 +1730,57 @@ P0_P1_P2:no newfinding;6P1/3P2baseline+nativeP0gatesOPEN.
 EVIDENCE:thisdirectory/API metadata+originalZIP+members/sourcebinding+bundleSHA256SUMS.
 NEXT_ACTIONS:verify currentexactmandatoryCI/jobs/artifacts independently;actual native integratedsource/ACKs and qualifiedE2E.
 GO_NO_GO:NO-GO. TAILSCALE_REMOVAL:BLOCKED. No reruns/protectedMathdiagnostics/officefaults/networkchanges/orders/deployments.
+
+
+# Agent8 phase112 — PR58 actual P2 principal identity slice
+
+| Requirement ID | Repository | PR | Exact HEAD | Test | Environment | Expected | Actual | Evidence | Status | Severity | Required correction |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| P2112-SOURCE | unified-system/Grid |58|1f6b0b5c231853607f5bec780f1544cd32bf577d|exact source closure|A8freshLFclone/primaryGitobjects|exactsource/noextras/prepost|tree5aa0025f564f16500e2ea5546b7bdd31deab758d;1519Unified+695Grid40e9 primaryrawprepostequal/noextras;module1f9714010143c5243c78494cb25bfe7f2d42e96301f57930212a2f5f3b9c869d;7ownedpaths vs31e|primary-verification.json;source.diff|PASS|—|No integrationbase/ABI freeze implied|
+| P2112-OWN22 | unified-system/Grid |58|1f6b0b5c231853607f5bec780f1544cd32bf577d|committed exact22runner|A8WindowsCP312.10 ownlockedbrokerenv/Consul1.22.2 ACLmTLSloopback|22unique/no skips/ownedcleanup|22PASS0skip/exit0;actualtwo3voterstands/all6ownPIDsretired/waited;foreignoperations0|own22.stdout.log;own22.stderr.log;primary-verification.json|PASS|—|Samehoststands not two independent storage/faultdomains/physicalacceptance|
+| P2112-BINDING | unified-system |58|1f6b0b5c231853607f5bec780f1544cd32bf577d|new7 actual profilev2 cases|genuine commissioned profile/principal/policy + mTLS/session/Consul|bind full20target/rawSHA/base64+P2+frozen13+actorquota/gen/original|exactsubmit/readcapturePASS;cancel12separateoriginalbound;wrongjob/request/key/profile/quota denied;fullyrebound3.0/bool/registryactor/direct/dotkey denied;actualrevocation/sessiondestroy and1of3noquorum refuse|own22.stderr.log;source.diff|PASS|—|Identitycaptures only; READcapture not payloadaccess;cancelcapture notcancel/exit/refund|
+| P2112-OWNER | unified-system |58|1f6b0b5c231853607f5bec780f1544cd32bf577d|4originalhashes/sourceclosure/sourcepinnedRED|read-onlyowneroriginals+primaryGitobjects|trace ownerREDandGREEN separately|receipt70008652bc8720c3f0b7d6144675c1569791a1821d31e556b58eb24da59afb02/closurece26c6326b87246fea0f46b631e1822ef771233cc96f7b61c154bf581e77c364 verified;entire1519map equals A8primary;originalREDd45/tree688 oldmodule1e9+testcc138 verified;onevalidP2ERROR oldclosedv1missingfeature;GREEN948f936 verified separately|owner-RECEIPT.json;owner-SOURCE-CLOSURE.json;owner-PRIMARY-RED-d45ae55.log;owner-PRIMARY-GREEN.log;source-owner-verification.json|PASS|—|No A8REDreplay;notmixedsourcequalification/nativeissuerbug;A8own22separate|
+| P2112-CI | unified-system |58|1f6b0b5c231853607f5bec780f1544cd32bf577d|mandatoryWindows/Linux|read-onlyCIsnapshot|terminalexactjobs+artifacts|not independentlyqualified;workflowonlyrunnerpath/expectedGridpinchanged;nojobreruns|ci-current.original.json;source.diff|BLOCKED|existingmandatorygate|Terminalexactmandatoryjobs/artifactsrequired|
+| P2112-EFFECTS | six repos |unadmitted|integratedsourceabsent|actualissuer/worker/resource/UTC/pub/read|NOT_RUN|actualsameTargetTxn/currentnativeauthority|capture onlyactualidentityobservations;nojob/Assignment/hold/worker/dispatch/pub/resultread APIs orseededproof;strictUTC-atcommitNOTqualified;publicsubmitDENY|exactAPI-REVIEW1.md;source.diff;phase106checklist|BLOCKED|existingownerlabelledP0gates|Actualissuer/currentrecordsALLindices+session inSAMETxn, coACK,qualifiedworkerresource/UTC/two-domainstorage/readrightsE2E|
+
+Full20target is strict bounded canonical base64 with separate typed target codec; integercaps reject bool/float aliases. ProfileP2 is genuine commissioned Consul data under exact principal/policy joins; it cannot be supplied as a JSONpermission. Frozen13 is reconstructed exactly, originalsubmit hash binds cancel12. Existing v1 behavior remains; this is not automatic direct-requestupgrade or a new registry. require_capture is still synchronous expected-instance/local-peer/deadline revalidation of captured records; actual effect must recheck their current indices/session in the same real target transaction. Existing expiration uses native-session-invalidation semantics, not strict UTC-at-Raft-commit. Stronger effect freshness thresholds are not implemented here.
+
+Owner source-pinned RED is now independently attributable to actual preceding commitd45ae55/tree688739c31e6fac5c24a47dc47df218953500ccdf/module1e9f4bb1c7a563b3cf5e19f432f5799941448df212a2ddb9a7de9df1d99cb543/testcc138c0ae3cf98428238bf636637ab9e4cae01754398ba8871d5919f56644b7a. A8 verifies bytes/log/source, without replay or relabeling old phase98historicalWIP RED. Distinct historical claims stay distinct. Own22 overlaps old15; it is not37unique/nativejobs. BinarySHA41762ef5b98c8dd9b6852df6cfbceed37e7f0acc5760856be33100f1092475e1; private ACLtokens/certs/configs not published. Published session evidence contains only retired own session identity, not credentials.
+
+RELEASE_MANIFEST_STATUS:exactPR58sourcebound;globalapprovedpackageabsent.
+NODE_INVENTORY_STATUS:ownloopbackprocessesonly/noofficeacceptance.
+CONTRACT_STATUS:P2identitysliceavailable;actualpositiveissuer/worker/storage/readABIunqualified.
+OFFLINE_TESTS:A8actual22PASS0skip1519/695primaryraw/twoownstandsretired.
+WINDOWS_CI:mandatoryterminalhostedNOTVERIFIED.
+PHYSICAL_TESTS:BLOCKED.
+P0_P1_P2:nonewmaterialfinding;baseline6P1/3P2+ownerlabellednativeP0gatesOPEN.
+EVIDENCE:thisdirectory+bundleSHA256SUMS.
+NEXT_ACTIONS:actualissuer/source/currenteffectABIcoACK+resource/UTC/enrollment/two-domainpublication/readqualification;terminalCI/artifacts.
+GO_NO_GO:NO-GO. TAILSCALE_REMOVAL:BLOCKED. Noproviderorders/production/officefaults/networksecuritychanges/MathorPR52diagnostics.
+
+
+# Agent8 phase113 — PR57 pure CPU policy and suspended observations
+
+| Requirement ID | Repository | PR | Exact HEAD | Test | Environment | Expected | Actual | Evidence | Status | Severity | Required correction |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| CPU113-SOURCE | unified-system |57|cf08b2d05f853f8c24392467c7690657cba69728|exactsource/primaryprepost|A8freshLFclone|exactraw/noextras|tree03a848f005e25e2bbd1a213caf95331f9f5970c0;1421primaryrawprepostequal/noextras;currentDraftHEADmatched|primary-verification.json;pr-current.original.json;source.diff|PASS|—|No new integratedbasequalified|
+| CPU113-OWN29 | unified-system |57|cf08b2d05f853f8c24392467c7690657cba69728|fivecommittedmodules|A8WindowsCP312.10 -I -S -B|29unique/0skip|29PASS0skip/exit0=prior24+5pureCPUmethods;2realownSUSPENDEDchildcasesincluded/noResume/CPUload/PR52|own29.stderr.log;own29.stdout.json;executed-child.py|PASS|—|OverlappingIDsnot24+29distinct;subcasesnotnativejobs|
+| CPU113-ARITH | unified-system |57|cf08b2d05f853f8c24392467c7690657cba69728|pureintegerconversionpolicyv1|untrustedinputDATA|floorbound/quantum/capacity/types/topologyrestrictions|N1/2/3/8/16/32/64;floor10m/N;zeroquantumrefuses/noimplicitclamp;strictintnotbool;singlefullgroup/64bitmask/countmatch/knownparentNONE+DFSSDISABLED;alwaysadmissionfalse/behaviorfalse|own29.stderr.log;source.diff|PASS|—|Arithmeticnotnativeenforcement/reservation/benchmarkproof|
+| CPU113-OBSERVE | unified-system |57|cf08b2d05f853f8c24392467c7690657cba69728|actualretainedhandleCPUquery/topology|twoownWindows suspendedchildtests|stablebefore/aftergroup/count/affinity/currentJobflagsrate|realqueriesflags5/rate1000/derivedrate_appliedfalse;parent/DFSSUNKNOWN;purecandidatewithactualsnapshotUNSUPPORTED;6resourcefieldsstillUNSUPPORTED/admitted[]|own29.stderr.log;source.diff|PASS|—|Snapshotnotpinnedtopology/read-to-resumeprovenance;derivedratenotapplied|
+| CPU113-OWNER | unified-system |57|cf08b2d05f853f8c24392467c7690657cba69728|receipt/log/rawsource/canonicaldata|read-onlyoriginalownerartifacts|bindingsmatch|receiptf361a60f6294668f7e5d7f37f124d8e212b2d6731f039f95c987293342fb58b1;worker85b29756316a0330f1e0aa9450bad33e4edfa5886a0ca64a63cb196f0b66a47b/test2b286f12/canonicalcap8528c0verified;owner29notA8|owner-receipt.original.json;owner-tests.original.log;owner-source-verification.json|PASS|—|No ownerPASStransfer|
+| CPU113-QUALIFICATION | six repos |unadmitted|actualconnectedchainabsent|resourceadmission/UTC/holds/custody/nativeE2E/hosted|NOT_RUN|qualifiedeffectsunderactualpermits|onlypurepolicy+set/query;actualparent/DFSSUNKNOWN⇒UNSUPPORTED;RSSnotjobcommit/PR51peakdiscrepancyOPEN;startDENY;notactualA2permit|ci-current.original.json;source docs;phase106gates|BLOCKED|existingownerlabelledP0gates|Actualverifiedparent/topology/freshholds/currentworker/UTC/sourcecustodyandseparatelyauthorizedbehavioralqualificationbeforewiring|
+
+Microsoft defines CpuRate in units per10000 cycles and zero is invalid; ENABLE+HARD_CAP flags are1+4. Parent CPU control changes the denominator, and DFSS can prohibit this mechanism. Verified from [official CPU rate documentation](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-jobobject_cpu_rate_control_information). The repository's floor10m/N calculation is a POLICY INFERENCE under its stated nominal1000millicores/logicalCPU definition, not a Microsoft guarantee of throughput. Count and affinity are group-sensitive observations; official [processor count](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getactiveprocessorcount) and [affinity mask](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getprocessaffinitymask) semantics independently consulted. V1 rejects incomplete/multigroup topology; matching snapshots cannot stop subsequent topology changes.
+
+Only selectedcommittedtest_owned_attempt/test_worker_limits/test_closed_jobs/test_resource_capabilities/test_cpu_policy executed. OwnGridfixturepath explicitly rebound to A8exact40e9primaryrepo,sourceuntouched. Nativequalifier tree/memory andPR52 never imported/invoked. CPU rate1000 is the preexisting trial rate, not newlyderived rate625for1000m/N16; no workload resumed to demonstrate cap behavior. Inputs parentNONE/DFSSDISABLED in puretests are DATA, notattestation; actualobservationUNKNOWN cannot grant admission. No newlyreproducedmaterialdefectwithinthisslice;globalnativegatesremainopen.
+
+RELEASE_MANIFEST_STATUS:exactPR57sourcebound/notapprovedintegratedrelease.
+NODE_INVENTORY_STATUS:noenrolledphysicalnodesaccepted.
+CONTRACT_STATUS:actualissuer/worker/resourceABIcoACKpending.
+OFFLINE_TESTS:29PASS0skip1421primaryraw;5pureCPUmethods/2ownSUSPENDEDnativecases.
+WINDOWS_CI:mandatoryterminalhostedNOTVERIFIED.
+PHYSICAL_TESTS:BLOCKED.
+P0_P1_P2:nonewmaterialfinding;6P1/3P2baseline+ownerlabellednativeP0gatesOPEN.
+EVIDENCE:thisdirectory+SHA256SUMS.
+NEXT_ACTIONS:actualresource/parent/DFSS/topology/freshholds/UTC/custodyqualificationandactualissuercoACK;terminalCI/isolatedconnectedE2E.
+GO_NO_GO:NO-GO. TAILSCALE_REMOVAL:BLOCKED. NoResume/CPUload/PR52/protectedMath/providerorders/production/officefaults/networksecuritychanges.
