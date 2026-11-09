@@ -1,0 +1,128 @@
+TAP version 13
+# Subtest: target_missing_two_raw_dependencies
+ok 1 - target_missing_two_raw_dependencies
+  ---
+  duration_ms: 4.5275
+  type: 'test'
+  ...
+# Subtest: target_actual_root_packet_and_frozen_model
+not ok 2 - target_actual_root_packet_and_frozen_model
+  ---
+  duration_ms: 1.9762
+  type: 'test'
+  location: 'C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-8-independent-security-ci\\work\\review-targetui3e\\tests\\target_adapter_result\\test_target_result.cjs:18:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + '04df48cb55a8378246acb22d0e136c94a2709ce0671938aa979f6097a103bae9'
+    - '1efd982c7c0bf5271fa108f33bbb497929014daded0a97973505cae36bd8c85b'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: '1efd982c7c0bf5271fa108f33bbb497929014daded0a97973505cae36bd8c85b'
+  actual: '04df48cb55a8378246acb22d0e136c94a2709ce0671938aa979f6097a103bae9'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\work\review-targetui3e\tests\target_adapter_result\test_target_result.cjs:18:753)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: target_two_input_preflight_before_hash_decode
+ok 3 - target_two_input_preflight_before_hash_decode
+  ---
+  duration_ms: 2.4649
+  type: 'test'
+  ...
+# Subtest: target_closed_schema_prefix_items_and_versions
+ok 4 - target_closed_schema_prefix_items_and_versions
+  ---
+  duration_ms: 7.6831
+  type: 'test'
+  ...
+# Subtest: target_reject_numeric_lexemes_not_just_schema_equality
+ok 5 - target_reject_numeric_lexemes_not_just_schema_equality
+  ---
+  duration_ms: 3.1336
+  type: 'test'
+  ...
+# Subtest: target_raw_request_id_and_hash_correlation
+ok 6 - target_raw_request_id_and_hash_correlation
+  ---
+  duration_ms: 13.2572
+  type: 'test'
+  ...
+# Subtest: target_mandatory_three_hash_checks
+ok 7 - target_mandatory_three_hash_checks
+  ---
+  duration_ms: 11.7257
+  type: 'test'
+  ...
+# Subtest: target_duplicate_keys_and_unsafe_integer_refuse
+ok 8 - target_duplicate_keys_and_unsafe_integer_refuse
+  ---
+  duration_ms: 1.8462
+  type: 'test'
+  ...
+# Subtest: target_refusal_unknown_cancelled_failed_clear
+ok 9 - target_refusal_unknown_cancelled_failed_clear
+  ---
+  duration_ms: 9.5007
+  type: 'test'
+  ...
+# Subtest: target_authority_publication_native_flags_refuse_promotion
+ok 10 - target_authority_publication_native_flags_refuse_promotion
+  ---
+  duration_ms: 5.5326
+  type: 'test'
+  ...
+# Subtest: target_display_identity_units_limits_provenance
+ok 11 - target_display_identity_units_limits_provenance
+  ---
+  duration_ms: 2.8222
+  type: 'test'
+  ...
+# Subtest: target_stale_success_cannot_replace_new_result
+ok 12 - target_stale_success_cannot_replace_new_result
+  ---
+  duration_ms: 5.2672
+  type: 'test'
+  ...
+# Subtest: target_stale_failure_cannot_replace_reset
+ok 13 - target_stale_failure_cannot_replace_reset
+  ---
+  duration_ms: 3.0577
+  type: 'test'
+  ...
+# Subtest: target_dom_inert_no_io_logs_or_handlers
+ok 14 - target_dom_inert_no_io_logs_or_handlers
+  ---
+  duration_ms: 4.4178
+  type: 'test'
+  ...
+# Subtest: target_canonical_ascii_and_crypto_unavailable
+ok 15 - target_canonical_ascii_and_crypto_unavailable
+  ---
+  duration_ms: 4.5579
+  type: 'test'
+  ...
+# Subtest: target_finance_null_and_fixed_profile_only
+ok 16 - target_finance_null_and_fixed_profile_only
+  ---
+  duration_ms: 3.5701
+  type: 'test'
+  ...
+1..16
+# tests 16
+# suites 0
+# pass 15
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 186.5376

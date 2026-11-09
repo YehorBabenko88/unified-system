@@ -370,5 +370,20 @@
     "correction_tree": "7f2ed11497ee89c2188efb44d8b205180c5c3954",
     "correction_evidence": "phase102/correction-verification.json;phase102/correction-jobs.original.json",
     "mandatory_target_CI": "BLOCKED_QUEUED_NOT_EXECUTED"
+  },
+  {
+    "id": "A8-F23",
+    "severity": "P2",
+    "repository": "Terminan",
+    "observed_head": "3e2b0efb5b16df4164a80b878f03844d86b85b74",
+    "status": "FIX_VERIFIED_OFFLINE_AT_22e6e72",
+    "title": "Committed target UI CONTRACT fixture normalized away from its declared Root raw pin",
+    "evidence": "phase103/contract-raw-pin-failure.json;phase103/a8-qualified/tests.tap",
+    "required_correction": "Preserve exact original Root normative bytes in allocated fixture path with nested nontext attributes or explicitly approved normalization provenance; independently qualify exact successor. No silent pin rewrite.",
+    "scope": "SOURCE_FIXTURE_PIN_MISMATCH_NOT_RENDERER_AUTH_BYPASS",
+    "correction_head": "22e6e7230d2f66fd22dda648a77910579812bd60",
+    "correction_tree": "1ff5c1f1090fc61170a64f32654a80e51e6c4952",
+    "correction_evidence": "phase103/corrected-primary-verification.json;phase103/a8-corrected-qualified/tests.tap;phase103/correction-verification.json",
+    "pr": 73
   }
 ]

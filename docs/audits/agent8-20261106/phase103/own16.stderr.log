@@ -1,0 +1,16 @@
+C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\work\review-targetui3e\tests\target_adapter_result\qualification.cjs:30
+ }catch(e){receipt.error=/^[A-Z_]+$/.test(e.message)?e.message:'QUALIFICATION_FAILED';throw e;}finally{fs.writeFileSync(path.join(out,'source-receipt.json'),JSON.stringify(receipt,null,2)+'\n');}
+                                                                                      ^
+
+Error: MANDATORY_TESTS
+    at Object.run (C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\work\review-targetui3e\tests\target_adapter_result\qualification.cjs:28:391)
+    at Object.<anonymous> (C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\work\targetui3e-bootstrap.cjs:10:21)
+    at Module._compile (node:internal/modules/cjs/loader:1929:14)
+    at Object..js (node:internal/modules/cjs/loader:2060:10)
+    at Module.load (node:internal/modules/cjs/loader:1651:32)
+    at Module._load (node:internal/modules/cjs/loader:1443:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    at node:internal/main/run_main_module:33:47
+
+Node.js v24.22.1
