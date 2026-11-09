@@ -3959,7 +3959,7 @@
     "mandatory_hosted": "NOT_QUALIFIED",
     "overall": "NO_GO"
   },
-  "latest_addendum_scope": "phase122 original CI/artifact verification only; older top-level snapshots are not a fresh global recheck",
+  "latest_addendum_scope": "phases123-126 scoped exact-head independent checks; older top-level snapshots are not a fresh global recheck",
   "PR54_b144_terminal_CI_20261109": {
     "head": "b144a5e0fd3af90c975bfc0f0123234628dbb696",
     "direct_run": 42646665067,
@@ -3983,6 +3983,46 @@
       "artifacts": "NOT_ACCEPTED_HERE"
     },
     "Root_Grid40e_pins_advanced": false,
+    "overall": "NO_GO"
+  },
+  "PR64_034_independent_negative": {
+    "head": "0342413b76e5574e7e303bfdd8a4ea2417ae8d93",
+    "Grid_dependency": "539239e3c11ec9e86aa24365d74a68301fdf1185",
+    "A8_unique_tests": 16,
+    "skips": 0,
+    "raw_primary_files": {
+      "Unified": 1635,
+      "Grid": 800
+    },
+    "all_3_owned_Consul_retired": true,
+    "separate_pre_native_guard_rejections": 2,
+    "positive_native_permission": false,
+    "hosted": "NOT_QUALIFIED_HERE"
+  },
+  "PR65_623_independent_clock_DATA": {
+    "head": "623c1ebe33c14707b99ad526678f5225f553e49a",
+    "A8_unique_tests": 4,
+    "skips": 0,
+    "raw_primary_files": 1667,
+    "monotonic_observed": "GetTickCount64()/0.015625s",
+    "perf_counter_observed": "QueryPerformanceCounter()/1e-7s",
+    "physical_age_bound": null,
+    "operational_max_age": null,
+    "admission_supported": false,
+    "resources_reserved": false
+  },
+  "PR54_639_independent_local145": {
+    "head": "639e8f82cc624348b25a43934b6655d6a378a26c",
+    "tree": "60d8ef3e06b0fd71f1378134126eaad3e57273d6",
+    "A8_unique_tests": 145,
+    "errors": 0,
+    "failures": 0,
+    "skips": 0,
+    "primary_files_before_after": 1588,
+    "prior144_and_inventory_hash_preserved": true,
+    "initial_A8_missing_tzdata_and_outer_timeout": "PRESERVED_NOT_PRODUCT_DEFECT",
+    "hosted": "NOT_QUALIFIED_HERE",
+    "F26": "P1_OPEN_PENDING_MANDATORY_HOSTED",
     "overall": "NO_GO"
   }
 }

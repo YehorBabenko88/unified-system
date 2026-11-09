@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\work\review-negative64-034\docs\intelligence\native-negative\run_qualification.py", line 99, in <module>
+    try:main()
+        ^^^^^^
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\work\review-negative64-034\docs\intelligence\native-negative\run_qualification.py", line 31, in main
+    assert not any(name==prefix or prefix.endswith('_') and name.startswith(prefix) for name in os.environ for prefix in forbidden),'GIT_ENV_OVERRIDE_REJECTED'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: GIT_ENV_OVERRIDE_REJECTED

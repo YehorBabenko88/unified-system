@@ -2118,3 +2118,78 @@ P0_P1_P2: 7 open P1 / 3 P2 unchanged; absence of P0 not proven.
 EVIDENCE: original logs, executed harness and exact raw maps linked above.
 NEXT_ACTIONS: Root owns mandatory inventory and hosted qualification. PR64 and PR65 remain pending independent review; no acceptance transferred.
 GO_NO_GO: NO-GO. TAILSCALE_REMOVAL: BLOCKED.
+
+
+# PR64 independent negative composition acceptance
+
+Exact Unified HEAD `0342413b76e5574e7e303bfdd8a4ea2417ae8d93`, tree `438a6309214a90133d3cce4e4d1a7009a50c32c7`; explicit Grid dependency `539239e3c11ec9e86aa24365d74a68301fdf1185`. Source/safety review preceded execution. All 11 paths are additions relative to 3af; prior production files are unchanged. This is a separate source pair, not advancement of Grid40e release pins.
+
+| Requirement ID | Repository / PR / exact HEAD | Test | Environment | Expected | Actual / status | Evidence | Severity / correction |
+|---|---|---|---|---|---|---|---|
+| A8-NEGATIVE-COMPOSITION | Unified PR64 / 0342413 above, Grid539 | 11 actual fixture cases plus 5 DATA/boundary cases | Own Windows CPython 3.12.10, pinned offline dependency environment, loopback TLS and ACL-default-deny three-voter Consul | Current authentication; denied submit/unknown lookup; invalid identity/policy/leader reject; cancellation and cleanup fail closed | 16 unique PASS / 0 skip | [Original log](phase125/actual16/tests.log), [qualification and primary maps](phase125/actual16/qualification.json), [original process lifecycle stdout](phase125/stdout.log) | Scoped PASS; no positive admission inferred |
+| A8-NEGATIVE-GUARD | Same exact sources | Wrong HEAD; Git environment override | Separate isolated interpreter invocations | Reject before native fixture | Both rejected before fixture entry; not extra application PASS cases | [Controls](phase125/guard-calibrations.json), [wrong HEAD](phase125/wrong-head.stderr.log), [Git override](phase125/git-env-override.stderr.log) | Scoped guard calibration only |
+
+Actual accepted mTLS, fixed broker open_session and native ResearchLabAuthority submit/lookup were exercised against own Consul. Revoked/expired policy, destroyed leader, malformed inputs and closed TLS remained errors. Same original twice remained denied without a job; absence lookup remained UNKNOWN. Concurrent second call rejected rather than queueing. Async task cancellation was observed, not cancellation of an issued research job. The final case killed only two retained own Consul processes during cleanup, preserving the original error and local context invalidation. Healthy session retirement was separately queried; successful invalidate_context alone is not a strong native-retirement receipt.
+
+1635 Unified and 800 Grid files were checked before/after, with exact module origins, no extra files and all three retained own Consul process handles waited (PIDs 93312, 137848, 139456). The initial startup confirmed three voters and one leader. No office node or foreign process was touched. Full scientific E2E, public HTTP endpoint, worker/job grants, quota/resource admission and publication remain unqualified. Owner original16/RED and five reported calibration artifacts were not independently authenticated in this phase and are not included in A8 counts.
+
+RELEASE_MANIFEST_STATUS: component manifest only, not approved release.
+NODE_INVENTORY_STATUS: not requalified.
+CONTRACT_STATUS: negative internal scope reviewed, no positive API acceptance.
+OFFLINE_TESTS: isolated integration 16 PASS; two separate guard rejections.
+WINDOWS_CI: NOT_RUN here; no hosted transfer.
+PHYSICAL_TESTS: BLOCKED.
+P0_P1_P2: 7 open P1 / 3 P2 unchanged; absence of P0 not proven.
+EVIDENCE: original logs and exact source maps linked above.
+NEXT_ACTIONS: hosted exact-head qualification and separately authorized positive APIs remain required.
+GO_NO_GO: NO-GO; TAILSCALE_REMOVAL BLOCKED.
+
+
+# PR65 independent clock metadata acceptance
+
+Exact HEAD `623c1ebe33c14707b99ad526678f5225f553e49a`, tree `8590259d5dcab44199cd19ff0ed66f23c091f6ae`. Exactly three new helper/test/doc paths relative to PR63; worker60c1 and prior freshness semantics remain unchanged.
+
+| Requirement ID | Repository / PR / exact HEAD | Test | Environment | Expected | Actual / status | Evidence | Severity / correction |
+|---|---|---|---|---|---|---|---|
+| A8-CLOCK-SOURCE-DATA | Unified PR65 / 623c1eb above | Four committed clock-source tests | Own Windows direct CPython 3.12.10, -I -S -B | Reject foreign clock/incarnation, invalid/rollback counters; zero delta never physical age; canonical metadata remains DATA | 4 unique PASS / 0 skip | [Executed harness](phase126/executed.py), [original test log](phase126/stderr.log), [receipt/raw source map](phase126/receipt.json) | Scoped PASS; no operational max age commissioned |
+| A8-CLOCK-OBSERVATION | Same source/runtime | Read-only get_clock_info and observed file fingerprints | Same interpreter invocation | No loaded-image custody or physical error-bound claim | Observed metadata only, not an extra test | [Original clock observation](phase126/stdout-clock-observation.json) | No admission/reservation or remote enrollment |
+
+All 1667 primary files matched Git raw bytes before and after with no extras. Same binding/incarnation/clock yields counter subtraction only; physical elapsed, measurement age, uncertainty and operational max age remain null, including zero delta. The executable/helper hashes describe observed files, not actual loaded-image custody. The own CPython3.12 monotonic observation is GetTickCount64()/0.015625 seconds; perf_counter is QueryPerformanceCounter()/1e-7 seconds. These API resolution fields do not establish physical error bounds. No worker process, native authority, suspended attempt, qualifier, PR52 or Math diagnostic was executed. Owner60/full predecessor counts and CPython3.15 observations were not transferred or independently authenticated here.
+
+RELEASE_MANIFEST_STATUS: not approved by this helper.
+NODE_INVENTORY_STATUS: not requalified.
+CONTRACT_STATUS: DATA-only helper, no source enrollment or native permission.
+OFFLINE_TESTS: focused 4 PASS / 0 skip.
+WINDOWS_CI: NOT_RUN here.
+PHYSICAL_TESTS: BLOCKED.
+P0_P1_P2: 7 open P1 / 3 P2 unchanged; absence of P0 not proven.
+EVIDENCE: exact receipt, original output and harness linked above.
+NEXT_ACTIONS: any operational policy requires independent clock uncertainty and resource admission qualification.
+GO_NO_GO: NO-GO; TAILSCALE_REMOVAL BLOCKED.
+
+
+# PR54 exact639 independent local component acceptance
+
+Exact HEAD `639e8f82cc624348b25a43934b6655d6a378a26c`, tree `60d8ef3e06b0fd71f1378134126eaad3e57273d6`, parent b144. Four changed paths only. The TLS test file is byte-identical to PR66 4e297c2. All prior 144 mandatory IDs and the primary b144 inventory SHA are preserved, with precisely one new injected-inactive-predicate TLS case. Production LAN/runtime/target files are unchanged. The workflow retains Ubuntu24.04/Windows-latest x Python3.11/3.12, exact-source guards, exact count and no-skip assertions.
+
+| Requirement ID | Repository / PR / exact HEAD | Test | Environment | Expected | Actual / status | Evidence | Severity / correction |
+|---|---|---|---|---|---|---|---|
+| A8-F26-INTEGRATION-SOURCE | Unified PR54 / 639e8f8 above | Four-file delta, inventory and exact PR66 import | Independent primary Git reads | Preserve every prior case and add one | PASS, prior hash a69eb60 verified | [Source review](phase124/source-inventory-review.json) | Scoped source verification |
+| A8-F26-LOCAL-145 | Same exact HEAD | Exact workflow inline driver, all 145 mandatory IDs | Own fresh no-hardlinks Windows CPython3.12.10 environment, tzdata2026.6, -I -B | 145 unique / zero errors, failures or skips, source unchanged | PASS; 1588 primary files checked before and after | [Exact executed driver](phase124/exact-inline-driver.py), [original test log](phase124/qualified-env/partial-integration-ci-tests.log), [source-bound receipt](phase124/qualified-env/partial-integration-ci-evidence.json) | Local component acceptance only; F26 remains P1 OPEN |
+| A8-HARNESS-INITIAL | Same source, separate initial clone | Initial omitted dependency attempt | Direct base CPython without tzdata | Reproduce workflow setup | FAIL: 145 tests run, 10 missing-tzdata error observations; outer210s timeout interrupted post-source receipt | [Original initial log](phase124/initial-missing-tzdata-tests.log), [status](phase124/initial-attempt-status.json) | A8 setup/timeout failure, not product defect or historical hosted RCA |
+| A8-F26-HOSTED | Same candidate | Four hosted matrix legs and original artifacts | Hosted Ubuntu/Windows x Python3.11/3.12 | All required exact-head runs/artifacts pass | NOT_RUN by A8 in this phase | Original b144 failures remain in phase122 | P1 OPEN pending original hosted evidence |
+
+A8 omitted the workflow dependency installation in its first interpreter choice. All ten error observations were missing tzdata/Europe-Berlin lookup errors (including subtest errors, not ten unique cases). The original log is retained. A fresh separate clone and existing own dependency environment with tzdata2026.6 corrected preparation; installed file hashes are recorded as observed files, not a wheel-digest attestation. The corrected run uses the exact unmodified extracted inline driver, with a600-second outer harness bound; no product timeout or test assertion was relaxed. The first210-second bound had interrupted slow primary raw-byte verification, so no source-qualified receipt or PASS is assigned to that attempt.
+
+The successful local receipt's run ID explicitly says A8_LOCAL_PHASE124_NOT_HOSTED. 145 local cases, A1's focused2 and Root's reported145 are distinct executions, not additive unique coverage. Hosted b144 DIRECT22 acceptance does not transfer to639. Original hosted failure cause remains UNKNOWN. Owner145 receipt and static reviewer claims were not independently authenticated here; A8 ran its own driver.
+
+RELEASE_MANIFEST_STATUS: no approved release inferred.
+NODE_INVENTORY_STATUS: not requalified.
+CONTRACT_STATUS: mandatory inventory/source integration verified, no runtime admission.
+OFFLINE_TESTS: local source-bound145 PASS /0 skip, initial environment failure retained.
+WINDOWS_CI: hosted matrix NOT_QUALIFIED_HERE.
+PHYSICAL_TESTS: BLOCKED.
+P0_P1_P2: 7 open P1 /3 P2 unchanged; absence of P0 not proven.
+EVIDENCE: exact driver, original receipts/logs and prior inventory hash linked above.
+NEXT_ACTIONS: independently inspect original hosted matrix jobs/artifacts at exact release HEAD.
+GO_NO_GO: NO-GO; TAILSCALE_REMOVAL BLOCKED.

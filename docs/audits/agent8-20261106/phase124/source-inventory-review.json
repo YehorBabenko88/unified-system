@@ -1,0 +1,26 @@
+{
+  "head": "639e8f82cc624348b25a43934b6655d6a378a26c",
+  "changed_paths": [
+    ".github/workflows/final-integration.yml",
+    "docs/ci/heartbeat-fixture-evidence-20261109.json",
+    "release/component-test-inventory.json",
+    "tests/test_lan_transport.py"
+  ],
+  "prior144_preserved": true,
+  "added_ids": [
+    "tests.test_lan_transport.TLSIsolationTests.test_expired_idle_peer_without_activity_still_closes_real_tls"
+  ],
+  "test_file_identical_to_PR66": true,
+  "driver_sha256": "2d4793cb8e7671473d7275d09ba031dc77debf24ad1880615979b947befa5984",
+  "prior_inventory_hash_verified_against_primary_b144": true,
+  "prior_inventory_sha256": "a69eb60b1ebd6b961ec3b104985c0d01f4382afb0d726f3c6ce203178e1a8ae7",
+  "matrix_os": [
+    "ubuntu-24.04",
+    "windows-latest"
+  ],
+  "matrix_python": [
+    "3.11",
+    "3.12"
+  ],
+  "production_paths_unchanged": true
+}

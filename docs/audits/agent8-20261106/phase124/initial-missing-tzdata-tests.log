@@ -1,0 +1,639 @@
+test_additional_allocation_cannot_claim_another_scope (tests.test_integration_registry.AcceptanceTests.test_additional_allocation_cannot_claim_another_scope) ... ok
+test_modified_member_and_wrong_external_pin_rejected (tests.test_integration_registry.AcceptanceTests.test_modified_member_and_wrong_external_pin_rejected) ... ok
+test_package_integrity_never_grants_execution (tests.test_integration_registry.AcceptanceTests.test_package_integrity_never_grants_execution) ... ok
+test_agent_cannot_reserve_common_contract_or_activation_files (tests.test_integration_registry.RegistryTests.test_agent_cannot_reserve_common_contract_or_activation_files) ... ok
+test_eight_scopes_isolated_and_conflicting_reservations_denied (tests.test_integration_registry.RegistryTests.test_eight_scopes_isolated_and_conflicting_reservations_denied) ... ok
+test_external_manifest_pin_cannot_be_replaced_by_candidate_claim (tests.test_integration_registry.RegistryTests.test_external_manifest_pin_cannot_be_replaced_by_candidate_claim) ... ok
+test_matching_identity_never_authorizes_runtime_or_trading (tests.test_integration_registry.RegistryTests.test_matching_identity_never_authorizes_runtime_or_trading) ... ok
+test_mixed_missing_extra_head_tree_and_contract_versions_rejected (tests.test_integration_registry.RegistryTests.test_mixed_missing_extra_head_tree_and_contract_versions_rejected) ... ok
+test_real_trading_and_json_duplicate_claims_denied (tests.test_integration_registry.RegistryTests.test_real_trading_and_json_duplicate_claims_denied) ... ok
+test_rehashed_candidate_cannot_hide_changed_contract_or_gate_bytes (tests.test_integration_registry.RegistryTests.test_rehashed_candidate_cannot_hide_changed_contract_or_gate_bytes) ... ok
+test_shared_worktree_denied (tests.test_integration_registry.RegistryTests.test_shared_worktree_denied) ... ok
+test_unsafe_repository_path_spelling_rejected (tests.test_integration_registry.RegistryTests.test_unsafe_repository_path_spelling_rejected) ... ok
+test_windows_path_aliases_and_case_collisions_rejected (tests.test_integration_registry.RegistryTests.test_windows_path_aliases_and_case_collisions_rejected) ... ok
+test_every_proposed_mutation_is_closed (tests.test_agent5_scheduler_components.AuthorityBoundaryTests.test_every_proposed_mutation_is_closed) ... ok
+test_reads_do_not_invent_receipts_or_mutate (tests.test_agent5_scheduler_components.AuthorityBoundaryTests.test_reads_do_not_invent_receipts_or_mutate) ... ok
+test_invalid_raw_reservation_cannot_be_masked_by_local_hold (tests.test_agent5_scheduler_components.DurablePreparationTests.test_invalid_raw_reservation_cannot_be_masked_by_local_hold) ... ok
+test_invalid_resource_input_cannot_mutate_registry (tests.test_agent5_scheduler_components.DurablePreparationTests.test_invalid_resource_input_cannot_mutate_registry) ... ok
+test_job_spec_is_immutable_and_enqueue_idempotent (tests.test_agent5_scheduler_components.DurablePreparationTests.test_job_spec_is_immutable_and_enqueue_idempotent) ... ok
+test_local_event_sequence_is_durable_and_not_authority_epoch (tests.test_agent5_scheduler_components.DurablePreparationTests.test_local_event_sequence_is_durable_and_not_authority_epoch) ... ok
+test_local_holds_prevent_overbooking (tests.test_agent5_scheduler_components.DurablePreparationTests.test_local_holds_prevent_overbooking) ... ok
+test_no_quorum_or_standby_never_creates_new_preparation (tests.test_agent5_scheduler_components.DurablePreparationTests.test_no_quorum_or_standby_never_creates_new_preparation) ... ok
+test_only_never_handed_off_hold_can_be_cancelled (tests.test_agent5_scheduler_components.DurablePreparationTests.test_only_never_handed_off_hold_can_be_cancelled) ... ok
+test_preparation_retry_preserves_original_intent (tests.test_agent5_scheduler_components.DurablePreparationTests.test_preparation_retry_preserves_original_intent) ... ok
+test_process_crash_before_event_commit_recovers_without_partial_hold (tests.test_agent5_scheduler_components.DurablePreparationTests.test_process_crash_before_event_commit_recovers_without_partial_hold) ... ok
+test_registry_survives_restart_without_execution_permission (tests.test_agent5_scheduler_components.DurablePreparationTests.test_registry_survives_restart_without_execution_permission) ... ok
+test_stale_capacity_and_pressure_remain_queued (tests.test_agent5_scheduler_components.DurablePreparationTests.test_stale_capacity_and_pressure_remain_queued) ... ok
+test_transaction_failure_rolls_back_preparation_and_hold (tests.test_agent5_scheduler_components.DurablePreparationTests.test_transaction_failure_rolls_back_preparation_and_hold) ... ok
+test_two_connections_cannot_spend_same_local_capacity (tests.test_agent5_scheduler_components.DurablePreparationTests.test_two_connections_cannot_spend_same_local_capacity) ... ok
+test_unknown_cpu_hold_blocks_incompatible_benchmark_after_restart (tests.test_agent5_scheduler_components.DurablePreparationTests.test_unknown_cpu_hold_blocks_incompatible_benchmark_after_restart) ... ok
+test_unknown_survives_restart_and_never_releases_or_rekeys (tests.test_agent5_scheduler_components.DurablePreparationTests.test_unknown_survives_restart_and_never_releases_or_rekeys) ... ok
+test_cpu_benchmark_capacity_and_locality_affect_ranking (tests.test_agent5_scheduler_components.PlacementTests.test_cpu_benchmark_capacity_and_locality_affect_ranking) ... ok
+test_each_resource_can_exhaust (tests.test_agent5_scheduler_components.PlacementTests.test_each_resource_can_exhaust) ... ok
+test_eligible_is_advisory_candidate (tests.test_agent5_scheduler_components.PlacementTests.test_eligible_is_advisory_candidate) ... ok
+test_exact_capacity_and_pressure_boundaries (tests.test_agent5_scheduler_components.PlacementTests.test_exact_capacity_and_pressure_boundaries) ... ok
+test_health_pressure_roles_schedule_and_benchmark (tests.test_agent5_scheduler_components.PlacementTests.test_health_pressure_roles_schedule_and_benchmark) ... ok
+test_malformed_inputs_fail_closed (tests.test_agent5_scheduler_components.PlacementTests.test_malformed_inputs_fail_closed) ... ok
+test_queue_and_order_independent_tie_break (tests.test_agent5_scheduler_components.PlacementTests.test_queue_and_order_independent_tie_break) ... ok
+test_stale_future_or_previous_incarnation_denied (tests.test_agent5_scheduler_components.PlacementTests.test_stale_future_or_previous_incarnation_denied) ... ok
+test_cross_midnight_and_start_weekday (tests.test_agent5_scheduler_components.ScheduleTests.test_cross_midnight_and_start_weekday) ... 
+  test_cross_midnight_and_start_weekday (tests.test_agent5_scheduler_components.ScheduleTests.test_cross_midnight_and_start_weekday) (stamp='2026-11-02T13:59:59+00:00') ... ERROR
+  test_cross_midnight_and_start_weekday (tests.test_agent5_scheduler_components.ScheduleTests.test_cross_midnight_and_start_weekday) (stamp='2026-11-02T14:00:00+00:00') ... ERROR
+  test_cross_midnight_and_start_weekday (tests.test_agent5_scheduler_components.ScheduleTests.test_cross_midnight_and_start_weekday) (stamp='2026-11-03T04:59:59+00:00') ... ERROR
+  test_cross_midnight_and_start_weekday (tests.test_agent5_scheduler_components.ScheduleTests.test_cross_midnight_and_start_weekday) (stamp='2026-11-03T05:00:00+00:00') ... ERROR
+  test_cross_midnight_and_start_weekday (tests.test_agent5_scheduler_components.ScheduleTests.test_cross_midnight_and_start_weekday) (stamp='2026-11-02T04:00:00+00:00') ... ERROR
+test_drain_is_separate_from_coordinator_policy (tests.test_agent5_scheduler_components.ScheduleTests.test_drain_is_separate_from_coordinator_policy) ... ok
+test_dst_skip_and_both_repeated_hours (tests.test_agent5_scheduler_components.ScheduleTests.test_dst_skip_and_both_repeated_hours) ... 
+  test_dst_skip_and_both_repeated_hours (tests.test_agent5_scheduler_components.ScheduleTests.test_dst_skip_and_both_repeated_hours) (stamp='2026-03-29T00:59:59+00:00') ... ERROR
+  test_dst_skip_and_both_repeated_hours (tests.test_agent5_scheduler_components.ScheduleTests.test_dst_skip_and_both_repeated_hours) (stamp='2026-03-29T01:00:00+00:00') ... ERROR
+  test_dst_skip_and_both_repeated_hours (tests.test_agent5_scheduler_components.ScheduleTests.test_dst_skip_and_both_repeated_hours) (stamp='2026-10-25T00:30:00+00:00') ... ERROR
+  test_dst_skip_and_both_repeated_hours (tests.test_agent5_scheduler_components.ScheduleTests.test_dst_skip_and_both_repeated_hours) (stamp='2026-10-25T01:30:00+00:00') ... ERROR
+test_invalid_schedule (tests.test_agent5_scheduler_components.ScheduleTests.test_invalid_schedule) ... ok
+test_weekday_iterator_not_consumed_by_validation (tests.test_agent5_scheduler_components.ScheduleTests.test_weekday_iterator_not_consumed_by_validation) ... ERROR
+test_all_protected_reads_are_unavailable_not_empty_success (tests.test_control_api_readonly.ControlAPITest.test_all_protected_reads_are_unavailable_not_empty_success) ... ok
+test_boundary_does_not_open_files_sockets_or_read_system_time (tests.test_control_api_readonly.ControlAPITest.test_boundary_does_not_open_files_sockets_or_read_system_time) ... ok
+test_claimed_principal_cookie_and_truthy_flags_do_not_authenticate (tests.test_control_api_readonly.ControlAPITest.test_claimed_principal_cookie_and_truthy_flags_do_not_authenticate) ... ok
+test_encoded_traversal_slashes_unicode_and_long_paths_are_invalid (tests.test_control_api_readonly.ControlAPITest.test_encoded_traversal_slashes_unicode_and_long_paths_are_invalid) ... ok
+test_error_envelope_has_no_fabricated_authority_or_request_identity (tests.test_control_api_readonly.ControlAPITest.test_error_envelope_has_no_fabricated_authority_or_request_identity) ... ok
+test_every_effect_route_stays_denied (tests.test_control_api_readonly.ControlAPITest.test_every_effect_route_stays_denied) ... ok
+test_head_errors_never_send_a_response_body (tests.test_control_api_readonly.ControlAPITest.test_head_errors_never_send_a_response_body) ... ok
+test_malformed_wsgi_fields_fail_closed (tests.test_control_api_readonly.ControlAPITest.test_malformed_wsgi_fields_fail_closed) ... ok
+test_mutating_returned_json_cannot_enable_later_requests (tests.test_control_api_readonly.ControlAPITest.test_mutating_returned_json_cannot_enable_later_requests) ... ok
+test_no_provider_or_backend_activation_constructor (tests.test_control_api_readonly.ControlAPITest.test_no_provider_or_backend_activation_constructor) ... ok
+test_nonempty_and_ambiguous_body_framing_denied_without_read (tests.test_control_api_readonly.ControlAPITest.test_nonempty_and_ambiguous_body_framing_denied_without_read) ... ok
+test_oversize_body_claim_rejected_before_buffering (tests.test_control_api_readonly.ControlAPITest.test_oversize_body_claim_rejected_before_buffering) ... ok
+test_public_capabilities_never_claim_admitted_runtime (tests.test_control_api_readonly.ControlAPITest.test_public_capabilities_never_claim_admitted_runtime) ... ok
+test_queries_are_not_treated_as_implemented_resume_or_barrier (tests.test_control_api_readonly.ControlAPITest.test_queries_are_not_treated_as_implemented_resume_or_barrier) ... ok
+test_unknown_route_does_not_look_like_missing_auth (tests.test_control_api_readonly.ControlAPITest.test_unknown_route_does_not_look_like_missing_auth) ... ok
+test_wrong_method_returns_allow_without_activation (tests.test_control_api_readonly.ControlAPITest.test_wrong_method_returns_allow_without_activation) ... ok
+test_backend_absent_never_returns_fake_receipt (tests.test_operator_control_plane.OperatorTests.test_backend_absent_never_returns_fake_receipt) ... ok
+test_current_grants_checked_on_every_retry (tests.test_operator_control_plane.OperatorTests.test_current_grants_checked_on_every_retry) ... ok
+test_malformed_private_receipt_never_disclosed (tests.test_operator_control_plane.OperatorTests.test_malformed_private_receipt_never_disclosed) ... ok
+test_missing_provider_fails_closed (tests.test_operator_control_plane.OperatorTests.test_missing_provider_fails_closed) ... ok
+test_receipt_rechecks_current_actor_scope (tests.test_operator_control_plane.OperatorTests.test_receipt_rechecks_current_actor_scope) ... ok
+test_revocation_during_receipt_query_prevents_disclosure (tests.test_operator_control_plane.OperatorTests.test_revocation_during_receipt_query_prevents_disclosure) ... ok
+test_role_backend_enforced_and_unknown_action_denied (tests.test_operator_control_plane.OperatorTests.test_role_backend_enforced_and_unknown_action_denied) ... ok
+test_serialized_or_unknown_capability_principal_denied (tests.test_operator_control_plane.OperatorTests.test_serialized_or_unknown_capability_principal_denied) ... ok
+test_strict_boundaries (tests.test_operator_control_plane.OperatorTests.test_strict_boundaries) ... ok
+test_submit_receipt_must_match_entire_intent (tests.test_operator_control_plane.OperatorTests.test_submit_receipt_must_match_entire_intent) ... ok
+test_two_windows_retry_and_conflicting_revision (tests.test_operator_control_plane.OperatorTests.test_two_windows_retry_and_conflicting_revision) ... ok
+test_untrusted_actor_role_and_machine_denied (tests.test_operator_control_plane.OperatorTests.test_untrusted_actor_role_and_machine_denied) ... ok
+test_zero_grant_denied_before_backend_io (tests.test_operator_control_plane.OperatorTests.test_zero_grant_denied_before_backend_io) ... ok
+test_invalid_snapshot_cannot_mark_live (tests.test_operator_control_plane.StreamTests.test_invalid_snapshot_cannot_mark_live) ... ok
+test_snapshot_gap_generation_and_staleness (tests.test_operator_control_plane.StreamTests.test_snapshot_gap_generation_and_staleness) ... ok
+test_actual_function_blocks_provider_before_every_network_primitive (tests.test_network_probe_provider_closed.ProviderClosedTests.test_actual_function_blocks_provider_before_every_network_primitive) ... ok
+test_backoff_is_bounded_auth_failure_not_retryable (tests.test_lan_transport.RegistryTests.test_backoff_is_bounded_auth_failure_not_retryable) ... ok
+test_duplicate_or_ip_claim_cannot_be_node_identity (tests.test_lan_transport.RegistryTests.test_duplicate_or_ip_claim_cannot_be_node_identity) ... ok
+test_active_control_heartbeats_keep_idle_data_channel_healthy (tests.test_lan_transport.TLSIsolationTests.test_active_control_heartbeats_keep_idle_data_channel_healthy) ... ok
+test_changed_endpoint_reconnect_keeps_certificate_identity_no_replay (tests.test_lan_transport.TLSIsolationTests.test_changed_endpoint_reconnect_keeps_certificate_identity_no_replay) ... ok
+test_close_releases_credit_reservations_and_queue_memory (tests.test_lan_transport.TLSIsolationTests.test_close_releases_credit_reservations_and_queue_memory) ... ok
+test_concurrent_registry_updates_cannot_restore_older_revoked_pin (tests.test_lan_transport.TLSIsolationTests.test_concurrent_registry_updates_cannot_restore_older_revoked_pin) ... ok
+test_control_writer_progresses_while_data_budget_waits (tests.test_lan_transport.TLSIsolationTests.test_control_writer_progresses_while_data_budget_waits) ... ok
+test_credit_backpressure_and_control_lane_while_data_waits (tests.test_lan_transport.TLSIsolationTests.test_credit_backpressure_and_control_lane_while_data_waits) ... ok
+test_expired_idle_peer_without_activity_still_closes_real_tls (tests.test_lan_transport.TLSIsolationTests.test_expired_idle_peer_without_activity_still_closes_real_tls) ... ok
+test_fingerprint_and_wrong_uri_cert_rejected (tests.test_lan_transport.TLSIsolationTests.test_fingerprint_and_wrong_uri_cert_rejected) ... ok
+test_isolation_rejects_nonloopback_even_if_registry_admits_it (tests.test_lan_transport.TLSIsolationTests.test_isolation_rejects_nonloopback_even_if_registry_admits_it) ... ok
+test_malformed_frame_rejected_before_payload_allocation (tests.test_lan_transport.TLSIsolationTests.test_malformed_frame_rejected_before_payload_allocation) ... ok
+test_missing_client_certificate_rejected (tests.test_lan_transport.TLSIsolationTests.test_missing_client_certificate_rejected) ... ok
+test_peer_cannot_spoof_control_role (tests.test_lan_transport.TLSIsolationTests.test_peer_cannot_spoof_control_role) ... ok
+test_real_mtls_payload_credit_classes_and_actual_byte_accounting (tests.test_lan_transport.TLSIsolationTests.test_real_mtls_payload_credit_classes_and_actual_byte_accounting) ... ok
+test_registry_revocation_and_cancellation (tests.test_lan_transport.TLSIsolationTests.test_registry_revocation_and_cancellation) ... ok
+test_revoked_pin_during_final_hello_cannot_install_connection (tests.test_lan_transport.TLSIsolationTests.test_revoked_pin_during_final_hello_cannot_install_connection) ... ok
+test_sender_waiting_for_memory_does_not_reset_stream_created_while_waiting (tests.test_lan_transport.TLSIsolationTests.test_sender_waiting_for_memory_does_not_reset_stream_created_while_waiting) ... ok
+test_six_real_isolated_nodes_independent_of_tailscale (tests.test_lan_transport.TLSIsolationTests.test_six_real_isolated_nodes_independent_of_tailscale) ... ok
+test_untrusted_ca_rejected_even_with_correct_leaf_pin (tests.test_lan_transport.TLSIsolationTests.test_untrusted_ca_rejected_even_with_correct_leaf_pin) ... ok
+test_wrong_eku_and_expired_cert_rejected (tests.test_lan_transport.TLSIsolationTests.test_wrong_eku_and_expired_cert_rejected) ... ok
+test_failed_child_cleans_all_owned_siblings_before_directory_cleanup (tests.test_network_budget.BudgetCleanupTests.test_failed_child_cleans_all_owned_siblings_before_directory_cleanup) ... ok
+test_backward_clock_or_changed_policy_fail_closed (tests.test_network_budget.BudgetTests.test_backward_clock_or_changed_policy_fail_closed) ... ok
+test_clock_sample_is_inside_store_transaction_not_before_lock_wait (tests.test_network_budget.BudgetTests.test_clock_sample_is_inside_store_transaction_not_before_lock_wait) ... ok
+test_cluster_allocations_cannot_expand (tests.test_network_budget.BudgetTests.test_cluster_allocations_cannot_expand) ... ok
+test_egress_replay_conflict_and_unverified_receipt_no_mutation (tests.test_network_budget.BudgetTests.test_egress_replay_conflict_and_unverified_receipt_no_mutation) ... ok
+test_egress_unknown_and_cooldown_survive_restart_no_dispatch (tests.test_network_budget.BudgetTests.test_egress_unknown_and_cooldown_survive_restart_no_dispatch) ... ok
+test_foreign_or_incomplete_database_not_adopted (tests.test_network_budget.BudgetTests.test_foreign_or_incomplete_database_not_adopted) ... ok
+test_real_processes_cannot_each_receive_a_fresh_full_budget (tests.test_network_budget.BudgetTests.test_real_processes_cannot_each_receive_a_fresh_full_budget) ... ok
+test_two_instances_share_atomic_debit_and_restart_not_fresh_burst (tests.test_network_budget.BudgetTests.test_two_instances_share_atomic_debit_and_restart_not_fresh_burst) ... ok
+test_confirmed_unknown_time_is_still_only_an_untrusted_claim (tests.storage.test_checkpoint_vectors.CheckpointVectorTests.test_confirmed_unknown_time_is_still_only_an_untrusted_claim) ... ok
+test_disposable_file_corruption_is_checked_by_real_bytes (tests.storage.test_checkpoint_vectors.CheckpointVectorTests.test_disposable_file_corruption_is_checked_by_real_bytes) ... ok
+test_exact_owner_schema_and_mapping_snapshots_are_bound (tests.storage.test_checkpoint_vectors.CheckpointVectorTests.test_exact_owner_schema_and_mapping_snapshots_are_bound) ... ok
+test_observation_does_not_rewrite_content_or_enable_effect (tests.storage.test_checkpoint_vectors.CheckpointVectorTests.test_observation_does_not_rewrite_content_or_enable_effect) ... ok
+test_unconfirmed_and_counterfeit_evidence_cannot_promote (tests.storage.test_checkpoint_vectors.CheckpointVectorTests.test_unconfirmed_and_counterfeit_evidence_cannot_promote) ... ok
+test_decoded_copy_cannot_rewrite_original_claim (tests.storage.test_contracts.ClaimTests.test_decoded_copy_cannot_rewrite_original_claim) ... ok
+test_parse_is_untrusted_and_cannot_promote (tests.storage.test_contracts.ClaimTests.test_parse_is_untrusted_and_cannot_promote) ... ok
+test_parser_bounds_and_counterfeit_primitive_types (tests.storage.test_contracts.ClaimTests.test_parser_bounds_and_counterfeit_primitive_types) ... ok
+test_parser_rejects_duplicate_numbers_nonascii_and_noncanonical_bytes (tests.storage.test_contracts.ClaimTests.test_parser_rejects_duplicate_numbers_nonascii_and_noncanonical_bytes) ... ok
+test_candidate_is_never_an_executable_delete_permission (tests.storage.test_retention.RetentionTests.test_candidate_is_never_an_executable_delete_permission) ... ok
+test_duplicate_identity_and_bool_budget_and_mutable_pin_inputs_reject (tests.storage.test_retention.RetentionTests.test_duplicate_identity_and_bool_budget_and_mutable_pin_inputs_reject) ... ok
+test_file_exists_or_unavailable_or_wrong_hash_does_not_count (tests.storage.test_retention.RetentionTests.test_file_exists_or_unavailable_or_wrong_hash_does_not_count) ... ok
+test_last_copy_and_missing_verified_survivors_are_retained (tests.storage.test_retention.RetentionTests.test_last_copy_and_missing_verified_survivors_are_retained) ... ok
+test_pins_and_unknown_closure_cannot_be_waived_by_age (tests.storage.test_retention.RetentionTests.test_pins_and_unknown_closure_cannot_be_waived_by_age) ... ok
+test_same_node_or_volume_cannot_supply_independent_survivors (tests.storage.test_retention.RetentionTests.test_same_node_or_volume_cannot_supply_independent_survivors) ... ok
+test_unknown_target_never_becomes_candidate (tests.storage.test_retention.RetentionTests.test_unknown_target_never_becomes_candidate) ... ok
+test_caller_cannot_construct_verified_byte_result (tests.storage.test_segments.SegmentTests.test_caller_cannot_construct_verified_byte_result) ... ok
+test_claim_detaches_mutable_instrument_input (tests.storage.test_segments.SegmentTests.test_claim_detaches_mutable_instrument_input) ... ok
+test_claim_rejects_coercion_unknown_fields_and_invalid_lineage (tests.storage.test_segments.SegmentTests.test_claim_rejects_coercion_unknown_fields_and_invalid_lineage) ... ok
+test_corruption_and_truncation_cannot_match_original (tests.storage.test_segments.SegmentTests.test_corruption_and_truncation_cannot_match_original) ... ok
+test_count_and_size_and_input_limit_are_independent (tests.storage.test_segments.SegmentTests.test_count_and_size_and_input_limit_are_independent) ... ok
+test_framed_bytes_do_not_claim_source_completeness (tests.storage.test_segments.SegmentTests.test_framed_bytes_do_not_claim_source_completeness) ... ok
+test_matching_bytes_are_not_authoritative_verification (tests.storage.test_segments.SegmentTests.test_matching_bytes_are_not_authoritative_verification) ... ok
+test_matching_digest_does_not_waive_framing (tests.storage.test_segments.SegmentTests.test_matching_digest_does_not_waive_framing) ... ok
+test_other_instrument_and_end_boundary_reject (tests.storage.test_segments.SegmentTests.test_other_instrument_and_end_boundary_reject) ... ok
+test_python_equality_objects_cannot_impersonate_typed_fields (tests.storage.test_segments.SegmentTests.test_python_equality_objects_cannot_impersonate_typed_fields) ... ok
+test_duplicate_noncanonical_and_oversized_json_denied (tests.test_security_identity_records.IdentityRecordTests.test_duplicate_noncanonical_and_oversized_json_denied) ... ok
+test_every_binding_mismatch_denied (tests.test_security_identity_records.IdentityRecordTests.test_every_binding_mismatch_denied) ... ok
+test_fixed_keys_cross_bound_and_no_authorization_property (tests.test_security_identity_records.IdentityRecordTests.test_fixed_keys_cross_bound_and_no_authorization_property) ... ok
+test_key_injection_and_noncanonical_uuid_denied (tests.test_security_identity_records.IdentityRecordTests.test_key_injection_and_noncanonical_uuid_denied) ... ok
+test_permissions_and_revision_are_strict (tests.test_security_identity_records.IdentityRecordTests.test_permissions_and_revision_are_strict) ... ok
+test_result_deeply_immutable_and_independent (tests.test_security_identity_records.IdentityRecordTests.test_result_deeply_immutable_and_independent) ... ok
+test_revoked_unknown_missing_and_extra_denied (tests.test_security_identity_records.IdentityRecordTests.test_revoked_unknown_missing_and_extra_denied) ... ok
+test_sid_and_native_logon_id_not_free_form (tests.test_security_identity_records.IdentityRecordTests.test_sid_and_native_logon_id_not_free_form) ... ok
+test_all_fourteen_unique_checks_required_independently (tests.test_windows_qualification.WindowsQualificationTests.test_all_fourteen_unique_checks_required_independently) ... ok
+test_home_cannot_be_assigned_coordinator (tests.test_windows_qualification.WindowsQualificationTests.test_home_cannot_be_assigned_coordinator) ... ok
+test_missing_node_or_unknown_track_rejected (tests.test_windows_qualification.WindowsQualificationTests.test_missing_node_or_unknown_track_rejected) ... ok
+test_pro_receipt_or_status_cannot_be_adopted_for_home (tests.test_windows_qualification.WindowsQualificationTests.test_pro_receipt_or_status_cannot_be_adopted_for_home) ... ok
+test_unqualified_physical_admission_cannot_be_enabled (tests.test_windows_qualification.WindowsQualificationTests.test_unqualified_physical_admission_cannot_be_enabled) ... ok
+test_valid_pending_matrix_never_admits_installation (tests.test_windows_qualification.WindowsQualificationTests.test_valid_pending_matrix_never_admits_installation) ... ok
+
+======================================================================
+ERROR: test_cross_midnight_and_start_weekday (tests.test_agent5_scheduler_components.ScheduleTests.test_cross_midnight_and_start_weekday) (stamp='2026-11-02T13:59:59+00:00')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\zoneinfo\_common.py", line 12, in load_tzdata
+    return resources.files(package_name).joinpath(resource_name).open("rb")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\importlib\resources\_common.py", line 46, in wrapper
+    return func(anchor)
+           ^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\importlib\resources\_common.py", line 56, in files
+    return from_package(resolve(anchor))
+                        ^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\functools.py", line 912, in wrapper
+    return dispatch(args[0].__class__)(*args, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\importlib\resources\_common.py", line 82, in _
+    return importlib.import_module(cand)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\importlib\__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1310, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1310, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1324, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'tzdata'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\work\review-matrix639\tests\test_agent5_scheduler_components.py", line 275, in test_cross_midnight_and_start_weekday
+    self.assertEqual(expected, active_at(datetime.fromisoformat(stamp), 900, 360, {0}))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\work\review-matrix639\scheduler_components\schedules.py", line 14, in active_at
+    local = instant.astimezone(ZoneInfo('Europe/Berlin'))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\zoneinfo\_common.py", line 24, in load_tzdata
+    raise ZoneInfoNotFoundError(f"No time zone found with key {key}")
+zoneinfo._common.ZoneInfoNotFoundError: 'No time zone found with key Europe/Berlin'
+
+======================================================================
+ERROR: test_cross_midnight_and_start_weekday (tests.test_agent5_scheduler_components.ScheduleTests.test_cross_midnight_and_start_weekday) (stamp='2026-11-02T14:00:00+00:00')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\zoneinfo\_common.py", line 12, in load_tzdata
+    return resources.files(package_name).joinpath(resource_name).open("rb")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\importlib\resources\_common.py", line 46, in wrapper
+    return func(anchor)
+           ^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\importlib\resources\_common.py", line 56, in files
+    return from_package(resolve(anchor))
+                        ^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\functools.py", line 912, in wrapper
+    return dispatch(args[0].__class__)(*args, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\importlib\resources\_common.py", line 82, in _
+    return importlib.import_module(cand)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\importlib\__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1310, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1310, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1324, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'tzdata'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\work\review-matrix639\tests\test_agent5_scheduler_components.py", line 275, in test_cross_midnight_and_start_weekday
+    self.assertEqual(expected, active_at(datetime.fromisoformat(stamp), 900, 360, {0}))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\work\review-matrix639\scheduler_components\schedules.py", line 14, in active_at
+    local = instant.astimezone(ZoneInfo('Europe/Berlin'))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\zoneinfo\_common.py", line 24, in load_tzdata
+    raise ZoneInfoNotFoundError(f"No time zone found with key {key}")
+zoneinfo._common.ZoneInfoNotFoundError: 'No time zone found with key Europe/Berlin'
+
+======================================================================
+ERROR: test_cross_midnight_and_start_weekday (tests.test_agent5_scheduler_components.ScheduleTests.test_cross_midnight_and_start_weekday) (stamp='2026-11-03T04:59:59+00:00')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\zoneinfo\_common.py", line 12, in load_tzdata
+    return resources.files(package_name).joinpath(resource_name).open("rb")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\importlib\resources\_common.py", line 46, in wrapper
+    return func(anchor)
+           ^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\importlib\resources\_common.py", line 56, in files
+    return from_package(resolve(anchor))
+                        ^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\functools.py", line 912, in wrapper
+    return dispatch(args[0].__class__)(*args, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\importlib\resources\_common.py", line 82, in _
+    return importlib.import_module(cand)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\importlib\__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1310, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1310, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1324, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'tzdata'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\work\review-matrix639\tests\test_agent5_scheduler_components.py", line 275, in test_cross_midnight_and_start_weekday
+    self.assertEqual(expected, active_at(datetime.fromisoformat(stamp), 900, 360, {0}))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\work\review-matrix639\scheduler_components\schedules.py", line 14, in active_at
+    local = instant.astimezone(ZoneInfo('Europe/Berlin'))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\zoneinfo\_common.py", line 24, in load_tzdata
+    raise ZoneInfoNotFoundError(f"No time zone found with key {key}")
+zoneinfo._common.ZoneInfoNotFoundError: 'No time zone found with key Europe/Berlin'
+
+======================================================================
+ERROR: test_cross_midnight_and_start_weekday (tests.test_agent5_scheduler_components.ScheduleTests.test_cross_midnight_and_start_weekday) (stamp='2026-11-03T05:00:00+00:00')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\zoneinfo\_common.py", line 12, in load_tzdata
+    return resources.files(package_name).joinpath(resource_name).open("rb")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\importlib\resources\_common.py", line 46, in wrapper
+    return func(anchor)
+           ^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\importlib\resources\_common.py", line 56, in files
+    return from_package(resolve(anchor))
+                        ^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\functools.py", line 912, in wrapper
+    return dispatch(args[0].__class__)(*args, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\importlib\resources\_common.py", line 82, in _
+    return importlib.import_module(cand)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\importlib\__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1310, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1310, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1324, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'tzdata'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\work\review-matrix639\tests\test_agent5_scheduler_components.py", line 275, in test_cross_midnight_and_start_weekday
+    self.assertEqual(expected, active_at(datetime.fromisoformat(stamp), 900, 360, {0}))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\work\review-matrix639\scheduler_components\schedules.py", line 14, in active_at
+    local = instant.astimezone(ZoneInfo('Europe/Berlin'))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\zoneinfo\_common.py", line 24, in load_tzdata
+    raise ZoneInfoNotFoundError(f"No time zone found with key {key}")
+zoneinfo._common.ZoneInfoNotFoundError: 'No time zone found with key Europe/Berlin'
+
+======================================================================
+ERROR: test_cross_midnight_and_start_weekday (tests.test_agent5_scheduler_components.ScheduleTests.test_cross_midnight_and_start_weekday) (stamp='2026-11-02T04:00:00+00:00')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\zoneinfo\_common.py", line 12, in load_tzdata
+    return resources.files(package_name).joinpath(resource_name).open("rb")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\importlib\resources\_common.py", line 46, in wrapper
+    return func(anchor)
+           ^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\importlib\resources\_common.py", line 56, in files
+    return from_package(resolve(anchor))
+                        ^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\functools.py", line 912, in wrapper
+    return dispatch(args[0].__class__)(*args, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\importlib\resources\_common.py", line 82, in _
+    return importlib.import_module(cand)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\importlib\__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1310, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1310, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1324, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'tzdata'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\work\review-matrix639\tests\test_agent5_scheduler_components.py", line 275, in test_cross_midnight_and_start_weekday
+    self.assertEqual(expected, active_at(datetime.fromisoformat(stamp), 900, 360, {0}))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\work\review-matrix639\scheduler_components\schedules.py", line 14, in active_at
+    local = instant.astimezone(ZoneInfo('Europe/Berlin'))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\zoneinfo\_common.py", line 24, in load_tzdata
+    raise ZoneInfoNotFoundError(f"No time zone found with key {key}")
+zoneinfo._common.ZoneInfoNotFoundError: 'No time zone found with key Europe/Berlin'
+
+======================================================================
+ERROR: test_dst_skip_and_both_repeated_hours (tests.test_agent5_scheduler_components.ScheduleTests.test_dst_skip_and_both_repeated_hours) (stamp='2026-03-29T00:59:59+00:00')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\zoneinfo\_common.py", line 12, in load_tzdata
+    return resources.files(package_name).joinpath(resource_name).open("rb")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\importlib\resources\_common.py", line 46, in wrapper
+    return func(anchor)
+           ^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\importlib\resources\_common.py", line 56, in files
+    return from_package(resolve(anchor))
+                        ^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\functools.py", line 912, in wrapper
+    return dispatch(args[0].__class__)(*args, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\importlib\resources\_common.py", line 82, in _
+    return importlib.import_module(cand)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\importlib\__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1310, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1310, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1324, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'tzdata'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\work\review-matrix639\tests\test_agent5_scheduler_components.py", line 283, in test_dst_skip_and_both_repeated_hours
+    self.assertEqual(expected, active_at(datetime.fromisoformat(stamp), 120, 180, {6}))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\work\review-matrix639\scheduler_components\schedules.py", line 14, in active_at
+    local = instant.astimezone(ZoneInfo('Europe/Berlin'))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\zoneinfo\_common.py", line 24, in load_tzdata
+    raise ZoneInfoNotFoundError(f"No time zone found with key {key}")
+zoneinfo._common.ZoneInfoNotFoundError: 'No time zone found with key Europe/Berlin'
+
+======================================================================
+ERROR: test_dst_skip_and_both_repeated_hours (tests.test_agent5_scheduler_components.ScheduleTests.test_dst_skip_and_both_repeated_hours) (stamp='2026-03-29T01:00:00+00:00')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\zoneinfo\_common.py", line 12, in load_tzdata
+    return resources.files(package_name).joinpath(resource_name).open("rb")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\importlib\resources\_common.py", line 46, in wrapper
+    return func(anchor)
+           ^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\importlib\resources\_common.py", line 56, in files
+    return from_package(resolve(anchor))
+                        ^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\functools.py", line 912, in wrapper
+    return dispatch(args[0].__class__)(*args, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\importlib\resources\_common.py", line 82, in _
+    return importlib.import_module(cand)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\importlib\__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1310, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1310, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1324, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'tzdata'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\work\review-matrix639\tests\test_agent5_scheduler_components.py", line 283, in test_dst_skip_and_both_repeated_hours
+    self.assertEqual(expected, active_at(datetime.fromisoformat(stamp), 120, 180, {6}))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\work\review-matrix639\scheduler_components\schedules.py", line 14, in active_at
+    local = instant.astimezone(ZoneInfo('Europe/Berlin'))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\zoneinfo\_common.py", line 24, in load_tzdata
+    raise ZoneInfoNotFoundError(f"No time zone found with key {key}")
+zoneinfo._common.ZoneInfoNotFoundError: 'No time zone found with key Europe/Berlin'
+
+======================================================================
+ERROR: test_dst_skip_and_both_repeated_hours (tests.test_agent5_scheduler_components.ScheduleTests.test_dst_skip_and_both_repeated_hours) (stamp='2026-10-25T00:30:00+00:00')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\zoneinfo\_common.py", line 12, in load_tzdata
+    return resources.files(package_name).joinpath(resource_name).open("rb")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\importlib\resources\_common.py", line 46, in wrapper
+    return func(anchor)
+           ^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\importlib\resources\_common.py", line 56, in files
+    return from_package(resolve(anchor))
+                        ^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\functools.py", line 912, in wrapper
+    return dispatch(args[0].__class__)(*args, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\importlib\resources\_common.py", line 82, in _
+    return importlib.import_module(cand)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\importlib\__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1310, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1310, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1324, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'tzdata'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\work\review-matrix639\tests\test_agent5_scheduler_components.py", line 283, in test_dst_skip_and_both_repeated_hours
+    self.assertEqual(expected, active_at(datetime.fromisoformat(stamp), 120, 180, {6}))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\work\review-matrix639\scheduler_components\schedules.py", line 14, in active_at
+    local = instant.astimezone(ZoneInfo('Europe/Berlin'))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\zoneinfo\_common.py", line 24, in load_tzdata
+    raise ZoneInfoNotFoundError(f"No time zone found with key {key}")
+zoneinfo._common.ZoneInfoNotFoundError: 'No time zone found with key Europe/Berlin'
+
+======================================================================
+ERROR: test_dst_skip_and_both_repeated_hours (tests.test_agent5_scheduler_components.ScheduleTests.test_dst_skip_and_both_repeated_hours) (stamp='2026-10-25T01:30:00+00:00')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\zoneinfo\_common.py", line 12, in load_tzdata
+    return resources.files(package_name).joinpath(resource_name).open("rb")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\importlib\resources\_common.py", line 46, in wrapper
+    return func(anchor)
+           ^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\importlib\resources\_common.py", line 56, in files
+    return from_package(resolve(anchor))
+                        ^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\functools.py", line 912, in wrapper
+    return dispatch(args[0].__class__)(*args, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\importlib\resources\_common.py", line 82, in _
+    return importlib.import_module(cand)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\importlib\__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1310, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1310, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1324, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'tzdata'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\work\review-matrix639\tests\test_agent5_scheduler_components.py", line 283, in test_dst_skip_and_both_repeated_hours
+    self.assertEqual(expected, active_at(datetime.fromisoformat(stamp), 120, 180, {6}))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\work\review-matrix639\scheduler_components\schedules.py", line 14, in active_at
+    local = instant.astimezone(ZoneInfo('Europe/Berlin'))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\zoneinfo\_common.py", line 24, in load_tzdata
+    raise ZoneInfoNotFoundError(f"No time zone found with key {key}")
+zoneinfo._common.ZoneInfoNotFoundError: 'No time zone found with key Europe/Berlin'
+
+======================================================================
+ERROR: test_weekday_iterator_not_consumed_by_validation (tests.test_agent5_scheduler_components.ScheduleTests.test_weekday_iterator_not_consumed_by_validation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\zoneinfo\_common.py", line 12, in load_tzdata
+    return resources.files(package_name).joinpath(resource_name).open("rb")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\importlib\resources\_common.py", line 46, in wrapper
+    return func(anchor)
+           ^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\importlib\resources\_common.py", line 56, in files
+    return from_package(resolve(anchor))
+                        ^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\functools.py", line 912, in wrapper
+    return dispatch(args[0].__class__)(*args, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\importlib\resources\_common.py", line 82, in _
+    return importlib.import_module(cand)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\importlib\__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1310, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1310, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1324, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'tzdata'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\work\review-matrix639\tests\test_agent5_scheduler_components.py", line 266, in test_weekday_iterator_not_consumed_by_validation
+    self.assertTrue(active_at(instant, 900, 360, iter([0])))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\work\review-matrix639\scheduler_components\schedules.py", line 14, in active_at
+    local = instant.astimezone(ZoneInfo('Europe/Berlin'))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\zoneinfo\_common.py", line 24, in load_tzdata
+    raise ZoneInfoNotFoundError(f"No time zone found with key {key}")
+zoneinfo._common.ZoneInfoNotFoundError: 'No time zone found with key Europe/Berlin'
+
+----------------------------------------------------------------------
+Ran 145 tests in 9.736s
+
+FAILED (errors=10)
