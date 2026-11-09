@@ -1,0 +1,31 @@
+{
+  "retirement": {
+    "scope": "OWNED_LOOPBACK_LAB_RETIRED",
+    "processes": [
+      {
+        "pid": 136788,
+        "returncode": 1
+      },
+      {
+        "pid": 137460,
+        "returncode": 1
+      },
+      {
+        "pid": 128280,
+        "returncode": 1
+      }
+    ],
+    "all_owned_processes_waited": true,
+    "foreign_process_operations": 0,
+    "session_retirement": "OWNED_SERVERS_STOPPED_TEMPORARY_DIRECTORY_CLEANUP_FOLLOWS"
+  },
+  "focus": {
+    "focused_tests": [
+      "test_native_snapshot.NativeSnapshotTests.test_actual_destroyed_leader_prepared_fence_cannot_write_after_takeover",
+      "test_native_snapshot.NativeSnapshotTests.test_actual_generation_change_rejects_prepared_fence_without_probe_effect"
+    ],
+    "tests": 2,
+    "skips": 0,
+    "scope": "FOCUSED_NEW_COMMITTED_CASES_ONLY_NOT_FULL_SUCCESSOR_SUITE"
+  }
+}

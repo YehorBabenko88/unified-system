@@ -1,0 +1,121 @@
+diff --git a/docs/intelligence/research-identity/native-profile-v2-20261109/EXPECTED-TESTS.json b/docs/intelligence/research-identity/native-profile-v2-20261109/EXPECTED-TESTS.json
+index f99d7dc..5349842 100644
+--- a/docs/intelligence/research-identity/native-profile-v2-20261109/EXPECTED-TESTS.json
++++ b/docs/intelligence/research-identity/native-profile-v2-20261109/EXPECTED-TESTS.json
+@@ -1,24 +1,25 @@
+-[
+-  "test_broker.BrokerBoundaryTests.test_context_and_capture_have_no_public_constructor",
+-  "test_broker.BrokerBoundaryTests.test_missing_or_method_shaped_authority_never_authenticates",
+-  "test_broker.BrokerBoundaryTests.test_native_session_syntax_is_distinct_and_never_a_permission",
+-  "test_native_broker.NativeBrokerTests.test_acl_default_deny_client_cannot_write_policy",
+-  "test_native_broker.NativeBrokerTests.test_actual_mtls_native_session_and_sealed_capture",
+-  "test_native_broker.NativeBrokerTests.test_actual_native_policy_revocation_and_session_invalidation",
+-  "test_native_broker.NativeBrokerTests.test_audit_full_invalidation_still_destroys_own_native_session",
+-  "test_native_broker.NativeBrokerTests.test_close_during_actual_native_create_retires_owned_session",
+-  "test_native_broker.NativeBrokerTests.test_forward_utc_jump_expires_real_issued_capture",
+-  "test_native_broker.NativeBrokerTests.test_invalidate_latches_and_stale_capture_is_no_permission",
+-  "test_native_broker.NativeBrokerTests.test_read_scope_cannot_be_upgraded_by_request",
+-  "test_native_broker.NativeBrokerTests.test_real_foreign_native_session_cannot_rebind_issued_context",
+-  "test_native_broker.NativeBrokerTests.test_shortened_native_policy_expiry_bounds_new_capture",
+-  "test_native_broker.NativeBrokerTests.test_stale_policy_capture_fails_actual_native_cas",
+-  "test_native_broker.NativeBrokerTests.test_z_real_one_of_three_no_quorum_is_unavailable",
+-  "test_native_profile_v2.NativeProfileV2Tests.test_00_actual_v2_principal_and_exact_submit_read_capture",
+-  "test_native_profile_v2.NativeProfileV2Tests.test_direct_profile_and_dot_key_cannot_be_upgraded",
+-  "test_native_profile_v2.NativeProfileV2Tests.test_exact_cancel_is_separate_original_bound_identity_capture",
+-  "test_native_profile_v2.NativeProfileV2Tests.test_fully_rebound_float_and_registry_actor_aliases_refuse",
+-  "test_native_profile_v2.NativeProfileV2Tests.test_real_v2_policy_revocation_and_session_loss_refuse",
+-  "test_native_profile_v2.NativeProfileV2Tests.test_wrong_lab_original_never_binds_valid_v2_context",
+-  "test_native_profile_v2.NativeProfileV2Tests.test_z_real_one_of_three_no_quorum_refuses_v2_capture"
+-]
++[
++  "test_broker.BrokerBoundaryTests.test_context_and_capture_have_no_public_constructor",
++  "test_broker.BrokerBoundaryTests.test_missing_or_method_shaped_authority_never_authenticates",
++  "test_broker.BrokerBoundaryTests.test_native_session_syntax_is_distinct_and_never_a_permission",
++  "test_native_broker.NativeBrokerTests.test_acl_default_deny_client_cannot_write_policy",
++  "test_native_broker.NativeBrokerTests.test_actual_mtls_native_session_and_sealed_capture",
++  "test_native_broker.NativeBrokerTests.test_actual_native_policy_revocation_and_session_invalidation",
++  "test_native_broker.NativeBrokerTests.test_audit_full_invalidation_still_destroys_own_native_session",
++  "test_native_broker.NativeBrokerTests.test_close_during_actual_native_create_retires_owned_session",
++  "test_native_broker.NativeBrokerTests.test_forward_utc_jump_expires_real_issued_capture",
++  "test_native_broker.NativeBrokerTests.test_invalidate_latches_and_stale_capture_is_no_permission",
++  "test_native_broker.NativeBrokerTests.test_read_scope_cannot_be_upgraded_by_request",
++  "test_native_broker.NativeBrokerTests.test_real_foreign_native_session_cannot_rebind_issued_context",
++  "test_native_broker.NativeBrokerTests.test_shortened_native_policy_expiry_bounds_new_capture",
++  "test_native_broker.NativeBrokerTests.test_stale_policy_capture_fails_actual_native_cas",
++  "test_native_broker.NativeBrokerTests.test_z_real_one_of_three_no_quorum_is_unavailable",
++  "test_native_profile_v2.NativeProfileV2Tests.test_00_actual_v2_principal_and_exact_submit_read_capture",
++  "test_native_profile_v2.NativeProfileV2Tests.test_direct_profile_and_dot_key_cannot_be_upgraded",
++  "test_native_profile_v2.NativeProfileV2Tests.test_exact_cancel_is_separate_original_bound_identity_capture",
++  "test_native_profile_v2.NativeProfileV2Tests.test_fully_rebound_float_and_registry_actor_aliases_refuse",
++  "test_native_profile_v2.NativeProfileV2Tests.test_real_v2_policy_revocation_and_session_loss_refuse",
++  "test_native_profile_v2.NativeProfileV2Tests.test_wrong_lab_original_never_binds_valid_v2_context",
++  "test_native_profile_v2.NativeProfileV2Tests.test_z_real_one_of_three_no_quorum_refuses_v2_capture",
++  "test_native_profile_v2.NativeProfileV2Tests.test_fresh_session_reads_same_original_without_reviving_old_capture"
++]
+\ No newline at end of file
+diff --git a/docs/intelligence/research-identity/native-profile-v2-20261109/run_qualification.py b/docs/intelligence/research-identity/native-profile-v2-20261109/run_qualification.py
+index 59ae85d..eb3fc26 100644
+--- a/docs/intelligence/research-identity/native-profile-v2-20261109/run_qualification.py
++++ b/docs/intelligence/research-identity/native-profile-v2-20261109/run_qualification.py
+@@ -1,4 +1,4 @@
+-"""Exact primary old15+new7 native profile-v2 source qualification; no job grants."""
++"""Exact primary old15+new8 native profile-v2 source qualification; no job grants."""
+ import argparse,hashlib,json,os
+ from pathlib import Path
+ import re,subprocess,sys,types,unittest
+@@ -28,10 +28,10 @@ def main():
+             if isinstance(item,unittest.TestSuite):yield from ids(item)
+             else:yield item.id()
+     actual=list(ids(suite));expected=json.loads((script.parent/'EXPECTED-TESTS.json').read_bytes())
+-    assert len(actual)==len(set(actual))==len(expected)==len(set(expected))==22
++    assert len(actual)==len(set(actual))==len(expected)==len(set(expected))==23
+     assert sorted(actual)==sorted(expected)
+     result=unittest.TextTestRunner(verbosity=2).run(suite)
+     assert guard.inventory(root)==before and guard.inventory(grid)==grid_before
+-    assert result.wasSuccessful() and result.testsRun==22 and not result.skipped
+-    print(json.dumps(dict(result='PASS',scope='ACTUAL_DISPOSABLE_PROFILE_V2_PRINCIPAL_NOT_JOB_RESOURCE_DISPATCH_OR_STORAGE_GRANT',head=args.expected_head,tree=git(root,'rev-parse','HEAD^{tree}').decode().strip(),grid_head=args.expected_grid_head,raw_files=len(before),grid_raw_files=len(grid_before),tests=22,skips=0,exact_unique_ids=True,module_sha256=before['unified_system/gateway_research_identity.py'],read840_unchanged=before['unified_system/gateway_identity.py']=='84093865e8477ef6562100d41137922785446c9cb4e024c9ba7105593a2b36c1')))
++    assert result.wasSuccessful() and result.testsRun==23 and not result.skipped
++    print(json.dumps(dict(result='PASS',scope='ACTUAL_DISPOSABLE_PROFILE_V2_PRINCIPAL_NOT_JOB_RESOURCE_DISPATCH_OR_STORAGE_GRANT',head=args.expected_head,tree=git(root,'rev-parse','HEAD^{tree}').decode().strip(),grid_head=args.expected_grid_head,raw_files=len(before),grid_raw_files=len(grid_before),tests=23,skips=0,exact_unique_ids=True,module_sha256=before['unified_system/gateway_research_identity.py'],read840_unchanged=before['unified_system/gateway_identity.py']=='84093865e8477ef6562100d41137922785446c9cb4e024c9ba7105593a2b36c1')))
+ if __name__=='__main__':main()
+diff --git a/tests/gateway_research_identity/test_native_profile_v2.py b/tests/gateway_research_identity/test_native_profile_v2.py
+index a5a85fa..c7b3d72 100644
+--- a/tests/gateway_research_identity/test_native_profile_v2.py
++++ b/tests/gateway_research_identity/test_native_profile_v2.py
+@@ -80,6 +80,37 @@ class NativeProfileV2Tests(unittest.IsolatedAsyncioTestCase):
+         cancel['original_submit_intent_sha256']='f'*64
+         with self.assertRaises(ResearchIdentityDenied):
+             await self.broker.capture_current(context,scope='CANCEL_OWN_JOB',request_bytes=canonical(cancel))
++    async def test_fresh_session_reads_same_original_without_reviving_old_capture(self):
++        raw=canonical(self.submit());digest=hashlib.sha256(raw).hexdigest()
++        old=await self.broker.open_session(self.tls.accepted,leader=self.leader)
++        old_capture=await self.broker.capture_current(old,scope='READ_RESEARCH',request_bytes=raw)
++        old_snapshot=self.broker.require_capture(old_capture,expected_authority=self.authority,scope='READ_RESEARCH',request_bytes=raw)
++        await self.broker.invalidate_context(old)
++        with self.assertRaises(ResearchIdentityDenied):
++            self.broker.require_capture(old_capture,expected_authority=self.authority,scope='READ_RESEARCH',request_bytes=raw)
++        current=await self.broker.open_session(self.tls.accepted,leader=self.leader)
++        capture=await self.broker.capture_current(current,scope='READ_RESEARCH',request_bytes=raw)
++        snapshot=self.broker.require_capture(capture,expected_authority=self.authority,scope='READ_RESEARCH',request_bytes=raw)
++        self.assertNotEqual(snapshot.session_id,old_snapshot.session_id)
++        self.assertEqual((snapshot.actor_id,snapshot.quota_owner_id,snapshot.profile_sha256),
++                         (old_snapshot.actor_id,old_snapshot.quota_owner_id,old_snapshot.profile_sha256))
++        self.assertEqual(snapshot.records[-1].session,snapshot.session_id)
++        self.assertEqual(hashlib.sha256(raw).hexdigest(),digest)
++        self.assertEqual(raw,canonical(self.submit()))
++        cancel=dict(schema='unified.gateway.lab-job-cancel.v1-review1',operation='CANCEL_OWN_JOB',cluster_id=self.cluster,
++            cluster_generation=self.generation,request_id=str(uuid.uuid4()),job_id=self.job,
++            original_actor_principal_id=self.actor,quota_owner_id=self.target['quota_owner'],idempotency_key='fresh_cancel_original',
++            commissioned_profile_sha256=self.profile_sha,original_submit_request_id=self.original,
++            original_submit_intent_sha256=digest)
++        cancel_raw=canonical(cancel)
++        canceled=self.broker.require_capture(await self.broker.capture_current(current,scope='CANCEL_OWN_JOB',request_bytes=cancel_raw),
++            expected_authority=self.authority,scope='CANCEL_OWN_JOB',request_bytes=cancel_raw)
++        self.assertEqual(canceled.session_id,snapshot.session_id)
++        with self.assertRaises(ResearchIdentityDenied):
++            await self.broker.capture_current(old,scope='CANCEL_OWN_JOB',request_bytes=cancel_raw)
++        # These are actual identity observations only: no fabricated original
++        # job/common receipt and no permission to resume/cancel an execution.
++        self.assertIsNone(await self.authority._request('GET','/v1/kv/'+self.prefix+'jobs/'+self.job,params={'consistent':''},missing_ok=True))
+     async def test_wrong_lab_original_never_binds_valid_v2_context(self):
+         context=await self.broker.open_session(self.tls.accepted,leader=self.leader)
+         for field,value in (('job_id',str(uuid.uuid4())),('request_id',str(uuid.uuid4())),('idempotency_key','other_original'),('commissioned_profile_sha256','f'*64),('quota_owner_id','other_quota')):
