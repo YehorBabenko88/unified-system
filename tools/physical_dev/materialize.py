@@ -52,12 +52,27 @@ def _write_all(descriptor,chunk):
         view=view[written:]
 
 
+def _close_owned_fds(target_fd,source_fd,original):
+    """Attempt each owned close once without masking a prior operation error."""
+    failures=[]
+    for role,descriptor in (("target",target_fd),("source",source_fd)):
+        if descriptor is None:continue
+        try:os.close(descriptor)
+        except BaseException as exc:failures.append((role,exc))
+    if failures:
+        note="OWNED_FD_CLOSE_FAILED: "+",".join(role+":"+type(exc).__name__ for role,exc in failures)+"; partial evidence retained"
+        if original is not None:original.add_note(note)
+        else:
+            failure=failures[0][1];failure.add_note(note)
+            raise failure
+
+
 def _copy_file(source,target,record):
     integrity._directory(source.parent)
     observed=source.lstat();integrity._ordinary(observed,"file");before=integrity._signature(observed)
     _need(before[4]==record["bytes"])
     source_fd=os.open(source,os.O_RDONLY|getattr(os,"O_BINARY",0)|getattr(os,"O_NOFOLLOW",0))
-    target_fd=None
+    target_fd=None;original=None
     try:
         held=os.fstat(source_fd);integrity._ordinary(held,"file");held_before=integrity._signature(held)
         _need(stat.S_IFMT(held_before[2])==stat.S_IFMT(before[2]))
@@ -80,9 +95,11 @@ def _copy_file(source,target,record):
         integrity._ordinary(held_target,"file");integrity._ordinary(current_target,"file")
         _need((held_target.st_dev,held_target.st_ino)==target_identity==(current_target.st_dev,current_target.st_ino))
         _need(held_target.st_size==current_target.st_size==count)
+    except BaseException as exc:
+        original=exc
+        raise
     finally:
-        if target_fd is not None:os.close(target_fd)
-        os.close(source_fd)
+        _close_owned_fds(target_fd,source_fd,original)
 
 
 def materialize(plan_raw,external_plan_sha):

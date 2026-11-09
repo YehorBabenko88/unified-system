@@ -29,6 +29,27 @@ runtime/physical authority. Directory-prefix sharing is admitted only when
 actual complete file maps are disjoint; duplicate/case/file-ancestor collisions
 deny. No complete physical package has been materialized or executed yet.
 
+The first actual read-only package plan correctly denied172 existing hardlinked
+files in installed Git. Its RED is retained; the package guard was not relaxed.
+Separate fixed-origin exporter PR73/f6f3418b0aa262863322c81f30cf290ad2fb2c08
+performed byte copies to independent private single-link files:9593 files,
+423632674 bytes,349.859s, complete source pre/post identities/digests and copied
+file closure checked. Receipt SHA256
+f6d6a0da46c878a6ab23e255f078e8b47e45b16688c29d347a1ecf8c3a5e6975.
+This is installed dependency-byte evidence, not publisher/loaded-DLL attestation,
+an application run, physical acceptance or native authority.
+
+A8 identified a descriptor-close failure path in copier/exporter cleanup:
+a target close error could skip source close and mask a prior copy error. Root
+adopted BOTH corrected modules and tests from PR74
+e5e9d440a5c8c44b4daaecbe6ed518c990481c74. Each owned descriptor is attempted once;
+the explicit original operation exception is preserved, cleanup-only failure
+propagates and no partial tree is deleted. Six new fault regressions include an
+already-active caller exception. The old f6 snapshot was never hotpatched.
+Its normal completed export is not successor error-path/runtime qualification.
+Root's combined working pure suite is101 unique tests, zero skips; exact-source
+qualification and A8 helper/package review remain pending.
+
 The intended source family is Unified runtime ba2b1cec0c2b114586afb73696e282117eede987,
 Strattester aed8a7c8a952f96803c207d5e90b133969a47f04, MetaAnalyse
 f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1 and A6 PR77. The harness itself must also
