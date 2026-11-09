@@ -401,5 +401,16 @@
     "correction_evidence": "phase104/verification.json;phase104/corrected-jobs.original.json",
     "scope": "CI_CONFIGURATION_ONLY_NOT_NEW_NATIVE_TEST_PASS",
     "mandatory_CI": "BLOCKED_QUEUED_NOT_EXECUTED"
+  },
+  {
+    "id": "A8-F25",
+    "severity": "P1",
+    "repository": "unified-system",
+    "pr": 54,
+    "observed_head": "68761aecacb6cc60113dd23f036c57efddcb0367",
+    "status": "OPEN",
+    "title": "Five mandatory workflows invalid YAML after unquoted colon-space pip command",
+    "evidence": "phase107/yaml-negative-results.json;phase107/ci-current.original.json;phase107/jobs-*.original.json",
+    "required_correction": "Quote entire run command or use block scalar; exact source parser regression and naturally triggered mandatory original jobs/artifacts."
   }
 ]
