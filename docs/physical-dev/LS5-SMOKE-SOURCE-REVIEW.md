@@ -9,8 +9,9 @@ pending; `--execute` is a test mode, never authorization.
 ## Scope and ownership
 
 Root owns `tools/physical_dev/{supervisor,bootstrap,ls5_smoke}.py` and their three
-contract test files. Package integrity library/test/plan are imported byte-exact
-from Agent package PR70, commit73bb603c1ec4dd02b2f5cca06377ed677199e54e.
+contract test files. Package integrity library/test/plan originated byte-exact
+from Agent package PR70, commit73bb603c1ec4dd02b2f5cca06377ed677199e54e;
+the subsequent Root correction is recorded below.
 No shared runtime adapter or target algorithm is changed. Fixed source selection
 maps the existing adapter's Git source reads to the admitted exact Git executable.
 A6 owns Terminan PR77 commit161ea1e0fc3a3a4cd64783b0e111e1e119e14d71.
@@ -67,9 +68,19 @@ deterministic no-child unit coverage, not physical enforcement proof.
 Retained original RED logs under the private evidence root:
 `ls5-primary-git-capture-red.log`, `ls5-cleanup-red.log`,
 `ls5-watchdog-red.log`, `ls5-bootstrap-git-red.log`.
-Working source suite:41 unique tests, zero skips. Original package24 tests are
-included in that count; they are not41 new runtime tests. Exact committed source
+Working source suite:42 unique tests, zero skips. Original package24 tests are
+included in that count; they are not42 new runtime tests. Exact committed source
 qualification and independent review are still required.
+
+The assembly preparer reproduced Windows pathname/descriptor mode differences
+on inert `.exe` bytes: lstat33279 versus fstat33206. Package73 incorrectly compared
+the full mode across APIs. Root preserved `ls5-exe-mode-red.log`, added an inert
+executable-extension regression, and compares file type plus device/inode/link
+count/size/mtime across APIs. Full mode/ctime stability is still required within
+each API; hardlink/reparse checks are unchanged. No executable fixture was run.
+The source review also found own-Job handle state was discarded before a failed
+CloseHandle; the correction preserves custody/state until successful close,
+covered by `ls5-job-close-red.log` and a nonnative regression.
 
 ## Remaining admission gates
 

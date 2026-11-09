@@ -17,6 +17,13 @@ def metadata():
 
 
 class PackageTests(unittest.TestCase):
+    def test_inert_executable_extension_handles_windows_path_descriptor_modes(self):
+        # Inert bytes, never executed. Windows lstat infers executable mode bits
+        # from .exe while fstat does not; identity and per-API stability still hold.
+        (self.root/'python.exe').write_bytes(b'inert executable fixture')
+        files=package.snapshot_files(self.root)
+        self.assertEqual(files['python.exe']['sha256'],hashlib.sha256(b'inert executable fixture').hexdigest())
+
     def setUp(self):
         self.temp=tempfile.TemporaryDirectory();self.addCleanup(self.temp.cleanup)
         self.root=Path(self.temp.name).resolve()/"package";self.root.mkdir()
