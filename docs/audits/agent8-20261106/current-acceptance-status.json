@@ -3544,5 +3544,40 @@
     "A8_Linux_downloader_hosted": "NOT_RUN",
     "target_adapter": "NOT_BOUND",
     "overall": "NO_GO"
+  },
+  "target_adapter_v1_preparation_20261109": {
+    "source_package": null,
+    "exact_HEAD": null,
+    "PR": null,
+    "levels": {
+      "PREPARATION": {
+        "mandatory_cases": 6,
+        "status": "BLOCKED_SOURCE_NOT_AVAILABLE"
+      },
+      "DIRECT_TARGET": {
+        "mandatory_cases": 14,
+        "status": "NOT_RUN"
+      },
+      "SCHEDULER_INTEGRATION": {
+        "mandatory_cases": 7,
+        "status": "NOT_RUN"
+      },
+      "AUTHENTICATED_GATEWAY": {
+        "mandatory_cases": 7,
+        "status": "NOT_RUN"
+      },
+      "PHYSICAL": {
+        "mandatory_cases": 4,
+        "status": "BLOCKED_NOT_AUTHORIZED"
+      }
+    },
+    "mandatory_requirements": 38,
+    "tests_executed": 0,
+    "report": "phase100/report.md",
+    "matrix": "phase100/target-adapter-v1-acceptance-checklist.json",
+    "prior_audits_preserved": true,
+    "physical": "BLOCKED",
+    "tailscale_removal": "BLOCKED",
+    "overall": "NO_GO"
   }
 }
