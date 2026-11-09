@@ -658,7 +658,7 @@
       "overall": "NO_GO"
     }
   },
-  "WINDOWS_CI": "PENDING_CURRENT_DRAFTS; FAILED_BASELINE_MANDATORY_GATES_NOT_CLOSED",
+  "WINDOWS_CI": "HOSTED_DIRECT_B144_PASS_ONLY; ALL_MANDATORY_COMPONENT_MATRIX_FAIL_F26",
   "INTEGRATION_ACCEPTANCE": "BLOCKED_NO_APPROVED_COHERENT_RUNTIME_OR_ACTUAL_ENDPOINTS",
   "PHYSICAL_TESTS": "BLOCKED",
   "PHYSICAL_ACCEPTANCE": "BLOCKED",
@@ -666,7 +666,7 @@
   "P0_P1_P2": {
     "P0_confirmed_defects": 0,
     "P0_absence_proven": false,
-    "P1_open": 6,
+    "P1_open": 7,
     "P2_open": 3,
     "F08": "FIX_VERIFIED_OFFLINE",
     "F09": "FIX_VERIFIED_OFFLINE_AT_42686cd",
@@ -679,7 +679,9 @@
     "F16": "OPEN_GIT_REPLACEMENT_RAW_SOURCE_GUARD",
     "F17": "A5_ROOT_EXACT_FIXES_VERIFIED_OTHER_APPLICABLE_GUARDS_PENDING",
     "F18": "FIX_VERIFIED_OFFLINE_AT_072d222",
-    "F19": "FIX_VERIFIED_OFFLINE_AT_a2265b0"
+    "F19": "FIX_VERIFIED_OFFLINE_AT_a2265b0",
+    "F26": "OPEN_MANDATORY_COMPONENT_CI_HEARTBEAT_FAILURE_SAME_ROOT_A1_RCA",
+    "owner_labelled_positive_native_P0_gates": "OPEN"
   },
   "EVIDENCE": [
     "phase4/math-source-and-compile-review.json",
@@ -3955,6 +3957,32 @@
     "admission_supported": false,
     "resources_reserved": false,
     "mandatory_hosted": "NOT_QUALIFIED",
+    "overall": "NO_GO"
+  },
+  "latest_addendum_scope": "phase122 original CI/artifact verification only; older top-level snapshots are not a fresh global recheck",
+  "PR54_b144_terminal_CI_20261109": {
+    "head": "b144a5e0fd3af90c975bfc0f0123234628dbb696",
+    "direct_run": 42646665067,
+    "attempt": 1,
+    "both_direct_jobs": "TERMINAL_SUCCESS_22_UNIQUE_0_SKIP_EACH",
+    "both_artifacts": "API_DIGEST_ALL_MEMBERS_SOURCE_MAPS_PRIMARY_VERIFIED",
+    "source_counts": {
+      "unified": 1587,
+      "strattester": 800,
+      "meta_analyse": 782
+    },
+    "scope": "DIRECT_ONLY",
+    "component_run": 42646665234,
+    "component_matrix": "3FAIL_1JOB_SUCCESS_METADATA",
+    "F26": "P1_OPEN_SAME_ROOT_A1_RCA",
+    "candidate66": "UNREVIEWED_LOCAL_OWNER_REPORT_ONLY",
+    "storage3af": {
+      "run": 42650064289,
+      "Windows": "SUCCESS_METADATA_ONLY",
+      "Ubuntu": "QUEUED",
+      "artifacts": "NOT_ACCEPTED_HERE"
+    },
+    "Root_Grid40e_pins_advanced": false,
     "overall": "NO_GO"
   }
 }

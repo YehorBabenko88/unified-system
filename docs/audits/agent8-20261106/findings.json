@@ -416,5 +416,32 @@
     "correction_tree": "01537daf676f3d9e4e924ba80026b531912cabd7",
     "correction_evidence": "phase108/own2.stderr.log;phase108/primary-verification.json",
     "mandatory_CI": "BLOCKED_QUEUED_NOT_HOSTED_PASS"
+  },
+  {
+    "id": "A8-F26",
+    "severity": "P1",
+    "repository": "unified-system",
+    "pr": 54,
+    "observed_head": "b144a5e0fd3af90c975bfc0f0123234628dbb696",
+    "title": "Mandatory component matrix fails active control heartbeat case in three exact-source cells",
+    "status": "OPEN_MANDATORY_CI_FAILURE_OWNER_A1_RCA",
+    "test": "tests.test_lan_transport.TLSIsolationTests.test_active_control_heartbeats_keep_idle_data_channel_healthy",
+    "run": 42646665234,
+    "attempt": 1,
+    "failed_jobs": [
+      129261629678,
+      129261630066,
+      129261630160
+    ],
+    "actual_errors": [
+      "DEADLINE assertion failure",
+      "TransportError DEADLINE",
+      "TransportError DISCONNECTED"
+    ],
+    "passing_job_metadata_only": 129261630267,
+    "evidence": "phase122/component-run.original.json;phase122/component-jobs.original.json;phase122/component-failure-excerpts.json;phase122/component-job-*.original.log",
+    "root_alias": "SAME_ROOT_A1_HEARTBEAT_RCA_NOT_SECOND_BUG",
+    "cause": "UNDETERMINED",
+    "required_correction": "Owner A1 reproduce/diagnose the original heartbeat failure and correct cause; verify exact new committed mandatory matrix/artifacts without test omission, timeout relaxation or replayed PASS. No A8 rerun/production edit."
   }
 ]
