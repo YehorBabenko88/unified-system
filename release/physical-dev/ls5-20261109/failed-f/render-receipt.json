@@ -1,0 +1,246 @@
+{
+  "schema": "terminan.disposable.fresh-file-render.v1",
+  "scope": "LOCAL_UNATTESTED_FRESH_FILE_RENDER_NOT_PRODUCER_AUTH_OR_MARKET_VERIFICATION",
+  "input_sha256": {
+    "request": "4cf1df7beb92853123db57742ceb0bc788d2ad129288b8f1777de7f55a1bb232",
+    "envelope": "653ecbd6964c27352698378ceb13877095fd5509f1fab1f7023cbd88216c02a7",
+    "artifact": "f4997d7d26211676cd8664e53d7999f8b71f203510f3b9a275b439c403e03940"
+  },
+  "renderer_sha256": "574dbf0882577708ab1e4c0ed73d6401eb6fabce3b3dc1b1375fc5952689241f",
+  "node": "v24.22.1",
+  "playwright": "1.56.1",
+  "chromium_revision": "1194",
+  "authenticated_gateway": false,
+  "verified_market_data": false,
+  "production_admission": false,
+  "hard_resource_containment": "NOT_QUALIFIED",
+  "browser_run": "FINISHED",
+  "render": "NOT_RUN",
+  "cleanup": {
+    "context": "CLOSED",
+    "client": "DISCONNECTED",
+    "server": "CLOSED",
+    "http": "CLOSED",
+    "confirmed": true,
+    "exit_observed": true,
+    "fallback_sdk_kill": false,
+    "budget_ms": 10000,
+    "expired": false,
+    "deadline_expired": false,
+    "expiration_phase": null,
+    "pid": 143920,
+    "exit_code": 0,
+    "signal_observed": false,
+    "observed_elapsed_ms": 51.1251
+  },
+  "page_requests": 1,
+  "blocked_page_requests": 0,
+  "failure": {
+    "error_name": "Error",
+    "timeout": false,
+    "net_error": "ERR_NAME_NOT_RESOLVED",
+    "code": "UNCLASSIFIED"
+  },
+  "failure_code": "UNCLASSIFIED",
+  "failure_phase": "PAGE_NAVIGATE",
+  "sync_spawn_guard": {
+    "scope": "PINNED_SDK_SPAWNSYNC_RESTRICTION_NOT_OS_BOUNDARY",
+    "installed": true,
+    "denied_attempts": 0,
+    "root_job_teardown_required": false
+  },
+  "root_job_teardown_required": false,
+  "result": "FAIL_OR_UNCONFIRMED",
+  "diagnostics": {
+    "schema": "terminan.render.diagnostics.v1",
+    "clock": "NODE_MONOTONIC_MS_SINCE_PROCESS_START_NOT_UTC",
+    "events": [
+      {
+        "phase": "PREPARE",
+        "state": "BEGIN",
+        "elapsed_ms": 42
+      },
+      {
+        "phase": "PREPARE",
+        "state": "OK",
+        "elapsed_ms": 4678
+      },
+      {
+        "phase": "TOOLING_VALIDATE",
+        "state": "BEGIN",
+        "elapsed_ms": 4678
+      },
+      {
+        "phase": "TOOLING_VALIDATE",
+        "state": "OK",
+        "elapsed_ms": 10182
+      },
+      {
+        "phase": "RUN_DIRECTORY",
+        "state": "BEGIN",
+        "elapsed_ms": 10182
+      },
+      {
+        "phase": "RUN_DIRECTORY",
+        "state": "OK",
+        "elapsed_ms": 10770
+      },
+      {
+        "phase": "HTTP_LISTEN",
+        "state": "BEGIN",
+        "elapsed_ms": 10770
+      },
+      {
+        "phase": "HTTP_LISTEN",
+        "state": "OK",
+        "elapsed_ms": 10781
+      },
+      {
+        "phase": "BROWSER_LAUNCH",
+        "state": "BEGIN",
+        "elapsed_ms": 11170
+      },
+      {
+        "phase": "BROWSER_LAUNCH",
+        "state": "OK",
+        "elapsed_ms": 11296
+      },
+      {
+        "phase": "OWNED_PID_WRITE",
+        "state": "BEGIN",
+        "elapsed_ms": 11296
+      },
+      {
+        "phase": "OWNED_PID_WRITE",
+        "state": "OK",
+        "elapsed_ms": 11889
+      },
+      {
+        "phase": "SPAWN_VALIDATE",
+        "state": "BEGIN",
+        "elapsed_ms": 11889
+      },
+      {
+        "phase": "SPAWN_VALIDATE",
+        "state": "OK",
+        "elapsed_ms": 11889
+      },
+      {
+        "phase": "CLIENT_CONNECT",
+        "state": "BEGIN",
+        "elapsed_ms": 11889
+      },
+      {
+        "phase": "CLIENT_CONNECT",
+        "state": "OK",
+        "elapsed_ms": 11906
+      },
+      {
+        "phase": "CONTEXT_CREATE",
+        "state": "BEGIN",
+        "elapsed_ms": 11906
+      },
+      {
+        "phase": "CONTEXT_CREATE",
+        "state": "OK",
+        "elapsed_ms": 11911
+      },
+      {
+        "phase": "ROUTE_INSTALL",
+        "state": "BEGIN",
+        "elapsed_ms": 11912
+      },
+      {
+        "phase": "ROUTE_INSTALL",
+        "state": "OK",
+        "elapsed_ms": 11913
+      },
+      {
+        "phase": "PAGE_CREATE",
+        "state": "BEGIN",
+        "elapsed_ms": 11913
+      },
+      {
+        "phase": "PAGE_CREATE",
+        "state": "OK",
+        "elapsed_ms": 11963
+      },
+      {
+        "phase": "PAGE_NAVIGATE",
+        "state": "BEGIN",
+        "elapsed_ms": 11963
+      },
+      {
+        "phase": "PAGE_NAVIGATE",
+        "state": "FAIL",
+        "elapsed_ms": 12007,
+        "failure": {
+          "error_name": "Error",
+          "timeout": false,
+          "net_error": "ERR_NAME_NOT_RESOLVED",
+          "code": "UNCLASSIFIED"
+        }
+      },
+      {
+        "phase": "CONTEXT_CLOSE",
+        "state": "BEGIN",
+        "elapsed_ms": 12008
+      },
+      {
+        "phase": "CONTEXT_CLOSE",
+        "state": "OK",
+        "elapsed_ms": 12014
+      },
+      {
+        "phase": "CLIENT_DISCONNECT",
+        "state": "BEGIN",
+        "elapsed_ms": 12014
+      },
+      {
+        "phase": "CLIENT_DISCONNECT",
+        "state": "OK",
+        "elapsed_ms": 12015
+      },
+      {
+        "phase": "SERVER_CLOSE",
+        "state": "BEGIN",
+        "elapsed_ms": 12015
+      },
+      {
+        "phase": "SERVER_CLOSE",
+        "state": "OK",
+        "elapsed_ms": 12058
+      },
+      {
+        "phase": "SERVER_EXIT_OBSERVE",
+        "state": "BEGIN",
+        "elapsed_ms": 12058
+      },
+      {
+        "phase": "SERVER_EXIT_OBSERVE",
+        "state": "OK",
+        "elapsed_ms": 12058
+      },
+      {
+        "phase": "HTTP_CLOSE",
+        "state": "BEGIN",
+        "elapsed_ms": 12059
+      },
+      {
+        "phase": "HTTP_CLOSE",
+        "state": "OK",
+        "elapsed_ms": 12059
+      },
+      {
+        "phase": "RECEIPT_WRITE",
+        "state": "BEGIN",
+        "elapsed_ms": 12059
+      }
+    ],
+    "event_count": 35,
+    "stream_bytes": 2198,
+    "overflow": false,
+    "io_failed": false,
+    "finalization": "ENDED_BEFORE_FINAL_WRITE"
+  }
+}

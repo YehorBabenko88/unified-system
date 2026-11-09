@@ -1663,155 +1663,20 @@
       "queue_root_cause": "UNKNOWN"
     },
     "package_preparation": {
-      "first_plan": "DENIED_BEFORE_COPY_SOURCE_GIT_HARDLINKS_172",
-      "fixed_export_source": "f6f3418b0aa262863322c81f30cf290ad2fb2c08",
-      "actual_byte_export": "IN_PROGRESS_NOT_RUNTIME_ADMISSION",
-      "a8_descriptor_cleanup_finding": "SOURCE_P2_SUCCESSOR_FIX_IN_PROGRESS",
-      "external_package_sha256": null,
-      "physical_smoke": "NOT_RUN"
-    },
-    "open_p0_gates": [
-      "EXACT_SOURCE_HOSTED_WINDOWS_UBUNTU_CI_F26",
-      "NATIVE_JOB_COMMISSIONER_AUTHORITY_AND_QUALIFIED_RESOURCE_ADMISSION",
-      "REAL_SCHEDULER_QUOTA_ASSIGNMENT_FENCING",
-      "NATIVE_COMMITTED_STORAGE_PUBLICATION",
-      "AUTHENTICATED_SCIENTIFIC_TERMINAN_READ",
-      "EXACT_PACKAGE_ISOLATION_AND_LS5_SMOKE",
-      "FULL_DISTRIBUTED_ACCEPTANCE"
-    ],
-    "unchanged_restrictions": {
-      "public_submit": "DENY",
-      "real_provider_sends": "BLOCKED",
-      "real_orders": "FORBIDDEN",
-      "production_deployment": "NOT_AUTHORIZED",
-      "physical_fault_injection": "NOT_AUTHORIZED",
-      "tailscale_removal": "BLOCKED",
-      "trusted_release": "BLOCKED_NO_TRUSTED_PUBLISHER"
-    }
-  },
-  "continuation_20261109": {
-    "status": "IN_PROGRESS / NO-GO",
-    "owner_directive_sha256": "961024a67181db37e3c99a66c30af7e92a23324b7f2c913ef6c1b23017d248c3",
-    "scope": "ADDITIVE_DEVELOPMENT_OBSERVATION_NOT_FULL_RUNTIME_OR_PHYSICAL_ACCEPTANCE",
-    "historical_matrix_snapshot_preserved": true,
-    "root_source_head": "435dd75321fb13c533fa5622bdfddafa6022ab31",
-    "root_source_tree": "466ecfe4cf523ea205706fa089466f22c8f76473",
-    "local_pure_source_tests": {
-      "passed": 81,
-      "skipped": 0,
-      "raw_files_pre_post": 1662,
-      "report": "release/physical-dev/ls5-20261109/SOURCE435-LOCAL-QUALIFICATION.json",
-      "not_hosted": true,
-      "not_native_or_physical": true
-    },
-    "ls5_readiness": "release/physical-dev/ls5-20261109/LS5-PHYSICAL-DEV-READINESS.json",
-    "source_review": {
-      "agent8_report_head": "4d56dfce4dcd22989b359705122c90125fac9ea8",
-      "path": "docs/audits/agent8-20261106/phase138/report.md",
-      "sha256": "0892c65423f5af9d1fd7acad0f57dc29082a5e7cfc5bd65f183b26123936d5b3",
-      "scope": "CORE495_AND_TERMINAN161_SOURCE_ONLY_ACK_NOT_NEW_HELPERS_OR_PACKAGE"
-    },
-    "hosted_source_ci": {
-      "run_id": 42700743627,
-      "status": "QUEUED",
-      "jobs": [
-        {
-          "id": 129444466660,
-          "os": "ubuntu-24.04",
-          "runner_id": 0,
-          "executed_steps": 0
-        },
-        {
-          "id": 129444467148,
-          "os": "windows-latest",
-          "runner_id": 0,
-          "executed_steps": 0
-        }
-      ],
-      "queue_root_cause": "UNKNOWN"
-    },
-    "package_preparation": {
-      "first_plan": "DENIED_BEFORE_COPY_SOURCE_GIT_HARDLINKS_172",
-      "fixed_export_source": "f6f3418b0aa262863322c81f30cf290ad2fb2c08",
-      "actual_byte_export": "IN_PROGRESS_NOT_RUNTIME_ADMISSION",
-      "a8_descriptor_cleanup_finding": "SOURCE_P2_SUCCESSOR_FIX_IN_PROGRESS",
-      "external_package_sha256": null,
-      "physical_smoke": "NOT_RUN"
-    },
-    "open_p0_gates": [
-      "EXACT_SOURCE_HOSTED_WINDOWS_UBUNTU_CI_F26",
-      "NATIVE_JOB_COMMISSIONER_AUTHORITY_AND_QUALIFIED_RESOURCE_ADMISSION",
-      "REAL_SCHEDULER_QUOTA_ASSIGNMENT_FENCING",
-      "NATIVE_COMMITTED_STORAGE_PUBLICATION",
-      "AUTHENTICATED_SCIENTIFIC_TERMINAN_READ",
-      "EXACT_PACKAGE_ISOLATION_AND_LS5_SMOKE",
-      "FULL_DISTRIBUTED_ACCEPTANCE"
-    ],
-    "unchanged_restrictions": {
-      "public_submit": "DENY",
-      "real_provider_sends": "BLOCKED",
-      "real_orders": "FORBIDDEN",
-      "production_deployment": "NOT_AUTHORIZED",
-      "physical_fault_injection": "NOT_AUTHORIZED",
-      "tailscale_removal": "BLOCKED",
-      "trusted_release": "BLOCKED_NO_TRUSTED_PUBLISHER"
-    }
-  },
-  "continuation_20261109": {
-    "status": "IN_PROGRESS / NO-GO",
-    "owner_directive_sha256": "961024a67181db37e3c99a66c30af7e92a23324b7f2c913ef6c1b23017d248c3",
-    "scope": "ADDITIVE_DEVELOPMENT_OBSERVATION_NOT_FULL_RUNTIME_OR_PHYSICAL_ACCEPTANCE",
-    "historical_matrix_snapshot_preserved": true,
-    "root_source_head": "435dd75321fb13c533fa5622bdfddafa6022ab31",
-    "root_source_tree": "466ecfe4cf523ea205706fa089466f22c8f76473",
-    "local_pure_source_tests": {
-      "passed": 81,
-      "skipped": 0,
-      "raw_files_pre_post": 1662,
-      "report": "release/physical-dev/ls5-20261109/SOURCE435-LOCAL-QUALIFICATION.json",
-      "not_hosted": true,
-      "not_native_or_physical": true
-    },
-    "ls5_readiness": "release/physical-dev/ls5-20261109/LS5-PHYSICAL-DEV-READINESS.json",
-    "source_review": {
-      "agent8_report_head": "4d56dfce4dcd22989b359705122c90125fac9ea8",
-      "path": "docs/audits/agent8-20261106/phase138/report.md",
-      "sha256": "0892c65423f5af9d1fd7acad0f57dc29082a5e7cfc5bd65f183b26123936d5b3",
-      "scope": "CORE495_AND_TERMINAN161_SOURCE_ONLY_ACK_NOT_NEW_HELPERS_OR_PACKAGE"
-    },
-    "hosted_source_ci": {
-      "run_id": 42700743627,
-      "status": "QUEUED",
-      "jobs": [
-        {
-          "id": 129444466660,
-          "os": "ubuntu-24.04",
-          "runner_id": 0,
-          "executed_steps": 0
-        },
-        {
-          "id": 129444467148,
-          "os": "windows-latest",
-          "runner_id": 0,
-          "executed_steps": 0
-        }
-      ],
-      "queue_root_cause": "UNKNOWN"
-    },
-    "package_preparation": {
       "fixed_export_source": "f6f3418b0aa262863322c81f30cf290ad2fb2c08",
       "descriptor_cleanup_source": "e5e9d440a5c8c44b4daaecbe6ed518c990481c74",
-      "external_package_sha256": "c0e5fe1d5a25f4d88488bbf5d33c9b5f47770890bf60b9c26cdacfa0aabd5886",
-      "files": 19567,
-      "bytes": 1008127478,
+      "external_package_sha256": "e551dcf3598a01ca4fd77f75145698762b76c53709adf5452eb3fa6a6103f3c6",
+      "files": 19263,
+      "bytes": 1008412748,
       "physical_smoke": "FAIL_OR_UNCONFIRMED",
       "backend": "ACTUAL_DIRECT_TARGET_PASS_LOCAL_UNATTESTED",
       "artifact_sha256": "f4997d7d26211676cd8664e53d7999f8b71f203510f3b9a275b439c403e03940",
-      "renderer": "FAIL_OR_UNCONFIRMED_RCA_UNKNOWN_F36",
+      "renderer": "PAGE_NAVIGATE_ERR_NAME_NOT_RESOLVED_NUMERIC_LOOPBACK_RULE_MISMATCH_CORRECTION_PENDING",
       "originals": [
         "release/physical-dev/ls5-20261109/failed-c/ORIGINAL-RED-INDEX.json",
         "release/physical-dev/ls5-20261109/failed-d/ORIGINAL-RED-INDEX.json",
-        "release/physical-dev/ls5-20261109/failed-e/ORIGINAL-RED-INDEX.json"
+        "release/physical-dev/ls5-20261109/failed-e/ORIGINAL-RED-INDEX.json",
+        "release/physical-dev/ls5-20261109/failed-f/ORIGINAL-RED-INDEX.json"
       ]
     },
     "open_p0_gates": [
@@ -1833,14 +1698,14 @@
       "trusted_release": "BLOCKED_NO_TRUSTED_PUBLISHER"
     },
     "latest_source_successor": {
-      "head": "e203c0bbeaa176a843a7d80b2eadfefe8fce7385",
-      "tree": "7ca3b471eb7ee2411eb83da68f8e068ee42c803c",
+      "head": "ed4ac58066c29ba21bbe258c3e303991766baf4c",
+      "tree": "9fa20a242d408976dec84e99e53bdf3d4f7969bb",
       "local_pure_tests": 106,
       "skips": 0,
-      "raw_files_pre_post": 1668,
+      "raw_files_pre_post": 1711,
       "not_hosted": true,
-      "report": "release/physical-dev/ls5-20261109/SOURCEE203-LOCAL-QUALIFICATION.json",
-      "runtime_retest": "ACTUAL_BACKEND_PASS_FULL_SMOKE_RENDER_FAIL",
+      "report": "release/physical-dev/ls5-20261109/SOURCEED4-LOCAL-QUALIFICATION.json",
+      "runtime_retest": "ACTUAL_BACKEND_PASS_FULL_SMOKE_NAVIGATION_FAIL_NO_WATCHDOG",
       "physical_cluster": "BLOCKED_NO_GO"
     },
     "scoped_hosted_success": {
@@ -1864,6 +1729,28 @@
       "path": "docs/audits/agent8-20261106/phase150/report.md",
       "sha256": "11170bae93139e269e5bb41749f323d93c9f5e98da260dd176a27880dc68c982",
       "scope": "ROOT_ORIGINAL_SMALL_RESULT_REVIEW_NOT_A8_RUNTIME_EXECUTION"
+    },
+    "latest_execution": {
+      "source_head": "ed4ac58066c29ba21bbe258c3e303991766baf4c",
+      "full_result": "FAIL_OR_UNCONFIRMED",
+      "backend": "ACTUAL_DIRECT_TARGET_BYTES_MATCH",
+      "primary_exit_codes": [
+        0,
+        1
+      ],
+      "own_job_active": 0,
+      "work_elapsed_ns": 13319304200,
+      "cleanup_elapsed_ns": 1955100,
+      "family_elapsed_ns": 13321259300,
+      "package_unchanged": true,
+      "report": "docs/physical-dev/LS5-PILOT-ED4-RESULT.md",
+      "retrospective_office_network_root_cause": "NOT_ESTABLISHED"
+    },
+    "latest_packet_review": {
+      "head": "bea56d829fd1d6886e8a27ca4dc05f484d7bcb5d",
+      "path": "docs/audits/agent8-20261106/phase154/report.md",
+      "sha256": "256fbde966ac2c2ac4380a30fd51620880a9112c26b5d1cfb8cf64779659133d",
+      "scope": "FILE_SOURCE_INVOCATION_ACK_NOT_EXECUTION_AUTHORITY"
     }
   }
 }
