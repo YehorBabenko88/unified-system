@@ -3959,7 +3959,7 @@
     "mandatory_hosted": "NOT_QUALIFIED",
     "overall": "NO_GO"
   },
-  "latest_addendum_scope": "phase142 exact453 F32 source correction only; no runtime/helper/fault/physical execution",
+  "latest_addendum_scope": "phase143 independent read-only c byte/source/delta/selectedACL; dynamic preGO and custody gates mandatory, no execution admission",
   "PR54_b144_terminal_CI_20261109": {
     "head": "b144a5e0fd3af90c975bfc0f0123234628dbb696",
     "direct_run": 42646665067,
@@ -4245,5 +4245,17 @@
     "owner103": "NOT_A8_NOT_HOSTED_ACCEPTANCE",
     "execution_admission": "NOT_GRANTED",
     "new_c_manifest": "PENDING"
+  },
+  "frozen_package_c_review": {
+    "manifest_sha256": "2ffadb31cc16dd4044d6fb1455c976f0988e4e0c565a1d0d5c6201cf28355ed7",
+    "file_count": 19567,
+    "bytes": 1008115882,
+    "primary_files": 5292,
+    "non_harness_rows_equal_b": 17872,
+    "external_controller_primary_match": 1668,
+    "result": "SCOPED_FILE_SOURCE_ACK_NO_NEW_STATIC_BLOCKER",
+    "isolation": "SELECTED_ACL_METADATA_ONLY_DYNAMIC_AND_CUSTODY_GATES_PENDING",
+    "execution_admission": "NOT_GRANTED",
+    "A8_app_helper_native_calls": 0
   }
 }
