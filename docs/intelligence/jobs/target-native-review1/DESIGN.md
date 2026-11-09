@@ -196,5 +196,15 @@ also occur in full profile principal_registry. Regression first produced12pass/
 This is an untrusted FORMAT-ONLY verifier correction, NOT an observed native
 admission bypass or authenticated issuer. Actual peer fingerprint/current principal/
 policy/session equality and immutable commissioned provenance remain native gates.
-No native runtime code was changed. Tests explicitly distinguish13unique unit
+No native runtime code was changed. Tests explicitly distinguish14unique unit
 cases from20 INVALID one-field sensitivity subcases; no owner counts are adopted.
+
+Additional pure counterexample: JSON Schema numeric integer/const accepts3.0 where
+fixed preflight budget requires integer3. A FULLY rebound format profile/hash did
+not by itself reject that unsupported type. Regression first13pass/1failure, then
+canonical budget comparison against pinned fixed profile refuses it. Actual future
+commissioner/native outer codec must enforce this semantic typed rule as well as
+hash/Schema; this is NOT a current broker/target/native authority bypass claim.
+All14unique own tests and20INVALID hash-sensitivity subcases remain PURE_CONTRACT.
+Native-target observation schema is still NOT_RECEIVED/NOT_ACKED; copied proposed
+schema's result_schema string is not evidence that response codec exists.

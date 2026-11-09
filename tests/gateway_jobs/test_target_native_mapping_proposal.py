@@ -47,6 +47,7 @@ def verify_format_triple(raw,profile,native):
     if q.get('schema')=='unified.gateway.target-request.v1':raise ValueError('DIRECT_PROFILE_NOT_ADMISSIBLE')
     v['outer'].validate(q)
     if outer_bytes(q)!=raw:raise ValueError('NONCANONICAL')
+    if outer_bytes(q['resource_budget'])!=outer_bytes(load('target-v1-request.source.json')['resource_budget']):raise ValueError('PREFLIGHT_BUDGET_TYPES')
     if re.fullmatch(r'[A-Za-z0-9_-]{1,128}',q['idempotency_key']) is None:
         raise ValueError('MAPPING_NOT_REPRESENTABLE')
     v['profile'].validate(profile);v['native'].validate(native)
@@ -151,6 +152,15 @@ class TargetNativeProposal(unittest.TestCase):
         p=copy.deepcopy(self.p);p['principal_registry']={key:self.n['job_id'] for key in p['principal_registry']}
         n=copy.deepcopy(self.n);n['commissioned_profile_sha256']=sha(c3(p))
         with self.assertRaisesRegex(ValueError,'ACTOR_REGISTRY_JOIN'):verify_format_triple(self.t,p,n)
+
+    def test_float_budget_alias_refuses_even_with_rebound_hashes(self):
+        q=json.loads(self.t);q['resource_budget']['max_rows']=3.0;raw=outer_bytes(q)
+        # JSON Schema integer/const can accept a numeric3.0. Policy/codec must not.
+        self.assertTrue(validators()['outer'].is_valid(q))
+        p=copy.deepcopy(self.p);p['target_binding']['target_request_canonical_base64']=base64.b64encode(raw).decode()
+        p['target_binding']['target_request_sha256']=sha(raw)
+        n=copy.deepcopy(self.n);n['commissioned_profile_sha256']=sha(c3(p))
+        with self.assertRaisesRegex(ValueError,'PREFLIGHT_BUDGET_TYPES'):verify_format_triple(raw,p,n)
 
     def test_no_profile_self_hash_or_native_digest_cycle(self):
         forbidden={'commissioned_profile_sha256','lab_submit_sha256','native_intent_sha256','native13','publication_receipt'}
