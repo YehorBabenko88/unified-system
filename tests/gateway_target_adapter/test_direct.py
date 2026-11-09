@@ -29,7 +29,8 @@ class DirectTests(unittest.TestCase):
     def setUp(self):
         self.temp=tempfile.TemporaryDirectory(prefix='target-adapter-test-')
         self.addCleanup(self.temp.cleanup)
-        self.stand=DisposableTargetStand(Path(self.temp.name),stratt_source_root=STRATT,meta_source_root=META)
+        self.root=Path(self.temp.name)/'stand';self.root.mkdir()
+        self.stand=DisposableTargetStand(self.root,stratt_source_root=STRATT,meta_source_root=META)
         self.addCleanup(self.stand.close)
         self.q=template_request()
         self.context=self.stand.local_test_context()
@@ -52,7 +53,7 @@ class DirectTests(unittest.TestCase):
         first=self.run_target();self.assertEqual(first,self.run_target())
         self.assertEqual(self.stand.invocations,1)
         self.stand.close()
-        other=DisposableTargetStand(Path(self.temp.name),stratt_source_root=STRATT,meta_source_root=META)
+        other=DisposableTargetStand(self.root,stratt_source_root=STRATT,meta_source_root=META)
         self.addCleanup(other.close)
         self.assertEqual(first,other.execute(prepare_target(encode(self.q)),context=other.local_test_context()))
         self.assertEqual(other.invocations,0)
@@ -112,13 +113,13 @@ class DirectTests(unittest.TestCase):
         self.assertIsNone(result['result']);self.assertEqual(result,self.run_target())
 
     def test_concurrent_local_writer_refused(self):
-        with self.assertRaises(TargetRejected):DisposableTargetStand(Path(self.temp.name),stratt_source_root=STRATT,meta_source_root=META)
+        with self.assertRaises(TargetRejected):DisposableTargetStand(self.root,stratt_source_root=STRATT,meta_source_root=META)
 
     def test_partial_journal_cannot_return_or_reexecute(self):
         self.run_target()
-        path=Path(self.temp.name)/'direct-journal.db'
+        path=self.root/'direct-journal.db'
         self.stand.close();path.write_bytes(b'partial')
-        with self.assertRaises(TargetRejected):DisposableTargetStand(Path(self.temp.name),stratt_source_root=STRATT,meta_source_root=META)
+        with self.assertRaises(TargetRejected):DisposableTargetStand(self.root,stratt_source_root=STRATT,meta_source_root=META)
 
     def test_registry_reports_unavailable_targets_truthfully(self):
         rows=capability_registry();self.assertEqual(len(rows),5)
@@ -128,13 +129,26 @@ class DirectTests(unittest.TestCase):
     def test_actual_target_no_python_network_and_only_owned_sqlite(self):
         original=sqlite3.connect;calls=[]
         def owned_connect(database,*args,**kwargs):
-            text=str(database)
-            if str(Path(self.temp.name)).replace('\\','/') not in text.replace('\\','/'):
+            text=os.fspath(database)
+            expected=(self.root/'direct-journal.db').resolve()
+            permitted=expected.as_uri()+'?mode=ro' if kwargs.get('uri') is True else str(expected)
+            if text!=permitted:
                 raise RuntimeError('NON_OWNED_DATABASE_DENIED')
             calls.append(text);return original(database,*args,**kwargs)
         with patch.object(socket,'socket',side_effect=RuntimeError('NETWORK_DENIED')) as network,patch.object(sqlite3,'connect',owned_connect):
             with self.assertRaises(RuntimeError):socket.socket()
             with self.assertRaises(RuntimeError):sqlite3.connect('production.db')
+            sibling=self.root.with_name('stand-sibling');sibling.mkdir()
+            for path,uri in [(str(sibling/'outside.sqlite'),False),
+                             (str(self.root/'..'/'stand-sibling'/'dotdot.sqlite'),False),
+                             ((sibling/'uri.sqlite').as_uri()+'?mode=rwc',True)]:
+                with self.assertRaises(RuntimeError):sqlite3.connect(path,uri=uri)
+            for path,uri in [(str(self.root/'direct-journal.db'),False),
+                             ((self.root/'direct-journal.db').as_uri()+'?mode=ro',True)]:
+                positive=sqlite3.connect(path,uri=uri)
+                try:self.assertEqual(positive.execute('SELECT 1').fetchone(),(1,))
+                finally:positive.close()
+            calls.clear()
             network.reset_mock()
             self.assertEqual(self.run_target()['status'],'DIRECT_TARGET_PASS')
             self.assertEqual(network.call_count,0)
