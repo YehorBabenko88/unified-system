@@ -161,7 +161,9 @@ class BudgetCleanupTests(unittest.TestCase):
         try:
             with patch('test_network_budget.multiprocessing.get_context',return_value=Context()):
                 BudgetTests('test_real_processes_cannot_each_receive_a_fresh_full_budget').run(result)
-            self.assertTrue(result.failures or result.errors,'injected child failure must remain a failure')
+            self.assertEqual(result.errors,[],'cleanup must not replace the child assertion')
+            self.assertEqual(len(result.failures),1)
+            self.assertIn('7 != 0 : budget child failed',result.failures[0][1])
             self.assertFalse(any(p.is_alive() for p in created),'owned sibling survived failed fixture')
             self.assertFalse(any('PermissionError' in detail for _,detail in result.errors),'SQLite cleanup ran before child exit')
         finally:
