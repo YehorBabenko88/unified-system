@@ -667,7 +667,7 @@
     "P0_confirmed_defects": 0,
     "P0_absence_proven": false,
     "P1_open": 8,
-    "P2_open": 3,
+    "P2_open": 4,
     "F08": "FIX_VERIFIED_OFFLINE",
     "F09": "FIX_VERIFIED_OFFLINE_AT_42686cd",
     "F10": "FIX_VERIFIED_OFFLINE_AT_42686cd",
@@ -3959,7 +3959,7 @@
     "mandatory_hosted": "NOT_QUALIFIED",
     "overall": "NO_GO"
   },
-  "latest_addendum_scope": "phase128 exact277 local Journal/OS lock only; earlier scoped results retained, no fresh global recheck",
+  "latest_addendum_scope": "phase129 actual failed context entry resource/lock leak; prior12 observed PASS retained, unconditional cleanup not accepted",
   "PR54_b144_terminal_CI_20261109": {
     "head": "b144a5e0fd3af90c975bfc0f0123234628dbb696",
     "direct_run": 42646665067,
@@ -4048,5 +4048,14 @@
     "native_freeze": "NOT_GRANTED",
     "F27": "OPEN_P1_Core868_UNCHANGED",
     "overall": "NO_GO"
+  },
+  "A8_F28_FAILED_ENTRY": {
+    "status": "OPEN_P2_ACTUAL_REPRODUCED",
+    "head": "19fae71db66a24f7be7bfa8d1682e1831c4720c4",
+    "prior12": "OBSERVED_PASS_RETAINED_NOT_FAILED_ENTRY_COVERAGE",
+    "both_owned_fds_open_after_error": true,
+    "actual_contender": "DENIED_UNTIL_EXPLICIT_OWN_CLOSE",
+    "manual_cleanup_completed": true,
+    "native_rpc": 0
   }
 }
