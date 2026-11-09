@@ -43,9 +43,17 @@ An unknown ancestor Job can be stricter. Parent/OS freeze is not solved here.
 Source/package provenance preparation precedes the target-family timer and does
 not start an application target; it can take longer than the proposed30s family
 window. A5 correctly identified that the old batch reader's wait(timeout15)
-occurred AFTER blocking reads. The prepared successor gives actual read/write/
-flush exchanges15s timers against their original retained Git Popen, followed by
-own-only terminate/wait5 and join-before-custody-release. A monotonic300s source
+occurred AFTER blocking reads. A subsequent timer-only version still blocked the
+controller when both retirement and a pipe read failed. That actual failure path
+was reproduced with an inert blocked reader and failing terminate/wait; original
+RED is `ls5-blocked-reader-cleanup-red.log`. The prepared successor performs pipe
+read/write/flush/wait operations in retained daemon workers, with the controller
+waiting on bounded result queues (exchange15s). Terminate/wait5 is itself run in
+a separately bounded6s own-handle worker. Pipe close is independently bounded2s.
+Unretired workers retain their original stream/Popen closure; failure remains
+UNKNOWN and prevents target admission, rather than claiming thread cancellation
+or confirmed cleanup. The controller can record failure even when retirement
+fails. A monotonic300s source
 preparation deadline is checked before each command/exchange; no new operation
 starts after it. Context cleanup attempts every retained batch even on failure.
 Global/system Git configuration and lazy fetch are disabled only in the child

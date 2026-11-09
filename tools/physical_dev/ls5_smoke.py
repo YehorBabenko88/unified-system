@@ -21,34 +21,54 @@ def digest(path):
         while chunk:=source.read(65536):result.update(chunk)
     return result.hexdigest()
 
-class TimedPrimaryStream:
-    """Bound blocking pipe exchanges, retaining the ORIGINAL source-Git Popen.
+def bounded_primary_call(operation,seconds,code):
+    """Keep controller responsive even if an own pipe/native cleanup blocks.
 
-    A timer requests termination of that handle only, then bounded wait. This
-    does not survive supervisor/OS freeze and does not confer worker authority.
+    A failed/unjoined worker retains its closure (stream/Popen HANDLE). Threads
+    are not cancelled and unknown retirement is NEVER accepted as source proof.
     """
-    def __init__(self,stream,process,remaining):self.stream=stream;self.process=process;self.remaining=remaining
+    need(type(seconds) in (int,float) and 0<seconds<=15,'PRIMARY_CALL_BOUND')
+    results=queue.Queue(maxsize=1)
+    def worker():
+        try:results.put_nowait((True,operation()))
+        except BaseException as error:results.put_nowait((False,error))
+    thread=threading.Thread(target=worker,name='own-primary-operation',daemon=True);thread.start()
+    try:success,value=results.get(timeout=seconds)
+    except queue.Empty:raise SmokeBlocked(code) from None
+    thread.join(.1);need(not thread.is_alive(),'PRIMARY_OPERATION_RETIREMENT_UNKNOWN')
+    if not success:raise value
+    return value
+
+def retire_primary(process):
+    def retire():
+        original=None
+        try:
+            if process.poll() is None:process.terminate()
+        except BaseException as error:original=error
+        try:process.wait(timeout=5)
+        except BaseException as error:
+            if original is None:original=error
+            else:original.add_note('Own primary wait failed: '+type(error).__name__)
+        if original is not None:raise original
+    return bounded_primary_call(retire,6,'PRIMARY_RETAINED_PROCESS_RETIREMENT_UNKNOWN')
+
+class TimedPrimaryStream:
+    """No blocking pipe operation on the controller thread, including close."""
+    def __init__(self,stream,process,remaining):
+        self.stream=stream;self.process=process;self.remaining=remaining;self.failed=False
     def _call(self,method,*args):
-        expired=threading.Event();errors=[]
-        def abort():
-            expired.set()
-            try:self.process.terminate()
-            except BaseException as error:errors.append(type(error).__name__)
-            try:self.process.wait(timeout=5)
-            except BaseException as error:errors.append(type(error).__name__)
-        timer=threading.Timer(self.remaining(),abort);timer.daemon=True;timer.start();original=None
-        try:return getattr(self.stream,method)(*args)
-        except BaseException as error:original=error;raise
-        finally:
-            timer.cancel();timer.join(6)
-            if timer.is_alive() or expired.is_set() or errors:
-                if original is not None:original.add_note('Primary Git pipe timeout or cleanup unknown')
-                else:raise SmokeBlocked('PRIMARY_BATCH_PIPE_TIMEOUT_OR_UNKNOWN')
+        need(not self.failed,'PRIMARY_STREAM_ALREADY_FAILED')
+        try:return bounded_primary_call(lambda:getattr(self.stream,method)(*args),self.remaining(),'PRIMARY_BATCH_PIPE_TIMEOUT_OR_UNKNOWN')
+        except BaseException as original:
+            self.failed=True
+            try:retire_primary(self.process)
+            except BaseException as cleanup:original.add_note('Own primary cleanup unknown: '+type(cleanup).__name__)
+            raise
     def read(self,size):return self._call('read',size)
     def readline(self):return self._call('readline')
     def write(self,raw):return self._call('write',raw)
     def flush(self):return self._call('flush')
-    def close(self):return self.stream.close()
+    def close(self):return bounded_primary_call(self.stream.close,2,'PRIMARY_PIPE_CLOSE_UNKNOWN')
 
 class PrimaryBatch:
     def __init__(self,process,remaining):
@@ -57,13 +77,11 @@ class PrimaryBatch:
     @property
     def returncode(self):return self.process.returncode
     def wait(self,timeout):
-        try:return self.process.wait(timeout=min(timeout,self.remaining()))
+        seconds=min(timeout,self.remaining())
+        try:return bounded_primary_call(lambda:self.process.wait(timeout=seconds),seconds,'PRIMARY_PROCESS_WAIT_UNKNOWN')
         except BaseException:
             self.retire();raise
-    def retire(self):
-        try:
-            if self.process.poll() is None:self.process.terminate()
-        finally:self.process.wait(timeout=5)
+    def retire(self):return retire_primary(self.process)
 
 class PrimaryGit:
     """The old verifier's batch subprocess also gets the pinned executable.

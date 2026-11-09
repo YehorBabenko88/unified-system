@@ -14,16 +14,17 @@ class LauncherContractTests(unittest.TestCase):
     def test_primary_pipe_timeout_retires_only_its_retained_process(self):
         from tools.physical_dev.ls5_smoke import TimedPrimaryStream,SmokeBlocked
         from unittest.mock import Mock
-        process=Mock();stream=Mock();stream.read.return_value=b'late'
-        class Timer:
-            def __init__(self,seconds,callback):self.callback=callback
-            def start(self):self.callback()
-            def cancel(self):pass
-            def join(self,seconds):pass
-            def is_alive(self):return False
-        with patch('threading.Timer',Timer):
-            bounded=TimedPrimaryStream(stream,process,lambda:1)
+        import threading,time,subprocess
+        process=Mock();process.poll.return_value=None;process.terminate.side_effect=OSError('retirement failed')
+        process.wait.side_effect=subprocess.TimeoutExpired('inert-owned-fixture',5)
+        release=threading.Event();entered=threading.Event();stream=Mock()
+        def blocked_read(size):entered.set();release.wait(1);return b'late'
+        stream.read.side_effect=blocked_read
+        bounded=TimedPrimaryStream(stream,process,lambda:.02);started=time.monotonic()
+        try:
             with self.assertRaises(SmokeBlocked):bounded.read(4)
+            self.assertTrue(entered.is_set());self.assertLess(time.monotonic()-started,.5)
+        finally:release.set()
         process.terminate.assert_called_once_with();process.wait.assert_called_once_with(timeout=5)
 
     def test_cleanup_failure_is_retained_without_skipping_next_own_process(self):
