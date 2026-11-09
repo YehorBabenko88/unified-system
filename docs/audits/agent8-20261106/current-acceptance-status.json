@@ -3959,7 +3959,7 @@
     "mandatory_hosted": "NOT_QUALIFIED",
     "overall": "NO_GO"
   },
-  "latest_addendum_scope": "phase139 exact71/73 helper source closure only; F31 source cleanup blocker, no export/materialization/physical test by A8",
+  "latest_addendum_scope": "phase140 exact PR74 source correction only; owner80/Root101 not transferred",
   "PR54_b144_terminal_CI_20261109": {
     "head": "b144a5e0fd3af90c975bfc0f0123234628dbb696",
     "direct_run": 42646665067,
@@ -4218,5 +4218,14 @@
     "phase138_core_ACK": "PRESERVED_SCOPED_ONLY",
     "physical_execution_admission": "NOT_GRANTED",
     "overall": "NO_GO"
+  },
+  "PR74_source_correction_review": {
+    "head": "e5e9d440a5c8c44b4daaecbe6ed518c990481c74",
+    "tree": "00dd3c02c31ee14fe92ffd4af268dde86e5ba3a2",
+    "primary_files": 1654,
+    "result": "SOURCE_ONLY_ACK",
+    "runtime": "NOT_RUN_BY_A8",
+    "physical_execution_admission": "NOT_GRANTED",
+    "F31": "SOURCE_CORRECTION_ACK_AT_E5_RUNTIME_QUALIFICATION_PENDING"
   }
 }

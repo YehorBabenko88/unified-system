@@ -531,9 +531,11 @@
     "also_affected_pr": 71,
     "also_affected_head": "45f03d46e5e42e7bd7225accc046ff50c9d3987a",
     "title": "Copy-helper target descriptor close failure skips source descriptor cleanup",
-    "status": "OPEN_SOURCE_ONLY_COPY_CLEANUP_NOT_RUNTIME_REPRODUCED",
+    "status": "SOURCE_CORRECTION_ACK_AT_E5_RUNTIME_QUALIFICATION_PENDING",
     "test": "AST/source finally ordering in materialize._copy_file and export_git._hash_copy",
     "evidence": "phase139/static-review.json;phase139/report.md",
-    "required_correction": "Attempt closing both own descriptors independently. Preserve original copy/validation failure as primary and retain cleanup errors/unknown state; do not delete partial output or retry ambiguous descriptor numbers. Add inert close-report fault regressions and separately qualify exact successor."
+    "required_correction": "Attempt closing both own descriptors independently. Preserve original copy/validation failure as primary and retain cleanup errors/unknown state; do not delete partial output or retry ambiguous descriptor numbers. Add inert close-report fault regressions and separately qualify exact successor.",
+    "successor_head": "e5e9d440a5c8c44b4daaecbe6ed518c990481c74",
+    "successor_evidence": "phase140/report.md;phase140/source-verification.json"
   }
 ]
