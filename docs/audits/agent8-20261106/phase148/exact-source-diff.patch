@@ -1,0 +1,119 @@
+diff --git a/docs/physical-dev/LS5-SMOKE-SOURCE-REVIEW.md b/docs/physical-dev/LS5-SMOKE-SOURCE-REVIEW.md
+index 7209f2c..f3b3456 100644
+--- a/docs/physical-dev/LS5-SMOKE-SOURCE-REVIEW.md
++++ b/docs/physical-dev/LS5-SMOKE-SOURCE-REVIEW.md
+@@ -86,6 +86,27 @@ nonzero still prevents PASS. Pure failed-child regression verifies evidence
+ survives that outcome. No c snapshot changes or automatic rerun occurred. New
+ source qualification, new package and independent review are required.
+ 
++Second actual d attempt: source9f/package67bcc2f0fd13b9d7363d4847e511d233a11a7be9c001e4a57411e0ea0bfa02bd
++also FAIL_OR_UNCONFIRMED. Original receipt SHA256
++145ff6f9acec46fb467d7ca0a1fff6753bbe9c583d2e8d9d83ba04e05532b4b9.
++The directory/SQLite precondition now passed. Actual before-GO child identity,
++nonadmin token, member1, limits and exit71 were retained; active0/primary exited,
++family402272600ns/package unchanged. Journal has STARTED then FINISHED UNKNOWN,
++TARGET_RESULT_UNAVAILABLE, no artifact. No successful research/render is claimed.
++
++Root checked actual CPython3.12 Windows subprocess.py: list2cmdline is applied
++before sys.audit(subprocess.Popen), so that audit receives a STRING; POSIX gets
++a vector. The old callback required list/tuple, and rejects even the fixed valid
++Windows commandline before CreateProcess. This source-predicate defect is
++reproduced by pure Windows/POSIX frame cases; d's generic RuntimeError alone is
++not retroactively relabelled with a missing audit event. The new audit compares
++only the exact canonical commandline of a currently active, prevalidated fixed
++Git vector in thread-local custody. It never parses/executes a caller string.
++Foreign executable, extra args, no active scope and platform-shape mismatches
++deny; the active value is cleared in finally. Fixed diagnostic markers contain
++no commandlines or environment values. RED ls5-windows-audit-commandline-red.log
++is retained.106 combined pure tests pass; a new immutable candidate is required.
++
+ The intended source family is Unified runtime ba2b1cec0c2b114586afb73696e282117eede987,
+ Strattester aed8a7c8a952f96803c207d5e90b133969a47f04, MetaAnalyse
+ f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1 and A6 PR77. The harness itself must also
+diff --git a/tests/physical_dev/test_bootstrap_contract.py b/tests/physical_dev/test_bootstrap_contract.py
+index c238b94..aa8d305 100644
+--- a/tests/physical_dev/test_bootstrap_contract.py
++++ b/tests/physical_dev/test_bootstrap_contract.py
+@@ -2,6 +2,16 @@ import unittest,tempfile
+ from pathlib import Path
+ 
+ class BootstrapPathTests(unittest.TestCase):
++    def test_windows_audit_commandline_matches_only_active_exact_selected_vector(self):
++        from tools.physical_dev.bootstrap import validate_source_git_audit
++        import subprocess
++        git='C:/private tooling/git.exe';selected=[git,'--no-replace-objects','-C','C:/private source','show','a'*40+':module.py']
++        commandline=subprocess.list2cmdline(selected)
++        self.assertIsNone(validate_source_git_audit(git,commandline,git,selected,'nt'))
++        self.assertIsNone(validate_source_git_audit(git,selected,git,selected,'posix'))
++        for exe,raw,expected,platform in [(git,commandline+' extra',selected,'nt'),('C:/foreign/git.exe',commandline,selected,'nt'),(git,commandline,None,'nt'),(git,selected,selected,'nt'),(git,commandline,selected,'posix')]:
++            with self.subTest(platform=platform),self.assertRaises(RuntimeError):validate_source_git_audit(exe,raw,git,expected,platform)
++
+     def test_allocate_existing_stand_contract_requires_new_empty_directory(self):
+         from tools.physical_dev.bootstrap import allocate_stand_root
+         from unified_system.gateway_target_adapter import DisposableTargetStand,TargetRejected
+diff --git a/tools/physical_dev/bootstrap.py b/tools/physical_dev/bootstrap.py
+index f2a7eb4..d6aea67 100644
+--- a/tools/physical_dev/bootstrap.py
++++ b/tools/physical_dev/bootstrap.py
+@@ -16,6 +16,17 @@ def source_git_argv(argv,git,roots):
+         raise RuntimeError('NON_SOURCE_GIT_CHILD_DENIED')
+     return [str(git),*argv[1:]]
+ 
++def validate_source_git_audit(executable,argv,git,selected,platform):
++    # Windows CPython emits a canonical commandline STRING after list2cmdline;
++    # POSIX emits a vector. Never parse/reinterpret a caller-provided string.
++    import subprocess
++    if not(isinstance(selected,(list,tuple)) and len(selected)==6 and str(executable)==str(git) and selected[0]==str(git)):
++        raise RuntimeError('NON_SOURCE_GIT_CHILD_DENIED')
++    if platform=='nt':valid=type(argv) is str and argv==subprocess.list2cmdline(selected)
++    elif platform=='posix':valid=isinstance(argv,(list,tuple)) and list(argv)==list(selected)
++    else:valid=False
++    if not valid:raise RuntimeError('NON_SOURCE_GIT_CHILD_DENIED')
++
+ def validate_state_path(value,root):
+     if isinstance(value,int):return
+     text=os.fsdecode(value)
+@@ -54,6 +65,7 @@ def main():
+     sys.path.insert(0,str(unified))
+     def own_write(value):
+         validate_state_path(value,root)
++    pending_git=threading.local()
+     def audit(event,args):
+         if event.startswith('socket.'):raise RuntimeError('BACKEND_NETWORK_DENIED')
+         if event=='open':
+@@ -65,9 +77,9 @@ def main():
+             own_write(args[0]);own_write(args[1])
+         elif event=='subprocess.Popen':
+             executable,argv,_,_=args
+-            if not(isinstance(argv,(list,tuple)) and len(argv)==6 and argv[1:3]==['--no-replace-objects','-C'] and argv[4]=='show'
+-                    and Path(argv[3]).resolve() in (stratt.resolve(),meta.resolve()) and isinstance(argv[5],str)
+-                    and str(executable)==str(git) and argv[0]==str(git)):raise RuntimeError('NON_SOURCE_GIT_CHILD_DENIED')
++            try:validate_source_git_audit(executable,argv,git,getattr(pending_git,'argv',None),os.name)
++            except RuntimeError:
++                print('SOURCE_GIT_AUDIT_DENIED',file=sys.stderr,flush=True);raise
+     # The caller selected and verified this source Git executable before GO.
+     os.environ['PATH']=str(git.parent)+os.pathsep+os.environ.get('PATH','')
+     # Select the exact admitted executable for the existing adapter's unchanged
+@@ -77,7 +89,10 @@ def main():
+     def pinned_source_popen(argv,*args,**kwargs):
+         if args or 'executable' in kwargs or kwargs.get('shell',False):raise RuntimeError('SOURCE_GIT_OPTIONS')
+         selected=source_git_argv(argv,git,{stratt,meta})
+-        return native_popen(selected,executable=str(git),**kwargs)
++        if getattr(pending_git,'argv',None) is not None:raise RuntimeError('NESTED_SOURCE_GIT_DENIED')
++        pending_git.argv=tuple(selected)
++        try:return native_popen(selected,executable=str(git),**kwargs)
++        finally:pending_git.argv=None
+     subprocess.Popen=pinned_source_popen
+     sys.addaudithook(audit)
+     from unified_system.gateway_target_adapter import DisposableTargetStand,prepare_target,template_request
+@@ -86,7 +101,9 @@ def main():
+     stand=DisposableTargetStand(str(state),stratt_source_root=str(stratt),meta_source_root=str(meta))
+     try:
+         value=stand.execute(prepare_target(request),context=stand.local_test_context())
+-        if value['status']!='DIRECT_TARGET_PASS' or stand.invocations!=1:raise RuntimeError('ACTUAL_DIRECT_TARGET_NOT_COMPLETED')
++        if value['status']!='DIRECT_TARGET_PASS' or stand.invocations!=1:
++            print('DIRECT_TARGET_COMPLETION_UNAVAILABLE',file=sys.stderr,flush=True)
++            raise RuntimeError('ACTUAL_DIRECT_TARGET_NOT_COMPLETED')
+         envelope=json.dumps(value,sort_keys=True,separators=(',',':'),allow_nan=False).encode('ascii')
+         artifact=json.dumps(value['result'],sort_keys=True,separators=(',',':'),allow_nan=False).encode('ascii')
+         import hashlib

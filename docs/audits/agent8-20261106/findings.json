@@ -591,9 +591,11 @@
     "pr": 69,
     "observed_head": "9f55260f1e3c0ff83512bbd307a6ccc3366a386e",
     "title": "Windows subprocess audit callback rejects canonical string emitted by CPython after list2cmdline",
-    "status": "OPEN_SOURCE_CONTRACT_MISMATCH_ACTUAL_D_FAILURE_RCA_NOT_RUNTIME_REPRODUCED_BY_A8",
+    "status": "SOURCE_CORRECTION_ACK_AT_E203_RUNTIME_QUALIFICATION_PENDING",
     "test": "Pinned CPython3.12 Lib/subprocess.py Windows _execute_child transformation ordering versus bootstrap subprocess.Popen audit predicate",
     "evidence": "phase147/evidence-verification.json;phase147/report.md",
-    "required_correction": "Owner reproduce with controlled platform-frame negatives/positives before RCA. Publish separate committed narrow Windows canonical issued-command frame validation without allowing arbitrary strings, shell, roots, commands, providers or unpinned executables. Preserve frozen d and original generic failure; no automatic rerun/hotpatch."
+    "required_correction": "Owner reproduce with controlled platform-frame negatives/positives before RCA. Publish separate committed narrow Windows canonical issued-command frame validation without allowing arbitrary strings, shell, roots, commands, providers or unpinned executables. Preserve frozen d and original generic failure; no automatic rerun/hotpatch.",
+    "successor_head": "e203c0bbeaa176a843a7d80b2eadfefe8fce7385",
+    "successor_evidence": "phase148/report.md;phase148/source-verification.json"
   }
 ]
