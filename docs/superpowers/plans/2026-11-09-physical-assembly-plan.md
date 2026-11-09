@@ -23,7 +23,10 @@ not unknown numbers of files inside excluded directories. Global file/byte
 bounds cover all components, and a bounded visited-entry count prevents empty
 tree expansion. Overflow refuses the whole plan; no truncation or silent cap.
 
-Source roots cannot overlap. Destination prefixes cannot overlap or case-alias.
+Source roots cannot overlap. Destination prefixes may share folders only when the actual merged file map
+has no exact duplicates, casefold aliases or file-as-directory conflicts.
+Duplicate final keys are refused before dictionary insertion, even for identical
+bytes; global package namespace validation remains mandatory.
 Destination must be absent with canonical ordinary existing ancestors, outside
 all sources. It is never created or reserved. Private parent ACL remains UNKNOWN;
 Root must independently admit it and perform exclusive creation/revalidation
@@ -52,3 +55,13 @@ are global 20000 selected files / 1GiB, 40000 visited entries / 32 components,
 and 32MiB returned canonical plan. Closed-tree installs over those bounds refuse
 without truncation. No actual package assembly, destination allocation or native
 process/browser/Job action was performed.
+
+
+Root-authorized compatibility adjustment preserves 4a8947c11b9d100f155385182c20956bd0d80368
+as an immutable parent. A package-lock singleton seed at prefix tooling can now
+coexist with disjoint tooling/node_modules, tooling/git and other file maps.
+Source-root overlap, canonical path rules, fixed materializer parent, 20000 files
+and 1GiB limits are unchanged. New REDs capture the old blanket overlap refusal
+and the duplicate-overwrite risk after its removal. The final 60 focused tests
+PASS without skips (21 planner, 15 materializer, 24 package). Only inert temporary
+unit fixtures are exercised; no actual package or physical copy was performed.

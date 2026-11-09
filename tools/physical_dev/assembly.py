@@ -96,9 +96,8 @@ def plan_assembly(components,destination,*,max_files=20000,max_bytes=1073741824)
             prefix=integrity._relative(component["destination_prefix"])
             _need(destination!=source and source not in destination.parents and destination not in source.parents)
             for prior in checked:
-                other=Path(prior["source_root"]);old=prior["destination_prefix"].casefold();new=prefix.casefold()
+                other=Path(prior["source_root"])
                 _need(source!=other and source not in other.parents and other not in source.parents)
-                _need(old!=new and not old.startswith(new+"/") and not new.startswith(old+"/"))
             checked.append(dict(name=name,source_root=str(source),destination_prefix=prefix,profile=component["profile"]))
         checked.sort(key=lambda item:item["name"])
         files={};skipped=[];visited=0;total=0;counts=[];snapshots=[]
@@ -110,6 +109,9 @@ def plan_assembly(components,destination,*,max_files=20000,max_bytes=1073741824)
                 record=integrity._hash_file(path,identity);selected_bytes+=record["bytes"]
                 name=component["destination_prefix"]+"/"+relative
                 integrity._relative(name)
+                # Prefix directories may be shared, but no source may shadow
+                # a prior final file, even when both files have identical bytes.
+                _need(name not in files)
                 files[name]=dict(source_path=str(path),**record)
             snapshots.append((root,component["profile"],remaining_files,remaining_bytes,MAX_ENTRIES-visited+entries,before,namespace,omissions))
             total+=selected_bytes

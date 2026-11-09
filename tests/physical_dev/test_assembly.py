@@ -67,10 +67,42 @@ class AssemblyTests(unittest.TestCase):
         for destination in (Path("relative"),self.root/"walk"/".."/"new",self.source/"inside-source"):
             with self.subTest(destination=destination),self.assertRaises(assembly.AssemblyError):assembly.plan_assembly([self.component()],destination)
 
-    def test_source_overlap_and_destination_prefix_aliases_refused(self):
+    def test_source_overlap_unsafe_prefix_and_actual_destination_aliases_refused(self):
         second=self.root/"second";second.mkdir();(second/"data").write_bytes(b"other")
-        for change in (dict(source_root=str(self.source)),dict(source_root=str(second),destination_prefix="SOURCES/unified"),dict(source_root=str(second),destination_prefix="sources/unified/nested"),dict(source_root=str(second),destination_prefix="../outside")):
+        for change in (dict(source_root=str(self.source)),dict(source_root=str(second),destination_prefix="SOURCES/unified"),dict(source_root=str(second),destination_prefix="../outside")):
             with self.subTest(change=change),self.assertRaises(assembly.AssemblyError):self.plan([self.component(),self.component(name="second",**change)])
+
+    def test_disjoint_nested_prefixes_allow_tooling_lock_seed_and_modules(self):
+        seed=self.root/"lock-seed";seed.mkdir();(seed/"package-lock.json").write_bytes(b"inert lock")
+        components=[self.component(destination_prefix="tooling/node_modules"),self.component(name="lock",source_root=str(seed),destination_prefix="tooling")]
+        plan=self.plan(components)
+        self.assertEqual(set(plan["files"]),{"tooling/node_modules/data","tooling/package-lock.json"})
+        self.assertEqual(plan["selected_file_count"],2);self.assertEqual(plan["selected_bytes"],17)
+        self.assertFalse(self.destination.exists())
+
+    def test_duplicate_final_file_is_refused_before_dictionary_overwrite(self):
+        second=self.root/"second";second.mkdir()
+        components=[self.component(destination_prefix="tooling"),self.component(name="second",source_root=str(second),destination_prefix="tooling")]
+        for raw in (b"fixture",b"different"):
+            (second/"data").write_bytes(raw)
+            with self.subTest(raw=raw),self.assertRaises(assembly.AssemblyError):self.plan(components)
+        self.assertFalse(self.destination.exists())
+
+    def test_equal_directory_prefixes_are_allowed_for_disjoint_final_files(self):
+        second=self.root/"second";second.mkdir();(second/"other").write_bytes(b"inert")
+        plan=self.plan([self.component(destination_prefix="tooling"),self.component(name="second",source_root=str(second),destination_prefix="tooling")])
+        self.assertEqual(set(plan["files"]),{"tooling/data","tooling/other"})
+        self.assertEqual(plan["selected_file_count"],2)
+
+    def test_nested_prefix_cannot_turn_a_file_into_a_directory(self):
+        second=self.root/"second";second.mkdir();(second/"child").write_bytes(b"inert")
+        components=[self.component(destination_prefix="tooling"),self.component(name="second",source_root=str(second),destination_prefix="tooling/data")]
+        with self.assertRaises(assembly.AssemblyError):self.plan(components)
+
+    def test_shared_directory_case_alias_rejected_with_disjoint_leaf_names(self):
+        second=self.root/"second";second.mkdir();(second/"other").write_bytes(b"inert")
+        components=[self.component(destination_prefix="tooling/NODE"),self.component(name="second",source_root=str(second),destination_prefix="tooling/node")]
+        with self.assertRaises(assembly.AssemblyError):self.plan(components)
 
     def test_global_byte_and_file_limits_cover_all_components(self):
         second=self.root/"second";second.mkdir();(second/"data").write_bytes(b"other")
