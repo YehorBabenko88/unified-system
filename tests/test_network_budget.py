@@ -6,6 +6,7 @@ import contextlib
 import queue
 import threading
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 from unified_system.network_budget import BandwidthPolicy, NodeBudget, EgressProjection, BudgetError
 
@@ -75,13 +76,25 @@ class BudgetTests(unittest.TestCase):
             self.assertTrue(a.try_take('tx','PC1','control',1,now_ms=1000))
             ctx=multiprocessing.get_context('spawn');out=ctx.Queue()
             workers=[ctx.Process(target=_compete,args=(str(path),out)) for _ in range(4)]
-            for p in workers:p.start()
-            for p in workers:
-                p.join(10)
-                if p.is_alive():p.terminate();p.join();self.fail('budget child deadline')
-                self.assertEqual(p.exitcode,0)
-            self.assertEqual(sum(out.get(timeout=1) for _ in workers),3)
-            out.close();out.join_thread()
+            started=[]
+            try:
+                for p in workers:
+                    p.start();started.append(p)
+                for p in started:
+                    p.join(10)
+                    if p.is_alive():self.fail('budget child deadline')
+                    self.assertEqual(p.exitcode,0,'budget child failed')
+                self.assertEqual(sum(out.get(timeout=1) for _ in started),3)
+            finally:
+                # Failure of one child must not leave siblings holding SQLite
+                # while TemporaryDirectory cleanup runs (notably on Windows).
+                for p in started:
+                    if p.is_alive():p.terminate()
+                for p in started:
+                    p.join(3)
+                    if p.is_alive():p.kill();p.join(3)
+                    self.assertFalse(p.is_alive(),'owned budget child cleanup deadline')
+                out.close();out.join_thread()
 
     def test_foreign_or_incomplete_database_not_adopted(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -122,6 +135,41 @@ class BudgetTests(unittest.TestCase):
                 self.assertTrue(b.try_take('tx','PC1','live',1,now_ms=2000))
             t.join(2)
             self.assertIs(results.get(timeout=1),True)
+
+
+
+
+def _faulting_budget_fixture(path, ready, index):
+    if index==0:
+        if not ready.wait(5):raise RuntimeError('fixture readiness deadline')
+        raise SystemExit(7)
+    with contextlib.closing(sqlite3.connect(path)) as con:
+        con.execute('SELECT * FROM meta').fetchone()
+        ready.set()
+        threading.Event().wait(30)
+
+
+class BudgetCleanupTests(unittest.TestCase):
+    def test_failed_child_cleans_all_owned_siblings_before_directory_cleanup(self):
+        ctx=multiprocessing.get_context('spawn');ready=ctx.Event();created=[]
+        class Context:
+            Queue=staticmethod(ctx.Queue)
+            def Process(self,*,target,args):
+                process=ctx.Process(target=_faulting_budget_fixture,args=(args[0],ready,len(created)))
+                created.append(process);return process
+        result=unittest.TestResult()
+        try:
+            with patch('test_network_budget.multiprocessing.get_context',return_value=Context()):
+                BudgetTests('test_real_processes_cannot_each_receive_a_fresh_full_budget').run(result)
+            self.assertTrue(result.failures or result.errors,'injected child failure must remain a failure')
+            self.assertFalse(any(p.is_alive() for p in created),'owned sibling survived failed fixture')
+            self.assertFalse(any('PermissionError' in detail for _,detail in result.errors),'SQLite cleanup ran before child exit')
+        finally:
+            for process in created:
+                if process.is_alive():process.terminate()
+            for process in created:
+                process.join(3)
+                if process.is_alive():process.kill();process.join(3)
 
 
 if __name__=='__main__': unittest.main()
