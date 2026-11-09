@@ -59,10 +59,67 @@ jobs:
                       raise RuntimeError('pure source test prohibited effect: ' + event)
               sys.addaudithook(audit)
               tracked = {}
+              def object_id(kind, blob):
+                  return hashlib.sha1(kind + b' ' + str(len(blob)).encode('ascii') + b'\0' + blob).hexdigest().encode('ascii')
+              def objects(requests):
+                  raw = primary('cat-file', '--batch', data=b''.join(oid + b'\n' for oid, _ in requests))
+                  cursor = 0; verified = {}
+                  for oid, kind in requests:
+                      end = raw.index(b'\n', cursor)
+                      header = raw[cursor:end].split()
+                      if len(header) != 3 or header[:2] != [oid, kind]:
+                          raise RuntimeError('primary object header mismatch')
+                      size = int(header[2]); cursor = end + 1
+                      if size < 0:
+                          raise RuntimeError('negative primary object size')
+                      blob = raw[cursor:cursor + size]
+                      if len(blob) != size or raw[cursor + size:cursor + size + 1] != b'\n' or object_id(kind, blob) != oid:
+                          raise RuntimeError('primary raw object size, delimiter or hash mismatch')
+                      cursor += size + 1
+                      verified[oid] = blob
+                  if cursor != len(raw):
+                      raise RuntimeError('trailing primary object bytes')
+                  return verified
               def guard():
                   head = primary('rev-parse', 'HEAD').decode().strip()
                   if head != os.environ['EXPECTED_HEAD']:
                       raise RuntimeError('HEAD mismatch')
+                  commit = objects([(head.encode('ascii'), b'commit')])[head.encode('ascii')]
+                  first = commit.split(b'\n', 1)[0]
+                  if not first.startswith(b'tree ') or len(first) != 45:
+                      raise RuntimeError('invalid primary commit tree')
+                  root_tree = first[5:]
+                  if primary('rev-parse', 'HEAD^{tree}').strip() != root_tree:
+                      raise RuntimeError('commit tree mismatch')
+                  tree_inventory = primary('ls-tree', '-rtz', '--full-tree', 'HEAD')
+                  tree_oids = {root_tree}
+                  for item in tree_inventory.split(b'\0'):
+                      if item:
+                          meta, _ = item.split(b'\t', 1)
+                          _, kind, oid = meta.split()
+                          if kind == b'tree':
+                              tree_oids.add(oid)
+                  trees = objects([(oid, b'tree') for oid in sorted(tree_oids)])
+                  bound_entries = {}
+                  def walk_tree(oid, prefix='', ancestors=()):
+                      if oid in ancestors:
+                          raise RuntimeError('cyclic primary tree')
+                      raw_tree = trees[oid]; offset = 0
+                      while offset < len(raw_tree):
+                          space = raw_tree.index(b' ', offset); zero = raw_tree.index(b'\0', space)
+                          mode = raw_tree[offset:space]; name = raw_tree[space + 1:zero].decode('utf-8')
+                          child = raw_tree[zero + 1:zero + 21]
+                          if len(child) != 20 or name in ('', '.', '..') or '/' in name or '\\' in name:
+                              raise RuntimeError('invalid primary tree entry')
+                          offset = zero + 21; path = prefix + name
+                          child_oid = child.hex().encode('ascii')
+                          if mode == b'40000':
+                              walk_tree(child_oid, path + '/', ancestors + (oid,))
+                          elif mode in (b'100644', b'100755') and path not in bound_entries:
+                              bound_entries[path] = child_oid
+                          else:
+                              raise RuntimeError('unsupported or duplicate primary tree entry')
+                  walk_tree(root_tree)
                   inventory = primary('ls-tree', '-rz', '--full-tree', 'HEAD')
                   entries = []
                   for entry in inventory.split(b'\0'):
@@ -72,16 +129,12 @@ jobs:
                           if mode not in (b'100644', b'100755') or kind != b'blob':
                               raise RuntimeError('nonregular primary entry')
                           entries.append((name.decode('utf-8'), oid))
-                  raw = primary('cat-file', '--batch', data=b''.join(oid + b'\n' for _, oid in entries))
-                  cursor = 0
+                  if dict(entries) != bound_entries or len(entries) != len(bound_entries):
+                      raise RuntimeError('inventory differs from authenticated commit tree')
+                  blobs = objects([(oid, b'blob') for _, oid in entries])
                   current = {}
                   for name, oid in entries:
-                      end = raw.index(b'\n', cursor)
-                      header = raw[cursor:end].split()
-                      if header[:2] != [oid, b'blob']:
-                          raise RuntimeError('primary object mismatch')
-                      size = int(header[2]); cursor = end + 1
-                      blob = raw[cursor:cursor + size]; cursor += size + 1
+                      blob = blobs[oid]
                       path = root / name
                       info = path.lstat()
                       if not stat.S_ISREG(info.st_mode) or info.st_nlink != 1 or getattr(info, 'st_file_attributes', 0) & 0x400:
@@ -89,8 +142,6 @@ jobs:
                       if path.read_bytes() != blob:
                           raise RuntimeError('raw primary mismatch: ' + name)
                       current[name] = blob
-                  if cursor != len(raw):
-                      raise RuntimeError('trailing primary object bytes')
                   actual = set()
                   for directory, dirs, files in os.walk(root, followlinks=False):
                       if pathlib.Path(directory) == root:
