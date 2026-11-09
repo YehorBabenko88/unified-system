@@ -1,0 +1,49 @@
+{
+  "head": "ba2b1cec0c2b114586afb73696e282117eede987",
+  "tree": "4e5c535367e4e7711a64096ff6e9c78038c55717",
+  "status": "SOURCE_SAFETY_REVIEW_ONLY",
+  "runtime_tests_executed": 0,
+  "lane": "ROOT_NOT_RELEASED_NO_A8_FIXTURE_START",
+  "CI639_four_paths_byte_equal": [
+    ".github/workflows/final-integration.yml",
+    "release/component-test-inventory.json",
+    "docs/ci/heartbeat-fixture-evidence-20261109.json",
+    "tests/test_lan_transport.py"
+  ],
+  "broker327_runtime_byte_equal": true,
+  "old16_case_AST_equal": [
+    "test_actual.GatewayNegativeTests.test_actual_mtls_submit_denied_and_own_context_invalidated",
+    "test_actual.GatewayNegativeTests.test_actual_same_original_twice_stays_denied_without_job",
+    "test_actual.GatewayNegativeTests.test_actual_lookup_absence_remains_unknown",
+    "test_actual.GatewayNegativeTests.test_input_and_fake_socket_reject_before_authentication",
+    "test_actual.GatewayNegativeTests.test_actual_revoked_and_expired_policy_are_errors_not_gate_data",
+    "test_actual.GatewayNegativeTests.test_actual_destroyed_leader_is_not_resource_denial",
+    "test_actual.GatewayNegativeTests.test_actual_inflight_call_rejects_second_instead_of_queueing",
+    "test_actual.GatewayNegativeTests.test_actual_task_cancellation_locally_invalidates_without_result",
+    "test_actual.GatewayNegativeTests.test_closed_actual_tls_socket_cannot_authenticate",
+    "test_actual.GatewayNegativeTests.test_rebound_authority_config_rejected_before_authentication",
+    "test_actual.GatewayNegativeTests.test_z_actual_quorum_loss_cleanup_preserves_original_error",
+    "test_boundary.NegativeDataTests.test_exact_negative_data_and_original_digest",
+    "test_boundary.NegativeDataTests.test_unexpected_positive_commit_effect_digest_or_pair_rejected",
+    "test_boundary.NegativeDataTests.test_json_and_equality_claims_are_not_native_result_type",
+    "test_boundary.NegativeDataTests.test_only_literal_loopback_lab_endpoints_are_accepted",
+    "test_boundary.NegativeDataTests.test_different_raw_source_rejected_without_editing_primary_files"
+  ],
+  "new_five_case_ids": [
+    "test_actual.GatewayNegativeTests.test_actual_lost_client_custody_preserves_error_without_proxy_cleanup",
+    "test_actual.GatewayNegativeTests.test_closed_captured_client_rejected_before_call_auth",
+    "test_actual.GatewayNegativeTests.test_closed_owned_client_rejected_before_constructor_auth",
+    "test_actual.GatewayNegativeTests.test_replaced_client_rejected_before_call_auth",
+    "test_boundary.ClientOwnershipTests.test_actual_injected_client_rejected_without_network_request"
+  ],
+  "exact21_static_inventory_equal": true,
+  "pins_verified": {
+    "grid.coordination": "3dd73d3eb3dfb576f7174a94fab05a0f87fe248ffcacccfa19786ccc74f0776b",
+    "grid.authority_runtime_v1": "cfb32db73f1859d9d78b03d886372cc08584c81abd64930b5409a91edc417b64",
+    "grid.authority_assignment_v1": "5b972b6d81eeaf6f2283584c5b0482552fa9bf0717a4379838900a72da791491",
+    "unified_system.gateway_research_identity": "481724cd2efca312773fa4152d1c223b46ced6529d96b2d74f452cdf57932d7f",
+    "unified_system.gateway_identity": "84093865e8477ef6562100d41137922785446c9cb4e024c9ba7105593a2b36c1"
+  },
+  "root_module_sha256": "bb56a83189839ee054cdb2fb233884b7ed4f88d61cff74bac3dd066ab91e40a2",
+  "public_submit": "DENY"
+}
