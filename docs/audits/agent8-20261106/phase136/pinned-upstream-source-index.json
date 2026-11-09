@@ -1,0 +1,25 @@
+{
+  "Consul_version": "v1.22.2",
+  "source_review_only": true,
+  "native_response_observed": false,
+  "upstream": [
+    {
+      "url": "https://github.com/hashicorp/consul/blob/v1.22.2/agent/consul/state/txn.go",
+      "lines": "97-124,346-397",
+      "reason": "absence checks yield no result; dispatcher concatenates returned results"
+    },
+    {
+      "url": "https://developer.hashicorp.com/consul/api-docs/txn#sample-response",
+      "reason": "results emitted for some operations, not universal positional placeholders"
+    }
+  ],
+  "client_source": {
+    "file": "grid/authority_assignment_v1.py",
+    "require_seven_results_line": 737,
+    "plan_absence_ops_lines": "832",
+    "session_policy_line": 785
+  },
+  "derived_expected_result_count": 5,
+  "client_expected_count": 7,
+  "LockDelay_comparison": "==0 without exact int check; JSON bool preserved"
+}

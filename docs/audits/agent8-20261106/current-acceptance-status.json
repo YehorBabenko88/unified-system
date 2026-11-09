@@ -667,7 +667,7 @@
     "P0_confirmed_defects": 0,
     "P0_absence_proven": false,
     "P1_open": 7,
-    "P2_open": 3,
+    "P2_open": 5,
     "F08": "FIX_VERIFIED_OFFLINE",
     "F09": "FIX_VERIFIED_OFFLINE_AT_42686cd",
     "F10": "FIX_VERIFIED_OFFLINE_AT_42686cd",
@@ -3959,7 +3959,7 @@
     "mandatory_hosted": "NOT_QUALIFIED",
     "overall": "NO_GO"
   },
-  "latest_addendum_scope": "phase135 own exact68 actual21 after explicit runtime lane handoff; F27 isolated fix verified, no global/hosted/positive-native/physical acceptance",
+  "latest_addendum_scope": "phase136 exact280 source/preparation only; F29/F30 source blockers, no native execution/physical or global recheck",
   "PR54_b144_terminal_CI_20261109": {
     "head": "b144a5e0fd3af90c975bfc0f0123234628dbb696",
     "direct_run": 42646665067,
@@ -4153,6 +4153,22 @@
     "F27": "FIX_VERIFIED_ISOLATED_NEGATIVE_COMPONENT_ONLY",
     "hosted": "NOT_QUALIFIED_HERE",
     "positive_native_freeze": "NOT_GRANTED",
+    "overall": "NO_GO"
+  },
+  "Grid280_source_preparation": {
+    "head": "49406ab9b2349abcf9524a7bc4aa4dc0e0cf0213",
+    "tree": "03439c7a0ef4ace77d0f10364f34da488af4cefd",
+    "public_gates": "UNCONDITIONALLY_CLOSED",
+    "A8_runtime_tests": 0,
+    "native_RPC": 0,
+    "primary_static_files": {
+      "Grid": 824,
+      "Unified1f6": 1519
+    },
+    "F29": "OPEN_P2_RESULT_CARDINALITY_SOURCE_ONLY",
+    "F30": "OPEN_P2_LOCKDELAY_BOOL_SOURCE_ONLY",
+    "execution_release": "NOT_GRANTED",
+    "Root68_pins": "UNCHANGED",
     "overall": "NO_GO"
   }
 }

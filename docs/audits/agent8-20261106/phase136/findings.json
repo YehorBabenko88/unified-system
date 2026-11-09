@@ -1,0 +1,24 @@
+[
+  {
+    "id": "A8-F29",
+    "severity": "P2",
+    "repository": "bybit-cluster-grid",
+    "pr": 280,
+    "observed_head": "49406ab9b2349abcf9524a7bc4aa4dc0e0cf0213",
+    "title": "Prepared seven-op registration sender expects seven results although two absence checks return none",
+    "status": "OPEN_PRE_ACTIVATION_SOURCE_BLOCKER_NOT_RUNTIME_REPRODUCED",
+    "evidence": "phase136/static-review.json;phase136/report.md",
+    "required_correction": "Keep public gate closed. Use operation-aware pinned Consul result grammar: successful current seven-op plan emits five results, with no placeholders for check-not-exists. Validate typed KV results and malformed/ambiguous responses before known-commit classification; actual native qualification requires separate release."
+  },
+  {
+    "id": "A8-F30",
+    "severity": "P2",
+    "repository": "bybit-cluster-grid",
+    "pr": 280,
+    "observed_head": "49406ab9b2349abcf9524a7bc4aa4dc0e0cf0213",
+    "title": "Prepared native session policy accepts JSON false as integer LockDelay zero",
+    "status": "OPEN_PRE_ACTIVATION_SOURCE_BLOCKER_NOT_RUNTIME_REPRODUCED",
+    "evidence": "phase136/static-review.json;phase136/report.md",
+    "required_correction": "Require exact non-boolean int LockDelay==0 and explicit typed session-info grammar, with pure negative regression; keep native gate closed pending independently released actual qualification."
+  }
+]
