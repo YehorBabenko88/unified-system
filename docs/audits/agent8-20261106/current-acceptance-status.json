@@ -666,7 +666,7 @@
   "P0_P1_P2": {
     "P0_confirmed_defects": 0,
     "P0_absence_proven": false,
-    "P1_open": 7,
+    "P1_open": 8,
     "P2_open": 3,
     "F08": "FIX_VERIFIED_OFFLINE",
     "F09": "FIX_VERIFIED_OFFLINE_AT_42686cd",
@@ -3959,7 +3959,7 @@
     "mandatory_hosted": "NOT_QUALIFIED",
     "overall": "NO_GO"
   },
-  "latest_addendum_scope": "phases123-126 scoped exact-head independent checks; older top-level snapshots are not a fresh global recheck",
+  "latest_addendum_scope": "phase127 client proxy isolation source-risk finding; earlier scoped test results retained, no fresh global recheck",
   "PR54_b144_terminal_CI_20261109": {
     "head": "b144a5e0fd3af90c975bfc0f0123234628dbb696",
     "direct_run": 42646665067,
@@ -4023,6 +4023,14 @@
     "initial_A8_missing_tzdata_and_outer_timeout": "PRESERVED_NOT_PRODUCT_DEFECT",
     "hosted": "NOT_QUALIFIED_HERE",
     "F26": "P1_OPEN_PENDING_MANDATORY_HOSTED",
+    "overall": "NO_GO"
+  },
+  "A8_F27_PROXY_ROUTE": {
+    "status": "P1_OPEN",
+    "Grid539": "Core868 owned client trust_env default True",
+    "Unified034": "literal loopback gate insufficient",
+    "actual_http_requests": 0,
+    "prior_proxy_use_or_egress": "NOT_ESTABLISHED",
     "overall": "NO_GO"
   }
 }
