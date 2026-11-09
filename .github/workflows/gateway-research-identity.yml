@@ -58,7 +58,7 @@ jobs:
           A2_RESEARCH_CONSUL_BINARY: ${{ runner.temp }}/a2-research-consul/${{ matrix.executable }}
         run: |
           set -o pipefail
-          python -I -B unified/docs/intelligence/research-identity/run_qualification.py --expected-head "$EXPECTED_HEAD" --grid-source "$GITHUB_WORKSPACE/grid" 2>&1 | tee "$RUNNER_TEMP/research-principal.log"
+          python -I -B unified/docs/intelligence/research-identity/native-profile-v2-20261109/run_qualification.py --expected-head "$EXPECTED_HEAD" --grid-source "$GITHUB_WORKSPACE/grid" --expected-grid-head 40e9c8dc274a2746018bc1aa08d103cd0187cecc 2>&1 | tee "$RUNNER_TEMP/research-principal.log"
       - if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
