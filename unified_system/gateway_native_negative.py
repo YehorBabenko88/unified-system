@@ -17,10 +17,10 @@ class NativeNegativeDenied(RuntimeError):
     pass
 
 _PINS={
-    'grid.coordination':'86814ec2519c272740ac8fae6fb4eae73d14ba51ccec091053ab260c7c024f73',
+    'grid.coordination':'3dd73d3eb3dfb576f7174a94fab05a0f87fe248ffcacccfa19786ccc74f0776b',
     'grid.authority_runtime_v1':'cfb32db73f1859d9d78b03d886372cc08584c81abd64930b5409a91edc417b64',
-    'grid.authority_assignment_v1':'1d578644ecbe881554bc3dd61d49227db2171ea2037d22599df44a73d698fd27',
-    'unified_system.gateway_research_identity':'1f9714010143c5243c78494cb25bfe7f2d42e96301f57930212a2f5f3b9c869d',
+    'grid.authority_assignment_v1':'5b972b6d81eeaf6f2283584c5b0482552fa9bf0717a4379838900a72da791491',
+    'unified_system.gateway_research_identity':'481724cd2efca312773fa4152d1c223b46ced6529d96b2d74f452cdf57932d7f',
     'unified_system.gateway_identity':'84093865e8477ef6562100d41137922785446c9cb4e024c9ba7105593a2b36c1',
 }
 
@@ -57,6 +57,28 @@ def _loopback_endpoints(endpoints,lab):
         except ValueError:valid=False
         if not valid:raise NativeNegativeDenied('ISOLATED_LOOPBACK_ONLY')
 
+def _owned_client(authority,*,config=None,client=None):
+    """Entry custody only; exclusive lifecycle is required throughout cleanup.
+
+    The pinned owned Core constructor supplies no proxy/mounts. This is not a
+    credential or protection against arbitrary in-process object mutation.
+    """
+    import httpx
+    authority_type=_fixed_types()[0]
+    if type(authority) is not authority_type or authority._owns_client is not True:
+        raise NativeNegativeDenied('SOURCE_OWNED_HTTP_CLIENT_REQUIRED')
+    if config is not None and authority.config is not config:
+        raise NativeNegativeDenied('QUALIFIED_CONFIGURATION_CHANGED')
+    current=authority.client
+    if client is not None and current is not client:
+        raise NativeNegativeDenied('QUALIFIED_HTTP_CLIENT_CHANGED')
+    if (type(current) is not httpx.AsyncClient or current.trust_env is not False
+            or current.is_closed is not False or current.follow_redirects is not False
+            or type(current._transport) is not httpx.AsyncHTTPTransport
+            or type(current._mounts) is not dict or current._mounts):
+        raise NativeNegativeDenied('OPEN_PROXY_FREE_OWNED_CLIENT_REQUIRED')
+    return current
+
 def _original(raw):
     if type(raw) is not bytes or not 0<len(raw)<=16384:
         raise NativeNegativeDenied('BOUNDED_ORIGINAL_BYTES_REQUIRED')
@@ -84,7 +106,13 @@ def _negative_observation(original,value,*,operation):
     return value
 
 class DisposableNativeNegativeGateway:
-    """One in-flight call on its owner loop; no queue, issuer or public endpoint."""
+    """One in-flight call; no queue, issuer or public endpoint.
+
+    Caller grants exclusive authority/client/config lifecycle for the entire
+    operation AND cleanup, including shutdown ordering. Entry checks are not
+    protection against supported concurrent reconfiguration (none is provided).
+    Deliberate custody loss is tested at an error-return boundary only.
+    """
     def __init__(self,authority,generation,*,broker):
         authority_type,broker_type,native_type,_=_fixed_types()
         if type(self) is not DisposableNativeNegativeGateway or type(authority) is not authority_type or type(broker) is not broker_type or type(generation) is not str:
@@ -93,6 +121,7 @@ class DisposableNativeNegativeGateway:
         timeout=authority.config.request_timeout
         if type(timeout) not in (int,float) or not 0<timeout<=2:
             raise NativeNegativeDenied('QUALIFIED_REQUEST_DEADLINE_REQUIRED')
+        self._client=_owned_client(authority)
         self._native=native_type(authority,generation,broker=broker)
         self._authority=authority;self._broker=broker;self._config=authority.config
         self._loop=asyncio.get_running_loop();self._thread=threading.get_ident();self._busy=False
@@ -112,8 +141,7 @@ class DisposableNativeNegativeGateway:
         authority_type,broker_type,native_type,_=_fixed_types()
         if type(self._authority) is not authority_type or type(self._broker) is not broker_type or type(self._native) is not native_type:
             raise NativeNegativeDenied('ACTUAL_OWNED_SOURCES_REQUIRED')
-        if self._authority.config is not self._config:
-            raise NativeNegativeDenied('QUALIFIED_CONFIGURATION_CHANGED')
+        _owned_client(self._authority,config=self._config,client=self._client)
         timeout=self._authority.config.request_timeout
         if type(timeout) not in (int,float) or not 0<timeout<=2:
             raise NativeNegativeDenied('QUALIFIED_REQUEST_DEADLINE_REQUIRED')
@@ -134,8 +162,17 @@ class DisposableNativeNegativeGateway:
         finally:
             try:
                 if context is not None:
-                    try:await broker_type.invalidate_context(self._broker,context)
-                    except BaseException:
+                    try:
+                        try:_owned_client(self._authority,config=self._config,client=self._client)
+                        except BaseException as custody_loss:
+                            # Never send cleanup through a changed/unknown client.
+                            # This fixed local latch is NOT native retirement.
+                            try:broker_type.invalidate_context_local_only(self._broker,context)
+                            except BaseException:custody_loss.add_note('LOCAL_CONTEXT_INVALIDATION_UNKNOWN')
+                            raise
+                        await broker_type.invalidate_context(self._broker,context)
+                    except BaseException as cleanup_error:
+                        cleanup_error.add_note('NATIVE_NEGATIVE_CONTEXT_INVALIDATION_UNKNOWN')
                         if failure is None:raise
                         failure.add_note('NATIVE_NEGATIVE_CONTEXT_INVALIDATION_UNKNOWN')
             finally:self._busy=False

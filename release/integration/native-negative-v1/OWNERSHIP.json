@@ -6,13 +6,29 @@
     "docs/intelligence/native-negative/**",
     "release/integration/native-negative-v1/**",
     ".github/workflows/gateway-native-negative.yml",
-    "docs/superpowers/plans/2026-11-09-native-negative-composition.md"
+    "docs/superpowers/plans/2026-11-09-native-negative-composition.md",
+    "docs/superpowers/plans/2026-11-09-native-proxy-custody.md",
+    "release/component-test-inventory.json",
+    ".github/workflows/final-integration.yml",
+    "docs/ci/heartbeat-fixture-evidence-20261109.json"
   ],
   "A2_UNCHANGED": [
-    "unified_system/gateway_research_identity.py",
-    "Grid grid/authority_assignment_v1.py and existing authority"
+    "Grid authority source (explicit paired dependency only)"
   ],
   "A4_A5_A6_A7": "NO_SHARED_FILES_CHANGED",
   "api_changes": "EXPLICIT_OWNER_COACK_REQUIRED",
-  "runtime_admission": false
+  "runtime_admission": false,
+  "A1_BYTE_EXACT_IMPORT": {
+    "head": "4e297c264e1c81d1cdb3bbb8161c281b76bb0613",
+    "path": "tests/test_lan_transport.py",
+    "sha256": "9d8099ed5aeca90c3bb8cb7acd8fd08fa8b21bb8c4c2682267084075ef4ae59d",
+    "integration_source": "639e8f82cc624348b25a43934b6655d6a378a26c"
+  },
+  "A2_BYTE_EXACT_IMPORT": {
+    "head": "327a3e2ca6106d2d39eb8f0da3802560e63b09e6",
+    "path": "unified_system/gateway_research_identity.py",
+    "sha256": "481724cd2efca312773fa4152d1c223b46ced6529d96b2d74f452cdf57932d7f",
+    "api_doc_sha256": "e007e127761edf27eef7adff6c38bfaac30861ae16e2e097164e93d8043813ab",
+    "scope": "FIXED_SYNC_LOCAL_ONLY_INVALIDATION_NO_NATIVE_RETIREMENT"
+  }
 }

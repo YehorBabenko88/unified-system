@@ -21,6 +21,95 @@ class GatewayNegativeTests(unittest.IsolatedAsyncioTestCase):
         await fixture.NativeProfileV2Tests.asyncSetUp(self)
         self.original_bytes=fixture.canonical(self.submit())
 
+    async def test_closed_owned_client_rejected_before_constructor_auth(self):
+        from unified_system.gateway_native_negative import DisposableNativeNegativeGateway,NativeNegativeDenied
+        from grid.coordination import ConsulSessionAuthority
+        extra=ConsulSessionAuthority(self.authority.config)
+        broker=ResearchIdentityBroker(authority=extra,generation=self.generation,realm_id=self.realm,
+            profile_sha256=self.profile_sha,server_ssl_context=self.tls.server_context,
+            server_certificate_der=self.tls.server_der,audit_sink=self.audit)
+        try:
+            await extra.close()
+            with self.assertRaises(NativeNegativeDenied):
+                DisposableNativeNegativeGateway(extra,self.generation,broker=broker)
+            self.assertEqual(self.session_responses,[])
+        finally:
+            await broker.close();await extra.close()
+
+    async def test_replaced_client_rejected_before_call_auth(self):
+        import httpx
+        from unified_system.gateway_native_negative import DisposableNativeNegativeGateway,NativeNegativeDenied
+        gateway=DisposableNativeNegativeGateway(self.authority,self.generation,broker=self.broker)
+        original=self.authority.client
+        replacement=httpx.AsyncClient(trust_env=False,follow_redirects=False)
+        try:
+            self.authority.client=replacement
+            with self.assertRaises(NativeNegativeDenied):
+                await gateway.submit(self.original_bytes,accepted_tls=self.tls.accepted,leader=self.leader)
+            self.assertEqual(self.session_responses,[])
+        finally:
+            self.authority.client=original;await replacement.aclose()
+
+    async def test_closed_captured_client_rejected_before_call_auth(self):
+        from unified_system.gateway_native_negative import DisposableNativeNegativeGateway,NativeNegativeDenied
+        gateway=DisposableNativeNegativeGateway(self.authority,self.generation,broker=self.broker)
+        await self.authority.client.aclose()
+        with self.assertRaises(NativeNegativeDenied):
+            await gateway.submit(self.original_bytes,accepted_tls=self.tls.accepted,leader=self.leader)
+        self.assertEqual(self.session_responses,[])
+
+    async def test_actual_lost_client_custody_preserves_error_without_proxy_cleanup(self):
+        import httpx,threading
+        from http.server import HTTPServer,BaseHTTPRequestHandler
+        from grid.coordination import ConsulSessionAuthority
+        from unified_system.gateway_native_negative import DisposableNativeNegativeGateway
+        gateway=DisposableNativeNegativeGateway(self.authority,self.generation,broker=self.broker)
+        counts={'requests':0};ready=threading.Event()
+        class Trap(BaseHTTPRequestHandler):
+            def do_PUT(handler):
+                counts['requests']+=1
+                length=int(handler.headers.get('Content-Length','0'))
+                if not 0<=length<=65536:raise AssertionError('OWN_TRAP_BODY_BOUND')
+                handler.rfile.read(length)  # Discard; never retain headers, tokens or body.
+                handler.send_response(502);handler.send_header('Content-Length','0')
+                handler.send_header('Connection','close');handler.end_headers()
+            def log_message(handler,*args):pass
+        trap=HTTPServer(('127.0.0.1',0),Trap)
+        def serve():ready.set();trap.serve_forever(poll_interval=.05)
+        thread=threading.Thread(target=serve,daemon=True);thread.start()
+        replacement=httpx.AsyncClient(proxy='http://127.0.0.1:'+str(trap.server_port),trust_env=False,follow_redirects=False)
+        original=self.authority.client;admin=ConsulSessionAuthority(self.authority.config);injected=[]
+        async def lose_after_actual_read(response):
+            if response.request.url.path=='/v1/txn':
+                request=json.loads(response.request.content)
+                if not injected and type(request) is list and len(request)==7 and all(item.get('KV',{}).get('Verb')=='get-or-empty' for item in request):
+                    await response.aread();injected.append(True)
+                    self.authority.client=replacement
+                    raise ValueError('OWN_CUSTODY_ERROR_AFTER_REAL_NATIVE_READ')
+        original.event_hooks['response'].append(lose_after_actual_read)
+        try:
+            self.assertTrue(ready.wait(2));self.assertTrue(thread.is_alive())
+            with self.assertRaisesRegex(ValueError,'OWN_CUSTODY_ERROR_AFTER_REAL_NATIVE_READ') as caught:
+                await gateway.submit(self.original_bytes,accepted_tls=self.tls.accepted,leader=self.leader)
+            self.assertTrue(injected)
+            self.assertIn('NATIVE_NEGATIVE_CONTEXT_INVALIDATION_UNKNOWN',getattr(caught.exception,'__notes__',[]))
+            self.assertEqual(counts['requests'],0)
+            self.assertEqual(len(self.broker._contexts),1);self.assertTrue(self.broker._captures)
+            for capture in self.broker._captures:
+                with self.assertRaises(ResearchIdentityDenied):
+                    ResearchIdentityBroker.require_capture(self.broker,capture,expected_authority=self.authority,
+                        scope='SUBMIT_RESEARCH',request_bytes=self.original_bytes)
+            sid=json.loads(self.session_responses[0]['raw'])['ID']
+            current=await admin._request('GET','/v1/session/info/'+sid)
+            self.assertEqual(len(current),1);self.assertEqual(current[0]['ID'],sid)
+            self.assertFalse(gateway._busy)
+        finally:
+            self.authority.client=original
+            original.event_hooks['response'].remove(lose_after_actual_read)
+            await replacement.aclose();await admin.close()
+            trap.shutdown();trap.server_close();thread.join(2)
+            self.assertFalse(thread.is_alive())
+
     async def test_actual_mtls_submit_denied_and_own_context_invalidated(self):
         from unified_system.gateway_native_negative import DisposableNativeNegativeGateway
         gateway=DisposableNativeNegativeGateway(self.authority,self.generation,broker=self.broker)

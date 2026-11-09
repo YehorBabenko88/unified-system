@@ -46,3 +46,14 @@ class NegativeDataTests(unittest.TestCase):
                 with self.assertRaises(NativeNegativeDenied):_fixed_types()
             finally:actual.__file__=original
         self.assertEqual(Path(original).read_bytes(),raw)
+
+class ClientOwnershipTests(unittest.IsolatedAsyncioTestCase):
+    async def test_actual_injected_client_rejected_without_network_request(self):
+        import httpx
+        from grid.coordination import ConsulConfig,ConsulSessionAuthority
+        from unified_system.gateway_native_negative import _owned_client,NativeNegativeDenied
+        client=httpx.AsyncClient(trust_env=False,follow_redirects=False)
+        authority=ConsulSessionAuthority(ConsulConfig(('http://127.0.0.1:1',),'owned-boundary',isolated_lab=True),client=client)
+        try:
+            with self.assertRaises(NativeNegativeDenied):_owned_client(authority)
+        finally:await client.aclose()

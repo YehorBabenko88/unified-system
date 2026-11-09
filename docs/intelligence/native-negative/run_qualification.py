@@ -11,7 +11,7 @@ import subprocess
 import sys
 import unittest
 
-GRID_HEAD='539239e3c11ec9e86aa24365d74a68301fdf1185'
+GRID_HEAD='2f94da511681811588e0f850a0a0e9dc4479c8b8'
 BASE='3af06455b601a328e94339327a0597eada802c38'
 HELPER='tests/storage/native_publication/qualify.py'
 HELPER_SHA='e71934d06625a5b1c2047cd32c23c4005f2c400b438717b6b3394ecb7855edee'
@@ -62,7 +62,7 @@ def main():
         for item in value:
             if isinstance(item,unittest.TestSuite):yield from cases(item)
             else:yield item.id()
-    actual=list(cases(suite));assert len(actual)==len(set(actual))==len(expected)==len(set(expected))==16 and sorted(actual)==expected
+    actual=list(cases(suite));assert len(actual)==len(set(actual))==len(expected)==len(set(expected))==21 and sorted(actual)==expected
     result=None;binding=False;failure=None;origins={};owned=[]
     try:
         with (out/'tests.log').open('w',encoding='utf-8') as log:
@@ -88,12 +88,12 @@ def main():
             failure=type(exc).__name__
             raise
         finally:
-            passed=binding and result is not None and result.wasSuccessful() and result.testsRun==16 and not result.skipped and len(owned)==3
+            passed=binding and result is not None and result.wasSuccessful() and result.testsRun==21 and not result.skipped and len(owned)==3
             report=dict(schema='unified.native-negative.source-qualification.v1',scope='REAL_MTLS_INTERNAL_NEGATIVE_COMPOSITION_NO_HTTP_ENDPOINT',head=args.expected_head,tree=primary_git(root,'rev-parse','HEAD^{tree}').decode().strip(),grid_head=GRID_HEAD,passed=passed,source_binding_passed=binding,source_failure_type=failure,tests=None if result is None else result.testsRun,errors=None if result is None else len(result.errors),failures=None if result is None else len(result.failures),skips=None if result is None else len(result.skipped),test_ids=actual,primary_before=before,primary_after_equal=binding,module_origins=origins,owned_processes_retired=owned,source_helper_sha256=HELPER_SHA,git_path=str(git),git_sha256=hashlib.sha256(git.read_bytes()).hexdigest(),python=sys.version,python_executable=sys.executable,run=os.environ.get('GITHUB_RUN_ID'),attempt=os.environ.get('GITHUB_RUN_ATTEMPT'),public_submit='DENY',native_job_permission=False,full_scientific_e2e=False,physical='NOT_RUN',production='NO_GO')
             if (out/'tests.log').exists():report['test_log_sha256']=hashlib.sha256((out/'tests.log').read_bytes()).hexdigest()
             (out/'qualification.json').write_bytes((json.dumps(report,indent=2)+'\n').encode())
     assert passed,'NATIVE_NEGATIVE_QUALIFICATION_FAILED'
-    print(json.dumps(dict(passed=True,head=args.expected_head,grid_head=GRID_HEAD,tests=16,skips=0,source_files={k:len(v) for k,v in before.items()},scope=report['scope'])))
+    print(json.dumps(dict(passed=True,head=args.expected_head,grid_head=GRID_HEAD,tests=21,skips=0,source_files={k:len(v) for k,v in before.items()},scope=report['scope'])))
 
 if __name__=='__main__':
     try:main()
