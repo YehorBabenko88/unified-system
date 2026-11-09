@@ -2414,3 +2414,35 @@ P0_P1_P2: 8 open P1 /3 P2 unchanged; F27 open, absence of P0 not proven.
 EVIDENCE: original current PR metadata, static checks and primary maps above.
 NEXT_ACTIONS: explicit Root serial lane handoff, then independent actual21 qualification on exact published source; original hosted artifacts separate.
 GO_NO_GO: NO-GO; TAILSCALE_REMOVAL BLOCKED.
+
+
+# PR68 independent actual client-custody acceptance
+
+Exact Unified Draft PR68 HEAD `ba2b1cec0c2b114586afb73696e282117eede987`, tree `4e5c535367e4e7711a64096ff6e9c78038c55717`; explicit Grid `2f94da511681811588e0f850a0a0e9dc4479c8b8` (Core3dd/assignment5b97), broker481. Source/safety review completed in phase134 before execution. Root subsequently explicitly handed off the serial isolated runtime lane, after its fixtures ended. A8 independently rechecked current Draft HEAD and executed the fixed committed driver on its own stand. Root21/145/Direct22 are not A8 counts.
+
+| Requirement ID | Repository / PR / exact HEAD | Test | Environment | Expected | Actual / status | Evidence | Severity / correction |
+|---|---|---|---|---|---|---|---|
+| A8-F27-CONSUMER-FIX | Unified PR68 /ba2 above +Grid2f | Full current21 mandatory negative-component cases | Own Windows CPython3.12.10/httpx0.28.1, actual mTLS, own ACL Consul triplet and loopback trap | Explicit owned proxy-free client gate, pre-auth rejection, safe custody-loss cleanup, existing negative cases preserved | 21 unique PASS /0 failure/error/skip | [Original tests](phase135/actual21/tests.log), [source-bound qualification](phase135/actual21/qualification.json), [original lifecycle stdout](phase135/stdout.log), [command](phase135/command.txt) | F27 FIX_VERIFIED_ISOLATED_COMPONENT at this exact source pair only |
+| A8-SOURCE-GUARD-68 | Same source | Wrong Root HEAD; old Grid HEAD; Git environment override | Three separate isolated interpreter calls | Reject before native fixture entry | All three reject; no tests.log or lab-start output | [Guard controls](phase135/guard-calibrations.json), [wrong head](phase135/wrong-head.stderr.log), [wrong Grid](phase135/wrong-grid.stderr.log), [Git override](phase135/git-env-override.stderr.log) | Pre-native guard calibration, not three extra application PASS tests |
+| A8-EXACT-HEAD-68 | Same PR | Connector metadata and primary source binding | Read-only GitHub/Git plus driver pre/post | Exact published head/tree/dependency | PASS;1642 Unified+821 Grid primary files unchanged, no extras | [Original metadata](phase135/GitHub-PR68.original-metadata.json), qualification primary maps/origins | Not a fresh all-six-repository release check |
+
+The suite ran all21 current methods, not prior16 plus an assumed five. It exercised actual healthy negative submit/lookup, current policy/session/leader rejection, repeated original/no-job behavior, in-flight contention, async call cancellation and own-quorum-loss cleanup, plus new client gates. The new cases reject actual injected/unowned client, closed owned client at construction, replaced client before call and closed captured client before call. Pre-auth cases assert no principal-session authentication response.
+
+The actual lost-custody case observes a real unmodified seven-op native read, deliberately replaces the client at a controlled error-return boundary and raises the original ValueError. Cleanup sends zero requests to the own explicit proxy trap, preserves the original error with NATIVE_NEGATIVE_CONTEXT_INVALIDATION_UNKNOWN, locally invalidates actual captures, clears busy state and leaves the real native SID present (read through a separate safe client). The test restores the known client before fixture teardown. This is local invalidation, not server retirement, rollback or positive job permission. Healthy cleanup's successful best-effort API return is still not a strong native-retirement receipt.
+
+Source qualification checked primary raw bytes before/after, exact imported project origins and test-log hash. All three retained own Consul handles were waited (140548,139988,137712); own trap thread was shut down/joined. The final quorum-loss test stopped only retained own Consul handles; no office/service/PID scan or foreign resource operation occurred. Fixture authentication creates/cleans own native principal/leader sessions and identity records; no worker registration, issued research job, quota/Assignment grant, result publication or protected diagnostic was run. No provider sends, real orders, policy/firewall/Tailscale changes or production action occurred in this stand.
+
+F27 is technically corrected and independently verified for the explicit isolated negative component/source pair. The inherited-proxy Core regression remains separately qualified at b0 in phase130; it was not rerun as a two-case suite here. This phase qualifies the actual Root consumer's ownership/identity/closed-state and cleanup gates, and does not manufacture an extra Core2 or transfer owner26/local13/Direct22/145 PASS. Exclusive authority/client/config ownership through operation AND cleanup remains a prerequisite. No supported concurrent reconfiguration, arbitrary Python mutation defense, every-await custody guarantee or exactly-once auth/orphan recovery is established. Ambiguous open_session SID custody remains UNKNOWN. Old034/Core868 remain immutable historical sources; no deployment/adoption of them is implied.
+
+Root's original21/145/Direct22 receipts and historical RED indices were not independently authenticated here. New hosted PR68 runs/artifacts, Linux/Windows matrix, positive native APIs and physical cluster acceptance remain separate. The corrected F27 source does not close F26 or grant full runtime/native registration admission.
+
+RELEASE_MANIFEST_STATUS: isolated component pair only, not approved release.
+NODE_INVENTORY_STATUS: not requalified.
+CONTRACT_STATUS: scoped negative consumer client-custody acceptance PASS; positive native/API freeze NOT_GRANTED.
+OFFLINE_TESTS: own full21 PASS /0 skip plus three separate pre-native guard rejections.
+WINDOWS_CI: hosted NOT_RUN here; mandatory F26 OPEN.
+PHYSICAL_TESTS: BLOCKED.
+P0_P1_P2: 7 open P1 /3 P2; F27 isolated source correction verified, F28 exact local adoption acknowledged. Absence of P0 not proven.
+EVIDENCE: original tests, source-bound receipt, exact PR metadata and guard logs above.
+NEXT_ACTIONS: independently verify original mandatory hosted runs/artifacts at exact release HEAD; positive job/worker/storage/physical gates remain open. Root may resume serial lane; no A8 runtime fixture remains active.
+GO_NO_GO: NO-GO; TAILSCALE_REMOVAL BLOCKED.
