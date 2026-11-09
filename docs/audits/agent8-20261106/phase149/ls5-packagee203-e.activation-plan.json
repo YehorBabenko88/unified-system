@@ -1,0 +1,69 @@
+{
+  "acceptance": "SCOPED_FUNCTIONAL_SMOKE_ONLY_NOT_DISTRIBUTED_OR_NATIVE_RESOURCE_ACCEPTANCE",
+  "argv": [
+    "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\python.exe",
+    "-I",
+    "-S",
+    "-B",
+    "C:\\Users\\LS-5\\.codex\\native-e2e-evidence-20261109\\ls5-source-qualified-e203c0b\\tools\\physical_dev\\ls5_smoke.py",
+    "--package",
+    "C:\\Users\\LS-5\\.codex\\native-e2e-evidence-20261109\\ls5-package-e203c0b-e",
+    "--manifest",
+    "C:\\Users\\LS-5\\.codex\\native-e2e-evidence-20261109\\ls5-package-e203-e.manifest.json",
+    "--sha256",
+    "c0e5fe1d5a25f4d88488bbf5d33c9b5f47770890bf60b9c26cdacfa0aabd5886",
+    "--state",
+    "C:\\Users\\LS-5\\.codex\\native-e2e-evidence-20261109\\ls5-smoke-e203-e",
+    "--execute"
+  ],
+  "elapsed_evidence": "REQUIRE_WORK_LE20_CLEANUP_LE10_FAMILY_LE30_SECONDS_IN_ACTUAL_RECEIPT_NOT_HARD_REALTIME",
+  "limitations": [
+    "COMMIT_NOT_RSS",
+    "USER_CPU_NOT_CPU_RATE_OR_KERNEL_OR_WALL",
+    "UNKNOWN_ANCESTORS_MAY_BE_STRICTER",
+    "COOPERATIVE_WATCHDOG_NOT_OS_FREEZE_PROOF",
+    "PACKAGE_FILES_AND_EXPLICIT_OUTPUTS_NOT_WHOLE_DISK_AUDIT"
+  ],
+  "limits": {
+    "active_processes": 16,
+    "aggregate_user_cpu_100ns": 100000000,
+    "cleanup_seconds": 10,
+    "combined_output_bytes": 16384,
+    "job_commit_bytes": 1073741824,
+    "job_end_action": 0,
+    "own_job_flags": "0x230c",
+    "process_commit_bytes": 536870912,
+    "work_seconds": 20
+  },
+  "mandatory_before_go": [
+    "ACTUAL_NONADMIN_PARENT_AND_RETAINED_CHILD_TOKEN",
+    "ORIGINAL_POPEN_HANDLE_PID_CREATION_IMAGE_JOIN",
+    "NEW_EMPTY_OWN_JOB_CONFIGURED_READBACK_AND_CHILD_MEMBERSHIP",
+    "FIXED_PACKAGE_SOURCE_AND_TOOL_PINS",
+    "BOUNDED_BOOTSTRAP_FRAME_AND_NONCE",
+    "NO_TARGET_OR_CHILD_BEFORE_GO"
+  ],
+  "manifest_path": "C:\\Users\\LS-5\\.codex\\native-e2e-evidence-20261109\\ls5-package-e203-e.manifest.json",
+  "manifest_sha256": "c0e5fe1d5a25f4d88488bbf5d33c9b5f47770890bf60b9c26cdacfa0aabd5886",
+  "owner_directive_sha256": "961024a67181db37e3c99a66c30af7e92a23324b7f2c913ef6c1b23017d248c3",
+  "owner_of_serial_lane": "ROOT_ONLY",
+  "package_path": "C:\\Users\\LS-5\\.codex\\native-e2e-evidence-20261109\\ls5-package-e203c0b-e",
+  "parent_python_sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a",
+  "scenario": "ONE_SYNTHETIC_BTCUSDT_EXISTING_STRATTESTER_METAANALYSE_AND_FRESH_LOCAL_RENDER",
+  "schema": "unified.ls5.disposable-activation-plan.v1",
+  "shell": false,
+  "source_head": "e203c0bbeaa176a843a7d80b2eadfefe8fce7385",
+  "source_tree": "7ca3b471eb7ee2411eb83da68f8e068ee42c803c",
+  "state_path": "C:\\Users\\LS-5\\.codex\\native-e2e-evidence-20261109\\ls5-smoke-e203-e",
+  "status": "PREPARED_PENDING_EXACT_PACKAGE_ISOLATION_REVIEW_NOT_A_GRANT",
+  "unchanged_gates": {
+    "native_worker_admission": false,
+    "physical_fault_injection": false,
+    "production": false,
+    "public_submit": "DENY",
+    "publication": "LOCAL_UNATTESTED",
+    "real_orders": false,
+    "real_provider_sends": false,
+    "service_policy_acl_firewall_eset_tailscale_changes": false
+  }
+}
