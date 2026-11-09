@@ -214,6 +214,29 @@ class GatewayWorker:
         self._node=node_id;self._lock=threading.RLock();self._attempts={};self._by_original={};self._keys={};self._originals={};self._active=None;self._poisoned=False
     def start(self,*args,**kwargs):
         raise WorkerUnavailable('ACTUAL_DISPATCH_PERMIT_AND_WORKER_PROFILE_UNAVAILABLE')
+    @staticmethod
+    def resource_capabilities():
+        """Canonical local DATA only. No resource is qualified for admission."""
+        fields={
+            'cpu_millicores':dict(admission='UNSUPPORTED',observation='NONE',
+                gap='NATIVE_CPU_RATE_1000_IS_NOT_1000_MILLICORES'),
+            'cpu_share':dict(admission='UNSUPPORTED',observation='JOB_RATE_SET_QUERY_ONLY',
+                native_rate_units='1000',native_rate_denominator='10000',
+                gap='EFFECTIVE_CAPACITY_INHERITED_JOB_AND_LOAD_ENFORCEMENT_UNQUALIFIED'),
+            'resident_memory_bytes':dict(admission='UNSUPPORTED',observation='PROCESS_WORKING_SET_SNAPSHOT_ONLY',
+                gap='JOB_COMMITTED_MEMORY_LIMIT_IS_NOT_RESIDENT_MEMORY_ENFORCEMENT'),
+            'committed_memory_bytes':dict(admission='UNSUPPORTED',observation='JOB_LIMIT_SET_QUERY_ONLY',
+                configured_native_bytes='268435456',
+                gap='PR51_PEAK_EXCEEDS_CONFIGURED_LIMIT_DISCREPANCY_UNRESOLVED'),
+            'available_commit_bytes':dict(admission='UNSUPPORTED',observation='HOST_PREPARATION_SNAPSHOT_ONLY',
+                preparation_refusal_floor_bytes='2952790016',
+                gap='NO_NATIVE_RESERVATION_OR_LOAD_QUALIFIED_FRESHNESS_AND_MARGIN'),
+            'available_physical_bytes':dict(admission='UNSUPPORTED',observation='HOST_PREPARATION_SNAPSHOT_ONLY',
+                preparation_refusal_floor_bytes='1073741824',
+                gap='NO_NATIVE_RESERVATION_OR_CONTINUOUS_MEMORY_PRESSURE_ENFORCEMENT')}
+        return _worker_canonical(dict(schema='unified.gateway.local-worker-resource-capabilities.v1',
+            scope='LOCAL_DIAGNOSTIC_DATA_NOT_AUTHORITY',dispatch_authorized=False,
+            admitted_fields=[],unsupported_fields=sorted(fields),fields=fields))
     def _record(self,attempt):
         _worker_need(type(self) is GatewayWorker and type(attempt) is OwnedWorkerAttempt and attempt in self._attempts,'FOREIGN_OWNED_ATTEMPT')
         return self._attempts[attempt]
@@ -304,6 +327,7 @@ class GatewayWorker:
                      native_lease_quota_utc='NOT_GRANTED',private_commit_bytes=str(memory.private_usage),working_set_bytes=str(memory.working_set),
                      limit_readback=state['limits'],host_observation=_attempt_host(k),grid_source_sha256=_GRID_JOB_SHA,
                      interpreter_sha256=_DIRECT_INTERPRETER_SHA,source_custody='NOT_QUALIFIED_FOR_RESUME')
+        details['resource_capabilities']=json.loads(GatewayWorker.resource_capabilities())
         snapshot=OwnedAttemptObservation('PREPARED_SUSPENDED_LOCAL_ONLY',state['rid'],state['digest'],state['job_label'],self._node,
             _PROCESS_INCARNATION,state['attempt_id'],int(proc.pid),*state['identity'],state['entry_sha'],_worker_canonical(details))
         state['snapshot']=snapshot;return snapshot

@@ -45,6 +45,30 @@ class ClosedJobs(unittest.IsolatedAsyncioTestCase):
         with self.assertRaises(JobUnavailable):
             await ResearchJobs().status('11111111-1111-4111-8111-111111111111',context=None)
 
+    async def test_fresh_composition_reconciliation_never_rekeys_or_retries_submit(self):
+        # New shell instances model loss of local composition, NOT a native restart.
+        original=raw();expected=prepare_intent(original)
+        for shell in (ResearchJobs(),ResearchJobs()):
+            for name in ('lookup','reconnect'):
+                with self.assertRaises(JobUnavailable) as raised:
+                    await getattr(shell,name)(original,context={'claimed_restart':True})
+                self.assertEqual(raised.exception.outcome,'UNKNOWN')
+                self.assertEqual(raised.exception.original,expected)
+                self.assertEqual(raised.exception.original.raw,original)
+        self.assertEqual(expected.sha256,hashlib.sha256(original).hexdigest())
+
+    async def test_cancel_before_and_after_unknown_lookup_does_not_authorize_effect(self):
+        original=raw();shell=ResearchJobs()
+        for i in range(2):
+            with self.assertRaises(JobUnavailable) as cancelled:
+                await shell.cancel(original,context={'cancelled':True,'lease':True})
+            self.assertEqual(cancelled.exception.outcome,'UNKNOWN')
+            self.assertIsNone(cancelled.exception.original)
+            with self.assertRaises(JobUnavailable) as lookup:
+                await shell.lookup(original,context=None)
+            self.assertEqual(lookup.exception.original.raw,original)
+            self.assertEqual(lookup.exception.outcome,'UNKNOWN')
+
     def test_strict_local_intent_rejects_unapproved_fields_and_identity(self):
         for b in (raw(owner='admin'),raw(request_id='11111111-1111-4111-8111-111111111111\n'),
                   raw(idempotency_key='x\n'),raw(schema='production.v1'), b'{"a":1,"a":2}',

@@ -1,0 +1,51 @@
+{
+  "admitted_fields": [],
+  "dispatch_authorized": false,
+  "fields": {
+    "available_commit_bytes": {
+      "admission": "UNSUPPORTED",
+      "gap": "NO_NATIVE_RESERVATION_OR_LOAD_QUALIFIED_FRESHNESS_AND_MARGIN",
+      "observation": "HOST_PREPARATION_SNAPSHOT_ONLY",
+      "preparation_refusal_floor_bytes": "2952790016"
+    },
+    "available_physical_bytes": {
+      "admission": "UNSUPPORTED",
+      "gap": "NO_NATIVE_RESERVATION_OR_CONTINUOUS_MEMORY_PRESSURE_ENFORCEMENT",
+      "observation": "HOST_PREPARATION_SNAPSHOT_ONLY",
+      "preparation_refusal_floor_bytes": "1073741824"
+    },
+    "committed_memory_bytes": {
+      "admission": "UNSUPPORTED",
+      "configured_native_bytes": "268435456",
+      "gap": "PR51_PEAK_EXCEEDS_CONFIGURED_LIMIT_DISCREPANCY_UNRESOLVED",
+      "observation": "JOB_LIMIT_SET_QUERY_ONLY"
+    },
+    "cpu_millicores": {
+      "admission": "UNSUPPORTED",
+      "gap": "NATIVE_CPU_RATE_1000_IS_NOT_1000_MILLICORES",
+      "observation": "NONE"
+    },
+    "cpu_share": {
+      "admission": "UNSUPPORTED",
+      "gap": "EFFECTIVE_CAPACITY_INHERITED_JOB_AND_LOAD_ENFORCEMENT_UNQUALIFIED",
+      "native_rate_denominator": "10000",
+      "native_rate_units": "1000",
+      "observation": "JOB_RATE_SET_QUERY_ONLY"
+    },
+    "resident_memory_bytes": {
+      "admission": "UNSUPPORTED",
+      "gap": "JOB_COMMITTED_MEMORY_LIMIT_IS_NOT_RESIDENT_MEMORY_ENFORCEMENT",
+      "observation": "PROCESS_WORKING_SET_SNAPSHOT_ONLY"
+    }
+  },
+  "schema": "unified.gateway.local-worker-resource-capabilities.v1",
+  "scope": "LOCAL_DIAGNOSTIC_DATA_NOT_AUTHORITY",
+  "unsupported_fields": [
+    "available_commit_bytes",
+    "available_physical_bytes",
+    "committed_memory_bytes",
+    "cpu_millicores",
+    "cpu_share",
+    "resident_memory_bytes"
+  ]
+}

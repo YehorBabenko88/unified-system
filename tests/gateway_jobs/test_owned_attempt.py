@@ -94,6 +94,12 @@ class NativeOwnedAttempt(unittest.TestCase):
         with self.assertRaises(WorkerUnavailable):worker.prepare_attempt(different,grid_source_root=GRID)
         with self.assertRaises(WorkerUnavailable):GatewayWorker.require_owned_attempt(worker,attempt,original_lab13_bytes=different)
         self.assertEqual(worker.inspect_attempt(attempt).state,'PREPARED_SUSPENDED_LOCAL_ONLY')
+        observation=worker.inspect_attempt(attempt)
+        for claimed in (observation,json.loads(observation.os_observation_json),observation.os_observation_json):
+            for inventory in (worker,foreign):
+                with self.assertRaises(WorkerUnavailable):inventory.inspect_attempt(claimed)
+                with self.assertRaises(WorkerUnavailable):inventory.abort_attempt(claimed)
+        self.assertFalse(json.loads(observation.os_observation_json)['resource_capabilities']['dispatch_authorized'])
 
 def load_tests(loader,tests,pattern):
     suite=loader.loadTestsFromTestCase(OwnedAttemptBoundary)
