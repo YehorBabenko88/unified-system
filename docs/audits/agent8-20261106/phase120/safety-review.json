@@ -1,0 +1,19 @@
+{
+  "head": "6f3085c0b4c2e07f11958c64a39603a1f74c2049",
+  "scope": "SOURCE_SAFETY_REVIEW_BEFORE_OWN_NATIVE_CASE",
+  "new_paths_only": 3,
+  "qualified_route": "qualify_owner_loss externalwatchdog ->core->ownowner+suspendedworker+freshrejoin",
+  "outer_Job_assigned_to_retained_own_process_before_ARM": true,
+  "only_PROCESS_handle_duplicated_not_inner_JOB": true,
+  "PID_creation_image_checked_via_retained_duplicate": true,
+  "owner_termination_and_worker_exit_before_fallback": true,
+  "private_identity_checked_nonrecursive_empty_only_cleanup": true,
+  "core_seconds": 30,
+  "core_cleanup_seconds": 10,
+  "watchdog_read_seconds": 40,
+  "watchdog_hard_seconds": 50,
+  "owned_outer_call_timeout_seconds": 90,
+  "no_Resume_CPUload_qualifier_PR52_Math": true,
+  "reported_owner_PIDs_not_reopened": true,
+  "static_blockers": []
+}

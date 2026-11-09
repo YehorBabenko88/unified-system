@@ -1,0 +1,32 @@
+{
+  "scope": "LOCAL_OWN_SUSPENDED_SUPERVISOR_LOSS_NOT_NATIVE_RESTART",
+  "head": "15fd084ae2cee131c058ab1db5c8d605b3b3cea8",
+  "tree": "14151c7333517ab95af237deee311f00bdc58af3",
+  "base": "ad146eabe2c8ec3cd5028406c737af14c157b808",
+  "raw_primary_files": 1662,
+  "default_local_pure_tests": 46,
+  "new_deterministic_fixture_tests": 5,
+  "previous_actual_suspended_tests": 2,
+  "new_actual_owner_loss_tests": 1,
+  "tests": 49,
+  "failures": 0,
+  "errors": 1,
+  "skips": 0,
+  "resume_calls": 0,
+  "derived_cpu_rate_applied": false,
+  "authority_effect_calls": 0,
+  "pr52_executed": false,
+  "qualifier_executed": false,
+  "admitted_fields": [],
+  "public_start": "DENY",
+  "go_no_go": "NO-GO",
+  "source_sha256": {
+    "tests/gateway_jobs/owned_supervisor_loss.py": "21f1b64b1fddf797d5770a48081eb994c40dbdca7287675f36ebadf82a9c7735",
+    "tests/gateway_jobs/test_owned_supervisor_loss.py": "29d742465436e3ac12baea7d9eca1b8af74801e3a205e89402d09134745fb0dd",
+    "unified_system/gateway_worker.py": "85b29756316a0330f1e0aa9450bad33e4edfa5886a0ca64a63cb196f0b66a47b"
+  },
+  "evidence_sha256": {
+    "failure-observation.json": "41ba27b0da642ef877392ec553c832bc31c668450944ce4509fe759e5ce4c152",
+    "tests.log": "397aed39928378284bcaa0a553402947d2f6885d647f041e0a9de0b6c71b01cb"
+  }
+}
