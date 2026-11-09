@@ -1,0 +1,181 @@
+name: LS5 physical development pure source tests
+on:
+  pull_request:
+    paths: ['tools/physical_dev/**', 'tests/physical_dev/**', '.github/workflows/ls5-physical-dev-source.yml']
+  push:
+    branches: [feature/ls5-physical-dev-source-ci-20261109]
+permissions:
+  contents: read
+jobs:
+  source:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-latest]
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      GIT_NO_REPLACE_OBJECTS: '1'
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        env:
+          GIT_CONFIG_COUNT: '1'
+          GIT_CONFIG_KEY_0: core.autocrlf
+          GIT_CONFIG_VALUE_0: 'false'
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+          fetch-depth: 1
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12.10'
+      - name: Guard primary source and run only pure physical development tests
+        shell: python -I -S -B {0}
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          import ast, contextlib, ctypes, hashlib, io, json, os, pathlib, stat, subprocess, sys, traceback, unittest
+
+          def main():
+              root = pathlib.Path.cwd().resolve()
+              evidence = pathlib.Path(os.environ['RUNNER_TEMP']).resolve() / 'ls5-physical-dev-source'
+              if evidence == root or root in evidence.parents:
+                  raise RuntimeError('evidence must be outside source')
+              evidence.mkdir(parents=True, exist_ok=False)
+              log = io.StringIO()
+              receipt = {'schema': 'ls5-pure-source-v1', 'status': 'FAIL', 'native_qualification': False,
+                         'python': sys.version, 'platform': sys.platform, 'expected_head': os.environ['EXPECTED_HEAD'],
+                         'run_id': os.environ.get('GITHUB_RUN_ID'), 'run_attempt': os.environ.get('GITHUB_RUN_ATTEMPT')}
+              git = pathlib.Path('C:/Program Files/Git/cmd/git.exe' if os.name == 'nt' else '/usr/bin/git')
+              def primary(*args, data=None):
+                  return subprocess.run([str(git), '--no-replace-objects', '--no-optional-locks', '-c',
+                                         'core.fsmonitor=false', '-C', str(root), *args], input=data,
+                                        stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True, timeout=60).stdout
+              active = [False]
+              def audit(event, args):
+                  if active[0] and (event in ('subprocess.Popen', 'os.system', 'os.posix_spawn', 'os.exec',
+                                             'ctypes.dlopen', 'ctypes.dlsym') or event.startswith('socket.')):
+                      raise RuntimeError('pure source test prohibited effect: ' + event)
+              sys.addaudithook(audit)
+              tracked = {}
+              def guard():
+                  head = primary('rev-parse', 'HEAD').decode().strip()
+                  if head != os.environ['EXPECTED_HEAD']:
+                      raise RuntimeError('HEAD mismatch')
+                  inventory = primary('ls-tree', '-rz', '--full-tree', 'HEAD')
+                  entries = []
+                  for entry in inventory.split(b'\0'):
+                      if entry:
+                          meta, name = entry.split(b'\t', 1)
+                          mode, kind, oid = meta.split()
+                          if mode not in (b'100644', b'100755') or kind != b'blob':
+                              raise RuntimeError('nonregular primary entry')
+                          entries.append((name.decode('utf-8'), oid))
+                  raw = primary('cat-file', '--batch', data=b''.join(oid + b'\n' for _, oid in entries))
+                  cursor = 0
+                  current = {}
+                  for name, oid in entries:
+                      end = raw.index(b'\n', cursor)
+                      header = raw[cursor:end].split()
+                      if header[:2] != [oid, b'blob']:
+                          raise RuntimeError('primary object mismatch')
+                      size = int(header[2]); cursor = end + 1
+                      blob = raw[cursor:cursor + size]; cursor += size + 1
+                      path = root / name
+                      info = path.lstat()
+                      if not stat.S_ISREG(info.st_mode) or info.st_nlink != 1 or getattr(info, 'st_file_attributes', 0) & 0x400:
+                          raise RuntimeError('nonregular or aliased source: ' + name)
+                      if path.read_bytes() != blob:
+                          raise RuntimeError('raw primary mismatch: ' + name)
+                      current[name] = blob
+                  if cursor != len(raw):
+                      raise RuntimeError('trailing primary object bytes')
+                  actual = set()
+                  for directory, dirs, files in os.walk(root, followlinks=False):
+                      if pathlib.Path(directory) == root:
+                          dirs[:] = [d for d in dirs if d != '.git']
+                          files = [f for f in files if f != '.git']
+                      for name in dirs:
+                          p = pathlib.Path(directory) / name
+                          if p.is_symlink() or getattr(p.lstat(), 'st_file_attributes', 0) & 0x400:
+                              raise RuntimeError('aliased source directory')
+                      for name in files:
+                          actual.add((pathlib.Path(directory) / name).relative_to(root).as_posix())
+                  if actual != set(current):
+                      raise RuntimeError('unexpected or missing source files: ' + repr(sorted(actual ^ set(current))))
+                  tracked.clear(); tracked.update(current)
+                  return {'head': head, 'tree': primary('rev-parse', 'HEAD^{tree}').decode().strip(),
+                          'files': len(current), 'inventory_sha256': hashlib.sha256(inventory).hexdigest()}
+              try:
+                  if sys.version_info[:3] != (3, 12, 10):
+                      raise RuntimeError('requires CPython 3.12.10')
+                  receipt['before'] = guard()
+                  expected = []
+                  for name, blob in sorted(tracked.items()):
+                      path = pathlib.PurePosixPath(name)
+                      if path.parent == pathlib.PurePosixPath('tests/physical_dev') and path.match('test_*.py'):
+                          tree = ast.parse(blob, filename=name)
+                          for cls in tree.body:
+                              if isinstance(cls, ast.ClassDef):
+                                  for method in cls.body:
+                                      if isinstance(method, (ast.FunctionDef, ast.AsyncFunctionDef)) and method.name.startswith('test_'):
+                                          expected.append(path.stem + '.' + cls.name + '.' + method.name)
+                  if not expected or len(expected) != len(set(expected)):
+                      raise RuntimeError('empty or duplicate mandatory source test IDs')
+                  receipt['required_ids'] = sorted(expected)
+                  receipt['required_count'] = len(expected)
+                  sys.path.insert(0, str(root))
+                  active[0] = True
+                  try:
+                      loader = unittest.TestLoader()
+                      suite = loader.discover(str(root / 'tests/physical_dev'), pattern='test_*.py')
+                      def ids(node):
+                          if isinstance(node, unittest.TestSuite):
+                              return [i for child in node for i in ids(child)]
+                          return [node.id()]
+                      found = ids(suite)
+                      receipt['discovered_ids'] = sorted(found)
+                      if loader.errors or len(found) != len(set(found)) or sorted(found) != sorted(expected):
+                          raise RuntimeError('discovery differs from committed mandatory inventory: ' + repr(loader.errors))
+                      with contextlib.redirect_stdout(log), contextlib.redirect_stderr(log):
+                          result = unittest.TextTestRunner(stream=log, verbosity=2).run(suite)
+                      receipt['result'] = {'tests_run': result.testsRun, 'failures': len(result.failures),
+                                           'errors': len(result.errors), 'skips': len(result.skipped),
+                                           'expected_failures': len(result.expectedFailures),
+                                           'unexpected_successes': len(result.unexpectedSuccesses)}
+                      if not result.wasSuccessful() or result.skipped or result.expectedFailures or result.testsRun != len(expected):
+                          raise RuntimeError('mandatory pure suite incomplete or unsuccessful')
+                  finally:
+                      active[0] = False
+                  receipt['status'] = 'PASS'
+              except BaseException:
+                  receipt['error'] = traceback.format_exc()
+                  log.write(receipt['error'])
+              finally:
+                  active[0] = False
+                  try:
+                      receipt['after'] = guard()
+                      if receipt.get('before') != receipt['after']:
+                          raise RuntimeError('source inventory changed')
+                  except BaseException:
+                      receipt['status'] = 'FAIL'
+                      receipt['post_guard_error'] = traceback.format_exc()
+                      log.write(receipt['post_guard_error'])
+                  rawlog = log.getvalue().encode('utf-8')
+                  (evidence / 'tests.log').write_bytes(rawlog)
+                  receipt['log_sha256'] = hashlib.sha256(rawlog).hexdigest()
+                  (evidence / 'result.json').write_text(json.dumps(receipt, indent=2) + '\n', encoding='utf-8')
+                  print(log.getvalue())
+                  print(json.dumps({'status': receipt['status'], 'required_count': receipt.get('required_count'), 'source': receipt.get('before')}))
+              return 0 if receipt['status'] == 'PASS' else 1
+
+          if __name__ == '__main__':
+              raise SystemExit(main())
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: ls5-pure-source-${{ matrix.os }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/ls5-physical-dev-source/
+          if-no-files-found: error
+          retention-days: 14
