@@ -667,7 +667,7 @@
     "P0_confirmed_defects": 0,
     "P0_absence_proven": false,
     "P1_open": 7,
-    "P2_open": 8,
+    "P2_open": 9,
     "F08": "FIX_VERIFIED_OFFLINE",
     "F09": "FIX_VERIFIED_OFFLINE_AT_42686cd",
     "F10": "FIX_VERIFIED_OFFLINE_AT_42686cd",
@@ -3959,7 +3959,7 @@
     "mandatory_hosted": "NOT_QUALIFIED",
     "overall": "NO_GO"
   },
-  "latest_addendum_scope": "phase150 small originale outcome/artifact/readonlyjournal review; backend scopedPASS/fullsmokeFAIL/newF36, no A8 runtime replay",
+  "latest_addendum_scope": "phase151 exacthostedstoppedfixture/docsonly615;phase152 PR78sourceonly newF37, sourceACKwithheld/noexecution",
   "PR54_b144_terminal_CI_20261109": {
     "head": "b144a5e0fd3af90c975bfc0f0123234628dbb696",
     "direct_run": 42646665067,
@@ -4332,5 +4332,26 @@
     "F35": "SCOPED_POSITIVE_FIX_VERIFIED_ORIGINAL_ROOT_E",
     "F36": "OPEN_P2_RENDER_ACCEPTANCE_RCA_UNKNOWN",
     "A8_helper_module_native_Job_SDK_fixture_calls": 0
+  },
+  "hosted_stopped_service_e203_review": {
+    "runs": [
+      42716081580,
+      42716071876
+    ],
+    "jobs": 4,
+    "distinct_unit_cases": 15,
+    "unit_executions": 60,
+    "result": "SCOPED_HOSTED_FIXTURE_PASS_NOT_FULL_MATRIX",
+    "F26": "OPEN",
+    "script_bytes": "CRLF_CHECKOUT_VARIANT_NOT_RAW_GIT_IDENTICAL"
+  },
+  "Terminan_PR78_source_review": {
+    "head": "458de55b7170d23f2e7ab3a5d72597b2a0124653",
+    "tree": "135159a2daa9fb035f620cca26c84c471d339260",
+    "raw_primary_files": 404,
+    "F37": "OPEN_SOURCE_ONLY",
+    "source_ACK": "WITHHELD_PENDING_F37",
+    "owner18": "ORIGINAL_TAP_AUTHENTICATED_NOT_A8_TESTS",
+    "A8_native_helper_SDK_browser_fixture_calls": 0
   }
 }

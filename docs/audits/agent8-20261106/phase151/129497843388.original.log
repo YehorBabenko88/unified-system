@@ -1,0 +1,280 @@
+﻿2026-11-09T23:02:53.5173486Z Current runner version: '2.338.2'
+2026-11-09T23:02:53.5196955Z ##[group]Runner Image Provisioner
+2026-11-09T23:02:53.5197931Z Hosted Compute Agent
+2026-11-09T23:02:53.5198442Z Version: 20261028.624
+2026-11-09T23:02:53.5198988Z Commit: 54898b74c23fde5556c9b3c3a2290865feef0dfe
+2026-11-09T23:02:53.5199720Z Build Date: 2026-10-28T21:51:42Z
+2026-11-09T23:02:53.5200327Z Worker ID: {a9d776be-76a5-454a-962e-40a8ae48391f}
+2026-11-09T23:02:53.5200933Z Region: southcentralus
+2026-11-09T23:02:53.5201450Z Cloud: Azure
+2026-11-09T23:02:53.5201927Z ##[endgroup]
+2026-11-09T23:02:53.5203157Z ##[group]Operating System
+2026-11-09T23:02:53.5203733Z Microsoft Windows Server 2022
+2026-11-09T23:02:53.5204241Z 10.0.20348
+2026-11-09T23:02:53.5204694Z Datacenter
+2026-11-09T23:02:53.5205172Z ##[endgroup]
+2026-11-09T23:02:53.5205653Z ##[group]Runner Image
+2026-11-09T23:02:53.5206137Z Image: windows-2022
+2026-11-09T23:02:53.5206595Z Version: 20261101.353.1
+2026-11-09T23:02:53.5207961Z Included Software: https://github.com/actions/runner-images/blob/win22/20261101.353/images/windows/Windows2022-Readme.md
+2026-11-09T23:02:53.5209374Z Image Release: https://github.com/actions/runner-images/releases/tag/win22%2F20261101.353
+2026-11-09T23:02:53.5210216Z ##[endgroup]
+2026-11-09T23:02:53.5211247Z ##[group]GITHUB_TOKEN Permissions
+2026-11-09T23:02:53.5213931Z Contents: read
+2026-11-09T23:02:53.5214474Z Metadata: read
+2026-11-09T23:02:53.5215001Z ##[endgroup]
+2026-11-09T23:02:53.5216880Z Secret source: Actions
+2026-11-09T23:02:53.5217662Z Cache mode: write
+2026-11-09T23:02:53.5218407Z Prepare workflow directory
+2026-11-09T23:02:53.5737669Z Prepare all required actions
+2026-11-09T23:02:53.5794594Z Getting action download info
+2026-11-09T23:02:53.8559169Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-11-09T23:02:53.9549573Z Download action repository 'actions/setup-python@v5' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+2026-11-09T23:02:54.0797975Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-11-09T23:02:54.3532637Z Complete job name: stopped-service (windows-2022)
+2026-11-09T23:02:54.5107028Z ##[group]Run actions/checkout@v4
+2026-11-09T23:02:54.5108392Z with:
+2026-11-09T23:02:54.5108881Z   ref: e203c0bbeaa176a843a7d80b2eadfefe8fce7385
+2026-11-09T23:02:54.5109486Z   persist-credentials: false
+2026-11-09T23:02:54.5110024Z   repository: YehorBabenko88/unified-system
+2026-11-09T23:02:54.5113773Z   token: ***
+2026-11-09T23:02:54.5114179Z   ssh-strict: true
+2026-11-09T23:02:54.5114610Z   ssh-user: git
+2026-11-09T23:02:54.5115018Z   clean: true
+2026-11-09T23:02:54.5115454Z   sparse-checkout-cone-mode: true
+2026-11-09T23:02:54.5115953Z   fetch-depth: 1
+2026-11-09T23:02:54.5116634Z   fetch-tags: false
+2026-11-09T23:02:54.5117138Z   show-progress: true
+2026-11-09T23:02:54.5117606Z   lfs: false
+2026-11-09T23:02:54.5118054Z   submodules: false
+2026-11-09T23:02:54.5118513Z   set-safe-directory: true
+2026-11-09T23:02:54.5119031Z   allow-unsafe-pr-checkout: false
+2026-11-09T23:02:54.5119799Z env:
+2026-11-09T23:02:54.5120431Z   CI_STOPPED_NAME: unified-stopped-service-42716081580-1-windows-2022
+2026-11-09T23:02:54.5121240Z   CI_EXPECTED_SHA: e203c0bbeaa176a843a7d80b2eadfefe8fce7385
+2026-11-09T23:02:54.5121847Z ##[endgroup]
+2026-11-09T23:02:54.6588498Z Syncing repository: YehorBabenko88/unified-system
+2026-11-09T23:02:54.6590946Z ##[group]Getting Git version info
+2026-11-09T23:02:54.6591873Z Working directory is 'D:\a\unified-system\unified-system'
+2026-11-09T23:02:54.7476221Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-09T23:02:55.1263662Z git version 2.56.0.windows.4
+2026-11-09T23:02:55.1309870Z ##[endgroup]
+2026-11-09T23:02:55.1329734Z Temporarily overriding HOME='D:\a\_temp\375a4f37-4934-40f6-ac25-fd74bc2cc1cd' before making global git config changes
+2026-11-09T23:02:55.1332189Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-09T23:02:55.1342739Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\unified-system\unified-system
+2026-11-09T23:02:55.1909391Z Deleting the contents of 'D:\a\unified-system\unified-system'
+2026-11-09T23:02:55.1914801Z ##[group]Initializing the repository
+2026-11-09T23:02:55.1925979Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\unified-system\unified-system
+2026-11-09T23:02:55.2817113Z Initialized empty Git repository in D:/a/unified-system/unified-system/.git/
+2026-11-09T23:02:55.2865057Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/YehorBabenko88/unified-system
+2026-11-09T23:02:55.3494712Z ##[endgroup]
+2026-11-09T23:02:55.3496508Z ##[group]Disabling automatic garbage collection
+2026-11-09T23:02:55.3503492Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2026-11-09T23:02:55.3801549Z ##[endgroup]
+2026-11-09T23:02:55.3803939Z ##[group]Setting up auth
+2026-11-09T23:02:55.3813542Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-09T23:02:55.4112956Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-09T23:02:56.8451396Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-09T23:02:56.8772757Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-09T23:02:57.3496717Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-09T23:02:57.3792053Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-09T23:02:57.8510205Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-11-09T23:02:57.8849945Z ##[endgroup]
+2026-11-09T23:02:57.8851226Z ##[group]Fetching the repository
+2026-11-09T23:02:57.8868660Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin e203c0bbeaa176a843a7d80b2eadfefe8fce7385
+2026-11-09T23:02:59.6119775Z From https://github.com/YehorBabenko88/unified-system
+2026-11-09T23:02:59.6120727Z  * branch            e203c0bbeaa176a843a7d80b2eadfefe8fce7385 -> FETCH_HEAD
+2026-11-09T23:02:59.6155663Z ##[endgroup]
+2026-11-09T23:02:59.6156283Z ##[group]Determining the checkout info
+2026-11-09T23:02:59.6157729Z ##[endgroup]
+2026-11-09T23:02:59.6166592Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2026-11-09T23:02:59.6800877Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2026-11-09T23:02:59.7091652Z ##[group]Checking out the ref
+2026-11-09T23:02:59.7100292Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force e203c0bbeaa176a843a7d80b2eadfefe8fce7385
+2026-11-09T23:03:00.0840057Z Note: switching to 'e203c0bbeaa176a843a7d80b2eadfefe8fce7385'.
+2026-11-09T23:03:00.0840657Z 
+2026-11-09T23:03:00.0840972Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-11-09T23:03:00.0841581Z changes and commit them, and you can discard any commits you make in this
+2026-11-09T23:03:00.0842115Z state without impacting any branches by switching back to a branch.
+2026-11-09T23:03:00.0842487Z 
+2026-11-09T23:03:00.0842846Z If you want to create a new branch to retain commits you create, you may
+2026-11-09T23:03:00.0843786Z do so (now or later) by using -c with the switch command. Example:
+2026-11-09T23:03:00.0844136Z 
+2026-11-09T23:03:00.0844858Z   git switch -c <new-branch-name>
+2026-11-09T23:03:00.0846630Z 
+2026-11-09T23:03:00.0846831Z Or undo this operation with:
+2026-11-09T23:03:00.0847063Z 
+2026-11-09T23:03:00.0847184Z   git switch -
+2026-11-09T23:03:00.0847388Z 
+2026-11-09T23:03:00.0848154Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-11-09T23:03:00.0848551Z 
+2026-11-09T23:03:00.0848946Z HEAD is now at e203c0b Validate canonical Windows subprocess audit frames for fixed source Git
+2026-11-09T23:03:00.0933666Z ##[endgroup]
+2026-11-09T23:03:00.1333003Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2026-11-09T23:03:00.1608891Z e203c0bbeaa176a843a7d80b2eadfefe8fce7385
+2026-11-09T23:03:00.1644127Z ##[group]Removing auth
+2026-11-09T23:03:00.1653563Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-09T23:03:00.1944900Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-09T23:03:00.6841975Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-09T23:03:00.7106197Z http.https://github.com/.extraheader
+2026-11-09T23:03:00.7156794Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+2026-11-09T23:03:00.7474795Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-09T23:03:01.2154099Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-09T23:03:01.2449356Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-09T23:03:01.7135999Z ##[endgroup]
+2026-11-09T23:03:01.7518583Z ##[group]Run actions/setup-python@v5
+2026-11-09T23:03:01.7519034Z with:
+2026-11-09T23:03:01.7519312Z   python-version: 3.12
+2026-11-09T23:03:01.7519585Z   check-latest: false
+2026-11-09T23:03:01.7522029Z   token: ***
+2026-11-09T23:03:01.7522301Z   update-environment: true
+2026-11-09T23:03:01.7522606Z   allow-prereleases: false
+2026-11-09T23:03:01.7522903Z   freethreaded: false
+2026-11-09T23:03:01.7523155Z env:
+2026-11-09T23:03:01.7523483Z   CI_STOPPED_NAME: unified-stopped-service-42716081580-1-windows-2022
+2026-11-09T23:03:01.7523933Z   CI_EXPECTED_SHA: e203c0bbeaa176a843a7d80b2eadfefe8fce7385
+2026-11-09T23:03:01.7524296Z ##[endgroup]
+2026-11-09T23:03:01.9030324Z ##[group]Installed versions
+2026-11-09T23:03:01.9178546Z (node:6268) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-09T23:03:01.9179274Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-09T23:03:01.9180207Z Successfully set up CPython (3.12.10)
+2026-11-09T23:03:01.9180815Z ##[endgroup]
+2026-11-09T23:03:01.9442492Z ##[group]Run python -B -m unittest tests.test_ci_stopped_service_acceptance -v
+2026-11-09T23:03:01.9443275Z [36;1mpython -B -m unittest tests.test_ci_stopped_service_acceptance -v[0m
+2026-11-09T23:03:01.9684762Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-09T23:03:01.9685178Z env:
+2026-11-09T23:03:01.9685537Z   CI_STOPPED_NAME: unified-stopped-service-42716081580-1-windows-2022
+2026-11-09T23:03:01.9686013Z   CI_EXPECTED_SHA: e203c0bbeaa176a843a7d80b2eadfefe8fce7385
+2026-11-09T23:03:01.9686453Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-09T23:03:01.9686975Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-11-09T23:03:01.9687457Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-09T23:03:01.9687891Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-09T23:03:01.9688595Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-09T23:03:01.9688953Z ##[endgroup]
+2026-11-09T23:03:04.5580231Z test_all_office_and_adminit_variants_reject_os_name (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_all_office_and_adminit_variants_reject_os_name) ... ok
+2026-11-09T23:03:04.5664408Z test_artifact_ownership_output_is_confined_to_runner_command_file (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_artifact_ownership_output_is_confined_to_runner_command_file) ... ok
+2026-11-09T23:03:04.5731050Z test_bootstrap_blob_wrong_pin_and_unknown_source_member_fail_closed (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_bootstrap_blob_wrong_pin_and_unknown_source_member_fail_closed) ... ok
+2026-11-09T23:03:04.6982373Z test_crlf_operator_file_does_not_replace_exact_lf_git_blob (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_crlf_operator_file_does_not_replace_exact_lf_git_blob) ... ok
+2026-11-09T23:03:04.7163408Z test_download_rejects_size_hash_and_cross_host_final_response (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_download_rejects_size_hash_and_cross_host_final_response) ... ok
+2026-11-09T23:03:04.7238939Z test_download_requires_pinned_bytes_and_exclusive_destination (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_download_requires_pinned_bytes_and_exclusive_destination) ... ok
+2026-11-09T23:03:04.7288674Z test_entry_uses_os_name_and_rejects_before_network_or_acl (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_entry_uses_os_name_and_rejects_before_network_or_acl) ... ok
+2026-11-09T23:03:04.7310737Z test_git_blob_wrong_size_or_pin_is_rejected_without_normalization (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_git_blob_wrong_size_or_pin_is_rejected_without_normalization) ... ok
+2026-11-09T23:03:07.0855055Z test_inert_orchestration_accepts_canonical_fake_tools_under_short_temp_alias (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_inert_orchestration_accepts_canonical_fake_tools_under_short_temp_alias) ... ok
+2026-11-09T23:03:09.2193441Z test_inert_orchestration_dry_run_uses_fakes_only_and_preserves_state (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_inert_orchestration_dry_run_uses_fakes_only_and_preserves_state) ... ok
+2026-11-09T23:03:09.2231310Z test_only_hosted_windows_fresh_descendant_is_admitted_without_effects (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_only_hosted_windows_fresh_descendant_is_admitted_without_effects) ... ok
+2026-11-09T23:03:09.2240721Z test_phase_guard_requires_exact_action_and_plan_digest (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_phase_guard_requires_exact_action_and_plan_digest) ... ok
+2026-11-09T23:03:09.2255762Z test_redirects_require_https_same_host_no_credentials_and_bounded_hops (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_redirects_require_https_same_host_no_credentials_and_bounded_hops) ... ok
+2026-11-09T23:03:09.2405081Z test_staged_archive_is_only_byte_integrity_and_confined_to_runner_temp (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_staged_archive_is_only_byte_integrity_and_confined_to_runner_temp) ... ok
+2026-11-09T23:03:09.2415122Z test_workflow_scopes_disposable_matrix_and_report_artifact (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_workflow_scopes_disposable_matrix_and_report_artifact) ... ok
+2026-11-09T23:03:09.2415889Z 
+2026-11-09T23:03:09.2416114Z ----------------------------------------------------------------------
+2026-11-09T23:03:09.2416661Z Ran 15 tests in 4.688s
+2026-11-09T23:03:09.2416912Z 
+2026-11-09T23:03:09.2417086Z OK
+2026-11-09T23:03:09.3810670Z ##[group]Run import hashlib, os, pathlib, urllib.request
+2026-11-09T23:03:09.3811367Z [36;1mimport hashlib, os, pathlib, urllib.request[0m
+2026-11-09T23:03:09.3812236Z [36;1massert os.environ.get('GITHUB_ACTIONS') == 'true' and os.environ.get('RUNNER_ENVIRONMENT') == 'github-hosted'[0m
+2026-11-09T23:03:09.3813193Z [36;1murl='https://raw.githubusercontent.com/YehorBabenko88/bybit-cluster-grid/fa7323d9e1973a85856e93f4e9bf6ac41d3098a5/installer/PinnedVendorDownload.psm1'[0m
+2026-11-09T23:03:09.3813963Z [36;1mclass NoRedirect(urllib.request.HTTPRedirectHandler):[0m
+2026-11-09T23:03:09.3814540Z [36;1m    def redirect_request(self,*args): raise ValueError('CI_HELPER_REDIRECT_REJECTED')[0m
+2026-11-09T23:03:09.3815053Z [36;1mopener=urllib.request.build_opener(NoRedirect())[0m
+2026-11-09T23:03:09.3815465Z [36;1mwith opener.open(url,timeout=30) as response:[0m
+2026-11-09T23:03:09.3815834Z [36;1m    assert response.geturl() == url[0m
+2026-11-09T23:03:09.3816278Z [36;1m    raw=response.read(32769)[0m
+2026-11-09T23:03:09.3816602Z [36;1massert 0 < len(raw) <= 32768[0m
+2026-11-09T23:03:09.3817132Z [36;1massert hashlib.sha256(raw).hexdigest() == 'fdd893be67bf2d50a995b39d0628fbc21dae1eaae7b426c5664e52ecb1578c85'[0m
+2026-11-09T23:03:09.3817805Z [36;1mname='unified-nssm-helper-'+os.environ['CI_STOPPED_NAME']+'.psm1'[0m
+2026-11-09T23:03:09.3818381Z [36;1mwith (pathlib.Path(os.environ['RUNNER_TEMP'])/name).open('xb') as stream: stream.write(raw)[0m
+2026-11-09T23:03:09.3824361Z shell: C:\hostedtoolcache\windows\Python\3.12.10\x64\python.EXE {0}
+2026-11-09T23:03:09.3824783Z env:
+2026-11-09T23:03:09.3825166Z   CI_STOPPED_NAME: unified-stopped-service-42716081580-1-windows-2022
+2026-11-09T23:03:09.3825648Z   CI_EXPECTED_SHA: e203c0bbeaa176a843a7d80b2eadfefe8fce7385
+2026-11-09T23:03:09.3826085Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-09T23:03:09.3826595Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-11-09T23:03:09.3827093Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-09T23:03:09.3827530Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-09T23:03:09.3828027Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-09T23:03:09.3828379Z ##[endgroup]
+2026-11-09T23:03:09.9179667Z ##[group]Run $ErrorActionPreference='Stop'
+2026-11-09T23:03:09.9180156Z [36;1m$ErrorActionPreference='Stop'[0m
+2026-11-09T23:03:09.9180672Z [36;1m$helper=Join-Path $env:RUNNER_TEMP ('unified-nssm-helper-'+$env:CI_STOPPED_NAME+'.psm1')[0m
+2026-11-09T23:03:09.9181681Z [36;1mif((Get-FileHash -LiteralPath $helper -Algorithm SHA256).Hash.ToLowerInvariant() -cne 'fdd893be67bf2d50a995b39d0628fbc21dae1eaae7b426c5664e52ecb1578c85'){throw 'CI_HELPER_PIN_REJECTED'}[0m
+2026-11-09T23:03:09.9182533Z [36;1mImport-Module $helper -Force[0m
+2026-11-09T23:03:09.9182954Z [36;1m$package=Join-Path $env:RUNNER_TEMP ($env:CI_STOPPED_NAME+'.nupkg')[0m
+2026-11-09T23:03:09.9183475Z [36;1m$archive=Join-Path $env:RUNNER_TEMP ($env:CI_STOPPED_NAME+'.zip')[0m
+2026-11-09T23:03:09.9184008Z [36;1m$pin='6c6b1e287fb2ac6b04cfd32be2b9ed54a283cf0847fab2326e1b3961b512d340'[0m
+2026-11-09T23:03:09.9184617Z [36;1mSave-PinnedNssmMirrorPackage -Destination $package -MirrorOuterSha256 $pin[0m
+2026-11-09T23:03:09.9185378Z [36;1mExpand-PinnedNssmPackage -PackageFile $package -Destination $archive -MirrorOuterSha256 $pin[0m
+2026-11-09T23:03:09.9219356Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-09T23:03:09.9219768Z env:
+2026-11-09T23:03:09.9220118Z   CI_STOPPED_NAME: unified-stopped-service-42716081580-1-windows-2022
+2026-11-09T23:03:09.9220575Z   CI_EXPECTED_SHA: e203c0bbeaa176a843a7d80b2eadfefe8fce7385
+2026-11-09T23:03:09.9221028Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-09T23:03:09.9221522Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-11-09T23:03:09.9221993Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-09T23:03:09.9222473Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-09T23:03:09.9223679Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-09T23:03:09.9224060Z ##[endgroup]
+2026-11-09T23:03:10.9080697Z ##[group]Run python -I -S -B scripts/ci_stopped_service_acceptance.py --root "$env:CI_STOPPED_ROOT" --expected-sha "$env:CI_EXPECTED_SHA"
+2026-11-09T23:03:10.9081700Z [36;1mpython -I -S -B scripts/ci_stopped_service_acceptance.py --root "$env:CI_STOPPED_ROOT" --expected-sha "$env:CI_EXPECTED_SHA"[0m
+2026-11-09T23:03:10.9116621Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-09T23:03:10.9117053Z env:
+2026-11-09T23:03:10.9117414Z   CI_STOPPED_NAME: unified-stopped-service-42716081580-1-windows-2022
+2026-11-09T23:03:10.9117878Z   CI_EXPECTED_SHA: e203c0bbeaa176a843a7d80b2eadfefe8fce7385
+2026-11-09T23:03:10.9118361Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-09T23:03:10.9118890Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-11-09T23:03:10.9119388Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-09T23:03:10.9119970Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-09T23:03:10.9120419Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-09T23:03:10.9120930Z   CI_STOPPED_ROOT: D:\a\_temp/unified-stopped-service-42716081580-1-windows-2022
+2026-11-09T23:03:10.9121514Z   CI_PINNED_NSSM_ARCHIVE: D:\a\_temp/unified-stopped-service-42716081580-1-windows-2022.zip
+2026-11-09T23:03:10.9122008Z ##[endgroup]
+2026-11-09T23:05:54.0648607Z {"result": "PASS_COMPONENT_STOPPED_SERVICE_ONLY", "failure_stage": null, "error_code": null, "source_proof": "NOT_EVALUATED", "activation": "BLOCKED", "physical": "NOT_RUN"}
+2026-11-09T23:05:54.1905835Z ##[group]Run actions/upload-artifact@v4
+2026-11-09T23:05:54.1906299Z with:
+2026-11-09T23:05:54.1906597Z   name: stopped-service-windows-2022-42716081580-1
+2026-11-09T23:05:54.1907061Z   path: D:\a\_temp/unified-stopped-service-42716081580-1-windows-2022/reports/
+2026-11-09T23:05:54.1907593Z   if-no-files-found: warn
+2026-11-09T23:05:54.1907865Z   compression-level: 6
+2026-11-09T23:05:54.1908126Z   overwrite: false
+2026-11-09T23:05:54.1908386Z   include-hidden-files: false
+2026-11-09T23:05:54.1908656Z env:
+2026-11-09T23:05:54.1909035Z   CI_STOPPED_NAME: unified-stopped-service-42716081580-1-windows-2022
+2026-11-09T23:05:54.1909532Z   CI_EXPECTED_SHA: e203c0bbeaa176a843a7d80b2eadfefe8fce7385
+2026-11-09T23:05:54.1909968Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-09T23:05:54.1910438Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-11-09T23:05:54.1911017Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-09T23:05:54.1911454Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-09T23:05:54.1911876Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-09T23:05:54.1912258Z ##[endgroup]
+2026-11-09T23:05:54.3713863Z (node:5768) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-09T23:05:54.3714661Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-09T23:05:54.3760793Z With the provided path, there will be 2 files uploaded
+2026-11-09T23:05:54.3766312Z Artifact name is valid!
+2026-11-09T23:05:54.3768288Z Root directory input is valid!
+2026-11-09T23:05:54.6785625Z Beginning upload of artifact content to blob storage
+2026-11-09T23:05:54.7013138Z (node:5768) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-11-09T23:05:54.8571830Z Uploaded bytes 2973
+2026-11-09T23:05:54.9073073Z Finished uploading artifact content to blob storage!
+2026-11-09T23:05:54.9074039Z SHA256 digest of uploaded artifact zip is 32bb64d282bc6dfb3f6bcf64d847ceefea7ad13b0403092053f2a8629e41daf3
+2026-11-09T23:05:54.9076557Z Finalizing artifact upload
+2026-11-09T23:05:55.2923574Z Artifact stopped-service-windows-2022-42716081580-1.zip successfully finalized. Artifact ID 13718237782
+2026-11-09T23:05:55.2924660Z Artifact stopped-service-windows-2022-42716081580-1 has been successfully uploaded! Final size is 2973 bytes. Artifact ID is 13718237782
+2026-11-09T23:05:55.2934155Z Artifact download URL: https://github.com/YehorBabenko88/unified-system/actions/runs/42716081580/artifacts/13718237782
+2026-11-09T23:05:55.3258018Z Post job cleanup.
+2026-11-09T23:05:55.4698909Z (node:5424) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-09T23:05:55.4699693Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-09T23:05:55.4983141Z Post job cleanup.
+2026-11-09T23:05:55.6815027Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-09T23:05:55.7095533Z git version 2.56.0.windows.4
+2026-11-09T23:05:55.7153910Z Temporarily overriding HOME='D:\a\_temp\c4c75da8-e963-4e35-8e94-87b0371867a3' before making global git config changes
+2026-11-09T23:05:55.7154717Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-09T23:05:55.7165431Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\unified-system\unified-system
+2026-11-09T23:05:55.7479058Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-09T23:05:55.7783035Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-09T23:05:56.2686641Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-09T23:05:56.2992159Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-09T23:05:56.7690304Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-09T23:05:56.7994373Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-09T23:05:57.3059329Z Cleaning up orphan processes
+2026-11-09T23:05:57.3147005Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-python@v5, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

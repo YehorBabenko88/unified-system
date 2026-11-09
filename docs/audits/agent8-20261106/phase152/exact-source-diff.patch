@@ -1,0 +1,275 @@
+diff --git a/tests/fresh_render/DIAGNOSTICS-DESIGN.md b/tests/fresh_render/DIAGNOSTICS-DESIGN.md
+new file mode 100644
+index 0000000..79a5e20
+--- /dev/null
++++ b/tests/fresh_render/DIAGNOSTICS-DESIGN.md
+@@ -0,0 +1,104 @@
++# Diagnostic and owned-lifecycle successor — 2026-11-10
++
++Immutable implementation base161ea1e0fc3a3a4cd64783b0e111e1e119e14d71.
++Root explicitly ACKed diagnostics and own lifecycle source changes, not PS batching.
++Files remain in tests/fresh_render. Renderer, SDK, guard, routing, sandbox and
++Root20s/USER10s/1GiB admission are unchanged. No physical rerun by A6.
++
++## Evidence, not a completed RCA
++
++Original Root smoke e203-e reports direct backend exit0/artifact2070B/f499,
++frontend retained primary exit73 at own watchdog20s and aggregate failure.
++The frontend's own receipt exists: render NOT_RUN, page_requests1/blocked0,
++HARNESS_FAILED_DETAILS_WITHHELD; issued browser exit confirmed, fallbackfalse,
++guard denied0. Owned-browser/receipt file mtimes are respectively
++23:10:47.478Z/23:10:48.228Z; stream files end around23:10:54.289Z. File mtimes
++are observations, NOT monotonic phase timing or commit/freshness proof.
++
++The local render failure and later primary-process watchdog death are separate
++facts. Source reaches page request handling, but these artifacts cannot identify
++whether goto, another awaited operation, policy, network or runtime caused failure.
++There is no safe raw error retained. Repeated PS startups are an overhead hypothesis,
++not sole-cause RCA. No attribution of all31 Job processes to PowerShell is made.
++
++Source gaps: no explicit close of the connected SDK browser client on failure;
++context scoped inside try and unavailable to finally; consumed GO stdin is paused
++but not explicitly closed. These are lifecycle gaps, not proof of the actual
++retained-handle cause. Exact pinned SDK source shows connect marks
++_shouldCloseConnectionOnClose=true; its public browser.close closes that connection
++and waits for disconnect. It does NOT establish browser-process exit. Separate
++owned BrowserServer.close and actual ChildProcess exit observation remain needed.
++
++## Authorized implementation
++
++1. After matching GO only, boundedly destroy/observe close of OWN stdin before
++   importing fixed harness. No extra argv, preloads, pre-GO target import, forced
++   process.exit or blanket unref. Parent never sends subsequent commands on this
++   single-frame protocol. Failure prevents target import.
++2. Fixed phase IDs emit BEGIN/OK/FAIL with monotonic milliseconds since this Node
++   process started (same process.uptime origin in bootstrap/harness, NOT UTC). At most
++   56 harness events, total<=6144B diagnostic stdout, each<=256B; bootstrap stdin
++   and one beforeExit observation keep the complete stream below64 events and
++   Root's existing16KiB capture limit. Receipt remains<=64KiB. Overflow is failure.
++3. Closed error_name enum, timeout bool, finite known internal error codes and
++   exact whitelisted net::ERR_* tokens only. No raw error/message/stack, URLs,
++   headers, environment, argv or arbitrary error strings. HTTP status only numeric
++   100..599; existing counters retained. Unknown remains UNKNOWN, never guessed.
++4. Finally closes actual issued OWN context, connected browser client, BrowserServer
++   and HTTP server. No object/JSON permit or PID reopening. Only public SDK APIs;
++   client disconnect and browser exit are independently recorded. No explicit SDK
++   kill fallback is added. Existing sync guard still denies its internal taskkill.
++   Aggregate cleanup<=10s cooperative, each operation<=existing5s, Root watchdog
++   remains authoritative. Late/unknown cleanup or diagnostic overflow stays nonPASS.
++5. Final mandatory diagnostic intent is RECEIPT_WRITE/BEGIN. Validate telemetry
++   before publishing a final receipt; it snapshots ENDED_BEFORE_FINAL_WRITE.
++   There are no mandatory diagnostic writes after publication. File existence,
++   actual write success and retained primary exit are separately observed; no
++   RECEIPT_WRITE/OK is invented before IO completes. Optional natural-idle stdout
++   is not receipt commit or a condition manufacturing local render PASS.
++6. Natural beforeExit observation is diagnostic only; no process.exit to manufacture
++   retirement. Root's retained Popen exit/Job accounting still decide actual success.
++
++Exact copied SDK source semantics evidence (read, never imported/executed by A6):
++browserType.js SHAa5c3aa4c7580393175b900c6931ba1c7fc28d65757d46d9bf8b22080475961c2
++sets the connected client's close-connection flag (lines124–146); browser.js
++SHA17be22b81b9aaed6dd9cb9d7d774007ef1d911db986ce9ee597677f5b3ce3d29
++closes that connection and awaits closedPromise (lines141–148). This evidence does
++not identify which handles actually remained live in e203-e.
++
++Pure/error/stream and nonexecuting issued-handle doubles only. No SDK import, native
++PS/browser/process/Job fixtures or performance benchmark by A6 under this ACK.
++
++## PS batching — DESIGN_PENDING, not implemented
++
++Current static successful-prepare path launches8 PS checks (3 fresh files plus
++renderer, each before/after), tooling9, run-root1, owned-PID output1; later output
++and final input rereads add more. The reported failure path is consistent with20
++calls including final receipt, but actual per-child counts/times are NOT known.
++
++Recommended later option, only if diagnostics justify it: invocation-local bounded
++multi-file read phases, never a cross-phase cache or persistent PS broker. Gather
++the COMPLETE deduplicated ancestor pathset for the phase, run identical Node and
++Windows attribute checks before opening any phase file, retain same per-file
++open/fstat/nlink/size/EOF/mtime/ctime/hash checks, then repeat the complete phase
++ancestor checks AFTER the LAST read and BEFORE publishing phase bytes. Compare
++every ancestor dev/ino before/after; any failure discards the whole phase. This
++widens the attribute-check interval and therefore changes freshness semantics;
++Root/Integration Owner must explicitly ACK that tradeoff before implementation.
++
++Proposed pathsets: P1 fresh request/envelope/artifact/renderer + all ancestors;
++P2 node binary/module/executable/lock/browsers JSON + all ancestors (full521-file
++SDK digest/link checks still retained); P3 new run directory before SDK launch;
++P4 output root before exclusive writes (unchanged per-write or explicit later ACK);
++P5 FINAL fresh3-file re-read, NEW pre/post checks, no P1 cache reuse. No whole-run
++approval covers newly created temp/profile/output paths or later input mutations.
++No checks, generations, Root admission, hashes or limits may be dropped.
++
++Alternative: keep all per-read checks and first fix diagnostic/lifecycle gaps.
++Selected now: this alternative. A long-lived PS process, broad allowlist cache,
++skipping checks or increasing budgets is rejected. If Root later requests batching,
++its bounded request/response/path count/sequence and failure semantics need their
++own review; source-only performance estimates cannot count as physical acceptance.
++
++GO_NO_GO: source implementation authorized for diagnostics/own lifecycle only;
++batching DESIGN_PENDING; actual new package/runtime/physical acceptance NO-GO.
+diff --git a/tests/fresh_render/bootstrap.cjs b/tests/fresh_render/bootstrap.cjs
+index 319965d..dc45cf0 100644
+--- a/tests/fresh_render/bootstrap.cjs
++++ b/tests/fresh_render/bootstrap.cjs
+@@ -25,10 +25,15 @@ async function main(args){
+  const config=parseArgs(args),gate=waitForGo(process.stdin,config.nonce);
+  const ready=JSON.stringify({pid:process.pid,nonce:config.nonce})+'\n';need(Buffer.byteLength(ready)<=128,'BOOTSTRAP_READY_SIZE');process.stdout.write(ready);
+  await gate;
++ process.exitCode=1;
++ const inputEvent=state=>process.stdout.write(JSON.stringify({phase:'GO_INPUT_CLOSE',state,elapsed_ms:Math.floor(process.uptime()*1000)})+'\n');inputEvent('BEGIN');
++ try{await closeGoInput(process.stdin);inputEvent('OK');}catch(e){inputEvent('FAIL');throw e;}
+  // Single fixed lazy import; no filesystem, renderer or SDK work before this line.
+  const {run}=require('./harness.cjs');
+  const result=await run(config.spec,config.modulePath,config.executable);
+  const receipt=JSON.stringify({run_root:result.runRoot,result:result.receipt.result})+'\n';need(Buffer.byteLength(receipt)<=4096,'BOOTSTRAP_RESULT_SIZE');process.stdout.write(receipt);process.exitCode=result.exitCode;
++ process.once('beforeExit',()=>process.stdout.write(JSON.stringify({phase:'NODE_NATURAL_IDLE',state:'OBSERVED',elapsed_ms:Math.floor(process.uptime()*1000)})+'\n'));
+ }
+-module.exports={WAIT_MS,MAX_STDIN,parseArgs,waitForGo};
++function closeGoInput(input){return new Promise((resolve,reject)=>{if(input.closed===true)return resolve();let done=false;const finish=ok=>{if(done)return;done=true;clearTimeout(timer);input.removeListener('close',closed);input.removeListener('error',failed);ok?resolve():reject(Error('GO_INPUT_CLOSE'));};const closed=()=>finish(true),failed=()=>finish(false),timer=setTimeout(failed,500);input.once('close',closed);input.once('error',failed);try{input.destroy();}catch{failed();}});}
++module.exports={WAIT_MS,MAX_STDIN,parseArgs,waitForGo,closeGoInput};
+ if(require.main===module)main(process.argv.slice(2)).catch(()=>{process.stderr.write('BOOTSTRAP_REFUSED\n');process.exitCode=1;});
+diff --git a/tests/fresh_render/diagnostics.cjs b/tests/fresh_render/diagnostics.cjs
+new file mode 100644
+index 0000000..30ecff6
+--- /dev/null
++++ b/tests/fresh_render/diagnostics.cjs
+@@ -0,0 +1,29 @@
++'use strict';
++const PHASES=new Set(['PREPARE','TOOLING_VALIDATE','RUN_DIRECTORY','HTTP_LISTEN','BROWSER_LAUNCH','OWNED_PID_WRITE','SPAWN_VALIDATE','CLIENT_CONNECT','CONTEXT_CREATE','ROUTE_INSTALL','PAGE_CREATE','PAGE_NAVIGATE','PAGE_WAIT','MODEL_VALIDATE','SCREENSHOT','SCREENSHOT_WRITE','INPUT_CONFIRM','CONTEXT_CLOSE','CLIENT_DISCONNECT','SERVER_CLOSE','SERVER_EXIT_OBSERVE','HTTP_CLOSE','RECEIPT_WRITE','RETIRE_READY','DIAGNOSTIC_LIMIT']);
++const NAMES=new Set(['Error','TimeoutError','TypeError','RangeError','AbortError']);
++const NET=new Set(['ERR_ADDRESS_UNREACHABLE','ERR_CONNECTION_REFUSED','ERR_CONNECTION_CLOSED','ERR_CONNECTION_RESET','ERR_CONNECTION_ABORTED','ERR_TIMED_OUT','ERR_NAME_NOT_RESOLVED','ERR_NETWORK_CHANGED','ERR_INTERNET_DISCONNECTED','ERR_BLOCKED_BY_CLIENT','ERR_BLOCKED_BY_ADMINISTRATOR','ERR_ABORTED','ERR_FAILED','ERR_EMPTY_RESPONSE','ERR_SSL_PROTOCOL_ERROR','ERR_CERT_AUTHORITY_INVALID','ERR_CERT_DATE_INVALID']);
++const CODES=new Set(['DEADLINE','SIZE_LIMIT','INPUT_DIGEST','PIN_DIGEST','ARTIFACT_BYTES_MISMATCH','FRESH_INPUT_CHANGED','FILE_CHANGED','PATH_CHANGED','REPARSE_CHECK_FAILED','SECURITY_SWITCH','PROFILE_OUTSIDE_TEMP','RENDER_MODEL_MISMATCH','RENDER_DOM_MISMATCH','RENDER_CELLS_MISMATCH','UNEXPECTED_BROWSER_REQUEST','SDK_ALREADY_IMPORTED','AMBIENT_RUNTIME_CONFIG','NODE_RUNTIME','DEPENDENCY_TREE_DIGEST','SYNC_SPAWN_DENIED_ROOT_JOB_TEARDOWN_REQUIRED']);
++function ownString(value,key){try{if(!value||(typeof value!=='object'&&typeof value!=='function'))return null;const d=Object.getOwnPropertyDescriptor(value,key);return d&&typeof d.value==='string'?d.value:null;}catch{return null;}}
++function safeFailure(error){
++ const name=ownString(error,'name'),message=ownString(error,'message')||'';let isError=false;try{isError=error instanceof Error;}catch{}const error_name=NAMES.has(name)?name:isError?'Error':'UNKNOWN';
++ let net_error=null;for(const m of message.slice(0,4096).matchAll(/\bnet::(ERR_[A-Z0-9_]+)(?![A-Z0-9_])/g))if(NET.has(m[1])){net_error=m[1];break;}
++ return Object.freeze({error_name,timeout:error_name==='TimeoutError'||message==='DEADLINE',net_error,code:CODES.has(message)?message:'UNCLASSIFIED'});
++}
++function createTelemetry(write=line=>process.stdout.write(line)){
++ const events=[];let bytes=0,overflow=false,io_failed=false;
++ const elapsed=()=>Math.min(Number.MAX_SAFE_INTEGER,Math.max(0,Math.floor(process.uptime()*1000)));
++ function append(event){const line=JSON.stringify(event)+'\n';if(Buffer.byteLength(line)>256||bytes+Buffer.byteLength(line)>6144){overflow=true;return;}events.push(Object.freeze(event));bytes+=Buffer.byteLength(line);try{write(line);}catch{io_failed=true;}}
++ function record(phase,state,error=null,status){
++  if(!PHASES.has(phase)||!['BEGIN','OK','FAIL'].includes(state))throw Error('DIAGNOSTIC_PHASE');if(overflow)return;
++  const event={phase,state,elapsed_ms:elapsed()};if(state==='FAIL')event.failure=safeFailure(error);if(Number.isInteger(status)&&status>=100&&status<=599)event.http_status=status;
++  const line=JSON.stringify(event)+'\n';if(events.length>=55||Buffer.byteLength(line)>256||bytes+Buffer.byteLength(line)>5888){overflow=true;append({phase:'DIAGNOSTIC_LIMIT',state:'FAIL',elapsed_ms:elapsed()});return;}append(event);
++ }
++ return Object.freeze({record,begin:phase=>record(phase,'BEGIN'),assertUsable:()=>{if(overflow||io_failed)throw Error('DIAGNOSTIC_UNAVAILABLE');},step:async(phase,fn)=>{record(phase,'BEGIN');try{const value=await fn();record(phase,'OK');return value;}catch(e){record(phase,'FAIL',e);throw e;}},snapshot:()=>Object.freeze({schema:'terminan.render.diagnostics.v1',clock:'NODE_MONOTONIC_MS_SINCE_PROCESS_START_NOT_UTC',events:Object.freeze([...events]),event_count:events.length,stream_bytes:bytes,overflow,io_failed})});
++}
++async function writeFinalReceipt(receipt,telemetry,write){
++ telemetry.begin('RECEIPT_WRITE');telemetry.assertUsable();receipt.diagnostics={...telemetry.snapshot(),finalization:'ENDED_BEFORE_FINAL_WRITE'};
++ // No mandatory diagnostic write follows publication. File-write/process exit
++ // evidence remains separate; this does not issue a durable/runtime commit.
++ await write(Buffer.from(JSON.stringify(receipt,null,2)+'\n'));
++}
++module.exports=Object.freeze({safeFailure,createTelemetry,writeFinalReceipt});
+diff --git a/tests/fresh_render/harness.cjs b/tests/fresh_render/harness.cjs
+index f582d18..4b96732 100644
+--- a/tests/fresh_render/harness.cjs
++++ b/tests/fresh_render/harness.cjs
+@@ -86,34 +86,36 @@ function verifyTooling(modulePath,executable){
+  need(require(path.join(modulePath,'package.json')).version==='1.56.1','PLAYWRIGHT_VERSION');return modules;
+ }
+ async function run(spec,modulePath,executable){
++ const {createTelemetry,safeFailure,writeFinalReceipt}=require('./diagnostics.cjs'),{cleanupIssued}=require('./owned_lifecycle.cjs'),diagnostics=createTelemetry();
+  const syncGuard=require('./sync_spawn_guard.cjs').install();
+- const p=await prepare(spec);verifyTooling(modulePath,executable);
+- const runRoot=fs.mkdtempSync(path.join(spec.testRoot,'fresh-render-'));checkPaths([runRoot]);const tmp=path.join(runRoot,'temp');fs.mkdirSync(tmp);const prior={};for(const k of ['TEMP','TMP','TMPDIR','LOCALAPPDATA','APPDATA','USERPROFILE']){prior[k]=process.env[k];process.env[k]=tmp;}
+- let httpServer,browserServer,browser,cleanup=null,exitCode=1;const receipt={schema:'terminan.disposable.fresh-file-render.v1',scope:p.scope,input_sha256:p.digests,renderer_sha256:PINS.renderer,node:process.version,playwright:'1.56.1',chromium_revision:'1194',authenticated_gateway:false,verified_market_data:false,production_admission:false,hard_resource_containment:'NOT_QUALIFIED',browser_run:'STARTED',render:'NOT_RUN',cleanup:'PENDING',page_requests:0,blocked_page_requests:0};
++ const p=await diagnostics.step('PREPARE',()=>prepare(spec));await diagnostics.step('TOOLING_VALIDATE',()=>verifyTooling(modulePath,executable));
++ const {runRoot,tmp}=await diagnostics.step('RUN_DIRECTORY',()=>{const runRoot=fs.mkdtempSync(path.join(spec.testRoot,'fresh-render-'));checkPaths([runRoot]);const tmp=path.join(runRoot,'temp');fs.mkdirSync(tmp);return {runRoot,tmp};});const prior={};for(const k of ['TEMP','TMP','TMPDIR','LOCALAPPDATA','APPDATA','USERPROFILE']){prior[k]=process.env[k];process.env[k]=tmp;}
++ let httpServer,browserServer,browser,context,cleanup=null,exitCode=1;const receipt={schema:'terminan.disposable.fresh-file-render.v1',scope:p.scope,input_sha256:p.digests,renderer_sha256:PINS.renderer,node:process.version,playwright:'1.56.1',chromium_revision:'1194',authenticated_gateway:false,verified_market_data:false,production_admission:false,hard_resource_containment:'NOT_QUALIFIED',browser_run:'STARTED',render:'NOT_RUN',cleanup:'PENDING',page_requests:0,blocked_page_requests:0};
+  const deadline=Date.now()+LIMITS.duration_ms;
+  const remaining=(cap=10000)=>{const ms=deadline-Date.now();need(ms>0,'DEADLINE');return Math.min(cap,ms);};
+  try{
+    httpServer=http.createServer({maxHeaderSize:4096},(req,res)=>{const r=routeFor(p,req.method,req.url);res.writeHead(r.status,r.headers);res.end(r.body);});httpServer.maxConnections=4;httpServer.requestTimeout=5000;httpServer.headersTimeout=5000;
+-   await new Promise((resolve,reject)=>{httpServer.once('error',reject);httpServer.listen(0,'127.0.0.1',resolve);});const base='http://127.0.0.1:'+httpServer.address().port;
+-   const {chromium}=require(modulePath);browserServer=await chromium.launchServer({...launchOptions(tmp,executable),timeout:remaining(15000)});const child=browserServer.process();
+-   writeBound(runRoot,'owned-browser.json',Buffer.from(JSON.stringify({schema:'terminan.owned-browser-process.v1',pid:child.pid,parent_pid:process.pid,ownership:'BrowserServer.process() issued by this launch only',run_root:runRoot})),LIMITS.json);checkSpawn(child.spawnargs,tmp);
+-   remaining();browser=await chromium.connect(browserServer.wsEndpoint(),{timeout:remaining()});const context=await limited(browser.newContext({viewport:{width:1280,height:900},serviceWorkers:'block',acceptDownloads:false}),remaining());
+-   await context.route('**/*',route=>{receipt.page_requests++;if(receipt.page_requests>32||!allowRequest(base,route.request().url(),route.request().method())){receipt.blocked_page_requests++;return route.abort('blockedbyclient');}return route.continue();});
+-   const page=await limited(context.newPage(),remaining());page.setDefaultTimeout(remaining());await page.goto(base+'/',{waitUntil:'load',timeout:remaining()});await page.waitForFunction(()=>window.__freshDone!==null,null,{timeout:remaining()});
+-   const observed=await limited(page.evaluate(()=>({status:window.__freshDone.status,model:window.__freshDone.model,banner:document.querySelector('[role="status"]')?.textContent,tables:[...document.querySelectorAll('table tbody')].map(x=>x.rows.length),cells:[...document.querySelectorAll('table tbody')].map(x=>[...x.rows].map(r=>[...r.cells].map(c=>c.textContent))),forbidden:document.querySelectorAll('a,img,iframe,button,input,svg,canvas').length})),remaining());
++   await diagnostics.step('HTTP_LISTEN',()=>new Promise((resolve,reject)=>{httpServer.once('error',reject);httpServer.listen(0,'127.0.0.1',resolve);}));const base='http://127.0.0.1:'+httpServer.address().port;
++   const {chromium}=require(modulePath);browserServer=await diagnostics.step('BROWSER_LAUNCH',()=>chromium.launchServer({...launchOptions(tmp,executable),timeout:remaining(15000)}));const child=browserServer.process();
++   await diagnostics.step('OWNED_PID_WRITE',()=>writeBound(runRoot,'owned-browser.json',Buffer.from(JSON.stringify({schema:'terminan.owned-browser-process.v1',pid:child.pid,parent_pid:process.pid,ownership:'BrowserServer.process() issued by this launch only',run_root:runRoot})),LIMITS.json));await diagnostics.step('SPAWN_VALIDATE',()=>checkSpawn(child.spawnargs,tmp));
++   remaining();browser=await diagnostics.step('CLIENT_CONNECT',()=>chromium.connect(browserServer.wsEndpoint(),{timeout:remaining()}));context=await diagnostics.step('CONTEXT_CREATE',()=>limited(browser.newContext({viewport:{width:1280,height:900},serviceWorkers:'block',acceptDownloads:false}),remaining()));
++   await diagnostics.step('ROUTE_INSTALL',()=>context.route('**/*',route=>{receipt.page_requests++;if(receipt.page_requests>32||!allowRequest(base,route.request().url(),route.request().method())){receipt.blocked_page_requests++;return route.abort('blockedbyclient');}return route.continue();}));
++   const page=await diagnostics.step('PAGE_CREATE',()=>limited(context.newPage(),remaining()));page.setDefaultTimeout(remaining());const response=await diagnostics.step('PAGE_NAVIGATE',()=>page.goto(base+'/',{waitUntil:'load',timeout:remaining()}));const status=response?.status();if(Number.isInteger(status)&&status>=100&&status<=599)receipt.http_status=status;await diagnostics.step('PAGE_WAIT',()=>page.waitForFunction(()=>window.__freshDone!==null,null,{timeout:remaining()}));
++   await diagnostics.step('MODEL_VALIDATE',async()=>{const observed=await limited(page.evaluate(()=>({status:window.__freshDone.status,model:window.__freshDone.model,banner:document.querySelector('[role="status"]')?.textContent,tables:[...document.querySelectorAll('table tbody')].map(x=>x.rows.length),cells:[...document.querySelectorAll('table tbody')].map(x=>[...x.rows].map(r=>[...r.cells].map(c=>c.textContent))),forbidden:document.querySelectorAll('a,img,iframe,button,input,svg,canvas').length})),remaining());
+    need(observed.status==='LOCAL_UNATTESTED'&&canonical(observed.model)===canonical(p.model),'RENDER_MODEL_MISMATCH');need(observed.banner==='LOCAL_UNATTESTED · BYTE AGREEMENT ONLY'&&JSON.stringify(observed.tables)==='[4,3]'&&observed.forbidden===0,'RENDER_DOM_MISMATCH');need(receipt.blocked_page_requests===0,'UNEXPECTED_BROWSER_REQUEST');
+    const r=p.model.envelope.result,expectedCells=[r.levels.map(x=>[x.kind,x.price,String(x.source_start_ms)]),r.rows.map(x=>[x.event_start_ms,x.open,x.high,x.low,x.close,x.volume].map(String))];need(JSON.stringify(observed.cells)===JSON.stringify(expectedCells),'RENDER_CELLS_MISMATCH');
+-   const screenshot=await page.screenshot({type:'png',fullPage:false,timeout:remaining()});writeBound(runRoot,'fresh-render.png',screenshot,LIMITS.screenshot);
+-   confirmInputs(spec,p);remaining();receipt.screenshot_sha256=sha(screenshot);receipt.rendered_model_sha256=sha(canonical(observed.model));receipt.render='LOCAL_UNATTESTED_MODEL_AND_DOM_AGREEMENT';receipt.levels=4;receipt.input_rows=3;await limited(context.close(),remaining());exitCode=0;
+- }catch(e){receipt.failure_code=/^[A-Z][A-Z0-9_]{0,95}$/.test(e.message)?e.message:'HARNESS_FAILED_DETAILS_WITHHELD';}
++   receipt.rendered_model_sha256=sha(canonical(observed.model));});
++   const screenshot=await diagnostics.step('SCREENSHOT',()=>page.screenshot({type:'png',fullPage:false,timeout:remaining()}));await diagnostics.step('SCREENSHOT_WRITE',()=>writeBound(runRoot,'fresh-render.png',screenshot,LIMITS.screenshot));
++   await diagnostics.step('INPUT_CONFIRM',()=>confirmInputs(spec,p));remaining();receipt.screenshot_sha256=sha(screenshot);receipt.render='LOCAL_UNATTESTED_MODEL_AND_DOM_AGREEMENT';receipt.levels=4;receipt.input_rows=3;exitCode=0;
++ }catch(e){receipt.failure=safeFailure(e);receipt.failure_code=receipt.failure.code;receipt.failure_phase=diagnostics.snapshot().events.at(-1)?.phase||'PREPARE';}
+  finally{
+-  // BrowserServer.close/kill are the only process-termination capabilities used.
+-  if(browserServer){try{cleanup=await closeOwned(browserServer);}catch{cleanup={confirmed:false};}}else cleanup={confirmed:false,reason:'NO_ISSUED_BROWSER_HANDLE'};
+-  if(httpServer){httpServer.closeAllConnections();await limited(new Promise(resolve=>httpServer.close(resolve)),5000).catch(()=>{exitCode=1;});}
++  // Only actual returned handles enter this bounded teardown; no PID-based fallback.
++  cleanup=await cleanupIssued({context,browser,browserServer,httpServer},diagnostics);
+   receipt.cleanup=cleanup;receipt.browser_run='FINISHED';receipt.sync_spawn_guard=syncGuard.snapshot();const outcome=classifyCleanup(exitCode,cleanup,receipt.sync_spawn_guard);
+-  exitCode=outcome.exitCode;receipt.root_job_teardown_required=outcome.root_job_teardown_required;receipt.result=outcome.result;
++  if(diagnostics.snapshot().overflow||diagnostics.snapshot().io_failed)exitCode=1;
++  exitCode=exitCode===0?outcome.exitCode:1;receipt.root_job_teardown_required=outcome.root_job_teardown_required;receipt.result=exitCode===0?outcome.result:'FAIL_OR_UNCONFIRMED';
+   for(const k of ['TEMP','TMP','TMPDIR','LOCALAPPDATA','APPDATA','USERPROFILE']){if(prior[k]===undefined)delete process.env[k];else process.env[k]=prior[k];}
+-  writeBound(runRoot,'render-receipt.json',Buffer.from(JSON.stringify(receipt,null,2)+'\n'),LIMITS.json);
++  await writeFinalReceipt(receipt,diagnostics,bytes=>writeBound(runRoot,'render-receipt.json',bytes,LIMITS.json));
+  }
+  return {runRoot,exitCode,receipt};
+ }
+diff --git a/tests/fresh_render/owned_lifecycle.cjs b/tests/fresh_render/owned_lifecycle.cjs
+new file mode 100644
+index 0000000..15474a2
+--- /dev/null
++++ b/tests/fresh_render/owned_lifecycle.cjs
+@@ -0,0 +1,16 @@
++'use strict';
++async function cleanupIssued(handles,telemetry,budgetMs=10000){
++ const started=process.hrtime.bigint(),r={context:'NOT_ISSUED',client:'NOT_ISSUED',server:'NOT_ISSUED',http:'NOT_ISSUED',confirmed:false,exit_observed:false,fallback_sdk_kill:false};
++ const remaining=()=>Math.max(0,Math.min(5000,budgetMs-Number((process.hrtime.bigint()-started)/1000000n)));
++ async function attempt(phase,fn){try{return await telemetry.step(phase,async()=>{const ms=remaining();if(ms<=0)throw Error('DEADLINE');let timer;try{const result=await Promise.race([Promise.resolve().then(fn),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('DEADLINE')),ms);})]);if(result!==true)throw Error('OWNED_CLEANUP_UNCONFIRMED');return true;}finally{clearTimeout(timer);}});}catch{return false;}}
++ if(handles.context)r.context=await attempt('CONTEXT_CLOSE',async()=>{await handles.context.close();return true;})?'CLOSED':'UNKNOWN';
++ if(handles.browser)r.client=await attempt('CLIENT_DISCONNECT',async()=>{await handles.browser.close();return handles.browser.isConnected()===false;})?'DISCONNECTED':'UNKNOWN';
++ if(handles.browserServer){
++  r.server=await attempt('SERVER_CLOSE',async()=>{await handles.browserServer.close();return true;})?'CLOSED':'UNKNOWN';
++  const observed=await attempt('SERVER_EXIT_OBSERVE',()=>{const child=handles.browserServer.process();if(Number.isSafeInteger(child.pid)&&child.pid>0)r.pid=child.pid;r.exit_observed=Number.isInteger(child.exitCode)||(typeof child.signalCode==='string'&&child.signalCode.length>0);r.exit_code=Number.isInteger(child.exitCode)?child.exitCode:null;r.signal_observed=typeof child.signalCode==='string'&&child.signalCode.length>0;return r.exit_observed&&r.exit_code===0;});if(!observed)r.server='UNKNOWN';
++ }
++ if(handles.httpServer)r.http=await attempt('HTTP_CLOSE',()=>new Promise((resolve,reject)=>{handles.httpServer.closeAllConnections();handles.httpServer.close(error=>error?reject(error):resolve(true));}))?'CLOSED':'UNKNOWN';
++ r.confirmed=['CLOSED','NOT_ISSUED'].includes(r.context)&&['DISCONNECTED','NOT_ISSUED'].includes(r.client)&&r.server==='CLOSED'&&r.exit_observed&&r.exit_code===0&&['CLOSED','NOT_ISSUED'].includes(r.http);
++ return Object.freeze(r);
++}
++module.exports=Object.freeze({cleanupIssued});
+diff --git a/tests/fresh_render/test_diagnostics.cjs b/tests/fresh_render/test_diagnostics.cjs
+new file mode 100644
+index 0000000..3c36da1
+--- /dev/null
++++ b/tests/fresh_render/test_diagnostics.cjs
+@@ -0,0 +1,22 @@
++'use strict';
++const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),{EventEmitter}=require('node:events');
++const d=require('./diagnostics.cjs'),{cleanupIssued}=require('./owned_lifecycle.cjs'),b=require('./bootstrap.cjs');
++test('failure taxonomy returns only closed enums and never raw error material',()=>{const e=Object.assign(Error('page.goto: net::ERR_CONNECTION_REFUSED at https://secret/token'),{name:'TimeoutError'});const x=d.safeFailure(e);assert.deepEqual(x,{error_name:'TimeoutError',timeout:true,net_error:'ERR_CONNECTION_REFUSED',code:'UNCLASSIFIED'});assert.ok(!JSON.stringify(x).includes('secret'));assert.equal(d.safeFailure(Error('net::ERR_PRIVATE_TOKEN')).net_error,null);assert.equal(d.safeFailure(Error('SECRET')).code,'UNCLASSIFIED');});
++test('error getters are not invoked by sanitizer',()=>{let n=0;const e={};for(const key of ['name','message','stack'])Object.defineProperty(e,key,{get(){n++;throw Error('secret')}});assert.equal(d.safeFailure(e).error_name,'UNKNOWN');assert.equal(n,0);});
++test('fixed internal errors survive, arbitrary HTTP or error strings cannot enter trace',()=>{assert.equal(d.safeFailure(Error('DEADLINE')).timeout,true);assert.equal(d.safeFailure(Error('ARTIFACT_BYTES_MISMATCH')).code,'ARTIFACT_BYTES_MISMATCH');const t=d.createTelemetry(()=>{});assert.throws(()=>t.begin('https://secret'),/PHASE/);t.record('PAGE_NAVIGATE','OK',null,200);t.record('PAGE_NAVIGATE','OK',null,'200 SECRET');assert.equal(t.snapshot().events[0].http_status,200);assert.equal(Object.hasOwn(t.snapshot().events[1],'http_status'),false);});
++test('trace records monotonic phase boundary and safe failure while preserving thrown error',async()=>{const lines=[],t=d.createTelemetry(x=>lines.push(x)),e=Error('net::ERR_FAILED secret');await assert.rejects(t.step('PAGE_NAVIGATE',async()=>{throw e}),x=>x===e);const s=t.snapshot();assert.equal(s.events.length,2);assert.equal(s.events[0].state,'BEGIN');assert.equal(s.events[1].state,'FAIL');assert.equal(s.events[1].failure.net_error,'ERR_FAILED');assert.ok(s.events[1].elapsed_ms>=s.events[0].elapsed_ms);assert.ok(!lines.join('').includes('secret'));});
++test('trace caps below64 events and6144 bytes and overflow is explicit failure',()=>{const lines=[],t=d.createTelemetry(x=>lines.push(x));for(let i=0;i<80;i++)t.record('PREPARE','BEGIN');const s=t.snapshot();assert.equal(s.overflow,true);assert.ok(s.events.length<=56);assert.ok(Buffer.byteLength(lines.join(''))<=6144);assert.ok(lines.every(x=>Buffer.byteLength(x)<=256));});
++test('telemetry write failure stays unknown without exposing error',()=>{const t=d.createTelemetry(()=>{throw Error('private')});t.begin('PREPARE');assert.equal(t.snapshot().io_failed,true);assert.ok(!JSON.stringify(t.snapshot()).includes('private'));});
++test('late telemetry failure or overflow refuses final success assertion',()=>{let fail=false;const t=d.createTelemetry(()=>{if(fail)throw Error('private')});t.begin('PREPARE');assert.doesNotThrow(()=>t.assertUsable());fail=true;t.record('RETIRE_READY','OK');assert.throws(()=>t.assertUsable(),/DIAGNOSTIC_UNAVAILABLE/);});
++test('opaque throwing descriptor/prototype proxies sanitize to UNKNOWN',()=>{const e=new Proxy({},{getOwnPropertyDescriptor(){throw Error('private')},getPrototypeOf(){throw Error('private')}});assert.equal(d.safeFailure(e).error_name,'UNKNOWN');});
++test('final telemetry failure prevents publishing any PASS receipt',async()=>{const published=[],t=d.createTelemetry(line=>{if(line.includes('RECEIPT_WRITE'))throw Error('private')});await assert.rejects(d.writeFinalReceipt({result:'LOCAL_RENDER_PASS_NOT_AUTH_OR_PHYSICAL_ACCEPTANCE'},t,bytes=>published.push(bytes)),/DIAGNOSTIC_UNAVAILABLE/);assert.equal(published.length,0);});
++test('final receipt observes diagnostic snapshot with no mandatory telemetry after its write',async()=>{const lines=[],t=d.createTelemetry(line=>lines.push(line));let atWrite,receipt;await d.writeFinalReceipt({result:'LOCAL_RENDER_PASS_NOT_AUTH_OR_PHYSICAL_ACCEPTANCE'},t,bytes=>{atWrite=lines.length;receipt=JSON.parse(bytes.toString());});assert.equal(atWrite,lines.length);assert.equal(receipt.diagnostics.io_failed,false);assert.equal(receipt.diagnostics.finalization,'ENDED_BEFORE_FINAL_WRITE');assert.equal(receipt.diagnostics.events.at(-1).phase,'RECEIPT_WRITE');assert.equal(receipt.diagnostics.events.at(-1).state,'BEGIN');});
++function handles(){const calls=[],child={pid:123,exitCode:null,signalCode:null};let connected=true;return {calls,context:{close:async()=>{calls.push('context')}},browser:{close:async()=>{calls.push('client');connected=false},isConnected:()=>connected},browserServer:{process:()=>child,close:async()=>{calls.push('server');child.exitCode=0}},httpServer:{closeAllConnections:()=>calls.push('http-connections'),close:cb=>{calls.push('http');cb()}},child};}
++test('owned teardown separately closes context, disconnects client, observes server exit and HTTP close',async()=>{const h=handles(),r=await cleanupIssued(h,d.createTelemetry(()=>{}));assert.deepEqual(h.calls,['context','client','server','http-connections','http']);assert.equal(r.confirmed,true);assert.equal(r.client,'DISCONNECTED');assert.equal(r.server,'CLOSED');assert.equal(r.exit_observed,true);assert.equal(r.fallback_sdk_kill,false);});
++test('client close fulfilled without disconnect is UNKNOWN even when browser process exits',async()=>{const h=handles(),t=d.createTelemetry(()=>{});h.browser.close=async()=>{};const r=await cleanupIssued(h,t);assert.equal(r.confirmed,false);assert.equal(r.client,'UNKNOWN');assert.ok(t.snapshot().events.some(e=>e.phase==='CLIENT_DISCONNECT'&&e.state==='FAIL'));});
++test('teardown records failure then still attempts other issued handles',async()=>{const h=handles();h.context.close=async()=>{throw Error('secret')};const r=await cleanupIssued(h,d.createTelemetry(()=>{}));assert.equal(r.confirmed,false);assert.equal(r.context,'UNKNOWN');assert.ok(h.calls.includes('client')&&h.calls.includes('server')&&h.calls.includes('http'));});
++test('missing issued browserServer or undefined exit fields never confirm retirement',async()=>{const h=handles();h.browserServer.close=async()=>{};h.child.exitCode=undefined;h.child.signalCode=undefined;assert.equal((await cleanupIssued(h,d.createTelemetry(()=>{}))).confirmed,false);assert.equal((await cleanupIssued({},d.createTelemetry(()=>{}))).confirmed,false);});
++test('cleanup timeout is nonPASS and never calls PID or SDK kill fallback',async()=>{const h=handles();h.browserServer.close=()=>new Promise(()=>{});h.browserServer.kill=()=>{throw Error('MUST_NOT_CALL')};const r=await cleanupIssued(h,d.createTelemetry(()=>{}),10);assert.equal(r.confirmed,false);assert.equal(r.server,'UNKNOWN');assert.equal(r.fallback_sdk_kill,false);});
++test('owned GO input is destroyed and observed closed using inert stream only',async()=>{class Input extends EventEmitter{destroy(){this.destroyed=true;this.closed=true;this.emit('close')}}const input=new Input();await b.closeGoInput(input);assert.equal(input.destroyed,true);});
++test('GO input closure error refuses before harness import',async()=>{class Input extends EventEmitter{destroy(){this.emit('error',Error('private'))}}await assert.rejects(b.closeGoInput(new Input()),/GO_INPUT_CLOSE/);});
++test('source preserves fixed bootstrap and security, tracks public issued client finally, no forced exit',()=>{const root=__dirname,s=fs.readFileSync(path.join(root,'harness.cjs'),'utf8'),boot=fs.readFileSync(path.join(root,'bootstrap.cjs'),'utf8'),life=fs.readFileSync(path.join(root,'owned_lifecycle.cjs'),'utf8');assert.ok(boot.indexOf('await gate')<boot.indexOf('await closeGoInput(process.stdin)'));assert.ok(boot.indexOf('await closeGoInput(process.stdin)')<boot.indexOf("require('./harness.cjs')"));assert.ok(!boot.includes('process.exit('));assert.ok(!life.includes('.kill('));assert.ok(!life.includes('child_process'));assert.match(s,/chromiumSandbox:true/);assert.match(s,/sync_spawn_guard.cjs/);assert.match(s,/cleanupIssued\(/);assert.match(s,/duration_ms:45000,close_ms:5000/);assert.match(s,/snapshot\(\).overflow/);});

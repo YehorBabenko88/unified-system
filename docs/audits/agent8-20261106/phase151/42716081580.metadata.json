@@ -1,0 +1,532 @@
+{
+  "run": {
+    "id": 42716081580,
+    "name": "Disposable Windows stopped-service acceptance",
+    "node_id": "WFR_kwLOVYdYD88AAAAJ8hOtrA",
+    "head_branch": "feature/ls5-physical-dev-smoke-20261109",
+    "head_sha": "e203c0bbeaa176a843a7d80b2eadfefe8fce7385",
+    "path": ".github/workflows/lab-stopped-service.yml",
+    "display_title": "LS5 physical development: read-only readiness and gated disposable pilot",
+    "run_number": 513,
+    "event": "pull_request",
+    "status": "completed",
+    "conclusion": "success",
+    "workflow_id": 407251737,
+    "check_suite_id": 115693856611,
+    "check_suite_node_id": "CS_kwDOVYdYD88AAAAa7-QnYw",
+    "url": "https://api.github.com/repos/YehorBabenko88/unified-system/actions/runs/42716081580",
+    "html_url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42716081580",
+    "pull_requests": [
+      {
+        "url": "https://api.github.com/repos/YehorBabenko88/unified-system/pulls/69",
+        "id": 5230309373,
+        "number": 69,
+        "head": {
+          "ref": "feature/ls5-physical-dev-smoke-20261109",
+          "sha": "615ee6afbe16865ccf1bcf6bc63582b26edd64a1",
+          "repo": {
+            "id": 1434933263,
+            "url": "https://api.github.com/repos/YehorBabenko88/unified-system",
+            "name": "unified-system"
+          }
+        },
+        "base": {
+          "ref": "feature/native-proxy-custody-20261109",
+          "sha": "ba2b1cec0c2b114586afb73696e282117eede987",
+          "repo": {
+            "id": 1434933263,
+            "url": "https://api.github.com/repos/YehorBabenko88/unified-system",
+            "name": "unified-system"
+          }
+        }
+      }
+    ],
+    "created_at": "2026-11-09T22:55:10Z",
+    "updated_at": "2026-11-09T23:05:58Z",
+    "actor": {
+      "login": "YehorBabenko88",
+      "id": 304050327,
+      "node_id": "U_kgDOEh9wlw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/304050327?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/YehorBabenko88",
+      "html_url": "https://github.com/YehorBabenko88",
+      "followers_url": "https://api.github.com/users/YehorBabenko88/followers",
+      "following_url": "https://api.github.com/users/YehorBabenko88/following{/other_user}",
+      "gists_url": "https://api.github.com/users/YehorBabenko88/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/YehorBabenko88/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/YehorBabenko88/subscriptions",
+      "organizations_url": "https://api.github.com/users/YehorBabenko88/orgs",
+      "repos_url": "https://api.github.com/users/YehorBabenko88/repos",
+      "events_url": "https://api.github.com/users/YehorBabenko88/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/YehorBabenko88/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "run_attempt": 1,
+    "referenced_workflows": [],
+    "run_started_at": "2026-11-09T22:55:10Z",
+    "triggering_actor": {
+      "login": "YehorBabenko88",
+      "id": 304050327,
+      "node_id": "U_kgDOEh9wlw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/304050327?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/YehorBabenko88",
+      "html_url": "https://github.com/YehorBabenko88",
+      "followers_url": "https://api.github.com/users/YehorBabenko88/followers",
+      "following_url": "https://api.github.com/users/YehorBabenko88/following{/other_user}",
+      "gists_url": "https://api.github.com/users/YehorBabenko88/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/YehorBabenko88/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/YehorBabenko88/subscriptions",
+      "organizations_url": "https://api.github.com/users/YehorBabenko88/orgs",
+      "repos_url": "https://api.github.com/users/YehorBabenko88/repos",
+      "events_url": "https://api.github.com/users/YehorBabenko88/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/YehorBabenko88/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "jobs_url": "https://api.github.com/repos/YehorBabenko88/unified-system/actions/runs/42716081580/jobs",
+    "logs_url": "https://api.github.com/repos/YehorBabenko88/unified-system/actions/runs/42716081580/logs",
+    "check_suite_url": "https://api.github.com/repos/YehorBabenko88/unified-system/check-suites/115693856611",
+    "artifacts_url": "https://api.github.com/repos/YehorBabenko88/unified-system/actions/runs/42716081580/artifacts",
+    "cancel_url": "https://api.github.com/repos/YehorBabenko88/unified-system/actions/runs/42716081580/cancel",
+    "rerun_url": "https://api.github.com/repos/YehorBabenko88/unified-system/actions/runs/42716081580/rerun",
+    "previous_attempt_url": null,
+    "workflow_url": "https://api.github.com/repos/YehorBabenko88/unified-system/actions/workflows/407251737",
+    "head_commit": {
+      "id": "e203c0bbeaa176a843a7d80b2eadfefe8fce7385",
+      "tree_id": "7ca3b471eb7ee2411eb83da68f8e068ee42c803c",
+      "message": "Validate canonical Windows subprocess audit frames for fixed source Git",
+      "timestamp": "2026-11-09T22:55:01Z",
+      "author": {
+        "name": "YehorBabenko88",
+        "email": "304050327+YehorBabenko88@users.noreply.github.com"
+      },
+      "committer": {
+        "name": "YehorBabenko88",
+        "email": "304050327+YehorBabenko88@users.noreply.github.com"
+      }
+    },
+    "repository": {
+      "id": 1434933263,
+      "node_id": "R_kgDOVYdYDw",
+      "name": "unified-system",
+      "full_name": "YehorBabenko88/unified-system",
+      "private": false,
+      "owner": {
+        "login": "YehorBabenko88",
+        "id": 304050327,
+        "node_id": "U_kgDOEh9wlw",
+        "avatar_url": "https://avatars.githubusercontent.com/u/304050327?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/YehorBabenko88",
+        "html_url": "https://github.com/YehorBabenko88",
+        "followers_url": "https://api.github.com/users/YehorBabenko88/followers",
+        "following_url": "https://api.github.com/users/YehorBabenko88/following{/other_user}",
+        "gists_url": "https://api.github.com/users/YehorBabenko88/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/YehorBabenko88/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/YehorBabenko88/subscriptions",
+        "organizations_url": "https://api.github.com/users/YehorBabenko88/orgs",
+        "repos_url": "https://api.github.com/users/YehorBabenko88/repos",
+        "events_url": "https://api.github.com/users/YehorBabenko88/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/YehorBabenko88/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "html_url": "https://github.com/YehorBabenko88/unified-system",
+      "description": null,
+      "fork": false,
+      "url": "https://api.github.com/repos/YehorBabenko88/unified-system",
+      "forks_url": "https://api.github.com/repos/YehorBabenko88/unified-system/forks",
+      "keys_url": "https://api.github.com/repos/YehorBabenko88/unified-system/keys{/key_id}",
+      "collaborators_url": "https://api.github.com/repos/YehorBabenko88/unified-system/collaborators{/collaborator}",
+      "teams_url": "https://api.github.com/repos/YehorBabenko88/unified-system/teams",
+      "hooks_url": "https://api.github.com/repos/YehorBabenko88/unified-system/hooks",
+      "issue_events_url": "https://api.github.com/repos/YehorBabenko88/unified-system/issues/events{/number}",
+      "events_url": "https://api.github.com/repos/YehorBabenko88/unified-system/events",
+      "assignees_url": "https://api.github.com/repos/YehorBabenko88/unified-system/assignees{/user}",
+      "branches_url": "https://api.github.com/repos/YehorBabenko88/unified-system/branches{/branch}",
+      "tags_url": "https://api.github.com/repos/YehorBabenko88/unified-system/tags",
+      "blobs_url": "https://api.github.com/repos/YehorBabenko88/unified-system/git/blobs{/sha}",
+      "git_tags_url": "https://api.github.com/repos/YehorBabenko88/unified-system/git/tags{/sha}",
+      "git_refs_url": "https://api.github.com/repos/YehorBabenko88/unified-system/git/refs{/sha}",
+      "trees_url": "https://api.github.com/repos/YehorBabenko88/unified-system/git/trees{/sha}",
+      "statuses_url": "https://api.github.com/repos/YehorBabenko88/unified-system/statuses/{sha}",
+      "languages_url": "https://api.github.com/repos/YehorBabenko88/unified-system/languages",
+      "stargazers_url": "https://api.github.com/repos/YehorBabenko88/unified-system/stargazers",
+      "contributors_url": "https://api.github.com/repos/YehorBabenko88/unified-system/contributors",
+      "subscribers_url": "https://api.github.com/repos/YehorBabenko88/unified-system/subscribers",
+      "subscription_url": "https://api.github.com/repos/YehorBabenko88/unified-system/subscription",
+      "commits_url": "https://api.github.com/repos/YehorBabenko88/unified-system/commits{/sha}",
+      "git_commits_url": "https://api.github.com/repos/YehorBabenko88/unified-system/git/commits{/sha}",
+      "comments_url": "https://api.github.com/repos/YehorBabenko88/unified-system/comments{/number}",
+      "issue_comment_url": "https://api.github.com/repos/YehorBabenko88/unified-system/issues/comments{/number}",
+      "contents_url": "https://api.github.com/repos/YehorBabenko88/unified-system/contents/{+path}",
+      "compare_url": "https://api.github.com/repos/YehorBabenko88/unified-system/compare/{base}...{head}",
+      "merges_url": "https://api.github.com/repos/YehorBabenko88/unified-system/merges",
+      "archive_url": "https://api.github.com/repos/YehorBabenko88/unified-system/{archive_format}{/ref}",
+      "downloads_url": "https://api.github.com/repos/YehorBabenko88/unified-system/downloads",
+      "issues_url": "https://api.github.com/repos/YehorBabenko88/unified-system/issues{/number}",
+      "pulls_url": "https://api.github.com/repos/YehorBabenko88/unified-system/pulls{/number}",
+      "milestones_url": "https://api.github.com/repos/YehorBabenko88/unified-system/milestones{/number}",
+      "notifications_url": "https://api.github.com/repos/YehorBabenko88/unified-system/notifications{?since,all,participating}",
+      "labels_url": "https://api.github.com/repos/YehorBabenko88/unified-system/labels{/name}",
+      "releases_url": "https://api.github.com/repos/YehorBabenko88/unified-system/releases{/id}",
+      "deployments_url": "https://api.github.com/repos/YehorBabenko88/unified-system/deployments"
+    },
+    "head_repository": {
+      "id": 1434933263,
+      "node_id": "R_kgDOVYdYDw",
+      "name": "unified-system",
+      "full_name": "YehorBabenko88/unified-system",
+      "private": false,
+      "owner": {
+        "login": "YehorBabenko88",
+        "id": 304050327,
+        "node_id": "U_kgDOEh9wlw",
+        "avatar_url": "https://avatars.githubusercontent.com/u/304050327?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/YehorBabenko88",
+        "html_url": "https://github.com/YehorBabenko88",
+        "followers_url": "https://api.github.com/users/YehorBabenko88/followers",
+        "following_url": "https://api.github.com/users/YehorBabenko88/following{/other_user}",
+        "gists_url": "https://api.github.com/users/YehorBabenko88/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/YehorBabenko88/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/YehorBabenko88/subscriptions",
+        "organizations_url": "https://api.github.com/users/YehorBabenko88/orgs",
+        "repos_url": "https://api.github.com/users/YehorBabenko88/repos",
+        "events_url": "https://api.github.com/users/YehorBabenko88/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/YehorBabenko88/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "html_url": "https://github.com/YehorBabenko88/unified-system",
+      "description": null,
+      "fork": false,
+      "url": "https://api.github.com/repos/YehorBabenko88/unified-system",
+      "forks_url": "https://api.github.com/repos/YehorBabenko88/unified-system/forks",
+      "keys_url": "https://api.github.com/repos/YehorBabenko88/unified-system/keys{/key_id}",
+      "collaborators_url": "https://api.github.com/repos/YehorBabenko88/unified-system/collaborators{/collaborator}",
+      "teams_url": "https://api.github.com/repos/YehorBabenko88/unified-system/teams",
+      "hooks_url": "https://api.github.com/repos/YehorBabenko88/unified-system/hooks",
+      "issue_events_url": "https://api.github.com/repos/YehorBabenko88/unified-system/issues/events{/number}",
+      "events_url": "https://api.github.com/repos/YehorBabenko88/unified-system/events",
+      "assignees_url": "https://api.github.com/repos/YehorBabenko88/unified-system/assignees{/user}",
+      "branches_url": "https://api.github.com/repos/YehorBabenko88/unified-system/branches{/branch}",
+      "tags_url": "https://api.github.com/repos/YehorBabenko88/unified-system/tags",
+      "blobs_url": "https://api.github.com/repos/YehorBabenko88/unified-system/git/blobs{/sha}",
+      "git_tags_url": "https://api.github.com/repos/YehorBabenko88/unified-system/git/tags{/sha}",
+      "git_refs_url": "https://api.github.com/repos/YehorBabenko88/unified-system/git/refs{/sha}",
+      "trees_url": "https://api.github.com/repos/YehorBabenko88/unified-system/git/trees{/sha}",
+      "statuses_url": "https://api.github.com/repos/YehorBabenko88/unified-system/statuses/{sha}",
+      "languages_url": "https://api.github.com/repos/YehorBabenko88/unified-system/languages",
+      "stargazers_url": "https://api.github.com/repos/YehorBabenko88/unified-system/stargazers",
+      "contributors_url": "https://api.github.com/repos/YehorBabenko88/unified-system/contributors",
+      "subscribers_url": "https://api.github.com/repos/YehorBabenko88/unified-system/subscribers",
+      "subscription_url": "https://api.github.com/repos/YehorBabenko88/unified-system/subscription",
+      "commits_url": "https://api.github.com/repos/YehorBabenko88/unified-system/commits{/sha}",
+      "git_commits_url": "https://api.github.com/repos/YehorBabenko88/unified-system/git/commits{/sha}",
+      "comments_url": "https://api.github.com/repos/YehorBabenko88/unified-system/comments{/number}",
+      "issue_comment_url": "https://api.github.com/repos/YehorBabenko88/unified-system/issues/comments{/number}",
+      "contents_url": "https://api.github.com/repos/YehorBabenko88/unified-system/contents/{+path}",
+      "compare_url": "https://api.github.com/repos/YehorBabenko88/unified-system/compare/{base}...{head}",
+      "merges_url": "https://api.github.com/repos/YehorBabenko88/unified-system/merges",
+      "archive_url": "https://api.github.com/repos/YehorBabenko88/unified-system/{archive_format}{/ref}",
+      "downloads_url": "https://api.github.com/repos/YehorBabenko88/unified-system/downloads",
+      "issues_url": "https://api.github.com/repos/YehorBabenko88/unified-system/issues{/number}",
+      "pulls_url": "https://api.github.com/repos/YehorBabenko88/unified-system/pulls{/number}",
+      "milestones_url": "https://api.github.com/repos/YehorBabenko88/unified-system/milestones{/number}",
+      "notifications_url": "https://api.github.com/repos/YehorBabenko88/unified-system/notifications{?since,all,participating}",
+      "labels_url": "https://api.github.com/repos/YehorBabenko88/unified-system/labels{/name}",
+      "releases_url": "https://api.github.com/repos/YehorBabenko88/unified-system/releases{/id}",
+      "deployments_url": "https://api.github.com/repos/YehorBabenko88/unified-system/deployments"
+    }
+  },
+  "jobs": {
+    "total_count": 2,
+    "jobs": [
+      {
+        "id": 129497843097,
+        "run_id": 42716081580,
+        "workflow_name": "Disposable Windows stopped-service acceptance",
+        "head_branch": "feature/ls5-physical-dev-smoke-20261109",
+        "run_url": "https://api.github.com/repos/YehorBabenko88/unified-system/actions/runs/42716081580",
+        "run_attempt": 1,
+        "node_id": "CR_kwDOVYdYD88AAAAeJqxFmQ",
+        "head_sha": "e203c0bbeaa176a843a7d80b2eadfefe8fce7385",
+        "url": "https://api.github.com/repos/YehorBabenko88/unified-system/actions/jobs/129497843097",
+        "html_url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42716081580/job/129497843097",
+        "status": "completed",
+        "conclusion": "success",
+        "created_at": "2026-11-09T22:55:11Z",
+        "started_at": "2026-11-09T22:59:21Z",
+        "completed_at": "2026-11-09T23:02:35Z",
+        "name": "stopped-service (windows-2025)",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1,
+            "started_at": "2026-11-09T22:59:22Z",
+            "completed_at": "2026-11-09T22:59:23Z"
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2,
+            "started_at": "2026-11-09T22:59:23Z",
+            "completed_at": "2026-11-09T22:59:32Z"
+          },
+          {
+            "name": "Run actions/setup-python@v5",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3,
+            "started_at": "2026-11-09T22:59:32Z",
+            "completed_at": "2026-11-09T22:59:32Z"
+          },
+          {
+            "name": "Guard and fixed-download regressions without SCM effects",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4,
+            "started_at": "2026-11-09T22:59:32Z",
+            "completed_at": "2026-11-09T22:59:39Z"
+          },
+          {
+            "name": "Fetch exact reviewed Grid transport helper outside checkout",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5,
+            "started_at": "2026-11-09T22:59:39Z",
+            "completed_at": "2026-11-09T22:59:40Z"
+          },
+          {
+            "name": "Prepare byte-identical NSSM using pinned package without running package scripts",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6,
+            "started_at": "2026-11-09T22:59:40Z",
+            "completed_at": "2026-11-09T22:59:41Z"
+          },
+          {
+            "name": "Disposable actual stopped service and APP_ONLY removal",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 7,
+            "started_at": "2026-11-09T22:59:41Z",
+            "completed_at": "2026-11-09T23:02:30Z"
+          },
+          {
+            "name": "Run actions/upload-artifact@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 8,
+            "started_at": "2026-11-09T23:02:30Z",
+            "completed_at": "2026-11-09T23:02:31Z"
+          },
+          {
+            "name": "Post Run actions/setup-python@v5",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 15,
+            "started_at": "2026-11-09T23:02:31Z",
+            "completed_at": "2026-11-09T23:02:31Z"
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 16,
+            "started_at": "2026-11-09T23:02:31Z",
+            "completed_at": "2026-11-09T23:02:33Z"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 17,
+            "started_at": "2026-11-09T23:02:33Z",
+            "completed_at": "2026-11-09T23:02:34Z"
+          }
+        ],
+        "check_run_url": "https://api.github.com/repos/YehorBabenko88/unified-system/check-runs/129497843097",
+        "labels": [
+          "windows-2025"
+        ],
+        "runner_id": 1000097123,
+        "runner_name": "GitHub Actions 1000097123",
+        "runner_group_id": 0,
+        "runner_group_name": "GitHub Actions"
+      },
+      {
+        "id": 129497843388,
+        "run_id": 42716081580,
+        "workflow_name": "Disposable Windows stopped-service acceptance",
+        "head_branch": "feature/ls5-physical-dev-smoke-20261109",
+        "run_url": "https://api.github.com/repos/YehorBabenko88/unified-system/actions/runs/42716081580",
+        "run_attempt": 1,
+        "node_id": "CR_kwDOVYdYD88AAAAeJqxGvA",
+        "head_sha": "e203c0bbeaa176a843a7d80b2eadfefe8fce7385",
+        "url": "https://api.github.com/repos/YehorBabenko88/unified-system/actions/jobs/129497843388",
+        "html_url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42716081580/job/129497843388",
+        "status": "completed",
+        "conclusion": "success",
+        "created_at": "2026-11-09T22:55:11Z",
+        "started_at": "2026-11-09T23:02:52Z",
+        "completed_at": "2026-11-09T23:05:58Z",
+        "name": "stopped-service (windows-2022)",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1,
+            "started_at": "2026-11-09T23:02:53Z",
+            "completed_at": "2026-11-09T23:02:54Z"
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2,
+            "started_at": "2026-11-09T23:02:54Z",
+            "completed_at": "2026-11-09T23:03:01Z"
+          },
+          {
+            "name": "Run actions/setup-python@v5",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3,
+            "started_at": "2026-11-09T23:03:01Z",
+            "completed_at": "2026-11-09T23:03:01Z"
+          },
+          {
+            "name": "Guard and fixed-download regressions without SCM effects",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4,
+            "started_at": "2026-11-09T23:03:01Z",
+            "completed_at": "2026-11-09T23:03:09Z"
+          },
+          {
+            "name": "Fetch exact reviewed Grid transport helper outside checkout",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5,
+            "started_at": "2026-11-09T23:03:09Z",
+            "completed_at": "2026-11-09T23:03:09Z"
+          },
+          {
+            "name": "Prepare byte-identical NSSM using pinned package without running package scripts",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6,
+            "started_at": "2026-11-09T23:03:09Z",
+            "completed_at": "2026-11-09T23:03:10Z"
+          },
+          {
+            "name": "Disposable actual stopped service and APP_ONLY removal",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 7,
+            "started_at": "2026-11-09T23:03:10Z",
+            "completed_at": "2026-11-09T23:05:54Z"
+          },
+          {
+            "name": "Run actions/upload-artifact@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 8,
+            "started_at": "2026-11-09T23:05:54Z",
+            "completed_at": "2026-11-09T23:05:55Z"
+          },
+          {
+            "name": "Post Run actions/setup-python@v5",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 15,
+            "started_at": "2026-11-09T23:05:55Z",
+            "completed_at": "2026-11-09T23:05:55Z"
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 16,
+            "started_at": "2026-11-09T23:05:55Z",
+            "completed_at": "2026-11-09T23:05:57Z"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 17,
+            "started_at": "2026-11-09T23:05:57Z",
+            "completed_at": "2026-11-09T23:05:57Z"
+          }
+        ],
+        "check_run_url": "https://api.github.com/repos/YehorBabenko88/unified-system/check-runs/129497843388",
+        "labels": [
+          "windows-2022"
+        ],
+        "runner_id": 1000097132,
+        "runner_name": "GitHub Actions 1000097132",
+        "runner_group_id": 0,
+        "runner_group_name": "GitHub Actions"
+      }
+    ]
+  },
+  "artifacts": {
+    "total_count": 2,
+    "artifacts": [
+      {
+        "id": 13718637089,
+        "node_id": "MDg6QXJ0aWZhY3QxMzcxODYzNzA4OQ==",
+        "name": "stopped-service-windows-2025-42716081580-1",
+        "size_in_bytes": 2969,
+        "url": "https://api.github.com/repos/YehorBabenko88/unified-system/actions/artifacts/13718637089",
+        "archive_download_url": "https://api.github.com/repos/YehorBabenko88/unified-system/actions/artifacts/13718637089/zip",
+        "expired": false,
+        "digest": "sha256:c3180be5547f06f1739084d4cad4a29fe834ef1da3edccfd110315315d413e3a",
+        "created_at": "2026-11-09T23:02:31Z",
+        "updated_at": "2026-11-09T23:02:31Z",
+        "expires_at": "2027-02-07T22:55:11Z",
+        "workflow_run": {
+          "id": 42716081580,
+          "repository_id": 1434933263,
+          "head_repository_id": 1434933263,
+          "head_branch": "feature/ls5-physical-dev-smoke-20261109",
+          "head_sha": "e203c0bbeaa176a843a7d80b2eadfefe8fce7385"
+        }
+      },
+      {
+        "id": 13718237782,
+        "node_id": "MDg6QXJ0aWZhY3QxMzcxODIzNzc4Mg==",
+        "name": "stopped-service-windows-2022-42716081580-1",
+        "size_in_bytes": 2973,
+        "url": "https://api.github.com/repos/YehorBabenko88/unified-system/actions/artifacts/13718237782",
+        "archive_download_url": "https://api.github.com/repos/YehorBabenko88/unified-system/actions/artifacts/13718237782/zip",
+        "expired": false,
+        "digest": "sha256:32bb64d282bc6dfb3f6bcf64d847ceefea7ad13b0403092053f2a8629e41daf3",
+        "created_at": "2026-11-09T23:05:55Z",
+        "updated_at": "2026-11-09T23:05:55Z",
+        "expires_at": "2027-02-07T22:55:11Z",
+        "workflow_run": {
+          "id": 42716081580,
+          "repository_id": 1434933263,
+          "head_repository_id": 1434933263,
+          "head_branch": "feature/ls5-physical-dev-smoke-20261109",
+          "head_sha": "e203c0bbeaa176a843a7d80b2eadfefe8fce7385"
+        }
+      }
+    ]
+  }
+}

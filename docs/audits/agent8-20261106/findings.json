@@ -614,5 +614,17 @@
     "test": "Original Root e render receipt generic failure/no screenshot, primary render73, work20.0489629s exceeds20",
     "evidence": "phase150/render-receipt.json;phase150/smoke-receipt.json;phase150/evidence-verification.json;phase150/report.md",
     "required_correction": "Owner source-only timing/phase analysis and safe design. Preserve e originals and fixed caps/no privilege or policy escalation; no automatic retry. Establish precise cause/ordered phase evidence before choosing separate committed correction; no assumption that PowerShell or CPU/memory cap caused it."
+  },
+  {
+    "id": "A8-F37",
+    "severity": "P2",
+    "repository": "Terminan",
+    "pr": 78,
+    "observed_head": "458de55b7170d23f2e7ab3a5d72597b2a0124653",
+    "title": "Owned lifecycle can confirm late cleanup without post-completion or final monotonic deadline check",
+    "status": "OPEN_SOURCE_ONLY_LATE_CLEANUP_ACCEPTANCE_GAP_NO_A8_RUNTIME_REPRO",
+    "test": "cleanupIssued remaining/Promise.race versus final r.confirmed predicate",
+    "evidence": "phase152/report.md;phase152/source-verification.json",
+    "required_correction": "Separate immutable common monotonic deadline and postcompletion/final elapsed rejection; delayed-event-loop mock regression, preserve own handles/no kill/fixed budgets/no native run."
   }
 ]
