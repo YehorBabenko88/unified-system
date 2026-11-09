@@ -1,0 +1,36 @@
+{
+  "scope": "ACTUAL_MTLS_CONSUL_PRINCIPAL_SESSION_ONLY_NO_JOB_GRANT",
+  "session_create_response": {
+    "status": 200,
+    "raw": "{\"ID\":\"d4342ea6-6790-32f3-12f9-fae4c5aee3d5\"}"
+  },
+  "session_info": [
+    {
+      "ID": "d4342ea6-6790-32f3-12f9-fae4c5aee3d5",
+      "Name": "research-principal-53446e10-7814-459b-93b3-d526cb6a0cfa",
+      "Node": "research-0",
+      "LockDelay": 0,
+      "Behavior": "release",
+      "TTL": "10s",
+      "NodeChecks": [],
+      "ServiceChecks": null,
+      "CreateIndex": 29,
+      "ModifyIndex": 29
+    }
+  ],
+  "native_lock": {
+    "key": "unified/3eeb5aa3-e048-4046-a432-bbb948538503/runtime-v1/research-lab-v1/eb2181fd-7fef-4369-9580-cb52acaa9c1e/principal-sessions/d4342ea6-6790-32f3-12f9-fae4c5aee3d5/lock",
+    "modify_index": 30,
+    "session": "d4342ea6-6790-32f3-12f9-fae4c5aee3d5",
+    "raw_value": "{\"actor_id\":\"53446e10-7814-459b-93b3-d526cb6a0cfa\",\"certificate_sha256\":\"a5825cf0225a538f6b5cbd7cdf4fadcb7b8a3c2009416c25071b797b1d440b91\",\"policy_id\":\"cd0b2a24-0a5f-493b-a88f-2a7cec52e1e5\",\"profile_sha256\":\"c02b0820fb9a7f0c5359dc903941c5e49d01a3d31f16d58f1323de49c2731894\",\"quota_owner_id\":\"lab-quota\",\"schema\":\"unified.authority.research-lab-principal-session.v1-review1\",\"service_id\":\"d6d94540-042e-480c-9492-e921b7b391f5\",\"session_id\":\"d4342ea6-6790-32f3-12f9-fae4c5aee3d5\"}"
+  },
+  "source_session_id": "d4342ea6-6790-32f3-12f9-fae4c5aee3d5",
+  "canonical_roundtrip": "d4342ea6-6790-32f3-12f9-fae4c5aee3d5",
+  "uuid_version_bits": null,
+  "exact_join": true,
+  "client_observed_loaded_server_der": true,
+  "binary_sha256": "41762ef5b98c8dd9b6852df6cfbceed37e7f0acc5760856be33100f1092475e1",
+  "binary_version": "Consul v1.22.2",
+  "acl": "DEFAULT_DENY_REAL_CLIENT_403_CHECK_SEPARATE",
+  "native_human": false
+}
