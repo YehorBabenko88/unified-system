@@ -385,5 +385,21 @@
     "correction_tree": "1ff5c1f1090fc61170a64f32654a80e51e6c4952",
     "correction_evidence": "phase103/corrected-primary-verification.json;phase103/a8-corrected-qualified/tests.tap;phase103/correction-verification.json",
     "pr": 73
+  },
+  {
+    "id": "A8-F24",
+    "severity": "P1",
+    "repository": "unified-system",
+    "pr": 53,
+    "observed_head": "65169396d550989b6b9fc78d4f3a64a1c906172b",
+    "status": "FIX_VERIFIED_CONFIGURATION_AT_31e0351_JOB_REGISTRATION_ONLY",
+    "title": "Research principal mandatory workflow rejected runner context in job-level env",
+    "evidence": "phase104/original-run.json;phase104/original-jobs.json;phase104/annotation.original.txt",
+    "required_correction": "Move Consul binary variable into supported qualification step env; verify independent original new GitHub jobs without weakening source/ACL/lock checks.",
+    "correction_head": "31e0351b9f21ac53f3eb47a23bf45d06a58e1fe1",
+    "correction_tree": "787be69ece1b533dff284195bbedd34a0ae5196e",
+    "correction_evidence": "phase104/verification.json;phase104/corrected-jobs.original.json",
+    "scope": "CI_CONFIGURATION_ONLY_NOT_NEW_NATIVE_TEST_PASS",
+    "mandatory_CI": "BLOCKED_QUEUED_NOT_EXECUTED"
   }
 ]
