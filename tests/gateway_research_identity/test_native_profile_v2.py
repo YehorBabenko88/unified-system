@@ -80,6 +80,37 @@ class NativeProfileV2Tests(unittest.IsolatedAsyncioTestCase):
         cancel['original_submit_intent_sha256']='f'*64
         with self.assertRaises(ResearchIdentityDenied):
             await self.broker.capture_current(context,scope='CANCEL_OWN_JOB',request_bytes=canonical(cancel))
+    async def test_fresh_session_reads_same_original_without_reviving_old_capture(self):
+        raw=canonical(self.submit());digest=hashlib.sha256(raw).hexdigest()
+        old=await self.broker.open_session(self.tls.accepted,leader=self.leader)
+        old_capture=await self.broker.capture_current(old,scope='READ_RESEARCH',request_bytes=raw)
+        old_snapshot=self.broker.require_capture(old_capture,expected_authority=self.authority,scope='READ_RESEARCH',request_bytes=raw)
+        await self.broker.invalidate_context(old)
+        with self.assertRaises(ResearchIdentityDenied):
+            self.broker.require_capture(old_capture,expected_authority=self.authority,scope='READ_RESEARCH',request_bytes=raw)
+        current=await self.broker.open_session(self.tls.accepted,leader=self.leader)
+        capture=await self.broker.capture_current(current,scope='READ_RESEARCH',request_bytes=raw)
+        snapshot=self.broker.require_capture(capture,expected_authority=self.authority,scope='READ_RESEARCH',request_bytes=raw)
+        self.assertNotEqual(snapshot.session_id,old_snapshot.session_id)
+        self.assertEqual((snapshot.actor_id,snapshot.quota_owner_id,snapshot.profile_sha256),
+                         (old_snapshot.actor_id,old_snapshot.quota_owner_id,old_snapshot.profile_sha256))
+        self.assertEqual(snapshot.records[-1].session,snapshot.session_id)
+        self.assertEqual(hashlib.sha256(raw).hexdigest(),digest)
+        self.assertEqual(raw,canonical(self.submit()))
+        cancel=dict(schema='unified.gateway.lab-job-cancel.v1-review1',operation='CANCEL_OWN_JOB',cluster_id=self.cluster,
+            cluster_generation=self.generation,request_id=str(uuid.uuid4()),job_id=self.job,
+            original_actor_principal_id=self.actor,quota_owner_id=self.target['quota_owner'],idempotency_key='fresh_cancel_original',
+            commissioned_profile_sha256=self.profile_sha,original_submit_request_id=self.original,
+            original_submit_intent_sha256=digest)
+        cancel_raw=canonical(cancel)
+        canceled=self.broker.require_capture(await self.broker.capture_current(current,scope='CANCEL_OWN_JOB',request_bytes=cancel_raw),
+            expected_authority=self.authority,scope='CANCEL_OWN_JOB',request_bytes=cancel_raw)
+        self.assertEqual(canceled.session_id,snapshot.session_id)
+        with self.assertRaises(ResearchIdentityDenied):
+            await self.broker.capture_current(old,scope='CANCEL_OWN_JOB',request_bytes=cancel_raw)
+        # These are actual identity observations only: no fabricated original
+        # job/common receipt and no permission to resume/cancel an execution.
+        self.assertIsNone(await self.authority._request('GET','/v1/kv/'+self.prefix+'jobs/'+self.job,params={'consistent':''},missing_ok=True))
     async def test_wrong_lab_original_never_binds_valid_v2_context(self):
         context=await self.broker.open_session(self.tls.accepted,leader=self.leader)
         for field,value in (('job_id',str(uuid.uuid4())),('request_id',str(uuid.uuid4())),('idempotency_key','other_original'),('commissioned_profile_sha256','f'*64),('quota_owner_id','other_quota')):
