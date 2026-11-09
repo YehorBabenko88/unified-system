@@ -3959,7 +3959,7 @@
     "mandatory_hosted": "NOT_QUALIFIED",
     "overall": "NO_GO"
   },
-  "latest_addendum_scope": "phase130 exact278 owned Core proxy correction only; Root consumer and F28 remain open, no fresh global recheck",
+  "latest_addendum_scope": "phase131 exact279 failed-entry local correction only; pending owner adoption, consumer/native/hosted gates retained",
   "PR54_b144_terminal_CI_20261109": {
     "head": "b144a5e0fd3af90c975bfc0f0123234628dbb696",
     "direct_run": 42646665067,
@@ -4074,6 +4074,21 @@
     "F27": "CORE_COMPONENT_FIX_VERIFIED_ROOT_CONSUMER_PENDING",
     "F28": "OPEN_UNCHANGED",
     "hosted": "NOT_QUALIFIED_HERE",
+    "overall": "NO_GO"
+  },
+  "Grid279_failed_entry_fix": {
+    "head": "2f94da511681811588e0f850a0a0e9dc4479c8b8",
+    "tree": "3e9664296a225d2ba20f594f73b1495c18fe8185",
+    "A8_unique_tests": 13,
+    "skips": 0,
+    "raw_primary_files": {
+      "Grid": 821,
+      "Unified1f6": 1519
+    },
+    "four_own_children": "RETURN0_INCLUDED_IN13",
+    "F28": "LOCAL_FIX_VERIFIED_OWNER_SOURCE_ADOPTION_PENDING",
+    "proxy2_at_this_head": "NOT_RUN_BY_A8",
+    "native_freeze": "NOT_GRANTED",
     "overall": "NO_GO"
   }
 }

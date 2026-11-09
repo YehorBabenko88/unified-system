@@ -476,9 +476,17 @@
     "pr": 277,
     "observed_head": "19fae71db66a24f7be7bfa8d1682e1831c4720c4",
     "title": "Failed RootRegistrationCustody context entry retains owned file descriptors and lock",
-    "status": "OPEN_ACTUAL_LOCAL_REPRODUCED",
+    "status": "OPEN_SOURCE_ADOPTION_PENDING_LOCAL_FIX_VERIFIED",
     "test": "Own sidecar created between construction and with entry; actual contender before/after explicit cleanup",
     "evidence": "phase129/executed.py;phase129/stdout.json;phase129/receipt.json",
-    "required_correction": "Separate local successor: if __enter__ validation fails, close only this adapter owned handles, preserve original entry exception if close also fails, never delete persistent lock/DB or foreign resources. Add actual failed-entry regression and independently qualify exact source; old19fae71 immutable."
+    "required_correction": "Separate local successor: if __enter__ validation fails, close only this adapter owned handles, preserve original entry exception if close also fails, never delete persistent lock/DB or foreign resources. Add actual failed-entry regression and independently qualify exact source; old19fae71 immutable.",
+    "component_fix": {
+      "Grid_head": "2f94da511681811588e0f850a0a0e9dc4479c8b8",
+      "module_sha256": "5b972b6d81eeaf6f2283584c5b0482552fa9bf0717a4379838900a72da791491",
+      "A8_unique_tests": 13,
+      "evidence": "phase131/report.md",
+      "owner_Root_A5_adoption": "PENDING",
+      "native_freeze": "NOT_GRANTED"
+    }
   }
 ]
