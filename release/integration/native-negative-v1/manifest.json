@@ -4,7 +4,7 @@
   "root_base": "3af06455b601a328e94339327a0597eada802c38",
   "grid_head": "b0ddb78fed04cc29c7b0290ae75d1d8af84fcfec",
   "scope": "REAL_MTLS_INTERNAL_NEGATIVE_COMPOSITION_NO_HTTP_ENDPOINT",
-  "root_module_sha256": "87ad51dda130a42901fc88713252df47ead148d596ffab6cfd4dfcf6bfa4ce0a",
+  "root_module_sha256": "66a557550ed0fc372b5aba4e6c40e9a7000cc2f7dd18f843c170f4cccb0141e3",
   "grid_module_sha256": "d128cdc5f6b787e3a0ff664c3af6c5d73cdef7a751e974cb990cade3ac39394a",
   "broker_module_sha256": "1f9714010143c5243c78494cb25bfe7f2d42e96301f57930212a2f5f3b9c869d",
   "a2_api_doc_sha256": "a8261b30d12b4924e4f501ee6474dc6a2c0c3704eabe5353ebc48938fa2c7d3a",
@@ -18,6 +18,7 @@
   "physical": "BLOCKED",
   "production": "NO_GO",
   "tests_expected": 20,
-  "source_qualification": "RED_EXPECTED_MISSING_CLIENT_CUSTODY_GUARDS",
-  "proxy_client_gate": "OPEN_PENDING_IMPLEMENTATION_AND_A8"
+  "source_qualification": "REQUIRES_FRESH_EXACT_COMMITTED_HEAD",
+  "proxy_client_gate": "ENTRY_GUARDS_IMPLEMENTED_FULL_ADMISSION_AND_A8_PENDING",
+  "local_only_cleanup_api": "PENDING_A2_EXACT_SOURCE_SUCCESSOR"
 }

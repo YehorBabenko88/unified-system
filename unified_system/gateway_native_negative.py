@@ -57,6 +57,28 @@ def _loopback_endpoints(endpoints,lab):
         except ValueError:valid=False
         if not valid:raise NativeNegativeDenied('ISOLATED_LOOPBACK_ONLY')
 
+def _owned_client(authority,*,config=None,client=None):
+    """Entry custody only; exclusive lifecycle is required throughout cleanup.
+
+    The pinned owned Core constructor supplies no proxy/mounts. This is not a
+    credential or protection against arbitrary in-process object mutation.
+    """
+    import httpx
+    authority_type=_fixed_types()[0]
+    if type(authority) is not authority_type or authority._owns_client is not True:
+        raise NativeNegativeDenied('SOURCE_OWNED_HTTP_CLIENT_REQUIRED')
+    if config is not None and authority.config is not config:
+        raise NativeNegativeDenied('QUALIFIED_CONFIGURATION_CHANGED')
+    current=authority.client
+    if client is not None and current is not client:
+        raise NativeNegativeDenied('QUALIFIED_HTTP_CLIENT_CHANGED')
+    if (type(current) is not httpx.AsyncClient or current.trust_env is not False
+            or current.is_closed is not False or current.follow_redirects is not False
+            or type(current._transport) is not httpx.AsyncHTTPTransport
+            or type(current._mounts) is not dict or current._mounts):
+        raise NativeNegativeDenied('OPEN_PROXY_FREE_OWNED_CLIENT_REQUIRED')
+    return current
+
 def _original(raw):
     if type(raw) is not bytes or not 0<len(raw)<=16384:
         raise NativeNegativeDenied('BOUNDED_ORIGINAL_BYTES_REQUIRED')
@@ -93,6 +115,7 @@ class DisposableNativeNegativeGateway:
         timeout=authority.config.request_timeout
         if type(timeout) not in (int,float) or not 0<timeout<=2:
             raise NativeNegativeDenied('QUALIFIED_REQUEST_DEADLINE_REQUIRED')
+        self._client=_owned_client(authority)
         self._native=native_type(authority,generation,broker=broker)
         self._authority=authority;self._broker=broker;self._config=authority.config
         self._loop=asyncio.get_running_loop();self._thread=threading.get_ident();self._busy=False
@@ -112,8 +135,7 @@ class DisposableNativeNegativeGateway:
         authority_type,broker_type,native_type,_=_fixed_types()
         if type(self._authority) is not authority_type or type(self._broker) is not broker_type or type(self._native) is not native_type:
             raise NativeNegativeDenied('ACTUAL_OWNED_SOURCES_REQUIRED')
-        if self._authority.config is not self._config:
-            raise NativeNegativeDenied('QUALIFIED_CONFIGURATION_CHANGED')
+        _owned_client(self._authority,config=self._config,client=self._client)
         timeout=self._authority.config.request_timeout
         if type(timeout) not in (int,float) or not 0<timeout<=2:
             raise NativeNegativeDenied('QUALIFIED_REQUEST_DEADLINE_REQUIRED')

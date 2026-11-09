@@ -1,0 +1,39 @@
+{
+  "schema": "unified.native-negative.client-custody-red.v1",
+  "head": "90132aa4d63bc8ff7ef1c8d1eb016c0bf789d35a",
+  "tree": "ecf4f1ab50645ed0c0fe00bfeb60d79b3ff73c0d",
+  "paired_grid": "b0ddb78fed04cc29c7b0290ae75d1d8af84fcfec",
+  "tests": 20,
+  "errors": 2,
+  "failures": 2,
+  "skips": 0,
+  "prior16_pass": true,
+  "new4_not_passed": true,
+  "source_binding_passed": true,
+  "source_files": {
+    "unified": 1637,
+    "grid": 820
+  },
+  "owned_consul_processes_retired": [
+    {
+      "pid": 137948,
+      "returncode": 1
+    },
+    {
+      "pid": 131676,
+      "returncode": 1
+    },
+    {
+      "pid": 141024,
+      "returncode": 1
+    }
+  ],
+  "qualification_sha256": "de375e6ad0236584dbc46ac480947ee05068d7f03fae385c77d2814a4bf36f5c",
+  "test_log_sha256": "ef10f436001cd7d0b215edebfdbec2a67c5b952badb04913f81b3df49a9c7fce",
+  "initial_outer_harness_failure": "PRECREATED_EVIDENCE_DIRECTORY_REJECTED_BEFORE_TESTS_SEPARATE_NOT_PRODUCT_RED",
+  "initial_harness_stderr_sha256": "7ede4c0d855a9daaa27927e174a2b32898cdae2371d579b19f7f7a7107b88c21",
+  "reason": "MISSING_PREAUTH_CLOSED_INJECTED_REPLACED_CLIENT_GUARDS",
+  "public_submit": "DENY",
+  "positive_job_admission": false,
+  "production": "NO_GO"
+}
