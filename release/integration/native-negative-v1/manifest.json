@@ -2,10 +2,10 @@
   "schema": "unified.native-negative.component-source-pair.v1",
   "source_identity": "ENCLOSING_PRIMARY_GIT_COMMIT",
   "root_base": "3af06455b601a328e94339327a0597eada802c38",
-  "grid_head": "539239e3c11ec9e86aa24365d74a68301fdf1185",
+  "grid_head": "b0ddb78fed04cc29c7b0290ae75d1d8af84fcfec",
   "scope": "REAL_MTLS_INTERNAL_NEGATIVE_COMPOSITION_NO_HTTP_ENDPOINT",
-  "root_module_sha256": "cecd83a77800ff0baff356bb9bfe006e316cc321c66ff361c8a7f68b12eb5f9b",
-  "grid_module_sha256": "1d578644ecbe881554bc3dd61d49227db2171ea2037d22599df44a73d698fd27",
+  "root_module_sha256": "87ad51dda130a42901fc88713252df47ead148d596ffab6cfd4dfcf6bfa4ce0a",
+  "grid_module_sha256": "d128cdc5f6b787e3a0ff664c3af6c5d73cdef7a751e974cb990cade3ac39394a",
   "broker_module_sha256": "1f9714010143c5243c78494cb25bfe7f2d42e96301f57930212a2f5f3b9c869d",
   "a2_api_doc_sha256": "a8261b30d12b4924e4f501ee6474dc6a2c0c3704eabe5353ebc48938fa2c7d3a",
   "a2_coack": "INTERNAL_NEGATIVE_COMPOSITION_ONLY",
@@ -17,6 +17,7 @@
   "public_submit": "DENY",
   "physical": "BLOCKED",
   "production": "NO_GO",
-  "tests_expected": 16,
-  "source_qualification": "REQUIRES_EXACT_COMMITTED_HEAD_AND_A8_REVIEW"
+  "tests_expected": 20,
+  "source_qualification": "RED_EXPECTED_MISSING_CLIENT_CUSTODY_GUARDS",
+  "proxy_client_gate": "OPEN_PENDING_IMPLEMENTATION_AND_A8"
 }

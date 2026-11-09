@@ -157,11 +157,63 @@ class TLSIsolationTests(unittest.TestCase):
         self.assertEqual(server.memory.used,0)
 
     def test_active_control_heartbeats_keep_idle_data_channel_healthy(self):
-        with patch('unified_system.lan_transport.HEARTBEAT_INTERVAL',.05),patch('unified_system.lan_transport.IDLE_TIMEOUT',.4):
+        # Exercise expiry of the OLD data-read deadline directly. A compressed
+        # .4s peer idle limit tested host scheduling rather than renewal semantics.
+        import unified_system.lan_transport as lan
+        original=lan._read_frame;ready=threading.Event();control={};data={}
+        renewed=queue.Queue();forced=set();seen_control=set();lock=threading.Lock()
+        def read(sock,budget,peer,deadline,on_idle=None):
+            if on_idle is None:return original(sock,budget,peer,deadline)
+            if not ready.wait(3):raise RuntimeError('fixture connection readiness')
+            key=id(sock)
+            # Reentry proves Connection._reader processed the prior heartbeat
+            # and updated last_rx, not merely that bytes reached the wrapper.
+            if key in control and key in seen_control:control[key].set()
+            if key in data:
+                with lock:
+                    first=key not in forced;forced.add(key)
+                if first:
+                    if not data[key].wait(3):raise RuntimeError('fixture control heartbeat readiness')
+                    def idle():
+                        healthy=on_idle();renewed.put(healthy);return healthy
+                    return original(sock,budget,peer,time.monotonic()-1,on_idle=idle)
+            result=original(sock,budget,peer,deadline,on_idle=on_idle)
+            if key in control and result[0]['kind'] in ('PING','PONG'):seen_control.add(key)
+            return result
+        with patch('unified_system.lan_transport.HEARTBEAT_INTERVAL',.05),patch.object(lan,'_read_frame',side_effect=read):
             client,server,c,s=self.pair()
-            time.sleep(1.3)
-            self.assertFalse(c.closed,c.error);self.assertFalse(s.closed,s.error)
-            c.send(b'after idle');self.assertEqual(s.receive().payload,b'after idle')
+            for connection in (c,s):
+                heartbeat=threading.Event()
+                control[id(connection.channels['control'])]=heartbeat
+                data[id(connection.channels['data'])]=heartbeat
+                # A fresh created_at must not make the renewal pass by itself.
+                # Only the gated real heartbeat can refresh this stale state.
+                connection.last_rx=time.monotonic()-lan.IDLE_TIMEOUT-1
+            ready.set()
+            try:
+                self.assertIs(renewed.get(timeout=3),True)
+                self.assertIs(renewed.get(timeout=3),True)
+                self.assertFalse(c.closed,c.error);self.assertFalse(s.closed,s.error)
+                c.send(b'after idle');self.assertEqual(s.receive().payload,b'after idle')
+                s.send(b'reply');self.assertEqual(c.receive().payload,b'reply')
+            finally:client.close();server.close()
+
+    def test_expired_idle_peer_without_activity_still_closes_real_tls(self):
+        import unified_system.lan_transport as lan
+        original=lan._read_frame;ready=threading.Event();data=set()
+        def read(sock,budget,peer,deadline,on_idle=None):
+            if on_idle is None:return original(sock,budget,peer,deadline)
+            if not ready.wait(3):raise RuntimeError('fixture connection readiness')
+            if id(sock) in data:
+                return original(sock,budget,peer,time.monotonic()-1,on_idle=lambda:False)
+            return original(sock,budget,peer,deadline,on_idle=on_idle)
+        with patch.object(lan,'_read_frame',side_effect=read):
+            client,server,c,s=self.pair();data.update((id(c.channels['data']),id(s.channels['data'])))
+            ready.set()
+            try:
+                self.assertTrue(c.closed_event.wait(3));self.assertTrue(s.closed_event.wait(3))
+                self.assertIn('DEADLINE',(c.error,s.error))
+            finally:client.close();server.close()
 
     def test_revoked_pin_during_final_hello_cannot_install_connection(self):
         doc=self.document();server=self.transport('LS5',PeerRegistry.from_document(doc));port=server.listen()

@@ -21,6 +21,43 @@ class GatewayNegativeTests(unittest.IsolatedAsyncioTestCase):
         await fixture.NativeProfileV2Tests.asyncSetUp(self)
         self.original_bytes=fixture.canonical(self.submit())
 
+    async def test_closed_owned_client_rejected_before_constructor_auth(self):
+        from unified_system.gateway_native_negative import DisposableNativeNegativeGateway,NativeNegativeDenied
+        from grid.coordination import ConsulSessionAuthority
+        extra=ConsulSessionAuthority(self.authority.config)
+        broker=ResearchIdentityBroker(authority=extra,generation=self.generation,realm_id=self.realm,
+            profile_sha256=self.profile_sha,server_ssl_context=self.tls.server_context,
+            server_certificate_der=self.tls.server_der,audit_sink=self.audit)
+        try:
+            await extra.close()
+            with self.assertRaises(NativeNegativeDenied):
+                DisposableNativeNegativeGateway(extra,self.generation,broker=broker)
+            self.assertEqual(self.session_responses,[])
+        finally:
+            await broker.close();await extra.close()
+
+    async def test_replaced_client_rejected_before_call_auth(self):
+        import httpx
+        from unified_system.gateway_native_negative import DisposableNativeNegativeGateway,NativeNegativeDenied
+        gateway=DisposableNativeNegativeGateway(self.authority,self.generation,broker=self.broker)
+        original=self.authority.client
+        replacement=httpx.AsyncClient(trust_env=False,follow_redirects=False)
+        try:
+            self.authority.client=replacement
+            with self.assertRaises(NativeNegativeDenied):
+                await gateway.submit(self.original_bytes,accepted_tls=self.tls.accepted,leader=self.leader)
+            self.assertEqual(self.session_responses,[])
+        finally:
+            self.authority.client=original;await replacement.aclose()
+
+    async def test_closed_captured_client_rejected_before_call_auth(self):
+        from unified_system.gateway_native_negative import DisposableNativeNegativeGateway,NativeNegativeDenied
+        gateway=DisposableNativeNegativeGateway(self.authority,self.generation,broker=self.broker)
+        await self.authority.client.aclose()
+        with self.assertRaises(NativeNegativeDenied):
+            await gateway.submit(self.original_bytes,accepted_tls=self.tls.accepted,leader=self.leader)
+        self.assertEqual(self.session_responses,[])
+
     async def test_actual_mtls_submit_denied_and_own_context_invalidated(self):
         from unified_system.gateway_native_negative import DisposableNativeNegativeGateway
         gateway=DisposableNativeNegativeGateway(self.authority,self.generation,broker=self.broker)

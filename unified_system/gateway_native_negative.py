@@ -17,9 +17,9 @@ class NativeNegativeDenied(RuntimeError):
     pass
 
 _PINS={
-    'grid.coordination':'86814ec2519c272740ac8fae6fb4eae73d14ba51ccec091053ab260c7c024f73',
+    'grid.coordination':'3dd73d3eb3dfb576f7174a94fab05a0f87fe248ffcacccfa19786ccc74f0776b',
     'grid.authority_runtime_v1':'cfb32db73f1859d9d78b03d886372cc08584c81abd64930b5409a91edc417b64',
-    'grid.authority_assignment_v1':'1d578644ecbe881554bc3dd61d49227db2171ea2037d22599df44a73d698fd27',
+    'grid.authority_assignment_v1':'d128cdc5f6b787e3a0ff664c3af6c5d73cdef7a751e974cb990cade3ac39394a',
     'unified_system.gateway_research_identity':'1f9714010143c5243c78494cb25bfe7f2d42e96301f57930212a2f5f3b9c869d',
     'unified_system.gateway_identity':'84093865e8477ef6562100d41137922785446c9cb4e024c9ba7105593a2b36c1',
 }
