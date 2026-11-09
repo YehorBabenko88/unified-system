@@ -551,5 +551,29 @@
     "required_correction": "Separate committed source successor with one explicit cleanup deadline and remaining-budget waits/joins plus elapsed and unknown-retirement evidence; preserve original handles and failures, never relabel timeout as PASS. Freeze b without hotpatch. Independently review successor before execution.",
     "successor_head": "453cb6d60efbdb8a34a7237053d69b6d631ed488",
     "successor_evidence": "phase142/report.md;phase142/source-verification.json"
+  },
+  {
+    "id": "A8-F33",
+    "severity": "P2",
+    "repository": "unified-system",
+    "pr": 69,
+    "observed_head": "453cb6d60efbdb8a34a7237053d69b6d631ed488",
+    "title": "Backend bootstrap omits caller-owned direct-state directory required by DisposableTargetStand",
+    "status": "OPEN_SOURCE_CONTRACT_GAP_ACTUAL_C_FAILURE_RCA_NOT_RUNTIME_REPRODUCED_BY_A8",
+    "test": "bootstrap main versus ba2 DisposableTargetStand.__init__ lstat precondition; original c absent direct-state",
+    "evidence": "phase144/evidence-verification.json;phase144/report.md",
+    "required_correction": "Owner independently reproduce in authorized isolated context. Separate committed caller/bootstrap fix creates and validates only its new own stand directory before construction; preserve adapter policy and c evidence; no hotpatch/retry implied."
+  },
+  {
+    "id": "A8-F34",
+    "severity": "P2",
+    "repository": "unified-system",
+    "pr": 69,
+    "observed_head": "453cb6d60efbdb8a34a7237053d69b6d631ed488",
+    "title": "Failed stage drops completed child identity and numeric exit/wait evidence from final receipt",
+    "status": "OPEN_ORIGINAL_RECEIPT_AND_SOURCE_CONFIRMED_EVIDENCE_GAP_NOT_SAFETY_GATE_BYPASS",
+    "test": "launch returns identity only after successful exit; execute assignment absent on failure; strict cleanup_summary raises before evidence assignment",
+    "evidence": "phase144/smoke-receipt.json;phase144/evidence-verification.json;phase144/report.md",
+    "required_correction": "Separate source successor persist per-stage identity/readback/membership facts before GO and numeric child exit/retirement observations even on failure, distinct from strict success qualification. No weakening of nonzero-exit failure; no reconstructed evidence inserted into original c receipt."
   }
 ]

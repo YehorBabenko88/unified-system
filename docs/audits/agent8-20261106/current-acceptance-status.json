@@ -667,7 +667,7 @@
     "P0_confirmed_defects": 0,
     "P0_absence_proven": false,
     "P1_open": 7,
-    "P2_open": 7,
+    "P2_open": 9,
     "F08": "FIX_VERIFIED_OFFLINE",
     "F09": "FIX_VERIFIED_OFFLINE_AT_42686cd",
     "F10": "FIX_VERIFIED_OFFLINE_AT_42686cd",
@@ -3959,7 +3959,7 @@
     "mandatory_hosted": "NOT_QUALIFIED",
     "overall": "NO_GO"
   },
-  "latest_addendum_scope": "phase143 independent read-only c byte/source/delta/selectedACL; dynamic preGO and custody gates mandatory, no execution admission",
+  "latest_addendum_scope": "phase144 original failedc/source-only review; no A8 replay; F33 directory contract gap/F34 failedstage evidence loss",
   "PR54_b144_terminal_CI_20261109": {
     "head": "b144a5e0fd3af90c975bfc0f0123234628dbb696",
     "direct_run": 42646665067,
@@ -4257,5 +4257,15 @@
     "isolation": "SELECTED_ACL_METADATA_ONLY_DYNAMIC_AND_CUSTODY_GATES_PENDING",
     "execution_admission": "NOT_GRANTED",
     "A8_app_helper_native_calls": 0
+  },
+  "c_actual_failure_original_evidence_review": {
+    "receipt_sha256": "9fae4e0d06e4911568ed6d3c78f890ee00014ef0ea5e4bbd6608db6a63a59bd6",
+    "result": "AUTHENTICATED_ROOT_FAIL_NOT_A8_EXECUTION",
+    "failure": "OWN_STAGE_EXIT_FAILED_TargetRejected_generic",
+    "active": 0,
+    "family_elapsed_ns": 371147100,
+    "retirement_qualification": "NOT_ESTABLISHED_CHILD_FACTS_ABSENT_F34",
+    "F33": "SOURCE_CONTRACT_GAP_ACTUAL_RCA_NOT_REPRODUCED_BY_A8",
+    "A8_helper_fixture_native_calls": 0
   }
 }
