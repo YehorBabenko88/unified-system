@@ -186,6 +186,9 @@ class TLSIsolationTests(unittest.TestCase):
                 heartbeat=threading.Event()
                 control[id(connection.channels['control'])]=heartbeat
                 data[id(connection.channels['data'])]=heartbeat
+                # A fresh created_at must not make the renewal pass by itself.
+                # Only the gated real heartbeat can refresh this stale state.
+                connection.last_rx=time.monotonic()-lan.IDLE_TIMEOUT-1
             ready.set()
             try:
                 self.assertIs(renewed.get(timeout=3),True)
