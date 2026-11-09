@@ -1,0 +1,177 @@
+{
+  "schema": "unified.scheduler.source-composition-review.v1",
+  "base_commit": "3af06455b601a328e94339327a0597eada802c38",
+  "base_tree": "c5fa79b31a0f12b2db9e1b506edcaa3e48930293",
+  "owner_source": "cf08b2d05f853f8c24392467c7690657cba69728",
+  "imports": {
+    "docs/intelligence/jobs/2026-11-09-native-scheduler-adapter-plan.md": {
+      "source_commit": "cf08b2d05f853f8c24392467c7690657cba69728",
+      "bytes": 11294,
+      "sha256": "ba5d2be9680c4455561ac65aa59cd1f0677d2207d4d381ab1c74fe98c5526124"
+    },
+    "docs/intelligence/jobs/completion-observation-review1.schema.json": {
+      "source_commit": "cf08b2d05f853f8c24392467c7690657cba69728",
+      "bytes": 6853,
+      "sha256": "ad8825a7161ecb06b942d19e84c34e1f90dd11ccdc36125a6651114ec0468e59"
+    },
+    "docs/intelligence/jobs/completion-seam-review1.md": {
+      "source_commit": "cf08b2d05f853f8c24392467c7690657cba69728",
+      "bytes": 3805,
+      "sha256": "ac84a4a2084d16cfbc5e72f71a45ee088e9fd502c077e2bb069d96abf8910cbd"
+    },
+    "docs/intelligence/jobs/contract-review1.md": {
+      "source_commit": "cf08b2d05f853f8c24392467c7690657cba69728",
+      "bytes": 8566,
+      "sha256": "2542eb02cf13c249a9ed57663db9e5edd31120d4934cb1cbb7787b9dd21494a9"
+    },
+    "docs/intelligence/jobs/lab-admission-review1.md": {
+      "source_commit": "cf08b2d05f853f8c24392467c7690657cba69728",
+      "bytes": 5108,
+      "sha256": "bccb2cd47c7b08fdbf05486f2eac0addd9a1f83434492778bbebc814ce6377ac"
+    },
+    "docs/intelligence/jobs/lab-submit-review1.schema.json": {
+      "source_commit": "cf08b2d05f853f8c24392467c7690657cba69728",
+      "bytes": 2618,
+      "sha256": "19357891fc022a87831009f17c663304ab72d88ed6ea344bb65c6bc325a321cc"
+    },
+    "docs/intelligence/jobs/native-profile-proposal-review1.md": {
+      "source_commit": "cf08b2d05f853f8c24392467c7690657cba69728",
+      "bytes": 7106,
+      "sha256": "2ae487628670ad0fa8143a121ce7d9d2e6f787ceb7e161167678a5ebe77269b7"
+    },
+    "docs/intelligence/jobs/target-native-review1/A2-REFERENCE.json": {
+      "source_commit": "cf08b2d05f853f8c24392467c7690657cba69728",
+      "bytes": 3077,
+      "sha256": "f40b0bb212fba1b24358d354107a7b6ae3c0df5e453fd514b76631d2b0c3015c"
+    },
+    "docs/intelligence/jobs/target-native-review1/DESIGN.md": {
+      "source_commit": "cf08b2d05f853f8c24392467c7690657cba69728",
+      "bytes": 15269,
+      "sha256": "cc9da110ebf427233c164915222e0efeeba411e9aad603a78688ef4ee1379137"
+    },
+    "docs/intelligence/jobs/target-native-review1/mapping.json": {
+      "source_commit": "cf08b2d05f853f8c24392467c7690657cba69728",
+      "bytes": 5418,
+      "sha256": "7204302751b3d4c00b9e18a360b00bfb8106053d387971e390002d00055fc265"
+    },
+    "docs/intelligence/jobs/windows-cpu-policy-v1.md": {
+      "source_commit": "cf08b2d05f853f8c24392467c7690657cba69728",
+      "bytes": 3768,
+      "sha256": "2cad335c6613671715810d8ae7d6c09da872b3b2c163936c90c6b34bd20a98f6"
+    },
+    "docs/intelligence/jobs/worker-containment-design-review1.md": {
+      "source_commit": "cf08b2d05f853f8c24392467c7690657cba69728",
+      "bytes": 5425,
+      "sha256": "64a3c7232f1c2f3bde032347f532f4865b5eaa58a8a6d63d1bf50270cc3eaa12"
+    },
+    "docs/intelligence/jobs/worker-resource-capabilities.v1.json": {
+      "source_commit": "cf08b2d05f853f8c24392467c7690657cba69728",
+      "bytes": 1869,
+      "sha256": "07d5ccd078b343427a156a2b4438efc90e5aec9749350d40e5ca5682c1816f51"
+    },
+    "tests/gateway_jobs/qualify_windows_job.py": {
+      "source_commit": "cf08b2d05f853f8c24392467c7690657cba69728",
+      "bytes": 8756,
+      "sha256": "a814f2a4c203c913ddd74477791d94d044a2ce667634822d044afa911a303b66"
+    },
+    "tests/gateway_jobs/target_native_mapping_fixtures/a2-admission-error.schema.source.json": {
+      "source_commit": "cf08b2d05f853f8c24392467c7690657cba69728",
+      "bytes": 2226,
+      "sha256": "df0b52379af3e44e64dc2ebc50be5c3196e368d83b846bbd9220d2f9a71f6322"
+    },
+    "tests/gateway_jobs/target_native_mapping_fixtures/a2-native-outer.FORMAT_ONLY.json": {
+      "source_commit": "cf08b2d05f853f8c24392467c7690657cba69728",
+      "bytes": 1048,
+      "sha256": "c0e6c331b6c307b83be6bee8add23b487612ff283d7167d4bb93114ec86d20b5"
+    },
+    "tests/gateway_jobs/target_native_mapping_fixtures/a2-native-outer.schema.source.json": {
+      "source_commit": "cf08b2d05f853f8c24392467c7690657cba69728",
+      "bytes": 3360,
+      "sha256": "faf01152678c5b066145dcafebe92f593a641a54dac84da3ce1e1df94c0fb261"
+    },
+    "tests/gateway_jobs/target_native_mapping_fixtures/a2-native13.FORMAT_ONLY.json": {
+      "source_commit": "cf08b2d05f853f8c24392467c7690657cba69728",
+      "bytes": 787,
+      "sha256": "b1675ccb47475d4d70788f3033cd9f05507ad320435d63d667d893aa07f00e71"
+    },
+    "tests/gateway_jobs/target_native_mapping_fixtures/a2-profile-v2.schema.source.json": {
+      "source_commit": "cf08b2d05f853f8c24392467c7690657cba69728",
+      "bytes": 4073,
+      "sha256": "27b169eebb07980c729ca479cf4ab66efe8e8e99f4f0f04fda1b6878f03eb05c"
+    },
+    "tests/gateway_jobs/target_native_mapping_fixtures/a2-profile.FORMAT_ONLY.json": {
+      "source_commit": "cf08b2d05f853f8c24392467c7690657cba69728",
+      "bytes": 2748,
+      "sha256": "72d92e1ff023f00823b65637f3c79bc080510f8a02cfe24b3c4715286d43299c"
+    },
+    "tests/gateway_jobs/target_native_mapping_fixtures/a7-v1-request.source.json": {
+      "source_commit": "cf08b2d05f853f8c24392467c7690657cba69728",
+      "bytes": 1126,
+      "sha256": "c548e2ffcd542d5d741682303694b3c6d06507740f158a6e30089b2d5355f648"
+    },
+    "tests/gateway_jobs/target_native_mapping_fixtures/broker-profile-v1.schema.source.json": {
+      "source_commit": "cf08b2d05f853f8c24392467c7690657cba69728",
+      "bytes": 1776,
+      "sha256": "e999dc35c4737346ac152172292078ac9eed040ffdf31afdf001ae86974f51d1"
+    },
+    "tests/gateway_jobs/target_native_mapping_fixtures/native13-v1.schema.source.json": {
+      "source_commit": "cf08b2d05f853f8c24392467c7690657cba69728",
+      "bytes": 2618,
+      "sha256": "19357891fc022a87831009f17c663304ab72d88ed6ea344bb65c6bc325a321cc"
+    },
+    "tests/gateway_jobs/target_native_mapping_fixtures/target-v1-request.source.json": {
+      "source_commit": "cf08b2d05f853f8c24392467c7690657cba69728",
+      "bytes": 1080,
+      "sha256": "350c835366651fccbee752a57879a74b6f7bf1502d9ae482a511e0aacdbdf143"
+    },
+    "tests/gateway_jobs/target_native_mapping_fixtures/target-v1-schema.source.json": {
+      "source_commit": "cf08b2d05f853f8c24392467c7690657cba69728",
+      "bytes": 3151,
+      "sha256": "2a7a9370eedc43b76b03fa13252e86606162ae8f494a362fd69d5b22a85858fe"
+    },
+    "tests/gateway_jobs/test_closed_jobs.py": {
+      "source_commit": "cf08b2d05f853f8c24392467c7690657cba69728",
+      "bytes": 4651,
+      "sha256": "30c3704f7e83931b274ced0edd74630a2aed5fcd7753e3fcbd61eeb564fc0b4a"
+    },
+    "tests/gateway_jobs/test_cpu_policy.py": {
+      "source_commit": "cf08b2d05f853f8c24392467c7690657cba69728",
+      "bytes": 3344,
+      "sha256": "2b286f12c400d00f45100736d0d39b893297e5a3670c6c7d1bbcd1f4a0a0ec35"
+    },
+    "tests/gateway_jobs/test_owned_attempt.py": {
+      "source_commit": "cf08b2d05f853f8c24392467c7690657cba69728",
+      "bytes": 8062,
+      "sha256": "1807facb8c3e09c1536a3e71f0ed8474ba69184879ba87397f57eb90afb5f32c"
+    },
+    "tests/gateway_jobs/test_resource_capabilities.py": {
+      "source_commit": "cf08b2d05f853f8c24392467c7690657cba69728",
+      "bytes": 1533,
+      "sha256": "6015f8b7f6508836a4a03cc25b632557106ef61b081dda1c52d17d8b216d33ed"
+    },
+    "tests/gateway_jobs/test_target_native_mapping_proposal.py": {
+      "source_commit": "cf08b2d05f853f8c24392467c7690657cba69728",
+      "bytes": 13462,
+      "sha256": "88bb577c8f830d79824326b8001d177d431094302109e27b813971c86e479fab"
+    },
+    "tests/gateway_jobs/test_worker_limits.py": {
+      "source_commit": "cf08b2d05f853f8c24392467c7690657cba69728",
+      "bytes": 3345,
+      "sha256": "a054c441d54da5e9990807bf1c162985161035e38fbec3388613deee7093c7fa"
+    },
+    "unified_system/gateway_jobs.py": {
+      "source_commit": "cf08b2d05f853f8c24392467c7690657cba69728",
+      "bytes": 3202,
+      "sha256": "6e12a0ec03989749a6fc5359ff6e4d72c820be1c8561eb721ac7b962c458211e"
+    },
+    "unified_system/gateway_worker.py": {
+      "source_commit": "cf08b2d05f853f8c24392467c7690657cba69728",
+      "bytes": 32368,
+      "sha256": "85b29756316a0330f1e0aa9450bad33e4edfa5886a0ca64a63cb196f0b66a47b"
+    }
+  },
+  "runtime_admission": false,
+  "shared_api_ack": "PENDING_ACTUAL_NATIVE_JOB_AND_PERMIT_API",
+  "public_submit": "DENY",
+  "go_no_go": "NO-GO"
+}
