@@ -22,6 +22,46 @@ from datetime import datetime, timezone
 class WorkerUnavailable(RuntimeError):
     pass
 
+@dataclass(frozen=True)
+class CpuHardCapPolicyV1:
+    """Pure arithmetic result from untrusted inputs, never OS/authority proof."""
+    state: str
+    reason: str
+    cpu_rate: int | None=None
+    control_flags: int | None=None
+    nominal_millicores_numerator: int | None=None
+    nominal_millicores_denominator: int=10
+    policy_version: str='windows-hard-cap-logical-mcpu.v1'
+    admission_supported: bool=False
+    behaviorally_qualified: bool=False
+
+def cpu_hard_cap_policy_v1(requested_millicores,*,processor_groups,active_processor_count,
+        process_affinity_mask,system_affinity_mask,already_reserved_millicores,
+        parent_cpu_control,dfss_state):
+    """Floor logical CPU-cycle share; no benchmark/throughput or hold claim.
+
+    Only a single full-affinity group with known non-parent-relative denominator
+    is representable in v1. Inputs are DATA, not verified topology/reservations.
+    """
+    def unsupported(reason):return CpuHardCapPolicyV1('UNSUPPORTED',reason)
+    values=(requested_millicores,processor_groups,active_processor_count,
+            process_affinity_mask,system_affinity_mask,already_reserved_millicores)
+    if any(type(v) is not int for v in values):return unsupported('INTEGER_INPUT_REQUIRED')
+    if requested_millicores<=0 or already_reserved_millicores<0:return unsupported('INVALID_CPU_BUDGET')
+    if processor_groups!=1:return unsupported('SINGLE_PROCESSOR_GROUP_REQUIRED')
+    if not 1<=active_processor_count<=64:return unsupported('ACTIVE_CPU_COUNT_UNSUPPORTED')
+    if (not 0<system_affinity_mask<1<<64 or process_affinity_mask!=system_affinity_mask
+            or system_affinity_mask.bit_count()!=active_processor_count):
+        return unsupported('FULL_AFFINITY_TOPOLOGY_REQUIRED')
+    if type(parent_cpu_control) is not str or parent_cpu_control!='NONE':return unsupported('PARENT_CPU_DENOMINATOR_UNKNOWN_OR_RELATIVE')
+    if type(dfss_state) is not str or dfss_state!='DISABLED':return unsupported('DFSS_UNKNOWN_OR_ENABLED')
+    if requested_millicores+already_reserved_millicores>1000*active_processor_count:
+        return unsupported('CPU_CAPACITY_EXHAUSTED')
+    rate=(10*requested_millicores)//active_processor_count
+    if rate==0:return unsupported('BELOW_NATIVE_QUANTUM')
+    return CpuHardCapPolicyV1('CONVERTIBLE_NOT_ADMITTED','FLOOR_BOUND_ONLY_NOT_ENFORCEMENT',
+        rate,5,rate*active_processor_count)
+
 class _Basic(ctypes.Structure):
     _fields_=[('process_time',ctypes.c_int64),('job_time',ctypes.c_int64),('flags',w.DWORD),
         ('min_working_set',ctypes.c_size_t),('max_working_set',ctypes.c_size_t),
@@ -179,6 +219,10 @@ def _attempt_api():
         'GetProcessTimes':([w.HANDLE,*([ctypes.POINTER(w.FILETIME)]*4)],w.BOOL),
         'QueryFullProcessImageNameW':([w.HANDLE,w.DWORD,w.LPWSTR,ctypes.POINTER(w.DWORD)],w.BOOL),
         'IsProcessInJob':([w.HANDLE,w.HANDLE,ctypes.POINTER(w.BOOL)],w.BOOL),
+        'GetActiveProcessorGroupCount':([],w.WORD),
+        'GetActiveProcessorCount':([w.WORD],w.DWORD),
+        'GetProcessAffinityMask':([w.HANDLE,ctypes.POINTER(ctypes.c_size_t),ctypes.POINTER(ctypes.c_size_t)],w.BOOL),
+        'QueryInformationJobObject':([w.HANDLE,ctypes.c_int,ctypes.c_void_p,w.DWORD,ctypes.c_void_p],w.BOOL),
         'K32GetProcessMemoryInfo':([w.HANDLE,ctypes.POINTER(_AttemptProcessMemory),w.DWORD],w.BOOL),
         'K32GetPerformanceInfo':([ctypes.POINTER(_AttemptPerformance),w.DWORD],w.BOOL)}
     for name,(args,result) in signatures.items():
@@ -200,6 +244,16 @@ def _attempt_host(k):
                 observation_utc=datetime.now(timezone.utc).isoformat(),monotonic_ns=str(time.monotonic_ns()),
                 qualified_for_native_admission=False)
 
+def _attempt_cpu_topology(k,handle):
+    """Retained-handle observation, no topology pin or resource reservation."""
+    groups=int(k.GetActiveProcessorGroupCount());active=int(k.GetActiveProcessorCount(0xffff))
+    process_mask=ctypes.c_size_t();system_mask=ctypes.c_size_t()
+    _worker_need(groups>0 and active>0 and k.GetProcessAffinityMask(handle,ctypes.byref(process_mask),ctypes.byref(system_mask)),
+                 'OWNED_CPU_TOPOLOGY_OBSERVATION_UNAVAILABLE')
+    return dict(processor_groups=groups,active_processor_count=active,
+                process_affinity_mask=int(process_mask.value),system_affinity_mask=int(system_mask.value),
+                parent_cpu_control='UNKNOWN',dfss_state='UNKNOWN',qualified_for_admission=False)
+
 class GatewayWorker:
     """Own process-local preparation inventory, NOT a scheduler or durable ledger.
 
@@ -219,7 +273,8 @@ class GatewayWorker:
         """Canonical local DATA only. No resource is qualified for admission."""
         fields={
             'cpu_millicores':dict(admission='UNSUPPORTED',observation='NONE',
-                gap='NATIVE_CPU_RATE_1000_IS_NOT_1000_MILLICORES'),
+                conversion_policy='windows-hard-cap-logical-mcpu.v1',
+                gap='PURE_FLOOR_CONVERSION_AVAILABLE_BUT_TOPOLOGY_AND_ENFORCEMENT_UNQUALIFIED'),
             'cpu_share':dict(admission='UNSUPPORTED',observation='JOB_RATE_SET_QUERY_ONLY',
                 native_rate_units='1000',native_rate_denominator='10000',
                 gap='EFFECTIVE_CAPACITY_INHERITED_JOB_AND_LOAD_ENFORCEMENT_UNQUALIFIED'),
@@ -318,6 +373,7 @@ class GatewayWorker:
         if state['phase']=='QUIESCENT':return state['snapshot']
         _worker_need(state['phase']=='PREPARED','OWNED_ATTEMPT_NOT_PREPARED')
         k=state['kernel'];proc=state['proc'];member=w.BOOL()
+        cpu_topology=_attempt_cpu_topology(k,proc.process)
         _worker_need(_attempt_identity(k,proc.process)==state['identity'],'OWNED_PROCESS_IDENTITY_CHANGED')
         _worker_need(k.WaitForSingleObject(proc.process,0)==258,'OWNED_PROCESS_NOT_LIVE')
         _worker_need(k.IsProcessInJob(proc.process,state['job']._job,ctypes.byref(member)) and member.value,'OWNED_JOB_MEMBERSHIP_LOST')
@@ -328,6 +384,15 @@ class GatewayWorker:
                      limit_readback=state['limits'],host_observation=_attempt_host(k),grid_source_sha256=_GRID_JOB_SHA,
                      interpreter_sha256=_DIRECT_INTERPRETER_SHA,source_custody='NOT_QUALIFIED_FOR_RESUME')
         details['resource_capabilities']=json.loads(GatewayWorker.resource_capabilities())
+        current_cpu=_CPU()
+        _worker_need(k.QueryInformationJobObject(state['job']._job,15,ctypes.byref(current_cpu),ctypes.sizeof(current_cpu),None),
+                     'OWNED_CURRENT_CPU_QUERY_UNAVAILABLE')
+        _worker_need(current_cpu.flags==5 and current_cpu.rate==state['limits']['cpu_hard_rate_units'],
+                     'OWNED_CURRENT_CPU_QUERY_CHANGED')
+        details['cpu_limit_query']=dict(control_flags=int(current_cpu.flags),cpu_rate=int(current_cpu.rate),
+            behaviorally_qualified=False,derived_rate_applied=False)
+        _worker_need(cpu_topology==_attempt_cpu_topology(k,proc.process),'OWNED_CPU_TOPOLOGY_CHANGED_DURING_OBSERVATION')
+        details['cpu_topology']=cpu_topology
         snapshot=OwnedAttemptObservation('PREPARED_SUSPENDED_LOCAL_ONLY',state['rid'],state['digest'],state['job_label'],self._node,
             _PROCESS_INCARNATION,state['attempt_id'],int(proc.pid),*state['identity'],state['entry_sha'],_worker_canonical(details))
         state['snapshot']=snapshot;return snapshot

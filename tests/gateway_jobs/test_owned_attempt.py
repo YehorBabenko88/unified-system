@@ -10,7 +10,7 @@ import unittest
 import uuid
 from unittest.mock import patch
 import unified_system.gateway_worker as worker_module
-from unified_system.gateway_worker import GatewayWorker, OwnedWorkerAttempt, WorkerUnavailable
+from unified_system.gateway_worker import GatewayWorker, OwnedWorkerAttempt, WorkerUnavailable, cpu_hard_cap_policy_v1
 
 FIX=Path(__file__).with_name('target_native_mapping_fixtures')
 GRID='C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-2-high-availability-distributed/work/grid-assignment-native-20261107'
@@ -76,6 +76,13 @@ class NativeOwnedAttempt(unittest.TestCase):
         details=json.loads(snapshot.os_observation_json)
         self.assertTrue(details['job_membership']);self.assertEqual(details['resume_calls'],0)
         self.assertFalse(details['resource_profile_qualified'])
+        self.assertEqual(details['cpu_limit_query']['control_flags'],5)
+        self.assertEqual(details['cpu_limit_query']['cpu_rate'],1000)
+        self.assertFalse(details['cpu_limit_query']['derived_rate_applied'])
+        topology=details['cpu_topology'].copy();self.assertFalse(topology.pop('qualified_for_admission'))
+        candidate=cpu_hard_cap_policy_v1(1000,already_reserved_millicores=0,**topology)
+        self.assertEqual(candidate.state,'UNSUPPORTED')
+        self.assertFalse(candidate.admission_supported)
         for operation in (copy.copy,copy.deepcopy,pickle.dumps):
             with self.assertRaises(TypeError):operation(attempt)
         retired=worker.abort_attempt(attempt);self.assertEqual(retired.state,'OWNED_QUIESCENCE_CONFIRMED')

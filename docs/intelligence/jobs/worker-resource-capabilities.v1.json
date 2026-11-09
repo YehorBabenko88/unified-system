@@ -22,7 +22,8 @@
     },
     "cpu_millicores": {
       "admission": "UNSUPPORTED",
-      "gap": "NATIVE_CPU_RATE_1000_IS_NOT_1000_MILLICORES",
+      "conversion_policy": "windows-hard-cap-logical-mcpu.v1",
+      "gap": "PURE_FLOOR_CONVERSION_AVAILABLE_BUT_TOPOLOGY_AND_ENFORCEMENT_UNQUALIFIED",
       "observation": "NONE"
     },
     "cpu_share": {
