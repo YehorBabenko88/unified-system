@@ -86,6 +86,27 @@ nonzero still prevents PASS. Pure failed-child regression verifies evidence
 survives that outcome. No c snapshot changes or automatic rerun occurred. New
 source qualification, new package and independent review are required.
 
+Second actual d attempt: source9f/package67bcc2f0fd13b9d7363d4847e511d233a11a7be9c001e4a57411e0ea0bfa02bd
+also FAIL_OR_UNCONFIRMED. Original receipt SHA256
+145ff6f9acec46fb467d7ca0a1fff6753bbe9c583d2e8d9d83ba04e05532b4b9.
+The directory/SQLite precondition now passed. Actual before-GO child identity,
+nonadmin token, member1, limits and exit71 were retained; active0/primary exited,
+family402272600ns/package unchanged. Journal has STARTED then FINISHED UNKNOWN,
+TARGET_RESULT_UNAVAILABLE, no artifact. No successful research/render is claimed.
+
+Root checked actual CPython3.12 Windows subprocess.py: list2cmdline is applied
+before sys.audit(subprocess.Popen), so that audit receives a STRING; POSIX gets
+a vector. The old callback required list/tuple, and rejects even the fixed valid
+Windows commandline before CreateProcess. This source-predicate defect is
+reproduced by pure Windows/POSIX frame cases; d's generic RuntimeError alone is
+not retroactively relabelled with a missing audit event. The new audit compares
+only the exact canonical commandline of a currently active, prevalidated fixed
+Git vector in thread-local custody. It never parses/executes a caller string.
+Foreign executable, extra args, no active scope and platform-shape mismatches
+deny; the active value is cleared in finally. Fixed diagnostic markers contain
+no commandlines or environment values. RED ls5-windows-audit-commandline-red.log
+is retained.106 combined pure tests pass; a new immutable candidate is required.
+
 The intended source family is Unified runtime ba2b1cec0c2b114586afb73696e282117eede987,
 Strattester aed8a7c8a952f96803c207d5e90b133969a47f04, MetaAnalyse
 f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1 and A6 PR77. The harness itself must also

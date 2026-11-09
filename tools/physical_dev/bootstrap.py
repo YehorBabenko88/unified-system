@@ -16,6 +16,17 @@ def source_git_argv(argv,git,roots):
         raise RuntimeError('NON_SOURCE_GIT_CHILD_DENIED')
     return [str(git),*argv[1:]]
 
+def validate_source_git_audit(executable,argv,git,selected,platform):
+    # Windows CPython emits a canonical commandline STRING after list2cmdline;
+    # POSIX emits a vector. Never parse/reinterpret a caller-provided string.
+    import subprocess
+    if not(isinstance(selected,(list,tuple)) and len(selected)==6 and str(executable)==str(git) and selected[0]==str(git)):
+        raise RuntimeError('NON_SOURCE_GIT_CHILD_DENIED')
+    if platform=='nt':valid=type(argv) is str and argv==subprocess.list2cmdline(selected)
+    elif platform=='posix':valid=isinstance(argv,(list,tuple)) and list(argv)==list(selected)
+    else:valid=False
+    if not valid:raise RuntimeError('NON_SOURCE_GIT_CHILD_DENIED')
+
 def validate_state_path(value,root):
     if isinstance(value,int):return
     text=os.fsdecode(value)
@@ -54,6 +65,7 @@ def main():
     sys.path.insert(0,str(unified))
     def own_write(value):
         validate_state_path(value,root)
+    pending_git=threading.local()
     def audit(event,args):
         if event.startswith('socket.'):raise RuntimeError('BACKEND_NETWORK_DENIED')
         if event=='open':
@@ -65,9 +77,9 @@ def main():
             own_write(args[0]);own_write(args[1])
         elif event=='subprocess.Popen':
             executable,argv,_,_=args
-            if not(isinstance(argv,(list,tuple)) and len(argv)==6 and argv[1:3]==['--no-replace-objects','-C'] and argv[4]=='show'
-                    and Path(argv[3]).resolve() in (stratt.resolve(),meta.resolve()) and isinstance(argv[5],str)
-                    and str(executable)==str(git) and argv[0]==str(git)):raise RuntimeError('NON_SOURCE_GIT_CHILD_DENIED')
+            try:validate_source_git_audit(executable,argv,git,getattr(pending_git,'argv',None),os.name)
+            except RuntimeError:
+                print('SOURCE_GIT_AUDIT_DENIED',file=sys.stderr,flush=True);raise
     # The caller selected and verified this source Git executable before GO.
     os.environ['PATH']=str(git.parent)+os.pathsep+os.environ.get('PATH','')
     # Select the exact admitted executable for the existing adapter's unchanged
@@ -77,7 +89,10 @@ def main():
     def pinned_source_popen(argv,*args,**kwargs):
         if args or 'executable' in kwargs or kwargs.get('shell',False):raise RuntimeError('SOURCE_GIT_OPTIONS')
         selected=source_git_argv(argv,git,{stratt,meta})
-        return native_popen(selected,executable=str(git),**kwargs)
+        if getattr(pending_git,'argv',None) is not None:raise RuntimeError('NESTED_SOURCE_GIT_DENIED')
+        pending_git.argv=tuple(selected)
+        try:return native_popen(selected,executable=str(git),**kwargs)
+        finally:pending_git.argv=None
     subprocess.Popen=pinned_source_popen
     sys.addaudithook(audit)
     from unified_system.gateway_target_adapter import DisposableTargetStand,prepare_target,template_request
@@ -86,7 +101,9 @@ def main():
     stand=DisposableTargetStand(str(state),stratt_source_root=str(stratt),meta_source_root=str(meta))
     try:
         value=stand.execute(prepare_target(request),context=stand.local_test_context())
-        if value['status']!='DIRECT_TARGET_PASS' or stand.invocations!=1:raise RuntimeError('ACTUAL_DIRECT_TARGET_NOT_COMPLETED')
+        if value['status']!='DIRECT_TARGET_PASS' or stand.invocations!=1:
+            print('DIRECT_TARGET_COMPLETION_UNAVAILABLE',file=sys.stderr,flush=True)
+            raise RuntimeError('ACTUAL_DIRECT_TARGET_NOT_COMPLETED')
         envelope=json.dumps(value,sort_keys=True,separators=(',',':'),allow_nan=False).encode('ascii')
         artifact=json.dumps(value['result'],sort_keys=True,separators=(',',':'),allow_nan=False).encode('ascii')
         import hashlib

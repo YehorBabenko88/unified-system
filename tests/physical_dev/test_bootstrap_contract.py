@@ -2,6 +2,16 @@ import unittest,tempfile
 from pathlib import Path
 
 class BootstrapPathTests(unittest.TestCase):
+    def test_windows_audit_commandline_matches_only_active_exact_selected_vector(self):
+        from tools.physical_dev.bootstrap import validate_source_git_audit
+        import subprocess
+        git='C:/private tooling/git.exe';selected=[git,'--no-replace-objects','-C','C:/private source','show','a'*40+':module.py']
+        commandline=subprocess.list2cmdline(selected)
+        self.assertIsNone(validate_source_git_audit(git,commandline,git,selected,'nt'))
+        self.assertIsNone(validate_source_git_audit(git,selected,git,selected,'posix'))
+        for exe,raw,expected,platform in [(git,commandline+' extra',selected,'nt'),('C:/foreign/git.exe',commandline,selected,'nt'),(git,commandline,None,'nt'),(git,selected,selected,'nt'),(git,commandline,selected,'posix')]:
+            with self.subTest(platform=platform),self.assertRaises(RuntimeError):validate_source_git_audit(exe,raw,git,expected,platform)
+
     def test_allocate_existing_stand_contract_requires_new_empty_directory(self):
         from tools.physical_dev.bootstrap import allocate_stand_root
         from unified_system.gateway_target_adapter import DisposableTargetStand,TargetRejected
