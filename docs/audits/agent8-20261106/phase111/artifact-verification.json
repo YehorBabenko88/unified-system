@@ -1,0 +1,42 @@
+[
+  {
+    "os": "ubuntu",
+    "artifact_id": 13681098824,
+    "sha256": "e18032880fe462239c7d81a64c4698ced385f8c33678277a57f42dd10fed13ec",
+    "bytes": 290872,
+    "members": [
+      "actual-meta-result.json",
+      "direct-result.json",
+      "local-journal.json",
+      "prepared-request.json",
+      "qualification.json"
+    ],
+    "receipt_tests": 21,
+    "skips": 0,
+    "receipt_lacks_failure_error_counts": true,
+    "classification": "UBUNTU_ORIGINAL_ARTIFACT_CONTENT_VERIFIED_NOT_NEW_WINDOWS_PASS",
+    "receipt_source_counts": {
+      "unified": 1583,
+      "strattester": 800,
+      "meta_analyse": 782
+    }
+  },
+  {
+    "os": "windows",
+    "artifact_id": 13682889468,
+    "sha256": "3d4bb1294c143cb046cc0526947d289d4d67dee31ed8a101e343056b3e64badd",
+    "bytes": 283000,
+    "members": [
+      "qualification.json"
+    ],
+    "receipt_tests": 21,
+    "skips": 0,
+    "receipt_lacks_failure_error_counts": true,
+    "classification": "FAILED_WINDOWS_PARTIAL_RECEIPT_NOT_PASS",
+    "receipt_source_counts": {
+      "unified": 1583,
+      "strattester": 800,
+      "meta_analyse": 782
+    }
+  }
+]

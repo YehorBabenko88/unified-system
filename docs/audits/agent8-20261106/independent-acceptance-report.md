@@ -1681,3 +1681,52 @@ P0_P1_P2:no new material finding; baseline6P1/3P2 after F25 correction; existing
 EVIDENCE:this directory and SHA256SUMS.txt.
 NEXT_ACTIONS:owner actual issuer/worker ABI+resource/UTC/enrollment/custody qualification, terminal exact CI, connected isolated native negatives/positive E2E.
 GO_NO_GO:NO-GO. TAILSCALE_REMOVAL:BLOCKED. No office faults/production/provider/networksecurity changes/Math or PR52 diagnostic invocation.
+
+
+# Agent8 phase110 — exact PR57 resource disclosure successor
+
+| Requirement ID | Repository | PR | Exact HEAD | Test | Environment | Expected | Actual | Evidence | Status | Severity | Required correction |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| WA110-SOURCE | unified-system |57|728a7ff20a4e5309f1cd0049f80681f57f50e005|exact source/PR and pre/post|A8 own fresh LF clone/primary objects|source bound/noextras|tree d75c972b96e1e45d0a94669a3e934f6ab670eb22;1419primaryraw pre/post equal/noextras;currentDraftHEAD independently matched|primary-verification.json;source.diff;pr-current.original.json|PASS|—|No integration-base ACK implied|
+| WA110-OWN24 | unified-system |57|728a7ff20a4e5309f1cd0049f80681f57f50e005|four actual committed modules|Windows CPython3.12.10 -I -S -B/own fixed Grid40e9 source|24unique/no skips|24PASS0skip/exit0=6boundary+2actual suspendedownchild+5fault+9closedjobs+2resource;noResume/nativeauthority/Meta/PR52|own24.stderr.log;own24.stdout.json;executed-child.py|PASS|—|Not24nativejobs/connectedE2E;prior73313 remains exact historical|
+| WA110-DISCLOSURE | unified-system |57|728a7ff20a4e5309f1cd0049f80681f57f50e005|canonical resource_capabilities|actual runtime and committed JSON|all6 unsupported/noadmission|admitted_fields=[];dispatch_authorized=false; sixUNSUPPORTED CPUmillicores/share/RSS/committedmemory/availablecommit/physical; returned immutable canonicalbytes independent across mutations; docs semantically equal|own24 logs;source.diff;owner-source-verification.json|PASS|—|No10percent=1000m orcommit=RSS conversion; discrepancy unresolved|
+| WA110-RECONCILE | unified-system |57|728a7ff20a4e5309f1cd0049f80681f57f50e005|new closed job composition/cancel|actual existing closed localAPI/noissuer|same originalUNKNOWN/noeffect|new composition lookup/reconnect retain exact bytes/hash/key;cancelbefore/afterUNKNOWN authorizes no effect;gateway_jobs.py byteunchanged; observation/dict/bytes cannot adopt attempt|own24.stderr.log;source.diff|PASS|—|New Python objects are not coordinator process/native restart qualification|
+| WA110-OWNER | unified-system |57|728a7ff20a4e5309f1cd0049f80681f57f50e005|original receipt/log and domains|read-only owner evidence|raw source and canonical data hash distinguished|receiptSHAc857b2fb671e14307856fec254181c712299ee3e4648c696878ee338e589ac4f;worker rawad5290011206ca20af64f73909c1875a1f1e1945277fd87fe4ec4db5b1270368;canonical capabilities235dbfd2c3388be657ca44051b3c821b384833603cbeeae96e0ae63803b1a176;formatted docraw00f7fecec364e83c757d86161c7ff3f87b089a9fd98f434c7ef49b0db75cedb8|owner-receipt.original.json;owner-tests.original.log;owner-source-verification.json|PASS|—|Owner24 separate from A8 own24|
+| WA110-HARNESS | unified-system |57|728a7ff20a4e5309f1cd0049f80681f57f50e005|A8 receipt reader hash-domain check|metadata only|do not conflate runtimecanonical andprettyJSONhash|initial A8assertion incorrectly compared capabilities_sha256 with rawdocbytes; failed; corrected canonical binding and separately recordedrawdocSHA without source changes/rerun|A8-receipt-reader-correction.json;owner-source-verification.json|FAIL|A8reader assumption corrected|Not product defect or fake hash match|
+| WA110-GATES | six repos |unadmitted|no approved integrated source|native workerresource/enrollment/UTC/permit/publication/read/hosted|not qualified|actual gates separately pass|resource bounds explicitlyunsupported;issuerABI/currentrights/holds/sourcecustody/actualnumericalworker/2domainpublication/resultread remain unavailable|source docs;ci-current.original.json;phase106checklist|BLOCKED|existing owner-labelled P0 gates|Owner exact APIs/coACKs+resource/UTCqualification+terminalCI+isolatedconnectedE2E|
+
+The13previous IDs overlap; own current24 is not37distinct tests. Only two explicitly selected cases create actual suspended own Windows children. It selected test_owned_attempt.py/test_worker_limits.py/test_closed_jobs.py/test_resource_capabilities.py; memory/tree qualifier was not imported/executed. Test module GRID path was explicitly rebound to A8 own exact40e9 primary repository without editing source. Native child path/interpreter hash and actual Kernel readbacks checked through existing code; no source-read-to-resume custody/admission proof. Existing unknown-cleanup poison/oneprocessgate/retainedoriginal semantics unchanged. Test_closed_jobs changed line endings in primary source; A8 preserves raw bytes and records source.diff rather than normalizing it.
+
+RELEASE_MANIFEST_STATUS:exactPR57 sourcebound, global approved package absent.
+NODE_INVENTORY_STATUS:declared local label only/no enrolled physical nodes accepted.
+CONTRACT_STATUS:actual native issuer/worker ABI not coACKed.
+OFFLINE_TESTS:24PASS0skip1419raw;2actualsuspendedownchild/noResume.
+WINDOWS_CI:terminal mandatory hosted results NOT_VERIFIED.
+PHYSICAL_TESTS:BLOCKED.
+P0_P1_P2:no new material defect; baseline6P1/3P2 and owner-labelled native P0 gates OPEN.
+EVIDENCE:this directory+bundleSHA256SUMS.
+NEXT_ACTIONS:actual issuer/worker API and resource/UTC/currentholds/sourcecustody qualification; terminalCI; actual connected negative+positiveE2E.
+GO_NO_GO:NO-GO. TAILSCALE_REMOVAL:BLOCKED. No production/orders/provider/networksecuritychanges/officefaults/Math orPR52diagnostic.
+
+
+# Agent8 phase111 — original PR54 hosted artifact verification
+
+| Requirement ID | Repository | PR | Exact HEAD | Test | Environment | Expected | Actual | Evidence | Status | Severity | Required correction |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| CI111-UBUNTU | unified-system |54|83d35ce4b18cb6adc556c8e1412ad7b0cffef2e8|original run42632828686 attempt1 artifact13681098824|A8 readonly Root originalZIP+directGitHubREST|API digest/length andmemberhashes/sourcepinsmatch|290872B SHAe18032880fe462239c7d81a64c4698ced385f8c33678277a57f42dd10fed13ec;5members;all4 receipt-listed payloads rawlength/hashmatch;21tests0skip/sourceequal;actualartifact2070B/f4997d7d26211676cd8664e53d7999f8b71f203510f3b9a275b439c403e03940|ubuntu-artifact-metadata.original.json;ubuntu-qualification.original.json;artifact-verification.json;originalZIP|PASS|—|Only original Ubuntu direct-target artifact verification; no newWindows/nativechainqualification|
+| CI111-WINDOWS | unified-system |54|83d35ce4b18cb6adc556c8e1412ad7b0cffef2e8|original failed Windows artifact13682889468|same read-onlystand|preserve FAIL despite partialreceipt|283000B SHA3d4bb1294c143cb046cc0526947d289d4d67dee31ed8a101e343056b3e64badd;ONLYqualification.json;21tests/sourceequal but lacks failure/errorcounts and actualpayloads;originaljob129213210871FAIL/1error per phase107rawlog|windows-artifact-metadata.original.json;windows-qualification.original.json;artifact-verification.json;originalZIP;phase107original-log-verification|FAIL|historicalmandatoryCI|Receipt count is execution count, not success; keep original failedCI distinct from correction|
+| CI111-SOURCE | unified-system+strattester+meta_analyse |54/A7pins|83d/aed8/f3c|both artifact source maps versus independent primaryGitobjects|A8 batchcatfile/hashGitblobOIDs|both before/after maps match actual commits|1583Unified+800Stratt+782Meta primaryBLOB maps independentlycomputed; both hostedreceipts before/afterexactmatch|primary-object-source-binding.json;both qualificationoriginals|PASS|—|Gitobjectbinding not physicalnode/runnerattestation|
+| CI111-LEVELS | six repos |unadmitted|newb144notcovered|mandatory releaseCI/nativeE2E|NOT_RUN|no acceptance transfer|this is original83d artifact inspection, no new test/nativeworker/profile/issuer/publication/physical run; b144hosted remains separatelypending|phase108ci snapshot;phase106gates|BLOCKED|existingreleasegates|TerminalexactmandatoryWindows/Linuxartifacts and integrated ownerapprovedsource|
+
+No archive extraction or executable invocation. ZIP entrynames were duplicate-free/top-level only; receipts/member payloads inspected as bytes. Raw ZIP bytes were downloaded earlier by Root; A8 independently verified against current original GitHub artifact metadata/digest and inspected every listed member. OriginalUbuntu jobSUCCESS was independentlyobserved phase106; phase111 now closes content inspection beyond metadata only. This does not reclassify original overall runFAIL/WindowsFAIL. Both receipts lack failure/errorcounts; source_before==after and tests_run==21 alone cannot supply PASS, especially on failed Windows job.
+
+RELEASE_MANIFEST_STATUS:original exactsourceartifactsverified, no integratedreleaseapproval.
+NODE_INVENTORY_STATUS:no new inventoryacceptance.
+CONTRACT_STATUS:native integration ownerACKs absent.
+OFFLINE_TESTS:no new execution; artifactchecksPASS/originalWindowsFAILpreserved.
+WINDOWS_CI:original83dFAIL; newerb144terminalmandatoryNOTQUALIFIEDhere.
+PHYSICAL_TESTS:BLOCKED.
+P0_P1_P2:no newfinding;6P1/3P2baseline+nativeP0gatesOPEN.
+EVIDENCE:thisdirectory/API metadata+originalZIP+members/sourcebinding+bundleSHA256SUMS.
+NEXT_ACTIONS:verify currentexactmandatoryCI/jobs/artifacts independently;actual native integratedsource/ACKs and qualifiedE2E.
+GO_NO_GO:NO-GO. TAILSCALE_REMOVAL:BLOCKED. No reruns/protectedMathdiagnostics/officefaults/networkchanges/orders/deployments.

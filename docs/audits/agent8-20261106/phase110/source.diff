@@ -1,0 +1,312 @@
+diff --git a/docs/intelligence/jobs/2026-11-09-native-scheduler-adapter-plan.md b/docs/intelligence/jobs/2026-11-09-native-scheduler-adapter-plan.md
+index 239ce36..cb4669c 100644
+--- a/docs/intelligence/jobs/2026-11-09-native-scheduler-adapter-plan.md
++++ b/docs/intelligence/jobs/2026-11-09-native-scheduler-adapter-plan.md
+@@ -65,3 +65,9 @@ Review fixes: frozen native13 constraints are fully checked before OS access; on
+ The local 16 KiB input bound follows frozen13/C3; one active preparation and 32 retained originals are conservative refusal safeguards, not load-qualified production limits. Headroom margins, committed-memory cap and CPU rate are preparation diagnostics only. No operational admission, RSS/CPU translation, lease duration, capacity age, batch size, storage budget or renewal limit is certified by this checkpoint.
+ 
+ Task1 source-bound receipt and final review remain required before completion. Tasks2/3 are pending actual A2 API/enrollment and ROOT runtime integration base; no positive shared wiring is present.
++
++## Follow-up: explicit unsupported resource capabilities and closed recovery
++
++ROOT acknowledged PR57/7338a80 and authorized standalone negative recovery/cancel tests. Current ROOT CI branch is not an integration runtime base. Implement a local DATA-only canonical capabilities report in GatewayWorker: admitted_fields empty, unsupported_fields explicit for CPU millicores/share, RSS, committed memory, commit/physical headroom. Each field records actual observation/configuration scope and the unresolved enforcement/mapping gap. Include this report in local OS observations; never return a grant or qualification PASS. Keep a machine-readable documentation mirror with exact equality tests.
++
++TDD: test missing report RED, add report, verify report is immutable bytes and all six unsupported dimensions remain unsupported. Add isolated negative tests for fresh ResearchJobs instances retaining the same original during lookup/reconnect UNKNOWN, cancellation before/after failed lookup staying UNKNOWN, and reconstructed/foreign local observation failing inventory checks. These are local closed-boundary tests, not native restart/cancel acceptance. Re-run focused tests with exact source guard, fresh review, update existing Draft PR57 and notify ROOT/A2/A8. No resume, PR52 execution, authority fallback or shared API wiring.
+diff --git a/docs/intelligence/jobs/worker-resource-capabilities.v1.json b/docs/intelligence/jobs/worker-resource-capabilities.v1.json
+new file mode 100644
+index 0000000..94a5f68
+--- /dev/null
++++ b/docs/intelligence/jobs/worker-resource-capabilities.v1.json
+@@ -0,0 +1,51 @@
++{
++  "admitted_fields": [],
++  "dispatch_authorized": false,
++  "fields": {
++    "available_commit_bytes": {
++      "admission": "UNSUPPORTED",
++      "gap": "NO_NATIVE_RESERVATION_OR_LOAD_QUALIFIED_FRESHNESS_AND_MARGIN",
++      "observation": "HOST_PREPARATION_SNAPSHOT_ONLY",
++      "preparation_refusal_floor_bytes": "2952790016"
++    },
++    "available_physical_bytes": {
++      "admission": "UNSUPPORTED",
++      "gap": "NO_NATIVE_RESERVATION_OR_CONTINUOUS_MEMORY_PRESSURE_ENFORCEMENT",
++      "observation": "HOST_PREPARATION_SNAPSHOT_ONLY",
++      "preparation_refusal_floor_bytes": "1073741824"
++    },
++    "committed_memory_bytes": {
++      "admission": "UNSUPPORTED",
++      "configured_native_bytes": "268435456",
++      "gap": "PR51_PEAK_EXCEEDS_CONFIGURED_LIMIT_DISCREPANCY_UNRESOLVED",
++      "observation": "JOB_LIMIT_SET_QUERY_ONLY"
++    },
++    "cpu_millicores": {
++      "admission": "UNSUPPORTED",
++      "gap": "NATIVE_CPU_RATE_1000_IS_NOT_1000_MILLICORES",
++      "observation": "NONE"
++    },
++    "cpu_share": {
++      "admission": "UNSUPPORTED",
++      "gap": "EFFECTIVE_CAPACITY_INHERITED_JOB_AND_LOAD_ENFORCEMENT_UNQUALIFIED",
++      "native_rate_denominator": "10000",
++      "native_rate_units": "1000",
++      "observation": "JOB_RATE_SET_QUERY_ONLY"
++    },
++    "resident_memory_bytes": {
++      "admission": "UNSUPPORTED",
++      "gap": "JOB_COMMITTED_MEMORY_LIMIT_IS_NOT_RESIDENT_MEMORY_ENFORCEMENT",
++      "observation": "PROCESS_WORKING_SET_SNAPSHOT_ONLY"
++    }
++  },
++  "schema": "unified.gateway.local-worker-resource-capabilities.v1",
++  "scope": "LOCAL_DIAGNOSTIC_DATA_NOT_AUTHORITY",
++  "unsupported_fields": [
++    "available_commit_bytes",
++    "available_physical_bytes",
++    "committed_memory_bytes",
++    "cpu_millicores",
++    "cpu_share",
++    "resident_memory_bytes"
++  ]
++}
+diff --git a/tests/gateway_jobs/test_closed_jobs.py b/tests/gateway_jobs/test_closed_jobs.py
+index 4f6bcbe..175476c 100644
+--- a/tests/gateway_jobs/test_closed_jobs.py
++++ b/tests/gateway_jobs/test_closed_jobs.py
+@@ -1,60 +1,84 @@
+-"""No-binding local tests only: no owner fixture, grant or native PASS."""
+-import asyncio
+-import hashlib
+-import json
+-import runpy
+-import unittest
+-from pathlib import Path
+-from unified_system.gateway_jobs import ResearchJobs, JobUnavailable, JobInvalid, prepare_intent
+-
+-plan = runpy.run_path(str(Path(__file__).parents[1] / 'test_intelligence_gateway.py'))['plan']
+-
+-def raw(**changes):
+-    value = dict(schema='unified.gateway.job-local-preparation.v1',
+-                 request_id='11111111-1111-4111-8111-111111111111',
+-                 idempotency_key='local-original-key', plan=plan())
+-    value.update(changes)
+-    return json.dumps(value,sort_keys=True,separators=(',',':'),ensure_ascii=True).encode('ascii')
+-
+-class ClosedJobs(unittest.IsolatedAsyncioTestCase):
+-    async def test_no_binding_never_submits_even_claimed_context(self):
+-        for context in (None, True, {'role':'ADMIN','approved':True}, object()):
+-            r=await ResearchJobs().submit(raw(),context=context)
+-            self.assertEqual(r['status'],'NOT_SUBMITTED')
+-            self.assertIsNone(r['job_id']);self.assertFalse(r['effects_authorized'])
+-            self.assertEqual(r['request_id'],'11111111-1111-4111-8111-111111111111')
+-
+-    async def test_lookup_and_reconnect_unknown_preserve_exact_original(self):
+-        b=raw()
+-        for name in ('lookup','reconnect'):
+-            with self.assertRaises(JobUnavailable) as raised:
+-                await getattr(ResearchJobs(),name)(b,context=None)
+-            e=raised.exception
+-            self.assertEqual(e.outcome,'UNKNOWN')
+-            self.assertEqual(e.original.raw,b)
+-            self.assertEqual(e.original.sha256,hashlib.sha256(b).hexdigest())
+-            self.assertEqual(e.original.idempotency_key,'local-original-key')
+-
+-    async def test_cancel_has_no_supported_codec_or_effective_cancellation(self):
+-        with self.assertRaises(JobUnavailable) as raised:
+-            await ResearchJobs().cancel(raw(),context={'owner':'admin'})
+-        self.assertIsNone(raised.exception.original)
+-        self.assertEqual(raised.exception.outcome,'UNKNOWN')
+-
+-    async def test_status_is_unavailable_not_fabricated_registry(self):
+-        with self.assertRaises(JobUnavailable):
+-            await ResearchJobs().status('11111111-1111-4111-8111-111111111111',context=None)
+-
+-    def test_strict_local_intent_rejects_unapproved_fields_and_identity(self):
+-        for b in (raw(owner='admin'),raw(request_id='11111111-1111-4111-8111-111111111111\n'),
+-                  raw(idempotency_key='x\n'),raw(schema='production.v1'), b'{"a":1,"a":2}',
+-                  b' '*32769, raw()+b' ', raw(plan={})):
+-            with self.subTest(raw=b[:50]),self.assertRaises(JobInvalid):prepare_intent(b)
+-
+-    def test_identity_is_immutable_local_data_not_authority(self):
+-        original=prepare_intent(raw())
+-        with self.assertRaises(AttributeError):original.request_id='replacement'
+-        self.assertEqual(original.raw,raw())
+-
+-    def test_no_backend_injection_constructor(self):
+-        with self.assertRaises(TypeError):ResearchJobs(owner_bindings=lambda:True)
++"""No-binding local tests only: no owner fixture, grant or native PASS."""
++import asyncio
++import hashlib
++import json
++import runpy
++import unittest
++from pathlib import Path
++from unified_system.gateway_jobs import ResearchJobs, JobUnavailable, JobInvalid, prepare_intent
++
++plan = runpy.run_path(str(Path(__file__).parents[1] / 'test_intelligence_gateway.py'))['plan']
++
++def raw(**changes):
++    value = dict(schema='unified.gateway.job-local-preparation.v1',
++                 request_id='11111111-1111-4111-8111-111111111111',
++                 idempotency_key='local-original-key', plan=plan())
++    value.update(changes)
++    return json.dumps(value,sort_keys=True,separators=(',',':'),ensure_ascii=True).encode('ascii')
++
++class ClosedJobs(unittest.IsolatedAsyncioTestCase):
++    async def test_no_binding_never_submits_even_claimed_context(self):
++        for context in (None, True, {'role':'ADMIN','approved':True}, object()):
++            r=await ResearchJobs().submit(raw(),context=context)
++            self.assertEqual(r['status'],'NOT_SUBMITTED')
++            self.assertIsNone(r['job_id']);self.assertFalse(r['effects_authorized'])
++            self.assertEqual(r['request_id'],'11111111-1111-4111-8111-111111111111')
++
++    async def test_lookup_and_reconnect_unknown_preserve_exact_original(self):
++        b=raw()
++        for name in ('lookup','reconnect'):
++            with self.assertRaises(JobUnavailable) as raised:
++                await getattr(ResearchJobs(),name)(b,context=None)
++            e=raised.exception
++            self.assertEqual(e.outcome,'UNKNOWN')
++            self.assertEqual(e.original.raw,b)
++            self.assertEqual(e.original.sha256,hashlib.sha256(b).hexdigest())
++            self.assertEqual(e.original.idempotency_key,'local-original-key')
++
++    async def test_cancel_has_no_supported_codec_or_effective_cancellation(self):
++        with self.assertRaises(JobUnavailable) as raised:
++            await ResearchJobs().cancel(raw(),context={'owner':'admin'})
++        self.assertIsNone(raised.exception.original)
++        self.assertEqual(raised.exception.outcome,'UNKNOWN')
++
++    async def test_status_is_unavailable_not_fabricated_registry(self):
++        with self.assertRaises(JobUnavailable):
++            await ResearchJobs().status('11111111-1111-4111-8111-111111111111',context=None)
++
++    async def test_fresh_composition_reconciliation_never_rekeys_or_retries_submit(self):
++        # New shell instances model loss of local composition, NOT a native restart.
++        original=raw();expected=prepare_intent(original)
++        for shell in (ResearchJobs(),ResearchJobs()):
++            for name in ('lookup','reconnect'):
++                with self.assertRaises(JobUnavailable) as raised:
++                    await getattr(shell,name)(original,context={'claimed_restart':True})
++                self.assertEqual(raised.exception.outcome,'UNKNOWN')
++                self.assertEqual(raised.exception.original,expected)
++                self.assertEqual(raised.exception.original.raw,original)
++        self.assertEqual(expected.sha256,hashlib.sha256(original).hexdigest())
++
++    async def test_cancel_before_and_after_unknown_lookup_does_not_authorize_effect(self):
++        original=raw();shell=ResearchJobs()
++        for i in range(2):
++            with self.assertRaises(JobUnavailable) as cancelled:
++                await shell.cancel(original,context={'cancelled':True,'lease':True})
++            self.assertEqual(cancelled.exception.outcome,'UNKNOWN')
++            self.assertIsNone(cancelled.exception.original)
++            with self.assertRaises(JobUnavailable) as lookup:
++                await shell.lookup(original,context=None)
++            self.assertEqual(lookup.exception.original.raw,original)
++            self.assertEqual(lookup.exception.outcome,'UNKNOWN')
++
++    def test_strict_local_intent_rejects_unapproved_fields_and_identity(self):
++        for b in (raw(owner='admin'),raw(request_id='11111111-1111-4111-8111-111111111111\n'),
++                  raw(idempotency_key='x\n'),raw(schema='production.v1'), b'{"a":1,"a":2}',
++                  b' '*32769, raw()+b' ', raw(plan={})):
++            with self.subTest(raw=b[:50]),self.assertRaises(JobInvalid):prepare_intent(b)
++
++    def test_identity_is_immutable_local_data_not_authority(self):
++        original=prepare_intent(raw())
++        with self.assertRaises(AttributeError):original.request_id='replacement'
++        self.assertEqual(original.raw,raw())
++
++    def test_no_backend_injection_constructor(self):
++        with self.assertRaises(TypeError):ResearchJobs(owner_bindings=lambda:True)
+diff --git a/tests/gateway_jobs/test_owned_attempt.py b/tests/gateway_jobs/test_owned_attempt.py
+index 9f249aa..bc5e88c 100644
+--- a/tests/gateway_jobs/test_owned_attempt.py
++++ b/tests/gateway_jobs/test_owned_attempt.py
+@@ -94,6 +94,12 @@ class NativeOwnedAttempt(unittest.TestCase):
+         with self.assertRaises(WorkerUnavailable):worker.prepare_attempt(different,grid_source_root=GRID)
+         with self.assertRaises(WorkerUnavailable):GatewayWorker.require_owned_attempt(worker,attempt,original_lab13_bytes=different)
+         self.assertEqual(worker.inspect_attempt(attempt).state,'PREPARED_SUSPENDED_LOCAL_ONLY')
++        observation=worker.inspect_attempt(attempt)
++        for claimed in (observation,json.loads(observation.os_observation_json),observation.os_observation_json):
++            for inventory in (worker,foreign):
++                with self.assertRaises(WorkerUnavailable):inventory.inspect_attempt(claimed)
++                with self.assertRaises(WorkerUnavailable):inventory.abort_attempt(claimed)
++        self.assertFalse(json.loads(observation.os_observation_json)['resource_capabilities']['dispatch_authorized'])
+ 
+ def load_tests(loader,tests,pattern):
+     suite=loader.loadTestsFromTestCase(OwnedAttemptBoundary)
+diff --git a/tests/gateway_jobs/test_resource_capabilities.py b/tests/gateway_jobs/test_resource_capabilities.py
+new file mode 100644
+index 0000000..6fccdb0
+--- /dev/null
++++ b/tests/gateway_jobs/test_resource_capabilities.py
+@@ -0,0 +1,27 @@
++"""Local capability disclosure only; unsupported bounds never qualify admission."""
++import json
++from pathlib import Path
++import unittest
++from unified_system.gateway_worker import GatewayWorker
++
++class ResourceCapabilities(unittest.TestCase):
++    def test_all_bounds_explicitly_unsupported_for_admission(self):
++        raw=GatewayWorker.resource_capabilities()
++        self.assertIs(type(raw),bytes)
++        value=json.loads(raw)
++        self.assertEqual(value['admitted_fields'],[])
++        expected={'cpu_millicores','cpu_share','resident_memory_bytes','committed_memory_bytes',
++                  'available_commit_bytes','available_physical_bytes'}
++        self.assertEqual(set(value['unsupported_fields']),expected)
++        self.assertEqual(set(value['fields']),expected)
++        self.assertFalse(value['dispatch_authorized'])
++        for field in value['fields'].values():
++            self.assertEqual(field['admission'],'UNSUPPORTED')
++            self.assertTrue(field['gap'])
++        self.assertEqual(raw,json.dumps(value,sort_keys=True,separators=(',',':')).encode('ascii'))
++        value['admitted_fields'].append('resident_memory_bytes')
++        self.assertEqual(json.loads(GatewayWorker.resource_capabilities())['admitted_fields'],[])
++
++    def test_documented_machine_report_exactly_matches_runtime_disclosure(self):
++        path=Path(__file__).parents[2]/'docs/intelligence/jobs/worker-resource-capabilities.v1.json'
++        self.assertEqual(json.loads(path.read_bytes()),json.loads(GatewayWorker.resource_capabilities()))
+diff --git a/unified_system/gateway_worker.py b/unified_system/gateway_worker.py
+index c7d1186..929a3b9 100644
+--- a/unified_system/gateway_worker.py
++++ b/unified_system/gateway_worker.py
+@@ -214,6 +214,29 @@ class GatewayWorker:
+         self._node=node_id;self._lock=threading.RLock();self._attempts={};self._by_original={};self._keys={};self._originals={};self._active=None;self._poisoned=False
+     def start(self,*args,**kwargs):
+         raise WorkerUnavailable('ACTUAL_DISPATCH_PERMIT_AND_WORKER_PROFILE_UNAVAILABLE')
++    @staticmethod
++    def resource_capabilities():
++        """Canonical local DATA only. No resource is qualified for admission."""
++        fields={
++            'cpu_millicores':dict(admission='UNSUPPORTED',observation='NONE',
++                gap='NATIVE_CPU_RATE_1000_IS_NOT_1000_MILLICORES'),
++            'cpu_share':dict(admission='UNSUPPORTED',observation='JOB_RATE_SET_QUERY_ONLY',
++                native_rate_units='1000',native_rate_denominator='10000',
++                gap='EFFECTIVE_CAPACITY_INHERITED_JOB_AND_LOAD_ENFORCEMENT_UNQUALIFIED'),
++            'resident_memory_bytes':dict(admission='UNSUPPORTED',observation='PROCESS_WORKING_SET_SNAPSHOT_ONLY',
++                gap='JOB_COMMITTED_MEMORY_LIMIT_IS_NOT_RESIDENT_MEMORY_ENFORCEMENT'),
++            'committed_memory_bytes':dict(admission='UNSUPPORTED',observation='JOB_LIMIT_SET_QUERY_ONLY',
++                configured_native_bytes='268435456',
++                gap='PR51_PEAK_EXCEEDS_CONFIGURED_LIMIT_DISCREPANCY_UNRESOLVED'),
++            'available_commit_bytes':dict(admission='UNSUPPORTED',observation='HOST_PREPARATION_SNAPSHOT_ONLY',
++                preparation_refusal_floor_bytes='2952790016',
++                gap='NO_NATIVE_RESERVATION_OR_LOAD_QUALIFIED_FRESHNESS_AND_MARGIN'),
++            'available_physical_bytes':dict(admission='UNSUPPORTED',observation='HOST_PREPARATION_SNAPSHOT_ONLY',
++                preparation_refusal_floor_bytes='1073741824',
++                gap='NO_NATIVE_RESERVATION_OR_CONTINUOUS_MEMORY_PRESSURE_ENFORCEMENT')}
++        return _worker_canonical(dict(schema='unified.gateway.local-worker-resource-capabilities.v1',
++            scope='LOCAL_DIAGNOSTIC_DATA_NOT_AUTHORITY',dispatch_authorized=False,
++            admitted_fields=[],unsupported_fields=sorted(fields),fields=fields))
+     def _record(self,attempt):
+         _worker_need(type(self) is GatewayWorker and type(attempt) is OwnedWorkerAttempt and attempt in self._attempts,'FOREIGN_OWNED_ATTEMPT')
+         return self._attempts[attempt]
+@@ -304,6 +327,7 @@ class GatewayWorker:
+                      native_lease_quota_utc='NOT_GRANTED',private_commit_bytes=str(memory.private_usage),working_set_bytes=str(memory.working_set),
+                      limit_readback=state['limits'],host_observation=_attempt_host(k),grid_source_sha256=_GRID_JOB_SHA,
+                      interpreter_sha256=_DIRECT_INTERPRETER_SHA,source_custody='NOT_QUALIFIED_FOR_RESUME')
++        details['resource_capabilities']=json.loads(GatewayWorker.resource_capabilities())
+         snapshot=OwnedAttemptObservation('PREPARED_SUSPENDED_LOCAL_ONLY',state['rid'],state['digest'],state['job_label'],self._node,
+             _PROCESS_INCARNATION,state['attempt_id'],int(proc.pid),*state['identity'],state['entry_sha'],_worker_canonical(details))
+         state['snapshot']=snapshot;return snapshot
