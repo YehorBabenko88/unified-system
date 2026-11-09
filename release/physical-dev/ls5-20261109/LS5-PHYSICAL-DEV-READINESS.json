@@ -1,0 +1,1296 @@
+{
+  "acl": {
+    "acl_changed": false,
+    "all_five_existing_ancestors_read": true,
+    "candidate_owner": "CURRENT_LOCAL_OPERATOR",
+    "observed_reparse_point": false,
+    "other_local_sandbox_group": "READ_EXECUTE_ONLY",
+    "scope": "PRIVATE_COOPERATING_OWNER_LIFECYCLE_NOT_DEFENSE_AGAINST_PRIVILEGED_OR_SAME_USER_TAMPERING",
+    "write_principals": [
+      "CURRENT_LOCAL_OPERATOR",
+      "SYSTEM",
+      "BUILTIN_ADMINISTRATORS"
+    ]
+  },
+  "backup_rollback": {
+    "disposable_rollback": "STOP_ONLY_OWN_RETAINED_PROCESS_FAMILY_KEEP_EVIDENCE_NO_EXISTING_DATA_DELETE",
+    "existing_data_and_services_touched": false,
+    "production_backup_verified": false,
+    "rollback_implementation": "PENDING_PACKAGE_AND_CONTAINMENT_REVIEW"
+  },
+  "candidate_directory": "C:/Users/LS-5/.codex/native-e2e-evidence-20261109",
+  "consul": {
+    "existing_control_plane_access_performed": false,
+    "processes_observed": [],
+    "use_for_first_smoke": false
+  },
+  "cpu": {
+    "LoadPercentage": 22,
+    "Name": "AMD Ryzen 7 5700G with Radeon Graphics         ",
+    "NumberOfCores": 8,
+    "NumberOfLogicalProcessors": 16
+  },
+  "disposable_package_sha256": null,
+  "execution_policy": [
+    {
+      "policy": "Undefined",
+      "scope": "MachinePolicy"
+    },
+    {
+      "policy": "Undefined",
+      "scope": "UserPolicy"
+    },
+    {
+      "policy": "Undefined",
+      "scope": "Process"
+    },
+    {
+      "policy": "Undefined",
+      "scope": "CurrentUser"
+    },
+    {
+      "policy": "RemoteSigned",
+      "scope": "LocalMachine"
+    }
+  ],
+  "existing_installation_directories": [
+    {
+      "exists": false,
+      "path": "C:/Program Files/Unified"
+    },
+    {
+      "exists": false,
+      "path": "C:/ProgramData/Unified"
+    },
+    {
+      "exists": false,
+      "path": "C:/Unified"
+    },
+    {
+      "exists": true,
+      "path": "C:/Users/LS-5/.codex/native-e2e-evidence-20261109"
+    }
+  ],
+  "existing_services": [
+    {
+      "DisplayName": "postgresql-x64-18 - PostgreSQL Server 18",
+      "Name": "postgresql-x64-18",
+      "ProcessId": 5112,
+      "StartMode": "Auto",
+      "StartName": "NT AUTHORITY\\NetworkService",
+      "State": "Running"
+    },
+    {
+      "DisplayName": "OpenSSH Authentication Agent",
+      "Name": "ssh-agent",
+      "ProcessId": 0,
+      "StartMode": "Disabled",
+      "StartName": "LocalSystem",
+      "State": "Stopped"
+    },
+    {
+      "DisplayName": "OpenSSH SSH Server",
+      "Name": "sshd",
+      "ProcessId": 4180,
+      "StartMode": "Auto",
+      "StartName": "LocalSystem",
+      "State": "Running"
+    },
+    {
+      "DisplayName": "Tailscale",
+      "Name": "Tailscale",
+      "ProcessId": 5660,
+      "StartMode": "Auto",
+      "StartName": "LocalSystem",
+      "State": "Running"
+    }
+  ],
+  "fixed_disks": {
+    "DeviceID": "C:",
+    "FreeSpace": 1593441296384,
+    "Size": 1999291445248
+  },
+  "go_no_go": "IN_PROGRESS / NO-GO",
+  "host_identity": {
+    "domain": "WORKGROUP",
+    "domain_joined": false,
+    "native_identity_admission": "NOT_GRANTED_BY_INVENTORY",
+    "observed_name": "LS5"
+  },
+  "installation_directory_coverage": "NAMED_CONVENTIONAL_PATHS_ONLY_NOT_EXHAUSTIVE",
+  "isolation_review": "PENDING_IMMUTABLE_FRESH_PACKET_HARNESS_AND_SUPERVISOR",
+  "multi_node_physical": "BLOCKED_SEPARATE_SECURITY_ADMISSION",
+  "observed_at_utc": "2026-11-09T19:38:42.3355537Z",
+  "os": {
+    "BuildNumber": "26300",
+    "Caption": "Microsoft Windows 11 Pro",
+    "FreePhysicalMemory": 34573988,
+    "FreeVirtualMemory": 32616912,
+    "LastBootUpTime": "2026-10-30T13:29:02.805165+01:00",
+    "OSArchitecture": "64-Bit",
+    "TotalVirtualMemorySize": 70619784,
+    "Version": "10.0.26300"
+  },
+  "parent_job_observation": {
+    "active_process_limit": 0,
+    "error": 0,
+    "flags": 10240,
+    "full_parent_chain_verified": false,
+    "in_job": true,
+    "innermost_current_job_query_success": true,
+    "job_commit_limit": 0,
+    "process_commit_limit": 0,
+    "query_return_bytes": 144,
+    "read_only": true,
+    "smoke_implication": "NO_BREAKAWAY_OR_PARENT_RECONFIGURATION_NESTED_CONTAINMENT_REVIEW_REQUIRED",
+    "user_cpu_limit_100ns": 0
+  },
+  "physical_memory_bytes": 68019691520,
+  "physical_smoke": "NOT_RUN_BY_THIS_DIRECTIVE_YET",
+  "port_collisions": {
+    "existing_listener_mutation": false,
+    "existing_postgresql_excluded_ports": [
+      55432
+    ],
+    "existing_ssh_excluded_ports": [
+      22
+    ],
+    "new_database_tcp_port_required": false,
+    "render_http": "ONLY_OWN_127_0_0_1_EPHEMERAL_AFTER_PACKAGE_ADMISSION"
+  },
+  "postgresql": {
+    "database_access_performed": false,
+    "listening_ports": [
+      55432
+    ],
+    "service": "postgresql-x64-18",
+    "use_for_smoke": "PROHIBITED"
+  },
+  "process_inventory": [
+    {
+      "CPU": 0.109375,
+      "Id": 79620,
+      "PrivateMemorySize64": 22302720,
+      "ProcessName": "node",
+      "SessionId": 1,
+      "WorkingSet64": 42827776
+    },
+    {
+      "CPU": 0.390625,
+      "Id": 83328,
+      "PrivateMemorySize64": 33484800,
+      "ProcessName": "node",
+      "SessionId": 1,
+      "WorkingSet64": 54087680
+    },
+    {
+      "CPU": 0.21875,
+      "Id": 84524,
+      "PrivateMemorySize64": 31182848,
+      "ProcessName": "node",
+      "SessionId": 1,
+      "WorkingSet64": 51023872
+    },
+    {
+      "CPU": 0.0625,
+      "Id": 94924,
+      "PrivateMemorySize64": 22196224,
+      "ProcessName": "node",
+      "SessionId": 1,
+      "WorkingSet64": 43180032
+    },
+    {
+      "CPU": 0.046875,
+      "Id": 99556,
+      "PrivateMemorySize64": 22351872,
+      "ProcessName": "node",
+      "SessionId": 1,
+      "WorkingSet64": 43339776
+    },
+    {
+      "CPU": 0.46875,
+      "Id": 102672,
+      "PrivateMemorySize64": 33939456,
+      "ProcessName": "node",
+      "SessionId": 1,
+      "WorkingSet64": 54435840
+    },
+    {
+      "CPU": 1.546875,
+      "Id": 105152,
+      "PrivateMemorySize64": 105918464,
+      "ProcessName": "node",
+      "SessionId": 1,
+      "WorkingSet64": 108179456
+    },
+    {
+      "CPU": 0.375,
+      "Id": 105196,
+      "PrivateMemorySize64": 33562624,
+      "ProcessName": "node",
+      "SessionId": 1,
+      "WorkingSet64": 53723136
+    },
+    {
+      "CPU": 0.15625,
+      "Id": 109032,
+      "PrivateMemorySize64": 31567872,
+      "ProcessName": "node",
+      "SessionId": 1,
+      "WorkingSet64": 50761728
+    },
+    {
+      "CPU": 0.703125,
+      "Id": 114148,
+      "PrivateMemorySize64": 33955840,
+      "ProcessName": "node",
+      "SessionId": 1,
+      "WorkingSet64": 57737216
+    },
+    {
+      "CPU": 0.125,
+      "Id": 116452,
+      "PrivateMemorySize64": 22347776,
+      "ProcessName": "node",
+      "SessionId": 1,
+      "WorkingSet64": 43089920
+    },
+    {
+      "CPU": 0.15625,
+      "Id": 116544,
+      "PrivateMemorySize64": 31682560,
+      "ProcessName": "node",
+      "SessionId": 1,
+      "WorkingSet64": 54038528
+    },
+    {
+      "CPU": 0.125,
+      "Id": 120648,
+      "PrivateMemorySize64": 22167552,
+      "ProcessName": "node",
+      "SessionId": 1,
+      "WorkingSet64": 43081728
+    },
+    {
+      "CPU": 0.34375,
+      "Id": 121320,
+      "PrivateMemorySize64": 32694272,
+      "ProcessName": "node",
+      "SessionId": 1,
+      "WorkingSet64": 52432896
+    },
+    {
+      "CPU": 0.265625,
+      "Id": 122672,
+      "PrivateMemorySize64": 31019008,
+      "ProcessName": "node",
+      "SessionId": 1,
+      "WorkingSet64": 50794496
+    },
+    {
+      "CPU": 0.234375,
+      "Id": 124544,
+      "PrivateMemorySize64": 31309824,
+      "ProcessName": "node",
+      "SessionId": 1,
+      "WorkingSet64": 50929664
+    },
+    {
+      "CPU": 0.09375,
+      "Id": 129772,
+      "PrivateMemorySize64": 22118400,
+      "ProcessName": "node",
+      "SessionId": 1,
+      "WorkingSet64": 43122688
+    },
+    {
+      "CPU": 0.140625,
+      "Id": 131436,
+      "PrivateMemorySize64": 22355968,
+      "ProcessName": "node",
+      "SessionId": 1,
+      "WorkingSet64": 43180032
+    },
+    {
+      "CPU": 0.21875,
+      "Id": 131912,
+      "PrivateMemorySize64": 31547392,
+      "ProcessName": "node",
+      "SessionId": 1,
+      "WorkingSet64": 54124544
+    },
+    {
+      "CPU": 0.109375,
+      "Id": 132204,
+      "PrivateMemorySize64": 31399936,
+      "ProcessName": "node",
+      "SessionId": 1,
+      "WorkingSet64": 50745344
+    },
+    {
+      "CPU": 0.0625,
+      "Id": 132472,
+      "PrivateMemorySize64": 22437888,
+      "ProcessName": "node",
+      "SessionId": 1,
+      "WorkingSet64": 43274240
+    },
+    {
+      "CPU": 0.078125,
+      "Id": 132600,
+      "PrivateMemorySize64": 22056960,
+      "ProcessName": "node",
+      "SessionId": 1,
+      "WorkingSet64": 43077632
+    },
+    {
+      "CPU": 0.1875,
+      "Id": 133016,
+      "PrivateMemorySize64": 31256576,
+      "ProcessName": "node",
+      "SessionId": 1,
+      "WorkingSet64": 50995200
+    },
+    {
+      "CPU": 0.09375,
+      "Id": 133160,
+      "PrivateMemorySize64": 22188032,
+      "ProcessName": "node",
+      "SessionId": 1,
+      "WorkingSet64": 43175936
+    },
+    {
+      "CPU": 0.0625,
+      "Id": 134232,
+      "PrivateMemorySize64": 22134784,
+      "ProcessName": "node",
+      "SessionId": 1,
+      "WorkingSet64": 43122688
+    },
+    {
+      "CPU": 0.078125,
+      "Id": 134588,
+      "PrivateMemorySize64": 22122496,
+      "ProcessName": "node",
+      "SessionId": 1,
+      "WorkingSet64": 43085824
+    },
+    {
+      "CPU": 0.0625,
+      "Id": 134896,
+      "PrivateMemorySize64": 22212608,
+      "ProcessName": "node",
+      "SessionId": 1,
+      "WorkingSet64": 46292992
+    },
+    {
+      "CPU": 0.0625,
+      "Id": 135900,
+      "PrivateMemorySize64": 22155264,
+      "ProcessName": "node",
+      "SessionId": 1,
+      "WorkingSet64": 43208704
+    },
+    {
+      "CPU": 0.28125,
+      "Id": 136648,
+      "PrivateMemorySize64": 32505856,
+      "ProcessName": "node",
+      "SessionId": 1,
+      "WorkingSet64": 51474432
+    },
+    {
+      "CPU": 0.109375,
+      "Id": 136924,
+      "PrivateMemorySize64": 22355968,
+      "ProcessName": "node",
+      "SessionId": 1,
+      "WorkingSet64": 43192320
+    },
+    {
+      "CPU": 0.078125,
+      "Id": 137548,
+      "PrivateMemorySize64": 22085632,
+      "ProcessName": "node",
+      "SessionId": 1,
+      "WorkingSet64": 43143168
+    },
+    {
+      "CPU": 0.078125,
+      "Id": 138552,
+      "PrivateMemorySize64": 22290432,
+      "ProcessName": "node",
+      "SessionId": 1,
+      "WorkingSet64": 43180032
+    },
+    {
+      "CPU": 0.078125,
+      "Id": 139300,
+      "PrivateMemorySize64": 22171648,
+      "ProcessName": "node",
+      "SessionId": 1,
+      "WorkingSet64": 46247936
+    },
+    {
+      "CPU": 0.25,
+      "Id": 140372,
+      "PrivateMemorySize64": 31379456,
+      "ProcessName": "node",
+      "SessionId": 1,
+      "WorkingSet64": 53927936
+    },
+    {
+      "CPU": 0.09375,
+      "Id": 140528,
+      "PrivateMemorySize64": 22138880,
+      "ProcessName": "node",
+      "SessionId": 1,
+      "WorkingSet64": 46223360
+    },
+    {
+      "CPU": 0.03125,
+      "Id": 74116,
+      "PrivateMemorySize64": 2809856,
+      "ProcessName": "node_repl",
+      "SessionId": 1,
+      "WorkingSet64": 11558912
+    },
+    {
+      "CPU": 0.046875,
+      "Id": 78992,
+      "PrivateMemorySize64": 3416064,
+      "ProcessName": "node_repl",
+      "SessionId": 1,
+      "WorkingSet64": 12103680
+    },
+    {
+      "CPU": 0.078125,
+      "Id": 80768,
+      "PrivateMemorySize64": 3518464,
+      "ProcessName": "node_repl",
+      "SessionId": 1,
+      "WorkingSet64": 12132352
+    },
+    {
+      "CPU": 0.015625,
+      "Id": 91852,
+      "PrivateMemorySize64": 2748416,
+      "ProcessName": "node_repl",
+      "SessionId": 1,
+      "WorkingSet64": 11739136
+    },
+    {
+      "CPU": 0.0625,
+      "Id": 97348,
+      "PrivateMemorySize64": 2891776,
+      "ProcessName": "node_repl",
+      "SessionId": 1,
+      "WorkingSet64": 11886592
+    },
+    {
+      "CPU": 0.046875,
+      "Id": 99756,
+      "PrivateMemorySize64": 3182592,
+      "ProcessName": "node_repl",
+      "SessionId": 1,
+      "WorkingSet64": 12148736
+    },
+    {
+      "CPU": 0.03125,
+      "Id": 104640,
+      "PrivateMemorySize64": 3284992,
+      "ProcessName": "node_repl",
+      "SessionId": 1,
+      "WorkingSet64": 12247040
+    },
+    {
+      "CPU": 0.0,
+      "Id": 105532,
+      "PrivateMemorySize64": 2732032,
+      "ProcessName": "node_repl",
+      "SessionId": 1,
+      "WorkingSet64": 11722752
+    },
+    {
+      "CPU": 0.015625,
+      "Id": 105536,
+      "PrivateMemorySize64": 3543040,
+      "ProcessName": "node_repl",
+      "SessionId": 1,
+      "WorkingSet64": 12161024
+    },
+    {
+      "CPU": 0.015625,
+      "Id": 105900,
+      "PrivateMemorySize64": 2789376,
+      "ProcessName": "node_repl",
+      "SessionId": 1,
+      "WorkingSet64": 11587584
+    },
+    {
+      "CPU": 0.0,
+      "Id": 107188,
+      "PrivateMemorySize64": 3067904,
+      "ProcessName": "node_repl",
+      "SessionId": 1,
+      "WorkingSet64": 12070912
+    },
+    {
+      "CPU": 0.015625,
+      "Id": 109988,
+      "PrivateMemorySize64": 2727936,
+      "ProcessName": "node_repl",
+      "SessionId": 1,
+      "WorkingSet64": 11722752
+    },
+    {
+      "CPU": 0.09375,
+      "Id": 110072,
+      "PrivateMemorySize64": 3559424,
+      "ProcessName": "node_repl",
+      "SessionId": 1,
+      "WorkingSet64": 12173312
+    },
+    {
+      "CPU": 0.015625,
+      "Id": 111812,
+      "PrivateMemorySize64": 2752512,
+      "ProcessName": "node_repl",
+      "SessionId": 1,
+      "WorkingSet64": 11739136
+    },
+    {
+      "CPU": 0.015625,
+      "Id": 113984,
+      "PrivateMemorySize64": 2789376,
+      "ProcessName": "node_repl",
+      "SessionId": 1,
+      "WorkingSet64": 11796480
+    },
+    {
+      "CPU": 0.03125,
+      "Id": 115588,
+      "PrivateMemorySize64": 2752512,
+      "ProcessName": "node_repl",
+      "SessionId": 1,
+      "WorkingSet64": 11542528
+    },
+    {
+      "CPU": 0.046875,
+      "Id": 116068,
+      "PrivateMemorySize64": 2756608,
+      "ProcessName": "node_repl",
+      "SessionId": 1,
+      "WorkingSet64": 11755520
+    },
+    {
+      "CPU": 0.015625,
+      "Id": 116116,
+      "PrivateMemorySize64": 3518464,
+      "ProcessName": "node_repl",
+      "SessionId": 1,
+      "WorkingSet64": 12152832
+    },
+    {
+      "CPU": 0.0,
+      "Id": 116244,
+      "PrivateMemorySize64": 2813952,
+      "ProcessName": "node_repl",
+      "SessionId": 1,
+      "WorkingSet64": 11829248
+    },
+    {
+      "CPU": 0.015625,
+      "Id": 117232,
+      "PrivateMemorySize64": 3518464,
+      "ProcessName": "node_repl",
+      "SessionId": 1,
+      "WorkingSet64": 12148736
+    },
+    {
+      "CPU": 0.09375,
+      "Id": 117324,
+      "PrivateMemorySize64": 3313664,
+      "ProcessName": "node_repl",
+      "SessionId": 1,
+      "WorkingSet64": 12279808
+    },
+    {
+      "CPU": 0.0625,
+      "Id": 119532,
+      "PrivateMemorySize64": 3203072,
+      "ProcessName": "node_repl",
+      "SessionId": 1,
+      "WorkingSet64": 12210176
+    },
+    {
+      "CPU": 0.015625,
+      "Id": 120564,
+      "PrivateMemorySize64": 2764800,
+      "ProcessName": "node_repl",
+      "SessionId": 1,
+      "WorkingSet64": 11751424
+    },
+    {
+      "CPU": 0.046875,
+      "Id": 121460,
+      "PrivateMemorySize64": 2781184,
+      "ProcessName": "node_repl",
+      "SessionId": 1,
+      "WorkingSet64": 11591680
+    },
+    {
+      "CPU": 0.03125,
+      "Id": 122196,
+      "PrivateMemorySize64": 3493888,
+      "ProcessName": "node_repl",
+      "SessionId": 1,
+      "WorkingSet64": 12066816
+    },
+    {
+      "CPU": 0.015625,
+      "Id": 124340,
+      "PrivateMemorySize64": 3235840,
+      "ProcessName": "node_repl",
+      "SessionId": 1,
+      "WorkingSet64": 12247040
+    },
+    {
+      "CPU": 0.0625,
+      "Id": 126344,
+      "PrivateMemorySize64": 3571712,
+      "ProcessName": "node_repl",
+      "SessionId": 1,
+      "WorkingSet64": 12165120
+    },
+    {
+      "CPU": 0.0,
+      "Id": 128040,
+      "PrivateMemorySize64": 2736128,
+      "ProcessName": "node_repl",
+      "SessionId": 1,
+      "WorkingSet64": 11726848
+    },
+    {
+      "CPU": 0.015625,
+      "Id": 131764,
+      "PrivateMemorySize64": 2908160,
+      "ProcessName": "node_repl",
+      "SessionId": 1,
+      "WorkingSet64": 11894784
+    },
+    {
+      "CPU": 0.046875,
+      "Id": 132176,
+      "PrivateMemorySize64": 3448832,
+      "ProcessName": "node_repl",
+      "SessionId": 1,
+      "WorkingSet64": 12111872
+    },
+    {
+      "CPU": 0.015625,
+      "Id": 132752,
+      "PrivateMemorySize64": 3780608,
+      "ProcessName": "node_repl",
+      "SessionId": 1,
+      "WorkingSet64": 12242944
+    },
+    {
+      "CPU": 0.046875,
+      "Id": 133180,
+      "PrivateMemorySize64": 3526656,
+      "ProcessName": "node_repl",
+      "SessionId": 1,
+      "WorkingSet64": 12165120
+    },
+    {
+      "CPU": 0.0625,
+      "Id": 133348,
+      "PrivateMemorySize64": 3440640,
+      "ProcessName": "node_repl",
+      "SessionId": 1,
+      "WorkingSet64": 12120064
+    },
+    {
+      "CPU": 0.078125,
+      "Id": 133376,
+      "PrivateMemorySize64": 3002368,
+      "ProcessName": "node_repl",
+      "SessionId": 1,
+      "WorkingSet64": 12005376
+    },
+    {
+      "CPU": 0.015625,
+      "Id": 133832,
+      "PrivateMemorySize64": 2822144,
+      "ProcessName": "node_repl",
+      "SessionId": 1,
+      "WorkingSet64": 11816960
+    },
+    {
+      "CPU": 0.03125,
+      "Id": 134028,
+      "PrivateMemorySize64": 2740224,
+      "ProcessName": "node_repl",
+      "SessionId": 1,
+      "WorkingSet64": 11735040
+    },
+    {
+      "CPU": 0.015625,
+      "Id": 134104,
+      "PrivateMemorySize64": 2781184,
+      "ProcessName": "node_repl",
+      "SessionId": 1,
+      "WorkingSet64": 11771904
+    },
+    {
+      "CPU": 0.078125,
+      "Id": 134196,
+      "PrivateMemorySize64": 3395584,
+      "ProcessName": "node_repl",
+      "SessionId": 1,
+      "WorkingSet64": 12091392
+    },
+    {
+      "CPU": 0.046875,
+      "Id": 134272,
+      "PrivateMemorySize64": 3452928,
+      "ProcessName": "node_repl",
+      "SessionId": 1,
+      "WorkingSet64": 12058624
+    },
+    {
+      "CPU": 0.0625,
+      "Id": 134404,
+      "PrivateMemorySize64": 3162112,
+      "ProcessName": "node_repl",
+      "SessionId": 1,
+      "WorkingSet64": 12161024
+    },
+    {
+      "CPU": 0.0,
+      "Id": 134828,
+      "PrivateMemorySize64": 3153920,
+      "ProcessName": "node_repl",
+      "SessionId": 1,
+      "WorkingSet64": 12107776
+    },
+    {
+      "CPU": 0.03125,
+      "Id": 134904,
+      "PrivateMemorySize64": 2977792,
+      "ProcessName": "node_repl",
+      "SessionId": 1,
+      "WorkingSet64": 11984896
+    },
+    {
+      "CPU": 0.03125,
+      "Id": 134976,
+      "PrivateMemorySize64": 3526656,
+      "ProcessName": "node_repl",
+      "SessionId": 1,
+      "WorkingSet64": 12066816
+    },
+    {
+      "CPU": 0.015625,
+      "Id": 135016,
+      "PrivateMemorySize64": 2723840,
+      "ProcessName": "node_repl",
+      "SessionId": 1,
+      "WorkingSet64": 11706368
+    },
+    {
+      "CPU": 0.0625,
+      "Id": 135068,
+      "PrivateMemorySize64": 3248128,
+      "ProcessName": "node_repl",
+      "SessionId": 1,
+      "WorkingSet64": 12197888
+    },
+    {
+      "CPU": 0.03125,
+      "Id": 135272,
+      "PrivateMemorySize64": 2920448,
+      "ProcessName": "node_repl",
+      "SessionId": 1,
+      "WorkingSet64": 11931648
+    },
+    {
+      "CPU": 0.046875,
+      "Id": 135300,
+      "PrivateMemorySize64": 2748416,
+      "ProcessName": "node_repl",
+      "SessionId": 1,
+      "WorkingSet64": 11747328
+    },
+    {
+      "CPU": 0.0625,
+      "Id": 135736,
+      "PrivateMemorySize64": 3387392,
+      "ProcessName": "node_repl",
+      "SessionId": 1,
+      "WorkingSet64": 12029952
+    },
+    {
+      "CPU": 0.0625,
+      "Id": 136256,
+      "PrivateMemorySize64": 2699264,
+      "ProcessName": "node_repl",
+      "SessionId": 1,
+      "WorkingSet64": 11698176
+    },
+    {
+      "CPU": 0.015625,
+      "Id": 136344,
+      "PrivateMemorySize64": 2945024,
+      "ProcessName": "node_repl",
+      "SessionId": 1,
+      "WorkingSet64": 11939840
+    },
+    {
+      "CPU": 0.03125,
+      "Id": 136472,
+      "PrivateMemorySize64": 3502080,
+      "ProcessName": "node_repl",
+      "SessionId": 1,
+      "WorkingSet64": 12095488
+    },
+    {
+      "CPU": 0.09375,
+      "Id": 136544,
+      "PrivateMemorySize64": 3629056,
+      "ProcessName": "node_repl",
+      "SessionId": 1,
+      "WorkingSet64": 12218368
+    },
+    {
+      "CPU": 0.03125,
+      "Id": 137752,
+      "PrivateMemorySize64": 2744320,
+      "ProcessName": "node_repl",
+      "SessionId": 1,
+      "WorkingSet64": 11726848
+    },
+    {
+      "CPU": 0.046875,
+      "Id": 138048,
+      "PrivateMemorySize64": 3739648,
+      "ProcessName": "node_repl",
+      "SessionId": 1,
+      "WorkingSet64": 12197888
+    },
+    {
+      "CPU": 0.03125,
+      "Id": 139148,
+      "PrivateMemorySize64": 2785280,
+      "ProcessName": "node_repl",
+      "SessionId": 1,
+      "WorkingSet64": 11784192
+    },
+    {
+      "CPU": null,
+      "Id": 6916,
+      "PrivateMemorySize64": 4489216,
+      "ProcessName": "postgres",
+      "SessionId": 0,
+      "WorkingSet64": 26300416
+    },
+    {
+      "CPU": null,
+      "Id": 7184,
+      "PrivateMemorySize64": 2744320,
+      "ProcessName": "postgres",
+      "SessionId": 0,
+      "WorkingSet64": 11128832
+    },
+    {
+      "CPU": null,
+      "Id": 7416,
+      "PrivateMemorySize64": 3129344,
+      "ProcessName": "postgres",
+      "SessionId": 0,
+      "WorkingSet64": 11878400
+    },
+    {
+      "CPU": null,
+      "Id": 7444,
+      "PrivateMemorySize64": 3100672,
+      "ProcessName": "postgres",
+      "SessionId": 0,
+      "WorkingSet64": 11255808
+    },
+    {
+      "CPU": null,
+      "Id": 7476,
+      "PrivateMemorySize64": 3108864,
+      "ProcessName": "postgres",
+      "SessionId": 0,
+      "WorkingSet64": 11149312
+    },
+    {
+      "CPU": null,
+      "Id": 7504,
+      "PrivateMemorySize64": 4206592,
+      "ProcessName": "postgres",
+      "SessionId": 0,
+      "WorkingSet64": 13049856
+    },
+    {
+      "CPU": null,
+      "Id": 7536,
+      "PrivateMemorySize64": 3133440,
+      "ProcessName": "postgres",
+      "SessionId": 0,
+      "WorkingSet64": 12476416
+    },
+    {
+      "CPU": null,
+      "Id": 7824,
+      "PrivateMemorySize64": 3141632,
+      "ProcessName": "postgres",
+      "SessionId": 0,
+      "WorkingSet64": 15466496
+    },
+    {
+      "CPU": null,
+      "Id": 7832,
+      "PrivateMemorySize64": 3653632,
+      "ProcessName": "postgres",
+      "SessionId": 0,
+      "WorkingSet64": 11948032
+    },
+    {
+      "CPU": null,
+      "Id": 7856,
+      "PrivateMemorySize64": 3649536,
+      "ProcessName": "postgres",
+      "SessionId": 0,
+      "WorkingSet64": 11767808
+    },
+    {
+      "CPU": null,
+      "Id": 4180,
+      "PrivateMemorySize64": 2686976,
+      "ProcessName": "sshd",
+      "SessionId": 0,
+      "WorkingSet64": 9347072
+    },
+    {
+      "CPU": null,
+      "Id": 5660,
+      "PrivateMemorySize64": 62799872,
+      "ProcessName": "tailscaled",
+      "SessionId": 0,
+      "WorkingSet64": 81084416
+    },
+    {
+      "CPU": null,
+      "Id": 7260,
+      "PrivateMemorySize64": 104693760,
+      "ProcessName": "tailscaled",
+      "SessionId": 0,
+      "WorkingSet64": 110178304
+    }
+  ],
+  "process_security": {
+    "effective_administrator": false,
+    "elevated": false,
+    "elevation_type": 3,
+    "observed_token": "LIMITED_NON_ELEVATED",
+    "separate_child_token_must_be_rechecked": true
+  },
+  "production_credentials_or_exchange_requests": false,
+  "proposed_smoke_budget": {
+    "active_process_limit": 16,
+    "budget_status": "PROPOSED_NOT_YET_IMPLEMENTED_OR_ADMITTED",
+    "captured_stdout_stderr_bytes": 16384,
+    "cpu_rate_or_worker_resource_qualification": false,
+    "dataset_rows": 3,
+    "families": 1,
+    "job_committed_memory_bytes": 1073741824,
+    "job_total_user_cpu_seconds": 10,
+    "process_committed_memory_bytes": 536870912,
+    "target_executions": 1,
+    "wall_watchdog_seconds": 30
+  },
+  "public_submit": "DENY",
+  "raw_original_evidence": {
+    "LS5-ACL-ANCESTORS.readonly.json": {
+      "bytes": 8473,
+      "sha256": "de65f341973cec2f99e927c969f82ece2ecca5c2a1e2af3f4ee4814bcb035f6c"
+    },
+    "LS5-APPLICATION-CANDIDATES.readonly.json": {
+      "bytes": 673,
+      "sha256": "48efb8ced78f1ae8f09afeaa75140fe6bf54062025f15e624a3a953df8ed8bae"
+    },
+    "LS5-CURRENT-JOB-LIMITS.readonly.json": {
+      "bytes": 295,
+      "sha256": "60381eb5907c2ea86052e70ffeaf66bcf3b4f4d0b8c739c8a2a1b7f0a1f80ebb"
+    },
+    "LS5-EXECUTION-POLICY.readonly.json": {
+      "bytes": 341,
+      "sha256": "075221a2f2764625fa63a4f8ff10052dc4c64efe5b9a6dfa26e2c5fd6782c81d"
+    },
+    "LS5-PARENT-JOB.readonly.json": {
+      "bytes": 259,
+      "sha256": "a1ed7740ab4786bfa61ddeafcca313128149973bc87e2b2751d7375da309760e"
+    },
+    "LS5-PHYSICAL-DEV-READINESS.raw.json": {
+      "bytes": 26605,
+      "sha256": "7ca16d2f6563fd452629729b1a36fe3d91e28633172dc17f72a78fb51d2c1e1d"
+    },
+    "LS5-PROCESS-TOKEN.readonly.json": {
+      "bytes": 47,
+      "sha256": "00d72be0e0464ac3649336bd80b1041955e2eef0542c878b8079eb986a468636"
+    },
+    "LS5-SECURITY-READONLY.json": {
+      "bytes": 857,
+      "sha256": "c4e24291c66f2f13eb385c3a731ca12a5516c642c7021e12422f443b9cd4a496"
+    },
+    "LS5-TAILSCALE.readonly.json": {
+      "bytes": 440,
+      "sha256": "0076894dc675bf11d3a3c4a7a8cdaa1664405be08e60bcde0f8cc37efe9ea729"
+    }
+  },
+  "read_only_inventory": "COMPLETED",
+  "readiness_outcome": "READ_ONLY_BASELINE_COMPLETED_EXECUTION_GATE_STILL_PENDING",
+  "running_application_attribution": "CANDIDATE_COMMANDLINE_TERMS_ONLY_NO_RAW_COMMANDLINES_RETAINED_NOT_NATIVE_IDENTITY",
+  "schema": "unified.ls5.physical-dev.readiness.v1",
+  "security_services_observed": [
+    {
+      "Name": "BFE",
+      "StartType": 2,
+      "Status": 4
+    },
+    {
+      "Name": "MpsSvc",
+      "StartType": 2,
+      "Status": 4
+    },
+    {
+      "Name": "WdNisSvc",
+      "StartType": 3,
+      "Status": 4
+    },
+    {
+      "Name": "WinDefend",
+      "StartType": 2,
+      "Status": 4
+    }
+  ],
+  "source_baseline": {
+    "meta_analyse": "f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1",
+    "strattester": "aed8a7c8a952f96803c207d5e90b133969a47f04",
+    "terminan_render_baseline": "22e6e7230d2f66fd22dda648a77910579812bd60",
+    "unified": "ba2b1cec0c2b114586afb73696e282117eede987"
+  },
+  "ssh": {
+    "authentication_test": "NOT_RUN_THIS_READINESS",
+    "client_version": "OpenSSH_for_Windows_9.5p2",
+    "known_hosts_sha256": "7bfcff98d0ec28cf23a7e2782ac26ce0a3024520fd60822f25de063e83f0233b",
+    "port": 22,
+    "server": "RUNNING"
+  },
+  "system_policies_services_firewall_eset_tailscale_changed": false,
+  "tailscale": {
+    "backend_state": "Running",
+    "office_peers": [
+      {
+        "hostname": "PC1",
+        "online": true
+      },
+      {
+        "hostname": "LS7",
+        "online": true
+      },
+      {
+        "hostname": "PC2",
+        "online": true
+      },
+      {
+        "hostname": "PC4",
+        "online": true
+      },
+      {
+        "hostname": "PC3",
+        "online": true
+      }
+    ],
+    "self": {
+      "hostname": "LS5",
+      "online": true
+    }
+  },
+  "tcp_listener_inventory": [
+    {
+      "LocalAddress": "::",
+      "LocalPort": 61234,
+      "OwningProcess": 7572
+    },
+    {
+      "LocalAddress": "::",
+      "LocalPort": 55432,
+      "OwningProcess": 6916
+    },
+    {
+      "LocalAddress": "::",
+      "LocalPort": 49674,
+      "OwningProcess": 1676
+    },
+    {
+      "LocalAddress": "::",
+      "LocalPort": 49668,
+      "OwningProcess": 4712
+    },
+    {
+      "LocalAddress": "::",
+      "LocalPort": 49667,
+      "OwningProcess": 3048
+    },
+    {
+      "LocalAddress": "::",
+      "LocalPort": 49666,
+      "OwningProcess": 2392
+    },
+    {
+      "LocalAddress": "::",
+      "LocalPort": 49665,
+      "OwningProcess": 1536
+    },
+    {
+      "LocalAddress": "::",
+      "LocalPort": 49664,
+      "OwningProcess": 1704
+    },
+    {
+      "LocalAddress": "::1",
+      "LocalPort": 42050,
+      "OwningProcess": 91884
+    },
+    {
+      "LocalAddress": "fd7a:115c:a1e0::2431:a06f",
+      "LocalPort": 38549,
+      "OwningProcess": 7260
+    },
+    {
+      "LocalAddress": "::",
+      "LocalPort": 21077,
+      "OwningProcess": 14708
+    },
+    {
+      "LocalAddress": "::",
+      "LocalPort": 7680,
+      "OwningProcess": 22488
+    },
+    {
+      "LocalAddress": "::",
+      "LocalPort": 5357,
+      "OwningProcess": 4
+    },
+    {
+      "LocalAddress": "::",
+      "LocalPort": 445,
+      "OwningProcess": 4
+    },
+    {
+      "LocalAddress": "::",
+      "LocalPort": 135,
+      "OwningProcess": 2012
+    },
+    {
+      "LocalAddress": "::",
+      "LocalPort": 22,
+      "OwningProcess": 4180
+    },
+    {
+      "LocalAddress": "127.0.0.1",
+      "LocalPort": 62783,
+      "OwningProcess": 7572
+    },
+    {
+      "LocalAddress": "100.103.160.110",
+      "LocalPort": 62465,
+      "OwningProcess": 7260
+    },
+    {
+      "LocalAddress": "0.0.0.0",
+      "LocalPort": 61234,
+      "OwningProcess": 7572
+    },
+    {
+      "LocalAddress": "0.0.0.0",
+      "LocalPort": 55432,
+      "OwningProcess": 6916
+    },
+    {
+      "LocalAddress": "0.0.0.0",
+      "LocalPort": 49674,
+      "OwningProcess": 1676
+    },
+    {
+      "LocalAddress": "0.0.0.0",
+      "LocalPort": 49668,
+      "OwningProcess": 4712
+    },
+    {
+      "LocalAddress": "0.0.0.0",
+      "LocalPort": 49667,
+      "OwningProcess": 3048
+    },
+    {
+      "LocalAddress": "0.0.0.0",
+      "LocalPort": 49666,
+      "OwningProcess": 2392
+    },
+    {
+      "LocalAddress": "0.0.0.0",
+      "LocalPort": 49665,
+      "OwningProcess": 1536
+    },
+    {
+      "LocalAddress": "0.0.0.0",
+      "LocalPort": 49664,
+      "OwningProcess": 1704
+    },
+    {
+      "LocalAddress": "0.0.0.0",
+      "LocalPort": 33333,
+      "OwningProcess": 7572
+    },
+    {
+      "LocalAddress": "0.0.0.0",
+      "LocalPort": 21077,
+      "OwningProcess": 14708
+    },
+    {
+      "LocalAddress": "127.0.0.1",
+      "LocalPort": 5939,
+      "OwningProcess": 18564
+    },
+    {
+      "LocalAddress": "0.0.0.0",
+      "LocalPort": 5040,
+      "OwningProcess": 8212
+    },
+    {
+      "LocalAddress": "192.168.2.173",
+      "LocalPort": 139,
+      "OwningProcess": 4
+    },
+    {
+      "LocalAddress": "100.103.160.110",
+      "LocalPort": 139,
+      "OwningProcess": 4
+    },
+    {
+      "LocalAddress": "0.0.0.0",
+      "LocalPort": 135,
+      "OwningProcess": 2012
+    },
+    {
+      "LocalAddress": "0.0.0.0",
+      "LocalPort": 22,
+      "OwningProcess": 4180
+    }
+  ]
+}
