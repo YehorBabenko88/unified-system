@@ -1,56 +1,50 @@
 # Pure package integrity implementation ledger
 
-Base: `ba2b1cec0c2b114586afb73696e282117eede987`.
-Owned files: `tools/physical_dev/package.py`,
-`tests/physical_dev/test_package.py`, and this plan. Root owns physical execution.
+Base: ba2b1cec0c2b114586afb73696e282117eede987.
+Owned: tools/physical_dev/package.py, tests/physical_dev/test_package.py, this plan.
+Root owns execution and independently reviews/imports compatible source.
+Executing-plans and TDD skills applied to the package-only Root plan task.
 
-I am using the executing-plans skill for the bounded package portion of Root's
-LS5 physical development plan. The owner directive does not grant this library
-runtime, native-worker or physical-test authority.
-
-- [x] RED: snapshot closure, namespace and identity/size mutations.
-- [x] Implement snapshot with hard file/count/byte bounds and guarded local paths.
-- [x] RED: external digest, canonical closed manifest and descriptive metadata.
-- [x] Implement in-memory manifest creation and data-only verification.
-- [x] Exact isolated focused suite; preserve all RED/intermediate logs.
-- [ ] Commit, fresh exact source/test receipt, push owned branch and Draft PR.
+- [x] RED for missing library and namespace/root failures; retain originals.
+- [x] Bounded file snapshot with hidden files and pre/post identity checks.
+- [x] Closed canonical manifest generation and external-SHA verification.
+- [x] Source metadata explicitly descriptive; every authority flag fixed false.
+- [x] Focused CPython3.12.10 -I -S -B tests: 24 PASS, zero skips.
+- [ ] Fresh exact-source inventory and focused isolated process verification.
+- [ ] Push owned branch and Draft PR; no merge or physical execution.
 - [ ] Independent Root review before import or any physical action.
 
-Ruling: manifest bytes are returned in memory and supplied externally to verify,
-not written inside the package â€” self-containing digests cannot pin their own
-bytes. Every on-disk file under root, including hidden files, is a package member.
-Empty directories are checked for path/alias/reparse safety but are not file
-manifest entries; file-only closure does not attest empty-directory inventory.
+Ruling: manifest bytes are returned in memory and supplied externally to verify.
+They belong outside package root because self-containing digest closure is not
+possible. Every on-disk file, including hidden files, is a member. Empty
+directories are namespace-checked but not represented in this file-only manifest;
+verification does not attest an empty-directory inventory.
 
-Ruling: source metadata has closed descriptive fields `description`, `sources`
-(name/repository/commit/tree), and `dependencies` (name/version). Valid SHA syntax
-does not establish Git provenance, approved origins, dependency trust or consent.
-Root must separately admit exact sources/tooling. Fixed public submit DENY and
-runtime/physical authorization false are checked, never derived from model data.
+Ruling: source_metadata has closed fields description, sources (name/repository/
+commit/tree), dependencies (name/version). Syntax-valid pins do not establish
+Git provenance, approved origins, dependency trust or execution consent. Root
+must separately admit actual sources/tooling. Fixed public_submit DENY,
+runtime_admission false, physical_execution_authorization false remain checked.
 
-Ruling: default/hard ceilings are 20000 files, 1 GiB total content, 1024 path
-characters, 255 characters per component, 8 MiB manifest bytes, 64 KiB metadata,
-32 descriptive sources and 128 dependencies. Callers may reduce snapshot limits.
-Count/size integers reject bool. Portable path checks reject traversal, drive/
-backslash/controls, Win32 aliases/device names and casefold or normalization
-aliases. Namespace directory visits are also bounded to prevent empty-tree walks.
+Ruling: ceilings are 20000 files, 20000 directories, 1GiB content, 4096 absolute
+path characters, 1024 relative path characters, 255 per component, 8MiB manifest,
+64KiB metadata, 32 sources and 128 dependencies. Snapshot limits may reduce
+file/byte ceilings. Bool is not an integer. Relative namespaces reject traversal,
+drive/backslash/controls, Unicode surrogates/normalization aliases, Win32
+aliases/device names and casefold collisions at file and directory prefixes.
 
-Ruling: stat/open/fstat and post-read identity/size/time comparisons detect ordinary
-concurrent modification. They do not prove hostile-parent exclusion, immutable
-filesystem semantics, private ACLs or atomic protection against an administrator.
-No ACL changes, process execution, network, installer or production operation is
-provided. Tests touch owned temporary fixtures only, without broad disk walks.
+Ruling: stat/open/fstat and final namespace snapshots detect ordinary mutation,
+identity replacement and concurrent growth/content change. Windows DirEntry.stat
+can supply zero link/inode fields, so Path.lstat supplies actual namespace data.
+Retained own-fixture probes found pathname and descriptor ctime can differ while
+identity/size/mtime match. These latter fields must agree across APIs; full ctime
+is still compared before/after within each API. No hostile-parent atomicity,
+private ACL, immutable filesystem, administrator containment or native worker
+admission is claimed. No copying, process/network/installer or ACL operations.
 
-
-Verification ledger: 23 focused CPython 3.12.10 `-I -S -B` tests PASS with
-zero skips. RED missing-library import, namespace aliases and surrogate paths
-were observed before implementation/fixes; every intermediate failure is retained
-outside the source tree under physical-package-evidence-20261109.
-
-Ruling: Windows `DirEntry.stat` can report zero link/inode fields, so actual
-Path.lstat data supplies namespace identity. A retained own-fixture probe found
-pathname and descriptor ctime differ while identity/size/mtime match. Those
-fields must agree across APIs; full ctime is still checked before/after within
-each API. No native timestamp or reparse qualification is inferred from a mocked
-metadata control. Actual hardlink fixtures are tested; the symlink test uses a
-real symlink when available and an explicit metadata guard control otherwise.
+Qualification: actual hardlink fixtures are tested. Symlink tests use a real
+symlink when available and an explicit metadata-control fallback otherwise;
+that control is not native reparse qualification. No physical smoke is started.
+All failed runs/probes are retained in external physical-package-evidence-20261109.
+A documentation update encountered Windows default text encoding; this plan is
+rewritten as explicit UTF-8 ASCII. Source/test bytes were unaffected by that error.
