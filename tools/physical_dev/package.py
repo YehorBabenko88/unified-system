@@ -116,10 +116,11 @@ def _hash_file(path,expected):
     descriptor=os.open(path,os.O_RDONLY|getattr(os,"O_BINARY",0)|getattr(os,"O_NOFOLLOW",0))
     try:
         held=os.fstat(descriptor);_ordinary(held,"file");held_before=_signature(held)
-        # Windows pathname/descriptor ctime can use different timestamp
-        # semantics. Compare identity/size/mtime across APIs, and retain full
-        # before/after comparisons within each API (including its own ctime).
-        _need(held_before[:6]==expected[:6])
+        # Windows pathname/descriptor ctime and filename-derived execute bits
+        # can differ. Require the same file type plus identity/link/size/mtime
+        # across APIs, and retain full mode/ctime stability within each API.
+        _need(stat.S_IFMT(held_before[2])==stat.S_IFMT(expected[2]))
+        _need(all(held_before[index]==expected[index] for index in (0,1,3,4,5)))
         size=expected[4];count=0;digest=hashlib.sha256()
         while True:
             chunk=os.read(descriptor,min(65536,size-count+1))
