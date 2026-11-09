@@ -1,0 +1,18 @@
+{
+  "schema": "unified.native-negative.ownership.v1",
+  "ROOT": [
+    "unified_system/gateway_native_negative.py",
+    "tests/gateway_native_negative/**",
+    "docs/intelligence/native-negative/**",
+    "release/integration/native-negative-v1/**",
+    ".github/workflows/gateway-native-negative.yml",
+    "docs/superpowers/plans/2026-11-09-native-negative-composition.md"
+  ],
+  "A2_UNCHANGED": [
+    "unified_system/gateway_research_identity.py",
+    "Grid grid/authority_assignment_v1.py and existing authority"
+  ],
+  "A4_A5_A6_A7": "NO_SHARED_FILES_CHANGED",
+  "api_changes": "EXPLICIT_OWNER_COACK_REQUIRED",
+  "runtime_admission": false
+}
