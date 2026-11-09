@@ -338,5 +338,20 @@
     "correction_head": "bcfa243b6ecb5389270152612217f8d89643a248",
     "correction_tree": "5df31e286a0ae4ed21832c19387b22ad6bd1ef08",
     "correction_evidence": "phase89/bcfa-focused-receipt.json; phase89/bcfa-focused.stderr.log"
+  },
+  {
+    "id": "A8-F21",
+    "severity": "P2",
+    "repository": "unified-system",
+    "pr": 54,
+    "observed_head": "8dc717ab85681d71711783df3ff11bfa8d9a2d87",
+    "title": "Owned SQLite acceptance observer accepts sibling paths through substring matching",
+    "status": "FIX_VERIFIED_OFFLINE_AT_a84eabb",
+    "evidence": "phase101/observer-negative.stdout.json; phase101/observer-negative-executed.py",
+    "required_correction": "Exact DB path/readonly URI allowlist with positive SELECT calibration and sibling/dotdot/URI negatives before open.",
+    "correction_head": "a84eabb533865f6a422a03bf096222ee51052e8f",
+    "correction_tree": "0b064c8291cb4030e0a4a97ca3296b69883576a6",
+    "correction_evidence": "phase101/correction-focused-receipt.json; phase101/correction-own1.stderr.log",
+    "scope": "TEST_ORACLE_NOT_PRODUCTION_EXTERNAL_WRITE_OR_AUTH_BYPASS"
   }
 ]

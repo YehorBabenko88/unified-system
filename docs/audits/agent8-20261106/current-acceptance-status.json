@@ -1,5 +1,5 @@
 {
-  "checked_utc": "2026-11-07T17:40:26.799042+00:00",
+  "checked_utc": "2026-11-09T14:12:08.483712+00:00",
   "RELEASE_MANIFEST_STATUS": "PRESENT_PREPARATION_ONLY_NOT_APPROVED_NOT_INSTALLABLE",
   "NODE_INVENTORY_STATUS": "SIX_REDACTED_OWNER_OBSERVATIONS_PRESENT_ORIGINAL_RAW_NOT_REACQUIRED_BY_A8_NOT_ADMITTED",
   "CONTRACT_STATUS": {
@@ -3576,6 +3576,38 @@
     "report": "phase100/report.md",
     "matrix": "phase100/target-adapter-v1-acceptance-checklist.json",
     "prior_audits_preserved": true,
+    "physical": "BLOCKED",
+    "tailscale_removal": "BLOCKED",
+    "overall": "NO_GO"
+  },
+  "target_adapter_v1_direct_phase101": {
+    "PR": 54,
+    "original_head": "8dc717ab85681d71711783df3ff11bfa8d9a2d87",
+    "original_tree": "992e3f64b270553670597ba05a97bdfffdaa2f4d",
+    "correction_head": "a84eabb533865f6a422a03bf096222ee51052e8f",
+    "correction_tree": "0b064c8291cb4030e0a4a97ca3296b69883576a6",
+    "publication": "cf7dad91bf0d3a24073c91e0d3e326e6d9e7d2db",
+    "runtime_sha256": "775976b3d344409d6c25ba96f2a475f5085695edf9947f482440c263355d6a8f",
+    "A8_unique_tests_original": 21,
+    "skips": 0,
+    "original_raw_counts": {
+      "Unified": 1555,
+      "Stratt": 800,
+      "Meta": 782
+    },
+    "A8_focused_correction_tests": 1,
+    "correction_raw_counts": {
+      "Unified": 1573,
+      "Stratt": 800,
+      "Meta": 782
+    },
+    "F21": "P2_TEST_ORACLE_FIX_VERIFIED_OFFLINE_AT_a84",
+    "actualartifact2070": "f4997d7d26211676cd8664e53d7999f8b71f203510f3b9a275b439c403e03940",
+    "actual_envelope5909": "653ecbd6964c27352698378ceb13877095fd5509f1fab1f7023cbd88216c02a7",
+    "own_Python_audit": "POSITIVE_AND_7NEGATIVE_CALIBRATED_NOT_NATIVE_EGRESS",
+    "schema": "16WIP_CHECKS_PLUS_ACTUAL_GENERATED_REQUEST_ENVELOPE_4.25.1",
+    "scheduler": "NOT_RUN",
+    "authenticated_gateway": "NOT_RUN",
     "physical": "BLOCKED",
     "tailscale_removal": "BLOCKED",
     "overall": "NO_GO"
