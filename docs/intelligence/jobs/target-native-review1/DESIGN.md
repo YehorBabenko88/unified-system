@@ -148,6 +148,10 @@ gates but does NOT prove an earlier original absent. UNCERTAIN after attempted
 native send keeps original T/H_T/P/H_P/N/H_N/I, request/key/job/actor/quota unchanged,
 no dispatch/refund/rekey/recommission. Parsed native409 only THIS_ATTEMPT_ROLLED_BACK,
 not terminal original REJECTED. execution/retry/hold-release permissions all false.
+Current actual READ_RESEARCH disclosure rights are required before serializing known
+native history/receipt state in a public error. Missing rights must not disclose
+internal known facts; retain them internally and emit only an authorized
+non-disclosing error. Error-schema validity is NOT read permission.
 Known native commit/phase facts stay separate from error/qualification UNKNOWN;
 projection pending cannot erase a known native publication commit.
 
