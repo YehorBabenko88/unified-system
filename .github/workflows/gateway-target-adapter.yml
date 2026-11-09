@@ -21,8 +21,6 @@ jobs:
       GIT_CONFIG_VALUE_0: 'false'
       GIT_CONFIG_KEY_1: core.eol
       GIT_CONFIG_VALUE_1: lf
-      TARGET_STRATT_ROOT: ${{ runner.temp }}/target-stratt-aed8
-      TARGET_META_ROOT: ${{ runner.temp }}/target-meta-f3
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
@@ -33,6 +31,9 @@ jobs:
         with:
           python-version: '3.12.10'
       - name: Provision exact public target source outside Unified checkout
+        env:
+          TARGET_STRATT_ROOT: ${{ runner.temp }}/target-stratt-aed8
+          TARGET_META_ROOT: ${{ runner.temp }}/target-meta-f3
         shell: python -I -S -B {0}
         run: |
           import os,pathlib,subprocess
@@ -43,6 +44,9 @@ jobs:
               run('remote','add','origin','https://github.com/YehorBabenko88/'+repo+'.git')
               run('fetch','--depth=1','origin',head);run('checkout','--detach',head)
       - name: Actual fixed existing target and local failure semantics
+        env:
+          TARGET_STRATT_ROOT: ${{ runner.temp }}/target-stratt-aed8
+          TARGET_META_ROOT: ${{ runner.temp }}/target-meta-f3
         shell: bash
         run: |
           python -I -S -B docs/intelligence/target-adapter/run_qualification.py
