@@ -32,16 +32,16 @@
 
 ## Task 1: Actual closed negative composition
 
-- [ ] Add one real mTLS/Consul test importing the missing composition after actual fixture setup.
-- [ ] Record RED with exact source identities and unchanged raw files; no fake callback or issued job row.
-- [ ] Implement the minimum disposable composition and strict result validation.
-- [ ] Add actual submit/replay, lookup, invalid original/socket, revocation/stale leader and real quorum-loss/cleanup tests; pure result-contract negatives separate.
-- [ ] Run selected tests and independently review original-error/cleanup semantics.
+- [x] Add one real mTLS/Consul test importing the missing composition after actual fixture setup.
+- [x] Record RED with exact source identities and unchanged raw files; no fake callback or issued job row.
+- [x] Implement the minimum disposable composition and strict result validation.
+- [x] Add actual submit/replay, lookup, invalid original/socket, revocation/stale leader and real quorum-loss/cleanup tests; pure result-contract negatives separate.
+- [x] Run selected tests and independently review original-error/cleanup semantics.
 - [ ] Commit new source; qualify fresh no-hardlink clone with strict primary Git bytes pre/post for Root and Grid, exact IDs/no skips, own process cleanup.
 
 ## Task 2: Publish reviewable source pair
 
-- [ ] Add immutable successor component manifest, declared source-only permissions false and dedicated Windows/Ubuntu CI with hash-pinned dependencies.
+- [x] Add immutable successor component manifest, declared source-only permissions false and dedicated Windows/Ubuntu CI with hash-pinned dependencies.
 - [ ] Preserve existing full mandatory security workflows and original RED evidence.
 - [ ] Open own Draft PR, attach it, provide exact HEAD/tree/log/receipt hashes to A8 and owners.
 - [ ] Keep hosted and independent qualification pending until actual terminal evidence arrives. No merge.
