@@ -1688,5 +1688,182 @@
       "tailscale_removal": "BLOCKED",
       "trusted_release": "BLOCKED_NO_TRUSTED_PUBLISHER"
     }
+  },
+  "continuation_20261109": {
+    "status": "IN_PROGRESS / NO-GO",
+    "owner_directive_sha256": "961024a67181db37e3c99a66c30af7e92a23324b7f2c913ef6c1b23017d248c3",
+    "scope": "ADDITIVE_DEVELOPMENT_OBSERVATION_NOT_FULL_RUNTIME_OR_PHYSICAL_ACCEPTANCE",
+    "historical_matrix_snapshot_preserved": true,
+    "root_source_head": "435dd75321fb13c533fa5622bdfddafa6022ab31",
+    "root_source_tree": "466ecfe4cf523ea205706fa089466f22c8f76473",
+    "local_pure_source_tests": {
+      "passed": 81,
+      "skipped": 0,
+      "raw_files_pre_post": 1662,
+      "report": "release/physical-dev/ls5-20261109/SOURCE435-LOCAL-QUALIFICATION.json",
+      "not_hosted": true,
+      "not_native_or_physical": true
+    },
+    "ls5_readiness": "release/physical-dev/ls5-20261109/LS5-PHYSICAL-DEV-READINESS.json",
+    "source_review": {
+      "agent8_report_head": "4d56dfce4dcd22989b359705122c90125fac9ea8",
+      "path": "docs/audits/agent8-20261106/phase138/report.md",
+      "sha256": "0892c65423f5af9d1fd7acad0f57dc29082a5e7cfc5bd65f183b26123936d5b3",
+      "scope": "CORE495_AND_TERMINAN161_SOURCE_ONLY_ACK_NOT_NEW_HELPERS_OR_PACKAGE"
+    },
+    "hosted_source_ci": {
+      "run_id": 42700743627,
+      "status": "QUEUED",
+      "jobs": [
+        {
+          "id": 129444466660,
+          "os": "ubuntu-24.04",
+          "runner_id": 0,
+          "executed_steps": 0
+        },
+        {
+          "id": 129444467148,
+          "os": "windows-latest",
+          "runner_id": 0,
+          "executed_steps": 0
+        }
+      ],
+      "queue_root_cause": "UNKNOWN"
+    },
+    "package_preparation": {
+      "first_plan": "DENIED_BEFORE_COPY_SOURCE_GIT_HARDLINKS_172",
+      "fixed_export_source": "f6f3418b0aa262863322c81f30cf290ad2fb2c08",
+      "actual_byte_export": "IN_PROGRESS_NOT_RUNTIME_ADMISSION",
+      "a8_descriptor_cleanup_finding": "SOURCE_P2_SUCCESSOR_FIX_IN_PROGRESS",
+      "external_package_sha256": null,
+      "physical_smoke": "NOT_RUN"
+    },
+    "open_p0_gates": [
+      "EXACT_SOURCE_HOSTED_WINDOWS_UBUNTU_CI_F26",
+      "NATIVE_JOB_COMMISSIONER_AUTHORITY_AND_QUALIFIED_RESOURCE_ADMISSION",
+      "REAL_SCHEDULER_QUOTA_ASSIGNMENT_FENCING",
+      "NATIVE_COMMITTED_STORAGE_PUBLICATION",
+      "AUTHENTICATED_SCIENTIFIC_TERMINAN_READ",
+      "EXACT_PACKAGE_ISOLATION_AND_LS5_SMOKE",
+      "FULL_DISTRIBUTED_ACCEPTANCE"
+    ],
+    "unchanged_restrictions": {
+      "public_submit": "DENY",
+      "real_provider_sends": "BLOCKED",
+      "real_orders": "FORBIDDEN",
+      "production_deployment": "NOT_AUTHORIZED",
+      "physical_fault_injection": "NOT_AUTHORIZED",
+      "tailscale_removal": "BLOCKED",
+      "trusted_release": "BLOCKED_NO_TRUSTED_PUBLISHER"
+    }
+  },
+  "continuation_20261109": {
+    "status": "IN_PROGRESS / NO-GO",
+    "owner_directive_sha256": "961024a67181db37e3c99a66c30af7e92a23324b7f2c913ef6c1b23017d248c3",
+    "scope": "ADDITIVE_DEVELOPMENT_OBSERVATION_NOT_FULL_RUNTIME_OR_PHYSICAL_ACCEPTANCE",
+    "historical_matrix_snapshot_preserved": true,
+    "root_source_head": "435dd75321fb13c533fa5622bdfddafa6022ab31",
+    "root_source_tree": "466ecfe4cf523ea205706fa089466f22c8f76473",
+    "local_pure_source_tests": {
+      "passed": 81,
+      "skipped": 0,
+      "raw_files_pre_post": 1662,
+      "report": "release/physical-dev/ls5-20261109/SOURCE435-LOCAL-QUALIFICATION.json",
+      "not_hosted": true,
+      "not_native_or_physical": true
+    },
+    "ls5_readiness": "release/physical-dev/ls5-20261109/LS5-PHYSICAL-DEV-READINESS.json",
+    "source_review": {
+      "agent8_report_head": "4d56dfce4dcd22989b359705122c90125fac9ea8",
+      "path": "docs/audits/agent8-20261106/phase138/report.md",
+      "sha256": "0892c65423f5af9d1fd7acad0f57dc29082a5e7cfc5bd65f183b26123936d5b3",
+      "scope": "CORE495_AND_TERMINAN161_SOURCE_ONLY_ACK_NOT_NEW_HELPERS_OR_PACKAGE"
+    },
+    "hosted_source_ci": {
+      "run_id": 42700743627,
+      "status": "QUEUED",
+      "jobs": [
+        {
+          "id": 129444466660,
+          "os": "ubuntu-24.04",
+          "runner_id": 0,
+          "executed_steps": 0
+        },
+        {
+          "id": 129444467148,
+          "os": "windows-latest",
+          "runner_id": 0,
+          "executed_steps": 0
+        }
+      ],
+      "queue_root_cause": "UNKNOWN"
+    },
+    "package_preparation": {
+      "fixed_export_source": "f6f3418b0aa262863322c81f30cf290ad2fb2c08",
+      "descriptor_cleanup_source": "e5e9d440a5c8c44b4daaecbe6ed518c990481c74",
+      "external_package_sha256": "c0e5fe1d5a25f4d88488bbf5d33c9b5f47770890bf60b9c26cdacfa0aabd5886",
+      "files": 19567,
+      "bytes": 1008127478,
+      "physical_smoke": "FAIL_OR_UNCONFIRMED",
+      "backend": "ACTUAL_DIRECT_TARGET_PASS_LOCAL_UNATTESTED",
+      "artifact_sha256": "f4997d7d26211676cd8664e53d7999f8b71f203510f3b9a275b439c403e03940",
+      "renderer": "FAIL_OR_UNCONFIRMED_RCA_UNKNOWN_F36",
+      "originals": [
+        "release/physical-dev/ls5-20261109/failed-c/ORIGINAL-RED-INDEX.json",
+        "release/physical-dev/ls5-20261109/failed-d/ORIGINAL-RED-INDEX.json",
+        "release/physical-dev/ls5-20261109/failed-e/ORIGINAL-RED-INDEX.json"
+      ]
+    },
+    "open_p0_gates": [
+      "EXACT_SOURCE_HOSTED_WINDOWS_UBUNTU_CI_F26",
+      "NATIVE_JOB_COMMISSIONER_AUTHORITY_AND_QUALIFIED_RESOURCE_ADMISSION",
+      "REAL_SCHEDULER_QUOTA_ASSIGNMENT_FENCING",
+      "NATIVE_COMMITTED_STORAGE_PUBLICATION",
+      "AUTHENTICATED_SCIENTIFIC_TERMINAN_READ",
+      "EXACT_PACKAGE_ISOLATION_AND_LS5_SMOKE",
+      "FULL_DISTRIBUTED_ACCEPTANCE"
+    ],
+    "unchanged_restrictions": {
+      "public_submit": "DENY",
+      "real_provider_sends": "BLOCKED",
+      "real_orders": "FORBIDDEN",
+      "production_deployment": "NOT_AUTHORIZED",
+      "physical_fault_injection": "NOT_AUTHORIZED",
+      "tailscale_removal": "BLOCKED",
+      "trusted_release": "BLOCKED_NO_TRUSTED_PUBLISHER"
+    },
+    "latest_source_successor": {
+      "head": "e203c0bbeaa176a843a7d80b2eadfefe8fce7385",
+      "tree": "7ca3b471eb7ee2411eb83da68f8e068ee42c803c",
+      "local_pure_tests": 106,
+      "skips": 0,
+      "raw_files_pre_post": 1668,
+      "not_hosted": true,
+      "report": "release/physical-dev/ls5-20261109/SOURCEE203-LOCAL-QUALIFICATION.json",
+      "runtime_retest": "ACTUAL_BACKEND_PASS_FULL_SMOKE_RENDER_FAIL",
+      "physical_cluster": "BLOCKED_NO_GO"
+    },
+    "scoped_hosted_success": {
+      "source_head": "e203c0bbeaa176a843a7d80b2eadfefe8fce7385",
+      "runs": [
+        42716081580,
+        42716071876
+      ],
+      "os": [
+        "windows-2022",
+        "windows-2025"
+      ],
+      "distinct_regressions": 15,
+      "total_test_executions": 60,
+      "scope": "STOPPED_SERVICE_FIXTURE_ONLY_NOT_ACTIVATION_OR_FULL_MATRIX",
+      "report": "release/physical-dev/ls5-20261109/hosted-e203-stopped-service/CI-QUALIFICATION-REPORT.json",
+      "report_sha256": "07b7f3edabe4aebcee5be1d5738e413a69fcc0b6016c53c64e06f1bf192d8ecb"
+    },
+    "latest_independent_review": {
+      "head": "b398fa84f26e2cac46b070ae3cd402da0e9bc36a",
+      "path": "docs/audits/agent8-20261106/phase150/report.md",
+      "sha256": "11170bae93139e269e5bb41749f323d93c9f5e98da260dd176a27880dc68c982",
+      "scope": "ROOT_ORIGINAL_SMALL_RESULT_REVIEW_NOT_A8_RUNTIME_EXECUTION"
+    }
   }
 }
