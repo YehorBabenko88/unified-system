@@ -57,5 +57,13 @@
   "native_e2e": "NOT_RUN",
   "public_submit": "DENY",
   "production": "NO_GO",
-  "physical": "NOT_RUN"
+  "physical": "NOT_RUN",
+  "followup_red": {
+    "head": "68761aecacb6cc60113dd23f036c57efddcb0367",
+    "run": 42645987144,
+    "jobs": 0,
+    "cause": "Unquoted shell colon-space in plain YAML run scalar; reproduced with real parser on all five workflows.",
+    "fix": "Literal block scalars and full workflow YAML structural regression; original RED retained.",
+    "local_component_qualification": "144 TESTS PASS BUT SOURCE_GUARD_FAIL: local orchestration omitted hosted PYTHONDONTWRITEBYTECODE. No qualification PASS claimed; failed checkout retained."
+  }
 }

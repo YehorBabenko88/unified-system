@@ -28,7 +28,8 @@ jobs:
         with:
           python-version: '3.12'
       - name: Install hash-pinned full-suite test dependencies
-        run: python -m pip install --only-binary=:all: --require-hashes -r docs/ci/requirements-unittest.lock
+        run: |
+          python -m pip install --only-binary=:all: --require-hashes -r docs/ci/requirements-unittest.lock
       - run: python scripts/ci_unittest.py
       - run: python scripts/verify_five_boundary.py --strattester .source/strattester --grid .source/grid
       - name: Exact-head evidence
