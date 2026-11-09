@@ -12,6 +12,7 @@ from concurrent.futures import ThreadPoolExecutor
 from threading import Barrier
 from unittest.mock import patch
 from pathlib import Path
+from types import SimpleNamespace
 
 from unified_system.contracts import ContractError, canonical, seal
 from unified_system.journal import Journal
@@ -31,11 +32,34 @@ class MissionTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
-        self.path = Path(self.tmp.name)/"mission.db"
+        self.root = Path(self.tmp.name).resolve()
+        self.path = self.root/"mission.db"
         self.controller = MissionController.create(self.path)
 
     def put(self, value=None):
         return self.controller.put(value or task(), expected_sequence=self.controller.projection()["sequence"])
+
+    def test_owned_temp_alias_is_resolved_before_guarded_journal_creation(self):
+        parent=Path(self.tmp.name).resolve()/"owned canonical fixture parent";parent.mkdir()
+        (parent/"walk").mkdir();alias=parent/"walk"/".."
+        if os.name=="nt":
+            import ctypes
+            function=ctypes.WinDLL("kernel32",use_last_error=True).GetShortPathNameW
+            function.argtypes=[ctypes.c_wchar_p,ctypes.c_wchar_p,ctypes.c_uint];function.restype=ctypes.c_uint
+            buffer=ctypes.create_unicode_buffer(32768)
+            length=function(str(parent),buffer,len(buffer))
+            if 0<length<len(buffer) and "~" in buffer.value: alias=Path(buffer.value)
+        self.assertNotEqual(str(alias),str(alias.resolve()))
+        fixture=type(self)("test_duplicate_is_idempotent")
+        self.addCleanup(fixture.doCleanups)
+        # Only the owned TemporaryDirectory spelling is modeled. The actual
+        # journal, canonicalization and unchanged production guards remain real.
+        with patch.object(tempfile,"TemporaryDirectory",return_value=SimpleNamespace(name=str(alias),cleanup=lambda:None)):
+            fixture.setUp()
+        self.assertEqual(str(fixture.path.parent),str(parent.resolve()))
+        fixture.put()
+        self.assertEqual(MissionController.open(fixture.path).projection()["sequence"],2)
+        with self.assertRaises(ContractError): MissionController.create(alias/"untrusted-raw.db")
 
     def test_reopen_preserves_receipts(self):
         self.put()
@@ -115,14 +139,14 @@ class MissionTests(unittest.TestCase):
         self.assertEqual(before,self.path.read_bytes())
 
     def test_arbitrary_existing_database_not_adopted(self):
-        path=Path(self.tmp.name)/"legacy.db";journal=Journal(path);journal.initialize();journal.append("OBSERVING",dict(legacy=True))
+        path=self.root/"legacy.db";journal=Journal(path);journal.initialize();journal.append("OBSERVING",dict(legacy=True))
         before=path.read_bytes()
         with self.assertRaises(ContractError): MissionController.create(path)
         with self.assertRaises(ContractError): MissionController.open(path)
         self.assertEqual(before,path.read_bytes())
 
     def test_unknown_schema_refused(self):
-        path=Path(self.tmp.name)/"future.db";journal=Journal(path);journal.initialize();journal.append("OBSERVING",dict(kind="development-mission",schema_version=3,max_bytes=16*1024*1024,max_records=1024))
+        path=self.root/"future.db";journal=Journal(path);journal.initialize();journal.append("OBSERVING",dict(kind="development-mission",schema_version=3,max_bytes=16*1024*1024,max_records=1024))
         with self.assertRaises(ContractError): MissionController.open(path)
 
     def test_crash_before_append_keeps_last_commit(self):
@@ -132,7 +156,7 @@ class MissionTests(unittest.TestCase):
         self.assertEqual(MissionController.open(self.path).projection(),before)
 
     def test_truncated_database_rejected(self):
-        path=Path(self.tmp.name)/"broken.db";path.write_bytes(b"not sqlite")
+        path=self.root/"broken.db";path.write_bytes(b"not sqlite")
         with self.assertRaises(ContractError): MissionController.open(path)
 
     def test_actual_process_exit_after_commit_reopens(self):
@@ -147,7 +171,7 @@ class MissionTests(unittest.TestCase):
         with self.assertRaises(ContractError): MissionController.open(self.path)
 
     def test_boolean_marker_version_rejected(self):
-        path=Path(self.tmp.name)/"bool.db";journal=Journal(path);journal.initialize()
+        path=self.root/"bool.db";journal=Journal(path);journal.initialize()
         journal.append("OBSERVING",dict(kind="development-mission",schema_version=True))
         with self.assertRaises(ContractError): MissionController.open(path)
 
@@ -199,21 +223,21 @@ class MissionTests(unittest.TestCase):
         with self.assertRaises(ContractError): MissionController.create(Path("relative-mission.db"))
 
     def test_hardlink_refused_without_writing(self):
-        alias=Path(self.tmp.name)/"alias.db";os.link(self.path,alias)
+        alias=self.root/"alias.db";os.link(self.path,alias)
         before=self.path.read_bytes()
         with self.assertRaises(ContractError): MissionController.open(alias)
         with self.assertRaises(ContractError): self.put()
         self.assertEqual(before,self.path.read_bytes())
 
     def test_legacy_version_one_refused_without_rewrite(self):
-        path=Path(self.tmp.name)/"v1.db";journal=Journal(path);journal.initialize()
+        path=self.root/"v1.db";journal=Journal(path);journal.initialize()
         journal.append("OBSERVING",dict(kind="development-mission",schema_version=1))
         before=path.read_bytes()
         with self.assertRaises(ContractError): MissionController.open(path)
         self.assertEqual(before,path.read_bytes())
 
     def test_persisted_record_capacity_refuses_append(self):
-        path=Path(self.tmp.name)/"small.db";controller=MissionController.create(path,max_records=2)
+        path=self.root/"small.db";controller=MissionController.create(path,max_records=2)
         controller.put(task(),expected_sequence=1)
         before=path.read_bytes()
         with self.assertRaises(ContractError): controller.put(task("task-2"),expected_sequence=2)
@@ -229,12 +253,12 @@ class MissionTests(unittest.TestCase):
 
     def test_invalid_capacity_refused_before_reservation(self):
         for limits in (dict(max_bytes=True),dict(max_bytes=1023),dict(max_bytes=65*1024*1024),dict(max_records=True),dict(max_records=1),dict(max_records=100001)):
-            path=Path(self.tmp.name)/"invalid.db"
+            path=self.root/"invalid.db"
             with self.subTest(limits=limits),self.assertRaises(ContractError): MissionController.create(path,**limits)
             self.assertFalse(path.exists())
 
     def test_legacy_wal_sidecar_refused_before_create(self):
-        path=Path(self.tmp.name)/"orphan.db";sidecar=Path(str(path)+"-wal");sidecar.write_bytes(b"foreign")
+        path=self.root/"orphan.db";sidecar=Path(str(path)+"-wal");sidecar.write_bytes(b"foreign")
         with self.assertRaises(ContractError): MissionController.create(path)
         self.assertFalse(path.exists());self.assertEqual(sidecar.read_bytes(),b"foreign")
 
@@ -244,7 +268,7 @@ class MissionTests(unittest.TestCase):
             with self.assertRaises(ContractError): MissionController.open(self.path)
 
     def test_conservative_byte_reserve_before_append(self):
-        path=Path(self.tmp.name)/"bytes.db";controller=MissionController.create(path,max_bytes=1024*1024)
+        path=self.root/"bytes.db";controller=MissionController.create(path,max_bytes=1024*1024)
         with path.open("r+b") as stream: stream.truncate(1024*1024-32768)
         before=path.read_bytes()
         with self.assertRaises(ContractError): controller.put(task(),expected_sequence=1)
@@ -257,7 +281,7 @@ class MissionTests(unittest.TestCase):
             with self.assertRaises(ContractError): MissionController.open(self.path)
 
     def test_maximum_task_dag_replays_and_cycle_revision_refused(self):
-        path=Path(self.tmp.name)/"dag.db";controller=MissionController.create(path,max_records=1030)
+        path=self.root/"dag.db";controller=MissionController.create(path,max_records=1030)
         marker=Journal(path).read()[0];previous=seal(marker);rows=[]
         # Maximum supported identities and dependency fan-in, without recursive
         # graph traversal or repeated revalidation of the complete prior DAG.
@@ -274,9 +298,9 @@ class MissionTests(unittest.TestCase):
         with self.assertRaises(ContractError): reopened.put(task("task-0",["task-1023"]),expected_sequence=1025)
 
     def test_directory_symlink_or_junction_refused(self):
-        target=Path(self.tmp.name)/"real";target.mkdir()
+        target=self.root/"real";target.mkdir()
         MissionController.create(target/"mission.db")
-        alias=Path(self.tmp.name)/"alias"
+        alias=self.root/"alias"
         try:
             alias.symlink_to(target,target_is_directory=True)
         except OSError:
@@ -288,7 +312,7 @@ class MissionTests(unittest.TestCase):
     def test_persisted_bounds_are_recovered_and_closed(self):
         marker=Journal(self.path).read()[0]["receipt"]
         self.assertEqual(marker,dict(kind="development-mission",schema_version=2,max_bytes=16*1024*1024,max_records=1024))
-        path=Path(self.tmp.name)/"bad-marker.db";journal=Journal(path);journal.initialize()
+        path=self.root/"bad-marker.db";journal=Journal(path);journal.initialize()
         journal.append("OBSERVING",dict(marker,max_records=True))
         with patch.object(Journal,"read",side_effect=AssertionError("unbounded read")):
             with self.assertRaises(ContractError): MissionController.open(path)
