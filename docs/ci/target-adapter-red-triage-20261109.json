@@ -1,0 +1,61 @@
+{
+  "schema": "unified.ci-red-triage.v1",
+  "original_head": "83d35ce4b18cb6adc556c8e1412ad7b0cffef2e8",
+  "original_target_run": 42632828686,
+  "windows_job": 129213210871,
+  "ubuntu_job": 129213210753,
+  "original_windows_log_sha256": "06eac8429a68eed1c5edadc90f17678fb5c13209ff6b8cd48bb7feacedf9defe",
+  "original_red_preserved": true,
+  "classifications": [
+    {
+      "kind": "APPLICATION_TEST_FIXTURE",
+      "cause": "Owned SQLite calibration rejected alternate canonical drive spelling; exact original hosted spelling not logged.",
+      "fix": "Commission exact owned raw spellings after canonical equality; retain sibling/URI/prefix refusals.",
+      "local_unique_tests": 22
+    },
+    {
+      "kind": "WORKFLOW_CONFIGURATION",
+      "cause": "Full-suite hosted environments omitted cryptography and Windows tzdata.",
+      "fix": "Hash-pinned wheels for Python 3.11, 3.12 and 3.13 Windows/Linux."
+    },
+    {
+      "kind": "APPLICATION_TEST_FIXTURE",
+      "cause": "Mission and LAN fixtures supplied unresolved owned paths to unchanged strict guards.",
+      "fix": "Resolve owned fixture roots; add positive alias and retained negative guard regressions.",
+      "local_combined_identity_mission_inventory": 79
+    },
+    {
+      "kind": "APPLICATION_TEST_FIXTURE",
+      "cause": "Budget fixture failure left owned child processes holding SQLite.",
+      "fix": "Finally terminate/join only owned children; preserve original exit-7 failure.",
+      "local_budget_tests": 9
+    },
+    {
+      "kind": "WORKFLOW_CONFIGURATION",
+      "cause": "READ job env used unavailable runner.temp context.",
+      "fix": "Step env only."
+    },
+    {
+      "kind": "WORKFLOW_CONFIGURATION",
+      "cause": "Six-source full-suite failure occurred before evidence creation.",
+      "fix": "Write execution status and original output outside source checkout in finally."
+    },
+    {
+      "kind": "WORKFLOW_HARNESS",
+      "cause": "Unconditional integration script reentered under Windows multiprocessing spawn.",
+      "historical_timeout_causality": "NOT_ESTABLISHED",
+      "fix": "Main guard; mandatory IDs retained, new cleanup case added."
+    }
+  ],
+  "unresolved": [
+    "Historical loopback deadlines/disconnects",
+    "Native diagnostic and child deadlines",
+    "Historical unexpected file: name not recorded; new diagnostic names repository-relative path"
+  ],
+  "infrastructure_outage": "NOT_ESTABLISHED",
+  "hosted_corrected_source": "PENDING",
+  "native_e2e": "NOT_RUN",
+  "public_submit": "DENY",
+  "production": "NO_GO",
+  "physical": "NOT_RUN"
+}

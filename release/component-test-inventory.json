@@ -121,6 +121,7 @@
     "tests.test_lan_transport.TLSIsolationTests.test_six_real_isolated_nodes_independent_of_tailscale",
     "tests.test_lan_transport.TLSIsolationTests.test_untrusted_ca_rejected_even_with_correct_leaf_pin",
     "tests.test_lan_transport.TLSIsolationTests.test_wrong_eku_and_expired_cert_rejected",
+    "tests.test_network_budget.BudgetCleanupTests.test_failed_child_cleans_all_owned_siblings_before_directory_cleanup",
     "tests.test_network_budget.BudgetTests.test_backward_clock_or_changed_policy_fail_closed",
     "tests.test_network_budget.BudgetTests.test_clock_sample_is_inside_store_transaction_not_before_lock_wait",
     "tests.test_network_budget.BudgetTests.test_cluster_allocations_cannot_expand",
@@ -160,7 +161,7 @@
     "tests.test_windows_qualification.WindowsQualificationTests.test_unqualified_physical_admission_cannot_be_enabled",
     "tests.test_windows_qualification.WindowsQualificationTests.test_valid_pending_matrix_never_admits_installation"
   ],
-  "expected_count": 143,
+  "expected_count": 144,
   "prior_inventory_sha256": "84fa3c63e87fab44da39dcdde27e5f7a7a5ebcf2c33e6ddd3abde7cec12d6cce",
   "preserved_prior_ids": [
     "tests.storage.test_checkpoint_vectors.CheckpointVectorTests.test_confirmed_unknown_time_is_still_only_an_untrusted_claim",

@@ -159,7 +159,7 @@ class BudgetCleanupTests(unittest.TestCase):
                 created.append(process);return process
         result=unittest.TestResult()
         try:
-            with patch('test_network_budget.multiprocessing.get_context',return_value=Context()):
+            with patch.object(multiprocessing,'get_context',return_value=Context()):
                 BudgetTests('test_real_processes_cannot_each_receive_a_fresh_full_budget').run(result)
             self.assertEqual(result.errors,[],'cleanup must not replace the child assertion')
             self.assertEqual(len(result.failures),1)

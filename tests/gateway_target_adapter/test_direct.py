@@ -127,12 +127,34 @@ class DirectTests(unittest.TestCase):
         self.assertTrue(all(x['scheduler_admission']=='BLOCKED' for x in rows))
 
     def test_actual_target_no_python_network_and_only_owned_sqlite(self):
+        self._assert_owned_io_calibration()
+
+    def test_canonical_or_windows_drive_alias_sqlite_calibration(self):
+        canonical=self.root.resolve()
+        if os.name=='nt':
+            self.root=Path(str(canonical.drive).swapcase()+str(canonical)[len(canonical.drive):])
+            self.assertNotEqual(str(self.root),str(canonical))
+            self.assertTrue(self.root.samefile(canonical))
+        else:
+            self.assertEqual(self.root,canonical)
+        self._assert_owned_io_calibration()
+
+    def _assert_owned_io_calibration(self):
         original=sqlite3.connect;calls=[]
+        intended=self.stand._journal.path.resolve()
+        # Only exact spellings of the commissioned file are allowed. Windows
+        # temporary roots may have drive-case/8.3 aliases; .resolve() alone is
+        # not necessarily the raw spelling passed by SQLite callers.
+        # Do not deduplicate WindowsPath objects before extracting raw strings:
+        # WindowsPath equality deliberately collapses different drive casing.
+        paths=(self.root/'direct-journal.db',self.stand._journal.path,intended)
+        self.assertTrue(all(path.resolve()==intended for path in paths))
+        ordinary={str(path) for path in paths}
+        readonly={path.as_uri()+'?mode=ro' for path in paths}
         def owned_connect(database,*args,**kwargs):
             text=os.fspath(database)
-            expected=(self.root/'direct-journal.db').resolve()
-            permitted=expected.as_uri()+'?mode=ro' if kwargs.get('uri') is True else str(expected)
-            if text!=permitted:
+            permitted=readonly if kwargs.get('uri') is True else ordinary
+            if text not in permitted:
                 raise RuntimeError('NON_OWNED_DATABASE_DENIED')
             calls.append(text);return original(database,*args,**kwargs)
         with patch.object(socket,'socket',side_effect=RuntimeError('NETWORK_DENIED')) as network,patch.object(sqlite3,'connect',owned_connect):
