@@ -83,9 +83,18 @@ deterministic no-child unit coverage, not physical enforcement proof.
 Retained original RED logs under the private evidence root:
 `ls5-primary-git-capture-red.log`, `ls5-cleanup-red.log`,
 `ls5-watchdog-red.log`, `ls5-bootstrap-git-red.log`.
-Working source suite:44 unique tests, zero skips. Original package24 tests are
-included in that count; they are not44 new runtime tests. Exact committed source
+Working source suite:45 unique tests, zero skips. Original package24 tests are
+included in that count; they are not45 new runtime tests. Exact committed source
 qualification and independent review are still required.
+
+A8 also identified native Git lazy-fetch risk: Python socket audit does not
+contain Git's native helpers. Both provenance and backend source-Git environments
+now deny lazy fetch/all transport protocols and global/system config, and disable
+prompts. Every source repository must be an independent local `.git` directory;
+partial/promisor markers/config, alternate object stores, common-dir/worktree
+config, grafts and include config deny before Git launch. Inert-file regression
+RED `ls5-git-offline-red.log` is retained. No remote/fetch test was executed and
+no historical network activity is attributed from this static finding.
 
 The assembly preparer reproduced Windows pathname/descriptor mode differences
 on inert `.exe` bytes: lstat33279 versus fstat33206. Package73 incorrectly compared

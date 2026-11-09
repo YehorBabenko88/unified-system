@@ -58,6 +58,8 @@ class SupervisorContractTests(unittest.TestCase):
             root=Path(tmp).resolve();env=child_environment(root)
             for key in ('PGPASSWORD','NODE_OPTIONS','NODE_PATH','HTTP_PROXY','BYBIT_API_KEY','PYTHONPATH','SELENIUM_REMOTE_URL'):self.assertNotIn(key,env)
             self.assertEqual(env['TEMP'],str(root));self.assertEqual(env['PYTHONDONTWRITEBYTECODE'],'1')
+            self.assertEqual(env['GIT_NO_LAZY_FETCH'],'1');self.assertEqual(env['GIT_ALLOW_PROTOCOL'],'')
+            self.assertEqual(env['GIT_CONFIG_NOSYSTEM'],'1');self.assertEqual(env['GIT_CONFIG_GLOBAL'],'NUL')
             self.assertNotIn('.',env['PATH'].split(';'))
 
     def test_watchdog_work_deadline_keeps_cleanup_reserve(self):

@@ -52,7 +52,8 @@ def child_environment(run_root):
     system=os.environ.get('SystemRoot','C:\\Windows');value=str(root)
     return {'SystemRoot':system,'WINDIR':system,'PATH':str(Path(system)/'System32'),'PATHEXT':'.EXE;.COM',
         'TEMP':value,'TMP':value,'TMPDIR':value,'HOME':value,'USERPROFILE':value,'LOCALAPPDATA':value,'APPDATA':value,
-        'PYTHONDONTWRITEBYTECODE':'1','GIT_OPTIONAL_LOCKS':'0','GIT_NO_REPLACE_OBJECTS':'1'}
+        'PYTHONDONTWRITEBYTECODE':'1','GIT_OPTIONAL_LOCKS':'0','GIT_NO_REPLACE_OBJECTS':'1',
+        'GIT_CONFIG_NOSYSTEM':'1','GIT_CONFIG_GLOBAL':'NUL','GIT_NO_LAZY_FETCH':'1','GIT_ALLOW_PROTOCOL':'','GIT_TERMINAL_PROMPT':'0'}
 
 def stop_reason(start_ns,now_ns,output_bytes):
     _need(all(type(v) is int and v>=0 for v in (start_ns,now_ns,output_bytes)) and now_ns>=start_ns,'WATCHDOG_COUNTER_UNKNOWN')

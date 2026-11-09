@@ -122,6 +122,23 @@ def validate_captures(captures):
     need(all(capture.error is None for _,capture in captures),'CAPTURE_FAILED_OR_OVERFLOW')
     need(sum(capture.count for _,capture in captures)<=16384,'OUTPUT_BOUND')
 
+def offline_repository(root):
+    """Admit only independent, complete local source repositories, not fetchers."""
+    import configparser
+    git=Path(root)/'.git';need(git.is_dir() and not git.is_symlink(),'INDEPENDENT_LOCAL_GIT_REQUIRED')
+    for relative in ('commondir','config.worktree','objects/info/alternates','objects/info/http-alternates','info/grafts'):
+        need(not (git/relative).exists(),'EXTERNAL_OR_ALTERNATE_OBJECT_CUSTODY')
+    need(not list((git/'objects/pack').glob('*.promisor')),'PROMISOR_OBJECT_STORE_DENIED')
+    config=git/'config';need(config.stat().st_size<=65536,'GIT_CONFIG_BOUND')
+    parser=configparser.RawConfigParser(strict=True)
+    try:parser.read_string(config.read_text(encoding='utf-8'))
+    except (ValueError,configparser.Error):raise SmokeBlocked('GIT_CONFIG_UNAVAILABLE') from None
+    for section in parser.sections():
+        lowered=section.casefold();keys={key.casefold() for key in parser[section]}
+        need(lowered!='include' and not lowered.startswith('includeif '),'EXTERNAL_GIT_CONFIG_DENIED')
+        need(not(lowered=='extensions' and 'partialclone' in keys),'PARTIAL_CLONE_DENIED')
+        need(not(lowered.startswith('remote ') and keys&{'promisor','partialclonefilter'}),'PROMISOR_REMOTE_DENIED')
+
 def retire_unassigned(processes):
     """Never let one own-handle cleanup failure skip the remaining evidence."""
     errors=[]
@@ -187,14 +204,14 @@ def source_bindings(package,manifest):
     raw=helper.read_bytes();need(hashlib.sha256(raw).hexdigest()=='e3733379da5e0cde84573f3279d265c91e16eceb8c94aeeda8983b51031216fe','PRIMARY_GUARD_PIN')
     namespace={'__name__':'physical_pilot_primary_guard','__file__':str(helper)};exec(compile(raw,str(helper),'exec'),namespace)
     clean={'SystemRoot':os.environ.get('SystemRoot','C:\\Windows'),'PATH':str(trusted.parent)+';C:\\Windows\\System32','GIT_OPTIONAL_LOCKS':'0',
-           'GIT_CONFIG_NOSYSTEM':'1','GIT_CONFIG_GLOBAL':'NUL','GIT_NO_LAZY_FETCH':'1'}
+           'GIT_CONFIG_NOSYSTEM':'1','GIT_CONFIG_GLOBAL':'NUL','GIT_NO_LAZY_FETCH':'1','GIT_ALLOW_PROTOCOL':'','GIT_TERMINAL_PROMPT':'0'}
     primary=PrimaryGit(trusted,clean,{str(package/'sources'/name) for name in ('runtime-unified','strattester','meta_analyse','terminan','harness')})
     def git(root,*args):return subprocess.check_output([str(trusted),'--no-replace-objects','--no-optional-locks','-c','core.fsmonitor=false','-C',str(root),*args],env=clean,timeout=primary.remaining())
     namespace['git']=git
     namespace['subprocess']=primary
     with primary:
         for name in ('runtime-unified','strattester','meta_analyse','terminan','harness'):
-            source=package/'sources'/name;head=git(source,'rev-parse','HEAD').decode().strip()
+            source=package/'sources'/name;offline_repository(source);head=git(source,'rev-parse','HEAD').decode().strip()
             need(head==refs.get(name,{}).get('commit'),'ACTUAL_PRIMARY_SOURCE_HEAD')
             need(git(source,'rev-parse','HEAD^{tree}').decode().strip()==refs[name]['tree'],'ACTUAL_PRIMARY_SOURCE_TREE')
             namespace['inventory'](source)

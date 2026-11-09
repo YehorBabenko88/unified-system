@@ -4,6 +4,22 @@ from pathlib import Path
 from unittest.mock import patch
 
 class LauncherContractTests(unittest.TestCase):
+    def test_offline_source_rejects_promisor_alternate_and_include_config(self):
+        from tools.physical_dev.ls5_smoke import offline_repository,SmokeBlocked
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp).resolve();git=root/'.git';(git/'objects/info').mkdir(parents=True);(git/'objects/pack').mkdir()
+            config=git/'config';config.write_text('[core]\nrepositoryformatversion = 0\n')
+            self.assertIsNone(offline_repository(root))
+            for raw in ['[remote "origin"]\npromisor = true\n','[extensions]\npartialClone = origin\n','[include]\npath = C:/foreign\n']:
+                config.write_text(raw)
+                with self.assertRaises(SmokeBlocked):offline_repository(root)
+            config.write_text('[core]\nrepositoryformatversion = 0\n')
+            for path in (git/'objects/info/alternates',git/'objects/pack/pack-inert.promisor',git/'commondir'):
+                path.write_bytes(b'')
+                with self.assertRaises(SmokeBlocked):offline_repository(root)
+                path.unlink()
+
     def test_primary_source_deadline_denies_before_creating_process(self):
         from tools.physical_dev.ls5_smoke import PrimaryGit,SmokeBlocked
         root=Path('C:/qualified-source');gate=PrimaryGit(Path('C:/pinned/git.exe'),{}, {str(root)})
