@@ -4,6 +4,7 @@ on:
     paths:
       - 'tests/gateway_jobs/**'
       - 'tests/test_intelligence_gateway.py'
+      - 'tests/test_agent5_scheduler_components.py'
       - 'scheduler_components/**'
       - 'unified_system/gateway_jobs.py'
       - 'unified_system/gateway_worker.py'
@@ -36,12 +37,18 @@ jobs:
           import os, subprocess, sys, unittest
           assert sys.flags.isolated and sys.flags.no_site and sys.dont_write_bytecode
           assert subprocess.check_output(['git','--no-replace-objects','rev-parse','HEAD']).decode().strip() == os.environ['EXPECTED_HEAD']
-          sys.path.insert(0, '.')
+          sys.path[:0] = ['.', 'tests']
+          from test_agent5_scheduler_components import DurablePreparationTests
           patterns = ['test_one_shot_closed_integration.py', 'test_closed_jobs.py',
                       'test_resource_capabilities.py', 'test_cpu_policy.py',
-                      'test_capacity_freshness.py', 'test_clock_source_prerequisites.py']
+                      'test_capacity_freshness.py', 'test_clock_source_prerequisites.py',
+                      'test_preparation_integrity.py']
           suite = unittest.TestSuite(unittest.TestLoader().discover('tests/gateway_jobs', pattern=p) for p in patterns)
-          assert suite.countTestCases() == 33
+          # Existing local SQLite regressions; process-crash subprocess case is
+          # outside this no-child cohort and remains in its original suite.
+          suite.addTests(DurablePreparationTests(n) for n in unittest.TestLoader().getTestCaseNames(DurablePreparationTests)
+                         if n != 'test_process_crash_before_event_commit_recovers_without_partial_hold')
+          assert suite.countTestCases() == 53
           result = unittest.TextTestRunner(verbosity=2).run(suite)
-          assert result.wasSuccessful() and result.testsRun == 33 and not result.skipped
+          assert result.wasSuccessful() and result.testsRun == 53 and not result.skipped
           assert not subprocess.check_output(['git','--no-replace-objects','status','--porcelain','--untracked-files=all']).strip()
