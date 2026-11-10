@@ -68,3 +68,34 @@ No real provider/trading operation is in this scenario; no network/security/poli
 changes, new credentials, production deployment, main merge, office fault injection
 or data deletion. Public submit DENY; TRUSTED_RELEASE BLOCKED_NO_TRUSTED_PUBLISHER;
 Tailscale removal BLOCKED. HA design packet is a separate unapproved design input.
+
+## Remaining P0/P1 and node readiness
+
+No approved HA implementation assembly, positive commissioning/resource/one-use
+start/publication/visibility APIs or full native protocol qualification exists.
+The strict commit-time expiry requirement is incompatible with current broker P2
+semantics; new logical mutations remain disabled while the operator decision is
+pending. Proposed codec/envelope reviews are not implementation or runtime gates.
+Full CI/F26, native Math and distributed LAN/Windows/Home/recovery acceptance stay
+open. Production backup/restore/failover/update/rollback have not been accepted.
+
+Math original run42352374979/attempt1/job128343065197 completed successfully as
+**NON_QUALIFYING_DIAGNOSTIC** at source2446d046..., not native PASS. Model8 and
+compile passed; child startup DLL_INITIALIZATION_FAILED, source defect/root cause
+NOT_ESTABLISHED. Original authorization CONSUMED_NO_RETRY; no new diagnostic.
+Bounded owner summary and exact SHA are retained in
+`release/physical-dev/ls5-20261109/MATH115-ORIGINAL-RUN-STATUS-20261110.json`.
+Last loaded OS module is an observation, not causal evidence.
+
+| Node | Planned role | Accepted scope now |
+| --- | --- | --- |
+| LS5 | Central operator/coordinator | One synthetic disposable functional pilot only; full commissioning blocked. |
+| PC3, PC4 | Coordinators | No distributed physical/HA qualification transferred from LS5. |
+| PC2 | Worker | No current load qualification; owner's Reolink-closed decision preserved, no remote process change. |
+| PC1, LS7 | Windows11Home workers | Separate Home qualification and installation gates remain blocked. |
+| ADMINIT | Excluded | Not part of the current architecture or acceptance. |
+
+The earlier cached Tailscale peer inventory does not prove five current LAN SSH
+authentications or DNS/HTTPS success on six nodes. No such PASS is claimed here.
+The staged physical plan remains the reviewable next sequence after prerequisites;
+there is no automatic production deployment or physical failure injection.

@@ -1781,6 +1781,44 @@
       "status": "DESIGN_ONLY_NO_GO_NO_IMPLEMENTATION_ASSEMBLY_APPROVED",
       "time_policy": "PRESERVE_STRICT_OPTION1_LOGICAL_MUTATIONS_DISABLED",
       "operator_ha_approval": false
+    },
+    "logical_codec_design_proposal": {
+      "path": "release/design-review/ha/logical-codec-20261110/ROOT-COMPOSITION.json",
+      "review1_seal": "f9b17f268e0a6b877fbb6b99013c1bb450d0ebad0269fdc48244fe517b29eaec",
+      "review2_seal": "de0100d1ea8d793094e0232e34fc04c13b61b9d3bd7dee372d55095e0afce7dc",
+      "review3_seal": "b4237bf61d6c862368bcdb27ba4dbd919ca1e43e4221a9053c82efd749fa63e7",
+      "review4_seal": "cbe74100205a59d73bdc591294f96e8b6a9697e45bcc64ad8d7fd2ab779e0735",
+      "status": "PROPOSED_DESIGN_DIRECTION_ACK_ONLY_NOT_ABI_OR_SOURCE_FREEZE",
+      "implementation_base": "NONE_APPROVED",
+      "time_policy": "OPTION1_MUTATIONS_DISABLED_OPERATOR_QUESTION_PENDING",
+      "native_calls_authorized": false
+    },
+    "runner_blocker_policy": {
+      "path": "release/physical-dev/ls5-20261109/runner-blocker-policy/RUNNER-BLOCKER-REPORT.json",
+      "sha256": "63c260745623a2bb94354ef257842b14fddeabceec5e229898223dc1b44b584f",
+      "api_gets": 6,
+      "actions_enabled": true,
+      "allowed_actions": "all",
+      "selected_workflow_concurrency": false,
+      "self_hosted_runners": 0,
+      "hosted_capacity": "NOT_INFERRED_FROM_SELF_HOSTED",
+      "billing": "UNKNOWN_404_NOT_PROOF_OF_RESTRICTION",
+      "queue_root_cause": "UNKNOWN",
+      "ci_mutations": false
+    },
+    "math_original_run": {
+      "run_id": 42352374979,
+      "attempt": 1,
+      "job_id": 128343065197,
+      "workflow_conclusion": "SUCCESS_NON_QUALIFYING_DIAGNOSTIC",
+      "source_head": "2446d04624469e34aa96ed766be7a4887d6d654c",
+      "native_startup": "DLL_INITIALIZATION_FAILED",
+      "source_defect": "NOT_ESTABLISHED",
+      "native_qualification": "BLOCKED",
+      "authorization": "CONSUMED_NO_RETRY",
+      "report": "release/physical-dev/ls5-20261109/MATH115-ORIGINAL-RUN-STATUS-20261110.json",
+      "report_sha256": "70391eeba6dd7d4b23af9bafd3e06d2dadbf0f01a886ef0a15c5b79a1e43234b",
+      "attribution": "AGENT7_FRESH_READONLY_METADATA_AND_RETAINED_ORIGINALS_NOT_ROOT_RUNTIME_REPLAY"
     }
   }
 }
