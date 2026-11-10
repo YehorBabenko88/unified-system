@@ -651,5 +651,17 @@
     "audit_correction": "Retracts phase160/161 assertion dedicated qualifier selects intentional24subset",
     "successor_head": "b48ddc5ff083deeecfdf76185117d0e86aa23e2a",
     "successor_evidence": "phase164/report.md;phase164/verification.json"
+  },
+  {
+    "id": "A8-F39",
+    "severity": "P2",
+    "repository": "unified-system",
+    "pr": null,
+    "observed_head": "ef09f718efaf1338376b400464f9f99f4ecde868",
+    "title": "Dedicated LAN/Mux PR workflow omits imported diagnostic helper from path trigger",
+    "status": "OPEN_SOURCE_CONFIRMED",
+    "test": "PR changing only tests/lan_failure_diagnostics.py versus lan-mux-isolated.yml pull_request.paths",
+    "evidence": "phase165/report.md;phase165/exact-source-diff.patch;phase165/verification.json",
+    "required_correction": "Add exact diagnostic helper dependency path;preserve existing triggers/security/no-skip/exactinventory;review successor."
   }
 ]
