@@ -3886,3 +3886,6 @@ Phases226–227: F50originalmodeled28RED22PASS/6firstkillcountFAIL/0error/skip v
 
 
 Phase228 originalsame28GREEN verified28PASS/0fail/error/skip;6negativecasesnowreachkill/wait/sticky/actualDENYassertions withunchanged3f7test. F50CLOSED scopedSOURCE+SELECTED_AST_MODELEDonly, notfullcontroller/Git/kernel/47. Confirmed8P1/8P2,F26/F42open; overallNO-GO/physicalTailscaleBLOCKED/hosted47HOLD. See phase228/report.md.
+
+
+Phase229 privateWindowsmode comparatoree561 SOURCEACK/same16 modeledPASS only. OriginalRED14PASS2failedMETHODS4subtestassertions/originalUNKNOWN preserved; GREENreceipt30fc…bbe745… output_bytes0 conflictsraw2606: OUTERNOT_QUALIFIED. Rootsidecarattributionretained/notA8drivercauseproof. No main/PS/prereq/native/retry/resealpermission.8P1/8P2/F26F42open/NO-GO/physicalTailscaleBLOCKED. See phase229/report.md.

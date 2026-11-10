@@ -1,0 +1,31 @@
+{
+  "original_sha256": {
+    "original-controller.py": "c7b6112aee23739f68942344b983a7a786c7bab339a767410bad2ba3aa34f6fb",
+    "fixed-controller.py": "ee5612610e0f77a4244c8ea2c5bcb8f6a32004a23ad711ba0d29d440729141ae",
+    "original-model16.py": "c1912aec95c75e9c4cb51a9acdf531f7b3856c5bad503c5c4bf01730a58761a6",
+    "fixed-model16.py": "8f21e600eaffdbd700a1a75d584783dcab1311d547c2662f85bff0ffb403a471",
+    "controller.diff": "0eaf2aa9db295a000d2184024f51dcc9ceb788db90ae06f7db6ad0e127aa3ecc",
+    "model.diff": "d5a7941fea9534d91f23e8b440d3dbffdb40762d5d710b38666641bfade4adc5",
+    "combined-source.diff": "b2f3bbbfa807173e896d273a8e1c5f59ecc4265ee08663c0e2e8eacadea18604",
+    "SOURCE-EFFECT-MANIFEST.json": "2fe963f37fed8f5197cd7f5d0b3be57ef6602088cdc661db1e06a283885a6f08",
+    "original-model109-receipt.json": "79eb38bfbafc2fa70c7a2960493c53b6f8f45f7021000c61eb340929fd8902e2",
+    "original-model109-stderr.original.bin": "beb530d0817511c34d4338c652da13a5537e9295fa81522769bc5dcdd9d95812",
+    "original-model109-stdout.original.bin": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "GREEN/receipt.json": "30fc5e4789b01ea211d31eb02e8ea03c00d685d95bbe745bd9b961d3b21e17b4",
+    "GREEN/stderr.original.bin": "6eb4f1ad9dbbdcd0772f11b894216d87038e968bbc6d65dbf2c50d4d62a5a91a",
+    "GREEN/stdout.original.bin": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "GREEN/pre-execution-state.json": "5301c1105bc9f4280a64ca92e4354f320581e1a41f54aeb71ae9281f56a7afc1",
+    "GREEN/ROOT-CLASSIFICATION.json": "325669de605eec5eace3a8756cfe75ca47261fa34b84ff3c16d22cd93df1aa5a"
+  },
+  "source_change": "ONLY_METADATA_MATCHES_BRANCH_CROSSAPI_S_IFMT_SAMEAPI_FULLMODE_CTIME;EVERY_OTHER_CONTROLLER_BYTE_UNCHANGED",
+  "model_change": "ONLY_CONTROLLER_SHA_PIN;SAME16_METHOD_BODIES_ASSERTIONS",
+  "actual_RED": "14PASS_2FAILED_METHODS_4SUBTEST_ASSERTIONS_0ERROR_SKIP;ORIGINAL_OUTER_UNKNOWN_PRESERVED",
+  "actual_GREEN": "16METHOD_PASS_0ERROR_SKIP_TESTEXIT0_LOCAL_ACTUALREADERS_INERTMODELS_ONLY",
+  "GREEN_outer_counter": "INCONSISTENT_OUTPUT_BYTES0_VS_RAW2606",
+  "GREEN_outer_qualification": "NOT_QUALIFIED_NO_OVERALL_OUTER_PASS",
+  "counter_cause": "ROOT_REPORTED_PERSISTENT_CALLBACK_CLOSURE_NOT_INDEPENDENTLY_PROVED_FROM_DRIVER_SOURCE",
+  "main_PS_Git_native_retry": "NONE_BY_A8_OR_INFERRED_FROM_MODELED_PASS",
+  "GO_NO_GO": "NO-GO",
+  "PHYSICAL_TESTS": "BLOCKED",
+  "TAILSCALE_REMOVAL": "BLOCKED"
+}
