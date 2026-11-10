@@ -3880,3 +3880,6 @@ Phase221 actualboundedsemanticreview finalSync12+Ops4/startupservecodecproducerC
 
 
 Phases222–225 (client2026-11-11): prerequisiteactualDENY0classifiercases retained; Math4pinlocalGitlineage src122identical/sourceonly/noNative; A6hostedexacte23run42917337440 freshAPI/joblogs/2ZIPdigests verified Windows+Ubuntu separate8/6PASS each/407maps—notfullCI/browser/native. A7proposed28test3f7 sourceeffectACKonly/actualNOTRUN/F50OPEN/noallocation. Confirmed8P1/9P2, overallNO-GO/physicalTailscaleBLOCKED. See phase222/report.md through phase225/report.md.
+
+
+Phases226–227: F50originalmodeled28RED22PASS/6firstkillcountFAIL/0error/skip verified; laternegativewait/sticky/DENYassertionsNOTREACHED. Corrected487c qualifier/e285workflow/unchanged3f7test sourceACK only, distinct28profile/candidatev2—notactualGREEN/47/native. F50OPEN;confirmed8P1/9P2/NO-GO/physicalTailscaleBLOCKED. See phase226/report.md and phase227/report.md.

@@ -1,0 +1,93 @@
+test_db_parent_file_refuses_before_backend (__main__.ChildPathAdmissionControls.test_db_parent_file_refuses_before_backend) ... ok
+test_db_parent_junction_refuses_before_backend (__main__.ChildPathAdmissionControls.test_db_parent_junction_refuses_before_backend) ... ok
+test_db_reparse_leaf_refuses_before_backend (__main__.ChildPathAdmissionControls.test_db_reparse_leaf_refuses_before_backend) ... ok
+test_marker_reparse_leaf_refuses_before_backend (__main__.ChildPathAdmissionControls.test_marker_reparse_leaf_refuses_before_backend) ... ok
+test_ordinary_db_absent_marker_reaches_backend_control (__main__.ChildPathAdmissionControls.test_ordinary_db_absent_marker_reaches_backend_control) ... ok
+test_ordinary_db_existing_marker_reaches_backend_control (__main__.ChildPathAdmissionControls.test_ordinary_db_existing_marker_reaches_backend_control) ... ok
+test_temp_junction_refuses_before_backend (__main__.ChildPathAdmissionControls.test_temp_junction_refuses_before_backend) ... ok
+test_normal_running_handle_cleanup_control (__main__.ControlsHeldCleanupControls.test_normal_running_handle_cleanup_control) ... ok
+test_poll_and_kill_error_still_attempts_wait_and_denies (__main__.ControlsHeldCleanupControls.test_poll_and_kill_error_still_attempts_wait_and_denies) ... FAIL
+test_poll_and_wait_error_keeps_unknown_and_denies (__main__.ControlsHeldCleanupControls.test_poll_and_wait_error_keeps_unknown_and_denies) ... FAIL
+test_poll_error_attempts_kill_and_wait_and_denies (__main__.ControlsHeldCleanupControls.test_poll_error_attempts_kill_and_wait_and_denies) ... FAIL
+test_file_xml_parent_refuses_before_parser_read_hash (__main__.JunitAdmissionControls.test_file_xml_parent_refuses_before_parser_read_hash) ... ok
+test_ordinary_bounded_xml_preserves_exact_47_facts_control (__main__.JunitAdmissionControls.test_ordinary_bounded_xml_preserves_exact_47_facts_control) ... ok
+test_oversized_xml_refuses_before_parser_read_hash (__main__.JunitAdmissionControls.test_oversized_xml_refuses_before_parser_read_hash) ... ok
+test_reparse_xml_parent_refuses_before_parser_read_hash (__main__.JunitAdmissionControls.test_reparse_xml_parent_refuses_before_parser_read_hash) ... ok
+test_normal_running_handle_cleanup_control (__main__.MainRunHeldCleanupControls.test_normal_running_handle_cleanup_control) ... ok
+test_poll_and_kill_error_still_attempts_wait_and_denies (__main__.MainRunHeldCleanupControls.test_poll_and_kill_error_still_attempts_wait_and_denies) ... FAIL
+test_poll_and_wait_error_keeps_unknown_and_denies (__main__.MainRunHeldCleanupControls.test_poll_and_wait_error_keeps_unknown_and_denies) ... FAIL
+test_poll_error_attempts_kill_and_wait_and_denies (__main__.MainRunHeldCleanupControls.test_poll_error_attempts_kill_and_wait_and_denies) ... FAIL
+test_invariant_refusal_cleanup_kills_and_waits_known_handle (__main__.ReturnedHandleControls.test_invariant_refusal_cleanup_kills_and_waits_known_handle) ... ok
+test_preconstructor_refusal_creates_no_handle (__main__.ReturnedHandleControls.test_preconstructor_refusal_creates_no_handle) ... ok
+test_returned_handle_registered_before_invariant_refusal (__main__.ReturnedHandleControls.test_returned_handle_registered_before_invariant_refusal) ... ok
+test_file_parent_stops_before_descendant_or_git (__main__.RootFirstControls.test_file_parent_stops_before_descendant_or_git) ... ok
+test_file_root_stops_before_leaf_git_or_hash (__main__.RootFirstControls.test_file_root_stops_before_leaf_git_or_hash) ... ok
+test_missing_parent_stops_before_descendant_or_git (__main__.RootFirstControls.test_missing_parent_stops_before_descendant_or_git) ... ok
+test_ordinary_tree_retains_exact_blob_and_ledger (__main__.RootFirstControls.test_ordinary_tree_retains_exact_blob_and_ledger) ... ok
+test_reparse_parent_stops_before_descendant_or_git (__main__.RootFirstControls.test_reparse_parent_stops_before_descendant_or_git) ... ok
+test_selected_reparse_parent_stops_before_leaf_inspection (__main__.RootFirstControls.test_selected_reparse_parent_stops_before_leaf_inspection) ... ok
+
+======================================================================
+FAIL: test_poll_and_kill_error_still_attempts_wait_and_denies (__main__.ControlsHeldCleanupControls.test_poll_and_kill_error_still_attempts_wait_and_denies)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-7-distributed-research-math\work\projection-recovery-hosted47-20261110\docs\gateway\research\persistence\qualification47\test_qualifier_controls.py", line 617, in test_poll_and_kill_error_still_attempts_wait_and_denies
+    assert_actual_cleanup(self, 'controls', poll_error=True, kill_error=True)
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-7-distributed-research-math\work\projection-recovery-hosted47-20261110\docs\gateway\research\persistence\qualification47\test_qualifier_controls.py", line 596, in assert_actual_cleanup
+    case.assertEqual(handle.events.count('kill'), 1, 'Known returned handle must get one best-effort kill attempt')
+AssertionError: 0 != 1 : Known returned handle must get one best-effort kill attempt
+
+======================================================================
+FAIL: test_poll_and_wait_error_keeps_unknown_and_denies (__main__.ControlsHeldCleanupControls.test_poll_and_wait_error_keeps_unknown_and_denies)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-7-distributed-research-math\work\projection-recovery-hosted47-20261110\docs\gateway\research\persistence\qualification47\test_qualifier_controls.py", line 620, in test_poll_and_wait_error_keeps_unknown_and_denies
+    assert_actual_cleanup(self, 'controls', poll_error=True, wait_error=True)
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-7-distributed-research-math\work\projection-recovery-hosted47-20261110\docs\gateway\research\persistence\qualification47\test_qualifier_controls.py", line 596, in assert_actual_cleanup
+    case.assertEqual(handle.events.count('kill'), 1, 'Known returned handle must get one best-effort kill attempt')
+AssertionError: 0 != 1 : Known returned handle must get one best-effort kill attempt
+
+======================================================================
+FAIL: test_poll_error_attempts_kill_and_wait_and_denies (__main__.ControlsHeldCleanupControls.test_poll_error_attempts_kill_and_wait_and_denies)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-7-distributed-research-math\work\projection-recovery-hosted47-20261110\docs\gateway\research\persistence\qualification47\test_qualifier_controls.py", line 614, in test_poll_error_attempts_kill_and_wait_and_denies
+    assert_actual_cleanup(self, 'controls', poll_error=True)
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-7-distributed-research-math\work\projection-recovery-hosted47-20261110\docs\gateway\research\persistence\qualification47\test_qualifier_controls.py", line 596, in assert_actual_cleanup
+    case.assertEqual(handle.events.count('kill'), 1, 'Known returned handle must get one best-effort kill attempt')
+AssertionError: 0 != 1 : Known returned handle must get one best-effort kill attempt
+
+======================================================================
+FAIL: test_poll_and_kill_error_still_attempts_wait_and_denies (__main__.MainRunHeldCleanupControls.test_poll_and_kill_error_still_attempts_wait_and_denies)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-7-distributed-research-math\work\projection-recovery-hosted47-20261110\docs\gateway\research\persistence\qualification47\test_qualifier_controls.py", line 631, in test_poll_and_kill_error_still_attempts_wait_and_denies
+    assert_actual_cleanup(self, 'run', poll_error=True, kill_error=True)
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-7-distributed-research-math\work\projection-recovery-hosted47-20261110\docs\gateway\research\persistence\qualification47\test_qualifier_controls.py", line 596, in assert_actual_cleanup
+    case.assertEqual(handle.events.count('kill'), 1, 'Known returned handle must get one best-effort kill attempt')
+AssertionError: 0 != 1 : Known returned handle must get one best-effort kill attempt
+
+======================================================================
+FAIL: test_poll_and_wait_error_keeps_unknown_and_denies (__main__.MainRunHeldCleanupControls.test_poll_and_wait_error_keeps_unknown_and_denies)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-7-distributed-research-math\work\projection-recovery-hosted47-20261110\docs\gateway\research\persistence\qualification47\test_qualifier_controls.py", line 634, in test_poll_and_wait_error_keeps_unknown_and_denies
+    assert_actual_cleanup(self, 'run', poll_error=True, wait_error=True)
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-7-distributed-research-math\work\projection-recovery-hosted47-20261110\docs\gateway\research\persistence\qualification47\test_qualifier_controls.py", line 596, in assert_actual_cleanup
+    case.assertEqual(handle.events.count('kill'), 1, 'Known returned handle must get one best-effort kill attempt')
+AssertionError: 0 != 1 : Known returned handle must get one best-effort kill attempt
+
+======================================================================
+FAIL: test_poll_error_attempts_kill_and_wait_and_denies (__main__.MainRunHeldCleanupControls.test_poll_error_attempts_kill_and_wait_and_denies)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-7-distributed-research-math\work\projection-recovery-hosted47-20261110\docs\gateway\research\persistence\qualification47\test_qualifier_controls.py", line 628, in test_poll_error_attempts_kill_and_wait_and_denies
+    assert_actual_cleanup(self, 'run', poll_error=True)
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-7-distributed-research-math\work\projection-recovery-hosted47-20261110\docs\gateway\research\persistence\qualification47\test_qualifier_controls.py", line 596, in assert_actual_cleanup
+    case.assertEqual(handle.events.count('kill'), 1, 'Known returned handle must get one best-effort kill attempt')
+AssertionError: 0 != 1 : Known returned handle must get one best-effort kill attempt
+
+----------------------------------------------------------------------
+Ran 28 tests in 0.208s
+
+FAILED (failures=6)
