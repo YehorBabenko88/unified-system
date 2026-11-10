@@ -1,0 +1,14 @@
+test_aba_task_drift_stays_stale_until_explicit_checkpoint (tests.test_mission_controller.ContinuationTests.test_aba_task_drift_stays_stale_until_explicit_checkpoint) ... FAIL
+
+======================================================================
+FAIL: test_aba_task_drift_stays_stale_until_explicit_checkpoint (tests.test_mission_controller.ContinuationTests.test_aba_task_drift_stays_stale_until_explicit_checkpoint)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\worktrees\mission-continuation-v2-20261110\gateway-runtime-recovery-20261107\tests\test_mission_controller.py", line 426, in test_aba_task_drift_stays_stale_until_explicit_checkpoint
+    self.assertTrue(self.controller.continuation_projection()["continuations"]["task-1"]["stale"])
+AssertionError: False is not true
+
+----------------------------------------------------------------------
+Ran 1 test in 0.084s
+
+FAILED (failures=1)

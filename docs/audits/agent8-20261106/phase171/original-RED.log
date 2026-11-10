@@ -1,0 +1,36 @@
+test_live_corrupt_unknown_cannot_create_competing_preparation (test_preparation_integrity.PreparationIntegrity.test_live_corrupt_unknown_cannot_create_competing_preparation) ... FAIL
+test_reopen_rejects_corrupt_unknown_resources_without_repair (test_preparation_integrity.PreparationIntegrity.test_reopen_rejects_corrupt_unknown_resources_without_repair) ... FAIL
+test_unknown_missing_hold_identity_is_not_a_valid_recovered_view (test_preparation_integrity.PreparationIntegrity.test_unknown_missing_hold_identity_is_not_a_valid_recovered_view) ... FAIL
+test_valid_unknown_roundtrip_preserves_exact_hold_and_events (test_preparation_integrity.PreparationIntegrity.test_valid_unknown_roundtrip_preserves_exact_hold_and_events) ... ok
+
+======================================================================
+FAIL: test_live_corrupt_unknown_cannot_create_competing_preparation (test_preparation_integrity.PreparationIntegrity.test_live_corrupt_unknown_cannot_create_competing_preparation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-5-resource-aware-distributed\work\one-shot-negative-20261110\tests\gateway_jobs\test_preparation_integrity.py", line 60, in test_live_corrupt_unknown_cannot_create_competing_preparation
+    with self.assertRaisesRegex(ValueError, 'invalid persisted preparation'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_reopen_rejects_corrupt_unknown_resources_without_repair (test_preparation_integrity.PreparationIntegrity.test_reopen_rejects_corrupt_unknown_resources_without_repair)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-5-resource-aware-distributed\work\one-shot-negative-20261110\tests\gateway_jobs\test_preparation_integrity.py", line 48, in test_reopen_rejects_corrupt_unknown_resources_without_repair
+    with self.assertRaisesRegex(ValueError, 'invalid persisted preparation'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_unknown_missing_hold_identity_is_not_a_valid_recovered_view (test_preparation_integrity.PreparationIntegrity.test_unknown_missing_hold_identity_is_not_a_valid_recovered_view)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-5-resource-aware-distributed\work\one-shot-negative-20261110\tests\gateway_jobs\test_preparation_integrity.py", line 67, in test_unknown_missing_hold_identity_is_not_a_valid_recovered_view
+    with self.assertRaisesRegex(ValueError, 'invalid persisted preparation'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.127s
+
+FAILED (failures=3)
