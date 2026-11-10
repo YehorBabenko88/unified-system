@@ -24,7 +24,7 @@ URI = 'urn:unified:test:service:' + U
 
 class TLSFixture:
     def __init__(self, *, client_uri=URI, client_eku=ExtendedKeyUsageOID.CLIENT_AUTH,
-                 trusted=True, present=True):
+                 trusted=True, present=True, strict_verification=False):
         self.temp = tempfile.TemporaryDirectory(prefix='a2-gateway-pki-')
         self.sockets = []
         self.thread = None
@@ -37,7 +37,13 @@ class TLSFixture:
                     .issuer_name(issuer.subject if issuer else subject).public_key(key.public_key())
                     .serial_number(x509.random_serial_number()).not_valid_before(now-timedelta(seconds=10))
                     .not_valid_after(now+timedelta(minutes=10))
-                    .add_extension(x509.BasicConstraints(ca=ca, path_length=0 if ca else None), critical=True))
+                    .add_extension(x509.BasicConstraints(ca=ca, path_length=0 if ca else None), critical=True)
+                    .add_extension(x509.KeyUsage(digital_signature=not ca, content_commitment=False,
+                        key_encipherment=False, data_encipherment=False, key_agreement=False,
+                        key_cert_sign=ca, crl_sign=ca, encipher_only=False, decipher_only=False), critical=True)
+                    .add_extension(x509.SubjectKeyIdentifier.from_public_key(key.public_key()), critical=False)
+                    .add_extension(x509.AuthorityKeyIdentifier.from_issuer_public_key(
+                        (issuer_key or key).public_key()), critical=False))
                 if not ca:
                     san = x509.IPAddress(ipaddress.ip_address('127.0.0.1')) if server else x509.UniformResourceIdentifier(uri)
                     builder = builder.add_extension(x509.SubjectAlternativeName([san]), critical=False)
@@ -63,9 +69,15 @@ class TLSFixture:
             self.server_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
             self.server_context.minimum_version = ssl.TLSVersion.TLSv1_2
             self.server_context.verify_mode = ssl.CERT_REQUIRED
+            if strict_verification:
+                self.server_context.verify_flags |= ssl.VERIFY_X509_STRICT
             self.server_context.load_verify_locations(cafile=ca_path)
             self.server_context.load_cert_chain(*material('server', server_key, server))
             client_context = ssl.create_default_context(cafile=ca_path)
+            if strict_verification:
+                client_context.verify_flags |= ssl.VERIFY_X509_STRICT
+            self.client_context = client_context
+            self.client_error = None
             if present:
                 client_context.load_cert_chain(*material('client', client_key, client))
             listener = socket.socket()
@@ -94,7 +106,8 @@ class TLSFixture:
                 self.client = client_context.wrap_socket(raw, server_hostname='127.0.0.1')
                 self.sockets.append(self.client)
                 assert self.client.getpeercert(binary_form=True) == self.server_der  # actual loaded server cert pin
-            except ssl.SSLError:
+            except ssl.SSLError as exc:
+                self.client_error = exc
                 self.client = None
             self.accepted = outcome.get(timeout=6)
             self.thread.join(6)
@@ -106,6 +119,28 @@ class TLSFixture:
         for item in reversed(self.sockets): item.close()
         if self.thread: self.thread.join(6)
         self.temp.cleanup()
+
+
+class StrictTLSFixtureTests(unittest.TestCase):
+    def test_generated_chain_handshakes_with_explicit_strict_verification(self):
+        # Root serial lane only: actual owned loopback handshake, no flag removal.
+        fixture = TLSFixture(strict_verification=True)
+        try:
+            error = fixture.client_error
+            diagnostic = dict(client_error_type=type(error).__name__,
+                              verify_code=getattr(error, 'verify_code', None),
+                              verify_message=getattr(error, 'verify_message', None),
+                              server_error_type=type(fixture.accepted).__name__)
+            self.assertIsNotNone(fixture.client, diagnostic)
+            self.assertIsInstance(fixture.accepted, ssl.SSLSocket, diagnostic)
+            self.assertTrue(fixture.client_context.verify_flags & ssl.VERIFY_X509_STRICT)
+            self.assertTrue(fixture.server_context.verify_flags & ssl.VERIFY_X509_STRICT)
+            self.assertEqual(fixture.client_context.verify_mode, ssl.CERT_REQUIRED)
+            self.assertEqual(fixture.server_context.verify_mode, ssl.CERT_REQUIRED)
+            self.assertTrue(fixture.client_context.check_hostname)
+        finally:
+            fixture.close()
+
 
 class GatewayIdentityTests(unittest.TestCase):
     def setUp(self):
