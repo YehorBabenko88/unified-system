@@ -1,0 +1,21 @@
+{
+  "original_sha256": {
+    "allocated-prerequisite-evidence/receipt.json": "bf8b4c7f87db699658180f53522f022829e1986a214d1ef78a0084ef066465a1",
+    "allocated-prerequisite-evidence/bootstrap.json": "b52e7960cc54197cde3afe2eec6b857b43ba8058e714ac2b59962c795fc2356d",
+    "READONLY-WINDOWS-STAT-OBSERVATION.json": "7d47c193b04bcb2dfb42c22629be2a396551e9c42d51e150668ab12c8cdfd3d0",
+    "controller.py": "2780868962f8c6a91cec6db40bbb1bd4d0fdeb9f77d3ce9b611d40450d705a13"
+  },
+  "actual_attempt": "DENY_PREFLIGHT_0_CLASSIFIER_CASES_EMPTY_RECORDED_PROCESS_ROLES",
+  "source_head_context": "756a6701421e804a116a50f997bc015643af341c",
+  "source_tree_context": "86abc51e5a9a3f09b72ad7c2d1d4ff8dbbabf9e9",
+  "recorded_stat_discrepancy": "LSTAT_VS_FSTAT_CTIME_ONLY_WITH_LISTED_IDENTITY_SIZE_MTIME_BIRTHTIME_EQUAL",
+  "source_guard": "CROSS_API_CTIME_IN_IDENTITY_TUPLE_STATICALLY_MATCHES_RECORDED_REFUSAL",
+  "inference": "PORTABILITY_CANDIDATE_NOT_FILE_MUTATION_PROOF; SAMEAPI_STABILITY_AND_DIFFERENTAPI_IDENTITY_NEED_SEPARATE_SOURCE_REVIEW",
+  "A8_runtime_stat_or_controller_execution": false,
+  "official_documentation": "https://docs.python.org/3.12/library/os.html#os.stat_result.st_ctime_ns",
+  "docs_limit": "WINDOWS_CTIME_DEPRECATION_OS_DEPENDENCE_ONLY_NOT_EXACT_LOCAL_API_DISCREPANCY",
+  "F42_Math_PS_catch": "NO_CAUSE_OR_TEST_RESULT_TRANSFER",
+  "GO_NO_GO": "NO-GO",
+  "PHYSICAL_TESTS": "BLOCKED",
+  "TAILSCALE_REMOVAL": "BLOCKED"
+}

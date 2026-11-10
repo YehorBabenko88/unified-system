@@ -1,0 +1,187 @@
+{
+  "scope": "HOSTED_WINDOWS_AND_UBUNTU_EXACT_E23_UNIT_ONLY",
+  "result": "VERIFIED",
+  "run_id": 42917337440,
+  "run_attempt": 1,
+  "event": "pull_request",
+  "platforms": [
+    {
+      "platform": "win32",
+      "artifact_id": 13810980134,
+      "job_id": 130183048978,
+      "created_at": "2026-11-10T22:46:52Z",
+      "expires_at": "2027-02-08T22:44:41Z",
+      "zip_digest": "sha256:49813f3bc9f678e54b811156ba6b4524f37eb649344312e309599416eb3dace5",
+      "head": "e23abe3345379e41f979695136fd1261e3cbd238",
+      "tree": "96335f168445ad7e73a6f99ba5221cf8ab1804c5",
+      "full_raw_files": 407,
+      "all_three_maps_match_independent_local_map": true,
+      "separate_python_guards": {
+        "tests": 8,
+        "passed": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "expected_failures": 0,
+        "unexpected_successes": 0
+      },
+      "separate_node_six": {
+        "tests": 6,
+        "pass": 6,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "node_fact": {
+        "version": "v24.22.1",
+        "exec_path": "C:\\hostedtoolcache\\windows\\node\\24.22.1\\x64\\node.exe",
+        "exec_argv": [
+          "--no-addons",
+          "--test",
+          "--test-isolation=none",
+          "--test-concurrency=1",
+          "--test-reporter=tap",
+          "--require",
+          "D:\\a\\_temp\\preview-benchmark-evidence\\unit\\node-preflight.cjs"
+        ],
+        "platform": "win32",
+        "arch": "x64"
+      },
+      "process": {
+        "launched": true,
+        "exit_code": 0,
+        "timed_out": false,
+        "output_overflow": false,
+        "kill_used": false,
+        "cleanup_uncertain": false,
+        "reader_error": false,
+        "readers_retired": true,
+        "elapsed_seconds": 0.14099999999999113,
+        "captured_bytes": 1393
+      },
+      "repository_cohort": {
+        "names": [
+          "YehorBabenko88/Terminan",
+          "YehorBabenko88/Terminan",
+          "YehorBabenko88/Terminan"
+        ],
+        "ids": [
+          "1413341784",
+          "1413341784",
+          "1413341784"
+        ],
+        "expected_name": "YehorBabenko88/Terminan",
+        "expected_id": "1413341784"
+      },
+      "source_receipt_sha256": "2137776e330273bf9fd5eb980fa0217ec5f309213153a0fbe08f1153176a27fa",
+      "decoded_files": {
+        "preflight-facts.json": "8c2580352e54dbb39716787230fedb29b08250e9d0524dbf76ca30ac2dbaa8c9",
+        "bootstrap-facts.json": "36805838de7a682becde48673957dec1fdddbbc56431e1fc6979601e59e729a5",
+        "primary-bootstrap.py": "00bfbc7a52fba771b9c3dd5bb481b758c763c29c36c33d4345a4a39e37eb2caf",
+        "bootstrap-final.json": "32cd49e3d9c1e47447a1abad66939845d6f79c522345ffae1dccc7d76aa09abe",
+        "unit/node-original.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "unit/node-preflight.cjs": "b3e3f3b8f8e5d44524c5fe0e0564c99f87bc4c745bc8a677791377cc330a41da",
+        "unit/node-original.tap": "e9e4178c21a4b52a6bb93a94dbf7a1ca5e59411faed13eaaccaf27c7816f2758",
+        "unit/pure-eight-original.txt": "5391a18dc0e8a1cfb4aa11264e4f4ac579c8715e834591bcf2539d32449a918b",
+        "unit/pure-eight-receipt.json": "55a199cf87c8517dd23592d7b931b71320eee0be9f3288985ec4a061585aea87",
+        "unit/pure-eight-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "unit/pure-eight-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "unit/source-receipt.json": "2137776e330273bf9fd5eb980fa0217ec5f309213153a0fbe08f1153176a27fa"
+      }
+    },
+    {
+      "platform": "linux",
+      "artifact_id": 13809402935,
+      "job_id": 130183048488,
+      "created_at": "2026-11-10T22:46:12Z",
+      "expires_at": "2027-02-08T22:44:41Z",
+      "zip_digest": "sha256:f61971b3f1fab1e6f063900f5e3008d5d56f3fbc5a95980119384068418c4d61",
+      "head": "e23abe3345379e41f979695136fd1261e3cbd238",
+      "tree": "96335f168445ad7e73a6f99ba5221cf8ab1804c5",
+      "full_raw_files": 407,
+      "all_three_maps_match_independent_local_map": true,
+      "separate_python_guards": {
+        "tests": 8,
+        "passed": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "expected_failures": 0,
+        "unexpected_successes": 0
+      },
+      "separate_node_six": {
+        "tests": 6,
+        "pass": 6,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "node_fact": {
+        "version": "v24.22.1",
+        "exec_path": "/opt/hostedtoolcache/node/24.22.1/x64/bin/node",
+        "exec_argv": [
+          "--no-addons",
+          "--test",
+          "--test-isolation=none",
+          "--test-concurrency=1",
+          "--test-reporter=tap",
+          "--require",
+          "/home/runner/work/_temp/preview-benchmark-evidence/unit/node-preflight.cjs"
+        ],
+        "platform": "linux",
+        "arch": "x64"
+      },
+      "process": {
+        "launched": true,
+        "exit_code": 0,
+        "timed_out": false,
+        "output_overflow": false,
+        "kill_used": false,
+        "cleanup_uncertain": false,
+        "reader_error": false,
+        "readers_retired": true,
+        "elapsed_seconds": 0.08139619899999673,
+        "captured_bytes": 1401
+      },
+      "repository_cohort": {
+        "names": [
+          "YehorBabenko88/Terminan",
+          "YehorBabenko88/Terminan",
+          "YehorBabenko88/Terminan"
+        ],
+        "ids": [
+          "1413341784",
+          "1413341784",
+          "1413341784"
+        ],
+        "expected_name": "YehorBabenko88/Terminan",
+        "expected_id": "1413341784"
+      },
+      "source_receipt_sha256": "30404561f604cf3a5887dd8c6b06c6b9c7ae86106559e5d9db23647aea1cb60a",
+      "decoded_files": {
+        "bootstrap-facts.json": "f5f7b821c4e95fccac8c2a42da2a45b7c0dac5702e99ccb6c3b72aef6d46ea52",
+        "bootstrap-final.json": "c27c60c2b9c441141d07b68b984c5400cc11121ec5ccb36c13700192d75db004",
+        "preflight-facts.json": "7edd1c3c42403dbb81149418295dbf73b23a2d45f94d339c58a6cd829d50fad5",
+        "primary-bootstrap.py": "221bb8a795e2aee7addc6f33060c5816f9c03e7236bc4618fa1f8a459593a87f",
+        "unit/node-original.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "unit/node-preflight.cjs": "b3e3f3b8f8e5d44524c5fe0e0564c99f87bc4c745bc8a677791377cc330a41da",
+        "unit/node-original.tap": "7a506f2f25e92b84d7861185af6331453feba90b99de1f8c38d2a156bea98a00",
+        "unit/pure-eight-original.txt": "7b3c746a929536ef420f99977c21ce26c8b6b7f52c75c4f57103f1428fb241fe",
+        "unit/pure-eight-receipt.json": "379fb8a89a48072ab65e064375954836af58aaa2fde9fa4c78fb6b3812a0d1cc",
+        "unit/pure-eight-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "unit/pure-eight-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "unit/source-receipt.json": "30404561f604cf3a5887dd8c6b06c6b9c7ae86106559e5d9db23647aea1cb60a"
+      }
+    }
+  ],
+  "limitations": [
+    "Not browser/10k100k cadence or full runtime acceptance",
+    "Not physical Windows acceptance",
+    "No Control API/scientific READ/native authority",
+    "Successful repo guard path observed; adversarial rejection not exercised",
+    "Source maps are complete for the primary repository; not host-wide provenance",
+    "No artifact code executed during collection/verification"
+  ]
+}

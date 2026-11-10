@@ -1,0 +1,47 @@
+# PREVIEW_NODE_FACT {"version":"v24.22.1","exec_path":"C:\\hostedtoolcache\\windows\\node\\24.22.1\\x64\\node.exe","exec_argv":["--no-addons","--test","--test-isolation=none","--test-concurrency=1","--test-reporter=tap","--require","D:\\a\\_temp\\preview-benchmark-evidence\\unit\\node-preflight.cjs"],"platform":"win32","arch":"x64"}
+TAP version 13
+# Subtest: r2_metrics_count_held_benchmark_raf
+ok 1 - r2_metrics_count_held_benchmark_raf
+  ---
+  duration_ms: 8.7431
+  type: 'test'
+  ...
+# Subtest: r2_dispose_settles_held_benchmark_without_frame
+ok 2 - r2_dispose_settles_held_benchmark_without_frame
+  ---
+  duration_ms: 4.4444
+  type: 'test'
+  ...
+# Subtest: r2_seek_settles_superseded_benchmark_without_frame
+ok 3 - r2_seek_settles_superseded_benchmark_without_frame
+  ---
+  duration_ms: 3.6286
+  type: 'test'
+  ...
+# Subtest: r4_metrics_count_held_benchmark_raf
+ok 4 - r4_metrics_count_held_benchmark_raf
+  ---
+  duration_ms: 7.4036
+  type: 'test'
+  ...
+# Subtest: r4_dispose_settles_held_benchmark_without_frame
+ok 5 - r4_dispose_settles_held_benchmark_without_frame
+  ---
+  duration_ms: 4.1033
+  type: 'test'
+  ...
+# Subtest: r4_seek_settles_superseded_benchmark_without_frame
+ok 6 - r4_seek_settles_superseded_benchmark_without_frame
+  ---
+  duration_ms: 3.7885
+  type: 'test'
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 55.6441

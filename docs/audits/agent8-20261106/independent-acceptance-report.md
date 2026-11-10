@@ -3877,3 +3877,6 @@ Phases218–220: Terminan135 rawblobs matchdc810; only3 inheritedfileschangedate
 
 
 Phase221 actualboundedsemanticreview finalSync12+Ops4/startupservecodecproducerCIjoins exactdc810/e23 scopedSOURCEACK; no newactionableP1/P2 inreviewedscope. SufficientinputforRootoneexactbaselinepolicyLEASEdecision withRootboundedCI10/runtime40+priorA8scopes, notall135/runtimesemanticACK. Opsdoc21alreadyfixed22ate23. FuturepolicyOps4/preview8closedinventories mustexplicitlyversion/review; no bypass. F50stillOPEN;8P1/9P2/NO-GO/physicalTailscaleBLOCKED. See phase221/report.md.
+
+
+Phases222–225 (client2026-11-11): prerequisiteactualDENY0classifiercases retained; Math4pinlocalGitlineage src122identical/sourceonly/noNative; A6hostedexacte23run42917337440 freshAPI/joblogs/2ZIPdigests verified Windows+Ubuntu separate8/6PASS each/407maps—notfullCI/browser/native. A7proposed28test3f7 sourceeffectACKonly/actualNOTRUN/F50OPEN/noallocation. Confirmed8P1/9P2, overallNO-GO/physicalTailscaleBLOCKED. See phase222/report.md through phase225/report.md.
