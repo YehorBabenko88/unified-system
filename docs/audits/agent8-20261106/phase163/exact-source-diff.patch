@@ -1,0 +1,664 @@
+diff --git a/.github/workflows/final-integration.yml b/.github/workflows/final-integration.yml
+index 87e83f8..89ea1d6 100644
+--- a/.github/workflows/final-integration.yml
++++ b/.github/workflows/final-integration.yml
+@@ -95,10 +95,10 @@ jobs:
+                       if isinstance(item, unittest.TestSuite): yield from cases(item)
+                       else: yield item
+               test_ids=[case.id() for case in cases(suite)]
+-              assert inventory['schema']=='unified.integration-component-tests.v5'
+-              assert inventory['expected_count']==145
+-              assert len(test_ids)==len(set(test_ids))==145
+-              assert len(inventory['preserved_prior_ids'])==144
++              assert inventory['schema']=='unified.integration-component-tests.v6'
++              assert inventory['expected_count']==161
++              assert len(test_ids)==len(set(test_ids))==161
++              assert len(inventory['preserved_prior_ids'])==145
+               assert set(inventory['preserved_prior_ids'])<=set(test_ids), 'prior mandatory cases removed'
+               assert sorted(test_ids)==inventory['expected_test_ids'], 'mandatory test inventory differs'
+               stream = io.StringIO()
+@@ -121,7 +121,7 @@ jobs:
+                   run_metadata='CORRELATION_ONLY_NOT_HOSTED_ATTESTATION',
+                   runtime_api='NOT_QUALIFIED', physical='NOT_RUN', production='NO_GO')
+               pathlib.Path('partial-integration-ci-evidence.json').write_text(json.dumps(report, indent=2), encoding='utf-8')
+-              assert result.wasSuccessful() and result.testsRun == 145 and not result.skipped
++              assert result.wasSuccessful() and result.testsRun == 161 and not result.skipped
+       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+         if: always()
+         with:
+diff --git a/docs/ci/lan-failure-diagnostics-integration-20261110.md b/docs/ci/lan-failure-diagnostics-integration-20261110.md
+new file mode 100644
+index 0000000..1cc62ff
+--- /dev/null
++++ b/docs/ci/lan-failure-diagnostics-integration-20261110.md
+@@ -0,0 +1,37 @@
++# Bounded heartbeat diagnostic integration
++
++Base: PR77 `dd4ef015d9ed20065ccdc2c563e80046015d9193`.
++Component source: `baef8c40c43f0cca95666a1b2008650293dd698c`,
++tree `ac91a344a2956e2244603b831fc17265ac05cc69`.
++Only the heartbeat test installs the test-process observer. Production transport,
++budgets, shared Mux tests and authority/security contracts remain unchanged.
++This is evidence collection, not a repair or a proven historical root cause.
++
++Root verified the baseline inventory has145 unique mandatory IDs. All145 are
++retained unchanged as preserved_prior_ids;16 distinct pure diagnostic IDs are
++added, giving schema v6/count161. Workflow count assertions are advanced with
++the inventory; no mandatory case is removed or skipped. No PASS is transferred
++from145 to161. Actual full161 qualification remains pending.
++
++Component pure evidence:16PASS/0skip/0.008s, guarded owner execution reports
++zero socket/SQLite/subprocess calls. A8 independently reviewed source and
++original receipts without importing/running tests. SOURCE_ACK is not a fixture,
++hosted, physical or native acceptance result.
++
++A8 immutable report:
++https://github.com/YehorBabenko88/unified-system/blob/fd273989372c648bcd7ef66017a524a0e6468e45/docs/audits/agent8-20261106/phase162/report.md
++SHA256: fefd75a71ff8912ad7002cca47a4d96b7dea2f3e9e8015c1e80e86b0b6d086b3.
++
++Interpretation limits: patches affect the whole test process during observe;
++therefore execution must remain serial. Fixed slots bound retained observations,
++not patch scope. Nonblocking observer/connection locks and the1960-byte line
++limit are not a hard wall-time bound on formatting/stderr writing. Snapshot is
++before explicit test cleanup, not an atomic pre-transport-closure assertion.
++Pair/setup errors outside the boundary do not emit this line. TX_COMMIT is
++intent before the original commit/close/lock-release section, not commit proof.
++Stage SEND is a static label. Diagnostic overhead can affect scheduling.
++
++Original LAN failures remain UNKNOWN. Strict D4 Option1/logical DISABLED,
++public submit DENY, native/physical gates and Tailscale removal blocks persist.
++No new TLS, socket, native, fault-injection or office fixture is authorized by
++this source integration. Overall IN_PROGRESS / NO-GO.
+diff --git a/release/component-test-inventory.json b/release/component-test-inventory.json
+index 88704c7..53d14c0 100644
+--- a/release/component-test-inventory.json
++++ b/release/component-test-inventory.json
+@@ -1,5 +1,5 @@
+ {
+-  "schema": "unified.integration-component-tests.v5",
++  "schema": "unified.integration-component-tests.v6",
+   "modules": [
+     "tests.test_integration_registry",
+     "tests.test_agent5_scheduler_components",
+@@ -101,6 +101,22 @@
+     "tests.test_integration_registry.RegistryTests.test_shared_worktree_denied",
+     "tests.test_integration_registry.RegistryTests.test_unsafe_repository_path_spelling_rejected",
+     "tests.test_integration_registry.RegistryTests.test_windows_path_aliases_and_case_collisions_rejected",
++    "tests.test_lan_transport.FailureDiagnosticsPureTests.test_budget_wait_phase_visible_without_sql_or_app_mutation",
++    "tests.test_lan_transport.FailureDiagnosticsPureTests.test_connection_busy_does_not_read_state",
++    "tests.test_lan_transport.FailureDiagnosticsPureTests.test_diagnostic_failure_sentinel_preserves_original",
++    "tests.test_lan_transport.FailureDiagnosticsPureTests.test_emit_observer_separates_control_and_data_without_changing_calls",
++    "tests.test_lan_transport.FailureDiagnosticsPureTests.test_fixed_registration_slots_and_one_failure_line",
++    "tests.test_lan_transport.FailureDiagnosticsPureTests.test_fixed_shape_ascii_byte_bound_and_privacy",
++    "tests.test_lan_transport.FailureDiagnosticsPureTests.test_frozen_snapshot_matches_the_original_failure_only",
++    "tests.test_lan_transport.FailureDiagnosticsPureTests.test_full_known_shape_overflow_stays_valid_bounded_and_causal",
++    "tests.test_lan_transport.FailureDiagnosticsPureTests.test_observer_busy_is_nonblocking",
++    "tests.test_lan_transport.FailureDiagnosticsPureTests.test_observer_failure_never_duplicates_or_masks_original_call",
++    "tests.test_lan_transport.FailureDiagnosticsPureTests.test_original_exception_and_traceback_preserved",
++    "tests.test_lan_transport.FailureDiagnosticsPureTests.test_success_emits_nothing",
++    "tests.test_lan_transport.FailureDiagnosticsPureTests.test_transaction_entry_wait_and_failed_entry_not_stale",
++    "tests.test_lan_transport.FailureDiagnosticsPureTests.test_unknown_objects_never_stringified",
++    "tests.test_lan_transport.FailureDiagnosticsPureTests.test_wrappers_call_originals_once_and_restore",
++    "tests.test_lan_transport.FailureDiagnosticsPureTests.test_writer_failure_never_replaces_original",
+     "tests.test_lan_transport.RegistryTests.test_backoff_is_bounded_auth_failure_not_retryable",
+     "tests.test_lan_transport.RegistryTests.test_duplicate_or_ip_claim_cannot_be_node_identity",
+     "tests.test_lan_transport.TLSIsolationTests.test_active_control_heartbeats_keep_idle_data_channel_healthy",
+@@ -162,7 +178,7 @@
+     "tests.test_windows_qualification.WindowsQualificationTests.test_unqualified_physical_admission_cannot_be_enabled",
+     "tests.test_windows_qualification.WindowsQualificationTests.test_valid_pending_matrix_never_admits_installation"
+   ],
+-  "expected_count": 145,
++  "expected_count": 161,
+   "prior_inventory_sha256": "a69eb60b1ebd6b961ec3b104985c0d01f4382afb0d726f3c6ce203178e1a8ae7",
+   "preserved_prior_ids": [
+     "tests.storage.test_checkpoint_vectors.CheckpointVectorTests.test_confirmed_unknown_time_is_still_only_an_untrusted_claim",
+@@ -258,6 +274,7 @@
+     "tests.test_lan_transport.TLSIsolationTests.test_concurrent_registry_updates_cannot_restore_older_revoked_pin",
+     "tests.test_lan_transport.TLSIsolationTests.test_control_writer_progresses_while_data_budget_waits",
+     "tests.test_lan_transport.TLSIsolationTests.test_credit_backpressure_and_control_lane_while_data_waits",
++    "tests.test_lan_transport.TLSIsolationTests.test_expired_idle_peer_without_activity_still_closes_real_tls",
+     "tests.test_lan_transport.TLSIsolationTests.test_fingerprint_and_wrong_uri_cert_rejected",
+     "tests.test_lan_transport.TLSIsolationTests.test_isolation_rejects_nonloopback_even_if_registry_admits_it",
+     "tests.test_lan_transport.TLSIsolationTests.test_malformed_frame_rejected_before_payload_allocation",
+diff --git a/tests/lan_failure_diagnostics.py b/tests/lan_failure_diagnostics.py
+new file mode 100644
+index 0000000..0ad4f2b
+--- /dev/null
++++ b/tests/lan_failure_diagnostics.py
+@@ -0,0 +1,241 @@
++"""Test-only, best-effort heartbeat failure line. No runtime/authority API.
++
++Exactly two connection/store slots; bounded IO scalars, never an event trace.
++Worker callbacks never print. Original calls run once even if observation fails.
++"""
++import contextlib
++import itertools
++import json
++import sys
++import threading
++import time
++from unittest.mock import patch
++
++PREFIX='LAN_FAIL_DIAG_V1 '
++LIMIT=1960
++_CODES=frozenset(('NONE','OTHER','ASSERTION','BUSY','UNAVAILABLE','DIAGNOSTIC_UNAVAILABLE','DEADLINE','DISCONNECTED','DELIVERY_UNKNOWN','CANCELLED','POLICY_REVOKED','BUDGET_STORE_UNAVAILABLE','BUDGET_CLOCK_UNCERTAIN','OVERLOADED','CLOSED','AUTH_REJECTED','PROTOCOL_REJECTED'))
++_KINDS=frozenset(('NONE','OTHER','HELLO','OPEN','CREDIT','APP','PING','PONG','MUX_FRAGMENT'))
++_PHASES=frozenset(('NONE','OTHER','SEND','ASSERT','WAIT','TX_BODY','TX_COMMIT','TX_DONE','TX_ERROR','TX_ERROR_EXIT','READ_1','READ_5','READ_OTHER','READ_DONE','READ_ERROR'))
++
++def _enum(value,allowed,default='OTHER'):
++    return value if type(value) is str and value in allowed else default
++
++def _int(value,maximum=9999999,minimum=0):
++    return min(maximum,max(minimum,value)) if type(value) is int else 0
++
++def _dict(value):return value if type(value) is dict else {}
++def _items(value,count):return value[:count] if type(value) in (list,tuple) else ()
++def _bool(value):return value is True
++
++def format_failure(state,code='OTHER'):
++    """Rebuild from an allowlist; no arbitrary repr/str/keys enter the line."""
++    state=_dict(state)
++    body=dict(v=1,stage=_enum(state.get('stage'),_PHASES),code=_enum(code,_CODES),observer=_enum(state.get('observer'),frozenset(('OK','BUSY','UNAVAILABLE'))),connections=[],stores=[],io=[],truncated=_bool(state.get('truncated')))
++    for item in _items(state.get('connections'),2):
++        item=_dict(item)
++        if item.get('busy') is True or item.get('unavailable') is True:
++            body['connections'].append(dict(state='BUSY' if item.get('busy') is True else 'UNAVAILABLE'));continue
++        streams=[];jobs=[]
++        for row in _items(item.get('streams'),2):
++            if type(row) in (list,tuple) and len(row)==4:streams.append([_int(row[0],16),_bool(row[1]),_int(row[2],2**63-1),_int(row[3],2**63-1)])
++        for row in _items(item.get('jobs'),2):
++            if type(row) in (list,tuple) and len(row)==5:jobs.append([_enum(row[0],_KINDS),_enum(row[1],frozenset(('control','live','bulk'))),_bool(row[2]),_enum(row[3],_CODES),_int(row[4],9999999,-9999999)])
++        body['connections'].append(dict(slot=_int(item.get('slot'),2),closed=_bool(item.get('closed')),why=_enum(item.get('why'),_CODES),age_ms=_int(item.get('age_ms')),q=_int(item.get('q'),64),qb=_int(item.get('qb'),1048576),streams=streams,jobs=jobs,alive=[_bool(x) for x in _items(item.get('alive'),5)]))
++    for item in _items(state.get('stores'),2):
++        item=_dict(item);body['stores'].append(dict(phase=_enum(item.get('phase'),_PHASES),waiters=_int(item.get('waiters'),16),held=_bool(item.get('held')),entry_ms=_int(item.get('entry_ms')),hold_ms=_int(item.get('hold_ms')),max_ms=_int(item.get('max_ms')),n=_int(item.get('n')),budget_waiters=_int(item.get('budget_waiters'),16),budget_ms=_int(item.get('budget_ms'))))
++    for item in _items(state.get('io'),4):
++        item=_dict(item);body['io'].append(dict(slot=_int(item.get('slot'),2),channel=_enum(item.get('channel'),frozenset(('control','data'))),read=_enum(item.get('read'),_PHASES),write=_enum(item.get('write'),_KINDS),n=_int(item.get('n'),65536),remaining_ms=_int(item.get('remaining_ms'),9999999,-9999999),elapsed_ms=_int(item.get('elapsed_ms')),active=_bool(item.get('active')),error=_enum(item.get('error'),_CODES)))
++    if any(type(state.get(name)) in (list,tuple) and len(state[name])>cap for name,cap in (('connections',2),('stores',2),('io',4))):body['truncated']=True
++    def encode():return PREFIX+json.dumps(body,sort_keys=True,separators=(',',':'),ensure_ascii=True,allow_nan=False)+'\n'
++    line=encode()
++    if len(line.encode('ascii'))>LIMIT:
++        body['truncated']=True;body['io']=body['io'][:2]
++        for row in body['connections']:
++            if 'jobs' in row:row['jobs']=row['jobs'][:1];row['streams']=row['streams'][:1]
++        line=encode()
++    if len(line.encode('ascii'))>LIMIT:
++        line=PREFIX+'{"code":"DIAGNOSTIC_UNAVAILABLE","truncated":true,"v":1}\n'
++    return line
++
++
++class FailureDiagnostics:
++    def __init__(self,writer=None):
++        self._writer=writer;self._lock=threading.Lock();self._connections=[];self._stores=[];self._io={}
++        self._emitted=False;self._unavailable=False;self._truncated=False;self._frozen=None;self._errors=()
++        self._test_thread=threading.get_ident()  # Private ownership only; never serialized.
++
++    def _note(self,callback,*args):
++        try:callback(*args)
++        except BaseException:self._unavailable=True
++
++    def register_connection(self,connection):
++        if not self._lock.acquire(False):self._unavailable=True;return
++        try:
++            if any(c is connection for c in self._connections):return
++            if len(self._connections)<2:self._connections.append(connection)
++            else:self._truncated=True
++        finally:self._lock.release()
++
++    def _code(self,exc):
++        if type(exc) is AssertionError:return 'ASSERTION'
++        if type(exc) in self._errors and type(exc.args) is tuple and len(exc.args)==1:return _enum(exc.args[0],_CODES)
++        return 'OTHER'
++
++    def _connection(self,connection,slot):
++        try:
++            if not connection.cv.acquire(False):return dict(busy=True)
++            try:
++                streams=[[k,v['opened'],v['grant'],v['sent']] for k,v in itertools.islice(connection.tx_streams.items(),2)]
++                jobs=[[j['kind'],j['cls'],j['started'],_enum(j['error'],_CODES),int((j['deadline']-time.monotonic())*1000)] for j in itertools.islice(connection.outgoing,2)]
++                return dict(slot=slot,closed=connection.closed,why=_enum(connection.error,_CODES),age_ms=int((time.monotonic()-connection.last_rx)*1000),q=len(connection.outgoing),qb=connection.queued_bytes,streams=streams,jobs=jobs,alive=[t.is_alive() for t in itertools.islice(connection.threads,5)])
++            finally:connection.cv.release()
++        except BaseException:return dict(unavailable=True)
++
++    def snapshot(self):
++        if not self._lock.acquire(False):return dict(observer='BUSY')
++        try:
++            connections=list(self._connections)
++            stores=[{k:v for k,v in row.items() if k not in ('ref','since','budget_since')} for row in self._stores]
++            now=time.monotonic()
++            for row,original in zip(stores,self._stores):
++                if original['held']:row['hold_ms']=int((now-original['since'])*1000)
++                if original.get('budget_waiters',0):row['budget_ms']=int((now-original['budget_since'])*1000)
++            io=[dict(row) for row in self._io.values()]
++            state=dict(observer='UNAVAILABLE' if self._unavailable else 'OK',stage='SEND',stores=stores,io=io,truncated=self._truncated)
++        finally:self._lock.release()
++        state['connections']=[self._connection(c,i+1) for i,c in enumerate(connections)]
++        return state
++
++    def emit_failure(self,exc):
++        if self._emitted:return
++        self._emitted=True
++        try:
++            state=self._frozen[1] if self._frozen is not None and self._frozen[0] is exc else self.snapshot()
++            line=format_failure(state,self._code(exc))
++        except BaseException:line=PREFIX+'{"code":"DIAGNOSTIC_UNAVAILABLE","v":1}\n'
++        try:
++            writer=self._writer if self._writer is not None else sys.stderr.write
++            writer(line)
++        except BaseException:pass  # Never replace the original test failure.
++
++    @contextlib.contextmanager
++    def failure_boundary(self):
++        try:yield
++        except BaseException as exc:
++            self.emit_failure(exc)
++            raise
++
++    def _store(self,store,phase,start):
++        if not self._lock.acquire(False):self._unavailable=True;return
++        try:
++            row=next((r for r in self._stores if r['ref'] is store),None)
++            if row is None:
++                if len(self._stores)>=2:self._truncated=True;return
++                row=dict(ref=store,phase='NONE',waiters=0,held=False,entry_ms=0,hold_ms=0,max_ms=0,n=0,since=start,budget_waiters=0,budget_ms=0,budget_since=start);self._stores.append(row)
++            elapsed=int((time.monotonic()-start)*1000)
++            if phase=='WAIT':
++                row['waiters']+=1
++                if not row['held']:row['phase']='WAIT'
++                return
++            if phase=='TX_ENTER_ERROR':
++                row['waiters']=max(0,row['waiters']-1);row['n']+=1;row['max_ms']=max(row['max_ms'],elapsed)
++                if not row['held']:row['phase']='WAIT' if row['waiters'] else 'TX_ERROR'
++                return
++            if phase=='TX_BODY':row['waiters']=max(0,row['waiters']-1);row['entry_ms']=elapsed;row['held']=True;row['since']=time.monotonic()
++            if phase in ('TX_DONE','TX_ERROR'):row['held']=False;row['n']+=1;row['max_ms']=max(row['max_ms'],elapsed)
++            row['phase']='WAIT' if not row['held'] and row['waiters'] else phase
++        finally:self._lock.release()
++
++    def _budget_event(self,store,active,start):
++        if not self._lock.acquire(False):self._unavailable=True;return
++        try:
++            row=next((r for r in self._stores if r['ref'] is store),None)
++            if row is None:
++                if len(self._stores)>=2:self._truncated=True;return
++                row=dict(ref=store,phase='NONE',waiters=0,held=False,entry_ms=0,hold_ms=0,max_ms=0,n=0,since=start,budget_waiters=0,budget_ms=0,budget_since=start);self._stores.append(row)
++            if active:
++                if not row['budget_waiters']:row['budget_since']=start
++                row['budget_waiters']+=1
++            else:
++                row['budget_waiters']=max(0,row['budget_waiters']-1)
++                row['budget_ms']=int((time.monotonic()-start)*1000)
++        finally:self._lock.release()
++
++    def _freeze(self,exc):
++        # Only the test-thread send can own its pre-cleanup snapshot. Worker
++        # errors still update bounded IO phases, but cannot replace this state.
++        if threading.get_ident()==self._test_thread:self._frozen=(exc,self.snapshot())
++
++    def _io_update(self,connection=None,sock=None,channel='control',**fields):
++        if not self._lock.acquire(False):self._unavailable=True;return
++        try:
++            slot=next((i+1 for i,c in enumerate(self._connections) if c is connection),0);channel=_enum(channel,frozenset(('control','data')),default='control')
++            if sock is not None:
++                slot=0
++                for i,c in enumerate(self._connections):
++                    for name in ('control','data'):
++                        if c.channels[name] is sock:slot=i+1;channel=name;break
++                    if slot:break
++            if not slot:return
++            key=(slot,channel)
++            row=self._io.setdefault(key,dict(slot=slot,channel=channel))
++            for name,value in fields.items():
++                if name=='write':row[name]=_enum(value,_KINDS)
++                elif name=='read':row[name]=_enum(value,_PHASES)
++                elif name=='error':row[name]=_enum(value,_CODES)
++                elif name=='active':row[name]=_bool(value)
++                elif name in ('n','remaining_ms','elapsed_ms'):row[name]=_int(value,9999999,-9999999 if name=='remaining_ms' else 0)
++        finally:self._lock.release()
++
++    @contextlib.contextmanager
++    def observe(self,lan,budget):
++        """Only the selected heartbeat case installs these test-process wrappers."""
++        owner=self;self._errors=(lan.TransportError,budget.BudgetError)
++        transaction=budget._Store.transaction;wait=budget.NodeBudget.wait_take
++        send=lan.Connection._send;emit=lan.Connection._emit;read=lan._read_exact
++        @contextlib.contextmanager
++        def observed_transaction(store):
++            start=time.monotonic();entered=False;owner._note(owner._store,store,'WAIT',start)
++            try:
++                with transaction(store) as con:
++                    entered=True;owner._note(owner._store,store,'TX_BODY',start)
++                    try:yield con
++                    except BaseException:
++                        owner._note(owner._store,store,'TX_ERROR_EXIT',start);raise
++                    else:owner._note(owner._store,store,'TX_COMMIT',start)
++                owner._note(owner._store,store,'TX_DONE',start)
++            except BaseException:
++                owner._note(owner._store,store,'TX_ERROR' if entered else 'TX_ENTER_ERROR',start);raise
++        def observed_wait(store,*args,**kwargs):
++            start=time.monotonic();owner._note(owner._budget_event,store,True,start)
++            try:return wait(store,*args,**kwargs)
++            finally:owner._note(owner._budget_event,store,False,start)
++        def observed_send(connection,*args,**kwargs):
++            owner._note(owner.register_connection,connection)
++            try:return send(connection,*args,**kwargs)
++            except BaseException as exc:
++                owner._note(owner._freeze,exc)
++                raise
++        def observed_emit(connection,*args,**kwargs):
++            owner._note(owner.register_connection,connection);start=time.monotonic()
++            kind=_enum(args[0] if args else kwargs.get('kind'),_KINDS)
++            traffic=_enum(args[2] if len(args)>2 else kwargs.get('cls'),frozenset(('control','live','bulk')))
++            channel='data' if kind=='MUX_FRAGMENT' or kind=='APP' and traffic!='control' else 'control'
++            owner._note(lambda:owner._io_update(connection=connection,channel=channel,write=kind,active=True))
++            try:
++                result=emit(connection,*args,**kwargs)
++                owner._note(lambda:owner._io_update(connection=connection,channel=channel,active=False,elapsed_ms=int((time.monotonic()-start)*1000)));return result
++            except BaseException as exc:
++                owner._note(lambda:owner._io_update(connection=connection,channel=channel,active=False,error=owner._code(exc),elapsed_ms=int((time.monotonic()-start)*1000)));raise
++        def observed_read(sock,n,deadline,*args,**kwargs):
++            start=time.monotonic();phase='READ_1' if n==1 else 'READ_5' if n==5 else 'READ_OTHER'
++            owner._note(lambda:owner._io_update(sock=sock,read=phase,n=n,remaining_ms=int((deadline-start)*1000)))
++            try:
++                result=read(sock,n,deadline,*args,**kwargs)
++                owner._note(lambda:owner._io_update(sock=sock,read='READ_DONE',elapsed_ms=int((time.monotonic()-start)*1000)));return result
++            except BaseException as exc:
++                owner._note(lambda:owner._io_update(sock=sock,read='READ_ERROR',error=owner._code(exc),elapsed_ms=int((time.monotonic()-start)*1000)));raise
++        with contextlib.ExitStack() as stack:
++            for target,name,value in ((budget._Store,'transaction',observed_transaction),(budget.NodeBudget,'wait_take',observed_wait),(lan.Connection,'_send',observed_send),(lan.Connection,'_emit',observed_emit),(lan,'_read_exact',observed_read)):
++                stack.enter_context(patch.object(target,name,value))
++            yield self
+diff --git a/tests/test_lan_transport.py b/tests/test_lan_transport.py
+index 586e958..c052ed6 100644
+--- a/tests/test_lan_transport.py
++++ b/tests/test_lan_transport.py
+@@ -160,6 +160,8 @@ class TLSIsolationTests(unittest.TestCase):
+         # Exercise expiry of the OLD data-read deadline directly. A compressed
+         # .4s peer idle limit tested host scheduling rather than renewal semantics.
+         import unified_system.lan_transport as lan
++        from unified_system import network_budget as budget
++        from tests.lan_failure_diagnostics import FailureDiagnostics
+         original=lan._read_frame;ready=threading.Event();control={};data={}
+         renewed=queue.Queue();forced=set();seen_control=set();lock=threading.Lock()
+         def read(sock,budget,peer,deadline,on_idle=None):
+@@ -180,8 +182,9 @@ class TLSIsolationTests(unittest.TestCase):
+             result=original(sock,budget,peer,deadline,on_idle=on_idle)
+             if key in control and result[0]['kind'] in ('PING','PONG'):seen_control.add(key)
+             return result
+-        with patch('unified_system.lan_transport.HEARTBEAT_INTERVAL',.05),patch.object(lan,'_read_frame',side_effect=read):
++        with FailureDiagnostics().observe(lan,budget) as diagnostics, patch('unified_system.lan_transport.HEARTBEAT_INTERVAL',.05),patch.object(lan,'_read_frame',side_effect=read):
+             client,server,c,s=self.pair()
++            diagnostics.register_connection(c);diagnostics.register_connection(s)
+             for connection in (c,s):
+                 heartbeat=threading.Event()
+                 control[id(connection.channels['control'])]=heartbeat
+@@ -191,11 +194,12 @@ class TLSIsolationTests(unittest.TestCase):
+                 connection.last_rx=time.monotonic()-lan.IDLE_TIMEOUT-1
+             ready.set()
+             try:
+-                self.assertIs(renewed.get(timeout=3),True)
+-                self.assertIs(renewed.get(timeout=3),True)
+-                self.assertFalse(c.closed,c.error);self.assertFalse(s.closed,s.error)
+-                c.send(b'after idle');self.assertEqual(s.receive().payload,b'after idle')
+-                s.send(b'reply');self.assertEqual(c.receive().payload,b'reply')
++                with diagnostics.failure_boundary():
++                    self.assertIs(renewed.get(timeout=3),True)
++                    self.assertIs(renewed.get(timeout=3),True)
++                    self.assertFalse(c.closed,c.error);self.assertFalse(s.closed,s.error)
++                    c.send(b'after idle');self.assertEqual(s.receive().payload,b'after idle')
++                    s.send(b'reply');self.assertEqual(c.receive().payload,b'reply')
+             finally:client.close();server.close()
+ 
+     def test_expired_idle_peer_without_activity_still_closes_real_tls(self):
+@@ -382,4 +386,252 @@ class RegistryTests(unittest.TestCase):
+         self.assertTrue(p.retryable('DISCONNECTED'))
+ 
+ 
++
++
++class FailureDiagnosticsPureTests(unittest.TestCase):
++    """Inert objects only: no TLS fixture setup, sockets, subprocess or SQLite."""
++    def helper(self):
++        from tests import lan_failure_diagnostics as helper
++        self.assertTrue(hasattr(helper,'FailureDiagnostics'),'diagnostic helper interface missing')
++        self.assertTrue(hasattr(helper,'format_failure'),'bounded formatter missing')
++        return helper
++
++    def test_fixed_shape_ascii_byte_bound_and_privacy(self):
++        helper=self.helper();secret='PAYLOAD_KEY_IDENTITY_SECRET_\u2603'
++        raw={'stage':secret,'payload':secret,'connections':[{'closed':False,'why':secret,'streams':[[16,True,2**10000,2**10000]]*50,'jobs':[['MUX_FRAGMENT','control',True,secret,-10**10000]]*50,'peer':secret}]*50,'stores':[{'phase':secret,'path':secret}]*50,'io':[{'read':secret,'write':secret,'size':2**10000}]*50}
++        line=helper.format_failure(raw,'DEADLINE')
++        self.assertIs(type(line),str);self.assertLessEqual(len(line.encode('ascii')),1960)
++        self.assertEqual(line.count('\n'),1);self.assertTrue(line.endswith('\n'))
++        self.assertNotIn('SECRET',line);self.assertNotIn('payload',line);self.assertNotIn('identity',line)
++        value=json.loads(line.split(' ',1)[1]);self.assertEqual(value['v'],1)
++        self.assertLessEqual(len(value.get('connections',[])),2)
++
++    def test_unknown_objects_never_stringified(self):
++        helper=self.helper()
++        class Poison:
++            def __str__(self):raise AssertionError('must not stringify')
++            def __repr__(self):raise AssertionError('must not repr')
++        line=helper.format_failure({'connections':[{'why':Poison(),'streams':Poison()}],'stage':Poison()},Poison())
++        self.assertLessEqual(len(line.encode('ascii')),1960);json.loads(line.split(' ',1)[1])
++
++    def test_success_emits_nothing(self):
++        import io
++        helper=self.helper();output=io.StringIO();diag=helper.FailureDiagnostics(writer=output.write)
++        with diag.failure_boundary():pass
++        self.assertEqual(output.getvalue(),'')
++
++    def test_original_exception_and_traceback_preserved(self):
++        import io
++        helper=self.helper();output=io.StringIO();diag=helper.FailureDiagnostics(writer=output.write)
++        original=AssertionError('PRIVATE_EXCEPTION_DETAIL')
++        def origin():raise original
++        try:
++            with diag.failure_boundary():origin()
++        except AssertionError as caught:
++            self.assertIs(caught,original)
++            names=[];tb=caught.__traceback__
++            while tb:names.append(tb.tb_frame.f_code.co_name);tb=tb.tb_next
++            self.assertEqual(names[-1],'origin')
++        else:self.fail('original failure swallowed')
++        self.assertEqual(output.getvalue().count('LAN_FAIL_DIAG_V1 '),1)
++        self.assertNotIn('PRIVATE_EXCEPTION_DETAIL',output.getvalue())
++
++    def test_observer_busy_is_nonblocking(self):
++        import io
++        helper=self.helper();output=io.StringIO();diag=helper.FailureDiagnostics(writer=output.write)
++        diag._lock.acquire()
++        try:diag.emit_failure(AssertionError('private'))
++        finally:diag._lock.release()
++        self.assertIn('BUSY',output.getvalue());self.assertLessEqual(len(output.getvalue().encode('ascii')),1960)
++
++    def test_connection_busy_does_not_read_state(self):
++        helper=self.helper();calls=[]
++        class Busy:
++            def acquire(self,blocking=True):calls.append(blocking);return False
++            def release(self):raise AssertionError('not held')
++        class Connection:
++            cv=Busy()
++            def __getattr__(self,name):raise AssertionError('must not inspect busy state')
++        diag=helper.FailureDiagnostics(writer=lambda text:None);diag.register_connection(Connection())
++        state=diag.snapshot();self.assertEqual(calls,[False]);self.assertIn('BUSY',helper.format_failure(state))
++
++    def test_diagnostic_failure_sentinel_preserves_original(self):
++        import io
++        helper=self.helper();output=io.StringIO();diag=helper.FailureDiagnostics(writer=output.write)
++        def broken():raise RuntimeError('SECRET_SNAPSHOT_ERROR')
++        diag.snapshot=broken;original=ValueError('SECRET_ORIGINAL')
++        with self.assertRaises(ValueError) as caught:
++            with diag.failure_boundary():raise original
++        self.assertIs(caught.exception,original);self.assertIn('DIAGNOSTIC_UNAVAILABLE',output.getvalue())
++        self.assertNotIn('SECRET',output.getvalue())
++
++    def test_writer_failure_never_replaces_original(self):
++        helper=self.helper()
++        def broken(text):raise RuntimeError('SECRET_WRITER_ERROR')
++        diag=helper.FailureDiagnostics(writer=broken);original=AssertionError('original')
++        with self.assertRaises(AssertionError) as caught:
++            with diag.failure_boundary():raise original
++        self.assertIs(caught.exception,original)
++
++    def test_fixed_registration_slots_and_one_failure_line(self):
++        import io
++        helper=self.helper();output=io.StringIO();diag=helper.FailureDiagnostics(writer=output.write)
++        for _ in range(100):diag.register_connection(object())
++        self.assertLessEqual(len(diag._connections),2)
++        diag.emit_failure(AssertionError('first'));diag.emit_failure(AssertionError('second'))
++        self.assertEqual(output.getvalue().count('LAN_FAIL_DIAG_V1 '),1)
++
++    def test_wrappers_call_originals_once_and_restore(self):
++        import contextlib
++        from types import SimpleNamespace
++        helper=self.helper();calls=[];marker=object();sock=object()
++        class Problem(ValueError):pass
++        class Connection:
++            channels={'control':sock,'data':object()}
++            def _send(self,*args,**kwargs):calls.append(('send',args,kwargs));return marker
++            def _emit(self,*args,**kwargs):calls.append(('emit',args,kwargs));return marker
++        class Store:
++            @contextlib.contextmanager
++            def transaction(self):
++                calls.append(('enter',))
++                try:yield marker
++                finally:calls.append(('exit',))
++        class NodeBudget(Store):
++            def wait_take(self,*args,**kwargs):calls.append(('wait',args,kwargs));return marker
++        def read(*args,**kwargs):calls.append(('read',args,kwargs));return marker
++        lan=SimpleNamespace(Connection=Connection,_read_exact=read,TransportError=Problem)
++        budget=SimpleNamespace(_Store=Store,NodeBudget=NodeBudget,BudgetError=Problem)
++        original=(Connection._send,Connection._emit,Store.transaction,NodeBudget.wait_take,lan._read_exact)
++        diag=helper.FailureDiagnostics(writer=lambda line:self.fail('success emitted a line'))
++        with diag.observe(lan,budget):
++            connection=Connection();store=NodeBudget()
++            self.assertIs(connection._send(marker,deadline=17),marker)
++            self.assertIs(connection._emit('OPEN',1,'control',deadline=17),marker)
++            self.assertIs(lan._read_exact(sock,1,17,on_idle=None),marker)
++            self.assertIs(store.wait_take('tx','PRIVATE_PEER','live',1,deadline=17),marker)
++            with store.transaction() as value:self.assertIs(value,marker)
++        self.assertEqual([row[0] for row in calls],['send','emit','read','wait','enter','exit'])
++        self.assertEqual(calls[0][2],{'deadline':17});self.assertIs(calls[0][1][0],marker)
++        self.assertEqual(original,(Connection._send,Connection._emit,Store.transaction,NodeBudget.wait_take,lan._read_exact))
++
++    def test_observer_failure_never_duplicates_or_masks_original_call(self):
++        import contextlib,io
++        from types import SimpleNamespace
++        helper=self.helper();calls=[];original=ValueError('PRIVATE_NATIVE_DETAIL')
++        class Connection:
++            def _send(self,*args,**kwargs):calls.append('send');raise original
++            def _emit(self,*args,**kwargs):calls.append('emit')
++        class Store:
++            @contextlib.contextmanager
++            def transaction(self):
++                calls.append('enter')
++                try:yield None
++                finally:calls.append('exit')
++        class NodeBudget(Store):
++            def wait_take(self,*args,**kwargs):calls.append('wait')
++        lan=SimpleNamespace(Connection=Connection,_read_exact=lambda *a,**k:None,TransportError=ValueError)
++        budget=SimpleNamespace(_Store=Store,NodeBudget=NodeBudget,BudgetError=ValueError)
++        output=io.StringIO();diag=helper.FailureDiagnostics(writer=output.write)
++        def broken(*args,**kwargs):raise RuntimeError('PRIVATE_OBSERVER_DETAIL')
++        diag._store=broken
++        with self.assertRaises(ValueError) as caught:
++            with diag.observe(lan,budget),diag.failure_boundary():
++                with Store().transaction():pass
++                Connection()._send(b'PRIVATE_PAYLOAD')
++        self.assertIs(caught.exception,original);self.assertEqual(calls,['enter','exit','send'])
++        self.assertNotIn('PRIVATE',output.getvalue());self.assertEqual(output.getvalue().count('\n'),1)
++
++    def test_budget_wait_phase_visible_without_sql_or_app_mutation(self):
++        import contextlib
++        from types import SimpleNamespace
++        helper=self.helper();observations=[]
++        class Problem(ValueError):pass
++        class Connection:
++            def _send(self,*args,**kwargs):pass
++            def _emit(self,*args,**kwargs):pass
++        class Store:
++            @contextlib.contextmanager
++            def transaction(self):yield None
++        class NodeBudget(Store):
++            def wait_take(self,*args,**kwargs):observations.append(diag.snapshot())
++        lan=SimpleNamespace(Connection=Connection,_read_exact=lambda *a,**k:None,TransportError=Problem)
++        budget=SimpleNamespace(_Store=Store,NodeBudget=NodeBudget,BudgetError=Problem)
++        diag=helper.FailureDiagnostics(writer=lambda line:None)
++        with diag.observe(lan,budget):NodeBudget().wait_take('tx','PRIVATE_PEER','control',10,deadline=7)
++        self.assertEqual(len(observations),1)
++        rows=observations[0].get('stores',[])
++        self.assertEqual(len(rows),1,'active budget wait must have one bounded slot')
++        self.assertEqual(rows[0].get('budget_waiters'),1)
++        self.assertEqual(diag.snapshot()['stores'][0].get('budget_waiters'),0)
++
++    def test_full_known_shape_overflow_stays_valid_bounded_and_causal(self):
++        helper=self.helper()
++        connection={'slot':2,'closed':True,'why':'BUDGET_STORE_UNAVAILABLE','age_ms':9999999,'q':64,'qb':1048576,'streams':[[16,True,2**63-1,2**63-1]]*2,'jobs':[['MUX_FRAGMENT','control',True,'BUDGET_STORE_UNAVAILABLE',-9999999]]*2,'alive':[True]*5}
++        store={'phase':'TX_COMMIT','waiters':16,'held':True,'entry_ms':9999999,'hold_ms':9999999,'max_ms':9999999,'n':9999999,'budget_waiters':16,'budget_ms':9999999}
++        io={'slot':2,'channel':'control','read':'READ_OTHER','write':'MUX_FRAGMENT','n':65536,'remaining_ms':-9999999,'elapsed_ms':9999999,'active':True,'error':'BUDGET_STORE_UNAVAILABLE'}
++        line=helper.format_failure({'stage':'SEND','observer':'OK','connections':[connection]*2,'stores':[store]*2,'io':[io]*4},'DEADLINE')
++        self.assertLessEqual(len(line.encode('ascii')),1960)
++        decoded=json.loads(line.split(' ',1)[1]);self.assertEqual(decoded['code'],'DEADLINE')
++        # The full fixed shape can fit without truncation. Force only the inert
++        # formatter's cap lower to exercise overflow/sentinel, not app budgets.
++        with patch.object(helper,'LIMIT',512):limited=helper.format_failure({'stage':'SEND','observer':'OK','connections':[connection]*2,'stores':[store]*2,'io':[io]*4},'DEADLINE')
++        self.assertLessEqual(len(limited.encode('ascii')),512)
++        reduced=json.loads(limited.split(' ',1)[1]);self.assertTrue(reduced['truncated'])
++        self.assertEqual(reduced['code'],'DIAGNOSTIC_UNAVAILABLE')
++
++    def test_emit_observer_separates_control_and_data_without_changing_calls(self):
++        import contextlib
++        from types import SimpleNamespace
++        helper=self.helper();calls=[]
++        class Problem(ValueError):pass
++        class Connection:
++            def _send(self,*args,**kwargs):pass
++            def _emit(self,*args,**kwargs):calls.append((args,kwargs))
++        class Store:
++            @contextlib.contextmanager
++            def transaction(self):yield None
++        class NodeBudget(Store):
++            def wait_take(self,*args,**kwargs):pass
++        lan=SimpleNamespace(Connection=Connection,_read_exact=lambda *a,**k:None,TransportError=Problem)
++        budget=SimpleNamespace(_Store=Store,NodeBudget=NodeBudget,BudgetError=Problem)
++        diag=helper.FailureDiagnostics(writer=lambda line:None)
++        with diag.observe(lan,budget):
++            c=Connection();c._emit('CREDIT',1,'control',value=1);c._emit('APP',1,'live',b'PRIVATE')
++        rows=diag.snapshot()['io'];by_channel={row['channel']:row for row in rows}
++        self.assertEqual(set(by_channel),{'control','data'})
++        self.assertEqual(by_channel['control']['write'],'CREDIT');self.assertEqual(by_channel['data']['write'],'APP')
++        self.assertEqual(len(calls),2);self.assertEqual(calls[1][0],('APP',1,'live',b'PRIVATE'))
++
++    def test_transaction_entry_wait_and_failed_entry_not_stale(self):
++        import contextlib
++        from types import SimpleNamespace
++        helper=self.helper();seen=[];original=ValueError('PRIVATE_SQL_DETAIL')
++        class Connection:
++            def _send(self,*args,**kwargs):pass
++            def _emit(self,*args,**kwargs):pass
++        class Store:
++            @contextlib.contextmanager
++            def transaction(self):
++                seen.append(diag.snapshot()['stores'][0]);raise original
++                yield
++        class NodeBudget(Store):
++            def wait_take(self,*args,**kwargs):pass
++        lan=SimpleNamespace(Connection=Connection,_read_exact=lambda *a,**k:None,TransportError=ValueError)
++        budget=SimpleNamespace(_Store=Store,NodeBudget=NodeBudget,BudgetError=ValueError)
++        diag=helper.FailureDiagnostics(writer=lambda line:None)
++        with diag.observe(lan,budget),self.assertRaises(ValueError) as caught:
++            with Store().transaction():self.fail('failed entry must not yield')
++        self.assertIs(caught.exception,original);self.assertEqual(seen[0]['phase'],'WAIT');self.assertEqual(seen[0]['waiters'],1)
++        row=diag.snapshot()['stores'][0];self.assertEqual(row['waiters'],0);self.assertFalse(row['held'])
++
++    def test_frozen_snapshot_matches_the_original_failure_only(self):
++        import io
++        helper=self.helper();output=io.StringIO();diag=helper.FailureDiagnostics(writer=output.write)
++        old=ValueError('private old');current=ValueError('private current')
++        diag._frozen=(old,{'stage':'WAIT','observer':'OK'})
++        diag.snapshot=lambda:{'stage':'SEND','observer':'OK'}
++        diag.emit_failure(current)
++        self.assertEqual(json.loads(output.getvalue().split(' ',1)[1])['stage'],'SEND')
++
++
+ if __name__=='__main__': unittest.main()

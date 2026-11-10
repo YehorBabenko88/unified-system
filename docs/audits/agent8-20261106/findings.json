@@ -636,5 +636,18 @@
     "successor_pr": 79,
     "successor_head": "47530d81e8b6f297a060a206bea6f783ccd0702e",
     "successor_evidence": "phase153/report.md;phase153/source-verification.json"
+  },
+  {
+    "id": "A8-F38",
+    "severity": "P1",
+    "repository": "unified-system",
+    "pr": 78,
+    "observed_head": "38572e56743692dd78f052c89125accec4677ea2",
+    "title": "Dedicated Gateway qualifier discovers25 cases but requires24 before execution",
+    "status": "OPEN_SOURCE_CONFIRMED_HOSTED_STACK_NOT_REACQUIRED",
+    "test": "run_qualification.py lines131/146/150/152 versus StrictTLSFixtureTests",
+    "evidence": "phase163/report.md;phase163/qualifier-static-proof.json",
+    "required_correction": "Exact25 expectedIDs retaining old24 plusstrictcase;update all counts/output;preserve no-skip/source guards;qualify exact successor.",
+    "audit_correction": "Retracts phase160/161 assertion dedicated qualifier selects intentional24subset"
   }
 ]
