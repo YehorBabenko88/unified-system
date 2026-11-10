@@ -1,0 +1,182 @@
+{
+  "non_harness_non_terminan_rows_identical_e": 17084,
+  "Root_module_AST_identical_except_expected_commit_and_literal_pin_list": true,
+  "pinned_leaves": [
+    [
+      "tooling/python/python.exe",
+      "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a"
+    ],
+    [
+      "tooling/git/cmd/git.exe",
+      "78211c7ed73988da93a6d8a33d47ec6187f464d7ea2a9a00c182bbd7a1ecf30f"
+    ],
+    [
+      "tooling/node/node.exe",
+      "d702daa815eabbff763c7d3808e235cf031cf2ca70211b56847bc72f51e240e5"
+    ],
+    [
+      "tooling/chromium/chrome-win/headless_shell.exe",
+      "ed19d88b4486c39c0265b0c07cbf1d6835d06069e600bede1adb09db0df46c8e"
+    ],
+    [
+      "sources/terminan/tests/fresh_render/bootstrap.cjs",
+      "9f6dc64e4087089ec6b989924a1a449ebc2cce985b10532f0eb556130c0ef9df"
+    ],
+    [
+      "sources/terminan/tests/fresh_render/harness.cjs",
+      "6cb6559803ab103657c3bb6dfac3a3e63f862825d43bac6f0db5d8d5bc17cfba"
+    ],
+    [
+      "sources/terminan/tests/fresh_render/diagnostics.cjs",
+      "1de4447a0955e6df3e3fdc8837092c037acde711aa673d65f8e6da6c693875c8"
+    ],
+    [
+      "sources/terminan/tests/fresh_render/owned_lifecycle.cjs",
+      "11f82177c95b61e4a6f591e584a0b7b467e64ebafbbeaf28eec26647b40057e1"
+    ],
+    [
+      "sources/terminan/tests/fresh_render/sync_spawn_guard.cjs",
+      "f14689e5a92c1704f974fdf8cf9cc9aaf79881ca7a6b16f1bcc7487037580810"
+    ],
+    [
+      "sources/terminan/terminan/target_adapter_result.js",
+      "574dbf0882577708ab1e4c0ed73d6401eb6fabce3b3dc1b1375fc5952689241f"
+    ]
+  ],
+  "term_five_module_digests": {
+    "bootstrap.cjs": "9f6dc64e4087089ec6b989924a1a449ebc2cce985b10532f0eb556130c0ef9df",
+    "harness.cjs": "6cb6559803ab103657c3bb6dfac3a3e63f862825d43bac6f0db5d8d5bc17cfba",
+    "diagnostics.cjs": "1de4447a0955e6df3e3fdc8837092c037acde711aa673d65f8e6da6c693875c8",
+    "owned_lifecycle.cjs": "11f82177c95b61e4a6f591e584a0b7b467e64ebafbbeaf28eec26647b40057e1",
+    "sync_spawn_guard.cjs": "f14689e5a92c1704f974fdf8cf9cc9aaf79881ca7a6b16f1bcc7487037580810"
+  },
+  "external_harness_primary_equal": 1737,
+  "external_no_non_git_extras": true,
+  "node_launch_expression": "launch(job, [str(node), '--no-addons', str(bootstrap), 'ROOT_NONCE', str(root), str(request), str(envelope), str(artifact), digest(request), digest(envelope), digest(artifact), str(module), str(browser)], node, env, root, 'render', started, processes, captures, result['stages'])",
+  "node_bootstrap_argument_count": 10,
+  "source_provenance_original": {
+    "path": "C:\\Users\\LS-5\\.codex\\native-e2e-evidence-20261109\\ls5-package1d9-g-source-bindings.json",
+    "sha256": "8b50faf1607ed676436928adc41d070f222f605e9d9d46ee5865437b274d7ef4",
+    "seconds_reported": 38.65600000007544,
+    "scope": "ORIGINAL_ROOT_DATA_AUTHENTICATED_NO_A8_REPLAY"
+  },
+  "ACL_private_reference": {
+    "path": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-8-independent-security-ci\\work\\phase157-ACL.private.json",
+    "sha256": "9437e09bf7be8cfe4986fcd43f0e2511af129443547aef0f886234c22bcb3917",
+    "bytes": 2837
+  },
+  "selected_ACL_metadata": [
+    {
+      "path": "C:/Users/LS-5/.codex/native-e2e-evidence-20261109/ls5-package-1d923f6-g",
+      "owner": "LS5\\LS-5",
+      "access": [
+        {
+          "IdentityReference": {
+            "Value": "EIGENT\u00dcMERRECHTE"
+          },
+          "FileSystemRights": 2032127,
+          "AccessControlType": 0,
+          "IsInherited": false
+        },
+        {
+          "IdentityReference": {
+            "Value": "NT-AUTORIT\u00c4T\\SYSTEM"
+          },
+          "FileSystemRights": 2032127,
+          "AccessControlType": 0,
+          "IsInherited": false
+        },
+        {
+          "IdentityReference": {
+            "Value": "VORDEFINIERT\\Administratoren"
+          },
+          "FileSystemRights": 2032127,
+          "AccessControlType": 0,
+          "IsInherited": false
+        }
+      ],
+      "protected": true
+    },
+    {
+      "path": "C:/Users/LS-5/.codex/native-e2e-evidence-20261109/ls5-source-qualified-1d923f6",
+      "owner": "LS5\\LS-5",
+      "access": [
+        {
+          "IdentityReference": {
+            "Value": "LS5\\CodexSandboxUsers"
+          },
+          "FileSystemRights": 1179817,
+          "AccessControlType": 0,
+          "IsInherited": true
+        },
+        {
+          "IdentityReference": {
+            "Value": "NT-AUTORIT\u00c4T\\SYSTEM"
+          },
+          "FileSystemRights": 2032127,
+          "AccessControlType": 0,
+          "IsInherited": true
+        },
+        {
+          "IdentityReference": {
+            "Value": "VORDEFINIERT\\Administratoren"
+          },
+          "FileSystemRights": 2032127,
+          "AccessControlType": 0,
+          "IsInherited": true
+        },
+        {
+          "IdentityReference": {
+            "Value": "LS5\\LS-5"
+          },
+          "FileSystemRights": 2032127,
+          "AccessControlType": 0,
+          "IsInherited": true
+        }
+      ],
+      "protected": false
+    },
+    {
+      "path": "C:/Users/LS-5/.codex/native-e2e-evidence-20261109/ls5-source-qualified-1d923f6/tools/physical_dev",
+      "owner": "LS5\\LS-5",
+      "access": [
+        {
+          "IdentityReference": {
+            "Value": "LS5\\CodexSandboxUsers"
+          },
+          "FileSystemRights": 1179817,
+          "AccessControlType": 0,
+          "IsInherited": true
+        },
+        {
+          "IdentityReference": {
+            "Value": "NT-AUTORIT\u00c4T\\SYSTEM"
+          },
+          "FileSystemRights": 2032127,
+          "AccessControlType": 0,
+          "IsInherited": true
+        },
+        {
+          "IdentityReference": {
+            "Value": "VORDEFINIERT\\Administratoren"
+          },
+          "FileSystemRights": 2032127,
+          "AccessControlType": 0,
+          "IsInherited": true
+        },
+        {
+          "IdentityReference": {
+            "Value": "LS5\\LS-5"
+          },
+          "FileSystemRights": 2032127,
+          "AccessControlType": 0,
+          "IsInherited": true
+        }
+      ],
+      "protected": false
+    }
+  ],
+  "scope": "READ_ONLY_BYTES_AND_SOURCE_CONSTANT_CLOSURE_NOT_PROJECT_HELPER_EXECUTION",
+  "A8_helper_module_fixture_native_Job_SDK_browser_calls": 0,
+  "execution_admission": false
+}
