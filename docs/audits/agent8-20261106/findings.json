@@ -644,13 +644,20 @@
     "pr": 78,
     "observed_head": "38572e56743692dd78f052c89125accec4677ea2",
     "title": "Dedicated Gateway qualifier discovers25 cases but requires24 before execution",
-    "status": "SOURCE_CORRECTION_ACK_RUNTIME_HOSTED_QUALIFICATION_PENDING",
+    "status": "CLOSED_SCOPED_EXACT_B48_HOSTED_CP312_GATEWAY25",
     "test": "run_qualification.py lines131/146/150/152 versus StrictTLSFixtureTests",
     "evidence": "phase163/report.md;phase163/qualifier-static-proof.json",
     "required_correction": "Exact25 expectedIDs retaining old24 plusstrictcase;update all counts/output;preserve no-skip/source guards;qualify exact successor.",
     "audit_correction": "Retracts phase160/161 assertion dedicated qualifier selects intentional24subset",
     "successor_head": "b48ddc5ff083deeecfdf76185117d0e86aa23e2a",
-    "successor_evidence": "phase164/report.md;phase164/verification.json"
+    "successor_evidence": "phase164/report.md;phase164/verification.json",
+    "fixed_evidence": "phase164/report.md;phase167/report.md;phase167/verification.json",
+    "fixed_scope": "RUN42853001010_ATTEMPT1_B48_TWO_HOSTED_PLATFORMS_25UNIQUE_NOT_FULL_CI_OR_PR79",
+    "fixed_run": 42853001010,
+    "fixed_jobs": [
+      129958435771,
+      129958436026
+    ]
   },
   {
     "id": "A8-F39",
@@ -659,9 +666,13 @@
     "pr": null,
     "observed_head": "ef09f718efaf1338376b400464f9f99f4ecde868",
     "title": "Dedicated LAN/Mux PR workflow omits imported diagnostic helper from path trigger",
-    "status": "OPEN_SOURCE_CONFIRMED",
+    "status": "CLOSED_SOURCE_TRIGGER_CONFIGURATION",
     "test": "PR changing only tests/lan_failure_diagnostics.py versus lan-mux-isolated.yml pull_request.paths",
     "evidence": "phase165/report.md;phase165/exact-source-diff.patch;phase165/verification.json",
-    "required_correction": "Add exact diagnostic helper dependency path;preserve existing triggers/security/no-skip/exactinventory;review successor."
+    "required_correction": "Add exact diagnostic helper dependency path;preserve existing triggers/security/no-skip/exactinventory;review successor.",
+    "successor_pr": 79,
+    "successor_head": "4f0429ce347f396fccecf83b6cfd4d0f9c467a2a",
+    "fixed_evidence": "phase166/report.md;phase166/verification.json",
+    "fixed_scope": "EXACT_HELPER_PRPATH_CONFIGURATION_NOT_HOSTED_EVENT_OR_RUNTIME_SUITE_PASS"
   }
 ]

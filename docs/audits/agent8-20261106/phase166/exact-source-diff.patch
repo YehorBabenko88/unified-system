@@ -1,0 +1,845 @@
+diff --git a/.github/workflows/lan-mux-isolated.yml b/.github/workflows/lan-mux-isolated.yml
+index cee7e54..08929a9 100644
+--- a/.github/workflows/lan-mux-isolated.yml
++++ b/.github/workflows/lan-mux-isolated.yml
+@@ -1,7 +1,7 @@
+ name: LAN Mux integrated isolated qualification
+ on:
+   pull_request:
+-    paths: ['unified_system/lan_transport.py', 'unified_system/network_budget.py', 'unified_system/lan_mux_channel.py', 'tests/test_lan_transport.py', 'tests/test_network_budget.py', 'tests/test_lan_mux_channel.py', '.github/workflows/lan-mux-isolated.yml']
++    paths: ['unified_system/lan_transport.py', 'unified_system/network_budget.py', 'unified_system/lan_mux_channel.py', 'tests/test_lan_transport.py', 'tests/lan_failure_diagnostics.py', 'tests/test_network_budget.py', 'tests/test_lan_mux_channel.py', 'tests/test_lan_mux_inventory.py', 'release/lan-mux-test-inventory.json', '.github/workflows/lan-mux-isolated.yml']
+   push:
+     branches: [mission/final-integration-20261106]
+ permissions:
+@@ -32,7 +32,7 @@ jobs:
+       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+         with:
+           python-version: '3.12.10'
+-      - name: Exact source and fifty mandatory isolated LAN Mux tests
++      - name: Exact source and versioned mandatory isolated LAN Mux inventory
+         shell: python -I -B {0}
+         run: |
+           if __name__ == '__main__':
+@@ -66,18 +66,23 @@ jobs:
+                   return result
+               before=receipt()
+               sys.path.insert(0,str(root))
++              sys.path.insert(0,str(root/'tests'))
++              from test_lan_mux_inventory import validate_inventory,InventoryTests
++              inventory=json.loads((root/'release/lan-mux-test-inventory.json').read_text(encoding='utf-8'))
++              controls=unittest.TextTestRunner(verbosity=2).run(unittest.defaultTestLoader.loadTestsFromTestCase(InventoryTests))
++              assert controls.wasSuccessful() and controls.testsRun==9 and not controls.skipped
+               loader=unittest.TestLoader();suite=unittest.TestSuite(loader.discover(str(root/'tests'),pattern=p) for p in ['test_lan_transport.py','test_network_budget.py','test_lan_mux_channel.py'])
+               ids=[]
+               def collect(suite):
+                   for item in suite:
+                       if isinstance(item,unittest.TestSuite): collect(item)
+                       else: ids.append(item.id())
+-              collect(suite);assert len(ids)==len(set(ids))==50
++              collect(suite);required=validate_inventory(inventory,ids)
+               result=unittest.TextTestRunner(verbosity=2).run(suite)
+-              assert result.wasSuccessful() and result.testsRun==50 and not result.skipped
++              assert result.wasSuccessful() and result.testsRun==len(required) and not result.skipped and not result.expectedFailures
+               assert before==receipt()
+               out=pathlib.Path(os.environ['RUNNER_TEMP'])/'lan-mux-integrated-evidence.json'
+-              out.write_text(json.dumps({'head':os.environ['EXPECTED_HEAD'],'tests':ids,'skips':0,'source_sha256':before,'qualification':'LOOPBACK_LAN_MUX_COMPONENT_ONLY','native_admission':False,'installation_admission':False},indent=2)+'\n',encoding='utf-8')
++              out.write_text(json.dumps({'head':os.environ['EXPECTED_HEAD'],'tests':ids,'required_ids':required,'inventory_schema':inventory['schema'],'inventory_sha256':before['release/lan-mux-test-inventory.json'],'required_count':len(required),'inventory_controls':controls.testsRun,'skips':0,'source_sha256':before,'qualification':'LOOPBACK_LAN_MUX_COMPONENT_ONLY','native_admission':False,'installation_admission':False},indent=2)+'\n',encoding='utf-8')
+       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+         with:
+           name: lan-mux-integrated-${{ matrix.os }}
+diff --git a/docs/ci/lan-mux-inventory-repair-20261110.md b/docs/ci/lan-mux-inventory-repair-20261110.md
+new file mode 100644
+index 0000000..90ba533
+--- /dev/null
++++ b/docs/ci/lan-mux-inventory-repair-20261110.md
+@@ -0,0 +1,43 @@
++# LAN Mux exact inventory repair
++
++Original attempt-1 run `42853578322` at source
++`b48ddc5ff083deeecfdf76185117d0e86aa23e2a` failed on Windows job
++`129960469241` and Ubuntu job `129960468874` at the workflow's hardcoded
++50-ID assertion, before execution. Original run/jobs JSON and log ZIP are retained
++privately under `lan-mux-b48-original-inventory-20261110` in the CI evidence root.
++Its artifact inventory is empty. The original logs do not print discovered IDs;
++the ID comparison is a source reconstruction and discovery-only observation,
++not an invented original test transcript or a component PASS.
++
++The previous workflow count was already stale at PR77 source
++`dd4ef015d9ed20065ccdc2c563e80046015d9193`: those three modules contain 52 unique
++IDs. Historical source `9680babc85ca605f8450936f5410728898d5b71e` has 50 IDs.
++The two later cases are the expired-idle-peer TLS negative and the owned-budget
++child-cleanup regression. Source b48 adds 16 pure failure-diagnostic cases to
++the 52, removing none. Discovery at CPython 3.12.10 confirms 68 unique IDs with
++no loader errors; it does not execute any of them.
++
++`release/lan-mux-test-inventory.json` version 1 records all 50 historical IDs,
++the two PR77 additions, the 16 assembly additions, the exact current 68 IDs,
++and primary source-head/raw-file-hash provenance. Pure validation independently
++pins the 50-, 52-, and 68-ID digests. Missing, extra, duplicate, or removed IDs
++fail closed, even if a lower count is substituted. Changing the inventory in
++the future requires a reviewed version/digest update, not selection narrowing.
++
++The workflow runs nine pure inventory controls, then validates the existing
++three-module discovery against the exact manifest before running the suite.
++All previous test cases, source guards, isolated interpreter flags, no-skip
++requirement, TLS/security assertions, actions pins, deadlines, matrix, and
++admission limits remain. No fixture test is deleted or masked. The shared
++component inventory is untouched; this new pure test module is scoped here.
++
++Preparation validation is limited to pure inventory RED/GREEN, source/AST/YAML
++checks, exact fresh LF checkout raw-Git checks, and discovery without execution.
++No TLS/network/native fixture, provider, service, installation, or physical
++qualification is claimed. Original RED is preserved. Root/A8 review and a later
++explicit fixture assignment are required before push or execution approval.
++
++Root integration adds tests/lan_failure_diagnostics.py to the dedicated
++pull-request path filter (A8 coverage observation). Other direct product/test
++dependencies were inspected and are already present. This broadens required
++qualification triggering; it does not bypass any source or runtime gate.
+diff --git a/docs/physical-dev/STAGE1B-READONLY-20261110.md b/docs/physical-dev/STAGE1B-READONLY-20261110.md
+new file mode 100644
+index 0000000..95ba3c4
+--- /dev/null
++++ b/docs/physical-dev/STAGE1B-READONLY-20261110.md
+@@ -0,0 +1,88 @@
++# Stage1B read-only readiness — 2026-11-10
++
++Reference PR78 source b48ddc5ff083deeecfdf76185117d0e86aa23e2a is NOT
++executed/installed on the workers by this observation. The owner expansion
++requires independent local gates before any disposable PC4 smoke, then PC3.
++Root has performed only read-only pinned SSH observations, with strict host keys,
++BatchMode, UpdateHostKeys=no, one attempt and bounded local SSH subprocesses.
++No package was copied, candidate directory created, service changed or installed,
++process stopped, trust store/policy modified, provider request or order sent.
++Private raw receipts retain account/ACL/service/port/network observations;
++public summaries expose node/OS/resource status and receipt SHA256 only.
++
++| Node | OS observed | Free RAM GiB | Free virtual GiB | Current observer elevated | Smoke |
++| --- | --- | ---: | ---: | --- | --- |
++| PC4 | Windows11Pro26200 | 18.82 | 18.31 | yes | BLOCKED / NOT_RUN |
++| PC3 | Windows11Pro26300 | 19.96 | 17.51 | yes | BLOCKED / NOT_RUN |
++| PC2 | Windows11Pro26300 | 3.36 | 1.31 | yes | NOT_AUTHORIZED_LOAD / read-only |
++| PC1 | Windows11Home26200 | 3.38 | 4.45 | yes | BLOCKED / separate Home matrix |
++| LS7 | Windows11Home26200 | 3.42 | 3.89 | yes | BLOCKED / separate Home matrix |
++
++Numbers are point-in-time observations, not a stress test or capacity guarantee.
++An elevated management observer does not qualify non-administrative app runtime.
++It also does not prove a future contained child would retain those privileges;
++that child admission and token must be independently verified before execution.
++Existing candidate parents were present; their ACLs were read, not changed.
++Package digest, protected test namespace, nonprivileged child identity,
++resource containment/ownership cleanup and production-conflict gates have NOT
++passed. Read-only observation complete is not Stage1B admission PASS.
++
++PC2: Reolink was observed running with28245909504 private bytes (26.31GiB),
++working set1229189120 bytes, while free virtual memory was about1.31GiB.
++No restart/stop/settings/pagefile action was performed. Private bytes and working
++set are different metrics; this does not establish a leak or network incident
++cause. Keep Unified load tests blocked and treat maintenance separately.
++
++PC1/LS7: independent14-item Home qualification matrices are included. Edition
++observation and existing pinned SSH do not qualify LAN, services, mTLS, IPC,
++worker engines, Scheduler/Storage, RBAC, logoff/restart or Pro independence.
++All such criteria remain NOT_QUALIFIED; no Pro PASS is transferred.
++
++Required gates before future PC4 smoke:
++1. Pin independently reviewed sources/trees, executable/dependency hashes and
++   package manifest; validate them on the target before executing candidate code.
++2. Verify existing approved nonprivileged runtime identity/key/IPC admission and
++   exact private namespace ACL. Do not provision a new identity or weaken policy
++   merely to bypass a failed gate.
++3. Review bounded CPU/commit/process/time limits and owned-family cleanup on the
++   actual node. Resource observations alone are not containment evidence.
++4. Verify no production conflict, own ephemeral loopback port/state directory,
++   rollback/retained-evidence plan and package-plan-only checks.
++5. Only if all pass, separately qualify the synthetic existing Strattester to
++   MetaAnalyse target and disposable Terminan; preserve original RED/exit/result/
++   DOM/ownership/cleanup/before-after evidence independently for PC4.
++6. Re-evaluate every gate independently on PC3 afterward. Never transfer PC4 or
++   LS5 PASS or automatically advance to multi-node commissioning.
++
++Current report:
++PR78_CI: exact-source hosted results tracked separately; no full matrix PASS.
++LAN_MUX_INVENTORY_ROOT_CAUSE: original hardcoded50 rejects actual68; exactdd4
++already had52, plus16 new pure IDs atb48. Repair must preserve historical50,
++the two existing regressions and all16 new diagnostics. Original hosted RED retained.
++F38: source correction ACK; hosted/runtime qualification pending.
++LS5_BASELINE: retained original1d923f6 scoped synthetic PASS, not repeated.
++PC4_PREFLIGHT: read-only complete / required execution gates BLOCKED.
++PC4_SMOKE: NOT_RUN.
++PC3_PREFLIGHT: read-only complete / required execution gates BLOCKED.
++PC3_SMOKE: NOT_RUN.
++PC2_READINESS: insufficient conservative resource margin, read-only maintenance review.
++PC1_HOME: edition confirmed; capability matrix NOT_QUALIFIED.
++LS7_HOME: edition confirmed; independent capability matrix NOT_QUALIFIED.
++NATIVE_AUTHORITY: strictD4/logical mutationsDISABLED; no positive admission.
++SCHEDULER: positive native job NOT_QUALIFIED.
++STORAGE: committed publication receipt NOT_AVAILABLE.
++TERMINAN: authenticated current scientific READ NOT_QUALIFIED.
++A8_REVIEW: prior PR78sourceACK only; this readiness publication requires review.
++NEXT_STAGE: repair hosted inventory; close PC4package/identity/containment gates.
++GO_NO_GO: IN_PROGRESS / NO-GO.
++
++ADMINIT excluded. Production deployment, real trading, provider sends, multi-node
++commissioning and Tailscale removal remain blocked. No router/network/security
++reset is an allowed recovery action.
++
++A2/A5 independently inspected existing source launch boundaries: no qualified
++Stage1B restricted-token research launch path from an elevated SSH parent was
++found at the inspected sources. Existing WindowsSmokeJob requires an already
++nonadmin parent; suspended worker prepare is not token downgrading. A private
++PostgreSQL provisioning restricted-process helper has a different permit and
++must not be repurposed as a research launcher. No such bypass was attempted.
+diff --git a/release/lan-mux-test-inventory.json b/release/lan-mux-test-inventory.json
+new file mode 100644
+index 0000000..354cc28
+--- /dev/null
++++ b/release/lan-mux-test-inventory.json
+@@ -0,0 +1,181 @@
++{
++  "schema": "unified.lan-mux-test-inventory.v1",
++  "version": 1,
++  "scope": "ISOLATED_LOOPBACK_COMPONENT_ONLY",
++  "modules": [
++    "test_lan_transport",
++    "test_network_budget",
++    "test_lan_mux_channel"
++  ],
++  "required_count": 68,
++  "prior50_source": {
++    "head": "9680babc85ca605f8450936f5410728898d5b71e",
++    "sources": {
++      "tests/test_lan_transport.py": "955b6ece5a0dbb82cf2c40d15d41cb694afe933444dac36c4925b24d2ff912c7",
++      "tests/test_network_budget.py": "31d631f050f4a0f697b8eb735749697595c4264f3cd5cadd1ac94e3ecc66eae7",
++      "tests/test_lan_mux_channel.py": "5c5f297f7d37fecea4edb80e68cf953349f1ca75a4d691ee79bfdb886c37099d"
++    }
++  },
++  "pr77_source": {
++    "head": "dd4ef015d9ed20065ccdc2c563e80046015d9193",
++    "sources": {
++      "tests/test_lan_transport.py": "9d8099ed5aeca90c3bb8cb7acd8fd08fa8b21bb8c4c2682267084075ef4ae59d",
++      "tests/test_network_budget.py": "339a9922ac21092ce0332994df0a31f8945cd5f9ad2f68240ef80ef096dc483e",
++      "tests/test_lan_mux_channel.py": "5c5f297f7d37fecea4edb80e68cf953349f1ca75a4d691ee79bfdb886c37099d"
++    }
++  },
++  "assembly_source": {
++    "head": "b48ddc5ff083deeecfdf76185117d0e86aa23e2a",
++    "sources": {
++      "tests/test_lan_transport.py": "8b210178faf03c143eaac9f8dbdce9974682c9c200ea7654686ff7772c33802a",
++      "tests/test_network_budget.py": "339a9922ac21092ce0332994df0a31f8945cd5f9ad2f68240ef80ef096dc483e",
++      "tests/test_lan_mux_channel.py": "5c5f297f7d37fecea4edb80e68cf953349f1ca75a4d691ee79bfdb886c37099d"
++    }
++  },
++  "prior50_ids_sha256": "63ee17edad67dbabd4d1a36681eb2485b52696ad44e097428f878d234b57021c",
++  "pr77_ids_sha256": "ffe6ce63be80e7dae82fc6a969dc2556feee97140a19e9fd961a0cc5f2fe40c3",
++  "prior50_test_ids": [
++    "test_lan_mux_channel.FragmentContractTests.test_binding_rejects_noncanonical_ids_bool_epoch_and_invalid_hash",
++    "test_lan_mux_channel.FragmentContractTests.test_exact_header_and_derived_chunk_count_residual",
++    "test_lan_mux_channel.FragmentContractTests.test_malformed_length_count_index_flags_magic_and_kind_rejected",
++    "test_lan_mux_channel.FragmentContractTests.test_nonfinal_short_chunk_and_kind_oversize_rejected",
++    "test_lan_mux_channel.FragmentContractTests.test_wrong_session_stream_attempt_profile_and_kind_rejected",
++    "test_lan_mux_channel.MuxTlsTests.test_actual_node_budget_blocks_fragment_writes",
++    "test_lan_mux_channel.MuxTlsTests.test_cancel_after_first_actual_fragment_is_unknown_no_retry",
++    "test_lan_mux_channel.MuxTlsTests.test_complete_large_messages_real_mtls_and_budget_overhead",
++    "test_lan_mux_channel.MuxTlsTests.test_completed_queue_backpressure_keeps_control_app_progress",
++    "test_lan_mux_channel.MuxTlsTests.test_explicit_completed_transfer_replay_charged_without_transport_exactly_once",
++    "test_lan_mux_channel.MuxTlsTests.test_hash_terminal_cause_survives_reader_receive_interleaving",
++    "test_lan_mux_channel.MuxTlsTests.test_legacy_session_rejects_new_record_without_fallback",
++    "test_lan_mux_channel.MuxTlsTests.test_mismatched_alpn_rejected",
++    "test_lan_mux_channel.MuxTlsTests.test_negotiated_control_only_data_record_and_app_demux",
++    "test_lan_mux_channel.MuxTlsTests.test_new_transport_and_stream_attempt_reject_old_fragments",
++    "test_lan_mux_channel.MuxTlsTests.test_real_hash_failure_no_complete_payload_and_memory_cleanup",
++    "test_lan_mux_channel.MuxTlsTests.test_real_partial_disconnect_discards_incomplete_transfer",
++    "test_lan_mux_channel.ReassemblyContractTests.test_absolute_assembly_deadline_not_refreshed_and_close_releases",
++    "test_lan_mux_channel.ReassemblyContractTests.test_complete_hash_verified_and_memory_retained_until_handoff",
++    "test_lan_mux_channel.ReassemblyContractTests.test_gap_duplicate_interleaving_reject_and_release",
++    "test_lan_mux_channel.ReassemblyContractTests.test_shared_node_pool_denies_before_allocation_and_queue_bound",
++    "test_lan_mux_channel.ReassemblyContractTests.test_wrong_whole_hash_rejects_no_partial_and_releases",
++    "test_lan_transport.RegistryTests.test_backoff_is_bounded_auth_failure_not_retryable",
++    "test_lan_transport.RegistryTests.test_duplicate_or_ip_claim_cannot_be_node_identity",
++    "test_lan_transport.TLSIsolationTests.test_active_control_heartbeats_keep_idle_data_channel_healthy",
++    "test_lan_transport.TLSIsolationTests.test_changed_endpoint_reconnect_keeps_certificate_identity_no_replay",
++    "test_lan_transport.TLSIsolationTests.test_close_releases_credit_reservations_and_queue_memory",
++    "test_lan_transport.TLSIsolationTests.test_concurrent_registry_updates_cannot_restore_older_revoked_pin",
++    "test_lan_transport.TLSIsolationTests.test_control_writer_progresses_while_data_budget_waits",
++    "test_lan_transport.TLSIsolationTests.test_credit_backpressure_and_control_lane_while_data_waits",
++    "test_lan_transport.TLSIsolationTests.test_fingerprint_and_wrong_uri_cert_rejected",
++    "test_lan_transport.TLSIsolationTests.test_isolation_rejects_nonloopback_even_if_registry_admits_it",
++    "test_lan_transport.TLSIsolationTests.test_malformed_frame_rejected_before_payload_allocation",
++    "test_lan_transport.TLSIsolationTests.test_missing_client_certificate_rejected",
++    "test_lan_transport.TLSIsolationTests.test_peer_cannot_spoof_control_role",
++    "test_lan_transport.TLSIsolationTests.test_real_mtls_payload_credit_classes_and_actual_byte_accounting",
++    "test_lan_transport.TLSIsolationTests.test_registry_revocation_and_cancellation",
++    "test_lan_transport.TLSIsolationTests.test_revoked_pin_during_final_hello_cannot_install_connection",
++    "test_lan_transport.TLSIsolationTests.test_sender_waiting_for_memory_does_not_reset_stream_created_while_waiting",
++    "test_lan_transport.TLSIsolationTests.test_six_real_isolated_nodes_independent_of_tailscale",
++    "test_lan_transport.TLSIsolationTests.test_untrusted_ca_rejected_even_with_correct_leaf_pin",
++    "test_lan_transport.TLSIsolationTests.test_wrong_eku_and_expired_cert_rejected",
++    "test_network_budget.BudgetTests.test_backward_clock_or_changed_policy_fail_closed",
++    "test_network_budget.BudgetTests.test_clock_sample_is_inside_store_transaction_not_before_lock_wait",
++    "test_network_budget.BudgetTests.test_cluster_allocations_cannot_expand",
++    "test_network_budget.BudgetTests.test_egress_replay_conflict_and_unverified_receipt_no_mutation",
++    "test_network_budget.BudgetTests.test_egress_unknown_and_cooldown_survive_restart_no_dispatch",
++    "test_network_budget.BudgetTests.test_foreign_or_incomplete_database_not_adopted",
++    "test_network_budget.BudgetTests.test_real_processes_cannot_each_receive_a_fresh_full_budget",
++    "test_network_budget.BudgetTests.test_two_instances_share_atomic_debit_and_restart_not_fresh_burst"
++  ],
++  "pr77_added_test_ids": [
++    "test_lan_transport.TLSIsolationTests.test_expired_idle_peer_without_activity_still_closes_real_tls",
++    "test_network_budget.BudgetCleanupTests.test_failed_child_cleans_all_owned_siblings_before_directory_cleanup"
++  ],
++  "assembly_added_test_ids": [
++    "test_lan_transport.FailureDiagnosticsPureTests.test_budget_wait_phase_visible_without_sql_or_app_mutation",
++    "test_lan_transport.FailureDiagnosticsPureTests.test_connection_busy_does_not_read_state",
++    "test_lan_transport.FailureDiagnosticsPureTests.test_diagnostic_failure_sentinel_preserves_original",
++    "test_lan_transport.FailureDiagnosticsPureTests.test_emit_observer_separates_control_and_data_without_changing_calls",
++    "test_lan_transport.FailureDiagnosticsPureTests.test_fixed_registration_slots_and_one_failure_line",
++    "test_lan_transport.FailureDiagnosticsPureTests.test_fixed_shape_ascii_byte_bound_and_privacy",
++    "test_lan_transport.FailureDiagnosticsPureTests.test_frozen_snapshot_matches_the_original_failure_only",
++    "test_lan_transport.FailureDiagnosticsPureTests.test_full_known_shape_overflow_stays_valid_bounded_and_causal",
++    "test_lan_transport.FailureDiagnosticsPureTests.test_observer_busy_is_nonblocking",
++    "test_lan_transport.FailureDiagnosticsPureTests.test_observer_failure_never_duplicates_or_masks_original_call",
++    "test_lan_transport.FailureDiagnosticsPureTests.test_original_exception_and_traceback_preserved",
++    "test_lan_transport.FailureDiagnosticsPureTests.test_success_emits_nothing",
++    "test_lan_transport.FailureDiagnosticsPureTests.test_transaction_entry_wait_and_failed_entry_not_stale",
++    "test_lan_transport.FailureDiagnosticsPureTests.test_unknown_objects_never_stringified",
++    "test_lan_transport.FailureDiagnosticsPureTests.test_wrappers_call_originals_once_and_restore",
++    "test_lan_transport.FailureDiagnosticsPureTests.test_writer_failure_never_replaces_original"
++  ],
++  "test_ids": [
++    "test_lan_mux_channel.FragmentContractTests.test_binding_rejects_noncanonical_ids_bool_epoch_and_invalid_hash",
++    "test_lan_mux_channel.FragmentContractTests.test_exact_header_and_derived_chunk_count_residual",
++    "test_lan_mux_channel.FragmentContractTests.test_malformed_length_count_index_flags_magic_and_kind_rejected",
++    "test_lan_mux_channel.FragmentContractTests.test_nonfinal_short_chunk_and_kind_oversize_rejected",
++    "test_lan_mux_channel.FragmentContractTests.test_wrong_session_stream_attempt_profile_and_kind_rejected",
++    "test_lan_mux_channel.MuxTlsTests.test_actual_node_budget_blocks_fragment_writes",
++    "test_lan_mux_channel.MuxTlsTests.test_cancel_after_first_actual_fragment_is_unknown_no_retry",
++    "test_lan_mux_channel.MuxTlsTests.test_complete_large_messages_real_mtls_and_budget_overhead",
++    "test_lan_mux_channel.MuxTlsTests.test_completed_queue_backpressure_keeps_control_app_progress",
++    "test_lan_mux_channel.MuxTlsTests.test_explicit_completed_transfer_replay_charged_without_transport_exactly_once",
++    "test_lan_mux_channel.MuxTlsTests.test_hash_terminal_cause_survives_reader_receive_interleaving",
++    "test_lan_mux_channel.MuxTlsTests.test_legacy_session_rejects_new_record_without_fallback",
++    "test_lan_mux_channel.MuxTlsTests.test_mismatched_alpn_rejected",
++    "test_lan_mux_channel.MuxTlsTests.test_negotiated_control_only_data_record_and_app_demux",
++    "test_lan_mux_channel.MuxTlsTests.test_new_transport_and_stream_attempt_reject_old_fragments",
++    "test_lan_mux_channel.MuxTlsTests.test_real_hash_failure_no_complete_payload_and_memory_cleanup",
++    "test_lan_mux_channel.MuxTlsTests.test_real_partial_disconnect_discards_incomplete_transfer",
++    "test_lan_mux_channel.ReassemblyContractTests.test_absolute_assembly_deadline_not_refreshed_and_close_releases",
++    "test_lan_mux_channel.ReassemblyContractTests.test_complete_hash_verified_and_memory_retained_until_handoff",
++    "test_lan_mux_channel.ReassemblyContractTests.test_gap_duplicate_interleaving_reject_and_release",
++    "test_lan_mux_channel.ReassemblyContractTests.test_shared_node_pool_denies_before_allocation_and_queue_bound",
++    "test_lan_mux_channel.ReassemblyContractTests.test_wrong_whole_hash_rejects_no_partial_and_releases",
++    "test_lan_transport.FailureDiagnosticsPureTests.test_budget_wait_phase_visible_without_sql_or_app_mutation",
++    "test_lan_transport.FailureDiagnosticsPureTests.test_connection_busy_does_not_read_state",
++    "test_lan_transport.FailureDiagnosticsPureTests.test_diagnostic_failure_sentinel_preserves_original",
++    "test_lan_transport.FailureDiagnosticsPureTests.test_emit_observer_separates_control_and_data_without_changing_calls",
++    "test_lan_transport.FailureDiagnosticsPureTests.test_fixed_registration_slots_and_one_failure_line",
++    "test_lan_transport.FailureDiagnosticsPureTests.test_fixed_shape_ascii_byte_bound_and_privacy",
++    "test_lan_transport.FailureDiagnosticsPureTests.test_frozen_snapshot_matches_the_original_failure_only",
++    "test_lan_transport.FailureDiagnosticsPureTests.test_full_known_shape_overflow_stays_valid_bounded_and_causal",
++    "test_lan_transport.FailureDiagnosticsPureTests.test_observer_busy_is_nonblocking",
++    "test_lan_transport.FailureDiagnosticsPureTests.test_observer_failure_never_duplicates_or_masks_original_call",
++    "test_lan_transport.FailureDiagnosticsPureTests.test_original_exception_and_traceback_preserved",
++    "test_lan_transport.FailureDiagnosticsPureTests.test_success_emits_nothing",
++    "test_lan_transport.FailureDiagnosticsPureTests.test_transaction_entry_wait_and_failed_entry_not_stale",
++    "test_lan_transport.FailureDiagnosticsPureTests.test_unknown_objects_never_stringified",
++    "test_lan_transport.FailureDiagnosticsPureTests.test_wrappers_call_originals_once_and_restore",
++    "test_lan_transport.FailureDiagnosticsPureTests.test_writer_failure_never_replaces_original",
++    "test_lan_transport.RegistryTests.test_backoff_is_bounded_auth_failure_not_retryable",
++    "test_lan_transport.RegistryTests.test_duplicate_or_ip_claim_cannot_be_node_identity",
++    "test_lan_transport.TLSIsolationTests.test_active_control_heartbeats_keep_idle_data_channel_healthy",
++    "test_lan_transport.TLSIsolationTests.test_changed_endpoint_reconnect_keeps_certificate_identity_no_replay",
++    "test_lan_transport.TLSIsolationTests.test_close_releases_credit_reservations_and_queue_memory",
++    "test_lan_transport.TLSIsolationTests.test_concurrent_registry_updates_cannot_restore_older_revoked_pin",
++    "test_lan_transport.TLSIsolationTests.test_control_writer_progresses_while_data_budget_waits",
++    "test_lan_transport.TLSIsolationTests.test_credit_backpressure_and_control_lane_while_data_waits",
++    "test_lan_transport.TLSIsolationTests.test_expired_idle_peer_without_activity_still_closes_real_tls",
++    "test_lan_transport.TLSIsolationTests.test_fingerprint_and_wrong_uri_cert_rejected",
++    "test_lan_transport.TLSIsolationTests.test_isolation_rejects_nonloopback_even_if_registry_admits_it",
++    "test_lan_transport.TLSIsolationTests.test_malformed_frame_rejected_before_payload_allocation",
++    "test_lan_transport.TLSIsolationTests.test_missing_client_certificate_rejected",
++    "test_lan_transport.TLSIsolationTests.test_peer_cannot_spoof_control_role",
++    "test_lan_transport.TLSIsolationTests.test_real_mtls_payload_credit_classes_and_actual_byte_accounting",
++    "test_lan_transport.TLSIsolationTests.test_registry_revocation_and_cancellation",
++    "test_lan_transport.TLSIsolationTests.test_revoked_pin_during_final_hello_cannot_install_connection",
++    "test_lan_transport.TLSIsolationTests.test_sender_waiting_for_memory_does_not_reset_stream_created_while_waiting",
++    "test_lan_transport.TLSIsolationTests.test_six_real_isolated_nodes_independent_of_tailscale",
++    "test_lan_transport.TLSIsolationTests.test_untrusted_ca_rejected_even_with_correct_leaf_pin",
++    "test_lan_transport.TLSIsolationTests.test_wrong_eku_and_expired_cert_rejected",
++    "test_network_budget.BudgetCleanupTests.test_failed_child_cleans_all_owned_siblings_before_directory_cleanup",
++    "test_network_budget.BudgetTests.test_backward_clock_or_changed_policy_fail_closed",
++    "test_network_budget.BudgetTests.test_clock_sample_is_inside_store_transaction_not_before_lock_wait",
++    "test_network_budget.BudgetTests.test_cluster_allocations_cannot_expand",
++    "test_network_budget.BudgetTests.test_egress_replay_conflict_and_unverified_receipt_no_mutation",
++    "test_network_budget.BudgetTests.test_egress_unknown_and_cooldown_survive_restart_no_dispatch",
++    "test_network_budget.BudgetTests.test_foreign_or_incomplete_database_not_adopted",
++    "test_network_budget.BudgetTests.test_real_processes_cannot_each_receive_a_fresh_full_budget",
++    "test_network_budget.BudgetTests.test_two_instances_share_atomic_debit_and_restart_not_fresh_burst"
++  ]
++}
+diff --git a/release/physical-dev/stage1b-20261110/LS7-HOME-QUALIFICATION.json b/release/physical-dev/stage1b-20261110/LS7-HOME-QUALIFICATION.json
+new file mode 100644
+index 0000000..7967e77
+--- /dev/null
++++ b/release/physical-dev/stage1b-20261110/LS7-HOME-QUALIFICATION.json
+@@ -0,0 +1,90 @@
++{
++  "schema": "unified.windows-home-qualification-matrix.v1",
++  "node": "LS7",
++  "os_observed": {
++    "build": "26200",
++    "version": "10.0.26200",
++    "caption": "Microsoft Windows 11 Home",
++    "total_ram_kib": 8151360,
++    "free_virtual_kib": 4075736,
++    "free_ram_kib": 3584852
++  },
++  "role": "WORKER_TERMINAN_CAPABLE_DESIGN_ONLY",
++  "coordinator_admitted": false,
++  "os_edition_change": false,
++  "checks": [
++    {
++      "criterion": "OpenSSH client/server and direct LAN authentication",
++      "status": "NOT_QUALIFIED",
++      "evidence": "READONLY_OS_OBSERVATION_IS_NOT_CAPABILITY_ACCEPTANCE"
++    },
++    {
++      "criterion": "Windows Services and Unified autostart",
++      "status": "NOT_QUALIFIED",
++      "evidence": "READONLY_OS_OBSERVATION_IS_NOT_CAPABILITY_ACCEPTANCE"
++    },
++    {
++      "criterion": "Persistent non-administrative runtime identity",
++      "status": "NOT_QUALIFIED",
++      "evidence": "READONLY_OS_OBSERVATION_IS_NOT_CAPABILITY_ACCEPTANCE"
++    },
++    {
++      "criterion": "mTLS and protected private-key storage",
++      "status": "NOT_QUALIFIED",
++      "evidence": "READONLY_OS_OBSERVATION_IS_NOT_CAPABILITY_ACCEPTANCE"
++    },
++    {
++      "criterion": "Named Pipe ACL and IPC admission",
++      "status": "NOT_QUALIFIED",
++      "evidence": "READONLY_OS_OBSERVATION_IS_NOT_CAPABILITY_ACCEPTANCE"
++    },
++    {
++      "criterion": "Firewall and ESET compatibility without changes",
++      "status": "NOT_QUALIFIED",
++      "evidence": "READONLY_OS_OBSERVATION_IS_NOT_CAPABILITY_ACCEPTANCE"
++    },
++    {
++      "criterion": "Pinned Python/Node/native runtime",
++      "status": "NOT_QUALIFIED",
++      "evidence": "READONLY_OS_OBSERVATION_IS_NOT_CAPABILITY_ACCEPTANCE"
++    },
++    {
++      "criterion": "Math/Strattester/MetaAnalyse worker execution",
++      "status": "NOT_QUALIFIED",
++      "evidence": "READONLY_OS_OBSERVATION_IS_NOT_CAPABILITY_ACCEPTANCE"
++    },
++    {
++      "criterion": "Scheduler/checkpoint/resume/recovery",
++      "status": "NOT_QUALIFIED",
++      "evidence": "READONLY_OS_OBSERVATION_IS_NOT_CAPABILITY_ACCEPTANCE"
++    },
++    {
++      "criterion": "Storage integrity/access/disk budgets",
++      "status": "NOT_QUALIFIED",
++      "evidence": "READONLY_OS_OBSERVATION_IS_NOT_CAPABILITY_ACCEPTANCE"
++    },
++    {
++      "criterion": "Terminan UI/RBAC/Control API",
++      "status": "NOT_QUALIFIED",
++      "evidence": "READONLY_OS_OBSERVATION_IS_NOT_CAPABILITY_ACCEPTANCE"
++    },
++    {
++      "criterion": "Restart and user-logoff recovery",
++      "status": "NOT_QUALIFIED",
++      "evidence": "READONLY_OS_OBSERVATION_IS_NOT_CAPABILITY_ACCEPTANCE"
++    },
++    {
++      "criterion": "Direct LAN independence from Tailscale",
++      "status": "NOT_QUALIFIED",
++      "evidence": "READONLY_OS_OBSERVATION_IS_NOT_CAPABILITY_ACCEPTANCE"
++    },
++    {
++      "criterion": "No dependency on Pro-only features",
++      "status": "NOT_QUALIFIED",
++      "evidence": "READONLY_OS_OBSERVATION_IS_NOT_CAPABILITY_ACCEPTANCE"
++    }
++  ],
++  "existing_pinned_ssh": "OBSERVED_SEPARATELY_NOT_DIRECT_LAN_QUALIFICATION",
++  "physical_deployment": "BLOCKED",
++  "security_gates_weakened": false
++}
+diff --git a/release/physical-dev/stage1b-20261110/PC1-HOME-QUALIFICATION.json b/release/physical-dev/stage1b-20261110/PC1-HOME-QUALIFICATION.json
+new file mode 100644
+index 0000000..fef413f
+--- /dev/null
++++ b/release/physical-dev/stage1b-20261110/PC1-HOME-QUALIFICATION.json
+@@ -0,0 +1,90 @@
++{
++  "schema": "unified.windows-home-qualification-matrix.v1",
++  "node": "PC1",
++  "os_observed": {
++    "build": "26200",
++    "version": "10.0.26200",
++    "caption": "Microsoft Windows 11 Home",
++    "total_ram_kib": 8252684,
++    "free_virtual_kib": 4670544,
++    "free_ram_kib": 3540492
++  },
++  "role": "WORKER_TERMINAN_CAPABLE_DESIGN_ONLY",
++  "coordinator_admitted": false,
++  "os_edition_change": false,
++  "checks": [
++    {
++      "criterion": "OpenSSH client/server and direct LAN authentication",
++      "status": "NOT_QUALIFIED",
++      "evidence": "READONLY_OS_OBSERVATION_IS_NOT_CAPABILITY_ACCEPTANCE"
++    },
++    {
++      "criterion": "Windows Services and Unified autostart",
++      "status": "NOT_QUALIFIED",
++      "evidence": "READONLY_OS_OBSERVATION_IS_NOT_CAPABILITY_ACCEPTANCE"
++    },
++    {
++      "criterion": "Persistent non-administrative runtime identity",
++      "status": "NOT_QUALIFIED",
++      "evidence": "READONLY_OS_OBSERVATION_IS_NOT_CAPABILITY_ACCEPTANCE"
++    },
++    {
++      "criterion": "mTLS and protected private-key storage",
++      "status": "NOT_QUALIFIED",
++      "evidence": "READONLY_OS_OBSERVATION_IS_NOT_CAPABILITY_ACCEPTANCE"
++    },
++    {
++      "criterion": "Named Pipe ACL and IPC admission",
++      "status": "NOT_QUALIFIED",
++      "evidence": "READONLY_OS_OBSERVATION_IS_NOT_CAPABILITY_ACCEPTANCE"
++    },
++    {
++      "criterion": "Firewall and ESET compatibility without changes",
++      "status": "NOT_QUALIFIED",
++      "evidence": "READONLY_OS_OBSERVATION_IS_NOT_CAPABILITY_ACCEPTANCE"
++    },
++    {
++      "criterion": "Pinned Python/Node/native runtime",
++      "status": "NOT_QUALIFIED",
++      "evidence": "READONLY_OS_OBSERVATION_IS_NOT_CAPABILITY_ACCEPTANCE"
++    },
++    {
++      "criterion": "Math/Strattester/MetaAnalyse worker execution",
++      "status": "NOT_QUALIFIED",
++      "evidence": "READONLY_OS_OBSERVATION_IS_NOT_CAPABILITY_ACCEPTANCE"
++    },
++    {
++      "criterion": "Scheduler/checkpoint/resume/recovery",
++      "status": "NOT_QUALIFIED",
++      "evidence": "READONLY_OS_OBSERVATION_IS_NOT_CAPABILITY_ACCEPTANCE"
++    },
++    {
++      "criterion": "Storage integrity/access/disk budgets",
++      "status": "NOT_QUALIFIED",
++      "evidence": "READONLY_OS_OBSERVATION_IS_NOT_CAPABILITY_ACCEPTANCE"
++    },
++    {
++      "criterion": "Terminan UI/RBAC/Control API",
++      "status": "NOT_QUALIFIED",
++      "evidence": "READONLY_OS_OBSERVATION_IS_NOT_CAPABILITY_ACCEPTANCE"
++    },
++    {
++      "criterion": "Restart and user-logoff recovery",
++      "status": "NOT_QUALIFIED",
++      "evidence": "READONLY_OS_OBSERVATION_IS_NOT_CAPABILITY_ACCEPTANCE"
++    },
++    {
++      "criterion": "Direct LAN independence from Tailscale",
++      "status": "NOT_QUALIFIED",
++      "evidence": "READONLY_OS_OBSERVATION_IS_NOT_CAPABILITY_ACCEPTANCE"
++    },
++    {
++      "criterion": "No dependency on Pro-only features",
++      "status": "NOT_QUALIFIED",
++      "evidence": "READONLY_OS_OBSERVATION_IS_NOT_CAPABILITY_ACCEPTANCE"
++    }
++  ],
++  "existing_pinned_ssh": "OBSERVED_SEPARATELY_NOT_DIRECT_LAN_QUALIFICATION",
++  "physical_deployment": "BLOCKED",
++  "security_gates_weakened": false
++}
+diff --git a/release/physical-dev/stage1b-20261110/READONLY-READINESS.json b/release/physical-dev/stage1b-20261110/READONLY-READINESS.json
+new file mode 100644
+index 0000000..b0b9288
+--- /dev/null
++++ b/release/physical-dev/stage1b-20261110/READONLY-READINESS.json
+@@ -0,0 +1,140 @@
++{
++  "schema": "unified.stage1b.readonly-readiness.v1",
++  "reference_source": "b48ddc5ff083deeecfdf76185117d0e86aa23e2a",
++  "reference_source_executed_on_workers": false,
++  "nodes": [
++    {
++      "node": "PC4",
++      "observed_at_utc": "2026-11-10T16:46:02.2176662Z",
++      "os": {
++        "build": "26200",
++        "version": "10.0.26200",
++        "caption": "Microsoft Windows 11 Pro",
++        "total_ram_kib": 32679288,
++        "free_virtual_kib": 19196112,
++        "free_ram_kib": 19730636
++      },
++      "observer_token_elevated": true,
++      "read_only_observation": "READONLY_OBSERVATION_COMPLETE",
++      "candidate_parent_exists": true,
++      "package_verified": false,
++      "restricted_runtime_identity_verified": false,
++      "process_containment_verified": false,
++      "production_conflicts_cleared": false,
++      "smoke": "BLOCKED_NOT_RUN",
++      "source_or_service_installed": false,
++      "changes_performed": false,
++      "original_receipt_sha256": "a08fbbbe134887674ae950329a5e6f229c3e91593b6b9cdf6b7816ed1e3495ca"
++    },
++    {
++      "node": "PC3",
++      "observed_at_utc": "2026-11-10T16:46:55.6206776Z",
++      "os": {
++        "build": "26300",
++        "version": "10.0.26300",
++        "caption": "Microsoft Windows 11 Pro",
++        "total_ram_kib": 33396912,
++        "free_virtual_kib": 18355596,
++        "free_ram_kib": 20930768
++      },
++      "observer_token_elevated": true,
++      "read_only_observation": "READONLY_OBSERVATION_COMPLETE",
++      "candidate_parent_exists": true,
++      "package_verified": false,
++      "restricted_runtime_identity_verified": false,
++      "process_containment_verified": false,
++      "production_conflicts_cleared": false,
++      "smoke": "BLOCKED_NOT_RUN",
++      "source_or_service_installed": false,
++      "changes_performed": false,
++      "original_receipt_sha256": "b4eade15e35e510c64eb9db6261ec95a0fd6eb173b63f2bbe753d56310c415a0"
++    },
++    {
++      "node": "PC2",
++      "observed_at_utc": "2026-11-10T16:46:55.1951826Z",
++      "os": {
++        "build": "26300",
++        "version": "10.0.26300",
++        "caption": "Microsoft Windows 11 Pro",
++        "total_ram_kib": 16477408,
++        "free_virtual_kib": 1375512,
++        "free_ram_kib": 3521684
++      },
++      "observer_token_elevated": true,
++      "read_only_observation": "READONLY_OBSERVATION_COMPLETE",
++      "candidate_parent_exists": true,
++      "package_verified": false,
++      "restricted_runtime_identity_verified": false,
++      "process_containment_verified": false,
++      "production_conflicts_cleared": false,
++      "smoke": "BLOCKED_NOT_RUN",
++      "source_or_service_installed": false,
++      "changes_performed": false,
++      "original_receipt_sha256": "e3abeceea4cbbcf2b58bbfebe39e60705765913efe49b001d4dba332cb518adb"
++    },
++    {
++      "node": "PC1",
++      "observed_at_utc": "2026-11-10T16:46:56.8739050Z",
++      "os": {
++        "build": "26200",
++        "version": "10.0.26200",
++        "caption": "Microsoft Windows 11 Home",
++        "total_ram_kib": 8252684,
++        "free_virtual_kib": 4670544,
++        "free_ram_kib": 3540492
++      },
++      "observer_token_elevated": true,
++      "read_only_observation": "READONLY_OBSERVATION_COMPLETE",
++      "candidate_parent_exists": true,
++      "package_verified": false,
++      "restricted_runtime_identity_verified": false,
++      "process_containment_verified": false,
++      "production_conflicts_cleared": false,
++      "smoke": "BLOCKED_NOT_RUN",
++      "source_or_service_installed": false,
++      "changes_performed": false,
++      "original_receipt_sha256": "f739e983fb7290a1c21548c31729146c162bca0680faf4a588dd09a317f596ad"
++    },
++    {
++      "node": "LS7",
++      "observed_at_utc": "2026-11-10T16:46:58.8291075Z",
++      "os": {
++        "build": "26200",
++        "version": "10.0.26200",
++        "caption": "Microsoft Windows 11 Home",
++        "total_ram_kib": 8151360,
++        "free_virtual_kib": 4075736,
++        "free_ram_kib": 3584852
++      },
++      "observer_token_elevated": true,
++      "read_only_observation": "READONLY_OBSERVATION_COMPLETE",
++      "candidate_parent_exists": true,
++      "package_verified": false,
++      "restricted_runtime_identity_verified": false,
++      "process_containment_verified": false,
++      "production_conflicts_cleared": false,
++      "smoke": "BLOCKED_NOT_RUN",
++      "source_or_service_installed": false,
++      "changes_performed": false,
++      "original_receipt_sha256": "a1748c3340ebb35f814acde7e1c4328a4665254c34db56c1cc50c82c855099f1"
++    }
++  ],
++  "pc2": {
++    "scope": "READONLY_NO_PROCESS_INTERFERENCE",
++    "load_tests": "BLOCKED_MEMORY_AND_RUNTIME_GATES",
++    "reolink_private_bytes": 28245909504,
++    "reolink_working_set_bytes": 1229189120,
++    "reolink_changed": false,
++    "memory_receipt_sha256": "d59cb11372c9fd81b66347624e7aea7b7a87d885ffb09885e4aef822fcae5642"
++  },
++  "ls5_baseline": {
++    "executed_source": "1d923f6a33e1f0f16cd476f1b4e5e65ee03a8a6c",
++    "result": "RETAINED_SCOPED_SYNTHETIC_PASS_NOT_REPEATED",
++    "native_or_cluster_acceptance": false
++  },
++  "adminit_included": false,
++  "physical_stage1b_smokes": "NOT_RUN_BLOCKED",
++  "production_deployment": false,
++  "multi_node_commissioning": false,
++  "overall": "IN_PROGRESS_NO_GO"
++}
+diff --git a/tests/test_lan_mux_inventory.py b/tests/test_lan_mux_inventory.py
+new file mode 100644
+index 0000000..7ed50c1
+--- /dev/null
++++ b/tests/test_lan_mux_inventory.py
+@@ -0,0 +1,122 @@
++"""Pure mandatory-ID validation; never execute LAN or native fixtures."""
++import copy
++import hashlib
++import json
++import re
++from pathlib import Path
++import unittest
++
++
++PRIOR50_SHA256 = '63ee17edad67dbabd4d1a36681eb2485b52696ad44e097428f878d234b57021c'
++PR77_SHA256 = 'ffe6ce63be80e7dae82fc6a969dc2556feee97140a19e9fd961a0cc5f2fe40c3'
++CURRENT_SHA256 = '42065166ac47ba96dfce42821eb1b1f13fda03fce6e28614ca92fa83e838f18a'
++
++
++def validate_inventory(document, actual_ids):
++    """Exact v1 inventory, with independently pinned historical preservation."""
++    def need(value):
++        if not value:
++            raise ValueError('LAN_MUX_TEST_INVENTORY_REJECTED')
++
++    def ids(value):
++        need(type(value) is list and 0 < len(value) <= 256)
++        need(all(type(x) is str and len(x) <= 240 and re.fullmatch(r'test_[a-z_]+\.[A-Za-z_][A-Za-z_0-9]*\.test_[a-z_0-9]+', x) for x in value))
++        need(len(value) == len(set(value)))
++        return sorted(value)
++
++    def digest(value):
++        return hashlib.sha256(('\n'.join(value) + '\n').encode('ascii')).hexdigest()
++
++    fields = {'schema','version','scope','modules','required_count','prior50_source','pr77_source','assembly_source',
++              'prior50_ids_sha256','pr77_ids_sha256','prior50_test_ids','pr77_added_test_ids','assembly_added_test_ids','test_ids'}
++    need(type(document) is dict and set(document) == fields)
++    need(document['schema'] == 'unified.lan-mux-test-inventory.v1' and type(document['version']) is int and document['version'] == 1)
++    need(document['scope'] == 'ISOLATED_LOOPBACK_COMPONENT_ONLY')
++    modules = ['test_lan_transport','test_network_budget','test_lan_mux_channel']
++    need(document['modules'] == modules)
++    prior = ids(document['prior50_test_ids'])
++    pr77_added = ids(document['pr77_added_test_ids'])
++    added = ids(document['assembly_added_test_ids'])
++    expected = ids(document['test_ids'])
++    need(document['prior50_test_ids'] == prior and document['test_ids'] == expected)
++    need(digest(prior) == document['prior50_ids_sha256'] == PRIOR50_SHA256)
++    need(not set(prior) & set(pr77_added) and not (set(prior) | set(pr77_added)) & set(added))
++    need(digest(sorted(prior + pr77_added)) == document['pr77_ids_sha256'] == PR77_SHA256)
++    need(sorted(prior + pr77_added + added) == expected)
++    need(digest(expected) == CURRENT_SHA256)
++    need(type(document['required_count']) is int and document['required_count'] == len(expected))
++    for field, head in [('prior50_source','9680babc85ca605f8450936f5410728898d5b71e'),
++                        ('pr77_source','dd4ef015d9ed20065ccdc2c563e80046015d9193'),
++                        ('assembly_source','b48ddc5ff083deeecfdf76185117d0e86aa23e2a')]:
++        source = document[field]
++        need(type(source) is dict and set(source) == {'head','sources'} and source['head'] == head)
++        need(type(source['sources']) is dict and set(source['sources']) == {'tests/' + m + '.py' for m in modules})
++        need(all(type(x) is str and re.fullmatch('[0-9a-f]{64}',x) for x in source['sources'].values()))
++    need(ids(actual_ids) == expected)
++    return expected
++
++
++class InventoryTests(unittest.TestCase):
++    def setUp(self):
++        self.document = json.loads((Path(__file__).resolve().parents[1] / 'release/lan-mux-test-inventory.json').read_text(encoding='utf-8'))
++        self.ids = list(self.document['test_ids'])
++
++    def test_exact_inventory_preserves_all_prior_ids(self):
++        self.assertEqual(validate_inventory(self.document, self.ids), self.ids)
++        self.assertTrue(set(self.document['prior50_test_ids']) <= set(self.ids))
++
++    def test_missing_case_rejected(self):
++        with self.assertRaises(ValueError):
++            validate_inventory(self.document, self.ids[1:])
++
++    def test_duplicate_case_rejected(self):
++        with self.assertRaises(ValueError):
++            validate_inventory(self.document, self.ids + self.ids[:1])
++
++    def test_extra_case_rejected(self):
++        with self.assertRaises(ValueError):
++            validate_inventory(self.document, self.ids + ['test_lan_transport.Foreign.test_extra'])
++
++    def test_prior_case_removal_cannot_be_resealed_by_count_change(self):
++        old = self.document['prior50_test_ids'][0]
++        self.document['prior50_test_ids'].remove(old)
++        self.document['test_ids'].remove(old)
++        self.document['required_count'] -= 1
++        with self.assertRaises(ValueError):
++            validate_inventory(self.document, self.document['test_ids'])
++
++    def test_pr77_case_removal_cannot_mask_old_count_fifty(self):
++        self.document['test_ids'] = self.document['prior50_test_ids'][:]
++        self.document['pr77_added_test_ids'] = []
++        self.document['assembly_added_test_ids'] = []
++        self.document['required_count'] = 50
++        with self.assertRaises(ValueError):
++            validate_inventory(self.document, self.document['test_ids'])
++
++    def test_assembly_case_removal_cannot_be_resealed(self):
++        case = self.document['assembly_added_test_ids'].pop()
++        self.document['test_ids'].remove(case)
++        self.document['required_count'] -= 1
++        with self.assertRaises(ValueError):
++            validate_inventory(self.document, self.document['test_ids'])
++
++    def test_manifest_duplicate_and_wrong_count_rejected(self):
++        for change in ('duplicate', 'count'):
++            d = copy.deepcopy(self.document)
++            if change == 'duplicate':
++                d['test_ids'].append(d['test_ids'][0])
++            else:
++                d['required_count'] = True
++            with self.assertRaises(ValueError):
++                validate_inventory(d, self.ids)
++
++    def test_closed_schema_and_foreign_origin_rejected(self):
++        for key, value in (('private', 'unexpected'), ('schema', 'foreign'), ('version', True)):
++            d = dict(self.document)
++            d[key] = value
++            with self.assertRaises(ValueError):
++                validate_inventory(d, self.ids)
++
++
++if __name__ == '__main__':
++    unittest.main()

@@ -1,0 +1,30 @@
+﻿2026-11-10T16:48:32.3050498Z ##[group]Run python -I -B docs/intelligence/identity/guard_controls.py
+2026-11-10T16:48:32.3051092Z [36;1mpython -I -B docs/intelligence/identity/guard_controls.py[0m
+2026-11-10T16:48:32.3069669Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-11-10T16:48:32.3070066Z env:
+2026-11-10T16:48:32.3070313Z   EXPECTED_HEAD: b48ddc5ff083deeecfdf76185117d0e86aa23e2a
+2026-11-10T16:48:32.3070715Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-10T16:48:32.3071355Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-11-10T16:48:32.3071812Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-10T16:48:32.3072217Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-10T16:48:32.3072615Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-10T16:48:32.3072934Z ##[endgroup]
+2026-11-10T16:48:32.8384572Z test_cache_rejected_before_any_source_import (__main__.SourceControls.test_cache_rejected_before_any_source_import) ... ok
+2026-11-10T16:48:33.2994414Z test_clean_positive_and_tracked_mutation_negative (__main__.SourceControls.test_clean_positive_and_tracked_mutation_negative) ... ok
+2026-11-10T16:48:35.7774246Z test_directory_reparse_rejected (__main__.SourceControls.test_directory_reparse_rejected) ... ok
+2026-11-10T16:48:35.9396596Z test_missing_and_duplicate_test_ids_rejected (__main__.SourceControls.test_missing_and_duplicate_test_ids_rejected) ... ok
+2026-11-10T16:48:36.4237032Z test_root_ancestor_reparse_rejected (__main__.SourceControls.test_root_ancestor_reparse_rejected) ... ok
+2026-11-10T16:48:36.7565254Z test_tampered_primary_blob_oid_rejected (__main__.SourceControls.test_tampered_primary_blob_oid_rejected) ... ok
+2026-11-10T16:48:37.0727505Z test_tampered_primary_tree_oid_rejected (__main__.SourceControls.test_tampered_primary_tree_oid_rejected) ... error: hash mismatch 08f0f9055af9956caf9bbd59558be96fad522b0d
+2026-11-10T16:48:37.0730456Z error: hash mismatch 08f0f9055af9956caf9bbd59558be96fad522b0d
+2026-11-10T16:48:37.0731399Z fatal: ambiguous argument 'HEAD^{tree}': unknown revision or path not in the working tree.
+2026-11-10T16:48:37.0732251Z Use '--' to separate paths from revisions, like this:
+2026-11-10T16:48:37.0732843Z 'git <command> [<revision>...] -- [<file>...]'
+2026-11-10T16:48:37.0860226Z ok
+2026-11-10T16:48:37.3880628Z test_unexpected_shadow_rejected (__main__.SourceControls.test_unexpected_shadow_rejected) ... ok
+2026-11-10T16:48:37.3881333Z 
+2026-11-10T16:48:37.3881558Z ----------------------------------------------------------------------
+2026-11-10T16:48:37.3882212Z Ran 8 tests in 4.892s
+2026-11-10T16:48:37.3882410Z 
+2026-11-10T16:48:37.3882509Z OK
+2026-11-10T16:48:37.3883178Z {"result": "PASS", "positive_controls": 1, "negative_controls": 11, "scope": "OWNED_SOURCE_GUARDS_NOT_NATIVE_ADMISSION"}
