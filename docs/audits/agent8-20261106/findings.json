@@ -442,7 +442,12 @@
     "evidence": "phase122/component-run.original.json;phase122/component-jobs.original.json;phase122/component-failure-excerpts.json;phase122/component-job-*.original.log",
     "root_alias": "SAME_ROOT_A1_HEARTBEAT_RCA_NOT_SECOND_BUG",
     "cause": "UNDETERMINED",
-    "required_correction": "Owner A1 reproduce/diagnose the original heartbeat failure and correct cause; verify exact new committed mandatory matrix/artifacts without test omission, timeout relaxation or replayed PASS. No A8 rerun/production edit."
+    "required_correction": "Owner A1 reproduce/diagnose the original heartbeat failure and correct cause; verify exact new committed mandatory matrix/artifacts without test omission, timeout relaxation or replayed PASS. No A8 rerun/production edit.",
+    "latest_exact_head": "6e79f2da66212474e9875559ec532c0f65b678a8",
+    "latest_run": 42861735651,
+    "latest_failed_job": 129989373738,
+    "latest_evidence": "phase169/report.md;phase169/verification.json;phase169/LAN-original-logs.zip",
+    "latest_result": "ACTUAL68_WINDOWS_ONE_HEARTBEAT_DEADLINE_UBUNTU68PASS_NO_EXCLUSIVE_RCA"
   },
   {
     "id": "A8-F27",

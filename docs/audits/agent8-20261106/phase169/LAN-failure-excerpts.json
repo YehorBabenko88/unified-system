@@ -1,0 +1,56 @@
+[
+  {
+    "member": "0_finite (windows-latest).txt",
+    "lines": [
+      {
+        "line": 311,
+        "text": "2026-11-10T17:23:16.6445698Z Ran 9 tests in 0.019s"
+      },
+      {
+        "line": 332,
+        "text": "2026-11-10T17:23:28.1116006Z test_active_control_heartbeats_keep_idle_data_channel_healthy (test_lan_transport.TLSIsolationTests.test_active_control_heartbeats_keep_idle_data_channel_healthy) ... LAN_FAIL_DIAG_V1 {\"code\":\"DEADLINE\",\"connections\":[{\"age_ms\":0,\"alive\":[true,true,true,true,true],\"closed\":false,\"jobs\":[],\"q\":0,\"qb\":0,\"slot\":1,\"streams\":[[1,true,65546,10]],\"why\":\"OTHER\"},{\"age_ms\":78,\"alive\":[true,true,true,true,true],\"closed\":false,\"jobs\":[],\"q\":0,\"qb\":0,\"slot\":2,\"streams\":[[1,true,0,0]],\"why\":\"OTHER\"}],\"io\":[{\"active\":false,\"channel\":\"control\",\"elapsed_ms\":156,\"error\":\"OTHER\",\"n\":0,\"read\":\"READ_DONE\",\"remaining_ms\":4922,\"slot\":2,\"write\":\"PONG\"},{\"active\":true,\"channel\":\"control\",\"elapsed_ms\":0,\"error\":\"OTHER\",\"n\":0,\"read\":\"READ_DONE\",\"remaining_ms\":4875,\"slot\":1,\"write\":\"PONG\"},{\"active\":false,\"channel\":\"data\",\"elapsed_ms\":141,\"error\":\"OTHER\",\"n\":1,\"read\":\"READ_1\",\"remaining_ms\":-1000,\"slot\":1,\"write\":\"APP\"},{\"active\":false,\"channel\":\"data\",\"elapsed_ms\":0,\"error\":\"OTHER\",\"n\":1,\"read\":\"READ_1\",\"remaining_ms\":29999,\"slot\":2,\"write\":\"OTHER\"}],\"observer\":\"OK\",\"stage\":\"SEND\",\"stores\":[{\"budget_ms\":156,\"budget_waiters\":1,\"entry_ms\":78,\"held\":true,\"hold_ms\":0,\"max_ms\":265,\"n\":130,\"phase\":\"TX_COMMIT\",\"waiters\":0},{\"budget_ms\":453,\"budget_waiters\":2,\"entry_ms\":16,\"held\":true,\"hold_ms\":0,\"max_ms\":235,\"n\":131,\"phase\":\"TX_BODY\",\"waiters\":1}],\"truncated\":false,\"v\":1}"
+      },
+      {
+        "line": 385,
+        "text": "2026-11-10T17:23:51.3586619Z ERROR: test_active_control_heartbeats_keep_idle_data_channel_healthy (test_lan_transport.TLSIsolationTests.test_active_control_heartbeats_keep_idle_data_channel_healthy)"
+      },
+      {
+        "line": 398,
+        "text": "2026-11-10T17:23:51.3600074Z     raise TransportError(job['error'])"
+      },
+      {
+        "line": 399,
+        "text": "2026-11-10T17:23:51.3600388Z unified_system.lan_transport.TransportError: DEADLINE"
+      },
+      {
+        "line": 402,
+        "text": "2026-11-10T17:23:51.3601065Z Ran 68 tests in 34.056s"
+      },
+      {
+        "line": 404,
+        "text": "2026-11-10T17:23:51.3601279Z FAILED (errors=1)"
+      },
+      {
+        "line": 409,
+        "text": "2026-11-10T17:23:51.3722297Z AssertionError"
+      },
+      {
+        "line": 410,
+        "text": "2026-11-10T17:23:51.3931491Z ##[error]Process completed with exit code 1."
+      }
+    ]
+  },
+  {
+    "member": "1_finite (ubuntu-24.04).txt",
+    "lines": [
+      {
+        "line": 350,
+        "text": "2026-11-10T17:14:55.2733716Z Ran 9 tests in 0.003s"
+      },
+      {
+        "line": 423,
+        "text": "2026-11-10T17:15:02.0507092Z Ran 68 tests in 6.600s"
+      }
+    ]
+  }
+]

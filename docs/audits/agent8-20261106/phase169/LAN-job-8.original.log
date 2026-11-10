@@ -1,0 +1,480 @@
+﻿2026-11-10T17:14:44.5068778Z Current runner version: '2.338.2'
+2026-11-10T17:14:44.5120979Z ##[group]Runner Image Provisioner
+2026-11-10T17:14:44.5121867Z Hosted Compute Agent
+2026-11-10T17:14:44.5122412Z Version: 20261028.624
+2026-11-10T17:14:44.5122960Z Commit: 54898b74c23fde5556c9b3c3a2290865feef0dfe
+2026-11-10T17:14:44.5123702Z Build Date: 2026-10-28T21:51:42Z
+2026-11-10T17:14:44.5124307Z Worker ID: {17fd7ead-70c4-4269-8a4a-7b1e1c674f80}
+2026-11-10T17:14:44.5125163Z Region: centralus
+2026-11-10T17:14:44.5125709Z Cloud: Azure
+2026-11-10T17:14:44.5126167Z ##[endgroup]
+2026-11-10T17:14:44.5127594Z ##[group]Operating System
+2026-11-10T17:14:44.5128165Z Ubuntu
+2026-11-10T17:14:44.5128750Z 24.04.5
+2026-11-10T17:14:44.5129225Z LTS
+2026-11-10T17:14:44.5129691Z ##[endgroup]
+2026-11-10T17:14:44.5130303Z ##[group]Runner Image
+2026-11-10T17:14:44.5130839Z Image: ubuntu-24.04
+2026-11-10T17:14:44.5131424Z Version: 20261101.360.1
+2026-11-10T17:14:44.5132596Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261101.360/images/ubuntu/Ubuntu2404-Readme.md
+2026-11-10T17:14:44.5134162Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261101.360
+2026-11-10T17:14:44.5135286Z ##[endgroup]
+2026-11-10T17:14:44.5136479Z ##[group]GITHUB_TOKEN Permissions
+2026-11-10T17:14:44.5138542Z Contents: read
+2026-11-10T17:14:44.5139173Z Metadata: read
+2026-11-10T17:14:44.5139696Z ##[endgroup]
+2026-11-10T17:14:44.5141944Z Secret source: Actions
+2026-11-10T17:14:44.5142975Z Cache mode: write
+2026-11-10T17:14:44.5143629Z Prepare workflow directory
+2026-11-10T17:14:44.5503413Z Prepare all required actions
+2026-11-10T17:14:44.5537700Z Getting action download info
+2026-11-10T17:14:44.7447179Z Download action repository 'actions/checkout@11d5960a326750d5838078e36cf38b85af677262' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-11-10T17:14:44.8447255Z Download action repository 'actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+2026-11-10T17:14:44.9361644Z Download action repository 'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-11-10T17:14:45.1242226Z Complete job name: finite (ubuntu-24.04)
+2026-11-10T17:14:45.1767225Z ##[group]Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+2026-11-10T17:14:45.1767764Z with:
+2026-11-10T17:14:45.1768031Z   ref: 6e79f2da66212474e9875559ec532c0f65b678a8
+2026-11-10T17:14:45.1768371Z   persist-credentials: false
+2026-11-10T17:14:45.1768653Z   fetch-depth: 0
+2026-11-10T17:14:45.1768926Z   repository: YehorBabenko88/unified-system
+2026-11-10T17:14:45.1770976Z   token: ***
+2026-11-10T17:14:45.1771212Z   ssh-strict: true
+2026-11-10T17:14:45.1771459Z   ssh-user: git
+2026-11-10T17:14:45.1771693Z   clean: true
+2026-11-10T17:14:45.1771948Z   sparse-checkout-cone-mode: true
+2026-11-10T17:14:45.1772240Z   fetch-tags: false
+2026-11-10T17:14:45.1772489Z   show-progress: true
+2026-11-10T17:14:45.1772741Z   lfs: false
+2026-11-10T17:14:45.1772970Z   submodules: false
+2026-11-10T17:14:45.1773238Z   set-safe-directory: true
+2026-11-10T17:14:45.1773524Z   allow-unsafe-pr-checkout: false
+2026-11-10T17:14:45.1773889Z env:
+2026-11-10T17:14:45.1774188Z   EXPECTED_HEAD: 6e79f2da66212474e9875559ec532c0f65b678a8
+2026-11-10T17:14:45.1774553Z   PYTHONDONTWRITEBYTECODE: 1
+2026-11-10T17:14:45.1774840Z   GIT_NO_REPLACE_OBJECTS: 1
+2026-11-10T17:14:45.1775235Z   GIT_CONFIG_COUNT: 2
+2026-11-10T17:14:45.1775497Z   GIT_CONFIG_KEY_0: core.autocrlf
+2026-11-10T17:14:45.1775785Z   GIT_CONFIG_VALUE_0: false
+2026-11-10T17:14:45.1776097Z   GIT_CONFIG_KEY_1: core.eol
+2026-11-10T17:14:45.1776371Z   GIT_CONFIG_VALUE_1: lf
+2026-11-10T17:14:45.1776628Z ##[endgroup]
+2026-11-10T17:14:45.3676513Z Syncing repository: YehorBabenko88/unified-system
+2026-11-10T17:14:45.3677693Z ##[group]Getting Git version info
+2026-11-10T17:14:45.3678265Z Working directory is '/home/runner/work/unified-system/unified-system'
+2026-11-10T17:14:45.3679236Z [command]/usr/bin/git version
+2026-11-10T17:14:45.3742724Z git version 2.56.0
+2026-11-10T17:14:45.3756788Z ##[endgroup]
+2026-11-10T17:14:45.3769670Z Temporarily overriding HOME='/home/runner/work/_temp/fbbe7b76-8162-43af-8089-37d7390fee07' before making global git config changes
+2026-11-10T17:14:45.3771477Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-10T17:14:45.3774462Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/unified-system/unified-system
+2026-11-10T17:14:45.3836997Z Deleting the contents of '/home/runner/work/unified-system/unified-system'
+2026-11-10T17:14:45.3838137Z ##[group]Initializing the repository
+2026-11-10T17:14:45.3838671Z [command]/usr/bin/git init /home/runner/work/unified-system/unified-system
+2026-11-10T17:14:45.3918740Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-11-10T17:14:45.3919617Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-11-10T17:14:45.3920435Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-11-10T17:14:45.3921028Z hint: call:
+2026-11-10T17:14:45.3921467Z hint:
+2026-11-10T17:14:45.3922051Z hint: 	git config --global init.defaultBranch <name>
+2026-11-10T17:14:45.3922650Z hint:
+2026-11-10T17:14:45.3923132Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-11-10T17:14:45.3924092Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-11-10T17:14:45.3925073Z hint:
+2026-11-10T17:14:45.3926219Z hint: 	git branch -m <name>
+2026-11-10T17:14:45.3926753Z hint:
+2026-11-10T17:14:45.3927410Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-11-10T17:14:45.3928388Z Initialized empty Git repository in /home/runner/work/unified-system/unified-system/.git/
+2026-11-10T17:14:45.3937646Z [command]/usr/bin/git remote add origin https://github.com/YehorBabenko88/unified-system
+2026-11-10T17:14:45.3981943Z ##[endgroup]
+2026-11-10T17:14:45.3982522Z ##[group]Disabling automatic garbage collection
+2026-11-10T17:14:45.3986368Z [command]/usr/bin/git config --local gc.auto 0
+2026-11-10T17:14:45.4022535Z ##[endgroup]
+2026-11-10T17:14:45.4023148Z ##[group]Setting up auth
+2026-11-10T17:14:45.4029506Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-10T17:14:45.4065518Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-10T17:14:45.4396849Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-10T17:14:45.4437180Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-10T17:14:45.4641609Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-10T17:14:45.4682742Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-10T17:14:45.4899816Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-10T17:14:45.4947822Z ##[endgroup]
+2026-11-10T17:14:45.4948388Z ##[group]Fetching the repository
+2026-11-10T17:14:45.4957608Z [command]/usr/bin/git -c protocol.version=2 fetch --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*
+2026-11-10T17:14:47.0481772Z From https://github.com/YehorBabenko88/unified-system
+2026-11-10T17:14:47.0486551Z  * [new branch]      agent1/direct-lan-transport-20261106 -> origin/agent1/direct-lan-transport-20261106
+2026-11-10T17:14:47.0487965Z  * [new branch]      agent1/heartbeat-fixture-20261109 -> origin/agent1/heartbeat-fixture-20261109
+2026-11-10T17:14:47.0489470Z  * [new branch]      agent1/native-peer-capture-20261107 -> origin/agent1/native-peer-capture-20261107
+2026-11-10T17:14:47.0491823Z  * [new branch]      audit/agent8-independent-acceptance-20261106 -> origin/audit/agent8-independent-acceptance-20261106
+2026-11-10T17:14:47.0493415Z  * [new branch]      codex/agent5-assignment-v1-design -> origin/codex/agent5-assignment-v1-design
+2026-11-10T17:14:47.0494523Z  * [new branch]      codex/five-boundary-c  -> origin/codex/five-boundary-c
+2026-11-10T17:14:47.0496949Z  * [new branch]      codex/five-lifecycle-b -> origin/codex/five-lifecycle-b
+2026-11-10T17:14:47.0498134Z  * [new branch]      codex/five-module-integration-20261030 -> origin/codex/five-module-integration-20261030
+2026-11-10T17:14:47.0499235Z  * [new branch]      codex/five-security-e  -> origin/codex/five-security-e
+2026-11-10T17:14:47.0500370Z  * [new branch]      codex/windows-staging-plan-20261030 -> origin/codex/windows-staging-plan-20261030
+2026-11-10T17:14:47.0501835Z  * [new branch]      codex/workstream-d-installer-dry-run -> origin/codex/workstream-d-installer-dry-run
+2026-11-10T17:14:47.0503184Z  * [new branch]      feature/agent2-control-mux-get-20261107 -> origin/feature/agent2-control-mux-get-20261107
+2026-11-10T17:14:47.0504749Z  * [new branch]      feature/agent2-control-mux-runtime-20261107 -> origin/feature/agent2-control-mux-runtime-20261107
+2026-11-10T17:14:47.0506856Z  * [new branch]      feature/agent2-control-v3-read-boundary-20261106 -> origin/feature/agent2-control-v3-read-boundary-20261106
+2026-11-10T17:14:47.0508915Z  * [new branch]      feature/agent2-gateway-identity-20261107 -> origin/feature/agent2-gateway-identity-20261107
+2026-11-10T17:14:47.0511027Z  * [new branch]      feature/agent2-principal-local-invalidation-20261109 -> origin/feature/agent2-principal-local-invalidation-20261109
+2026-11-10T17:14:47.0513243Z  * [new branch]      feature/agent2-research-current-session-20261109 -> origin/feature/agent2-research-current-session-20261109
+2026-11-10T17:14:47.0515349Z  * [new branch]      feature/agent2-research-profile-v2-20261109 -> origin/feature/agent2-research-profile-v2-20261109
+2026-11-10T17:14:47.0517460Z  * [new branch]      feature/agent5-assignment-backend-contracts-20261107 -> origin/feature/agent5-assignment-backend-contracts-20261107
+2026-11-10T17:14:47.0519915Z  * [new branch]      feature/agent5-capacity-source-freshness-20261109 -> origin/feature/agent5-capacity-source-freshness-20261109
+2026-11-10T17:14:47.0521994Z  * [new branch]      feature/agent5-clock-source-prerequisites-20261109 -> origin/feature/agent5-clock-source-prerequisites-20261109
+2026-11-10T17:14:47.0523806Z  * [new branch]      feature/agent5-gateway-jobs-20261107 -> origin/feature/agent5-gateway-jobs-20261107
+2026-11-10T17:14:47.0527585Z  * [new branch]      feature/agent5-native-scheduler-adapter-20261109 -> origin/feature/agent5-native-scheduler-adapter-20261109
+2026-11-10T17:14:47.0529597Z  * [new branch]      feature/agent5-one-shot-negative-20261110 -> origin/feature/agent5-one-shot-negative-20261110
+2026-11-10T17:14:47.0531305Z  * [new branch]      feature/agent5-owned-supervisor-loss-20261109 -> origin/feature/agent5-owned-supervisor-loss-20261109
+2026-11-10T17:14:47.0533136Z  * [new branch]      feature/agent5-scheduler-components-20261106 -> origin/feature/agent5-scheduler-components-20261106
+2026-11-10T17:14:47.0535108Z  * [new branch]      feature/agent5-source-composition-20261109 -> origin/feature/agent5-source-composition-20261109
+2026-11-10T17:14:47.0536987Z  * [new branch]      feature/agent5-target-native-mapping-20261109 -> origin/feature/agent5-target-native-mapping-20261109
+2026-11-10T17:14:47.0538835Z  * [new branch]      feature/ci-boundary-repair-20261110 -> origin/feature/ci-boundary-repair-20261110
+2026-11-10T17:14:47.0540756Z  * [new branch]      feature/ci-queue-controller-20261107 -> origin/feature/ci-queue-controller-20261107
+2026-11-10T17:14:47.0542338Z  * [new branch]      feature/durable-mission-controller-20261107 -> origin/feature/durable-mission-controller-20261107
+2026-11-10T17:14:47.0544030Z  * [new branch]      feature/gateway-research-identity-20261107 -> origin/feature/gateway-research-identity-20261107
+2026-11-10T17:14:47.0546348Z  * [new branch]      feature/gateway-strict-pki-fixture-20261110 -> origin/feature/gateway-strict-pki-fixture-20261110
+2026-11-10T17:14:47.0548048Z  * [new branch]      feature/gateway-target-adapter-v1-20261109 -> origin/feature/gateway-target-adapter-v1-20261109
+2026-11-10T17:14:47.0549720Z  * [new branch]      feature/gateway-worker-containment-20261107 -> origin/feature/gateway-worker-containment-20261107
+2026-11-10T17:14:47.0551716Z  * [new branch]      feature/gateway-worker-virtualalloc-diagnostic-20261107 -> origin/feature/gateway-worker-virtualalloc-diagnostic-20261107
+2026-11-10T17:14:47.0553602Z  * [new branch]      feature/ha-authority-client-20261106 -> origin/feature/ha-authority-client-20261106
+2026-11-10T17:14:47.0555369Z  * [new branch]      feature/intelligence-gateway-20261107 -> origin/feature/intelligence-gateway-20261107
+2026-11-10T17:14:47.0557118Z  * [new branch]      feature/lan-send-diagnostics-integration-20261110 -> origin/feature/lan-send-diagnostics-integration-20261110
+2026-11-10T17:14:47.0558880Z  * [new branch]      feature/ls5-fixed-git-export-20261109 -> origin/feature/ls5-fixed-git-export-20261109
+2026-11-10T17:14:47.0560348Z  * [new branch]      feature/ls5-physical-dev-smoke-20261109 -> origin/feature/ls5-physical-dev-smoke-20261109
+2026-11-10T17:14:47.0561920Z  * [new branch]      feature/ls5-physical-dev-source-ci-20261109 -> origin/feature/ls5-physical-dev-source-ci-20261109
+2026-11-10T17:14:47.0563560Z  * [new branch]      feature/ls5-smoke-assembly-plan-20261109 -> origin/feature/ls5-smoke-assembly-plan-20261109
+2026-11-10T17:14:47.0565220Z  * [new branch]      feature/ls5-smoke-package-20261109 -> origin/feature/ls5-smoke-package-20261109
+2026-11-10T17:14:47.0566712Z  * [new branch]      feature/native-negative-path-20261109 -> origin/feature/native-negative-path-20261109
+2026-11-10T17:14:47.0568221Z  * [new branch]      feature/native-proxy-custody-20261109 -> origin/feature/native-proxy-custody-20261109
+2026-11-10T17:14:47.0569719Z  * [new branch]      feature/native-research-e2e-20261109 -> origin/feature/native-research-e2e-20261109
+2026-11-10T17:14:47.0666116Z  * [new branch]      feature/node-supervisor-v2-20261107 -> origin/feature/node-supervisor-v2-20261107
+2026-11-10T17:14:47.0667618Z  * [new branch]      feature/physical-copy-close-recovery-20261109 -> origin/feature/physical-copy-close-recovery-20261109
+2026-11-10T17:14:47.0668698Z  * [new branch]      feature/stage1b-and-lan-ci-20261110 -> origin/feature/stage1b-and-lan-ci-20261110
+2026-11-10T17:14:47.0669667Z  * [new branch]      feature/storage-authority-fixtures-20261107 -> origin/feature/storage-authority-fixtures-20261107
+2026-11-10T17:14:47.0670756Z  * [new branch]      feature/storage-gateway-disclosure-20261107 -> origin/feature/storage-gateway-disclosure-20261107
+2026-11-10T17:14:47.0671677Z  * [new branch]      feature/storage-integrity-20261106 -> origin/feature/storage-integrity-20261106
+2026-11-10T17:14:47.0672637Z  * [new branch]      feature/storage-manifest-codec-20261107 -> origin/feature/storage-manifest-codec-20261107
+2026-11-10T17:14:47.0673697Z  * [new branch]      feature/storage-native-publication-20261109 -> origin/feature/storage-native-publication-20261109
+2026-11-10T17:14:47.0674750Z  * [new branch]      feature/storage-result-publication-20261107 -> origin/feature/storage-result-publication-20261107
+2026-11-10T17:14:47.0675938Z  * [new branch]      feature/storage-runtime-20261107 -> origin/feature/storage-runtime-20261107
+2026-11-10T17:14:47.0676883Z  * [new branch]      feature/supervisor-local-integration-20261107 -> origin/feature/supervisor-local-integration-20261107
+2026-11-10T17:14:47.0677938Z  * [new branch]      feature/supervisor-root-adapters-20261107 -> origin/feature/supervisor-root-adapters-20261107
+2026-11-10T17:14:47.0678973Z  * [new branch]      fix/readonly-provider-probe-closed-20261106 -> origin/fix/readonly-provider-probe-closed-20261106
+2026-11-10T17:14:47.0680367Z  * [new branch]      integration/combined-fleet-lifecycle-security-provenance-20261030 -> origin/integration/combined-fleet-lifecycle-security-provenance-20261030
+2026-11-10T17:14:47.0681879Z  * [new branch]      integration/five-module-infra-control-plane -> origin/integration/five-module-infra-control-plane
+2026-11-10T17:14:47.0683014Z  * [new branch]      integration/five-workstreams-acceptance-20261030 -> origin/integration/five-workstreams-acceptance-20261030
+2026-11-10T17:14:47.0684031Z  * [new branch]      integration/gateway-runtime-20261107 -> origin/integration/gateway-runtime-20261107
+2026-11-10T17:14:47.0685352Z  * [new branch]      integration/offline-contract-prototype -> origin/integration/offline-contract-prototype
+2026-11-10T17:14:47.0686285Z  * [new branch]      integration/supervisor-contract-v1 -> origin/integration/supervisor-contract-v1
+2026-11-10T17:14:47.0686943Z  * [new branch]      main                   -> origin/main
+2026-11-10T17:14:47.0687746Z  * [new branch]      mission-exec/network-probe-transport-20261105 -> origin/mission-exec/network-probe-transport-20261105
+2026-11-10T17:14:47.0688713Z  * [new branch]      mission-exec/network-safety-20261105 -> origin/mission-exec/network-safety-20261105
+2026-11-10T17:14:47.0689673Z  * [new branch]      mission-exec/runtime-token-policy-20261105 -> origin/mission-exec/runtime-token-policy-20261105
+2026-11-10T17:14:47.0690563Z  * [new branch]      mission/final-integration-20261106 -> origin/mission/final-integration-20261106
+2026-11-10T17:14:47.0691465Z  * [new branch]      mission/integration-registry-20261106 -> origin/mission/integration-registry-20261106
+2026-11-10T17:14:47.0692693Z  * [new branch]      mission/operator-control-plane -> origin/mission/operator-control-plane
+2026-11-10T17:14:47.0693962Z  * [new branch]      mission/windows-phase-diagnostics -> origin/mission/windows-phase-diagnostics
+2026-11-10T17:14:47.0695376Z  * [new branch]      mission/windows-test-fixtures -> origin/mission/windows-test-fixtures
+2026-11-10T17:14:47.0696728Z  * [new branch]      mission/workgroup-operator-auth-design -> origin/mission/workgroup-operator-auth-design
+2026-11-10T17:14:47.0698442Z  * [new branch]      mission1/six-module-runtime-20261031 -> origin/mission1/six-module-runtime-20261031
+2026-11-10T17:14:47.0699949Z  * [new branch]      mission3/runtime-predeploy-20261031 -> origin/mission3/runtime-predeploy-20261031
+2026-11-10T17:14:47.0701151Z  * [new branch]      newcodex/five-infra-a  -> origin/newcodex/five-infra-a
+2026-11-10T17:14:47.0702517Z  * [new branch]      test/agent1-network-safety-models-20261106 -> origin/test/agent1-network-safety-models-20261106
+2026-11-10T17:14:47.0705485Z [command]/usr/bin/git rev-parse --verify --quiet 6e79f2da66212474e9875559ec532c0f65b678a8^{object}
+2026-11-10T17:14:47.0706638Z 6e79f2da66212474e9875559ec532c0f65b678a8
+2026-11-10T17:14:47.0708053Z ##[endgroup]
+2026-11-10T17:14:47.0708739Z ##[group]Determining the checkout info
+2026-11-10T17:14:47.0709539Z ##[endgroup]
+2026-11-10T17:14:47.0709988Z [command]/usr/bin/git sparse-checkout disable
+2026-11-10T17:14:47.0711374Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-11-10T17:14:47.0713030Z ##[group]Checking out the ref
+2026-11-10T17:14:47.0713908Z [command]/usr/bin/git checkout --progress --force 6e79f2da66212474e9875559ec532c0f65b678a8
+2026-11-10T17:14:47.2363135Z Note: switching to '6e79f2da66212474e9875559ec532c0f65b678a8'.
+2026-11-10T17:14:47.2363597Z 
+2026-11-10T17:14:47.2363870Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-11-10T17:14:47.2364542Z changes and commit them, and you can discard any commits you make in this
+2026-11-10T17:14:47.2365428Z state without impacting any branches by switching back to a branch.
+2026-11-10T17:14:47.2365820Z 
+2026-11-10T17:14:47.2366068Z If you want to create a new branch to retain commits you create, you may
+2026-11-10T17:14:47.2366694Z do so (now or later) by using -c with the switch command. Example:
+2026-11-10T17:14:47.2367050Z 
+2026-11-10T17:14:47.2367191Z   git switch -c <new-branch-name>
+2026-11-10T17:14:47.2367629Z 
+2026-11-10T17:14:47.2367761Z Or undo this operation with:
+2026-11-10T17:14:47.2367976Z 
+2026-11-10T17:14:47.2368093Z   git switch -
+2026-11-10T17:14:47.2368249Z 
+2026-11-10T17:14:47.2368535Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-11-10T17:14:47.2368967Z 
+2026-11-10T17:14:47.2369291Z HEAD is now at 6e79f2d docs: retain owner PC4 block and verified LS5-only capsule scope
+2026-11-10T17:14:47.2400034Z ##[endgroup]
+2026-11-10T17:14:47.2449351Z [command]/usr/bin/git log -1 --format=%H
+2026-11-10T17:14:47.2482543Z 6e79f2da66212474e9875559ec532c0f65b678a8
+2026-11-10T17:14:47.2492419Z ##[group]Removing auth
+2026-11-10T17:14:47.2496120Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-10T17:14:47.2534814Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-10T17:14:47.2747634Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-10T17:14:47.2781538Z http.https://github.com/.extraheader
+2026-11-10T17:14:47.2788286Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-10T17:14:47.2830696Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-10T17:14:47.3041291Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-10T17:14:47.3080613Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-10T17:14:47.3289988Z ##[endgroup]
+2026-11-10T17:14:47.3607917Z ##[group]Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+2026-11-10T17:14:47.3608686Z with:
+2026-11-10T17:14:47.3608992Z   python-version: 3.12.10
+2026-11-10T17:14:47.3609368Z   check-latest: false
+2026-11-10T17:14:47.3614293Z   token: ***
+2026-11-10T17:14:47.3614601Z   update-environment: true
+2026-11-10T17:14:47.3615258Z   allow-prereleases: false
+2026-11-10T17:14:47.3615642Z   freethreaded: false
+2026-11-10T17:14:47.3615961Z env:
+2026-11-10T17:14:47.3616328Z   EXPECTED_HEAD: 6e79f2da66212474e9875559ec532c0f65b678a8
+2026-11-10T17:14:47.3616926Z   PYTHONDONTWRITEBYTECODE: 1
+2026-11-10T17:14:47.3617331Z   GIT_NO_REPLACE_OBJECTS: 1
+2026-11-10T17:14:47.3617706Z   GIT_CONFIG_COUNT: 2
+2026-11-10T17:14:47.3618052Z   GIT_CONFIG_KEY_0: core.autocrlf
+2026-11-10T17:14:47.3618474Z   GIT_CONFIG_VALUE_0: false
+2026-11-10T17:14:47.3618854Z   GIT_CONFIG_KEY_1: core.eol
+2026-11-10T17:14:47.3619238Z   GIT_CONFIG_VALUE_1: lf
+2026-11-10T17:14:47.3619587Z ##[endgroup]
+2026-11-10T17:14:47.4638799Z ##[group]Installed versions
+2026-11-10T17:14:47.4651852Z Version 3.12.10 was not found in the local cache
+2026-11-10T17:14:47.4793203Z (node:2190) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-10T17:14:47.4794786Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-10T17:14:48.4226400Z Version 3.12.10 is available for downloading
+2026-11-10T17:14:48.4227203Z Download from "https://github.com/actions/python-versions/releases/download/3.12.10-14343898437/python-3.12.10-linux-24.04-x64.tar.gz"
+2026-11-10T17:14:49.0524376Z Extract downloaded archive
+2026-11-10T17:14:49.0660467Z [command]/usr/bin/tar xz --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/b3250d7a-625e-4d57-befb-24105ec75da5 -f /home/runner/work/_temp/c7bcb68a-e491-4a7d-8bb8-2a4314c97e45
+2026-11-10T17:14:50.6354161Z Execute installation script
+2026-11-10T17:14:50.6473987Z Check if Python hostedtoolcache folder exist...
+2026-11-10T17:14:50.6474767Z Create Python 3.12.10 folder
+2026-11-10T17:14:50.6487847Z Copy Python binaries to hostedtoolcache folder
+2026-11-10T17:14:51.0108701Z Create additional symlinks (Required for the UsePythonVersion Azure Pipelines task and the setup-python GitHub Action)
+2026-11-10T17:14:51.0145691Z Upgrading pip...
+2026-11-10T17:14:52.6311478Z Looking in links: /tmp/tmplw69l4xl
+2026-11-10T17:14:52.6313208Z Requirement already satisfied: pip in /opt/hostedtoolcache/Python/3.12.10/x64/lib/python3.12/site-packages (25.0.1)
+2026-11-10T17:14:53.8137869Z Collecting pip
+2026-11-10T17:14:53.8694188Z Downloading pip-26.3-py3-none-any.whl.metadata (4.6 kB)
+2026-11-10T17:14:53.8834254Z Downloading pip-26.3-py3-none-any.whl (2.0 MB)
+2026-11-10T17:14:53.9367399Z ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.0/2.0 MB 59.3 MB/s eta 0:00:00
+2026-11-10T17:14:53.9367844Z 
+2026-11-10T17:14:53.9501649Z Installing collected packages: pip
+2026-11-10T17:14:53.9502168Z Attempting uninstall: pip
+2026-11-10T17:14:53.9522953Z Found existing installation: pip 25.0.1
+2026-11-10T17:14:53.9745654Z Uninstalling pip-25.0.1:
+2026-11-10T17:14:53.9805483Z Successfully uninstalled pip-25.0.1
+2026-11-10T17:14:54.6496429Z Successfully installed pip-26.3
+2026-11-10T17:14:54.7076220Z Create complete file
+2026-11-10T17:14:54.7107999Z Successfully set up CPython (3.12.10)
+2026-11-10T17:14:54.7108998Z ##[endgroup]
+2026-11-10T17:14:54.7336117Z ##[group]Run if __name__ == '__main__':
+2026-11-10T17:14:54.7336820Z [36;1mif __name__ == '__main__':[0m
+2026-11-10T17:14:54.7337127Z [36;1m    import hashlib,io,json,os,pathlib,subprocess,sys,unittest[0m
+2026-11-10T17:14:54.7337374Z [36;1m    root=pathlib.Path.cwd()[0m
+2026-11-10T17:14:54.7338669Z [36;1m    git=pathlib.Path('C:/Program Files/Git/cmd/git.exe' if sys.platform=='win32' else '/usr/bin/git')[0m
+2026-11-10T17:14:54.7339592Z [36;1m    def g(*args):[0m
+2026-11-10T17:14:54.7340018Z [36;1m        return subprocess.check_output([str(git),'--no-replace-objects','--no-optional-locks','-c','core.fsmonitor=false',*args],cwd=root)[0m
+2026-11-10T17:14:54.7340526Z [36;1m    assert sys.flags.isolated and sys.dont_write_bytecode and sys.pycache_prefix is None[0m
+2026-11-10T17:14:54.7340880Z [36;1m    assert g('rev-parse','HEAD').decode().strip()==os.environ['EXPECTED_HEAD'][0m
+2026-11-10T17:14:54.7341112Z [36;1m    def receipt():[0m
+2026-11-10T17:14:54.7341276Z [36;1m        entries=[][0m
+2026-11-10T17:14:54.7341469Z [36;1m        for row in g('ls-tree','-rz','--full-tree','HEAD').split(b'\0'):[0m
+2026-11-10T17:14:54.7341677Z [36;1m            if not row: continue[0m
+2026-11-10T17:14:54.7341878Z [36;1m            meta,name=row.split(b'\t',1);mode,kind,oid=meta.split()[0m
+2026-11-10T17:14:54.7342117Z [36;1m            assert mode in (b'100644',b'100755') and kind==b'blob'[0m
+2026-11-10T17:14:54.7342340Z [36;1m            entries.append((name.decode(),oid.decode()))[0m
+2026-11-10T17:14:54.7342724Z [36;1m        raw=subprocess.check_output([str(git),'--no-replace-objects','cat-file','--batch'],cwd=root,input=''.join(oid+'\n' for _,oid in entries).encode())[0m
+2026-11-10T17:14:54.7343111Z [36;1m        stream=io.BytesIO(raw);result={}[0m
+2026-11-10T17:14:54.7343285Z [36;1m        for name,oid in entries:[0m
+2026-11-10T17:14:54.7343510Z [36;1m            actual,kind,size=stream.readline().split();data=stream.read(int(size))[0m
+2026-11-10T17:14:54.7343808Z [36;1m            assert actual.decode()==oid and kind==b'blob' and stream.read(1)==b'\n'[0m
+2026-11-10T17:14:54.7344031Z [36;1m            path=root/name[0m
+2026-11-10T17:14:54.7344254Z [36;1m            assert path.is_file() and not path.is_symlink() and path.read_bytes()==data[0m
+2026-11-10T17:14:54.7344512Z [36;1m            result[name]=hashlib.sha256(data).hexdigest()[0m
+2026-11-10T17:14:54.7344710Z [36;1m        for path in root.rglob('*'):[0m
+2026-11-10T17:14:54.7345034Z [36;1m            rel=path.relative_to(root)[0m
+2026-11-10T17:14:54.7345240Z [36;1m            if '.git' in rel.parts: continue[0m
+2026-11-10T17:14:54.7345510Z [36;1m            assert not path.is_symlink() and not (getattr(path.lstat(),'st_file_attributes',0)&1024)[0m
+2026-11-10T17:14:54.7345853Z [36;1m            if path.is_file(): assert rel.as_posix() in result and path.suffix not in ('.pyc','.pyo')[0m
+2026-11-10T17:14:54.7346266Z [36;1m        return result[0m
+2026-11-10T17:14:54.7346410Z [36;1m    before=receipt()[0m
+2026-11-10T17:14:54.7346558Z [36;1m    sys.path.insert(0,str(root))[0m
+2026-11-10T17:14:54.7346729Z [36;1m    sys.path.insert(0,str(root/'tests'))[0m
+2026-11-10T17:14:54.7346957Z [36;1m    from test_lan_mux_inventory import validate_inventory,InventoryTests[0m
+2026-11-10T17:14:54.7347298Z [36;1m    inventory=json.loads((root/'release/lan-mux-test-inventory.json').read_text(encoding='utf-8'))[0m
+2026-11-10T17:14:54.7347730Z [36;1m    controls=unittest.TextTestRunner(verbosity=2).run(unittest.defaultTestLoader.loadTestsFromTestCase(InventoryTests))[0m
+2026-11-10T17:14:54.7348141Z [36;1m    assert controls.wasSuccessful() and controls.testsRun==9 and not controls.skipped[0m
+2026-11-10T17:14:54.7348650Z [36;1m    loader=unittest.TestLoader();suite=unittest.TestSuite(loader.discover(str(root/'tests'),pattern=p) for p in ['test_lan_transport.py','test_network_budget.py','test_lan_mux_channel.py'])[0m
+2026-11-10T17:14:54.7349066Z [36;1m    ids=[][0m
+2026-11-10T17:14:54.7349319Z [36;1m    def collect(suite):[0m
+2026-11-10T17:14:54.7349465Z [36;1m        for item in suite:[0m
+2026-11-10T17:14:54.7349655Z [36;1m            if isinstance(item,unittest.TestSuite): collect(item)[0m
+2026-11-10T17:14:54.7349863Z [36;1m            else: ids.append(item.id())[0m
+2026-11-10T17:14:54.7350074Z [36;1m    collect(suite);required=validate_inventory(inventory,ids)[0m
+2026-11-10T17:14:54.7350313Z [36;1m    result=unittest.TextTestRunner(verbosity=2).run(suite)[0m
+2026-11-10T17:14:54.7350668Z [36;1m    assert result.wasSuccessful() and result.testsRun==len(required) and not result.skipped and not result.expectedFailures[0m
+2026-11-10T17:14:54.7350981Z [36;1m    assert before==receipt()[0m
+2026-11-10T17:14:54.7351217Z [36;1m    out=pathlib.Path(os.environ['RUNNER_TEMP'])/'lan-mux-integrated-evidence.json'[0m
+2026-11-10T17:14:54.7352199Z [36;1m    out.write_text(json.dumps({'head':os.environ['EXPECTED_HEAD'],'tests':ids,'required_ids':required,'inventory_schema':inventory['schema'],'inventory_sha256':before['release/lan-mux-test-inventory.json'],'required_count':len(required),'inventory_controls':controls.testsRun,'skips':0,'source_sha256':before,'qualification':'LOOPBACK_LAN_MUX_COMPONENT_ONLY','native_admission':False,'installation_admission':False},indent=2)+'\n',encoding='utf-8')[0m
+2026-11-10T17:14:54.7357477Z shell: /opt/hostedtoolcache/Python/3.12.10/x64/bin/python -I -B {0}
+2026-11-10T17:14:54.7357689Z env:
+2026-11-10T17:14:54.7357842Z   EXPECTED_HEAD: 6e79f2da66212474e9875559ec532c0f65b678a8
+2026-11-10T17:14:54.7358033Z   PYTHONDONTWRITEBYTECODE: 1
+2026-11-10T17:14:54.7358174Z   GIT_NO_REPLACE_OBJECTS: 1
+2026-11-10T17:14:54.7358306Z   GIT_CONFIG_COUNT: 2
+2026-11-10T17:14:54.7358434Z   GIT_CONFIG_KEY_0: core.autocrlf
+2026-11-10T17:14:54.7358577Z   GIT_CONFIG_VALUE_0: false
+2026-11-10T17:14:54.7358715Z   GIT_CONFIG_KEY_1: core.eol
+2026-11-10T17:14:54.7358848Z   GIT_CONFIG_VALUE_1: lf
+2026-11-10T17:14:54.7359010Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.10/x64
+2026-11-10T17:14:54.7359264Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.10/x64/lib/pkgconfig
+2026-11-10T17:14:54.7359503Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.10/x64
+2026-11-10T17:14:54.7359719Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.10/x64
+2026-11-10T17:14:54.7359934Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.10/x64
+2026-11-10T17:14:54.7360156Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.10/x64/lib
+2026-11-10T17:14:54.7360344Z ##[endgroup]
+2026-11-10T17:14:55.2707801Z test_assembly_case_removal_cannot_be_resealed (test_lan_mux_inventory.InventoryTests.test_assembly_case_removal_cannot_be_resealed) ... ok
+2026-11-10T17:14:55.2708794Z test_closed_schema_and_foreign_origin_rejected (test_lan_mux_inventory.InventoryTests.test_closed_schema_and_foreign_origin_rejected) ... ok
+2026-11-10T17:14:55.2713278Z test_duplicate_case_rejected (test_lan_mux_inventory.InventoryTests.test_duplicate_case_rejected) ... ok
+2026-11-10T17:14:55.2717020Z test_exact_inventory_preserves_all_prior_ids (test_lan_mux_inventory.InventoryTests.test_exact_inventory_preserves_all_prior_ids) ... ok
+2026-11-10T17:14:55.2720230Z test_extra_case_rejected (test_lan_mux_inventory.InventoryTests.test_extra_case_rejected) ... ok
+2026-11-10T17:14:55.2724661Z test_manifest_duplicate_and_wrong_count_rejected (test_lan_mux_inventory.InventoryTests.test_manifest_duplicate_and_wrong_count_rejected) ... ok
+2026-11-10T17:14:55.2727838Z test_missing_case_rejected (test_lan_mux_inventory.InventoryTests.test_missing_case_rejected) ... ok
+2026-11-10T17:14:55.2729848Z test_pr77_case_removal_cannot_mask_old_count_fifty (test_lan_mux_inventory.InventoryTests.test_pr77_case_removal_cannot_mask_old_count_fifty) ... ok
+2026-11-10T17:14:55.2732380Z test_prior_case_removal_cannot_be_resealed_by_count_change (test_lan_mux_inventory.InventoryTests.test_prior_case_removal_cannot_be_resealed_by_count_change) ... ok
+2026-11-10T17:14:55.2732940Z 
+2026-11-10T17:14:55.2733374Z ----------------------------------------------------------------------
+2026-11-10T17:14:55.2733716Z Ran 9 tests in 0.003s
+2026-11-10T17:14:55.2733843Z 
+2026-11-10T17:14:55.2733917Z OK
+2026-11-10T17:14:55.4543680Z test_budget_wait_phase_visible_without_sql_or_app_mutation (test_lan_transport.FailureDiagnosticsPureTests.test_budget_wait_phase_visible_without_sql_or_app_mutation) ... ok
+2026-11-10T17:14:55.4544794Z test_connection_busy_does_not_read_state (test_lan_transport.FailureDiagnosticsPureTests.test_connection_busy_does_not_read_state) ... ok
+2026-11-10T17:14:55.4545996Z test_diagnostic_failure_sentinel_preserves_original (test_lan_transport.FailureDiagnosticsPureTests.test_diagnostic_failure_sentinel_preserves_original) ... ok
+2026-11-10T17:14:55.4547207Z test_emit_observer_separates_control_and_data_without_changing_calls (test_lan_transport.FailureDiagnosticsPureTests.test_emit_observer_separates_control_and_data_without_changing_calls) ... ok
+2026-11-10T17:14:55.4548452Z test_fixed_registration_slots_and_one_failure_line (test_lan_transport.FailureDiagnosticsPureTests.test_fixed_registration_slots_and_one_failure_line) ... ok
+2026-11-10T17:14:55.4551650Z test_fixed_shape_ascii_byte_bound_and_privacy (test_lan_transport.FailureDiagnosticsPureTests.test_fixed_shape_ascii_byte_bound_and_privacy) ... ok
+2026-11-10T17:14:55.4555947Z test_frozen_snapshot_matches_the_original_failure_only (test_lan_transport.FailureDiagnosticsPureTests.test_frozen_snapshot_matches_the_original_failure_only) ... ok
+2026-11-10T17:14:55.4557154Z test_full_known_shape_overflow_stays_valid_bounded_and_causal (test_lan_transport.FailureDiagnosticsPureTests.test_full_known_shape_overflow_stays_valid_bounded_and_causal) ... ok
+2026-11-10T17:14:55.4558209Z test_observer_busy_is_nonblocking (test_lan_transport.FailureDiagnosticsPureTests.test_observer_busy_is_nonblocking) ... ok
+2026-11-10T17:14:55.4559278Z test_observer_failure_never_duplicates_or_masks_original_call (test_lan_transport.FailureDiagnosticsPureTests.test_observer_failure_never_duplicates_or_masks_original_call) ... ok
+2026-11-10T17:14:55.4560445Z test_original_exception_and_traceback_preserved (test_lan_transport.FailureDiagnosticsPureTests.test_original_exception_and_traceback_preserved) ... ok
+2026-11-10T17:14:55.4561362Z test_success_emits_nothing (test_lan_transport.FailureDiagnosticsPureTests.test_success_emits_nothing) ... ok
+2026-11-10T17:14:55.4562287Z test_transaction_entry_wait_and_failed_entry_not_stale (test_lan_transport.FailureDiagnosticsPureTests.test_transaction_entry_wait_and_failed_entry_not_stale) ... ok
+2026-11-10T17:14:55.4563257Z test_unknown_objects_never_stringified (test_lan_transport.FailureDiagnosticsPureTests.test_unknown_objects_never_stringified) ... ok
+2026-11-10T17:14:55.4564124Z test_wrappers_call_originals_once_and_restore (test_lan_transport.FailureDiagnosticsPureTests.test_wrappers_call_originals_once_and_restore) ... ok
+2026-11-10T17:14:55.4565507Z test_writer_failure_never_replaces_original (test_lan_transport.FailureDiagnosticsPureTests.test_writer_failure_never_replaces_original) ... ok
+2026-11-10T17:14:55.4566362Z test_backoff_is_bounded_auth_failure_not_retryable (test_lan_transport.RegistryTests.test_backoff_is_bounded_auth_failure_not_retryable) ... ok
+2026-11-10T17:14:55.4567216Z test_duplicate_or_ip_claim_cannot_be_node_identity (test_lan_transport.RegistryTests.test_duplicate_or_ip_claim_cannot_be_node_identity) ... ok
+2026-11-10T17:14:55.8916389Z test_active_control_heartbeats_keep_idle_data_channel_healthy (test_lan_transport.TLSIsolationTests.test_active_control_heartbeats_keep_idle_data_channel_healthy) ... ok
+2026-11-10T17:14:56.1708752Z test_changed_endpoint_reconnect_keeps_certificate_identity_no_replay (test_lan_transport.TLSIsolationTests.test_changed_endpoint_reconnect_keeps_certificate_identity_no_replay) ... ok
+2026-11-10T17:14:56.2859203Z test_close_releases_credit_reservations_and_queue_memory (test_lan_transport.TLSIsolationTests.test_close_releases_credit_reservations_and_queue_memory) ... ok
+2026-11-10T17:14:56.2907133Z test_concurrent_registry_updates_cannot_restore_older_revoked_pin (test_lan_transport.TLSIsolationTests.test_concurrent_registry_updates_cannot_restore_older_revoked_pin) ... ok
+2026-11-10T17:14:56.4029560Z test_control_writer_progresses_while_data_budget_waits (test_lan_transport.TLSIsolationTests.test_control_writer_progresses_while_data_budget_waits) ... ok
+2026-11-10T17:14:56.6332720Z test_credit_backpressure_and_control_lane_while_data_waits (test_lan_transport.TLSIsolationTests.test_credit_backpressure_and_control_lane_while_data_waits) ... ok
+2026-11-10T17:14:56.7451685Z test_expired_idle_peer_without_activity_still_closes_real_tls (test_lan_transport.TLSIsolationTests.test_expired_idle_peer_without_activity_still_closes_real_tls) ... ok
+2026-11-10T17:14:56.7639511Z test_fingerprint_and_wrong_uri_cert_rejected (test_lan_transport.TLSIsolationTests.test_fingerprint_and_wrong_uri_cert_rejected) ... ok
+2026-11-10T17:14:56.7675402Z test_isolation_rejects_nonloopback_even_if_registry_admits_it (test_lan_transport.TLSIsolationTests.test_isolation_rejects_nonloopback_even_if_registry_admits_it) ... ok
+2026-11-10T17:14:56.8769200Z test_malformed_frame_rejected_before_payload_allocation (test_lan_transport.TLSIsolationTests.test_malformed_frame_rejected_before_payload_allocation) ... ok
+2026-11-10T17:14:56.8873564Z test_missing_client_certificate_rejected (test_lan_transport.TLSIsolationTests.test_missing_client_certificate_rejected) ... ok
+2026-11-10T17:14:56.9959949Z test_peer_cannot_spoof_control_role (test_lan_transport.TLSIsolationTests.test_peer_cannot_spoof_control_role) ... ok
+2026-11-10T17:14:57.2116629Z test_real_mtls_payload_credit_classes_and_actual_byte_accounting (test_lan_transport.TLSIsolationTests.test_real_mtls_payload_credit_classes_and_actual_byte_accounting) ... ok
+2026-11-10T17:14:57.3102899Z test_registry_revocation_and_cancellation (test_lan_transport.TLSIsolationTests.test_registry_revocation_and_cancellation) ... ok
+2026-11-10T17:14:57.4090852Z test_revoked_pin_during_final_hello_cannot_install_connection (test_lan_transport.TLSIsolationTests.test_revoked_pin_during_final_hello_cannot_install_connection) ... ok
+2026-11-10T17:14:57.5764703Z test_sender_waiting_for_memory_does_not_reset_stream_created_while_waiting (test_lan_transport.TLSIsolationTests.test_sender_waiting_for_memory_does_not_reset_stream_created_while_waiting) ... ok
+2026-11-10T17:14:58.1031115Z test_six_real_isolated_nodes_independent_of_tailscale (test_lan_transport.TLSIsolationTests.test_six_real_isolated_nodes_independent_of_tailscale) ... ok
+2026-11-10T17:14:58.1181014Z test_untrusted_ca_rejected_even_with_correct_leaf_pin (test_lan_transport.TLSIsolationTests.test_untrusted_ca_rejected_even_with_correct_leaf_pin) ... ok
+2026-11-10T17:14:58.1525265Z test_wrong_eku_and_expired_cert_rejected (test_lan_transport.TLSIsolationTests.test_wrong_eku_and_expired_cert_rejected) ... ok
+2026-11-10T17:14:58.7607113Z test_failed_child_cleans_all_owned_siblings_before_directory_cleanup (test_network_budget.BudgetCleanupTests.test_failed_child_cleans_all_owned_siblings_before_directory_cleanup) ... ok
+2026-11-10T17:14:58.7675743Z test_backward_clock_or_changed_policy_fail_closed (test_network_budget.BudgetTests.test_backward_clock_or_changed_policy_fail_closed) ... ok
+2026-11-10T17:14:58.8736741Z test_clock_sample_is_inside_store_transaction_not_before_lock_wait (test_network_budget.BudgetTests.test_clock_sample_is_inside_store_transaction_not_before_lock_wait) ... ok
+2026-11-10T17:14:58.8737399Z test_cluster_allocations_cannot_expand (test_network_budget.BudgetTests.test_cluster_allocations_cannot_expand) ... ok
+2026-11-10T17:14:58.9380453Z test_egress_replay_conflict_and_unverified_receipt_no_mutation (test_network_budget.BudgetTests.test_egress_replay_conflict_and_unverified_receipt_no_mutation) ... ok
+2026-11-10T17:14:58.9429072Z test_egress_unknown_and_cooldown_survive_restart_no_dispatch (test_network_budget.BudgetTests.test_egress_unknown_and_cooldown_survive_restart_no_dispatch) ... ok
+2026-11-10T17:14:58.9449565Z test_foreign_or_incomplete_database_not_adopted (test_network_budget.BudgetTests.test_foreign_or_incomplete_database_not_adopted) ... ok
+2026-11-10T17:14:59.5743726Z test_real_processes_cannot_each_receive_a_fresh_full_budget (test_network_budget.BudgetTests.test_real_processes_cannot_each_receive_a_fresh_full_budget) ... ok
+2026-11-10T17:14:59.5838689Z test_two_instances_share_atomic_debit_and_restart_not_fresh_burst (test_network_budget.BudgetTests.test_two_instances_share_atomic_debit_and_restart_not_fresh_burst) ... ok
+2026-11-10T17:14:59.5840360Z test_binding_rejects_noncanonical_ids_bool_epoch_and_invalid_hash (test_lan_mux_channel.FragmentContractTests.test_binding_rejects_noncanonical_ids_bool_epoch_and_invalid_hash) ... ok
+2026-11-10T17:14:59.5869777Z test_exact_header_and_derived_chunk_count_residual (test_lan_mux_channel.FragmentContractTests.test_exact_header_and_derived_chunk_count_residual) ... ok
+2026-11-10T17:14:59.5872563Z test_malformed_length_count_index_flags_magic_and_kind_rejected (test_lan_mux_channel.FragmentContractTests.test_malformed_length_count_index_flags_magic_and_kind_rejected) ... ok
+2026-11-10T17:14:59.5873830Z test_nonfinal_short_chunk_and_kind_oversize_rejected (test_lan_mux_channel.FragmentContractTests.test_nonfinal_short_chunk_and_kind_oversize_rejected) ... ok
+2026-11-10T17:14:59.5875840Z test_wrong_session_stream_attempt_profile_and_kind_rejected (test_lan_mux_channel.FragmentContractTests.test_wrong_session_stream_attempt_profile_and_kind_rejected) ... ok
+2026-11-10T17:15:00.0746424Z test_actual_node_budget_blocks_fragment_writes (test_lan_mux_channel.MuxTlsTests.test_actual_node_budget_blocks_fragment_writes) ... ok
+2026-11-10T17:15:00.1828827Z test_cancel_after_first_actual_fragment_is_unknown_no_retry (test_lan_mux_channel.MuxTlsTests.test_cancel_after_first_actual_fragment_is_unknown_no_retry) ... ok
+2026-11-10T17:15:00.5359526Z test_complete_large_messages_real_mtls_and_budget_overhead (test_lan_mux_channel.MuxTlsTests.test_complete_large_messages_real_mtls_and_budget_overhead) ... ok
+2026-11-10T17:15:00.7563210Z test_completed_queue_backpressure_keeps_control_app_progress (test_lan_mux_channel.MuxTlsTests.test_completed_queue_backpressure_keeps_control_app_progress) ... ok
+2026-11-10T17:15:00.9082708Z test_explicit_completed_transfer_replay_charged_without_transport_exactly_once (test_lan_mux_channel.MuxTlsTests.test_explicit_completed_transfer_replay_charged_without_transport_exactly_once) ... ok
+2026-11-10T17:15:01.0667987Z test_hash_terminal_cause_survives_reader_receive_interleaving (test_lan_mux_channel.MuxTlsTests.test_hash_terminal_cause_survives_reader_receive_interleaving) ... ok
+2026-11-10T17:15:01.1664785Z test_legacy_session_rejects_new_record_without_fallback (test_lan_mux_channel.MuxTlsTests.test_legacy_session_rejects_new_record_without_fallback) ... ok
+2026-11-10T17:15:01.2007418Z test_mismatched_alpn_rejected (test_lan_mux_channel.MuxTlsTests.test_mismatched_alpn_rejected) ... ok
+2026-11-10T17:15:01.3470936Z test_negotiated_control_only_data_record_and_app_demux (test_lan_mux_channel.MuxTlsTests.test_negotiated_control_only_data_record_and_app_demux) ... ok
+2026-11-10T17:15:01.6866643Z test_new_transport_and_stream_attempt_reject_old_fragments (test_lan_mux_channel.MuxTlsTests.test_new_transport_and_stream_attempt_reject_old_fragments) ... ok
+2026-11-10T17:15:01.8504561Z test_real_hash_failure_no_complete_payload_and_memory_cleanup (test_lan_mux_channel.MuxTlsTests.test_real_hash_failure_no_complete_payload_and_memory_cleanup) ... ok
+2026-11-10T17:15:02.0475394Z test_real_partial_disconnect_discards_incomplete_transfer (test_lan_mux_channel.MuxTlsTests.test_real_partial_disconnect_discards_incomplete_transfer) ... ok
+2026-11-10T17:15:02.0488321Z test_absolute_assembly_deadline_not_refreshed_and_close_releases (test_lan_mux_channel.ReassemblyContractTests.test_absolute_assembly_deadline_not_refreshed_and_close_releases) ... ok
+2026-11-10T17:15:02.0492414Z test_complete_hash_verified_and_memory_retained_until_handoff (test_lan_mux_channel.ReassemblyContractTests.test_complete_hash_verified_and_memory_retained_until_handoff) ... ok
+2026-11-10T17:15:02.0500590Z test_gap_duplicate_interleaving_reject_and_release (test_lan_mux_channel.ReassemblyContractTests.test_gap_duplicate_interleaving_reject_and_release) ... ok
+2026-11-10T17:15:02.0502479Z test_shared_node_pool_denies_before_allocation_and_queue_bound (test_lan_mux_channel.ReassemblyContractTests.test_shared_node_pool_denies_before_allocation_and_queue_bound) ... ok
+2026-11-10T17:15:02.0506117Z test_wrong_whole_hash_rejects_no_partial_and_releases (test_lan_mux_channel.ReassemblyContractTests.test_wrong_whole_hash_rejects_no_partial_and_releases) ... ok
+2026-11-10T17:15:02.0506649Z 
+2026-11-10T17:15:02.0506788Z ----------------------------------------------------------------------
+2026-11-10T17:15:02.0507092Z Ran 68 tests in 6.600s
+2026-11-10T17:15:02.0507209Z 
+2026-11-10T17:15:02.0507302Z OK
+2026-11-10T17:15:02.4283901Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+2026-11-10T17:15:02.4284134Z with:
+2026-11-10T17:15:02.4284266Z   name: lan-mux-integrated-ubuntu-24.04
+2026-11-10T17:15:02.4284472Z   path: /home/runner/work/_temp/lan-mux-integrated-evidence.json
+2026-11-10T17:15:02.4284672Z   if-no-files-found: error
+2026-11-10T17:15:02.4284810Z   compression-level: 6
+2026-11-10T17:15:02.4285186Z   overwrite: false
+2026-11-10T17:15:02.4285312Z   include-hidden-files: false
+2026-11-10T17:15:02.4285451Z env:
+2026-11-10T17:15:02.4285594Z   EXPECTED_HEAD: 6e79f2da66212474e9875559ec532c0f65b678a8
+2026-11-10T17:15:02.4285781Z   PYTHONDONTWRITEBYTECODE: 1
+2026-11-10T17:15:02.4285922Z   GIT_NO_REPLACE_OBJECTS: 1
+2026-11-10T17:15:02.4286053Z   GIT_CONFIG_COUNT: 2
+2026-11-10T17:15:02.4286178Z   GIT_CONFIG_KEY_0: core.autocrlf
+2026-11-10T17:15:02.4286319Z   GIT_CONFIG_VALUE_0: false
+2026-11-10T17:15:02.4286449Z   GIT_CONFIG_KEY_1: core.eol
+2026-11-10T17:15:02.4286623Z   GIT_CONFIG_VALUE_1: lf
+2026-11-10T17:15:02.4286786Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.10/x64
+2026-11-10T17:15:02.4287020Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.10/x64/lib/pkgconfig
+2026-11-10T17:15:02.4287253Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.10/x64
+2026-11-10T17:15:02.4287463Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.10/x64
+2026-11-10T17:15:02.4287673Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.10/x64
+2026-11-10T17:15:02.4287888Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.10/x64/lib
+2026-11-10T17:15:02.4288069Z ##[endgroup]
+2026-11-10T17:15:02.5524610Z (node:2717) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-10T17:15:02.5525278Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-10T17:15:02.5557967Z With the provided path, there will be 1 file uploaded
+2026-11-10T17:15:02.5561825Z Artifact name is valid!
+2026-11-10T17:15:02.5578289Z Root directory input is valid!
+2026-11-10T17:15:02.8471537Z Beginning upload of artifact content to blob storage
+2026-11-10T17:15:02.8665956Z (node:2717) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-11-10T17:15:03.1188433Z Uploaded bytes 83643
+2026-11-10T17:15:03.1689902Z Finished uploading artifact content to blob storage!
+2026-11-10T17:15:03.1690335Z SHA256 digest of uploaded artifact zip is a652745aea0aed0efd3a8f7d1a56a83b6d4355b33a3edd6435831e8861da024d
+2026-11-10T17:15:03.1690923Z Finalizing artifact upload
+2026-11-10T17:15:03.6657651Z Artifact lan-mux-integrated-ubuntu-24.04.zip successfully finalized. Artifact ID 13785686892
+2026-11-10T17:15:03.6658373Z Artifact lan-mux-integrated-ubuntu-24.04 has been successfully uploaded! Final size is 83643 bytes. Artifact ID is 13785686892
+2026-11-10T17:15:03.6662686Z Artifact download URL: https://github.com/YehorBabenko88/unified-system/actions/runs/42861735651/artifacts/13785686892
+2026-11-10T17:15:03.6831986Z Post job cleanup.
+2026-11-10T17:15:03.7693078Z (node:2730) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-10T17:15:03.7693526Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-10T17:15:03.7872327Z Post job cleanup.
+2026-11-10T17:15:03.8535959Z [command]/usr/bin/git version
+2026-11-10T17:15:03.8573899Z git version 2.56.0
+2026-11-10T17:15:03.8601454Z Temporarily overriding HOME='/home/runner/work/_temp/141b72d6-a60f-4882-894e-889003432a53' before making global git config changes
+2026-11-10T17:15:03.8602226Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-10T17:15:03.8607714Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/unified-system/unified-system
+2026-11-10T17:15:03.8649558Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-10T17:15:03.8686394Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-10T17:15:03.8937361Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-10T17:15:03.8967063Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-10T17:15:03.9204619Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-10T17:15:03.9245800Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-10T17:15:03.9584584Z Cleaning up orphan processes
+2026-11-10T17:15:03.9854797Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@11d5960a326750d5838078e36cf38b85af677262, actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065, actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
