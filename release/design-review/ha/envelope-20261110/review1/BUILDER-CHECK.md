@@ -1,0 +1,3 @@
+# Read-only builder check
+
+Fresh reviewer ha_envelope_builder_check inspected proposal/measurements, no implementation/tests/native calls. Four important questions were resolved in the document: exact one fragment/frame; WANT-started client/server deadline and unused credit expiry; explicit new roles/directional accounting and response reservation in the same domain; MUTATION versus RECONCILE_READ custody and blind-or-close failure conditions. Final review found no further important questions/internal contradictions at proposal level. Native grammar, new capture ABI, reservation/context/visibility APIs and strict-time enforcement remain explicit owner-open gates. This is not an owner ACK or runtime qualification.
