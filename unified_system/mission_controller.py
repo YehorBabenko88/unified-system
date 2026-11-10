@@ -4,6 +4,7 @@ Single local journal; caller protects its directory. No scheduler, execution,
 GitHub client, authority issuance, migration, pruning, or repair is provided.
 """
 import copy
+import hashlib
 import json
 import re
 import sqlite3
@@ -99,6 +100,52 @@ def validate_task(value):
     return copy.deepcopy(value)
 
 
+def _snapshot(task):
+    return hashlib.sha256(canonical(task)).hexdigest()
+
+
+def _continuation_metadata(value):
+    _closed(value,("source_head","source_tree","status","last_verified_result","evidence",
+                   "retry_budget","next_executable_step","blocking_condition","required_authorization"))
+    for key in ("source_head","source_tree"): _match(value[key],r"[0-9a-f]{40}")
+    if type(value["status"]) is not str or value["status"] not in ("TODO","IN_PROGRESS","BLOCKED","COMPLETE","UNKNOWN"):
+        raise ContractError("invalid continuation status")
+    result=value["last_verified_result"]
+    if result is not None:
+        _closed(result,("status","scope","summary","source_head","source_tree"))
+        if type(result["status"]) is not str or result["status"] not in STATES: raise ContractError("invalid result observation")
+        for key in ("scope","summary"): _text(result[key])
+        for key in ("source_head","source_tree"): _match(result[key],r"[0-9a-f]{40}")
+    for entry in _items(value["evidence"]):
+        _closed(entry,("reference","sha256"));_text(entry["reference"]);_match(entry["sha256"],r"[0-9a-f]{64}")
+    budget=value["retry_budget"];_closed(budget,("max_retries","retries_used"))
+    if any(type(budget[k]) is not int or not 0<=budget[k]<=32 for k in budget) or budget["retries_used"]>budget["max_retries"]:
+        raise ContractError("invalid retry observations")
+    step=value["next_executable_step"];_closed(step,("step_id","description"))
+    _identifier(step["step_id"]);_text(step["description"])
+    if value["blocking_condition"] is not None: _text(value["blocking_condition"])
+    for ref in _items(value["required_authorization"]): _text(ref)
+    return copy.deepcopy(value)
+
+
+def _apply_continuation(tasks,continuations,receipt):
+    _closed(receipt,("kind","schema_version","task_id","task_snapshot_sha256","metadata"))
+    if receipt["kind"]!="development-continuation" or type(receipt["schema_version"]) is not int or receipt["schema_version"]!=2:
+        raise ContractError("unknown continuation receipt")
+    _identifier(receipt["task_id"]);_match(receipt["task_snapshot_sha256"],r"[0-9a-f]{64}")
+    if len(canonical(receipt))>MAX_RECEIPT_BYTES: raise ContractError("continuation receipt capacity exceeded")
+    metadata=_continuation_metadata(receipt["metadata"])
+    task=tasks.get(receipt["task_id"])
+    if task is None or _snapshot(task)!=receipt["task_snapshot_sha256"]:
+        raise ContractError("unknown or mismatched continuation task")
+    old=continuations.get(receipt["task_id"])
+    if old is not None:
+        before=old["metadata"]["retry_budget"];after=metadata["retry_budget"]
+        if before["max_retries"]!=after["max_retries"] or after["retries_used"]<before["retries_used"]:
+            raise ContractError("immutable retry maximum or decreasing usage")
+    continuations[receipt["task_id"]]=dict(copy.deepcopy(receipt),stale=False)
+
+
 def _bounds(max_bytes, max_records):
     if type(max_bytes) is not int or not 1024*1024 <= max_bytes <= HARD_MAX_BYTES:
         raise ContractError("invalid byte capacity")
@@ -187,7 +234,7 @@ class MissionController:
             raise ContractError("unreadable bounded development journal") from exc
         return marker,size,count
 
-    def _replay(self):
+    def _replay_all(self):
         marker,_,_=self._preflight()
         try:
             records=self._journal.read()
@@ -195,15 +242,27 @@ class MissionController:
             raise ContractError("unreadable development journal") from exc
         if not records or records[0]["state"] != "OBSERVING" or records[0]["receipt"] != marker:
             raise ContractError("missing or incompatible development marker")
-        tasks={}
+        tasks={};continuations={}
         for record in records[1:]:
             receipt=record["receipt"]
             if record["state"] != "OBSERVING": raise ContractError("unexpected development state")
+            if type(receipt) is dict and receipt.get("kind")=="development-continuation":
+                _apply_continuation(tasks,continuations,receipt)
+                continue
             _closed(receipt, ("kind", "schema_version", "task"))
             if receipt["kind"] != "development-task" or type(receipt["schema_version"]) is not int or receipt["schema_version"] != 1:
                 raise ContractError("unknown receipt schema")
             task=validate_task(receipt["task"])
+            previous=tasks.get(task["task_id"])
             self._apply(tasks, task)
+            if previous is not None and previous!=task and task["task_id"] in continuations:
+                # Replay-derived invalidation is sticky, including A -> B -> A.
+                # Only a subsequent explicit continuation receipt clears it.
+                continuations[task["task_id"]]["stale"]=True
+        return records,tasks,continuations
+
+    def _replay(self):
+        records,tasks,_=self._replay_all()
         return records,tasks
 
     @staticmethod
@@ -246,3 +305,31 @@ class MissionController:
         records,tasks=self._replay()
         return dict(schema_version=1, sequence=len(records), tasks=copy.deepcopy(tasks),
                     grants_node_operations=False, native_authority=False)
+
+    def checkpoint_continuation(self, task_id, metadata, *, expected_sequence):
+        """Persist descriptive continuation data. Never executes the next step."""
+        _identifier(task_id)
+        metadata=_continuation_metadata(metadata)
+        records,tasks,continuations=self._replay_all()
+        if type(expected_sequence) is not int or expected_sequence!=len(records):
+            raise ContractError("stale development sequence")
+        if task_id not in tasks: raise ContractError("unknown continuation task")
+        receipt=dict(kind="development-continuation",schema_version=2,task_id=task_id,
+                     task_snapshot_sha256=_snapshot(tasks[task_id]),metadata=metadata)
+        old=continuations.get(task_id)
+        _apply_continuation(tasks,continuations,receipt)
+        if old is not None and not old["stale"] and {k:v for k,v in old.items() if k!="stale"}==receipt:
+            return self.continuation_projection()
+        marker,size,count=self._preflight()
+        reserve=2*len(canonical(receipt))+65536
+        if count>=marker["max_records"] or size+reserve>marker["max_bytes"]:
+            raise ContractError("journal append capacity reserve exceeded")
+        self._journal.append("OBSERVING",receipt,expected_sequence=expected_sequence)
+        return self.continuation_projection()
+
+    def continuation_projection(self):
+        """Detached development observations; references grant no authority."""
+        records,tasks,continuations=self._replay_all()
+        return dict(schema_version=2,sequence=len(records),continuations=continuations,
+                    public_submit="DENY",grants_node_operations=False,native_authority=False,
+                    runtime_admission=False,physical_execution_authorization=False,trading_authority=False)
