@@ -31,6 +31,22 @@ def static_case_ids():
 
 
 class MissionWorkflowInventoryTests(unittest.TestCase):
+    def assert_root_matrix_inputs(self, filename):
+        text = (ROOT / '.github/workflows' / filename).read_text()
+        pull = text.split('  pull_request:', 1)[1].split('  push:', 1)[0]
+        line = next(s.strip() for s in pull.splitlines() if s.strip().startswith('paths:'))
+        paths = ast.literal_eval(line.split(':', 1)[1].strip())
+        self.assertTrue({'scheduler_components/**', 'tools/ci/**',
+                         '.github/workflows/preparation-integrity.yml',
+                         '.github/workflows/durable-mission-controller.yml',
+                         'tests/test_mission_workflow_inventory.py'} <= set(paths))
+
+    def test_gateway_matrix_is_triggered_by_root_integration_inputs(self):
+        self.assert_root_matrix_inputs('gateway-identity.yml')
+
+    def test_supervisor_matrix_is_triggered_by_root_integration_inputs(self):
+        self.assert_root_matrix_inputs('supervisor-local-integration.yml')
+
     def test_original_47_ids_are_preserved(self):
         required, _ = workflow_data()
         original = [name for name in required if '.ContinuationTests.' not in name
