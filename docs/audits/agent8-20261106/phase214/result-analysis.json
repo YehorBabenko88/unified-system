@@ -1,0 +1,128 @@
+{
+  "scope": "MODELED20_SELECTED_ACTUAL_AST_INERT_METADATA_XML_POPENS_ONLY",
+  "classification": "PASS_MODELED_CONTROLS_ONLY",
+  "tests": 20,
+  "passed": 20,
+  "failed": 0,
+  "errors": 0,
+  "skips": 0,
+  "test_exit_code": 0,
+  "supervisor_exit_code": 0,
+  "cases": [
+    {
+      "id": "__main__.ChildPathAdmissionControls.test_db_parent_file_refuses_before_backend",
+      "outcome": "PASS"
+    },
+    {
+      "id": "__main__.ChildPathAdmissionControls.test_db_parent_junction_refuses_before_backend",
+      "outcome": "PASS"
+    },
+    {
+      "id": "__main__.ChildPathAdmissionControls.test_db_reparse_leaf_refuses_before_backend",
+      "outcome": "PASS"
+    },
+    {
+      "id": "__main__.ChildPathAdmissionControls.test_marker_reparse_leaf_refuses_before_backend",
+      "outcome": "PASS"
+    },
+    {
+      "id": "__main__.ChildPathAdmissionControls.test_ordinary_db_absent_marker_reaches_backend_control",
+      "outcome": "PASS"
+    },
+    {
+      "id": "__main__.ChildPathAdmissionControls.test_ordinary_db_existing_marker_reaches_backend_control",
+      "outcome": "PASS"
+    },
+    {
+      "id": "__main__.ChildPathAdmissionControls.test_temp_junction_refuses_before_backend",
+      "outcome": "PASS"
+    },
+    {
+      "id": "__main__.JunitAdmissionControls.test_file_xml_parent_refuses_before_parser_read_hash",
+      "outcome": "PASS"
+    },
+    {
+      "id": "__main__.JunitAdmissionControls.test_ordinary_bounded_xml_preserves_exact_47_facts_control",
+      "outcome": "PASS"
+    },
+    {
+      "id": "__main__.JunitAdmissionControls.test_oversized_xml_refuses_before_parser_read_hash",
+      "outcome": "PASS"
+    },
+    {
+      "id": "__main__.JunitAdmissionControls.test_reparse_xml_parent_refuses_before_parser_read_hash",
+      "outcome": "PASS"
+    },
+    {
+      "id": "__main__.ReturnedHandleControls.test_invariant_refusal_cleanup_kills_and_waits_known_handle",
+      "outcome": "PASS"
+    },
+    {
+      "id": "__main__.ReturnedHandleControls.test_preconstructor_refusal_creates_no_handle",
+      "outcome": "PASS"
+    },
+    {
+      "id": "__main__.ReturnedHandleControls.test_returned_handle_registered_before_invariant_refusal",
+      "outcome": "PASS"
+    },
+    {
+      "id": "__main__.RootFirstControls.test_file_parent_stops_before_descendant_or_git",
+      "outcome": "PASS"
+    },
+    {
+      "id": "__main__.RootFirstControls.test_file_root_stops_before_leaf_git_or_hash",
+      "outcome": "PASS"
+    },
+    {
+      "id": "__main__.RootFirstControls.test_missing_parent_stops_before_descendant_or_git",
+      "outcome": "PASS"
+    },
+    {
+      "id": "__main__.RootFirstControls.test_ordinary_tree_retains_exact_blob_and_ledger",
+      "outcome": "PASS"
+    },
+    {
+      "id": "__main__.RootFirstControls.test_reparse_parent_stops_before_descendant_or_git",
+      "outcome": "PASS"
+    },
+    {
+      "id": "__main__.RootFirstControls.test_selected_reparse_parent_stops_before_leaf_inspection",
+      "outcome": "PASS"
+    }
+  ],
+  "test_runtime_seconds": 0.164,
+  "child": {
+    "command_flags": [
+      "-I",
+      "-S",
+      "-B"
+    ],
+    "exit_code": 0,
+    "identity": "OWN_POPEN_HANDLE",
+    "pid": 172872,
+    "retired": true
+  },
+  "measured_process_phase_seconds": 0.39000000001396984,
+  "timing_scope": "Processphase only. Source ancestry/hash setup precedes this interval; post-source hashes and evidence finalization follow it. No strict whole-operation bound claimed",
+  "controller_lane_attribution": "New explicit Root allocation reported A5 prerequisite process/readers retired and lane free; immutable capsule retains preparation-era pending marker",
+  "six_raw_prepost_equal": true,
+  "five_implementation_files_unchanged_during_run": true,
+  "output_bytes": 2982,
+  "F43_F44_F48_F49": "Narrow MODELED regression controls PASS; independent acceptance pending",
+  "no_admission": [
+    "hosted47 notrun",
+    "actualGitdispatch untested",
+    "realnamespace/kernel/childcontainment unqualified",
+    "actualresearchengine notrun",
+    "native/physical/runtime/publication notadmitted"
+  ],
+  "old_red_preserved": "12PASS8FAIL receipt41ef and earlier9packets separate",
+  "allocation": "ONE_GREEN_CONSUMED_NO_RETRY",
+  "next_gate": "Root/A8 verify originals; subsequent workflow/commit/hosted actions need separate scope",
+  "hashes": {
+    "receipt": "49d5552efbdb9cdc086557dcebff11de8f0aa1b76f4fd4936a9680cb4da14e55",
+    "stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr": "ffc79f303b8ee8623cd3e7b394dea8e7cfeef13ad295cfbbd63949b66ad2bd59"
+  },
+  "overall": "MODELED_GREEN / HOSTED47_HOLD / NO-GO"
+}

@@ -3865,3 +3865,6 @@ Phases207–210: A2 Review4 F46/F47 scoped source correction; original old mock1
 
 
 Phase211 independent A7 modeled20 originals:12PASS/8intendedFAIL/0errors/0skip/testexit1. F48 XML early parser/size and F49 child path admission P2 OPEN; original9 modeledPASS inside20 only. No real47/kernel qualification. Registered8P1/12P2, NO-GO/physicalTailscaleBLOCKED. See phase211/report.md.
+
+
+Phases212–214: PR84 exact1bafec review-only12JSON/53unique reference hashes/35proposedUNKNOWN checks source-dataACK; Root clarifies historicalA7NONE grantsnoauthorityfrompacket, not separatelease revocation. A7same20 actualmodeledGREEN20PASS0skip originalverified; F43/F44/F48/F49CLOSEDscopedSOURCE+MODELEDonly, no realGit/child/kernel/47. Registered8P1/8P2; F26/F42open; fullCI/physical/TailscaleNO-GO/BLOCKED. See phase212/report.md and phase214/report.md.
