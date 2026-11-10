@@ -1,0 +1,143 @@
+{
+  "schema": "runner-blocker-policy-observation-v1",
+  "captured_utc": "2026-11-10T00:34:13.199674+00:00",
+  "api_GETs": 6,
+  "confirmed_cause": null,
+  "classification": "UNKNOWN",
+  "facts": {
+    "repository_owner_type": "User",
+    "repository_public": true,
+    "repository_archived": false,
+    "repository_disabled": false,
+    "Actions_enabled": true,
+    "allowed_actions": "all",
+    "selected_actions_endpoint": "409 All actions and workflows are allowed; consistent with policy, not a queue failure",
+    "default_workflow_permissions": "read",
+    "can_approve_pull_request_reviews": false,
+    "self_hosted_runner_count": 0,
+    "self_hosted_inventory_scope": "repository accessible self-hosted runners ONLY; not GitHub-hosted capacity",
+    "runner_groups": "Organization/enterprise APIs are inapplicable to personal User owner; selected workflows use standard OS labels, no group/self-hosted selector",
+    "billing": "Single account Actions usage-summary endpoint returned404. Availability/permission/billing block UNKNOWN; no financial values included."
+  },
+  "source_configuration": {
+    "head": "1d923f6a33e1f0f16cd476f1b4e5e65ee03a8a6c",
+    "selected": [
+      {
+        "path": ".github/workflows/ls5-physical-dev-source.yml",
+        "sha256": "38c61aa34222a483f4cdc99cafdf9b5f47da66842e660f77511bc7f690387dc6",
+        "configuration_lines": [
+          {
+            "line": 11,
+            "text": "runs-on: ${{ matrix.os }}"
+          }
+        ]
+      },
+      {
+        "path": ".github/workflows/paper-causal.yml",
+        "sha256": "108b8e4ee82570e037fe6f1c43fe496316f94997ab7f6c6af2eba529571d5635",
+        "configuration_lines": [
+          {
+            "line": 11,
+            "text": "runs-on: ${{ matrix.os }}"
+          }
+        ]
+      }
+    ],
+    "conclusion": "No concurrency key in either selected complete workflow; ordinary hosted OS matrix labels. Does not exclude account-wide concurrency/capacity constraints."
+  },
+  "prior_observation": {
+    "head": "ed4ac58066c29ba21bbe258c3e303991766baf4c",
+    "file": "C:\\Users\\LS-5\\.codex\\ci-queue-evidence-20261107\\pr69-ed4ac580-ci-refresh-20261110\\CI-REFRESH-REPORT.json",
+    "sha256": "12235cae3470b287b91fd9f42b42c07a79fd13253073c6ad644163e616ded0dd",
+    "jobs": [
+      {
+        "run_id": 42721792598,
+        "jobs": [
+          {
+            "id": 129517288707,
+            "name": "source (ubuntu-24.04)",
+            "status": "queued",
+            "conclusion": null,
+            "runner_id": 0,
+            "labels": [
+              "ubuntu-24.04"
+            ]
+          },
+          {
+            "id": 129517289007,
+            "name": "source (windows-latest)",
+            "status": "queued",
+            "conclusion": null,
+            "runner_id": 0,
+            "labels": [
+              "windows-latest"
+            ]
+          }
+        ]
+      },
+      {
+        "run_id": 42721792637,
+        "jobs": [
+          {
+            "id": 129517288550,
+            "name": "paper-causal (ubuntu-24.04)",
+            "status": "queued",
+            "conclusion": null,
+            "runner_id": 0,
+            "labels": [
+              "ubuntu-24.04"
+            ]
+          },
+          {
+            "id": 129517289049,
+            "name": "paper-causal (windows-2025)",
+            "status": "completed",
+            "conclusion": "success",
+            "runner_id": 1000097262,
+            "labels": [
+              "windows-2025"
+            ]
+          }
+        ]
+      },
+      {
+        "run_id": 42721780126,
+        "jobs": [
+          {
+            "id": 129517241158,
+            "name": "paper-causal (windows-2025)",
+            "status": "completed",
+            "conclusion": "success",
+            "runner_id": 1000097255,
+            "labels": [
+              "windows-2025"
+            ]
+          },
+          {
+            "id": 129517241491,
+            "name": "paper-causal (ubuntu-24.04)",
+            "status": "queued",
+            "conclusion": null,
+            "runner_id": 0,
+            "labels": [
+              "ubuntu-24.04"
+            ]
+          }
+        ]
+      }
+    ],
+    "fresh_poll": false
+  },
+  "unknown": [
+    "GitHub-hosted queue capacity/account concurrent-job limit",
+    "Billing entitlement or spending restriction",
+    "Scheduler reason for individual unassigned jobs",
+    "Any current job outcome after prior observation"
+  ],
+  "primary_docs": [
+    "https://docs.github.com/en/rest/actions/self-hosted-runners#list-self-hosted-runners-for-a-repository",
+    "https://docs.github.com/en/rest/actions/self-hosted-runner-groups",
+    "https://docs.github.com/en/rest/billing/usage#get-billing-usage-summary-for-a-user"
+  ],
+  "limits": "No settings changes, tokens, private principals, financial amounts, native/office operations, or job repoll."
+}

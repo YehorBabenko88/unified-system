@@ -1,0 +1,51 @@
+{
+  "application_imports": 0,
+  "authority_rpc": 0,
+  "client_uuid4_definition_unchanged": true,
+  "conditions": [
+    "Pure proposal composition only; no exact codec/schema/source/ABI/custody adoption or implementation approval.",
+    "Current same-owner reader/final-visibility capability and full coherent snapshot/original/receipt joins are mandatory external gates; schema JSON and historical responses are not capabilities.",
+    "Private known native history is retained when disclosure fails; no resource-specific facts or timing-proof claim in the blind branch.",
+    "Logical queued cancellation only discharges queued slot, never CPU/RSS or artifact/storage/research holds, publication/projection or scientific payload access.",
+    "Attempt NOT_SENT/DEFINITIVE_REJECT is local-attempt scope only, never original absence after earlier UNKNOWN; no retry/rekey/refund/eviction.",
+    "Custody32768/64records/4MiB and request samples remain unqualified full-layer budgets; native16KiB is not widened.",
+    "Strict UTC-at-Raft-commit remains unsatisfied, original P2 bytes unchanged and incompatible, no implementation base approved, all logical mutation gates remain disabled."
+  ],
+  "date": "2026-11-10",
+  "disposition": "SCOPED_SUCCESSOR_DESIGN_REQUIREMENTS_COMPATIBILITY_ACK_ONLY",
+  "implementation_permission": false,
+  "native_write_permission": false,
+  "observation_contract_sha256": "3cb8ff0626356f2a73a2aea963b5810b51246bf5ddaa39043e23f15bee5b77c3",
+  "operator_ha_approval": false,
+  "packages": {
+    "2": {
+      "package_sha256": "de0100d1ea8d793094e0232e34fc04c13b61b9d3bd7dee372d55095e0afce7dc",
+      "sealed_members_verified": 6
+    },
+    "3": {
+      "package_sha256": "b4237bf61d6c862368bcdb27ba4dbd919ca1e43e4221a9053c82efd749fa63e7",
+      "sealed_members_verified": 7
+    },
+    "4": {
+      "package_sha256": "cbe74100205a59d73bdc591294f96e8b6a9697e45bcc64ad8d7fd2ab779e0735",
+      "sealed_members_verified": 5
+    }
+  },
+  "physical_calls": 0,
+  "public_resource_blind_branch_properties": [
+    "schema",
+    "status"
+  ],
+  "publication_permission": false,
+  "release_permission": false,
+  "review1_original_seal_unchanged": true,
+  "schema": "agent4.ha-logical-codec.successor-static-design-review.v1",
+  "scientific_read_permission": false,
+  "source_edits": 0,
+  "static_p2_native_session_definition_addressed": true,
+  "static_p2_operation_delta_sequence_addressed": true,
+  "status": "DESIGN_COMPATIBLE_RUNTIME_SEMANTIC_GATES_OPEN_NO_GO",
+  "tests_executed": 0,
+  "validators_executed": 0,
+  "wire_freeze": false
+}

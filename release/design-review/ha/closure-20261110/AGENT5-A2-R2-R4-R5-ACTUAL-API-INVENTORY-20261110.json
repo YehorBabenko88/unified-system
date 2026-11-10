@@ -1,0 +1,64 @@
+{
+  "schema": "agent5.actual-api-inventory.v1",
+  "date": "2026-11-10",
+  "head": "623c1ebe33c14707b99ad526678f5225f553e49a",
+  "tree": "8590259d5dcab44199cd19ff0ed66f23c091f6ae",
+  "branch": "feature/agent5-clock-source-prerequisites-20261109",
+  "checkout_clean": true,
+  "approved_ha_implementation_base": false,
+  "modules": {
+    "unified_system/gateway_worker.py": "60c1f4ec663cd6760d34cc682d59fb1528145e3df035437d15b7ab2c4fb9d811",
+    "unified_system/gateway_jobs.py": "6e12a0ec03989749a6fc5359ff6e4d72c820be1c8561eb721ac7b962c458211e",
+    "tests/gateway_jobs/clock_source_prerequisites.py": "6bc351b4db6f889ba5a3a1d9368bf2b992a214ba1a8bf2be7bcf5acb45274753"
+  },
+  "actual_local_worker_signatures": [
+    "GatewayWorker(*, node_id=None)",
+    "GatewayWorker.prepare_attempt(self, original_lab13_bytes, *, grid_source_root)",
+    "GatewayWorker.inspect_attempt(self, attempt)",
+    "GatewayWorker.require_owned_attempt(expected_worker, attempt, *, original_lab13_bytes) [staticmethod]",
+    "GatewayWorker.abort_attempt(self, attempt)",
+    "GatewayWorker.resource_capabilities() [staticmethod]",
+    "GatewayWorker.start(self, *args, **kwargs) -> raises WorkerUnavailable(ACTUAL_DISPATCH_PERMIT_AND_WORKER_PROFILE_UNAVAILABLE)"
+  ],
+  "semantics": "Local process-owned SUSPENDED preparation/inspection/retained-identity checks/own abort only. prepare is a native mutating operation when executed, not read-only and not authorized by this inventory. Node label/incarnation/observation/source validators are not authority. Abort is not quota/resource release.",
+  "qualified_apis": {
+    "resource_capsule": "NONE",
+    "native_scheduler_reservation": "NONE",
+    "one_use_consume": "NONE",
+    "require_dispatch": "NONE",
+    "resume_start": "NONE",
+    "active_release": "NONE"
+  },
+  "resource_capabilities": "admitted_fields=[]; all six fields UNSUPPORTED for admission. Clock/capacity/CPU policy validators do not change this.",
+  "actual_job_shell": [
+    "ResearchJobs.submit(self, original_request_bytes, *, context) -> local NOT_SUBMITTED/job_id=None/effects_authorized=False",
+    "ResearchJobs.lookup/reconnect(self, original_request_bytes, *, context) -> JobUnavailable/UNKNOWN preserving local original",
+    "ResearchJobs.status(self, job_id, *, context) -> JobUnavailable",
+    "ResearchJobs.cancel(self, original_cancel_bytes, *, context) -> JobUnavailable"
+  ],
+  "decisions_requested_from_a2": {
+    "R2": [
+      "Root exact immutable implementation source manifest distinct from source catalog and negative/local adoption.",
+      "Exclusive writer source inventory and adopted versions/ACLs; old privileged writers must be fenced, not assumed absent.",
+      "Commissioned new logical-only lineage and exact rights/profile/original/job/receipt/quota/control schemas with hashes; old consumers reject new state/schema."
+    ],
+    "R4": [
+      "Exact native operation-aware transaction/result/session grammar and measured JOB-sized budgets; serialized per-original mutation/reconciliation and custody lifecycle.",
+      "Authority linearization of supersession versus publication through same existing authority order, with A4 atomic effect/publication contract. No scheduler independent expiry-check then write.",
+      "Explicit commit-time expiry semantics: local UTC/pre-post observations do not prove Raft application time; strict expiry requirement remains blocker until enforceable protocol approved.",
+      "No quorum: no new quorum-dependent assignment/supersession/renewal/release authorization. Lost replies stay UNKNOWN without rekey/retry/refund; preserve known commit separately from current permission."
+    ],
+    "R5": [
+      "Every queued->physical Assignment/hold/lease/dispatch writer and queued cancel must atomically CAS same job state/sequence/index AND logical ledger revision/index plus current authority fences.",
+      "Queued cancellation/release disabled until all-writer adoption and exact no-double-release/terminal-replay/current-rights rules agreed.",
+      "Physical admission remains disabled while qualified resource/reservation/consume/start APIs NONE; weak registration/Root smoke/local metadata are not substitute grants.",
+      "Active release is a separate A2 authority+A5 actual containment/resource lifecycle+A4 effect/publication decision. Process exit/session TTL/standby/expiry/UNKNOWN alone never refunds. Require exact owner evidence and idempotent atomic release protocol before enabling; no callable API proposed here."
+    ]
+  },
+  "tests": 0,
+  "native_job_consul_physical_calls": 0,
+  "source_edits": 0,
+  "full_api_ack": false,
+  "implementation_permission": false,
+  "status": "DESIGN_CLOSURE_INPUT_ONLY_INTEGRATION_PENDING_NO_GO"
+}

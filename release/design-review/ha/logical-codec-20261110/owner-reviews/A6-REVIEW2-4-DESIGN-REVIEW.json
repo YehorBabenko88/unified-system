@@ -1,0 +1,73 @@
+{
+  "scope": "A6_EXACT_SUCCESSOR_SCOPED_DESIGN_REVIEW_ONLY_NOT_FREEZE",
+  "composition_review4_seal": "cbe74100205a59d73bdc591294f96e8b6a9697e45bcc64ad8d7fd2ab779e0735",
+  "review4_observation_contract_sha256": "3cb8ff0626356f2a73a2aea963b5810b51246bf5ddaa39043e23f15bee5b77c3",
+  "verified_seals": [
+    {
+      "review": 1,
+      "seal": "f9b17f268e0a6b877fbb6b99013c1bb450d0ebad0269fdc48244fe517b29eaec",
+      "member_count": 12,
+      "bytes_and_hashes": "MATCHED",
+      "extras": 0
+    },
+    {
+      "review": 2,
+      "seal": "de0100d1ea8d793094e0232e34fc04c13b61b9d3bd7dee372d55095e0afce7dc",
+      "member_count": 6,
+      "bytes_and_hashes": "MATCHED",
+      "extras": 0
+    },
+    {
+      "review": 3,
+      "seal": "b4237bf61d6c862368bcdb27ba4dbd919ca1e43e4221a9053c82efd749fa63e7",
+      "member_count": 7,
+      "bytes_and_hashes": "MATCHED",
+      "extras": 0
+    },
+    {
+      "review": 4,
+      "seal": "cbe74100205a59d73bdc591294f96e8b6a9697e45bcc64ad8d7fd2ab779e0735",
+      "member_count": 5,
+      "bytes_and_hashes": "MATCHED",
+      "extras": 0
+    }
+  ],
+  "composition": "EXPLICIT_REVIEW1_2_3_PRECEDENCE_MATCHED",
+  "assessment": "SCOPED_DESIGN_REQUIREMENTS_ACK_NO_NEW_BLOCKING_DESIGN_CORRECTION_IDENTIFIED_IN_CONSUMER_SCOPE",
+  "C1": "ADDRESSED_IN_PROPOSED_DESIGN: separate private data and resource-blind exact2field public branch; no hidden existence echoes or partial private copy",
+  "C2": "REQUIREMENT_ACCEPTED_NOT_QUALIFIED: actual fixed CURRENT reader, coherent source/schema/cluster/gen/realm/original joins and final visibility revalidation explicit; actualAPI NONE",
+  "C3": "ADDRESSED_IN_DESIGN: private known history retained, read loss withholds UI/cache/crosswindow, fresh historical READ never revives writer/effect rights",
+  "C4": "NARROW_SCHEMA_CORRECTIONS_ACK_ONLY: review2 queue/cancel pairing retained byreview3; native SessionIDsyntax distinct from unchanged UUIDv4; original/captured state/quota arithmetic/native authority joins remain OPEN NOT_RUN",
+  "C5": "OPEN_BY_DESIGN: exact wire/ABI/source/custody/alllayer maxima/error mapping and adoption not frozen; current consumers reject proposed namespaces",
+  "C6": "DIRECTION_ACK: attempt NOT_SENT/DEFINITIVE_REJECT are attempt-only and cannot erase prior UNKNOWN, refund/rekey/retry/delete originals",
+  "C7": "DIRECTION_ACK: closed public fields/false effects and future semantic/auth/replay/multiclient negatives explicit; owner purecounts NOT_A6_RUNTIME_TESTS",
+  "required_before_any_freeze": [
+    {
+      "id": "N1_OUTER_CONTEXT",
+      "requirement": "Specify/version how the approved backend/transport BINDS current subject/session/source/schema/cluster/generation/realm/coherent snapshot revision/index-set/request to this disclosure. This need not be serialized in public history JSON: do NOT add session/capture/capability or blind-branch echoes. Separately review any safe outer generation/snapshot/request metadata needed by the client. Never infer currentness from schema validity or receipt_modify_index."
+    },
+    {
+      "id": "N2_UI_HISTORY_LABELS",
+      "requirement": "Display LOGICAL_HISTORY as historical queue/cancel-pre-admission data, not present RUNNING/COMPLETED/resource release/integrity/fresh authority. Add no LIVE badge from this object. Current reader visibility and cache invalidation need exact admitted API/lifecycle before implementation."
+    },
+    {
+      "id": "N3_PRIVATE_STORAGE_SCOPE",
+      "requirement": "Private six-field summary schema is not the retained original/receipt store. Keep links in separately approved custody/issuer state; no silent extra fields or raw capability/profile/native-body serialization. Actual persistence/custody budgets and lifecycle remain co-ACK gates."
+    }
+  ],
+  "new_vulnerability_claim": "NONE_DESIGN_SUCCESSOR_ONLY",
+  "full_wire_codec_ACK": "NOT_GRANTED",
+  "actual_reader_visibility_API_ACK": "NONE",
+  "implementation_base": "NONE_APPROVED",
+  "strict_time_gate": "D4_OPTION1_MUTATIONS_DISABLED_P2_NON_UTC_INCOMPATIBILITY_REMAINS_P0",
+  "builder_schema_app_UI_RPC_browser_Job_physical_execution": "NONE_BY_A6",
+  "permissions_granted": {
+    "implementation": false,
+    "native_writes": false,
+    "schema_activation": false,
+    "state_activation": false,
+    "dispatch": false,
+    "runtime": false
+  },
+  "overall": "SCOPED_DESIGN_ACK_ONLY_INTEGRATION_PENDING_NO_GO"
+}

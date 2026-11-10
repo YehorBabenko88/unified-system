@@ -1,0 +1,75 @@
+{
+  "schema": "agent7.math.original-diagnostic.public-status.v1",
+  "scope": "READONLY_METADATA_AND_RETAINED_EVIDENCE_SUMMARY_NOT_NATIVE_QUALIFICATION",
+  "prepared_at_utc": "2026-11-10T00:40:14Z",
+  "timestamp_attribution": "Time of preceding readonly metadata verification; not a new native observation",
+  "source_attribution": {
+    "native_outcome": "Retained original terminal evidence, 2026-11-07",
+    "current_status": "GitHub REST GET original run and attempt1 jobs, read on 2026-11-10",
+    "current_api_capture": "NOT_PERSISTED_SEPARATELY"
+  },
+  "run": {
+    "url": "https://github.com/YehorBabenko88/math/actions/runs/42352374979",
+    "id": "42352374979",
+    "conclusion": "success",
+    "status": "completed",
+    "updated_at_utc": "2026-11-07T14:19:21Z",
+    "attempt": 1,
+    "repository": "YehorBabenko88/math"
+  },
+  "job": {
+    "name": "observation",
+    "runner_id": "1000085295",
+    "runner_name": "GitHub Actions 1000085295",
+    "completed_at_utc": "2026-11-07T14:19:20Z",
+    "status": "completed",
+    "id": "128343065197",
+    "started_at_utc": "2026-11-07T14:18:35Z",
+    "conclusion": "success",
+    "runner_group": "GitHub Actions"
+  },
+  "source": {
+    "event_sha": "d5d5d7ac9ba31d9d13f246a6d1d293570001ad4f",
+    "head": "2446d04624469e34aa96ed766be7a4887d6d654c",
+    "tree": "12c4e3cbd3557c7f4f634f5241c7e4b51eafba4f"
+  },
+  "executed_steps": [
+    "Exact label validation",
+    "Pinned source checkout and Node setup",
+    "Exact PR-head admission and MODEL tests",
+    "Immutable source compile",
+    "Single owned-child observation with independent 30s owner watchdog",
+    "Post steps and producer cleanup"
+  ],
+  "result": {
+    "overall": "NO-GO",
+    "source_defect": "NOT_ESTABLISHED",
+    "native_startup": "DLL_INITIALIZATION_FAILED",
+    "classification": "SUCCESS_NON_QUALIFYING_DIAGNOSTIC",
+    "trace_events": 7,
+    "native_acceptance": "BLOCKED",
+    "cleanup": "PRODUCER_CONFIRMED_NOT_INDEPENDENT_HANDLE_CONTAINMENT_PROOF",
+    "model_pass": 8,
+    "qualification": "NONE",
+    "last_module_attribution": "Observation only; not established cause",
+    "model_skip": 0,
+    "first_exception": "NONE",
+    "last_module": "OS_KERNELBASE",
+    "compile_marker_count": 1,
+    "breakpoint_handled": false,
+    "root_cause": "NOT_ESTABLISHED",
+    "compile": "PASS"
+  },
+  "authorization": "CONSUMED_NO_RETRY",
+  "refresh_actions": [
+    "Readonly original run GET",
+    "Readonly original attempt1 jobs GET",
+    "Read retained local evidence"
+  ],
+  "new_native_calls": 0,
+  "raw_log": {
+    "publication": "EXCLUDED_LOCAL_ONLY",
+    "sha256": "95fae6fc41ff57e312f050b1525208ca06db2c13d8d360e427531ec2a12cc2d9",
+    "bytes": 24392
+  }
+}
