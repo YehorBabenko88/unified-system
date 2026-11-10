@@ -318,4 +318,117 @@ class MissionTests(unittest.TestCase):
             with self.assertRaises(ContractError): MissionController.open(path)
 
 
+
+
+def continuation_metadata():
+    return dict(source_head="b"*40, source_tree="c"*40, status="IN_PROGRESS",
+                last_verified_result=None, evidence=[], retry_budget=dict(max_retries=2,retries_used=0),
+                next_executable_step=dict(step_id="review",description="Review source evidence"),
+                blocking_condition=None, required_authorization=["Root review"])
+
+
+class ContinuationTests(unittest.TestCase):
+    def setUp(self):
+        self.tmp=tempfile.TemporaryDirectory();self.addCleanup(self.tmp.cleanup)
+        self.path=Path(self.tmp.name).resolve()/"context.db"
+        self.controller=MissionController.create(self.path)
+        self.controller.put(task(),expected_sequence=1)
+
+    def checkpoint(self,metadata=None):
+        return self.controller.checkpoint_continuation("task-1",metadata or continuation_metadata(),
+                    expected_sequence=self.controller.projection()["sequence"])
+
+    def test_continuation_reopen_detached_and_no_authority(self):
+        original=self.controller.projection()
+        result=self.checkpoint();self.assertFalse(result["continuations"]["task-1"]["stale"])
+        result["continuations"].clear()
+        reopened=MissionController.open(self.path)
+        self.assertEqual(reopened.continuation_projection()["continuations"]["task-1"]["metadata"],continuation_metadata())
+        self.assertEqual(set(reopened.projection()),set(original))
+        for key in ("native_authority","runtime_admission","physical_execution_authorization","trading_authority","grants_node_operations"):
+            self.assertIs(reopened.continuation_projection()[key],False)
+        self.assertEqual(reopened.continuation_projection()["public_submit"],"DENY")
+
+    def test_any_task_drift_stales_without_rewriting_history(self):
+        self.checkpoint();before=Journal(self.path).read()
+        changed=task();changed["next_actions"]=["different"]
+        self.controller.put(changed,expected_sequence=3)
+        self.assertTrue(self.controller.continuation_projection()["continuations"]["task-1"]["stale"])
+        self.assertEqual(Journal(self.path).read()[:3],before)
+        self.assertFalse(self.checkpoint()["continuations"]["task-1"]["stale"])
+
+    def test_retry_budget_never_resets_even_after_stale_and_reopen(self):
+        metadata=continuation_metadata();metadata["retry_budget"]["retries_used"]=1
+        self.checkpoint(metadata)
+        changed=task();changed["blockers"]=["blocked"];self.controller.put(changed,expected_sequence=3)
+        self.controller=MissionController.open(self.path)
+        with self.assertRaises(ContractError):self.checkpoint()
+        metadata["retry_budget"]["max_retries"]=3
+        with self.assertRaises(ContractError):self.checkpoint(metadata)
+
+    def test_closed_types_sha_bounds_and_unknown_task(self):
+        for mutate in (lambda m:m.update(extra=True),lambda m:m.update(source_tree="c"*40+"\n"),
+                       lambda m:m["retry_budget"].update(max_retries=True),
+                       lambda m:m["retry_budget"].update(retries_used=3),
+                       lambda m:m.update(required_authorization=["x"*2049])):
+            metadata=continuation_metadata();mutate(metadata)
+            with self.assertRaises(ContractError):self.checkpoint(metadata)
+        with self.assertRaises(ContractError):
+            self.controller.checkpoint_continuation("missing",continuation_metadata(),expected_sequence=2)
+        self.assertEqual(self.controller.projection()["sequence"],2)
+
+    def test_stale_cas_duplicate_and_full_receipt_capacity(self):
+        self.checkpoint();self.checkpoint();self.assertEqual(self.controller.projection()["sequence"],3)
+        with self.assertRaises(ContractError):
+            self.controller.checkpoint_continuation("task-1",continuation_metadata(),expected_sequence=2)
+        metadata=continuation_metadata();metadata["required_authorization"]=["x"*2048]*128
+        with self.assertRaises(ContractError):self.checkpoint(metadata)
+
+    def test_unknown_receipt_version_and_invalid_binding_reject_reopen(self):
+        Journal(self.path).append("OBSERVING",dict(kind="development-continuation",schema_version=2,
+            task_id="task-1",task_snapshot_sha256="0"*64,metadata=continuation_metadata()),expected_sequence=2)
+        with self.assertRaises(ContractError):MissionController.open(self.path)
+
+    def test_result_scope_and_evidence_remain_observations(self):
+        metadata=continuation_metadata()
+        metadata["last_verified_result"]=dict(status="PASS",scope="SOURCE_ONLY",summary="Reviewed",source_head="d"*40,source_tree="e"*40)
+        metadata["evidence"]=[dict(reference="local receipt",sha256="f"*64)]
+        metadata["status"]="COMPLETE"
+        result=self.checkpoint(metadata)
+        self.assertEqual(result["continuations"]["task-1"]["metadata"],metadata)
+        self.assertIs(result["physical_execution_authorization"],False)
+        metadata["last_verified_result"]["authority"]=True
+        with self.assertRaises(ContractError):self.checkpoint(metadata)
+
+    def test_continuation_persisted_record_capacity(self):
+        path=self.path.parent/"limited.db"
+        limited=MissionController.create(path,max_records=2)
+        limited.put(task(),expected_sequence=1)
+        with self.assertRaises(ContractError):
+            limited.checkpoint_continuation("task-1",continuation_metadata(),expected_sequence=2)
+        self.assertEqual(len(Journal(path).read()),2)
+
+    def test_unknown_continuation_version_rejected(self):
+        import hashlib
+        Journal(self.path).append("OBSERVING",dict(kind="development-continuation",schema_version=3,
+            task_id="task-1",task_snapshot_sha256=hashlib.sha256(canonical(task())).hexdigest(),
+            metadata=continuation_metadata()),expected_sequence=2)
+        with self.assertRaises(ContractError):MissionController.open(self.path)
+
+    def test_aba_task_drift_stays_stale_until_explicit_checkpoint(self):
+        metadata=continuation_metadata();metadata["retry_budget"]["retries_used"]=1
+        self.checkpoint(metadata)
+        changed=task();changed["blockers"]=["intermediate drift"]
+        self.controller.put(changed,expected_sequence=3)
+        self.controller.put(task(),expected_sequence=4)
+        self.controller=MissionController.open(self.path)
+        self.assertTrue(self.controller.continuation_projection()["continuations"]["task-1"]["stale"])
+        self.checkpoint(metadata)
+        self.assertEqual(self.controller.projection()["sequence"],6)
+        self.assertFalse(MissionController.open(self.path).continuation_projection()["continuations"]["task-1"]["stale"])
+        lower=continuation_metadata()
+        with self.assertRaises(ContractError):self.checkpoint(lower)
+        metadata["retry_budget"]["max_retries"]=3
+        with self.assertRaises(ContractError):self.checkpoint(metadata)
+
 if __name__ == "__main__": unittest.main()
