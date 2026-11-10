@@ -1,0 +1,24 @@
+{
+  "schema": "unified.stage1b.owner-channel-decision.v1",
+  "node": "PC4",
+  "owner_decision": "KEEP_SMOKE_BLOCKED_UNTIL_EXISTING_NONPRIVILEGED_CHANNEL_CONFIRMED",
+  "smoke": "BLOCKED",
+  "channel": "UNCONFIRMED",
+  "account_changes": false,
+  "ssh_changes": false,
+  "uac_changes": false,
+  "acl_changes": false,
+  "security_policy_changes": false,
+  "artificial_elevated_ssh_token_downgrade": false,
+  "remote_package_staging": false,
+  "allowed_now": [
+    "READONLY_NODE_DIAGNOSTICS",
+    "READONLY_PACKAGE_VERIFICATION",
+    "READONLY_RESOURCE_AND_GATE_CHECKS",
+    "READONLY_EXISTING_LOCAL_OPERATOR_CONSOLE_AVAILABILITY_CHECK"
+  ],
+  "if_channel_confirmed": "PRESENT_EVIDENCE_AND_SAFE_RUN_PLAN",
+  "smoke_autostart": false,
+  "independent_master_mission_work": "CONTINUE",
+  "source": "DIRECT_HUMAN_REPLY_IN_ROOT_CHAT"
+}
