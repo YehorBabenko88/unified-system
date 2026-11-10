@@ -1,0 +1,22 @@
+# MissionController continuation proposal: design boundary pre-review
+
+Root scope ACK received for observational continuation on EXISTING marker2 Journal/CAS/bounds. Final implementation HEAD/tree/branch/PR not yet supplied;ownerworktree is uncommitted. This is design pre-review,not implementationACK or operationalpermission. Baseline source6e79f2da66212474e9875559ec532c0f65b678a8/tree18c84ddbe65cd4e82d3f32a5210c3ff8617bf0ca inspectedread-only. Existingv1taskclosedFIELDS/identity/DAG/CAS/bytecapacity/read-onlypreflight/projectionfalseauthority establish comparisonbaseline. No newledger/scheduler/storage/authority or sharedstatewrittenbyA8.
+
+| Requirement ID | Repository / PR / exact HEAD | Test / Environment | Expected | Actual / status | Evidence | Severity / Required correction |
+|---|---|---|---|---|---|---|
+| A8-MC-DESIGN-170 | Unified/proposalunpublished/finalpinabsent;baseline6e | Design/sourceboundaryreviewonly | Existingjournal/observationalextension | PREREVIEW_COMPLETE_NO_SOURCE_ACK | [verification](verification.json),[taskupdate](task-handoff-update.json) | Finalexactcandidate required |
+| A8-MC-RED | Proposedv2/baseline6e | Owneroriginal6newcases | Preservehonesttest-firstfailure | ORIGINAL_DATA_AUTHENTICATED:6cases/5absentAPIerrors/1negativePASS | [RED](owner-original-RED.log) | Not newAPIworking/green/runtimeproof |
+| A8-MC-STALE | Same | CounterexamplecheckpointA→putB→putA | Anychangeinvalidatesuntilrecheckpoint | DESIGN_REVIEW_REQUIREMENT;implementationNOT_EVALUATED | verification | MustteststickySTALE/replay/restart;notconfirmeddefect |
+
+Required finalreview boundaries transmittedtoRoot:
+
+- Preservev1FIELDS,validate_task,put,projectionpublicmeaning;newseparatelyclosedv2receipt sharescurrentjournal/marker/CAS/capacity. Oldv1journalsreadwithoutmigration;oldbinarynewkindfailsclosedisexpected,notforwardcompatibility.
+- Fullcurrentcanonicalv1snapshot bindingmustnotpermit checkpointA reactivationaftertaskA→B→A. Anytaskchangeincludingaxes/CI/evidence muststaySTALEuntil explicitnewcheckpoint. Hash equalityatprojectionaloneisinsufficientforthisrequirement. Verifyreplayandrestart,notonlyimmediateinmemorycomparison.
+- Fixedretrymax0..32/nondecreasingused mustpersistacrossstale/recheckpoint/nextstepchanges/reopen/processrestart. Changingbindingsorrestoringoldtaskmustnotresetbudget. Exactbudgetscope/immutabilityandexpiry mustbeexplicitratherthanassumed.
+- CASusesglobalv1+v2sequence andsameJournalappendtransaction;staleexpectedsequence rejectedbeforeidempotentreturn. Concurrentv1changeaftermetadatareadmustnotappendoldbinding. Replayrejectsunknown/foreign/missingtask/snapshotmetadata;noauto-rebinding/recovery/migration.
+- Closedtypes/enums/nullableverificationtuple/evidencerefs/strings/lists/canonicalbytes boundedbeforeappend,existingcapacityreservepreserved. Detachednestedprojectioncannotmutatejournalstate. Anyauthority/permissionfieldsremainfalse/publicDENY;nextstepdescription/authorizationrefsareobservationalstrings,notdispatch/approvalcapability. NoGitHubclient/agentlauncher/scheduler.
+- RealPythonprocessrestart evidence requiresactualseparateprocess/reopeniflaterexplicitlyqualified;itdoesnotdemonstrateCodexapprestart. NoA8processfixture/restart/currentapplicationrestartauthorizedhere. RootserialunitlaneassignedtoanotheragentisnotA8fixturepermission.
+
+UpdatedtaskrecordAGENT8.MISSION_CONTROLLER.PROPOSAL.REVIEW acknowledgesRootscopeACKandnowwaitsonfinalpin/relevantownerACKifsharedcontractaffected. Priorintakehand-offschemaisnotautomaticMissionControllerwirecontract;noneinserted. ProposedmetadataandanyclaimedPASSareuntrustedobservationsuntilindependentoriginalevidence. A8 didnotinspectmovinguncommittedimplementationasfinalsourceorchangeproductionfiles.
+
+RELEASE_MANIFEST_STATUS:unchangedpreparation/notapproved. NODE_INVENTORY_STATUS:no nodequery. CONTRACT_STATUS:designscopeACKonly/finalimplementationpending/STRICTOption1/logicalDISABLED/publicDENY. OFFLINE_TESTS:ownerREDauthenticated;A8fixtureexecution0. WINDOWS_CI:F26current6eWindows68heartbeatFAIL remains. PHYSICAL_TESTS:BLOCKED;PC4existingnonprivilegedchannelunconfirmed/noidentitySSH/UAC/ACL/policychanges/artificialdowngrade. P0_P1_P2:7P1/8P2unchanged,nonewconfirmedfinding. EVIDENCE:baselinehash/originalRED/taskupdate. NEXT_ACTIONS:reviewfinalexactcandidate/originalsunderRootscope,thenindependentqualificationassessment;noimplicitsharedinterfacechanges. GO_NO_GO:NO-GO. TAILSCALE_REMOVAL_ACCEPTANCE:BLOCKED/NO-GO. No A8realorders/networkchanges;priorg/F38/F39remainexactscopes.

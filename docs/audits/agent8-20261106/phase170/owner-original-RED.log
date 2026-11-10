@@ -1,0 +1,70 @@
+test_any_task_drift_stales_without_rewriting_history (tests.test_mission_controller.ContinuationTests.test_any_task_drift_stales_without_rewriting_history) ... ERROR
+test_closed_types_sha_bounds_and_unknown_task (tests.test_mission_controller.ContinuationTests.test_closed_types_sha_bounds_and_unknown_task) ... ERROR
+test_continuation_reopen_detached_and_no_authority (tests.test_mission_controller.ContinuationTests.test_continuation_reopen_detached_and_no_authority) ... ERROR
+test_retry_budget_never_resets_even_after_stale_and_reopen (tests.test_mission_controller.ContinuationTests.test_retry_budget_never_resets_even_after_stale_and_reopen) ... ERROR
+test_stale_cas_duplicate_and_full_receipt_capacity (tests.test_mission_controller.ContinuationTests.test_stale_cas_duplicate_and_full_receipt_capacity) ... ERROR
+test_unknown_receipt_version_and_invalid_binding_reject_reopen (tests.test_mission_controller.ContinuationTests.test_unknown_receipt_version_and_invalid_binding_reject_reopen) ... ok
+
+======================================================================
+ERROR: test_any_task_drift_stales_without_rewriting_history (tests.test_mission_controller.ContinuationTests.test_any_task_drift_stales_without_rewriting_history)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\worktrees\mission-continuation-v2-20261110\gateway-runtime-recovery-20261107\tests\test_mission_controller.py", line 354, in test_any_task_drift_stales_without_rewriting_history
+    self.checkpoint();before=Journal(self.path).read()
+    ^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\.codex\worktrees\mission-continuation-v2-20261110\gateway-runtime-recovery-20261107\tests\test_mission_controller.py", line 339, in checkpoint
+    return self.controller.checkpoint_continuation("task-1",metadata or continuation_metadata(),
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'MissionController' object has no attribute 'checkpoint_continuation'
+
+======================================================================
+ERROR: test_closed_types_sha_bounds_and_unknown_task (tests.test_mission_controller.ContinuationTests.test_closed_types_sha_bounds_and_unknown_task)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\worktrees\mission-continuation-v2-20261110\gateway-runtime-recovery-20261107\tests\test_mission_controller.py", line 376, in test_closed_types_sha_bounds_and_unknown_task
+    with self.assertRaises(ContractError):self.checkpoint(metadata)
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\.codex\worktrees\mission-continuation-v2-20261110\gateway-runtime-recovery-20261107\tests\test_mission_controller.py", line 339, in checkpoint
+    return self.controller.checkpoint_continuation("task-1",metadata or continuation_metadata(),
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'MissionController' object has no attribute 'checkpoint_continuation'
+
+======================================================================
+ERROR: test_continuation_reopen_detached_and_no_authority (tests.test_mission_controller.ContinuationTests.test_continuation_reopen_detached_and_no_authority)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\worktrees\mission-continuation-v2-20261110\gateway-runtime-recovery-20261107\tests\test_mission_controller.py", line 344, in test_continuation_reopen_detached_and_no_authority
+    result=self.checkpoint();self.assertFalse(result["continuations"]["task-1"]["stale"])
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\.codex\worktrees\mission-continuation-v2-20261110\gateway-runtime-recovery-20261107\tests\test_mission_controller.py", line 339, in checkpoint
+    return self.controller.checkpoint_continuation("task-1",metadata or continuation_metadata(),
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'MissionController' object has no attribute 'checkpoint_continuation'
+
+======================================================================
+ERROR: test_retry_budget_never_resets_even_after_stale_and_reopen (tests.test_mission_controller.ContinuationTests.test_retry_budget_never_resets_even_after_stale_and_reopen)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\worktrees\mission-continuation-v2-20261110\gateway-runtime-recovery-20261107\tests\test_mission_controller.py", line 363, in test_retry_budget_never_resets_even_after_stale_and_reopen
+    self.checkpoint(metadata)
+  File "C:\Users\LS-5\.codex\worktrees\mission-continuation-v2-20261110\gateway-runtime-recovery-20261107\tests\test_mission_controller.py", line 339, in checkpoint
+    return self.controller.checkpoint_continuation("task-1",metadata or continuation_metadata(),
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'MissionController' object has no attribute 'checkpoint_continuation'
+
+======================================================================
+ERROR: test_stale_cas_duplicate_and_full_receipt_capacity (tests.test_mission_controller.ContinuationTests.test_stale_cas_duplicate_and_full_receipt_capacity)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\worktrees\mission-continuation-v2-20261110\gateway-runtime-recovery-20261107\tests\test_mission_controller.py", line 382, in test_stale_cas_duplicate_and_full_receipt_capacity
+    self.checkpoint();self.checkpoint();self.assertEqual(self.controller.projection()["sequence"],3)
+    ^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\.codex\worktrees\mission-continuation-v2-20261110\gateway-runtime-recovery-20261107\tests\test_mission_controller.py", line 339, in checkpoint
+    return self.controller.checkpoint_continuation("task-1",metadata or continuation_metadata(),
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'MissionController' object has no attribute 'checkpoint_continuation'
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.196s
+
+FAILED (errors=5)
