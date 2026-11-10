@@ -3862,3 +3862,6 @@ Phase207 exactA2Review4outer8bef/innerae11/capsuleb0/indexc0be scoped source/eff
 
 
 Phases207–210: A2 Review4 F46/F47 scoped source correction; original old mock10 RED preserved; exact successor ab4c/tree7245 source ACK; independent original corrected mock10PASS verification4497f943, raw1870+824/deps461/runtime841/1038recorded origins, no native or full Windows acceptance. Additive fail-closed native22 preflight design feedback only, exact diff pending. Registered8P1/10P2; overallNO-GO/physical and TailscaleBLOCKED. Reports phase207/report.md through phase210/report.md.
+
+
+Phase211 independent A7 modeled20 originals:12PASS/8intendedFAIL/0errors/0skip/testexit1. F48 XML early parser/size and F49 child path admission P2 OPEN; original9 modeledPASS inside20 only. No real47/kernel qualification. Registered8P1/12P2, NO-GO/physicalTailscaleBLOCKED. See phase211/report.md.

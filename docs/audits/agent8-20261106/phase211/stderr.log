@@ -1,0 +1,163 @@
+test_db_parent_file_refuses_before_backend (__main__.ChildPathAdmissionControls.test_db_parent_file_refuses_before_backend) ... FAIL
+test_db_parent_junction_refuses_before_backend (__main__.ChildPathAdmissionControls.test_db_parent_junction_refuses_before_backend) ... FAIL
+test_db_reparse_leaf_refuses_before_backend (__main__.ChildPathAdmissionControls.test_db_reparse_leaf_refuses_before_backend) ... FAIL
+test_marker_reparse_leaf_refuses_before_backend (__main__.ChildPathAdmissionControls.test_marker_reparse_leaf_refuses_before_backend) ... FAIL
+test_ordinary_db_absent_marker_reaches_backend_control (__main__.ChildPathAdmissionControls.test_ordinary_db_absent_marker_reaches_backend_control) ... ok
+test_ordinary_db_existing_marker_reaches_backend_control (__main__.ChildPathAdmissionControls.test_ordinary_db_existing_marker_reaches_backend_control) ... ok
+test_temp_junction_refuses_before_backend (__main__.ChildPathAdmissionControls.test_temp_junction_refuses_before_backend) ... FAIL
+test_file_xml_parent_refuses_before_parser_read_hash (__main__.JunitAdmissionControls.test_file_xml_parent_refuses_before_parser_read_hash) ... FAIL
+test_ordinary_bounded_xml_preserves_exact_47_facts_control (__main__.JunitAdmissionControls.test_ordinary_bounded_xml_preserves_exact_47_facts_control) ... ok
+test_oversized_xml_refuses_before_parser_read_hash (__main__.JunitAdmissionControls.test_oversized_xml_refuses_before_parser_read_hash) ... FAIL
+test_reparse_xml_parent_refuses_before_parser_read_hash (__main__.JunitAdmissionControls.test_reparse_xml_parent_refuses_before_parser_read_hash) ... FAIL
+test_invariant_refusal_cleanup_kills_and_waits_known_handle (__main__.ReturnedHandleControls.test_invariant_refusal_cleanup_kills_and_waits_known_handle) ... ok
+test_preconstructor_refusal_creates_no_handle (__main__.ReturnedHandleControls.test_preconstructor_refusal_creates_no_handle) ... ok
+test_returned_handle_registered_before_invariant_refusal (__main__.ReturnedHandleControls.test_returned_handle_registered_before_invariant_refusal) ... ok
+test_file_parent_stops_before_descendant_or_git (__main__.RootFirstControls.test_file_parent_stops_before_descendant_or_git) ... ok
+test_file_root_stops_before_leaf_git_or_hash (__main__.RootFirstControls.test_file_root_stops_before_leaf_git_or_hash) ... ok
+test_missing_parent_stops_before_descendant_or_git (__main__.RootFirstControls.test_missing_parent_stops_before_descendant_or_git) ... ok
+test_ordinary_tree_retains_exact_blob_and_ledger (__main__.RootFirstControls.test_ordinary_tree_retains_exact_blob_and_ledger) ... ok
+test_reparse_parent_stops_before_descendant_or_git (__main__.RootFirstControls.test_reparse_parent_stops_before_descendant_or_git) ... ok
+test_selected_reparse_parent_stops_before_leaf_inspection (__main__.RootFirstControls.test_selected_reparse_parent_stops_before_leaf_inspection) ... ok
+
+======================================================================
+FAIL: test_db_parent_file_refuses_before_backend (__main__.ChildPathAdmissionControls.test_db_parent_file_refuses_before_backend)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-7-distributed-research-math\work\projection-recovery-hosted47-20261110\docs\gateway\research\persistence\qualification47\test_qualifier_controls.py", line 486, in test_db_parent_file_refuses_before_backend
+    self.assert_refused_before_backend(probe)
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-7-distributed-research-math\work\projection-recovery-hosted47-20261110\docs\gateway\research\persistence\qualification47\test_qualifier_controls.py", line 461, in assert_refused_before_backend
+    self.assertEqual(effects, [], 'Path refusal must precede inert backend construction')
+AssertionError: Lists differ: ['constructor_returned'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'constructor_returned'
+
+- ['constructor_returned']
++ [] : Path refusal must precede inert backend construction
+
+======================================================================
+FAIL: test_db_parent_junction_refuses_before_backend (__main__.ChildPathAdmissionControls.test_db_parent_junction_refuses_before_backend)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-7-distributed-research-math\work\projection-recovery-hosted47-20261110\docs\gateway\research\persistence\qualification47\test_qualifier_controls.py", line 481, in test_db_parent_junction_refuses_before_backend
+    self.assert_refused_before_backend(probe)
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-7-distributed-research-math\work\projection-recovery-hosted47-20261110\docs\gateway\research\persistence\qualification47\test_qualifier_controls.py", line 461, in assert_refused_before_backend
+    self.assertEqual(effects, [], 'Path refusal must precede inert backend construction')
+AssertionError: Lists differ: ['constructor_returned'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'constructor_returned'
+
+- ['constructor_returned']
++ [] : Path refusal must precede inert backend construction
+
+======================================================================
+FAIL: test_db_reparse_leaf_refuses_before_backend (__main__.ChildPathAdmissionControls.test_db_reparse_leaf_refuses_before_backend)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-7-distributed-research-math\work\projection-recovery-hosted47-20261110\docs\gateway\research\persistence\qualification47\test_qualifier_controls.py", line 491, in test_db_reparse_leaf_refuses_before_backend
+    self.assert_refused_before_backend(probe)
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-7-distributed-research-math\work\projection-recovery-hosted47-20261110\docs\gateway\research\persistence\qualification47\test_qualifier_controls.py", line 461, in assert_refused_before_backend
+    self.assertEqual(effects, [], 'Path refusal must precede inert backend construction')
+AssertionError: Lists differ: ['constructor_returned'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'constructor_returned'
+
+- ['constructor_returned']
++ [] : Path refusal must precede inert backend construction
+
+======================================================================
+FAIL: test_marker_reparse_leaf_refuses_before_backend (__main__.ChildPathAdmissionControls.test_marker_reparse_leaf_refuses_before_backend)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-7-distributed-research-math\work\projection-recovery-hosted47-20261110\docs\gateway\research\persistence\qualification47\test_qualifier_controls.py", line 496, in test_marker_reparse_leaf_refuses_before_backend
+    self.assert_refused_before_backend(probe)
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-7-distributed-research-math\work\projection-recovery-hosted47-20261110\docs\gateway\research\persistence\qualification47\test_qualifier_controls.py", line 461, in assert_refused_before_backend
+    self.assertEqual(effects, [], 'Path refusal must precede inert backend construction')
+AssertionError: Lists differ: ['constructor_returned'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'constructor_returned'
+
+- ['constructor_returned']
++ [] : Path refusal must precede inert backend construction
+
+======================================================================
+FAIL: test_temp_junction_refuses_before_backend (__main__.ChildPathAdmissionControls.test_temp_junction_refuses_before_backend)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-7-distributed-research-math\work\projection-recovery-hosted47-20261110\docs\gateway\research\persistence\qualification47\test_qualifier_controls.py", line 476, in test_temp_junction_refuses_before_backend
+    self.assert_refused_before_backend(probe)
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-7-distributed-research-math\work\projection-recovery-hosted47-20261110\docs\gateway\research\persistence\qualification47\test_qualifier_controls.py", line 461, in assert_refused_before_backend
+    self.assertEqual(effects, [], 'Path refusal must precede inert backend construction')
+AssertionError: Lists differ: ['constructor_returned'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'constructor_returned'
+
+- ['constructor_returned']
++ [] : Path refusal must precede inert backend construction
+
+======================================================================
+FAIL: test_file_xml_parent_refuses_before_parser_read_hash (__main__.JunitAdmissionControls.test_file_xml_parent_refuses_before_parser_read_hash)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-7-distributed-research-math\work\projection-recovery-hosted47-20261110\docs\gateway\research\persistence\qualification47\test_qualifier_controls.py", line 436, in test_file_xml_parent_refuses_before_parser_read_hash
+    self.assert_refused_before_parser_read_hash(probe)
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-7-distributed-research-math\work\projection-recovery-hosted47-20261110\docs\gateway\research\persistence\qualification47\test_qualifier_controls.py", line 423, in assert_refused_before_parser_read_hash
+    self.assertEqual([event for event in probe.events
+AssertionError: Lists differ: [('xml_parse', '/unit/evidence/pytest.xml')] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+('xml_parse', '/unit/evidence/pytest.xml')
+
+- [('xml_parse', '/unit/evidence/pytest.xml')]
++ []
+
+======================================================================
+FAIL: test_oversized_xml_refuses_before_parser_read_hash (__main__.JunitAdmissionControls.test_oversized_xml_refuses_before_parser_read_hash)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-7-distributed-research-math\work\projection-recovery-hosted47-20261110\docs\gateway\research\persistence\qualification47\test_qualifier_controls.py", line 443, in test_oversized_xml_refuses_before_parser_read_hash
+    self.assert_refused_before_parser_read_hash(probe)
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-7-distributed-research-math\work\projection-recovery-hosted47-20261110\docs\gateway\research\persistence\qualification47\test_qualifier_controls.py", line 423, in assert_refused_before_parser_read_hash
+    self.assertEqual([event for event in probe.events
+AssertionError: Lists differ: [('xml_parse', '/unit/evidence/pytest.xml'[70 chars]s>')] != []
+
+First list contains 3 additional elements.
+First extra element 0:
+('xml_parse', '/unit/evidence/pytest.xml')
+
++ []
+- [('xml_parse', '/unit/evidence/pytest.xml'),
+-  ('file_read', '/unit/evidence/pytest.xml'),
+-  ('payload_hash', '<bytes>')]
+
+======================================================================
+FAIL: test_reparse_xml_parent_refuses_before_parser_read_hash (__main__.JunitAdmissionControls.test_reparse_xml_parent_refuses_before_parser_read_hash)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-7-distributed-research-math\work\projection-recovery-hosted47-20261110\docs\gateway\research\persistence\qualification47\test_qualifier_controls.py", line 431, in test_reparse_xml_parent_refuses_before_parser_read_hash
+    self.assert_refused_before_parser_read_hash(probe)
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-7-distributed-research-math\work\projection-recovery-hosted47-20261110\docs\gateway\research\persistence\qualification47\test_qualifier_controls.py", line 423, in assert_refused_before_parser_read_hash
+    self.assertEqual([event for event in probe.events
+AssertionError: Lists differ: [('xml_parse', '/unit/evidence/pytest.xml')] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+('xml_parse', '/unit/evidence/pytest.xml')
+
+- [('xml_parse', '/unit/evidence/pytest.xml')]
++ []
+
+----------------------------------------------------------------------
+Ran 20 tests in 0.134s
+
+FAILED (failures=8)

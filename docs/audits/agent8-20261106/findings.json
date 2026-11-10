@@ -825,5 +825,27 @@
     "successor_outer_sha256": "8bef1750e46034573c36609a41bd76d5d1fd6eb7160e7eebaed98abb4fedc46c",
     "successor_inner_sha256": "ae11e546b3922239fafbbfb572ff078d5745a26dd0a138109351ec15c4ecbfd7",
     "fixed_scope": "EXACT_SOURCE_ORDER_EXCEPTION_AND_LATE_QUOTA_GATES_ONLY_NOT_ACTUAL10_OR_NATIVE_RELEASE_ADMISSION"
+  },
+  {
+    "id": "A8-F48",
+    "severity": "P2",
+    "repository": "math hosted47 qualification tooling",
+    "pr": null,
+    "observed_head": "UNTRACKED_QUALIFIER_SHA256_f0e6709190aec3d8dcdb9a7b0554c1f926147b3d3291f766215bb916a57994e4",
+    "title": "JUnit XML parsed before ordinary-path and bounded-size admission",
+    "status": "OPEN_SOURCE_AND_MODELED_AST_RED_NOT_OS_EXPLOIT",
+    "evidence": "phase211/report.md;phase211/verification.json;phase211/stderr.log",
+    "required_correction": "Guard ancestors/leaf and bounded same-byte parse+hash before parser; preserve exact47/0skip"
+  },
+  {
+    "id": "A8-F49",
+    "severity": "P2",
+    "repository": "math hosted47 qualification tooling",
+    "pr": null,
+    "observed_head": "UNTRACKED_QUALIFIER_SHA256_f0e6709190aec3d8dcdb9a7b0554c1f926147b3d3291f766215bb916a57994e4",
+    "title": "Hosted47 child database/marker paths only lexically checked before Popen backend",
+    "status": "OPEN_SOURCE_AND_MODELED_AST_RED_NOT_OS_EXPLOIT",
+    "evidence": "phase211/report.md;phase211/verification.json;phase211/stderr.log",
+    "required_correction": "Admit temp/DB parent+leaf and marker absent-or-ordinary before intent/backend; preserve command and held guards"
   }
 ]
