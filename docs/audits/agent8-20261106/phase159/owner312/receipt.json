@@ -1,0 +1,32 @@
+{
+  "schema": "agent5.one-shot-negative-verification.v1",
+  "head": "72117a0ba641f8a4287742f9278f4bee7a5005a6",
+  "tree": "a0bfd66ff2731c63e9eb4c16df86e6d5cd795d10",
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "interpreter_file_sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a",
+  "raw_source_files": 1670,
+  "raw_pre_post_equal": true,
+  "extra_files": false,
+  "tests": 33,
+  "new_tests": 8,
+  "existing_tests": 25,
+  "skips": 0,
+  "mutation_controls_expected_failures": 2,
+  "native_worker_job_calls": 0,
+  "consul_rpc": 0,
+  "target_browser_math_runs": 0,
+  "production_source_changes": 0,
+  "strict_time": "OPTION1_LOGICAL_MUTATIONS_DISABLED",
+  "positive_job": "NOT_IMPLEMENTED_NOT_RUN",
+  "qualification": "LOCAL_NEGATIVE_ONLY_NOT_NATIVE_HA",
+  "hashes": {
+    "unified_system/gateway_worker.py": "60c1f4ec663cd6760d34cc682d59fb1528145e3df035437d15b7ab2c4fb9d811",
+    "unified_system/gateway_jobs.py": "6e12a0ec03989749a6fc5359ff6e4d72c820be1c8561eb721ac7b962c458211e",
+    "tests/gateway_jobs/test_one_shot_closed_integration.py": "e744e8c77e93295a99fd7a661fb8ec18a620405e39b7f2113c6f5add39c9d773",
+    ".github/workflows/agent5-one-shot-negative.yml": "7c46aacaf6aece1188958105003c28031bbdf0b4419eb9a1e3bff70cf770b36c"
+  },
+  "evidence_sha256": {
+    "mutation-expected-failures.log": "276cc1061cb387d5a1a24d3017540547078b5bcff6740271739891ec69f341c6",
+    "pure-tests.log": "722ba4944b022e92b9b308548d331fde7b9e96cb2ae8577b495f64f2138f8093"
+  }
+}
