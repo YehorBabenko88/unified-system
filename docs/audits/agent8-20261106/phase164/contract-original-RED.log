@@ -1,0 +1,31 @@
+test_duplicate_rejected (__main__.IdentityContractTests.test_duplicate_rejected) ... ok
+test_exact_25_accepts (__main__.IdentityContractTests.test_exact_25_accepts) ... FAIL
+test_extra_rejected (__main__.IdentityContractTests.test_extra_rejected) ... ok
+test_missing_prior_rejected (__main__.IdentityContractTests.test_missing_prior_rejected) ... ok
+test_original24_without_strict_rejected (__main__.IdentityContractTests.test_original24_without_strict_rejected) ... FAIL
+
+======================================================================
+FAIL: test_exact_25_accepts (__main__.IdentityContractTests.test_exact_25_accepts)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\ci-boundary-evidence-20261110\gateway25-pure-contract.py", line 12, in test_exact_25_accepts
+    def test_exact_25_accepts(self):ns['validate_test_ids'](self.suite(expected))
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "docs/intelligence/identity/run_qualification.py", line 131, in validate_test_ids
+    assert len(actual)==len(set(actual))==24 and sorted(actual)==sorted(expected)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+
+======================================================================
+FAIL: test_original24_without_strict_rejected (__main__.IdentityContractTests.test_original24_without_strict_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\ci-boundary-evidence-20261110\gateway25-pure-contract.py", line 14, in test_original24_without_strict_rejected
+    with self.assertRaises(AssertionError):ns['validate_test_ids'](self.suite(prior))
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: AssertionError not raised
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.002s
+
+FAILED (failures=2)

@@ -1,0 +1,192 @@
+diff --git a/.github/workflows/supervisor-local-integration.yml b/.github/workflows/supervisor-local-integration.yml
+index cca56ee..61b5e36 100644
+--- a/.github/workflows/supervisor-local-integration.yml
++++ b/.github/workflows/supervisor-local-integration.yml
+@@ -71,7 +71,7 @@ jobs:
+                       else: raise AssertionError(str(rel))
+                   return result
+               before=inventory()
+-              required=['test_ci_queue_controller.QueueTests.test_archived_math_queue_zero_runner', 'test_ci_queue_controller.QueueTests.test_attempt_and_head_mismatch', 'test_ci_queue_controller.QueueTests.test_bounds_and_existing_creation', 'test_ci_queue_controller.QueueTests.test_clock_rollback_cannot_observe', 'test_ci_queue_controller.QueueTests.test_consumed_authorization_and_no_executor', 'test_ci_queue_controller.QueueTests.test_corruption_and_foreign_journal_not_adopted', 'test_ci_queue_controller.QueueTests.test_duplicate_and_old_observation', 'test_ci_queue_controller.QueueTests.test_exact_pin_type_required', 'test_ci_queue_controller.QueueTests.test_foreign_file_between_check_and_initialize_is_not_adopted', 'test_ci_queue_controller.QueueTests.test_initialization_failure_retains_owned_reservation', 'test_ci_queue_controller.QueueTests.test_null_and_unknown_never_success', 'test_ci_queue_controller.QueueTests.test_ordinary_run_does_not_invent_consumed_authorization', 'test_ci_queue_controller.QueueTests.test_payload_cannot_renew_authorization', 'test_ci_queue_controller.QueueTests.test_protected_identity_is_exact', 'test_ci_queue_controller.QueueTests.test_queued_without_runner_or_steps', 'test_ci_queue_controller.QueueTests.test_redacts_raw_fields_and_artifact_urls', 'test_ci_queue_controller.QueueTests.test_restart_preserves_backoff_and_limit', 'test_ci_queue_controller.QueueTests.test_simultaneous_creators_have_single_exclusive_owner', 'test_ci_queue_controller.QueueTests.test_states_and_no_timeout_infrastructure_diagnosis', 'test_ci_queue_controller.QueueTests.test_terminal_conflict_stays_unknown', 'test_ci_queue_controller.QueueTests.test_terminal_regression_does_not_restore_success', 'test_ci_queue_controller.QueueTests.test_workflow_job_consistency', 'test_journal.JournalTests.test_append_after_reopen', 'test_journal.JournalTests.test_empty', 'test_journal.JournalTests.test_expected_sequence_cas', 'test_journal.JournalTests.test_long_chain_latest_digest_not_lexical_max', 'test_journal.JournalTests.test_no_implicit_creation', 'test_journal.JournalTests.test_recovery', 'test_journal.JournalTests.test_tamper', 'test_journal.JournalTests.test_unknown_state', 'test_mission_controller.MissionTests.test_actual_process_exit_after_commit_reopens', 'test_mission_controller.MissionTests.test_arbitrary_existing_database_not_adopted', 'test_mission_controller.MissionTests.test_base_identity_collision_rejected', 'test_mission_controller.MissionTests.test_boolean_marker_version_rejected', 'test_mission_controller.MissionTests.test_bounds_and_safe_paths', 'test_mission_controller.MissionTests.test_closed_fields_and_canonical_ids', 'test_mission_controller.MissionTests.test_concurrent_stale_writer_rejected', 'test_mission_controller.MissionTests.test_conservative_byte_reserve_before_append', 'test_mission_controller.MissionTests.test_corruption_rejected_without_repair', 'test_mission_controller.MissionTests.test_crash_before_append_keeps_last_commit', 'test_mission_controller.MissionTests.test_cycle_rejected', 'test_mission_controller.MissionTests.test_directory_symlink_or_junction_refused', 'test_mission_controller.MissionTests.test_duplicate_is_idempotent', 'test_mission_controller.MissionTests.test_evidence_and_ci_are_typed_and_bounded', 'test_mission_controller.MissionTests.test_fake_ci_success_never_physical_approval', 'test_mission_controller.MissionTests.test_foreign_schema_refused_before_read', 'test_mission_controller.MissionTests.test_hardlink_refused_without_writing', 'test_mission_controller.MissionTests.test_invalid_capacity_refused_before_reservation', 'test_mission_controller.MissionTests.test_legacy_version_one_refused_without_rewrite', 'test_mission_controller.MissionTests.test_legacy_wal_sidecar_refused_before_create', 'test_mission_controller.MissionTests.test_maximum_task_dag_replays_and_cycle_revision_refused', 'test_mission_controller.MissionTests.test_oversized_receipt_rejected_before_journal_materialization', 'test_mission_controller.MissionTests.test_owner_and_scope_identity_immutable', 'test_mission_controller.MissionTests.test_persisted_bounds_are_recovered_and_closed', 'test_mission_controller.MissionTests.test_persisted_record_capacity_refuses_append', 'test_mission_controller.MissionTests.test_process_dies_during_uncommitted_transaction', 'test_mission_controller.MissionTests.test_projection_is_copy', 'test_mission_controller.MissionTests.test_record_bytes_bounded', 'test_mission_controller.MissionTests.test_relative_path_refused_without_creation', 'test_mission_controller.MissionTests.test_reopen_preserves_receipts', 'test_mission_controller.MissionTests.test_replay_rejects_semantic_identity_collision', 'test_mission_controller.MissionTests.test_same_task_updates_keep_failed_ci_history', 'test_mission_controller.MissionTests.test_simultaneous_writers_have_one_commit', 'test_mission_controller.MissionTests.test_sparse_file_rejected_before_journal_materialization', 'test_mission_controller.MissionTests.test_truncated_database_rejected', 'test_mission_controller.MissionTests.test_unknown_dependency_rejected', 'test_mission_controller.MissionTests.test_unknown_receipt_rejected_even_with_valid_chain', 'test_mission_controller.MissionTests.test_unknown_schema_refused', 'test_mission_controller.MissionTests.test_wal_sidecar_refused_before_read', 'test_node_supervisor_v2.SupervisorTests.test_all_other_operations_fail_closed', 'test_node_supervisor_v2.SupervisorTests.test_foreign_supervisor_scope_cannot_reconcile_or_inspect', 'test_node_supervisor_v2.SupervisorTests.test_identity_mismatch_and_no_proof_injection', 'test_node_supervisor_v2.SupervisorTests.test_identity_projection_and_swapped_context_entrypoints', 'test_node_supervisor_v2.SupervisorTests.test_interrupted_read_is_not_blindly_replayed', 'test_node_supervisor_v2.SupervisorTests.test_persisted_authorized_is_not_admission', 'test_node_supervisor_v2.SupervisorTests.test_readonly_durable_completion_and_duplicate', 'test_node_task_journal.JournalTests.test_atomic_reservation_refuses_racing_file', 'test_node_task_journal.JournalTests.test_capacity_preserves_existing_receipts', 'test_node_task_journal.JournalTests.test_closed_schema_and_strict_types', 'test_node_task_journal.JournalTests.test_concurrent_empty_scope_writers_one_scope_wins', 'test_node_task_journal.JournalTests.test_corrupt_chain_fails_closed', 'test_node_task_journal.JournalTests.test_duplicate_after_restart_and_closed_receipts', 'test_node_task_journal.JournalTests.test_duplicate_retains_original_and_collision_refused', 'test_node_task_journal.JournalTests.test_empty_legacy_database_not_adopted', 'test_node_task_journal.JournalTests.test_failed_reservation_is_retained', 'test_node_task_journal.JournalTests.test_foreign_database_untouched', 'test_node_task_journal.JournalTests.test_foreign_schema_in_valid_chain_untouched', 'test_node_task_journal.JournalTests.test_full_database_does_not_advance', 'test_node_task_journal.JournalTests.test_generation_change_is_immutable_collision', 'test_node_task_journal.JournalTests.test_generation_v2_reference_only_strict_uuid', 'test_node_task_journal.JournalTests.test_invalid_transition_and_receipt_mutation', 'test_node_task_journal.JournalTests.test_journal_rejects_mixed_node_cluster_incarnation', 'test_node_task_journal.JournalTests.test_legacy_receipt_cannot_be_adopted', 'test_node_task_journal.JournalTests.test_mixed_scope_hashchain_rejected_before_replay', 'test_node_task_journal.JournalTests.test_overlength_and_byte_capacity', 'test_node_task_journal.JournalTests.test_replaced_inode_and_hardlink_refused', 'test_node_task_journal.JournalTests.test_restart_before_during_after', 'test_node_task_journal.JournalTests.test_scope_projections_cannot_rebind_and_old_receipts_refuse', 'test_node_task_journal.JournalTests.test_sqlite_sidecars_rejected_without_open_or_cleanup', 'test_node_task_journal.JournalTests.test_symlink_not_adopted_where_available', 'test_node_task_journal.JournalTests.test_wal_held_reader_rejected_before_reads_and_writes', 'test_supervisor_deployment.DeploymentPlanTests.test_actual_capsule_bytes_and_sequential_rollout_reuse', 'test_supervisor_deployment.DeploymentPlanTests.test_capsule_tamper_after_constructor_refuses_before_preparation', 'test_supervisor_deployment.DeploymentPlanTests.test_development_task_cannot_be_cast_to_node_or_service_operation', 'test_supervisor_deployment.DeploymentPlanTests.test_empty_oversized_or_noncanonical_nodes_refused', 'test_supervisor_deployment.DeploymentPlanTests.test_metadata_drift_is_blocker_never_upgrade_or_success', 'test_supervisor_deployment.DeploymentPlanTests.test_no_execution_or_shell_authority_from_plans', 'test_supervisor_deployment.DeploymentPlanTests.test_original_input_not_mutated_and_edition_qualification_separate', 'test_supervisor_deployment.DeploymentPlanTests.test_overlapping_roots_fail_existing_transaction_validation', 'test_supervisor_deployment.DeploymentPlanTests.test_prepare_reuses_existing_inactive_transaction_plan_without_writes', 'test_supervisor_deployment.DeploymentPlanTests.test_returned_plan_mutation_does_not_change_adapter', 'test_supervisor_deployment.DeploymentPlanTests.test_rollback_reference_is_not_backup_or_rollback_verification', 'test_supervisor_deployment.DeploymentPlanTests.test_wrong_membership_role_duplicates_and_injected_health_reject', 'test_supervisor_deployment.ServicePrototypeTests.test_existing_service_plan_reused_without_registration_or_activation', 'test_supervisor_deployment.ServicePrototypeTests.test_home_worker_cannot_receive_control_service_plan', 'test_supervisor_local_integration.LocalIntegrationTests.test_archived_math_queue_reopens_unassigned_consumed_without_api', 'test_supervisor_local_integration.LocalIntegrationTests.test_development_receipts_cannot_parse_or_submit_as_node_operations', 'test_supervisor_local_integration.LocalIntegrationTests.test_report_status_completes_only_local_receipts_and_preserves_unknowns', 'test_supervisor_local_integration.LocalIntegrationTests.test_request_drain_blocks_despite_development_pass_and_approval_reference', 'test_supervisor_local_integration.LocalIntegrationTests.test_source_ci_and_development_pass_cannot_promote_trust_or_deployment', 'test_supervisor_local_integration.LocalIntegrationTests.test_verified_capsule_and_inactive_install_plan_never_create_target_or_rollback']
++              required=['test_ci_queue_controller.QueueTests.test_archived_math_queue_zero_runner', 'test_ci_queue_controller.QueueTests.test_attempt_and_head_mismatch', 'test_ci_queue_controller.QueueTests.test_bounds_and_existing_creation', 'test_ci_queue_controller.QueueTests.test_clock_rollback_cannot_observe', 'test_ci_queue_controller.QueueTests.test_consumed_authorization_and_no_executor', 'test_ci_queue_controller.QueueTests.test_corruption_and_foreign_journal_not_adopted', 'test_ci_queue_controller.QueueTests.test_duplicate_and_old_observation', 'test_ci_queue_controller.QueueTests.test_exact_pin_type_required', 'test_ci_queue_controller.QueueTests.test_foreign_file_between_check_and_initialize_is_not_adopted', 'test_ci_queue_controller.QueueTests.test_initialization_failure_retains_owned_reservation', 'test_ci_queue_controller.QueueTests.test_null_and_unknown_never_success', 'test_ci_queue_controller.QueueTests.test_ordinary_run_does_not_invent_consumed_authorization', 'test_ci_queue_controller.QueueTests.test_payload_cannot_renew_authorization', 'test_ci_queue_controller.QueueTests.test_protected_identity_is_exact', 'test_ci_queue_controller.QueueTests.test_queued_without_runner_or_steps', 'test_ci_queue_controller.QueueTests.test_redacts_raw_fields_and_artifact_urls', 'test_ci_queue_controller.QueueTests.test_restart_preserves_backoff_and_limit', 'test_ci_queue_controller.QueueTests.test_simultaneous_creators_have_single_exclusive_owner', 'test_ci_queue_controller.QueueTests.test_states_and_no_timeout_infrastructure_diagnosis', 'test_ci_queue_controller.QueueTests.test_terminal_conflict_stays_unknown', 'test_ci_queue_controller.QueueTests.test_terminal_regression_does_not_restore_success', 'test_ci_queue_controller.QueueTests.test_workflow_job_consistency', 'test_journal.JournalTests.test_append_after_reopen', 'test_journal.JournalTests.test_empty', 'test_journal.JournalTests.test_expected_sequence_cas', 'test_journal.JournalTests.test_long_chain_latest_digest_not_lexical_max', 'test_journal.JournalTests.test_no_implicit_creation', 'test_journal.JournalTests.test_recovery', 'test_journal.JournalTests.test_tamper', 'test_journal.JournalTests.test_unknown_state', 'test_mission_controller.MissionTests.test_actual_process_exit_after_commit_reopens', 'test_mission_controller.MissionTests.test_arbitrary_existing_database_not_adopted', 'test_mission_controller.MissionTests.test_base_identity_collision_rejected', 'test_mission_controller.MissionTests.test_boolean_marker_version_rejected', 'test_mission_controller.MissionTests.test_bounds_and_safe_paths', 'test_mission_controller.MissionTests.test_closed_fields_and_canonical_ids', 'test_mission_controller.MissionTests.test_concurrent_stale_writer_rejected', 'test_mission_controller.MissionTests.test_conservative_byte_reserve_before_append', 'test_mission_controller.MissionTests.test_corruption_rejected_without_repair', 'test_mission_controller.MissionTests.test_crash_before_append_keeps_last_commit', 'test_mission_controller.MissionTests.test_cycle_rejected', 'test_mission_controller.MissionTests.test_directory_symlink_or_junction_refused', 'test_mission_controller.MissionTests.test_duplicate_is_idempotent', 'test_mission_controller.MissionTests.test_evidence_and_ci_are_typed_and_bounded', 'test_mission_controller.MissionTests.test_fake_ci_success_never_physical_approval', 'test_mission_controller.MissionTests.test_foreign_schema_refused_before_read', 'test_mission_controller.MissionTests.test_hardlink_refused_without_writing', 'test_mission_controller.MissionTests.test_invalid_capacity_refused_before_reservation', 'test_mission_controller.MissionTests.test_legacy_version_one_refused_without_rewrite', 'test_mission_controller.MissionTests.test_legacy_wal_sidecar_refused_before_create', 'test_mission_controller.MissionTests.test_maximum_task_dag_replays_and_cycle_revision_refused', 'test_mission_controller.MissionTests.test_oversized_receipt_rejected_before_journal_materialization', 'test_mission_controller.MissionTests.test_owned_temp_alias_is_resolved_before_guarded_journal_creation', 'test_mission_controller.MissionTests.test_owner_and_scope_identity_immutable', 'test_mission_controller.MissionTests.test_persisted_bounds_are_recovered_and_closed', 'test_mission_controller.MissionTests.test_persisted_record_capacity_refuses_append', 'test_mission_controller.MissionTests.test_process_dies_during_uncommitted_transaction', 'test_mission_controller.MissionTests.test_projection_is_copy', 'test_mission_controller.MissionTests.test_record_bytes_bounded', 'test_mission_controller.MissionTests.test_relative_path_refused_without_creation', 'test_mission_controller.MissionTests.test_reopen_preserves_receipts', 'test_mission_controller.MissionTests.test_replay_rejects_semantic_identity_collision', 'test_mission_controller.MissionTests.test_same_task_updates_keep_failed_ci_history', 'test_mission_controller.MissionTests.test_simultaneous_writers_have_one_commit', 'test_mission_controller.MissionTests.test_sparse_file_rejected_before_journal_materialization', 'test_mission_controller.MissionTests.test_truncated_database_rejected', 'test_mission_controller.MissionTests.test_unknown_dependency_rejected', 'test_mission_controller.MissionTests.test_unknown_receipt_rejected_even_with_valid_chain', 'test_mission_controller.MissionTests.test_unknown_schema_refused', 'test_mission_controller.MissionTests.test_wal_sidecar_refused_before_read', 'test_node_supervisor_v2.SupervisorTests.test_all_other_operations_fail_closed', 'test_node_supervisor_v2.SupervisorTests.test_foreign_supervisor_scope_cannot_reconcile_or_inspect', 'test_node_supervisor_v2.SupervisorTests.test_identity_mismatch_and_no_proof_injection', 'test_node_supervisor_v2.SupervisorTests.test_identity_projection_and_swapped_context_entrypoints', 'test_node_supervisor_v2.SupervisorTests.test_interrupted_read_is_not_blindly_replayed', 'test_node_supervisor_v2.SupervisorTests.test_persisted_authorized_is_not_admission', 'test_node_supervisor_v2.SupervisorTests.test_readonly_durable_completion_and_duplicate', 'test_node_task_journal.JournalTests.test_atomic_reservation_refuses_racing_file', 'test_node_task_journal.JournalTests.test_capacity_preserves_existing_receipts', 'test_node_task_journal.JournalTests.test_closed_schema_and_strict_types', 'test_node_task_journal.JournalTests.test_concurrent_empty_scope_writers_one_scope_wins', 'test_node_task_journal.JournalTests.test_corrupt_chain_fails_closed', 'test_node_task_journal.JournalTests.test_duplicate_after_restart_and_closed_receipts', 'test_node_task_journal.JournalTests.test_duplicate_retains_original_and_collision_refused', 'test_node_task_journal.JournalTests.test_empty_legacy_database_not_adopted', 'test_node_task_journal.JournalTests.test_failed_reservation_is_retained', 'test_node_task_journal.JournalTests.test_foreign_database_untouched', 'test_node_task_journal.JournalTests.test_foreign_schema_in_valid_chain_untouched', 'test_node_task_journal.JournalTests.test_full_database_does_not_advance', 'test_node_task_journal.JournalTests.test_generation_change_is_immutable_collision', 'test_node_task_journal.JournalTests.test_generation_v2_reference_only_strict_uuid', 'test_node_task_journal.JournalTests.test_invalid_transition_and_receipt_mutation', 'test_node_task_journal.JournalTests.test_journal_rejects_mixed_node_cluster_incarnation', 'test_node_task_journal.JournalTests.test_legacy_receipt_cannot_be_adopted', 'test_node_task_journal.JournalTests.test_mixed_scope_hashchain_rejected_before_replay', 'test_node_task_journal.JournalTests.test_overlength_and_byte_capacity', 'test_node_task_journal.JournalTests.test_replaced_inode_and_hardlink_refused', 'test_node_task_journal.JournalTests.test_restart_before_during_after', 'test_node_task_journal.JournalTests.test_scope_projections_cannot_rebind_and_old_receipts_refuse', 'test_node_task_journal.JournalTests.test_sqlite_sidecars_rejected_without_open_or_cleanup', 'test_node_task_journal.JournalTests.test_symlink_not_adopted_where_available', 'test_node_task_journal.JournalTests.test_wal_held_reader_rejected_before_reads_and_writes', 'test_supervisor_deployment.DeploymentPlanTests.test_actual_capsule_bytes_and_sequential_rollout_reuse', 'test_supervisor_deployment.DeploymentPlanTests.test_capsule_tamper_after_constructor_refuses_before_preparation', 'test_supervisor_deployment.DeploymentPlanTests.test_development_task_cannot_be_cast_to_node_or_service_operation', 'test_supervisor_deployment.DeploymentPlanTests.test_empty_oversized_or_noncanonical_nodes_refused', 'test_supervisor_deployment.DeploymentPlanTests.test_metadata_drift_is_blocker_never_upgrade_or_success', 'test_supervisor_deployment.DeploymentPlanTests.test_no_execution_or_shell_authority_from_plans', 'test_supervisor_deployment.DeploymentPlanTests.test_original_input_not_mutated_and_edition_qualification_separate', 'test_supervisor_deployment.DeploymentPlanTests.test_overlapping_roots_fail_existing_transaction_validation', 'test_supervisor_deployment.DeploymentPlanTests.test_prepare_reuses_existing_inactive_transaction_plan_without_writes', 'test_supervisor_deployment.DeploymentPlanTests.test_returned_plan_mutation_does_not_change_adapter', 'test_supervisor_deployment.DeploymentPlanTests.test_rollback_reference_is_not_backup_or_rollback_verification', 'test_supervisor_deployment.DeploymentPlanTests.test_wrong_membership_role_duplicates_and_injected_health_reject', 'test_supervisor_deployment.ServicePrototypeTests.test_existing_service_plan_reused_without_registration_or_activation', 'test_supervisor_deployment.ServicePrototypeTests.test_home_worker_cannot_receive_control_service_plan', 'test_supervisor_local_integration.LocalIntegrationTests.test_archived_math_queue_reopens_unassigned_consumed_without_api', 'test_supervisor_local_integration.LocalIntegrationTests.test_development_receipts_cannot_parse_or_submit_as_node_operations', 'test_supervisor_local_integration.LocalIntegrationTests.test_report_status_completes_only_local_receipts_and_preserves_unknowns', 'test_supervisor_local_integration.LocalIntegrationTests.test_request_drain_blocks_despite_development_pass_and_approval_reference', 'test_supervisor_local_integration.LocalIntegrationTests.test_source_ci_and_development_pass_cannot_promote_trust_or_deployment', 'test_supervisor_local_integration.LocalIntegrationTests.test_verified_capsule_and_inactive_install_plan_never_create_target_or_rollback']
+               child="""import json,pathlib,sys,unittest
+           assert sys.flags.isolated and sys.flags.no_site and sys.dont_write_bytecode and sys.pycache_prefix is None
+           root=pathlib.Path(sys.argv[1]);sys.path.insert(0,str(root))
+diff --git a/docs/ci/qualification-inventory-repair-20261110.md b/docs/ci/qualification-inventory-repair-20261110.md
+new file mode 100644
+index 0000000..4802432
+--- /dev/null
++++ b/docs/ci/qualification-inventory-repair-20261110.md
+@@ -0,0 +1,44 @@
++# Qualification inventory repair after exact-source hosted failures
++
++Original source: PR77 `dd4ef015d9ed20065ccdc2c563e80046015d9193`.
++Original Gateway runs42846229238 and42846159426: all four Windows/Ubuntu
++jobs pass source controls, then reject discovered25 test IDs against the
++qualifier's fixed24 expectation before fixture execution. Earlier Root/A8
++wording that the dedicated entrypoint selected only24 was incorrect: it discovers
++the entire module, then validates24. Original reports are preserved; A8 phase163
++explicitly retracts the earlier source-review interpretation (F38).
++
++The repair preserves all24 prior GatewayIdentityTests and explicitly requires
++the new strict regression as the25th ID. Discovery remains whole-module;
++uniqueness, exact set equality, no skips, raw source guards, runtime assertions,
++certificate/hostname checks and TLS policy remain. Both post-run count and output
++metadata advance to25. Guard controls retain missing/duplicate rejection and
++add missing-prior/extra checks; omitting the new strict case is rejected.
++Root's five pure contract checks against original source produced two failures;
++the successor passed all five. No TLS fixture was executed by those checks.
++A2 granted Root exclusive ownership of the two qualification files for this fix.
++
++Original Supervisor run42846228841: both Windows/Ubuntu jobs reject122
++discovered IDs versus121 expected before tests execute. The only added ID is
++MissionTests.test_owned_temp_alias_is_resolved_before_guarded_journal_creation.
++All121 previous IDs are retained; the explicit list now contains122. No test is
++removed, renamed or skipped. No production or service operation is modified.
++
++Separate PR78 component inventory lineage correction binds prior_inventory_sha256
++to the actual raw145-case v5 predecessor atdd4:
++22b52b8ee2eaeb752ae1ec0c3899185253bafdec73e17ed7f79aa00e379dfaf3.
++The older inherited144-case digest was stale metadata; all145 preserved IDs and
++16 added pure IDs remain unchanged. This does not qualify full161 execution.
++
++Original report SHA256:
++e240865404df79f3a150a5307eb0ea3712dc6914833f38a33ac17b0521dd745f.
++Read-only retrieval used14 GETs, no retries; original six failed-job logs and
++Supervisor artifacts/digests remain retained separately. Raw source-control
++hash-mismatch text was expected negative-control output, not evidence of actual
++source corruption. Public correlation index: DD4-ORIGINAL-RED.json.
++
++Hosted qualification of the repaired successor remains pending. The original
++failure stacks establish inventory configuration defects, not a native transport,
++installation or application failure. F26/LAN RCA remains UNKNOWN; F38 is a distinct
++Gateway qualification blocker. No full CI, native, physical or system PASS is
++claimed. Strict D4 Option1/logical DISABLED/public submit DENY remain unchanged.
+diff --git a/docs/intelligence/identity/guard_controls.py b/docs/intelligence/identity/guard_controls.py
+index 616a053..7f129b6 100644
+--- a/docs/intelligence/identity/guard_controls.py
++++ b/docs/intelligence/identity/guard_controls.py
+@@ -15,7 +15,7 @@ raw = runner.read_bytes()
+ tree = ast.parse(raw, filename=str(runner))
+ selected = ast.Module(body=[item for item in tree.body if isinstance(item,
+                        (ast.Import, ast.ImportFrom, ast.FunctionDef)) or
+-                       (isinstance(item,ast.Assign) and any(isinstance(t,ast.Name) and t.id=='EXPECTED_TEST_NAMES' for t in item.targets))], type_ignores=[])
++                       (isinstance(item,ast.Assign) and any(isinstance(t,ast.Name) and t.id in ('EXPECTED_TEST_NAMES','EXPECTED_STRICT_TEST_ID') for t in item.targets))], type_ignores=[])
+ namespace = {}
+ exec(compile(selected, str(runner), 'exec'), namespace)
+ 
+@@ -89,22 +89,24 @@ class SourceControls(unittest.TestCase):
+         (self.root/'tracked.txt').write_bytes(changed)
+         with self.assertRaises((AssertionError,ValueError,subprocess.CalledProcessError)): self.inventory()
+     def test_missing_and_duplicate_test_ids_rejected(self):
+-        names = namespace['EXPECTED_TEST_NAMES']
++        names = tuple('test_gateway_identity.GatewayIdentityTests.'+name for name in namespace['EXPECTED_TEST_NAMES'])+(namespace['EXPECTED_STRICT_TEST_ID'],)
+         class Case(unittest.TestCase):
+             def runTest(self): pass
+         def suite(values):
+             tests=[]
+             for value in values:
+                 test=Case()
+-                test.id=lambda value=value: 'test_gateway_identity.GatewayIdentityTests.'+value
++                test.id=lambda value=value: value
+                 tests.append(test)
+             return unittest.TestSuite(tests)
+         namespace['validate_test_ids'](suite(names))
+         with self.assertRaises(AssertionError): namespace['validate_test_ids'](suite(names[:-1]))
+         with self.assertRaises(AssertionError): namespace['validate_test_ids'](suite(names[:-1]+(names[0],)))
++        with self.assertRaises(AssertionError): namespace['validate_test_ids'](suite(names[1:]))
++        with self.assertRaises(AssertionError): namespace['validate_test_ids'](suite(names+('UNAPPROVED_EXTRA',)))
+ 
+ if __name__=='__main__':
+     result=unittest.TextTestRunner(verbosity=2).run(unittest.defaultTestLoader.loadTestsFromTestCase(SourceControls))
+     if not result.wasSuccessful(): raise SystemExit(1)
+-    print(json.dumps(dict(result='PASS',positive_controls=1,negative_controls=9,
++    print(json.dumps(dict(result='PASS',positive_controls=1,negative_controls=11,
+                          scope='OWNED_SOURCE_GUARDS_NOT_NATIVE_ADMISSION')))
+diff --git a/docs/intelligence/identity/run_qualification.py b/docs/intelligence/identity/run_qualification.py
+index 8a68c2a..21184ff 100644
+--- a/docs/intelligence/identity/run_qualification.py
++++ b/docs/intelligence/identity/run_qualification.py
+@@ -35,6 +35,8 @@ EXPECTED_TEST_NAMES = (
+     'test_wrong_actual_san_denies',
+     'test_untrusted_ca_and_missing_client_cert_real_handshake_refused',
+ )
++EXPECTED_STRICT_TEST_ID = 'test_gateway_identity.StrictTLSFixtureTests.test_generated_chain_handshakes_with_explicit_strict_verification'
++
+ 
+ def git(root, *arguments):
+     return subprocess.check_output(['git','--no-replace-objects','-C',str(root),*arguments])
+@@ -127,8 +129,8 @@ def validate_test_ids(suite):
+             if isinstance(test,unittest.TestSuite): yield from ids(test)
+             else: yield test.id()
+     actual = list(ids(suite))
+-    expected = ['test_gateway_identity.GatewayIdentityTests.'+name for name in EXPECTED_TEST_NAMES]
+-    assert len(actual)==len(set(actual))==24 and sorted(actual)==sorted(expected)
++    expected = ['test_gateway_identity.GatewayIdentityTests.'+name for name in EXPECTED_TEST_NAMES]+[EXPECTED_STRICT_TEST_ID]
++    assert len(actual)==len(set(actual))==25 and sorted(actual)==sorted(expected)
+ 
+ def main():
+     parser = argparse.ArgumentParser()
+@@ -147,9 +149,9 @@ def main():
+     validate_test_ids(suite)
+     result = unittest.TextTestRunner(verbosity=2).run(suite)
+     after = inventory(root)
+-    assert before==after and result.testsRun==24 and not result.skipped
++    assert before==after and result.testsRun==25 and not result.skipped
+     assert result.wasSuccessful()
+-    print(json.dumps(dict(result='PASS',head=args.expected_head,tests=24,skips=0,
++    print(json.dumps(dict(result='PASS',head=args.expected_head,tests=25,skips=0,
+                           raw_files_before_after=len(before),exact_unique_test_ids=True,
+                           scope='DISPOSABLE_MTLS_AND_LOCAL_READ_CAPABILITY_ONLY',
+                           cross_owner_read='NOT_RUN',nativeauthentication=False)))
+diff --git a/release/ci-repair/20261110/DD4-ORIGINAL-RED.json b/release/ci-repair/20261110/DD4-ORIGINAL-RED.json
+new file mode 100644
+index 0000000..24db401
+--- /dev/null
++++ b/release/ci-repair/20261110/DD4-ORIGINAL-RED.json
+@@ -0,0 +1,33 @@
++{
++  "schema": "unified.qualification-inventory-original-red.v1",
++  "head": "dd4ef015d9ed20065ccdc2c563e80046015d9193",
++  "failed_runs": [
++    42846229238,
++    42846159426,
++    42846228841
++  ],
++  "failed_jobs": [
++    129934295641,
++    129934296074,
++    129934053512,
++    129934054150,
++    129934294267,
++    129934294594
++  ],
++  "classification": "CONFIG_QUALIFICATION_TEST_INVENTORY_PRE_EXECUTION",
++  "gateway": {
++    "discovered": 25,
++    "required_old": 24,
++    "preserved": 24,
++    "added_strict_case": 1
++  },
++  "supervisor": {
++    "discovered": 122,
++    "required_old": 121,
++    "preserved": 121,
++    "added_mission_temp_alias": 1
++  },
++  "original_report_sha256": "e240865404df79f3a150a5307eb0ea3712dc6914833f38a33ac17b0521dd745f",
++  "manual_retries": 0,
++  "actual_fixture_results": "NOT_ESTABLISHED_BY_THESE_FAILURES"
++}
+diff --git a/release/component-test-inventory.json b/release/component-test-inventory.json
+index 53d14c0..4e0515f 100644
+--- a/release/component-test-inventory.json
++++ b/release/component-test-inventory.json
+@@ -179,7 +179,7 @@
+     "tests.test_windows_qualification.WindowsQualificationTests.test_valid_pending_matrix_never_admits_installation"
+   ],
+   "expected_count": 161,
+-  "prior_inventory_sha256": "a69eb60b1ebd6b961ec3b104985c0d01f4382afb0d726f3c6ce203178e1a8ae7",
++  "prior_inventory_sha256": "22b52b8ee2eaeb752ae1ec0c3899185253bafdec73e17ed7f79aa00e379dfaf3",
+   "preserved_prior_ids": [
+     "tests.storage.test_checkpoint_vectors.CheckpointVectorTests.test_confirmed_unknown_time_is_still_only_an_untrusted_claim",
+     "tests.storage.test_checkpoint_vectors.CheckpointVectorTests.test_disposable_file_corruption_is_checked_by_real_bytes",

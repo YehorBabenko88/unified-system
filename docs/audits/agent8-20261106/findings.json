@@ -644,10 +644,12 @@
     "pr": 78,
     "observed_head": "38572e56743692dd78f052c89125accec4677ea2",
     "title": "Dedicated Gateway qualifier discovers25 cases but requires24 before execution",
-    "status": "OPEN_SOURCE_CONFIRMED_HOSTED_STACK_NOT_REACQUIRED",
+    "status": "SOURCE_CORRECTION_ACK_RUNTIME_HOSTED_QUALIFICATION_PENDING",
     "test": "run_qualification.py lines131/146/150/152 versus StrictTLSFixtureTests",
     "evidence": "phase163/report.md;phase163/qualifier-static-proof.json",
     "required_correction": "Exact25 expectedIDs retaining old24 plusstrictcase;update all counts/output;preserve no-skip/source guards;qualify exact successor.",
-    "audit_correction": "Retracts phase160/161 assertion dedicated qualifier selects intentional24subset"
+    "audit_correction": "Retracts phase160/161 assertion dedicated qualifier selects intentional24subset",
+    "successor_head": "b48ddc5ff083deeecfdf76185117d0e86aa23e2a",
+    "successor_evidence": "phase164/report.md;phase164/verification.json"
   }
 ]
