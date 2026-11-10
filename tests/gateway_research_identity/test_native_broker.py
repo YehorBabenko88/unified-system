@@ -1,4 +1,5 @@
 """Real disposable mTLS/ACL/three-voter principal sessions; NO job grants."""
+raise RuntimeError('NATIVE_QUALIFICATION_PREREQUISITES_LOCKED')
 import asyncio,base64,copy,hashlib,json,os,sys,tempfile,types,unittest,uuid
 from datetime import datetime,timedelta,timezone
 from pathlib import Path

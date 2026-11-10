@@ -1,4 +1,5 @@
 """Exact-source actual internal negative composition; no public/effect admission."""
+raise RuntimeError('NATIVE_QUALIFICATION_PREREQUISITES_LOCKED')
 import argparse
 import functools
 import hashlib

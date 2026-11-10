@@ -215,6 +215,11 @@ class ResearchIdentityBroker:
             _require(server.not_valid_before_utc.timestamp()<=self._wall<self._server_expiry)
         except (ResearchIdentityDenied,ValueError,TypeError,x509.ExtensionNotFound,InvalidSignature,UnsupportedAlgorithm) as exc:
             raise ResearchIdentityUnavailable('DISPOSABLE_COMMISSIONING_UNAVAILABLE') from exc
+        try:
+            from grid.authority_assignment_v1 import AssignmentAuthority
+            self._identity_snapshot_source=AssignmentAuthority(self._authority,self._generation)
+        except (ImportError,ValueError,TypeError):
+            raise ResearchIdentityUnavailable('NATIVE_IDENTITY_SOURCE_UNAVAILABLE') from None
     def _clock(self):
         wall,mono=_utc(),time.monotonic()
         if (self._closed or self._poisoned or wall<self._last_wall or mono<self._last_mono
@@ -252,10 +257,10 @@ class ResearchIdentityBroker:
         value=base64.b64decode(row['Value'],validate=True);_decode(value)
         session=row.get('Session','');_require(type(session) is str)
         return ResearchNativeRecord(key,row['ModifyIndex'],value,session)
-    async def _policy(self,fingerprint,service):
-        generation=await self._read(self._namespace+'/commands/generation')
+    def _decode_profile_records(self,generation,profile,fingerprint):
+        _require(generation.key==self._namespace+'/commands/generation')
+        _require(profile.key==self._prefix+'profile-registry/'+self._profile_sha)
         _require(_decode(generation.raw)=={'generation':self._generation})
-        profile=await self._read(self._prefix+'profile-registry/'+self._profile_sha)
         _require(hashlib.sha256(profile.raw).hexdigest()==self._profile_sha)
         p=_decode(profile.raw)
         profile_fields='schema cluster_id realm_id principal_registry input_request_sha256 producer_head resources expiry_semantics expires_utc'
@@ -269,21 +274,86 @@ class ResearchIdentityBroker:
         _require(p['producer_head']=='aed8a7c8a952f96803c207d5e90b133969a47f04')
         _require(p['resources']=={'cpu_millicores':'1000','resident_memory_bytes':'268435456','max_artifact_bytes':'1048576'})
         actor=p['principal_registry'].get(fingerprint);_require(actor is not None)
-        principal=await self._read(self._prefix+'principals/'+actor);a=_decode(principal.raw)
+        return p,actor
+    def _decode_principal_record(self,principal,*,profile,actor,service,fingerprint):
+        _require(principal.key==self._prefix+'principals/'+actor)
+        p=profile;a=_decode(principal.raw)
         _fields(a,'schema actor_id service_id certificate_sha256 quota_owner_id policy_id profile_sha256 state')
         _require(a['schema']=='unified.authority.research-lab-principal.v1-review1' and a['actor_id']==actor
                  and a['service_id']==service and a['certificate_sha256']==fingerprint and a['profile_sha256']==self._profile_sha and a['state']=='ACTIVE')
         _id(a['quota_owner_id']);_uuid(a['policy_id'])
-        if v2:_target_binding(p,generation=self._generation,actor=actor,quota_owner=a['quota_owner_id'])
-        policy=await self._read(self._prefix+'policies/'+a['policy_id']);r=_decode(policy.raw)
+        if p['schema']==_PROFILE_V2:_target_binding(p,generation=self._generation,actor=actor,quota_owner=a['quota_owner_id'])
+        return a
+    def _decode_policy_record(self,policy,*,profile,principal,actor):
+        p=profile;a=principal
+        _require(policy.key==self._prefix+'policies/'+a['policy_id'])
+        r=_decode(policy.raw)
         _fields(r,'schema policy_id actor_id profile_sha256 revision state scopes expires_utc')
         _require(r['schema']=='unified.authority.research-lab-policy.v1-review1' and r['policy_id']==a['policy_id']
                  and r['actor_id']==actor and r['profile_sha256']==self._profile_sha and r['state']=='ACTIVE')
         revision=r['revision'];_require(type(revision) is str and re.fullmatch('[1-9][0-9]{0,18}',revision) is not None and int(revision)<2**63)
         scopes=r['scopes'];_require(type(scopes) is list and 1<=len(scopes)<=3 and all(type(s) is str and s in SCOPES for s in scopes) and scopes==sorted(set(scopes)))
         expiry=min(_expiry(p['expires_utc']),_expiry(r['expires_utc']))
+        return r,expiry
+    def _decode_policy_snapshot(self,records,fingerprint,service):
+        _require(type(records) is tuple and len(records)==4 and all(type(r) is ResearchNativeRecord for r in records))
+        generation,profile,principal,policy=records
+        p,actor=self._decode_profile_records(generation,profile,fingerprint)
+        a=self._decode_principal_record(principal,profile=p,actor=actor,service=service,fingerprint=fingerprint)
+        r,expiry=self._decode_policy_record(policy,profile=p,principal=a,actor=actor)
+        return records,a,r,expiry
+    async def _policy(self,fingerprint,service):
+        generation=await self._read(self._namespace+'/commands/generation')
+        _require(_decode(generation.raw)=={'generation':self._generation})
+        profile=await self._read(self._prefix+'profile-registry/'+self._profile_sha)
+        p,actor=self._decode_profile_records(generation,profile,fingerprint)
+        principal=await self._read(self._prefix+'principals/'+actor)
+        a=self._decode_principal_record(principal,profile=p,actor=actor,service=service,fingerprint=fingerprint)
+        policy=await self._read(self._prefix+'policies/'+a['policy_id'])
+        r,expiry=self._decode_policy_record(policy,profile=p,principal=a,actor=actor)
         wall,_=self._clock();_require(wall<expiry<=self._wall+900)
         return (generation,profile,principal,policy),a,r,expiry
+    async def _read_identity_snapshot(self,state,*,context):
+        try:
+            from grid.authority_assignment_v1 import AssignmentAuthority,CapturedRecord,AssignmentUnavailable
+        except ImportError:
+            raise ResearchIdentityUnavailable('NATIVE_IDENTITY_SOURCE_UNAVAILABLE') from None
+        source=getattr(self,'_identity_snapshot_source',None)
+        def same_source():
+            return (type(source) is AssignmentAuthority and source is getattr(self,'_identity_snapshot_source',None)
+                    and getattr(source,'authority',None) is self._authority
+                    and getattr(source,'generation',None)==self._generation
+                    and getattr(source,'prefix',None)==self._namespace+'/runtime-v1/'
+                    and getattr(source,'native_provider',False) is None)
+        if not same_source():raise ResearchIdentityUnavailable('NATIVE_IDENTITY_SOURCE_UNAVAILABLE')
+        _native_session(state[3]);_uuid(state[5]);_uuid(state[6]);_id(state[7])
+        keys=(self._namespace+'/commands/generation',self._prefix+'profile-registry/'+self._profile_sha,
+              self._prefix+'principals/'+state[5],self._prefix+'policies/'+state[6],
+              self._prefix+'principal-sessions/'+state[3]+'/lock')
+        try:
+            rows=await source._read_snapshot(keys)
+        except (CoordinationUnavailable,AssignmentUnavailable):
+            raise ResearchIdentityUnavailable('NATIVE_IDENTITY_SOURCE_UNAVAILABLE') from None
+        # A close/invalidation/peer or deadline change wins before row consumption.
+        _require(self._context(context) is state)
+        if not same_source():raise ResearchIdentityUnavailable('NATIVE_IDENTITY_SOURCE_UNAVAILABLE')
+        if type(rows) is not tuple or len(rows)!=5:
+            raise ResearchIdentityUnavailable('NATIVE_IDENTITY_SOURCE_UNAVAILABLE')
+        records=[]
+        for key,row in zip(keys,rows):
+            if (type(row) is not CapturedRecord or row.key!=key or type(row.index) is not int
+                    or not 0<=row.index<2**63 or type(row.session) is not str):
+                raise ResearchIdentityUnavailable('NATIVE_IDENTITY_SOURCE_UNAVAILABLE')
+            if row.index==0 and row.raw is None and not row.session:
+                raise ResearchIdentityUnavailable('NATIVE_IDENTITY_RECORD_UNAVAILABLE')
+            if not row.index or type(row.raw) is not bytes or not 0<len(row.raw)<=16384:
+                raise ResearchIdentityUnavailable('NATIVE_IDENTITY_SOURCE_UNAVAILABLE')
+            if row.session:
+                try:_native_session(row.session)
+                except ResearchIdentityDenied:
+                    raise ResearchIdentityUnavailable('NATIVE_IDENTITY_SOURCE_UNAVAILABLE') from None
+            records.append(ResearchNativeRecord(row.key,row.index,row.raw,row.session))
+        return tuple(records)
     @staticmethod
     def _check(record): return {'KV':dict(Verb='check-index',Key=record.key,Index=record.index)}
     async def open_session(self,server_ssl_socket,*,leader):
@@ -354,14 +424,18 @@ class ResearchIdentityBroker:
         _require(type(scope) is str and scope in SCOPES and type(request_bytes) is bytes and 0<len(request_bytes)<=16384)
         if len(self._captures)>=256: raise ResearchIdentityUnavailable('CAPTURE_CAPACITY')
         state=self._context(context)
-        records,a,r,policy_expiry=await self._policy(state[1],state[2]);_require(scope in r['scopes'])
+        rows=await self._read_identity_snapshot(state,context=context)
+        self._context(context)
+        records,a,r,policy_expiry=self._decode_policy_snapshot(rows[:4],state[1],state[2])
+        _require(scope in r['scopes'])
         profile=_decode(records[1].raw)
         if profile['schema']==_PROFILE_V2:_profile_request(profile,self._profile_sha,scope=scope,raw=request_bytes)
         _require((a['actor_id'],a['policy_id'],a['quota_owner_id'])==(state[5],state[6],state[7]))
-        lock=await self._read(self._prefix+'principal-sessions/'+state[3]+'/lock')
+        lock=rows[4]
         expected=dict(schema='unified.authority.research-lab-principal-session.v1-review1',actor_id=state[5],
             service_id=state[2],certificate_sha256=state[1],session_id=state[3],policy_id=state[6],profile_sha256=self._profile_sha,quota_owner_id=state[7])
         _require(lock.session==state[3] and lock.raw==canonical(expected))
+        wall,_=self._clock();_require(wall<policy_expiry<=self._wall+900)
         self._context(context);self._emit('CURRENT_RESEARCH_IDENTITY')
         wall,mono=self._clock();expiry=min(state[8],policy_expiry)
         deadline=min(state[4],mono+expiry-wall)

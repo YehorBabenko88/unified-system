@@ -1,4 +1,5 @@
 """Exact primary raw sources before/after; actual owned native tests only."""
+raise RuntimeError('NATIVE_QUALIFICATION_PREREQUISITES_LOCKED')
 import argparse,hashlib,json,os,pathlib,subprocess,sys,types,unittest
 
 def main():
