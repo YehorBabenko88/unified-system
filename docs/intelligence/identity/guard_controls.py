@@ -15,7 +15,7 @@ raw = runner.read_bytes()
 tree = ast.parse(raw, filename=str(runner))
 selected = ast.Module(body=[item for item in tree.body if isinstance(item,
                        (ast.Import, ast.ImportFrom, ast.FunctionDef)) or
-                       (isinstance(item,ast.Assign) and any(isinstance(t,ast.Name) and t.id=='EXPECTED_TEST_NAMES' for t in item.targets))], type_ignores=[])
+                       (isinstance(item,ast.Assign) and any(isinstance(t,ast.Name) and t.id in ('EXPECTED_TEST_NAMES','EXPECTED_STRICT_TEST_ID') for t in item.targets))], type_ignores=[])
 namespace = {}
 exec(compile(selected, str(runner), 'exec'), namespace)
 
@@ -89,22 +89,24 @@ class SourceControls(unittest.TestCase):
         (self.root/'tracked.txt').write_bytes(changed)
         with self.assertRaises((AssertionError,ValueError,subprocess.CalledProcessError)): self.inventory()
     def test_missing_and_duplicate_test_ids_rejected(self):
-        names = namespace['EXPECTED_TEST_NAMES']
+        names = tuple('test_gateway_identity.GatewayIdentityTests.'+name for name in namespace['EXPECTED_TEST_NAMES'])+(namespace['EXPECTED_STRICT_TEST_ID'],)
         class Case(unittest.TestCase):
             def runTest(self): pass
         def suite(values):
             tests=[]
             for value in values:
                 test=Case()
-                test.id=lambda value=value: 'test_gateway_identity.GatewayIdentityTests.'+value
+                test.id=lambda value=value: value
                 tests.append(test)
             return unittest.TestSuite(tests)
         namespace['validate_test_ids'](suite(names))
         with self.assertRaises(AssertionError): namespace['validate_test_ids'](suite(names[:-1]))
         with self.assertRaises(AssertionError): namespace['validate_test_ids'](suite(names[:-1]+(names[0],)))
+        with self.assertRaises(AssertionError): namespace['validate_test_ids'](suite(names[1:]))
+        with self.assertRaises(AssertionError): namespace['validate_test_ids'](suite(names+('UNAPPROVED_EXTRA',)))
 
 if __name__=='__main__':
     result=unittest.TextTestRunner(verbosity=2).run(unittest.defaultTestLoader.loadTestsFromTestCase(SourceControls))
     if not result.wasSuccessful(): raise SystemExit(1)
-    print(json.dumps(dict(result='PASS',positive_controls=1,negative_controls=9,
+    print(json.dumps(dict(result='PASS',positive_controls=1,negative_controls=11,
                          scope='OWNED_SOURCE_GUARDS_NOT_NATIVE_ADMISSION')))
