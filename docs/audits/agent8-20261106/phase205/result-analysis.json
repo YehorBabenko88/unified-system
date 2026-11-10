@@ -1,0 +1,84 @@
+{
+  "scope": "MODELED_REGRESSION_ACTUAL_AST_INERT_BACKENDS_NOT_REAL_LEAK_OR_NATIVE",
+  "test_source_sha256": "7670fd5a714d8e8e369eaa8710f96bcf180e5b22bededbaa291b04af8fa0ef99",
+  "tests": 9,
+  "passed": 2,
+  "failed": 7,
+  "skipped": 0,
+  "child_exit_code": 1,
+  "supervisor_exit_code": 0,
+  "supervisor_exit_interpretation": "Evidence orchestration only; NOT test PASS",
+  "cases": [
+    {
+      "id": "__main__.ReturnedHandleControls.test_invariant_refusal_cleanup_kills_and_waits_known_handle",
+      "outcome": "FAIL",
+      "classification": "ACTUAL_OWNEDPOPEN_AND_CLEANUP_AST_MODELED_RED"
+    },
+    {
+      "id": "__main__.ReturnedHandleControls.test_preconstructor_refusal_creates_no_handle",
+      "outcome": "PASS",
+      "classification": "MODELED_CONTROL_PASS"
+    },
+    {
+      "id": "__main__.ReturnedHandleControls.test_returned_handle_registered_before_invariant_refusal",
+      "outcome": "FAIL",
+      "classification": "ACTUAL_OWNEDPOPEN_AND_CLEANUP_AST_MODELED_RED"
+    },
+    {
+      "id": "__main__.RootFirstControls.test_file_parent_stops_before_descendant_or_git",
+      "outcome": "FAIL",
+      "classification": "ACTUAL_INLINE_LEDGER_MODELED_ANCESTRY_RED"
+    },
+    {
+      "id": "__main__.RootFirstControls.test_file_root_stops_before_leaf_git_or_hash",
+      "outcome": "FAIL",
+      "classification": "ACTUAL_INLINE_LEDGER_MODELED_ANCESTRY_RED"
+    },
+    {
+      "id": "__main__.RootFirstControls.test_missing_parent_stops_before_descendant_or_git",
+      "outcome": "FAIL",
+      "classification": "ACTUAL_INLINE_LEDGER_MODELED_ANCESTRY_RED"
+    },
+    {
+      "id": "__main__.RootFirstControls.test_ordinary_tree_retains_exact_blob_and_ledger",
+      "outcome": "PASS",
+      "classification": "MODELED_CONTROL_PASS"
+    },
+    {
+      "id": "__main__.RootFirstControls.test_reparse_parent_stops_before_descendant_or_git",
+      "outcome": "FAIL",
+      "classification": "ACTUAL_INLINE_LEDGER_MODELED_ANCESTRY_RED"
+    },
+    {
+      "id": "__main__.RootFirstControls.test_selected_reparse_parent_stops_before_leaf_inspection",
+      "outcome": "FAIL",
+      "classification": "ACTUAL_INLINE_LEDGER_MODELED_ANCESTRY_RED"
+    }
+  ],
+  "F43": "Five intended ancestry RED assertions with actual inline functions; ordinary ledger control PASS",
+  "F44": "Two actual OwnedPopen/actual cleanup-loop AST modeled RED assertions; preconstructor refusal control PASS",
+  "F44_effects": "Returned inert constructor with deliberately unconsumed allowance: held registry length0; actual cleanup has no fake handle to kill/wait. Not real child leak or native containment proof",
+  "child": {
+    "command_flags": [
+      "-I",
+      "-S",
+      "-B"
+    ],
+    "exit_code": 1,
+    "identity": "OWN_POPEN_HANDLE",
+    "pid": 148228,
+    "retired": true
+  },
+  "child_observed_seconds": 0.25,
+  "original_five_unchanged": true,
+  "all_six_pre_post_equal": true,
+  "output_bytes": 8974,
+  "old_attempt": "Original8FAIL1PASS retained, no relabel or overwrite",
+  "allocation": "NEW_BUDGET_CONSUMED_NO_RETRY",
+  "implementation": "ORIGINAL_FIVE_FIXHELD_PENDING_ROOT_RESULT_REVIEW",
+  "logs": {
+    "stderr_sha256": "7d740726fcf40bf32a3aed96b1024c5ac553cc6b34b1a23616b7248b9d21b660",
+    "receipt_sha256": "43c90c30b057f1231a94a0eb1d7fbd9981e897283d2718422ae15afe6164af05"
+  },
+  "overall": "HOLD / NO-GO"
+}

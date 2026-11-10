@@ -1,0 +1,46 @@
+TAP version 13
+# Subtest: r2_metrics_count_held_benchmark_raf
+ok 1 - r2_metrics_count_held_benchmark_raf
+  ---
+  duration_ms: 10.4815
+  type: 'test'
+  ...
+# Subtest: r2_dispose_settles_held_benchmark_without_frame
+ok 2 - r2_dispose_settles_held_benchmark_without_frame
+  ---
+  duration_ms: 5.3896
+  type: 'test'
+  ...
+# Subtest: r2_seek_settles_superseded_benchmark_without_frame
+ok 3 - r2_seek_settles_superseded_benchmark_without_frame
+  ---
+  duration_ms: 3.2525
+  type: 'test'
+  ...
+# Subtest: r4_metrics_count_held_benchmark_raf
+ok 4 - r4_metrics_count_held_benchmark_raf
+  ---
+  duration_ms: 5.5404
+  type: 'test'
+  ...
+# Subtest: r4_dispose_settles_held_benchmark_without_frame
+ok 5 - r4_dispose_settles_held_benchmark_without_frame
+  ---
+  duration_ms: 5.2954
+  type: 'test'
+  ...
+# Subtest: r4_seek_settles_superseded_benchmark_without_frame
+ok 6 - r4_seek_settles_superseded_benchmark_without_frame
+  ---
+  duration_ms: 5.2145
+  type: 'test'
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 68.9717

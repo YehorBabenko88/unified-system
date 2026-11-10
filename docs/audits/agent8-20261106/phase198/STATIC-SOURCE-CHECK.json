@@ -1,0 +1,192 @@
+{
+  "allowed_new_files": [
+    "docs/analysis/research-identity/atomic-read-bridge-implementation-review1.md",
+    "tests/test_research_identity_atomic_snapshot_unit.py"
+  ],
+  "base": "96b17905a5be923857aa1e778085eaeec6f0f27f",
+  "base_original_files_raw_unchanged": 1868,
+  "base_raw_sha256": "8aec9e1969c6a2882312ed369607f60d6284046631992cac7c8b9ed3dacc5164",
+  "base_tree": "e868213d3fd47739c05aa1fc9f70a8d7658a1333",
+  "extra_files": [],
+  "imports": [
+    {
+      "line": 8,
+      "module": null,
+      "names": [
+        "asyncio"
+      ]
+    },
+    {
+      "line": 9,
+      "module": null,
+      "names": [
+        "base64"
+      ]
+    },
+    {
+      "line": 10,
+      "module": null,
+      "names": [
+        "copy"
+      ]
+    },
+    {
+      "line": 11,
+      "module": "contextlib",
+      "names": [
+        "AsyncExitStack"
+      ]
+    },
+    {
+      "line": 12,
+      "module": "datetime",
+      "names": [
+        "datetime",
+        "timedelta",
+        "timezone"
+      ]
+    },
+    {
+      "line": 13,
+      "module": "functools",
+      "names": [
+        "wraps"
+      ]
+    },
+    {
+      "line": 14,
+      "module": null,
+      "names": [
+        "hashlib"
+      ]
+    },
+    {
+      "line": 15,
+      "module": null,
+      "names": [
+        "ipaddress"
+      ]
+    },
+    {
+      "line": 16,
+      "module": null,
+      "names": [
+        "json"
+      ]
+    },
+    {
+      "line": 17,
+      "module": null,
+      "names": [
+        "ssl"
+      ]
+    },
+    {
+      "line": 18,
+      "module": "types",
+      "names": [
+        "SimpleNamespace"
+      ]
+    },
+    {
+      "line": 19,
+      "module": null,
+      "names": [
+        "unittest"
+      ]
+    },
+    {
+      "line": 20,
+      "module": "unittest.mock",
+      "names": [
+        "patch"
+      ]
+    },
+    {
+      "line": 50,
+      "module": null,
+      "names": [
+        "httpx"
+      ]
+    },
+    {
+      "line": 51,
+      "module": "cryptography",
+      "names": [
+        "x509"
+      ]
+    },
+    {
+      "line": 52,
+      "module": "cryptography.hazmat.primitives",
+      "names": [
+        "hashes",
+        "serialization"
+      ]
+    },
+    {
+      "line": 53,
+      "module": "cryptography.hazmat.primitives.asymmetric",
+      "names": [
+        "ec"
+      ]
+    },
+    {
+      "line": 54,
+      "module": "cryptography.x509.oid",
+      "names": [
+        "ExtendedKeyUsageOID",
+        "NameOID"
+      ]
+    },
+    {
+      "line": 55,
+      "module": "grid",
+      "names": [
+        "authority_assignment_v1"
+      ]
+    },
+    {
+      "line": 56,
+      "module": "grid",
+      "names": [
+        "coordination"
+      ]
+    },
+    {
+      "line": 57,
+      "module": "unified_system",
+      "names": [
+        "gateway_research_identity"
+      ]
+    },
+    {
+      "line": 58,
+      "module": "unified_system.gateway_identity",
+      "names": [
+        "GatewayAuditSink"
+      ]
+    }
+  ],
+  "independent_static_review": "p0_code_review: no actionable P0/P1/P2, read-only/no imports/compile/tests/native; not a PASS",
+  "native_calls": 0,
+  "red_result": "NOT_RUN",
+  "runtime_import_admitted": false,
+  "schema": "a2.atomic-unit-preparation-static-check.v1",
+  "scope": "SOURCE_ONLY_AST_NO_CODE_OBJECT_OR_PROJECT_IMPORT_EXECUTION",
+  "static_ids": [
+    "__main__.ControlledBackendBrokerUnitTests.test_mock_backend_cached_capture_is_historical_until_explicit_reobserve",
+    "__main__.ControlledBackendBrokerUnitTests.test_mock_backend_cancelled_snapshot_propagates_without_capture_or_retry",
+    "__main__.ControlledBackendBrokerUnitTests.test_mock_backend_context_loss_during_snapshot_prevents_capture",
+    "__main__.ControlledBackendBrokerUnitTests.test_mock_backend_existing_reobserve_guard_remains_required",
+    "__main__.ControlledBackendBrokerUnitTests.test_mock_backend_generation_or_principal_policy_interleaving_cannot_issue_mixed_capture",
+    "__main__.ControlledBackendBrokerUnitTests.test_mock_backend_open_session_retains_atomic_record_and_leader_fences",
+    "__main__.ControlledBackendBrokerUnitTests.test_mock_backend_policy_decoder_keeps_original_schema_target_scope_and_expiry_rejections",
+    "__main__.ControlledBackendBrokerUnitTests.test_mock_backend_same_authority_constructor_creates_no_native_call",
+    "__main__.ControlledBackendBrokerUnitTests.test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed",
+    "__main__.ControlledBackendBrokerUnitTests.test_mock_backend_stable_read_uses_one_five_key_snapshot_and_preserves_order"
+  ],
+  "static_method_count": 10,
+  "unit_executions": 0,
+  "unit_source_sha256": "7401aabaa855e85e02e5011978bd44f8567d2aa4ba65c5ac03278904a885b354"
+}

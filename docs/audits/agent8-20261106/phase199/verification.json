@@ -1,0 +1,64 @@
+{
+  "requirement_id": "A8-BFA-WINDOWS36-ORIGINAL-RED",
+  "repository": "unified-system",
+  "PR": 82,
+  "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
+  "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98",
+  "run": 42897137339,
+  "attempt": 1,
+  "job": 130113108432,
+  "artifact": 13801431495,
+  "artifact_sha256": "13ab352ac9882d5b3ae6559b9ad9baab9e1dd6b3ab50c57b670b5bccb082d1ba",
+  "actual": "FAIL36_TESTS35OK_1ERROR_0SKIP_24.144_SECONDS",
+  "failed_test": "test_agent5_scheduler_components.DurablePreparationTests.test_process_crash_before_event_commit_recovers_without_partial_hold",
+  "exception": "subprocess.TimeoutExpired_20_SECONDS_LEGACY_CHILD_RUN",
+  "source1870_beforeafter_matches_A8": true,
+  "pure12_names": [
+    "test_batch_blob_parser_rejects_truncation_wrong_identity_extra",
+    "test_exact_inventory_accepts_only_all_36_unique_ids",
+    "test_git_path_rejects_relative_local_and_nonordinary_without_launch",
+    "test_legacy_inventory_and_closed_new_schema_cannot_drift",
+    "test_preflight_failure_preserves_metadata_before_any_spawn",
+    "test_raw_bytes_extra_empty_directory_and_cache_refused",
+    "test_run_result_requires_zero_skips_and_exact_count",
+    "test_runner_temp_is_bound_at_step_time_not_job_env",
+    "test_unpinned_timezone_wheel_refused",
+    "test_unsafe_parent_preserves_null_hash_without_selected_file_access",
+    "test_unsafe_paths_and_hardlinks_refused",
+    "test_windows_git_selector_is_fixed_bin_without_fallback"
+  ],
+  "preflights": [
+    {
+      "member": "download-git-preflight.json",
+      "selected_git": "C:\\Program Files\\Git\\bin\\git.exe",
+      "raw_sha256": "20d0dde30a65afb6e5810a883700a94dcd77fbf3b44b32868d45bf7c9b30137c",
+      "nlink": 1,
+      "passed": true
+    },
+    {
+      "member": "qualifier-git-preflight.json",
+      "selected_git": "C:\\Program Files\\Git\\bin\\git.exe",
+      "raw_sha256": "20d0dde30a65afb6e5810a883700a94dcd77fbf3b44b32868d45bf7c9b30137c",
+      "nlink": 1,
+      "passed": true
+    },
+    {
+      "member": "evidence/git-preflight.json",
+      "selected_git": "C:\\Program Files\\Git\\bin\\git.exe",
+      "raw_sha256": "20d0dde30a65afb6e5810a883700a94dcd77fbf3b44b32868d45bf7c9b30137c",
+      "nlink": 1,
+      "passed": true
+    }
+  ],
+  "wheel_zoneinfo625_verified": true,
+  "F41": "CLOSED_SCOPED_WINDOWS_PREFLIGHT_AND_EARLY_ARTIFACT_FIX_ONLY_NOT_MANDATORY36_PASS",
+  "new_F42": "OPEN_MANDATORY_WINDOWS36_LEGACY_CHILD_TIMEOUT_CAUSE_UNKNOWN",
+  "actual_child_phase_cause": "NOT_IN_ORIGINAL_EVIDENCE_NO_ZONEINFO_OR_SQLITE_CAUSAL_CLAIM",
+  "cleanup_descendant_failure_paths": "NOT_QUALIFIED_BY_ARTIFACT_OR_FAILED_TEST",
+  "Ubuntu_current": "NOT_QUALIFIED_THIS_PHASE",
+  "A8_project_helper_fixture_executions": 0,
+  "CI_reruns": 0,
+  "GO_NO_GO": "NO-GO",
+  "PHYSICAL_TESTS": "BLOCKED",
+  "TAILSCALE_REMOVAL": "BLOCKED"
+}

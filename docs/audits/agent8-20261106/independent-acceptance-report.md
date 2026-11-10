@@ -3838,3 +3838,21 @@ Phase196 fresh6PR/HEAD/tree metadata: Root82 moved to bfa3b24d/tree0145968d; oth
 
 
 Phase197 exactbfa3b24d/tree0145968d source1870/noextras/fivepaths and original27purePASS scoped; F41fixedprimary/earlymetadata/sourceguardordering correction ACK, actualhosted36closurepending. F26OPEN, registered8P1/8P2, NO-GO/physicalTailscaleBLOCKED. See docs/audits/agent8-20261106/phase197/report.md.
+
+
+Phases198–199: sourceunit228df10AST/1870raw and931localpayload+15runtimebytes verified SOURCEONLY, actualunit/outerrunner/cachepolicy HELD. Bfa Windows actual36 RED independentlyverified:35OK1ERROR0skip/legacychildtimeout20s; Gitpreflight+earlyartifactworked =>F41scopedclosed/newP1F42OPEN, F26OPEN. Registered8P1/8P2; NO-GO/physicalTailscaleBLOCKED. See docs/audits/agent8-20261106/phase199/report.md.
+
+
+Phase200 A7hosted47source HOLD: newP2F43rootfirstguardordering/F44returnedhandletracking;5originalpins+6metadata locks verified, actual779/809tracked CRLFrawmismatch (no normalization), sixth9controlsourceNOTRUN/toolcount814stale815held. No actual47/pure9PASS. Registered8P1/10P2; NO-GO/physicalTailscaleBLOCKED. See docs/audits/agent8-20261106/phase200/report.md.
+
+
+Phase201 TerminanR40-1/F45 independentlyverified exactoldaa9 6intendedRED then77fe same6actualJSunitGREEN/0skip/source404each rawbeforeafter. Scopedlocalunitclosureonly, notbrowser/session/workload/hosted/runtime135; futuretoolHEADnoPASStransfer. Registeredopen8P1/10P2unchanged; NO-GO/physicalTailscaleBLOCKED. See docs/audits/agent8-20261106/phase201/report.md.
+
+
+Phase202 A7actualpure9 original independentlyverified1PASS8FAIL0skip/testexit1;5F43modeledRED+ordinarycontrolPASS,3ASTextractorseamfailures F44NOTEXERCISED. Supervisor0notPASS; noautomaticretry;8P1/10P2unchanged/NO-GO. See docs/audits/agent8-20261106/phase202/report.md.
+
+
+Phases203–204: fresh original bfa five targetedfamilies12jobs/10ZIPs PASS scoped, notfullmandatoryCI (Preparation36/F42FAIL,F26OPEN). A7selector7670fdsourcecorrectionACK/9bodiesunchanged/original5unchanged/new9NOTRUN/F43F44OPEN. Registered8P1/10P2;NO-GO/physicalTailscaleBLOCKED. See docs/audits/agent8-20261106/phase203/report.md andphase204/report.md.
+
+
+Phases205–206: A7correctedseam original9 actual2PASS7FAIL0skip (F43/F44meaningful modeledRED, noactualleak); A2mock10oldrunner raw2694source+461deps+841runtime/emptycache DATAverified butnewP2F46postcreationfinally/F47rootfirstinputguards SOURCEHOLD beforeexecution. Registered8P1/12P2;NO-GO/physicalTailscaleBLOCKED. See docs/audits/agent8-20261106/phase206/report.md.
