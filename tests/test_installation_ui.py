@@ -70,24 +70,31 @@ class BootstrapTests(unittest.TestCase):
         self.append(done=2,total=8)
         payload=json.loads(self.call()[1]);script=self.call('/bootstrap.js')[1].decode()
         harness=r"""
+process.stderr.write('UNIFIED_NODE:ENTRY\n');
 const vm=require('node:vm'),assert=require('node:assert/strict');
 let input='';process.stdin.on('data',chunk=>input+=chunk);process.stdin.on('end',async()=>{
+ process.stderr.write('UNIFIED_NODE:STDIN_END\n');
  const {script,payload}=JSON.parse(input),nodes={},timers=[];let exported='',clicked=false,unavailable=false;
+ process.stderr.write('UNIFIED_NODE:PARSED\n');
  function node(id){return nodes[id]??=( {textContent:'',hidden:false,removeAttribute(){delete this.value;},addEventListener(name,fn){this[name]=fn;}});}
  const document={getElementById:node,body:{appendChild(){}},createElement(){return {click(){clicked=true;},remove(){}};}};
  const context={document,window:{setTimeout(fn){timers.push(fn);}},URL:{createObjectURL(blob){exported=blob.parts.join('');return 'blob:test';},revokeObjectURL(){}},Blob:class{constructor(parts){this.parts=parts;}},
  fetch:async()=>({ok:!unavailable,json:async()=>unavailable?{status:'UNAVAILABLE'}:payload})};
- vm.runInNewContext(script,context);await new Promise(setImmediate);
+ vm.runInNewContext(script,context);process.stderr.write('UNIFIED_NODE:VM_RETURN\n');await new Promise(setImmediate);
+ process.stderr.write('UNIFIED_NODE:FIRST_SETTLED\n');
  assert.equal(node('counts').textContent,'2 / 8 (25%)');assert.equal(node('progress').value,25);assert.equal(node('progress').hidden,false);
  node('error').textContent='overwritten';node('view-error').click();assert.equal(node('error').textContent,'NONE');
  node('export').click();assert(clicked);assert.deepEqual(JSON.parse(exported).snapshot,payload.snapshot);
  unavailable=true;const refresh=timers.shift();refresh();await new Promise(setImmediate);
+ process.stderr.write('UNIFIED_NODE:SECOND_SETTLED\n');
  assert.equal(node('status').textContent,'UNAVAILABLE');assert.equal(node('progress').hidden,true);assert.equal(node('progress').value,undefined);
  node('view-error').click();assert.equal(node('error').textContent,'SOURCE_UNAVAILABLE');
  node('export').click();assert.equal(JSON.parse(exported).status,'UNAVAILABLE');assert(!exported.includes('percentage'));
+ process.stderr.write('UNIFIED_NODE:DONE\n');
 });
 """
-        result=subprocess.run([shutil.which('node'),'-e',harness],input=json.dumps({'script':script,'payload':payload}),text=True,capture_output=True,timeout=15)
+        from tests.native_phase_diagnostics import run_node_phased
+        result=run_node_phased([shutil.which('node'),'-e',harness],input=json.dumps({'script':script,'payload':payload}))
         self.assertEqual(result.returncode,0,result.stderr)
 
     def test_reject_provider_and_nonloopback_construction(self):

@@ -24,7 +24,9 @@ if(!$rejected -or $parent.Creates -ne 0 -or $parameters.Saved -cne 'FOREIGN'){th
 Write-Output 'INERT_NSSM_BOOTSTRAP_VERIFIED'
 '''
   command=phase('ENTRY')+command.replace('$m=Import-Module',phase('IMPORT_BEGIN')+'$m=Import-Module',1)
-  command=command.replace('$parameters=',phase('IMPORT_END')+phase('MEMBER_BEGIN')+'$parameters=',1)
+  command=command.replace('$parameters=',phase('IMPORT_END')+phase('MEMBER_BEGIN')+phase('OBJECT_BEGIN')+'$parameters=',1)
+  command=command.replace('$parameters|Add-Member',phase('OBJECT_END')+phase('FIRST_MEMBER_BEGIN')+'$parameters|Add-Member',1)
+  command=command.replace('$parameters|Add-Member ScriptMethod GetValue ',phase('FIRST_MEMBER_END')+'$parameters|Add-Member ScriptMethod GetValue ',1)
   command=command.replace('& $m {param($key)',phase('MEMBER_END')+'& $m {param($key)',1)+phase('DONE')
   env=service._environment();env['UNIFIED_TEST_MODULE']=str(service.MODULE)
   child=run_phased([service._native_tools()['powershell']['path'],'-NoProfile','-NonInteractive','-Command',command],env=env)
