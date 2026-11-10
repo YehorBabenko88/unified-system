@@ -86,3 +86,24 @@ found at the inspected sources. Existing WindowsSmokeJob requires an already
 nonadmin parent; suspended worker prepare is not token downgrading. A private
 PostgreSQL provisioning restricted-process helper has a different permit and
 must not be repurposed as a research launcher. No such bypass was attempted.
+
+## Subsequent direct owner decision
+
+PC4 smoke remains explicitly BLOCKED until an EXISTING nonprivileged channel
+is confirmed. No account, SSH, UAC, ACL or security-policy changes; no artificial
+downgrade of the elevated SSH token. Continue only read-only diagnostics and
+package/resources/gate checks, including ordinary local operator console
+availability. If confirmed, present evidence and a safe-run plan; no automatic
+smoke start. Other MASTER MISSION components continue independently.
+
+Read-only PC4 observation found an interactive user and Explorer in session1,
+but did NOT obtain nonprivileged parent-token evidence. Presence alone is not
+channel confirmation. The channel remains UNCONFIRMED and smoke BLOCKED.
+
+Existing LS5 g capsule local read-only check completed:19300 member hashes,
+1008702257 bytes match manifest3e05c5251d0bd84e073dc0545c95c903424654690942bd77313175ae493b0a5a;no changes or PC4 transfer/execution. This does not promote descriptive source
+metadata to verified new runtime admission. Existing supervisor is explicitly
+LS5_ONLY_PILOT, independently confirmed in the actual capsule. It cannot be
+repurposed for PC4; a separately pinned/reviewed PC4-specific artifact and
+activation plan would be required after independent source/security gates.
+No LS5 host guard is removed and no capsule hotpatch is permitted.
