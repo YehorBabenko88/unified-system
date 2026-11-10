@@ -1,0 +1,10 @@
+# Supervisor: оригинальные hosted evidence на e869
+
+| Requirement ID | Repository | PR | Exact HEAD / tree | Test name | Environment | Expected result | Actual result | Evidence link | Status | Severity | Required correction |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| A8-SUPERVISOR132 | unified-system | 81 | e869d8365c7e54ed3da3739d9cdf15948f37f022 / 8de558ea63b82a0b710a1dcea3459996057cb216 | Supervisor local integration132 | GitHub CP312.10 Windows + Ubuntu, attempt1 |132 уникальных PASS,0skip на каждой ОС | Windows11.752s /Ubuntu3.334s;132 distinct /264 executions | [run](https://github.com/YehorBabenko88/unified-system/actions/runs/42869185847), [proof](verification.json) | PASS scoped | — | Не переносить на новый HEAD/другие gates |
+| A8-ARTIFACT-INTEGRITY | unified-system | 81 | тот же exact HEAD | ZIP digest /1859 raw source hashes /testIDs | Свежие GitHub API+два artifact ZIP | Оригинал и точные исходники совпадают | Оба ZIP digest совпали с API и сохранёнными Root originals; полные before/after1859 совпали с независимым raw Git; все132 ID точны | [proof](verification.json) | PASS scoped | — | Полнота release/runtime отдельно |
+
+Свежие GET run/jobs/artifacts/logZIP и обоих artifact ZIP. Jobs130015537729/130015537405. Артефакты13790214538 /13789223960: SHA2565677daa39725e7c1d446e8a1577f9617c183308da88bc4af1b7722a1aede8200 /009a17397ff3f001fd54f6960b5e3f95270a5d764ec57292707552ddb8b34880. По одному JSON; native_authority=false /grants_node_operations=false. A8 ничего из проекта не импортировал и не запускал. Проверка локального интеграционного компонента не является доказательством physical acceptance, автономного dispatch или актуального PR82.
+
+RELEASE_MANIFEST_STATUS: не утверждён. NODE_INVENTORY_STATUS: без новой проверки. CONTRACT_STATUS: public DENY /полномочия не изменены. OFFLINE_TESTS: evidence verification. WINDOWS_CI: PASS только Supervisor132/e869. PHYSICAL_TESTS: BLOCKED. P0_P1_P2: 8 P1 /8 P2. EVIDENCE: оригиналы и verification.json. NEXT_ACTIONS: дождаться отдельных актуальных обязательных CI без запуска A8. GO_NO_GO: NO-GO. TAILSCALE_REMOVAL_ACCEPTANCE: BLOCKED/NO-GO.

@@ -686,5 +686,19 @@
     "successor_head": "4f0429ce347f396fccecf83b6cfd4d0f9c467a2a",
     "fixed_evidence": "phase166/report.md;phase166/verification.json",
     "fixed_scope": "EXACT_HELPER_PRPATH_CONFIGURATION_NOT_HOSTED_EVENT_OR_RUNTIME_SUITE_PASS"
+  },
+  {
+    "id": "A8-F40",
+    "severity": "P1",
+    "repository": "unified-system",
+    "pr": 81,
+    "observed_head": "e869d8365c7e54ed3da3739d9cdf15948f37f022",
+    "title": "Mandatory MCI CI expects47 IDs but discovers58 and aborts before execution on both hosted platforms",
+    "status": "SOURCE_CORRECTION_ACK_AT_PR82_96B_HOSTED_CLOSURE_PENDING",
+    "evidence": "phase181/report.md;phase181/verification.json",
+    "successor_pr": 82,
+    "successor_head": "96b17905a5be923857aa1e778085eaeec6f0f27f",
+    "successor_evidence": "phase183/report.md;phase183/verification.json",
+    "required_correction": "Exact58 required IDs including10 continuation+owned-temp-alias, duplicate rejection; independently qualify exact hosted successor."
   }
 ]
