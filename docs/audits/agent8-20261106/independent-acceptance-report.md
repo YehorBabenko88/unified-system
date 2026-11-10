@@ -3835,3 +3835,6 @@ Phases188–195: atomic model/card scoped design only; Gridf350 restricted sourc
 
 
 Phase196 fresh6PR/HEAD/tree metadata: Root82 moved to bfa3b24d/tree0145968d; other5 pins match observations. Exact96 results historical only, not transferred to bfa. Revised source observation explicitly NOTrelease/notexecuted and includes broadF26failure; no node/runtime attestation. F26/F41OPEN; NO-GO. See docs/audits/agent8-20261106/phase196/report.md.
+
+
+Phase197 exactbfa3b24d/tree0145968d source1870/noextras/fivepaths and original27purePASS scoped; F41fixedprimary/earlymetadata/sourceguardordering correction ACK, actualhosted36closurepending. F26OPEN, registered8P1/8P2, NO-GO/physicalTailscaleBLOCKED. See docs/audits/agent8-20261106/phase197/report.md.
