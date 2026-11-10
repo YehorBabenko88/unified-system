@@ -1,0 +1,24 @@
+Exception in thread Thread-49 (_reader):
+Traceback (most recent call last):
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\threading.py", line 1075, in _bootstrap_inner
+    self.run()
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\threading.py", line 1012, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-1-direct-lan-transport\work\f26-m-revised-source-once\unified_system\lan_transport.py", line 363, in _reader
+    h,payload=_read_frame(self.channels[channel],self.owner.budget,self.peer_id,time.monotonic()+IDLE_TIMEOUT,
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\unittest\mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\unittest\mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\unittest\mock.py", line 1204, in _execute_mock_call
+    result = effect(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-1-direct-lan-transport\work\f26-m-revised-source-once\tests\test_lan_transport.py", line 178, in read
+    if not data[key].wait(3):raise RuntimeError('fixture control heartbeat readiness')
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: fixture control heartbeat readiness
+{"arm": "M", "cadence_source": "COMMITTED_TEST_AND_ORIGINAL_HEARTBEAT", "extra_transaction_service_ms": 50, "tests": 1, "failures": 1, "errors": 0, "skips": 0, "elapsed_seconds": 4.578, "retirement": {"threads_alive": 0, "children_alive": 0}}
+{"schema": "unified.f26.matched-cadence-service.experiment.v1", "head": "ab9362706cd8cd75b2fc0f5177481a96a5f73ac4", "tree": "cfa80d600603d947e79304e075d48787c116a8a1", "source_unchanged": true, "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]", "outcomes": [{"arm": "M", "cadence_source": "COMMITTED_TEST_AND_ORIGINAL_HEARTBEAT", "extra_transaction_service_ms": 50, "tests": 1, "failures": 1, "errors": 0, "skips": 0, "elapsed_seconds": 4.578, "retirement": {"threads_alive": 0, "children_alive": 0}}], "mutant_invocations": 1, "harness_error": null, "scope_violation": null, "phase_event_limit": 2048, "event_count": 49, "events_retained": 49, "owned_processes_created": 19, "retirement": {"threads_alive": 0, "children_alive": 0}, "original_deadlines_budgets_security_unchanged": true, "simulation": "OWN_DISPOSABLE_50MS_PRE_EXIT_TRANSACTION_COST_MUTATION_ONLY_OBSERVER_INNER_FALSE", "historical_cause": "NOT_ESTABLISHED", "code_fix": "TEST_ONLY_CADENCE_RESTORE", "physical": "NOT_RUN", "production": "NO_GO", "lane": "RETIRED", "family_seconds": 7.36}

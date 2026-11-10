@@ -1,0 +1,14 @@
+test_active_control_heartbeats_keep_idle_data_channel_healthy (tests.test_lan_transport.TLSIsolationTests.test_active_control_heartbeats_keep_idle_data_channel_healthy) ... FAIL
+
+======================================================================
+FAIL: test_active_control_heartbeats_keep_idle_data_channel_healthy (tests.test_lan_transport.TLSIsolationTests.test_active_control_heartbeats_keep_idle_data_channel_healthy)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-1-direct-lan-transport\work\f26-m-revised-source-once\tests\test_lan_transport.py", line 200, in test_active_control_heartbeats_keep_idle_data_channel_healthy
+    self.assertIs(renewed.get(timeout=3),True)
+AssertionError: False is not True
+
+----------------------------------------------------------------------
+Ran 1 test in 3.964s
+
+FAILED (failures=1)
