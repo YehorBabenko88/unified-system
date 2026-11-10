@@ -20,6 +20,13 @@ if DRIVER.exists():spec.loader.exec_module(module)
 
 
 class PreparationQualificationControls(unittest.TestCase):
+    def test_runner_temp_is_bound_at_step_time_not_job_env(self):
+        workflow=(DRIVER.parents[2]/'.github/workflows/preparation-integrity.yml').read_text()
+        job_env=workflow.split('    env:',1)[1].split('    steps:',1)[0]
+        self.assertNotIn('${{ runner.',job_env)
+        self.assertIn("os.environ['RUNNER_TEMP']",workflow)
+        self.assertIn("os.environ['GITHUB_ENV']",workflow)
+
     def inventory(self):
         old=dict(schema="agent5.component-test-inventory.v2",expected_count=30,
                  expected_ids=["legacy."+str(i) for i in range(30)])

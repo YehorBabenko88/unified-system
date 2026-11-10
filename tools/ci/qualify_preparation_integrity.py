@@ -197,9 +197,9 @@ def main():
         controls=unittest.defaultTestLoader.discover(str(root/'tests'),pattern='test_preparation_qualification.py')
         with (out/'controls.log').open('w',encoding='utf-8') as log:
             controls_result=unittest.TextTestRunner(stream=log,verbosity=2).run(controls)
-        if not controls_result.wasSuccessful() or controls_result.skipped or controls_result.testsRun!=8:
+        if not controls_result.wasSuccessful() or controls_result.skipped or controls_result.testsRun!=9:
             raise ValueError('pure guard controls failed')
-        receipt['pure_controls']=8
+        receipt['pure_controls']=9
         env=os.environ.copy()
         for key in ('PYTHONPATH','PYTHONHOME','PYTHONPYCACHEPREFIX'):env.pop(key,None)
         env['PYTHONDONTWRITEBYTECODE']='1'

@@ -17,7 +17,6 @@ jobs:
     timeout-minutes: 10
     env:
       EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
-      QUALIFICATION_BASE: ${{ runner.temp }}/preparation-${{ github.run_id }}-${{ github.run_attempt }}
       PYTHONDONTWRITEBYTECODE: '1'
       PIP_DISABLE_PIP_VERSION_CHECK: '1'
     steps:
@@ -35,6 +34,13 @@ jobs:
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with:
           python-version: '3.12.10'
+      - name: Bind runner-local path after runner assignment
+        shell: python -I -S -B {0}
+        run: |
+          import os, pathlib
+          base=pathlib.Path(os.environ['RUNNER_TEMP'])/('preparation-'+os.environ['GITHUB_RUN_ID']+'-'+os.environ['GITHUB_RUN_ATTEMPT'])
+          with open(os.environ['GITHUB_ENV'],'a',encoding='utf-8') as stream:
+              stream.write('QUALIFICATION_BASE='+str(base)+'\n')
       - name: Download and verify pinned timezone data without importing it
         shell: bash
         run: |
