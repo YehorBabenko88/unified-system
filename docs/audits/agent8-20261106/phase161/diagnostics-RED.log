@@ -1,0 +1,68 @@
+test_finer_static_powershell_phases_are_allowlisted (tests.test_native_phase_diagnostics.PhaseDiagnosticsTests.test_finer_static_powershell_phases_are_allowlisted) ... ERROR
+test_node_parser_rejects_private_unknown_nonascii_and_excess (tests.test_native_phase_diagnostics.PhaseDiagnosticsTests.test_node_parser_rejects_private_unknown_nonascii_and_excess) ... ERROR
+test_node_phase_allowlist_accepts_bytes_and_text (tests.test_native_phase_diagnostics.PhaseDiagnosticsTests.test_node_phase_allowlist_accepts_bytes_and_text) ... ERROR
+test_node_timeout_hides_harness_input_path_and_raw_outputs (tests.test_native_phase_diagnostics.PhaseDiagnosticsTests.test_node_timeout_hides_harness_input_path_and_raw_outputs) ... ERROR
+test_only_allowlisted_bounded_phase_markers_are_reported (tests.test_native_phase_diagnostics.PhaseDiagnosticsTests.test_only_allowlisted_bounded_phase_markers_are_reported) ... ok
+test_other_powershell_bounds_are_rejected_before_spawn (tests.test_native_phase_diagnostics.PhaseDiagnosticsTests.test_other_powershell_bounds_are_rejected_before_spawn) ... ERROR
+test_private_unknown_or_excessive_phase_data_is_rejected (tests.test_native_phase_diagnostics.PhaseDiagnosticsTests.test_private_unknown_or_excessive_phase_data_is_rejected) ... ok
+test_thirty_second_timeout_retains_bound_and_hides_payload (tests.test_native_phase_diagnostics.PhaseDiagnosticsTests.test_thirty_second_timeout_retains_bound_and_hides_payload) ... ERROR
+test_timeout_reports_static_phases_without_private_exception_payload (tests.test_native_phase_diagnostics.PhaseDiagnosticsTests.test_timeout_reports_static_phases_without_private_exception_payload) ... ok
+
+======================================================================
+ERROR: test_finer_static_powershell_phases_are_allowlisted (tests.test_native_phase_diagnostics.PhaseDiagnosticsTests.test_finer_static_powershell_phases_are_allowlisted)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\worktrees\windows-boundary-diagnostics-20261110\gateway-runtime-recovery-20261107\tests\test_native_phase_diagnostics.py", line 25, in test_finer_static_powershell_phases_are_allowlisted
+    self.assertIn(name,phase(name))
+                       ^^^^^^^^^^^
+  File "C:\Users\LS-5\.codex\worktrees\windows-boundary-diagnostics-20261110\gateway-runtime-recovery-20261107\tests\native_phase_diagnostics.py", line 13, in phase
+    if name not in PHASES:raise ValueError('UNKNOWN_DIAGNOSTIC_PHASE')
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: UNKNOWN_DIAGNOSTIC_PHASE
+
+======================================================================
+ERROR: test_node_parser_rejects_private_unknown_nonascii_and_excess (tests.test_native_phase_diagnostics.PhaseDiagnosticsTests.test_node_parser_rejects_private_unknown_nonascii_and_excess)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\worktrees\windows-boundary-diagnostics-20261110\gateway-runtime-recovery-20261107\tests\test_native_phase_diagnostics.py", line 42, in test_node_parser_rejects_private_unknown_nonascii_and_excess
+    from tests.native_phase_diagnostics import node_phase_summary
+ImportError: cannot import name 'node_phase_summary' from 'tests.native_phase_diagnostics' (C:\Users\LS-5\.codex\worktrees\windows-boundary-diagnostics-20261110\gateway-runtime-recovery-20261107\tests\native_phase_diagnostics.py)
+
+======================================================================
+ERROR: test_node_phase_allowlist_accepts_bytes_and_text (tests.test_native_phase_diagnostics.PhaseDiagnosticsTests.test_node_phase_allowlist_accepts_bytes_and_text)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\worktrees\windows-boundary-diagnostics-20261110\gateway-runtime-recovery-20261107\tests\test_native_phase_diagnostics.py", line 38, in test_node_phase_allowlist_accepts_bytes_and_text
+    from tests.native_phase_diagnostics import node_phase_summary
+ImportError: cannot import name 'node_phase_summary' from 'tests.native_phase_diagnostics' (C:\Users\LS-5\.codex\worktrees\windows-boundary-diagnostics-20261110\gateway-runtime-recovery-20261107\tests\native_phase_diagnostics.py)
+
+======================================================================
+ERROR: test_node_timeout_hides_harness_input_path_and_raw_outputs (tests.test_native_phase_diagnostics.PhaseDiagnosticsTests.test_node_timeout_hides_harness_input_path_and_raw_outputs)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\worktrees\windows-boundary-diagnostics-20261110\gateway-runtime-recovery-20261107\tests\test_native_phase_diagnostics.py", line 47, in test_node_timeout_hides_harness_input_path_and_raw_outputs
+    from tests.native_phase_diagnostics import run_node_phased
+ImportError: cannot import name 'run_node_phased' from 'tests.native_phase_diagnostics' (C:\Users\LS-5\.codex\worktrees\windows-boundary-diagnostics-20261110\gateway-runtime-recovery-20261107\tests\native_phase_diagnostics.py)
+
+======================================================================
+ERROR: test_other_powershell_bounds_are_rejected_before_spawn (tests.test_native_phase_diagnostics.PhaseDiagnosticsTests.test_other_powershell_bounds_are_rejected_before_spawn)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\worktrees\windows-boundary-diagnostics-20261110\gateway-runtime-recovery-20261107\tests\test_native_phase_diagnostics.py", line 35, in test_other_powershell_bounds_are_rejected_before_spawn
+    with self.assertRaises(ValueError):run_phased([],env={},timeout=value)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: run_phased() got an unexpected keyword argument 'timeout'
+
+======================================================================
+ERROR: test_thirty_second_timeout_retains_bound_and_hides_payload (tests.test_native_phase_diagnostics.PhaseDiagnosticsTests.test_thirty_second_timeout_retains_bound_and_hides_payload)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\worktrees\windows-boundary-diagnostics-20261110\gateway-runtime-recovery-20261107\tests\test_native_phase_diagnostics.py", line 29, in test_thirty_second_timeout_retains_bound_and_hides_payload
+    with self.assertRaises(AssertionError) as caught:run_phased(['PRIVATE_PATH'],env={},timeout=30)
+                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: run_phased() got an unexpected keyword argument 'timeout'
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.004s
+
+FAILED (errors=6)
