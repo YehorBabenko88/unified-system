@@ -1,0 +1,90 @@
+{
+  "approval": "ROOT_APPROVED_FOR_A8_SOURCE_REVIEW_ONLY",
+  "excluded_nodes": [
+    "ADMINIT"
+  ],
+  "installability": "NOT_INSTALLABLE",
+  "network_mutations": "FORBIDDEN",
+  "nodes": [
+    {
+      "intended_role": "CENTRAL_CONTROLLER",
+      "node": "LS5",
+      "os_assertion": "WINDOWS_VERSION_NOT_REFRESHED",
+      "resource_state": "UNKNOWN_OR_STALE_NOT_CURRENT_ADMISSION"
+    },
+    {
+      "intended_role": "COORDINATOR",
+      "node": "PC3",
+      "os_assertion": "WINDOWS_VERSION_NOT_REFRESHED",
+      "resource_state": "UNKNOWN_OR_STALE_NOT_CURRENT_ADMISSION"
+    },
+    {
+      "intended_role": "COORDINATOR",
+      "node": "PC4",
+      "os_assertion": "WINDOWS_VERSION_NOT_REFRESHED",
+      "resource_state": "UNKNOWN_OR_STALE_NOT_CURRENT_ADMISSION"
+    },
+    {
+      "intended_role": "WORKER_USER_APPLICATIONS_UNTOUCHED",
+      "node": "PC2",
+      "os_assertion": "WINDOWS_VERSION_NOT_REFRESHED",
+      "resource_state": "UNKNOWN_OR_STALE_NOT_CURRENT_ADMISSION"
+    },
+    {
+      "intended_role": "INDEPENDENT_WORKER",
+      "node": "PC1",
+      "os_assertion": "WINDOWS_HOME_OWNER_ASSERTED_NOT_REFRESHED",
+      "resource_state": "UNKNOWN_OR_STALE_NOT_CURRENT_ADMISSION"
+    },
+    {
+      "intended_role": "INDEPENDENT_WORKER",
+      "node": "LS7",
+      "os_assertion": "WINDOWS_HOME_OWNER_ASSERTED_NOT_REFRESHED",
+      "resource_state": "UNKNOWN_OR_STALE_NOT_CURRENT_ADMISSION"
+    }
+  ],
+  "pc2": "USER_APPS_UNTOUCHED_NO_PREPARATION_OR_SERVICE_CHANGES",
+  "pc4": "SMOKE_BLOCKED_PENDING_EXISTING_NONADMIN_CHANNEL_NO_ACCOUNT_OR_TOKEN_CHANGES",
+  "permissions": {
+    "dispatch": "DENY",
+    "fault_injection": "DENY",
+    "installation": "DENY",
+    "physical": "DENY",
+    "production": "DENY",
+    "provider_sends": "DENY",
+    "runtime": "DENY",
+    "tailscale_changes": "DENY",
+    "trading": "DENY"
+  },
+  "read_only_network_snapshot_receipt": {
+    "bybit_requests": 0,
+    "bytes": 2185,
+    "freshness": "HISTORICAL_SNAPSHOT_NOT_REFRESHED_NOT_CURRENT",
+    "https_nodes_observed": 6,
+    "network_configuration_writes": 0,
+    "observed_first_utc": "2026-11-10T19:09:08.6124003Z",
+    "observed_last_utc": "2026-11-10T19:09:46.1632230Z",
+    "path": "$PRIVATE_CODEX_EVIDENCE/network-egress-readonly-20261110/summary.json",
+    "physical_acceptance": false,
+    "private_principals_and_ips": "OMITTED",
+    "runtime_admission": false,
+    "scope": "ONE_READ_ONLY_HTTPS_IPV4_ENDPOINT_SNAPSHOT_NOT_BYBIT_EGRESS_PROOF",
+    "sha256": "f2ca62fdb33ab7ba8b4e67d98eb896c3621c87a5792b8b08edbc38a2d521cb37",
+    "ssh_remote_nodes_passed": 5,
+    "transport": "FIVE_PINNED_TAILSCALE_SSH_NOT_DIRECT_LAN"
+  },
+  "read_only_prior_snapshot": {
+    "current_observation_time": "NOT_REFRESHED",
+    "direct_lan": "NOT_QUALIFIED",
+    "evidence_missing": "NONE_FOR_THIS_PINNED_HISTORICAL_SUMMARY; new current/direct-LAN qualification still missing",
+    "five_pinned_tailscale_ssh": "PASSED_OWNER_REPORTED_SNAPSHOT_ONLY",
+    "private_endpoints": "OMITTED",
+    "six_node_https_nat": "PASSED_OWNER_REPORTED_SNAPSHOT_ONLY"
+  },
+  "resource_inventory": "STALE_OR_UNKNOWN_DO_NOT_INFER_CAPACITY",
+  "review_scope": "May be approved for A8 SOURCE review only; never executable release or runtime/native endpoint admission",
+  "roles_basis": "CURRENT_ROOT_OWNER_DIRECTIVE_NOT_NEW_PHYSICAL_OBSERVATION",
+  "schema": "unified.acceptance-review.level2.node-inventory.v1",
+  "source_combination": "NOT_ASSEMBLED_OR_VERIFIED",
+  "status": "REVIEW_INPUTS_ONLY"
+}
