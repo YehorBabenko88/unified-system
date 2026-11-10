@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>HCSEC-2026-03 - HashiCorp GPG Key (72D7468F) Update - Security - HashiCorp Discuss</title>
+    <meta name="description" content="Bulletin ID: HCSEC-2026-03 
+Publication Date: March 12, 2026 
+Summary 
+This bulletin is for informational purposes only. HashiCorp published signatures can be verified using the same public key as previously, and there s…">
+    <meta name="generator" content="Discourse 2026.11.0-latest - https://github.com/discourse/discourse version cfa7b412b21ecb599500f1160eaf3bc0556e2358">
+<link rel="icon" type="image/png" href="https://global.discourse-cdn.com/hashicorp/optimized/1X/768b0c508ad4facc44cabe5a30aff4d7f8afa863_2_32x32.png">
+<link rel="apple-touch-icon" type="image/png" href="https://global.discourse-cdn.com/hashicorp/optimized/1X/154331ed085112b536f7a0c4c5355c17a57e53c1_2_180x180.png">
+<meta name="theme-color" media="all" content="#ffffff">
+
+<meta name="color-scheme" content="light">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<link rel="canonical" href="https://discuss.hashicorp.com/t/hcsec-2026-03-hashicorp-gpg-key-72d7468f-update/77237" />
+
+<meta name="discourse-track-view-session-id" content="ezXgwXdek8cFo37MFZcRPd411nesGQkZ">
+  <link rel="search" type="application/opensearchdescription+xml" href="https://discuss.hashicorp.com/opensearch.xml" title="HashiCorp Discuss Search">
+
+    
+    <link href="https://sea2.discourse-cdn.com/hashicorp/stylesheets/color_definitions_hashicorp_11_19_78d8873269f3ae116af709c1079b2b91ecdef2a5.css?__ws=discuss.hashicorp.com" media="all" rel="stylesheet" class="light-scheme" data-scheme-id="11"/>
+
+<link href="https://sea2.discourse-cdn.com/hashicorp/stylesheets/common_123fe36564c5513476894d6b2c9e87b123f03925.css?__ws=discuss.hashicorp.com" media="all" rel="stylesheet" data-target="common"  />
+
+
+
+  <link href="https://sea2.discourse-cdn.com/hashicorp/stylesheets/automation_123fe36564c5513476894d6b2c9e87b123f03925.css?__ws=discuss.hashicorp.com" media="all" rel="stylesheet" data-target="automation"  />
+  <link href="https://sea2.discourse-cdn.com/hashicorp/stylesheets/boards_123fe36564c5513476894d6b2c9e87b123f03925.css?__ws=discuss.hashicorp.com" media="all" rel="stylesheet" data-target="boards"  />
+  <link href="https://sea2.discourse-cdn.com/hashicorp/stylesheets/checklist_123fe36564c5513476894d6b2c9e87b123f03925.css?__ws=discuss.hashicorp.com" media="all" rel="stylesheet" data-target="checklist"  />
+  <link href="https://sea2.discourse-cdn.com/hashicorp/stylesheets/discourse-ai_123fe36564c5513476894d6b2c9e87b123f03925.css?__ws=discuss.hashicorp.com" media="all" rel="stylesheet" data-target="discourse-ai"  />
+  <link href="https://sea2.discourse-cdn.com/hashicorp/stylesheets/discourse-akismet_123fe36564c5513476894d6b2c9e87b123f03925.css?__ws=discuss.hashicorp.com" media="all" rel="stylesheet" data-target="discourse-akismet"  />
+  <link href="https://sea2.discourse-cdn.com/hashicorp/stylesheets/discourse-assign_123fe36564c5513476894d6b2c9e87b123f03925.css?__ws=discuss.hashicorp.com" media="all" rel="stylesheet" data-target="discourse-assign"  />
+  <link href="https://sea2.discourse-cdn.com/hashicorp/stylesheets/discourse-cakeday_123fe36564c5513476894d6b2c9e87b123f03925.css?__ws=discuss.hashicorp.com" media="all" rel="stylesheet" data-target="discourse-cakeday"  />
+  <link href="https://sea2.discourse-cdn.com/hashicorp/stylesheets/discourse-chat-integration_123fe36564c5513476894d6b2c9e87b123f03925.css?__ws=discuss.hashicorp.com" media="all" rel="stylesheet" data-target="discourse-chat-integration"  />
+  <link href="https://sea2.discourse-cdn.com/hashicorp/stylesheets/discourse-data-explorer_123fe36564c5513476894d6b2c9e87b123f03925.css?__ws=discuss.hashicorp.com" media="all" rel="stylesheet" data-target="discourse-data-explorer"  />
+  <link href="https://sea2.discourse-cdn.com/hashicorp/stylesheets/discourse-details_123fe36564c5513476894d6b2c9e87b123f03925.css?__ws=discuss.hashicorp.com" media="all" rel="stylesheet" data-target="discourse-details"  />
+  <link href="https://sea2.discourse-cdn.com/hashicorp/stylesheets/discourse-github_123fe36564c5513476894d6b2c9e87b123f03925.css?__ws=discuss.hashicorp.com" media="all" rel="stylesheet" data-target="discourse-github"  />
+  <link href="https://sea2.discourse-cdn.com/hashicorp/stylesheets/discourse-lazy-videos_123fe36564c5513476894d6b2c9e87b123f03925.css?__ws=discuss.hashicorp.com" media="all" rel="stylesheet" data-target="discourse-lazy-videos"  />
+  <link href="https://sea2.discourse-cdn.com/hashicorp/stylesheets/discourse-local-dates_123fe36564c5513476894d6b2c9e87b123f03925.css?__ws=discuss.hashicorp.com" media="all" rel="stylesheet" data-target="discourse-local-dates"  />
+  <link href="https://sea2.discourse-cdn.com/hashicorp/stylesheets/discourse-math_123fe36564c5513476894d6b2c9e87b123f03925.css?__ws=discuss.hashicorp.com" media="all" rel="stylesheet" data-target="discourse-math"  />
+  <link href="https://sea2.discourse-cdn.com/hashicorp/stylesheets/discourse-narrative-bot_123fe36564c5513476894d6b2c9e87b123f03925.css?__ws=discuss.hashicorp.com" media="all" rel="stylesheet" data-target="discourse-narrative-bot"  />
+  <link href="https://sea2.discourse-cdn.com/hashicorp/stylesheets/discourse-policy_123fe36564c5513476894d6b2c9e87b123f03925.css?__ws=discuss.hashicorp.com" media="all" rel="stylesheet" data-target="discourse-policy"  />
+  <link href="https://sea2.discourse-cdn.com/hashicorp/stylesheets/discourse-presence_123fe36564c5513476894d6b2c9e87b123f03925.css?__ws=discuss.hashicorp.com" media="all" rel="stylesheet" data-target="discourse-presence"  />
+  <link href="https://sea2.discourse-cdn.com/hashicorp/stylesheets/discourse-reactions_123fe36564c5513476894d6b2c9e87b123f03925.css?__ws=discuss.hashicorp.com" media="all" rel="stylesheet" data-target="discourse-reactions"  />
+  <link href="https://sea2.discourse-cdn.com/hashicorp/stylesheets/discourse-solved_123fe36564c5513476894d6b2c9e87b123f03925.css?__ws=discuss.hashicorp.com" media="all" rel="stylesheet" data-target="discourse-solved"  />
+  <link href="https://sea2.discourse-cdn.com/hashicorp/stylesheets/discourse-templates_123fe36564c5513476894d6b2c9e87b123f03925.css?__ws=discuss.hashicorp.com" media="all" rel="stylesheet" data-target="discourse-templates"  />
+  <link href="https://sea2.discourse-cdn.com/hashicorp/stylesheets/discourse-topic-voting_123fe36564c5513476894d6b2c9e87b123f03925.css?__ws=discuss.hashicorp.com" media="all" rel="stylesheet" data-target="discourse-topic-voting"  />
+  <link href="https://sea2.discourse-cdn.com/hashicorp/stylesheets/discourse-user-notes_123fe36564c5513476894d6b2c9e87b123f03925.css?__ws=discuss.hashicorp.com" media="all" rel="stylesheet" data-target="discourse-user-notes"  />
+  <link href="https://sea2.discourse-cdn.com/hashicorp/stylesheets/footnote_123fe36564c5513476894d6b2c9e87b123f03925.css?__ws=discuss.hashicorp.com" media="all" rel="stylesheet" data-target="footnote"  />
+  <link href="https://sea2.discourse-cdn.com/hashicorp/stylesheets/hosted-site_123fe36564c5513476894d6b2c9e87b123f03925.css?__ws=discuss.hashicorp.com" media="all" rel="stylesheet" data-target="hosted-site"  />
+  <link href="https://sea2.discourse-cdn.com/hashicorp/stylesheets/poll_123fe36564c5513476894d6b2c9e87b123f03925.css?__ws=discuss.hashicorp.com" media="all" rel="stylesheet" data-target="poll"  />
+  <link href="https://sea2.discourse-cdn.com/hashicorp/stylesheets/spoiler-alert_123fe36564c5513476894d6b2c9e87b123f03925.css?__ws=discuss.hashicorp.com" media="all" rel="stylesheet" data-target="spoiler-alert"  />
+  <link href="https://sea2.discourse-cdn.com/hashicorp/stylesheets/discourse-ai_mobile_123fe36564c5513476894d6b2c9e87b123f03925.css?__ws=discuss.hashicorp.com" media="(width < 40rem)" rel="stylesheet" data-target="discourse-ai_mobile"  />
+  <link href="https://sea2.discourse-cdn.com/hashicorp/stylesheets/discourse-assign_mobile_123fe36564c5513476894d6b2c9e87b123f03925.css?__ws=discuss.hashicorp.com" media="(width < 40rem)" rel="stylesheet" data-target="discourse-assign_mobile"  />
+  <link href="https://sea2.discourse-cdn.com/hashicorp/stylesheets/discourse-reactions_mobile_123fe36564c5513476894d6b2c9e87b123f03925.css?__ws=discuss.hashicorp.com" media="(width < 40rem)" rel="stylesheet" data-target="discourse-reactions_mobile"  />
+  <link href="https://sea2.discourse-cdn.com/hashicorp/stylesheets/discourse-ai_desktop_123fe36564c5513476894d6b2c9e87b123f03925.css?__ws=discuss.hashicorp.com" media="(width >= 40rem)" rel="stylesheet" data-target="discourse-ai_desktop"  />
+  <link href="https://sea2.discourse-cdn.com/hashicorp/stylesheets/discourse-reactions_desktop_123fe36564c5513476894d6b2c9e87b123f03925.css?__ws=discuss.hashicorp.com" media="(width >= 40rem)" rel="stylesheet" data-target="discourse-reactions_desktop"  />
+  <link href="https://sea2.discourse-cdn.com/hashicorp/stylesheets/poll_desktop_123fe36564c5513476894d6b2c9e87b123f03925.css?__ws=discuss.hashicorp.com" media="(width >= 40rem)" rel="stylesheet" data-target="poll_desktop"  />
+
+  <link href="https://sea2.discourse-cdn.com/hashicorp/stylesheets/common_theme_21_852f7ed8094a5602b73e1a31b41fd388ca26e299.css?__ws=discuss.hashicorp.com" media="all" rel="stylesheet" data-target="common_theme" data-theme-id="21" data-theme-name="custom header links"/>
+<link href="https://sea2.discourse-cdn.com/hashicorp/stylesheets/common_theme_19_21b1670b883a9b2646891835986863580e5de768.css?__ws=discuss.hashicorp.com" media="all" rel="stylesheet" data-target="common_theme" data-theme-id="19" data-theme-name="discourse-hashicorp-theme"/>
+  <link href="https://sea2.discourse-cdn.com/hashicorp/stylesheets/mobile_theme_19_669d452b9aecf024025181dba56868910d352c59.css?__ws=discuss.hashicorp.com" media="(width < 40rem)" rel="stylesheet" data-target="mobile_theme" data-theme-id="19" data-theme-name="discourse-hashicorp-theme"/>
+<link href="https://sea2.discourse-cdn.com/hashicorp/stylesheets/mobile_theme_20_dc68807fe9c153e9ef51a5f721b8f1d3caa37ebf.css?__ws=discuss.hashicorp.com" media="(width < 40rem)" rel="stylesheet" data-target="mobile_theme" data-theme-id="20" data-theme-name="mobile profile nav fix"/>
+  <link href="https://sea2.discourse-cdn.com/hashicorp/stylesheets/desktop_theme_19_1c58131152b44400bb73f70b9d2680f33c9243a3.css?__ws=discuss.hashicorp.com" media="(width >= 40rem)" rel="stylesheet" data-target="desktop_theme" data-theme-id="19" data-theme-name="discourse-hashicorp-theme"/>
+
+
+
+    
+    
+        <link rel="alternate nofollow" type="application/rss+xml" title="RSS feed of &#39;HCSEC-2026-03 - HashiCorp GPG Key (72D7468F) Update&#39;" href="https://discuss.hashicorp.com/t/hcsec-2026-03-hashicorp-gpg-key-72d7468f-update/77237.rss" />
+    <meta property="og:site_name" content="HashiCorp Discuss" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:image" content="https://global.discourse-cdn.com/hashicorp/original/1X/154331ed085112b536f7a0c4c5355c17a57e53c1.png" />
+<meta property="og:image" content="https://global.discourse-cdn.com/hashicorp/original/1X/154331ed085112b536f7a0c4c5355c17a57e53c1.png" />
+<meta property="og:url" content="https://discuss.hashicorp.com/t/hcsec-2026-03-hashicorp-gpg-key-72d7468f-update/77237" />
+<meta name="twitter:url" content="https://discuss.hashicorp.com/t/hcsec-2026-03-hashicorp-gpg-key-72d7468f-update/77237" />
+<meta property="og:title" content="HCSEC-2026-03 - HashiCorp GPG Key (72D7468F) Update" />
+<meta name="twitter:title" content="HCSEC-2026-03 - HashiCorp GPG Key (72D7468F) Update" />
+<meta property="og:description" content="Bulletin ID: HCSEC-2026-03  Publication Date: March 12, 2026  Summary  This bulletin is for informational purposes only. HashiCorp published signatures can be verified using the same public key as previously, and there should be no external action required.  The GPG key for security@hashicorp.com (C874011F0AB405110D02105534365D9472D7468F), used to sign binaries on releases.hashicorp.com, is set to expire on April 18th, 2026. The key has been updated to expire on March 1st, 2030. The latest versi..." />
+<meta name="twitter:description" content="Bulletin ID: HCSEC-2026-03  Publication Date: March 12, 2026  Summary  This bulletin is for informational purposes only. HashiCorp published signatures can be verified using the same public key as previously, and there should be no external action required.  The GPG key for security@hashicorp.com (C874011F0AB405110D02105534365D9472D7468F), used to sign binaries on releases.hashicorp.com, is set to expire on April 18th, 2026. The key has been updated to expire on March 1st, 2030. The latest versi..." />
+<meta property="og:article:section" content="Security" />
+<meta property="og:article:section:color" content="0088CC" />
+<meta property="article:published_time" content="2026-03-12T18:09:04+00:00" />
+<meta property="og:ignore_canonical" content="true" />
+
+
+    <link rel="alternate" type="text/markdown" href="https://discuss.hashicorp.com/t/hcsec-2026-03-hashicorp-gpg-key-72d7468f-update/77237.md">
+    
+
+  </head>
+  <body class="crawler ">
+    <!-- Replace icons -->
+
+<script type="text/discourse-plugin" version="0.8" nonce="eieiiACXm2oaRa1HRF2G5KUZd">
+  api.replaceIcon('circle-exclamation', 'hashicorp-alert-circle');
+  api.replaceIcon('box-archive', 'hashicorp-archive');
+  api.replaceIcon('arrow-left', 'hashicorp-arrow_left');
+  api.replaceIcon('certificate', 'hashicorp-badge');
+  api.replaceIcon('bold', 'hashicorp-bold');
+  api.replaceIcon('bookmark', 'hashicorp-bookmark');
+  api.replaceIcon('calendar', 'hashicorp-calendar');
+  api.replaceIcon('far-calendar', 'hashicorp-calendar');
+  api.replaceIcon('check', 'hashicorp-checkmark');
+  api.replaceIcon('code', 'hashicorp-code');
+  api.replaceIcon('file', 'hashicorp-doc_post');
+  api.replaceIcon('file-lines', 'hashicorp-doc_post');
+  api.replaceIcon('pencil', 'hashicorp-edit');
+  api.replaceIcon('pen-to-square', 'hashicorp-edit_updated');
+  api.replaceIcon('flag', 'hashicorp-flag');
+  api.replaceIcon('fab-github', 'hashicorp-github');
+  api.replaceIcon('heart', 'hashicorp-heart');
+  api.replaceIcon('far-heart', 'hashicorp-heart');
+  api.replaceIcon('d-unliked', 'hashicorp-heart');
+  api.replaceIcon('circle-question', 'hashicorp-help-circle');
+  api.replaceIcon('house', 'hashicorp-home');
+  api.replaceIcon('inbox', 'hashicorp-inbox');
+  api.replaceIcon('italic', 'hashicorp-italic');
+  api.replaceIcon('link', 'hashicorp-link');
+  api.replaceIcon('list-ul', 'hashicorp-list-ul');
+  api.replaceIcon('lock', 'hashicorp-lock');
+  api.replaceIcon('right-to-bracket', 'hashicorp-log-in');
+  api.replaceIcon('right-from-bracket', 'hashicorp-log-out');
+  api.replaceIcon('envelope', 'hashicorp-mail');
+  api.replaceIcon('far-envelope', 'hashicorp-mail');
+  api.replaceIcon('bars', 'hashicorp-menu');
+  api.replaceIcon('comment', 'hashicorp-message-circle');
+  api.replaceIcon('far-comment', 'hashicorp-message-circle');
+  api.replaceIcon('gear', 'hashicorp-options');
+  api.replaceIcon('paperclip', 'hashicorp-paperclip');
+  api.replaceIcon('plus', 'hashicorp-plus');
+  api.replaceIcon('arrows-rotate', 'hashicorp-refresh-ccw');
+  api.replaceIcon('arrows-up-down-left-right', 'hashicorp-refresh-ccw');
+  api.replaceIcon('retweet', 'hashicorp-repeat');
+  api.replaceIcon('arrow-rotate-right', 'hashicorp-repeat');
+  api.replaceIcon('rotate-right', 'hashicorp-repeat');
+  api.replaceIcon('reply', 'hashicorp-reply');
+  api.replaceIcon('share', 'hashicorp-reply');
+  api.replaceIcon('magnifying-glass', 'hashicorp-search');
+  api.replaceIcon('shield-halved', 'hashicorp-shield');
+  api.replaceIcon('shuffle', 'hashicorp-shuffle');
+  api.replaceIcon('ellipsis', 'hashicorp-sub_menu');
+  api.replaceIcon('tag', 'hashicorp-tag');
+  api.replaceIcon('trash-can', 'hashicorp-trash');
+  api.replaceIcon('far-trash-can', 'hashicorp-trash');
+  api.replaceIcon('underline', 'hashicorp-underline');
+  api.replaceIcon('upload', 'hashicorp-upload');
+  api.replaceIcon('user-plus', 'hashicorp-user_plus');
+  api.replaceIcon('users', 'hashicorp-users');
+  api.replaceIcon('xmark', 'hashicorp-x');
+  api.replaceIcon('upload', 'hashicorp-upload');
+  api.replaceIcon('arrow-left', 'hashicorp-arrow_left');
+  api.replaceIcon('chevron-down', 'hashicorp-chevron-down');
+  api.replaceIcon('caret-right', 'hashicorp-chevron-down');
+  api.replaceIcon('caret-down', 'hashicorp-chevron-down');
+  api.replaceIcon('caret-up', 'hashicorp-chevron-down');
+  api.replaceIcon('list-ol', 'hashicorp-list-ol');
+  api.replaceIcon('quote-right', 'hashicorp-quote');
+  api.replaceIcon('discourse-expand', 'hashicorp-expand');
+  api.replaceIcon('user', 'hashicorp-user');
+  api.replaceIcon('notification.invitee_accepted', 'hashicorp-user');
+  api.replaceIcon('notification.liked', 'hashicorp-heart');
+  api.replaceIcon('notification.liked_2', 'hashicorp-heart');
+  api.replaceIcon('notification.liked_many', 'hashicorp-heart');
+  api.replaceIcon('notification.liked_consolidated', 'hashicorp-heart');
+  api.replaceIcon('notification.replied', 'hashicorp-reply');
+  api.replaceIcon('notification.posted', 'hashicorp-reply');
+  api.replaceIcon('notification.edited', 'hashicorp-edit');
+  api.replaceIcon('notification.private_message', 'hashicorp-mail');
+  api.replaceIcon('notification.invited_to_private_message', 'hashicorp-mail');
+  api.replaceIcon('notification.moved_post', 'hashicorp-log-out');
+  api.replaceIcon('notification.linked', 'hashicorp-link');
+  api.replaceIcon('notification.granted_badge', 'hashicorp-badge');
+  api.replaceIcon('notification.group_message_summary', 'hashicorp-users');
+</script>
+    <header>
+  <a href="/">HashiCorp Discuss</a>
+</header>
+
+    <div id="main-outlet" class="wrap" role="main">
+        <div id="topic-title">
+    <h1>
+      <a href="/t/hcsec-2026-03-hashicorp-gpg-key-72d7468f-update/77237">HCSEC-2026-03 - HashiCorp GPG Key (72D7468F) Update</a>
+    </h1>
+
+      <div class="topic-category" itemscope itemtype="http://schema.org/BreadcrumbList">
+          <span itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+            <a href="/c/security/52" class="badge-wrapper bullet" itemprop="item">
+              <span class='badge-category-bg' style='background-color: #0088CC'></span>
+              <span class='badge-category clear-badge'>
+                <span class='category-name' itemprop='name'>Security</span>
+              </span>
+            </a>
+            <meta itemprop="position" content="1" />
+          </span>
+        <span itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+          <meta itemprop="name" content="HCSEC-2026-03 - HashiCorp GPG Key (72D7468F) Update" />
+          <link itemprop="item" href="https://discuss.hashicorp.com/t/hcsec-2026-03-hashicorp-gpg-key-72d7468f-update/77237" />
+          <meta itemprop="position" content="2" />
+        </span>
+      </div>
+
+  </div>
+
+  
+
+    <div itemscope="itemscope" itemtype="http://schema.org/DiscussionForumPosting">
+      <meta itemprop='headline' content='HCSEC-2026-03 - HashiCorp GPG Key (72D7468F) Update'>
+      <link itemprop='url' href='https://discuss.hashicorp.com/t/hcsec-2026-03-hashicorp-gpg-key-72d7468f-update/77237'>
+      <meta itemprop='datePublished' content='2026-03-12T18:09:04Z'>
+      <meta itemprop='keywords' content=''>
+          <meta itemprop='articleSection' content='Security'>
+        <div itemprop='publisher' itemscope itemtype="http://schema.org/Organization">
+          <meta itemprop='name' content='HashiCorp'>
+            <div itemprop='logo' itemscope itemtype="http://schema.org/ImageObject">
+              <meta itemprop='url' content='https://global.discourse-cdn.com/hashicorp/original/3X/5/c/5cdcd535aa3285da7087e6afc19a95e7bec59fc9.svg'>
+            </div>
+        </div>
+
+      
+
+
+
+          <div id='post_1'  class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+                <a rel='nofollow' href='https://discuss.hashicorp.com/u/mickael'><span itemprop="name">mickael</span></a>
+                  <meta itemprop='url' content='https://discuss.hashicorp.com/u/mickael'>
+                
+              </span>
+
+                <link itemprop="mainEntityOfPage" href="https://discuss.hashicorp.com/t/hcsec-2026-03-hashicorp-gpg-key-72d7468f-update/77237">
+
+
+              <span class="crawler-post-infos">
+                  <time  datetime='2026-03-12T18:09:04Z' class='post-time'>
+                    March 12, 2026,  6:09pm
+                  </time>
+                  <meta itemprop='dateModified' content='2026-03-12T18:09:04Z'>
+              <span itemprop="position">1</span>
+              </span>
+            </div>
+            <div class='post' itemprop="text">
+              <p><strong>Bulletin ID:</strong> HCSEC-2026-03<br>
+<strong>Publication Date:</strong> March 12, 2026</p>
+<p><strong>Summary</strong><br>
+<em><strong>This bulletin is for informational purposes only. HashiCorp published signatures can be verified using the same public key as previously, and there should be no external action required.</strong></em></p>
+<p>The GPG key for <a href="mailto:security@hashicorp.com">security@hashicorp.com</a> (<code>C874011F0AB405110D02105534365D9472D7468F</code>), used to sign binaries on <a href="http://releases.hashicorp.com" rel="noopener nofollow ugc">releases.hashicorp.com</a>, is set to expire on April 18th, 2026. The key has been updated to expire on March 1st, 2030. The latest version of the public key can also be obtained <a href="https://www.hashicorp.com/.well-known/pgp-key.txt" rel="noopener nofollow ugc">here</a>.</p>
+<p><em>We deeply appreciate any effort to coordinate disclosure of security vulnerabilities. For information about security at HashiCorp and the reporting of security vulnerabilities, please see <a href="https://hashicorp.com/security" rel="noopener nofollow ugc">https://hashicorp.com/security</a>.</em></p>
+            </div>
+
+              <div itemprop="interactionStatistic" itemscope="itemscope" itemtype="http://schema.org/InteractionCounter">
+                  <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+                  <meta itemprop="userInteractionCount" content="0" />
+                <span class='post-likes'></span>
+              </div>
+
+
+            
+
+
+          </div>
+
+    </div>
+
+
+    <div id="related-topics" class="more-topics__list " role="complementary" aria-labelledby="related-topics-title">
+  <h3 id="related-topics-title" class="more-topics__list-title">
+    Related topics
+  </h3>
+  <div class="topic-list-container" itemscope itemtype='http://schema.org/ItemList'>
+    <meta itemprop='itemListOrder' content='http://schema.org/ItemListOrderDescending'>
+    <table class='topic-list'>
+      <thead>
+        <tr>
+          <th>Topic</th>
+          <th></th>
+          <th class="replies">Replies</th>
+          <th class="views">Views</th>
+          <th>Activity</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="topic-list-item" id="topic-list-item-77734">
+            <td class="main-link" itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
+              <meta itemprop='position' content='1'>
+              <span class="link-top-line">
+                <a itemprop='url' href='https://discuss.hashicorp.com/t/hcsec-2026-33-hashicorp-linux-signing-gpg-key-update-ca026560/77734' class='title raw-link raw-topic-link'>HCSEC-2026-33 - HashiCorp Linux Signing GPG Key Update (CA026560)</a>
+              </span>
+              <div class="link-bottom-line">
+                  <a href='/c/security/52' class='badge-wrapper bullet'>
+                    <span class='badge-category-bg' style='background-color: #0088CC'></span>
+                    <span class='badge-category clear-badge'>
+                      <span class='category-name'>Security</span>
+                    </span>
+                  </a>
+                  <div class="discourse-tags">
+                  </div>
+              </div>
+            </td>
+            <td class="replies">
+              <span class='posts' title='posts'>0</span>
+            </td>
+            <td class="views">
+              <span class='views' title='views'>2045</span>
+            </td>
+            <td>
+              September 10, 2026
+            </td>
+          </tr>
+          <tr class="topic-list-item" id="topic-list-item-38460">
+            <td class="main-link" itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
+              <meta itemprop='position' content='2'>
+              <span class="link-top-line">
+                <a itemprop='url' href='https://discuss.hashicorp.com/t/hcsec-2022-11-hashicorp-gpg-signing-subkey-change/38460' class='title raw-link raw-topic-link'>HCSEC-2022-11 - HashiCorp GPG Signing Subkey Change</a>
+              </span>
+              <div class="link-bottom-line">
+                  <a href='/c/security/52' class='badge-wrapper bullet'>
+                    <span class='badge-category-bg' style='background-color: #0088CC'></span>
+                    <span class='badge-category clear-badge'>
+                      <span class='category-name'>Security</span>
+                    </span>
+                  </a>
+                  <div class="discourse-tags">
+                  </div>
+              </div>
+            </td>
+            <td class="replies">
+              <span class='posts' title='posts'>0</span>
+            </td>
+            <td class="views">
+              <span class='views' title='views'>4610</span>
+            </td>
+            <td>
+              April 18, 2022
+            </td>
+          </tr>
+          <tr class="topic-list-item" id="topic-list-item-77732">
+            <td class="main-link" itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
+              <meta itemprop='position' content='3'>
+              <span class="link-top-line">
+                <a itemprop='url' href='https://discuss.hashicorp.com/t/is-the-new-apt-releases-hashicorp-com-signing-key-fc9ca96aca026560-legitimate/77732' class='title raw-link raw-topic-link'>Is the new apt.releases.hashicorp.com signing key (FC9CA96ACA026560) legitimate?</a>
+              </span>
+              <div class="link-bottom-line">
+                  <a href='/c/consul/29' class='badge-wrapper bullet'>
+                    <span class='badge-category-bg' style='background-color: #ED207B'></span>
+                    <span class='badge-category clear-badge'>
+                      <span class='category-name'>Consul</span>
+                    </span>
+                  </a>
+                  <div class="discourse-tags">
+                  </div>
+              </div>
+            </td>
+            <td class="replies">
+              <span class='posts' title='posts'>6</span>
+            </td>
+            <td class="views">
+              <span class='views' title='views'>802</span>
+            </td>
+            <td>
+              September 11, 2026
+            </td>
+          </tr>
+          <tr class="topic-list-item" id="topic-list-item-23512">
+            <td class="main-link" itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
+              <meta itemprop='position' content='4'>
+              <span class="link-top-line">
+                <a itemprop='url' href='https://discuss.hashicorp.com/t/hcsec-2021-12-codecov-security-event-and-hashicorp-gpg-key-exposure/23512' class='title raw-link raw-topic-link'>HCSEC-2021-12 - Codecov Security Event and HashiCorp GPG Key Exposure</a>
+              </span>
+              <div class="link-bottom-line">
+                  <a href='/c/security/52' class='badge-wrapper bullet'>
+                    <span class='badge-category-bg' style='background-color: #0088CC'></span>
+                    <span class='badge-category clear-badge'>
+                      <span class='category-name'>Security</span>
+                    </span>
+                  </a>
+                  <div class="discourse-tags">
+                      <a href='https://discuss.hashicorp.com/tag/security-nomad/73' class='discourse-tag'>security-nomad</a>
+                      ,&nbsp;
+                      <a href='https://discuss.hashicorp.com/tag/security-consul/74' class='discourse-tag'>security-consul</a>
+                      ,&nbsp;
+                      <a href='https://discuss.hashicorp.com/tag/security-vault/75' class='discourse-tag'>security-vault</a>
+                      ,&nbsp;
+                      <a href='https://discuss.hashicorp.com/tag/security-terraform/76' class='discourse-tag'>security-terraform</a>
+                      
+                  </div>
+              </div>
+            </td>
+            <td class="replies">
+              <span class='posts' title='posts'>2</span>
+            </td>
+            <td class="views">
+              <span class='views' title='views'>67538</span>
+            </td>
+            <td>
+              May 4, 2021
+            </td>
+          </tr>
+          <tr class="topic-list-item" id="topic-list-item-48842">
+            <td class="main-link" itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
+              <meta itemprop='position' content='5'>
+              <span class="link-top-line">
+                <a itemprop='url' href='https://discuss.hashicorp.com/t/hcsec-2023-01-hashicorp-response-to-circleci-security-alert/48842' class='title raw-link raw-topic-link'>HCSEC-2023-01 - HashiCorp Response to CircleCI Security Alert</a>
+              </span>
+              <div class="link-bottom-line">
+                  <a href='/c/security/52' class='badge-wrapper bullet'>
+                    <span class='badge-category-bg' style='background-color: #0088CC'></span>
+                    <span class='badge-category clear-badge'>
+                      <span class='category-name'>Security</span>
+                    </span>
+                  </a>
+                  <div class="discourse-tags">
+                  </div>
+              </div>
+            </td>
+            <td class="replies">
+              <span class='posts' title='posts'>3</span>
+            </td>
+            <td class="views">
+              <span class='views' title='views'>14510</span>
+            </td>
+            <td>
+              April 24, 2023
+            </td>
+          </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+
+
+
+    </div>
+    <footer class="container wrap">
+  <nav class='crawler-nav'>
+    <ul>
+      <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+        <span itemprop='name'>
+          <a href='/' itemprop="url">Home </a>
+        </span>
+      </li>
+      <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+        <span itemprop='name'>
+          <a href='/categories' itemprop="url">Categories </a>
+        </span>
+      </li>
+      
+      <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+        <span itemprop='name'>
+          <a href='/guidelines' itemprop="url">Guidelines </a>
+        </span>
+      </li>
+        <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+          <span itemprop='name'>
+            <a href='/tos' itemprop="url">Terms of Service </a>
+          </span>
+        </li>
+        <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+          <span itemprop='name'>
+            <a href='https://meta.discourse.org/privacy' itemprop="url">Privacy Policy </a>
+          </span>
+        </li>
+    </ul>
+  </nav>
+  <p class='powered-by-link'>Powered by <a href="https://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled</p>
+</footer>
+
+    
+    
+  </body>
+  
+</html>

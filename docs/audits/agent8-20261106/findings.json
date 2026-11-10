@@ -694,11 +694,18 @@
     "pr": 81,
     "observed_head": "e869d8365c7e54ed3da3739d9cdf15948f37f022",
     "title": "Mandatory MCI CI expects47 IDs but discovers58 and aborts before execution on both hosted platforms",
-    "status": "SOURCE_CORRECTION_ACK_AT_PR82_96B_HOSTED_CLOSURE_PENDING",
+    "status": "CLOSED_SCOPED_EXACT96_HOSTED_MCI58_BOTH_OS",
     "evidence": "phase181/report.md;phase181/verification.json",
     "successor_pr": 82,
     "successor_head": "96b17905a5be923857aa1e778085eaeec6f0f27f",
     "successor_evidence": "phase183/report.md;phase183/verification.json",
-    "required_correction": "Exact58 required IDs including10 continuation+owned-temp-alias, duplicate rejection; independently qualify exact hosted successor."
+    "required_correction": "Exact58 required IDs including10 continuation+owned-temp-alias, duplicate rejection; independently qualify exact hosted successor.",
+    "fixed_run": 42880543983,
+    "fixed_jobs": [
+      130055331922,
+      130055332321
+    ],
+    "fixed_evidence": "phase187/report.md;phase187/verification.json",
+    "fixed_scope": "EXACT96_MCI58_PER_OS_ONLY_NOT_FULL_CI_RUNTIME_OR_CODEX_APP_RESTART"
   }
 ]

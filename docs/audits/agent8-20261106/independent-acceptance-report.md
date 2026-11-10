@@ -3826,3 +3826,6 @@ RELEASE_MANIFEST_STATUS:sourcegraph/toolproposal/notapprovedassembly. NODE_INVEN
 
 
 Phases181–183: MCI mandatory47→58 preexecution defect F40 (source corrected on96, hosted pending); independently verified e869 Supervisor132/OS artifacts; PR82 exact96 source1868/full original24 pure only. Current six hosted queued;8P1/8P2; Overall NO-GO; physical/Tailscale BLOCKED. Reports: docs/audits/agent8-20261106/phase181/report.md, docs/audits/agent8-20261106/phase182/report.md, docs/audits/agent8-20261106/phase183/report.md.
+
+
+Phases184–187: retained Consul metadata and local GPG identity reviewed data-only (publisher/signature NOT_QUALIFIED, execution BLOCKED); A4 inventory22 source correction/6 original pure controls ACK but six ignored pyc fail worktree readiness. F40 CLOSED scoped exact96 MCI hosted58 perOS/0skip/full1868maps. Registered prior open7P1/8P2; other new tooling/harness findings not adjudicated here. Overall NO-GO; physical/Tailscale BLOCKED. See docs/audits/agent8-20261106/phase187/report.md and phases184–186.
