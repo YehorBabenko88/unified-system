@@ -610,12 +610,15 @@
     "integration_pr": 69,
     "integration_head": "e203c0bbeaa176a843a7d80b2eadfefe8fce7385",
     "title": "Scoped fresh render e lacks DOM completion and full smoke fails at observed work budget breach",
-    "status": "OPEN_F_ORIGINAL_PAGE_NAVIGATE_ERR_NAME_NOT_RESOLVED_SOURCE_CANDIDATE_CORROBORATED_EXCLUSIVE_RCA_PENDING",
+    "status": "SOURCE_CORRECTION_ACK_PR80_2AB_RESOLVER_ALIGNMENT_RUNTIME_VALIDATION_AND_EXCLUSIVE_RCA_PENDING",
     "test": "Original Root e render receipt generic failure/no screenshot, primary render73, work20.0489629s exceeds20",
     "evidence": "phase150/render-receipt.json;phase150/smoke-receipt.json;phase150/evidence-verification.json;phase150/report.md",
     "required_correction": "Owner source-only timing/phase analysis and safe design. Preserve e originals and fixed caps/no privilege or policy escalation; no automatic retry. Establish precise cause/ordered phase evidence before choosing separate committed correction; no assumption that PowerShell or CPU/memory cap caused it.",
     "additional_head": "Terminan47530d81e8b6f297a060a206bea6f783ccd0702e / Unifieded4ac58066c29ba21bbe258c3e303991766baf4c",
-    "additional_evidence": "phase155/report.md;phase155/render-receipt.json;phase155/primary-source-review.json"
+    "additional_evidence": "phase155/report.md;phase155/render-receipt.json;phase155/primary-source-review.json",
+    "successor_pr": 80,
+    "successor_head": "2ab52f86aca6a38bd63c1fea71e12a80a2c2ddd9",
+    "successor_evidence": "phase156/report.md;phase156/source-verification.json"
   },
   {
     "id": "A8-F37",
