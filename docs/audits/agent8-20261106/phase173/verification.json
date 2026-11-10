@@ -1,0 +1,102 @@
+{
+  "head": "8160f6c581640089e5db68516edfc43a0a88a993",
+  "tree": "5866562d8ca6add34df4373db5114a53c5cda9ff",
+  "original_refs": {
+    "restart-receipt.json": {
+      "original": "C:\\Users\\LS-5\\.codex\\mission-continuation-evidence-20261110\\restart-receipt.json",
+      "sha256": "699c9e21aa063d28717f5c0bdb5a2200648b125fc49cff421afadfe3954375ef",
+      "bytes": 1138
+    },
+    "exact-50.log": {
+      "original": "C:\\Users\\LS-5\\.codex\\mission-continuation-evidence-20261110\\exact-50.log",
+      "sha256": "a32523502fc68fc0519603bb8ed1849f61532d74926fec0fe7fc1e04b4b8c40a",
+      "bytes": 7189
+    },
+    "exact-source-before.json": {
+      "original": "C:\\Users\\LS-5\\.codex\\mission-continuation-evidence-20261110\\exact-source-before.json",
+      "sha256": "fb864a9c67d1858431e63ad13788030bcf9dbd4b97525a63334469e4163f9e7f",
+      "bytes": 243917
+    },
+    "exact-source-after.json": {
+      "original": "C:\\Users\\LS-5\\.codex\\mission-continuation-evidence-20261110\\exact-source-after.json",
+      "sha256": "fb864a9c67d1858431e63ad13788030bcf9dbd4b97525a63334469e4163f9e7f",
+      "bytes": 243917
+    },
+    "qualify.py": {
+      "original": "C:\\Users\\LS-5\\.codex\\mission-continuation-evidence-20261110\\qualify.py",
+      "sha256": "50b42e42945c112317efc27229b3bf41d6a7b82a2969672ba45189db86b2f3b7",
+      "bytes": 5551
+    }
+  },
+  "raw1858_original_before_after_equal_own_Git": true,
+  "original_unique50_IDs": [
+    "tests.test_mission_controller.ContinuationTests.test_aba_task_drift_stays_stale_until_explicit_checkpoint",
+    "tests.test_mission_controller.ContinuationTests.test_any_task_drift_stales_without_rewriting_history",
+    "tests.test_mission_controller.ContinuationTests.test_closed_types_sha_bounds_and_unknown_task",
+    "tests.test_mission_controller.ContinuationTests.test_continuation_persisted_record_capacity",
+    "tests.test_mission_controller.ContinuationTests.test_continuation_reopen_detached_and_no_authority",
+    "tests.test_mission_controller.ContinuationTests.test_result_scope_and_evidence_remain_observations",
+    "tests.test_mission_controller.ContinuationTests.test_retry_budget_never_resets_even_after_stale_and_reopen",
+    "tests.test_mission_controller.ContinuationTests.test_stale_cas_duplicate_and_full_receipt_capacity",
+    "tests.test_mission_controller.ContinuationTests.test_unknown_continuation_version_rejected",
+    "tests.test_mission_controller.ContinuationTests.test_unknown_receipt_version_and_invalid_binding_reject_reopen",
+    "tests.test_mission_controller.MissionTests.test_actual_process_exit_after_commit_reopens",
+    "tests.test_mission_controller.MissionTests.test_arbitrary_existing_database_not_adopted",
+    "tests.test_mission_controller.MissionTests.test_base_identity_collision_rejected",
+    "tests.test_mission_controller.MissionTests.test_boolean_marker_version_rejected",
+    "tests.test_mission_controller.MissionTests.test_bounds_and_safe_paths",
+    "tests.test_mission_controller.MissionTests.test_closed_fields_and_canonical_ids",
+    "tests.test_mission_controller.MissionTests.test_concurrent_stale_writer_rejected",
+    "tests.test_mission_controller.MissionTests.test_conservative_byte_reserve_before_append",
+    "tests.test_mission_controller.MissionTests.test_corruption_rejected_without_repair",
+    "tests.test_mission_controller.MissionTests.test_crash_before_append_keeps_last_commit",
+    "tests.test_mission_controller.MissionTests.test_cycle_rejected",
+    "tests.test_mission_controller.MissionTests.test_directory_symlink_or_junction_refused",
+    "tests.test_mission_controller.MissionTests.test_duplicate_is_idempotent",
+    "tests.test_mission_controller.MissionTests.test_evidence_and_ci_are_typed_and_bounded",
+    "tests.test_mission_controller.MissionTests.test_fake_ci_success_never_physical_approval",
+    "tests.test_mission_controller.MissionTests.test_foreign_schema_refused_before_read",
+    "tests.test_mission_controller.MissionTests.test_hardlink_refused_without_writing",
+    "tests.test_mission_controller.MissionTests.test_invalid_capacity_refused_before_reservation",
+    "tests.test_mission_controller.MissionTests.test_legacy_version_one_refused_without_rewrite",
+    "tests.test_mission_controller.MissionTests.test_legacy_wal_sidecar_refused_before_create",
+    "tests.test_mission_controller.MissionTests.test_maximum_task_dag_replays_and_cycle_revision_refused",
+    "tests.test_mission_controller.MissionTests.test_oversized_receipt_rejected_before_journal_materialization",
+    "tests.test_mission_controller.MissionTests.test_owned_temp_alias_is_resolved_before_guarded_journal_creation",
+    "tests.test_mission_controller.MissionTests.test_owner_and_scope_identity_immutable",
+    "tests.test_mission_controller.MissionTests.test_persisted_bounds_are_recovered_and_closed",
+    "tests.test_mission_controller.MissionTests.test_persisted_record_capacity_refuses_append",
+    "tests.test_mission_controller.MissionTests.test_process_dies_during_uncommitted_transaction",
+    "tests.test_mission_controller.MissionTests.test_projection_is_copy",
+    "tests.test_mission_controller.MissionTests.test_record_bytes_bounded",
+    "tests.test_mission_controller.MissionTests.test_relative_path_refused_without_creation",
+    "tests.test_mission_controller.MissionTests.test_reopen_preserves_receipts",
+    "tests.test_mission_controller.MissionTests.test_replay_rejects_semantic_identity_collision",
+    "tests.test_mission_controller.MissionTests.test_same_task_updates_keep_failed_ci_history",
+    "tests.test_mission_controller.MissionTests.test_simultaneous_writers_have_one_commit",
+    "tests.test_mission_controller.MissionTests.test_sparse_file_rejected_before_journal_materialization",
+    "tests.test_mission_controller.MissionTests.test_truncated_database_rejected",
+    "tests.test_mission_controller.MissionTests.test_unknown_dependency_rejected",
+    "tests.test_mission_controller.MissionTests.test_unknown_receipt_rejected_even_with_valid_chain",
+    "tests.test_mission_controller.MissionTests.test_unknown_schema_refused",
+    "tests.test_mission_controller.MissionTests.test_wal_sidecar_refused_before_read"
+  ],
+  "owner_unit_duration_seconds": 3.515,
+  "separate_Python_process_ids": [
+    151280,
+    161656
+  ],
+  "nonces_distinct": true,
+  "phase1_state_equals_phase2_reopened_before": true,
+  "original_journal_SHA256": "2784d87bf5e79740b6db2a7962c630c7c24ebd1c37799ca15bdb9966b4cfcb68",
+  "independent_stdlib_SQLite_READONLY_sixrow_chain_valid": true,
+  "fulltask_snapshot_bindings_verified_at_both_checkpoint_rows": true,
+  "phase2_explicit_refresh_sequence": 6,
+  "retry_max2_used1_preserved": true,
+  "duration_bound": "DRIVER_COMMUNICATE_TIMEOUT10_PER_PROCESS_NO_RECORDED_PER_PROCESS_END_DURATION",
+  "interpreter_version": "NOT_PERSISTED_IN_THIS_RECEIPT_NO_VERSION_SPECIFIC_CLAIM",
+  "result": "ORIGINAL_EXACT816_LOCAL50_AND_TWO_PYTHON_PROCESS_REOPEN_PROOF_AUTHENTICATED_SCOPED_ONLY",
+  "Codex_app_restart": "NOT_TESTED",
+  "autonomous_dispatch": "NOT_IMPLEMENTED",
+  "A8_project_helper_fixture_restart_or_node_execution": 0
+}

@@ -1,0 +1,56 @@
+UNIQUE_IDS 50
+test_aba_task_drift_stays_stale_until_explicit_checkpoint (tests.test_mission_controller.ContinuationTests.test_aba_task_drift_stays_stale_until_explicit_checkpoint) ... ok
+test_any_task_drift_stales_without_rewriting_history (tests.test_mission_controller.ContinuationTests.test_any_task_drift_stales_without_rewriting_history) ... ok
+test_closed_types_sha_bounds_and_unknown_task (tests.test_mission_controller.ContinuationTests.test_closed_types_sha_bounds_and_unknown_task) ... ok
+test_continuation_persisted_record_capacity (tests.test_mission_controller.ContinuationTests.test_continuation_persisted_record_capacity) ... ok
+test_continuation_reopen_detached_and_no_authority (tests.test_mission_controller.ContinuationTests.test_continuation_reopen_detached_and_no_authority) ... ok
+test_result_scope_and_evidence_remain_observations (tests.test_mission_controller.ContinuationTests.test_result_scope_and_evidence_remain_observations) ... ok
+test_retry_budget_never_resets_even_after_stale_and_reopen (tests.test_mission_controller.ContinuationTests.test_retry_budget_never_resets_even_after_stale_and_reopen) ... ok
+test_stale_cas_duplicate_and_full_receipt_capacity (tests.test_mission_controller.ContinuationTests.test_stale_cas_duplicate_and_full_receipt_capacity) ... ok
+test_unknown_continuation_version_rejected (tests.test_mission_controller.ContinuationTests.test_unknown_continuation_version_rejected) ... ok
+test_unknown_receipt_version_and_invalid_binding_reject_reopen (tests.test_mission_controller.ContinuationTests.test_unknown_receipt_version_and_invalid_binding_reject_reopen) ... ok
+test_actual_process_exit_after_commit_reopens (tests.test_mission_controller.MissionTests.test_actual_process_exit_after_commit_reopens) ... ok
+test_arbitrary_existing_database_not_adopted (tests.test_mission_controller.MissionTests.test_arbitrary_existing_database_not_adopted) ... ok
+test_base_identity_collision_rejected (tests.test_mission_controller.MissionTests.test_base_identity_collision_rejected) ... ok
+test_boolean_marker_version_rejected (tests.test_mission_controller.MissionTests.test_boolean_marker_version_rejected) ... ok
+test_bounds_and_safe_paths (tests.test_mission_controller.MissionTests.test_bounds_and_safe_paths) ... ok
+test_closed_fields_and_canonical_ids (tests.test_mission_controller.MissionTests.test_closed_fields_and_canonical_ids) ... ok
+test_concurrent_stale_writer_rejected (tests.test_mission_controller.MissionTests.test_concurrent_stale_writer_rejected) ... ok
+test_conservative_byte_reserve_before_append (tests.test_mission_controller.MissionTests.test_conservative_byte_reserve_before_append) ... ok
+test_corruption_rejected_without_repair (tests.test_mission_controller.MissionTests.test_corruption_rejected_without_repair) ... ok
+test_crash_before_append_keeps_last_commit (tests.test_mission_controller.MissionTests.test_crash_before_append_keeps_last_commit) ... ok
+test_cycle_rejected (tests.test_mission_controller.MissionTests.test_cycle_rejected) ... ok
+test_directory_symlink_or_junction_refused (tests.test_mission_controller.MissionTests.test_directory_symlink_or_junction_refused) ... ok
+test_duplicate_is_idempotent (tests.test_mission_controller.MissionTests.test_duplicate_is_idempotent) ... ok
+test_evidence_and_ci_are_typed_and_bounded (tests.test_mission_controller.MissionTests.test_evidence_and_ci_are_typed_and_bounded) ... ok
+test_fake_ci_success_never_physical_approval (tests.test_mission_controller.MissionTests.test_fake_ci_success_never_physical_approval) ... ok
+test_foreign_schema_refused_before_read (tests.test_mission_controller.MissionTests.test_foreign_schema_refused_before_read) ... ok
+test_hardlink_refused_without_writing (tests.test_mission_controller.MissionTests.test_hardlink_refused_without_writing) ... ok
+test_invalid_capacity_refused_before_reservation (tests.test_mission_controller.MissionTests.test_invalid_capacity_refused_before_reservation) ... ok
+test_legacy_version_one_refused_without_rewrite (tests.test_mission_controller.MissionTests.test_legacy_version_one_refused_without_rewrite) ... ok
+test_legacy_wal_sidecar_refused_before_create (tests.test_mission_controller.MissionTests.test_legacy_wal_sidecar_refused_before_create) ... ok
+test_maximum_task_dag_replays_and_cycle_revision_refused (tests.test_mission_controller.MissionTests.test_maximum_task_dag_replays_and_cycle_revision_refused) ... ok
+test_oversized_receipt_rejected_before_journal_materialization (tests.test_mission_controller.MissionTests.test_oversized_receipt_rejected_before_journal_materialization) ... ok
+test_owned_temp_alias_is_resolved_before_guarded_journal_creation (tests.test_mission_controller.MissionTests.test_owned_temp_alias_is_resolved_before_guarded_journal_creation) ... ok
+test_owner_and_scope_identity_immutable (tests.test_mission_controller.MissionTests.test_owner_and_scope_identity_immutable) ... ok
+test_persisted_bounds_are_recovered_and_closed (tests.test_mission_controller.MissionTests.test_persisted_bounds_are_recovered_and_closed) ... ok
+test_persisted_record_capacity_refuses_append (tests.test_mission_controller.MissionTests.test_persisted_record_capacity_refuses_append) ... ok
+test_process_dies_during_uncommitted_transaction (tests.test_mission_controller.MissionTests.test_process_dies_during_uncommitted_transaction) ... ok
+test_projection_is_copy (tests.test_mission_controller.MissionTests.test_projection_is_copy) ... ok
+test_record_bytes_bounded (tests.test_mission_controller.MissionTests.test_record_bytes_bounded) ... ok
+test_relative_path_refused_without_creation (tests.test_mission_controller.MissionTests.test_relative_path_refused_without_creation) ... ok
+test_reopen_preserves_receipts (tests.test_mission_controller.MissionTests.test_reopen_preserves_receipts) ... ok
+test_replay_rejects_semantic_identity_collision (tests.test_mission_controller.MissionTests.test_replay_rejects_semantic_identity_collision) ... ok
+test_same_task_updates_keep_failed_ci_history (tests.test_mission_controller.MissionTests.test_same_task_updates_keep_failed_ci_history) ... ok
+test_simultaneous_writers_have_one_commit (tests.test_mission_controller.MissionTests.test_simultaneous_writers_have_one_commit) ... ok
+test_sparse_file_rejected_before_journal_materialization (tests.test_mission_controller.MissionTests.test_sparse_file_rejected_before_journal_materialization) ... ok
+test_truncated_database_rejected (tests.test_mission_controller.MissionTests.test_truncated_database_rejected) ... ok
+test_unknown_dependency_rejected (tests.test_mission_controller.MissionTests.test_unknown_dependency_rejected) ... ok
+test_unknown_receipt_rejected_even_with_valid_chain (tests.test_mission_controller.MissionTests.test_unknown_receipt_rejected_even_with_valid_chain) ... ok
+test_unknown_schema_refused (tests.test_mission_controller.MissionTests.test_unknown_schema_refused) ... ok
+test_wal_sidecar_refused_before_read (tests.test_mission_controller.MissionTests.test_wal_sidecar_refused_before_read) ... ok
+
+----------------------------------------------------------------------
+Ran 50 tests in 3.515s
+
+OK
