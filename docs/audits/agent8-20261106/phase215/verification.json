@@ -1,0 +1,34 @@
+{
+  "base_head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
+  "base_tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98",
+  "staged_tree": "f9e6e18820305135c87687f56232496bd4f981ad",
+  "exact_files": {
+    "docs/network/f26-pre-reentry-review1.md": "d8edb1e8642f277f5397c1edda48cca192469beb07a45f8be6d1bcaf3f9f0952",
+    "tests/test_lan_pre_reentry_diagnostics.py": "f55ee329f1c2a6440b76a42b43423486608be7b987e4781380ea620b3260278c"
+  },
+  "proposed_test_ids": [
+    "PreReentryProposalTests.test_two_fixed_slots_and_unknown_slot_cannot_expand_wire",
+    "PreReentryProposalTests.test_readiness_bits_and_false_idle_value_are_not_truthy_coerced",
+    "PreReentryProposalTests.test_first_current_failure_site_code_family_and_order_are_sticky",
+    "PreReentryProposalTests.test_first_close_entry_is_sticky_not_claimed_as_actual_transition",
+    "PreReentryProposalTests.test_ordinals_saturate_without_rollover",
+    "PreReentryProposalTests.test_private_values_never_call_str_or_repr_or_enter_wire",
+    "PreReentryProposalTests.test_delegating_current_calls_original_exactly_once",
+    "PreReentryProposalTests.test_original_exception_identity_survives_observer_failure",
+    "PreReentryProposalTests.test_actual_formatter_rejects_unknown_packed_data_without_private_leak",
+    "PreReentryProposalTests.test_no_earlier_truncation_of_legacy_fields_is_release_gate",
+    "PreReentryV2CodecProposalTests.test_alias_registry_is_closed_injective_and_versioned",
+    "PreReentryV2CodecProposalTests.test_original_v1_wire_and_historical_decode_remain_v1",
+    "PreReentryV2CodecProposalTests.test_full_old_fallback_is_selected_before_new_encoding",
+    "PreReentryV2CodecProposalTests.test_all_bounded_collection_shapes_keep_old_decoded_retention",
+    "PreReentryV2CodecProposalTests.test_busy_unavailable_connection_shapes_are_not_reinterpreted",
+    "PreReentryV2CodecProposalTests.test_decoder_rejects_duplicate_unknown_alias_and_wrong_version",
+    "PreReentryV2CodecProposalTests.test_codec_rejects_oversized_or_non_ascii_input_before_parse"
+  ],
+  "review_result": "NEEDS_SOURCE_CORRECTION_BEFORE_V2_DESIGN_ACK",
+  "contradiction": "POSITIVE_RETENTION_TEST_REQUIRES_INVALID_CODE31_UNCHANGED_DESPITE_CLOSED0_TO16",
+  "historical_codec_requirement": "EXISTING_EMERGENCY_V1_SENTINEL_MAY_OMIT_TRUNCATED",
+  "execution": "NONE_PROJECT_HELPER_TEST_OR_AST",
+  "F26": "OPEN",
+  "GO_NO_GO": "NO-GO"
+}

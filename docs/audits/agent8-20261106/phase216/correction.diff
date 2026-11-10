@@ -1,0 +1,73 @@
+diff --git a/docs/network/f26-pre-reentry-review1.md b/docs/network/f26-pre-reentry-review1.md
+index d0f3a10..67c765b 100644
+--- a/docs/network/f26-pre-reentry-review1.md
++++ b/docs/network/f26-pre-reentry-review1.md
+@@ -198,3 +198,25 @@ CONFLICTS: review1 V1 addition conflict resolved IN DESIGN by380-byte key saving
+ implementation, actual pure verification and wire-parser adoption remain HELD.
+ BLOCKERS: Root exact API review; subsequent separate implementation/test scope.
+ NEXT_ACTIONS: Root/A8 source review only; no tests, imports, compile, fixture or push.
++
++
++## A8 source correction: closed enums and historical sentinel acceptance
++
++Positive1938-byte retention witness now uses legal maximum code16, not reserved31.
++Two-digit width and all size bounds remain identical.31 appears only in explicit
++invalid-code negative source: formatter defaults the entire invalid pre input to
++two zero/default rows; strict decoder rejects wire code31 rather than roundtrip it.
++This corrects a proposal-test defect, not an observed helper failure; no run.
++
++Historical V1 decoder accepts EXACTLY these existing emergency sentinel shapes:
++{code:"DIAGNOSTIC_UNAVAILABLE",v:1}, emitted by emit_failure exception fallback;
++{code:"DIAGNOSTIC_UNAVAILABLE",truncated:true,v:1}, emitted by formatter size fallback.
++Absence of truncated in the first is preserved, not filled with a fabricated bool.
++No observer/connections/stores/io/stage is required for those exact sentinel
++contexts. Normal full V1 records retain their existing validated schema; arbitrary
++partial records, extra keys, false truncated sentinel, duplicate keys or alternate
++codes do not gain emergency-sentinel acceptance. Decode returns original object
++unchanged plus pre=None. Encoder V2 unavailable still has explicit t:true/v:2;
++V1 emergency without truncated is historical decode-only compatibility, never
++permission to omit required fields from normal V2 records.All17 existing proposed method IDs remain; both corrections are assertions
++inside existing codec methods, not new test IDs. Existing helper/test paths remain IMPLEMENTATION_HELD.
+diff --git a/tests/test_lan_pre_reentry_diagnostics.py b/tests/test_lan_pre_reentry_diagnostics.py
+index 2bcd275..56bdb7e 100644
+--- a/tests/test_lan_pre_reentry_diagnostics.py
++++ b/tests/test_lan_pre_reentry_diagnostics.py
+@@ -103,7 +103,7 @@ class PreReentryProposalTests(unittest.TestCase):
+         for row in state['stores']:
+             for key in ('entry_ms','hold_ms','max_ms','n','budget_ms'):row[key]=0
+         baseline=self.helper.format_failure(state,'BUDGET_STORE_UNAVAILABLE')
+-        pre=[[slot,31,3,3,31,7,255,31,7,255] for slot in (1,2)]
++        pre=[[slot,31,3,3,16,7,255,16,7,255] for slot in (1,2)]
+         candidate=self.helper.format_failure_v2(state,'BUDGET_STORE_UNAVAILABLE',pre=pre)
+         self.assertLessEqual(len(candidate.encode('ascii')),1960)
+         old=json.loads(baseline.split(' ',1)[1]);new,decoded_pre=self.helper.decode_failure(candidate)
+@@ -136,6 +136,12 @@ class PreReentryV2CodecProposalTests(unittest.TestCase):
+         decoded,pre=self.helper.decode_failure(line)
+         self.assertEqual(decoded,json.loads(line.split(' ',1)[1]))
+         self.assertIsNone(pre)
++        for body in ({'code':'DIAGNOSTIC_UNAVAILABLE','v':1},
++                     {'code':'DIAGNOSTIC_UNAVAILABLE','truncated':True,'v':1}):
++            historical='LAN_FAIL_DIAG_V1 '+json.dumps(body,separators=(',',':'))+'\n'
++            decoded,pre=self.helper.decode_failure(historical)
++            self.assertEqual(decoded,body)
++            self.assertIsNone(pre)
+ 
+     def test_full_old_fallback_is_selected_before_new_encoding(self):
+         state=maximal_legacy_state()
+@@ -179,6 +185,16 @@ class PreReentryV2CodecProposalTests(unittest.TestCase):
+                      'LAN_FAIL_DIAG_V1 {"v":2}\n'):
+             with self.assertRaises(ValueError):self.helper.decode_failure(line)
+ 
++        invalid=[[slot,31,3,3,31,7,255,31,7,255] for slot in (1,2)]
++        line=self.helper.format_failure_v2({},pre=invalid)
++        decoded,pre=self.helper.decode_failure(line)
++        self.assertEqual(pre,[[slot,0,0,0,0,0,0,0,0,0] for slot in (1,2)])
++        self.assertNotEqual(pre,invalid)
++        valid=self.helper.format_failure_v2({},pre=self.pre)
++        wire=json.loads(valid.split(' ',1)[1]);wire['P']=invalid
++        bad='LAN_FAIL_DIAG_V2 '+json.dumps(wire,separators=(',',':'))+'\n'
++        with self.assertRaises(ValueError):self.helper.decode_failure(bad)
++
+     def test_codec_rejects_oversized_or_non_ascii_input_before_parse(self):
+         for line in ('LAN_FAIL_DIAG_V2 '+' '*1960,'LAN_FAIL_DIAG_V2 {"v":2,"secret":"\u2603"}'):
+             with self.assertRaises(ValueError):self.helper.decode_failure(line)

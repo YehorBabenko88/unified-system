@@ -3868,3 +3868,6 @@ Phase211 independent A7 modeled20 originals:12PASS/8intendedFAIL/0errors/0skip/t
 
 
 Phases212–214: PR84 exact1bafec review-only12JSON/53unique reference hashes/35proposedUNKNOWN checks source-dataACK; Root clarifies historicalA7NONE grantsnoauthorityfrompacket, not separatelease revocation. A7same20 actualmodeledGREEN20PASS0skip originalverified; F43/F44/F48/F49CLOSEDscopedSOURCE+MODELEDonly, no realGit/child/kernel/47. Registered8P1/8P2; F26/F42open; fullCI/physical/TailscaleNO-GO/BLOCKED. See phase212/report.md and phase214/report.md.
+
+
+Phases215–217: A1V2 closed-enum positive31 contradiction correctedatstaged764bb;17proposedIDsNOTRUN/source-designACKonly/F26OPEN. A6e23 exact963tree/407raw+Git andoriginalmaps match; actualpure8PASS+separateNode6PASS localnormalpath only, no actualfailuremechanics/browser/hosted/native. Confirmed8P1/8P2 unchanged; overallNO-GO/physicalTailscaleBLOCKED. See phase216/report.md,phase217/report.md.
