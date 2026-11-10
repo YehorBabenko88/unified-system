@@ -1,0 +1,85 @@
+diff --git a/docs/ci/f26-cadence-fixture-20261110.md b/docs/ci/f26-cadence-fixture-20261110.md
+new file mode 100644
+index 0000000..2053da6
+--- /dev/null
++++ b/docs/ci/f26-cadence-fixture-20261110.md
+@@ -0,0 +1,54 @@
++# F26 heartbeat fixture cadence proposal
++
++Status: source approved by Root; publication held pending Root/A8 qualification review.
++Base HEAD: 6e79f2da66212474e9875559ec532c0f65b678a8
++Base tree: 18c84ddbe65cd4e82d3f32a5210c3ff8617bf0ca
++
++## Change and preserved coverage
++
++The existing heartbeat test temporarily selects 50 ms cadence to establish real
++PING/PONG processing and renew an already expired data-read deadline on both
++connections. Stop that patch immediately after both original renewal assertions,
++before connection-health assertions or bidirectional application sends. Context
++exit still restores it on setup/assertion failure. The original heartbeat method
++continues running; a wait already in progress may complete once at the old cadence.
++No frame injection, heartbeat replacement, budget bypass, deadline increase or
++production change is proposed. Production interval is 10 seconds; idle timeout
++remains 30 seconds and application deadlines remain the original 5 seconds.
++
++All existing test IDs and assertions remain. Added test IDs: NONE. Original
++stale last_rx, real control processing gate, forced old read deadline, both True
++renewal assertions, open/health checks and both payload comparisons remain.
++Existing expired-idle negative real-TLS case remains unchanged. Failure diagnostics
++remain unchanged. No helper or mandatory inventory changes are needed for IDs.
++
++## Executable qualification plan (requires new serial allocation)
++
++1. Run the existing active-control heartbeat case once on this exact reviewed diff,
++   with actual owned loopback TLS and fresh temporary SQLite synchronous FULL.
++   Inject the SAME requested extra 50 ms own-store transaction service cost as
++   the original matched experiment, after the body while holding only its RLock
++   and before the original context exit. No cost calibration or debit replay.
++   Require both renewals, open connections and both payload comparisons to pass.
++   Capture original failure diagnostics on failure. Do not retry automatically.
++2. In a separate disposable, explicitly allocated mutation run, make only the data
++   read on_idle callback return False at the existing wrapper boundary while
++   retaining the actual TLS/control heartbeat method. Run that same active case
++   once; require failure at renewal/closure before payload success. This checks
++   the test cannot pass when renewal is disabled. Never ship the mutation.
++3. Run the unchanged expired-idle negative case once: both real TLS connections
++   must close and preserve DEADLINE evidence. No timeout/cap/security changes.
++4. Root owns subsequent exact-head mandatory inventory and Windows hosted suite.
++   Local outcomes do not transfer to hosted, physical or runtime admission.
++
++These are proposed future executions, not claims of completed tests or current
++permission to run. No additional fixture, model, calibration or third arm ran.
++
++## Evidence limits
++
++The authorized matched pair on the base produced A RED at reply CREDIT0/DEADLINE
++and B GREEN under the same requested extra 50 ms owned-store service cost, with
++only subsequent heartbeat cadence changed. It supports fixture cadence sensitivity
++under that declared simulation, not exclusive historical hosted causality or a
++production fix. This diff requires independent review and exact-head qualification.
++No physical computer or network security settings were changed.
+diff --git a/tests/test_lan_transport.py b/tests/test_lan_transport.py
+index c052ed6..abcedff 100644
+--- a/tests/test_lan_transport.py
++++ b/tests/test_lan_transport.py
+@@ -182,7 +182,9 @@ class TLSIsolationTests(unittest.TestCase):
+             result=original(sock,budget,peer,deadline,on_idle=on_idle)
+             if key in control and result[0]['kind'] in ('PING','PONG'):seen_control.add(key)
+             return result
+-        with FailureDiagnostics().observe(lan,budget) as diagnostics, patch('unified_system.lan_transport.HEARTBEAT_INTERVAL',.05),patch.object(lan,'_read_frame',side_effect=read):
++        from contextlib import ExitStack
++        with FailureDiagnostics().observe(lan,budget) as diagnostics, ExitStack() as heartbeat_cadence,patch.object(lan,'_read_frame',side_effect=read):
++            heartbeat_cadence.enter_context(patch('unified_system.lan_transport.HEARTBEAT_INTERVAL',.05))
+             client,server,c,s=self.pair()
+             diagnostics.register_connection(c);diagnostics.register_connection(s)
+             for connection in (c,s):
+@@ -197,6 +199,9 @@ class TLSIsolationTests(unittest.TestCase):
+                 with diagnostics.failure_boundary():
+                     self.assertIs(renewed.get(timeout=3),True)
+                     self.assertIs(renewed.get(timeout=3),True)
++                    # Fast cadence establishes renewal only; application traffic
++                    # uses the original production interval and durable budgets.
++                    heartbeat_cadence.close()
+                     self.assertFalse(c.closed,c.error);self.assertFalse(s.closed,s.error)
+                     c.send(b'after idle');self.assertEqual(s.receive().payload,b'after idle')
+                     s.send(b'reply');self.assertEqual(c.receive().payload,b'reply')

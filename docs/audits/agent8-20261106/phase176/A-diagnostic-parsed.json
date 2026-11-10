@@ -1,0 +1,129 @@
+[
+  {
+    "code": "DEADLINE",
+    "connections": [
+      {
+        "age_ms": 77,
+        "alive": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "closed": false,
+        "jobs": [],
+        "q": 0,
+        "qb": 0,
+        "slot": 1,
+        "streams": [
+          [
+            1,
+            true,
+            0,
+            0
+          ]
+        ],
+        "why": "OTHER"
+      },
+      {
+        "age_ms": 202,
+        "alive": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "closed": false,
+        "jobs": [],
+        "q": 0,
+        "qb": 0,
+        "slot": 2,
+        "streams": [
+          [
+            1,
+            true,
+            65536,
+            10
+          ]
+        ],
+        "why": "OTHER"
+      }
+    ],
+    "io": [
+      {
+        "active": false,
+        "channel": "control",
+        "elapsed_ms": 62,
+        "error": "OTHER",
+        "n": 0,
+        "read": "READ_DONE",
+        "remaining_ms": 4875,
+        "slot": 1,
+        "write": "PONG"
+      },
+      {
+        "active": false,
+        "channel": "control",
+        "elapsed_ms": 62,
+        "error": "OTHER",
+        "n": 120,
+        "read": "READ_DONE",
+        "remaining_ms": 5000,
+        "slot": 2,
+        "write": "PING"
+      },
+      {
+        "active": false,
+        "channel": "data",
+        "elapsed_ms": 187,
+        "error": "OTHER",
+        "n": 1,
+        "read": "READ_1",
+        "remaining_ms": -1000,
+        "slot": 2,
+        "write": "APP"
+      },
+      {
+        "active": false,
+        "channel": "data",
+        "elapsed_ms": 0,
+        "error": "OTHER",
+        "n": 1,
+        "read": "READ_1",
+        "remaining_ms": 30000,
+        "slot": 1,
+        "write": "OTHER"
+      }
+    ],
+    "observer": "OK",
+    "stage": "SEND",
+    "stores": [
+      {
+        "budget_ms": 8500,
+        "budget_waiters": 1,
+        "entry_ms": 62,
+        "held": true,
+        "hold_ms": 15,
+        "max_ms": 187,
+        "n": 142,
+        "phase": "TX_COMMIT",
+        "waiters": 0
+      },
+      {
+        "budget_ms": 8562,
+        "budget_waiters": 1,
+        "entry_ms": 62,
+        "held": true,
+        "hold_ms": 15,
+        "max_ms": 187,
+        "n": 142,
+        "phase": "TX_COMMIT",
+        "waiters": 0
+      }
+    ],
+    "truncated": false,
+    "v": 1
+  }
+]

@@ -1,0 +1,23 @@
+LAN_FAIL_DIAG_V1 {"code":"OTHER","connections":[{"age_ms":2750,"alive":[false,true,false,false,false],"closed":true,"jobs":[],"q":0,"qb":0,"slot":1,"streams":[],"why":"OTHER"},{"age_ms":2797,"alive":[false,false,false,false,false],"closed":true,"jobs":[],"q":0,"qb":0,"slot":2,"streams":[],"why":"DEADLINE"}],"io":[{"active":false,"channel":"control","elapsed_ms":62,"error":"OTHER","n":0,"read":"READ_DONE","remaining_ms":4875,"slot":1,"write":"PING"},{"active":false,"channel":"control","elapsed_ms":62,"error":"OTHER","n":1,"read":"READ_ERROR","remaining_ms":30000,"slot":2,"write":"PING"},{"active":false,"channel":"data","elapsed_ms":0,"error":"DEADLINE","n":1,"read":"READ_ERROR","remaining_ms":-1000,"slot":2,"write":"OTHER"}],"observer":"OK","stage":"SEND","stores":[{"budget_ms":62,"budget_waiters":0,"entry_ms":0,"held":false,"hold_ms":0,"max_ms":125,"n":11,"phase":"TX_DONE","waiters":0},{"budget_ms":62,"budget_waiters":0,"entry_ms":0,"held":false,"hold_ms":0,"max_ms":140,"n":10,"phase":"TX_DONE","waiters":0}],"truncated":false,"v":1}
+Exception in thread Thread-49 (_reader):
+Traceback (most recent call last):
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\threading.py", line 1075, in _bootstrap_inner
+    self.run()
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\threading.py", line 1012, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-1-direct-lan-transport\work\f26-fix-qualification-source\unified_system\lan_transport.py", line 363, in _reader
+    h,payload=_read_frame(self.channels[channel],self.owner.budget,self.peer_id,time.monotonic()+IDLE_TIMEOUT,
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\unittest\mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\unittest\mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\unittest\mock.py", line 1204, in _execute_mock_call
+    result = effect(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-1-direct-lan-transport\work\f26-fix-qualification-source\tests\test_lan_transport.py", line 178, in read
+    if not data[key].wait(3):raise RuntimeError('fixture control heartbeat readiness')
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: fixture control heartbeat readiness

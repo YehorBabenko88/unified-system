@@ -1,0 +1,26 @@
+test_active_control_heartbeats_keep_idle_data_channel_healthy (tests.test_lan_transport.TLSIsolationTests.test_active_control_heartbeats_keep_idle_data_channel_healthy) ... ERROR
+
+======================================================================
+ERROR: test_active_control_heartbeats_keep_idle_data_channel_healthy (tests.test_lan_transport.TLSIsolationTests.test_active_control_heartbeats_keep_idle_data_channel_healthy)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\worktrees\agent1-f26-matched-6e-20261110\gateway-runtime-recovery-20261107\tests\test_lan_transport.py", line 202, in test_active_control_heartbeats_keep_idle_data_channel_healthy
+    s.send(b'reply');self.assertEqual(c.receive().payload,b'reply')
+    ^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\.codex\worktrees\agent1-f26-matched-6e-20261110\gateway-runtime-recovery-20261107\unified_system\lan_transport.py", line 279, in send
+    return self._send(payload,traffic_class,stream_id=stream_id,deadline=deadline,cancel=cancel,kind='APP')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\.codex\worktrees\agent1-f26-matched-6e-20261110\gateway-runtime-recovery-20261107\tests\lan_failure_diagnostics.py", line 215, in observed_send
+    try:return send(connection,*args,**kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-1-direct-lan-transport\work\f26-matched-6e.py", line 86, in measured_send
+    result=original_send(connection,payload,traffic_class,**kwargs);record('APP_CALL',size=len(payload),completed=True,total_ms=round((time.monotonic()-begin)*1000,3));return result
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\.codex\worktrees\agent1-f26-matched-6e-20261110\gateway-runtime-recovery-20261107\unified_system\lan_transport.py", line 319, in _send
+    raise TransportError(job['error'])
+unified_system.lan_transport.TransportError: DEADLINE
+
+----------------------------------------------------------------------
+Ran 1 test in 10.252s
+
+FAILED (errors=1)

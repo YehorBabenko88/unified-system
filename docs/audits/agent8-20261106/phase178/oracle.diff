@@ -1,0 +1,67 @@
+--- sealed/f26-fix-qualification.py
++++ proposed/f26-revised-oracle.py
+@@ -3,6 +3,8 @@
+ from unittest.mock import patch
+ 
+ if __name__=='__main__':
++    assert os.environ['QUAL_CASE']=='M', 'MUTATION_ONLY_NO_P_N'
++    assert 1<=float(os.environ['CASE_SAFETY_SECONDS'])<=84
+     guard=runpy.run_path(str(pathlib.Path(__file__).with_name('f26-fix-source-guard.py')))
+     output=guard['output'];source=guard['source'];before=source()
+     (output/'source-before.json').write_text(json.dumps(before,sort_keys=True),encoding='utf8')
+@@ -100,11 +102,32 @@
+         except (OSError,ValueError) as exc:connection.close(str(exc))
+     original_read=lan._read_frame;mutant_calls=[0]
+     def mutant_read(sock,store,peer,deadline,on_idle=None):
+-        if arm[0]=='M' and on_idle is not None and any(sock is c.channels.get('data') for c in connections):
+-            def disabled():
+-                mutant_calls[0]+=1;record('MUTANT_RENEWAL_DISABLED');return False
+-            on_idle=disabled
+-        return original_read(sock,store,peer,deadline,on_idle=on_idle)
++        if not (arm[0]=='M' and on_idle is not None and any(sock is c.channels.get('data') for c in connections)):
++            return original_read(sock,store,peer,deadline,on_idle=on_idle)
++        # Exact owned test observer, whose inner callback came from _reader.
++        # Preserve idle(): healthy=on_idle(); renewed.put(healthy); return healthy.
++        import types
++        expected_test=str(pathlib.Path.cwd()/'tests'/'test_lan_transport.py')
++        expected_prod=str(pathlib.Path.cwd()/'unified_system'/'lan_transport.py')
++        if not (type(on_idle) is types.FunctionType and on_idle.__code__.co_name=='idle'
++                and pathlib.Path(on_idle.__code__.co_filename)==pathlib.Path(expected_test)
++                and on_idle.__code__.co_freevars==('on_idle','renewed')
++                and len(on_idle.__closure__)==2):
++            scope_violation[0]='MUTANT_OBSERVER_SHAPE';raise RuntimeError('MUTANT_OBSERVER_SHAPE')
++        cell=on_idle.__closure__[0];inner=cell.cell_contents
++        if not (type(inner) is types.FunctionType and inner.__code__.co_name=='<lambda>'
++                and pathlib.Path(inner.__code__.co_filename)==pathlib.Path(expected_prod)
++                and inner.__code__.co_freevars==('self',)):
++            scope_violation[0]='MUTANT_INNER_SHAPE';raise RuntimeError('MUTANT_INNER_SHAPE')
++        def disabled():
++            mutant_calls[0]+=1;record('MUTANT_INNER_FALSE');return False
++        cell.cell_contents=disabled
++        try:
++            # The ORIGINAL observer runs, queues False, then returns False to
++            # the ORIGINAL frame reader. Only its inner health callback differs.
++            return original_read(sock,store,peer,deadline,on_idle=on_idle)
++        finally:
++            cell.cell_contents=inner
+     timer=threading.Thread(target=watchdog,daemon=True,name='own-matched-family-safety');timer.start()
+     harness_error=None;after=None
+     try:
+@@ -118,7 +141,7 @@
+                 with (output/(label+'-tests.log')).open('w',encoding='utf8') as log,(output/(label+'-stderr.log')).open('w',encoding='utf8') as err,contextlib.redirect_stderr(err):
+                     result=unittest.TextTestRunner(stream=log,verbosity=2).run(suite)
+             retired=retirement()
+-            outcome=dict(arm=label,periodic_seconds=cadence,initial_seconds=.05,extra_transaction_service_ms=0 if label=='N' else 50,tests=result.testsRun,failures=len(result.failures),errors=len(result.errors),skips=len(result.skipped),elapsed_seconds=round(time.monotonic()-began,3),retirement=retired)
++            outcome=dict(arm=label,cadence_source='COMMITTED_TEST_AND_ORIGINAL_HEARTBEAT',extra_transaction_service_ms=0 if label=='N' else 50,tests=result.testsRun,failures=len(result.failures),errors=len(result.errors),skips=len(result.skipped),elapsed_seconds=round(time.monotonic()-began,3),retirement=retired)
+             outcomes.append(outcome);record('ARM_DONE',tests=result.testsRun,failures=len(result.failures),errors=len(result.errors))
+             dump();(output/'outcomes.json').write_text(json.dumps(outcomes,sort_keys=True),encoding='utf8')
+             print(json.dumps(outcome),flush=True)
+@@ -132,7 +155,7 @@
+         retired=retirement();dump()
+         try:after=source()
+         except BaseException as exc:harness_error=harness_error or ('SOURCE_POST_'+type(exc).__name__)
+-        receipt=dict(schema='unified.f26.matched-cadence-service.experiment.v1',head=before['head'],tree=before['tree'],source_before=before,source_after=after,source_unchanged=before==after,python=sys.version,outcomes=outcomes,mutant_invocations=mutant_calls[0],harness_error=harness_error,scope_violation=scope_violation[0],phase_event_limit=2048,event_count=total[0],events_retained=len(rows),owned_processes_created=len(children),retirement=retired,original_deadlines_budgets_security_unchanged=True,simulation='OWN_DISPOSABLE_50MS_PRE_EXIT_TRANSACTION_COST_BOTH_ARMS_POSTFIRST_HEARTBEAT_CADENCE_ONLY_VARIABLE',historical_cause='NOT_ESTABLISHED',code_fix='TEST_ONLY_CADENCE_RESTORE',physical='NOT_RUN',production='NO_GO',lane='RETIRED' if not retired['threads_alive'] and not retired['children_alive'] else 'CLEANUP_FAILED',family_seconds=round(time.monotonic()-start,3))
++        receipt=dict(schema='unified.f26.matched-cadence-service.experiment.v1',head=before['head'],tree=before['tree'],source_before=before,source_after=after,source_unchanged=before==after,python=sys.version,outcomes=outcomes,mutant_invocations=mutant_calls[0],harness_error=harness_error,scope_violation=scope_violation[0],phase_event_limit=2048,event_count=total[0],events_retained=len(rows),owned_processes_created=len(children),retirement=retired,original_deadlines_budgets_security_unchanged=True,simulation='OWN_DISPOSABLE_50MS_PRE_EXIT_TRANSACTION_COST_MUTATION_ONLY_OBSERVER_INNER_FALSE',historical_cause='NOT_ESTABLISHED',code_fix='TEST_ONLY_CADENCE_RESTORE',physical='NOT_RUN',production='NO_GO',lane='RETIRED' if not retired['threads_alive'] and not retired['children_alive'] else 'CLEANUP_FAILED',family_seconds=round(time.monotonic()-start,3))
+         (output/'receipt.json').write_text(json.dumps(receipt,sort_keys=True),encoding='utf8');done.set();timer.join(1)
+     print(json.dumps({k:v for k,v in receipt.items() if k not in ('source_before','source_after')}),flush=True)
+     sys.exit(0 if len(outcomes)==1 and not harness_error and not scope_violation[0] and before==after and not retired['threads_alive'] and not retired['children_alive'] else 1)
