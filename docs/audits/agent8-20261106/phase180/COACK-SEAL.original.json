@@ -1,0 +1,47 @@
+{
+  "dependency_and_binary_closure": "INCOMPLETE; no native execution eligibility",
+  "encoding_contract": {
+    "descriptor": "UTF-8 without BOM; exact retained raw bytes, CRLF line endings; no normalization before SHA256",
+    "future_serialization": "Requires a new explicit digest; semantic JSON equivalence does not satisfy raw pin",
+    "inventories": "UTF-8 without BOM; exact retained raw bytes, CRLF line endings; no normalization before SHA256"
+  },
+  "error_codes_proposed_closed": [
+    "UNKNOWN_SCHEMA",
+    "GRAPH_SHA_MISMATCH",
+    "INVALID_DESCRIPTOR",
+    "INVALID_PATH",
+    "UNSAFE_FILE",
+    "INVENTORY_SHA_MISMATCH",
+    "WRONG_HEAD",
+    "WRONG_TREE",
+    "RAW_MISMATCH",
+    "EXTRA_SOURCE_FILE",
+    "MISSING_HISTORICAL_OBJECT",
+    "ORIGIN_CONFLICT",
+    "GIT_VERIFICATION_FAILED"
+  ],
+  "execution_authorized": false,
+  "files": {
+    "GRID-PRIMARY-INVENTORY.json": {
+      "bytes": 209533,
+      "sha256": "284015b33000a08eb081dc1af9db0250af9d5ce5742746a4ca4dafb8f79cd704"
+    },
+    "SOURCE-GRAPH.json": {
+      "bytes": 7086,
+      "sha256": "21b4538247894158777ee2506fabafc5e830da7c641c64bbd108d99fecd8506d"
+    },
+    "UNIFIED-SUPPORT-PRIMARY-INVENTORY.json": {
+      "bytes": 410740,
+      "sha256": "388e667178196c74385e3d79a5f65c25881ed6d037554ba23d09088b7206979c"
+    },
+    "VERIFIER-API-COACK.md": {
+      "bytes": 8404,
+      "sha256": "6bde04db9e6f59a94fe6d99cfe8a613a939499e5ee39927e3b3809a49c35bc73"
+    }
+  },
+  "fixture_import_authorized": false,
+  "ownership": "Root exclusive NEW three paths in bybit-cluster-grid; existing YAML/native imports NO_EDIT; exact API/allocation acceptance pending",
+  "schema": "a2.native-support-verifier-coack.v1",
+  "signature": "verify_native_test_support(graph_path: pathlib.Path, *, expected_graph_sha256: str, source_roots: dict[str, pathlib.Path]) -> dict",
+  "status": "PROPOSED_BEFORE_EDIT_ROOT_A8_REVIEW_REQUIRED"
+}
