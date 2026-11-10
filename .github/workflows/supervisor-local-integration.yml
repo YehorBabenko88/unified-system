@@ -1,7 +1,7 @@
 name: Supervisor local-only component integration
 on:
   pull_request:
-    paths: ['unified_system/**', 'tests/test_node_task_journal.py', 'tests/test_node_supervisor_v2.py', 'tests/test_ci_queue_controller.py', 'tests/test_mission_controller.py', 'tests/test_journal.py', 'tests/test_supervisor_deployment.py', 'tests/test_supervisor_local_integration.py', 'tests/test_lab_release.py', 'tests/test_installation_service.py', 'release/evidence/supervisor-local-integration-fixtures/**', '.github/workflows/supervisor-local-integration.yml']
+    paths: ['unified_system/**', 'tests/test_node_task_journal.py', 'tests/test_node_supervisor_v2.py', 'tests/test_ci_queue_controller.py', 'tests/test_mission_controller.py', 'tests/test_journal.py', 'tests/test_supervisor_deployment.py', 'tests/test_supervisor_local_integration.py', 'tests/test_lab_release.py', 'tests/test_installation_service.py', 'release/evidence/supervisor-local-integration-fixtures/**', '.github/workflows/supervisor-local-integration.yml', 'scheduler_components/**', 'tools/ci/**', '.github/workflows/preparation-integrity.yml', '.github/workflows/durable-mission-controller.yml', 'tests/test_mission_workflow_inventory.py']
   push:
     branches: [feature/supervisor-local-integration-20261107]
 permissions:

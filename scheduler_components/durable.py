@@ -47,6 +47,37 @@ class IntentConflict(ValueError):
 class ReconciliationRequired(RuntimeError):
     pass
 
+
+def _validated_row(row):
+    """Reject malformed local debt; never repair or infer a capacity credit."""
+    try:
+        expected = {'scope', 'spec', 'state', 'request_id', 'local_hold_id',
+                    'node_id', 'incarnation', 'reason'}
+        if set(row.keys()) != expected or _scope(json.loads(row['scope'])) != row['scope']:
+            raise ValueError
+        spec = json.loads(row['spec'])
+        if (type(spec) is not dict or set(spec) != {'resources', 'benchmark_id', 'data'}
+                or type(spec['data']) is not list
+                or _spec(Resources(**spec['resources']), spec['benchmark_id'],
+                         frozenset(spec['data'])) != row['spec']):
+            raise ValueError
+        if row['state'] not in {'QUEUED', 'PREPARED', 'SEALED', 'UNKNOWN', 'CANCELLED'}:
+            raise ValueError
+        identity = tuple(row[k] for k in ('request_id', 'local_hold_id', 'node_id', 'incarnation'))
+        if row['state'] == 'QUEUED' and any(v is not None for v in identity):
+            raise ValueError
+        if row['state'] in _HELD or any(v is not None for v in identity):
+            if any(type(v) is not str or not v for v in identity):
+                raise ValueError
+            for value in identity[:2]:
+                parsed = uuid.UUID(value)
+                if parsed.version != 4 or str(parsed) != value:
+                    raise ValueError
+    except (ValueError, TypeError, KeyError, AttributeError):
+        raise ValueError('invalid persisted preparation') from None
+    return row
+
+
 class PreparationJournal:
     def __init__(self, path):
         self._db = sqlite3.connect(path, timeout=5, isolation_level=None)
@@ -67,6 +98,12 @@ class PreparationJournal:
                 scope TEXT NOT NULL, kind TEXT NOT NULL);
             PRAGMA user_version=1;
         ''')
+        try:
+            for row in self._db.execute('SELECT * FROM jobs'):
+                _validated_row(row)
+        except BaseException:
+            self.close()
+            raise
 
     def close(self):
         if self._db is not None:
@@ -87,7 +124,7 @@ class PreparationJournal:
         row = self._db.execute('SELECT * FROM jobs WHERE scope=?', (key,)).fetchone()
         if row is None:
             raise KeyError('unknown local job scope')
-        return row
+        return _validated_row(row)
 
     def _event(self, key, kind):
         self._db.execute('INSERT INTO events(scope,kind) VALUES (?,?)', (key, kind))
@@ -136,7 +173,8 @@ class PreparationJournal:
                 # double-counting is conservative, never a capacity credit.
                 holds = {}
                 held_cpu_scales = {}
-                for held in self._db.execute("SELECT node_id,spec FROM jobs WHERE state IN ('PREPARED','SEALED','UNKNOWN')"):
+                for held in self._db.execute("SELECT * FROM jobs WHERE state IN ('PREPARED','SEALED','UNKNOWN')"):
+                    _validated_row(held)
                     held_spec = json.loads(held['spec'])
                     quantities = held_spec['resources']
                     if quantities['cpu']:

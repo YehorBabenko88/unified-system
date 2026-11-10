@@ -182,7 +182,9 @@ class TLSIsolationTests(unittest.TestCase):
             result=original(sock,budget,peer,deadline,on_idle=on_idle)
             if key in control and result[0]['kind'] in ('PING','PONG'):seen_control.add(key)
             return result
-        with FailureDiagnostics().observe(lan,budget) as diagnostics, patch('unified_system.lan_transport.HEARTBEAT_INTERVAL',.05),patch.object(lan,'_read_frame',side_effect=read):
+        from contextlib import ExitStack
+        with FailureDiagnostics().observe(lan,budget) as diagnostics, ExitStack() as heartbeat_cadence,patch.object(lan,'_read_frame',side_effect=read):
+            heartbeat_cadence.enter_context(patch('unified_system.lan_transport.HEARTBEAT_INTERVAL',.05))
             client,server,c,s=self.pair()
             diagnostics.register_connection(c);diagnostics.register_connection(s)
             for connection in (c,s):
@@ -197,6 +199,9 @@ class TLSIsolationTests(unittest.TestCase):
                 with diagnostics.failure_boundary():
                     self.assertIs(renewed.get(timeout=3),True)
                     self.assertIs(renewed.get(timeout=3),True)
+                    # Fast cadence establishes renewal only; application traffic
+                    # uses the original production interval and durable budgets.
+                    heartbeat_cadence.close()
                     self.assertFalse(c.closed,c.error);self.assertFalse(s.closed,s.error)
                     c.send(b'after idle');self.assertEqual(s.receive().payload,b'after idle')
                     s.send(b'reply');self.assertEqual(c.receive().payload,b'reply')

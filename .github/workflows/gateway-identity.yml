@@ -3,7 +3,7 @@ on:
   push:
     paths: ['unified_system/gateway_identity.py', 'tests/test_gateway_identity.py', 'docs/intelligence/identity/**', '.github/workflows/gateway-identity.yml']
   pull_request:
-    paths: ['unified_system/gateway_identity.py', 'tests/test_gateway_identity.py', 'docs/intelligence/identity/**', '.github/workflows/gateway-identity.yml']
+    paths: ['unified_system/gateway_identity.py', 'tests/test_gateway_identity.py', 'docs/intelligence/identity/**', '.github/workflows/gateway-identity.yml', 'scheduler_components/**', 'tools/ci/**', '.github/workflows/preparation-integrity.yml', '.github/workflows/durable-mission-controller.yml', 'tests/test_mission_workflow_inventory.py']
 permissions:
   contents: read
 jobs:
