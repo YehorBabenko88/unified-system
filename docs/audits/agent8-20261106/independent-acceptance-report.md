@@ -3829,3 +3829,9 @@ Phases181–183: MCI mandatory47→58 preexecution defect F40 (source corrected 
 
 
 Phases184–187: retained Consul metadata and local GPG identity reviewed data-only (publisher/signature NOT_QUALIFIED, execution BLOCKED); A4 inventory22 source correction/6 original pure controls ACK but six ignored pyc fail worktree readiness. F40 CLOSED scoped exact96 MCI hosted58 perOS/0skip/full1868maps. Registered prior open7P1/8P2; other new tooling/harness findings not adjudicated here. Overall NO-GO; physical/Tailscale BLOCKED. See docs/audits/agent8-20261106/phase187/report.md and phases184–186.
+
+
+Phases188–195: atomic model/card scoped design only; Gridf350 restricted source39MODEL (Windowsblocked/Linuxnotqualified); Storage1da fresh1523 and original hosted22x4PASS local prerequisites; Root96 targeted LAN68/Component161/Supervisor132/Gateway25 PASS, BUT PreparationWindows preflight FAIL(newP1F41), Ubuntu36 scopedPASS, broad1181 heartbeat readiness FAIL(F26OPEN). Registered8P1/8P2; fullmandatoryCI NOTPASS; OverallNO-GO/physicalTailscaleBLOCKED. See docs/audits/agent8-20261106/phase195/report.md and phases188–194.
+
+
+Phase196 fresh6PR/HEAD/tree metadata: Root82 moved to bfa3b24d/tree0145968d; other5 pins match observations. Exact96 results historical only, not transferred to bfa. Revised source observation explicitly NOTrelease/notexecuted and includes broadF26failure; no node/runtime attestation. F26/F41OPEN; NO-GO. See docs/audits/agent8-20261106/phase196/report.md.

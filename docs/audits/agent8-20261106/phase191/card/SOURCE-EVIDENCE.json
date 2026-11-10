@@ -1,0 +1,441 @@
+{
+  "files": {
+    "grid_assignment": {
+      "actual_constructor_source": "def __init__(self,authority,generation,*,native_provider=None):\n        self.authority=authority;self.generation=_uuid(generation);self.native_provider=native_provider\n        if native_provider is not None:\n            if type(native_provider) in (bool,dict) or not callable(getattr(native_provider,'require_current',None)) or not callable(getattr(native_provider,'verify_records',None)):\n                raise TypeError('ACTUAL_NATIVE_PROVIDER_REQUIRED')\n        self.prefix=getattr(getattr(authority,'config',None),'namespace','')+'/runtime-v1/'",
+      "bytes": 37001,
+      "constructor_await_nodes": 0,
+      "constructor_call_sources": [
+        "_uuid(generation)",
+        "getattr(getattr(authority,'config',None),'namespace','')",
+        "TypeError('ACTUAL_NATIVE_PROVIDER_REQUIRED')",
+        "getattr(authority,'config',None)",
+        "type(native_provider)",
+        "callable(getattr(native_provider,'require_current',None))",
+        "callable(getattr(native_provider,'verify_records',None))",
+        "getattr(native_provider,'require_current',None)",
+        "getattr(native_provider,'verify_records',None)"
+      ],
+      "git_blob_sha1": "a629b18b0445e943e5f7483d559df1ae35272519",
+      "module_imports": [
+        {
+          "line": 6,
+          "module": null,
+          "names": [
+            "base64",
+            "hashlib",
+            "json",
+            "os",
+            "re",
+            "stat",
+            "uuid"
+          ],
+          "relative_level": 0
+        },
+        {
+          "line": 7,
+          "module": "pathlib",
+          "names": [
+            "Path"
+          ],
+          "relative_level": 0
+        },
+        {
+          "line": 8,
+          "module": null,
+          "names": [
+            "httpx"
+          ],
+          "relative_level": 0
+        },
+        {
+          "line": 9,
+          "module": "dataclasses",
+          "names": [
+            "dataclass"
+          ],
+          "relative_level": 0
+        },
+        {
+          "line": 10,
+          "module": "urllib.parse",
+          "names": [
+            "quote"
+          ],
+          "relative_level": 0
+        },
+        {
+          "line": 11,
+          "module": "authority_runtime_v1",
+          "names": [
+            "RuntimeLayout",
+            "canonical",
+            "measure_native_plan"
+          ],
+          "relative_level": 1
+        },
+        {
+          "line": 12,
+          "module": "coordination",
+          "names": [
+            "ConsulSessionAuthority",
+            "CoordinationLost",
+            "CoordinationUnavailable"
+          ],
+          "relative_level": 1
+        }
+      ],
+      "path": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-2-high-availability-distributed\\work\\utc-fb17\\grid\\authority_assignment_v1.py",
+      "sha256": "5b972b6d81eeaf6f2283584c5b0482552fa9bf0717a4379838900a72da791491",
+      "static_module_class_body_calls_not_runtime_import_proof": [
+        {
+          "line": 27,
+          "source": "dataclass(frozen=True)"
+        },
+        {
+          "line": 41,
+          "source": "dataclass(frozen=True)"
+        },
+        {
+          "line": 83,
+          "source": "frozenset(('ASSIGN','DISPATCH','PUBLISH','READ_ASSIGNMENT','READ_PUBLICATION','RENEW_BEGIN','RENEW_FINALIZE','REVOKE','VERIFY_ASSIGNMENT'))"
+        },
+        {
+          "line": 193,
+          "source": "dataclass(frozen=True)"
+        }
+      ]
+    },
+    "grid_coordination": {
+      "bytes": 15085,
+      "git_blob_sha1": "a508951bdcf243dfe865bbba108af5377ddddb38",
+      "module_imports": [
+        {
+          "line": 2,
+          "module": null,
+          "names": [
+            "asyncio"
+          ],
+          "relative_level": 0
+        },
+        {
+          "line": 3,
+          "module": null,
+          "names": [
+            "base64"
+          ],
+          "relative_level": 0
+        },
+        {
+          "line": 4,
+          "module": "dataclasses",
+          "names": [
+            "dataclass",
+            "field"
+          ],
+          "relative_level": 0
+        },
+        {
+          "line": 5,
+          "module": null,
+          "names": [
+            "json"
+          ],
+          "relative_level": 0
+        },
+        {
+          "line": 6,
+          "module": null,
+          "names": [
+            "math"
+          ],
+          "relative_level": 0
+        },
+        {
+          "line": 7,
+          "module": null,
+          "names": [
+            "re"
+          ],
+          "relative_level": 0
+        },
+        {
+          "line": 8,
+          "module": null,
+          "names": [
+            "ssl"
+          ],
+          "relative_level": 0
+        },
+        {
+          "line": 9,
+          "module": null,
+          "names": [
+            "time"
+          ],
+          "relative_level": 0
+        },
+        {
+          "line": 10,
+          "module": "urllib.parse",
+          "names": [
+            "quote",
+            "urlsplit"
+          ],
+          "relative_level": 0
+        },
+        {
+          "line": 11,
+          "module": null,
+          "names": [
+            "uuid"
+          ],
+          "relative_level": 0
+        },
+        {
+          "line": 13,
+          "module": null,
+          "names": [
+            "httpx"
+          ],
+          "relative_level": 0
+        }
+      ],
+      "path": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-2-high-availability-distributed\\work\\utc-fb17\\grid\\coordination.py",
+      "sha256": "3dd73d3eb3dfb576f7174a94fab05a0f87fe248ffcacccfa19786ccc74f0776b",
+      "static_module_class_body_calls_not_runtime_import_proof": [
+        {
+          "line": 28,
+          "source": "dataclass(frozen=True)"
+        },
+        {
+          "line": 32,
+          "source": "field(default='', repr=False)"
+        },
+        {
+          "line": 35,
+          "source": "field(default=None, repr=False)"
+        },
+        {
+          "line": 65,
+          "source": "dataclass(frozen=True)"
+        }
+      ]
+    },
+    "grid_runtime": {
+      "bytes": 5655,
+      "git_blob_sha1": "9ad648b4a247974c92da25f9554b89a713544012",
+      "module_imports": [
+        {
+          "line": 5,
+          "module": "dataclasses",
+          "names": [
+            "dataclass"
+          ],
+          "relative_level": 0
+        },
+        {
+          "line": 6,
+          "module": null,
+          "names": [
+            "hashlib",
+            "json",
+            "re",
+            "uuid"
+          ],
+          "relative_level": 0
+        }
+      ],
+      "path": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-2-high-availability-distributed\\work\\utc-fb17\\grid\\authority_runtime_v1.py",
+      "sha256": "cfb32db73f1859d9d78b03d886372cc08584c81abd64930b5409a91edc417b64",
+      "static_module_class_body_calls_not_runtime_import_proof": [
+        {
+          "line": 8,
+          "source": "re.compile(r'[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}')"
+        },
+        {
+          "line": 9,
+          "source": "re.compile(r'[0-9a-f]{64}')"
+        },
+        {
+          "line": 44,
+          "source": "dataclass(frozen=True)"
+        },
+        {
+          "line": 56,
+          "source": "dataclass(frozen=True)"
+        },
+        {
+          "line": 104,
+          "source": "dataclass(frozen=True)"
+        }
+      ]
+    },
+    "unified_broker": {
+      "bytes": 26610,
+      "git_blob_sha1": "e10519767bad164534f99e42e5b04eb69d823d9c",
+      "module_imports": [
+        {
+          "line": 6,
+          "module": null,
+          "names": [
+            "asyncio"
+          ],
+          "relative_level": 0
+        },
+        {
+          "line": 7,
+          "module": null,
+          "names": [
+            "base64"
+          ],
+          "relative_level": 0
+        },
+        {
+          "line": 8,
+          "module": "dataclasses",
+          "names": [
+            "dataclass"
+          ],
+          "relative_level": 0
+        },
+        {
+          "line": 9,
+          "module": "datetime",
+          "names": [
+            "datetime",
+            "timezone"
+          ],
+          "relative_level": 0
+        },
+        {
+          "line": 10,
+          "module": null,
+          "names": [
+            "hashlib"
+          ],
+          "relative_level": 0
+        },
+        {
+          "line": 11,
+          "module": null,
+          "names": [
+            "json"
+          ],
+          "relative_level": 0
+        },
+        {
+          "line": 12,
+          "module": null,
+          "names": [
+            "re"
+          ],
+          "relative_level": 0
+        },
+        {
+          "line": 13,
+          "module": null,
+          "names": [
+            "ssl"
+          ],
+          "relative_level": 0
+        },
+        {
+          "line": 14,
+          "module": null,
+          "names": [
+            "time"
+          ],
+          "relative_level": 0
+        },
+        {
+          "line": 15,
+          "module": null,
+          "names": [
+            "uuid"
+          ],
+          "relative_level": 0
+        },
+        {
+          "line": 16,
+          "module": "urllib.parse",
+          "names": [
+            "quote"
+          ],
+          "relative_level": 0
+        },
+        {
+          "line": 17,
+          "module": "cryptography",
+          "names": [
+            "x509"
+          ],
+          "relative_level": 0
+        },
+        {
+          "line": 18,
+          "module": "cryptography.exceptions",
+          "names": [
+            "InvalidSignature",
+            "UnsupportedAlgorithm"
+          ],
+          "relative_level": 0
+        },
+        {
+          "line": 19,
+          "module": "cryptography.hazmat.primitives",
+          "names": [
+            "hashes"
+          ],
+          "relative_level": 0
+        },
+        {
+          "line": 20,
+          "module": "cryptography.x509.oid",
+          "names": [
+            "ExtendedKeyUsageOID"
+          ],
+          "relative_level": 0
+        },
+        {
+          "line": 21,
+          "module": null,
+          "names": [
+            "httpx"
+          ],
+          "relative_level": 0
+        },
+        {
+          "line": 22,
+          "module": "gateway_identity",
+          "names": [
+            "GatewayAuditSink",
+            "GatewayIdentityUnavailable"
+          ],
+          "relative_level": 1
+        }
+      ],
+      "path": "C:\\Users\\LS-5\\.codex\\root-integrated-96b1790-qualified\\unified_system\\gateway_research_identity.py",
+      "sha256": "481724cd2efca312773fa4152d1c223b46ced6529d96b2d74f452cdf57932d7f",
+      "static_module_class_body_calls_not_runtime_import_proof": [
+        {
+          "line": 30,
+          "source": "frozenset(('SUBMIT_RESEARCH','READ_RESEARCH','CANCEL_OWN_JOB'))"
+        },
+        {
+          "line": 160,
+          "source": "dataclass(frozen=True)"
+        },
+        {
+          "line": 167,
+          "source": "dataclass(frozen=True)"
+        }
+      ]
+    }
+  },
+  "grid_reference": "fb177d14b1e6e399bd9b66ae7cb35d3838acbd81",
+  "grid_tree": "2cba4b0a1ee7621ef213600d6334db8e9ac7dae1",
+  "schema": "a2.atomic-read-bridge-source-evidence.v1",
+  "scope": "STATIC_AST_RAW_ONLY_NO_PROJECT_IMPORT",
+  "unified_base": "96b17905a5be923857aa1e778085eaeec6f0f27f",
+  "unified_tree": "e868213d3fd47739c05aa1fc9f70a8d7658a1333"
+}

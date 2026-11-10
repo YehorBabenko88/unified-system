@@ -1,0 +1,50 @@
+{
+  "requirement_id": "A8-F26-CURRENT96-BROAD-COUNTEREVIDENCE",
+  "repository": "unified-system",
+  "PR": 82,
+  "head": "96b17905a5be923857aa1e778085eaeec6f0f27f",
+  "run": 42880544113,
+  "attempt": 1,
+  "job": 130055333690,
+  "job_name": "source-integration (ubuntu-24.04, 3.11)",
+  "original_refs": {
+    "run.original.json": {
+      "endpoint": "actions/runs/42880544113",
+      "sha256": "17438b23aee4aac8facb90d274e022cbcefdaa3bdd563defe725348361eddc00",
+      "bytes": 13911
+    },
+    "jobs.original.json": {
+      "endpoint": "actions/runs/42880544113/jobs?per_page=100",
+      "sha256": "d48cb7a7e014a21bd8f25264f906790b2cda41bef8d13bc70fabc9d0d8204d5c",
+      "bytes": 26210
+    },
+    "artifacts.original.json": {
+      "endpoint": "actions/runs/42880544113/artifacts?per_page=100",
+      "sha256": "57c91f1d082fec232d3b758569499c953e76b2db22b7f73f7a357fd0475fd2ca",
+      "bytes": 3101
+    },
+    "original-run-logs.zip": {
+      "endpoint": "actions/runs/42880544113/logs",
+      "sha256": "2d5cd41d9ea5c2feb097891af9afd645c6c6f719076d4a385161c166fa973a71",
+      "bytes": 172518
+    },
+    "13797477462.original.zip": {
+      "endpoint": "actions/artifacts/13797477462/zip",
+      "sha256": "d328acb1f0e0c078ab18987218272345c0a2c3d3e0c5e06ceb71b7c0cff0ed40",
+      "bytes": 34017
+    }
+  },
+  "actual": "FAIL_1181_1ERROR_50SKIPS_104.208s_HEARTBEAT_RENEWED_QUEUE_EMPTY_READINESS_WORKER_RUNTIMEERROR",
+  "mandatory_skips": "PRESENT50_NO_PASS_CLAIM_NO_ADJUDICATION_OF_EACH_SKIP_THIS_PHASE",
+  "F26": "OPEN_NOT_CLOSED_BY_TARGETED68_161_SUCCESS",
+  "cause": "NOT_DETERMINED_NO_EXCLUSIVE_RCA_FROM_STACKTRACE",
+  "artifact_payloads": "VERIFIED_EXACT_TWO_EXECUTION_AND_UNITTEST_MEMBERS_NO_FULL_SOURCE_MAPS",
+  "A8_project_helper_fixture_execution": 0,
+  "CI_rerun": 0,
+  "GO_NO_GO": "NO-GO",
+  "PHYSICAL_TESTS": "BLOCKED",
+  "TAILSCALE_REMOVAL": "BLOCKED",
+  "artifact": 13797477462,
+  "artifact_sha256": "d328acb1f0e0c078ab18987218272345c0a2c3d3e0c5e06ceb71b7c0cff0ed40",
+  "unittest_sha256": "afe3b3ce4d6ee09ccb7a1069e6a2012b2c42006462a1ef0d8502fc3bb1398113"
+}

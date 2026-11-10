@@ -424,7 +424,7 @@
     "pr": 54,
     "observed_head": "b144a5e0fd3af90c975bfc0f0123234628dbb696",
     "title": "Mandatory component matrix fails active control heartbeat case in three exact-source cells",
-    "status": "OPEN_MANDATORY_CI_FAILURE_OWNER_A1_RCA",
+    "status": "OPEN_ACTUAL_CURRENT96_BROAD_HEARTBEAT_READINESS_FAILURE_DESPITE_TARGETED_PASS",
     "test": "tests.test_lan_transport.TLSIsolationTests.test_active_control_heartbeats_keep_idle_data_channel_healthy",
     "run": 42646665234,
     "attempt": 1,
@@ -443,18 +443,20 @@
     "root_alias": "SAME_ROOT_A1_HEARTBEAT_RCA_NOT_SECOND_BUG",
     "cause": "UNDETERMINED",
     "required_correction": "Owner A1 reproduce/diagnose the original heartbeat failure and correct cause; verify exact new committed mandatory matrix/artifacts without test omission, timeout relaxation or replayed PASS. No A8 rerun/production edit.",
-    "latest_exact_head": "6e79f2da66212474e9875559ec532c0f65b678a8",
-    "latest_run": 42861735651,
-    "latest_failed_job": 129989373738,
-    "latest_evidence": "phase169/report.md;phase169/verification.json;phase169/LAN-original-logs.zip",
-    "latest_result": "ACTUAL68_WINDOWS_ONE_HEARTBEAT_DEADLINE_UBUNTU68PASS_NO_EXCLUSIVE_RCA",
+    "latest_exact_head": "96b17905a5be923857aa1e778085eaeec6f0f27f",
+    "latest_run": 42880544113,
+    "latest_failed_job": 130055333690,
+    "latest_evidence": "phase195/report.md;phase195/verification.json",
+    "latest_result": "BROAD1181_1ERROR_50SKIPS_FIRST_RENEWED_QUEUE_EMPTY_READINESS_RUNTIMEERROR_NO_EXCLUSIVE_RCA",
     "matched_evidence": "phase176/report.md;phase176/verification.json",
     "candidate_head": "ab9362706cd8cd75b2fc0f5177481a96a5f73ac4",
     "candidate_source_review": "SOURCE_IDLE_RENEWAL_FIXTURE_ACK_WITH_STRESS_LIMIT",
     "candidate_qualification": "SCOPED_LOCAL_P_PASS_REVISED_M_CAUSAL_REJECTION_N_PASS_EXACT_AB936_MANDATORY_HOSTED_PENDING",
     "candidate_evidence": "phase177/report.md;phase177/verification.json",
     "revised_oracle_evidence": "phase179/report.md;phase179/verification.json",
-    "historical_M": "phase177_ORACLE_INCONCLUSIVE_PRESERVED"
+    "historical_M": "phase177_ORACLE_INCONCLUSIVE_PRESERVED",
+    "targeted_current96": "LAN68_2OS_COMPONENT161_4CELLS_PASS_SCOPED_NOT_F26_CLOSURE",
+    "targeted_current96_evidence": "phase193/report.md;phase193/verification.json"
   },
   {
     "id": "A8-F27",
@@ -707,5 +709,19 @@
     ],
     "fixed_evidence": "phase187/report.md;phase187/verification.json",
     "fixed_scope": "EXACT96_MCI58_PER_OS_ONLY_NOT_FULL_CI_RUNTIME_OR_CODEX_APP_RESTART"
+  },
+  {
+    "id": "A8-F41",
+    "severity": "P1",
+    "repository": "unified-system",
+    "pr": 82,
+    "observed_head": "96b17905a5be923857aa1e778085eaeec6f0f27f",
+    "title": "Mandatory Preparation Windows CI fails configured ordinary Git file preflight before36 tests and retains no early-failure artifact",
+    "status": "OPEN_MANDATORY_WINDOWS_PREFLIGHT_FAILURE_SUCCESSOR_PENDING",
+    "run": 42880544154,
+    "attempt": 1,
+    "failed_job": 130055333038,
+    "evidence": "phase194/report.md;phase194/verification.json",
+    "required_correction": "Review explicit fixed ordinary singlelink Git primary with existing guards retained; preserve early-failure evidence; independently qualify exact successor Windows+Ubuntu. No bypass or A8 rerun."
   }
 ]

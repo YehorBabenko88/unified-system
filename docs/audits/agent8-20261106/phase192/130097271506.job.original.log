@@ -1,0 +1,234 @@
+﻿2026-11-10T20:12:19.1716398Z Current runner version: '2.338.2'
+2026-11-10T20:12:19.1744388Z ##[group]Runner Image Provisioner
+2026-11-10T20:12:19.1745434Z Hosted Compute Agent
+2026-11-10T20:12:19.1746108Z Version: 20261028.624
+2026-11-10T20:12:19.1746817Z Commit: 54898b74c23fde5556c9b3c3a2290865feef0dfe
+2026-11-10T20:12:19.1747892Z Build Date: 2026-10-28T21:51:42Z
+2026-11-10T20:12:19.1748646Z Worker ID: {e30dec03-684e-4bff-b8bd-db465b8033ac}
+2026-11-10T20:12:19.1749380Z Region: eastus
+2026-11-10T20:12:19.1750032Z Cloud: Azure
+2026-11-10T20:12:19.1750602Z ##[endgroup]
+2026-11-10T20:12:19.1752847Z ##[group]Operating System
+2026-11-10T20:12:19.1753583Z Ubuntu
+2026-11-10T20:12:19.1754163Z 24.04.5
+2026-11-10T20:12:19.1754787Z LTS
+2026-11-10T20:12:19.1755374Z ##[endgroup]
+2026-11-10T20:12:19.1755992Z ##[group]Runner Image
+2026-11-10T20:12:19.1756643Z Image: ubuntu-24.04
+2026-11-10T20:12:19.1757509Z Version: 20261101.360.1
+2026-11-10T20:12:19.1758956Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261101.360/images/ubuntu/Ubuntu2404-Readme.md
+2026-11-10T20:12:19.1760680Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261101.360
+2026-11-10T20:12:19.1761724Z ##[endgroup]
+2026-11-10T20:12:19.1762969Z ##[group]GITHUB_TOKEN Permissions
+2026-11-10T20:12:19.1765429Z Contents: read
+2026-11-10T20:12:19.1766152Z Metadata: read
+2026-11-10T20:12:19.1766848Z ##[endgroup]
+2026-11-10T20:12:19.1769543Z Secret source: Actions
+2026-11-10T20:12:19.1770706Z Cache mode: write
+2026-11-10T20:12:19.1771501Z Prepare workflow directory
+2026-11-10T20:12:19.2279765Z Prepare all required actions
+2026-11-10T20:12:19.2359501Z Getting action download info
+2026-11-10T20:12:19.4501462Z Download action repository 'actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683' (SHA:11bd71901bbe5b1630ceea73d27597364c9af683)
+2026-11-10T20:12:19.5833827Z Download action repository 'actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+2026-11-10T20:12:19.6982009Z Download action repository 'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-11-10T20:12:19.9357330Z Complete job name: local-prerequisites (ubuntu-24.04)
+2026-11-10T20:12:20.0166789Z ##[group]Run git config --global core.autocrlf false
+2026-11-10T20:12:20.0168055Z [36;1mgit config --global core.autocrlf false[0m
+2026-11-10T20:12:20.0192630Z shell: /usr/bin/bash -e {0}
+2026-11-10T20:12:20.0193460Z ##[endgroup]
+2026-11-10T20:12:20.0675742Z ##[group]Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+2026-11-10T20:12:20.0676537Z with:
+2026-11-10T20:12:20.0677012Z   ref: 1da10616a2b8217930f354e17caaa6fcea22dac4
+2026-11-10T20:12:20.0677887Z   persist-credentials: false
+2026-11-10T20:12:20.0678450Z   repository: YehorBabenko88/unified-system
+2026-11-10T20:12:20.0683715Z   token: ***
+2026-11-10T20:12:20.0684197Z   ssh-strict: true
+2026-11-10T20:12:20.0684910Z   ssh-user: git
+2026-11-10T20:12:20.0685396Z   clean: true
+2026-11-10T20:12:20.0686165Z   sparse-checkout-cone-mode: true
+2026-11-10T20:12:20.0686730Z   fetch-depth: 1
+2026-11-10T20:12:20.0687587Z   fetch-tags: false
+2026-11-10T20:12:20.0688108Z   show-progress: true
+2026-11-10T20:12:20.0688727Z   lfs: false
+2026-11-10T20:12:20.0689264Z   submodules: false
+2026-11-10T20:12:20.0689962Z   set-safe-directory: true
+2026-11-10T20:12:20.0690465Z ##[endgroup]
+2026-11-10T20:12:20.5621637Z Syncing repository: YehorBabenko88/unified-system
+2026-11-10T20:12:20.5624603Z ##[group]Getting Git version info
+2026-11-10T20:12:20.5625915Z Working directory is '/home/runner/work/unified-system/unified-system'
+2026-11-10T20:12:20.5628136Z [command]/usr/bin/git version
+2026-11-10T20:12:20.5663750Z git version 2.56.0
+2026-11-10T20:12:20.5692161Z ##[endgroup]
+2026-11-10T20:12:20.5707741Z Copying '/home/runner/.gitconfig' to '/home/runner/work/_temp/e3e148f2-764b-4173-aa15-f89c512e0058/.gitconfig'
+2026-11-10T20:12:20.5737065Z Temporarily overriding HOME='/home/runner/work/_temp/e3e148f2-764b-4173-aa15-f89c512e0058' before making global git config changes
+2026-11-10T20:12:20.5741427Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-10T20:12:20.5750834Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/unified-system/unified-system
+2026-11-10T20:12:20.5820298Z Deleting the contents of '/home/runner/work/unified-system/unified-system'
+2026-11-10T20:12:20.5830319Z ##[group]Initializing the repository
+2026-11-10T20:12:20.5858693Z [command]/usr/bin/git init /home/runner/work/unified-system/unified-system
+2026-11-10T20:12:20.6010278Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-11-10T20:12:20.6013921Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-11-10T20:12:20.6015650Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-11-10T20:12:20.6017779Z hint: call:
+2026-11-10T20:12:20.6018513Z hint:
+2026-11-10T20:12:20.6019324Z hint: 	git config --global init.defaultBranch <name>
+2026-11-10T20:12:20.6020955Z hint:
+2026-11-10T20:12:20.6021899Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-11-10T20:12:20.6041478Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-11-10T20:12:20.6042837Z hint:
+2026-11-10T20:12:20.6043578Z hint: 	git branch -m <name>
+2026-11-10T20:12:20.6044402Z hint:
+2026-11-10T20:12:20.6045454Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-11-10T20:12:20.6047612Z Initialized empty Git repository in /home/runner/work/unified-system/unified-system/.git/
+2026-11-10T20:12:20.6058544Z [command]/usr/bin/git remote add origin https://github.com/YehorBabenko88/unified-system
+2026-11-10T20:12:20.6123358Z ##[endgroup]
+2026-11-10T20:12:20.6124975Z ##[group]Disabling automatic garbage collection
+2026-11-10T20:12:20.6128483Z [command]/usr/bin/git config --local gc.auto 0
+2026-11-10T20:12:20.6177100Z ##[endgroup]
+2026-11-10T20:12:20.6305799Z ##[group]Setting up auth
+2026-11-10T20:12:20.6308681Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-10T20:12:20.6332507Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-10T20:12:20.6853999Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-10T20:12:20.6906999Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-10T20:12:20.7183574Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-10T20:12:20.7242939Z ##[endgroup]
+2026-11-10T20:12:20.7244845Z ##[group]Fetching the repository
+2026-11-10T20:12:20.7257523Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin 1da10616a2b8217930f354e17caaa6fcea22dac4
+2026-11-10T20:12:21.3806139Z From https://github.com/YehorBabenko88/unified-system
+2026-11-10T20:12:21.3808254Z  * branch            1da10616a2b8217930f354e17caaa6fcea22dac4 -> FETCH_HEAD
+2026-11-10T20:12:21.3814767Z ##[endgroup]
+2026-11-10T20:12:21.3816164Z ##[group]Determining the checkout info
+2026-11-10T20:12:21.3818212Z ##[endgroup]
+2026-11-10T20:12:21.3824756Z [command]/usr/bin/git sparse-checkout disable
+2026-11-10T20:12:21.3891812Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-11-10T20:12:21.3935438Z ##[group]Checking out the ref
+2026-11-10T20:12:21.3940479Z [command]/usr/bin/git checkout --progress --force 1da10616a2b8217930f354e17caaa6fcea22dac4
+2026-11-10T20:12:21.5691664Z Note: switching to '1da10616a2b8217930f354e17caaa6fcea22dac4'.
+2026-11-10T20:12:21.5693429Z 
+2026-11-10T20:12:21.5694590Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-11-10T20:12:21.5697986Z changes and commit them, and you can discard any commits you make in this
+2026-11-10T20:12:21.5700666Z state without impacting any branches by switching back to a branch.
+2026-11-10T20:12:21.5702231Z 
+2026-11-10T20:12:21.5703286Z If you want to create a new branch to retain commits you create, you may
+2026-11-10T20:12:21.5705707Z do so (now or later) by using -c with the switch command. Example:
+2026-11-10T20:12:21.5707342Z 
+2026-11-10T20:12:21.5707985Z   git switch -c <new-branch-name>
+2026-11-10T20:12:21.5709044Z 
+2026-11-10T20:12:21.5709733Z Or undo this operation with:
+2026-11-10T20:12:21.5710765Z 
+2026-11-10T20:12:21.5711368Z   git switch -
+2026-11-10T20:12:21.5712254Z 
+2026-11-10T20:12:21.5713675Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-11-10T20:12:21.5715601Z 
+2026-11-10T20:12:21.5717343Z HEAD is now at 1da1061 storage: preserve mandatory inventory and add fixed packet cases
+2026-11-10T20:12:21.5735070Z ##[endgroup]
+2026-11-10T20:12:21.5793698Z [command]/usr/bin/git log -1 --format=%H
+2026-11-10T20:12:21.5836184Z 1da10616a2b8217930f354e17caaa6fcea22dac4
+2026-11-10T20:12:21.5852645Z ##[group]Removing auth
+2026-11-10T20:12:21.5855164Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-10T20:12:21.5906373Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-10T20:12:21.6165168Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-10T20:12:21.6210695Z http.https://github.com/.extraheader
+2026-11-10T20:12:21.6221580Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-10T20:12:21.6276857Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-10T20:12:21.6551639Z ##[endgroup]
+2026-11-10T20:12:21.6888614Z ##[group]Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+2026-11-10T20:12:21.6890330Z with:
+2026-11-10T20:12:21.6891150Z   python-version: 3.12.10
+2026-11-10T20:12:21.6892155Z   check-latest: false
+2026-11-10T20:12:21.6903053Z   token: ***
+2026-11-10T20:12:21.6903927Z   update-environment: true
+2026-11-10T20:12:21.6904942Z   allow-prereleases: false
+2026-11-10T20:12:21.6905941Z   freethreaded: false
+2026-11-10T20:12:21.6906845Z ##[endgroup]
+2026-11-10T20:12:21.8431540Z ##[group]Installed versions
+2026-11-10T20:12:21.8457443Z Version 3.12.10 was not found in the local cache
+2026-11-10T20:12:21.8654370Z (node:2359) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-10T20:12:21.8657690Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-10T20:12:22.5570602Z Version 3.12.10 is available for downloading
+2026-11-10T20:12:22.5572287Z Download from "https://github.com/actions/python-versions/releases/download/3.12.10-14343898437/python-3.12.10-linux-24.04-x64.tar.gz"
+2026-11-10T20:12:23.2301803Z Extract downloaded archive
+2026-11-10T20:12:23.2451893Z [command]/usr/bin/tar xz --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/3a67abf4-8207-46d0-ad0e-54686b155222 -f /home/runner/work/_temp/660fa812-a6e3-44e1-8f4b-51b4feef15f9
+2026-11-10T20:12:25.3274138Z Execute installation script
+2026-11-10T20:12:25.3398711Z Check if Python hostedtoolcache folder exist...
+2026-11-10T20:12:25.3399830Z Create Python 3.12.10 folder
+2026-11-10T20:12:25.3413602Z Copy Python binaries to hostedtoolcache folder
+2026-11-10T20:12:25.8245348Z Create additional symlinks (Required for the UsePythonVersion Azure Pipelines task and the setup-python GitHub Action)
+2026-11-10T20:12:25.8289825Z Upgrading pip...
+2026-11-10T20:12:28.0706244Z Looking in links: /tmp/tmpfhqadu_d
+2026-11-10T20:12:28.0712199Z Requirement already satisfied: pip in /opt/hostedtoolcache/Python/3.12.10/x64/lib/python3.12/site-packages (25.0.1)
+2026-11-10T20:12:29.2422057Z Collecting pip
+2026-11-10T20:12:29.3816413Z Downloading pip-26.3-py3-none-any.whl.metadata (4.6 kB)
+2026-11-10T20:12:29.4239508Z Downloading pip-26.3-py3-none-any.whl (2.0 MB)
+2026-11-10T20:12:29.6189203Z ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.0/2.0 MB 16.7 MB/s eta 0:00:00
+2026-11-10T20:12:29.6189982Z 
+2026-11-10T20:12:29.6370736Z Installing collected packages: pip
+2026-11-10T20:12:29.6373155Z Attempting uninstall: pip
+2026-11-10T20:12:29.6395632Z Found existing installation: pip 25.0.1
+2026-11-10T20:12:29.6763829Z Uninstalling pip-25.0.1:
+2026-11-10T20:12:29.6820878Z Successfully uninstalled pip-25.0.1
+2026-11-10T20:12:30.6923467Z Successfully installed pip-26.3
+2026-11-10T20:12:30.7456960Z Create complete file
+2026-11-10T20:12:30.7499565Z Successfully set up CPython (3.12.10)
+2026-11-10T20:12:30.7501000Z ##[endgroup]
+2026-11-10T20:12:30.7730802Z ##[group]Run python -I -S -B tests/storage/native_publication/qualify.py
+2026-11-10T20:12:30.7731435Z [36;1mpython -I -S -B tests/storage/native_publication/qualify.py[0m
+2026-11-10T20:12:30.7754720Z shell: /usr/bin/bash -e {0}
+2026-11-10T20:12:30.7755015Z env:
+2026-11-10T20:12:30.7755301Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.10/x64
+2026-11-10T20:12:30.7755805Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.10/x64/lib/pkgconfig
+2026-11-10T20:12:30.7756252Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.10/x64
+2026-11-10T20:12:30.7756647Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.10/x64
+2026-11-10T20:12:30.7757042Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.10/x64
+2026-11-10T20:12:30.7757652Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.10/x64/lib
+2026-11-10T20:12:30.7758130Z   A4_RESULT_EVIDENCE: /home/runner/work/_temp/storage-publication-prerequisites
+2026-11-10T20:12:30.7758661Z   A4_RESULT_EXPECTED_HEAD: 1da10616a2b8217930f354e17caaa6fcea22dac4
+2026-11-10T20:12:30.7759012Z ##[endgroup]
+2026-11-10T20:12:32.4582610Z {"passed": true, "head": "1da10616a2b8217930f354e17caaa6fcea22dac4", "tree": "c2b39329924810535add3b02c3f5c5e1b11bdf62", "tests": 22, "skips": 0, "files": 1523}
+2026-11-10T20:12:32.5200898Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+2026-11-10T20:12:32.5201491Z with:
+2026-11-10T20:12:32.5201882Z   name: publication-prerequisites-ubuntu-24.04-42892587873-1
+2026-11-10T20:12:32.5202525Z   path: /home/runner/work/_temp/storage-publication-prerequisites
+2026-11-10T20:12:32.5203062Z   if-no-files-found: error
+2026-11-10T20:12:32.5203391Z   retention-days: 14
+2026-11-10T20:12:32.5203700Z   compression-level: 6
+2026-11-10T20:12:32.5204002Z   overwrite: false
+2026-11-10T20:12:32.5204560Z   include-hidden-files: false
+2026-11-10T20:12:32.5204820Z env:
+2026-11-10T20:12:32.5205074Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.10/x64
+2026-11-10T20:12:32.5205565Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.10/x64/lib/pkgconfig
+2026-11-10T20:12:32.5206053Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.10/x64
+2026-11-10T20:12:32.5206548Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.10/x64
+2026-11-10T20:12:32.5207026Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.10/x64
+2026-11-10T20:12:32.5207762Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.10/x64/lib
+2026-11-10T20:12:32.5208118Z ##[endgroup]
+2026-11-10T20:12:32.7037339Z (node:2470) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-10T20:12:32.7038912Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-10T20:12:32.7110004Z With the provided path, there will be 3 files uploaded
+2026-11-10T20:12:32.7116472Z Artifact name is valid!
+2026-11-10T20:12:32.7117918Z Root directory input is valid!
+2026-11-10T20:12:32.9914933Z Beginning upload of artifact content to blob storage
+2026-11-10T20:12:33.1271047Z (node:2470) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-11-10T20:12:33.1906923Z Uploaded bytes 106457
+2026-11-10T20:12:33.2124621Z Finished uploading artifact content to blob storage!
+2026-11-10T20:12:33.2126368Z SHA256 digest of uploaded artifact zip is 0bd86c7a66328b104e458e3d1b05d22a81e2852181444cd6ec96b1e010fead6b
+2026-11-10T20:12:33.2128460Z Finalizing artifact upload
+2026-11-10T20:12:33.6702922Z Artifact publication-prerequisites-ubuntu-24.04-42892587873-1.zip successfully finalized. Artifact ID 13799152197
+2026-11-10T20:12:33.6706134Z Artifact publication-prerequisites-ubuntu-24.04-42892587873-1 has been successfully uploaded! Final size is 106457 bytes. Artifact ID is 13799152197
+2026-11-10T20:12:33.6710424Z Artifact download URL: https://github.com/YehorBabenko88/unified-system/actions/runs/42892587873/artifacts/13799152197
+2026-11-10T20:12:33.6951687Z Post job cleanup.
+2026-11-10T20:12:33.8200440Z (node:2484) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-10T20:12:33.8201516Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-10T20:12:33.8440169Z Post job cleanup.
+2026-11-10T20:12:33.9437780Z [command]/usr/bin/git version
+2026-11-10T20:12:33.9488529Z git version 2.56.0
+2026-11-10T20:12:33.9527864Z Copying '/home/runner/.gitconfig' to '/home/runner/work/_temp/e3f240ef-7b42-4b37-adb8-8143bb317162/.gitconfig'
+2026-11-10T20:12:33.9539082Z Temporarily overriding HOME='/home/runner/work/_temp/e3f240ef-7b42-4b37-adb8-8143bb317162' before making global git config changes
+2026-11-10T20:12:33.9540415Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-10T20:12:33.9546593Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/unified-system/unified-system
+2026-11-10T20:12:33.9594746Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-10T20:12:33.9640261Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-10T20:12:33.9956337Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-10T20:12:34.0000185Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-10T20:12:34.0470879Z Cleaning up orphan processes
+2026-11-10T20:12:34.0986699Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683, actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065, actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

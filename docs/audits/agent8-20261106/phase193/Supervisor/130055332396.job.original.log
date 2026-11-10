@@ -1,0 +1,512 @@
+﻿2026-11-10T19:48:53.2363611Z Current runner version: '2.338.2'
+2026-11-10T19:48:53.2386553Z ##[group]Runner Image Provisioner
+2026-11-10T19:48:53.2387245Z Hosted Compute Agent
+2026-11-10T19:48:53.2387691Z Version: 20261103.629
+2026-11-10T19:48:53.2388193Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+2026-11-10T19:48:53.2388762Z Build Date: 2026-11-03T17:26:59Z
+2026-11-10T19:48:53.2389279Z Worker ID: {0e4f758b-afcd-4a26-9a5b-89a8338c747f}
+2026-11-10T19:48:53.2389795Z Region: eastus2
+2026-11-10T19:48:53.2390270Z Cloud: Azure
+2026-11-10T19:48:53.2390857Z ##[endgroup]
+2026-11-10T19:48:53.2392326Z ##[group]Operating System
+2026-11-10T19:48:53.2392816Z Microsoft Windows Server 2025
+2026-11-10T19:48:53.2393253Z 10.0.26100
+2026-11-10T19:48:53.2393677Z Datacenter
+2026-11-10T19:48:53.2394097Z ##[endgroup]
+2026-11-10T19:48:53.2394503Z ##[group]Runner Image
+2026-11-10T19:48:53.2394969Z Image: windows-2025-vs2026
+2026-11-10T19:48:53.2395432Z Version: 20261103.298.1
+2026-11-10T19:48:53.2398141Z Included Software: https://github.com/actions/runner-images/blob/win25-vs2026/20261103.298/images/windows/Windows2025-VS2026-Readme.md
+2026-11-10T19:48:53.2400264Z Image Release: https://github.com/actions/runner-images/releases/tag/win25-vs2026%2F20261103.298
+2026-11-10T19:48:53.2401307Z ##[endgroup]
+2026-11-10T19:48:53.2402455Z ##[group]GITHUB_TOKEN Permissions
+2026-11-10T19:48:53.2404323Z Contents: read
+2026-11-10T19:48:53.2404929Z Metadata: read
+2026-11-10T19:48:53.2405574Z ##[endgroup]
+2026-11-10T19:48:53.2407845Z Secret source: Actions
+2026-11-10T19:48:53.2408880Z Cache mode: write
+2026-11-10T19:48:53.2409577Z Prepare workflow directory
+2026-11-10T19:48:53.2849418Z Prepare all required actions
+2026-11-10T19:48:53.2891726Z Getting action download info
+2026-11-10T19:48:53.4570748Z Download action repository 'actions/checkout@11d5960a326750d5838078e36cf38b85af677262' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-11-10T19:48:53.5734056Z Download action repository 'actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+2026-11-10T19:48:53.7102775Z Download action repository 'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-11-10T19:48:54.2634250Z Complete job name: component (windows-latest)
+2026-11-10T19:48:54.4067884Z ##[group]Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+2026-11-10T19:48:54.4069011Z with:
+2026-11-10T19:48:54.4069387Z   ref: 96b17905a5be923857aa1e778085eaeec6f0f27f
+2026-11-10T19:48:54.4069872Z   persist-credentials: false
+2026-11-10T19:48:54.4070260Z   fetch-depth: 0
+2026-11-10T19:48:54.4070638Z   repository: YehorBabenko88/unified-system
+2026-11-10T19:48:54.4074058Z   token: ***
+2026-11-10T19:48:54.4074408Z   ssh-strict: true
+2026-11-10T19:48:54.4074746Z   ssh-user: git
+2026-11-10T19:48:54.4075067Z   clean: true
+2026-11-10T19:48:54.4075408Z   sparse-checkout-cone-mode: true
+2026-11-10T19:48:54.4075820Z   fetch-tags: false
+2026-11-10T19:48:54.4076169Z   show-progress: true
+2026-11-10T19:48:54.4076550Z   lfs: false
+2026-11-10T19:48:54.4076883Z   submodules: false
+2026-11-10T19:48:54.4077235Z   set-safe-directory: true
+2026-11-10T19:48:54.4077631Z   allow-unsafe-pr-checkout: false
+2026-11-10T19:48:54.4078214Z env:
+2026-11-10T19:48:54.4078634Z   EXPECTED_HEAD: 96b17905a5be923857aa1e778085eaeec6f0f27f
+2026-11-10T19:48:54.4079162Z   PYTHONDONTWRITEBYTECODE: 1
+2026-11-10T19:48:54.4079564Z   GIT_NO_REPLACE_OBJECTS: 1
+2026-11-10T19:48:54.4079955Z   GIT_CONFIG_COUNT: 2
+2026-11-10T19:48:54.4080314Z   GIT_CONFIG_KEY_0: core.autocrlf
+2026-11-10T19:48:54.4080721Z   GIT_CONFIG_VALUE_0: false
+2026-11-10T19:48:54.4081096Z   GIT_CONFIG_KEY_1: core.eol
+2026-11-10T19:48:54.4081469Z   GIT_CONFIG_VALUE_1: lf
+2026-11-10T19:48:54.4081826Z ##[endgroup]
+2026-11-10T19:48:54.5399943Z Syncing repository: YehorBabenko88/unified-system
+2026-11-10T19:48:54.5403869Z ##[group]Getting Git version info
+2026-11-10T19:48:54.5405128Z Working directory is 'D:\a\unified-system\unified-system'
+2026-11-10T19:48:54.6236175Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-10T19:48:55.0228433Z git version 2.56.0.windows.4
+2026-11-10T19:48:55.0268868Z ##[endgroup]
+2026-11-10T19:48:55.0285819Z Temporarily overriding HOME='D:\a\_temp\eb8f5df5-a821-4b00-8dba-efe31ff401e2' before making global git config changes
+2026-11-10T19:48:55.0287513Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-10T19:48:55.0294882Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\unified-system\unified-system
+2026-11-10T19:48:55.1203625Z Deleting the contents of 'D:\a\unified-system\unified-system'
+2026-11-10T19:48:55.1208485Z ##[group]Initializing the repository
+2026-11-10T19:48:55.1216123Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\unified-system\unified-system
+2026-11-10T19:48:55.2283886Z Initialized empty Git repository in D:/a/unified-system/unified-system/.git/
+2026-11-10T19:48:55.2325229Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/YehorBabenko88/unified-system
+2026-11-10T19:48:55.3051003Z ##[endgroup]
+2026-11-10T19:48:55.3053509Z ##[group]Disabling automatic garbage collection
+2026-11-10T19:48:55.3058882Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2026-11-10T19:48:55.3373460Z ##[endgroup]
+2026-11-10T19:48:55.3374834Z ##[group]Setting up auth
+2026-11-10T19:48:55.3384133Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-10T19:48:55.3688792Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-10T19:48:58.1867836Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-10T19:48:58.2199967Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-10T19:48:58.6913283Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-10T19:48:58.7247420Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-10T19:48:59.2284974Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-11-10T19:48:59.2609668Z ##[endgroup]
+2026-11-10T19:48:59.2610079Z ##[group]Fetching the repository
+2026-11-10T19:48:59.2621312Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*
+2026-11-10T19:49:02.2524534Z From https://github.com/YehorBabenko88/unified-system
+2026-11-10T19:49:02.2526264Z  * [new branch]      agent1/direct-lan-transport-20261106 -> origin/agent1/direct-lan-transport-20261106
+2026-11-10T19:49:02.2527251Z  * [new branch]      agent1/heartbeat-fixture-20261109 -> origin/agent1/heartbeat-fixture-20261109
+2026-11-10T19:49:02.2528036Z  * [new branch]      agent1/native-peer-capture-20261107 -> origin/agent1/native-peer-capture-20261107
+2026-11-10T19:49:02.2529251Z  * [new branch]      audit/agent8-independent-acceptance-20261106 -> origin/audit/agent8-independent-acceptance-20261106
+2026-11-10T19:49:02.2530157Z  * [new branch]      codex/agent5-assignment-v1-design -> origin/codex/agent5-assignment-v1-design
+2026-11-10T19:49:02.2530628Z  * [new branch]      codex/five-boundary-c  -> origin/codex/five-boundary-c
+2026-11-10T19:49:02.2531011Z  * [new branch]      codex/five-lifecycle-b -> origin/codex/five-lifecycle-b
+2026-11-10T19:49:02.2531457Z  * [new branch]      codex/five-module-integration-20261030 -> origin/codex/five-module-integration-20261030
+2026-11-10T19:49:02.2532781Z  * [new branch]      codex/five-security-e  -> origin/codex/five-security-e
+2026-11-10T19:49:02.2533396Z  * [new branch]      codex/windows-staging-plan-20261030 -> origin/codex/windows-staging-plan-20261030
+2026-11-10T19:49:02.2533950Z  * [new branch]      codex/workstream-d-installer-dry-run -> origin/codex/workstream-d-installer-dry-run
+2026-11-10T19:49:02.2534526Z  * [new branch]      feature/agent2-control-mux-get-20261107 -> origin/feature/agent2-control-mux-get-20261107
+2026-11-10T19:49:02.2535352Z  * [new branch]      feature/agent2-control-mux-runtime-20261107 -> origin/feature/agent2-control-mux-runtime-20261107
+2026-11-10T19:49:02.2536100Z  * [new branch]      feature/agent2-control-v3-read-boundary-20261106 -> origin/feature/agent2-control-v3-read-boundary-20261106
+2026-11-10T19:49:02.2537478Z  * [new branch]      feature/agent2-gateway-identity-20261107 -> origin/feature/agent2-gateway-identity-20261107
+2026-11-10T19:49:02.2538277Z  * [new branch]      feature/agent2-principal-local-invalidation-20261109 -> origin/feature/agent2-principal-local-invalidation-20261109
+2026-11-10T19:49:02.2538982Z  * [new branch]      feature/agent2-research-current-session-20261109 -> origin/feature/agent2-research-current-session-20261109
+2026-11-10T19:49:02.2539589Z  * [new branch]      feature/agent2-research-profile-v2-20261109 -> origin/feature/agent2-research-profile-v2-20261109
+2026-11-10T19:49:02.2540249Z  * [new branch]      feature/agent5-assignment-backend-contracts-20261107 -> origin/feature/agent5-assignment-backend-contracts-20261107
+2026-11-10T19:49:02.2540919Z  * [new branch]      feature/agent5-capacity-source-freshness-20261109 -> origin/feature/agent5-capacity-source-freshness-20261109
+2026-11-10T19:49:02.2541607Z  * [new branch]      feature/agent5-clock-source-prerequisites-20261109 -> origin/feature/agent5-clock-source-prerequisites-20261109
+2026-11-10T19:49:02.2542282Z  * [new branch]      feature/agent5-gateway-jobs-20261107 -> origin/feature/agent5-gateway-jobs-20261107
+2026-11-10T19:49:02.2542864Z  * [new branch]      feature/agent5-native-scheduler-adapter-20261109 -> origin/feature/agent5-native-scheduler-adapter-20261109
+2026-11-10T19:49:02.2544136Z  * [new branch]      feature/agent5-one-shot-negative-20261110 -> origin/feature/agent5-one-shot-negative-20261110
+2026-11-10T19:49:02.2544731Z  * [new branch]      feature/agent5-owned-supervisor-loss-20261109 -> origin/feature/agent5-owned-supervisor-loss-20261109
+2026-11-10T19:49:02.2618117Z  * [new branch]      feature/agent5-preparation-integrity-20261110 -> origin/feature/agent5-preparation-integrity-20261110
+2026-11-10T19:49:02.2619415Z  * [new branch]      feature/agent5-scheduler-components-20261106 -> origin/feature/agent5-scheduler-components-20261106
+2026-11-10T19:49:02.2620339Z  * [new branch]      feature/agent5-source-composition-20261109 -> origin/feature/agent5-source-composition-20261109
+2026-11-10T19:49:02.2621206Z  * [new branch]      feature/agent5-target-native-mapping-20261109 -> origin/feature/agent5-target-native-mapping-20261109
+2026-11-10T19:49:02.2622482Z  * [new branch]      feature/ci-boundary-repair-20261110 -> origin/feature/ci-boundary-repair-20261110
+2026-11-10T19:49:02.2623349Z  * [new branch]      feature/ci-queue-controller-20261107 -> origin/feature/ci-queue-controller-20261107
+2026-11-10T19:49:02.2624229Z  * [new branch]      feature/durable-mission-controller-20261107 -> origin/feature/durable-mission-controller-20261107
+2026-11-10T19:49:02.2625229Z  * [new branch]      feature/gateway-research-identity-20261107 -> origin/feature/gateway-research-identity-20261107
+2026-11-10T19:49:02.2626244Z  * [new branch]      feature/gateway-strict-pki-fixture-20261110 -> origin/feature/gateway-strict-pki-fixture-20261110
+2026-11-10T19:49:02.2627200Z  * [new branch]      feature/gateway-target-adapter-v1-20261109 -> origin/feature/gateway-target-adapter-v1-20261109
+2026-11-10T19:49:02.2628134Z  * [new branch]      feature/gateway-worker-containment-20261107 -> origin/feature/gateway-worker-containment-20261107
+2026-11-10T19:49:02.2629725Z  * [new branch]      feature/gateway-worker-virtualalloc-diagnostic-20261107 -> origin/feature/gateway-worker-virtualalloc-diagnostic-20261107
+2026-11-10T19:49:02.2630793Z  * [new branch]      feature/ha-authority-client-20261106 -> origin/feature/ha-authority-client-20261106
+2026-11-10T19:49:02.2631688Z  * [new branch]      feature/intelligence-gateway-20261107 -> origin/feature/intelligence-gateway-20261107
+2026-11-10T19:49:02.2632689Z  * [new branch]      feature/lan-send-diagnostics-integration-20261110 -> origin/feature/lan-send-diagnostics-integration-20261110
+2026-11-10T19:49:02.2633813Z  * [new branch]      feature/level2-preparation-integration-20261110 -> origin/feature/level2-preparation-integration-20261110
+2026-11-10T19:49:02.2634783Z  * [new branch]      feature/ls5-fixed-git-export-20261109 -> origin/feature/ls5-fixed-git-export-20261109
+2026-11-10T19:49:02.2635660Z  * [new branch]      feature/ls5-physical-dev-smoke-20261109 -> origin/feature/ls5-physical-dev-smoke-20261109
+2026-11-10T19:49:02.2636592Z  * [new branch]      feature/ls5-physical-dev-source-ci-20261109 -> origin/feature/ls5-physical-dev-source-ci-20261109
+2026-11-10T19:49:02.2637535Z  * [new branch]      feature/ls5-smoke-assembly-plan-20261109 -> origin/feature/ls5-smoke-assembly-plan-20261109
+2026-11-10T19:49:02.2638394Z  * [new branch]      feature/ls5-smoke-package-20261109 -> origin/feature/ls5-smoke-package-20261109
+2026-11-10T19:49:02.2639384Z  * [new branch]      feature/mission-continuation-integration-20261110 -> origin/feature/mission-continuation-integration-20261110
+2026-11-10T19:49:02.2640387Z  * [new branch]      feature/native-negative-path-20261109 -> origin/feature/native-negative-path-20261109
+2026-11-10T19:49:02.2641239Z  * [new branch]      feature/native-proxy-custody-20261109 -> origin/feature/native-proxy-custody-20261109
+2026-11-10T19:49:02.2641826Z  * [new branch]      feature/native-research-e2e-20261109 -> origin/feature/native-research-e2e-20261109
+2026-11-10T19:49:02.2642770Z  * [new branch]      feature/node-supervisor-v2-20261107 -> origin/feature/node-supervisor-v2-20261107
+2026-11-10T19:49:02.2643952Z  * [new branch]      feature/physical-copy-close-recovery-20261109 -> origin/feature/physical-copy-close-recovery-20261109
+2026-11-10T19:49:02.2644833Z  * [new branch]      feature/stage1b-and-lan-ci-20261110 -> origin/feature/stage1b-and-lan-ci-20261110
+2026-11-10T19:49:02.2645738Z  * [new branch]      feature/storage-authority-fixtures-20261107 -> origin/feature/storage-authority-fixtures-20261107
+2026-11-10T19:49:02.2646749Z  * [new branch]      feature/storage-gateway-disclosure-20261107 -> origin/feature/storage-gateway-disclosure-20261107
+2026-11-10T19:49:02.2647620Z  * [new branch]      feature/storage-integrity-20261106 -> origin/feature/storage-integrity-20261106
+2026-11-10T19:49:02.2648421Z  * [new branch]      feature/storage-manifest-codec-20261107 -> origin/feature/storage-manifest-codec-20261107
+2026-11-10T19:49:02.2649352Z  * [new branch]      feature/storage-native-publication-20261109 -> origin/feature/storage-native-publication-20261109
+2026-11-10T19:49:02.2650268Z  * [new branch]      feature/storage-result-publication-20261107 -> origin/feature/storage-result-publication-20261107
+2026-11-10T19:49:02.2651077Z  * [new branch]      feature/storage-runtime-20261107 -> origin/feature/storage-runtime-20261107
+2026-11-10T19:49:02.2651985Z  * [new branch]      feature/supervisor-local-integration-20261107 -> origin/feature/supervisor-local-integration-20261107
+2026-11-10T19:49:02.2653834Z  * [new branch]      feature/supervisor-root-adapters-20261107 -> origin/feature/supervisor-root-adapters-20261107
+2026-11-10T19:49:02.2654801Z  * [new branch]      fix/readonly-provider-probe-closed-20261106 -> origin/fix/readonly-provider-probe-closed-20261106
+2026-11-10T19:49:02.2655969Z  * [new branch]      integration/combined-fleet-lifecycle-security-provenance-20261030 -> origin/integration/combined-fleet-lifecycle-security-provenance-20261030
+2026-11-10T19:49:02.2657358Z  * [new branch]      integration/five-module-infra-control-plane -> origin/integration/five-module-infra-control-plane
+2026-11-10T19:49:02.2658387Z  * [new branch]      integration/five-workstreams-acceptance-20261030 -> origin/integration/five-workstreams-acceptance-20261030
+2026-11-10T19:49:02.2659318Z  * [new branch]      integration/gateway-runtime-20261107 -> origin/integration/gateway-runtime-20261107
+2026-11-10T19:49:02.2660157Z  * [new branch]      integration/offline-contract-prototype -> origin/integration/offline-contract-prototype
+2026-11-10T19:49:02.2660967Z  * [new branch]      integration/supervisor-contract-v1 -> origin/integration/supervisor-contract-v1
+2026-11-10T19:49:02.2661576Z  * [new branch]      main                   -> origin/main
+2026-11-10T19:49:02.2662323Z  * [new branch]      mission-exec/network-probe-transport-20261105 -> origin/mission-exec/network-probe-transport-20261105
+2026-11-10T19:49:02.2663202Z  * [new branch]      mission-exec/network-safety-20261105 -> origin/mission-exec/network-safety-20261105
+2026-11-10T19:49:02.2664028Z  * [new branch]      mission-exec/runtime-token-policy-20261105 -> origin/mission-exec/runtime-token-policy-20261105
+2026-11-10T19:49:02.2664827Z  * [new branch]      mission/final-integration-20261106 -> origin/mission/final-integration-20261106
+2026-11-10T19:49:02.2665643Z  * [new branch]      mission/integration-registry-20261106 -> origin/mission/integration-registry-20261106
+2026-11-10T19:49:02.2666423Z  * [new branch]      mission/operator-control-plane -> origin/mission/operator-control-plane
+2026-11-10T19:49:02.2667220Z  * [new branch]      mission/windows-phase-diagnostics -> origin/mission/windows-phase-diagnostics
+2026-11-10T19:49:02.2667951Z  * [new branch]      mission/windows-test-fixtures -> origin/mission/windows-test-fixtures
+2026-11-10T19:49:02.2668739Z  * [new branch]      mission/workgroup-operator-auth-design -> origin/mission/workgroup-operator-auth-design
+2026-11-10T19:49:02.2669579Z  * [new branch]      mission1/six-module-runtime-20261031 -> origin/mission1/six-module-runtime-20261031
+2026-11-10T19:49:02.2670574Z  * [new branch]      mission3/runtime-predeploy-20261031 -> origin/mission3/runtime-predeploy-20261031
+2026-11-10T19:49:02.2671310Z  * [new branch]      newcodex/five-infra-a  -> origin/newcodex/five-infra-a
+2026-11-10T19:49:02.2672088Z  * [new branch]      test/agent1-network-safety-models-20261106 -> origin/test/agent1-network-safety-models-20261106
+2026-11-10T19:49:02.2674034Z [command]"C:\Program Files\Git\bin\git.exe" rev-parse --verify --quiet 96b17905a5be923857aa1e778085eaeec6f0f27f^{object}
+2026-11-10T19:49:02.3179576Z 96b17905a5be923857aa1e778085eaeec6f0f27f
+2026-11-10T19:49:02.3212661Z ##[endgroup]
+2026-11-10T19:49:02.3213694Z ##[group]Determining the checkout info
+2026-11-10T19:49:02.3214702Z ##[endgroup]
+2026-11-10T19:49:02.3223495Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2026-11-10T19:49:02.3633407Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2026-11-10T19:49:02.3948117Z ##[group]Checking out the ref
+2026-11-10T19:49:02.3955780Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force 96b17905a5be923857aa1e778085eaeec6f0f27f
+2026-11-10T19:49:02.9337286Z Note: switching to '96b17905a5be923857aa1e778085eaeec6f0f27f'.
+2026-11-10T19:49:02.9337692Z 
+2026-11-10T19:49:02.9337927Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-11-10T19:49:02.9338449Z changes and commit them, and you can discard any commits you make in this
+2026-11-10T19:49:02.9338892Z state without impacting any branches by switching back to a branch.
+2026-11-10T19:49:02.9339381Z 
+2026-11-10T19:49:02.9339611Z If you want to create a new branch to retain commits you create, you may
+2026-11-10T19:49:02.9340285Z do so (now or later) by using -c with the switch command. Example:
+2026-11-10T19:49:02.9341361Z 
+2026-11-10T19:49:02.9341463Z   git switch -c <new-branch-name>
+2026-11-10T19:49:02.9341623Z 
+2026-11-10T19:49:02.9341695Z Or undo this operation with:
+2026-11-10T19:49:02.9341824Z 
+2026-11-10T19:49:02.9341916Z   git switch -
+2026-11-10T19:49:02.9342015Z 
+2026-11-10T19:49:02.9342197Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-11-10T19:49:02.9342424Z 
+2026-11-10T19:49:02.9342836Z HEAD is now at 96b1790 fix(ci): bind preparation output path after runner assignment
+2026-11-10T19:49:02.9515161Z ##[endgroup]
+2026-11-10T19:49:03.0034291Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2026-11-10T19:49:03.0421731Z 96b17905a5be923857aa1e778085eaeec6f0f27f
+2026-11-10T19:49:03.0467995Z ##[group]Removing auth
+2026-11-10T19:49:03.0478795Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-10T19:49:03.0828319Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-10T19:49:03.6094094Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-10T19:49:03.6375054Z http.https://github.com/.extraheader
+2026-11-10T19:49:03.6415438Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+2026-11-10T19:49:03.6756179Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-10T19:49:04.2262624Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-10T19:49:04.2587355Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-10T19:49:04.7483887Z ##[endgroup]
+2026-11-10T19:49:04.7854877Z ##[group]Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+2026-11-10T19:49:04.7855243Z with:
+2026-11-10T19:49:04.7855415Z   python-version: 3.12.10
+2026-11-10T19:49:04.7855598Z   check-latest: false
+2026-11-10T19:49:04.7857585Z   token: ***
+2026-11-10T19:49:04.7857761Z   update-environment: true
+2026-11-10T19:49:04.7857944Z   allow-prereleases: false
+2026-11-10T19:49:04.7858108Z   freethreaded: false
+2026-11-10T19:49:04.7858265Z env:
+2026-11-10T19:49:04.7858448Z   EXPECTED_HEAD: 96b17905a5be923857aa1e778085eaeec6f0f27f
+2026-11-10T19:49:04.7858696Z   PYTHONDONTWRITEBYTECODE: 1
+2026-11-10T19:49:04.7858875Z   GIT_NO_REPLACE_OBJECTS: 1
+2026-11-10T19:49:04.7859039Z   GIT_CONFIG_COUNT: 2
+2026-11-10T19:49:04.7859202Z   GIT_CONFIG_KEY_0: core.autocrlf
+2026-11-10T19:49:04.7859388Z   GIT_CONFIG_VALUE_0: false
+2026-11-10T19:49:04.7859553Z   GIT_CONFIG_KEY_1: core.eol
+2026-11-10T19:49:04.7860048Z   GIT_CONFIG_VALUE_1: lf
+2026-11-10T19:49:04.7860272Z ##[endgroup]
+2026-11-10T19:49:04.9199058Z ##[group]Installed versions
+2026-11-10T19:49:04.9303277Z (node:2448) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-10T19:49:04.9303857Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-10T19:49:04.9304814Z Successfully set up CPython (3.12.10)
+2026-11-10T19:49:04.9305804Z ##[endgroup]
+2026-11-10T19:49:04.9549684Z ##[group]Run import hashlib,io,json,os,pathlib,subprocess,sys
+2026-11-10T19:49:04.9550284Z [36;1mimport hashlib,io,json,os,pathlib,subprocess,sys[0m
+2026-11-10T19:49:04.9550545Z [36;1m[0m
+2026-11-10T19:49:04.9550683Z [36;1mdef main():[0m
+2026-11-10T19:49:04.9550864Z [36;1m    root=pathlib.Path.cwd()[0m
+2026-11-10T19:49:04.9551228Z [36;1m    git=pathlib.Path('C:/Program Files/Git/cmd/git.exe' if sys.platform=='win32' else '/usr/bin/git')[0m
+2026-11-10T19:49:04.9551775Z [36;1m    def g(*args,input=None):[0m
+2026-11-10T19:49:04.9552266Z [36;1m        return subprocess.check_output([str(git),'--no-replace-objects','--no-optional-locks','-c','core.fsmonitor=false',*args],cwd=root,input=input)[0m
+2026-11-10T19:49:04.9552773Z [36;1m    assert sys.version_info[:3]==(3,12,10)[0m
+2026-11-10T19:49:04.9553183Z [36;1m    assert sys.flags.isolated and sys.flags.no_site and sys.dont_write_bytecode and sys.pycache_prefix is None[0m
+2026-11-10T19:49:04.9553700Z [36;1m    assert g('rev-parse','HEAD').decode().strip()==os.environ['EXPECTED_HEAD'][0m
+2026-11-10T19:49:04.9554004Z [36;1m    def inventory():[0m
+2026-11-10T19:49:04.9554188Z [36;1m        entries=[];dirs={''}[0m
+2026-11-10T19:49:04.9554444Z [36;1m        for row in g('ls-tree','-rz','--full-tree','HEAD').split(b'\0'):[0m
+2026-11-10T19:49:04.9554711Z [36;1m            if not row: continue[0m
+2026-11-10T19:49:04.9554969Z [36;1m            meta,name=row.split(b'\t',1);mode,kind,oid=meta.split()[0m
+2026-11-10T19:49:04.9555291Z [36;1m            assert mode in (b'100644',b'100755') and kind==b'blob'[0m
+2026-11-10T19:49:04.9555600Z [36;1m            name=name.decode();entries.append((name,oid.decode()))[0m
+2026-11-10T19:49:04.9556004Z [36;1m            dirs.update(p.as_posix() for p in pathlib.PurePosixPath(name).parents if p.as_posix()!='.')[0m
+2026-11-10T19:49:04.9556456Z [36;1m        raw=g('cat-file','--batch',input=''.join(oid+'\n' for _,oid in entries).encode())[0m
+2026-11-10T19:49:04.9556777Z [36;1m        stream=io.BytesIO(raw);result={}[0m
+2026-11-10T19:49:04.9556997Z [36;1m        for name,oid in entries:[0m
+2026-11-10T19:49:04.9557300Z [36;1m            actual,kind,size=stream.readline().split();data=stream.read(int(size))[0m
+2026-11-10T19:49:04.9557689Z [36;1m            assert actual.decode()==oid and kind==b'blob' and stream.read(1)==b'\n'[0m
+2026-11-10T19:49:04.9557978Z [36;1m            path=root/name[0m
+2026-11-10T19:49:04.9558286Z [36;1m            assert path.is_file() and not path.is_symlink() and path.read_bytes()==data,name[0m
+2026-11-10T19:49:04.9558633Z [36;1m            result[name]=hashlib.sha256(data).hexdigest()[0m
+2026-11-10T19:49:04.9558921Z [36;1m        assert not stream.read()[0m
+2026-11-10T19:49:04.9559124Z [36;1m        for path in root.rglob('*'):[0m
+2026-11-10T19:49:04.9559342Z [36;1m            rel=path.relative_to(root)[0m
+2026-11-10T19:49:04.9559582Z [36;1m            if rel.parts[0]=='.git': continue[0m
+2026-11-10T19:49:04.9559954Z [36;1m            assert not path.is_symlink() and not (getattr(path.lstat(),'st_file_attributes',0)&1024),str(rel)[0m
+2026-11-10T19:49:04.9560453Z [36;1m            if path.is_file(): assert rel.as_posix() in result and path.suffix not in ('.pyc','.pyo'),str(rel)[0m
+2026-11-10T19:49:04.9560855Z [36;1m            elif path.is_dir(): assert rel.as_posix() in dirs,str(rel)[0m
+2026-11-10T19:49:04.9561142Z [36;1m            else: raise AssertionError(str(rel))[0m
+2026-11-10T19:49:04.9561363Z [36;1m        return result[0m
+2026-11-10T19:49:04.9561544Z [36;1m    before=inventory()[0m
+2026-11-10T19:49:04.9595740Z [36;1m    required=['test_ci_queue_controller.QueueTests.test_archived_math_queue_zero_runner', 'test_ci_queue_controller.QueueTests.test_attempt_and_head_mismatch', 'test_ci_queue_controller.QueueTests.test_bounds_and_existing_creation', 'test_ci_queue_controller.QueueTests.test_clock_rollback_cannot_observe', 'test_ci_queue_controller.QueueTests.test_consumed_authorization_and_no_executor', 'test_ci_queue_controller.QueueTests.test_corruption_and_foreign_journal_not_adopted', 'test_ci_queue_controller.QueueTests.test_duplicate_and_old_observation', 'test_ci_queue_controller.QueueTests.test_exact_pin_type_required', 'test_ci_queue_controller.QueueTests.test_foreign_file_between_check_and_initialize_is_not_adopted', 'test_ci_queue_controller.QueueTests.test_initialization_failure_retains_owned_reservation', 'test_ci_queue_controller.QueueTests.test_null_and_unknown_never_success', 'test_ci_queue_controller.QueueTests.test_ordinary_run_does_not_invent_consumed_authorization', 'test_ci_queue_controller.QueueTests.test_payload_cannot_renew_authorization', 'test_ci_queue_controller.QueueTests.test_protected_identity_is_exact', 'test_ci_queue_controller.QueueTests.test_queued_without_runner_or_steps', 'test_ci_queue_controller.QueueTests.test_redacts_raw_fields_and_artifact_urls', 'test_ci_queue_controller.QueueTests.test_restart_preserves_backoff_and_limit', 'test_ci_queue_controller.QueueTests.test_simultaneous_creators_have_single_exclusive_owner', 'test_ci_queue_controller.QueueTests.test_states_and_no_timeout_infrastructure_diagnosis', 'test_ci_queue_controller.QueueTests.test_terminal_conflict_stays_unknown', 'test_ci_queue_controller.QueueTests.test_terminal_regression_does_not_restore_success', 'test_ci_queue_controller.QueueTests.test_workflow_job_consistency', 'test_journal.JournalTests.test_append_after_reopen', 'test_journal.JournalTests.test_empty', 'test_journal.JournalTests.test_expected_sequence_cas', 'test_journal.JournalTests.test_long_chain_latest_digest_not_lexical_max', 'test_journal.JournalTests.test_no_implicit_creation', 'test_journal.JournalTests.test_recovery', 'test_journal.JournalTests.test_tamper', 'test_journal.JournalTests.test_unknown_state', 'test_mission_controller.ContinuationTests.test_aba_task_drift_stays_stale_until_explicit_checkpoint', 'test_mission_controller.ContinuationTests.test_any_task_drift_stales_without_rewriting_history', 'test_mission_controller.ContinuationTests.test_closed_types_sha_bounds_and_unknown_task', 'test_mission_controller.ContinuationTests.test_continuation_persisted_record_capacity', 'test_mission_controller.ContinuationTests.test_continuation_reopen_detached_and_no_authority', 'test_mission_controller.ContinuationTests.test_result_scope_and_evidence_remain_observations', 'test_mission_controller.ContinuationTests.test_retry_budget_never_resets_even_after_stale_and_reopen', 'test_mission_controller.ContinuationTests.test_stale_cas_duplicate_and_full_receipt_capacity', 'test_mission_controller.ContinuationTests.test_unknown_continuation_version_rejected', 'test_mission_controller.ContinuationTests.test_unknown_receipt_version_and_invalid_binding_reject_reopen', 'test_mission_controller.MissionTests.test_actual_process_exit_after_commit_reopens', 'test_mission_controller.MissionTests.test_arbitrary_existing_database_not_adopted', 'test_mission_controller.MissionTests.test_base_identity_collision_rejected', 'test_mission_controller.MissionTests.test_boolean_marker_version_rejected', 'test_mission_controller.MissionTests.test_bounds_and_safe_paths', 'test_mission_controller.MissionTests.test_closed_fields_and_canonical_ids', 'test_mission_controller.MissionTests.test_concurrent_stale_writer_rejected', 'test_mission_controller.MissionTests.test_conservative_byte_reserve_before_append', 'test_mission_controller.MissionTests.test_corruption_rejected_without_repair', 'test_mission_controller.MissionTests.test_crash_before_append_keeps_last_commit', 'test_mission_controller.MissionTests.test_cycle_rejected', 'test_mission_controller.MissionTests.test_directory_symlink_or_junction_refused', 'test_mission_controller.MissionTests.test_duplicate_is_idempotent', 'test_mission_controller.MissionTests.test_evidence_and_ci_are_typed_and_bounded', 'test_mission_controller.MissionTests.test_fake_ci_success_never_physical_approval', 'test_mission_controller.MissionTests.test_foreign_schema_refused_before_read', 'test_mission_controller.MissionTests.test_hardlink_refused_without_writing', 'test_mission_controller.MissionTests.test_invalid_capacity_refused_before_reservation', 'test_mission_controller.MissionTests.test_legacy_version_one_refused_without_rewrite', 'test_mission_controller.MissionTests.test_legacy_wal_sidecar_refused_before_create', 'test_mission_controller.MissionTests.test_maximum_task_dag_replays_and_cycle_revision_refused', 'test_mission_controller.MissionTests.test_oversized_receipt_rejected_before_journal_materialization', 'test_mission_controller.MissionTests.test_owned_temp_alias_is_resolved_before_guarded_journal_creation', 'test_mission_controller.MissionTests.test_owner_and_scope_identity_immutable', 'test_mission_controller.MissionTests.test_persisted_bounds_are_recovered_and_closed', 'test_mission_controller.MissionTests.test_persisted_record_capacity_refuses_append', 'test_mission_controller.MissionTests.test_process_dies_during_uncommitted_transaction', 'test_mission_controller.MissionTests.test_projection_is_copy', 'test_mission_controller.MissionTests.test_record_bytes_bounded', 'test_mission_controller.MissionTests.test_relative_path_refused_without_creation', 'test_mission_controller.MissionTests.test_reopen_preserves_receipts', 'test_mission_controller.MissionTests.test_replay_rejects_semantic_identity_collision', 'test_mission_controller.MissionTests.test_same_task_updates_keep_failed_ci_history', 'test_mission_controller.MissionTests.test_simultaneous_writers_have_one_commit', 'test_mission_controller.MissionTests.test_sparse_file_rejected_before_journal_materialization', 'test_mission_controller.MissionTests.test_truncated_database_rejected', 'test_mission_controller.MissionTests.test_unknown_dependency_rejected', 'test_mission_controller.MissionTests.test_unknown_receipt_rejected_even_with_valid_chain', 'test_mission_controller.MissionTests.test_unknown_schema_refused', 'test_mission_controller.MissionTests.test_wal_sidecar_refused_before_read', 'test_node_supervisor_v2.SupervisorTests.test_all_other_operations_fail_closed', 'test_node_supervisor_v2.SupervisorTests.test_foreign_supervisor_scope_cannot_reconcile_or_inspect', 'test_node_supervisor_v2.SupervisorTests.test_identity_mismatch_and_no_proof_injection', 'test_node_supervisor_v2.SupervisorTests.test_identity_projection_and_swapped_context_entrypoints', 'test_node_supervisor_v2.SupervisorTests.test_interrupted_read_is_not_blindly_replayed', 'test_node_supervisor_v2.SupervisorTests.test_persisted_authorized_is_not_admission', 'test_node_supervisor_v2.SupervisorTests.test_readonly_durable_completion_and_duplicate', 'test_node_task_journal.JournalTests.test_atomic_reservation_refuses_racing_file', 'test_node_task_journal.JournalTests.test_capacity_preserves_existing_receipts', 'test_node_task_journal.JournalTests.test_closed_schema_and_strict_types', 'test_node_task_journal.JournalTests.test_concurrent_empty_scope_writers_one_scope_wins', 'test_node_task_journal.JournalTests.test_corrupt_chain_fails_closed', 'test_node_task_journal.JournalTests.test_duplicate_after_restart_and_closed_receipts', 'test_node_task_journal.JournalTests.test_duplicate_retains_original_and_collision_refused', 'test_node_task_journal.JournalTests.test_empty_legacy_database_not_adopted', 'test_node_task_journal.JournalTests.test_failed_reservation_is_retained', 'test_node_task_journal.JournalTests.test_foreign_database_untouched', 'test_node_task_journal.JournalTests.test_foreign_schema_in_valid_chain_untouched', 'test_node_task_journal.JournalTests.test_full_database_does_not_advance', 'test_node_task_journal.JournalTests.test_generation_change_is_immutable_collision', 'test_node_task_journal.JournalTests.test_generation_v2_reference_only_strict_uuid', 'test_node_task_journal.JournalTests.test_invalid_transition_and_receipt_mutation', 'test_node_task_journal.JournalTests.test_journal_rejects_mixed_node_cluster_incarnation', 'test_node_task_journal.JournalTests.test_legacy_receipt_cannot_be_adopted', 'test_node_task_journal.JournalTests.test_mixed_scope_hashchain_rejected_before_replay', 'test_node_task_journal.JournalTests.test_overlength_and_byte_capacity', 'test_node_task_journal.JournalTests.test_replaced_inode_and_hardlink_refused', 'test_node_task_journal.JournalTests.test_restart_before_during_after', 'test_node_task_journal.JournalTests.test_scope_projections_cannot_rebind_and_old_receipts_refuse', 'test_node_task_journal.JournalTests.test_sqlite_sidecars_rejected_without_open_or_cleanup', 'test_node_task_journal.JournalTests.test_symlink_not_adopted_where_available', 'test_node_task_journal.JournalTests.test_wal_held_reader_rejected_before_reads_and_writes', 'test_supervisor_deployment.DeploymentPlanTests.test_actual_capsule_bytes_and_sequential_rollout_reuse', 'test_supervisor_deployment.DeploymentPlanTests.test_capsule_tamper_after_constructor_refuses_before_preparation', 'test_supervisor_deployment.DeploymentPlanTests.test_development_task_cannot_be_cast_to_node_or_service_operation', 'test_supervisor_deployment.DeploymentPlanTests.test_empty_oversized_or_noncanonical_nodes_refused', 'test_supervisor_deployment.DeploymentPlanTests.test_metadata_drift_is_blocker_never_upgrade_or_success', 'test_supervisor_deployment.DeploymentPlanTests.test_no_execution_or_shell_authority_from_plans', 'test_supervisor_deployment.DeploymentPlanTests.test_original_input_not_mutated_and_edition_qualification_separate', 'test_supervisor_deployment.DeploymentPlanTests.test_overlapping_roots_fail_existing_transaction_validation', 'test_supervisor_deployment.DeploymentPlanTests.test_prepare_reuses_existing_inactive_transaction_plan_without_writes', 'test_supervisor_deployment.DeploymentPlanTests.test_returned_plan_mutation_does_not_change_adapter', 'test_supervisor_deployment.DeploymentPlanTests.test_rollback_reference_is_not_backup_or_rollback_verification', 'test_supervisor_deployment.DeploymentPlanTests.test_wrong_membership_role_duplicates_and_injected_health_reject', 'test_supervisor_deployment.ServicePrototypeTests.test_existing_service_plan_reused_without_registration_or_activation', 'test_supervisor_deployment.ServicePrototypeTests.test_home_worker_cannot_receive_control_service_plan', 'test_supervisor_local_integration.LocalIntegrationTests.test_archived_math_queue_reopens_unassigned_consumed_without_api', 'test_supervisor_local_integration.LocalIntegrationTests.test_development_receipts_cannot_parse_or_submit_as_node_operations', 'test_supervisor_local_integration.LocalIntegrationTests.test_report_status_completes_only_local_receipts_and_preserves_unknowns', 'test_supervisor_local_integration.LocalIntegrationTests.test_request_drain_blocks_despite_development_pass_and_approval_reference', 'test_supervisor_local_integration.LocalIntegrationTests.test_source_ci_and_development_pass_cannot_promote_trust_or_deployment', 'test_supervisor_local_integration.LocalIntegrationTests.test_verified_capsule_and_inactive_install_plan_never_create_target_or_rollback'][0m
+2026-11-10T19:49:04.9627083Z [36;1m    child="""import json,pathlib,sys,unittest[0m
+2026-11-10T19:49:04.9627717Z [36;1massert sys.flags.isolated and sys.flags.no_site and sys.dont_write_bytecode and sys.pycache_prefix is None[0m
+2026-11-10T19:49:04.9628217Z [36;1mroot=pathlib.Path(sys.argv[1]);sys.path.insert(0,str(root))[0m
+2026-11-10T19:49:04.9628496Z [36;1msuite=unittest.TestSuite()[0m
+2026-11-10T19:49:04.9629195Z [36;1mfor name in ('test_node_task_journal.py', 'test_node_supervisor_v2.py', 'test_ci_queue_controller.py', 'test_mission_controller.py', 'test_journal.py', 'test_supervisor_deployment.py', 'test_supervisor_local_integration.py'):[0m
+2026-11-10T19:49:04.9630042Z [36;1m    suite.addTests(unittest.defaultTestLoader.discover(str(root/'tests'),pattern=name))[0m
+2026-11-10T19:49:04.9630395Z [36;1mdef collect(s):[0m
+2026-11-10T19:49:04.9630565Z [36;1m    result=[][0m
+2026-11-10T19:49:04.9630729Z [36;1m    for item in s:[0m
+2026-11-10T19:49:04.9631041Z [36;1m        result.extend(collect(item) if isinstance(item,unittest.TestSuite) else [item.id()])[0m
+2026-11-10T19:49:04.9631371Z [36;1m    return result[0m
+2026-11-10T19:49:04.9631715Z [36;1mids=collect(suite);required=json.loads(sys.argv[2])[0m
+2026-11-10T19:49:04.9632057Z [36;1massert len(ids)==len(set(ids)) and set(ids)==set(required),(ids,required)[0m
+2026-11-10T19:49:04.9632409Z [36;1mresult=unittest.TextTestRunner(verbosity=2).run(suite)[0m
+2026-11-10T19:49:04.9632802Z [36;1massert result.wasSuccessful() and result.testsRun==len(required) and not result.skipped[0m
+2026-11-10T19:49:04.9633128Z [36;1m"""[0m
+2026-11-10T19:49:04.9633375Z [36;1m    result=None;after=None[0m
+2026-11-10T19:49:04.9633734Z [36;1m    output=pathlib.Path(os.environ['RUNNER_TEMP'])/'supervisor-local-integration-evidence.json'[0m
+2026-11-10T19:49:04.9634086Z [36;1m    try:[0m
+2026-11-10T19:49:04.9634442Z [36;1m        result=subprocess.run([sys.executable,'-I','-S','-B','-c',child,str(root),json.dumps(required)],cwd=root,timeout=180)[0m
+2026-11-10T19:49:04.9634875Z [36;1m        assert result.returncode==0,result.returncode[0m
+2026-11-10T19:49:04.9635107Z [36;1m    finally:[0m
+2026-11-10T19:49:04.9635298Z [36;1m        try:[0m
+2026-11-10T19:49:04.9635458Z [36;1m            after=inventory()[0m
+2026-11-10T19:49:04.9635652Z [36;1m            assert before==after[0m
+2026-11-10T19:49:04.9635843Z [36;1m        finally:[0m
+2026-11-10T19:49:04.9636802Z [36;1m            output.write_text(json.dumps(dict(head=os.environ['EXPECTED_HEAD'],python=sys.version,tests=required,returncode=None if result is None else result.returncode,source_before=before,source_after=after,qualification='LOCAL_COMPONENT_INTEGRATION_ONLY',native_authority=False,grants_node_operations=False),indent=2)+'\n',encoding='utf-8')[0m
+2026-11-10T19:49:04.9637762Z [36;1m[0m
+2026-11-10T19:49:04.9637901Z [36;1mif __name__=='__main__':[0m
+2026-11-10T19:49:04.9638076Z [36;1m    main()[0m
+2026-11-10T19:49:04.9649337Z shell: C:\hostedtoolcache\windows\Python\3.12.10\x64\python.EXE -I -S -B {0}
+2026-11-10T19:49:04.9649644Z env:
+2026-11-10T19:49:04.9649848Z   EXPECTED_HEAD: 96b17905a5be923857aa1e778085eaeec6f0f27f
+2026-11-10T19:49:04.9650091Z   PYTHONDONTWRITEBYTECODE: 1
+2026-11-10T19:49:04.9650276Z   GIT_NO_REPLACE_OBJECTS: 1
+2026-11-10T19:49:04.9650440Z   GIT_CONFIG_COUNT: 2
+2026-11-10T19:49:04.9650596Z   GIT_CONFIG_KEY_0: core.autocrlf
+2026-11-10T19:49:04.9650772Z   GIT_CONFIG_VALUE_0: false
+2026-11-10T19:49:04.9650933Z   GIT_CONFIG_KEY_1: core.eol
+2026-11-10T19:49:04.9651107Z   GIT_CONFIG_VALUE_1: lf
+2026-11-10T19:49:04.9651333Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-10T19:49:04.9651701Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-11-10T19:49:04.9652044Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-10T19:49:04.9652345Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-10T19:49:04.9652645Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-10T19:49:04.9652888Z ##[endgroup]
+2026-11-10T19:49:10.1663184Z test_atomic_reservation_refuses_racing_file (test_node_task_journal.JournalTests.test_atomic_reservation_refuses_racing_file) ... ok
+2026-11-10T19:49:10.2393064Z test_capacity_preserves_existing_receipts (test_node_task_journal.JournalTests.test_capacity_preserves_existing_receipts) ... ok
+2026-11-10T19:49:10.2402693Z test_closed_schema_and_strict_types (test_node_task_journal.JournalTests.test_closed_schema_and_strict_types) ... ok
+2026-11-10T19:49:10.3459256Z test_concurrent_empty_scope_writers_one_scope_wins (test_node_task_journal.JournalTests.test_concurrent_empty_scope_writers_one_scope_wins) ... ok
+2026-11-10T19:49:10.4724438Z test_corrupt_chain_fails_closed (test_node_task_journal.JournalTests.test_corrupt_chain_fails_closed) ... ok
+2026-11-10T19:49:10.5826107Z test_duplicate_after_restart_and_closed_receipts (test_node_task_journal.JournalTests.test_duplicate_after_restart_and_closed_receipts) ... ok
+2026-11-10T19:49:10.6708635Z test_duplicate_retains_original_and_collision_refused (test_node_task_journal.JournalTests.test_duplicate_retains_original_and_collision_refused) ... ok
+2026-11-10T19:49:10.7339730Z test_empty_legacy_database_not_adopted (test_node_task_journal.JournalTests.test_empty_legacy_database_not_adopted) ... ok
+2026-11-10T19:49:10.7374665Z test_failed_reservation_is_retained (test_node_task_journal.JournalTests.test_failed_reservation_is_retained) ... ok
+2026-11-10T19:49:10.7648889Z test_foreign_database_untouched (test_node_task_journal.JournalTests.test_foreign_database_untouched) ... ok
+2026-11-10T19:49:10.9232493Z test_foreign_schema_in_valid_chain_untouched (test_node_task_journal.JournalTests.test_foreign_schema_in_valid_chain_untouched) ... ok
+2026-11-10T19:49:10.9921372Z test_full_database_does_not_advance (test_node_task_journal.JournalTests.test_full_database_does_not_advance) ... ok
+2026-11-10T19:49:11.1616712Z test_generation_change_is_immutable_collision (test_node_task_journal.JournalTests.test_generation_change_is_immutable_collision) ... ok
+2026-11-10T19:49:11.1625677Z test_generation_v2_reference_only_strict_uuid (test_node_task_journal.JournalTests.test_generation_v2_reference_only_strict_uuid) ... ok
+2026-11-10T19:49:11.4458509Z test_invalid_transition_and_receipt_mutation (test_node_task_journal.JournalTests.test_invalid_transition_and_receipt_mutation) ... ok
+2026-11-10T19:49:11.5284519Z test_journal_rejects_mixed_node_cluster_incarnation (test_node_task_journal.JournalTests.test_journal_rejects_mixed_node_cluster_incarnation) ... ok
+2026-11-10T19:49:11.5892164Z test_legacy_receipt_cannot_be_adopted (test_node_task_journal.JournalTests.test_legacy_receipt_cannot_be_adopted) ... ok
+2026-11-10T19:49:11.8118228Z test_mixed_scope_hashchain_rejected_before_replay (test_node_task_journal.JournalTests.test_mixed_scope_hashchain_rejected_before_replay) ... ok
+2026-11-10T19:49:11.8132407Z test_overlength_and_byte_capacity (test_node_task_journal.JournalTests.test_overlength_and_byte_capacity) ... ok
+2026-11-10T19:49:11.8965059Z test_replaced_inode_and_hardlink_refused (test_node_task_journal.JournalTests.test_replaced_inode_and_hardlink_refused) ... ok
+2026-11-10T19:49:12.6010433Z test_restart_before_during_after (test_node_task_journal.JournalTests.test_restart_before_during_after) ... ok
+2026-11-10T19:49:12.7626066Z test_scope_projections_cannot_rebind_and_old_receipts_refuse (test_node_task_journal.JournalTests.test_scope_projections_cannot_rebind_and_old_receipts_refuse) ... ok
+2026-11-10T19:49:12.8201201Z test_sqlite_sidecars_rejected_without_open_or_cleanup (test_node_task_journal.JournalTests.test_sqlite_sidecars_rejected_without_open_or_cleanup) ... ok
+2026-11-10T19:49:12.9419106Z test_symlink_not_adopted_where_available (test_node_task_journal.JournalTests.test_symlink_not_adopted_where_available) ... ok
+2026-11-10T19:49:13.0495662Z test_wal_held_reader_rejected_before_reads_and_writes (test_node_task_journal.JournalTests.test_wal_held_reader_rejected_before_reads_and_writes) ... ok
+2026-11-10T19:49:14.6182519Z test_all_other_operations_fail_closed (test_node_supervisor_v2.SupervisorTests.test_all_other_operations_fail_closed) ... ok
+2026-11-10T19:49:14.7329045Z test_foreign_supervisor_scope_cannot_reconcile_or_inspect (test_node_supervisor_v2.SupervisorTests.test_foreign_supervisor_scope_cannot_reconcile_or_inspect) ... ok
+2026-11-10T19:49:14.8103336Z test_identity_mismatch_and_no_proof_injection (test_node_supervisor_v2.SupervisorTests.test_identity_mismatch_and_no_proof_injection) ... ok
+2026-11-10T19:49:14.9450724Z test_identity_projection_and_swapped_context_entrypoints (test_node_supervisor_v2.SupervisorTests.test_identity_projection_and_swapped_context_entrypoints) ... ok
+2026-11-10T19:49:15.2237214Z test_interrupted_read_is_not_blindly_replayed (test_node_supervisor_v2.SupervisorTests.test_interrupted_read_is_not_blindly_replayed) ... ok
+2026-11-10T19:49:15.4825894Z test_persisted_authorized_is_not_admission (test_node_supervisor_v2.SupervisorTests.test_persisted_authorized_is_not_admission) ... ok
+2026-11-10T19:49:16.0946822Z test_readonly_durable_completion_and_duplicate (test_node_supervisor_v2.SupervisorTests.test_readonly_durable_completion_and_duplicate) ... ok
+2026-11-10T19:49:16.2195297Z test_archived_math_queue_zero_runner (test_ci_queue_controller.QueueTests.test_archived_math_queue_zero_runner) ... ok
+2026-11-10T19:49:16.3068913Z test_attempt_and_head_mismatch (test_ci_queue_controller.QueueTests.test_attempt_and_head_mismatch) ... ok
+2026-11-10T19:49:16.3691852Z test_bounds_and_existing_creation (test_ci_queue_controller.QueueTests.test_bounds_and_existing_creation) ... ok
+2026-11-10T19:49:16.6743259Z test_clock_rollback_cannot_observe (test_ci_queue_controller.QueueTests.test_clock_rollback_cannot_observe) ... ok
+2026-11-10T19:49:16.7687927Z test_consumed_authorization_and_no_executor (test_ci_queue_controller.QueueTests.test_consumed_authorization_and_no_executor) ... ok
+2026-11-10T19:49:17.1149777Z test_corruption_and_foreign_journal_not_adopted (test_ci_queue_controller.QueueTests.test_corruption_and_foreign_journal_not_adopted) ... ok
+2026-11-10T19:49:17.2858746Z test_duplicate_and_old_observation (test_ci_queue_controller.QueueTests.test_duplicate_and_old_observation) ... ok
+2026-11-10T19:49:17.3565551Z test_exact_pin_type_required (test_ci_queue_controller.QueueTests.test_exact_pin_type_required) ... ok
+2026-11-10T19:49:17.5642019Z test_foreign_file_between_check_and_initialize_is_not_adopted (test_ci_queue_controller.QueueTests.test_foreign_file_between_check_and_initialize_is_not_adopted) ... ok
+2026-11-10T19:49:17.8961329Z test_initialization_failure_retains_owned_reservation (test_ci_queue_controller.QueueTests.test_initialization_failure_retains_owned_reservation) ... ok
+2026-11-10T19:49:18.0947436Z test_null_and_unknown_never_success (test_ci_queue_controller.QueueTests.test_null_and_unknown_never_success) ... ok
+2026-11-10T19:49:18.4540942Z test_ordinary_run_does_not_invent_consumed_authorization (test_ci_queue_controller.QueueTests.test_ordinary_run_does_not_invent_consumed_authorization) ... ok
+2026-11-10T19:49:18.5659817Z test_payload_cannot_renew_authorization (test_ci_queue_controller.QueueTests.test_payload_cannot_renew_authorization) ... ok
+2026-11-10T19:49:18.6817083Z test_protected_identity_is_exact (test_ci_queue_controller.QueueTests.test_protected_identity_is_exact) ... ok
+2026-11-10T19:49:18.7867251Z test_queued_without_runner_or_steps (test_ci_queue_controller.QueueTests.test_queued_without_runner_or_steps) ... ok
+2026-11-10T19:49:18.9700822Z test_redacts_raw_fields_and_artifact_urls (test_ci_queue_controller.QueueTests.test_redacts_raw_fields_and_artifact_urls) ... ok
+2026-11-10T19:49:19.2142464Z test_restart_preserves_backoff_and_limit (test_ci_queue_controller.QueueTests.test_restart_preserves_backoff_and_limit) ... ok
+2026-11-10T19:49:19.3600072Z test_simultaneous_creators_have_single_exclusive_owner (test_ci_queue_controller.QueueTests.test_simultaneous_creators_have_single_exclusive_owner) ... ok
+2026-11-10T19:49:19.6306516Z test_states_and_no_timeout_infrastructure_diagnosis (test_ci_queue_controller.QueueTests.test_states_and_no_timeout_infrastructure_diagnosis) ... ok
+2026-11-10T19:49:19.8436794Z test_terminal_conflict_stays_unknown (test_ci_queue_controller.QueueTests.test_terminal_conflict_stays_unknown) ... ok
+2026-11-10T19:49:20.0650735Z test_terminal_regression_does_not_restore_success (test_ci_queue_controller.QueueTests.test_terminal_regression_does_not_restore_success) ... ok
+2026-11-10T19:49:20.4549130Z test_workflow_job_consistency (test_ci_queue_controller.QueueTests.test_workflow_job_consistency) ... ok
+2026-11-10T19:49:20.7860521Z test_aba_task_drift_stays_stale_until_explicit_checkpoint (test_mission_controller.ContinuationTests.test_aba_task_drift_stays_stale_until_explicit_checkpoint) ... ok
+2026-11-10T19:49:21.0524920Z test_any_task_drift_stales_without_rewriting_history (test_mission_controller.ContinuationTests.test_any_task_drift_stales_without_rewriting_history) ... ok
+2026-11-10T19:49:21.1611866Z test_closed_types_sha_bounds_and_unknown_task (test_mission_controller.ContinuationTests.test_closed_types_sha_bounds_and_unknown_task) ... ok
+2026-11-10T19:49:21.4878562Z test_continuation_persisted_record_capacity (test_mission_controller.ContinuationTests.test_continuation_persisted_record_capacity) ... ok
+2026-11-10T19:49:21.6968455Z test_continuation_reopen_detached_and_no_authority (test_mission_controller.ContinuationTests.test_continuation_reopen_detached_and_no_authority) ... ok
+2026-11-10T19:49:22.1248779Z test_result_scope_and_evidence_remain_observations (test_mission_controller.ContinuationTests.test_result_scope_and_evidence_remain_observations) ... ok
+2026-11-10T19:49:22.3358403Z test_retry_budget_never_resets_even_after_stale_and_reopen (test_mission_controller.ContinuationTests.test_retry_budget_never_resets_even_after_stale_and_reopen) ... ok
+2026-11-10T19:49:22.6694872Z test_stale_cas_duplicate_and_full_receipt_capacity (test_mission_controller.ContinuationTests.test_stale_cas_duplicate_and_full_receipt_capacity) ... ok
+2026-11-10T19:49:22.8594082Z test_unknown_continuation_version_rejected (test_mission_controller.ContinuationTests.test_unknown_continuation_version_rejected) ... ok
+2026-11-10T19:49:23.0350191Z test_unknown_receipt_version_and_invalid_binding_reject_reopen (test_mission_controller.ContinuationTests.test_unknown_receipt_version_and_invalid_binding_reject_reopen) ... ok
+2026-11-10T19:49:23.4138146Z test_actual_process_exit_after_commit_reopens (test_mission_controller.MissionTests.test_actual_process_exit_after_commit_reopens) ... ok
+2026-11-10T19:49:23.8040671Z test_arbitrary_existing_database_not_adopted (test_mission_controller.MissionTests.test_arbitrary_existing_database_not_adopted) ... ok
+2026-11-10T19:49:24.1764574Z test_base_identity_collision_rejected (test_mission_controller.MissionTests.test_base_identity_collision_rejected) ... ok
+2026-11-10T19:49:24.4388911Z test_boolean_marker_version_rejected (test_mission_controller.MissionTests.test_boolean_marker_version_rejected) ... ok
+2026-11-10T19:49:24.4984745Z test_bounds_and_safe_paths (test_mission_controller.MissionTests.test_bounds_and_safe_paths) ... ok
+2026-11-10T19:49:24.6610903Z test_closed_fields_and_canonical_ids (test_mission_controller.MissionTests.test_closed_fields_and_canonical_ids) ... ok
+2026-11-10T19:49:24.7873991Z test_concurrent_stale_writer_rejected (test_mission_controller.MissionTests.test_concurrent_stale_writer_rejected) ... ok
+2026-11-10T19:49:24.9352693Z test_conservative_byte_reserve_before_append (test_mission_controller.MissionTests.test_conservative_byte_reserve_before_append) ... ok
+2026-11-10T19:49:25.1636539Z test_corruption_rejected_without_repair (test_mission_controller.MissionTests.test_corruption_rejected_without_repair) ... ok
+2026-11-10T19:49:25.2656265Z test_crash_before_append_keeps_last_commit (test_mission_controller.MissionTests.test_crash_before_append_keeps_last_commit) ... ok
+2026-11-10T19:49:25.4309665Z test_cycle_rejected (test_mission_controller.MissionTests.test_cycle_rejected) ... ok
+2026-11-10T19:49:25.6166941Z test_directory_symlink_or_junction_refused (test_mission_controller.MissionTests.test_directory_symlink_or_junction_refused) ... ok
+2026-11-10T19:49:25.7168101Z test_duplicate_is_idempotent (test_mission_controller.MissionTests.test_duplicate_is_idempotent) ... ok
+2026-11-10T19:49:25.7932788Z test_evidence_and_ci_are_typed_and_bounded (test_mission_controller.MissionTests.test_evidence_and_ci_are_typed_and_bounded) ... ok
+2026-11-10T19:49:25.9059861Z test_fake_ci_success_never_physical_approval (test_mission_controller.MissionTests.test_fake_ci_success_never_physical_approval) ... ok
+2026-11-10T19:49:26.0371766Z test_foreign_schema_refused_before_read (test_mission_controller.MissionTests.test_foreign_schema_refused_before_read) ... ok
+2026-11-10T19:49:26.1028958Z test_hardlink_refused_without_writing (test_mission_controller.MissionTests.test_hardlink_refused_without_writing) ... ok
+2026-11-10T19:49:26.1979256Z test_invalid_capacity_refused_before_reservation (test_mission_controller.MissionTests.test_invalid_capacity_refused_before_reservation) ... ok
+2026-11-10T19:49:26.3119983Z test_legacy_version_one_refused_without_rewrite (test_mission_controller.MissionTests.test_legacy_version_one_refused_without_rewrite) ... ok
+2026-11-10T19:49:26.4004537Z test_legacy_wal_sidecar_refused_before_create (test_mission_controller.MissionTests.test_legacy_wal_sidecar_refused_before_create) ... ok
+2026-11-10T19:49:27.7120590Z test_maximum_task_dag_replays_and_cycle_revision_refused (test_mission_controller.MissionTests.test_maximum_task_dag_replays_and_cycle_revision_refused) ... ok
+2026-11-10T19:49:27.9336970Z test_oversized_receipt_rejected_before_journal_materialization (test_mission_controller.MissionTests.test_oversized_receipt_rejected_before_journal_materialization) ... ok
+2026-11-10T19:49:28.2723113Z test_owned_temp_alias_is_resolved_before_guarded_journal_creation (test_mission_controller.MissionTests.test_owned_temp_alias_is_resolved_before_guarded_journal_creation) ... ok
+2026-11-10T19:49:28.7303274Z test_owner_and_scope_identity_immutable (test_mission_controller.MissionTests.test_owner_and_scope_identity_immutable) ... ok
+2026-11-10T19:49:29.0945484Z test_persisted_bounds_are_recovered_and_closed (test_mission_controller.MissionTests.test_persisted_bounds_are_recovered_and_closed) ... ok
+2026-11-10T19:49:29.4416296Z test_persisted_record_capacity_refuses_append (test_mission_controller.MissionTests.test_persisted_record_capacity_refuses_append) ... ok
+2026-11-10T19:49:29.6529546Z test_process_dies_during_uncommitted_transaction (test_mission_controller.MissionTests.test_process_dies_during_uncommitted_transaction) ... ok
+2026-11-10T19:49:29.8268867Z test_projection_is_copy (test_mission_controller.MissionTests.test_projection_is_copy) ... ok
+2026-11-10T19:49:29.9193280Z test_record_bytes_bounded (test_mission_controller.MissionTests.test_record_bytes_bounded) ... ok
+2026-11-10T19:49:30.1330871Z test_relative_path_refused_without_creation (test_mission_controller.MissionTests.test_relative_path_refused_without_creation) ... ok
+2026-11-10T19:49:30.3337095Z test_reopen_preserves_receipts (test_mission_controller.MissionTests.test_reopen_preserves_receipts) ... ok
+2026-11-10T19:49:30.5077624Z test_replay_rejects_semantic_identity_collision (test_mission_controller.MissionTests.test_replay_rejects_semantic_identity_collision) ... ok
+2026-11-10T19:49:30.8781140Z test_same_task_updates_keep_failed_ci_history (test_mission_controller.MissionTests.test_same_task_updates_keep_failed_ci_history) ... ok
+2026-11-10T19:49:31.0568015Z test_simultaneous_writers_have_one_commit (test_mission_controller.MissionTests.test_simultaneous_writers_have_one_commit) ... ok
+2026-11-10T19:49:31.2855094Z test_sparse_file_rejected_before_journal_materialization (test_mission_controller.MissionTests.test_sparse_file_rejected_before_journal_materialization) ... ok
+2026-11-10T19:49:31.5094787Z test_truncated_database_rejected (test_mission_controller.MissionTests.test_truncated_database_rejected) ... ok
+2026-11-10T19:49:31.5760902Z test_unknown_dependency_rejected (test_mission_controller.MissionTests.test_unknown_dependency_rejected) ... ok
+2026-11-10T19:49:31.6845980Z test_unknown_receipt_rejected_even_with_valid_chain (test_mission_controller.MissionTests.test_unknown_receipt_rejected_even_with_valid_chain) ... ok
+2026-11-10T19:49:31.8320362Z test_unknown_schema_refused (test_mission_controller.MissionTests.test_unknown_schema_refused) ... ok
+2026-11-10T19:49:31.9508447Z test_wal_sidecar_refused_before_read (test_mission_controller.MissionTests.test_wal_sidecar_refused_before_read) ... ok
+2026-11-10T19:49:32.0956229Z test_append_after_reopen (test_journal.JournalTests.test_append_after_reopen) ... ok
+2026-11-10T19:49:32.1272852Z test_empty (test_journal.JournalTests.test_empty) ... ok
+2026-11-10T19:49:32.2679924Z test_expected_sequence_cas (test_journal.JournalTests.test_expected_sequence_cas) ... ok
+2026-11-10T19:49:34.8237027Z test_long_chain_latest_digest_not_lexical_max (test_journal.JournalTests.test_long_chain_latest_digest_not_lexical_max) ... ok
+2026-11-10T19:49:34.9017661Z test_no_implicit_creation (test_journal.JournalTests.test_no_implicit_creation) ... ok
+2026-11-10T19:49:35.0566286Z test_recovery (test_journal.JournalTests.test_recovery) ... ok
+2026-11-10T19:49:35.3885961Z test_tamper (test_journal.JournalTests.test_tamper) ... ok
+2026-11-10T19:49:35.4730865Z test_unknown_state (test_journal.JournalTests.test_unknown_state) ... ok
+2026-11-10T19:49:35.5364187Z test_actual_capsule_bytes_and_sequential_rollout_reuse (test_supervisor_deployment.DeploymentPlanTests.test_actual_capsule_bytes_and_sequential_rollout_reuse) ... ok
+2026-11-10T19:49:35.5692145Z test_capsule_tamper_after_constructor_refuses_before_preparation (test_supervisor_deployment.DeploymentPlanTests.test_capsule_tamper_after_constructor_refuses_before_preparation) ... ok
+2026-11-10T19:49:35.6208844Z test_development_task_cannot_be_cast_to_node_or_service_operation (test_supervisor_deployment.DeploymentPlanTests.test_development_task_cannot_be_cast_to_node_or_service_operation) ... ok
+2026-11-10T19:49:35.7155814Z test_empty_oversized_or_noncanonical_nodes_refused (test_supervisor_deployment.DeploymentPlanTests.test_empty_oversized_or_noncanonical_nodes_refused) ... ok
+2026-11-10T19:49:35.7643406Z test_metadata_drift_is_blocker_never_upgrade_or_success (test_supervisor_deployment.DeploymentPlanTests.test_metadata_drift_is_blocker_never_upgrade_or_success) ... ok
+2026-11-10T19:49:35.8088049Z test_no_execution_or_shell_authority_from_plans (test_supervisor_deployment.DeploymentPlanTests.test_no_execution_or_shell_authority_from_plans) ... ok
+2026-11-10T19:49:35.8578498Z test_original_input_not_mutated_and_edition_qualification_separate (test_supervisor_deployment.DeploymentPlanTests.test_original_input_not_mutated_and_edition_qualification_separate) ... ok
+2026-11-10T19:49:36.1565741Z test_overlapping_roots_fail_existing_transaction_validation (test_supervisor_deployment.DeploymentPlanTests.test_overlapping_roots_fail_existing_transaction_validation) ... ok
+2026-11-10T19:49:36.2276755Z test_prepare_reuses_existing_inactive_transaction_plan_without_writes (test_supervisor_deployment.DeploymentPlanTests.test_prepare_reuses_existing_inactive_transaction_plan_without_writes) ... ok
+2026-11-10T19:49:36.2872735Z test_returned_plan_mutation_does_not_change_adapter (test_supervisor_deployment.DeploymentPlanTests.test_returned_plan_mutation_does_not_change_adapter) ... ok
+2026-11-10T19:49:36.3394772Z test_rollback_reference_is_not_backup_or_rollback_verification (test_supervisor_deployment.DeploymentPlanTests.test_rollback_reference_is_not_backup_or_rollback_verification) ... ok
+2026-11-10T19:49:36.4340970Z test_wrong_membership_role_duplicates_and_injected_health_reject (test_supervisor_deployment.DeploymentPlanTests.test_wrong_membership_role_duplicates_and_injected_health_reject) ... ok
+2026-11-10T19:49:36.6520880Z test_existing_service_plan_reused_without_registration_or_activation (test_supervisor_deployment.ServicePrototypeTests.test_existing_service_plan_reused_without_registration_or_activation) ... ok
+2026-11-10T19:49:36.7821822Z test_home_worker_cannot_receive_control_service_plan (test_supervisor_deployment.ServicePrototypeTests.test_home_worker_cannot_receive_control_service_plan) ... ok
+2026-11-10T19:49:37.5584151Z test_archived_math_queue_reopens_unassigned_consumed_without_api (test_supervisor_local_integration.LocalIntegrationTests.test_archived_math_queue_reopens_unassigned_consumed_without_api) ... ok
+2026-11-10T19:49:38.1239078Z test_development_receipts_cannot_parse_or_submit_as_node_operations (test_supervisor_local_integration.LocalIntegrationTests.test_development_receipts_cannot_parse_or_submit_as_node_operations) ... ok
+2026-11-10T19:49:38.8741559Z test_report_status_completes_only_local_receipts_and_preserves_unknowns (test_supervisor_local_integration.LocalIntegrationTests.test_report_status_completes_only_local_receipts_and_preserves_unknowns) ... ok
+2026-11-10T19:49:39.4156379Z test_request_drain_blocks_despite_development_pass_and_approval_reference (test_supervisor_local_integration.LocalIntegrationTests.test_request_drain_blocks_despite_development_pass_and_approval_reference) ... ok
+2026-11-10T19:49:40.3886163Z test_source_ci_and_development_pass_cannot_promote_trust_or_deployment (test_supervisor_local_integration.LocalIntegrationTests.test_source_ci_and_development_pass_cannot_promote_trust_or_deployment) ... ok
+2026-11-10T19:49:40.5267376Z test_verified_capsule_and_inactive_install_plan_never_create_target_or_rollback (test_supervisor_local_integration.LocalIntegrationTests.test_verified_capsule_and_inactive_install_plan_never_create_target_or_rollback) ... ok
+2026-11-10T19:49:40.5268767Z 
+2026-11-10T19:49:40.5268949Z ----------------------------------------------------------------------
+2026-11-10T19:49:40.5269335Z Ran 132 tests in 30.973s
+2026-11-10T19:49:40.5269480Z 
+2026-11-10T19:49:40.5269557Z OK
+2026-11-10T19:49:41.3365320Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+2026-11-10T19:49:41.3365690Z with:
+2026-11-10T19:49:41.3365907Z   name: supervisor-local-integration-windows-latest
+2026-11-10T19:49:41.3366220Z   path: D:\a\_temp/supervisor-local-integration-evidence.json
+2026-11-10T19:49:41.3366476Z   if-no-files-found: error
+2026-11-10T19:49:41.3366651Z   compression-level: 6
+2026-11-10T19:49:41.3366823Z   overwrite: false
+2026-11-10T19:49:41.3366991Z   include-hidden-files: false
+2026-11-10T19:49:41.3367166Z env:
+2026-11-10T19:49:41.3367349Z   EXPECTED_HEAD: 96b17905a5be923857aa1e778085eaeec6f0f27f
+2026-11-10T19:49:41.3367613Z   PYTHONDONTWRITEBYTECODE: 1
+2026-11-10T19:49:41.3367794Z   GIT_NO_REPLACE_OBJECTS: 1
+2026-11-10T19:49:41.3367982Z   GIT_CONFIG_COUNT: 2
+2026-11-10T19:49:41.3368149Z   GIT_CONFIG_KEY_0: core.autocrlf
+2026-11-10T19:49:41.3368332Z   GIT_CONFIG_VALUE_0: false
+2026-11-10T19:49:41.3368500Z   GIT_CONFIG_KEY_1: core.eol
+2026-11-10T19:49:41.3368717Z   GIT_CONFIG_VALUE_1: lf
+2026-11-10T19:49:41.3368946Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-10T19:49:41.3369295Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-11-10T19:49:41.3369635Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-10T19:49:41.3369936Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-10T19:49:41.3370230Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-10T19:49:41.3370468Z ##[endgroup]
+2026-11-10T19:49:41.4969008Z (node:8368) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-10T19:49:41.4969632Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-10T19:49:41.5013993Z With the provided path, there will be 1 file uploaded
+2026-11-10T19:49:41.5018002Z Artifact name is valid!
+2026-11-10T19:49:41.5019492Z Root directory input is valid!
+2026-11-10T19:49:41.7331504Z Beginning upload of artifact content to blob storage
+2026-11-10T19:49:41.7631093Z (node:8368) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-11-10T19:49:41.8246427Z Uploaded bytes 166650
+2026-11-10T19:49:41.8427453Z Finished uploading artifact content to blob storage!
+2026-11-10T19:49:41.8428506Z SHA256 digest of uploaded artifact zip is d8f7d1d4d744da52c5eae29a8d2ff38032f72dcaec65535370d48631458686bd
+2026-11-10T19:49:41.8430275Z Finalizing artifact upload
+2026-11-10T19:49:42.1992484Z Artifact supervisor-local-integration-windows-latest.zip successfully finalized. Artifact ID 13796678257
+2026-11-10T19:49:42.1993510Z Artifact supervisor-local-integration-windows-latest has been successfully uploaded! Final size is 166650 bytes. Artifact ID is 13796678257
+2026-11-10T19:49:42.2002649Z Artifact download URL: https://github.com/YehorBabenko88/unified-system/actions/runs/42880544083/artifacts/13796678257
+2026-11-10T19:49:42.2296709Z Post job cleanup.
+2026-11-10T19:49:42.3590866Z (node:7788) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-10T19:49:42.3591445Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-10T19:49:42.3850091Z Post job cleanup.
+2026-11-10T19:49:42.5422732Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-10T19:49:42.5717635Z git version 2.56.0.windows.4
+2026-11-10T19:49:42.5778939Z Temporarily overriding HOME='D:\a\_temp\e19ef866-7e36-4e3e-95a1-b003eeefb052' before making global git config changes
+2026-11-10T19:49:42.5780507Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-10T19:49:42.5788044Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\unified-system\unified-system
+2026-11-10T19:49:42.6121119Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-10T19:49:42.6456575Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-10T19:49:43.1357687Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-10T19:49:43.1688254Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-10T19:49:43.6575418Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-10T19:49:43.6898158Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-10T19:49:44.2283135Z Cleaning up orphan processes
+2026-11-10T19:49:44.2519841Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@11d5960a326750d5838078e36cf38b85af677262, actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065, actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

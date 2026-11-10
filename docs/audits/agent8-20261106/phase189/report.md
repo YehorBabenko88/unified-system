@@ -1,0 +1,33 @@
+# Grid verifier f350: independent restricted-source review
+
+| Requirement ID | Repository | PR | Exact HEAD / tree | Test name | Environment | Expected result | Actual result | Evidence link | Status | Severity | Required correction |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| A8-GRID-F350-EXACT | bybit-cluster-grid | Local unpublished candidate |f350e581bb93b3f7915c0aab5f6f8c81df8e13de /3c9993260e114030a8b07c818bf2420ac945a8a3 | Raw Git/source boundaries | A8 read-only own verifier |3 allocated NEW paths,824 old blobs unchanged |827 raw Git files match, noextras; all824 prior fb177 mode/OIDs unchanged; exactly3 additions | [verification](verification.json) | PASS source | — | No runtime/native transfer |
+| A8-GRID-MODEL39 | Same |Same|same| Original39 MODEL controls | Root original log/driver/receipt/summary |39 exact PASS/0skip/full source beforeafter |39 unique IDs,9.830s,0skip;827 maps exactly A8 raw Git; threads_alive[] in original receipt | verification /Root originals | PASS scoped original evidence | — | Actual graph/kernel qualification NOT_RUN |
+| A8-GRID-WINDOWS | Same |Same|same| _qualify_git_custody before Popen | Source+inert model | Windows refuses before verifier Git spawn | Linux-only platform gate precedes _Git metadata/executable setup and every call; closed GIT_VERIFICATION_FAILED | source /verification | PASS source restriction; Windows positive BLOCKED | Acceptance blocker | Qualified Windows family design separately; no binpath workaround |
+| A8-GRID-LINUX-CUSTODY | Same |Same|same| New session /WNOWAIT /group signal before reap | Source+inert doubles only | Restrict unsupported contexts; no PGID signal after reap | Preconditions and nonreaped leader sequence present; uncertainty rejects; no real Linux kernel/process-family run | source /MODEL log | SCOPED SOURCE ACK; platform NOT_QUALIFIED | Acceptance blocker | Separate qualified platform/custody allocation; no actual process authorization here |
+| A8-GRID-DATA-API | Same |Same|same| Frozen API/13codes/result flags | Static source | Source data only; no imports/native grant | Closed13 codes preserved; SOURCE_MATCH_DATA_ONLY /INCOMPLETE_SOURCE_DATA_ONLY /both import/execution false | source/doc | PASS scoped contract | — | Full dependency/artifact/publisher/legacy compatibility separate |
+
+The fresh Root clone is shallow and lacks fb177 locally. A8 did not fetch into or alter it: old824 blob/mode map came from A8's independently retained fb177 object store; new827 came from the candidate's tree. This compares exact trees without pretending the qualified clone contains historical ancestry. All actual827 bytes also match candidate Git and original full before/after SHA maps.
+
+Original receipt SHA3f775086b33be14922e755a4e115e476fe4d35f43faa622b962d21664c7f8b76 and original log SHAeea5b53772a0fe60efa14e8c2d3da12e36368a54740ab5e107611235b203b12f verified. Original `windows_git_spawns=0` is rejected as a whole-run count: its own source snapshots use ordinary installed Git subprocesses. Corrected summary explicitly scopes zero-spawn to modeled verifier controls. Neither receipt nor summary proves actual real graph execution or Linux process-family cleanup; both explicitly leave those unqualified. A8 ran only independent stdlib hash/AST/Git source verification, no helper/model/project/fixture code.
+
+Linux source restrictions: CPython-I-S-B, main thread/no other Python worker threads, default SIGCHLD, required waitid WNOWAIT/WEXITED/WNOHANG and session/group APIs, fixed /usr/bin/git, cooperative exclusive child reaping. Every actual transport call rechecks eligibility. Popen requests start_new_session; own_group verifies waitable retained PID=PGID=SID. The code does not poll/reap before group SIGKILL, signals the group while leader remains unreaped, then closes streams/joins threads and waits the leader. No signal follows that wait. Custody/cleanup uncertainty produces failure rather than DATA. This relies on cooperative caller/reaper and ordinary nonescaping Git descendants; no malicious session-escape or hostile competing reaper proof is claimed. Actual SIGKILL completion/descendant closure and inherited-pipe behavior remain unqualified outside inert doubles.
+
+One-second cleanup reserve lies within min30s child/remaining90s whole budget; aggregate output and eight-item fixed-buffer queue checks are source-visible. Local synchronous filesystem/kernel operations and native pipe close behavior are not proven hard real-time by Python clock checks. Preserving rejection on cleanup uncertainty is compatible with the restriction, not a guaranteed family-retirement result.
+
+Raw descriptors/inventories, duplicate keys/paths, casefold conflicts, bounds, Git object/tree/raw identities, source noextras/reparse/hardlinks, historical no-fetch checks, exact origins and reference locks are checked without importing source bytes. Config include/alternates/grafts/replacement/promisor restrictions and fixed read-only Git argv/environment remain source controls, not authenticated tool/runtime provenance. Commondir unresolved path ancestors are checked before canonical resolve; ordinary ../.. administration is retained. DATA remains a point-in-time result, not future filesystem immutability.
+
+No source-review blocker found within this explicitly restricted source/model contract. Earlier direct-child cleanup gap is addressed by Windows capability refusal and conditional Linux source design; it is not closed as actual all-platform lifecycle qualification. Exact API/3paths unchanged. Root publication remains HELD until existing CI trigger/native authorization effects are mapped; no CIskip/retarget/mandatory removal or old bootstrap failure-as-containment is accepted. A8 source ACK is not publication, process, native or physical execution authorization.
+
+RELEASE_MANIFEST_STATUS: not approved assembly.
+NODE_INVENTORY_STATUS: no new observations.
+CONTRACT_STATUS: source DATA only /public DENY /positive native API NONE.
+OFFLINE_TESTS: original39 MODEL controls and A8 source/hash checks PASS scoped.
+WINDOWS_CI: positive verifier execution BLOCKED; not Windows acceptance PASS.
+PHYSICAL_TESTS: BLOCKED.
+P0_P1_P2: no new actionable source finding within restricted scope; actual transport/custody and native acceptance remain open prerequisites.
+EVIDENCE: verification.json /three raw source files /original Root log+receipt+driver+corrected summary.
+NEXT_ACTIONS: Root CI event/authorization map decision; actual graph/platform qualification only under separate scope, preserving restrictions.
+GO_NO_GO: NO-GO.
+TAILSCALE_REMOVAL_ACCEPTANCE: BLOCKED /NO-GO.

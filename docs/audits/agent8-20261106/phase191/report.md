@@ -1,0 +1,31 @@
+# Atomic READ bridge: exact pre-edit card review
+
+| Requirement ID | Repository | PR | Exact HEAD / evidence pin | Test name | Environment | Expected result | Actual result | Evidence link | Status | Severity | Required correction |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| A8-BRIDGE-CARD | Unified /Grid reference | No implementation PR | Card7c4d9024a0cc78c51f2fceb4efd451d9ec9855f939be0a6b2daa92c4aded46ff; Unified96b/treee868; Gridfb177/tree2cba | Exact proposed API/constructor/error contract | A8 source/data only | Concrete bounded reuse preserving ABI/fences | Card seal and4 source raw/Git blobs independently match A8 objects; scoped pre-edit design ACK below | [verification](verification.json),[card](card/CARD.md) | PASS scoped design | — | Actual implementation/execution separately reviewed |
+| A8-MODEL-RELOCATION | Unified | Local unpublished |8ef8d9eca6196e8d3aed0aa97ff665806f88c721 /29bbc301ab76ba04009084c25587190d59c2f99b | Raw maps/unchanged model/original discovery | Original owner log +A8 static verification |1870 full raw prepost/noextras, same6 model bytes | All1870 match actual Git/source/prepost; two additions versus96; test bytes unchanged from46c;6 unique original PASS .001s/0skip | verification /model originals | PASS scoped MODEL only | — | No actual broker/native transfer |
+| A8-BRIDGE-ACTUAL | Unified /Grid | No implementation | No code successor | Proposed10 controlled-backend unit methods | NOT_RUN | Exact real implementation qualified in approved environment | Ten proposed IDs only; no unit source/import/runtime/crypto custody qualification yet | card | BLOCKED /NOT_RUN | Acceptance blocker | Root edit lease, affected-owner exact agreement, qualified dependency/runtime and original actual-unit evidence |
+
+A8 ACKs this exact pre-edit direction, including the explicit fail-closed error classification: one actual AssignmentAuthority with same original authority/generation and providerNone, created after existing broker initialization; no new client/session/Journal/lifetime ownership. Closed five keys derive only from issued state. One existing `_read_snapshot`, exact CapturedRecord tuple/order/presence/type/bounds, then existing ResearchNativeRecord DATA conversion. No injected reader/provider, forged instance, key chase, GET fallback or copied snapshot implementation.
+
+The synchronous wrapper constructor body has no request/resource creation in inspected source. Its module/import dependency closure is not runtime-qualified by AST or raw hashes. Actual imports can execute module/third-party initialization; dependency origins remain a prerequisite. Missing/incompatible bridge or source/ACL/inventory failure → existing SOURCE_UNAVAILABLE; absent required record → existing RECORD_UNAVAILABLE; present policy/context join rejection → existing DENIED. Earlier malformed records may now be classified UNAVAILABLE before broker policy decode. A8 accepts that documented negative classification change as design, not byte-identical behavior or successful implementation.
+
+Shared pure decoder factoring must preserve every existing canonical field, profile hash/target-v2/actor/service/quota/policy/generation/scope/revision/original/expiry check. Time-dependent checks stay in live operations. Existing `_policy` preliminary reads and `_open_session` four check-index plus leader/session/creation fences remain. `_observe` keeps its larger snapshot and exact comparisons. After snapshot await immediately recheck actual context and wrapper identity before consuming rows; retain final audit/clock/deadline checks before capture insertion, with no intervening await. Cancellation propagates, no retry/write/capture; close latch must reject return. Public signatures, snapshot fields/records order, schema/scopes unchanged.
+
+The proposed unit harness remains MOCK_BACKEND_UNIT_ONLY. Actual object construction and an intercepted `_request` boundary can test builders/decoders without native traffic, but do not prove peer/TLS/native identity. Scoped virtual clock/module patches must restore state and must not mutate global asyncio clocks. Ordinary broker-issued test contexts are preferable to externally forged contexts; zero actual socket/DNS/HTTP/session calls and bounded owned cleanup require independently reviewed harness evidence. This card is not permission to import cryptography/httpx/DSOs, create a mock suite or execute its ten methods. A8 executed none of them.
+
+No current-at-read observation proves future revocation freshness, session TTL at UTC cutoff, strict D4 commit time, scientific payload visibility or worker/resource authority. No equal ModifyIndex/fake Raft epoch is permitted. Endpoint read-only classifier, actual platform/response/cancellation/containment behavior remain separate native prerequisites. Preferred design edits no Grid file. Any promotion to a shared primitive needs a new separately allocated cross-repository contract; no implicit alternative authorization.
+
+Root edit allocation, exact affected-owner agreement and prepublication CI/native authorization mapping remain required. A8 does not independently attest other owner ACKs from Root's message. Relocated model source/receipt were checked anew; old46c result remains separate. Native CI trigger from a production broker change cannot be avoided by model-doc relocation, skipped mandatory tests or reliance on a bootstrap failure.
+
+RELEASE_MANIFEST_STATUS: not approved assembly.
+NODE_INVENTORY_STATUS: no new observations.
+CONTRACT_STATUS: exact card pre-edit design ACK; actual bridge/runtime not qualified; public DENY.
+OFFLINE_TESTS: source/card/data verification and original relocated6 MODEL evidence PASS scoped.
+WINDOWS_CI: no new actual-unit/native acceptance.
+PHYSICAL_TESTS: BLOCKED.
+P0_P1_P2: prior atomic-capture concern not closed by design/model evidence; no new actionable card defect found within restricted scope.
+EVIDENCE: verification.json /sealed card/source evidence /sealed relocated model originals.
+NEXT_ACTIONS: Root exact lease/owner agreement; independently review actual implementation and proposed harness before any imports/execution/publication.
+GO_NO_GO: NO-GO.
+TAILSCALE_REMOVAL_ACCEPTANCE: BLOCKED /NO-GO.
