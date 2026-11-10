@@ -1,12 +1,12 @@
 # F42 preparation child observer — SOURCE ONLY review1
 
-Status: BEFORE-IMPLEMENTATION REVIEW. No tests/imports/compile or child fixture have run. No helper or qualifier code is implemented under this lease.
+Status: HELPER SOURCE_IMPLEMENTED_NOT_RUN. Root accepted the628 missing-helper prerequisite (one failed module import, zero12-case execution) and allocated helper SOURCE ONLY. No helper import/compile or12-control execution has run. Qualifier hooks remain HELD.
 
 Base: Unified bfa3b24d8f209d5e91acfa64819d3ebed4967af7. Branch: feature/agent5-f42-observer-source-20261110.
 Initial ownership ONLY:
 - NEW tests/test_preparation_child_observer.py (12 proposed stdlib/inert controls).
 - NEW docs/ci/preparation-child-observer-review1.md (this card).
-Future NEW tests/preparation_child_observer.py and existing tools/ci/qualify_preparation_integrity.py remain HELD until Root reviews this source and explicitly authorizes RED and later implementation. No push, existing test/child command/environment/20s timeout change, native/provider/office/PowerShell fixture, or real child run. A managed worktree request did not return a path; an isolated Git worktree was created from the exact base instead.
+NEW tests/preparation_child_observer.py is now allocated only for reviewed API implementation source. Existing tools/ci/qualify_preparation_integrity.py remains HELD until actual-helper12 controls are separately allocated/reviewed/qualified. No push, existing test/child command/environment/20s timeout change, native/provider/office/PowerShell fixture, or real crash-child run. A managed worktree request did not return a path; an isolated Git worktree was created from the exact base instead.
 
 ## Original observation and purpose
 
@@ -14,9 +14,9 @@ Preserve run42897137339/job130113108432/artifact13801431495, ZIP SHA13ab352ac988
 
 Proposed diagnostic distinguishes observed retained-child poll state from stdout/stderr reader state immediately after the ORIGINAL communicate raises TimeoutExpired, BEFORE subprocess.run executes its standard kill/cleanup. No observation changes red to green or confers process/authority/worker/cleanup proof. This is not an all-green qualification harness.
 
-## Proposed actual-helper API (not implemented)
+## Actual-helper source API (not imported or executed)
 
-Future file tests/preparation_child_observer.py exports PreparationChildObserver, with no dependency on project runtime modules.
+Source file tests/preparation_child_observer.py exports PreparationChildObserver, with no dependency on project runtime modules. This is source implementation only, not an executed API qualification.
 
 - PreparationChildObserver(): purely in-memory fixed limits; no injected clock/provider/backend, files, threads, imports of project code or process construction.
 - begin_constructor(*, at_ns: int) -> int | None: reserve the sole local observation token and append CONSTRUCTOR_BEGIN. None means diagnostic capacity exhausted; never blocks or authorizes process creation.
@@ -91,10 +91,10 @@ The only test implementation of behavior is the future actual helper import. Ine
 11. Bad timings/unknown token produce no poll/history mutation.
 12. Constructor failure and two caller-entered communicate pairs record without cleanup actions.
 
-Current test source references a deliberately MISSING helper. It has NOT been imported, compiled or run. Future prerequisite RED is ONE failed module import under scoped discovery with exact tests path and -I; it is not12 case errors or a reproduction of original F42. Original Windows timeout RED remains the only actual child evidence referenced here.
+The unchanged test source SHA9de3045395a178421cbf3041ad2261f9221f4dfc9b21d83432bd1046d0d410cc was qualified once BEFORE helper creation: ONE failed module import under exact tests-path named loading/-I-S-B, not12 case errors/F42 reproduction. Receipt SHA4aa27092a8a6ceaad7f315364bcbe003a81ded7fa7f451766be5604527eb0cce;1872 full raw pre/post maps identical, process/readers retired. The NEW helper source has NOT been imported, compiled or executed. Original Windows timeout RED remains the only actual crash-child evidence referenced here.
 
 ## Required review decision
 
-Root: approve/correct exact API/budgets/test source first. Then explicitly allocate a bounded pure RED-only execution, if appropriate. Only AFTER reviewed RED may the NEW actual helper and qualifier hooks be allocated. Any actual original child diagnostic remains a separate serial-lane approval, not granted by this source work. Do not push or dispatch GitHub CI from this lease.
+Root/independent source review: approve/correct actual helper implementation first. Then separately allocate the12 pure controls; no execution follows merely from source review. Only AFTER reviewed qualified actual-helper controls may qualifier hooks be allocated. Any original crash-child diagnostic remains a separate serial-lane approval. Do not push or dispatch GitHub CI from this lease.
 
-Current effects: two NEW source/document files; no actual helper/qualifier edit, imports/compile/tests/fixtures/native/provider/office calls or push. F42 source cause UNKNOWN; 20s/original child unchanged. StrictD4/logicalDISABLED/publicDENY/NO-GO.
+Current helper lease effects: ONE NEW helper source and own doc update; original12-test source unchanged. No qualifier edit, helper imports/compile/tests/fixtures/native/provider/office calls or push. F42 source cause UNKNOWN;20s/original child unchanged. StrictD4/logicalDISABLED/publicDENY/NO-GO.
