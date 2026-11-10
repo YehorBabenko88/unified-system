@@ -196,7 +196,7 @@ class Capture:
 
 def source_bindings(package,manifest):
     expected={'runtime-unified':'ba2b1cec0c2b114586afb73696e282117eede987',
-        'strattester':'aed8a7c8a952f96803c207d5e90b133969a47f04','meta_analyse':'f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1','terminan':'47530d81e8b6f297a060a206bea6f783ccd0702e'}
+        'strattester':'aed8a7c8a952f96803c207d5e90b133969a47f04','meta_analyse':'f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1','terminan':'2ab52f86aca6a38bd63c1fea71e12a80a2c2ddd9'}
     refs={entry['name']:entry for entry in manifest['source_metadata']['sources']}
     for name,commit in expected.items():need(refs.get(name,{}).get('commit')==commit,'FIXED_SOURCE_REFERENCE')
     # Exact executable/source admission, not a claimed loaded-DLL attestation.
@@ -205,7 +205,7 @@ def source_bindings(package,manifest):
         ('tooling/node/node.exe','d702daa815eabbff763c7d3808e235cf031cf2ca70211b56847bc72f51e240e5'),
         ('tooling/chromium/chrome-win/headless_shell.exe','ed19d88b4486c39c0265b0c07cbf1d6835d06069e600bede1adb09db0df46c8e'),
         ('sources/terminan/tests/fresh_render/bootstrap.cjs','9f6dc64e4087089ec6b989924a1a449ebc2cce985b10532f0eb556130c0ef9df'),
-        ('sources/terminan/tests/fresh_render/harness.cjs','661294b79b243aab74fc51ba56caadd988e81435447aa0afed020f03c4016b3f'),
+        ('sources/terminan/tests/fresh_render/harness.cjs','6cb6559803ab103657c3bb6dfac3a3e63f862825d43bac6f0db5d8d5bc17cfba'),
         ('sources/terminan/tests/fresh_render/diagnostics.cjs','1de4447a0955e6df3e3fdc8837092c037acde711aa673d65f8e6da6c693875c8'),
         ('sources/terminan/tests/fresh_render/owned_lifecycle.cjs','11f82177c95b61e4a6f591e584a0b7b467e64ebafbbeaf28eec26647b40057e1'),
         ('sources/terminan/tests/fresh_render/sync_spawn_guard.cjs','f14689e5a92c1704f974fdf8cf9cc9aaf79881ca7a6b16f1bcc7487037580810'),
