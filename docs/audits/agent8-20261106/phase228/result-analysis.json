@@ -1,0 +1,155 @@
+{
+  "scope": "F50_SELECTED_ACTUAL_AST_MODELED_GREEN_ONLY_NOT_KERNEL_REAL_CHILD_OR_FULL47",
+  "allocation": "ROOT.A7.F50.MODELED28.GREEN.ONCE_MCI106_CONSUMED",
+  "classification": "PASS_MODELED28_CONTROLS_ONLY",
+  "tests": 28,
+  "passed": 28,
+  "failed": 0,
+  "errors": 0,
+  "skips": 0,
+  "test_exit_code": 0,
+  "supervisor_exit_code": 0,
+  "cases": [
+    {
+      "id": "__main__.ChildPathAdmissionControls.test_db_parent_file_refuses_before_backend",
+      "outcome": "PASS"
+    },
+    {
+      "id": "__main__.ChildPathAdmissionControls.test_db_parent_junction_refuses_before_backend",
+      "outcome": "PASS"
+    },
+    {
+      "id": "__main__.ChildPathAdmissionControls.test_db_reparse_leaf_refuses_before_backend",
+      "outcome": "PASS"
+    },
+    {
+      "id": "__main__.ChildPathAdmissionControls.test_marker_reparse_leaf_refuses_before_backend",
+      "outcome": "PASS"
+    },
+    {
+      "id": "__main__.ChildPathAdmissionControls.test_ordinary_db_absent_marker_reaches_backend_control",
+      "outcome": "PASS"
+    },
+    {
+      "id": "__main__.ChildPathAdmissionControls.test_ordinary_db_existing_marker_reaches_backend_control",
+      "outcome": "PASS"
+    },
+    {
+      "id": "__main__.ChildPathAdmissionControls.test_temp_junction_refuses_before_backend",
+      "outcome": "PASS"
+    },
+    {
+      "id": "__main__.ControlsHeldCleanupControls.test_normal_running_handle_cleanup_control",
+      "outcome": "PASS"
+    },
+    {
+      "id": "__main__.ControlsHeldCleanupControls.test_poll_and_kill_error_still_attempts_wait_and_denies",
+      "outcome": "PASS"
+    },
+    {
+      "id": "__main__.ControlsHeldCleanupControls.test_poll_and_wait_error_keeps_unknown_and_denies",
+      "outcome": "PASS"
+    },
+    {
+      "id": "__main__.ControlsHeldCleanupControls.test_poll_error_attempts_kill_and_wait_and_denies",
+      "outcome": "PASS"
+    },
+    {
+      "id": "__main__.JunitAdmissionControls.test_file_xml_parent_refuses_before_parser_read_hash",
+      "outcome": "PASS"
+    },
+    {
+      "id": "__main__.JunitAdmissionControls.test_ordinary_bounded_xml_preserves_exact_47_facts_control",
+      "outcome": "PASS"
+    },
+    {
+      "id": "__main__.JunitAdmissionControls.test_oversized_xml_refuses_before_parser_read_hash",
+      "outcome": "PASS"
+    },
+    {
+      "id": "__main__.JunitAdmissionControls.test_reparse_xml_parent_refuses_before_parser_read_hash",
+      "outcome": "PASS"
+    },
+    {
+      "id": "__main__.MainRunHeldCleanupControls.test_normal_running_handle_cleanup_control",
+      "outcome": "PASS"
+    },
+    {
+      "id": "__main__.MainRunHeldCleanupControls.test_poll_and_kill_error_still_attempts_wait_and_denies",
+      "outcome": "PASS"
+    },
+    {
+      "id": "__main__.MainRunHeldCleanupControls.test_poll_and_wait_error_keeps_unknown_and_denies",
+      "outcome": "PASS"
+    },
+    {
+      "id": "__main__.MainRunHeldCleanupControls.test_poll_error_attempts_kill_and_wait_and_denies",
+      "outcome": "PASS"
+    },
+    {
+      "id": "__main__.ReturnedHandleControls.test_invariant_refusal_cleanup_kills_and_waits_known_handle",
+      "outcome": "PASS"
+    },
+    {
+      "id": "__main__.ReturnedHandleControls.test_preconstructor_refusal_creates_no_handle",
+      "outcome": "PASS"
+    },
+    {
+      "id": "__main__.ReturnedHandleControls.test_returned_handle_registered_before_invariant_refusal",
+      "outcome": "PASS"
+    },
+    {
+      "id": "__main__.RootFirstControls.test_file_parent_stops_before_descendant_or_git",
+      "outcome": "PASS"
+    },
+    {
+      "id": "__main__.RootFirstControls.test_file_root_stops_before_leaf_git_or_hash",
+      "outcome": "PASS"
+    },
+    {
+      "id": "__main__.RootFirstControls.test_missing_parent_stops_before_descendant_or_git",
+      "outcome": "PASS"
+    },
+    {
+      "id": "__main__.RootFirstControls.test_ordinary_tree_retains_exact_blob_and_ledger",
+      "outcome": "PASS"
+    },
+    {
+      "id": "__main__.RootFirstControls.test_reparse_parent_stops_before_descendant_or_git",
+      "outcome": "PASS"
+    },
+    {
+      "id": "__main__.RootFirstControls.test_selected_reparse_parent_stops_before_leaf_inspection",
+      "outcome": "PASS"
+    }
+  ],
+  "test_runtime_seconds": 0.21,
+  "negative_assertion_reach": "All6poll-failure modeled cases nowpassed killcount1/wait(timeout2)count1/stickyuncertainty+retainederrors and actualcontrolsobservedFalse or actualmainverifyDENY assertion",
+  "injected_errors": "Expected inertpoll/kill/wait OSError models only; zero unittesterrors doesnotmean no injectedcleanup errors",
+  "child": {
+    "command_flags": [
+      "-I",
+      "-S",
+      "-B"
+    ],
+    "exit_code": 0,
+    "identity": "OWN_POPEN_HANDLE",
+    "pid": 96352,
+    "retired": true
+  },
+  "measured_process_phase_seconds": 0.35999999998603016,
+  "timing_scope": "Guards/setuphashes before processphase, posthashes/finalization after; no wholeoperation15s claim",
+  "output_bytes": 4150,
+  "six_raw_prepost_equal": true,
+  "implementation_five_unchanged_during_attempt": true,
+  "original_test_source": "3f7be88ebb61d20627585be4894fb116cf28dffc04fdfd1d44829146aa3bd69a",
+  "red_preserved": "901b16c9 oldsource22PASS6FAIL remainsoriginal/separate",
+  "admission": "No actualcontrols/run/main/Git/engine/SQLite/nativechild/47/provider/publication/commit/push",
+  "next_gate": "RootactualGREEN review +completequalifierreview/freshrawbaseline before commit/publication/hosted47",
+  "hashes": {
+    "receipt": "28c43c88da8a891722b53edcfb7b3f59b356c77295e7a71cf577b2ebb7cddf85",
+    "stderr": "fc30d3dc25d8857699ed39d2c859aaf087953f5064c055feb8f51463bed71ce0",
+    "stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "overall": "MODELED28_GREEN / HOSTED47_HOLD / NO-GO"
+}

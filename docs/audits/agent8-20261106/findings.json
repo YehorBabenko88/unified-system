@@ -867,11 +867,14 @@
     "pr": null,
     "observed_head": "UNTRACKED_QUALIFIER_SHA256_94277c28a9b25f048b4a0acf26d343d1c08e45ccd940437d0e5bf894126d5d62",
     "title": "Known held control child poll exception skips kill/wait cleanup attempt",
-    "status": "OPEN_MODELED28_RED_SOURCE_CORRECTION_REVIEWED_AWAIT_SAME28_GREEN",
+    "status": "CLOSED_SCOPED_SOURCE_AND_SELECTED_ACTUAL_AST_MODELED28_NOT_FULL_CONTROLLER_OR_KERNEL",
     "evidence": "phase220/report.md;phase220/verification.json;phase220/qualify.py",
     "required_correction": "Attempt held kill+wait even when poll throws; preserve sticky failed/UNKNOWN and exact old source; independently review successor/lifecycle negative before execution",
     "modeled_RED": "phase226/report.md;28unique22PASS6FIRST_KILLCOUNT_ASSERTIONFAIL_0ERROR_SKIP;laterNegativeAssertionsNotReached",
     "source_correction": "phase227/report.md;qualifier487c96082c983f2b9e4408939afe2707f4e7fd791090c44ea252109b6dc51b5b",
-    "scope": "CONTROLS_AND_MAINRUN_POLL_KILL_WAIT_STATIC_AND_INERT_MODELS_NOT_ACTUAL_LEAK"
+    "scope": "CONTROLS_AND_MAINRUN_POLL_KILL_WAIT_STATIC_AND_INERT_MODELS_NOT_ACTUAL_LEAK",
+    "fixed_evidence": "phase227/report.md;phase228/report.md;phase228/verification.json",
+    "modeled_GREEN": "SAME28PASS_0FAIL_ERROR_SKIP;SIXNEGATIVE_METHODS_REACH_ALL_ASSERTIONS",
+    "fixed_scope": "HELD_POLL_KILL_WAIT_SOURCE_ORDER_AND_INERT_HANDLE_ERROR_DENIAL_ONLY"
   }
 ]

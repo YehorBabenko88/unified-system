@@ -3883,3 +3883,6 @@ Phases222–225 (client2026-11-11): prerequisiteactualDENY0classifiercases retai
 
 
 Phases226–227: F50originalmodeled28RED22PASS/6firstkillcountFAIL/0error/skip verified; laternegativewait/sticky/DENYassertionsNOTREACHED. Corrected487c qualifier/e285workflow/unchanged3f7test sourceACK only, distinct28profile/candidatev2—notactualGREEN/47/native. F50OPEN;confirmed8P1/9P2/NO-GO/physicalTailscaleBLOCKED. See phase226/report.md and phase227/report.md.
+
+
+Phase228 originalsame28GREEN verified28PASS/0fail/error/skip;6negativecasesnowreachkill/wait/sticky/actualDENYassertions withunchanged3f7test. F50CLOSED scopedSOURCE+SELECTED_AST_MODELEDonly, notfullcontroller/Git/kernel/47. Confirmed8P1/8P2,F26/F42open; overallNO-GO/physicalTailscaleBLOCKED/hosted47HOLD. See phase228/report.md.
