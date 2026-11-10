@@ -1,0 +1,140 @@
+{
+  "schema": "unified.stage1b.readonly-readiness.v1",
+  "reference_source": "b48ddc5ff083deeecfdf76185117d0e86aa23e2a",
+  "reference_source_executed_on_workers": false,
+  "nodes": [
+    {
+      "node": "PC4",
+      "observed_at_utc": "2026-11-10T16:46:02.2176662Z",
+      "os": {
+        "build": "26200",
+        "version": "10.0.26200",
+        "caption": "Microsoft Windows 11 Pro",
+        "total_ram_kib": 32679288,
+        "free_virtual_kib": 19196112,
+        "free_ram_kib": 19730636
+      },
+      "observer_token_elevated": true,
+      "read_only_observation": "READONLY_OBSERVATION_COMPLETE",
+      "candidate_parent_exists": true,
+      "package_verified": false,
+      "restricted_runtime_identity_verified": false,
+      "process_containment_verified": false,
+      "production_conflicts_cleared": false,
+      "smoke": "BLOCKED_NOT_RUN",
+      "source_or_service_installed": false,
+      "changes_performed": false,
+      "original_receipt_sha256": "a08fbbbe134887674ae950329a5e6f229c3e91593b6b9cdf6b7816ed1e3495ca"
+    },
+    {
+      "node": "PC3",
+      "observed_at_utc": "2026-11-10T16:46:55.6206776Z",
+      "os": {
+        "build": "26300",
+        "version": "10.0.26300",
+        "caption": "Microsoft Windows 11 Pro",
+        "total_ram_kib": 33396912,
+        "free_virtual_kib": 18355596,
+        "free_ram_kib": 20930768
+      },
+      "observer_token_elevated": true,
+      "read_only_observation": "READONLY_OBSERVATION_COMPLETE",
+      "candidate_parent_exists": true,
+      "package_verified": false,
+      "restricted_runtime_identity_verified": false,
+      "process_containment_verified": false,
+      "production_conflicts_cleared": false,
+      "smoke": "BLOCKED_NOT_RUN",
+      "source_or_service_installed": false,
+      "changes_performed": false,
+      "original_receipt_sha256": "b4eade15e35e510c64eb9db6261ec95a0fd6eb173b63f2bbe753d56310c415a0"
+    },
+    {
+      "node": "PC2",
+      "observed_at_utc": "2026-11-10T16:46:55.1951826Z",
+      "os": {
+        "build": "26300",
+        "version": "10.0.26300",
+        "caption": "Microsoft Windows 11 Pro",
+        "total_ram_kib": 16477408,
+        "free_virtual_kib": 1375512,
+        "free_ram_kib": 3521684
+      },
+      "observer_token_elevated": true,
+      "read_only_observation": "READONLY_OBSERVATION_COMPLETE",
+      "candidate_parent_exists": true,
+      "package_verified": false,
+      "restricted_runtime_identity_verified": false,
+      "process_containment_verified": false,
+      "production_conflicts_cleared": false,
+      "smoke": "BLOCKED_NOT_RUN",
+      "source_or_service_installed": false,
+      "changes_performed": false,
+      "original_receipt_sha256": "e3abeceea4cbbcf2b58bbfebe39e60705765913efe49b001d4dba332cb518adb"
+    },
+    {
+      "node": "PC1",
+      "observed_at_utc": "2026-11-10T16:46:56.8739050Z",
+      "os": {
+        "build": "26200",
+        "version": "10.0.26200",
+        "caption": "Microsoft Windows 11 Home",
+        "total_ram_kib": 8252684,
+        "free_virtual_kib": 4670544,
+        "free_ram_kib": 3540492
+      },
+      "observer_token_elevated": true,
+      "read_only_observation": "READONLY_OBSERVATION_COMPLETE",
+      "candidate_parent_exists": true,
+      "package_verified": false,
+      "restricted_runtime_identity_verified": false,
+      "process_containment_verified": false,
+      "production_conflicts_cleared": false,
+      "smoke": "BLOCKED_NOT_RUN",
+      "source_or_service_installed": false,
+      "changes_performed": false,
+      "original_receipt_sha256": "f739e983fb7290a1c21548c31729146c162bca0680faf4a588dd09a317f596ad"
+    },
+    {
+      "node": "LS7",
+      "observed_at_utc": "2026-11-10T16:46:58.8291075Z",
+      "os": {
+        "build": "26200",
+        "version": "10.0.26200",
+        "caption": "Microsoft Windows 11 Home",
+        "total_ram_kib": 8151360,
+        "free_virtual_kib": 4075736,
+        "free_ram_kib": 3584852
+      },
+      "observer_token_elevated": true,
+      "read_only_observation": "READONLY_OBSERVATION_COMPLETE",
+      "candidate_parent_exists": true,
+      "package_verified": false,
+      "restricted_runtime_identity_verified": false,
+      "process_containment_verified": false,
+      "production_conflicts_cleared": false,
+      "smoke": "BLOCKED_NOT_RUN",
+      "source_or_service_installed": false,
+      "changes_performed": false,
+      "original_receipt_sha256": "a1748c3340ebb35f814acde7e1c4328a4665254c34db56c1cc50c82c855099f1"
+    }
+  ],
+  "pc2": {
+    "scope": "READONLY_NO_PROCESS_INTERFERENCE",
+    "load_tests": "BLOCKED_MEMORY_AND_RUNTIME_GATES",
+    "reolink_private_bytes": 28245909504,
+    "reolink_working_set_bytes": 1229189120,
+    "reolink_changed": false,
+    "memory_receipt_sha256": "d59cb11372c9fd81b66347624e7aea7b7a87d885ffb09885e4aef822fcae5642"
+  },
+  "ls5_baseline": {
+    "executed_source": "1d923f6a33e1f0f16cd476f1b4e5e65ee03a8a6c",
+    "result": "RETAINED_SCOPED_SYNTHETIC_PASS_NOT_REPEATED",
+    "native_or_cluster_acceptance": false
+  },
+  "adminit_included": false,
+  "physical_stage1b_smokes": "NOT_RUN_BLOCKED",
+  "production_deployment": false,
+  "multi_node_commissioning": false,
+  "overall": "IN_PROGRESS_NO_GO"
+}
