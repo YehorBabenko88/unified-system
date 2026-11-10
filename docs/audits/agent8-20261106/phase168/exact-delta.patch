@@ -1,0 +1,105 @@
+diff --git a/docs/physical-dev/STAGE1B-READONLY-20261110.md b/docs/physical-dev/STAGE1B-READONLY-20261110.md
+index 95ba3c4..11883a1 100644
+--- a/docs/physical-dev/STAGE1B-READONLY-20261110.md
++++ b/docs/physical-dev/STAGE1B-READONLY-20261110.md
+@@ -86,3 +86,24 @@ found at the inspected sources. Existing WindowsSmokeJob requires an already
+ nonadmin parent; suspended worker prepare is not token downgrading. A private
+ PostgreSQL provisioning restricted-process helper has a different permit and
+ must not be repurposed as a research launcher. No such bypass was attempted.
++
++## Subsequent direct owner decision
++
++PC4 smoke remains explicitly BLOCKED until an EXISTING nonprivileged channel
++is confirmed. No account, SSH, UAC, ACL or security-policy changes; no artificial
++downgrade of the elevated SSH token. Continue only read-only diagnostics and
++package/resources/gate checks, including ordinary local operator console
++availability. If confirmed, present evidence and a safe-run plan; no automatic
++smoke start. Other MASTER MISSION components continue independently.
++
++Read-only PC4 observation found an interactive user and Explorer in session1,
++but did NOT obtain nonprivileged parent-token evidence. Presence alone is not
++channel confirmation. The channel remains UNCONFIRMED and smoke BLOCKED.
++
++Existing LS5 g capsule local read-only check completed:19300 member hashes,
++1008702257 bytes match manifest3e05c5251d0bd84e073dc0545c95c903424654690942bd77313175ae493b0a5a;no changes or PC4 transfer/execution. This does not promote descriptive source
++metadata to verified new runtime admission. Existing supervisor is explicitly
++LS5_ONLY_PILOT, independently confirmed in the actual capsule. It cannot be
++repurposed for PC4; a separately pinned/reviewed PC4-specific artifact and
++activation plan would be required after independent source/security gates.
++No LS5 host guard is removed and no capsule hotpatch is permitted.
+diff --git a/release/physical-dev/stage1b-20261110/EXISTING-LS5-CAPSULE-LOCAL-INTEGRITY.json b/release/physical-dev/stage1b-20261110/EXISTING-LS5-CAPSULE-LOCAL-INTEGRITY.json
+new file mode 100644
+index 0000000..ae2167d
+--- /dev/null
++++ b/release/physical-dev/stage1b-20261110/EXISTING-LS5-CAPSULE-LOCAL-INTEGRITY.json
+@@ -0,0 +1,19 @@
++{
++  "schema": "unified.local-capsule-readonly-integrity.v1",
++  "manifest_sha256": "3e05c5251d0bd84e073dc0545c95c903424654690942bd77313175ae493b0a5a",
++  "members_verified": 19300,
++  "bytes_verified": 1008702257,
++  "ordinary_single_link_no_reparse": true,
++  "all_member_digests_match": true,
++  "elapsed_seconds": 182.797,
++  "scope": "EXISTING_LS5_G_CAPSULE_LOCAL_BYTES_ONLY",
++  "pc4_staged": false,
++  "pc4_execution": false,
++  "new_runtime_admission": false,
++  "source_provenance_promoted": false,
++  "changes_performed": false,
++  "original_receipt_sha256": "c3f69ca1825aaf8450faa3859282070927a204ec84384cfde17a1e87ef75ef3d",
++  "existing_supervisor_host_binding": "LS5_ONLY_PILOT",
++  "existing_supervisor_sha256": "e5abb31ac26c3a2f02f6b0fe37374ddef10e303ad476955ad84617dafc22ac4a",
++  "pc4_package_qualification": "BLOCKED_REQUIRES_SEPARATE_PINNED_REVIEWED_PC4_ARTIFACT"
++}
+diff --git a/release/physical-dev/stage1b-20261110/OWNER-CHANNEL-DECISION.json b/release/physical-dev/stage1b-20261110/OWNER-CHANNEL-DECISION.json
+new file mode 100644
+index 0000000..ffdf36d
+--- /dev/null
++++ b/release/physical-dev/stage1b-20261110/OWNER-CHANNEL-DECISION.json
+@@ -0,0 +1,24 @@
++{
++  "schema": "unified.stage1b.owner-channel-decision.v1",
++  "node": "PC4",
++  "owner_decision": "KEEP_SMOKE_BLOCKED_UNTIL_EXISTING_NONPRIVILEGED_CHANNEL_CONFIRMED",
++  "smoke": "BLOCKED",
++  "channel": "UNCONFIRMED",
++  "account_changes": false,
++  "ssh_changes": false,
++  "uac_changes": false,
++  "acl_changes": false,
++  "security_policy_changes": false,
++  "artificial_elevated_ssh_token_downgrade": false,
++  "remote_package_staging": false,
++  "allowed_now": [
++    "READONLY_NODE_DIAGNOSTICS",
++    "READONLY_PACKAGE_VERIFICATION",
++    "READONLY_RESOURCE_AND_GATE_CHECKS",
++    "READONLY_EXISTING_LOCAL_OPERATOR_CONSOLE_AVAILABILITY_CHECK"
++  ],
++  "if_channel_confirmed": "PRESENT_EVIDENCE_AND_SAFE_RUN_PLAN",
++  "smoke_autostart": false,
++  "independent_master_mission_work": "CONTINUE",
++  "source": "DIRECT_HUMAN_REPLY_IN_ROOT_CHAT"
++}
+diff --git a/release/physical-dev/stage1b-20261110/READONLY-READINESS.json b/release/physical-dev/stage1b-20261110/READONLY-READINESS.json
+index b0b9288..1f03058 100644
+--- a/release/physical-dev/stage1b-20261110/READONLY-READINESS.json
++++ b/release/physical-dev/stage1b-20261110/READONLY-READINESS.json
+@@ -136,5 +136,15 @@
+   "physical_stage1b_smokes": "NOT_RUN_BLOCKED",
+   "production_deployment": false,
+   "multi_node_commissioning": false,
+-  "overall": "IN_PROGRESS_NO_GO"
++  "overall": "IN_PROGRESS_NO_GO",
++  "pc4_owner_channel_decision": "KEEP_BLOCKED_NO_ARTIFICIAL_TOKEN_DOWNGRADE",
++  "pc4_local_console_observation": {
++    "interactive_user_present": true,
++    "explorer_session": 1,
++    "token_proof": "NOT_OBTAINED",
++    "channel": "UNCONFIRMED",
++    "original_receipt_sha256": "2a04610d16325fd98ae2867823b800226f475c56cde18a072db30739b8dbe43f"
++  },
++  "existing_ls5_capsule_local_bytes": "19300_MEMBER_DIGESTS_MATCH_NOT_PC4_ADMISSION",
++  "pc4_artifact": "BLOCKED_EXISTING_CAPSULE_LS5_ONLY"
+ }
