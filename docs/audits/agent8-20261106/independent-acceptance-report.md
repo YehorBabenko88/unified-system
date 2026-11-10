@@ -3871,3 +3871,9 @@ Phases212–214: PR84 exact1bafec review-only12JSON/53unique reference hashes/35
 
 
 Phases215–217: A1V2 closed-enum positive31 contradiction correctedatstaged764bb;17proposedIDsNOTRUN/source-designACKonly/F26OPEN. A6e23 exact963tree/407raw+Git andoriginalmaps match; actualpure8PASS+separateNode6PASS localnormalpath only, no actualfailuremechanics/browser/hosted/native. Confirmed8P1/8P2 unchanged; overallNO-GO/physicalTailscaleBLOCKED. See phase216/report.md,phase217/report.md.
+
+
+Phases218–220: Terminan135 rawblobs matchdc810; only3 inheritedfileschangedate23,5newpaths. RootCI10/runtime40 originalreports independentlyhash/sourcebound50, notnewblanketA8semanticACK. Exactbasepolicy decision path described; futurepolicyedits must reconcileclosed8delta, no wildcard/guarddisable. A7newmandatory20controller94277 F50P2OPEN staticheldpoll-exception path skipskill/wait; falsePASSnotclaimed, newwiringNOTRUN. Confirmed8P1/9P2; overallNO-GO/physicalTailscaleBLOCKED. See phase218/report.md,phase219/report.md,phase220/report.md.
+
+
+Phase221 actualboundedsemanticreview finalSync12+Ops4/startupservecodecproducerCIjoins exactdc810/e23 scopedSOURCEACK; no newactionableP1/P2 inreviewedscope. SufficientinputforRootoneexactbaselinepolicyLEASEdecision withRootboundedCI10/runtime40+priorA8scopes, notall135/runtimesemanticACK. Opsdoc21alreadyfixed22ate23. FuturepolicyOps4/preview8closedinventories mustexplicitlyversion/review; no bypass. F50stillOPEN;8P1/9P2/NO-GO/physicalTailscaleBLOCKED. See phase221/report.md.

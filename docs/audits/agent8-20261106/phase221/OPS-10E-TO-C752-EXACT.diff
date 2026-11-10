@@ -1,0 +1,599 @@
+diff --git a/.github/workflows/operations-dashboard.yml b/.github/workflows/operations-dashboard.yml
+new file mode 100644
+index 0000000..9a4bd4c
+--- /dev/null
++++ b/.github/workflows/operations-dashboard.yml
+@@ -0,0 +1,72 @@
++name: Operations dashboard local read-only prototype
++on:
++  push:
++    branches: [feature/terminan-operations-dashboard-20261107]
++  pull_request:
++    paths: ['terminan/operations/dashboard.js', 'tests/operations/test_dashboard.cjs', 'docs/operations/operations-dashboard-contract.md', '.github/workflows/operations-dashboard.yml']
++  workflow_dispatch:
++permissions:
++  contents: read
++jobs:
++  local-view:
++    strategy:
++      fail-fast: false
++      matrix:
++        os: [windows-latest, ubuntu-24.04]
++    runs-on: ${{ matrix.os }}
++    timeout-minutes: 10
++    env:
++      EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
++      GIT_NO_REPLACE_OBJECTS: '1'
++      GIT_CONFIG_COUNT: '2'
++      GIT_CONFIG_KEY_0: core.autocrlf
++      GIT_CONFIG_VALUE_0: 'false'
++      GIT_CONFIG_KEY_1: core.eol
++      GIT_CONFIG_VALUE_1: lf
++    steps:
++      - name: Refuse ambient Node configuration before interpreter startup
++        shell: pwsh
++        run: |
++          foreach ($taskKey in @('NODE_OPTIONS','NODE_PATH','NODE_COMPILE_CACHE','NODE_V8_COVERAGE')) {
++            if ([Environment]::GetEnvironmentVariable($taskKey)) { throw 'AMBIENT_NODE_CONFIG' }
++          }
++      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
++        with:
++          ref: ${{ github.event.pull_request.head.sha || github.sha }}
++          fetch-depth: 0
++          persist-credentials: false
++      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
++        with:
++          node-version: '22.14.0'
++      - name: Exact primary-Git source guard and mandatory 22 builtin-only scenarios
++        shell: pwsh
++        env:
++          OPERATIONS_EVIDENCE: ${{ runner.temp }}/operations-dashboard-evidence
++        run: |
++          foreach ($taskKey in @('NODE_OPTIONS','NODE_PATH','NODE_COMPILE_CACHE','NODE_V8_COVERAGE')) {
++            if ([Environment]::GetEnvironmentVariable($taskKey)) { throw 'AMBIENT_NODE_CONFIG' }
++          }
++          $taskBootstrap = Join-Path $env:RUNNER_TEMP 'operations-dashboard-primary.cjs'
++          $taskCode = @'
++          const fs=require('node:fs'),path=require('node:path'),cp=require('node:child_process'),Module=require('node:module');
++          for(const k of ['NODE_OPTIONS','NODE_PATH','NODE_COMPILE_CACHE','NODE_V8_COVERAGE'])if(process.env[k])throw Error('AMBIENT_NODE_CONFIG');
++          const root=process.env.GITHUB_WORKSPACE,head=process.env.EXPECTED_HEAD;
++          if(!/^[0-9a-f]{40}$/.test(head))throw Error('EXPECTED_HEAD');
++          const git=process.platform==='win32'?'C:/Program Files/Git/cmd/git.exe':'/usr/bin/git';
++          const source=cp.execFileSync(git,['--no-replace-objects','--no-optional-locks','-c','core.fsmonitor=false','-C',root,'show',head+':tests/operations/test_dashboard.cjs'],{maxBuffer:1048576});
++          const filename=path.join(root,'tests/operations/test_dashboard.cjs');
++          if(fs.lstatSync(filename).isSymbolicLink()||!source.equals(fs.readFileSync(filename)))throw Error('PRIMARY_TEST_SOURCE_MISMATCH');
++          const mod=new Module(filename);mod.filename=filename;mod.paths=Module._nodeModulePaths(path.dirname(filename));
++          mod._compile(source.toString('utf8'),filename);
++          const receipt=mod.exports.runQualified(root,head,process.env.OPERATIONS_EVIDENCE,["missing_input_pure_unavailable_no_io","strict_version_and_unknown_fields_reject","duplicate_key_reject_before_projection","byte_depth_node_member_string_array_caps","source_pin_link_and_unique_row_ids","unsupported_installed_release_service_facts_reject","journal_completed_authorized_never_operational_grant","journal_integrity_pass_never_promotes_health_or_other_axes","development_physical_pass_remains_unverified_claim","dev_tasks_never_cast_to_node_operations","ci_runner_zero_unassigned_queued_not_running","ci_success_unverified_not_operational_or_hosted_acceptance","protected_consumed_ordinary_not_applicable_no_grant","ci_unknown_conflict_never_infra_from_age","test_only_banner_persistent_and_local_capture_banner_distinct","render_invalid_input_clears_previous_capture","text_content_only_no_html_or_secret_log_exposure","all_controls_disabled_no_effect_handlers_or_provider_calls","journal_current_task_identity_allows_multiple_tasks_per_capture","mission_task_tuple_identity_has_no_delimiter_collision","ci_pin_identity_ignores_object_key_order","presentation_details_collapsed_preserve_hashes_and_qualifiers"]);
++          process.stdout.write(JSON.stringify({head:receipt.expected_head,result:receipt.result,tests:receipt.counts.tests,qualification:receipt.qualification})+'\n');
++          '@
++          [IO.File]::WriteAllText($taskBootstrap, $taskCode, [Text.UTF8Encoding]::new($false))
++          node --no-addons $taskBootstrap
++          if ($LASTEXITCODE -ne 0) { throw 'OPERATIONS_SOURCE_QUALIFICATION_FAILED' }
++      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
++        if: always()
++        with:
++          name: operations-local-${{ matrix.os }}-${{ github.event.pull_request.head.sha || github.sha }}-${{ github.run_attempt }}
++          path: ${{ runner.temp }}/operations-dashboard-evidence
++          if-no-files-found: error
+diff --git a/docs/operations/operations-dashboard-contract.md b/docs/operations/operations-dashboard-contract.md
+new file mode 100644
+index 0000000..7075786
+--- /dev/null
++++ b/docs/operations/operations-dashboard-contract.md
+@@ -0,0 +1,189 @@
++# Operations Dashboard: exact LOCAL read-only view proposal
++
++STATUS: ROOT_ACKED_ISOLATED_LOCAL_PROTOTYPE. No operational/native/endpoint admission.
++Local schema artifact SHA256: e7b90440767e7c33ed8acb2c310a5bd502ce5a727d527488350922ae0c61fcab
++This is a UI input DTO, NOT C3 wire, backend endpoint, native authentication,
++Node Operation, financial/profile schema, or an authority record.
++
++## Scope and isolation
++
++New worktree work/terminan-operations-dashboard-20261107, branch
++feature/terminan-operations-dashboard-20261107, exact Terminan base
++10e07ef108d155b9ca2278eec6a8361cb92fa488 / tree
++899ab6ec331784aa4e512050c75665cecfa9385e. All4 reserved paths absent at base.
++Existing Sync/control-get branches and two WIP files untouched. No main merge.
++Reserved files: terminan/operations/dashboard.js; tests/operations/test_dashboard.cjs;
++docs/operations/operations-dashboard-contract.md. Optional workflow remains absent
++until ROOT approves exact test scope. No other shared source or producer edits.
++
++Chosen approach for approval: detached bounded JSON parser + inert DOM renderer.
++Direct Python object/controller callbacks and network/native API binding are
++excluded from this first slice because they are not read-only UI projection
++contracts. ROOT-owned collection/normalization stays outside this allocation.
++
++## Exact local public UI API (proposal)
++
++UMD export TerminanOperations / CommonJS with exactly:
++- parseLocalProjection(rawText = null): returns frozen local result with
++  status UNAVAILABLE or REPORTED_ONLY, model=null or detached frozen validated
++  projection, errorCode=null or bounded local enum NO_LOCAL_PROJECTION,
++  BODY_LIMIT, DUPLICATE_KEY, UNSUPPORTED_SCHEMA, INVALID_PROJECTION.
++- renderOperations(rootElement, rawText = null): parses then synchronously replaces
++  the target DOM with safe text and disabled controls. Returns the local result.
++  No retained prior successful capture after invalid/missing input.
++
++No provider/callback/factory argument, transport handle, fetch, URL, auth header,
++credential, IPC, filesystem, journal or controller call. No timer/poll/retry/run/
++submit/observe/reconcile/install/update/rollback/approval/dispatch method.
++In particular NodeSupervisorV2.run_readonly WRITES receipts and CI.observe WRITES
++observations, so the VIEW must never invoke either despite their safe prototype
++scope. It does not open/create journals or turn development tasks into NodeOps.
++Renderer has no effect handlers; visible action buttons are disabled and cannot
++become enabled from input. Existing Tailscale/ADMINIT restrictions unchanged.
++
++## Closed input shape
++
++LOCAL-PROJECTION.schema.PROPOSAL.json is the exact Draft2020-12 companion. Top keys:
++schema, data_mode, captured_at_utc, coverage, effects_authorized, source_pins,
++sections, operational_axes. All objects closed; every listed field required.
++schema=terminan.operations.local-view.v1. data_mode TEST_ONLY or
++LOCAL_CAPTURE_UNVERIFIED. effects_authorized=false always.
++coverage=BOUNDED_CAPTURE_NOT_COMPLETE_HISTORY. Missing provider is represented by
++null input, not a guessed URL or synthetic successful projection.
++
++source_pins has at most5 unique IDs from inventory/supervisor/mission/ci/deployment;
++repository, exact head/tree and capture_sha256 are unverified references, not
++cryptographic/native admission. Each REPORTED section references an existing pin;
++source bytes/producer provenance are ROOT collection obligations. UNAVAILABLE
++sections have empty rows and has_more=null. REPORTED rows are bounded captures,
++not complete history; has_more is explicit bool/null, never inferred complete.
++
++Section contracts and local meaning:
++
++| Section | Cap | Display / meaning |
++|---|---:|---|
++| inventory |6| Declared node/role/OS inventory only; supervisor_version=null, installed_release_sha=null, service_state=UNAVAILABLE until a separately acknowledged operational producer revision. Do not map source schema/version to installed software. |
++| node_journal |128| Local task/operation/state/release/approval/generation REFERENCE, sequence, result code and local journal chain report. AUTHORIZED/COMPLETED never imply native grant or OS health. effects_authorized=false, physical_acceptance=NOT_RUN. |
++| development_tasks |128| Task/mission/owner/repository/base/allowed files, blockers/next actions and separate source/tested/integrated/windows/physical CLAIMS. grants_node_operations=false and native_authority=false. Even claimed physical PASS is prominently unverified development data. |
++| ci |64| Exact immutable pin, reported state, runner scalar/state, observed/next timestamps, conclusion, artifact IDs and raw capture digest. data_origin=UNVERIFIED_CAPTURE. CONSUMED or NOT_APPLICABLE are historical/non-authorizing classifications. |
++| approvals |128| Public approval/target references and REPORTED_APPROVAL/CONSUMED/NOT_APPLICABLE/UNKNOWN; effective_grant=false. No approval token or authority boolean. |
++| lifecycle |32| Recovery/update/rollback/deployment PLAN_ONLY/BLOCKED/UNKNOWN, target release reference and bounded reason; no effect or actual installed outcome. |
++
++All five operational axes are independent UNKNOWN/UNAVAILABLE in this initial
++local prototype contract: local_health, authority_freshness, compatibility,
++integrity, replication. A local journal_integrity=PASS stays scoped to its receipt
++chain row; it does not promote any axis. No HEALTHY/LIVE/current-authority label,
++combined green score or Pro/Home/physical qualification is inferred. Separate
++future source/mapping ACK is required to widen operational-axis values.
++
++## Additional semantic checks beyond structural schema
++
++Maximum raw input262144 UTF8 bytes; container depth12; nodes including keys16384;
++32members/object;128array elements except tighter schema caps; strings per-schema.
++Reject duplicate decoded keys before ordinary JSON parse. No unsupported numbers:
++all local integer metadata must be exact safe integers0..9007199254740991,
++positive where specified. These ordinary JSON integers are NOT profile integers
++converted into C3. Monetary/financial fields are not part of this local contract.
++UTC capture syntax requires actual valid UTC calendar/time and preserves declared
++capture time only; age is not authority freshness or clock qualification.
++
++Source IDs unique and all section references resolve. Inventory node IDs unique.
++One captured journal snapshot per node may contain multiple latest-per-task rows.
++Both (node_id, task_id) and (node_id, journal_sequence) are unique tuples; the
++sequence belongs to that node journal capture, never authority. Mission task
++identity is the two-element (mission_id, task_id) tuple, not delimiter concatenation. CI pin identity
++is repository/workflow/run/attempt/source/job; duplicate current rows reject.
++Allowed-file metadata remains repository-relative (no absolute/drive/traversal).
++Reject overlimit input; do not silently truncate/drop rows. Empty or failed source
++is UNAVAILABLE; absence of rows does not prove absence of backend work.
++
++CI runner0/null means UNASSIGNED; positive integer means reported ASSIGNED.
++Queued API started_at or age does not imply RUNNING/SUCCESS/INFRA_BLOCKED.
++Contradictory runner state rejects. Preserve UNKNOWN terminal conflict. The exact
++protected Math original pin remains CONSUMED; different fields with that run ID
++reject as in the pinned controller. Ordinary CI is NOT_APPLICABLE; no fabricated
++authorization or consumption. INFRA_BLOCKED is not inferred by UI. A claimed
++SUCCESS remains an unverified CI observation, not hosted CI acceptance.
++
++Render textContent only; no innerHTML, arbitrary href/script, filesystem path,
++raw captured logs, stack traces, cookies, tokens, native handles or proof payloads.
++Evidence is limited to public ref IDs plus optional SHA256, not credentials or
++URLs. ROOT collector must explicitly whitelist public metadata; UI logs no raw
++projection or error text. Unknown keys/flags deny rather than declassify secrets.
++
++## Actual producer mapping and missing sources
++
++| Producer pin | Actual existing source | Admissible local projection boundary |
++|---|---|---|
++| PR38 b6f58f42690966814bae3f723766f15b45c5c077 | NodeTaskJournal snapshot/get and NodeSupervisorV2.inspect output, local operation.v2 intents / journal.v1 receipts | Detached selected public fields only; authority_generation UUID REFERENCE_ONLY; no call to submit/run_readonly/reconcile. Journal-only integrity, UNKNOWN source/freshness/authority. |
++| PR40 d22677736dc862c344a54fe9105d336fa02abe83 | MissionController.projection() schema_version1/sequence/tasks/grants_node_operations=false/native_authority=false | Extract development claims, never NodeOps/execution. Fresh pin has marker2/capacity correction; development task projection remains schema_version1. Not native or operational admission. |
++| PR39 48e38a2eeea32ddb3836a27871959814843bb6c6 | Already captured sanitized CI OBSERVATION receipt / exact Pin | Read an externally supplied capture; no Controller.observe/create/open or GitHub write/poll/retry by UI. Actual protected runner0 remains UNASSIGNED. |
++| ROOT supervisor_deployment.py | Draft42 4cfdc31f63ff32ab251464e89ff1aa6becd471fa / tree e7904c9ffc76971395ab1965067b75f1adbc03aa | Inactive capsule/install/rollback/service PLAN_ONLY; still no installed-release/service fact. |
++| ROOT inventory / operational service state | No new exact UI producer/mapping ACK | Inventory claims optional; actual health/version/release/service/compatibility/replication facts UNAVAILABLE. |
++
++All three prototypes share development base49a970270570548e5d4f0c5a440d30e238bb21f1;
++this does not make them a shared native wire. Full per-file raw pins and trees are
++in ALLOCATION-AND-PRODUCER-PINS.json. No producer import/normalizer implementation
++is supplied by this proposal. ROOT must ACK semantic extraction and own the
++collector; otherwise only labeled test fixture inputs are available.
++
++## Presentation and verification proposal
++
++Persistent TEST_ONLY fixture banner or LOCAL CAPTURE UNVERIFIED banner; separate
++panels for declared inventory/unavailable operational slots, local receipts,
++development mission, CI, approval references, recovery/update/rollback plans,
++public evidence, and the five independent operational axes. No hidden effect
++handlers or enabled control. Tabular data is bounded; no live simulation data.
++
++ROOT approved18 original Node scenario IDs. Independent review added3 identity
++regressions: latest task per node capture, delimiter-free mission/task tuple, and
++CI pin key-order independence. Actual mandatory inventory is22/zero skip.
++Tests cover the parser and a model DOM; actual isolated Chromium TEST_ONLY
++missing/fixture/hostile/mobile preview is separate evidence. Source-bound runner
++checks all tracked raw Git blobs before/after, exact22TAP IDs and counts, no
++unexpected files or ambient Node options/path/cache/coverage, no addons. Workflow
++pins Node22.14.0 and immutable actions, Windows/Ubuntu, no npm/dependencies.
++No local preview or hosted component check qualifies native/Home/physical use.
++
++ROOT ACK received for this exact local artifact/API/data-vs-fact boundary,
++external projection collector ownership, original18scenarios and fourth workflow
++path. Only the four reserved files change; discovered regression IDs are recorded. No native bridge is required to
++implement this inert view; actual operational facts remain unavailable until
++separately supplied and acknowledged. No shared/source/native/office/provider or
++physical action, production admission or P0 closure is implied.
++
++## Approved implementation plan
++
++ROOT approved the exact LOCAL DTO/API/extraction boundaries,18scenario IDs and the fourth workflow path. Use superpowers:executing-plans inline.
++
++- [x] Original18 RED then PASS; independent3identity regressions RED18/3 then PASS21.
++- [x] Bounded decoded-key parser/schema/semantics, frozen model, inert textContent render.
++- [x] Verify22PASS/zero skip and separate isolated TEST_ONLY Chromium stand.
++- [x] Add pinned-actions Node-only Windows/Ubuntu workflow with primary Git-blob source bootstrap, ambient Node/addon rejection and before/after complete raw inventory. No npm/dependencies.
++- [ ] Independent bounded source review, fix meaningful findings, source-bound receipt and Draft PR; no merge or operational admission.
++
++Workflow tests Node-only behavior; actual visual/browser evidence remains separate. All source/installed/native facts remain unverified/unavailable. Original contract schema SHA e7b90440767e7c33ed8acb2c310a5bd502ce5a727d527488350922ae0c61fcab. Producer pin fulltrees/source hashes are recorded externally; no raw proof/authorization factory.
++
++## Qualification limits
++
++The schema is embedded in dashboard.js because this allocation has no extra runtime
++schema file. Only ordinary local integer tokens are accepted; exponent/fraction/
++negative metadata tokens are refused before any Number rounding. Original approved
++LOCAL schema artifact remains externally pinned; these are conservative local
++parser checks, not a C3 conversion or financial profile. No schema success proves
++source identity or operational truth. Source guard assumes a controlled isolated
++workspace, not protection against a malicious OS/kernel or private-directory owner.
++
++Run component tests: node --no-addons --test tests/operations/test_dashboard.cjs.
++Source-bound mode requires a clean immutable commit with only the four approved
++additions, raw Git-equal checkout, --no-addons and external evidence directory.
++Workflow first compiles primary test-runner bytes from that exact Git commit; a
++workspace shadow cannot bootstrap qualification. Child TAP must contain exactly
++the22 frozen IDs,21passes,0fail/cancel/skip/todo. Source receipts are LOCAL component
++engineering evidence, never provider/native or full release admission.
++
++## Read-only presentation refinement
++
++Tables use readable labels and separate CI run, attempt, job and source columns. Native details are collapsed initially and retain complete row data, source pins and evidence hashes. Development axes always say reported/unverified; they never qualify operational axes. No event handlers, links, new fields or schema changes are introduced.
++
++Current NodeSupervisor source: `840511a8567e8b016733d7dc2566d7890dff39b9`, tree `5529a7fe006f430ec11a72791ecca37bd2e94544`. Compared with historical b6f58f4: local receipt v2 requires immutable cluster_id/node_id/node_incarnation scope; receipt v1/unbound histories reject unchanged. Snapshot/get projections remain reference-only extraction candidates. UI must never construct controllers or journals or call reconciliation. This source comparison is not endpoint, installed-version, enrollment or runtime ACK.
+diff --git a/terminan/operations/dashboard.js b/terminan/operations/dashboard.js
+new file mode 100644
+index 0000000..9cf5452
+--- /dev/null
++++ b/terminan/operations/dashboard.js
+@@ -0,0 +1,157 @@
++/* ROOT-approved LOCAL read-only prototype. No C3 wire, provider or authority. */
++(function(root,factory){const api=factory();if(typeof module==='object')module.exports=api;else root.TerminanOperations=api;})(globalThis,function(){
++  'use strict';
++  // Exact approved local schema artifact SHA256 e7b90440767e7c33ed8acb2c310a5bd502ce5a727d527488350922ae0c61fcab.
++  const schema={"type":"object","additionalProperties":false,"properties":{"schema":{"const":"terminan.operations.local-view.v1"},"data_mode":{"enum":["TEST_ONLY","LOCAL_CAPTURE_UNVERIFIED"]},"captured_at_utc":{"anyOf":[{"type":"string","pattern":"^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z(?![\\s\\S])"},{"type":"null"}]},"coverage":{"const":"BOUNDED_CAPTURE_NOT_COMPLETE_HISTORY"},"effects_authorized":{"const":false},"source_pins":{"type":"array","items":{"type":"object","additionalProperties":false,"properties":{"id":{"enum":["inventory","supervisor","mission","ci","deployment"]},"repository":{"type":"string","maxLength":160,"pattern":"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+(?![\\s\\S])"},"head":{"type":"string","pattern":"^[0-9a-f]{40}(?![\\s\\S])"},"tree":{"type":"string","pattern":"^[0-9a-f]{40}(?![\\s\\S])"},"capture_sha256":{"type":"string","pattern":"^[0-9a-f]{64}(?![\\s\\S])"}},"required":["id","repository","head","tree","capture_sha256"]},"maxItems":5},"sections":{"type":"object","additionalProperties":false,"properties":{"inventory":{"type":"object","additionalProperties":false,"properties":{"state":{"enum":["UNAVAILABLE","REPORTED"]},"source_id":{"anyOf":[{"type":"string","pattern":"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}(?![\\s\\S])"},{"type":"null"}]},"has_more":{"anyOf":[{"type":"boolean"},{"type":"null"}]},"rows":{"type":"array","items":{"type":"object","additionalProperties":false,"properties":{"node_id":{"enum":["LS5","PC4","PC3","PC2","PC1","LS7"]},"declared_role":{"enum":["COORDINATOR","WORKER","UNKNOWN"]},"declared_os_edition":{"enum":["WINDOWS_11_PRO","WINDOWS_11_HOME","UNKNOWN"]},"supervisor_version":{"type":"null"},"installed_release_sha":{"type":"null"},"service_state":{"const":"UNAVAILABLE"},"evidence_refs":{"type":"array","items":{"type":"object","additionalProperties":false,"properties":{"ref":{"type":"string","pattern":"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}(?![\\s\\S])"},"sha256":{"anyOf":[{"type":"string","pattern":"^[0-9a-f]{64}(?![\\s\\S])"},{"type":"null"}]}},"required":["ref","sha256"]},"maxItems":16}},"required":["node_id","declared_role","declared_os_edition","supervisor_version","installed_release_sha","service_state","evidence_refs"]},"maxItems":6}},"required":["state","source_id","has_more","rows"],"allOf":[{"if":{"properties":{"state":{"const":"UNAVAILABLE"}}},"then":{"properties":{"rows":{"maxItems":0},"has_more":{"type":"null"}}}},{"if":{"properties":{"state":{"const":"REPORTED"}}},"then":{"properties":{"source_id":{"type":"string","pattern":"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}(?![\\s\\S])"}}}}]},"node_journal":{"type":"object","additionalProperties":false,"properties":{"state":{"enum":["UNAVAILABLE","REPORTED"]},"source_id":{"anyOf":[{"type":"string","pattern":"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}(?![\\s\\S])"},{"type":"null"}]},"has_more":{"anyOf":[{"type":"boolean"},{"type":"null"}]},"rows":{"type":"array","items":{"type":"object","additionalProperties":false,"properties":{"task_id":{"type":"string","pattern":"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}(?![\\s\\S])"},"node_id":{"enum":["LS5","PC4","PC3","PC2","PC1","LS7"]},"journal_sequence":{"type":"integer","minimum":0,"maximum":9007199254740991},"operation_type":{"enum":["READ_INVENTORY","VERIFY_ARTIFACT","VERIFY_CONFIGURATION","CHECK_SERVICE","CHECK_HEALTH","PREPARE_INSTALL","PREPARE_UPDATE","VERIFY_RELEASE","COLLECT_LOGS","REPORT_STATUS","REQUEST_DRAIN","VERIFY_BACKUP","PREPARE_ROLLBACK"]},"state":{"enum":["CREATED","VERIFIED","AUTHORIZED","PREPARED","RUNNING","VERIFYING","COMPLETED","BLOCKED","FAILED","INTERRUPTED","RECOVERY_REQUIRED","ROLLBACK_REQUIRED","CANCELLED","UNKNOWN_OUTCOME"]},"release_ref":{"anyOf":[{"type":"string","pattern":"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}(?![\\s\\S])"},{"type":"null"}]},"approval_ref":{"anyOf":[{"type":"string","pattern":"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}(?![\\s\\S])"},{"type":"null"}]},"authority_generation_ref":{"anyOf":[{"type":"string","pattern":"^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}(?![\\s\\S])"},{"type":"null"}]},"result_code":{"anyOf":[{"type":"string","pattern":"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}(?![\\s\\S])"},{"type":"null"}]},"journal_integrity":{"enum":["PASS","FAIL","UNKNOWN"]},"effects_authorized":{"const":false},"physical_acceptance":{"const":"NOT_RUN"},"evidence_refs":{"type":"array","items":{"type":"object","additionalProperties":false,"properties":{"ref":{"type":"string","pattern":"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}(?![\\s\\S])"},"sha256":{"anyOf":[{"type":"string","pattern":"^[0-9a-f]{64}(?![\\s\\S])"},{"type":"null"}]}},"required":["ref","sha256"]},"maxItems":16}},"required":["task_id","node_id","journal_sequence","operation_type","state","release_ref","approval_ref","authority_generation_ref","result_code","journal_integrity","effects_authorized","physical_acceptance","evidence_refs"]},"maxItems":128}},"required":["state","source_id","has_more","rows"],"allOf":[{"if":{"properties":{"state":{"const":"UNAVAILABLE"}}},"then":{"properties":{"rows":{"maxItems":0},"has_more":{"type":"null"}}}},{"if":{"properties":{"state":{"const":"REPORTED"}}},"then":{"properties":{"source_id":{"type":"string","pattern":"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}(?![\\s\\S])"}}}}]},"development_tasks":{"type":"object","additionalProperties":false,"properties":{"state":{"enum":["UNAVAILABLE","REPORTED"]},"source_id":{"anyOf":[{"type":"string","pattern":"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}(?![\\s\\S])"},{"type":"null"}]},"has_more":{"anyOf":[{"type":"boolean"},{"type":"null"}]},"rows":{"type":"array","items":{"type":"object","additionalProperties":false,"properties":{"task_id":{"type":"string","pattern":"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}(?![\\s\\S])"},"mission_id":{"type":"string","pattern":"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}(?![\\s\\S])"},"owner":{"type":"string","minLength":1,"maxLength":128,"pattern":"^[^\\u0000-\\u001f\\u007f]+(?![\\s\\S])"},"repository":{"type":"string","maxLength":160,"pattern":"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+(?![\\s\\S])"},"base_sha":{"type":"string","pattern":"^[0-9a-f]{40}(?![\\s\\S])"},"allowed_files":{"type":"array","items":{"type":"string","minLength":1,"maxLength":256,"pattern":"^[^\\u0000-\\u001f\\u007f]+(?![\\s\\S])"},"maxItems":128},"blockers":{"type":"array","items":{"type":"string","minLength":1,"maxLength":512,"pattern":"^[^\\u0000-\\u001f\\u007f]+(?![\\s\\S])"},"maxItems":32},"next_actions":{"type":"array","items":{"type":"string","minLength":1,"maxLength":512,"pattern":"^[^\\u0000-\\u001f\\u007f]+(?![\\s\\S])"},"maxItems":32},"axes":{"type":"object","additionalProperties":false,"properties":{"source":{"enum":["UNKNOWN","PASS","FAIL","BLOCKED"]},"tested":{"enum":["UNKNOWN","PASS","FAIL","BLOCKED"]},"integrated":{"enum":["UNKNOWN","PASS","FAIL","BLOCKED"]},"windows":{"enum":["UNKNOWN","PASS","FAIL","BLOCKED"]},"physical":{"enum":["UNKNOWN","PASS","FAIL","BLOCKED"]}},"required":["source","tested","integrated","windows","physical"]},"grants_node_operations":{"const":false},"native_authority":{"const":false},"evidence_refs":{"type":"array","items":{"type":"object","additionalProperties":false,"properties":{"ref":{"type":"string","pattern":"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}(?![\\s\\S])"},"sha256":{"anyOf":[{"type":"string","pattern":"^[0-9a-f]{64}(?![\\s\\S])"},{"type":"null"}]}},"required":["ref","sha256"]},"maxItems":16}},"required":["task_id","mission_id","owner","repository","base_sha","allowed_files","blockers","next_actions","axes","grants_node_operations","native_authority","evidence_refs"]},"maxItems":128}},"required":["state","source_id","has_more","rows"],"allOf":[{"if":{"properties":{"state":{"const":"UNAVAILABLE"}}},"then":{"properties":{"rows":{"maxItems":0},"has_more":{"type":"null"}}}},{"if":{"properties":{"state":{"const":"REPORTED"}}},"then":{"properties":{"source_id":{"type":"string","pattern":"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}(?![\\s\\S])"}}}}]},"ci":{"type":"object","additionalProperties":false,"properties":{"state":{"enum":["UNAVAILABLE","REPORTED"]},"source_id":{"anyOf":[{"type":"string","pattern":"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}(?![\\s\\S])"},{"type":"null"}]},"has_more":{"anyOf":[{"type":"boolean"},{"type":"null"}]},"rows":{"type":"array","items":{"type":"object","additionalProperties":false,"properties":{"pin":{"type":"object","additionalProperties":false,"properties":{"repository":{"type":"string","maxLength":160,"pattern":"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+(?![\\s\\S])"},"workflow_id":{"type":"integer","minimum":1,"maximum":9007199254740991},"run_id":{"type":"integer","minimum":1,"maximum":9007199254740991},"attempt":{"type":"integer","minimum":1,"maximum":9007199254740991},"source_sha":{"type":"string","pattern":"^[0-9a-f]{40}(?![\\s\\S])"},"job_id":{"type":"integer","minimum":1,"maximum":9007199254740991}},"required":["repository","workflow_id","run_id","attempt","source_sha","job_id"]},"state":{"enum":["QUEUED","RUNNING","SUCCESS","FAILURE","CANCELLED","INFRA_BLOCKED","UNKNOWN"]},"authorization_state":{"enum":["CONSUMED","NOT_APPLICABLE"]},"runner_assignment":{"anyOf":[{"type":"integer","minimum":0,"maximum":9007199254740991},{"type":"null"}]},"runner_assignment_state":{"enum":["UNASSIGNED","ASSIGNED"]},"observed_at":{"type":"integer","minimum":0,"maximum":9007199254740991},"next_at":{"type":"integer","minimum":0,"maximum":9007199254740991},"conclusion":{"anyOf":[{"type":"string","minLength":1,"maxLength":32,"pattern":"^[^\\u0000-\\u001f\\u007f]+(?![\\s\\S])"},{"type":"null"}]},"data_origin":{"const":"UNVERIFIED_CAPTURE"},"raw_sha256":{"type":"string","pattern":"^[0-9a-f]{64}(?![\\s\\S])"},"artifact_ids":{"type":"array","items":{"type":"integer","minimum":1,"maximum":9007199254740991},"maxItems":64},"evidence_refs":{"type":"array","items":{"type":"object","additionalProperties":false,"properties":{"ref":{"type":"string","pattern":"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}(?![\\s\\S])"},"sha256":{"anyOf":[{"type":"string","pattern":"^[0-9a-f]{64}(?![\\s\\S])"},{"type":"null"}]}},"required":["ref","sha256"]},"maxItems":16}},"required":["pin","state","authorization_state","runner_assignment","runner_assignment_state","observed_at","next_at","conclusion","data_origin","raw_sha256","artifact_ids","evidence_refs"]},"maxItems":64}},"required":["state","source_id","has_more","rows"],"allOf":[{"if":{"properties":{"state":{"const":"UNAVAILABLE"}}},"then":{"properties":{"rows":{"maxItems":0},"has_more":{"type":"null"}}}},{"if":{"properties":{"state":{"const":"REPORTED"}}},"then":{"properties":{"source_id":{"type":"string","pattern":"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}(?![\\s\\S])"}}}}]},"approvals":{"type":"object","additionalProperties":false,"properties":{"state":{"enum":["UNAVAILABLE","REPORTED"]},"source_id":{"anyOf":[{"type":"string","pattern":"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}(?![\\s\\S])"},{"type":"null"}]},"has_more":{"anyOf":[{"type":"boolean"},{"type":"null"}]},"rows":{"type":"array","items":{"type":"object","additionalProperties":false,"properties":{"reference":{"type":"string","pattern":"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}(?![\\s\\S])"},"target_reference":{"type":"string","pattern":"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}(?![\\s\\S])"},"reported_state":{"enum":["UNKNOWN","REPORTED_APPROVAL","CONSUMED","NOT_APPLICABLE"]},"effective_grant":{"const":false},"evidence_refs":{"type":"array","items":{"type":"object","additionalProperties":false,"properties":{"ref":{"type":"string","pattern":"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}(?![\\s\\S])"},"sha256":{"anyOf":[{"type":"string","pattern":"^[0-9a-f]{64}(?![\\s\\S])"},{"type":"null"}]}},"required":["ref","sha256"]},"maxItems":16}},"required":["reference","target_reference","reported_state","effective_grant","evidence_refs"]},"maxItems":128}},"required":["state","source_id","has_more","rows"],"allOf":[{"if":{"properties":{"state":{"const":"UNAVAILABLE"}}},"then":{"properties":{"rows":{"maxItems":0},"has_more":{"type":"null"}}}},{"if":{"properties":{"state":{"const":"REPORTED"}}},"then":{"properties":{"source_id":{"type":"string","pattern":"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}(?![\\s\\S])"}}}}]},"lifecycle":{"type":"object","additionalProperties":false,"properties":{"state":{"enum":["UNAVAILABLE","REPORTED"]},"source_id":{"anyOf":[{"type":"string","pattern":"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}(?![\\s\\S])"},{"type":"null"}]},"has_more":{"anyOf":[{"type":"boolean"},{"type":"null"}]},"rows":{"type":"array","items":{"type":"object","additionalProperties":false,"properties":{"node_id":{"enum":["LS5","PC4","PC3","PC2","PC1","LS7"]},"kind":{"enum":["RECOVERY","UPDATE","ROLLBACK","DEPLOYMENT"]},"state":{"enum":["PLAN_ONLY","BLOCKED","UNKNOWN"]},"target_release_ref":{"anyOf":[{"type":"string","pattern":"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}(?![\\s\\S])"},{"type":"null"}]},"reason_code":{"type":"string","pattern":"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}(?![\\s\\S])"},"effects_authorized":{"const":false},"evidence_refs":{"type":"array","items":{"type":"object","additionalProperties":false,"properties":{"ref":{"type":"string","pattern":"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}(?![\\s\\S])"},"sha256":{"anyOf":[{"type":"string","pattern":"^[0-9a-f]{64}(?![\\s\\S])"},{"type":"null"}]}},"required":["ref","sha256"]},"maxItems":16}},"required":["node_id","kind","state","target_release_ref","reason_code","effects_authorized","evidence_refs"]},"maxItems":32}},"required":["state","source_id","has_more","rows"],"allOf":[{"if":{"properties":{"state":{"const":"UNAVAILABLE"}}},"then":{"properties":{"rows":{"maxItems":0},"has_more":{"type":"null"}}}},{"if":{"properties":{"state":{"const":"REPORTED"}}},"then":{"properties":{"source_id":{"type":"string","pattern":"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}(?![\\s\\S])"}}}}]}},"required":["inventory","node_journal","development_tasks","ci","approvals","lifecycle"]},"operational_axes":{"type":"object","additionalProperties":false,"properties":{"local_health":{"enum":["UNKNOWN","UNAVAILABLE"]},"authority_freshness":{"enum":["UNKNOWN","UNAVAILABLE"]},"compatibility":{"enum":["UNKNOWN","UNAVAILABLE"]},"integrity":{"enum":["UNKNOWN","UNAVAILABLE"]},"replication":{"enum":["UNKNOWN","UNAVAILABLE"]}},"required":["local_health","authority_freshness","compatibility","integrity","replication"]}},"required":["schema","data_mode","captured_at_utc","coverage","effects_authorized","source_pins","sections","operational_axes"],"$schema":"https://json-schema.org/draft/2020-12/schema","$id":"urn:terminan:operations:local-view:v1:PROPOSAL","$comment":"LOCAL_UI_PROPOSAL_ONLY_NOT_C3_WIRE_OR_BACKEND_SCHEMA; ordinary JSON integer metadata is not a C3 message. ROOT ACK required before implementation."};
++  const fail=(code='INVALID_PROJECTION')=>{throw new Error(code);};
++  const limit=(condition)=>{if(!condition)fail('BODY_LIMIT');};
++  function decode(raw){
++    limit(raw.length<=262144);limit(new TextEncoder().encode(raw).length<=262144);
++    let i=0,nodes=0;
++    const count=()=>limit(++nodes<=16384);
++    const white=()=>{while(i<raw.length&&/[ \t\r\n]/.test(raw[i]))i++;};
++    function string(){
++      const start=i++;let escaped=false;
++      while(i<raw.length){
++        const ch=raw[i++];
++        limit(i-start<=6146);
++        if(!escaped&&ch==='"'){
++          let value;try{value=JSON.parse(raw.slice(start,i));}catch{fail();}
++          limit([...value].length<=512);
++          if(/[\u0000-\u001f\u007f]/.test(value)||!value.isWellFormed())fail();
++          return value;
++        }
++        if(!escaped&&ch==='\\')escaped=true;else escaped=false;
++      }
++      fail();
++    }
++    function read(parentDepth){
++      white();count();const ch=raw[i];
++      if(ch==='"')return string();
++      for(const [literal,value] of [['null',null],['true',true],['false',false]])if(raw.startsWith(literal,i)){i+=literal.length;return value;}
++      if(ch==='{'||ch==='['){
++        const depth=parentDepth+1;limit(depth<=12);i++;white();
++        if(ch==='['){
++          const result=[];if(raw[i]===']'){i++;return Object.freeze(result);}
++          while(true){limit(result.length<128);result.push(read(depth));white();if(raw[i]===']'){i++;return Object.freeze(result);}if(raw[i++]!==',')fail();}
++        }
++        const result=Object.create(null);let members=0;if(raw[i]==='}'){i++;return Object.freeze(result);}
++        while(true){
++          white();if(raw[i]!=='"')fail();count();limit(++members<=32);const key=string();limit([...key].length<=128);
++          if(Object.hasOwn(result,key))fail('DUPLICATE_KEY');white();if(raw[i++]!==':')fail();result[key]=read(depth);white();
++          if(raw[i]==='}'){i++;return Object.freeze(result);}if(raw[i++]!==',')fail();
++        }
++      }
++      const match=raw.slice(i).match(/^-?(?:0|[1-9][0-9]*)(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?/);
++      // This local DTO contains nonnegative integer metadata only; never round a token.
++      if(!match||! /^(?:0|[1-9][0-9]*)$/.test(match[0])||match[0].length>16)fail();
++      const value=BigInt(match[0]);if(value>9007199254740991n)fail();i+=match[0].length;return Number(value);
++    }
++    const value=read(0);white();if(i!==raw.length)fail();return value;
++  }
++  function conforms(s,v){
++    if(s.anyOf&&!s.anyOf.some(x=>conforms(x,v)))return false;
++    if(s.enum&&!s.enum.some(x=>Object.is(x,v)))return false;
++    if(Object.hasOwn(s,'const')&&!Object.is(s.const,v))return false;
++    if(s.type==='null'&&v!==null)return false;
++    if(s.type==='boolean'&&typeof v!=='boolean')return false;
++    if(s.type==='integer'&&(!Number.isSafeInteger(v)||v<s.minimum||v>s.maximum))return false;
++    if(s.type==='string'&&typeof v!=='string')return false;
++    if(s.type==='array'&&!Array.isArray(v))return false;
++    if(s.type==='object'&&(v===null||typeof v!=='object'||Array.isArray(v)))return false;
++    if(typeof v==='string'){
++      const length=[...v].length;
++      if(s.minLength!==undefined&&length<s.minLength||s.maxLength!==undefined&&length>s.maxLength)return false;
++      if(s.pattern&&!new RegExp(s.pattern,'u').test(v))return false;
++    }
++    if(Array.isArray(v)){
++      if(s.maxItems!==undefined&&v.length>s.maxItems)return false;
++      if(s.items&&!v.every(x=>conforms(s.items,x)))return false;
++    }
++    if(s.properties){
++      if(v===null||typeof v!=='object'||Array.isArray(v))return false;
++      if((s.required||[]).some(k=>!Object.hasOwn(v,k)))return false;
++      if(s.additionalProperties===false&&Object.keys(v).some(k=>!Object.hasOwn(s.properties,k)))return false;
++      for(const key of Object.keys(s.properties))if(Object.hasOwn(v,key)&&!conforms(s.properties[key],v[key]))return false;
++    }
++    if(s.allOf)for(const part of s.allOf){if(part.if){if(conforms(part.if,v)&&part.then&&!conforms(part.then,v))return false;}else if(!conforms(part,v))return false;}
++    return true;
++  }
++  const sourceKinds={inventory:['inventory'],node_journal:['supervisor'],development_tasks:['mission'],ci:['ci'],approvals:['mission','supervisor'],lifecycle:['deployment']};
++  const protectedPin=['YehorBabenko88/math',409676563,42352374979,1,'2446d04624469e34aa96ed766be7a4887d6d654c',128343065197];
++  function unique(rows,key){const seen=new Set();for(const row of rows){const id=key(row);if(seen.has(id))fail();seen.add(id);}}
++  function semantics(v){
++    unique(v.source_pins,x=>x.id);const sources=new Set(v.source_pins.map(x=>x.id));
++    if(v.captured_at_utc!==null){const date=new Date(v.captured_at_utc);if(!Number.isFinite(date.getTime())||date.toISOString()!==v.captured_at_utc.replace('Z','.000Z'))fail();}
++    for(const [name,section] of Object.entries(v.sections)){
++      if(section.source_id!==null&&(!sources.has(section.source_id)||!sourceKinds[name].includes(section.source_id)))fail();
++      if(section.state==='REPORTED'&&section.source_id===null)fail();
++    }
++    unique(v.sections.inventory.rows,x=>x.node_id);
++    unique(v.sections.node_journal.rows,x=>x.node_id+':'+x.journal_sequence);
++    unique(v.sections.node_journal.rows,x=>JSON.stringify([x.node_id,x.task_id]));
++    unique(v.sections.development_tasks.rows,x=>JSON.stringify([x.mission_id,x.task_id]));
++    unique(v.sections.ci.rows,x=>JSON.stringify([x.pin.repository,x.pin.workflow_id,x.pin.run_id,x.pin.attempt,x.pin.source_sha,x.pin.job_id]));
++    unique(v.sections.approvals.rows,x=>x.reference);
++    unique(v.sections.lifecycle.rows,x=>JSON.stringify([x.node_id,x.kind,x.target_release_ref]));
++    for(const task of v.sections.development_tasks.rows)for(const p of task.allowed_files){
++      if(p.startsWith('/')||p.includes('\\')||/^[A-Za-z]:/.test(p)||p.split('/').some(x=>x===''||x==='.'||x==='..'))fail();
++    }
++    for(const row of v.sections.ci.rows){
++      const pin=row.pin,values=[pin.repository,pin.workflow_id,pin.run_id,pin.attempt,pin.source_sha,pin.job_id];
++      const protectedRun=pin.run_id===protectedPin[2],exact=values.every((x,i)=>x===protectedPin[i]);
++      if(protectedRun&&!exact||row.authorization_state!==(exact?'CONSUMED':'NOT_APPLICABLE'))fail();
++      if(row.runner_assignment_state!==((row.runner_assignment===null||row.runner_assignment===0)?'UNASSIGNED':'ASSIGNED')||row.next_at<=row.observed_at)fail();
++    }
++  }
++  function parseLocalProjection(rawText=null){
++    if(rawText===null||rawText===undefined)return Object.freeze({status:'UNAVAILABLE',model:null,errorCode:'NO_LOCAL_PROJECTION'});
++    try{
++      if(typeof rawText!=='string')fail();const model=decode(rawText);
++      if(model===null||typeof model!=='object'||model.schema!=='terminan.operations.local-view.v1')fail('UNSUPPORTED_SCHEMA');
++      if(!conforms(schema,model))fail();semantics(model);
++      return Object.freeze({status:'REPORTED_ONLY',model,errorCode:null});
++    }catch(error){
++      const code=['BODY_LIMIT','DUPLICATE_KEY','UNSUPPORTED_SCHEMA'].includes(error.message)?error.message:'INVALID_PROJECTION';
++      return Object.freeze({status:'UNAVAILABLE',model:null,errorCode:code});
++    }
++  }
++  const sectionNames={inventory:'Declared inventory — installed facts unavailable',node_journal:'Local journal claims — not operational facts',development_tasks:'DEVELOPMENT CLAIMS — NOT VERIFIED',ci:'CI observations — UNVERIFIED_CAPTURE',approvals:'Approval references — no effective grant',lifecycle:'Recovery / update / rollback — PLAN ONLY'};
++  const notes={inventory:'Supervisor version, installed release and service facts are UNAVAILABLE. Declared OS/role does not qualify a node.',node_journal:'Journal integrity reports only a local receipt chain. Authority generation / approval: REFERENCE ONLY. AUTHORIZED and COMPLETED are local history, not operational permission.',development_tasks:'Even reported physical PASS is an unverified DEVELOPMENT claim. Tasks never become Node Operations.',ci:'UNVERIFIED_CAPTURE is not hosted CI acceptance, runtime health or operation permission. Runner 0 / null is UNASSIGNED; queue age grants nothing.',approvals:'CONSUMED and NOT_APPLICABLE are non-authorizing observations. No token, approval renewal or effect exists here.',lifecycle:'Inactive plans and target-release references do not establish installation, containment, recovery or rollback success.'};
++  const css=':host{color-scheme:dark}.ops-view{background:#0d1420;color:#e0e8f2;font:14px system-ui;padding:24px;border-radius:14px}.ops-view h1{font-size:26px}.ops-banner{background:#332b18;color:#ffe0a0;padding:16px;border:1px solid #78602b;border-radius:8px}.ops-axes{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:20px 0}.ops-card,.ops-section{background:#151e2c;border:1px solid #2a394f;padding:16px;border-radius:10px}.ops-section{margin-top:16px}.ops-section p{color:#a7b9cf}.ops-table{overflow:auto}.ops-view table{border-collapse:collapse;width:100%;font-size:12px}.ops-view th,.ops-view td{border-bottom:1px solid #314157;text-align:left;padding:8px;vertical-align:top;min-width:100px}.ops-view details{max-width:360px}.ops-view summary{cursor:pointer;color:#b8cbe1}.ops-view td{overflow-wrap:anywhere;max-width:360px}.ops-view pre{white-space:pre-wrap;word-break:break-word;max-width:360px;margin:0}.ops-view button{padding:10px;margin:6px;background:#202c3b;color:#a6b0bd;border:1px solid #435065;border-radius:7px}.ops-meta{color:#a7b9cf}';
++  function renderOperations(rootElement,rawText=null){
++    const result=parseLocalProjection(rawText),model=result.model,doc=rootElement.ownerDocument;
++    const el=(tag,text)=>{const n=doc.createElement(tag);if(text!==undefined)n.textContent=text;return n;};
++    const container=el('div');container.className='ops-view';const style=el('style',css);container.append(style);
++    container.append(el('p','TERMINAN / LOCAL READ-ONLY PROTOTYPE'),el('h1','Operations Dashboard'));
++    const banner=el('p',model?(model.data_mode==='TEST_ONLY'?'TEST_ONLY — fixture data, not operational facts':'LOCAL CAPTURE UNVERIFIED — no operational authority'):'UNAVAILABLE — no usable local projection');
++    banner.className='ops-banner';banner.setAttribute('role','status');container.append(banner);
++    container.append(el('p',model?'Capture time (unverified): '+(model.captured_at_utc||'UNKNOWN')+' · '+model.coverage:'UNKNOWN source, health, installed release and service state. No provider is called.'));
++    const axes=el('div');axes.className='ops-axes';
++    for(const name of ['local_health','authority_freshness','compatibility','integrity','replication']){const card=el('section');card.className='ops-card';card.append(el('h2',name.replaceAll('_',' ')),el('strong',model?model.operational_axes[name]:'UNKNOWN'));axes.append(card);}container.append(axes);
++    for(const name of Object.keys(sectionNames)){
++      const block=el('section');block.className='ops-section';block.append(el('h2',sectionNames[name]),el('p',notes[name]));
++      const section=model?model.sections[name]:null;
++      block.append(el('p',section?section.state+' · source '+(section.source_id||'UNKNOWN')+' · More captured rows: '+(section.has_more===null?'UNKNOWN':String(section.has_more)):'UNAVAILABLE'));
++      if(!section||!section.rows.length)block.append(el('p',section&&section.state==='REPORTED'?'No rows in this bounded capture; not complete history.':'UNAVAILABLE — no admitted operational data or usable local capture.'));
++      else{
++        const wrap=el('div');wrap.className='ops-table';const table=el('table'),thead=el('thead'),header=el('tr');
++        const columns={inventory:['node_id','declared_role','declared_os_edition','service_state'],node_journal:['node_id','task_id','state','journal_integrity'],development_tasks:['owner','task_id','axes'],ci:['run','attempt','job','source','state','runner_assignment_state'],approvals:['reference','target_reference','reported_state'],lifecycle:['node_id','kind','state']};
++        const label=key=>({node_id:'Node',task_id:'Task',declared_role:'Declared role',declared_os_edition:'Declared OS',service_state:'Service',journal_integrity:'Local receipt integrity',axes:'Reported development claims',runner_assignment_state:'Runner',source:'Source',run:'Run',attempt:'Attempt',job:'Job'}[key]||key.charAt(0).toUpperCase()+key.slice(1).replaceAll('_',' '));
++        const keys=columns[name].filter(key=>name==='ci'||section.rows.some(row=>Object.hasOwn(row,key)));
++        for(const key of [...keys,'Details'])header.append(el('th',label(key)));thead.append(header);table.append(thead);const body=el('tbody');
++        for(const row of section.rows){const tr=el('tr');for(const key of keys){const td=el('td');let value=name==='ci'&&['run','attempt','job','source'].includes(key)?row.pin[{run:'run_id',attempt:'attempt',job:'job_id',source:'source_sha'}[key]]:row[key];
++          if(key==='axes'){for(const [axis,claim] of Object.entries(value))td.append(el('div','Reported '+axis+': '+claim+' (UNVERIFIED)'));}
++          else td.textContent=value===null||value===undefined?'UNAVAILABLE':String(value);tr.append(td);}
++          const td=el('td'),details=el('details');details.append(el('summary','Source and evidence (unverified)'),el('pre',JSON.stringify(row,null,2)));td.append(details);tr.append(td);body.append(tr);
++        }table.append(body);wrap.append(table);block.append(wrap);
++      }
++      container.append(block);
++    }
++    const sources=el('section');sources.className='ops-section';sources.append(el('h2','Public source / evidence references — UNVERIFIED'));const sourceDetails=el('details');sourceDetails.append(el('summary','Expand source pins and capture hashes (unverified)'),el('pre',model?JSON.stringify(model.source_pins,null,2):'UNAVAILABLE'));sources.append(sourceDetails);container.append(sources);
++    const controls=el('section');controls.className='ops-section';controls.append(el('h2','Controls disabled — no effect handlers'));
++    for(const name of ['Run task','Approve','Update','Rollback']){const button=el('button',name);button.disabled=true;button.setAttribute('disabled','');button.setAttribute('aria-disabled','true');controls.append(button);}container.append(controls);
++    rootElement.replaceChildren(container);return result;
++  }
++  return Object.freeze({parseLocalProjection,renderOperations});
++});
+diff --git a/tests/operations/test_dashboard.cjs b/tests/operations/test_dashboard.cjs
+new file mode 100644
+index 0000000..05fca49
+--- /dev/null
++++ b/tests/operations/test_dashboard.cjs
+@@ -0,0 +1,157 @@
++/* Strict TEST_ONLY fixture projections; no controller, native bridge or backend. */
++'use strict';
++const {test}=require('node:test');
++const assert=require('node:assert/strict');
++const fs=require('node:fs');
++const path=require('node:path');
++const vm=require('node:vm');
++const SOURCE=path.resolve(__dirname,'../../terminan/operations/dashboard.js');
++const IDS=[
++  'missing_input_pure_unavailable_no_io','strict_version_and_unknown_fields_reject',
++  'duplicate_key_reject_before_projection','byte_depth_node_member_string_array_caps',
++  'source_pin_link_and_unique_row_ids','unsupported_installed_release_service_facts_reject',
++  'journal_completed_authorized_never_operational_grant','journal_integrity_pass_never_promotes_health_or_other_axes',
++  'development_physical_pass_remains_unverified_claim','dev_tasks_never_cast_to_node_operations',
++  'ci_runner_zero_unassigned_queued_not_running','ci_success_unverified_not_operational_or_hosted_acceptance',
++  'protected_consumed_ordinary_not_applicable_no_grant','ci_unknown_conflict_never_infra_from_age',
++  'test_only_banner_persistent_and_local_capture_banner_distinct','render_invalid_input_clears_previous_capture',
++  'text_content_only_no_html_or_secret_log_exposure','all_controls_disabled_no_effect_handlers_or_provider_calls',
++  'journal_current_task_identity_allows_multiple_tasks_per_capture',
++  'mission_task_tuple_identity_has_no_delimiter_collision',
++  'ci_pin_identity_ignores_object_key_order',
++  'presentation_details_collapsed_preserve_hashes_and_qualifiers',
++];
++function api(){assert.ok(fs.existsSync(SOURCE),'MISSING_OPERATIONS_DASHBOARD');return require(SOURCE);}
++const sha='a'.repeat(64),head='b'.repeat(40),tree='c'.repeat(40);
++function fixture(){
++  const sections={};for(const k of ['inventory','node_journal','development_tasks','ci','approvals','lifecycle'])sections[k]={state:'UNAVAILABLE',source_id:null,has_more:null,rows:[]};
++  return {schema:'terminan.operations.local-view.v1',data_mode:'TEST_ONLY',captured_at_utc:'2026-11-07T12:00:00Z',coverage:'BOUNDED_CAPTURE_NOT_COMPLETE_HISTORY',effects_authorized:false,
++    source_pins:['inventory','supervisor','mission','ci','deployment'].map(id=>({id,repository:'fixture/readonly',head,tree,capture_sha256:sha})),sections,
++    operational_axes:{local_health:'UNKNOWN',authority_freshness:'UNKNOWN',compatibility:'UNKNOWN',integrity:'UNKNOWN',replication:'UNKNOWN'}};
++}
++function reported(v,section,rows){v.sections[section]={state:'REPORTED',source_id:({node_journal:'supervisor',development_tasks:'mission',approvals:'mission',lifecycle:'deployment'})[section]||section,has_more:false,rows};return v;}
++function inventory(){return {node_id:'LS5',declared_role:'COORDINATOR',declared_os_edition:'WINDOWS_11_PRO',supervisor_version:null,installed_release_sha:null,service_state:'UNAVAILABLE',evidence_refs:[]};}
++function journal(){return {task_id:'fixture-task',node_id:'LS5',journal_sequence:1,operation_type:'REPORT_STATUS',state:'COMPLETED',release_ref:'fixture-release',approval_ref:null,authority_generation_ref:'11111111-1111-4111-8111-111111111111',result_code:'LOCAL_RECEIPTS_ONLY',journal_integrity:'PASS',effects_authorized:false,physical_acceptance:'NOT_RUN',evidence_refs:[]};}
++function development(){return {task_id:'dev-1',mission_id:'mission-1',owner:'fixture owner',repository:'fixture/repository',base_sha:head,allowed_files:['tests/local.cjs'],blockers:[],next_actions:['Review only'],axes:{source:'PASS',tested:'PASS',integrated:'UNKNOWN',windows:'UNKNOWN',physical:'PASS'},grants_node_operations:false,native_authority:false,evidence_refs:[]};}
++function ci(){return {pin:{repository:'fixture/repository',workflow_id:1,run_id:2,attempt:1,source_sha:head,job_id:3},state:'QUEUED',authorization_state:'NOT_APPLICABLE',runner_assignment:0,runner_assignment_state:'UNASSIGNED',observed_at:100,next_at:200,conclusion:null,data_origin:'UNVERIFIED_CAPTURE',raw_sha256:sha,artifact_ids:[],evidence_refs:[]};}
++function parse(v){return api().parseLocalProjection(typeof v==='string'?v:JSON.stringify(v));}
++function valid(v){const r=parse(v);assert.equal(r.status,'REPORTED_ONLY',r.errorCode);return r;}
++function invalid(v,code){const r=parse(v);assert.equal(r.status,'UNAVAILABLE');assert.equal(r.model,null);if(code)assert.equal(r.errorCode,code);return r;}
++/* Model DOM only. Real browser rendering is verified separately, never claimed here. */
++class Element{
++  constructor(tag,doc){this.tagName=tag;this.ownerDocument=doc;this.children=[];this.attributes={};this.disabled=false;this._text='';}
++  append(...nodes){this.children.push(...nodes);}
++  replaceChildren(...nodes){this.children=[...nodes];this._text='';}
++  setAttribute(k,v){assert.notEqual(k,'href');assert.ok(!k.startsWith('on'));this.attributes[k]=String(v);}
++  set textContent(v){this._text=String(v);this.children=[];}
++  get textContent(){return this._text+this.children.map(x=>typeof x==='string'?x:x.textContent).join(' ');}
++  set innerHTML(_){throw Error('HTML_INJECTION');}
++  addEventListener(){throw Error('EFFECT_HANDLER_FORBIDDEN');}
++}
++function dom(){const doc={createElement:tag=>new Element(tag,doc)};return new Element('main',doc);}
++function all(root){return [root,...root.children.flatMap(x=>typeof x==='object'?all(x):[])];}
++
++function registerTests(){
++test(IDS[0],()=>{const a=api(),r=a.parseLocalProjection();assert.deepEqual(r,{status:'UNAVAILABLE',model:null,errorCode:'NO_LOCAL_PROJECTION'});assert.ok(Object.isFrozen(r));const root=dom();a.renderOperations(root);assert.match(root.textContent,/UNAVAILABLE/);});
++test(IDS[1],()=>{for(const mutate of [v=>v.schema='other',v=>v.extra='secret',v=>v.sections.inventory.token='secret',v=>v.effects_authorized=true]){const v=fixture();mutate(v);invalid(v);}const r=valid(fixture());assert.ok(Object.isFrozen(r.model.sections));assert.ok(Object.isFrozen(r.model.source_pins));});
++test(IDS[2],()=>{invalid('{"schema":"x","schema":"y"}','DUPLICATE_KEY');invalid('{"schema":"x","\\u0073chema":"y"}','DUPLICATE_KEY');invalid('{"__proto__":{"polluted":true}}');assert.equal({}.polluted,undefined);});
++test(IDS[3],()=>{
++  for(const raw of ['x'.repeat(262145),'['.repeat(13)+'null'+']'.repeat(13),JSON.stringify(Array(129).fill(null)),JSON.stringify(Object.fromEntries(Array.from({length:33},(_,i)=>['k'+i,null]))),JSON.stringify('x'.repeat(513)),JSON.stringify(Array.from({length:128},()=>Array.from({length:2},()=>Object.fromEntries(Array.from({length:32},(_,i)=>['k'+i,''])))))])invalid(raw,'BODY_LIMIT');
++  invalid(JSON.stringify(fixture()).replace('"effects_authorized":false','"effects_authorized":9007199254740993'));
++  const x=fixture();x.captured_at_utc='2026-02-30T12:00:00Z';invalid(x);
++});
++test(IDS[4],()=>{const v=reported(fixture(),'inventory',[inventory()]);valid(v);v.sections.inventory.source_id='missing';invalid(v);v.sections.inventory.source_id='inventory';v.source_pins.push(v.source_pins[0]);invalid(v);v.source_pins.pop();v.sections.inventory.rows.push(inventory());invalid(v);});
++test(IDS[5],()=>{for(const change of [{supervisor_version:'v2'},{installed_release_sha:head},{service_state:'RUNNING'}])invalid(reported(fixture(),'inventory',[{...inventory(),...change}]));valid(reported(fixture(),'inventory',[inventory()]));});
++test(IDS[6],()=>{for(const state of ['COMPLETED','AUTHORIZED']){const v=reported(fixture(),'node_journal',[{...journal(),state}]);valid(v);const root=dom();api().renderOperations(root,JSON.stringify(v));assert.match(root.textContent,/REFERENCE ONLY/);assert.match(root.textContent,/not operational/i);assert.equal(v.operational_axes.authority_freshness,'UNKNOWN');}invalid(reported(fixture(),'node_journal',[{...journal(),effects_authorized:true}]));});
++test(IDS[7],()=>{const r=valid(reported(fixture(),'node_journal',[journal()]));assert.equal(r.model.sections.node_journal.rows[0].journal_integrity,'PASS');assert.ok(Object.values(r.model.operational_axes).every(x=>x==='UNKNOWN'));const v=fixture();v.operational_axes.local_health='HEALTHY';invalid(v);v.operational_axes.local_health='UNKNOWN';v.operational_axes.integrity='PASS';invalid(v);});
++test(IDS[8],()=>{const v=reported(fixture(),'development_tasks',[development()]);valid(v);const root=dom();api().renderOperations(root,JSON.stringify(v));assert.match(root.textContent,/DEVELOPMENT CLAIMS/);assert.match(root.textContent,/UNVERIFIED/);assert.equal(parse(v).model.operational_axes.compatibility,'UNKNOWN');});
++test(IDS[9],()=>{invalid(reported(fixture(),'node_journal',[development()]));invalid(reported(fixture(),'development_tasks',[{...development(),operation_type:'REPORT_STATUS'}]));invalid(reported(fixture(),'development_tasks',[{...development(),native_authority:true}]));const v=development();v.allowed_files=['../outside'];invalid(reported(fixture(),'development_tasks',[v]));});
++test(IDS[10],()=>{const v=reported(fixture(),'ci',[ci()]);assert.equal(valid(v).model.sections.ci.rows[0].state,'QUEUED');v.sections.ci.rows[0].runner_assignment_state='ASSIGNED';invalid(v);v.sections.ci.rows[0].runner_assignment=null;v.sections.ci.rows[0].runner_assignment_state='UNASSIGNED';valid(v);});
++test(IDS[11],()=>{const v=reported(fixture(),'ci',[{...ci(),state:'SUCCESS',conclusion:'success',runner_assignment:12,runner_assignment_state:'ASSIGNED'}]);valid(v);const root=dom();api().renderOperations(root,JSON.stringify(v));assert.match(root.textContent,/UNVERIFIED_CAPTURE/);assert.match(root.textContent,/not hosted.*acceptance/i);assert.ok(Object.values(parse(v).model.operational_axes).every(x=>x==='UNKNOWN'));});
++test(IDS[12],()=>{const row=ci();row.pin={repository:'YehorBabenko88/math',workflow_id:409676563,run_id:42352374979,attempt:1,source_sha:'2446d04624469e34aa96ed766be7a4887d6d654c',job_id:128343065197};row.authorization_state='CONSUMED';valid(reported(fixture(),'ci',[row]));row.authorization_state='NOT_APPLICABLE';invalid(reported(fixture(),'ci',[row]));row.authorization_state='CONSUMED';row.pin.attempt=2;invalid(reported(fixture(),'ci',[row]));invalid(reported(fixture(),'ci',[{...ci(),authorization_state:'CONSUMED'}]));});
++test(IDS[13],()=>{for(const state of ['QUEUED','UNKNOWN']){const v=reported(fixture(),'ci',[{...ci(),state,observed_at:0,next_at:900}]);assert.equal(valid(v).model.sections.ci.rows[0].state,state);}const v=ci();v.data_origin='VERIFIED_GITHUB';invalid(reported(fixture(),'ci',[v]));});
++test(IDS[14],()=>{const root=dom(),v=fixture();api().renderOperations(root,JSON.stringify(v));assert.match(root.textContent,/TEST_ONLY/);v.data_mode='LOCAL_CAPTURE_UNVERIFIED';api().renderOperations(root,JSON.stringify(v));assert.match(root.textContent,/LOCAL CAPTURE UNVERIFIED/);assert.doesNotMatch(root.textContent,/TEST_ONLY/);});
++test(IDS[15],()=>{const root=dom(),v=reported(fixture(),'development_tasks',[development()]);api().renderOperations(root,JSON.stringify(v));assert.match(root.textContent,/dev-1/);api().renderOperations(root,'not-json');assert.doesNotMatch(root.textContent,/dev-1/);assert.match(root.textContent,/UNAVAILABLE/);});
++test(IDS[16],()=>{const v=development();v.blockers=['<img src=x onerror="fetch(1)">'];const root=dom();api().renderOperations(root,JSON.stringify(reported(fixture(),'development_tasks',[v])));assert.match(root.textContent,/<img/);assert.ok(all(root).every(x=>!['img','script','a'].includes(x.tagName)));});
++test(IDS[17],()=>{const sandbox={TextEncoder,fetch(){throw Error('NETWORK');},setInterval(){throw Error('TIMER');},setTimeout(){throw Error('TIMER');},console:new Proxy({}, {get(){throw Error('RAW_LOGGING');}})};vm.createContext(sandbox);vm.runInContext(fs.readFileSync(SOURCE,'utf8'),sandbox);assert.deepEqual(Object.keys(sandbox.TerminanOperations).sort(),['parseLocalProjection','renderOperations']);const root=dom();sandbox.TerminanOperations.renderOperations(root,JSON.stringify(fixture()));const buttons=all(root).filter(x=>x.tagName==='button');assert.ok(buttons.length>=4);assert.ok(buttons.every(x=>x.disabled));assert.ok(all(root).every(x=>!Object.keys(x.attributes).some(k=>k.startsWith('on')||k==='href')));});
++test(IDS[18],()=>{const a=journal(),b={...journal(),task_id:'other-task',journal_sequence:2};valid(reported(fixture(),'node_journal',[a,b]));invalid(reported(fixture(),'node_journal',[a,{...journal(),journal_sequence:3}]));});
++test(IDS[19],()=>{const a={...development(),mission_id:'a:b',task_id:'c'},b={...development(),mission_id:'a',task_id:'b:c'};valid(reported(fixture(),'development_tasks',[a,b]));});
++test(IDS[20],()=>{const a=ci(),b=ci();b.pin=Object.fromEntries(Object.entries(b.pin).reverse());invalid(reported(fixture(),'ci',[a,b]));});
++
++test(IDS[21],()=>{const v=reported(reported(fixture(),'development_tasks',[development()]),'ci',[ci()]);const root=dom();api().renderOperations(root,JSON.stringify(v));const nodes=all(root),details=nodes.filter(x=>x.tagName==='details');assert.ok(details.length>=3);assert.ok(details.every(x=>!('open' in x.attributes)&&x.open!==true));assert.ok(details.some(x=>x.textContent.includes(sha)));assert.match(root.textContent,/Reported source: PASS \(UNVERIFIED\)/);const headers=nodes.filter(x=>x.tagName==='th').map(x=>x.textContent);for(const h of ['Run','Attempt','Job','Source'])assert.ok(headers.includes(h));assert.ok(headers.every(x=>!x.includes('_')));assert.ok(nodes.filter(x=>x.tagName==='pre').every(x=>details.some(d=>all(d).includes(x))));});
++}
++
++/* Standalone source-bound qualification; only this test file and Node builtins.
++ * Workflow first compiles THESE exact Git blob bytes, not a workspace shadow.
++ */
++function runQualified(root,expectedHead,output,expectedIds=IDS){
++  const cp=require('node:child_process'),crypto=require('node:crypto');
++  root=path.resolve(root);output=path.resolve(output);
++  if(output===root||!path.relative(root,output).startsWith('..'+path.sep))throw Error('EVIDENCE_MUST_BE_OUTSIDE_SOURCE');
++  fs.mkdirSync(output,{recursive:true});
++  const receipt={qualification:'LOCAL_NODE_READONLY_COMPONENT_ONLY_NOT_NATIVE_HOME_PHYSICAL',expected_head:expectedHead,node:process.version,platform:process.platform,tests_started:false,result:'FAIL'};
++  const fail=code=>{throw Error(code);};
++  const digest=raw=>crypto.createHash('sha256').update(raw).digest('hex');
++  const git=process.platform==='win32'?'C:/Program Files/Git/cmd/git.exe':'/usr/bin/git';
++  const g=(...args)=>cp.execFileSync(git,['--no-replace-objects','--no-optional-locks','-c','core.fsmonitor=false',...args],{cwd:root,maxBuffer:134217728,stdio:['pipe','pipe','pipe']});
++  function noLinks(file){
++    for(let p=file;;p=path.dirname(p)){if(fs.lstatSync(p).isSymbolicLink())fail('SOURCE_LINK');if(path.dirname(p)===p)break;}
++  }
++  function inventory(){
++    noLinks(root);
++    if(g('rev-parse','HEAD').toString().trim()!==expectedHead)fail('HEAD_MISMATCH');
++    if(g('for-each-ref','refs/replace').length)fail('REPLACEMENT_REF');
++    const graft=path.resolve(root,g('rev-parse','--git-path','info/grafts').toString().trim());if(fs.existsSync(graft))fail('GRAFTS_FORBIDDEN');
++    const allowed=['.github/workflows/operations-dashboard.yml','docs/operations/operations-dashboard-contract.md','terminan/operations/dashboard.js','tests/operations/test_dashboard.cjs'];
++    const diff=g('diff','--name-status','10e07ef108d155b9ca2278eec6a8361cb92fa488',expectedHead).toString().trim().split('\n').filter(Boolean).map(line=>{const [kind,name]=line.split('\t');if(kind!=='A'||!allowed.includes(name))fail('SOURCE_SCOPE_CHANGED');return name;}).sort();
++    if(JSON.stringify(diff)!==JSON.stringify(allowed))fail('SOURCE_SCOPE_INCOMPLETE');
++    const entries=g('ls-tree','-rz','--full-tree',expectedHead).toString('utf8').split('\0').filter(Boolean).map(row=>{
++      const [meta,name]=row.split('\t'),[mode,kind,oid]=meta.split(' ');
++      if(!['100644','100755'].includes(mode)||kind!=='blob')fail('SOURCE_MODE');
++      const file=path.resolve(root,name);if(!file.startsWith(root+path.sep)||name.includes('\\'))fail('SOURCE_PATH');
++      return {name,oid,file};
++    });
++    const raw=cp.execFileSync(git,['--no-replace-objects','--no-optional-locks','-c','core.fsmonitor=false','cat-file','--batch'],{cwd:root,input:entries.map(x=>x.oid+'\n').join(''),maxBuffer:134217728});
++    let offset=0;const files={};
++    for(const entry of entries){
++      const end=raw.indexOf(10,offset);if(end<0)fail('GIT_BATCH');const [oid,type,sizeText]=raw.subarray(offset,end).toString().split(' '),size=Number(sizeText);offset=end+1;
++      if(oid!==entry.oid||type!=='blob'||!Number.isSafeInteger(size)||size<0)fail('GIT_BATCH');const blob=raw.subarray(offset,offset+size);offset+=size;
++      if(raw[offset++]!==10)fail('GIT_BATCH');noLinks(entry.file);const st=fs.lstatSync(entry.file);
++      if(!st.isFile()||st.nlink!==1)fail('SOURCE_FILE_IDENTITY');
++      const actual=fs.readFileSync(entry.file);if(!actual.equals(blob))fail('RAW_SOURCE_MISMATCH');files[entry.name]={git_blob:entry.oid,sha256:digest(blob)};
++    }
++    if(offset!==raw.length)fail('GIT_BATCH');
++    function walk(dir){for(const entry of fs.readdirSync(dir,{withFileTypes:true})){
++      const file=path.join(dir,entry.name),relative=path.relative(root,file).split(path.sep).join('/');
++      if(relative==='.git')continue;
++      const st=fs.lstatSync(file);if(st.isSymbolicLink())fail('UNEXPECTED_LINK');
++      if(st.isDirectory())walk(file);else if(!Object.hasOwn(files,relative))fail('UNEXPECTED_FILE');
++    }}
++    walk(root);if(g('status','--porcelain','--untracked-files=all').length)fail('DIRTY_SOURCE');
++    return {head:expectedHead,tree:g('rev-parse',expectedHead+'^{tree}').toString().trim(),files};
++  }
++  try{
++    for(const key of ['NODE_OPTIONS','NODE_PATH','NODE_COMPILE_CACHE','NODE_V8_COVERAGE'])if(process.env[key])fail('AMBIENT_NODE_CONFIG');
++    if(process.execArgv.length!==1||process.execArgv[0]!=='--no-addons')fail('NODE_FLAGS');
++    if(!/^[0-9a-f]{40}$/.test(expectedHead))fail('EXPECTED_HEAD');
++    if(!Array.isArray(expectedIds)||JSON.stringify(expectedIds)!==JSON.stringify(IDS)||new Set(expectedIds).size!==22)fail('MANDATORY_INVENTORY');
++    const before=inventory();receipt.before=before;
++    receipt.tests_started=true;
++    const run=cp.spawnSync(process.execPath,['--no-addons','--test','--test-reporter=tap',path.join(root,'tests/operations/test_dashboard.cjs')],{cwd:root,encoding:'utf8',maxBuffer:1048576,env:process.env});
++    fs.writeFileSync(path.join(output,'tests.tap'),run.stdout||'');fs.writeFileSync(path.join(output,'tests.stderr.log'),run.stderr||'');
++    const tap=run.stdout||'',actual=[...tap.matchAll(/^# Subtest: (.+)$/gm)].map(x=>x[1]);
++    if(run.status!==0||JSON.stringify(actual)!==JSON.stringify(expectedIds))fail('MANDATORY_TESTS');
++    const counts={};for(const name of ['tests','pass','fail','cancelled','skipped','todo']){const matches=[...tap.matchAll(new RegExp('^# '+name+' (\\d+)\\s*$','gm'))];if(matches.length!==1)fail('TAP_COUNTS');counts[name]=Number(matches[0][1]);}
++    if(JSON.stringify(counts)!==JSON.stringify({tests:22,pass:22,fail:0,cancelled:0,skipped:0,todo:0}))fail('TAP_COUNTS');
++    receipt.counts=counts;receipt.executed_ids=actual;
++    const after=inventory();receipt.after=after;if(JSON.stringify(before)!==JSON.stringify(after))fail('SOURCE_CHANGED_AFTER');
++    receipt.result='PASS';return receipt;
++  }catch(error){receipt.failure_code=/^[A-Z_]+$/.test(error.message)?error.message:'QUALIFICATION_FAILURE';throw error;}
++  finally{fs.writeFileSync(path.join(output,'source-receipt.json'),JSON.stringify(receipt,null,2)+'\n');}
++}
++module.exports={IDS,fixture,reported,inventory,journal,development,ci,runQualified};
++if(require.main===module){
++  if(process.argv[2]==='--source-bound-run'){
++    try{const r=runQualified(path.resolve(__dirname,'../..'),process.argv[3],process.argv[4]);process.stdout.write(JSON.stringify({head:r.expected_head,result:r.result,tests:r.counts.tests})+'\n');}catch{process.stderr.write('OPERATIONS_SOURCE_QUALIFICATION_FAILED\n');process.exitCode=1;}
++  }else registerTests();
++}

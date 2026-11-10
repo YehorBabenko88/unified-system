@@ -859,5 +859,16 @@
     "fixed_evidence": "phase213/report.md;phase214/report.md;phase214/verification.json",
     "modeled_green": "20PASS_0FAIL_ERROR_SKIP_TESTEXIT0_SAME20_RAW_TEST_BYTES",
     "fixed_scope": "POINT_IN_TIME_SOURCE_ORDER_AND_INERT_BACKEND_CONTROLS_ONLY_NO_NATIVE_REAL_CHILD_GIT_OR47_ADMISSION"
+  },
+  {
+    "id": "A8-F50",
+    "severity": "P2",
+    "repository": "strattester hosted47 mandatory20 tooling",
+    "pr": null,
+    "observed_head": "UNTRACKED_QUALIFIER_SHA256_94277c28a9b25f048b4a0acf26d343d1c08e45ccd940437d0e5bf894126d5d62",
+    "title": "Known held control child poll exception skips kill/wait cleanup attempt",
+    "status": "OPEN_STATIC_SOURCE_FAILURE_PATH_NOT_ACTUAL_LEAK_OR_FALSE_PASS",
+    "evidence": "phase220/report.md;phase220/verification.json;phase220/qualify.py",
+    "required_correction": "Attempt held kill+wait even when poll throws; preserve sticky failed/UNKNOWN and exact old source; independently review successor/lifecycle negative before execution"
   }
 ]
