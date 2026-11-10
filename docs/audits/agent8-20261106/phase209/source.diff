@@ -1,0 +1,195 @@
+diff --git a/docs/analysis/research-identity/atomic-read-bridge-implementation-review1.md b/docs/analysis/research-identity/atomic-read-bridge-implementation-review1.md
+index c1f995c..bda9119 100644
+--- a/docs/analysis/research-identity/atomic-read-bridge-implementation-review1.md
++++ b/docs/analysis/research-identity/atomic-read-bridge-implementation-review1.md
+@@ -1,8 +1,8 @@
+ # Atomic READ bridge: SOURCE-only test/harness preparation
+ 
+-2026-11-10. PREPARED_NOT_RUN. Root allocated only this NEW document and NEW tests/test_research_identity_atomic_snapshot_unit.py from frozen Unified96b. Production broker/Grid are unchanged. No project import/compile/execution, unit/model run, native fixture, Consul/provider call, download or push is part of this source lease. No actual RED/PASS result is claimed.
++2026-11-10. Initial source preparation at228df was PREPARED_NOT_RUN. Root subsequently performed one admitted old-source LOCAL_MOCK_UNIT diagnostic and explicitly leased the production broker source change described below. This successor changes ONLY the broker and this document; test source/Grid remain unchanged. A2 performs no tests, project imports/compile/execution, native fixture/Consul/provider call, download or push for this successor. No corrected-source GREEN/PASS is claimed.
+ 
+-Implementation contract: A2 CARD SHA256 `7c4d9024a0cc78c51f2fceb4efd451d9ec9855f939be0a6b2daa92c4aded46ff`, source-evidence `e3a9560bea0d1a06bb134f99d4ca93a71dc8f47c14954588e129e48bf06849e2`. Root/A4/A5/A6/A8 scoped design/negative-classification agreement is not production implementation or runtime-import admission. Actual shared broker remains Root HELD. The six stdlib DATA models in8ef and their original evidence/PR83 are separate and are not rerun or counted here.
++Implementation contract: A2 CARD SHA256 `7c4d9024a0cc78c51f2fceb4efd451d9ec9855f939be0a6b2daa92c4aded46ff`, source-evidence `e3a9560bea0d1a06bb134f99d4ca93a71dc8f47c14954588e129e48bf06849e2`. Root/A4/A5/A6/A8 agreed direction/negative classifications; Root's later explicit lease permits ONLY unified_system/gateway_research_identity.py and this existing document on the same branch from228df. Source review and fresh corrected-source execution remain separate gates. The six stdlib DATA models in8ef and original evidence/PR83 remain separate and are not rerun or counted here.
+ 
+ ## Frozen source and exact ownership
+ 
+@@ -18,6 +18,23 @@ Implementation contract: A2 CARD SHA256 `7c4d9024a0cc78c51f2fceb4efd451d9ec9855f
+ 
+ Root owns Unified source/production broker edit lease. A2 owns this preparatory test/doc lease and Grid contract direction; no Grid source edits are allocated. Agent1 transport, A4 Storage, A5 Scheduler/worker and A6 Terminan/Control remain untouched. New isolated feature worktree/branch is distinct from model8ef. No Source success is automatically a runtime assembly adoption or global Unified1f6 replacement.
+ 
++## Root's actual old-source RED and leased source correction
++
++Root's immutable original ACTUAL-RESULT.json SHA256 `699764398c531c094ddbda4c30f3d8e547c821043157afd110dc0c4ae3366caa` was read/hashed by A2; no original was changed. Exact test source remains SHA256 `e9dfdc83b9dd10b0166bda588c0f2a328c0e1ff2142f9657565b3762d62360da`. Root executed ten exact methods against Unified228df/broker96b + Gridfb177 using Review4/fresh wheels/cache/fixed Python: six methods PASS, four methods FAIL, thirteen assertion failures including ten inventory subcases, zero errors/skips/boundary failures; elapsed1.977s reported by Root. The intended failures are missing bridge, five GETs rather than one snapshot, mixed interleaving and absent malformed-snapshot enforcement. Preservation cases passed. This is genuine mocked product-level RED, NOT real Consul/HTTP/peer/native acceptance.
++
++The result records ten loops, all loops/tasks/self-pipe sockets closed, zero new live threads, empty cache and admitted raw bytes checked; actual local self-pipe effects were ten binds/ten connects. Root separately reports child/readers retired and17,433 output bytes. Original stderr SHA256 `66657502835bf5835981f865bebb2b1e3c7bb72a06b65d3fb9f6626fe8dd1af0` is retained by Root. These are prior diagnostic observations, not a future cleanup guarantee or A2 rerun. Review4 budget is90s child plus separate5s cleanup/joins, NOT a strict whole90s or memory-quota qualification; the earlier runner proposal below is historical, not a claimed actual guarantee.
++
++Source correction after that RED:
++
++* Constructor creates the actual existing AssignmentAuthority with the same authority/generation, defaultNone provider, after existing broker validation; no new client/session/Journal/election. Missing import/incompatible source fails existing SOURCE_UNAVAILABLE.
++* Capture derives exactly five keys from issued context and reads them once through the existing private `_read_snapshot`; no fallback GET loop. Binding/type/presence/raw/index/session conversion stays closed; required absence maps RECORD_UNAVAILABLE, malformed/filtered/unavailable inventory maps SOURCE_UNAVAILABLE, present policy/identity violations remain Denied.
++* Shared pure profile/principal/policy decoders preserve all previous field/target/scope/expiry joins for both capture and preliminary `_policy`. `_policy` keeps its early stale-generation rejection and `_open_session` remains structurally unchanged, including all commit-time record/leader/session fences. Grid `_observe` and its larger revalidation are untouched.
++* Actual context is checked before read, immediately after its await BEFORE consuming rows, and before final capture insertion/audit/deadline gates. Reader identity is checked on both sides. Cancellation propagates with no capture or retry/write. Captured tuples still retain historical/future-use limits.
++
++Two private-signature clarifications to CARD7c4d are explicit: `_decode_principal_record(..., fingerprint=...)` is necessary to retain the original certificate fingerprint equality; `_read_identity_snapshot(state, *, context=...)` is necessary to check the issued context immediately after the helper await before conversion. Neither adds or changes a public argument/constructor/snapshot/schema/scope. Test bytes and public ABI remain unchanged. These details are exposed for Root/A8 source review rather than silently weakening a check to match an incomplete private parameter sketch.
++
++This correction has NOT been imported or run by A2. Root/A8 review of exact successor HEAD/tree/diff precedes any fresh admitted GREEN execution or publication. Root's newer bfa source does not silently rebase this branch; direct source parent stays228df from frozen96b.
++
+ ## Actual-code tests, controlled response protocol
+ 
+ The test file imports stdlib only at module definition. `_runtime_imports()` is deferred until admitted harness setup; it imports actual frozen project classes and third-party modules, never native fixture/test helpers. No object.__new__ forged broker/context/capture, no production test hook, no constructor/type-guard weakening, no missing-implementation stub or shim is supplied.
+@@ -26,7 +43,7 @@ Harness uses normal ConsulSessionAuthority construction with its owned actual ht
+ 
+ Normal authority.acquire and normal broker.open_session obtain their lease/context using explicitly fabricated session/lock/transaction UNIT responses. Only actual class methods construct their own context/capture. These are not actual Consul sessions, worker permits or capabilities accepted outside this test. Backend models all-or-none open-session index/session checks in memory; before-write transition can invalidate them. Capture must build a single closed five-get-or-empty consistent transaction, not a sequential GET loop or extra fake helper implementation.
+ 
+-The old frozen broker has no `_identity_snapshot_source` and still uses sequential reads; tests are intended to reveal that through assertion failures once Root separately admits/executes an old-source RED qualification. They are NOT run here. Some preservation tests may already pass old source; no promise all ten fail. Import/setup failure is infrastructure/admission failure, not a demonstrated atomicity regression. No automatic retry, old-source shim or BROKER edit to turn preparation green.
++The old frozen broker had no `_identity_snapshot_source` and used sequential reads; Root's separate original RED above demonstrated the intended assertions. That evidence remains immutable. The successor source has not been run here; do not infer GREEN from the diff. Import/setup failure remains infrastructure/admission failure, not a demonstrated atomicity regression. No automatic retry or old-source shim is added.
+ 
+ ## Dependency and module-origin graph: NOT QUALIFIED
+ 
+@@ -98,4 +115,4 @@ This preparatory top-level test would execute on standard global discovery if pu
+ 
+ All capture errors remain eligibility failures, NEVER original-job NOT_FOUND/uncommitted evidence, refund/rekey/retry/dropUNKNOWN permission. Snapshot association is historical/current-at-read, not TTL UTC at Raft commit or scientific READ/final visibility. Keep existing _observe/_open_session guards and all public ABI fields/order/schemas/scopes in any later implementation. A4/A5/A6/transport APIs remain unchanged; strictD4/logical mutations remain DISABLED/public DENY.
+ 
+-Decision: SOURCE_READY_FOR_ROOT_A8_REVIEW, RUNTIME_IMPORT/RUNNER/OLD_SOURCE_RED_NOT_ADMITTED, PRODUCTION_EDIT_HELD, UNIT_NOT_RUN, NATIVE_READ_D4_PHYSICAL_NO_GO. Exact new test/doc hashes, ten static IDs/import map and unchanged1868base raw proof belong to the external source-preparation seal; no self-referential HEAD/hash claim is embedded here.
++Decision for this successor: SOURCE_CORRECTION_READY_FOR_ROOT_A8_REVIEW_AFTER_IMMUTABLE_MOCK_RED; CORRECTED_SOURCE_NOT_IMPORTED_OR_RUN; PUSH_HELD; NATIVE_READ_D4_PHYSICAL_NO_GO. Original228df test/source/dependency seals and Root's RED remain unchanged. Successor diff/full raw proof/public-ABI and unchanged-test checks belong to a new external seal; no self-referential successor HEAD/hash is embedded here.
+diff --git a/unified_system/gateway_research_identity.py b/unified_system/gateway_research_identity.py
+index e105197..33766ee 100644
+--- a/unified_system/gateway_research_identity.py
++++ b/unified_system/gateway_research_identity.py
+@@ -215,6 +215,11 @@ class ResearchIdentityBroker:
+             _require(server.not_valid_before_utc.timestamp()<=self._wall<self._server_expiry)
+         except (ResearchIdentityDenied,ValueError,TypeError,x509.ExtensionNotFound,InvalidSignature,UnsupportedAlgorithm) as exc:
+             raise ResearchIdentityUnavailable('DISPOSABLE_COMMISSIONING_UNAVAILABLE') from exc
++        try:
++            from grid.authority_assignment_v1 import AssignmentAuthority
++            self._identity_snapshot_source=AssignmentAuthority(self._authority,self._generation)
++        except (ImportError,ValueError,TypeError):
++            raise ResearchIdentityUnavailable('NATIVE_IDENTITY_SOURCE_UNAVAILABLE') from None
+     def _clock(self):
+         wall,mono=_utc(),time.monotonic()
+         if (self._closed or self._poisoned or wall<self._last_wall or mono<self._last_mono
+@@ -252,10 +257,10 @@ class ResearchIdentityBroker:
+         value=base64.b64decode(row['Value'],validate=True);_decode(value)
+         session=row.get('Session','');_require(type(session) is str)
+         return ResearchNativeRecord(key,row['ModifyIndex'],value,session)
+-    async def _policy(self,fingerprint,service):
+-        generation=await self._read(self._namespace+'/commands/generation')
++    def _decode_profile_records(self,generation,profile,fingerprint):
++        _require(generation.key==self._namespace+'/commands/generation')
++        _require(profile.key==self._prefix+'profile-registry/'+self._profile_sha)
+         _require(_decode(generation.raw)=={'generation':self._generation})
+-        profile=await self._read(self._prefix+'profile-registry/'+self._profile_sha)
+         _require(hashlib.sha256(profile.raw).hexdigest()==self._profile_sha)
+         p=_decode(profile.raw)
+         profile_fields='schema cluster_id realm_id principal_registry input_request_sha256 producer_head resources expiry_semantics expires_utc'
+@@ -269,21 +274,86 @@ class ResearchIdentityBroker:
+         _require(p['producer_head']=='aed8a7c8a952f96803c207d5e90b133969a47f04')
+         _require(p['resources']=={'cpu_millicores':'1000','resident_memory_bytes':'268435456','max_artifact_bytes':'1048576'})
+         actor=p['principal_registry'].get(fingerprint);_require(actor is not None)
+-        principal=await self._read(self._prefix+'principals/'+actor);a=_decode(principal.raw)
++        return p,actor
++    def _decode_principal_record(self,principal,*,profile,actor,service,fingerprint):
++        _require(principal.key==self._prefix+'principals/'+actor)
++        p=profile;a=_decode(principal.raw)
+         _fields(a,'schema actor_id service_id certificate_sha256 quota_owner_id policy_id profile_sha256 state')
+         _require(a['schema']=='unified.authority.research-lab-principal.v1-review1' and a['actor_id']==actor
+                  and a['service_id']==service and a['certificate_sha256']==fingerprint and a['profile_sha256']==self._profile_sha and a['state']=='ACTIVE')
+         _id(a['quota_owner_id']);_uuid(a['policy_id'])
+-        if v2:_target_binding(p,generation=self._generation,actor=actor,quota_owner=a['quota_owner_id'])
+-        policy=await self._read(self._prefix+'policies/'+a['policy_id']);r=_decode(policy.raw)
++        if p['schema']==_PROFILE_V2:_target_binding(p,generation=self._generation,actor=actor,quota_owner=a['quota_owner_id'])
++        return a
++    def _decode_policy_record(self,policy,*,profile,principal,actor):
++        p=profile;a=principal
++        _require(policy.key==self._prefix+'policies/'+a['policy_id'])
++        r=_decode(policy.raw)
+         _fields(r,'schema policy_id actor_id profile_sha256 revision state scopes expires_utc')
+         _require(r['schema']=='unified.authority.research-lab-policy.v1-review1' and r['policy_id']==a['policy_id']
+                  and r['actor_id']==actor and r['profile_sha256']==self._profile_sha and r['state']=='ACTIVE')
+         revision=r['revision'];_require(type(revision) is str and re.fullmatch('[1-9][0-9]{0,18}',revision) is not None and int(revision)<2**63)
+         scopes=r['scopes'];_require(type(scopes) is list and 1<=len(scopes)<=3 and all(type(s) is str and s in SCOPES for s in scopes) and scopes==sorted(set(scopes)))
+         expiry=min(_expiry(p['expires_utc']),_expiry(r['expires_utc']))
++        return r,expiry
++    def _decode_policy_snapshot(self,records,fingerprint,service):
++        _require(type(records) is tuple and len(records)==4 and all(type(r) is ResearchNativeRecord for r in records))
++        generation,profile,principal,policy=records
++        p,actor=self._decode_profile_records(generation,profile,fingerprint)
++        a=self._decode_principal_record(principal,profile=p,actor=actor,service=service,fingerprint=fingerprint)
++        r,expiry=self._decode_policy_record(policy,profile=p,principal=a,actor=actor)
++        return records,a,r,expiry
++    async def _policy(self,fingerprint,service):
++        generation=await self._read(self._namespace+'/commands/generation')
++        _require(_decode(generation.raw)=={'generation':self._generation})
++        profile=await self._read(self._prefix+'profile-registry/'+self._profile_sha)
++        p,actor=self._decode_profile_records(generation,profile,fingerprint)
++        principal=await self._read(self._prefix+'principals/'+actor)
++        a=self._decode_principal_record(principal,profile=p,actor=actor,service=service,fingerprint=fingerprint)
++        policy=await self._read(self._prefix+'policies/'+a['policy_id'])
++        r,expiry=self._decode_policy_record(policy,profile=p,principal=a,actor=actor)
+         wall,_=self._clock();_require(wall<expiry<=self._wall+900)
+         return (generation,profile,principal,policy),a,r,expiry
++    async def _read_identity_snapshot(self,state,*,context):
++        try:
++            from grid.authority_assignment_v1 import AssignmentAuthority,CapturedRecord,AssignmentUnavailable
++        except ImportError:
++            raise ResearchIdentityUnavailable('NATIVE_IDENTITY_SOURCE_UNAVAILABLE') from None
++        source=getattr(self,'_identity_snapshot_source',None)
++        def same_source():
++            return (type(source) is AssignmentAuthority and source is getattr(self,'_identity_snapshot_source',None)
++                    and getattr(source,'authority',None) is self._authority
++                    and getattr(source,'generation',None)==self._generation
++                    and getattr(source,'prefix',None)==self._namespace+'/runtime-v1/'
++                    and getattr(source,'native_provider',False) is None)
++        if not same_source():raise ResearchIdentityUnavailable('NATIVE_IDENTITY_SOURCE_UNAVAILABLE')
++        _native_session(state[3]);_uuid(state[5]);_uuid(state[6]);_id(state[7])
++        keys=(self._namespace+'/commands/generation',self._prefix+'profile-registry/'+self._profile_sha,
++              self._prefix+'principals/'+state[5],self._prefix+'policies/'+state[6],
++              self._prefix+'principal-sessions/'+state[3]+'/lock')
++        try:
++            rows=await source._read_snapshot(keys)
++        except (CoordinationUnavailable,AssignmentUnavailable):
++            raise ResearchIdentityUnavailable('NATIVE_IDENTITY_SOURCE_UNAVAILABLE') from None
++        # A close/invalidation/peer or deadline change wins before row consumption.
++        _require(self._context(context) is state)
++        if not same_source():raise ResearchIdentityUnavailable('NATIVE_IDENTITY_SOURCE_UNAVAILABLE')
++        if type(rows) is not tuple or len(rows)!=5:
++            raise ResearchIdentityUnavailable('NATIVE_IDENTITY_SOURCE_UNAVAILABLE')
++        records=[]
++        for key,row in zip(keys,rows):
++            if (type(row) is not CapturedRecord or row.key!=key or type(row.index) is not int
++                    or not 0<=row.index<2**63 or type(row.session) is not str):
++                raise ResearchIdentityUnavailable('NATIVE_IDENTITY_SOURCE_UNAVAILABLE')
++            if row.index==0 and row.raw is None and not row.session:
++                raise ResearchIdentityUnavailable('NATIVE_IDENTITY_RECORD_UNAVAILABLE')
++            if not row.index or type(row.raw) is not bytes or not 0<len(row.raw)<=16384:
++                raise ResearchIdentityUnavailable('NATIVE_IDENTITY_SOURCE_UNAVAILABLE')
++            if row.session:
++                try:_native_session(row.session)
++                except ResearchIdentityDenied:
++                    raise ResearchIdentityUnavailable('NATIVE_IDENTITY_SOURCE_UNAVAILABLE') from None
++            records.append(ResearchNativeRecord(row.key,row.index,row.raw,row.session))
++        return tuple(records)
+     @staticmethod
+     def _check(record): return {'KV':dict(Verb='check-index',Key=record.key,Index=record.index)}
+     async def open_session(self,server_ssl_socket,*,leader):
+@@ -354,14 +424,18 @@ class ResearchIdentityBroker:
+         _require(type(scope) is str and scope in SCOPES and type(request_bytes) is bytes and 0<len(request_bytes)<=16384)
+         if len(self._captures)>=256: raise ResearchIdentityUnavailable('CAPTURE_CAPACITY')
+         state=self._context(context)
+-        records,a,r,policy_expiry=await self._policy(state[1],state[2]);_require(scope in r['scopes'])
++        rows=await self._read_identity_snapshot(state,context=context)
++        self._context(context)
++        records,a,r,policy_expiry=self._decode_policy_snapshot(rows[:4],state[1],state[2])
++        _require(scope in r['scopes'])
+         profile=_decode(records[1].raw)
+         if profile['schema']==_PROFILE_V2:_profile_request(profile,self._profile_sha,scope=scope,raw=request_bytes)
+         _require((a['actor_id'],a['policy_id'],a['quota_owner_id'])==(state[5],state[6],state[7]))
+-        lock=await self._read(self._prefix+'principal-sessions/'+state[3]+'/lock')
++        lock=rows[4]
+         expected=dict(schema='unified.authority.research-lab-principal-session.v1-review1',actor_id=state[5],
+             service_id=state[2],certificate_sha256=state[1],session_id=state[3],policy_id=state[6],profile_sha256=self._profile_sha,quota_owner_id=state[7])
+         _require(lock.session==state[3] and lock.raw==canonical(expected))
++        wall,_=self._clock();_require(wall<policy_expiry<=self._wall+900)
+         self._context(context);self._emit('CURRENT_RESEARCH_IDENTITY')
+         wall,mono=self._clock();expiry=min(state[8],policy_expiry)
+         deadline=min(state[4],mono+expiry-wall)

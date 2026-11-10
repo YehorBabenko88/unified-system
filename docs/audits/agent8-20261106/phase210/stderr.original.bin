@@ -1,0 +1,17 @@
+test_mock_backend_cached_capture_is_historical_until_explicit_reobserve (__main__.ControlledBackendBrokerUnitTests.test_mock_backend_cached_capture_is_historical_until_explicit_reobserve) ... Executing <Task finished name='Task-1' coro=<ControlledBackendBrokerUnitTests.asyncSetUp() done, defined at C:\Users\LS-5\.codex\atomic-read-unit-green-20261110\unified\tests\test_research_identity_atomic_snapshot_unit.py:353> result=None created at C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\runners.py:100> took 1.000 seconds
+Executing <Task finished name='Task-4' coro=<AsyncExitStack.aclose() done, defined at C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\contextlib.py:694> result=None created at C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\runners.py:100> took 0.188 seconds
+ok
+test_mock_backend_cancelled_snapshot_propagates_without_capture_or_retry (__main__.ControlledBackendBrokerUnitTests.test_mock_backend_cancelled_snapshot_propagates_without_capture_or_retry) ... ok
+test_mock_backend_context_loss_during_snapshot_prevents_capture (__main__.ControlledBackendBrokerUnitTests.test_mock_backend_context_loss_during_snapshot_prevents_capture) ... ok
+test_mock_backend_existing_reobserve_guard_remains_required (__main__.ControlledBackendBrokerUnitTests.test_mock_backend_existing_reobserve_guard_remains_required) ... ok
+test_mock_backend_generation_or_principal_policy_interleaving_cannot_issue_mixed_capture (__main__.ControlledBackendBrokerUnitTests.test_mock_backend_generation_or_principal_policy_interleaving_cannot_issue_mixed_capture) ... ok
+test_mock_backend_open_session_retains_atomic_record_and_leader_fences (__main__.ControlledBackendBrokerUnitTests.test_mock_backend_open_session_retains_atomic_record_and_leader_fences) ... ok
+test_mock_backend_policy_decoder_keeps_original_schema_target_scope_and_expiry_rejections (__main__.ControlledBackendBrokerUnitTests.test_mock_backend_policy_decoder_keeps_original_schema_target_scope_and_expiry_rejections) ... ok
+test_mock_backend_same_authority_constructor_creates_no_native_call (__main__.ControlledBackendBrokerUnitTests.test_mock_backend_same_authority_constructor_creates_no_native_call) ... ok
+test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed (__main__.ControlledBackendBrokerUnitTests.test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed) ... ok
+test_mock_backend_stable_read_uses_one_five_key_snapshot_and_preserves_order (__main__.ControlledBackendBrokerUnitTests.test_mock_backend_stable_read_uses_one_five_key_snapshot_and_preserves_order) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 1.816s
+
+OK

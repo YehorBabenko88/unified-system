@@ -1,0 +1,175 @@
+test_mock_backend_cached_capture_is_historical_until_explicit_reobserve (__main__.ControlledBackendBrokerUnitTests.test_mock_backend_cached_capture_is_historical_until_explicit_reobserve) ... Executing <Task finished name='Task-1' coro=<ControlledBackendBrokerUnitTests.asyncSetUp() done, defined at C:\Users\LS-5\.codex\atomic-read-unit-qualification-20261110\unified\tests\test_research_identity_atomic_snapshot_unit.py:353> result=None created at C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\runners.py:100> took 1.062 seconds
+Executing <Task finished name='Task-4' coro=<AsyncExitStack.aclose() done, defined at C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\contextlib.py:694> result=None created at C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\runners.py:100> took 0.187 seconds
+ok
+test_mock_backend_cancelled_snapshot_propagates_without_capture_or_retry (__main__.ControlledBackendBrokerUnitTests.test_mock_backend_cancelled_snapshot_propagates_without_capture_or_retry) ... ok
+test_mock_backend_context_loss_during_snapshot_prevents_capture (__main__.ControlledBackendBrokerUnitTests.test_mock_backend_context_loss_during_snapshot_prevents_capture) ... ok
+test_mock_backend_existing_reobserve_guard_remains_required (__main__.ControlledBackendBrokerUnitTests.test_mock_backend_existing_reobserve_guard_remains_required) ... ok
+test_mock_backend_generation_or_principal_policy_interleaving_cannot_issue_mixed_capture (__main__.ControlledBackendBrokerUnitTests.test_mock_backend_generation_or_principal_policy_interleaving_cannot_issue_mixed_capture) ... FAIL
+test_mock_backend_open_session_retains_atomic_record_and_leader_fences (__main__.ControlledBackendBrokerUnitTests.test_mock_backend_open_session_retains_atomic_record_and_leader_fences) ... ok
+test_mock_backend_policy_decoder_keeps_original_schema_target_scope_and_expiry_rejections (__main__.ControlledBackendBrokerUnitTests.test_mock_backend_policy_decoder_keeps_original_schema_target_scope_and_expiry_rejections) ... ok
+test_mock_backend_same_authority_constructor_creates_no_native_call (__main__.ControlledBackendBrokerUnitTests.test_mock_backend_same_authority_constructor_creates_no_native_call) ... FAIL
+test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed (__main__.ControlledBackendBrokerUnitTests.test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed) ... 
+  test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed (__main__.ControlledBackendBrokerUnitTests.test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed) (case='missing') ... FAIL
+  test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed (__main__.ControlledBackendBrokerUnitTests.test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed) (case='order') ... FAIL
+  test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed (__main__.ControlledBackendBrokerUnitTests.test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed) (case='duplicate') ... FAIL
+  test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed (__main__.ControlledBackendBrokerUnitTests.test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed) (case='bool_index') ... FAIL
+  test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed (__main__.ControlledBackendBrokerUnitTests.test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed) (case='base64') ... FAIL
+  test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed (__main__.ControlledBackendBrokerUnitTests.test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed) (case='transport') ... FAIL
+  test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed (__main__.ControlledBackendBrokerUnitTests.test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed) (case='acl') ... FAIL
+  test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed (__main__.ControlledBackendBrokerUnitTests.test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed) (case='leader') ... FAIL
+  test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed (__main__.ControlledBackendBrokerUnitTests.test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed) (case='short') ... FAIL
+  test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed (__main__.ControlledBackendBrokerUnitTests.test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed) (case='extra') ... FAIL
+test_mock_backend_stable_read_uses_one_five_key_snapshot_and_preserves_order (__main__.ControlledBackendBrokerUnitTests.test_mock_backend_stable_read_uses_one_five_key_snapshot_and_preserves_order) ... FAIL
+
+======================================================================
+FAIL: test_mock_backend_generation_or_principal_policy_interleaving_cannot_issue_mixed_capture (__main__.ControlledBackendBrokerUnitTests.test_mock_backend_generation_or_principal_policy_interleaving_cannot_issue_mixed_capture)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\.codex\atomic-read-unit-qualification-20261110\unified\tests\test_research_identity_atomic_snapshot_unit.py", line 347, in bounded
+    await asyncio.wait_for(method(self), timeout=5)
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\tasks.py", line 520, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "C:\Users\LS-5\.codex\atomic-read-unit-qualification-20261110\unified\tests\test_research_identity_atomic_snapshot_unit.py", line 395, in test_mock_backend_generation_or_principal_policy_interleaving_cannot_issue_mixed_capture
+    with self.assertRaises(h.runtime.broker.ResearchIdentityDenied):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ResearchIdentityDenied not raised
+
+======================================================================
+FAIL: test_mock_backend_same_authority_constructor_creates_no_native_call (__main__.ControlledBackendBrokerUnitTests.test_mock_backend_same_authority_constructor_creates_no_native_call)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\.codex\atomic-read-unit-qualification-20261110\unified\tests\test_research_identity_atomic_snapshot_unit.py", line 347, in bounded
+    await asyncio.wait_for(method(self), timeout=5)
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\tasks.py", line 520, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "C:\Users\LS-5\.codex\atomic-read-unit-qualification-20261110\unified\tests\test_research_identity_atomic_snapshot_unit.py", line 364, in test_mock_backend_same_authority_constructor_creates_no_native_call
+    self.assertIs(type(source), h.runtime.assignment.AssignmentAuthority)
+AssertionError: <class 'NoneType'> is not <class 'grid.authority_assignment_v1.AssignmentAuthority'>
+
+======================================================================
+FAIL: test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed (__main__.ControlledBackendBrokerUnitTests.test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed) (case='missing')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\atomic-read-unit-qualification-20261110\unified\tests\test_research_identity_atomic_snapshot_unit.py", line 430, in test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed
+    with self.assertRaises(h.runtime.broker.ResearchIdentityUnavailable) as caught:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ResearchIdentityUnavailable not raised
+
+======================================================================
+FAIL: test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed (__main__.ControlledBackendBrokerUnitTests.test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed) (case='order')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\atomic-read-unit-qualification-20261110\unified\tests\test_research_identity_atomic_snapshot_unit.py", line 430, in test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed
+    with self.assertRaises(h.runtime.broker.ResearchIdentityUnavailable) as caught:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ResearchIdentityUnavailable not raised
+
+======================================================================
+FAIL: test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed (__main__.ControlledBackendBrokerUnitTests.test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed) (case='duplicate')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\atomic-read-unit-qualification-20261110\unified\tests\test_research_identity_atomic_snapshot_unit.py", line 430, in test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed
+    with self.assertRaises(h.runtime.broker.ResearchIdentityUnavailable) as caught:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ResearchIdentityUnavailable not raised
+
+======================================================================
+FAIL: test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed (__main__.ControlledBackendBrokerUnitTests.test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed) (case='bool_index')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\atomic-read-unit-qualification-20261110\unified\tests\test_research_identity_atomic_snapshot_unit.py", line 430, in test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed
+    with self.assertRaises(h.runtime.broker.ResearchIdentityUnavailable) as caught:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ResearchIdentityUnavailable not raised
+
+======================================================================
+FAIL: test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed (__main__.ControlledBackendBrokerUnitTests.test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed) (case='base64')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\atomic-read-unit-qualification-20261110\unified\tests\test_research_identity_atomic_snapshot_unit.py", line 430, in test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed
+    with self.assertRaises(h.runtime.broker.ResearchIdentityUnavailable) as caught:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ResearchIdentityUnavailable not raised
+
+======================================================================
+FAIL: test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed (__main__.ControlledBackendBrokerUnitTests.test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed) (case='transport')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\atomic-read-unit-qualification-20261110\unified\tests\test_research_identity_atomic_snapshot_unit.py", line 430, in test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed
+    with self.assertRaises(h.runtime.broker.ResearchIdentityUnavailable) as caught:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ResearchIdentityUnavailable not raised
+
+======================================================================
+FAIL: test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed (__main__.ControlledBackendBrokerUnitTests.test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed) (case='acl')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\atomic-read-unit-qualification-20261110\unified\tests\test_research_identity_atomic_snapshot_unit.py", line 430, in test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed
+    with self.assertRaises(h.runtime.broker.ResearchIdentityUnavailable) as caught:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ResearchIdentityUnavailable not raised
+
+======================================================================
+FAIL: test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed (__main__.ControlledBackendBrokerUnitTests.test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed) (case='leader')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\atomic-read-unit-qualification-20261110\unified\tests\test_research_identity_atomic_snapshot_unit.py", line 430, in test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed
+    with self.assertRaises(h.runtime.broker.ResearchIdentityUnavailable) as caught:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ResearchIdentityUnavailable not raised
+
+======================================================================
+FAIL: test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed (__main__.ControlledBackendBrokerUnitTests.test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed) (case='short')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\atomic-read-unit-qualification-20261110\unified\tests\test_research_identity_atomic_snapshot_unit.py", line 430, in test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed
+    with self.assertRaises(h.runtime.broker.ResearchIdentityUnavailable) as caught:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ResearchIdentityUnavailable not raised
+
+======================================================================
+FAIL: test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed (__main__.ControlledBackendBrokerUnitTests.test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed) (case='extra')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\atomic-read-unit-qualification-20261110\unified\tests\test_research_identity_atomic_snapshot_unit.py", line 430, in test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed
+    with self.assertRaises(h.runtime.broker.ResearchIdentityUnavailable) as caught:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ResearchIdentityUnavailable not raised
+
+======================================================================
+FAIL: test_mock_backend_stable_read_uses_one_five_key_snapshot_and_preserves_order (__main__.ControlledBackendBrokerUnitTests.test_mock_backend_stable_read_uses_one_five_key_snapshot_and_preserves_order)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\.codex\atomic-read-unit-qualification-20261110\unified\tests\test_research_identity_atomic_snapshot_unit.py", line 347, in bounded
+    await asyncio.wait_for(method(self), timeout=5)
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\tasks.py", line 520, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "C:\Users\LS-5\.codex\atomic-read-unit-qualification-20261110\unified\tests\test_research_identity_atomic_snapshot_unit.py", line 382, in test_mock_backend_stable_read_uses_one_five_key_snapshot_and_preserves_order
+    self.assertEqual(len(h.backend.calls), 1)
+AssertionError: 5 != 1
+
+----------------------------------------------------------------------
+Ran 10 tests in 1.977s
+
+FAILED (failures=13)

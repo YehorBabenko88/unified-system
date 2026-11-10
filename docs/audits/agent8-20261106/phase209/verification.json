@@ -1,0 +1,41 @@
+{
+  "head": "ab4c3b62a3d160d189f06df01d42c01a7c57e3c5",
+  "tree": "72456e8f5a710be45a80afcd622ca2fcd0cace47",
+  "parent": "228df98801c572286abc67731c3d3fadea5db061",
+  "raw_files": 1870,
+  "changed_paths": [
+    "docs/analysis/research-identity/atomic-read-bridge-implementation-review1.md",
+    "unified_system/gateway_research_identity.py"
+  ],
+  "unchanged_test_sha256": "e9dfdc83b9dd10b0166bda588c0f2a328c0e1ff2142f9657565b3762d62360da",
+  "changed_methods": [
+    "__init__",
+    "_capture_current",
+    "_policy"
+  ],
+  "added_methods": [
+    "_decode_policy_record",
+    "_decode_policy_snapshot",
+    "_decode_principal_record",
+    "_decode_profile_records",
+    "_read_identity_snapshot"
+  ],
+  "unchanged_methods": [
+    "_check",
+    "_clock",
+    "_context",
+    "_emit",
+    "_open_session",
+    "_peer",
+    "_read",
+    "capture_current",
+    "close",
+    "invalidate_context",
+    "invalidate_context_local_only",
+    "open_session",
+    "require_capture"
+  ],
+  "scope": "SOURCE_ONLY_NO_PROJECT_IMPORT_COMPILE_OR_EXECUTION",
+  "result": "SCOPED_SOURCE_ACK_NOT_GREEN_OR_NATIVE_ACCEPTANCE",
+  "GO_NO_GO": "NO-GO"
+}

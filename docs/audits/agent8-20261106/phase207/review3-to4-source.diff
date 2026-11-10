@@ -1,0 +1,12 @@
+--- review3/outer
++++ review4/outer
+@@ -117,6 +117,9 @@
+             try:retire()
+             except BaseException as exc:problem('retirement_unexpected',exc)
+             readers_retired=not any(alive(t) for t in threads)
++            # Sticky finalization check: a child can exit before polling sees
++            # an overflow that the draining readers observe after its exit.
++            if exceeded.is_set() or total>budget:reason='OUTPUT_OR_READER_BOUNDARY'
+             if not direct_retired or not readers_retired:reason=reason or 'RETIREMENT_UNKNOWN'
+             if lifecycle_errors or reader_errors:reason=reason or 'OUTER_BOUNDARY_FAILURE'
+             receipt=dict(state='FAILED_OR_UNKNOWN' if reason else 'CHILD_RETIRED',child_created=held is not None,returncode=returncode,reason=reason,observed_output_bytes=total,output_limit=budget,elapsed_seconds=time.monotonic()-started,direct_handle_retired=direct_retired,reader_threads_retired=readers_retired,reader_errors=reader_errors,lifecycle_errors=lifecycle_errors,scope='LOCAL_MOCK_UNIT_ONLY_NOT_HOSTILE_FAMILY_SANDBOX',budget='90s child lifetime plus bounded 5s retirement and 1s per reader join; not strict whole-lane 90s',native=False,physical=False,public_submit=False)

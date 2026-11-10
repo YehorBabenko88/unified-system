@@ -1,0 +1,100 @@
+{
+  "changed_source_files": {
+    "docs/analysis/research-identity/atomic-read-bridge-implementation-review1.md": {
+      "blob": "bda911997ed92e6d304156bb079afc9f9495ff8d",
+      "bytes": 21791,
+      "sha256": "e896bb5a4bd4d4bed2304982c05474d9d1e597a36775a4f12c204bf522241039"
+    },
+    "unified_system/gateway_research_identity.py": {
+      "blob": "33766ee1a374aa468dd378474acaa91b528005e9",
+      "bytes": 31489,
+      "sha256": "63a659e5c85c89b46d66fea08925120dde32830f878daa9088bf716f037a6de3"
+    }
+  },
+  "deps": 461,
+  "drivers_ast_equal_excluding_only_hash_assignments": true,
+  "files": 1870,
+  "flags": {
+    "actual_successor_execution": false,
+    "extension_loads": false,
+    "native": false,
+    "physical": false,
+    "project_imports": false,
+    "provider": false,
+    "public_submit": false
+  },
+  "grid_files": 824,
+  "old_actual_red": {
+    "actual_ids": [
+      "__main__.ControlledBackendBrokerUnitTests.test_mock_backend_cached_capture_is_historical_until_explicit_reobserve",
+      "__main__.ControlledBackendBrokerUnitTests.test_mock_backend_cancelled_snapshot_propagates_without_capture_or_retry",
+      "__main__.ControlledBackendBrokerUnitTests.test_mock_backend_context_loss_during_snapshot_prevents_capture",
+      "__main__.ControlledBackendBrokerUnitTests.test_mock_backend_existing_reobserve_guard_remains_required",
+      "__main__.ControlledBackendBrokerUnitTests.test_mock_backend_generation_or_principal_policy_interleaving_cannot_issue_mixed_capture",
+      "__main__.ControlledBackendBrokerUnitTests.test_mock_backend_open_session_retains_atomic_record_and_leader_fences",
+      "__main__.ControlledBackendBrokerUnitTests.test_mock_backend_policy_decoder_keeps_original_schema_target_scope_and_expiry_rejections",
+      "__main__.ControlledBackendBrokerUnitTests.test_mock_backend_same_authority_constructor_creates_no_native_call",
+      "__main__.ControlledBackendBrokerUnitTests.test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed",
+      "__main__.ControlledBackendBrokerUnitTests.test_mock_backend_stable_read_uses_one_five_key_snapshot_and_preserves_order"
+    ],
+    "errors": [],
+    "failures": [
+      "__main__.ControlledBackendBrokerUnitTests.test_mock_backend_generation_or_principal_policy_interleaving_cannot_issue_mixed_capture",
+      "__main__.ControlledBackendBrokerUnitTests.test_mock_backend_same_authority_constructor_creates_no_native_call",
+      "__main__.ControlledBackendBrokerUnitTests.test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed (case='missing')",
+      "__main__.ControlledBackendBrokerUnitTests.test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed (case='order')",
+      "__main__.ControlledBackendBrokerUnitTests.test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed (case='duplicate')",
+      "__main__.ControlledBackendBrokerUnitTests.test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed (case='bool_index')",
+      "__main__.ControlledBackendBrokerUnitTests.test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed (case='base64')",
+      "__main__.ControlledBackendBrokerUnitTests.test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed (case='transport')",
+      "__main__.ControlledBackendBrokerUnitTests.test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed (case='acl')",
+      "__main__.ControlledBackendBrokerUnitTests.test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed (case='leader')",
+      "__main__.ControlledBackendBrokerUnitTests.test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed (case='short')",
+      "__main__.ControlledBackendBrokerUnitTests.test_mock_backend_snapshot_inventory_acl_and_transport_fail_closed (case='extra')",
+      "__main__.ControlledBackendBrokerUnitTests.test_mock_backend_stable_read_uses_one_five_key_snapshot_and_preserves_order"
+    ],
+    "original_files": {
+      "ACTUAL-RESULT.json": {
+        "bytes": 266745,
+        "sha256": "699764398c531c094ddbda4c30f3d8e547c821043157afd110dc0c4ae3366caa"
+      },
+      "OUTER-RESULT.json": {
+        "bytes": 566,
+        "sha256": "19343daac8e8443186333872a5e8c7c05f67b2ef1c10041e0485e526a8fb0601"
+      },
+      "stderr.original.bin": {
+        "bytes": 17433,
+        "sha256": "66657502835bf5835981f865bebb2b1e3c7bb72a06b65d3fb9f6626fe8dd1af0"
+      },
+      "stdout.original.bin": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "outer": {
+      "budget": "90s child lifetime plus bounded 5s retirement and 1s per reader join; not strict whole-lane 90s",
+      "child_created": true,
+      "direct_handle_retired": true,
+      "elapsed_seconds": 15.641000000061467,
+      "lifecycle_errors": [],
+      "native": false,
+      "observed_output_bytes": 17433,
+      "output_limit": 2097152,
+      "physical": false,
+      "public_submit": false,
+      "reader_errors": [],
+      "reader_threads_retired": true,
+      "reason": null,
+      "returncode": 1,
+      "scope": "LOCAL_MOCK_UNIT_ONLY_NOT_HOSTILE_FAMILY_SANDBOX",
+      "state": "CHILD_RETIRED"
+    },
+    "skips": 0,
+    "tests_run": 10
+  },
+  "root_paths_derived_from_new_script_location": true,
+  "runtime": 841,
+  "source_head": "ab4c3b62a3d160d189f06df01d42c01a7c57e3c5",
+  "source_tree": "72456e8f5a710be45a80afcd622ca2fcd0cace47",
+  "state": "SUCCESSOR_NOT_RUN"
+}

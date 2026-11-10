@@ -803,9 +803,13 @@
     "pr": null,
     "observed_head": "EXTERNAL_SOURCE_REVIEW1_SEAL_8e99468160a3b6ca418f7944dc947a509aac89f48176def61f0f079b834adcf7",
     "title": "Mock10 outer runner lacks finally across known direct child postcreation lifecycle",
-    "status": "OPEN_PREEXECUTION_SOURCE_OLD_RUNNER_HELD_SUCCESSOR_PENDING",
+    "status": "CLOSED_SCOPED_REVIEW4_SOURCE_CORRECTION_ONLY_LOCAL_MOCK_NOT_OS_NEGATIVEPATH_QUALIFICATION",
     "evidence": "phase206/report.md;phase206/verification.json",
-    "required_correction": "Retain direct handle immediately and use all-exit lifecycle finally for bounded kill/wait/readers; record failed/UNKNOWN receipt; no actual unit before exact successor review."
+    "required_correction": "Retain direct handle immediately and use all-exit lifecycle finally for bounded kill/wait/readers; record failed/UNKNOWN receipt; no actual unit before exact successor review.",
+    "fixed_evidence": "phase207/report.md;phase207/verification.json",
+    "successor_outer_sha256": "8bef1750e46034573c36609a41bd76d5d1fd6eb7160e7eebaed98abb4fedc46c",
+    "successor_inner_sha256": "ae11e546b3922239fafbbfb572ff078d5745a26dd0a138109351ec15c4ecbfd7",
+    "fixed_scope": "EXACT_SOURCE_ORDER_EXCEPTION_AND_LATE_QUOTA_GATES_ONLY_NOT_ACTUAL10_OR_NATIVE_RELEASE_ADMISSION"
   },
   {
     "id": "A8-F47",
@@ -814,8 +818,12 @@
     "pr": null,
     "observed_head": "EXTERNAL_SOURCE_REVIEW1_SEAL_8e99468160a3b6ca418f7944dc947a509aac89f48176def61f0f079b834adcf7",
     "title": "Mock10 runner reads own seal/capsule/cache and walks unknown dependencies before root-first ordinary guards",
-    "status": "OPEN_PREEXECUTION_SOURCE_OLD_RUNNER_HELD_SUCCESSOR_PENDING",
+    "status": "CLOSED_SCOPED_REVIEW4_SOURCE_CORRECTION_ONLY_LOCAL_MOCK_NOT_OS_NEGATIVEPATH_QUALIFICATION",
     "evidence": "phase206/report.md;phase206/verification.json",
-    "required_correction": "Guard unresolved roots/owninputs/cache before any read/hash/traversal, bounded same-raw seal reads and exact guarded dir inventory; preserve old source/seals."
+    "required_correction": "Guard unresolved roots/owninputs/cache before any read/hash/traversal, bounded same-raw seal reads and exact guarded dir inventory; preserve old source/seals.",
+    "fixed_evidence": "phase207/report.md;phase207/verification.json",
+    "successor_outer_sha256": "8bef1750e46034573c36609a41bd76d5d1fd6eb7160e7eebaed98abb4fedc46c",
+    "successor_inner_sha256": "ae11e546b3922239fafbbfb572ff078d5745a26dd0a138109351ec15c4ecbfd7",
+    "fixed_scope": "EXACT_SOURCE_ORDER_EXCEPTION_AND_LATE_QUOTA_GATES_ONLY_NOT_ACTUAL10_OR_NATIVE_RELEASE_ADMISSION"
   }
 ]

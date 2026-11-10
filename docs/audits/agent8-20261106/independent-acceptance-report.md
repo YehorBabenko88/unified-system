@@ -3856,3 +3856,9 @@ Phases203–204: fresh original bfa five targetedfamilies12jobs/10ZIPs PASS scop
 
 
 Phases205–206: A7correctedseam original9 actual2PASS7FAIL0skip (F43/F44meaningful modeledRED, noactualleak); A2mock10oldrunner raw2694source+461deps+841runtime/emptycache DATAverified butnewP2F46postcreationfinally/F47rootfirstinputguards SOURCEHOLD beforeexecution. Registered8P1/12P2;NO-GO/physicalTailscaleBLOCKED. See docs/audits/agent8-20261106/phase206/report.md.
+
+
+Phase207 exactA2Review4outer8bef/innerae11/capsuleb0/indexc0be scoped source/effectACK; F46/F47closedSOURCEonlyincllatequotaafterreaderretirement, notactual10/OSnegativepath/nativeadmission. Actual10NOTRUN/Rootallocationseparate;8P1/10P2open/NO-GO/physicalTailscaleBLOCKED. See docs/audits/agent8-20261106/phase207/report.md.
+
+
+Phases207–210: A2 Review4 F46/F47 scoped source correction; original old mock10 RED preserved; exact successor ab4c/tree7245 source ACK; independent original corrected mock10PASS verification4497f943, raw1870+824/deps461/runtime841/1038recorded origins, no native or full Windows acceptance. Additive fail-closed native22 preflight design feedback only, exact diff pending. Registered8P1/10P2; overallNO-GO/physical and TailscaleBLOCKED. Reports phase207/report.md through phase210/report.md.
