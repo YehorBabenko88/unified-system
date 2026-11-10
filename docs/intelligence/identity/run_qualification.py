@@ -35,6 +35,8 @@ EXPECTED_TEST_NAMES = (
     'test_wrong_actual_san_denies',
     'test_untrusted_ca_and_missing_client_cert_real_handshake_refused',
 )
+EXPECTED_STRICT_TEST_ID = 'test_gateway_identity.StrictTLSFixtureTests.test_generated_chain_handshakes_with_explicit_strict_verification'
+
 
 def git(root, *arguments):
     return subprocess.check_output(['git','--no-replace-objects','-C',str(root),*arguments])
@@ -127,8 +129,8 @@ def validate_test_ids(suite):
             if isinstance(test,unittest.TestSuite): yield from ids(test)
             else: yield test.id()
     actual = list(ids(suite))
-    expected = ['test_gateway_identity.GatewayIdentityTests.'+name for name in EXPECTED_TEST_NAMES]
-    assert len(actual)==len(set(actual))==24 and sorted(actual)==sorted(expected)
+    expected = ['test_gateway_identity.GatewayIdentityTests.'+name for name in EXPECTED_TEST_NAMES]+[EXPECTED_STRICT_TEST_ID]
+    assert len(actual)==len(set(actual))==25 and sorted(actual)==sorted(expected)
 
 def main():
     parser = argparse.ArgumentParser()
@@ -147,9 +149,9 @@ def main():
     validate_test_ids(suite)
     result = unittest.TextTestRunner(verbosity=2).run(suite)
     after = inventory(root)
-    assert before==after and result.testsRun==24 and not result.skipped
+    assert before==after and result.testsRun==25 and not result.skipped
     assert result.wasSuccessful()
-    print(json.dumps(dict(result='PASS',head=args.expected_head,tests=24,skips=0,
+    print(json.dumps(dict(result='PASS',head=args.expected_head,tests=25,skips=0,
                           raw_files_before_after=len(before),exact_unique_test_ids=True,
                           scope='DISPOSABLE_MTLS_AND_LOCAL_READ_CAPABILITY_ONLY',
                           cross_owner_read='NOT_RUN',nativeauthentication=False)))
