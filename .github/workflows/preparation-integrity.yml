@@ -37,23 +37,47 @@ jobs:
       - name: Bind runner-local path after runner assignment
         shell: python -I -S -B {0}
         run: |
-          import os, pathlib
+          import json, os, pathlib, sys
           base=pathlib.Path(os.environ['RUNNER_TEMP'])/('preparation-'+os.environ['GITHUB_RUN_ID']+'-'+os.environ['GITHUB_RUN_ATTEMPT'])
+          base.mkdir(parents=True,exist_ok=False)
+          (base/'bootstrap.json').write_text(json.dumps(dict(stage='RUNNER_PATH_BOUND',python=sys.version,expected_head=os.environ['EXPECTED_HEAD'],run_id=os.environ['GITHUB_RUN_ID'],attempt=os.environ['GITHUB_RUN_ATTEMPT'],passed=False),sort_keys=True)+'\n')
           with open(os.environ['GITHUB_ENV'],'a',encoding='utf-8') as stream:
               stream.write('QUALIFICATION_BASE='+str(base)+'\n')
       - name: Download and verify pinned timezone data without importing it
         shell: bash
         run: |
           python -I -S -B - <<'PY'
-          import hashlib, os, pathlib, stat, subprocess, sys, zipfile
+          import hashlib, json, os, pathlib, stat, subprocess, sys, zipfile
           root=pathlib.Path.cwd().resolve()
-          git=pathlib.Path('C:/Program Files/Git/cmd/git.exe' if os.name=='nt' else '/usr/bin/git')
-          assert git.is_absolute() and not git.is_relative_to(root)
-          for item in [git,*git.parents]:
-              info=item.lstat()
-              assert not item.is_symlink() and not getattr(info,'st_file_attributes',0)&1024
-              assert (stat.S_ISREG(info.st_mode) and info.st_nlink==1) if item==git else stat.S_ISDIR(info.st_mode)
-          assert os.name=='nt' or git.stat().st_mode&0o111
+          git=pathlib.Path('C:/Program Files/Git/bin/git.exe' if os.name=='nt' else '/usr/bin/git')
+          base=pathlib.Path(os.environ['QUALIFICATION_BASE'])
+          report=dict(selected_git=str(git),passed=False,raw_sha256=None,ancestors=[],errors=[])
+          report['file']=None
+          def inspect(item):
+              entry=dict(path=str(item))
+              try:
+                  info=item.lstat()
+                  entry.update(mode=info.st_mode,dev=info.st_dev,inode=info.st_ino,nlink=info.st_nlink,size=info.st_size,mtime_ns=info.st_mtime_ns,ctime_ns=info.st_ctime_ns,attributes=getattr(info,'st_file_attributes',0),symlink=item.is_symlink())
+              except OSError as error:
+                  entry['error']=type(error).__name__
+              return entry
+          if not git.is_absolute() or git.is_relative_to(root): report['errors'].append('Git must be absolute and external')
+          if not report['errors']:
+              for item in reversed(git.parents):
+                  entry=inspect(item);report['ancestors'].append(entry)
+                  if 'mode' not in entry or not stat.S_ISDIR(entry['mode']) or entry['symlink'] or entry['attributes']&1024:
+                      report['errors'].append('nonordinary Git parent');break
+          if not report['errors']:
+              file=inspect(git);report['file']=file
+              if 'mode' not in file or not stat.S_ISREG(file['mode']) or file['symlink'] or file['nlink']!=1 or file['attributes']&1024 or file['size']>64*1024*1024: report['errors'].append('nonordinary Git executable')
+              if os.name!='nt' and ('mode' not in file or not file['mode']&0o111): report['errors'].append('Git is not executable')
+          if not report['errors']:
+              try: report['raw_sha256']=hashlib.sha256(git.read_bytes()).hexdigest()
+              except OSError as error: report['errors'].append(type(error).__name__)
+          (base/'download-git-preflight.json').write_text(json.dumps(report,sort_keys=True,indent=2)+'\n')
+          if report['errors']: raise ValueError('; '.join(report['errors']))
+          report['passed']=True
+          (base/'download-git-preflight.json').write_text(json.dumps(report,sort_keys=True,indent=2)+'\n')
           def raw(*args):
               return subprocess.check_output([str(git),'--no-replace-objects','--no-optional-locks','-c','core.fsmonitor=false',*args],timeout=30)
           head=os.environ['EXPECTED_HEAD']
@@ -63,7 +87,6 @@ jobs:
           pin='1a403fada01ff9221ca8044d701868fa132215d84beb92242d9acd2147f667a8'
           line='tzdata==2025.2 --hash=sha256:'+pin
           assert line in (root/lock).read_text().splitlines()
-          base=pathlib.Path(os.environ['QUALIFICATION_BASE']);base.mkdir(exist_ok=False)
           (base/'tzdata.lock').write_text(line+'\n')
           command=[sys.executable,'-I','-B','-m','pip','--isolated','download','--no-cache-dir','--no-deps','--only-binary=:all:','--require-hashes','--dest',str(base/'wheels'),'-r',str(base/'tzdata.lock')]
           with (base/'download.log').open('wb') as log:
@@ -79,15 +102,37 @@ jobs:
         shell: bash
         run: |
           python -I -S -B - <<'PY'
-          import hashlib, os, pathlib, stat, subprocess, sys
+          import hashlib, json, os, pathlib, stat, subprocess, sys
           root=pathlib.Path.cwd().resolve()
-          git=pathlib.Path('C:/Program Files/Git/cmd/git.exe' if os.name=='nt' else '/usr/bin/git')
-          assert git.is_absolute() and not git.is_relative_to(root)
-          for item in [git,*git.parents]:
-              info=item.lstat()
-              assert not item.is_symlink() and not getattr(info,'st_file_attributes',0)&1024
-              assert (stat.S_ISREG(info.st_mode) and info.st_nlink==1) if item==git else stat.S_ISDIR(info.st_mode)
-          assert os.name=='nt' or git.stat().st_mode&0o111
+          git=pathlib.Path('C:/Program Files/Git/bin/git.exe' if os.name=='nt' else '/usr/bin/git')
+          base=pathlib.Path(os.environ['QUALIFICATION_BASE'])
+          report=dict(selected_git=str(git),passed=False,raw_sha256=None,ancestors=[],errors=[])
+          report['file']=None
+          def inspect(item):
+              entry=dict(path=str(item))
+              try:
+                  info=item.lstat()
+                  entry.update(mode=info.st_mode,dev=info.st_dev,inode=info.st_ino,nlink=info.st_nlink,size=info.st_size,mtime_ns=info.st_mtime_ns,ctime_ns=info.st_ctime_ns,attributes=getattr(info,'st_file_attributes',0),symlink=item.is_symlink())
+              except OSError as error:
+                  entry['error']=type(error).__name__
+              return entry
+          if not git.is_absolute() or git.is_relative_to(root): report['errors'].append('Git must be absolute and external')
+          if not report['errors']:
+              for item in reversed(git.parents):
+                  entry=inspect(item);report['ancestors'].append(entry)
+                  if 'mode' not in entry or not stat.S_ISDIR(entry['mode']) or entry['symlink'] or entry['attributes']&1024:
+                      report['errors'].append('nonordinary Git parent');break
+          if not report['errors']:
+              file=inspect(git);report['file']=file
+              if 'mode' not in file or not stat.S_ISREG(file['mode']) or file['symlink'] or file['nlink']!=1 or file['attributes']&1024 or file['size']>64*1024*1024: report['errors'].append('nonordinary Git executable')
+              if os.name!='nt' and ('mode' not in file or not file['mode']&0o111): report['errors'].append('Git is not executable')
+          if not report['errors']:
+              try: report['raw_sha256']=hashlib.sha256(git.read_bytes()).hexdigest()
+              except OSError as error: report['errors'].append(type(error).__name__)
+          (base/'qualifier-git-preflight.json').write_text(json.dumps(report,sort_keys=True,indent=2)+'\n')
+          if report['errors']: raise ValueError('; '.join(report['errors']))
+          report['passed']=True
+          (base/'qualifier-git-preflight.json').write_text(json.dumps(report,sort_keys=True,indent=2)+'\n')
           head=os.environ['EXPECTED_HEAD'];name='tools/ci/qualify_preparation_integrity.py'
           def raw(*args):
               return subprocess.check_output([str(git),'--no-replace-objects','--no-optional-locks','-c','core.fsmonitor=false',*args],timeout=30)

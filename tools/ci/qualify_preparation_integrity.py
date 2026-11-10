@@ -106,17 +106,48 @@ def validate_zoneinfo(zone,wheel):
     return dict(version='2025.2',wheel_sha256=TZDATA_SHA256,zoneinfo_files=check_files(zone,files))
 
 
-def approved_git(root,path=None):
-    candidate=Path(path) if path is not None else Path('C:/Program Files/Git/cmd/git.exe' if os.name=='nt' else '/usr/bin/git')
-    if not candidate.is_absolute() or candidate.is_relative_to(root):raise ValueError('approved Git must be absolute and external')
-    for parent in candidate.parents:
-        info=parent.lstat()
-        if not stat.S_ISDIR(info.st_mode) or parent.is_symlink() or getattr(info,'st_file_attributes',0)&1024:
-            raise ValueError('nonordinary Git parent')
-    info=candidate.lstat()
-    if not stat.S_ISREG(info.st_mode) or candidate.is_symlink() or info.st_nlink!=1 or getattr(info,'st_file_attributes',0)&1024:
-        raise ValueError('nonordinary Git executable')
-    if os.name!='nt' and not info.st_mode&0o111:raise ValueError('Git is not executable')
+def selected_git_path(platform):
+    return 'C:/Program Files/Git/bin/git.exe' if platform=='nt' else '/usr/bin/git'
+
+
+def approved_git(root,path=None,*,evidence_path=None):
+    candidate=Path(path) if path is not None else Path(selected_git_path(os.name))
+    record=dict(selected_git=str(candidate),passed=False,raw_sha256=None,ancestors=[])
+    errors=[]
+    def inspect(item):
+        entry=dict(path=str(item))
+        try:
+            info=item.lstat()
+            entry.update(mode=info.st_mode,dev=info.st_dev,inode=info.st_ino,nlink=info.st_nlink,
+                         size=info.st_size,mtime_ns=info.st_mtime_ns,ctime_ns=info.st_ctime_ns,
+                         attributes=getattr(info,'st_file_attributes',0),symlink=item.is_symlink())
+        except OSError as error:
+            entry['error']=type(error).__name__;errors.append('unavailable Git path')
+        return entry
+    record['file']=None
+    if not candidate.is_absolute() or candidate.is_relative_to(root):
+        errors.append('approved Git must be absolute and external')
+    if not errors:
+        for parent in reversed(candidate.parents):
+            entry=inspect(parent);record['ancestors'].append(entry)
+            if 'mode' not in entry or not stat.S_ISDIR(entry['mode']) or entry['symlink'] or entry['attributes']&1024:
+                errors.append('nonordinary Git parent');break
+    if not errors:
+        file=inspect(candidate);record['file']=file
+        if ('mode' not in file or not stat.S_ISREG(file['mode']) or file['symlink']
+                or file['nlink']!=1 or file['attributes']&1024 or file['size']>64*1024*1024):
+            errors.append('nonordinary Git executable')
+        if os.name!='nt' and ('mode' not in file or not file['mode']&0o111):errors.append('Git is not executable')
+    # Never traverse below an unsafe parent or hash bytes before every gate.
+    if not errors:
+        try:record['raw_sha256']=hashlib.sha256(candidate.read_bytes()).hexdigest()
+        except OSError as error:errors.append('unreadable Git bytes: '+type(error).__name__)
+    record['errors']=errors
+    # Persist observations before any refusal or subprocess invocation.
+    if evidence_path is not None:Path(evidence_path).write_text(json.dumps(record,sort_keys=True,indent=2)+'\n')
+    if errors:raise ValueError('; '.join(errors))
+    record['passed']=True
+    if evidence_path is not None:Path(evidence_path).write_text(json.dumps(record,sort_keys=True,indent=2)+'\n')
     return str(candidate)
 
 
@@ -193,13 +224,13 @@ def main():
         attempt=os.getenv('GITHUB_RUN_ATTEMPT'),job=os.getenv('GITHUB_JOB'),runner_os=sys.platform,
         python=sys.version,legacy_child_isolated_flags=False,dependency=dependency)
     try:
-        git=approved_git(root);before=snapshot(root,git,args.expected_head);receipt['source_before']=before
+        git=approved_git(root,evidence_path=out/'git-preflight.json');before=snapshot(root,git,args.expected_head);receipt['source_before']=before
         controls=unittest.defaultTestLoader.discover(str(root/'tests'),pattern='test_preparation_qualification.py')
         with (out/'controls.log').open('w',encoding='utf-8') as log:
             controls_result=unittest.TextTestRunner(stream=log,verbosity=2).run(controls)
-        if not controls_result.wasSuccessful() or controls_result.skipped or controls_result.testsRun!=9:
+        if not controls_result.wasSuccessful() or controls_result.skipped or controls_result.testsRun!=12:
             raise ValueError('pure guard controls failed')
-        receipt['pure_controls']=9
+        receipt['pure_controls']=12
         env=os.environ.copy()
         for key in ('PYTHONPATH','PYTHONHOME','PYTHONPYCACHEPREFIX'):env.pop(key,None)
         env['PYTHONDONTWRITEBYTECODE']='1'

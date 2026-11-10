@@ -97,3 +97,57 @@ class PreparationQualificationControls(unittest.TestCase):
             external=root.parent/(root.name+"-directory");external.mkdir()
             self.addCleanup(external.rmdir)
             with self.assertRaises(ValueError):module.approved_git(root,external)
+
+    def test_windows_git_selector_is_fixed_bin_without_fallback(self):
+        workflow=(DRIVER.parents[2]/'.github/workflows/preparation-integrity.yml').read_text()
+        self.assertNotIn('C:/Program Files/Git/cmd/git.exe',workflow)
+        self.assertEqual(workflow.count('C:/Program Files/Git/bin/git.exe'),2)
+        self.assertEqual(module.selected_git_path('nt'),'C:/Program Files/Git/bin/git.exe')
+        self.assertEqual(module.selected_git_path('posix'),'/usr/bin/git')
+
+    def test_preflight_failure_preserves_metadata_before_any_spawn(self):
+        import json
+        from unittest.mock import patch
+        with tempfile.TemporaryDirectory() as temporary:
+            root=Path(temporary).resolve();candidate=root/'git.exe';candidate.write_bytes(b'inert fixture only')
+            evidence=root/'preflight.json'
+            with patch.object(module.subprocess,'Popen',side_effect=AssertionError('must not spawn')):
+                with self.assertRaises(ValueError):module.approved_git(root,candidate,evidence_path=evidence)
+            record=json.loads(evidence.read_bytes())
+            self.assertEqual(record['selected_git'],str(candidate))
+            self.assertIsNone(record['file'])
+            self.assertIsNone(record['raw_sha256'])
+            self.assertEqual(record['ancestors'],[])
+            self.assertIs(record['passed'],False)
+            # Existing hardlinks remain refused; metadata is diagnostic only.
+            import os
+            repository=root/'repository';repository.mkdir()
+            os.link(candidate,root/'alias.exe')
+            with patch.object(module.subprocess,'Popen',side_effect=AssertionError('must not spawn')):
+                with self.assertRaisesRegex(ValueError,'nonordinary Git executable'):
+                    module.approved_git(repository,candidate,evidence_path=evidence)
+            record=json.loads(evidence.read_bytes())
+            self.assertEqual(record['file']['nlink'],2)
+            self.assertIsNone(record['raw_sha256'])
+            self.assertIs(record['passed'],False)
+
+    def test_unsafe_parent_preserves_null_hash_without_selected_file_access(self):
+        import json
+        from types import SimpleNamespace
+        from unittest.mock import patch
+        with tempfile.TemporaryDirectory() as temporary:
+            root=Path(temporary).resolve();repository=root/'repository';repository.mkdir()
+            candidate=root/'git.exe';candidate.write_bytes(b'inert fixture only');evidence=root/'preflight.json'
+            real_lstat=Path.lstat;real_read=Path.read_bytes;info=real_lstat(root)
+            unsafe=SimpleNamespace(**{name:getattr(info,name) for name in ('st_mode','st_dev','st_ino','st_nlink','st_size','st_mtime_ns','st_ctime_ns')},st_file_attributes=1024)
+            def observe(path,*args,**kwargs):
+                if path==candidate:raise AssertionError('selected file reached through unsafe parent')
+                return unsafe if path==root else real_lstat(path,*args,**kwargs)
+            def read(path,*args,**kwargs):
+                if path==candidate:raise AssertionError('unsafe selected bytes read')
+                return real_read(path,*args,**kwargs)
+            with patch.object(Path,'lstat',observe),patch.object(Path,'read_bytes',read),patch.object(module.subprocess,'Popen',side_effect=AssertionError('must not spawn')):
+                with self.assertRaises(ValueError):module.approved_git(repository,candidate,evidence_path=evidence)
+            record=json.loads(evidence.read_bytes())
+            self.assertIs(record['passed'],False);self.assertIsNone(record['raw_sha256'])
+            self.assertEqual(record['ancestors'][-1]['path'],str(root))
