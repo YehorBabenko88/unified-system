@@ -1,0 +1,46 @@
+name: Storage publication local prerequisites
+on:
+  push:
+    branches: [feature/storage-native-publication-20261109]
+  pull_request:
+    paths:
+      - unified_system/storage/result_publication.py
+      - unified_system/storage/replica_evidence.py
+      - unified_system/storage/publication_records.py
+      - unified_system/storage/publication_recovery.py
+      - tests/storage/native_publication/**
+      - docs/storage/native-publication/**
+      - .github/workflows/storage-native-publication.yml
+permissions:
+  contents: read
+jobs:
+  local-prerequisites:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-2022, ubuntu-24.04]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 12
+    steps:
+      - name: Preserve primary source bytes
+        run: git config --global core.autocrlf false
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12.10'
+      - name: Exact source and local-only byte crash-recovery cases
+        env:
+          A4_RESULT_EVIDENCE: ${{ runner.temp }}/storage-publication-prerequisites
+          A4_RESULT_EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: python -I -S -B tests/storage/native_publication/qualify.py
+      - name: Upload local evidence, not native or physical qualification
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: publication-prerequisites-${{ matrix.os }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/storage-publication-prerequisites
+          if-no-files-found: error
+          retention-days: 14
