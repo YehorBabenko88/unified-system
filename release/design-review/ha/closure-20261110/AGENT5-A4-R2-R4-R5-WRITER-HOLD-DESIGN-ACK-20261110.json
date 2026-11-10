@@ -1,0 +1,50 @@
+{
+  "schema": "agent5.scoped-design-review.v1",
+  "date": "2026-11-10",
+  "input": {
+    "path": "A4-R2-R4-R5-SOURCE-DESIGN-HANDOFF-20261110.md",
+    "sha256": "44fb1cbf949209c60715b50b0cfb7288fd0b06c80703a581a36e082a9a0e0348",
+    "read_in_full": true,
+    "hash_verified": true
+  },
+  "scope": "Joint writer/order/hold semantics only; A4 source/module inventory assertions not independently reverified in this review",
+  "disposition": "DESIGN_REQUIREMENTS_ACK_ONLY",
+  "confirmed": [
+    "Publication, supersession and relevant release must check/update overlapping captured native versions in the SAME existing A2 authority serialization domain. A2 derives fixed keys/ops. Separate precheck plus unprotected publication is forbidden.",
+    "Supersession/release-first invalidates old publication predicates. Publication-first preserves exact immutable committed root/revision/receipt/history; later release must resolve that fact, not relabel outcome or refund twice.",
+    "Pending storage reservation/debt must atomically and idempotently become retained dataset accounting/protection at committed publication, without an unprotected interval. Scheduler CPU/RSS execution holds are separate from retained artifact/research/dependency/backup/history protection.",
+    "UNKNOWN, COMPUTED, CANCEL_REQUESTED, expiry, restart, process/file absence and reassignment alone never authorize release/refund/rekey/retry. No-quorum/incomplete history remains UNKNOWN.",
+    "A5 actual issuer-owned attempt/child/incarnation/quiescence evidence must bind exact original/job/hold and be validated under A2 current release authority plus captured native CAS. Caller DTOs, bare PID, module-incarnation or standalone local abort are insufficient.",
+    "Known commit survives failed projection; projection/historical read resolves SAME immutable receipt with current reader rights. Expired worker write lease must not be required to acknowledge historical commit, nor reused to grant new writes.",
+    "Resource release does not authorize cleanup, last-copy deletion or loss of retired history. Concurrent pin/repair/publication/delete reservations must participate in relevant protection-version ordering."
+  ],
+  "clarifications": [
+    "A2 current RELEASE authorization is distinct from the old worker WRITE lease; expiry can invalidate publication eligibility without preventing an otherwise separately authorized safe reconciliation/release protocol.",
+    "Every concurrent command needs approved exact identity/idempotency/codec and overlap predicates; neither names nor field enums in this ACK are executable APIs.",
+    "If full measured native transaction cannot fit approved limits, deny; do not split the atomic protection/accounting/order boundary or omit predicates.",
+    "Owned local child quiescence is necessary evidence for applicable execution-hold release, never sufficient cluster authority, storage safety or a current qualified resource capsule."
+  ],
+  "a5_actual_api_inventory_sha256": "dd816238621ebc71cd6f563137251ba775197e7ae4886fe0d8b145ef307074b7",
+  "qualified_a5_resource_reservation_consume_start_active_release": "NONE",
+  "open": [
+    "Root immutable implementation base/source adoption and operator HA gate",
+    "A2 exact fixed writers/ACL/schema/record/identity and CAS plan",
+    "A4 publication/reservation/protection/receipt lifecycle codec and actual backend",
+    "A5 qualified actual resource/consume/release evidence API",
+    "Measured transaction/payload budgets and separately authorized negative native tests",
+    "Commit-time expiry protocol if policy requires strict UTC boundary"
+  ],
+  "tests": 0,
+  "native_rpc_job_physical_calls": 0,
+  "production_source_edits": 0,
+  "permissions": {
+    "full_api_ack": false,
+    "wire_freeze": false,
+    "implementation": false,
+    "native_writes": false,
+    "release": false,
+    "publication": false,
+    "cleanup": false
+  },
+  "status": "DESIGN_REQUIREMENTS_ACK_INTEGRATION_PENDING_NO_GO"
+}

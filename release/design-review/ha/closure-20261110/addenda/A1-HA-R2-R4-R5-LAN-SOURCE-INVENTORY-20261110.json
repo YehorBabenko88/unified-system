@@ -1,0 +1,456 @@
+{
+  "schema": "unified.a1-ha-lan-source-compatibility.v1",
+  "date": "2026-11-10",
+  "package_manifest_sha256": "9af6e969ab9bf4dfd8089a34fec1c30bf88573f29e63ec342714fb1e18ca0b61",
+  "decisions_sha256": "51358f390f008f3b46504b393e7059fbd799db65344106d987210f4471d27800",
+  "sealed_package_files_verified": {
+    "A4-ACTUAL-PUBLICATION-API-INVENTORY-20261110.json": {
+      "bytes": 4242,
+      "sha256": "6da7e8d242774194e4dbc7aaadce8f736e04a258d9cffd65bd76fe844c8b08b6"
+    },
+    "A4-R2-R4-R5-SOURCE-DESIGN-HANDOFF-20261110.md": {
+      "bytes": 8184,
+      "sha256": "44fb1cbf949209c60715b50b0cfb7288fd0b06c80703a581a36e082a9a0e0348"
+    },
+    "AGENT5-A2-R2-R4-R5-ACTUAL-API-INVENTORY-20261110.json": {
+      "bytes": 4720,
+      "sha256": "dd816238621ebc71cd6f563137251ba775197e7ae4886fe0d8b145ef307074b7"
+    },
+    "AGENT5-A4-R2-R4-R5-WRITER-HOLD-DESIGN-ACK-20261110.json": {
+      "bytes": 3982,
+      "sha256": "fc0c7b6fef5584d75c7fb4641ea5ba47130e77f0e320816d027e768ec124a525"
+    },
+    "DECISION-REGISTER.json": {
+      "bytes": 4573,
+      "sha256": "eaaf05b2f5893e2a88401b4e2106fab77ccb6229c3ec4ade2eeaf3723f3a9461"
+    },
+    "DECISIONS.md": {
+      "bytes": 21654,
+      "sha256": "51358f390f008f3b46504b393e7059fbd799db65344106d987210f4471d27800"
+    },
+    "SOURCE-BASELINE.json": {
+      "bytes": 13799,
+      "sha256": "47cedfe6ef0680b07a29735f90b4ddf38647bea48dc416a444e9858d41ec0544"
+    }
+  },
+  "source_head": "1d923f6a33e1f0f16cd476f1b4e5e65ee03a8a6c",
+  "source_tree": "e5ad4acf893b99cb71ad1b55cd642fcb4946de7c",
+  "source_qualification": "PINNED_INSPECTION_INPUT_NOT_APPROVED_HA_BASE",
+  "files": {
+    "unified_system/lan_transport.py": {
+      "bytes": 33419,
+      "sha256": "f9b5348e120650af459c49131f396fb5629bf7f35d990a757ca317e87d7d1873",
+      "blob_oid": "78fcc80d9d8cdd851ab4f0337383f77c0d8582ee",
+      "public_api_source_only": {
+        "PeerRegistry": {
+          "from_document": {
+            "signature": "cls, doc",
+            "async_method": false,
+            "line": 98
+          },
+          "peer": {
+            "signature": "self, node",
+            "async_method": false,
+            "line": 136
+          },
+          "authenticate": {
+            "signature": "self, tls, expected=None, *, application_protocol=LEGACY_PROTOCOL",
+            "async_method": false,
+            "line": 140
+          }
+        },
+        "ReconnectPolicy": {
+          "__init__": {
+            "signature": "self, seed=None",
+            "async_method": false,
+            "line": 166
+          },
+          "delay": {
+            "signature": "self, attempt",
+            "async_method": false,
+            "line": 167
+          },
+          "retryable": {
+            "signature": "self, code",
+            "async_method": false,
+            "line": 170
+          }
+        },
+        "_Memory": {
+          "__init__": {
+            "signature": "self",
+            "async_method": false,
+            "line": 174
+          },
+          "take": {
+            "signature": "self, n",
+            "async_method": false,
+            "line": 175
+          },
+          "release": {
+            "signature": "self, n",
+            "async_method": false,
+            "line": 179
+          }
+        },
+        "Connection": {
+          "__init__": {
+            "signature": "self, owner, peer, nonce, channels",
+            "async_method": false,
+            "line": 245
+          },
+          "send": {
+            "signature": "self, payload, traffic_class='live', *, stream_id=None, deadline=None, cancel=None",
+            "async_method": false,
+            "line": 278
+          },
+          "send_mux_fragment": {
+            "signature": "self, payload, *, deadline=None, cancel=None",
+            "async_method": false,
+            "line": 281
+          },
+          "receive": {
+            "signature": "self, *, deadline=None, cancel=None",
+            "async_method": false,
+            "line": 412
+          },
+          "receive_mux_fragment": {
+            "signature": "self, *, deadline=None, cancel=None",
+            "async_method": false,
+            "line": 415
+          },
+          "close": {
+            "signature": "self, reason='CLOSED'",
+            "async_method": false,
+            "line": 436
+          }
+        },
+        "LanTransport": {
+          "runtime": {
+            "signature": "cls, *args, **kwargs",
+            "async_method": false,
+            "line": 454
+          },
+          "isolated": {
+            "signature": "cls, node, registry, *, client_context, server_context, budget, application_protocol=LEGACY_PROTOCOL",
+            "async_method": false,
+            "line": 458
+          },
+          "__init__": {
+            "signature": "self, node, registry, client_context, server_context, budget, *, application_protocol=LEGACY_PROTOCOL",
+            "async_method": false,
+            "line": 461
+          },
+          "listen": {
+            "signature": "self, address='127.0.0.1', port=0",
+            "async_method": false,
+            "line": 473
+          },
+          "update_registry": {
+            "signature": "self, new",
+            "async_method": false,
+            "line": 480
+          },
+          "connect": {
+            "signature": "self, peer, *, deadline=None, cancel=None",
+            "async_method": false,
+            "line": 498
+          },
+          "accept": {
+            "signature": "self, *, deadline=None",
+            "async_method": false,
+            "line": 544
+          },
+          "connect_with_retry": {
+            "signature": "self, peer, *, deadline, cancel=None, policy=None",
+            "async_method": false,
+            "line": 578
+          },
+          "close": {
+            "signature": "self",
+            "async_method": false,
+            "line": 592
+          }
+        }
+      }
+    },
+    "unified_system/lan_mux_channel.py": {
+      "bytes": 12601,
+      "sha256": "d4f56cf3dc602cf19303e0e45d0661a1aedafe01afcaa2cd29436c515fed8c23",
+      "blob_oid": "713124f47cbae115dd3117c0e0cb09c46581653c",
+      "public_api_source_only": {
+        "Reassembler": {
+          "__init__": {
+            "signature": "self, binding, nonce, memory, expected_kinds, *, clock=time.monotonic",
+            "async_method": false,
+            "line": 104
+          },
+          "close": {
+            "signature": "self, reason='MUX_CLOSED'",
+            "async_method": false,
+            "line": 112
+          },
+          "check_deadline": {
+            "signature": "self",
+            "async_method": false,
+            "line": 117
+          },
+          "push": {
+            "signature": "self, raw",
+            "async_method": false,
+            "line": 122
+          },
+          "pop": {
+            "signature": "self",
+            "async_method": false,
+            "line": 145
+          }
+        },
+        "LanMuxChannel": {
+          "runtime": {
+            "signature": "cls, *args, **kwargs",
+            "async_method": false,
+            "line": 160
+          },
+          "isolated": {
+            "signature": "cls, connection, binding, *, allowed_send_kinds, expected_receive_kinds",
+            "async_method": false,
+            "line": 164
+          },
+          "__init__": {
+            "signature": "self, connection, binding, allowed_send_kinds, expected_receive_kinds",
+            "async_method": false,
+            "line": 167
+          },
+          "close": {
+            "signature": "self",
+            "async_method": false,
+            "line": 189
+          },
+          "send": {
+            "signature": "self, kind, payload, *, deadline=None, cancel=None",
+            "async_method": false,
+            "line": 222
+          },
+          "receive": {
+            "signature": "self, *, deadline=None, cancel=None",
+            "async_method": false,
+            "line": 259
+          }
+        }
+      }
+    },
+    "unified_system/network_budget.py": {
+      "bytes": 14558,
+      "sha256": "f12d713c732b38e9d7ad656e7219b07ba6d82adeb289cceab6079b3680d73113",
+      "blob_oid": "03137f45f0f13060f73fa58a9e3d3cab59cbb341",
+      "public_api_source_only": {
+        "BandwidthPolicy": {
+          "__init__": {
+            "signature": "self, allocations, *, cluster_rate, cluster_burst, classes",
+            "async_method": false,
+            "line": 50
+          },
+          "node": {
+            "signature": "self, node",
+            "async_method": false,
+            "line": 63
+          },
+          "class_limit": {
+            "signature": "self, node, traffic_class",
+            "async_method": false,
+            "line": 66
+          }
+        },
+        "_Store": {
+          "__init__": {
+            "signature": "self, path",
+            "async_method": false,
+            "line": 72
+          },
+          "transaction": {
+            "signature": "self",
+            "async_method": false,
+            "line": 80
+          }
+        },
+        "NodeBudget": {
+          "runtime": {
+            "signature": "cls, *args, **kwargs",
+            "async_method": false,
+            "line": 113
+          },
+          "isolated": {
+            "signature": "cls, path, node, policy, *, clock=time.monotonic, clock_id='isolated'",
+            "async_method": false,
+            "line": 117
+          },
+          "__init__": {
+            "signature": "self, path, node, policy, *, clock, clock_id",
+            "async_method": false,
+            "line": 120
+          },
+          "try_take": {
+            "signature": "self, direction, peer, traffic_class, size, *, now_ms=None",
+            "async_method": false,
+            "line": 145
+          },
+          "wait_take": {
+            "signature": "self, direction, peer, traffic_class, size, *, deadline, cancel=None",
+            "async_method": false,
+            "line": 184
+          },
+          "counters": {
+            "signature": "self",
+            "async_method": false,
+            "line": 194
+          }
+        },
+        "EgressProjection": {
+          "isolated": {
+            "signature": "cls, path",
+            "async_method": false,
+            "line": 209
+          },
+          "runtime": {
+            "signature": "cls, *args, **kwargs",
+            "async_method": false,
+            "line": 213
+          },
+          "__init__": {
+            "signature": "self, path",
+            "async_method": false,
+            "line": 216
+          },
+          "acquire": {
+            "signature": "self, *args, **kwargs",
+            "async_method": false,
+            "line": 225
+          },
+          "prepare_dispatch": {
+            "signature": "self, *args, **kwargs",
+            "async_method": false,
+            "line": 228
+          },
+          "apply_verified": {
+            "signature": "self, event, *, verifier",
+            "async_method": false,
+            "line": 231
+          },
+          "snapshot": {
+            "signature": "self",
+            "async_method": false,
+            "line": 265
+          }
+        }
+      }
+    },
+    "unified_system/gateway_identity.py": {
+      "bytes": 15283,
+      "sha256": "84093865e8477ef6562100d41137922785446c9cb4e024c9ba7105593a2b36c1",
+      "blob_oid": "f81ede7ddd6973a544968922c1db20c7b056a286",
+      "public_api_source_only": {
+        "GatewayAuditSink": {
+          "__init__": {
+            "signature": "self, *, max_events=1024",
+            "async_method": false,
+            "line": 69
+          },
+          "drain": {
+            "signature": "self",
+            "async_method": false,
+            "line": 80
+          }
+        },
+        "GatewayReadCapability": {
+          "check_current": {
+            "signature": "self, *, tool_name, request_bytes, binding, owned_store",
+            "async_method": false,
+            "line": 107
+          }
+        },
+        "DisposableIdentityAuthority": {
+          "__init__": {
+            "signature": "self, *, server_ssl_context, profile, audit_sink",
+            "async_method": false,
+            "line": 119
+          },
+          "authenticate_connection": {
+            "signature": "self, server_ssl_socket",
+            "async_method": false,
+            "line": 197
+          },
+          "authorize_read": {
+            "signature": "self, context, *, tool_name, request_bytes, binding, owned_store",
+            "async_method": false,
+            "line": 222
+          },
+          "require_issued_read": {
+            "signature": "self, capability, *, tool_name, request_bytes, binding, owned_store",
+            "async_method": false,
+            "line": 250
+          },
+          "revoke_service": {
+            "signature": "self, service_id",
+            "async_method": false,
+            "line": 271
+          }
+        }
+      }
+    },
+    "unified_system/gateway_research_identity.py": {
+      "bytes": 26610,
+      "sha256": "481724cd2efca312773fa4152d1c223b46ced6529d96b2d74f452cdf57932d7f",
+      "blob_oid": "e10519767bad164534f99e42e5b04eb69d823d9c",
+      "public_api_source_only": {
+        "ResearchIdentityBroker": {
+          "__init__": {
+            "signature": "self, *, authority, generation, realm_id, profile_sha256, server_ssl_context, server_certificate_der, audit_sink",
+            "async_method": false,
+            "line": 187
+          },
+          "open_session": {
+            "signature": "self, server_ssl_socket, *, leader",
+            "async_method": true,
+            "line": 289
+          },
+          "capture_current": {
+            "signature": "self, context, *, scope, request_bytes",
+            "async_method": true,
+            "line": 346
+          },
+          "require_capture": {
+            "signature": "self, capture, *, expected_authority, scope, request_bytes",
+            "async_method": false,
+            "line": 373
+          },
+          "invalidate_context_local_only": {
+            "signature": "self, context",
+            "async_method": false,
+            "line": 382
+          },
+          "invalidate_context": {
+            "signature": "self, context",
+            "async_method": true,
+            "line": 390
+          },
+          "close": {
+            "signature": "self",
+            "async_method": true,
+            "line": 400
+          }
+        }
+      }
+    }
+  },
+  "native_peer_identity_at_root": "ABSENT_AT_INSPECTED_HEAD",
+  "qualified_ha_lan_transport_auth_peer_server_lifecycle_api": "NONE",
+  "decision": "SCOPED_DESIGN_REQUIREMENTS_ACK_ONLY_EXECUTABLE_HA_ADAPTER_BLOCKED",
+  "implementation": false,
+  "module_imports": 0,
+  "tests": 0,
+  "native_rpc": 0,
+  "physical_calls": 0,
+  "acl_changes": 0,
+  "production_go": false
+}

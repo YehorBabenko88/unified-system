@@ -1,0 +1,43 @@
+{
+  "schema": "unified.ha.transport-compatibility-addendum.v1",
+  "date": "2026-11-10",
+  "sealed_package_sha256": "9af6e969ab9bf4dfd8089a34fec1c30bf88573f29e63ec342714fb1e18ca0b61",
+  "sealed_package_unchanged": true,
+  "owner_artifacts": [
+    {
+      "path": "C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-1-direct-lan-transport/outputs/A1-HA-R2-R4-R5-LAN-COMPATIBILITY-20261110.md",
+      "sha256": "d42ca19f4b2e815729cc83b8b439c92908604f8c88e4a31c8422a560392191df",
+      "read_in_full_by_A2": true,
+      "hash_verified_by_A2": true
+    },
+    {
+      "path": "C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-1-direct-lan-transport/outputs/A1-HA-R2-R4-R5-LAN-SOURCE-INVENTORY-20261110.json",
+      "sha256": "e63d3be9e1f79f8051934c0a3ce7da34270cb36cd17dfe7d6bac41b36d9ad7f5",
+      "read_in_full_by_A2": true,
+      "hash_verified_by_A2": true
+    }
+  ],
+  "A1_source_scope": "Five primary module blobs/AST at Root1d923f6/treee5ad only, not approved HA assembly or deployment census. Seven sealed package members verified by A1.",
+  "A2_verification_scope": "Owner documents fully read and raw hashes matched; no independent A2 runtime or whole-source A1 qualification performed for this addendum.",
+  "actual_qualified_ha_lan_authenticated_peer_server_lifecycle_api": "NONE",
+  "executable_adapter_compatibility": "BLOCKED",
+  "ack_scope": "SOURCE_DESIGN_REQUIREMENTS_ONLY",
+  "constraints": [
+    "LanTransport.isolated and LanMuxChannel.isolated exist with loopback-only connection/listen; runtime factories deny. They are not an admitted HA dispatcher.",
+    "Transport machine/node authentication does not supply broker actor/quota rights, human identity, consensus authority or quorum. Current broker has no QUEUE rights.",
+    "Native peer identity module absent at inspected Root head; separate pipe observation source not imported or adopted.",
+    "Broker original capture has a 16384-byte limit; all expanded target/profile/base64/native request and response layers require exact measured codec/adapter agreement. Mux ceilings do not approve HA payload semantics or splitting an atomic native transaction.",
+    "Local send success is not native commit. Deadline/cancel/partial response/disconnect may be UNKNOWN and cannot retire a pending mutation, refund, rekey or authorize resend. Connection retry is not mutation retry.",
+    "Local transport/heartbeat deadlines do not prove UTC-at-Raft-commit. D4-TIME remains an explicit owner policy decision.",
+    "Generic byte channels do not enforce credential filtering. Root must own exact admitted server/source/endpoint and TLS/native token lifecycle; credentials must not appear in command/error/redirect payloads or be forwarded to unreviewed endpoints.",
+    "A1 supplies no actual deployment principal/token/service/ACL writer census. Root commissioning lineage and exclusive writer retirement/adoption remain open."
+  ],
+  "remaining_decisions": ["D2-BASE", "D2-LINEAGE", "D2-WRITER", "D2-RIGHTS", "D4-SCHEMAS", "D4-CUSTODY", "D4-NATIVE", "D4-TIME", "D5-INTERLOCK", "D5-ACTIVE"],
+  "gate_closure": false,
+  "implementation_permission": false,
+  "native_write_permission": false,
+  "operator_ha_approval": false,
+  "tests": 0,
+  "native_job_browser_physical_calls": 0,
+  "go_no_go": "DESIGN_PENDING_NO_GO"
+}

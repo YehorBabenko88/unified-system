@@ -1,0 +1,61 @@
+{
+  "a4_primary_modules_verified": {
+    "unified_system/storage/publication.py": {
+      "blob": "32a68e4e77e0b6dfc68948a14c086f3c48540e3a",
+      "sha256": "e9a92a2477c07ebbcf520d6e65a93237a723ed067f106bffcd605e3b4c7b4d12"
+    },
+    "unified_system/storage/publication_records.py": {
+      "blob": "b6e70b634da595d3b796c7ce59f48582b1fdcc0f",
+      "sha256": "65653bc442091bb935bd69d5873c33dc161083ceff51010f6805736ddbca8257"
+    },
+    "unified_system/storage/publication_recovery.py": {
+      "blob": "04f5166c4b4b8dd62c324cae0b45f64106696aa9",
+      "sha256": "7a25a13533f66296d8626859374ebe850860cd825c5e094e6f2b2092ba0b3285"
+    },
+    "unified_system/storage/replica_evidence.py": {
+      "blob": "55d657da86bea6187191b86e5120cf49f61719b0",
+      "sha256": "23ea42e433f70de35345030bce8fc0a8f30d7097dc022006249a7bd714af1c9d"
+    },
+    "unified_system/storage/result_publication.py": {
+      "blob": "a30b2f0290fa9ca7b3c9e39fa391d7a703559a8e",
+      "sha256": "f6c1833771546134f97c45a4c53aae7fe5c16bb3cb73fff182821f4a0be952ed"
+    }
+  },
+  "active_release_permission": false,
+  "actual_positive_publication_capture_release_scientific_read_api": "NONE",
+  "authority_rpc": 0,
+  "clarifications": [
+    "Future terminal/released state must be scoped to the obligation being discharged; CPU/RSS execution discharge cannot imply whole-job/storage/publication terminality or erase retained artifact/research/dependency protection. This is a semantic requirement, not a new enum/API."
+  ],
+  "copied_a4_originals_byte_identical": true,
+  "current_root_inspection_head": "1d923f6a33e1f0f16cd476f1b4e5e65ee03a8a6c",
+  "current_root_inspection_tree": "e5ad4acf893b99cb71ad1b55cd642fcb4946de7c",
+  "date": "2026-11-10",
+  "decision_reviews": {
+    "D2-WRITER": "SCOPED_DESIGN_REQUIREMENTS_ACK_ONLY",
+    "D4-SCHEMAS": "SCOPED_DESIGN_REQUIREMENTS_ACK_ONLY",
+    "D5-ACTIVE": "SCOPED_DESIGN_REQUIREMENTS_ACK_ONLY",
+    "D5-INTERLOCK": "SCOPED_DESIGN_REQUIREMENTS_ACK_ONLY"
+  },
+  "decisions_sha256": "51358f390f008f3b46504b393e7059fbd799db65344106d987210f4471d27800",
+  "implementation_base_approved": false,
+  "implementation_permission": false,
+  "native_write_permission": false,
+  "operator_ha_approval": false,
+  "other_component_source_inventory_independently_reverified": false,
+  "package_sha256": "9af6e969ab9bf4dfd8089a34fec1c30bf88573f29e63ec342714fb1e18ca0b61",
+  "physical_calls": 0,
+  "publication_permission": false,
+  "schema": "agent4.ha-r2-r4-r5.sealed-design-review.v1",
+  "scope": [
+    "D2-WRITER requires actual all-writer/token/ACL/custody inventory; source review does not prove office privileged writers absent.",
+    "D4-SCHEMAS requires future exact closed codec/bytes/source agreement; no offered or frozen positive publication/release wire API is inferred.",
+    "D5-INTERLOCK preserves same-serialization job/ledger/protection predicates, idempotency and UNKNOWN debt; future physical writer adoption must actually implement the interlock before activation.",
+    "D5-ACTIVE correctly defers unavailable active APIs; publication-first atomic protection/accounting transfer has no gap, CPU/RSS execution release is distinct from storage/research holds, same committed receipt current-reader rights, no cleanup grant."
+  ],
+  "sealed_members_verified": 7,
+  "source_edits": 0,
+  "status": "DESIGN_REQUIREMENTS_ACK_RUNTIME_GATES_OPEN_NO_GO",
+  "tests": 0,
+  "wire_api_freeze": false
+}

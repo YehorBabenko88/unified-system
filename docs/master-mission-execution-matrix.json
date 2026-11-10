@@ -1665,19 +1665,20 @@
     "package_preparation": {
       "fixed_export_source": "f6f3418b0aa262863322c81f30cf290ad2fb2c08",
       "descriptor_cleanup_source": "e5e9d440a5c8c44b4daaecbe6ed518c990481c74",
-      "external_package_sha256": "e551dcf3598a01ca4fd77f75145698762b76c53709adf5452eb3fa6a6103f3c6",
-      "files": 19263,
-      "bytes": 1008412748,
-      "physical_smoke": "FAIL_OR_UNCONFIRMED",
+      "external_package_sha256": "3e05c5251d0bd84e073dc0545c95c903424654690942bd77313175ae493b0a5a",
+      "files": 19300,
+      "bytes": 1008702257,
+      "physical_smoke": "SCOPED_FUNCTIONAL_SMOKE_PASS_NOT_NATIVE_RESOURCE_OR_CLUSTER_ACCEPTANCE",
       "backend": "ACTUAL_DIRECT_TARGET_PASS_LOCAL_UNATTESTED",
       "artifact_sha256": "f4997d7d26211676cd8664e53d7999f8b71f203510f3b9a275b439c403e03940",
-      "renderer": "PAGE_NAVIGATE_ERR_NAME_NOT_RESOLVED_NUMERIC_LOOPBACK_RULE_MISMATCH_CORRECTION_PENDING",
+      "renderer": "FRESH_LOCAL_UNATTESTED_BYTES_AND_DOM_MATCH_NOT_AUTHENTICATED_READ",
       "originals": [
         "release/physical-dev/ls5-20261109/failed-c/ORIGINAL-RED-INDEX.json",
         "release/physical-dev/ls5-20261109/failed-d/ORIGINAL-RED-INDEX.json",
         "release/physical-dev/ls5-20261109/failed-e/ORIGINAL-RED-INDEX.json",
         "release/physical-dev/ls5-20261109/failed-f/ORIGINAL-RED-INDEX.json"
-      ]
+      ],
+      "scoped_pass_originals": "release/physical-dev/ls5-20261109/passed-g/ORIGINAL-PASS-INDEX.json"
     },
     "open_p0_gates": [
       "EXACT_SOURCE_HOSTED_WINDOWS_UBUNTU_CI_F26",
@@ -1685,7 +1686,6 @@
       "REAL_SCHEDULER_QUOTA_ASSIGNMENT_FENCING",
       "NATIVE_COMMITTED_STORAGE_PUBLICATION",
       "AUTHENTICATED_SCIENTIFIC_TERMINAN_READ",
-      "EXACT_PACKAGE_ISOLATION_AND_LS5_SMOKE",
       "FULL_DISTRIBUTED_ACCEPTANCE"
     ],
     "unchanged_restrictions": {
@@ -1698,14 +1698,14 @@
       "trusted_release": "BLOCKED_NO_TRUSTED_PUBLISHER"
     },
     "latest_source_successor": {
-      "head": "ed4ac58066c29ba21bbe258c3e303991766baf4c",
-      "tree": "9fa20a242d408976dec84e99e53bdf3d4f7969bb",
+      "head": "1d923f6a33e1f0f16cd476f1b4e5e65ee03a8a6c",
+      "tree": "e5ad4acf893b99cb71ad1b55cd642fcb4946de7c",
       "local_pure_tests": 106,
       "skips": 0,
-      "raw_files_pre_post": 1711,
+      "raw_files_pre_post": 1737,
       "not_hosted": true,
-      "report": "release/physical-dev/ls5-20261109/SOURCEED4-LOCAL-QUALIFICATION.json",
-      "runtime_retest": "ACTUAL_BACKEND_PASS_FULL_SMOKE_NAVIGATION_FAIL_NO_WATCHDOG",
+      "report": "release/physical-dev/ls5-20261109/SOURCE1D9-LOCAL-QUALIFICATION.json",
+      "runtime_retest": "SCOPED_FUNCTIONAL_SMOKE_PASS_NOT_NATIVE_RESOURCE_OR_CLUSTER_ACCEPTANCE",
       "physical_cluster": "BLOCKED_NO_GO"
     },
     "scoped_hosted_success": {
@@ -1725,32 +1725,62 @@
       "report_sha256": "07b7f3edabe4aebcee5be1d5738e413a69fcc0b6016c53c64e06f1bf192d8ecb"
     },
     "latest_independent_review": {
-      "head": "b398fa84f26e2cac46b070ae3cd402da0e9bc36a",
-      "path": "docs/audits/agent8-20261106/phase150/report.md",
-      "sha256": "11170bae93139e269e5bb41749f323d93c9f5e98da260dd176a27880dc68c982",
-      "scope": "ROOT_ORIGINAL_SMALL_RESULT_REVIEW_NOT_A8_RUNTIME_EXECUTION"
+      "head": "ca8826e3165f8e6c2e82b174d8e9bd20410df241",
+      "path": "docs/audits/agent8-20261106/phase158/report.md",
+      "sha256": "61404a627f4a13d73a30be9dfa9c4b78451eaf7f3249272c0ecdb429b1426090",
+      "scope": "ROOT_ORIGINAL_G_SCOPED_FUNCTIONAL_PILOT_PASS_NOT_A8_RUNTIME_OR_FULL_SYSTEM",
+      "open_p1": 7,
+      "open_p2": 8
     },
     "latest_execution": {
-      "source_head": "ed4ac58066c29ba21bbe258c3e303991766baf4c",
-      "full_result": "FAIL_OR_UNCONFIRMED",
+      "source_head": "1d923f6a33e1f0f16cd476f1b4e5e65ee03a8a6c",
+      "full_result": "SCOPED_FUNCTIONAL_SMOKE_PASS_NOT_NATIVE_RESOURCE_OR_CLUSTER_ACCEPTANCE",
+      "full_system_acceptance": false,
       "backend": "ACTUAL_DIRECT_TARGET_BYTES_MATCH",
       "primary_exit_codes": [
         0,
-        1
+        0
       ],
       "own_job_active": 0,
-      "work_elapsed_ns": 13319304200,
-      "cleanup_elapsed_ns": 1955100,
-      "family_elapsed_ns": 13321259300,
+      "work_elapsed_ns": 17863625700,
+      "cleanup_elapsed_ns": 2268100,
+      "family_elapsed_ns": 17865893800,
       "package_unchanged": true,
-      "report": "docs/physical-dev/LS5-PILOT-ED4-RESULT.md",
+      "report": "docs/physical-dev/LS5-PILOT-1D9-RESULT.md",
       "retrospective_office_network_root_cause": "NOT_ESTABLISHED"
     },
     "latest_packet_review": {
-      "head": "bea56d829fd1d6886e8a27ca4dc05f484d7bcb5d",
-      "path": "docs/audits/agent8-20261106/phase154/report.md",
-      "sha256": "256fbde966ac2c2ac4380a30fd51620880a9112c26b5d1cfb8cf64779659133d",
+      "head": "a9cb364ce837628d0ac10d90a277b8f0e3ba07db",
+      "path": "docs/audits/agent8-20261106/phase157/report.md",
+      "sha256": "5ba882056409d658c323732463b459677b48c72506a2fa5dada819e9a9ece7c6",
       "scope": "FILE_SOURCE_INVOCATION_ACK_NOT_EXECUTION_AUTHORITY"
+    },
+    "updated_on": "2026-11-10",
+    "closed_scoped_gates": [
+      "ONE_LS5_SYNTHETIC_EXISTING_DIRECT_TARGET_TO_FRESH_LOCAL_RENDER_SOURCE1D9_PACKAGE3E05_NOT_FULL_SYSTEM"
+    ],
+    "hosted_ed4_partial_mandatory": {
+      "source_head": "ed4ac58066c29ba21bbe258c3e303991766baf4c",
+      "windows_jobs": [
+        129517289049,
+        129517241158
+      ],
+      "windows_status": "SUCCESS",
+      "tests_per_job": {
+        "gate": 7,
+        "composed": 16,
+        "skipped": 0
+      },
+      "remaining": "UBUNTU_AND_PURE_SOURCE_QUEUED_NO_RUNNER_NO_STEPS",
+      "report": "release/physical-dev/ls5-20261109/hosted-ed4-partial-mandatory/CI-REFRESH-REPORT.json",
+      "full_matrix": false
+    },
+    "ha_closure_design": {
+      "seal_sha256": "9af6e969ab9bf4dfd8089a34fec1c30bf88573f29e63ec342714fb1e18ca0b61",
+      "path": "release/design-review/ha/closure-20261110/ROOT-REVIEW.md",
+      "status": "DESIGN_ONLY_NO_GO_NO_IMPLEMENTATION_ASSEMBLY_APPROVED",
+      "time_policy": "PRESERVE_STRICT_OPTION1_LOGICAL_MUTATIONS_DISABLED",
+      "operator_ha_approval": false
     }
   }
 }
