@@ -2,9 +2,9 @@ name: Preparation integrity exact source
 on:
   push:
     branches: [main]
-    paths: ['scheduler_components/**', 'tests/test_agent5_scheduler_components.py', 'tests/test_preparation_integrity.py', 'tests/test_preparation_qualification.py', 'tools/ci/qualify_preparation_integrity.py', 'docs/scheduler/component-test-inventory-v2.json', 'docs/ci/preparation-integrity-inventory-v1.json', 'docs/ci/requirements-unittest.lock', '.github/workflows/preparation-integrity.yml']
+    paths: ['scheduler_components/**', 'tests/test_agent5_scheduler_components.py', 'tests/test_preparation_integrity.py', 'tests/test_preparation_qualification.py', 'tests/preparation_child_observer.py', 'tests/test_preparation_child_observer.py', 'tests/test_preparation_observer_admission.py', 'tests/fixtures/preparation_observer_admission.py', 'tests/fixtures/observer_discovery_binding.py', 'docs/ci/preparation-child-observer-review1.md', 'tools/ci/qualify_preparation_integrity.py', 'docs/scheduler/component-test-inventory-v2.json', 'docs/ci/preparation-integrity-inventory-v1.json', 'docs/ci/requirements-unittest.lock', '.github/workflows/preparation-integrity.yml']
   pull_request:
-    paths: ['scheduler_components/**', 'tests/test_agent5_scheduler_components.py', 'tests/test_preparation_integrity.py', 'tests/test_preparation_qualification.py', 'tools/ci/qualify_preparation_integrity.py', 'docs/scheduler/component-test-inventory-v2.json', 'docs/ci/preparation-integrity-inventory-v1.json', 'docs/ci/requirements-unittest.lock', '.github/workflows/preparation-integrity.yml']
+    paths: ['scheduler_components/**', 'tests/test_agent5_scheduler_components.py', 'tests/test_preparation_integrity.py', 'tests/test_preparation_qualification.py', 'tests/preparation_child_observer.py', 'tests/test_preparation_child_observer.py', 'tests/test_preparation_observer_admission.py', 'tests/fixtures/preparation_observer_admission.py', 'tests/fixtures/observer_discovery_binding.py', 'docs/ci/preparation-child-observer-review1.md', 'tools/ci/qualify_preparation_integrity.py', 'docs/scheduler/component-test-inventory-v2.json', 'docs/ci/preparation-integrity-inventory-v1.json', 'docs/ci/requirements-unittest.lock', '.github/workflows/preparation-integrity.yml']
 permissions:
   contents: read
 jobs:
@@ -147,6 +147,75 @@ jobs:
           sys.argv=[str(path),'--expected-head',head,'--evidence',str(base/'evidence'),'--zoneinfo',str(base/'dependency/tzdata/zoneinfo'),'--tzdata-wheel',str(base/'wheels/tzdata-2025.2-py2.py3-none-any.whl')]
           exec(compile(committed,str(path),'exec'),dict(__name__='__main__',__file__=str(path)))
           PY
+      - name: Report separate discovery1 admission3 observer12 evidence without summing cohorts
+        if: always()
+        shell: python -I -S -B {0}
+        run: |
+          import json, os, pathlib
+          base=os.environ.get('QUALIFICATION_BASE')
+          facade_sha=None
+          primary_path=pathlib.Path(base)/'evidence/receipt.json' if base else None
+          if primary_path is not None and primary_path.is_file():
+              with primary_path.open('rb') as evidence:primary_raw=evidence.read(8*1024*1024+1)
+              if len(primary_raw)>8*1024*1024:raise ValueError('primary receipt evidence bound')
+              primary=json.loads(primary_raw)
+              before=primary.get('source_before',{})
+              if before.get('head')==os.environ['EXPECTED_HEAD']:
+                  facade_sha=before.get('files',{}).get('tests/test_preparation_observer_admission.py')
+          discovery_ids=['test_observer_discovery_binding.ObserverDiscoveryBindingControl.'
+                         'test_actual_module_discovery_runs_three_bound_successes']
+          observer_ids=['test_preparation_child_observer.PreparationChildObserverControls.'+name for name in (
+              'test_buffer_hash_is_only_bounded_prefix_not_full_output',
+              'test_event_budget_exhaustion_does_not_sample_child_again',
+              'test_exit23_with_live_stdout_reader_is_recorded_not_reinterpreted',
+              'test_export_is_a_detached_bounded_copy_with_no_child_effects',
+              'test_failed_constructor_and_two_observed_communicate_calls_do_not_do_cleanup',
+              'test_fixed_limits_and_constructor_registration_are_observation_only',
+              'test_invalid_timing_or_unknown_token_never_polls_or_mutates_history',
+              'test_missing_or_empty_cpython_buffers_and_threads_are_explicit',
+              'test_poll_or_thread_error_is_unknown_without_exception_text',
+              'test_second_constructor_is_declined_without_observing_another_child',
+              'test_timeout_samples_poll_then_threads_without_pipe_or_cleanup_calls',
+              'test_unsupported_buffers_are_not_coerced_hashed_or_iterated')]
+          admission_ids=['test_preparation_observer_admission.PreparationObserverAdmissionControls.'+name for name in (
+              'test_actual_observer_controls_accepts_normal_twelve_successes',
+              'test_actual_observer_controls_rejects_expected_failure',
+              'test_actual_observer_controls_rejects_unexpected_success')]
+          fields={'schema','status','ids','started_ids','succeeded_ids','tests','skips','failures','errors','expected_failures','unexpected_successes','elapsed_ns'}
+          counts=('tests','skips','failures','errors','expected_failures','unexpected_successes')
+          inner_fields={'stage','fixture_sha256','ids','started_ids','succeeded_ids','tests','failures',
+                        'errors','error_details','skips','expected_failures','unexpected_successes','was_successful'}
+          with open(os.environ['GITHUB_STEP_SUMMARY'],'a',encoding='utf-8') as stream:
+              for label,name,schema,expected in (
+                  ('discovery1','observer-discovery-controls.json','preparation.observer-discovery-controls.v1',discovery_ids),
+                  ('admission3','observer-admission-controls.json','preparation.observer-admission-controls.v1',admission_ids),
+                  ('observer12','observer-controls.json','preparation.observer-controls.v2',observer_ids),
+                  ):
+                  path=pathlib.Path(base)/'evidence'/name if base else None
+                  status='NOT_RUN'
+                  if path is not None and path.is_file():
+                      with path.open('rb') as evidence:raw=evidence.read(16385)
+                      if len(raw)>16384:raise ValueError('control evidence bound')
+                      record=json.loads(raw)
+                      good=(type(record) is dict and set(record)==(fields|{'inner'} if label=='discovery1' else fields)
+                          and record['schema']==schema and record['status']=='QUALIFIED'
+                          and all(type(record[key]) is int for key in counts)
+                          and tuple(record[key] for key in counts)==(len(expected),0,0,0,0,0)
+                          and record['ids']==record['started_ids']==record['succeeded_ids']==expected
+                          and type(record['elapsed_ns']) is int and record['elapsed_ns']>=0)
+                      if good and label=='discovery1':
+                          inner=record['inner']
+                          good=(type(inner) is dict and set(inner)==inner_fields
+                              and type(facade_sha) is str and len(facade_sha)==64
+                              and all(char in '0123456789abcdef' for char in facade_sha)
+                              and inner['stage']=='ACTUAL_MODULE_DISCOVERY_EXECUTED'
+                              and inner['fixture_sha256']==facade_sha
+                              and inner['ids']==inner['started_ids']==inner['succeeded_ids']==admission_ids
+                              and all(type(inner[key]) is int for key in counts)
+                              and tuple(inner[key] for key in counts)==(3,0,0,0,0,0)
+                              and inner['error_details']==[] and inner['was_successful'] is True)
+                      status='EXECUTED_EXACT_IDS_OK' if good else 'NOT_QUALIFIED'
+                  stream.write('Separate in-process '+label+' controls: '+status+'; not mandatory36, not native/F42 RCA.\n')
       - name: Preserve qualification evidence
         id: evidence
         if: always()
