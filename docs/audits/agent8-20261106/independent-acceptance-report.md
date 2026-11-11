@@ -3889,3 +3889,6 @@ Phase228 originalsame28GREEN verified28PASS/0fail/error/skip;6negativecasesnowre
 
 
 Phase229 privateWindowsmode comparatoree561 SOURCEACK/same16 modeledPASS only. OriginalRED14PASS2failedMETHODS4subtestassertions/originalUNKNOWN preserved; GREENreceipt30fc…bbe745… output_bytes0 conflictsraw2606: OUTERNOT_QUALIFIED. Rootsidecarattributionretained/notA8drivercauseproof. No main/PS/prereq/native/retry/resealpermission.8P1/8P2/F26F42open/NO-GO/physicalTailscaleBLOCKED. See phase229/report.md.
+
+
+Phase230 addendum independentlyconfirms historicalf491 outer checked_file EOFloop no cumulativecap/deadline and clockresetafterPopen/livepoll-only90s/nofinalelapsedrefusal. Normalatomic10PASS retainedscope, notgeneralallfault/budgetproof. F46/F47closures retain documentednarrow scope; no oldretry/evidence rewrite/newdriverblanketACK.8P1/8P2/F26F42open/NO-GO/physicalTailscaleBLOCKED. See phase230/report.md.
