@@ -1,5 +1,11 @@
 """Actual-helper/source controls. SOURCE PREPARED; execution requires allocation."""
 import ast
+import asyncio
+import contextlib
+import io
+import stat
+from types import SimpleNamespace
+from unittest.mock import patch
 import importlib.util
 import json
 from pathlib import Path
@@ -129,6 +135,186 @@ class LockedNativeQualificationControls(unittest.TestCase):
             self.assertEqual(len(ids), count)
             self.assertEqual(len(set(ids)), count)
         self.assertEqual(hashlib.sha256((ROOT / 'tests/test_research_identity_atomic_snapshot_unit.py').read_bytes()).hexdigest(), 'e9dfdc83b9dd10b0166bda588c0f2a328c0e1ff2142f9657565b3762d62360da')
+
+
+class MockQualificationInertFaultControls(unittest.TestCase):
+    """Call actual functions with inert dependencies; never real children/Grid."""
+
+    def test_post_popen_faults_still_retire_handle_and_attempt_failure_receipt(self):
+        stages = ('lock', 'event', 'thread_constructor', 'first_start', 'second_start',
+                  'poll', 'kill', 'clock', 'join')
+        for stage in stages:
+            with self.subTest(stage=stage):
+                helper = actual('run_atomic_read_mock_qualification')
+                calls = []; receipts = []; fired = set(); readers = []
+                def fault(name):
+                    if name == stage and name not in fired:
+                        fired.add(name)
+                        raise RuntimeError('INERT_INJECTED_' + name)
+                class Pipe:
+                    def close(self): calls.append('pipe_close')
+                class Process:
+                    stdout = Pipe(); stderr = Pipe(); returncode = None
+                    def poll(self):
+                        calls.append('poll'); fault('poll')
+                        # After an injected failure the inert handle remains live
+                        # until actual cleanup kills it; no wait-only fake retirement.
+                        if fired and self.returncode is None: return None
+                        # kill-stage forces the actual budget branch once.
+                        if stage == 'kill' and 'kill' not in fired: return None
+                        self.returncode = 0; return 0
+                    def kill(self):
+                        calls.append('kill'); fault('kill'); self.returncode = -9
+                    def wait(self, timeout=None):
+                        calls.append(('wait', timeout))
+                        if fired and self.returncode is None:
+                            raise helper.subprocess.TimeoutExpired('INERT_HANDLE_STILL_LIVE', timeout)
+                        self.returncode = 0; return 0
+                process = Process()
+                class Event:
+                    def is_set(self): return False
+                    def set(self): pass
+                def event(): fault('event'); return Event()
+                def lock(): fault('lock'); return contextlib.nullcontext()
+                class Reader:
+                    def __init__(self, **kwargs):
+                        # Deliberately NEVER call target: no thread, pipe read or file.
+                        fault('thread_constructor'); self.index = len(readers); self.started = False; readers.append(self)
+                    def start(self):
+                        fault('first_start' if self.index == 0 else 'second_start'); self.started = True
+                    def join(self, timeout=None): calls.append(('join', self.index, timeout)); fault('join')
+                    def is_alive(self): return False
+                ticks = [0]
+                def clock():
+                    ticks[0] += 1
+                    if ticks[0] > 1: fault('clock')
+                    return 91 if stage == 'kill' and ticks[0] > 1 else 0
+                fake_threads = SimpleNamespace(Lock=lock, Event=event, Thread=Reader)
+                fake_time = SimpleNamespace(monotonic=clock, sleep=lambda _: None)
+                failure = None; returned = None
+                with patch.object(helper.subprocess, 'Popen', return_value=process) as launch, \
+                     patch.object(helper, 'threading', fake_threads), \
+                     patch.object(helper, 'time', fake_time), \
+                     patch.object(helper, 'write_json', side_effect=lambda path, value, **kw: receipts.append(value)):
+                    try: returned = helper.supervise(['INERT_NOT_EXECUTED'], Path('INERT_NO_FILE'))
+                    except BaseException as error: failure = type(error).__name__
+                self.assertLessEqual(launch.call_count, 1)
+                self.assertIn(stage, fired, 'control must reach its injected fault')
+                if launch.call_count == 0:
+                    # Moving fallible setup before launch is valid containment.
+                    self.assertEqual(calls, [])
+                    self.assertIsNotNone(failure)
+                    continue
+                self.assertTrue(any(isinstance(c, tuple) and c[0] == 'wait' for c in calls),
+                                'held handle must receive bounded wait even after setup/poll/kill faults')
+                self.assertTrue(receipts, 'failure evidence must be attempted independently')
+                self.assertIs(receipts[-1].get('passed'), False)
+                if stage not in ('clock', 'join'):
+                    self.assertIn('kill', calls, 'inert live handle must receive kill before wait')
+                for reader in readers:
+                    if reader.started:
+                        self.assertTrue(any(isinstance(c, tuple) and c[:2] == ('join', reader.index) for c in calls),
+                                        'each successfully started reader needs an independent join attempt')
+                self.assertNotEqual(returned, True)
+                self.assertTrue(failure is not None or returned is False)
+
+    def test_actual_child_entry_executes_checked_buffer_not_reopening_loader(self):
+        helper = actual('run_atomic_read_mock_qualification')
+        entry = b"MARKER = 'CHECKED_BUFFER'\n"
+        manifest = dict(files={}, helper={}, cache='INERT_CACHE', unified='INERT_UNIFIED',
+                        grid='INERT_GRID', deps='INERT_DEPS', stdlib_paths=[], output='INERT_OUTPUT')
+        manifest['files']['INERT_UNIFIED/tests/test_research_identity_atomic_snapshot_unit.py'] = dict(bytes=len(entry), sha256=helper.digest(entry))
+        raw_manifest = json.dumps(manifest).encode()
+        unchecked = []; receipts = []
+        class InertPath:
+            def __init__(self, value): self.value = str(value)
+            def __truediv__(self, part): return InertPath(self.value + '/' + part)
+            def __str__(self): return self.value
+            def absolute(self): return self
+            def iterdir(self): return iter(())
+        fake_sys = SimpleNamespace(flags=SimpleNamespace(isolated=True, no_site=True),
+                                   dont_write_bytecode=True, pycache_prefix='INERT_CACHE', path=[],
+                                   meta_path=[], modules={}, addaudithook=lambda hook: None,
+                                   stderr=io.StringIO())
+        class ReopeningLoader:
+            def create_module(self, spec): return None
+            def exec_module(self, module):
+                unchecked.append('REOPENED_UNCHECKED_ENTRY')
+                module.MARKER = 'UNCHECKED_LOADER'
+        spec = importlib.util.spec_from_loader('atomic_read_mock', ReopeningLoader(), origin='INERT_ENTRY')
+        def raw(path, **kwargs): return raw_manifest if str(path) == 'INERT_MANIFEST' else entry
+        expected_sha = helper.digest(entry)
+        with patch.object(helper, 'TEST_SHA', expected_sha), \
+             patch.object(helper, 'sys', fake_sys), \
+             patch.object(helper, 'Path', InertPath), \
+             patch.object(helper, 'read_raw', side_effect=raw), \
+             patch.object(helper, 'check_all'), patch.object(helper, 'exact_owned_tree'), \
+             patch.object(helper, 'file_fact', return_value={}), \
+             patch.object(helper, 'ordinary'), \
+             patch.object(helper.importlib.util, 'spec_from_file_location', return_value=spec), \
+             patch.object(helper, 'write_json', side_effect=lambda path, value, **kw: receipts.append(value)):
+            # This is the ACTUAL child function; its I/O/audit/process dependencies
+            # are inert. No ControlledBackend class exists in input bytes, hence
+            # no test, native fixture, crypto constructor or Grid import can run.
+            # file_fact has one helper binding call and one entry hash call.
+            with patch.object(helper, 'file_fact', side_effect=[{}, {'sha256': expected_sha}]):
+                try: helper.child(InertPath('INERT_MANIFEST'), helper.digest(raw_manifest))
+                except BaseException:
+                    # Missing class or final-origin observation may fail; the
+                    # security assertion is which exact entry bytes were used.
+                    pass
+        self.assertEqual(unchecked, [], 'explicit entry must not delegate reopening exec_module')
+        self.assertIn('atomic_read_mock', fake_sys.modules)
+        self.assertEqual(fake_sys.modules['atomic_read_mock'].MARKER, 'CHECKED_BUFFER')
+
+    def test_actual_ordinary_rejects_unsafe_ancestor_before_leaf_lookup(self):
+        helper = actual('run_atomic_read_mock_qualification')
+        observations = []
+        class InertPath:
+            def __init__(self, label, mode, parents=()): self.label=label; self.mode=mode; self.parents=parents
+            def absolute(self): return self
+            def lstat(self):
+                observations.append(self.label)
+                return SimpleNamespace(st_mode=self.mode, st_reparse_tag=0, st_file_attributes=0, st_nlink=1)
+            def stat(self): return self.lstat()
+            def is_file(self): return stat.S_ISREG(self.mode)
+            def is_dir(self): return stat.S_ISDIR(self.mode)
+        root = InertPath('root', stat.S_IFDIR)
+        unsafe = InertPath('unsafe', stat.S_IFLNK, (root,))
+        leaf = InertPath('leaf', stat.S_IFREG, (unsafe, root))
+        with patch.object(helper, 'Path', side_effect=lambda value: value):
+            with self.assertRaises(RuntimeError): helper.ordinary(leaf)
+        self.assertTrue(observations)
+        self.assertEqual(observations[0], 'root')
+        self.assertIn('unsafe', observations)
+        self.assertNotIn('leaf', observations)
+
+    def test_actual_locked_output_checks_root_before_nearest_unsafe_ancestor(self):
+        helper = actual('locked_native_qualification')
+        observations = []; writes = []
+        class InertPath:
+            def __init__(self, label, unsafe=False, parents=()): self.label=label; self.unsafe=unsafe; self.parents=parents
+            def absolute(self): return self
+            def lstat(self):
+                observations.append(self.label)
+                return SimpleNamespace(st_mode=stat.S_IFLNK if self.unsafe else stat.S_IFDIR,
+                                       st_reparse_tag=0, st_file_attributes=0)
+            def stat(self): return self.lstat()
+            def is_symlink(self): return self.unsafe
+            def is_dir(self): return not self.unsafe
+            def mkdir(self, **kwargs): writes.append('mkdir'); raise AssertionError('must not write')
+        root=InertPath('root'); unsafe=InertPath('unsafe', True, (root,)); leaf=InertPath('leaf', parents=(unsafe,root))
+        real_path = Path
+        def path(value): return real_path(value) if str(value) == helper.__file__ else leaf
+        with patch.object(helper, 'Path', side_effect=path), \
+             patch.object(helper.sys, 'stdout', io.StringIO()), patch.object(helper.sys, 'stderr', io.StringIO()):
+            code = helper.main(['--output', 'INERT_OUTPUT', '--expected-tests', '22'])
+        self.assertEqual(code, 78)
+        self.assertTrue(observations)
+        self.assertEqual(observations[0], 'root')
+        self.assertIn('unsafe', observations)
+        self.assertNotIn('leaf', observations)
+        self.assertEqual(writes, [])
 
 
 if __name__ == '__main__':
