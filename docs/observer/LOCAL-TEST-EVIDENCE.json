@@ -1,0 +1,85 @@
+{
+  "schema": "observer.precommit-test-observation.v1",
+  "evidence_type": "Local execution tool transcript observation, not raw descriptor evidence",
+  "latest_tests": 68,
+  "failures": 0,
+  "errors": 0,
+  "skips": 0,
+  "seconds": 8.482,
+  "latest_tool_chunk": "2429c1",
+  "red_observations": [
+    {
+      "chunk": "e3b808",
+      "scope": "Missing feature assertions before implementation",
+      "failures": 20
+    },
+    {
+      "chunk": "678dc6",
+      "scope": "Timestamp, privacy, HTTP and CLI boundaries",
+      "assertion_failures_including_subtests": 11
+    },
+    {
+      "chunk": "9ad9fe",
+      "scope": "Foreign database preconnect, recurring transition and retention",
+      "failures": 3,
+      "fixture_cleanup_error": 1
+    },
+    {
+      "chunk": "241e4c",
+      "scope": "Mock transport label and failed server thread startup",
+      "failures": 2
+    },
+    {
+      "chunk": "8d2e15",
+      "scope": "CLI secret echo rejection",
+      "failures": 1
+    },
+    {
+      "chunk": "d5445b",
+      "scope": "Bounded CI history and safe polling stop",
+      "failures": 3
+    },
+    {
+      "chunk": "5c227b",
+      "scope": "Mission progress export and sequence mismatch",
+      "failures": 2
+    }
+  ],
+  "fixture_correction": "Foreign SQLite fixture now explicitly closes its connection; assertion requirements unchanged",
+  "live_sources": "NOT_POLLED",
+  "listener": "NOT_STARTED",
+  "actual_telegram": "NOT_SENT",
+  "physical_acceptance": "NOT_RUN",
+  "native_authority": "NOT_ADMITTED",
+  "hosted_ci": "NOT_RUN",
+  "status": "SCOPED_OFFLINE_ONLY",
+  "github_budget_followup": {
+    "result": "51 PASS",
+    "seconds": 9.223,
+    "tool_chunk": "5cf2d9",
+    "scope": "MOCK_NETWORK_OFFLINE"
+  },
+  "followup": {
+    "scope": "LOCAL_OFFLINE_NOT_NATIVE_OR_LIVE_JOURNAL_ADMISSION",
+    "tests": 67,
+    "seconds": 11.074,
+    "tool_chunk": "11882b",
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "a8_p2_source_episodes": "THREE_REGRESSIONS_LOCAL_PASS_EXACT_PENDING",
+    "copy_adapter": "NINE_TEMP_FIXTURE_TESTS_LOCAL_PASS_LIVE_READ_NOT_RUN",
+    "dashboard_links": "FOUR_SAFE_LINK_TESTS_LOCAL_PASS"
+  },
+  "shallow_fixture_followup": {
+    "tests": 68,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "seconds": 12.062,
+    "tool_chunk": "b99807",
+    "scope": "LOCAL_OFFLINE_MOCKED_HISTORICAL_GIT_ABSENCE_NOT_ACTUAL_HOSTED_SHALLOW_CLONE",
+    "red_tool": "fd9108",
+    "production_reader_unchanged": true
+  }
+}
