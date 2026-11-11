@@ -1,0 +1,137 @@
+{
+  "scope": "ORIGINAL_HOSTED_UNIT_EVIDENCE_DATA_VERIFICATION_NOT_TEST_RERUN",
+  "run": 42929428929,
+  "job": 130224125868,
+  "attempt": 1,
+  "artifact_zip_sha256": "8f88277e6da04765bb8ad6f68b506100dc4f4f0ae6bdd23f7f95e5d038c9fe88",
+  "files": {
+    "bootstrap.json": {
+      "sha256": "5de2ca8e68973b54755522fe44e10104897b17b9f9adc335a9d3d4d15649aec0",
+      "bytes": 269993
+    },
+    "controls28-claim.json": {
+      "sha256": "f9c2db1652355f90ed40555ae5870ff6c9bf22f53b32c32c51160ae6c826cfde",
+      "bytes": 73
+    },
+    "controls28.json": {
+      "sha256": "d7ae3b39e079d6c550a5063d072533bc2857887e3ba54f1da8bc9164750a1492",
+      "bytes": 283878
+    },
+    "candidate.json": {
+      "sha256": "795f2137a488c5cb791ec09d19b09a55ce96d848c119c60d9ed4f71a2d10cacd",
+      "bytes": 477901
+    },
+    "controls28.stderr.log": {
+      "sha256": "3523f57e132e83598d2c40ab0ad725f503f41e2f4d2fa008f8588bf04a3e6224",
+      "bytes": 4150
+    },
+    "controls28.stdout.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "pip-install.json": {
+      "sha256": "967906d4d7a629889a9c2c41e4f94dbe8f2bfa6fc505b26c9659c1a6b25512d2",
+      "bytes": 46000
+    },
+    "pytest.log": {
+      "sha256": "3f4cbda774f5b0e308c972b482ea268a94dc1047fd990704b054642422b4681f",
+      "bytes": 101
+    },
+    "pytest.xml": {
+      "sha256": "450238c736d1d849b20eb321fea5b827116df28959be8ada6ec115ffe49c462b",
+      "bytes": 7810
+    },
+    "run-claim.json": {
+      "sha256": "41233a75033fdce3dfd2b3052555a02a5e54f7212f4aaf220e2fb65be38cdd70",
+      "bytes": 45
+    },
+    "terminal.json": {
+      "sha256": "9b51c252a202b22bbb58395f0c11e4a840bb7eb1ead8977bd9ba2c0ec43ad026",
+      "bytes": 1019
+    }
+  },
+  "tests": 47,
+  "phases": 141,
+  "skips": 0,
+  "modeled_controls_separate": 28,
+  "child_exits": [
+    73,
+    74,
+    74
+  ],
+  "source_files": {
+    "tool": 815,
+    "target": 809
+  },
+  "source_post_matches_local_raw_manifests": true,
+  "terminal": {
+    "artifact_upload": "NOT_OBSERVED_BY_THIS_PROCESS",
+    "candidate_sha256": "795f2137a488c5cb791ec09d19b09a55ce96d848c119c60d9ed4f71a2d10cacd",
+    "classification": "HOSTED_UNIT_QUALIFIED",
+    "finalization": "SEPARATE_READBACK_OF_CLOSED_CANDIDATE",
+    "job_completion": "NOT_OBSERVED_BY_THIS_PROCESS",
+    "junit_sha256": "450238c736d1d849b20eb321fea5b827116df28959be8ada6ec115ffe49c462b",
+    "modeled_controls": {
+      "receipt_sha256": "d7ae3b39e079d6c550a5063d072533bc2857887e3ba54f1da8bc9164750a1492",
+      "separate_from_staging_cases": true,
+      "skips": 0,
+      "tests": 28
+    },
+    "native_admission": false,
+    "phases": 141,
+    "physical_admission": false,
+    "schema": "agent7.hosted.sqlite47.terminal.v2",
+    "skips": 0,
+    "test_head": "de6620eb5577e97db1af11b6807e22a9b61d1090",
+    "test_tree": "01e9e95f593e74d0b0a27afca771f37034aef977",
+    "tests": 47,
+    "tool_head": "889d787ef053dca1eb0244da10f47a4a4a2cc982",
+    "tool_tree": "504f1b2cffe6bbb69babf21cef8171995a459322",
+    "vm_teardown": "NOT_INDEPENDENTLY_OBSERVED"
+  },
+  "import_origins": {
+    "strattester": "strattester/__init__.py",
+    "strattester.persistence": "strattester/persistence/__init__.py",
+    "strattester.persistence.result_store": "strattester/persistence/result_store.py",
+    "strattester.research": "strattester/research/__init__.py",
+    "strattester.research.result_persistence": "strattester/research/result_persistence.py",
+    "tests.persistence.test_result_store": "tests/persistence/test_result_store.py",
+    "tests.persistence.test_result_store_recovery": "tests/persistence/test_result_store_recovery.py",
+    "tests.research.gateway_artifact_persistence.test_local_stage": "tests/research/gateway_artifact_persistence/test_local_stage.py",
+    "tests.research.gateway_artifact_persistence.test_projection_recovery_without_issuer": "tests/research/gateway_artifact_persistence/test_projection_recovery_without_issuer.py"
+  },
+  "wheels": {
+    "colorama": {
+      "filename": "colorama-0.4.6-py2.py3-none-any.whl",
+      "sha256": "4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6",
+      "version": "0.4.6"
+    },
+    "iniconfig": {
+      "filename": "iniconfig-2.3.1-py3-none-any.whl",
+      "sha256": "9121e2c1fdb355232495be3194c8dfe87ccc2d5dee45947b78e68f499790d7a7",
+      "version": "2.3.1"
+    },
+    "packaging": {
+      "filename": "packaging-26.3-py3-none-any.whl",
+      "sha256": "d7193f7c8e4e93f444fde0262bf90af30e16fa0ad0ad44cb553c87339b23cd1c",
+      "version": "26.3"
+    },
+    "pluggy": {
+      "filename": "pluggy-1.7.0-py3-none-any.whl",
+      "sha256": "7dd7b0d8832ba3cb632c306926ded123429211b83641b35dc5c41ad2d34f9bec",
+      "version": "1.7.0"
+    },
+    "pygments": {
+      "filename": "pygments-2.21.0-py3-none-any.whl",
+      "sha256": "2363c69b61c4a97c838da3b130dcd6468f4848992b21a82f2a63ec34377137d9",
+      "version": "2.21.0"
+    },
+    "pytest": {
+      "filename": "pytest-9.2.0-py3-none-any.whl",
+      "sha256": "07acdcf88ec174f907dc01af70bf52d49b014bbab03faeeade31c96b18c2e588",
+      "version": "9.2.0"
+    }
+  },
+  "full_cohort": "NOT_QUALIFIED; OTHER_RUNS_PENDING_OR_RED",
+  "overall": "NO-GO"
+}
