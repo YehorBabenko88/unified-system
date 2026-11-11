@@ -24,6 +24,82 @@ LEDGER_SHA = os.environ['SOURCE_LEDGER_SHA256']
 PS = Path('C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe')
 PS_SHA = None
 DRIVER = BASE / 'child-driver.py'
+ORIGIN_SOURCE = r'''
+def module_origins(runtime, roles, read_file, extra=None):
+    """Observe/admit actual module objects against this run's selected raw map.
+
+    This is origin consistency, not interpreter/loaded-DLL publisher attestation.
+    read_file is the fixed caller's held-descriptor hash guard (inert seam only
+    for separately allocated controls), never a process or authority callback.
+    """
+    def need(value):
+        if not value:
+            raise AssertionError('MODULE_ORIGIN_DENY')
+    import _imp
+    import importlib.machinery as machinery
+    import types
+    need(type(runtime) is dict and type(runtime.get('files')) is dict)
+    need(len(runtime['files']) <= 20000 and len(roles) <= 2)
+    cache = BASE / 'pycache-prefix'
+    ordinary(cache, directory=True)
+    need(not any(cache.iterdir()))
+    known = {Path(name): entry for name, entry in runtime['files'].items()}
+    modules = dict(sys.modules)
+    for name, module in (extra or {}).items():
+        need(name not in modules)
+        modules[name] = module
+    need(len(modules) <= 512)
+    rows = []
+    typing_module = modules.get('typing')
+    for name, module in sorted(modules.items()):
+        need(type(name) is str and 0 < len(name) <= 256 and '\x00' not in name)
+        if type(module) is not types.ModuleType:
+            need(name in ('typing.io', 'typing.re') and type(typing_module) is types.ModuleType
+                 and module is vars(typing_module).get(name.split('.')[1])
+                 and type(module) is vars(typing_module).get('_DeprecatedType')
+                 and vars(module).get('__module__') == 'typing')
+            rows.append({'name': name, 'kind': 'EXACT_TYPING_PSEUDO_CLASS'})
+            continue
+        data = vars(module)
+        spec, file, cached = data.get('__spec__'), data.get('__file__'), data.get('__cached__')
+        row = {'name': name, 'kind': None, 'file': file, 'sha256': None, 'cached': cached}
+        if name in roles:
+            role = roles[name]
+            need(spec is None and file == role['path'])
+            entry = role
+            row['kind'] = 'EXACT_VERIFIED_SOURCE_ROLE'
+        else:
+            need(type(spec) is machinery.ModuleSpec)
+            if spec.origin == 'built-in':
+                need(spec.loader is machinery.BuiltinImporter and _imp.is_builtin(spec.name))
+                row['kind'] = 'BUILTIN'
+            elif spec.origin == 'frozen':
+                need(spec.loader is machinery.FrozenImporter and _imp.is_frozen(spec.name))
+                row['kind'] = 'FROZEN'
+            else:
+                need(type(spec.origin) is str and file == spec.origin
+                     and type(spec.loader) in (machinery.SourceFileLoader, machinery.ExtensionFileLoader))
+                row['kind'] = 'OBSERVED_RUNTIME_FILE'
+            entry = known.get(Path(file)) if type(file) is str else None
+        if file is not None:
+            need(type(file) is str and len(file) <= 2048)
+            path = Path(file)
+            need(path.is_absolute() and path.suffix.lower() not in ('.pyc', '.pyo')
+                 and entry is not None)
+            read_file(path, entry)
+            row['sha256'] = entry['sha256']
+        else:
+            need(row['kind'] in ('BUILTIN', 'FROZEN'))
+        if cached is not None:
+            need(type(cached) is str and len(cached) <= 2048
+                 and Path(cached).is_absolute() and Path(cached).is_relative_to(cache)
+                 and Path(cached).suffix.lower() == '.pyc')
+        rows.append(row)
+    ordinary(cache, directory=True)
+    need(not any(cache.iterdir()))
+    return {'rows': rows, 'row_count': len(rows), 'cache_empty': True,
+            'claim': 'ACTUAL_MODULE_ORIGINS_ONLY_NOT_TRANSITIVE_DLL_OR_EXECUTED_BYTE_PROOF'}
+'''
 CHILD_SOURCE = r'''"""UNEXECUTED: one explicit stock-exception unittest, not a native fixture."""
 import base64
 import hashlib
@@ -98,7 +174,7 @@ def matches(a, b, same_api):
 
 def pinned(path, digest, limit, system32=False):
     before = ordinary(path, system32=system32)
-    need(0 < before.st_size <= limit)
+    need(0 <= before.st_size <= limit)
     with path.open('rb', buffering=0) as stream:
         opened = os.fstat(stream.fileno())
         matches(before, opened, False)
@@ -148,6 +224,13 @@ def main():
     exec(compile(raw, str(TEST), 'exec'), module.__dict__)
     need(tuple(module.CASE_IDS) == CASES and module.ACCEPT_IDS == frozenset(CASES[:7]))
     need(module.POWERSHELL == PS and module.HELPER == HELPER and module.ROOT == SOURCE)
+    runtime_raw = pinned(BASE / 'runtime-ledger.json', os.environ['OBSERVED_RUNTIME_LEDGER_SHA256'], 8 * 1024 * 1024)
+    runtime = json.loads(runtime_raw)
+    roles = {'__main__': {'path': str(Path(__file__)), 'bytes': ordinary(Path(__file__)).st_size,
+                           'sha256': os.environ['OBSERVED_DRIVER_SHA256']},
+             'allocated_stock_matrix_source': {'path': str(TEST), 'bytes': len(raw), 'sha256': TEST_SHA}}
+    read_origin = lambda path, entry: pinned(path, entry['sha256'], entry['bytes'])
+    origins_before = module_origins(runtime, roles, read_origin, {'allocated_stock_matrix_source': module})
     suite = module.make_suite()
     need(suite.countTestCases() == 1 and [test.id() for test in suite] == [TEST_ID])
     TEMP.mkdir(exist_ok=False)
@@ -164,7 +247,7 @@ def main():
     profile = {'schema': 'stock-matrix-observation.v1', 'result': 'DENY',
                'test_id': TEST_ID, 'test_sha256': TEST_SHA, 'helper_sha256': HELPER_SHA,
                'powershell_sha256': PS_SHA, 'native_authority': False,
-               'raw_ps_output_independently_preserved': False}
+               'raw_ps_output_independently_preserved': False, 'module_origins_before': origins_before}
 
     def observed_popen(command, **kwargs):
         need(not stopped and not attempts)
@@ -249,10 +332,11 @@ def main():
     pinned(TEST, TEST_SHA, 65536)
     pinned(HELPER, HELPER_SHA, 65536)
     pinned(PS, PS_SHA, 64 * 1024 * 1024, system32=True)
+    profile['module_origins_after'] = module_origins(runtime, roles, read_origin, {'allocated_stock_matrix_source': module})
     if good:
         profile['result'] = 'ONE_UNIT_24_STOCK_SUBCASES_PASS'
     data = (json.dumps(profile, sort_keys=True, separators=(',', ':')) + '\n').encode('utf8')
-    need(len(data) <= 65536)
+    need(len(data) <= 256 * 1024)
     with (EVIDENCE / 'matrix-profile.json').open('xb') as stream:
         stream.write(data)
     print(json.dumps({'profile_sha256': hashlib.sha256(data).hexdigest()}, separators=(',', ':')), flush=True)
@@ -262,6 +346,7 @@ def main():
 if __name__ == '__main__':
     raise SystemExit(main())
 '''
+CHILD_SOURCE = CHILD_SOURCE.replace('\n\ndef main():', '\n\n' + ORIGIN_SOURCE + '\n\ndef main():')
 DRIVER_SHA = hashlib.sha256(CHILD_SOURCE.encode('utf8')).hexdigest()
 FROZEN = {
     'tests/native_output_cap_assertion.ps1': '71818734af4f3e1badebec43afb867f106bb4cd692c3a013ad8d4f36126a6b71',
@@ -275,6 +360,8 @@ CAP = 256 * 1024
 WHOLE_END = None
 RECORD = {'schema': 'hosted-windows-stock-matrix.v1', 'result': 'DENY',
           'source_head': HEAD, 'source_tree': TREE, 'source_parent': PARENT,
+          'driver_source_sha256': DRIVER_SHA,
+          'run_id': os.environ['GITHUB_RUN_ID'], 'run_attempt': os.environ['GITHUB_RUN_ATTEMPT'],
           'native_authority': False, 'fixture_import_allowed': False, 'stock_matrix_nonmain_source_load_allowed': True,
           'actual_classifier_subcases_run': 0, 'process_roles': []}
 CLOSED_FAILURE_CODES = frozenset('''
@@ -289,7 +376,7 @@ CHILD_LOCAL_COMPLETION_BOUND GIT_ARGUMENTS_NOT_ALLOWED SOURCE_GIT_FAILED
 EXACT_SOURCE_OR_HELPER_PRECONDITION SOURCE_OBJECT_REDIRECTION SOURCE_COMMIT_CHANGED
 SOURCE_GIT_TYPE SOURCE_GIT_INVENTORY_CHANGED SOURCE_WALK_FAILED SOURCE_EXTRA_FILE
 SOURCE_MISSING_OR_EXTRA SOURCE_DIRTY FROZEN_TEST_DOCUMENT_CHANGED RUNTIME_FILE_COUNT
-FIXED_TOOL_CHANGED STOCK_MATRIX_PROFILE_REQUIRED EXPECTED_SINGLE_PREREQUISITE_RED_REQUIRED EXPECTED_ASSERTION_MISSING
+FIXED_TOOL_CHANGED CLOSED_RECEIPT_REQUIRED MODULE_ORIGIN_DENY STOCK_MATRIX_PROFILE_REQUIRED EXPECTED_SINGLE_PREREQUISITE_RED_REQUIRED EXPECTED_ASSERTION_MISSING
 EXPECTED_ONE_FAILURE_REQUIRED UNEXPECTED_SETUP_OR_CLASSIFIER_EXECUTION
 EXPLICIT_ROOT_ALLOCATION_REQUIRED FIXED_WINDOWS_CPYTHON_REQUIRED
 ISOLATED_RUNTIME_AND_FRESH_PREFIX_REQUIRED EVIDENCE_FILE_BOUND
@@ -447,7 +534,9 @@ def environment(git=False):
     result.update(SYSTEMROOT='C:\\Windows', WINDIR='C:\\Windows', PYTHONDONTWRITEBYTECODE='1')
     if not git:
         result.update(QUALIFICATION_BASE=str(BASE), GITHUB_WORKSPACE=str(SOURCE),
-                      OBSERVED_POWERSHELL_SHA256=PS_SHA)
+                      OBSERVED_POWERSHELL_SHA256=PS_SHA,
+                      OBSERVED_RUNTIME_LEDGER_SHA256=RECORD['runtime_ledger_sha256'],
+                      OBSERVED_DRIVER_SHA256=DRIVER_SHA)
     if git:
         result.update(GIT_CONFIG_NOSYSTEM='1', GIT_CONFIG_SYSTEM=os.devnull,
                       GIT_CONFIG_GLOBAL=os.devnull, GIT_CONFIG_COUNT='0',
@@ -674,6 +763,9 @@ def snapshot(ledger, phase):
             'source_single_links': True, 'no_extras': True, 'helper_present_and_pinned': True}
 
 
+exec(compile(ORIGIN_SOURCE, '<sealed-module-origin-admission>', 'exec'), globals())
+
+
 def collect_runtime():
     root = Path(sys.base_prefix)
     ordinary(root, directory=True)
@@ -737,7 +829,7 @@ def classify_matrix(output, error, status):
         'schema', 'result', 'test_id', 'test_sha256', 'helper_sha256', 'powershell_sha256',
         'native_authority', 'raw_ps_output_independently_preserved', 'primary_failure_type',
         'attempts', 'child_retirement', 'actual_return_records', 'started_ids', 'succeeded_ids',
-        'subcases', 'elapsed_seconds'}, 'STOCK_MATRIX_PROFILE_REQUIRED')
+        'subcases', 'elapsed_seconds', 'module_origins_before', 'module_origins_after'}, 'STOCK_MATRIX_PROFILE_REQUIRED')
     need(profile['schema'] == 'stock-matrix-observation.v1'
          and profile['result'] == 'ONE_UNIT_24_STOCK_SUBCASES_PASS'
          and profile['test_id'] == TEST_ID and profile['primary_failure_type'] is None
@@ -773,6 +865,12 @@ def classify_matrix(output, error, status):
     need(TEST_ID in text and re.search(r'Ran 1 test in [0-9.]+s', text) is not None
          and text.rstrip().endswith('OK') and 'FAIL' not in text and 'ERROR:' not in text
          and 'skipped' not in text, 'STOCK_MATRIX_PROFILE_REQUIRED')
+    for phase in ('module_origins_before', 'module_origins_after'):
+        observation = profile[phase]
+        need(type(observation) is dict and set(observation) == {'rows', 'row_count', 'cache_empty', 'claim'}
+             and observation['cache_empty'] is True and type(observation['rows']) is list
+             and type(observation['row_count']) is int and 0 < observation['row_count'] <= 512
+             and observation['row_count'] == len(observation['rows']), 'MODULE_ORIGIN_DENY')
     RECORD['actual_stock_matrix_profile'] = profile
     RECORD['actual_classifier_subcases_run'] = 24
 
@@ -811,6 +909,10 @@ def main():
         RECORD['runtime_before'] = runtime_snapshot(runtime)
         PS_SHA = RECORD['runtime_before']['tools']['powershell']['sha256']
         RECORD['source_before'] = snapshot(ledger, 'pre')
+        origin_roles = {'__main__': {'path': str(Path(__file__)), 'bytes': ordinary(Path(__file__)).st_size,
+                                   'sha256': os.environ['QUALIFIER_SHA256']}}
+        read_origin = lambda path, entry: hash_file(path, entry, single=True)
+        RECORD['module_origins_before'] = module_origins(runtime, origin_roles, read_origin)
         before = True
         command = [str(REAL), '-I', '-S', '-B', '-X', 'pycache_prefix=' + str(CACHE),
                    str(DRIVER), '--allocated-stock-classifier-matrix']
@@ -827,6 +929,7 @@ def main():
                 RECORD['source_after'] = snapshot(ledger, 'post')
                 RECORD['runtime_after'] = runtime_snapshot(runtime)
                 need(RECORD['runtime_after'] == RECORD['runtime_before'], 'FIXED_TOOL_CHANGED')
+                RECORD['module_origins_after'] = module_origins(runtime, origin_roles, read_origin)
             except BaseException as error:
                 RECORD['post_verification_failed'] = True
                 RECORD['post_verification_failure'] = failure_fact(error)
@@ -837,15 +940,16 @@ def main():
         cleanup_ok = all(not r['denied'] and not r['cleanup_uncertain']
                          and r['reader_threads_retired'] and r['local_completion_within_bound']
                          for r in RECORD['process_roles'])
+        RECORD['candidate_checks_passed'] = False
         if (RECORD.get('actual_stock_matrix_observed') and RECORD.get('source_after')
-                and RECORD.get('runtime_after') and not RECORD.get('failure_type')
+                and RECORD.get('runtime_after') and RECORD.get('module_origins_before')
+                and RECORD.get('module_origins_after') and not RECORD.get('failure_type')
                 and not RECORD.get('post_verification_failed') and cleanup_ok
                 and not RECORD['remaining_new_threads'] and len(expected) == 1
                 and len(RECORD['process_roles']) == 7
                 and sum(r['role'] == 'source_git_inspection' for r in RECORD['process_roles']) == 6
                 and RECORD['elapsed_seconds'] < 120):
-            RECORD['result'] = 'ONE_UNIT_24_STOCK_SUBCASES_QUALIFIED'
-            exit_code = 0
+            RECORD['candidate_checks_passed'] = True
         RECORD['observed_owned_powershell_children'] = 1 if RECORD.get('actual_stock_matrix_observed') else 'UNKNOWN'
         RECORD['scope'] = 'One Python unittest / 24 stock managed exception subcases and one owned PowerShell child; six separate source Git roles. No native C#Run, installation, service, family-hardwall or hostwide process qualification.'
         # Failure evidence must still be attempted after the whole qualification
@@ -864,10 +968,54 @@ def main():
                 RECORD['result'] = 'DENY'
                 RECORD['artifact_hash_failed'] = True
                 exit_code = 1
-        with (EVIDENCE / 'receipt.json').open('x', encoding='utf8') as stream:
-            stream.write(json.dumps(RECORD, sort_keys=True, indent=2) + '\n')
-        print(json.dumps({'result': RECORD['result'], 'actual_classifier_subcases_run': RECORD['actual_classifier_subcases_run'],
-                          'expected_python_children': len(expected), 'scope': 'STOCK_EXCEPTION_UNIT_ONLY_NOT_NATIVE_FIXTURE'}), flush=True)
+        # Candidate facts are NOT terminal qualification. Artifact work is inside
+        # the measured gate; a late/failed artifact phase is sticky DENY.
+        try:
+            observed = time.monotonic()
+            within = (type(observed) in (int, float) and float('-inf') < observed < float('inf')
+                      and started <= observed < WHOLE_END)
+            RECORD['post_artifact_elapsed_seconds'] = observed - started if within else None
+            RECORD['post_artifact_within_observed_bound'] = within
+            candidate = (RECORD['candidate_checks_passed'] and within
+                         and not RECORD.get('artifact_hash_failed'))
+            RECORD['result'] = 'CANDIDATE_REQUIRES_EXTERNAL_VERIFICATION' if candidate else 'DENY'
+            RECORD['terminal_publication_self_attested'] = False
+            raw = (json.dumps(RECORD, sort_keys=True, indent=2, allow_nan=False) + '\n').encode('utf8')
+            need(len(raw) <= 2 * 1024 * 1024, 'EVIDENCE_FILE_BOUND')
+            with (EVIDENCE / 'receipt.json').open('xb') as stream:
+                stream.write(raw)
+            digest = hashlib.sha256(raw).hexdigest()
+            closed = pinned_json('allocated-matrix-evidence/receipt.json', digest)
+            need(closed == RECORD, 'CLOSED_RECEIPT_REQUIRED')
+            closed_at = time.monotonic()
+            ready = candidate and started <= closed_at < WHOLE_END
+            completion = {'schema': 'stock24-closed-candidate.v1',
+                          'result': 'CLOSED_CANDIDATE_READBACK' if ready else 'DENY',
+                          'receipt_sha256': digest, 'source_head': HEAD,
+                          'controller_started_monotonic': started,
+                          'elapsed_through_closed_readback': closed_at - started,
+                          'terminal_publication_self_attested': False,
+                          'requires_actual_successful_producer_exit_and_external_readback': True}
+            completion_raw = (json.dumps(completion, sort_keys=True, allow_nan=False) + '\n').encode('utf8')
+            with (EVIDENCE / 'completion.json').open('xb') as stream:
+                stream.write(completion_raw)
+            print(json.dumps({'result': completion['result'],
+                              'completion_sha256': hashlib.sha256(completion_raw).hexdigest(),
+                              'scope': 'CANDIDATE_NOT_TERMINAL_OR_HARDWALL_PROOF'}), flush=True)
+            # This return is still not a self-proof of terminal publication:
+            # the workflow separately requires actual step success and reads
+            # the closed files. A late final write/print cannot return PASS.
+            exit_code = 0 if ready and started <= time.monotonic() < WHOLE_END else 1
+        except BaseException as error:
+            exit_code = 1
+            failure = {'result': 'DENY', 'phase': 'CLOSED_CANDIDATE_PUBLICATION',
+                       'failure': failure_fact(error), 'source_head': HEAD}
+            try:
+                with (EVIDENCE / 'completion-failure.json').open('x', encoding='utf8') as stream:
+                    stream.write(json.dumps(failure, sort_keys=True) + '\n')
+            except BaseException:
+                pass  # actual nonzero producer exit is mandatory; no silent PASS
+            print(json.dumps(failure), flush=True)
     return exit_code
 
 

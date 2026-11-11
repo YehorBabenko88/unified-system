@@ -288,3 +288,56 @@ No execution/import/compile/test/PowerShell/CI/push was authorized or performed
 by the implementer for this source preparation. Root/A8 must review the exact
 committed source and full prospective workflow cohort before any separate push
 allocation. Public submit remains DENY; native/physical/runtime admission NO-GO.
+
+## D5 source-review corrections (SOURCE ONLY)
+
+The original D5 workflow f33d1b2b /qualifier347c2b6b /documentc7213c31 are
+archived unchanged outside source before these corrections. Three concrete P2
+findings are addressed without changing helper7181, matrixb822 or installation
+test7f55: bootstrap poll failure must not bypass kill; candidate selection must
+not precede artifact-completion gates; and a runtime file map alone does not
+establish actual imported-module origins. None of these corrections has been
+executed, imported, compiled or tested under this lease.
+
+Bootstrap Git cleanup now observes poll, attempts kill on unknown status, and
+attempts the held handle's wait independently. Cleanup and evidence errors are
+recorded separately. The original body exception remains primary, with a fixed
+cleanup-uncertainty note where relevant; unknown custody cannot return PASS.
+An external unexecuted inert regression source extracts the actual workflow git
+FunctionDef and supplies only BytesIO/fake owned-handle objects. Its poll-throws
+case requires kill and wait. Any D5 RED for that control is predicted, NOT RUN.
+
+Parent and unit child now observe actual sys.modules objects before/after the
+unit boundary. One sealed origin-admission source definition is shared with
+the embedded driver. Actual file-backed stdlib/extension origins must belong to
+this run's raw runtime map and pass its held-descriptor hash guard; pyc/pyo
+origins are refused. Builtin/frozen cases require their actual standard loader
+identity and _imp builtin/frozen name checks. Only exact verified qualifier,
+driver and explicit non-main matrix source roles are admitted outside that map.
+The workflow registers the verified qualifier as its actual __main__ module.
+Only the specific typing.io/typing.re identities held by admitted typing, with
+its exact _DeprecatedType metaclass, may be pseudo-module classes; there is no
+general fileless-module allowance. This CP312 shape was read from local typing
+source without importing it. Row count/path/profile sizes are bounded. Cached
+paths must point into the empty fresh external prefix; existing cache content
+and other project imports deny. Origin rows are observations, not a proof of
+executed byte identity, publisher provenance or transitive loaded-DLL closure.
+
+The producer now records only candidate facts. Artifact hashing occurs before
+the post-artifact measured-time gate; any artifact failure or over-budget
+observation is sticky DENY. The closed candidate receipt is hash/readback-checked
+before a separate completion observation. Late final write/print causes nonzero
+producer return. Receipt/completion explicitly disclaim terminal self-attestation.
+A subsequent workflow step requires GitHub's actual successful producer-step
+outcome, independently reads closed receipt/completion/artifacts/profile with
+bounded same-buffer metadata/hash checks, and records its observed elapsed time.
+It cannot certify its own terminal publication; final job/producer exit and
+downloaded closed-artifact verification remain necessary. No strict whole120s
+kernel, family or terminal-write guarantee is claimed.
+
+Publication additionally remains HOLD until Root reviews every automatically
+eligible native/Consul route and A2 integration compatibility. The unfiltered
+existing native cohort is not authorized to execute an unqualified tool. This
+change does not skip, bypass, disable or modify any existing workflow to evade
+that gate. Root/A8 source/cohort review and a separate execution/push allocation
+are still required. Hosted STOCK24 is not Win11/native-workload acceptance.

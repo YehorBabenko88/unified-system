@@ -92,7 +92,7 @@ jobs:
               command=[str(git_path),'--no-replace-objects','--no-optional-locks','-c','core.fsmonitor=false','-c','core.hooksPath=NUL','-c','core.useReplaceRefs=false','-c','protocol.allow=never',*args]
               env={key:value for key,value in os.environ.items() if key.upper() in {'SYSTEMDRIVE','PROGRAMDATA','TEMP','TMP','USERPROFILE','LOCALAPPDATA','APPDATA'}}
               env.update(SYSTEMROOT='C:\\Windows',WINDIR='C:\\Windows',GIT_CONFIG_NOSYSTEM='1',GIT_CONFIG_SYSTEM=os.devnull,GIT_CONFIG_GLOBAL=os.devnull,GIT_CONFIG_COUNT='0',GIT_NO_REPLACE_OBJECTS='1',GIT_NO_LAZY_FETCH='1',GIT_OPTIONAL_LOCKS='0',GIT_TERMINAL_PROMPT='0')
-              child=None;fact=dict(args=args,retired=False,passed=False);report['roles'].append(fact)
+              child=None;primary=None;fact=dict(args=args,retired=False,passed=False,cleanup_errors=[],evidence_errors=[]);report['roles'].append(fact)
               with tempfile.TemporaryFile(dir=base) as source,tempfile.TemporaryFile(dir=base) as output,tempfile.TemporaryFile(dir=base) as error:
                   source.write(data);source.seek(0);start=time.monotonic()
                   try:
@@ -100,15 +100,31 @@ jobs:
                       while child.poll() is None:
                           assert time.monotonic()-start<29 and os.fstat(output.fileno()).st_size<=limit and os.fstat(error.fileno()).st_size<=65536
                           time.sleep(.01)
+                  except BaseException as failure:
+                      primary=failure;fact['primary_failure_type']=type(failure).__name__
                   finally:
                       if child is not None:
                           try:
-                              if child.poll() is None:child.kill()
-                          finally:
-                              fact['returncode']=child.wait(timeout=1);fact['retired']=True
-                      output.seek(0);error.seek(0)
-                      err=error.read(65537)
-                      with (base/('bootstrap-git-'+str(len(report['roles']))+'.stderr')).open('xb') as stream:stream.write(err[:65536])
+                              status=child.poll()
+                          except BaseException as failure:
+                              status=None;fact['cleanup_errors'].append(dict(stage='poll',type=type(failure).__name__))
+                          if status is None:
+                              try:child.kill()
+                              except BaseException as failure:fact['cleanup_errors'].append(dict(stage='kill',type=type(failure).__name__))
+                          try:
+                              status=child.wait(timeout=1)
+                              assert type(status) is int
+                              fact.update(returncode=status,retired=True)
+                          except BaseException as failure:fact['cleanup_errors'].append(dict(stage='wait',type=type(failure).__name__))
+                      try:
+                          output.seek(0);error.seek(0);err=error.read(65537)
+                          fact['stderr_truncated']=len(err)>65536
+                          with (base/('bootstrap-git-'+str(len(report['roles']))+'.stderr')).open('xb') as stream:stream.write(err[:65536])
+                      except BaseException as failure:fact['evidence_errors'].append(type(failure).__name__)
+                  if primary is not None:
+                      if fact['cleanup_errors'] or fact['evidence_errors']:primary.add_note('BOOTSTRAP_CLEANUP_OR_EVIDENCE_UNKNOWN')
+                      raise primary
+                  assert fact['retired'] and not fact['cleanup_errors'] and not fact['evidence_errors']
                   raw=output.read(limit+1)
                   assert child.returncode==0 and not err and len(raw)<=limit and time.monotonic()-start<=30
                   fact.update(passed=True,bytes=len(raw),sha256=hashlib.sha256(raw).hexdigest());return raw
@@ -172,9 +188,10 @@ jobs:
               report['failure_type']=type(error).__name__;raise
           finally:save()
       - name: Run exact verified Windows stock24 qualifier
+        id: qualifier
         shell: python -I -S -B -X "pycache_prefix=${{ env.QUALIFICATION_BASE }}/pycache-prefix" {0}
         run: |
-          import hashlib, os, pathlib, stat, sys
+          import hashlib, os, pathlib, stat, sys, types
           base=pathlib.Path(os.environ['QUALIFICATION_BASE']);path=base/'verified-qualifier.py'
           for parent in reversed(path.parents):
               info=parent.lstat();assert stat.S_ISDIR(info.st_mode) and not stat.S_ISLNK(info.st_mode) and not getattr(info,'st_file_attributes',0)&1024
@@ -191,7 +208,73 @@ jobs:
           if hasattr(before,'st_birthtime_ns'):assert before.st_birthtime_ns==after.st_birthtime_ns
           assert len(raw)==before.st_size and hashlib.sha256(raw).hexdigest()==os.environ['QUALIFIER_SHA256']
           sys.argv=[str(path),'--allocated-stock-matrix-controller']
-          exec(compile(raw,str(path),'exec'),dict(__name__='__main__',__file__=str(path)))
+          module=types.ModuleType('__main__');module.__file__=str(path);sys.modules['__main__']=module
+          exec(compile(raw,str(path),'exec'),module.__dict__)
+      - name: Independently read closed candidate after actual producer success
+        shell: python -I -S -B {0}
+        env:
+          PRODUCER_OUTCOME: ${{ steps.qualifier.outcome }}
+        run: |
+          import hashlib, json, os, pathlib, stat, time
+          assert os.environ['PRODUCER_OUTCOME']=='success'
+          base=pathlib.Path(os.environ['QUALIFICATION_BASE'])/'allocated-matrix-evidence'
+          def closed(name,limit,parse=True,outer=False):
+              assert pathlib.PureWindowsPath(name).name==name and '/' not in name and '\\' not in name and name not in ('.','..')
+              assert not outer or name in ('runtime-ledger.json','source-ledger.json','verified-qualifier.py','child-driver.py')
+              path=(base.parent if outer else base)/name
+              for parent in reversed(path.parents):
+                  info=parent.lstat();assert stat.S_ISDIR(info.st_mode) and not stat.S_ISLNK(info.st_mode) and not getattr(info,'st_file_attributes',0)&1024
+              before=path.lstat();assert stat.S_ISREG(before.st_mode) and before.st_nlink==1 and not getattr(before,'st_file_attributes',0)&1024 and 0<before.st_size<=limit
+              with path.open('rb',buffering=0) as stream:
+                  opened=os.fstat(stream.fileno())
+                  assert (before.st_dev,before.st_ino,before.st_size,before.st_mtime_ns,before.st_nlink,stat.S_IFMT(before.st_mode))==(opened.st_dev,opened.st_ino,opened.st_size,opened.st_mtime_ns,opened.st_nlink,stat.S_IFMT(opened.st_mode))
+                  if hasattr(before,'st_birthtime_ns') and hasattr(opened,'st_birthtime_ns'):assert before.st_birthtime_ns==opened.st_birthtime_ns
+                  raw=stream.read(before.st_size+1);after=os.fstat(stream.fileno())
+                  for key in ('st_dev','st_ino','st_mode','st_size','st_mtime_ns','st_ctime_ns','st_nlink'):assert getattr(opened,key)==getattr(after,key)
+                  assert hasattr(opened,'st_birthtime_ns')==hasattr(after,'st_birthtime_ns')
+                  if hasattr(opened,'st_birthtime_ns'):assert opened.st_birthtime_ns==after.st_birthtime_ns
+              after=path.lstat()
+              for key in ('st_dev','st_ino','st_mode','st_size','st_mtime_ns','st_ctime_ns','st_nlink'):assert getattr(before,key)==getattr(after,key)
+              assert hasattr(before,'st_birthtime_ns')==hasattr(after,'st_birthtime_ns')
+              if hasattr(before,'st_birthtime_ns'):assert before.st_birthtime_ns==after.st_birthtime_ns
+              assert len(raw)==before.st_size
+              def pairs(items):
+                  result={}
+                  for key,value in items:
+                      assert key not in result;result[key]=value
+                  return result
+              def reject(value):raise AssertionError('NONFINITE_CLOSED_RECEIPT')
+              return raw,json.loads(raw,object_pairs_hook=pairs,parse_constant=reject) if parse else None
+          raw,receipt=closed('receipt.json',2097152);completion_raw,completion=closed('completion.json',4096)
+          assert completion['schema']=='stock24-closed-candidate.v1' and completion['result']=='CLOSED_CANDIDATE_READBACK'
+          assert completion['receipt_sha256']==hashlib.sha256(raw).hexdigest()
+          assert receipt['result']=='CANDIDATE_REQUIRES_EXTERNAL_VERIFICATION' and receipt['post_artifact_within_observed_bound'] is True
+          assert receipt['candidate_checks_passed'] is True and receipt['source_head']==completion['source_head']==os.environ['EXPECTED_HEAD']
+          assert receipt['source_before']==receipt['source_after'] and receipt['source_before']['files']==1875
+          assert receipt['runtime_before']==receipt['runtime_after'] and receipt['actual_classifier_subcases_run']==24
+          runtime,_=closed('runtime-ledger.json',8388608,False,True)
+          assert hashlib.sha256(runtime).hexdigest()==receipt['runtime_ledger_sha256']
+          source,_=closed('source-ledger.json',2097152,False,True)
+          assert hashlib.sha256(source).hexdigest()==os.environ['SOURCE_LEDGER_SHA256']
+          qualifier,_=closed('verified-qualifier.py',131072,False,True)
+          assert hashlib.sha256(qualifier).hexdigest()==os.environ['QUALIFIER_SHA256']
+          driver,_=closed('child-driver.py',65536,False,True)
+          assert hashlib.sha256(driver).hexdigest()==receipt['driver_source_sha256']
+          assert type(receipt['artifacts']) is dict and len(receipt['artifacts'])<=32
+          for name,digest in receipt['artifacts'].items():
+              artifact,_=closed(name,262144,False);assert hashlib.sha256(artifact).hexdigest()==digest
+          _,profile=closed('matrix-profile.json',262144)
+          assert profile['result']=='ONE_UNIT_24_STOCK_SUBCASES_PASS' and len(profile['subcases'])==24
+          ids=[row['id'] for row in profile['subcases']]
+          assert len(set(ids))==24 and all(row['passed'] is True for row in profile['subcases'])
+          assert set(ids)==set(profile['actual_return_records']) and sum(value=='TRUE' for value in profile['actual_return_records'].values())==7
+          assert sum(value=='FALSE' for value in profile['actual_return_records'].values())==17
+          assert receipt['run_id']==os.environ['GITHUB_RUN_ID'] and receipt['run_attempt']==os.environ['GITHUB_RUN_ATTEMPT']
+          assert completion['terminal_publication_self_attested'] is False and receipt['terminal_publication_self_attested'] is False
+          now=time.monotonic();start=completion['controller_started_monotonic']
+          assert type(start) in (int,float) and 0<=now-start<120
+          observation=dict(result='CLOSED_PRODUCER_OBSERVED',producer_step_outcome=os.environ['PRODUCER_OUTCOME'],head=os.environ['EXPECTED_HEAD'],receipt_sha256=hashlib.sha256(raw).hexdigest(),completion_sha256=hashlib.sha256(completion_raw).hexdigest(),elapsed_at_independent_readback=now-start,not_terminal_write_or_family_hardwall_proof=True,native_authority=False)
+          with (base/'external-readback.json').open('x',encoding='utf8') as stream:stream.write(json.dumps(observation,sort_keys=True)+'\n')
       - name: Preserve bounded source and stock-matrix evidence
         id: evidence
         if: always()
