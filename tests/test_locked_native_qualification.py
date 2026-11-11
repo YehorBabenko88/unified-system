@@ -118,6 +118,9 @@ class LockedNativeQualificationControls(unittest.TestCase):
         self.assertLess(supervise.index('process.wait(timeout=5)'), supervise.index('observed_completion ='))
         self.assertIn('observed_completion > 90', supervise)
         self.assertIn('COMPLETION_OBSERVED_AFTER_CHILD_BUDGET', supervise)
+        loader = next(n for n in ast.walk(tree) if isinstance(n, ast.FunctionDef) and n.name == 'exec_module')
+        source = ast.unparse(loader)
+        self.assertLess(source.index('digest(raw)'), source.index('compile(raw,'))
 
     def test_native_expected_inventories_and_mock_hash_stay_exact(self):
         import hashlib
