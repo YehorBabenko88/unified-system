@@ -1,0 +1,403 @@
+{
+  "scope": "ORIGINAL_LOG_BYTES_AND_LITERAL_MARKERS_NOT_AUTOMATIC_RCA",
+  "logs": [
+    {
+      "repo": "unified-system",
+      "PR": 86,
+      "run": 43065066057,
+      "job": 130677702955,
+      "name": "synthetic (windows-latest)",
+      "file": "failed-original-logs/unified-system-130677702955.log",
+      "bytes": 270081,
+      "sha256": "ecdd77bbf2b52b645437d913768a4878bee05328db1d6d57871dec38524ffd64",
+      "markers_only_not_cause_classification": {
+        "missing_modules": [],
+        "pytest_summary": [],
+        "source_identity": [],
+        "timeout": [
+          "2026-11-11T17:29:01.5816015Z     raise AssertionError('NATIVE_PHASE_TIMEOUT_'+str(timeout)+'S elapsed_ms='+str(round((time.monotonic()-started)*1000))+' phases='+summary) from None",
+          "2026-11-11T17:29:01.5817757Z AssertionError: NATIVE_PHASE_TIMEOUT_15S elapsed_ms=15016 phases=ENTRY@2370605796,IMPORT_BEGIN@2370702072,IMPORT_END@2371348519,MEMBER_BEGIN@2371348912,OBJECT_BEGIN@2371348965,",
+          "2026-11-11T17:29:01.5825378Z     raise AssertionError('NATIVE_PHASE_TIMEOUT_'+str(timeout)+'S elapsed_ms='+str(round((time.monotonic()-started)*1000))+' phases='+summary) from None",
+          "2026-11-11T17:29:01.5826487Z AssertionError: NATIVE_PHASE_TIMEOUT_15S elapsed_ms=15015 phases=ENTRY@2505153377,IMPORT_BEGIN@2505196697,IMPORT_END@2505437359,COMPILE_BEGIN@2505448168",
+          "2026-11-11T17:29:01.5834607Z     raise AssertionError('NATIVE_PHASE_TIMEOUT_'+str(timeout)+'S elapsed_ms='+str(round((time.monotonic()-started)*1000))+' phases='+summary) from None",
+          "2026-11-11T17:29:01.5835563Z AssertionError: NATIVE_PHASE_TIMEOUT_15S elapsed_ms=15015 phases=ENTRY@2743020468,SAFE_LOOKUP_BEGIN@2743062321",
+          "2026-11-11T17:29:01.5844152Z     raise AssertionError('NATIVE_PHASE_TIMEOUT_'+str(timeout)+'S elapsed_ms='+str(round((time.monotonic()-started)*1000))+' phases='+summary) from None",
+          "2026-11-11T17:29:01.5845014Z AssertionError: NATIVE_PHASE_TIMEOUT_30S elapsed_ms=30141 phases=ENTRY@2900407385"
+        ]
+      }
+    },
+    {
+      "repo": "unified-system",
+      "PR": 86,
+      "run": 43065066287,
+      "job": 130677704122,
+      "name": "windows-security (pwsh)",
+      "file": "failed-original-logs/unified-system-130677704122.log",
+      "bytes": 255495,
+      "sha256": "8e9f8af84b1bf2ba9b1f2ec9c224583ec93136f10028fd9da67e2eb499a77a62",
+      "markers_only_not_cause_classification": {
+        "missing_modules": [],
+        "pytest_summary": [],
+        "source_identity": [],
+        "timeout": [
+          "2026-11-11T17:29:43.8407490Z     raise AssertionError('NATIVE_PHASE_TIMEOUT_'+str(timeout)+'S elapsed_ms='+str(round((time.monotonic()-started)*1000))+' phases='+summary) from None",
+          "2026-11-11T17:29:43.8409012Z AssertionError: NATIVE_PHASE_TIMEOUT_15S elapsed_ms=15015 phases=ENTRY@3175810720,IMPORT_BEGIN@3175907360,IMPORT_END@3176671962,MEMBER_BEGIN@3176672422,OBJECT_BEGIN@3176672464,",
+          "2026-11-11T17:29:43.8417482Z     raise AssertionError('NATIVE_PHASE_TIMEOUT_'+str(timeout)+'S elapsed_ms='+str(round((time.monotonic()-started)*1000))+' phases='+summary) from None",
+          "2026-11-11T17:29:43.8418677Z AssertionError: NATIVE_PHASE_TIMEOUT_15S elapsed_ms=15032 phases=ENTRY@3305901511,IMPORT_BEGIN@3305937082,IMPORT_END@3306151412,COMPILE_BEGIN@3306161301",
+          "2026-11-11T17:29:43.8426418Z     raise AssertionError('NATIVE_PHASE_TIMEOUT_'+str(timeout)+'S elapsed_ms='+str(round((time.monotonic()-started)*1000))+' phases='+summary) from None",
+          "2026-11-11T17:29:43.8427468Z AssertionError: NATIVE_PHASE_TIMEOUT_15S elapsed_ms=15031 phases=ENTRY@3555673086,SAFE_LOOKUP_BEGIN@3555708026"
+        ]
+      }
+    },
+    {
+      "repo": "unified-system",
+      "PR": 86,
+      "run": 43065066287,
+      "job": 130677704623,
+      "name": "windows-security (powershell)",
+      "file": "failed-original-logs/unified-system-130677704623.log",
+      "bytes": 253186,
+      "sha256": "3b62fb6707005851dc7d2125c1b77be140819f416bdcc39cb70e963e219b9c93",
+      "markers_only_not_cause_classification": {
+        "missing_modules": [],
+        "pytest_summary": [],
+        "source_identity": [],
+        "timeout": [
+          "2026-11-11T17:28:12.9690426Z     raise AssertionError('NATIVE_PHASE_TIMEOUT_'+str(timeout)+'S elapsed_ms='+str(round((time.monotonic()-started)*1000))+' phases='+summary) from None",
+          "2026-11-11T17:28:12.9692391Z AssertionError: NATIVE_PHASE_TIMEOUT_15S elapsed_ms=15016 phases=ENTRY@2650035502,IMPORT_BEGIN@2650123452,IMPORT_END@2650821610,MEMBER_BEGIN@2650822001,OBJECT_BEGIN@2650822046,",
+          "2026-11-11T17:28:12.9703230Z     raise AssertionError('NATIVE_PHASE_TIMEOUT_'+str(timeout)+'S elapsed_ms='+str(round((time.monotonic()-started)*1000))+' phases='+summary) from None",
+          "2026-11-11T17:28:12.9704821Z AssertionError: NATIVE_PHASE_TIMEOUT_15S elapsed_ms=15016 phases=ENTRY@2783041066,IMPORT_BEGIN@2783078363,IMPORT_END@2783286460,COMPILE_BEGIN@2783298128",
+          "2026-11-11T17:28:12.9715964Z     raise AssertionError('NATIVE_PHASE_TIMEOUT_'+str(timeout)+'S elapsed_ms='+str(round((time.monotonic()-started)*1000))+' phases='+summary) from None",
+          "2026-11-11T17:28:12.9716956Z AssertionError: NATIVE_PHASE_TIMEOUT_15S elapsed_ms=15031 phases=ENTRY@3025905831,SAFE_LOOKUP_BEGIN@3025940332"
+        ]
+      }
+    },
+    {
+      "repo": "unified-system",
+      "PR": 86,
+      "run": 43065065959,
+      "job": 130677705548,
+      "name": "source-integration (windows-latest, 3.13)",
+      "file": "failed-original-logs/unified-system-130677705548.log",
+      "bytes": 64784,
+      "sha256": "e92f4272caedc94dbc0be73a4ff2fe89bd5e92dd3e5c4ad000bec5f78644095d",
+      "markers_only_not_cause_classification": {
+        "missing_modules": [],
+        "pytest_summary": [],
+        "source_identity": [],
+        "timeout": []
+      }
+    },
+    {
+      "repo": "unified-system",
+      "PR": 86,
+      "run": 43065065959,
+      "job": 130677705700,
+      "name": "source-integration (windows-latest, 3.11)",
+      "file": "failed-original-logs/unified-system-130677705700.log",
+      "bytes": 64762,
+      "sha256": "43d9a0e26be872e0c44605cb14c915a99c2083a899505288b0c4e50b1588a3b7",
+      "markers_only_not_cause_classification": {
+        "missing_modules": [],
+        "pytest_summary": [],
+        "source_identity": [],
+        "timeout": []
+      }
+    },
+    {
+      "repo": "unified-system",
+      "PR": 86,
+      "run": 43065066382,
+      "job": 130677705323,
+      "name": "synthetic (windows-latest)",
+      "file": "failed-original-logs/unified-system-130677705323.log",
+      "bytes": 255681,
+      "sha256": "676beeec422058518a22e6cac42e3e8c5bd4ffe862146b1419072f1c4d262352",
+      "markers_only_not_cause_classification": {
+        "missing_modules": [],
+        "pytest_summary": [],
+        "source_identity": [],
+        "timeout": [
+          "2026-11-11T17:31:30.2331016Z     raise AssertionError('NATIVE_PHASE_TIMEOUT_'+str(timeout)+'S elapsed_ms='+str(round((time.monotonic()-started)*1000))+' phases='+summary) from None",
+          "2026-11-11T17:31:30.2332435Z AssertionError: NATIVE_PHASE_TIMEOUT_15S elapsed_ms=15016 phases=ENTRY@6178781495,IMPORT_BEGIN@6178869513,IMPORT_END@6183475574,MEMBER_BEGIN@6183476063,OBJECT_BEGIN@6183476103,",
+          "2026-11-11T17:31:30.2340445Z     raise AssertionError('NATIVE_PHASE_TIMEOUT_'+str(timeout)+'S elapsed_ms='+str(round((time.monotonic()-started)*1000))+' phases='+summary) from None",
+          "2026-11-11T17:31:30.2341827Z AssertionError: NATIVE_PHASE_TIMEOUT_15S elapsed_ms=15125 phases=ENTRY@6269971988,IMPORT_BEGIN@6270007276,IMPORT_END@6270235251,COMPILE_BEGIN@6270245547",
+          "2026-11-11T17:31:30.2348934Z     raise AssertionError('NATIVE_PHASE_TIMEOUT_'+str(timeout)+'S elapsed_ms='+str(round((time.monotonic()-started)*1000))+' phases='+summary) from None",
+          "2026-11-11T17:31:30.2349859Z AssertionError: NATIVE_PHASE_TIMEOUT_15S elapsed_ms=15015 phases=ENTRY@6532776311,SAFE_LOOKUP_BEGIN@6532810853",
+          "2026-11-11T17:31:30.2357138Z     raise AssertionError('NATIVE_PHASE_TIMEOUT_'+str(timeout)+'S elapsed_ms='+str(round((time.monotonic()-started)*1000))+' phases='+summary) from None",
+          "2026-11-11T17:31:30.2357950Z AssertionError: NATIVE_PHASE_TIMEOUT_30S elapsed_ms=30406 phases=ENTRY@6689223231"
+        ]
+      }
+    },
+    {
+      "repo": "unified-system",
+      "PR": 86,
+      "run": 43065066370,
+      "job": 130677704820,
+      "name": "test (windows-latest, 3.13)",
+      "file": "failed-original-logs/unified-system-130677704820.log",
+      "bytes": 254881,
+      "sha256": "ab84983a0ae68d73ddbcc33a1fe8f8586d66a6469c8b750f269926d572eda9d3",
+      "markers_only_not_cause_classification": {
+        "missing_modules": [],
+        "pytest_summary": [],
+        "source_identity": [],
+        "timeout": [
+          "2026-11-11T17:28:07.0105596Z     raise AssertionError('NATIVE_PHASE_TIMEOUT_'+str(timeout)+'S elapsed_ms='+str(round((time.monotonic()-started)*1000))+' phases='+summary) from None",
+          "2026-11-11T17:28:07.0107296Z AssertionError: NATIVE_PHASE_TIMEOUT_15S elapsed_ms=15018 phases=ENTRY@4746739710,IMPORT_BEGIN@4746889487,IMPORT_END@4748746110,MEMBER_BEGIN@4748746637,OBJECT_BEGIN@4748746696,",
+          "2026-11-11T17:28:07.0114950Z     raise AssertionError('NATIVE_PHASE_TIMEOUT_'+str(timeout)+'S elapsed_ms='+str(round((time.monotonic()-started)*1000))+' phases='+summary) from None",
+          "2026-11-11T17:28:07.0116100Z AssertionError: NATIVE_PHASE_TIMEOUT_15S elapsed_ms=15030 phases=ENTRY@4877370302,IMPORT_BEGIN@4877409187,IMPORT_END@4877643363,COMPILE_BEGIN@4877654009",
+          "2026-11-11T17:28:07.0123210Z     raise AssertionError('NATIVE_PHASE_TIMEOUT_'+str(timeout)+'S elapsed_ms='+str(round((time.monotonic()-started)*1000))+' phases='+summary) from None",
+          "2026-11-11T17:28:07.0124163Z AssertionError: NATIVE_PHASE_TIMEOUT_15S elapsed_ms=15023 phases=ENTRY@5123837710,SAFE_LOOKUP_BEGIN@5123871525"
+        ]
+      }
+    },
+    {
+      "repo": "unified-system",
+      "PR": 86,
+      "run": 43065066370,
+      "job": 130677704876,
+      "name": "test (windows-latest, 3.11)",
+      "file": "failed-original-logs/unified-system-130677704876.log",
+      "bytes": 251781,
+      "sha256": "42cfe51e1d8b448321e78e0ad4aac567c21dadd1f582c73f80f25c827f710301",
+      "markers_only_not_cause_classification": {
+        "missing_modules": [],
+        "pytest_summary": [],
+        "source_identity": [],
+        "timeout": [
+          "2026-11-11T17:32:31.3232266Z     raise AssertionError('NATIVE_PHASE_TIMEOUT_'+str(timeout)+'S elapsed_ms='+str(round((time.monotonic()-started)*1000))+' phases='+summary) from None",
+          "2026-11-11T17:32:31.3234915Z AssertionError: NATIVE_PHASE_TIMEOUT_15S elapsed_ms=15015 phases=ENTRY@2564540535,IMPORT_BEGIN@2564641378,IMPORT_END@2565286356,MEMBER_BEGIN@2565286838,OBJECT_BEGIN@2565286920,",
+          "2026-11-11T17:32:31.3247048Z     raise AssertionError('NATIVE_PHASE_TIMEOUT_'+str(timeout)+'S elapsed_ms='+str(round((time.monotonic()-started)*1000))+' phases='+summary) from None",
+          "2026-11-11T17:32:31.3248732Z AssertionError: NATIVE_PHASE_TIMEOUT_15S elapsed_ms=15015 phases=ENTRY@2696026542,IMPORT_BEGIN@2696070129,IMPORT_END@2696320187,COMPILE_BEGIN@2696331590",
+          "2026-11-11T17:32:31.3259607Z     raise AssertionError('NATIVE_PHASE_TIMEOUT_'+str(timeout)+'S elapsed_ms='+str(round((time.monotonic()-started)*1000))+' phases='+summary) from None",
+          "2026-11-11T17:32:31.3260993Z AssertionError: NATIVE_PHASE_TIMEOUT_15S elapsed_ms=15016 phases=ENTRY@2956716816,SAFE_LOOKUP_BEGIN@2956758369"
+        ]
+      }
+    },
+    {
+      "repo": "unified-system",
+      "PR": 86,
+      "run": 43065002587,
+      "job": 130677477112,
+      "name": "windows-security (pwsh)",
+      "file": "failed-original-logs/unified-system-130677477112.log",
+      "bytes": 253178,
+      "sha256": "e9a7c7217065b9c763d3d0e93226aa73edab598c111e2b9a1a0b5b0e9c9881d2",
+      "markers_only_not_cause_classification": {
+        "missing_modules": [],
+        "pytest_summary": [],
+        "source_identity": [],
+        "timeout": [
+          "2026-11-11T17:27:21.2033438Z     raise AssertionError('NATIVE_PHASE_TIMEOUT_'+str(timeout)+'S elapsed_ms='+str(round((time.monotonic()-started)*1000))+' phases='+summary) from None",
+          "2026-11-11T17:27:21.2035527Z AssertionError: NATIVE_PHASE_TIMEOUT_15S elapsed_ms=15016 phases=ENTRY@2375626725,IMPORT_BEGIN@2375724258,IMPORT_END@2376435547,MEMBER_BEGIN@2376436059,OBJECT_BEGIN@2376436118,",
+          "2026-11-11T17:27:21.2046912Z     raise AssertionError('NATIVE_PHASE_TIMEOUT_'+str(timeout)+'S elapsed_ms='+str(round((time.monotonic()-started)*1000))+' phases='+summary) from None",
+          "2026-11-11T17:27:21.2048570Z AssertionError: NATIVE_PHASE_TIMEOUT_15S elapsed_ms=15015 phases=ENTRY@2509427426,IMPORT_BEGIN@2509470605,IMPORT_END@2509718773,COMPILE_BEGIN@2509729474",
+          "2026-11-11T17:27:21.2059319Z     raise AssertionError('NATIVE_PHASE_TIMEOUT_'+str(timeout)+'S elapsed_ms='+str(round((time.monotonic()-started)*1000))+' phases='+summary) from None",
+          "2026-11-11T17:27:21.2060757Z AssertionError: NATIVE_PHASE_TIMEOUT_15S elapsed_ms=15015 phases=ENTRY@2769397322,SAFE_LOOKUP_BEGIN@2769440839"
+        ]
+      }
+    },
+    {
+      "repo": "unified-system",
+      "PR": 86,
+      "run": 43065002587,
+      "job": 130677477620,
+      "name": "windows-security (powershell)",
+      "file": "failed-original-logs/unified-system-130677477620.log",
+      "bytes": 256877,
+      "sha256": "4fefd2dd1430d0bcae42dc976f4f0bea798bc677343f4eb78f4dcbfab2f3d8d3",
+      "markers_only_not_cause_classification": {
+        "missing_modules": [],
+        "pytest_summary": [],
+        "source_identity": [],
+        "timeout": [
+          "2026-11-11T17:29:34.8004231Z     raise AssertionError('NATIVE_PHASE_TIMEOUT_'+str(timeout)+'S elapsed_ms='+str(round((time.monotonic()-started)*1000))+' phases='+summary) from None",
+          "2026-11-11T17:29:34.8006173Z AssertionError: NATIVE_PHASE_TIMEOUT_15S elapsed_ms=15016 phases=ENTRY@3602692628,IMPORT_BEGIN@3602805424,IMPORT_END@3603564359,MEMBER_BEGIN@3603564924,OBJECT_BEGIN@3603564996,",
+          "2026-11-11T17:29:34.8016122Z     raise AssertionError('NATIVE_PHASE_TIMEOUT_'+str(timeout)+'S elapsed_ms='+str(round((time.monotonic()-started)*1000))+' phases='+summary) from None",
+          "2026-11-11T17:29:34.8017160Z AssertionError: NATIVE_PHASE_TIMEOUT_15S elapsed_ms=15016 phases=ENTRY@3732371476,IMPORT_BEGIN@3732416142,IMPORT_END@3732684201,COMPILE_BEGIN@3732699469",
+          "2026-11-11T17:29:34.8024918Z     raise AssertionError('NATIVE_PHASE_TIMEOUT_'+str(timeout)+'S elapsed_ms='+str(round((time.monotonic()-started)*1000))+' phases='+summary) from None",
+          "2026-11-11T17:29:34.8026398Z AssertionError: NATIVE_PHASE_TIMEOUT_15S elapsed_ms=15015 phases=ENTRY@4020636817,SAFE_LOOKUP_BEGIN@4020679117",
+          "2026-11-11T17:29:34.8034116Z     raise AssertionError('NATIVE_PHASE_TIMEOUT_'+str(timeout)+'S elapsed_ms='+str(round((time.monotonic()-started)*1000))+' phases='+summary) from None",
+          "2026-11-11T17:29:34.8034912Z AssertionError: NATIVE_PHASE_TIMEOUT_30S elapsed_ms=30031 phases=ENTRY@4182437384"
+        ]
+      }
+    },
+    {
+      "repo": "unified-system",
+      "PR": 86,
+      "run": 43065002573,
+      "job": 130677477873,
+      "name": "synthetic (windows-latest)",
+      "file": "failed-original-logs/unified-system-130677477873.log",
+      "bytes": 270198,
+      "sha256": "53f52d3929d2a7ba7e3a17e5d9b92901a0dec60feb7fd5533253921e0e0f9a8a",
+      "markers_only_not_cause_classification": {
+        "missing_modules": [],
+        "pytest_summary": [],
+        "source_identity": [],
+        "timeout": [
+          "2026-11-11T17:24:59.3171742Z     raise AssertionError('NATIVE_PHASE_TIMEOUT_'+str(timeout)+'S elapsed_ms='+str(round((time.monotonic()-started)*1000))+' phases='+summary) from None",
+          "2026-11-11T17:24:59.3173541Z AssertionError: NATIVE_PHASE_TIMEOUT_15S elapsed_ms=15016 phases=ENTRY@2537271638,IMPORT_BEGIN@2537395565,IMPORT_END@2538187485,MEMBER_BEGIN@2538188012,OBJECT_BEGIN@2538188062,",
+          "2026-11-11T17:24:59.3186789Z     raise AssertionError('NATIVE_PHASE_TIMEOUT_'+str(timeout)+'S elapsed_ms='+str(round((time.monotonic()-started)*1000))+' phases='+summary) from None",
+          "2026-11-11T17:24:59.3189288Z AssertionError: NATIVE_PHASE_TIMEOUT_15S elapsed_ms=15016 phases=ENTRY@2662699756,IMPORT_BEGIN@2662740844,IMPORT_END@2662977023,COMPILE_BEGIN@2662988568",
+          "2026-11-11T17:24:59.3203827Z     raise AssertionError('NATIVE_PHASE_TIMEOUT_'+str(timeout)+'S elapsed_ms='+str(round((time.monotonic()-started)*1000))+' phases='+summary) from None",
+          "2026-11-11T17:24:59.3205941Z AssertionError: NATIVE_PHASE_TIMEOUT_15S elapsed_ms=15015 phases=ENTRY@2893260061,SAFE_LOOKUP_BEGIN@2893300922",
+          "2026-11-11T17:24:59.3216459Z     raise AssertionError('NATIVE_PHASE_TIMEOUT_'+str(timeout)+'S elapsed_ms='+str(round((time.monotonic()-started)*1000))+' phases='+summary) from None",
+          "2026-11-11T17:24:59.3217955Z AssertionError: NATIVE_PHASE_TIMEOUT_30S elapsed_ms=42344 phases=ENTRY@3049699133,PARSE_BEGIN@3301161454,PARSE_END@3301287794,IMPORT_BEGIN@3301400059,IMPORT_END@3301516829,COMP"
+        ]
+      }
+    },
+    {
+      "repo": "unified-system",
+      "PR": 86,
+      "run": 43065002458,
+      "job": 130677476901,
+      "name": "source-integration (windows-latest, 3.11)",
+      "file": "failed-original-logs/unified-system-130677476901.log",
+      "bytes": 64764,
+      "sha256": "c4ad41c2efe75173ccff9368b13df246e6d463b0b409173e1c645ec40e26e7e6",
+      "markers_only_not_cause_classification": {
+        "missing_modules": [],
+        "pytest_summary": [],
+        "source_identity": [],
+        "timeout": []
+      }
+    },
+    {
+      "repo": "unified-system",
+      "PR": 86,
+      "run": 43065002458,
+      "job": 130677476921,
+      "name": "source-integration (windows-latest, 3.13)",
+      "file": "failed-original-logs/unified-system-130677476921.log",
+      "bytes": 64786,
+      "sha256": "94439bee663cb855f46044b9b09f8a894ec9d2f00ed6843d9aabf58f6efc0162",
+      "markers_only_not_cause_classification": {
+        "missing_modules": [],
+        "pytest_summary": [],
+        "source_identity": [],
+        "timeout": []
+      }
+    },
+    {
+      "repo": "unified-system",
+      "PR": 86,
+      "run": 43065002475,
+      "job": 130677477077,
+      "name": "test (windows-latest, 3.13)",
+      "file": "failed-original-logs/unified-system-130677477077.log",
+      "bytes": 251674,
+      "sha256": "9513c7f3a9816945df086880fe37e2c7163b2bf02710796dff41b16b60e08210",
+      "markers_only_not_cause_classification": {
+        "missing_modules": [],
+        "pytest_summary": [],
+        "source_identity": [],
+        "timeout": [
+          "2026-11-11T17:24:35.8097824Z     raise AssertionError('NATIVE_PHASE_TIMEOUT_'+str(timeout)+'S elapsed_ms='+str(round((time.monotonic()-started)*1000))+' phases='+summary) from None",
+          "2026-11-11T17:24:35.8099186Z AssertionError: NATIVE_PHASE_TIMEOUT_15S elapsed_ms=15020 phases=ENTRY@4639543592,IMPORT_BEGIN@4639644643,IMPORT_END@4640298686,MEMBER_BEGIN@4640299159,OBJECT_BEGIN@4640299203,",
+          "2026-11-11T17:24:35.8107055Z     raise AssertionError('NATIVE_PHASE_TIMEOUT_'+str(timeout)+'S elapsed_ms='+str(round((time.monotonic()-started)*1000))+' phases='+summary) from None",
+          "2026-11-11T17:24:35.8108271Z AssertionError: NATIVE_PHASE_TIMEOUT_15S elapsed_ms=15167 phases=ENTRY@4761228546,IMPORT_BEGIN@4761261784,IMPORT_END@4761467107,COMPILE_BEGIN@4761476492",
+          "2026-11-11T17:24:35.8115689Z     raise AssertionError('NATIVE_PHASE_TIMEOUT_'+str(timeout)+'S elapsed_ms='+str(round((time.monotonic()-started)*1000))+' phases='+summary) from None",
+          "2026-11-11T17:24:35.8116713Z AssertionError: NATIVE_PHASE_TIMEOUT_15S elapsed_ms=15013 phases=ENTRY@4990089052,SAFE_LOOKUP_BEGIN@4990122369"
+        ]
+      }
+    },
+    {
+      "repo": "unified-system",
+      "PR": 86,
+      "run": 43065002475,
+      "job": 130677477117,
+      "name": "test (windows-latest, 3.11)",
+      "file": "failed-original-logs/unified-system-130677477117.log",
+      "bytes": 252461,
+      "sha256": "e615534151fe7409c3774cbb959aebee686b3024357bf00103f10cd305ae6a0f",
+      "markers_only_not_cause_classification": {
+        "missing_modules": [],
+        "pytest_summary": [],
+        "source_identity": [],
+        "timeout": [
+          "2026-11-11T17:27:01.5939398Z     raise AssertionError('NATIVE_PHASE_TIMEOUT_'+str(timeout)+'S elapsed_ms='+str(round((time.monotonic()-started)*1000))+' phases='+summary) from None",
+          "2026-11-11T17:27:01.5941435Z AssertionError: NATIVE_PHASE_TIMEOUT_15S elapsed_ms=15016 phases=ENTRY@2882111863,IMPORT_BEGIN@2882207968,IMPORT_END@2882941115,MEMBER_BEGIN@2882941583,OBJECT_BEGIN@2882941642,",
+          "2026-11-11T17:27:01.5953000Z     raise AssertionError('NATIVE_PHASE_TIMEOUT_'+str(timeout)+'S elapsed_ms='+str(round((time.monotonic()-started)*1000))+' phases='+summary) from None",
+          "2026-11-11T17:27:01.5954067Z AssertionError: NATIVE_PHASE_TIMEOUT_15S elapsed_ms=15031 phases=ENTRY@3014432382,IMPORT_BEGIN@3014474327,IMPORT_END@3014713678,COMPILE_BEGIN@3014724365",
+          "2026-11-11T17:27:01.5961770Z     raise AssertionError('NATIVE_PHASE_TIMEOUT_'+str(timeout)+'S elapsed_ms='+str(round((time.monotonic()-started)*1000))+' phases='+summary) from None",
+          "2026-11-11T17:27:01.5962678Z AssertionError: NATIVE_PHASE_TIMEOUT_15S elapsed_ms=15016 phases=ENTRY@3269936428,SAFE_LOOKUP_BEGIN@3269978352",
+          "2026-11-11T17:27:01.5969969Z     raise AssertionError('NATIVE_PHASE_TIMEOUT_'+str(timeout)+'S elapsed_ms='+str(round((time.monotonic()-started)*1000))+' phases='+summary) from None",
+          "2026-11-11T17:27:01.5971158Z AssertionError: NATIVE_PHASE_TIMEOUT_30S elapsed_ms=30313 phases=ENTRY@3428854362,PARSE_BEGIN@3720317738,PARSE_END@3720437004,IMPORT_BEGIN@3720574288,IMPORT_END@3720696730,COMP"
+        ]
+      }
+    },
+    {
+      "repo": "unified-system",
+      "PR": 86,
+      "run": 43065002503,
+      "job": 130677476223,
+      "name": "synthetic (windows-latest)",
+      "file": "failed-original-logs/unified-system-130677476223.log",
+      "bytes": 254310,
+      "sha256": "a789ffda9d5a6f1d44e7e0404351a4756552010c7d7b344193f540513b72e807",
+      "markers_only_not_cause_classification": {
+        "missing_modules": [],
+        "pytest_summary": [],
+        "source_identity": [],
+        "timeout": [
+          "2026-11-11T17:26:25.7244688Z     raise AssertionError('NATIVE_PHASE_TIMEOUT_'+str(timeout)+'S elapsed_ms='+str(round((time.monotonic()-started)*1000))+' phases='+summary) from None",
+          "2026-11-11T17:26:25.7246869Z AssertionError: NATIVE_PHASE_TIMEOUT_15S elapsed_ms=15031 phases=ENTRY@2405703665,IMPORT_BEGIN@2405848783,IMPORT_END@2406546959,MEMBER_BEGIN@2406547490,OBJECT_BEGIN@2406547538,",
+          "2026-11-11T17:26:25.7255149Z     raise AssertionError('NATIVE_PHASE_TIMEOUT_'+str(timeout)+'S elapsed_ms='+str(round((time.monotonic()-started)*1000))+' phases='+summary) from None",
+          "2026-11-11T17:26:25.7256231Z AssertionError: NATIVE_PHASE_TIMEOUT_15S elapsed_ms=15031 phases=ENTRY@2537535698,IMPORT_BEGIN@2537577301,IMPORT_END@2537818477,COMPILE_BEGIN@2537829636",
+          "2026-11-11T17:26:25.7263275Z     raise AssertionError('NATIVE_PHASE_TIMEOUT_'+str(timeout)+'S elapsed_ms='+str(round((time.monotonic()-started)*1000))+' phases='+summary) from None",
+          "2026-11-11T17:26:25.7264659Z AssertionError: NATIVE_PHASE_TIMEOUT_15S elapsed_ms=15016 phases=ENTRY@2771648218,SAFE_LOOKUP_BEGIN@2771689383"
+        ]
+      }
+    },
+    {
+      "repo": "bybit-cluster-grid",
+      "PR": 283,
+      "run": 43052197019,
+      "job": 130632047075,
+      "name": "python-preflight (3.11)",
+      "file": "failed-original-logs/bybit-cluster-grid-130632047075.log",
+      "bytes": 69818,
+      "sha256": "8f92d51c29b0d3caa3d10453889beccce327ee439222e4b160d4f4cfbb120b00",
+      "markers_only_not_cause_classification": {
+        "missing_modules": [
+          "ModuleNotFoundError: No module named 'native_snapshot_consul_lab'",
+          "ModuleNotFoundError: No module named 'test_native_profile_v2'",
+          "ModuleNotFoundError: No module named 'jsonschema'",
+          "ModuleNotFoundError: No module named 'unified_system'"
+        ],
+        "pytest_summary": [
+          "7 errors during collection !!!!!!!!!!!!!!!!!!!!",
+          "7 errors in 2.48s"
+        ],
+        "source_identity": [],
+        "timeout": []
+      }
+    },
+    {
+      "repo": "bybit-cluster-grid",
+      "PR": 283,
+      "run": 43052196579,
+      "job": 130632046039,
+      "name": "linux-postgres18",
+      "file": "failed-original-logs/bybit-cluster-grid-130632046039.log",
+      "bytes": 78575,
+      "sha256": "e11974e36cbcb65cf80e32e7fde4f3074c21b2ebd33e86ad903df008b93a17aa",
+      "markers_only_not_cause_classification": {
+        "missing_modules": [
+          "ModuleNotFoundError: No module named 'native_snapshot_consul_lab'",
+          "ModuleNotFoundError: No module named 'test_native_profile_v2'",
+          "ModuleNotFoundError: No module named 'jsonschema'",
+          "ModuleNotFoundError: No module named 'unified_system'"
+        ],
+        "pytest_summary": [
+          "7 errors during collection !!!!!!!!!!!!!!!!!!!!",
+          "7 errors in 4.00s"
+        ],
+        "source_identity": [],
+        "timeout": []
+      }
+    }
+  ]
+}

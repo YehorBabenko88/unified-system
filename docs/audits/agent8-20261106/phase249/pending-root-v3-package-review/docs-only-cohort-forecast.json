@@ -1,0 +1,980 @@
+{
+  "schema": "review-only.docs-cohort-forecast.v1",
+  "source": "PR84 inherits bfa workflows; retained5fc map with only new-stock-workflow excluded",
+  "proposed_path": "release/acceptance-review/20261111-master-v3-review1/report.json",
+  "push_branch": "feature/level2-acceptance-review-20261110",
+  "pull_request_base": "feature/level2-preparation-integration-20261110",
+  "push_runs": 10,
+  "push_cells": 30,
+  "pr_runs": 21,
+  "pr_cells": 47,
+  "limits": "Declared cells before job if/platform validation/runner admission; no push; native path filters remain enforced; actual workflow bytes must be reconfirmed before publication",
+  "workflows": [
+    {
+      "path": ".github/workflows/agent2-control-api.yml",
+      "declared_cells": 4.0,
+      "push": {
+        "selected": false,
+        "branch": "feature/level2-acceptance-review-20261110",
+        "paths": [
+          "unified_system/control_api_readonly.py",
+          "tests/test_control_api_readonly.py",
+          "docs/architecture/control-api-readonly.md",
+          ".github/workflows/agent2-control-api.yml"
+        ],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      },
+      "pull_request": {
+        "selected": false,
+        "branch": "feature/level2-preparation-integration-20261110",
+        "paths": [
+          "unified_system/control_api_readonly.py",
+          "tests/test_control_api_readonly.py",
+          "docs/architecture/control-api-readonly.md",
+          ".github/workflows/agent2-control-api.yml"
+        ],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      }
+    },
+    {
+      "path": ".github/workflows/agent2-control-mux-runtime.yml",
+      "declared_cells": 2.0,
+      "push": {
+        "selected": false,
+        "branch": "feature/level2-acceptance-review-20261110",
+        "paths": [
+          "unified_system/control_mux/**",
+          "tests/control_mux/**",
+          "docs/control-mux/**",
+          ".github/workflows/agent2-control-mux-runtime.yml"
+        ],
+        "branches": [
+          "feature/agent2-control-mux-runtime-20261107",
+          "feature/agent2-control-mux-get-20261107"
+        ],
+        "source": "retained exact workflow event blocks"
+      },
+      "pull_request": {
+        "selected": false,
+        "branch": "feature/level2-preparation-integration-20261110",
+        "paths": [
+          "unified_system/control_mux/**",
+          "tests/control_mux/**",
+          "docs/control-mux/**",
+          ".github/workflows/agent2-control-mux-runtime.yml"
+        ],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      }
+    },
+    {
+      "path": ".github/workflows/agent4-manifest-codec.yml",
+      "declared_cells": 2.0,
+      "push": {
+        "selected": false,
+        "branch": "feature/level2-acceptance-review-20261110",
+        "paths": [],
+        "branches": [
+          "feature/storage-manifest-codec-20261107"
+        ],
+        "source": "retained exact workflow event blocks"
+      },
+      "pull_request": {
+        "selected": false,
+        "branch": "feature/level2-preparation-integration-20261110",
+        "paths": [
+          ".github/workflows/agent4-manifest-codec.yml",
+          "unified_system/storage/**",
+          "tests/storage/**",
+          "docs/storage/**"
+        ],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      }
+    },
+    {
+      "path": ".github/workflows/agent5-components.yml",
+      "declared_cells": 1.0,
+      "push": {
+        "selected": false,
+        "branch": "feature/level2-acceptance-review-20261110",
+        "paths": [],
+        "branches": [
+          "feature/agent5-scheduler-components-20261106"
+        ],
+        "source": "retained exact workflow event blocks"
+      },
+      "pull_request": {
+        "selected": false,
+        "branch": "feature/level2-preparation-integration-20261110",
+        "paths": [
+          "scheduler_components/**",
+          "tests/test_agent5_scheduler_components.py",
+          "docs/scheduler/**",
+          ".github/workflows/agent5-components.yml"
+        ],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      }
+    },
+    {
+      "path": ".github/workflows/ci-queue-controller.yml",
+      "declared_cells": 2.0,
+      "push": {
+        "selected": false,
+        "branch": "feature/level2-acceptance-review-20261110",
+        "paths": [],
+        "branches": [
+          "feature/ci-queue-controller-20261107"
+        ],
+        "source": "retained exact workflow event blocks"
+      },
+      "pull_request": {
+        "selected": false,
+        "branch": "feature/level2-preparation-integration-20261110",
+        "paths": [
+          "unified_system/ci_queue_controller.py",
+          "tests/test_ci_queue_controller.py",
+          "docs/operations/ci-queue-controller.md",
+          ".github/workflows/ci-queue-controller.yml"
+        ],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      }
+    },
+    {
+      "path": ".github/workflows/combined-infrastructure.yml",
+      "declared_cells": 4.0,
+      "push": {
+        "selected": true,
+        "branch": "feature/level2-acceptance-review-20261110",
+        "paths": [],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      },
+      "pull_request": {
+        "selected": true,
+        "branch": "feature/level2-preparation-integration-20261110",
+        "paths": [],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      }
+    },
+    {
+      "path": ".github/workflows/cross-repo-smoke.yml",
+      "declared_cells": 1.0,
+      "push": {
+        "selected": false,
+        "branch": "feature/level2-acceptance-review-20261110",
+        "paths": [],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      },
+      "pull_request": {
+        "selected": true,
+        "branch": "feature/level2-preparation-integration-20261110",
+        "paths": [],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      }
+    },
+    {
+      "path": ".github/workflows/durable-mission-controller.yml",
+      "declared_cells": 2.0,
+      "push": {
+        "selected": false,
+        "branch": "feature/level2-acceptance-review-20261110",
+        "paths": [],
+        "branches": [
+          "feature/durable-mission-controller-20261107"
+        ],
+        "source": "retained exact workflow event blocks"
+      },
+      "pull_request": {
+        "selected": false,
+        "branch": "feature/level2-preparation-integration-20261110",
+        "paths": [
+          "unified_system/mission_controller.py",
+          "unified_system/journal.py",
+          "unified_system/contracts.py",
+          "tests/test_mission_controller.py",
+          "tests/test_journal.py",
+          "tests/test_mission_workflow_inventory.py",
+          "docs/operations/development-task.schema.json",
+          ".github/workflows/durable-mission-controller.yml"
+        ],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      }
+    },
+    {
+      "path": ".github/workflows/final-integration.yml",
+      "declared_cells": 4.0,
+      "push": {
+        "selected": false,
+        "branch": "feature/level2-acceptance-review-20261110",
+        "paths": [],
+        "branches": [
+          "mission/final-integration-20261106"
+        ],
+        "source": "retained exact workflow event blocks"
+      },
+      "pull_request": {
+        "selected": true,
+        "branch": "feature/level2-preparation-integration-20261110",
+        "paths": [],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      }
+    },
+    {
+      "path": ".github/workflows/five-boundary.yml",
+      "declared_cells": 2.0,
+      "push": {
+        "selected": true,
+        "branch": "feature/level2-acceptance-review-20261110",
+        "paths": [],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      },
+      "pull_request": {
+        "selected": true,
+        "branch": "feature/level2-preparation-integration-20261110",
+        "paths": [],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      }
+    },
+    {
+      "path": ".github/workflows/five-module-infra.yml",
+      "declared_cells": 4.0,
+      "push": {
+        "selected": true,
+        "branch": "feature/level2-acceptance-review-20261110",
+        "paths": [],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      },
+      "pull_request": {
+        "selected": true,
+        "branch": "feature/level2-preparation-integration-20261110",
+        "paths": [],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      }
+    },
+    {
+      "path": ".github/workflows/five-source-integration.yml",
+      "declared_cells": 4.0,
+      "push": {
+        "selected": true,
+        "branch": "feature/level2-acceptance-review-20261110",
+        "paths": [],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      },
+      "pull_request": {
+        "selected": true,
+        "branch": "feature/level2-preparation-integration-20261110",
+        "paths": [],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      }
+    },
+    {
+      "path": ".github/workflows/fleet-control.yml",
+      "declared_cells": 4.0,
+      "push": {
+        "selected": true,
+        "branch": "feature/level2-acceptance-review-20261110",
+        "paths": [],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      },
+      "pull_request": {
+        "selected": true,
+        "branch": "feature/level2-preparation-integration-20261110",
+        "paths": [],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      }
+    },
+    {
+      "path": ".github/workflows/gateway-identity.yml",
+      "declared_cells": 2.0,
+      "push": {
+        "selected": false,
+        "branch": "feature/level2-acceptance-review-20261110",
+        "paths": [
+          "unified_system/gateway_identity.py",
+          "tests/test_gateway_identity.py",
+          "docs/intelligence/identity/**",
+          ".github/workflows/gateway-identity.yml"
+        ],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      },
+      "pull_request": {
+        "selected": false,
+        "branch": "feature/level2-preparation-integration-20261110",
+        "paths": [
+          "unified_system/gateway_identity.py",
+          "tests/test_gateway_identity.py",
+          "docs/intelligence/identity/**",
+          ".github/workflows/gateway-identity.yml",
+          "scheduler_components/**",
+          "tools/ci/**",
+          ".github/workflows/preparation-integrity.yml",
+          ".github/workflows/durable-mission-controller.yml",
+          "tests/test_mission_workflow_inventory.py"
+        ],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      }
+    },
+    {
+      "path": ".github/workflows/gateway-native-negative.yml",
+      "declared_cells": 2.0,
+      "push": {
+        "selected": false,
+        "branch": "feature/level2-acceptance-review-20261110",
+        "paths": [],
+        "branches": [
+          "feature/native-negative-path-20261109"
+        ],
+        "source": "retained exact workflow event blocks"
+      },
+      "pull_request": {
+        "selected": false,
+        "branch": "feature/level2-preparation-integration-20261110",
+        "paths": [
+          "unified_system/gateway_native_negative.py",
+          "tests/gateway_native_negative/**",
+          "docs/intelligence/native-negative/**",
+          "release/integration/native-negative-v1/**",
+          ".github/workflows/gateway-native-negative.yml"
+        ],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      }
+    },
+    {
+      "path": ".github/workflows/gateway-research-identity.yml",
+      "declared_cells": 2.0,
+      "push": {
+        "selected": false,
+        "branch": "feature/level2-acceptance-review-20261110",
+        "paths": [
+          "unified_system/gateway_research_identity.py",
+          "tests/gateway_research_identity/**",
+          "docs/intelligence/research-identity/**",
+          ".github/workflows/gateway-research-identity.yml"
+        ],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      },
+      "pull_request": {
+        "selected": false,
+        "branch": "feature/level2-preparation-integration-20261110",
+        "paths": [
+          "unified_system/gateway_research_identity.py",
+          "tests/gateway_research_identity/**",
+          "docs/intelligence/research-identity/**",
+          ".github/workflows/gateway-research-identity.yml"
+        ],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      }
+    },
+    {
+      "path": ".github/workflows/gateway-runtime-integration.yml",
+      "declared_cells": 2.0,
+      "push": {
+        "selected": false,
+        "branch": "feature/level2-acceptance-review-20261110",
+        "paths": [],
+        "branches": [
+          "integration/gateway-runtime-20261107"
+        ],
+        "source": "retained exact workflow event blocks"
+      },
+      "pull_request": {
+        "selected": false,
+        "branch": "feature/level2-preparation-integration-20261110",
+        "paths": [
+          "unified_system/gateway_runtime_composition.py",
+          "unified_system/gateway_identity.py",
+          "unified_system/storage/**",
+          "tests/gateway_runtime/**",
+          "tests/storage/**",
+          "docs/intelligence/runtime-integration/**",
+          "release/evidence/gateway-runtime-synthetic-profile-review1/**",
+          ".github/workflows/gateway-runtime-integration.yml"
+        ],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      }
+    },
+    {
+      "path": ".github/workflows/gateway-target-adapter.yml",
+      "declared_cells": 2.0,
+      "push": {
+        "selected": false,
+        "branch": "feature/level2-acceptance-review-20261110",
+        "paths": [],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      },
+      "pull_request": {
+        "selected": false,
+        "branch": "feature/level2-preparation-integration-20261110",
+        "paths": [
+          "unified_system/gateway_target_adapter.py",
+          "tests/gateway_target_adapter/**",
+          "docs/intelligence/target-adapter/**",
+          ".github/workflows/gateway-target-adapter.yml"
+        ],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      }
+    },
+    {
+      "path": ".github/workflows/handoff-roundtrip.yml",
+      "declared_cells": 1.0,
+      "push": {
+        "selected": false,
+        "branch": "feature/level2-acceptance-review-20261110",
+        "paths": [],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      },
+      "pull_request": {
+        "selected": true,
+        "branch": "feature/level2-preparation-integration-20261110",
+        "paths": [],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      }
+    },
+    {
+      "path": ".github/workflows/installer-archive-namespace.yml",
+      "declared_cells": 2.0,
+      "push": {
+        "selected": false,
+        "branch": "feature/level2-acceptance-review-20261110",
+        "paths": [],
+        "branches": [
+          "mission/final-integration-20261106"
+        ],
+        "source": "retained exact workflow event blocks"
+      },
+      "pull_request": {
+        "selected": false,
+        "branch": "feature/level2-preparation-integration-20261110",
+        "paths": [
+          "scripts/prepare_lab_capsule.py",
+          "tests/test_lab_capsule_archive_namespace.py",
+          ".github/workflows/installer-archive-namespace.yml"
+        ],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      }
+    },
+    {
+      "path": ".github/workflows/installer-security.yml",
+      "declared_cells": 2.0,
+      "push": {
+        "selected": true,
+        "branch": "feature/level2-acceptance-review-20261110",
+        "paths": [],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      },
+      "pull_request": {
+        "selected": true,
+        "branch": "feature/level2-preparation-integration-20261110",
+        "paths": [],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      }
+    },
+    {
+      "path": ".github/workflows/integration-registry.yml",
+      "declared_cells": 2.0,
+      "push": {
+        "selected": false,
+        "branch": "feature/level2-acceptance-review-20261110",
+        "paths": [],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      },
+      "pull_request": {
+        "selected": false,
+        "branch": "feature/level2-preparation-integration-20261110",
+        "paths": [
+          "coordination/**",
+          "unified_system/integration_registry.py",
+          "tests/test_integration_registry.py",
+          ".github/workflows/integration-registry.yml"
+        ],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      }
+    },
+    {
+      "path": ".github/workflows/intelligence-gateway.yml",
+      "declared_cells": 2.0,
+      "push": {
+        "selected": false,
+        "branch": "feature/level2-acceptance-review-20261110",
+        "paths": [],
+        "branches": [
+          "feature/intelligence-gateway-20261107"
+        ],
+        "source": "retained exact workflow event blocks"
+      },
+      "pull_request": {
+        "selected": false,
+        "branch": "feature/level2-preparation-integration-20261110",
+        "paths": [
+          "unified_system/intelligence_gateway.py",
+          "tests/test_intelligence_gateway.py",
+          "docs/intelligence/**",
+          ".github/workflows/intelligence-gateway.yml"
+        ],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      }
+    },
+    {
+      "path": ".github/workflows/lab-stopped-service.yml",
+      "declared_cells": 2.0,
+      "push": {
+        "selected": true,
+        "branch": "feature/level2-acceptance-review-20261110",
+        "paths": [],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      },
+      "pull_request": {
+        "selected": true,
+        "branch": "feature/level2-preparation-integration-20261110",
+        "paths": [],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      }
+    },
+    {
+      "path": ".github/workflows/lan-mux-isolated.yml",
+      "declared_cells": 2.0,
+      "push": {
+        "selected": false,
+        "branch": "feature/level2-acceptance-review-20261110",
+        "paths": [],
+        "branches": [
+          "mission/final-integration-20261106"
+        ],
+        "source": "retained exact workflow event blocks"
+      },
+      "pull_request": {
+        "selected": false,
+        "branch": "feature/level2-preparation-integration-20261110",
+        "paths": [
+          "unified_system/lan_transport.py",
+          "unified_system/network_budget.py",
+          "unified_system/lan_mux_channel.py",
+          "tests/test_lan_transport.py",
+          "tests/lan_failure_diagnostics.py",
+          "tests/test_network_budget.py",
+          "tests/test_lan_mux_channel.py",
+          "tests/test_lan_mux_inventory.py",
+          "release/lan-mux-test-inventory.json",
+          ".github/workflows/lan-mux-isolated.yml"
+        ],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      }
+    },
+    {
+      "path": ".github/workflows/lifecycle-evidence.yml",
+      "declared_cells": 2.0,
+      "push": {
+        "selected": true,
+        "branch": "feature/level2-acceptance-review-20261110",
+        "paths": [],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      },
+      "pull_request": {
+        "selected": true,
+        "branch": "feature/level2-preparation-integration-20261110",
+        "paths": [],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      }
+    },
+    {
+      "path": ".github/workflows/loopback-status.yml",
+      "declared_cells": 4.0,
+      "push": {
+        "selected": false,
+        "branch": "feature/level2-acceptance-review-20261110",
+        "paths": [],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      },
+      "pull_request": {
+        "selected": true,
+        "branch": "feature/level2-preparation-integration-20261110",
+        "paths": [],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      }
+    },
+    {
+      "path": ".github/workflows/ls5-physical-dev-source.yml",
+      "declared_cells": 2.0,
+      "push": {
+        "selected": false,
+        "branch": "feature/level2-acceptance-review-20261110",
+        "paths": [],
+        "branches": [
+          "feature/ls5-physical-dev-source-ci-20261109"
+        ],
+        "source": "retained exact workflow event blocks"
+      },
+      "pull_request": {
+        "selected": false,
+        "branch": "feature/level2-preparation-integration-20261110",
+        "paths": [
+          "tools/physical_dev/**",
+          "tests/physical_dev/**",
+          ".github/workflows/ls5-physical-dev-source.yml"
+        ],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      }
+    },
+    {
+      "path": ".github/workflows/node-supervisor-v2.yml",
+      "declared_cells": 2.0,
+      "push": {
+        "selected": false,
+        "branch": "feature/level2-acceptance-review-20261110",
+        "paths": [],
+        "branches": [
+          "feature/node-supervisor-v2-20261107"
+        ],
+        "source": "retained exact workflow event blocks"
+      },
+      "pull_request": {
+        "selected": false,
+        "branch": "feature/level2-preparation-integration-20261110",
+        "paths": [
+          "unified_system/node_supervisor_v2.py",
+          "unified_system/node_task_journal.py",
+          "tests/test_node_supervisor_v2.py",
+          "tests/test_node_task_journal.py",
+          "docs/operations/node-supervisor-v2.md",
+          ".github/workflows/node-supervisor-v2.yml"
+        ],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      }
+    },
+    {
+      "path": ".github/workflows/operator-grid-contracts.yml",
+      "declared_cells": 1.0,
+      "push": {
+        "selected": false,
+        "branch": "feature/level2-acceptance-review-20261110",
+        "paths": [],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      },
+      "pull_request": {
+        "selected": true,
+        "branch": "feature/level2-preparation-integration-20261110",
+        "paths": [],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      }
+    },
+    {
+      "path": ".github/workflows/paper-causal.yml",
+      "declared_cells": 2.0,
+      "push": {
+        "selected": true,
+        "branch": "feature/level2-acceptance-review-20261110",
+        "paths": [],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      },
+      "pull_request": {
+        "selected": true,
+        "branch": "feature/level2-preparation-integration-20261110",
+        "paths": [],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      }
+    },
+    {
+      "path": ".github/workflows/preparation-integrity.yml",
+      "declared_cells": 2.0,
+      "push": {
+        "selected": false,
+        "branch": "feature/level2-acceptance-review-20261110",
+        "paths": [
+          "scheduler_components/**",
+          "tests/test_agent5_scheduler_components.py",
+          "tests/test_preparation_integrity.py",
+          "tests/test_preparation_qualification.py",
+          "tools/ci/qualify_preparation_integrity.py",
+          "docs/scheduler/component-test-inventory-v2.json",
+          "docs/ci/preparation-integrity-inventory-v1.json",
+          "docs/ci/requirements-unittest.lock",
+          ".github/workflows/preparation-integrity.yml"
+        ],
+        "branches": [
+          "main"
+        ],
+        "source": "retained exact workflow event blocks"
+      },
+      "pull_request": {
+        "selected": false,
+        "branch": "feature/level2-preparation-integration-20261110",
+        "paths": [
+          "scheduler_components/**",
+          "tests/test_agent5_scheduler_components.py",
+          "tests/test_preparation_integrity.py",
+          "tests/test_preparation_qualification.py",
+          "tools/ci/qualify_preparation_integrity.py",
+          "docs/scheduler/component-test-inventory-v2.json",
+          "docs/ci/preparation-integrity-inventory-v1.json",
+          "docs/ci/requirements-unittest.lock",
+          ".github/workflows/preparation-integrity.yml"
+        ],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      }
+    },
+    {
+      "path": ".github/workflows/provenance-handoff-smoke.yml",
+      "declared_cells": 1.0,
+      "push": {
+        "selected": false,
+        "branch": "feature/level2-acceptance-review-20261110",
+        "paths": [],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      },
+      "pull_request": {
+        "selected": true,
+        "branch": "feature/level2-preparation-integration-20261110",
+        "paths": [],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      }
+    },
+    {
+      "path": ".github/workflows/real-supervisor-terminan.yml",
+      "declared_cells": 1.0,
+      "push": {
+        "selected": false,
+        "branch": "feature/level2-acceptance-review-20261110",
+        "paths": [],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      },
+      "pull_request": {
+        "selected": true,
+        "branch": "feature/level2-preparation-integration-20261110",
+        "paths": [],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      }
+    },
+    {
+      "path": ".github/workflows/storage-native-publication.yml",
+      "declared_cells": 2.0,
+      "push": {
+        "selected": false,
+        "branch": "feature/level2-acceptance-review-20261110",
+        "paths": [],
+        "branches": [
+          "feature/storage-native-publication-20261109"
+        ],
+        "source": "retained exact workflow event blocks"
+      },
+      "pull_request": {
+        "selected": false,
+        "branch": "feature/level2-preparation-integration-20261110",
+        "paths": [
+          "unified_system/storage/result_publication.py",
+          "unified_system/storage/replica_evidence.py",
+          "unified_system/storage/publication_records.py",
+          "unified_system/storage/publication_recovery.py",
+          "tests/storage/native_publication/**",
+          "docs/storage/native-publication/**",
+          ".github/workflows/storage-native-publication.yml"
+        ],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      }
+    },
+    {
+      "path": ".github/workflows/supervisor-deployment-plan.yml",
+      "declared_cells": 2.0,
+      "push": {
+        "selected": false,
+        "branch": "feature/level2-acceptance-review-20261110",
+        "paths": [],
+        "branches": [
+          "feature/supervisor-root-adapters-20261107"
+        ],
+        "source": "retained exact workflow event blocks"
+      },
+      "pull_request": {
+        "selected": false,
+        "branch": "feature/level2-preparation-integration-20261110",
+        "paths": [
+          "unified_system/supervisor_deployment.py",
+          "tests/test_supervisor_deployment.py",
+          ".github/workflows/supervisor-deployment-plan.yml"
+        ],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      }
+    },
+    {
+      "path": ".github/workflows/supervisor-local-integration.yml",
+      "declared_cells": 2.0,
+      "push": {
+        "selected": false,
+        "branch": "feature/level2-acceptance-review-20261110",
+        "paths": [],
+        "branches": [
+          "feature/supervisor-local-integration-20261107"
+        ],
+        "source": "retained exact workflow event blocks"
+      },
+      "pull_request": {
+        "selected": false,
+        "branch": "feature/level2-preparation-integration-20261110",
+        "paths": [
+          "unified_system/**",
+          "tests/test_node_task_journal.py",
+          "tests/test_node_supervisor_v2.py",
+          "tests/test_ci_queue_controller.py",
+          "tests/test_mission_controller.py",
+          "tests/test_journal.py",
+          "tests/test_supervisor_deployment.py",
+          "tests/test_supervisor_local_integration.py",
+          "tests/test_lab_release.py",
+          "tests/test_installation_service.py",
+          "release/evidence/supervisor-local-integration-fixtures/**",
+          ".github/workflows/supervisor-local-integration.yml",
+          "scheduler_components/**",
+          "tools/ci/**",
+          ".github/workflows/preparation-integrity.yml",
+          ".github/workflows/durable-mission-controller.yml",
+          "tests/test_mission_workflow_inventory.py"
+        ],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      }
+    },
+    {
+      "path": ".github/workflows/terminan-contract-smoke.yml",
+      "declared_cells": 1.0,
+      "push": {
+        "selected": false,
+        "branch": "feature/level2-acceptance-review-20261110",
+        "paths": [],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      },
+      "pull_request": {
+        "selected": true,
+        "branch": "feature/level2-preparation-integration-20261110",
+        "paths": [],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      }
+    },
+    {
+      "path": ".github/workflows/terminan-supervisor-http.yml",
+      "declared_cells": 1.0,
+      "push": {
+        "selected": false,
+        "branch": "feature/level2-acceptance-review-20261110",
+        "paths": [],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      },
+      "pull_request": {
+        "selected": true,
+        "branch": "feature/level2-preparation-integration-20261110",
+        "paths": [],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      }
+    },
+    {
+      "path": ".github/workflows/tests.yml",
+      "declared_cells": 4.0,
+      "push": {
+        "selected": true,
+        "branch": "feature/level2-acceptance-review-20261110",
+        "paths": [],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      },
+      "pull_request": {
+        "selected": true,
+        "branch": "feature/level2-preparation-integration-20261110",
+        "paths": [],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      }
+    },
+    {
+      "path": ".github/workflows/three-module-chain.yml",
+      "declared_cells": 1.0,
+      "push": {
+        "selected": false,
+        "branch": "feature/level2-acceptance-review-20261110",
+        "paths": [],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      },
+      "pull_request": {
+        "selected": true,
+        "branch": "feature/level2-preparation-integration-20261110",
+        "paths": [],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      }
+    },
+    {
+      "path": ".github/workflows/unified-terminan-status.yml",
+      "declared_cells": 1.0,
+      "push": {
+        "selected": false,
+        "branch": "feature/level2-acceptance-review-20261110",
+        "paths": [],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      },
+      "pull_request": {
+        "selected": true,
+        "branch": "feature/level2-preparation-integration-20261110",
+        "paths": [],
+        "branches": [],
+        "source": "retained exact workflow event blocks"
+      }
+    }
+  ]
+}

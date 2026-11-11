@@ -1,0 +1,1079 @@
+﻿2026-11-07T20:21:21.5817008Z Current runner version: '2.338.2'
+2026-11-07T20:21:21.5834056Z ##[group]Runner Image Provisioner
+2026-11-07T20:21:21.5834679Z Hosted Compute Agent
+2026-11-07T20:21:21.5835159Z Version: 20261028.624
+2026-11-07T20:21:21.5835572Z Commit: 54898b74c23fde5556c9b3c3a2290865feef0dfe
+2026-11-07T20:21:21.5836047Z Build Date: 2026-10-28T21:51:42Z
+2026-11-07T20:21:21.5836469Z Worker ID: {08ae88ca-2053-4c5a-b604-9f2f60ff4378}
+2026-11-07T20:21:21.5836930Z Region: centralus
+2026-11-07T20:21:21.5837266Z Cloud: Azure
+2026-11-07T20:21:21.5837596Z ##[endgroup]
+2026-11-07T20:21:21.5838461Z ##[group]Operating System
+2026-11-07T20:21:21.5838851Z Ubuntu
+2026-11-07T20:21:21.5839210Z 26.04.1
+2026-11-07T20:21:21.5839525Z LTS
+2026-11-07T20:21:21.5839830Z ##[endgroup]
+2026-11-07T20:21:21.5840237Z ##[group]Runner Image
+2026-11-07T20:21:21.5840601Z Image: ubuntu-26.04
+2026-11-07T20:21:21.5840968Z Version: 20261101.186.1
+2026-11-07T20:21:21.5841749Z Included Software: https://github.com/actions/runner-images/blob/ubuntu26/20261101.186/images/ubuntu/Ubuntu2604-Readme.md
+2026-11-07T20:21:21.5842693Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu26%2F20261101.186
+2026-11-07T20:21:21.5843251Z ##[endgroup]
+2026-11-07T20:21:21.5843948Z ##[group]GITHUB_TOKEN Permissions
+2026-11-07T20:21:21.5845268Z Contents: read
+2026-11-07T20:21:21.5845664Z Metadata: read
+2026-11-07T20:21:21.5846051Z ##[endgroup]
+2026-11-07T20:21:21.5847348Z Secret source: Actions
+2026-11-07T20:21:21.5847949Z Cache mode: write
+2026-11-07T20:21:21.5848369Z Prepare workflow directory
+2026-11-07T20:21:21.6313833Z Prepare all required actions
+2026-11-07T20:21:21.6347390Z Getting action download info
+2026-11-07T20:21:21.8644780Z Download action repository 'actions/checkout@11d5960a326750d5838078e36cf38b85af677262' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-11-07T20:21:21.9600452Z Download action repository 'actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+2026-11-07T20:21:22.0180329Z Download action repository 'actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+2026-11-07T20:21:22.1235379Z Download action repository 'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-11-07T20:21:22.3065217Z Complete job name: Full suite Node 24 / PostgreSQL 16
+2026-11-07T20:21:22.3453676Z ##[group]Checking docker version
+2026-11-07T20:21:22.3463396Z ##[command]/usr/bin/docker version --format '{{.Server.APIVersion}}'
+2026-11-07T20:21:22.4205816Z '1.54'
+2026-11-07T20:21:22.4226073Z Docker daemon API version: '1.54'
+2026-11-07T20:21:22.4226570Z ##[command]/usr/bin/docker version --format '{{.Client.APIVersion}}'
+2026-11-07T20:21:22.4378786Z '1.54'
+2026-11-07T20:21:22.4393852Z Docker client API version: '1.54'
+2026-11-07T20:21:22.4397768Z ##[endgroup]
+2026-11-07T20:21:22.4399616Z ##[group]Clean up resources from previous jobs
+2026-11-07T20:21:22.4403435Z ##[command]/usr/bin/docker ps --all --quiet --no-trunc --filter "label=4726d3"
+2026-11-07T20:21:22.4533229Z ##[command]/usr/bin/docker network prune --force --filter "label=4726d3"
+2026-11-07T20:21:22.4656962Z ##[endgroup]
+2026-11-07T20:21:22.4657273Z ##[group]Create local container network
+2026-11-07T20:21:22.4663456Z ##[command]/usr/bin/docker network create --label 4726d3 github_network_b329c1890490406cbb14045b0494a692
+2026-11-07T20:21:22.5015666Z 85539da5a9b520bad8a782a76af1d32a54beaffc4f9733c84a1647e946590b3a
+2026-11-07T20:21:22.5039632Z ##[endgroup]
+2026-11-07T20:21:22.5059596Z ##[group]Starting postgres service container
+2026-11-07T20:21:22.5074765Z ##[command]/usr/bin/docker pull postgres:16
+2026-11-07T20:21:23.0692242Z 16: Pulling from library/postgres
+2026-11-07T20:21:23.2779770Z 37fb86c2a767: Pulling fs layer
+2026-11-07T20:21:23.2801874Z 369949eb0229: Pulling fs layer
+2026-11-07T20:21:23.2802706Z da434b32d480: Pulling fs layer
+2026-11-07T20:21:23.2878532Z 7e0f86eb8508: Pulling fs layer
+2026-11-07T20:21:23.2879690Z bcc75ab4e010: Pulling fs layer
+2026-11-07T20:21:23.2880605Z c924699dde26: Pulling fs layer
+2026-11-07T20:21:23.2881069Z d9f83a042741: Pulling fs layer
+2026-11-07T20:21:23.2881571Z 379ccbe62e26: Pulling fs layer
+2026-11-07T20:21:23.2882043Z 1244f763be36: Pulling fs layer
+2026-11-07T20:21:23.2882500Z e9dd37612d7b: Pulling fs layer
+2026-11-07T20:21:23.2882956Z a28de24f57c0: Pulling fs layer
+2026-11-07T20:21:23.2883422Z be193f0583fb: Pulling fs layer
+2026-11-07T20:21:23.2883869Z 6d141360b363: Pulling fs layer
+2026-11-07T20:21:23.2884297Z 9732cf873eb7: Pulling fs layer
+2026-11-07T20:21:23.5243863Z 6d141360b363: Download complete
+2026-11-07T20:21:23.5287411Z be193f0583fb: Download complete
+2026-11-07T20:21:23.5288437Z c924699dde26: Download complete
+2026-11-07T20:21:23.5298822Z d9f83a042741: Download complete
+2026-11-07T20:21:23.5310061Z 1244f763be36: Download complete
+2026-11-07T20:21:23.5321868Z e9dd37612d7b: Download complete
+2026-11-07T20:21:23.5332679Z 9732cf873eb7: Download complete
+2026-11-07T20:21:23.5340431Z a28de24f57c0: Download complete
+2026-11-07T20:21:23.8205563Z da434b32d480: Download complete
+2026-11-07T20:21:23.8206668Z 3e9a8bde18c8: Download complete
+2026-11-07T20:21:23.8216081Z bcc75ab4e010: Download complete
+2026-11-07T20:21:23.8218320Z aad9f8e2454d: Download complete
+2026-11-07T20:21:23.8222238Z 37fb86c2a767: Download complete
+2026-11-07T20:21:23.8232922Z 369949eb0229: Download complete
+2026-11-07T20:21:23.8236100Z 7e0f86eb8508: Download complete
+2026-11-07T20:21:24.5203178Z 379ccbe62e26: Download complete
+2026-11-07T20:21:24.5265609Z e9dd37612d7b: Pull complete
+2026-11-07T20:21:24.5315786Z 37fb86c2a767: Pull complete
+2026-11-07T20:21:24.6286631Z 369949eb0229: Pull complete
+2026-11-07T20:21:24.6291878Z 7e0f86eb8508: Pull complete
+2026-11-07T20:21:24.7270056Z da434b32d480: Pull complete
+2026-11-07T20:21:24.8211522Z 6d141360b363: Pull complete
+2026-11-07T20:21:24.8275458Z a28de24f57c0: Pull complete
+2026-11-07T20:21:24.8276174Z bcc75ab4e010: Pull complete
+2026-11-07T20:21:26.1066593Z be193f0583fb: Pull complete
+2026-11-07T20:21:26.1072091Z c924699dde26: Pull complete
+2026-11-07T20:21:26.1082152Z d9f83a042741: Pull complete
+2026-11-07T20:21:26.1092515Z 1244f763be36: Pull complete
+2026-11-07T20:21:26.1101994Z 9732cf873eb7: Pull complete
+2026-11-07T20:21:26.1110420Z 379ccbe62e26: Pull complete
+2026-11-07T20:21:26.1111505Z Digest: sha256:f9a7b9ebf6f56201f949db745e47bc423c0f0f8294bafe991cc10bf74b029657
+2026-11-07T20:21:26.1112045Z Status: Downloaded newer image for postgres:16
+2026-11-07T20:21:26.1115528Z docker.io/library/postgres:16
+2026-11-07T20:21:26.1183415Z ##[command]/usr/bin/docker create --name 75e11fb0e5c04bb09491eac852b3285c_postgres16_b5c3aa --label 4726d3 --network github_network_b329c1890490406cbb14045b0494a692 --network-alias postgres -p 5432:5432 --health-cmd "pg_isready -U math_test -d math_universe_test" --health-interval 5s --health-timeout 5s --health-retries 10 -e "POSTGRES_DB=math_universe_test" -e "POSTGRES_USER=math_test" -e "POSTGRES_PASSWORD=math_test_ci_only" -e GITHUB_ACTIONS=true -e CI=true postgres:16
+2026-11-07T20:21:30.6632290Z 4d72510870031c749cfa67caee4355437d8e1f04d882d0650719f981da130c45
+2026-11-07T20:21:30.6655158Z ##[command]/usr/bin/docker start 4d72510870031c749cfa67caee4355437d8e1f04d882d0650719f981da130c45
+2026-11-07T20:21:30.8387126Z 4d72510870031c749cfa67caee4355437d8e1f04d882d0650719f981da130c45
+2026-11-07T20:21:30.8413016Z ##[command]/usr/bin/docker ps --all --filter id=4d72510870031c749cfa67caee4355437d8e1f04d882d0650719f981da130c45 --filter status=running --no-trunc --format "{{.ID}} {{.Status}}"
+2026-11-07T20:21:30.8628835Z 4d72510870031c749cfa67caee4355437d8e1f04d882d0650719f981da130c45 Up Less than a second (health: starting)
+2026-11-07T20:21:30.8653832Z ##[command]/usr/bin/docker port 4d72510870031c749cfa67caee4355437d8e1f04d882d0650719f981da130c45
+2026-11-07T20:21:30.8786587Z 5432/tcp -> 0.0.0.0:5432
+2026-11-07T20:21:30.8786872Z 5432/tcp -> [::]:5432
+2026-11-07T20:21:30.8844120Z ##[endgroup]
+2026-11-07T20:21:30.8852475Z ##[group]Waiting for all services to be ready
+2026-11-07T20:21:30.8863756Z ##[command]/usr/bin/docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" 4d72510870031c749cfa67caee4355437d8e1f04d882d0650719f981da130c45
+2026-11-07T20:21:30.8985666Z starting
+2026-11-07T20:21:30.9005979Z postgres service is starting, waiting 2 seconds before checking again.
+2026-11-07T20:21:32.9002052Z ##[command]/usr/bin/docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" 4d72510870031c749cfa67caee4355437d8e1f04d882d0650719f981da130c45
+2026-11-07T20:21:32.9112638Z starting
+2026-11-07T20:21:32.9127932Z postgres service is starting, waiting 4 seconds before checking again.
+2026-11-07T20:21:37.0438062Z ##[command]/usr/bin/docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" 4d72510870031c749cfa67caee4355437d8e1f04d882d0650719f981da130c45
+2026-11-07T20:21:37.0549994Z healthy
+2026-11-07T20:21:37.0568076Z postgres service is healthy.
+2026-11-07T20:21:37.0568607Z ##[endgroup]
+2026-11-07T20:21:37.0742489Z ##[group]Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+2026-11-07T20:21:37.0743046Z with:
+2026-11-07T20:21:37.0743189Z   persist-credentials: false
+2026-11-07T20:21:37.0743357Z   ref: 20f5d15d5028c598309aa05b8f6e2d834764441b
+2026-11-07T20:21:37.0743525Z   fetch-depth: 0
+2026-11-07T20:21:37.0743655Z   repository: YehorBabenko88/math
+2026-11-07T20:21:37.0745597Z   token: ***
+2026-11-07T20:21:37.0745721Z   ssh-strict: true
+2026-11-07T20:21:37.0745842Z   ssh-user: git
+2026-11-07T20:21:37.0745953Z   clean: true
+2026-11-07T20:21:37.0746084Z   sparse-checkout-cone-mode: true
+2026-11-07T20:21:37.0746231Z   fetch-tags: false
+2026-11-07T20:21:37.0746356Z   show-progress: true
+2026-11-07T20:21:37.0746476Z   lfs: false
+2026-11-07T20:21:37.0746588Z   submodules: false
+2026-11-07T20:21:37.0746716Z   set-safe-directory: true
+2026-11-07T20:21:37.0746863Z   allow-unsafe-pr-checkout: false
+2026-11-07T20:21:37.0747156Z env:
+2026-11-07T20:21:37.0747329Z   PROVENANCE_CONTEXT: Full suite Node 24 / PostgreSQL 16
+2026-11-07T20:21:37.0747524Z   BOOK_INGESTION_PYTHON: python
+2026-11-07T20:21:37.0747846Z   MATH_UNIVERSE_TEST_DATABASE_URL: ***127.0.0.1:5432/math_universe_test
+2026-11-07T20:21:37.0748046Z ##[endgroup]
+2026-11-07T20:21:37.2622202Z Syncing repository: YehorBabenko88/math
+2026-11-07T20:21:37.2623191Z ##[group]Getting Git version info
+2026-11-07T20:21:37.2623382Z Working directory is '/home/runner/work/math/math'
+2026-11-07T20:21:37.2623665Z [command]/usr/bin/git version
+2026-11-07T20:21:37.2623883Z git version 2.56.0
+2026-11-07T20:21:37.2632760Z ##[endgroup]
+2026-11-07T20:21:37.2641315Z Temporarily overriding HOME='/home/runner/work/_temp/878491f5-7adc-4bdd-acc6-52abad45647a' before making global git config changes
+2026-11-07T20:21:37.2641943Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-07T20:21:37.2645030Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/math/math
+2026-11-07T20:21:37.2696963Z Deleting the contents of '/home/runner/work/math/math'
+2026-11-07T20:21:37.2699783Z ##[group]Initializing the repository
+2026-11-07T20:21:37.2701927Z [command]/usr/bin/git init /home/runner/work/math/math
+2026-11-07T20:21:37.2785175Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-11-07T20:21:37.2785693Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-11-07T20:21:37.2786231Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-11-07T20:21:37.2786559Z hint: call:
+2026-11-07T20:21:37.2786691Z hint:
+2026-11-07T20:21:37.2786902Z hint: 	git config --global init.defaultBranch <name>
+2026-11-07T20:21:37.2787095Z hint:
+2026-11-07T20:21:37.2787264Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-11-07T20:21:37.2787537Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-11-07T20:21:37.2787741Z hint:
+2026-11-07T20:21:37.2787862Z hint: 	git branch -m <name>
+2026-11-07T20:21:37.2788017Z hint:
+2026-11-07T20:21:37.2788498Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-11-07T20:21:37.2799725Z Initialized empty Git repository in /home/runner/work/math/math/.git/
+2026-11-07T20:21:37.2804343Z [command]/usr/bin/git remote add origin https://github.com/YehorBabenko88/math
+2026-11-07T20:21:37.2887483Z ##[endgroup]
+2026-11-07T20:21:37.2887837Z ##[group]Disabling automatic garbage collection
+2026-11-07T20:21:37.2890205Z [command]/usr/bin/git config --local gc.auto 0
+2026-11-07T20:21:37.2925941Z ##[endgroup]
+2026-11-07T20:21:37.2926325Z ##[group]Setting up auth
+2026-11-07T20:21:37.2931741Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-07T20:21:37.2961206Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-07T20:21:37.3313325Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-07T20:21:37.3341080Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-07T20:21:37.3556640Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-07T20:21:37.3583042Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-07T20:21:37.3795268Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-07T20:21:37.3826945Z ##[endgroup]
+2026-11-07T20:21:37.3827301Z ##[group]Fetching the repository
+2026-11-07T20:21:37.3833270Z [command]/usr/bin/git -c protocol.version=2 fetch --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*
+2026-11-07T20:21:38.0074396Z From https://github.com/YehorBabenko88/math
+2026-11-07T20:21:38.0075173Z  * [new branch]      agent7/math-history-statistics-overflow-20261107 -> origin/agent7/math-history-statistics-overflow-20261107
+2026-11-07T20:21:38.0076008Z  * [new branch]      agent7/math-loader-init-diagnostics-20261106 -> origin/agent7/math-loader-init-diagnostics-20261106
+2026-11-07T20:21:38.0076703Z  * [new branch]      agent7/math-loader-init-followup-20261107 -> origin/agent7/math-loader-init-followup-20261107
+2026-11-07T20:21:38.0077337Z  * [new branch]      agent7/math-native-research-20261106 -> origin/agent7/math-native-research-20261106
+2026-11-07T20:21:38.0077961Z  * [new branch]      agent7/math-verifier-import-20261107 -> origin/agent7/math-verifier-import-20261107
+2026-11-07T20:21:38.0078610Z  * [new branch]      audit/ai-codex-pr31-object-format-20261025 -> origin/audit/ai-codex-pr31-object-format-20261025
+2026-11-07T20:21:38.0079186Z  * [new branch]      audit/base-pr31-cb168925-pinned -> origin/audit/base-pr31-cb168925-pinned
+2026-11-07T20:21:38.0079538Z  * [new branch]      audit/book-cutover-hardening -> origin/audit/book-cutover-hardening
+2026-11-07T20:21:38.0079900Z  * [new branch]      audit/book-full-ci-coverage -> origin/audit/book-full-ci-coverage
+2026-11-07T20:21:38.0080324Z  * [new branch]      audit/book-ingestion-trust-boundary-20261022 -> origin/audit/book-ingestion-trust-boundary-20261022
+2026-11-07T20:21:38.0080735Z  * [new branch]      audit/book-migration-integrity -> origin/audit/book-migration-integrity
+2026-11-07T20:21:38.0081049Z  * [new branch]      audit/g0-query-contract -> origin/audit/g0-query-contract
+2026-11-07T20:21:38.0081488Z  * [new branch]      audit/gpt1-pr80-diagnostic-20261027 -> origin/audit/gpt1-pr80-diagnostic-20261027
+2026-11-07T20:21:38.0082123Z  * [new branch]      audit/gpt1-pr80-os-attribution-20261027 -> origin/audit/gpt1-pr80-os-attribution-20261027
+2026-11-07T20:21:38.0082612Z  * [new branch]      audit/gpt1-pr83-admission-review-20261028 -> origin/audit/gpt1-pr83-admission-review-20261028
+2026-11-07T20:21:38.0083229Z  * [new branch]      audit/gpt1-proof-kernel-pr31-20261025 -> origin/audit/gpt1-proof-kernel-pr31-20261025
+2026-11-07T20:21:38.0083612Z  * [new branch]      audit/gpt1-token73-flags-20261026 -> origin/audit/gpt1-token73-flags-20261026
+2026-11-07T20:21:38.0084002Z  * [new branch]      audit/gpt1-token75-76-combined-20261026 -> origin/audit/gpt1-token75-76-combined-20261026
+2026-11-07T20:21:38.0084404Z  * [new branch]      audit/gpt3-kg-pr31-narrow-20261025 -> origin/audit/gpt3-kg-pr31-narrow-20261025
+2026-11-07T20:21:38.0084929Z  * [new branch]      audit/gpt3-kg-pr31-snapshot-20261025 -> origin/audit/gpt3-kg-pr31-snapshot-20261025
+2026-11-07T20:21:38.0085387Z  * [new branch]      audit/gpt5-adminit-provenance-20261025 -> origin/audit/gpt5-adminit-provenance-20261025
+2026-11-07T20:21:38.0085843Z  * [new branch]      audit/gpt5-pr51-package-binding-20261025 -> origin/audit/gpt5-pr51-package-binding-20261025
+2026-11-07T20:21:38.0086406Z  * [new branch]      audit/gpt5-pr57-merge-oidc-20261025 -> origin/audit/gpt5-pr57-merge-oidc-20261025
+2026-11-07T20:21:38.0086801Z  * [new branch]      audit/gpt5-pr60-receiver-20261026 -> origin/audit/gpt5-pr60-receiver-20261026
+2026-11-07T20:21:38.0087214Z  * [new branch]      audit/gpt5-pr64-signed-receipt-20261026 -> origin/audit/gpt5-pr64-signed-receipt-20261026
+2026-11-07T20:21:38.0087622Z  * [new branch]      audit/historical-ci-69-73-20261026 -> origin/audit/historical-ci-69-73-20261026
+2026-11-07T20:21:38.0088004Z  * [new branch]      audit/math-integration-readiness -> origin/audit/math-integration-readiness
+2026-11-07T20:21:38.0088405Z  * [new branch]      audit/math-stabilization-20 -> origin/audit/math-stabilization-20
+2026-11-07T20:21:38.0088863Z  * [new branch]      audit/pr31-independent-acceptance-20261025 -> origin/audit/pr31-independent-acceptance-20261025
+2026-11-07T20:21:38.0089437Z  * [new branch]      audit/pr31-physical-readiness -> origin/audit/pr31-physical-readiness
+2026-11-07T20:21:38.0090040Z  * [new branch]      audit/pr31-qa-correction-20261025 -> origin/audit/pr31-qa-correction-20261025
+2026-11-07T20:21:38.0090468Z  * [new branch]      audit/pr31-win-pg-independent-20261025 -> origin/audit/pr31-win-pg-independent-20261025
+2026-11-07T20:21:38.0090964Z  * [new branch]      audit/pr44-adminit-independent-20261025 -> origin/audit/pr44-adminit-independent-20261025
+2026-11-07T20:21:38.0091387Z  * [new branch]      audit/pr44-g0-independent-20261025 -> origin/audit/pr44-g0-independent-20261025
+2026-11-07T20:21:38.0091740Z  * [new branch]      audit/pr48-final-acceptance -> origin/audit/pr48-final-acceptance
+2026-11-07T20:21:38.0092092Z  * [new branch]      audit/pr51-hosted-privacy-20261025 -> origin/audit/pr51-hosted-privacy-20261025
+2026-11-07T20:21:38.0092498Z  * [new branch]      audit/pr51-independent-negative-20261025 -> origin/audit/pr51-independent-negative-20261025
+2026-11-07T20:21:38.0092939Z  * [new branch]      audit/pr52-hosted-final-acceptance-20261026 -> origin/audit/pr52-hosted-final-acceptance-20261026
+2026-11-07T20:21:38.0093380Z  * [new branch]      audit/pr57-queued-receiver-qa-20261025 -> origin/audit/pr57-queued-receiver-qa-20261025
+2026-11-07T20:21:38.0093792Z  * [new branch]      audit/pr60-independent-hosted-20261026 -> origin/audit/pr60-independent-hosted-20261026
+2026-11-07T20:21:38.0094210Z  * [new branch]      audit/pr60-windows-negative-20261026 -> origin/audit/pr60-windows-negative-20261026
+2026-11-07T20:21:38.0094601Z  * [new branch]      audit/pr64-independent-g0-20261026 -> origin/audit/pr64-independent-g0-20261026
+2026-11-07T20:21:38.0095183Z  * [new branch]      audit/pr82-physical-g0v2-admission-20261027 -> origin/audit/pr82-physical-g0v2-admission-20261027
+2026-11-07T20:21:38.0095587Z  * [new branch]      audit/proof-kernel-v2-20261025 -> origin/audit/proof-kernel-v2-20261025
+2026-11-07T20:21:38.0095984Z  * [new branch]      audit/q01-pr28-real-symlink-20261025 -> origin/audit/q01-pr28-real-symlink-20261025
+2026-11-07T20:21:38.0096422Z  * [new branch]      audit/q01-pr64-phase-boundary-20261026 -> origin/audit/q01-pr64-phase-boundary-20261026
+2026-11-07T20:21:38.0097028Z  * [new branch]      audit/qa-acceptance-gates-20261022 -> origin/audit/qa-acceptance-gates-20261022
+2026-11-07T20:21:38.0097427Z  * [new branch]      audit/sqlite-q01-reliability-20261022 -> origin/audit/sqlite-q01-reliability-20261022
+2026-11-07T20:21:38.0097833Z  * [new branch]      codex/grid-history-kernels-20261030 -> origin/codex/grid-history-kernels-20261030
+2026-11-07T20:21:38.0098244Z  * [new branch]      codex/math-native-console-fix-20261030 -> origin/codex/math-native-console-fix-20261030
+2026-11-07T20:21:38.0098712Z  * [new branch]      codex/math-native-detached-experiment-20261030 -> origin/codex/math-native-detached-experiment-20261030
+2026-11-07T20:21:38.0099186Z  * [new branch]      codex/math-native-harness-audit-20261030 -> origin/codex/math-native-harness-audit-20261030
+2026-11-07T20:21:38.0099738Z  * [new branch]      codex/math-native-loader-diagnostics-20261030 -> origin/codex/math-native-loader-diagnostics-20261030
+2026-11-07T20:21:38.0100204Z  * [new branch]      codex/math-native-loader-trace-20261030 -> origin/codex/math-native-loader-trace-20261030
+2026-11-07T20:21:38.0100622Z  * [new branch]      codex/math-workflow-policy-20261030 -> origin/codex/math-workflow-policy-20261030
+2026-11-07T20:21:38.0100994Z  * [new branch]      codex/platform-matrix-20261030 -> origin/codex/platform-matrix-20261030
+2026-11-07T20:21:38.0101401Z  * [new branch]      codex/unified-history-scientific-20261030 -> origin/codex/unified-history-scientific-20261030
+2026-11-07T20:21:38.0101868Z  * [new branch]      design/ai-codex-orchestrator-gates-20261022 -> origin/design/ai-codex-orchestrator-gates-20261022
+2026-11-07T20:21:38.0102319Z  * [new branch]      draft/knowledge-graph-boundary-20261022 -> origin/draft/knowledge-graph-boundary-20261022
+2026-11-07T20:21:38.0102713Z  * [new branch]      draft/proof-kernel-mvp-20261022 -> origin/draft/proof-kernel-mvp-20261022
+2026-11-07T20:21:38.0103096Z  * [new branch]      feat/adminit-3d-quality-ui-20261029 -> origin/feat/adminit-3d-quality-ui-20261029
+2026-11-07T20:21:38.0103466Z  * [new branch]      feat/book-knowledge-ingestion -> origin/feat/book-knowledge-ingestion
+2026-11-07T20:21:38.0103859Z  * [new branch]      feat/book-knowledge-integration-review -> origin/feat/book-knowledge-integration-review
+2026-11-07T20:21:38.0104233Z  * [new branch]      feat/book-postgres-backend -> origin/feat/book-postgres-backend
+2026-11-07T20:21:38.0104645Z  * [new branch]      feat/book-postgres-cutover-controller -> origin/feat/book-postgres-cutover-controller
+2026-11-07T20:21:38.0105248Z  * [new branch]      feat/book-postgres-integration-test -> origin/feat/book-postgres-integration-test
+2026-11-07T20:21:38.0105636Z  * [new branch]      feat/book-postgres-lossless-json -> origin/feat/book-postgres-lossless-json
+2026-11-07T20:21:38.0106019Z  * [new branch]      feat/causal-feature-screen-20261029 -> origin/feat/causal-feature-screen-20261029
+2026-11-07T20:21:38.0106407Z  * [new branch]      feat/central-scientific-engine-v2 -> origin/feat/central-scientific-engine-v2
+2026-11-07T20:21:38.0106792Z  * [new branch]      feat/disposable-vm-runtime-smoke -> origin/feat/disposable-vm-runtime-smoke
+2026-11-07T20:21:38.0107181Z  * [new branch]      feat/external-vm-host-contract -> origin/feat/external-vm-host-contract
+2026-11-07T20:21:38.0107776Z  * [new branch]      feat/five-bounded-compute-d-20261030 -> origin/feat/five-bounded-compute-d-20261030
+2026-11-07T20:21:38.0108379Z  * [new branch]      feat/g0-bounded-diagnostics -> origin/feat/g0-bounded-diagnostics
+2026-11-07T20:21:38.0108868Z  * [new branch]      feat/g0-offline-preflight -> origin/feat/g0-offline-preflight
+2026-11-07T20:21:38.0109332Z  * [new branch]      feat/g0-structured-token -> origin/feat/g0-structured-token
+2026-11-07T20:21:38.0109941Z  * [new branch]      feat/grid-provenance-contract-gate-20261029 -> origin/feat/grid-provenance-contract-gate-20261029
+2026-11-07T20:21:38.0110694Z  * [new branch]      feat/guarded-validation-selection-20261029 -> origin/feat/guarded-validation-selection-20261029
+2026-11-07T20:21:38.0111458Z  * [new branch]      feat/math-universe-foundation -> origin/feat/math-universe-foundation
+2026-11-07T20:21:38.0112050Z  * [new branch]      feat/math-walk-forward-gated-20261029 -> origin/feat/math-walk-forward-gated-20261029
+2026-11-07T20:21:38.0112740Z  * [new branch]      feat/pr56-confidential-evidence-receiver -> origin/feat/pr56-confidential-evidence-receiver
+2026-11-07T20:21:38.0113477Z  * [new branch]      feat/pr60-hosted-confidential-qualification -> origin/feat/pr60-hosted-confidential-qualification
+2026-11-07T20:21:38.0114094Z  * [new branch]      feat/q01-windows-job-containment -> origin/feat/q01-windows-job-containment
+2026-11-07T20:21:38.0114587Z  * [new branch]      feat/return-research-oos-20261029 -> origin/feat/return-research-oos-20261029
+2026-11-07T20:21:38.0115155Z  * [new branch]      feat/roots-convergence-diagnostics -> origin/feat/roots-convergence-diagnostics
+2026-11-07T20:21:38.0115676Z  * [new branch]      feat/scientific-engine-composition-v21 -> origin/feat/scientific-engine-composition-v21
+2026-11-07T20:21:38.0116044Z  * [new branch]      feature/aim-research-lab -> origin/feature/aim-research-lab
+2026-11-07T20:21:38.0116348Z  * [new branch]      fix/ci-release-provenance -> origin/fix/ci-release-provenance
+2026-11-07T20:21:38.0116660Z  * [new branch]      fix/f01-f02-audit-hardening -> origin/fix/f01-f02-audit-hardening
+2026-11-07T20:21:38.0117027Z  * [new branch]      fix/f03-r06-independent-audit-findings -> origin/fix/f03-r06-independent-audit-findings
+2026-11-07T20:21:38.0117382Z  * [new branch]      fix/g0-csv-escaped-quotes -> origin/fix/g0-csv-escaped-quotes
+2026-11-07T20:21:38.0117674Z  * [new branch]      fix/g0-token-cleanup    -> origin/fix/g0-token-cleanup
+2026-11-07T20:21:38.0117993Z  * [new branch]      fix/immutable-dependency-locks -> origin/fix/immutable-dependency-locks
+2026-11-07T20:21:38.0118367Z  * [new branch]      fix/kernel-result-inert-binding-20 -> origin/fix/kernel-result-inert-binding-20
+2026-11-07T20:21:38.0118753Z  * [new branch]      fix/knowledge-dependency-clone-20 -> origin/fix/knowledge-dependency-clone-20
+2026-11-07T20:21:38.0119167Z  * [new branch]      fix/knowledge-inert-input-20 -> origin/fix/knowledge-inert-input-20
+2026-11-07T20:21:38.0119742Z  * [new branch]      fix/mandatory-postgres-matrix-20261030 -> origin/fix/mandatory-postgres-matrix-20261030
+2026-11-07T20:21:38.0120265Z  * [new branch]      fix/orchestrator-source-identity-20 -> origin/fix/orchestrator-source-identity-20
+2026-11-07T20:21:38.0120613Z  * [new branch]      fix/pg-fenced-lease-clock -> origin/fix/pg-fenced-lease-clock
+2026-11-07T20:21:38.0120925Z  * [new branch]      fix/pg-wait-witness-chain-20 -> origin/fix/pg-wait-witness-chain-20
+2026-11-07T20:21:38.0121302Z  * [new branch]      fix/postgres-registry-worker-integrity -> origin/fix/postgres-registry-worker-integrity
+2026-11-07T20:21:38.0121713Z  * [new branch]      fix/pr31-preflight-source-identity -> origin/fix/pr31-preflight-source-identity
+2026-11-07T20:21:38.0122093Z  * [new branch]      fix/pr31-verifier-pending-state -> origin/fix/pr31-verifier-pending-state
+2026-11-07T20:21:38.0122486Z  * [new branch]      fix/pr44-watchdog-confirmation-20261025 -> origin/fix/pr44-watchdog-confirmation-20261025
+2026-11-07T20:21:38.0122840Z  * [new branch]      fix/pr45-regex-syntax   -> origin/fix/pr45-regex-syntax
+2026-11-07T20:21:38.0123121Z  * [new branch]      fix/pr64-hosted-failure -> origin/fix/pr64-hosted-failure
+2026-11-07T20:21:38.0123622Z  * [new branch]      fix/pr64-watchdog-handle-alias-20261026 -> origin/fix/pr64-watchdog-handle-alias-20261026
+2026-11-07T20:21:38.0124196Z  * [new branch]      fix/pr70-g0-observation-integrity -> origin/fix/pr70-g0-observation-integrity
+2026-11-07T20:21:38.0124568Z  * [new branch]      fix/proof-input-size-boundary-20 -> origin/fix/proof-input-size-boundary-20
+2026-11-07T20:21:38.0125200Z  * [new branch]      fix/q01-detached-journal-stat-20 -> origin/fix/q01-detached-journal-stat-20
+2026-11-07T20:21:38.0125704Z  * [new branch]      fix/qa-evidence-symlink-portability -> origin/fix/qa-evidence-symlink-portability
+2026-11-07T20:21:38.0126079Z  * [new branch]      fix/release-required-contexts-20 -> origin/fix/release-required-contexts-20
+2026-11-07T20:21:38.0126455Z  * [new branch]      fix/scientific-evidence-consistency -> origin/fix/scientific-evidence-consistency
+2026-11-07T20:21:38.0126812Z  * [new branch]      fix/sql-byte-reproducibility -> origin/fix/sql-byte-reproducibility
+2026-11-07T20:21:38.0127159Z  * [new branch]      fix/walk-forward-forecast-guard -> origin/fix/walk-forward-forecast-guard
+2026-11-07T20:21:38.0127509Z  * [new branch]      fix/windows-deployment-safety -> origin/fix/windows-deployment-safety
+2026-11-07T20:21:38.0127885Z  * [new branch]      fix/windows-release-artifact-binding -> origin/fix/windows-release-artifact-binding
+2026-11-07T20:21:38.0128260Z  * [new branch]      integration/g0-diagnostic-os-fix -> origin/integration/g0-diagnostic-os-fix
+2026-11-07T20:21:38.0128708Z  * [new branch]      integration/g0-token-flags-cleanup -> origin/integration/g0-token-flags-cleanup
+2026-11-07T20:21:38.0129090Z  * [new branch]      integration/math-adminit-readiness -> origin/integration/math-adminit-readiness
+2026-11-07T20:21:38.0129504Z  * [new branch]      integration/math-central-engine-v1-20261029 -> origin/integration/math-central-engine-v1-20261029
+2026-11-07T20:21:38.0129890Z  * [new branch]      integration/math-f01-f02 -> origin/integration/math-f01-f02
+2026-11-07T20:21:38.0130221Z  * [new branch]      integration/math-f03-r06 -> origin/integration/math-f03-r06
+2026-11-07T20:21:38.0130714Z  * [new branch]      integration/math-issue20-physical-preflight-20261025 -> origin/integration/math-issue20-physical-preflight-20261025
+2026-11-07T20:21:38.0131195Z  * [new branch]      integration/math-parallel-audit-20261023 -> origin/integration/math-parallel-audit-20261023
+2026-11-07T20:21:38.0131588Z  * [new branch]      integration/math-remediation-abc -> origin/integration/math-remediation-abc
+2026-11-07T20:21:38.0131977Z  * [new branch]      integration/pr51-gpt456-qualification -> origin/integration/pr51-gpt456-qualification
+2026-11-07T20:21:38.0132361Z  * [new branch]      integration/pr57-source-binding-qa -> origin/integration/pr57-source-binding-qa
+2026-11-07T20:21:38.0132710Z  * [new branch]      integration/pr69-g0-readiness -> origin/integration/pr69-g0-readiness
+2026-11-07T20:21:38.0132988Z  * [new branch]      main                    -> origin/main
+2026-11-07T20:21:38.0133313Z  * [new branch]      mission/loader-facts-coarse-diagnostics -> origin/mission/loader-facts-coarse-diagnostics
+2026-11-07T20:21:38.0133701Z  * [new branch]      mission1/composed-math-20261031 -> origin/mission1/composed-math-20261031
+2026-11-07T20:21:38.0134078Z  * [new branch]      mission3/pinned-browser-host-20261031 -> origin/mission3/pinned-browser-host-20261031
+2026-11-07T20:21:38.0134464Z  * [new branch]      review/base-proof-kernel-6c969ab -> origin/review/base-proof-kernel-6c969ab
+2026-11-07T20:21:38.0134989Z  * [new branch]      test/adminit-synthetic-containment -> origin/test/adminit-synthetic-containment
+2026-11-07T20:21:38.0135405Z  * [new branch]      test/pr31-queue-independent-review -> origin/test/pr31-queue-independent-review
+2026-11-07T20:21:38.0135742Z  * [new branch]      test/pr31-windows-harness -> origin/test/pr31-windows-harness
+2026-11-07T20:21:38.0136072Z  * [new branch]      test/pr50-watchdog-qualification -> origin/test/pr50-watchdog-qualification
+2026-11-07T20:21:38.0136412Z  * [new branch]      test/q01-native-forensics-20 -> origin/test/q01-native-forensics-20
+2026-11-07T20:21:38.0136723Z  * [new branch]      test/q01-queue-reliability -> origin/test/q01-queue-reliability
+2026-11-07T20:21:38.0137785Z [command]/usr/bin/git rev-parse --verify --quiet 20f5d15d5028c598309aa05b8f6e2d834764441b^{object}
+2026-11-07T20:21:38.0138432Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules origin 20f5d15d5028c598309aa05b8f6e2d834764441b
+2026-11-07T20:21:38.2792606Z From https://github.com/YehorBabenko88/math
+2026-11-07T20:21:38.2792921Z  * branch            20f5d15d5028c598309aa05b8f6e2d834764441b -> FETCH_HEAD
+2026-11-07T20:21:38.2797158Z ##[endgroup]
+2026-11-07T20:21:38.2797507Z ##[group]Determining the checkout info
+2026-11-07T20:21:38.2799548Z ##[endgroup]
+2026-11-07T20:21:38.2804297Z [command]/usr/bin/git sparse-checkout disable
+2026-11-07T20:21:38.2846677Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-11-07T20:21:38.2870500Z ##[group]Checking out the ref
+2026-11-07T20:21:38.2873369Z [command]/usr/bin/git checkout --progress --force 20f5d15d5028c598309aa05b8f6e2d834764441b
+2026-11-07T20:21:38.3267887Z Note: switching to '20f5d15d5028c598309aa05b8f6e2d834764441b'.
+2026-11-07T20:21:38.3268175Z 
+2026-11-07T20:21:38.3268291Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-11-07T20:21:38.3268568Z changes and commit them, and you can discard any commits you make in this
+2026-11-07T20:21:38.3269099Z state without impacting any branches by switching back to a branch.
+2026-11-07T20:21:38.3269251Z 
+2026-11-07T20:21:38.3269359Z If you want to create a new branch to retain commits you create, you may
+2026-11-07T20:21:38.3269609Z do so (now or later) by using -c with the switch command. Example:
+2026-11-07T20:21:38.3269752Z 
+2026-11-07T20:21:38.3269817Z   git switch -c <new-branch-name>
+2026-11-07T20:21:38.3269919Z 
+2026-11-07T20:21:38.3269977Z Or undo this operation with:
+2026-11-07T20:21:38.3270075Z 
+2026-11-07T20:21:38.3270124Z   git switch -
+2026-11-07T20:21:38.3270264Z 
+2026-11-07T20:21:38.3270384Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-11-07T20:21:38.3270554Z 
+2026-11-07T20:21:38.3270754Z HEAD is now at 20f5d15 Merge b9c2f24b33285b7b0e06aebc354a9c61a909d204 into 917d99672e37db59835a8ab23b03c99826b12d78
+2026-11-07T20:21:38.3281783Z ##[endgroup]
+2026-11-07T20:21:38.3323867Z [command]/usr/bin/git log -1 --format=%H
+2026-11-07T20:21:38.3346052Z 20f5d15d5028c598309aa05b8f6e2d834764441b
+2026-11-07T20:21:38.3353619Z ##[group]Removing auth
+2026-11-07T20:21:38.3356530Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-07T20:21:38.3381158Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-07T20:21:38.3604423Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-07T20:21:38.3623704Z http.https://github.com/.extraheader
+2026-11-07T20:21:38.3629235Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-07T20:21:38.3656703Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-07T20:21:38.3872751Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-07T20:21:38.3897281Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-07T20:21:38.4110521Z ##[endgroup]
+2026-11-07T20:21:38.4326922Z ##[group]Run actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+2026-11-07T20:21:38.4327150Z with:
+2026-11-07T20:21:38.4327270Z   node-version: 24
+2026-11-07T20:21:38.4327390Z   always-auth: false
+2026-11-07T20:21:38.4327523Z   check-latest: false
+2026-11-07T20:21:38.4329111Z   token: ***
+2026-11-07T20:21:38.4329225Z env:
+2026-11-07T20:21:38.4329370Z   PROVENANCE_CONTEXT: Full suite Node 24 / PostgreSQL 16
+2026-11-07T20:21:38.4329562Z   BOOK_INGESTION_PYTHON: python
+2026-11-07T20:21:38.4329874Z   MATH_UNIVERSE_TEST_DATABASE_URL: ***127.0.0.1:5432/math_universe_test
+2026-11-07T20:21:38.4330076Z ##[endgroup]
+2026-11-07T20:21:38.5272692Z Found in cache @ /opt/hostedtoolcache/node/24.22.2/x64
+2026-11-07T20:21:38.5275588Z (node:2669) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-07T20:21:38.5276244Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-07T20:21:38.5278024Z ##[group]Environment details
+2026-11-07T20:21:41.3834769Z node: v24.22.2
+2026-11-07T20:21:41.3835266Z npm: 11.19.1
+2026-11-07T20:21:41.3835441Z yarn: 1.22.22
+2026-11-07T20:21:41.3836484Z ##[endgroup]
+2026-11-07T20:21:41.3962353Z ##[group]Run node scripts/verify-source-identity.mjs --before
+2026-11-07T20:21:41.3962671Z [36;1mnode scripts/verify-source-identity.mjs --before[0m
+2026-11-07T20:21:41.4062713Z shell: /usr/bin/bash -e {0}
+2026-11-07T20:21:41.4062869Z env:
+2026-11-07T20:21:41.4063029Z   PROVENANCE_CONTEXT: Full suite Node 24 / PostgreSQL 16
+2026-11-07T20:21:41.4063221Z   BOOK_INGESTION_PYTHON: python
+2026-11-07T20:21:41.4063637Z   MATH_UNIVERSE_TEST_DATABASE_URL: ***127.0.0.1:5432/math_universe_test
+2026-11-07T20:21:41.4063915Z   SOURCE_IDENTITY_RECEIPT: /home/runner/work/_temp/math-source-before.json
+2026-11-07T20:21:41.4064142Z ##[endgroup]
+2026-11-07T20:21:41.4982332Z {"schema":1,"repository":"YehorBabenko88/math","workflowPath":".github/workflows/postgres-integration.yml","runId":"42369097913","runAttempt":"1","context":"Full suite Node 24 / PostgreSQL 16","sourceSha":"20f5d15d5028c598309aa05b8f6e2d834764441b","committedTreeSha":"d88c75a3c367eef2cb7246c4f8dd094716f07ddd","trackedSourceSha256":"74974e580157f1fcba2835d86d7adb6a5ec8e470c9baac63806a7a190fcbb88c","trackedFiles":687}
+2026-11-07T20:21:41.5056902Z ##[group]Run node scripts/verify-dependency-locks.mjs
+2026-11-07T20:21:41.5057145Z [36;1mnode scripts/verify-dependency-locks.mjs[0m
+2026-11-07T20:21:41.5099919Z shell: /usr/bin/bash -e {0}
+2026-11-07T20:21:41.5100059Z env:
+2026-11-07T20:21:41.5100206Z   PROVENANCE_CONTEXT: Full suite Node 24 / PostgreSQL 16
+2026-11-07T20:21:41.5100393Z   BOOK_INGESTION_PYTHON: python
+2026-11-07T20:21:41.5100786Z   MATH_UNIVERSE_TEST_DATABASE_URL: ***127.0.0.1:5432/math_universe_test
+2026-11-07T20:21:41.5101001Z ##[endgroup]
+2026-11-07T20:21:41.5453347Z Dependency lock verified
+2026-11-07T20:21:41.5530292Z ##[group]Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+2026-11-07T20:21:41.5530516Z with:
+2026-11-07T20:21:41.5530635Z   python-version: 3.12
+2026-11-07T20:21:41.5530774Z   check-latest: false
+2026-11-07T20:21:41.5532270Z   token: ***
+2026-11-07T20:21:41.5532389Z   update-environment: true
+2026-11-07T20:21:41.5532525Z   allow-prereleases: false
+2026-11-07T20:21:41.5532656Z   freethreaded: false
+2026-11-07T20:21:41.5532772Z env:
+2026-11-07T20:21:41.5532908Z   PROVENANCE_CONTEXT: Full suite Node 24 / PostgreSQL 16
+2026-11-07T20:21:41.5533096Z   BOOK_INGESTION_PYTHON: python
+2026-11-07T20:21:41.5533382Z   MATH_UNIVERSE_TEST_DATABASE_URL: ***127.0.0.1:5432/math_universe_test
+2026-11-07T20:21:41.5533581Z ##[endgroup]
+2026-11-07T20:21:41.6383546Z ##[group]Installed versions
+2026-11-07T20:21:41.6499261Z (node:2750) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-07T20:21:41.6499816Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-07T20:21:41.6500254Z Successfully set up CPython (3.12.16)
+2026-11-07T20:21:41.6500642Z ##[endgroup]
+2026-11-07T20:21:41.6631916Z ##[group]Run node scripts/verify-sql-bytes.mjs
+2026-11-07T20:21:41.6632142Z [36;1mnode scripts/verify-sql-bytes.mjs[0m
+2026-11-07T20:21:41.6695215Z shell: /usr/bin/bash -e {0}
+2026-11-07T20:21:41.6695478Z env:
+2026-11-07T20:21:41.6695727Z   PROVENANCE_CONTEXT: Full suite Node 24 / PostgreSQL 16
+2026-11-07T20:21:41.6696048Z   BOOK_INGESTION_PYTHON: python
+2026-11-07T20:21:41.6696716Z   MATH_UNIVERSE_TEST_DATABASE_URL: ***127.0.0.1:5432/math_universe_test
+2026-11-07T20:21:41.6697109Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T20:21:41.6697509Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib/pkgconfig
+2026-11-07T20:21:41.6697907Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T20:21:41.6698500Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T20:21:41.6698864Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T20:21:41.6699288Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib
+2026-11-07T20:21:41.6699598Z ##[endgroup]
+2026-11-07T20:21:41.7319411Z SQL_CHECKOUT_BYTES_OK 20f5d15d5028c598309aa05b8f6e2d834764441b 11 files
+2026-11-07T20:21:41.7388161Z ##[group]Run npm ci --ignore-scripts --no-audit --no-fund
+2026-11-07T20:21:41.7388425Z [36;1mnpm ci --ignore-scripts --no-audit --no-fund[0m
+2026-11-07T20:21:41.7433327Z shell: /usr/bin/bash -e {0}
+2026-11-07T20:21:41.7433473Z env:
+2026-11-07T20:21:41.7433625Z   PROVENANCE_CONTEXT: Full suite Node 24 / PostgreSQL 16
+2026-11-07T20:21:41.7433814Z   BOOK_INGESTION_PYTHON: python
+2026-11-07T20:21:41.7434216Z   MATH_UNIVERSE_TEST_DATABASE_URL: ***127.0.0.1:5432/math_universe_test
+2026-11-07T20:21:41.7434461Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T20:21:41.7434718Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib/pkgconfig
+2026-11-07T20:21:41.7435113Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T20:21:41.7435330Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T20:21:41.7435547Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T20:21:41.7435793Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib
+2026-11-07T20:21:41.7435977Z ##[endgroup]
+2026-11-07T20:21:43.5898921Z 
+2026-11-07T20:21:43.5899606Z added 17 packages in 2s
+2026-11-07T20:21:43.6269087Z ##[group]Run python -m pip install --disable-pip-version-check --require-hashes --only-binary=:all: -r scripts/book-ingestion-requirements.txt
+2026-11-07T20:21:43.6269674Z [36;1mpython -m pip install --disable-pip-version-check --require-hashes --only-binary=:all: -r scripts/book-ingestion-requirements.txt[0m
+2026-11-07T20:21:43.6317950Z shell: /usr/bin/bash -e {0}
+2026-11-07T20:21:43.6318104Z env:
+2026-11-07T20:21:43.6318270Z   PROVENANCE_CONTEXT: Full suite Node 24 / PostgreSQL 16
+2026-11-07T20:21:43.6318462Z   BOOK_INGESTION_PYTHON: python
+2026-11-07T20:21:43.6319001Z   MATH_UNIVERSE_TEST_DATABASE_URL: ***127.0.0.1:5432/math_universe_test
+2026-11-07T20:21:43.6319244Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T20:21:43.6319483Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib/pkgconfig
+2026-11-07T20:21:43.6319722Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T20:21:43.6319970Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T20:21:43.6320193Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T20:21:43.6320415Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib
+2026-11-07T20:21:43.6320603Z ##[endgroup]
+2026-11-07T20:21:44.1876671Z Collecting pypdf==6.20.1 (from -r scripts/book-ingestion-requirements.txt (line 3))
+2026-11-07T20:21:44.2425419Z   Downloading pypdf-6.20.1-py3-none-any.whl (402 kB)
+2026-11-07T20:21:44.3698545Z Collecting pypdfium2==5.14.0 (from -r scripts/book-ingestion-requirements.txt (line 5))
+2026-11-07T20:21:44.3823789Z   Downloading pypdfium2-5.14.0-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.8 MB)
+2026-11-07T20:21:44.4590092Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.8/3.8 MB 48.7 MB/s  0:00:00
+2026-11-07T20:21:44.6003124Z Collecting pillow==12.3.0 (from -r scripts/book-ingestion-requirements.txt (line 8))
+2026-11-07T20:21:44.6135537Z   Downloading pillow-12.3.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (6.9 MB)
+2026-11-07T20:21:44.6661516Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.9/6.9 MB 131.0 MB/s  0:00:00
+2026-11-07T20:21:44.6989678Z Installing collected packages: pypdfium2, pypdf, pillow
+2026-11-07T20:21:45.1724540Z 
+2026-11-07T20:21:45.1733843Z Successfully installed pillow-12.3.0 pypdf-6.20.1 pypdfium2-5.14.0
+2026-11-07T20:21:45.2177658Z ##[group]Run node scripts/test-full-ci.mjs
+2026-11-07T20:21:45.2177881Z [36;1mnode scripts/test-full-ci.mjs[0m
+2026-11-07T20:21:45.2223127Z shell: /usr/bin/bash -e {0}
+2026-11-07T20:21:45.2223273Z env:
+2026-11-07T20:21:45.2223426Z   PROVENANCE_CONTEXT: Full suite Node 24 / PostgreSQL 16
+2026-11-07T20:21:45.2223623Z   BOOK_INGESTION_PYTHON: python
+2026-11-07T20:21:45.2224043Z   MATH_UNIVERSE_TEST_DATABASE_URL: ***127.0.0.1:5432/math_universe_test
+2026-11-07T20:21:45.2224290Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T20:21:45.2224536Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib/pkgconfig
+2026-11-07T20:21:45.2224784Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T20:21:45.2225151Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T20:21:45.2225365Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T20:21:45.2225632Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib
+2026-11-07T20:21:45.2225827Z ##[endgroup]
+2026-11-07T20:22:06.2417404Z ##[error]FULL_CI_TERMINAL case_id=1fb7193a7b52dd842acfceebc47b807d3cbe22f52f1593624bb0bc28818ed255 status=fail code=ERR_ASSERTION type=TEST_CODE_FAILURE phase=UNCLASSIFIED worker_phase=UNAVAILABLE trace_step=UNAVAILABLE worker_report_code=UNAVAILABLE worker_entry=UNAVAILABLE captured_after_termination=false
+2026-11-07T20:22:06.2426141Z ##[error]FULL_CI_TERMINAL_SUMMARY matched=1 unmatched=0 emitted=1 truncated=no
+2026-11-07T20:22:06.2427130Z ##[error]FULL_CI_FAILURE stage=EVENT_VALIDATION reason=TERMINAL_SUITE_REJECTED
+2026-11-07T20:22:06.2502138Z Mandatory platform result: {"cell":"linux-24-16","tests":1204,"summary":{"tests":1204,"pass":1203,"fail":1,"cancelled":0,"skipped":0,"todo":0},"ok":false}
+2026-11-07T20:22:06.2580814Z ##[error]Process completed with exit code 1.
+2026-11-07T20:22:06.2620707Z ##[group]Run node scripts/ci-provenance.mjs
+2026-11-07T20:22:06.2620930Z [36;1mnode scripts/ci-provenance.mjs[0m
+2026-11-07T20:22:06.2670436Z shell: /usr/bin/bash -e {0}
+2026-11-07T20:22:06.2670665Z env:
+2026-11-07T20:22:06.2670891Z   PROVENANCE_CONTEXT: Full suite Node 24 / PostgreSQL 16
+2026-11-07T20:22:06.2671209Z   BOOK_INGESTION_PYTHON: python
+2026-11-07T20:22:06.2671824Z   MATH_UNIVERSE_TEST_DATABASE_URL: ***127.0.0.1:5432/math_universe_test
+2026-11-07T20:22:06.2672220Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T20:22:06.2672616Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib/pkgconfig
+2026-11-07T20:22:06.2672978Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T20:22:06.2673307Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T20:22:06.2673637Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T20:22:06.2673977Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib
+2026-11-07T20:22:06.2674382Z   SOURCE_IDENTITY_RECEIPT: /home/runner/work/_temp/math-source-before.json
+2026-11-07T20:22:06.2674726Z ##[endgroup]
+2026-11-07T20:22:06.3791623Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+2026-11-07T20:22:06.3791871Z with:
+2026-11-07T20:22:06.3792027Z   name: release-provenance-42369097913-1-postgres-24-16
+2026-11-07T20:22:06.3792230Z   path: release-provenance.json
+2026-11-07T20:22:06.3792380Z   if-no-files-found: error
+2026-11-07T20:22:06.3792512Z   retention-days: 30
+2026-11-07T20:22:06.3792637Z   compression-level: 6
+2026-11-07T20:22:06.3792760Z   overwrite: false
+2026-11-07T20:22:06.3792888Z   include-hidden-files: false
+2026-11-07T20:22:06.3793020Z env:
+2026-11-07T20:22:06.3793161Z   PROVENANCE_CONTEXT: Full suite Node 24 / PostgreSQL 16
+2026-11-07T20:22:06.3793346Z   BOOK_INGESTION_PYTHON: python
+2026-11-07T20:22:06.3793748Z   MATH_UNIVERSE_TEST_DATABASE_URL: ***127.0.0.1:5432/math_universe_test
+2026-11-07T20:22:06.3793991Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T20:22:06.3794231Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib/pkgconfig
+2026-11-07T20:22:06.3794503Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T20:22:06.3794717Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T20:22:06.3795430Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T20:22:06.3795650Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib
+2026-11-07T20:22:06.3795836Z ##[endgroup]
+2026-11-07T20:22:06.4930791Z (node:7599) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-07T20:22:06.4931496Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-07T20:22:06.4966372Z With the provided path, there will be 1 file uploaded
+2026-11-07T20:22:06.4967162Z Artifact name is valid!
+2026-11-07T20:22:06.4967576Z Root directory input is valid!
+2026-11-07T20:22:06.7505484Z Beginning upload of artifact content to blob storage
+2026-11-07T20:22:06.7621505Z (node:7599) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-11-07T20:22:06.9041128Z Uploaded bytes 709
+2026-11-07T20:22:06.9408765Z Finished uploading artifact content to blob storage!
+2026-11-07T20:22:06.9409397Z SHA256 digest of uploaded artifact zip is 0b9d53620f961e2b3d113ae2732af03f34f3a6ba2d77bbbf5a02bc368daeabfc
+2026-11-07T20:22:06.9410501Z Finalizing artifact upload
+2026-11-07T20:22:07.3368174Z Artifact release-provenance-42369097913-1-postgres-24-16.zip successfully finalized. Artifact ID 13589501913
+2026-11-07T20:22:07.3369237Z Artifact release-provenance-42369097913-1-postgres-24-16 has been successfully uploaded! Final size is 709 bytes. Artifact ID is 13589501913
+2026-11-07T20:22:07.3373529Z Artifact download URL: https://github.com/YehorBabenko88/math/actions/runs/42369097913/artifacts/13589501913
+2026-11-07T20:22:07.3521994Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+2026-11-07T20:22:07.3522233Z with:
+2026-11-07T20:22:07.3522367Z   name: platform-linux-24-16
+2026-11-07T20:22:07.3522560Z   path: platform-evidence/
+release-provenance.json
+
+2026-11-07T20:22:07.3522747Z   if-no-files-found: error
+2026-11-07T20:22:07.3522885Z   retention-days: 30
+2026-11-07T20:22:07.3523012Z   compression-level: 6
+2026-11-07T20:22:07.3523148Z   overwrite: false
+2026-11-07T20:22:07.3523277Z   include-hidden-files: false
+2026-11-07T20:22:07.3523416Z env:
+2026-11-07T20:22:07.3523563Z   PROVENANCE_CONTEXT: Full suite Node 24 / PostgreSQL 16
+2026-11-07T20:22:07.3523758Z   BOOK_INGESTION_PYTHON: python
+2026-11-07T20:22:07.3524150Z   MATH_UNIVERSE_TEST_DATABASE_URL: ***127.0.0.1:5432/math_universe_test
+2026-11-07T20:22:07.3524400Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T20:22:07.3524643Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib/pkgconfig
+2026-11-07T20:22:07.3525098Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T20:22:07.3525316Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T20:22:07.3525560Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T20:22:07.3525783Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib
+2026-11-07T20:22:07.3525970Z ##[endgroup]
+2026-11-07T20:22:07.4638506Z (node:7612) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-07T20:22:07.4639104Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-07T20:22:07.4687141Z Multiple search paths detected. Calculating the least common ancestor of all paths
+2026-11-07T20:22:07.4688948Z The least common ancestor is /home/runner/work/math/math. This will be the root directory of the artifact
+2026-11-07T20:22:07.4689839Z With the provided path, there will be 3 files uploaded
+2026-11-07T20:22:07.4692005Z Artifact name is valid!
+2026-11-07T20:22:07.4692568Z Root directory input is valid!
+2026-11-07T20:22:07.7610001Z Beginning upload of artifact content to blob storage
+2026-11-07T20:22:07.7854052Z (node:7612) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-11-07T20:22:07.9923374Z Uploaded bytes 69615
+2026-11-07T20:22:08.0340034Z Finished uploading artifact content to blob storage!
+2026-11-07T20:22:08.0340686Z SHA256 digest of uploaded artifact zip is 6bc0b876613a40cb70c8db2aaa18818fb44e51bfa650d721933f1e97bfcf67e9
+2026-11-07T20:22:08.0341225Z Finalizing artifact upload
+2026-11-07T20:22:08.4268473Z Artifact platform-linux-24-16.zip successfully finalized. Artifact ID 13589167619
+2026-11-07T20:22:08.4271070Z Artifact platform-linux-24-16 has been successfully uploaded! Final size is 69615 bytes. Artifact ID is 13589167619
+2026-11-07T20:22:08.4275254Z Artifact download URL: https://github.com/YehorBabenko88/math/actions/runs/42369097913/artifacts/13589167619
+2026-11-07T20:22:08.4483807Z Post job cleanup.
+2026-11-07T20:22:08.5069639Z [command]/usr/bin/git version
+2026-11-07T20:22:08.5141537Z git version 2.56.0
+2026-11-07T20:22:08.5163159Z Temporarily overriding HOME='/home/runner/work/_temp/4effad24-06bd-4a06-87bd-1711c2a02979' before making global git config changes
+2026-11-07T20:22:08.5164249Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-07T20:22:08.5166111Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/math/math
+2026-11-07T20:22:08.5200833Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-07T20:22:08.5234572Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-07T20:22:08.5501246Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-07T20:22:08.5537039Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-07T20:22:08.5796041Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-07T20:22:08.5825269Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-07T20:22:08.6155643Z Print service container logs: 75e11fb0e5c04bb09491eac852b3285c_postgres16_b5c3aa
+2026-11-07T20:22:08.6158896Z ##[command]/usr/bin/docker logs --details 4d72510870031c749cfa67caee4355437d8e1f04d882d0650719f981da130c45
+2026-11-07T20:22:08.6270461Z  The files belonging to this database system will be owned by user "postgres".
+2026-11-07T20:22:08.6270983Z  This user must also own the server process.
+2026-11-07T20:22:08.6274258Z  initdb: warning: enabling "trust" authentication for local connections
+2026-11-07T20:22:08.6274658Z  
+2026-11-07T20:22:08.6275040Z  The database cluster will be initialized with locale "en_US.utf8".
+2026-11-07T20:22:08.6275522Z  The default database encoding has accordingly been set to "UTF8".
+2026-11-07T20:22:08.6275939Z  The default text search configuration will be set to "english".
+2026-11-07T20:22:08.6276268Z  
+2026-11-07T20:22:08.6276469Z  Data page checksums are disabled.
+2026-11-07T20:22:08.6276741Z  
+2026-11-07T20:22:08.6277092Z  fixing permissions on existing directory /var/lib/postgresql/data ... ok
+2026-11-07T20:22:08.6277522Z  creating subdirectories ... ok
+2026-11-07T20:22:08.6277856Z  selecting dynamic shared memory implementation ... posix
+2026-11-07T20:22:08.6278217Z  selecting default max_connections ... 100
+2026-11-07T20:22:08.6278510Z  selecting default shared_buffers ... 128MB
+2026-11-07T20:22:08.6278805Z  selecting default time zone ... Etc/UTC
+2026-11-07T20:22:08.6279078Z  creating configuration files ... ok
+2026-11-07T20:22:08.6279354Z  running bootstrap script ... ok
+2026-11-07T20:22:08.6279643Z  performing post-bootstrap initialization ... ok
+2026-11-07T20:22:08.6280290Z  syncing data to disk ... ok
+2026-11-07T20:22:08.6280517Z  
+2026-11-07T20:22:08.6280696Z  
+2026-11-07T20:22:08.6280923Z  Success. You can now start the database server using:
+2026-11-07T20:22:08.6281210Z  
+2026-11-07T20:22:08.6281452Z      pg_ctl -D /var/lib/postgresql/data -l logfile start
+2026-11-07T20:22:08.6281744Z  
+2026-11-07T20:22:08.6282289Z  waiting for server to start....2026-11-07 20:21:31.615 UTC [48] LOG:  starting PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+2026-11-07T20:22:08.6282801Z  2026-11-07 20:21:31.615 UTC [48] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+2026-11-07T20:22:08.6283138Z  2026-11-07 20:21:31.618 UTC [51] LOG:  database system was shut down at 2026-11-07 20:21:31 UTC
+2026-11-07T20:22:08.6283435Z  2026-11-07 20:21:31.621 UTC [48] LOG:  database system is ready to accept connections
+2026-11-07T20:22:08.6283782Z   done
+2026-11-07T20:22:08.6283932Z  server started
+2026-11-07T20:22:08.6284071Z  CREATE DATABASE
+2026-11-07T20:22:08.6284193Z  
+2026-11-07T20:22:08.6284375Z  
+2026-11-07T20:22:08.6284692Z  /usr/local/bin/docker-entrypoint.sh: ignoring /docker-entrypoint-initdb.d/*
+2026-11-07T20:22:08.6285118Z  
+2026-11-07T20:22:08.6285281Z  2026-11-07 20:21:31.783 UTC [48] LOG:  received fast shutdown request
+2026-11-07T20:22:08.6285594Z  waiting for server to shut down....2026-11-07 20:21:31.783 UTC [48] LOG:  aborting any active transactions
+2026-11-07T20:22:08.6285995Z  2026-11-07 20:21:31.785 UTC [48] LOG:  background worker "logical replication launcher" (PID 54) exited with exit code 1
+2026-11-07T20:22:08.6286378Z  2026-11-07 20:21:31.785 UTC [49] LOG:  shutting down
+2026-11-07T20:22:08.6286612Z  2026-11-07 20:21:31.785 UTC [49] LOG:  checkpoint starting: shutdown immediate
+2026-11-07T20:22:08.6287419Z  2026-11-07 20:21:31.883 UTC [49] LOG:  checkpoint complete: wrote 926 buffers (5.7%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.086 s, sync=0.011 s, total=0.098 s; sync files=301, longest=0.010 s, average=0.001 s; distance=4273 kB, estimate=4273 kB; lsn=0/191F0F8, redo lsn=0/191F0F8
+2026-11-07T20:22:08.6288330Z  2026-11-07 20:21:31.889 UTC [48] LOG:  database system is shut down
+2026-11-07T20:22:08.6288618Z   done
+2026-11-07T20:22:08.6288791Z  server stopped
+2026-11-07T20:22:08.6288965Z  
+2026-11-07T20:22:08.6289445Z  PostgreSQL init process complete; ready for start up.
+2026-11-07T20:22:08.6289716Z  
+2026-11-07T20:22:08.6290206Z  initdb: hint: You can change this by editing pg_hba.conf or using the option -A, or --auth-local and --auth-host, the next time you run initdb.
+2026-11-07T20:22:08.6290988Z  2026-11-07 20:21:31.998 UTC [1] LOG:  starting PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+2026-11-07T20:22:08.6291592Z  2026-11-07 20:21:31.998 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+2026-11-07T20:22:08.6292002Z  2026-11-07 20:21:31.999 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+2026-11-07T20:22:08.6292446Z  2026-11-07 20:21:31.999 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+2026-11-07T20:22:08.6292929Z  2026-11-07 20:21:32.002 UTC [64] LOG:  database system was shut down at 2026-11-07 20:21:31 UTC
+2026-11-07T20:22:08.6293368Z  2026-11-07 20:21:32.005 UTC [1] LOG:  database system is ready to accept connections
+2026-11-07T20:22:08.6293814Z  2026-11-07 20:21:47.354 UTC [96] ERROR:  could not serialize access due to concurrent update
+2026-11-07T20:22:08.6294391Z  2026-11-07 20:21:47.354 UTC [96] CONTEXT:  SQL statement "SELECT generation            FROM mu_book_cutover_epoch WHERE singleton FOR SHARE"
+2026-11-07T20:22:08.6295112Z  	PL/pgSQL function mu_book_check_cutover_guard() line 6 at SQL statement
+2026-11-07T20:22:08.6295761Z  2026-11-07 20:21:47.354 UTC [96] STATEMENT:  INSERT INTO mu_book_queue(singleton,version,max_attempts) VALUES(true,1,$1) ON CONFLICT(singleton) DO NOTHING
+2026-11-07T20:22:08.6296407Z  2026-11-07 20:21:47.477 UTC [99] ERROR:  could not serialize access due to concurrent update
+2026-11-07T20:22:08.6297150Z  2026-11-07 20:21:47.477 UTC [99] CONTEXT:  SQL statement "SELECT generation            FROM mu_book_cutover_epoch WHERE singleton FOR SHARE"
+2026-11-07T20:22:08.6297697Z  	PL/pgSQL function mu_book_check_cutover_guard() line 6 at SQL statement
+2026-11-07T20:22:08.6298076Z  2026-11-07 20:21:47.477 UTC [99] STATEMENT:  DELETE FROM mu_book_jobs
+2026-11-07T20:22:08.6298447Z  2026-11-07 20:21:47.539 UTC [94] ERROR:  Book target is fenced for staging
+2026-11-07T20:22:08.6298895Z  2026-11-07 20:21:47.539 UTC [94] CONTEXT:  PL/pgSQL function mu_book_check_cutover_guard() line 10 at RAISE
+2026-11-07T20:22:08.6299347Z  2026-11-07 20:21:47.539 UTC [94] STATEMENT:  DELETE FROM mu_book_jobs
+2026-11-07T20:22:08.6299712Z  2026-11-07 20:21:47.571 UTC [102] ERROR:  Book target is fenced for staging
+2026-11-07T20:22:08.6300177Z  2026-11-07 20:21:47.571 UTC [102] CONTEXT:  PL/pgSQL function mu_book_check_cutover_guard() line 10 at RAISE
+2026-11-07T20:22:08.6300720Z  2026-11-07 20:21:47.571 UTC [102] STATEMENT:  DELETE FROM "mu_it_633e9806ce974cc08619d8f31b2bcf41".mu_book_jobs
+2026-11-07T20:22:08.6301237Z  2026-11-07 20:21:47.825 UTC [108] WARNING:  there is no transaction in progress
+2026-11-07T20:22:08.6301630Z  2026-11-07 20:21:47.826 UTC [108] ERROR:  Book target is fenced for staging
+2026-11-07T20:22:08.6302092Z  2026-11-07 20:21:47.826 UTC [108] CONTEXT:  PL/pgSQL function mu_book_check_cutover_guard() line 10 at RAISE
+2026-11-07T20:22:08.6302551Z  2026-11-07 20:21:47.826 UTC [108] STATEMENT:  DELETE FROM mu_book_jobs
+2026-11-07T20:22:08.6302933Z  2026-11-07 20:21:47.891 UTC [110] ERROR:  Book target is fenced for staging
+2026-11-07T20:22:08.6303395Z  2026-11-07 20:21:47.891 UTC [110] CONTEXT:  PL/pgSQL function mu_book_check_cutover_guard() line 10 at RAISE
+2026-11-07T20:22:08.6303974Z  2026-11-07 20:21:47.891 UTC [110] STATEMENT:  INSERT INTO mu_book_queue(max_attempts) VALUES(3) ON CONFLICT DO NOTHING
+2026-11-07T20:22:08.6304462Z  2026-11-07 20:21:47.896 UTC [104] ERROR:  Book target is fenced for staging
+2026-11-07T20:22:08.6305019Z  2026-11-07 20:21:47.896 UTC [104] CONTEXT:  PL/pgSQL function mu_book_check_cutover_guard() line 10 at RAISE
+2026-11-07T20:22:08.6305483Z  2026-11-07 20:21:47.896 UTC [104] STATEMENT:  DELETE FROM mu_book_jobs
+2026-11-07T20:22:08.6305999Z  2026-11-07 20:21:47.906 UTC [112] ERROR:  Book target is fenced for staging
+2026-11-07T20:22:08.6306557Z  2026-11-07 20:21:47.906 UTC [112] CONTEXT:  PL/pgSQL function mu_book_check_cutover_guard() line 10 at RAISE
+2026-11-07T20:22:08.6307000Z  2026-11-07 20:21:47.906 UTC [112] STATEMENT:  TRUNCATE mu_book_jobs CASCADE
+2026-11-07T20:22:08.6307331Z  2026-11-07 20:21:47.914 UTC [113] ERROR:  Book target is fenced for staging
+2026-11-07T20:22:08.6307632Z  2026-11-07 20:21:47.914 UTC [113] CONTEXT:  PL/pgSQL function mu_book_check_cutover_guard() line 10 at RAISE
+2026-11-07T20:22:08.6307957Z  2026-11-07 20:21:47.914 UTC [113] STATEMENT:  TRUNCATE mu_book_reviews CASCADE
+2026-11-07T20:22:08.6308220Z  2026-11-07 20:21:47.922 UTC [114] ERROR:  Book target is fenced for staging
+2026-11-07T20:22:08.6308521Z  2026-11-07 20:21:47.922 UTC [114] CONTEXT:  PL/pgSQL function mu_book_check_cutover_guard() line 10 at RAISE
+2026-11-07T20:22:08.6308832Z  2026-11-07 20:21:47.922 UTC [114] STATEMENT:  TRUNCATE mu_book_imports CASCADE
+2026-11-07T20:22:08.6309090Z  2026-11-07 20:21:47.928 UTC [115] ERROR:  Book target is fenced for staging
+2026-11-07T20:22:08.6309386Z  2026-11-07 20:21:47.928 UTC [115] CONTEXT:  PL/pgSQL function mu_book_check_cutover_guard() line 10 at RAISE
+2026-11-07T20:22:08.6309694Z  2026-11-07 20:21:47.928 UTC [115] STATEMENT:  TRUNCATE mu_book_queue CASCADE
+2026-11-07T20:22:08.6309947Z  2026-11-07 20:21:47.958 UTC [116] ERROR:  Book target is fenced for staging
+2026-11-07T20:22:08.6310252Z  2026-11-07 20:21:47.958 UTC [116] CONTEXT:  PL/pgSQL function mu_book_check_cutover_guard() line 10 at RAISE
+2026-11-07T20:22:08.6310553Z  2026-11-07 20:21:47.958 UTC [116] STATEMENT:  DELETE FROM mu_book_imports
+2026-11-07T20:22:08.6310910Z  2026-11-07 20:21:48.114 UTC [123] ERROR:  Book target is fenced for staging
+2026-11-07T20:22:08.6311207Z  2026-11-07 20:21:48.114 UTC [123] CONTEXT:  PL/pgSQL function mu_book_check_cutover_guard() line 10 at RAISE
+2026-11-07T20:22:08.6311667Z  2026-11-07 20:21:48.114 UTC [123] STATEMENT:  INSERT INTO mu_book_queue(singleton,version,max_attempts) VALUES(true,1,$1) ON CONFLICT(singleton) DO NOTHING
+2026-11-07T20:22:08.6312058Z  2026-11-07 20:21:48.589 UTC [130] ERROR:  Book target is fenced for staging
+2026-11-07T20:22:08.6312366Z  2026-11-07 20:21:48.589 UTC [130] CONTEXT:  PL/pgSQL function mu_book_check_cutover_guard() line 10 at RAISE
+2026-11-07T20:22:08.6312667Z  2026-11-07 20:21:48.589 UTC [130] STATEMENT:  DELETE FROM mu_book_jobs
+2026-11-07T20:22:08.6312925Z  2026-11-07 20:21:49.815 UTC [146] ERROR:  Book control epoch/generation mismatch
+2026-11-07T20:22:08.6313243Z  2026-11-07 20:21:49.815 UTC [146] CONTEXT:  PL/pgSQL function mu_book_check_control_pair() line 6 at RAISE
+2026-11-07T20:22:08.6313576Z  2026-11-07 20:21:49.815 UTC [146] STATEMENT:  UPDATE mu_book_cutover_guard SET generation=2
+2026-11-07T20:22:08.6313860Z  2026-11-07 20:21:49.975 UTC [149] ERROR:  Book target is fenced for staging
+2026-11-07T20:22:08.6314162Z  2026-11-07 20:21:49.975 UTC [149] CONTEXT:  PL/pgSQL function mu_book_check_cutover_guard() line 10 at RAISE
+2026-11-07T20:22:08.6314606Z  2026-11-07 20:21:49.975 UTC [149] STATEMENT:  INSERT INTO mu_book_queue(singleton,version,max_attempts) VALUES(true,1,$1) ON CONFLICT(singleton) DO NOTHING
+2026-11-07T20:22:08.6315175Z  2026-11-07 20:21:49.976 UTC [149] ERROR:  permission denied for table mu_book_cutover_guard
+2026-11-07T20:22:08.6315471Z  2026-11-07 20:21:49.976 UTC [149] STATEMENT:  SELECT * FROM mu_book_cutover_guard
+2026-11-07T20:22:08.6315760Z  2026-11-07 20:21:49.977 UTC [149] ERROR:  permission denied for table mu_book_cutover_epoch
+2026-11-07T20:22:08.6316088Z  2026-11-07 20:21:49.977 UTC [149] STATEMENT:  UPDATE mu_book_cutover_epoch SET generation=generation+1
+2026-11-07T20:22:08.6316414Z  2026-11-07 20:21:49.977 UTC [149] ERROR:  permission denied for table mu_book_cutover_guard
+2026-11-07T20:22:08.6316783Z  2026-11-07 20:21:49.977 UTC [149] STATEMENT:  DELETE FROM mu_book_cutover_guard
+2026-11-07T20:22:08.6317052Z  2026-11-07 20:21:49.977 UTC [149] ERROR:  must be owner of table mu_book_jobs
+2026-11-07T20:22:08.6317456Z  2026-11-07 20:21:49.977 UTC [149] STATEMENT:  ALTER TABLE mu_book_jobs DISABLE TRIGGER ALL
+2026-11-07T20:22:08.6317914Z  2026-11-07 20:21:49.978 UTC [149] ERROR:  permission denied for function mu_book_check_cutover_guard
+2026-11-07T20:22:08.6318410Z  2026-11-07 20:21:49.978 UTC [149] STATEMENT:  SELECT mu_book_check_cutover_guard()
+2026-11-07T20:22:08.6318878Z  2026-11-07 20:21:49.978 UTC [149] ERROR:  permission denied for schema mu_it_ba274f30ef1045488cc8985c1b1e44f2 at character 14
+2026-11-07T20:22:08.6319224Z  2026-11-07 20:21:49.978 UTC [149] STATEMENT:  CREATE TABLE unauthorized(id int)
+2026-11-07T20:22:08.6319497Z  2026-11-07 20:21:50.712 UTC [171] WARNING:  there is no transaction in progress
+2026-11-07T20:22:08.6319758Z  2026-11-07 20:21:50.768 UTC [175] ERROR:  Book JSON encoding downgrade rejected
+2026-11-07T20:22:08.6320083Z  2026-11-07 20:21:50.768 UTC [175] CONTEXT:  PL/pgSQL function mu_book_guard_document_encoding() line 3 at RAISE
+2026-11-07T20:22:08.6320441Z  2026-11-07 20:21:50.768 UTC [175] STATEMENT:  UPDATE mu_book_jobs SET document_encoding=9
+2026-11-07T20:22:08.6320738Z  2026-11-07 20:21:50.781 UTC [178] ERROR:  Book JSON encoding downgrade rejected
+2026-11-07T20:22:08.6321051Z  2026-11-07 20:21:50.781 UTC [178] CONTEXT:  PL/pgSQL function mu_book_guard_document_encoding() line 3 at RAISE
+2026-11-07T20:22:08.6321425Z  2026-11-07 20:21:50.781 UTC [178] STATEMENT:  UPDATE mu_book_jobs SET document_encoding=0,document_wire=NULL
+2026-11-07T20:22:08.6321774Z  2026-11-07 20:21:50.783 UTC [176] LOG:  unexpected EOF on client connection with an open transaction
+2026-11-07T20:22:08.6322177Z  2026-11-07 20:21:50.792 UTC [180] ERROR:  new row for relation "mu_book_jobs" violates check constraint "mu_book_jobs_document_encoding"
+2026-11-07T20:22:08.6323021Z  2026-11-07 20:21:50.792 UTC [180] DETAIL:  Failing row contains (1, 82db570855b25cf64c35235772e6d5fa8fb15447196e5311db9a3c51d19dce7d, 0, {"id": "82db570855b25cf64c35235772e6d5fa8fb15447196e5311db9a3c51..., 1, {"data": "eyJzb3VyY2VIYXNoIjoiYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYW...).
+2026-11-07T20:22:08.6323784Z  2026-11-07 20:21:50.792 UTC [180] STATEMENT:  UPDATE mu_book_jobs SET document_wire=jsonb_set(document_wire,'{schemaVersion}','"book-json/v2"')
+2026-11-07T20:22:08.6324260Z  2026-11-07 20:21:50.845 UTC [179] ERROR:  Book control epoch/generation mismatch
+2026-11-07T20:22:08.6324576Z  2026-11-07 20:21:50.845 UTC [179] CONTEXT:  PL/pgSQL function mu_book_check_control_pair() line 6 at RAISE
+2026-11-07T20:22:08.6325043Z  2026-11-07 20:21:50.845 UTC [179] STATEMENT:  UPDATE mu_book_cutover_guard SET generation=2
+2026-11-07T20:22:08.6325335Z  2026-11-07 20:21:50.855 UTC [184] ERROR:  Book control epoch/generation mismatch
+2026-11-07T20:22:08.6325646Z  2026-11-07 20:21:50.855 UTC [184] CONTEXT:  PL/pgSQL function mu_book_check_control_pair() line 6 at RAISE
+2026-11-07T20:22:08.6326035Z  2026-11-07 20:21:50.855 UTC [184] STATEMENT:  UPDATE mu_book_cutover_guard SET generation=2,capability_hash=repeat('a',64)
+2026-11-07T20:22:08.6326379Z  2026-11-07 20:21:50.861 UTC [185] ERROR:  Book control epoch/generation mismatch
+2026-11-07T20:22:08.6326699Z  2026-11-07 20:21:50.861 UTC [185] CONTEXT:  PL/pgSQL function mu_book_check_control_pair() line 6 at RAISE
+2026-11-07T20:22:08.6327025Z  2026-11-07 20:21:50.861 UTC [185] STATEMENT:  UPDATE mu_book_cutover_epoch SET generation=2
+2026-11-07T20:22:08.6327313Z  2026-11-07 20:21:50.869 UTC [186] ERROR:  Book control generation must increase
+2026-11-07T20:22:08.6327620Z  2026-11-07 20:21:50.869 UTC [186] CONTEXT:  PL/pgSQL function mu_book_monotonic_control() line 4 at RAISE
+2026-11-07T20:22:08.6327952Z  2026-11-07 20:21:50.869 UTC [186] STATEMENT:  UPDATE mu_book_cutover_epoch SET generation=0
+2026-11-07T20:22:08.6328233Z  2026-11-07 20:21:50.881 UTC [187] ERROR:  Book control removal prohibited
+2026-11-07T20:22:08.6328534Z  2026-11-07 20:21:50.881 UTC [187] CONTEXT:  PL/pgSQL function mu_book_no_control_removal() line 3 at RAISE
+2026-11-07T20:22:08.6328928Z  2026-11-07 20:21:50.881 UTC [187] STATEMENT:  DELETE FROM mu_book_cutover_guard
+2026-11-07T20:22:08.6329203Z  2026-11-07 20:21:50.888 UTC [188] ERROR:  Book control removal prohibited
+2026-11-07T20:22:08.6329498Z  2026-11-07 20:21:50.888 UTC [188] CONTEXT:  PL/pgSQL function mu_book_no_control_removal() line 3 at RAISE
+2026-11-07T20:22:08.6329809Z  2026-11-07 20:21:50.888 UTC [188] STATEMENT:  TRUNCATE mu_book_cutover_epoch
+2026-11-07T20:22:08.6330070Z  2026-11-07 20:21:51.015 UTC [193] ERROR:  Book control epoch/generation mismatch
+2026-11-07T20:22:08.6330386Z  2026-11-07 20:21:51.015 UTC [193] CONTEXT:  PL/pgSQL function mu_book_check_control_pair() line 6 at RAISE
+2026-11-07T20:22:08.6330668Z  2026-11-07 20:21:51.015 UTC [193] STATEMENT:  COMMIT
+2026-11-07T20:22:08.6330902Z  2026-11-07 20:21:51.015 UTC [193] WARNING:  there is no transaction in progress
+2026-11-07T20:22:08.6331219Z  2026-11-07 20:21:51.064 UTC [191] ERROR:  column "definitely_missing_book_column" does not exist at character 8
+2026-11-07T20:22:08.6331544Z  2026-11-07 20:21:51.064 UTC [191] STATEMENT:  SELECT definitely_missing_book_column
+2026-11-07T20:22:08.6331846Z  2026-11-07 20:21:51.159 UTC [203] ERROR:  could not serialize access due to concurrent update
+2026-11-07T20:22:08.6332225Z  2026-11-07 20:21:51.159 UTC [203] CONTEXT:  SQL statement "SELECT generation FROM mu_book_cutover_epoch WHERE singleton FOR UPDATE"
+2026-11-07T20:22:08.6332577Z  	PL/pgSQL function mu_book_lock_control() line 3 at PERFORM
+2026-11-07T20:22:08.6332840Z  2026-11-07 20:21:51.159 UTC [203] STATEMENT:  UPDATE mu_book_cutover_guard SET generation=3
+2026-11-07T20:22:08.6333165Z  2026-11-07 20:21:51.445 UTC [221] LOG:  unexpected EOF on client connection with an open transaction
+2026-11-07T20:22:08.6333644Z  2026-11-07 20:21:51.474 UTC [222] ERROR:  new row for relation "mu_book_jobs" violates check constraint "mu_book_jobs_document_encoding"
+2026-11-07T20:22:08.6334408Z  2026-11-07 20:21:51.474 UTC [222] DETAIL:  Failing row contains (1, aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, 0, {"id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa..., -1, null).
+2026-11-07T20:22:08.6335218Z  2026-11-07 20:21:51.474 UTC [222] STATEMENT:  UPDATE mu_book_jobs SET document_encoding=$1,document_wire=$2
+2026-11-07T20:22:08.6335626Z  2026-11-07 20:21:51.490 UTC [225] ERROR:  new row for relation "mu_book_jobs" violates check constraint "mu_book_jobs_document_encoding"
+2026-11-07T20:22:08.6336266Z  2026-11-07 20:21:51.490 UTC [225] DETAIL:  Failing row contains (1, aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, 0, {"id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa..., 2, null).
+2026-11-07T20:22:08.6336868Z  2026-11-07 20:21:51.490 UTC [225] STATEMENT:  UPDATE mu_book_jobs SET document_encoding=$1,document_wire=$2
+2026-11-07T20:22:08.6337272Z  2026-11-07 20:21:51.501 UTC [227] ERROR:  new row for relation "mu_book_jobs" violates check constraint "mu_book_jobs_document_encoding"
+2026-11-07T20:22:08.6337916Z  2026-11-07 20:21:51.501 UTC [227] DETAIL:  Failing row contains (1, aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, 0, {"id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa..., 32767, null).
+2026-11-07T20:22:08.6338519Z  2026-11-07 20:21:51.501 UTC [227] STATEMENT:  UPDATE mu_book_jobs SET document_encoding=$1,document_wire=$2
+2026-11-07T20:22:08.6338919Z  2026-11-07 20:21:51.510 UTC [229] ERROR:  new row for relation "mu_book_jobs" violates check constraint "mu_book_jobs_document_encoding"
+2026-11-07T20:22:08.6339674Z  2026-11-07 20:21:51.510 UTC [229] DETAIL:  Failing row contains (1, aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, 0, {"id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa..., 0, {"data": "e30=", "sha256": "cccccccccccccccccccccccccccccccccccc...).
+2026-11-07T20:22:08.6340383Z  2026-11-07 20:21:51.510 UTC [229] STATEMENT:  UPDATE mu_book_jobs SET document_encoding=$1,document_wire=$2
+2026-11-07T20:22:08.6340876Z  2026-11-07 20:21:51.521 UTC [231] ERROR:  new row for relation "mu_book_jobs" violates check constraint "mu_book_jobs_document_encoding"
+2026-11-07T20:22:08.6341512Z  2026-11-07 20:21:51.521 UTC [231] DETAIL:  Failing row contains (1, aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, 0, {"id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa..., 1, null).
+2026-11-07T20:22:08.6342104Z  2026-11-07 20:21:51.521 UTC [231] STATEMENT:  UPDATE mu_book_jobs SET document_encoding=$1,document_wire=$2
+2026-11-07T20:22:08.6342502Z  2026-11-07 20:21:51.530 UTC [232] ERROR:  new row for relation "mu_book_jobs" violates check constraint "mu_book_jobs_document_encoding"
+2026-11-07T20:22:08.6343133Z  2026-11-07 20:21:51.530 UTC [232] DETAIL:  Failing row contains (1, aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, 0, {"id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa..., 1, {}).
+2026-11-07T20:22:08.6343721Z  2026-11-07 20:21:51.530 UTC [232] STATEMENT:  UPDATE mu_book_jobs SET document_encoding=$1,document_wire=$2
+2026-11-07T20:22:08.6344130Z  2026-11-07 20:21:51.538 UTC [234] ERROR:  new row for relation "mu_book_jobs" violates check constraint "mu_book_jobs_document_encoding"
+2026-11-07T20:22:08.6344761Z  2026-11-07 20:21:51.538 UTC [234] DETAIL:  Failing row contains (1, aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, 0, {"id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa..., 1, {}).
+2026-11-07T20:22:08.6345465Z  2026-11-07 20:21:51.538 UTC [234] STATEMENT:  UPDATE mu_book_jobs SET document_encoding=$1,document_wire=$2
+2026-11-07T20:22:08.6345860Z  2026-11-07 20:21:51.548 UTC [235] ERROR:  new row for relation "mu_book_jobs" violates check constraint "mu_book_jobs_document_encoding"
+2026-11-07T20:22:08.6346687Z  2026-11-07 20:21:51.548 UTC [235] DETAIL:  Failing row contains (1, aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, 0, {"id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa..., 1, {"data": "e30=", "extra": true, "sha256": "ccccccccccccccccccccc...).
+2026-11-07T20:22:08.6347388Z  2026-11-07 20:21:51.548 UTC [235] STATEMENT:  UPDATE mu_book_jobs SET document_encoding=$1,document_wire=$2
+2026-11-07T20:22:08.6347790Z  2026-11-07 20:21:51.556 UTC [236] ERROR:  new row for relation "mu_book_jobs" violates check constraint "mu_book_jobs_document_encoding"
+2026-11-07T20:22:08.6348541Z  2026-11-07 20:21:51.556 UTC [236] DETAIL:  Failing row contains (1, aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, 0, {"id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa..., 1, {"data": "e30=", "sha256": "cccccccccccccccccccccccccccccccccccc...).
+2026-11-07T20:22:08.6349241Z  2026-11-07 20:21:51.556 UTC [236] STATEMENT:  UPDATE mu_book_jobs SET document_encoding=$1,document_wire=$2
+2026-11-07T20:22:08.6349647Z  2026-11-07 20:21:51.564 UTC [237] ERROR:  new row for relation "mu_book_jobs" violates check constraint "mu_book_jobs_document_encoding"
+2026-11-07T20:22:08.6350390Z  2026-11-07 20:21:51.564 UTC [237] DETAIL:  Failing row contains (1, aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, 0, {"id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa..., 1, {"data": "e30=", "sha256": "cccccccccccccccccccccccccccccccccccc...).
+2026-11-07T20:22:08.6351092Z  2026-11-07 20:21:51.564 UTC [237] STATEMENT:  UPDATE mu_book_jobs SET document_encoding=$1,document_wire=$2
+2026-11-07T20:22:08.6351492Z  2026-11-07 20:21:51.574 UTC [238] ERROR:  new row for relation "mu_book_jobs" violates check constraint "mu_book_jobs_document_encoding"
+2026-11-07T20:22:08.6352240Z  2026-11-07 20:21:51.574 UTC [238] DETAIL:  Failing row contains (1, aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, 0, {"id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa..., 1, {"data": "e30=", "sha256": "cccccccccccccccccccccccccccccccccccc...).
+2026-11-07T20:22:08.6352943Z  2026-11-07 20:21:51.574 UTC [238] STATEMENT:  UPDATE mu_book_jobs SET document_encoding=$1,document_wire=$2
+2026-11-07T20:22:08.6353493Z  2026-11-07 20:21:51.583 UTC [239] ERROR:  new row for relation "mu_book_jobs" violates check constraint "mu_book_jobs_document_encoding"
+2026-11-07T20:22:08.6354234Z  2026-11-07 20:21:51.583 UTC [239] DETAIL:  Failing row contains (1, aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, 0, {"id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa..., 1, {"data": "e30=", "sha256": "cccccccccccccccccccccccccccccccccccc...).
+2026-11-07T20:22:08.6355104Z  2026-11-07 20:21:51.583 UTC [239] STATEMENT:  UPDATE mu_book_jobs SET document_encoding=$1,document_wire=$2
+2026-11-07T20:22:08.6355643Z  2026-11-07 20:21:51.593 UTC [240] ERROR:  new row for relation "mu_book_jobs" violates check constraint "mu_book_jobs_document_encoding"
+2026-11-07T20:22:08.6356386Z  2026-11-07 20:21:51.593 UTC [240] DETAIL:  Failing row contains (1, aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, 0, {"id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa..., 1, {"data": "e30=", "sha256": "cccccccccccccccccccccccccccccccccccc...).
+2026-11-07T20:22:08.6357091Z  2026-11-07 20:21:51.593 UTC [240] STATEMENT:  UPDATE mu_book_jobs SET document_encoding=$1,document_wire=$2
+2026-11-07T20:22:08.6357493Z  2026-11-07 20:21:51.604 UTC [241] ERROR:  new row for relation "mu_book_jobs" violates check constraint "mu_book_jobs_document_encoding"
+2026-11-07T20:22:08.6358240Z  2026-11-07 20:21:51.604 UTC [241] DETAIL:  Failing row contains (1, aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, 0, {"id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa..., 1, {"data": "e30=", "sha256": "cccccccccccccccccccccccccccccccccccc...).
+2026-11-07T20:22:08.6358943Z  2026-11-07 20:21:51.604 UTC [241] STATEMENT:  UPDATE mu_book_jobs SET document_encoding=$1,document_wire=$2
+2026-11-07T20:22:08.6359457Z  2026-11-07 20:21:51.615 UTC [242] ERROR:  new row for relation "mu_book_jobs" violates check constraint "mu_book_jobs_document_encoding"
+2026-11-07T20:22:08.6360198Z  2026-11-07 20:21:51.615 UTC [242] DETAIL:  Failing row contains (1, aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, 0, {"id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa..., 1, {"data": "e30=", "sha256": "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC...).
+2026-11-07T20:22:08.6360895Z  2026-11-07 20:21:51.615 UTC [242] STATEMENT:  UPDATE mu_book_jobs SET document_encoding=$1,document_wire=$2
+2026-11-07T20:22:08.6361294Z  2026-11-07 20:21:51.623 UTC [243] ERROR:  new row for relation "mu_book_jobs" violates check constraint "mu_book_jobs_document_encoding"
+2026-11-07T20:22:08.6362032Z  2026-11-07 20:21:51.623 UTC [243] DETAIL:  Failing row contains (1, aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, 0, {"id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa..., 1, {"data": "e30=", "sha256": null, "encoding": "base64-utf8-json",...).
+2026-11-07T20:22:08.6362721Z  2026-11-07 20:21:51.623 UTC [243] STATEMENT:  UPDATE mu_book_jobs SET document_encoding=$1,document_wire=$2
+2026-11-07T20:22:08.6363125Z  2026-11-07 20:21:51.631 UTC [244] ERROR:  new row for relation "mu_book_jobs" violates check constraint "mu_book_jobs_document_encoding"
+2026-11-07T20:22:08.6363888Z  2026-11-07 20:21:51.631 UTC [244] DETAIL:  Failing row contains (1, aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, 0, {"id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa..., 1, {"data": "λ", "sha256": "cccccccccccccccccccccccccccccccccccccc...).
+2026-11-07T20:22:08.6364603Z  2026-11-07 20:21:51.631 UTC [244] STATEMENT:  UPDATE mu_book_jobs SET document_encoding=$1,document_wire=$2
+2026-11-07T20:22:08.6365126Z  2026-11-07 20:21:51.642 UTC [245] ERROR:  new row for relation "mu_book_jobs" violates check constraint "mu_book_jobs_document_encoding"
+2026-11-07T20:22:08.6365884Z  2026-11-07 20:21:51.642 UTC [245] DETAIL:  Failing row contains (1, aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, 0, {"id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa..., 1, {"data": "e3==AAAA", "sha256": "cccccccccccccccccccccccccccccccc...).
+2026-11-07T20:22:08.6366683Z  2026-11-07 20:21:51.642 UTC [245] STATEMENT:  UPDATE mu_book_jobs SET document_encoding=$1,document_wire=$2
+2026-11-07T20:22:08.6367083Z  2026-11-07 20:21:51.657 UTC [246] ERROR:  new row for relation "mu_book_jobs" violates check constraint "mu_book_jobs_document_encoding"
+2026-11-07T20:22:08.6367827Z  2026-11-07 20:21:51.657 UTC [246] DETAIL:  Failing row contains (1, aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, 0, {"id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa..., 1, {"data": "e30=\n", "sha256": "cccccccccccccccccccccccccccccccccc...).
+2026-11-07T20:22:08.6368522Z  2026-11-07 20:21:51.657 UTC [246] STATEMENT:  UPDATE mu_book_jobs SET document_encoding=$1,document_wire=$2
+2026-11-07T20:22:08.6368927Z  2026-11-07 20:21:51.669 UTC [248] ERROR:  new row for relation "mu_book_jobs" violates check constraint "mu_book_jobs_document_encoding"
+2026-11-07T20:22:08.6369678Z  2026-11-07 20:21:51.669 UTC [248] DETAIL:  Failing row contains (1, aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, 0, {"id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa..., 1, {"data": "e30", "sha256": "ccccccccccccccccccccccccccccccccccccc...).
+2026-11-07T20:22:08.6370384Z  2026-11-07 20:21:51.669 UTC [248] STATEMENT:  UPDATE mu_book_jobs SET document_encoding=$1,document_wire=$2
+2026-11-07T20:22:08.6370792Z  2026-11-07 20:21:51.688 UTC [251] ERROR:  new row for relation "mu_book_jobs" violates check constraint "mu_book_jobs_document_encoding"
+2026-11-07T20:22:08.6371543Z  2026-11-07 20:21:51.688 UTC [251] DETAIL:  Failing row contains (1, aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, 0, {"id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa..., 1, {"data": null, "sha256": "cccccccccccccccccccccccccccccccccccccc...).
+2026-11-07T20:22:08.6372344Z  2026-11-07 20:21:51.688 UTC [251] STATEMENT:  UPDATE mu_book_jobs SET document_encoding=$1,document_wire=$2
+2026-11-07T20:22:08.6372762Z  2026-11-07 20:21:51.702 UTC [253] ERROR:  new row for relation "mu_book_reviews" violates check constraint "mu_book_reviews_receipt_encoding"
+2026-11-07T20:22:08.6373538Z  2026-11-07 20:21:51.702 UTC [253] DETAIL:  Failing row contains (aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc, {"reason": "checked", "decision": "approved", "reviewer": "human..., 2, null).
+2026-11-07T20:22:08.6374250Z  2026-11-07 20:21:51.702 UTC [253] STATEMENT:  UPDATE mu_book_reviews SET receipt_encoding=$1,receipt_wire=$2
+2026-11-07T20:22:08.6374674Z  2026-11-07 20:21:51.712 UTC [254] ERROR:  new row for relation "mu_book_reviews" violates check constraint "mu_book_reviews_receipt_encoding"
+2026-11-07T20:22:08.6375654Z  2026-11-07 20:21:51.712 UTC [254] DETAIL:  Failing row contains (aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc, {"reason": "checked", "decision": "approved", "reviewer": "human..., 0, {"data": "e30=", "sha256": "cccccccccccccccccccccccccccccccccccc...).
+2026-11-07T20:22:08.6376468Z  2026-11-07 20:21:51.712 UTC [254] STATEMENT:  UPDATE mu_book_reviews SET receipt_encoding=$1,receipt_wire=$2
+2026-11-07T20:22:08.6376910Z  2026-11-07 20:21:51.721 UTC [255] ERROR:  new row for relation "mu_book_reviews" violates check constraint "mu_book_reviews_receipt_encoding"
+2026-11-07T20:22:08.6377677Z  2026-11-07 20:21:51.721 UTC [255] DETAIL:  Failing row contains (aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc, {"reason": "checked", "decision": "approved", "reviewer": "human..., 1, null).
+2026-11-07T20:22:08.6378393Z  2026-11-07 20:21:51.721 UTC [255] STATEMENT:  UPDATE mu_book_reviews SET receipt_encoding=$1,receipt_wire=$2
+2026-11-07T20:22:08.6378812Z  2026-11-07 20:21:51.730 UTC [256] ERROR:  new row for relation "mu_book_reviews" violates check constraint "mu_book_reviews_receipt_encoding"
+2026-11-07T20:22:08.6379756Z  2026-11-07 20:21:51.730 UTC [256] DETAIL:  Failing row contains (aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc, {"reason": "checked", "decision": "approved", "reviewer": "human..., 1, {"data": "e30=", "sha256": "cccccccccccccccccccccccccccccccccccc...).
+2026-11-07T20:22:08.6380561Z  2026-11-07 20:21:51.730 UTC [256] STATEMENT:  UPDATE mu_book_reviews SET receipt_encoding=$1,receipt_wire=$2
+2026-11-07T20:22:08.6380984Z  2026-11-07 20:21:51.738 UTC [258] ERROR:  new row for relation "mu_book_reviews" violates check constraint "mu_book_reviews_receipt_encoding"
+2026-11-07T20:22:08.6381846Z  2026-11-07 20:21:51.738 UTC [258] DETAIL:  Failing row contains (aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc, {"reason": "checked", "decision": "approved", "reviewer": "human..., 1, {"data": "e30=", "sha256": "cccccccccccccccccccccccccccccccccccc...).
+2026-11-07T20:22:08.6382655Z  2026-11-07 20:21:51.738 UTC [258] STATEMENT:  UPDATE mu_book_reviews SET receipt_encoding=$1,receipt_wire=$2
+2026-11-07T20:22:08.6382972Z  2026-11-07 20:21:51.748 UTC [259] ERROR:  Book JSON encoding downgrade rejected
+2026-11-07T20:22:08.6383301Z  2026-11-07 20:21:51.748 UTC [259] CONTEXT:  PL/pgSQL function mu_book_guard_document_encoding() line 3 at RAISE
+2026-11-07T20:22:08.6383664Z  2026-11-07 20:21:51.748 UTC [259] STATEMENT:  UPDATE mu_book_jobs SET document_encoding=$1,document_wire=$2
+2026-11-07T20:22:08.6383976Z  2026-11-07 20:21:51.757 UTC [260] ERROR:  Book JSON encoding downgrade rejected
+2026-11-07T20:22:08.6384294Z  2026-11-07 20:21:51.757 UTC [260] CONTEXT:  PL/pgSQL function mu_book_guard_receipt_encoding() line 3 at RAISE
+2026-11-07T20:22:08.6384751Z  2026-11-07 20:21:51.757 UTC [260] STATEMENT:  UPDATE mu_book_reviews SET receipt_encoding=0,receipt_wire=NULL
+2026-11-07T20:22:08.6385291Z  2026-11-07 20:21:51.873 UTC [265] ERROR:  new row for relation "mu_book_queue" violates check constraint "mu_book_queue_singleton_check"
+2026-11-07T20:22:08.6385653Z  2026-11-07 20:21:51.873 UTC [265] DETAIL:  Failing row contains (f, 1, 3).
+2026-11-07T20:22:08.6385964Z  2026-11-07 20:21:51.873 UTC [265] STATEMENT:  INSERT INTO mu_book_queue(singleton,max_attempts) VALUES(false,3)
+2026-11-07T20:22:08.6386385Z  2026-11-07 20:21:51.875 UTC [263] ERROR:  new row for relation "mu_book_queue" violates check constraint "mu_book_queue_max_attempts_check"
+2026-11-07T20:22:08.6386749Z  2026-11-07 20:21:51.875 UTC [263] DETAIL:  Failing row contains (t, 1, 11).
+2026-11-07T20:22:08.6387025Z  2026-11-07 20:21:51.875 UTC [263] STATEMENT:  UPDATE mu_book_queue SET max_attempts=11
+2026-11-07T20:22:08.6387380Z  2026-11-07 20:21:51.883 UTC [269] ERROR:  new row for relation "mu_book_jobs" violates check constraint "mu_book_jobs_check"
+2026-11-07T20:22:08.6388183Z  2026-11-07 20:21:51.883 UTC [269] DETAIL:  Failing row contains (1, aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, 0, {"page": 1, "state": "queued", "edition": "edition", "payload": ..., 0, null).
+2026-11-07T20:22:08.6388766Z  2026-11-07 20:21:51.883 UTC [269] STATEMENT:  INSERT INTO mu_book_jobs(sqlite_id,ordinal,document) VALUES($1,0,$2)
+2026-11-07T20:22:08.6389167Z  2026-11-07 20:21:51.891 UTC [270] ERROR:  new row for relation "mu_book_jobs" violates check constraint "mu_book_jobs_check"
+2026-11-07T20:22:08.6389812Z  2026-11-07 20:21:51.891 UTC [270] DETAIL:  Failing row contains (2, aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, 0, {"id": null, "page": 1, "state": "queued", "edition": "edition",..., 0, null).
+2026-11-07T20:22:08.6390534Z  2026-11-07 20:21:51.891 UTC [270] STATEMENT:  INSERT INTO mu_book_jobs(sqlite_id,ordinal,document) VALUES($1,0,$2)
+2026-11-07T20:22:08.6391062Z  2026-11-07 20:21:51.897 UTC [271] ERROR:  new row for relation "mu_book_jobs" violates check constraint "mu_book_jobs_document_check1"
+2026-11-07T20:22:08.6391796Z  2026-11-07 20:21:51.897 UTC [271] DETAIL:  Failing row contains (3, aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, 0, {"id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa..., 0, null).
+2026-11-07T20:22:08.6392410Z  2026-11-07 20:21:51.897 UTC [271] STATEMENT:  INSERT INTO mu_book_jobs(sqlite_id,ordinal,document) VALUES($1,0,$2)
+2026-11-07T20:22:08.6392893Z  2026-11-07 20:21:51.905 UTC [272] ERROR:  new row for relation "mu_book_jobs" violates check constraint "mu_book_jobs_document_check1"
+2026-11-07T20:22:08.6393535Z  2026-11-07 20:21:51.905 UTC [272] DETAIL:  Failing row contains (4, aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, 0, {"id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa..., 0, null).
+2026-11-07T20:22:08.6394138Z  2026-11-07 20:21:51.905 UTC [272] STATEMENT:  INSERT INTO mu_book_jobs(sqlite_id,ordinal,document) VALUES($1,0,$2)
+2026-11-07T20:22:08.6394549Z  2026-11-07 20:21:51.911 UTC [273] ERROR:  new row for relation "mu_book_jobs" violates check constraint "mu_book_jobs_document_check2"
+2026-11-07T20:22:08.6395303Z  2026-11-07 20:21:51.911 UTC [273] DETAIL:  Failing row contains (5, aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, 0, {"id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa..., 0, null).
+2026-11-07T20:22:08.6395910Z  2026-11-07 20:21:51.911 UTC [273] STATEMENT:  INSERT INTO mu_book_jobs(sqlite_id,ordinal,document) VALUES($1,0,$2)
+2026-11-07T20:22:08.6396316Z  2026-11-07 20:21:51.918 UTC [274] ERROR:  new row for relation "mu_book_jobs" violates check constraint "mu_book_jobs_document_check2"
+2026-11-07T20:22:08.6396949Z  2026-11-07 20:21:51.918 UTC [274] DETAIL:  Failing row contains (6, aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, 0, {"id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa..., 0, null).
+2026-11-07T20:22:08.6397636Z  2026-11-07 20:21:51.918 UTC [274] STATEMENT:  INSERT INTO mu_book_jobs(sqlite_id,ordinal,document) VALUES($1,0,$2)
+2026-11-07T20:22:08.6398050Z  2026-11-07 20:21:51.926 UTC [275] ERROR:  new row for relation "mu_book_jobs" violates check constraint "mu_book_jobs_document_check4"
+2026-11-07T20:22:08.6398682Z  2026-11-07 20:21:51.926 UTC [275] DETAIL:  Failing row contains (7, aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, 0, {"id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa..., 0, null).
+2026-11-07T20:22:08.6399286Z  2026-11-07 20:21:51.926 UTC [275] STATEMENT:  INSERT INTO mu_book_jobs(sqlite_id,ordinal,document) VALUES($1,0,$2)
+2026-11-07T20:22:08.6399693Z  2026-11-07 20:21:51.935 UTC [276] ERROR:  new row for relation "mu_book_jobs" violates check constraint "mu_book_jobs_document_check4"
+2026-11-07T20:22:08.6400325Z  2026-11-07 20:21:51.935 UTC [276] DETAIL:  Failing row contains (8, aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, 0, {"id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa..., 0, null).
+2026-11-07T20:22:08.6400933Z  2026-11-07 20:21:51.935 UTC [276] STATEMENT:  INSERT INTO mu_book_jobs(sqlite_id,ordinal,document) VALUES($1,0,$2)
+2026-11-07T20:22:08.6401342Z  2026-11-07 20:21:51.944 UTC [277] ERROR:  new row for relation "mu_book_jobs" violates check constraint "mu_book_jobs_document_check3"
+2026-11-07T20:22:08.6401978Z  2026-11-07 20:21:51.944 UTC [277] DETAIL:  Failing row contains (9, aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, 0, {"id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa..., 0, null).
+2026-11-07T20:22:08.6402578Z  2026-11-07 20:21:51.944 UTC [277] STATEMENT:  INSERT INTO mu_book_jobs(sqlite_id,ordinal,document) VALUES($1,0,$2)
+2026-11-07T20:22:08.6402987Z  2026-11-07 20:21:51.952 UTC [278] ERROR:  new row for relation "mu_book_jobs" violates check constraint "mu_book_jobs_document_check3"
+2026-11-07T20:22:08.6403620Z  2026-11-07 20:21:51.952 UTC [278] DETAIL:  Failing row contains (10, aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, 0, {"id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa..., 0, null).
+2026-11-07T20:22:08.6404306Z  2026-11-07 20:21:51.952 UTC [278] STATEMENT:  INSERT INTO mu_book_jobs(sqlite_id,ordinal,document) VALUES($1,0,$2)
+2026-11-07T20:22:08.6404725Z  2026-11-07 20:21:51.959 UTC [279] ERROR:  new row for relation "mu_book_jobs" violates check constraint "mu_book_jobs_document_check5"
+2026-11-07T20:22:08.6405518Z  2026-11-07 20:21:51.959 UTC [279] DETAIL:  Failing row contains (11, aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, 0, {"id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa..., 0, null).
+2026-11-07T20:22:08.6406128Z  2026-11-07 20:21:51.959 UTC [279] STATEMENT:  INSERT INTO mu_book_jobs(sqlite_id,ordinal,document) VALUES($1,0,$2)
+2026-11-07T20:22:08.6406541Z  2026-11-07 20:21:51.966 UTC [280] ERROR:  new row for relation "mu_book_jobs" violates check constraint "mu_book_jobs_document_check5"
+2026-11-07T20:22:08.6407177Z  2026-11-07 20:21:51.966 UTC [280] DETAIL:  Failing row contains (12, aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, 0, {"id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa..., 0, null).
+2026-11-07T20:22:08.6407783Z  2026-11-07 20:21:51.966 UTC [280] STATEMENT:  INSERT INTO mu_book_jobs(sqlite_id,ordinal,document) VALUES($1,0,$2)
+2026-11-07T20:22:08.6408192Z  2026-11-07 20:21:51.975 UTC [282] ERROR:  new row for relation "mu_book_jobs" violates check constraint "mu_book_jobs_document_check14"
+2026-11-07T20:22:08.6408835Z  2026-11-07 20:21:51.975 UTC [282] DETAIL:  Failing row contains (13, aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, 0, {"id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa..., 0, null).
+2026-11-07T20:22:08.6409436Z  2026-11-07 20:21:51.975 UTC [282] STATEMENT:  INSERT INTO mu_book_jobs(sqlite_id,ordinal,document) VALUES($1,0,$2)
+2026-11-07T20:22:08.6409831Z  2026-11-07 20:21:51.978 UTC [268] ERROR:  synthetic failure
+2026-11-07T20:22:08.6410089Z  2026-11-07 20:21:51.978 UTC [268] CONTEXT:  PL/pgSQL function reject_book() line 1 at RAISE
+2026-11-07T20:22:08.6410537Z  2026-11-07 20:21:51.978 UTC [268] STATEMENT:  INSERT INTO mu_book_jobs(sqlite_id,ordinal,document,document_encoding,document_wire) VALUES($1,$2,$3::jsonb,1,$4::jsonb)
+2026-11-07T20:22:08.6411043Z  2026-11-07 20:21:51.987 UTC [283] ERROR:  new row for relation "mu_book_jobs" violates check constraint "mu_book_jobs_document_check14"
+2026-11-07T20:22:08.6411682Z  2026-11-07 20:21:51.987 UTC [283] DETAIL:  Failing row contains (14, aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, 0, {"id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa..., 0, null).
+2026-11-07T20:22:08.6412285Z  2026-11-07 20:21:51.987 UTC [283] STATEMENT:  INSERT INTO mu_book_jobs(sqlite_id,ordinal,document) VALUES($1,0,$2)
+2026-11-07T20:22:08.6412702Z  2026-11-07 20:21:51.998 UTC [284] ERROR:  new row for relation "mu_book_jobs" violates check constraint "mu_book_jobs_document_check7"
+2026-11-07T20:22:08.6413337Z  2026-11-07 20:21:51.998 UTC [284] DETAIL:  Failing row contains (15, aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, 0, {"id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa..., 0, null).
+2026-11-07T20:22:08.6425811Z  2026-11-07 20:21:51.998 UTC [284] STATEMENT:  INSERT INTO mu_book_jobs(sqlite_id,ordinal,document) VALUES($1,0,$2)
+2026-11-07T20:22:08.6426272Z  2026-11-07 20:21:52.009 UTC [285] ERROR:  new row for relation "mu_book_jobs" violates check constraint "mu_book_jobs_document_check7"
+2026-11-07T20:22:08.6426918Z  2026-11-07 20:21:52.009 UTC [285] DETAIL:  Failing row contains (16, aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, 0, {"id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa..., 0, null).
+2026-11-07T20:22:08.6427536Z  2026-11-07 20:21:52.009 UTC [285] STATEMENT:  INSERT INTO mu_book_jobs(sqlite_id,ordinal,document) VALUES($1,0,$2)
+2026-11-07T20:22:08.6427954Z  2026-11-07 20:21:52.025 UTC [286] ERROR:  new row for relation "mu_book_jobs" violates check constraint "mu_book_jobs_document_check8"
+2026-11-07T20:22:08.6428726Z  2026-11-07 20:21:52.025 UTC [286] DETAIL:  Failing row contains (17, aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, 0, {"id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa..., 0, null).
+2026-11-07T20:22:08.6429333Z  2026-11-07 20:21:52.025 UTC [286] STATEMENT:  INSERT INTO mu_book_jobs(sqlite_id,ordinal,document) VALUES($1,0,$2)
+2026-11-07T20:22:08.6429750Z  2026-11-07 20:21:52.039 UTC [287] ERROR:  new row for relation "mu_book_jobs" violates check constraint "mu_book_jobs_document_check8"
+2026-11-07T20:22:08.6430386Z  2026-11-07 20:21:52.039 UTC [287] DETAIL:  Failing row contains (18, aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, 0, {"id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa..., 0, null).
+2026-11-07T20:22:08.6430996Z  2026-11-07 20:21:52.039 UTC [287] STATEMENT:  INSERT INTO mu_book_jobs(sqlite_id,ordinal,document) VALUES($1,0,$2)
+2026-11-07T20:22:08.6431409Z  2026-11-07 20:21:52.052 UTC [290] ERROR:  new row for relation "mu_book_jobs" violates check constraint "mu_book_jobs_document_check9"
+2026-11-07T20:22:08.6432040Z  2026-11-07 20:21:52.052 UTC [290] DETAIL:  Failing row contains (19, aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, 0, {"id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa..., 0, null).
+2026-11-07T20:22:08.6432648Z  2026-11-07 20:21:52.052 UTC [290] STATEMENT:  INSERT INTO mu_book_jobs(sqlite_id,ordinal,document) VALUES($1,0,$2)
+2026-11-07T20:22:08.6433057Z  2026-11-07 20:21:52.062 UTC [291] ERROR:  new row for relation "mu_book_jobs" violates check constraint "mu_book_jobs_document_check9"
+2026-11-07T20:22:08.6433693Z  2026-11-07 20:21:52.062 UTC [291] DETAIL:  Failing row contains (20, aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, 0, {"id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa..., 0, null).
+2026-11-07T20:22:08.6434378Z  2026-11-07 20:21:52.062 UTC [291] STATEMENT:  INSERT INTO mu_book_jobs(sqlite_id,ordinal,document) VALUES($1,0,$2)
+2026-11-07T20:22:08.6434911Z  2026-11-07 20:21:52.071 UTC [292] ERROR:  new row for relation "mu_book_jobs" violates check constraint "mu_book_jobs_document_check4"
+2026-11-07T20:22:08.6435581Z  2026-11-07 20:21:52.071 UTC [292] DETAIL:  Failing row contains (21, aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, 0, {"id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa..., 0, null).
+2026-11-07T20:22:08.6436188Z  2026-11-07 20:21:52.071 UTC [292] STATEMENT:  INSERT INTO mu_book_jobs(sqlite_id,ordinal,document) VALUES($1,0,$2)
+2026-11-07T20:22:08.6436599Z  2026-11-07 20:21:52.082 UTC [293] ERROR:  new row for relation "mu_book_jobs" violates check constraint "mu_book_jobs_document_check10"
+2026-11-07T20:22:08.6437240Z  2026-11-07 20:21:52.082 UTC [293] DETAIL:  Failing row contains (22, aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, 0, {"id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa..., 0, null).
+2026-11-07T20:22:08.6437842Z  2026-11-07 20:21:52.082 UTC [293] STATEMENT:  INSERT INTO mu_book_jobs(sqlite_id,ordinal,document) VALUES($1,0,$2)
+2026-11-07T20:22:08.6438259Z  2026-11-07 20:21:52.094 UTC [294] ERROR:  new row for relation "mu_book_jobs" violates check constraint "mu_book_jobs_document_check10"
+2026-11-07T20:22:08.6438891Z  2026-11-07 20:21:52.094 UTC [294] DETAIL:  Failing row contains (23, aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, 0, {"id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa..., 0, null).
+2026-11-07T20:22:08.6439496Z  2026-11-07 20:21:52.094 UTC [294] STATEMENT:  INSERT INTO mu_book_jobs(sqlite_id,ordinal,document) VALUES($1,0,$2)
+2026-11-07T20:22:08.6439902Z  2026-11-07 20:21:52.106 UTC [295] ERROR:  new row for relation "mu_book_jobs" violates check constraint "mu_book_jobs_document_check11"
+2026-11-07T20:22:08.6440537Z  2026-11-07 20:21:52.106 UTC [295] DETAIL:  Failing row contains (24, aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, 0, {"id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa..., 0, null).
+2026-11-07T20:22:08.6441285Z  2026-11-07 20:21:52.106 UTC [295] STATEMENT:  INSERT INTO mu_book_jobs(sqlite_id,ordinal,document) VALUES($1,0,$2)
+2026-11-07T20:22:08.6441700Z  2026-11-07 20:21:52.117 UTC [296] ERROR:  new row for relation "mu_book_jobs" violates check constraint "mu_book_jobs_document_check11"
+2026-11-07T20:22:08.6442338Z  2026-11-07 20:21:52.117 UTC [296] DETAIL:  Failing row contains (25, aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, 0, {"id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa..., 0, null).
+2026-11-07T20:22:08.6442936Z  2026-11-07 20:21:52.117 UTC [296] STATEMENT:  INSERT INTO mu_book_jobs(sqlite_id,ordinal,document) VALUES($1,0,$2)
+2026-11-07T20:22:08.6443353Z  2026-11-07 20:21:52.127 UTC [297] ERROR:  new row for relation "mu_book_jobs" violates check constraint "mu_book_jobs_document_check11"
+2026-11-07T20:22:08.6443989Z  2026-11-07 20:21:52.127 UTC [297] DETAIL:  Failing row contains (26, aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, 0, {"id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa..., 0, null).
+2026-11-07T20:22:08.6444593Z  2026-11-07 20:21:52.127 UTC [297] STATEMENT:  INSERT INTO mu_book_jobs(sqlite_id,ordinal,document) VALUES($1,0,$2)
+2026-11-07T20:22:08.6445156Z  2026-11-07 20:21:52.137 UTC [298] ERROR:  new row for relation "mu_book_jobs" violates check constraint "mu_book_jobs_document_check14"
+2026-11-07T20:22:08.6445794Z  2026-11-07 20:21:52.137 UTC [298] DETAIL:  Failing row contains (27, aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, 0, {"id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa..., 0, null).
+2026-11-07T20:22:08.6446397Z  2026-11-07 20:21:52.137 UTC [298] STATEMENT:  INSERT INTO mu_book_jobs(sqlite_id,ordinal,document) VALUES($1,0,$2)
+2026-11-07T20:22:08.6446933Z  2026-11-07 20:21:52.153 UTC [299] ERROR:  new row for relation "mu_book_reviews" violates check constraint "mu_book_reviews_check"
+2026-11-07T20:22:08.6447681Z  2026-11-07 20:21:52.153 UTC [299] DETAIL:  Failing row contains (aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc, {"reason": "checked", "decision": "approved", "reviewer": "human..., 0, null).
+2026-11-07T20:22:08.6448435Z  2026-11-07 20:21:52.153 UTC [299] STATEMENT:  INSERT INTO mu_book_reviews(sqlite_id,candidate_digest,receipt) VALUES($1,$2,$3)
+2026-11-07T20:22:08.6448867Z  2026-11-07 20:21:52.165 UTC [300] ERROR:  new row for relation "mu_book_reviews" violates check constraint "mu_book_reviews_check"
+2026-11-07T20:22:08.6449611Z  2026-11-07 20:21:52.165 UTC [300] DETAIL:  Failing row contains (aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc, {"reason": "checked", "decision": "approved", "reviewer": "human..., 0, null).
+2026-11-07T20:22:08.6450356Z  2026-11-07 20:21:52.165 UTC [300] STATEMENT:  INSERT INTO mu_book_reviews(sqlite_id,candidate_digest,receipt) VALUES($1,$2,$3)
+2026-11-07T20:22:08.6450815Z  2026-11-07 20:21:52.178 UTC [301] ERROR:  new row for relation "mu_book_reviews" violates check constraint "mu_book_reviews_receipt_check1"
+2026-11-07T20:22:08.6451579Z  2026-11-07 20:21:52.178 UTC [301] DETAIL:  Failing row contains (aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc, {"reason": "checked", "reviewer": "human", "reviewedAt": "2026-0..., 0, null).
+2026-11-07T20:22:08.6452313Z  2026-11-07 20:21:52.178 UTC [301] STATEMENT:  INSERT INTO mu_book_reviews(sqlite_id,candidate_digest,receipt) VALUES($1,$2,$3)
+2026-11-07T20:22:08.6452764Z  2026-11-07 20:21:52.191 UTC [302] ERROR:  new row for relation "mu_book_reviews" violates check constraint "mu_book_reviews_receipt_check1"
+2026-11-07T20:22:08.6453605Z  2026-11-07 20:21:52.191 UTC [302] DETAIL:  Failing row contains (aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc, {"reason": "checked", "decision": null, "reviewer": "human", "re..., 0, null).
+2026-11-07T20:22:08.6454349Z  2026-11-07 20:21:52.191 UTC [302] STATEMENT:  INSERT INTO mu_book_reviews(sqlite_id,candidate_digest,receipt) VALUES($1,$2,$3)
+2026-11-07T20:22:08.6454930Z  2026-11-07 20:21:52.201 UTC [304] ERROR:  new row for relation "mu_book_reviews" violates check constraint "mu_book_reviews_receipt_check3"
+2026-11-07T20:22:08.6455697Z  2026-11-07 20:21:52.201 UTC [304] DETAIL:  Failing row contains (aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc, {"reason": "checked", "decision": "approved", "reviewedAt": "202..., 0, null).
+2026-11-07T20:22:08.6456437Z  2026-11-07 20:21:52.201 UTC [304] STATEMENT:  INSERT INTO mu_book_reviews(sqlite_id,candidate_digest,receipt) VALUES($1,$2,$3)
+2026-11-07T20:22:08.6456889Z  2026-11-07 20:21:52.209 UTC [306] ERROR:  new row for relation "mu_book_reviews" violates check constraint "mu_book_reviews_receipt_check3"
+2026-11-07T20:22:08.6457647Z  2026-11-07 20:21:52.209 UTC [306] DETAIL:  Failing row contains (aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc, {"reason": "checked", "decision": "approved", "reviewer": null, ..., 0, null).
+2026-11-07T20:22:08.6458390Z  2026-11-07 20:21:52.209 UTC [306] STATEMENT:  INSERT INTO mu_book_reviews(sqlite_id,candidate_digest,receipt) VALUES($1,$2,$3)
+2026-11-07T20:22:08.6458837Z  2026-11-07 20:21:52.219 UTC [307] ERROR:  new row for relation "mu_book_reviews" violates check constraint "mu_book_reviews_receipt_check4"
+2026-11-07T20:22:08.6459593Z  2026-11-07 20:21:52.219 UTC [307] DETAIL:  Failing row contains (aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc, {"decision": "approved", "reviewer": "human", "reviewedAt": "202..., 0, null).
+2026-11-07T20:22:08.6460422Z  2026-11-07 20:21:52.219 UTC [307] STATEMENT:  INSERT INTO mu_book_reviews(sqlite_id,candidate_digest,receipt) VALUES($1,$2,$3)
+2026-11-07T20:22:08.6460865Z  2026-11-07 20:21:52.231 UTC [308] ERROR:  new row for relation "mu_book_reviews" violates check constraint "mu_book_reviews_receipt_check4"
+2026-11-07T20:22:08.6461631Z  2026-11-07 20:21:52.231 UTC [308] DETAIL:  Failing row contains (aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc, {"reason": null, "decision": "approved", "reviewer": "human", "r..., 0, null).
+2026-11-07T20:22:08.6462373Z  2026-11-07 20:21:52.231 UTC [308] STATEMENT:  INSERT INTO mu_book_reviews(sqlite_id,candidate_digest,receipt) VALUES($1,$2,$3)
+2026-11-07T20:22:08.6462822Z  2026-11-07 20:21:52.244 UTC [309] ERROR:  new row for relation "mu_book_reviews" violates check constraint "mu_book_reviews_receipt_check5"
+2026-11-07T20:22:08.6463578Z  2026-11-07 20:21:52.244 UTC [309] DETAIL:  Failing row contains (aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc, {"reason": "checked", "decision": "approved", "reviewer": "human..., 0, null).
+2026-11-07T20:22:08.6464318Z  2026-11-07 20:21:52.244 UTC [309] STATEMENT:  INSERT INTO mu_book_reviews(sqlite_id,candidate_digest,receipt) VALUES($1,$2,$3)
+2026-11-07T20:22:08.6464765Z  2026-11-07 20:21:52.254 UTC [310] ERROR:  new row for relation "mu_book_reviews" violates check constraint "mu_book_reviews_receipt_check5"
+2026-11-07T20:22:08.6465675Z  2026-11-07 20:21:52.254 UTC [310] DETAIL:  Failing row contains (aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc, {"reason": "checked", "decision": "approved", "reviewer": "human..., 0, null).
+2026-11-07T20:22:08.6466418Z  2026-11-07 20:21:52.254 UTC [310] STATEMENT:  INSERT INTO mu_book_reviews(sqlite_id,candidate_digest,receipt) VALUES($1,$2,$3)
+2026-11-07T20:22:08.6466949Z  2026-11-07 20:21:52.264 UTC [311] ERROR:  new row for relation "mu_book_reviews" violates check constraint "mu_book_reviews_receipt_check2"
+2026-11-07T20:22:08.6467715Z  2026-11-07 20:21:52.264 UTC [311] DETAIL:  Failing row contains (aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc, {"reason": "checked", "decision": "approved", "reviewer": "human..., 0, null).
+2026-11-07T20:22:08.6468450Z  2026-11-07 20:21:52.264 UTC [311] STATEMENT:  INSERT INTO mu_book_reviews(sqlite_id,candidate_digest,receipt) VALUES($1,$2,$3)
+2026-11-07T20:22:08.6468894Z  2026-11-07 20:21:52.277 UTC [312] ERROR:  new row for relation "mu_book_reviews" violates check constraint "mu_book_reviews_receipt_check2"
+2026-11-07T20:22:08.6469649Z  2026-11-07 20:21:52.277 UTC [312] DETAIL:  Failing row contains (aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc, {"reason": "checked", "decision": "approved", "reviewer": "human..., 0, null).
+2026-11-07T20:22:08.6470391Z  2026-11-07 20:21:52.277 UTC [312] STATEMENT:  INSERT INTO mu_book_reviews(sqlite_id,candidate_digest,receipt) VALUES($1,$2,$3)
+2026-11-07T20:22:08.6470785Z  2026-11-07 20:21:52.349 UTC [315] ERROR:  function missing_book_function() does not exist at character 45
+2026-11-07T20:22:08.6471199Z  2026-11-07 20:21:52.349 UTC [315] HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+2026-11-07T20:22:08.6471625Z  2026-11-07 20:21:52.349 UTC [315] STATEMENT:   CREATE TABLE mu_book_probe(id int); SELECT missing_book_function(); 
+2026-11-07T20:22:08.6471996Z  2026-11-07 20:21:54.951 UTC [326] ERROR:  Drain all running ingestion leases before protocol activation
+2026-11-07T20:22:08.6472428Z  2026-11-07 20:21:54.951 UTC [326] CONTEXT:  PL/pgSQL function mu_enable_fenced_ingestion() line 8 at RAISE
+2026-11-07T20:22:08.6472757Z  2026-11-07 20:21:54.951 UTC [326] STATEMENT:  SELECT mu_enable_fenced_ingestion()
+2026-11-07T20:22:08.6473029Z  2026-11-07 20:21:54.954 UTC [326] ERROR:  Fenced ingestion protocol required
+2026-11-07T20:22:08.6473345Z  2026-11-07 20:21:54.954 UTC [326] CONTEXT:  PL/pgSQL function mu_ingestion_protocol_guard() line 30 at RAISE
+2026-11-07T20:22:08.6473626Z  2026-11-07 20:21:54.954 UTC [326] STATEMENT:  
+2026-11-07T20:22:08.6473801Z  	WITH candidate AS (
+2026-11-07T20:22:08.6473946Z  	 SELECT job_id FROM mu_ingestion_jobs
+2026-11-07T20:22:08.6474215Z  	 WHERE ((state='queued' AND available_at<=now()) OR (state='running' AND lease_until<now()))
+2026-11-07T20:22:08.6474471Z  	   AND attempts<max_attempts
+2026-11-07T20:22:08.6474630Z  	 ORDER BY available_at,job_id
+2026-11-07T20:22:08.6474929Z  	 FOR UPDATE SKIP LOCKED LIMIT 1
+2026-11-07T20:22:08.6475088Z  	)
+2026-11-07T20:22:08.6475279Z  	UPDATE mu_ingestion_jobs AS job SET state='running',attempts=job.attempts+1,
+2026-11-07T20:22:08.6475578Z  	 worker_id=$1,lease_until=now()+($2::int*interval '1 second'),updated_at=now()
+2026-11-07T20:22:08.6475828Z  	FROM candidate WHERE job.job_id=candidate.job_id
+2026-11-07T20:22:08.6476104Z  	RETURNING job.job_id,job.kind,job.payload,job.attempts,job.lease_until
+2026-11-07T20:22:08.6476393Z  2026-11-07 20:21:54.963 UTC [327] ERROR:  Fenced ingestion protocol required
+2026-11-07T20:22:08.6476706Z  2026-11-07 20:21:54.963 UTC [327] CONTEXT:  PL/pgSQL function mu_ingestion_protocol_guard() line 30 at RAISE
+2026-11-07T20:22:08.6477301Z  2026-11-07 20:21:54.963 UTC [327] STATEMENT:  UPDATE mu_ingestion_jobs SET lease_until=now()+($3::int*interval '1 second'),updated_at=now() WHERE job_id=$1 AND state='running' AND worker_id=$2 AND lease_until>now() RETURNING job_id,lease_until
+2026-11-07T20:22:08.6477830Z  2026-11-07 20:21:54.969 UTC [328] ERROR:  Fenced ingestion protocol required
+2026-11-07T20:22:08.6478148Z  2026-11-07 20:21:54.969 UTC [328] CONTEXT:  PL/pgSQL function mu_ingestion_protocol_guard() line 30 at RAISE
+2026-11-07T20:22:08.6478817Z  2026-11-07 20:21:54.969 UTC [328] STATEMENT:  UPDATE mu_ingestion_jobs SET state='completed',result=$3::jsonb,lease_until=NULL,updated_at=now() WHERE job_id=$1 AND state='running' AND worker_id=$2 AND lease_until>now() RETURNING job_id
+2026-11-07T20:22:08.6479339Z  2026-11-07 20:21:54.975 UTC [329] ERROR:  Fenced ingestion protocol required
+2026-11-07T20:22:08.6479646Z  2026-11-07 20:21:54.975 UTC [329] CONTEXT:  PL/pgSQL function mu_ingestion_protocol_guard() line 30 at RAISE
+2026-11-07T20:22:08.6479922Z  2026-11-07 20:21:54.975 UTC [329] STATEMENT:  
+2026-11-07T20:22:08.6480097Z  	UPDATE mu_ingestion_jobs SET
+2026-11-07T20:22:08.6480310Z  	 state=CASE WHEN attempts>=max_attempts THEN 'failed' ELSE 'queued' END,
+2026-11-07T20:22:08.6480593Z  	 available_at=now()+($4::int*interval '1 second'),lease_until=NULL,worker_id=NULL,
+2026-11-07T20:22:08.6480828Z  	 last_error=$3,updated_at=now()
+2026-11-07T20:22:08.6481046Z  	WHERE job_id=$1 AND state='running' AND worker_id=$2 AND lease_until>now()
+2026-11-07T20:22:08.6481258Z  	RETURNING job_id,state
+2026-11-07T20:22:08.6481459Z  2026-11-07 20:21:54.981 UTC [330] ERROR:  Fenced ingestion protocol required
+2026-11-07T20:22:08.6481762Z  2026-11-07 20:21:54.981 UTC [330] CONTEXT:  PL/pgSQL function mu_ingestion_protocol_guard() line 30 at RAISE
+2026-11-07T20:22:08.6482127Z  2026-11-07 20:21:54.981 UTC [330] STATEMENT:  UPDATE mu_ingestion_jobs SET result='{}'::jsonb WHERE job_id=$1
+2026-11-07T20:22:08.6482464Z  2026-11-07 20:21:55.180 UTC [335] ERROR:  could not serialize access due to concurrent update
+2026-11-07T20:22:08.6482847Z  2026-11-07 20:21:55.180 UTC [335] CONTEXT:  SQL statement "SELECT mode                      FROM mu_ingestion_protocol WHERE singleton FOR SHARE"
+2026-11-07T20:22:08.6483205Z  	PL/pgSQL function mu_ingestion_protocol_guard() line 6 at SQL statement
+2026-11-07T20:22:08.6483677Z  2026-11-07 20:21:55.180 UTC [335] STATEMENT:  UPDATE mu_ingestion_jobs SET state='running',worker_id='legacy',lease_until=now()+interval '1 minute'
+2026-11-07T20:22:08.6484069Z  2026-11-07 20:21:55.181 UTC [335] ERROR:  Fenced ingestion protocol forbids truncate
+2026-11-07T20:22:08.6484393Z  2026-11-07 20:21:55.181 UTC [335] CONTEXT:  PL/pgSQL function mu_ingestion_protocol_lock() line 7 at RAISE
+2026-11-07T20:22:08.6484696Z  2026-11-07 20:21:55.181 UTC [335] STATEMENT:  TRUNCATE mu_ingestion_jobs
+2026-11-07T20:22:08.6485102Z  2026-11-07 20:21:55.222 UTC [338] ERROR:  Fenced ingestion protocol required
+2026-11-07T20:22:08.6485407Z  2026-11-07 20:21:55.222 UTC [338] CONTEXT:  PL/pgSQL function mu_ingestion_protocol_guard() line 30 at RAISE
+2026-11-07T20:22:08.6485779Z  2026-11-07 20:21:55.222 UTC [338] STATEMENT:  UPDATE mu_ingestion_jobs SET checkpoint='{}'::jsonb WHERE job_id=$1
+2026-11-07T20:22:08.6486126Z  2026-11-07 20:21:55.316 UTC [343] ERROR:  permission denied for table mu_ingestion_protocol
+2026-11-07T20:22:08.6486438Z  2026-11-07 20:21:55.316 UTC [343] STATEMENT:  UPDATE mu_ingestion_protocol SET mode='legacy'
+2026-11-07T20:22:08.6486759Z  2026-11-07 20:21:55.316 UTC [343] ERROR:  permission denied for function mu_enable_fenced_ingestion
+2026-11-07T20:22:08.6487070Z  2026-11-07 20:21:55.316 UTC [343] STATEMENT:  SELECT mu_enable_fenced_ingestion()
+2026-11-07T20:22:08.6487364Z  2026-11-07 20:21:55.348 UTC [346] ERROR:  Protocol activation requires READ COMMITTED isolation
+2026-11-07T20:22:08.6487702Z  2026-11-07 20:21:55.348 UTC [346] CONTEXT:  PL/pgSQL function mu_enable_fenced_ingestion() line 4 at RAISE
+2026-11-07T20:22:08.6488018Z  2026-11-07 20:21:55.348 UTC [346] STATEMENT:  SELECT mu_enable_fenced_ingestion()
+2026-11-07T20:22:08.6488284Z  2026-11-07 20:21:56.163 UTC [352] ERROR:  Fenced ingestion protocol required
+2026-11-07T20:22:08.6488590Z  2026-11-07 20:21:56.163 UTC [352] CONTEXT:  PL/pgSQL function mu_ingestion_protocol_guard() line 30 at RAISE
+2026-11-07T20:22:08.6489167Z  2026-11-07 20:21:56.163 UTC [352] STATEMENT:  UPDATE mu_ingestion_jobs SET state='completed',result=$3::jsonb,lease_until=NULL,updated_at=now() WHERE job_id=$1 AND state='running' AND worker_id=$2 AND lease_until>now() RETURNING job_id
+2026-11-07T20:22:08.6489832Z  2026-11-07 20:21:56.652 UTC [367] ERROR:  function missing_migration_function() does not exist at character 8
+2026-11-07T20:22:08.6490252Z  2026-11-07 20:21:56.652 UTC [367] HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+2026-11-07T20:22:08.6490624Z  2026-11-07 20:21:56.652 UTC [367] STATEMENT:  SELECT missing_migration_function();
+2026-11-07T20:22:08.6490984Z  2026-11-07 20:21:56.859 UTC [374] WARNING:  there is no transaction in progress
+2026-11-07T20:22:08.6491247Z  2026-11-07 20:21:56.859 UTC [375] WARNING:  there is no transaction in progress
+2026-11-07T20:22:08.6491513Z  2026-11-07 20:21:56.860 UTC [376] WARNING:  there is no transaction in progress
+2026-11-07T20:22:08.6491775Z  2026-11-07 20:21:56.860 UTC [377] WARNING:  there is no transaction in progress
+2026-11-07T20:22:08.6492039Z  2026-11-07 20:21:59.017 UTC [386] WARNING:  there is no transaction in progress
+2026-11-07T20:22:08.6492294Z  2026-11-07 20:22:01.188 UTC [405] WARNING:  there is no transaction in progress
+2026-11-07T20:22:08.6492553Z  2026-11-07 20:22:03.319 UTC [424] ERROR:  Job lease expired or not owned
+2026-11-07T20:22:08.6492851Z  2026-11-07 20:22:03.319 UTC [424] CONTEXT:  PL/pgSQL function mu_ingestion_protocol_guard() line 28 at RAISE
+2026-11-07T20:22:08.6493566Z  2026-11-07 20:22:03.319 UTC [424] STATEMENT:  UPDATE mu_ingestion_jobs SET state='completed',result=$4::jsonb,lease_until=NULL,claim_token=NULL,worker_id=NULL,updated_at=clock_timestamp() WHERE job_id=$1 AND worker_id=$2 AND claim_token=$3::uuid AND state='running' AND lease_until>clock_timestamp() RETURNING job_id
+2026-11-07T20:22:08.6494220Z  2026-11-07 20:22:03.321 UTC [432] ERROR:  Job lease expired or not owned
+2026-11-07T20:22:08.6494607Z  2026-11-07 20:22:03.321 UTC [432] CONTEXT:  PL/pgSQL function mu_ingestion_protocol_guard() line 28 at RAISE
+2026-11-07T20:22:08.6495110Z  2026-11-07 20:22:03.321 UTC [432] STATEMENT:  UPDATE mu_ingestion_jobs SET
+2026-11-07T20:22:08.6495371Z  	 state=CASE WHEN attempts>=max_attempts THEN 'failed' ELSE 'queued' END,
+2026-11-07T20:22:08.6495679Z  	 available_at=clock_timestamp()+($5::int*interval '1 second'),lease_until=NULL,claim_token=NULL,
+2026-11-07T20:22:08.6495975Z  	 worker_id=NULL,last_error=$4,updated_at=clock_timestamp()
+2026-11-07T20:22:08.6496281Z  	 WHERE job_id=$1 AND worker_id=$2 AND claim_token=$3::uuid AND state='running' AND lease_until>clock_timestamp()
+2026-11-07T20:22:08.6496551Z  	 RETURNING job_id,state
+2026-11-07T20:22:08.6496745Z  2026-11-07 20:22:03.321 UTC [430] ERROR:  Job lease expired or not owned
+2026-11-07T20:22:08.6497050Z  2026-11-07 20:22:03.321 UTC [430] CONTEXT:  PL/pgSQL function mu_ingestion_protocol_guard() line 28 at RAISE
+2026-11-07T20:22:08.6497736Z  2026-11-07 20:22:03.321 UTC [430] STATEMENT:  UPDATE mu_ingestion_jobs SET lease_until=clock_timestamp()+($4::int*interval '1 second'),updated_at=clock_timestamp() WHERE job_id=$1 AND worker_id=$2 AND claim_token=$3::uuid AND state='running' AND lease_until>clock_timestamp() RETURNING job_id,lease_until
+2026-11-07T20:22:08.6498361Z  2026-11-07 20:22:03.322 UTC [431] ERROR:  Job lease expired or not owned
+2026-11-07T20:22:08.6498665Z  2026-11-07 20:22:03.322 UTC [431] CONTEXT:  PL/pgSQL function mu_ingestion_protocol_guard() line 28 at RAISE
+2026-11-07T20:22:08.6499282Z  2026-11-07 20:22:03.322 UTC [431] STATEMENT:  UPDATE mu_ingestion_jobs SET checkpoint=$4::jsonb,updated_at=clock_timestamp() WHERE job_id=$1 AND worker_id=$2 AND claim_token=$3::uuid AND state='running' AND lease_until>clock_timestamp() RETURNING job_id,checkpoint
+2026-11-07T20:22:08.6499863Z  2026-11-07 20:22:03.346 UTC [433] WARNING:  there is no transaction in progress
+2026-11-07T20:22:08.6500131Z  2026-11-07 20:22:03.504 UTC [439] WARNING:  there is no transaction in progress
+2026-11-07T20:22:08.6500385Z  2026-11-07 20:22:05.545 UTC [442] ERROR:  Job lease expired or not owned
+2026-11-07T20:22:08.6500682Z  2026-11-07 20:22:05.545 UTC [442] CONTEXT:  PL/pgSQL function mu_ingestion_protocol_guard() line 28 at RAISE
+2026-11-07T20:22:08.6501484Z  2026-11-07 20:22:05.545 UTC [442] STATEMENT:  UPDATE mu_ingestion_jobs SET state='completed',result=$4::jsonb,lease_until=NULL,claim_token=NULL,worker_id=NULL,updated_at=clock_timestamp() WHERE job_id=$1 AND worker_id=$2 AND claim_token=$3::uuid AND state='running' AND lease_until>clock_timestamp() RETURNING job_id
+2026-11-07T20:22:08.6502131Z  2026-11-07 20:22:05.546 UTC [444] ERROR:  Job lease expired or not owned
+2026-11-07T20:22:08.6502434Z  2026-11-07 20:22:05.546 UTC [444] CONTEXT:  PL/pgSQL function mu_ingestion_protocol_guard() line 28 at RAISE
+2026-11-07T20:22:08.6503116Z  2026-11-07 20:22:05.546 UTC [444] STATEMENT:  UPDATE mu_ingestion_jobs SET lease_until=clock_timestamp()+($4::int*interval '1 second'),updated_at=clock_timestamp() WHERE job_id=$1 AND worker_id=$2 AND claim_token=$3::uuid AND state='running' AND lease_until>clock_timestamp() RETURNING job_id,lease_until
+2026-11-07T20:22:08.6503750Z  2026-11-07 20:22:05.569 UTC [446] WARNING:  there is no transaction in progress
+2026-11-07T20:22:08.6504018Z  2026-11-07 20:22:05.570 UTC [447] WARNING:  there is no transaction in progress
+2026-11-07T20:22:08.6504270Z  2026-11-07 20:22:05.652 UTC [457] ERROR:  Job lease expired or not owned
+2026-11-07T20:22:08.6504568Z  2026-11-07 20:22:05.652 UTC [457] CONTEXT:  PL/pgSQL function mu_ingestion_protocol_guard() line 28 at RAISE
+2026-11-07T20:22:08.6505223Z  2026-11-07 20:22:05.652 UTC [457] STATEMENT:  UPDATE mu_ingestion_jobs SET state='completed',claim_token=NULL,worker_id=NULL,lease_until=NULL WHERE job_id=$1 AND lease_until=now()
+2026-11-07T20:22:08.6505707Z  2026-11-07 20:22:05.871 UTC [464] LOG:  unexpected EOF on client connection with an open transaction
+2026-11-07T20:22:08.6506092Z  2026-11-07 20:22:05.991 UTC [467] WARNING:  there is no transaction in progress
+2026-11-07T20:22:08.6506359Z  2026-11-07 20:22:06.041 UTC [470] WARNING:  there is no transaction in progress
+2026-11-07T20:22:08.6506619Z  2026-11-07 20:22:06.105 UTC [473] WARNING:  there is no transaction in progress
+2026-11-07T20:22:08.6506882Z  2026-11-07 20:22:06.171 UTC [477] WARNING:  there is no transaction in progress
+2026-11-07T20:22:08.6511283Z Stop and remove container: 75e11fb0e5c04bb09491eac852b3285c_postgres16_b5c3aa
+2026-11-07T20:22:08.6515193Z ##[command]/usr/bin/docker rm --force 4d72510870031c749cfa67caee4355437d8e1f04d882d0650719f981da130c45
+2026-11-07T20:22:09.1119481Z 4d72510870031c749cfa67caee4355437d8e1f04d882d0650719f981da130c45
+2026-11-07T20:22:09.1147849Z Remove container network: github_network_b329c1890490406cbb14045b0494a692
+2026-11-07T20:22:09.1150672Z ##[command]/usr/bin/docker network rm github_network_b329c1890490406cbb14045b0494a692
+2026-11-07T20:22:09.1667285Z github_network_b329c1890490406cbb14045b0494a692
+2026-11-07T20:22:09.1735528Z Cleaning up orphan processes
+2026-11-07T20:22:09.2059404Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@11d5960a326750d5838078e36cf38b85af677262, actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020, actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065, actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

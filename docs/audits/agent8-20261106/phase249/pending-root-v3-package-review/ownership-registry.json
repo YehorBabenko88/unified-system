@@ -1,0 +1,35 @@
+{
+  "schema": "master-v3.ownership.review.v1",
+  "scope": "EXISTING_OWNERS_ONLY_NO_NEW_EDITING_RIGHTS",
+  "owners": {
+    "Root": "integration baseline/shared contracts/admission/sole durable checkpoints",
+    "A1": "transport/LAN",
+    "A2": "authority/fencing/order/UNKNOWN",
+    "A3": "provider request planner/offline ingestion",
+    "A4": "Storage/publication/custody/current read",
+    "A5": "Scheduler/assignment/resource-bound worker",
+    "A6": "Terminan authenticated client/projection",
+    "A7": "Strattester/MetaAnalyse/Math producer and scientific payload",
+    "A8": "independent review"
+  },
+  "A2": {
+    "source_preserved": true,
+    "head": "0a22437b2ac302bf63602714ef956ab0f8c22251",
+    "owner_control_channel": "Root reports Cannot steer without activeTurnId; ACK unavailable",
+    "consent_inferred": false
+  },
+  "no_new_ledger_or_broker": true,
+  "permissions": {
+    "public_submit": "DENY",
+    "real_trading": "PROHIBITED",
+    "provider_sends": "BLOCKED",
+    "logical_mutations": "DISABLED_PENDING_STRICT_D4",
+    "production_deployment": "BLOCKED",
+    "runtime_admission": false,
+    "native_admission": false,
+    "physical_admission": false,
+    "installable": false,
+    "tailscale_removal": "BLOCKED",
+    "main_merge": "NOT_AUTHORIZED"
+  }
+}

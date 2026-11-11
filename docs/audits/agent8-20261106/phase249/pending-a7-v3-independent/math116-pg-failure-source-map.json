@@ -1,0 +1,25 @@
+{
+  "scope": "DATA_ONLY_NO_TEST_EXECUTION",
+  "head": "b9c2f24b33285b7b0e06aebc354a9c61a909d204",
+  "reporter_formula": "SHA256UTF8(JSON.stringify([file,parent??null,name,occurrence]))",
+  "matches": [
+    {
+      "inventory_entry": {
+        "file": "tests/confidential-workflow-scope.test.mjs",
+        "name": "unrelated workflows explicitly exclude the no-native/no-Q01 qualification branch",
+        "parent": null,
+        "line": 3,
+        "column": 1,
+        "platform": "linux",
+        "occurrence": 1,
+        "destination": "tests/confidential-workflow-scope.test.mjs"
+      },
+      "identity": [
+        "tests/confidential-workflow-scope.test.mjs",
+        null,
+        "unrelated workflows explicitly exclude the no-native/no-Q01 qualification branch",
+        1
+      ]
+    }
+  ]
+}

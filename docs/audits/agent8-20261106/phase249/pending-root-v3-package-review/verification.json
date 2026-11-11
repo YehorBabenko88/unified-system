@@ -1,0 +1,75 @@
+{
+  "scope": "INDEPENDENT_ROOT_V3_REVIEW_PACKAGE_SOURCE_DATA_ONLY",
+  "package_sha256": "c84fd43728f54673091ad96e55547f195621d4a6f74c9967f8040ff8f1b89e6a",
+  "sealed_files": 15,
+  "referenced_evidence_raw_hashes": "ALL_MATCH",
+  "references_checked": [
+    "MASTER_ATTACHMENT",
+    "FRESH_PRIMARY_SNAPSHOT",
+    "ORIGINAL_CI_TAXONOMY",
+    "ORIGINAL_CI_TAXONOMY_REPORT",
+    "PR87_ORIGINAL_DIAGNOSIS",
+    "LOCAL_PRIMARY_GIT_RECONCILIATION",
+    "LOCAL_PRIMARY_MODULE_ANCESTRY",
+    "OWNER_A1_REPORT",
+    "OWNER_A3_REPORT",
+    "OWNER_A4_REPORT",
+    "OWNER_A5_REPORT",
+    "OWNER_A6_REPORT",
+    "OWNER_A7_REPORT",
+    "OWNER_A7_PILOT_REFERENCE",
+    "ORIGINAL_PILOT",
+    "HISTORICAL_ROOT_REPORT",
+    "LOCAL_C45_SOURCE_PREPARATION"
+  ],
+  "primary_sources": "ALL_SIX_MATCH_A8_FROZEN_PRIMARY_SNAPSHOT",
+  "compatibility": "BLOCKED_NOT_ASSEMBLED_COMBINED_HEAD_TREE_NULL",
+  "missing_five_at_bfa": "INDEPENDENT_PRIMARY_GIT_TREE_CONFIRMED",
+  "storage": [
+    {
+      "path": "unified_system/storage/publication_records.py",
+      "same": false,
+      "base_blob": "b6e70b634da595d3b796c7ce59f48582b1fdcc0f",
+      "PR56_blob": "80396767a0d143689a5ba5a6287cf1b1e285acbe"
+    },
+    {
+      "path": "unified_system/storage/publication_recovery.py",
+      "same": true,
+      "base_blob": "04f5166c4b4b8dd62c324cae0b45f64106696aa9",
+      "PR56_blob": "04f5166c4b4b8dd62c324cae0b45f64106696aa9"
+    },
+    {
+      "path": "unified_system/storage/replica_evidence.py",
+      "same": true,
+      "base_blob": "55d657da86bea6187191b86e5120cf49f61719b0",
+      "PR56_blob": "55d657da86bea6187191b86e5120cf49f61719b0"
+    },
+    {
+      "path": "unified_system/storage/result_publication.py",
+      "same": true,
+      "base_blob": "a30b2f0290fa9ca7b3c9e39fa391d7a703559a8e",
+      "PR56_blob": "a30b2f0290fa9ca7b3c9e39fa391d7a703559a8e"
+    }
+  ],
+  "forecast_internal_sum": {
+    "push": {
+      "runs": 10,
+      "cells": 30.0
+    },
+    "pull_request": {
+      "runs": 21,
+      "cells": 47.0
+    }
+  },
+  "forecast_selection": "ARITHMETIC_MATCH_ONLY_NOT_INDEPENDENT_ALL_WORKFLOW_SELECTOR_REVALIDATION_OR_FUTURE_CI_GUARANTEE",
+  "SOURCE_ACK": "REVIEW_PACKAGE_ACCURATELY_SCOPED_NOT_COMPATIBILITY_OR_RUNTIME_ACK",
+  "commit_push": "NOT_GRANTED_BY_A8_REVIEW",
+  "limitations": [
+    "PR87 RCA here referenced-hash checked not all original artifact members independently semantically reviewed",
+    "Parent sync-async ABI and loader baseline P2 are Root/owner findings retained not independently closed",
+    "All mandatory CI and owner ACK incomplete; no operational release approved"
+  ],
+  "GO_NO_GO": "NO-GO",
+  "PHYSICAL_TESTS": "BLOCKED",
+  "TAILSCALE_REMOVAL": "BLOCKED"
+}

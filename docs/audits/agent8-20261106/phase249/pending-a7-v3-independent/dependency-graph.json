@@ -1,0 +1,74 @@
+{
+  "status": "SOURCE_CANDIDATE_ONLY_NOT_INTEGRATED_RUNTIME",
+  "candidate": {
+    "strattester": {
+      "repo": "strattester",
+      "pr": 80,
+      "head": "dfb5a2947070c8ebef0b22d9c97719b924909b39",
+      "tree": "dcec97f87f661a5c364775d9a346d17b67db8427",
+      "source_url": "https://github.com/YehorBabenko88/strattester/pull/80"
+    },
+    "meta_analyse": {
+      "repo": "meta_analyse",
+      "pr": 78,
+      "head": "f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1",
+      "tree": "c155c935a801fa98b7c78219c9798ce1f1be8848",
+      "source_url": "https://github.com/YehorBabenko88/meta_analyse/pull/78"
+    },
+    "math_reference": {
+      "repo": "math",
+      "pr": 112,
+      "head": "917d99672e37db59835a8ab23b03c99826b12d78",
+      "tree": "0e8c7a3712fbbcddee0e0c9e5b8d5f10f34bde69",
+      "source_url": "https://github.com/YehorBabenko88/math/pull/112"
+    },
+    "math_native_admission": false,
+    "math116_mandatory_if_history_bootstrap_enabled": {
+      "repo": "math",
+      "pr": 116,
+      "head": "b9c2f24b33285b7b0e06aebc354a9c61a909d204",
+      "tree": "d88c75a3c367eef2cb7246c4f8dd094716f07ddd",
+      "source_url": "https://github.com/YehorBabenko88/math/pull/116"
+    },
+    "history_bootstrap_enabled_in_this_candidate": false
+  },
+  "edges": [
+    {
+      "from": "Strattester80 Gateway adapter",
+      "to": "Meta78 OHLCV pure research",
+      "binding": "actual source META_HEAD f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1 / meta.ohlcv.untouched_levels.v1",
+      "status": "SOURCE_COMPATIBLE_AND_PRIOR_COMPONENT_CI_VERIFIED"
+    },
+    {
+      "from": "Agent3 Grid marketdata",
+      "to": "Agent4 versioned datasets/manifests",
+      "status": "OWNER_RECONCILIATION_ACK_PENDING"
+    },
+    {
+      "from": "Authority Agent2",
+      "to": "Assignment v1 Agent5/resource worker fencing",
+      "status": "ACTUAL_NATIVE_ADMISSION_PENDING_NO_SUBSTITUTE_AUTHORITY"
+    },
+    {
+      "from": "Assignment v1 Agent5",
+      "to": "Strattester research job",
+      "status": "ENDPOINT_ACK_PENDING"
+    },
+    {
+      "from": "Strattester artifact ResultStore",
+      "to": "A4 committed publication/current read",
+      "status": "ARTIFACT_AUTHORITY_ABI_UNAVAILABLE_DENY"
+    },
+    {
+      "from": "A4 authenticated scientific read",
+      "to": "Terminan Agent6",
+      "status": "ACTUAL_ENDPOINT_AND_PUBLICATION_ACK_PENDING"
+    },
+    {
+      "from": "Math116 history_statistics finite fix",
+      "to": "historical source parity/reference",
+      "status": "SOURCE_IDENTITY_CONFLICT_EXPECTED_BYTEIDENTICAL_REFERENCE_MUST_RECONCILE_WITHOUT_DISABLING_GATES"
+    }
+  ],
+  "external_exact_nodes": "Root owns final six-repo exact baseline; no fabricated external implementation pins/ACK or auto-merge"
+}

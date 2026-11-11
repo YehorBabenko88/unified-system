@@ -1,0 +1,72 @@
+{
+  "schema": "master-v3.sourceset.review.v1",
+  "name": "ROOT-V3-REVIEW-SOURCESET-1",
+  "status": "COMPATIBILITY_BLOCKED_NOT_ASSEMBLED",
+  "combined_head": null,
+  "combined_tree": null,
+  "primary_sources": [
+    {
+      "repository": "unified-system",
+      "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
+      "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
+    },
+    {
+      "repository": "bybit-cluster-grid",
+      "head": "d6b72b66ff1b85b7e6b956568342ad6bd8bfcfbe",
+      "tree": "066bbe51900e88dd53541baf29a777037ed10b5b"
+    },
+    {
+      "repository": "strattester",
+      "head": "dfb5a2947070c8ebef0b22d9c97719b924909b39",
+      "tree": "dcec97f87f661a5c364775d9a346d17b67db8427"
+    },
+    {
+      "repository": "meta_analyse",
+      "head": "f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1",
+      "tree": "c155c935a801fa98b7c78219c9798ce1f1be8848"
+    },
+    {
+      "repository": "Terminan",
+      "head": "e23abe3345379e41f979695136fd1261e3cbd238",
+      "tree": "96335f168445ad7e73a6f99ba5221cf8ab1804c5"
+    },
+    {
+      "repository": "math",
+      "head": "917d99672e37db59835a8ab23b03c99826b12d78",
+      "tree": "0e8c7a3712fbbcddee0e0c9e5b8d5f10f34bde69",
+      "role": "PR112_REFERENCE_ONLY_NATIVE_AND_HISTORY_DISABLED"
+    }
+  ],
+  "sibling_overlays_not_merged": {
+    "PR84": "1bafec550399d1f54f2e56144e8c98955977a350",
+    "PR85": "0a22437b2ac302bf63602714ef956ab0f8c22251",
+    "PR86": "5fcac999b1daec75707010573606f486f6dccf4d",
+    "PR87": "12d8c63a15c641977932f5e75603a1527eb3b313",
+    "PS_unpublished_successor": "c45af68b445be931b07a7dd8a95a37b72ebd75f8"
+  },
+  "existing_dependency_parents": "source-inventory.json: Unified24/55/65; five missing runtime files and sync/async conflict unresolved",
+  "storage": {
+    "component_PR": 56,
+    "head": "1da10616a2b8217930f354e17caaa6fcea22dac4",
+    "tree": "c2b39329924810535add3b02c3f5c5e1b11bdf62",
+    "ancestor_of_bfa": false,
+    "present_at_bfa": 4,
+    "identical_modules": 3,
+    "different_module": "publication_records.py",
+    "comparison_reference": "local-primary-reconciliation.json"
+  },
+  "Math116": "b9c2f24b33285b7b0e06aebc354a9c61a909d204 is a required separately reviewed source dependency; not silently adopted; original parity/source-scope RED retained",
+  "permissions": {
+    "public_submit": "DENY",
+    "real_trading": "PROHIBITED",
+    "provider_sends": "BLOCKED",
+    "logical_mutations": "DISABLED_PENDING_STRICT_D4",
+    "production_deployment": "BLOCKED",
+    "runtime_admission": false,
+    "native_admission": false,
+    "physical_admission": false,
+    "installable": false,
+    "tailscale_removal": "BLOCKED",
+    "main_merge": "NOT_AUTHORIZED"
+  }
+}

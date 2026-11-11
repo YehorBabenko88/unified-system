@@ -1,0 +1,74 @@
+test_every_proposed_mutation_is_closed (test_agent5_scheduler_components.AuthorityBoundaryTests.test_every_proposed_mutation_is_closed) ... ok
+test_reads_do_not_invent_receipts_or_mutate (test_agent5_scheduler_components.AuthorityBoundaryTests.test_reads_do_not_invent_receipts_or_mutate) ... ok
+test_invalid_raw_reservation_cannot_be_masked_by_local_hold (test_agent5_scheduler_components.DurablePreparationTests.test_invalid_raw_reservation_cannot_be_masked_by_local_hold) ... ok
+test_invalid_resource_input_cannot_mutate_registry (test_agent5_scheduler_components.DurablePreparationTests.test_invalid_resource_input_cannot_mutate_registry) ... ok
+test_job_spec_is_immutable_and_enqueue_idempotent (test_agent5_scheduler_components.DurablePreparationTests.test_job_spec_is_immutable_and_enqueue_idempotent) ... ok
+test_local_event_sequence_is_durable_and_not_authority_epoch (test_agent5_scheduler_components.DurablePreparationTests.test_local_event_sequence_is_durable_and_not_authority_epoch) ... ok
+test_local_holds_prevent_overbooking (test_agent5_scheduler_components.DurablePreparationTests.test_local_holds_prevent_overbooking) ... ok
+test_no_quorum_or_standby_never_creates_new_preparation (test_agent5_scheduler_components.DurablePreparationTests.test_no_quorum_or_standby_never_creates_new_preparation) ... ok
+test_only_never_handed_off_hold_can_be_cancelled (test_agent5_scheduler_components.DurablePreparationTests.test_only_never_handed_off_hold_can_be_cancelled) ... ok
+test_preparation_retry_preserves_original_intent (test_agent5_scheduler_components.DurablePreparationTests.test_preparation_retry_preserves_original_intent) ... ok
+test_process_crash_before_event_commit_recovers_without_partial_hold (test_agent5_scheduler_components.DurablePreparationTests.test_process_crash_before_event_commit_recovers_without_partial_hold) ... ERROR
+test_registry_survives_restart_without_execution_permission (test_agent5_scheduler_components.DurablePreparationTests.test_registry_survives_restart_without_execution_permission) ... ok
+test_stale_capacity_and_pressure_remain_queued (test_agent5_scheduler_components.DurablePreparationTests.test_stale_capacity_and_pressure_remain_queued) ... ok
+test_transaction_failure_rolls_back_preparation_and_hold (test_agent5_scheduler_components.DurablePreparationTests.test_transaction_failure_rolls_back_preparation_and_hold) ... ok
+test_two_connections_cannot_spend_same_local_capacity (test_agent5_scheduler_components.DurablePreparationTests.test_two_connections_cannot_spend_same_local_capacity) ... ok
+test_unknown_cpu_hold_blocks_incompatible_benchmark_after_restart (test_agent5_scheduler_components.DurablePreparationTests.test_unknown_cpu_hold_blocks_incompatible_benchmark_after_restart) ... ok
+test_unknown_survives_restart_and_never_releases_or_rekeys (test_agent5_scheduler_components.DurablePreparationTests.test_unknown_survives_restart_and_never_releases_or_rekeys) ... ok
+test_cpu_benchmark_capacity_and_locality_affect_ranking (test_agent5_scheduler_components.PlacementTests.test_cpu_benchmark_capacity_and_locality_affect_ranking) ... ok
+test_each_resource_can_exhaust (test_agent5_scheduler_components.PlacementTests.test_each_resource_can_exhaust) ... ok
+test_eligible_is_advisory_candidate (test_agent5_scheduler_components.PlacementTests.test_eligible_is_advisory_candidate) ... ok
+test_exact_capacity_and_pressure_boundaries (test_agent5_scheduler_components.PlacementTests.test_exact_capacity_and_pressure_boundaries) ... ok
+test_health_pressure_roles_schedule_and_benchmark (test_agent5_scheduler_components.PlacementTests.test_health_pressure_roles_schedule_and_benchmark) ... ok
+test_malformed_inputs_fail_closed (test_agent5_scheduler_components.PlacementTests.test_malformed_inputs_fail_closed) ... ok
+test_queue_and_order_independent_tie_break (test_agent5_scheduler_components.PlacementTests.test_queue_and_order_independent_tie_break) ... ok
+test_stale_future_or_previous_incarnation_denied (test_agent5_scheduler_components.PlacementTests.test_stale_future_or_previous_incarnation_denied) ... ok
+test_cross_midnight_and_start_weekday (test_agent5_scheduler_components.ScheduleTests.test_cross_midnight_and_start_weekday) ... ok
+test_drain_is_separate_from_coordinator_policy (test_agent5_scheduler_components.ScheduleTests.test_drain_is_separate_from_coordinator_policy) ... ok
+test_dst_skip_and_both_repeated_hours (test_agent5_scheduler_components.ScheduleTests.test_dst_skip_and_both_repeated_hours) ... ok
+test_invalid_schedule (test_agent5_scheduler_components.ScheduleTests.test_invalid_schedule) ... ok
+test_weekday_iterator_not_consumed_by_validation (test_agent5_scheduler_components.ScheduleTests.test_weekday_iterator_not_consumed_by_validation) ... ok
+test_failed_reopen_closes_its_owned_connection (test_preparation_integrity.PreparationIntegrity.test_failed_reopen_closes_its_owned_connection) ... ok
+test_live_corrupt_unknown_cannot_create_competing_preparation (test_preparation_integrity.PreparationIntegrity.test_live_corrupt_unknown_cannot_create_competing_preparation) ... ok
+test_malformed_persisted_spec_variants_cannot_be_recovered_as_valid (test_preparation_integrity.PreparationIntegrity.test_malformed_persisted_spec_variants_cannot_be_recovered_as_valid) ... ok
+test_reopen_rejects_corrupt_unknown_resources_without_repair (test_preparation_integrity.PreparationIntegrity.test_reopen_rejects_corrupt_unknown_resources_without_repair) ... ok
+test_unknown_missing_hold_identity_is_not_a_valid_recovered_view (test_preparation_integrity.PreparationIntegrity.test_unknown_missing_hold_identity_is_not_a_valid_recovered_view) ... ok
+test_valid_unknown_roundtrip_preserves_exact_hold_and_events (test_preparation_integrity.PreparationIntegrity.test_valid_unknown_roundtrip_preserves_exact_hold_and_events) ... ok
+
+======================================================================
+ERROR: test_process_crash_before_event_commit_recovers_without_partial_hold (test_agent5_scheduler_components.DurablePreparationTests.test_process_crash_before_event_commit_recovers_without_partial_hold)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\a\unified-system\unified-system\tests\test_agent5_scheduler_components.py", line 158, in test_process_crash_before_event_commit_recovers_without_partial_hold
+    crashed = subprocess.run([sys.executable, '-c', code, str(self.path), json.dumps(self.scope)],
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\subprocess.py", line 550, in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\a\unified-system\unified-system\tools\ci\qualify_preparation_integrity.py", line 403, in communicate
+    result=super().communicate(*args,**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\subprocess.py", line 1209, in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\subprocess.py", line 1630, in _communicate
+    raise TimeoutExpired(self.args, orig_timeout)
+subprocess.TimeoutExpired: Command '['C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\python.exe', '-c', "\nimport json, os, sys\nfrom scheduler_components.durable import PreparationJournal\nfrom scheduler_components.placement import Candidate, Resources, Policy\nstore = PreparationJournal(sys.argv[1])\nscope = json.loads(sys.argv[2])\nstore._event = lambda *args: os._exit(23)\nnode = Candidate('node-a','process-a','process-a',90,'bench-v1',Resources(100,100,100,100,100),Resources(0,0,0,0,0))\nstore.prepare(scope,[node],100,Policy(10,800000,1,1),quorum_available=True,schedule_active=True)\n", 'C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\tmpjv8zm208\\preparation.sqlite', '{"cluster_id": "cluster", "cluster_generation": "generation", "job_id": "job1", "dataset_id": "dataset", "source_id": "source", "partition_id": "partition"}']' timed out after 20 seconds
+
+----------------------------------------------------------------------
+Ran 36 tests in 25.421s
+
+FAILED (errors=1)
+Traceback (most recent call last):
+  File "D:\a\unified-system\unified-system\tools\ci\qualify_preparation_integrity.py", line 518, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "D:\a\unified-system\unified-system\tools\ci\qualify_preparation_integrity.py", line 463, in main
+    if args.worker:worker(root,args.worker,zone);return
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\a\unified-system\unified-system\tools\ci\qualify_preparation_integrity.py", line 450, in worker
+    result_path.write_text(json.dumps(record,sort_keys=True));validate_result(record,inventory['expected_ids'])
+                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\a\unified-system\unified-system\tools\ci\qualify_preparation_integrity.py", line 63, in validate_result
+    raise ValueError('exact36/zero-skips qualification required')
+ValueError: exact36/zero-skips qualification required

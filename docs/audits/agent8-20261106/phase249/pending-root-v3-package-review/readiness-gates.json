@@ -1,0 +1,35 @@
+{
+  "schema": "master-v3.readiness.review.v1",
+  "permissions": {
+    "public_submit": "DENY",
+    "real_trading": "PROHIBITED",
+    "provider_sends": "BLOCKED",
+    "logical_mutations": "DISABLED_PENDING_STRICT_D4",
+    "production_deployment": "BLOCKED",
+    "runtime_admission": false,
+    "native_admission": false,
+    "physical_admission": false,
+    "installable": false,
+    "tailscale_removal": "BLOCKED",
+    "main_merge": "NOT_AUTHORIZED"
+  },
+  "D4": "Native trusted UTC at commit/supersession not qualified; models281/282 cannot enforce commit expiry",
+  "Storage": "LOCAL_UNATTESTED; authoritative committed receipt/current scientific READ unavailable",
+  "PC4": "existing nonprivileged channel unconfirmed; smoke BLOCKED; no token/account workaround",
+  "Home": "PC1/LS7 Home compatibility NOT_QUALIFIED",
+  "PC3": "three WindowsFirewall profiles Enabled0 with ESET running; cause/age/replacement policy UNKNOWN; no changes",
+  "LS7": "free virtual2830588KiB snapshot is not resource reservation/load admission",
+  "LAN": "private actual addresses omitted; prior five pinned SSH used Tailscale aliases; direct LAN route/peer and mTLS not accepted",
+  "Tailscale": "retain enabled; no removal or network policy change",
+  "reference_pilot": {
+    "sha256": "775f696ce668dbf693e2f6d1c0cb4fe40148d8ccbcc2b2296d31df77bd69da1f",
+    "harness": "1d923f6a33e1f0f16cd476f1b4e5e65ee03a8a6c",
+    "runtime": "ba2b1cec0c2b114586afb73696e282117eede987",
+    "result": "SCOPED_FUNCTIONAL_SMOKE_PASS_NOT_NATIVE_RESOURCE_OR_CLUSTER_ACCEPTANCE",
+    "publication": "LOCAL_UNATTESTED",
+    "transfer_to_current_sources": false,
+    "repeated": false
+  },
+  "A1_source_hold": "7301 helper global baseline reset/reassignment and unsnapshotted loader state P2;14 originals retained; no new implementation",
+  "A8": "source/restricted evidence review only; no joint exact-source native/Level2 admission"
+}
