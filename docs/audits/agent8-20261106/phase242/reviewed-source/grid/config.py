@@ -1,0 +1,87 @@
+from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import SecretStr
+
+class Settings(BaseSettings):
+    grid_coordination_mode: str = 'legacy'
+    grid_ha_required: bool = False
+    grid_coordination_isolated_lab: bool = False
+    grid_control_node_id: str = ''
+    grid_leader_lease_seconds: int = 20
+    grid_leader_renew_seconds: float = 5
+    grid_leader_cleanup_timeout_seconds: float = 5
+    consul_endpoints: tuple[str, ...] = ()
+    consul_namespace: str = ''
+    consul_acl_token: SecretStr = SecretStr('')
+    consul_ca_bundle: str | None = None
+    consul_client_certificate: str | None = None
+    consul_client_key: str | None = None
+    consul_ttl_seconds: int = 15
+    consul_request_timeout: float = 2
+
+    role: str = "worker"
+    node_role: str = "WORKER"
+    coordinator_url: str = "http://127.0.0.1:8765"
+    grid_shared_token: str = ""
+    enrollment_token: str = ""
+    tailscale_oauth_client_id: str = ""
+    tailscale_oauth_client_secret: str = ""
+    tailscale_node_tags: str = "tag:grid-node"
+    tailscale_control_tags: str = "tag:grid-control"
+    node_credential: str = ""
+    postgres_dsn: str = ""
+    bybit_ws_url: str = "wss://stream.bybit.com/v5/public/linear"
+    bybit_rest_url: str = "https://api.bybit.com"
+    bybit_archive_base_url: str = "https://public.bybit.com/trading"
+    archive_root: str = "C:/ProgramData/BybitClusterGrid/archive-cache"
+    archive_probe_days: int = 30
+    resource_cpu_limit: float = 75
+    resource_ram_limit: float = 78
+    resource_disk_free_gb: float = 25
+    disk_soft_free_gb: float = 35
+    disk_hard_free_gb: float = 20
+    disk_emergency_free_gb: float = 8
+    resource_reserve_cores: int = 2
+    heartbeat_seconds: int = 10
+    rebalance_seconds: int = 30
+    assignment_max_churn_fraction: float = 0.10
+    spool_max_gb: float = 8.0
+    spool_critical_ratio: float = 0.90
+    cluster_interval_seconds: int = 60
+    microstructure_snapshot_ms: int = 250
+    micro_tape_bucket_ms: int = 250
+    micro_event_spool_max_gb: float = 4.0
+    replay_minute_per_second: float = 25.0
+    replay_micro_per_second: float = 100.0
+    replay_start_jitter_seconds: float = 5.0
+    replay_minute_fast_per_second: float = 60.0
+    replay_micro_fast_per_second: float = 250.0
+    replay_minute_slow_per_second: float = 8.0
+    replay_micro_slow_per_second: float = 30.0
+    replay_db_latency_slow_ms: float = 75.0
+    replay_db_latency_pause_ms: float = 250.0
+    telegram_bot_token: str = ""
+    telegram_allowed_chat_ids: str = ""
+    retention_enabled: bool = True
+    retention_interval_minutes: int = 60
+    retention_batch_size: int = 10000
+    retention_market_events_days: int = 7
+    retention_orderbook_snapshots_days: int = 14
+    retention_footprint_days: int = 90
+    retention_derivatives_days: int = 365
+    strategy_cache_dir: str = "runtime_strategies"
+    ml_artifact_root: str = "C:/ProgramData/BybitClusterGrid/ml-artifacts"
+    ml_job_timeout_seconds: int = 21600
+    ml_job_ram_limit_mb: int = 8192
+    strategy_job_timeout_seconds: int = 21600
+    strategy_cpu_soft_limit: float = 60
+    strategy_ram_soft_limit: float = 72
+    strategy_ram_limit_mb: int = 4096
+    strategy_disk_free_gb: float = 30
+    strategy_db_active_limit: int = 20
+    strategy_poll_seconds: int = 3
+    offline_warn_hours: int = 24
+    quarantine_days: int = 3
+    decommission_days: int = 7
+    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+
+settings = Settings()

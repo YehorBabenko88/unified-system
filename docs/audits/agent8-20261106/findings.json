@@ -876,5 +876,16 @@
     "fixed_evidence": "phase227/report.md;phase228/report.md;phase228/verification.json",
     "modeled_GREEN": "SAME28PASS_0FAIL_ERROR_SKIP;SIXNEGATIVE_METHODS_REACH_ALL_ASSERTIONS",
     "fixed_scope": "HELD_POLL_KILL_WAIT_SOURCE_ORDER_AND_INERT_HANDLE_ERROR_DENIAL_ONLY"
+  },
+  {
+    "id": "A8-F51",
+    "severity": "P2",
+    "repository": "bybit-cluster-grid publication review packet",
+    "pr": null,
+    "observed_head": "d6b72b66ff1b85b7e6b956568342ad6bd8bfcfbe",
+    "title": "Publication forecast omits two matrix cells: actual15 not13",
+    "status": "OPEN_READINESS_METADATA_ONLY_NOT_PRODUCTION_DEFECT",
+    "evidence": "phase242/report.md;phase242/verification.json;phase242/WORKFLOW-PINS.json",
+    "required_correction": "Preserve e98b original; append corrected15-cell effects descriptor before Root publication decision; no test deselection"
   }
 ]
