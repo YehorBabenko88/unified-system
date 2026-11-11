@@ -69,13 +69,26 @@ def ordinary(path, *, runtime=False):
     return info
 
 
-def file_fact(path, *, runtime=False):
+def read_raw(path, *, expected_size=None, max_bytes=256 * 1024 * 1024, runtime=False):
     before = ordinary(path, runtime=runtime)
-    raw = Path(path).read_bytes()
+    size = before.st_size if expected_size is None else expected_size
+    require(type(size) is int and 0 <= size <= max_bytes and before.st_size == size, 'INPUT_SIZE_BOUND')
+    with Path(path).open('rb') as stream:
+        opened = os.fstat(stream.fileno())
+        require((opened.st_dev, opened.st_ino) == (before.st_dev, before.st_ino), 'OPENED_IDENTITY')
+        raw = stream.read(size + 1)
+        held = os.fstat(stream.fileno())
     after = ordinary(path, runtime=runtime)
-    require((before.st_dev, before.st_ino, before.st_size, before.st_mtime_ns) ==
-            (after.st_dev, after.st_ino, after.st_size, after.st_mtime_ns), 'INPUT_CHANGED')
-    return dict(bytes=len(raw), sha256=digest(raw))
+    identity = (before.st_dev, before.st_ino, before.st_size, before.st_mtime_ns)
+    require(len(raw) == size and all((v.st_dev, v.st_ino, v.st_size, v.st_mtime_ns) == identity for v in (opened, held, after)), 'INPUT_CHANGED')
+    return raw
+
+
+def file_fact(path, *, runtime=False, expected=None):
+    raw = read_raw(path, runtime=runtime, expected_size=None if expected is None else expected['bytes'])
+    fact = dict(bytes=len(raw), sha256=digest(raw))
+    require(expected is None or fact == expected, 'RAW_HASH_CHANGED')
+    return fact
 
 
 def write_json(path, value, limit=8 * 1024 * 1024):
@@ -111,7 +124,7 @@ def source(root, head):
 def dependencies(root, lock):
     require(root.is_dir() and not root.is_symlink(), 'DEPS_ROOT')
     wanted = {}
-    for line in lock.read_text().splitlines():
+    for line in read_raw(lock, max_bytes=1024 * 1024).decode().splitlines():
         if not line or line.startswith('#'):
             continue
         item = line.split()[0]
@@ -123,13 +136,13 @@ def dependencies(root, lock):
     records = list(root.glob('*.dist-info/RECORD'))
     require(len(records) == len(wanted) == 15, 'EXACT_FIFTEEN_DISTRIBUTIONS')
     for record in records:
-        metadata = (record.parent / 'METADATA').read_text()
+        metadata = read_raw(record.parent / 'METADATA', max_bytes=4 * 1024 * 1024).decode()
         name = re.search(r'^Name: (.+)$', metadata, re.M).group(1)
         version = re.search(r'^Version: (.+)$', metadata, re.M).group(1)
         key = re.sub('[-_.]+', '-', name).lower()
         require(key not in found and wanted.get(key) == version, 'DEPENDENCY_VERSION')
         found[key] = version
-        for rel, encoded, size in csv.reader(record.read_text().splitlines()):
+        for rel, encoded, size in csv.reader(read_raw(record, max_bytes=4 * 1024 * 1024).decode().splitlines()):
             part = Path(rel)
             require(not part.is_absolute(), 'RECORD_PATH')
             if '..' in part.parts:
@@ -191,12 +204,12 @@ def exact_owned_tree(root, files, *, git_metadata=False):
 
 def check_all(files):
     for name, expected in files.items():
-        require(file_fact(Path(name), runtime=True) == expected, 'ADMITTED_RAW_CHANGED')
+        require(file_fact(Path(name), runtime=True, expected=expected) == expected, 'ADMITTED_RAW_CHANGED')
 
 
 def child(manifest_path, manifest_sha):
     require(sys.flags.isolated and sys.flags.no_site and sys.dont_write_bytecode, 'ISOLATED_CHILD')
-    raw = manifest_path.read_bytes()
+    raw = read_raw(manifest_path, max_bytes=8 * 1024 * 1024)
     require(digest(raw) == manifest_sha and len(raw) <= 8 * 1024 * 1024, 'MANIFEST_BINDING')
     c = json.loads(raw)
     files = c['files']
@@ -213,7 +226,7 @@ def child(manifest_path, manifest_sha):
             return
         require(type(path) is str and str(Path(path).absolute()) in files, 'UNADMITTED_IMPORT_ORIGIN')
         absolute = str(Path(path).absolute())
-        require(file_fact(Path(absolute), runtime=True) == files[absolute], 'IMPORT_RAW')
+        require(file_fact(Path(absolute), runtime=True, expected=files[absolute]) == files[absolute], 'IMPORT_RAW')
         origins[name] = absolute
     class Loader:
         def __init__(self, spec):
@@ -225,7 +238,7 @@ def child(manifest_path, manifest_sha):
         def exec_module(self, module):
             origin(self.spec.name, self.spec.origin)
             if self.spec.origin.endswith('.py'):
-                exec(compile(Path(self.spec.origin).read_bytes(), self.spec.origin, 'exec'), module.__dict__)
+                exec(compile(read_raw(Path(self.spec.origin), expected_size=files[str(Path(self.spec.origin).absolute())]['bytes'], runtime=True), self.spec.origin, 'exec'), module.__dict__)
             else:
                 self.delegate.exec_module(module)
         def __getattr__(self, name):
@@ -372,13 +385,16 @@ def supervise(command, output):
     except subprocess.TimeoutExpired:
         retired = False
         reason = 'RETIREMENT_UNKNOWN'
+    observed_completion = time.monotonic() - started
+    if reason is None and observed_completion > 90:
+        reason = 'COMPLETION_OBSERVED_AFTER_CHILD_BUDGET'
     for thread in readers:
         thread.join(timeout=1)
     readers_retired = all(not t.is_alive() for t in readers)
     ok = retired and readers_retired and not errors and reason is None and not exceeded.is_set() and process.returncode == 0
     write_json(output / 'outer-result.json', dict(scope='TRUSTED_MOCK_ONLY_NOT_HOSTILE_FAMILY', returncode=process.returncode,
                reason=reason, direct_child_retired=retired, readers_retired=readers_retired, reader_errors=errors,
-               observed_output_bytes=total, child_phase_seconds=time.monotonic() - started, passed=ok))
+               observed_output_bytes=total, completion_observed_seconds=observed_completion, total_observed_seconds=time.monotonic() - started, passed=ok))
     return ok
 
 
@@ -424,13 +440,13 @@ def main(argv=None):
                        lock=file_fact(lock), setup_scope='Checkout and hashlocked installation are separate CI effects')
         write_json(output / 'capsule.json', capsule)
         command = [sys.executable, '-I', '-S', '-B', '-X', 'pycache_prefix=' + str(cache), str(Path(__file__).absolute()),
-                   '--child-manifest', str(output / 'capsule.json'), '--manifest-sha', digest((output / 'capsule.json').read_bytes())]
+                   '--child-manifest', str(output / 'capsule.json'), '--manifest-sha', digest(read_raw(output / 'capsule.json', max_bytes=8 * 1024 * 1024))]
         status['state'] = 'EXECUTION_FAILED'
         ok = supervise(command, output)
         check_all(files)
         result_path = output / 'child-result.json'
         require(result_path.is_file() and result_path.stat().st_size <= 8 * 1024 * 1024, 'CHILD_RECEIPT')
-        result = json.loads(result_path.read_bytes())
+        result = json.loads(read_raw(result_path, max_bytes=8 * 1024 * 1024))
         ok = ok and result.get('state') == 'HOSTED_CONTROLLED_BACKEND_MOCK10_PASS'
         status.update(state='HOSTED_CONTROLLED_BACKEND_MOCK10_PASS' if ok else 'FAILED', heads=capsule['heads'],
                       tests=result.get('tests'), test_sha=TEST_SHA, source_prepost_equal=True, platform=sys.platform)
