@@ -39,6 +39,15 @@ fixtures, not the live journal. Live source-copy admission remains separate.
 
 ## Current limits
 
+All four original hosted Observer jobs actually passed 51 tests. Their original
+ZIP digests matched GitHub artifact metadata, and 20 exported source members
+matched their recorded digests, but `.github/workflows/observer-offline.yml`
+was missing from each archive because hidden files were excluded by the upload
+action. Thus their full archived source capsules are incomplete. The follow-up
+sets include-hidden-files only for the closed owned evidence directory. The next
+hosted artifact must contain every receipt-listed source member with matching raw
+digest; a unit assertion of the YAML flag cannot substitute for that verification.
+
 Actual GitHub observation at the first milestone performed two unauthenticated
 GETs with persistent reservations. Its raw response bodies were not retained;
 body digests, sizes and sanitized facts are observations, not independent wire
