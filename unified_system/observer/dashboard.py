@@ -1,6 +1,9 @@
 """Pure read-only WSGI dashboard; no listener is created at import."""
 import html
 import json
+import re
+from .model import need
+from .sources import REPOSITORIES
 
 CSS = b'''body{margin:0;background:#101820;color:#e4edf5;font:15px system-ui,sans-serif}
 header,main{max-width:1400px;margin:auto;padding:24px}header{border-bottom:1px solid #364553}
@@ -22,6 +25,16 @@ def status_cell(row):
     return '<span class="' + esc(state) + '">' + esc(state) + '</span>'
 
 
+def public_evidence_link(row):
+    subject = row.get('subject'); field = row.get('field')
+    if type(subject) is not str or field not in ('RUN_STATUS','PR_STATUS'): return ''
+    repository, separator, identifier = subject.rpartition('#')
+    if not separator or repository not in REPOSITORIES or not re.fullmatch('[1-9][0-9]{0,14}',identifier): return ''
+    route = 'actions/runs/' if field == 'RUN_STATUS' else 'pull/'
+    url = 'https://github.com/'+repository+'/'+route+identifier
+    return '<br><a rel="noreferrer" href="'+url+'">Public evidence</a>'
+
+
 def rows_table(rows):
     parts = ['<table><tr><th>Subject / field</th><th>Status</th><th>Observation / last success</th><th>Evidence / source version</th></tr>']
     for row in rows:
@@ -32,12 +45,14 @@ def rows_table(rows):
             '</small></td><td><small>' + esc(row.get('observed_at') or 'Not observed') + '<br>Last success: ' +
             esc(row.get('last_successful_observation') or 'None') + '</small></td><td><small>' +
             esc(evidence.get('source', 'None')) + '</small><br><code>' + esc(evidence.get('sha256', '')) +
-            '<br>' + esc(row.get('source_version') or '') + '</code></td></tr>')
+            '<br>' + esc(row.get('source_version') or '') + '</code>' + public_evidence_link(row) + '</td></tr>')
     if not rows: parts.append('<tr><td colspan="4">UNKNOWN — no admitted observation</td></tr>')
     return ''.join(parts) + '</table>'
 
 
-def render(snapshot):
+def render(snapshot, *, source_head=None):
+    need(source_head is None or (type(source_head) is str and re.fullmatch('[a-f0-9]{40}',source_head)),
+         'OBSERVER_CODE_SOURCE_PIN')
     sections = (('overview', 'Overview'), ('computers', 'Computers'), ('services', 'Services'),
         ('market_data', 'Market Data'), ('development', 'Development'), ('ci', 'CI'),
         ('acceptance', 'Acceptance'), ('events', 'Events'))
@@ -48,6 +63,9 @@ def render(snapshot):
     parts.append('</nav></header><main><section id="overview"><h2>Overview</h2><p>Last evidence update: <code>' +
         esc(snapshot.get('updated_at') or 'Never') + '</code></p><p class="note">Historical PASS is not current ONLINE. Synthetic evidence is not physical acceptance. LOCAL_UNATTESTED is not committed publication.</p>')
     parts.append('<p>Notification queue: <code>' + esc(json.dumps(snapshot.get('notifications', {}), sort_keys=True)) + '</code></p></section>')
+    if source_head is not None:
+        parts.append('<p><a rel="noreferrer" href="https://github.com/YehorBabenko88/unified-system/blob/' +
+            source_head + '/unified_system/observer/dashboard.py">Immutable Observer code source</a></p>')
     parts.append('<section id="computers"><h2>Computers</h2><div class="nodes">')
     for node, fields in snapshot.get('computers', {}).items():
         rows = [dict(value, subject=node, field=field) for field, value in fields.items()]
@@ -65,7 +83,8 @@ def render(snapshot):
 
 
 class ObserverApp:
-    def __init__(self, provider): self.provider = provider
+    def __init__(self, provider, *, source_head=None):
+        self.provider, self.source_head = provider, source_head
 
     def __call__(self, environ, start_response):
         method, path = environ.get('REQUEST_METHOD'), environ.get('PATH_INFO')
@@ -84,7 +103,7 @@ class ObserverApp:
         elif path in ('/', '/api/status'):
             try:
                 snapshot = self.provider()
-                if path == '/': body, content_type = render(snapshot), 'text/html; charset=utf-8'
+                if path == '/': body, content_type = render(snapshot, source_head=self.source_head), 'text/html; charset=utf-8'
                 else: body = json.dumps(snapshot, sort_keys=True, allow_nan=False).encode('utf-8')
                 if len(body) > 1048576: raise ValueError('RESPONSE_BOUND')
             except Exception:

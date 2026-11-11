@@ -8,7 +8,7 @@ import threading
 from threading import Thread as _ObserverThread
 
 from .dashboard import CSS, ObserverApp, render
-from .model import ObserverError, decode, need
+from .model import ObserverError, decode, need, version
 from .notifications import MockNotificationTransport
 from .runtime import ObserverEngine, sources_from_config
 from .store import ObserverStore, ordinary
@@ -30,7 +30,9 @@ def main(argv=None):
     parser.add_argument('--mock-notifications', action='store_true')
     parser.add_argument('--serve-loopback', action='store_true', help='Requires separate local listener admission')
     parser.add_argument('--port', type=int, default=8769)
+    parser.add_argument('--source-head', help='Reviewed immutable Observer source commit; display only')
     args = parser.parse_args(argv)
+    if args.source_head is not None: need(len(version(args.source_head)) == 40, 'OBSERVER_CODE_SOURCE_PIN')
     need(not args.once or not args.serve_loopback, 'ONCE_NO_LISTENER')
     need(1024 <= args.port <= 65535, 'LOOPBACK_PORT_BOUND')
     config = Path(args.config); need(config.is_absolute(), 'ABSOLUTE_CONFIG_REQUIRED')
@@ -43,7 +45,7 @@ def main(argv=None):
     try:
         if args.export_dashboard:
             engine.poll_once(datetime.now(timezone.utc))
-            content = render(store.snapshot(datetime.now(timezone.utc))).replace(
+            content = render(store.snapshot(datetime.now(timezone.utc)), source_head=args.source_head).replace(
                 b'<link rel="stylesheet" href="/app.css">', b'<style>' + CSS + b'</style>')
             target = store.directory / 'dashboard.html'
             if target.exists(): ordinary(target, False)
@@ -63,7 +65,7 @@ def main(argv=None):
                     self.connection.settimeout(3)
                     super().handle()
             server = _make_loopback_server('127.0.0.1', args.port,
-                ObserverApp(lambda:store.snapshot(datetime.now(timezone.utc))), handler_class=QuietHandler)
+                ObserverApp(lambda:store.snapshot(datetime.now(timezone.utc)), source_head=args.source_head), handler_class=QuietHandler)
             thread = _ObserverThread(target=server.serve_forever, kwargs={'poll_interval':0.2}, daemon=True)
             thread.start()
         def stop(*_): engine.stop()

@@ -36,7 +36,10 @@ class SnapshotSource:
 class MissionProjectionSource(SnapshotSource):
     """Exported JSON only. Never calls MissionController.open or sqlite on input."""
     def read(self, now):
-        raw = self.read_bytes(); data = decode(raw)
+        return self.parse_bytes(self.read_bytes(), now)
+
+    def parse_bytes(self, raw, now):
+        data = decode(raw)
         need(type(data) is dict and set(data) == {'schema', 'source_version', 'observed_at', 'projection'}
              and data['schema'] == 'unified.observer.mission-export.v1', 'MISSION_EXPORT_SCHEMA')
         projection = data['projection']

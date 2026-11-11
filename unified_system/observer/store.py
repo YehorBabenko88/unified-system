@@ -97,6 +97,7 @@ class ObserverStore:
             # Observer-owned GET accounting, never the cluster's Bybit limiter.
             self.db.execute('CREATE TABLE IF NOT EXISTS github_attempts(at INTEGER NOT NULL, source TEXT NOT NULL)')
             self.db.execute('CREATE TABLE IF NOT EXISTS github_cooldown(id INTEGER PRIMARY KEY CHECK(id=1), until_at INTEGER NOT NULL)')
+            self.db.execute('CREATE TABLE IF NOT EXISTS source_episodes(id TEXT PRIMARY KEY, episode INTEGER NOT NULL)')
             self.db.execute("UPDATE events SET delivery='UNKNOWN' WHERE delivery='SENDING'")
         except BaseException:
             self.db.close(); self.closed = True; raise
@@ -141,8 +142,22 @@ class ObserverStore:
     def record_source(self, source, status, now, source_version):
         label(source); version(source_version); need(status in ('PASS', 'FAIL'), 'SOURCE_AVAILABILITY')
         with self.lock:
-            self._check(); self.db.execute('INSERT OR REPLACE INTO sources VALUES(?,?,?,?)',
-                (source, status, stamp(now), source_version))
+            self._check(); self.db.execute('BEGIN IMMEDIATE')
+            try:
+                prior = self.db.execute('SELECT status FROM sources WHERE id=?', (source,)).fetchone()
+                row = self.db.execute('SELECT episode FROM source_episodes WHERE id=?', (source,)).fetchone()
+                episode = row[0] if row else 0
+                if status == 'FAIL' and (prior is None or prior[0] != 'FAIL'):
+                    need(episode < 10**9, 'SOURCE_EPISODE_BOUND')
+                    episode += 1
+                    self._enqueue('SOURCE_UNAVAILABLE', source, 'FAIL', source_version, now,
+                                  discriminator='source-episode:' + str(episode))
+                self.db.execute('INSERT OR REPLACE INTO source_episodes VALUES(?,?)', (source, episode))
+                self.db.execute('INSERT OR REPLACE INTO sources VALUES(?,?,?,?)',
+                    (source, status, stamp(now), source_version))
+                self.db.execute('COMMIT')
+            except BaseException:
+                self.db.execute('ROLLBACK'); raise
 
     def ingest(self, facts, now):
         need(type(facts) is list and len(facts) <= MAX_FACTS, 'FACT_BATCH_BOUND')

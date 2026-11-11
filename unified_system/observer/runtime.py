@@ -30,7 +30,6 @@ class ObserverEngine:
             except Exception:
                 # Never persist source exception text, URLs, body or credentials.
                 self.store.record_source(policy.source_id, 'FAIL', now, policy.source_version)
-                self.store.enqueue('SOURCE_UNAVAILABLE', policy.source_id, 'FAIL', policy.source_version, now)
                 outcomes[policy.source_id] = 'UNAVAILABLE'
         if self.transport is not None:
             self.store.deliver_one(self.transport, now)

@@ -18,7 +18,8 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
 SCOPES = ('unified_system/observer/', 'tests/observer/', 'tools/observer/', 'docs/observer/')
-EXTRA = {'unified_system/__init__.py', '.github/workflows/observer-offline.yml'}
+EXTRA = {'unified_system/__init__.py', '.github/workflows/observer-offline.yml',
+         'unified_system/contracts.py', 'unified_system/journal.py', 'unified_system/mission_controller.py'}
 
 
 def need(value, code):
@@ -48,7 +49,7 @@ def source(head):
         need(hashlib.sha1(b'blob ' + str(len(raw)).encode() + b'\0' + raw).hexdigest() == oid.decode(), 'PRIMARY_BLOB')
         # The unchanged parent __init__ is copied from its primary blob; the
         # original checkout version is never executed (including EOL aliases).
-        if name != 'unified_system/__init__.py':
+        if name.startswith(SCOPES) or name == '.github/workflows/observer-offline.yml':
             path = ROOT/name
             need(path.is_file() and not path.is_symlink() and path.stat().st_nlink == 1, 'ORDINARY_SOURCE')
             need(path.read_bytes() == raw, 'RAW_CHECKOUT_SOURCE_MISMATCH')
@@ -68,7 +69,7 @@ def main():
         path = capsule/name; path.parent.mkdir(parents=True, exist_ok=True)
         with path.open('xb') as stream: stream.write(raw)
     expected = json.loads(held['docs/observer/test-inventory.json'])['ids']
-    need(len(expected) == len(set(expected)) == 51, 'DECLARED_INVENTORY')
+    need(len(expected) == len(set(expected)) == 67, 'DECLARED_INVENTORY')
     sys.path.insert(0, str(capsule))
     suite = unittest.defaultTestLoader.discover(str(capsule/'tests/observer'))
     def ids(group):
@@ -90,7 +91,7 @@ def main():
     need(before == after and held == after_held, 'SOURCE_POST_CHANGED')
     capsule_equal = all((capsule/name).read_bytes() == raw for name,raw in held.items())
     ok = (result.wasSuccessful() and not result.skipped and not result.expectedFailures and not result.unexpectedSuccesses
-          and result.testsRun == 51 and sorted(started) == collected == sorted(succeeded) and capsule_equal)
+          and result.testsRun == 67 and sorted(started) == collected == sorted(succeeded) and capsule_equal)
     receipt = {'schema':'observer.offline-qualification.v1', 'head':args.head,
         'tree':git('rev-parse', args.head+'^{tree}').decode().strip(), 'scope':'OFFLINE_OBSERVER_ONLY_NOT_HOSTED_NATIVE_OR_PHYSICAL',
         'status':'SCOPED_OFFLINE_PASS' if ok else 'FAIL', 'tests':result.testsRun,
@@ -102,7 +103,8 @@ def main():
         'python_version':sys.version, 'python_executable_sha256':hashlib.sha256(Path(sys.executable).read_bytes()).hexdigest(),
         'runtime_assurance':'HOSTED_OR_LOCAL_STDLIB_METADATA_ONLY_NOT_NATIVE_RUNTIME_QUALIFICATION',
         'live_sources':False, 'real_telegram_delivery':False, 'listener_started':False,
-        'mission_journal_opened':False, 'production_db_opened':False, 'physical_accepted':False}
+        'live_mission_journal_opened':False, 'fixture_journal_copied':True,
+        'production_db_opened':False, 'physical_accepted':False}
     with (out/'receipt.json').open('x', encoding='utf-8') as stream: json.dump(receipt,stream,indent=2)
     print(json.dumps({k:receipt[k] for k in ('head','tree','status','tests','failures','errors','skips','seconds')}))
     return 0 if ok else 1

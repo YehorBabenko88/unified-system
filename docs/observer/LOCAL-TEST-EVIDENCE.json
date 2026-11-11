@@ -1,7 +1,7 @@
 {
   "schema": "observer.precommit-test-observation.v1",
   "evidence_type": "Local execution tool transcript observation, not raw descriptor evidence",
-  "latest_tests": 51,
+  "latest_tests": 67,
   "failures": 0,
   "errors": 0,
   "skips": 0,
@@ -58,5 +58,17 @@
     "seconds": 9.223,
     "tool_chunk": "5cf2d9",
     "scope": "MOCK_NETWORK_OFFLINE"
+  },
+  "followup": {
+    "scope": "LOCAL_OFFLINE_NOT_NATIVE_OR_LIVE_JOURNAL_ADMISSION",
+    "tests": 67,
+    "seconds": 11.074,
+    "tool_chunk": "11882b",
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "a8_p2_source_episodes": "THREE_REGRESSIONS_LOCAL_PASS_EXACT_PENDING",
+    "copy_adapter": "NINE_TEMP_FIXTURE_TESTS_LOCAL_PASS_LIVE_READ_NOT_RUN",
+    "dashboard_links": "FOUR_SAFE_LINK_TESTS_LOCAL_PASS"
   }
 }
