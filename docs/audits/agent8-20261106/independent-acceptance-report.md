@@ -3892,3 +3892,9 @@ Phase229 privateWindowsmode comparatoree561 SOURCEACK/same16 modeledPASS only. O
 
 
 Phase230 addendum independentlyconfirms historicalf491 outer checked_file EOFloop no cumulativecap/deadline and clockresetafterPopen/livepoll-only90s/nofinalelapsedrefusal. Normalatomic10PASS retainedscope, notgeneralallfault/budgetproof. F46/F47closures retain documentednarrow scope; no oldretry/evidence rewrite/newdriverblanketACK.8P1/8P2/F26F42open/NO-GO/physicalTailscaleBLOCKED. See phase230/report.md.
+
+
+Phase231 new3bba/521e thirdprereq sourceDATAACK independent1872raw/214dirs/841runtime/toolpins/emptycache/evidenceabsent;oneBASEliteral relocationonly. Prospective6Git+1missinghelperPythonroles,noactualexecutionpermission. Main120elapsedpre-finalartifacthash/receipt explicitlyNOTstrictwholewallclock. No consumedreuse/MODELED16outertransfer.8P1/8P2/NO-GO/physicalTailscaleBLOCKED. See phase231/report.md.
+
+
+Phase232 A7local889d/tree504f exactly6ADDparentde662/9ADD887; independentfresh815tool+809targetallrawGitOID/SHA/size/singlelink/noextras/cleanPASS. Original4LF2CRLFretained; old779authoringunchanged. Source/rawonlyACK; ownerreceiptuntrackedlabels historical. Wholeautomaticprovider/importclosureUNKNOWN/publicationHOLD, noactual47/fullCI/noorders/nativeadmission.8P1/8P2/NO-GO/physicalTailscaleBLOCKED. See phase232/report.md.

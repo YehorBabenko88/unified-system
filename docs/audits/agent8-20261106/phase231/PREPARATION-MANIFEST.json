@@ -1,0 +1,216 @@
+{
+  "schema": "native-output-cap-prerequisite-successor-packet.v1",
+  "state": "THIRD_PACKET_SOURCE_DATA_ONLY_NOT_EXECUTED_NOT_ALLOCATED",
+  "root_durable_source_readback_required": true,
+  "execution_authorization": "NONE; Root/A8 exact source/data review then separate ONE explicit allocation; both historical actual packets consumed",
+  "namespace": "C:/Users/LS-5/.codex/native-output-cap-prerequisite-756a670-mode-fixed-20261111",
+  "source": {
+    "root": "C:/Users/LS-5/.codex/native-output-cap-prerequisite-756a670-mode-fixed-20261111/source",
+    "head": "756a6701421e804a116a50f997bc015643af341c",
+    "tree": "86abc51e5a9a3f09b72ad7c2d1d4ff8dbbabf9e9",
+    "parent": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
+    "files": 1872,
+    "directories": 214,
+    "bytes": 56470079,
+    "single_links": true,
+    "no_extra_files_or_directories": true,
+    "clean": true,
+    "clone_policy": "--no-local --no-hardlinks --no-checkout; localcore.autocrlf=false before exactdetachedcheckout; physicalbyteshashagainstrawprimaryblobs; no normalization.",
+    "delta": "Exactly2ADD:test_native_output_cap_assertion.py+native-output-cap-assertion-review1.md",
+    "helper_absent": true,
+    "frozen": {
+      "tests/test_native_output_cap_assertion.py": {
+        "mode": "100644",
+        "git_blob": "b82eb0f33cd8f1a9fa5db7ccce4f15027d277dbb",
+        "bytes": 10063,
+        "sha256": "b822f4ec0d89240c1733b546eef3b00967c524da653ad802830c68b2b5f5191e"
+      },
+      "docs/ci/native-output-cap-assertion-review1.md": {
+        "mode": "100644",
+        "git_blob": "87919760c78f02457c9dcd602c8aafa466db19d0",
+        "bytes": 9242,
+        "sha256": "054ebd5cb4324882e55dde4a994481d54f745fa05fc48834b61827e44e264592"
+      }
+    },
+    "raw_git_object_id_and_sha256_binding_match": true,
+    "readback_method": "Exact primary Git ls-tree modes/OIDs/sizes match unchanged sealed74dc ledger; every physical file length/SHA256 and recomputed Git blob SHA1 equals those bindings; no normalization"
+  },
+  "controller": {
+    "path": "C:/Users/LS-5/.codex/native-output-cap-prerequisite-756a670-mode-fixed-20261111/controller.py",
+    "bytes": 27142,
+    "sha256": "3bba0496549797d1359a1c26b57e8fef1ba628613afb9869871a8eda95be1d26",
+    "algorithms_parent_sha256": "ee5612610e0f77a4244c8ea2c5bcb8f6a32004a23ad711ba0d29d440729141ae",
+    "change": "BASE stringliteral ONLY from reviewed Windows-mode-fixed ee561 controller",
+    "executed": false,
+    "imported": false,
+    "compiled": false,
+    "algorithm_byte_identity": "UTF8source identical outside one BASEliteral; exact proof recorded, no parser/compiler/runtime execution",
+    "io_architecture": "Reviewed Python streaming64KiB/queue8/reserve-before-copy/held-handle finally core; no persistent Node callback closure reused"
+  },
+  "immutable_ledgers": {
+    "source-ledger.json": {
+      "sha256": "74dc7334fa526c6395ae895440f2050df19c86f1a695f406168138d7ee949033",
+      "bytes": 475327,
+      "raw_copied": true
+    },
+    "runtime-ledger.json": {
+      "sha256": "3625b1be9c8ac3309ba2c974ad35a6b62c7f53e07031a6b4bc3e75b86d4f0046",
+      "bytes": 167973,
+      "raw_copied": true,
+      "files": 841
+    }
+  },
+  "fixed_tools": {
+    "C:/Program Files/Git/bin/git.exe": {
+      "sha256": "78211c7ed73988da93a6d8a33d47ec6187f464d7ea2a9a00c182bbd7a1ecf30f",
+      "bytes": 43352,
+      "nlink": "1",
+      "dev": "4042445555",
+      "ino": "6473924464811305"
+    },
+    "C:/Users/LS-5/AppData/Local/Python/pythoncore-3.12-64/python.exe": {
+      "sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a",
+      "bytes": 104952,
+      "nlink": "1",
+      "dev": "4042445555",
+      "ino": "3096224744617911"
+    }
+  },
+  "runtime": {
+    "python": "C:/Users/LS-5/AppData/Local/Python/pythoncore-3.12-64/python.exe",
+    "python_sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a",
+    "version_required": "3.12.10",
+    "bound_runtime_files": 841,
+    "flags": [
+      "-I",
+      "-S",
+      "-B",
+      "-X",
+      "pycache_prefix=C:/Users/LS-5/.codex/native-output-cap-prerequisite-756a670-mode-fixed-20261111/pycache-prefix"
+    ],
+    "fresh_cache": "C:/Users/LS-5/.codex/native-output-cap-prerequisite-756a670-mode-fixed-20261111/pycache-prefix",
+    "empty_now": true,
+    "required_empty_before_and_after": true,
+    "limits": "Installed runtime DATA binding only; excludes site-packages/cache; newemptyexplicitprefix avoids oldbytecode. TransitiveOSDLL/loadedorigin/releaseclosure NOT_PROVEN."
+  },
+  "unique_execution_evidence": {
+    "path": "C:/Users/LS-5/.codex/native-output-cap-prerequisite-756a670-mode-fixed-20261111/allocated-prerequisite-evidence",
+    "absent_now": true,
+    "create_exclusive": true,
+    "no_overwrite_or_automatic_retry": true,
+    "prior_directories_never_reused": [
+      "C:/Users/LS-5/.codex/native-output-cap-prerequisite-756a670-20261110/allocated-prerequisite-evidence",
+      "C:/Users/LS-5/.codex/native-output-cap-prerequisite-756a670-successor-20261111/allocated-prerequisite-evidence"
+    ]
+  },
+  "proposed_root_command": [
+    "C:/Users/LS-5/AppData/Local/Python/pythoncore-3.12-64/python.exe",
+    "-I",
+    "-S",
+    "-B",
+    "-X",
+    "pycache_prefix=C:/Users/LS-5/.codex/native-output-cap-prerequisite-756a670-mode-fixed-20261111/pycache-prefix",
+    "C:/Users/LS-5/.codex/native-output-cap-prerequisite-756a670-mode-fixed-20261111/controller.py",
+    "--allocated-missing-helper-prerequisite"
+  ],
+  "expected_test_command": [
+    "C:/Users/LS-5/AppData/Local/Python/pythoncore-3.12-64/python.exe",
+    "-I",
+    "-S",
+    "-B",
+    "-X",
+    "pycache_prefix=C:/Users/LS-5/.codex/native-output-cap-prerequisite-756a670-mode-fixed-20261111/pycache-prefix",
+    "C:/Users/LS-5/.codex/native-output-cap-prerequisite-756a670-mode-fixed-20261111/source/tests/test_native_output_cap_assertion.py",
+    "--allocated-pure-powershell"
+  ],
+  "allowed_role_effects": {
+    "preparation_already_performed": "Git sourceclone/config/checkout/read-onlyinspection andfilesystemDATAhashes only; noPythoncontroller/testprocess.",
+    "future_source_git_inspection": {
+      "direct_calls": 6,
+      "executable": "C:/Program Files/Git/bin/git.exe",
+      "sha256": "78211c7ed73988da93a6d8a33d47ec6187f464d7ea2a9a00c182bbd7a1ecf30f",
+      "whitelist": [
+        "rev-parse HEAD HEAD^{tree} HEAD^",
+        "ls-tree -rlz --full-tree HEAD",
+        "status --porcelain=v1 --untracked-files=all"
+      ],
+      "seconds_each_including_cleanup": 10,
+      "combined_output_cap_each": 262144,
+      "environment": "MinimalfixedGit/no inheritedGIT/PATH/helpers/replace/lazyfetch/credentials/proxy; protocolsnever; nofetch/checkoutbycontroller."
+    },
+    "future_expected_python": {
+      "direct_children": 1,
+      "seconds_including_cleanup": 15,
+      "cleanup_reservation": 1,
+      "combined_output_cap": 262144,
+      "expected_exit": 1,
+      "expected_methods": 1,
+      "expected_failures": 1,
+      "marker": "NATIVE_OUTPUT_CAP_HELPER_MISSING",
+      "actual_classifier_subcases": 0,
+      "powershell_by_reviewed_early_failure_path": 0
+    },
+    "controller_whole_seconds": 120,
+    "scope": "Directheldhandles andboundedreaders only; sourceGit inspection separatefromtestrole; nohostwidezero-process/familycontainmentclaim."
+  },
+  "unchanged_safety_algorithms": [
+    "corrected crossAPI filekind+identity/sharedbirthtime; sameAPI FULLmode+ctime/presence",
+    "singleheld<=2MiBdescriptor/samebufferhashparse/duplicatesreject",
+    "rootfirstordinaryREALafterexactlexicalcheck",
+    "64KiBstreamingreaders/queue8/reservebeforecopy",
+    "unconditionalheldkillwait/close/join despitefailures",
+    "per-roleelapsed aftercleanup/evidence stickyDENY ifover10/15s",
+    "normalizedprimarybodyfact separatefromcleanup/evidence/boundfacts",
+    "full1872raw/noextra/singlelink/sourceidentity prepost andruntime/cache prepost"
+  ],
+  "provenance": {
+    "prior_denial": {
+      "packet": "C:/Users/LS-5/.codex/native-output-cap-prerequisite-756a670-20261110",
+      "receipt_sha256": "bf8b4c7f87db699658180f53522f022829e1986a214d1ef78a0084ef066465a1",
+      "allocation_consumed": true,
+      "unchanged": true
+    },
+    "model_green": {
+      "mci_sequence": 100,
+      "receipt_sha256": "50dbbbefe025fb0525cb18718a0bfad18d82c084274048d590235e7672a1c896",
+      "outcome_index_sha256": "a35064f57e1c47618aaee832907a33849892916f5c0382925d63359098c02cdc",
+      "scope": "11actualfunctionmodeledmethods only, NOTactualcontroller/main/kernel/prerequisiteacceptance."
+    },
+    "second_prior_denial": {
+      "receipt_sha256": "3770c636b16bbde049e64411222d3121b1eb22f7bde4b12d8bace72b61d30791",
+      "packet": "C:/Users/LS-5/.codex/native-output-cap-prerequisite-756a670-successor-20261111",
+      "allocation_consumed": true,
+      "unchanged": true
+    },
+    "modeled16_mci113": {
+      "root_reported_methods": 16,
+      "root_classification": "ACTUAL16GREEN_TESTONLY; OUTERNOTQUALIFIED",
+      "scope": "Root explicit report; prior callback closure kept counters/receipt, original preserved and not rerun; no outer lifecycle/bounds qualification transferred to this packet",
+      "independently_reexecuted": false,
+      "original_receipt_sha256": "30fc5e4789b01ea211d31eb02e8ea03c00d685d95bbe745bd9b961d3b21e17b4",
+      "root_reported_skips": 0,
+      "outer_output_bytes": 0,
+      "root_reported_passes": 16
+    },
+    "mode_fix_source": {
+      "controller_sha256": "ee5612610e0f77a4244c8ea2c5bcb8f6a32004a23ad711ba0d29d440729141ae",
+      "model_sha256": "8f21e600eaffdbd700a1a75d584783dcab1311d547c2662f85bff0ffb403a471",
+      "execution_scope": "SOURCE_ONLY; future actual prerequisite requires this NEW packet +Root/A8 review +separate allocation",
+      "source_effect_manifest_sha256": "2fe963f37fed8f5197cd7f5d0b3be57ef6602088cdc661db1e06a283885a6f08"
+    }
+  },
+  "limitations": [
+    "No controller/test/import/compile/PS/classifier/nativefixture executed in this newpacket.",
+    "No helper/catch/production source edit, dependencychange, push, dispatch, fallback or retry.",
+    "ExpectedprerequisiteRED is notoldcapcatchbehaviorproof orPS/classifierPASS.",
+    "Cleanup/bounds arecooperative; synchronousOSfileoperations relyonOSreturning; nohardkerneldeadline orWindowsJobguarantee.",
+    "Anycustody/source/runtime/output/evidence/bounduncertainty DENY."
+  ],
+  "preparation_effects": {
+    "python_controller_or_test_import_compile_execution": false,
+    "filesystem_hash_readback_and_newpacket_files": true,
+    "PowerShell_classifier_native_fixture_network_push": false,
+    "source_clone_config_checkout_and_readonly_git_metadata": true,
+    "controller_source_git_roles_executed": false
+  }
+}

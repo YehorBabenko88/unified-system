@@ -1,0 +1,64 @@
+{
+  "schema": "third-native-output-cap-prerequisite-source-readback.v1",
+  "state": "AWAIT_ROOT_A8_INDEPENDENT_READBACK_BEFORE_ANY_ALLOCATION",
+  "bindings": {
+    "controller.py": {
+      "bytes": 27142,
+      "sha256": "3bba0496549797d1359a1c26b57e8fef1ba628613afb9869871a8eda95be1d26"
+    },
+    "PARENT-FIXED-CONTROLLER.py": {
+      "bytes": 27141,
+      "sha256": "ee5612610e0f77a4244c8ea2c5bcb8f6a32004a23ad711ba0d29d440729141ae"
+    },
+    "PREPARATION-MANIFEST.json": {
+      "bytes": 10881,
+      "sha256": "521e4d608b5a7c65fc876a0b7ed81e10402f7995f25a2c934824acd885674b8b"
+    },
+    "source-ledger.json": {
+      "bytes": 475327,
+      "sha256": "74dc7334fa526c6395ae895440f2050df19c86f1a695f406168138d7ee949033"
+    },
+    "runtime-ledger.json": {
+      "bytes": 167973,
+      "sha256": "3625b1be9c8ac3309ba2c974ad35a6b62c7f53e07031a6b4bc3e75b86d4f0046"
+    },
+    "ALGORITHM-IDENTITY-PROOF.json": {
+      "bytes": 790,
+      "sha256": "c0e5d5331b64c0a00cf4fc1ed460a2ebf6d8c239209c65c1f9eb880f7332c957"
+    },
+    "PATH-ONLY-CONTROLLER.diff": {
+      "bytes": 824,
+      "sha256": "de6cc9afc107e4bce36f594c7a290665a7c2659c1ea9dc2da5584ac80410c159"
+    }
+  },
+  "source": {
+    "clean": true,
+    "normalization_applied": false,
+    "raw_primary_catfile_replay_claimed": false,
+    "primaryGit_mode_OID_size_listing_matches": true,
+    "actual_physical_SHA256_and_recomputed_Git_blob_OID_match_sealed_ledger": true,
+    "directories": 214,
+    "source_singlelinks": true,
+    "no_extras": true,
+    "parent": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
+    "raw_files": 1872,
+    "physical_bytes": 56470079,
+    "head": "756a6701421e804a116a50f997bc015643af341c",
+    "tree": "86abc51e5a9a3f09b72ad7c2d1d4ff8dbbabf9e9"
+  },
+  "runtime": {
+    "files": 841,
+    "all_physical_lengths_SHA256_match_unchanged_ledger": true,
+    "transitive_OS_DLL_release_qualification": "NOT_PROVEN"
+  },
+  "new_cache_empty": true,
+  "new_evidence_absent": true,
+  "old_receipts_unchanged": [
+    "bf8b4c7f87db699658180f53522f022829e1986a214d1ef78a0084ef066465a1",
+    "3770c636b16bbde049e64411222d3121b1eb22f7bde4b12d8bace72b61d30791"
+  ],
+  "algorithm_proof": "exact1BASEliteral; allotherUTF8bytesidentical to ee561; no AST/parser/import/compiler",
+  "actual_main_test_model_PS_or_controller_Git_roles_executed": false,
+  "readback_tools": "PowerShell/.NET filesystem hashing and fixed-Git clone/config/checkout/metadata/noindex-diff source preparation ONLY",
+  "allocation_granted": false
+}
