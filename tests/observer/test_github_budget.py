@@ -47,6 +47,7 @@ class GitHubBudgetTests(unittest.TestCase):
             store = ObserverStore(Path(root)/'state')
             try:
                 store.reserve_github('a', NOW)
+                with self.assertRaises(ObserverError): store.reserve_github('b', NOW-dt.timedelta(seconds=1))
                 store.cooldown_github(NOW, 7200)
                 with self.assertRaises(ObserverError): store.reserve_github('b', NOW+dt.timedelta(seconds=3601))
                 with self.assertRaises(ObserverError): store.reserve_github('b', NOW-dt.timedelta(days=1))

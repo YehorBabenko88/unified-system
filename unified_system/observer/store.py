@@ -117,6 +117,8 @@ class ObserverStore:
         with self.lock:
             self._check(); self.db.execute('BEGIN IMMEDIATE')
             try:
+                highwater = self.db.execute('SELECT MAX(at) FROM github_attempts').fetchone()[0]
+                need(highwater is None or epoch >= highwater, 'GITHUB_CLOCK_ROLLBACK')
                 cooldown = self.db.execute('SELECT until_at FROM github_cooldown WHERE id=1').fetchone()
                 need(cooldown is None or epoch >= cooldown[0], 'GITHUB_COOLDOWN')
                 last = self.db.execute('SELECT MAX(at) FROM github_attempts WHERE source=?', (source,)).fetchone()[0]
