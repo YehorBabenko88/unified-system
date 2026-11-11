@@ -1,0 +1,291 @@
+{
+  "approval": "ROOT_APPROVED_FOR_A8_SOURCE_REVIEW_ONLY",
+  "artifact_payloads": [],
+  "base": {
+    "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
+    "repository": "YehorBabenko88/unified-system",
+    "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
+  },
+  "code_signing": {
+    "LAB_UNSIGNED": "NO_COMMERCIAL_CERTIFICATE_REQUIRED_BY_LAB_PROFILE",
+    "LAB_other_gates": "SOURCE_INTEGRITY_OWNER_REVIEW_ADMISSION_AND_RUNTIME_PHYSICAL_GATES_STILL_REQUIRED",
+    "TRUSTED_RELEASE": "BLOCKED_TRUSTED_PUBLISHER_CHAIN_REQUIRED_FOR_THIS_PROFILE_ONLY",
+    "permission_granted": false
+  },
+  "concrete_missing_inputs": [
+    "One exact assembled executable source/dependency/contract capsule and explicit owner/source review; not produced here",
+    "Current complete required CI inventory and original source-bound full matrix PASS; F26 and F42 unresolved",
+    "Windows36 child stdout-thread timeout20 RCA/fix/regression; no blind timeout increase",
+    "Trusted runtime source/credential/custody/native auth and same-authority grants/assignment/storage/worker positive proof",
+    "Actual direct-LAN six-node identity/quorum/endpoint/HA recovery acceptance independent of Tailscale",
+    "Current resource/capacity/schedule observations for all six nodes; stale observations cannot grant resources",
+    "Existing nonadmin PC4 execution/recovery channel without new account/token changes",
+    "Approved current ten-instrument identity registry and pinned provider/egress/budget policy; list currently unverified",
+    "TRUSTED_RELEASE-only trusted publisher/signing chain remains blocked; LAB requires no commercial certificate, but still requires separate source integrity/executable admission and all other applicable gates",
+    "Root review approval then independent A8 SOURCE review; source review is not runtime or physical permission",
+    "Full exact source seal for uncommitted hosted47 tools and scoped owner review before adoption",
+    "Explicit pilot/fault-injection/install/restart/update/rollback authorization and recovery proof after gates"
+  ],
+  "entrypoints": [],
+  "executable_release": false,
+  "files": [
+    "release-manifest.json",
+    "integration-baseline.json",
+    "ownership-registry.json",
+    "node-inventory.json",
+    "authority-fencing-v1.json",
+    "assignment-v1.json",
+    "storage-publication-v1.json",
+    "terminan-control-api-v1.json",
+    "ci-evidence-index.json",
+    "rollback-plan.json",
+    "physical-acceptance-plan.json",
+    "SHA256.json"
+  ],
+  "go_no_go": "NO_GO",
+  "installability": "NOT_INSTALLABLE",
+  "installer_compatible": false,
+  "package_kind": "REVIEW_DOCUMENT_PACKET_DISTINCT_FROM_INSTALLER_MANIFEST",
+  "permissions": {
+    "dispatch": "DENY",
+    "fault_injection": "DENY",
+    "installation": "DENY",
+    "physical": "DENY",
+    "production": "DENY",
+    "provider_sends": "DENY",
+    "runtime": "DENY",
+    "tailscale_changes": "DENY",
+    "trading": "DENY"
+  },
+  "public_source_observations": [
+    {
+      "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
+      "observed_updated_at": "2026-11-10T20:37:52Z",
+      "pr": 82,
+      "public_pr_url": "https://github.com/YehorBabenko88/unified-system/pull/82",
+      "repository": "YehorBabenko88/unified-system",
+      "selection": "OBSERVED_PUBLIC_SOURCE_INPUT_ONLY",
+      "snapshot": {
+        "admission": "NONE",
+        "bytes": 21106,
+        "origin": "EXISTING_LOCAL_EVIDENCE",
+        "path": "$PRIVATE_CODEX_EVIDENCE/ci-boundary-evidence-20261110/pr82-bfa3-head-original.json",
+        "scope": "PUBLIC_PR_METADATA_SNAPSHOT_NOT_ASSEMBLY",
+        "sha256": "42736e0b9339fc34442f4f3b0d017f378dd709ce6df79b64104d79f86c671adf"
+      },
+      "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98",
+      "tree_origin": "Root supplied full pin; PR body/source metadata corroboration; not independent Git verification of every foreign repository"
+    },
+    {
+      "head": "fb177d14b1e6e399bd9b66ae7cb35d3838acbd81",
+      "observed_updated_at": "2026-11-10T15:16:34Z",
+      "pr": 281,
+      "public_pr_url": "https://github.com/YehorBabenko88/bybit-cluster-grid/pull/281",
+      "repository": "YehorBabenko88/bybit-cluster-grid",
+      "selection": "OBSERVED_PUBLIC_SOURCE_INPUT_ONLY",
+      "snapshot": {
+        "admission": "NONE",
+        "bytes": 20696,
+        "origin": "EXISTING_LOCAL_EVIDENCE",
+        "path": "$PRIVATE_CODEX_EVIDENCE/ci-boundary-evidence-20261110/sixrepo-current-bybit-cluster-grid-pr281.json",
+        "scope": "PUBLIC_PR_METADATA_SNAPSHOT_NOT_ASSEMBLY",
+        "sha256": "da85986cd090e7b6ae4aa9153e5dac14f79b9fa5906fb10157b827d477a559a6"
+      },
+      "tree": "2cba4b0a1ee7621ef213600d6334db8e9ac7dae1",
+      "tree_origin": "Root supplied full pin; PR body/source metadata corroboration; not independent Git verification of every foreign repository"
+    },
+    {
+      "head": "887e3eeaf23ef8d9d1429435bc88bbac8099c6e6",
+      "observed_updated_at": "2026-11-07T17:14:05Z",
+      "pr": 77,
+      "public_pr_url": "https://github.com/YehorBabenko88/strattester/pull/77",
+      "repository": "YehorBabenko88/strattester",
+      "selection": "OBSERVED_PUBLIC_SOURCE_INPUT_ONLY",
+      "snapshot": {
+        "admission": "NONE",
+        "bytes": 19973,
+        "origin": "EXISTING_LOCAL_EVIDENCE",
+        "path": "$PRIVATE_CODEX_EVIDENCE/ci-boundary-evidence-20261110/sixrepo-current-strattester-pr77.json",
+        "scope": "PUBLIC_PR_METADATA_SNAPSHOT_NOT_ASSEMBLY",
+        "sha256": "800b906a133fe3265aa2842e6a7eb5ab187b0cf129b619ad6316d8ed5520df5c"
+      },
+      "tree": "954f3364cb70369705f658e89fcc6ae8ce547eec",
+      "tree_origin": "Root supplied full pin; PR body/source metadata corroboration; not independent Git verification of every foreign repository"
+    },
+    {
+      "head": "2446d04624469e34aa96ed766be7a4887d6d654c",
+      "observed_updated_at": "2026-11-07T07:42:10Z",
+      "pr": 115,
+      "public_pr_url": "https://github.com/YehorBabenko88/math/pull/115",
+      "repository": "YehorBabenko88/math",
+      "selection": "DIAGNOSTIC_ONLY_NOT_SELECTED_TRUSTED_RUNTIME",
+      "snapshot": {
+        "admission": "NONE",
+        "bytes": 19172,
+        "origin": "EXISTING_LOCAL_EVIDENCE",
+        "path": "$PRIVATE_CODEX_EVIDENCE/ci-boundary-evidence-20261110/sixrepo-current-math-pr115.json",
+        "scope": "PUBLIC_PR_METADATA_SNAPSHOT_NOT_ASSEMBLY",
+        "sha256": "da944844ed19a8e902a8a580e6d5f805742478b70738cc1ed9180f813d668a42"
+      },
+      "tree": "12c4e3cbd3557c7f4f634f5241c7e4b51eafba4f",
+      "tree_origin": "Root supplied full pin; PR body/source metadata corroboration; not independent Git verification of every foreign repository"
+    },
+    {
+      "head": "f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1",
+      "observed_updated_at": "2026-11-06T20:19:16Z",
+      "pr": 78,
+      "public_pr_url": "https://github.com/YehorBabenko88/meta_analyse/pull/78",
+      "repository": "YehorBabenko88/meta_analyse",
+      "selection": "OBSERVED_PUBLIC_SOURCE_INPUT_ONLY",
+      "snapshot": {
+        "admission": "NONE",
+        "bytes": 19325,
+        "origin": "EXISTING_LOCAL_EVIDENCE",
+        "path": "$PRIVATE_CODEX_EVIDENCE/ci-boundary-evidence-20261110/sixrepo-current-meta_analyse-pr78.json",
+        "scope": "PUBLIC_PR_METADATA_SNAPSHOT_NOT_ASSEMBLY",
+        "sha256": "3479d203d54674195b84c1dba0e78f43691b856e9a7ec3496cd0b33623907a2a"
+      },
+      "tree": "c155c935a801fa98b7c78219c9798ce1f1be8848",
+      "tree_origin": "Root supplied full pin; PR body/source metadata corroboration; not independent Git verification of every foreign repository"
+    },
+    {
+      "head": "dc810b03c3accf0e6f28fca1d5068f4171bb909d",
+      "observed_updated_at": "2026-11-10T17:32:30Z",
+      "pr": 82,
+      "public_pr_url": "https://github.com/YehorBabenko88/Terminan/pull/82",
+      "repository": "YehorBabenko88/Terminan",
+      "selection": "OBSERVED_PUBLIC_SOURCE_INPUT_ONLY",
+      "snapshot": {
+        "admission": "NONE",
+        "bytes": 18532,
+        "origin": "EXISTING_LOCAL_EVIDENCE",
+        "path": "$PRIVATE_CODEX_EVIDENCE/ci-boundary-evidence-20261110/sixrepo-current-Terminan-pr82.json",
+        "scope": "PUBLIC_PR_METADATA_SNAPSHOT_NOT_ASSEMBLY",
+        "sha256": "6b33cbaa07ddee85e498b6f63adcd514c5dcce2be208da1d139e70636c5f739c"
+      },
+      "tree": "d5bbb6f73c841ba93ae74354ea72cc0989212d92",
+      "tree_origin": "Root supplied full pin; PR body/source metadata corroboration; not independent Git verification of every foreign repository"
+    }
+  ],
+  "review_scope": "May be approved for A8 SOURCE review only; never executable release or runtime/native endpoint admission",
+  "schema": "unified.acceptance-review.level2.release-manifest.v1",
+  "source_combination": "NOT_ASSEMBLED_OR_VERIFIED",
+  "status": "REVIEW_INPUTS_ONLY",
+  "unassembled_inputs": [
+    {
+      "component": "A2 broker",
+      "head": "ab4c3b62a3d160d189f06df01d42c01a7c57e3c5",
+      "qualification": {
+        "methods": 10,
+        "receipt": {
+          "admission": "NONE",
+          "bytes": 264908,
+          "origin": "EXISTING_LOCAL_EVIDENCE",
+          "path": "$PRIVATE_CODEX_EVIDENCE/atomic-read-unit-green-20261110/ACTUAL-RESULT.json",
+          "scope": "LOCAL_MOCK_ONLY_NOT_NATIVE_PROOF",
+          "sha256": "4497f943839d6890d09137abeaf49c720e741d8b9bac770b9f9a000610a71f85"
+        },
+        "scope": "LOCAL_ACTUAL_CODE_MOCK_BACKEND_UNIT_ONLY",
+        "skips": 0,
+        "state": "LOCAL_MOCK_UNIT_PASS"
+      },
+      "repository": "YehorBabenko88/unified-system",
+      "runtime_admission": false,
+      "source_handoff": {
+        "admission": "NONE",
+        "bytes": 1440,
+        "origin": "EXISTING_LOCAL_COMPONENT_CARD",
+        "path": "$PRIVATE_TASK_OUTPUTS/codex-agent-2-high-availability-distributed/outputs/A2-ATOMIC-READ-SOURCE-UNIT-HANDOFF-20261110/HANDOFF.json",
+        "scope": "EXACT_POST_FIX_LOCAL_MOCK10_HANDOFF_PUBLICATION_HELD_NATIVE_PHYSICAL_NO_GO",
+        "sha256": "ebdd074edafbef4690841db09320e5de4ff46eb06434d1de8890c73cd28836f0"
+      },
+      "state": "UNASSEMBLED_LOCAL_INPUT",
+      "tree": "72456e8f5a710be45a80afcd622ca2fcd0cace47"
+    },
+    {
+      "component": "A6 preview RAF disposal",
+      "head": "77fe6dfd85171305930f308f307d1aa2718df2c0",
+      "qualification": {
+        "receipt": {
+          "admission": "NONE",
+          "bytes": 88732,
+          "origin": "EXISTING_LOCAL_EVIDENCE",
+          "path": "$PRIVATE_CODEX_EVIDENCE/terminan-disposal-green-evidence-20261110/receipt.json",
+          "scope": "LOCAL_ACTUAL_JS_FAKE_DOM_RAF_POST_FIX_SIX_CASE_UNIT_ONLY",
+          "sha256": "7b2b6143b03cee8dfd7fd63666f3b00a28f5ac45918b9b55ddd5b7e412179f0a"
+        },
+        "same_six_local_js_cases": "PASS",
+        "scope": "LOCAL_ACTUAL_JS_FAKE_DOM_RAF_POST_FIX_SIX_CASE_UNIT_ONLY",
+        "tap_sha256": "4905dc18ebafcd02d8c8d6b930616552314fa17cc2fac85a8f849ae04617e2d0"
+      },
+      "repository": "YehorBabenko88/Terminan",
+      "runtime_admission": false,
+      "state": "UNASSEMBLED_LOCAL_INPUT",
+      "tree": "f19e14102bfc7cb852e47dec933bfeb34a139698"
+    },
+    {
+      "component": "A4 storage",
+      "head": "1da10616a2b8217930f354e17caaa6fcea22dac4",
+      "qualification": {
+        "cases_per_job": 22,
+        "hosted_jobs": 4,
+        "local_pure6": {
+          "admission": "NONE",
+          "bytes": 407151,
+          "origin": "EXISTING_LOCAL_EVIDENCE",
+          "path": "$PRIVATE_CODEX_EVIDENCE/ci-boundary-evidence-20261110/storage-1da-pure-receipt.json",
+          "scope": "SIX_INVENTORY_CONTROLS_ONLY_NOT_22_FIXTURE_RERUN",
+          "sha256": "30f951f0cd7a7ee871a9a69aa395073700a15d26e519bd835f73fae3f0b563d4"
+        },
+        "separate_inventory_controls": 6,
+        "verification": {
+          "admission": "NONE",
+          "bytes": 3507,
+          "origin": "EXISTING_LOCAL_EVIDENCE",
+          "path": "$PRIVATE_TASK_OUTPUTS/codex-agent-4-distributed-storage-integrity/outputs/PR56-1DA-HOSTED/verification.json",
+          "scope": "FOUR_HOSTED_LOCAL_PREREQUISITE_JOBS_NOT_FULL_CI_NATIVE_OR_PHYSICAL",
+          "sha256": "f50a51788deffe2f67d9f9eb82a82329f247515564b3cdca6c6e8fceff546ddf"
+        }
+      },
+      "repository": "YehorBabenko88/unified-system",
+      "runtime_admission": false,
+      "state": "UNASSEMBLED_SOURCE_INPUT",
+      "tree": "c2b39329924810535add3b02c3f5c5e1b11bdf62"
+    },
+    {
+      "component": "A7 Strattester test delta / hosted47 tools",
+      "head": "de6620eb5577e97db1af11b6807e22a9b61d1090",
+      "qualification": {
+        "green_tests_executed": false,
+        "overall": "HOLD / NO-GO",
+        "receipt": {
+          "admission": "NONE",
+          "bytes": 3389,
+          "origin": "EXISTING_LOCAL_EVIDENCE",
+          "path": "$PRIVATE_TASK_OUTPUTS/codex-agent-7-distributed-research-math/outputs/hosted47-f43-f44-source-fix-final-receipt-20261110.json",
+          "scope": "SOURCE_ONLY_FIX_NOT_GREEN_EXECUTION",
+          "sha256": "959a2fce1ef4ae80fb94b1ce1f079572d7fe1e0c9577ac050ce862dd39140d39"
+        },
+        "source_raw_status": "A8 reported779CRLFmismatches; not raw-qualified, no normalization"
+      },
+      "repository": "YehorBabenko88/strattester",
+      "runtime_admission": false,
+      "state": "UNASSEMBLED_TEST_DELTA_PLUS_UNCOMMITTED_TOOLS_HOLD",
+      "tree": "01e9e95f593e74d0b0a27afca771f37034aef977",
+      "unpublished_tools": {
+        "execution_allocation": "NONE",
+        "implementation_permission": "NONE",
+        "manifest": {
+          "admission": "NONE",
+          "bytes": 5266,
+          "origin": "EXISTING_LOCAL_COMPONENT_CARD",
+          "path": "$PRIVATE_TASK_OUTPUTS/codex-agent-7-distributed-research-math/outputs/hosted47-parser-childpath-controls-source-manifest-20261110.json",
+          "scope": "UNPUBLISHED_SOURCE_ONLY_TOOLS_HOLD_NO_IMPORT_TEST_COMPILE_OR_EXECUTION",
+          "sha256": "222811d6d9298be5effe23b976a30f9cfdbc6a9fbf07bd868d18ac1dbf7011e9"
+        },
+        "publication": "UNPUBLISHED",
+        "status": "HOLD"
+      }
+    }
+  ]
+}

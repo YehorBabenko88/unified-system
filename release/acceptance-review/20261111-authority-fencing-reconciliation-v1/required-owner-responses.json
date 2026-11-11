@@ -1,0 +1,108 @@
+{
+  "schema": "authority-fencing.reconciliation.review-questions.v1",
+  "status": "REQUESTED_REVIEW_NOT_ACK_NOT_PERMISSION",
+  "common_required_response": "For each answer identify exact repository/head/tree/API file digest and contract/schema digest, the accepted scope and explicit exclusions. ACK one source/design scope or NACK with concrete differences. Silence, publication, model PASS and another owner's prior ACK are not consent.",
+  "questions": {
+    "A1": [{"id":"A1-1","question":"For the existing Bybit transport boundary, pin how A2 same-authority quota/budget and NAT/shared-egress reservation evidence must be bound to the A3 request plan, consumed/reconciled and refused when expired/revoked/no-quorum/UNKNOWN. Identify unavailable enforcement and fail-closed outcomes. This asks for an existing transport contract response only, with no provider-send grant or new contract semantics."}],
+    "A2": [
+      {
+        "id": "A2-1",
+        "question": "Which exact current capture/execute/reconcile/submit/lookup/verify-outcome/dispatch interfaces and source versions may A5 consume? Confirm async/sync calling contract, current principal/session/permission/quota re-observation and no-quorum/UNKNOWN semantics; identify unavailable APIs explicitly."
+      },
+      {
+        "id": "A2-2",
+        "question": "What actual authoritative producer and exact issued Assignment/native13/profile-v2 schema bind revision/epoch/fence, worker incarnation, execution custody and Storage reservation/budget? Identify original byte evidence and one-use authorization boundary, or confirm still unavailable. Do not reinterpret assignment-v1 or mint proposal values."
+      },
+      {
+        "id": "A2-3",
+        "question": "Confirm the existing unknown-commit-instant decision and strictD4 disabled native mutation policy. How can the proposed exact producer prove current authority order/supersession at actual mutation, separately from UTC observation? If unavailable, keep positive mutation blocked."
+      },
+      {
+        "id": "A2-4",
+        "question": "Identify the single authoritative publication/reconciliation order shared with A4 and A3 checkpoint. Which exact stale-writer/revocation/no-quorum/cancellation outcomes preserve debt/idempotency and prohibit refund/rekey/automatic retry?"
+      }
+    ],
+    "A3": [
+      {
+        "id": "A3-1",
+        "question": "Pin exact checkpoint-v3 schema/golden/protocol and proposed producer-tag/domain-record mapping for A2/A4/A5. Confirm null committed_at_utc/UNKNOWN_COMMIT_INSTANT versus unconfirmed status and separately qualified observed time; no field alias or legacy reinterpretation."
+      },
+      {
+        "id": "A3-2",
+        "question": "Confirm reuse of Grid283 D6 DATA-only send=false request planner. Which exact instrument/category/market/source/segment/cursor/idempotency and fencing/checkpoint bytes join retained raw, metadata and manifest? Separate pure claims/codec (including separate PR265) from admitted publication; no provider-send ACK is requested."
+      },
+      {
+        "id": "A3-3",
+        "question": "Which existing fixture-only ingestion seams avoid archive_worker raw deletion and separate data/checkpoint transactions? Pin event versus observation times, sequence-gap/dedup/coverage semantics and UNKNOWN recovery without claiming exchange completeness."
+      }
+    ],
+    "A4": [
+      {
+        "id": "A4-1",
+        "question": "Select exact publication_records byte version (PR56 versus bfa divergence), keep the three identical existing modules, and pin current immutable raw/manifest/recovery APIs. Identify unavailable authoritative commit/current READ paths; no new backend or automatic branch adoption."
+      },
+      {
+        "id": "A4-2",
+        "question": "Pin proposed Storage fencing schemas and same-A2-authority reservation/budget/revision/epoch/worker/attempt bindings. Which actual mutation/commit and reconciliation producer can supply verifiable receipt and stale-writer refusal, or explicitly confirm no positive backend exists?"
+      },
+      {
+        "id": "A4-3",
+        "question": "Confirm exact UNKNOWN/unconfirmed checkpoint mapping and original-byte retention, no resend/rekey/refund/release. Which exact custody/access/receipt evidence would be needed beyond LOCAL_UNATTESTED ObjectStore or SQLite ARTIFACT staging? Design/schema PASS is not native publication."
+      }
+    ],
+    "A5": [
+      {
+        "id": "A5-1",
+        "question": "Pin which preserved PR24/55/65 runtime/registry/single-node/gateway job/worker files are dependency inputs and the exact lossless20/native13 mapping. Resolve the synchronous consumer versus A2/A4 asynchronous seams jointly before any wiring; no new component or facade implementation is authorized by this question."
+      },
+      {
+        "id": "A5-2",
+        "question": "Which exact genuinely issued Assignment/resource/custody/Storage records are required before dispatch/start, and which current capacity/benchmark/incarnation/schedule fields are only observations? Preserve provisional/UNKNOWN holds and deny local refund/reassignment/rekey on expiry or restart."
+      },
+      {
+        "id": "A5-3",
+        "question": "Confirm checkpoint consumer behavior for confirmed unknown instant, unconfirmed commit, stale/changed authority and source/schema mismatch. Pin exact result/receipt and completed-state transition evidence; no local preparation/worker object/model result may manufacture issued permission or committed success."
+      }
+    ]
+  },
+  "joint_required_ACKs": [
+    {
+      "join": "Assignment/worker consumer",
+      "owners": [
+        "A2",
+        "A5"
+      ],
+      "Root": "exact combined source and boundary review"
+    },
+    {
+      "join": "Bybit checkpoint/Storage authoritative evidence",
+      "owners": [
+        "A2",
+        "A3",
+        "A4"
+      ],
+      "Root": "exact schema/tag/domain and integration review"
+    },
+    {
+      "join": "resource reservation/budget/publication",
+      "owners": [
+        "A2",
+        "A4",
+        "A5"
+      ],
+      "Root": "same-authority order/source review"
+    }
+  ],
+  "all_responses_pending_for_this_exact_combination": true,
+  "permissions": {
+    "public_submit": "DENY",
+    "runtime_admission": false,
+    "native_admission": false,
+    "provider_sends": "BLOCKED",
+    "real_trading": "PROHIBITED",
+    "logical_mutations": "DISABLED_PENDING_STRICT_D4",
+    "production_deployment": "BLOCKED",
+    "installable": false,
+    "physical_admission": false
+  }
+}

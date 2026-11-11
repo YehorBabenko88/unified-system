@@ -1,0 +1,66 @@
+{
+  "approval": "ROOT_APPROVED_FOR_A8_SOURCE_REVIEW_ONLY",
+  "installability": "NOT_INSTALLABLE",
+  "invariants": [
+    "Never delete/replace existing data or services",
+    "Never alter DNS/routes/firewall/adapters/router/Tailscale/security/accounts/tokens",
+    "Never use rollback as permission to retry uncertain effects or clear UNKNOWN debt",
+    "PC2 user applications untouched; preserve recovery access"
+  ],
+  "permissions": {
+    "dispatch": "DENY",
+    "fault_injection": "DENY",
+    "installation": "DENY",
+    "physical": "DENY",
+    "production": "DENY",
+    "provider_sends": "DENY",
+    "runtime": "DENY",
+    "tailscale_changes": "DENY",
+    "trading": "DENY"
+  },
+  "pilot_admission": "BLOCKED_BY_GATES",
+  "plan_status": "PROPOSED_SEQUENTIAL_PLAN_NOT_EXECUTABLE",
+  "proposed_time_budget": "Per-step estimate/recovery window must be set by Root before pilot; no unattended loop or automatic failback",
+  "review_scope": "May be approved for A8 SOURCE review only; never executable release or runtime/native endpoint admission",
+  "rollback_execution": "DENY",
+  "schema": "unified.acceptance-review.level2.rollback-plan.v1",
+  "source_combination": "NOT_ASSEMBLED_OR_VERIFIED",
+  "status": "REVIEW_INPUTS_ONLY",
+  "steps": [
+    {
+      "authorization": false,
+      "order": 1,
+      "recovery": "Abort before mutation if identity/backup uncertain",
+      "risk": "Accidental scope drift",
+      "step": "Record exact pre-change source/config/data evidence and restore target"
+    },
+    {
+      "authorization": false,
+      "order": 2,
+      "recovery": "Retain original unchanged; no destructive restore",
+      "risk": "Incomplete backup or wrong namespace",
+      "step": "Create verified backup into NEW namespace only"
+    },
+    {
+      "authorization": false,
+      "order": 3,
+      "recovery": "Stop new admission and preserve original idempotency/debt",
+      "risk": "Unresolved in-flight writes",
+      "step": "After explicit APP_ONLY pilot permission, drain application-owned work with uncertainty retained"
+    },
+    {
+      "authorization": false,
+      "order": 4,
+      "recovery": "Restore prior admitted app bits/config from verified backup into authorized scope",
+      "risk": "Compatibility/custody failure",
+      "step": "APP_ONLY restart/update to exact admitted candidate, never OS/network/service changes outside pilot"
+    },
+    {
+      "authorization": false,
+      "order": 5,
+      "recovery": "Mark UNKNOWN/FAIL; preserve all receipts and return to owner review",
+      "risk": "False success from partial evidence",
+      "step": "Verify data integrity/visibility/fences and stop on mismatch"
+    }
+  ]
+}

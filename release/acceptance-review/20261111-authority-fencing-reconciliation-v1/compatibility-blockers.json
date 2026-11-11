@@ -1,0 +1,82 @@
+{
+  "schema": "authority-fencing.reconciliation.blockers.v1",
+  "status": "COMPATIBILITY_BLOCKED_NOT_ASSEMBLED",
+  "integration_base": {
+    "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
+    "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
+  },
+  "source_siblings_not_merged": {
+    "PR85": "0a22437b2ac302bf63602714ef956ab0f8c22251",
+    "PR87": "12d8c63a15c641977932f5e75603a1527eb3b313"
+  },
+  "missing_existing_dependencies": [
+    {
+      "PR": 24,
+      "head": "7a4185924d4702ade53f518644e45d6ee4f6f451",
+      "not_bfa_ancestor": true,
+      "files_absent_bfa": [
+        "scheduler_components/runtime.py",
+        "scheduler_components/attempt_registry.py",
+        "scheduler_components/single_node.py"
+      ]
+    },
+    {
+      "PR": 55,
+      "head": "c741f36e8ddaf58bb8a709b986609916ec6f2358",
+      "not_bfa_ancestor": true,
+      "existing_contract": "docs/intelligence/jobs/target-native-review1/mapping.json",
+      "meaning": "exact20/native13 mapping dependency; preserve original canonical20 bytes, not runtime authority"
+    },
+    {
+      "PR": 65,
+      "head": "623c1ebe33c14707b99ad526678f5225f553e49a",
+      "not_bfa_ancestor": true,
+      "files_absent_bfa": [
+        "unified_system/gateway_jobs.py",
+        "unified_system/gateway_worker.py"
+      ]
+    }
+  ],
+  "ABI": {
+    "existing_PR24": "sync single-node owner consumer rejects coroutinefunctions and awaitable results",
+    "existing_A2_A4": "AssignmentAuthority.execute/reconcile and ResearchLabAuthority.submit/lookup, PublicationAdapter.commit_storage/reconcile_storage have async seams",
+    "decision": "Exact owner/source ABI mapping required; no direct binding, callback-true surrogate or new facade implementation authorized here"
+  },
+  "Storage56": {
+    "head": "1da10616a2b8217930f354e17caaa6fcea22dac4",
+    "not_bfa_ancestor": true,
+    "already_present_bfa_modules": 4,
+    "identical_modules": 3,
+    "identical": [
+      "publication_recovery.py",
+      "replica_evidence.py",
+      "result_publication.py"
+    ],
+    "different": {
+      "path": "unified_system/storage/publication_records.py",
+      "PR56_blob": "80396767a0d143689a5ba5a6287cf1b1e285acbe",
+      "bfa_blob": "b6e70b634da595d3b796c7ce59f48582b1fdcc0f"
+    },
+    "action": "A4 chooses exact byte/API mapping; no whole-branch import or duplicate Storage"
+  },
+  "authority_and_fencing_pending": [
+    "actual current principal/session/rights/quota and authoritative revision/fence evidence",
+    "actual issued Assignment/resource custody/storage reservation and budget joins",
+    "same-authority order for publication/supersession and stale-writer refusal at mutation boundary",
+    "native strict commit-time UTC expiry unavailable; post-quorum model not enforcement",
+    "Bybit checkpoint/manifest/retained raw atomic publication producer mapping",
+    "UNKNOWN debt/idempotency preserved; no automatic refund/rekey/retry"
+  ],
+  "path_intersections": "PR85 and PR87 are disjoint source deltas frombfa; no textual collision is not semantic compatibility",
+  "permissions": {
+    "public_submit": "DENY",
+    "runtime_admission": false,
+    "native_admission": false,
+    "provider_sends": "BLOCKED",
+    "real_trading": "PROHIBITED",
+    "logical_mutations": "DISABLED_PENDING_STRICT_D4",
+    "production_deployment": "BLOCKED",
+    "installable": false,
+    "physical_admission": false
+  }
+}

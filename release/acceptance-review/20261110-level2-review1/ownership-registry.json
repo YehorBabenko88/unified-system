@@ -1,0 +1,63 @@
+{
+  "allocated_editor": "ci_queue_controller",
+  "allocated_paths": [
+    "release/acceptance-review/20261110-level2-review1/**"
+  ],
+  "allowed_output": "JSON_REVIEW_DOCUMENTS_ONLY",
+  "approval": "ROOT_APPROVED_FOR_A8_SOURCE_REVIEW_ONLY",
+  "domain_owners": {
+    "assignment_workers": "A5",
+    "authority_fencing": "A2",
+    "engines_math": "A7",
+    "independent_review": "A8",
+    "integration_admission": "ROOT",
+    "provider_history_live": "A3",
+    "storage_publication": "A4",
+    "terminan_control": "A6",
+    "transport": "A1"
+  },
+  "installability": "NOT_INSTALLABLE",
+  "integration_commit_owner": "ROOT",
+  "permissions": {
+    "dispatch": "DENY",
+    "fault_injection": "DENY",
+    "installation": "DENY",
+    "physical": "DENY",
+    "production": "DENY",
+    "provider_sends": "DENY",
+    "runtime": "DENY",
+    "tailscale_changes": "DENY",
+    "trading": "DENY"
+  },
+  "reference_registry_scope": "Existing historical allocations remain their own scope; not new edit/runtime rights",
+  "references": [
+    {
+      "admission": "NONE",
+      "bytes": 14179,
+      "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
+      "path": "coordination/ownership.v1.json",
+      "repository": "YehorBabenko88/unified-system",
+      "scope": "EXISTING_SOURCE_CONTRACT_NOT_RUNTIME_ADMISSION",
+      "sha256": "22150f804b1b3a0d6e2047887585b1b550d189bb410fbc894ef566c553594ebe",
+      "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
+    },
+    {
+      "admission": "NONE",
+      "bytes": 8543,
+      "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
+      "path": "coordination/gateway-runtime-ownership.v1.json",
+      "repository": "YehorBabenko88/unified-system",
+      "scope": "EXISTING_SOURCE_CONTRACT_NOT_RUNTIME_ADMISSION",
+      "sha256": "989b08dc66491c3d6796a83b095884a15fdff0e53b045866143d5f8334bb5202",
+      "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
+    }
+  ],
+  "review_chain": [
+    "ROOT_SOURCE_REVIEW_APPROVED_ONLY",
+    "A8_SOURCE_REVIEW_PENDING_NO_EXECUTION_AUTHORITY"
+  ],
+  "review_scope": "May be approved for A8 SOURCE review only; never executable release or runtime/native endpoint admission",
+  "schema": "unified.acceptance-review.level2.ownership-registry.v1",
+  "source_combination": "NOT_ASSEMBLED_OR_VERIFIED",
+  "status": "REVIEW_INPUTS_ONLY"
+}

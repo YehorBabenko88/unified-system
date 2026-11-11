@@ -1,0 +1,62 @@
+{
+  "schema": "authority-fencing.reconciliation.checkpoint-time.v1",
+  "status": "EXISTING_OWNER_DECISION_AND_CODEC_SCOPE_ONLY",
+  "decision_reference": {
+    "repository": "YehorBabenko88/unified-system",
+    "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
+    "path": "release/contracts/checkpoint-v3-time/DECISION.json",
+    "sha256": "aa84f7acbe7632f8d534c96f529c7a39b9b1b26c1a49cf7a69a9366e5c04670e",
+    "recorded_utc": "2026-11-06T19:21:16.571383+00:00",
+    "scope": "HISTORICAL_DESIGN_TIME_SEMANTICS_APPROVAL_NOT_RUNTIME_ADMISSION"
+  },
+  "preserved_semantics": {
+    "committed_at_utc": null,
+    "commit_time_status": "UNKNOWN_COMMIT_INSTANT",
+    "commit_confirmation": "SEPARATE_AUTHORITATIVE_REVISION_IDENTITY_VERIFIABLE_EVIDENCE_REQUIRED",
+    "unconfirmed_commit_status": "COMMIT_UNCONFIRMED_OR_EXPLICITLY_AGREED_DISTINCT_EQUIVALENT",
+    "observed_time": "SEPARATE_CONFIRMED_OBSERVED_AT_UTC_OR_EXPLICITLY_AGREED_FIELD_WITH_QUALIFIED_SOURCE_SEMANTICS",
+    "old_commit_time_semantics_field": "NOT_AN_IMPLICIT_ALIAS_OF_commit_time_status",
+    "legacy": "old versioned bytes/readers/meaning preserved; actual runtime dispatch compatibility separately evidenced"
+  },
+  "codec_ACK": {
+    "sha256": "e6b0e351732cdc02cbb57d558cc7b505c151a69cd128909712660ad8ef168e7e",
+    "scope": "INDEPENDENT_UNTRUSTED_CLAIM_CODEC_ONLY",
+    "COMMITTED": "UNTRUSTED_INPUT_CLAIM_UNTIL_REAL_ADMITTED_PROOF_ADAPTER",
+    "full_wire_ACK": "PENDING_EXACT_PRODUCER_TAG_MAPPING_AND_DOMAIN_RECORDS",
+    "not_covered": [
+      "real publication confirmation",
+      "native fencing producer",
+      "trusted audit clock",
+      "legacy runtime compatibility",
+      "shared wiring",
+      "runtime or physical admission"
+    ]
+  },
+  "required_owner_roles": {
+    "A3": "schema/spec/golden editor",
+    "A4": "Storage audit/commit mapping",
+    "A5": "Scheduler consumer",
+    "A2": "actual authoritative publication-evidence producer",
+    "Root": "decision and integration registry"
+  },
+  "test_requirements_from_original_decision": [
+    "confirmed commit unknown instant",
+    "unconfirmed commit",
+    "delayed/repeated confirmed observation",
+    "crash/restart and checkpoint reload",
+    "incompatible schema version",
+    "stale worker fencing"
+  ],
+  "not_executed_here": true,
+  "permissions": {
+    "public_submit": "DENY",
+    "runtime_admission": false,
+    "native_admission": false,
+    "provider_sends": "BLOCKED",
+    "real_trading": "PROHIBITED",
+    "logical_mutations": "DISABLED_PENDING_STRICT_D4",
+    "production_deployment": "BLOCKED",
+    "installable": false,
+    "physical_admission": false
+  }
+}

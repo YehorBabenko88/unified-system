@@ -1,0 +1,31 @@
+{
+  "schema": "authority-fencing.reconciliation.status.v1",
+  "status": "IN_PROGRESS_NO_GO_SOURCE_RECONCILIATION_ONLY",
+  "A2_communication_status": "BLOCKED_COMMUNICATION",
+  "new_Authority_ACK_dependent_actions": "BLOCKED_UNTIL_EXPLICIT_EXACT_SOURCE_OWNER_ACK; publication is not ACK and no consent is inferred",
+  "purpose": "User-requested GitHub publication preparation; publication is not an owner ACK",
+  "MCI254": "PRESERVED; no journal access/mutation or owner chat delivery attempt by this preparation",
+  "later_MCI256": "Root separately reported isolated modeled12 allocation; unrelated to A2 Authority/Fencing and not evidence or ACK for this combination",
+  "A2_source": "preserved exact0a22437; owner ACK not inferred from unavailable control channel",
+  "evidence_classes": [
+    "fresh finite primary GitHub GET metadata with local capture time",
+    "retained exact-head commit/tree and contract reference metadata",
+    "owner reports with bounded scope",
+    "historical design/codec approval, never native admission"
+  ],
+  "no_tests_import_compile_DB_or_physical_actions": true,
+  "no_Git_commit_push_PR_mutation": true,
+  "no_owner_delivery_attempts": true,
+  "requested_publication": "append-only docs/JSON to existing DraftPR84 after Root review, no new PR",
+  "permissions": {
+    "public_submit": "DENY",
+    "runtime_admission": false,
+    "native_admission": false,
+    "provider_sends": "BLOCKED",
+    "real_trading": "PROHIBITED",
+    "logical_mutations": "DISABLED_PENDING_STRICT_D4",
+    "production_deployment": "BLOCKED",
+    "installable": false,
+    "physical_admission": false
+  }
+}
