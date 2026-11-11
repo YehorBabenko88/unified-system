@@ -3940,3 +3940,6 @@ Phase245 actualOLDMODELED11 receipt40f51977 verified11methods3PASS8FAIL/11assert
 
 
 Phase246 candidate444MODELED11 originaleeff1c9b independentlyverifiedsame11frozenIDsALLPASS0FAILERRORSKIP,profilesraw+841currentrawrehash. Compiler444clampedcleanupmetricFOLLOWINGdeadlineDENYconfirmed/metadataimprecisionnotfalsePASS; source3separate/notadmitted. No compiler/Win32/fullmain/native/MathRCA/protectedretry. OverallNO-GO/TailscaleBLOCKED. See phase246/report.md.
+
+
+Phase247 compilerreview3a05e timingdelta/sourceAST4unchanged verified; activationNOTGRANTED/null. NEWF52P2wholemainknownreadhandle attemptedbeforeThreadconstructor/noentryonraise→finallyskipsclose; sourceonly/noactualleak/falsePASS. Root/A7notified,wholecompilerSourceACKpendingexactownershipcorrection; no compiler/Win32/model/protectedaction. Prior11GREENscopeunchanged/overallNO-GO/TailscaleBLOCKED. See phase247/report.md.

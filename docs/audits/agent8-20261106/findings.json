@@ -888,5 +888,16 @@
     "evidence": "phase242/report.md;phase242/verification.json;phase242/WORKFLOW-PINS.json",
     "required_correction": "Preserve e98b original; append corrected15-cell effects descriptor before Root publication decision; no test deselection",
     "fixed_evidence": "phase243/report.md;phase243/verification.json;phase243/FINAL-SUMMARY.json"
+  },
+  {
+    "id": "A8-F52",
+    "severity": "P2",
+    "repository": "math external compile-only controller proposal",
+    "pr": 110,
+    "observed_head": "5721987a15d20c3f9984d52eac4446704566d4b9;controller-a05e865da136baec3f7945e795733589fdf4cdd8cc92750aed5046b1c081bca7",
+    "title": "Thread constructor failure leaves known read handle marked attempted without owner and skips close",
+    "status": "OPEN_SOURCE_READINESS_ONLY_NOT_ACTUAL_LEAK_OR_FALSEPASS",
+    "evidence": "phase247/report.md;phase247/verification.json;phase247/controller-review3.py",
+    "required_correction": "Track per-handle entry reservation before start; independently close definitely-unclaimed constructor-failed handles, retain unknown-start uncertainty; no compiler execution grant"
   }
 ]

@@ -1,0 +1,25 @@
+--- review2-444/controller.py
++++ review3/controller.py
+@@ -166,7 +166,8 @@
+   exit_code=_winapi.GetExitCodeProcess(hp)
+  except BaseException:error('COMPILE_OWNER_BODY_FAILURE')
+  finally:
+-  deadline=time.monotonic()+5;watch_done.set()
++  cleanup_started=time.monotonic()
++  deadline=cleanup_started+5;watch_done.set()
+   if hp is not None:
+    try:
+     if _winapi.WaitForSingleObject(hp,0)!=0:terminate_owned()
+@@ -203,7 +204,11 @@
+     if handle is not None:
+      try:_winapi.CloseHandle(handle)
+      except BaseException:error('HELD_HANDLE_CLOSE_FAILURE')
+-  record['cleanup_observed_seconds']=5-max(0,deadline-time.monotonic())
++  cleanup_finished=time.monotonic()
++  cleanup_elapsed=cleanup_finished-cleanup_started
++  record['cleanup_observed_seconds']=cleanup_elapsed
++  record['cleanup_within_budget']=(type(cleanup_elapsed) in (int,float) and float('-inf')<cleanup_elapsed<float('inf') and 0<=cleanup_elapsed<=5)
++  if not record['cleanup_within_budget']:error('CLEANUP_OBSERVED_DEADLINE')
+   if time.monotonic()>=deadline:error('CLEANUP_DEADLINE')
+   record['logs']={}
+   with lock:captured={name:bytes(data) for name,data in buffers.items()}
