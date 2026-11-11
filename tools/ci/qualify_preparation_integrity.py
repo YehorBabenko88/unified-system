@@ -13,6 +13,7 @@ import stat
 import subprocess
 import sys
 import threading
+import time
 import unittest
 import zipfile
 
@@ -21,6 +22,20 @@ INVENTORY='docs/ci/preparation-integrity-inventory-v1.json'
 MAX_FILES=20000
 MAX_BYTES=256*1024*1024
 TZDATA_SHA256='1a403fada01ff9221ca8044d701868fa132215d84beb92242d9acd2147f667a8'
+CRASH_CASE_ID='test_agent5_scheduler_components.DurablePreparationTests.test_process_crash_before_event_commit_recovers_without_partial_hold'
+OBSERVER_IDS=tuple('test_preparation_child_observer.PreparationChildObserverControls.'+name for name in (
+    'test_buffer_hash_is_only_bounded_prefix_not_full_output',
+    'test_event_budget_exhaustion_does_not_sample_child_again',
+    'test_exit23_with_live_stdout_reader_is_recorded_not_reinterpreted',
+    'test_export_is_a_detached_bounded_copy_with_no_child_effects',
+    'test_failed_constructor_and_two_observed_communicate_calls_do_not_do_cleanup',
+    'test_fixed_limits_and_constructor_registration_are_observation_only',
+    'test_invalid_timing_or_unknown_token_never_polls_or_mutates_history',
+    'test_missing_or_empty_cpython_buffers_and_threads_are_explicit',
+    'test_poll_or_thread_error_is_unknown_without_exception_text',
+    'test_second_constructor_is_declined_without_observing_another_child',
+    'test_timeout_samples_poll_then_threads_without_pipe_or_cleanup_calls',
+    'test_unsupported_buffers_are_not_coerced_hashed_or_iterated'))
 
 
 def validate_inventory(old,new,ids):
@@ -173,8 +188,112 @@ def case_ids(suite):
         else:yield case.id()
 
 
+def observer_controls(root,out):
+    """Separate in-process pure lane: no recursive test-package discovery."""
+    previous=list(sys.path)
+    started=time.perf_counter_ns()
+    try:
+        sys.path.insert(0,str(root/'tests'))
+        loader=unittest.TestLoader()
+        suite=loader.loadTestsFromName('test_preparation_child_observer')
+        ids=list(case_ids(suite))
+        expected=list(OBSERVER_IDS)
+        if ids!=expected:
+            # Preserve setup evidence without pretending failed import is12 cases.
+            with (out/'observer-controls.log').open('w',encoding='utf-8') as log:
+                log.write('OBSERVER_CONTROL_IMPORT_OR_ID_MISMATCH\n')
+                for error in loader.errors:log.write(error[:262144])
+            (out/'observer-controls.json').write_text(json.dumps(dict(
+                schema='preparation.observer-controls.v2',status='IMPORT_OR_ID_MISMATCH',
+                ids=ids,started_ids=[],succeeded_ids=[],tests=0,skips=None,failures=None,
+                errors=None,expected_failures=None,unexpected_successes=None,
+                elapsed_ns=time.perf_counter_ns()-started),sort_keys=True)+'\n')
+            raise ValueError('exact12 observer control IDs required')
+        # Nested so the frozen admission3 AST fixture extracts a standalone
+        # actual observer_controls definition, with no new private dependency.
+        class Result(unittest.TextTestResult):
+            def __init__(self,*args,**kwargs):
+                super().__init__(*args,**kwargs)
+                self.started_ids=[];self.succeeded_ids=[]
+            def startTest(self,test):
+                self.started_ids.append(test.id());super().startTest(test)
+            def addSuccess(self,test):
+                self.succeeded_ids.append(test.id());super().addSuccess(test)
+        with (out/'observer-controls.log').open('w',encoding='utf-8') as log:
+            result=unittest.TextTestRunner(stream=log,verbosity=2,resultclass=Result).run(suite)
+        qualified=(result.testsRun==12 and result.wasSuccessful() and not result.skipped
+                   and not result.failures and not result.errors
+                   and not result.expectedFailures and not result.unexpectedSuccesses
+                   and result.started_ids==expected and result.succeeded_ids==expected)
+        record=dict(schema='preparation.observer-controls.v2',
+                    status='QUALIFIED' if qualified else 'NOT_QUALIFIED',
+                    ids=ids,started_ids=result.started_ids,succeeded_ids=result.succeeded_ids,
+                    tests=result.testsRun,skips=len(result.skipped),
+                    failures=len(result.failures),errors=len(result.errors),
+                    expected_failures=len(result.expectedFailures),
+                    unexpected_successes=len(result.unexpectedSuccesses),
+                    elapsed_ns=time.perf_counter_ns()-started)
+        (out/'observer-controls.json').write_text(json.dumps(record,sort_keys=True)+'\n')
+        if not qualified:
+            raise ValueError('exact12 observer controls failed')
+        return record
+    finally:
+        sys.path[:]=previous
+
+
+def observer_admission_controls(root,out,source_hashes):
+    """Mandatory actual3 against this verified qualifier, before actual36."""
+    started=time.perf_counter_ns()
+    fixture='tests/test_preparation_observer_admission.py'
+    qualifier='tools/ci/qualify_preparation_integrity.py'
+    sources={}
+    for name in (fixture,qualifier):
+        with (root/name).open('rb') as stream:raw=stream.read(65537)
+        if len(raw)>65536 or hashlib.sha256(raw).hexdigest()!=source_hashes[name]:
+            raise ValueError('bounded admission source identity mismatch')
+        sources[name]=raw
+    if source_hashes[fixture]!='15c5ced54f3c569bd1d8fdc7a752a1e7147efae80c91853b2f1ba0cddc4c80a1':
+        raise ValueError('frozen actual3 fixture required')
+    namespace=dict(__name__='test_preparation_observer_admission',__file__=str(root/fixture))
+    exec(compile(sources[fixture],str(root/fixture),'exec'),namespace)
+    suite=namespace['make_suite'](sources[qualifier],expected_source_sha256=source_hashes[qualifier])
+    expected=['test_preparation_observer_admission.PreparationObserverAdmissionControls.'+name
+              for name in ('test_actual_observer_controls_accepts_normal_twelve_successes',
+                           'test_actual_observer_controls_rejects_expected_failure',
+                           'test_actual_observer_controls_rejects_unexpected_success')]
+    ids=list(case_ids(suite))
+    if ids!=expected:raise ValueError('exact3 admission control IDs required')
+    class Result(unittest.TextTestResult):
+        def __init__(self,*args,**kwargs):
+            super().__init__(*args,**kwargs)
+            self.started_ids=[];self.succeeded_ids=[]
+        def startTest(self,test):
+            self.started_ids.append(test.id());super().startTest(test)
+        def addSuccess(self,test):
+            self.succeeded_ids.append(test.id());super().addSuccess(test)
+    with (out/'observer-admission-controls.log').open('w',encoding='utf-8') as log:
+        result=unittest.TextTestRunner(stream=log,verbosity=2,resultclass=Result).run(suite)
+    qualified=(result.testsRun==3 and result.wasSuccessful() and not result.skipped
+               and not result.failures and not result.errors
+               and not result.expectedFailures and not result.unexpectedSuccesses
+               and result.started_ids==expected and result.succeeded_ids==expected)
+    record=dict(schema='preparation.observer-admission-controls.v1',
+                status='QUALIFIED' if qualified else 'NOT_QUALIFIED',
+                ids=ids,started_ids=result.started_ids,succeeded_ids=result.succeeded_ids,
+                tests=result.testsRun,skips=len(result.skipped),failures=len(result.failures),
+                errors=len(result.errors),expected_failures=len(result.expectedFailures),
+                unexpected_successes=len(result.unexpectedSuccesses),
+                elapsed_ns=time.perf_counter_ns()-started)
+    (out/'observer-admission-controls.json').write_text(json.dumps(record,sort_keys=True)+'\n')
+    if not qualified:raise ValueError('exact3 observer admission controls failed')
+    return record
+
+
 def worker(root,result_path,zone):
     sys.path.insert(0,str(root))
+    sys.path.insert(0,str(root/'tests'))
+    from preparation_child_observer import PreparationChildObserver
+    observer=PreparationChildObserver()
     import zoneinfo
     zoneinfo.reset_tzpath([str(zone)]);zoneinfo.ZoneInfo.clear_cache()
     old=json.loads((root/LEGACY).read_bytes());inventory=json.loads((root/INVENTORY).read_bytes())
@@ -182,10 +301,52 @@ def worker(root,result_path,zone):
         for pattern in ('test_agent5_scheduler_components.py','test_preparation_integrity.py'))
     ids=list(case_ids(suite));validate_inventory(old,inventory,ids)
     children=[];lock=threading.Lock();original=subprocess.Popen
+    active_case=[None]
+    observation=dict(incomplete=False,observer_failures=0,constructors=0,communicates=0,timeouts=0)
+    def increment(name):observation[name]=min(observation[name]+1,2147483647)
+    def observe(method,*args):
+        # No output, locks or cleanup here; never mask an original exception.
+        try:return getattr(observer,method)(*args,at_ns=time.perf_counter_ns())
+        except BaseException:
+            observation['incomplete']=True;increment('observer_failures')
+            return None
+    class ObservedResult(unittest.TextTestResult):
+        def startTest(self,test):
+            active_case[0]=test.id();super().startTest(test)
+        def stopTest(self,test):
+            try:super().stopTest(test)
+            finally:active_case[0]=None
     class OwnedPopen(original):
         def __init__(self,*args,**kwargs):
-            with lock:
-                super().__init__(*args,**kwargs);children.append(self)
+            self._preparation_observed=active_case[0]==CRASH_CASE_ID
+            self._preparation_observer_token=None
+            if self._preparation_observed:
+                increment('constructors')
+                self._preparation_observer_token=observe('begin_constructor')
+            try:
+                with lock:
+                    super().__init__(*args,**kwargs);children.append(self)
+            except BaseException:
+                if self._preparation_observed:observe('constructor_failed',self._preparation_observer_token)
+                raise
+            if self._preparation_observed:observe('end_constructor',self._preparation_observer_token,self)
+        def communicate(self,*args,**kwargs):
+            selected=self._preparation_observed
+            token=self._preparation_observer_token
+            if selected:
+                increment('communicates');observe('begin_communicate',token)
+            try:
+                result=super().communicate(*args,**kwargs)
+            except subprocess.TimeoutExpired:
+                if selected:
+                    increment('timeouts');observe('communicate_timeout',token)
+                raise
+            except BaseException:
+                if selected:observation['incomplete']=True
+                raise
+            else:
+                if selected:observe('end_communicate',token)
+                return result
     subprocess.Popen=OwnedPopen
     def cancel():
         if sys.stdin.readline()!='CANCEL\n':return
@@ -197,11 +358,33 @@ def worker(root,result_path,zone):
                 except subprocess.TimeoutExpired:pass
         os._exit(124)
     threading.Thread(target=cancel,daemon=True).start()
-    result=unittest.TextTestRunner(verbosity=2).run(suite)
-    with lock:
-        if any(p.poll() is None for p in children):raise ValueError('owned child not retired')
+    observer_ok=False
+    try:
+        result=unittest.TextTestRunner(verbosity=2,resultclass=ObservedResult).run(suite)
+        with lock:
+            if any(p.poll() is None for p in children):raise ValueError('owned child not retired')
+    finally:
+        # Only after suite/standard cleanup, before exact36 validation can raise.
+        # Diagnostic export failure cannot replace a suite/cleanup exception.
+        try:
+            raw=observer.export_json()
+            if type(raw) is not bytes or len(raw)>16384:raise ValueError('observer export bound')
+            value=json.loads(raw)
+            observation['incomplete']=(observation['incomplete'] or value['incomplete']
+                or value['retained_children']!=1 or value['dropped_events']!=0
+                or observation['constructors']!=1 or not 1<=observation['communicates']<=2
+                or observation['timeouts']>1)
+            (result_path.parent/'child-observer.json').write_bytes(raw)
+            observation['export_status']='EXPORTED'
+            (result_path.parent/'child-observer-adapter.json').write_text(json.dumps(observation,sort_keys=True)+'\n')
+            observer_ok=not observation['incomplete']
+        except BaseException:
+            observation['incomplete']=True;observation['export_status']='UNAVAILABLE'
+            try:(result_path.parent/'child-observer-adapter.json').write_text(json.dumps(observation,sort_keys=True)+'\n')
+            except BaseException:pass
     record=dict(ids=ids,tests=result.testsRun,skips=len(result.skipped),failures=len(result.failures),errors=len(result.errors))
     result_path.write_text(json.dumps(record,sort_keys=True));validate_result(record,inventory['expected_ids'])
+    if not observer_ok:raise ValueError('child observation incomplete; no qualification')
 
 
 def main():
@@ -231,6 +414,8 @@ def main():
         if not controls_result.wasSuccessful() or controls_result.skipped or controls_result.testsRun!=12:
             raise ValueError('pure guard controls failed')
         receipt['pure_controls']=12
+        receipt['observer_admission_controls']=observer_admission_controls(root,out,before['files'])
+        receipt['observer_controls']=observer_controls(root,out)
         env=os.environ.copy()
         for key in ('PYTHONPATH','PYTHONHOME','PYTHONPYCACHEPREFIX'):env.pop(key,None)
         env['PYTHONDONTWRITEBYTECODE']='1'

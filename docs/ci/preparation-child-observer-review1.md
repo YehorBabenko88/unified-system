@@ -1,12 +1,81 @@
 # F42 preparation child observer — SOURCE ONLY review1
 
-Status: HELPER SOURCE_IMPLEMENTED_NOT_RUN. Root accepted the628 missing-helper prerequisite (one failed module import, zero12-case execution) and allocated helper SOURCE ONLY. No helper import/compile or12-control execution has run. Qualifier hooks remain HELD.
+Status: ADMISSION_FIX_SOURCE_PREPARED_NOT_RUN. The current fix has not been imported,
+compiled, tested or committed. Root separately observed actual pure3 RED against
+the preserved874029 qualifier; this supersedes the historical source-only status
+and future-RED language below. Historical evidence and source remain immutable.
+
+## Current admission correction — source review before execution
+
+Root's ONE MCI142→143 actual pure3 RED receipt SHA256:
+`be437d713adaf15ad89a74ae705ef2d22a1e5918d00b54170d93207d03463177`.
+Three actual cases: one normal PASS, two intended assertion FAIL for expectedFailure
+and unexpectedSuccess admission; zero errors/skips. Held fixedREAL retired,
+handle closed, readers0, .761s, source1874/runtime4470/approved841 stable and no
+cleanup/evidence fault. This is not36/F42 reproduction or cause proof. Root's
+earlier inert22 pattern was2 archived PASS+7 specific assertion FAIL+13 fixed/read
+PASS, not22 all PASS. No previous result is transferred to this changed source.
+
+The actual observer_controls now requires exact ordered12 loaded IDs, genuine
+started12 and succeeded12 IDs captured by a nested TextTestResult subclass,
+wasSuccessful, no skips/failures/errors and explicitly no expectedFailures or
+unexpectedSuccesses. The subclass stays INSIDE the function so frozen15c's
+selected AST remains standalone; no external private dependency was introduced.
+Unknown/import-mismatch setup is not12-case execution or success.
+
+Private observer receipt is versioned `preparation.observer-controls.v2`.
+Closed fields: schema/status/ids/started_ids/succeeded_ids/tests/skips/failures/
+errors/expected_failures/unexpected_successes/elapsed_ns. Successful status is
+QUALIFIED; all five adverse counts are integer0 and tests12, all three ID lists
+equal the fixed ordered12. Failed executed controls emit NOT_QUALIFIED and raise.
+An import/ID mismatch emits IMPORT_OR_ID_MISMATCH, tests0, empty started/succeeded
+lists and null unknown adverse counts, then raises. Elapsed is observed data.
+
+New private function observer_admission_controls(root,out,source_hashes) loads
+frozen fixture15c and this qualifier from bounded65537-byte reads (at most65536
+accepted), compares both hashes with source-before snapshot, and pins15c explicitly.
+It executes the verified SAME fixture buffer in a non-main namespace, then calls
+actual make_suite with the verified SAME qualifier buffer/hash. No unbound test
+discovery or whole qualifier execution/import occurs. Real outer Result captures
+the exact3 started/succeeded IDs and actual zero adverse flags before accepting.
+Its separately versioned receipt is `preparation.observer-admission-controls.v1`
+with the same closed fields, tests3 and the exact3 IDs; log and JSON are separate
+observer-admission-controls.log/json. No outcome is converted to expectedFailure.
+Setup/hash/compile/import errors stop the parent and cannot launch36.
+
+Mandatory parent order: existing guard12 → actual admission3 → actual observer12
+→ unchanged actual36 child. Every group is independent; no summed-cohort claim.
+The admission3 runs only the existing deterministic synthetic12 scenarios, never
+the real observer12/helper/36/crash child. Its patch contexts and actual gate's
+finally restore temporary unittest/sys.modules/sys.path state as in frozen15c.
+No extra process/thread/SQL/network/native effect is added by this group.
+
+Workflow adds only the frozen15c fixture path trigger and synchronizes its
+always-run observer12/admission3 summaries. Summary checks closed schema/status,
+all six integer counts including xfail/unexpected, elapsed integer>=0 and exact
+ordered loaded/started/succeeded IDs. Old v1/partial receipts cannot show green.
+Missing evidence is NOT_RUN. No continue-on-error, security skip, inventory edit,
+old guard12/observer12 identity/count change, platform/timeout/upload change,
+crash argv/code/cwd/env/capture_output/20s change or worker cleanup change.
+
+Changed scope: existing qualifier/workflow/this doc ONLY. Frozen actual3 fixture
+15c, observer tests9de and actual helperdef2 remain byte-identical. A later reviewed
+commit may include the already prepared new15c ADD and complete hook diff on the
+own branch, but no commit/import/compile/tests/GREEN/12/36/controller/CI/push has
+been done under this lease. No generic framework or shared production API added.
+
+Fresh GREEN requires a separately reviewed source/profile/manifest and new output
+namespace. The unchanged91 RED controller, fd091 manifest and consumed RED attempt
+must not be repurposed by pin replacement. Lifecycle-core reuse must be explicit;
+current source card does not allocate a GREEN run or constitute F42 acceptance.
+
+## Historical design and evidence (current status above takes precedence)
 
 Base: Unified bfa3b24d8f209d5e91acfa64819d3ebed4967af7. Branch: feature/agent5-f42-observer-source-20261110.
 Initial ownership ONLY:
 - NEW tests/test_preparation_child_observer.py (12 proposed stdlib/inert controls).
 - NEW docs/ci/preparation-child-observer-review1.md (this card).
-NEW tests/preparation_child_observer.py is now allocated only for reviewed API implementation source. Existing tools/ci/qualify_preparation_integrity.py remains HELD until actual-helper12 controls are separately allocated/reviewed/qualified. No push, existing test/child command/environment/20s timeout change, native/provider/office/PowerShell fixture, or real crash-child run. A managed worktree request did not return a path; an isolated Git worktree was created from the exact base instead.
+tests/preparation_child_observer.py remains frozen at cb7 source SHAdef2dc6487744d175c63878910934c471121c1b644245c1dd2bcb0d45117a83d and test source SHA9de304... remains unchanged. Hook-source lease permits ONLY existing tools/ci/qualify_preparation_integrity.py, this doc and additive .github/workflows/preparation-integrity.yml edits. Execution/commit/push remain HELD pending Root review. No existing child command/environment/20s timeout change, native/provider/office/PowerShell fixture or real crash-child run. A managed worktree request did not return a path; an isolated Git worktree was created from the exact base instead.
 
 ## Original observation and purpose
 
@@ -63,7 +132,7 @@ Exact poll effect: real Popen.poll may cache an observed exit in that object's r
 
 Forbidden: pipe read/readline/readinto/write/flush/close/fileno, extra communicate, kill/terminate/wait, joins/locks held across waits, second process, command/env/isolation/timeout changes, retries, host clocks/security changes, SQL connections or reading DB files, imports of project/fixture/helper execution under THIS source lease. Instrumentation does not determine SQLite phase or prove startup cause.
 
-## Future qualifier hook sketch — NOT edited/authorized
+## Qualifier hook source design — NOT executed/committed
 
 1. Keep original child argv/code/cwd/env/capture_output/timeout20, OwnedPopen registration and subprocess.run behavior.
 2. Record constructor start/end/failure around existing super().__init__, without any new wait or observer method under a registry lock.
@@ -73,9 +142,27 @@ Forbidden: pipe read/readline/readinto/write/flush/close/fileno, extra communica
 6. Root owns exact evidence path and outer cancellation/termination lifecycle. Existing os._exit/OS termination can prevent export; missing diagnostics remain UNKNOWN, never fabricated completion. Helper does not own, release or close process handles.
 7. Export wrapper envelope is EXACT {schema,events,retained_children,dropped_events,incomplete}, schema preparation.child-observer.v1-review1. It contains no admission/success/cleanup-confirmed field.
 
-Nothing in the initial lease authorizes these qualifier edits, imports or execution. No test runtime/source freeze is implied by this card. Full future file/import/driver effects require Root review.
+The later Root SOURCE-ONLY lease authorizes this exact hook diff for review, not imports/execution/commit/push. No runtime grant is implied. The original initial lease and its628/07638 evidence remain immutable.
 
-## Proposed12 pure controls (source only, zero executed)
+### Exact active-case and exception boundary
+
+The unchanged36 inventory is loaded as before. A TextTestResult subclass records only the current exact test ID, resetting it on stopTest. Only the original DurablePreparationTests.test_process_crash_before_event_commit_recovers_without_partial_hold gets observer hooks. The Popen subclass still delegates its constructor under the SAME registry lock and appends the SAME object to the existing children list. Observation begin/end/error calls run outside that lock. Existing cancellation thread/commands, owner poll/kill/wait and outer120/job10min bounds are unchanged.
+
+Communicate override delegates ONCE per caller entry with the identical args/kwargs. Its bare raise preserves the same TimeoutExpired, without replacing/truncating its traceback; timeout metadata is sampled before subprocess.run catches and performs its standard cleanup. No observer call invokes communicate or causes the standard-library second entry. A bounded adapter counter/INCOMPLETE flag catches observer failures, including counter sampling failure, without replacing the original constructor/communicate exception. Other delegate exceptions also leave diagnostics incomplete.
+
+After the suite and existing owned-child check, finally exports child-observer.json and child-observer-adapter.json. No file output is performed in constructor/communicate observation. Export errors are normalized to UNAVAILABLE/incomplete and cannot replace an active suite/cleanup exception. Existing result.json retains its exact36 schema and is validated only AFTER export. If36 is otherwise green but observer coverage/export is incomplete, qualification refuses PASS. If36 fails, that original36 validation/error remains the failure; observer data does not turn it green. Forced os._exit/OS death may still prevent export and stays UNKNOWN.
+
+### Separate parent observer12 lane and additive workflow effects
+
+After source-before raw verification and existing12 guard controls, the SAME parent interpreter loads ONLY test_preparation_child_observer by exact module name on the explicit tests path. It verifies the exact12 immutable IDs and records observer-controls.log/observer-controls.json plus a separate receipt field BEFORE launching the existing36 worker. Import/ID mismatch is preserved as a setup/ID error with zero case execution, not12 failures. The controls use only actual observer/stdlib/inert objects; no new fixture child, SQL or native source is added by this group.
+
+The in-process12 group has completion/elapsed_ns DATA and existing outer120 suite/job10min context; it is NOT a new hard15s preemptive executor. Root explicitly accepted this effect distinction. Existing guard12, observer12 and mandatory36 are separate counts/IDs/logs; do not claim an aggregate60-case acceptance. The prior standalone07638 pure12 result remains its own15s held-process qualification, not a result for this new hook source.
+
+Workflow only ADDS explicit helper/test/this-doc path triggers and an always-run separate observer evidence summary. Original platforms, mandatory36, historical inventory30, guard12 lane, fixed two Git bootstraps, timeout values and upload steps are untouched. The summary may show EXECUTED_12_OK while36 failed; that reports counts only, not independent source-adoption/qualification,36/F42/native status or an override of an earlier failed step. Source pre/post evidence and complete parent result still require review. Missing observer evidence is NOT_RUN. All sidecars are included by the existing external evidence upload.
+
+Fresh source-only reviewer found missing stdlib time import in the unexecuted hook diff. Corrected before any import/compile/execution. This is not an actual NameError RED or F42 cause; reviewer otherwise found no concrete hook/exception/export issue. New hook qualification remains NOT_RUN.
+
+## Frozen12 pure controls (qualified only at cb7, not hook-source execution)
 
 The only test implementation of behavior is the future actual helper import. Inert children/pipes/threads have forbidden-operation tripwires. No subprocess, real pipe/thread, SQLite, fixture module or runtime object is constructed.
 1. Fixed limits; constructor reference/timing retention makes no child calls.
@@ -91,10 +178,56 @@ The only test implementation of behavior is the future actual helper import. Ine
 11. Bad timings/unknown token produce no poll/history mutation.
 12. Constructor failure and two caller-entered communicate pairs record without cleanup actions.
 
-The unchanged test source SHA9de3045395a178421cbf3041ad2261f9221f4dfc9b21d83432bd1046d0d410cc was qualified once BEFORE helper creation: ONE failed module import under exact tests-path named loading/-I-S-B, not12 case errors/F42 reproduction. Receipt SHA4aa27092a8a6ceaad7f315364bcbe003a81ded7fa7f451766be5604527eb0cce;1872 full raw pre/post maps identical, process/readers retired. The NEW helper source has NOT been imported, compiled or executed. Original Windows timeout RED remains the only actual crash-child evidence referenced here.
+The unchanged test source SHA9de3045395a178421cbf3041ad2261f9221f4dfc9b21d83432bd1046d0d410cc was first qualified BEFORE helper creation: ONE failed module import, receipt4aa27092a8a6ceaad7f315364bcbe003a81ded7fa7f451766be5604527eb0cce;1872 full raw maps identical. Root then allocated ONE cb7 actual-helper qualification:12 PURE PASS/0skip, receipt07638c516ef336c245244bdf018727b47afd0ed58184415b03a5f9bffcdaaa96,1873 full raw maps identical, actual process/readers retired. Only helper/test modules loaded and inert child/thread/buffer objects used. These are not F42 reproduction, native proof or new hook-source execution. Original Windows timeout RED remains unchanged.
 
 ## Required review decision
 
-Root/independent source review: approve/correct actual helper implementation first. Then separately allocate the12 pure controls; no execution follows merely from source review. Only AFTER reviewed qualified actual-helper controls may qualifier hooks be allocated. Any original crash-child diagnostic remains a separate serial-lane approval. Do not push or dispatch GitHub CI from this lease.
+Root/independent source review: inspect this uncommitted qualifier/workflow/doc diff and effects before any commit/import/compile/tests. Any hook-control or original crash-child diagnostic needs a separate explicit serial-lane allocation. Do not push or dispatch GitHub CI from this lease.
 
-Current helper lease effects: ONE NEW helper source and own doc update; original12-test source unchanged. No qualifier edit, helper imports/compile/tests/fixtures/native/provider/office calls or push. F42 source cause UNKNOWN;20s/original child unchanged. StrictD4/logicalDISABLED/publicDENY/NO-GO.
+Current hook lease effects: existing qualifier source diff, additive workflow source diff and own doc update ONLY; helper/test bytes unchanged. No hook imports/compile/tests/fixtures/native/provider/office calls, commit or push. F42 source cause UNKNOWN;20s/original child unchanged. StrictD4/logicalDISABLED/publicDENY/NO-GO.
+# Admission regression source preparation — 2026-11-11
+
+SOURCE ONLY / NOT EXECUTED. The unexecuted qualifier SHA256
+`874029fabf05ad87f542f0099a937e3641b936950f6a0a551ae062625736a5fd`
+and workflow SHA256
+`583c6da693473d618cb22a8d23ac2b4643afd6853b5d56de4774898b6b2c734e`
+remain unchanged. Copies of both and the previous card are preserved externally
+under `outputs/F42-OBSERVER-ADMISSION-UNEXECUTED-874029-583C6-20261110`.
+
+New source: `tests/test_preparation_observer_admission.py`.
+API: `make_suite(qualifier_source_bytes: bytes, *, expected_source_sha256: str)`
+returns three explicitly bound unittest cases; unbound discovery raises a setup
+error. It accepts at most 65536 trusted source bytes, verifies the supplied hash,
+and extracts exactly the actual `OBSERVER_IDS`, `case_ids`, `observer_controls`
+AST definitions. It does not import or execute the complete qualifier. This is
+trusted-source testing, not an untrusted-code sandbox.
+
+Exact outer case IDs (prefix `test_preparation_observer_admission.PreparationObserverAdmissionControls.`):
+
+- `test_actual_observer_controls_accepts_normal_twelve_successes`
+- `test_actual_observer_controls_rejects_expected_failure`
+- `test_actual_observer_controls_rejects_unexpected_success`
+
+Each case installs a genuine synthetic module with the actual 12 expected IDs.
+Real unittest decorators and a real TextTestRunner produce failure flags. A
+temporary recording subclass delegates once to the original runner and returns
+its unchanged result. Module and runner patches restore on exit; the actual gate
+restores sys.path. Timing is an inert constant. Logs use bounded StringIO
+(16384 characters), each retained output at most 65536 UTF-8 bytes. No fixture
+filesystem, network, subprocess, storage, native runtime, observer helper, actual
+12 observer tests, or actual 36 preparation tests are invoked. Stdlib traceback
+formatting may consult linecache for existing source lines; this is not an
+OS-level IO sandbox. The regression backend itself performs no filesystem IO.
+
+Expected future RED against the pinned draft: two outer assertion failures
+(gate incorrectly accepts expectedFailure and unexpectedSuccess), one normal
+positive PASS; all inner suites run 12 synthetic cases with zero ordinary
+failures/errors/skips. This expectation is NOT an observed result. Three times
+12 synthetic cases is not a run of the preparation 36 suite.
+
+Implementation correction remains HELD pending Root review and one allocated
+pure RED. Proposed subsequent change: require zero expected failures and zero
+unexpected successes (prefer exact started/succeeded IDs), synchronize workflow
+summary. No underlying F42 fix, root-cause conclusion, production admission,
+authority, storage-publication implementation, CI, commit or push is claimed.
+
