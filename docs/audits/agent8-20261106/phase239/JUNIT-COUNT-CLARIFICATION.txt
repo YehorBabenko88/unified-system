@@ -1,0 +1,18 @@
+Append-only naming clarification; no original XML/ZIP/API or summary rewritten.
+
+whole-cohort-original-data-summary.json SHA
+0eb4810187908c4b41dc12483f88d56d7ae33a77b8d8f2fc099e27ced816c4d0
+contains a field named entries_including_subtests. Its actual computed value is
+the number of XML testcase elements. For each core job this value is2166.
+The name is inaccurate: it does not add35subtest reports.
+
+Each core testsuite tests attribute is2201; pytest summary distinguishes:
+Windows2138passed+28skipped+35subtests passed=2201reported total.
+Linux2112passed+54skipped+35subtests passed=2201reported total.
+Testcase elements2166 correspond to2138+28 or2112+54 respectively.
+All core failures/errors zero. No skips/tests were added or suppressed.
+
+Earlier commentary referred to2201as entries including subtests: that means the
+suite-declared reported count, not the count of testcase XML elements. The same
+data-parser field name in PR79 should likewise be read as testcase element count.
+Raw XML and original ZIP checksums remain authoritative and unchanged.

@@ -3916,3 +3916,6 @@ Phase237 PR79exact0c4f hostedcohort:6attempt1runs26jobs2SUCCESS4FAIL,freshAPI+al
 
 
 Phase238 PR80exactdfb5 Gateway43046405180attempt1 HOSTEDCOMPONENT38PASSbothWindowsUbuntu;38originalverboseIDs0skip/mutationOK, freshAPIs/twofreshAPI-digest-boundZIPs/816Gitboundsourcemaps/3calculationhashlinksMeta pins verified. ReplayBYTE_IDENTICALoriginalobservations/notA8execution. No fullcore/nativephysical/aliasRCA/old47transfer. OverallNO-GO/TailscaleBLOCKED. See phase238/report.md.
+
+
+Phase239 PR80exactdfb wholecohort6runs26jobs5SUCCESS1FAILURE verifiedfreshAPI/all26freshAPI-digest-boundZIPs/allmemberhashes/23XMLzeroFAILERROR. Core8jobsSUCCESS,Win2138pass28skip+35subtests/Linux2112pass54skip+35;XML2166elements/suite2201distinct. FinancialaggregateexternalBLOCKED/authenticityUNVERIFIED_SELF_REPORT,notallmandatoryCI. Old79RED/88947separate,noaliasRCA/nativephysical/providerpromotion. OverallNO-GO/TailscaleBLOCKED. See phase239/report.md.
