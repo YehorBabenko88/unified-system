@@ -1,4 +1,5 @@
 """Fetch one pinned disposable test binary; never installs a service."""
+raise RuntimeError('NATIVE_QUALIFICATION_PREREQUISITES_LOCKED')
 import argparse
 import hashlib
 import io

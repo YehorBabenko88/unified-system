@@ -1,4 +1,5 @@
 """Own ACL-default-deny loopback triplet; no service/system/foreign processes."""
+raise RuntimeError('NATIVE_QUALIFICATION_PREREQUISITES_LOCKED')
 import hashlib,json,os,socket,subprocess,sys,time,urllib.request,urllib.error,uuid
 from pathlib import Path
 

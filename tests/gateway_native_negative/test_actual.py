@@ -1,4 +1,5 @@
 """Actual loopback mTLS/Consul composition; never an admitted research job."""
+raise RuntimeError('NATIVE_QUALIFICATION_PREREQUISITES_LOCKED')
 import hashlib
 import asyncio
 import json

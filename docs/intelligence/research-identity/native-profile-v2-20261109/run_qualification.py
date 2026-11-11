@@ -1,4 +1,5 @@
 """Exact primary old15+new7 native profile-v2 source qualification; no job grants."""
+raise RuntimeError('NATIVE_QUALIFICATION_PREREQUISITES_LOCKED')
 import argparse,hashlib,json,os
 from pathlib import Path
 import re,subprocess,sys,types,unittest

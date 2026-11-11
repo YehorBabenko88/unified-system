@@ -1,0 +1,69 @@
+name: Atomic identity actual-code MOCK10 (not native qualification)
+on:
+  push:
+    paths: ['unified_system/gateway_research_identity.py', 'tests/test_research_identity_atomic_snapshot_unit.py', 'scripts/run_atomic_read_mock_qualification.py', 'docs/intelligence/research-identity/requirements-windows.lock', 'docs/intelligence/research-identity/requirements-linux.lock', '.github/workflows/atomic-read-mock-qualification.yml']
+  pull_request:
+    paths: ['unified_system/gateway_research_identity.py', 'tests/test_research_identity_atomic_snapshot_unit.py', 'scripts/run_atomic_read_mock_qualification.py', 'docs/intelligence/research-identity/requirements-windows.lock', 'docs/intelligence/research-identity/requirements-linux.lock', '.github/workflows/atomic-read-mock-qualification.yml']
+permissions:
+  contents: read
+jobs:
+  mock10:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            lock: windows
+          - os: ubuntu-24.04
+            lock: linux
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    env:
+      EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        env:
+          GIT_CONFIG_COUNT: '1'
+          GIT_CONFIG_KEY_0: core.autocrlf
+          GIT_CONFIG_VALUE_0: 'false'
+        with:
+          ref: ${{ env.EXPECTED_HEAD }}
+          path: unified
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        env:
+          GIT_CONFIG_COUNT: '1'
+          GIT_CONFIG_KEY_0: core.autocrlf
+          GIT_CONFIG_VALUE_0: 'false'
+        with:
+          repository: YehorBabenko88/bybit-cluster-grid
+          ref: fb177d14b1e6e399bd9b66ae7cb35d3838acbd81
+          path: grid
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12.10'
+          architecture: x64
+      - name: SETUP only - hashlocked binary dependencies outside source
+        shell: bash
+        run: >-
+          python -m pip install --disable-pip-version-check --only-binary=:all:
+          --require-hashes --no-compile --target "$RUNNER_TEMP/atomic-mock-deps"
+          -r unified/docs/intelligence/research-identity/requirements-${{ matrix.lock }}.lock
+      - name: Actual unchanged controlled-backend ten cases only
+        shell: bash
+        run: >-
+          python -I -S -B unified/scripts/run_atomic_read_mock_qualification.py
+          --unified "$GITHUB_WORKSPACE/unified" --grid "$GITHUB_WORKSPACE/grid"
+          --deps "$RUNNER_TEMP/atomic-mock-deps" --output "$RUNNER_TEMP/atomic-mock-evidence"
+          --expected-head "$EXPECTED_HEAD"
+      - name: Retain MOCK10 evidence (native22 and negative21 remain NOT_RUN)
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: atomic-mock10-${{ matrix.lock }}-${{ env.EXPECTED_HEAD }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/atomic-mock-evidence/
+          if-no-files-found: error

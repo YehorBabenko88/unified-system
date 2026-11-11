@@ -1,4 +1,5 @@
 """Actual own mTLS/Consul profile-v2 source; no issued jobs or grants seeded."""
+raise RuntimeError('NATIVE_QUALIFICATION_PREREQUISITES_LOCKED')
 import base64,copy,hashlib,json,uuid,unittest
 import test_native_broker as native_fixture
 canonical=native_fixture.canonical
