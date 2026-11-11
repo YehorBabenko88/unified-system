@@ -3934,3 +3934,6 @@ Phase243 PR283exactD6/basefb177/merge71c4sameTREE terminal7PR15cells12SUCCESS2FA
 
 
 Phase244 newcompile7dff→444 3reportedsourceissuesCLOSED_SOURCEONLY; originaldffrestored509eunchanged/new444review2; fullMODELED11driver57ef/a0c4/control541991/preflightchildparent SOURCEread+hashACKpreparationonly,7helpers/referenceparent2literalsLFidentical/841rawrehash/futureOUTsabsent. No model/compiler/APIexecution/results/predictions/grant/protectedretry. OverallNO-GO/TailscaleBLOCKED. See phase244/report.md.
+
+
+Phase245 actualOLDMODELED11 receipt40f51977 verified11methods3PASS8FAIL/11assertionrecords0ERRORskip/841currentrawrehash. A8CORRECTIONoldreadfailurealreadysetsOverflow→completeFALSE,actualfailmissingread_failedfact; close/EOF/retire/write/memberfalse-completeness remainsseparate. Oldfailuresnotalllaterassertionsreached;candidateGREENnotassumed/no compilerAPI/MathRCA. Originalsunchanged/overallNO-GO/TailscaleBLOCKED. See phase245/report.md.
