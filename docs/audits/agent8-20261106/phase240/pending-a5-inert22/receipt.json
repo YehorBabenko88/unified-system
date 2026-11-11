@@ -1,0 +1,265 @@
+{
+  "schema": "a5-inert22-root.v1",
+  "allocation": "ROOT.A5.CONTROLLER.INERT22.ONCE",
+  "mci_sequence": 139,
+  "result": "RETIRED_INERT22_OBSERVATIONS_REQUIRE_ROOT_REVIEW",
+  "pins": {
+    "C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-5-resource-aware-distributed/outputs/f42-admission-red-controller-review1/childloader_inert22_source.py": "bde882129a110c24dbdac0a5b938dddabb1af05a23549ae8c367eb8f9cd8a018",
+    "C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-5-resource-aware-distributed/outputs/f42-admission-red-controller-review1/test_controller_faults_source.py": "5cdfa7cd2bd8715fb8fc66eb0d1f519163532701e1ed3e301bec41adf20cb649",
+    "C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-5-resource-aware-distributed/outputs/f42-admission-red-controller-review1/controller.py": "91b27e21819448b526498fdcfed850ab748bd8256e9ed83fef72ae5fb478710c",
+    "C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-5-resource-aware-distributed/outputs/f42-admission-red-controller-review1/archived-8f-fd091/controller.py": "8f16551258b9ac3187402321539a22a11cc24e482906498e2e3767fa04e04a1a",
+    "C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-5-resource-aware-distributed/outputs/f42-admission-red-controller-review1/runtime-approved-841.json": "3625b1be9c8ac3309ba2c974ad35a6b62c7f53e07031a6b4bc3e75b86d4f0046",
+    "C:/Users/LS-5/AppData/Local/Python/pythoncore-3.12-64/python.exe": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a"
+  },
+  "runtime_pre": 841,
+  "scope": "ActualmainAST with inert22 only; no actual3/12/36/PS/SQL/project/native/network",
+  "pid": 164220,
+  "exit_code": 0,
+  "signal": null,
+  "direct_retired": true,
+  "readers_closed": true,
+  "elapsed_process_and_retirement_seconds": 1.5273930000001565,
+  "within15s": true,
+  "output_bytes": 22359,
+  "stdout_sha256": "0d4c2569157c7b280cb92a04012bb0991c308729641091e76a61d17cac40cdc0",
+  "stderr_sha256": "4df5de3eebd4af59788b6a5df2e8baf2f7b6d81e389c2d97ea8178fa81152a57",
+  "evidence_errors": [],
+  "runtime_post": 841,
+  "pins_unchanged": true,
+  "cache_empty": true,
+  "child_result": {
+    "boundary_errors": [],
+    "cache_empty": true,
+    "cache_pre_post_equal": true,
+    "errors": 0,
+    "expected_failures": 0,
+    "failure_provenance_matches": true,
+    "loaded_ids": [
+      "test_controller_faults_source.ArchivedControllerFaultControls.test_completion_bound_includes_pipe_and_handle_close",
+      "test_controller_faults_source.ArchivedControllerFaultControls.test_creation_delay_counts_even_when_first_poll_reports_exit",
+      "test_controller_faults_source.ArchivedControllerFaultControls.test_final_poll_error_is_sticky_and_wait_confirmed_handle_is_closed",
+      "test_controller_faults_source.ArchivedControllerFaultControls.test_first_join_error_does_not_skip_second_join_or_close",
+      "test_controller_faults_source.ArchivedControllerFaultControls.test_normal_inert_protocol_preserves_expected_red",
+      "test_controller_faults_source.ArchivedControllerFaultControls.test_poll_error_still_attempts_kill_wait_and_retains_denial",
+      "test_controller_faults_source.ArchivedControllerFaultControls.test_primary_receipt_failure_attempts_fallback_and_denies",
+      "test_controller_faults_source.ArchivedControllerFaultControls.test_stdout_write_failure_does_not_skip_stderr_or_receipt",
+      "test_controller_faults_source.ArchivedControllerFaultControls.test_unstarted_thread_is_not_joined_and_evidence_is_retained",
+      "test_controller_faults_source.FixedControllerFaultControls.test_completion_bound_includes_pipe_and_handle_close",
+      "test_controller_faults_source.FixedControllerFaultControls.test_creation_delay_counts_even_when_first_poll_reports_exit",
+      "test_controller_faults_source.FixedControllerFaultControls.test_final_poll_error_is_sticky_and_wait_confirmed_handle_is_closed",
+      "test_controller_faults_source.FixedControllerFaultControls.test_first_join_error_does_not_skip_second_join_or_close",
+      "test_controller_faults_source.FixedControllerFaultControls.test_normal_inert_protocol_preserves_expected_red",
+      "test_controller_faults_source.FixedControllerFaultControls.test_poll_error_still_attempts_kill_wait_and_retains_denial",
+      "test_controller_faults_source.FixedControllerFaultControls.test_primary_receipt_failure_attempts_fallback_and_denies",
+      "test_controller_faults_source.FixedControllerFaultControls.test_stdout_write_failure_does_not_skip_stderr_or_receipt",
+      "test_controller_faults_source.FixedControllerFaultControls.test_unstarted_thread_is_not_joined_and_evidence_is_retained",
+      "test_controller_faults_source.FixedBoundedReadControls.test_cross_api_file_kind_change_denies_before_read",
+      "test_controller_faults_source.FixedBoundedReadControls.test_cross_api_permission_and_ctime_difference_preserves_file_kind",
+      "test_controller_faults_source.FixedBoundedReadControls.test_growing_input_reads_only_pinned_size_plus_one_and_denies",
+      "test_controller_faults_source.FixedBoundedReadControls.test_same_api_metadata_change_denies"
+    ],
+    "matched": true,
+    "outcomes": [
+      {
+        "assertion_error_exact": true,
+        "error_type": "AssertionError",
+        "id": "test_controller_faults_source.ArchivedControllerFaultControls.test_completion_bound_includes_pipe_and_handle_close",
+        "last_model_frame": {
+          "filename": "<agent5-pinned-controller-fault-model>",
+          "function": "require_retained_denial",
+          "line": 282
+        },
+        "message": "0 != 2",
+        "outcome": "FAILURE",
+        "trace_truncated": false
+      },
+      {
+        "id": "test_controller_faults_source.ArchivedControllerFaultControls.test_creation_delay_counts_even_when_first_poll_reports_exit",
+        "outcome": "SUCCESS"
+      },
+      {
+        "assertion_error_exact": true,
+        "error_type": "AssertionError",
+        "id": "test_controller_faults_source.ArchivedControllerFaultControls.test_final_poll_error_is_sticky_and_wait_confirmed_handle_is_closed",
+        "last_model_frame": {
+          "filename": "<agent5-pinned-controller-fault-model>",
+          "function": "test_final_poll_error_is_sticky_and_wait_confirmed_handle_is_closed",
+          "line": 316
+        },
+        "message": "'close_handle' not found in ['mkdir:/attempt', 'mkdir:/attempt/empty-cache', 'write:raw-before.json', 'popen', 'start:0', 'start:1', 'poll', 'poll', 'wait', 'join:0', 'join:1', 'poll']",
+        "outcome": "FAILURE",
+        "trace_truncated": false
+      },
+      {
+        "assertion_error_exact": true,
+        "error_type": "AssertionError",
+        "id": "test_controller_faults_source.ArchivedControllerFaultControls.test_first_join_error_does_not_skip_second_join_or_close",
+        "last_model_frame": {
+          "filename": "<agent5-pinned-controller-fault-model>",
+          "function": "test_first_join_error_does_not_skip_second_join_or_close",
+          "line": 308
+        },
+        "message": "'join:1' not found in ['mkdir:/attempt', 'mkdir:/attempt/empty-cache', 'write:raw-before.json', 'popen', 'start:0', 'start:1', 'poll', 'poll', 'wait', 'join:0']",
+        "outcome": "FAILURE",
+        "trace_truncated": false
+      },
+      {
+        "id": "test_controller_faults_source.ArchivedControllerFaultControls.test_normal_inert_protocol_preserves_expected_red",
+        "outcome": "SUCCESS"
+      },
+      {
+        "assertion_error_exact": true,
+        "error_type": "AssertionError",
+        "id": "test_controller_faults_source.ArchivedControllerFaultControls.test_poll_error_still_attempts_kill_wait_and_retains_denial",
+        "last_model_frame": {
+          "filename": "<agent5-pinned-controller-fault-model>",
+          "function": "test_poll_error_still_attempts_kill_wait_and_retains_denial",
+          "line": 295
+        },
+        "message": "'kill' not found in ['mkdir:/attempt', 'mkdir:/attempt/empty-cache', 'write:raw-before.json', 'popen', 'start:0', 'start:1', 'poll', 'poll', 'wait', 'join:0', 'join:1', 'poll']",
+        "outcome": "FAILURE",
+        "trace_truncated": false
+      },
+      {
+        "assertion_error_exact": true,
+        "error_type": "AssertionError",
+        "id": "test_controller_faults_source.ArchivedControllerFaultControls.test_primary_receipt_failure_attempts_fallback_and_denies",
+        "last_model_frame": {
+          "filename": "<agent5-pinned-controller-fault-model>",
+          "function": "test_primary_receipt_failure_attempts_fallback_and_denies",
+          "line": 338
+        },
+        "message": "'write:receipt-fallback.json' not found in ['mkdir:/attempt', 'mkdir:/attempt/empty-cache', 'write:raw-before.json', 'popen', 'start:0', 'start:1', 'poll', 'poll', 'wait', 'join:0', 'join:1', 'poll', 'alive:0', 'alive:1', 'close_pipe:1', 'close_pipe:2', 'close_handle', 'write:stdout.log', 'write:stderr.log', 'write:raw-after.json', 'write:receipt.json']",
+        "outcome": "FAILURE",
+        "trace_truncated": false
+      },
+      {
+        "assertion_error_exact": true,
+        "error_type": "AssertionError",
+        "id": "test_controller_faults_source.ArchivedControllerFaultControls.test_stdout_write_failure_does_not_skip_stderr_or_receipt",
+        "last_model_frame": {
+          "filename": "<agent5-pinned-controller-fault-model>",
+          "function": "test_stdout_write_failure_does_not_skip_stderr_or_receipt",
+          "line": 332
+        },
+        "message": "'write:stderr.log' not found in ['mkdir:/attempt', 'mkdir:/attempt/empty-cache', 'write:raw-before.json', 'popen', 'start:0', 'start:1', 'poll', 'poll', 'wait', 'join:0', 'join:1', 'poll', 'alive:0', 'alive:1', 'close_pipe:1', 'close_pipe:2', 'close_handle', 'write:stdout.log']",
+        "outcome": "FAILURE",
+        "trace_truncated": false
+      },
+      {
+        "assertion_error_exact": true,
+        "error_type": "AssertionError",
+        "id": "test_controller_faults_source.ArchivedControllerFaultControls.test_unstarted_thread_is_not_joined_and_evidence_is_retained",
+        "last_model_frame": {
+          "filename": "<agent5-pinned-controller-fault-model>",
+          "function": "test_unstarted_thread_is_not_joined_and_evidence_is_retained",
+          "line": 301
+        },
+        "message": "'join:0' unexpectedly found in ['mkdir:/attempt', 'mkdir:/attempt/empty-cache', 'write:raw-before.json', 'popen', 'start:0', 'poll', 'wait', 'join:0']",
+        "outcome": "FAILURE",
+        "trace_truncated": false
+      },
+      {
+        "id": "test_controller_faults_source.FixedControllerFaultControls.test_completion_bound_includes_pipe_and_handle_close",
+        "outcome": "SUCCESS"
+      },
+      {
+        "id": "test_controller_faults_source.FixedControllerFaultControls.test_creation_delay_counts_even_when_first_poll_reports_exit",
+        "outcome": "SUCCESS"
+      },
+      {
+        "id": "test_controller_faults_source.FixedControllerFaultControls.test_final_poll_error_is_sticky_and_wait_confirmed_handle_is_closed",
+        "outcome": "SUCCESS"
+      },
+      {
+        "id": "test_controller_faults_source.FixedControllerFaultControls.test_first_join_error_does_not_skip_second_join_or_close",
+        "outcome": "SUCCESS"
+      },
+      {
+        "id": "test_controller_faults_source.FixedControllerFaultControls.test_normal_inert_protocol_preserves_expected_red",
+        "outcome": "SUCCESS"
+      },
+      {
+        "id": "test_controller_faults_source.FixedControllerFaultControls.test_poll_error_still_attempts_kill_wait_and_retains_denial",
+        "outcome": "SUCCESS"
+      },
+      {
+        "id": "test_controller_faults_source.FixedControllerFaultControls.test_primary_receipt_failure_attempts_fallback_and_denies",
+        "outcome": "SUCCESS"
+      },
+      {
+        "id": "test_controller_faults_source.FixedControllerFaultControls.test_stdout_write_failure_does_not_skip_stderr_or_receipt",
+        "outcome": "SUCCESS"
+      },
+      {
+        "id": "test_controller_faults_source.FixedControllerFaultControls.test_unstarted_thread_is_not_joined_and_evidence_is_retained",
+        "outcome": "SUCCESS"
+      },
+      {
+        "id": "test_controller_faults_source.FixedBoundedReadControls.test_cross_api_file_kind_change_denies_before_read",
+        "outcome": "SUCCESS"
+      },
+      {
+        "id": "test_controller_faults_source.FixedBoundedReadControls.test_cross_api_permission_and_ctime_difference_preserves_file_kind",
+        "outcome": "SUCCESS"
+      },
+      {
+        "id": "test_controller_faults_source.FixedBoundedReadControls.test_growing_input_reads_only_pinned_size_plus_one_and_denies",
+        "outcome": "SUCCESS"
+      },
+      {
+        "id": "test_controller_faults_source.FixedBoundedReadControls.test_same_api_metadata_change_denies",
+        "outcome": "SUCCESS"
+      }
+    ],
+    "runtime_ledger_post_pin": true,
+    "runtime_post_digest": "84b2e1c6da691f0a767afb066ec0fa424941062fe65e3710f01ada40e756d3f2",
+    "runtime_pre_digest": "84b2e1c6da691f0a767afb066ec0fa424941062fe65e3710f01ada40e756d3f2",
+    "runtime_pre_post_equal": true,
+    "scope": "INERT_ACTUAL_MAIN_22_ONLY",
+    "skips": 0,
+    "source_pre": {
+      "archived-8f-fd091/controller.py": {
+        "bytes": 12436,
+        "sha256": "8f16551258b9ac3187402321539a22a11cc24e482906498e2e3767fa04e04a1a"
+      },
+      "controller.py": {
+        "bytes": 22844,
+        "sha256": "91b27e21819448b526498fdcfed850ab748bd8256e9ed83fef72ae5fb478710c"
+      },
+      "test_controller_faults_source.py": {
+        "bytes": 18787,
+        "sha256": "5cdfa7cd2bd8715fb8fc66eb0d1f519163532701e1ed3e301bec41adf20cb649"
+      }
+    },
+    "source_pre_post_equal": true,
+    "started": [
+      "test_controller_faults_source.ArchivedControllerFaultControls.test_completion_bound_includes_pipe_and_handle_close",
+      "test_controller_faults_source.ArchivedControllerFaultControls.test_creation_delay_counts_even_when_first_poll_reports_exit",
+      "test_controller_faults_source.ArchivedControllerFaultControls.test_final_poll_error_is_sticky_and_wait_confirmed_handle_is_closed",
+      "test_controller_faults_source.ArchivedControllerFaultControls.test_first_join_error_does_not_skip_second_join_or_close",
+      "test_controller_faults_source.ArchivedControllerFaultControls.test_normal_inert_protocol_preserves_expected_red",
+      "test_controller_faults_source.ArchivedControllerFaultControls.test_poll_error_still_attempts_kill_wait_and_retains_denial",
+      "test_controller_faults_source.ArchivedControllerFaultControls.test_primary_receipt_failure_attempts_fallback_and_denies",
+      "test_controller_faults_source.ArchivedControllerFaultControls.test_stdout_write_failure_does_not_skip_stderr_or_receipt",
+      "test_controller_faults_source.ArchivedControllerFaultControls.test_unstarted_thread_is_not_joined_and_evidence_is_retained",
+      "test_controller_faults_source.FixedControllerFaultControls.test_completion_bound_includes_pipe_and_handle_close",
+      "test_controller_faults_source.FixedControllerFaultControls.test_creation_delay_counts_even_when_first_poll_reports_exit",
+      "test_controller_faults_source.FixedControllerFaultControls.test_final_poll_error_is_sticky_and_wait_confirmed_handle_is_closed",
+      "test_controller_faults_source.FixedControllerFaultControls.test_first_join_error_does_not_skip_second_join_or_close",
+      "test_controller_faults_source.FixedControllerFaultControls.test_normal_inert_protocol_preserves_expected_red",
+      "test_controller_faults_source.FixedControllerFaultControls.test_poll_error_still_attempts_kill_wait_and_retains_denial",
+      "test_controller_faults_source.FixedControllerFaultControls.test_primary_receipt_failure_attempts_fallback_and_denies",
+      "test_controller_faults_source.FixedControllerFaultControls.test_stdout_write_failure_does_not_skip_stderr_or_receipt",
+      "test_controller_faults_source.FixedControllerFaultControls.test_unstarted_thread_is_not_joined_and_evidence_is_retained",
+      "test_controller_faults_source.FixedBoundedReadControls.test_cross_api_file_kind_change_denies_before_read",
+      "test_controller_faults_source.FixedBoundedReadControls.test_cross_api_permission_and_ctime_difference_preserves_file_kind",
+      "test_controller_faults_source.FixedBoundedReadControls.test_growing_input_reads_only_pinned_size_plus_one_and_denies",
+      "test_controller_faults_source.FixedBoundedReadControls.test_same_api_metadata_change_denies"
+    ],
+    "state": "INERT22_EXPECTED_PATTERN_OBSERVED",
+    "tests": 22,
+    "tripwire_events": [],
+    "unexpected_successes": 0
+  }
+}

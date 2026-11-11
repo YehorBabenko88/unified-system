@@ -1,0 +1,74 @@
+{
+  "scope": "SOURCE_ONLY_AST_PARSE_NO_COMPILE_IMPORT_CALCULATION",
+  "reviewed_driver_sha256": "92c66a2221e70ca69d7c864340e80a7dc4fc392090885e1ab7179a03a31ae879",
+  "new_driver_sha256": "9af0f43292f1c64a4ed0f09a27d4f83d923c34267c77f7b700cb226f46c17815",
+  "source_head": "dfb5a2947070c8ebef0b22d9c97719b924909b39",
+  "source_tree": "dcec97f87f661a5c364775d9a346d17b67db8427",
+  "source_provenance_receipt_sha256": "416fb68f552615bf053b2ac7cf0d3841bc5cec034e5ade1f87fbde0b40a6a3d4",
+  "qualification_receipt": {
+    "bytes": 2100,
+    "sha256": "2240d10b93bfb0dc957f5e501ee314c2c6e9d415512e602904666a8f673d0796"
+  },
+  "raw816_manifest": {
+    "bytes": 185062,
+    "sha256": "2fe093edb524377b8f5bc53bdeff28816dd74ec6d01c313ef18a950f0213ddd1"
+  },
+  "source816_rehashed_equal": true,
+  "meta3_rehashed_equal": true,
+  "runtime841_rehashed_equal": true,
+  "runtime_manifest_sha256": "cf6c3a323a56096bdbfbc6e4de91823cffa286d46ca410572067cabb632c99c1",
+  "function_names": [
+    "ordinary",
+    "bounded_bytes",
+    "metadata_matches",
+    "digest",
+    "check_map",
+    "preflight",
+    "unique_pairs",
+    "invalid_constant",
+    "runtime_flags",
+    "child",
+    "parent"
+  ],
+  "functions_with_only_literal_changes": [
+    "preflight",
+    "child"
+  ],
+  "all_other_functions_ast_identical": true,
+  "substitutions": [
+    [
+      "PACKAGE=BASE/'gateway-diagnostics-committed-source-20261111'",
+      "PACKAGE=BASE/'gateway-canonical-one-case-inputs-review1-20261111'"
+    ],
+    [
+      "SOURCE=PACKAGE/'raw816-clone';META=PACKAGE/'meta3-source'",
+      "SOURCE=BASE/'gateway-canonical-copy-source-20261111/raw816-clone';META=PACKAGE/'meta3-source'"
+    ],
+    [
+      "OUT=BASE/'gateway-one-case-diagnostic-review1-attempt1'",
+      "OUT=BASE/'gateway-canonical-one-case-review1-attempt1'"
+    ],
+    [
+      "(PACKAGE/'receipt.json',1750,'edde8836f6d898ec102e908f883c33c93e184938bfeb6bf8b536e6d28b62c4a2')",
+      "(PACKAGE/'receipt.json',2100,'2240d10b93bfb0dc957f5e501ee314c2c6e9d415512e602904666a8f673d0796')"
+    ],
+    [
+      "1b2381a6698f06f61c0570d06e20f246191621920d217d7d628c987e3060c1a7",
+      "2fe093edb524377b8f5bc53bdeff28816dd74ec6d01c313ef18a950f0213ddd1"
+    ],
+    [
+      "0c4f64c897aacd78bbec0e1faa886c7003c353ff",
+      "dfb5a2947070c8ebef0b22d9c97719b924909b39"
+    ],
+    [
+      "889d787ef053dca1eb0244da10f47a4a4a2cc982",
+      "dfb5a2947070c8ebef0b22d9c97719b924909b39"
+    ]
+  ],
+  "driver_diff_sha256": "c72b2ce7816343b09e7de5e6dbbda6017ee874a51140fb7cf10632edd1e37351",
+  "fresh_out": "gateway-canonical-one-case-review1-attempt1",
+  "case": "_gateway_diag_case.GatewayAdapterTests.test_source_changed_after_calculation_refused",
+  "budget": "15s observed process phase before Popen + separate5s cleanup/readers;256KiB; no strict globalwallclock",
+  "expected": "ONE diagnostic GREEN only; actual NOT_RUN",
+  "allocation": "PENDING"
+}

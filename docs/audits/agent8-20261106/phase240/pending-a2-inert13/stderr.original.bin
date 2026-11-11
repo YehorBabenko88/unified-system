@@ -1,0 +1,142 @@
+test_actual_helper_always_blocks_both_native_suites (inert13_controls.LockedNativeQualificationControls.test_actual_helper_always_blocks_both_native_suites) ... NATIVE_QUALIFICATION_PREREQUISITES_LOCKED
+NATIVE_QUALIFICATION_PREREQUISITES_LOCKED
+ok
+test_actual_helper_output_failure_is_not_success (inert13_controls.LockedNativeQualificationControls.test_actual_helper_output_failure_is_not_success) ... NATIVE_PREREQUISITE_ARTIFACT_WRITE_FAILED
+NATIVE_QUALIFICATION_PREREQUISITES_LOCKED
+ok
+test_actual_helper_rejects_enable_option (inert13_controls.LockedNativeQualificationControls.test_actual_helper_rejects_enable_option) ... usage: inert13_child_source.py [-h] --output OUTPUT --expected-tests {21,22}
+inert13_child_source.py: error: the following arguments are required: --output, --expected-tests
+ok
+test_actual_mock_inventory_checker_fails_extra_missing_skip_or_error (inert13_controls.LockedNativeQualificationControls.test_actual_mock_inventory_checker_fails_extra_missing_skip_or_error) ... ok
+test_all_eight_native_entries_raise_before_any_import (inert13_controls.LockedNativeQualificationControls.test_all_eight_native_entries_raise_before_any_import) ... ok
+test_mock_helper_is_separate_and_exact_inventory_is_ten (inert13_controls.LockedNativeQualificationControls.test_mock_helper_is_separate_and_exact_inventory_is_ten) ... ok
+test_mock_source_bounds_reads_and_observed_completion (inert13_controls.LockedNativeQualificationControls.test_mock_source_bounds_reads_and_observed_completion) ... ok
+test_native_expected_inventories_and_mock_hash_stay_exact (inert13_controls.LockedNativeQualificationControls.test_native_expected_inventories_and_mock_hash_stay_exact) ... ok
+test_workflows_lock_before_dependency_download_and_import (inert13_controls.LockedNativeQualificationControls.test_workflows_lock_before_dependency_download_and_import) ... ok
+test_actual_child_entry_executes_checked_buffer_not_reopening_loader (inert13_controls.MockQualificationInertFaultControls.test_actual_child_entry_executes_checked_buffer_not_reopening_loader) ... FAIL
+test_actual_locked_output_checks_root_before_nearest_unsafe_ancestor (inert13_controls.MockQualificationInertFaultControls.test_actual_locked_output_checks_root_before_nearest_unsafe_ancestor) ... FAIL
+test_actual_ordinary_rejects_unsafe_ancestor_before_leaf_lookup (inert13_controls.MockQualificationInertFaultControls.test_actual_ordinary_rejects_unsafe_ancestor_before_leaf_lookup) ... FAIL
+test_post_popen_faults_still_retire_handle_and_attempt_failure_receipt (inert13_controls.MockQualificationInertFaultControls.test_post_popen_faults_still_retire_handle_and_attempt_failure_receipt) ... 
+  test_post_popen_faults_still_retire_handle_and_attempt_failure_receipt (inert13_controls.MockQualificationInertFaultControls.test_post_popen_faults_still_retire_handle_and_attempt_failure_receipt) (stage='lock') ... FAIL
+  test_post_popen_faults_still_retire_handle_and_attempt_failure_receipt (inert13_controls.MockQualificationInertFaultControls.test_post_popen_faults_still_retire_handle_and_attempt_failure_receipt) (stage='event') ... FAIL
+  test_post_popen_faults_still_retire_handle_and_attempt_failure_receipt (inert13_controls.MockQualificationInertFaultControls.test_post_popen_faults_still_retire_handle_and_attempt_failure_receipt) (stage='thread_constructor') ... FAIL
+  test_post_popen_faults_still_retire_handle_and_attempt_failure_receipt (inert13_controls.MockQualificationInertFaultControls.test_post_popen_faults_still_retire_handle_and_attempt_failure_receipt) (stage='first_start') ... FAIL
+  test_post_popen_faults_still_retire_handle_and_attempt_failure_receipt (inert13_controls.MockQualificationInertFaultControls.test_post_popen_faults_still_retire_handle_and_attempt_failure_receipt) (stage='second_start') ... FAIL
+  test_post_popen_faults_still_retire_handle_and_attempt_failure_receipt (inert13_controls.MockQualificationInertFaultControls.test_post_popen_faults_still_retire_handle_and_attempt_failure_receipt) (stage='poll') ... FAIL
+  test_post_popen_faults_still_retire_handle_and_attempt_failure_receipt (inert13_controls.MockQualificationInertFaultControls.test_post_popen_faults_still_retire_handle_and_attempt_failure_receipt) (stage='kill') ... FAIL
+  test_post_popen_faults_still_retire_handle_and_attempt_failure_receipt (inert13_controls.MockQualificationInertFaultControls.test_post_popen_faults_still_retire_handle_and_attempt_failure_receipt) (stage='clock') ... FAIL
+  test_post_popen_faults_still_retire_handle_and_attempt_failure_receipt (inert13_controls.MockQualificationInertFaultControls.test_post_popen_faults_still_retire_handle_and_attempt_failure_receipt) (stage='join') ... FAIL
+
+======================================================================
+FAIL: test_actual_child_entry_executes_checked_buffer_not_reopening_loader (inert13_controls.MockQualificationInertFaultControls.test_actual_child_entry_executes_checked_buffer_not_reopening_loader)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-2-high-availability-distributed\work\locked-native-bfa-ae341-recovery-20261111\tests\test_locked_native_qualification.py", line 266, in test_actual_child_entry_executes_checked_buffer_not_reopening_loader
+    self.assertEqual(unchecked, [], 'explicit entry must not delegate reopening exec_module')
+AssertionError: Lists differ: ['REOPENED_UNCHECKED_ENTRY'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'REOPENED_UNCHECKED_ENTRY'
+
+- ['REOPENED_UNCHECKED_ENTRY']
++ [] : explicit entry must not delegate reopening exec_module
+
+======================================================================
+FAIL: test_actual_locked_output_checks_root_before_nearest_unsafe_ancestor (inert13_controls.MockQualificationInertFaultControls.test_actual_locked_output_checks_root_before_nearest_unsafe_ancestor)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-2-high-availability-distributed\work\locked-native-bfa-ae341-recovery-20261111\tests\test_locked_native_qualification.py", line 314, in test_actual_locked_output_checks_root_before_nearest_unsafe_ancestor
+    self.assertEqual(observations[0], 'root')
+AssertionError: 'unsafe' != 'root'
+- unsafe
++ root
+
+
+======================================================================
+FAIL: test_actual_ordinary_rejects_unsafe_ancestor_before_leaf_lookup (inert13_controls.MockQualificationInertFaultControls.test_actual_ordinary_rejects_unsafe_ancestor_before_leaf_lookup)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-2-high-availability-distributed\work\locked-native-bfa-ae341-recovery-20261111\tests\test_locked_native_qualification.py", line 288, in test_actual_ordinary_rejects_unsafe_ancestor_before_leaf_lookup
+    self.assertEqual(observations[0], 'root')
+AssertionError: 'leaf' != 'root'
+- leaf
++ root
+
+
+======================================================================
+FAIL: test_post_popen_faults_still_retire_handle_and_attempt_failure_receipt (inert13_controls.MockQualificationInertFaultControls.test_post_popen_faults_still_retire_handle_and_attempt_failure_receipt) (stage='lock')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-2-high-availability-distributed\work\locked-native-bfa-ae341-recovery-20261111\tests\test_locked_native_qualification.py", line 208, in test_post_popen_faults_still_retire_handle_and_attempt_failure_receipt
+    self.assertTrue(any(isinstance(c, tuple) and c[0] == 'wait' for c in calls),
+AssertionError: False is not true : held handle must receive bounded wait even after setup/poll/kill faults
+
+======================================================================
+FAIL: test_post_popen_faults_still_retire_handle_and_attempt_failure_receipt (inert13_controls.MockQualificationInertFaultControls.test_post_popen_faults_still_retire_handle_and_attempt_failure_receipt) (stage='event')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-2-high-availability-distributed\work\locked-native-bfa-ae341-recovery-20261111\tests\test_locked_native_qualification.py", line 208, in test_post_popen_faults_still_retire_handle_and_attempt_failure_receipt
+    self.assertTrue(any(isinstance(c, tuple) and c[0] == 'wait' for c in calls),
+AssertionError: False is not true : held handle must receive bounded wait even after setup/poll/kill faults
+
+======================================================================
+FAIL: test_post_popen_faults_still_retire_handle_and_attempt_failure_receipt (inert13_controls.MockQualificationInertFaultControls.test_post_popen_faults_still_retire_handle_and_attempt_failure_receipt) (stage='thread_constructor')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-2-high-availability-distributed\work\locked-native-bfa-ae341-recovery-20261111\tests\test_locked_native_qualification.py", line 208, in test_post_popen_faults_still_retire_handle_and_attempt_failure_receipt
+    self.assertTrue(any(isinstance(c, tuple) and c[0] == 'wait' for c in calls),
+AssertionError: False is not true : held handle must receive bounded wait even after setup/poll/kill faults
+
+======================================================================
+FAIL: test_post_popen_faults_still_retire_handle_and_attempt_failure_receipt (inert13_controls.MockQualificationInertFaultControls.test_post_popen_faults_still_retire_handle_and_attempt_failure_receipt) (stage='first_start')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-2-high-availability-distributed\work\locked-native-bfa-ae341-recovery-20261111\tests\test_locked_native_qualification.py", line 208, in test_post_popen_faults_still_retire_handle_and_attempt_failure_receipt
+    self.assertTrue(any(isinstance(c, tuple) and c[0] == 'wait' for c in calls),
+AssertionError: False is not true : held handle must receive bounded wait even after setup/poll/kill faults
+
+======================================================================
+FAIL: test_post_popen_faults_still_retire_handle_and_attempt_failure_receipt (inert13_controls.MockQualificationInertFaultControls.test_post_popen_faults_still_retire_handle_and_attempt_failure_receipt) (stage='second_start')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-2-high-availability-distributed\work\locked-native-bfa-ae341-recovery-20261111\tests\test_locked_native_qualification.py", line 208, in test_post_popen_faults_still_retire_handle_and_attempt_failure_receipt
+    self.assertTrue(any(isinstance(c, tuple) and c[0] == 'wait' for c in calls),
+AssertionError: False is not true : held handle must receive bounded wait even after setup/poll/kill faults
+
+======================================================================
+FAIL: test_post_popen_faults_still_retire_handle_and_attempt_failure_receipt (inert13_controls.MockQualificationInertFaultControls.test_post_popen_faults_still_retire_handle_and_attempt_failure_receipt) (stage='poll')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-2-high-availability-distributed\work\locked-native-bfa-ae341-recovery-20261111\tests\test_locked_native_qualification.py", line 208, in test_post_popen_faults_still_retire_handle_and_attempt_failure_receipt
+    self.assertTrue(any(isinstance(c, tuple) and c[0] == 'wait' for c in calls),
+AssertionError: False is not true : held handle must receive bounded wait even after setup/poll/kill faults
+
+======================================================================
+FAIL: test_post_popen_faults_still_retire_handle_and_attempt_failure_receipt (inert13_controls.MockQualificationInertFaultControls.test_post_popen_faults_still_retire_handle_and_attempt_failure_receipt) (stage='kill')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-2-high-availability-distributed\work\locked-native-bfa-ae341-recovery-20261111\tests\test_locked_native_qualification.py", line 208, in test_post_popen_faults_still_retire_handle_and_attempt_failure_receipt
+    self.assertTrue(any(isinstance(c, tuple) and c[0] == 'wait' for c in calls),
+AssertionError: False is not true : held handle must receive bounded wait even after setup/poll/kill faults
+
+======================================================================
+FAIL: test_post_popen_faults_still_retire_handle_and_attempt_failure_receipt (inert13_controls.MockQualificationInertFaultControls.test_post_popen_faults_still_retire_handle_and_attempt_failure_receipt) (stage='clock')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-2-high-availability-distributed\work\locked-native-bfa-ae341-recovery-20261111\tests\test_locked_native_qualification.py", line 210, in test_post_popen_faults_still_retire_handle_and_attempt_failure_receipt
+    self.assertTrue(receipts, 'failure evidence must be attempted independently')
+AssertionError: [] is not true : failure evidence must be attempted independently
+
+======================================================================
+FAIL: test_post_popen_faults_still_retire_handle_and_attempt_failure_receipt (inert13_controls.MockQualificationInertFaultControls.test_post_popen_faults_still_retire_handle_and_attempt_failure_receipt) (stage='join')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-2-high-availability-distributed\work\locked-native-bfa-ae341-recovery-20261111\tests\test_locked_native_qualification.py", line 210, in test_post_popen_faults_still_retire_handle_and_attempt_failure_receipt
+    self.assertTrue(receipts, 'failure evidence must be attempted independently')
+AssertionError: [] is not true : failure evidence must be attempted independently
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.061s
+
+FAILED (failures=12)

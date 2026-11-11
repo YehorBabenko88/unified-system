@@ -1,0 +1,24 @@
+test_actual_observer_controls_accepts_normal_twelve_successes (test_preparation_observer_admission.PreparationObserverAdmissionControls.test_actual_observer_controls_accepts_normal_twelve_successes) ... ok
+test_actual_observer_controls_rejects_expected_failure (test_preparation_observer_admission.PreparationObserverAdmissionControls.test_actual_observer_controls_rejects_expected_failure) ... FAIL
+test_actual_observer_controls_rejects_unexpected_success (test_preparation_observer_admission.PreparationObserverAdmissionControls.test_actual_observer_controls_rejects_unexpected_success) ... FAIL
+
+======================================================================
+FAIL: test_actual_observer_controls_rejects_expected_failure (test_preparation_observer_admission.PreparationObserverAdmissionControls.test_actual_observer_controls_rejects_expected_failure)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-5-resource-aware-distributed\work\f42-observer-source-20261110\tests\test_preparation_observer_admission.py", line 134, in test_actual_observer_controls_rejects_expected_failure
+    self.assertTrue(self.invoke('expected_failure'))
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_actual_observer_controls_rejects_unexpected_success (test_preparation_observer_admission.PreparationObserverAdmissionControls.test_actual_observer_controls_rejects_unexpected_success)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-5-resource-aware-distributed\work\f42-observer-source-20261110\tests\test_preparation_observer_admission.py", line 137, in test_actual_observer_controls_rejects_unexpected_success
+    self.assertTrue(self.invoke('unexpected_success'))
+AssertionError: False is not true
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.002s
+
+FAILED (failures=2)

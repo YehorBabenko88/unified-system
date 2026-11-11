@@ -1,0 +1,140 @@
+diff --git a/docs/ci/gateway-copy-source-admission-review1.md b/docs/ci/gateway-copy-source-admission-review1.md
+new file mode 100644
+index 0000000..6af8522
+--- /dev/null
++++ b/docs/ci/gateway-copy-source-admission-review1.md
+@@ -0,0 +1,38 @@
++# Gateway copied-source admission diagnostic proposal
++
++Baseline: 889d787ef053dca1eb0244da10f47a4a4a2cc982, tree
++504f1b2cffe6bbb69babf21cef8171995a459322. Source preparation only;
++no calculation, imports, compilation, tests, CI or publication of this proposal.
++
++Original run 42929428724, Windows job 130224124675, executed 38 tests and
++failed `test_source_changed_after_calculation_refused`: mutation observer did
++not set `changed`. Ubuntu job succeeded. This does not identify the earlier
++refusal code or failing production admission stage. A Windows path alias is
++an unproven hypothesis. Original RED and immutable hosted47 evidence remain intact.
++
++Ownership: only this document and tests/gateway_adapter/{support.py,
++test_gateway_adapter.py}. Production adapter, workflow, existing 38 test IDs,
++timeouts, source pins and guards remain unchanged.
++
++The mutation test first performs a positive calculation on the exact same copied
++directory, before installing its profile observer or mutating any bytes. It
++compares the artifact to the pinned reference and checks execution authority is
++false. A failure reports a closed error code and fixed phase, plus boolean source
++facts. It does not retry with a resolved path or change admission rules.
++
++Diagnostic facts expose only absolute/canonical-identity equality, all-three-pin
++equality and ordinary-single-link checks; failures expose a bounded class label.
++No path, account, source bytes, exception message or credentials are printed.
++These observations are diagnostics, not a substitute for production admission;
++the production adapter still independently checks ancestry and raw identity.
++
++If calibration succeeds, the observer matches both function name and exact
++copied adapter filename, records entry, then mutates only the owned copy on
++return. Existing mutation assertion remains; the refusal must specifically be
++SOURCE_UNAVAILABLE. The previous profile hook is restored in finally.
++
++Future execution requires a separate allocation. First preserve its original
++result, including calibration refusal if any; do not weaken assertions, suppress
++tests or alter production code based on the path-alias hypothesis. Any later fix
++needs proven cause and exact ownership approval. Rollback: discard this isolated
++uncommitted three-file proposal; baseline889 and hosted47 artifacts are untouched.
+diff --git a/tests/gateway_adapter/support.py b/tests/gateway_adapter/support.py
+index 032368e..51ed6fa 100644
+--- a/tests/gateway_adapter/support.py
++++ b/tests/gateway_adapter/support.py
+@@ -1,5 +1,5 @@
+ """Disposable test support; invokes real pinned Meta pure code, no native service."""
+-import copy,hashlib,importlib.util,json,os,pathlib,sys,types
++import copy,hashlib,importlib.util,json,os,pathlib,stat,sys,types
+ ROOT=pathlib.Path(__file__).resolve().parents[2]
+ PINS={'__init__.py':'70d2201e97a9d8b57973b8328ce7e2938e85096035a867aab8b37b35ee1e1883','core.py':'caa15e51394d3c204ecbcf557cd13ce7a6853b5c8005c4d266971f3f14177170','ohlcv_research_adapter.py':'39b165c945f4d5c00fdf96c460d9bf4e34a32c9cb30483d9be6d88f45403a90f'}
+ def canonical(value):return json.dumps(value,sort_keys=True,separators=(',',':'),allow_nan=False).encode()
+@@ -43,3 +43,36 @@ def copy_source(target):
+  folder=pathlib.Path(target)/'src/meta_analyse';folder.mkdir(parents=True)
+  for name in PINS:(folder/name).write_bytes((source_root()/'src/meta_analyse'/name).read_bytes())
+  return pathlib.Path(target)
++
++def copied_source_admission_diagnostics(root):
++ """Closed facts only: never include paths, source bytes or exception messages."""
++ result={'schema':'gateway.copied-source-admission.v1','stage':'START',
++         'absolute':False,'canonical_identity_equal':False,'pins_match':False,
++         'ordinary_single_link_files':False,'ordinary_ancestry':False,'error_class':'NONE'}
++ try:
++  result['stage']='ROOT_IDENTITY';result['absolute']=root.is_absolute()
++  result['stage']='ANCESTRY';package=root/'src/meta_analyse'
++  for p in (*reversed(root.parents),root,root/'src',package):
++   info=p.lstat()
++   if not stat.S_ISDIR(info.st_mode) or stat.S_ISLNK(info.st_mode) or (getattr(info,'st_file_attributes',0)&1024):return result
++  result['ordinary_ancestry']=True
++  result['stage']='CANONICAL_IDENTITY'
++  result['canonical_identity_equal']=root.resolve()==root.absolute()
++  result['stage']='PINNED_FILES'
++  checks=[];ordinary=[]
++  for name,pin in PINS.items():
++   p=package/name;info=p.lstat()
++   safe=stat.S_ISREG(info.st_mode) and not stat.S_ISLNK(info.st_mode) and info.st_nlink==1 and not (getattr(info,'st_file_attributes',0)&1024) and info.st_size<=1048576
++   ordinary.append(safe)
++   if not safe:return result
++   with p.open('rb') as stream:
++    opened=os.fstat(stream.fileno())
++    if (opened.st_dev,opened.st_ino)!=(info.st_dev,info.st_ino) or opened.st_nlink!=1:return result
++    raw=stream.read(1048577)
++   checks.append(sha(raw)==pin)
++  result['pins_match']=all(checks);result['ordinary_single_link_files']=all(ordinary)
++  result['stage']='COMPLETE'
++ except (OSError,ValueError,RuntimeError) as exc:
++  result['error_class']=type(exc).__name__ if type(exc).__name__ in (
++   'OSError','FileNotFoundError','PermissionError','ValueError','RuntimeError') else 'OTHER_CLOSED_ERROR'
++ return result
+diff --git a/tests/gateway_adapter/test_gateway_adapter.py b/tests/gateway_adapter/test_gateway_adapter.py
+index 067a747..5fb3a51 100644
+--- a/tests/gateway_adapter/test_gateway_adapter.py
++++ b/tests/gateway_adapter/test_gateway_adapter.py
+@@ -1,6 +1,6 @@
+ """Focused actual-Meta synthetic calculation; no signature/authority mocks."""
+ import copy,json,pathlib,sys,tempfile,types,unittest
+-from support import canonical,sha,request,reference,source_root,load_adapter,copy_source
++from support import canonical,sha,request,reference,source_root,load_adapter,copy_source,copied_source_admission_diagnostics
+ EXPECTED=[('low','8',0),('low','9',60000),('high','12',120000),('low','10',120000)]
+ 
+ class ExistingMetaReferenceTests(unittest.TestCase):
+@@ -100,13 +100,31 @@ class GatewayAdapterTests(unittest.TestCase):
+    else:sys.modules[name]=previous
+  def test_source_changed_after_calculation_refused(self):
+   with tempfile.TemporaryDirectory() as directory:
+-   root=copy_source(directory);state={'changed':False};old=sys.getprofile()
++   root=copy_source(directory)
++   facts=copied_source_admission_diagnostics(root)
++   # The SAME copy must calculate successfully before testing its later mutation.
++   # Do not resolve/rewrite this path to bypass a production admission refusal.
++   try:calibration=self.execute(root=root)
++   except self.m.GatewayResearchError as exc:
++    code=exc.code if exc.code in ('SOURCE_UNAVAILABLE','INVALID_REQUEST','INVALID_OHLCV','RESULT_UNAVAILABLE') else 'OTHER_CLOSED_CODE'
++    raise self.failureException(json.dumps({'phase':'COPY_POSITIVE_CALIBRATION','code':code,'facts':facts},sort_keys=True)) from None
++   except Exception:
++    raise self.failureException(json.dumps({'phase':'COPY_POSITIVE_CALIBRATION','code':'UNEXPECTED_CLOSED_ERROR','facts':facts},sort_keys=True)) from None
++   self.assertEqual(calibration['artifact_bytes'],canonical(reference(request())))
++   self.assertFalse(calibration['descriptor']['execution_authority'])
++   state={'changed':False,'entered_meta':False};old=sys.getprofile()
+    def observer(frame,event,arg):
+-    if event=='return' and frame.f_code.co_name=='analyze_ohlcv_research' and not state['changed']:
++    actual=frame.f_code.co_name=='analyze_ohlcv_research' and frame.f_code.co_filename==str(root/'src/meta_analyse/ohlcv_research_adapter.py')
++    if actual and event=='call':state['entered_meta']=True
++    if actual and event=='return' and not state['changed']:
+      p=root/'src/meta_analyse/core.py';p.write_bytes(p.read_bytes()+b'\n# changed during calculation\n');state['changed']=True
+    try:
+-    sys.setprofile(observer);self.refused(root=root)
++    sys.setprofile(observer)
++    with self.assertRaises(self.m.GatewayResearchError) as refused:self.execute(root=root)
+    finally:sys.setprofile(old)
+-   self.assertTrue(state['changed'])
++   diagnostic=json.dumps({'phase':'MUTATION_REFUSAL','entered_meta':state['entered_meta'],
++                          'changed':state['changed'],'facts':facts},sort_keys=True)
++   self.assertTrue(state['changed'],diagnostic)
++   self.assertEqual(refused.exception.code,'SOURCE_UNAVAILABLE',diagnostic)
+ 
+ if __name__=='__main__':unittest.main()
