@@ -1,0 +1,123 @@
+--- beforedff/controller.py
++++ after/controller.py
+@@ -75,6 +75,7 @@
+  record={'schema':'math572.compile7.proposal.v1','result':'DENY','errors':[],'source_head':m['head'],'source_tree':m['tree'],'native_runtime_admission':False,'output_cap':CAP,'observed_process_seconds_bound':10,'separate_cleanup_seconds_bound':5,'creation_intent':False,'child':None,'job_assigned_before_resume':False,'descendant_limit':1,'compiler_argv':argv,'startup_class':'UNKNOWN','source_post_equal':False}
+  job=None;hp=None;ht=None;nul=None;read_handles=[];write_handles=[];threads=[];reader_attempts=set();write_attempts=set();writes_closed=set()
+  stopped=threading.Event();overflow=threading.Event();watch_done=threading.Event();lock=threading.Lock();buffers={'stdout':bytearray(),'stderr':bytearray()};total=[0];start=None;exit_code=None;uncertain=False
++ reader_state={name:{'started':False,'eof':False,'read_failed':False,'close_ok':False,'close_failed':False,'retired':False,'log_written':False} for name in buffers}
+  def error(code):
+   with lock:record['errors'].append(code)
+  def terminate_owned():
+@@ -83,31 +84,45 @@
+     if not k.TerminateJobObject(job,197):error('JOB_TERMINATE_FAILURE')
+    except BaseException:error('JOB_TERMINATE_EXCEPTION')
+   if hp is not None:
+-   try:
+-    if _winapi.WaitForSingleObject(hp,0)!=0:_winapi.TerminateProcess(hp,198)
+-   except BaseException:error('PROCESS_TERMINATE_FAILURE')
++   needs_termination=True
++   try:
++    status=_winapi.WaitForSingleObject(hp,0)
++    if status==0:needs_termination=False
++    elif status!=258:error('PROCESS_POLL_UNKNOWN')
++   except BaseException:error('PROCESS_POLL_FAILURE')
++   if needs_termination:
++    try:_winapi.TerminateProcess(hp,198)
++    except BaseException:error('PROCESS_TERMINATE_FAILURE')
+  def watchdog():
+   try:
+    if not watch_done.wait(max(0,10-(time.monotonic()-start))):error('WATCHDOG_DEADLINE');terminate_owned()
+   except BaseException:error('WATCHDOG_FAILURE');terminate_owned()
+  def reader(handle,name):
+   stream=None
++  with lock:reader_state[name]['started']=True
+   try:
+    stream=os.fdopen(msvcrt.open_osfhandle(handle,os.O_RDONLY|os.O_BINARY),'rb',buffering=0)
+    while True:
+     block=stream.read(1024)
+-    if not block:break
++    if not block:
++     with lock:reader_state[name]['eof']=True
++     break
+     with lock:
+      room=max(0,CAP-total[0]);total[0]+=len(block);buffers[name].extend(block[:room])
+      if total[0]>CAP:overflow.set()
+-  except BaseException:error('READER_FAILURE');overflow.set()
++  except BaseException:
++   with lock:reader_state[name]['read_failed']=True
++   error('READER_FAILURE');overflow.set()
+   finally:
+    try:
+     if stream is not None:stream.close()
+     else:_winapi.CloseHandle(handle)
+-   except BaseException:error('READER_CLOSE_FAILURE')
++    with lock:reader_state[name]['close_ok']=True
++   except BaseException:
++    with lock:reader_state[name]['close_failed']=True
++    error('READER_CLOSE_FAILURE')
+  def start_thread(function,args=()):
+-  entry={'thread':threading.Thread(target=function,args=args,daemon=True),'outcome':'UNKNOWN'};threads.append(entry)
++  entry={'thread':threading.Thread(target=function,args=args,daemon=True),'outcome':'UNKNOWN','reader_name':args[1] if function is reader else None};threads.append(entry)
+   try:entry['thread'].start();entry['outcome']='STARTED'
+   except BaseException:
+    error('THREAD_START_FAILURE')
+@@ -180,6 +195,7 @@
+    except BaseException:error('THREAD_JOIN_FAILURE');uncertain=True
+    try:
+     if entry['thread'].is_alive():error('THREAD_RETIREMENT_UNKNOWN');uncertain=True
++    elif entry['reader_name'] is not None:reader_state[entry['reader_name']]['retired']=True
+    except BaseException:error('THREAD_STATE_UNKNOWN');uncertain=True
+   record['cleanup_uncertain']=uncertain
+   if not uncertain:
+@@ -190,10 +206,12 @@
+   record['cleanup_observed_seconds']=5-max(0,deadline-time.monotonic())
+   if time.monotonic()>=deadline:error('CLEANUP_DEADLINE')
+   record['logs']={}
+-  for name,data in buffers.items():
++  with lock:captured={name:bytes(data) for name,data in buffers.items()}
++  for name,data in captured.items():
+    try:
+     with (OUT/(name+'.original.bin')).open('xb') as f:f.write(data)
+     record['logs'][name]={'bytes':len(data),'sha256':hashlib.sha256(data).hexdigest()}
++    reader_state[name]['log_written']=True
+    except BaseException:error('ORIGINAL_LOG_WRITE_FAILURE')
+   record['generated_output_present']=False
+   if not uncertain:
+@@ -213,16 +231,31 @@
+    record['actual_compiler_input_copies_post_equal']=True
+   except BaseException:error('COMPILER_INPUT_COPY_DRIFT')
+   if overflow.is_set():error('OUTPUT_CAP')
+-  text=(bytes(buffers['stdout'])+b'\n'+bytes(buffers['stderr'])).decode('utf-8',errors='replace')
+-  diagnostics=[{'source_ordinal':int(a),'line':int(b),'column':int(c),'kind':d,'code':e} for a,b,c,d,e in re.findall(r'\bS(\d{2})\.cs\((\d+),(\d+)\):\s*(error|warning)\s*(CS\d{4})',text)]
++  try:text=(captured['stdout']+b'\n'+captured['stderr']).decode('utf-8',errors='strict')
++  except UnicodeDecodeError:error('COMPILER_OUTPUT_ENCODING');text=''
++  diagnostics=[];allowed_output=True;expected_missing=False;unadmitted_lines=0
++  allowed_pairs={('CS0246','OwnedPrivateDesktop'),('CS0246','PrivateDesktopException'),('CS0103','HostedPrivateDesktop')}
++  for line in text.splitlines():
++   if not line.strip():continue
++   match=re.fullmatch(r'(?:.*[\\/])?S(\d{2})\.cs\((\d+),(\d+)\):\s*(error|warning)\s*(CS\d{4}):\s*(.*)',line)
++   if match is None:allowed_output=False;unadmitted_lines+=1;continue
++   ordinal,lineno,column,kind,code,message=match.groups();ordinal=int(ordinal)
++   diagnostics.append({'source_ordinal':ordinal,'line':int(lineno),'column':int(column),'kind':kind,'code':code})
++   pairs=[pair for pair in allowed_pairs if pair[0]==code and re.search(r'\b'+pair[1]+r'\b',message)]
++   admitted=ordinal==3 and kind=='error' and len(pairs)==1
++   if not admitted:allowed_output=False;unadmitted_lines+=1
++   if admitted and code=='CS0246':expected_missing=True
+   record['closed_diagnostics']=diagnostics
+-  record['original_logs_complete']=not overflow.is_set() and not uncertain
+-  expected_missing=any(re.search(r'\bS03\.cs\(\d+,\d+\):\s*error\s*CS0246.*\b'+symbol+r'\b',line) for line in text.splitlines() for symbol in ('OwnedPrivateDesktop','PrivateDesktopException'))
++  record['unadmitted_nonempty_output_lines']=unadmitted_lines
++  record['diagnostic_set_admitted']=bool(diagnostics) and allowed_output and expected_missing
++  with lock:record['reader_states']={name:dict(state) for name,state in reader_state.items()}
++  record['original_logs_complete']=not overflow.is_set() and not uncertain and len(record['logs'])==2 and all(state['started'] and state['eof'] and state['close_ok'] and state['retired'] and state['log_written'] and not state['read_failed'] and not state['close_failed'] for state in record['reader_states'].values())
+   if exit_code in (0xC0000142,0xC0000135,0xC000007B):record['startup_class']='NATIVE_STARTUP_FAILURE_UNKNOWN_CAUSE'
+-  elif exit_code==1 and expected_missing:record['startup_class']='COMPILER_MISSING_TYPE_DIAGNOSTIC_OBSERVED'
++  elif exit_code==1 and record['diagnostic_set_admitted']:record['startup_class']='COMPILER_MISSING_TYPE_DIAGNOSTIC_OBSERVED'
++  elif expected_missing:record['startup_class']='UNKNOWN_MIXED_OR_UNADMITTED_COMPILER_OUTPUT'
+   elif exit_code==0:record['startup_class']='UNEXPECTED_COMPILE_SUCCESS'
+   else:record['startup_class']='UNKNOWN_OTHER_COMPILER_OR_STARTUP_FAILURE'
+-  if not record['errors'] and not uncertain and record['job_assigned_before_resume'] and record['startup_class']=='COMPILER_MISSING_TYPE_DIAGNOSTIC_OBSERVED':record['result']='EXPECTED_COMPILE_DIAGNOSTIC_OBSERVED_NOT_RUNTIME_PASS'
++  if not record['errors'] and not uncertain and record['original_logs_complete'] and record['job_assigned_before_resume'] and record['startup_class']=='COMPILER_MISSING_TYPE_DIAGNOSTIC_OBSERVED':record['result']='EXPECTED_COMPILE_DIAGNOSTIC_OBSERVED_NOT_RUNTIME_PASS'
+   record['whole_wallclock_claim']=False
+   try:
+    with (OUT/'receipt.json').open('x',encoding='utf-8') as f:json.dump(record,f,indent=2);f.write('\n')

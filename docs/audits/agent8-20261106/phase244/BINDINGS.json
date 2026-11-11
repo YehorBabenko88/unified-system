@@ -1,0 +1,41 @@
+{
+  "schema": "math572.compile7.modeled11.bindings.v1",
+  "scope": "INERT_SOURCE_CONTROLS_NOT_COMPILER",
+  "profiles": {
+    "old": {
+      "path": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-7-distributed-research-math\\outputs\\math572_compile7_controller_review1.py",
+      "bytes": 15098,
+      "sha256": "dff93058aa9c97e776c7febb3d354cbf5502da4995e92340aa383fdc65b40494"
+    },
+    "candidate": {
+      "path": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-7-distributed-research-math\\outputs\\math572_compile7_controller_review2.py",
+      "bytes": 17235,
+      "sha256": "444c32b8456fa1c42e1504a96e5a2882b29c3a832368671aba813b4f2d3477d2"
+    }
+  },
+  "control": {
+    "path": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-7-distributed-research-math\\outputs\\math572-compile7-modeled11-source-20261111\\controls-541991.py",
+    "bytes": 8771,
+    "sha256": "541991f4d3bb92daf0c705b9551f7e52b87adb5e66c004b73c48a13993c73c4a"
+  },
+  "runtime": {
+    "path": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-7-distributed-research-math\\outputs\\gateway-one-case-runtime841-review1.json",
+    "bytes": 129713,
+    "sha256": "cf6c3a323a56096bdbfbc6e4de91823cffa286d46ca410572067cabb632c99c1"
+  },
+  "case_ids": [
+    "owned_compile7_controls.TerminationControls.test_unknown_poll_unassigned_child_still_direct_termination",
+    "owned_compile7_controls.TerminationControls.test_poll_and_kill_failure_still_reaches_actual_independent_wait",
+    "owned_compile7_controls.TerminationControls.test_retired_child_control_avoids_direct_termination",
+    "owned_compile7_controls.CompilerPolicyControls.test_expected_only_control_is_diagnostic_not_runtime_pass",
+    "owned_compile7_controls.CompilerPolicyControls.test_expected_plus_unrelated_error_is_unknown",
+    "owned_compile7_controls.CompilerPolicyControls.test_unknown_symbol_and_warning_are_denied",
+    "owned_compile7_controls.CompilerPolicyControls.test_native_startup_cannot_be_missing_type_result",
+    "owned_compile7_controls.LogCompletenessControls.test_actual_reader_failure_never_claims_complete_logs",
+    "owned_compile7_controls.LogCompletenessControls.test_actual_reader_close_failure_never_claims_complete_logs",
+    "owned_compile7_controls.LogCompletenessControls.test_missing_eof_retirement_or_log_write_never_complete",
+    "owned_compile7_controls.LogCompletenessControls.test_missing_evidence_member_never_complete"
+  ],
+  "reference_custody_sha256": "19353016fad469dc625176989ee1f66436cf9cefba5d654e2764395d5a99ef16",
+  "source_seal509e_unchanged": "509e10b89ae35b5ef3c38c473cdbb6de192387c5161d4a4020a428944fba7a0e"
+}
