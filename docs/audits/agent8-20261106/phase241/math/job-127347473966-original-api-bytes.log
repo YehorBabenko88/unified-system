@@ -1,0 +1,376 @@
+﻿2026-11-05T16:13:53.9736191Z Current runner version: '2.338.2'
+2026-11-05T16:13:53.9772149Z ##[group]Runner Image Provisioner
+2026-11-05T16:13:53.9773440Z Hosted Compute Agent
+2026-11-05T16:13:53.9774318Z Version: 20261021.618
+2026-11-05T16:13:53.9775382Z Commit: 21505ad2541d5be6135ed84fc33697146cf75b8e
+2026-11-05T16:13:53.9776581Z Build Date: 2026-10-21T00:45:21Z
+2026-11-05T16:13:53.9777785Z Worker ID: {137aea19-6ba2-4d14-ae28-1f0f20e22e43}
+2026-11-05T16:13:53.9779058Z Region: eastus
+2026-11-05T16:13:53.9779859Z Cloud: Azure
+2026-11-05T16:13:53.9780791Z ##[endgroup]
+2026-11-05T16:13:53.9782907Z ##[group]Operating System
+2026-11-05T16:13:53.9784060Z Microsoft Windows Server 2025
+2026-11-05T16:13:53.9785127Z 10.0.26100
+2026-11-05T16:13:53.9785940Z Datacenter
+2026-11-05T16:13:53.9787289Z ##[endgroup]
+2026-11-05T16:13:53.9788121Z ##[group]Runner Image
+2026-11-05T16:13:53.9789148Z Image: windows-2025-vs2026
+2026-11-05T16:13:53.9790243Z Version: 20261030.294.1
+2026-11-05T16:13:53.9792622Z Included Software: https://github.com/actions/runner-images/blob/win25-vs2026/20261030.294/images/windows/Windows2025-VS2026-Readme.md
+2026-11-05T16:13:53.9795714Z Image Release: https://github.com/actions/runner-images/releases/tag/win25-vs2026%2F20261030.294
+2026-11-05T16:13:53.9797542Z ##[endgroup]
+2026-11-05T16:13:53.9799255Z ##[group]GITHUB_TOKEN Permissions
+2026-11-05T16:13:53.9801821Z Contents: read
+2026-11-05T16:13:53.9802770Z Metadata: read
+2026-11-05T16:13:53.9803620Z ##[endgroup]
+2026-11-05T16:13:53.9806917Z Secret source: Actions
+2026-11-05T16:13:53.9808372Z Cache mode: write
+2026-11-05T16:13:53.9809577Z Prepare workflow directory
+2026-11-05T16:13:54.0284470Z Prepare all required actions
+2026-11-05T16:13:54.0362676Z Getting action download info
+2026-11-05T16:13:54.2032669Z Download action repository 'actions/checkout@11d5960a326750d5838078e36cf38b85af677262' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-11-05T16:13:54.3575498Z Download action repository 'actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+2026-11-05T16:13:54.5657742Z Download action repository 'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-11-05T16:13:54.9740074Z Complete job name: Disposable Windows / Framework / actual Medium token
+2026-11-05T16:13:55.2139765Z ##[group]Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+2026-11-05T16:13:55.2141333Z with:
+2026-11-05T16:13:55.2141855Z   persist-credentials: false
+2026-11-05T16:13:55.2142462Z   repository: YehorBabenko88/math
+2026-11-05T16:13:55.2148775Z   token: ***
+2026-11-05T16:13:55.2149251Z   ssh-strict: true
+2026-11-05T16:13:55.2149982Z   ssh-user: git
+2026-11-05T16:13:55.2150483Z   clean: true
+2026-11-05T16:13:55.2150975Z   sparse-checkout-cone-mode: true
+2026-11-05T16:13:55.2151569Z   fetch-depth: 1
+2026-11-05T16:13:55.2152288Z   fetch-tags: false
+2026-11-05T16:13:55.2153294Z   show-progress: true
+2026-11-05T16:13:55.2153715Z   lfs: false
+2026-11-05T16:13:55.2154402Z   submodules: false
+2026-11-05T16:13:55.2154890Z   set-safe-directory: true
+2026-11-05T16:13:55.2155365Z   allow-unsafe-pr-checkout: false
+2026-11-05T16:13:55.2156122Z ##[endgroup]
+2026-11-05T16:13:55.3974712Z Syncing repository: YehorBabenko88/math
+2026-11-05T16:13:55.3979804Z ##[group]Getting Git version info
+2026-11-05T16:13:55.3981662Z Working directory is 'D:\a\math\math'
+2026-11-05T16:13:55.5062149Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-05T16:13:56.4108328Z git version 2.56.0.windows.4
+2026-11-05T16:13:56.4259878Z ##[endgroup]
+2026-11-05T16:13:56.4271434Z Temporarily overriding HOME='D:\a\_temp\d822d99d-390b-4474-a130-4ddf37bb326a' before making global git config changes
+2026-11-05T16:13:56.4275642Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-05T16:13:56.4278835Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\math\math
+2026-11-05T16:13:56.4993837Z Deleting the contents of 'D:\a\math\math'
+2026-11-05T16:13:56.5000306Z ##[group]Initializing the repository
+2026-11-05T16:13:56.5009235Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\math\math
+2026-11-05T16:13:56.6007998Z Initialized empty Git repository in D:/a/math/math/.git/
+2026-11-05T16:13:56.6054646Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/YehorBabenko88/math
+2026-11-05T16:13:56.6745572Z ##[endgroup]
+2026-11-05T16:13:56.6747795Z ##[group]Disabling automatic garbage collection
+2026-11-05T16:13:56.6753115Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2026-11-05T16:13:56.7168604Z ##[endgroup]
+2026-11-05T16:13:56.7171058Z ##[group]Setting up auth
+2026-11-05T16:13:56.7181233Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-05T16:13:56.7556095Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-05T16:13:58.3536535Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-05T16:13:58.3900981Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-05T16:13:59.0030964Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-05T16:13:59.0414029Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-05T16:13:59.5930109Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-11-05T16:13:59.6302442Z ##[endgroup]
+2026-11-05T16:13:59.6303305Z ##[group]Fetching the repository
+2026-11-05T16:13:59.6314927Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +5d7d2c87ef048ba09c7bf10a140db7f6653f828e:refs/remotes/pull/110/merge
+2026-11-05T16:14:00.7460289Z From https://github.com/YehorBabenko88/math
+2026-11-05T16:14:00.7461302Z  * [new ref]         5d7d2c87ef048ba09c7bf10a140db7f6653f828e -> pull/110/merge
+2026-11-05T16:14:00.7492747Z ##[endgroup]
+2026-11-05T16:14:00.7493396Z ##[group]Determining the checkout info
+2026-11-05T16:14:00.7495912Z ##[endgroup]
+2026-11-05T16:14:00.7506008Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2026-11-05T16:14:00.8040294Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2026-11-05T16:14:00.8426852Z ##[group]Checking out the ref
+2026-11-05T16:14:00.8435444Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force refs/remotes/pull/110/merge
+2026-11-05T16:14:01.1022122Z Note: switching to 'refs/remotes/pull/110/merge'.
+2026-11-05T16:14:01.1022441Z 
+2026-11-05T16:14:01.1022648Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-11-05T16:14:01.1023189Z changes and commit them, and you can discard any commits you make in this
+2026-11-05T16:14:01.1024310Z state without impacting any branches by switching back to a branch.
+2026-11-05T16:14:01.1024808Z 
+2026-11-05T16:14:01.1026504Z If you want to create a new branch to retain commits you create, you may
+2026-11-05T16:14:01.1027408Z do so (now or later) by using -c with the switch command. Example:
+2026-11-05T16:14:01.1027867Z 
+2026-11-05T16:14:01.1028034Z   git switch -c <new-branch-name>
+2026-11-05T16:14:01.1028319Z 
+2026-11-05T16:14:01.1028473Z Or undo this operation with:
+2026-11-05T16:14:01.1028763Z 
+2026-11-05T16:14:01.1028902Z   git switch -
+2026-11-05T16:14:01.1029088Z 
+2026-11-05T16:14:01.1029452Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-11-05T16:14:01.1031303Z 
+2026-11-05T16:14:01.1031994Z HEAD is now at 5d7d2c8 Merge 5721987a15d20c3f9984d52eac4446704566d4b9 into 191a119b8a00e97d61549280f9dcbe5ae9f3a7cd
+2026-11-05T16:14:01.1111801Z ##[endgroup]
+2026-11-05T16:14:01.1598391Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2026-11-05T16:14:01.1936332Z 5d7d2c87ef048ba09c7bf10a140db7f6653f828e
+2026-11-05T16:14:01.1974437Z ##[group]Removing auth
+2026-11-05T16:14:01.1982658Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-05T16:14:01.2342208Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-05T16:14:01.7975548Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-05T16:14:01.8296756Z http.https://github.com/.extraheader
+2026-11-05T16:14:01.8334966Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+2026-11-05T16:14:01.8707541Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-05T16:14:02.4090789Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-05T16:14:02.4452695Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-05T16:14:03.0137115Z ##[endgroup]
+2026-11-05T16:14:03.0561055Z ##[group]Run actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+2026-11-05T16:14:03.0561499Z with:
+2026-11-05T16:14:03.0561680Z   node-version: 24
+2026-11-05T16:14:03.0561903Z   always-auth: false
+2026-11-05T16:14:03.0562098Z   check-latest: false
+2026-11-05T16:14:03.0564643Z   token: ***
+2026-11-05T16:14:03.0564819Z ##[endgroup]
+2026-11-05T16:14:03.2433664Z Found in cache @ C:\hostedtoolcache\windows\node\24.22.2\x64
+2026-11-05T16:14:03.2440675Z (node:724) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-05T16:14:03.2441549Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-05T16:14:03.2444069Z ##[group]Environment details
+2026-11-05T16:14:08.5685409Z node: v24.22.2
+2026-11-05T16:14:08.5685770Z npm: 11.19.1
+2026-11-05T16:14:08.5686041Z yarn: 1.22.22
+2026-11-05T16:14:08.5686670Z ##[endgroup]
+2026-11-05T16:14:08.6013102Z ##[group]Run & powershell -NoProfile -File scripts/adminit-containment/build-hosted.ps1 -OutputRoot "$env:RUNNER_TEMP/adminit-build" -ExpectedHead '5d7d2c87ef048ba09c7bf10a140db7f6653f828e'
+2026-11-05T16:14:08.6014986Z [36;1m& powershell -NoProfile -File scripts/adminit-containment/build-hosted.ps1 -OutputRoot "$env:RUNNER_TEMP/adminit-build" -ExpectedHead '5d7d2c87ef048ba09c7bf10a140db7f6653f828e'[0m
+2026-11-05T16:14:08.6016117Z [36;1mexit $LASTEXITCODE[0m
+2026-11-05T16:14:08.6784111Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-05T16:14:08.6784530Z ##[endgroup]
+2026-11-05T16:14:11.9071137Z BUILD_INPUTS_COMMITTED_REGULAR
+2026-11-05T16:15:03.4885038Z PRIVATE_DESKTOP_MODEL checks=420 native=NOT_RUN qualification=NONE
+2026-11-05T16:15:35.0827261Z MANIFEST_SHA256=b3a52e575e038a757418de8bb3197572940fd8582a4efa4ed19072df3531d367
+2026-11-05T16:15:35.1900882Z ##[group]Run $package = Join-Path $env:RUNNER_TEMP 'adminit-build/package'
+2026-11-05T16:15:35.1901511Z [36;1m$package = Join-Path $env:RUNNER_TEMP 'adminit-build/package'[0m
+2026-11-05T16:15:35.1902258Z [36;1m$manifest = (Get-FileHash "$package/package.json").Hash.ToLowerInvariant()[0m
+2026-11-05T16:15:35.1902779Z [36;1m$tree = git --no-replace-objects rev-parse 'HEAD^{tree}'[0m
+2026-11-05T16:15:35.1903448Z [36;1mif ($LASTEXITCODE -ne 0) { throw 'source tree unavailable' }[0m
+2026-11-05T16:15:35.1904085Z [36;1mnode scripts/adminit-containment/package.mjs $package $manifest '5d7d2c87ef048ba09c7bf10a140db7f6653f828e' $tree[0m
+2026-11-05T16:15:35.1904875Z [36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }[0m
+2026-11-05T16:15:35.1906876Z [36;1m@{sourceHead='5d7d2c87ef048ba09c7bf10a140db7f6653f828e';sourceTree=(git --no-replace-objects rev-parse 'HEAD^{tree}');manifestSha256=$manifest;runtime='Windows PowerShell5.1 Add-Type / .NET Framework';localExecution='BLOCKED_PENDING_ISOLATION_REVIEW'} | ConvertTo-Json | Set-Content "$env:RUNNER_TEMP/adminit-build/build-identity.json"[0m
+2026-11-05T16:15:35.1985448Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-05T16:15:35.1985805Z ##[endgroup]
+2026-11-05T16:15:35.7557618Z {"sourceHead":"5d7d2c87ef048ba09c7bf10a140db7f6653f828e","sourceTree":"4dfced3be2ee08fa8a33cead814bb0b92bc5bdcd","manifestSha256":"b3a52e575e038a757418de8bb3197572940fd8582a4efa4ed19072df3531d367","executableSha256":"2a37ed57f20466ed7bd1edb49db4b78da8c997d6f6735d8229ea69265b48c4a0","localExecution":"BLOCKED_PENDING_ISOLATION_REVIEW","evidence":"point-in-time file identity only, not isolation or independent attestation","qualification":"SOURCE_TREE_BOUND_ONLY","execution":"DENIED"}
+2026-11-05T16:15:35.9053192Z ##[group]Run $env:SOURCE_HEAD = '5d7d2c87ef048ba09c7bf10a140db7f6653f828e'
+2026-11-05T16:15:35.9053817Z [36;1m$env:SOURCE_HEAD = '5d7d2c87ef048ba09c7bf10a140db7f6653f828e'[0m
+2026-11-05T16:15:35.9054300Z [36;1m$env:SOURCE_TREE = git --no-replace-objects rev-parse 'HEAD^{tree}'[0m
+2026-11-05T16:15:35.9054790Z [36;1mif ($LASTEXITCODE -ne 0) { throw 'source tree unavailable' }[0m
+2026-11-05T16:15:35.9055231Z [36;1m$build = Join-Path $env:RUNNER_TEMP 'adminit-build'[0m
+2026-11-05T16:15:35.9055620Z [36;1m$run = Join-Path $env:RUNNER_TEMP 'adminit-native'[0m
+2026-11-05T16:15:35.9056011Z [36;1m$exe = Join-Path $build 'HostedMediumLauncher.exe'[0m
+2026-11-05T16:15:35.9056405Z [36;1m$fixtureArguments = '"' + "$build/package" + '" "' + $run + '"'[0m
+2026-11-05T16:15:35.9057425Z [36;1m$owner = Start-Process -FilePath $exe -ArgumentList $fixtureArguments -PassThru -WindowStyle Hidden -RedirectStandardOutput "$build/bootstrap-stdout.txt" -RedirectStandardError "$build/bootstrap-stderr.txt"[0m
+2026-11-05T16:15:35.9058306Z [36;1mtry {[0m
+2026-11-05T16:15:35.9058497Z [36;1m  $handle = $owner.Handle[0m
+2026-11-05T16:15:35.9058762Z [36;1m  if (-not $owner.WaitForExit(150000)) {[0m
+2026-11-05T16:15:35.9059262Z [36;1m    try { $owner.Kill() } catch { throw 'independent watchdog kill failed: BLOCKED; cleanup unconfirmed' }[0m
+2026-11-05T16:15:35.9060049Z [36;1m    if (-not $owner.WaitForExit(5000) -or -not $owner.HasExited) {[0m
+2026-11-05T16:15:35.9084511Z [36;1m      throw 'independent watchdog cleanup unconfirmed: BLOCKED; descendant status unknown'[0m
+2026-11-05T16:15:35.9085321Z [36;1m    }[0m
+2026-11-05T16:15:35.9085827Z [36;1m    throw 'independent whole-fixture watchdog expired: BLOCKED, never PASS'[0m
+2026-11-05T16:15:35.9086470Z [36;1m  }[0m
+2026-11-05T16:15:35.9088234Z [36;1m  @{pid=$owner.Id;handle=([long]$handle).ToString('x');exitCode=$owner.ExitCode;exited=$owner.HasExited;scope='process handle only; no named inner job handle held by observer'} | ConvertTo-Json | Set-Content "$build/bootstrap-process.json"[0m
+2026-11-05T16:15:35.9090398Z [36;1m  # Do not echo raw bootstrap streams into public Actions logs.[0m
+2026-11-05T16:15:35.9091180Z [36;1m  Write-Output "HOSTED_BOOTSTRAP_EXIT_RECORDED"[0m
+2026-11-05T16:15:35.9092591Z [36;1m  if ($owner.ExitCode -ne 0) { node scripts/adminit-containment/report-bootstrap-phase.mjs "$build/bootstrap-stdout.txt" }[0m
+2026-11-05T16:15:35.9093392Z [36;1m  if ($owner.ExitCode -ne 0) { throw "native fixture FAIL/BLOCKED exit $($owner.ExitCode)" }[0m
+2026-11-05T16:15:35.9093844Z [36;1m} finally {[0m
+2026-11-05T16:15:35.9094360Z [36;1m  $owner.Dispose()[0m
+2026-11-05T16:15:35.9094576Z [36;1m}[0m
+2026-11-05T16:15:35.9094970Z [36;1mnode scripts/adminit-containment/verify-native.mjs $run $env:SOURCE_HEAD $env:SOURCE_TREE[0m
+2026-11-05T16:15:35.9095434Z [36;1mexit $LASTEXITCODE[0m
+2026-11-05T16:15:35.9171320Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-05T16:15:35.9171722Z ##[endgroup]
+2026-11-05T16:15:36.7740949Z HOSTED_BOOTSTRAP_EXIT_RECORDED
+2026-11-05T16:15:36.8392269Z HOSTED_CHILD_DESKTOP handle_available=false access_available=false allowed=false label_available=false label=UNAVAILABLE no_write_up=false no_read_up=false no_execute_up=false access_class=HANDLE_UNAVAILABLE label_class=HANDLE_UNAVAILABLE
+2026-11-05T16:15:36.8395597Z HOSTED_TOKEN_FACT name=PARENT available=true integrity=HIGH elevation=DEFAULT kind=PRIMARY restricted=false admin_enabled=true admin_deny_only=false same_user=true same_session=true
+2026-11-05T16:15:36.8398365Z HOSTED_TOKEN_FACT name=LIMITED available=true integrity=MEDIUM elevation=DEFAULT kind=PRIMARY restricted=true admin_enabled=false admin_deny_only=true same_user=true same_session=true
+2026-11-05T16:15:36.8400969Z HOSTED_TOKEN_EXTRA name=PARENT available=true change_notify_present=true change_notify_enabled=true logon_present=true logon_enabled=true same_logon=true restricting_sid_count=0
+2026-11-05T16:15:36.8407170Z HOSTED_TOKEN_EXTRA name=LIMITED available=true change_notify_present=true change_notify_enabled=true logon_present=true logon_enabled=true same_logon=true restricting_sid_count=0
+2026-11-05T16:15:36.8410263Z HOSTED_TOKEN_FACT name=CHILD available=true integrity=MEDIUM elevation=DEFAULT kind=PRIMARY restricted=true admin_enabled=false admin_deny_only=true same_user=true same_session=true
+2026-11-05T16:15:36.8412959Z HOSTED_TOKEN_EXTRA name=CHILD available=true change_notify_present=true change_notify_enabled=true logon_present=true logon_enabled=true same_logon=true restricting_sid_count=0
+2026-11-05T16:15:36.8415245Z HOSTED_RUNTIME_FACT name=SHIM available=true pin_match=true allowed=true label=UNLABELLED no_write_up=false no_read_up=false no_execute_up=false class=NONE
+2026-11-05T16:15:36.8417315Z HOSTED_RUNTIME_FACT name=CLR available=true pin_match=true allowed=true label=UNLABELLED no_write_up=false no_read_up=false no_execute_up=false class=NONE
+2026-11-05T16:15:36.8419312Z HOSTED_RUNTIME_FACT name=JIT available=true pin_match=true allowed=true label=UNLABELLED no_write_up=false no_read_up=false no_execute_up=false class=NONE
+2026-11-05T16:15:36.8421367Z HOSTED_RUNTIME_FACT name=CORELIB available=true pin_match=true allowed=true label=UNLABELLED no_write_up=false no_read_up=false no_execute_up=false class=NONE
+2026-11-05T16:15:36.8422886Z HOSTED_LOADER_EVENT name=CI_3033 available=true pid_matches=0 image_matches=0 class=NONE
+2026-11-05T16:15:36.8423967Z HOSTED_LOADER_EVENT name=CI_3034 available=true pid_matches=0 image_matches=0 class=NONE
+2026-11-05T16:15:36.8425051Z HOSTED_LOADER_EVENT name=CI_3076 available=true pid_matches=0 image_matches=0 class=NONE
+2026-11-05T16:15:36.8426154Z HOSTED_LOADER_EVENT name=CI_3077 available=true pid_matches=0 image_matches=0 class=NONE
+2026-11-05T16:15:36.8427237Z HOSTED_LOADER_EVENT name=CI_3089 available=true pid_matches=0 image_matches=0 class=NONE
+2026-11-05T16:15:36.8428399Z HOSTED_LOADER_EVENT name=APPLOCKER_8002 available=true pid_matches=0 image_matches=0 class=NONE
+2026-11-05T16:15:36.8429898Z HOSTED_LOADER_EVENT name=APPLOCKER_8003 available=true pid_matches=0 image_matches=0 class=NONE
+2026-11-05T16:15:36.8431108Z HOSTED_LOADER_EVENT name=APPLOCKER_8004 available=true pid_matches=0 image_matches=0 class=NONE
+2026-11-05T16:15:36.8432310Z HOSTED_LOADER_EVENT name=DEFENDER_1121 available=true pid_matches=0 image_matches=0 class=NONE
+2026-11-05T16:15:36.8433506Z HOSTED_LOADER_EVENT name=DEFENDER_1122 available=true pid_matches=0 image_matches=0 class=NONE
+2026-11-05T16:15:36.8434774Z HOSTED_LOADER_EVENT name=APPLICATION_1000 available=true pid_matches=0 image_matches=0 class=NONE
+2026-11-05T16:15:36.8437275Z HOSTED_LOADER_EVENT name=APPLICATION_1001 available=true pid_matches=0 image_matches=0 class=NONE
+2026-11-05T16:15:36.8438511Z HOSTED_LOADER_EVENT name=APPLICATION_1026 available=true pid_matches=0 image_matches=0 class=NONE
+2026-11-05T16:15:36.8439419Z HOSTED_BOOTSTRAP_FAILURE phase=CHILD_RESULT
+2026-11-05T16:15:36.8440107Z HOSTED_CHILD_FAILURE class=DLL_INITIALIZATION_FAILED
+2026-11-05T16:15:36.8441033Z HOSTED_ACCESS_PROBE name=PACKAGE_EXE_READ_EXECUTE available=true allowed=true class=NONE
+2026-11-05T16:15:36.8442165Z HOSTED_ACCESS_PROBE name=PACKAGE_ROOT_LIST available=true allowed=true class=NONE
+2026-11-05T16:15:36.8443374Z HOSTED_ACCESS_PROBE name=RUN_PARENT_CREATE_DIR available=true allowed=true class=NONE
+2026-11-05T16:15:36.8444511Z HOSTED_ACCESS_PROBE name=RUN_PARENT_TEMP_WRITE available=true allowed=true class=NONE
+2026-11-05T16:15:36.8445334Z HOSTED_UI_CONTEXT station=INTERACTIVE
+2026-11-05T16:15:36.8446268Z HOSTED_UI_ACCESS_PROBE name=WINSTA_ENUM_DESKTOPS available=true allowed=true class=NONE
+2026-11-05T16:15:36.8447479Z HOSTED_UI_ACCESS_PROBE name=WINSTA_READ_ATTRIBUTES available=true allowed=true class=NONE
+2026-11-05T16:15:36.8448529Z HOSTED_UI_ACCESS_PROBE name=WINSTA_ACCESS_CLIPBOARD available=true allowed=true class=NONE
+2026-11-05T16:15:36.8450845Z HOSTED_UI_ACCESS_PROBE name=WINSTA_CREATE_DESKTOP available=true allowed=true class=NONE
+2026-11-05T16:15:36.8452031Z HOSTED_UI_ACCESS_PROBE name=WINSTA_WRITE_ATTRIBUTES available=true allowed=true class=NONE
+2026-11-05T16:15:36.8453138Z HOSTED_UI_ACCESS_PROBE name=WINSTA_ACCESS_GLOBAL_ATOMS available=true allowed=true class=NONE
+2026-11-05T16:15:36.8454208Z HOSTED_UI_ACCESS_PROBE name=WINSTA_EXIT_WINDOWS available=true allowed=true class=NONE
+2026-11-05T16:15:36.8455204Z HOSTED_UI_ACCESS_PROBE name=WINSTA_ENUMERATE available=true allowed=true class=NONE
+2026-11-05T16:15:36.8456197Z HOSTED_UI_ACCESS_PROBE name=WINSTA_READ_SCREEN available=true allowed=true class=NONE
+2026-11-05T16:15:36.8457224Z HOSTED_UI_ACCESS_PROBE name=WINSTA_GENERIC_ALL available=true allowed=true class=NONE
+2026-11-05T16:15:36.8458208Z HOSTED_UI_ACCESS_PROBE name=DESKTOP_READ_OBJECTS available=true allowed=true class=NONE
+2026-11-05T16:15:36.8459252Z HOSTED_UI_ACCESS_PROBE name=DESKTOP_CREATE_WINDOW available=true allowed=true class=NONE
+2026-11-05T16:15:36.8460419Z HOSTED_UI_ACCESS_PROBE name=DESKTOP_CREATE_MENU available=true allowed=true class=NONE
+2026-11-05T16:15:36.8461468Z HOSTED_UI_ACCESS_PROBE name=DESKTOP_HOOK_CONTROL available=true allowed=true class=NONE
+2026-11-05T16:15:36.8462565Z HOSTED_UI_ACCESS_PROBE name=DESKTOP_JOURNAL_RECORD available=true allowed=true class=NONE
+2026-11-05T16:15:36.8463671Z HOSTED_UI_ACCESS_PROBE name=DESKTOP_JOURNAL_PLAYBACK available=true allowed=true class=NONE
+2026-11-05T16:15:36.8464775Z HOSTED_UI_ACCESS_PROBE name=DESKTOP_ENUMERATE available=true allowed=true class=NONE
+2026-11-05T16:15:36.8465825Z HOSTED_UI_ACCESS_PROBE name=DESKTOP_WRITE_OBJECTS available=true allowed=true class=NONE
+2026-11-05T16:15:36.8466858Z HOSTED_UI_ACCESS_PROBE name=DESKTOP_SWITCH available=true allowed=true class=NONE
+2026-11-05T16:15:36.8467877Z HOSTED_UI_ACCESS_PROBE name=DESKTOP_GENERIC_ALL available=true allowed=true class=NONE
+2026-11-05T16:15:36.8469219Z HOSTED_UI_LABEL name=WINDOW_STATION available=true label=LOW no_write_up=true no_read_up=false no_execute_up=false class=NONE
+2026-11-05T16:15:36.8470762Z HOSTED_UI_LABEL name=DESKTOP available=true label=LOW no_write_up=true no_read_up=false no_execute_up=false class=NONE
+2026-11-05T16:15:36.8472033Z HOSTED_POLICY_PROBE name=OWNED_JOB_UI_HANDLES available=true enabled=false class=NONE
+2026-11-05T16:15:36.8473099Z HOSTED_POLICY_PROBE name=OWNED_JOB_UI_READ_CLIPBOARD available=true enabled=false class=NONE
+2026-11-05T16:15:36.8474300Z HOSTED_POLICY_PROBE name=OWNED_JOB_UI_WRITE_CLIPBOARD available=true enabled=false class=NONE
+2026-11-05T16:15:36.8475898Z HOSTED_POLICY_PROBE name=OWNED_JOB_UI_SYSTEM_PARAMETERS available=true enabled=false class=NONE
+2026-11-05T16:15:36.8477611Z HOSTED_POLICY_PROBE name=OWNED_JOB_UI_DISPLAY_SETTINGS available=true enabled=false class=NONE
+2026-11-05T16:15:36.8478829Z HOSTED_POLICY_PROBE name=OWNED_JOB_UI_GLOBAL_ATOMS available=true enabled=false class=NONE
+2026-11-05T16:15:36.8479955Z HOSTED_POLICY_PROBE name=OWNED_JOB_UI_DESKTOP available=true enabled=false class=NONE
+2026-11-05T16:15:36.8481054Z HOSTED_POLICY_PROBE name=OWNED_JOB_UI_EXIT_WINDOWS available=true enabled=false class=NONE
+2026-11-05T16:15:36.8482203Z HOSTED_POLICY_PROBE name=CALLER_IMMEDIATE_JOB_UI_HANDLES available=true enabled=false class=NONE
+2026-11-05T16:15:36.8483494Z HOSTED_POLICY_PROBE name=CALLER_IMMEDIATE_JOB_UI_READ_CLIPBOARD available=true enabled=false class=NONE
+2026-11-05T16:15:36.8484798Z HOSTED_POLICY_PROBE name=CALLER_IMMEDIATE_JOB_UI_WRITE_CLIPBOARD available=true enabled=false class=NONE
+2026-11-05T16:15:36.8486168Z HOSTED_POLICY_PROBE name=CALLER_IMMEDIATE_JOB_UI_SYSTEM_PARAMETERS available=true enabled=false class=NONE
+2026-11-05T16:15:36.8487573Z HOSTED_POLICY_PROBE name=CALLER_IMMEDIATE_JOB_UI_DISPLAY_SETTINGS available=true enabled=false class=NONE
+2026-11-05T16:15:36.8488902Z HOSTED_POLICY_PROBE name=CALLER_IMMEDIATE_JOB_UI_GLOBAL_ATOMS available=true enabled=false class=NONE
+2026-11-05T16:15:36.8490409Z HOSTED_POLICY_PROBE name=CALLER_IMMEDIATE_JOB_UI_DESKTOP available=true enabled=false class=NONE
+2026-11-05T16:15:36.8491746Z HOSTED_POLICY_PROBE name=CALLER_IMMEDIATE_JOB_UI_EXIT_WINDOWS available=true enabled=false class=NONE
+2026-11-05T16:15:36.8492912Z HOSTED_POLICY_PROBE name=CHILD_WIN32K_DISABLED available=true enabled=false class=NONE
+2026-11-05T16:15:36.8494034Z HOSTED_POLICY_PROBE name=CHILD_WIN32K_AUDIT available=true enabled=false class=NONE
+2026-11-05T16:15:36.8495496Z HOSTED_KERNEL_ACCESS_PROBE name=CHILD_PROCESS_QUERY available=true allowed=true class=NONE
+2026-11-05T16:15:36.8496754Z HOSTED_KERNEL_ACCESS_PROBE name=CHILD_PROCESS_QUERY_LIMITED available=true allowed=true class=NONE
+2026-11-05T16:15:36.8497982Z HOSTED_KERNEL_ACCESS_PROBE name=CHILD_PROCESS_VM_READ available=true allowed=true class=NONE
+2026-11-05T16:15:36.8499226Z HOSTED_KERNEL_ACCESS_PROBE name=CHILD_PROCESS_SYNCHRONIZE available=true allowed=true class=NONE
+2026-11-05T16:15:36.8500401Z HOSTED_KERNEL_ACCESS_PROBE name=CHILD_THREAD_QUERY available=true allowed=true class=NONE
+2026-11-05T16:15:36.8501623Z HOSTED_KERNEL_ACCESS_PROBE name=CHILD_THREAD_GET_CONTEXT available=true allowed=true class=NONE
+2026-11-05T16:15:36.8502838Z HOSTED_KERNEL_ACCESS_PROBE name=CHILD_THREAD_SYNCHRONIZE available=true allowed=true class=NONE
+2026-11-05T16:15:36.8504329Z HOSTED_KERNEL_LABEL name=CHILD_PROCESS available=true label=MEDIUM no_write_up=true no_read_up=true no_execute_up=false class=NONE
+2026-11-05T16:15:36.8505988Z HOSTED_KERNEL_LABEL name=CHILD_THREAD available=true label=MEDIUM no_write_up=true no_read_up=true no_execute_up=false class=NONE
+2026-11-05T16:15:37.0621276Z [31;1mException: [0mD:\a\_temp\54006d78-be86-45e6-ad07-abd9c462568e.ps1:23[0m
+2026-11-05T16:15:37.0622271Z [31;1m[0m[36;1mLine |[0m
+2026-11-05T16:15:37.0623290Z [31;1m[0m[36;1m[36;1m  23 | [0m … de -ne 0) { [36;1mthrow "native fixture FAIL/BLOCKED exit $($owner.ExitCode[0m …[0m
+2026-11-05T16:15:37.0624275Z [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+2026-11-05T16:15:37.0625171Z [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mnative fixture FAIL/BLOCKED exit -1073741502[0m
+2026-11-05T16:15:37.1264639Z ##[error]Process completed with exit code 1.
+2026-11-05T16:15:37.1453064Z ##[group]Run $build = Join-Path $env:RUNNER_TEMP 'adminit-build'
+2026-11-05T16:15:37.1453634Z [36;1m$build = Join-Path $env:RUNNER_TEMP 'adminit-build'[0m
+2026-11-05T16:15:37.1454057Z [36;1m$exe = Join-Path $build 'HostedClrEntryDiagnostics.exe'[0m
+2026-11-05T16:15:37.1454782Z [36;1mif (-not (Test-Path -LiteralPath $exe)) { Write-Output 'HOSTED_CLR_DIAGNOSTIC variant=SETUP outcome=UNAVAILABLE qualification=NONE'; exit 0 }[0m
+2026-11-05T16:15:37.1455750Z [36;1m$env:SOURCE_HEAD = '5d7d2c87ef048ba09c7bf10a140db7f6653f828e'[0m
+2026-11-05T16:15:37.1456203Z [36;1m$env:SOURCE_TREE = git --no-replace-objects rev-parse 'HEAD^{tree}'[0m
+2026-11-05T16:15:37.1456710Z [36;1mif ($LASTEXITCODE -ne 0) { throw 'diagnostic source tree unavailable' }[0m
+2026-11-05T16:15:37.1457232Z [36;1m$diagnosticRoot = Join-Path $env:RUNNER_TEMP 'adminit-clr-diagnostic'[0m
+2026-11-05T16:15:37.1458394Z [36;1m$owner = Start-Process -FilePath $exe -ArgumentList ('"' + $build + '" "' + $diagnosticRoot + '"') -PassThru -WindowStyle Hidden -RedirectStandardOutput "$build/clr-diagnostic-stdout.txt" -RedirectStandardError "$build/clr-diagnostic-stderr.txt"[0m
+2026-11-05T16:15:37.1459369Z [36;1mtry {[0m
+2026-11-05T16:15:37.1460154Z [36;1m  if (-not $owner.WaitForExit(60000)) { $owner.Kill(); if (-not $owner.WaitForExit(5000)) { throw 'diagnostic cleanup unconfirmed' }; Write-Output 'HOSTED_CLR_DIAGNOSTIC variant=SETUP outcome=DEADLINE qualification=NONE' }[0m
+2026-11-05T16:15:37.1461244Z [36;1m  node scripts/adminit-containment/report-clr-diagnostic.mjs "$build/clr-diagnostic-stdout.txt"[0m
+2026-11-05T16:15:37.1461856Z [36;1m  if ($LASTEXITCODE -ne 0) { throw 'closed diagnostic reporter failed' }[0m
+2026-11-05T16:15:37.1462241Z [36;1m} finally { $owner.Dispose() }[0m
+2026-11-05T16:15:37.1462681Z [36;1m# This step never changes the earlier mandatory fixture outcome or supplies acceptance.[0m
+2026-11-05T16:15:37.1463100Z [36;1mexit 0[0m
+2026-11-05T16:15:37.1538367Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-05T16:15:37.1538736Z ##[endgroup]
+2026-11-05T16:15:37.8015767Z HOSTED_CLR_DIAGNOSTIC variant=BASE outcome=DLL_INITIALIZATION_FAILED qualification=NONE
+2026-11-05T16:15:37.8018390Z HOSTED_CLR_DIAGNOSTIC variant=SYSTEM_PATH outcome=DLL_INITIALIZATION_FAILED qualification=NONE
+2026-11-05T16:15:37.8020086Z HOSTED_CLR_DIAGNOSTIC variant=OWNED_PROFILE outcome=DLL_INITIALIZATION_FAILED qualification=NONE
+2026-11-05T16:15:37.8022507Z HOSTED_CLR_DIAGNOSTIC variant=SYSTEM_PROGRAMDATA outcome=DLL_INITIALIZATION_FAILED qualification=NONE
+2026-11-05T16:15:37.8024838Z HOSTED_CLR_DIAGNOSTIC variant=PRIVATE_NONINTERACTIVE outcome=DLL_INITIALIZATION_FAILED qualification=NONE
+2026-11-05T16:15:37.8027250Z PROCESS_DIAGNOSTIC name=SYSTEM_CMD outcome=DLL_INITIALIZATION_FAILED pin=BUILD_HOST_OS_PIN_MATCHED qualification=NONE
+2026-11-05T16:15:37.8800829Z ##[group]Run $build = Join-Path $env:RUNNER_TEMP 'adminit-build'
+2026-11-05T16:15:37.8801433Z [36;1m$build = Join-Path $env:RUNNER_TEMP 'adminit-build'[0m
+2026-11-05T16:15:37.8801963Z [36;1mif (-not (Test-Path -LiteralPath $build)) { throw 'no build evidence: BLOCKED' }[0m
+2026-11-05T16:15:37.8803328Z [36;1m$files = @(Get-ChildItem -LiteralPath $build -Recurse -File | Where-Object { $_.Name -ne 'private-inventory.json' } | ForEach-Object { @{path=('build/'+$_.FullName.Substring($build.Length+1));bytes=$_.Length;sha256=(Get-FileHash -LiteralPath $_.FullName).Hash.ToLowerInvariant()} })[0m
+2026-11-05T16:15:37.8804541Z [36;1m$run = Join-Path $env:RUNNER_TEMP 'adminit-native'[0m
+2026-11-05T16:15:37.8805662Z [36;1mif (Test-Path -LiteralPath $run) { $files += @(Get-ChildItem -LiteralPath $run -Recurse -File | ForEach-Object { @{path=('native/'+$_.FullName.Substring($run.Length+1));bytes=$_.Length;sha256=(Get-FileHash -LiteralPath $_.FullName).Hash.ToLowerInvariant()} }) }[0m
+2026-11-05T16:15:37.8806863Z [36;1m# Do not publish the raw per-file path inventory: names may disclose runtime identity.[0m
+2026-11-05T16:15:37.8807397Z [36;1m# The private full inventory remains on the ephemeral runner only.[0m
+2026-11-05T16:15:37.8807874Z [36;1m$privateInventory = Join-Path $build 'private-inventory.json'[0m
+2026-11-05T16:15:37.8808395Z [36;1m$files | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath $privateInventory[0m
+2026-11-05T16:15:37.8809080Z [36;1m$inventoryDigest = (Get-FileHash -LiteralPath $privateInventory -Algorithm SHA256).Hash.ToLowerInvariant()[0m
+2026-11-05T16:15:37.8811090Z [36;1m@{sourceHead='5d7d2c87ef048ba09c7bf10a140db7f6653f828e';runId='42056857844';attempt='1';localExecution='BLOCKED_PENDING_ISOLATION_REVIEW';privateInventorySha256=$inventoryDigest;privateFileCount=@($files).Count;rawNativeEvidencePublished=$false;nativeAcceptance='BLOCKED_PRIVATE_EVIDENCE_REQUIRED'} | ConvertTo-Json -Depth 6 | Set-Content "$build/evidence-sha256.json"[0m
+2026-11-05T16:15:37.8885485Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-05T16:15:37.8885851Z ##[endgroup]
+2026-11-05T16:15:38.4371433Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+2026-11-05T16:15:38.4371922Z with:
+2026-11-05T16:15:38.4372267Z   name: adminit-package-5d7d2c87ef048ba09c7bf10a140db7f6653f828e-42056857844-1
+2026-11-05T16:15:38.4372700Z   path: D:\a\_temp/adminit-build/package/
+2026-11-05T16:15:38.4372967Z   if-no-files-found: error
+2026-11-05T16:15:38.4373204Z   retention-days: 30
+2026-11-05T16:15:38.4373406Z   compression-level: 6
+2026-11-05T16:15:38.4373598Z   overwrite: false
+2026-11-05T16:15:38.4373793Z   include-hidden-files: false
+2026-11-05T16:15:38.4374016Z ##[endgroup]
+2026-11-05T16:15:38.6582816Z (node:7552) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-05T16:15:38.6584157Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-05T16:15:38.6652646Z With the provided path, there will be 2 files uploaded
+2026-11-05T16:15:38.6658735Z Artifact name is valid!
+2026-11-05T16:15:38.6661056Z Root directory input is valid!
+2026-11-05T16:15:38.8868270Z Beginning upload of artifact content to blob storage
+2026-11-05T16:15:38.9127754Z (node:7552) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-11-05T16:15:38.9621991Z Uploaded bytes 20303
+2026-11-05T16:15:38.9822142Z Finished uploading artifact content to blob storage!
+2026-11-05T16:15:38.9823993Z SHA256 digest of uploaded artifact zip is 0314c531d2da9fdfd3ffa220b2d354b57a6b8cc80870104e7595d38a7f0bb1b4
+2026-11-05T16:15:38.9826039Z Finalizing artifact upload
+2026-11-05T16:15:39.4783549Z Artifact adminit-package-5d7d2c87ef048ba09c7bf10a140db7f6653f828e-42056857844-1.zip successfully finalized. Artifact ID 13432527753
+2026-11-05T16:15:39.4786173Z Artifact adminit-package-5d7d2c87ef048ba09c7bf10a140db7f6653f828e-42056857844-1 has been successfully uploaded! Final size is 20303 bytes. Artifact ID is 13432527753
+2026-11-05T16:15:39.4794645Z Artifact download URL: https://github.com/YehorBabenko88/math/actions/runs/42056857844/artifacts/13432527753
+2026-11-05T16:15:39.5145025Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+2026-11-05T16:15:39.5145502Z with:
+2026-11-05T16:15:39.5145881Z   name: adminit-native-evidence-5d7d2c87ef048ba09c7bf10a140db7f6653f828e-42056857844-1
+2026-11-05T16:15:39.5146859Z   path: D:\a\_temp/adminit-build/build-identity.json
+D:\a\_temp/adminit-build/source-identity.json
+D:\a\_temp/adminit-build/evidence-sha256.json
+
+2026-11-05T16:15:39.5147489Z   if-no-files-found: error
+2026-11-05T16:15:39.5147703Z   retention-days: 30
+2026-11-05T16:15:39.5147905Z   compression-level: 6
+2026-11-05T16:15:39.5148102Z   overwrite: false
+2026-11-05T16:15:39.5148294Z   include-hidden-files: false
+2026-11-05T16:15:39.5148518Z ##[endgroup]
+2026-11-05T16:15:39.7350328Z (node:4892) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-05T16:15:39.7351938Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-05T16:15:39.7421206Z Multiple search paths detected. Calculating the least common ancestor of all paths
+2026-11-05T16:15:39.7425353Z The least common ancestor is D:\a\_temp\adminit-build. This will be the root directory of the artifact
+2026-11-05T16:15:39.7465806Z With the provided path, there will be 3 files uploaded
+2026-11-05T16:15:39.7466581Z Artifact name is valid!
+2026-11-05T16:15:39.7466995Z Root directory input is valid!
+2026-11-05T16:15:39.9638186Z Beginning upload of artifact content to blob storage
+2026-11-05T16:15:39.9900434Z (node:4892) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-11-05T16:15:40.0314497Z Uploaded bytes 1229
+2026-11-05T16:15:40.0506376Z Finished uploading artifact content to blob storage!
+2026-11-05T16:15:40.0507709Z SHA256 digest of uploaded artifact zip is 5054a16444c2c463d610437e842cb1742a18ca8caf846d6a47216bec8ba688d4
+2026-11-05T16:15:40.0510705Z Finalizing artifact upload
+2026-11-05T16:15:40.6955636Z Artifact adminit-native-evidence-5d7d2c87ef048ba09c7bf10a140db7f6653f828e-42056857844-1.zip successfully finalized. Artifact ID 13432527757
+2026-11-05T16:15:40.6957792Z Artifact adminit-native-evidence-5d7d2c87ef048ba09c7bf10a140db7f6653f828e-42056857844-1 has been successfully uploaded! Final size is 1229 bytes. Artifact ID is 13432527757
+2026-11-05T16:15:40.6968939Z Artifact download URL: https://github.com/YehorBabenko88/math/actions/runs/42056857844/artifacts/13432527757
+2026-11-05T16:15:40.7363066Z Post job cleanup.
+2026-11-05T16:15:40.9456569Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-05T16:15:40.9830166Z git version 2.56.0.windows.4
+2026-11-05T16:15:40.9913717Z Temporarily overriding HOME='D:\a\_temp\888dbe0e-a06d-459e-a0bb-f96e3995d09c' before making global git config changes
+2026-11-05T16:15:40.9915169Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-05T16:15:40.9927278Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\math\math
+2026-11-05T16:15:41.0373740Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-05T16:15:41.0792925Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-05T16:15:41.7012991Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-05T16:15:41.7449548Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-05T16:15:42.3966443Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-05T16:15:42.4406350Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-05T16:15:43.0814113Z Cleaning up orphan processes
+2026-11-05T16:15:43.1259452Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@11d5960a326750d5838078e36cf38b85af677262, actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020, actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
