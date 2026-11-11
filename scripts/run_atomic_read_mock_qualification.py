@@ -13,6 +13,7 @@ import stat
 import subprocess
 import sys
 import threading
+import types
 import time
 
 GRID_HEAD = 'fb177d14b1e6e399bd9b66ae7cb35d3838acbd81'
@@ -58,12 +59,13 @@ def digest(raw):
 
 def ordinary(path, *, runtime=False):
     path = Path(path).absolute()
-    for p in (path, *path.parents):
-        info = p.lstat()
-        require(not stat.S_ISLNK(info.st_mode) and not getattr(info, 'st_reparse_tag', 0)
-                and not getattr(info, 'st_file_attributes', 0) & 1024, 'LINK_OR_REPARSE')
-    info = path.stat()
-    require(path.is_file(), 'REGULAR_INPUT_REQUIRED')
+    for parent in reversed(path.parents):
+        info = parent.lstat()
+        require(stat.S_ISDIR(info.st_mode) and not stat.S_ISLNK(info.st_mode)
+                and not getattr(info, 'st_reparse_tag', 0) and not getattr(info, 'st_file_attributes', 0) & 1024, 'ORDINARY_ANCESTOR_DIRECTORY')
+    info = path.lstat()
+    require(stat.S_ISREG(info.st_mode) and not stat.S_ISLNK(info.st_mode)
+            and not getattr(info, 'st_reparse_tag', 0) and not getattr(info, 'st_file_attributes', 0) & 1024, 'REGULAR_INPUT_REQUIRED')
     if not runtime:
         require(info.st_nlink == 1, 'SINGLE_LINK_REQUIRED')
     return info
@@ -303,10 +305,13 @@ def child(manifest_path, manifest_sha):
     try:
         test = Path(c['unified']) / 'tests/test_research_identity_atomic_snapshot_unit.py'
         require(file_fact(test)['sha256'] == TEST_SHA, 'TEST_HASH')
-        spec = importlib.util.spec_from_file_location('atomic_read_mock', test)
-        module = importlib.util.module_from_spec(spec)
-        sys.modules[spec.name] = module
-        spec.loader.exec_module(module)
+        expected_entry = files[str(test.absolute())]
+        entry_bytes = read_raw(test, expected_size=expected_entry['bytes'], runtime=True)
+        require(digest(entry_bytes) == expected_entry['sha256'] == TEST_SHA, 'ENTRY_SOURCE_HASH')
+        module = types.ModuleType('atomic_read_mock')
+        module.__file__ = str(test); module.__package__ = ''
+        sys.modules['atomic_read_mock'] = module
+        exec(compile(entry_bytes, str(test), 'exec'), module.__dict__)
         suite = unittest.defaultTestLoader.loadTestsFromTestCase(module.ControlledBackendBrokerUnitTests)
         ids = [t.id() for t in suite]
         require(inventory_ok(ids), 'EXACT_TEN_REQUIRED')
@@ -344,61 +349,114 @@ def child(manifest_path, manifest_sha):
 
 
 def supervise(command, output):
-    """90s child phase, then bounded retirement/readers; not whole-lane90s."""
-    started = time.monotonic()
-    process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.DEVNULL,
-                               env={**os.environ, 'PYTHONDONTWRITEBYTECODE': '1'},
-                               creationflags=getattr(subprocess, 'CREATE_NO_WINDOW', 0))
-    total = 0
-    lock = threading.Lock()
-    exceeded = threading.Event()
-    errors = []
+    """Owned direct handle;90s observed phase plus bounded independent cleanup."""
+    process = None; readers = []; errors = []; reader_errors = []; kill_attempts = []
+    reason = None; unknown = False; retired = False; readers_retired = False
+    returncode = None; completion = None; total = 0
+    # Failures here precede launch and cannot lose a child handle.
+    lock = threading.Lock(); exceeded = threading.Event()
+    def fail(value):
+        nonlocal reason
+        if reason is None: reason = value
+    def problem(stage, error):
+        nonlocal unknown
+        unknown = True; errors.append(dict(stage=stage, type=type(error).__name__))
+        fail('SUPERVISOR_' + stage)
     def reader(pipe, path):
         nonlocal total
         try:
             with path.open('xb') as stream:
                 while True:
                     block = pipe.read(4096)
-                    if not block:
-                        break
+                    if not block: break
                     with lock:
-                        allowed = max(0, OUTPUT_LIMIT - total)
-                        total += len(block)
-                    stream.write(block[:allowed])
-                    if total > OUTPUT_LIMIT:
-                        exceeded.set()
+                        allowed = max(0, OUTPUT_LIMIT - total); total += len(block)
+                        stream.write(block[:allowed])
+                        if total > OUTPUT_LIMIT: exceeded.set()
         except BaseException as error:
-            errors.append(type(error).__name__)
+            reader_errors.append(type(error).__name__); exceeded.set()
         finally:
-            pipe.close()
-    readers = [threading.Thread(target=reader, args=(pipe, output / name), daemon=True)
-               for pipe, name in ((process.stdout, 'stdout.original.bin'), (process.stderr, 'stderr.original.bin'))]
-    for thread in readers:
-        thread.start()
-    reason = None
-    while process.poll() is None:
-        if exceeded.is_set() or time.monotonic() - started > 90:
-            reason = 'OUTPUT_LIMIT' if exceeded.is_set() else 'CHILD_TIMEOUT'
-            process.kill()
-            break
-        time.sleep(.05)
-    retired = True
+            try: pipe.close()
+            except BaseException as error: reader_errors.append(type(error).__name__)
+    started = time.monotonic()
     try:
-        process.wait(timeout=5)
-    except subprocess.TimeoutExpired:
-        retired = False
-        reason = 'RETIREMENT_UNKNOWN'
-    observed_completion = time.monotonic() - started
-    if reason is None and observed_completion > 90:
-        reason = 'COMPLETION_OBSERVED_AFTER_CHILD_BUDGET'
-    for thread in readers:
-        thread.join(timeout=1)
-    readers_retired = all(not t.is_alive() for t in readers)
-    ok = retired and readers_retired and not errors and reason is None and not exceeded.is_set() and process.returncode == 0
-    write_json(output / 'outer-result.json', dict(scope='TRUSTED_MOCK_ONLY_NOT_HOSTILE_FAMILY', returncode=process.returncode,
-               reason=reason, direct_child_retired=retired, readers_retired=readers_retired, reader_errors=errors,
-               observed_output_bytes=total, completion_observed_seconds=observed_completion, total_observed_seconds=time.monotonic() - started, passed=ok))
-    return ok
+        # This retained assignment is already inside the encompassing finally.
+        process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.DEVNULL,
+                                   env={**os.environ, 'PYTHONDONTWRITEBYTECODE': '1'},
+                                   creationflags=getattr(subprocess, 'CREATE_NO_WINDOW', 0))
+        for pipe, name in ((process.stdout, 'stdout.original.bin'), (process.stderr, 'stderr.original.bin')):
+            slot = dict(thread=None, start_attempted=False, start_returned=False,
+                        join_attempted=False, join_returned=False, retired=False)
+            readers.append(slot)
+            slot['thread'] = threading.Thread(target=reader, args=(pipe, output / name), daemon=True)
+            slot['start_attempted'] = True; slot['thread'].start(); slot['start_returned'] = True
+        while process.poll() is None:
+            if exceeded.is_set(): fail('OUTPUT_OR_READER_LIMIT'); break
+            if time.monotonic() - started > 90: fail('CHILD_TIMEOUT'); break
+            time.sleep(.05)
+    except BaseException as error:
+        problem('spawn_or_post_spawn', error)
+    finally:
+        if process is not None:
+            kill_needed = True
+            try: kill_needed = process.poll() is None
+            except BaseException as error: problem('cleanup_poll', error)
+            if kill_needed:
+                for number in range(2):
+                    attempt = dict(number=number + 1, outcome='ATTEMPTED'); kill_attempts.append(attempt)
+                    try: process.kill(); attempt['outcome'] = 'RETURNED'; break
+                    except BaseException as error:
+                        attempt.update(outcome='ERROR', type=type(error).__name__)
+                        problem('cleanup_kill_' + str(number + 1), error)
+            try:
+                returncode = process.wait(timeout=5); retired = True
+            except BaseException as error: problem('cleanup_wait', error)
+            try:
+                observed_completion = time.monotonic() - started
+                completion = observed_completion
+                if observed_completion > 90: fail('COMPLETION_OBSERVED_AFTER_CHILD_BUDGET')
+            except BaseException as error: problem('completion_clock', error)
+            for number, slot in enumerate(readers):
+                thread = slot['thread']
+                if thread is None: continue
+                if slot['start_attempted']:
+                    slot['join_attempted'] = True
+                    try: thread.join(timeout=1); slot['join_returned'] = True
+                    except BaseException as error: problem('reader_join_' + str(number), error)
+                alive = None
+                try: alive = thread.is_alive()
+                except BaseException as error: problem('reader_alive_' + str(number), error)
+                if slot['start_returned']:
+                    slot['retired'] = alive is False
+                elif slot['start_attempted']:
+                    ident_seen = False
+                    try: ident_seen = thread.ident is not None
+                    except BaseException as error: problem('reader_ident_' + str(number), error)
+                    slot['retired'] = slot['join_returned'] and ident_seen and alive is False
+                    if not slot['retired']:
+                        unknown = True; fail('READER_START_UNKNOWN')
+            readers_retired = len(readers) == 2 and all(slot['retired'] for slot in readers)
+            if not retired or not readers_retired:
+                unknown = True; fail('RETIREMENT_UNKNOWN')
+            if readers_retired:
+                for pipe in (process.stdout, process.stderr):
+                    try: pipe.close()
+                    except BaseException as error: problem('parent_pipe_close', error)
+        try:
+            if exceeded.is_set() or total > OUTPUT_LIMIT: fail('OUTPUT_OR_READER_LIMIT')
+        except BaseException as error: problem('output_observation', error)
+        if reader_errors:
+            unknown = True; fail('READER_ERRORS')
+        passed = (process is not None and retired and readers_retired and not unknown and not errors
+                  and not reader_errors and reason is None and returncode == 0)
+        # Evidence is attempted even after clock, kill, wait or join errors.
+        write_json(output / 'outer-result.json', dict(scope='TRUSTED_MOCK_ONLY_NOT_HOSTILE_FAMILY',
+                   returncode=returncode, reason=reason, unknown_sticky=unknown, kill_attempts=kill_attempts,
+                   direct_child_retired=retired, readers_retired=readers_retired,
+                   readers=[{k: v for k, v in slot.items() if k != 'thread'} for slot in readers],
+                   lifecycle_errors=errors, reader_errors=reader_errors, observed_output_bytes=total,
+                   completion_observed_seconds=completion, passed=bool(passed)))
+    return bool(passed)
 
 
 def main(argv=None):

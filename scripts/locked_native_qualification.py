@@ -3,6 +3,7 @@ import argparse
 import json
 import hashlib
 import os
+import stat
 from pathlib import Path
 import sys
 
@@ -27,9 +28,10 @@ def main(argv=None):
         target = Path(args.output).absolute()
         # Workflow passes a fresh explicitly owned runner-temp child directory.
         # Never overwrite/adopt a preexisting output path.
-        for parent in target.parents:
+        for parent in reversed(target.parents):
             info = parent.lstat()
-            if parent.is_symlink() or getattr(info, 'st_reparse_tag', 0) or getattr(info, 'st_file_attributes', 0) & 1024:
+            if (not stat.S_ISDIR(info.st_mode) or stat.S_ISLNK(info.st_mode)
+                    or getattr(info, 'st_reparse_tag', 0) or getattr(info, 'st_file_attributes', 0) & 1024):
                 raise ValueError('LINK_OUTPUT')
         target.mkdir(exist_ok=False)
         with (target / 'status.json').open('xb') as stream:
