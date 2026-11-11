@@ -1,0 +1,22 @@
+test_actual_constructor_failure_closes_known_unowned_read_handle (owned_compile7_controls.ConstructorCallerRegression.test_actual_constructor_failure_closes_known_unowned_read_handle) ... FAIL
+test_actual_unknown_start_preserves_no_close_control (owned_compile7_controls.ConstructorCallerRegression.test_actual_unknown_start_preserves_no_close_control) ... ok
+
+======================================================================
+FAIL: test_actual_constructor_failure_closes_known_unowned_read_handle (owned_compile7_controls.ConstructorCallerRegression.test_actual_constructor_failure_closes_known_unowned_read_handle)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-7-distributed-research-math\outputs\math572-constructor2-bounded-driver-source-20261111\regression-original.py", line 52, in test_actual_constructor_failure_closes_known_unowned_read_handle
+    self.assertEqual(self.closed,[701],'known read handle must independently close when no Thread.start was attempted')
+AssertionError: Lists differ: [] != [701]
+
+Second list contains 1 additional elements.
+First extra element 0:
+701
+
+- []
++ [701] : known read handle must independently close when no Thread.start was attempted
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.011s
+
+FAILED (failures=1)

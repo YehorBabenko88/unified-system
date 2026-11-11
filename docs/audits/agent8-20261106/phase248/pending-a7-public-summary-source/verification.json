@@ -1,0 +1,24 @@
+{
+  "scope": "SOURCE_ONLY_NO_TARGET_EXECUTION",
+  "pins": {
+    "math572_compile7_public_summary_regression_source_review1.py": "ba3544c772dd0d4826cfd72a6ec8b398ba917e8618997f98cdfce1cfc31efe0a",
+    "math572_compile7_controller_review3.py": "a05e865da136baec3f7945e795733589fdf4cdd8cc92750aed5046b1c081bca7",
+    "math572-public-summary-old-regression-source-20261111/source-seal.json": "b7123d78cdf73a4eff8317f4b007b2013cb55173962d50a2c14afddb9f883fa2"
+  },
+  "tests": [
+    "test_actual_small_serialized_summary_bounded_positive_control",
+    "test_actual_final_summary_expansion_must_obey_public_byte_cap"
+  ],
+  "actual_policy_selector": "UNIQUE_SOURCE_SLICE_CONFIRMED",
+  "literal_payload": {
+    "line_bytes": 47,
+    "records": 174,
+    "raw_bytes": 8178
+  },
+  "calibration": "SOURCE_REVIEWED_SETUP_ERRORS_DISTINCT_FROM_FINAL_ASSERTION",
+  "serialized_bytes": "NOT_OBSERVED",
+  "actual_tests": "NOT_RUN",
+  "execution_authorization": "NOT_GRANTED_BY_A8_SOURCE_REVIEW",
+  "full_controller": "NOT_QUALIFIED",
+  "GO_NO_GO": "NO-GO"
+}

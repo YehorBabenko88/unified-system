@@ -757,7 +757,7 @@
     "observed_head": "de6620eb5577e97db1af11b6807e22a9b61d1090_TARGET_ONLY_NEW_FILES_UNTRACKED",
     "title": "Hosted47 bootstrap reads/spawns Git before guarding unresolved source/executable ancestry and root directory type",
     "status": "CLOSED_SCOPED_SOURCE_AND_ACTUAL_SELECTED_AST_MODELED20_NOT_KERNEL_OR_HOSTED47",
-    "test": "workflow00f955... ledger lines70–77/111",
+    "test": "workflow00f955... ledger lines70\u201377/111",
     "evidence": "phase200/report.md;phase200/verification.json",
     "required_correction": "Root-first unresolved ancestors/root/selectedGit type/link/reparse guards before any descendant access/Git/hash; actual-source pure regressions; fresh raw checkout.",
     "modeled_regression": "FIVE_ACTUAL_INLINE_ANCESTRY_RED_ORDINARY_CONTROL_PASS",
@@ -775,7 +775,7 @@
     "observed_head": "de6620eb5577e97db1af11b6807e22a9b61d1090_TARGET_ONLY_NEW_FILES_UNTRACKED",
     "title": "Hosted47 OwnedPopen registers returned handle only after a failing postconstructor audit invariant",
     "status": "CLOSED_SCOPED_SOURCE_AND_ACTUAL_SELECTED_AST_MODELED20_NOT_KERNEL_OR_HOSTED47",
-    "test": "qualifier79d9... lines204–206",
+    "test": "qualifier79d9... lines204\u2013206",
     "evidence": "phase200/report.md;phase200/verification.json",
     "required_correction": "Register successfully returned handle before any postconstructor invariant; retain refusal/uncertainty and run held-handle kill AND wait cleanup; inert source regressions before qualification.",
     "modeled_regression": "TWO_ACTUAL_OWNEDPOPEN_AND_CLEANUP_AST_MODELED_RED_PRECONSTRUCTOR_PASS_NOT_ACTUAL_LEAK",
@@ -896,8 +896,11 @@
     "pr": 110,
     "observed_head": "5721987a15d20c3f9984d52eac4446704566d4b9;controller-a05e865da136baec3f7945e795733589fdf4cdd8cc92750aed5046b1c081bca7",
     "title": "Thread constructor failure leaves known read handle marked attempted without owner and skips close",
-    "status": "OPEN_SOURCE_READINESS_ONLY_NOT_ACTUAL_LEAK_OR_FALSEPASS",
+    "status": "CLOSED_SCOPED_SOURCE_AND_SELECTED_ACTUAL_AST_SAME2_MODELED_NOT_WIN32",
     "evidence": "phase247/report.md;phase247/verification.json;phase247/controller-review3.py",
-    "required_correction": "Track per-handle entry reservation before start; independently close definitely-unclaimed constructor-failed handles, retain unknown-start uncertainty; no compiler execution grant"
+    "required_correction": "Track per-handle entry reservation before start; independently close definitely-unclaimed constructor-failed handles, retain unknown-start uncertainty; no compiler execution grant",
+    "fixed_evidence": "phase248/pending-a7-constructor-green-data/verification.json",
+    "old_regression": "phase248/pending-a7-two-old-data/verification.json",
+    "fixed_scope": "KNOWN_NOT_STARTED_CLOSE_AND_UNKNOWN_NO_BLIND_CLOSE_INERT_HANDLES_ONLY_NO_FULL_CONTROLLER_KERNEL_COMPILER_ADMISSION"
   }
 ]

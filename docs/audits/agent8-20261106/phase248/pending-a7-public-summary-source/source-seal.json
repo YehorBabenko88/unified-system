@@ -1,0 +1,27 @@
+{
+  "scope": "SOURCE_AST_PARSE_AND_LITERAL_DATA_ONLY_NO_POLICY_OR_SERIALIZER_TARGET_EXECUTION",
+  "control_source_sha256": "ba3544c772dd0d4826cfd72a6ec8b398ba917e8618997f98cdfce1cfc31efe0a",
+  "source_path": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-7-distributed-research-math\\outputs\\math572_compile7_public_summary_regression_source_review1.py",
+  "bound_owner_source": "a05e865da136baec3f7945e795733589fdf4cdd8cc92750aed5046b1c081bca7",
+  "case_ids": [
+    "PublicSummaryBoundaryRegression.test_actual_small_serialized_summary_bounded_positive_control",
+    "PublicSummaryBoundaryRegression.test_actual_final_summary_expansion_must_obey_public_byte_cap"
+  ],
+  "seam": "ACTUALdiagnosticpolicyAST+ACTUALfinalprint(json.dumps(...)) AST, inertseededrecord/capturedlogs, printcapturedtoBytesIO-equivalentmemory",
+  "positive_payload": {
+    "raw_bytes": 47,
+    "records": 1
+  },
+  "large_payload": {
+    "raw_bytes": 8178,
+    "records": 174,
+    "raw_cap": 8192
+  },
+  "actual_serialized_bytes": "NOT_OBSERVED; TARGETNOTRUN",
+  "limiter": "NONE_ADDED",
+  "raw_preservation": "Syntheticbufferhash/recordcount/roundtripcalibrations; no realoriginalsmodified",
+  "setup_failure": "ERRORdistinctfromfinalregressionassertion",
+  "tests": "NOT_RUN",
+  "compiler": "NOT_RUN",
+  "allocation": "PENDING"
+}

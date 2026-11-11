@@ -1,0 +1,98 @@
+A3_NINE_PHASE CHILD_ENTER
+A3_NINE_PHASE PREFLIGHT_BEGIN
+A3_NINE_PHASE PREFLIGHT_END
+A3_NINE_PHASE MODEL_BEGIN
+test_calibration_known_started_retired_route (a3_boundary_nine_model.ThreeBoundaryRegressions.test_calibration_known_started_retired_route) ... ok
+test_calibration_retirement_inside_shared_budget (a3_boundary_nine_model.ThreeBoundaryRegressions.test_calibration_retirement_inside_shared_budget) ... ok
+test_final_cleanup_close_late_nonfinite_or_negative_is_unknown (a3_boundary_nine_model.ThreeBoundaryRegressions.test_final_cleanup_close_late_nonfinite_or_negative_is_unknown) ... 
+  test_final_cleanup_close_late_nonfinite_or_negative_is_unknown (a3_boundary_nine_model.ThreeBoundaryRegressions.test_final_cleanup_close_late_nonfinite_or_negative_is_unknown) (final=6.0) ... FAIL
+  test_final_cleanup_close_late_nonfinite_or_negative_is_unknown (a3_boundary_nine_model.ThreeBoundaryRegressions.test_final_cleanup_close_late_nonfinite_or_negative_is_unknown) (final=nan) ... FAIL
+  test_final_cleanup_close_late_nonfinite_or_negative_is_unknown (a3_boundary_nine_model.ThreeBoundaryRegressions.test_final_cleanup_close_late_nonfinite_or_negative_is_unknown) (final=inf) ... FAIL
+  test_final_cleanup_close_late_nonfinite_or_negative_is_unknown (a3_boundary_nine_model.ThreeBoundaryRegressions.test_final_cleanup_close_late_nonfinite_or_negative_is_unknown) (final=-1.0) ... FAIL
+test_known_live_writer_does_not_autoclose_sink (a3_boundary_nine_model.ThreeBoundaryRegressions.test_known_live_writer_does_not_autoclose_sink) ... FAIL
+test_missing_stage_calibration_is_error_not_target_red (a3_boundary_nine_model.ThreeBoundaryRegressions.test_missing_stage_calibration_is_error_not_target_red) ... ok
+test_primary_and_postcheck_failure_leave_partial_unknown_evidence (a3_boundary_nine_model.ThreeBoundaryRegressions.test_primary_and_postcheck_failure_leave_partial_unknown_evidence) ... FAIL
+test_source_postcheck_fault_does_not_skip_cache_and_git_attempts (a3_boundary_nine_model.ThreeBoundaryRegressions.test_source_postcheck_fault_does_not_skip_cache_and_git_attempts) ... FAIL
+test_start_throw_ident_none_is_unknown_not_reader_retired (a3_boundary_nine_model.ThreeBoundaryRegressions.test_start_throw_ident_none_is_unknown_not_reader_retired) ... FAIL
+test_unknown_started_writer_does_not_autoclose_sink (a3_boundary_nine_model.ThreeBoundaryRegressions.test_unknown_started_writer_does_not_autoclose_sink) ... FAIL
+
+======================================================================
+FAIL: test_final_cleanup_close_late_nonfinite_or_negative_is_unknown (a3_boundary_nine_model.ThreeBoundaryRegressions.test_final_cleanup_close_late_nonfinite_or_negative_is_unknown) (final=6.0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\a3-component-boundary-nine-source-20261111\model_source.py", line 164, in test_final_cleanup_close_late_nonfinite_or_negative_is_unknown
+    self.assertTrue(errors or not direct or not readers,
+AssertionError: False is not true : final finite0..5 gate must occur AFTER last close
+
+======================================================================
+FAIL: test_final_cleanup_close_late_nonfinite_or_negative_is_unknown (a3_boundary_nine_model.ThreeBoundaryRegressions.test_final_cleanup_close_late_nonfinite_or_negative_is_unknown) (final=nan)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\a3-component-boundary-nine-source-20261111\model_source.py", line 164, in test_final_cleanup_close_late_nonfinite_or_negative_is_unknown
+    self.assertTrue(errors or not direct or not readers,
+AssertionError: False is not true : final finite0..5 gate must occur AFTER last close
+
+======================================================================
+FAIL: test_final_cleanup_close_late_nonfinite_or_negative_is_unknown (a3_boundary_nine_model.ThreeBoundaryRegressions.test_final_cleanup_close_late_nonfinite_or_negative_is_unknown) (final=inf)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\a3-component-boundary-nine-source-20261111\model_source.py", line 164, in test_final_cleanup_close_late_nonfinite_or_negative_is_unknown
+    self.assertTrue(errors or not direct or not readers,
+AssertionError: False is not true : final finite0..5 gate must occur AFTER last close
+
+======================================================================
+FAIL: test_final_cleanup_close_late_nonfinite_or_negative_is_unknown (a3_boundary_nine_model.ThreeBoundaryRegressions.test_final_cleanup_close_late_nonfinite_or_negative_is_unknown) (final=-1.0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\a3-component-boundary-nine-source-20261111\model_source.py", line 164, in test_final_cleanup_close_late_nonfinite_or_negative_is_unknown
+    self.assertTrue(errors or not direct or not readers,
+AssertionError: False is not true : final finite0..5 gate must occur AFTER last close
+
+======================================================================
+FAIL: test_known_live_writer_does_not_autoclose_sink (a3_boundary_nine_model.ThreeBoundaryRegressions.test_known_live_writer_does_not_autoclose_sink)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\a3-component-boundary-nine-source-20261111\model_source.py", line 141, in test_known_live_writer_does_not_autoclose_sink
+    self.assertFalse(files.files['stdout.bin'].closed, 'live writer sink must not auto-close')
+AssertionError: True is not false : live writer sink must not auto-close
+
+======================================================================
+FAIL: test_primary_and_postcheck_failure_leave_partial_unknown_evidence (a3_boundary_nine_model.ThreeBoundaryRegressions.test_primary_and_postcheck_failure_leave_partial_unknown_evidence)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\a3-component-boundary-nine-source-20261111\model_source.py", line 205, in test_primary_and_postcheck_failure_leave_partial_unknown_evidence
+    self.assertIn('PRIMARY_CAPTURE_ERROR', serialized, 'primary must survive in explicit failure evidence')
+AssertionError: 'PRIMARY_CAPTURE_ERROR' not found in '[{"git_role": "OBSERVED_NOT_ROOT_ADMITTED", "git_sha256": "c44478712a1b76c0db1121f6671d1104fe4dd49cecb89ab811cad6aac1d21e10", "head": "8c523bd326f6ac18f545ebbe3d48c5315dec77df", "runtime": {"files": {}, "role": "OBSERVED_NOT_ROOT_ADMITTED"}, "scope": "COMPONENT_UNIT_CI", "source": {}}]' : primary must survive in explicit failure evidence
+
+======================================================================
+FAIL: test_source_postcheck_fault_does_not_skip_cache_and_git_attempts (a3_boundary_nine_model.ThreeBoundaryRegressions.test_source_postcheck_fault_does_not_skip_cache_and_git_attempts)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\a3-component-boundary-nine-source-20261111\model_source.py", line 197, in test_source_postcheck_fault_does_not_skip_cache_and_git_attempts
+    self.assertIn('cache.post.attempt', stages.events)
+AssertionError: 'cache.post.attempt' not found in ['snapshot.pre', 'capture.primary', 'source.post.fault']
+
+======================================================================
+FAIL: test_start_throw_ident_none_is_unknown_not_reader_retired (a3_boundary_nine_model.ThreeBoundaryRegressions.test_start_throw_ident_none_is_unknown_not_reader_retired)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\a3-component-boundary-nine-source-20261111\model_source.py", line 126, in test_start_throw_ident_none_is_unknown_not_reader_retired
+    self.assertFalse(receipt['readers_retired'], 'start outcome cannot be proved by identNone/aliveFalse')
+AssertionError: True is not false : start outcome cannot be proved by identNone/aliveFalse
+
+======================================================================
+FAIL: test_unknown_started_writer_does_not_autoclose_sink (a3_boundary_nine_model.ThreeBoundaryRegressions.test_unknown_started_writer_does_not_autoclose_sink)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\a3-component-boundary-nine-source-20261111\model_source.py", line 133, in test_unknown_started_writer_does_not_autoclose_sink
+    self.assertFalse(files.files['stdout.bin'].closed, 'unknown writer sink must not auto-close')
+AssertionError: True is not false : unknown writer sink must not auto-close
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.025s
+
+FAILED (failures=9)
+A3_NINE_PHASE MODEL_END
+A3_NINE_PHASE POSTCHECK_BEGIN
+A3_NINE_PHASE POSTCHECK_END
+A3_NINE_PHASE RESTORATION_END

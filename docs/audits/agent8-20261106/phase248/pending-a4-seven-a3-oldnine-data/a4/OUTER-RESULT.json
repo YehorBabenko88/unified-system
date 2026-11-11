@@ -1,0 +1,20 @@
+{
+  "state": "CHILD_RETIRED",
+  "child_created": true,
+  "returncode": 0,
+  "reason": null,
+  "observed_output_bytes": 1501,
+  "output_limit": 262144,
+  "elapsed_seconds": 3.9690000000045984,
+  "observed_completion_seconds": 3.9690000000045984,
+  "completion_observed_within_budget": true,
+  "direct_handle_retired": true,
+  "reader_threads_retired": true,
+  "reader_errors": [],
+  "lifecycle_errors": [],
+  "scope": "CUSTODY_DATA_SEVEN_ONLY_NOT_HOSTILE_FAMILY_SANDBOX",
+  "budget": "15s cooperative observed completion from before Popen plus separate bounded 5s retirement and 1s per reader join; not strict whole-lane 15s or exact OS exit timestamp",
+  "native": false,
+  "physical": false,
+  "public_submit": false
+}
