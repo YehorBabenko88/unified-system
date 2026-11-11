@@ -238,7 +238,10 @@ def child(manifest_path, manifest_sha):
         def exec_module(self, module):
             origin(self.spec.name, self.spec.origin)
             if self.spec.origin.endswith('.py'):
-                exec(compile(read_raw(Path(self.spec.origin), expected_size=files[str(Path(self.spec.origin).absolute())]['bytes'], runtime=True), self.spec.origin, 'exec'), module.__dict__)
+                expected = files[str(Path(self.spec.origin).absolute())]
+                raw = read_raw(Path(self.spec.origin), expected_size=expected['bytes'], runtime=True)
+                require(digest(raw) == expected['sha256'], 'EXECUTED_SOURCE_HASH')
+                exec(compile(raw, self.spec.origin, 'exec'), module.__dict__)
             else:
                 self.delegate.exec_module(module)
         def __getattr__(self, name):
