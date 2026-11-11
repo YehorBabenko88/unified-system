@@ -1,0 +1,119 @@
+{
+  "schema": "stock-matrix-source-preparation.v1",
+  "prepared_utc": "2026-11-11T00:35:26.9934664Z",
+  "status": "UNEXECUTED_REQUIRES_ROOT_REVIEW_AND_SEPARATE_ALLOCATION",
+  "base": "C:/Users/LS-5/.codex/native-output-cap-matrix-d69b699-20261111",
+  "source_head": "d69b699466fb8b15785e0a4e886cbf60c8c91dd3",
+  "source_tree": "c1fef5f97d1ec475ddcc7d1be02a1d3cd69d8b9c",
+  "source_parent": "756a6701421e804a116a50f997bc015643af341c",
+  "source_files": 1873,
+  "source_directories": 214,
+  "runtime_files": 841,
+  "reused_core_functions": {
+    "need": "BYTE_IDENTICAL",
+    "failure_fact": "BYTE_IDENTICAL",
+    "ordinary": "BYTE_IDENTICAL",
+    "clock": "BYTE_IDENTICAL",
+    "_metadata_matches": "BYTE_IDENTICAL",
+    "hash_file": "BYTE_IDENTICAL",
+    "pinned_json": "BYTE_IDENTICAL",
+    "cache_empty": "BYTE_IDENTICAL",
+    "environment": "BYTE_IDENTICAL",
+    "capture": "BYTE_IDENTICAL_AFTER_SINGLE_ROLE_LITERAL_NORMALIZATION",
+    "git": "BYTE_IDENTICAL"
+  },
+  "future_controller_argument": "--allocated-stock-matrix-controller",
+  "future_child_argument": "--allocated-stock-classifier-matrix",
+  "future_direct_roles": {
+    "source_git": 6,
+    "unit_python": 1
+  },
+  "future_nested_owned_roles": {
+    "fixed_system32_powershell": 1
+  },
+  "future_method_count": 1,
+  "future_actual_subtest_count": 24,
+  "controller_observed_whole_seconds": 120,
+  "python_role_observed_completion_seconds": 15,
+  "powershell_existing_deadline_seconds": 8,
+  "powershell_existing_retirement_seconds": 2,
+  "raw_nested_ps_streams_retained": false,
+  "observes_actual_return_dictionary": true,
+  "observes_actual_unittest_subtests": true,
+  "returns_actual_popen_object": true,
+  "custody_immediate_after_constructor": true,
+  "external_seal_is_not_execution_authority": true,
+  "native_fixture_executed": false,
+  "test_executed": false,
+  "controller_executed": false,
+  "python_import_or_compile": false,
+  "target_powershell_executed": false,
+  "ci_dispatched": false,
+  "source_pushed": false,
+  "old_packets_reused": false,
+  "physical_runtime_admission": false,
+  "public_submit": "DENY",
+  "limits_are_not_family_hardwall_proof": true,
+  "prerequisites": [
+    "Root/A8 exact source review",
+    "Separate explicit Root ONE execution allocation",
+    "Verify external seals before allocation",
+    "Evidence and temp must remain absent",
+    "Cache must remain empty",
+    "Preserve all outcomes; never reuse consumed namespace"
+  ],
+  "files": {
+    "controller.py": {
+      "sha256": "9d3835a0bb4f079008e60d4bd38c8e62004a9ad661adb32ef8b560a28926c27d",
+      "bytes": 31441
+    },
+    "child-driver.py": {
+      "sha256": "720b8562bc0372c576e99b1ca5adf5c3dba308fe7d068ca646b2fd108b2fc6e2",
+      "bytes": 11376
+    },
+    "source-ledger.json": {
+      "sha256": "d93374a6e732c48f9fc609a1cc411b6506c497a8a95d1da33913344aeca81ccd",
+      "bytes": 486799
+    },
+    "runtime-ledger.json": {
+      "sha256": "3625b1be9c8ac3309ba2c974ad35a6b62c7f53e07031a6b4bc3e75b86d4f0046",
+      "bytes": 167973
+    },
+    "reviewed-core-original-3bba.py": {
+      "sha256": "3bba0496549797d1359a1c26b57e8fef1ba628613afb9869871a8eda95be1d26",
+      "bytes": 27142
+    },
+    "CONTROLLER-ADAPTATION-RAW.diff": {
+      "sha256": "84d02fc8ffc1ef5e76bc1086afdc066493b4af6978defa9d181c109781678e22",
+      "bytes": 15678
+    },
+    "CONTROLLER-ADAPTATION-RAW.stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "SOURCE-DATA-READBACK.json": {
+      "sha256": "e22d285dbacaeb03076ebfca80d958c312b9bdd848ee55940fc498096f2acb0f",
+      "bytes": 1073
+    },
+    "POWERSHELL-TOOL-READONLY.json": {
+      "sha256": "04a3e5b5dabbfeb29754f3d2e1a258d1671c23ec264d7691e52b72c2e3eb9791",
+      "bytes": 561
+    },
+    "POWERSHELL-ANCESTRY-DATA-READBACK.json": {
+      "sha256": "fc1e0245e5be3242f5c99af7e8c3b2368bb9fe3ac9ac183a2d6ba79aed3f8563",
+      "bytes": 1581
+    },
+    "REVIEW-AND-ALLOCATION.md": {
+      "sha256": "ee6698578bba95ebd7fe226fd4f52bce0114baf375d41f82bd5db9a9e69432bc",
+      "bytes": 5427
+    },
+    "CONTROLLER-ADAPTATION.diff": {
+      "sha256": "84d02fc8ffc1ef5e76bc1086afdc066493b4af6978defa9d181c109781678e22",
+      "bytes": 15678
+    },
+    "PREPARATION-DIFF-ATTEMPT1-NONQUALIFIED.json": {
+      "sha256": "16fd51f730c8bd266b599209d86b5306324de9f6de3877029ebeba2bbc97f7aa",
+      "bytes": 226
+    }
+  }
+}
