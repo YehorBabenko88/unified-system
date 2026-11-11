@@ -1,9 +1,81 @@
 # F42 preparation child observer — SOURCE ONLY review1
 
-Status: ADMISSION_FIX_SOURCE_PREPARED_NOT_RUN. The current fix has not been imported,
-compiled, tested or committed. Root separately observed actual pure3 RED against
-the preserved874029 qualifier; this supersedes the historical source-only status
-and future-RED language below. Historical evidence and source remain immutable.
+Status: DISCOVERY_FACADE_V2_SOURCE_ONLY_PENDING_ROOT_ALLOCATION. The current v2
+source has not been imported, compiled or tested. Historical evidence and source
+remain immutable; no old PASS is transferred to these changed bytes.
+
+## Current v2 facade and mandatory discovery guard
+
+Root MCI188→189 observed the ONE discovery-binding RED against old15c/fdce:
+receipt SHA256 `aa7a1ea6c8fc698fedee1ce9cb626e2b679c2b6dffa8cb144a342998c979d688`.
+Exactly one outer assertion failure at line88, zero outer errors/skips; actual
+inner3 started,0success,3 known setUp RuntimeErrors. Modules/linecache/raw1874/
+runtime4470/approved841/cache/held cleanup were stable. This is not product3 RED,
+actual observer12/36 or F42 cause proof. The old15c and GREEN4dae are preserved.
+
+The public tests/test_preparation_observer_admission.py is now a version2
+load_tests facade with no exported TestCase class. The original5616-byte module
+is preserved EXACTLY at tests/fixtures/preparation_observer_admission.py, SHA15c.
+All three original method bodies/assertions/make_suite remain byte-identical.
+The5377-byte ONE regression is preserved EXACTLY at
+tests/fixtures/observer_discovery_binding.py, SHA49cdf. Neither basename starts
+with test_, so standard full discovery only sees the public facade.
+
+Pin DAG is acyclic: qualifier Q2 pins moved15c and owned49cdf, NEVER a literal
+facade hash. The facade pins Q2 whole-file SHA/size and moved15c. Root's exact
+primary Git HEAD/raw-tree snapshot binds the facade and all other source bytes.
+Q2 was finalized before its whole-file pin was written into the facade; no
+self-minted pin, cyclic source hash or normalized/partial hash substitutes.
+
+Facade load_tests requires empty standard_tests (unexpected exported cases fail,
+not filter). It checks ancestor/root directories before descendant file reads,
+ordinary/reparse-free/single-link fixed source paths, and retains the exact read
+handles. Reads are fixed pinned size+1; stable same-API metadata is strict while
+cross lstat/fstat checks compare file kind/identity/size/mtime (not Windows
+permission bits or ctime semantics). Directory identity is rechecked without
+treating unrelated ancestor directory timestamp changes as content authority.
+The verified SAME15c buffer is executed in a private namespace with ORIGINAL
+constant module name test_preparation_observer_admission and moved physical
+__file__. It returns actual make_suite(SAMEQ2buffer,Q2pin) exactly once, requiring
+the exact three old IDs. No public module clobber, synthetic already-bound
+fallback, skipped/deselected case, catch-and-pass or whole qualifier import.
+
+Trusted facade binding for the new private observer_discovery_controls function
+is supplied by main's existing before['files'] map from snapshot(root,approved_git,
+expected_head). That map is constructed only after primary Git HEAD/tree/blob
+identity and raw current-file verification; it is not a facade self-hash.
+There is no new CLI/caller-supplied source-map input or runtime permission API.
+The function checks49cdf and facade SAME buffers against that map, hardpins49cdf,
+executes49cdf as a non-main namespace and calls its actual make_suite with the
+externally bound facade hash and actual public source path. It runs exactly ONE
+outer discovery case and requires its actual observed inner3 loaded/started/
+succeeded IDs, zero all adverse flags, empty error_details and wasSuccessful=True.
+Missing/partial/setup errors stay failed/unknown and cannot launch later groups.
+
+Its separate log/JSON/parent receipt key is observer-discovery-controls, schema
+preparation.observer-discovery-controls.v1: the prior12 common fields plus inner
+(13 outer fields). The inner record has its own13 exact49cdf observation fields.
+Observer12/admission3 schemas remain12 fields. No counts are summed: discovery1
+with inner3 witness, direct admission3, observer12 and worker36 are separate scopes.
+
+Mandatory parent order is now guard12 → discovery1 → admission3 → observer12 →36.
+The direct admission3 group reads moved15c with its original hardcoded hash and
+original module identity. The old observer12 helper/tests and worker36 inventory,
+crash argv/code/cwd/env/capture_output/20s, exceptions and cleanup are unchanged.
+
+Workflow adds both nondiscovery fixture triggers and the separate discovery1
+summary. It validates the13-field outer receipt, actual inner3 success facts,
+and facade hash from the already verified primary receipt source_before map for
+EXPECTED_HEAD. Missing primary binding cannot display a qualified discovery1.
+Other control summaries keep their exact12-field contracts. No skip/filter,
+continue-on-error, security workflow weakening, generic loader/framework or
+production Scheduler/authority/storage API changes.
+
+This v2 source needs full Root source review and separate actual1 GREEN/3/12/36
+allocations. No actual new execution, hosted CI, push or merge has occurred under
+this implementation lease. Source-only commits/raw Git proof are not new PASS.
+
+## Historical admission correction (v2 status above takes precedence)
 
 ## Current admission correction — source review before execution
 

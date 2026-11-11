@@ -241,10 +241,74 @@ def observer_controls(root,out):
         sys.path[:]=previous
 
 
+def observer_discovery_controls(root,out,source_hashes):
+    """ONE real facade discovery guard; facade binding comes from primary Git."""
+    started=time.perf_counter_ns()
+    regression='tests/fixtures/observer_discovery_binding.py'
+    facade='tests/test_preparation_observer_admission.py'
+    sources={}
+    for name in (regression,facade):
+        with (root/name).open('rb') as stream:raw=stream.read(65537)
+        # Never adopt a facade's self-hash: main supplies snapshot()['files']
+        # only after primary Git HEAD/raw-tree identity has been verified.
+        if len(raw)>65536 or hashlib.sha256(raw).hexdigest()!=source_hashes[name]:
+            raise ValueError('bounded discovery source identity mismatch')
+        sources[name]=raw
+    if source_hashes[regression]!='49cdf04af503f2d16a6004fd2009b2859604a83395fb3ff2d326f06a036c5209':
+        raise ValueError('frozen ONE discovery regression required')
+    namespace=dict(__name__='test_observer_discovery_binding',__file__=str(root/regression))
+    exec(compile(sources[regression],str(root/regression),'exec'),namespace)
+    suite=namespace['make_suite'](sources[facade],expected_fixture_sha256=source_hashes[facade],
+                                  fixture_path=str(root/facade))
+    expected=['test_observer_discovery_binding.ObserverDiscoveryBindingControl.'
+              'test_actual_module_discovery_runs_three_bound_successes']
+    cases=list(suite);ids=list(case_ids(suite))
+    if ids!=expected or len(cases)!=1:raise ValueError('exact ONE discovery ID required')
+    class Result(unittest.TextTestResult):
+        def __init__(self,*args,**kwargs):
+            super().__init__(*args,**kwargs)
+            self.started_ids=[];self.succeeded_ids=[]
+        def startTest(self,test):
+            self.started_ids.append(test.id());super().startTest(test)
+        def addSuccess(self,test):
+            self.succeeded_ids.append(test.id());super().addSuccess(test)
+    with (out/'observer-discovery-controls.log').open('w',encoding='utf-8') as log:
+        result=unittest.TextTestRunner(stream=log,verbosity=2,resultclass=Result).run(suite)
+    inner=getattr(cases[0],'observed',None)
+    inner_ids=['test_preparation_observer_admission.PreparationObserverAdmissionControls.'+name
+               for name in ('test_actual_observer_controls_accepts_normal_twelve_successes',
+                            'test_actual_observer_controls_rejects_expected_failure',
+                            'test_actual_observer_controls_rejects_unexpected_success')]
+    fields={'stage','fixture_sha256','ids','started_ids','succeeded_ids','tests','failures',
+            'errors','error_details','skips','expected_failures','unexpected_successes','was_successful'}
+    counts=('tests','skips','failures','errors','expected_failures','unexpected_successes')
+    qualified=(result.testsRun==1 and result.wasSuccessful() and not result.skipped
+               and not result.failures and not result.errors
+               and not result.expectedFailures and not result.unexpectedSuccesses
+               and result.started_ids==expected and result.succeeded_ids==expected
+               and type(inner) is dict and set(inner)==fields
+               and inner['stage']=='ACTUAL_MODULE_DISCOVERY_EXECUTED'
+               and inner['fixture_sha256']==source_hashes[facade]
+               and inner['ids']==inner['started_ids']==inner['succeeded_ids']==inner_ids
+               and all(type(inner[key]) is int for key in counts)
+               and tuple(inner[key] for key in counts)==(3,0,0,0,0,0)
+               and inner['error_details']==[] and inner['was_successful'] is True)
+    record=dict(schema='preparation.observer-discovery-controls.v1',
+                status='QUALIFIED' if qualified else 'NOT_QUALIFIED',
+                ids=ids,started_ids=result.started_ids,succeeded_ids=result.succeeded_ids,
+                tests=result.testsRun,skips=len(result.skipped),failures=len(result.failures),
+                errors=len(result.errors),expected_failures=len(result.expectedFailures),
+                unexpected_successes=len(result.unexpectedSuccesses),inner=inner,
+                elapsed_ns=time.perf_counter_ns()-started)
+    (out/'observer-discovery-controls.json').write_text(json.dumps(record,sort_keys=True)+'\n')
+    if not qualified:raise ValueError('ONE discovery and exact inner3 successes required')
+    return record
+
+
 def observer_admission_controls(root,out,source_hashes):
     """Mandatory actual3 against this verified qualifier, before actual36."""
     started=time.perf_counter_ns()
-    fixture='tests/test_preparation_observer_admission.py'
+    fixture='tests/fixtures/preparation_observer_admission.py'
     qualifier='tools/ci/qualify_preparation_integrity.py'
     sources={}
     for name in (fixture,qualifier):
@@ -414,6 +478,7 @@ def main():
         if not controls_result.wasSuccessful() or controls_result.skipped or controls_result.testsRun!=12:
             raise ValueError('pure guard controls failed')
         receipt['pure_controls']=12
+        receipt['observer_discovery_controls']=observer_discovery_controls(root,out,before['files'])
         receipt['observer_admission_controls']=observer_admission_controls(root,out,before['files'])
         receipt['observer_controls']=observer_controls(root,out)
         env=os.environ.copy()
