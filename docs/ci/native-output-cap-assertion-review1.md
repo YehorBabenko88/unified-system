@@ -341,3 +341,61 @@ existing native cohort is not authorized to execute an unqualified tool. This
 change does not skip, bypass, disable or modify any existing workflow to evade
 that gate. Root/A8 source/cohort review and a separate execution/push allocation
 are still required. Hosted STOCK24 is not Win11/native-workload acceptance.
+
+## Original PR86 validation RED and static-shell successor (SOURCE ONLY)
+
+The original exact5fc Draft PR86/push cohort remains preserved, never rerun. Run
+43064999840 failed before any job: public original GitHub validation annotation
+reports Line192/Col16, Unrecognized named-value env, in env.QUALIFICATION_BASE.
+It is workflow configuration RED, not a PowerShell classifier failure:0 jobs,
+no stock24 profile/cases. Source5fc, original annotation/receipts and prior4 model
+bodies are retained unchanged outside this successor. The existing34 original
+runs continue independently; no replacement or cancellation is authorized here.
+
+Primary actions/runner workflow-v1.0 schema declares run-step.shell as a plain
+non-empty-string, without expression context. ScriptHandler uses the supplied
+argument format with string.Format(argFormat,resolvedScriptPath); repeated{0}
+refers to the same generated script. ScriptHandlerHelpers assigns Python a .py
+extension. The correction therefore uses ONLY this static literal shell:
+python -I -S -B -X "pycache_prefix={0}.pycache" "{0}".
+No env/runner/github substitution, PowerShell wrapper, re-exec, runtime assignment
+to sys.pycache_prefix, dropped startup flag or additional process is introduced.
+
+The actual runner script, RUNNER_TEMP and verified BASE must pass unresolved
+root-first ordinary directory/single-link script checks before resolution or byte
+reads; canonical aliases refuse rather than normalize. The startup prefix must
+equal exactly str(actual __file__)+'.pycache', outside and disjoint from BASE.
+Its leaf must be absent, including no dangling alias. The script is size-bounded
+and hashed from one held identity-checked buffer, then the prefix is mkdir-exclusive
+and verified ordinary/canonical/empty. Failed prefixes/files are never deleted or
+adopted to retry. The script hash is an observation, not proof of executed memory
+or primary-Git/publisher provenance. Metadata failure cannot trigger script reads.
+
+The binding is stored as a bounded, closed, exclusive parent-prefix-binding.json,
+with same-buffer digest supplied only inside the existing Python process. The
+verified qualifier independently rederives the parent prefix from the controlled
+runner-script path, checks ACTUAL -I/-S/-B/-X state, rooted/canonical/disjoint
+paths, script hash and descriptor. Parent origin admission explicitly uses that
+prefix. The one existing Python unit child still receives its separate BASE/
+pycache-prefix through an actual -X argument; its origin helper's default role is
+unchanged. The shared origin helper's optional cache-prefix metadata does not grant
+authority. Both empty prefixes and script identity are checked before/after;
+independent closed readback checks the descriptor/prefixes after producer exit.
+
+Only this workflow, qualifier and owned review document change; raw tracked count
+remains1875. Helper7181/matrixb822/installation7f55 and native workload/timeout are
+unchanged. Eight new external regression SOURCE methods select the actual inline
+binder/helper: static no-context shell/real-X/double-placeholder, wrong startup
+prefix, reparse parent, existing prefix, canonical alias, exclusive positive
+binding, parent explicit origin prefix and child default origin prefix. They use
+owned inert path/stat/BytesIO objects. Original four controls retain their bodies;
+any future target-SHA repin is explicit, not transferred prior qualification.
+These controls have NOT run; missing new binder is only a feature prerequisite.
+Original GitHub validation is the actual configuration RED.
+
+No target import/compile/test, real PowerShell/Git/process fixture, native action,
+CI dispatch/rerun/cancel or push is performed for this SOURCE preparation. No
+Windows alias fallback or security/ordinary/source/origin guard is relaxed. Any
+new hosted path incompatibility remains fail-closed pending original diagnosis.
+Independent source review and separate execution/publication grants remain
+required; no whole-hosted/Win11/native/physical qualification is claimed.

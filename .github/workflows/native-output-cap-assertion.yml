@@ -189,10 +189,74 @@ jobs:
           finally:save()
       - name: Run exact verified Windows stock24 qualifier
         id: qualifier
-        shell: python -I -S -B -X "pycache_prefix=${{ env.QUALIFICATION_BASE }}/pycache-prefix" {0}
+        shell: python -I -S -B -X "pycache_prefix={0}.pycache" "{0}"
         run: |
           import hashlib, os, pathlib, stat, sys, types
+          from pathlib import Path
+          def bind_runner_prefix(script,runner_temp,base,observed_prefix):
+              def ordinary(path,directory=False):
+                  assert path.is_absolute() and path.drive and not path.drive.startswith('\\\\') and '..' not in path.parts
+                  for parent in reversed(path.parents):
+                      info=parent.lstat()
+                      assert stat.S_ISDIR(info.st_mode) and not stat.S_ISLNK(info.st_mode) and not getattr(info,'st_file_attributes',0)&1024
+                  info=path.lstat()
+                  assert not stat.S_ISLNK(info.st_mode) and not getattr(info,'st_file_attributes',0)&1024
+                  assert stat.S_ISDIR(info.st_mode) if directory else stat.S_ISREG(info.st_mode) and info.st_nlink==1
+                  # Resolve only AFTER all unresolved ancestry/leaf guards; never
+                  # normalize a Windows alias into an admitted path.
+                  assert str(path)==str(path.resolve(strict=True))
+                  return info
+              def same(left,right,same_api):
+                  for key in ('st_mode','st_dev','st_ino','st_size','st_mtime_ns','st_nlink')+(('st_ctime_ns',) if same_api else ()):
+                      a,b=getattr(left,key,None),getattr(right,key,None)
+                      assert type(a) is int and type(b) is int
+                      assert stat.S_IFMT(a)==stat.S_IFMT(b) if key=='st_mode' and not same_api else a==b
+                  absent=object();a=getattr(left,'st_birthtime_ns',absent);b=getattr(right,'st_birthtime_ns',absent)
+                  assert not same_api or (a is absent)==(b is absent)
+                  assert a is absent or type(a) is int
+                  assert b is absent or type(b) is int
+                  assert a is absent or b is absent or a==b
+              ordinary(runner_temp,True);ordinary(base,True)
+              assert script.is_relative_to(runner_temp) and base.is_relative_to(runner_temp)
+              before=ordinary(script)
+              assert script.suffix=='.py' and 0<before.st_size<=262144
+              prefix=Path(str(script)+'.pycache')
+              assert type(observed_prefix) is str and observed_prefix==str(prefix)
+              assert not prefix.is_relative_to(base) and not base.is_relative_to(prefix)
+              try:prefix.lstat()
+              except FileNotFoundError:pass
+              else:raise AssertionError('PARENT_PREFIX_ALREADY_EXISTS')
+              with script.open('rb',buffering=0) as held:
+                  opened=os.fstat(held.fileno());same(before,opened,False)
+                  raw=held.read(before.st_size+1);same(opened,os.fstat(held.fileno()),True)
+              same(before,ordinary(script),True);assert len(raw)==before.st_size
+              prefix.mkdir(exist_ok=False)
+              ordinary(prefix,True);assert not any(prefix.iterdir())
+              return dict(schema='runner-qualified-prefix.v1',runner_script=str(script),runner_temp=str(runner_temp),
+                          runner_script_sha256=hashlib.sha256(raw).hexdigest(),runner_script_bytes=len(raw),
+                          parent_prefix=str(prefix),child_prefix=str(base/'pycache-prefix'),actual_startup_prefix=observed_prefix,
+                          fresh_absent_before_create=True)
           base=pathlib.Path(os.environ['QUALIFICATION_BASE']);path=base/'verified-qualifier.py'
+          # BASE already belongs to this run. Guard it again before attempting
+          # failure metadata; an unsafe script must never cause diagnostic reads.
+          for parent in [*reversed(base.parents),base]:
+              info=parent.lstat();assert stat.S_ISDIR(info.st_mode) and not stat.S_ISLNK(info.st_mode) and not getattr(info,'st_file_attributes',0)&1024
+          assert str(base)==str(base.resolve(strict=True))
+          try:
+              assert os.name=='nt' and sys.version_info[:3]==(3,12,10) and sys.flags.isolated and sys.flags.no_site and sys.dont_write_bytecode
+              binding=bind_runner_prefix(Path(__file__),Path(os.environ['RUNNER_TEMP']),base,sys.pycache_prefix)
+              binding_raw=(__import__('json').dumps(binding,sort_keys=True)+'\n').encode('utf8')
+              assert len(binding_raw)<=4096
+              with (base/'parent-prefix-binding.json').open('xb') as stream:stream.write(binding_raw)
+              os.environ['QUALIFIED_RUNNER_SCRIPT']=binding['runner_script']
+              os.environ['QUALIFIED_PARENT_PREFIX']=binding['parent_prefix']
+              os.environ['PARENT_PREFIX_BINDING_SHA256']=hashlib.sha256(binding_raw).hexdigest()
+          except BaseException as error:
+              # Fixed type only; preserve the primary refusal if evidence fails.
+              try:
+                  with (base/'parent-prefix-failure.json').open('x',encoding='utf8') as stream:stream.write(__import__('json').dumps(dict(passed=False,failure_type=type(error).__name__))+'\n')
+              except BaseException:pass
+              raise
           for parent in reversed(path.parents):
               info=parent.lstat();assert stat.S_ISDIR(info.st_mode) and not stat.S_ISLNK(info.st_mode) and not getattr(info,'st_file_attributes',0)&1024
           before=path.lstat();assert stat.S_ISREG(before.st_mode) and before.st_nlink==1 and not getattr(before,'st_file_attributes',0)&1024 and 0<before.st_size<=131072
@@ -220,7 +284,7 @@ jobs:
           base=pathlib.Path(os.environ['QUALIFICATION_BASE'])/'allocated-matrix-evidence'
           def closed(name,limit,parse=True,outer=False):
               assert pathlib.PureWindowsPath(name).name==name and '/' not in name and '\\' not in name and name not in ('.','..')
-              assert not outer or name in ('runtime-ledger.json','source-ledger.json','verified-qualifier.py','child-driver.py')
+              assert not outer or name in ('runtime-ledger.json','source-ledger.json','verified-qualifier.py','child-driver.py','parent-prefix-binding.json')
               path=(base.parent if outer else base)/name
               for parent in reversed(path.parents):
                   info=parent.lstat();assert stat.S_ISDIR(info.st_mode) and not stat.S_ISLNK(info.st_mode) and not getattr(info,'st_file_attributes',0)&1024
@@ -260,6 +324,17 @@ jobs:
           assert hashlib.sha256(qualifier).hexdigest()==os.environ['QUALIFIER_SHA256']
           driver,_=closed('child-driver.py',65536,False,True)
           assert hashlib.sha256(driver).hexdigest()==receipt['driver_source_sha256']
+          binding_raw,binding=closed('parent-prefix-binding.json',4096,True,True)
+          assert hashlib.sha256(binding_raw).hexdigest()==receipt['parent_prefix_binding_sha256']
+          assert binding['schema']=='runner-qualified-prefix.v1' and binding['fresh_absent_before_create'] is True
+          parent_prefix=pathlib.Path(binding['parent_prefix']);child_prefix=pathlib.Path(binding['child_prefix'])
+          assert str(parent_prefix)==binding['actual_startup_prefix'] and parent_prefix==pathlib.Path(binding['runner_script']+'.pycache')
+          assert child_prefix==base.parent/'pycache-prefix' and parent_prefix!=child_prefix and not parent_prefix.is_relative_to(base.parent) and not base.parent.is_relative_to(parent_prefix)
+          for prefix in (parent_prefix,child_prefix):
+              assert prefix.is_absolute() and prefix.is_relative_to(pathlib.Path(os.environ['RUNNER_TEMP']))
+              for directory in [*reversed(prefix.parents),prefix]:
+                  info=directory.lstat();assert stat.S_ISDIR(info.st_mode) and not stat.S_ISLNK(info.st_mode) and not getattr(info,'st_file_attributes',0)&1024
+              assert str(prefix)==str(prefix.resolve(strict=True)) and not any(prefix.iterdir())
           assert type(receipt['artifacts']) is dict and len(receipt['artifacts'])<=32
           for name,digest in receipt['artifacts'].items():
               artifact,_=closed(name,262144,False);assert hashlib.sha256(artifact).hexdigest()==digest

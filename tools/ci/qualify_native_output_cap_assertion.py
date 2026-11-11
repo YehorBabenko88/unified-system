@@ -13,7 +13,9 @@ import time
 
 BASE = Path(os.environ['QUALIFICATION_BASE'])
 SOURCE = Path(os.environ['GITHUB_WORKSPACE'])
-CACHE = BASE / 'pycache-prefix'
+RUNNER_SCRIPT = Path(os.environ['QUALIFIED_RUNNER_SCRIPT'])
+CACHE = Path(str(RUNNER_SCRIPT) + '.pycache')
+CHILD_CACHE = BASE / 'pycache-prefix'
 EVIDENCE = BASE / 'allocated-matrix-evidence'
 REAL = Path(sys.executable)
 GIT = Path('C:/Program Files/Git/bin/git.exe')
@@ -25,7 +27,7 @@ PS = Path('C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe')
 PS_SHA = None
 DRIVER = BASE / 'child-driver.py'
 ORIGIN_SOURCE = r'''
-def module_origins(runtime, roles, read_file, extra=None):
+def module_origins(runtime, roles, read_file, extra=None, *, cache_prefix=None):
     """Observe/admit actual module objects against this run's selected raw map.
 
     This is origin consistency, not interpreter/loaded-DLL publisher attestation.
@@ -40,7 +42,9 @@ def module_origins(runtime, roles, read_file, extra=None):
     import types
     need(type(runtime) is dict and type(runtime.get('files')) is dict)
     need(len(runtime['files']) <= 20000 and len(roles) <= 2)
-    cache = BASE / 'pycache-prefix'
+    # Parent passes its exact startup-script-derived prefix; child/default model
+    # role retains its separate BASE prefix. This argument is metadata, not a grant.
+    cache = BASE / 'pycache-prefix' if cache_prefix is None else cache_prefix
     ordinary(cache, directory=True)
     need(not any(cache.iterdir()))
     known = {Path(name): entry for name, entry in runtime['files'].items()}
@@ -376,7 +380,7 @@ CHILD_LOCAL_COMPLETION_BOUND GIT_ARGUMENTS_NOT_ALLOWED SOURCE_GIT_FAILED
 EXACT_SOURCE_OR_HELPER_PRECONDITION SOURCE_OBJECT_REDIRECTION SOURCE_COMMIT_CHANGED
 SOURCE_GIT_TYPE SOURCE_GIT_INVENTORY_CHANGED SOURCE_WALK_FAILED SOURCE_EXTRA_FILE
 SOURCE_MISSING_OR_EXTRA SOURCE_DIRTY FROZEN_TEST_DOCUMENT_CHANGED RUNTIME_FILE_COUNT
-FIXED_TOOL_CHANGED CLOSED_RECEIPT_REQUIRED MODULE_ORIGIN_DENY STOCK_MATRIX_PROFILE_REQUIRED EXPECTED_SINGLE_PREREQUISITE_RED_REQUIRED EXPECTED_ASSERTION_MISSING
+FIXED_TOOL_CHANGED CLOSED_RECEIPT_REQUIRED PREFIX_BINDING_REQUIRED MODULE_ORIGIN_DENY STOCK_MATRIX_PROFILE_REQUIRED EXPECTED_SINGLE_PREREQUISITE_RED_REQUIRED EXPECTED_ASSERTION_MISSING
 EXPECTED_ONE_FAILURE_REQUIRED UNEXPECTED_SETUP_OR_CLASSIFIER_EXECUTION
 EXPLICIT_ROOT_ALLOCATION_REQUIRED FIXED_WINDOWS_CPYTHON_REQUIRED
 ISOLATED_RUNTIME_AND_FRESH_PREFIX_REQUIRED EVIDENCE_FILE_BOUND
@@ -524,8 +528,10 @@ def pinned_json(name, digest):
 
 
 def cache_empty():
-    ordinary(CACHE, directory=True)
-    need(not any(CACHE.iterdir()), 'FRESH_PYCACHE_NOT_EMPTY')
+    for prefix in (CACHE, CHILD_CACHE):
+        ordinary(prefix, directory=True)
+        need(str(prefix) == str(prefix.resolve(strict=True)), 'PREFIX_BINDING_REQUIRED')
+        need(not any(prefix.iterdir()), 'FRESH_PYCACHE_NOT_EMPTY')
 
 
 def environment(git=False):
@@ -815,6 +821,7 @@ def runtime_snapshot(runtime):
     return {'bound_files': len(runtime['files']), 'root': runtime['root'], 'tools': tools,
             'runtime_map_sha256': hashlib.sha256(json.dumps(runtime, sort_keys=True).encode()).hexdigest(),
             'version': sys.version, 'empty_external_pycache_prefix': True,
+            'parent_pycache_prefix': str(CACHE), 'child_pycache_prefix': str(CHILD_CACHE),
             'excluded': ['Lib/site-packages', '**/__pycache__', '**/*.pyc', '**/*.pyo'],
             'transitive_os_dll_release_closure': 'NOT_PROVEN', 'publisher_attestation': False}
 
@@ -894,9 +901,37 @@ def main():
              'ISOLATED_RUNTIME_AND_FRESH_PREFIX_REQUIRED')
         ordinary(REAL)  # root-first; do not resolve/follow an executable alias
         need(sys.flags.isolated and sys.flags.no_site and sys.dont_write_bytecode
-             and sys.pycache_prefix is not None and Path(sys.pycache_prefix) == CACHE
+             and type(sys.pycache_prefix) is str and sys.pycache_prefix == str(CACHE)
              and executable == REAL,
              'ISOLATED_RUNTIME_AND_FRESH_PREFIX_REQUIRED')
+        runner_temp = Path(os.environ['RUNNER_TEMP'])
+        ordinary(runner_temp, directory=True)
+        ordinary(RUNNER_SCRIPT, single=True)
+        need(RUNNER_SCRIPT.is_relative_to(runner_temp) and BASE.is_relative_to(runner_temp)
+             and not CACHE.is_relative_to(BASE) and not BASE.is_relative_to(CACHE)
+             and CACHE != CHILD_CACHE and os.environ['QUALIFIED_PARENT_PREFIX'] == str(CACHE),
+             'PREFIX_BINDING_REQUIRED')
+        for path in (runner_temp, RUNNER_SCRIPT, BASE):
+            need(str(path) == str(path.resolve(strict=True)), 'PREFIX_BINDING_REQUIRED')
+        binding_digest = os.environ['PARENT_PREFIX_BINDING_SHA256']
+        need(re.fullmatch('[0-9a-f]{64}', binding_digest) is not None, 'PREFIX_BINDING_REQUIRED')
+        binding = pinned_json('parent-prefix-binding.json', binding_digest)
+        need(type(binding) is dict and set(binding) == {
+            'schema', 'runner_script', 'runner_temp', 'runner_script_sha256', 'runner_script_bytes',
+            'parent_prefix', 'child_prefix', 'actual_startup_prefix', 'fresh_absent_before_create'},
+             'PREFIX_BINDING_REQUIRED')
+        need(binding['schema'] == 'runner-qualified-prefix.v1'
+             and binding['runner_script'] == str(RUNNER_SCRIPT) and binding['runner_temp'] == str(runner_temp)
+             and binding['parent_prefix'] == binding['actual_startup_prefix'] == sys.pycache_prefix
+             and binding['child_prefix'] == str(CHILD_CACHE) and binding['fresh_absent_before_create'] is True
+             and type(binding['runner_script_bytes']) is int and 0 < binding['runner_script_bytes'] <= 262144
+             and type(binding['runner_script_sha256']) is str
+             and re.fullmatch('[0-9a-f]{64}', binding['runner_script_sha256']) is not None,
+             'PREFIX_BINDING_REQUIRED')
+        script_entry = {'bytes': binding['runner_script_bytes'], 'sha256': binding['runner_script_sha256']}
+        hash_file(RUNNER_SCRIPT, script_entry, single=True)
+        RECORD['parent_prefix_binding_sha256'] = binding_digest
+        RECORD['parent_prefix_binding'] = binding
         ledger = pinned_json('source-ledger.json', LEDGER_SHA)
         with DRIVER.open('xb') as stream:
             stream.write(CHILD_SOURCE.encode('utf8'))
@@ -912,9 +947,9 @@ def main():
         origin_roles = {'__main__': {'path': str(Path(__file__)), 'bytes': ordinary(Path(__file__)).st_size,
                                    'sha256': os.environ['QUALIFIER_SHA256']}}
         read_origin = lambda path, entry: hash_file(path, entry, single=True)
-        RECORD['module_origins_before'] = module_origins(runtime, origin_roles, read_origin)
+        RECORD['module_origins_before'] = module_origins(runtime, origin_roles, read_origin, cache_prefix=CACHE)
         before = True
-        command = [str(REAL), '-I', '-S', '-B', '-X', 'pycache_prefix=' + str(CACHE),
+        command = [str(REAL), '-I', '-S', '-B', '-X', 'pycache_prefix=' + str(CHILD_CACHE),
                    str(DRIVER), '--allocated-stock-classifier-matrix']
         output, error, status = capture(command, 'actual_classifier_unit_python', 'stock-matrix-unit', 15)
         classify_matrix(output, error, status)
@@ -929,7 +964,8 @@ def main():
                 RECORD['source_after'] = snapshot(ledger, 'post')
                 RECORD['runtime_after'] = runtime_snapshot(runtime)
                 need(RECORD['runtime_after'] == RECORD['runtime_before'], 'FIXED_TOOL_CHANGED')
-                RECORD['module_origins_after'] = module_origins(runtime, origin_roles, read_origin)
+                hash_file(RUNNER_SCRIPT, script_entry, single=True)
+                RECORD['module_origins_after'] = module_origins(runtime, origin_roles, read_origin, cache_prefix=CACHE)
             except BaseException as error:
                 RECORD['post_verification_failed'] = True
                 RECORD['post_verification_failure'] = failure_fact(error)
