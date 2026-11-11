@@ -1,0 +1,83 @@
+{
+  "actual_source": {
+    "qualifier": "94277c28a9b25f048b4a0acf26d343d1c08e45ccd940437d0e5bf894126d5d62",
+    "readme": "0cef56996e8d721ec13f5cb536bfe7d1dfe9adcb4974c0865dc353e632c0dabb",
+    "workflow": "e0666d138186b0b621ef52851892c4f755c24ed9845428ad549a02b0b18a1c62"
+  },
+  "counts": {
+    "additional": 8,
+    "original": 20,
+    "proposed_total": 28
+  },
+  "execution_allocation": "NONE; Root/A8 source review before one new modeledRED; no implementation fix yet",
+  "fake_effects": "Inert in-memory handle poll/kill/wait records and deterministic OSError only; no actual Popen/resource/OS cleanup/threads/Git/network/source mutation",
+  "implementation_five_unchanged": [
+    {
+      "path": "docs/gateway/research/persistence/qualification47/qualify.py",
+      "sha256": "94277c28a9b25f048b4a0acf26d343d1c08e45ccd940437d0e5bf894126d5d62"
+    },
+    {
+      "path": "docs/gateway/research/persistence/qualification47/expected47.json",
+      "sha256": "0a24d40c42b35b713a39f54c39c62c4e8b902ac70c9a3802770b2e6ae29451d1"
+    },
+    {
+      "path": "docs/gateway/research/persistence/qualification47/requirements.lock",
+      "sha256": "389c729ab525863c70bd3accc21b9fc73b431b89fa52fb035be444e6a853eeeb"
+    },
+    {
+      "path": "docs/gateway/research/persistence/qualification47/README.md",
+      "sha256": "0cef56996e8d721ec13f5cb536bfe7d1dfe9adcb4974c0865dc353e632c0dabb"
+    },
+    {
+      "path": ".github/workflows/projection-recovery-47.yml",
+      "sha256": "e0666d138186b0b621ef52851892c4f755c24ed9845428ad549a02b0b18a1c62"
+    }
+  ],
+  "models": "Per lane poll error, poll+kill error, poll+wait error, normal running-held cleanup control. Exactly one kill attempt and wait(timeout=2) expected; sticky uncertainty/error evidence and actual denial predicate required.",
+  "new_ids": [
+    "__main__.ControlsHeldCleanupControls.test_poll_error_attempts_kill_and_wait_and_denies",
+    "__main__.ControlsHeldCleanupControls.test_poll_and_kill_error_still_attempts_wait_and_denies",
+    "__main__.ControlsHeldCleanupControls.test_poll_and_wait_error_keeps_unknown_and_denies",
+    "__main__.ControlsHeldCleanupControls.test_normal_running_handle_cleanup_control",
+    "__main__.MainRunHeldCleanupControls.test_poll_error_attempts_kill_and_wait_and_denies",
+    "__main__.MainRunHeldCleanupControls.test_poll_and_kill_error_still_attempts_wait_and_denies",
+    "__main__.MainRunHeldCleanupControls.test_poll_and_wait_error_keeps_unknown_and_denies",
+    "__main__.MainRunHeldCleanupControls.test_normal_running_handle_cleanup_control"
+  ],
+  "new_test_bytes": 31251,
+  "new_test_sha256": "3f7be88ebb61d20627585be4894fb116cf28dffc04fdfd1d44829146aa3bd69a",
+  "old_test_sha256": "f3e8f14f4f4d5e5051795514861722ec790e9c3d8ef9c50d1948a1372b556376",
+  "original20_ids_bodies_assertions_and_prior_top_definitions_unchanged": true,
+  "original_ids": [
+    "__main__.RootFirstControls.test_reparse_parent_stops_before_descendant_or_git",
+    "__main__.RootFirstControls.test_file_parent_stops_before_descendant_or_git",
+    "__main__.RootFirstControls.test_missing_parent_stops_before_descendant_or_git",
+    "__main__.RootFirstControls.test_file_root_stops_before_leaf_git_or_hash",
+    "__main__.RootFirstControls.test_selected_reparse_parent_stops_before_leaf_inspection",
+    "__main__.RootFirstControls.test_ordinary_tree_retains_exact_blob_and_ledger",
+    "__main__.ReturnedHandleControls.test_returned_handle_registered_before_invariant_refusal",
+    "__main__.ReturnedHandleControls.test_invariant_refusal_cleanup_kills_and_waits_known_handle",
+    "__main__.ReturnedHandleControls.test_preconstructor_refusal_creates_no_handle",
+    "__main__.JunitAdmissionControls.test_reparse_xml_parent_refuses_before_parser_read_hash",
+    "__main__.JunitAdmissionControls.test_file_xml_parent_refuses_before_parser_read_hash",
+    "__main__.JunitAdmissionControls.test_oversized_xml_refuses_before_parser_read_hash",
+    "__main__.JunitAdmissionControls.test_ordinary_bounded_xml_preserves_exact_47_facts_control",
+    "__main__.ChildPathAdmissionControls.test_temp_junction_refuses_before_backend",
+    "__main__.ChildPathAdmissionControls.test_db_parent_junction_refuses_before_backend",
+    "__main__.ChildPathAdmissionControls.test_db_parent_file_refuses_before_backend",
+    "__main__.ChildPathAdmissionControls.test_db_reparse_leaf_refuses_before_backend",
+    "__main__.ChildPathAdmissionControls.test_marker_reparse_leaf_refuses_before_backend",
+    "__main__.ChildPathAdmissionControls.test_ordinary_db_absent_marker_reaches_backend_control",
+    "__main__.ChildPathAdmissionControls.test_ordinary_db_existing_marker_reaches_backend_control"
+  ],
+  "overall": "HOLD / NO-GO",
+  "pending_pipeline": "Current mandatory sourceSHA/count20 intentionally HELD/stale against proposed28 file; no pipeline version/count/claim update until reviewed later. Frozen809/47/141 and lock unchanged.",
+  "predicted_current_source": "6 additional intended assertion RED +2 positive controls; prior20 not rerun or assumed actual",
+  "schema": "agent7.knownheld.poll-controls.source-proposal.v1",
+  "scope": "SOURCE_ONLY_NO_TEST_OR_DEFINITION_EXECUTION",
+  "source_seams": {
+    "controls": "Actual controls outerTry.finalbody unique if(child is not None) branch AND actual observed_pass assignment",
+    "run": "Actual run outerTry.finalbody unique for(child in held) containing actual kill+wait; separate actual verify retirement-denial need statement",
+    "wrappers": "Binding parameters only; selected AST bodies inserted unchanged; actual need definition, no full main/import/authority permit"
+  }
+}

@@ -1,0 +1,86 @@
+diff --git a/tests/fresh_render/CLEANUP-DEADLINE.md b/tests/fresh_render/CLEANUP-DEADLINE.md
+new file mode 100644
+index 0000000..6916008
+--- /dev/null
++++ b/tests/fresh_render/CLEANUP-DEADLINE.md
+@@ -0,0 +1,29 @@
++# F37 — observed monotonic cleanup expiry
++
++Immutable successor from458de55; original18 PURE/mock evidence is retained.
++A8/Root source review identified a real predicate gap: relative timers alone do
++not reject a synchronously blocking or delayed-event-loop completion that settles
++before its overdue timer callback. This is a source finding, NOT actual e RCA or
++a demonstrated bypass of Root's external retained-Job watchdog.
++
++One absolute hrtime deadline now covers the entire cleanup invocation, <=10000ms.
++Each operation gets min(common deadline, operation start+5000ms). The same monotonic
++deadline is checked before scheduling, immediately before invoking an issued
++handle, after awaited completion, after telemetry completion and before confirmed.
++Equality is expired. No elapsed time is rounded down into an extra allowance.
++The existing timer still bounds ordinary asynchronous waits; it is not treated as
++a hard event-loop/OS scheduler guarantee.
++
++Any timer/postcompletion/per-operation/common deadline expiry is sticky:
++expired:true, expiration_phase fixed ID, and deadline_expired:true when common
++deadline was observed. observed_elapsed_ms records the final monotonic interval,
++not CPU/UTC/commit authority. Late operations are UNKNOWN; even separately observed
++exit facts cannot turn expired cleanup into confirmed. Existing harness classification
++therefore stays nonPASS/root_job_teardown_required on these results.
++
++Pure inert tests advance a virtual hrtime clock synchronously without CPU spinning,
++native child execution, browser/SDK/PowerShell/Job calls or wall-clock sleeps.
++They reproduce late last HTTP completion before timeout callback, per-operation5s
++expiry, late telemetry/final confirmation, and the unchanged under-deadline control.
++Root20s/USER10s/1GiB, own handles, guard, pins, bootstrap and per-read checks are
++unchanged. No additional kill, retry, batching or physical authorization is added.
+diff --git a/tests/fresh_render/owned_lifecycle.cjs b/tests/fresh_render/owned_lifecycle.cjs
+index 15474a2..170f125 100644
+--- a/tests/fresh_render/owned_lifecycle.cjs
++++ b/tests/fresh_render/owned_lifecycle.cjs
+@@ -1,8 +1,17 @@
+ 'use strict';
+ async function cleanupIssued(handles,telemetry,budgetMs=10000){
+- const started=process.hrtime.bigint(),r={context:'NOT_ISSUED',client:'NOT_ISSUED',server:'NOT_ISSUED',http:'NOT_ISSUED',confirmed:false,exit_observed:false,fallback_sdk_kill:false};
+- const remaining=()=>Math.max(0,Math.min(5000,budgetMs-Number((process.hrtime.bigint()-started)/1000000n)));
+- async function attempt(phase,fn){try{return await telemetry.step(phase,async()=>{const ms=remaining();if(ms<=0)throw Error('DEADLINE');let timer;try{const result=await Promise.race([Promise.resolve().then(fn),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('DEADLINE')),ms);})]);if(result!==true)throw Error('OWNED_CLEANUP_UNCONFIRMED');return true;}finally{clearTimeout(timer);}});}catch{return false;}}
++ if(!Number.isInteger(budgetMs)||budgetMs<=0||budgetMs>10000)throw Error('CLEANUP_BUDGET');
++ const started=process.hrtime.bigint(),deadline=started+BigInt(budgetMs)*1000000n,r={context:'NOT_ISSUED',client:'NOT_ISSUED',server:'NOT_ISSUED',http:'NOT_ISSUED',confirmed:false,exit_observed:false,fallback_sdk_kill:false,budget_ms:budgetMs,expired:false,deadline_expired:false,expiration_phase:null};
++ function expire(phase,now){r.expired=true;if(now>=deadline)r.deadline_expired=true;if(r.expiration_phase===null)r.expiration_phase=phase;}
++ async function attempt(phase,fn){
++  const begin=process.hrtime.bigint(),operationDeadline=begin+5000000000n<deadline?begin+5000000000n:deadline;
++  const check=()=>{const now=process.hrtime.bigint();if(now>=operationDeadline){expire(phase,now);throw Error('DEADLINE');}return now;};
++  try{
++   check();const result=await telemetry.step(phase,async()=>{check();let timer;try{const ms=Math.ceil(Number(operationDeadline-check())/1000000);const result=await Promise.race([Promise.resolve().then(()=>{check();return fn();}),new Promise((_,reject)=>{timer=setTimeout(()=>{expire(phase,process.hrtime.bigint());reject(Error('DEADLINE'));},ms);})]);check();if(result!==true)throw Error('OWNED_CLEANUP_UNCONFIRMED');return true;}finally{clearTimeout(timer);}});
++   // A delayed telemetry continuation must not hide elapsed cleanup time either.
++   check();return result;
++  }catch{return false;}
++ }
+  if(handles.context)r.context=await attempt('CONTEXT_CLOSE',async()=>{await handles.context.close();return true;})?'CLOSED':'UNKNOWN';
+  if(handles.browser)r.client=await attempt('CLIENT_DISCONNECT',async()=>{await handles.browser.close();return handles.browser.isConnected()===false;})?'DISCONNECTED':'UNKNOWN';
+  if(handles.browserServer){
+@@ -10,7 +19,8 @@ async function cleanupIssued(handles,telemetry,budgetMs=10000){
+   const observed=await attempt('SERVER_EXIT_OBSERVE',()=>{const child=handles.browserServer.process();if(Number.isSafeInteger(child.pid)&&child.pid>0)r.pid=child.pid;r.exit_observed=Number.isInteger(child.exitCode)||(typeof child.signalCode==='string'&&child.signalCode.length>0);r.exit_code=Number.isInteger(child.exitCode)?child.exitCode:null;r.signal_observed=typeof child.signalCode==='string'&&child.signalCode.length>0;return r.exit_observed&&r.exit_code===0;});if(!observed)r.server='UNKNOWN';
+  }
+  if(handles.httpServer)r.http=await attempt('HTTP_CLOSE',()=>new Promise((resolve,reject)=>{handles.httpServer.closeAllConnections();handles.httpServer.close(error=>error?reject(error):resolve(true));}))?'CLOSED':'UNKNOWN';
+- r.confirmed=['CLOSED','NOT_ISSUED'].includes(r.context)&&['DISCONNECTED','NOT_ISSUED'].includes(r.client)&&r.server==='CLOSED'&&r.exit_observed&&r.exit_code===0&&['CLOSED','NOT_ISSUED'].includes(r.http);
++ const finished=process.hrtime.bigint();r.observed_elapsed_ms=Math.max(0,Number(finished-started)/1000000);if(finished>=deadline)expire('FINAL_CONFIRM',finished);
++ r.confirmed=!r.expired&&!r.deadline_expired&&['CLOSED','NOT_ISSUED'].includes(r.context)&&['DISCONNECTED','NOT_ISSUED'].includes(r.client)&&r.server==='CLOSED'&&r.exit_observed&&r.exit_code===0&&['CLOSED','NOT_ISSUED'].includes(r.http);
+  return Object.freeze(r);
+ }
+ module.exports=Object.freeze({cleanupIssued});
+diff --git a/tests/fresh_render/test_cleanup_deadline.cjs b/tests/fresh_render/test_cleanup_deadline.cjs
+new file mode 100644
+index 0000000..d6fddd4
+--- /dev/null
++++ b/tests/fresh_render/test_cleanup_deadline.cjs
+@@ -0,0 +1,10 @@
++'use strict';
++const {test}=require('node:test'),assert=require('node:assert/strict'),{cleanupIssued}=require('./owned_lifecycle.cjs');
++function telemetry(after){return {step:async(phase,fn)=>{const result=await fn();if(after)after(phase);return result;}};}
++function handles(http){const child={pid:123,exitCode:0,signalCode:null};return {browserServer:{close:async()=>{},process:()=>child},httpServer:{closeAllConnections(){},close:cb=>http(cb)}};}
++async function clocked(fn){const original=process.hrtime.bigint;let ns=0n;process.hrtime.bigint=()=>ns;try{return await fn(ms=>{ns=BigInt(ms)*1000000n;});}finally{process.hrtime.bigint=original;}}
++test('late synchronous final HTTP completion rejects even before timeout callback runs',()=>clocked(async set=>{const r=await cleanupIssued(handles(cb=>{set(11000);cb();}),telemetry());assert.equal(r.confirmed,false);assert.equal(r.http,'UNKNOWN');assert.equal(r.expired,true);assert.equal(r.deadline_expired,true);assert.equal(r.expiration_phase,'HTTP_CLOSE');assert.equal(r.observed_elapsed_ms,11000);}));
++test('per-operation 5s deadline also rejects before common 10s is exhausted',()=>clocked(async set=>{const r=await cleanupIssued(handles(cb=>{set(6000);cb();}),telemetry());assert.equal(r.confirmed,false);assert.equal(r.expired,true);assert.equal(r.deadline_expired,false);assert.equal(r.http,'UNKNOWN');}));
++test('final monotonic confirmation rejects time consumed after operation completes',()=>clocked(async set=>{const r=await cleanupIssued(handles(cb=>cb()),telemetry(phase=>{if(phase==='HTTP_CLOSE')set(10000);}));assert.equal(r.confirmed,false);assert.equal(r.deadline_expired,true);assert.equal(r.expired,true);}));
++test('under-deadline completion remains separately confirmed with bounded elapsed evidence',()=>clocked(async set=>{const r=await cleanupIssued(handles(cb=>{set(4);cb();}),telemetry());assert.equal(r.confirmed,true);assert.equal(r.expired,false);assert.equal(r.deadline_expired,false);assert.equal(r.observed_elapsed_ms,4);assert.equal(r.budget_ms,10000);}));
++test('final confirmation independently rejects microtask delay after last attempt postcheck',()=>clocked(async set=>{const t={step:(phase,fn)=>Promise.resolve().then(fn).then(value=>{if(phase==='HTTP_CLOSE')queueMicrotask(()=>queueMicrotask(()=>set(10000)));return value;})};const r=await cleanupIssued(handles(cb=>cb()),t);assert.equal(r.http,'CLOSED');assert.equal(r.expiration_phase,'FINAL_CONFIRM');assert.equal(r.confirmed,false);assert.equal(r.deadline_expired,true);}));

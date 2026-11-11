@@ -1,0 +1,47 @@
+{
+  "schema": "agent7.pure9.selector-correction.source-only.v1",
+  "new_test_sha256": "7670fd5a714d8e8e369eaa8710f96bcf180e5b22bededbaa291b04af8fa0ef99",
+  "new_test_bytes": 13940,
+  "preserved_old_test_sha256": "0cbbbb17c7639e992462fb15fccba870af4d30f1332336544252995b59695eb1",
+  "diff": "outputs/hosted47-pure9-selector-only.diff",
+  "diff_sha256": "6c174753dea8087b851278c9ca95ef1ea3ac777685ea1e57c86c50b2b0303f1c",
+  "original_nine_ids_and_method_bodies": "UNCHANGED by literal method-source comparison",
+  "selected_context": "Actual run FunctionDef -> actual outer Try.finalbody -> top-level For(Name child, Name held)",
+  "selector": "Require direct child.kill AND child.wait Call attribute receiver names in same actual loop AST; reject nested function/class/lambda scopes; exactly one selected loop or refuse",
+  "poll_only_loop": "Excluded because neither kill nor wait",
+  "implementation_copy": "NONE: actual selected AST node inserted unchanged into binding-only wrapper",
+  "negative_control_policy": "No new case added; zero/multiple selector matches remain fail-closed, no behavior assertions weakened",
+  "future_effects": "Same approved-in-principle pure9 AST/fake seam only; actual execution allocation not granted by this source update",
+  "imports_compile_or_execution": false,
+  "new_metadata_gets": 0,
+  "original_five": [
+    {
+      "path": "docs/gateway/research/persistence/qualification47/qualify.py",
+      "sha256": "79d9e1ef9600f4b1102549bde436b56ae953c79f7bf86757146cce796c00335a",
+      "unchanged": true
+    },
+    {
+      "path": "docs/gateway/research/persistence/qualification47/expected47.json",
+      "sha256": "0a24d40c42b35b713a39f54c39c62c4e8b902ac70c9a3802770b2e6ae29451d1",
+      "unchanged": true
+    },
+    {
+      "path": "docs/gateway/research/persistence/qualification47/requirements.lock",
+      "sha256": "389c729ab525863c70bd3accc21b9fc73b431b89fa52fb035be444e6a853eeeb",
+      "unchanged": true
+    },
+    {
+      "path": "docs/gateway/research/persistence/qualification47/README.md",
+      "sha256": "f4168d49432418df03a652cdb85879748ded7b49dae0718723fdab1a21305e2b",
+      "unchanged": true
+    },
+    {
+      "path": ".github/workflows/projection-recovery-47.yml",
+      "sha256": "00f955ff2bfaf2978934cc88a1abe56de30c091fe79cad3c2580a84c5782d895",
+      "unchanged": true
+    }
+  ],
+  "old_run": "8FAIL/1PASS original logs and receipt unchanged; not reclassified as7/2",
+  "next_gate": "Root and independent static review before any new allocation",
+  "overall": "FIXHELD / NO-GO"
+}

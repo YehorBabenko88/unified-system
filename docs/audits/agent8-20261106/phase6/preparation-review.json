@@ -1,0 +1,107 @@
+{
+  "head": "c7307afba57aa28548e483e02c3a2f390b5056e1",
+  "tree": "8d24a6702125e6f3d91d8e0dce48216129bbf499",
+  "index_sha256": "81e4dd6e8d32643bdeb5cb760d6be4db2aa51370fe2bfca7b182a9f76dcaf234",
+  "members_verified": {
+    "approval-status.json": true,
+    "assignment-v1.json": true,
+    "authority-fencing-v1.json": true,
+    "ci-evidence-index.json": true,
+    "contract-status.json": true,
+    "egress-observation.json": true,
+    "independent-evidence-index.json": true,
+    "integration-baseline.json": true,
+    "mandatory-gates.json": true,
+    "node-inventory.json": true,
+    "ownership-registry.json": true,
+    "physical-acceptance-plan.json": true,
+    "physical-acceptance-plan.md": true,
+    "proposals/1f8e3a4badf5de5d2a6ae63ec0b1c2c0ceb205f443837e6117bd26b1236b89e4.json": true,
+    "proposals/2128421ccbbb2d880b71762447fa9cd114b09f6dbfbaf93123b699a60e1f1f3d.md": true,
+    "proposals/41f54681f166dc7fc630018dd36d1046789126b0bc61d9f2807fadea5e7c6202.json": true,
+    "proposals/4b4d227207f19c55d6d6da1d6df73555b79c6f9ed2de0f424a6fdd00fce78b56.json": true,
+    "proposals/5cc8e6a3557a9d71b6d1ccdf9939be49133deee9219b19029ffd4cf3d3bfa278.json": true,
+    "proposals/657fd3d1f7204edf09738709b1014451eeb54377122f1f58e330048caefbf64a.json": true,
+    "proposals/799f07457bbd8419da4e859f27425ec58b884b89330e4224577f372070224a79.json": true,
+    "proposals/8e0aa17a0eaee24ed78f9ab2f7189916d64af19b3b896523543c237fdbdbf576.json": true,
+    "proposals/973f84f87de066d6686dfbe1177dc583637fa819aa21f988303e3a649abae3f1.json": true,
+    "proposals/cc7d8068b4d5488cc8c948767041df5d89edef4e1f102644962370f69c5d2d2b.json": true,
+    "proposals/f6343e8f5021a3c4ca16b4124a24147059037fe2c729eb75c68d07c4c1cd8ad7.json": true,
+    "proposals/fb82ee72c66defa7e88fc7f502ed3778314e9733d4bbb7baf360e77509d7c6d5.json": true,
+    "release-manifest.json": true,
+    "rollback-plan.md": true,
+    "storage-publication-v1.json": true,
+    "terminan-control-api-v1.json": true,
+    "README.md": true
+  },
+  "package_integrity_result": {
+    "integrity": "VERIFIED_PREPARATION_ONLY",
+    "runtime_admission": "BLOCKED",
+    "physical_authorized": false,
+    "go": "NO-GO"
+  },
+  "six_source_pins": {
+    "unified-system": {
+      "head": "8aab34342d03900ab28e6f5b78acd7558239630c",
+      "tree": "d491dfa26d31561892232de7425eb75816b842d4",
+      "pr": 13,
+      "prior_original_api_pin_match": true
+    },
+    "bybit-cluster-grid": {
+      "head": "9c6113421024777a988ba69bf2dd1f79bd712130",
+      "tree": "fc84a0363f177a2a9a44cacff872e582897f7e4c",
+      "pr": 254,
+      "prior_original_api_pin_match": true
+    },
+    "strattester": {
+      "head": "25eb939f8a816a80ac7c042ce75ec4d9173cd4ce",
+      "tree": "29c8bf9b4a607291d845e3026904074a33480373",
+      "pr": 70,
+      "prior_original_api_pin_match": true
+    },
+    "math": {
+      "head": "5721987a15d20c3f9984d52eac4446704566d4b9",
+      "tree": "4dfced3be2ee08fa8a33cead814bb0b92bc5bdcd",
+      "pr": 110,
+      "prior_original_api_pin_match": true
+    },
+    "meta_analyse": {
+      "head": "2c4db055e56e36384a2661d443f9abc7b2331e90",
+      "tree": "20b1e615f6035b7b4fc83e6115eba2984900f47e",
+      "pr": 76,
+      "prior_original_api_pin_match": true
+    },
+    "Terminan": {
+      "head": "7ed3708df53c8850fd11fc8331440bdfee99aa3e",
+      "tree": "96963f7e749e73c8c81e7650bdee4f2a0a05923a",
+      "pr": 68,
+      "prior_original_api_pin_match": true
+    }
+  },
+  "ownership_revision": 2,
+  "ownership_sha256": "72acc43445b66f9730f868f6df335dc608dfe342e550be83e47eef98789115ff",
+  "A8_scope_and_actual_path": "ACK_A8_SCOPE_ONLY",
+  "changed_files_not_in_published_ownership": {
+    "math#112": [
+      "docs/audits/agent7-research-regressions.json"
+    ],
+    "strattester#71": [
+      "docs/research/agent7-regression-evidence.json"
+    ],
+    "meta_analyse#77": [
+      "docs/AGENT7_RESEARCH_CONTRACT_EVIDENCE.json"
+    ],
+    "unified-system#24": []
+  },
+  "known_A6_metadata_pending": [
+    "draft_pr:null should be69",
+    "dependencies should explicitly include A3/A4"
+  ],
+  "node_inventory": "CANDIDATES_DECLARED_NOT_AUTHENTICATED_OR_CAPACITY_ADMITTED",
+  "release_manifest": "PRESENT_PREPARATION_ONLY_NOT_APPROVED_OR_INSTALLABLE",
+  "contract_endpoint_ACK": "PENDING",
+  "mandatory_case_workflow_platform_attempt_skip_mapping": "PENDING_A8_REVIEW",
+  "physical": "BLOCKED",
+  "tailscale_removal": "BLOCKED",
+  "overall": "NO-GO"
+}

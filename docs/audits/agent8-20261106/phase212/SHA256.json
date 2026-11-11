@@ -1,0 +1,67 @@
+{
+  "approval": "ROOT_APPROVED_FOR_A8_SOURCE_REVIEW_ONLY",
+  "hash_scope": "RAW_UTF8_LF_BYTES_OF_OTHER_11_PACKET_FILES",
+  "installability": "NOT_INSTALLABLE",
+  "members": {
+    "assignment-v1.json": {
+      "bytes": 3321,
+      "sha256": "39b4d6bc734d5fb27b1299307786801a725b5e932c359ef715af1b719975d7f3"
+    },
+    "authority-fencing-v1.json": {
+      "bytes": 5573,
+      "sha256": "cff7ccbc5859c99f89cf087b60c5156a0a09a4e68494530c8f35c55509554428"
+    },
+    "ci-evidence-index.json": {
+      "bytes": 24285,
+      "sha256": "491e124d358ac00ababca90981dfeacd67fd332abdacb444d158045a0a478a32"
+    },
+    "integration-baseline.json": {
+      "bytes": 13220,
+      "sha256": "618f350bc05f5b135e69532f09f5803a6914621dab882c7534bef5f241603bc1"
+    },
+    "node-inventory.json": {
+      "bytes": 3463,
+      "sha256": "2e38f1ad39aea46745db41c31e926efcad2d39c6131150eef590101b9549ac88"
+    },
+    "ownership-registry.json": {
+      "bytes": 2298,
+      "sha256": "377cf62095d86a6d3aec14074aa135f576aef8b2f07f696f841972ccc385d8e9"
+    },
+    "physical-acceptance-plan.json": {
+      "bytes": 44052,
+      "sha256": "0f8a84c6ba7ba6654fbfdc8b42c24bca0c8242bf72818c14af484bac062127bf"
+    },
+    "release-manifest.json": {
+      "bytes": 13949,
+      "sha256": "24eafe929b08a4386ca825c5d1c4837fb689aae2ad620305af385a047d61764a"
+    },
+    "rollback-plan.json": {
+      "bytes": 2664,
+      "sha256": "27462915b2568974f898fce67e3d68528c758adb4f65cab72013afd3fef80c23"
+    },
+    "storage-publication-v1.json": {
+      "bytes": 7324,
+      "sha256": "f75f5bfc0b90fc06c4d7013a214df169029f4a89dd4706a13c00816707e717c6"
+    },
+    "terminan-control-api-v1.json": {
+      "bytes": 7932,
+      "sha256": "49783d93d5eef8e1e4519847c574b26d97f025f3929a6a53fcb5c92c6567ffc3"
+    }
+  },
+  "permissions": {
+    "dispatch": "DENY",
+    "fault_injection": "DENY",
+    "installation": "DENY",
+    "physical": "DENY",
+    "production": "DENY",
+    "provider_sends": "DENY",
+    "runtime": "DENY",
+    "tailscale_changes": "DENY",
+    "trading": "DENY"
+  },
+  "review_scope": "May be approved for A8 SOURCE review only; never executable release or runtime/native endpoint admission",
+  "schema": "unified.acceptance-review.level2.SHA256.v1",
+  "self_hash": "EXCLUDED_TO_AVOID_SELF_REFERENCE_EXTERNAL_ROOT_HASH_REQUIRED",
+  "source_combination": "NOT_ASSEMBLED_OR_VERIFIED",
+  "status": "REVIEW_INPUTS_ONLY"
+}

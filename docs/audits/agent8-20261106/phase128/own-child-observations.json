@@ -1,0 +1,20 @@
+{
+  "children": [
+    {
+      "returncode": 0,
+      "stdout": "{\"status\": \"DENIED\", \"reason\": \"EXCLUSIVE_ROOT_JOURNAL_OWNERSHIP_UNAVAILABLE\"}\r\n",
+      "stderr": "",
+      "scope": "OWN_SUBPROCESS_CALL_NOT_NATIVE_PID_IDENTITY_PROOF"
+    },
+    {
+      "returncode": 0,
+      "stdout": "{\"status\": \"ACQUIRED\", \"effect_permitted\": false}\r\n",
+      "stderr": "",
+      "scope": "OWN_SUBPROCESS_CALL_NOT_NATIVE_PID_IDENTITY_PROOF"
+    }
+  ],
+  "parent_connect_calls": 0,
+  "parent_dns_calls": 0,
+  "parent_http_calls": 0,
+  "child_network_scope": "reviewed exact child source imports local Journal/adapter only; parent guards do not propagate to child"
+}

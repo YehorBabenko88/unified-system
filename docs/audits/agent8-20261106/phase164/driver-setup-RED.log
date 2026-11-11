@@ -1,0 +1,6 @@
+{"head": "b48ddc5ff083deeecfdf76185117d0e86aa23e2a", "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]", "openssl": "OpenSSL 3.0.16 11 Feb 2025", "cryptography": "46.0.3", "scope": "ROOT_PURE_LAN_DIAGNOSTIC_ONLY"}
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\ci-boundary-evidence-20261110\qualification-b48ddc5-driver.py", line 52, in <module>
+    harness=ast.parse(Path('C:/Users/LS-5/.codex/ci-boundary-evidence-20261110/gateway25-pure-contract.py').read_bytes());case=next(n for n in harness.body if isinstance(n,ast.ClassDef) and n.name=='IdentityContractTests');globals_for_case={'unittest':unittest,'ns':ns,'prior':prior,'expected':expected_ids};exec(compile(ast.Module(body=[case],type_ignores=[]),'pure-qualification-contract','exec'),globals_for_case)
+                      ^^^^
+NameError: name 'Path' is not defined. Did you mean: 'patch'?

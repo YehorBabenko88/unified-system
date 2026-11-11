@@ -1,0 +1,422 @@
+﻿2026-11-10T18:17:18.8250720Z Current runner version: '2.338.2'
+2026-11-10T18:17:18.8273228Z ##[group]Runner Image Provisioner
+2026-11-10T18:17:18.8274305Z Hosted Compute Agent
+2026-11-10T18:17:18.8274815Z Version: 20261028.624
+2026-11-10T18:17:18.8275374Z Commit: 54898b74c23fde5556c9b3c3a2290865feef0dfe
+2026-11-10T18:17:18.8276052Z Build Date: 2026-10-28T21:51:42Z
+2026-11-10T18:17:18.8276636Z Worker ID: {40b53957-2e47-4efa-ad2f-4d01801a785a}
+2026-11-10T18:17:18.8277264Z Region: centralus
+2026-11-10T18:17:18.8277767Z Cloud: Azure
+2026-11-10T18:17:18.8278264Z ##[endgroup]
+2026-11-10T18:17:18.8279556Z ##[group]Operating System
+2026-11-10T18:17:18.8280102Z Ubuntu
+2026-11-10T18:17:18.8280599Z 24.04.5
+2026-11-10T18:17:18.8281075Z LTS
+2026-11-10T18:17:18.8281558Z ##[endgroup]
+2026-11-10T18:17:18.8282072Z ##[group]Runner Image
+2026-11-10T18:17:18.8282609Z Image: ubuntu-24.04
+2026-11-10T18:17:18.8283081Z Version: 20261101.360.1
+2026-11-10T18:17:18.8284520Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261101.360/images/ubuntu/Ubuntu2404-Readme.md
+2026-11-10T18:17:18.8285858Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261101.360
+2026-11-10T18:17:18.8286674Z ##[endgroup]
+2026-11-10T18:17:18.8287690Z ##[group]GITHUB_TOKEN Permissions
+2026-11-10T18:17:18.8289845Z Contents: read
+2026-11-10T18:17:18.8290366Z Metadata: read
+2026-11-10T18:17:18.8290985Z ##[endgroup]
+2026-11-10T18:17:18.8292757Z Secret source: Actions
+2026-11-10T18:17:18.8293748Z Cache mode: write
+2026-11-10T18:17:18.8294711Z Prepare workflow directory
+2026-11-10T18:17:18.8760651Z Prepare all required actions
+2026-11-10T18:17:18.8819199Z Getting action download info
+2026-11-10T18:17:19.1231923Z Download action repository 'actions/checkout@11d5960a326750d5838078e36cf38b85af677262' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-11-10T18:17:19.2377089Z Download action repository 'actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+2026-11-10T18:17:19.3702347Z Download action repository 'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-11-10T18:17:19.5930406Z Complete job name: component (ubuntu-24.04)
+2026-11-10T18:17:19.6573966Z ##[group]Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+2026-11-10T18:17:19.6574833Z with:
+2026-11-10T18:17:19.6575232Z   ref: e869d8365c7e54ed3da3739d9cdf15948f37f022
+2026-11-10T18:17:19.6575735Z   persist-credentials: false
+2026-11-10T18:17:19.6576152Z   fetch-depth: 0
+2026-11-10T18:17:19.6576549Z   repository: YehorBabenko88/unified-system
+2026-11-10T18:17:19.6579673Z   token: ***
+2026-11-10T18:17:19.6580045Z   ssh-strict: true
+2026-11-10T18:17:19.6580417Z   ssh-user: git
+2026-11-10T18:17:19.6580770Z   clean: true
+2026-11-10T18:17:19.6581145Z   sparse-checkout-cone-mode: true
+2026-11-10T18:17:19.6581579Z   fetch-tags: false
+2026-11-10T18:17:19.6581944Z   show-progress: true
+2026-11-10T18:17:19.6582317Z   lfs: false
+2026-11-10T18:17:19.6582658Z   submodules: false
+2026-11-10T18:17:19.6583051Z   set-safe-directory: true
+2026-11-10T18:17:19.6583468Z   allow-unsafe-pr-checkout: false
+2026-11-10T18:17:19.6584217Z env:
+2026-11-10T18:17:19.6584660Z   EXPECTED_HEAD: e869d8365c7e54ed3da3739d9cdf15948f37f022
+2026-11-10T18:17:19.6585188Z   PYTHONDONTWRITEBYTECODE: 1
+2026-11-10T18:17:19.6585597Z   GIT_NO_REPLACE_OBJECTS: 1
+2026-11-10T18:17:19.6585996Z   GIT_CONFIG_COUNT: 2
+2026-11-10T18:17:19.6586385Z   GIT_CONFIG_KEY_0: core.autocrlf
+2026-11-10T18:17:19.6586802Z   GIT_CONFIG_VALUE_0: false
+2026-11-10T18:17:19.6587203Z   GIT_CONFIG_KEY_1: core.eol
+2026-11-10T18:17:19.6587604Z   GIT_CONFIG_VALUE_1: lf
+2026-11-10T18:17:19.6587975Z ##[endgroup]
+2026-11-10T18:17:19.8605525Z Syncing repository: YehorBabenko88/unified-system
+2026-11-10T18:17:19.8607654Z ##[group]Getting Git version info
+2026-11-10T18:17:19.8608617Z Working directory is '/home/runner/work/unified-system/unified-system'
+2026-11-10T18:17:19.8609982Z [command]/usr/bin/git version
+2026-11-10T18:17:19.8705050Z git version 2.56.0
+2026-11-10T18:17:19.8726138Z ##[endgroup]
+2026-11-10T18:17:19.8739521Z Temporarily overriding HOME='/home/runner/work/_temp/dbffe193-90a7-4ed5-bce9-6947200f6da2' before making global git config changes
+2026-11-10T18:17:19.8744047Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-10T18:17:19.8745873Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/unified-system/unified-system
+2026-11-10T18:17:19.8811590Z Deleting the contents of '/home/runner/work/unified-system/unified-system'
+2026-11-10T18:17:19.8815820Z ##[group]Initializing the repository
+2026-11-10T18:17:19.8825435Z [command]/usr/bin/git init /home/runner/work/unified-system/unified-system
+2026-11-10T18:17:19.8907400Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-11-10T18:17:19.8908420Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-11-10T18:17:19.8909592Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-11-10T18:17:19.8910381Z hint: call:
+2026-11-10T18:17:19.8910933Z hint:
+2026-11-10T18:17:19.8911457Z hint: 	git config --global init.defaultBranch <name>
+2026-11-10T18:17:19.8912403Z hint:
+2026-11-10T18:17:19.8913232Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-11-10T18:17:19.8914616Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-11-10T18:17:19.8915740Z hint:
+2026-11-10T18:17:19.8916407Z hint: 	git branch -m <name>
+2026-11-10T18:17:19.8917115Z hint:
+2026-11-10T18:17:19.8918013Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-11-10T18:17:19.8919557Z Initialized empty Git repository in /home/runner/work/unified-system/unified-system/.git/
+2026-11-10T18:17:19.8930026Z [command]/usr/bin/git remote add origin https://github.com/YehorBabenko88/unified-system
+2026-11-10T18:17:19.8973810Z ##[endgroup]
+2026-11-10T18:17:19.8974905Z ##[group]Disabling automatic garbage collection
+2026-11-10T18:17:19.8979296Z [command]/usr/bin/git config --local gc.auto 0
+2026-11-10T18:17:19.9015018Z ##[endgroup]
+2026-11-10T18:17:19.9016113Z ##[group]Setting up auth
+2026-11-10T18:17:19.9024854Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-10T18:17:19.9066004Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-10T18:17:19.9391266Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-10T18:17:19.9421789Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-10T18:17:19.9648448Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-10T18:17:19.9687700Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-10T18:17:19.9903399Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-10T18:17:19.9952418Z ##[endgroup]
+2026-11-10T18:17:19.9962380Z ##[group]Fetching the repository
+2026-11-10T18:17:19.9963659Z [command]/usr/bin/git -c protocol.version=2 fetch --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*
+2026-11-10T18:17:21.4423844Z From https://github.com/YehorBabenko88/unified-system
+2026-11-10T18:17:21.4425632Z  * [new branch]      agent1/direct-lan-transport-20261106 -> origin/agent1/direct-lan-transport-20261106
+2026-11-10T18:17:21.4427353Z  * [new branch]      agent1/heartbeat-fixture-20261109 -> origin/agent1/heartbeat-fixture-20261109
+2026-11-10T18:17:21.4428983Z  * [new branch]      agent1/native-peer-capture-20261107 -> origin/agent1/native-peer-capture-20261107
+2026-11-10T18:17:21.4431406Z  * [new branch]      audit/agent8-independent-acceptance-20261106 -> origin/audit/agent8-independent-acceptance-20261106
+2026-11-10T18:17:21.4433419Z  * [new branch]      codex/agent5-assignment-v1-design -> origin/codex/agent5-assignment-v1-design
+2026-11-10T18:17:21.4435131Z  * [new branch]      codex/five-boundary-c  -> origin/codex/five-boundary-c
+2026-11-10T18:17:21.4436250Z  * [new branch]      codex/five-lifecycle-b -> origin/codex/five-lifecycle-b
+2026-11-10T18:17:21.4437631Z  * [new branch]      codex/five-module-integration-20261030 -> origin/codex/five-module-integration-20261030
+2026-11-10T18:17:21.4439015Z  * [new branch]      codex/five-security-e  -> origin/codex/five-security-e
+2026-11-10T18:17:21.4440401Z  * [new branch]      codex/windows-staging-plan-20261030 -> origin/codex/windows-staging-plan-20261030
+2026-11-10T18:17:21.4441958Z  * [new branch]      codex/workstream-d-installer-dry-run -> origin/codex/workstream-d-installer-dry-run
+2026-11-10T18:17:21.4443765Z  * [new branch]      feature/agent2-control-mux-get-20261107 -> origin/feature/agent2-control-mux-get-20261107
+2026-11-10T18:17:21.4445809Z  * [new branch]      feature/agent2-control-mux-runtime-20261107 -> origin/feature/agent2-control-mux-runtime-20261107
+2026-11-10T18:17:21.4447788Z  * [new branch]      feature/agent2-control-v3-read-boundary-20261106 -> origin/feature/agent2-control-v3-read-boundary-20261106
+2026-11-10T18:17:21.4449766Z  * [new branch]      feature/agent2-gateway-identity-20261107 -> origin/feature/agent2-gateway-identity-20261107
+2026-11-10T18:17:21.4451766Z  * [new branch]      feature/agent2-principal-local-invalidation-20261109 -> origin/feature/agent2-principal-local-invalidation-20261109
+2026-11-10T18:17:21.4454045Z  * [new branch]      feature/agent2-research-current-session-20261109 -> origin/feature/agent2-research-current-session-20261109
+2026-11-10T18:17:21.4455964Z  * [new branch]      feature/agent2-research-profile-v2-20261109 -> origin/feature/agent2-research-profile-v2-20261109
+2026-11-10T18:17:21.4458012Z  * [new branch]      feature/agent5-assignment-backend-contracts-20261107 -> origin/feature/agent5-assignment-backend-contracts-20261107
+2026-11-10T18:17:21.4460371Z  * [new branch]      feature/agent5-capacity-source-freshness-20261109 -> origin/feature/agent5-capacity-source-freshness-20261109
+2026-11-10T18:17:21.4462526Z  * [new branch]      feature/agent5-clock-source-prerequisites-20261109 -> origin/feature/agent5-clock-source-prerequisites-20261109
+2026-11-10T18:17:21.4464671Z  * [new branch]      feature/agent5-gateway-jobs-20261107 -> origin/feature/agent5-gateway-jobs-20261107
+2026-11-10T18:17:21.4466585Z  * [new branch]      feature/agent5-native-scheduler-adapter-20261109 -> origin/feature/agent5-native-scheduler-adapter-20261109
+2026-11-10T18:17:21.4468546Z  * [new branch]      feature/agent5-one-shot-negative-20261110 -> origin/feature/agent5-one-shot-negative-20261110
+2026-11-10T18:17:21.4470484Z  * [new branch]      feature/agent5-owned-supervisor-loss-20261109 -> origin/feature/agent5-owned-supervisor-loss-20261109
+2026-11-10T18:17:21.4473089Z  * [new branch]      feature/agent5-preparation-integrity-20261110 -> origin/feature/agent5-preparation-integrity-20261110
+2026-11-10T18:17:21.4476025Z  * [new branch]      feature/agent5-scheduler-components-20261106 -> origin/feature/agent5-scheduler-components-20261106
+2026-11-10T18:17:21.4478539Z  * [new branch]      feature/agent5-source-composition-20261109 -> origin/feature/agent5-source-composition-20261109
+2026-11-10T18:17:21.4481024Z  * [new branch]      feature/agent5-target-native-mapping-20261109 -> origin/feature/agent5-target-native-mapping-20261109
+2026-11-10T18:17:21.4483395Z  * [new branch]      feature/ci-boundary-repair-20261110 -> origin/feature/ci-boundary-repair-20261110
+2026-11-10T18:17:21.4485509Z  * [new branch]      feature/ci-queue-controller-20261107 -> origin/feature/ci-queue-controller-20261107
+2026-11-10T18:17:21.4487866Z  * [new branch]      feature/durable-mission-controller-20261107 -> origin/feature/durable-mission-controller-20261107
+2026-11-10T18:17:21.4490471Z  * [new branch]      feature/gateway-research-identity-20261107 -> origin/feature/gateway-research-identity-20261107
+2026-11-10T18:17:21.4492804Z  * [new branch]      feature/gateway-strict-pki-fixture-20261110 -> origin/feature/gateway-strict-pki-fixture-20261110
+2026-11-10T18:17:21.4495296Z  * [new branch]      feature/gateway-target-adapter-v1-20261109 -> origin/feature/gateway-target-adapter-v1-20261109
+2026-11-10T18:17:21.4497503Z  * [new branch]      feature/gateway-worker-containment-20261107 -> origin/feature/gateway-worker-containment-20261107
+2026-11-10T18:17:21.4500015Z  * [new branch]      feature/gateway-worker-virtualalloc-diagnostic-20261107 -> origin/feature/gateway-worker-virtualalloc-diagnostic-20261107
+2026-11-10T18:17:21.4502400Z  * [new branch]      feature/ha-authority-client-20261106 -> origin/feature/ha-authority-client-20261106
+2026-11-10T18:17:21.4504602Z  * [new branch]      feature/intelligence-gateway-20261107 -> origin/feature/intelligence-gateway-20261107
+2026-11-10T18:17:21.4506904Z  * [new branch]      feature/lan-send-diagnostics-integration-20261110 -> origin/feature/lan-send-diagnostics-integration-20261110
+2026-11-10T18:17:21.4509125Z  * [new branch]      feature/ls5-fixed-git-export-20261109 -> origin/feature/ls5-fixed-git-export-20261109
+2026-11-10T18:17:21.4511151Z  * [new branch]      feature/ls5-physical-dev-smoke-20261109 -> origin/feature/ls5-physical-dev-smoke-20261109
+2026-11-10T18:17:21.4513271Z  * [new branch]      feature/ls5-physical-dev-source-ci-20261109 -> origin/feature/ls5-physical-dev-source-ci-20261109
+2026-11-10T18:17:21.4515557Z  * [new branch]      feature/ls5-smoke-assembly-plan-20261109 -> origin/feature/ls5-smoke-assembly-plan-20261109
+2026-11-10T18:17:21.4598719Z  * [new branch]      feature/ls5-smoke-package-20261109 -> origin/feature/ls5-smoke-package-20261109
+2026-11-10T18:17:21.4601471Z  * [new branch]      feature/mission-continuation-integration-20261110 -> origin/feature/mission-continuation-integration-20261110
+2026-11-10T18:17:21.4603761Z  * [new branch]      feature/native-negative-path-20261109 -> origin/feature/native-negative-path-20261109
+2026-11-10T18:17:21.4605975Z  * [new branch]      feature/native-proxy-custody-20261109 -> origin/feature/native-proxy-custody-20261109
+2026-11-10T18:17:21.4607921Z  * [new branch]      feature/native-research-e2e-20261109 -> origin/feature/native-research-e2e-20261109
+2026-11-10T18:17:21.4609766Z  * [new branch]      feature/node-supervisor-v2-20261107 -> origin/feature/node-supervisor-v2-20261107
+2026-11-10T18:17:21.4611790Z  * [new branch]      feature/physical-copy-close-recovery-20261109 -> origin/feature/physical-copy-close-recovery-20261109
+2026-11-10T18:17:21.4613926Z  * [new branch]      feature/stage1b-and-lan-ci-20261110 -> origin/feature/stage1b-and-lan-ci-20261110
+2026-11-10T18:17:21.4615554Z  * [new branch]      feature/storage-authority-fixtures-20261107 -> origin/feature/storage-authority-fixtures-20261107
+2026-11-10T18:17:21.4616995Z  * [new branch]      feature/storage-gateway-disclosure-20261107 -> origin/feature/storage-gateway-disclosure-20261107
+2026-11-10T18:17:21.4618234Z  * [new branch]      feature/storage-integrity-20261106 -> origin/feature/storage-integrity-20261106
+2026-11-10T18:17:21.4619404Z  * [new branch]      feature/storage-manifest-codec-20261107 -> origin/feature/storage-manifest-codec-20261107
+2026-11-10T18:17:21.4620681Z  * [new branch]      feature/storage-native-publication-20261109 -> origin/feature/storage-native-publication-20261109
+2026-11-10T18:17:21.4621999Z  * [new branch]      feature/storage-result-publication-20261107 -> origin/feature/storage-result-publication-20261107
+2026-11-10T18:17:21.4623175Z  * [new branch]      feature/storage-runtime-20261107 -> origin/feature/storage-runtime-20261107
+2026-11-10T18:17:21.4624555Z  * [new branch]      feature/supervisor-local-integration-20261107 -> origin/feature/supervisor-local-integration-20261107
+2026-11-10T18:17:21.4625888Z  * [new branch]      feature/supervisor-root-adapters-20261107 -> origin/feature/supervisor-root-adapters-20261107
+2026-11-10T18:17:21.4627389Z  * [new branch]      fix/readonly-provider-probe-closed-20261106 -> origin/fix/readonly-provider-probe-closed-20261106
+2026-11-10T18:17:21.4629016Z  * [new branch]      integration/combined-fleet-lifecycle-security-provenance-20261030 -> origin/integration/combined-fleet-lifecycle-security-provenance-20261030
+2026-11-10T18:17:21.4630738Z  * [new branch]      integration/five-module-infra-control-plane -> origin/integration/five-module-infra-control-plane
+2026-11-10T18:17:21.4632220Z  * [new branch]      integration/five-workstreams-acceptance-20261030 -> origin/integration/five-workstreams-acceptance-20261030
+2026-11-10T18:17:21.4633761Z  * [new branch]      integration/gateway-runtime-20261107 -> origin/integration/gateway-runtime-20261107
+2026-11-10T18:17:21.4635009Z  * [new branch]      integration/offline-contract-prototype -> origin/integration/offline-contract-prototype
+2026-11-10T18:17:21.4636241Z  * [new branch]      integration/supervisor-contract-v1 -> origin/integration/supervisor-contract-v1
+2026-11-10T18:17:21.4637148Z  * [new branch]      main                   -> origin/main
+2026-11-10T18:17:21.4638184Z  * [new branch]      mission-exec/network-probe-transport-20261105 -> origin/mission-exec/network-probe-transport-20261105
+2026-11-10T18:17:21.4639499Z  * [new branch]      mission-exec/network-safety-20261105 -> origin/mission-exec/network-safety-20261105
+2026-11-10T18:17:21.4640775Z  * [new branch]      mission-exec/runtime-token-policy-20261105 -> origin/mission-exec/runtime-token-policy-20261105
+2026-11-10T18:17:21.4642012Z  * [new branch]      mission/final-integration-20261106 -> origin/mission/final-integration-20261106
+2026-11-10T18:17:21.4643198Z  * [new branch]      mission/integration-registry-20261106 -> origin/mission/integration-registry-20261106
+2026-11-10T18:17:21.4644529Z  * [new branch]      mission/operator-control-plane -> origin/mission/operator-control-plane
+2026-11-10T18:17:21.4645625Z  * [new branch]      mission/windows-phase-diagnostics -> origin/mission/windows-phase-diagnostics
+2026-11-10T18:17:21.4646805Z  * [new branch]      mission/windows-test-fixtures -> origin/mission/windows-test-fixtures
+2026-11-10T18:17:21.4647967Z  * [new branch]      mission/workgroup-operator-auth-design -> origin/mission/workgroup-operator-auth-design
+2026-11-10T18:17:21.4649224Z  * [new branch]      mission1/six-module-runtime-20261031 -> origin/mission1/six-module-runtime-20261031
+2026-11-10T18:17:21.4650480Z  * [new branch]      mission3/runtime-predeploy-20261031 -> origin/mission3/runtime-predeploy-20261031
+2026-11-10T18:17:21.4651530Z  * [new branch]      newcodex/five-infra-a  -> origin/newcodex/five-infra-a
+2026-11-10T18:17:21.4652668Z  * [new branch]      test/agent1-network-safety-models-20261106 -> origin/test/agent1-network-safety-models-20261106
+2026-11-10T18:17:21.4654946Z [command]/usr/bin/git rev-parse --verify --quiet e869d8365c7e54ed3da3739d9cdf15948f37f022^{object}
+2026-11-10T18:17:21.4655854Z e869d8365c7e54ed3da3739d9cdf15948f37f022
+2026-11-10T18:17:21.4657088Z ##[endgroup]
+2026-11-10T18:17:21.4657720Z ##[group]Determining the checkout info
+2026-11-10T18:17:21.4658457Z ##[endgroup]
+2026-11-10T18:17:21.4658995Z [command]/usr/bin/git sparse-checkout disable
+2026-11-10T18:17:21.4660240Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-11-10T18:17:21.4661722Z ##[group]Checking out the ref
+2026-11-10T18:17:21.4662486Z [command]/usr/bin/git checkout --progress --force e869d8365c7e54ed3da3739d9cdf15948f37f022
+2026-11-10T18:17:21.6455351Z Note: switching to 'e869d8365c7e54ed3da3739d9cdf15948f37f022'.
+2026-11-10T18:17:21.6456148Z 
+2026-11-10T18:17:21.6456542Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-11-10T18:17:21.6457475Z changes and commit them, and you can discard any commits you make in this
+2026-11-10T18:17:21.6458373Z state without impacting any branches by switching back to a branch.
+2026-11-10T18:17:21.6459248Z 
+2026-11-10T18:17:21.6459612Z If you want to create a new branch to retain commits you create, you may
+2026-11-10T18:17:21.6460492Z do so (now or later) by using -c with the switch command. Example:
+2026-11-10T18:17:21.6461006Z 
+2026-11-10T18:17:21.6461198Z   git switch -c <new-branch-name>
+2026-11-10T18:17:21.6461531Z 
+2026-11-10T18:17:21.6461721Z Or undo this operation with:
+2026-11-10T18:17:21.6462016Z 
+2026-11-10T18:17:21.6462183Z   git switch -
+2026-11-10T18:17:21.6462410Z 
+2026-11-10T18:17:21.6462800Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-11-10T18:17:21.6463392Z 
+2026-11-10T18:17:21.6464105Z HEAD is now at e869d83 feat: persist bounded development continuation in existing mission journal
+2026-11-10T18:17:21.6493834Z ##[endgroup]
+2026-11-10T18:17:21.6542482Z [command]/usr/bin/git log -1 --format=%H
+2026-11-10T18:17:21.6573128Z e869d8365c7e54ed3da3739d9cdf15948f37f022
+2026-11-10T18:17:21.6584790Z ##[group]Removing auth
+2026-11-10T18:17:21.6586047Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-10T18:17:21.6621659Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-10T18:17:21.6849280Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-10T18:17:21.6880223Z http.https://github.com/.extraheader
+2026-11-10T18:17:21.6887662Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-10T18:17:21.6926199Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-10T18:17:21.7136447Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-10T18:17:21.7174238Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-10T18:17:21.7380350Z ##[endgroup]
+2026-11-10T18:17:21.7718121Z ##[group]Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+2026-11-10T18:17:21.7719545Z with:
+2026-11-10T18:17:21.7720327Z   python-version: 3.12.10
+2026-11-10T18:17:21.7721237Z   check-latest: false
+2026-11-10T18:17:21.7729183Z   token: ***
+2026-11-10T18:17:21.7729990Z   update-environment: true
+2026-11-10T18:17:21.7730903Z   allow-prereleases: false
+2026-11-10T18:17:21.7731781Z   freethreaded: false
+2026-11-10T18:17:21.7732567Z env:
+2026-11-10T18:17:21.7733435Z   EXPECTED_HEAD: e869d8365c7e54ed3da3739d9cdf15948f37f022
+2026-11-10T18:17:21.7734784Z   PYTHONDONTWRITEBYTECODE: 1
+2026-11-10T18:17:21.7735698Z   GIT_NO_REPLACE_OBJECTS: 1
+2026-11-10T18:17:21.7736548Z   GIT_CONFIG_COUNT: 2
+2026-11-10T18:17:21.7737379Z   GIT_CONFIG_KEY_0: core.autocrlf
+2026-11-10T18:17:21.7738305Z   GIT_CONFIG_VALUE_0: false
+2026-11-10T18:17:21.7739214Z   GIT_CONFIG_KEY_1: core.eol
+2026-11-10T18:17:21.7740088Z   GIT_CONFIG_VALUE_1: lf
+2026-11-10T18:17:21.7740914Z ##[endgroup]
+2026-11-10T18:17:21.8947286Z ##[group]Installed versions
+2026-11-10T18:17:21.8960498Z Version 3.12.10 was not found in the local cache
+2026-11-10T18:17:21.9104717Z (node:2203) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-10T18:17:21.9108566Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-10T18:17:22.8063760Z Version 3.12.10 is available for downloading
+2026-11-10T18:17:22.8064777Z Download from "https://github.com/actions/python-versions/releases/download/3.12.10-14343898437/python-3.12.10-linux-24.04-x64.tar.gz"
+2026-11-10T18:17:23.5955424Z Extract downloaded archive
+2026-11-10T18:17:23.6073191Z [command]/usr/bin/tar xz --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/eac11469-b5b6-407b-a271-34e7343550a8 -f /home/runner/work/_temp/3900f583-1682-405f-9876-9dab9908d61a
+2026-11-10T18:17:25.3719648Z Execute installation script
+2026-11-10T18:17:25.3821043Z Check if Python hostedtoolcache folder exist...
+2026-11-10T18:17:25.3821580Z Create Python 3.12.10 folder
+2026-11-10T18:17:25.3829381Z Copy Python binaries to hostedtoolcache folder
+2026-11-10T18:17:25.7613885Z Create additional symlinks (Required for the UsePythonVersion Azure Pipelines task and the setup-python GitHub Action)
+2026-11-10T18:17:25.7650153Z Upgrading pip...
+2026-11-10T18:17:27.6844965Z Looking in links: /tmp/tmpeyt7p521
+2026-11-10T18:17:27.6847087Z Requirement already satisfied: pip in /opt/hostedtoolcache/Python/3.12.10/x64/lib/python3.12/site-packages (25.0.1)
+2026-11-10T18:17:29.0675976Z Collecting pip
+2026-11-10T18:17:29.1197473Z Downloading pip-26.3-py3-none-any.whl.metadata (4.6 kB)
+2026-11-10T18:17:29.2354184Z Downloading pip-26.3-py3-none-any.whl (2.0 MB)
+2026-11-10T18:17:29.2976843Z ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.0/2.0 MB 48.9 MB/s eta 0:00:00
+2026-11-10T18:17:29.2977245Z 
+2026-11-10T18:17:29.3781801Z Installing collected packages: pip
+2026-11-10T18:17:29.3804977Z Attempting uninstall: pip
+2026-11-10T18:17:29.3805474Z Found existing installation: pip 25.0.1
+2026-11-10T18:17:29.4062188Z Uninstalling pip-25.0.1:
+2026-11-10T18:17:29.4108810Z Successfully uninstalled pip-25.0.1
+2026-11-10T18:17:30.2144341Z Successfully installed pip-26.3
+2026-11-10T18:17:30.2685838Z Create complete file
+2026-11-10T18:17:30.2717571Z Successfully set up CPython (3.12.10)
+2026-11-10T18:17:30.2718312Z ##[endgroup]
+2026-11-10T18:17:30.2896065Z ##[group]Run import hashlib,io,json,os,pathlib,subprocess,sys
+2026-11-10T18:17:30.2896594Z [36;1mimport hashlib,io,json,os,pathlib,subprocess,sys[0m
+2026-11-10T18:17:30.2896878Z [36;1m[0m
+2026-11-10T18:17:30.2897060Z [36;1mdef main():[0m
+2026-11-10T18:17:30.2897267Z [36;1m    root=pathlib.Path.cwd()[0m
+2026-11-10T18:17:30.2897697Z [36;1m    git=pathlib.Path('C:/Program Files/Git/cmd/git.exe' if sys.platform=='win32' else '/usr/bin/git')[0m
+2026-11-10T18:17:30.2898096Z [36;1m    def g(*args,input=None):[0m
+2026-11-10T18:17:30.2898605Z [36;1m        return subprocess.check_output([str(git),'--no-replace-objects','--no-optional-locks','-c','core.fsmonitor=false',*args],cwd=root,input=input)[0m
+2026-11-10T18:17:30.2899138Z [36;1m    assert sys.version_info[:3]==(3,12,10)[0m
+2026-11-10T18:17:30.2899555Z [36;1m    assert sys.flags.isolated and sys.flags.no_site and sys.dont_write_bytecode and sys.pycache_prefix is None[0m
+2026-11-10T18:17:30.2900093Z [36;1m    assert g('rev-parse','HEAD').decode().strip()==os.environ['EXPECTED_HEAD'][0m
+2026-11-10T18:17:30.2900408Z [36;1m    def inventory():[0m
+2026-11-10T18:17:30.2900617Z [36;1m        entries=[];dirs={''}[0m
+2026-11-10T18:17:30.2900899Z [36;1m        for row in g('ls-tree','-rz','--full-tree','HEAD').split(b'\0'):[0m
+2026-11-10T18:17:30.2901200Z [36;1m            if not row: continue[0m
+2026-11-10T18:17:30.2901487Z [36;1m            meta,name=row.split(b'\t',1);mode,kind,oid=meta.split()[0m
+2026-11-10T18:17:30.2901829Z [36;1m            assert mode in (b'100644',b'100755') and kind==b'blob'[0m
+2026-11-10T18:17:30.2902154Z [36;1m            name=name.decode();entries.append((name,oid.decode()))[0m
+2026-11-10T18:17:30.2902572Z [36;1m            dirs.update(p.as_posix() for p in pathlib.PurePosixPath(name).parents if p.as_posix()!='.')[0m
+2026-11-10T18:17:30.2903043Z [36;1m        raw=g('cat-file','--batch',input=''.join(oid+'\n' for _,oid in entries).encode())[0m
+2026-11-10T18:17:30.2903403Z [36;1m        stream=io.BytesIO(raw);result={}[0m
+2026-11-10T18:17:30.2903842Z [36;1m        for name,oid in entries:[0m
+2026-11-10T18:17:30.2904160Z [36;1m            actual,kind,size=stream.readline().split();data=stream.read(int(size))[0m
+2026-11-10T18:17:30.2904577Z [36;1m            assert actual.decode()==oid and kind==b'blob' and stream.read(1)==b'\n'[0m
+2026-11-10T18:17:30.2904889Z [36;1m            path=root/name[0m
+2026-11-10T18:17:30.2905210Z [36;1m            assert path.is_file() and not path.is_symlink() and path.read_bytes()==data,name[0m
+2026-11-10T18:17:30.2905758Z [36;1m            result[name]=hashlib.sha256(data).hexdigest()[0m
+2026-11-10T18:17:30.2906037Z [36;1m        assert not stream.read()[0m
+2026-11-10T18:17:30.2906270Z [36;1m        for path in root.rglob('*'):[0m
+2026-11-10T18:17:30.2906509Z [36;1m            rel=path.relative_to(root)[0m
+2026-11-10T18:17:30.2906758Z [36;1m            if rel.parts[0]=='.git': continue[0m
+2026-11-10T18:17:30.2907147Z [36;1m            assert not path.is_symlink() and not (getattr(path.lstat(),'st_file_attributes',0)&1024),str(rel)[0m
+2026-11-10T18:17:30.2907656Z [36;1m            if path.is_file(): assert rel.as_posix() in result and path.suffix not in ('.pyc','.pyo'),str(rel)[0m
+2026-11-10T18:17:30.2908074Z [36;1m            elif path.is_dir(): assert rel.as_posix() in dirs,str(rel)[0m
+2026-11-10T18:17:30.2908380Z [36;1m            else: raise AssertionError(str(rel))[0m
+2026-11-10T18:17:30.2908623Z [36;1m        return result[0m
+2026-11-10T18:17:30.2908827Z [36;1m    before=inventory()[0m
+2026-11-10T18:17:30.2918335Z [36;1m    required=['test_journal.JournalTests.test_append_after_reopen', 'test_journal.JournalTests.test_empty', 'test_journal.JournalTests.test_expected_sequence_cas', 'test_journal.JournalTests.test_long_chain_latest_digest_not_lexical_max', 'test_journal.JournalTests.test_no_implicit_creation', 'test_journal.JournalTests.test_recovery', 'test_journal.JournalTests.test_tamper', 'test_journal.JournalTests.test_unknown_state', 'test_mission_controller.MissionTests.test_actual_process_exit_after_commit_reopens', 'test_mission_controller.MissionTests.test_arbitrary_existing_database_not_adopted', 'test_mission_controller.MissionTests.test_base_identity_collision_rejected', 'test_mission_controller.MissionTests.test_boolean_marker_version_rejected', 'test_mission_controller.MissionTests.test_bounds_and_safe_paths', 'test_mission_controller.MissionTests.test_closed_fields_and_canonical_ids', 'test_mission_controller.MissionTests.test_concurrent_stale_writer_rejected', 'test_mission_controller.MissionTests.test_conservative_byte_reserve_before_append', 'test_mission_controller.MissionTests.test_corruption_rejected_without_repair', 'test_mission_controller.MissionTests.test_crash_before_append_keeps_last_commit', 'test_mission_controller.MissionTests.test_cycle_rejected', 'test_mission_controller.MissionTests.test_directory_symlink_or_junction_refused', 'test_mission_controller.MissionTests.test_duplicate_is_idempotent', 'test_mission_controller.MissionTests.test_evidence_and_ci_are_typed_and_bounded', 'test_mission_controller.MissionTests.test_fake_ci_success_never_physical_approval', 'test_mission_controller.MissionTests.test_foreign_schema_refused_before_read', 'test_mission_controller.MissionTests.test_hardlink_refused_without_writing', 'test_mission_controller.MissionTests.test_invalid_capacity_refused_before_reservation', 'test_mission_controller.MissionTests.test_legacy_version_one_refused_without_rewrite', 'test_mission_controller.MissionTests.test_legacy_wal_sidecar_refused_before_create', 'test_mission_controller.MissionTests.test_maximum_task_dag_replays_and_cycle_revision_refused', 'test_mission_controller.MissionTests.test_oversized_receipt_rejected_before_journal_materialization', 'test_mission_controller.MissionTests.test_owner_and_scope_identity_immutable', 'test_mission_controller.MissionTests.test_persisted_bounds_are_recovered_and_closed', 'test_mission_controller.MissionTests.test_persisted_record_capacity_refuses_append', 'test_mission_controller.MissionTests.test_process_dies_during_uncommitted_transaction', 'test_mission_controller.MissionTests.test_projection_is_copy', 'test_mission_controller.MissionTests.test_record_bytes_bounded', 'test_mission_controller.MissionTests.test_relative_path_refused_without_creation', 'test_mission_controller.MissionTests.test_reopen_preserves_receipts', 'test_mission_controller.MissionTests.test_replay_rejects_semantic_identity_collision', 'test_mission_controller.MissionTests.test_same_task_updates_keep_failed_ci_history', 'test_mission_controller.MissionTests.test_simultaneous_writers_have_one_commit', 'test_mission_controller.MissionTests.test_sparse_file_rejected_before_journal_materialization', 'test_mission_controller.MissionTests.test_truncated_database_rejected', 'test_mission_controller.MissionTests.test_unknown_dependency_rejected', 'test_mission_controller.MissionTests.test_unknown_receipt_rejected_even_with_valid_chain', 'test_mission_controller.MissionTests.test_unknown_schema_refused', 'test_mission_controller.MissionTests.test_wal_sidecar_refused_before_read'][0m
+2026-11-10T18:17:30.2927979Z [36;1m    child="""import json,pathlib,sys,unittest[0m
+2026-11-10T18:17:30.2928410Z [36;1massert sys.flags.isolated and sys.flags.no_site and sys.dont_write_bytecode and sys.pycache_prefix is None[0m
+2026-11-10T18:17:30.2928868Z [36;1mroot=pathlib.Path(sys.argv[1]);sys.path.insert(0,str(root))[0m
+2026-11-10T18:17:30.2929162Z [36;1msuite=unittest.TestSuite()[0m
+2026-11-10T18:17:30.2929445Z [36;1mfor name in ('test_mission_controller.py','test_journal.py'):[0m
+2026-11-10T18:17:30.2929866Z [36;1m    suite.addTests(unittest.defaultTestLoader.discover(str(root/'tests'),pattern=name))[0m
+2026-11-10T18:17:30.2930223Z [36;1mdef collect(s):[0m
+2026-11-10T18:17:30.2930409Z [36;1m    result=[][0m
+2026-11-10T18:17:30.2930589Z [36;1m    for item in s:[0m
+2026-11-10T18:17:30.2931042Z [36;1m        result.extend(collect(item) if isinstance(item,unittest.TestSuite) else [item.id()])[0m
+2026-11-10T18:17:30.2931396Z [36;1m    return result[0m
+2026-11-10T18:17:30.2931640Z [36;1mids=collect(suite);required=json.loads(sys.argv[2])[0m
+2026-11-10T18:17:30.2931995Z [36;1massert len(ids)==len(set(ids)) and set(ids)==set(required),(ids,required)[0m
+2026-11-10T18:17:30.2932355Z [36;1mresult=unittest.TextTestRunner(verbosity=2).run(suite)[0m
+2026-11-10T18:17:30.2932759Z [36;1massert result.wasSuccessful() and result.testsRun==len(required) and not result.skipped[0m
+2026-11-10T18:17:30.2933110Z [36;1m"""[0m
+2026-11-10T18:17:30.2933284Z [36;1m    result=None;after=None[0m
+2026-11-10T18:17:30.2933816Z [36;1m    output=pathlib.Path(os.environ['RUNNER_TEMP'])/'durable-mission-controller-evidence.json'[0m
+2026-11-10T18:17:30.2934181Z [36;1m    try:[0m
+2026-11-10T18:17:30.2934544Z [36;1m        result=subprocess.run([sys.executable,'-I','-S','-B','-c',child,str(root),json.dumps(required)],cwd=root,timeout=180)[0m
+2026-11-10T18:17:30.2934992Z [36;1m        assert result.returncode==0,result.returncode[0m
+2026-11-10T18:17:30.2935247Z [36;1m    finally:[0m
+2026-11-10T18:17:30.2935419Z [36;1m        try:[0m
+2026-11-10T18:17:30.2935594Z [36;1m            after=inventory()[0m
+2026-11-10T18:17:30.2935816Z [36;1m            assert before==after[0m
+2026-11-10T18:17:30.2936027Z [36;1m        finally:[0m
+2026-11-10T18:17:30.2936948Z [36;1m            output.write_text(json.dumps(dict(head=os.environ['EXPECTED_HEAD'],python=sys.version,tests=required,returncode=None if result is None else result.returncode,source_before=before,source_after=after,qualification='DEVELOPMENT_COMPONENT_ONLY',native_authority=False,grants_node_operations=False),indent=2)+'\n',encoding='utf-8')[0m
+2026-11-10T18:17:30.2937889Z [36;1m[0m
+2026-11-10T18:17:30.2938049Z [36;1mif __name__=='__main__':[0m
+2026-11-10T18:17:30.2938247Z [36;1m    main()[0m
+2026-11-10T18:17:30.2943177Z shell: /opt/hostedtoolcache/Python/3.12.10/x64/bin/python -I -S -B {0}
+2026-11-10T18:17:30.2943489Z env:
+2026-11-10T18:17:30.2943928Z   EXPECTED_HEAD: e869d8365c7e54ed3da3739d9cdf15948f37f022
+2026-11-10T18:17:30.2944203Z   PYTHONDONTWRITEBYTECODE: 1
+2026-11-10T18:17:30.2944407Z   GIT_NO_REPLACE_OBJECTS: 1
+2026-11-10T18:17:30.2944606Z   GIT_CONFIG_COUNT: 2
+2026-11-10T18:17:30.2944790Z   GIT_CONFIG_KEY_0: core.autocrlf
+2026-11-10T18:17:30.2944993Z   GIT_CONFIG_VALUE_0: false
+2026-11-10T18:17:30.2945179Z   GIT_CONFIG_KEY_1: core.eol
+2026-11-10T18:17:30.2945385Z   GIT_CONFIG_VALUE_1: lf
+2026-11-10T18:17:30.2945760Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.10/x64
+2026-11-10T18:17:30.2946107Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.10/x64/lib/pkgconfig
+2026-11-10T18:17:30.2946442Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.10/x64
+2026-11-10T18:17:30.2946738Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.10/x64
+2026-11-10T18:17:30.2947040Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.10/x64
+2026-11-10T18:17:30.2947338Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.10/x64/lib
+2026-11-10T18:17:30.2947622Z ##[endgroup]
+2026-11-10T18:17:31.2896151Z Traceback (most recent call last):
+2026-11-10T18:17:31.2903410Z   File "<string>", line 13, in <module>
+2026-11-10T18:17:31.2938199Z AssertionError: (['test_mission_controller.ContinuationTests.test_aba_task_drift_stays_stale_until_explicit_checkpoint', 'test_mission_controller.ContinuationTests.test_any_task_drift_stales_without_rewriting_history', 'test_mission_controller.ContinuationTests.test_closed_types_sha_bounds_and_unknown_task', 'test_mission_controller.ContinuationTests.test_continuation_persisted_record_capacity', 'test_mission_controller.ContinuationTests.test_continuation_reopen_detached_and_no_authority', 'test_mission_controller.ContinuationTests.test_result_scope_and_evidence_remain_observations', 'test_mission_controller.ContinuationTests.test_retry_budget_never_resets_even_after_stale_and_reopen', 'test_mission_controller.ContinuationTests.test_stale_cas_duplicate_and_full_receipt_capacity', 'test_mission_controller.ContinuationTests.test_unknown_continuation_version_rejected', 'test_mission_controller.ContinuationTests.test_unknown_receipt_version_and_invalid_binding_reject_reopen', 'test_mission_controller.MissionTests.test_actual_process_exit_after_commit_reopens', 'test_mission_controller.MissionTests.test_arbitrary_existing_database_not_adopted', 'test_mission_controller.MissionTests.test_base_identity_collision_rejected', 'test_mission_controller.MissionTests.test_boolean_marker_version_rejected', 'test_mission_controller.MissionTests.test_bounds_and_safe_paths', 'test_mission_controller.MissionTests.test_closed_fields_and_canonical_ids', 'test_mission_controller.MissionTests.test_concurrent_stale_writer_rejected', 'test_mission_controller.MissionTests.test_conservative_byte_reserve_before_append', 'test_mission_controller.MissionTests.test_corruption_rejected_without_repair', 'test_mission_controller.MissionTests.test_crash_before_append_keeps_last_commit', 'test_mission_controller.MissionTests.test_cycle_rejected', 'test_mission_controller.MissionTests.test_directory_symlink_or_junction_refused', 'test_mission_controller.MissionTests.test_duplicate_is_idempotent', 'test_mission_controller.MissionTests.test_evidence_and_ci_are_typed_and_bounded', 'test_mission_controller.MissionTests.test_fake_ci_success_never_physical_approval', 'test_mission_controller.MissionTests.test_foreign_schema_refused_before_read', 'test_mission_controller.MissionTests.test_hardlink_refused_without_writing', 'test_mission_controller.MissionTests.test_invalid_capacity_refused_before_reservation', 'test_mission_controller.MissionTests.test_legacy_version_one_refused_without_rewrite', 'test_mission_controller.MissionTests.test_legacy_wal_sidecar_refused_before_create', 'test_mission_controller.MissionTests.test_maximum_task_dag_replays_and_cycle_revision_refused', 'test_mission_controller.MissionTests.test_oversized_receipt_rejected_before_journal_materialization', 'test_mission_controller.MissionTests.test_owned_temp_alias_is_resolved_before_guarded_journal_creation', 'test_mission_controller.MissionTests.test_owner_and_scope_identity_immutable', 'test_mission_controller.MissionTests.test_persisted_bounds_are_recovered_and_closed', 'test_mission_controller.MissionTests.test_persisted_record_capacity_refuses_append', 'test_mission_controller.MissionTests.test_process_dies_during_uncommitted_transaction', 'test_mission_controller.MissionTests.test_projection_is_copy', 'test_mission_controller.MissionTests.test_record_bytes_bounded', 'test_mission_controller.MissionTests.test_relative_path_refused_without_creation', 'test_mission_controller.MissionTests.test_reopen_preserves_receipts', 'test_mission_controller.MissionTests.test_replay_rejects_semantic_identity_collision', 'test_mission_controller.MissionTests.test_same_task_updates_keep_failed_ci_history', 'test_mission_controller.MissionTests.test_simultaneous_writers_have_one_commit', 'test_mission_controller.MissionTests.test_sparse_file_rejected_before_journal_materialization', 'test_mission_controller.MissionTests.test_truncated_database_rejected', 'test_mission_controller.MissionTests.test_unknown_dependency_rejected', 'test_mission_controller.MissionTests.test_unknown_receipt_rejected_even_with_valid_chain', 'test_mission_controller.MissionTests.test_unknown_schema_refused', 'test_mission_controller.MissionTests.test_wal_sidecar_refused_before_read', 'test_journal.JournalTests.test_append_after_reopen', 'test_journal.JournalTests.test_empty', 'test_journal.JournalTests.test_expected_sequence_cas', 'test_journal.JournalTests.test_long_chain_latest_digest_not_lexical_max', 'test_journal.JournalTests.test_no_implicit_creation', 'test_journal.JournalTests.test_recovery', 'test_journal.JournalTests.test_tamper', 'test_journal.JournalTests.test_unknown_state'], ['test_journal.JournalTests.test_append_after_reopen', 'test_journal.JournalTests.test_empty', 'test_journal.JournalTests.test_expected_sequence_cas', 'test_journal.JournalTests.test_long_chain_latest_digest_not_lexical_max', 'test_journal.JournalTests.test_no_implicit_creation', 'test_journal.JournalTests.test_recovery', 'test_journal.JournalTests.test_tamper', 'test_journal.JournalTests.test_unknown_state', 'test_mission_controller.MissionTests.test_actual_process_exit_after_commit_reopens', 'test_mission_controller.MissionTests.test_arbitrary_existing_database_not_adopted', 'test_mission_controller.MissionTests.test_base_identity_collision_rejected', 'test_mission_controller.MissionTests.test_boolean_marker_version_rejected', 'test_mission_controller.MissionTests.test_bounds_and_safe_paths', 'test_mission_controller.MissionTests.test_closed_fields_and_canonical_ids', 'test_mission_controller.MissionTests.test_concurrent_stale_writer_rejected', 'test_mission_controller.MissionTests.test_conservative_byte_reserve_before_append', 'test_mission_controller.MissionTests.test_corruption_rejected_without_repair', 'test_mission_controller.MissionTests.test_crash_before_append_keeps_last_commit', 'test_mission_controller.MissionTests.test_cycle_rejected', 'test_mission_controller.MissionTests.test_directory_symlink_or_junction_refused', 'test_mission_controller.MissionTests.test_duplicate_is_idempotent', 'test_mission_controller.MissionTests.test_evidence_and_ci_are_typed_and_bounded', 'test_mission_controller.MissionTests.test_fake_ci_success_never_physical_approval', 'test_mission_controller.MissionTests.test_foreign_schema_refused_before_read', 'test_mission_controller.MissionTests.test_hardlink_refused_without_writing', 'test_mission_controller.MissionTests.test_invalid_capacity_refused_before_reservation', 'test_mission_controller.MissionTests.test_legacy_version_one_refused_without_rewrite', 'test_mission_controller.MissionTests.test_legacy_wal_sidecar_refused_before_create', 'test_mission_controller.MissionTests.test_maximum_task_dag_replays_and_cycle_revision_refused', 'test_mission_controller.MissionTests.test_oversized_receipt_rejected_before_journal_materialization', 'test_mission_controller.MissionTests.test_owner_and_scope_identity_immutable', 'test_mission_controller.MissionTests.test_persisted_bounds_are_recovered_and_closed', 'test_mission_controller.MissionTests.test_persisted_record_capacity_refuses_append', 'test_mission_controller.MissionTests.test_process_dies_during_uncommitted_transaction', 'test_mission_controller.MissionTests.test_projection_is_copy', 'test_mission_controller.MissionTests.test_record_bytes_bounded', 'test_mission_controller.MissionTests.test_relative_path_refused_without_creation', 'test_mission_controller.MissionTests.test_reopen_preserves_receipts', 'test_mission_controller.MissionTests.test_replay_rejects_semantic_identity_collision', 'test_mission_controller.MissionTests.test_same_task_updates_keep_failed_ci_history', 'test_mission_controller.MissionTests.test_simultaneous_writers_have_one_commit', 'test_mission_controller.MissionTests.test_sparse_file_rejected_before_journal_materialization', 'test_mission_controller.MissionTests.test_truncated_database_rejected', 'test_mission_controller.MissionTests.test_unknown_dependency_rejected', 'test_mission_controller.MissionTests.test_unknown_receipt_rejected_even_with_valid_chain', 'test_mission_controller.MissionTests.test_unknown_schema_refused', 'test_mission_controller.MissionTests.test_wal_sidecar_refused_before_read'])
+2026-11-10T18:17:31.7797691Z Traceback (most recent call last):
+2026-11-10T18:17:31.7798599Z   File "/home/runner/work/_temp/147f017d-5ec8-4fee-a556-53188cca98e5.py", line 67, in <module>
+2026-11-10T18:17:31.7804477Z     main()
+2026-11-10T18:17:31.7805092Z   File "/home/runner/work/_temp/147f017d-5ec8-4fee-a556-53188cca98e5.py", line 58, in main
+2026-11-10T18:17:31.7805723Z     assert result.returncode==0,result.returncode
+2026-11-10T18:17:31.7806109Z            ^^^^^^^^^^^^^^^^^^^^
+2026-11-10T18:17:31.7806401Z AssertionError: 1
+2026-11-10T18:17:31.7907942Z ##[error]Process completed with exit code 1.
+2026-11-10T18:17:31.7995410Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+2026-11-10T18:17:31.7995743Z with:
+2026-11-10T18:17:31.7995953Z   name: durable-mission-controller-ubuntu-24.04
+2026-11-10T18:17:31.7996294Z   path: /home/runner/work/_temp/durable-mission-controller-evidence.json
+2026-11-10T18:17:31.7996602Z   if-no-files-found: error
+2026-11-10T18:17:31.7996802Z   compression-level: 6
+2026-11-10T18:17:31.7996985Z   overwrite: false
+2026-11-10T18:17:31.7997170Z   include-hidden-files: false
+2026-11-10T18:17:31.7997365Z env:
+2026-11-10T18:17:31.7997565Z   EXPECTED_HEAD: e869d8365c7e54ed3da3739d9cdf15948f37f022
+2026-11-10T18:17:31.7997838Z   PYTHONDONTWRITEBYTECODE: 1
+2026-11-10T18:17:31.7998040Z   GIT_NO_REPLACE_OBJECTS: 1
+2026-11-10T18:17:31.7998230Z   GIT_CONFIG_COUNT: 2
+2026-11-10T18:17:31.7998424Z   GIT_CONFIG_KEY_0: core.autocrlf
+2026-11-10T18:17:31.7998624Z   GIT_CONFIG_VALUE_0: false
+2026-11-10T18:17:31.7998809Z   GIT_CONFIG_KEY_1: core.eol
+2026-11-10T18:17:31.7999033Z   GIT_CONFIG_VALUE_1: lf
+2026-11-10T18:17:31.7999270Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.10/x64
+2026-11-10T18:17:31.7999595Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.10/x64/lib/pkgconfig
+2026-11-10T18:17:31.7999920Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.10/x64
+2026-11-10T18:17:31.8000213Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.10/x64
+2026-11-10T18:17:31.8000506Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.10/x64
+2026-11-10T18:17:31.8000823Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.10/x64/lib
+2026-11-10T18:17:31.8001080Z ##[endgroup]
+2026-11-10T18:17:31.9357788Z (node:2297) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-10T18:17:31.9358712Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-10T18:17:31.9396862Z With the provided path, there will be 1 file uploaded
+2026-11-10T18:17:31.9401877Z Artifact name is valid!
+2026-11-10T18:17:31.9402439Z Root directory input is valid!
+2026-11-10T18:17:32.2030833Z Beginning upload of artifact content to blob storage
+2026-11-10T18:17:32.2400316Z (node:2297) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-11-10T18:17:32.4528109Z Uploaded bytes 163629
+2026-11-10T18:17:32.4929075Z Finished uploading artifact content to blob storage!
+2026-11-10T18:17:32.4929605Z SHA256 digest of uploaded artifact zip is 34369432fdb8d7d27bb75e101415ad321eaaac36194714071e7b0266d5421670
+2026-11-10T18:17:32.4930666Z Finalizing artifact upload
+2026-11-10T18:17:32.9014761Z Artifact durable-mission-controller-ubuntu-24.04.zip successfully finalized. Artifact ID 13789924056
+2026-11-10T18:17:32.9015513Z Artifact durable-mission-controller-ubuntu-24.04 has been successfully uploaded! Final size is 163629 bytes. Artifact ID is 13789924056
+2026-11-10T18:17:32.9020089Z Artifact download URL: https://github.com/YehorBabenko88/unified-system/actions/runs/42869185791/artifacts/13789924056
+2026-11-10T18:17:32.9205222Z Post job cleanup.
+2026-11-10T18:17:32.9955152Z [command]/usr/bin/git version
+2026-11-10T18:17:32.9993643Z git version 2.56.0
+2026-11-10T18:17:33.0024249Z Temporarily overriding HOME='/home/runner/work/_temp/d998f63b-d08c-4f8e-9c1a-1284fdb50120' before making global git config changes
+2026-11-10T18:17:33.0025320Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-10T18:17:33.0028680Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/unified-system/unified-system
+2026-11-10T18:17:33.0066024Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-10T18:17:33.0099730Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-10T18:17:33.0342093Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-10T18:17:33.0395073Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-10T18:17:33.0705162Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-10T18:17:33.0752375Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-10T18:17:33.1144847Z Cleaning up orphan processes
+2026-11-10T18:17:33.1461275Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@11d5960a326750d5838078e36cf38b85af677262, actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065, actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

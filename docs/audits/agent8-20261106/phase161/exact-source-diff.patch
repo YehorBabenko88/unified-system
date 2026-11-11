@@ -1,0 +1,971 @@
+diff --git a/docs/ci/gateway-strict-pki-20261110.md b/docs/ci/gateway-strict-pki-20261110.md
+new file mode 100644
+index 0000000..66fa3e0
+--- /dev/null
++++ b/docs/ci/gateway-strict-pki-20261110.md
+@@ -0,0 +1,101 @@
++# CPython 3.13 Gateway identity fixture investigation
++
++Exact baseline: `01630597fb418d5a76a93c8b09750683dfe49b94`.
++Branch: `feature/gateway-strict-pki-fixture-20261110`.
++Ownership: test fixture/regression only. `unified_system/gateway_identity.py`
++remains unchanged. No verification flags are removed and no guard is bypassed.
++
++## Original evidence
++
++Root's original failure matrix identifies eight CPython3.13 jobs across Ubuntu
++and Windows, each with sixteen GatewayIdentity authentication denials. Example:
++run42732716713 / job129554444542 / attempt1, artifact13748216340.
++Original artifact SHA256:
++`ea498fc5eeda0d5cf9bdd579f2c4bd84f335b1a76415ace36110dd818be99abb`.
++Its `_temp/actual-six-source-suite/unittest.log` SHA256:
++`711dbea1ad0fda9ff0ff8412fd90927a3b238521c2059c850dc9fda2cf90dd01`.
++
++The original traceback reaches test line140 -> permit line130 -> production
++authenticate_connection line221, ending in GATEWAY_READ_DENIED. It does not
++expose the inner TLS validation reason. Originals remain at Root's
++`pr69-01630597-original-red-20261110` evidence directory; an unchanged selected
++unittest log and matrix subset are retained in the separate investigation
++evidence directory. No original run is retried or replaced.
++
++## Confirmed fixture strict-verification defect
++
++The fixture CA currently has critical BasicConstraints but no KeyUsage/SKI.
++Leaves have SAN/EKU but no AKI. TLSFixture catches a client SSLError and stores
++an exception as the server outcome; authenticate_connection correctly rejects
++anything other than a verified live server SSLSocket.
++
++Python documents that create_default_context adds VERIFY_X509_STRICT and
++VERIFY_X509_PARTIAL_CHAIN starting in3.13:
++[Python3.13 SSL documentation](https://docs.python.org/3.13/library/ssl.html#create-default-context).
++OpenSSL3.0 documents strict requirements including explicit CA KeyUsage, CA SKI
++and non-self-signed v3 certificate AKI:
++[OpenSSL verification options](https://docs.openssl.org/3.0/man1/openssl-verification-options/).
++The assigned actual loopback regression confirmed the old fixture fails STRICT
++on CPython3.12.10/OpenSSL3.0.16 with SSLCertVerificationError verify_code85,
++Missing Authority Key Identifier. The non-strict existing positive case passed
++in that same selected process. Original hosted logs mask their inner SSL error;
++the fixture defect reproduces the documented3.13 default change, while an actual
++CPython3.13 rerun remains unperformed.
++
++## Prepared serial-lane regression
++
++`StrictTLSFixtureTests.test_generated_chain_handshakes_with_explicit_strict_verification`
++enables STRICT by OR on both existing fixture contexts, preserving every other
++flag, CERT_REQUIRED and hostname checking. Its failure diagnostic reports only
++exception type, verify_code and verify_message. Synthetic private keys are not
++printed. This should reproduce strict behavior on existing CPython3.12, without
++installing3.13 or changing production policy.
++
++After Root assigns the TLS lane and supplies an approved cryptography environment:
++
++```text
++<approved-python> -I -B -c "import sys,unittest;sys.path.insert(0,'.');sys.path.insert(0,'tests');s=unittest.defaultTestLoader.loadTestsFromName('test_gateway_identity.StrictTLSFixtureTests');r=unittest.TextTestRunner(verbosity=2).run(s);sys.exit(not r.wasSuccessful())"
++```
++
++Run from the isolated worktree. Capture original RED output before changing any
++certificate extensions. If confirmed, add proper RFC5280 fixture extensions;
++never disable STRICT, PARTIAL_CHAIN, certificate validation or hostname checks.
++Then retain GREEN for the strict case and all existing positive/negative gateway
++cases. Runtime source changes require separate Root approval and actual RCA.
++
++## Qualified serial-lane results and dependency origin
++
++Root supplied the existing read-only site directory:
++`C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-8-independent-security-ci/work/identity-a8-env/Lib/site-packages`.
++The actual base interpreter was
++`C:/Users/LS-5/AppData/Local/Python/pythoncore-3.12-64/python.exe -I -S -B`,
++with only that qualified dependency directory, this worktree and its tests
++explicitly added to sys.path. Cryptography46.0.3 matches the original CI lock;
++OpenSSL is3.0.16. No installation, site mutation or venv redirector was used.
++There is no installed3.13; local3.14/3.15 were not used for fixture qualification.
++
++Actual RED: old certificate generation, existing non-strict positive control PASS,
++explicit STRICT case FAIL with verify_code85/Missing Authority Key Identifier;
++2cases/0.198s. Ephemeral fixture fix then adds critical KeyUsage, noncritical SKI
++and issuer-derived AKI to the CA/leaves. It does not alter runtime source, trust
++mode, hostname checks, certificate requirements, default flags, CA scope or EKU.
++
++Actual GREEN: all25 unique Gateway module tests PASS, zero skips,3.734s. Negative
++untrusted CA, missing client certificate, wrong EKU/SAN, revoked/closed session,
++forged/foreign capabilities and bounds remain covered. A55-second own-process
++watchdog bounded both selected runs; all accept threads joined and the process
++returned. Source raw SHA256 before/after each run matched. Lane RETIRED after the
++full module; no further socket/TLS/native fixture may run without a new Root lane.
++
++Initial native checkout used CRLF for the unchanged runtime module. Its raw
++working-tree SHA differs from the Git LF blob, but LF-normalized content and
++Git diff establish no production edit. The exact tested raw identities are
++retained in receipts. Final commit/fresh LF primary-byte verification is separate
++and must not be inferred from that initial checkout. A further serial-lane run
++on the exact committed LF clone requires Root assignment.
++
++Evidence directory: `C:/Users/LS-5/.codex/gateway-strict-pki-evidence-20261110`.
++Original RED, source/dependency metadata and all selected receipts remain there.
++No office/provider, truststore/policy, installation, protected Math or native
++Windows service operation was performed. These synthetic loopback tests do not
++grant runtime/physical deployment admission.
+diff --git a/docs/ci/windows-boundary-diagnostics-20261110.md b/docs/ci/windows-boundary-diagnostics-20261110.md
+new file mode 100644
+index 0000000..8dbaf00
+--- /dev/null
++++ b/docs/ci/windows-boundary-diagnostics-20261110.md
+@@ -0,0 +1,46 @@
++# Windows boundary timeout diagnostics
++
++This test-only change prepares finer observations of original hosted failures at
++`01630597fb418d5a76a93c8b09750683dfe49b94`. It is instrumentation, not a timeout
++fix or a hosted/native qualification. The original 15-second PowerShell and Node
++limits and 30-second declaration-test limit remain unchanged. There are no retries,
++new skips, extra module imports, command-resolution probes, cache warming, SCM
++operations, or changes to the sanitized environment or poison-autoload assertions.
++
++The fake NSSM-member test now separates object construction (`OBJECT_BEGIN/END`)
++from the first existing `Add-Member` call (`FIRST_MEMBER_BEGIN/END`). The enclosing
++`MEMBER_BEGIN/END` markers remain. Neither member markers nor `COMPILE_BEGIN`
++prove that a native API or compiler has started: PowerShell still resolves the
++original unqualified commands in the original environment.
++
++The existing 30-second declaration test now reports parser, import, Add-Type,
++Unicode-child, and output-cap-child intervals. `COMPILE_BEGIN/END` surrounds the
++existing Add-Type expression, including command resolution and module autoload.
++It cannot discriminate resolution from compilation. The original Unicode/output
++assertions and child commands remain. Timeout failures expose only a fixed phase
++allowlist and bounded numeric timestamp/elapsed facts; malformed or private stderr
++is represented as `PHASE_DATA_REJECTED`.
++
++The Node harness emits seven fixed stderr markers: `ENTRY`, `STDIN_END`, `PARSED`,
++`VM_RETURN`, `FIRST_SETTLED`, `SECOND_SETTLED`, `DONE`. They report reached JS
++statements, not kernel-level process startup or pipe ownership. The parser accepts
++at most eight lines and 1024 ASCII bytes. The existing VM script, assertions,
++stdin payload, and async scheduling remain; no real browser is introduced.
++Timeout failures do not print argv, harness, input, paths, or raw child output.
++No missing-output or inherited-pipe explanation follows from a timeout alone.
++
++Original evidence is private under
++`C:/Users/LS-5/.codex/ci-queue-evidence-20261107/pr69-01630597-original-red-20261110`.
++Representative run `42732724684`, job `129554474213` contains the 15-second Node
++timeout and 30-second declaration timeout. The original phase control lookup
++completed in 235ms in that job before the safe lookup timed out. Later local
++Add-Member/safe-lookup discriminators reportedly passed; those are not a hosted
++reproduction or proof of command-discovery root cause.
++
++Validation at preparation time: pure mocked parser/privacy/bounds tests only.
++The original three pure tests plus six new tests run without subprocesses or
++fixtures: the new tests first failed against the old helper, then all nine passed.
++PowerShell, Node, sockets, SCM, and native child fixtures have not been executed
++for this change. Root must review the exact source and assign a serial fixture
++lane before qualification or publication. Keep the original RED even if a later
++fixture completes; diagnose the first missing marker without increasing limits.
+diff --git a/release/ci-repair/20261110/INTEGRATION-STATUS.json b/release/ci-repair/20261110/INTEGRATION-STATUS.json
+new file mode 100644
+index 0000000..7edff8b
+--- /dev/null
++++ b/release/ci-repair/20261110/INTEGRATION-STATUS.json
+@@ -0,0 +1,76 @@
++{
++  "baseline": "01630597fb418d5a76a93c8b09750683dfe49b94",
++  "d4_time": {
++    "current_component_argument": {
++      "draft_pr": 281,
++      "head": "fb177d14b1e6e399bd9b66ae7cb35d3838acbd81",
++      "qualification": "OWNER_MODEL_ONLY_NOT_NATIVE_ACCEPTANCE",
++      "repository": "bybit-cluster-grid",
++      "root_review": "SCOPED_CURRENT_INTERFACE_EXPLANATION_ACCEPTED_NO_NEW_PROTOCOL_APPROVAL"
++    },
++    "logical_mutations": "DISABLED",
++    "policy": "OPTION_1_STRICT_CONSENSUS_COMMIT_UTC"
++  },
++  "diagnostic_instrumentation": {
++    "bounds_seconds_unchanged": [
++      15,
++      30
++    ],
++    "local_native_compiled_tests": "NOT_RUN",
++    "local_node_harness": "NOT_RUN_ON_INTEGRATED_SOURCE_YET",
++    "native_root_cause": "UNKNOWN",
++    "node_root_cause": "UNKNOWN",
++    "pure_tests": 9,
++    "scope": "TEST_ONLY_STATIC_BOUNDED_PHASES",
++    "source_commit": "36e4955c0d10da0eed2184a4f626cf4c64198b37"
++  },
++  "gateway": {
++    "a8": "SOURCE_SECURITY_PRESERVING_FIXTURE_ACK_NOT_HOSTED_ACCEPTANCE",
++    "candidate_head": "71989562c51a008201babb222391211757eaf402",
++    "coverage": {
++      "dedicated_identity_qualifier": 24,
++      "full_discovery_includes_strict_regression": true,
++      "local_module": 25
++    },
++    "draft_pr": 76,
++    "evidence_sha256": {
++      "final-exact-green.log": "54dbcefdca6df93a3cad407faec056c0ab215f70e6da0d9ff607aaeae41ae158",
++      "final-exact-receipt.json": "4214d2a2730e1268ffdaab945c22a04f6d266fc21e62afd58126987bffa61bd9",
++      "strict-original-red.log": "03dc9ea25356d86400ccc5463620b7abcea187d57e91bf60e58e842da022bb82",
++      "strict-red-receipt.json": "a667582d6b6c53df1b8bb4e41186c54bf0ed47755e34a1f8fc98b471db3ad496"
++    },
++    "hosted_cp313": "NOT_VERIFIED",
++    "production_module_changed": false,
++    "qualification": "EXACT_WINDOWS_CP312_STRICT_FIXTURE_25_PASS_0_SKIP"
++  },
++  "lan_root_cause": "OWNER_INVESTIGATING",
++  "ls5_scoped_pilot": "RETAINED_SCOPED_PASS_NOT_REPEATED",
++  "math_native": "BLOCKED_SINGLE_USE_CONSUMED_NO_REPEAT",
++  "overall": "IN_PROGRESS_NO_GO",
++  "physical_cluster": "READONLY_PREPARATION_ONLY",
++  "production_deployment": false,
++  "protected_merge": false,
++  "public_submit": "DENY",
++  "scheduler": {
++    "draft_pr": 75,
++    "head": "72117a0ba641f8a4287742f9278f4bee7a5005a6",
++    "positive_job": "NOT_IMPLEMENTED",
++    "qualification": "LOCAL_NEGATIVE_PREPARATION_ONLY"
++  },
++  "schema": "unified.ci-repair-integration.v1",
++  "storage_committed_receipt": "NOT_AVAILABLE",
++  "terminan": {
++    "authenticated_scientific_read": "NOT_IMPLEMENTED",
++    "draft_pr": 81,
++    "head": "8599630158bc889379d9b5088c11a0457dd6672c",
++    "qualification": "OWNER_REPORTED_HOSTED_PURE_SOURCE_TESTS"
++  },
++  "windows_native": {
++    "hosted_timeout_reproduced_locally": false,
++    "hypothesis": "COMMAND_DISCOVERY_AUTOLOAD_NOT_COMPILER_PROOF",
++    "local_member_seconds": 0.468,
++    "local_safe_lookup_seconds": 0.453,
++    "root_cause": "UNKNOWN",
++    "timeout_increase": false
++  }
++}
+diff --git a/release/ci-repair/20261110/ORIGINAL-RED-INDEX.json b/release/ci-repair/20261110/ORIGINAL-RED-INDEX.json
+new file mode 100644
+index 0000000..64bd35c
+--- /dev/null
++++ b/release/ci-repair/20261110/ORIGINAL-RED-INDEX.json
+@@ -0,0 +1,385 @@
++{
++  "category_jobs": {
++    "CP313_GATEWAY_AUTHENTICATE_DENIED": [
++      {
++        "job_id": 129554444542,
++        "run_id": 42732716713
++      },
++      {
++        "job_id": 129554444638,
++        "run_id": 42732716713
++      },
++      {
++        "job_id": 129554449024,
++        "run_id": 42732718454
++      },
++      {
++        "job_id": 129554449275,
++        "run_id": 42732718454
++      },
++      {
++        "job_id": 129554474333,
++        "run_id": 42732724598
++      },
++      {
++        "job_id": 129554474406,
++        "run_id": 42732724598
++      },
++      {
++        "job_id": 129554474364,
++        "run_id": 42732724672
++      },
++      {
++        "job_id": 129554474547,
++        "run_id": 42732724672
++      }
++    ],
++    "INSTALLATION_SERVICE_POWERSHELL_30S_TIMEOUT": [
++      {
++        "job_id": 129554444638,
++        "run_id": 42732716713
++      },
++      {
++        "job_id": 129554468593,
++        "run_id": 42732724427
++      },
++      {
++        "job_id": 129554474213,
++        "run_id": 42732724684
++      }
++    ],
++    "INSTALLATION_UI_NODE_15S_TIMEOUT": [
++      {
++        "job_id": 129554474213,
++        "run_id": 42732724684
++      }
++    ],
++    "LAN_HEARTBEAT_DEADLINE": [
++      {
++        "job_id": 129554442427,
++        "run_id": 42732716604
++      },
++      {
++        "job_id": 129554444364,
++        "run_id": 42732716713
++      },
++      {
++        "job_id": 129554444638,
++        "run_id": 42732716713
++      },
++      {
++        "job_id": 129554446766,
++        "run_id": 42732716855
++      },
++      {
++        "job_id": 129554448023,
++        "run_id": 42732716855
++      },
++      {
++        "job_id": 129554447581,
++        "run_id": 42732716915
++      },
++      {
++        "job_id": 129554449275,
++        "run_id": 42732718454
++      },
++      {
++        "job_id": 129554449323,
++        "run_id": 42732718454
++      },
++      {
++        "job_id": 129554468244,
++        "run_id": 42732724242
++      },
++      {
++        "job_id": 129554468574,
++        "run_id": 42732724242
++      },
++      {
++        "job_id": 129554468593,
++        "run_id": 42732724427
++      },
++      {
++        "job_id": 129554473223,
++        "run_id": 42732724593
++      },
++      {
++        "job_id": 129554473628,
++        "run_id": 42732724593
++      },
++      {
++        "job_id": 129554473953,
++        "run_id": 42732724598
++      },
++      {
++        "job_id": 129554474333,
++        "run_id": 42732724598
++      },
++      {
++        "job_id": 129554474364,
++        "run_id": 42732724672
++      },
++      {
++        "job_id": 129554474552,
++        "run_id": 42732724672
++      },
++      {
++        "job_id": 129554474213,
++        "run_id": 42732724684
++      }
++    ],
++    "MUX_DISCONNECTED": [
++      {
++        "job_id": 129554468593,
++        "run_id": 42732724427
++      }
++    ],
++    "MUX_RECEIVE_DEADLINE": [
++      {
++        "job_id": 129554449323,
++        "run_id": 42732718454
++      },
++      {
++        "job_id": 129554468574,
++        "run_id": 42732724242
++      },
++      {
++        "job_id": 129554473953,
++        "run_id": 42732724598
++      },
++      {
++        "job_id": 129554474364,
++        "run_id": 42732724672
++      }
++    ],
++    "NATIVE_DIAGNOSTIC_15S_COMPILE_BEGIN": [
++      {
++        "job_id": 129554442427,
++        "run_id": 42732716604
++      },
++      {
++        "job_id": 129554444364,
++        "run_id": 42732716713
++      },
++      {
++        "job_id": 129554444638,
++        "run_id": 42732716713
++      },
++      {
++        "job_id": 129554446766,
++        "run_id": 42732716855
++      },
++      {
++        "job_id": 129554448023,
++        "run_id": 42732716855
++      },
++      {
++        "job_id": 129554447581,
++        "run_id": 42732716915
++      },
++      {
++        "job_id": 129554449275,
++        "run_id": 42732718454
++      },
++      {
++        "job_id": 129554449323,
++        "run_id": 42732718454
++      },
++      {
++        "job_id": 129554468244,
++        "run_id": 42732724242
++      },
++      {
++        "job_id": 129554468574,
++        "run_id": 42732724242
++      },
++      {
++        "job_id": 129554468593,
++        "run_id": 42732724427
++      },
++      {
++        "job_id": 129554473953,
++        "run_id": 42732724598
++      },
++      {
++        "job_id": 129554474333,
++        "run_id": 42732724598
++      },
++      {
++        "job_id": 129554474364,
++        "run_id": 42732724672
++      },
++      {
++        "job_id": 129554474552,
++        "run_id": 42732724672
++      },
++      {
++        "job_id": 129554474213,
++        "run_id": 42732724684
++      }
++    ],
++    "NATIVE_DIAGNOSTIC_15S_MEMBER_BEGIN": [
++      {
++        "job_id": 129554442427,
++        "run_id": 42732716604
++      },
++      {
++        "job_id": 129554444364,
++        "run_id": 42732716713
++      },
++      {
++        "job_id": 129554444638,
++        "run_id": 42732716713
++      },
++      {
++        "job_id": 129554446766,
++        "run_id": 42732716855
++      },
++      {
++        "job_id": 129554448023,
++        "run_id": 42732716855
++      },
++      {
++        "job_id": 129554447581,
++        "run_id": 42732716915
++      },
++      {
++        "job_id": 129554449275,
++        "run_id": 42732718454
++      },
++      {
++        "job_id": 129554449323,
++        "run_id": 42732718454
++      },
++      {
++        "job_id": 129554468244,
++        "run_id": 42732724242
++      },
++      {
++        "job_id": 129554468574,
++        "run_id": 42732724242
++      },
++      {
++        "job_id": 129554468593,
++        "run_id": 42732724427
++      },
++      {
++        "job_id": 129554473953,
++        "run_id": 42732724598
++      },
++      {
++        "job_id": 129554474333,
++        "run_id": 42732724598
++      },
++      {
++        "job_id": 129554474364,
++        "run_id": 42732724672
++      },
++      {
++        "job_id": 129554474552,
++        "run_id": 42732724672
++      },
++      {
++        "job_id": 129554474213,
++        "run_id": 42732724684
++      }
++    ],
++    "NATIVE_DIAGNOSTIC_15S_SAFE_LOOKUP_BEGIN": [
++      {
++        "job_id": 129554442427,
++        "run_id": 42732716604
++      },
++      {
++        "job_id": 129554444364,
++        "run_id": 42732716713
++      },
++      {
++        "job_id": 129554444638,
++        "run_id": 42732716713
++      },
++      {
++        "job_id": 129554446766,
++        "run_id": 42732716855
++      },
++      {
++        "job_id": 129554448023,
++        "run_id": 42732716855
++      },
++      {
++        "job_id": 129554447581,
++        "run_id": 42732716915
++      },
++      {
++        "job_id": 129554449275,
++        "run_id": 42732718454
++      },
++      {
++        "job_id": 129554449323,
++        "run_id": 42732718454
++      },
++      {
++        "job_id": 129554468244,
++        "run_id": 42732724242
++      },
++      {
++        "job_id": 129554468574,
++        "run_id": 42732724242
++      },
++      {
++        "job_id": 129554468593,
++        "run_id": 42732724427
++      },
++      {
++        "job_id": 129554473953,
++        "run_id": 42732724598
++      },
++      {
++        "job_id": 129554474333,
++        "run_id": 42732724598
++      },
++      {
++        "job_id": 129554474364,
++        "run_id": 42732724672
++      },
++      {
++        "job_id": 129554474552,
++        "run_id": 42732724672
++      },
++      {
++        "job_id": 129554474213,
++        "run_id": 42732724684
++      }
++    ],
++    "SQLITE_CLEANUP_FILE_IN_USE": [
++      {
++        "job_id": 129554474364,
++        "run_id": 42732724672
++      }
++    ]
++  },
++  "classification": "ORIGINAL_RED_NOT_REPLACED",
++  "inventory": {
++    "failed_jobs": 22,
++    "failure": 11,
++    "runs": 32,
++    "success": 21
++  },
++  "manual_retries": 0,
++  "original_matrix_sha256": "d949b448a47975059250dafbbedfd3ebdbbd1f1f96d8096b7285e52fdbe491ac",
++  "originals_retained": true,
++  "overall": "NO_GO",
++  "overlapping_category_job_counts": {
++    "CP313_GATEWAY_AUTHENTICATE_DENIED": 8,
++    "INSTALLATION_SERVICE_POWERSHELL_30S_TIMEOUT": 3,
++    "INSTALLATION_UI_NODE_15S_TIMEOUT": 1,
++    "LAN_HEARTBEAT_DEADLINE": 18,
++    "MUX_DISCONNECTED": 1,
++    "MUX_RECEIVE_DEADLINE": 4,
++    "NATIVE_DIAGNOSTIC_15S_COMPILE_BEGIN": 16,
++    "NATIVE_DIAGNOSTIC_15S_MEMBER_BEGIN": 16,
++    "NATIVE_DIAGNOSTIC_15S_SAFE_LOOKUP_BEGIN": 16,
++    "SQLITE_CLEANUP_FILE_IN_USE": 1
++  },
++  "schema": "unified.original-ci-failure-index.v1",
++  "source_head": "01630597fb418d5a76a93c8b09750683dfe49b94"
++}
+diff --git a/release/ci-repair/20261110/README.md b/release/ci-repair/20261110/README.md
+new file mode 100644
+index 0000000..5aef7a5
+--- /dev/null
++++ b/release/ci-repair/20261110/README.md
+@@ -0,0 +1,51 @@
++# CI boundary repair and retained acceptance limits
++
++This package preserves the original RED inventory at Unified source
++`01630597fb418d5a76a93c8b09750683dfe49b94`: 32 completed runs,
++21 SUCCESS, 11 FAILURE, 22 failed jobs. Category counts overlap. Original
++logs/artifacts remain retained; no manual retry replaces them.
++
++The Gateway fix is Draft [PR76](https://github.com/YehorBabenko88/unified-system/pull/76),
++source `71989562c51a008201babb222391211757eaf402`, tree
++`91306124644e6c3f304fe7e7971a012f3298680a`. The original synthetic
++certificate failed explicit STRICT with verification code85 (missing AKI).
++Only test certificates/regression changed. Exact-source Windows CPython3.12.10
++module qualification: 25 PASS, zero skips, 4.019s, no remaining fixture threads.
++Root independently matched all1839 receipt source digests to Git blobs and
++reviewed the exact diff. A8 issued a source/security-preserving fixture ACK;
++A8 did not rerun TLS. Hosted CPython3.13 qualification remains pending.
++The dedicated identity entrypoint retains its pinned24 tests; full unittest
++discovery includes the new25th strict regression. No coverage is transferred.
++
++Test-only Windows/Node phase instrumentation comes from source
++`36e4955c0d10da0eed2184a4f626cf4c64198b37`. It preserves existing15/30s
++deadlines, mandatory assertions, sanitized environment and security controls.
++Nine pure diagnostic tests passed after test-first failure. It introduces no
++module/command warmup. COMPILE_BEGIN still includes command resolution; it is
++not evidence that the compiler started. Actual hosted timeout causes remain
++UNKNOWN. These markers collect evidence; they are not a timeout repair claim.
++
++| Required report field | Status at preparation |
++| --- | --- |
++| LS5_SCOPED_PILOT | Retained scoped synthetic PASS; not repeated |
++| D4_TIME | Strict Option1; current-component explanation reviewed; logical mutations DISABLED |
++| EXACT_SOURCE | Component pins above; no approved full native runtime assembly |
++| CI_SUCCESS | Original016:21 completed SUCCESS |
++| CI_FAILURE | Original016:11 completed FAILURE; originals retained |
++| F26_STATUS | OPEN; no full hosted qualification |
++| LAN_ROOT_CAUSE | UNKNOWN; owner's bounded serial discriminator authorized |
++| WINDOWS_NATIVE_ROOT_CAUSE | UNKNOWN; original-style local member/lookup probes did not reproduce |
++| AUTHORITY_ADMISSION | Logical mutation disabled; no strict positive admission |
++| SCHEDULER_POSITIVE_JOB | NOT_IMPLEMENTED/NOT_RUN; PR75 is negative preparation only |
++| STORAGE_COMMITTED_RECEIPT | NOT_AVAILABLE; LOCAL_UNATTESTED retained |
++| TERMINAN_AUTHENTICATED_READ | NOT_IMPLEMENTED; PR81 pure preparation is not actual authorization |
++| MATH_NATIVE | BLOCKED; original single-use authorization consumed, no repeat |
++| A8_REVIEW | Gateway scoped source/evidence ACK; no full-system acceptance |
++| PHYSICAL_CLUSTER_READINESS | Read-only preparation only; no distributed installation |
++| NEXT_ACTION | Qualify exact integrated source, inspect original hosted results, diagnose remaining REDs |
++| GO_NO_GO | IN_PROGRESS / NO-GO |
++
++No production orders, provider sends, protected merge, office fault injection,
++service installation, security policy or network configuration change is
++performed by this package. ADMINIT remains excluded. The previous LS5 pilot
++PASS is not native Scheduler/Storage/Math or six-node acceptance.
+diff --git a/release/ci-repair/20261110/ROOT-GATEWAY-EVIDENCE-REVIEW.json b/release/ci-repair/20261110/ROOT-GATEWAY-EVIDENCE-REVIEW.json
+new file mode 100644
+index 0000000..5b635f8
+--- /dev/null
++++ b/release/ci-repair/20261110/ROOT-GATEWAY-EVIDENCE-REVIEW.json
+@@ -0,0 +1,11 @@
++{
++  "root_independent_verification": "EXACT_DIFF_AND_OWNER_ORIGINAL_RECEIPT_SOURCE_MAP",
++  "head": "71989562c51a008201babb222391211757eaf402",
++  "tree": "91306124644e6c3f304fe7e7971a012f3298680a",
++  "tracked_files": 1839,
++  "owner_tests": 25,
++  "root_rerun_tests": 0,
++  "production_changed": false,
++  "hosted_qualification": "NOT_VERIFIED",
++  "method": "BATCH_GIT_BLOBS"
++}
+diff --git a/tests/native_phase_diagnostics.py b/tests/native_phase_diagnostics.py
+index 1e69874..ca18cfa 100644
+--- a/tests/native_phase_diagnostics.py
++++ b/tests/native_phase_diagnostics.py
+@@ -6,7 +6,9 @@ import time
+ PHASES=frozenset({'ENTRY','IMPORT_BEGIN','IMPORT_END','MEMBER_BEGIN','MEMBER_END',
+                  'COMPILE_BEGIN','COMPILE_END','CHILD_BEGIN','CHILD_END',
+                  'CONTROL_LOOKUP_BEGIN','CONTROL_LOOKUP_END',
+-                 'SAFE_LOOKUP_BEGIN','SAFE_LOOKUP_END','DONE'})
++                 'SAFE_LOOKUP_BEGIN','SAFE_LOOKUP_END','DONE',
++                 'OBJECT_BEGIN','OBJECT_END','FIRST_MEMBER_BEGIN','FIRST_MEMBER_END',
++                 'PARSE_BEGIN','PARSE_END','UNICODE_BEGIN','UNICODE_END','CAP_BEGIN','CAP_END'})
+ 
+ 
+ def phase(name):
+@@ -28,16 +30,48 @@ def phase_summary(raw):
+  return ','.join(result)
+ 
+ 
+-def run_phased(argv,*,env):
+- """Same fatal 15 seconds and one child attempt; never expose raw child data."""
++def run_phased(argv,*,env,timeout=15):
++ """Existing fatal 15/30 second bounds; one attempt, no raw child data."""
++ if type(timeout) is not int or timeout not in (15,30):raise ValueError('UNKNOWN_DIAGNOSTIC_BOUND')
+  started=time.monotonic()
+- try:result=subprocess.run(argv,env=env,capture_output=True,timeout=15)
++ try:result=subprocess.run(argv,env=env,capture_output=True,timeout=timeout)
+  except subprocess.TimeoutExpired as error:
+   summary=phase_summary(error.stderr)
+   # Drop raw TimeoutExpired args/output from the displayed exception chain.
+-  raise AssertionError('NATIVE_PHASE_TIMEOUT_15S elapsed_ms='+str(round((time.monotonic()-started)*1000))+' phases='+summary) from None
++  raise AssertionError('NATIVE_PHASE_TIMEOUT_'+str(timeout)+'S elapsed_ms='+str(round((time.monotonic()-started)*1000))+' phases='+summary) from None
+  summary=phase_summary(result.stderr)
+  print('NATIVE_PHASE_RESULT elapsed_ms='+str(round((time.monotonic()-started)*1000))+' phases='+summary,flush=True)
+  if result.returncode!=0:raise AssertionError('NATIVE_PHASE_EXIT_NONZERO phases='+summary)
+  if summary=='PHASE_DATA_REJECTED':raise AssertionError('NATIVE_PHASE_DATA_REJECTED')
+  return result
++
++
++NODE_PHASES=frozenset({'ENTRY','STDIN_END','PARSED','VM_RETURN','FIRST_SETTLED','SECOND_SETTLED','DONE'})
++
++
++def node_phase_summary(raw):
++ if raw is None or raw in (b'',''):return 'NO_PHASE_OBSERVED'
++ if type(raw) is str:
++  try:raw=raw.encode('ascii')
++  except UnicodeError:return 'PHASE_DATA_REJECTED'
++ if type(raw) is not bytes or len(raw)>1024:return 'PHASE_DATA_REJECTED'
++ try:lines=raw.decode('ascii').splitlines()
++ except UnicodeError:return 'PHASE_DATA_REJECTED'
++ if not 0<len(lines)<=8:return 'PHASE_DATA_REJECTED'
++ phases=[]
++ for line in lines:
++  match=re.fullmatch(r'UNIFIED_NODE:([A-Z_]{1,32})',line)
++  if not match or match[1] not in NODE_PHASES:return 'PHASE_DATA_REJECTED'
++  phases.append(match[1])
++ return ','.join(phases)
++
++
++def run_node_phased(argv,*,input):
++ started=time.monotonic()
++ try:result=subprocess.run(argv,input=input,text=True,capture_output=True,timeout=15)
++ except subprocess.TimeoutExpired as error:
++  raise AssertionError('NODE_PHASE_TIMEOUT_15S elapsed_ms='+str(round((time.monotonic()-started)*1000))+' phases='+node_phase_summary(error.stderr)) from None
++ summary=node_phase_summary(result.stderr)
++ print('NODE_PHASE_RESULT elapsed_ms='+str(round((time.monotonic()-started)*1000))+' phases='+summary,flush=True)
++ if summary=='PHASE_DATA_REJECTED':raise AssertionError('NODE_PHASE_DATA_REJECTED')
++ return result
+diff --git a/tests/test_gateway_identity.py b/tests/test_gateway_identity.py
+index 72b1a05..3e45a10 100644
+--- a/tests/test_gateway_identity.py
++++ b/tests/test_gateway_identity.py
+@@ -24,7 +24,7 @@ URI = 'urn:unified:test:service:' + U
+ 
+ class TLSFixture:
+     def __init__(self, *, client_uri=URI, client_eku=ExtendedKeyUsageOID.CLIENT_AUTH,
+-                 trusted=True, present=True):
++                 trusted=True, present=True, strict_verification=False):
+         self.temp = tempfile.TemporaryDirectory(prefix='a2-gateway-pki-')
+         self.sockets = []
+         self.thread = None
+@@ -37,7 +37,13 @@ class TLSFixture:
+                     .issuer_name(issuer.subject if issuer else subject).public_key(key.public_key())
+                     .serial_number(x509.random_serial_number()).not_valid_before(now-timedelta(seconds=10))
+                     .not_valid_after(now+timedelta(minutes=10))
+-                    .add_extension(x509.BasicConstraints(ca=ca, path_length=0 if ca else None), critical=True))
++                    .add_extension(x509.BasicConstraints(ca=ca, path_length=0 if ca else None), critical=True)
++                    .add_extension(x509.KeyUsage(digital_signature=not ca, content_commitment=False,
++                        key_encipherment=False, data_encipherment=False, key_agreement=False,
++                        key_cert_sign=ca, crl_sign=ca, encipher_only=False, decipher_only=False), critical=True)
++                    .add_extension(x509.SubjectKeyIdentifier.from_public_key(key.public_key()), critical=False)
++                    .add_extension(x509.AuthorityKeyIdentifier.from_issuer_public_key(
++                        (issuer_key or key).public_key()), critical=False))
+                 if not ca:
+                     san = x509.IPAddress(ipaddress.ip_address('127.0.0.1')) if server else x509.UniformResourceIdentifier(uri)
+                     builder = builder.add_extension(x509.SubjectAlternativeName([san]), critical=False)
+@@ -63,9 +69,15 @@ class TLSFixture:
+             self.server_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+             self.server_context.minimum_version = ssl.TLSVersion.TLSv1_2
+             self.server_context.verify_mode = ssl.CERT_REQUIRED
++            if strict_verification:
++                self.server_context.verify_flags |= ssl.VERIFY_X509_STRICT
+             self.server_context.load_verify_locations(cafile=ca_path)
+             self.server_context.load_cert_chain(*material('server', server_key, server))
+             client_context = ssl.create_default_context(cafile=ca_path)
++            if strict_verification:
++                client_context.verify_flags |= ssl.VERIFY_X509_STRICT
++            self.client_context = client_context
++            self.client_error = None
+             if present:
+                 client_context.load_cert_chain(*material('client', client_key, client))
+             listener = socket.socket()
+@@ -94,7 +106,8 @@ class TLSFixture:
+                 self.client = client_context.wrap_socket(raw, server_hostname='127.0.0.1')
+                 self.sockets.append(self.client)
+                 assert self.client.getpeercert(binary_form=True) == self.server_der  # actual loaded server cert pin
+-            except ssl.SSLError:
++            except ssl.SSLError as exc:
++                self.client_error = exc
+                 self.client = None
+             self.accepted = outcome.get(timeout=6)
+             self.thread.join(6)
+@@ -107,6 +120,28 @@ class TLSFixture:
+         if self.thread: self.thread.join(6)
+         self.temp.cleanup()
+ 
++
++class StrictTLSFixtureTests(unittest.TestCase):
++    def test_generated_chain_handshakes_with_explicit_strict_verification(self):
++        # Root serial lane only: actual owned loopback handshake, no flag removal.
++        fixture = TLSFixture(strict_verification=True)
++        try:
++            error = fixture.client_error
++            diagnostic = dict(client_error_type=type(error).__name__,
++                              verify_code=getattr(error, 'verify_code', None),
++                              verify_message=getattr(error, 'verify_message', None),
++                              server_error_type=type(fixture.accepted).__name__)
++            self.assertIsNotNone(fixture.client, diagnostic)
++            self.assertIsInstance(fixture.accepted, ssl.SSLSocket, diagnostic)
++            self.assertTrue(fixture.client_context.verify_flags & ssl.VERIFY_X509_STRICT)
++            self.assertTrue(fixture.server_context.verify_flags & ssl.VERIFY_X509_STRICT)
++            self.assertEqual(fixture.client_context.verify_mode, ssl.CERT_REQUIRED)
++            self.assertEqual(fixture.server_context.verify_mode, ssl.CERT_REQUIRED)
++            self.assertTrue(fixture.client_context.check_hostname)
++        finally:
++            fixture.close()
++
++
+ class GatewayIdentityTests(unittest.TestCase):
+     def setUp(self):
+         self.m = importlib.import_module('unified_system.gateway_identity')
+diff --git a/tests/test_installation_native_diagnostic.py b/tests/test_installation_native_diagnostic.py
+index a2dc9ec..b859b95 100644
+--- a/tests/test_installation_native_diagnostic.py
++++ b/tests/test_installation_native_diagnostic.py
+@@ -24,7 +24,9 @@ if(!$rejected -or $parent.Creates -ne 0 -or $parameters.Saved -cne 'FOREIGN'){th
+ Write-Output 'INERT_NSSM_BOOTSTRAP_VERIFIED'
+ '''
+   command=phase('ENTRY')+command.replace('$m=Import-Module',phase('IMPORT_BEGIN')+'$m=Import-Module',1)
+-  command=command.replace('$parameters=',phase('IMPORT_END')+phase('MEMBER_BEGIN')+'$parameters=',1)
++  command=command.replace('$parameters=',phase('IMPORT_END')+phase('MEMBER_BEGIN')+phase('OBJECT_BEGIN')+'$parameters=',1)
++  command=command.replace('$parameters|Add-Member',phase('OBJECT_END')+phase('FIRST_MEMBER_BEGIN')+'$parameters|Add-Member',1)
++  command=command.replace('$parameters|Add-Member ScriptMethod GetValue ',phase('FIRST_MEMBER_END')+'$parameters|Add-Member ScriptMethod GetValue ',1)
+   command=command.replace('& $m {param($key)',phase('MEMBER_END')+'& $m {param($key)',1)+phase('DONE')
+   env=service._environment();env['UNIFIED_TEST_MODULE']=str(service.MODULE)
+   child=run_phased([service._native_tools()['powershell']['path'],'-NoProfile','-NonInteractive','-Command',command],env=env)
+diff --git a/tests/test_installation_service.py b/tests/test_installation_service.py
+index 834c947..d63fe69 100644
+--- a/tests/test_installation_service.py
++++ b/tests/test_installation_service.py
+@@ -245,7 +245,17 @@ class ServiceResourceTests(unittest.TestCase):
+   env=service._environment();env['UNIFIED_TEST_MODULE']=str(module)
+   # These child processes only emit known strings; no SCM/ACL API is called.
+   command+=";$ps=Join-Path ([Environment]::SystemDirectory) 'WindowsPowerShell\\v1.0\\powershell.exe';$child=\"[Console]::OutputEncoding=[Text.Encoding]::GetEncoding([Globalization.CultureInfo]::CurrentCulture.TextInfo.OEMCodePage);[Console]::Write('C:\\LAB\\'+[char]0xdc+[char]0xe9)\";$enc=[Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($child));$value=[UnifiedStoppedServiceNative]::Run($ps,('-NoProfile -NonInteractive -EncodedCommand '+$enc));if($value -cne ('C:\\LAB\\'+[char]0xdc+[char]0xe9)){throw 'UNICODE_ROUNDTRIP_REJECTED'};$large=\"[Console]::Write(('x'*70000))\";$enc=[Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($large));$limited=$false;try{$null=[UnifiedStoppedServiceNative]::Run($ps,('-NoProfile -NonInteractive -EncodedCommand '+$enc))}catch{$limited=$true};if(-not $limited){throw 'OUTPUT_CAP_NOT_ENFORCED'};Write-Output 'UNICODE_AND_OUTPUT_BOUND_VERIFIED'"
+-  result=subprocess.run([service._native_tools()['powershell']['path'],'-NoProfile','-NonInteractive','-Command',command],env=env,capture_output=True,timeout=30)
++  from tests.native_phase_diagnostics import phase,run_phased
++  command=phase('ENTRY')+command.replace('$null=[Management.Automation.Language.Parser]::ParseFile',phase('PARSE_BEGIN')+'$null=[Management.Automation.Language.Parser]::ParseFile',1)
++  command=command.replace(';if($e.Count)', ';'+phase('PARSE_END')+'if($e.Count)',1)
++  command=command.replace('$m=Import-Module',phase('IMPORT_BEGIN')+'$m=Import-Module',1)
++  command=command.replace(';& $m {Add-Type',';'+phase('IMPORT_END')+'& $m {'+phase('COMPILE_BEGIN')+'Add-Type',1)
++  command=command.replace(";Write-Output 'DECLARATIONS_COMPILED'",';'+phase('COMPILE_END')+"Write-Output 'DECLARATIONS_COMPILED'",1)
++  command=command.replace('$value=[UnifiedStoppedServiceNative]::Run',phase('UNICODE_BEGIN')+'$value=[UnifiedStoppedServiceNative]::Run',1)
++  command=command.replace(';if($value -cne',';'+phase('UNICODE_END')+'if($value -cne',1)
++  command=command.replace('try{$null=[UnifiedStoppedServiceNative]::Run',phase('CAP_BEGIN')+'try{$null=[UnifiedStoppedServiceNative]::Run',1)
++  command=command.replace(';if(-not $limited)',';'+phase('CAP_END')+'if(-not $limited)',1)+';'+phase('DONE')
++  result=run_phased([service._native_tools()['powershell']['path'],'-NoProfile','-NonInteractive','-Command',command],env=env,timeout=30)
+   self.assertEqual(result.returncode,0,result.stderr.decode(errors='replace'));self.assertIn(b'DECLARATIONS_COMPILED',result.stdout);self.assertIn(b'UNICODE_AND_OUTPUT_BOUND_VERIFIED',result.stdout)
+ 
+  def test_static_module_no_start_stop_delete_or_policy_bypass(self):
+diff --git a/tests/test_installation_ui.py b/tests/test_installation_ui.py
+index b74c8b1..5a8680a 100644
+--- a/tests/test_installation_ui.py
++++ b/tests/test_installation_ui.py
+@@ -70,24 +70,31 @@ class BootstrapTests(unittest.TestCase):
+         self.append(done=2,total=8)
+         payload=json.loads(self.call()[1]);script=self.call('/bootstrap.js')[1].decode()
+         harness=r"""
++process.stderr.write('UNIFIED_NODE:ENTRY\n');
+ const vm=require('node:vm'),assert=require('node:assert/strict');
+ let input='';process.stdin.on('data',chunk=>input+=chunk);process.stdin.on('end',async()=>{
++ process.stderr.write('UNIFIED_NODE:STDIN_END\n');
+  const {script,payload}=JSON.parse(input),nodes={},timers=[];let exported='',clicked=false,unavailable=false;
++ process.stderr.write('UNIFIED_NODE:PARSED\n');
+  function node(id){return nodes[id]??=( {textContent:'',hidden:false,removeAttribute(){delete this.value;},addEventListener(name,fn){this[name]=fn;}});}
+  const document={getElementById:node,body:{appendChild(){}},createElement(){return {click(){clicked=true;},remove(){}};}};
+  const context={document,window:{setTimeout(fn){timers.push(fn);}},URL:{createObjectURL(blob){exported=blob.parts.join('');return 'blob:test';},revokeObjectURL(){}},Blob:class{constructor(parts){this.parts=parts;}},
+  fetch:async()=>({ok:!unavailable,json:async()=>unavailable?{status:'UNAVAILABLE'}:payload})};
+- vm.runInNewContext(script,context);await new Promise(setImmediate);
++ vm.runInNewContext(script,context);process.stderr.write('UNIFIED_NODE:VM_RETURN\n');await new Promise(setImmediate);
++ process.stderr.write('UNIFIED_NODE:FIRST_SETTLED\n');
+  assert.equal(node('counts').textContent,'2 / 8 (25%)');assert.equal(node('progress').value,25);assert.equal(node('progress').hidden,false);
+  node('error').textContent='overwritten';node('view-error').click();assert.equal(node('error').textContent,'NONE');
+  node('export').click();assert(clicked);assert.deepEqual(JSON.parse(exported).snapshot,payload.snapshot);
+  unavailable=true;const refresh=timers.shift();refresh();await new Promise(setImmediate);
++ process.stderr.write('UNIFIED_NODE:SECOND_SETTLED\n');
+  assert.equal(node('status').textContent,'UNAVAILABLE');assert.equal(node('progress').hidden,true);assert.equal(node('progress').value,undefined);
+  node('view-error').click();assert.equal(node('error').textContent,'SOURCE_UNAVAILABLE');
+  node('export').click();assert.equal(JSON.parse(exported).status,'UNAVAILABLE');assert(!exported.includes('percentage'));
++ process.stderr.write('UNIFIED_NODE:DONE\n');
+ });
+ """
+-        result=subprocess.run([shutil.which('node'),'-e',harness],input=json.dumps({'script':script,'payload':payload}),text=True,capture_output=True,timeout=15)
++        from tests.native_phase_diagnostics import run_node_phased
++        result=run_node_phased([shutil.which('node'),'-e',harness],input=json.dumps({'script':script,'payload':payload}))
+         self.assertEqual(result.returncode,0,result.stderr)
+ 
+     def test_reject_provider_and_nonloopback_construction(self):
+diff --git a/tests/test_native_phase_diagnostics.py b/tests/test_native_phase_diagnostics.py
+index 51a83fc..054999d 100644
+--- a/tests/test_native_phase_diagnostics.py
++++ b/tests/test_native_phase_diagnostics.py
+@@ -20,3 +20,33 @@ class PhaseDiagnosticsTests(unittest.TestCase):
+    with self.assertRaises(AssertionError) as caught:run_phased(['PRIVATE_PATH'],env={})
+   self.assertNotIn('PRIVATE',str(caught.exception));self.assertIn('ENTRY@1',str(caught.exception))
+   self.assertEqual(child.call_args.kwargs['timeout'],15)
++ def test_finer_static_powershell_phases_are_allowlisted(self):
++  for name in ('OBJECT_BEGIN','OBJECT_END','FIRST_MEMBER_BEGIN','FIRST_MEMBER_END','PARSE_BEGIN','PARSE_END','UNICODE_BEGIN','UNICODE_END','CAP_BEGIN','CAP_END'):
++   self.assertIn(name,phase(name))
++ def test_thirty_second_timeout_retains_bound_and_hides_payload(self):
++  error=subprocess.TimeoutExpired(['PRIVATE_PATH'],30,output=b'PRIVATE',stderr=b'UNIFIED_PHASE:PARSE_BEGIN:1')
++  with patch('subprocess.run',side_effect=error) as child:
++   with self.assertRaises(AssertionError) as caught:run_phased(['PRIVATE_PATH'],env={},timeout=30)
++  self.assertNotIn('PRIVATE',str(caught.exception));self.assertIn('TIMEOUT_30S',str(caught.exception))
++  self.assertEqual(child.call_args.kwargs['timeout'],30)
++ def test_other_powershell_bounds_are_rejected_before_spawn(self):
++  with patch('subprocess.run') as child:
++   for value in (True,0,16,31,'15'):
++    with self.assertRaises(ValueError):run_phased([],env={},timeout=value)
++   child.assert_not_called()
++ def test_node_phase_allowlist_accepts_bytes_and_text(self):
++  from tests.native_phase_diagnostics import node_phase_summary
++  for raw in (b'UNIFIED_NODE:ENTRY\nUNIFIED_NODE:STDIN_END\n','UNIFIED_NODE:ENTRY\r\nUNIFIED_NODE:STDIN_END\r\n'):
++   self.assertEqual(node_phase_summary(raw),'ENTRY,STDIN_END')
++ def test_node_parser_rejects_private_unknown_nonascii_and_excess(self):
++  from tests.native_phase_diagnostics import node_phase_summary
++  for raw in (b'PRIVATE',b'UNIFIED_NODE:PRIVATE',b'\xff',b'x'*1025,b'UNIFIED_NODE:ENTRY\n'*9,object()):
++   self.assertEqual(node_phase_summary(raw),'PHASE_DATA_REJECTED')
++  self.assertEqual(node_phase_summary(None),'NO_PHASE_OBSERVED')
++ def test_node_timeout_hides_harness_input_path_and_raw_outputs(self):
++  from tests.native_phase_diagnostics import run_node_phased
++  error=subprocess.TimeoutExpired(['PRIVATE_PATH','PRIVATE_HARNESS'],15,output=b'PRIVATE_OUTPUT',stderr=b'UNIFIED_NODE:ENTRY\nUNIFIED_NODE:PARSED\n')
++  with patch('subprocess.run',side_effect=error) as child:
++   with self.assertRaises(AssertionError) as caught:run_node_phased(['PRIVATE_PATH','PRIVATE_HARNESS'],input='PRIVATE_INPUT')
++  self.assertNotIn('PRIVATE',str(caught.exception));self.assertIn('ENTRY,PARSED',str(caught.exception))
++  self.assertEqual(child.call_args.kwargs['timeout'],15)

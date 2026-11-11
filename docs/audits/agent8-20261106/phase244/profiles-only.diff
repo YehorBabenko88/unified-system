@@ -1,0 +1,11 @@
+--- old/driver.py
++++ candidate/driver.py
+@@ -1,7 +1,7 @@
+ """UNEXECUTED SOURCE; Root allocation required for one inert MODELED11 attempt."""
+ import os,sys,pathlib,stat,json,hashlib,time,subprocess,threading,importlib.util,importlib.machinery,unittest,tempfile,types,_imp,io
+ BASE=pathlib.Path('C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-7-distributed-research-math\\outputs\\math572-compile7-modeled11-source-20261111')
+-PROFILE='old'
++PROFILE='candidate'
+ BINDINGS_SHA='c01e2e95f55f5798bc40cd3e69faef0457eeef856d425e54cee1bb0ba376d0c2'
+ CONTROL_FILE="controls-541991.py"
+ AUDITS=[]

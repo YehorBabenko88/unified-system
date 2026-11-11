@@ -1,0 +1,33 @@
+AUDITOR_PYTEST=9.2.0
+...............                                                          [100%]
+============================== warnings summary ===============================
+tests/test_owned_control_source.py::test_default_foreign_owner_denied_and_exact_scope_has_no_config_mutation
+  C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\work\review-grid262\grid\coordinator.py:928: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    @app.on_event("startup")
+
+tests/test_owned_control_source.py::test_default_foreign_owner_denied_and_exact_scope_has_no_config_mutation
+tests/test_owned_control_source.py::test_default_foreign_owner_denied_and_exact_scope_has_no_config_mutation
+  C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\work\audit-venv\Lib\site-packages\fastapi\applications.py:4723: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    return self.router.on_event(event_type)  # ty: ignore[deprecated]
+
+tests/test_owned_control_source.py::test_default_foreign_owner_denied_and_exact_scope_has_no_config_mutation
+  C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\work\review-grid262\grid\coordinator.py:1046: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    @app.on_event("shutdown")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+15 passed, 4 warnings in 6.32s

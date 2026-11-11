@@ -1,0 +1,13 @@
+diff --git a/C:/Users/LS-5/.codex/native-output-cap-prerequisite-756a670-successor-20261111/REVIEW-WINDOWS-MODE-FIX-SOURCE-20261111/original-model16.py b/C:/Users/LS-5/.codex/native-output-cap-prerequisite-756a670-successor-20261111/REVIEW-MODE-COMPATIBILITY-PROPOSAL/test_windows_mode_comparison_models.py
+index 1cf1e6f..00930ca 100644
+--- a/C:/Users/LS-5/.codex/native-output-cap-prerequisite-756a670-successor-20261111/REVIEW-WINDOWS-MODE-FIX-SOURCE-20261111/original-model16.py
++++ b/C:/Users/LS-5/.codex/native-output-cap-prerequisite-756a670-successor-20261111/REVIEW-MODE-COMPATIBILITY-PROPOSAL/test_windows_mode_comparison_models.py
+@@ -19,7 +19,7 @@ import unittest
+ from unittest.mock import patch
+ 
+ CONTROLLER = Path('C:/Users/LS-5/.codex/native-output-cap-prerequisite-756a670-successor-20261111/controller.py')
+-CONTROLLER_SHA = 'c7b6112aee23739f68942344b983a7a786c7bab339a767410bad2ba3aa34f6fb'
++CONTROLLER_SHA = 'ee5612610e0f77a4244c8ea2c5bcb8f6a32004a23ad711ba0d29d440729141ae'
+ MODEL_PATH = Path('C:/INERT-CONTROLLER-METADATA/entry.json')
+ RAW = b'{"unit":true}' + b' ' * (475327 - len(b'{"unit":true}'))
+ COMMON_FIELDS = ('st_dev', 'st_ino', 'st_size', 'st_mtime_ns', 'st_nlink')

@@ -1,0 +1,66 @@
+{
+  "schema": "master-v3.original-ci-taxonomy.review.v1",
+  "freshness": "Retained originals, no rerun or new GET",
+  "original_RED_preserved": true,
+  "Unified86": {
+    "head": "5fcac999b1daec75707010573606f486f6dccf4d",
+    "runs": 34,
+    "success": 23,
+    "failure": 11,
+    "jobs": 81,
+    "job_success": 65,
+    "job_failure": 16,
+    "configuration": {
+      "run": 43064999840,
+      "jobs": 0,
+      "cause": "env.QUALIFICATION_BASE unavailable in run-step shell"
+    },
+    "executed_failed_workflows": 10,
+    "classification": "RUNTIME_BOUNDARY_FAILURE",
+    "last_phases": "native15s FIRST_MEMBER_BEGIN/COMPILE_BEGIN/SAFE_LOOKUP_BEGIN; some30s declaration/MUX_RECEIVE_DEADLINE",
+    "underlying_source_vs_host_cause": "UNKNOWN",
+    "successor_c45": "SOURCE_ONLY_NOT_QUALIFIED"
+  },
+  "Grid283": {
+    "head": "d6b72b66ff1b85b7e6b956568342ad6bd8bfcfbe",
+    "PR_runs": 7,
+    "PR_success": 5,
+    "PR_failure": 2,
+    "jobs": 15,
+    "job_success": 12,
+    "job_failure": 2,
+    "job_cancelled": 1,
+    "extra_push_failure": 43052161163,
+    "extra_push_jobs": 0,
+    "extra_push_cause": "UNKNOWN",
+    "executed_failures": [
+      43052196579,
+      43052197019
+    ],
+    "classification": "DEPENDENCY_BOOTSTRAP_COLLECTION",
+    "errors": "seven pytest collection errors; native_snapshot_consul_lab/test_native_profile_v2/jsonschema/unified_system",
+    "hosted62_qualified": false
+  },
+  "Unified87": {
+    "head": "12d8c63a15c641977932f5e75603a1527eb3b313",
+    "Preparation_Windows": {
+      "actual_cases": 36,
+      "OK": 35,
+      "ERROR": 1,
+      "failures": 0,
+      "skips": 0,
+      "seconds": 25.421,
+      "case": "test_process_crash_before_event_commit_recovers_without_partial_hold",
+      "exception": "subprocess.TimeoutExpired20s",
+      "observer": "child poll RUNNING; stdout/stderr readers ALIVE; zero captured bytes",
+      "source_prepost_equal": true,
+      "underlying_import_SQLite_scheduling_cause": "UNKNOWN",
+      "downstream": "suite worker failed/exact36 validation not root cause"
+    }
+  },
+  "references": {
+    "taxonomy_sha256": "5e5a48069847db282f0f5335b3c46d1c24d2164ea970dce71a260ba28eb3efae",
+    "PR87_diagnosis_sha256": "68d0e1fc4272116188d37e6514547e62a02650bfec60e73d16713dcf42c90b09"
+  },
+  "no_timeout_increase_or_guard_removal": true
+}

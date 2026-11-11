@@ -1,0 +1,134 @@
+[
+  {
+    "member": "0_identity (ubuntu-24.04, linux).txt",
+    "file": "log-members/0.log",
+    "bytes": 37790,
+    "sha256": "d32328257f1de9ac4de44ac59d93487dc446c01d9421ee2f8dbce4fe56592690"
+  },
+  {
+    "member": "identity (ubuntu-24.04, linux)/system.txt",
+    "file": "log-members/1.log",
+    "bytes": 639,
+    "sha256": "55f645a2d2700d84630599d0ab5489571eb1d9d786b04e5dca5b13282e479284"
+  },
+  {
+    "member": "identity (ubuntu-24.04, linux)/1_Set up job.txt",
+    "file": "log-members/2.log",
+    "bytes": 2124,
+    "sha256": "cd69d1b6ca2ba0e77f5201719542301d97127006713ab1f853a2d5d09a5827f6"
+  },
+  {
+    "member": "identity (ubuntu-24.04, linux)/2_Run actions_checkout@11bd71901bbe5b1630ceea73d27597364c9af683.txt",
+    "file": "log-members/3.log",
+    "bytes": 19150,
+    "sha256": "27fce4c924bcc6ad8b9549203b81cc4d440eb5b40097f0f18c73de15054f2a35"
+  },
+  {
+    "member": "identity (ubuntu-24.04, linux)/3_Run actions_setup-python@a26af69be951a213d495a4c3e4e4022e16d87065.txt",
+    "file": "log-members/4.log",
+    "bytes": 3139,
+    "sha256": "eb708994df9f710c9460bd4ac5ed7e4f5b4c01c518f960db958035ca1679cf35"
+  },
+  {
+    "member": "identity (ubuntu-24.04, linux)/4_Run python -m pip install --only-binary=all --require-hashes -r docs_intelligence_identity_requirements-linux.lock.txt",
+    "file": "log-members/5.log",
+    "bytes": 2206,
+    "sha256": "2337eea1aa5dba0a4fcf65c6f2ee984fef10ad235b86f1946b71919108d7d58c"
+  },
+  {
+    "member": "identity (ubuntu-24.04, linux)/5_Run python -I -B docs_intelligence_identity_guard_controls.py.txt",
+    "file": "log-members/6.log",
+    "bytes": 2989,
+    "sha256": "d573b8216ba9ee54a49c9f73000aa598600fcea5b10f6ca91735687493ca48ff"
+  },
+  {
+    "member": "identity (ubuntu-24.04, linux)/6_Run python -I -B docs_intelligence_identity_run_qualification.py --expected-head $EXPECTED_HEAD.txt",
+    "file": "log-members/7.log",
+    "bytes": 6178,
+    "sha256": "34f8f722e23f4a586433244970083002fc3d3b101be30e18cb8546adeec6d27c"
+  },
+  {
+    "member": "identity (ubuntu-24.04, linux)/11_Post Run actions_setup-python@a26af69be951a213d495a4c3e4e4022e16d87065.txt",
+    "file": "log-members/8.log",
+    "bytes": 305,
+    "sha256": "8e451b9d6e758c218583453a571719363ad862a182fbadac6c772c982966b6e5"
+  },
+  {
+    "member": "identity (ubuntu-24.04, linux)/12_Post Run actions_checkout@11bd71901bbe5b1630ceea73d27597364c9af683.txt",
+    "file": "log-members/9.log",
+    "bytes": 1274,
+    "sha256": "d2aa5f8c2881a70c58ceae6cc9cbc396f45aa03430a69503036d1c172812a760"
+  },
+  {
+    "member": "identity (ubuntu-24.04, linux)/13_Complete job.txt",
+    "file": "log-members/10.log",
+    "bytes": 449,
+    "sha256": "1cafa7942af0979006971f690c496b200eb60afb3ac7618bb4072088a5548a19"
+  },
+  {
+    "member": "1_identity (windows-latest, windows).txt",
+    "file": "log-members/11.log",
+    "bytes": 35403,
+    "sha256": "dcc46df7f2c269e871ce43f45be9a1ca42a729aba3576d020fd7aea35f28c73d"
+  },
+  {
+    "member": "identity (windows-latest, windows)/system.txt",
+    "file": "log-members/12.log",
+    "bytes": 641,
+    "sha256": "6943dca8bb4c423a57eba329713231f14d9a3481af9032a857049effd23a1e06"
+  },
+  {
+    "member": "identity (windows-latest, windows)/1_Set up job.txt",
+    "file": "log-members/13.log",
+    "bytes": 2216,
+    "sha256": "54cab6cbc11f48f4769b7b55c8b5d26ec597e40fc969c5842a3ec9975ce12daf"
+  },
+  {
+    "member": "identity (windows-latest, windows)/2_Run actions_checkout@11bd71901bbe5b1630ceea73d27597364c9af683.txt",
+    "file": "log-members/14.log",
+    "bytes": 18766,
+    "sha256": "60943c55a6aaa7b8a0fafbf755449ff50cedfc4f23daff0db80de18a5341ca79"
+  },
+  {
+    "member": "identity (windows-latest, windows)/3_Run actions_setup-python@a26af69be951a213d495a4c3e4e4022e16d87065.txt",
+    "file": "log-members/15.log",
+    "bytes": 1053,
+    "sha256": "a3e5dcef606d1eb493adebc38b8949969fafa0c2324bcb0c060d3c9f6ba71da7"
+  },
+  {
+    "member": "identity (windows-latest, windows)/4_Run python -m pip install --only-binary=all --require-hashes -r docs_intelligence_identity_requirements-windows.lock.txt",
+    "file": "log-members/16.log",
+    "bytes": 2070,
+    "sha256": "5d0c34a7e7a97c32188abae1c961139d0dad8fb2932df035ba7440614b0068ee"
+  },
+  {
+    "member": "identity (windows-latest, windows)/5_Run python -I -B docs_intelligence_identity_guard_controls.py.txt",
+    "file": "log-members/17.log",
+    "bytes": 2977,
+    "sha256": "0867ac6520ac71a15c813a392b0031f917209c85218d869e2a5f4ebc718cd856"
+  },
+  {
+    "member": "identity (windows-latest, windows)/6_Run python -I -B docs_intelligence_identity_run_qualification.py --expected-head $EXPECTED_HEAD.txt",
+    "file": "log-members/18.log",
+    "bytes": 6178,
+    "sha256": "b1eb871a27abefcf7026335ac088c79a9a98d096660410ac792211092f205a39"
+  },
+  {
+    "member": "identity (windows-latest, windows)/11_Post Run actions_setup-python@a26af69be951a213d495a4c3e4e4022e16d87065.txt",
+    "file": "log-members/19.log",
+    "bytes": 308,
+    "sha256": "0e54f1d3156cc0e0a2ad6b2b86df6568becfcc5218a49e8000a3719d11bb2d28"
+  },
+  {
+    "member": "identity (windows-latest, windows)/12_Post Run actions_checkout@11bd71901bbe5b1630ceea73d27597364c9af683.txt",
+    "file": "log-members/20.log",
+    "bytes": 1408,
+    "sha256": "7cff51a65a84ce0349f21dd06287c0b5a92b7947c2778644fa2b759f5a8d9b08"
+  },
+  {
+    "member": "identity (windows-latest, windows)/13_Complete job.txt",
+    "file": "log-members/21.log",
+    "bytes": 451,
+    "sha256": "ac624b6856bb0ddad83d4aa96cfb356e49fcdaf1ed05b5f1247eb1cb414fdc40"
+  }
+]

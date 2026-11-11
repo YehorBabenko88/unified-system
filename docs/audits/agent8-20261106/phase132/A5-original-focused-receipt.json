@@ -1,0 +1,90 @@
+{
+  "scope": "ACTUAL_LOCAL_FAILED_ENTRY_CLEANUP_GREEN_NOT_NATIVE_API",
+  "grid_head": "2f94da511681811588e0f850a0a0e9dc4479c8b8",
+  "grid_tree": "3e9664296a225d2ba20f594f73b1495c18fe8185",
+  "support_head": "1f6b0b5c231853607f5bec780f1544cd32bf577d",
+  "grid_primary_files": 821,
+  "support_primary_files": 1519,
+  "primary_pre_post_unchanged": true,
+  "module_sha256": "5b972b6d81eeaf6f2283584c5b0482552fa9bf0717a4379838900a72da791491",
+  "core_dependency_sha256": "cfb32db73f1859d9d78b03d886372cc08584c81abd64930b5409a91edc417b64",
+  "journal_sha256": "9f170cf33f8cdd79baef6fa633d03bebf9eb4b594c54c9cf8dd6c7cb9810bbc3",
+  "script_sha256": "b2975b35d9015579fbf8921a715486d9c2226b32b4117d5d1809cccd4c24f512",
+  "runtime": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "interpreter": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-2-high-availability-distributed\\work\\research-identity-env\\Scripts\\python.exe",
+  "bootstrap_venv_not_native_pid_identity": true,
+  "focused_local_cases": [
+    {
+      "case": "path_mutation_failed_entry",
+      "entry_error": [
+        "RegistrationCustodyUnavailable",
+        "JOURNAL_PATH_CHANGED"
+      ],
+      "body_not_run": true,
+      "closed_before_contender": [
+        {
+          "former_fd": 4,
+          "error_type": "OSError",
+          "errno": 9
+        },
+        {
+          "former_fd": 3,
+          "error_type": "OSError",
+          "errno": 9
+        }
+      ],
+      "manual_close_before_contender": false,
+      "contender": {
+        "status": "ACQUIRED_LOCAL_LOCK_ONLY",
+        "resources_reserved": false,
+        "effect_permitted": false,
+        "own_launch_pid": 140388,
+        "launch_exit_code": 0,
+        "native_pid_identity_qualified": false
+      },
+      "original_rows_unchanged": true
+    },
+    {
+      "case": "sidecar_entry_and_close_report_fault",
+      "entry_error": [
+        "RegistrationCustodyUnavailable",
+        "SIDECAR_REQUIRES_EXPLICIT_OWNER_RECOVERY"
+      ],
+      "cleanup_notes": [
+        "Custody entry cleanup: OSError"
+      ],
+      "body_not_run": true,
+      "closed_before_contender": [
+        {
+          "former_fd": 4,
+          "error_type": "OSError",
+          "errno": 9
+        },
+        {
+          "former_fd": 3,
+          "error_type": "OSError",
+          "errno": 9
+        }
+      ],
+      "manual_close_before_contender": false,
+      "contender": {
+        "status": "ACQUIRED_LOCAL_LOCK_ONLY",
+        "resources_reserved": false,
+        "effect_permitted": false,
+        "own_launch_pid": 136080,
+        "launch_exit_code": 0,
+        "native_pid_identity_qualified": false
+      },
+      "original_rows_unchanged": true
+    }
+  ],
+  "unexpected_failure": null,
+  "cleanup_errors": [],
+  "owner13_not_rerun": true,
+  "proxy_tests_not_run": true,
+  "native_rpc_calls": 0,
+  "workers_run": 0,
+  "native_api_ack": false,
+  "effect_ack": false,
+  "go_no_go": "NO-GO"
+}

@@ -1,0 +1,30 @@
+{
+  "retirement": {
+    "scope": "OWNED_LOOPBACK_LAB_RETIRED",
+    "processes": [
+      {
+        "pid": 135556,
+        "returncode": 1
+      },
+      {
+        "pid": 134944,
+        "returncode": 1
+      },
+      {
+        "pid": 103364,
+        "returncode": 1
+      }
+    ],
+    "all_owned_processes_waited": true,
+    "foreign_process_operations": 0,
+    "session_retirement": "OWNED_SERVERS_STOPPED_TEMPORARY_DIRECTORY_CLEANUP_FOLLOWS"
+  },
+  "focus": {
+    "focused_tests": [
+      "test_native_profile_v2.NativeProfileV2Tests.test_fresh_session_reads_same_original_without_reviving_old_capture"
+    ],
+    "tests": 1,
+    "skips": 0,
+    "scope": "FOCUSED_NEW_COMMITTED_CASES_ONLY_NOT_FULL_SUCCESSOR_SUITE"
+  }
+}

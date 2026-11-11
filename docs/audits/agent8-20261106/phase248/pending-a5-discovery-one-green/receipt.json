@@ -1,0 +1,112 @@
+{
+  "actual": {
+    "errors": [],
+    "expected_failures": [],
+    "failure_details": [],
+    "failures": [],
+    "fixture_sha256": "17a68f7b5051a523ac0a5ef7fa441fc88de5c0a6a196c794f12c9f1ebe86a60e",
+    "ids": [
+      "test_observer_discovery_binding.ObserverDiscoveryBindingControl.test_actual_module_discovery_runs_three_bound_successes"
+    ],
+    "inner": {
+      "error_details": [],
+      "errors": 0,
+      "expected_failures": 0,
+      "failures": 0,
+      "fixture_sha256": "17a68f7b5051a523ac0a5ef7fa441fc88de5c0a6a196c794f12c9f1ebe86a60e",
+      "ids": [
+        "test_preparation_observer_admission.PreparationObserverAdmissionControls.test_actual_observer_controls_accepts_normal_twelve_successes",
+        "test_preparation_observer_admission.PreparationObserverAdmissionControls.test_actual_observer_controls_rejects_expected_failure",
+        "test_preparation_observer_admission.PreparationObserverAdmissionControls.test_actual_observer_controls_rejects_unexpected_success"
+      ],
+      "skips": 0,
+      "stage": "ACTUAL_MODULE_DISCOVERY_EXECUTED",
+      "started_ids": [
+        "test_preparation_observer_admission.PreparationObserverAdmissionControls.test_actual_observer_controls_accepts_normal_twelve_successes",
+        "test_preparation_observer_admission.PreparationObserverAdmissionControls.test_actual_observer_controls_rejects_expected_failure",
+        "test_preparation_observer_admission.PreparationObserverAdmissionControls.test_actual_observer_controls_rejects_unexpected_success"
+      ],
+      "succeeded_ids": [
+        "test_preparation_observer_admission.PreparationObserverAdmissionControls.test_actual_observer_controls_accepts_normal_twelve_successes",
+        "test_preparation_observer_admission.PreparationObserverAdmissionControls.test_actual_observer_controls_rejects_expected_failure",
+        "test_preparation_observer_admission.PreparationObserverAdmissionControls.test_actual_observer_controls_rejects_unexpected_success"
+      ],
+      "tests": 3,
+      "unexpected_successes": 0,
+      "was_successful": true
+    },
+    "legacy_lines_restored": true,
+    "legacy_module_restored": true,
+    "project_modules": [],
+    "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+    "qualifier_sha256": "dd6fa2bb62bec980dd556b3b90f98045d293d61439c2ae84004e72533cfc8ac4",
+    "regression_lines_restored": true,
+    "regression_module_restored": true,
+    "regression_sha256": "49cdf04af503f2d16a6004fd2009b2859604a83395fb3ff2d326f06a036c5209",
+    "skips": [],
+    "started": [
+      "test_observer_discovery_binding.ObserverDiscoveryBindingControl.test_actual_module_discovery_runs_three_bound_successes"
+    ],
+    "succeeded": [
+      "test_observer_discovery_binding.ObserverDiscoveryBindingControl.test_actual_module_discovery_runs_three_bound_successes"
+    ],
+    "tests": 1,
+    "unexpected_successes": []
+  },
+  "cache_empty": true,
+  "child_phase_budget_seconds": 15,
+  "child_phase_seconds": 0.6046224999954575,
+  "cleanup_errors": [],
+  "command": [
+    "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\python.exe",
+    "-I",
+    "-S",
+    "-B",
+    "-X",
+    "pycache_prefix=C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-5-resource-aware-distributed\\outputs\\F42-DISCOVERY-BINDING-ONE-GREEN-ONCE-20261111\\empty-cache",
+    "-c",
+    "\nimport hashlib,importlib.machinery,json,sys,os,stat\nfrom pathlib import Path\ndef bounded_read(path,limit,expected_size=None):\n path=Path(path)\n before=path.lstat()\n if not stat.S_ISREG(before.st_mode) or before.st_nlink!=1 or path.is_symlink() or getattr(before,'st_file_attributes',0)&1024:\n  raise RuntimeError('NONORDINARY_INPUT')\n if before.st_size>limit or expected_size is not None and before.st_size!=expected_size:\n  raise RuntimeError('INPUT_SIZE_BOUND')\n def same_api(value):\n  return (value.st_dev,value.st_ino,value.st_mode,value.st_size,value.st_mtime_ns,\n          value.st_ctime_ns,value.st_nlink,getattr(value,'st_file_attributes',0))\n def cross_api(value):\n  return (value.st_dev,value.st_ino,stat.S_IFMT(value.st_mode),value.st_size,value.st_mtime_ns,value.st_nlink)\n with path.open('rb') as stream:\n  opened=os.fstat(stream.fileno())\n  if cross_api(opened)!=cross_api(before):raise RuntimeError('INPUT_OPEN_CHANGED')\n  raw=stream.read(before.st_size+1)\n  after=os.fstat(stream.fileno())\n final=path.lstat()\n if (len(raw)!=before.st_size or same_api(opened)!=same_api(after)\n     or same_api(before)!=same_api(final) or cross_api(after)!=cross_api(final)):\n  raise RuntimeError('INPUT_CHANGED')\n return raw\ndef install_runtime_gate(admitted):\n def origin(name,location):\n  if location in ('built-in','frozen',None):return\n  key=Path(location).as_posix()\n  if key not in admitted:raise RuntimeError('UNADMITTED_MODULE_ORIGIN:'+name)\n  expected=admitted[key];raw=bounded_read(location,expected['bytes'],expected['bytes'])\n  if len(raw)!=expected['bytes'] or hashlib.sha256(raw).hexdigest()!=expected['sha256']:\n   raise RuntimeError('MODULE_ORIGIN_CHANGED:'+name)\n for name,module in tuple(sys.modules.items()):\n  if name=='__main__':continue\n  spec=getattr(module,'__spec__',None)\n  location=spec.origin if spec else getattr(module,'__file__',None)\n  origin(name,location)\n class Loader:\n  def __init__(self,name,spec):self.name=name;self.spec=spec;self.delegate=spec.loader\n  def create_module(self,spec):\n   origin(self.name,self.spec.origin)\n   return self.delegate.create_module(spec) if hasattr(self.delegate,'create_module') else None\n  def exec_module(self,module):origin(self.name,self.spec.origin);return self.delegate.exec_module(module)\n  def __getattr__(self,name):return getattr(self.delegate,name)\n class Finder:\n  def find_spec(self,name,path=None,target=None):\n   spec=importlib.machinery.PathFinder.find_spec(name,path,target)\n   if spec:\n    if spec.loader is None:raise RuntimeError('UNADMITTED_NAMESPACE_PACKAGE')\n    origin(name,spec.origin);spec.loader=Loader(name,spec)\n   return spec\n sys.meta_path=[finder for finder in sys.meta_path if finder is not importlib.machinery.PathFinder]\n sys.meta_path.append(Finder())\n return origin\n\nimport hashlib,json,linecache,sys,types,unittest\nfrom pathlib import Path\nassert sys.version_info[:3]==(3,12,10)\nassert sys.flags.isolated and sys.flags.no_site and sys.dont_write_bytecode\nassert sys.pycache_prefix and Path(sys.pycache_prefix).resolve() == Path(sys.argv[3]).resolve()\nroot=Path(sys.argv[1]); expected=json.loads(sys.argv[2])\nruntime_raw=bounded_read(Path(sys.argv[4]),167973,167973)\nassert hashlib.sha256(runtime_raw).hexdigest()==sys.argv[5]\nadmitted=json.loads(runtime_raw)['files']\norigin=install_runtime_gate(admitted)\ndef audit(event,args):\n if event in ('subprocess.Popen','os.system','ctypes.dlopen','ctypes.dlsym') or event.startswith(('socket.','os.exec','os.spawn','os.fork','os.posix_spawn')):\n  raise RuntimeError('PURE_CHILD_EFFECT_FORBIDDEN')\nsys.addaudithook(audit)\n# The fixture argument is PUBLIC F2; only the49cdf module has make_suite here.\nfixture=root/'tests/test_preparation_observer_admission.py'\nfixture_raw=bounded_read(fixture,expected['fixture_bytes'],expected['fixture_bytes'])\nassert hashlib.sha256(fixture_raw).hexdigest()==expected['fixture']\nqualifier=bounded_read(root/'tools/ci/qualify_preparation_integrity.py',expected['qualifier_bytes'],expected['qualifier_bytes'])\nassert hashlib.sha256(qualifier).hexdigest()==expected['qualifier']\nregression=Path(expected['regression_path'])\nregression_raw=bounded_read(regression,expected['regression_bytes'],expected['regression_bytes'])\nassert hashlib.sha256(regression_raw).hexdigest()==expected['regression_sha256']\nname='test_observer_discovery_binding';code_file='<pinned-discovery-binding-regression>'\nmissing=object();previous_module=sys.modules.get(name,missing)\nprevious_lines=linecache.cache.get(code_file,missing)\nlegacy_module=sys.modules.get('test_preparation_observer_admission',missing)\nlegacy_file='<pinned-observer-admission-discovery-fixture>'\nlegacy_lines=linecache.cache.get(legacy_file,missing)\nmodule=types.ModuleType(name);module.__file__=str(regression)\nadmitted[regression.as_posix()]=dict(bytes=len(regression_raw),sha256=expected['regression_sha256'])\nclass TraceResult(unittest.TextTestResult):\n def __init__(self,*a,**k):\n  super().__init__(*a,**k);self.started=[];self.succeeded=[];self.failure_details=[]\n def startTest(self,test):\n  self.started.append(test.id());super().startTest(test)\n def addSuccess(self,test):\n  self.succeeded.append(test.id());super().addSuccess(test)\n def addFailure(self,test,error):\n  trace=error[2];last=None\n  for _ in range(64):\n   if trace is None:break\n   if trace.tb_frame.f_code.co_filename==code_file:\n    last=dict(function=trace.tb_frame.f_code.co_name,line=trace.tb_lineno)\n   trace=trace.tb_next\n  self.failure_details.append(dict(id=test.id(),assertion_error_exact=error[0] is AssertionError,\n   last_regression_frame=last,trace_truncated=trace is not None))\n  super().addFailure(test,error)\ntry:\n sys.modules[module.__name__]=module\n linecache.cache[code_file]=(len(regression_raw),None,regression_raw.decode('utf-8').splitlines(True),code_file)\n exec(compile(regression_raw,code_file,'exec'),module.__dict__)\n suite=module.make_suite(fixture_raw,expected_fixture_sha256=expected['fixture'],fixture_path=str(fixture))\n cases=list(suite);ids=[case.id() for case in cases]\n assert ids==expected['ids'] and len(cases)==1\n case=cases[0]\n result=unittest.TextTestRunner(verbosity=2,resultclass=TraceResult).run(suite)\n for loaded_name,loaded in tuple(sys.modules.items()):\n  if loaded_name=='__main__':continue\n  spec=getattr(loaded,'__spec__',None)\n  origin(loaded_name,spec.origin if spec else getattr(loaded,'__file__',None))\n project=[]\n for loaded_name,loaded in list(sys.modules.items()):\n  source=getattr(loaded,'__file__',None)\n  if source and Path(source).is_relative_to(root):project.append(loaded_name)\n record=dict(ids=ids,started=result.started,succeeded=result.succeeded,\n tests=result.testsRun,failures=[case.id() for case,_ in result.failures],\n errors=[case.id() for case,_ in result.errors],skips=[case.id() for case,_ in result.skipped],\n expected_failures=[case.id() for case,_ in result.expectedFailures],\n unexpected_successes=[case.id() for case in result.unexpectedSuccesses],\n project_modules=sorted(project),python=sys.version,\n failure_details=result.failure_details,inner=case.observed,\n legacy_module_restored=sys.modules.get('test_preparation_observer_admission',missing) is legacy_module,\n legacy_lines_restored=linecache.cache.get(legacy_file,missing) is legacy_lines,\n fixture_sha256=hashlib.sha256(fixture_raw).hexdigest(),\n qualifier_sha256=hashlib.sha256(qualifier).hexdigest(),\n regression_sha256=hashlib.sha256(regression_raw).hexdigest())\nfinally:\n if previous_module is missing:sys.modules.pop(name,None)\n else:sys.modules[name]=previous_module\n if previous_lines is missing:linecache.cache.pop(code_file,None)\n else:linecache.cache[code_file]=previous_lines\nrecord['regression_module_restored']=sys.modules.get(name,missing) is previous_module\nrecord['regression_lines_restored']=linecache.cache.get(code_file,missing) is previous_lines\nprint(json.dumps(record,sort_keys=True),flush=True)\nsys.exit(0 if result.wasSuccessful() else 1)\n",
+    "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-5-resource-aware-distributed\\work\\f42-facade-12d8c63-raw-20261111",
+    "{\"fixture\": \"17a68f7b5051a523ac0a5ef7fa441fc88de5c0a6a196c794f12c9f1ebe86a60e\", \"qualifier\": \"dd6fa2bb62bec980dd556b3b90f98045d293d61439c2ae84004e72533cfc8ac4\", \"fixture_bytes\": 4141, \"qualifier_bytes\": 31264, \"ids\": [\"test_observer_discovery_binding.ObserverDiscoveryBindingControl.test_actual_module_discovery_runs_three_bound_successes\"], \"regression_path\": \"C:\\\\Users\\\\LS-5\\\\Documents\\\\Codex\\\\2026-11-06\\\\codex-agent-5-resource-aware-distributed\\\\outputs\\\\f42-discovery-one-green-controller-review1\\\\test_observer_discovery_binding.py\", \"regression_bytes\": 5377, \"regression_sha256\": \"49cdf04af503f2d16a6004fd2009b2859604a83395fb3ff2d326f06a036c5209\"}",
+    "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-5-resource-aware-distributed\\outputs\\F42-DISCOVERY-BINDING-ONE-GREEN-ONCE-20261111\\empty-cache",
+    "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-5-resource-aware-distributed\\outputs\\f42-discovery-one-green-controller-review1\\runtime-approved-841.json",
+    "3625b1be9c8ac3309ba2c974ad35a6b62c7f53e07031a6b4bc3e75b86d4f0046"
+  ],
+  "controller_sha256": "6a1549614488ae63f88199c38f149d5a0eea4ee4925b1de2ffbc04201067f2c8",
+  "env": {
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "SystemRoot": "C:\\WINDOWS",
+    "TEMP": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-5-resource-aware-distributed\\outputs\\F42-DISCOVERY-BINDING-ONE-GREEN-ONCE-20261111\\empty-cache",
+    "TMP": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-5-resource-aware-distributed\\outputs\\F42-DISCOVERY-BINDING-ONE-GREEN-ONCE-20261111\\empty-cache",
+    "WINDIR": "C:\\WINDOWS"
+  },
+  "evidence_errors": [],
+  "evidence_sha256": {
+    "raw-after.json": "fd2e636e240b0bdd5c662dab6c2e26884d5534bf7f1436a9c603d730023e3234",
+    "raw-before.json": "fd2e636e240b0bdd5c662dab6c2e26884d5534bf7f1436a9c603d730023e3234",
+    "stderr.log": "08fb928ed6ec4b9b394cc23e4705459fd2add007031d5130d46284ec6976a8d3",
+    "stdout.log": "1f3ca5b605f1373c2756ff8f6d90061026146b4712b22c9606912584a341c3c8"
+  },
+  "executed": true,
+  "execution_budget_seconds": 10,
+  "manifest_sha256": "54992ba4839a71e4550706e993b43820ac848bed4c6e93b1ea0d9182777a2e38",
+  "native_authority": false,
+  "output_bytes": {
+    "stderr": 288,
+    "stdout": 2596
+  },
+  "output_limit": 262144,
+  "output_overflow": false,
+  "owned_handle_closed": true,
+  "pid": 12728,
+  "qualified_discovery_green": true,
+  "raw_pre_post_equal": true,
+  "reader_errors": [],
+  "readers_alive": 0,
+  "regression_pre_post_equal": true,
+  "retired": true,
+  "retry": false,
+  "returncode": 0,
+  "scope": "ONE_MODULE_DISCOVERY_BINDING_GREEN_ONLY",
+  "wait_confirmed_retired": true
+}

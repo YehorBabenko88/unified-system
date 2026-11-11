@@ -1,0 +1,95 @@
+test_concurrent_supersession_publication_has_one_native_order (__main__.ActualAssignmentBackendContracts.test_concurrent_supersession_publication_has_one_native_order) ... ERROR
+test_native_no_quorum_preserves_original_intent_without_mutation (__main__.ActualAssignmentBackendContracts.test_native_no_quorum_preserves_original_intent_without_mutation) ... ERROR
+test_publication_first_survives_as_one_immutable_historical_commit (__main__.ActualAssignmentBackendContracts.test_publication_first_survives_as_one_immutable_historical_commit) ... ERROR
+test_stale_generation_cannot_create_assignment_or_publication (__main__.ActualAssignmentBackendContracts.test_stale_generation_cannot_create_assignment_or_publication) ... ERROR
+test_supersession_first_rejects_old_worker_publication (__main__.ActualAssignmentBackendContracts.test_supersession_first_rejects_old_worker_publication) ... ERROR
+
+======================================================================
+ERROR: test_concurrent_supersession_publication_has_one_native_order (__main__.ActualAssignmentBackendContracts.test_concurrent_supersession_publication_has_one_native_order)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\work\review-a5-red1bb6\tests\test_agent5_assignment_backend_contract.py", line 67, in asyncSetUp
+    self.fixture = await open_actual_owner_fixture()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\work\review-a5-red1bb6\tests\test_agent5_assignment_backend_contract.py", line 51, in open_actual_owner_fixture
+    raise ActualBackendUnavailable(
+ActualBackendUnavailable: A2 actual Assignment producer NONE; A4 actual reservation/publication backend NONE; supported endpoint/schema ACK absent. Native contract assertions NOT_RUN; do not substitute model18/UNWIRED/Mux/lease metadata.
+
+======================================================================
+ERROR: test_native_no_quorum_preserves_original_intent_without_mutation (__main__.ActualAssignmentBackendContracts.test_native_no_quorum_preserves_original_intent_without_mutation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\work\review-a5-red1bb6\tests\test_agent5_assignment_backend_contract.py", line 67, in asyncSetUp
+    self.fixture = await open_actual_owner_fixture()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\work\review-a5-red1bb6\tests\test_agent5_assignment_backend_contract.py", line 51, in open_actual_owner_fixture
+    raise ActualBackendUnavailable(
+ActualBackendUnavailable: A2 actual Assignment producer NONE; A4 actual reservation/publication backend NONE; supported endpoint/schema ACK absent. Native contract assertions NOT_RUN; do not substitute model18/UNWIRED/Mux/lease metadata.
+
+======================================================================
+ERROR: test_publication_first_survives_as_one_immutable_historical_commit (__main__.ActualAssignmentBackendContracts.test_publication_first_survives_as_one_immutable_historical_commit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\work\review-a5-red1bb6\tests\test_agent5_assignment_backend_contract.py", line 67, in asyncSetUp
+    self.fixture = await open_actual_owner_fixture()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\work\review-a5-red1bb6\tests\test_agent5_assignment_backend_contract.py", line 51, in open_actual_owner_fixture
+    raise ActualBackendUnavailable(
+ActualBackendUnavailable: A2 actual Assignment producer NONE; A4 actual reservation/publication backend NONE; supported endpoint/schema ACK absent. Native contract assertions NOT_RUN; do not substitute model18/UNWIRED/Mux/lease metadata.
+
+======================================================================
+ERROR: test_stale_generation_cannot_create_assignment_or_publication (__main__.ActualAssignmentBackendContracts.test_stale_generation_cannot_create_assignment_or_publication)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\work\review-a5-red1bb6\tests\test_agent5_assignment_backend_contract.py", line 67, in asyncSetUp
+    self.fixture = await open_actual_owner_fixture()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\work\review-a5-red1bb6\tests\test_agent5_assignment_backend_contract.py", line 51, in open_actual_owner_fixture
+    raise ActualBackendUnavailable(
+ActualBackendUnavailable: A2 actual Assignment producer NONE; A4 actual reservation/publication backend NONE; supported endpoint/schema ACK absent. Native contract assertions NOT_RUN; do not substitute model18/UNWIRED/Mux/lease metadata.
+
+======================================================================
+ERROR: test_supersession_first_rejects_old_worker_publication (__main__.ActualAssignmentBackendContracts.test_supersession_first_rejects_old_worker_publication)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\work\review-a5-red1bb6\tests\test_agent5_assignment_backend_contract.py", line 67, in asyncSetUp
+    self.fixture = await open_actual_owner_fixture()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\work\review-a5-red1bb6\tests\test_agent5_assignment_backend_contract.py", line 51, in open_actual_owner_fixture
+    raise ActualBackendUnavailable(
+ActualBackendUnavailable: A2 actual Assignment producer NONE; A4 actual reservation/publication backend NONE; supported endpoint/schema ACK absent. Native contract assertions NOT_RUN; do not substitute model18/UNWIRED/Mux/lease metadata.
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.084s
+
+FAILED (errors=5)

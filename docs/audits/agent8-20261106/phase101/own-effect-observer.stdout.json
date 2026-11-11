@@ -1,0 +1,143 @@
+{
+  "actual_target": "DIRECT_TARGET_PASS",
+  "invocations": 1,
+  "positive_read_SQLite_calibrated": true,
+  "negative_calibrations": [
+    "read",
+    "write",
+    "sqlite_sibling",
+    "sqlite_dotdot",
+    "sqlite_uri_rwc",
+    "process",
+    "network"
+  ],
+  "observed_calls": [
+    {
+      "event": "sqlite3.connect",
+      "database": "file:///C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-8-independent-security-ci/work/target8dc-a8-audit2/stand/direct-journal.db?mode=ro"
+    },
+    {
+      "event": "sqlite3.connect",
+      "database": "file:///C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-8-independent-security-ci/work/target8dc-a8-audit2/stand/direct-journal.db?mode=ro"
+    },
+    {
+      "event": "sqlite3.connect",
+      "database": "file:///C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-8-independent-security-ci/work/target8dc-a8-audit2/stand/direct-journal.db?mode=ro"
+    },
+    {
+      "event": "sqlite3.connect",
+      "database": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-8-independent-security-ci\\work\\target8dc-a8-audit2\\stand\\direct-journal.db"
+    },
+    {
+      "event": "subprocess.Popen",
+      "command": "git --no-replace-objects -C C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-8-independent-security-ci\\work\\review-research75-aed8 show aed8a7c8a952f96803c207d5e90b133969a47f04:strattester/research/gateway_adapter.py"
+    },
+    {
+      "event": "subprocess.Popen",
+      "command": "git --no-replace-objects -C C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-8-independent-security-ci\\work\\review-research75-aed8 show aed8a7c8a952f96803c207d5e90b133969a47f04:docs/gateway/research/evidence/btc-v1/request.json"
+    },
+    {
+      "event": "open",
+      "writing": false,
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\__pycache__\\__future__.cpython-312.pyc"
+    },
+    {
+      "event": "open",
+      "writing": false,
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\__pycache__\\decimal.cpython-312.pyc"
+    },
+    {
+      "event": "open",
+      "writing": false,
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\__pycache__\\numbers.cpython-312.pyc"
+    },
+    {
+      "event": "open",
+      "writing": false,
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\__pycache__\\inspect.cpython-312.pyc"
+    },
+    {
+      "event": "open",
+      "writing": false,
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\__pycache__\\ast.cpython-312.pyc"
+    },
+    {
+      "event": "open",
+      "writing": false,
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\__pycache__\\dis.cpython-312.pyc"
+    },
+    {
+      "event": "open",
+      "writing": false,
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\__pycache__\\opcode.cpython-312.pyc"
+    },
+    {
+      "event": "open",
+      "writing": false,
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\importlib\\__pycache__\\__init__.cpython-312.pyc"
+    },
+    {
+      "event": "open",
+      "writing": false,
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\__pycache__\\linecache.cpython-312.pyc"
+    },
+    {
+      "event": "open",
+      "writing": false,
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\__pycache__\\tokenize.cpython-312.pyc"
+    },
+    {
+      "event": "open",
+      "writing": false,
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\__pycache__\\token.cpython-312.pyc"
+    },
+    {
+      "event": "open",
+      "writing": false,
+      "path": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-8-independent-security-ci\\work\\research75-a8-temp\\gateway-meta-source-f3c\\src\\meta_analyse\\__init__.py"
+    },
+    {
+      "event": "open",
+      "writing": false,
+      "path": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-8-independent-security-ci\\work\\research75-a8-temp\\gateway-meta-source-f3c\\src\\meta_analyse\\core.py"
+    },
+    {
+      "event": "open",
+      "writing": false,
+      "path": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-8-independent-security-ci\\work\\research75-a8-temp\\gateway-meta-source-f3c\\src\\meta_analyse\\ohlcv_research_adapter.py"
+    },
+    {
+      "event": "open",
+      "writing": false,
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\__pycache__\\dataclasses.cpython-312.pyc"
+    },
+    {
+      "event": "open",
+      "writing": false,
+      "path": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-8-independent-security-ci\\work\\research75-a8-temp\\gateway-meta-source-f3c\\src\\meta_analyse\\__init__.py"
+    },
+    {
+      "event": "open",
+      "writing": false,
+      "path": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-8-independent-security-ci\\work\\research75-a8-temp\\gateway-meta-source-f3c\\src\\meta_analyse\\core.py"
+    },
+    {
+      "event": "open",
+      "writing": false,
+      "path": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-8-independent-security-ci\\work\\research75-a8-temp\\gateway-meta-source-f3c\\src\\meta_analyse\\ohlcv_research_adapter.py"
+    },
+    {
+      "event": "sqlite3.connect",
+      "database": "file:///C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-8-independent-security-ci/work/target8dc-a8-audit2/stand/direct-journal.db?mode=ro"
+    },
+    {
+      "event": "sqlite3.connect",
+      "database": "file:///C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-8-independent-security-ci/work/target8dc-a8-audit2/stand/direct-journal.db?mode=ro"
+    },
+    {
+      "event": "sqlite3.connect",
+      "database": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-8-independent-security-ci\\work\\target8dc-a8-audit2\\stand\\direct-journal.db"
+    }
+  ],
+  "scope": "PYTHON_AUDIT_EFFECTS_ONLY_NOT_NATIVE_EGRESS_SANDBOX"
+}

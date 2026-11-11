@@ -1,0 +1,141 @@
+--- original20/test_qualifier_controls.py
++++ proposed28/test_qualifier_controls.py
+@@ -504,5 +504,138 @@
+         self.assert_valid_paths_reach_backend(probe)
+ 
+ 
++def actual_held_cleanup_seam(lane):
++    """Select actual named-function cleanup and its actual denial predicate."""
++    parsed = ast.parse(QUALIFIER.read_text(encoding='utf-8'), filename=str(QUALIFIER))
++    functions = {n.name: n for n in parsed.body if isinstance(n, ast.FunctionDef)}
++    name = 'controls' if lane == 'controls' else 'run'
++    function = functions[name]
++    tries = [n for n in function.body if isinstance(n, ast.Try)]
++    if len(tries) != 1:
++        raise AssertionError('One actual outer cleanup Try required')
++    final = tries[0].finalbody
++    if lane == 'controls':
++        branches = [n for n in final if isinstance(n, ast.If) and isinstance(n.test, ast.Compare)
++                    and isinstance(n.test.left, ast.Name) and n.test.left.id == 'child'
++                    and len(n.test.ops) == len(n.test.comparators) == 1
++                    and isinstance(n.test.ops[0], ast.IsNot)
++                    and isinstance(n.test.comparators[0], ast.Constant) and n.test.comparators[0].value is None]
++        predicates = [n for n in final if isinstance(n, ast.Assign) and len(n.targets) == 1
++                      and isinstance(n.targets[0], ast.Subscript)
++                      and isinstance(n.targets[0].value, ast.Name) and n.targets[0].value.id == 'record'
++                      and isinstance(n.targets[0].slice, ast.Constant) and n.targets[0].slice.value == 'observed_pass']
++        if len(branches) != len(predicates) or len(branches) != 1:
++            raise AssertionError('Actual controls held cleanup and observed-pass predicate required')
++        wrapper = ast.parse('def cleanup(child, record):\n pass\n').body[0]
++        wrapper.body = [branches[0], predicates[0]]
++        module = ast.Module(body=[functions['need'], wrapper], type_ignores=[])
++        env = {'traceback': traceback}
++        exec(compile(ast.fix_missing_locations(module), str(QUALIFIER), 'exec'), env)
++        return env['cleanup'], None
++    if lane != 'run':
++        raise AssertionError('Only actual controls/run cleanup lanes allowed')
++    loops = [n for n in final if isinstance(n, ast.For)
++             and isinstance(n.target, ast.Name) and n.target.id == 'child'
++             and isinstance(n.iter, ast.Name) and n.iter.id == 'held'
++             and not any(isinstance(x, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef, ast.Lambda)) for x in ast.walk(n))
++             and {'kill', 'wait'}.issubset({x.func.attr for x in ast.walk(n)
++                 if isinstance(x, ast.Call) and isinstance(x.func, ast.Attribute)
++                 and isinstance(x.func.value, ast.Name) and x.func.value.id == 'child'})]
++    gates = [n for n in ast.walk(functions['verify']) if isinstance(n, ast.Expr) and isinstance(n.value, ast.Call)
++             and isinstance(n.value.func, ast.Name) and n.value.func.id == 'need'
++             and len(n.value.args) == 2 and isinstance(n.value.args[1], ast.Constant)
++             and n.value.args[1].value == 'Retirement/cleanup not established']
++    if len(loops) != len(gates) or len(loops) != 1:
++        raise AssertionError('Actual main held cleanup and verify retirement-denial gate required')
++    wrapper = ast.parse('def cleanup(held, state):\n pass\n').body[0]
++    wrapper.body = [loops[0]]
++    denial = ast.parse('def deny(candidate):\n pass\n').body[0]
++    denial.body = [gates[0]]
++    env = {'traceback': traceback}
++    module = ast.Module(body=[functions['need'], wrapper, denial], type_ignores=[])
++    exec(compile(ast.fix_missing_locations(module), str(QUALIFIER), 'exec'), env)
++    return env['cleanup'], env['deny']
++
++
++class InertHeldCleanupHandle:
++    def __init__(self, poll_error=False, kill_error=False, wait_error=False):
++        self.poll_error = poll_error
++        self.kill_error = kill_error
++        self.wait_error = wait_error
++        self.returncode = None
++        self.events = []
++
++    def poll(self):
++        self.events.append('poll')
++        if self.poll_error:
++            raise OSError('INERT_POLL_FAILURE')
++        return self.returncode
++
++    def kill(self):
++        self.events.append('kill')
++        if self.kill_error:
++            raise OSError('INERT_KILL_FAILURE')
++
++    def wait(self, timeout):
++        self.events.append(('wait', timeout))
++        if self.wait_error:
++            raise OSError('INERT_WAIT_FAILURE')
++        self.returncode = -1
++        return self.returncode
++
++
++def assert_actual_cleanup(case, lane, poll_error=False, kill_error=False, wait_error=False):
++    cleanup, denial = actual_held_cleanup_seam(lane)
++    handle = InertHeldCleanupHandle(poll_error, kill_error, wait_error)
++    facts = {'errors': [], 'cleanup_uncertain': False, 'child': {'pid': 7001, 'identity': 'INERT_HELD_HANDLE'},
++             'creation_status': 'HELD', 'remaining_new_threads': []}
++    if lane == 'controls':
++        cleanup(handle, facts)
++    else:
++        cleanup([handle], facts)
++    case.assertEqual(handle.events.count('kill'), 1, 'Known returned handle must get one best-effort kill attempt')
++    case.assertEqual(handle.events.count(('wait', 2)), 1, 'Wait must be attempted even when poll/kill fails')
++    if poll_error or kill_error or wait_error:
++        case.assertTrue(facts['cleanup_uncertain'], 'UNKNOWN must remain sticky after cleanup errors')
++        case.assertTrue(facts['errors'], 'Cleanup failure evidence must be retained')
++    else:
++        case.assertFalse(facts['cleanup_uncertain'])
++        case.assertEqual(facts['errors'], [])
++        case.assertIsNotNone(handle.returncode)
++    if lane == 'controls':
++        case.assertIs(facts['observed_pass'], False, 'Actual controller predicate must deny uncertain/unexpected cleanup')
++    else:
++        with case.assertRaisesRegex(RuntimeError, 'Retirement/cleanup not established'):
++            denial(facts)  # Actual verify predicate, not a fake runtime permit.
++
++
++class ControlsHeldCleanupControls(unittest.TestCase):
++    def test_poll_error_attempts_kill_and_wait_and_denies(self):
++        assert_actual_cleanup(self, 'controls', poll_error=True)
++
++    def test_poll_and_kill_error_still_attempts_wait_and_denies(self):
++        assert_actual_cleanup(self, 'controls', poll_error=True, kill_error=True)
++
++    def test_poll_and_wait_error_keeps_unknown_and_denies(self):
++        assert_actual_cleanup(self, 'controls', poll_error=True, wait_error=True)
++
++    def test_normal_running_handle_cleanup_control(self):
++        assert_actual_cleanup(self, 'controls')
++
++
++class MainRunHeldCleanupControls(unittest.TestCase):
++    def test_poll_error_attempts_kill_and_wait_and_denies(self):
++        assert_actual_cleanup(self, 'run', poll_error=True)
++
++    def test_poll_and_kill_error_still_attempts_wait_and_denies(self):
++        assert_actual_cleanup(self, 'run', poll_error=True, kill_error=True)
++
++    def test_poll_and_wait_error_keeps_unknown_and_denies(self):
++        assert_actual_cleanup(self, 'run', poll_error=True, wait_error=True)
++
++    def test_normal_running_handle_cleanup_control(self):
++        assert_actual_cleanup(self, 'run')
++
++
+ if __name__ == '__main__':
+     unittest.main(verbosity=2)

@@ -1,0 +1,82 @@
+diff --git a/docs/development/mission-continuation-v2.md b/docs/development/mission-continuation-v2.md
+index 91d16f9..4f5a091 100644
+--- a/docs/development/mission-continuation-v2.md
++++ b/docs/development/mission-continuation-v2.md
+@@ -2,7 +2,7 @@
+ 
+ Root-approved implementation choice: extend the existing marker-v2 Journal, not a controller or executor. Preserve closed v1 task validation, put and projection contracts. New closed development-continuation/version-2 receipts bind a complete current task snapshot SHA256 to explicit source HEAD/tree, status, last verified result, evidence, retry budget, next descriptive step, blocker and authorization references.
+ 
+-The checkpoint API uses the existing global sequence CAS and capacity reservation. Replay validates every historical binding against its contemporaneous task. Later task drift marks the retained checkpoint stale; only an explicit checkpoint refreshes it. Retry maximum is fixed (0..32), usage never decreases, including after restart or stale refresh. No implicit v1 conversion occurs. Old binaries are not forward compatible with new receipt kinds.
++The checkpoint API uses the existing global sequence CAS and capacity reservation. Replay validates every historical binding against its contemporaneous task. Later task drift marks the retained checkpoint stale through replay, including A-to-B-to-A changes; only an explicit appended checkpoint refreshes it. Returning to the original digest never reactivates an old checkpoint. Retry maximum is fixed (0..32), usage never decreases, including after restart or stale refresh. No implicit v1 conversion occurs. Old binaries are not forward compatible with new receipt kinds.
+ 
+ Implementation sequence: regression tests first; closed metadata validation and replay; explicit checkpoint and detached projection; bounded local verification. Process restart proof, if separately run, is PYTHON_RESTART_NOT_CODEXAPP_RESTART. Actual Codex app restart is not tested here.
+ 
+diff --git a/tests/test_mission_controller.py b/tests/test_mission_controller.py
+index 6ee2edb..5d71e59 100644
+--- a/tests/test_mission_controller.py
++++ b/tests/test_mission_controller.py
+@@ -415,3 +415,19 @@ class ContinuationTests(unittest.TestCase):
+             task_id="task-1",task_snapshot_sha256=hashlib.sha256(canonical(task())).hexdigest(),
+             metadata=continuation_metadata()),expected_sequence=2)
+         with self.assertRaises(ContractError):MissionController.open(self.path)
++
++    def test_aba_task_drift_stays_stale_until_explicit_checkpoint(self):
++        metadata=continuation_metadata();metadata["retry_budget"]["retries_used"]=1
++        self.checkpoint(metadata)
++        changed=task();changed["blockers"]=["intermediate drift"]
++        self.controller.put(changed,expected_sequence=3)
++        self.controller.put(task(),expected_sequence=4)
++        self.controller=MissionController.open(self.path)
++        self.assertTrue(self.controller.continuation_projection()["continuations"]["task-1"]["stale"])
++        self.checkpoint(metadata)
++        self.assertEqual(self.controller.projection()["sequence"],6)
++        self.assertFalse(MissionController.open(self.path).continuation_projection()["continuations"]["task-1"]["stale"])
++        lower=continuation_metadata()
++        with self.assertRaises(ContractError):self.checkpoint(lower)
++        metadata["retry_budget"]["max_retries"]=3
++        with self.assertRaises(ContractError):self.checkpoint(metadata)
+diff --git a/unified_system/mission_controller.py b/unified_system/mission_controller.py
+index 63e44e3..13b19f2 100644
+--- a/unified_system/mission_controller.py
++++ b/unified_system/mission_controller.py
+@@ -143,7 +143,7 @@ def _apply_continuation(tasks,continuations,receipt):
+         before=old["metadata"]["retry_budget"];after=metadata["retry_budget"]
+         if before["max_retries"]!=after["max_retries"] or after["retries_used"]<before["retries_used"]:
+             raise ContractError("immutable retry maximum or decreasing usage")
+-    continuations[receipt["task_id"]]=copy.deepcopy(receipt)
++    continuations[receipt["task_id"]]=dict(copy.deepcopy(receipt),stale=False)
+ 
+ 
+ def _bounds(max_bytes, max_records):
+@@ -253,7 +253,12 @@ class MissionController:
+             if receipt["kind"] != "development-task" or type(receipt["schema_version"]) is not int or receipt["schema_version"] != 1:
+                 raise ContractError("unknown receipt schema")
+             task=validate_task(receipt["task"])
++            previous=tasks.get(task["task_id"])
+             self._apply(tasks, task)
++            if previous is not None and previous!=task and task["task_id"] in continuations:
++                # Replay-derived invalidation is sticky, including A -> B -> A.
++                # Only a subsequent explicit continuation receipt clears it.
++                continuations[task["task_id"]]["stale"]=True
+         return records,tasks,continuations
+ 
+     def _replay(self):
+@@ -313,7 +318,8 @@ class MissionController:
+                      task_snapshot_sha256=_snapshot(tasks[task_id]),metadata=metadata)
+         old=continuations.get(task_id)
+         _apply_continuation(tasks,continuations,receipt)
+-        if old==receipt: return self.continuation_projection()
++        if old is not None and not old["stale"] and {k:v for k,v in old.items() if k!="stale"}==receipt:
++            return self.continuation_projection()
+         marker,size,count=self._preflight()
+         reserve=2*len(canonical(receipt))+65536
+         if count>=marker["max_records"] or size+reserve>marker["max_bytes"]:
+@@ -324,8 +330,6 @@ class MissionController:
+     def continuation_projection(self):
+         """Detached development observations; references grant no authority."""
+         records,tasks,continuations=self._replay_all()
+-        for task_id,entry in continuations.items():
+-            entry["stale"]=entry["task_snapshot_sha256"]!=_snapshot(tasks[task_id])
+         return dict(schema_version=2,sequence=len(records),continuations=continuations,
+                     public_submit="DENY",grants_node_operations=False,native_authority=False,
+                     runtime_admission=False,physical_execution_authorization=False,trading_authority=False)

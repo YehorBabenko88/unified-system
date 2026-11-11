@@ -1,0 +1,29 @@
+{
+  "head": "166b85e888d7d0ade24bd945761ad501a94e060c",
+  "files": {
+    "terminan/sync/protocol.js": "e5b66df5aeb6687923ec66ee48c09ce1c32a2521d48b74047799f308a8945f9d",
+    "terminan/sync/client.js": "e6803f5c9fa10222d4af702e1db76683a3152d7d35d65334942683c9403c7697",
+    "tests/sync/fixtures.cjs": "33f4e46735f1867fbb62c34cba1761b3679b4b016409f0566bd2372a76afaa99"
+  },
+  "scope": "SYNTHETIC_COMPONENT_COUNTEREXAMPLES_ONLY",
+  "failures": [
+    {
+      "case": "dataset_snapshot_noquorum",
+      "expected": "NO_QUORUM",
+      "actual": "LIVE",
+      "authority": "QUORUM_CONFIRMED",
+      "canMutate": false
+    },
+    {
+      "case": "synchronous_subscribe_failure",
+      "expected": "NOT_LIVE_AND_RETRY",
+      "actual": "LIVE",
+      "status_after_retry_deadline": "LIVE",
+      "connected": true,
+      "subscriptions": 1,
+      "closed_before_stop": 0
+    }
+  ],
+  "physical": "BLOCKED",
+  "authority": "COMMAND_UNAVAILABLE"
+}

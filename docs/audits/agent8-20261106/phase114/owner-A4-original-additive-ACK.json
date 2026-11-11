@@ -1,0 +1,128 @@
+{
+  "alternative_full_owner_commit_order": [
+    "3e1b4c7c65174fe5775050449162153213e62a8f",
+    "743bfc7590a3d05eff3c42dc6dd4dc0be51e2ea6"
+  ],
+  "alternative_note": "Full owner commits bring additional local tests/docs/workflows; no need to import their old ROOT ancestry. Minimal final-four-blob import is sufficient for runtime closure.",
+  "conditions": [
+    "Single canonical unified_system package and same exact Journal/ObjectStore classes; no alias module or vendored duplicate class.",
+    "PendingPublicationJournal requires its own initialized private/exclusively-custodied existing Journal instance/file; unrelated or mixed audit/direct journal record schemas are rejected. This reuses Journal, not a new authority or registry.",
+    "RetainedPublicationIntent is opaque candidate custody, not validation of native request identity, permissions or body. All recovered native outcomes stay UNKNOWN, no resend/rekey/refund/hold release.",
+    "Local readback/copy hash/identity facts are not semantic closure, independent domain eligibility or native receipt. Physical two-domain policy remains uncommissioned.",
+    "Existing synchronous deny capture and commit/reconcile APIs remain denied. No READ/direct context is upgraded into native PUBLISH or projection.",
+    "No broker/source/interface freeze or actual native sender/access qualification is included in this import ACK; that source must be separately co-ACKed."
+  ],
+  "date": "2026-11-09",
+  "dependencies": {
+    "unified_system/__init__.py": {
+      "blob": "2a6d72d8d9591b62e636c3b4e74c0a2ba59c8298",
+      "bytes": 81,
+      "root_byte_identical": true,
+      "sha256": "68113e881a6bce0a682d3ebe1a3a1086c176c35b889d8c852b14e75645409610"
+    },
+    "unified_system/contracts.py": {
+      "blob": "25d1f064b646a0cb2f1be07a039f279490113ba4",
+      "bytes": 2352,
+      "root_byte_identical": true,
+      "sha256": "935f946bcf9cf64f9c4b98a9cd6f391e92e03f6db5120ad910bb11f3e1dbc9fc"
+    },
+    "unified_system/journal.py": {
+      "blob": "73c7706d5a18c4b5718bd5585255a4bd527826cd",
+      "bytes": 3459,
+      "root_byte_identical": true,
+      "sha256": "9f170cf33f8cdd79baef6fa633d03bebf9eb4b594c54c9cf8dd6c7cb9810bbc3"
+    },
+    "unified_system/storage/__init__.py": {
+      "blob": "156d29860ad0dd12d133e389094ef8a35556d279",
+      "bytes": 84,
+      "root_byte_identical": true,
+      "sha256": "b1e9fb9689b449be9532be0393a6ea52fc5c70f9b3ef6aa598937b313b9bddee"
+    },
+    "unified_system/storage/contracts.py": {
+      "blob": "2e487e9a22c36fc6be2276c3d5390e91263431b8",
+      "bytes": 5978,
+      "root_byte_identical": true,
+      "sha256": "1c9225b15a59b5f6c706de30664ea00094d3b293034e594e4113db9a76cb0e38"
+    },
+    "unified_system/storage/object_store.py": {
+      "blob": "92b90bd39328c15f3ad987e45e5807d6732b02bd",
+      "bytes": 9211,
+      "root_byte_identical": true,
+      "sha256": "193c4e68e48dcdda212412ed7bd00d23afa04fe36bffb84c074948602bb8f739"
+    }
+  },
+  "minimal_runtime_import_paths": [
+    "unified_system/storage/publication_records.py",
+    "unified_system/storage/publication_recovery.py",
+    "unified_system/storage/replica_evidence.py",
+    "unified_system/storage/result_publication.py"
+  ],
+  "native_publication_admitted": false,
+  "new_integration_source_qualification_required": true,
+  "new_runtime": {
+    "unified_system/storage/publication_records.py": {
+      "blob": "b6e70b634da595d3b796c7ce59f48582b1fdcc0f",
+      "bytes": 1606,
+      "imports": [
+        "from dataclasses import dataclass",
+        "import hashlib",
+        "from .contracts import _UUID, require"
+      ],
+      "sha256": "65653bc442091bb935bd69d5873c33dc161083ceff51010f6805736ddbca8257"
+    },
+    "unified_system/storage/publication_recovery.py": {
+      "blob": "04f5166c4b4b8dd62c324cae0b45f64106696aa9",
+      "bytes": 7162,
+      "imports": [
+        "import base64",
+        "import binascii",
+        "import sqlite3",
+        "import stat",
+        "import threading",
+        "from ..contracts import ContractError",
+        "from ..journal import Journal",
+        "from .contracts import StorageBlocked, require",
+        "from .object_store import ObjectStore, _parents",
+        "from .publication_records import RetainedPublicationIntent, PendingPublicationObservation, publication_identifier, MAX_ORIGINAL_BYTES"
+      ],
+      "sha256": "7a25a13533f66296d8626859374ebe850860cd825c5e094e6f2b2092ba0b3285"
+    },
+    "unified_system/storage/replica_evidence.py": {
+      "blob": "55d657da86bea6187191b86e5120cf49f61719b0",
+      "bytes": 3401,
+      "imports": [
+        "from dataclasses import dataclass",
+        "from .contracts import _decode, _UUID, digest, require, u63, StorageBlocked"
+      ],
+      "sha256": "23ea42e433f70de35345030bce8fc0a8f30d7097dc022006249a7bd714af1c9d"
+    },
+    "unified_system/storage/result_publication.py": {
+      "blob": "a30b2f0290fa9ca7b3c9e39fa391d7a703559a8e",
+      "bytes": 7267,
+      "imports": [
+        "from dataclasses import dataclass",
+        "import hashlib",
+        "import json",
+        "from .contracts import _decode, digest, require, u63, StorageBlocked",
+        "from .object_store import ObjectStore",
+        "from .replica_evidence import LocalReplicaObservation, _issue_local_inventory_readback"
+      ],
+      "sha256": "f6c1833771546134f97c45a4c53aae7fe5c16bb3cb73fff182821f4a0be952ed"
+    }
+  },
+  "owner_head": "743bfc7590a3d05eff3c42dc6dd4dc0be51e2ea6",
+  "owner_test_counts_transferred": false,
+  "production_admitted": false,
+  "recommended_commit_order": [
+    "On separate ROOT native feature from exact b144/tree0153, atomically add the four final743 runtime files byte-for-byte; all six dependency files are already identical and must remain unchanged.",
+    "Add exact tests/storage/native_publication/{test_actual_inventory_readback.py,test_original_intent_recovery.py,qualify.py}, native-publication docs and optionally its owned workflow, or invoke the same exact suite from ROOT workflow.",
+    "Commit full new integrated source and run fresh primary byte guard plus relevant tests with new ROOT HEAD; owner743 test evidence does not transfer.",
+    "Only after exact A2/A4/A5/A7 native snapshot/plan/receipt/access/source co-ACK may new explicitly versioned native wiring be introduced."
+  ],
+  "root_base": "b144a5e0fd3af90c975bfc0f0123234628dbb696",
+  "root_files_edited_by_agent4": false,
+  "root_tree": "01537daf676f3d9e4e924ba80026b531912cabd7",
+  "schema": "agent4.root-b144-pr56-additive-import.source-ack.v1",
+  "two_domain_qualified": false,
+  "verdict": "SCOPED_ADDITIVE_IMPORT_SOURCE_COMPATIBILITY_ACK"
+}

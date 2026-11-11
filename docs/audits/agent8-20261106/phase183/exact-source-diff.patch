@@ -1,0 +1,1068 @@
+diff --git a/.github/workflows/durable-mission-controller.yml b/.github/workflows/durable-mission-controller.yml
+index 6f82291..84e896b 100644
+--- a/.github/workflows/durable-mission-controller.yml
++++ b/.github/workflows/durable-mission-controller.yml
+@@ -1,7 +1,7 @@
+ name: Durable development mission controller
+ on:
+   pull_request:
+-    paths: ['unified_system/mission_controller.py', 'unified_system/journal.py', 'unified_system/contracts.py', 'tests/test_mission_controller.py', 'tests/test_journal.py', 'docs/operations/development-task.schema.json', '.github/workflows/durable-mission-controller.yml']
++    paths: ['unified_system/mission_controller.py', 'unified_system/journal.py', 'unified_system/contracts.py', 'tests/test_mission_controller.py', 'tests/test_journal.py', 'tests/test_mission_workflow_inventory.py', 'docs/operations/development-task.schema.json', '.github/workflows/durable-mission-controller.yml']
+   push:
+     branches: [feature/durable-mission-controller-20261107]
+ permissions:
+@@ -32,6 +32,8 @@ jobs:
+       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+         with:
+           python-version: '3.12.10'
++      - name: Static mandatory inventory regressions (no fixture imports)
++        run: python -I -S -B tests/test_mission_workflow_inventory.py
+       - name: Fresh stdlib exact-source mandatory and primary regressions
+         shell: python -I -S -B {0}
+         run: |
+@@ -71,7 +73,7 @@ jobs:
+                       else: raise AssertionError(str(rel))
+                   return result
+               before=inventory()
+-              required=['test_journal.JournalTests.test_append_after_reopen', 'test_journal.JournalTests.test_empty', 'test_journal.JournalTests.test_expected_sequence_cas', 'test_journal.JournalTests.test_long_chain_latest_digest_not_lexical_max', 'test_journal.JournalTests.test_no_implicit_creation', 'test_journal.JournalTests.test_recovery', 'test_journal.JournalTests.test_tamper', 'test_journal.JournalTests.test_unknown_state', 'test_mission_controller.MissionTests.test_actual_process_exit_after_commit_reopens', 'test_mission_controller.MissionTests.test_arbitrary_existing_database_not_adopted', 'test_mission_controller.MissionTests.test_base_identity_collision_rejected', 'test_mission_controller.MissionTests.test_boolean_marker_version_rejected', 'test_mission_controller.MissionTests.test_bounds_and_safe_paths', 'test_mission_controller.MissionTests.test_closed_fields_and_canonical_ids', 'test_mission_controller.MissionTests.test_concurrent_stale_writer_rejected', 'test_mission_controller.MissionTests.test_conservative_byte_reserve_before_append', 'test_mission_controller.MissionTests.test_corruption_rejected_without_repair', 'test_mission_controller.MissionTests.test_crash_before_append_keeps_last_commit', 'test_mission_controller.MissionTests.test_cycle_rejected', 'test_mission_controller.MissionTests.test_directory_symlink_or_junction_refused', 'test_mission_controller.MissionTests.test_duplicate_is_idempotent', 'test_mission_controller.MissionTests.test_evidence_and_ci_are_typed_and_bounded', 'test_mission_controller.MissionTests.test_fake_ci_success_never_physical_approval', 'test_mission_controller.MissionTests.test_foreign_schema_refused_before_read', 'test_mission_controller.MissionTests.test_hardlink_refused_without_writing', 'test_mission_controller.MissionTests.test_invalid_capacity_refused_before_reservation', 'test_mission_controller.MissionTests.test_legacy_version_one_refused_without_rewrite', 'test_mission_controller.MissionTests.test_legacy_wal_sidecar_refused_before_create', 'test_mission_controller.MissionTests.test_maximum_task_dag_replays_and_cycle_revision_refused', 'test_mission_controller.MissionTests.test_oversized_receipt_rejected_before_journal_materialization', 'test_mission_controller.MissionTests.test_owner_and_scope_identity_immutable', 'test_mission_controller.MissionTests.test_persisted_bounds_are_recovered_and_closed', 'test_mission_controller.MissionTests.test_persisted_record_capacity_refuses_append', 'test_mission_controller.MissionTests.test_process_dies_during_uncommitted_transaction', 'test_mission_controller.MissionTests.test_projection_is_copy', 'test_mission_controller.MissionTests.test_record_bytes_bounded', 'test_mission_controller.MissionTests.test_relative_path_refused_without_creation', 'test_mission_controller.MissionTests.test_reopen_preserves_receipts', 'test_mission_controller.MissionTests.test_replay_rejects_semantic_identity_collision', 'test_mission_controller.MissionTests.test_same_task_updates_keep_failed_ci_history', 'test_mission_controller.MissionTests.test_simultaneous_writers_have_one_commit', 'test_mission_controller.MissionTests.test_sparse_file_rejected_before_journal_materialization', 'test_mission_controller.MissionTests.test_truncated_database_rejected', 'test_mission_controller.MissionTests.test_unknown_dependency_rejected', 'test_mission_controller.MissionTests.test_unknown_receipt_rejected_even_with_valid_chain', 'test_mission_controller.MissionTests.test_unknown_schema_refused', 'test_mission_controller.MissionTests.test_wal_sidecar_refused_before_read']
++              required=['test_journal.JournalTests.test_append_after_reopen', 'test_journal.JournalTests.test_empty', 'test_journal.JournalTests.test_expected_sequence_cas', 'test_journal.JournalTests.test_long_chain_latest_digest_not_lexical_max', 'test_journal.JournalTests.test_no_implicit_creation', 'test_journal.JournalTests.test_recovery', 'test_journal.JournalTests.test_tamper', 'test_journal.JournalTests.test_unknown_state', 'test_mission_controller.ContinuationTests.test_aba_task_drift_stays_stale_until_explicit_checkpoint', 'test_mission_controller.ContinuationTests.test_any_task_drift_stales_without_rewriting_history', 'test_mission_controller.ContinuationTests.test_closed_types_sha_bounds_and_unknown_task', 'test_mission_controller.ContinuationTests.test_continuation_persisted_record_capacity', 'test_mission_controller.ContinuationTests.test_continuation_reopen_detached_and_no_authority', 'test_mission_controller.ContinuationTests.test_result_scope_and_evidence_remain_observations', 'test_mission_controller.ContinuationTests.test_retry_budget_never_resets_even_after_stale_and_reopen', 'test_mission_controller.ContinuationTests.test_stale_cas_duplicate_and_full_receipt_capacity', 'test_mission_controller.ContinuationTests.test_unknown_continuation_version_rejected', 'test_mission_controller.ContinuationTests.test_unknown_receipt_version_and_invalid_binding_reject_reopen', 'test_mission_controller.MissionTests.test_actual_process_exit_after_commit_reopens', 'test_mission_controller.MissionTests.test_arbitrary_existing_database_not_adopted', 'test_mission_controller.MissionTests.test_base_identity_collision_rejected', 'test_mission_controller.MissionTests.test_boolean_marker_version_rejected', 'test_mission_controller.MissionTests.test_bounds_and_safe_paths', 'test_mission_controller.MissionTests.test_closed_fields_and_canonical_ids', 'test_mission_controller.MissionTests.test_concurrent_stale_writer_rejected', 'test_mission_controller.MissionTests.test_conservative_byte_reserve_before_append', 'test_mission_controller.MissionTests.test_corruption_rejected_without_repair', 'test_mission_controller.MissionTests.test_crash_before_append_keeps_last_commit', 'test_mission_controller.MissionTests.test_cycle_rejected', 'test_mission_controller.MissionTests.test_directory_symlink_or_junction_refused', 'test_mission_controller.MissionTests.test_duplicate_is_idempotent', 'test_mission_controller.MissionTests.test_evidence_and_ci_are_typed_and_bounded', 'test_mission_controller.MissionTests.test_fake_ci_success_never_physical_approval', 'test_mission_controller.MissionTests.test_foreign_schema_refused_before_read', 'test_mission_controller.MissionTests.test_hardlink_refused_without_writing', 'test_mission_controller.MissionTests.test_invalid_capacity_refused_before_reservation', 'test_mission_controller.MissionTests.test_legacy_version_one_refused_without_rewrite', 'test_mission_controller.MissionTests.test_legacy_wal_sidecar_refused_before_create', 'test_mission_controller.MissionTests.test_maximum_task_dag_replays_and_cycle_revision_refused', 'test_mission_controller.MissionTests.test_oversized_receipt_rejected_before_journal_materialization', 'test_mission_controller.MissionTests.test_owned_temp_alias_is_resolved_before_guarded_journal_creation', 'test_mission_controller.MissionTests.test_owner_and_scope_identity_immutable', 'test_mission_controller.MissionTests.test_persisted_bounds_are_recovered_and_closed', 'test_mission_controller.MissionTests.test_persisted_record_capacity_refuses_append', 'test_mission_controller.MissionTests.test_process_dies_during_uncommitted_transaction', 'test_mission_controller.MissionTests.test_projection_is_copy', 'test_mission_controller.MissionTests.test_record_bytes_bounded', 'test_mission_controller.MissionTests.test_relative_path_refused_without_creation', 'test_mission_controller.MissionTests.test_reopen_preserves_receipts', 'test_mission_controller.MissionTests.test_replay_rejects_semantic_identity_collision', 'test_mission_controller.MissionTests.test_same_task_updates_keep_failed_ci_history', 'test_mission_controller.MissionTests.test_simultaneous_writers_have_one_commit', 'test_mission_controller.MissionTests.test_sparse_file_rejected_before_journal_materialization', 'test_mission_controller.MissionTests.test_truncated_database_rejected', 'test_mission_controller.MissionTests.test_unknown_dependency_rejected', 'test_mission_controller.MissionTests.test_unknown_receipt_rejected_even_with_valid_chain', 'test_mission_controller.MissionTests.test_unknown_schema_refused', 'test_mission_controller.MissionTests.test_wal_sidecar_refused_before_read']
+               child="""import json,pathlib,sys,unittest
+           assert sys.flags.isolated and sys.flags.no_site and sys.dont_write_bytecode and sys.pycache_prefix is None
+           root=pathlib.Path(sys.argv[1]);sys.path.insert(0,str(root))
+@@ -84,7 +86,7 @@ jobs:
+                   result.extend(collect(item) if isinstance(item,unittest.TestSuite) else [item.id()])
+               return result
+           ids=collect(suite);required=json.loads(sys.argv[2])
+-          assert len(ids)==len(set(ids)) and set(ids)==set(required),(ids,required)
++          assert len(required)==len(set(required))==58 and len(ids)==len(set(ids))==58 and set(ids)==set(required),(ids,required)
+           result=unittest.TextTestRunner(verbosity=2).run(suite)
+           assert result.wasSuccessful() and result.testsRun==len(required) and not result.skipped
+           """
+diff --git a/.github/workflows/gateway-identity.yml b/.github/workflows/gateway-identity.yml
+index 7dc8362..93cdd89 100644
+--- a/.github/workflows/gateway-identity.yml
++++ b/.github/workflows/gateway-identity.yml
+@@ -3,7 +3,7 @@ on:
+   push:
+     paths: ['unified_system/gateway_identity.py', 'tests/test_gateway_identity.py', 'docs/intelligence/identity/**', '.github/workflows/gateway-identity.yml']
+   pull_request:
+-    paths: ['unified_system/gateway_identity.py', 'tests/test_gateway_identity.py', 'docs/intelligence/identity/**', '.github/workflows/gateway-identity.yml']
++    paths: ['unified_system/gateway_identity.py', 'tests/test_gateway_identity.py', 'docs/intelligence/identity/**', '.github/workflows/gateway-identity.yml', 'scheduler_components/**', 'tools/ci/**', '.github/workflows/preparation-integrity.yml', '.github/workflows/durable-mission-controller.yml', 'tests/test_mission_workflow_inventory.py']
+ permissions:
+   contents: read
+ jobs:
+diff --git a/.github/workflows/preparation-integrity.yml b/.github/workflows/preparation-integrity.yml
+new file mode 100644
+index 0000000..1caddb8
+--- /dev/null
++++ b/.github/workflows/preparation-integrity.yml
+@@ -0,0 +1,128 @@
++name: Preparation integrity exact source
++on:
++  push:
++    branches: [main]
++    paths: ['scheduler_components/**', 'tests/test_agent5_scheduler_components.py', 'tests/test_preparation_integrity.py', 'tests/test_preparation_qualification.py', 'tools/ci/qualify_preparation_integrity.py', 'docs/scheduler/component-test-inventory-v2.json', 'docs/ci/preparation-integrity-inventory-v1.json', 'docs/ci/requirements-unittest.lock', '.github/workflows/preparation-integrity.yml']
++  pull_request:
++    paths: ['scheduler_components/**', 'tests/test_agent5_scheduler_components.py', 'tests/test_preparation_integrity.py', 'tests/test_preparation_qualification.py', 'tools/ci/qualify_preparation_integrity.py', 'docs/scheduler/component-test-inventory-v2.json', 'docs/ci/preparation-integrity-inventory-v1.json', 'docs/ci/requirements-unittest.lock', '.github/workflows/preparation-integrity.yml']
++permissions:
++  contents: read
++jobs:
++  qualification:
++    strategy:
++      fail-fast: false
++      matrix:
++        os: [windows-latest, ubuntu-24.04]
++    runs-on: ${{ matrix.os }}
++    timeout-minutes: 10
++    env:
++      EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
++      PYTHONDONTWRITEBYTECODE: '1'
++      PIP_DISABLE_PIP_VERSION_CHECK: '1'
++    steps:
++      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
++        env:
++          GIT_CONFIG_COUNT: '2'
++          GIT_CONFIG_KEY_0: core.autocrlf
++          GIT_CONFIG_VALUE_0: 'false'
++          GIT_CONFIG_KEY_1: core.eol
++          GIT_CONFIG_VALUE_1: lf
++        with:
++          ref: ${{ env.EXPECTED_HEAD }}
++          persist-credentials: false
++          fetch-depth: 0
++      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
++        with:
++          python-version: '3.12.10'
++      - name: Bind runner-local path after runner assignment
++        shell: python -I -S -B {0}
++        run: |
++          import os, pathlib
++          base=pathlib.Path(os.environ['RUNNER_TEMP'])/('preparation-'+os.environ['GITHUB_RUN_ID']+'-'+os.environ['GITHUB_RUN_ATTEMPT'])
++          with open(os.environ['GITHUB_ENV'],'a',encoding='utf-8') as stream:
++              stream.write('QUALIFICATION_BASE='+str(base)+'\n')
++      - name: Download and verify pinned timezone data without importing it
++        shell: bash
++        run: |
++          python -I -S -B - <<'PY'
++          import hashlib, os, pathlib, stat, subprocess, sys, zipfile
++          root=pathlib.Path.cwd().resolve()
++          git=pathlib.Path('C:/Program Files/Git/cmd/git.exe' if os.name=='nt' else '/usr/bin/git')
++          assert git.is_absolute() and not git.is_relative_to(root)
++          for item in [git,*git.parents]:
++              info=item.lstat()
++              assert not item.is_symlink() and not getattr(info,'st_file_attributes',0)&1024
++              assert (stat.S_ISREG(info.st_mode) and info.st_nlink==1) if item==git else stat.S_ISDIR(info.st_mode)
++          assert os.name=='nt' or git.stat().st_mode&0o111
++          def raw(*args):
++              return subprocess.check_output([str(git),'--no-replace-objects','--no-optional-locks','-c','core.fsmonitor=false',*args],timeout=30)
++          head=os.environ['EXPECTED_HEAD']
++          assert raw('rev-parse','HEAD').decode().strip()==head
++          lock='docs/ci/requirements-unittest.lock'
++          assert (root/lock).read_bytes()==raw('cat-file','blob',head+':'+lock)
++          pin='1a403fada01ff9221ca8044d701868fa132215d84beb92242d9acd2147f667a8'
++          line='tzdata==2025.2 --hash=sha256:'+pin
++          assert line in (root/lock).read_text().splitlines()
++          base=pathlib.Path(os.environ['QUALIFICATION_BASE']);base.mkdir(exist_ok=False)
++          (base/'tzdata.lock').write_text(line+'\n')
++          command=[sys.executable,'-I','-B','-m','pip','--isolated','download','--no-cache-dir','--no-deps','--only-binary=:all:','--require-hashes','--dest',str(base/'wheels'),'-r',str(base/'tzdata.lock')]
++          with (base/'download.log').open('wb') as log:
++              subprocess.run(command,stdout=log,stderr=log,check=True,timeout=120)
++          wheels=list((base/'wheels').glob('*.whl'));assert len(wheels)==1
++          wheel=wheels[0];assert hashlib.sha256(wheel.read_bytes()).hexdigest()==pin
++          assert wheel.name=='tzdata-2025.2-py2.py3-none-any.whl'
++          with zipfile.ZipFile(wheel) as archive:
++              assert all(not pathlib.PurePosixPath(n).is_absolute() and '..' not in pathlib.PurePosixPath(n).parts and '\\' not in n for n in archive.namelist())
++              archive.extractall(base/'dependency')
++          PY
++      - name: Bootstrap verified qualifier and run bounded exact 36
++        shell: bash
++        run: |
++          python -I -S -B - <<'PY'
++          import hashlib, os, pathlib, stat, subprocess, sys
++          root=pathlib.Path.cwd().resolve()
++          git=pathlib.Path('C:/Program Files/Git/cmd/git.exe' if os.name=='nt' else '/usr/bin/git')
++          assert git.is_absolute() and not git.is_relative_to(root)
++          for item in [git,*git.parents]:
++              info=item.lstat()
++              assert not item.is_symlink() and not getattr(info,'st_file_attributes',0)&1024
++              assert (stat.S_ISREG(info.st_mode) and info.st_nlink==1) if item==git else stat.S_ISDIR(info.st_mode)
++          assert os.name=='nt' or git.stat().st_mode&0o111
++          head=os.environ['EXPECTED_HEAD'];name='tools/ci/qualify_preparation_integrity.py'
++          def raw(*args):
++              return subprocess.check_output([str(git),'--no-replace-objects','--no-optional-locks','-c','core.fsmonitor=false',*args],timeout=30)
++          assert raw('rev-parse','HEAD').decode().strip()==head
++          for path in [root,root/'tools',root/'tools/ci']:
++              info=path.lstat();assert stat.S_ISDIR(info.st_mode) and not path.is_symlink() and not getattr(info,'st_file_attributes',0)&1024
++          path=root/name;info=path.lstat()
++          assert stat.S_ISREG(info.st_mode) and info.st_nlink==1 and not getattr(info,'st_file_attributes',0)&1024
++          committed=raw('cat-file','blob',head+':'+name);assert path.read_bytes()==committed
++          print('QUALIFIER_BOOTSTRAP_SHA256',hashlib.sha256(committed).hexdigest(),flush=True)
++          base=pathlib.Path(os.environ['QUALIFICATION_BASE'])
++          sys.argv=[str(path),'--expected-head',head,'--evidence',str(base/'evidence'),'--zoneinfo',str(base/'dependency/tzdata/zoneinfo'),'--tzdata-wheel',str(base/'wheels/tzdata-2025.2-py2.py3-none-any.whl')]
++          exec(compile(committed,str(path),'exec'),dict(__name__='__main__',__file__=str(path)))
++          PY
++      - name: Preserve qualification evidence
++        id: evidence
++        if: always()
++        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
++        with:
++          name: preparation-${{ matrix.os }}-${{ github.event.pull_request.head.sha || github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
++          path: ${{ env.QUALIFICATION_BASE }}/
++          if-no-files-found: error
++      - name: Publish artifact identity and digest
++        if: always()
++        shell: bash
++        env:
++          ARTIFACT_ID: ${{ steps.evidence.outputs.artifact-id }}
++          ARTIFACT_DIGEST: ${{ steps.evidence.outputs.artifact-digest }}
++          ARTIFACT_URL: ${{ steps.evidence.outputs.artifact-url }}
++        run: |
++          python -I -S -B - <<'PY'
++          import os
++          assert os.environ['ARTIFACT_ID'] and len(os.environ['ARTIFACT_DIGEST'])==64
++          with open(os.environ['GITHUB_STEP_SUMMARY'],'a',encoding='utf-8') as stream:
++              for name in ('EXPECTED_HEAD','GITHUB_RUN_ID','GITHUB_RUN_ATTEMPT','ARTIFACT_ID','ARTIFACT_DIGEST','ARTIFACT_URL'):
++                  stream.write(name+': '+os.environ[name]+'\n')
++              stream.write('Scope: local SQLite preparation only; no runtime/native/physical admission.\n')
++          PY
+diff --git a/.github/workflows/supervisor-local-integration.yml b/.github/workflows/supervisor-local-integration.yml
+index 72a39c8..8d52972 100644
+--- a/.github/workflows/supervisor-local-integration.yml
++++ b/.github/workflows/supervisor-local-integration.yml
+@@ -1,7 +1,7 @@
+ name: Supervisor local-only component integration
+ on:
+   pull_request:
+-    paths: ['unified_system/**', 'tests/test_node_task_journal.py', 'tests/test_node_supervisor_v2.py', 'tests/test_ci_queue_controller.py', 'tests/test_mission_controller.py', 'tests/test_journal.py', 'tests/test_supervisor_deployment.py', 'tests/test_supervisor_local_integration.py', 'tests/test_lab_release.py', 'tests/test_installation_service.py', 'release/evidence/supervisor-local-integration-fixtures/**', '.github/workflows/supervisor-local-integration.yml']
++    paths: ['unified_system/**', 'tests/test_node_task_journal.py', 'tests/test_node_supervisor_v2.py', 'tests/test_ci_queue_controller.py', 'tests/test_mission_controller.py', 'tests/test_journal.py', 'tests/test_supervisor_deployment.py', 'tests/test_supervisor_local_integration.py', 'tests/test_lab_release.py', 'tests/test_installation_service.py', 'release/evidence/supervisor-local-integration-fixtures/**', '.github/workflows/supervisor-local-integration.yml', 'scheduler_components/**', 'tools/ci/**', '.github/workflows/preparation-integrity.yml', '.github/workflows/durable-mission-controller.yml', 'tests/test_mission_workflow_inventory.py']
+   push:
+     branches: [feature/supervisor-local-integration-20261107]
+ permissions:
+diff --git a/docs/ci/f26-cadence-fixture-20261110.md b/docs/ci/f26-cadence-fixture-20261110.md
+new file mode 100644
+index 0000000..770a29f
+--- /dev/null
++++ b/docs/ci/f26-cadence-fixture-20261110.md
+@@ -0,0 +1,62 @@
++# F26 heartbeat fixture cadence proposal
++
++Status: source approved by Root; publication held pending Root/A8 qualification review.
++Base HEAD: 6e79f2da66212474e9875559ec532c0f65b678a8
++Base tree: 18c84ddbe65cd4e82d3f32a5210c3ff8617bf0ca
++
++## Change and preserved coverage
++
++The existing heartbeat test temporarily selects 50 ms cadence to establish real
++PING/PONG processing and renew an already expired data-read deadline on both
++connections. Stop that patch immediately after both original renewal assertions,
++before connection-health assertions or bidirectional application sends. Context
++exit still restores it on setup/assertion failure. The original heartbeat method
++continues running; a wait already in progress may complete once at the old cadence.
++No frame injection, heartbeat replacement, budget bypass, deadline increase or
++production change is proposed. Production interval is 10 seconds; idle timeout
++remains 30 seconds and application deadlines remain the original 5 seconds.
++
++All existing test IDs and assertions remain. Added test IDs: NONE. Original
++stale last_rx, real control processing gate, forced old read deadline, both True
++renewal assertions, open/health checks and both payload comparisons remain.
++Existing expired-idle negative real-TLS case remains unchanged. Failure diagnostics
++remain unchanged. No helper or mandatory inventory changes are needed for IDs.
++
++## Executable qualification plan (requires new serial allocation)
++
++1. Run the existing active-control heartbeat case once on this exact reviewed diff,
++   with actual owned loopback TLS and fresh temporary SQLite synchronous FULL.
++   Inject the SAME requested extra 50 ms own-store transaction service cost as
++   the original matched experiment, after the body while holding only its RLock
++   and before the original context exit. No cost calibration or debit replay.
++   Require both renewals, open connections and both payload comparisons to pass.
++   Capture original failure diagnostics on failure. Do not retry automatically.
++2. In a separate disposable, explicitly allocated mutation run, make only the data
++   read on_idle callback return False at the existing wrapper boundary while
++   retaining the actual TLS/control heartbeat method. Run that same active case
++   once; require failure at renewal/closure before payload success. This checks
++   the test cannot pass when renewal is disabled. Never ship the mutation.
++3. Run the unchanged expired-idle negative case once: both real TLS connections
++   must close and preserve DEADLINE evidence. No timeout/cap/security changes.
++4. Root owns subsequent exact-head mandatory inventory and Windows hosted suite.
++   Local outcomes do not transfer to hosted, physical or runtime admission.
++
++These are proposed future executions, not claims of completed tests or current
++permission to run. No additional fixture, model, calibration or third arm ran.
++
++## Evidence limits
++
++The authorized matched pair on the base produced A RED at reply CREDIT0/DEADLINE
++and B GREEN under the same requested extra 50 ms owned-store service cost, with
++only subsequent heartbeat cadence changed. It supports fixture cadence sensitivity
++under that declared simulation, not exclusive historical hosted causality or a
++production fix. This diff requires independent review and exact-head qualification.
++No physical computer or network security settings were changed.
++
++## ROOT integration evidence and limits
++
++Component source ab9362706cd8cd75b2fc0f5177481a96a5f73ac4, tree cfa80d600603d947e79304e075d48787c116a8a1. A8 source/original review phase177 confirms all existing IDs/assertions remain, positive case and unchanged expired-idle negative pass under the declared conditions. This does not preserve or claim sustained 50 ms stress coverage during application sends. F26 remains OPEN pending hosted exact-source qualification; historical hosted cause is not established.
++
++Original P/M/N qualification retained the first M as ORACLE_INCONCLUSIVE: replacing the observer skipped its queue. A separately reviewed, once-only successor changed only the observer's inner callback, leaving the original observer/queue and production heartbeat method intact. The original renewal assertion rejected False: one test, one failure, zero errors/skips, one actual mutation invocation, zero successful APP calls, 49 events with none dropped. All 1858 raw files matched before/after; all 19 owned child processes and threads retired. Family 23.531 s; no automatic retry or P/N repetition.
++
++Revised-M package seal SHA256 86fb2363d7d4123a17b73941bd186c42be833daf632dc6a4b0e953053e1a4803. A8 phase178 reviewed revised harness source only; successor execution originals require separate independent review. A failed mutation case is proof of causal test rejection, not a successful production runtime or a replacement for Windows/Ubuntu LAN68/component161 matrices. No runtime transport or network budget code is changed.
+diff --git a/docs/ci/mission-inventory-repair-20261110.md b/docs/ci/mission-inventory-repair-20261110.md
+new file mode 100644
+index 0000000..d3c75a6
+--- /dev/null
++++ b/docs/ci/mission-inventory-repair-20261110.md
+@@ -0,0 +1,18 @@
++# Mission Controller mandatory inventory repair
++
++Original run 42869185791, source e869d8365c7e54ed3da3739d9cdf15948f37f022, failed on Ubuntu job130015537081 and Windows job130015537660 before executing fixture tests. The inline qualifier expected 47 IDs while discovery found 58. The missing cases were ten continuation regressions and the existing owned-temp-alias regression. This is a CI configuration defect, not an established application failure.
++
++Original decoded logs retained outside source, SHA256:
++
++- Ubuntu: 4e13f3ca7634cfc346f68f196c6b79cf8d59e7b42b48a7897ba2636a7753d845.
++- Windows: 8c2aa587dd15c4e7f25c0080a61f878694632fbe8d7111a6cbdda6d8b7c8e352.
++
++The repaired qualifier preserves all original 47 IDs and adds the missing eleven. A static regression freezes the original sorted-list encoding SHA256 5b18c7e3128d1810aa67a66730732265ec66daff410aa7baa20553aa5bf75495. Before fixture execution the predicate now rejects duplicate expected IDs as well as missing, extra or duplicate discovered IDs. No fixture assertion, timeout, source integrity or admission gate is removed.
++
++Three initial static regressions reproduced two failures: omitted current cases and duplicate expected IDs accepted by the old pre-execution predicate. Original RED log SHA256 6e0fe64c278f09641cfd75e859b4c65c3bccf83bec2079868b06d337935480f0. Four final static guards pass; GREEN log SHA256 3026ec44bc7e8defaa63d1647f3f92526bd7ac348fd584f5641c783c93dd82de. They parse source and the actual workflow admission expression without importing fixture modules.
++
++ROOT also executed the complete local 50 Mission Controller + 8 Journal + 4 static guards: 62 cases, zero failures/errors/skips, checked source bytes unchanged and no remaining Python threads. These tests use owned temporary SQLite and existing bounded child-process cases. They do not establish Codex app restart, autonomous dispatch, native authority, hosted qualification or physical admission. Exact-source hosted successor results remain pending; do not relabel the original failed run.
++
++## Required matrix trigger coverage
++
++Root integration changes in scheduler_components, tools/ci, the new preparation workflow and Mission workflow/guard did not match the dedicated Gateway25/Supervisor132 PR filters. Their previous-source successes cannot qualify a new integration head. Two additional static regressions reproduced this missing trigger coverage (six controls total, two failures), then passed after additive PR path entries. Existing path entries, push selectors, mandatory test inventories and all security/admission checks are preserved. This schedules existing disposable qualification on the new exact PR source rather than issuing retries of old runs. Six current static controls pass; hosted outcomes remain separate and pending.
+diff --git a/docs/ci/preparation-integrity-inventory-v1.json b/docs/ci/preparation-integrity-inventory-v1.json
+new file mode 100644
+index 0000000..456303e
+--- /dev/null
++++ b/docs/ci/preparation-integrity-inventory-v1.json
+@@ -0,0 +1,82 @@
++{
++  "schema": "preparation-integrity-inventory.v1",
++  "expected_count": 36,
++  "preserved_legacy_ids": [
++    "test_agent5_scheduler_components.AuthorityBoundaryTests.test_every_proposed_mutation_is_closed",
++    "test_agent5_scheduler_components.AuthorityBoundaryTests.test_reads_do_not_invent_receipts_or_mutate",
++    "test_agent5_scheduler_components.DurablePreparationTests.test_invalid_raw_reservation_cannot_be_masked_by_local_hold",
++    "test_agent5_scheduler_components.DurablePreparationTests.test_invalid_resource_input_cannot_mutate_registry",
++    "test_agent5_scheduler_components.DurablePreparationTests.test_job_spec_is_immutable_and_enqueue_idempotent",
++    "test_agent5_scheduler_components.DurablePreparationTests.test_local_event_sequence_is_durable_and_not_authority_epoch",
++    "test_agent5_scheduler_components.DurablePreparationTests.test_local_holds_prevent_overbooking",
++    "test_agent5_scheduler_components.DurablePreparationTests.test_no_quorum_or_standby_never_creates_new_preparation",
++    "test_agent5_scheduler_components.DurablePreparationTests.test_only_never_handed_off_hold_can_be_cancelled",
++    "test_agent5_scheduler_components.DurablePreparationTests.test_preparation_retry_preserves_original_intent",
++    "test_agent5_scheduler_components.DurablePreparationTests.test_process_crash_before_event_commit_recovers_without_partial_hold",
++    "test_agent5_scheduler_components.DurablePreparationTests.test_registry_survives_restart_without_execution_permission",
++    "test_agent5_scheduler_components.DurablePreparationTests.test_stale_capacity_and_pressure_remain_queued",
++    "test_agent5_scheduler_components.DurablePreparationTests.test_transaction_failure_rolls_back_preparation_and_hold",
++    "test_agent5_scheduler_components.DurablePreparationTests.test_two_connections_cannot_spend_same_local_capacity",
++    "test_agent5_scheduler_components.DurablePreparationTests.test_unknown_cpu_hold_blocks_incompatible_benchmark_after_restart",
++    "test_agent5_scheduler_components.DurablePreparationTests.test_unknown_survives_restart_and_never_releases_or_rekeys",
++    "test_agent5_scheduler_components.PlacementTests.test_cpu_benchmark_capacity_and_locality_affect_ranking",
++    "test_agent5_scheduler_components.PlacementTests.test_each_resource_can_exhaust",
++    "test_agent5_scheduler_components.PlacementTests.test_eligible_is_advisory_candidate",
++    "test_agent5_scheduler_components.PlacementTests.test_exact_capacity_and_pressure_boundaries",
++    "test_agent5_scheduler_components.PlacementTests.test_health_pressure_roles_schedule_and_benchmark",
++    "test_agent5_scheduler_components.PlacementTests.test_malformed_inputs_fail_closed",
++    "test_agent5_scheduler_components.PlacementTests.test_queue_and_order_independent_tie_break",
++    "test_agent5_scheduler_components.PlacementTests.test_stale_future_or_previous_incarnation_denied",
++    "test_agent5_scheduler_components.ScheduleTests.test_cross_midnight_and_start_weekday",
++    "test_agent5_scheduler_components.ScheduleTests.test_drain_is_separate_from_coordinator_policy",
++    "test_agent5_scheduler_components.ScheduleTests.test_dst_skip_and_both_repeated_hours",
++    "test_agent5_scheduler_components.ScheduleTests.test_invalid_schedule",
++    "test_agent5_scheduler_components.ScheduleTests.test_weekday_iterator_not_consumed_by_validation"
++  ],
++  "added_integrity_ids": [
++    "test_preparation_integrity.PreparationIntegrity.test_failed_reopen_closes_its_owned_connection",
++    "test_preparation_integrity.PreparationIntegrity.test_live_corrupt_unknown_cannot_create_competing_preparation",
++    "test_preparation_integrity.PreparationIntegrity.test_malformed_persisted_spec_variants_cannot_be_recovered_as_valid",
++    "test_preparation_integrity.PreparationIntegrity.test_reopen_rejects_corrupt_unknown_resources_without_repair",
++    "test_preparation_integrity.PreparationIntegrity.test_unknown_missing_hold_identity_is_not_a_valid_recovered_view",
++    "test_preparation_integrity.PreparationIntegrity.test_valid_unknown_roundtrip_preserves_exact_hold_and_events"
++  ],
++  "expected_ids": [
++    "test_agent5_scheduler_components.AuthorityBoundaryTests.test_every_proposed_mutation_is_closed",
++    "test_agent5_scheduler_components.AuthorityBoundaryTests.test_reads_do_not_invent_receipts_or_mutate",
++    "test_agent5_scheduler_components.DurablePreparationTests.test_invalid_raw_reservation_cannot_be_masked_by_local_hold",
++    "test_agent5_scheduler_components.DurablePreparationTests.test_invalid_resource_input_cannot_mutate_registry",
++    "test_agent5_scheduler_components.DurablePreparationTests.test_job_spec_is_immutable_and_enqueue_idempotent",
++    "test_agent5_scheduler_components.DurablePreparationTests.test_local_event_sequence_is_durable_and_not_authority_epoch",
++    "test_agent5_scheduler_components.DurablePreparationTests.test_local_holds_prevent_overbooking",
++    "test_agent5_scheduler_components.DurablePreparationTests.test_no_quorum_or_standby_never_creates_new_preparation",
++    "test_agent5_scheduler_components.DurablePreparationTests.test_only_never_handed_off_hold_can_be_cancelled",
++    "test_agent5_scheduler_components.DurablePreparationTests.test_preparation_retry_preserves_original_intent",
++    "test_agent5_scheduler_components.DurablePreparationTests.test_process_crash_before_event_commit_recovers_without_partial_hold",
++    "test_agent5_scheduler_components.DurablePreparationTests.test_registry_survives_restart_without_execution_permission",
++    "test_agent5_scheduler_components.DurablePreparationTests.test_stale_capacity_and_pressure_remain_queued",
++    "test_agent5_scheduler_components.DurablePreparationTests.test_transaction_failure_rolls_back_preparation_and_hold",
++    "test_agent5_scheduler_components.DurablePreparationTests.test_two_connections_cannot_spend_same_local_capacity",
++    "test_agent5_scheduler_components.DurablePreparationTests.test_unknown_cpu_hold_blocks_incompatible_benchmark_after_restart",
++    "test_agent5_scheduler_components.DurablePreparationTests.test_unknown_survives_restart_and_never_releases_or_rekeys",
++    "test_agent5_scheduler_components.PlacementTests.test_cpu_benchmark_capacity_and_locality_affect_ranking",
++    "test_agent5_scheduler_components.PlacementTests.test_each_resource_can_exhaust",
++    "test_agent5_scheduler_components.PlacementTests.test_eligible_is_advisory_candidate",
++    "test_agent5_scheduler_components.PlacementTests.test_exact_capacity_and_pressure_boundaries",
++    "test_agent5_scheduler_components.PlacementTests.test_health_pressure_roles_schedule_and_benchmark",
++    "test_agent5_scheduler_components.PlacementTests.test_malformed_inputs_fail_closed",
++    "test_agent5_scheduler_components.PlacementTests.test_queue_and_order_independent_tie_break",
++    "test_agent5_scheduler_components.PlacementTests.test_stale_future_or_previous_incarnation_denied",
++    "test_agent5_scheduler_components.ScheduleTests.test_cross_midnight_and_start_weekday",
++    "test_agent5_scheduler_components.ScheduleTests.test_drain_is_separate_from_coordinator_policy",
++    "test_agent5_scheduler_components.ScheduleTests.test_dst_skip_and_both_repeated_hours",
++    "test_agent5_scheduler_components.ScheduleTests.test_invalid_schedule",
++    "test_agent5_scheduler_components.ScheduleTests.test_weekday_iterator_not_consumed_by_validation",
++    "test_preparation_integrity.PreparationIntegrity.test_failed_reopen_closes_its_owned_connection",
++    "test_preparation_integrity.PreparationIntegrity.test_live_corrupt_unknown_cannot_create_competing_preparation",
++    "test_preparation_integrity.PreparationIntegrity.test_malformed_persisted_spec_variants_cannot_be_recovered_as_valid",
++    "test_preparation_integrity.PreparationIntegrity.test_reopen_rejects_corrupt_unknown_resources_without_repair",
++    "test_preparation_integrity.PreparationIntegrity.test_unknown_missing_hold_identity_is_not_a_valid_recovered_view",
++    "test_preparation_integrity.PreparationIntegrity.test_valid_unknown_roundtrip_preserves_exact_hold_and_events"
++  ]
++}
+diff --git a/docs/superpowers/plans/2026-11-10-preparation-integrity.md b/docs/superpowers/plans/2026-11-10-preparation-integrity.md
+new file mode 100644
+index 0000000..4f8cfee
+--- /dev/null
++++ b/docs/superpowers/plans/2026-11-10-preparation-integrity.md
+@@ -0,0 +1,43 @@
++# Existing preparation journal integrity fix
++
++> Execute inline using existing Scheduler component. No new journal, issuer, native API or wire change.
++
++**Base:** PR75 HEAD72117a0ba641f8a4287742f9278f4bee7a5005a6. This is not a qualified native runtime base.
++**Owner:** Agent5. Private code change in scheduler_components/durable.py only.
++**Spec:** Owner02285186 continuation; preserve UNKNOWN debt/no refund across recovery. Public constructor and method signatures unchanged.
++
++## Reproduced defect and cause
++Stored local rows were decoded but never checked against the same canonical scope/spec codec and held identity invariants used on creation. A syntactically valid zeroed UNKNOWN resources record caused live competing prepare to omit conservative debt. Reopen/view also accepted incomplete UNKNOWN request identity. Own disposable SQLite only; no office/production corruption or native fault injection.
++
++Original regression: four tests, three expected assertion failures and one valid roundtrip control. RED saved externally as AGENT5-PREPARATION-INTEGRITY-RED.log SHA159fc36508e371055ecc8b5034966a5ecac4c77d04cc7fd18098fb3e20dee92d.
++
++## Implementation
++- [x] Validate exact persisted columns, canonical scope/spec, nonempty u63 resource vector, canonical local UUID request/hold identities and complete held node/incarnation fields.
++- [x] Validate on reopen and _row; validate every held row BEFORE using its quantities in competing capacity calculation.
++- [x] Failed reopen closes its own connection. Invalid rows are never repaired/deleted/converted into free capacity; valid originals, events and UNKNOWN identities are retained.
++- [x] Verify new targeted regressions plus existing pure preparation and closed integration tests: 53 pure/local PASS, zero skips, CPython3.12.10 on Windows. Original process-crash subprocess test is not selected by this no-child cohort; remains in original suite.
++- [x] Fresh source review found no actionable issue in the private validation/test changes; source-only, no reviewer test execution.
++- [ ] Exact-source evidence, own feature PR and A8/hosted review; no merge/deployment.
++
++## Limits
++Validation is structural consistency, not tamper-evidence or native authority: an attacker who rewrites a row to another completely valid record cannot be detected by this change. It does not add schema migration, backups, encrypted storage, capacity qualification, a hash ledger or protection against hostile namespace replacement. Existing local SQLite is advisory preparation only. StrictOption1/logicalDISABLED/startDENY remain unchanged.
++
++## ROOT selective integration on PR81
++
++Integration base: e869d8365c7e54ed3da3739d9cdf15948f37f022, tree 8de558ea63b82a0b710a1dcea3459996057cb216. Owner ACK covers the private guard and six-case regression only. The regression is relocated byte-for-byte to tests/test_preparation_integrity.py. No gateway_worker, Agent5 workflow, native integration base or 53-case result is imported.
++
++ROOT reproduced the six-case regression against the old guard: six cases, nine failing subtests and one error, zero skips. Original log SHA256: 04ac4481aa11461e728c4d3d6e6f333d0188ea1539d3d7707a1841428a359449.
++
++Expanded local qualification executes all 30 existing Scheduler tests plus the six new regressions, including the existing own-child crash test. First isolated Python run had ten ZoneInfoNotFoundError subtest errors because Europe/Berlin data was unavailable; no assertion failures. Original environment RED SHA256: 2a491fbea5c2e3835e253aaba5c7bc7f700814a5949005f56bab494e6b9ec2e4.
++
++After explicitly selecting existing tzdata 2025.2 data, matching docs/ci/requirements-unittest.lock, all 36 tests passed with zero skips. All 627 existing package data files were checked against their local RECORD; Berlin bytes SHA256 a7fd9932d785d4d690900b834c3563c1810c1cf2e01711bcc0926af6c0767cb7. This is local installed-data verification, not a fresh wheel provenance qualification. No dependency installation or source schedule change occurred. GREEN log SHA256 ae4614f096499cc2a342de6f3457a1cb28f90a046e1d3ef4d93e1388fcda164f. Checked source bytes unchanged before/after; no remaining Python threads.
++
++Hosted qualification, independent integrated review and native admission remain pending. Local preparation capacity is not cluster authority. Public submit remains DENY.
++
++Additive CI qualification is implemented separately from the unchanged historical 30-case workflow/inventory: Windows and Ubuntu CPython 3.12.10, exact old30+new6 IDs, eight pure negative guard controls, full raw source before/after, hashed tzdata2025.2 wheel/data, bounded own-child execution and artifact digests. Feature qualification runs on PR events; main push remains covered without a duplicate feature push run. ROOT executed the eight pure controls plus four Mission workflow controls: 12 PASS, zero skips. The full new driver/worker/watchdog path is not yet locally qualified: the fixed existing LS5 Git executable has link count two, and the new ordinary-singlelink prerequisite correctly refuses it. No installed Git file, link or policy was changed. Prior 36-case local results used the explicit local test harness and are not a PASS for this new CI driver. Hosted matrix and exact-source independent review remain pending.
++
++### Hosted workflow validation defect and successor
++
++Original c999 source run42879856455 completed FAILURE before jobs. GitHub's original validation annotation states `(Line: 20, Col: 27): Unrecognized named-value: 'runner'. Located at position 1 within expression: runner.temp`. This job-level env context is unavailable before runner assignment. The retained original page and run metadata distinguish this configuration failure from test execution or application failure. Primary review had compiled Python blocks but missed the GitHub expression-context restriction.
++
++The successor binds QUALIFICATION_BASE from RUNNER_TEMP in a Python step after runner assignment using GITHUB_ENV. No source guard, test timeout, test identity or dependency pin changes. One new static regression reproduces the invalid job env, then passes after this repair. Qualifier pure controls now nine; ROOT current pure cohort is 24 = nine preparation + six Mission/trigger + nine LAN inventory guards, zero skips. Original failed run is not retried or relabeled; successor hosted qualification remains pending.
+diff --git a/scheduler_components/durable.py b/scheduler_components/durable.py
+index 2f68318..4410e64 100644
+--- a/scheduler_components/durable.py
++++ b/scheduler_components/durable.py
+@@ -47,6 +47,37 @@ class IntentConflict(ValueError):
+ class ReconciliationRequired(RuntimeError):
+     pass
+ 
++
++def _validated_row(row):
++    """Reject malformed local debt; never repair or infer a capacity credit."""
++    try:
++        expected = {'scope', 'spec', 'state', 'request_id', 'local_hold_id',
++                    'node_id', 'incarnation', 'reason'}
++        if set(row.keys()) != expected or _scope(json.loads(row['scope'])) != row['scope']:
++            raise ValueError
++        spec = json.loads(row['spec'])
++        if (type(spec) is not dict or set(spec) != {'resources', 'benchmark_id', 'data'}
++                or type(spec['data']) is not list
++                or _spec(Resources(**spec['resources']), spec['benchmark_id'],
++                         frozenset(spec['data'])) != row['spec']):
++            raise ValueError
++        if row['state'] not in {'QUEUED', 'PREPARED', 'SEALED', 'UNKNOWN', 'CANCELLED'}:
++            raise ValueError
++        identity = tuple(row[k] for k in ('request_id', 'local_hold_id', 'node_id', 'incarnation'))
++        if row['state'] == 'QUEUED' and any(v is not None for v in identity):
++            raise ValueError
++        if row['state'] in _HELD or any(v is not None for v in identity):
++            if any(type(v) is not str or not v for v in identity):
++                raise ValueError
++            for value in identity[:2]:
++                parsed = uuid.UUID(value)
++                if parsed.version != 4 or str(parsed) != value:
++                    raise ValueError
++    except (ValueError, TypeError, KeyError, AttributeError):
++        raise ValueError('invalid persisted preparation') from None
++    return row
++
++
+ class PreparationJournal:
+     def __init__(self, path):
+         self._db = sqlite3.connect(path, timeout=5, isolation_level=None)
+@@ -67,6 +98,12 @@ class PreparationJournal:
+                 scope TEXT NOT NULL, kind TEXT NOT NULL);
+             PRAGMA user_version=1;
+         ''')
++        try:
++            for row in self._db.execute('SELECT * FROM jobs'):
++                _validated_row(row)
++        except BaseException:
++            self.close()
++            raise
+ 
+     def close(self):
+         if self._db is not None:
+@@ -87,7 +124,7 @@ class PreparationJournal:
+         row = self._db.execute('SELECT * FROM jobs WHERE scope=?', (key,)).fetchone()
+         if row is None:
+             raise KeyError('unknown local job scope')
+-        return row
++        return _validated_row(row)
+ 
+     def _event(self, key, kind):
+         self._db.execute('INSERT INTO events(scope,kind) VALUES (?,?)', (key, kind))
+@@ -136,7 +173,8 @@ class PreparationJournal:
+                 # double-counting is conservative, never a capacity credit.
+                 holds = {}
+                 held_cpu_scales = {}
+-                for held in self._db.execute("SELECT node_id,spec FROM jobs WHERE state IN ('PREPARED','SEALED','UNKNOWN')"):
++                for held in self._db.execute("SELECT * FROM jobs WHERE state IN ('PREPARED','SEALED','UNKNOWN')"):
++                    _validated_row(held)
+                     held_spec = json.loads(held['spec'])
+                     quantities = held_spec['resources']
+                     if quantities['cpu']:
+diff --git a/tests/test_lan_transport.py b/tests/test_lan_transport.py
+index c052ed6..abcedff 100644
+--- a/tests/test_lan_transport.py
++++ b/tests/test_lan_transport.py
+@@ -182,7 +182,9 @@ class TLSIsolationTests(unittest.TestCase):
+             result=original(sock,budget,peer,deadline,on_idle=on_idle)
+             if key in control and result[0]['kind'] in ('PING','PONG'):seen_control.add(key)
+             return result
+-        with FailureDiagnostics().observe(lan,budget) as diagnostics, patch('unified_system.lan_transport.HEARTBEAT_INTERVAL',.05),patch.object(lan,'_read_frame',side_effect=read):
++        from contextlib import ExitStack
++        with FailureDiagnostics().observe(lan,budget) as diagnostics, ExitStack() as heartbeat_cadence,patch.object(lan,'_read_frame',side_effect=read):
++            heartbeat_cadence.enter_context(patch('unified_system.lan_transport.HEARTBEAT_INTERVAL',.05))
+             client,server,c,s=self.pair()
+             diagnostics.register_connection(c);diagnostics.register_connection(s)
+             for connection in (c,s):
+@@ -197,6 +199,9 @@ class TLSIsolationTests(unittest.TestCase):
+                 with diagnostics.failure_boundary():
+                     self.assertIs(renewed.get(timeout=3),True)
+                     self.assertIs(renewed.get(timeout=3),True)
++                    # Fast cadence establishes renewal only; application traffic
++                    # uses the original production interval and durable budgets.
++                    heartbeat_cadence.close()
+                     self.assertFalse(c.closed,c.error);self.assertFalse(s.closed,s.error)
+                     c.send(b'after idle');self.assertEqual(s.receive().payload,b'after idle')
+                     s.send(b'reply');self.assertEqual(c.receive().payload,b'reply')
+diff --git a/tests/test_mission_workflow_inventory.py b/tests/test_mission_workflow_inventory.py
+new file mode 100644
+index 0000000..234b9d2
+--- /dev/null
++++ b/tests/test_mission_workflow_inventory.py
+@@ -0,0 +1,77 @@
++"""Static CI admission regressions; never import or execute fixture tests."""
++import ast
++import hashlib
++import json
++import pathlib
++import unittest
++
++ROOT = pathlib.Path(__file__).resolve().parents[1]
++
++
++def workflow_data():
++    text = (ROOT / '.github/workflows/durable-mission-controller.yml').read_text()
++    line = next(s.strip() for s in text.splitlines() if s.strip().startswith('required=['))
++    required = ast.literal_eval(line.split('=', 1)[1])
++    child = text.split('child="""', 1)[1].split('"""', 1)[0]
++    child = '\n'.join(s[10:] if s.startswith('          ') else s for s in child.splitlines())
++    gate = next(n for n in ast.parse(child).body if isinstance(n, ast.Assert) and 'ids' in ast.unparse(n.test))
++    expression = compile(ast.Expression(gate.test), '<CI inventory predicate>', 'eval')
++    return required, lambda ids, expected: eval(expression, {'__builtins__': {'len': len, 'set': set}}, {'ids': ids, 'required': expected})
++
++
++def static_case_ids():
++    result = []
++    for name in ('test_mission_controller', 'test_journal'):
++        tree = ast.parse((ROOT / 'tests' / (name + '.py')).read_text())
++        for cls in tree.body:
++            if isinstance(cls, ast.ClassDef):
++                result.extend(name + '.' + cls.name + '.' + method.name for method in cls.body
++                              if isinstance(method, ast.FunctionDef) and method.name.startswith('test_'))
++    return sorted(result)
++
++
++class MissionWorkflowInventoryTests(unittest.TestCase):
++    def assert_root_matrix_inputs(self, filename):
++        text = (ROOT / '.github/workflows' / filename).read_text()
++        pull = text.split('  pull_request:', 1)[1].split('  push:', 1)[0]
++        line = next(s.strip() for s in pull.splitlines() if s.strip().startswith('paths:'))
++        paths = ast.literal_eval(line.split(':', 1)[1].strip())
++        self.assertTrue({'scheduler_components/**', 'tools/ci/**',
++                         '.github/workflows/preparation-integrity.yml',
++                         '.github/workflows/durable-mission-controller.yml',
++                         'tests/test_mission_workflow_inventory.py'} <= set(paths))
++
++    def test_gateway_matrix_is_triggered_by_root_integration_inputs(self):
++        self.assert_root_matrix_inputs('gateway-identity.yml')
++
++    def test_supervisor_matrix_is_triggered_by_root_integration_inputs(self):
++        self.assert_root_matrix_inputs('supervisor-local-integration.yml')
++
++    def test_original_47_ids_are_preserved(self):
++        required, _ = workflow_data()
++        original = [name for name in required if '.ContinuationTests.' not in name
++                    and not name.endswith('.test_owned_temp_alias_is_resolved_before_guarded_journal_creation')]
++        self.assertEqual(len(original), 47)
++        digest = hashlib.sha256(json.dumps(sorted(original), separators=(',', ':')).encode()).hexdigest()
++        self.assertEqual(digest, '5b18c7e3128d1810aa67a66730732265ec66daff410aa7baa20553aa5bf75495')
++
++    def test_workflow_admits_all_58_existing_cases(self):
++        required, gate = workflow_data()
++        actual = static_case_ids()
++        self.assertEqual(len(actual), 58)
++        self.assertEqual(sorted(required), actual)
++        self.assertTrue(gate(actual, required))
++
++    def test_duplicate_expected_id_is_denied_before_execution(self):
++        required, gate = workflow_data()
++        self.assertFalse(gate(required, required + [required[0]]))
++
++    def test_missing_extra_or_duplicate_discovery_is_denied(self):
++        required, gate = workflow_data()
++        for ids in (required[:-1], required + ['unexpected.case'], required + [required[0]]):
++            with self.subTest(ids=len(ids)):
++                self.assertFalse(gate(ids, required))
++
++
++if __name__ == '__main__':
++    unittest.main()
+diff --git a/tests/test_preparation_integrity.py b/tests/test_preparation_integrity.py
+new file mode 100644
+index 0000000..0f1e4a6
+--- /dev/null
++++ b/tests/test_preparation_integrity.py
+@@ -0,0 +1,103 @@
++"""Local SQLite integrity regression; no authority/native/physical fixture."""
++from contextlib import closing
++import json
++from pathlib import Path
++import sqlite3
++import tempfile
++import unittest
++from unittest.mock import patch
++
++from scheduler_components.durable import PreparationJournal
++from scheduler_components.placement import Candidate, Policy, Resources
++
++
++class PreparationIntegrity(unittest.TestCase):
++    def setUp(self):
++        self.temp = tempfile.TemporaryDirectory(prefix='a5-local-integrity-')
++        self.addCleanup(self.temp.cleanup)
++        self.path = Path(self.temp.name) / 'preparation.sqlite'
++        self.store = PreparationJournal(self.path)
++        self.addCleanup(lambda: self.store.close())
++        self.scope = dict(cluster_id='cluster', cluster_generation='generation',
++                          job_id='pending', dataset_id='dataset',
++                          source_id='source', partition_id='partition')
++        self.request = Resources(60, 60, 60, 60, 60)
++        self.node = Candidate('node', 'incarnation', 'incarnation', 100, 'bench',
++                              Resources(100, 100, 100, 100, 100), Resources(0, 0, 0, 0, 0))
++        self.policy = Policy(10, 800000, 1, 1)
++        self.store.enqueue(self.scope, self.request, 'bench')
++        self.store.prepare(self.scope, [self.node], 100, self.policy,
++                           quorum_available=True, schedule_active=True)
++        self.store.record_handoff(self.scope)
++        self.store.record_unknown(self.scope)
++
++    def rewrite(self, column, value):
++        # Fixed test-owned DB/column, never caller SQL or another owner's file.
++        assert column in ('spec', 'request_id')
++        with closing(sqlite3.connect(self.path)) as db:
++            db.execute('UPDATE jobs SET ' + column + '=? WHERE state=?', (value, 'UNKNOWN'))
++            db.commit()
++
++    def zero_unknown_spec(self):
++        spec = self.store.view(self.scope)['spec']
++        spec['resources'] = dict.fromkeys(spec['resources'], 0)
++        self.rewrite('spec', json.dumps(spec, sort_keys=True, separators=(',', ':')))
++
++    def test_reopen_rejects_corrupt_unknown_resources_without_repair(self):
++        self.zero_unknown_spec()
++        self.store.close()
++        with self.assertRaisesRegex(ValueError, 'invalid persisted preparation'):
++            reopened = PreparationJournal(self.path)
++            reopened.close()
++        with closing(sqlite3.connect(self.path)) as db:
++            state, spec = db.execute('SELECT state,spec FROM jobs').fetchone()
++        self.assertEqual(state, 'UNKNOWN')
++        self.assertTrue(all(v == 0 for v in json.loads(spec)['resources'].values()))
++
++    def test_live_corrupt_unknown_cannot_create_competing_preparation(self):
++        self.zero_unknown_spec()
++        second = dict(self.scope, job_id='competing')
++        self.store.enqueue(second, self.request, 'bench')
++        with self.assertRaisesRegex(ValueError, 'invalid persisted preparation'):
++            self.store.prepare(second, [self.node], 100, self.policy,
++                               quorum_available=True, schedule_active=True)
++        self.assertEqual(self.store.view(second)['state'], 'QUEUED')
++
++    def test_unknown_missing_hold_identity_is_not_a_valid_recovered_view(self):
++        self.rewrite('request_id', None)
++        with self.assertRaisesRegex(ValueError, 'invalid persisted preparation'):
++            self.store.view(self.scope)
++
++    def test_valid_unknown_roundtrip_preserves_exact_hold_and_events(self):
++        before = self.store.view(self.scope)
++        events = self.store.events()
++        self.store.close()
++        self.store = PreparationJournal(self.path)
++        self.assertEqual(self.store.view(self.scope), before)
++        self.assertEqual(self.store.events(), events)
++        self.assertIs(before['execution_authorized'], False)
++
++    def test_malformed_persisted_spec_variants_cannot_be_recovered_as_valid(self):
++        original = self.store.view(self.scope)['spec']
++        variants = []
++        for change in ({'ram': True}, {'cpu': -1}, {'scratch': 9223372036854775808}):
++            spec = dict(original, resources=dict(original['resources'], **change))
++            variants.append(json.dumps(spec, sort_keys=True, separators=(',', ':')))
++        variants.append(json.dumps(dict(original, data=['duplicate', 'duplicate']),
++                                   sort_keys=True, separators=(',', ':')))
++        variants.append(json.dumps(dict(original, extra='not-in-local-codec'),
++                                   sort_keys=True, separators=(',', ':')))
++        for raw in variants:
++            with self.subTest(spec=raw):
++                self.rewrite('spec', raw)
++                with self.assertRaisesRegex(ValueError, 'invalid persisted preparation'):
++                    self.store.view(self.scope)
++
++    def test_failed_reopen_closes_its_owned_connection(self):
++        self.zero_unknown_spec()
++        connection = sqlite3.connect(self.path, isolation_level=None)
++        with patch('scheduler_components.durable.sqlite3.connect', return_value=connection):
++            with self.assertRaisesRegex(ValueError, 'invalid persisted preparation'):
++                PreparationJournal(self.path)
++        with self.assertRaises(sqlite3.ProgrammingError):
++            connection.execute('SELECT 1')
+diff --git a/tests/test_preparation_qualification.py b/tests/test_preparation_qualification.py
+new file mode 100644
+index 0000000..9a219fb
+--- /dev/null
++++ b/tests/test_preparation_qualification.py
+@@ -0,0 +1,99 @@
++"""Pure qualifier controls; never imports or runs Scheduler fixtures.
++
++Design: preserve the old 30-case inventory byte-for-byte; qualify its exact union
++with six integrity cases in an additive Windows/Ubuntu CP312 workflow. Bootstrap
++verifies the driver before import; driver batch-verifies all raw Git blobs before
++and after a bounded child suite. Evidence is external. Existing crash child keeps
++its original command (not isolated -I/-S); inherited no-bytecode is scoped locally.
++No qualification receipt grants runtime, native or physical authority.
++"""
++import copy
++import importlib.util
++from pathlib import Path
++import tempfile
++import unittest
++
++DRIVER=Path(__file__).resolve().parents[1]/"tools/ci/qualify_preparation_integrity.py"
++spec=importlib.util.spec_from_file_location("preparation_qualifier_controls",DRIVER)
++module=importlib.util.module_from_spec(spec)
++if DRIVER.exists():spec.loader.exec_module(module)
++
++
++class PreparationQualificationControls(unittest.TestCase):
++    def test_runner_temp_is_bound_at_step_time_not_job_env(self):
++        workflow=(DRIVER.parents[2]/'.github/workflows/preparation-integrity.yml').read_text()
++        job_env=workflow.split('    env:',1)[1].split('    steps:',1)[0]
++        self.assertNotIn('${{ runner.',job_env)
++        self.assertIn("os.environ['RUNNER_TEMP']",workflow)
++        self.assertIn("os.environ['GITHUB_ENV']",workflow)
++
++    def inventory(self):
++        old=dict(schema="agent5.component-test-inventory.v2",expected_count=30,
++                 expected_ids=["legacy."+str(i) for i in range(30)])
++        added=["integrity."+str(i) for i in range(6)]
++        new=dict(schema="preparation-integrity-inventory.v1",expected_count=36,
++                 preserved_legacy_ids=old["expected_ids"].copy(),added_integrity_ids=added,
++                 expected_ids=old["expected_ids"]+added)
++        return old,new
++
++    def test_exact_inventory_accepts_only_all_36_unique_ids(self):
++        old,new=self.inventory()
++        module.validate_inventory(old,new,list(reversed(new["expected_ids"])))
++        for ids in (new["expected_ids"][:-1],new["expected_ids"]+["extra"],new["expected_ids"][:-1]+[new["expected_ids"][0]]):
++            with self.assertRaises(ValueError):module.validate_inventory(old,new,ids)
++
++    def test_legacy_inventory_and_closed_new_schema_cannot_drift(self):
++        old,new=self.inventory()
++        for mutate in (lambda n:n["preserved_legacy_ids"].pop(),lambda n:n.update(extra=True),
++                       lambda n:n.update(expected_count=True),lambda n:n["added_integrity_ids"].append("extra")):
++            changed=copy.deepcopy(new);mutate(changed)
++            with self.assertRaises(ValueError):module.validate_inventory(old,changed,changed["expected_ids"])
++
++    def test_raw_bytes_extra_empty_directory_and_cache_refused(self):
++        with tempfile.TemporaryDirectory() as temporary:
++            root=Path(temporary).resolve();(root/"a.py").write_bytes(b"x\n")
++            module.check_files(root,{"a.py":b"x\n"})
++            (root/"a.py").write_bytes(b"x\r\n")
++            with self.assertRaises(ValueError):module.check_files(root,{"a.py":b"x\n"})
++            (root/"a.py").write_bytes(b"x\n");(root/"empty").mkdir()
++            with self.assertRaises(ValueError):module.check_files(root,{"a.py":b"x\n"})
++            (root/"empty").rmdir();(root/"__pycache__").mkdir()
++            with self.assertRaises(ValueError):module.check_files(root,{"a.py":b"x\n"})
++
++    def test_unsafe_paths_and_hardlinks_refused(self):
++        import os
++        with tempfile.TemporaryDirectory() as temporary:
++            root=Path(temporary).resolve();(root/"a").write_bytes(b"x")
++            for name in ("../a","/a","a\\b","A:a"):
++                with self.assertRaises(ValueError):module.check_files(root,{name:b"x"})
++            os.link(root/"a",root/"b")
++            with self.assertRaises(ValueError):module.check_files(root,{"a":b"x","b":b"x"})
++
++    def test_batch_blob_parser_rejects_truncation_wrong_identity_extra(self):
++        import hashlib
++        raw=b"content";oid=hashlib.sha1(b"blob 7\0"+raw).hexdigest()
++        output=oid.encode()+b" blob 7\n"+raw+b"\n"
++        self.assertEqual(module.parse_blobs([(oid,7)],output),[raw])
++        for bad in (output[:-1],output+b"x",output.replace(b"content",b"changed")):
++            with self.assertRaises(ValueError):module.parse_blobs([(oid,7)],bad)
++
++    def test_run_result_requires_zero_skips_and_exact_count(self):
++        expected=["case."+str(i) for i in range(36)]
++        module.validate_result(dict(ids=expected,tests=36,skips=0,failures=0,errors=0),expected)
++        for key in ("tests","skips","failures","errors"):
++            result=dict(ids=expected,tests=36,skips=0,failures=0,errors=0);result[key]+=1
++            with self.assertRaises(ValueError):module.validate_result(result,expected)
++
++    def test_unpinned_timezone_wheel_refused(self):
++        with tempfile.TemporaryDirectory() as temporary:
++            root=Path(temporary).resolve();wheel=root/"tzdata.whl";wheel.write_bytes(b"untrusted")
++            with self.assertRaisesRegex(ValueError,"pin mismatch"):module.validate_zoneinfo(root,wheel)
++
++    def test_git_path_rejects_relative_local_and_nonordinary_without_launch(self):
++        with tempfile.TemporaryDirectory() as temporary:
++            root=Path(temporary).resolve()
++            for path in (Path("git"),root/"git.exe",root.parent/root.name):
++                with self.assertRaises(ValueError):module.approved_git(root,path)
++            external=root.parent/(root.name+"-directory");external.mkdir()
++            self.addCleanup(external.rmdir)
++            with self.assertRaises(ValueError):module.approved_git(root,external)
+diff --git a/tools/ci/qualify_preparation_integrity.py b/tools/ci/qualify_preparation_integrity.py
+new file mode 100644
+index 0000000..005bff1
+--- /dev/null
++++ b/tools/ci/qualify_preparation_integrity.py
+@@ -0,0 +1,237 @@
++"""Additive exact-source Scheduler preparation qualification; no authority.
++
++The legacy crash child retains its command and is not -I/-S isolated. Its scoped
++environment disables bytecode. No Scheduler fixture is imported by pure controls.
++"""
++import argparse
++import hashlib
++import json
++import os
++from pathlib import Path
++import re
++import stat
++import subprocess
++import sys
++import threading
++import unittest
++import zipfile
++
++LEGACY='docs/scheduler/component-test-inventory-v2.json'
++INVENTORY='docs/ci/preparation-integrity-inventory-v1.json'
++MAX_FILES=20000
++MAX_BYTES=256*1024*1024
++TZDATA_SHA256='1a403fada01ff9221ca8044d701868fa132215d84beb92242d9acd2147f667a8'
++
++
++def validate_inventory(old,new,ids):
++    def exact(value,count):
++        return type(value) is list and len(value)==count and all(type(x) is str and x for x in value) and len(set(value))==count
++    if set(new)!={'schema','expected_count','preserved_legacy_ids','added_integrity_ids','expected_ids'}:
++        raise ValueError('closed inventory required')
++    legacy=old.get('expected_ids')
++    if old.get('schema')!='agent5.component-test-inventory.v2' or type(old.get('expected_count')) is not int or old['expected_count']!=30 or not exact(legacy,30):
++        raise ValueError('invalid original30 inventory')
++    if new['preserved_legacy_ids']!=legacy:raise ValueError('original30 must be preserved in order')
++    if new['schema']!='preparation-integrity-inventory.v1' or type(new['expected_count']) is not int or new['expected_count']!=36:
++        raise ValueError('invalid inventory schema/count')
++    added=new['added_integrity_ids'];expected=new['expected_ids']
++    if not exact(added,6) or not exact(expected,36) or set(added)&set(legacy) or set(expected)!=set(legacy+added):
++        raise ValueError('exact disjoint30+6 required')
++    if not exact(ids,36) or set(ids)!=set(expected):raise ValueError('missing/duplicate/extra test IDs')
++
++
++def validate_result(result,expected):
++    if (type(result) is not dict or set(result)!={'ids','tests','skips','failures','errors'}
++        or any(type(result[k]) is not int for k in ('tests','skips','failures','errors'))
++        or tuple(result[k] for k in ('tests','skips','failures','errors'))!=(36,0,0,0)
++        or type(result['ids']) is not list or len(result['ids'])!=36 or len(set(result['ids']))!=36 or set(result['ids'])!=set(expected)):
++        raise ValueError('exact36/zero-skips qualification required')
++
++
++def parse_blobs(entries,output):
++    cursor=0;blobs=[]
++    for oid,size in entries:
++        end=output.find(b'\n',cursor)
++        if end<0 or output[cursor:end]!=f'{oid} blob {size}'.encode():raise ValueError('invalid Git batch header')
++        cursor=end+1;blob=output[cursor:cursor+size];cursor+=size
++        if len(blob)!=size or output[cursor:cursor+1]!=b'\n':raise ValueError('truncated Git blob')
++        cursor+=1
++        if hashlib.sha1(b'blob '+str(size).encode()+b'\0'+blob).hexdigest()!=oid:raise ValueError('Git blob identity mismatch')
++        blobs.append(blob)
++    if cursor!=len(output):raise ValueError('extra Git batch data')
++    return blobs
++
++
++def check_files(root,files):
++    dirs=set();hashes={}
++    if len(files)>MAX_FILES or sum(map(len,files.values()))>MAX_BYTES:raise ValueError('source bounds exceeded')
++    for name in files:
++        parts=name.split('/')
++        if not name or name.startswith('/') or '\\' in name or ':' in name or '\0' in name or any(p in ('','.','..','__pycache__') for p in parts) or name.endswith(('.pyc','.pyo')):
++            raise ValueError('unsafe source path')
++        for index in range(1,len(parts)):dirs.add('/'.join(parts[:index]))
++    for name in sorted(dirs,key=lambda item:item.count('/')):
++        path=root/name;info=path.lstat()
++        if not stat.S_ISDIR(info.st_mode) or path.is_symlink() or getattr(info,'st_file_attributes',0)&1024:
++            raise ValueError('nonordinary source parent')
++    for name,raw in files.items():
++        path=root/name;info=path.lstat()
++        if not stat.S_ISREG(info.st_mode) or info.st_nlink!=1 or getattr(info,'st_file_attributes',0)&1024:raise ValueError('nonordinary source file')
++        if path.read_bytes()!=raw:raise ValueError('raw Git source mismatch')
++        hashes[name]=hashlib.sha256(raw).hexdigest()
++    actual_files=set();actual_dirs=set()
++    for current,directories,names in os.walk(root,followlinks=False):
++        base=Path(current)
++        if base==root:
++            if '.git' in directories:directories.remove('.git')
++            if '.git' in names:names.remove('.git')
++        for name in directories:
++            path=base/name;info=path.lstat()
++            if not stat.S_ISDIR(info.st_mode) or path.is_symlink() or getattr(info,'st_file_attributes',0)&1024:raise ValueError('nonordinary source directory')
++            actual_dirs.add(path.relative_to(root).as_posix())
++        for name in names:actual_files.add((base/name).relative_to(root).as_posix())
++    if actual_files!=set(files) or actual_dirs!=dirs:raise ValueError('extra/missing source files or directories')
++    return hashes
++
++
++def validate_zoneinfo(zone,wheel):
++    info=wheel.lstat()
++    if not stat.S_ISREG(info.st_mode) or info.st_nlink!=1 or getattr(info,'st_file_attributes',0)&1024 or info.st_size>2*1024*1024:
++        raise ValueError('nonordinary bounded tzdata wheel')
++    raw=wheel.read_bytes()
++    if hashlib.sha256(raw).hexdigest()!=TZDATA_SHA256:raise ValueError('tzdata2025.2 wheel pin mismatch')
++    with zipfile.ZipFile(wheel) as archive:
++        prefix='tzdata/zoneinfo/'
++        files={name[len(prefix):]:archive.read(name) for name in archive.namelist() if name.startswith(prefix) and not name.endswith('/')}
++    return dict(version='2025.2',wheel_sha256=TZDATA_SHA256,zoneinfo_files=check_files(zone,files))
++
++
++def approved_git(root,path=None):
++    candidate=Path(path) if path is not None else Path('C:/Program Files/Git/cmd/git.exe' if os.name=='nt' else '/usr/bin/git')
++    if not candidate.is_absolute() or candidate.is_relative_to(root):raise ValueError('approved Git must be absolute and external')
++    for parent in candidate.parents:
++        info=parent.lstat()
++        if not stat.S_ISDIR(info.st_mode) or parent.is_symlink() or getattr(info,'st_file_attributes',0)&1024:
++            raise ValueError('nonordinary Git parent')
++    info=candidate.lstat()
++    if not stat.S_ISREG(info.st_mode) or candidate.is_symlink() or info.st_nlink!=1 or getattr(info,'st_file_attributes',0)&1024:
++        raise ValueError('nonordinary Git executable')
++    if os.name!='nt' and not info.st_mode&0o111:raise ValueError('Git is not executable')
++    return str(candidate)
++
++
++def snapshot(root,git,expected):
++    def call(*args,data=None):
++        return subprocess.run([git,'--no-replace-objects','--no-optional-locks','-c','core.fsmonitor=false','-C',str(root),*args],input=data,capture_output=True,check=True,timeout=30).stdout
++    head=call('rev-parse','HEAD').decode().strip()
++    if head!=expected:raise ValueError('HEAD mismatch')
++    tree=call('rev-parse','HEAD^{tree}').decode().strip();entries=[];names=[]
++    for row in call('ls-tree','-rlz','--full-tree',head).split(b'\0'):
++        if not row:continue
++        meta,name=row.split(b'\t',1);mode,kind,oid,size=meta.split()
++        if mode not in (b'100644',b'100755') or kind!=b'blob':raise ValueError('nonordinary committed source')
++        entries.append((oid.decode(),int(size)));names.append(name.decode('utf-8'))
++    if len(entries)>MAX_FILES or sum(size for _,size in entries)>MAX_BYTES:raise ValueError('Git source bounds exceeded')
++    blobs=parse_blobs(entries,call('cat-file','--batch',data=''.join(oid+'\n' for oid,_ in entries).encode()))
++    return dict(head=head,tree=tree,files=check_files(root,dict(zip(names,blobs))),primary_git=git)
++
++
++def case_ids(suite):
++    for case in suite:
++        if isinstance(case,unittest.TestSuite):yield from case_ids(case)
++        else:yield case.id()
++
++
++def worker(root,result_path,zone):
++    sys.path.insert(0,str(root))
++    import zoneinfo
++    zoneinfo.reset_tzpath([str(zone)]);zoneinfo.ZoneInfo.clear_cache()
++    old=json.loads((root/LEGACY).read_bytes());inventory=json.loads((root/INVENTORY).read_bytes())
++    suite=unittest.TestSuite(unittest.defaultTestLoader.discover(str(root/'tests'),pattern=pattern)
++        for pattern in ('test_agent5_scheduler_components.py','test_preparation_integrity.py'))
++    ids=list(case_ids(suite));validate_inventory(old,inventory,ids)
++    children=[];lock=threading.Lock();original=subprocess.Popen
++    class OwnedPopen(original):
++        def __init__(self,*args,**kwargs):
++            with lock:
++                super().__init__(*args,**kwargs);children.append(self)
++    subprocess.Popen=OwnedPopen
++    def cancel():
++        if sys.stdin.readline()!='CANCEL\n':return
++        with lock:
++            for child in children:
++                if child.poll() is None:child.kill()
++            for child in children:
++                try:child.wait(timeout=5)
++                except subprocess.TimeoutExpired:pass
++        os._exit(124)
++    threading.Thread(target=cancel,daemon=True).start()
++    result=unittest.TextTestRunner(verbosity=2).run(suite)
++    with lock:
++        if any(p.poll() is None for p in children):raise ValueError('owned child not retired')
++    record=dict(ids=ids,tests=result.testsRun,skips=len(result.skipped),failures=len(result.failures),errors=len(result.errors))
++    result_path.write_text(json.dumps(record,sort_keys=True));validate_result(record,inventory['expected_ids'])
++
++
++def main():
++    parser=argparse.ArgumentParser();parser.add_argument('--expected-head');parser.add_argument('--evidence',type=Path)
++    parser.add_argument('--zoneinfo',type=Path,required=True);parser.add_argument('--tzdata-wheel',type=Path,required=True);parser.add_argument('--worker',type=Path)
++    args=parser.parse_args();root=Path(__file__).resolve().parents[2]
++    if sys.version_info[:3]!=(3,12,10) or not sys.flags.isolated or not sys.flags.no_site or not sys.dont_write_bytecode or sys.pycache_prefix is not None:
++        raise ValueError('CP312.10 -I-S-B/no cache prefix required')
++    zone=args.zoneinfo.resolve()
++    if not (zone/'Europe/Berlin').is_file() or zone.is_relative_to(root):raise ValueError('external pinned zoneinfo required')
++    dependency=validate_zoneinfo(zone,args.tzdata_wheel.resolve())
++    if args.worker:worker(root,args.worker,zone);return
++    if not args.expected_head or re.fullmatch('[0-9a-f]{40}',args.expected_head) is None:raise ValueError('exact expected HEAD required')
++    out=args.evidence.resolve()
++    if out.is_relative_to(root):raise ValueError('evidence must be external')
++    out.mkdir(parents=True,exist_ok=False)
++    before=None;git=None
++    receipt=dict(passed=False,scope='LOCAL_SQLITE_PREPARATION_ONLY',native_authority=False,runtime_admission=False,
++        physical_execution_authorization=False,public_submit='DENY',run_id=os.getenv('GITHUB_RUN_ID'),
++        attempt=os.getenv('GITHUB_RUN_ATTEMPT'),job=os.getenv('GITHUB_JOB'),runner_os=sys.platform,
++        python=sys.version,legacy_child_isolated_flags=False,dependency=dependency)
++    try:
++        git=approved_git(root);before=snapshot(root,git,args.expected_head);receipt['source_before']=before
++        controls=unittest.defaultTestLoader.discover(str(root/'tests'),pattern='test_preparation_qualification.py')
++        with (out/'controls.log').open('w',encoding='utf-8') as log:
++            controls_result=unittest.TextTestRunner(stream=log,verbosity=2).run(controls)
++        if not controls_result.wasSuccessful() or controls_result.skipped or controls_result.testsRun!=9:
++            raise ValueError('pure guard controls failed')
++        receipt['pure_controls']=9
++        env=os.environ.copy()
++        for key in ('PYTHONPATH','PYTHONHOME','PYTHONPYCACHEPREFIX'):env.pop(key,None)
++        env['PYTHONDONTWRITEBYTECODE']='1'
++        result_path=out/'result.json'
++        command=[sys.executable,'-I','-S','-B',str(Path(__file__).resolve()),'--zoneinfo',str(zone),'--tzdata-wheel',str(args.tzdata_wheel.resolve()),'--worker',str(result_path)]
++        with (out/'tests.log').open('wb') as log:
++            child=subprocess.Popen(command,stdin=subprocess.PIPE,stdout=log,stderr=log,env=env);receipt['worker_pid']=child.pid
++            try:code=child.wait(timeout=120)
++            except subprocess.TimeoutExpired:
++                receipt['timeout']=True
++                try:child.communicate(input=b'CANCEL\n',timeout=10)
++                except subprocess.TimeoutExpired:
++                    child.kill();child.wait(timeout=5);receipt['descendant_cleanup']='UNKNOWN'
++                raise ValueError('suite timeout; no qualification')
++            finally:
++                if child.stdin:child.stdin.close()
++        if code!=0:raise ValueError('suite worker failed')
++        result=json.loads(result_path.read_bytes());inventory=json.loads((root/INVENTORY).read_bytes())
++        validate_result(result,inventory['expected_ids']);receipt['result']=result
++        after=snapshot(root,git,args.expected_head);receipt['source_after']=after
++        if dependency!=validate_zoneinfo(zone,args.tzdata_wheel.resolve()):raise ValueError('dependency changed')
++        if before!=after:raise ValueError('source changed')
++        receipt['passed']=True
++    except BaseException as error:
++        receipt['error']=type(error).__name__+': '+str(error);raise
++    finally:
++        if before is not None and 'source_after' not in receipt:
++            try:receipt['source_after']=snapshot(root,git,args.expected_head)
++            except BaseException as post_error:
++                receipt['source_after_error']=type(post_error).__name__+': '+str(post_error)
++        receipt['artifacts']={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in out.iterdir() if p.is_file()}
++        (out/'receipt.json').write_text(json.dumps(receipt,sort_keys=True,indent=2)+'\n');print(json.dumps(receipt,sort_keys=True))
++
++
++if __name__=='__main__':main()

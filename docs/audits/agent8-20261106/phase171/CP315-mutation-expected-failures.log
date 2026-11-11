@@ -1,0 +1,55 @@
+test_advisory_placement_and_preparation_never_issue_assignment_or_start (test_one_shot_closed_integration.OneShotClosedIntegration.test_advisory_placement_and_preparation_never_issue_assignment_or_start) ... FAIL
+
+======================================================================
+FAIL: test_advisory_placement_and_preparation_never_issue_assignment_or_start (test_one_shot_closed_integration.OneShotClosedIntegration.test_advisory_placement_and_preparation_never_issue_assignment_or_start)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Python315\Lib\asyncio\runners.py", line 128, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Python315\Lib\asyncio\base_events.py", line 724, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-5-resource-aware-distributed\work\one-shot-negative-20261110\tests\gateway_jobs\test_one_shot_closed_integration.py", line 92, in test_advisory_placement_and_preparation_never_issue_assignment_or_start
+    self.assert_closed(local)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-5-resource-aware-distributed\work\one-shot-negative-20261110\tests\gateway_jobs\test_one_shot_closed_integration.py", line 63, in assert_closed
+    self.assertEqual(self.boundary.execute('GrantAssignment', metadata),
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                     'SAFETY_GATE_CLOSED')
+                     ^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'GRANTED' != 'SAFETY_GATE_CLOSED'
+- GRANTED
++ SAFETY_GATE_CLOSED
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.032s
+
+FAILED (failures=1)
+test_forged_committed_metadata_or_session_never_opens_start (test_one_shot_closed_integration.OneShotClosedIntegration.test_forged_committed_metadata_or_session_never_opens_start) ... FAIL
+
+======================================================================
+FAIL: test_forged_committed_metadata_or_session_never_opens_start (test_one_shot_closed_integration.OneShotClosedIntegration.test_forged_committed_metadata_or_session_never_opens_start)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Python315\Lib\asyncio\runners.py", line 128, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Python315\Lib\asyncio\base_events.py", line 724, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-5-resource-aware-distributed\work\one-shot-negative-20261110\tests\gateway_jobs\test_one_shot_closed_integration.py", line 168, in test_forged_committed_metadata_or_session_never_opens_start
+    self.assert_closed(forged)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-5-resource-aware-distributed\work\one-shot-negative-20261110\tests\gateway_jobs\test_one_shot_closed_integration.py", line 65, in assert_closed
+    with self.assertRaisesRegex(WorkerUnavailable,
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+            'ACTUAL_DISPATCH_PERMIT_AND_WORKER_PROFILE_UNAVAILABLE'):
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: WorkerUnavailable not raised
+
+----------------------------------------------------------------------
+Ran 1 test in 0.022s
+
+FAILED (failures=1)

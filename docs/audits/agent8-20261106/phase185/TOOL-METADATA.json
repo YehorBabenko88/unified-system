@@ -1,0 +1,522 @@
+{
+  "ancestors": [
+    {
+      "attributes": 16,
+      "path": "C:\\Program Files\\Git\\usr\\bin",
+      "reparse_tag": 0,
+      "symlink": false
+    },
+    {
+      "attributes": 16,
+      "path": "C:\\Program Files\\Git\\usr",
+      "reparse_tag": 0,
+      "symlink": false
+    },
+    {
+      "attributes": 16,
+      "path": "C:\\Program Files\\Git",
+      "reparse_tag": 0,
+      "symlink": false
+    },
+    {
+      "attributes": 17,
+      "path": "C:\\Program Files",
+      "reparse_tag": 0,
+      "symlink": false
+    },
+    {
+      "attributes": 22,
+      "path": "C:\\",
+      "reparse_tag": 0,
+      "symlink": false
+    }
+  ],
+  "candidates": {
+    "gpg.exe": {
+      "attributes": 32,
+      "bytes": 1129818,
+      "device": 7417695763057267443,
+      "file_id": 9851624185351477,
+      "nlink": 1,
+      "path": "C:\\Program Files\\Git\\usr\\bin\\gpg.exe",
+      "pe": {
+        "delay_import_directory_bytes": 0,
+        "delay_import_directory_rva": 0,
+        "direct_imports": [
+          "msys-assuan-9.dll",
+          "msys-bz2-1.dll",
+          "msys-gcrypt-20.dll",
+          "msys-gpg-error-0.dll",
+          "msys-2.0.dll",
+          "msys-npth-0.dll",
+          "msys-readline8.dll",
+          "msys-sqlite3-0.dll",
+          "msys-z.dll",
+          "msys-iconv-2.dll",
+          "msys-intl-8.dll",
+          "KERNEL32.dll"
+        ],
+        "machine_hex": "0x8664",
+        "pe_magic": "0x20b",
+        "scope": "PE static direct-import names only, not loader/runtime/dynamic-load attestation"
+      },
+      "regular": true,
+      "reparse_tag": 0,
+      "sha256": "14953ed8b4549020e185c0f7ab600bb9d0384457ea74da9d574e8d31139aff4f",
+      "symlink": false
+    },
+    "gpgv.exe": {
+      "attributes": 32,
+      "bytes": 513794,
+      "device": 7417695763057267443,
+      "file_id": 7599824371666282,
+      "nlink": 1,
+      "path": "C:\\Program Files\\Git\\usr\\bin\\gpgv.exe",
+      "pe": {
+        "delay_import_directory_bytes": 0,
+        "delay_import_directory_rva": 0,
+        "direct_imports": [
+          "msys-assuan-9.dll",
+          "msys-bz2-1.dll",
+          "msys-gcrypt-20.dll",
+          "msys-gpg-error-0.dll",
+          "msys-2.0.dll",
+          "msys-npth-0.dll",
+          "msys-z.dll",
+          "msys-iconv-2.dll",
+          "msys-intl-8.dll",
+          "KERNEL32.dll"
+        ],
+        "machine_hex": "0x8664",
+        "pe_magic": "0x20b",
+        "scope": "PE static direct-import names only, not loader/runtime/dynamic-load attestation"
+      },
+      "regular": true,
+      "reparse_tag": 0,
+      "sha256": "e5b9f232083ac4c7427ad4923e21d26bae0c8b8554db3344ef388088f92919fe",
+      "symlink": false
+    }
+  },
+  "default_distributed_keyring": "C:/Program Files/Git/usr/share/gnupg/distsigkey.gpg NOT READ, NOT ADOPTED",
+  "execution_performed": false,
+  "gpg_version_probe_performed": false,
+  "local_dependency_files": {
+    "msys-2.0.dll": {
+      "attributes": 32,
+      "bytes": 3371103,
+      "device": 7417695763057267443,
+      "file_id": 4503599627849225,
+      "nlink": 1,
+      "path": "C:\\Program Files\\Git\\usr\\bin\\msys-2.0.dll",
+      "pe": {
+        "delay_import_directory_bytes": 0,
+        "delay_import_directory_rva": 0,
+        "direct_imports": [
+          "KERNEL32.dll",
+          "ntdll.dll"
+        ],
+        "machine_hex": "0x8664",
+        "pe_magic": "0x20b",
+        "scope": "PE static direct-import names only, not loader/runtime/dynamic-load attestation"
+      },
+      "regular": true,
+      "reparse_tag": 0,
+      "sha256": "e55be2d89f2756f540a8f2acf18cd14bf275d1187a32d5189946ee5c896bcf03",
+      "symlink": false
+    },
+    "msys-assuan-9.dll": {
+      "attributes": 32,
+      "bytes": 69674,
+      "device": 7417695763057267443,
+      "file_id": 3377699721006680,
+      "nlink": 1,
+      "path": "C:\\Program Files\\Git\\usr\\bin\\msys-assuan-9.dll",
+      "pe": {
+        "delay_import_directory_bytes": 0,
+        "delay_import_directory_rva": 0,
+        "direct_imports": [
+          "msys-gpg-error-0.dll",
+          "msys-2.0.dll",
+          "KERNEL32.dll"
+        ],
+        "machine_hex": "0x8664",
+        "pe_magic": "0x20b",
+        "scope": "PE static direct-import names only, not loader/runtime/dynamic-load attestation"
+      },
+      "regular": true,
+      "reparse_tag": 0,
+      "sha256": "3eaf1c57c85b1ca2303e7d9544c0a96507f483aae7ae5a1125dfde09bdb12b26",
+      "symlink": false
+    },
+    "msys-bz2-1.dll": {
+      "attributes": 32,
+      "bytes": 67277,
+      "device": 7417695763057267443,
+      "file_id": 3096224744296027,
+      "nlink": 1,
+      "path": "C:\\Program Files\\Git\\usr\\bin\\msys-bz2-1.dll",
+      "pe": {
+        "delay_import_directory_bytes": 0,
+        "delay_import_directory_rva": 0,
+        "direct_imports": [
+          "msys-2.0.dll",
+          "KERNEL32.dll"
+        ],
+        "machine_hex": "0x8664",
+        "pe_magic": "0x20b",
+        "scope": "PE static direct-import names only, not loader/runtime/dynamic-load attestation"
+      },
+      "regular": true,
+      "reparse_tag": 0,
+      "sha256": "1082896c71da5e62dfd8e421fba35fa3123e6e1e2782381c08258917117b51cd",
+      "symlink": false
+    },
+    "msys-gcc_s-seh-1.dll": {
+      "attributes": 32,
+      "bytes": 141537,
+      "device": 7417695763057267443,
+      "file_id": 7599824371666627,
+      "nlink": 1,
+      "path": "C:\\Program Files\\Git\\usr\\bin\\msys-gcc_s-seh-1.dll",
+      "pe": {
+        "delay_import_directory_bytes": 0,
+        "delay_import_directory_rva": 0,
+        "direct_imports": [
+          "msys-2.0.dll",
+          "KERNEL32.dll"
+        ],
+        "machine_hex": "0x8664",
+        "pe_magic": "0x20b",
+        "scope": "PE static direct-import names only, not loader/runtime/dynamic-load attestation"
+      },
+      "regular": true,
+      "reparse_tag": 0,
+      "sha256": "59b816ee2880c2140ac8d7726f59e4e7435e309f272a80fd590d3130215f77f5",
+      "symlink": false
+    },
+    "msys-gcrypt-20.dll": {
+      "attributes": 32,
+      "bytes": 1060867,
+      "device": 7417695763057267443,
+      "file_id": 5348024557981384,
+      "nlink": 1,
+      "path": "C:\\Program Files\\Git\\usr\\bin\\msys-gcrypt-20.dll",
+      "pe": {
+        "delay_import_directory_bytes": 0,
+        "delay_import_directory_rva": 0,
+        "direct_imports": [
+          "msys-gpg-error-0.dll",
+          "msys-2.0.dll",
+          "msys-gcc_s-seh-1.dll",
+          "KERNEL32.dll"
+        ],
+        "machine_hex": "0x8664",
+        "pe_magic": "0x20b",
+        "scope": "PE static direct-import names only, not loader/runtime/dynamic-load attestation"
+      },
+      "regular": true,
+      "reparse_tag": 0,
+      "sha256": "660e7e5441e6ddb9debb5db0f04b3e56c0cf7a6a22be14958a40b366e5f32e1c",
+      "symlink": false
+    },
+    "msys-gpg-error-0.dll": {
+      "attributes": 32,
+      "bytes": 156385,
+      "device": 7417695763057267443,
+      "file_id": 6755399441534741,
+      "nlink": 1,
+      "path": "C:\\Program Files\\Git\\usr\\bin\\msys-gpg-error-0.dll",
+      "pe": {
+        "delay_import_directory_bytes": 0,
+        "delay_import_directory_rva": 0,
+        "direct_imports": [
+          "msys-intl-8.dll",
+          "msys-2.0.dll",
+          "KERNEL32.dll"
+        ],
+        "machine_hex": "0x8664",
+        "pe_magic": "0x20b",
+        "scope": "PE static direct-import names only, not loader/runtime/dynamic-load attestation"
+      },
+      "regular": true,
+      "reparse_tag": 0,
+      "sha256": "a53ec385fd2133d39dd6074ee8262a6904d0c5f63ec30720e0d8acb1a75fd38c",
+      "symlink": false
+    },
+    "msys-iconv-2.dll": {
+      "attributes": 32,
+      "bytes": 1103690,
+      "device": 7417695763057267443,
+      "file_id": 7036874418245439,
+      "nlink": 1,
+      "path": "C:\\Program Files\\Git\\usr\\bin\\msys-iconv-2.dll",
+      "pe": {
+        "delay_import_directory_bytes": 0,
+        "delay_import_directory_rva": 0,
+        "direct_imports": [
+          "msys-2.0.dll",
+          "KERNEL32.dll"
+        ],
+        "machine_hex": "0x8664",
+        "pe_magic": "0x20b",
+        "scope": "PE static direct-import names only, not loader/runtime/dynamic-load attestation"
+      },
+      "regular": true,
+      "reparse_tag": 0,
+      "sha256": "50012969ed96a5232220185d2fc1ac1e3abe5790f6b3027f4fc3c4cad3fd38f0",
+      "symlink": false
+    },
+    "msys-intl-8.dll": {
+      "attributes": 32,
+      "bytes": 111181,
+      "device": 7417695763057267443,
+      "file_id": 8444249301798736,
+      "nlink": 1,
+      "path": "C:\\Program Files\\Git\\usr\\bin\\msys-intl-8.dll",
+      "pe": {
+        "delay_import_directory_bytes": 0,
+        "delay_import_directory_rva": 0,
+        "direct_imports": [
+          "msys-iconv-2.dll",
+          "msys-2.0.dll",
+          "KERNEL32.dll"
+        ],
+        "machine_hex": "0x8664",
+        "pe_magic": "0x20b",
+        "scope": "PE static direct-import names only, not loader/runtime/dynamic-load attestation"
+      },
+      "regular": true,
+      "reparse_tag": 0,
+      "sha256": "50f7de0c712d867ddca2c9eb8562ca6ee2d69e120e798ec6126ad29dd1ed5402",
+      "symlink": false
+    },
+    "msys-ncursesw6.dll": {
+      "attributes": 32,
+      "bytes": 353237,
+      "device": 7417695763057267443,
+      "file_id": 7881299348377480,
+      "nlink": 1,
+      "path": "C:\\Program Files\\Git\\usr\\bin\\msys-ncursesw6.dll",
+      "pe": {
+        "delay_import_directory_bytes": 0,
+        "delay_import_directory_rva": 0,
+        "direct_imports": [
+          "msys-2.0.dll",
+          "KERNEL32.dll"
+        ],
+        "machine_hex": "0x8664",
+        "pe_magic": "0x20b",
+        "scope": "PE static direct-import names only, not loader/runtime/dynamic-load attestation"
+      },
+      "regular": true,
+      "reparse_tag": 0,
+      "sha256": "aef26ffbcd20ee5781c3a5e81265390494090e13561a13336d000d9d5f9a84cb",
+      "symlink": false
+    },
+    "msys-npth-0.dll": {
+      "attributes": 32,
+      "bytes": 17194,
+      "device": 7417695763057267443,
+      "file_id": 2814749767585688,
+      "nlink": 1,
+      "path": "C:\\Program Files\\Git\\usr\\bin\\msys-npth-0.dll",
+      "pe": {
+        "delay_import_directory_bytes": 0,
+        "delay_import_directory_rva": 0,
+        "direct_imports": [
+          "msys-2.0.dll",
+          "KERNEL32.dll"
+        ],
+        "machine_hex": "0x8664",
+        "pe_magic": "0x20b",
+        "scope": "PE static direct-import names only, not loader/runtime/dynamic-load attestation"
+      },
+      "regular": true,
+      "reparse_tag": 0,
+      "sha256": "740e76727c26411d263788f175e4d12420a88079544bb690fd3a2f4d97f4845b",
+      "symlink": false
+    },
+    "msys-readline8.dll": {
+      "attributes": 32,
+      "bytes": 287391,
+      "device": 7417695763057267443,
+      "file_id": 2814749767585790,
+      "nlink": 1,
+      "path": "C:\\Program Files\\Git\\usr\\bin\\msys-readline8.dll",
+      "pe": {
+        "delay_import_directory_bytes": 0,
+        "delay_import_directory_rva": 0,
+        "direct_imports": [
+          "msys-2.0.dll",
+          "msys-ncursesw6.dll",
+          "KERNEL32.dll",
+          "USER32.dll"
+        ],
+        "machine_hex": "0x8664",
+        "pe_magic": "0x20b",
+        "scope": "PE static direct-import names only, not loader/runtime/dynamic-load attestation"
+      },
+      "regular": true,
+      "reparse_tag": 0,
+      "sha256": "15289513b1330e3431bec652e2bd57163f1196a4a25b179807af45e1330a8539",
+      "symlink": false
+    },
+    "msys-sqlite3-0.dll": {
+      "attributes": 32,
+      "bytes": 1573338,
+      "device": 7417695763057267443,
+      "file_id": 16607023626407959,
+      "nlink": 1,
+      "path": "C:\\Program Files\\Git\\usr\\bin\\msys-sqlite3-0.dll",
+      "pe": {
+        "delay_import_directory_bytes": 0,
+        "delay_import_directory_rva": 0,
+        "direct_imports": [
+          "msys-2.0.dll",
+          "KERNEL32.dll"
+        ],
+        "machine_hex": "0x8664",
+        "pe_magic": "0x20b",
+        "scope": "PE static direct-import names only, not loader/runtime/dynamic-load attestation"
+      },
+      "regular": true,
+      "reparse_tag": 0,
+      "sha256": "fad59b1dda3ccf29fbb57b3656b6fcd95feda095735e17445b41d95c2c0aaddb",
+      "symlink": false
+    },
+    "msys-z.dll": {
+      "attributes": 32,
+      "bytes": 91648,
+      "device": 7417695763057267443,
+      "file_id": 14355223812722889,
+      "nlink": 1,
+      "path": "C:\\Program Files\\Git\\usr\\bin\\msys-z.dll",
+      "pe": {
+        "delay_import_directory_bytes": 0,
+        "delay_import_directory_rva": 0,
+        "direct_imports": [
+          "msys-2.0.dll",
+          "KERNEL32.dll"
+        ],
+        "machine_hex": "0x8664",
+        "pe_magic": "0x20b",
+        "scope": "PE static direct-import names only, not loader/runtime/dynamic-load attestation"
+      },
+      "regular": true,
+      "reparse_tag": 0,
+      "sha256": "f548bb1632160282c3853415182d695c655d0eb7c12aa42a0538161898694b6f",
+      "symlink": false
+    }
+  },
+  "network_performed": false,
+  "package_version_claims_not_execution_or_authenticated_origin": [
+    "gnupg 2.4.9-3",
+    "libassuan 3.0.2-1",
+    "libgcrypt 1.12.2-1",
+    "libgpg-error 1.61-1",
+    "libksba 1.8.0-1",
+    "libnpth 1.8-1",
+    "msys2-runtime 3.6.10-1"
+  ],
+  "package_versions_reference": {
+    "attributes": 32,
+    "bytes": 4036,
+    "device": 7417695763057267443,
+    "file_id": 3940649674415395,
+    "nlink": 1,
+    "path": "C:\\Program Files\\Git\\etc\\package-versions.txt",
+    "regular": true,
+    "reparse_tag": 0,
+    "sha256": "29353ede8bcce3cd4390a698c22b43903f813e46961e100524eac84caf9dd3e6",
+    "symlink": false
+  },
+  "schema": "a2.offline-signature-tool-metadata.v1",
+  "system_or_unresolved_imports": [
+    {
+      "classification": "SYSTEM_OR_UNRESOLVED_NOT_LOADER_VERIFIED",
+      "dll": "KERNEL32.dll",
+      "importer": "gpg.exe"
+    },
+    {
+      "classification": "SYSTEM_OR_UNRESOLVED_NOT_LOADER_VERIFIED",
+      "dll": "KERNEL32.dll",
+      "importer": "gpgv.exe"
+    },
+    {
+      "classification": "SYSTEM_OR_UNRESOLVED_NOT_LOADER_VERIFIED",
+      "dll": "KERNEL32.dll",
+      "importer": "msys-assuan-9.dll"
+    },
+    {
+      "classification": "SYSTEM_OR_UNRESOLVED_NOT_LOADER_VERIFIED",
+      "dll": "KERNEL32.dll",
+      "importer": "msys-bz2-1.dll"
+    },
+    {
+      "classification": "SYSTEM_OR_UNRESOLVED_NOT_LOADER_VERIFIED",
+      "dll": "KERNEL32.dll",
+      "importer": "msys-gcrypt-20.dll"
+    },
+    {
+      "classification": "SYSTEM_OR_UNRESOLVED_NOT_LOADER_VERIFIED",
+      "dll": "KERNEL32.dll",
+      "importer": "msys-gpg-error-0.dll"
+    },
+    {
+      "classification": "SYSTEM_OR_UNRESOLVED_NOT_LOADER_VERIFIED",
+      "dll": "KERNEL32.dll",
+      "importer": "msys-2.0.dll"
+    },
+    {
+      "classification": "SYSTEM_OR_UNRESOLVED_NOT_LOADER_VERIFIED",
+      "dll": "ntdll.dll",
+      "importer": "msys-2.0.dll"
+    },
+    {
+      "classification": "SYSTEM_OR_UNRESOLVED_NOT_LOADER_VERIFIED",
+      "dll": "KERNEL32.dll",
+      "importer": "msys-npth-0.dll"
+    },
+    {
+      "classification": "SYSTEM_OR_UNRESOLVED_NOT_LOADER_VERIFIED",
+      "dll": "KERNEL32.dll",
+      "importer": "msys-readline8.dll"
+    },
+    {
+      "classification": "SYSTEM_OR_UNRESOLVED_NOT_LOADER_VERIFIED",
+      "dll": "USER32.dll",
+      "importer": "msys-readline8.dll"
+    },
+    {
+      "classification": "SYSTEM_OR_UNRESOLVED_NOT_LOADER_VERIFIED",
+      "dll": "KERNEL32.dll",
+      "importer": "msys-sqlite3-0.dll"
+    },
+    {
+      "classification": "SYSTEM_OR_UNRESOLVED_NOT_LOADER_VERIFIED",
+      "dll": "KERNEL32.dll",
+      "importer": "msys-z.dll"
+    },
+    {
+      "classification": "SYSTEM_OR_UNRESOLVED_NOT_LOADER_VERIFIED",
+      "dll": "KERNEL32.dll",
+      "importer": "msys-iconv-2.dll"
+    },
+    {
+      "classification": "SYSTEM_OR_UNRESOLVED_NOT_LOADER_VERIFIED",
+      "dll": "KERNEL32.dll",
+      "importer": "msys-intl-8.dll"
+    },
+    {
+      "classification": "SYSTEM_OR_UNRESOLVED_NOT_LOADER_VERIFIED",
+      "dll": "KERNEL32.dll",
+      "importer": "msys-gcc_s-seh-1.dll"
+    },
+    {
+      "classification": "SYSTEM_OR_UNRESOLVED_NOT_LOADER_VERIFIED",
+      "dll": "KERNEL32.dll",
+      "importer": "msys-ncursesw6.dll"
+    }
+  ],
+  "tool_origin_authenticated": false
+}

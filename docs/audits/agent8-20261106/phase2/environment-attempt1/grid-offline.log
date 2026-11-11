@@ -1,0 +1,21 @@
+
+=================================== ERRORS ====================================
+______________ ERROR collecting tests/test_wal_enqueue_order.py _______________
+ImportError while importing test module 'C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\work\grid-isolated\tests\test_wal_enqueue_order.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_wal_enqueue_order.py:4: in <module>
+    from grid.storage import Storage
+grid\storage.py:6: in <module>
+    from .config import settings
+grid\config.py:1: in <module>
+    from pydantic_settings import BaseSettings, SettingsConfigDict
+E   ModuleNotFoundError: No module named 'pydantic_settings'
+- generated xml file: C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\outputs\phase2\grid-offline.xml -
+=========================== short test summary info ===========================
+ERROR tests/test_wal_enqueue_order.py
+!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+1 error in 2.61s

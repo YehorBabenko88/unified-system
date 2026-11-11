@@ -1,0 +1,80 @@
+{
+  "head": "57e8f7524912b52ebbb639bd6d5d4fd5e2961622",
+  "tree": "220383699d607443ffe094ec3667de9951cc7359",
+  "manifest_sha256": "4f76d6af430ba36812048f14c49f7bdb95c6ed69bf98e7a3e12a01bf12598449",
+  "reference_hashes": {
+    "api-contracts.v1.json": true,
+    "ownership.v1.json": true,
+    "repository-audit.json": true,
+    "integration-matrix.v1.json": true,
+    "mandatory-gates.v1.json": true
+  },
+  "original_valid_ownership": "ACCEPTED",
+  "negative_probes": {
+    "UNIFIED_SYSTEM/LAN_TRANSPORT.PY": {
+      "status": "REJECTED",
+      "reason": "FILE_OWNERSHIP_COLLISION"
+    },
+    "unified_system/../unified_system/contracts.py": {
+      "status": "REJECTED",
+      "reason": "NONCANONICAL_REPOSITORY_PATH"
+    },
+    "unified_system\\contracts.py": {
+      "status": "REJECTED",
+      "reason": "NONCANONICAL_REPOSITORY_PATH"
+    },
+    "/unified_system/x.py": {
+      "status": "REJECTED",
+      "reason": "NONCANONICAL_REPOSITORY_PATH"
+    },
+    "C:/x.py": {
+      "status": "REJECTED",
+      "reason": "NONCANONICAL_REPOSITORY_PATH"
+    },
+    "unified_system//x.py": {
+      "status": "REJECTED",
+      "reason": "NONCANONICAL_REPOSITORY_PATH"
+    },
+    "./unified_system/x.py": {
+      "status": "REJECTED",
+      "reason": "NONCANONICAL_REPOSITORY_PATH"
+    },
+    "unified_system/x.py.": {
+      "status": "REJECTED",
+      "reason": "NONCANONICAL_REPOSITORY_PATH"
+    },
+    "unified_system/CON.py": {
+      "status": "REJECTED",
+      "reason": "NONCANONICAL_REPOSITORY_PATH"
+    },
+    "unified_system/x.py:stream": {
+      "status": "REJECTED",
+      "reason": "NONCANONICAL_REPOSITORY_PATH"
+    },
+    ".git/config": {
+      "status": "REJECTED",
+      "reason": "GIT_METADATA_RESERVED"
+    },
+    "unified_system/NUL.txt": {
+      "status": "REJECTED",
+      "reason": "NONCANONICAL_REPOSITORY_PATH"
+    },
+    "unified_system/a/../../unified_system/contracts.py": {
+      "status": "REJECTED",
+      "reason": "NONCANONICAL_REPOSITORY_PATH"
+    },
+    "unified_system/LaN_TrAnSpOrT.pY": {
+      "status": "REJECTED",
+      "reason": "FILE_OWNERSHIP_COLLISION"
+    },
+    "unified_system/x.py ": {
+      "status": "REJECTED",
+      "reason": "NONCANONICAL_REPOSITORY_PATH"
+    }
+  },
+  "F08": "FIX_VERIFIED_OFFLINE_EXACT_SOURCE",
+  "global_ownership_ack": "PENDING_METADATA_AND_OTHER_RULES",
+  "mandatory_gate_ack": "PENDING",
+  "runtime_admission": "BLOCKED",
+  "physical": "BLOCKED"
+}

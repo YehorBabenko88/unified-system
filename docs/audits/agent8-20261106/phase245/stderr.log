@@ -1,0 +1,129 @@
+test_unknown_poll_unassigned_child_still_direct_termination (owned_compile7_controls.TerminationControls.test_unknown_poll_unassigned_child_still_direct_termination) ... FAIL
+test_poll_and_kill_failure_still_reaches_actual_independent_wait (owned_compile7_controls.TerminationControls.test_poll_and_kill_failure_still_reaches_actual_independent_wait) ... FAIL
+test_retired_child_control_avoids_direct_termination (owned_compile7_controls.TerminationControls.test_retired_child_control_avoids_direct_termination) ... ok
+test_expected_only_control_is_diagnostic_not_runtime_pass (owned_compile7_controls.CompilerPolicyControls.test_expected_only_control_is_diagnostic_not_runtime_pass) ... ok
+test_expected_plus_unrelated_error_is_unknown (owned_compile7_controls.CompilerPolicyControls.test_expected_plus_unrelated_error_is_unknown) ... FAIL
+test_unknown_symbol_and_warning_are_denied (owned_compile7_controls.CompilerPolicyControls.test_unknown_symbol_and_warning_are_denied) ... 
+  test_unknown_symbol_and_warning_are_denied (owned_compile7_controls.CompilerPolicyControls.test_unknown_symbol_and_warning_are_denied) (extra=b'S03.cs(2,1): error CS0246: type ') ... FAIL
+  test_unknown_symbol_and_warning_are_denied (owned_compile7_controls.CompilerPolicyControls.test_unknown_symbol_and_warning_are_denied) (extra=b'S03.cs(2,1): warning CS0168: unu') ... FAIL
+test_native_startup_cannot_be_missing_type_result (owned_compile7_controls.CompilerPolicyControls.test_native_startup_cannot_be_missing_type_result) ... ok
+test_actual_reader_failure_never_claims_complete_logs (owned_compile7_controls.LogCompletenessControls.test_actual_reader_failure_never_claims_complete_logs) ... FAIL
+test_actual_reader_close_failure_never_claims_complete_logs (owned_compile7_controls.LogCompletenessControls.test_actual_reader_close_failure_never_claims_complete_logs) ... FAIL
+test_missing_eof_retirement_or_log_write_never_complete (owned_compile7_controls.LogCompletenessControls.test_missing_eof_retirement_or_log_write_never_complete) ... 
+  test_missing_eof_retirement_or_log_write_never_complete (owned_compile7_controls.LogCompletenessControls.test_missing_eof_retirement_or_log_write_never_complete) (field='eof') ... FAIL
+  test_missing_eof_retirement_or_log_write_never_complete (owned_compile7_controls.LogCompletenessControls.test_missing_eof_retirement_or_log_write_never_complete) (field='retired') ... FAIL
+  test_missing_eof_retirement_or_log_write_never_complete (owned_compile7_controls.LogCompletenessControls.test_missing_eof_retirement_or_log_write_never_complete) (field='log_written') ... FAIL
+test_missing_evidence_member_never_complete (owned_compile7_controls.LogCompletenessControls.test_missing_evidence_member_never_complete) ... FAIL
+
+======================================================================
+FAIL: test_unknown_poll_unassigned_child_still_direct_termination (owned_compile7_controls.TerminationControls.test_unknown_poll_unassigned_child_still_direct_termination)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-7-distributed-research-math\outputs\math572-compile7-modeled11-source-20261111\controls-541991.py", line 72, in test_unknown_poll_unassigned_child_still_direct_termination
+    definition('terminate_owned',ns)();self.assertEqual(win.kills,1);self.assertIn('PROCESS_POLL_FAILURE',ns['record']['errors'])
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_poll_and_kill_failure_still_reaches_actual_independent_wait (owned_compile7_controls.TerminationControls.test_poll_and_kill_failure_still_reaches_actual_independent_wait)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-7-distributed-research-math\outputs\math572-compile7-modeled11-source-20261111\controls-541991.py", line 80, in test_poll_and_kill_failure_still_reaches_actual_independent_wait
+    self.assertEqual(win.kills,1);self.assertEqual(win.waits,3);self.assertTrue(ns['record']['child']['retired']);self.assertIn('PROCESS_TERMINATE_FAILURE',ns['record']['errors'])
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_expected_plus_unrelated_error_is_unknown (owned_compile7_controls.CompilerPolicyControls.test_expected_plus_unrelated_error_is_unknown)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-7-distributed-research-math\outputs\math572-compile7-modeled11-source-20261111\controls-541991.py", line 88, in test_expected_plus_unrelated_error_is_unknown
+    result=policy(namespace(GOOD+b"error CS0006: unrelated missing reference\n"));self.assertEqual(result['result'],'DENY');self.assertEqual(result['startup_class'],'UNKNOWN_MIXED_OR_UNADMITTED_COMPILER_OUTPUT')
+                                                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'EXPECTED_COMPILE_DIAGNOSTIC_OBSERVED_NOT_RUNTIME_PASS' != 'DENY'
+- EXPECTED_COMPILE_DIAGNOSTIC_OBSERVED_NOT_RUNTIME_PASS
++ DENY
+
+
+======================================================================
+FAIL: test_unknown_symbol_and_warning_are_denied (owned_compile7_controls.CompilerPolicyControls.test_unknown_symbol_and_warning_are_denied) (extra=b'S03.cs(2,1): error CS0246: type ')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-7-distributed-research-math\outputs\math572-compile7-modeled11-source-20261111\controls-541991.py", line 91, in test_unknown_symbol_and_warning_are_denied
+    with self.subTest(extra=extra[:32]):self.assertEqual(policy(namespace(GOOD+extra))['result'],'DENY')
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'EXPECTED_COMPILE_DIAGNOSTIC_OBSERVED_NOT_RUNTIME_PASS' != 'DENY'
+- EXPECTED_COMPILE_DIAGNOSTIC_OBSERVED_NOT_RUNTIME_PASS
++ DENY
+
+
+======================================================================
+FAIL: test_unknown_symbol_and_warning_are_denied (owned_compile7_controls.CompilerPolicyControls.test_unknown_symbol_and_warning_are_denied) (extra=b'S03.cs(2,1): warning CS0168: unu')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-7-distributed-research-math\outputs\math572-compile7-modeled11-source-20261111\controls-541991.py", line 91, in test_unknown_symbol_and_warning_are_denied
+    with self.subTest(extra=extra[:32]):self.assertEqual(policy(namespace(GOOD+extra))['result'],'DENY')
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'EXPECTED_COMPILE_DIAGNOSTIC_OBSERVED_NOT_RUNTIME_PASS' != 'DENY'
+- EXPECTED_COMPILE_DIAGNOSTIC_OBSERVED_NOT_RUNTIME_PASS
++ DENY
+
+
+======================================================================
+FAIL: test_actual_reader_failure_never_claims_complete_logs (owned_compile7_controls.LogCompletenessControls.test_actual_reader_failure_never_claims_complete_logs)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-7-distributed-research-math\outputs\math572-compile7-modeled11-source-20261111\controls-541991.py", line 103, in test_actual_reader_failure_never_claims_complete_logs
+    result=policy(ns);self.assertFalse(result['original_logs_complete']);self.assertEqual(result['result'],'DENY');self.assertTrue(ns['reader_state']['stdout']['read_failed'])
+                                                                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_actual_reader_close_failure_never_claims_complete_logs (owned_compile7_controls.LogCompletenessControls.test_actual_reader_close_failure_never_claims_complete_logs)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-7-distributed-research-math\outputs\math572-compile7-modeled11-source-20261111\controls-541991.py", line 105, in test_actual_reader_close_failure_never_claims_complete_logs
+    ns=self.run_actual_reader(Pipe([GOOD,b''],True));result=policy(ns);self.assertFalse(result['original_logs_complete']);self.assertEqual(result['result'],'DENY');self.assertTrue(ns['reader_state']['stdout']['close_failed'])
+                                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_missing_eof_retirement_or_log_write_never_complete (owned_compile7_controls.LogCompletenessControls.test_missing_eof_retirement_or_log_write_never_complete) (field='eof')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-7-distributed-research-math\outputs\math572-compile7-modeled11-source-20261111\controls-541991.py", line 109, in test_missing_eof_retirement_or_log_write_never_complete
+    ns=namespace();ns['reader_state']['stdout'][field]=False;result=policy(ns);self.assertFalse(result['original_logs_complete']);self.assertEqual(result['result'],'DENY')
+                                                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_missing_eof_retirement_or_log_write_never_complete (owned_compile7_controls.LogCompletenessControls.test_missing_eof_retirement_or_log_write_never_complete) (field='retired')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-7-distributed-research-math\outputs\math572-compile7-modeled11-source-20261111\controls-541991.py", line 109, in test_missing_eof_retirement_or_log_write_never_complete
+    ns=namespace();ns['reader_state']['stdout'][field]=False;result=policy(ns);self.assertFalse(result['original_logs_complete']);self.assertEqual(result['result'],'DENY')
+                                                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_missing_eof_retirement_or_log_write_never_complete (owned_compile7_controls.LogCompletenessControls.test_missing_eof_retirement_or_log_write_never_complete) (field='log_written')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-7-distributed-research-math\outputs\math572-compile7-modeled11-source-20261111\controls-541991.py", line 109, in test_missing_eof_retirement_or_log_write_never_complete
+    ns=namespace();ns['reader_state']['stdout'][field]=False;result=policy(ns);self.assertFalse(result['original_logs_complete']);self.assertEqual(result['result'],'DENY')
+                                                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_missing_evidence_member_never_complete (owned_compile7_controls.LogCompletenessControls.test_missing_evidence_member_never_complete)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-7-distributed-research-math\outputs\math572-compile7-modeled11-source-20261111\controls-541991.py", line 111, in test_missing_evidence_member_never_complete
+    ns=namespace();ns['record']['logs'].pop('stderr');result=policy(ns);self.assertFalse(result['original_logs_complete']);self.assertEqual(result['result'],'DENY')
+                                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: True is not false
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.076s
+
+FAILED (failures=11)

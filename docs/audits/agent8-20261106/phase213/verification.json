@@ -1,0 +1,43 @@
+{
+  "source_sha256": {
+    "qualify.py": "eaf1652c815095f18daa4310661a85913bedaeda5277dfe15c8a1e767a5849a8",
+    "README.md": "a2c69f7d32eaf7ebe43c269cfddd11eddb0264479e855d2dea0f3f783e009613",
+    "test_qualifier_controls.py": "f3e8f14f4f4d5e5051795514861722ec790e9c3d8ef9c50d1948a1372b556376",
+    "expected47.json": "0a24d40c42b35b713a39f54c39c62c4e8b902ac70c9a3802770b2e6ae29451d1",
+    "requirements.lock": "389c729ab525863c70bd3accc21b9fc73b431b89fa52fb035be444e6a853eeeb",
+    "projection-recovery-47.yml": "e4498ae780f6f5bd8c833203e5f72bcd683f9a11dc8af271f0d1203e5379e29d"
+  },
+  "changed_files_vs_preserved_RED": [
+    "qualify.py",
+    "README.md"
+  ],
+  "test_ids": [
+    "RootFirstControls.test_reparse_parent_stops_before_descendant_or_git",
+    "RootFirstControls.test_file_parent_stops_before_descendant_or_git",
+    "RootFirstControls.test_missing_parent_stops_before_descendant_or_git",
+    "RootFirstControls.test_file_root_stops_before_leaf_git_or_hash",
+    "RootFirstControls.test_selected_reparse_parent_stops_before_leaf_inspection",
+    "RootFirstControls.test_ordinary_tree_retains_exact_blob_and_ledger",
+    "ReturnedHandleControls.test_returned_handle_registered_before_invariant_refusal",
+    "ReturnedHandleControls.test_invariant_refusal_cleanup_kills_and_waits_known_handle",
+    "ReturnedHandleControls.test_preconstructor_refusal_creates_no_handle",
+    "JunitAdmissionControls.test_reparse_xml_parent_refuses_before_parser_read_hash",
+    "JunitAdmissionControls.test_file_xml_parent_refuses_before_parser_read_hash",
+    "JunitAdmissionControls.test_oversized_xml_refuses_before_parser_read_hash",
+    "JunitAdmissionControls.test_ordinary_bounded_xml_preserves_exact_47_facts_control",
+    "ChildPathAdmissionControls.test_temp_junction_refuses_before_backend",
+    "ChildPathAdmissionControls.test_db_parent_junction_refuses_before_backend",
+    "ChildPathAdmissionControls.test_db_parent_file_refuses_before_backend",
+    "ChildPathAdmissionControls.test_db_reparse_leaf_refuses_before_backend",
+    "ChildPathAdmissionControls.test_marker_reparse_leaf_refuses_before_backend",
+    "ChildPathAdmissionControls.test_ordinary_db_absent_marker_reaches_backend_control",
+    "ChildPathAdmissionControls.test_ordinary_db_existing_marker_reaches_backend_control"
+  ],
+  "F48_source": "CORRECTED_POINT_IN_TIME_ORDINARY_AND_BOUNDED_SAME_BUFFER_PARSE_HASH",
+  "F49_source": "CORRECTED_PATH_GATE_BEFORE_INTENT_AND_BACKEND",
+  "actual_corrected20": "NOT_RUN_BY_A8_NO_GREEN_EVIDENCE_REVIEWED",
+  "finding_closure": "PENDING_SEPARATE_ACTUAL20; NO_HOSTILE_NAMESPACE_GUARANTEE",
+  "scope": "SOURCE_ONLY_NO_PROJECT_AST_COMPILE_OR_EXECUTION",
+  "GO_NO_GO": "NO-GO",
+  "HOSTED47": "HOLD"
+}

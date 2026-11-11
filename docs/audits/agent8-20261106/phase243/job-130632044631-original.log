@@ -1,0 +1,263 @@
+﻿2026-11-11T15:49:39.1736703Z Current runner version: '2.338.2'
+2026-11-11T15:49:39.1764028Z ##[group]Runner Image Provisioner
+2026-11-11T15:49:39.1764812Z Hosted Compute Agent
+2026-11-11T15:49:39.1765383Z Version: 20261103.629
+2026-11-11T15:49:39.1766006Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+2026-11-11T15:49:39.1766708Z Build Date: 2026-11-03T17:26:59Z
+2026-11-11T15:49:39.1767331Z Worker ID: {c667ec92-fef6-4514-bc33-612a020cfbf1}
+2026-11-11T15:49:39.1767987Z Region: westcentralus
+2026-11-11T15:49:39.1768508Z Cloud: Azure
+2026-11-11T15:49:39.1768983Z ##[endgroup]
+2026-11-11T15:49:39.1770280Z ##[group]Operating System
+2026-11-11T15:49:39.1770910Z Microsoft Windows Server 2025
+2026-11-11T15:49:39.1771466Z 10.0.26100
+2026-11-11T15:49:39.1771926Z Datacenter
+2026-11-11T15:49:39.1772968Z ##[endgroup]
+2026-11-11T15:49:39.1773486Z ##[group]Runner Image
+2026-11-11T15:49:39.1774082Z Image: windows-2025-vs2026
+2026-11-11T15:49:39.1774663Z Version: 20261103.298.1
+2026-11-11T15:49:39.1776143Z Included Software: https://github.com/actions/runner-images/blob/win25-vs2026/20261103.298/images/windows/Windows2025-VS2026-Readme.md
+2026-11-11T15:49:39.1777753Z Image Release: https://github.com/actions/runner-images/releases/tag/win25-vs2026%2F20261103.298
+2026-11-11T15:49:39.1778689Z ##[endgroup]
+2026-11-11T15:49:39.1779698Z ##[group]GITHUB_TOKEN Permissions
+2026-11-11T15:49:39.1781636Z Contents: read
+2026-11-11T15:49:39.1782173Z Metadata: read
+2026-11-11T15:49:39.1782694Z ##[endgroup]
+2026-11-11T15:49:39.1784812Z Secret source: Actions
+2026-11-11T15:49:39.1785737Z Cache mode: write
+2026-11-11T15:49:39.1786441Z Prepare workflow directory
+2026-11-11T15:49:39.2417991Z Prepare all required actions
+2026-11-11T15:49:39.2470596Z Getting action download info
+2026-11-11T15:49:39.5183609Z Download action repository 'actions/checkout@11d5960a326750d5838078e36cf38b85af677262' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-11-11T15:49:39.6557006Z Download action repository 'actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+2026-11-11T15:49:39.8087923Z Download action repository 'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-11-11T15:49:40.1820859Z Complete job name: synthetic (windows-latest)
+2026-11-11T15:49:40.3410297Z ##[group]Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+2026-11-11T15:49:40.3411586Z with:
+2026-11-11T15:49:40.3412078Z   ref: d6b72b66ff1b85b7e6b956568342ad6bd8bfcfbe
+2026-11-11T15:49:40.3412715Z   persist-credentials: false
+2026-11-11T15:49:40.3413308Z   repository: YehorBabenko88/bybit-cluster-grid
+2026-11-11T15:49:40.3418258Z   token: ***
+2026-11-11T15:49:40.3418726Z   ssh-strict: true
+2026-11-11T15:49:40.3419181Z   ssh-user: git
+2026-11-11T15:49:40.3419605Z   clean: true
+2026-11-11T15:49:40.3420058Z   sparse-checkout-cone-mode: true
+2026-11-11T15:49:40.3420591Z   fetch-depth: 1
+2026-11-11T15:49:40.3421023Z   fetch-tags: false
+2026-11-11T15:49:40.3421510Z   show-progress: true
+2026-11-11T15:49:40.3421968Z   lfs: false
+2026-11-11T15:49:40.3422401Z   submodules: false
+2026-11-11T15:49:40.3422845Z   set-safe-directory: true
+2026-11-11T15:49:40.3423352Z   allow-unsafe-pr-checkout: false
+2026-11-11T15:49:40.3424137Z env:
+2026-11-11T15:49:40.3424758Z   EXPECTED_SOURCE_SHA: d6b72b66ff1b85b7e6b956568342ad6bd8bfcfbe
+2026-11-11T15:49:40.3425449Z ##[endgroup]
+2026-11-11T15:49:40.4914484Z Syncing repository: YehorBabenko88/bybit-cluster-grid
+2026-11-11T15:49:40.4916567Z ##[group]Getting Git version info
+2026-11-11T15:49:40.4917396Z Working directory is 'D:\a\bybit-cluster-grid\bybit-cluster-grid'
+2026-11-11T15:49:40.5971969Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-11T15:49:41.0084300Z git version 2.56.0.windows.4
+2026-11-11T15:49:41.0135627Z ##[endgroup]
+2026-11-11T15:49:41.0156302Z Temporarily overriding HOME='D:\a\_temp\b2acd77a-a93b-4ce5-af2d-e04d072bcf77' before making global git config changes
+2026-11-11T15:49:41.0158495Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-11T15:49:41.0167636Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\bybit-cluster-grid\bybit-cluster-grid
+2026-11-11T15:49:41.0949472Z Deleting the contents of 'D:\a\bybit-cluster-grid\bybit-cluster-grid'
+2026-11-11T15:49:41.0956693Z ##[group]Initializing the repository
+2026-11-11T15:49:41.0969875Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\bybit-cluster-grid\bybit-cluster-grid
+2026-11-11T15:49:41.1901032Z Initialized empty Git repository in D:/a/bybit-cluster-grid/bybit-cluster-grid/.git/
+2026-11-11T15:49:41.1953515Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/YehorBabenko88/bybit-cluster-grid
+2026-11-11T15:49:41.2789573Z ##[endgroup]
+2026-11-11T15:49:41.2791348Z ##[group]Disabling automatic garbage collection
+2026-11-11T15:49:41.2798817Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2026-11-11T15:49:41.3200228Z ##[endgroup]
+2026-11-11T15:49:41.3202022Z ##[group]Setting up auth
+2026-11-11T15:49:41.3212971Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-11T15:49:41.3626742Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-11T15:49:43.0719451Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-11T15:49:43.1110163Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-11T15:49:43.6878937Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-11T15:49:43.7323528Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-11T15:49:44.2984115Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-11-11T15:49:44.3390152Z ##[endgroup]
+2026-11-11T15:49:44.3391166Z ##[group]Fetching the repository
+2026-11-11T15:49:44.3403296Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin d6b72b66ff1b85b7e6b956568342ad6bd8bfcfbe
+2026-11-11T15:49:45.8096522Z From https://github.com/YehorBabenko88/bybit-cluster-grid
+2026-11-11T15:49:45.8097706Z  * branch            d6b72b66ff1b85b7e6b956568342ad6bd8bfcfbe -> FETCH_HEAD
+2026-11-11T15:49:45.8142990Z ##[endgroup]
+2026-11-11T15:49:45.8143646Z ##[group]Determining the checkout info
+2026-11-11T15:49:45.8146407Z ##[endgroup]
+2026-11-11T15:49:45.8157196Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2026-11-11T15:49:45.8832576Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2026-11-11T15:49:45.9162214Z ##[group]Checking out the ref
+2026-11-11T15:49:45.9171151Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force d6b72b66ff1b85b7e6b956568342ad6bd8bfcfbe
+2026-11-11T15:49:46.1883295Z Note: switching to 'd6b72b66ff1b85b7e6b956568342ad6bd8bfcfbe'.
+2026-11-11T15:49:46.1883674Z 
+2026-11-11T15:49:46.1884208Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-11-11T15:49:46.1884948Z changes and commit them, and you can discard any commits you make in this
+2026-11-11T15:49:46.1886299Z state without impacting any branches by switching back to a branch.
+2026-11-11T15:49:46.1887248Z 
+2026-11-11T15:49:46.1887544Z If you want to create a new branch to retain commits you create, you may
+2026-11-11T15:49:46.1888057Z do so (now or later) by using -c with the switch command. Example:
+2026-11-11T15:49:46.1889650Z 
+2026-11-11T15:49:46.1889776Z   git switch -c <new-branch-name>
+2026-11-11T15:49:46.1889956Z 
+2026-11-11T15:49:46.1890063Z Or undo this operation with:
+2026-11-11T15:49:46.1890251Z 
+2026-11-11T15:49:46.1890357Z   git switch -
+2026-11-11T15:49:46.1890486Z 
+2026-11-11T15:49:46.1890694Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-11-11T15:49:46.1891009Z 
+2026-11-11T15:49:46.1891279Z HEAD is now at d6b72b6 feat(agent3): add pure data-only Bybit request planner source
+2026-11-11T15:49:46.2076470Z ##[endgroup]
+2026-11-11T15:49:46.2620828Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2026-11-11T15:49:46.2978880Z d6b72b66ff1b85b7e6b956568342ad6bd8bfcfbe
+2026-11-11T15:49:46.3026810Z ##[group]Removing auth
+2026-11-11T15:49:46.3035191Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-11T15:49:46.3427811Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-11T15:49:46.9184534Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-11T15:49:46.9527874Z http.https://github.com/.extraheader
+2026-11-11T15:49:46.9576642Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+2026-11-11T15:49:47.0181273Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-11T15:49:47.6047688Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-11T15:49:47.6481420Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-11T15:49:48.2409093Z ##[endgroup]
+2026-11-11T15:49:48.2851347Z ##[group]Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+2026-11-11T15:49:48.2851792Z with:
+2026-11-11T15:49:48.2851982Z   python-version: 3.12
+2026-11-11T15:49:48.2852194Z   check-latest: false
+2026-11-11T15:49:48.2854937Z   token: ***
+2026-11-11T15:49:48.2855137Z   update-environment: true
+2026-11-11T15:49:48.2855359Z   allow-prereleases: false
+2026-11-11T15:49:48.2855568Z   freethreaded: false
+2026-11-11T15:49:48.2855749Z env:
+2026-11-11T15:49:48.2855992Z   EXPECTED_SOURCE_SHA: d6b72b66ff1b85b7e6b956568342ad6bd8bfcfbe
+2026-11-11T15:49:48.2856774Z ##[endgroup]
+2026-11-11T15:49:48.4672531Z ##[group]Installed versions
+2026-11-11T15:49:48.4911923Z (node:1100) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-11T15:49:48.4913540Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-11T15:49:48.4914322Z Successfully set up CPython (3.12.10)
+2026-11-11T15:49:48.4915166Z ##[endgroup]
+2026-11-11T15:49:48.5220854Z ##[group]Run python scripts/history_ci.py tests 'test_history*.py'
+2026-11-11T15:49:48.5221442Z [36;1mpython scripts/history_ci.py tests 'test_history*.py'[0m
+2026-11-11T15:49:48.5910280Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-11T15:49:48.5910687Z env:
+2026-11-11T15:49:48.5910981Z   EXPECTED_SOURCE_SHA: d6b72b66ff1b85b7e6b956568342ad6bd8bfcfbe
+2026-11-11T15:49:48.5911453Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-11T15:49:48.5911976Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-11-11T15:49:48.5912499Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-11T15:49:48.5912947Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-11T15:49:48.5913691Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-11T15:49:48.5914044Z ##[endgroup]
+2026-11-11T15:49:52.0215211Z test_fail_closed (test_history_export.ExportTest.test_fail_closed) ... ok
+2026-11-11T15:49:52.0215927Z 
+2026-11-11T15:49:52.0216360Z test_readonly_sql (test_history_export.ExportTest.test_readonly_sql) ... ok
+2026-11-11T15:49:52.0217040Z 
+2026-11-11T15:49:52.0217589Z test_valid_and_reproducible (test_history_export.ExportTest.test_valid_and_reproducible) ... ok
+2026-11-11T15:49:52.0218389Z 
+2026-11-11T15:49:52.0218957Z test_no_missing_or_boolean_clock_or_changed_receipt (test_history_export_v11.TimedExport.test_no_missing_or_boolean_clock_or_changed_receipt) ... ok
+2026-11-11T15:49:52.0219640Z 
+2026-11-11T15:49:52.0220202Z test_preserves_clock_and_stable_content_identity (test_history_export_v11.TimedExport.test_preserves_clock_and_stable_content_identity) ... ok
+2026-11-11T15:49:52.0220869Z 
+2026-11-11T15:49:52.0221494Z test_source_failure_is_normalized_and_no_result_returned (test_history_export_v11.TimedExport.test_source_failure_is_normalized_and_no_result_returned) ... ok
+2026-11-11T15:49:52.0222235Z 
+2026-11-11T15:49:52.0222792Z test_watermark_cannot_postdate_first_availability (test_history_export_v11.TimedExport.test_watermark_cannot_postdate_first_availability) ... ok
+2026-11-11T15:49:52.0223680Z 
+2026-11-11T15:49:52.0224269Z test_export_and_readonly (test_history_postgres.DisposablePostgres.test_export_and_readonly) ... skipped 'disposable PostgreSQL not configured'
+2026-11-11T15:49:52.0224928Z 
+2026-11-11T15:49:52.0225611Z test_duplicate_missing_and_wrong_revision_never_select_another_snapshot (test_history_snapshot.SnapshotSelection.test_duplicate_missing_and_wrong_revision_never_select_another_snapshot) ... ok
+2026-11-11T15:49:52.0226399Z 
+2026-11-11T15:49:52.0226893Z test_exact_snapshot_identity_and_revision_filter (test_history_snapshot.SnapshotSelection.test_exact_snapshot_identity_and_revision_filter) ... ok
+2026-11-11T15:49:52.0227521Z 
+2026-11-11T15:49:52.0228180Z test_wrong_market_range_snapshot_and_mutated_catalog_fail_before_sql (test_history_snapshot.SnapshotSelection.test_wrong_market_range_snapshot_and_mutated_catalog_fail_before_sql) ... ok
+2026-11-11T15:49:52.0228935Z 
+2026-11-11T15:49:52.0228940Z 
+2026-11-11T15:49:52.0228945Z 
+2026-11-11T15:49:52.0229091Z ----------------------------------------------------------------------
+2026-11-11T15:49:52.0229377Z 
+2026-11-11T15:49:52.0229461Z Ran 11 tests in 0.184s
+2026-11-11T15:49:52.0229591Z 
+2026-11-11T15:49:52.0229596Z 
+2026-11-11T15:49:52.0229600Z 
+2026-11-11T15:49:52.0229680Z OK (skipped=1)
+2026-11-11T15:49:52.0229788Z 
+2026-11-11T15:49:52.0229792Z 
+2026-11-11T15:49:52.0230523Z {"head": "d6b72b66ff1b85b7e6b956568342ad6bd8bfcfbe", "tree": "066bbe51900e88dd53541baf29a777037ed10b5b", "test_exit_code": 0, "receipt_sha256": "3d0692cea6eef90c5a49da39ba8b6bbf5196b5b2b7a9697e228e6242cbd22332"}
+2026-11-11T15:49:52.1884556Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+2026-11-11T15:49:52.1885029Z with:
+2026-11-11T15:49:52.1885307Z   name: history-Windows-d6b72b66ff1b85b7e6b956568342ad6bd8bfcfbe
+2026-11-11T15:49:52.1885763Z   path: .history-evidence/*.json
+.history-evidence/SHA256SUMS
+
+2026-11-11T15:49:52.1886095Z   include-hidden-files: true
+2026-11-11T15:49:52.1886313Z   if-no-files-found: error
+2026-11-11T15:49:52.1886520Z   compression-level: 6
+2026-11-11T15:49:52.1886714Z   overwrite: false
+2026-11-11T15:49:52.1886882Z env:
+2026-11-11T15:49:52.1887120Z   EXPECTED_SOURCE_SHA: d6b72b66ff1b85b7e6b956568342ad6bd8bfcfbe
+2026-11-11T15:49:52.1887514Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-11T15:49:52.1887969Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-11-11T15:49:52.1888433Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-11T15:49:52.1888866Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-11T15:49:52.1889278Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-11T15:49:52.1889790Z ##[endgroup]
+2026-11-11T15:49:52.3783495Z (node:2776) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-11T15:49:52.3785181Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-11T15:49:52.3857283Z With the provided path, there will be 2 files uploaded
+2026-11-11T15:49:52.3862925Z Artifact name is valid!
+2026-11-11T15:49:52.3865210Z Root directory input is valid!
+2026-11-11T15:49:52.6907422Z Beginning upload of artifact content to blob storage
+2026-11-11T15:49:52.7204880Z (node:2776) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-11-11T15:49:52.9847030Z Uploaded bytes 70767
+2026-11-11T15:49:53.0392291Z Finished uploading artifact content to blob storage!
+2026-11-11T15:49:53.0393614Z SHA256 digest of uploaded artifact zip is dd8199db14a3660a2405fc3a5a66f8333214dee4941b27fa23965e0a056f166a
+2026-11-11T15:49:53.0396010Z Finalizing artifact upload
+2026-11-11T15:49:53.4195903Z Artifact history-Windows-d6b72b66ff1b85b7e6b956568342ad6bd8bfcfbe.zip successfully finalized. Artifact ID 13869881256
+2026-11-11T15:49:53.4197916Z Artifact history-Windows-d6b72b66ff1b85b7e6b956568342ad6bd8bfcfbe has been successfully uploaded! Final size is 70767 bytes. Artifact ID is 13869881256
+2026-11-11T15:49:53.4211508Z Artifact download URL: https://github.com/YehorBabenko88/bybit-cluster-grid/actions/runs/43052196664/artifacts/13869881256
+2026-11-11T15:49:53.4548637Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+2026-11-11T15:49:53.4567023Z with:
+2026-11-11T15:49:53.4567564Z   name: history-log-Windows-d6b72b66ff1b85b7e6b956568342ad6bd8bfcfbe
+2026-11-11T15:49:53.4568225Z   path: .history-evidence/tests.log
+2026-11-11T15:49:53.4568633Z   include-hidden-files: true
+2026-11-11T15:49:53.4568911Z   if-no-files-found: error
+2026-11-11T15:49:53.4569134Z   compression-level: 6
+2026-11-11T15:49:53.4569347Z   overwrite: false
+2026-11-11T15:49:53.4569528Z env:
+2026-11-11T15:49:53.4569788Z   EXPECTED_SOURCE_SHA: d6b72b66ff1b85b7e6b956568342ad6bd8bfcfbe
+2026-11-11T15:49:53.4570208Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-11T15:49:53.4570663Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-11-11T15:49:53.4571109Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-11T15:49:53.4571545Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-11T15:49:53.4571955Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-11T15:49:53.4572266Z ##[endgroup]
+2026-11-11T15:49:53.6511244Z (node:5764) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-11T15:49:53.6512583Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-11T15:49:53.6566805Z With the provided path, there will be 1 file uploaded
+2026-11-11T15:49:53.6572260Z Artifact name is valid!
+2026-11-11T15:49:53.6574484Z Root directory input is valid!
+2026-11-11T15:49:53.9606614Z Beginning upload of artifact content to blob storage
+2026-11-11T15:49:53.9813585Z (node:5764) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-11-11T15:49:54.1624345Z Uploaded bytes 593
+2026-11-11T15:49:54.2169293Z Finished uploading artifact content to blob storage!
+2026-11-11T15:49:54.2170312Z SHA256 digest of uploaded artifact zip is 01392930627bda28779566572d33cff529096e69194ffa2cf042ac163e3e82e1
+2026-11-11T15:49:54.2172984Z Finalizing artifact upload
+2026-11-11T15:49:54.5914656Z Artifact history-log-Windows-d6b72b66ff1b85b7e6b956568342ad6bd8bfcfbe.zip successfully finalized. Artifact ID 13870335957
+2026-11-11T15:49:54.5917576Z Artifact history-log-Windows-d6b72b66ff1b85b7e6b956568342ad6bd8bfcfbe has been successfully uploaded! Final size is 593 bytes. Artifact ID is 13870335957
+2026-11-11T15:49:54.5925579Z Artifact download URL: https://github.com/YehorBabenko88/bybit-cluster-grid/actions/runs/43052196664/artifacts/13870335957
+2026-11-11T15:49:54.6279009Z Post job cleanup.
+2026-11-11T15:49:54.7746753Z (node:6732) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-11T15:49:54.7747622Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-11T15:49:54.8099362Z Post job cleanup.
+2026-11-11T15:49:55.0285908Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-11T15:49:55.0655116Z git version 2.56.0.windows.4
+2026-11-11T15:49:55.0745192Z Temporarily overriding HOME='D:\a\_temp\addcfe0e-6204-4977-a631-47fff2377ade' before making global git config changes
+2026-11-11T15:49:55.0746529Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-11T15:49:55.0758063Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\bybit-cluster-grid\bybit-cluster-grid
+2026-11-11T15:49:55.1165770Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-11T15:49:55.1561946Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-11T15:49:55.7358875Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-11T15:49:55.7754590Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-11T15:49:56.3731998Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-11T15:49:56.4139376Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-11T15:49:57.0002167Z Cleaning up orphan processes
+2026-11-11T15:49:57.0103925Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@11d5960a326750d5838078e36cf38b85af677262, actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065, actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

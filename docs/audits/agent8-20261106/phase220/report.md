@@ -1,0 +1,13 @@
+# A7 mandatory20 wiring: held cleanup source defect
+
+| Requirement ID | Repository | PR | Exact HEAD | Test name | Environment | Expected | Actual | Evidence | Status | Severity | Required correction |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| A8-F50 | strattester A7 hosted47 tooling | Untracked/unpublished | Targetde662 is not tool commit; qualifier94277c28a9b25f048b4a0acf26d343d1c08e45ccd940437d0e5bf894126d5d62 | controls(args) finally poll failure path | A8 static AST/source only | Known returned child handle gets best-effort kill+wait even if poll fails | First finally child.poll exception jumps to handler only recording uncertainty/errors; child.kill/wait not attempted | [verification](verification.json),[source](qualify.py),original wiring diff | FAIL source | P2 OPEN | Retain sticky failure/UNKNOWN; attempt held kill+wait in fallback despite poll error; separately review new source and negative lifecycle control |
+
+This is a static concrete exception path, not executed process leakage or false PASS. Current observed_pass remains denied through cleanup_uncertain/errors, but known direct-handle cleanup is skipped for this path. Earlier F43/F44/F48/F49 scoped closures concern the earlier qualified source/model controls and do not qualify this new controls controller. Do not reopen/rewrite earlier originals or transfer their GREEN to94277.
+
+Source wiring otherwise proposes a separate modeled20 role before acquisition, distinct47/141 inventory, exact source roles/control raw bytes, closed log receipt readback before47 imports, candidate binding and final verification. Those checks are source-only; no YAML runtime, actual Git role, control runner or full47 has executed for these bytes. This report is not an exhaustive correctness ACK of the new receipt parser or full workflow. Source receipt52f94f65/diff460704e6 and qualifier/workflow/README/test pins preserved independently.
+
+No implementation edit, project/helper/test AST compile/call, actual child failure, fixture, dependency acquisition, CI dispatch/rerun or network change was performed by A8. Owner/Root notified with exact failure path. Production/source publication and execution allocation remain separate.
+
+RELEASE_MANIFEST_STATUS: no executable release. NODE_INVENTORY_STATUS: unchanged. CONTRACT_STATUS: new mandatory20 wiring needs correction/review. OFFLINE_TESTS: new wiring NOT_RUN. WINDOWS_CI: hosted47HOLD. PHYSICAL_TESTS: BLOCKED. P0_P1_P2: new F50 P2, confirmed register8P1/9P2; F26/F42open; no absence-of-P0 assurance. EVIDENCE: preserved exact source/diff/receipt/verification. NEXT_ACTIONS: Root narrow source correction decision, new lifecycle source/negative review; no retry inferred. GO_NO_GO: NO-GO. TAILSCALE_REMOVAL_ACCEPTANCE: BLOCKED/NO-GO.

@@ -1,0 +1,17 @@
+{"crypto": "46.0.3", "exe": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\python.exe", "openssl": "OpenSSL 3.0.16 11 Feb 2025", "phase": "ORIGINAL_CERTIFICATES_CONTROL_AND_STRICT_RED", "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]"}
+test_actual_tls_read_capability_two_checks_then_replay_denied (test_gateway_identity.GatewayIdentityTests.test_actual_tls_read_capability_two_checks_then_replay_denied) ... ok
+{"phase": "STRICT_CERTIFICATE_RED_CONTROL", "tests_run": 2, "failures": 1, "errors": 0, "source_before": {"tests/test_gateway_identity.py": "e6410b5b42b6faeb2eb9eabe584bb50d4152dad9f780c60642cba32e9ba03ba5", "unified_system/gateway_identity.py": "86dc7efd440bce3b937f166ea5980ffdd5e9d7df542d6233dbdf08d3634ee061"}, "source_after": {"tests/test_gateway_identity.py": "e6410b5b42b6faeb2eb9eabe584bb50d4152dad9f780c60642cba32e9ba03ba5", "unified_system/gateway_identity.py": "86dc7efd440bce3b937f166ea5980ffdd5e9d7df542d6233dbdf08d3634ee061"}, "threads_remaining": [], "lane": "OWNED_LOOPBACK_ONLY_RETIRED"}
+test_generated_chain_handshakes_with_explicit_strict_verification (test_gateway_identity.StrictTLSFixtureTests.test_generated_chain_handshakes_with_explicit_strict_verification) ... FAIL
+
+======================================================================
+FAIL: test_generated_chain_handshakes_with_explicit_strict_verification (test_gateway_identity.StrictTLSFixtureTests.test_generated_chain_handshakes_with_explicit_strict_verification)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\worktrees\gateway-strict-pki-20261110\unified-system\tests\test_gateway_identity.py", line 128, in test_generated_chain_handshakes_with_explicit_strict_verification
+    self.assertIsNotNone(fixture.client, diagnostic)
+AssertionError: unexpectedly None : {'client_error_type': 'SSLCertVerificationError', 'verify_code': 85, 'verify_message': 'Missing Authority Key Identifier', 'server_error_type': 'SSLError'}
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.198s
+
+FAILED (failures=1)

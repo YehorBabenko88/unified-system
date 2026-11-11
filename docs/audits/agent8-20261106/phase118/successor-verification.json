@@ -1,0 +1,29 @@
+{
+  "head": "8d042eb16626d5c79f8727a79eaf1422c62caa05",
+  "tree": "f4fa39b3ea49aebd8f8df4bfeb8c67387b9e9b62",
+  "parent": "89134b324d1b3405d249d464b09d889648c685aa",
+  "changed": [
+    "tests/coordination/assignment_v1/NATIVE-EXPECTED-TESTS.json",
+    "tests/coordination/assignment_v1/run_native_qualification.py",
+    "tests/coordination/assignment_v1/test_native_snapshot.py"
+  ],
+  "production_modules_byteunchanged": [
+    "grid/authority_assignment_v1.py",
+    "grid/coordination.py",
+    "grid/authority_runtime_v1.py"
+  ],
+  "old_registered_count": 18,
+  "new_registered_count": 20,
+  "old_ids_preserved": true,
+  "new_ids": [
+    "test_native_snapshot.NativeSnapshotTests.test_actual_destroyed_leader_prepared_fence_cannot_write_after_takeover",
+    "test_native_snapshot.NativeSnapshotTests.test_actual_generation_change_rejects_prepared_fence_without_probe_effect"
+  ],
+  "A8_actual_focused_count": 2,
+  "A8_full_successor_suite": "NOT_RUN",
+  "owner_full_count": 20,
+  "owner_receipt_sha256": "6437d7a9b10f8a5688337b9a33b4952db57e7cf9a02ffaf072428eef968cf725",
+  "owner_log_sha256": "7dabfc03e6973064c80df481e784d606c9ecb7e452d968321694026adfce09a0",
+  "owner_counts_NOT_A8": true,
+  "Root_Grid40e_pins_not_advanced": true
+}

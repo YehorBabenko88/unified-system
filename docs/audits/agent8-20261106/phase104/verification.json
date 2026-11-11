@@ -1,0 +1,71 @@
+{
+  "original_head": "65169396d550989b6b9fc78d4f3a64a1c906172b",
+  "original_run": 42397196705,
+  "original_jobs": 0,
+  "original_checks": 0,
+  "annotation": "(Line: 25, Col: 34): Unrecognized named-value: 'runner'. Located at position 1 within expression: runner.temp",
+  "public_html_sha256": "b6a381cad079b616376509b17c5505e15218054ad66776c3dab7599e836b30ee",
+  "public_html_local_retained": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-8-independent-security-ci\\work\\ci104-original-run42397196705.html",
+  "public_html_published": false,
+  "corrected_head": "31e0351b9f21ac53f3eb47a23bf45d06a58e1fe1",
+  "corrected_tree": "787be69ece1b533dff284195bbedd34a0ae5196e",
+  "delta_only_workflow": true,
+  "protected_pins_unchanged": [
+    {
+      "path": "unified_system/gateway_research_identity.py",
+      "sha256": "1e9f4bb1c7a563b3cf5e19f432f5799941448df212a2ddb9a7de9df1d99cb543"
+    },
+    {
+      "path": "tests/gateway_research_identity/test_native_broker.py",
+      "sha256": "2bba62dc458237214bc9c11aeae99fc1154867f1e74264f93f1c90e52b160df0"
+    },
+    {
+      "path": "docs/intelligence/research-identity/run_qualification.py",
+      "sha256": "6d8127bdb2c4cdd9791c9a14a27b73ec11b0d8ceb8fb62ba74933bdd79ac06d3"
+    },
+    {
+      "path": "docs/intelligence/research-identity/API-REVIEW1.md",
+      "sha256": "549abfe795b922b90692ab6c34edbbfd992c479113cc2fd816a5c3faba98a2c0"
+    },
+    {
+      "path": "docs/intelligence/research-identity/profile.schema.json",
+      "sha256": "e999dc35c4737346ac152172292078ac9eed040ffdf31afdf001ae86974f51d1"
+    },
+    {
+      "path": "docs/intelligence/research-identity/principal.schema.json",
+      "sha256": "cae4952fd7763322f4f8a8754cc6cf2eefcad0faa0e915f6ab9e392bcd9f724d"
+    },
+    {
+      "path": "docs/intelligence/research-identity/policy.schema.json",
+      "sha256": "912ed3f1beb17d6ca1ae8e28faaa0ff073aa37726e06bbef4b8f9aa286591518"
+    },
+    {
+      "path": "docs/intelligence/research-identity/principal_session.schema.json",
+      "sha256": "74572913bcbb28131ab7c777e3349ec6d9ff45c2ecc268457aae702ab28137fd"
+    }
+  ],
+  "new_original_run": 42632834956,
+  "new_jobs": [
+    {
+      "id": 129213231028,
+      "name": "research-principal (windows-latest, windows, consul.exe)",
+      "status": "queued",
+      "conclusion": null,
+      "runner_id": 0
+    },
+    {
+      "id": 129213231455,
+      "name": "research-principal (ubuntu-24.04, linux, consul)",
+      "status": "queued",
+      "conclusion": null,
+      "runner_id": 0
+    }
+  ],
+  "configuration": "FIX_VERIFIED_GITHUB_JOB_REGISTRATION_ONLY",
+  "explicit_readonly_REST_public_page_requests": 6,
+  "native_test_reruns": 0,
+  "manual_workflow_reruns": 0,
+  "settings_changes": 0,
+  "own_shared_workflow_edits": 0,
+  "mandatory_CI": "BLOCKED_QUEUED_NOT_EXECUTED"
+}

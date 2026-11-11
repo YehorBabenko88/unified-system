@@ -1,0 +1,118 @@
+TAP version 13
+# Subtest: failure taxonomy returns only closed enums and never raw error material
+ok 1 - failure taxonomy returns only closed enums and never raw error material
+  ---
+  duration_ms: 1.685
+  type: 'test'
+  ...
+# Subtest: error getters are not invoked by sanitizer
+ok 2 - error getters are not invoked by sanitizer
+  ---
+  duration_ms: 0.1485
+  type: 'test'
+  ...
+# Subtest: fixed internal errors survive, arbitrary HTTP or error strings cannot enter trace
+ok 3 - fixed internal errors survive, arbitrary HTTP or error strings cannot enter trace
+  ---
+  duration_ms: 0.6397
+  type: 'test'
+  ...
+# Subtest: trace records monotonic phase boundary and safe failure while preserving thrown error
+ok 4 - trace records monotonic phase boundary and safe failure while preserving thrown error
+  ---
+  duration_ms: 0.4786
+  type: 'test'
+  ...
+# Subtest: trace caps below64 events and6144 bytes and overflow is explicit failure
+ok 5 - trace caps below64 events and6144 bytes and overflow is explicit failure
+  ---
+  duration_ms: 0.3531
+  type: 'test'
+  ...
+# Subtest: telemetry write failure stays unknown without exposing error
+ok 6 - telemetry write failure stays unknown without exposing error
+  ---
+  duration_ms: 0.1794
+  type: 'test'
+  ...
+# Subtest: late telemetry failure or overflow refuses final success assertion
+ok 7 - late telemetry failure or overflow refuses final success assertion
+  ---
+  duration_ms: 0.2487
+  type: 'test'
+  ...
+# Subtest: opaque throwing descriptor/prototype proxies sanitize to UNKNOWN
+ok 8 - opaque throwing descriptor/prototype proxies sanitize to UNKNOWN
+  ---
+  duration_ms: 0.1822
+  type: 'test'
+  ...
+# Subtest: final telemetry failure prevents publishing any PASS receipt
+ok 9 - final telemetry failure prevents publishing any PASS receipt
+  ---
+  duration_ms: 0.2458
+  type: 'test'
+  ...
+# Subtest: final receipt observes diagnostic snapshot with no mandatory telemetry after its write
+ok 10 - final receipt observes diagnostic snapshot with no mandatory telemetry after its write
+  ---
+  duration_ms: 0.3164
+  type: 'test'
+  ...
+# Subtest: owned teardown separately closes context, disconnects client, observes server exit and HTTP close
+ok 11 - owned teardown separately closes context, disconnects client, observes server exit and HTTP close
+  ---
+  duration_ms: 1.1389
+  type: 'test'
+  ...
+# Subtest: client close fulfilled without disconnect is UNKNOWN even when browser process exits
+ok 12 - client close fulfilled without disconnect is UNKNOWN even when browser process exits
+  ---
+  duration_ms: 1.1905
+  type: 'test'
+  ...
+# Subtest: teardown records failure then still attempts other issued handles
+ok 13 - teardown records failure then still attempts other issued handles
+  ---
+  duration_ms: 0.3174
+  type: 'test'
+  ...
+# Subtest: missing issued browserServer or undefined exit fields never confirm retirement
+ok 14 - missing issued browserServer or undefined exit fields never confirm retirement
+  ---
+  duration_ms: 0.2842
+  type: 'test'
+  ...
+# Subtest: cleanup timeout is nonPASS and never calls PID or SDK kill fallback
+ok 15 - cleanup timeout is nonPASS and never calls PID or SDK kill fallback
+  ---
+  duration_ms: 20.4148
+  type: 'test'
+  ...
+# Subtest: owned GO input is destroyed and observed closed using inert stream only
+ok 16 - owned GO input is destroyed and observed closed using inert stream only
+  ---
+  duration_ms: 0.5289
+  type: 'test'
+  ...
+# Subtest: GO input closure error refuses before harness import
+ok 17 - GO input closure error refuses before harness import
+  ---
+  duration_ms: 0.2583
+  type: 'test'
+  ...
+# Subtest: source preserves fixed bootstrap and security, tracks public issued client finally, no forced exit
+ok 18 - source preserves fixed bootstrap and security, tracks public issued client finally, no forced exit
+  ---
+  duration_ms: 0.9025
+  type: 'test'
+  ...
+1..18
+# tests 18
+# suites 0
+# pass 18
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 134.8551

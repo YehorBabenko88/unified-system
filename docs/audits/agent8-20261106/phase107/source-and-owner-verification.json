@@ -1,0 +1,33 @@
+{
+  "head": "68761aecacb6cc60113dd23f036c57efddcb0367",
+  "tree": "46e06599e4419fae8f19d67df5c704cbf8c27cd9",
+  "changed": [
+    ".github/workflows/final-integration.yml",
+    ".github/workflows/five-boundary.yml",
+    ".github/workflows/five-source-integration.yml",
+    ".github/workflows/gateway-runtime-integration.yml",
+    ".github/workflows/installer-security.yml",
+    ".github/workflows/lifecycle-evidence.yml",
+    ".github/workflows/tests.yml",
+    "docs/ci/requirements-unittest.lock",
+    "docs/ci/target-adapter-red-triage-20261109.json",
+    "docs/ci/unittest-dependencies.source.json",
+    "docs/intelligence/target-adapter/run_qualification.py",
+    "release/component-test-inventory.json",
+    "tests/gateway_target_adapter/test_direct.py",
+    "tests/test_lan_probe_inventory.py",
+    "tests/test_mission_controller.py",
+    "tests/test_network_budget.py"
+  ],
+  "runtime_sha256": "775976b3d344409d6c25ba96f2a475f5085695edf9947f482440c263355d6a8f",
+  "runtime_unchanged": true,
+  "inventory_old": 143,
+  "inventory_new": 144,
+  "removed_ids": [],
+  "added_ids": [
+    "tests.test_network_budget.BudgetCleanupTests.test_failed_child_cleans_all_owned_siblings_before_directory_cleanup"
+  ],
+  "owner_receipt_sha256": "1882427195fa57b61c9399e136af914005b315104d0442ebc9e2be3fc4d78424",
+  "owner_receipt_members_verified": 4,
+  "owner_PASS_not_A8_PASS": true
+}

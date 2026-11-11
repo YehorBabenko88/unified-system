@@ -1,0 +1,110 @@
+diff --git a/tests/coordination/assignment_v1/NATIVE-EXPECTED-TESTS.json b/tests/coordination/assignment_v1/NATIVE-EXPECTED-TESTS.json
+index 67cc5e20..72e11833 100644
+--- a/tests/coordination/assignment_v1/NATIVE-EXPECTED-TESTS.json
++++ b/tests/coordination/assignment_v1/NATIVE-EXPECTED-TESTS.json
+@@ -1,20 +1,22 @@
+-[
+-  "test_assignment_contract.AssignmentContractTests.test_deep_or_noncanonical_native_record_is_rejected",
+-  "test_assignment_contract.AssignmentContractTests.test_default_missing_actual_native_provider_never_touches_consul",
+-  "test_assignment_contract.AssignmentContractTests.test_distinct_storage_records_do_not_alias_issuance_lifecycle_policy_accounting",
+-  "test_assignment_contract.AssignmentContractTests.test_malformed_native_success_response_is_not_commit_confirmation",
+-  "test_assignment_contract.AssignmentContractTests.test_native_plan_overflow_is_rejected_before_transport",
+-  "test_assignment_contract.AssignmentContractTests.test_new_layout_preserves_stable_partition_key_and_rejects_unsafe_original",
+-  "test_assignment_contract.AssignmentContractTests.test_none_boolean_shape_is_not_a_native_provider",
+-  "test_bootstrap_guard.SourceBootstrapTests.test_checked_helper_bytes_cannot_be_replaced_by_valid_pyc",
+-  "test_native_snapshot.NativeSnapshotTests.test_00_actual_atomic_existing_and_absent_snapshot",
+-  "test_native_snapshot.NativeSnapshotTests.test_actual_acl_denial_never_becomes_absence",
+-  "test_native_snapshot.NativeSnapshotTests.test_actual_all_node_restart_retains_raw_snapshot_indices",
+-  "test_native_snapshot.NativeSnapshotTests.test_actual_leader_failure_two_voters_keep_snapshot",
+-  "test_native_snapshot.NativeSnapshotTests.test_actual_stale_snapshot_cas_rolls_back_without_probe_effect",
+-  "test_native_snapshot.NativeSnapshotTests.test_snapshot_rejects_duplicate_outside_namespace_and_overflow",
+-  "test_native_snapshot.NativeSnapshotTests.test_z_actual_one_of_three_no_quorum_never_returns_cached_snapshot",
+-  "test_runtime_policy.RuntimePolicyDataTests.test_runtime_fullmatch_bounds_namespace_and_operation_semantics",
+-  "test_runtime_policy.RuntimePolicyDataTests.test_schema_control_and13_terminal_newline_negatives",
+-  "test_runtime_policy.RuntimePolicyDataTests.test_schema_positive_u63_limit_and_no_implicit_policy_write"
+-]
++[
++  "test_assignment_contract.AssignmentContractTests.test_deep_or_noncanonical_native_record_is_rejected",
++  "test_assignment_contract.AssignmentContractTests.test_default_missing_actual_native_provider_never_touches_consul",
++  "test_assignment_contract.AssignmentContractTests.test_distinct_storage_records_do_not_alias_issuance_lifecycle_policy_accounting",
++  "test_assignment_contract.AssignmentContractTests.test_malformed_native_success_response_is_not_commit_confirmation",
++  "test_assignment_contract.AssignmentContractTests.test_native_plan_overflow_is_rejected_before_transport",
++  "test_assignment_contract.AssignmentContractTests.test_new_layout_preserves_stable_partition_key_and_rejects_unsafe_original",
++  "test_assignment_contract.AssignmentContractTests.test_none_boolean_shape_is_not_a_native_provider",
++  "test_bootstrap_guard.SourceBootstrapTests.test_checked_helper_bytes_cannot_be_replaced_by_valid_pyc",
++  "test_native_snapshot.NativeSnapshotTests.test_00_actual_atomic_existing_and_absent_snapshot",
++  "test_native_snapshot.NativeSnapshotTests.test_actual_acl_denial_never_becomes_absence",
++  "test_native_snapshot.NativeSnapshotTests.test_actual_all_node_restart_retains_raw_snapshot_indices",
++  "test_native_snapshot.NativeSnapshotTests.test_actual_leader_failure_two_voters_keep_snapshot",
++  "test_native_snapshot.NativeSnapshotTests.test_actual_stale_snapshot_cas_rolls_back_without_probe_effect",
++  "test_native_snapshot.NativeSnapshotTests.test_snapshot_rejects_duplicate_outside_namespace_and_overflow",
++  "test_native_snapshot.NativeSnapshotTests.test_z_actual_one_of_three_no_quorum_never_returns_cached_snapshot",
++  "test_runtime_policy.RuntimePolicyDataTests.test_runtime_fullmatch_bounds_namespace_and_operation_semantics",
++  "test_runtime_policy.RuntimePolicyDataTests.test_schema_control_and13_terminal_newline_negatives",
++  "test_runtime_policy.RuntimePolicyDataTests.test_schema_positive_u63_limit_and_no_implicit_policy_write",
++  "test_native_snapshot.NativeSnapshotTests.test_actual_destroyed_leader_prepared_fence_cannot_write_after_takeover",
++  "test_native_snapshot.NativeSnapshotTests.test_actual_generation_change_rejects_prepared_fence_without_probe_effect"
++]
+\ No newline at end of file
+diff --git a/tests/coordination/assignment_v1/run_native_qualification.py b/tests/coordination/assignment_v1/run_native_qualification.py
+index ede9888d..5c45689e 100644
+--- a/tests/coordination/assignment_v1/run_native_qualification.py
++++ b/tests/coordination/assignment_v1/run_native_qualification.py
+@@ -24,10 +24,10 @@ def main():
+             if isinstance(t,unittest.TestSuite):yield from ids(t)
+             else:yield t.id()
+     actual=list(ids(suite));expected=json.loads((script.parent/'NATIVE-EXPECTED-TESTS.json').read_bytes())
+-    assert len(actual)==len(set(actual))==len(expected)==len(set(expected))==18
++    assert len(actual)==len(set(actual))==len(expected)==len(set(expected))==20
+     assert sorted(actual)==sorted(expected)
+     r=unittest.TextTestRunner(verbosity=2).run(suite)
+     assert guard.inventory(root)==before and guard.inventory(support)==support_before
+-    assert r.wasSuccessful() and r.testsRun==18 and not r.skipped
+-    print(json.dumps(dict(result='PASS',scope='CONSISTENT_NATIVE_RAW_READ_CAS_FAILOVER_RESTART_ONLY_NOT_ISSUED_GRANT',head=a.expected_head,tree=git(root,'rev-parse','HEAD^{tree}').decode().strip(),support_head='1f6b0b5c231853607f5bec780f1544cd32bf577d',raw_files=len(before),support_raw_files=len(support_before),tests=18,skips=0,exact_unique_ids=True,module_sha256=before['grid/authority_assignment_v1.py'])))
++    assert r.wasSuccessful() and r.testsRun==20 and not r.skipped
++    print(json.dumps(dict(result='PASS',scope='CONSISTENT_NATIVE_RAW_READ_CAS_FAILOVER_RESTART_ONLY_NOT_ISSUED_GRANT',head=a.expected_head,tree=git(root,'rev-parse','HEAD^{tree}').decode().strip(),support_head='1f6b0b5c231853607f5bec780f1544cd32bf577d',raw_files=len(before),support_raw_files=len(support_before),tests=20,skips=0,exact_unique_ids=True,module_sha256=before['grid/authority_assignment_v1.py'])))
+ if __name__=='__main__':main()
+diff --git a/tests/coordination/assignment_v1/test_native_snapshot.py b/tests/coordination/assignment_v1/test_native_snapshot.py
+index 123d5bf1..79c65063 100644
+--- a/tests/coordination/assignment_v1/test_native_snapshot.py
++++ b/tests/coordination/assignment_v1/test_native_snapshot.py
+@@ -42,6 +42,39 @@ class NativeSnapshotTests(unittest.IsolatedAsyncioTestCase):
+         with self.assertRaises(CoordinationLost):
+             await self.backend._transaction([_check(r) for r in old]+[_cas(effect,0,dict(schema='untrusted.probe-effect.v1'))])
+         self.assertEqual((await self.backend._read_snapshot((effect,)))[0].index,0)
++    async def test_actual_destroyed_leader_prepared_fence_cannot_write_after_takeover(self):
++        generation_key=self.authority.config.namespace+'/commands/generation'
++        await self.authority._request('PUT','/v1/kv/'+generation_key,content=canonical(dict(generation=self.generation)))
++        old=await self.authority.acquire('old-coordinator')
++        self.assertIsNotNone(old)
++        prepared=await self.backend._leader_fence(old)
++        await self.authority._request('PUT','/v1/session/destroy/'+old.session_id)
++        successor=await self.authority.acquire('successor-coordinator')
++        self.assertIsNotNone(successor)
++        self.assertNotEqual(successor.session_id,old.session_id)
++        self.assertGreater(successor.token,old.token)
++        self.assertFalse(await self.authority.validate(old))
++        with self.assertRaises(AssignmentUnavailable):await self.backend._leader_fence(old)
++        effect=self.prefix+'stale-leader-effect'
++        with self.assertRaises(CoordinationLost):
++            await self.backend._transaction(prepared+[_cas(effect,0,dict(schema='untrusted.probe-effect.v1',owner='stale'))])
++        self.assertEqual((await self.backend._read_snapshot((effect,)))[0].index,0)
++        await self.backend._transaction(await self.backend._leader_fence(successor)+[_cas(effect,0,dict(schema='untrusted.probe-effect.v1',owner='successor'))])
++        self.assertEqual(json.loads((await self.backend._read_snapshot((effect,)))[0].raw)['owner'],'successor')
++        print(json.dumps(dict(scope='ACTUAL_NATIVE_SESSION_FENCE_PROBE_ONLY',old_token=old.token,new_token=successor.token,stale_write='REJECTED',successor_probe='COMMITTED')),flush=True)
++    async def test_actual_generation_change_rejects_prepared_fence_without_probe_effect(self):
++        key=self.authority.config.namespace+'/commands/generation'
++        await self.authority._request('PUT','/v1/kv/'+key,content=canonical(dict(generation=self.generation)))
++        leader=await self.authority.acquire('generation-probe')
++        self.assertIsNotNone(leader)
++        prepared=await self.backend._leader_fence(leader)
++        await self.authority._request('PUT','/v1/kv/'+key,content=canonical(dict(generation=str(uuid.uuid4()))))
++        self.assertTrue(await self.authority.validate(leader))
++        effect=self.prefix+'old-generation-effect'
++        with self.assertRaises(CoordinationLost):
++            await self.backend._transaction(prepared+[_cas(effect,0,dict(schema='untrusted.probe-effect.v1'))])
++        self.assertEqual((await self.backend._read_snapshot((effect,)))[0].index,0)
++        with self.assertRaises(AssignmentUnavailable):await self.backend._leader_fence(leader)
+     async def test_actual_acl_denial_never_becomes_absence(self):
+         policy=await self.authority._request('PUT','/v1/acl/policy',json=dict(Name='snapshot-'+str(uuid.uuid4()),Rules='key_prefix "'+self.a+'" { policy = "read" }'))
+         token=await self.authority._request('PUT','/v1/acl/token',json=dict(Description='owned-snapshot-negative',Policies=[dict(ID=policy['ID'])]))

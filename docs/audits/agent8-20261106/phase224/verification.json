@@ -1,0 +1,142 @@
+{
+  "head": "e23abe3345379e41f979695136fd1261e3cbd238",
+  "tree": "96335f168445ad7e73a6f99ba5221cf8ab1804c5",
+  "run": 42917337440,
+  "attempt": 1,
+  "fresh_API": "RUN_JOBS_ARTIFACTS_JOBLOGS_READONLY",
+  "platforms": [
+    {
+      "artifact": 13810980134,
+      "job": 130183048978,
+      "platform": "win32",
+      "zip_sha256": "sha256:49813f3bc9f678e54b811156ba6b4524f37eb649344312e309599416eb3dace5",
+      "source_files": 407,
+      "source_maps": "ALL3_EQUAL_INDEPENDENT_PHASE217_GIT_MAP",
+      "pure8": "PASS0SKIP",
+      "Node6": "PASS0SKIP",
+      "process": {
+        "launched": true,
+        "exit_code": 0,
+        "timed_out": false,
+        "output_overflow": false,
+        "kill_used": false,
+        "cleanup_uncertain": false,
+        "reader_error": false,
+        "readers_retired": true,
+        "elapsed_seconds": 0.14099999999999113,
+        "captured_bytes": 1393
+      },
+      "repository_id_names": "ALL3_EXACT",
+      "fresh_job_log_sha256": "805f74efefbcb2305d01ec918c47944e3d62125c3649ad193ee983df313edd7a",
+      "fresh_job_log_equals_owner_original": true,
+      "bootstrap_final": {
+        "scope": "REVIEWED_WORKFLOW_BOOTSTRAP_NOT_TARGET_CODE_OR_OS_ATTESTATION",
+        "qualifier_load_attempted": true,
+        "result": "QUALIFIER_RETURNED_SUCCESS",
+        "repository_cohort": {
+          "names": [
+            "YehorBabenko88/Terminan",
+            "YehorBabenko88/Terminan",
+            "YehorBabenko88/Terminan"
+          ],
+          "ids": [
+            "1413341784",
+            "1413341784",
+            "1413341784"
+          ],
+          "expected_name": "YehorBabenko88/Terminan",
+          "expected_id": "1413341784"
+        },
+        "tools": {
+          "python": {
+            "path": "C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\python.exe",
+            "sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a",
+            "role": "ISOLATED_BOOTSTRAP_QUALIFIER"
+          },
+          "git": {
+            "path": "C:\\Program Files\\Git\\bin\\git.exe",
+            "sha256": "20d0dde30a65afb6e5810a883700a94dcd77fbf3b44b32868d45bf7c9b30137c",
+            "role": "FIXED_PRIMARY_GIT_NO_CMD_FALLBACK"
+          },
+          "node": {
+            "path": "C:\\hostedtoolcache\\windows\\node\\24.22.1\\x64\\node.exe",
+            "sha256": "d702daa815eabbff763c7d3808e235cf031cf2ca70211b56847bc72f51e240e5",
+            "role": "SETUP_NODE_TEST_BINARY_OBSERVED_NOT_SIGNED_PROVENANCE"
+          }
+        },
+        "head": "e23abe3345379e41f979695136fd1261e3cbd238",
+        "qualifier_sha256": "8f7970f1dd6f1366110d04e35cca6179c7f7c159e3b7ad89bd276c108d865857",
+        "error_type": "SystemExit"
+      }
+    },
+    {
+      "artifact": 13809402935,
+      "job": 130183048488,
+      "platform": "linux",
+      "zip_sha256": "sha256:f61971b3f1fab1e6f063900f5e3008d5d56f3fbc5a95980119384068418c4d61",
+      "source_files": 407,
+      "source_maps": "ALL3_EQUAL_INDEPENDENT_PHASE217_GIT_MAP",
+      "pure8": "PASS0SKIP",
+      "Node6": "PASS0SKIP",
+      "process": {
+        "launched": true,
+        "exit_code": 0,
+        "timed_out": false,
+        "output_overflow": false,
+        "kill_used": false,
+        "cleanup_uncertain": false,
+        "reader_error": false,
+        "readers_retired": true,
+        "elapsed_seconds": 0.08139619899999673,
+        "captured_bytes": 1401
+      },
+      "repository_id_names": "ALL3_EXACT",
+      "fresh_job_log_sha256": "2c7b1d91719208a9c4f5f1bc65020f86a3339741c47b393a529b86755a58b987",
+      "fresh_job_log_equals_owner_original": true,
+      "bootstrap_final": {
+        "scope": "REVIEWED_WORKFLOW_BOOTSTRAP_NOT_TARGET_CODE_OR_OS_ATTESTATION",
+        "qualifier_load_attempted": true,
+        "result": "QUALIFIER_RETURNED_SUCCESS",
+        "repository_cohort": {
+          "names": [
+            "YehorBabenko88/Terminan",
+            "YehorBabenko88/Terminan",
+            "YehorBabenko88/Terminan"
+          ],
+          "ids": [
+            "1413341784",
+            "1413341784",
+            "1413341784"
+          ],
+          "expected_name": "YehorBabenko88/Terminan",
+          "expected_id": "1413341784"
+        },
+        "tools": {
+          "python": {
+            "path": "/opt/hostedtoolcache/Python/3.12.10/x64/bin/python3.12",
+            "sha256": "96b570567fe6afa8e7fe2278b1302be7f5320d8afa5f3ccd8d627796039499b2",
+            "role": "ISOLATED_BOOTSTRAP_QUALIFIER"
+          },
+          "git": {
+            "path": "/usr/bin/git",
+            "sha256": "824d5b2fffef332ec7ba053e579659bb12f26a0b4747da6f9c6dc0e71d36f235",
+            "role": "FIXED_PRIMARY_GIT_NO_CMD_FALLBACK"
+          },
+          "node": {
+            "path": "/opt/hostedtoolcache/node/24.22.1/x64/bin/node",
+            "sha256": "e32e2d16081cf644f88392934288086e7662529d0d43277c34f7aad2207cfafb",
+            "role": "SETUP_NODE_TEST_BINARY_OBSERVED_NOT_SIGNED_PROVENANCE"
+          }
+        },
+        "head": "e23abe3345379e41f979695136fd1261e3cbd238",
+        "qualifier_sha256": "8f7970f1dd6f1366110d04e35cca6179c7f7c159e3b7ad89bd276c108d865857",
+        "error_type": "SystemExit"
+      }
+    }
+  ],
+  "scope": "HOSTED_WINDOWS_UBUNTU_UNIT8_AND6_ONLY_NOT_FULL_COHORT_BROWSER_NATIVE_PHYSICAL",
+  "A8_artifact_execution": false,
+  "GO_NO_GO": "NO-GO",
+  "PHYSICAL_TESTS": "BLOCKED",
+  "TAILSCALE_REMOVAL": "BLOCKED"
+}

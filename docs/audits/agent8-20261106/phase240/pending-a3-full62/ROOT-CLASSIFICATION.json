@@ -1,0 +1,15 @@
+{
+  "schema": "root-full62-timeout-classification.v1",
+  "original_receipt_sha256": "a7b0d2c58f29b487e1cc4d871ba5278e5b49566450934633857b6ff5010ac122",
+  "classification": "QUALIFICATION_ENVELOPE_DENY_TEST_RESULT_UNAVAILABLE",
+  "actual_test_count": "NOT_ESTABLISHED",
+  "module_defect": "NOT_ESTABLISHED",
+  "root_controller_issue": "Soft timer was14s, not authorized15s phase plus separatecleanup; originalFINALLY kill_reason overwrote primaryTIMEOUT label but timeout=true preserved.",
+  "observed_seconds": 14.0271178,
+  "raw_stdout_bytes": 0,
+  "raw_stderr_bytes": 0,
+  "source_pre_post": 831,
+  "runtime_pre_post": 841,
+  "all_pins_unchanged": true,
+  "next": "Source-only phase markers; fixparentexact15phase/separatecleanup accounting. No timingincrease/integrityskip/automaticretry."
+}

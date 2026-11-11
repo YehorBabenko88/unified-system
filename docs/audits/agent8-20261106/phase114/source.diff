@@ -1,0 +1,2911 @@
+diff --git a/.github/workflows/gateway-research-identity.yml b/.github/workflows/gateway-research-identity.yml
+new file mode 100644
+index 0000000..b2b0545
+--- /dev/null
++++ b/.github/workflows/gateway-research-identity.yml
+@@ -0,0 +1,67 @@
++name: Gateway research principal native Consul
++on:
++  push:
++    paths: ['unified_system/gateway_research_identity.py', 'tests/gateway_research_identity/**', 'docs/intelligence/research-identity/**', '.github/workflows/gateway-research-identity.yml']
++  pull_request:
++    paths: ['unified_system/gateway_research_identity.py', 'tests/gateway_research_identity/**', 'docs/intelligence/research-identity/**', '.github/workflows/gateway-research-identity.yml']
++permissions:
++  contents: read
++jobs:
++  research-principal:
++    strategy:
++      fail-fast: false
++      matrix:
++        include:
++          - os: windows-latest
++            lock: windows
++            executable: consul.exe
++          - os: ubuntu-24.04
++            lock: linux
++            executable: consul
++    runs-on: ${{ matrix.os }}
++    timeout-minutes: 15
++    env:
++      EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
++    steps:
++      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
++        env:
++          GIT_CONFIG_COUNT: '1'
++          GIT_CONFIG_KEY_0: core.autocrlf
++          GIT_CONFIG_VALUE_0: 'false'
++        with:
++          ref: ${{ env.EXPECTED_HEAD }}
++          path: unified
++          persist-credentials: false
++          fetch-depth: 0
++      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
++        env:
++          GIT_CONFIG_COUNT: '1'
++          GIT_CONFIG_KEY_0: core.autocrlf
++          GIT_CONFIG_VALUE_0: 'false'
++        with:
++          repository: YehorBabenko88/bybit-cluster-grid
++          ref: 40e9c8dc274a2746018bc1aa08d103cd0187cecc
++          path: grid
++          persist-credentials: false
++          fetch-depth: 0
++      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
++        with:
++          python-version: '3.12.10'
++      - shell: bash
++        run: |
++          python -m pip install --only-binary=:all: --require-hashes -r unified/docs/intelligence/research-identity/requirements-${{ matrix.lock }}.lock
++      - shell: bash
++        run: |
++          python -I -B unified/docs/intelligence/research-identity/fetch_consul.py --directory "$RUNNER_TEMP/a2-research-consul"
++      - shell: bash
++        env:
++          A2_RESEARCH_CONSUL_BINARY: ${{ runner.temp }}/a2-research-consul/${{ matrix.executable }}
++        run: |
++          set -o pipefail
++          python -I -B unified/docs/intelligence/research-identity/native-profile-v2-20261109/run_qualification.py --expected-head "$EXPECTED_HEAD" --grid-source "$GITHUB_WORKSPACE/grid" --expected-grid-head 40e9c8dc274a2746018bc1aa08d103cd0187cecc 2>&1 | tee "$RUNNER_TEMP/research-principal.log"
++      - if: always()
++        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
++        with:
++          name: research-principal-${{ matrix.lock }}-${{ env.EXPECTED_HEAD }}
++          path: ${{ runner.temp }}/research-principal.log
++          if-no-files-found: warn
+diff --git a/.github/workflows/storage-native-publication.yml b/.github/workflows/storage-native-publication.yml
+new file mode 100644
+index 0000000..3a2cc62
+--- /dev/null
++++ b/.github/workflows/storage-native-publication.yml
+@@ -0,0 +1,46 @@
++name: Storage publication local prerequisites
++on:
++  push:
++    branches: [feature/storage-native-publication-20261109]
++  pull_request:
++    paths:
++      - unified_system/storage/result_publication.py
++      - unified_system/storage/replica_evidence.py
++      - unified_system/storage/publication_records.py
++      - unified_system/storage/publication_recovery.py
++      - tests/storage/native_publication/**
++      - docs/storage/native-publication/**
++      - .github/workflows/storage-native-publication.yml
++permissions:
++  contents: read
++jobs:
++  local-prerequisites:
++    strategy:
++      fail-fast: false
++      matrix:
++        os: [windows-2022, ubuntu-24.04]
++    runs-on: ${{ matrix.os }}
++    timeout-minutes: 12
++    steps:
++      - name: Preserve primary source bytes
++        run: git config --global core.autocrlf false
++      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
++        with:
++          ref: ${{ github.event.pull_request.head.sha || github.sha }}
++          persist-credentials: false
++      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
++        with:
++          python-version: '3.12.10'
++      - name: Exact source and local-only byte crash-recovery cases
++        env:
++          A4_RESULT_EVIDENCE: ${{ runner.temp }}/storage-publication-prerequisites
++          A4_RESULT_EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
++        run: python -I -S -B tests/storage/native_publication/qualify.py
++      - name: Upload local evidence, not native or physical qualification
++        if: always()
++        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
++        with:
++          name: publication-prerequisites-${{ matrix.os }}-${{ github.run_id }}-${{ github.run_attempt }}
++          path: ${{ runner.temp }}/storage-publication-prerequisites
++          if-no-files-found: error
++          retention-days: 14
+diff --git a/docs/intelligence/research-identity/API-REVIEW1.md b/docs/intelligence/research-identity/API-REVIEW1.md
+new file mode 100644
+index 0000000..3983f48
+--- /dev/null
++++ b/docs/intelligence/research-identity/API-REVIEW1.md
+@@ -0,0 +1,91 @@
++# Actual disposable research principal/session source — API review1
++
++Root allocated NEW files only on f155126a95e80139b1b9679c1870ffd66c29360e /
++e129873c435c8b11d2126307a67b604601e7e4b8. Existing read source84093865 unchanged.
++Separate research service certificate/URI, never READ_DATA handle upgrade.
++This source authenticates a lab principal and creates its actual native session;
++it DOES NOT issue Assignment, resources, dispatch, publication or worker proof.
++
++Proposed exact module unified_system.gateway_research_identity, fixed class
++ResearchIdentityBroker. Constructor keyword-only authority, generation, realm_id,
++profile_sha256, server_ssl_context, server_certificate_der, audit_sink.
++authority must be SAME actual Grid ConsulSessionAuthority with its owned real
++HTTP client and server-private ACL token, not a supplied source callback. Root
++qualifies complete source/class/dependency capsule and actual Consul endpoints.
++Root provides loaded server cert/key/context and observes client server-DER pin;
++profile DER alone does not prove the key/cert was loaded.
++
++`async open_session(server_ssl_socket, *, leader) -> ResearchPrincipalContext`
++checks actual same-context server SSLSocket/verified CA/leaf clientAuth EKU/exact
++one URI urn:unified:test:research-service:<UUID>/DER fingerprint and local expiry.
++Loads actual canonical immutable profile and current principal/policy from SAME
++Consul namespace. Creates a genuine native session and atomically acquires its
++principal-session lock with generation/leader/principal/policy/profile index
++checks. Confirms actual stored native session/value/index consistently before
++minting private same-instance context. No caller-provided cert bytes/role/session.
++
++`async capture_current(context, *, scope, request_bytes) -> ResearchIdentityCapture`
++accepts only actual issuer inventory context, actual socket/current clock, fixed
++scope SUBMIT_RESEARCH/READ_RESEARCH/CANCEL_OWN_JOB and original bounded bytes.
++Reads actual current profile/principal/policy/session lock consistently; verifies
++all identity and state/scope/session joins, records exact raw/ModifyIndex/Session.
++Capture is immutable issuer-owned read evidence, not an execution permission.
++
++`ResearchIdentityBroker.require_capture(expected_broker, capture, *,
++expected_authority, scope, request_bytes)` synchronously checks exact types and
++issuer/inventory/authority-instance/operation/digest/local expiry and returns a
++detached immutable snapshot. A2 builds own native index/session checks from it.
++No arbitrary receiver callback/None return or JSON/native-source flag is proof.
++Actual target checks captured principal/policy/profile/session again in mutation.
++
++`async invalidate_context(context)` latches local invalidation BEFORE attempting
++native session destroy; failure/unknown never restores old context. `async close()`
++invalidates only own issued sessions, no foreign process/session enumeration.
++
++## Backend-derived native records, no fake issued rows
++
++N=existing unified/<clusterUUID>; L=N/runtime-v1/research-lab-v1/<realmUUID>/.
++Profile L/profile-registry/<profileSHA>: canonical bytes hash MUST equal selector;
++closed schema unified.authority.research-lab-profile.v1-review1, cluster_id,
++realm_id, principal_registry (peer DER SHA -> actor UUID), input_request_sha256,
++producer_head, resources, expiry_semantics=NATIVE_SESSION_INVALIDATION_NOT_UTC_AT_COMMIT,
++expires_utc. No own profile hash inside body. Root profile commissioning remains
++explicit; fixture may provision legitimate policy/registration, never fake grants.
++
++Principal L/principals/<actorUUID>: closed schema
++unified.authority.research-lab-principal.v1-review1, actor_id, service_id,
++certificate_sha256, quota_owner_id, policy_id, profile_sha256, state ACTIVE/REVOKED.
++Policy L/policies/<policyUUID>: closed schema
++unified.authority.research-lab-policy.v1-review1, policy_id, actor_id,
++profile_sha256, revision positiveu63, state ACTIVE/REVOKED, scopes sorted unique
++subset of the three research scopes, expires_utc. Unknown fields/roles deny.
++
++Principal session L/principal-sessions/<real Consul session UUID>/lock: closed
++schema unified.authority.research-lab-principal-session.v1-review1, actor_id,
++service_id, certificate_sha256, session_id, policy_id, profile_sha256,
++quota_owner_id. Native KV Session MUST equal actual session, positive ModifyIndex.
++Session generated by Consul, not input UUID/fixture-created issued assignment.
++Generation N/commands/generation and leader N/leader are existing shared authority.
++
++Root bootstrap uses actual private Consul ACL credentials, default-deny test
++policy and real negative unauthorized-write evidence. No client policy writer.
++No second registry/leader/job ledger; local dictionaries track process handles
++and native session contexts only. No arbitrary KV endpoint.
++
++## Lifetime and limits
++
++Actual TLS/cert/policy/profile UTC plus real monotonic conservative deadline;
++max15min commissioning, native principal TTL10sec with local safety margin.
++No renewal in first source. Native session invalidation/policy CAS is target-
++authoritative; strict UTC-at-Raft-commit remains P0. Clock uncertainty/late call
++cannot mint context/capture/dispatch; actual known native facts remain separate.
++No new job identity/refund/publish after uncertain outcome. Actor session creation
++can leave an expiring orphan after transport loss; it is not a job/resource grant.
++Audit exact fixed GatewayAuditSink from unchanged read module, Root drains; full
++audit denies mint. Contexts128/captures256, raw record/request16KiB, no default role.
++
++Independent allowed tests: real own disposable mTLS, actual three-voter policy/
++session/ACL primitive under genuine Root commissioning, foreign/copy/callerclaim,
++wrong scope/CA/SAN/EKU, current revocation/session loss/noquorum and audit denial.
++No Assignment/worker/contained-resource qualification follows. Source/owner APIs
++need exact subsequent integration ACK; public Gateway research remains DENY.
+diff --git a/docs/intelligence/research-identity/RECORD-JOINS-REVIEW1.md b/docs/intelligence/research-identity/RECORD-JOINS-REVIEW1.md
+new file mode 100644
+index 0000000..4fbfe16
+--- /dev/null
++++ b/docs/intelligence/research-identity/RECORD-JOINS-REVIEW1.md
+@@ -0,0 +1,34 @@
++# Exact broker record/registry joins
++
++API549abfe7 record fields are now closed machine schemas in this directory.
++Same L/profile-registry/<profileSHA> selector as research-lab review2: no duplicate
++principal/profile authority or role map in local memory. Broker constructor takes
++ONLY the server-selected immutable profile SHA; actual role/policy data comes
++from Consul. L/native session lock and principal/policy keys are those in API1.
++
++Profile raw canonical KV Value SHA256 must equal its key selector; profile body
++contains NO own SHA. It binds cluster/realm, actual peer fingerprint -> actor UUID,
++fixed input/producer and TRIAL demands. This actor profile does NOT qualify worker
++limits/headroom or publication. Job issuer's global approved schema/profile
++registration remains an additional target-side check; broker session is not it.
++
++Actual cert URI service UUID and peer DER SHA must match same actual principal
++row and profile registry mapping. Principal row policy ID/actor/profile/quota and
++policy row ID/actor/profile must agree; ACTIVE/current native row indices and
++sorted unique scope subset are mandatory. Context stores original peer, native
++session and principal/policy/quota; changing those joins denies, not adoption.
++Source returns current actual raw/index/session observations; mutation owner
++MUST independently include all relevant profile/principal/policy/session/gen/leader
++native checks in target transaction. Capture is NOT permission or a boolean proof.
++
++Native Consul session identifier is a DISTINCT canonical lowercase UUID string,
++not necessarily UUIDv4; exact real RPC/lock/session equality required. Client/job/
++actor UUIDv4 rules remain strict. See separate native-session correction packet;
++the old lab lease schema is not silently rewritten or treated as approved.
++
++Machine schema is structural only. Runtime additionally enforces exact C3 bytes,
++actual server CA/EKU/SAN/DER, issuer/source membership, profile raw hash, complete
++cross-record identity joins, real UTC date parsing, positive revision <=u63 and
++scope ordering. Regex date syntax or JSON record state is not standalone authority.
++Source/identity/native session class qualification is separate from worker/job
++admission. Strict UTC-at-Raft-commit remains P0. Root public submit stays DENY.
+diff --git a/docs/intelligence/research-identity/RECORD-MANIFEST.json b/docs/intelligence/research-identity/RECORD-MANIFEST.json
+new file mode 100644
+index 0000000..2d2c5f9
+--- /dev/null
++++ b/docs/intelligence/research-identity/RECORD-MANIFEST.json
+@@ -0,0 +1,21 @@
++{
++  "scope": "CLOSED_NATIVE_RECORD_DATA_NOT_ISSUED_AUTHORITY",
++  "members": [
++    {
++      "path": "profile.schema.json",
++      "sha256": "e999dc35c4737346ac152172292078ac9eed040ffdf31afdf001ae86974f51d1"
++    },
++    {
++      "path": "principal.schema.json",
++      "sha256": "cae4952fd7763322f4f8a8754cc6cf2eefcad0faa0e915f6ab9e392bcd9f724d"
++    },
++    {
++      "path": "policy.schema.json",
++      "sha256": "912ed3f1beb17d6ca1ae8e28faaa0ff073aa37726e06bbef4b8f9aa286591518"
++    },
++    {
++      "path": "principal_session.schema.json",
++      "sha256": "74572913bcbb28131ab7c777e3349ec6d9ff45c2ecc268457aae702ab28137fd"
++    }
++  ]
++}
+diff --git a/docs/intelligence/research-identity/build_record_schemas.py b/docs/intelligence/research-identity/build_record_schemas.py
+new file mode 100644
+index 0000000..79b3c4d
+--- /dev/null
++++ b/docs/intelligence/research-identity/build_record_schemas.py
+@@ -0,0 +1,35 @@
++"""Closed native broker record data; never a commissioning/authority tool."""
++import hashlib,json
++from pathlib import Path
++
++OUT=Path(__file__).resolve().parent
++def ref(name):return {'$ref':'#/$defs/'+name}
++def closed(props):return dict(type='object',properties=props,required=sorted(props),additionalProperties=False)
++def const(value):return {'const':value}
++defs=dict(uuid4=dict(type='string',pattern=r'^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}(?![\s\S])'),
++    native_session=dict(type='string',minLength=36,maxLength=36,pattern=r'^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}(?![\s\S])'),
++    sha256=dict(type='string',pattern=r'^[0-9a-f]{64}(?![\s\S])'),
++    id=dict(type='string',pattern=r'^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}(?![\s\S])'),
++    utc=dict(type='string',pattern=r'^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z(?![\s\S])'),
++    revision=dict(type='string',pattern=r'^[1-9][0-9]{0,18}(?![\s\S])'))
++records=dict(
++    profile=closed(dict(schema=const('unified.authority.research-lab-profile.v1-review1'),cluster_id=ref('uuid4'),realm_id=ref('uuid4'),
++        principal_registry=dict(type='object',minProperties=1,maxProperties=32,propertyNames=ref('sha256'),additionalProperties=ref('uuid4')),
++        input_request_sha256=const('c548e2ffcd542d5d741682303694b3c6d06507740f158a6e30089b2d5355f648'),
++        producer_head=const('aed8a7c8a952f96803c207d5e90b133969a47f04'),resources=closed(dict(cpu_millicores=const('1000'),
++            resident_memory_bytes=const('268435456'),max_artifact_bytes=const('1048576'))),
++        expiry_semantics=const('NATIVE_SESSION_INVALIDATION_NOT_UTC_AT_COMMIT'),expires_utc=ref('utc'))),
++    principal=closed(dict(schema=const('unified.authority.research-lab-principal.v1-review1'),actor_id=ref('uuid4'),service_id=ref('uuid4'),
++        certificate_sha256=ref('sha256'),quota_owner_id=ref('id'),policy_id=ref('uuid4'),profile_sha256=ref('sha256'),state={'enum':['ACTIVE','REVOKED']})),
++    policy=closed(dict(schema=const('unified.authority.research-lab-policy.v1-review1'),policy_id=ref('uuid4'),actor_id=ref('uuid4'),
++        profile_sha256=ref('sha256'),revision=ref('revision'),state={'enum':['ACTIVE','REVOKED']},
++        scopes=dict(type='array',minItems=1,maxItems=3,uniqueItems=True,items={'enum':['SUBMIT_RESEARCH','READ_RESEARCH','CANCEL_OWN_JOB']}),expires_utc=ref('utc'))),
++    principal_session=closed(dict(schema=const('unified.authority.research-lab-principal-session.v1-review1'),actor_id=ref('uuid4'),service_id=ref('uuid4'),
++        certificate_sha256=ref('sha256'),session_id=ref('native_session'),policy_id=ref('uuid4'),profile_sha256=ref('sha256'),quota_owner_id=ref('id'))))
++members=[]
++for name,body in records.items():
++    value={'$schema':'https://json-schema.org/draft/2020-12/schema','$id':'urn:unified:research-identity:'+name+':v1-review1','$defs':defs,**body}
++    raw=json.dumps(value,sort_keys=True,separators=(',',':')).encode()+b'\n'
++    path=name+'.schema.json';(OUT/path).write_bytes(raw)
++    members.append(dict(path=path,sha256=hashlib.sha256(raw).hexdigest()))
++(OUT/'RECORD-MANIFEST.json').write_text(json.dumps(dict(scope='CLOSED_NATIVE_RECORD_DATA_NOT_ISSUED_AUTHORITY',members=members),indent=2)+'\n',encoding='utf-8')
+diff --git a/docs/intelligence/research-identity/fetch_consul.py b/docs/intelligence/research-identity/fetch_consul.py
+new file mode 100644
+index 0000000..24ced6c
+--- /dev/null
++++ b/docs/intelligence/research-identity/fetch_consul.py
+@@ -0,0 +1,28 @@
++"""Fetch one pinned disposable test binary; never installs a service."""
++import argparse
++import hashlib
++import io
++from pathlib import Path
++import sys
++import urllib.request
++import zipfile
++
++PINS={
++    'win32':('windows','consul.exe','41762ef5b98c8dd9b6852df6cfbceed37e7f0acc5760856be33100f1092475e1'),
++    'linux':('linux','consul','acb0a1b5b2a22a5fadb5d725f03610335e499e193eeade9df458c6c6017a77f4'),
++}
++parser=argparse.ArgumentParser();parser.add_argument('--directory',required=True);args=parser.parse_args()
++platform,name,pin=PINS[sys.platform]
++destination=Path(args.directory).absolute();destination.mkdir(parents=True,exist_ok=False)
++url='https://releases.hashicorp.com/consul/1.22.2/consul_1.22.2_'+platform+'_amd64.zip'
++with urllib.request.urlopen(url,timeout=60) as response:
++    raw=response.read(128*1024*1024+1)
++assert len(raw)<=128*1024*1024
++with zipfile.ZipFile(io.BytesIO(raw)) as archive:
++    member=archive.getinfo(name);assert member.file_size<=256*1024*1024
++    binary=archive.read(member)
++assert hashlib.sha256(binary).hexdigest()==pin
++target=destination/name
++with target.open('xb') as stream:stream.write(binary)
++if sys.platform=='linux':target.chmod(0o700)
++print(str(target))
+diff --git a/docs/intelligence/research-identity/native-profile-v2-20261109/API-REVIEW1.md b/docs/intelligence/research-identity/native-profile-v2-20261109/API-REVIEW1.md
+new file mode 100644
+index 0000000..8d91c68
+--- /dev/null
++++ b/docs/intelligence/research-identity/native-profile-v2-20261109/API-REVIEW1.md
+@@ -0,0 +1,19 @@
++# Actual broker profile-v2 principal source — runtime review1
++
++New owner branch from31e0351; exact RED predecessord45ae55 source module1e9 before P2 implementation. Current module/test commit qualification is reported separately. These APIs create ONLY genuine disposable research principal sessions and current identity-record captures; no job, worker, resources, publication, result access, dispatch or native-human grant.
++
++Constructor and fixed method signatures remain unchanged: ResearchIdentityBroker(*,authority,generation,realm_id,profile_sha256,server_ssl_context,server_certificate_der,audit_sink); async open_session(actual_server_SSLsocket,*,leader); async capture_current(context,*,scope,request_bytes); fixed ResearchIdentityBroker.require_capture(expected_broker,capture,*,expected_authority,scope,request_bytes). Invalidate and close keep original local latch/native own-session cleanup semantics. Actual same issuer/source/context/private inventories, real owned httpx transport/default-deny ACL, mTLS peer/DER/CA/EKU/SAN and existing Grid authority remain mandatory. READ840 is unchanged; its query literal is unified.query_market_data, not query_time_series.
++
++Added supported profile body schema unified.authority.target-bound-research-profile.v2-review1 from single-job proposal27b169; current v1 behavior remains separate. Exact native outer codec/schema SHA faf01152678c5b066145dcafebe92f593a641a54dac84da3ce1e1df94c0fb261 has exactly20 fields and new native-request schema/mode, no direct conversion. Immutable P is stored in SAME L/profile-registry/S; P has no own S/D, while native13 includes S. Actual principal/policy/session records remain their existing closed v1 formats referring to S. No second identity registry or consensus source.
++
++P2 runtime additionally requires ONE actual fingerprint->actor entry, exact registry/current principal/binding actor and quota joins, cluster/generation/realm, planned job/request/idem, exact producer/input and all20 byte bindings. Strict bounded canonical base64 and SHA retained; decoded target uses its own ASCII canonical codec, exact numeric integer caps (reject bool/3.0 aliases), no duplicates/nonfinite/depth>12. Metadata P/C3 limits still apply; target16KiB does not guarantee expanded P fits16KiB. Root commissioner controls actual profile writes; a caller cannot self-commission from a JSON role/profile/hash. Trial CPU/RSS/output demand strings do not qualify resources.
++
++SUBMIT_RESEARCH and READ_RESEARCH captures for P2 require EXACT original canonical frozen lab13 bytes reconstructed from actual P/S, current actor/quota/generation and fixed input/producer/resources. READ capture does not prove that a planned job exists or issue job/payload access. CANCEL_OWN_JOB capture requires closed cancel12 with its own different request UUID, canonical lab-compatible key and exact original submit UUID/D/planned job/actor/quota/gen/profile. This captures identity for a possible owned cancel command, not an actual cancel/exit/refund. Actual native job owner/original/common binding/CAS is still required in the Grid issuer.
++
++All captures remain read observations: actual target mutation must derive and check ALL captured native record indices/principal-session Session in SAME transaction with real leader/gen/job/worker/hold/resource checks. Fixed require_capture synchronously rechecks original peer/current local UTC+monotonic deadlines and exact bytes/scope/issuer, not a fresh distributed permission read. No serialized object/dataclass/None callback or foreign source is proof.
++
++Expiry remains existing native-session-invalidation semantics, NOT strict certificate UTC-at-Raft-commit. Root follow-up separates native commit fact from effect admission. A control write response may arrive late; actual receipt stays known, policy/operation UNKNOWN blocks effect permits. Current source only enforces its original local min(cert/profile/policy UTC,monotonic/nativeTTL margin) and rollback guards; proposed stronger minimum remaining2.5s/effect revalidation is NOT yet implemented or silently promised here. Root/A5 source/API numeric co-ACK is needed before dispatch/publication. Unknown/stale source denies.
++
++Tests: new7 actual own three-voter Consul/mTLS cases cover valid P2 session and exact submit/read capture, closed cancel binding, wrong original, fully rebound float/bool/registry actor, direct/dot key refusal, current policy revocation/session loss, and real1/3 no quorum. Existing15 plus7 discover as22 UNIQUE IDs (fixture TestCase not re-exported). Profile/principal/policy/generation are genuinely Root-commissioned with actual peer fingerprints; no issued job/Assignment/hold/receipt proof rows are seeded. Original RED exact HEAD/module/test +1516primaryraw pre/post retained separately; final source qualification must use fresh clones/exact source/zero skips and owned process cleanup, not WIP log relabel.
++
++Current actual native job/publication/worker/result access gates remain unavailable until their separately co-approved implementation/source qualification. Public submit DENY; production/physical BLOCKED. No Root target/CI, transport, storage engine, placement or UI edits.
+\ No newline at end of file
+diff --git a/docs/intelligence/research-identity/native-profile-v2-20261109/EXPECTED-TESTS.json b/docs/intelligence/research-identity/native-profile-v2-20261109/EXPECTED-TESTS.json
+new file mode 100644
+index 0000000..f99d7dc
+--- /dev/null
++++ b/docs/intelligence/research-identity/native-profile-v2-20261109/EXPECTED-TESTS.json
+@@ -0,0 +1,24 @@
++[
++  "test_broker.BrokerBoundaryTests.test_context_and_capture_have_no_public_constructor",
++  "test_broker.BrokerBoundaryTests.test_missing_or_method_shaped_authority_never_authenticates",
++  "test_broker.BrokerBoundaryTests.test_native_session_syntax_is_distinct_and_never_a_permission",
++  "test_native_broker.NativeBrokerTests.test_acl_default_deny_client_cannot_write_policy",
++  "test_native_broker.NativeBrokerTests.test_actual_mtls_native_session_and_sealed_capture",
++  "test_native_broker.NativeBrokerTests.test_actual_native_policy_revocation_and_session_invalidation",
++  "test_native_broker.NativeBrokerTests.test_audit_full_invalidation_still_destroys_own_native_session",
++  "test_native_broker.NativeBrokerTests.test_close_during_actual_native_create_retires_owned_session",
++  "test_native_broker.NativeBrokerTests.test_forward_utc_jump_expires_real_issued_capture",
++  "test_native_broker.NativeBrokerTests.test_invalidate_latches_and_stale_capture_is_no_permission",
++  "test_native_broker.NativeBrokerTests.test_read_scope_cannot_be_upgraded_by_request",
++  "test_native_broker.NativeBrokerTests.test_real_foreign_native_session_cannot_rebind_issued_context",
++  "test_native_broker.NativeBrokerTests.test_shortened_native_policy_expiry_bounds_new_capture",
++  "test_native_broker.NativeBrokerTests.test_stale_policy_capture_fails_actual_native_cas",
++  "test_native_broker.NativeBrokerTests.test_z_real_one_of_three_no_quorum_is_unavailable",
++  "test_native_profile_v2.NativeProfileV2Tests.test_00_actual_v2_principal_and_exact_submit_read_capture",
++  "test_native_profile_v2.NativeProfileV2Tests.test_direct_profile_and_dot_key_cannot_be_upgraded",
++  "test_native_profile_v2.NativeProfileV2Tests.test_exact_cancel_is_separate_original_bound_identity_capture",
++  "test_native_profile_v2.NativeProfileV2Tests.test_fully_rebound_float_and_registry_actor_aliases_refuse",
++  "test_native_profile_v2.NativeProfileV2Tests.test_real_v2_policy_revocation_and_session_loss_refuse",
++  "test_native_profile_v2.NativeProfileV2Tests.test_wrong_lab_original_never_binds_valid_v2_context",
++  "test_native_profile_v2.NativeProfileV2Tests.test_z_real_one_of_three_no_quorum_refuses_v2_capture"
++]
+diff --git a/docs/intelligence/research-identity/native-profile-v2-20261109/PLAN.md b/docs/intelligence/research-identity/native-profile-v2-20261109/PLAN.md
+new file mode 100644
+index 0000000..09e3c7c
+--- /dev/null
++++ b/docs/intelligence/research-identity/native-profile-v2-20261109/PLAN.md
+@@ -0,0 +1,17 @@
++# Executable broker profile-v2 slice
++
++Root NativeJobAdmission/ResearchE2E directive2026-11-09 selects SINGLE-JOB PROFILE-V2/full20 with unchanged lab13. This is actual disposable principal source work, NOT job/worker/publication permission.
++
++Base31e0351b9f21ac53f3eb47a23bf45d06a58e1fe1/tree787be69ece1b533dff284195bbedd34a0ae5196e, old broker SHA1e9f4bb1c7a563b3cf5e19f432f5799941448df212a2ddb9a7de9df1d99cb543. Separate feature/agent2-research-profile-v2-20261109. Existing READ840 untouched; no Root CI/target/shared code.
++
++Scope: existing gateway_research_identity.py, tests/gateway_research_identity/**, these docs and owned workflow only. Source/class/record/API co-ACK precedes shared freeze/wiring. Current worker/storage/UTC job mutation gates remain closed.
++
++- [x] Actual current remote base matched, separate worktree created; three existing boundary units PASS, no native15 transfer.
++- [ ] Commit RED new actual native profile-v2 test/fixture while broker source remains1e9; preserve exact HEAD/module/test hashes plus original failed log.
++- [ ] Support exact closed target-bound profile schema27b169... / native20faf011... joins, strict base64/canonical numeric types, actor registry/current principal/quota/generation/realm/request/planned job/idem/resources/producer/input identity. Direct v1 and fully rebound invalid bindings deny.
++- [ ] Require exact original lab13 for SUBMIT/READ captures. CANCEL captures bind exact original-submit digest/UUID/job/actor/quota/profile and independent cancel command; identity capture alone grants no mutation.
++- [ ] Use real mTLS peer and existing owned real Consul client/default-deny ACL, genuine profile/principal/policy/generation bootstrap and actual principal-session lock. No fake issued Assignment/job/hold/receipt seeds.
++- [ ] Native RED/GREEN tests valid principal session/capture plus full-binding/numeric alias/direct upgrade/wrong original/cancel/revocation/stale-session/no-quorum and expiry/cleanup. Preserve source-pinned RED; no historical WIP relabel.
++- [ ] Independent source review, fresh raw primary qualification old15 plus exact new IDs, hashes/cleanup and own Windows/Linux workflow. Draft separate PR, no merge/deploy.
++
++Profile v2 still uses NATIVE_SESSION_INVALIDATION_NOT_UTC_AT_COMMIT as descriptive semantics, not a strict UTC promise. Principal context/capture is read evidence only; actual Grid mutation requires all captured indices/session in SAME transaction and its independently approved expiry/resource/worker policy. Strict/unknown mutation requirement fails closed. See Grid docs/superpowers/plans/2026-11-09-native-job-admission.md for provenance and whole slice plan.
+diff --git a/docs/intelligence/research-identity/native-profile-v2-20261109/run_qualification.py b/docs/intelligence/research-identity/native-profile-v2-20261109/run_qualification.py
+new file mode 100644
+index 0000000..59ae85d
+--- /dev/null
++++ b/docs/intelligence/research-identity/native-profile-v2-20261109/run_qualification.py
+@@ -0,0 +1,37 @@
++"""Exact primary old15+new7 native profile-v2 source qualification; no job grants."""
++import argparse,hashlib,json,os
++from pathlib import Path
++import re,subprocess,sys,types,unittest
++
++def git(root,*args):return subprocess.check_output(['git','--no-replace-objects','-C',str(root),*args])
++def main():
++    parser=argparse.ArgumentParser()
++    parser.add_argument('--expected-head',required=True)
++    parser.add_argument('--grid-source',required=True)
++    parser.add_argument('--expected-grid-head',required=True)
++    args=parser.parse_args()
++    assert sys.flags.isolated and sys.dont_write_bytecode and sys.pycache_prefix is None
++    script=Path(__file__).absolute();root=script.parents[4];grid=Path(args.grid_source).absolute()
++    assert all(re.fullmatch('[0-9a-f]{40}',v) for v in (args.expected_head,args.expected_grid_head))
++    raw=git(root,'show','f155126a95e80139b1b9679c1870ffd66c29360e:docs/intelligence/identity/run_qualification.py')
++    assert hashlib.sha256(raw).hexdigest()=='e3733379da5e0cde84573f3279d265c91e16eceb8c94aeeda8983b51031216fe'
++    guard=types.ModuleType('pinned_primary_guard');exec(compile(raw,'<pinned-primary-guard>','exec'),guard.__dict__)
++    for ancestor in (script,*script.parents):guard.ordinary(ancestor)
++    assert git(root,'rev-parse','HEAD').decode().strip()==args.expected_head
++    assert git(grid,'rev-parse','HEAD').decode().strip()==args.expected_grid_head
++    before=guard.inventory(root);grid_before=guard.inventory(grid)
++    os.environ['A2_RESEARCH_GRID_SOURCE']=str(grid)
++    sys.path[:0]=[str(root),str(root/'tests/gateway_research_identity')]
++    suite=unittest.defaultTestLoader.discover(str(root/'tests/gateway_research_identity'),pattern='test_*.py')
++    def ids(value):
++        for item in value:
++            if isinstance(item,unittest.TestSuite):yield from ids(item)
++            else:yield item.id()
++    actual=list(ids(suite));expected=json.loads((script.parent/'EXPECTED-TESTS.json').read_bytes())
++    assert len(actual)==len(set(actual))==len(expected)==len(set(expected))==22
++    assert sorted(actual)==sorted(expected)
++    result=unittest.TextTestRunner(verbosity=2).run(suite)
++    assert guard.inventory(root)==before and guard.inventory(grid)==grid_before
++    assert result.wasSuccessful() and result.testsRun==22 and not result.skipped
++    print(json.dumps(dict(result='PASS',scope='ACTUAL_DISPOSABLE_PROFILE_V2_PRINCIPAL_NOT_JOB_RESOURCE_DISPATCH_OR_STORAGE_GRANT',head=args.expected_head,tree=git(root,'rev-parse','HEAD^{tree}').decode().strip(),grid_head=args.expected_grid_head,raw_files=len(before),grid_raw_files=len(grid_before),tests=22,skips=0,exact_unique_ids=True,module_sha256=before['unified_system/gateway_research_identity.py'],read840_unchanged=before['unified_system/gateway_identity.py']=='84093865e8477ef6562100d41137922785446c9cb4e024c9ba7105593a2b36c1')))
++if __name__=='__main__':main()
+diff --git a/docs/intelligence/research-identity/policy.schema.json b/docs/intelligence/research-identity/policy.schema.json
+new file mode 100644
+index 0000000..5702284
+--- /dev/null
++++ b/docs/intelligence/research-identity/policy.schema.json
+@@ -0,0 +1 @@
++{"$defs":{"id":{"pattern":"^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}(?![\\s\\S])","type":"string"},"native_session":{"maxLength":36,"minLength":36,"pattern":"^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}(?![\\s\\S])","type":"string"},"revision":{"pattern":"^[1-9][0-9]{0,18}(?![\\s\\S])","type":"string"},"sha256":{"pattern":"^[0-9a-f]{64}(?![\\s\\S])","type":"string"},"utc":{"pattern":"^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z(?![\\s\\S])","type":"string"},"uuid4":{"pattern":"^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}(?![\\s\\S])","type":"string"}},"$id":"urn:unified:research-identity:policy:v1-review1","$schema":"https://json-schema.org/draft/2020-12/schema","additionalProperties":false,"properties":{"actor_id":{"$ref":"#/$defs/uuid4"},"expires_utc":{"$ref":"#/$defs/utc"},"policy_id":{"$ref":"#/$defs/uuid4"},"profile_sha256":{"$ref":"#/$defs/sha256"},"revision":{"$ref":"#/$defs/revision"},"schema":{"const":"unified.authority.research-lab-policy.v1-review1"},"scopes":{"items":{"enum":["SUBMIT_RESEARCH","READ_RESEARCH","CANCEL_OWN_JOB"]},"maxItems":3,"minItems":1,"type":"array","uniqueItems":true},"state":{"enum":["ACTIVE","REVOKED"]}},"required":["actor_id","expires_utc","policy_id","profile_sha256","revision","schema","scopes","state"],"type":"object"}
+diff --git a/docs/intelligence/research-identity/principal.schema.json b/docs/intelligence/research-identity/principal.schema.json
+new file mode 100644
+index 0000000..867fc8b
+--- /dev/null
++++ b/docs/intelligence/research-identity/principal.schema.json
+@@ -0,0 +1 @@
++{"$defs":{"id":{"pattern":"^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}(?![\\s\\S])","type":"string"},"native_session":{"maxLength":36,"minLength":36,"pattern":"^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}(?![\\s\\S])","type":"string"},"revision":{"pattern":"^[1-9][0-9]{0,18}(?![\\s\\S])","type":"string"},"sha256":{"pattern":"^[0-9a-f]{64}(?![\\s\\S])","type":"string"},"utc":{"pattern":"^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z(?![\\s\\S])","type":"string"},"uuid4":{"pattern":"^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}(?![\\s\\S])","type":"string"}},"$id":"urn:unified:research-identity:principal:v1-review1","$schema":"https://json-schema.org/draft/2020-12/schema","additionalProperties":false,"properties":{"actor_id":{"$ref":"#/$defs/uuid4"},"certificate_sha256":{"$ref":"#/$defs/sha256"},"policy_id":{"$ref":"#/$defs/uuid4"},"profile_sha256":{"$ref":"#/$defs/sha256"},"quota_owner_id":{"$ref":"#/$defs/id"},"schema":{"const":"unified.authority.research-lab-principal.v1-review1"},"service_id":{"$ref":"#/$defs/uuid4"},"state":{"enum":["ACTIVE","REVOKED"]}},"required":["actor_id","certificate_sha256","policy_id","profile_sha256","quota_owner_id","schema","service_id","state"],"type":"object"}
+diff --git a/docs/intelligence/research-identity/principal_session.schema.json b/docs/intelligence/research-identity/principal_session.schema.json
+new file mode 100644
+index 0000000..e694199
+--- /dev/null
++++ b/docs/intelligence/research-identity/principal_session.schema.json
+@@ -0,0 +1 @@
++{"$defs":{"id":{"pattern":"^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}(?![\\s\\S])","type":"string"},"native_session":{"maxLength":36,"minLength":36,"pattern":"^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}(?![\\s\\S])","type":"string"},"revision":{"pattern":"^[1-9][0-9]{0,18}(?![\\s\\S])","type":"string"},"sha256":{"pattern":"^[0-9a-f]{64}(?![\\s\\S])","type":"string"},"utc":{"pattern":"^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z(?![\\s\\S])","type":"string"},"uuid4":{"pattern":"^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}(?![\\s\\S])","type":"string"}},"$id":"urn:unified:research-identity:principal_session:v1-review1","$schema":"https://json-schema.org/draft/2020-12/schema","additionalProperties":false,"properties":{"actor_id":{"$ref":"#/$defs/uuid4"},"certificate_sha256":{"$ref":"#/$defs/sha256"},"policy_id":{"$ref":"#/$defs/uuid4"},"profile_sha256":{"$ref":"#/$defs/sha256"},"quota_owner_id":{"$ref":"#/$defs/id"},"schema":{"const":"unified.authority.research-lab-principal-session.v1-review1"},"service_id":{"$ref":"#/$defs/uuid4"},"session_id":{"$ref":"#/$defs/native_session"}},"required":["actor_id","certificate_sha256","policy_id","profile_sha256","quota_owner_id","schema","service_id","session_id"],"type":"object"}
+diff --git a/docs/intelligence/research-identity/profile.schema.json b/docs/intelligence/research-identity/profile.schema.json
+new file mode 100644
+index 0000000..3ca49d0
+--- /dev/null
++++ b/docs/intelligence/research-identity/profile.schema.json
+@@ -0,0 +1 @@
++{"$defs":{"id":{"pattern":"^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}(?![\\s\\S])","type":"string"},"native_session":{"maxLength":36,"minLength":36,"pattern":"^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}(?![\\s\\S])","type":"string"},"revision":{"pattern":"^[1-9][0-9]{0,18}(?![\\s\\S])","type":"string"},"sha256":{"pattern":"^[0-9a-f]{64}(?![\\s\\S])","type":"string"},"utc":{"pattern":"^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z(?![\\s\\S])","type":"string"},"uuid4":{"pattern":"^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}(?![\\s\\S])","type":"string"}},"$id":"urn:unified:research-identity:profile:v1-review1","$schema":"https://json-schema.org/draft/2020-12/schema","additionalProperties":false,"properties":{"cluster_id":{"$ref":"#/$defs/uuid4"},"expires_utc":{"$ref":"#/$defs/utc"},"expiry_semantics":{"const":"NATIVE_SESSION_INVALIDATION_NOT_UTC_AT_COMMIT"},"input_request_sha256":{"const":"c548e2ffcd542d5d741682303694b3c6d06507740f158a6e30089b2d5355f648"},"principal_registry":{"additionalProperties":{"$ref":"#/$defs/uuid4"},"maxProperties":32,"minProperties":1,"propertyNames":{"$ref":"#/$defs/sha256"},"type":"object"},"producer_head":{"const":"aed8a7c8a952f96803c207d5e90b133969a47f04"},"realm_id":{"$ref":"#/$defs/uuid4"},"resources":{"additionalProperties":false,"properties":{"cpu_millicores":{"const":"1000"},"max_artifact_bytes":{"const":"1048576"},"resident_memory_bytes":{"const":"268435456"}},"required":["cpu_millicores","max_artifact_bytes","resident_memory_bytes"],"type":"object"},"schema":{"const":"unified.authority.research-lab-profile.v1-review1"}},"required":["cluster_id","expires_utc","expiry_semantics","input_request_sha256","principal_registry","producer_head","realm_id","resources","schema"],"type":"object"}
+diff --git a/docs/intelligence/research-identity/requirements-linux.lock b/docs/intelligence/research-identity/requirements-linux.lock
+new file mode 100644
+index 0000000..cdbf25a
+--- /dev/null
++++ b/docs/intelligence/research-identity/requirements-linux.lock
+@@ -0,0 +1,15 @@
++anyio==4.16.0 --hash=sha256:c66ae634e0b8228396b801741beb3294326d4b6102f7bba4041c0dfb58c29026
++attrs==26.1.0 --hash=sha256:c647aa4a12dfbad9333ca4e71fe62ddc36f4e63b2d260a37a8b83d2f043ac309
++certifi==2026.10.23 --hash=sha256:e9b54de76e530bb6cf0ccd036787103acb58fd42ba930ea8bf948ddbaa2f61d1
++h11==0.16.0 --hash=sha256:63cf8bbe7522de3bf65932fda1d9c2772064ffb3dae62d55932da54b31cb6c86
++httpcore==1.0.9 --hash=sha256:2d400746a40668fc9dec9810239072b40b4484b640a8c38fd654a024c7a1bf55
++httpx==0.28.1 --hash=sha256:d909fcccc110f8c7faf814ca82a9a4d816bc5a6dbfea25d6591d6985b8ba59ad
++idna==3.20 --hash=sha256:ab7ae7122974553370f0bdb919e1a960b2cd1bc1ef0276416d896db81c14582c
++jsonschema==4.25.1 --hash=sha256:3fba0169e345c7175110351d456342c364814cfcf3b964ba4587f22915230a63
++jsonschema-specifications==2025.9.1 --hash=sha256:98802fee3a11ee76ecaca44429fda8a41bff98b00a0f2838151b113f210cc6fe
++referencing==0.37.0 --hash=sha256:381329a9f99628c9069361716891d34ad94af76e461dcb0335825aecc7692231
++rpds-py==2026.9.1 --hash=sha256:5ce8943f79c2210f7abcc28e86367b03b28d95027fd01c46d2472373ae70c86f --hash=sha256:addeda51556dac7c1a2f14cda62db8b621cd12afba3091d03a96c72932387eab
++typing-extensions==4.16.0 --hash=sha256:481caa481374e813c1b176ada14e97f1f67a4539ce9cfeb3f350d78d6370c2e8
++cryptography==46.0.3 --hash=sha256:a2c0cd47381a3229c403062f764160d57d4d175e022c1df84e168c6251a22eec
++cffi==2.0.0 --hash=sha256:3e17ed538242334bf70832644a32a7aae3d83b57567f9fd60a26257e992b79ba
++pycparser==2.23 --hash=sha256:e5c6e8d3fbad53479cab09ac03729e0a9faf2bee3db8208a550daf5af81a5934
+diff --git a/docs/intelligence/research-identity/requirements-windows.lock b/docs/intelligence/research-identity/requirements-windows.lock
+new file mode 100644
+index 0000000..2243ba4
+--- /dev/null
++++ b/docs/intelligence/research-identity/requirements-windows.lock
+@@ -0,0 +1,15 @@
++anyio==4.16.0 --hash=sha256:c66ae634e0b8228396b801741beb3294326d4b6102f7bba4041c0dfb58c29026
++attrs==26.1.0 --hash=sha256:c647aa4a12dfbad9333ca4e71fe62ddc36f4e63b2d260a37a8b83d2f043ac309
++certifi==2026.10.23 --hash=sha256:e9b54de76e530bb6cf0ccd036787103acb58fd42ba930ea8bf948ddbaa2f61d1
++h11==0.16.0 --hash=sha256:63cf8bbe7522de3bf65932fda1d9c2772064ffb3dae62d55932da54b31cb6c86
++httpcore==1.0.9 --hash=sha256:2d400746a40668fc9dec9810239072b40b4484b640a8c38fd654a024c7a1bf55
++httpx==0.28.1 --hash=sha256:d909fcccc110f8c7faf814ca82a9a4d816bc5a6dbfea25d6591d6985b8ba59ad
++idna==3.20 --hash=sha256:ab7ae7122974553370f0bdb919e1a960b2cd1bc1ef0276416d896db81c14582c
++jsonschema==4.25.1 --hash=sha256:3fba0169e345c7175110351d456342c364814cfcf3b964ba4587f22915230a63
++jsonschema-specifications==2025.9.1 --hash=sha256:98802fee3a11ee76ecaca44429fda8a41bff98b00a0f2838151b113f210cc6fe
++referencing==0.37.0 --hash=sha256:381329a9f99628c9069361716891d34ad94af76e461dcb0335825aecc7692231
++rpds-py==2026.9.1 --hash=sha256:5ce8943f79c2210f7abcc28e86367b03b28d95027fd01c46d2472373ae70c86f --hash=sha256:addeda51556dac7c1a2f14cda62db8b621cd12afba3091d03a96c72932387eab
++typing-extensions==4.16.0 --hash=sha256:481caa481374e813c1b176ada14e97f1f67a4539ce9cfeb3f350d78d6370c2e8
++cryptography==46.0.3 --hash=sha256:a9a3008438615669153eb86b26b61e09993921ebdd75385ddd748702c5adfddb
++cffi==2.0.0 --hash=sha256:da68248800ad6320861f129cd9c1bf96ca849a2771a59e0344e88681905916f5
++pycparser==2.23 --hash=sha256:e5c6e8d3fbad53479cab09ac03729e0a9faf2bee3db8208a550daf5af81a5934
+diff --git a/docs/intelligence/research-identity/run_qualification.py b/docs/intelligence/research-identity/run_qualification.py
+new file mode 100644
+index 0000000..4ba1e57
+--- /dev/null
++++ b/docs/intelligence/research-identity/run_qualification.py
+@@ -0,0 +1,39 @@
++"""Exact primary raw sources before/after; actual owned native tests only."""
++import argparse,hashlib,json,os,pathlib,subprocess,sys,types,unittest
++
++def main():
++    parser=argparse.ArgumentParser();parser.add_argument('--expected-head',required=True);parser.add_argument('--grid-source',required=True);args=parser.parse_args()
++    assert sys.flags.isolated and sys.dont_write_bytecode and sys.pycache_prefix is None
++    root=pathlib.Path(__file__).absolute().parents[3];grid=pathlib.Path(args.grid_source).absolute()
++    def git(path,*argv):return subprocess.check_output(['git','--no-replace-objects','-C',str(path),*argv])
++    raw=git(root,'show','f155126a95e80139b1b9679c1870ffd66c29360e:docs/intelligence/identity/run_qualification.py')
++    assert hashlib.sha256(raw).hexdigest()=='e3733379da5e0cde84573f3279d265c91e16eceb8c94aeeda8983b51031216fe'
++    guard=types.ModuleType('primary_guard');exec(compile(raw,'<pinned-primary-guard>','exec'),guard.__dict__)
++    for ancestor in (pathlib.Path(__file__).absolute(),*pathlib.Path(__file__).absolute().parents):guard.ordinary(ancestor)
++    assert git(root,'rev-parse','HEAD').decode().strip()==args.expected_head
++    assert git(grid,'rev-parse','HEAD').decode().strip()=='40e9c8dc274a2746018bc1aa08d103cd0187cecc'
++    before=guard.inventory(root);grid_before=guard.inventory(grid)
++    os.environ['A2_RESEARCH_GRID_SOURCE']=str(grid)
++    sys.path[:0]=[str(root),str(root/'tests/gateway_research_identity')]
++    suite=unittest.defaultTestLoader.discover(str(root/'tests/gateway_research_identity'),pattern='test_*.py')
++    def ids(s):
++        for test in s:
++            if isinstance(test,unittest.TestSuite):yield from ids(test)
++            else:yield test.id()
++    actual=list(ids(suite))
++    expected={
++        'test_broker.BrokerBoundaryTests.'+name for name in (
++        'test_missing_or_method_shaped_authority_never_authenticates','test_context_and_capture_have_no_public_constructor','test_native_session_syntax_is_distinct_and_never_a_permission')}
++    expected.update('test_native_broker.NativeBrokerTests.'+name for name in (
++        'test_actual_mtls_native_session_and_sealed_capture','test_actual_native_policy_revocation_and_session_invalidation',
++        'test_forward_utc_jump_expires_real_issued_capture','test_shortened_native_policy_expiry_bounds_new_capture',
++        'test_acl_default_deny_client_cannot_write_policy','test_close_during_actual_native_create_retires_owned_session',
++        'test_read_scope_cannot_be_upgraded_by_request','test_invalidate_latches_and_stale_capture_is_no_permission',
++        'test_stale_policy_capture_fails_actual_native_cas','test_real_foreign_native_session_cannot_rebind_issued_context',
++        'test_audit_full_invalidation_still_destroys_own_native_session','test_z_real_one_of_three_no_quorum_is_unavailable'))
++    assert len(actual)==len(set(actual))==15 and set(actual)==expected
++    result=unittest.TextTestRunner(verbosity=2).run(suite)
++    assert guard.inventory(root)==before and guard.inventory(grid)==grid_before
++    assert result.wasSuccessful() and result.testsRun==15 and not result.skipped
++    print(json.dumps(dict(result='PASS',head=args.expected_head,tree=git(root,'rev-parse','HEAD^{tree}').decode().strip(),grid_head='40e9c8dc274a2746018bc1aa08d103cd0187cecc',raw_files=len(before),grid_raw_files=len(grid_before),tests=15,skips=0,scope='DISPOSABLE_RESEARCH_PRINCIPAL_NOT_JOB_WORKER_OR_PUBLIC_SUBMIT')))
++if __name__=='__main__':main()
+\ No newline at end of file
+diff --git a/docs/storage/native-publication/EXECUTION-PLAN-20261109.md b/docs/storage/native-publication/EXECUTION-PLAN-20261109.md
+new file mode 100644
+index 0000000..5bb3d52
+--- /dev/null
++++ b/docs/storage/native-publication/EXECUTION-PLAN-20261109.md
+@@ -0,0 +1,84 @@
++# Actual StoragePublication: executable slice plan
++
++2026-11-09. ROOT relayed explicit user authorization for separate isolated
++implementation. This is not deployment, physical topology or positive native
++admission. Existing PR50 and its evidence remain immutable.
++
++Base3e1b4c7c65174fe5775050449162153213e62a8f,
++tree3354fe1f7e130dbaa19a8455b8f21b65f4ec067e.
++Branch feature/storage-native-publication-20261109; separate own worktree.
++
++Owned source: result_publication.py, replica_evidence.py; proposed new
++publication_records.py, publication_recovery.py; tests/storage/native_publication/**,
++docs/storage/native-publication/** and .github/workflows/storage-native-publication.yml.
++Existing A2/A5/A7 or ROOT sources are not edited here.
++
++## Required resulting behavior
++
++Only an actual A2 native transaction can publish a dataset identity, immutable
++root and committed revision with original native receipt/access scope. A local
++file/hash/replica-shaped record is insufficient. Target result stays
++LOCAL_UNATTESTED until that transaction is actually consistently resolved.
++Known commit survives lost response/projection/reassignment; UNKNOWN preserves
++original intent/holds/bytes and never creates a second request or debit.
++
++## Executable slices and dependencies
++
++1. Actual retained bytes: original producer/target requests, input closure,
++   computed artifact, descriptor and truthful source/algorithm/units/provenance.
++   Verify exact bytes/hash/length/schema and complete acyclic dependencies before
++   producing a candidate. Retain existing local copy API semantics separately.
++2. Actual destination copy/readback and verifier: distinct admitted store/node/
++   volume/incarnation/domain, current eligibility, protection/holds and issued
++   reservations. No domain label supplied in JSON proves independence. Actual
++   observations are stored only through the same A2 authority/issuer contract.
++3. Native publisher adapter: fixed A2 source/instance API, not an injected callback
++   or raw caller operation plan. A2 constructs the complete transaction checking
++   assignment supersession/attempt/cancel, current closure/replicas/holds/budgets,
++   dataset CAS/original idempotency/access and atomically writes root/revision/
++   receipt/protection/accounting. Exact schemas and key-to-CAS mapping co-ACK
++   A2/A4/A5 before positive wiring. Fully encode/measure every actual plan.
++4. Reconciliation/recovery: consistent same-original lookup under current rights;
++   immutable exact native KV Value receipt bytes plus external actual ModifyIndex.
++   Crash before send, uncertain send, commit-before-response and projection crash
++   are distinct. Never reconstruct an opaque proof from JSON or retry with a new
++   key. Physical corruption/loss revokes eligibility and blocks further unsafe
++   publication; all-lost produces explicit unavailable/unrecoverable ranges.
++5. Existing A7 ResultStore projection/read: only an actual consistently resolved
++   receipt, exact artifact/root/revision/identity and current READ scope admit
++   durable projection/disclosure. Shared exact API and error/codecs co-ACK owners.
++   A6 receives actual scientific bytes/descriptor, never metadata-only chart data.
++
++## Work proceeding before interface freeze
++
++Read-only source inventory, exact byte/semantic fixture graph, explicit topology
++and commissioning requirements, interruption matrix, and independent local
++verification tests may proceed. Do not guess native success records, create a
++parallel state/receipt registry, or turn an always-denied seam into DTO success.
++New authority record names and shared signatures stay proposed until owner co-ACK.
++
++## Domain qualification and stop gate
++
++No admitted two-independent-domain storage laboratory exists in current A4
++evidence. Two folders, volumes in one physical disk, processes or containers on
++this Windows machine cannot establish independent host/media failure domains.
++Concrete provisioning requirements are recorded separately. Without actual
++policy-qualified topology, distributed publication positive stays BLOCKED, even
++if local filesystem and actual logical Consul process tests pass.
++
++## Verification gates
++
++TDD for each owned behavior; actual bounded byte corruption/loss/short-write/
++ENOSPC/flush interruption tests; real same-authority stale-owner/no-quorum/CAS/
++duplicate/concurrent/crash tests after fixed A2 API admission; actual distinct
++domain loss/readback tests before qualifying replica policy; existing-store
++projection/access/receipt tests after A7 interface admission; independent exact
++source review and fresh primary source guard. No broad reruns without new code,
++failures or unresolved concerns. No hosted rerun is requested by this plan.
++
++## Current ledger
++
++- Worktree and exact base verified clean; proposed paths listed to ROOT first.
++- Current A2/A5/A7 exact executable interfaces requested; ACK pending.
++- Historical local-only functions remain as PR50 until a reviewed successor.
++- No native publication, topology or global E2E PASS is claimed.
+diff --git a/docs/storage/native-publication/LOCAL-PREREQUISITES-CONTRACT.md b/docs/storage/native-publication/LOCAL-PREREQUISITES-CONTRACT.md
+new file mode 100644
+index 0000000..2274bae
+--- /dev/null
++++ b/docs/storage/native-publication/LOCAL-PREREQUISITES-CONTRACT.md
+@@ -0,0 +1,76 @@
++# Executed local prerequisites, not native publication
++
++2026-11-09. This separate branch preserves PR50 source/evidence. Actual A2
++publication/reconciliation API and physical two-domain commissioning are missing.
++No committed scientific artifact or access permission is produced by this slice.
++
++## Actual immutable inventory readback
++
++readback_local_closure(owned_store, claim) verifies every declared object AND root
++with actual ObjectStore.verify reads. The returned local inventory retains each
++same-read byte length/hash/filesystem identity. Source corruption or missing bytes
++fails without replacing them. The inventory is bounded by existing local declared
++graph limits. Caller edges and payload schema/source/provenance are not validated
++as semantic closure by this readback. LocalInventoryReadback is immutable and
++nonserializable; private construction is provenance hygiene, NOT an authority
++boundary against hostile Python. Native eligibility/domain/semantic closure/
++publication properties remainFalse. Two copied roots on one host remain one model.
++
++The existing ReplicaClosureInventory.capture_result_closure stub is synchronous
++and unavailable. Its old local-fixture ABI is not silently replaced by an async
++native proof. The future async native class/API/version/source and complete
++same-authority record-to-CAS contract require explicit owner co-ACK.
++
++## Actual original-byte custody and interruption recovery
++
++RetainedPublicationIntent(publication_id, raw_bytes) is an untrusted opaque local
++candidate: strict UUID4 and exact bytes1..16384, raw SHA256 computed locally. It
++does not parse or approve a native publication intent, bind a native caller or
++establish that an internal request UUID agrees with its custody identifier.
++Actual native owner parsing/identity joins remain mandatory before any send.
++
++PendingPublicationJournal(journal, owned_store) requires exact existing Journal
++and ObjectStore types, an initialized private owned journal and trusted ROOT
++directory custody. It reuses the existing transitions table, not a second registry
++or native state authority. Files/ancestors/sidecars/link identity and2MiB/64record
++bounds are checked. New-intent capacity is checked BEFORE staging effects. It is
++not an adversarial filesystem race/ACL/physical durability qualification. ROOT
++must provide exclusive journal lifecycle custody; local mutex is not a native
++writer grant or distributed lock.
++
++retain(original) writes actual immutable original bytes, reads them back, and
++appends the exact base64/hash/length/original ID in an OBSERVING journal record.
++Repeated identical ID/bytes is a local no-op; differing bytes conflict. The record
++uses closed LOCAL schema unified.storage.pending-original.v1 and only RETAINED or
++ATTEMPT_UNCERTAIN phases. No native receipt, revision, COMMITTED state or permission
++field is accepted. Such records never serve as an A2 capture/receipt/projection
++handle, even when their hash chain is valid.
++
++mark_attempt_uncertain(id) persists BEFORE a future independently admitted send;
++the marker does not claim that any send happened. recover_original(id) recovers
++exact raw bytes from verified local custody after process exit without changing
++ID, invoking a target, sending a native request or minting a receipt. UNKNOWN is
++the only native outcome. No retry/refund/hold-release permission is returned.
++Consistent actual A2 original-intent lookup is still needed for a native outcome.
++
++Loss/corruption of the staged object is explicit through verify_staged_original;
++the journal's retained exact raw original remains recoverable but does not repair
++the store automatically. A lost append response may follow an actual SQLite
++commit: the error remains uncertain and fresh recovery reads the same original.
++No bytes, sidecars, records, holds or uncertainty are deleted or reset. An unrelated
++journal/schema, bad hash chain, malformed base64 or corrupt SQLite fails closed.
++
++## Evidence boundaries and current tests
++
++TDD RED/GREEN for missing APIs, closed corrupt-SQLite errors and capacity-before-IO.
++17 own local tests cover actual copies/readbacks, corruption, exact retained
++original, identity conflict, actual child os._exit after durable attempt marker,
++append-response loss after actual SQLite commit, malformed/foreign records and
++budget denial before staging. Related retained62+11+new17 regression90PASS/0skip
++was observed on CPython3.12.10. These are working-tree results until exact source
++qualification. No native Consul/issuer/closure/replica-domain/receipt/access test
++has passed in this slice; no A2/A5/A7/global counts transfer.
++
++Dedicated workflow selects exact17 stdlib-only cases with primary Git byte guard
++before project imports and after tests. It must not be labelled native or
++two-domain E2E. Hosted execution is separate evidence and not yet claimed.
+diff --git a/docs/storage/native-publication/PROVISIONING-REQUIREMENTS-20261109.md b/docs/storage/native-publication/PROVISIONING-REQUIREMENTS-20261109.md
+new file mode 100644
+index 0000000..91c86b8
+--- /dev/null
++++ b/docs/storage/native-publication/PROVISIONING-REQUIREMENTS-20261109.md
+@@ -0,0 +1,47 @@
++# Concrete disposable two-domain provisioning requirements
++
++Status: NOT_PROVISIONED / NOT_COMMISSIONED. This file authorizes no physical,
++office, deployment, service or network-security changes.
++
++ROOT must supply or explicitly commission two independent admitted storage hosts
++with independently backed media and unique node/volume/storage incarnation IDs.
++For a virtual laboratory, evidence must identify the backing physical hosts/media
++and shared failure dependencies. If only same-host isolation is available, report
++exactly that logical process/container model; it does not meet independent
++physical two-copy policy. Do not weaken policy to make a test pass.
++
++Per host provide: isolated disposable owned root; authenticated transfer/verifier
++endpoint bound to actual admitted source and identity; actual capacity/free-space
++and measured repair/safety headroom; versioned budget/reservation/usage records;
++failure-domain evidence and policy decision; current corruption/loss eligibility;
++retention/hold protection; cleanup responsibility restricted to disposable roots.
++Caller UUIDs, path names or declared domain labels are not commissioning evidence.
++
++A2 supplies the existing disposable Consul authority namespace/generation and
++actual current issuer/leader/session/ACL/transaction interfaces. Three local
++Consul voter processes may exercise logical quorum behavior but do not establish
++physical fault-domain resilience of storage hosts or Consul itself. No second
++consensus, permanent service, office ACL/firewall/VPN configuration or fake issued
++records are introduced by Storage.
++
++A2/A4 jointly freeze exact authority replica/inventory/protection/reservation/
++accounting/access records and full record-to-CAS ledger; ROOT/A5 approve assignment/
++attempt/cancel/source/ownership semantics. A7 approves receipt projection/reading.
++Actual transactions include all relevant captured native indices and session
++checks, checked absence where needed, dataset expected revision and original
++intent/idempotency. Every actual encoded plan must fit native64op/32768byte limits;
++oversize denies, never split/omit checks or use an unchecked hash-only root.
++
++Qualification run must transfer actual full closure to both hosts; independently
++re-read/hash/schema-check both copies; establish protection against retention;
++commit through actual A2 transaction; capture raw receipt/ModifyIndex and access
++scope; interrupt before/after transaction/response; consistently reconcile the
++same original and read actual bytes with current authorized access. Inject actual
++destination corruption/loss, stale writer, current hold change and no quorum.
++Protect the last confirmed copy; lost data is explicit, never an empty success.
++
++Evidence must name exact sources/HEAD/tree/module hashes, actual runtime/dependency
++capsule, domain identities/backing/failure model, native request/response/receipt
++bytes and indices, pre/post roots/revisions, byte inventory/hash/length, original
++request/job/attempt/access joins, failure points and unresolved outcomes. Physical
++acceptance, native-human trust and production remain independent gates.
+diff --git a/release/integration/native-research-v1/NODES.json b/release/integration/native-research-v1/NODES.json
+new file mode 100644
+index 0000000..0057703
+--- /dev/null
++++ b/release/integration/native-research-v1/NODES.json
+@@ -0,0 +1,16 @@
++{
++  "schema": "unified.node-role-plan.v1",
++  "inventory_kind": "DECLARED_ARCHITECTURE_NOT_FRESH_PHYSICAL_INVENTORY",
++  "nodes": {
++    "LS5": "CENTRAL_COORDINATOR",
++    "PC3": "COORDINATOR",
++    "PC4": "COORDINATOR",
++    "PC2": "WORKER",
++    "PC1": "WINDOWS_HOME_WORKER",
++    "LS7": "WINDOWS_HOME_WORKER"
++  },
++  "ADMINIT": "EXCLUDED",
++  "physical_readiness": "NOT_ESTABLISHED",
++  "network_changes": "NOT_AUTHORIZED",
++  "tailscale_removal": "BLOCKED"
++}
+diff --git a/release/integration/native-research-v1/OWNERSHIP.json b/release/integration/native-research-v1/OWNERSHIP.json
+new file mode 100644
+index 0000000..3582ef9
+--- /dev/null
++++ b/release/integration/native-research-v1/OWNERSHIP.json
+@@ -0,0 +1,24 @@
++{
++  "schema": "unified.native-research.ownership.v1",
++  "ROOT": [
++    "release/integration/native-research-v1/**",
++    "integration composition: NOT IMPLEMENTED"
++  ],
++  "A2": [
++    "unified_system/gateway_research_identity.py",
++    "tests/gateway_research_identity/**",
++    "docs/intelligence/research-identity/**",
++    ".github/workflows/gateway-research-identity.yml"
++  ],
++  "A4": [
++    "unified_system/storage/replica_evidence.py",
++    "unified_system/storage/result_publication.py",
++    "unified_system/storage/publication_records.py",
++    "unified_system/storage/publication_recovery.py",
++    "tests/storage/native_publication/**",
++    "docs/storage/native-publication/**",
++    ".github/workflows/storage-native-publication.yml"
++  ],
++  "shared_changes": "REQUIRE_EXPLICIT_OWNER_ACK_NO_SILENT_COMPATIBILITY_CHANGE",
++  "other_owners": "A5 worker/A7 projection/A6 client remain separate NOT_IMPORTED"
++}
+diff --git a/release/integration/native-research-v1/README.md b/release/integration/native-research-v1/README.md
+new file mode 100644
+index 0000000..91ba8a7
+--- /dev/null
++++ b/release/integration/native-research-v1/README.md
+@@ -0,0 +1,37 @@
++# Native research integration candidate
++
++This is an additive source assembly, not an admitted runtime or a completed E2E.
++Its immutable identity is the enclosing primary Git commit and tree. The manifest
++retains exact owner source commits and every imported file digest. No existing
++b144 source was edited, including the direct Strattester to MetaAnalyse path,
++READ identity840, public-submit denial and existing source/security guards.
++
++ROOT selects single-job profile-v2, preserving all20 target fields, their exact
++canonical bytes, H/base64 binding in P, profile digest S and unchanged native13
++request digest D. No identity, provenance, quota, idempotency or fencing field is
++dropped. Dots/grammar mismatches are rejected, never normalized. A principal
++capture is not a job permit. Native issued revisions and fencing are not invented
++from timestamps or request fields. This decision is not a wire/effect admission.
++
++A2 and A4 explicitly ACKed additive exact-byte import onto b144. Their scoped owner
++PASS does not transfer to this new source. Working-source integration checks ran
++22 actual disposable Consul/mTLS identity cases plus17 actual local Storage
++custody/recovery cases:39 PASS, zero skips. Exact committed-source qualification
++must follow. Those suites do NOT traverse the requested scientific execution chain.
++
++Still unavailable: actual issued job/quota/Assignment/lease/fencing dispatch APIs,
++qualified Windows resource containment, current scientific payload READ permission,
++two commissioned independent storage domains, native publication receipt,
++committed projection and authenticated Terminan result endpoint. Preserve
++LOCAL_UNATTESTED/UNKNOWN and public submit DENY. Schema or DTO success is not a
++native authority grant. Shared interfaces require explicit owner ACK; no second
++broker, scheduler or authority is introduced.
++
++Rollback for this source-only candidate is selecting the immutable parent b144
++source. Nothing is installed, no persistent office service/data is changed, and
++no native job grant is minted. A runtime/data rollback plan cannot be admitted by
++this source-only change. Disposable test processes clean up only their own PIDs.
++
++TRUSTED_RELEASE remains BLOCKED_NO_TRUSTED_PUBLISHER. Production/physical deployment,
++provider sends, actual trading, office fault injection, security/network edits,
++Tailscale removal and protected-branch merge remain unauthorized. Overall NO-GO.
+diff --git a/release/integration/native-research-v1/manifest.json b/release/integration/native-research-v1/manifest.json
+new file mode 100644
+index 0000000..3b80928
+--- /dev/null
++++ b/release/integration/native-research-v1/manifest.json
+@@ -0,0 +1,212 @@
++{
++  "schema": "unified.native-research.integration-candidate.v1",
++  "source_identity": "ENCLOSING_PRIMARY_GIT_COMMIT_NOT_A_PREAPPROVED_RUNTIME",
++  "assembly_parent": "b144a5e0fd3af90c975bfc0f0123234628dbb696",
++  "imports": {
++    "unified_system/gateway_research_identity.py": {
++      "source_commit": "1f6b0b5c231853607f5bec780f1544cd32bf577d",
++      "bytes": 26114,
++      "sha256": "1f9714010143c5243c78494cb25bfe7f2d42e96301f57930212a2f5f3b9c869d"
++    },
++    ".github/workflows/gateway-research-identity.yml": {
++      "source_commit": "1f6b0b5c231853607f5bec780f1544cd32bf577d",
++      "bytes": 2886,
++      "sha256": "21e3ce4ff2a5dd24f488718534c6f21d2c26d3afdbc9103fc392be4dca3f76cc"
++    },
++    "docs/intelligence/research-identity/API-REVIEW1.md": {
++      "source_commit": "1f6b0b5c231853607f5bec780f1544cd32bf577d",
++      "bytes": 5963,
++      "sha256": "549abfe795b922b90692ab6c34edbbfd992c479113cc2fd816a5c3faba98a2c0"
++    },
++    "docs/intelligence/research-identity/RECORD-JOINS-REVIEW1.md": {
++      "source_commit": "1f6b0b5c231853607f5bec780f1544cd32bf577d",
++      "bytes": 2292,
++      "sha256": "853ee10d427494c852f24baf61487f7aeadb318e2808e65fcd4ec2e0af2fd450"
++    },
++    "docs/intelligence/research-identity/RECORD-MANIFEST.json": {
++      "source_commit": "1f6b0b5c231853607f5bec780f1544cd32bf577d",
++      "bytes": 647,
++      "sha256": "30b09ca3d4cf54e7997d23aec87889c42fb41b682887bbfa7f862bff0fa1ab26"
++    },
++    "docs/intelligence/research-identity/build_record_schemas.py": {
++      "source_commit": "1f6b0b5c231853607f5bec780f1544cd32bf577d",
++      "bytes": 3238,
++      "sha256": "18fd675de1dd5f10f220e5812f3c88e9cca3ec318a49792cbef920a52fa6ac00"
++    },
++    "docs/intelligence/research-identity/fetch_consul.py": {
++      "source_commit": "1f6b0b5c231853607f5bec780f1544cd32bf577d",
++      "bytes": 1194,
++      "sha256": "4ceb14497e0f2b2e2d4a16096f38427b6d57ff67a2e86b5a81ee2b49d01bb80b"
++    },
++    "docs/intelligence/research-identity/native-profile-v2-20261109/API-REVIEW1.md": {
++      "source_commit": "1f6b0b5c231853607f5bec780f1544cd32bf577d",
++      "bytes": 5184,
++      "sha256": "e88dce5892373a77fd90311c48d658afb4762ef9ce0a2600d9b592b40bf6f5c5"
++    },
++    "docs/intelligence/research-identity/native-profile-v2-20261109/EXPECTED-TESTS.json": {
++      "source_commit": "1f6b0b5c231853607f5bec780f1544cd32bf577d",
++      "bytes": 2185,
++      "sha256": "d6ec4f140060d0d87ce9000dc6431e77ab2fdec84e637d77975fe79c440529e0"
++    },
++    "docs/intelligence/research-identity/native-profile-v2-20261109/PLAN.md": {
++      "source_commit": "1f6b0b5c231853607f5bec780f1544cd32bf577d",
++      "bytes": 2663,
++      "sha256": "30355f7925959e594c34f647f4e5ffa1a82ca6daa2dfb70cbd9669c661e0be95"
++    },
++    "docs/intelligence/research-identity/native-profile-v2-20261109/run_qualification.py": {
++      "source_commit": "1f6b0b5c231853607f5bec780f1544cd32bf577d",
++      "bytes": 2873,
++      "sha256": "3df7db1500fd56045b3291f5c51d728a06e975c233ce29a96fee887f1342ab84"
++    },
++    "docs/intelligence/research-identity/policy.schema.json": {
++      "source_commit": "1f6b0b5c231853607f5bec780f1544cd32bf577d",
++      "bytes": 1305,
++      "sha256": "912ed3f1beb17d6ca1ae8e28faaa0ff073aa37726e06bbef4b8f9aa286591518"
++    },
++    "docs/intelligence/research-identity/principal.schema.json": {
++      "source_commit": "1f6b0b5c231853607f5bec780f1544cd32bf577d",
++      "bytes": 1235,
++      "sha256": "cae4952fd7763322f4f8a8754cc6cf2eefcad0faa0e915f6ab9e392bcd9f724d"
++    },
++    "docs/intelligence/research-identity/principal_session.schema.json": {
++      "source_commit": "1f6b0b5c231853607f5bec780f1544cd32bf577d",
++      "bytes": 1265,
++      "sha256": "74572913bcbb28131ab7c777e3349ec6d9ff45c2ecc268457aae702ab28137fd"
++    },
++    "docs/intelligence/research-identity/profile.schema.json": {
++      "source_commit": "1f6b0b5c231853607f5bec780f1544cd32bf577d",
++      "bytes": 1776,
++      "sha256": "e999dc35c4737346ac152172292078ac9eed040ffdf31afdf001ae86974f51d1"
++    },
++    "docs/intelligence/research-identity/requirements-linux.lock": {
++      "source_commit": "1f6b0b5c231853607f5bec780f1544cd32bf577d",
++      "bytes": 1533,
++      "sha256": "b66f09f4f65dd6ec88cc5080e3e506c60d8ad63e2f1cda6a4248767cc28ab883"
++    },
++    "docs/intelligence/research-identity/requirements-windows.lock": {
++      "source_commit": "1f6b0b5c231853607f5bec780f1544cd32bf577d",
++      "bytes": 1548,
++      "sha256": "6ae98c455add14d9aae36028afe2b50028af6f469c354a58b0cd25ce87f00c8d"
++    },
++    "docs/intelligence/research-identity/run_qualification.py": {
++      "source_commit": "1f6b0b5c231853607f5bec780f1544cd32bf577d",
++      "bytes": 3462,
++      "sha256": "6d8127bdb2c4cdd9791c9a14a27b73ec11b0d8ceb8fb62ba74933bdd79ac06d3"
++    },
++    "tests/gateway_research_identity/consul_lab.py": {
++      "source_commit": "1f6b0b5c231853607f5bec780f1544cd32bf577d",
++      "bytes": 4959,
++      "sha256": "71e7662021ec259c94c4ddea03c18210bcbdd8b23b4cf499c5dc8f062396ca6c"
++    },
++    "tests/gateway_research_identity/test_broker.py": {
++      "source_commit": "1f6b0b5c231853607f5bec780f1544cd32bf577d",
++      "bytes": 1739,
++      "sha256": "ce9971504e52bbc94a7dc42f2442ed40f6f52ceef214f0576d5b14e387af067c"
++    },
++    "tests/gateway_research_identity/test_native_broker.py": {
++      "source_commit": "1f6b0b5c231853607f5bec780f1544cd32bf577d",
++      "bytes": 18332,
++      "sha256": "2bba62dc458237214bc9c11aeae99fc1154867f1e74264f93f1c90e52b160df0"
++    },
++    "tests/gateway_research_identity/test_native_profile_v2.py": {
++      "source_commit": "1f6b0b5c231853607f5bec780f1544cd32bf577d",
++      "bytes": 10971,
++      "sha256": "0c4a5552329a6f3abd8446a0e2fae28216ca653292ae48bc3843bae43585bd79"
++    },
++    "unified_system/storage/replica_evidence.py": {
++      "source_commit": "743bfc7590a3d05eff3c42dc6dd4dc0be51e2ea6",
++      "bytes": 3401,
++      "sha256": "23ea42e433f70de35345030bce8fc0a8f30d7097dc022006249a7bd714af1c9d"
++    },
++    "unified_system/storage/result_publication.py": {
++      "source_commit": "743bfc7590a3d05eff3c42dc6dd4dc0be51e2ea6",
++      "bytes": 7267,
++      "sha256": "f6c1833771546134f97c45a4c53aae7fe5c16bb3cb73fff182821f4a0be952ed"
++    },
++    "unified_system/storage/publication_records.py": {
++      "source_commit": "743bfc7590a3d05eff3c42dc6dd4dc0be51e2ea6",
++      "bytes": 1606,
++      "sha256": "65653bc442091bb935bd69d5873c33dc161083ceff51010f6805736ddbca8257"
++    },
++    "unified_system/storage/publication_recovery.py": {
++      "source_commit": "743bfc7590a3d05eff3c42dc6dd4dc0be51e2ea6",
++      "bytes": 7162,
++      "sha256": "7a25a13533f66296d8626859374ebe850860cd825c5e094e6f2b2092ba0b3285"
++    },
++    ".github/workflows/storage-native-publication.yml": {
++      "source_commit": "743bfc7590a3d05eff3c42dc6dd4dc0be51e2ea6",
++      "bytes": 1890,
++      "sha256": "1b49a0d0e6722ef1e267edbedb203df6ca2e24b23d5af22b0f0b4c9d50808f17"
++    },
++    "docs/storage/native-publication/EXECUTION-PLAN-20261109.md": {
++      "source_commit": "743bfc7590a3d05eff3c42dc6dd4dc0be51e2ea6",
++      "bytes": 5009,
++      "sha256": "71a0d5f2531542b9f58ca29cdc5340ef33d73f7d261ebcab1b07f9800ba217f8"
++    },
++    "docs/storage/native-publication/LOCAL-PREREQUISITES-CONTRACT.md": {
++      "source_commit": "743bfc7590a3d05eff3c42dc6dd4dc0be51e2ea6",
++      "bytes": 4825,
++      "sha256": "79e60e0ed675ee5a7e5ac15d1e10bb5599497053f061cf75b235f362cdf9f69e"
++    },
++    "docs/storage/native-publication/PROVISIONING-REQUIREMENTS-20261109.md": {
++      "source_commit": "743bfc7590a3d05eff3c42dc6dd4dc0be51e2ea6",
++      "bytes": 3118,
++      "sha256": "305fd0a2c7880ddab35cbf8b3a4c57ebd8a32aceb6b497618ef71ad5045d6a2f"
++    },
++    "tests/storage/native_publication/qualify.py": {
++      "source_commit": "743bfc7590a3d05eff3c42dc6dd4dc0be51e2ea6",
++      "bytes": 7944,
++      "sha256": "e71934d06625a5b1c2047cd32c23c4005f2c400b438717b6b3394ecb7855edee"
++    },
++    "tests/storage/native_publication/test_actual_inventory_readback.py": {
++      "source_commit": "743bfc7590a3d05eff3c42dc6dd4dc0be51e2ea6",
++      "bytes": 3845,
++      "sha256": "7e9ea68d67ba2a446b03f879f4446da44d155031536919725ba68780a77faf62"
++    },
++    "tests/storage/native_publication/test_original_intent_recovery.py": {
++      "source_commit": "743bfc7590a3d05eff3c42dc6dd4dc0be51e2ea6",
++      "bytes": 9476,
++      "sha256": "17c2e9b8bc1bbe06e309ee16beb1429eab156cbcbea8742250f7c72a38b9bcc3"
++    }
++  },
++  "owner_acks": {
++    "A2": "ADDITIVE_IMPORT_SOURCE_COMPATIBILITY_ONLY",
++    "A4": "ADDITIVE_IMPORT_SOURCE_COMPATIBILITY_ONLY"
++  },
++  "mapping_decision": {
++    "root_choice": "SINGLE_JOB_PROFILE_V2_LOSSLESS20_UNCHANGED_NATIVE13",
++    "proposal_pr": 55,
++    "proposal_head": "c741f36e8ddaf58bb8a709b986609916ec6f2358",
++    "native_mapping_design_sha256": "586f93b6222219480c15316ee8ab8f726ccf95023ccd10c6fe3c77688b8aff16",
++    "native13_schema_sha256": "19357891fc022a87831009f17c663304ab72d88ed6ea344bb65c6bc325a321cc",
++    "runtime_grant": false,
++    "wire_freeze": "NOT_GRANTED_BY_THIS_MANIFEST"
++  },
++  "component_source_catalog": {
++    "bybit-cluster-grid": "40e9c8dc274a2746018bc1aa08d103cd0187cecc",
++    "strattester_direct": "aed8a7c8a952f96803c207d5e90b133969a47f04",
++    "strattester_projection_candidate": "887e3eeaf23ef8d9d1429435bc88bbac8099c6e6",
++    "meta_analyse_direct": "f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1",
++    "Terminan_local_ui": "22e6e7230d2f66fd22dda648a77910579812bd60",
++    "math_blocked": "b9c2f24b33285b7b0e06aebc354a9c61a909d204"
++  },
++  "qualification": "PENDING_EXACT_COMMITTED_SOURCE; WORKING_SOURCE_39_PASS_0_SKIP_NOT_NATIVE_CHAIN",
++  "native_job_permission": false,
++  "scheduler_dispatch": false,
++  "storage_publication": "LOCAL_UNATTESTED_UNKNOWN_NOT_NATIVE_COMMITTED",
++  "scientific_result_read": "NOT_IMPLEMENTED",
++  "public_submit": "DENY",
++  "physical_acceptance": "BLOCKED",
++  "production": "NO_GO",
++  "observed_draft_heads": {
++    "unified-system_PR54": "b144a5e0fd3af90c975bfc0f0123234628dbb696",
++    "unified-system_PR58": "1f6b0b5c231853607f5bec780f1544cd32bf577d",
++    "unified-system_PR56": "743bfc7590a3d05eff3c42dc6dd4dc0be51e2ea6",
++    "bybit-cluster-grid_PR270": "40e9c8dc274a2746018bc1aa08d103cd0187cecc",
++    "strattester_PR77": "887e3eeaf23ef8d9d1429435bc88bbac8099c6e6",
++    "meta_analyse_PR76": "2c4db055e56e36384a2661d443f9abc7b2331e90",
++    "Terminan_PR73": "22e6e7230d2f66fd22dda648a77910579812bd60",
++    "math_PR116": "b9c2f24b33285b7b0e06aebc354a9c61a909d204"
++  },
++  "catalog_caveat": "Observed draft HEADs are NOT one qualified integrated six-source runtime. Direct target deliberately retains separately pinned older Strattester and MetaAnalyse sources."
++}
+diff --git a/tests/gateway_research_identity/consul_lab.py b/tests/gateway_research_identity/consul_lab.py
+new file mode 100644
+index 0000000..4ff93fd
+--- /dev/null
++++ b/tests/gateway_research_identity/consul_lab.py
+@@ -0,0 +1,74 @@
++"""Own ACL-default-deny loopback triplet; no service/system/foreign processes."""
++import hashlib,json,os,socket,subprocess,sys,time,urllib.request,urllib.error,uuid
++from pathlib import Path
++
++PINS={'win32':'41762ef5b98c8dd9b6852df6cfbceed37e7f0acc5760856be33100f1092475e1',
++      'linux':'acb0a1b5b2a22a5fadb5d725f03610335e499e193eeade9df458c6c6017a77f4'}
++class ConsulLab:
++    def __init__(self,binary,scratch):
++        self.binary=Path(binary).resolve();self.scratch=Path(scratch).resolve()
++        assert hashlib.sha256(self.binary.read_bytes()).hexdigest()==PINS[sys.platform]
++        self.token=str(uuid.uuid4())  # own disposable admin only, never emitted
++        self.processes=[];self.logs=[];self.nodes=[]
++    def __enter__(self):
++        self.scratch.mkdir(parents=True,exist_ok=False)
++        ports=[];reserved=[]
++        try:
++            for _ in range(12):
++                item=socket.socket();item.bind(('127.0.0.1',0));reserved.append(item);ports.append(item.getsockname()[1])
++        finally:
++            for item in reserved: item.close()
++        try:
++            for i in range(3):
++                folder=self.scratch/str(i);folder.mkdir()
++                rpc,lan,wan,http=ports[i*4:i*4+4]
++                value=dict(server=True,bootstrap_expect=3,datacenter='research-identity-lab',node_name='research-'+str(i),
++                    data_dir=str(folder/'data'),bind_addr='127.0.0.1',advertise_addr='127.0.0.1',client_addr='127.0.0.1',
++                    ports=dict(server=rpc,serf_lan=lan,serf_wan=wan,http=http,https=-1,dns=-1,grpc=-1,grpc_tls=-1),
++                    retry_join=['127.0.0.1:'+str(ports[j*4+1]) for j in range(3) if j!=i],
++                    disable_update_check=True,disable_remote_exec=True,enable_script_checks=False,
++                    leave_on_terminate=False,skip_leave_on_interrupt=True,log_level='warn',performance=dict(raft_multiplier=1),
++                    connect=dict(enabled=False),raft_logstore=dict(backend='boltdb'),
++                    acl=dict(enabled=True,default_policy='deny',enable_token_persistence=True,
++                        tokens=dict(initial_management=self.token,agent=self.token)))
++                path=folder/'config.json';path.write_text(json.dumps(value),encoding='utf-8')
++                log=(folder/'consul.log').open('ab');self.logs.append(log)
++                env=os.environ.copy();env['CHECKPOINT_DISABLE']='1'
++                p=subprocess.Popen([str(self.binary),'agent','-config-file',str(path)],stdout=log,stderr=subprocess.STDOUT,
++                    env=env,creationflags=getattr(subprocess,'CREATE_NO_WINDOW',0))
++                self.processes.append(p);self.nodes.append('http://127.0.0.1:'+str(http))
++            deadline=time.monotonic()+45
++            while time.monotonic()<deadline:
++                assert all(p.poll() is None for p in self.processes)
++                try:
++                    for node in self.nodes:
++                        status,raw=self.request(node,'GET','/v1/operator/raft/configuration?consistent')
++                        assert status==200
++                        voters=json.loads(raw)['Servers']
++                        assert len(voters)==3 and all(v['Voter'] for v in voters) and sum(v['Leader'] for v in voters)==1
++                    print(json.dumps(dict(scope='OWNED_LOOPBACK_LAB_STARTED',voters=3,
++                        processes=[p.pid for p in self.processes],endpoints=self.nodes,
++                        binary_sha256=PINS[sys.platform],acl_default='deny')),flush=True)
++                    return self
++                except (OSError,ValueError,KeyError,AssertionError): time.sleep(.2)
++            raise RuntimeError('OWNED_ACL_CONSUL_START_TIMEOUT')
++        except BaseException:
++            self.__exit__(None,None,None);raise
++    def request(self,endpoint,method,path,data=None,*,authenticated=True):
++        headers={'Content-Type':'application/json'}
++        if authenticated: headers['X-Consul-Token']=self.token
++        request=urllib.request.Request(endpoint+path,data=data,method=method,headers=headers)
++        opener=urllib.request.build_opener(urllib.request.ProxyHandler({}))
++        try:
++            with opener.open(request,timeout=2) as response: return response.status,response.read(1048576)
++        except urllib.error.HTTPError as exc: return exc.code,exc.read(1048576)
++    def __exit__(self,*args):
++        for process in self.processes:
++            if process.poll() is None: process.kill()
++        for process in self.processes: process.wait(timeout=10)
++        for log in self.logs: log.close()
++        assert all(process.poll() is not None for process in self.processes)
++        print(json.dumps(dict(scope='OWNED_LOOPBACK_LAB_RETIRED',
++            processes=[dict(pid=p.pid,returncode=p.returncode) for p in self.processes],
++            all_owned_processes_waited=True,foreign_process_operations=0,
++            session_retirement='OWNED_SERVERS_STOPPED_TEMPORARY_DIRECTORY_CLEANUP_FOLLOWS')),flush=True)
+diff --git a/tests/gateway_research_identity/test_broker.py b/tests/gateway_research_identity/test_broker.py
+new file mode 100644
+index 0000000..e14a168
+--- /dev/null
++++ b/tests/gateway_research_identity/test_broker.py
+@@ -0,0 +1,27 @@
++"""Research identity source boundaries; no synthetic job/grant fixtures."""
++import importlib
++import unittest
++
++class BrokerBoundaryTests(unittest.TestCase):
++    def test_missing_or_method_shaped_authority_never_authenticates(self):
++        m=importlib.import_module('unified_system.gateway_research_identity')
++        for source in (None,True,{},object()):
++            with self.subTest(source=type(source)):
++                with self.assertRaises(m.ResearchIdentityUnavailable):
++                    m.ResearchIdentityBroker(authority=source,generation='00000000-0000-4000-8000-000000000001',
++                        realm_id='00000000-0000-4000-8000-000000000002',profile_sha256='a'*64,
++                        server_ssl_context=None,server_certificate_der=b'',audit_sink=None)
++    def test_context_and_capture_have_no_public_constructor(self):
++        m=importlib.import_module('unified_system.gateway_research_identity')
++        for cls in (m.ResearchPrincipalContext,m.ResearchIdentityCapture):
++            with self.assertRaises(TypeError): cls()
++    def test_native_session_syntax_is_distinct_and_never_a_permission(self):
++        m=importlib.import_module('unified_system.gateway_research_identity')
++        actual_format='01234567-89ab-1cde-0fab-0123456789ab'
++        self.assertIsNone(m._native_session(actual_format))
++        with self.assertRaises(m.ResearchIdentityDenied): m._uuid(actual_format)
++        for invalid in (None,True,'not-a-session',actual_format.upper(),actual_format+'\n',actual_format+'x',actual_format.replace('-','')):
++            with self.subTest(invalid=type(invalid)):
++                with self.assertRaises(m.ResearchIdentityDenied): m._native_session(invalid)
++
++if __name__=='__main__': unittest.main()
+diff --git a/tests/gateway_research_identity/test_native_broker.py b/tests/gateway_research_identity/test_native_broker.py
+new file mode 100644
+index 0000000..d897b8d
+--- /dev/null
++++ b/tests/gateway_research_identity/test_native_broker.py
+@@ -0,0 +1,235 @@
++"""Real disposable mTLS/ACL/three-voter principal sessions; NO job grants."""
++import asyncio,base64,copy,hashlib,json,os,sys,tempfile,types,unittest,uuid
++from datetime import datetime,timedelta,timezone
++from pathlib import Path
++from unittest.mock import patch
++from jsonschema import Draft202012Validator
++import subprocess
++
++GRID=Path(os.environ.get('A2_RESEARCH_GRID_SOURCE','C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-2-high-availability-distributed/work/grid-assignment-native-20261107'))
++sys.path.insert(0,str(GRID))
++from grid.coordination import ConsulConfig,ConsulSessionAuthority,CoordinationLost
++from grid.authority_runtime_v1 import canonical
++from unified_system.gateway_identity import GatewayAuditSink
++from unified_system.gateway_research_identity import ResearchIdentityBroker,ResearchIdentityDenied,ResearchIdentityUnavailable
++from consul_lab import ConsulLab
++
++ROOT=Path(__file__).resolve().parents[2]
++fixture_raw=subprocess.check_output(['git','--no-replace-objects','-C',str(ROOT),'show',
++    'f155126a95e80139b1b9679c1870ffd66c29360e:tests/test_gateway_identity.py'])
++assert hashlib.sha256(fixture_raw).hexdigest()=='b26fe114c778a8b8a95bc3de822dd7c7a4f57dd12277e9fdcbc96cfb5bc4199f'
++fixture=types.ModuleType('a2_pinned_tls_fixture');sys.modules[fixture.__name__]=fixture
++exec(compile(fixture_raw,'<pinned-TLSFixture>','exec'),fixture.__dict__)
++
++class NativeBrokerTests(unittest.IsolatedAsyncioTestCase):
++    @classmethod
++    def setUpClass(cls):
++        cls.temp=tempfile.TemporaryDirectory(prefix='a2-native-principal-')
++        cls.lab=ConsulLab(os.environ.get('A2_RESEARCH_CONSUL_BINARY',
++            'C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-8-independent-security-ci/work/consul-bin/extracted/consul.exe'),Path(cls.temp.name)/'consul')
++        try: cls.lab.__enter__()
++        except BaseException: cls.temp.cleanup();raise
++    @classmethod
++    def tearDownClass(cls):
++        cls.lab.__exit__(None,None,None);cls.temp.cleanup()
++    async def asyncSetUp(self):
++        self.cluster=str(uuid.uuid4());self.generation=str(uuid.uuid4());self.realm=str(uuid.uuid4())
++        self.actor=str(uuid.uuid4());self.policy=str(uuid.uuid4());self.service=str(uuid.uuid4())
++        self.tls=fixture.TLSFixture(client_uri='urn:unified:test:research-service:'+self.service)
++        self.addCleanup(self.tls.close)
++        self.authority=ConsulSessionAuthority(ConsulConfig(tuple(self.lab.nodes),'unified/'+self.cluster,
++            isolated_lab=True,acl_token=self.lab.token,ttl_seconds=15,request_timeout=2))
++        self.addAsyncCleanup(self.authority.close)
++        self.leader=await self.authority.acquire('research-source')
++        self.assertIsNotNone(self.leader)
++        self.session_responses=[]
++        async def observe(response):
++            if response.request.url.path=='/v1/session/create':
++                raw=await response.aread()
++                self.session_responses.append(dict(status=response.status_code,raw=raw.decode('ascii')))
++        self.authority.client.event_hooks['response'].append(observe)  # observes REAL transport, no mock response
++        self.prefix=self.authority.config.namespace+'/runtime-v1/research-lab-v1/'+self.realm+'/'
++        self.fingerprint=hashlib.sha256(self.tls.client_der).hexdigest()
++        expiry=(datetime.now(timezone.utc)+timedelta(minutes=5)).strftime('%Y-%m-%dT%H:%M:%SZ')
++        self.profile=dict(schema='unified.authority.research-lab-profile.v1-review1',cluster_id=self.cluster,
++            realm_id=self.realm,principal_registry={self.fingerprint:self.actor},
++            input_request_sha256='c548e2ffcd542d5d741682303694b3c6d06507740f158a6e30089b2d5355f648',
++            producer_head='aed8a7c8a952f96803c207d5e90b133969a47f04',
++            resources=dict(cpu_millicores='1000',resident_memory_bytes='268435456',max_artifact_bytes='1048576'),
++            expiry_semantics='NATIVE_SESSION_INVALIDATION_NOT_UTC_AT_COMMIT',expires_utc=expiry)
++        self.profile_sha=hashlib.sha256(canonical(self.profile)).hexdigest()
++        self.principal=dict(schema='unified.authority.research-lab-principal.v1-review1',actor_id=self.actor,
++            service_id=self.service,certificate_sha256=self.fingerprint,quota_owner_id='lab-quota',policy_id=self.policy,
++            profile_sha256=self.profile_sha,state='ACTIVE')
++        self.policy_body=dict(schema='unified.authority.research-lab-policy.v1-review1',policy_id=self.policy,
++            actor_id=self.actor,profile_sha256=self.profile_sha,revision='1',state='ACTIVE',
++            scopes=['CANCEL_OWN_JOB','READ_RESEARCH','SUBMIT_RESEARCH'],expires_utc=expiry)
++        # Genuine Root commissioning only. NO Assignment/hold/job/receipt seeded.
++        await self.put(self.authority.config.namespace+'/commands/generation',{'generation':self.generation})
++        for key,value in (('profile-registry/'+self.profile_sha,self.profile),('principals/'+self.actor,self.principal),
++                          ('policies/'+self.policy,self.policy_body)):
++            await self.put(self.prefix+key,value)
++        self.audit=GatewayAuditSink(max_events=100)
++        self.broker=ResearchIdentityBroker(authority=self.authority,generation=self.generation,realm_id=self.realm,
++            profile_sha256=self.profile_sha,server_ssl_context=self.tls.server_context,
++            server_certificate_der=self.tls.server_der,audit_sink=self.audit)
++        self.addAsyncCleanup(self.broker.close)
++    async def put(self,key,value):
++        result=await self.authority._request('PUT','/v1/kv/'+key,content=canonical(value));self.assertIs(result,True)
++    async def test_actual_mtls_native_session_and_sealed_capture(self):
++        context=await self.broker.open_session(self.tls.accepted,leader=self.leader)
++        capture=await self.broker.capture_current(context,scope='SUBMIT_RESEARCH',request_bytes=b'original-intent')
++        snapshot=ResearchIdentityBroker.require_capture(self.broker,capture,expected_authority=self.authority,
++            scope='SUBMIT_RESEARCH',request_bytes=b'original-intent')
++        self.assertEqual(snapshot.actor_id,self.actor)
++        class ScopeEqualityClaim:
++            def __eq__(self,other):return True
++        with self.assertRaises(ResearchIdentityDenied):
++            self.broker.require_capture(capture,expected_authority=self.authority,
++                scope=ScopeEqualityClaim(),request_bytes=b'original-intent')
++        with self.assertRaises(ResearchIdentityDenied):
++            self.broker.require_capture(capture,expected_authority=self.authority,
++                scope='SUBMIT_RESEARCH',request_bytes=b'x'*16385)
++        lock=snapshot.records[-1]
++        schema_dir=ROOT/'docs/intelligence/research-identity'
++        for name,record in zip(('profile','principal','policy','principal_session'),snapshot.records[1:],strict=True):
++            schema=json.loads((schema_dir/(name+'.schema.json')).read_bytes())
++            Draft202012Validator.check_schema(schema)
++            Draft202012Validator(schema).validate(json.loads(record.raw))
++        self.assertEqual(lock.session,snapshot.session_id);self.assertGreater(lock.index,0)
++        native=await self.authority._request('GET','/v1/session/info/'+snapshot.session_id)
++        self.assertEqual(native[0]['ID'],snapshot.session_id)
++        self.assertIs(self.tls.client.getpeercert(binary_form=True)==self.tls.server_der,True)
++        with self.assertRaises(ResearchIdentityDenied):
++            ResearchIdentityBroker.require_capture(self.broker,capture,expected_authority=object(),
++                scope='SUBMIT_RESEARCH',request_bytes=b'original-intent')
++        with self.assertRaises(ResearchIdentityDenied):
++            ResearchIdentityBroker.require_capture(self.broker,capture,expected_authority=self.authority,
++                scope='SUBMIT_RESEARCH',request_bytes=b'changed-intent')
++        evidence=os.environ.get('A2_RESEARCH_EVIDENCE_OUT')
++        if evidence:
++            folder=Path(evidence).resolve();folder.mkdir(parents=True,exist_ok=True)
++            created=next(row for row in self.session_responses if json.loads(row['raw'])['ID']==snapshot.session_id)
++            report=dict(scope='ACTUAL_MTLS_CONSUL_PRINCIPAL_SESSION_ONLY_NO_JOB_GRANT',
++                session_create_response=created,session_info=native,
++                native_lock=dict(key=lock.key,modify_index=lock.index,session=lock.session,raw_value=lock.raw.decode('ascii')),
++                source_session_id=snapshot.session_id,canonical_roundtrip=str(uuid.UUID(snapshot.session_id)),
++                uuid_version_bits=uuid.UUID(snapshot.session_id).version,
++                exact_join=json.loads(created['raw'])['ID']==snapshot.session_id==lock.session==json.loads(lock.raw)['session_id'],
++                client_observed_loaded_server_der=self.tls.client.getpeercert(binary_form=True)==self.tls.server_der,
++                binary_sha256=hashlib.sha256(self.lab.binary.read_bytes()).hexdigest(),
++                binary_version=subprocess.check_output([str(self.lab.binary),'version']).decode().splitlines()[0],
++                acl='DEFAULT_DENY_REAL_CLIENT_403_CHECK_SEPARATE',native_human=False)
++            (folder/'actual-native-session.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
++    async def test_actual_native_policy_revocation_and_session_invalidation(self):
++        context=await self.broker.open_session(self.tls.accepted,leader=self.leader)
++        await self.put(self.prefix+'policies/'+self.policy,dict(self.policy_body,state='REVOKED',revision='2'))
++        with self.assertRaises(ResearchIdentityDenied):
++            await self.broker.capture_current(context,scope='SUBMIT_RESEARCH',request_bytes=b'original')
++        await self.put(self.prefix+'policies/'+self.policy,dict(self.policy_body,revision='3'))
++        capture=await self.broker.capture_current(context,scope='SUBMIT_RESEARCH',request_bytes=b'original')
++        snapshot=self.broker.require_capture(capture,expected_authority=self.authority,scope='SUBMIT_RESEARCH',request_bytes=b'original')
++        await self.authority._request('PUT','/v1/session/destroy/'+snapshot.session_id)
++        with self.assertRaises(ResearchIdentityDenied):
++            await self.broker.capture_current(context,scope='SUBMIT_RESEARCH',request_bytes=b'original')
++    async def test_forward_utc_jump_expires_real_issued_capture(self):
++        expiry=datetime.now(timezone.utc)+timedelta(seconds=30)
++        await self.put(self.prefix+'policies/'+self.policy,dict(self.policy_body,expires_utc=expiry.strftime('%Y-%m-%dT%H:%M:%SZ')))
++        context=await self.broker.open_session(self.tls.accepted,leader=self.leader)
++        capture=await self.broker.capture_current(context,scope='SUBMIT_RESEARCH',request_bytes=b'clock')
++        with patch('unified_system.gateway_research_identity._utc',return_value=expiry.timestamp()+1):
++            with self.assertRaises(ResearchIdentityDenied):
++                self.broker.require_capture(capture,expected_authority=self.authority,scope='SUBMIT_RESEARCH',request_bytes=b'clock')
++    async def test_shortened_native_policy_expiry_bounds_new_capture(self):
++        context=await self.broker.open_session(self.tls.accepted,leader=self.leader)
++        expiry=datetime.now(timezone.utc)+timedelta(seconds=30)
++        await self.put(self.prefix+'policies/'+self.policy,dict(self.policy_body,revision='2',expires_utc=expiry.strftime('%Y-%m-%dT%H:%M:%SZ')))
++        capture=await self.broker.capture_current(context,scope='SUBMIT_RESEARCH',request_bytes=b'shortened')
++        with patch('unified_system.gateway_research_identity._utc',return_value=expiry.timestamp()+1):
++            with self.assertRaises(ResearchIdentityDenied):
++                self.broker.require_capture(capture,expected_authority=self.authority,scope='SUBMIT_RESEARCH',request_bytes=b'shortened')
++    async def test_acl_default_deny_client_cannot_write_policy(self):
++        status,_=self.lab.request(self.lab.nodes[0],'PUT','/v1/kv/'+self.prefix+'policies/'+self.policy,
++                                  canonical(dict(self.policy_body,state='ACTIVE')),authenticated=False)
++        self.assertEqual(status,403)
++    async def test_close_during_actual_native_create_retires_owned_session(self):
++        arrived=asyncio.Event();release=asyncio.Event();created=[]
++        async def pause_actual_response(response):
++            if response.request.url.path=='/v1/session/create':
++                raw=await response.aread();created.append(json.loads(raw)['ID'])
++                arrived.set();await release.wait()
++        self.authority.client.event_hooks['response'].append(pause_actual_response)
++        opening=asyncio.create_task(self.broker.open_session(self.tls.accepted,leader=self.leader))
++        closing=None
++        try:
++            await asyncio.wait_for(arrived.wait(),3)
++            closing=asyncio.create_task(self.broker.close())
++            await asyncio.sleep(0)  # let close latch before resuming the real response
++            release.set()
++            with self.assertRaises(ResearchIdentityUnavailable):await opening
++            await closing
++            self.assertEqual(len(created),1)
++            for session in created:
++                self.assertEqual(await self.authority._request('GET','/v1/session/info/'+session),[])
++            self.assertEqual(self.broker._sessions,set())
++        finally:
++            release.set()
++            await asyncio.gather(opening,*([closing] if closing else []),return_exceptions=True)
++            self.authority.client.event_hooks['response'].remove(pause_actual_response)
++    async def test_read_scope_cannot_be_upgraded_by_request(self):
++        await self.put(self.prefix+'policies/'+self.policy,dict(self.policy_body,scopes=['READ_RESEARCH']))
++        context=await self.broker.open_session(self.tls.accepted,leader=self.leader)
++        with self.assertRaises(ResearchIdentityDenied):
++            await self.broker.capture_current(context,scope='SUBMIT_RESEARCH',request_bytes=b'{"role":"admin"}')
++    async def test_invalidate_latches_and_stale_capture_is_no_permission(self):
++        context=await self.broker.open_session(self.tls.accepted,leader=self.leader)
++        capture=await self.broker.capture_current(context,scope='SUBMIT_RESEARCH',request_bytes=b'original')
++        await self.broker.invalidate_context(context)
++        with self.assertRaises(ResearchIdentityDenied):
++            self.broker.require_capture(capture,expected_authority=self.authority,scope='SUBMIT_RESEARCH',request_bytes=b'original')
++    async def test_stale_policy_capture_fails_actual_native_cas(self):
++        context=await self.broker.open_session(self.tls.accepted,leader=self.leader)
++        capture=await self.broker.capture_current(context,scope='SUBMIT_RESEARCH',request_bytes=b'original')
++        snapshot=self.broker.require_capture(capture,expected_authority=self.authority,scope='SUBMIT_RESEARCH',request_bytes=b'original')
++        await self.put(self.prefix+'policies/'+self.policy,dict(self.policy_body,state='REVOKED',revision='2'))
++        probe=self.prefix+'identity-native-probes/'+str(uuid.uuid4())
++        ops=[{'KV':dict(Verb='check-index',Key=r.key,Index=r.index)} for r in snapshot.records]
++        ops+=[{'KV':dict(Verb='check-session',Key=snapshot.records[-1].key,Session=snapshot.session_id)},
++              {'KV':dict(Verb='cas',Key=probe,Index=0,Value=base64.b64encode(canonical({'schema':'untrusted.identity-policy-probe.v1'})).decode())}]
++        with self.assertRaises(CoordinationLost): await self.authority._request('PUT','/v1/txn',json=ops)
++        self.assertIsNone(await self.authority._request('GET','/v1/kv/'+probe,params={'consistent':''},missing_ok=True))
++    async def test_real_foreign_native_session_cannot_rebind_issued_context(self):
++        context=await self.broker.open_session(self.tls.accepted,leader=self.leader)
++        capture=await self.broker.capture_current(context,scope='SUBMIT_RESEARCH',request_bytes=b'original')
++        snapshot=self.broker.require_capture(capture,expected_authority=self.authority,scope='SUBMIT_RESEARCH',request_bytes=b'original')
++        lock=snapshot.records[-1]
++        other=await self.authority._request('PUT','/v1/session/create',json={
++            'Name':'foreign-negative-only','TTL':'10s','Behavior':'release','LockDelay':'0s','NodeChecks':[]})
++        try:
++            await self.authority._request('PUT','/v1/session/destroy/'+snapshot.session_id)
++            self.assertIs(await self.authority._request('PUT','/v1/kv/'+lock.key,
++                params={'acquire':other['ID']},content=lock.raw),True)
++            with self.assertRaises(ResearchIdentityDenied):
++                await self.broker.capture_current(context,scope='SUBMIT_RESEARCH',request_bytes=b'original')
++        finally: await self.authority._request('PUT','/v1/session/destroy/'+other['ID'])
++    async def test_audit_full_invalidation_still_destroys_own_native_session(self):
++        context=await self.broker.open_session(self.tls.accepted,leader=self.leader)
++        capture=await self.broker.capture_current(context,scope='SUBMIT_RESEARCH',request_bytes=b'original')
++        snapshot=self.broker.require_capture(capture,expected_authority=self.authority,scope='SUBMIT_RESEARCH',request_bytes=b'original')
++        self.audit._max=len(self.audit._events)
++        with self.assertRaises(ResearchIdentityUnavailable): await self.broker.invalidate_context(context)
++        self.audit.drain()
++        # Consul1.22.2 session/info returns an empty JSON list after destroy.
++        self.assertEqual(await self.authority._request('GET','/v1/session/info/'+snapshot.session_id,missing_ok=True),[])
++        self.assertEqual((await self.broker._read(snapshot.records[-1].key)).session,'')
++        with self.assertRaises(ResearchIdentityDenied):
++            self.broker.require_capture(capture,expected_authority=self.authority,scope='SUBMIT_RESEARCH',request_bytes=b'original')
++    async def test_z_real_one_of_three_no_quorum_is_unavailable(self):
++        context=await self.broker.open_session(self.tls.accepted,leader=self.leader)
++        for p in self.lab.processes[1:]:
++            if p.poll() is None: p.kill()
++            p.wait(timeout=10)
++        with self.assertRaises(ResearchIdentityUnavailable):
++            await self.broker.capture_current(context,scope='SUBMIT_RESEARCH',request_bytes=b'original')
++
++if __name__=='__main__': unittest.main()
+diff --git a/tests/gateway_research_identity/test_native_profile_v2.py b/tests/gateway_research_identity/test_native_profile_v2.py
+new file mode 100644
+index 0000000..a5a85fa
+--- /dev/null
++++ b/tests/gateway_research_identity/test_native_profile_v2.py
+@@ -0,0 +1,126 @@
++"""Actual own mTLS/Consul profile-v2 source; no issued jobs or grants seeded."""
++import base64,copy,hashlib,json,uuid,unittest
++import test_native_broker as native_fixture
++canonical=native_fixture.canonical
++from unified_system.gateway_research_identity import ResearchIdentityBroker,ResearchIdentityDenied,ResearchIdentityUnavailable
++
++TARGET_SCHEMA_SHA='faf01152678c5b066145dcafebe92f593a641a54dac84da3ce1e1df94c0fb261'
++INPUT_SHA='c548e2ffcd542d5d741682303694b3c6d06507740f158a6e30089b2d5355f648'
++PRODUCER='aed8a7c8a952f96803c207d5e90b133969a47f04'
++def target_bytes(value):return json.dumps(value,sort_keys=True,separators=(',',':'),ensure_ascii=True,allow_nan=False).encode('ascii')
++
++class NativeProfileV2Tests(unittest.IsolatedAsyncioTestCase):
++    @classmethod
++    def setUpClass(cls):native_fixture.NativeBrokerTests.setUpClass.__func__(cls)
++    @classmethod
++    def tearDownClass(cls):native_fixture.NativeBrokerTests.tearDownClass.__func__(cls)
++    put=native_fixture.NativeBrokerTests.put
++    async def asyncSetUp(self):
++        await native_fixture.NativeBrokerTests.asyncSetUp(self)
++        self.job=str(uuid.uuid4());self.original=str(uuid.uuid4())
++        self.target=dict(schema='unified.gateway.target-native-request.v1-review1',request_id=self.original,
++            target_kind='MetaAnalyse',target_capability='meta.ohlcv.untouched_levels.v1',target_version='f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1',
++            dataset_manifest_id='local-sha256:33d5bf0f918884c8908795b384e0964a48a1351c808800964b8cacf3f83e28b6',dataset_revision='LOCAL_FIXTURE_1',
++            experiment_id='fixture.gateway.btc.levels',strategy_version=None,parameters_digest=INPUT_SHA,
++            execution_mode='NATIVE_RESEARCH_ADMISSION_REQUEST_NOT_PERMISSION',
++            resource_budget=dict(max_input_bytes=16384,max_output_bytes=16384,max_rows=3,max_executions=1),
++            quota_owner=self.principal['quota_owner_id'],principal_id=self.actor,authority_generation=self.generation,
++            assignment_revision=None,fencing_token=None,idempotency_key='native_original_1',
++            result_schema='unified.gateway.native-target-observation.v1-review1',result_artifact_ref=None)
++        self.profile['schema']='unified.authority.target-bound-research-profile.v2-review1'
++        self.profile['target_binding']=dict(target_request_schema_sha256=TARGET_SCHEMA_SHA,
++            target_request_canonical_base64='',target_request_sha256='',request_id=self.original,job_id=self.job,
++            idempotency_key=self.target['idempotency_key'],cluster_generation=self.generation,
++            actor_principal_id=self.actor,quota_owner_id=self.target['quota_owner'],producer_request_sha256=INPUT_SHA,producer_head=PRODUCER)
++        self.rebind_target()
++        await self.commission(self.profile)
++    def rebind_target(self):
++        raw=target_bytes(self.target)
++        self.profile['target_binding'].update(target_request_canonical_base64=base64.b64encode(raw).decode(),target_request_sha256=hashlib.sha256(raw).hexdigest())
++    async def commission(self,profile):
++        await self.broker.close()
++        self.profile=copy.deepcopy(profile);self.profile_sha=hashlib.sha256(canonical(self.profile)).hexdigest()
++        self.principal['profile_sha256']=self.profile_sha;self.policy_body['profile_sha256']=self.profile_sha
++        # Genuine Root bootstrap of profile/principal/policy only. Never seed job,
++        # Assignment, hold, lease, command receipt or a fake worker proof.
++        await self.put(self.prefix+'profile-registry/'+self.profile_sha,self.profile)
++        await self.put(self.prefix+'principals/'+self.actor,self.principal)
++        await self.put(self.prefix+'policies/'+self.policy,self.policy_body)
++        self.broker=ResearchIdentityBroker(authority=self.authority,generation=self.generation,realm_id=self.realm,
++            profile_sha256=self.profile_sha,server_ssl_context=self.tls.server_context,
++            server_certificate_der=self.tls.server_der,audit_sink=self.audit)
++        self.addAsyncCleanup(self.broker.close)
++    def submit(self):
++        return dict(schema='unified.gateway.lab-job-submit.v1-review1',operation='SUBMIT_RESEARCH',cluster_id=self.cluster,
++            cluster_generation=self.generation,request_id=self.original,job_id=self.job,
++            original_actor_principal_id=self.actor,quota_owner_id=self.target['quota_owner'],idempotency_key=self.target['idempotency_key'],
++            commissioned_profile_sha256=self.profile_sha,input_request_sha256=INPUT_SHA,producer_head=PRODUCER,resources=self.profile['resources'])
++    async def test_00_actual_v2_principal_and_exact_submit_read_capture(self):
++        context=await self.broker.open_session(self.tls.accepted,leader=self.leader)
++        raw=canonical(self.submit())
++        for scope in ('SUBMIT_RESEARCH','READ_RESEARCH'):
++            capture=await self.broker.capture_current(context,scope=scope,request_bytes=raw)
++            snapshot=ResearchIdentityBroker.require_capture(self.broker,capture,expected_authority=self.authority,scope=scope,request_bytes=raw)
++            self.assertEqual(snapshot.actor_id,self.actor)
++            self.assertEqual(snapshot.profile_sha256,self.profile_sha)
++            self.assertEqual(snapshot.records[1].raw,canonical(self.profile))
++            self.assertEqual(snapshot.records[-1].session,snapshot.session_id)
++            native=await self.authority._request('GET','/v1/session/info/'+snapshot.session_id)
++            self.assertEqual(native[0]['ID'],snapshot.session_id)
++        self.assertIsNone(await self.authority._request('GET','/v1/kv/'+self.prefix+'jobs/'+self.job,params={'consistent':''},missing_ok=True))
++    async def test_exact_cancel_is_separate_original_bound_identity_capture(self):
++        context=await self.broker.open_session(self.tls.accepted,leader=self.leader)
++        cancel=dict(schema='unified.gateway.lab-job-cancel.v1-review1',operation='CANCEL_OWN_JOB',cluster_id=self.cluster,
++            cluster_generation=self.generation,request_id=str(uuid.uuid4()),job_id=self.job,
++            original_actor_principal_id=self.actor,quota_owner_id=self.target['quota_owner'],idempotency_key='cancel_original_1',
++            commissioned_profile_sha256=self.profile_sha,original_submit_request_id=self.original,
++            original_submit_intent_sha256=hashlib.sha256(canonical(self.submit())).hexdigest())
++        capture=await self.broker.capture_current(context,scope='CANCEL_OWN_JOB',request_bytes=canonical(cancel))
++        self.assertEqual(self.broker.require_capture(capture,expected_authority=self.authority,scope='CANCEL_OWN_JOB',request_bytes=canonical(cancel)).actor_id,self.actor)
++        cancel['original_submit_intent_sha256']='f'*64
++        with self.assertRaises(ResearchIdentityDenied):
++            await self.broker.capture_current(context,scope='CANCEL_OWN_JOB',request_bytes=canonical(cancel))
++    async def test_wrong_lab_original_never_binds_valid_v2_context(self):
++        context=await self.broker.open_session(self.tls.accepted,leader=self.leader)
++        for field,value in (('job_id',str(uuid.uuid4())),('request_id',str(uuid.uuid4())),('idempotency_key','other_original'),('commissioned_profile_sha256','f'*64),('quota_owner_id','other_quota')):
++            bad=self.submit();bad[field]=value
++            with self.subTest(field=field),self.assertRaises(ResearchIdentityDenied):
++                await self.broker.capture_current(context,scope='SUBMIT_RESEARCH',request_bytes=canonical(bad))
++        with self.assertRaises(ResearchIdentityDenied):
++            await self.broker.capture_current(context,scope='READ_RESEARCH',request_bytes=b'{"role":"SUBMIT_RESEARCH"}')
++    async def test_fully_rebound_float_and_registry_actor_aliases_refuse(self):
++        original=copy.deepcopy(self.profile);target=copy.deepcopy(self.target)
++        for field,value in (('max_rows',3.0),('max_executions',True)):
++            self.profile=copy.deepcopy(original);self.target=copy.deepcopy(target)
++            self.target['resource_budget'][field]=value;self.rebind_target();await self.commission(self.profile)
++            with self.subTest(field=field),self.assertRaises(ResearchIdentityDenied):
++                await self.broker.open_session(self.tls.accepted,leader=self.leader)
++        self.profile=copy.deepcopy(original);self.target=copy.deepcopy(target)
++        foreign=str(uuid.uuid4());self.target['principal_id']=foreign
++        self.profile['target_binding']['actor_principal_id']=foreign;self.rebind_target();await self.commission(self.profile)
++        with self.assertRaises(ResearchIdentityDenied):await self.broker.open_session(self.tls.accepted,leader=self.leader)
++    async def test_direct_profile_and_dot_key_cannot_be_upgraded(self):
++        original=copy.deepcopy(self.profile);target=copy.deepcopy(self.target)
++        self.target.update(schema='unified.gateway.target-request.v1',execution_mode='DIRECT_DISPOSABLE_SYNTHETIC')
++        self.rebind_target();await self.commission(self.profile)
++        with self.assertRaises(ResearchIdentityDenied):await self.broker.open_session(self.tls.accepted,leader=self.leader)
++        self.profile=copy.deepcopy(original);self.target=copy.deepcopy(target)
++        self.target['idempotency_key']='original.with.dot';self.profile['target_binding']['idempotency_key']=self.target['idempotency_key']
++        self.rebind_target();await self.commission(self.profile)
++        with self.assertRaises(ResearchIdentityDenied):await self.broker.open_session(self.tls.accepted,leader=self.leader)
++    async def test_real_v2_policy_revocation_and_session_loss_refuse(self):
++        context=await self.broker.open_session(self.tls.accepted,leader=self.leader);raw=canonical(self.submit())
++        capture=await self.broker.capture_current(context,scope='SUBMIT_RESEARCH',request_bytes=raw)
++        snapshot=self.broker.require_capture(capture,expected_authority=self.authority,scope='SUBMIT_RESEARCH',request_bytes=raw)
++        await self.put(self.prefix+'policies/'+self.policy,dict(self.policy_body,state='REVOKED',revision='2'))
++        with self.assertRaises(ResearchIdentityDenied):await self.broker.capture_current(context,scope='SUBMIT_RESEARCH',request_bytes=raw)
++        await self.put(self.prefix+'policies/'+self.policy,dict(self.policy_body,revision='3'))
++        await self.authority._request('PUT','/v1/session/destroy/'+snapshot.session_id)
++        with self.assertRaises(ResearchIdentityDenied):await self.broker.capture_current(context,scope='SUBMIT_RESEARCH',request_bytes=raw)
++    async def test_z_real_one_of_three_no_quorum_refuses_v2_capture(self):
++        context=await self.broker.open_session(self.tls.accepted,leader=self.leader)
++        for process in self.lab.processes[1:]:process.kill();process.wait(timeout=10)
++        with self.assertRaises(ResearchIdentityUnavailable):
++            await self.broker.capture_current(context,scope='READ_RESEARCH',request_bytes=canonical(self.submit()))
++
++if __name__=='__main__':unittest.main()
+diff --git a/tests/storage/native_publication/qualify.py b/tests/storage/native_publication/qualify.py
+new file mode 100644
+index 0000000..98f1237
+--- /dev/null
++++ b/tests/storage/native_publication/qualify.py
+@@ -0,0 +1,128 @@
++"""Pre-import exact Git byte guard for the isolated local suite only."""
++import hashlib
++import io
++import json
++import os
++from pathlib import Path
++import platform
++import stat
++import subprocess
++import sys
++import unittest
++
++ROOT = Path(__file__).resolve().parents[3]
++OUT = Path(os.environ['A4_RESULT_EVIDENCE']).resolve()
++OUT.mkdir(parents=True, exist_ok=True)
++EXPECTED = ['test_actual_inventory_readback.ActualInventoryReadbackTests.test_actual_all_objects_and_metadata_root_readback_has_same_read_identities', 'test_actual_inventory_readback.ActualInventoryReadbackTests.test_destination_actual_corruption_and_root_corruption_refuse_observation', 'test_actual_inventory_readback.ActualInventoryReadbackTests.test_no_public_constructor_copy_or_pickle_can_mint_native_proof', 'test_actual_inventory_readback.ActualInventoryReadbackTests.test_two_actual_local_copies_never_become_two_qualified_domains', 'test_original_intent_recovery.OriginalIntentRecoveryTests.test_append_response_loss_preserves_actual_committed_local_original', 'test_original_intent_recovery.OriginalIntentRecoveryTests.test_attempt_marker_remains_unknown_without_automatic_resend', 'test_original_intent_recovery.OriginalIntentRecoveryTests.test_corrupt_actual_sqlite_has_closed_unavailable_result', 'test_original_intent_recovery.OriginalIntentRecoveryTests.test_crash_after_durable_attempt_marker_retains_same_original', 'test_original_intent_recovery.OriginalIntentRecoveryTests.test_exact_original_bytes_survive_journal_reopen_without_native_success', 'test_original_intent_recovery.OriginalIntentRecoveryTests.test_exact_retry_does_not_duplicate_and_conflict_never_replaces', 'test_original_intent_recovery.OriginalIntentRecoveryTests.test_exhausted_journal_budget_rejects_before_new_staging_io', 'test_original_intent_recovery.OriginalIntentRecoveryTests.test_foreign_journal_record_and_wrong_schema_are_not_adopted', 'test_original_intent_recovery.OriginalIntentRecoveryTests.test_journal_tamper_fails_and_never_mints_committed_receipt', 'test_original_intent_recovery.OriginalIntentRecoveryTests.test_local_record_rejects_claimed_native_commit_or_result_receipt', 'test_original_intent_recovery.OriginalIntentRecoveryTests.test_missing_or_corrupt_staged_object_is_explicit_without_republication', 'test_original_intent_recovery.OriginalIntentRecoveryTests.test_original_byte_preflight_and_identifiers_reject_before_custom_methods', 'test_original_intent_recovery.OriginalIntentRecoveryTests.test_unknown_id_and_attempt_without_retained_original_do_not_create_state']
++
++
++def require(value, code):
++    if not value:
++        raise RuntimeError(code)
++
++
++def git(*args, input=None):
++    return subprocess.check_output(['git', '--no-replace-objects', *args], cwd=ROOT, input=input)
++
++
++def primary():
++    require(not git('for-each-ref', '--format=%(refname)', 'refs/replace').strip(), 'REPLACE_REFS')
++    listing = []
++    for entry in git('ls-tree', '-rz', 'HEAD').split(b'\0'):
++        if not entry:
++            continue
++        meta, path = entry.split(b'\t', 1)
++        mode, kind, blob = meta.split()
++        require(mode in (b'100644', b'100755') and kind == b'blob', 'SOURCE_TYPE')
++        listing.append((path.decode('utf-8'), blob))
++    stream = io.BytesIO(git('cat-file', '--batch', input=b'\n'.join(blob for _, blob in listing)+b'\n'))
++    bindings = {}
++    for path, blob in listing:
++        oid, kind, size = stream.readline().split()
++        require(oid == blob and kind == b'blob', 'PRIMARY_BLOB')
++        raw = stream.read(int(size))
++        require(len(raw) == int(size) and stream.read(1) == b'\n', 'PRIMARY_LENGTH')
++        bindings[path] = dict(blob=blob.decode(), bytes=len(raw), sha256=hashlib.sha256(raw).hexdigest())
++    require(not stream.read(), 'PRIMARY_TRAILING_BYTES')
++    return bindings
++
++
++def physical(expected):
++    found = {}
++    for parent, dirs, files in os.walk(ROOT, followlinks=False):
++        if Path(parent) == ROOT:
++            dirs[:] = [name for name in dirs if name != '.git']
++            files = [name for name in files if name != '.git']
++        for name in dirs+files:
++            path = Path(parent)/name
++            info = path.lstat()
++            require(not path.is_symlink() and not getattr(info, 'st_file_attributes', 0) & 1024, 'SOURCE_ALIAS')
++        for name in files:
++            path = Path(parent)/name
++            info = path.lstat()
++            require(stat.S_ISREG(info.st_mode) and info.st_nlink == 1, 'SOURCE_LINK_OR_SPECIAL')
++            rel = path.relative_to(ROOT).as_posix()
++            require(rel in expected, 'UNEXPECTED_SOURCE_FILE')
++            raw = path.read_bytes()
++            actual = dict(blob=expected[rel]['blob'], bytes=len(raw), sha256=hashlib.sha256(raw).hexdigest())
++            require(actual == expected[rel], 'SOURCE_BYTES')
++            found[rel] = actual
++    require(found == expected, 'SOURCE_INVENTORY')
++    return found
++
++
++def cases(suite):
++    for test in suite:
++        if isinstance(test, unittest.TestSuite):
++            yield from cases(test)
++        else:
++            yield test.id()
++
++
++def main():
++    require(platform.python_version() == '3.12.10', 'CPYTHON_VERSION')
++    require(sys.flags.isolated and sys.flags.no_site and sys.dont_write_bytecode, 'PYTHON_ISOLATION')
++    require(not OUT.is_relative_to(ROOT), 'EVIDENCE_OUTSIDE_SOURCE_REQUIRED')
++    head = git('rev-parse', 'HEAD').decode().strip()
++    tree = git('rev-parse', 'HEAD^{tree}').decode().strip()
++    require(head == os.environ['A4_RESULT_EXPECTED_HEAD'], 'EXPECTED_HEAD')
++    expected = primary()
++    physical(expected)  # Before project/test imports.
++    require(not git('status', '--porcelain', '--untracked-files=all').strip(), 'DIRTY_SOURCE')
++    sys.path[:0] = [str(ROOT)]
++    suite = unittest.TestLoader().discover(str(ROOT/'tests/storage/native_publication'))
++    actual = sorted(cases(suite))
++    require(actual == EXPECTED, 'EXACT_CASES')
++    with (OUT/'tests.log').open('w', encoding='utf-8') as log:
++        result = unittest.TextTestRunner(stream=log, verbosity=2).run(suite)
++    physical(expected)
++    require(git('rev-parse', 'HEAD').decode().strip() == head and primary() == expected, 'SOURCE_CHANGED')
++    require(not git('status', '--porcelain', '--untracked-files=all').strip(), 'DIRTY_SOURCE_AFTER')
++    origins = {}
++    for name, module in tuple(sys.modules.items()):
++        if name == 'unified_system' or name.startswith('unified_system.'):
++            path = Path(module.__file__).resolve()
++            rel = path.relative_to(ROOT).as_posix()
++            require(rel in expected and path.suffix == '.py', 'PROJECT_ORIGIN')
++            origins[name] = rel
++    passed = result.wasSuccessful() and result.testsRun == 17 and not result.skipped
++    report = dict(schema='agent4.native-publication-prerequisites.source-evidence.v1', head=head, tree=tree,
++        passed=passed, tests=result.testsRun, skips=len(result.skipped), cases=actual,
++        primary_git_bindings=expected, module_origins=origins, python=sys.version,
++        os=platform.platform(), run_id=os.environ.get('GITHUB_RUN_ID'),
++        attempt=os.environ.get('GITHUB_RUN_ATTEMPT'), replica_qualified=False,
++        two_failure_domains_qualified=False, native_publication_qualified=False,
++        topology_model="LOGICAL_SAME_HOST_ONLY", recovery_scope="LOCAL_JOURNAL_NOT_NATIVE",
++        semantic_closure_verified=False, physical_qualified=False, production_admitted=False)
++    (OUT/'qualification.json').write_text(json.dumps(report, sort_keys=True, indent=2)+'\n', encoding='utf-8')
++    require(passed, 'LOCAL_TEST_FAILURE_OR_SKIP')
++    print(json.dumps(dict(passed=True, head=head, tree=tree, tests=17, skips=0, files=len(expected))))
++
++
++if __name__ == '__main__':
++    try:
++        main()
++    except Exception as exc:
++        (OUT/'failure.json').write_text(json.dumps(dict(status='FAILED_NO_QUALIFICATION',
++            reason=str(exc), type=type(exc).__name__, production_admitted=False))+'\n', encoding='utf-8')
++        raise
+diff --git a/tests/storage/native_publication/test_actual_inventory_readback.py b/tests/storage/native_publication/test_actual_inventory_readback.py
+new file mode 100644
+index 0000000..02a956b
+--- /dev/null
++++ b/tests/storage/native_publication/test_actual_inventory_readback.py
+@@ -0,0 +1,63 @@
++"""Actual local readback evidence is not native replica/domain qualification."""
++import hashlib
++from pathlib import Path
++import tempfile
++import unittest
++
++from unified_system.storage.contracts import StorageBlocked
++from unified_system.storage.object_store import ObjectStore
++from unified_system.storage.replica_evidence import LocalInventoryReadback
++from unified_system.storage.result_publication import (build_local_closure, stage_local_closure,
++    copy_local_closure, readback_local_closure)
++
++
++class ActualInventoryReadbackTests(unittest.TestCase):
++    def fixture(self, root):
++        source=ObjectStore.create(root/'a',store_id='00000000-0000-4000-8000-000000000001')
++        destination=ObjectStore.create(root/'b',store_id='00000000-0000-4000-8000-000000000002')
++        artifact=b'{"result":12.0}'
++        entries=(('artifact',artifact,()),('descriptor',b'{"raw":"retained"}',(hashlib.sha256(artifact).hexdigest(),)),('request',b'{"input":1}',()))
++        closure=build_local_closure(entries);stage_local_closure(source,closure,entries)
++        return source,destination,closure,entries
++
++    def test_actual_all_objects_and_metadata_root_readback_has_same_read_identities(self):
++        with tempfile.TemporaryDirectory() as temp:
++            source,_,closure,entries=self.fixture(Path(temp))
++            fact=readback_local_closure(source,closure)
++            self.assertIsInstance(fact,LocalInventoryReadback)
++            self.assertEqual(fact.closure_sha256,closure.sha256)
++            self.assertEqual(len(fact.objects),len(entries)+1)
++            self.assertEqual({item.sha256 for item in fact.objects},
++                             {hashlib.sha256(raw).hexdigest() for _,raw,_ in entries}|{closure.sha256})
++            self.assertTrue(all(item.file_identity for item in fact.objects))
++            self.assertFalse(fact.native_replica_eligible)
++            self.assertFalse(fact.failure_domain_qualified)
++            self.assertFalse(fact.semantic_closure_verified)
++            self.assertFalse(fact.publication_confirmed)
++
++    def test_two_actual_local_copies_never_become_two_qualified_domains(self):
++        with tempfile.TemporaryDirectory() as temp:
++            source,destination,closure,_=self.fixture(Path(temp))
++            copy_local_closure(source,destination,closure)
++            a,b=readback_local_closure(source,closure),readback_local_closure(destination,closure)
++            self.assertNotEqual(a.store_id,b.store_id)
++            self.assertEqual([o.sha256 for o in a.objects],[o.sha256 for o in b.objects])
++            self.assertFalse(a.failure_domain_qualified or b.failure_domain_qualified)
++            self.assertFalse(a.native_replica_eligible or b.native_replica_eligible)
++
++    def test_destination_actual_corruption_and_root_corruption_refuse_observation(self):
++        for kind in ('artifact','root'):
++            with self.subTest(kind=kind),tempfile.TemporaryDirectory() as temp:
++                source,destination,closure,entries=self.fixture(Path(temp));copy_local_closure(source,destination,closure)
++                sha=closure.sha256 if kind=='root' else hashlib.sha256(entries[0][1]).hexdigest()
++                path=destination._root/'objects'/sha;path.write_bytes(b'corrupt')
++                with self.assertRaises(StorageBlocked):readback_local_closure(destination,closure)
++                self.assertEqual(path.read_bytes(),b'corrupt')
++
++    def test_no_public_constructor_copy_or_pickle_can_mint_native_proof(self):
++        import copy,pickle
++        with self.assertRaises(TypeError):LocalInventoryReadback()
++        with tempfile.TemporaryDirectory() as temp:
++            source,_,closure,_=self.fixture(Path(temp));fact=readback_local_closure(source,closure)
++            for operation in (copy.copy,copy.deepcopy,pickle.dumps):
++                with self.assertRaises(TypeError):operation(fact)
+diff --git a/tests/storage/native_publication/test_original_intent_recovery.py b/tests/storage/native_publication/test_original_intent_recovery.py
+new file mode 100644
+index 0000000..af23038
+--- /dev/null
++++ b/tests/storage/native_publication/test_original_intent_recovery.py
+@@ -0,0 +1,162 @@
++"""Actual owned SQLite/immutable-byte recovery, never a simulated native commit."""
++import base64
++import json
++from pathlib import Path
++import sqlite3
++import subprocess
++import sys
++import tempfile
++import unittest
++
++from unified_system.journal import Journal
++from unified_system.storage.contracts import StorageBlocked
++from unified_system.storage.object_store import ObjectStore
++from unified_system.storage.publication_records import RetainedPublicationIntent
++from unified_system.storage.publication_recovery import PendingPublicationJournal
++
++PUBLICATION = '00000000-0000-4000-8000-000000000001'
++STORE = '00000000-0000-4000-8000-000000000002'
++RAW = b'{"opaque_candidate":1.25,"unknown":null}'
++
++
++class OriginalIntentRecoveryTests(unittest.TestCase):
++    def setup_owned(self, root):
++        journal = Journal(root/'pending.sqlite')
++        journal.initialize()
++        store = ObjectStore.create(root/'objects', store_id=STORE)
++        return journal, store, PendingPublicationJournal(journal, store)
++
++    def test_exact_original_bytes_survive_journal_reopen_without_native_success(self):
++        with tempfile.TemporaryDirectory() as temp:
++            root=Path(temp);journal,store,pending=self.setup_owned(root)
++            intent=RetainedPublicationIntent(PUBLICATION,RAW)
++            observation=pending.retain(intent)
++            self.assertEqual(observation.native_outcome,'UNKNOWN')
++            self.assertFalse(observation.publication_confirmed)
++            self.assertEqual(ObjectStore.read(store,intent.sha256),RAW)
++            reopened=PendingPublicationJournal(Journal(journal.path),ObjectStore.open(store._root,store_id=STORE))
++            recovered=reopened.recover_original(PUBLICATION)
++            self.assertEqual(recovered.raw_bytes,RAW)
++            self.assertEqual(recovered.publication_id,PUBLICATION)
++            self.assertEqual(len(journal.read()),1)
++
++    def test_exact_retry_does_not_duplicate_and_conflict_never_replaces(self):
++        with tempfile.TemporaryDirectory() as temp:
++            journal,_,pending=self.setup_owned(Path(temp))
++            pending.retain(RetainedPublicationIntent(PUBLICATION,RAW))
++            pending.retain(RetainedPublicationIntent(PUBLICATION,RAW))
++            with self.assertRaises(StorageBlocked):pending.retain(RetainedPublicationIntent(PUBLICATION,b'different'))
++            self.assertEqual(len(journal.read()),1)
++            self.assertEqual(pending.recover_original(PUBLICATION).raw_bytes,RAW)
++
++    def test_attempt_marker_remains_unknown_without_automatic_resend(self):
++        with tempfile.TemporaryDirectory() as temp:
++            journal,_,pending=self.setup_owned(Path(temp))
++            pending.retain(RetainedPublicationIntent(PUBLICATION,RAW))
++            for _ in range(2):
++                observation=pending.mark_attempt_uncertain(PUBLICATION)
++                self.assertEqual(observation.native_outcome,'UNKNOWN')
++                self.assertFalse(observation.publication_confirmed)
++            self.assertEqual(len(journal.read()),2)
++            self.assertEqual(pending.recover_original(PUBLICATION).raw_bytes,RAW)
++
++    def test_crash_after_durable_attempt_marker_retains_same_original(self):
++        with tempfile.TemporaryDirectory() as temp:
++            root=Path(temp);journal,_,pending=self.setup_owned(root)
++            pending.retain(RetainedPublicationIntent(PUBLICATION,RAW))
++            code='''import os,sys
++from pathlib import Path
++sys.path.insert(0,sys.argv[1])
++from unified_system.journal import Journal
++from unified_system.storage.object_store import ObjectStore
++from unified_system.storage.publication_recovery import PendingPublicationJournal
++root=Path(sys.argv[2])
++p=PendingPublicationJournal(Journal(root/'pending.sqlite'),ObjectStore.open(root/'objects',store_id=sys.argv[3]))
++p.mark_attempt_uncertain(sys.argv[4])
++os._exit(23)
++'''
++            repo=Path(__file__).resolve().parents[3]
++            result=subprocess.run([sys.executable,'-I','-S','-B','-c',code,str(repo),str(root),STORE,PUBLICATION],capture_output=True)
++            self.assertEqual(result.returncode,23,result.stderr)
++            fresh=PendingPublicationJournal(Journal(journal.path),ObjectStore.open(root/'objects',store_id=STORE))
++            self.assertEqual(fresh.recover_original(PUBLICATION).raw_bytes,RAW)
++            self.assertEqual(fresh.observation(PUBLICATION).native_outcome,'UNKNOWN')
++            self.assertEqual(len(journal.read()),2)
++
++    def test_missing_or_corrupt_staged_object_is_explicit_without_republication(self):
++        with tempfile.TemporaryDirectory() as temp:
++            journal,store,pending=self.setup_owned(Path(temp));intent=RetainedPublicationIntent(PUBLICATION,RAW)
++            pending.retain(intent)
++            path=store._root/'objects'/intent.sha256
++            path.write_bytes(b'corrupted actual bytes')
++            self.assertEqual(pending.recover_original(PUBLICATION).raw_bytes,RAW)
++            with self.assertRaises(StorageBlocked):pending.verify_staged_original(PUBLICATION)
++            self.assertEqual(len(journal.read()),1)
++            self.assertEqual(path.read_bytes(),b'corrupted actual bytes')
++
++    def test_original_byte_preflight_and_identifiers_reject_before_custom_methods(self):
++        class Foreign(bytes):
++            def __len__(self):raise AssertionError('foreign length')
++        for identifier,raw in ((PUBLICATION+'\n',RAW),(True,RAW),(PUBLICATION,b''),
++                              (PUBLICATION,b'x'*16385),(PUBLICATION,Foreign(RAW))):
++            with self.subTest(identifier=identifier),self.assertRaises(StorageBlocked):RetainedPublicationIntent(identifier,raw)
++
++    def test_foreign_journal_record_and_wrong_schema_are_not_adopted(self):
++        with tempfile.TemporaryDirectory() as temp:
++            journal,store,_=self.setup_owned(Path(temp))
++            journal.append('OBSERVING',dict(schema='unrelated.own.journal.v1'))
++            with self.assertRaises(StorageBlocked):PendingPublicationJournal(journal,store)
++
++    def test_journal_tamper_fails_and_never_mints_committed_receipt(self):
++        with tempfile.TemporaryDirectory() as temp:
++            journal,_,pending=self.setup_owned(Path(temp));pending.retain(RetainedPublicationIntent(PUBLICATION,RAW))
++            con=sqlite3.connect(journal.path)
++            con.execute("UPDATE transitions SET receipt='{}'");con.commit();con.close()
++            with self.assertRaises(StorageBlocked):pending.observation(PUBLICATION)
++
++    def test_unknown_id_and_attempt_without_retained_original_do_not_create_state(self):
++        with tempfile.TemporaryDirectory() as temp:
++            journal,_,pending=self.setup_owned(Path(temp))
++            for fn in (pending.recover_original,pending.mark_attempt_uncertain,pending.observation):
++                with self.assertRaises(StorageBlocked):fn(PUBLICATION)
++            self.assertEqual(journal.read(),[])
++
++    def test_local_record_rejects_claimed_native_commit_or_result_receipt(self):
++        with tempfile.TemporaryDirectory() as temp:
++            journal,store,_=self.setup_owned(Path(temp))
++            journal.append('OBSERVING',dict(schema='unified.storage.pending-original.v1',publication_id=PUBLICATION,
++                intent_base64=base64.b64encode(RAW).decode(),intent_sha256='a'*64,
++                intent_bytes=str(len(RAW)),phase='COMMITTED',native_receipt={'state':'COMMITTED'}))
++            with self.assertRaises(StorageBlocked):PendingPublicationJournal(journal,store)
++
++    def test_corrupt_actual_sqlite_has_closed_unavailable_result(self):
++        with tempfile.TemporaryDirectory() as temp:
++            journal,store,_=self.setup_owned(Path(temp))
++            journal.path.write_bytes(b'not an actual SQLite database')
++            with self.assertRaises(StorageBlocked):PendingPublicationJournal(journal,store)
++
++    def test_append_response_loss_preserves_actual_committed_local_original(self):
++        from unittest.mock import patch
++        with tempfile.TemporaryDirectory() as temp:
++            journal,store,pending=self.setup_owned(Path(temp));original=Journal.append
++            def lose_response(instance,*args,**kwargs):
++                original(instance,*args,**kwargs)
++                raise OSError('local append response lost after actual SQLite commit')
++            with patch.object(Journal,'append',lose_response):
++                with self.assertRaises(StorageBlocked):pending.retain(RetainedPublicationIntent(PUBLICATION,RAW))
++            fresh=PendingPublicationJournal(Journal(journal.path),store)
++            self.assertEqual(fresh.recover_original(PUBLICATION).raw_bytes,RAW)
++            self.assertEqual(fresh.observation(PUBLICATION).native_outcome,'UNKNOWN')
++            self.assertEqual(len(journal.read()),1)
++
++    def test_exhausted_journal_budget_rejects_before_new_staging_io(self):
++        from unittest.mock import patch
++        import unified_system.storage.publication_recovery as recovery
++        with tempfile.TemporaryDirectory() as temp:
++            journal,_,pending=self.setup_owned(Path(temp))
++            with patch.object(recovery,'MAX_RECORDS',1):
++                pending.retain(RetainedPublicationIntent(PUBLICATION,RAW))
++                other=RetainedPublicationIntent('00000000-0000-4000-8000-000000000003',b'new bytes')
++                with patch.object(ObjectStore,'put',side_effect=AssertionError('quota denial must precede IO')):
++                    with self.assertRaises(StorageBlocked):pending.retain(other)
++                self.assertEqual(len(journal.read()),1)
+diff --git a/unified_system/gateway_research_identity.py b/unified_system/gateway_research_identity.py
+new file mode 100644
+index 0000000..b098ed5
+--- /dev/null
++++ b/unified_system/gateway_research_identity.py
+@@ -0,0 +1,401 @@
++"""Actual disposable mTLS + Consul principal session; never a job/worker grant.
++
++Root owns certificate/key load+client pin, real ACL provisioning and source capsule.
++No READ capability upgrade, standalone ledger, source callback or human identity.
++"""
++import asyncio
++import base64
++from dataclasses import dataclass
++from datetime import datetime, timezone
++import hashlib
++import json
++import re
++import ssl
++import time
++import uuid
++from urllib.parse import quote
++from cryptography import x509
++from cryptography.exceptions import InvalidSignature, UnsupportedAlgorithm
++from cryptography.hazmat.primitives import hashes
++from cryptography.x509.oid import ExtendedKeyUsageOID
++import httpx
++from .gateway_identity import GatewayAuditSink, GatewayIdentityUnavailable
++
++try:
++    from grid.coordination import ConsulSessionAuthority, CoordinationUnavailable
++    from grid.authority_runtime_v1 import canonical, measure_native_plan
++except ImportError:
++    ConsulSessionAuthority = None
++
++SCOPES=frozenset(('SUBMIT_RESEARCH','READ_RESEARCH','CANCEL_OWN_JOB'))
++_PROFILE_V2='unified.authority.target-bound-research-profile.v2-review1'
++_TARGET_SCHEMA_SHA='faf01152678c5b066145dcafebe92f593a641a54dac84da3ce1e1df94c0fb261'
++_INPUT_SHA='c548e2ffcd542d5d741682303694b3c6d06507740f158a6e30089b2d5355f648'
++_PRODUCER='aed8a7c8a952f96803c207d5e90b133969a47f04'
++
++class ResearchIdentityDenied(RuntimeError): pass
++class ResearchIdentityUnavailable(RuntimeError): pass
++
++def _require(value):
++    if not value: raise ResearchIdentityDenied('RESEARCH_IDENTITY_DENIED')
++def _uuid(value):
++    _require(type(value) is str and re.fullmatch(r'[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}',value) is not None)
++def _native_session(value):
++    # Consul session IDs are canonical UUID strings, not guaranteed UUIDv4.
++    _require(type(value) is str and re.fullmatch(r'[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}',value) is not None)
++    _require(str(uuid.UUID(value))==value)
++def _sha(value):
++    _require(type(value) is str and re.fullmatch(r'[0-9a-f]{64}',value) is not None)
++def _id(value):
++    _require(type(value) is str and re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}',value) is not None)
++def _fields(value,names): _require(type(value) is dict and set(value)==set(names.split()))
++def _utc(): return datetime.now(timezone.utc).timestamp()
++def _expiry(value):
++    _require(type(value) is str and re.fullmatch(r'[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z',value) is not None)
++    return datetime.strptime(value,'%Y-%m-%dT%H:%M:%SZ').replace(tzinfo=timezone.utc).timestamp()
++def _decode(raw):
++    _require(type(raw) is bytes and 0<len(raw)<=16384)
++    def pairs(items):
++        result={}
++        for key,value in items:
++            _require(key not in result);result[key]=value
++        return result
++    def number(_): raise ValueError('NATIVE_METADATA_NUMBER')
++    value=json.loads(raw.decode('ascii'),object_pairs_hook=pairs,parse_int=number,parse_float=number,parse_constant=number)
++    _require(type(value) is dict and canonical(value)==raw)
++    return value
++
++def _lab_id(value):
++    _require(type(value) is str and re.fullmatch(r'[A-Za-z0-9_-]{1,128}',value) is not None)
++
++def _decode_target(raw):
++    """Separate target codec retains numeric input caps; never native C3 coercion."""
++    _require(type(raw) is bytes and 0<len(raw)<=16384)
++    depth=0;quoted=False;escaped=False
++    for char in raw:
++        if quoted:
++            if escaped:escaped=False
++            elif char==92:escaped=True
++            elif char==34:quoted=False
++        elif char==34:quoted=True
++        elif char in (91,123):
++            depth+=1;_require(depth<=12)
++        elif char in (93,125):
++            depth-=1;_require(depth>=0)
++    _require(depth==0 and not quoted)
++    def pairs(items):
++        result={}
++        for key,value in items:
++            _require(key not in result);result[key]=value
++        return result
++    def constant(_):raise ValueError('TARGET_NONFINITE_NUMBER')
++    value=json.loads(raw.decode('ascii'),object_pairs_hook=pairs,parse_constant=constant)
++    _require(type(value) is dict and json.dumps(value,sort_keys=True,separators=(',',':'),ensure_ascii=True,allow_nan=False).encode('ascii')==raw)
++    return value
++
++def _target_binding(profile,*,generation,actor,quota_owner):
++    """Data joins for actual commissioned profile, not resource/job qualification."""
++    binding=profile['target_binding']
++    _fields(binding,'target_request_schema_sha256 target_request_canonical_base64 target_request_sha256 request_id job_id idempotency_key cluster_generation actor_principal_id quota_owner_id producer_request_sha256 producer_head')
++    _require(binding['target_request_schema_sha256']==_TARGET_SCHEMA_SHA)
++    _sha(binding['target_request_sha256'])
++    encoded=binding['target_request_canonical_base64']
++    _require(type(encoded) is str and 0<len(encoded)<=21848)
++    raw=base64.b64decode(encoded,validate=True)
++    _require(base64.b64encode(raw).decode('ascii')==encoded and hashlib.sha256(raw).hexdigest()==binding['target_request_sha256'])
++    target=_decode_target(raw)
++    _fields(target,'schema request_id target_kind target_capability target_version dataset_manifest_id dataset_revision experiment_id strategy_version parameters_digest execution_mode resource_budget quota_owner principal_id authority_generation assignment_revision fencing_token idempotency_key result_schema result_artifact_ref')
++    expected=dict(schema='unified.gateway.target-native-request.v1-review1',target_kind='MetaAnalyse',
++        target_capability='meta.ohlcv.untouched_levels.v1',target_version='f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1',
++        dataset_manifest_id='local-sha256:33d5bf0f918884c8908795b384e0964a48a1351c808800964b8cacf3f83e28b6',
++        dataset_revision='LOCAL_FIXTURE_1',experiment_id='fixture.gateway.btc.levels',strategy_version=None,
++        parameters_digest=_INPUT_SHA,execution_mode='NATIVE_RESEARCH_ADMISSION_REQUEST_NOT_PERMISSION',
++        assignment_revision=None,fencing_token=None,result_schema='unified.gateway.native-target-observation.v1-review1',result_artifact_ref=None)
++    for key,value in expected.items():
++        _require(type(target[key]) is type(value) and target[key]==value)
++    caps=target['resource_budget'];_fields(caps,'max_input_bytes max_output_bytes max_rows max_executions')
++    for key,value in dict(max_input_bytes=16384,max_output_bytes=16384,max_rows=3,max_executions=1).items():
++        _require(type(caps[key]) is int and caps[key]==value)
++    for key in ('request_id','job_id','cluster_generation','actor_principal_id'):_uuid(binding[key])
++    _lab_id(binding['idempotency_key']);_lab_id(binding['quota_owner_id'])
++    _require(binding['cluster_generation']==generation==target['authority_generation'])
++    _require(binding['actor_principal_id']==actor==target['principal_id'])
++    _require(binding['quota_owner_id']==quota_owner==target['quota_owner'])
++    _require(binding['request_id']==target['request_id'] and binding['idempotency_key']==target['idempotency_key'])
++    _require(binding['producer_request_sha256']==profile['input_request_sha256']==_INPUT_SHA)
++    _require(binding['producer_head']==profile['producer_head']==_PRODUCER)
++    _require(len(profile['principal_registry'])==1)
++    return binding
++
++def _profile_request(profile,profile_sha,*,scope,raw):
++    """Bind current identity capture to the ONE original; never issue a job."""
++    b=profile['target_binding']
++    submit=dict(schema='unified.gateway.lab-job-submit.v1-review1',operation='SUBMIT_RESEARCH',
++        cluster_id=profile['cluster_id'],cluster_generation=b['cluster_generation'],request_id=b['request_id'],
++        job_id=b['job_id'],original_actor_principal_id=b['actor_principal_id'],quota_owner_id=b['quota_owner_id'],
++        idempotency_key=b['idempotency_key'],commissioned_profile_sha256=profile_sha,
++        input_request_sha256=profile['input_request_sha256'],producer_head=profile['producer_head'],resources=profile['resources'])
++    if scope in ('SUBMIT_RESEARCH','READ_RESEARCH'):
++        _require(raw==canonical(submit))
++        return
++    cancel=_decode(raw)
++    _fields(cancel,'schema operation cluster_id cluster_generation request_id job_id original_actor_principal_id quota_owner_id idempotency_key commissioned_profile_sha256 original_submit_request_id original_submit_intent_sha256')
++    _uuid(cancel['request_id']);_lab_id(cancel['idempotency_key'])
++    _require(cancel['request_id']!=b['request_id'])
++    expected=dict(schema='unified.gateway.lab-job-cancel.v1-review1',operation='CANCEL_OWN_JOB',
++        cluster_id=profile['cluster_id'],cluster_generation=b['cluster_generation'],job_id=b['job_id'],
++        original_actor_principal_id=b['actor_principal_id'],quota_owner_id=b['quota_owner_id'],
++        commissioned_profile_sha256=profile_sha,original_submit_request_id=b['request_id'],
++        original_submit_intent_sha256=hashlib.sha256(canonical(submit)).hexdigest())
++    for key,value in expected.items():_require(cancel[key]==value)
++def _leaf(cert,eku,uri=None):
++    _require(not cert.extensions.get_extension_for_class(x509.BasicConstraints).value.ca)
++    _require(list(cert.extensions.get_extension_for_class(x509.ExtendedKeyUsage).value)==[eku])
++    names=list(cert.extensions.get_extension_for_class(x509.SubjectAlternativeName).value)
++    if uri is None:
++        _require(len(names)==1 and type(names[0]) is x509.IPAddress and str(names[0].value)=='127.0.0.1')
++    else:
++        _require(len(names)==1 and type(names[0]) is x509.UniformResourceIdentifier and names[0].value==uri)
++
++@dataclass(frozen=True)
++class ResearchNativeRecord:
++    key: str
++    index: int
++    raw: bytes
++    session: str
++
++@dataclass(frozen=True)
++class ResearchIdentitySnapshot:
++    actor_id: str
++    service_id: str
++    quota_owner_id: str
++    session_id: str
++    policy_id: str
++    profile_sha256: str
++    records: tuple
++
++class ResearchPrincipalContext:
++    __slots__=()
++    def __new__(cls): raise TypeError('BROKER_ONLY_CONTEXT')
++    def __copy__(self): raise TypeError('CONTEXT_NOT_COPYABLE')
++    def __deepcopy__(self,memo): raise TypeError('CONTEXT_NOT_COPYABLE')
++    def __reduce__(self): raise TypeError('CONTEXT_NOT_SERIALIZABLE')
++class ResearchIdentityCapture(ResearchPrincipalContext):
++    __slots__=()
++
++class ResearchIdentityBroker:
++    def __init__(self,*,authority,generation,realm_id,profile_sha256,server_ssl_context,server_certificate_der,audit_sink):
++        if (ConsulSessionAuthority is None or type(authority) is not ConsulSessionAuthority
++                or not authority._owns_client or type(authority.client) is not httpx.AsyncClient
++                or type(authority.client._transport) is not httpx.AsyncHTTPTransport
++                or not authority.config.isolated_lab or not authority.config.acl_token
++                or type(audit_sink) is not GatewayAuditSink):
++            raise ResearchIdentityUnavailable('QUALIFIED_DISPOSABLE_SOURCE_UNAVAILABLE')
++        self._authority=authority;self._audit=audit_sink
++        self._contexts={};self._captures={};self._sessions=set();self._invalid=set()
++        self._operations_lock=asyncio.Lock()
++        self._wall=_utc();self._mono=time.monotonic();self._last_wall=self._wall;self._last_mono=self._mono
++        self._poisoned=False;self._closed=False
++        try:
++            _uuid(generation);_uuid(realm_id);_sha(profile_sha256)
++            namespace=authority.config.namespace
++            _require(namespace.startswith('unified/'));_uuid(namespace[8:])
++            self._cluster=namespace[8:];self._namespace=namespace;self._generation=generation
++            self._realm=realm_id;self._profile_sha=profile_sha256
++            self._prefix=namespace+'/runtime-v1/research-lab-v1/'+realm_id+'/'
++            _require(type(server_ssl_context) is ssl.SSLContext and server_ssl_context.protocol==ssl.PROTOCOL_TLS_SERVER)
++            _require(server_ssl_context.verify_mode==ssl.CERT_REQUIRED and server_ssl_context.minimum_version>=ssl.TLSVersion.TLSv1_2)
++            self._ssl=server_ssl_context
++            cas=server_ssl_context.get_ca_certs(binary_form=True);_require(len(cas)==1)
++            self._ca=x509.load_der_x509_certificate(cas[0])
++            _require(type(server_certificate_der) is bytes)
++            server=x509.load_der_x509_certificate(server_certificate_der)
++            server.verify_directly_issued_by(self._ca);_leaf(server,ExtendedKeyUsageOID.SERVER_AUTH)
++            self._server_expiry=server.not_valid_after_utc.timestamp()
++            _require(server.not_valid_before_utc.timestamp()<=self._wall<self._server_expiry)
++        except (ResearchIdentityDenied,ValueError,TypeError,x509.ExtensionNotFound,InvalidSignature,UnsupportedAlgorithm) as exc:
++            raise ResearchIdentityUnavailable('DISPOSABLE_COMMISSIONING_UNAVAILABLE') from exc
++    def _clock(self):
++        wall,mono=_utc(),time.monotonic()
++        if (self._closed or self._poisoned or wall<self._last_wall or mono<self._last_mono
++                or wall-self._wall<mono-self._mono-1):
++            self._poisoned=True
++            raise ResearchIdentityUnavailable('CLOCK_OR_SOURCE_UNAVAILABLE')
++        self._last_wall,self._last_mono=wall,mono
++        return wall,mono
++    def _emit(self,decision):
++        try:
++            self._audit._append(dict(schema='unified.gateway.research-identity-audit.v1',realm_id=self._realm,decision=decision))
++        except GatewayIdentityUnavailable:
++            raise ResearchIdentityUnavailable('AUDIT_SOURCE_UNAVAILABLE') from None
++    def _peer(self,sock):
++        wall,_=self._clock()
++        _require(type(sock) is ssl.SSLSocket and sock.context is self._ssl and sock.server_side and sock.fileno()>=0)
++        raw=sock.getpeercert(binary_form=True);_require(type(raw) is bytes)
++        cert=x509.load_der_x509_certificate(raw);cert.verify_directly_issued_by(self._ca)
++        names=list(cert.extensions.get_extension_for_class(x509.SubjectAlternativeName).value)
++        _require(len(names)==1 and type(names[0]) is x509.UniformResourceIdentifier)
++        uri=names[0].value;prefix='urn:unified:test:research-service:'
++        _require(uri.startswith(prefix));service=uri[len(prefix):];_uuid(service)
++        _leaf(cert,ExtendedKeyUsageOID.CLIENT_AUTH,uri)
++        expiry=min(cert.not_valid_after_utc.timestamp(),self._server_expiry)
++        _require(cert.not_valid_before_utc.timestamp()<=wall<expiry)
++        return hashlib.sha256(raw).hexdigest(),service,expiry
++    async def _read(self,key):
++        try:
++            rows=await self._authority._request('GET','/v1/kv/'+quote(key,safe='/'),params={'consistent':''},missing_ok=True)
++        except CoordinationUnavailable:
++            raise ResearchIdentityUnavailable('NATIVE_IDENTITY_SOURCE_UNAVAILABLE') from None
++        if type(rows) is not list or len(rows)!=1: raise ResearchIdentityUnavailable('NATIVE_IDENTITY_RECORD_UNAVAILABLE')
++        row=rows[0]
++        _require(type(row) is dict and row.get('Key')==key and type(row.get('ModifyIndex')) is int and 0<row['ModifyIndex']<2**63)
++        value=base64.b64decode(row['Value'],validate=True);_decode(value)
++        session=row.get('Session','');_require(type(session) is str)
++        return ResearchNativeRecord(key,row['ModifyIndex'],value,session)
++    async def _policy(self,fingerprint,service):
++        generation=await self._read(self._namespace+'/commands/generation')
++        _require(_decode(generation.raw)=={'generation':self._generation})
++        profile=await self._read(self._prefix+'profile-registry/'+self._profile_sha)
++        _require(hashlib.sha256(profile.raw).hexdigest()==self._profile_sha)
++        p=_decode(profile.raw)
++        profile_fields='schema cluster_id realm_id principal_registry input_request_sha256 producer_head resources expiry_semantics expires_utc'
++        v2=p.get('schema')==_PROFILE_V2
++        _fields(p,profile_fields+(' target_binding' if v2 else ''))
++        _require(p['schema'] in ('unified.authority.research-lab-profile.v1-review1',_PROFILE_V2) and p['cluster_id']==self._cluster and p['realm_id']==self._realm)
++        _require(p['expiry_semantics']=='NATIVE_SESSION_INVALIDATION_NOT_UTC_AT_COMMIT')
++        _require(type(p['principal_registry']) is dict and 1<=len(p['principal_registry'])<=32)
++        for key,value in p['principal_registry'].items(): _sha(key);_uuid(value)
++        _require(p['input_request_sha256']=='c548e2ffcd542d5d741682303694b3c6d06507740f158a6e30089b2d5355f648')
++        _require(p['producer_head']=='aed8a7c8a952f96803c207d5e90b133969a47f04')
++        _require(p['resources']=={'cpu_millicores':'1000','resident_memory_bytes':'268435456','max_artifact_bytes':'1048576'})
++        actor=p['principal_registry'].get(fingerprint);_require(actor is not None)
++        principal=await self._read(self._prefix+'principals/'+actor);a=_decode(principal.raw)
++        _fields(a,'schema actor_id service_id certificate_sha256 quota_owner_id policy_id profile_sha256 state')
++        _require(a['schema']=='unified.authority.research-lab-principal.v1-review1' and a['actor_id']==actor
++                 and a['service_id']==service and a['certificate_sha256']==fingerprint and a['profile_sha256']==self._profile_sha and a['state']=='ACTIVE')
++        _id(a['quota_owner_id']);_uuid(a['policy_id'])
++        if v2:_target_binding(p,generation=self._generation,actor=actor,quota_owner=a['quota_owner_id'])
++        policy=await self._read(self._prefix+'policies/'+a['policy_id']);r=_decode(policy.raw)
++        _fields(r,'schema policy_id actor_id profile_sha256 revision state scopes expires_utc')
++        _require(r['schema']=='unified.authority.research-lab-policy.v1-review1' and r['policy_id']==a['policy_id']
++                 and r['actor_id']==actor and r['profile_sha256']==self._profile_sha and r['state']=='ACTIVE')
++        revision=r['revision'];_require(type(revision) is str and re.fullmatch('[1-9][0-9]{0,18}',revision) is not None and int(revision)<2**63)
++        scopes=r['scopes'];_require(type(scopes) is list and 1<=len(scopes)<=3 and all(type(s) is str and s in SCOPES for s in scopes) and scopes==sorted(set(scopes)))
++        expiry=min(_expiry(p['expires_utc']),_expiry(r['expires_utc']))
++        wall,_=self._clock();_require(wall<expiry<=self._wall+900)
++        return (generation,profile,principal,policy),a,r,expiry
++    @staticmethod
++    def _check(record): return {'KV':dict(Verb='check-index',Key=record.key,Index=record.index)}
++    async def open_session(self,server_ssl_socket,*,leader):
++        try:
++            async with self._operations_lock:
++                return await self._open_session(server_ssl_socket,leader=leader)
++        except (ResearchIdentityDenied,ResearchIdentityUnavailable): raise
++        except Exception:
++            raise ResearchIdentityUnavailable('PRINCIPAL_SESSION_OUTCOME_UNKNOWN') from None
++    async def _open_session(self,server_ssl_socket,*,leader):
++        if len(self._contexts)>=128 or len(self._sessions)>=128: raise ResearchIdentityUnavailable('CONTEXT_CAPACITY')
++        session_id=None
++        try:
++            fingerprint,service,cert_expiry=self._peer(server_ssl_socket)
++            records,a,r,policy_expiry=await self._policy(fingerprint,service)
++            _require(await self._authority.validate(leader))
++            self._emit('PRINCIPAL_SESSION_BEGIN')
++            started=time.monotonic()
++            created=await self._authority._request('PUT','/v1/session/create',json={
++                'Name':'research-principal-'+a['actor_id'],'TTL':'10s','Behavior':'release','LockDelay':'0s','NodeChecks':[]})
++            session_id=created['ID'];_native_session(session_id);self._sessions.add(session_id)
++            key=self._prefix+'principal-sessions/'+session_id+'/lock'
++            body=dict(schema='unified.authority.research-lab-principal-session.v1-review1',actor_id=a['actor_id'],
++                service_id=service,certificate_sha256=fingerprint,session_id=session_id,policy_id=a['policy_id'],
++                profile_sha256=self._profile_sha,quota_owner_id=a['quota_owner_id'])
++            operations=[self._check(record) for record in records]+[
++                {'KV':dict(Verb='check-index',Key=self._authority.key,Index=leader.token)},
++                {'KV':dict(Verb='check-session',Key=self._authority.key,Session=leader.session_id)},
++                {'KV':dict(Verb='check-not-exists',Key=key)},
++                {'KV':dict(Verb='lock',Key=key,Session=session_id,Value=base64.b64encode(canonical(body)).decode('ascii'))}]
++            measure_native_plan(operations)
++            result=await self._authority._request('PUT','/v1/txn',json=operations)
++            _require(type(result) is dict and not result.get('Errors') and type(result.get('Results')) is list)
++            lock=await self._read(key);_require(lock.session==session_id and lock.raw==canonical(body))
++            fingerprint2,service2,cert_expiry2=self._peer(server_ssl_socket)
++            _require((fingerprint,service)==(fingerprint2,service2))
++            expiry=min(cert_expiry,cert_expiry2,policy_expiry)
++            wall,mono=self._clock()
++            deadline=min(started+9,mono+expiry-wall)
++            _require(wall<expiry and mono<deadline)
++            self._emit('PRINCIPAL_SESSION_CONFIRMED')
++            context=object.__new__(ResearchPrincipalContext)
++            self._contexts[context]=(server_ssl_socket,fingerprint,service,session_id,deadline,a['actor_id'],a['policy_id'],a['quota_owner_id'],expiry)
++            return context
++        except BaseException:
++            if session_id:
++                self._invalid.add(session_id)
++                try:
++                    destroyed=await self._authority._request('PUT','/v1/session/destroy/'+session_id)
++                    if destroyed is True:
++                        self._sessions.discard(session_id);self._invalid.discard(session_id)
++                except Exception: pass
++            raise
++    def _context(self,context):
++        _require(type(context) is ResearchPrincipalContext and context in self._contexts)
++        state=self._contexts[context];wall,mono=self._clock()
++        _require(state[3] not in self._invalid and mono<state[4] and wall<state[8])
++        fingerprint,service,_=self._peer(state[0]);_require((fingerprint,service)==(state[1],state[2]))
++        return state
++    async def capture_current(self,context,*,scope,request_bytes):
++        try:
++            async with self._operations_lock:
++                return await self._capture_current(context,scope=scope,request_bytes=request_bytes)
++        except (ResearchIdentityDenied,ResearchIdentityUnavailable): raise
++        except Exception:
++            raise ResearchIdentityUnavailable('CURRENT_IDENTITY_UNAVAILABLE') from None
++    async def _capture_current(self,context,*,scope,request_bytes):
++        _require(type(scope) is str and scope in SCOPES and type(request_bytes) is bytes and 0<len(request_bytes)<=16384)
++        if len(self._captures)>=256: raise ResearchIdentityUnavailable('CAPTURE_CAPACITY')
++        state=self._context(context)
++        records,a,r,policy_expiry=await self._policy(state[1],state[2]);_require(scope in r['scopes'])
++        profile=_decode(records[1].raw)
++        if profile['schema']==_PROFILE_V2:_profile_request(profile,self._profile_sha,scope=scope,raw=request_bytes)
++        _require((a['actor_id'],a['policy_id'],a['quota_owner_id'])==(state[5],state[6],state[7]))
++        lock=await self._read(self._prefix+'principal-sessions/'+state[3]+'/lock')
++        expected=dict(schema='unified.authority.research-lab-principal-session.v1-review1',actor_id=state[5],
++            service_id=state[2],certificate_sha256=state[1],session_id=state[3],policy_id=state[6],profile_sha256=self._profile_sha,quota_owner_id=state[7])
++        _require(lock.session==state[3] and lock.raw==canonical(expected))
++        self._context(context);self._emit('CURRENT_RESEARCH_IDENTITY')
++        wall,mono=self._clock();expiry=min(state[8],policy_expiry)
++        deadline=min(state[4],mono+expiry-wall)
++        _require(wall<expiry and mono<deadline)
++        snapshot=ResearchIdentitySnapshot(state[5],state[2],state[7],state[3],state[6],self._profile_sha,records+(lock,))
++        capture=object.__new__(ResearchIdentityCapture)
++        self._captures[capture]=(context,scope,hashlib.sha256(request_bytes).digest(),snapshot,expiry,deadline)
++        return capture
++    def require_capture(self,capture,*,expected_authority,scope,request_bytes):
++        _require(type(self) is ResearchIdentityBroker and self._authority is expected_authority)
++        _require(type(scope) is str and scope in SCOPES and type(request_bytes) is bytes and 0<len(request_bytes)<=16384)
++        _require(type(capture) is ResearchIdentityCapture and capture in self._captures)
++        context,original_scope,digest,snapshot,expiry,deadline=self._captures[capture]
++        self._context(context)
++        wall,mono=self._clock();_require(wall<expiry and mono<deadline)
++        _require(type(request_bytes) is bytes and scope==original_scope and hashlib.sha256(request_bytes).digest()==digest)
++        return snapshot
++    async def invalidate_context(self,context):
++        _require(type(context) is ResearchPrincipalContext and context in self._contexts)
++        session=self._contexts[context][3];self._invalid.add(session)
++        try:
++            self._emit('PRINCIPAL_SESSION_INVALIDATED')
++        finally:
++            # Audit backpressure cannot prevent best-effort native invalidation.
++            try: await self._authority._request('PUT','/v1/session/destroy/'+session)
++            except CoordinationUnavailable:
++                raise ResearchIdentityUnavailable('NATIVE_INVALIDATION_UNKNOWN') from None
++    async def close(self):
++        # Latch before waiting: in-flight operations must fail their final check.
++        self._closed=True
++        async with self._operations_lock:
++            self._invalid.update(self._sessions)
++            for session in tuple(self._sessions):
++                try:
++                    destroyed=await self._authority._request('PUT','/v1/session/destroy/'+session)
++                    if destroyed is True: self._sessions.discard(session)
++                except Exception: pass
+diff --git a/unified_system/storage/publication_records.py b/unified_system/storage/publication_records.py
+new file mode 100644
+index 0000000..b6e70b6
+--- /dev/null
++++ b/unified_system/storage/publication_records.py
+@@ -0,0 +1,61 @@
++"""Exact local original-intent custody, not a native wire or proof ABI.
++
++Native publication/receipt/access schemas still require A2/A4/A5/A7 co-ACK.
++These records intentionally cannot represent COMMITTED or grant any permission.
++"""
++from dataclasses import dataclass
++import hashlib
++
++from .contracts import _UUID, require
++
++MAX_ORIGINAL_BYTES = 16384
++
++
++def publication_identifier(value):
++    require(type(value) is str and _UUID.fullmatch(value) is not None,
++            'INVALID_PUBLICATION_IDENTIFIER')
++    return value
++
++
++@dataclass(frozen=True)
++class RetainedPublicationIntent:
++    """Opaque candidate bytes, not an approved native intent/schema/authority."""
++    publication_id: str
++    raw_bytes: bytes
++
++    def __post_init__(self):
++        publication_identifier(self.publication_id)
++        require(type(self.raw_bytes) is bytes and 0 < len(self.raw_bytes) <= MAX_ORIGINAL_BYTES,
++                'INVALID_ORIGINAL_PUBLICATION_BYTES')
++
++    @property
++    def sha256(self):
++        return hashlib.sha256(self.raw_bytes).hexdigest()
++
++    @property
++    def authority_verified(self):
++        return False
++
++
++@dataclass(frozen=True)
++class PendingPublicationObservation:
++    """Local journal observation; never an A2 result/receipt/projection handle."""
++    publication_id: str
++    original_sha256: str
++    local_phase: str
++
++    @property
++    def native_outcome(self):
++        return 'UNKNOWN'
++
++    @property
++    def publication_confirmed(self):
++        return False
++
++    @property
++    def retry_authorized(self):
++        return False
++
++    @property
++    def hold_release_authorized(self):
++        return False
+diff --git a/unified_system/storage/publication_recovery.py b/unified_system/storage/publication_recovery.py
+new file mode 100644
+index 0000000..04f5166
+--- /dev/null
++++ b/unified_system/storage/publication_recovery.py
+@@ -0,0 +1,138 @@
++"""Bounded original-byte custody using the EXISTING non-authorizing Journal.
++
++ROOT must provide a private initialized journal and owned ObjectStore. No second
++registry, consensus, sender, receipt reconstruction, retry or cleanup lives here.
++An attempt marker is written BEFORE a future admitted send and does not establish
++whether anything was sent. A recovered original always has native outcome UNKNOWN.
++"""
++import base64
++import binascii
++import sqlite3
++import stat
++import threading
++
++from ..contracts import ContractError
++from ..journal import Journal
++from .contracts import StorageBlocked, require
++from .object_store import ObjectStore, _parents
++from .publication_records import (RetainedPublicationIntent, PendingPublicationObservation,
++                                  publication_identifier, MAX_ORIGINAL_BYTES)
++
++MAX_RECORDS = 64
++MAX_JOURNAL_BYTES = 2*1024*1024
++SCHEMA = 'unified.storage.pending-original.v1'
++
++
++class PendingPublicationJournal:
++    def __init__(self, journal, owned_store):
++        require(type(journal) is Journal and type(owned_store) is ObjectStore,
++                'OWNED_JOURNAL_AND_STORE_REQUIRED')
++        self._journal = journal
++        self._store = owned_store
++        self._mutex = threading.RLock()
++        self._records()
++
++    def _path_check(self):
++        path = self._journal.path.absolute()
++        _parents(path.parent)
++        info = path.lstat()
++        require(stat.S_ISREG(info.st_mode) and not path.is_symlink() and info.st_nlink == 1
++                and not getattr(info, 'st_file_attributes', 0) & 1024
++                and info.st_size <= MAX_JOURNAL_BYTES, 'PENDING_JOURNAL_UNAVAILABLE')
++        for suffix in ('-wal', '-shm', '-journal'):
++            sidecar = path.with_name(path.name+suffix)
++            require(not sidecar.exists() and not sidecar.is_symlink(), 'PENDING_JOURNAL_RECOVERY_REQUIRED')
++        return info.st_dev, info.st_ino
++
++    def _records(self):
++        try:
++            before = self._path_check()
++            records = Journal.read(self._journal)
++            require(self._path_check() == before, 'PENDING_JOURNAL_IDENTITY_CHANGED')
++            require(len(records) <= MAX_RECORDS, 'PENDING_JOURNAL_CAPACITY')
++            originals, latest = {}, {}
++            for row in records:
++                value = row['receipt']
++                require(row['state'] == 'OBSERVING' and type(value) is dict and set(value) == {
++                    'schema', 'publication_id', 'intent_base64', 'intent_sha256', 'intent_bytes', 'phase'})
++                require(value['schema'] == SCHEMA and type(value['intent_base64']) is str)
++                require(len(value['intent_base64']) <= 4*((MAX_ORIGINAL_BYTES+2)//3))
++                raw = base64.b64decode(value['intent_base64'], validate=True)
++                require(base64.b64encode(raw).decode('ascii') == value['intent_base64'])
++                original = RetainedPublicationIntent(value['publication_id'], raw)
++                require(value['intent_sha256'] == original.sha256 and value['intent_bytes'] == str(len(raw)))
++                require(value['phase'] in ('RETAINED', 'ATTEMPT_UNCERTAIN'))
++                key = original.publication_id
++                if key not in originals:
++                    require(value['phase'] == 'RETAINED', 'PENDING_ORIGINAL_NOT_RETAINED')
++                    originals[key] = original
++                else:
++                    require(originals[key] == original and latest[key] == 'RETAINED'
++                            and value['phase'] == 'ATTEMPT_UNCERTAIN', 'PENDING_ORIGINAL_CONFLICT')
++                latest[key] = value['phase']
++            return records, originals, latest
++        except StorageBlocked:
++            raise
++        except (ContractError, OSError, ValueError, TypeError, KeyError, binascii.Error, sqlite3.Error):
++            raise StorageBlocked('PENDING_ORIGINAL_UNAVAILABLE') from None
++
++    def _append(self, original, phase, records):
++        require(len(records) < MAX_RECORDS, 'PENDING_JOURNAL_CAPACITY')
++        value = dict(schema=SCHEMA, publication_id=original.publication_id,
++            intent_base64=base64.b64encode(original.raw_bytes).decode('ascii'),
++            intent_sha256=original.sha256, intent_bytes=str(len(original.raw_bytes)), phase=phase)
++        try:
++            Journal.append(self._journal, 'OBSERVING', value, expected_sequence=len(records))
++            self._records()
++        except StorageBlocked:
++            raise
++        except (ContractError, OSError, ValueError, TypeError, KeyError, sqlite3.Error):
++            # An append may already have committed. Retain original identity and
++            # reconcile this same journal; never erase, replace or infer failure.
++            raise StorageBlocked('PENDING_APPEND_OUTCOME_UNKNOWN') from None
++
++    def retain(self, original):
++        require(type(original) is RetainedPublicationIntent, 'EXACT_ORIGINAL_RECORD_REQUIRED')
++        original = RetainedPublicationIntent(original.publication_id, original.raw_bytes)
++        with self._mutex:
++            records, originals, _ = self._records()
++            if original.publication_id in originals:
++                require(originals[original.publication_id] == original, 'PENDING_ORIGINAL_CONFLICT')
++                self.verify_staged_original(original.publication_id)
++                return self.observation(original.publication_id)
++            require(len(records) < MAX_RECORDS, 'PENDING_JOURNAL_CAPACITY')
++            ObjectStore.put(self._store, original.raw_bytes, max_bytes=MAX_ORIGINAL_BYTES)
++            require(ObjectStore.read(self._store, original.sha256, max_bytes=MAX_ORIGINAL_BYTES) == original.raw_bytes)
++            self._append(original, 'RETAINED', records)
++            return self.observation(original.publication_id)
++
++    def mark_attempt_uncertain(self, publication_id):
++        key = publication_identifier(publication_id)
++        with self._mutex:
++            records, originals, latest = self._records()
++            require(key in originals, 'PENDING_ORIGINAL_NOT_RETAINED')
++            self.verify_staged_original(key)
++            if latest[key] == 'RETAINED':
++                self._append(originals[key], 'ATTEMPT_UNCERTAIN', records)
++            return self.observation(key)
++
++    def recover_original(self, publication_id):
++        key = publication_identifier(publication_id)
++        with self._mutex:
++            _, originals, _ = self._records()
++            require(key in originals, 'PENDING_ORIGINAL_NOT_RETAINED')
++            return originals[key]
++
++    def verify_staged_original(self, publication_id):
++        with self._mutex:
++            original = self.recover_original(publication_id)
++            require(ObjectStore.read(self._store, original.sha256, max_bytes=MAX_ORIGINAL_BYTES)
++                    == original.raw_bytes, 'STAGED_ORIGINAL_BYTES_MISMATCH')
++            return original
++
++    def observation(self, publication_id):
++        key = publication_identifier(publication_id)
++        with self._mutex:
++            _, originals, latest = self._records()
++            require(key in originals, 'PENDING_ORIGINAL_NOT_RETAINED')
++            return PendingPublicationObservation(key, originals[key].sha256, latest[key])
+diff --git a/unified_system/storage/replica_evidence.py b/unified_system/storage/replica_evidence.py
+new file mode 100644
+index 0000000..55d657d
+--- /dev/null
++++ b/unified_system/storage/replica_evidence.py
+@@ -0,0 +1,104 @@
++"""Local-only copy observations; native closure inventory is not admitted.
++
++This is deliberately not the proposed native replica/CAS wire contract.
++Neither source hashes nor a parsed observation confer replica eligibility.
++"""
++from dataclasses import dataclass
++from .contracts import _decode, _UUID, digest, require, u63, StorageBlocked
++
++
++@dataclass(frozen=True)
++class LocalReplicaObservation:
++    canonical_bytes: bytes
++
++    def __post_init__(self):
++        value, _ = _decode(self.canonical_bytes, canonical=True)
++        require(set(value) == {'schema', 'closure_sha256', 'source_store_id',
++                              'destination_store_id', 'object_count', 'byte_count'})
++        require(value['schema'] == 'unified.storage.local-copy-observation.v1')
++        digest(value['closure_sha256'])
++        for name in ('source_store_id', 'destination_store_id'):
++            require(type(value[name]) is str and _UUID.fullmatch(value[name]) is not None)
++        require(value['source_store_id'] != value['destination_store_id'])
++        require(4 <= u63(value['object_count'], positive=True) <= 17)
++        require(u63(value['byte_count'], positive=True) <= 1024*1024+32768)
++
++    @property
++    def replica_valid(self):
++        return False
++
++    @property
++    def failure_domain_verified(self):
++        return False
++
++    @property
++    def publication_confirmed(self):
++        return False
++
++
++class ReplicaClosureInventory:
++    """Deny-only placeholder, never an injectable native provider."""
++
++    def capture_result_closure(self, original_intent_bytes, *, expected_authority):
++        raise StorageBlocked('NATIVE_CLOSURE_CAPTURE_UNAVAILABLE')
++
++
++class LocalInventoryReadback:
++    """Point-in-time local bytes only, NOT native closure/capture/replica proof.
++
++ROOT commissioning and the future A2 native snapshot/issuer contract are separate.
++This object cannot establish source trust against arbitrary hostile Python.
++"""
++    __slots__ = ('_store_id', '_closure_sha256', '_objects')
++
++    def __new__(cls, *args, **kwargs):
++        raise TypeError('READBACK_CREATED_BY_FIXED_LOCAL_READER_ONLY')
++
++    def __setattr__(self, name, value):
++        raise TypeError('LOCAL_READBACK_IMMUTABLE')
++
++    def __copy__(self):
++        raise TypeError('LOCAL_READBACK_NOT_TRANSFERABLE_PROOF')
++
++    def __deepcopy__(self, memo):
++        raise TypeError('LOCAL_READBACK_NOT_TRANSFERABLE_PROOF')
++
++    def __reduce__(self):
++        raise TypeError('LOCAL_READBACK_NOT_SERIALIZABLE_PROOF')
++
++    @property
++    def store_id(self):
++        return self._store_id
++
++    @property
++    def closure_sha256(self):
++        return self._closure_sha256
++
++    @property
++    def objects(self):
++        return self._objects
++
++    @property
++    def native_replica_eligible(self):
++        return False
++
++    @property
++    def failure_domain_qualified(self):
++        return False
++
++    @property
++    def semantic_closure_verified(self):
++        return False
++
++    @property
++    def publication_confirmed(self):
++        return False
++
++
++def _issue_local_inventory_readback(store_id, closure_sha256, observations):
++    # Private construction is data provenance hygiene, not an authority boundary.
++    result = object.__new__(LocalInventoryReadback)
++    object.__setattr__(result, '_store_id', store_id)
++    object.__setattr__(result, '_closure_sha256', closure_sha256)
++    object.__setattr__(result, '_objects', tuple(observations))
++    return result
+diff --git a/unified_system/storage/result_publication.py b/unified_system/storage/result_publication.py
+new file mode 100644
+index 0000000..a30b2f0
+--- /dev/null
++++ b/unified_system/storage/result_publication.py
+@@ -0,0 +1,180 @@
++"""Bounded immutable copies of a caller-declared byte graph, not publication.
++
++All graph claims remain untrusted. Payloads are never decoded/reencoded. These
++local byte checks do not verify semantic dependencies, replica eligibility,
++independent failure domains, reservations or native commit authority.
++"""
++from dataclasses import dataclass
++import hashlib
++import json
++
++from .contracts import _decode, digest, require, u63, StorageBlocked
++from .object_store import ObjectStore
++from .replica_evidence import LocalReplicaObservation, _issue_local_inventory_readback
++
++MAX_OBJECTS = 16
++MAX_TOTAL_BYTES = 1024*1024
++ROLES = frozenset(('artifact', 'descriptor', 'request', 'query_request', 'query_result',
++                  'computation_receipt', 'corrected_replay', 'input_manifest', 'input_rows',
++                  'input_coverage', 'input_schema', 'input_index', 'input_profile',
++                  'input_dependencies', 'input_lineage', 'producer_metadata'))
++
++
++def _canonical(value):
++    return json.dumps(value, sort_keys=True, separators=(',', ':'), ensure_ascii=True).encode('ascii')
++
++
++def _validate(raw):
++    value, _ = _decode(raw, canonical=True)
++    require(set(value) == {'schema', 'objects'})
++    require(value['schema'] == 'unified.storage.local-declared-byte-closure.v1')
++    entries = value['objects']
++    require(type(entries) is list and 3 <= len(entries) <= MAX_OBJECTS)
++    roles, seen, total = set(), {}, 0
++    for entry in entries:
++        require(type(entry) is dict and set(entry) == {'role', 'sha256', 'bytes', 'dependencies'})
++        role = entry['role']
++        require(type(role) is str and role in ROLES and role not in roles)
++        roles.add(role)
++        sha = digest(entry['sha256'])
++        require(sha not in seen)
++        size = u63(entry['bytes'], positive=True)
++        total += size
++        require(total <= MAX_TOTAL_BYTES)
++        deps = entry['dependencies']
++        require(type(deps) is list and len(deps) <= MAX_OBJECTS)
++        for dependency in deps:
++            digest(dependency)
++        require(deps == sorted(set(deps)) and sha not in deps)
++        seen[sha] = entry
++    require({'artifact', 'descriptor', 'request'} <= roles)
++    require([e['role'] for e in entries] == sorted(roles))
++    visiting, complete = set(), set()
++
++    def visit(sha):
++        require(sha in seen and sha not in visiting, 'DECLARED_GRAPH_NOT_CLOSED_ACYCLIC')
++        if sha in complete:
++            return
++        visiting.add(sha)
++        for dependency in seen[sha]['dependencies']:
++            visit(dependency)
++        visiting.remove(sha)
++        complete.add(sha)
++    for sha in seen:
++        visit(sha)
++    return value
++
++
++@dataclass(frozen=True)
++class LocalByteClosure:
++    canonical_bytes: bytes
++
++    def __post_init__(self):
++        _validate(self.canonical_bytes)
++
++    @property
++    def value(self):
++        return _validate(self.canonical_bytes)
++
++    @property
++    def sha256(self):
++        return hashlib.sha256(self.canonical_bytes).hexdigest()
++
++    @property
++    def publication_confirmed(self):
++        return False
++
++    @property
++    def semantic_closure_verified(self):
++        return False
++
++
++def build_local_closure(entries):
++    require(type(entries) is tuple and 3 <= len(entries) <= MAX_OBJECTS)
++    objects, total = [], 0
++    for item in entries:
++        require(type(item) is tuple and len(item) == 3)
++        role, raw, dependencies = item
++        require(type(raw) is bytes and 0 < len(raw) <= MAX_TOTAL_BYTES)
++        total += len(raw)
++        require(total <= MAX_TOTAL_BYTES)
++        require(type(dependencies) is tuple and len(dependencies) <= MAX_OBJECTS)
++        for sha in dependencies:
++            digest(sha)
++        require(len(set(dependencies)) == len(dependencies))
++        require(type(role) is str and role in ROLES)
++        objects.append(dict(role=role, sha256=hashlib.sha256(raw).hexdigest(),
++                            bytes=str(len(raw)), dependencies=sorted(dependencies)))
++    return LocalByteClosure(_canonical(dict(schema='unified.storage.local-declared-byte-closure.v1',
++                                           objects=sorted(objects, key=lambda e: e['role']))))
++
++
++def _inventory(claim):
++    require(type(claim) is LocalByteClosure)
++    return [(entry['sha256'], int(entry['bytes'])) for entry in claim.value['objects']] + [
++        (claim.sha256, len(claim.canonical_bytes))]
++
++
++def stage_local_closure(store, claim, entries):
++    require(type(store) is ObjectStore)
++    inventory = _inventory(claim)
++    rebuilt = build_local_closure(entries)
++    require(rebuilt.canonical_bytes == claim.canonical_bytes, 'DECLARED_BYTES_MISMATCH')
++    for _, raw, _ in entries:
++        ObjectStore.put(store, raw, max_bytes=MAX_TOTAL_BYTES)
++    ObjectStore.put(store, claim.canonical_bytes, max_bytes=32768)
++    for sha, size in inventory:
++        require(len(ObjectStore.read(store, sha, max_bytes=size)) == size)
++    return claim
++
++
++def copy_local_closure(source, destination, claim):
++    require(type(source) is ObjectStore and type(destination) is ObjectStore)
++    inventory = _inventory(claim)
++    ObjectStore._check(source)
++    ObjectStore._check(destination)
++    require(source.store_id != destination.store_id and
++            source._identities['.'] != destination._identities['.'], 'DISTINCT_LOCAL_ROOT_REQUIRED')
++    # Validate the complete bounded source before the first destination mutation.
++    raw_objects = []
++    for sha, size in inventory:
++        raw = ObjectStore.read(source, sha, max_bytes=size)
++        require(len(raw) == size)
++        raw_objects.append(raw)
++    for raw in raw_objects:
++        ObjectStore.put(destination, raw, max_bytes=MAX_TOTAL_BYTES)
++    for sha, size in inventory:
++        require(len(ObjectStore.read(destination, sha, max_bytes=size)) == size)
++    ObjectStore._check(source)
++    ObjectStore._check(destination)
++    return LocalReplicaObservation(_canonical(dict(schema='unified.storage.local-copy-observation.v1',
++        closure_sha256=claim.sha256, source_store_id=source.store_id,
++        destination_store_id=destination.store_id, object_count=str(len(inventory)),
++        byte_count=str(sum(size for _, size in inventory)))))
++
++
++def commit_result(original_intent_bytes):
++    raise StorageBlocked('NATIVE_RESULT_PUBLICATION_UNAVAILABLE')
++
++
++def reconcile_result(original_intent_bytes):
++    raise StorageBlocked('NATIVE_RESULT_RECONCILIATION_UNAVAILABLE')
++
++
++def readback_local_closure(owned_store, claim):
++    """Read/hash every declared object/root with same-read filesystem identities.
++
++    This does not validate payload schemas, source/dependency semantics, current
++    authority holds, domain independence or access rights for disclosure.
++    A2 native capture/commit remain unavailable; no boolean can promote this fact.
++    """
++    require(type(owned_store) is ObjectStore, 'EXACT_OWNED_STORE_REQUIRED')
++    inventory = _inventory(claim)
++    ObjectStore._check(owned_store)
++    observations = []
++    for sha, size in inventory:
++        observation = ObjectStore.verify(owned_store, sha, max_bytes=size)
++        require(observation.byte_length == size, 'READBACK_LENGTH_MISMATCH')
++        observations.append(observation)
++    ObjectStore._check(owned_store)
++    return _issue_local_inventory_readback(owned_store.store_id, claim.sha256, observations)

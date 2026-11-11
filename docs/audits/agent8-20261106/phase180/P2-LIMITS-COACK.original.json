@@ -1,0 +1,38 @@
+{
+  "artifact_closure_status": "INCOMPLETE_SOURCE_DATA_ONLY",
+  "fixture_import_allowed": false,
+  "future_complete_status_allowed": false,
+  "git_execution": "Fixed approved absolute Git executable selected by existing tooling policy, no ambient PATH fallback. Build minimal explicit child environment; discard inherited GIT_* and suppress system/global/repository helper/config/replace/alternate-object effects. Reject alternates, replace refs and external object redirection rather than reading outside approved local object store; no hooks, pager, filters, external helpers, network, fetch or checkout. Historical objects must already be locally available. No executable version probe. Unavailable safe execution rejects with existing structural code.",
+  "limit_semantics": "Hard enforced while streaming, not after unbounded communicate/read. Aggregate stdout includes all Git calls and historical objects; primary total counts declared committed primary payload once. Whole monotonic deadline starts at verifier entry including validation; each child deadline min(30s, remaining whole budget). Stop/reap owned Git child on limit/error; no source mutation. No new API/CLI parameters. Bounded batch cat-file requests, no shell. Git timeout/output/child failures map GIT_VERIFICATION_FAILED; malformed descriptor limits map INVALID_DESCRIPTOR. Never print raw stderr or environment. No new error codes.",
+  "limits": {
+    "aggregate_git_stderr_bytes": 1048576,
+    "aggregate_git_stdout_bytes": 75497472,
+    "max_individual_blob_bytes": 20971520,
+    "per_command_seconds": 30,
+    "primary_combined_blob_bytes": 67108864,
+    "whole_verification_seconds": 90
+  },
+  "native_execution_allowed": false,
+  "observed_primary_inventory_stats": {
+    "GRID-PRIMARY-INVENTORY.json": {
+      "files": 824,
+      "max_blob_bytes": 57482,
+      "total_blob_bytes": 3373503
+    },
+    "UNIFIED-SUPPORT-PRIMARY-INVENTORY.json": {
+      "files": 1519,
+      "max_blob_bytes": 16761841,
+      "total_blob_bytes": 50802970
+    }
+  },
+  "ownership": "Root exclusive 3 NEW Grid paths already accepted; A2 no code edits; A8 ACK still required; YAML/native fixtures NO_EDIT",
+  "pending_code_enum": "NONE; 13 existing exception codes are structural failures only",
+  "prior_seal_sha256": "7084862b5a81537464f3bfdd873dba5a6bc821fb39d1638e0f7c1f3ee7b158ec",
+  "root_static_review_digest_reported_not_independently_read": "d2a3c9673b5ff861645daf6a5f4ca344dedaffada9b528636edb1df1f0960d51",
+  "schema": "a2.native-support-verifier-p2-coack.v1",
+  "source_graph_sha256": "21b4538247894158777ee2506fabafc5e830da7c641c64bbd108d99fecd8506d",
+  "status": "A2_SCOPED_COACK_ROOT_A8_IMPLEMENTATION_HOLD",
+  "supersedes_prior_card_in_conflict": true,
+  "unresolved_codes": [],
+  "v1_success_status_only": "SOURCE_MATCH_DATA_ONLY"
+}

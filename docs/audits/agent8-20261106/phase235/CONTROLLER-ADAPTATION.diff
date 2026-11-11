@@ -1,0 +1,225 @@
+diff --git a/C:/Users/LS-5/.codex/native-output-cap-matrix-d69b699-20261111/reviewed-core-original-3bba.py b/C:/Users/LS-5/.codex/native-output-cap-matrix-d69b699-20261111/controller.py
+index a7119ec..f68ef62 100644
+--- a/C:/Users/LS-5/.codex/native-output-cap-matrix-d69b699-20261111/reviewed-core-original-3bba.py
++++ b/C:/Users/LS-5/.codex/native-output-cap-matrix-d69b699-20261111/controller.py
+@@ -1,4 +1,4 @@
+-"""UNEXECUTED Root allocation proposal: zero-PS missing-helper prerequisite only."""
++"""UNEXECUTED Root allocation proposal: one stock-exception unittest / 24 subcases only."""
+ import hashlib
+ import json
+ import os
+@@ -11,31 +11,37 @@ import sys
+ import threading
+ import time
+ 
+-BASE = Path('C:/Users/LS-5/.codex/native-output-cap-prerequisite-756a670-mode-fixed-20261111')
++BASE = Path('C:/Users/LS-5/.codex/native-output-cap-matrix-d69b699-20261111')
+ SOURCE = BASE / 'source'
+ CACHE = BASE / 'pycache-prefix'
+-EVIDENCE = BASE / 'allocated-prerequisite-evidence'
++EVIDENCE = BASE / 'allocated-matrix-evidence'
+ REAL = Path('C:/Users/LS-5/AppData/Local/Python/pythoncore-3.12-64/python.exe')
+ GIT = Path('C:/Program Files/Git/bin/git.exe')
+-HEAD = '756a6701421e804a116a50f997bc015643af341c'
+-TREE = '86abc51e5a9a3f09b72ad7c2d1d4ff8dbbabf9e9'
+-PARENT = 'bfa3b24d8f209d5e91acfa64819d3ebed4967af7'
+-LEDGER_SHA = '74dc7334fa526c6395ae895440f2050df19c86f1a695f406168138d7ee949033'
++HEAD = 'd69b699466fb8b15785e0a4e886cbf60c8c91dd3'
++TREE = 'c1fef5f97d1ec475ddcc7d1be02a1d3cd69d8b9c'
++PARENT = '756a6701421e804a116a50f997bc015643af341c'
++LEDGER_SHA = 'd93374a6e732c48f9fc609a1cc411b6506c497a8a95d1da33913344aeca81ccd'
+ RUNTIME_SHA = '3625b1be9c8ac3309ba2c974ad35a6b62c7f53e07031a6b4bc3e75b86d4f0046'
+ REAL_SHA = '4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a'
+ GIT_SHA = '78211c7ed73988da93a6d8a33d47ec6187f464d7ea2a9a00c182bbd7a1ecf30f'
++PS = Path('C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe')
++PS_SHA = '60c9b29843624dd8af6b6a7b26147753be6aeef65098b9a503cc50850afe410f'
++DRIVER = BASE / 'child-driver.py'
++DRIVER_SHA = '720b8562bc0372c576e99b1ca5adf5c3dba308fe7d068ca646b2fd108b2fc6e2'
+ FROZEN = {
++    'tests/native_output_cap_assertion.ps1': '71818734af4f3e1badebec43afb867f106bb4cd692c3a013ad8d4f36126a6b71',
++    'tests/test_installation_service.py': '7f55993256b098d109ba895098dde18a49b6dc16f882cd99e1aafc0d5bdc8039',
+     'tests/test_native_output_cap_assertion.py': 'b822f4ec0d89240c1733b546eef3b00967c524da653ad802830c68b2b5f5191e',
+-    'docs/ci/native-output-cap-assertion-review1.md': '054ebd5cb4324882e55dde4a994481d54f745fa05fc48834b61827e44e264592',
++    'docs/ci/native-output-cap-assertion-review1.md': 'ed62abd890c1192a1162b0fedeeecfbecf002b350048d3d2c69ab53e106e4a28',
+ }
+ TEST = SOURCE / 'tests/test_native_output_cap_assertion.py'
+ HELPER = SOURCE / 'tests/native_output_cap_assertion.ps1'
+ TEST_ID = 'native_output_cap_assertion_controls.NativeOutputCapAssertionControls.test_actual_shared_classifier_stock_exception_matrix'
+ CAP = 256 * 1024
+ WHOLE_END = None
+-RECORD = {'schema': 'native-output-cap-prerequisite.v1', 'result': 'DENY',
++RECORD = {'schema': 'native-output-cap-stock-matrix.v1', 'result': 'DENY',
+           'source_head': HEAD, 'source_tree': TREE, 'source_parent': PARENT,
+-          'native_authority': False, 'fixture_import_allowed': False,
++          'native_authority': False, 'fixture_import_allowed': False, 'stock_matrix_nonmain_source_load_allowed': True,
+           'actual_classifier_subcases_run': 0, 'process_roles': []}
+ CLOSED_FAILURE_CODES = frozenset('''
+ ABSOLUTE_PATH_REQUIRED UNSAFE_ANCESTOR UNSAFE_PATH UNSAFE_TYPE SOURCE_HARDLINK
+@@ -49,7 +55,7 @@ CHILD_LOCAL_COMPLETION_BOUND GIT_ARGUMENTS_NOT_ALLOWED SOURCE_GIT_FAILED
+ EXACT_SOURCE_OR_HELPER_PRECONDITION SOURCE_OBJECT_REDIRECTION SOURCE_COMMIT_CHANGED
+ SOURCE_GIT_TYPE SOURCE_GIT_INVENTORY_CHANGED SOURCE_WALK_FAILED SOURCE_EXTRA_FILE
+ SOURCE_MISSING_OR_EXTRA SOURCE_DIRTY FROZEN_TEST_DOCUMENT_CHANGED RUNTIME_FILE_COUNT
+-FIXED_TOOL_CHANGED EXPECTED_SINGLE_PREREQUISITE_RED_REQUIRED EXPECTED_ASSERTION_MISSING
++FIXED_TOOL_CHANGED STOCK_MATRIX_PROFILE_REQUIRED EXPECTED_SINGLE_PREREQUISITE_RED_REQUIRED EXPECTED_ASSERTION_MISSING
+ EXPECTED_ONE_FAILURE_REQUIRED UNEXPECTED_SETUP_OR_CLASSIFIER_EXECUTION
+ EXPLICIT_ROOT_ALLOCATION_REQUIRED FIXED_WINDOWS_CPYTHON_REQUIRED
+ ISOLATED_RUNTIME_AND_FRESH_PREFIX_REQUIRED EVIDENCE_FILE_BOUND
+@@ -215,7 +221,7 @@ def environment(git=False):
+ 
+ def capture(command, role, label, seconds):
+     """Bounded direct-child handles, finite readers, no unrelated PID discovery."""
+-    need(role in ('source_git_inspection', 'expected_missing_helper_python'), 'UNKNOWN_PROCESS_ROLE')
++    need(role in ('source_git_inspection', 'actual_classifier_unit_python'), 'UNKNOWN_PROCESS_ROLE')
+     need(threading.current_thread() is threading.main_thread(), 'MAIN_THREAD_REQUIRED')
+     start = clock()
+     end = min(start + seconds, WHOLE_END)
+@@ -384,7 +390,7 @@ def git(args, label):
+ 
+ def snapshot(ledger, phase):
+     clock()
+-    need(len(ledger) == 1872 and 'tests/native_output_cap_assertion.ps1' not in ledger,
++    need(len(ledger) == 1873 and 'tests/native_output_cap_assertion.ps1' in ledger,
+          'EXACT_SOURCE_OR_HELPER_PRECONDITION')
+     ordinary(SOURCE, directory=True)
+     ordinary(SOURCE / '.git', directory=True)
+@@ -428,32 +434,75 @@ def snapshot(ledger, phase):
+     for name, digest in FROZEN.items():
+         need(ledger[name]['sha256'] == digest, 'FROZEN_TEST_DOCUMENT_CHANGED')
+     return {'files': len(files), 'head': HEAD, 'tree': TREE, 'raw_git_and_physical_match': True,
+-            'source_single_links': True, 'no_extras': True, 'helper_absent': True}
++            'source_single_links': True, 'no_extras': True, 'helper_present_and_pinned': True}
+ 
+ 
+ def runtime_snapshot(runtime):
+     need(len(runtime['files']) == 841, 'RUNTIME_FILE_COUNT')
+     for name, entry in runtime['files'].items():
+-        hash_file(Path(name), entry)
+-    need(hash_file(REAL)['sha256'] == REAL_SHA and hash_file(GIT)['sha256'] == GIT_SHA, 'FIXED_TOOL_CHANGED')
++        hash_file(Path(name), entry, single=True)
++    need(hash_file(REAL, single=True)['sha256'] == REAL_SHA and hash_file(GIT, single=True)['sha256'] == GIT_SHA, 'FIXED_TOOL_CHANGED')
++    # Only this exact System32 servicing role permits multiple ordinary hardlinks.
++    need(ordinary(PS).st_nlink >= 1 and hash_file(PS)['sha256'] == PS_SHA, 'FIXED_TOOL_CHANGED')
++    need(hash_file(DRIVER, single=True)['sha256'] == DRIVER_SHA, 'FIXED_TOOL_CHANGED')
+     cache_empty()
+     return {'bound_files': 841, 'real_python_sha256': REAL_SHA,
+             'empty_external_pycache_prefix': True, 'transitive_os_dll_release_closure': 'NOT_PROVEN'}
+ 
+ 
+-def classify_missing_helper(output, error, status):
+-    need(status == 1 and output == b'', 'EXPECTED_SINGLE_PREREQUISITE_RED_REQUIRED')
++def classify_matrix(output, error, status):
++    need(status == 0 and len(output) < 256, 'STOCK_MATRIX_PROFILE_REQUIRED')
++    # Exactly one closed digest observation; the independently sealed driver
++    # produces this profile. It is evidence consistency, never permission.
++    match = re.fullmatch(rb'\{"profile_sha256":"([0-9a-f]{64})"\}\r?\n', output)
++    need(match is not None, 'STOCK_MATRIX_PROFILE_REQUIRED')
++    profile = pinned_json('allocated-matrix-evidence/matrix-profile.json', match[1].decode('ascii'))
++    need(type(profile) is dict and set(profile) == {
++        'schema', 'result', 'test_id', 'test_sha256', 'helper_sha256', 'powershell_sha256',
++        'native_authority', 'raw_ps_output_independently_preserved', 'primary_failure_type',
++        'attempts', 'child_retirement', 'actual_return_records', 'started_ids', 'succeeded_ids',
++        'subcases', 'elapsed_seconds'}, 'STOCK_MATRIX_PROFILE_REQUIRED')
++    need(profile['schema'] == 'stock-matrix-observation.v1'
++         and profile['result'] == 'ONE_UNIT_24_STOCK_SUBCASES_PASS'
++         and profile['test_id'] == TEST_ID and profile['primary_failure_type'] is None
++         and profile['native_authority'] is False
++         and profile['raw_ps_output_independently_preserved'] is False
++         and profile['test_sha256'] == FROZEN['tests/test_native_output_cap_assertion.py']
++         and profile['helper_sha256'] == FROZEN['tests/native_output_cap_assertion.ps1']
++         and profile['powershell_sha256'] == PS_SHA, 'STOCK_MATRIX_PROFILE_REQUIRED')
++    cases = ('accept_leaf', 'accept_aggregate_single', 'accept_aggregate_all_cap',
++             'accept_method_aggregate', 'accept_target_method_aggregate', 'accept_max_depth',
++             'accept_max_nodes', 'reject_null', 'reject_truthy_nonexception', 'reject_deadline',
++             'reject_drain_deadline', 'reject_launch_failure', 'reject_unrelated', 'reject_wrong_case',
++             'reject_cap_prefix', 'reject_unknown_wrapper', 'reject_nonleaf_cap',
++             'reject_empty_aggregate', 'reject_mixed_aggregate', 'reject_nested_mixed',
++             'reject_cycle', 'reject_depth', 'reject_nodes', 'reject_oversized_message')
++    need(profile['started_ids'] == profile['succeeded_ids'] == [TEST_ID]
++         and profile['subcases'] == [{'id': case, 'passed': True} for case in cases]
++         and profile['actual_return_records'] == {
++             case: 'TRUE' if case in cases[:7] else 'FALSE' for case in cases}, 'STOCK_MATRIX_PROFILE_REQUIRED')
++    attempts, cleanup = profile['attempts'], profile['child_retirement']
++    need(type(attempts) is list and type(cleanup) is list and len(attempts) == len(cleanup) == 1,
++         'STOCK_MATRIX_PROFILE_REQUIRED')
++    need(type(attempts[0]) is dict and set(attempts[0]) == {'returned_handle', 'pid'}
++         and attempts[0]['returned_handle'] is True and type(attempts[0]['pid']) is int
++         and attempts[0]['pid'] > 0, 'STOCK_MATRIX_PROFILE_REQUIRED')
++    need(type(cleanup[0]) is dict and set(cleanup[0]) == {'pid', 'cleanup_needed', 'uncertain', 'returncode'}
++         and cleanup[0]['pid'] == attempts[0]['pid'] and cleanup[0]['cleanup_needed'] is False
++         and cleanup[0]['uncertain'] is False and type(cleanup[0]['returncode']) is int
++         and cleanup[0]['returncode'] == 0, 'STOCK_MATRIX_PROFILE_REQUIRED')
++    elapsed = profile['elapsed_seconds']
++    need(type(elapsed) in (int, float) and 0 <= elapsed < 12, 'STOCK_MATRIX_PROFILE_REQUIRED')
+     text = error.decode('utf8')
+-    need(TEST_ID in text and 'NATIVE_OUTPUT_CAP_HELPER_MISSING' in text, 'EXPECTED_ASSERTION_MISSING')
+-    need(re.search(r'Ran 1 test in [0-9.]+s', text) is not None and 'FAILED (failures=1)' in text,
+-         'EXPECTED_ONE_FAILURE_REQUIRED')
+-    need('ERROR:' not in text and 'skipped' not in text and 'UNIT_CAP_V1' not in text
+-         and 'PURE_PS_' not in text, 'UNEXPECTED_SETUP_OR_CLASSIFIER_EXECUTION')
+-
++    need(TEST_ID in text and re.search(r'Ran 1 test in [0-9.]+s', text) is not None
++         and text.rstrip().endswith('OK') and 'FAIL' not in text and 'ERROR:' not in text
++         and 'skipped' not in text, 'STOCK_MATRIX_PROFILE_REQUIRED')
++    RECORD['actual_stock_matrix_profile'] = profile
++    RECORD['actual_classifier_subcases_run'] = 24
+ 
+ def main():
+     global WHOLE_END
+-    need(sys.argv[1:] == ['--allocated-missing-helper-prerequisite'], 'EXPLICIT_ROOT_ALLOCATION_REQUIRED')
++    need(sys.argv[1:] == ['--allocated-stock-matrix-controller'], 'EXPLICIT_ROOT_ALLOCATION_REQUIRED')
+     ordinary(BASE, directory=True)
+     EVIDENCE.mkdir(exist_ok=False)  # consumed once; no overwrite or automatic repeat
+     with (EVIDENCE / 'bootstrap.json').open('x', encoding='utf8') as stream:
+@@ -480,10 +529,10 @@ def main():
+         RECORD['source_before'] = snapshot(ledger, 'pre')
+         before = True
+         command = [str(REAL), '-I', '-S', '-B', '-X', 'pycache_prefix=' + str(CACHE),
+-                   str(TEST), '--allocated-pure-powershell']
+-        output, error, status = capture(command, 'expected_missing_helper_python', 'prerequisite', 15)
+-        classify_missing_helper(output, error, status)
+-        RECORD['expected_missing_helper_assertion_observed'] = True
++                   str(DRIVER), '--allocated-stock-classifier-matrix']
++        output, error, status = capture(command, 'actual_classifier_unit_python', 'stock-matrix-unit', 15)
++        classify_matrix(output, error, status)
++        RECORD['actual_stock_matrix_observed'] = True
+     except BaseException as error:
+         fact = failure_fact(error)
+         RECORD['failure_type'] = fact['type']
+@@ -499,19 +548,21 @@ def main():
+         RECORD['remaining_new_threads'] = sum(thread.is_alive() and thread.ident not in initial_threads
+                                               for thread in threading.enumerate())
+         RECORD['elapsed_seconds'] = time.monotonic() - started
+-        expected = [r for r in RECORD['process_roles'] if r['role'] == 'expected_missing_helper_python']
++        expected = [r for r in RECORD['process_roles'] if r['role'] == 'actual_classifier_unit_python']
+         cleanup_ok = all(not r['denied'] and not r['cleanup_uncertain']
+                          and r['reader_threads_retired'] and r['local_completion_within_bound']
+                          for r in RECORD['process_roles'])
+-        if (RECORD.get('expected_missing_helper_assertion_observed') and RECORD.get('source_after')
++        if (RECORD.get('actual_stock_matrix_observed') and RECORD.get('source_after')
+                 and RECORD.get('runtime_after') and not RECORD.get('failure_type')
+                 and not RECORD.get('post_verification_failed') and cleanup_ok
+                 and not RECORD['remaining_new_threads'] and len(expected) == 1
++                and len(RECORD['process_roles']) == 7
++                and sum(r['role'] == 'source_git_inspection' for r in RECORD['process_roles']) == 6
+                 and RECORD['elapsed_seconds'] < 120):
+-            RECORD['result'] = 'PREREQUISITE_MISSING_HELPER_RED_CONFIRMED'
++            RECORD['result'] = 'ONE_UNIT_24_STOCK_SUBCASES_QUALIFIED'
+             exit_code = 0
+-        RECORD['powershell_child_count_by_reviewed_test_path'] = 0 if RECORD.get('expected_missing_helper_assertion_observed') else 'NOT_ESTABLISHED'
+-        RECORD['scope'] = 'One expected Python unittest failure; zero actual classifier subcases. Source Git inspection is a separate direct-process role; no hostwide process claim.'
++        RECORD['observed_owned_powershell_children'] = 1 if RECORD.get('actual_stock_matrix_observed') else 'UNKNOWN'
++        RECORD['scope'] = 'One Python unittest / 24 stock managed exception subcases and one owned PowerShell child; six separate source Git roles. No native C#Run, installation, service, family-hardwall or hostwide process qualification.'
+         # Failure evidence must still be attempted after the whole qualification
+         # deadline. Finite artifact reads do not resurrect a DENY result.
+         RECORD['artifacts'] = {}
+@@ -530,8 +581,8 @@ def main():
+                 exit_code = 1
+         with (EVIDENCE / 'receipt.json').open('x', encoding='utf8') as stream:
+             stream.write(json.dumps(RECORD, sort_keys=True, indent=2) + '\n')
+-        print(json.dumps({'result': RECORD['result'], 'actual_classifier_subcases_run': 0,
+-                          'expected_python_children': len(expected), 'scope': 'PREREQUISITE_ONLY_NOT_NATIVE_FIXTURE'}), flush=True)
++        print(json.dumps({'result': RECORD['result'], 'actual_classifier_subcases_run': RECORD['actual_classifier_subcases_run'],
++                          'expected_python_children': len(expected), 'scope': 'STOCK_EXCEPTION_UNIT_ONLY_NOT_NATIVE_FIXTURE'}), flush=True)
+     return exit_code
+ 
+ 

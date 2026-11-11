@@ -1,0 +1,10 @@
+const fs=require('node:fs'),path=require('node:path'),cp=require('node:child_process'),Module=require('node:module');
+for(const k of ['NODE_OPTIONS','NODE_PATH','NODE_COMPILE_CACHE','NODE_V8_COVERAGE'])if(process.env[k])throw Error('AMBIENT_NODE_CONFIG');
+const root=process.env.GITHUB_WORKSPACE,head=process.env.EXPECTED_HEAD;
+if(!/^[0-9a-f]{40}$/.test(head))throw Error('EXPECTED_HEAD');
+const git=process.platform==='win32'?'C:/Program Files/Git/cmd/git.exe':'/usr/bin/git';
+const source=cp.execFileSync(git,['--no-replace-objects','--no-optional-locks','-c','core.fsmonitor=false','-C',root,'show',head+':tests/gateway_artifacts/qualification.cjs']);
+const file=path.join(root,'tests/gateway_artifacts/qualification.cjs');
+if(fs.lstatSync(file).isSymbolicLink()||!source.equals(fs.readFileSync(file)))throw Error('PRIMARY_SOURCE_MISMATCH');
+const mod=new Module(file);mod.filename=file;mod.paths=Module._nodeModulePaths(path.dirname(file));mod._compile(source.toString('utf8'),file);
+const r=mod.exports.run(root,head,process.env.GATEWAY_EVIDENCE);process.stdout.write(JSON.stringify({head:r.head,result:r.result,tests:r.tests})+'\n');

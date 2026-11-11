@@ -1,0 +1,25 @@
+# Agent8 phase113 — PR57 pure CPU policy and suspended observations
+
+| Requirement ID | Repository | PR | Exact HEAD | Test | Environment | Expected | Actual | Evidence | Status | Severity | Required correction |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| CPU113-SOURCE | unified-system |57|cf08b2d05f853f8c24392467c7690657cba69728|exactsource/primaryprepost|A8freshLFclone|exactraw/noextras|tree03a848f005e25e2bbd1a213caf95331f9f5970c0;1421primaryrawprepostequal/noextras;currentDraftHEADmatched|primary-verification.json;pr-current.original.json;source.diff|PASS|—|No new integratedbasequalified|
+| CPU113-OWN29 | unified-system |57|cf08b2d05f853f8c24392467c7690657cba69728|fivecommittedmodules|A8WindowsCP312.10 -I -S -B|29unique/0skip|29PASS0skip/exit0=prior24+5pureCPUmethods;2realownSUSPENDEDchildcasesincluded/noResume/CPUload/PR52|own29.stderr.log;own29.stdout.json;executed-child.py|PASS|—|OverlappingIDsnot24+29distinct;subcasesnotnativejobs|
+| CPU113-ARITH | unified-system |57|cf08b2d05f853f8c24392467c7690657cba69728|pureintegerconversionpolicyv1|untrustedinputDATA|floorbound/quantum/capacity/types/topologyrestrictions|N1/2/3/8/16/32/64;floor10m/N;zeroquantumrefuses/noimplicitclamp;strictintnotbool;singlefullgroup/64bitmask/countmatch/knownparentNONE+DFSSDISABLED;alwaysadmissionfalse/behaviorfalse|own29.stderr.log;source.diff|PASS|—|Arithmeticnotnativeenforcement/reservation/benchmarkproof|
+| CPU113-OBSERVE | unified-system |57|cf08b2d05f853f8c24392467c7690657cba69728|actualretainedhandleCPUquery/topology|twoownWindows suspendedchildtests|stablebefore/aftergroup/count/affinity/currentJobflagsrate|realqueriesflags5/rate1000/derivedrate_appliedfalse;parent/DFSSUNKNOWN;purecandidatewithactualsnapshotUNSUPPORTED;6resourcefieldsstillUNSUPPORTED/admitted[]|own29.stderr.log;source.diff|PASS|—|Snapshotnotpinnedtopology/read-to-resumeprovenance;derivedratenotapplied|
+| CPU113-OWNER | unified-system |57|cf08b2d05f853f8c24392467c7690657cba69728|receipt/log/rawsource/canonicaldata|read-onlyoriginalownerartifacts|bindingsmatch|receiptf361a60f6294668f7e5d7f37f124d8e212b2d6731f039f95c987293342fb58b1;worker85b29756316a0330f1e0aa9450bad33e4edfa5886a0ca64a63cb196f0b66a47b/test2b286f12/canonicalcap8528c0verified;owner29notA8|owner-receipt.original.json;owner-tests.original.log;owner-source-verification.json|PASS|—|No ownerPASStransfer|
+| CPU113-QUALIFICATION | six repos |unadmitted|actualconnectedchainabsent|resourceadmission/UTC/holds/custody/nativeE2E/hosted|NOT_RUN|qualifiedeffectsunderactualpermits|onlypurepolicy+set/query;actualparent/DFSSUNKNOWN⇒UNSUPPORTED;RSSnotjobcommit/PR51peakdiscrepancyOPEN;startDENY;notactualA2permit|ci-current.original.json;source docs;phase106gates|BLOCKED|existingownerlabelledP0gates|Actualverifiedparent/topology/freshholds/currentworker/UTC/sourcecustodyandseparatelyauthorizedbehavioralqualificationbeforewiring|
+
+Microsoft defines CpuRate in units per10000 cycles and zero is invalid; ENABLE+HARD_CAP flags are1+4. Parent CPU control changes the denominator, and DFSS can prohibit this mechanism. Verified from [official CPU rate documentation](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-jobobject_cpu_rate_control_information). The repository's floor10m/N calculation is a POLICY INFERENCE under its stated nominal1000millicores/logicalCPU definition, not a Microsoft guarantee of throughput. Count and affinity are group-sensitive observations; official [processor count](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getactiveprocessorcount) and [affinity mask](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getprocessaffinitymask) semantics independently consulted. V1 rejects incomplete/multigroup topology; matching snapshots cannot stop subsequent topology changes.
+
+Only selectedcommittedtest_owned_attempt/test_worker_limits/test_closed_jobs/test_resource_capabilities/test_cpu_policy executed. OwnGridfixturepath explicitly rebound to A8exact40e9primaryrepo,sourceuntouched. Nativequalifier tree/memory andPR52 never imported/invoked. CPU rate1000 is the preexisting trial rate, not newlyderived rate625for1000m/N16; no workload resumed to demonstrate cap behavior. Inputs parentNONE/DFSSDISABLED in puretests are DATA, notattestation; actualobservationUNKNOWN cannot grant admission. No newlyreproducedmaterialdefectwithinthisslice;globalnativegatesremainopen.
+
+RELEASE_MANIFEST_STATUS:exactPR57sourcebound/notapprovedintegratedrelease.
+NODE_INVENTORY_STATUS:noenrolledphysicalnodesaccepted.
+CONTRACT_STATUS:actualissuer/worker/resourceABIcoACKpending.
+OFFLINE_TESTS:29PASS0skip1421primaryraw;5pureCPUmethods/2ownSUSPENDEDnativecases.
+WINDOWS_CI:mandatoryterminalhostedNOTVERIFIED.
+PHYSICAL_TESTS:BLOCKED.
+P0_P1_P2:nonewmaterialfinding;6P1/3P2baseline+ownerlabellednativeP0gatesOPEN.
+EVIDENCE:thisdirectory+SHA256SUMS.
+NEXT_ACTIONS:actualresource/parent/DFSS/topology/freshholds/UTC/custodyqualificationandactualissuercoACK;terminalCI/isolatedconnectedE2E.
+GO_NO_GO:NO-GO. TAILSCALE_REMOVAL:BLOCKED. NoResume/CPUload/PR52/protectedMath/providerorders/production/officefaults/networksecuritychanges.

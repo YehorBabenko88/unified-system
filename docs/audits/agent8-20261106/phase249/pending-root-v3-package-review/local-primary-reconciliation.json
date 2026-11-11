@@ -1,0 +1,92 @@
+{
+  "schema": "master-v3-candidate-roadmap.v1",
+  "status": "COMPATIBILITY_BLOCKED_NOT_ASSEMBLED",
+  "root_head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
+  "root_tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98",
+  "proposed_source_overlays": [
+    "1bafec550399d1f54f2e56144e8c98955977a350",
+    "0a22437b2ac302bf63602714ef956ab0f8c22251",
+    "c45af68b445be931b07a7dd8a95a37b72ebd75f8",
+    "12d8c63a15c641977932f5e75603a1527eb3b313"
+  ],
+  "missing_dependency_parents": [
+    {
+      "pr": 24,
+      "head": "7a4185924d4702ade53f518644e45d6ee4f6f451",
+      "tree": "2b0c3a9435d705e8a46bd21bc6594e760fbd6953",
+      "ancestor_of_bfa": false,
+      "existing_components": [
+        "scheduler_components/runtime.py",
+        "scheduler_components/attempt_registry.py",
+        "scheduler_components/single_node.py"
+      ]
+    },
+    {
+      "pr": 55,
+      "head": "c741f36e8ddaf58bb8a709b986609916ec6f2358",
+      "tree": "b6e511476e81fb2480b4395b855849437f5b8636",
+      "ancestor_of_bfa": false,
+      "mapping": "docs/intelligence/jobs/target-native-review1/mapping.json",
+      "role": "20-field lossless mapping; not issued13 authority"
+    },
+    {
+      "pr": 65,
+      "head": "623c1ebe33c14707b99ad526678f5225f553e49a",
+      "tree": "8590259d5dcab44199cd19ff0ed66f23c091f6ae",
+      "ancestor_of_bfa": false,
+      "existing_components": [
+        "unified_system/gateway_jobs.py",
+        "unified_system/gateway_worker.py"
+      ]
+    }
+  ],
+  "five_components_absent_at_bfa": true,
+  "storage": {
+    "pr": 56,
+    "head": "1da10616a2b8217930f354e17caaa6fcea22dac4",
+    "ancestor_of_bfa": false,
+    "ancestry_method": "primary Git read-only child-local alternate object directory; exit1, stderr empty; no fetch/config writes",
+    "modules": [
+      {
+        "path": "publication_records.py",
+        "pr56_blob": "80396767a0d143689a5ba5a6287cf1b1e285acbe",
+        "bfa_blob": "b6e70b634da595d3b796c7ce59f48582b1fdcc0f",
+        "same": false
+      },
+      {
+        "path": "publication_recovery.py",
+        "pr56_blob": "04f5166c4b4b8dd62c324cae0b45f64106696aa9",
+        "bfa_blob": "04f5166c4b4b8dd62c324cae0b45f64106696aa9",
+        "same": true
+      },
+      {
+        "path": "replica_evidence.py",
+        "pr56_blob": "55d657da86bea6187191b86e5120cf49f61719b0",
+        "bfa_blob": "55d657da86bea6187191b86e5120cf49f61719b0",
+        "same": true
+      },
+      {
+        "path": "result_publication.py",
+        "pr56_blob": "a30b2f0290fa9ca7b3c9e39fa391d7a703559a8e",
+        "bfa_blob": "a30b2f0290fa9ca7b3c9e39fa391d7a703559a8e",
+        "same": true
+      }
+    ],
+    "conclusion": "Storage partially present,3/4 identical; different publication_records requires owner-reviewed byte reconciliation, not full reimplementation or automatic branch import"
+  },
+  "blockers": [
+    "PR24 synchronous owner contract explicitly rejects coroutinefunctions/awaitable results; A2/A4 async seam unresolved",
+    "A2 owner ACK steering channel unavailable; source exists; consent not inferred",
+    "c45 successor new8 controls unexecuted and independent review pending",
+    "not assembled or tested exact combined source; new composite tree UNKNOWN"
+  ],
+  "permissions": {
+    "runtime": false,
+    "native": false,
+    "physical": false,
+    "provider": false,
+    "trading": false,
+    "public_submit": "DENY"
+  },
+  "no_tests_import_compile_merge_or_journal_access": true
+}

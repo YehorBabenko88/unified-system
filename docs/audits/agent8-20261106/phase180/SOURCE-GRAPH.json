@@ -1,0 +1,159 @@
+{
+  "actual_native_positive_api": "NONE",
+  "artifact_closure": {
+    "binary_archive_publisher_closure": "NONE_APPROVED_IN_THIS_GRAPH",
+    "dependency_archive_and_install_closure": "NONE_APPROVED_FOR_BROAD_MATRIX",
+    "fixture_import_allowed": false,
+    "status": "INCOMPLETE_SOURCE_DATA_ONLY"
+  },
+  "complete_platform_python_dependency_wheel_closure": "PENDING_OWNER_LOCK_INCLUDES_EXISTING_RUNTIME_PLUS_PYTEST_SUPPORT_NO_UNPINNED_FALLBACK",
+  "consul_artifact_provenance": "PENDING_APPROVED_ARCHIVE_URL_MEMBER_ARCHIVE_SHA_SIZE_PLATFORM_AND_LEAF_CHAIN; NO_DOWNLOAD",
+  "existing_support_locks_reference_only": {
+    "docs/intelligence/research-identity/requirements-linux.lock": {
+      "bytes": 1533,
+      "git_blob": "cdbf25a18948c09603433dffb07e921f37f3f511",
+      "mode": "100644",
+      "sha256": "b66f09f4f65dd6ec88cc5080e3e506c60d8ad63e2f1cda6a4248767cc28ab883"
+    },
+    "docs/intelligence/research-identity/requirements-windows.lock": {
+      "bytes": 1548,
+      "git_blob": "2243ba4fd14543f38e3d407a7e4b4cdf075e4764",
+      "mode": "100644",
+      "sha256": "6ae98c455add14d9aae36028afe2b50028af6f469c354a58b0cd25ce87f00c8d"
+    }
+  },
+  "fixture_import_allowed": false,
+  "historical_objects": [
+    {
+      "bytes": 18653,
+      "git_blob": "72b1a05acd21f31e68616ada59cb9d03d7c3e37d",
+      "head": "f155126a95e80139b1b9679c1870ffd66c29360e",
+      "object_repository_role": "unified_native_support",
+      "path": "tests/test_gateway_identity.py",
+      "role": "DYNAMIC_TLS_FIXTURE_BYTES_NOT_EXECUTED",
+      "sha256": "b26fe114c778a8b8a95bc3de822dd7c7a4f57dd12277e9fdcbc96cfb5bc4199f",
+      "tree": "e129873c435c8b11d2126307a67b604601e7e4b8"
+    },
+    {
+      "bytes": 7150,
+      "git_blob": "8a68c2a6f613d7ba6530afeb807c12880fafaddb",
+      "head": "f155126a95e80139b1b9679c1870ffd66c29360e",
+      "object_repository_role": "unified_native_support",
+      "path": "docs/intelligence/identity/run_qualification.py",
+      "role": "HISTORICAL_SOURCE_GUARD_REFERENCE_NOT_EXECUTED",
+      "sha256": "e3733379da5e0cde84573f3279d265c91e16eceb8c94aeeda8983b51031216fe",
+      "tree": "e129873c435c8b11d2126307a67b604601e7e4b8"
+    }
+  ],
+  "known_consul_leaf_sha256_reference_only": {
+    "linux": "acb0a1b5b2a22a5fadb5d725f03610335e499e193eeade9df458c6c6017a77f4",
+    "windows": "41762ef5b98c8dd9b6852df6cfbceed37e7f0acc5760856be33100f1092475e1"
+  },
+  "legacy_unified_source": "e0c2ea20aa4f1bd9476d1046e7e4b41f1b12d8e9_RETAINED_FOR_EXISTING_GROUP_PENDING_ROOT_OWNED_COMPATIBILITY_NO_GLOBAL_REPLACEMENT",
+  "module_origins_for_named_native_group_only": {
+    "consul_lab": {
+      "bytes": 4959,
+      "git_blob": "4ff93fdaf5409adcfccf5e5c86e4a849a12caa41",
+      "mode": "100644",
+      "path": "tests/gateway_research_identity/consul_lab.py",
+      "role": "unified_native_support",
+      "sha256": "71e7662021ec259c94c4ddea03c18210bcbdd8b23b4cf499c5dc8f062396ca6c"
+    },
+    "grid.authority_assignment_v1": {
+      "bytes": 37001,
+      "git_blob": "a629b18b0445e943e5f7483d559df1ae35272519",
+      "mode": "100644",
+      "path": "grid/authority_assignment_v1.py",
+      "role": "grid",
+      "sha256": "5b972b6d81eeaf6f2283584c5b0482552fa9bf0717a4379838900a72da791491"
+    },
+    "grid.authority_runtime_v1": {
+      "bytes": 5655,
+      "git_blob": "9ad648b4a247974c92da25f9554b89a713544012",
+      "mode": "100644",
+      "path": "grid/authority_runtime_v1.py",
+      "role": "grid",
+      "sha256": "cfb32db73f1859d9d78b03d886372cc08584c81abd64930b5409a91edc417b64"
+    },
+    "grid.coordination": {
+      "bytes": 15085,
+      "git_blob": "a508951bdcf243dfe865bbba108af5377ddddb38",
+      "mode": "100644",
+      "path": "grid/coordination.py",
+      "role": "grid",
+      "sha256": "3dd73d3eb3dfb576f7174a94fab05a0f87fe248ffcacccfa19786ccc74f0776b"
+    },
+    "native_snapshot_consul_lab": {
+      "bytes": 6482,
+      "git_blob": "7ba2bcc96909f383e942e8103f85b83a93f35632",
+      "mode": "100644",
+      "path": "tests/coordination/assignment_v1/native_snapshot_consul_lab.py",
+      "role": "grid",
+      "sha256": "3de5971a3537d8351c87fdf0b94b9858e2927821b5bbfdc1866faf7a617d8a06"
+    },
+    "test_native_broker": {
+      "bytes": 18332,
+      "git_blob": "d897b8dfcd3c700d20d68eb051b5ccb72181ffcc",
+      "mode": "100644",
+      "path": "tests/gateway_research_identity/test_native_broker.py",
+      "role": "unified_native_support",
+      "sha256": "2bba62dc458237214bc9c11aeae99fc1154867f1e74264f93f1c90e52b160df0"
+    },
+    "test_native_profile_v2": {
+      "bytes": 10971,
+      "git_blob": "a5a85fadd565b95c9ed66ac3020d726e6604de4a",
+      "mode": "100644",
+      "path": "tests/gateway_research_identity/test_native_profile_v2.py",
+      "role": "unified_native_support",
+      "sha256": "0c4a5552329a6f3abd8446a0e2fae28216ca653292ae48bc3843bae43585bd79"
+    },
+    "unified_system.gateway_identity": {
+      "bytes": 15283,
+      "git_blob": "f81ede7ddd6973a544968922c1db20c7b056a286",
+      "mode": "100644",
+      "path": "unified_system/gateway_identity.py",
+      "role": "unified_native_support",
+      "sha256": "84093865e8477ef6562100d41137922785446c9cb4e024c9ba7105593a2b36c1"
+    },
+    "unified_system.gateway_research_identity": {
+      "bytes": 26114,
+      "git_blob": "b098ed585b23b304cca087dccb2d139314cf6a69",
+      "mode": "100644",
+      "path": "unified_system/gateway_research_identity.py",
+      "role": "unified_native_support",
+      "sha256": "1f9714010143c5243c78494cb25bfe7f2d42e96301f57930212a2f5f3b9c869d"
+    },
+    "unified_system.journal": {
+      "bytes": 3459,
+      "git_blob": "73c7706d5a18c4b5718bd5585255a4bd527826cd",
+      "mode": "100644",
+      "path": "unified_system/journal.py",
+      "role": "unified_native_support",
+      "sha256": "9f170cf33f8cdd79baef6fa633d03bebf9eb4b594c54c9cf8dd6c7cb9810bbc3"
+    }
+  },
+  "native_fixture_authorization": false,
+  "schema": "grid.native-test-support-source-graph.v1-proposed",
+  "scope": "ELIGIBLE_FOR_PURE_SOURCE_VERIFICATION_ONLY_NOT_HA_RUNTIME_OR_FIXTURE_IMPORT",
+  "source_runtime_adoption": false,
+  "sources": {
+    "grid": {
+      "head": "fb177d14b1e6e399bd9b66ae7cb35d3838acbd81",
+      "inventory": "GRID-PRIMARY-INVENTORY.json",
+      "inventory_sha256": "284015b33000a08eb081dc1af9db0250af9d5ce5742746a4ca4dafb8f79cd704",
+      "repository": "YehorBabenko88/bybit-cluster-grid",
+      "tracked_blobs": 824,
+      "tree": "2cba4b0a1ee7621ef213600d6334db8e9ac7dae1"
+    },
+    "unified_native_support": {
+      "head": "1f6b0b5c231853607f5bec780f1544cd32bf577d",
+      "inventory": "UNIFIED-SUPPORT-PRIMARY-INVENTORY.json",
+      "inventory_sha256": "388e667178196c74385e3d79a5f65c25881ed6d037554ba23d09088b7206979c",
+      "repository": "YehorBabenko88/unified-system",
+      "tracked_blobs": 1519,
+      "tree": "5aa0025f564f16500e2ea5546b7bdd31deab758d"
+    }
+  },
+  "strict_time": "OPTION1_LOGICAL_MUTATIONS_DISABLED",
+  "whole336file_generic_suite_compatibility": "NOT_PROVEN"
+}

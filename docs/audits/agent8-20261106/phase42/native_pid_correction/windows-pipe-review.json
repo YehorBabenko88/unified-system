@@ -1,0 +1,30 @@
+{
+  "head": "e238558a1d5bc44128b4541531a2cb9e194155e9",
+  "tree": "0ab27ebdc4da8e2a3fa8613b4bac4add1c9c949c",
+  "raw_before": {
+    "files": 786,
+    "sha256": "c95ae7e3a15bafe3c5568491d6d4ee36ec78b6bc3968cc713879c1108ac3cf1d"
+  },
+  "raw_after": {
+    "files": 786,
+    "sha256": "c95ae7e3a15bafe3c5568491d6d4ee36ec78b6bc3968cc713879c1108ac3cf1d"
+  },
+  "executed_cases": 4,
+  "skips": 0,
+  "script_primary_blob_sha256": "06905cbc80ac712db4ad09f350b7c5da453147d9e861a3ab45d2eb944ed5b00d",
+  "actual_positive": "REAL_KERNEL_PIPE_PID_SAME_ACCOUNT_SID_IDENTIFICATION_TOKEN_AND_REVERT",
+  "actual_negative_levels": [
+    "Anonymous",
+    "Impersonation"
+  ],
+  "wrong_pid_case": "REAL_KERNEL_PID_DIFFERS_FROM_EXPECTED_STILL_LIVE_PARENT_PID",
+  "all_owned_children_stopped": true,
+  "scope": "LOCAL_SAME_ACCOUNT_WINDOWS_NATIVE_PRIMITIVE_ONLY",
+  "native_operator_bridge": "NOT_IMPLEMENTED",
+  "kernel_PID_mismatch_acceptance": "PASS_LOCAL_NATIVE_COMPARISON_ONLY",
+  "cross_account_DACL_negative": "NOT_RUN",
+  "RBAC_expiry": "NOT_RUN",
+  "WINDOWS_ACCEPTANCE": "BLOCKED",
+  "PHYSICAL_ACCEPTANCE": "BLOCKED",
+  "overall": "NO_GO"
+}

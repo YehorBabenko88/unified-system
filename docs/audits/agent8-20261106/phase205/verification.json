@@ -1,0 +1,54 @@
+{
+  "requirement_id": "A8-A7-CORRECTED-SEAM-ORIGINAL9",
+  "repository": "strattester",
+  "PR": null,
+  "target_head": "de6620eb5577e97db1af11b6807e22a9b61d1090",
+  "test_source_sha256": "7670fd5a714d8e8e369eaa8710f96bcf180e5b22bededbaa291b04af8fa0ef99",
+  "original_refs": {
+    "receipt.json": {
+      "bytes": 3180,
+      "sha256": "43c90c30b057f1231a94a0eb1d7fbd9981e897283d2718422ae15afe6164af05"
+    },
+    "stderr.log": {
+      "bytes": 8974,
+      "sha256": "7d740726fcf40bf32a3aed96b1024c5ac553cc6b34b1a23616b7248b9d21b660"
+    },
+    "result-analysis.json": {
+      "bytes": 3407,
+      "sha256": "82a2999806f2ee08bd4c944a3288be1dd08608ab274c1ed45e2b5fbab8f56ae8"
+    },
+    "stdout.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "driver.original.py": {
+      "sha256": "17b74ba9df44055ba7b5ec8f890bebbb67096c9d83fc80bd46a301160c3b7c7c",
+      "bytes": 4995
+    }
+  },
+  "actual9_case_IDs": [
+    "__main__.ReturnedHandleControls.test_invariant_refusal_cleanup_kills_and_waits_known_handle",
+    "__main__.ReturnedHandleControls.test_preconstructor_refusal_creates_no_handle",
+    "__main__.ReturnedHandleControls.test_returned_handle_registered_before_invariant_refusal",
+    "__main__.RootFirstControls.test_file_parent_stops_before_descendant_or_git",
+    "__main__.RootFirstControls.test_file_root_stops_before_leaf_git_or_hash",
+    "__main__.RootFirstControls.test_missing_parent_stops_before_descendant_or_git",
+    "__main__.RootFirstControls.test_ordinary_tree_retains_exact_blob_and_ledger",
+    "__main__.RootFirstControls.test_reparse_parent_stops_before_descendant_or_git",
+    "__main__.RootFirstControls.test_selected_reparse_parent_stops_before_leaf_inspection"
+  ],
+  "actual_result": "9_UNIQUE_2PASS_7FAIL_0SKIP_TEST_EXIT1",
+  "F43": "5_ACTUAL_INLINE_AST_MODELED_ANCESTRY_RED_ORDINARY_PASS",
+  "F44": "2_ACTUAL_OWNEDPOPEN_AND_CLEANUP_AST_MODELED_RED_PRECONSTRUCTOR_CONTROL_PASS",
+  "real_process_leak_or_native_cleanup": "NOT_EXERCISED_INERT_HANDLE_ONLY",
+  "original_attempt1": "PRESERVED_1PASS8FAIL_THREE_EXTRACTOR_FAILURES_NO_RELABEL",
+  "supervisor_exit0": "EVIDENCE_ORCHESTRATION_ONLY_NOT_TEST_PASS",
+  "six_raw_sources_prepost_match_A8": true,
+  "full809_physical_raw": "NOT_QUALIFIED_NO_WHOLE_SOURCE_CLAIM",
+  "actual_interpreter": "ORIGINAL_HELD_HANDLE_RETIRED_0.25S_NO_KILL_NORMAL_POSITIVE_CONTROLLER_PATH_ONLY",
+  "hosted47_native_Math": "NOT_RUN",
+  "A8_project_AST_helper_or_test_execution": 0,
+  "GO_NO_GO": "NO-GO",
+  "PHYSICAL_TESTS": "BLOCKED",
+  "TAILSCALE_REMOVAL": "BLOCKED"
+}

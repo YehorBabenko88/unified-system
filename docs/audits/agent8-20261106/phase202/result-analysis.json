@@ -1,0 +1,69 @@
+{
+  "scope": "MODELED_REGRESSION_NOT_NATIVE_OR47_QUALIFICATION",
+  "tests": 9,
+  "passed": 1,
+  "failed": 8,
+  "skipped": 0,
+  "child_exit_code": 1,
+  "supervisor_exit_code": 0,
+  "supervisor_exit_interpretation": "Orchestration/evidence completed, NOT test PASS",
+  "cases": [
+    {
+      "id": "__main__.ReturnedHandleControls.test_invariant_refusal_cleanup_kills_and_waits_known_handle",
+      "outcome": "FAIL",
+      "classification": "AST_EXTRACTION_SEAM_FAILURE_BEFORE_ACTUAL_CLASS"
+    },
+    {
+      "id": "__main__.ReturnedHandleControls.test_preconstructor_refusal_creates_no_handle",
+      "outcome": "FAIL",
+      "classification": "AST_EXTRACTION_SEAM_FAILURE_BEFORE_ACTUAL_CLASS"
+    },
+    {
+      "id": "__main__.ReturnedHandleControls.test_returned_handle_registered_before_invariant_refusal",
+      "outcome": "FAIL",
+      "classification": "AST_EXTRACTION_SEAM_FAILURE_BEFORE_ACTUAL_CLASS"
+    },
+    {
+      "id": "__main__.RootFirstControls.test_file_parent_stops_before_descendant_or_git",
+      "outcome": "FAIL",
+      "classification": "ACTUAL_INLINE_LEDGER_MODELED_ANCESTRY_RED"
+    },
+    {
+      "id": "__main__.RootFirstControls.test_file_root_stops_before_leaf_git_or_hash",
+      "outcome": "FAIL",
+      "classification": "ACTUAL_INLINE_LEDGER_MODELED_ANCESTRY_RED"
+    },
+    {
+      "id": "__main__.RootFirstControls.test_missing_parent_stops_before_descendant_or_git",
+      "outcome": "FAIL",
+      "classification": "ACTUAL_INLINE_LEDGER_MODELED_ANCESTRY_RED"
+    },
+    {
+      "id": "__main__.RootFirstControls.test_ordinary_tree_retains_exact_blob_and_ledger",
+      "outcome": "PASS",
+      "classification": "MODELED_ORDINARY_LEDGER_CONTROL"
+    },
+    {
+      "id": "__main__.RootFirstControls.test_reparse_parent_stops_before_descendant_or_git",
+      "outcome": "FAIL",
+      "classification": "ACTUAL_INLINE_LEDGER_MODELED_ANCESTRY_RED"
+    },
+    {
+      "id": "__main__.RootFirstControls.test_selected_reparse_parent_stops_before_leaf_inspection",
+      "outcome": "FAIL",
+      "classification": "ACTUAL_INLINE_LEDGER_MODELED_ANCESTRY_RED"
+    }
+  ],
+  "F43": "Five modeled ancestry RED failures with actual inline functions; safe control PASS",
+  "F44": "NOT_EXERCISED: three extractor failures before actual OwnedPopen call",
+  "seam_cause": "Selector assumes exactly one For(target child, iter held) in actual finally; current source has cleanup loop plus remaining-child poll loop",
+  "original_five_unchanged": true,
+  "all_six_pre_post_equal": true,
+  "allocation": "CONSUMED_NO_RETRY",
+  "next_gate": "Root must review actualRED before any seam/source fix or newexecution",
+  "logs": {
+    "receipt_sha256": "25b7f7c0d6892f1ef614e8c25c1c168e06b56d88f7a38a9f0dc4d23264995f36",
+    "stderr_sha256": "18066aef3074613ce01bb947df98402c4a35c89eeb7c7794c3389d79a06eb1d3"
+  },
+  "overall": "HOLD / NO-GO"
+}

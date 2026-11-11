@@ -1,0 +1,88 @@
+{
+  "all_six_unchanged": true,
+  "allocation": "ONE_MODELED20_OLD_PARSER_AND_PATH_RED",
+  "child": {
+    "command_flags": [
+      "-I",
+      "-S",
+      "-B"
+    ],
+    "exit_code": 1,
+    "identity": "OWN_POPEN_HANDLE",
+    "pid": 2700,
+    "retired": true
+  },
+  "child_observed_seconds": 0.3279999999795109,
+  "controller_preflight": {
+    "own_test_controllers_active": 0,
+    "shared_lane_attribution": "Root allocation reports last actual unit retired; no global OS scan or physical action"
+  },
+  "errors": [],
+  "original_five_unchanged": true,
+  "output_bytes": 12946,
+  "outputs": {
+    "stderr.log": {
+      "bytes": 12946,
+      "sha256": "60e427816ce55f0394844dd604bea5a7ee319c75557093e84d1673d42159b0fe"
+    },
+    "stdout.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "post": {
+    ".github/workflows/projection-recovery-47.yml": {
+      "bytes": 10594,
+      "sha256": "e4498ae780f6f5bd8c833203e5f72bcd683f9a11dc8af271f0d1203e5379e29d"
+    },
+    "docs/gateway/research/persistence/qualification47/README.md": {
+      "bytes": 13330,
+      "sha256": "1da27988c358fb3f8030a85894c244f9df8f97b5d251c4f0a46f52f7e3aae6b6"
+    },
+    "docs/gateway/research/persistence/qualification47/expected47.json": {
+      "bytes": 197026,
+      "sha256": "0a24d40c42b35b713a39f54c39c62c4e8b902ac70c9a3802770b2e6ae29451d1"
+    },
+    "docs/gateway/research/persistence/qualification47/qualify.py": {
+      "bytes": 24301,
+      "sha256": "f0e6709190aec3d8dcdb9a7b0554c1f926147b3d3291f766215bb916a57994e4"
+    },
+    "docs/gateway/research/persistence/qualification47/requirements.lock": {
+      "bytes": 646,
+      "sha256": "389c729ab525863c70bd3accc21b9fc73b431b89fa52fb035be444e6a853eeeb"
+    },
+    "docs/gateway/research/persistence/qualification47/test_qualifier_controls.py": {
+      "bytes": 24276,
+      "sha256": "f3e8f14f4f4d5e5051795514861722ec790e9c3d8ef9c50d1948a1372b556376"
+    }
+  },
+  "pre": {
+    ".github/workflows/projection-recovery-47.yml": {
+      "bytes": 10594,
+      "sha256": "e4498ae780f6f5bd8c833203e5f72bcd683f9a11dc8af271f0d1203e5379e29d"
+    },
+    "docs/gateway/research/persistence/qualification47/README.md": {
+      "bytes": 13330,
+      "sha256": "1da27988c358fb3f8030a85894c244f9df8f97b5d251c4f0a46f52f7e3aae6b6"
+    },
+    "docs/gateway/research/persistence/qualification47/expected47.json": {
+      "bytes": 197026,
+      "sha256": "0a24d40c42b35b713a39f54c39c62c4e8b902ac70c9a3802770b2e6ae29451d1"
+    },
+    "docs/gateway/research/persistence/qualification47/qualify.py": {
+      "bytes": 24301,
+      "sha256": "f0e6709190aec3d8dcdb9a7b0554c1f926147b3d3291f766215bb916a57994e4"
+    },
+    "docs/gateway/research/persistence/qualification47/requirements.lock": {
+      "bytes": 646,
+      "sha256": "389c729ab525863c70bd3accc21b9fc73b431b89fa52fb035be444e6a853eeeb"
+    },
+    "docs/gateway/research/persistence/qualification47/test_qualifier_controls.py": {
+      "bytes": 24276,
+      "sha256": "f3e8f14f4f4d5e5051795514861722ec790e9c3d8ef9c50d1948a1372b556376"
+    }
+  },
+  "python_sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a",
+  "scope": "MODELED_REGRESSION_ACTUAL_AST_DEFINITIONS_INERT_BACKENDS_NOT47_OR_NATIVE",
+  "within_output_limit": true
+}

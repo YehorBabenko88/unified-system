@@ -1,0 +1,1 @@
+'use strict';if(process.version!=='v24.22.1'||process.arch!=='x64')throw Error('NODE_RUNTIME_VERSION');process.stdout.write('# PREVIEW_NODE_FACT '+JSON.stringify({version:process.version,exec_path:process.execPath,exec_argv:process.execArgv,platform:process.platform,arch:process.arch})+String.fromCharCode(10));

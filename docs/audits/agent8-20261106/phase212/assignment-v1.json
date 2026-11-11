@@ -1,0 +1,72 @@
+{
+  "actual_resource_capsule_and_consume_integration": "NOT_ESTABLISHED",
+  "approval": "ROOT_APPROVED_FOR_A8_SOURCE_REVIEW_ONLY",
+  "contract_adoption": "NO_NEW_STATES_OR_OPERATIONS_GRANTED",
+  "current_component_assembly": "UNASSEMBLED_NOT_SELECTED",
+  "document_kind": "REFERENCE_CARD_NOT_NEW_WIRE_ABI",
+  "installability": "NOT_INSTALLABLE",
+  "permissions": {
+    "dispatch": "DENY",
+    "fault_injection": "DENY",
+    "installation": "DENY",
+    "physical": "DENY",
+    "production": "DENY",
+    "provider_sends": "DENY",
+    "runtime": "DENY",
+    "tailscale_changes": "DENY",
+    "trading": "DENY"
+  },
+  "references": [
+    {
+      "admission": "NONE",
+      "bytes": 1100,
+      "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
+      "path": "acceptance/20261106/assignment-v1.json",
+      "repository": "YehorBabenko88/unified-system",
+      "scope": "EXISTING_SOURCE_CONTRACT_NOT_RUNTIME_ADMISSION",
+      "sha256": "2c963c65feb9ae76c4117e801a49922005a8065ca6edaaf193578008ddc74b41",
+      "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
+    },
+    {
+      "admission": "NONE",
+      "bytes": 27529,
+      "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
+      "path": "acceptance/20261106/proposals/5cc8e6a3557a9d71b6d1ccdf9939be49133deee9219b19029ffd4cf3d3bfa278.json",
+      "repository": "YehorBabenko88/unified-system",
+      "scope": "HISTORICAL_PROPOSAL_REVIEW_ONLY_NO_RUNTIME_ACK",
+      "sha256": "5cc8e6a3557a9d71b6d1ccdf9939be49133deee9219b19029ffd4cf3d3bfa278",
+      "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
+    },
+    {
+      "admission": "NONE",
+      "bytes": 7123,
+      "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
+      "path": "acceptance/20261106/proposals/799f07457bbd8419da4e859f27425ec58b884b89330e4224577f372070224a79.json",
+      "repository": "YehorBabenko88/unified-system",
+      "scope": "HISTORICAL_PROPOSAL_REVIEW_ONLY_NO_RUNTIME_ACK",
+      "sha256": "799f07457bbd8419da4e859f27425ec58b884b89330e4224577f372070224a79",
+      "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
+    },
+    {
+      "admission": "NONE",
+      "bytes": 1357,
+      "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
+      "path": "release/design-review/ha/logical-codec-20261110/ROOT-COMPOSITION.json",
+      "repository": "YehorBabenko88/unified-system",
+      "scope": "EXISTING_SOURCE_CONTRACT_NOT_RUNTIME_ADMISSION",
+      "sha256": "2849e9436007e045cfff1c6f1aacbca683478ef1a8316d420779cdaf249c41f3",
+      "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
+    }
+  ],
+  "review_scope": "May be approved for A8 SOURCE review only; never executable release or runtime/native endpoint admission",
+  "rules": [
+    "Existing source/design contracts retained with their original approval scopes",
+    "Actual current principal/rights/quota plus same authority reservation/fence required before physical placement",
+    "Logical hold does not grant CPU/RAM/disk/worker/native access",
+    "One in-flight owner and UNKNOWN debt/idempotency must be preserved; cancellation races require actual proof",
+    "UI closing/reopening does not own committed job lifetime; coordinator duties independent of worker schedule"
+  ],
+  "schema": "unified.acceptance-review.level2.assignment-v1.v1",
+  "source_combination": "NOT_ASSEMBLED_OR_VERIFIED",
+  "status": "REVIEW_INPUTS_ONLY"
+}

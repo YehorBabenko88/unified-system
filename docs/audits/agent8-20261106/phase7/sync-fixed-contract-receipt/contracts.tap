@@ -1,0 +1,280 @@
+TAP version 13
+# Subtest: absent approved endpoint remains UNAVAILABLE without fetching
+ok 1 - absent approved endpoint remains UNAVAILABLE without fetching
+  ---
+  duration_ms: 1.4078
+  type: 'test'
+  ...
+# Subtest: client resumes last applied cursor after leader failover
+ok 2 - client resumes last applied cursor after leader failover
+  ---
+  duration_ms: 5.8328
+  type: 'test'
+  ...
+# Subtest: client gap discards cursor then gets coherent snapshot
+ok 3 - client gap discards cursor then gets coherent snapshot
+  ---
+  duration_ms: 1.0484
+  type: 'test'
+  ...
+# Subtest: expired session stops retries and clears data
+ok 4 - expired session stops retries and clears data
+  ---
+  duration_ms: 0.9915
+  type: 'test'
+  ...
+# Subtest: late snapshot after UI shutdown cannot change client
+ok 5 - late snapshot after UI shutdown cannot change client
+  ---
+  duration_ms: 0.3248
+  type: 'test'
+  ...
+# Subtest: client bounded queue rejects actual overflow
+ok 6 - client bounded queue rejects actual overflow
+  ---
+  duration_ms: 2.2508
+  type: 'test'
+  ...
+# Subtest: concurrent clients remain independent and relocation uses new snapshot
+ok 7 - concurrent clients remain independent and relocation uses new snapshot
+  ---
+  duration_ms: 0.9111
+  type: 'test'
+  ...
+# Subtest: reconnect floor and rolling rate cap prevent retry storm
+ok 8 - reconnect floor and rolling rate cap prevent retry storm
+  ---
+  duration_ms: 0.481
+  type: 'test'
+  ...
+# Subtest: dataset session expiry clears all privileged state
+ok 9 - dataset session expiry clears all privileged state
+  ---
+  duration_ms: 1.2861
+  type: 'test'
+  ...
+# Subtest: dataset future metadata waits then applies at exact control barrier
+ok 10 - dataset future metadata waits then applies at exact control barrier
+  ---
+  duration_ms: 0.9633
+  type: 'test'
+  ...
+# Subtest: dataset stream reconnect resumes through a fresh metadata snapshot
+ok 11 - dataset stream reconnect resumes through a fresh metadata snapshot
+  ---
+  duration_ms: 0.9111
+  type: 'test'
+  ...
+# Subtest: dataset snapshot expiry clears session and stops retries
+ok 12 - dataset snapshot expiry clears session and stops retries
+  ---
+  duration_ms: 0.3293
+  type: 'test'
+  ...
+# Subtest: late dataset snapshot rejection cannot expire a newer connection
+ok 13 - late dataset snapshot rejection cannot expire a newer connection
+  ---
+  duration_ms: 0.371
+  type: 'test'
+  ...
+# Subtest: buffer accepts more than half of its advertised byte capacity
+ok 14 - buffer accepts more than half of its advertised byte capacity
+  ---
+  duration_ms: 1.5997
+  type: 'test'
+  ...
+# Subtest: synchronous control subscribe failure cannot resurrect LIVE and closes its handle
+ok 15 - synchronous control subscribe failure cannot resurrect LIVE and closes its handle
+  ---
+  duration_ms: 0.6705
+  type: 'test'
+  ...
+# Subtest: synchronous dataset subscribe failure closes late handle and reports resync
+ok 16 - synchronous dataset subscribe failure closes late handle and reports resync
+  ---
+  duration_ms: 0.4562
+  type: 'test'
+  ...
+# Subtest: snapshot_consistency
+ok 17 - snapshot_consistency
+  ---
+  duration_ms: 4.3938
+  type: 'test'
+  ...
+# Subtest: missing_event
+ok 18 - missing_event
+  ---
+  duration_ms: 0.8763
+  type: 'test'
+  ...
+# Subtest: duplicate_event
+ok 19 - duplicate_event
+  ---
+  duration_ms: 1.2256
+  type: 'test'
+  ...
+# Subtest: conflicting_duplicate
+ok 20 - conflicting_duplicate
+  ---
+  duration_ms: 0.6193
+  type: 'test'
+  ...
+# Subtest: out_of_order
+ok 21 - out_of_order
+  ---
+  duration_ms: 0.435
+  type: 'test'
+  ...
+# Subtest: generation_change
+ok 22 - generation_change
+  ---
+  duration_ms: 0.3891
+  type: 'test'
+  ...
+# Subtest: expired_cursor
+ok 23 - expired_cursor
+  ---
+  duration_ms: 0.2674
+  type: 'test'
+  ...
+# Subtest: resync_required
+ok 24 - resync_required
+  ---
+  duration_ms: 0.3968
+  type: 'test'
+  ...
+# Subtest: stale_authority
+ok 25 - stale_authority
+  ---
+  duration_ms: 0.2823
+  type: 'test'
+  ...
+# Subtest: unauthorized
+ok 26 - unauthorized
+  ---
+  duration_ms: 0.5535
+  type: 'test'
+  ...
+# Subtest: expired_session
+ok 27 - expired_session
+  ---
+  duration_ms: 0.2099
+  type: 'test'
+  ...
+# Subtest: multiple_clients
+ok 28 - multiple_clients
+  ---
+  duration_ms: 1.2353
+  type: 'test'
+  ...
+# Subtest: leader_failover
+ok 29 - leader_failover
+  ---
+  duration_ms: 0.2933
+  type: 'test'
+  ...
+# Subtest: relocation_PC1_LS7
+ok 30 - relocation_PC1_LS7
+  ---
+  duration_ms: 0.2623
+  type: 'test'
+  ...
+# Subtest: jobs_after_shutdown
+ok 31 - jobs_after_shutdown
+  ---
+  duration_ms: 0.3579
+  type: 'test'
+  ...
+# Subtest: dataset_metadata
+ok 32 - dataset_metadata
+  ---
+  duration_ms: 0.2963
+  type: 'test'
+  ...
+# Subtest: buffer_overflow
+ok 33 - buffer_overflow
+  ---
+  duration_ms: 0.1864
+  type: 'test'
+  ...
+# Subtest: clock_rollback
+ok 34 - clock_rollback
+  ---
+  duration_ms: 0.1668
+  type: 'test'
+  ...
+# Subtest: scope_change
+ok 35 - scope_change
+  ---
+  duration_ms: 0.2075
+  type: 'test'
+  ...
+# Subtest: no_quorum
+ok 36 - no_quorum
+  ---
+  duration_ms: 0.2293
+  type: 'test'
+  ...
+# Subtest: payload_limits
+ok 37 - payload_limits
+  ---
+  duration_ms: 0.6404
+  type: 'test'
+  ...
+# Subtest: four_dimensions
+ok 38 - four_dimensions
+  ---
+  duration_ms: 0.6614
+  type: 'test'
+  ...
+# Subtest: dataset_snapshot_anchor
+ok 39 - dataset_snapshot_anchor
+  ---
+  duration_ms: 0.3145
+  type: 'test'
+  ...
+# Subtest: authority_renewal
+ok 40 - authority_renewal
+  ---
+  duration_ms: 0.2665
+  type: 'test'
+  ...
+# Subtest: combined_change_limit
+ok 41 - combined_change_limit
+  ---
+  duration_ms: 1.5833
+  type: 'test'
+  ...
+# Subtest: dataset authority loss immediately removes global LIVE
+ok 42 - dataset authority loss immediately removes global LIVE
+  ---
+  duration_ms: 0.8161
+  type: 'test'
+  ...
+# Subtest: snapshot resource bound applies to incremental growth
+ok 43 - snapshot resource bound applies to incremental growth
+  ---
+  duration_ms: 9.7549
+  type: 'test'
+  ...
+# Subtest: expired NO_QUORUM observation becomes STALE
+ok 44 - expired NO_QUORUM observation becomes STALE
+  ---
+  duration_ms: 0.3751
+  type: 'test'
+  ...
+# Subtest: dataset snapshot authority loss immediately downgrades control LIVE
+ok 45 - dataset snapshot authority loss immediately downgrades control LIVE
+  ---
+  duration_ms: 0.6824
+  type: 'test'
+  ...
+1..45
+# tests 45
+# suites 0
+# pass 45
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 131.3473

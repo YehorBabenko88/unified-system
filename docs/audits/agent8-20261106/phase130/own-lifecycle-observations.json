@@ -1,0 +1,32 @@
+{
+  "owned_children": [
+    {
+      "returncode": 0,
+      "stdout": "{\"actual_three_voters\": true, \"closed_by_authority\": true, \"follow_redirects\": false, \"mode\": \"OWNED\", \"owned\": true, \"trust_env\": false}\r\n",
+      "stderr": "",
+      "scope": "OWN_CHILD_NOT_NATIVE_PID_IDENTITY_QUALIFICATION"
+    },
+    {
+      "returncode": 0,
+      "stdout": "{\"closed_by_authority\": false, \"follow_redirects\": false, \"mode\": \"INJECTED\", \"no_request_injected_check\": true, \"owned\": false, \"trust_env\": true}\r\n",
+      "stderr": "",
+      "scope": "OWN_CHILD_NOT_NATIVE_PID_IDENTITY_QUALIFICATION"
+    }
+  ],
+  "owned_Consul_retained_handles_retired": [
+    {
+      "pid": 114512,
+      "returncode": 1
+    },
+    {
+      "pid": 135744,
+      "returncode": 1
+    },
+    {
+      "pid": 138284,
+      "returncode": 1
+    }
+  ],
+  "trap_thread_cleanup": "committed tests assert joined own thread per case",
+  "scope": "ACTUAL_OWNED_CONSUL_READ_ONLY_NO_JOB_OR_REGISTRATION"
+}

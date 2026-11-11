@@ -1,0 +1,122 @@
+{
+  "scope": "ORIGINAL_API_DIGEST_BOUND_ZIPS_DATA_ONLY",
+  "rows": [
+    {
+      "run": 43065065959,
+      "artifact": 13876547846,
+      "name": "actual-six-source-windows-latest-3.11-1",
+      "sha256": "e22c98444eaaa0b2ac195a386944080a148809b38fd1f536e87ce84e01788232",
+      "bytes": 33934,
+      "receipts": [
+        {
+          "attempt": "1",
+          "elapsed_seconds": 1003.406,
+          "expected_head": "5fcac999b1daec75707010573606f486f6dccf4d",
+          "returncode": 1,
+          "run": "43065065959",
+          "schema": "unified.ci-suite-execution.v1",
+          "status": "FAIL"
+        }
+      ],
+      "marker_lines": 8,
+      "markers": [
+        "ERROR: test_complete_large_messages_real_mtls_and_budget_overhead (test_lan_mux_channel.MuxTlsTests.test_complete_large_messages_real_mtls_and_budget_overhead)",
+        "FAIL: test_new_nssm_bootstrap_seeds_only_application_and_never_adopts_parameters (test_installation_native_diagnostic.NativeDiagnosticTests.test_new_nssm_bootstrap_seeds_only_application_and_never_adopts_parameters)",
+        "AssertionError: NATIVE_PHASE_TIMEOUT_15S elapsed_ms=15015 phases=ENTRY@2825099964,IMPORT_BEGIN@2825187093,IMPORT_END@2826327117,MEMBER_BEGIN@2826327544,OBJECT_BEGIN@2826327582,OBJECT_END@2826409980,FIRST_MEMBER_BEGIN@2826410403",
+        "FAIL: test_real_child_exit_code_without_service_or_acl_operations (test_installation_native_diagnostic.NativeDiagnosticTests.test_real_child_exit_code_without_service_or_acl_operations)",
+        "AssertionError: NATIVE_PHASE_TIMEOUT_15S elapsed_ms=15032 phases=ENTRY@2953106799,IMPORT_BEGIN@2953140338,IMPORT_END@2953345807,COMPILE_BEGIN@2953355649",
+        "FAIL: test_poisoned_parent_module_path_cannot_autoload_user_module (test_installation_service.ServiceResourceTests.test_poisoned_parent_module_path_cannot_autoload_user_module)",
+        "AssertionError: NATIVE_PHASE_TIMEOUT_15S elapsed_ms=15016 phases=ENTRY@3187465773,SAFE_LOOKUP_BEGIN@3187497849",
+        "FAILED (failures=3, errors=1, skipped=10)"
+      ]
+    },
+    {
+      "run": 43065065959,
+      "artifact": 13876278997,
+      "name": "actual-six-source-windows-latest-3.13-1",
+      "sha256": "204f520ee0b55e9c238f2577756c0b6336b27e67336baf00544f84e0fbebde5f",
+      "bytes": 33583,
+      "receipts": [
+        {
+          "attempt": "1",
+          "elapsed_seconds": 1013.7944138,
+          "expected_head": "5fcac999b1daec75707010573606f486f6dccf4d",
+          "returncode": 1,
+          "run": "43065065959",
+          "schema": "unified.ci-suite-execution.v1",
+          "status": "FAIL"
+        }
+      ],
+      "marker_lines": 9,
+      "markers": [
+        "FAIL: test_new_nssm_bootstrap_seeds_only_application_and_never_adopts_parameters (test_installation_native_diagnostic.NativeDiagnosticTests.test_new_nssm_bootstrap_seeds_only_application_and_never_adopts_parameters)",
+        "AssertionError: NATIVE_PHASE_TIMEOUT_15S elapsed_ms=15036 phases=ENTRY@2292839084,IMPORT_BEGIN@2292932998,IMPORT_END@2293646196,MEMBER_BEGIN@2293646807,OBJECT_BEGIN@2293646860,OBJECT_END@2293717280,FIRST_MEMBER_BEGIN@2293717877",
+        "FAIL: test_real_child_exit_code_without_service_or_acl_operations (test_installation_native_diagnostic.NativeDiagnosticTests.test_real_child_exit_code_without_service_or_acl_operations)",
+        "AssertionError: NATIVE_PHASE_TIMEOUT_15S elapsed_ms=15031 phases=ENTRY@2428325752,IMPORT_BEGIN@2428369128,IMPORT_END@2428618105,COMPILE_BEGIN@2428630680",
+        "FAIL: test_poisoned_parent_module_path_cannot_autoload_user_module (test_installation_service.ServiceResourceTests.test_poisoned_parent_module_path_cannot_autoload_user_module)",
+        "AssertionError: NATIVE_PHASE_TIMEOUT_15S elapsed_ms=15017 phases=ENTRY@2653987412,SAFE_LOOKUP_BEGIN@2654029591",
+        "FAIL: test_real_module_parses_and_native_declarations_compile_without_api_calls (test_installation_service.ServiceResourceTests.test_real_module_parses_and_native_declarations_compile_without_api_calls)",
+        "AssertionError: NATIVE_PHASE_TIMEOUT_30S elapsed_ms=30054 phases=ENTRY@2810298474,PARSE_BEGIN@3094908538,PARSE_END@3095014315,IMPORT_BEGIN@3095127833,IMPORT_END@3095248369,COMPILE_BEGIN@3095260550,COMPILE_END@3104026593,UNICODE_BEGIN@3104242703,UNICODE_END@3106095376,CAP_BEGIN@3106108368",
+        "FAILED (failures=4, skipped=10)"
+      ]
+    },
+    {
+      "run": 43065002458,
+      "artifact": 13876822267,
+      "name": "actual-six-source-windows-latest-3.11-1",
+      "sha256": "b349431c8afa5349bd582d0aa9b08eef0456731112cac2b44cf37b527735ee13",
+      "bytes": 33439,
+      "receipts": [
+        {
+          "attempt": "1",
+          "elapsed_seconds": 1057.906,
+          "expected_head": "5fcac999b1daec75707010573606f486f6dccf4d",
+          "returncode": 1,
+          "run": "43065002458",
+          "schema": "unified.ci-suite-execution.v1",
+          "status": "FAIL"
+        }
+      ],
+      "marker_lines": 9,
+      "markers": [
+        "FAIL: test_new_nssm_bootstrap_seeds_only_application_and_never_adopts_parameters (test_installation_native_diagnostic.NativeDiagnosticTests.test_new_nssm_bootstrap_seeds_only_application_and_never_adopts_parameters)",
+        "AssertionError: NATIVE_PHASE_TIMEOUT_15S elapsed_ms=15032 phases=ENTRY@3934864768,IMPORT_BEGIN@3935094668,IMPORT_END@3936051154,MEMBER_BEGIN@3936051902,OBJECT_BEGIN@3936052032,OBJECT_END@3936309870,FIRST_MEMBER_BEGIN@3936310618",
+        "FAIL: test_real_child_exit_code_without_service_or_acl_operations (test_installation_native_diagnostic.NativeDiagnosticTests.test_real_child_exit_code_without_service_or_acl_operations)",
+        "AssertionError: NATIVE_PHASE_TIMEOUT_15S elapsed_ms=15047 phases=ENTRY@4032540358,IMPORT_BEGIN@4032577911,IMPORT_END@4032791449,COMPILE_BEGIN@4032803417",
+        "FAIL: test_poisoned_parent_module_path_cannot_autoload_user_module (test_installation_service.ServiceResourceTests.test_poisoned_parent_module_path_cannot_autoload_user_module)",
+        "AssertionError: NATIVE_PHASE_TIMEOUT_15S elapsed_ms=15031 phases=ENTRY@4282899978,SAFE_LOOKUP_BEGIN@4282938987",
+        "FAIL: test_real_module_parses_and_native_declarations_compile_without_api_calls (test_installation_service.ServiceResourceTests.test_real_module_parses_and_native_declarations_compile_without_api_calls)",
+        "AssertionError: NATIVE_PHASE_TIMEOUT_30S elapsed_ms=30047 phases=ENTRY@4441882811",
+        "FAILED (failures=4, skipped=10)"
+      ]
+    },
+    {
+      "run": 43065002458,
+      "artifact": 13876687348,
+      "name": "actual-six-source-windows-latest-3.13-1",
+      "sha256": "e274393b0fef0076a2d9b79a1e1402a4f3e1fd12c630565fdaad6366cafb6add",
+      "bytes": 33608,
+      "receipts": [
+        {
+          "attempt": "1",
+          "elapsed_seconds": 1007.2529328999999,
+          "expected_head": "5fcac999b1daec75707010573606f486f6dccf4d",
+          "returncode": 1,
+          "run": "43065002458",
+          "schema": "unified.ci-suite-execution.v1",
+          "status": "FAIL"
+        }
+      ],
+      "marker_lines": 7,
+      "markers": [
+        "FAIL: test_new_nssm_bootstrap_seeds_only_application_and_never_adopts_parameters (test_installation_native_diagnostic.NativeDiagnosticTests.test_new_nssm_bootstrap_seeds_only_application_and_never_adopts_parameters)",
+        "AssertionError: NATIVE_PHASE_TIMEOUT_15S elapsed_ms=15017 phases=ENTRY@2811922643,IMPORT_BEGIN@2812017118,IMPORT_END@2812631208,MEMBER_BEGIN@2812631559,OBJECT_BEGIN@2812631593,OBJECT_END@2812703695,FIRST_MEMBER_BEGIN@2812704017",
+        "FAIL: test_real_child_exit_code_without_service_or_acl_operations (test_installation_native_diagnostic.NativeDiagnosticTests.test_real_child_exit_code_without_service_or_acl_operations)",
+        "AssertionError: NATIVE_PHASE_TIMEOUT_15S elapsed_ms=15026 phases=ENTRY@2942854871,IMPORT_BEGIN@2942888051,IMPORT_END@2943079392,COMPILE_BEGIN@2943088046",
+        "FAIL: test_poisoned_parent_module_path_cannot_autoload_user_module (test_installation_service.ServiceResourceTests.test_poisoned_parent_module_path_cannot_autoload_user_module)",
+        "AssertionError: NATIVE_PHASE_TIMEOUT_15S elapsed_ms=15017 phases=ENTRY@3176777775,SAFE_LOOKUP_BEGIN@3176809598",
+        "FAILED (failures=3, skipped=10)"
+      ]
+    }
+  ]
+}

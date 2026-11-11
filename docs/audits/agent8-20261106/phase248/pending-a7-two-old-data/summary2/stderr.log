@@ -1,0 +1,15 @@
+test_actual_small_serialized_summary_bounded_positive_control (owned_compile7_controls.PublicSummaryBoundaryRegression.test_actual_small_serialized_summary_bounded_positive_control) ... ok
+test_actual_final_summary_expansion_must_obey_public_byte_cap (owned_compile7_controls.PublicSummaryBoundaryRegression.test_actual_final_summary_expansion_must_obey_public_byte_cap) ... FAIL
+
+======================================================================
+FAIL: test_actual_final_summary_expansion_must_obey_public_byte_cap (owned_compile7_controls.PublicSummaryBoundaryRegression.test_actual_final_summary_expansion_must_obey_public_byte_cap)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-7-distributed-research-math\outputs\math572-summary2-bounded-driver-source-20261111\regression-original.py", line 55, in test_actual_final_summary_expansion_must_obey_public_byte_cap
+    self.assertLessEqual(len(public),CAP,'actual serialized public summary must independently respect8192byte cap')
+AssertionError: 14402 not less than or equal to 8192 : actual serialized public summary must independently respect8192byte cap
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.020s
+
+FAILED (failures=1)

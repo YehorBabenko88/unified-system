@@ -1,0 +1,834 @@
+diff --git a/docs/intelligence/jobs/2026-11-09-native-scheduler-adapter-plan.md b/docs/intelligence/jobs/2026-11-09-native-scheduler-adapter-plan.md
+new file mode 100644
+index 0000000..239ce36
+--- /dev/null
++++ b/docs/intelligence/jobs/2026-11-09-native-scheduler-adapter-plan.md
+@@ -0,0 +1,67 @@
++# Native scheduler adapter and owned worker implementation plan
++
++> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement task-by-task. Final fresh-context review, no implementer delegation.
++
++**Goal:** Integrate actual existing A2 issuer with A5 job/owned-attempt lifecycle without another scheduler/authority, preserving original identities and fail-closed resource/UTC/fencing gates.
++
++**Architecture:** A2 is the sole actual Consul transaction/issued Assignment/permit owner. A5 owns job adapter and retained Windows process/Job attempt inventory only, not a durable job ledger. Root selects SINGLE-JOB profile-v2/full20 binding; native13 remains unchanged. Actual shared ABI must be coACKed before positive wiring.
++
++**Tech Stack:** Python async owner calls, existing Grid ConsulSessionAuthority, Windows retained process/thread/Job handles, existing Root custody/Journal only for original byte retention.
++
++**Spec:** PR55C741 docs/intelligence/jobs/target-native-review1/DESIGN.md, new Root userdirective20261109 actualNativeAdmission/ResearchE2E, A2 actualissuer/worker ABI pending.
++
++## Global constraints and exact bases
++
++- BaseC741f36e8ddaf58bb8a709b986609916ec6f2358/treeb6e511476e81fb2480b4395b855849437f5b8636.
++- Own prior worker commits e86b4cc and4801092 cherry-picked into new feature only; composite b5a54d51da7fbec2d25e4b23f9489a6033069f32/tree63b5eacdb5e98300669a1b4d32946f7bc4a3cead. Worker bytes remain5458dc5d... initially.
++- Allowed gateway_jobs.py/gateway_worker.py/tests/gateway_jobs/**/docs/intelligence/jobs/**/owned workflows only. Root/shared contract/Grid/storage/UI files unchanged.
++- No independent queue/broker/authority/ledger/PaperLedger; no fake issued rows/COMMITTED/boolean lease verifier.
++- Unknown quota/headroom/RSS-vs-commit/CPU-share/UTC/lease/session/attempt proof => no resume/dispatch.
++- Actual own bounded disposable worker tests allowed. PR52 VirtualAlloc remains SOURCE_ONLY, never invoked by this plan. No office/service/production/provider operations.
++- Public submit remains DENY; native observations/proofs only actual expected owner APIs after exact coACK.
++
++## Task1: actual suspended attempt preparation/inspection/abort
++
++- [ ] Write tests first for default start deny, nonconstructible/foreign/copied attempt denial, exact source/interpreter pin rejection BEFORE native creation, duplicate original preparation returns SAME owned attempt, and native own suspended creation->membership/limit readback->inspect->abort/empty proof without ResumeThread.
++- [ ] Observe RED for missing API, distinguish dependency/unavailable from native safety failures.
++- [ ] Add preparation to gateway_worker.py only. Nonserializable inventory-owned attempt handle, retained actual process/primary thread/Job handles, original requestUUID, instance incarnation+attemptUUID, actual creationtime/image/source pin observations. At mostONE active preparation; stale/terminal attempt never silently recreated.
++- [ ] Native CreateProcessW is suspended/no inheritance/fixed Python entry/minimized environment. Reuse exact pinned GridWindowsJob and actual private ABI; apply/query trial limits before any resume. Independent preparation NEVER resumes; actual A2 permit/worker profile is a later gate.
++- [ ] inspect only actual own inventory; query retained handle creationtime/image/membership/process state and real host/process memory diagnostics. Descriptor is local DATA, not Assignment/permission/status proof.
++- [ ] abort only exact owned attempt, latched before cleanup; prove Job empty+process signaled and close all retained handles. Uncertain exit remains poisoned/no release/no automatic retry.
++- [ ] Run focused unit/fault assertions and explicit bounded native suspended-child test. No Meta, native grant or PR52 allocation. Source-bound pre/post receipts; commit exact source.
++
++## Task2: cofreeze actual A2/worker-source ABI then job adapter
++
++- [ ] Receive actual primary source and exact APIs for submit/lookup/begin_dispatch/require_dispatch/record_computed/cancel and actual current worker enrolment/session/resource hold source. Existing AssignmentAuthority execute/reconcile are closed; method-shape proposals do not satisfy this step.
++- [ ] Publish A5 expected-instance attempt/capture and originalT/H/P/S/N/D mapping; require opaque actual issuer/worker handles, no JSON or None proof. Root/A2/A5 exact coACK before positive wiring.
++- [ ] Add RED tests for changed original bytes/key/profile, foreign issuer/attempt, RUNNING replay no new start, stale incarnation/session/lease/epoch/fence, quota/resource/UTC unknown, cancellation race, restart same original lookup. Use actual owner disposable fixture only for positive native tests; unavailable fixture stays unavailable.
++- [ ] Route gateway_jobs.py through fixed source-qualified owner classes, not caller callbacks. Own local inventory is not authoritative job status; status/cancel/restart derive actual original owner observations. No local receipt promotion.
++- [ ] Run actual source-bound native contract tests only when real issuer/profile/ACL/quorum fixture qualifies. Record complete actual transaction proof/budget from A2, not candidate examples.
++
++## Task3: bounded worker resume/computation and E2E
++
++- [ ] CoACK real resource semantics/headroom (RSS != jobcommit,1000m != native10%), fixed source custody/interpreter/entry/bounded IPC/output/deadline, actual native worker session/attempt/current holds and one-use dispatch permit.
++- [ ] Only then implement resume through actual expected A2 require_dispatch and same owned attempt. OS resume is not atomically Consul commit; cancellation/residual compute/final current fencing must be explicit.
++- [ ] Execute actual A7 pinned producer on exact input; verify returned raw artifact/descriptor/source hashes and record COMPUTED through actual current A2 job CAS. No fake Meta success/native grant.
++- [ ] Keep storage COMMITTED/projection/completion closed until actual A4 eligible two-domain closure+A2 sole publication receipt+A7 durable existing ResultStore projection coACK. No COMPUTED->COMPLETED alias.
++- [ ] Actual worker loss/cancel/restart/dupe/noquorum/headroom/timeout/overflow source-bound tests, Windows/Ubuntu CI and A8 independent review; Draft PR, no merge/production.
++
++## Review focus
++
++Retained-handle lifetime/cleanup and new object after restart; original bytes/idempotency/immutable profile binding; prepared-child overhead before native reservation; actual worker source vs principal broker identity; resource units and absent current UTC/native lease proof; no fake positive owner fixture.
++
++## Rulings and current gates
++
++Ruling: task1 real suspended preparation/abort is independently authorized, but source bytes and local descriptors cannot admit a worker/job. No shared ABI guessed. Task2/3 positive wiring stays BLOCKED until A2 actual source/coACK and real resource/UTC qualification.
++Ruling: no new durable attempt queue/ledger; process-local owned handle inventory prevents same-process duplicate preparation only. Durable restart idempotency must come from actual A2 original lookup before any future reprepare/resume.
++Ruling: source-only VirtualAlloc52 is excluded even though new owned-worker tests are authorized.
++
++## Task1 verification checkpoint (2026-11-09, not integration acceptance)
++
++Observed 6 deterministic boundary tests plus 2 explicitly selected real Windows suspended-process cases: 8 PASS. Existing worker-limit fault assertions: 5 PASS. No ResumeThread, authority mutation, Meta computation, storage publication, or PR52 diagnostic execution.
++
++Review fixes: frozen native13 constraints are fully checked before OS access; one process-wide preparation reservation blocks other inventories even with different declared node labels. Unknown cleanup poisons the owner and retains that refusal gate. Headroom/interpreter/source pin failures are covered by deterministic inert-kernel assertions. Native13 validation RED recorded 5 failing mutation subcases before the fix.
++
++The local 16 KiB input bound follows frozen13/C3; one active preparation and 32 retained originals are conservative refusal safeguards, not load-qualified production limits. Headroom margins, committed-memory cap and CPU rate are preparation diagnostics only. No operational admission, RSS/CPU translation, lease duration, capacity age, batch size, storage budget or renewal limit is certified by this checkpoint.
++
++Task1 source-bound receipt and final review remain required before completion. Tasks2/3 are pending actual A2 API/enrollment and ROOT runtime integration base; no positive shared wiring is present.
+diff --git a/docs/intelligence/jobs/worker-containment-design-review1.md b/docs/intelligence/jobs/worker-containment-design-review1.md
+new file mode 100644
+index 0000000..efcd483
+--- /dev/null
++++ b/docs/intelligence/jobs/worker-containment-design-review1.md
+@@ -0,0 +1,76 @@
++# Owned Windows child containment — allocated isolated slice review1
++
++ROOT allocated feature/gateway-worker-containment-20261107 from exact
++3e498de973536c2d6393f83abe7d59cb1452a9b4/treeea13a052992acff8268e7e79b99c7a603bcb1fa3.
++NEW gateway_worker.py, owned tests/gateway_jobs/** and docs only. No Grid edits.
++No native grant, authority issuer, publication, quota release or physical service.
++
++Reuse primary Grid40e9 grid/ml_windows_job.py Gitblobf30a09a3af647518d69f7787879defc4d5fa8ab5,
++rawSHA7fd6223de3e28052b1254fa9e33e638132c6db89388bbb2d994b35970802a25c.
++Its WindowsJob(pid,resume_primary_thread=False), terminate_and_wait(timeout) and
++close are existing methods. Retained _job HANDLE/_kernel and _BasicAccounting
++are PRIVATE source-pinned ABI, not generic provider API. The proposed owned
++wrapper explicitly binds this exact implementation/type/source and never accepts
++an arbitrary caller handle or substitutes a public native authority capability.
++Any source/ABI mismatch denies before resume. No optional psutil path is used.
++
++CreateProcessW suspended with actual retained process AND primary-thread handles,
++explicit absolute executable/fixed source-owned entry, minimal environment and
++no inherited application credentials/handles. Attach to new pinned WindowsJob,
++apply own narrow SetInformationJobObject limits to that SAME retained owned handle,
++query/readback exact limits, then ResumeThread. Any failure before resume terminates
++owned suspended child, proves it exited, closes handles. After attachment require
++existing terminate_and_wait actual ActiveProcesses0 before cleanup. Never PID-only
++kill/adoption, no suspend/resume of office or service process.
++
++Proposed limit trial: whole Job committed-memory256MiB, active processes8,
++CPU hard-rate1000 (fixed10% native Job rate), NOT one logical CPU.
++GetProcessAffinityMask and single-group check observed16 processors; inherited
++Job/container effective capacity remains unknown, so no millicore mapping. These are
++qualification test settings, NOT approved safe research capacity or scheduler
++benchmark. Job committed memory is NOT resident working set; CPU rate hard ceiling
++is NOT reserved CPU service guarantee. Actual resource profile requires measured
++RSS/CPU/pressure/headroom and bounded IPC/output/deadline qualification separately.
++Output process handles must be bounded by owner IPC; stdout file read-at-end is
++not an output quota. Do not claim final worker admission from kill/memory tests.
++
++Cancellation separates cooperative discard from native Job termination/quiescence.
++Unknown quiescence poisons/restricts retry, no hold refund. Actual dispatch entry
++stays denied until A2 one-use ResearchDispatchPermit and exact same authority plus
++owned_attempt ABI are qualified. Replayed RUNNING never launches a second child.
++Consul dispatch commit and OS resume are not atomic; final durable effects require
++current A2 grant+CAS. Historical projection/read never restarts worker.
++
++First native probe used no real research/grants: explicit synthetic parent spawns
++a sleeping descendant. Initial exact2-process assertion failed because actual
++Job accounted4 processes. Cleanup initially lacked waiting for retained parent
++handle and obscured cause; fixed failure cleanup waits that owned handle. Corrected
++probe requires observed descendants >=2 and records actual4, then Job empty and
++parent signaled. This is actual kill/quiescence only, not memory/CPU/admission PASS.
++Next probe applies/readbacks memory/CPU/active limits BEFORE resume, captures native
++accounting/peak committed usage and exercises quota failures/timeout only against
++own disposable processes. No positive authority fixture is created.
++
++Independent review fixed cleanup: unconditional retained-handle close even after
++Job termination/query failure, explicit checked process termination/wait; unknown
++quiescence raises OWNED_CLEANUP_UNPROVEN_NO_RELEASE. Fault-injection tests are
++assertion-quality checks, NOT real OS failure qualification. Real memory probe
++reported allocation512MiB refused but native peak committed counter544940032;
++limit readback was268435456. Do not infer safe peak/headroom from that counter or
++claim cause of MemoryError conclusively. This probe remains unqualified for RSS,
++CPU share, pressure, bounded output and admission. Worker start stays denied.
++
++ROOT requested diagnostic successor preserves original544940032 discrepancy
++unchanged. Actual e86b4cc fresh-clone repeat reported544903168 (a separate sample,
++not a replacement): both exceed configured limit. Source-bound1400 tracked raw
++files matched before/after unit4 and3actual probes. These receipts apply ONLY to
++e86b4cc. Diagnostic successor logs requested/readback native flags/limit bytes,
++CPU fields, raw Extended/CPU/accounting structs and sizes/offsets, membership,
++monotonic/UTC observation times and native return values. Last-error after a
++successful API call is stale/informational, NOT evidence of failure. No inferred
++attempted-versus-charged explanation is asserted. Win32 memory definitions:
++https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-jobobject_extended_limit_information
++CPU rate units/flags:
++https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-jobobject_cpu_rate_control_information
++Fault-injection assertion controls deny failed memory setup, failed CPU setup,
++failed readback and readback mismatch. These are not native failure reproductions.
+diff --git a/tests/gateway_jobs/qualify_windows_job.py b/tests/gateway_jobs/qualify_windows_job.py
+new file mode 100644
+index 0000000..876a99f
+--- /dev/null
++++ b/tests/gateway_jobs/qualify_windows_job.py
+@@ -0,0 +1,117 @@
++"""Explicit owned disposable Windows Job probe; never native job admission.
++Run directly only. No services, network, database, real job, policy or host changes.
++"""
++import ctypes
++from ctypes import wintypes as w
++import hashlib
++import json
++import os
++from pathlib import Path
++import subprocess
++import sys
++import tempfile
++import types
++import time
++from datetime import datetime,timezone
++sys.path.insert(0,str(Path(__file__).resolve().parents[2]))
++from unified_system.gateway_worker import _configure_retained_job, _Extended, WorkerUnavailable, _retire_owned
++
++
++def qualify(grid_repository,mode="tree"):
++    if mode not in ("tree","memory","bad_profile"):raise ValueError("UNKNOWN_QUALIFICATION_MODE")
++    observed_at=datetime.now(timezone.utc).isoformat();started_ns=time.monotonic_ns()
++    if os.name != 'nt':
++        raise RuntimeError('WINDOWS_REQUIRED_NOT_QUALIFIED')
++    raw = subprocess.check_output(['git','--no-replace-objects','-C',str(grid_repository),
++        'show','40e9c8dc274a2746018bc1aa08d103cd0187cecc:grid/ml_windows_job.py'])
++    # Exact source pinned by primary Git object, no working file/cache import.
++    source_oid = hashlib.sha1(b'blob '+str(len(raw)).encode()+b'\0'+raw).hexdigest()
++    if source_oid != 'f30a09a3af647518d69f7787879defc4d5fa8ab5':
++        raise RuntimeError('SOURCE_PIN_MISMATCH')
++    module=types.ModuleType('a5_primary_grid_job');exec(compile(raw,'primary-grid-job','exec'),module.__dict__)
++    class Startup(ctypes.Structure):
++        _fields_=[('cb',w.DWORD),('reserved',w.LPWSTR),('desktop',w.LPWSTR),('title',w.LPWSTR),
++            ('x',w.DWORD),('y',w.DWORD),('xs',w.DWORD),('ys',w.DWORD),('xc',w.DWORD),('yc',w.DWORD),
++            ('fill',w.DWORD),('flags',w.DWORD),('show',w.WORD),('reserved_size',w.WORD),
++            ('reserved_bytes',ctypes.c_void_p),('stdin',w.HANDLE),('stdout',w.HANDLE),('stderr',w.HANDLE)]
++    class Process(ctypes.Structure):
++        _fields_=[('process',w.HANDLE),('thread',w.HANDLE),('pid',w.DWORD),('tid',w.DWORD)]
++    k=ctypes.WinDLL('kernel32',use_last_error=True)
++    k.CreateProcessW.argtypes=[w.LPCWSTR,w.LPWSTR,ctypes.c_void_p,ctypes.c_void_p,w.BOOL,w.DWORD,ctypes.c_void_p,w.LPCWSTR,ctypes.POINTER(Startup),ctypes.POINTER(Process)]
++    k.CreateProcessW.restype=w.BOOL;k.ResumeThread.argtypes=[w.HANDLE];k.ResumeThread.restype=w.DWORD
++    k.TerminateProcess.argtypes=[w.HANDLE,w.UINT];k.TerminateProcess.restype=w.BOOL
++    k.WaitForSingleObject.argtypes=[w.HANDLE,w.DWORD];k.WaitForSingleObject.restype=w.DWORD
++    k.GetExitCodeProcess.argtypes=[w.HANDLE,ctypes.POINTER(w.DWORD)];k.GetExitCodeProcess.restype=w.BOOL
++    k.CloseHandle.argtypes=[w.HANDLE];k.CloseHandle.restype=w.BOOL
++    child="import os,subprocess,sys,time; memory=bytearray(4*1024*1024); subprocess.Popen([sys.executable,'-I','-B','-c','import time; time.sleep(30)'],env=dict(os.environ),creationflags=0x08000000); time.sleep(30)"
++    if mode=='memory':
++        child="import os\ntry:\n x=bytearray(512*1024*1024)\nexcept MemoryError:\n os._exit(42)\nos._exit(99)"
++    proc=Process();startup=Startup();startup.cb=ctypes.sizeof(startup);job=None;created=False;quiescent=False
++    environment={name:os.environ[name] for name in ('SYSTEMROOT','WINDIR','TEMP','TMP') if name in os.environ}
++    block=ctypes.create_unicode_buffer('\0'.join(key+'='+value for key,value in sorted(environment.items()))+'\0\0')
++    with tempfile.TemporaryDirectory(prefix='a5-job-qualification-') as directory:
++        try:
++            command=ctypes.create_unicode_buffer(subprocess.list2cmdline([sys.executable,'-I','-B','-c',child]))
++            if not k.CreateProcessW(sys.executable,command,None,None,False,0x4|0x400|0x08000000,block,directory,ctypes.byref(startup),ctypes.byref(proc)):
++                raise ctypes.WinError(ctypes.get_last_error())
++            created=True
++            job=module.WindowsJob(proc.pid,resume_primary_thread=False)
++            if mode=='bad_profile':
++                try:_configure_retained_job(job,expected_job_type=module.WindowsJob,owned_process_handle=proc.process,cpu_rate=999)
++                except WorkerUnavailable as error:
++                    if str(error)!='UNQUALIFIED_LIMIT_PROFILE':raise
++                else:raise RuntimeError('INVALID_PROFILE_ACCEPTED')
++                quiescent=job.terminate_and_wait(5)
++                if quiescent is not True or k.WaitForSingleObject(proc.process,5000)!=0:raise RuntimeError('SETUP_FAILURE_NOT_QUIESCENT')
++                return dict(classification='OWNED_SETUP_DENIAL_BEFORE_RESUME',mode=mode,resumed=False,
++                            terminated_job_observed_empty=True,native_job_admission=False)
++            limit_observation=_configure_retained_job(job,expected_job_type=module.WindowsJob,owned_process_handle=proc.process)
++            if k.ResumeThread(proc.thread)==0xffffffff:raise ctypes.WinError(ctypes.get_last_error())
++            if mode=='memory':
++                if k.WaitForSingleObject(proc.process,5000)!=0:raise RuntimeError('MEMORY_PROBE_TIMEOUT')
++                exit_code=w.DWORD()
++                if not k.GetExitCodeProcess(proc.process,ctypes.byref(exit_code)) or exit_code.value!=42:raise RuntimeError('MEMORY_CAP_NOT_OBSERVED:'+str(exit_code.value))
++                usage=_Extended()
++                if not job._kernel.QueryInformationJobObject(job._job,9,ctypes.byref(usage),ctypes.sizeof(usage),None):raise RuntimeError('MEMORY_ACCOUNTING_UNAVAILABLE')
++                quiescent=job.terminate_and_wait(5)
++                if quiescent is not True:raise RuntimeError('MEMORY_PROBE_NOT_QUIESCENT')
++                return dict(classification='OWNED_COMMITTED_MEMORY_LIMIT_PROBE_NOT_RSS',mode=mode,
++                    rejected_allocation_bytes=512*1024*1024,exit_code=exit_code.value,
++                    native_peak_job_committed_bytes=usage.peak_job_memory,
++                    native_peak_process_memory_bytes=usage.peak_process_memory,
++                    memory_accounting_struct_hex=bytes(usage).hex(),
++                    memory_accounting_query_success=True,observation_utc=observed_at,
++                    elapsed_monotonic_ns=str(time.monotonic_ns()-started_ns),
++                    peak_exceeds_configured_limit=usage.peak_job_memory>268435456,
++                    memory_limit_cause_and_peak_semantics_qualified=False,
++                    limit_readback_before_resume=limit_observation,terminated_job_observed_empty=True,
++                    rss_capacity_qualified=False,native_job_admission=False)
++            info=module._BasicAccounting()
++            # Bounded wait on owned process handle, not a PID or unowned worker.
++            for _ in range(20):
++                if k.WaitForSingleObject(proc.process,100)==0:raise RuntimeError('CHILD_EXITED_EARLY')
++                if not job._kernel.QueryInformationJobObject(job._job,1,ctypes.byref(info),ctypes.sizeof(info),None):raise ctypes.WinError(ctypes.get_last_error())
++                if info.ActiveProcesses>=2:break
++            if info.ActiveProcesses<2:raise RuntimeError('DESCENDANT_NOT_OBSERVED:'+str((info.ActiveProcesses,info.TotalProcesses,info.TotalTerminatedProcesses)))
++            before=int(info.ActiveProcesses);total=int(info.TotalProcesses)
++            accounting=dict(raw_hex=bytes(info).hex(),size=ctypes.sizeof(info),
++                            offsets={field:getattr(type(info),field).offset for field,*_ in info._fields_},
++                            values={field:str(getattr(info,field)) for field,*_ in info._fields_})
++            quiescent=job.terminate_and_wait(5)
++            if quiescent is not True or k.WaitForSingleObject(proc.process,5000)!=0:raise RuntimeError('QUIESCENCE_NOT_PROVEN')
++            return dict(classification='OWNED_DISPOSABLE_CONTAINMENT_PRIMITIVE_ONLY',
++                grid_head='40e9c8dc274a2746018bc1aa08d103cd0187cecc',source_sha256=hashlib.sha256(raw).hexdigest(),
++                observation_utc=observed_at,elapsed_monotonic_ns=str(time.monotonic_ns()-started_ns),
++                native_accounting_before_cancel=accounting,
++                assigned_before_resume=True,limit_readback_before_resume=limit_observation,active_processes_before_cancel=before,total_processes=total,
++                terminated_job_observed_empty=True,primary_handle_signaled=True,
++                cpu_memory_output_limits_qualified=False,capacity_qualified=False,native_job_admission=False)
++        finally:
++            _retire_owned(job,process_handle=proc.process,thread_handle=proc.thread,
++                          kernel=k,created=created,quiescent=quiescent)
++
++
++
++if __name__=='__main__':
++    if len(sys.argv) not in (2,3):raise SystemExit('explicit Grid repository path and optional mode required')
++    print(json.dumps(qualify(Path(sys.argv[1]),sys.argv[2] if len(sys.argv)==3 else "tree"),sort_keys=True))
+diff --git a/tests/gateway_jobs/test_owned_attempt.py b/tests/gateway_jobs/test_owned_attempt.py
+new file mode 100644
+index 0000000..9f249aa
+--- /dev/null
++++ b/tests/gateway_jobs/test_owned_attempt.py
+@@ -0,0 +1,103 @@
++"""Local owned OS attempt tests, NOT native admission/worker profile qualification.
++Native selection is explicit; no A2 broker/Consul/Meta/PR52 allocation calls.
++"""
++import copy
++import json
++import os
++from pathlib import Path
++import pickle
++import unittest
++import uuid
++from unittest.mock import patch
++import unified_system.gateway_worker as worker_module
++from unified_system.gateway_worker import GatewayWorker, OwnedWorkerAttempt, WorkerUnavailable
++
++FIX=Path(__file__).with_name('target_native_mapping_fixtures')
++GRID='C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-2-high-availability-distributed/work/grid-assignment-native-20261107'
++
++def raw():return (FIX/'a2-native13.FORMAT_ONLY.json').read_bytes()
++def canonical(value):return json.dumps(value,sort_keys=True,separators=(',',':')).encode('ascii')
++
++class OwnedAttemptBoundary(unittest.TestCase):
++    def test_default_start_still_denies(self):
++        with self.assertRaises(WorkerUnavailable):GatewayWorker().start()
++    def test_attempt_cannot_be_constructed_or_forged_into_inventory(self):
++        with self.assertRaises(TypeError):OwnedWorkerAttempt()
++        forged=object.__new__(OwnedWorkerAttempt);worker=GatewayWorker(node_id=str(uuid.uuid4()))
++        for call in (worker.inspect_attempt,worker.abort_attempt):
++            with self.assertRaises(WorkerUnavailable):call(forged)
++        with self.assertRaises(WorkerUnavailable):GatewayWorker.require_owned_attempt(worker,forged,original_lab13_bytes=raw())
++    def test_original_bytes_are_strict_before_any_process_creation(self):
++        worker=GatewayWorker(node_id=str(uuid.uuid4()))
++        for b in (raw()+b' ',b'{"request_id":1,"request_id":2}',b'x'*16385,b'[]'):
++            with self.assertRaises(WorkerUnavailable):worker.prepare_attempt(b,grid_source_root=GRID)
++    def test_missing_declared_node_denies_preparation(self):
++        with self.assertRaisesRegex(WorkerUnavailable,'WORKER_NODE_LABEL_REQUIRED'):
++            GatewayWorker().prepare_attempt(raw(),grid_source_root=GRID)
++    def test_all_frozen_native13_constraints_precede_native_access(self):
++        mutations=[('commissioned_profile_sha256','z'*64),('input_request_sha256','0'*64),
++                   ('producer_head','0'*40),('resources',{}),('resources',{'cpu_millicores':'999'})]
++        for field,value in mutations:
++            original=json.loads(raw());original[field]=value
++            with self.subTest(field=field,value=value),patch.object(worker_module,'_attempt_api',side_effect=AssertionError('native access')) as api:
++                with self.assertRaises(WorkerUnavailable):
++                    GatewayWorker(node_id=str(uuid.uuid4())).prepare_attempt(canonical(original),grid_source_root=GRID)
++                api.assert_not_called()
++    def test_preparation_headroom_and_pin_faults_never_create_process(self):
++        # Deterministic refusal assertions only: inert kernel is not OS evidence.
++        original=raw()
++        class NoCreate:
++            def CreateProcessW(self,*args):
++                raise AssertionError('process creation crossed refusal gate')
++        host={'available_commit_bytes':'2952790016','available_physical_bytes':'1073741824'}
++        cases=[('OWNED_PREPARATION_HEADROOM_REFUSED',
++                patch.object(worker_module,'_attempt_host',return_value={**host,'available_commit_bytes':'0'})),
++               ('OWNED_INTERPRETER_PIN_MISMATCH',
++                patch.object(worker_module,'_DIRECT_INTERPRETER_SHA','0'*64)),
++               ('OWNED_GRID_SOURCE_MISMATCH',
++                patch.object(worker_module.subprocess,'check_output',return_value=b'wrong source'))]
++        for code,fault in cases:
++            with self.subTest(code=code),patch.object(worker_module,'_attempt_api',return_value=NoCreate()),patch.object(worker_module,'_attempt_host',return_value=host),fault:
++                worker=GatewayWorker(node_id=str(uuid.uuid4()))
++                with self.assertRaises(WorkerUnavailable) as caught:
++                    worker.prepare_attempt(original,grid_source_root=GRID)
++                self.assertEqual(caught.exception.origin_diagnostic[1],code)
++                self.assertEqual(caught.exception.cleanup_diagnostics,())
++
++class NativeOwnedAttempt(unittest.TestCase):
++    def test_actual_suspended_duplicate_inspect_abort_without_resume(self):
++        worker=GatewayWorker(node_id=str(uuid.uuid4()));original=raw()
++        attempt=worker.prepare_attempt(original,grid_source_root=GRID)
++        self.addCleanup(worker.abort_attempt,attempt)
++        self.assertIs(worker.prepare_attempt(original,grid_source_root=GRID),attempt)
++        snapshot=GatewayWorker.require_owned_attempt(worker,attempt,original_lab13_bytes=original)
++        self.assertEqual(snapshot.state,'PREPARED_SUSPENDED_LOCAL_ONLY')
++        self.assertEqual(snapshot.native_authority,'NOT_GRANTED')
++        details=json.loads(snapshot.os_observation_json)
++        self.assertTrue(details['job_membership']);self.assertEqual(details['resume_calls'],0)
++        self.assertFalse(details['resource_profile_qualified'])
++        for operation in (copy.copy,copy.deepcopy,pickle.dumps):
++            with self.assertRaises(TypeError):operation(attempt)
++        retired=worker.abort_attempt(attempt);self.assertEqual(retired.state,'OWNED_QUIESCENCE_CONFIRMED')
++        self.assertIs(worker.abort_attempt(attempt),retired)
++        with self.assertRaises(WorkerUnavailable):worker.prepare_attempt(original,grid_source_root=GRID)
++        with self.assertRaises(WorkerUnavailable):GatewayWorker.require_owned_attempt(worker,attempt,original_lab13_bytes=original)
++    def test_foreign_inventory_and_changed_original_do_not_adopt_child(self):
++        worker=GatewayWorker(node_id=str(uuid.uuid4()));original=raw();attempt=worker.prepare_attempt(original,grid_source_root=GRID)
++        self.addCleanup(worker.abort_attempt,attempt)
++        foreign=GatewayWorker(node_id=str(uuid.uuid4()))
++        with patch.object(worker_module,'_attempt_api',side_effect=AssertionError('second native access')) as api:
++            with self.assertRaises(WorkerUnavailable):foreign.prepare_attempt(original,grid_source_root=GRID)
++            api.assert_not_called()
++        with self.assertRaises(WorkerUnavailable):foreign.abort_attempt(attempt)
++        changed=json.loads(original);changed['job_id']=str(uuid.uuid4());different=canonical(changed)
++        with self.assertRaises(WorkerUnavailable):worker.prepare_attempt(different,grid_source_root=GRID)
++        with self.assertRaises(WorkerUnavailable):GatewayWorker.require_owned_attempt(worker,attempt,original_lab13_bytes=different)
++        self.assertEqual(worker.inspect_attempt(attempt).state,'PREPARED_SUSPENDED_LOCAL_ONLY')
++
++def load_tests(loader,tests,pattern):
++    suite=loader.loadTestsFromTestCase(OwnedAttemptBoundary)
++    if os.environ.get('AGENT5_RUN_OWNED_ATTEMPT_NATIVE')=='1':
++        suite.addTests(loader.loadTestsFromTestCase(NativeOwnedAttempt))
++    else:print('OWNED_ATTEMPT_NATIVE_NOT_RUN_EXPLICIT_SELECTION_REQUIRED')
++    return suite
+diff --git a/tests/gateway_jobs/test_worker_limits.py b/tests/gateway_jobs/test_worker_limits.py
+new file mode 100644
+index 0000000..96f1d0f
+--- /dev/null
++++ b/tests/gateway_jobs/test_worker_limits.py
+@@ -0,0 +1,59 @@
++"""Validation tests only; actual Windows qualifier is explicit and separate."""
++import unittest
++from unified_system.gateway_worker import WorkerUnavailable, _configure_retained_job, GatewayWorker, _retire_owned
++class WorkerLimits(unittest.TestCase):
++    def test_foreign_handle_rejected_before_native_access(self):
++        with self.assertRaises(WorkerUnavailable):
++            _configure_retained_job(object(),expected_job_type=None)
++    def test_no_native_grant_no_dispatch(self):
++        with self.assertRaises(WorkerUnavailable):GatewayWorker().start()
++
++    def test_cleanup_error_still_closes_both_retained_handles(self):
++        # Fault-injection assertion only: not native handles or qualification.
++        closed=[]
++        class Job:
++            def terminate_and_wait(self,timeout):raise TimeoutError('unproven')
++            def close(self):pass
++        class Kernel:
++            def WaitForSingleObject(self,handle,timeout):return 0
++            def CloseHandle(self,handle):closed.append(handle);return True
++        with self.assertRaises(WorkerUnavailable):
++            _retire_owned(Job(),process_handle=10,thread_handle=20,kernel=Kernel(),created=True,quiescent=False)
++        self.assertEqual(closed,[20,10])
++
++    def test_failed_suspended_termination_not_reported_as_exit(self):
++        closed=[]
++        class Kernel:
++            def TerminateProcess(self,handle,code):return False
++            def WaitForSingleObject(self,handle,timeout):return 258
++            def CloseHandle(self,handle):closed.append(handle);return True
++        with self.assertRaises(WorkerUnavailable):
++            _retire_owned(None,process_handle=10,thread_handle=20,kernel=Kernel(),created=True,quiescent=False)
++        self.assertEqual(closed,[20,10])
++
++    def test_native_setup_and_readback_fault_assertions(self):
++        # Inert API fault injection ONLY, not native limit or worker evidence.
++        import os
++        if os.name!='nt':
++            with self.assertRaises(WorkerUnavailable):_configure_retained_job(object(),expected_job_type=None)
++            return
++        class Call:
++            def __init__(self,fn):self.fn=fn
++            def __call__(self,*args):return self.fn(*args)
++        for fault,code in [('set_memory','JOB_MEMORY_PROCESS_LIMIT_FAILED'),
++                           ('set_cpu','JOB_CPU_LIMIT_FAILED'),
++                           ('query','JOB_LIMIT_READBACK_FAILED'),
++                           ('mismatch','JOB_LIMIT_READBACK_MISMATCH')]:
++            class Kernel:
++                pass
++            kernel=Kernel()
++            def member(process,job,out):out._obj.value=True;return True
++            def affinity(process,a,b):a._obj.value=b._obj.value=0xffff;return True
++            kernel.IsProcessInJob=Call(member);kernel.GetProcessAffinityMask=Call(affinity)
++            kernel.GetActiveProcessorGroupCount=Call(lambda:1)
++            kernel.SetInformationJobObject=Call(lambda handle,kind,out,size:not ((fault=='set_memory' and kind==9) or (fault=='set_cpu' and kind==15)))
++            kernel.QueryInformationJobObject=Call(lambda *args:fault!='query')
++            class Job:pass
++            job=Job();job._kernel=kernel;job._job=123
++            with self.subTest(fault=fault),self.assertRaisesRegex(WorkerUnavailable,code):
++                _configure_retained_job(job,expected_job_type=Job,owned_process_handle=456)
+diff --git a/unified_system/gateway_worker.py b/unified_system/gateway_worker.py
+new file mode 100644
+index 0000000..c7d1186
+--- /dev/null
++++ b/unified_system/gateway_worker.py
+@@ -0,0 +1,376 @@
++"""Owned Job limit/readback primitive; no worker admission or start authority.
++
++Private helpers require an already-owned suspended process and exact pinned Grid
++class. Caller handles/types are not native grants. GatewayWorker.start is closed.
++"""
++import ctypes
++from ctypes import wintypes as w
++import os
++import time
++import hashlib
++import json
++from pathlib import Path
++import re
++import subprocess
++import tempfile
++import threading
++import types
++import uuid
++from dataclasses import dataclass
++from datetime import datetime, timezone
++
++class WorkerUnavailable(RuntimeError):
++    pass
++
++class _Basic(ctypes.Structure):
++    _fields_=[('process_time',ctypes.c_int64),('job_time',ctypes.c_int64),('flags',w.DWORD),
++        ('min_working_set',ctypes.c_size_t),('max_working_set',ctypes.c_size_t),
++        ('active_limit',w.DWORD),('affinity',ctypes.c_size_t),('priority',w.DWORD),('scheduling',w.DWORD)]
++class _IO(ctypes.Structure):
++    _fields_=[(x,ctypes.c_uint64) for x in ('reads','writes','others','read_bytes','write_bytes','other_bytes')]
++class _Extended(ctypes.Structure):
++    _fields_=[('basic',_Basic),('io',_IO),('process_memory',ctypes.c_size_t),
++        ('job_memory',ctypes.c_size_t),('peak_process_memory',ctypes.c_size_t),('peak_job_memory',ctypes.c_size_t)]
++class _CPU(ctypes.Structure):
++    _fields_=[('flags',w.DWORD),('rate',w.DWORD)]
++
++def _configure_retained_job(job,*,expected_job_type,owned_process_handle=None,
++                            committed_bytes=268435456,active_processes=8,cpu_rate=1000):
++    """Native setting/readback only. Does NOT map CPU share or committed bytes to RSS.
++
++    expected_job_type is internal exact source-qualified Grid class identity;
++    this helper is not a public arbitrary handle or authority-provider endpoint.
++    CPU rate1000 is ten percent native Job CPU rate, NOT one logical CPU.
++    """
++    if (os.name!='nt' or expected_job_type is None or type(job) is not expected_job_type
++            or not owned_process_handle or not getattr(job,'_job',None)):
++        raise WorkerUnavailable('OWNED_JOB_REQUIRED')
++    if (type(committed_bytes) is not int or committed_bytes!=268435456
++            or type(active_processes) is not int or active_processes!=8
++            or type(cpu_rate) is not int or cpu_rate!=1000):
++        raise WorkerUnavailable('UNQUALIFIED_LIMIT_PROFILE')
++    k=job._kernel;handle=job._job;calls=[]
++    def observed(name,fn,*args):
++        value=fn(*args)
++        calls.append(dict(api=name,result=int(value),last_error=ctypes.get_last_error(),
++                          monotonic_ns=str(time.monotonic_ns())))
++        return value
++    k.IsProcessInJob.argtypes=[w.HANDLE,w.HANDLE,ctypes.POINTER(w.BOOL)];k.IsProcessInJob.restype=w.BOOL
++    k.GetProcessAffinityMask.argtypes=[w.HANDLE,ctypes.POINTER(ctypes.c_size_t),ctypes.POINTER(ctypes.c_size_t)];k.GetProcessAffinityMask.restype=w.BOOL
++    k.GetActiveProcessorGroupCount.argtypes=[];k.GetActiveProcessorGroupCount.restype=w.WORD
++    member=w.BOOL();process_mask=ctypes.c_size_t();system_mask=ctypes.c_size_t()
++    if not observed("IsProcessInJob",k.IsProcessInJob,owned_process_handle,handle,ctypes.byref(member)) or not member.value:
++        raise WorkerUnavailable('OWNED_JOB_MEMBERSHIP_UNVERIFIED')
++    if (observed("GetActiveProcessorGroupCount",k.GetActiveProcessorGroupCount)!=1 or
++            not observed("GetProcessAffinityMask",k.GetProcessAffinityMask,owned_process_handle,ctypes.byref(process_mask),ctypes.byref(system_mask))
++            or not process_mask.value or process_mask.value & ~system_mask.value):
++        raise WorkerUnavailable('PROCESSOR_TOPOLOGY_UNQUALIFIED')
++    limits=_Extended();limits.basic.flags=0x2000|0x200|0x8
++    limits.basic.active_limit=active_processes;limits.job_memory=committed_bytes
++    if not observed("SetInformationJobObject:Extended9",k.SetInformationJobObject,handle,9,ctypes.byref(limits),ctypes.sizeof(limits)):
++        raise WorkerUnavailable('JOB_MEMORY_PROCESS_LIMIT_FAILED')
++    cpu=_CPU(5,cpu_rate)  # ENABLE|HARD_CAP, explicitly bounded native rate units.
++    if not observed("SetInformationJobObject:CPU15",k.SetInformationJobObject,handle,15,ctypes.byref(cpu),ctypes.sizeof(cpu)):
++        raise WorkerUnavailable('JOB_CPU_LIMIT_FAILED')
++    actual=_Extended();actual_cpu=_CPU()
++    if (not observed("QueryInformationJobObject:Extended9",k.QueryInformationJobObject,handle,9,ctypes.byref(actual),ctypes.sizeof(actual),None)
++            or not observed("QueryInformationJobObject:CPU15",k.QueryInformationJobObject,handle,15,ctypes.byref(actual_cpu),ctypes.sizeof(actual_cpu),None)):
++        raise WorkerUnavailable('JOB_LIMIT_READBACK_FAILED')
++    if (actual.basic.flags & limits.basic.flags != limits.basic.flags or actual.job_memory!=committed_bytes
++            or actual.basic.active_limit!=active_processes or actual_cpu.flags!=5 or actual_cpu.rate!=cpu_rate):
++        raise WorkerUnavailable('JOB_LIMIT_READBACK_MISMATCH')
++    return dict(native_calls=calls,job_membership_verified=bool(member.value),
++                requested_limit_flags=limits.basic.flags,readback_limit_flags=actual.basic.flags,
++                requested_job_memory_bytes=limits.job_memory,
++                requested_cpu_flags=cpu.flags,readback_cpu_flags=actual_cpu.flags,
++                extended_requested_hex=bytes(limits).hex(),extended_readback_hex=bytes(actual).hex(),
++                cpu_requested_hex=bytes(cpu).hex(),cpu_readback_hex=bytes(actual_cpu).hex(),
++                layouts={name:dict(size=ctypes.sizeof(cls),offsets={field:getattr(cls,field).offset for field,*_ in cls._fields_})
++                         for name,cls in [('basic',_Basic),('io',_IO),('extended',_Extended),('cpu',_CPU)]},
++                committed_memory_limit_bytes=actual.job_memory,active_process_limit=actual.basic.active_limit,
++                cpu_hard_rate_units=actual_cpu.rate,affinity_processor_count=process_mask.value.bit_count(),
++                system_affinity_processor_count=system_mask.value.bit_count(),processor_groups=1,
++                inherited_job_capacity_qualified=False,cpu_millicore_mapping_qualified=False,
++                resident_memory_mapping_qualified=False)
++
++_PROCESS_INCARNATION=str(uuid.uuid4())
++_DIRECT_INTERPRETER=Path(r'C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\python.exe')
++_DIRECT_INTERPRETER_SHA='4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a'
++_GRID_JOB_SHA='7fd6223de3e28052b1254fa9e33e638132c6db89388bbb2d994b35970802a25c'
++
++class OwnedWorkerAttempt:
++    """Inventory-only local OS object, never an Assignment or dispatch permit."""
++    __slots__=()
++    def __new__(cls):raise TypeError('OWNED_ATTEMPT_INVENTORY_ONLY')
++    def __copy__(self):raise TypeError('OWNED_ATTEMPT_NOT_COPYABLE')
++    def __deepcopy__(self,memo):raise TypeError('OWNED_ATTEMPT_NOT_COPYABLE')
++    def __reduce__(self):raise TypeError('OWNED_ATTEMPT_NOT_SERIALIZABLE')
++
++@dataclass(frozen=True)
++class OwnedAttemptObservation:
++    state: str
++    original_request_id: str
++    original_request_sha256: str
++    planned_job_id: str
++    declared_node_id: str
++    worker_incarnation_id: str
++    attempt_id: str
++    child_pid: int
++    child_creation_filetime: str
++    child_image: str
++    source_sha256: str
++    os_observation_json: bytes
++    native_authority: str='NOT_GRANTED'
++
++class _AttemptStartup(ctypes.Structure):
++    _fields_=[('cb',w.DWORD),('reserved',w.LPWSTR),('desktop',w.LPWSTR),('title',w.LPWSTR),
++        ('x',w.DWORD),('y',w.DWORD),('xs',w.DWORD),('ys',w.DWORD),('xc',w.DWORD),('yc',w.DWORD),
++        ('fill',w.DWORD),('flags',w.DWORD),('show',w.WORD),('reserved_size',w.WORD),
++        ('reserved_bytes',ctypes.c_void_p),('stdin',w.HANDLE),('stdout',w.HANDLE),('stderr',w.HANDLE)]
++class _AttemptProcess(ctypes.Structure):
++    _fields_=[('process',w.HANDLE),('thread',w.HANDLE),('pid',w.DWORD),('tid',w.DWORD)]
++class _AttemptPerformance(ctypes.Structure):
++    _fields_=[('cb',w.DWORD)]+[(n,ctypes.c_size_t) for n in ('commit_total','commit_limit','commit_peak',
++        'physical_total','physical_available','cache','kernel_total','kernel_paged','kernel_nonpaged','page_size')]+[
++        ('handles',w.DWORD),('processes',w.DWORD),('threads',w.DWORD)]
++class _AttemptProcessMemory(ctypes.Structure):
++    _fields_=[('cb',w.DWORD),('faults',w.DWORD)]+[(n,ctypes.c_size_t) for n in
++        ('peak_working_set','working_set','peak_paged','paged','peak_nonpaged','nonpaged','pagefile','peak_pagefile','private_usage')]
++
++def _worker_need(ok,code):
++    if not ok:raise WorkerUnavailable(code)
++def _worker_uuid(value):
++    _worker_need(type(value) is str and re.fullmatch(r'[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}',value) is not None,'OWNED_REQUEST_UUID')
++def _worker_canonical(value):return json.dumps(value,sort_keys=True,separators=(',',':'),allow_nan=False).encode('ascii')
++def _worker_original(raw):
++    try:
++        _worker_need(type(raw) is bytes and 0<len(raw)<=16384,'OWNED_ORIGINAL_BYTES')
++        def pairs(items):
++            result={}
++            for key,value in items:
++                _worker_need(key not in result,'OWNED_DUPLICATE_KEY');result[key]=value
++            return result
++        def number(_):raise WorkerUnavailable('OWNED_NATIVE_METADATA_NUMBER')
++        value=json.loads(raw.decode('ascii'),object_pairs_hook=pairs,parse_int=number,parse_float=number,parse_constant=number)
++        fields={'schema','operation','cluster_id','cluster_generation','request_id','job_id','original_actor_principal_id',
++                'quota_owner_id','idempotency_key','commissioned_profile_sha256','input_request_sha256','producer_head','resources'}
++        _worker_need(type(value) is dict and set(value)==fields and _worker_canonical(value)==raw,'OWNED_ORIGINAL_CANONICAL')
++        _worker_need(value['schema']=='unified.gateway.lab-job-submit.v1-review1' and value['operation']=='SUBMIT_RESEARCH','OWNED_ORIGINAL_PROFILE')
++        for key in ('cluster_id','cluster_generation','request_id','job_id','original_actor_principal_id'):_worker_uuid(value[key])
++        for key in ('quota_owner_id','idempotency_key'):
++            _worker_need(type(value[key]) is str and re.fullmatch(r'[A-Za-z0-9_-]{1,128}',value[key]) is not None,'OWNED_ORIGINAL_KEY')
++        _worker_need(type(value['commissioned_profile_sha256']) is str and re.fullmatch(r'[0-9a-f]{64}',value['commissioned_profile_sha256']) is not None,'OWNED_ORIGINAL_PROFILE_HASH')
++        _worker_need(value['input_request_sha256']=='c548e2ffcd542d5d741682303694b3c6d06507740f158a6e30089b2d5355f648','OWNED_ORIGINAL_INPUT')
++        _worker_need(value['producer_head']=='aed8a7c8a952f96803c207d5e90b133969a47f04','OWNED_ORIGINAL_PRODUCER')
++        _worker_need(type(value['resources']) is dict and value['resources']=={
++            'cpu_millicores':'1000','resident_memory_bytes':'268435456','max_artifact_bytes':'1048576'},'OWNED_ORIGINAL_RESOURCES')
++        return value
++    except WorkerUnavailable:raise
++    except (ValueError,UnicodeError,TypeError,KeyError,RecursionError):
++        raise WorkerUnavailable('OWNED_ORIGINAL_INVALID') from None
++
++def _attempt_api():
++    _worker_need(os.name=='nt' and ctypes.sizeof(ctypes.c_void_p)==8,'OWNED_WINDOWS_X64_REQUIRED')
++    k=ctypes.WinDLL('kernel32',use_last_error=True)
++    signatures={
++        'CreateProcessW':([w.LPCWSTR,w.LPWSTR,ctypes.c_void_p,ctypes.c_void_p,w.BOOL,w.DWORD,ctypes.c_void_p,w.LPCWSTR,ctypes.POINTER(_AttemptStartup),ctypes.POINTER(_AttemptProcess)],w.BOOL),
++        'WaitForSingleObject':([w.HANDLE,w.DWORD],w.DWORD),'TerminateProcess':([w.HANDLE,w.UINT],w.BOOL),
++        'CloseHandle':([w.HANDLE],w.BOOL),'GetCurrentProcess':([],w.HANDLE),
++        'GetProcessTimes':([w.HANDLE,*([ctypes.POINTER(w.FILETIME)]*4)],w.BOOL),
++        'QueryFullProcessImageNameW':([w.HANDLE,w.DWORD,w.LPWSTR,ctypes.POINTER(w.DWORD)],w.BOOL),
++        'IsProcessInJob':([w.HANDLE,w.HANDLE,ctypes.POINTER(w.BOOL)],w.BOOL),
++        'K32GetProcessMemoryInfo':([w.HANDLE,ctypes.POINTER(_AttemptProcessMemory),w.DWORD],w.BOOL),
++        'K32GetPerformanceInfo':([ctypes.POINTER(_AttemptPerformance),w.DWORD],w.BOOL)}
++    for name,(args,result) in signatures.items():
++        fn=getattr(k,name);fn.argtypes=args;fn.restype=result
++    return k
++
++def _attempt_identity(k,handle):
++    times=[w.FILETIME() for _ in range(4)];image=ctypes.create_unicode_buffer(32768);length=w.DWORD(len(image))
++    _worker_need(k.GetProcessTimes(handle,*[ctypes.byref(v) for v in times]),'OWNED_CREATION_TIME_UNAVAILABLE')
++    _worker_need(k.QueryFullProcessImageNameW(handle,0,image,ctypes.byref(length)),'OWNED_IMAGE_UNAVAILABLE')
++    return str((times[0].dwHighDateTime<<32)|times[0].dwLowDateTime),str(Path(image.value).resolve())
++
++def _attempt_host(k):
++    info=_AttemptPerformance();info.cb=ctypes.sizeof(info)
++    _worker_need(k.K32GetPerformanceInfo(ctypes.byref(info),ctypes.sizeof(info)),'OWNED_HOST_OBSERVATION_UNAVAILABLE')
++    _worker_need(info.page_size>0 and info.commit_limit>=info.commit_total,'OWNED_HOST_OBSERVATION_INVALID')
++    return dict(available_commit_bytes=str((info.commit_limit-info.commit_total)*info.page_size),
++                available_physical_bytes=str(info.physical_available*info.page_size),
++                observation_utc=datetime.now(timezone.utc).isoformat(),monotonic_ns=str(time.monotonic_ns()),
++                qualified_for_native_admission=False)
++
++class GatewayWorker:
++    """Own process-local preparation inventory, NOT a scheduler or durable ledger.
++
++    prepare_attempt creates only a suspended child. Source/OS observations do not
++    qualify node identity, resource policy, native enrollment/session or a grant.
++    """
++    _owners={}
++    _owners_lock=threading.RLock()
++    _preparation_owner=None
++    def __init__(self,*,node_id=None):
++        if node_id is not None:_worker_uuid(node_id)
++        self._node=node_id;self._lock=threading.RLock();self._attempts={};self._by_original={};self._keys={};self._originals={};self._active=None;self._poisoned=False
++    def start(self,*args,**kwargs):
++        raise WorkerUnavailable('ACTUAL_DISPATCH_PERMIT_AND_WORKER_PROFILE_UNAVAILABLE')
++    def _record(self,attempt):
++        _worker_need(type(self) is GatewayWorker and type(attempt) is OwnedWorkerAttempt and attempt in self._attempts,'FOREIGN_OWNED_ATTEMPT')
++        return self._attempts[attempt]
++    def prepare_attempt(self,original_lab13_bytes,*,grid_source_root):
++        _worker_need(type(self) is GatewayWorker,'EXPECTED_WORKER_INVENTORY_REQUIRED')
++        _worker_need(self._node is not None,'WORKER_NODE_LABEL_REQUIRED')
++        value=_worker_original(original_lab13_bytes);rid=value['request_id'];digest=hashlib.sha256(original_lab13_bytes).hexdigest()
++        key=tuple(value[n] for n in ('cluster_id','quota_owner_id','original_actor_principal_id','idempotency_key'))
++        with self._lock:
++            _worker_need(not self._poisoned,'OWNED_INVENTORY_POISONED_NO_RELEASE')
++            if rid in self._originals:
++                _worker_need(self._originals[rid]==original_lab13_bytes,'OWNED_ORIGINAL_CONFLICT')
++                prior=self._by_original.get(rid)
++                _worker_need(prior is not None and self._record(prior)['phase']=='PREPARED','OWNED_ORIGINAL_RETIRED_OR_FAILED_NO_AUTORETRY')
++                return prior
++            _worker_need(key not in self._keys,'OWNED_IDEMPOTENCY_CONFLICT')
++            _worker_need(self._active is None and len(self._originals)<32,'OWNED_PREPARATION_CAPACITY')
++            with self._owners_lock:
++                _worker_need(GatewayWorker._preparation_owner is None,'OWNED_PROCESS_PREPARATION_CAPACITY')
++                owner=self._owners.get(self._node)
++                _worker_need(owner is None or owner is self,'FOREIGN_NODE_PREPARATION_INVENTORY')
++                self._owners[self._node]=self
++                GatewayWorker._preparation_owner=self
++            self._originals[rid]=original_lab13_bytes;self._keys[key]=rid;self._by_original[rid]=None
++            k=None;job=None;created=False;proc=_AttemptProcess();directory=None;attempt=None
++            try:
++                k=_attempt_api();host=_attempt_host(k)
++                # Conservative local-preparation refusal margin, NOT admission.
++                _worker_need(int(host['available_commit_bytes'])>=2952790016 and int(host['available_physical_bytes'])>=1073741824,'OWNED_PREPARATION_HEADROOM_REFUSED')
++                for ancestor in reversed((_DIRECT_INTERPRETER,*_DIRECT_INTERPRETER.parents)):
++                    st=ancestor.lstat();_worker_need(not ancestor.is_symlink() and not getattr(st,'st_file_attributes',0)&1024,'OWNED_INTERPRETER_LINK_REFUSED')
++                _worker_need(hashlib.sha256(_DIRECT_INTERPRETER.read_bytes()).hexdigest()==_DIRECT_INTERPRETER_SHA,'OWNED_INTERPRETER_PIN_MISMATCH')
++                source=subprocess.check_output(['git','--no-replace-objects','-C',str(grid_source_root),'cat-file','blob',
++                    '40e9c8dc274a2746018bc1aa08d103cd0187cecc:grid/ml_windows_job.py'],timeout=10)
++                _worker_need(hashlib.sha256(source).hexdigest()==_GRID_JOB_SHA,'OWNED_GRID_SOURCE_MISMATCH')
++                module=types.ModuleType('owned_attempt_pinned_grid');exec(compile(source,'primary-owned-grid-job','exec'),module.__dict__)
++                entry=Path(__file__).resolve();entry_sha=hashlib.sha256(entry.read_bytes()).hexdigest()
++                directory=Path(tempfile.mkdtemp(prefix='a5-owned-suspended-'));ds=directory.stat();directory_identity=(ds.st_dev,ds.st_ino)
++                startup=_AttemptStartup();startup.cb=ctypes.sizeof(startup)
++                argv=[str(_DIRECT_INTERPRETER),'-I','-B',str(entry),'--owned-research-child-not-admitted']
++                command=ctypes.create_unicode_buffer(subprocess.list2cmdline(argv))
++                environment={key:os.environ[key] for key in ('SYSTEMROOT','WINDIR','TEMP','TMP') if key in os.environ}
++                block=ctypes.create_unicode_buffer('\0'.join(key+'='+v for key,v in sorted(environment.items()))+'\0\0')
++                _worker_need(k.CreateProcessW(str(_DIRECT_INTERPRETER),command,None,None,False,0x4|0x400|0x08000000,
++                    block,str(directory),ctypes.byref(startup),ctypes.byref(proc)),'OWNED_SUSPENDED_CREATE_FAILED')
++                created=True;identity=_attempt_identity(k,proc.process)
++                _worker_need(Path(identity[1])==_DIRECT_INTERPRETER.resolve(),'OWNED_ACTUAL_IMAGE_MISMATCH')
++                job=module.WindowsJob(proc.pid,resume_primary_thread=False)
++                limits=_configure_retained_job(job,expected_job_type=module.WindowsJob,owned_process_handle=proc.process)
++                _worker_need(k.WaitForSingleObject(proc.process,0)==258,'OWNED_PREPARED_CHILD_NOT_LIVE')
++                attempt=object.__new__(OwnedWorkerAttempt)
++                state=dict(phase='PREPARED',raw=original_lab13_bytes,rid=rid,digest=digest,job_label=value['job_id'],
++                    attempt_id=str(uuid.uuid4()),kernel=k,proc=proc,job=job,identity=identity,limits=limits,
++                    entry_sha=entry_sha,directory=directory,directory_identity=directory_identity,snapshot=None)
++                self._attempts[attempt]=state;self._by_original[rid]=attempt;self._active=attempt
++                self._inspect(state)
++                return attempt
++            except BaseException as origin:
++                failures=[]
++                if attempt is not None:
++                    self._attempts[attempt]['phase']='POISONED'
++                try:
++                    if k is not None:_retire_owned(job,process_handle=proc.process,thread_handle=proc.thread,kernel=k,created=created,quiescent=False)
++                except BaseException as error:failures.append(('owned_retirement',error))
++                try:
++                    if directory is not None:
++                        st=directory.stat()
++                        _worker_need((st.st_dev,st.st_ino)==directory_identity and not getattr(st,'st_file_attributes',0)&1024,'OWNED_DIRECTORY_IDENTITY_CHANGED')
++                        directory.rmdir()
++                except BaseException as error:failures.append(('directory_cleanup',error))
++                if failures or attempt is not None:self._poisoned=True
++                if not self._poisoned:
++                    with self._owners_lock:GatewayWorker._preparation_owner=None
++                error=WorkerUnavailable('OWNED_PREPARATION_FAILED_NO_AUTORETRY')
++                error.origin_diagnostic=(type(origin).__name__,str(origin))
++                error.cleanup_diagnostics=tuple((stage,type(e).__name__,str(e)) for stage,e in failures)
++                raise error from origin
++    def _inspect(self,state):
++        if state['phase']=='QUIESCENT':return state['snapshot']
++        _worker_need(state['phase']=='PREPARED','OWNED_ATTEMPT_NOT_PREPARED')
++        k=state['kernel'];proc=state['proc'];member=w.BOOL()
++        _worker_need(_attempt_identity(k,proc.process)==state['identity'],'OWNED_PROCESS_IDENTITY_CHANGED')
++        _worker_need(k.WaitForSingleObject(proc.process,0)==258,'OWNED_PROCESS_NOT_LIVE')
++        _worker_need(k.IsProcessInJob(proc.process,state['job']._job,ctypes.byref(member)) and member.value,'OWNED_JOB_MEMBERSHIP_LOST')
++        memory=_AttemptProcessMemory();memory.cb=ctypes.sizeof(memory)
++        _worker_need(k.K32GetProcessMemoryInfo(proc.process,ctypes.byref(memory),ctypes.sizeof(memory)),'OWNED_MEMORY_OBSERVATION_UNAVAILABLE')
++        details=dict(job_membership=True,resume_calls=0,resource_profile_qualified=False,native_worker_enrollment='NOT_QUALIFIED',
++                     native_lease_quota_utc='NOT_GRANTED',private_commit_bytes=str(memory.private_usage),working_set_bytes=str(memory.working_set),
++                     limit_readback=state['limits'],host_observation=_attempt_host(k),grid_source_sha256=_GRID_JOB_SHA,
++                     interpreter_sha256=_DIRECT_INTERPRETER_SHA,source_custody='NOT_QUALIFIED_FOR_RESUME')
++        snapshot=OwnedAttemptObservation('PREPARED_SUSPENDED_LOCAL_ONLY',state['rid'],state['digest'],state['job_label'],self._node,
++            _PROCESS_INCARNATION,state['attempt_id'],int(proc.pid),*state['identity'],state['entry_sha'],_worker_canonical(details))
++        state['snapshot']=snapshot;return snapshot
++    def inspect_attempt(self,attempt):
++        with self._lock:return self._inspect(self._record(attempt))
++    @staticmethod
++    def require_owned_attempt(expected_worker,attempt,*,original_lab13_bytes):
++        _worker_need(type(expected_worker) is GatewayWorker,'EXPECTED_WORKER_INVENTORY_REQUIRED')
++        with expected_worker._lock:
++            state=expected_worker._record(attempt)
++            _worker_need(type(original_lab13_bytes) is bytes and state['raw']==original_lab13_bytes,'OWNED_ORIGINAL_CONFLICT')
++            _worker_need(state['phase']=='PREPARED','OWNED_ATTEMPT_NOT_PREPARED')
++            return expected_worker._inspect(state)
++    def abort_attempt(self,attempt):
++        with self._lock:
++            state=self._record(attempt)
++            if state['phase']=='QUIESCENT':return state['snapshot']
++            _worker_need(state['phase']=='PREPARED','OWNED_ATTEMPT_POISONED_NO_RELEASE')
++            state['phase']='ABORTING'
++            try:
++                _retire_owned(state['job'],process_handle=state['proc'].process,thread_handle=state['proc'].thread,
++                              kernel=state['kernel'],created=True,quiescent=False)
++                directory=state['directory'];st=directory.stat()
++                _worker_need((st.st_dev,st.st_ino)==state['directory_identity'] and not getattr(st,'st_file_attributes',0)&1024,'OWNED_DIRECTORY_IDENTITY_CHANGED')
++                directory.rmdir()
++                previous=state['snapshot'];details=json.loads(previous.os_observation_json)
++                details.update(job_empty_observed=True,retained_primary_exit_observed=True,observed_utc=datetime.now(timezone.utc).isoformat(),native_hold_release='NOT_AUTHORIZED')
++                state['snapshot']=OwnedAttemptObservation('OWNED_QUIESCENCE_CONFIRMED',previous.original_request_id,previous.original_request_sha256,
++                    previous.planned_job_id,previous.declared_node_id,previous.worker_incarnation_id,previous.attempt_id,previous.child_pid,
++                    previous.child_creation_filetime,previous.child_image,previous.source_sha256,_worker_canonical(details))
++                state['phase']='QUIESCENT';self._active=None
++                with self._owners_lock:GatewayWorker._preparation_owner=None
++                return state['snapshot']
++            except BaseException:
++                state['phase']='POISONED';self._poisoned=True;raise
++
++
++def _retire_owned(job,*,process_handle,thread_handle,kernel,created,quiescent):
++    """Best-effort own-handle cleanup; NEVER converts unknown exit to success."""
++    failure=None
++    try:
++        if job is not None and not quiescent:
++            try:
++                if job.terminate_and_wait(5) is not True:
++                    raise WorkerUnavailable('OWNED_JOB_EMPTY_UNPROVEN')
++            except BaseException as error:
++                failure=error
++            finally:
++                try:job.close()
++                except BaseException as error:
++                    if failure is None:failure=error
++            if created and kernel.WaitForSingleObject(process_handle,5000)!=0:
++                failure=failure or WorkerUnavailable('OWNED_PROCESS_EXIT_UNPROVEN')
++        elif created and job is None:
++            if not kernel.TerminateProcess(process_handle,1):
++                failure=WorkerUnavailable('OWNED_SUSPENDED_TERMINATE_FAILED')
++            if kernel.WaitForSingleObject(process_handle,5000)!=0:
++                failure=failure or WorkerUnavailable('OWNED_SUSPENDED_EXIT_UNPROVEN')
++    except BaseException as error:
++        failure=failure or error
++    finally:
++        for handle in (thread_handle,process_handle):
++            if handle:
++                try:
++                    if not kernel.CloseHandle(handle):
++                        failure=failure or WorkerUnavailable('OWNED_HANDLE_CLOSE_FAILED')
++                except BaseException as error:
++                    failure=failure or error
++    if failure is not None:
++        raise WorkerUnavailable('OWNED_CLEANUP_UNPROVEN_NO_RELEASE') from failure

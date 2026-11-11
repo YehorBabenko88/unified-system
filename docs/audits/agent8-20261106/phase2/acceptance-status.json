@@ -1,0 +1,56 @@
+{
+  "checked_utc": "2026-11-06T15:36:17.757152+00:00",
+  "RELEASE_MANIFEST_STATUS": "BLOCKED_NO_APPROVED_INSTALLABLE_COHERENT_RELEASE_PACKAGE",
+  "NODE_INVENTORY_STATUS": "BLOCKED_CURRENT_APPROVED_INVENTORY_NOT_SUPPLIED_TO_AUDITOR",
+  "CONTRACT_STATUS": {
+    "git_reference_hashes": "PASS_EXACT_PR22_34a2adf",
+    "endpoint_acks": "PENDING",
+    "ownership_validator": "OBJECTION_WINDOWS_PATH_ALIASES",
+    "mandatory_case_matrix": "PENDING_SOURCE_CASE_PLATFORM_ATTEMPT_AND_SKIP_MAPPING"
+  },
+  "OFFLINE_TESTS": {
+    "status": "PARTIAL_COMPONENT_PASS",
+    "grid_storage_coordination": 151,
+    "network_budget_model_store": 94,
+    "terminan": 71,
+    "registry_regression": 8,
+    "independent_prior_negatives": 7,
+    "prior_targeted_upstream": 23,
+    "all_mandatory_product_cases": "NOT_QUALIFIED"
+  },
+  "WINDOWS_CI": "FAIL_UNIFIED_AND_MATH_BASELINE_GATES; OTHER_GREEN_COMPONENTS_NOT_SYSTEM_PASS",
+  "OFFLINE_ACCEPTANCE": "PARTIAL_COMPONENT_PASS",
+  "WINDOWS_CI_ACCEPTANCE": "FAIL",
+  "INTEGRATION_ACCEPTANCE": "BLOCKED_NO_APPROVED_COHERENT_RELEASE; LIMITED_ACTUAL_WINDOWS_LOOPBACK_COMPONENT_SCENARIOS_PASS",
+  "PHYSICAL_TESTS": "BLOCKED",
+  "PHYSICAL_ACCEPTANCE": "BLOCKED",
+  "TAILSCALE_REMOVAL_ACCEPTANCE": "BLOCKED",
+  "P0_P1_P2": {
+    "P0_independently_confirmed_defects": 0,
+    "P0_absence_proven": false,
+    "P1_open": 6,
+    "P2_open": 2
+  },
+  "EVIDENCE": [
+    "coordination-probe.json",
+    "registry-tests.log",
+    "grid-run-receipt.json",
+    "grid-offline.xml",
+    "budget/grid-run-receipt.json",
+    "budget/grid-offline.xml",
+    "terminan-receipt.json",
+    "terminan-tests.log",
+    "native-consul/native-consul-receipt.json",
+    "native-consul-boltdb/native-consul-receipt.json",
+    "hosted-consensus-review.json"
+  ],
+  "NEXT_ACTIONS": [
+    "Integration Owner supplies or explicitly marks missing/unapproved the requested release package.",
+    "Fix ownership canonicalization and update A7 allocation and actual A8 path.",
+    "Agent7 remediates Math110/Strattester70/Meta76; audit resulting exact SHAs and original Windows evidence.",
+    "Wire and test Budget Store with consensus anchor under one approved source set.",
+    "Qualify direct LAN/mTLS/real human expiry/RBAC and integrated relocation in isolated approved composition."
+  ],
+  "GO_NO_GO": "NO-GO",
+  "authorization": "ISOLATED_TEST_PROCESSES_TEMP_STORES_SYNTHETIC_DATA_ONLY"
+}

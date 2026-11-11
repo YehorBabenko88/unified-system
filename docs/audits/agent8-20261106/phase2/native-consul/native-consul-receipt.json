@@ -1,0 +1,42 @@
+{
+  "schema": "agent8.native-loopback.v1",
+  "head": "71084a336520187d6e260531a2f5d15555ba0e0c",
+  "scope": "ISOLATED_WINDOWS_LOOPBACK_COMPONENTS",
+  "consul_version": "1.22.2",
+  "consul_binary_sha256": "41762ef5b98c8dd9b6852df6cfbceed37e7f0acc5760856be33100f1092475e1",
+  "consul_zip_sha256": "7b8a3bb723017d1be87decf3a7bb12661c36e43eba8283b8c04eca60501493ec",
+  "download_source": "https://releases.hashicorp.com/consul/1.22.2/",
+  "physical": "BLOCKED",
+  "tailscale_removal": "BLOCKED",
+  "production_deployment": "NOT_AUTHORIZED",
+  "human_authentication": "SYNTHETIC_PROVIDER_ONLY",
+  "peer_tls_acl": "NOT_RUN",
+  "network_partition": "NOT_RUN",
+  "events": [
+    {
+      "scenario": "owned_process_started",
+      "node": "a8-disposable-0",
+      "pid": 107668,
+      "endpoint": "http://127.0.0.1:58204"
+    },
+    {
+      "scenario": "owned_process_started",
+      "node": "a8-disposable-1",
+      "pid": 98044,
+      "endpoint": "http://127.0.0.1:58209"
+    },
+    {
+      "scenario": "owned_process_started",
+      "node": "a8-disposable-2",
+      "pid": 106356,
+      "endpoint": "http://127.0.0.1:58214"
+    },
+    {
+      "scenario": "failure",
+      "error": "AssertionError(\"LAB_QUORUM_TIMEOUT AssertionError('owned test process exited')\")"
+    }
+  ],
+  "result": "FAIL",
+  "error": "AssertionError(\"LAB_QUORUM_TIMEOUT AssertionError('owned test process exited')\")",
+  "all_owned_processes_stopped": true
+}

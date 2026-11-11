@@ -1,0 +1,11 @@
+# One activated hosted observation: pending evidence
+
+Requirement: independently reconcile concrete authorization, activation count and resulting run/source/cleanup evidence.
+Repository: Math PR113 source dbb9bb1da9b180a8bb9f1d5401f1117894256941/treeade739990db8da7926bc7bdd9ed58e41acbd011e. Authorization in Unified PR26 f3bde56c889ebd5e15665a05e113213f511f2b2a, release/diagnostic-authorizations/math113-dbb9bb1.json SHA2563df3720c7efbf0ad71ea0ac84e7001e37ea8c2deaf105076ff473f6919ac48a2.
+Environment: read-only Git/GitHub API metadata inspection; no activation/rerun/cancel or native/physical calls by A8.
+
+PASS for documentary activation binding only: exact authorization hash verified, linked A8 source ACK hash verified, immutable source workflow and reviewed event merge workflow blob20db5de0a8090eef092697dc17f04735497c45bb match. Matching PR113 label event35379692250 by trusted owner observed once, label description matches authorization digest. Original run42274233717 has correct source head/workflow/actor/triggering_actor/event and attempt1; one observation job128086308505. No automatic retry/relabel performed by A8. This does not independently prove every assertion in ROOT's original activation ceremony.
+
+Actual runtime status: QUEUED at repeated bounded checks, no runner assigned,0artifacts. Runtime event receipt/source checks, target observation and cleanup NOT_VERIFIED; no public witness/log yet. No native acceptance, no host/process cleanup PASS inferred from source models, queue metadata or label consent. Provider queue is an external prerequisite, not a product-test PASS or a reason to activate again. Severity: no new defect; existing native/CI gates remain open. Required next action: inspect the same attempt's original job logs and bounded source/trace/cleanup witness after terminal status; preserve cancelled/failed/UNKNOWN result without retry.
+
+Source-review scopes remain unchanged. Overall NO-GO6P1/1P2; native/physical/Tailscale removal BLOCKED. Evidence: run-review.json, authorization.json, run.json, jobs.json, artifacts.json, matching-label-events.json. Read-only collector ../collect_loader_run.py. Current metadata timestamp is in run-review.json; metadata is a snapshot, not a guarantee of later unchanged status.

@@ -1,0 +1,64 @@
+{
+  "requirement_id": "A8-TERMINAN-R40-1-LOCAL-UNIT",
+  "repository": "Terminan",
+  "PR": null,
+  "old_head": "aa9b4e9328382c885ca3cf0cc9b66e6abf1ffe74",
+  "old_tree": "706d409586acc32028d458eb27ac9bfcc7fae608",
+  "successor_head": "77fe6dfd85171305930f308f307d1aa2718df2c0",
+  "successor_tree": "f19e14102bfc7cb852e47dec933bfeb34a139698",
+  "original_refs": {
+    "red/receipt.json": {
+      "bytes": 88734,
+      "sha256": "67efedf27e4daa705f0ad25c9586263b24f194e449e8213073e534c5101f3243"
+    },
+    "red/node-original.tap": {
+      "bytes": 5502,
+      "sha256": "89138c2da7cbf6c39195b87e7b319c105f1f3c4510e52d36ae62c881904a98eb"
+    },
+    "red/driver.original.py": {
+      "bytes": 5616,
+      "sha256": "3d247dfa572631552865b2d0bcf091ec2cac0e5ee66ab949bf4cc681055dc511"
+    },
+    "green/receipt.json": {
+      "bytes": 88732,
+      "sha256": "7b2b6143b03cee8dfd7fd63666f3b00a28f5ac45918b9b55ddd5b7e412179f0a"
+    },
+    "green/node-original.tap": {
+      "bytes": 1059,
+      "sha256": "4905dc18ebafcd02d8c8d6b930616552314fa17cc2fac85a8f849ae04617e2d0"
+    },
+    "green/driver.original.py": {
+      "bytes": 5763,
+      "sha256": "ae9baa0fc2a771c9ead8654c36a8d973fe19c6d8f1c1bfce54bf91536bc50463"
+    }
+  },
+  "raw_source404_both_beforeafter_match_A8": true,
+  "same6_unit_bytes": true,
+  "changed_paths": [
+    "docs/operations/preview-benchmark-disposal-review1.md",
+    "terminan/r2_preview.js",
+    "terminan/r4_preview.js"
+  ],
+  "six_distinct_IDs": [
+    "r2_metrics_count_held_benchmark_raf",
+    "r2_dispose_settles_held_benchmark_without_frame",
+    "r2_seek_settles_superseded_benchmark_without_frame",
+    "r4_metrics_count_held_benchmark_raf",
+    "r4_dispose_settles_held_benchmark_without_frame",
+    "r4_seek_settles_superseded_benchmark_without_frame"
+  ],
+  "original_RED": "6_INTENDED_FAILURES_0SKIP_EXIT1_0.125_SECONDS",
+  "original_GREEN": "6PASS_0SKIP_EXIT0_0.218_SECONDS",
+  "test_executions": 12,
+  "node_actual_bytes_rehashed": true,
+  "node_version": "OWNER_METADATA24.22.1_NO_A8_VERSION_EXECUTION",
+  "controller_scope": "ORIGINAL_DIRECT_NODE_AND_READER_POSITIVE_RETIREMENT_ONLY_NO_GLOBAL_PROCESS_OR_FAILED_TIMEOUT_FAMILY_PROOF",
+  "source_fix_review": "SCOPED_CANCEL_SETTLE_COUNT_BENCHMARK_RAF_AND_OWNER_TOKEN_CORRECTION_ACK",
+  "full_browser_workload_session_runtime135_admission": "NOT_QUALIFIED",
+  "future_hosted6_helper_workflow": "NOT_REVIEWED_OR_QUALIFIED_THIS_PHASE_NO_PASS_TRANSFER",
+  "A8_Node_browser_or_project_executions": 0,
+  "GO_NO_GO": "NO-GO",
+  "PHYSICAL_TESTS": "BLOCKED",
+  "TAILSCALE_REMOVAL": "BLOCKED",
+  "RED_six_intended_assertion_categories_verified": "2METRICS_0_NE1+2DISPOSE_PENDING_NULL+2SEEK_PENDING_NULL_NOT_BOOTSTRAP"
+}

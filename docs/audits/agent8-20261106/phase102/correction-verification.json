@@ -1,0 +1,62 @@
+{
+  "correction_head": "83d35ce4b18cb6adc556c8e1412ad7b0cffef2e8",
+  "tree": "7f2ed11497ee89c2188efb44d8b205180c5c3954",
+  "workflow_sha256": "ffe5fcd490734e855feca8cf5585b47d9a12304f1f9a3389fb2e0bf2be7ba2bb",
+  "protected_source_pins_unchanged": [
+    {
+      "path": "unified_system/gateway_target_adapter.py",
+      "sha256": "775976b3d344409d6c25ba96f2a475f5085695edf9947f482440c263355d6a8f"
+    },
+    {
+      "path": "tests/gateway_target_adapter/test_direct.py",
+      "sha256": "2571d8942aa9a693a95e2011f41bb51a89199c340bc02cb971e0f8e6146123bb"
+    },
+    {
+      "path": "docs/intelligence/target-adapter/run_qualification.py",
+      "sha256": "771b51332bd5627560bafb4d2dbd067809d89d246fd7051a6bd513d85ec73796"
+    },
+    {
+      "path": "docs/intelligence/target-adapter/request.schema.json",
+      "sha256": "2a7a9370eedc43b76b03fa13252e86606162ae8f494a362fd69d5b22a85858fe"
+    },
+    {
+      "path": "docs/intelligence/target-adapter/success-result.schema.json",
+      "sha256": "68ef432b79bae3011970375747e5c0640483af4eb8eccbc195ba7456bf0d7917"
+    },
+    {
+      "path": "docs/intelligence/target-adapter/refusal-result.schema.json",
+      "sha256": "ce8fee657340e4a65ce91769327b6718ba79c8aefb848f54ef6c12b4f2e1d49a"
+    }
+  ],
+  "original_failed_run_untouched": 42631650396,
+  "new_original_run": 42632828686,
+  "new_original_event": "pull_request",
+  "new_jobs": [
+    {
+      "id": 129213210753,
+      "name": "direct-target (ubuntu-24.04)",
+      "status": "queued",
+      "conclusion": null,
+      "runner_id": null,
+      "labels": [
+        "ubuntu-24.04"
+      ]
+    },
+    {
+      "id": 129213210871,
+      "name": "direct-target (windows-latest)",
+      "status": "queued",
+      "conclusion": null,
+      "runner_id": null,
+      "labels": [
+        "windows-latest"
+      ]
+    }
+  ],
+  "configuration": "FIX_VERIFIED_GITHUB_JOB_REGISTRATION_ONLY",
+  "test_execution": "NOT_PASS_QUEUED_NO_RUNNER",
+  "manual_reruns": 0,
+  "settings_changes": 0,
+  "own_new_workflows": 0,
+  "explicit_REST_public_page_requests": 6
+}

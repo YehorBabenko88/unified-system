@@ -1,0 +1,24 @@
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\native-e2e-evidence-20261109\ls5-source-qualified-e203c0b\tools\physical_dev\ls5_smoke.py", line 288, in execute
+    result['render_identity']=launch(job,[str(node),'--no-addons',str(bootstrap),'ROOT_NONCE',str(root),str(request),str(envelope),str(artifact),digest(request),digest(envelope),digest(artifact),str(module),str(browser)],node,env,root,'render',started,processes,captures,result['stages'])
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\.codex\native-e2e-evidence-20261109\ls5-source-qualified-e203c0b\tools\physical_dev\ls5_smoke.py", line 256, in launch
+    need(process.returncode==0,'OWN_STAGE_EXIT_FAILED')
+  File "C:\Users\LS-5\.codex\native-e2e-evidence-20261109\ls5-source-qualified-e203c0b\tools\physical_dev\ls5_smoke.py", line 16, in need
+    if not value:raise SmokeBlocked(code)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^
+tools.physical_dev.supervisor.SmokeBlocked: OWN_STAGE_EXIT_FAILED
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\native-e2e-evidence-20261109\ls5-source-qualified-e203c0b\tools\physical_dev\ls5_smoke.py", line 359, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "C:\Users\LS-5\.codex\native-e2e-evidence-20261109\ls5-source-qualified-e203c0b\tools\physical_dev\ls5_smoke.py", line 357, in main
+    print(json.dumps(execute(args.package,raw,args.sha256,Path(args.state))))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\.codex\native-e2e-evidence-20261109\ls5-source-qualified-e203c0b\tools\physical_dev\ls5_smoke.py", line 347, in execute
+    if failure is not None:raise SmokeBlocked('DISPOSABLE_SMOKE_FAILED') from failure
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tools.physical_dev.supervisor.SmokeBlocked: DISPOSABLE_SMOKE_FAILED

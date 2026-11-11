@@ -1,0 +1,299 @@
+diff --git a/.github/workflows/agent2-native-job-admission.yml b/.github/workflows/agent2-native-job-admission.yml
+index 12a98679..1d2ed315 100644
+--- a/.github/workflows/agent2-native-job-admission.yml
++++ b/.github/workflows/agent2-native-job-admission.yml
+@@ -52,6 +52,7 @@ jobs:
+       - shell: bash
+         env:
+           A2_NATIVE_CONSUL_BINARY: ${{ runner.temp }}/a2-snapshot-consul/${{ matrix.executable }}
++          A2_RESEARCH_CONSUL_BINARY: ${{ runner.temp }}/a2-snapshot-consul/${{ matrix.executable }}
+         run: |
+           set -o pipefail
+           python -I -B grid/tests/coordination/assignment_v1/run_native_qualification.py --expected-head "$EXPECTED_HEAD" --support-root "$GITHUB_WORKSPACE/support" 2>&1 | tee "$RUNNER_TEMP/native-snapshot.log"
+diff --git a/docs/coordination/assignment-v1/native-job-admission-20261109/NEGATIVE-PATH-API.md b/docs/coordination/assignment-v1/native-job-admission-20261109/NEGATIVE-PATH-API.md
+new file mode 100644
+index 00000000..4b6f2b89
+--- /dev/null
++++ b/docs/coordination/assignment-v1/native-job-admission-20261109/NEGATIVE-PATH-API.md
+@@ -0,0 +1,84 @@
++# Implemented internal native job negative path
++
++Scope: NEGATIVE_PATH only, not scientific E2E or positive NativeJobAdmission.
++Root explicitly requested an executable authenticated native handler rather than
++a callback, fake capacity, new broker or another authority. Existing reviewed
++lab13 bytes and P2 source are retained. No new SID wire envelope is necessary.
++
++Actual module: `grid.authority_assignment_v1`.
++
++```python
++ResearchLabAuthority(authority, generation, *, broker)
++async ResearchLabAuthority.submit(original_lab13_bytes, *, context, leader, owned_attempt=None)
++async ResearchLabAuthority.lookup(original_lab13_bytes, *, context)
++```
++
++Constructor requires exact existing ConsulSessionAuthority and exact existing
++ResearchIdentityBroker bound to the SAME authority/generation. It creates no
++broker, session, voter, campaign, queue or separate consensus. `context` must be
++the genuine current context from that broker's actual mTLS session. `leader` is
++the existing Grid ConsulLease; callers cannot substitute a JSON actor/session.
++
++The handler validates the closed original lab13, calls the fixed broker methods
++for current SUBMIT_RESEARCH or READ_RESEARCH identity, requires target-bound P2,
++and checks original actor/quota/profile/cluster/generation bindings. It derives
++keys itself, reads ALL captured identity rows plus the existing leader and
++planned-job key in ONE actual consistent Consul transaction, and compares exact
++indices/raw bytes/native sessions. Submit checks current leader generation and
++session/index. Both paths recheck the fixed broker capture and local peer/expiry
++after awaits. No post-read current check is a Raft commit-time UTC assertion.
++
++Returned `ResearchAdmissionResult` is frozen observation DATA, publicly
++constructible and NEVER a capability, receipt or issuer-owned proof. Fields:
++`outcome`, `reason`, `original_intent_sha256`, `commit_status`,
++`effect_permitted`. All current returns have `commit_status=NOT_ATTEMPTED`
++(this invocation attempted NO mutation) and `effect_permitted=False`.
++`owned_attempt` currently cannot grant anything, including when non-None.
++
++Submit with absent planned-job row returns DENIED /
++NATIVE_WORKER_RESOURCE_API_UNQUALIFIED. This states that the actual native
++worker/resource API has not been qualified, not that measured free capacity is
++zero. With an existing row it returns UNKNOWN /
++JOB_RECONCILIATION_API_UNQUALIFIED, without exposing its payload or claiming a
++verified commit. Lookup always returns UNKNOWN /
++JOB_RECONCILIATION_API_UNQUALIFIED after current authenticated consistent reads.
++Absence never becomes proof of never-committed/NOT_FOUND. Prior commits are not
++erased/refunded, originals are not rewritten, and no replacement permit exists.
++
++Malformed originals fail validation; invalid/revoked/expired identity raises the
++actual broker exception; lost leader, changed snapshot/generation or no quorum
++raises the actual authority/unavailable exception. These failures are NOT
++converted into successful resource-gate observations. In particular, no caller
++callback, bool, JSON, missing provider or None can establish permission.
++
++Disposable invocation (use only the actual source-owned provisioned objects):
++
++```python
++native = ResearchLabAuthority(consul_authority, generation, broker=research_broker)
++observation = await native.submit(original_lab13_bytes,
++    context=actual_broker_context, leader=actual_existing_grid_lease)
++assert observation.effect_permitted is False
++read_observation = await native.lookup(original_lab13_bytes,
++    context=actual_broker_context)
++```
++
++Reproducible real disposable invocation is also implemented in
++`tests/coordination/assignment_v1/test_native_job_negative.py`. It reuses pinned
++Unified1f6 actual mTLS/Root-commissioned profile/principal/policy fixture, creates
++actual owned Consul sessions, and NEVER seeds issued job/Assignment/hold/receipt
++rows. Five new cases cover valid deterministic negative submit/unknown lookup,
++forged context/changed original, destroyed leader, actual policy revocation and
++actual one-of-three no quorum. The existing20 tests remain required; new runner
++requires25 exact unique IDs. Initial RED5266620d0c28d746499a597885ece426a025e541
++ran25 tests:20 prior PASS and5 missing ResearchLabAuthority AttributeError.
++Primary raw/OID guards execute before and after, including on this failed suite;
++final source identities/logs/qualification are reported separately.
++
++Pinned support remains Unified1f6b0b5c231853607f5bec780f1544cd32bf577d;
++Core coordination and runtime/layout remain unchanged. Root canonical manifest
++at Unified3af06455b601a328e94339327a0597eada802c38 is a SOURCE assembly with
++Grid40e catalog; this new component is NOT silently substituted into that pin.
++Positive worker/attempt API, quota/ledger/assignment mutation, receipt resolver,
++dispatch/effect consume, publication/current artifact access remain unqualified
++and require actual native dependencies plus owner co-ACK before implementation.
++Public submit DENY; physical/production NO-GO. No services/deployment/merge.
+diff --git a/grid/authority_assignment_v1.py b/grid/authority_assignment_v1.py
+index 4ad122b5..e7e71f68 100644
+--- a/grid/authority_assignment_v1.py
++++ b/grid/authority_assignment_v1.py
+@@ -3,7 +3,7 @@
+ No native identity issuer, second consensus, public arbitrary-KV endpoint or
+ execution permission is created. Existing reviewed layout/lease modules unchanged.
+ """
+-import base64,json,re,uuid
++import base64,hashlib,json,re,uuid
+ import httpx
+ from dataclasses import dataclass
+ from urllib.parse import quote
+@@ -188,3 +188,83 @@ class AssignmentAuthority:
+         raise AssignmentUnavailable('ASSIGNMENT_DOMAIN_PROFILE_NOT_APPROVED')
+     async def reconcile(self,original_request_bytes,*,context):
+         raise AssignmentUnavailable('ASSIGNMENT_RECEIPT_PROFILE_NOT_APPROVED')
++
++@dataclass(frozen=True)
++class ResearchAdmissionResult:
++    """NEGATIVE_PATH observation DATA, never a receipt or execution capability."""
++    outcome: str
++    reason: str
++    original_intent_sha256: str
++    commit_status: str='NOT_ATTEMPTED'
++    effect_permitted: bool=False
++
++class ResearchLabAuthority:
++    """Internal authenticated negative path over the existing Grid authority.
++
++    No job writes, queue, second broker, resource proof or positive permission.
++    Existing committed jobs are deliberately UNKNOWN until a qualified resolver
++    checks their full original/receipt/assignment/phase dependencies.
++    """
++    def __init__(self,authority,generation,*,broker):
++        from unified_system.gateway_research_identity import ResearchIdentityBroker
++        if (type(authority) is not ConsulSessionAuthority or type(broker) is not ResearchIdentityBroker
++                or broker._authority is not authority or broker._generation!=generation):
++            raise TypeError('ACTUAL_SAME_AUTHORITY_RESEARCH_BROKER_REQUIRED')
++        self._native=AssignmentAuthority(authority,generation)
++        self._broker=broker
++
++    async def _observe(self,original,*,context,scope,leader=None):
++        from unified_system.gateway_research_identity import ResearchIdentityBroker
++        command=_decode(original)
++        fields={'schema','operation','cluster_id','cluster_generation','request_id','job_id',
++                'original_actor_principal_id','quota_owner_id','idempotency_key',
++                'commissioned_profile_sha256','input_request_sha256','producer_head','resources'}
++        if (set(command)!=fields or command['schema']!='unified.gateway.lab-job-submit.v1-review1'
++                or command['operation']!='SUBMIT_RESEARCH'):
++            raise ValueError('EXACT_ORIGINAL_LAB13_REQUIRED')
++        authority=self._native.authority
++        if scope=='SUBMIT_RESEARCH' and not await authority.validate(leader):
++            raise AssignmentUnavailable('CURRENT_GRID_LEADER_REQUIRED')
++        capture=await ResearchIdentityBroker.capture_current(self._broker,context,scope=scope,request_bytes=original)
++        identity=ResearchIdentityBroker.require_capture(self._broker,capture,expected_authority=authority,scope=scope,request_bytes=original)
++        profile=_decode(identity.records[1].raw)
++        if (profile.get('schema')!='unified.authority.target-bound-research-profile.v2-review1'
++                or profile.get('cluster_id')!=command['cluster_id']
++                or command['cluster_generation']!=self._native.generation
++                or identity.actor_id!=command['original_actor_principal_id']
++                or identity.quota_owner_id!=command['quota_owner_id']
++                or identity.profile_sha256!=command['commissioned_profile_sha256']):
++            raise AssignmentUnavailable('CURRENT_TARGET_BOUND_PROFILE_REQUIRED')
++        realm=_uuid(profile['realm_id']);job=_uuid(command['job_id'])
++        namespace=authority.config.namespace
++        if namespace!='unified/'+_uuid(command['cluster_id']):raise ValueError('CLUSTER_BINDING')
++        job_key=namespace+'/runtime-v1/research-lab-v1/'+realm+'/jobs/'+job
++        keys=tuple(r.key for r in identity.records)
++        generation_key=namespace+'/commands/generation'
++        if generation_key not in keys:raise AssignmentUnavailable('CURRENT_GENERATION_SOURCE_REQUIRED')
++        rows=await self._native._read_snapshot(keys+(authority.key,job_key))
++        for current,prior in zip(rows,identity.records):
++            if (current.key,current.index,current.raw,current.session)!=(prior.key,prior.index,prior.raw,prior.session):
++                raise AssignmentUnavailable('CURRENT_IDENTITY_SNAPSHOT_CHANGED')
++        if _decode(rows[keys.index(generation_key)].raw)!={'generation':self._native.generation}:
++            raise AssignmentUnavailable('GENERATION_NOT_CURRENT')
++        if scope=='SUBMIT_RESEARCH':
++            lock=rows[-2]
++            if lock.index!=leader.token or lock.session!=leader.session_id or not await authority.validate(leader):
++                raise AssignmentUnavailable('CURRENT_GRID_LEADER_REQUIRED')
++        # Recheck the actual fixed issuer, exact original and local peer/expiry
++        # after all awaits; this does not establish Raft commit-time UTC.
++        ResearchIdentityBroker.require_capture(self._broker,capture,expected_authority=authority,scope=scope,request_bytes=original)
++        return rows[-1]
++
++    async def submit(self,original_lab13_bytes,*,context,leader,owned_attempt=None):
++        job=await self._observe(original_lab13_bytes,context=context,scope='SUBMIT_RESEARCH',leader=leader)
++        # No caller-supplied attempt/boolean/method shape can bypass this gate.
++        reason='JOB_RECONCILIATION_API_UNQUALIFIED' if job.index else 'NATIVE_WORKER_RESOURCE_API_UNQUALIFIED'
++        return ResearchAdmissionResult('UNKNOWN' if job.index else 'DENIED',reason,hashlib.sha256(original_lab13_bytes).hexdigest())
++
++    async def lookup(self,original_lab13_bytes,*,context):
++        await self._observe(original_lab13_bytes,context=context,scope='READ_RESEARCH')
++        # Snapshot absence is not never-committed evidence. Do not manufacture a
++        # NOT_FOUND receipt or expose arbitrary native job record payloads.
++        return ResearchAdmissionResult('UNKNOWN','JOB_RECONCILIATION_API_UNQUALIFIED',hashlib.sha256(original_lab13_bytes).hexdigest())
+diff --git a/tests/coordination/assignment_v1/NATIVE-EXPECTED-TESTS.json b/tests/coordination/assignment_v1/NATIVE-EXPECTED-TESTS.json
+index 72e11833..152b7127 100644
+--- a/tests/coordination/assignment_v1/NATIVE-EXPECTED-TESTS.json
++++ b/tests/coordination/assignment_v1/NATIVE-EXPECTED-TESTS.json
+@@ -18,5 +18,10 @@
+   "test_runtime_policy.RuntimePolicyDataTests.test_schema_control_and13_terminal_newline_negatives",
+   "test_runtime_policy.RuntimePolicyDataTests.test_schema_positive_u63_limit_and_no_implicit_policy_write",
+   "test_native_snapshot.NativeSnapshotTests.test_actual_destroyed_leader_prepared_fence_cannot_write_after_takeover",
+-  "test_native_snapshot.NativeSnapshotTests.test_actual_generation_change_rejects_prepared_fence_without_probe_effect"
++  "test_native_snapshot.NativeSnapshotTests.test_actual_generation_change_rejects_prepared_fence_without_probe_effect",
++  "test_native_job_negative.NativeJobNegativeTests.test_actual_authenticated_submit_denies_unqualified_resources_without_job",
++  "test_native_job_negative.NativeJobNegativeTests.test_fake_context_and_changed_original_cannot_reach_resource_gate",
++  "test_native_job_negative.NativeJobNegativeTests.test_actual_destroyed_leader_cannot_reach_resource_gate",
++  "test_native_job_negative.NativeJobNegativeTests.test_actual_revoked_current_policy_never_reaches_resource_gate",
++  "test_native_job_negative.NativeJobNegativeTests.test_z_actual_no_quorum_never_returns_gate_or_cached_job_observation"
+ ]
+\ No newline at end of file
+diff --git a/tests/coordination/assignment_v1/run_native_qualification.py b/tests/coordination/assignment_v1/run_native_qualification.py
+index 5c45689e..8dd1bfb2 100644
+--- a/tests/coordination/assignment_v1/run_native_qualification.py
++++ b/tests/coordination/assignment_v1/run_native_qualification.py
+@@ -17,6 +17,8 @@ def main():
+     for ancestor in (script,*script.parents):guard.ordinary(ancestor)
+     before=guard.inventory(root);support_before=guard.inventory(support)
+     os.environ['A2_ASSIGNMENT_TEST_SUPPORT']=str(support)
++    os.environ['A2_RESEARCH_GRID_SOURCE']=str(root)
++    sys.path[:0]=[str(support),str(support/'tests/gateway_research_identity')]
+     sys.path[:0]=[str(root),str(root/'tests/coordination/assignment_v1')]
+     suite=unittest.defaultTestLoader.discover(str(root/'tests/coordination/assignment_v1'),pattern='test_*.py')
+     def ids(s):
+@@ -24,10 +26,10 @@ def main():
+             if isinstance(t,unittest.TestSuite):yield from ids(t)
+             else:yield t.id()
+     actual=list(ids(suite));expected=json.loads((script.parent/'NATIVE-EXPECTED-TESTS.json').read_bytes())
+-    assert len(actual)==len(set(actual))==len(expected)==len(set(expected))==20
++    assert len(actual)==len(set(actual))==len(expected)==len(set(expected))==25
+     assert sorted(actual)==sorted(expected)
+     r=unittest.TextTestRunner(verbosity=2).run(suite)
+     assert guard.inventory(root)==before and guard.inventory(support)==support_before
+-    assert r.wasSuccessful() and r.testsRun==20 and not r.skipped
+-    print(json.dumps(dict(result='PASS',scope='CONSISTENT_NATIVE_RAW_READ_CAS_FAILOVER_RESTART_ONLY_NOT_ISSUED_GRANT',head=a.expected_head,tree=git(root,'rev-parse','HEAD^{tree}').decode().strip(),support_head='1f6b0b5c231853607f5bec780f1544cd32bf577d',raw_files=len(before),support_raw_files=len(support_before),tests=20,skips=0,exact_unique_ids=True,module_sha256=before['grid/authority_assignment_v1.py'])))
++    assert r.wasSuccessful() and r.testsRun==25 and not r.skipped
++    print(json.dumps(dict(result='PASS',scope='CONSISTENT_NATIVE_RAW_READ_CAS_FAILOVER_RESTART_ONLY_NOT_ISSUED_GRANT',head=a.expected_head,tree=git(root,'rev-parse','HEAD^{tree}').decode().strip(),support_head='1f6b0b5c231853607f5bec780f1544cd32bf577d',raw_files=len(before),support_raw_files=len(support_before),tests=25,skips=0,exact_unique_ids=True,module_sha256=before['grid/authority_assignment_v1.py'])))
+ if __name__=='__main__':main()
+diff --git a/tests/coordination/assignment_v1/test_native_job_negative.py b/tests/coordination/assignment_v1/test_native_job_negative.py
+new file mode 100644
+index 00000000..c2ad1f9f
+--- /dev/null
++++ b/tests/coordination/assignment_v1/test_native_job_negative.py
+@@ -0,0 +1,50 @@
++"""Actual broker/Consul negative composition; never seed issued job records."""
++import hashlib,unittest
++import test_native_profile_v2 as profile_fixture
++from unified_system.gateway_research_identity import ResearchIdentityDenied
++from grid.coordination import CoordinationUnavailable
++from grid import authority_assignment_v1 as native
++
++class NativeJobNegativeTests(unittest.IsolatedAsyncioTestCase):
++    @classmethod
++    def setUpClass(cls):profile_fixture.NativeProfileV2Tests.setUpClass.__func__(cls)
++    @classmethod
++    def tearDownClass(cls):profile_fixture.NativeProfileV2Tests.tearDownClass.__func__(cls)
++    put=profile_fixture.NativeProfileV2Tests.put
++    commission=profile_fixture.NativeProfileV2Tests.commission
++    rebind_target=profile_fixture.NativeProfileV2Tests.rebind_target
++    submit=profile_fixture.NativeProfileV2Tests.submit
++    async def asyncSetUp(self):
++        await profile_fixture.NativeProfileV2Tests.asyncSetUp(self)
++        self.context=await self.broker.open_session(self.tls.accepted,leader=self.leader)
++        self.raw=profile_fixture.canonical(self.submit())
++        self.handler=native.ResearchLabAuthority(self.authority,self.generation,broker=self.broker)
++    async def test_actual_authenticated_submit_denies_unqualified_resources_without_job(self):
++        result=await self.handler.submit(self.raw,context=self.context,leader=self.leader)
++        self.assertIs(type(result),native.ResearchAdmissionResult)
++        self.assertEqual(result.outcome,'DENIED')
++        self.assertEqual(result.reason,'NATIVE_WORKER_RESOURCE_API_UNQUALIFIED')
++        self.assertEqual(result.original_intent_sha256,hashlib.sha256(self.raw).hexdigest())
++        self.assertEqual(result.commit_status,'NOT_ATTEMPTED');self.assertIs(result.effect_permitted,False)
++        again=await self.handler.submit(self.raw,context=self.context,leader=self.leader)
++        self.assertEqual(again,result)
++        lookup=await self.handler.lookup(self.raw,context=self.context)
++        self.assertEqual(lookup.outcome,'UNKNOWN');self.assertIs(lookup.effect_permitted,False)
++        self.assertIsNone(await self.authority._request('GET','/v1/kv/'+self.prefix+'jobs/'+self.job,params={'consistent':''},missing_ok=True))
++    async def test_fake_context_and_changed_original_cannot_reach_resource_gate(self):
++        with self.assertRaises(ResearchIdentityDenied):await self.handler.submit(self.raw,context=object(),leader=self.leader)
++        with self.assertRaises((ResearchIdentityDenied,ValueError)):
++            await self.handler.submit(b'{}',context=self.context,leader=self.leader)
++    async def test_actual_destroyed_leader_cannot_reach_resource_gate(self):
++        await self.authority._request('PUT','/v1/session/destroy/'+self.leader.session_id)
++        with self.assertRaises(native.AssignmentUnavailable):await self.handler.submit(self.raw,context=self.context,leader=self.leader)
++    async def test_actual_revoked_current_policy_never_reaches_resource_gate(self):
++        await self.put(self.prefix+'policies/'+self.policy,dict(self.policy_body,state='REVOKED',revision='2'))
++        with self.assertRaises(ResearchIdentityDenied):await self.handler.submit(self.raw,context=self.context,leader=self.leader)
++    async def test_z_actual_no_quorum_never_returns_gate_or_cached_job_observation(self):
++        await self.handler.lookup(self.raw,context=self.context)
++        for process in self.lab.processes[1:]:process.kill();process.wait(timeout=10)
++        with self.assertRaises((CoordinationUnavailable,native.AssignmentUnavailable)):
++            await self.handler.submit(self.raw,context=self.context,leader=self.leader)
++
++if __name__=='__main__':unittest.main()

@@ -1,0 +1,59 @@
+SOURCE ONLY / NO PUBLICATION / NO EXECUTION ADMISSION
+
+Root clarified raw retention: no LF conversion is required. Six reviewed files
+were committed as their original raw bytes. Prior source-review manifest/card
+LF-sealing statements are historical proposals, superseded by this decision;
+the historical documents and six hashes remain unchanged.
+
+Local HEAD 889d787ef053dca1eb0244da10f47a4a4a2cc982
+tree 504f1b2cffe6bbb69babf21cef8171995a459322
+parent de6620eb5577e97db1af11b6807e22a9b61d1090.
+Exactly six additions; no existing tracked changes. Index raw SHA verified for
+all six before commit. check-attr --all was empty. core.autocrlf=false was command
+scoped for add/commit; original 779 CRLF tracked physical files were not rewritten.
+Initial commit failed128 for missing author identity; no commit was created by
+that invocation. Subsequent commit0 used the preceding Agent7 commit's identity,
+command scoped, with no global configuration mutation.
+
+Root selected future PR base feature/artifact-result-store-successor-20261107,
+887e3eeaf23ef8d9d1429435bc88bbac8099c6e6. Root reports fresh API observation;
+this preparation has not independently queried remote. Nine-path delta is three
+de662 recovery additions plus six qualifier files. Static maximum eligibility:
+push core4; PR core4+DataFirst6+financial9+ML1+gateway2+new47job1=23.
+These are not observed runs or a guarantee that all jobs execute.
+
+AUTOMATIC COHORT PROVIDER SAFETY: PARTIAL SOURCE EVIDENCE; GLOBAL UNKNOWN.
+Existing core tests.yml invokes full pytest without a workflow-wide network-deny
+guard. Its source does not by itself prove all collected tests and imports cannot
+send provider traffic. Full source closure of every such path is not completed.
+No publication safety ACK is asserted from workflow titles or provenance claims.
+
+Concrete inspected examples at exact committed source:
+tests/marketdata/test_bybit_client.py injects Session/S.get in all client tests.
+tests/marketdata/test_data_first_sync.py first two default-client constructions
+replace client.get before fetch; other checked request tests inject Session.
+tests/engine/test_data_first_scheduler.py:46-50 has autouse socket.connect and
+getaddrinfo denial; setup injects Transport into BybitClient at57.
+tests/engine/test_data_first_integration.py imports that setup; redirect fixture
+injects Session. A module import does not transfer another module's autouse fixture.
+tests/engine/test_grid_data_first_factory.py:75,110 patches requests.Session;
+lines38,110 deny socket.connect for the indicated test bodies.
+scripts/ml_oos_synthetic_e2e.py:33-34 and child code63 deny socket connect and
+create_connection. This is Python guard evidence, not OS containment.
+Gateway workflow fetches pinned Meta Git source, executes synthetic adapter
+calculation and replay; network Git downloads are distinct from provider sends.
+
+BybitClient itself defaults to requests.Session and api.bybit.com and therefore
+is not globally offline merely because individual tests inject mocks. No global
+offline default or package-level transport denial is claimed.
+Existing full core financial tests can create disposable localhost PostgreSQL,
+invoke initdb/pg_ctl and owned temporary ACL setup on hosted Windows. These are
+broader effects than selected47 and must remain in the whole cohort review.
+Selected47 still imports no Bybit provider and uses owned local SQLite only;
+its narrower effect review cannot qualify the entire automatic CI cohort.
+
+No tests, imports, pip/download, qualifier, fake hosted environment, push, PR,
+workflow dispatch, Math/native execution or physical-node access were performed.
+PUBLICATION HOLD pending Root review and unresolved automatic-cohort safety.
+NO-GO remains. Math diagnostic DLL_INITIALIZATION_FAILED is not established RCA;
+the consumed original Math run is not retried under this preparation.

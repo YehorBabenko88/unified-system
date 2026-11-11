@@ -1,0 +1,392 @@
+--- F50-red-source/docs/gateway/research/persistence/qualification47/qualify.py
++++ F50-corrected-source/docs/gateway/research/persistence/qualification47/qualify.py
+@@ -31,7 +31,7 @@
+ PHASES = ('setup', 'call', 'teardown')
+ CHILD_PHASES = ('BEFORE_COMMIT', 'AFTER_COMMIT', 'AFTER_COMMIT')
+ GIT_PRIMARY = Path('C:/Program Files/Git/bin/git.exe')
+-CONTROL_SOURCE_SHA256 = 'f3e8f14f4f4d5e5051795514861722ec790e9c3d8ef9c50d1948a1372b556376'
++CONTROL_SOURCE_SHA256 = '3f7be88ebb61d20627585be4894fb116cf28dffc04fdfd1d44829146aa3bd69a'
+ CONTROL_IDS = (
+     '__main__.ChildPathAdmissionControls.test_db_parent_file_refuses_before_backend',
+     '__main__.ChildPathAdmissionControls.test_db_parent_junction_refuses_before_backend',
+@@ -53,6 +53,14 @@
+     '__main__.RootFirstControls.test_ordinary_tree_retains_exact_blob_and_ledger',
+     '__main__.RootFirstControls.test_reparse_parent_stops_before_descendant_or_git',
+     '__main__.RootFirstControls.test_selected_reparse_parent_stops_before_leaf_inspection',
++    '__main__.ControlsHeldCleanupControls.test_poll_error_attempts_kill_and_wait_and_denies',
++    '__main__.ControlsHeldCleanupControls.test_poll_and_kill_error_still_attempts_wait_and_denies',
++    '__main__.ControlsHeldCleanupControls.test_poll_and_wait_error_keeps_unknown_and_denies',
++    '__main__.ControlsHeldCleanupControls.test_normal_running_handle_cleanup_control',
++    '__main__.MainRunHeldCleanupControls.test_poll_error_attempts_kill_and_wait_and_denies',
++    '__main__.MainRunHeldCleanupControls.test_poll_and_kill_error_still_attempts_wait_and_denies',
++    '__main__.MainRunHeldCleanupControls.test_poll_and_wait_error_keeps_unknown_and_denies',
++    '__main__.MainRunHeldCleanupControls.test_normal_running_handle_cleanup_control',
+ )
+ 
+ 
+@@ -195,7 +203,7 @@
+ 
+ def control_log_facts(evidence):
+     raw = {}
+-    for name in ('controls.stdout.log', 'controls.stderr.log'):
++    for name in ('controls28.stdout.log', 'controls28.stderr.log'):
+         path = evidence / name
+         info = ordinary(path, 'file')
+         need(info.st_size <= 256 * 1024, 'Control log oversized')
+@@ -203,12 +211,12 @@
+             raw[name] = stream.read(256 * 1024 + 1)
+         need(len(raw[name]) == info.st_size, 'Control log size changed')
+     need(sum(map(len, raw.values())) <= 256 * 1024, 'Combined control log oversized')
+-    text = raw['controls.stderr.log'].decode('utf-8')
++    text = raw['controls28.stderr.log'].decode('utf-8')
+     matches = re.findall(r'^test_\S+ \((__main__\.[^)]+)\) \.\.\. (ok|FAIL|ERROR|skipped[^\r\n]*)\r*$', text, re.M)
+     ids = [node for node, _ in matches]
+-    need(len(ids) == len(set(ids)) == 20 and set(ids) == set(CONTROL_IDS), 'Exact 20 control identities missing/duplicated')
+-    need(re.search(r'^Ran 20 tests in [0-9.]+s\r*$', text, re.M), 'Modeled control summary missing')
+-    return {'tests': 20, 'passed': sum(value == 'ok' for _, value in matches),
++    need(len(ids) == len(set(ids)) == 28 and set(ids) == set(CONTROL_IDS), 'Exact 28 control identities missing/duplicated')
++    need(re.search(r'^Ran 28 tests in [0-9.]+s\r*$', text, re.M), 'Modeled control summary missing')
++    return {'tests': 28, 'passed': sum(value == 'ok' for _, value in matches),
+             'failed': sum(value == 'FAIL' for _, value in matches), 'errors': sum(value == 'ERROR' for _, value in matches),
+             'skips': sum(value.startswith('skipped') for _, value in matches), 'ids': ids,
+             'outcomes': [{'id': node, 'status': value} for node, value in matches],
+@@ -217,8 +225,8 @@
+ 
+ 
+ def require_controls(evidence, bootstrap):
+-    record = read_json(evidence / 'controls.json')
+-    need(record['schema'] == 'agent7.hosted.modeled20.facts.v1' and record['observed_pass'] is True, 'Mandatory modeled controls not passed')
++    record = read_json(evidence / 'controls28.json')
++    need(record['schema'] == 'agent7.hosted.modeled28.facts.v1' and record['observed_pass'] is True, 'Mandatory modeled controls not passed')
+     need(record['tool_head'] == bootstrap['tool_head'] and record['tool_tree'] == bootstrap['tool_tree']
+          and record['test_head'] == bootstrap['test_head'] and record['test_tree'] == bootstrap['test_tree'], 'Control source roles differ')
+     need(record['control_source_sha256'] == CONTROL_SOURCE_SHA256
+@@ -231,19 +239,19 @@
+     need(record['source_post'] == {'test': bootstrap['test_files'], 'tool': bootstrap['tool_files']}, 'Control source postcheck differs')
+     facts = control_log_facts(evidence)
+     need(record['facts'] == facts, 'Closed control logs differ')
+-    need(facts['passed'] == 20 and facts['failed'] == facts['errors'] == facts['skips'] == 0
++    need(facts['passed'] == 28 and facts['failed'] == facts['errors'] == facts['skips'] == 0
+          and facts['summary_ok'], 'Mandatory control outcomes not all passed')
+-    return digest(evidence / 'controls.json')
++    return digest(evidence / 'controls28.json')
+ 
+ 
+ def controls(args):
+     """One stdlib-only modeled process; no dependency acquisition or 47 imports."""
+     target, deps, evidence, namespace = layout(args, deps_required=False)
+     need(absent(deps), 'Controls must precede dependency acquisition')
+-    names = ('controls-claim.json', 'controls.json', 'controls.stdout.log', 'controls.stderr.log')
++    names = ('controls28-claim.json', 'controls28.json', 'controls28.stdout.log', 'controls28.stderr.log')
+     need(all(absent(evidence / name) for name in names), 'Control stage already used')
+-    write_new(evidence / 'controls-claim.json', {'role': 'MODELED20_ONLY', 'run': os.environ['GITHUB_RUN_ID'], 'attempt': os.environ['GITHUB_RUN_ATTEMPT']})
+-    record = {'schema': 'agent7.hosted.modeled20.facts.v1', 'observed_pass': False, 'errors': [],
++    write_new(evidence / 'controls28-claim.json', {'role': 'MODELED28_ONLY', 'run': os.environ['GITHUB_RUN_ID'], 'attempt': os.environ['GITHUB_RUN_ATTEMPT']})
++    record = {'schema': 'agent7.hosted.modeled28.facts.v1', 'observed_pass': False, 'errors': [],
+               'creation_status': 'NOT_STARTED', 'cleanup_uncertain': False, 'child': None,
+               'native_admission': False, 'physical_admission': False, 'hosted47_result': 'NOT_RUN_BY_THIS_STAGE'}
+     child = None
+@@ -257,16 +265,16 @@
+                       python_sha256=digest(Path(sys.executable)), git_sha256=digest(GIT_PRIMARY))
+         need(not any(name == 'strattester' or name.startswith('strattester.') for name in sys.modules), 'Project imported before controls')
+         ordinary(HERE / 'test_qualifier_controls.py', 'file')
+-        with (evidence / 'controls.stdout.log').open('xb') as stdout, (evidence / 'controls.stderr.log').open('xb') as stderr:
++        with (evidence / 'controls28.stdout.log').open('xb') as stdout, (evidence / 'controls28.stderr.log').open('xb') as stderr:
+             record['creation_status'] = 'PENDING'
+             started = time.monotonic()
+             child = subprocess.Popen([sys.executable, '-I', '-S', '-B', str(HERE / 'test_qualifier_controls.py')],
+                                      cwd=evidence, stdout=stdout, stderr=stderr, creationflags=subprocess.CREATE_NO_WINDOW)
+             # Retain the returned held object before post-constructor checks.
+             record['creation_status'] = 'HELD'
+-            record['child'] = {'pid': child.pid, 'identity': 'OWN_POPEN_HANDLE', 'role': 'MODELED20_CONTROLLER'}
++            record['child'] = {'pid': child.pid, 'identity': 'OWN_POPEN_HANDLE', 'role': 'MODELED28_CONTROLLER'}
+             while child.poll() is None:
+-                size = sum(ordinary(evidence / name, 'file').st_size for name in ('controls.stdout.log', 'controls.stderr.log'))
++                size = sum(ordinary(evidence / name, 'file').st_size for name in ('controls28.stdout.log', 'controls28.stderr.log'))
+                 need(size <= 256 * 1024, 'Control output cap reached')
+                 need(time.monotonic() - started < 15, 'Control process wait policy elapsed')
+                 time.sleep(0.01)
+@@ -278,12 +286,31 @@
+             record['cleanup_uncertain'] = True
+     finally:
+         if child is not None:
++            exit_code = None
+             try:
+-                if child.poll() is None:
+-                    record['cleanup_required'] = True
++                exit_code = child.poll()
++            except BaseException:
++                record['cleanup_uncertain'] = True
++                record['errors'].append(traceback.format_exc())
++            if exit_code is None:
++                record['cleanup_required'] = True
++                try:
+                     child.kill()
+-                    child.wait(timeout=2)
+-                record['child'].update(exit_code=child.poll(), retired=child.poll() is not None)
++                except BaseException:
++                    record['cleanup_uncertain'] = True
++                    record['errors'].append(traceback.format_exc())
++                # A failed poll/kill never skips the independent wait attempt.
++                try:
++                    exit_code = child.wait(timeout=2)
++                except BaseException:
++                    record['cleanup_uncertain'] = True
++                    record['errors'].append(traceback.format_exc())
++            retired = type(exit_code) is int
++            if not retired:
++                record['cleanup_uncertain'] = True
++                record['errors'].append('OWN_HELD_CHILD_RETIREMENT_UNKNOWN')
++            try:
++                record['child'].update(exit_code=exit_code, retired=retired)
+             except BaseException:
+                 record['cleanup_uncertain'] = True
+                 record['errors'].append(traceback.format_exc())
+@@ -296,7 +323,7 @@
+             need(digest(Path(sys.executable)) == record['python_sha256'] and digest(GIT_PRIMARY) == record['git_sha256'], 'Control runtime/tool changed')
+             record['facts'] = control_log_facts(evidence)
+             facts = record['facts']
+-            need(facts['passed'] == 20 and facts['failed'] == facts['errors'] == facts['skips'] == 0
++            need(facts['passed'] == 28 and facts['failed'] == facts['errors'] == facts['skips'] == 0
+                  and facts['summary_ok'], 'Modeled control failure/error/skip')
+         except BaseException:
+             record['errors'].append(traceback.format_exc())
+@@ -304,7 +331,7 @@
+                                        and not record.get('cleanup_required') and not record['remaining_new_threads']
+                                        and record['creation_status'] == 'HELD' and record['child']
+                                        and record['child'].get('exit_code') == 0 and record['child'].get('retired'))
+-        write_new(evidence / 'controls.json', record)
++        write_new(evidence / 'controls28.json', record)
+     return 0 if record['observed_pass'] else 1
+ 
+ 
+@@ -324,12 +351,12 @@
+         acquired[name] = {'version': pin['version'], 'filename': pin['filename'], 'sha256': pin['sha256']}
+     need(set(acquired) == set(locked), 'Six-wheel acquisition closure incomplete')
+     state = {
+-        'schema': 'agent7.hosted.sqlite47.candidate.v1', 'classification': 'UNIT_FACTS_NOT_RUNTIME_ADMISSION',
++        'schema': 'agent7.hosted.sqlite47.candidate.v2', 'classification': 'UNIT_FACTS_NOT_RUNTIME_ADMISSION',
+         'test_head': expected['test_head'], 'test_tree': expected['test_tree'],
+         'tool_head': bootstrap['tool_head'], 'tool_tree': bootstrap['tool_tree'],
+         'bootstrap_sha256': digest(evidence / 'bootstrap.json'), 'expected_sha256': digest(HERE / 'expected47.json'),
+         'requirements_sha256': digest(HERE / 'requirements.lock'), 'pip_report_sha256': digest(evidence / 'pip-install.json'),
+-        'modeled20_receipt_sha256': controls_sha,
++        'modeled28_receipt_sha256': controls_sha,
+         'wheel_acquisition': acquired, 'release_wheel_qualification': 'NOT_CLAIMED',
+         'source_pre': {'test_files': 809, 'tool_files': len(bootstrap['tool_files']), 'raw_git_match': True},
+         'python': {'executable': sys.executable, 'sha256': digest(Path(sys.executable)), 'version': sys.version},
+@@ -369,7 +396,7 @@
+     need(all(absent(evidence / x) for x in ('run-claim.json', 'candidate.json', 'pytest.xml', 'pytest.log')), 'Lane already used')
+     need(absent(namespace / 'test-temp'), 'Test temp already exists')
+     write_new(evidence / 'run-claim.json', {'run': os.environ['GITHUB_RUN_ID'], 'attempt': os.environ['GITHUB_RUN_ATTEMPT']})
+-    state = {'schema': 'agent7.hosted.sqlite47.precondition-failure.v1', 'errors': []}
++    state = {'schema': 'agent7.hosted.sqlite47.precondition-failure.v2', 'errors': []}
+     held = []
+     pending = None
+     stopped = False
+@@ -484,30 +511,35 @@
+         subprocess.Popen = original_popen
+         state['stopfence'] = True
+         for child in held:
++            exit_code = None
+             try:
+-                if child.poll() is None:
+-                    state['cleanup_required'] = True
+-                    child.kill()
+-                    child.wait(timeout=2)
++                exit_code = child.poll()
+             except BaseException:
+                 state['cleanup_uncertain'] = True
+                 state['errors'].append(traceback.format_exc())
+-        for child, record in zip(held, state.get('held_children', [])):
+-            try:
+-                record.update(returncode=child.poll(), retired=child.poll() is not None)
+-            except BaseException:
++            if exit_code is None:
++                state['cleanup_required'] = True
++                try:
++                    child.kill()
++                except BaseException:
++                    state['cleanup_uncertain'] = True
++                    state['errors'].append(traceback.format_exc())
++                try:
++                    exit_code = child.wait(timeout=2)
++                except BaseException:
++                    state['cleanup_uncertain'] = True
++                    state['errors'].append(traceback.format_exc())
++            retired = type(exit_code) is int
++            if not retired:
+                 state['cleanup_uncertain'] = True
+-                state['errors'].append(traceback.format_exc())
+-        remaining, unknown = 0, 0
+-        for child in held:
+-            try:
+-                remaining += child.poll() is None
+-            except BaseException:
+-                unknown += 1
+-                state['cleanup_uncertain'] = True
+-                state['errors'].append(traceback.format_exc())
+-        state['remaining_held_children'] = remaining
+-        state['unknown_held_children'] = unknown
++                state['errors'].append('OWN_HELD_CHILD_RETIREMENT_UNKNOWN')
++            # Retain held-handle results once; do not re-poll and lose them later.
++            state.setdefault('held_retirement', []).append({'returncode': exit_code, 'retired': retired})
++        retirement = state.get('held_retirement', [])
++        for record, fact in zip(state.get('held_children', []), retirement):
++            record.update(fact)
++        state['remaining_held_children'] = sum(not fact['retired'] for fact in retirement)
++        state['unknown_held_children'] = state['remaining_held_children']
+         state['pending_or_unknown_creation'] = any(x['status'] != 'HELD' for x in state.get('creation_intents', []))
+         state['remaining_new_threads'] = [{'name': t.name, 'ident': t.ident} for t in threading.enumerate() if t.ident not in initial_threads and t.is_alive()]
+         for key, action in (
+@@ -535,24 +567,27 @@
+         state['candidate_persistence_proven'] = False
+         # No PASS decision here: a separate process must read back closed evidence.
+         write_new(evidence / 'candidate.json', state)
+-    return 0 if state.get('pytest_exit_code') == 0 and not state['errors'] else 1
++    return 0 if (state.get('pytest_exit_code') == 0 and not state['errors']
++                 and not state.get('cleanup_required') and not state['cleanup_uncertain']
++                 and not state['remaining_held_children'] and not state['unknown_held_children']
++                 and not state['pending_or_unknown_creation'] and not state['remaining_new_threads']) else 1
+ 
+ 
+ def verify(args):
+     target, deps, evidence, namespace = layout(args)
+     need(absent(evidence / 'terminal.json'), 'Terminal observation already exists')
+-    terminal = {'classification': 'FAIL_OR_UNKNOWN', 'native_admission': False, 'physical_admission': False}
++    terminal = {'schema': 'agent7.hosted.sqlite47.terminal.v2', 'classification': 'FAIL_OR_UNKNOWN', 'native_admission': False, 'physical_admission': False}
+     try:
+         expected, bootstrap, tools, _ = preflight(target, deps, evidence)
+         candidate = read_json(evidence / 'candidate.json')
+-        need(candidate['schema'] == 'agent7.hosted.sqlite47.candidate.v1', 'Precondition failure candidate')
++        need(candidate['schema'] == 'agent7.hosted.sqlite47.candidate.v2', 'Precondition failure candidate')
+         need(candidate['test_head'] == expected['test_head'] and candidate['test_tree'] == expected['test_tree']
+              and candidate['tool_head'] == bootstrap['tool_head'] and candidate['tool_tree'] == bootstrap['tool_tree'], 'Candidate source pins differ')
+         need(candidate['bootstrap_sha256'] == digest(evidence / 'bootstrap.json')
+              and candidate['expected_sha256'] == digest(HERE / 'expected47.json')
+              and candidate['requirements_sha256'] == digest(HERE / 'requirements.lock')
+              and candidate['pip_report_sha256'] == digest(evidence / 'pip-install.json'), 'Candidate provenance files changed')
+-        need(candidate['modeled20_receipt_sha256'] == require_controls(evidence, bootstrap), 'Mandatory control receipt changed')
++        need(candidate['modeled28_receipt_sha256'] == require_controls(evidence, bootstrap), 'Mandatory control receipt changed')
+         need(candidate['pytest_exit_code'] == 0 and not candidate['errors'] and candidate['stopfence'], 'Test/controller errors')
+         need(candidate['python']['sha256'] == digest(Path(sys.executable)), 'Interpreter changed between steps')
+         need(set(candidate['source_import_origins'].values()).issubset(set(expected['allowed_source_imports'])), 'Unexpected source import origin')
+@@ -577,7 +612,7 @@
+         terminal.update(classification='HOSTED_UNIT_QUALIFIED', test_head=expected['test_head'], test_tree=expected['test_tree'],
+                         tool_head=bootstrap['tool_head'], tool_tree=bootstrap['tool_tree'], tests=47, phases=141, skips=0,
+                         candidate_sha256=digest(evidence / 'candidate.json'), junit_sha256=digest(evidence / 'pytest.xml'),
+-                        modeled_controls={'tests': 20, 'skips': 0, 'receipt_sha256': digest(evidence / 'controls.json'), 'separate_from_staging_cases': True},
++                        modeled_controls={'tests': 28, 'skips': 0, 'receipt_sha256': digest(evidence / 'controls28.json'), 'separate_from_staging_cases': True},
+                         finalization='SEPARATE_READBACK_OF_CLOSED_CANDIDATE', job_completion='NOT_OBSERVED_BY_THIS_PROCESS',
+                         artifact_upload='NOT_OBSERVED_BY_THIS_PROCESS', vm_teardown='NOT_INDEPENDENTLY_OBSERVED')
+     except BaseException:
+--- F50-red-source/docs/gateway/research/persistence/qualification47/README.md
++++ F50-corrected-source/docs/gateway/research/persistence/qualification47/README.md
+@@ -127,7 +127,7 @@
+ it and postchecks/finalization follow it. No strict whole-operation15s claim.
+ Frozen809/47/141 and six wheel pins remain unchanged.
+ 
+-## Mandatory modeled20 stage before staging47 dependencies
++## Mandatory modeled28 stage before staging47 dependencies
+ 
+ The proposed workflow order is now explicit and mandatory:
+ 
+@@ -136,7 +136,7 @@
+    ordinary guarded bin Git primary and actual Windows Python executable hash,
+    version and exact tool/test source roles.
+ 2. `qualify.py controls`: one isolated real Python3.12.10 `-I -S -B` process
+-   runs the unchanged `f3e8f14f...` test file, with stdlib/source reads and inert
++   runs the unchanged `3f7be88e...` 28-case test file, with stdlib/source reads and inert
+    actual-AST metadata/XML/Popen models only. Dependency directory must still
+    be absent; no pytest, target test or project engine is imported by this role.
+ 3. Only after controls step succeeds, acquire the six hash-locked wheels.
+@@ -144,12 +144,12 @@
+    then performs exactly47 staging cases/141 phases. `verify` revalidates both
+    separate roles before its staging-only terminal observation.
+ 
+-No 20+47 aggregate case count is emitted. The modeled role has exact20 IDs,
+-outcomes and zero-skip predicates in `controls.json` plus separate original
+-`controls.stdout.log`/`controls.stderr.log`; staging keeps its original47 IDs,
+-141 phases and JUnit. The modeled source SHA and explicit20 IDs are frozen in
++No modeled/staging aggregate case count is emitted. The modeled role has exact28
++IDs, outcomes and zero-skip predicates in `controls28.json` plus separate original
++`controls28.stdout.log`/`controls28.stderr.log`; staging keeps its original47 IDs,
++141 phases and JUnit. The modeled source SHA and explicit28 IDs are frozen in
+ the qualifier without changing `expected47.json`, the test source or the lock.
+-If a full20 inventory runs but contains failures/errors/skips, those outcomes
++If a full28 inventory runs but contains failures/errors/skips, those outcomes
+ are retained and the stage fails; missing/ambiguous evidence is not PASS.
+ 
+ The modeled controller uses an own held Popen object and owned external logs,
+@@ -161,7 +161,7 @@
+ its logs and closed receipt are read back before 47 imports. A returned held
+ object is retained immediately, before post-constructor checks.
+ 
+-This stage adds one MODELED20 interpreter child **separate from** the three
++This stage adds one MODELED28 interpreter child **separate from** the three
+ staging47 crash-probe children. It does not expand the staging subprocess
+ allowlist, admit a native backend, publish research results, release holds or
+ grant current scientific read access. Bootstrap readonly Git processes, wheel
+@@ -172,6 +172,42 @@
+ new controller or workflow. Root/A8 exact review must precede any further
+ execution/publication. A local commit is also reserved for the subsequent
+ approved phase; tracked CRLF files must not be normalized to fabricate raw PASS.
++
++## F50 known-held cleanup source correction and profile version
++
++The separately allocated OLD `94277c28...` implementation MODEL28 RED is retained:
++**22 PASS / 6 intended FAIL / 0 errors / 0 skips**, test exit1, receipt SHA
++`901b16c90471cbcc9d715a11b24e5ead88852ccbee6d1f0d6163eca808b7ed4f`.
++All six negatives stopped at the first assertion that kill count was zero;
++later wait/sticky/DENY assertions were not reached in those negatives. The
++two normal cleanup controls passed. A8 phase226 independently verified those
++originals; this is modeled failure evidence, not a real leaked process.
++
++The current source fix covers both the modeled controller's known-child finally
++and the staging runner's held-child loop. A poll exception is retained as a
++primary error and sticky cleanup uncertainty, while the held object still gets
++an independent kill attempt and bounded wait(timeout2) attempt. Kill failure
++cannot skip wait. Unknown/incomplete retirement stays UNKNOWN; no foreign PID
++lookup or process-tree operation is introduced. Errors are appended, never
++replaced or cleared by later successful wait. Main-run held results are recorded
++once from poll/wait observations instead of repeated unguarded later polls.
++Any kill-required path, cleanup error, unknown or incomplete state prevents
++successful controller/run return and final verify admission.
++
++All28 test bytes/IDs/assertions remain exactly `3f7be88e...`; only actual
++implementation cleanup changes. The actual extracted loop/branch and actual
++DENY predicates remain the test seams; no copied cleanup algorithm or fake
++runtime permit is added. No corrected28 execution has occurred yet in this phase.
++
++The mandatory profile now uses `agent7.hosted.modeled28.facts.v1`, exact28 IDs
++and source hash, and distinct controls28 claim/log/receipt names. Its binding
++is `modeled28_receipt_sha256` in the qualification-only
++`agent7.hosted.sqlite47.candidate.v2`; terminal observations are explicit v2.
++Old modeled20 source/counts/schema/receipts and GREEN49d555 remain preserved and
++are not reclassified as28. Old candidate v1 is not silently promoted. These are
++local unit-qualification evidence schemas, not shared native publication APIs.
++Frozen809/47/141, research inputs, strategy result bytes and six wheel pins are
++unchanged. Workflow labels the modeled28 prerequisite distinctly from staging47.
+ 
+ ## Dependency provenance
+ 
+@@ -263,7 +299,7 @@
+ | Current preparation | Source/data/AST reads and five new files; six JSON-only TLS GETs | No qualifier/test imports or execution |
+ | Hosted setup | Pinned actions, owned checkout/dependency/evidence dirs; official network acquisition | No office node, service or production state |
+ | Bootstrap | Readonly Git processes and raw file hashing before tool execution | Separate from the three test children |
+-| Modeled prerequisite | One isolated stdlib-only Python, unchanged20 source, inert actual-AST models; own log/receipt files | Before wheel acquisition; no target47/project imports; separate count |
++| Modeled prerequisite | One isolated stdlib-only Python, unchanged28 source, inert actual-AST models; own log/receipt files | Before wheel acquisition; no target47/project imports; separate count |
+ | Unit run | Pytest, stdlib SQLite/markers, existing bounded threads, three staging-only Python children | Separate47 cases; local staging only; no target/provider/native backend |
+ | Normal cleanup | Stopfence; held own child kill **and wait**; thread observations | Unknown or unexpected cleanup fails qualification |
+ | Finalization | Own logs/JUnit/JSON; separate readback; artifact upload of evidence only | No SQLite DBs, dependencies, secrets or raw environment uploaded |
+--- F50-red-source/.github/workflows/projection-recovery-47.yml
++++ F50-corrected-source/.github/workflows/projection-recovery-47.yml
+@@ -157,7 +157,7 @@
+                   ordinary(evidence)
+                   with (evidence/'bootstrap-failure.json').open('x',encoding='utf-8') as out:json.dump(failure,out,sort_keys=True,indent=2)
+               raise
+-      - name: Mandatory separate modeled20 controls before dependency acquisition
++      - name: Mandatory separate modeled28 controls before dependency acquisition
+         shell: pwsh
+         run: |
+           $deps=Join-Path $env:A7_NAMESPACE 'deps'

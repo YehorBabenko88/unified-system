@@ -1,0 +1,67 @@
+{
+  "schema": "unified.loader-followup-authorization.v1",
+  "authorized_by": null,
+  "directive_sha256": "1dc4bad55cc8d65919e416b1093d7a609181bb9ee997d61031862cab70ad2bf5",
+  "created_utc": "2026-11-07T07:37:08.802559+00:00",
+  "status": "PREPARED_PENDING_EXPLICIT_SINGLE_USE_OWNER_AUTHORIZATION_AND_A8_RECORD_REVIEW",
+  "repository": "YehorBabenko88/math",
+  "pr": 115,
+  "source_head": "2446d04624469e34aa96ed766be7a4887d6d654c",
+  "source_tree": "12c4e3cbd3557c7f4f634f5241c7e4b51eafba4f",
+  "workflow": ".github/workflows/agent7-loader-init-trace.yml",
+  "workflow_blob_sha1": "612a6300071b478a823da076ca015782caabb9ca",
+  "workflow_sha256": "f4b1f8ef9d7f9a629247c5406026443ec2d8733d852e9670a946c1cd1df24a48",
+  "event_merge_ref": "refs/pull/115/merge",
+  "event_merge_head_reviewed": "d5d5d7ac9ba31d9d13f246a6d1d293570001ad4f",
+  "event_workflow_blob_sha1": "612a6300071b478a823da076ca015782caabb9ca",
+  "event_definition_matches_reviewed_source": true,
+  "a8_source_model_ack": {
+    "head": "fbc2936038d5a348a7d21ae1936552327d479db4",
+    "path": "docs/audits/agent8-20261106/phase46/source-model-ack.json",
+    "raw_sha256": "d150f3da87f4e1bb4ae612ce17d618855d52a127e3b81535e595461b4d771d05",
+    "activation_authorized_by_a8": false
+  },
+  "allowed_activation": {
+    "event": "pull_request",
+    "action": "labeled",
+    "actor": "YehorBabenko88",
+    "triggering_actor": "YehorBabenko88",
+    "label": "diag-f-2446d04624469e34aa96ed766be7a4887d6d654c",
+    "description_prefix": "followup-review-sha256:",
+    "attempt": 1,
+    "activations_max": 1,
+    "automatic_retry_remove_relabel_rerun_cancel": false
+  },
+  "allowed_effect": "ONE_NON_QUALIFYING_DISPOSABLE_GITHUB_HOSTED_WINDOWS_OWNED_CHILD_OBSERVATION",
+  "budgets": {
+    "event_seconds": 10,
+    "cleanup_seconds": 5,
+    "owner_watchdog_seconds": 30,
+    "public_bytes": 8192,
+    "events": 256
+  },
+  "prohibited": [
+    "Office execution or fault injection",
+    "Privilege enabling",
+    "Memory/register writes or injection",
+    "OS policy/desktop ACL changes",
+    "Real trading or production credentials",
+    "Raw private paths/debug strings/native binaries uploaded"
+  ],
+  "old_math113_activation": "CONSUMED_UNCHANGED_NOT_REUSED",
+  "native_acceptance": "BLOCKED",
+  "windows_home_qualification": "NOT_ESTABLISHED",
+  "production_deployment": false,
+  "physical_deployment": false,
+  "single_use_ledger": "dispatch-ledger.json",
+  "unknown_result_rule": "PRESERVE_RECONCILE_NO_RETRY_OR_SECOND_ACTIVATION",
+  "label_digest_role": "REFERENCE_ONLY_NOT_CONSENT_OR_DURABLE_ONCE_GUARD",
+  "pre_dispatch_requirements": [
+    "Fresh A8 review of THIS immutable authorization and actual merge-workflow parity",
+    "Recheck exact current source/head/base/draft and merge parity",
+    "Persist DISPATCH_INTENT before the one API label-add call",
+    "If ambiguous label/run state do not retry"
+  ],
+  "owner_single_use_authorization": "NOT_RECEIVED",
+  "old_math115_record": "HISTORICAL_PRE_DISPATCH_LABEL_DEFINITION_REJECTED_NOT_REUSED"
+}

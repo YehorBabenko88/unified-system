@@ -1,0 +1,39 @@
+{
+  "scope": "ALLOCATED_OWNER_STATIC_REVIEW_ONLY_NOT_A8_OR_FULL_STACK_ADMISSION",
+  "reviewed_sync_head": "10e07ef108d155b9ca2278eec6a8361cb92fa488",
+  "reviewed_sync_tree": "899ab6ec331784aa4e512050c75665cecfa9385e",
+  "reviewed_sync_delta_base": "42686cd8fafcefaed3c5df5adaee5173d27543fd",
+  "sync_delta_paths": 12,
+  "reviewed_ops_head": "c752dff751d964c57daf3b3afe4987ea3377839b",
+  "reviewed_ops_tree": "8e19a76b13893f5e6d3103fd599f7fcec25644ca",
+  "ops_paths": 4,
+  "code_findings": {
+    "P0": 0,
+    "P1": 0,
+    "P2": 0
+  },
+  "documentation_findings": [
+    {
+      "id": "A6-STATIC-OPS-DOC-COUNT",
+      "severity": "P2",
+      "path": "docs/operations/operations-dashboard-contract.md",
+      "line": 182,
+      "actual": "22 frozen IDs,21 passes",
+      "expected": "22 frozen IDs,22 passes per actual qualifier and workflow",
+      "fix_status": "NOT_EDITED_NO_CODE_CHANGE_ALLOCATION"
+    }
+  ],
+  "report_sha256": "4b10c2e734241053b90b7db0846dd123680a9b58bd4913242f4a2a933dc1eeaa",
+  "reviewed_pins_sha256": "d503a284d2accafc326ac0dc6466cdbdc36466aa5f28c352bdf6f0b0d3932fff",
+  "original_CI_correction": {
+    "path": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-6-distributed-terminan-control\\outputs\\terminan-sync-v1\\scientific-read-recovery\\hosted-original\\ORIGINAL-CI-POST-GATE-CORRECTION.json",
+    "sha256": "e3aded5b39c3f2e018c1bae82750847784f2727ca868fce69f05a34a0c441566",
+    "jobs_api_sha256": "90e517c2c998e8d56a2d74e65f18c409ced6eec6bae573e3dc8a851b8afc0da6",
+    "full_log_sha256": "b4862eabc89a71e26db66af416300968b961d48729f86d385c0b57d34ba07653"
+  },
+  "tests_imports_code_changes_reruns_native_browser_calls": 0,
+  "policy_edit": "HELD",
+  "shared_CI10_runtime40": "ROOT_A8_SEPARATE_REVIEW",
+  "scientific_READ_final_visibility": "NONE",
+  "overall": "NO_GO"
+}

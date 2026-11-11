@@ -1,0 +1,25 @@
+{
+  "state": "SOURCE_REVIEW3_NOT_EXECUTED",
+  "actual10": false,
+  "project_or_dependency_imports": false,
+  "extension_loads": false,
+  "native_or_provider_or_network_fixtures": false,
+  "capsule_unchanged_sha256": "b0b56441f797babc16d268b0015bd860a29a82f5e47e8fc789e324e586d1da55",
+  "preserved_revisions": ["SOURCE-REVIEW1", "SOURCE-REVIEW2-PREFLIGHT"],
+  "changes": [
+    "Root-first ordinary root/input/cache checks precede manifest reads and cache enumeration",
+    "S_ISLNK, st_reparse_tag and FILE_ATTRIBUTE_REPARSE_POINT checks",
+    "Bounded pinned reads parse the exact verified bytes; closed two-name seal; duplicate JSON rejected",
+    "Exact source/dependency files and derived directories; no extra empty dirs; scandir-name+lstat before descent",
+    "All post-Popen lifecycle operations under try/finally and immediate held-handle assignment",
+    "Every exit attempts held-handle retirement/wait5 and reader joins; errors remain FAILED/UNKNOWN",
+    "Inner post-observation failure facts/markers retained best effort and never labeled product RED"
+  ],
+  "budget": "90s CHILD lifetime plus wait5 and per-reader join1; not strict90s whole lane",
+  "remaining_limits": [
+    "Source-only corrections, no regression execution or qualification",
+    "Ordinary cooperative local mock basis, no hostile OS sandbox/process-family guarantee",
+    "No enforced memory quota or transitive DLL publisher/signature closure",
+    "Receipt preservation and retirement cannot be guaranteed under uninterruptible OS/I/O failure"
+  ]
+}

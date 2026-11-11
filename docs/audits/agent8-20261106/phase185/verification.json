@@ -1,0 +1,129 @@
+{
+  "requirement_id": "A8-OFFLINE-SIGNATURE-PROPOSAL",
+  "repository": "Grid / Unified support",
+  "PR": null,
+  "exact_HEAD": "PROPOSAL_PACKET_NOT_SOURCE_COMMIT",
+  "test": "raw seal /existing candidate15 files raw bytes /source review",
+  "environment": "A8 stdlib offline data only",
+  "expected": "Immutable proposal identity and no execution/admission inference",
+  "actual": "SEALED_PROPOSAL_MATCH;15_LOCAL_FILES_REHASHED_ORDINARY_SINGLELINK_NO_REPARSE;ANCESTORS_NO_REPARSE",
+  "status": "PASS_SCOPED_METADATA_ONLY;EXECUTION_BLOCKED",
+  "severity": "Toolorigin/runtime/custody/parser/freshness unqualified",
+  "required_correction": "Exact qualified origin/loader+nonprivileged family runner+closed parser policy+input/freshness adoption before any process",
+  "files": [
+    {
+      "name": "gpg.exe",
+      "path": "C:\\Program Files\\Git\\usr\\bin\\gpg.exe",
+      "sha256": "14953ed8b4549020e185c0f7ab600bb9d0384457ea74da9d574e8d31139aff4f",
+      "bytes": 1129818,
+      "nlink": 1
+    },
+    {
+      "name": "gpgv.exe",
+      "path": "C:\\Program Files\\Git\\usr\\bin\\gpgv.exe",
+      "sha256": "e5b9f232083ac4c7427ad4923e21d26bae0c8b8554db3344ef388088f92919fe",
+      "bytes": 513794,
+      "nlink": 1
+    },
+    {
+      "name": "msys-2.0.dll",
+      "path": "C:\\Program Files\\Git\\usr\\bin\\msys-2.0.dll",
+      "sha256": "e55be2d89f2756f540a8f2acf18cd14bf275d1187a32d5189946ee5c896bcf03",
+      "bytes": 3371103,
+      "nlink": 1
+    },
+    {
+      "name": "msys-assuan-9.dll",
+      "path": "C:\\Program Files\\Git\\usr\\bin\\msys-assuan-9.dll",
+      "sha256": "3eaf1c57c85b1ca2303e7d9544c0a96507f483aae7ae5a1125dfde09bdb12b26",
+      "bytes": 69674,
+      "nlink": 1
+    },
+    {
+      "name": "msys-bz2-1.dll",
+      "path": "C:\\Program Files\\Git\\usr\\bin\\msys-bz2-1.dll",
+      "sha256": "1082896c71da5e62dfd8e421fba35fa3123e6e1e2782381c08258917117b51cd",
+      "bytes": 67277,
+      "nlink": 1
+    },
+    {
+      "name": "msys-gcc_s-seh-1.dll",
+      "path": "C:\\Program Files\\Git\\usr\\bin\\msys-gcc_s-seh-1.dll",
+      "sha256": "59b816ee2880c2140ac8d7726f59e4e7435e309f272a80fd590d3130215f77f5",
+      "bytes": 141537,
+      "nlink": 1
+    },
+    {
+      "name": "msys-gcrypt-20.dll",
+      "path": "C:\\Program Files\\Git\\usr\\bin\\msys-gcrypt-20.dll",
+      "sha256": "660e7e5441e6ddb9debb5db0f04b3e56c0cf7a6a22be14958a40b366e5f32e1c",
+      "bytes": 1060867,
+      "nlink": 1
+    },
+    {
+      "name": "msys-gpg-error-0.dll",
+      "path": "C:\\Program Files\\Git\\usr\\bin\\msys-gpg-error-0.dll",
+      "sha256": "a53ec385fd2133d39dd6074ee8262a6904d0c5f63ec30720e0d8acb1a75fd38c",
+      "bytes": 156385,
+      "nlink": 1
+    },
+    {
+      "name": "msys-iconv-2.dll",
+      "path": "C:\\Program Files\\Git\\usr\\bin\\msys-iconv-2.dll",
+      "sha256": "50012969ed96a5232220185d2fc1ac1e3abe5790f6b3027f4fc3c4cad3fd38f0",
+      "bytes": 1103690,
+      "nlink": 1
+    },
+    {
+      "name": "msys-intl-8.dll",
+      "path": "C:\\Program Files\\Git\\usr\\bin\\msys-intl-8.dll",
+      "sha256": "50f7de0c712d867ddca2c9eb8562ca6ee2d69e120e798ec6126ad29dd1ed5402",
+      "bytes": 111181,
+      "nlink": 1
+    },
+    {
+      "name": "msys-ncursesw6.dll",
+      "path": "C:\\Program Files\\Git\\usr\\bin\\msys-ncursesw6.dll",
+      "sha256": "aef26ffbcd20ee5781c3a5e81265390494090e13561a13336d000d9d5f9a84cb",
+      "bytes": 353237,
+      "nlink": 1
+    },
+    {
+      "name": "msys-npth-0.dll",
+      "path": "C:\\Program Files\\Git\\usr\\bin\\msys-npth-0.dll",
+      "sha256": "740e76727c26411d263788f175e4d12420a88079544bb690fd3a2f4d97f4845b",
+      "bytes": 17194,
+      "nlink": 1
+    },
+    {
+      "name": "msys-readline8.dll",
+      "path": "C:\\Program Files\\Git\\usr\\bin\\msys-readline8.dll",
+      "sha256": "15289513b1330e3431bec652e2bd57163f1196a4a25b179807af45e1330a8539",
+      "bytes": 287391,
+      "nlink": 1
+    },
+    {
+      "name": "msys-sqlite3-0.dll",
+      "path": "C:\\Program Files\\Git\\usr\\bin\\msys-sqlite3-0.dll",
+      "sha256": "fad59b1dda3ccf29fbb57b3656b6fcd95feda095735e17445b41d95c2c0aaddb",
+      "bytes": 1573338,
+      "nlink": 1
+    },
+    {
+      "name": "msys-z.dll",
+      "path": "C:\\Program Files\\Git\\usr\\bin\\msys-z.dll",
+      "sha256": "f548bb1632160282c3853415182d695c655d0eb7c12aa42a0538161898694b6f",
+      "bytes": 91648,
+      "nlink": 1
+    }
+  ],
+  "tool_or_project_executions": 0,
+  "network_requests": 0,
+  "publisher_authenticated": false,
+  "signature_verified": false,
+  "execution_authorized_by_A8": false,
+  "platform_loader_or_PE_dependency_graph_independently_qualified": false,
+  "GO_NO_GO": "NO-GO",
+  "PHYSICAL_TESTS": "BLOCKED",
+  "TAILSCALE_REMOVAL": "BLOCKED"
+}

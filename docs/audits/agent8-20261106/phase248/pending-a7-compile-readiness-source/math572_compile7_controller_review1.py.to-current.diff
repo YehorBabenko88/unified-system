@@ -1,0 +1,255 @@
+--- math572_compile7_controller_review1.py
++++ math572_compile7_controller_public_summary_successor_review1.py
+@@ -8,6 +8,75 @@
+ CSC=pathlib.Path('C:/Windows/Microsoft.NET/Framework64/v4.0.30319/csc.exe')
+ CAP=8192
+ TOKEN='ROOT.A7.MATH572.COMPILE7.ONCE'
++
++PUBLIC_SUMMARY_FALLBACK=b'{"count_status":"UNAVAILABLE","details_omitted":true,"diagnostic_count":0,"error_count":0,"event_limit":256,"event_overflow":false,"private_evidence_sha256":null,"private_evidence_status":"UNAVAILABLE","result":"DENY","runtime_admission":false,"schema":"math572.compile7.public-summary.v1"}\n'
++
++def project_public_summary(record,written):
++ if type(record) is not dict or type(written) is not bytes:raise ValueError('PRIVATE_EVIDENCE_UNAVAILABLE')
++ diagnostics=record.get('closed_diagnostics',[]);errors=record.get('errors',[])
++ if type(diagnostics) is not list or type(errors) is not list:raise ValueError('PRIVATE_EVENT_SHAPE')
++ nd=len(diagnostics);ne=len(errors);overflow=nd+ne>256
++ expected=record.get('result')=='EXPECTED_COMPILE_DIAGNOSTIC_OBSERVED_NOT_RUNTIME_PASS' and not errors and not overflow
++ return {'schema':'math572.compile7.public-summary.v1','result':'EXPECTED_COMPILE_DIAGNOSTIC_OBSERVED_NOT_RUNTIME_PASS' if expected else 'DENY','runtime_admission':False,'diagnostic_count':min(nd,256),'error_count':min(ne,256),'count_status':'CAPPED' if nd>256 or ne>256 else 'EXACT','event_limit':256,'event_overflow':overflow,'details_omitted':bool(nd+ne),'private_evidence_status':'AVAILABLE','private_evidence_sha256':hashlib.sha256(written).hexdigest()}
++
++def serialize_public_summary(summary):
++ return (json.dumps(summary,sort_keys=True,separators=(',',':'),allow_nan=False)+'\n').encode('utf-8')
++
++def validate_public_summary(raw,record,written):
++ if type(raw) is not bytes or len(raw)>8192 or not raw.endswith(b'\n') or raw.count(b'\n')!=1 or b'\r' in raw:raise ValueError('PUBLIC_WIRE_BOUND')
++ def unique(pairs):
++  result={}
++  for key,value in pairs:
++   if key in result:raise ValueError('PUBLIC_DUPLICATE_KEY')
++   result[key]=value
++  return result
++ def invalid_constant(value):raise ValueError('PUBLIC_NONFINITE')
++ summary=json.loads(raw.decode('utf-8'),object_pairs_hook=unique,parse_constant=invalid_constant)
++ keys={'schema','result','runtime_admission','diagnostic_count','error_count','count_status','event_limit','event_overflow','details_omitted','private_evidence_status','private_evidence_sha256'}
++ if type(summary) is not dict or set(summary)!=keys:raise ValueError('PUBLIC_KEYS')
++ if (json.dumps(summary,sort_keys=True,separators=(',',':'),allow_nan=False)+'\n').encode('utf-8')!=raw:raise ValueError('PUBLIC_CANONICAL')
++ for key in ('runtime_admission','event_overflow','details_omitted'):
++  if type(summary[key]) is not bool:raise ValueError('PUBLIC_BOOL')
++ for key in ('diagnostic_count','error_count','event_limit'):
++  if type(summary[key]) is not int:raise ValueError('PUBLIC_INT')
++ if summary['schema']!='math572.compile7.public-summary.v1' or summary['runtime_admission'] is not False or summary['event_limit']!=256:raise ValueError('PUBLIC_SCHEMA')
++ if type(written) is not bytes or summary['private_evidence_status']!='AVAILABLE' or type(summary['private_evidence_sha256']) is not str or not re.fullmatch('[0-9a-f]{64}',summary['private_evidence_sha256']) or summary['private_evidence_sha256']!=hashlib.sha256(written).hexdigest():raise ValueError('PUBLIC_PRIVATE_CORRELATION')
++ diagnostics=record.get('closed_diagnostics',[]);errors=record.get('errors',[])
++ if type(diagnostics) is not list or type(errors) is not list:raise ValueError('PRIVATE_EVENT_SHAPE')
++ nd=len(diagnostics);ne=len(errors);overflow=nd+ne>256
++ if summary['diagnostic_count']!=min(nd,256) or summary['error_count']!=min(ne,256) or summary['count_status']!=('CAPPED' if nd>256 or ne>256 else 'EXACT') or summary['event_overflow']!=overflow or summary['details_omitted']!=bool(nd+ne):raise ValueError('PUBLIC_COUNT_CORRELATION')
++ expected=record.get('result')=='EXPECTED_COMPILE_DIAGNOSTIC_OBSERVED_NOT_RUNTIME_PASS' and not errors and not overflow
++ if summary['result']!=('EXPECTED_COMPILE_DIAGNOSTIC_OBSERVED_NOT_RUNTIME_PASS' if expected else 'DENY'):raise ValueError('PUBLIC_NONPROMOTION')
++ return True
++
++def publish_public_summary(record,receipt_path,output,projector=None,serializer=None,validator=None):
++ # Dependencies are explicit inert fault seams; defaults are actual source helpers.
++ if projector is None:projector=project_public_summary
++ if serializer is None:serializer=serialize_public_summary
++ if validator is None:validator=validate_public_summary
++ failures=[];written=None;effective_result='DENY';raw=PUBLIC_SUMMARY_FALLBACK
++ try:
++  private=(json.dumps(record,indent=2,allow_nan=False)+'\n').encode('utf-8')
++  if len(private)>2*1024*1024:raise ValueError('PRIVATE_RECEIPT_BOUND')
++  with receipt_path.open('xb') as held:
++   if held.write(private)!=len(private):raise ValueError('PRIVATE_SHORT_WRITE')
++  # Available only after exclusive write AND context close both succeeded.
++  written=private
++ except BaseException:failures.append('PRIVATE_RECEIPT_WRITE_FAILURE')
++ if written is not None:
++  stage='PROJECTOR'
++  try:
++   summary=projector(record,written);stage='SERIALIZER';candidate=serializer(summary);stage='VALIDATOR'
++   if validator(candidate,record,written) is not True:raise ValueError('PUBLIC_VALIDATION_REFUSED')
++   raw=candidate;effective_result=summary['result']
++  except BaseException:failures.append('PUBLIC_'+stage+'_FAILURE');raw=PUBLIC_SUMMARY_FALLBACK;effective_result='DENY'
++ # Exactly one delivery attempt. Never retry partial/failed output with raw data.
++ delivered=False
++ try:
++  if output.write(raw)!=len(raw):raise ValueError('PUBLIC_SHORT_WRITE')
++  output.flush();delivered=True
++ except BaseException:failures.append('PUBLIC_OUTPUT_WRITE_FAILURE');effective_result='DENY'
++ return {'effective_result':effective_result,'exit_code':0 if delivered and not failures and effective_result=='EXPECTED_COMPILE_DIAGNOSTIC_OBSERVED_NOT_RUNTIME_PASS' else 1,'output_delivered':delivered,'output_calls':1,'failure_labels':failures,'private_evidence_status':'AVAILABLE' if written is not None else 'UNAVAILABLE','private_evidence_sha256':hashlib.sha256(written).hexdigest() if written is not None else None}
+ 
+ def ordinary(path,directory=False):
+  if not path.is_absolute():raise ValueError('ABSOLUTE_REQUIRED')
+@@ -73,8 +142,9 @@
+  k.TerminateJobObject.argtypes=[W.HANDLE,W.UINT];k.TerminateJobObject.restype=W.BOOL
+  k.ResumeThread.argtypes=[W.HANDLE];k.ResumeThread.restype=W.DWORD
+  record={'schema':'math572.compile7.proposal.v1','result':'DENY','errors':[],'source_head':m['head'],'source_tree':m['tree'],'native_runtime_admission':False,'output_cap':CAP,'observed_process_seconds_bound':10,'separate_cleanup_seconds_bound':5,'creation_intent':False,'child':None,'job_assigned_before_resume':False,'descendant_limit':1,'compiler_argv':argv,'startup_class':'UNKNOWN','source_post_equal':False}
+- job=None;hp=None;ht=None;nul=None;read_handles=[];write_handles=[];threads=[];reader_attempts=set();write_attempts=set();writes_closed=set()
++ job=None;hp=None;ht=None;nul=None;read_handles=[];write_handles=[];threads=[];reader_attempts=set();reader_reservations={};write_attempts=set();writes_closed=set()
+  stopped=threading.Event();overflow=threading.Event();watch_done=threading.Event();lock=threading.Lock();buffers={'stdout':bytearray(),'stderr':bytearray()};total=[0];start=None;exit_code=None;uncertain=False
++ reader_state={name:{'started':False,'eof':False,'read_failed':False,'close_ok':False,'close_failed':False,'retired':False,'log_written':False} for name in buffers}
+  def error(code):
+   with lock:record['errors'].append(code)
+  def terminate_owned():
+@@ -83,31 +153,50 @@
+     if not k.TerminateJobObject(job,197):error('JOB_TERMINATE_FAILURE')
+    except BaseException:error('JOB_TERMINATE_EXCEPTION')
+   if hp is not None:
+-   try:
+-    if _winapi.WaitForSingleObject(hp,0)!=0:_winapi.TerminateProcess(hp,198)
+-   except BaseException:error('PROCESS_TERMINATE_FAILURE')
++   needs_termination=True
++   try:
++    status=_winapi.WaitForSingleObject(hp,0)
++    if status==0:needs_termination=False
++    elif status!=258:error('PROCESS_POLL_UNKNOWN')
++   except BaseException:error('PROCESS_POLL_FAILURE')
++   if needs_termination:
++    try:_winapi.TerminateProcess(hp,198)
++    except BaseException:error('PROCESS_TERMINATE_FAILURE')
+  def watchdog():
+   try:
+    if not watch_done.wait(max(0,10-(time.monotonic()-start))):error('WATCHDOG_DEADLINE');terminate_owned()
+   except BaseException:error('WATCHDOG_FAILURE');terminate_owned()
+  def reader(handle,name):
+   stream=None
++  with lock:reader_state[name]['started']=True
+   try:
+    stream=os.fdopen(msvcrt.open_osfhandle(handle,os.O_RDONLY|os.O_BINARY),'rb',buffering=0)
+    while True:
+     block=stream.read(1024)
+-    if not block:break
++    if not block:
++     with lock:reader_state[name]['eof']=True
++     break
+     with lock:
+      room=max(0,CAP-total[0]);total[0]+=len(block);buffers[name].extend(block[:room])
+      if total[0]>CAP:overflow.set()
+-  except BaseException:error('READER_FAILURE');overflow.set()
++  except BaseException:
++   with lock:reader_state[name]['read_failed']=True
++   error('READER_FAILURE');overflow.set()
+   finally:
+    try:
+     if stream is not None:stream.close()
+     else:_winapi.CloseHandle(handle)
+-   except BaseException:error('READER_CLOSE_FAILURE')
++    with lock:reader_state[name]['close_ok']=True
++   except BaseException:
++    with lock:reader_state[name]['close_failed']=True
++    error('READER_CLOSE_FAILURE')
+  def start_thread(function,args=()):
+-  entry={'thread':threading.Thread(target=function,args=args,daemon=True),'outcome':'UNKNOWN'};threads.append(entry)
++  entry=reader_reservations[args[0]] if function is reader else {'thread':None,'outcome':'NOT_STARTED','reader_name':None}
++  threads.append(entry)
++  try:entry['thread']=threading.Thread(target=function,args=args,daemon=True)
++  except BaseException:error('THREAD_CONSTRUCTOR_FAILURE');raise
++  # Only the start call can transfer reader custody; constructor failure cannot.
++  entry['outcome']='UNKNOWN'
+   try:entry['thread'].start();entry['outcome']='STARTED'
+   except BaseException:
+    error('THREAD_START_FAILURE')
+@@ -135,6 +224,7 @@
+   if not k.AssignProcessToJobObject(job,hp):raise ValueError('JOB_ASSIGN_DENIED')
+   record['job_assigned_before_resume']=True
+   for r,name in read_handles:
++   reader_reservations[r]={'thread':None,'outcome':'NOT_STARTED','reader_name':name}
+    reader_attempts.add(r);start_thread(reader,(r,name))
+   for w in write_handles:
+    write_attempts.add(w);_winapi.CloseHandle(w);writes_closed.add(w)
+@@ -151,7 +241,8 @@
+   exit_code=_winapi.GetExitCodeProcess(hp)
+  except BaseException:error('COMPILE_OWNER_BODY_FAILURE')
+  finally:
+-  deadline=time.monotonic()+5;watch_done.set()
++  cleanup_started=time.monotonic()
++  deadline=cleanup_started+5;watch_done.set()
+   if hp is not None:
+    try:
+     if _winapi.WaitForSingleObject(hp,0)!=0:terminate_owned()
+@@ -168,18 +259,21 @@
+    try:_winapi.CloseHandle(w);writes_closed.add(w)
+    except BaseException:error('WRITE_PIPE_CLOSE_FAILURE');uncertain=True
+   for r,name in read_handles:
+-   if r not in reader_attempts:
++   reservation=reader_reservations.get(r)
++   if r not in reader_attempts or (reservation is not None and reservation['outcome']=='NOT_STARTED'):
+     try:_winapi.CloseHandle(r)
+     except BaseException:error('UNSTARTED_READ_PIPE_CLOSE_FAILURE')
+   if nul is not None:
+    try:os.close(nul)
+    except BaseException:error('STDIN_CLOSE_FAILURE')
+   for entry in threads:
++   if entry['outcome']=='NOT_STARTED':continue
+    if entry['outcome']!='STARTED':error('THREAD_START_UNKNOWN');uncertain=True;continue
+    try:entry['thread'].join(timeout=max(0,deadline-time.monotonic()))
+    except BaseException:error('THREAD_JOIN_FAILURE');uncertain=True
+    try:
+     if entry['thread'].is_alive():error('THREAD_RETIREMENT_UNKNOWN');uncertain=True
++    elif entry['reader_name'] is not None:reader_state[entry['reader_name']]['retired']=True
+    except BaseException:error('THREAD_STATE_UNKNOWN');uncertain=True
+   record['cleanup_uncertain']=uncertain
+   if not uncertain:
+@@ -187,13 +281,19 @@
+     if handle is not None:
+      try:_winapi.CloseHandle(handle)
+      except BaseException:error('HELD_HANDLE_CLOSE_FAILURE')
+-  record['cleanup_observed_seconds']=5-max(0,deadline-time.monotonic())
++  cleanup_finished=time.monotonic()
++  cleanup_elapsed=cleanup_finished-cleanup_started
++  record['cleanup_observed_seconds']=cleanup_elapsed
++  record['cleanup_within_budget']=(type(cleanup_elapsed) in (int,float) and float('-inf')<cleanup_elapsed<float('inf') and 0<=cleanup_elapsed<=5)
++  if not record['cleanup_within_budget']:error('CLEANUP_OBSERVED_DEADLINE')
+   if time.monotonic()>=deadline:error('CLEANUP_DEADLINE')
+   record['logs']={}
+-  for name,data in buffers.items():
++  with lock:captured={name:bytes(data) for name,data in buffers.items()}
++  for name,data in captured.items():
+    try:
+     with (OUT/(name+'.original.bin')).open('xb') as f:f.write(data)
+     record['logs'][name]={'bytes':len(data),'sha256':hashlib.sha256(data).hexdigest()}
++    reader_state[name]['log_written']=True
+    except BaseException:error('ORIGINAL_LOG_WRITE_FAILURE')
+   record['generated_output_present']=False
+   if not uncertain:
+@@ -213,21 +313,33 @@
+    record['actual_compiler_input_copies_post_equal']=True
+   except BaseException:error('COMPILER_INPUT_COPY_DRIFT')
+   if overflow.is_set():error('OUTPUT_CAP')
+-  text=(bytes(buffers['stdout'])+b'\n'+bytes(buffers['stderr'])).decode('utf-8',errors='replace')
+-  diagnostics=[{'source_ordinal':int(a),'line':int(b),'column':int(c),'kind':d,'code':e} for a,b,c,d,e in re.findall(r'\bS(\d{2})\.cs\((\d+),(\d+)\):\s*(error|warning)\s*(CS\d{4})',text)]
++  try:text=(captured['stdout']+b'\n'+captured['stderr']).decode('utf-8',errors='strict')
++  except UnicodeDecodeError:error('COMPILER_OUTPUT_ENCODING');text=''
++  diagnostics=[];allowed_output=True;expected_missing=False;unadmitted_lines=0
++  allowed_pairs={('CS0246','OwnedPrivateDesktop'),('CS0246','PrivateDesktopException'),('CS0103','HostedPrivateDesktop')}
++  for line in text.splitlines():
++   if not line.strip():continue
++   match=re.fullmatch(r'(?:.*[\\/])?S(\d{2})\.cs\((\d+),(\d+)\):\s*(error|warning)\s*(CS\d{4}):\s*(.*)',line)
++   if match is None:allowed_output=False;unadmitted_lines+=1;continue
++   ordinal,lineno,column,kind,code,message=match.groups();ordinal=int(ordinal)
++   diagnostics.append({'source_ordinal':ordinal,'line':int(lineno),'column':int(column),'kind':kind,'code':code})
++   pairs=[pair for pair in allowed_pairs if pair[0]==code and re.search(r'\b'+pair[1]+r'\b',message)]
++   admitted=ordinal==3 and kind=='error' and len(pairs)==1
++   if not admitted:allowed_output=False;unadmitted_lines+=1
++   if admitted and code=='CS0246':expected_missing=True
+   record['closed_diagnostics']=diagnostics
+-  record['original_logs_complete']=not overflow.is_set() and not uncertain
+-  expected_missing=any(re.search(r'\bS03\.cs\(\d+,\d+\):\s*error\s*CS0246.*\b'+symbol+r'\b',line) for line in text.splitlines() for symbol in ('OwnedPrivateDesktop','PrivateDesktopException'))
++  record['unadmitted_nonempty_output_lines']=unadmitted_lines
++  record['diagnostic_set_admitted']=bool(diagnostics) and allowed_output and expected_missing
++  with lock:record['reader_states']={name:dict(state) for name,state in reader_state.items()}
++  record['original_logs_complete']=not overflow.is_set() and not uncertain and len(record['logs'])==2 and all(state['started'] and state['eof'] and state['close_ok'] and state['retired'] and state['log_written'] and not state['read_failed'] and not state['close_failed'] for state in record['reader_states'].values())
+   if exit_code in (0xC0000142,0xC0000135,0xC000007B):record['startup_class']='NATIVE_STARTUP_FAILURE_UNKNOWN_CAUSE'
+-  elif exit_code==1 and expected_missing:record['startup_class']='COMPILER_MISSING_TYPE_DIAGNOSTIC_OBSERVED'
++  elif exit_code==1 and record['diagnostic_set_admitted']:record['startup_class']='COMPILER_MISSING_TYPE_DIAGNOSTIC_OBSERVED'
++  elif expected_missing:record['startup_class']='UNKNOWN_MIXED_OR_UNADMITTED_COMPILER_OUTPUT'
+   elif exit_code==0:record['startup_class']='UNEXPECTED_COMPILE_SUCCESS'
+   else:record['startup_class']='UNKNOWN_OTHER_COMPILER_OR_STARTUP_FAILURE'
+-  if not record['errors'] and not uncertain and record['job_assigned_before_resume'] and record['startup_class']=='COMPILER_MISSING_TYPE_DIAGNOSTIC_OBSERVED':record['result']='EXPECTED_COMPILE_DIAGNOSTIC_OBSERVED_NOT_RUNTIME_PASS'
++  if not record['errors'] and not uncertain and record['original_logs_complete'] and record['job_assigned_before_resume'] and record['startup_class']=='COMPILER_MISSING_TYPE_DIAGNOSTIC_OBSERVED':record['result']='EXPECTED_COMPILE_DIAGNOSTIC_OBSERVED_NOT_RUNTIME_PASS'
+   record['whole_wallclock_claim']=False
+-  try:
+-   with (OUT/'receipt.json').open('x',encoding='utf-8') as f:json.dump(record,f,indent=2);f.write('\n')
+-  except BaseException:error('RECEIPT_WRITE_FAILURE');record['result']='DENY'
+- print(json.dumps({'result':record['result'],'errors':record['errors'],'closed_diagnostics':record.get('closed_diagnostics',[]),'runtime_admission':False},sort_keys=True))
+- return 0 if record['result'].startswith('EXPECTED_COMPILE_') else 1
++ publication=publish_public_summary(record,OUT/'receipt.json',sys.stdout.buffer)
++ return publication['exit_code']
+ 
+ if __name__=='__main__':sys.exit(main())

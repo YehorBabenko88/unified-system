@@ -1,0 +1,247 @@
+diff --git a/.github/workflows/agent5-one-shot-negative.yml b/.github/workflows/agent5-one-shot-negative.yml
+index fd982ea..8273dc3 100644
+--- a/.github/workflows/agent5-one-shot-negative.yml
++++ b/.github/workflows/agent5-one-shot-negative.yml
+@@ -4,6 +4,7 @@ on:
+     paths:
+       - 'tests/gateway_jobs/**'
+       - 'tests/test_intelligence_gateway.py'
++      - 'tests/test_agent5_scheduler_components.py'
+       - 'scheduler_components/**'
+       - 'unified_system/gateway_jobs.py'
+       - 'unified_system/gateway_worker.py'
+@@ -36,12 +37,18 @@ jobs:
+           import os, subprocess, sys, unittest
+           assert sys.flags.isolated and sys.flags.no_site and sys.dont_write_bytecode
+           assert subprocess.check_output(['git','--no-replace-objects','rev-parse','HEAD']).decode().strip() == os.environ['EXPECTED_HEAD']
+-          sys.path.insert(0, '.')
++          sys.path[:0] = ['.', 'tests']
++          from test_agent5_scheduler_components import DurablePreparationTests
+           patterns = ['test_one_shot_closed_integration.py', 'test_closed_jobs.py',
+                       'test_resource_capabilities.py', 'test_cpu_policy.py',
+-                      'test_capacity_freshness.py', 'test_clock_source_prerequisites.py']
++                      'test_capacity_freshness.py', 'test_clock_source_prerequisites.py',
++                      'test_preparation_integrity.py']
+           suite = unittest.TestSuite(unittest.TestLoader().discover('tests/gateway_jobs', pattern=p) for p in patterns)
+-          assert suite.countTestCases() == 33
++          # Existing local SQLite regressions; process-crash subprocess case is
++          # outside this no-child cohort and remains in its original suite.
++          suite.addTests(DurablePreparationTests(n) for n in unittest.TestLoader().getTestCaseNames(DurablePreparationTests)
++                         if n != 'test_process_crash_before_event_commit_recovers_without_partial_hold')
++          assert suite.countTestCases() == 53
+           result = unittest.TextTestRunner(verbosity=2).run(suite)
+-          assert result.wasSuccessful() and result.testsRun == 33 and not result.skipped
++          assert result.wasSuccessful() and result.testsRun == 53 and not result.skipped
+           assert not subprocess.check_output(['git','--no-replace-objects','status','--porcelain','--untracked-files=all']).strip()
+diff --git a/docs/superpowers/plans/2026-11-10-preparation-integrity.md b/docs/superpowers/plans/2026-11-10-preparation-integrity.md
+new file mode 100644
+index 0000000..6cfad18
+--- /dev/null
++++ b/docs/superpowers/plans/2026-11-10-preparation-integrity.md
+@@ -0,0 +1,23 @@
++# Existing preparation journal integrity fix
++
++> Execute inline using existing Scheduler component. No new journal, issuer, native API or wire change.
++
++**Base:** PR75 HEAD72117a0ba641f8a4287742f9278f4bee7a5005a6. This is not a qualified native runtime base.
++**Owner:** Agent5. Private code change in scheduler_components/durable.py only.
++**Spec:** Owner02285186 continuation; preserve UNKNOWN debt/no refund across recovery. Public constructor and method signatures unchanged.
++
++## Reproduced defect and cause
++Stored local rows were decoded but never checked against the same canonical scope/spec codec and held identity invariants used on creation. A syntactically valid zeroed UNKNOWN resources record caused live competing prepare to omit conservative debt. Reopen/view also accepted incomplete UNKNOWN request identity. Own disposable SQLite only; no office/production corruption or native fault injection.
++
++Original regression: four tests, three expected assertion failures and one valid roundtrip control. RED saved externally as AGENT5-PREPARATION-INTEGRITY-RED.log SHA159fc36508e371055ecc8b5034966a5ecac4c77d04cc7fd18098fb3e20dee92d.
++
++## Implementation
++- [x] Validate exact persisted columns, canonical scope/spec, nonempty u63 resource vector, canonical local UUID request/hold identities and complete held node/incarnation fields.
++- [x] Validate on reopen and _row; validate every held row BEFORE using its quantities in competing capacity calculation.
++- [x] Failed reopen closes its own connection. Invalid rows are never repaired/deleted/converted into free capacity; valid originals, events and UNKNOWN identities are retained.
++- [x] Verify new targeted regressions plus existing pure preparation and closed integration tests: 53 pure/local PASS, zero skips, CPython3.12.10 on Windows. Original process-crash subprocess test is not selected by this no-child cohort; remains in original suite.
++- [x] Fresh source review found no actionable issue in the private validation/test changes; source-only, no reviewer test execution.
++- [ ] Exact-source evidence, own feature PR and A8/hosted review; no merge/deployment.
++
++## Limits
++Validation is structural consistency, not tamper-evidence or native authority: an attacker who rewrites a row to another completely valid record cannot be detected by this change. It does not add schema migration, backups, encrypted storage, capacity qualification, a hash ledger or protection against hostile namespace replacement. Existing local SQLite is advisory preparation only. StrictOption1/logicalDISABLED/startDENY remain unchanged.
+diff --git a/scheduler_components/durable.py b/scheduler_components/durable.py
+index 2f68318..4410e64 100644
+--- a/scheduler_components/durable.py
++++ b/scheduler_components/durable.py
+@@ -47,6 +47,37 @@ class IntentConflict(ValueError):
+ class ReconciliationRequired(RuntimeError):
+     pass
+ 
++
++def _validated_row(row):
++    """Reject malformed local debt; never repair or infer a capacity credit."""
++    try:
++        expected = {'scope', 'spec', 'state', 'request_id', 'local_hold_id',
++                    'node_id', 'incarnation', 'reason'}
++        if set(row.keys()) != expected or _scope(json.loads(row['scope'])) != row['scope']:
++            raise ValueError
++        spec = json.loads(row['spec'])
++        if (type(spec) is not dict or set(spec) != {'resources', 'benchmark_id', 'data'}
++                or type(spec['data']) is not list
++                or _spec(Resources(**spec['resources']), spec['benchmark_id'],
++                         frozenset(spec['data'])) != row['spec']):
++            raise ValueError
++        if row['state'] not in {'QUEUED', 'PREPARED', 'SEALED', 'UNKNOWN', 'CANCELLED'}:
++            raise ValueError
++        identity = tuple(row[k] for k in ('request_id', 'local_hold_id', 'node_id', 'incarnation'))
++        if row['state'] == 'QUEUED' and any(v is not None for v in identity):
++            raise ValueError
++        if row['state'] in _HELD or any(v is not None for v in identity):
++            if any(type(v) is not str or not v for v in identity):
++                raise ValueError
++            for value in identity[:2]:
++                parsed = uuid.UUID(value)
++                if parsed.version != 4 or str(parsed) != value:
++                    raise ValueError
++    except (ValueError, TypeError, KeyError, AttributeError):
++        raise ValueError('invalid persisted preparation') from None
++    return row
++
++
+ class PreparationJournal:
+     def __init__(self, path):
+         self._db = sqlite3.connect(path, timeout=5, isolation_level=None)
+@@ -67,6 +98,12 @@ class PreparationJournal:
+                 scope TEXT NOT NULL, kind TEXT NOT NULL);
+             PRAGMA user_version=1;
+         ''')
++        try:
++            for row in self._db.execute('SELECT * FROM jobs'):
++                _validated_row(row)
++        except BaseException:
++            self.close()
++            raise
+ 
+     def close(self):
+         if self._db is not None:
+@@ -87,7 +124,7 @@ class PreparationJournal:
+         row = self._db.execute('SELECT * FROM jobs WHERE scope=?', (key,)).fetchone()
+         if row is None:
+             raise KeyError('unknown local job scope')
+-        return row
++        return _validated_row(row)
+ 
+     def _event(self, key, kind):
+         self._db.execute('INSERT INTO events(scope,kind) VALUES (?,?)', (key, kind))
+@@ -136,7 +173,8 @@ class PreparationJournal:
+                 # double-counting is conservative, never a capacity credit.
+                 holds = {}
+                 held_cpu_scales = {}
+-                for held in self._db.execute("SELECT node_id,spec FROM jobs WHERE state IN ('PREPARED','SEALED','UNKNOWN')"):
++                for held in self._db.execute("SELECT * FROM jobs WHERE state IN ('PREPARED','SEALED','UNKNOWN')"):
++                    _validated_row(held)
+                     held_spec = json.loads(held['spec'])
+                     quantities = held_spec['resources']
+                     if quantities['cpu']:
+diff --git a/tests/gateway_jobs/test_preparation_integrity.py b/tests/gateway_jobs/test_preparation_integrity.py
+new file mode 100644
+index 0000000..0f1e4a6
+--- /dev/null
++++ b/tests/gateway_jobs/test_preparation_integrity.py
+@@ -0,0 +1,103 @@
++"""Local SQLite integrity regression; no authority/native/physical fixture."""
++from contextlib import closing
++import json
++from pathlib import Path
++import sqlite3
++import tempfile
++import unittest
++from unittest.mock import patch
++
++from scheduler_components.durable import PreparationJournal
++from scheduler_components.placement import Candidate, Policy, Resources
++
++
++class PreparationIntegrity(unittest.TestCase):
++    def setUp(self):
++        self.temp = tempfile.TemporaryDirectory(prefix='a5-local-integrity-')
++        self.addCleanup(self.temp.cleanup)
++        self.path = Path(self.temp.name) / 'preparation.sqlite'
++        self.store = PreparationJournal(self.path)
++        self.addCleanup(lambda: self.store.close())
++        self.scope = dict(cluster_id='cluster', cluster_generation='generation',
++                          job_id='pending', dataset_id='dataset',
++                          source_id='source', partition_id='partition')
++        self.request = Resources(60, 60, 60, 60, 60)
++        self.node = Candidate('node', 'incarnation', 'incarnation', 100, 'bench',
++                              Resources(100, 100, 100, 100, 100), Resources(0, 0, 0, 0, 0))
++        self.policy = Policy(10, 800000, 1, 1)
++        self.store.enqueue(self.scope, self.request, 'bench')
++        self.store.prepare(self.scope, [self.node], 100, self.policy,
++                           quorum_available=True, schedule_active=True)
++        self.store.record_handoff(self.scope)
++        self.store.record_unknown(self.scope)
++
++    def rewrite(self, column, value):
++        # Fixed test-owned DB/column, never caller SQL or another owner's file.
++        assert column in ('spec', 'request_id')
++        with closing(sqlite3.connect(self.path)) as db:
++            db.execute('UPDATE jobs SET ' + column + '=? WHERE state=?', (value, 'UNKNOWN'))
++            db.commit()
++
++    def zero_unknown_spec(self):
++        spec = self.store.view(self.scope)['spec']
++        spec['resources'] = dict.fromkeys(spec['resources'], 0)
++        self.rewrite('spec', json.dumps(spec, sort_keys=True, separators=(',', ':')))
++
++    def test_reopen_rejects_corrupt_unknown_resources_without_repair(self):
++        self.zero_unknown_spec()
++        self.store.close()
++        with self.assertRaisesRegex(ValueError, 'invalid persisted preparation'):
++            reopened = PreparationJournal(self.path)
++            reopened.close()
++        with closing(sqlite3.connect(self.path)) as db:
++            state, spec = db.execute('SELECT state,spec FROM jobs').fetchone()
++        self.assertEqual(state, 'UNKNOWN')
++        self.assertTrue(all(v == 0 for v in json.loads(spec)['resources'].values()))
++
++    def test_live_corrupt_unknown_cannot_create_competing_preparation(self):
++        self.zero_unknown_spec()
++        second = dict(self.scope, job_id='competing')
++        self.store.enqueue(second, self.request, 'bench')
++        with self.assertRaisesRegex(ValueError, 'invalid persisted preparation'):
++            self.store.prepare(second, [self.node], 100, self.policy,
++                               quorum_available=True, schedule_active=True)
++        self.assertEqual(self.store.view(second)['state'], 'QUEUED')
++
++    def test_unknown_missing_hold_identity_is_not_a_valid_recovered_view(self):
++        self.rewrite('request_id', None)
++        with self.assertRaisesRegex(ValueError, 'invalid persisted preparation'):
++            self.store.view(self.scope)
++
++    def test_valid_unknown_roundtrip_preserves_exact_hold_and_events(self):
++        before = self.store.view(self.scope)
++        events = self.store.events()
++        self.store.close()
++        self.store = PreparationJournal(self.path)
++        self.assertEqual(self.store.view(self.scope), before)
++        self.assertEqual(self.store.events(), events)
++        self.assertIs(before['execution_authorized'], False)
++
++    def test_malformed_persisted_spec_variants_cannot_be_recovered_as_valid(self):
++        original = self.store.view(self.scope)['spec']
++        variants = []
++        for change in ({'ram': True}, {'cpu': -1}, {'scratch': 9223372036854775808}):
++            spec = dict(original, resources=dict(original['resources'], **change))
++            variants.append(json.dumps(spec, sort_keys=True, separators=(',', ':')))
++        variants.append(json.dumps(dict(original, data=['duplicate', 'duplicate']),
++                                   sort_keys=True, separators=(',', ':')))
++        variants.append(json.dumps(dict(original, extra='not-in-local-codec'),
++                                   sort_keys=True, separators=(',', ':')))
++        for raw in variants:
++            with self.subTest(spec=raw):
++                self.rewrite('spec', raw)
++                with self.assertRaisesRegex(ValueError, 'invalid persisted preparation'):
++                    self.store.view(self.scope)
++
++    def test_failed_reopen_closes_its_owned_connection(self):
++        self.zero_unknown_spec()
++        connection = sqlite3.connect(self.path, isolation_level=None)
++        with patch('scheduler_components.durable.sqlite3.connect', return_value=connection):
++            with self.assertRaisesRegex(ValueError, 'invalid persisted preparation'):
++                PreparationJournal(self.path)
++        with self.assertRaises(sqlite3.ProgrammingError):
++            connection.execute('SELECT 1')

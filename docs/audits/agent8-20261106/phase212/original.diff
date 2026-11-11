@@ -1,0 +1,3303 @@
+diff --git a/release/acceptance-review/20261110-level2-review1/SHA256.json b/release/acceptance-review/20261110-level2-review1/SHA256.json
+new file mode 100644
+index 0000000..8a8303b
+--- /dev/null
++++ b/release/acceptance-review/20261110-level2-review1/SHA256.json
+@@ -0,0 +1,67 @@
++{
++  "approval": "ROOT_APPROVED_FOR_A8_SOURCE_REVIEW_ONLY",
++  "hash_scope": "RAW_UTF8_LF_BYTES_OF_OTHER_11_PACKET_FILES",
++  "installability": "NOT_INSTALLABLE",
++  "members": {
++    "assignment-v1.json": {
++      "bytes": 3321,
++      "sha256": "39b4d6bc734d5fb27b1299307786801a725b5e932c359ef715af1b719975d7f3"
++    },
++    "authority-fencing-v1.json": {
++      "bytes": 5573,
++      "sha256": "cff7ccbc5859c99f89cf087b60c5156a0a09a4e68494530c8f35c55509554428"
++    },
++    "ci-evidence-index.json": {
++      "bytes": 24285,
++      "sha256": "491e124d358ac00ababca90981dfeacd67fd332abdacb444d158045a0a478a32"
++    },
++    "integration-baseline.json": {
++      "bytes": 13220,
++      "sha256": "618f350bc05f5b135e69532f09f5803a6914621dab882c7534bef5f241603bc1"
++    },
++    "node-inventory.json": {
++      "bytes": 3463,
++      "sha256": "2e38f1ad39aea46745db41c31e926efcad2d39c6131150eef590101b9549ac88"
++    },
++    "ownership-registry.json": {
++      "bytes": 2298,
++      "sha256": "377cf62095d86a6d3aec14074aa135f576aef8b2f07f696f841972ccc385d8e9"
++    },
++    "physical-acceptance-plan.json": {
++      "bytes": 44052,
++      "sha256": "0f8a84c6ba7ba6654fbfdc8b42c24bca0c8242bf72818c14af484bac062127bf"
++    },
++    "release-manifest.json": {
++      "bytes": 13949,
++      "sha256": "24eafe929b08a4386ca825c5d1c4837fb689aae2ad620305af385a047d61764a"
++    },
++    "rollback-plan.json": {
++      "bytes": 2664,
++      "sha256": "27462915b2568974f898fce67e3d68528c758adb4f65cab72013afd3fef80c23"
++    },
++    "storage-publication-v1.json": {
++      "bytes": 7324,
++      "sha256": "f75f5bfc0b90fc06c4d7013a214df169029f4a89dd4706a13c00816707e717c6"
++    },
++    "terminan-control-api-v1.json": {
++      "bytes": 7932,
++      "sha256": "49783d93d5eef8e1e4519847c574b26d97f025f3929a6a53fcb5c92c6567ffc3"
++    }
++  },
++  "permissions": {
++    "dispatch": "DENY",
++    "fault_injection": "DENY",
++    "installation": "DENY",
++    "physical": "DENY",
++    "production": "DENY",
++    "provider_sends": "DENY",
++    "runtime": "DENY",
++    "tailscale_changes": "DENY",
++    "trading": "DENY"
++  },
++  "review_scope": "May be approved for A8 SOURCE review only; never executable release or runtime/native endpoint admission",
++  "schema": "unified.acceptance-review.level2.SHA256.v1",
++  "self_hash": "EXCLUDED_TO_AVOID_SELF_REFERENCE_EXTERNAL_ROOT_HASH_REQUIRED",
++  "source_combination": "NOT_ASSEMBLED_OR_VERIFIED",
++  "status": "REVIEW_INPUTS_ONLY"
++}
+diff --git a/release/acceptance-review/20261110-level2-review1/assignment-v1.json b/release/acceptance-review/20261110-level2-review1/assignment-v1.json
+new file mode 100644
+index 0000000..db87015
+--- /dev/null
++++ b/release/acceptance-review/20261110-level2-review1/assignment-v1.json
+@@ -0,0 +1,72 @@
++{
++  "actual_resource_capsule_and_consume_integration": "NOT_ESTABLISHED",
++  "approval": "ROOT_APPROVED_FOR_A8_SOURCE_REVIEW_ONLY",
++  "contract_adoption": "NO_NEW_STATES_OR_OPERATIONS_GRANTED",
++  "current_component_assembly": "UNASSEMBLED_NOT_SELECTED",
++  "document_kind": "REFERENCE_CARD_NOT_NEW_WIRE_ABI",
++  "installability": "NOT_INSTALLABLE",
++  "permissions": {
++    "dispatch": "DENY",
++    "fault_injection": "DENY",
++    "installation": "DENY",
++    "physical": "DENY",
++    "production": "DENY",
++    "provider_sends": "DENY",
++    "runtime": "DENY",
++    "tailscale_changes": "DENY",
++    "trading": "DENY"
++  },
++  "references": [
++    {
++      "admission": "NONE",
++      "bytes": 1100,
++      "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++      "path": "acceptance/20261106/assignment-v1.json",
++      "repository": "YehorBabenko88/unified-system",
++      "scope": "EXISTING_SOURCE_CONTRACT_NOT_RUNTIME_ADMISSION",
++      "sha256": "2c963c65feb9ae76c4117e801a49922005a8065ca6edaaf193578008ddc74b41",
++      "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
++    },
++    {
++      "admission": "NONE",
++      "bytes": 27529,
++      "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++      "path": "acceptance/20261106/proposals/5cc8e6a3557a9d71b6d1ccdf9939be49133deee9219b19029ffd4cf3d3bfa278.json",
++      "repository": "YehorBabenko88/unified-system",
++      "scope": "HISTORICAL_PROPOSAL_REVIEW_ONLY_NO_RUNTIME_ACK",
++      "sha256": "5cc8e6a3557a9d71b6d1ccdf9939be49133deee9219b19029ffd4cf3d3bfa278",
++      "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
++    },
++    {
++      "admission": "NONE",
++      "bytes": 7123,
++      "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++      "path": "acceptance/20261106/proposals/799f07457bbd8419da4e859f27425ec58b884b89330e4224577f372070224a79.json",
++      "repository": "YehorBabenko88/unified-system",
++      "scope": "HISTORICAL_PROPOSAL_REVIEW_ONLY_NO_RUNTIME_ACK",
++      "sha256": "799f07457bbd8419da4e859f27425ec58b884b89330e4224577f372070224a79",
++      "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
++    },
++    {
++      "admission": "NONE",
++      "bytes": 1357,
++      "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++      "path": "release/design-review/ha/logical-codec-20261110/ROOT-COMPOSITION.json",
++      "repository": "YehorBabenko88/unified-system",
++      "scope": "EXISTING_SOURCE_CONTRACT_NOT_RUNTIME_ADMISSION",
++      "sha256": "2849e9436007e045cfff1c6f1aacbca683478ef1a8316d420779cdaf249c41f3",
++      "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
++    }
++  ],
++  "review_scope": "May be approved for A8 SOURCE review only; never executable release or runtime/native endpoint admission",
++  "rules": [
++    "Existing source/design contracts retained with their original approval scopes",
++    "Actual current principal/rights/quota plus same authority reservation/fence required before physical placement",
++    "Logical hold does not grant CPU/RAM/disk/worker/native access",
++    "One in-flight owner and UNKNOWN debt/idempotency must be preserved; cancellation races require actual proof",
++    "UI closing/reopening does not own committed job lifetime; coordinator duties independent of worker schedule"
++  ],
++  "schema": "unified.acceptance-review.level2.assignment-v1.v1",
++  "source_combination": "NOT_ASSEMBLED_OR_VERIFIED",
++  "status": "REVIEW_INPUTS_ONLY"
++}
+diff --git a/release/acceptance-review/20261110-level2-review1/authority-fencing-v1.json b/release/acceptance-review/20261110-level2-review1/authority-fencing-v1.json
+new file mode 100644
+index 0000000..5029de9
+--- /dev/null
++++ b/release/acceptance-review/20261110-level2-review1/authority-fencing-v1.json
+@@ -0,0 +1,128 @@
++{
++  "approval": "ROOT_APPROVED_FOR_A8_SOURCE_REVIEW_ONLY",
++  "current_broker_input": {
++    "component": "A2 broker",
++    "head": "ab4c3b62a3d160d189f06df01d42c01a7c57e3c5",
++    "qualification": {
++      "methods": 10,
++      "receipt": {
++        "admission": "NONE",
++        "bytes": 264908,
++        "origin": "EXISTING_LOCAL_EVIDENCE",
++        "path": "$PRIVATE_CODEX_EVIDENCE/atomic-read-unit-green-20261110/ACTUAL-RESULT.json",
++        "scope": "LOCAL_MOCK_ONLY_NOT_NATIVE_PROOF",
++        "sha256": "4497f943839d6890d09137abeaf49c720e741d8b9bac770b9f9a000610a71f85"
++      },
++      "scope": "LOCAL_ACTUAL_CODE_MOCK_BACKEND_UNIT_ONLY",
++      "skips": 0,
++      "state": "LOCAL_MOCK_UNIT_PASS"
++    },
++    "repository": "YehorBabenko88/unified-system",
++    "runtime_admission": false,
++    "state": "UNASSEMBLED_LOCAL_INPUT",
++    "tree": "72456e8f5a710be45a80afcd622ca2fcd0cace47"
++  },
++  "current_component_cards": [
++    {
++      "admission": "NONE",
++      "bytes": 23622,
++      "origin": "EXISTING_LOCAL_COMPONENT_CARD",
++      "path": "$PRIVATE_TASK_OUTPUTS/codex-agent-2-high-availability-distributed/outputs/A2-ATOMIC-READ-BRIDGE-IMPLEMENTATION-CARD-20261110/CARD.md",
++      "scope": "HISTORICAL_BEFORE_EDIT_CARD_NOT_POST_FIX_RUNTIME_APPROVAL",
++      "sha256": "7c4d9024a0cc78c51f2fceb4efd451d9ec9855f939be0a6b2daa92c4aded46ff"
++    },
++    {
++      "admission": "NONE",
++      "bytes": 1440,
++      "origin": "EXISTING_LOCAL_COMPONENT_CARD",
++      "path": "$PRIVATE_TASK_OUTPUTS/codex-agent-2-high-availability-distributed/outputs/A2-ATOMIC-READ-SOURCE-UNIT-HANDOFF-20261110/HANDOFF.json",
++      "scope": "EXACT_POST_FIX_LOCAL_MOCK10_HANDOFF_PUBLICATION_HELD_NATIVE_PHYSICAL_NO_GO",
++      "sha256": "ebdd074edafbef4690841db09320e5de4ff46eb06434d1de8890c73cd28836f0"
++    }
++  ],
++  "design_ack": "HISTORICAL_SCOPED_ONLY_NOT_RUNTIME_OR_NATIVE_ADMISSION",
++  "document_kind": "REFERENCE_CARD_NOT_NEW_WIRE_ABI",
++  "installability": "NOT_INSTALLABLE",
++  "math_single_use": {
++    "attempt": 1,
++    "authorization": "CONSUMED_IMMUTABLE_NO_RETRY_OR_RENEWAL",
++    "diagnostic": "DLL_INITIALIZATION_FAILED",
++    "native_pass": "UNAVAILABLE",
++    "run_id": 42352374979,
++    "source": "2446d04624469e34aa96ed766be7a4887d6d654c"
++  },
++  "native_grants": "NOT_ADMITTED",
++  "permissions": {
++    "dispatch": "DENY",
++    "fault_injection": "DENY",
++    "installation": "DENY",
++    "physical": "DENY",
++    "production": "DENY",
++    "provider_sends": "DENY",
++    "runtime": "DENY",
++    "tailscale_changes": "DENY",
++    "trading": "DENY"
++  },
++  "references": [
++    {
++      "admission": "NONE",
++      "bytes": 671,
++      "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++      "path": "acceptance/20261106/authority-fencing-v1.json",
++      "repository": "YehorBabenko88/unified-system",
++      "scope": "EXISTING_SOURCE_CONTRACT_NOT_RUNTIME_ADMISSION",
++      "sha256": "a1cf761b41916f4f082f35abb672113eb472f79dfdeddd28167363f81995d2ed",
++      "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
++    },
++    {
++      "admission": "NONE",
++      "bytes": 27529,
++      "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++      "path": "acceptance/20261106/proposals/5cc8e6a3557a9d71b6d1ccdf9939be49133deee9219b19029ffd4cf3d3bfa278.json",
++      "repository": "YehorBabenko88/unified-system",
++      "scope": "HISTORICAL_PROPOSAL_REVIEW_ONLY_NO_RUNTIME_ACK",
++      "sha256": "5cc8e6a3557a9d71b6d1ccdf9939be49133deee9219b19029ffd4cf3d3bfa278",
++      "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
++    },
++    {
++      "admission": "NONE",
++      "bytes": 12927,
++      "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++      "path": "coordination/api-contracts.v1.json",
++      "repository": "YehorBabenko88/unified-system",
++      "scope": "EXISTING_SOURCE_CONTRACT_NOT_RUNTIME_ADMISSION",
++      "sha256": "6d3479c90a4312cdcba9befc1f06638770a74c59a9ec774a323837c143362952",
++      "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
++    },
++    {
++      "admission": "NONE",
++      "bytes": 5963,
++      "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++      "path": "docs/intelligence/research-identity/API-REVIEW1.md",
++      "repository": "YehorBabenko88/unified-system",
++      "scope": "EXISTING_SOURCE_CONTRACT_NOT_RUNTIME_ADMISSION",
++      "sha256": "549abfe795b922b90692ab6c34edbbfd992c479113cc2fd816a5c3faba98a2c0",
++      "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
++    },
++    {
++      "admission": "NONE",
++      "bytes": 1357,
++      "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++      "path": "release/design-review/ha/logical-codec-20261110/ROOT-COMPOSITION.json",
++      "repository": "YehorBabenko88/unified-system",
++      "scope": "EXISTING_SOURCE_CONTRACT_NOT_RUNTIME_ADMISSION",
++      "sha256": "2849e9436007e045cfff1c6f1aacbca683478ef1a8316d420779cdaf249c41f3",
++      "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
++    }
++  ],
++  "review_scope": "May be approved for A8 SOURCE review only; never executable release or runtime/native endpoint admission",
++  "rules": [
++    "Consistent current authority and native session/index fences are distinct from UTC timestamps",
++    "UNKNOWN never means NOT_FOUND or uncommitted; preserve identity/debt, no refund/rekey/retry permission",
++    "Local capture requires actual re-observation where consumer needs current authority; mock10 does not prove native atomicity",
++    "Existing strict-time logical mutation policy remains disabled; no physical grant/dispatch from a logical hold"
++  ],
++  "schema": "unified.acceptance-review.level2.authority-fencing-v1.v1",
++  "source_combination": "NOT_ASSEMBLED_OR_VERIFIED",
++  "status": "REVIEW_INPUTS_ONLY"
++}
+diff --git a/release/acceptance-review/20261110-level2-review1/ci-evidence-index.json b/release/acceptance-review/20261110-level2-review1/ci-evidence-index.json
+new file mode 100644
+index 0000000..3491fbc
+--- /dev/null
++++ b/release/acceptance-review/20261110-level2-review1/ci-evidence-index.json
+@@ -0,0 +1,685 @@
++{
++  "F26": "BROAD_HEARTBEAT_OPEN_CAUSE_NOT_CLOSED_BY_TARGETED_PASS",
++  "F42": "OPEN",
++  "approval": "ROOT_APPROVED_FOR_A8_SOURCE_REVIEW_ONLY",
++  "current_source": {
++    "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++    "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
++  },
++  "full_mandatory_ci": "NOT_PASS",
++  "historical96": "HISTORICAL_ONLY_NO_TRANSFER",
++  "installability": "NOT_INSTALLABLE",
++  "latest_original_cohort_snapshot": {
++    "bytes": 545986,
++    "cancellation_root_cause": "UNKNOWN",
++    "conclusions": {
++      "cancelled": 4,
++      "failure": 7,
++      "success": 26
++    },
++    "failures": "Exact current originals collected independently; causes not inferred from conclusions",
++    "latest_run_update_utc": "2026-11-10T21:18:07Z",
++    "path": "$PRIVATE_CODEX_EVIDENCE/ci-boundary-evidence-20261110/pr82-bfa3-ci-observation3.json",
++    "previous_observation": "Existing observation2 reference retained as historical observation; no old status overwritten",
++    "root_manual_rerun_or_cancel": "NONE_ROOT_REPORTED",
++    "runs": [
++      {
++        "attempt": 1,
++        "conclusion": "success",
++        "created_utc": "2026-11-10T20:37:35Z",
++        "event": "pull_request",
++        "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++        "name": "Disposable Windows stopped-service acceptance",
++        "run_id": 42897137450,
++        "status": "completed",
++        "updated_utc": "2026-11-10T20:43:14Z"
++      },
++      {
++        "attempt": 1,
++        "conclusion": "success",
++        "created_utc": "2026-11-10T20:37:35Z",
++        "event": "pull_request",
++        "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++        "name": "Final partial integration source-bound components",
++        "run_id": 42897137429,
++        "status": "completed",
++        "updated_utc": "2026-11-10T20:56:48Z"
++      },
++      {
++        "attempt": 1,
++        "conclusion": "success",
++        "created_utc": "2026-11-10T20:37:35Z",
++        "event": "pull_request",
++        "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++        "name": "Durable fleet PLAN_ONLY evidence",
++        "run_id": 42897137525,
++        "status": "completed",
++        "updated_utc": "2026-11-10T21:00:13Z"
++      },
++      {
++        "attempt": 1,
++        "conclusion": "success",
++        "created_utc": "2026-11-10T20:37:35Z",
++        "event": "pull_request",
++        "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++        "name": "Pinned historical handoff negative smoke",
++        "run_id": 42897137469,
++        "status": "completed",
++        "updated_utc": "2026-11-10T20:58:17Z"
++      },
++      {
++        "attempt": 1,
++        "conclusion": "success",
++        "created_utc": "2026-11-10T20:37:34Z",
++        "event": "pull_request",
++        "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++        "name": "Agent 5 isolated components",
++        "run_id": 42897137021,
++        "status": "completed",
++        "updated_utc": "2026-11-10T20:44:31Z"
++      },
++      {
++        "attempt": 1,
++        "conclusion": "failure",
++        "created_utc": "2026-11-10T20:37:34Z",
++        "event": "pull_request",
++        "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++        "name": "Offline contract tests",
++        "run_id": 42897137291,
++        "status": "completed",
++        "updated_utc": "2026-11-10T21:10:48Z"
++      },
++      {
++        "attempt": 1,
++        "conclusion": "cancelled",
++        "created_utc": "2026-11-10T20:37:34Z",
++        "event": "pull_request",
++        "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++        "name": "Five-module source boundary",
++        "run_id": 42897137271,
++        "status": "completed",
++        "updated_utc": "2026-11-10T21:05:30Z"
++      },
++      {
++        "attempt": 1,
++        "conclusion": "cancelled",
++        "created_utc": "2026-11-10T20:37:34Z",
++        "event": "pull_request",
++        "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++        "name": "Five-module lifecycle evidence",
++        "run_id": 42897137558,
++        "status": "completed",
++        "updated_utc": "2026-11-10T21:16:55Z"
++      },
++      {
++        "attempt": 1,
++        "conclusion": "failure",
++        "created_utc": "2026-11-10T20:37:34Z",
++        "event": "pull_request",
++        "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++        "name": "Actual six-source disposable integration",
++        "run_id": 42897137274,
++        "status": "completed",
++        "updated_utc": "2026-11-10T21:17:05Z"
++      },
++      {
++        "attempt": 1,
++        "conclusion": "failure",
++        "created_utc": "2026-11-10T20:37:34Z",
++        "event": "pull_request",
++        "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++        "name": "Installer security PLAN_ONLY",
++        "run_id": 42897137360,
++        "status": "completed",
++        "updated_utc": "2026-11-10T21:18:07Z"
++      },
++      {
++        "attempt": 1,
++        "conclusion": "failure",
++        "created_utc": "2026-11-10T20:37:34Z",
++        "event": "pull_request",
++        "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++        "name": "Preparation integrity exact source",
++        "run_id": 42897137339,
++        "status": "completed",
++        "updated_utc": "2026-11-10T20:50:53Z"
++      },
++      {
++        "attempt": 1,
++        "conclusion": "success",
++        "created_utc": "2026-11-10T20:37:34Z",
++        "event": "pull_request",
++        "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++        "name": "Pinned Terminan source contract smoke",
++        "run_id": 42897137070,
++        "status": "completed",
++        "updated_utc": "2026-11-10T20:51:40Z"
++      },
++      {
++        "attempt": 1,
++        "conclusion": "success",
++        "created_utc": "2026-11-10T20:37:34Z",
++        "event": "pull_request",
++        "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++        "name": "Unified to Terminan synthetic status integration",
++        "run_id": 42897137413,
++        "status": "completed",
++        "updated_utc": "2026-11-10T20:50:58Z"
++      },
++      {
++        "attempt": 1,
++        "conclusion": "success",
++        "created_utc": "2026-11-10T20:37:34Z",
++        "event": "pull_request",
++        "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++        "name": "Disposable loopback Supervisor status transport",
++        "run_id": 42897137057,
++        "status": "completed",
++        "updated_utc": "2026-11-10T20:57:11Z"
++      },
++      {
++        "attempt": 1,
++        "conclusion": "success",
++        "created_utc": "2026-11-10T20:37:34Z",
++        "event": "pull_request",
++        "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++        "name": "Supervisor local-only component integration",
++        "run_id": 42897137294,
++        "status": "completed",
++        "updated_utc": "2026-11-10T20:56:29Z"
++      },
++      {
++        "attempt": 1,
++        "conclusion": "success",
++        "created_utc": "2026-11-10T20:37:34Z",
++        "event": "pull_request",
++        "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++        "name": "Mandatory synthetic causal paper composition",
++        "run_id": 42897137370,
++        "status": "completed",
++        "updated_utc": "2026-11-10T20:56:32Z"
++      },
++      {
++        "attempt": 1,
++        "conclusion": "success",
++        "created_utc": "2026-11-10T20:37:34Z",
++        "event": "pull_request",
++        "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++        "name": "Actual Unified Supervisor to Terminan disposable HTTP",
++        "run_id": 42897137258,
++        "status": "completed",
++        "updated_utc": "2026-11-10T20:56:23Z"
++      },
++      {
++        "attempt": 1,
++        "conclusion": "success",
++        "created_utc": "2026-11-10T20:37:34Z",
++        "event": "pull_request",
++        "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++        "name": "Five-module fleet policy offline",
++        "run_id": 42897137085,
++        "status": "completed",
++        "updated_utc": "2026-11-10T20:56:48Z"
++      },
++      {
++        "attempt": 1,
++        "conclusion": "success",
++        "created_utc": "2026-11-10T20:37:34Z",
++        "event": "pull_request",
++        "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++        "name": "Durable development mission controller",
++        "run_id": 42897137364,
++        "status": "completed",
++        "updated_utc": "2026-11-10T20:55:01Z"
++      },
++      {
++        "attempt": 1,
++        "conclusion": "success",
++        "created_utc": "2026-11-10T20:37:34Z",
++        "event": "pull_request",
++        "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++        "name": "Pinned A-B-C synthetic integration chain",
++        "run_id": 42897137247,
++        "status": "completed",
++        "updated_utc": "2026-11-10T20:55:31Z"
++      },
++      {
++        "attempt": 1,
++        "conclusion": "success",
++        "created_utc": "2026-11-10T20:37:34Z",
++        "event": "pull_request",
++        "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++        "name": "LAN Mux integrated isolated qualification",
++        "run_id": 42897137228,
++        "status": "completed",
++        "updated_utc": "2026-11-10T20:58:05Z"
++      },
++      {
++        "attempt": 1,
++        "conclusion": "success",
++        "created_utc": "2026-11-10T20:37:34Z",
++        "event": "pull_request",
++        "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++        "name": "Operator Grid contracts",
++        "run_id": 42897137378,
++        "status": "completed",
++        "updated_utc": "2026-11-10T20:46:38Z"
++      },
++      {
++        "attempt": 1,
++        "conclusion": "success",
++        "created_utc": "2026-11-10T20:37:34Z",
++        "event": "pull_request",
++        "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++        "name": "Pinned source code contract smoke",
++        "run_id": 42897137079,
++        "status": "completed",
++        "updated_utc": "2026-11-10T20:46:17Z"
++      },
++      {
++        "attempt": 1,
++        "conclusion": "success",
++        "created_utc": "2026-11-10T20:37:34Z",
++        "event": "pull_request",
++        "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++        "name": "Pinned synthetic A-B handoff roundtrip",
++        "run_id": 42897137081,
++        "status": "completed",
++        "updated_utc": "2026-11-10T20:46:22Z"
++      },
++      {
++        "attempt": 1,
++        "conclusion": "success",
++        "created_utc": "2026-11-10T20:37:34Z",
++        "event": "pull_request",
++        "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++        "name": "Gateway disposable identity",
++        "run_id": 42897137417,
++        "status": "completed",
++        "updated_utc": "2026-11-10T20:48:35Z"
++      },
++      {
++        "attempt": 1,
++        "conclusion": "success",
++        "created_utc": "2026-11-10T20:37:34Z",
++        "event": "pull_request",
++        "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++        "name": "Pinned Terminan consumer wrong-producer HTTP negative",
++        "run_id": 42897137232,
++        "status": "completed",
++        "updated_utc": "2026-11-10T20:58:16Z"
++      },
++      {
++        "attempt": 1,
++        "conclusion": "success",
++        "created_utc": "2026-11-10T20:37:34Z",
++        "event": "pull_request",
++        "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++        "name": "Combined infrastructure cross-stream smoke",
++        "run_id": 42897137337,
++        "status": "completed",
++        "updated_utc": "2026-11-10T20:58:18Z"
++      },
++      {
++        "attempt": 1,
++        "conclusion": "success",
++        "created_utc": "2026-11-10T20:37:30Z",
++        "event": "push",
++        "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++        "name": "Mandatory synthetic causal paper composition",
++        "run_id": 42897126418,
++        "status": "completed",
++        "updated_utc": "2026-11-10T20:41:05Z"
++      },
++      {
++        "attempt": 1,
++        "conclusion": "failure",
++        "created_utc": "2026-11-10T20:37:30Z",
++        "event": "push",
++        "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++        "name": "Installer security PLAN_ONLY",
++        "run_id": 42897126422,
++        "status": "completed",
++        "updated_utc": "2026-11-10T21:11:34Z"
++      },
++      {
++        "attempt": 1,
++        "conclusion": "cancelled",
++        "created_utc": "2026-11-10T20:37:30Z",
++        "event": "push",
++        "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++        "name": "Five-module source boundary",
++        "run_id": 42897126372,
++        "status": "completed",
++        "updated_utc": "2026-11-10T21:06:34Z"
++      },
++      {
++        "attempt": 1,
++        "conclusion": "failure",
++        "created_utc": "2026-11-10T20:37:30Z",
++        "event": "push",
++        "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++        "name": "Offline contract tests",
++        "run_id": 42897126385,
++        "status": "completed",
++        "updated_utc": "2026-11-10T21:13:12Z"
++      },
++      {
++        "attempt": 1,
++        "conclusion": "failure",
++        "created_utc": "2026-11-10T20:37:30Z",
++        "event": "push",
++        "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++        "name": "Actual six-source disposable integration",
++        "run_id": 42897126440,
++        "status": "completed",
++        "updated_utc": "2026-11-10T21:08:36Z"
++      },
++      {
++        "attempt": 1,
++        "conclusion": "cancelled",
++        "created_utc": "2026-11-10T20:37:30Z",
++        "event": "push",
++        "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++        "name": "Five-module lifecycle evidence",
++        "run_id": 42897126396,
++        "status": "completed",
++        "updated_utc": "2026-11-10T21:05:43Z"
++      },
++      {
++        "attempt": 1,
++        "conclusion": "success",
++        "created_utc": "2026-11-10T20:37:30Z",
++        "event": "push",
++        "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++        "name": "Combined infrastructure cross-stream smoke",
++        "run_id": 42897126516,
++        "status": "completed",
++        "updated_utc": "2026-11-10T20:52:22Z"
++      },
++      {
++        "attempt": 1,
++        "conclusion": "success",
++        "created_utc": "2026-11-10T20:37:30Z",
++        "event": "push",
++        "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++        "name": "Five-module fleet policy offline",
++        "run_id": 42897126425,
++        "status": "completed",
++        "updated_utc": "2026-11-10T20:53:27Z"
++      },
++      {
++        "attempt": 1,
++        "conclusion": "success",
++        "created_utc": "2026-11-10T20:37:30Z",
++        "event": "push",
++        "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++        "name": "Disposable Windows stopped-service acceptance",
++        "run_id": 42897126376,
++        "status": "completed",
++        "updated_utc": "2026-11-10T20:46:12Z"
++      },
++      {
++        "attempt": 1,
++        "conclusion": "success",
++        "created_utc": "2026-11-10T20:37:30Z",
++        "event": "push",
++        "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++        "name": "Durable fleet PLAN_ONLY evidence",
++        "run_id": 42897126344,
++        "status": "completed",
++        "updated_utc": "2026-11-10T20:59:38Z"
++      }
++    ],
++    "scope": "ORIGINAL_RUN_METADATA_NOT_JOB_LOG_ROOT_CAUSE",
++    "sha256": "057bd2319d1cae7cc81b3661b60772231c8b0fc1f3c619d65187235f2fb5b73e",
++    "source_head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++    "terminal_runs": 37,
++    "timestamp_semantics": "RUN_UPDATE_BOUND_NOT_CAPTURE_OR_CURRENT_TIME",
++    "total_runs": 37
++  },
++  "local_units": [
++    {
++      "methods": 10,
++      "receipt": {
++        "admission": "NONE",
++        "bytes": 264908,
++        "origin": "EXISTING_LOCAL_EVIDENCE",
++        "path": "$PRIVATE_CODEX_EVIDENCE/atomic-read-unit-green-20261110/ACTUAL-RESULT.json",
++        "scope": "LOCAL_MOCK_ONLY_NOT_NATIVE_PROOF",
++        "sha256": "4497f943839d6890d09137abeaf49c720e741d8b9bac770b9f9a000610a71f85"
++      },
++      "scope": "LOCAL_ACTUAL_CODE_MOCK_BACKEND_UNIT_ONLY",
++      "skips": 0,
++      "state": "LOCAL_MOCK_UNIT_PASS"
++    },
++    {
++      "receipt": {
++        "admission": "NONE",
++        "bytes": 88732,
++        "origin": "EXISTING_LOCAL_EVIDENCE",
++        "path": "$PRIVATE_CODEX_EVIDENCE/terminan-disposal-green-evidence-20261110/receipt.json",
++        "scope": "LOCAL_ACTUAL_JS_FAKE_DOM_RAF_POST_FIX_SIX_CASE_UNIT_ONLY",
++        "sha256": "7b2b6143b03cee8dfd7fd63666f3b00a28f5ac45918b9b55ddd5b7e412179f0a"
++      },
++      "same_six_local_js_cases": "PASS",
++      "scope": "LOCAL_ACTUAL_JS_FAKE_DOM_RAF_POST_FIX_SIX_CASE_UNIT_ONLY",
++      "tap_sha256": "4905dc18ebafcd02d8c8d6b930616552314fa17cc2fac85a8f849ae04617e2d0"
++    }
++  ],
++  "math": "CONSUMED_DLL_INITIALIZATION_FAILED_NATIVE_PASS_UNAVAILABLE",
++  "original_observation": {
++    "admission": "NONE",
++    "bytes": 545949,
++    "origin": "EXISTING_LOCAL_EVIDENCE",
++    "path": "$PRIVATE_CODEX_EVIDENCE/ci-boundary-evidence-20261110/pr82-bfa3-ci-observation2.json",
++    "scope": "BOUNDED_PRIOR_OBSERVATION_NO_NEW_POLL",
++    "sha256": "594d9a71d98231b9d39fd43ad5e92feb13e01c87babbbaaf5ad7a41a52af91b5"
++  },
++  "permissions": {
++    "dispatch": "DENY",
++    "fault_injection": "DENY",
++    "installation": "DENY",
++    "physical": "DENY",
++    "production": "DENY",
++    "provider_sends": "DENY",
++    "runtime": "DENY",
++    "tailscale_changes": "DENY",
++    "trading": "DENY"
++  },
++  "review_scope": "May be approved for A8 SOURCE review only; never executable release or runtime/native endpoint admission",
++  "schema": "unified.acceptance-review.level2.ci-evidence-index.v1",
++  "source_combination": "NOT_ASSEMBLED_OR_VERIFIED",
++  "status": "REVIEW_INPUTS_ONLY",
++  "storage": {
++    "cases_per_job": 22,
++    "hosted_job_origins": [
++      {
++        "artifact_id": 13799047107,
++        "attempt": 1,
++        "head": "1da10616a2b8217930f354e17caaa6fcea22dac4",
++        "inventory_controls": 6,
++        "job_id": 130097270823,
++        "native_qualified": false,
++        "physical_qualified": false,
++        "run_id": 42892587873,
++        "skips": 0,
++        "suite_tests": 22,
++        "tree": "c2b39329924810535add3b02c3f5c5e1b11bdf62",
++        "zip_sha256": "01174d0750926a4e1d4b2289fba37305874f9f19bb507ffbd081ed650fc4c19c"
++      },
++      {
++        "artifact_id": 13799152197,
++        "attempt": 1,
++        "head": "1da10616a2b8217930f354e17caaa6fcea22dac4",
++        "inventory_controls": 6,
++        "job_id": 130097271506,
++        "native_qualified": false,
++        "physical_qualified": false,
++        "run_id": 42892587873,
++        "skips": 0,
++        "suite_tests": 22,
++        "tree": "c2b39329924810535add3b02c3f5c5e1b11bdf62",
++        "zip_sha256": "0bd86c7a66328b104e458e3d1b05d22a81e2852181444cd6ec96b1e010fead6b"
++      },
++      {
++        "artifact_id": 13798114884,
++        "attempt": 1,
++        "head": "1da10616a2b8217930f354e17caaa6fcea22dac4",
++        "inventory_controls": 6,
++        "job_id": 130097247188,
++        "native_qualified": false,
++        "physical_qualified": false,
++        "run_id": 42892580326,
++        "skips": 0,
++        "suite_tests": 22,
++        "tree": "c2b39329924810535add3b02c3f5c5e1b11bdf62",
++        "zip_sha256": "b442997845a73e78d855afa2a8808e69554bedb882628be515f70ae5f9c7e403"
++      },
++      {
++        "artifact_id": 13799426232,
++        "attempt": 1,
++        "head": "1da10616a2b8217930f354e17caaa6fcea22dac4",
++        "inventory_controls": 6,
++        "job_id": 130097247741,
++        "native_qualified": false,
++        "physical_qualified": false,
++        "run_id": 42892580326,
++        "skips": 0,
++        "suite_tests": 22,
++        "tree": "c2b39329924810535add3b02c3f5c5e1b11bdf62",
++        "zip_sha256": "3c8bdecdf816ccde54e7970977f42147fe79b654967e4c495da0477d27f1b1c5"
++      }
++    ],
++    "hosted_jobs": 4,
++    "local_pure6": {
++      "admission": "NONE",
++      "bytes": 407151,
++      "origin": "EXISTING_LOCAL_EVIDENCE",
++      "path": "$PRIVATE_CODEX_EVIDENCE/ci-boundary-evidence-20261110/storage-1da-pure-receipt.json",
++      "scope": "SIX_INVENTORY_CONTROLS_ONLY_NOT_22_FIXTURE_RERUN",
++      "sha256": "30f951f0cd7a7ee871a9a69aa395073700a15d26e519bd835f73fae3f0b563d4"
++    },
++    "separate_inventory_controls": 6,
++    "verification": {
++      "admission": "NONE",
++      "bytes": 3507,
++      "origin": "EXISTING_LOCAL_EVIDENCE",
++      "path": "$PRIVATE_TASK_OUTPUTS/codex-agent-4-distributed-storage-integrity/outputs/PR56-1DA-HOSTED/verification.json",
++      "scope": "FOUR_HOSTED_LOCAL_PREREQUISITE_JOBS_NOT_FULL_CI_NATIVE_OR_PHYSICAL",
++      "sha256": "f50a51788deffe2f67d9f9eb82a82329f247515564b3cdca6c6e8fceff546ddf"
++    }
++  },
++  "targeted_family_verification": {
++    "families": [
++      {
++        "inventory": "68+separate9controls",
++        "name": "LAN",
++        "platforms": "Windows/Ubuntu CP312.10",
++        "run_id": 42897137228
++      },
++      {
++        "inventory": "161",
++        "name": "Component",
++        "platforms": "Windows/Ubuntu CP311+312",
++        "run_id": 42897137429
++      },
++      {
++        "inventory": "132",
++        "name": "Supervisor",
++        "platforms": "Windows/Ubuntu CP312.10",
++        "run_id": 42897137294
++      },
++      {
++        "inventory": "25+8controls",
++        "name": "Gateway",
++        "platforms": "Windows/Ubuntu CP312.10",
++        "run_id": 42897137417
++      },
++      {
++        "inventory": "58+6static",
++        "name": "MCI",
++        "platforms": "Windows/Ubuntu CP312.10",
++        "run_id": 42897137364
++      }
++    ],
++    "limits": [
++      "LAN single exported map with workflow pre/post assertion; not two exported maps",
++      "Gateway original logs/head1870/countIDs; no artifact or individual runner source map",
++      "MCI static6 count/OK summary; no verbose6IDs"
++    ],
++    "review": {
++      "admission": "NONE",
++      "bytes": 4910,
++      "origin": "EXISTING_LOCAL_EVIDENCE",
++      "path": "$PRIVATE_TASK_OUTPUTS/codex-agent-8-independent-security-ci/outputs/phase203/report.md",
++      "scope": "A8_PHASE203_TARGETED_ONLY",
++      "sha256": "53bd5bef5b00daa85de26041da62a9fb782539d5f92de4fb9735e5675d62ae6c"
++    },
++    "scope": "FIVE_FAMILIES_ONLY_NOT_SUMMED_AS_DISTINCT_TESTS",
++    "verification": {
++      "admission": "NONE",
++      "bytes": 141871,
++      "origin": "EXISTING_LOCAL_EVIDENCE",
++      "path": "$PRIVATE_TASK_OUTPUTS/codex-agent-8-independent-security-ci/outputs/phase203/verification.json",
++      "scope": "A8_PHASE203_ORIGINAL_JOB_ARTIFACT_SOURCE_CHECKS",
++      "sha256": "fe4b51a9b6bc42aaa87e436946bc8da48d9b710572d424932617170f1d3e3c99"
++    }
++  },
++  "unpublished_hosted47_tools": {
++    "manifest": {
++      "admission": "NONE",
++      "bytes": 5266,
++      "origin": "EXISTING_LOCAL_COMPONENT_CARD",
++      "path": "$PRIVATE_TASK_OUTPUTS/codex-agent-7-distributed-research-math/outputs/hosted47-parser-childpath-controls-source-manifest-20261110.json",
++      "scope": "UNPUBLISHED_SOURCE_ONLY_TOOLS_HOLD_NO_IMPORT_TEST_COMPILE_OR_EXECUTION",
++      "sha256": "222811d6d9298be5effe23b976a30f9cfdbc6a9fbf07bd868d18ac1dbf7011e9"
++    },
++    "no_execution_or_47_pass_claim": true,
++    "status": "HOLD"
++  },
++  "windows36_failure": {
++    "actual_inventory": {
++      "elapsed_seconds": 24.144,
++      "errors": 1,
++      "expected": 36,
++      "failures": 0,
++      "ok": 35,
++      "separate_pure_controls_passed": 12,
++      "skips": 0
++    },
++    "jobs": [
++      {
++        "conclusion": null,
++        "job_id": 130113107981,
++        "name": "qualification (ubuntu-24.04)"
++      },
++      {
++        "conclusion": "failure",
++        "job_id": 130113108432,
++        "name": "qualification (windows-latest)"
++      }
++    ],
++    "note": "Exact original Windows qualification:12 separate pure controls PASS; actual36 cases:35OK/1ERROR/0skip in24.144s. Actual36 qualification FAIL; not36PASS.",
++    "original_jobs": {
++      "admission": "NONE",
++      "bytes": 4459,
++      "origin": "EXISTING_LOCAL_EVIDENCE",
++      "path": "$PRIVATE_CODEX_EVIDENCE/ci-boundary-evidence-20261110/preparation-bfa3-jobs-observation1.json",
++      "scope": "ORIGINAL_SNAPSHOT_NOT_REFRESHED",
++      "sha256": "1c2589f2a7cff167689284d8576b8cecc702db65f88eacf4d7d17ba197897a52"
++    },
++    "original_log": {
++      "admission": "NONE",
++      "bytes": 611927,
++      "origin": "EXISTING_LOCAL_EVIDENCE",
++      "path": "$PRIVATE_CODEX_EVIDENCE/ci-boundary-evidence-20261110/preparation-bfa3-windows-original-decoded-log.json",
++      "scope": "LOSSLESS_DECODED_ORIGINAL_PRIVATE_LOG_REFERENCE",
++      "sha256": "d0348d0c412dc5a96b76abeb077ac173afb614b8b92007f6f0891c853887dd8b"
++    },
++    "run_id": 42897137339,
++    "source": "EXACT_BFA",
++    "stage": "F42_CHILD_STDOUT_THREAD_TIMEOUT_20S",
++    "status": "FAIL"
++  }
++}
+diff --git a/release/acceptance-review/20261110-level2-review1/integration-baseline.json b/release/acceptance-review/20261110-level2-review1/integration-baseline.json
+new file mode 100644
+index 0000000..4940fdd
+--- /dev/null
++++ b/release/acceptance-review/20261110-level2-review1/integration-baseline.json
+@@ -0,0 +1,289 @@
++{
++  "abi_reinterpretation": false,
++  "approval": "ROOT_APPROVED_FOR_A8_SOURCE_REVIEW_ONLY",
++  "base_head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++  "base_tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98",
++  "historical_snapshot_correction": {
++    "current_bfa_snapshot": "pr82-bfa3-head-original.json",
++    "observed_head": "96b17905a5be923857aa1e778085eaeec6f0f27f",
++    "old_evidence_transfer": "FORBIDDEN",
++    "older_file": "sixrepo-current-unified-system-pr82.json"
++  },
++  "installability": "NOT_INSTALLABLE",
++  "new_abi_defined": false,
++  "permissions": {
++    "dispatch": "DENY",
++    "fault_injection": "DENY",
++    "installation": "DENY",
++    "physical": "DENY",
++    "production": "DENY",
++    "provider_sends": "DENY",
++    "runtime": "DENY",
++    "tailscale_changes": "DENY",
++    "trading": "DENY"
++  },
++  "public_source_observations": [
++    {
++      "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++      "observed_updated_at": "2026-11-10T20:37:52Z",
++      "pr": 82,
++      "public_pr_url": "https://github.com/YehorBabenko88/unified-system/pull/82",
++      "repository": "YehorBabenko88/unified-system",
++      "selection": "OBSERVED_PUBLIC_SOURCE_INPUT_ONLY",
++      "snapshot": {
++        "admission": "NONE",
++        "bytes": 21106,
++        "origin": "EXISTING_LOCAL_EVIDENCE",
++        "path": "$PRIVATE_CODEX_EVIDENCE/ci-boundary-evidence-20261110/pr82-bfa3-head-original.json",
++        "scope": "PUBLIC_PR_METADATA_SNAPSHOT_NOT_ASSEMBLY",
++        "sha256": "42736e0b9339fc34442f4f3b0d017f378dd709ce6df79b64104d79f86c671adf"
++      },
++      "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98",
++      "tree_origin": "Root supplied full pin; PR body/source metadata corroboration; not independent Git verification of every foreign repository"
++    },
++    {
++      "head": "fb177d14b1e6e399bd9b66ae7cb35d3838acbd81",
++      "observed_updated_at": "2026-11-10T15:16:34Z",
++      "pr": 281,
++      "public_pr_url": "https://github.com/YehorBabenko88/bybit-cluster-grid/pull/281",
++      "repository": "YehorBabenko88/bybit-cluster-grid",
++      "selection": "OBSERVED_PUBLIC_SOURCE_INPUT_ONLY",
++      "snapshot": {
++        "admission": "NONE",
++        "bytes": 20696,
++        "origin": "EXISTING_LOCAL_EVIDENCE",
++        "path": "$PRIVATE_CODEX_EVIDENCE/ci-boundary-evidence-20261110/sixrepo-current-bybit-cluster-grid-pr281.json",
++        "scope": "PUBLIC_PR_METADATA_SNAPSHOT_NOT_ASSEMBLY",
++        "sha256": "da85986cd090e7b6ae4aa9153e5dac14f79b9fa5906fb10157b827d477a559a6"
++      },
++      "tree": "2cba4b0a1ee7621ef213600d6334db8e9ac7dae1",
++      "tree_origin": "Root supplied full pin; PR body/source metadata corroboration; not independent Git verification of every foreign repository"
++    },
++    {
++      "head": "887e3eeaf23ef8d9d1429435bc88bbac8099c6e6",
++      "observed_updated_at": "2026-11-07T17:14:05Z",
++      "pr": 77,
++      "public_pr_url": "https://github.com/YehorBabenko88/strattester/pull/77",
++      "repository": "YehorBabenko88/strattester",
++      "selection": "OBSERVED_PUBLIC_SOURCE_INPUT_ONLY",
++      "snapshot": {
++        "admission": "NONE",
++        "bytes": 19973,
++        "origin": "EXISTING_LOCAL_EVIDENCE",
++        "path": "$PRIVATE_CODEX_EVIDENCE/ci-boundary-evidence-20261110/sixrepo-current-strattester-pr77.json",
++        "scope": "PUBLIC_PR_METADATA_SNAPSHOT_NOT_ASSEMBLY",
++        "sha256": "800b906a133fe3265aa2842e6a7eb5ab187b0cf129b619ad6316d8ed5520df5c"
++      },
++      "tree": "954f3364cb70369705f658e89fcc6ae8ce547eec",
++      "tree_origin": "Root supplied full pin; PR body/source metadata corroboration; not independent Git verification of every foreign repository"
++    },
++    {
++      "head": "2446d04624469e34aa96ed766be7a4887d6d654c",
++      "observed_updated_at": "2026-11-07T07:42:10Z",
++      "pr": 115,
++      "public_pr_url": "https://github.com/YehorBabenko88/math/pull/115",
++      "repository": "YehorBabenko88/math",
++      "selection": "DIAGNOSTIC_ONLY_NOT_SELECTED_TRUSTED_RUNTIME",
++      "snapshot": {
++        "admission": "NONE",
++        "bytes": 19172,
++        "origin": "EXISTING_LOCAL_EVIDENCE",
++        "path": "$PRIVATE_CODEX_EVIDENCE/ci-boundary-evidence-20261110/sixrepo-current-math-pr115.json",
++        "scope": "PUBLIC_PR_METADATA_SNAPSHOT_NOT_ASSEMBLY",
++        "sha256": "da944844ed19a8e902a8a580e6d5f805742478b70738cc1ed9180f813d668a42"
++      },
++      "tree": "12c4e3cbd3557c7f4f634f5241c7e4b51eafba4f",
++      "tree_origin": "Root supplied full pin; PR body/source metadata corroboration; not independent Git verification of every foreign repository"
++    },
++    {
++      "head": "f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1",
++      "observed_updated_at": "2026-11-06T20:19:16Z",
++      "pr": 78,
++      "public_pr_url": "https://github.com/YehorBabenko88/meta_analyse/pull/78",
++      "repository": "YehorBabenko88/meta_analyse",
++      "selection": "OBSERVED_PUBLIC_SOURCE_INPUT_ONLY",
++      "snapshot": {
++        "admission": "NONE",
++        "bytes": 19325,
++        "origin": "EXISTING_LOCAL_EVIDENCE",
++        "path": "$PRIVATE_CODEX_EVIDENCE/ci-boundary-evidence-20261110/sixrepo-current-meta_analyse-pr78.json",
++        "scope": "PUBLIC_PR_METADATA_SNAPSHOT_NOT_ASSEMBLY",
++        "sha256": "3479d203d54674195b84c1dba0e78f43691b856e9a7ec3496cd0b33623907a2a"
++      },
++      "tree": "c155c935a801fa98b7c78219c9798ce1f1be8848",
++      "tree_origin": "Root supplied full pin; PR body/source metadata corroboration; not independent Git verification of every foreign repository"
++    },
++    {
++      "head": "dc810b03c3accf0e6f28fca1d5068f4171bb909d",
++      "observed_updated_at": "2026-11-10T17:32:30Z",
++      "pr": 82,
++      "public_pr_url": "https://github.com/YehorBabenko88/Terminan/pull/82",
++      "repository": "YehorBabenko88/Terminan",
++      "selection": "OBSERVED_PUBLIC_SOURCE_INPUT_ONLY",
++      "snapshot": {
++        "admission": "NONE",
++        "bytes": 18532,
++        "origin": "EXISTING_LOCAL_EVIDENCE",
++        "path": "$PRIVATE_CODEX_EVIDENCE/ci-boundary-evidence-20261110/sixrepo-current-Terminan-pr82.json",
++        "scope": "PUBLIC_PR_METADATA_SNAPSHOT_NOT_ASSEMBLY",
++        "sha256": "6b33cbaa07ddee85e498b6f63adcd514c5dcce2be208da1d139e70636c5f739c"
++      },
++      "tree": "d5bbb6f73c841ba93ae74354ea72cc0989212d92",
++      "tree_origin": "Root supplied full pin; PR body/source metadata corroboration; not independent Git verification of every foreign repository"
++    }
++  ],
++  "references": [
++    {
++      "admission": "NONE",
++      "bytes": 12927,
++      "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++      "path": "coordination/api-contracts.v1.json",
++      "repository": "YehorBabenko88/unified-system",
++      "scope": "EXISTING_SOURCE_CONTRACT_NOT_RUNTIME_ADMISSION",
++      "sha256": "6d3479c90a4312cdcba9befc1f06638770a74c59a9ec774a323837c143362952",
++      "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
++    },
++    {
++      "admission": "NONE",
++      "bytes": 2699,
++      "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++      "path": "coordination/gateway-runtime-contracts.v1.json",
++      "repository": "YehorBabenko88/unified-system",
++      "scope": "EXISTING_SOURCE_CONTRACT_NOT_RUNTIME_ADMISSION",
++      "sha256": "b8dad476fbf43421dfe761aad61e58b1d9ec79c1d0b78fbcd32e376ca41e2e15",
++      "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
++    },
++    {
++      "admission": "NONE",
++      "bytes": 14946,
++      "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++      "path": "coordination/mandatory-gates.v1.json",
++      "repository": "YehorBabenko88/unified-system",
++      "scope": "EXISTING_SOURCE_CONTRACT_NOT_RUNTIME_ADMISSION",
++      "sha256": "bffdb09bbd291f1c93cffee4ceabd1e97fcf161998936070012558b92c1b959d",
++      "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
++    }
++  ],
++  "review_scope": "May be approved for A8 SOURCE review only; never executable release or runtime/native endpoint admission",
++  "schema": "unified.acceptance-review.level2.integration-baseline.v1",
++  "source_combination": "NOT_ASSEMBLED_OR_VERIFIED",
++  "source_component_success_is_not_combination_success": true,
++  "status": "REVIEW_INPUTS_ONLY",
++  "unassembled_inputs": [
++    {
++      "component": "A2 broker",
++      "head": "ab4c3b62a3d160d189f06df01d42c01a7c57e3c5",
++      "qualification": {
++        "methods": 10,
++        "receipt": {
++          "admission": "NONE",
++          "bytes": 264908,
++          "origin": "EXISTING_LOCAL_EVIDENCE",
++          "path": "$PRIVATE_CODEX_EVIDENCE/atomic-read-unit-green-20261110/ACTUAL-RESULT.json",
++          "scope": "LOCAL_MOCK_ONLY_NOT_NATIVE_PROOF",
++          "sha256": "4497f943839d6890d09137abeaf49c720e741d8b9bac770b9f9a000610a71f85"
++        },
++        "scope": "LOCAL_ACTUAL_CODE_MOCK_BACKEND_UNIT_ONLY",
++        "skips": 0,
++        "state": "LOCAL_MOCK_UNIT_PASS"
++      },
++      "repository": "YehorBabenko88/unified-system",
++      "runtime_admission": false,
++      "source_handoff": {
++        "admission": "NONE",
++        "bytes": 1440,
++        "origin": "EXISTING_LOCAL_COMPONENT_CARD",
++        "path": "$PRIVATE_TASK_OUTPUTS/codex-agent-2-high-availability-distributed/outputs/A2-ATOMIC-READ-SOURCE-UNIT-HANDOFF-20261110/HANDOFF.json",
++        "scope": "EXACT_POST_FIX_LOCAL_MOCK10_HANDOFF_PUBLICATION_HELD_NATIVE_PHYSICAL_NO_GO",
++        "sha256": "ebdd074edafbef4690841db09320e5de4ff46eb06434d1de8890c73cd28836f0"
++      },
++      "state": "UNASSEMBLED_LOCAL_INPUT",
++      "tree": "72456e8f5a710be45a80afcd622ca2fcd0cace47"
++    },
++    {
++      "component": "A6 preview RAF disposal",
++      "head": "77fe6dfd85171305930f308f307d1aa2718df2c0",
++      "qualification": {
++        "receipt": {
++          "admission": "NONE",
++          "bytes": 88732,
++          "origin": "EXISTING_LOCAL_EVIDENCE",
++          "path": "$PRIVATE_CODEX_EVIDENCE/terminan-disposal-green-evidence-20261110/receipt.json",
++          "scope": "LOCAL_ACTUAL_JS_FAKE_DOM_RAF_POST_FIX_SIX_CASE_UNIT_ONLY",
++          "sha256": "7b2b6143b03cee8dfd7fd63666f3b00a28f5ac45918b9b55ddd5b7e412179f0a"
++        },
++        "same_six_local_js_cases": "PASS",
++        "scope": "LOCAL_ACTUAL_JS_FAKE_DOM_RAF_POST_FIX_SIX_CASE_UNIT_ONLY",
++        "tap_sha256": "4905dc18ebafcd02d8c8d6b930616552314fa17cc2fac85a8f849ae04617e2d0"
++      },
++      "repository": "YehorBabenko88/Terminan",
++      "runtime_admission": false,
++      "state": "UNASSEMBLED_LOCAL_INPUT",
++      "tree": "f19e14102bfc7cb852e47dec933bfeb34a139698"
++    },
++    {
++      "component": "A4 storage",
++      "head": "1da10616a2b8217930f354e17caaa6fcea22dac4",
++      "qualification": {
++        "cases_per_job": 22,
++        "hosted_jobs": 4,
++        "local_pure6": {
++          "admission": "NONE",
++          "bytes": 407151,
++          "origin": "EXISTING_LOCAL_EVIDENCE",
++          "path": "$PRIVATE_CODEX_EVIDENCE/ci-boundary-evidence-20261110/storage-1da-pure-receipt.json",
++          "scope": "SIX_INVENTORY_CONTROLS_ONLY_NOT_22_FIXTURE_RERUN",
++          "sha256": "30f951f0cd7a7ee871a9a69aa395073700a15d26e519bd835f73fae3f0b563d4"
++        },
++        "separate_inventory_controls": 6,
++        "verification": {
++          "admission": "NONE",
++          "bytes": 3507,
++          "origin": "EXISTING_LOCAL_EVIDENCE",
++          "path": "$PRIVATE_TASK_OUTPUTS/codex-agent-4-distributed-storage-integrity/outputs/PR56-1DA-HOSTED/verification.json",
++          "scope": "FOUR_HOSTED_LOCAL_PREREQUISITE_JOBS_NOT_FULL_CI_NATIVE_OR_PHYSICAL",
++          "sha256": "f50a51788deffe2f67d9f9eb82a82329f247515564b3cdca6c6e8fceff546ddf"
++        }
++      },
++      "repository": "YehorBabenko88/unified-system",
++      "runtime_admission": false,
++      "state": "UNASSEMBLED_SOURCE_INPUT",
++      "tree": "c2b39329924810535add3b02c3f5c5e1b11bdf62"
++    },
++    {
++      "component": "A7 Strattester test delta / hosted47 tools",
++      "head": "de6620eb5577e97db1af11b6807e22a9b61d1090",
++      "qualification": {
++        "green_tests_executed": false,
++        "overall": "HOLD / NO-GO",
++        "receipt": {
++          "admission": "NONE",
++          "bytes": 3389,
++          "origin": "EXISTING_LOCAL_EVIDENCE",
++          "path": "$PRIVATE_TASK_OUTPUTS/codex-agent-7-distributed-research-math/outputs/hosted47-f43-f44-source-fix-final-receipt-20261110.json",
++          "scope": "SOURCE_ONLY_FIX_NOT_GREEN_EXECUTION",
++          "sha256": "959a2fce1ef4ae80fb94b1ce1f079572d7fe1e0c9577ac050ce862dd39140d39"
++        },
++        "source_raw_status": "A8 reported779CRLFmismatches; not raw-qualified, no normalization"
++      },
++      "repository": "YehorBabenko88/strattester",
++      "runtime_admission": false,
++      "state": "UNASSEMBLED_TEST_DELTA_PLUS_UNCOMMITTED_TOOLS_HOLD",
++      "tree": "01e9e95f593e74d0b0a27afca771f37034aef977",
++      "unpublished_tools": {
++        "execution_allocation": "NONE",
++        "implementation_permission": "NONE",
++        "manifest": {
++          "admission": "NONE",
++          "bytes": 5266,
++          "origin": "EXISTING_LOCAL_COMPONENT_CARD",
++          "path": "$PRIVATE_TASK_OUTPUTS/codex-agent-7-distributed-research-math/outputs/hosted47-parser-childpath-controls-source-manifest-20261110.json",
++          "scope": "UNPUBLISHED_SOURCE_ONLY_TOOLS_HOLD_NO_IMPORT_TEST_COMPILE_OR_EXECUTION",
++          "sha256": "222811d6d9298be5effe23b976a30f9cfdbc6a9fbf07bd868d18ac1dbf7011e9"
++        },
++        "publication": "UNPUBLISHED",
++        "status": "HOLD"
++      }
++    }
++  ]
++}
+diff --git a/release/acceptance-review/20261110-level2-review1/node-inventory.json b/release/acceptance-review/20261110-level2-review1/node-inventory.json
+new file mode 100644
+index 0000000..1303e8c
+--- /dev/null
++++ b/release/acceptance-review/20261110-level2-review1/node-inventory.json
+@@ -0,0 +1,90 @@
++{
++  "approval": "ROOT_APPROVED_FOR_A8_SOURCE_REVIEW_ONLY",
++  "excluded_nodes": [
++    "ADMINIT"
++  ],
++  "installability": "NOT_INSTALLABLE",
++  "network_mutations": "FORBIDDEN",
++  "nodes": [
++    {
++      "intended_role": "CENTRAL_CONTROLLER",
++      "node": "LS5",
++      "os_assertion": "WINDOWS_VERSION_NOT_REFRESHED",
++      "resource_state": "UNKNOWN_OR_STALE_NOT_CURRENT_ADMISSION"
++    },
++    {
++      "intended_role": "COORDINATOR",
++      "node": "PC3",
++      "os_assertion": "WINDOWS_VERSION_NOT_REFRESHED",
++      "resource_state": "UNKNOWN_OR_STALE_NOT_CURRENT_ADMISSION"
++    },
++    {
++      "intended_role": "COORDINATOR",
++      "node": "PC4",
++      "os_assertion": "WINDOWS_VERSION_NOT_REFRESHED",
++      "resource_state": "UNKNOWN_OR_STALE_NOT_CURRENT_ADMISSION"
++    },
++    {
++      "intended_role": "WORKER_USER_APPLICATIONS_UNTOUCHED",
++      "node": "PC2",
++      "os_assertion": "WINDOWS_VERSION_NOT_REFRESHED",
++      "resource_state": "UNKNOWN_OR_STALE_NOT_CURRENT_ADMISSION"
++    },
++    {
++      "intended_role": "INDEPENDENT_WORKER",
++      "node": "PC1",
++      "os_assertion": "WINDOWS_HOME_OWNER_ASSERTED_NOT_REFRESHED",
++      "resource_state": "UNKNOWN_OR_STALE_NOT_CURRENT_ADMISSION"
++    },
++    {
++      "intended_role": "INDEPENDENT_WORKER",
++      "node": "LS7",
++      "os_assertion": "WINDOWS_HOME_OWNER_ASSERTED_NOT_REFRESHED",
++      "resource_state": "UNKNOWN_OR_STALE_NOT_CURRENT_ADMISSION"
++    }
++  ],
++  "pc2": "USER_APPS_UNTOUCHED_NO_PREPARATION_OR_SERVICE_CHANGES",
++  "pc4": "SMOKE_BLOCKED_PENDING_EXISTING_NONADMIN_CHANNEL_NO_ACCOUNT_OR_TOKEN_CHANGES",
++  "permissions": {
++    "dispatch": "DENY",
++    "fault_injection": "DENY",
++    "installation": "DENY",
++    "physical": "DENY",
++    "production": "DENY",
++    "provider_sends": "DENY",
++    "runtime": "DENY",
++    "tailscale_changes": "DENY",
++    "trading": "DENY"
++  },
++  "read_only_network_snapshot_receipt": {
++    "bybit_requests": 0,
++    "bytes": 2185,
++    "freshness": "HISTORICAL_SNAPSHOT_NOT_REFRESHED_NOT_CURRENT",
++    "https_nodes_observed": 6,
++    "network_configuration_writes": 0,
++    "observed_first_utc": "2026-11-10T19:09:08.6124003Z",
++    "observed_last_utc": "2026-11-10T19:09:46.1632230Z",
++    "path": "$PRIVATE_CODEX_EVIDENCE/network-egress-readonly-20261110/summary.json",
++    "physical_acceptance": false,
++    "private_principals_and_ips": "OMITTED",
++    "runtime_admission": false,
++    "scope": "ONE_READ_ONLY_HTTPS_IPV4_ENDPOINT_SNAPSHOT_NOT_BYBIT_EGRESS_PROOF",
++    "sha256": "f2ca62fdb33ab7ba8b4e67d98eb896c3621c87a5792b8b08edbc38a2d521cb37",
++    "ssh_remote_nodes_passed": 5,
++    "transport": "FIVE_PINNED_TAILSCALE_SSH_NOT_DIRECT_LAN"
++  },
++  "read_only_prior_snapshot": {
++    "current_observation_time": "NOT_REFRESHED",
++    "direct_lan": "NOT_QUALIFIED",
++    "evidence_missing": "NONE_FOR_THIS_PINNED_HISTORICAL_SUMMARY; new current/direct-LAN qualification still missing",
++    "five_pinned_tailscale_ssh": "PASSED_OWNER_REPORTED_SNAPSHOT_ONLY",
++    "private_endpoints": "OMITTED",
++    "six_node_https_nat": "PASSED_OWNER_REPORTED_SNAPSHOT_ONLY"
++  },
++  "resource_inventory": "STALE_OR_UNKNOWN_DO_NOT_INFER_CAPACITY",
++  "review_scope": "May be approved for A8 SOURCE review only; never executable release or runtime/native endpoint admission",
++  "roles_basis": "CURRENT_ROOT_OWNER_DIRECTIVE_NOT_NEW_PHYSICAL_OBSERVATION",
++  "schema": "unified.acceptance-review.level2.node-inventory.v1",
++  "source_combination": "NOT_ASSEMBLED_OR_VERIFIED",
++  "status": "REVIEW_INPUTS_ONLY"
++}
+diff --git a/release/acceptance-review/20261110-level2-review1/ownership-registry.json b/release/acceptance-review/20261110-level2-review1/ownership-registry.json
+new file mode 100644
+index 0000000..69631cb
+--- /dev/null
++++ b/release/acceptance-review/20261110-level2-review1/ownership-registry.json
+@@ -0,0 +1,63 @@
++{
++  "allocated_editor": "ci_queue_controller",
++  "allocated_paths": [
++    "release/acceptance-review/20261110-level2-review1/**"
++  ],
++  "allowed_output": "JSON_REVIEW_DOCUMENTS_ONLY",
++  "approval": "ROOT_APPROVED_FOR_A8_SOURCE_REVIEW_ONLY",
++  "domain_owners": {
++    "assignment_workers": "A5",
++    "authority_fencing": "A2",
++    "engines_math": "A7",
++    "independent_review": "A8",
++    "integration_admission": "ROOT",
++    "provider_history_live": "A3",
++    "storage_publication": "A4",
++    "terminan_control": "A6",
++    "transport": "A1"
++  },
++  "installability": "NOT_INSTALLABLE",
++  "integration_commit_owner": "ROOT",
++  "permissions": {
++    "dispatch": "DENY",
++    "fault_injection": "DENY",
++    "installation": "DENY",
++    "physical": "DENY",
++    "production": "DENY",
++    "provider_sends": "DENY",
++    "runtime": "DENY",
++    "tailscale_changes": "DENY",
++    "trading": "DENY"
++  },
++  "reference_registry_scope": "Existing historical allocations remain their own scope; not new edit/runtime rights",
++  "references": [
++    {
++      "admission": "NONE",
++      "bytes": 14179,
++      "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++      "path": "coordination/ownership.v1.json",
++      "repository": "YehorBabenko88/unified-system",
++      "scope": "EXISTING_SOURCE_CONTRACT_NOT_RUNTIME_ADMISSION",
++      "sha256": "22150f804b1b3a0d6e2047887585b1b550d189bb410fbc894ef566c553594ebe",
++      "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
++    },
++    {
++      "admission": "NONE",
++      "bytes": 8543,
++      "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++      "path": "coordination/gateway-runtime-ownership.v1.json",
++      "repository": "YehorBabenko88/unified-system",
++      "scope": "EXISTING_SOURCE_CONTRACT_NOT_RUNTIME_ADMISSION",
++      "sha256": "989b08dc66491c3d6796a83b095884a15fdff0e53b045866143d5f8334bb5202",
++      "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
++    }
++  ],
++  "review_chain": [
++    "ROOT_SOURCE_REVIEW_APPROVED_ONLY",
++    "A8_SOURCE_REVIEW_PENDING_NO_EXECUTION_AUTHORITY"
++  ],
++  "review_scope": "May be approved for A8 SOURCE review only; never executable release or runtime/native endpoint admission",
++  "schema": "unified.acceptance-review.level2.ownership-registry.v1",
++  "source_combination": "NOT_ASSEMBLED_OR_VERIFIED",
++  "status": "REVIEW_INPUTS_ONLY"
++}
+diff --git a/release/acceptance-review/20261110-level2-review1/physical-acceptance-plan.json b/release/acceptance-review/20261110-level2-review1/physical-acceptance-plan.json
+new file mode 100644
+index 0000000..b267775
+--- /dev/null
++++ b/release/acceptance-review/20261110-level2-review1/physical-acceptance-plan.json
+@@ -0,0 +1,1145 @@
++{
++  "approval": "ROOT_APPROVED_FOR_A8_SOURCE_REVIEW_ONLY",
++  "current_pilot_admission": "BLOCKED_BY_GATES",
++  "data_services": "NEVER_REMOVE_EXISTING_DATA_OR_SERVICES",
++  "execution_authorized": false,
++  "fault_injection_authorized": false,
++  "historical_integrity": "EXISTING_RAW_NORMALIZED_CHECKPOINT_ENGINES_ONLY_NO_PARALLEL_PIPELINE",
++  "install_outside_approved_pilot": false,
++  "installability": "NOT_INSTALLABLE",
++  "missing_inputs": [
++    "One exact assembled executable source/dependency/contract capsule and explicit owner/source review; not produced here",
++    "Current complete required CI inventory and original source-bound full matrix PASS; F26 and F42 unresolved",
++    "Windows36 child stdout-thread timeout20 RCA/fix/regression; no blind timeout increase",
++    "Trusted runtime source/credential/custody/native auth and same-authority grants/assignment/storage/worker positive proof",
++    "Actual direct-LAN six-node identity/quorum/endpoint/HA recovery acceptance independent of Tailscale",
++    "Current resource/capacity/schedule observations for all six nodes; stale observations cannot grant resources",
++    "Existing nonadmin PC4 execution/recovery channel without new account/token changes",
++    "Approved current ten-instrument identity registry and pinned provider/egress/budget policy; list currently unverified",
++    "TRUSTED_RELEASE-only trusted publisher/signing chain remains blocked; LAB requires no commercial certificate, but still requires separate source integrity/executable admission and all other applicable gates",
++    "Root review approval then independent A8 SOURCE review; source review is not runtime or physical permission",
++    "Full exact source seal for uncommitted hosted47 tools and scoped owner review before adoption",
++    "Explicit pilot/fault-injection/install/restart/update/rollback authorization and recovery proof after gates"
++  ],
++  "network": "NEVER_ALTER_EXISTING_NETWORKING_TAILSCALE",
++  "network_snapshot_reference": {
++    "bybit_requests": 0,
++    "bytes": 2185,
++    "freshness": "HISTORICAL_SNAPSHOT_NOT_REFRESHED_NOT_CURRENT",
++    "https_nodes_observed": 6,
++    "network_configuration_writes": 0,
++    "observed_first_utc": "2026-11-10T19:09:08.6124003Z",
++    "observed_last_utc": "2026-11-10T19:09:46.1632230Z",
++    "path": "$PRIVATE_CODEX_EVIDENCE/network-egress-readonly-20261110/summary.json",
++    "physical_acceptance": false,
++    "private_principals_and_ips": "OMITTED",
++    "runtime_admission": false,
++    "scope": "ONE_READ_ONLY_HTTPS_IPV4_ENDPOINT_SNAPSHOT_NOT_BYBIT_EGRESS_PROOF",
++    "sha256": "f2ca62fdb33ab7ba8b4e67d98eb896c3621c87a5792b8b08edbc38a2d521cb37",
++    "ssh_remote_nodes_passed": 5,
++    "transport": "FIVE_PINNED_TAILSCALE_SSH_NOT_DIRECT_LAN"
++  },
++  "paper": "EXISTING_ENGINES_ONLY_NO_REAL_ORDERS",
++  "permissions": {
++    "dispatch": "DENY",
++    "fault_injection": "DENY",
++    "installation": "DENY",
++    "physical": "DENY",
++    "production": "DENY",
++    "provider_sends": "DENY",
++    "runtime": "DENY",
++    "tailscale_changes": "DENY",
++    "trading": "DENY"
++  },
++  "plan_status": "PROPOSED_SEQUENTIAL_REVIEW_ONLY",
++  "predicate_profile": {
++    "FAIL": "Any declared mismatch or confirmed guard/security/integrity failure",
++    "PASS": "Only when every declared check is PASS against complete authenticated exact-source artifacts",
++    "UNKNOWN": "Missing, stale, incomplete, conflicting or unauthenticated evidence; never PASS",
++    "authorization_granted": false,
++    "closed_comparators": [
++      "EXACT_EQUALS",
++      "EXACT_SET_EQUALS",
++      "ALL_REQUIRED_TRUE",
++      "IDENTITY_BOUND_EQUALS",
++      "AT_LEAST"
++    ],
++    "closed_result_values": [
++      "PASS",
++      "FAIL",
++      "UNKNOWN"
++    ],
++    "closed_stage_ids": [
++      "L2-S01",
++      "L2-S02",
++      "L2-S03",
++      "L2-S04",
++      "L2-S05",
++      "L2-S06",
++      "L2-S07",
++      "L2-S08"
++    ],
++    "default_result": "UNKNOWN",
++    "execution_engine": "NONE_DEFINED_OR_ADMITTED",
++    "failure_action": "STOP_CURRENT_OPERATION",
++    "predicate_inputs": "FUTURE_SOURCE_BOUND_ARTIFACT_FACTS_ONLY_NO_COMMANDS_CALLBACKS_OR_URL_EXECUTION",
++    "schema": "unified.acceptance-review.declarative-stage-checks.v1",
++    "scope": "REVIEW_PLAN_ONLY_NOT_NEW_RUNTIME_ABI_OR_EXECUTOR",
++    "unknown_action": "HOLD_NO_CONTINUE_REQUIRE_ROOT_REVIEW"
++  },
++  "review_scope": "May be approved for A8 SOURCE review only; never executable release or runtime/native endpoint admission",
++  "schema": "unified.acceptance-review.level2.physical-acceptance-plan.v1",
++  "signing_profile_policy": {
++    "LAB": "COMMERCIAL_CERTIFICATE_NOT_REQUIRED_NO_OTHER_GATE_WAIVER",
++    "TRUSTED_RELEASE": "TRUSTED_PUBLISHER_CHAIN_BLOCKED_PROFILE_ONLY"
++  },
++  "source_combination": "NOT_ASSEMBLED_OR_VERIFIED",
++  "stages": [
++    {
++      "authority_granted": false,
++      "checks": [
++        {
++          "artifact_id": "L2-S01-SOURCE-BOUND-RESULT",
++          "authority_granted": false,
++          "check_id": "L2-S01-SOURCE_ASSEMBLY",
++          "comparator": "EXACT_EQUALS",
++          "expected": true,
++          "fact_field": "assembly_verified",
++          "failure_action": "STOP_CURRENT_OPERATION",
++          "missing_action": "UNKNOWN_NO_CONTINUE",
++          "observed": null,
++          "result": "UNKNOWN"
++        },
++        {
++          "artifact_id": "L2-S01-SOURCE-BOUND-RESULT",
++          "authority_granted": false,
++          "check_id": "L2-S01-REQUIRED_CI",
++          "comparator": "EXACT_EQUALS",
++          "expected": true,
++          "fact_field": "all_required_ci_pass",
++          "failure_action": "STOP_CURRENT_OPERATION",
++          "missing_action": "UNKNOWN_NO_CONTINUE",
++          "observed": null,
++          "result": "UNKNOWN"
++        },
++        {
++          "artifact_id": "L2-S01-SOURCE-BOUND-RESULT",
++          "authority_granted": false,
++          "check_id": "L2-S01-EXACT_RELEASE_REVIEW",
++          "comparator": "EXACT_EQUALS",
++          "expected": true,
++          "fact_field": "root_executable_release_approved",
++          "failure_action": "STOP_CURRENT_OPERATION",
++          "missing_action": "UNKNOWN_NO_CONTINUE",
++          "observed": null,
++          "result": "UNKNOWN"
++        },
++        {
++          "artifact_id": "L2-S01-SOURCE-BOUND-RESULT",
++          "authority_granted": false,
++          "check_id": "L2-S01-RECOVERY_CHANNEL",
++          "comparator": "EXACT_EQUALS",
++          "expected": true,
++          "fact_field": "existing_nonadmin_recovery_verified",
++          "failure_action": "STOP_CURRENT_OPERATION",
++          "missing_action": "UNKNOWN_NO_CONTINUE",
++          "observed": null,
++          "result": "UNKNOWN"
++        },
++        {
++          "artifact_id": "L2-S01-SOURCE-BOUND-RESULT",
++          "authority_granted": false,
++          "check_id": "L2-S01-PROFILE_POLICY",
++          "comparator": "EXACT_EQUALS",
++          "expected": true,
++          "fact_field": "selected_release_profile_integrity_satisfied",
++          "failure_action": "STOP_CURRENT_OPERATION",
++          "missing_action": "UNKNOWN_NO_CONTINUE",
++          "observed": null,
++          "result": "UNKNOWN"
++        }
++      ],
++      "closed_check_ids": [
++        "L2-S01-SOURCE_ASSEMBLY",
++        "L2-S01-REQUIRED_CI",
++        "L2-S01-EXACT_RELEASE_REVIEW",
++        "L2-S01-RECOVERY_CHANNEL",
++        "L2-S01-PROFILE_POLICY"
++      ],
++      "current_result": "UNKNOWN",
++      "estimated_time": "15-30 proposed minutes",
++      "evidence_requirements": {
++        "artifact_id": "L2-S01-SOURCE-BOUND-RESULT",
++        "exact_executable_source_ref": null,
++        "expected_state": "NOT_PRESENT_NOT_EXECUTED",
++        "missing_or_skipped_required_cases": "FAIL_IF_EXECUTED_OTHERWISE_UNKNOWN",
++        "producer_rule": "Independent authenticated source binding; self-reported summary alone insufficient",
++        "raw_artifact_preservation": "RETAIN_ORIGINAL_BYTES_AND_SHA256_NO_NORMALIZATION",
++        "required_binding_fields": [
++          "repository",
++          "exact_head",
++          "exact_tree",
++          "contract_versions_sha256",
++          "expected_inventory_sha256",
++          "actual_case_ids",
++          "artifact_sha256",
++          "original_log_sha256",
++          "producer_identity_binding",
++          "run_attempt_job_or_owner_phase_identity",
++          "started_utc",
++          "completed_utc",
++          "source_before_sha256",
++          "source_after_sha256",
++          "execution_class",
++          "authority_scope"
++        ],
++        "required_inventory": "ROOT_PINNED_EXACT_STAGE_SCENARIO_IDS_REQUIRED_BEFORE_EXECUTION",
++        "review_baseline": {
++          "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++          "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
++        },
++        "source_ref_status": "PENDING_ROOT_APPROVED_ASSEMBLED_EXECUTABLE_SOURCE_NOT_THIS_REVIEW_PACKET"
++      },
++      "execution_authorized": false,
++      "failure_action": "STOP_CURRENT_OPERATION",
++      "name": "Source/contract/CI/signing and recovery-channel gate review",
++      "order": 1,
++      "pass_predicate": {
++        "comparator": "ALL_REQUIRED_TRUE",
++        "condition": "Every listed check result exactly PASS; no extra/substituted/missing/duplicate IDs",
++        "operands": [
++          "L2-S01-SOURCE_ASSEMBLY",
++          "L2-S01-REQUIRED_CI",
++          "L2-S01-EXACT_RELEASE_REVIEW",
++          "L2-S01-RECOVERY_CHANNEL",
++          "L2-S01-PROFILE_POLICY"
++        ],
++        "permission_granted": false,
++        "result_if_incomplete": "UNKNOWN"
++      },
++      "predecessor_stage_ids": [],
++      "prerequisites": [
++        "ROOT_APPROVED_EXACT_EXECUTABLE_RELEASE",
++        "REQUIRED_GATES_PASS",
++        "EXISTING_NONADMIN_RECOVERY_ACCESS",
++        "SEPARATE_STAGE_AUTHORIZATION"
++      ],
++      "recovery": "Read-only; stop if any source/gate unresolved",
++      "risk": "LOW",
++      "stage_id": "L2-S01",
++      "unknown_action": "HOLD_NO_CONTINUE_REQUIRE_ROOT_REVIEW"
++    },
++    {
++      "authority_granted": false,
++      "checks": [
++        {
++          "artifact_id": "L2-S02-SOURCE-BOUND-RESULT",
++          "authority_granted": false,
++          "check_id": "L2-S02-NEW_NAMESPACE",
++          "comparator": "EXACT_EQUALS",
++          "expected": true,
++          "fact_field": "restore_target_is_new_namespace",
++          "failure_action": "STOP_CURRENT_OPERATION",
++          "missing_action": "UNKNOWN_NO_CONTINUE",
++          "observed": null,
++          "result": "UNKNOWN"
++        },
++        {
++          "artifact_id": "L2-S02-SOURCE-BOUND-RESULT",
++          "authority_granted": false,
++          "check_id": "L2-S02-BACKUP_HASHES",
++          "comparator": "EXACT_EQUALS",
++          "expected": true,
++          "fact_field": "backup_manifest_matches_originals",
++          "failure_action": "STOP_CURRENT_OPERATION",
++          "missing_action": "UNKNOWN_NO_CONTINUE",
++          "observed": null,
++          "result": "UNKNOWN"
++        },
++        {
++          "artifact_id": "L2-S02-SOURCE-BOUND-RESULT",
++          "authority_granted": false,
++          "check_id": "L2-S02-RESTORE_HASHES",
++          "comparator": "EXACT_EQUALS",
++          "expected": true,
++          "fact_field": "restored_manifest_matches_backup",
++          "failure_action": "STOP_CURRENT_OPERATION",
++          "missing_action": "UNKNOWN_NO_CONTINUE",
++          "observed": null,
++          "result": "UNKNOWN"
++        },
++        {
++          "artifact_id": "L2-S02-SOURCE-BOUND-RESULT",
++          "authority_granted": false,
++          "check_id": "L2-S02-ORIGINALS_UNTOUCHED",
++          "comparator": "EXACT_EQUALS",
++          "expected": true,
++          "fact_field": "existing_data_services_unchanged",
++          "failure_action": "STOP_CURRENT_OPERATION",
++          "missing_action": "UNKNOWN_NO_CONTINUE",
++          "observed": null,
++          "result": "UNKNOWN"
++        }
++      ],
++      "closed_check_ids": [
++        "L2-S02-NEW_NAMESPACE",
++        "L2-S02-BACKUP_HASHES",
++        "L2-S02-RESTORE_HASHES",
++        "L2-S02-ORIGINALS_UNTOUCHED"
++      ],
++      "current_result": "UNKNOWN",
++      "estimated_time": "15-30 proposed minutes",
++      "evidence_requirements": {
++        "artifact_id": "L2-S02-SOURCE-BOUND-RESULT",
++        "exact_executable_source_ref": null,
++        "expected_state": "NOT_PRESENT_NOT_EXECUTED",
++        "missing_or_skipped_required_cases": "FAIL_IF_EXECUTED_OTHERWISE_UNKNOWN",
++        "producer_rule": "Independent authenticated source binding; self-reported summary alone insufficient",
++        "raw_artifact_preservation": "RETAIN_ORIGINAL_BYTES_AND_SHA256_NO_NORMALIZATION",
++        "required_binding_fields": [
++          "repository",
++          "exact_head",
++          "exact_tree",
++          "contract_versions_sha256",
++          "expected_inventory_sha256",
++          "actual_case_ids",
++          "artifact_sha256",
++          "original_log_sha256",
++          "producer_identity_binding",
++          "run_attempt_job_or_owner_phase_identity",
++          "started_utc",
++          "completed_utc",
++          "source_before_sha256",
++          "source_after_sha256",
++          "execution_class",
++          "authority_scope"
++        ],
++        "required_inventory": "ROOT_PINNED_EXACT_STAGE_SCENARIO_IDS_REQUIRED_BEFORE_EXECUTION",
++        "review_baseline": {
++          "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++          "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
++        },
++        "source_ref_status": "PENDING_ROOT_APPROVED_ASSEMBLED_EXECUTABLE_SOURCE_NOT_THIS_REVIEW_PACKET"
++      },
++      "execution_authorized": false,
++      "failure_action": "STOP_CURRENT_OPERATION",
++      "name": "Approved pilot snapshot, backup and restore rehearsal into NEW namespace",
++      "order": 2,
++      "pass_predicate": {
++        "comparator": "ALL_REQUIRED_TRUE",
++        "condition": "Every listed check result exactly PASS; no extra/substituted/missing/duplicate IDs",
++        "operands": [
++          "L2-S02-NEW_NAMESPACE",
++          "L2-S02-BACKUP_HASHES",
++          "L2-S02-RESTORE_HASHES",
++          "L2-S02-ORIGINALS_UNTOUCHED"
++        ],
++        "permission_granted": false,
++        "result_if_incomplete": "UNKNOWN"
++      },
++      "predecessor_stage_ids": [
++        "L2-S01"
++      ],
++      "prerequisites": [
++        "ROOT_APPROVED_EXACT_EXECUTABLE_RELEASE",
++        "REQUIRED_GATES_PASS",
++        "EXISTING_NONADMIN_RECOVERY_ACCESS",
++        "SEPARATE_STAGE_AUTHORIZATION"
++      ],
++      "recovery": "Original data/services untouched; verify backup before later mutation",
++      "risk": "MEDIUM",
++      "stage_id": "L2-S02",
++      "unknown_action": "HOLD_NO_CONTINUE_REQUIRE_ROOT_REVIEW"
++    },
++    {
++      "authority_granted": false,
++      "checks": [
++        {
++          "artifact_id": "L2-S03-SOURCE-BOUND-RESULT",
++          "authority_granted": false,
++          "check_id": "L2-S03-SIMULATOR_FIRST",
++          "comparator": "EXACT_EQUALS",
++          "expected": "SIMULATOR_ONLY",
++          "fact_field": "execution_class",
++          "failure_action": "STOP_CURRENT_OPERATION",
++          "missing_action": "UNKNOWN_NO_CONTINUE",
++          "observed": null,
++          "result": "UNKNOWN"
++        },
++        {
++          "artifact_id": "L2-S03-SOURCE-BOUND-RESULT",
++          "authority_granted": false,
++          "check_id": "L2-S03-NO_QUORUM",
++          "comparator": "EXACT_EQUALS",
++          "expected": true,
++          "fact_field": "no_quorum_new_effects_denied",
++          "failure_action": "STOP_CURRENT_OPERATION",
++          "missing_action": "UNKNOWN_NO_CONTINUE",
++          "observed": null,
++          "result": "UNKNOWN"
++        },
++        {
++          "artifact_id": "L2-S03-SOURCE-BOUND-RESULT",
++          "authority_granted": false,
++          "check_id": "L2-S03-STALE_WRITER",
++          "comparator": "EXACT_EQUALS",
++          "expected": true,
++          "fact_field": "stale_writer_effects_denied",
++          "failure_action": "STOP_CURRENT_OPERATION",
++          "missing_action": "UNKNOWN_NO_CONTINUE",
++          "observed": null,
++          "result": "UNKNOWN"
++        },
++        {
++          "artifact_id": "L2-S03-SOURCE-BOUND-RESULT",
++          "authority_granted": false,
++          "check_id": "L2-S03-UNKNOWN_DEBT",
++          "comparator": "EXACT_EQUALS",
++          "expected": true,
++          "fact_field": "unknown_identity_debt_preserved",
++          "failure_action": "STOP_CURRENT_OPERATION",
++          "missing_action": "UNKNOWN_NO_CONTINUE",
++          "observed": null,
++          "result": "UNKNOWN"
++        }
++      ],
++      "closed_check_ids": [
++        "L2-S03-SIMULATOR_FIRST",
++        "L2-S03-NO_QUORUM",
++        "L2-S03-STALE_WRITER",
++        "L2-S03-UNKNOWN_DEBT"
++      ],
++      "current_result": "UNKNOWN",
++      "estimated_time": "20-40 proposed minutes",
++      "evidence_requirements": {
++        "artifact_id": "L2-S03-SOURCE-BOUND-RESULT",
++        "exact_executable_source_ref": null,
++        "expected_state": "NOT_PRESENT_NOT_EXECUTED",
++        "missing_or_skipped_required_cases": "FAIL_IF_EXECUTED_OTHERWISE_UNKNOWN",
++        "producer_rule": "Independent authenticated source binding; self-reported summary alone insufficient",
++        "raw_artifact_preservation": "RETAIN_ORIGINAL_BYTES_AND_SHA256_NO_NORMALIZATION",
++        "required_binding_fields": [
++          "repository",
++          "exact_head",
++          "exact_tree",
++          "contract_versions_sha256",
++          "expected_inventory_sha256",
++          "actual_case_ids",
++          "artifact_sha256",
++          "original_log_sha256",
++          "producer_identity_binding",
++          "run_attempt_job_or_owner_phase_identity",
++          "started_utc",
++          "completed_utc",
++          "source_before_sha256",
++          "source_after_sha256",
++          "execution_class",
++          "authority_scope"
++        ],
++        "required_inventory": "ROOT_PINNED_EXACT_STAGE_SCENARIO_IDS_REQUIRED_BEFORE_EXECUTION",
++        "review_baseline": {
++          "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++          "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
++        },
++        "source_ref_status": "PENDING_ROOT_APPROVED_ASSEMBLED_EXECUTABLE_SOURCE_NOT_THIS_REVIEW_PACKET"
++      },
++      "execution_authorized": false,
++      "failure_action": "STOP_CURRENT_OPERATION",
++      "name": "Simulator failover and noquorum/stale-writer scenarios FIRST",
++      "order": 3,
++      "pass_predicate": {
++        "comparator": "ALL_REQUIRED_TRUE",
++        "condition": "Every listed check result exactly PASS; no extra/substituted/missing/duplicate IDs",
++        "operands": [
++          "L2-S03-SIMULATOR_FIRST",
++          "L2-S03-NO_QUORUM",
++          "L2-S03-STALE_WRITER",
++          "L2-S03-UNKNOWN_DEBT"
++        ],
++        "permission_granted": false,
++        "result_if_incomplete": "UNKNOWN"
++      },
++      "predecessor_stage_ids": [
++        "L2-S01",
++        "L2-S02"
++      ],
++      "prerequisites": [
++        "ROOT_APPROVED_EXACT_EXECUTABLE_RELEASE",
++        "REQUIRED_GATES_PASS",
++        "EXISTING_NONADMIN_RECOVERY_ACCESS",
++        "SEPARATE_STAGE_AUTHORIZATION"
++      ],
++      "recovery": "No physical faults; preserve UNKNOWN and simulator evidence",
++      "risk": "MEDIUM",
++      "stage_id": "L2-S03",
++      "unknown_action": "HOLD_NO_CONTINUE_REQUIRE_ROOT_REVIEW"
++    },
++    {
++      "authority_granted": false,
++      "checks": [
++        {
++          "artifact_id": "L2-S04-SOURCE-BOUND-RESULT",
++          "authority_granted": false,
++          "check_id": "L2-S04-TEN_IDENTITIES",
++          "comparator": "EXACT_EQUALS",
++          "expected": 10,
++          "fact_field": "approved_instrument_count",
++          "failure_action": "STOP_CURRENT_OPERATION",
++          "missing_action": "UNKNOWN_NO_CONTINUE",
++          "observed": null,
++          "result": "UNKNOWN"
++        },
++        {
++          "artifact_id": "L2-S04-SOURCE-BOUND-RESULT",
++          "authority_granted": false,
++          "check_id": "L2-S04-REGISTRY_BINDING",
++          "comparator": "EXACT_EQUALS",
++          "expected": true,
++          "fact_field": "approved_registry_policy_bound",
++          "failure_action": "STOP_CURRENT_OPERATION",
++          "missing_action": "UNKNOWN_NO_CONTINUE",
++          "observed": null,
++          "result": "UNKNOWN"
++        },
++        {
++          "artifact_id": "L2-S04-SOURCE-BOUND-RESULT",
++          "authority_granted": false,
++          "check_id": "L2-S04-HISTORICAL_INTEGRITY",
++          "comparator": "EXACT_EQUALS",
++          "expected": true,
++          "fact_field": "all_required_integrity_cases_pass",
++          "failure_action": "STOP_CURRENT_OPERATION",
++          "missing_action": "UNKNOWN_NO_CONTINUE",
++          "observed": null,
++          "result": "UNKNOWN"
++        },
++        {
++          "artifact_id": "L2-S04-SOURCE-BOUND-RESULT",
++          "authority_granted": false,
++          "check_id": "L2-S04-GAPS_DISCLOSED",
++          "comparator": "EXACT_EQUALS",
++          "expected": true,
++          "fact_field": "unverified_gaps_reported_without_invented_completeness",
++          "failure_action": "STOP_CURRENT_OPERATION",
++          "missing_action": "UNKNOWN_NO_CONTINUE",
++          "observed": null,
++          "result": "UNKNOWN"
++        }
++      ],
++      "closed_check_ids": [
++        "L2-S04-TEN_IDENTITIES",
++        "L2-S04-REGISTRY_BINDING",
++        "L2-S04-HISTORICAL_INTEGRITY",
++        "L2-S04-GAPS_DISCLOSED"
++      ],
++      "current_result": "UNKNOWN",
++      "estimated_time": "30-60 proposed minutes",
++      "evidence_requirements": {
++        "artifact_id": "L2-S04-SOURCE-BOUND-RESULT",
++        "exact_executable_source_ref": null,
++        "expected_state": "NOT_PRESENT_NOT_EXECUTED",
++        "missing_or_skipped_required_cases": "FAIL_IF_EXECUTED_OTHERWISE_UNKNOWN",
++        "producer_rule": "Independent authenticated source binding; self-reported summary alone insufficient",
++        "raw_artifact_preservation": "RETAIN_ORIGINAL_BYTES_AND_SHA256_NO_NORMALIZATION",
++        "required_binding_fields": [
++          "repository",
++          "exact_head",
++          "exact_tree",
++          "contract_versions_sha256",
++          "expected_inventory_sha256",
++          "actual_case_ids",
++          "artifact_sha256",
++          "original_log_sha256",
++          "producer_identity_binding",
++          "run_attempt_job_or_owner_phase_identity",
++          "started_utc",
++          "completed_utc",
++          "source_before_sha256",
++          "source_after_sha256",
++          "execution_class",
++          "authority_scope"
++        ],
++        "required_inventory": "ROOT_PINNED_EXACT_STAGE_SCENARIO_IDS_REQUIRED_BEFORE_EXECUTION",
++        "review_baseline": {
++          "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++          "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
++        },
++        "source_ref_status": "PENDING_ROOT_APPROVED_ASSEMBLED_EXECUTABLE_SOURCE_NOT_THIS_REVIEW_PACKET"
++      },
++      "execution_authorized": false,
++      "failure_action": "STOP_CURRENT_OPERATION",
++      "name": "Approved ten-instrument historical integrity via existing engines",
++      "order": 4,
++      "pass_predicate": {
++        "comparator": "ALL_REQUIRED_TRUE",
++        "condition": "Every listed check result exactly PASS; no extra/substituted/missing/duplicate IDs",
++        "operands": [
++          "L2-S04-TEN_IDENTITIES",
++          "L2-S04-REGISTRY_BINDING",
++          "L2-S04-HISTORICAL_INTEGRITY",
++          "L2-S04-GAPS_DISCLOSED"
++        ],
++        "permission_granted": false,
++        "result_if_incomplete": "UNKNOWN"
++      },
++      "predecessor_stage_ids": [
++        "L2-S01",
++        "L2-S02",
++        "L2-S03"
++      ],
++      "prerequisites": [
++        "ROOT_APPROVED_EXACT_EXECUTABLE_RELEASE",
++        "REQUIRED_GATES_PASS",
++        "EXISTING_NONADMIN_RECOVERY_ACCESS",
++        "SEPARATE_STAGE_AUTHORIZATION"
++      ],
++      "recovery": "Stop on gaps; never synthesize completeness or overwrite originals",
++      "risk": "MEDIUM",
++      "stage_id": "L2-S04",
++      "unknown_action": "HOLD_NO_CONTINUE_REQUIRE_ROOT_REVIEW"
++    },
++    {
++      "authority_granted": false,
++      "checks": [
++        {
++          "artifact_id": "L2-S05-SOURCE-BOUND-RESULT",
++          "authority_granted": false,
++          "check_id": "L2-S05-EXISTING_ENGINES",
++          "comparator": "EXACT_EQUALS",
++          "expected": true,
++          "fact_field": "only_approved_existing_engines_used",
++          "failure_action": "STOP_CURRENT_OPERATION",
++          "missing_action": "UNKNOWN_NO_CONTINUE",
++          "observed": null,
++          "result": "UNKNOWN"
++        },
++        {
++          "artifact_id": "L2-S05-SOURCE-BOUND-RESULT",
++          "authority_granted": false,
++          "check_id": "L2-S05-PAPER_ONLY",
++          "comparator": "EXACT_EQUALS",
++          "expected": 0,
++          "fact_field": "real_order_count",
++          "failure_action": "STOP_CURRENT_OPERATION",
++          "missing_action": "UNKNOWN_NO_CONTINUE",
++          "observed": null,
++          "result": "UNKNOWN"
++        },
++        {
++          "artifact_id": "L2-S05-SOURCE-BOUND-RESULT",
++          "authority_granted": false,
++          "check_id": "L2-S05-SIX_NODE_VISIBILITY",
++          "comparator": "EXACT_EQUALS",
++          "expected": true,
++          "fact_field": "all_six_intended_nodes_visible_with_correct_disclosures",
++          "failure_action": "STOP_CURRENT_OPERATION",
++          "missing_action": "UNKNOWN_NO_CONTINUE",
++          "observed": null,
++          "result": "UNKNOWN"
++        },
++        {
++          "artifact_id": "L2-S05-SOURCE-BOUND-RESULT",
++          "authority_granted": false,
++          "check_id": "L2-S05-SESSION_CONTINUITY",
++          "comparator": "EXACT_EQUALS",
++          "expected": true,
++          "fact_field": "required_session_job_continuity_cases_pass",
++          "failure_action": "STOP_CURRENT_OPERATION",
++          "missing_action": "UNKNOWN_NO_CONTINUE",
++          "observed": null,
++          "result": "UNKNOWN"
++        }
++      ],
++      "closed_check_ids": [
++        "L2-S05-EXISTING_ENGINES",
++        "L2-S05-PAPER_ONLY",
++        "L2-S05-SIX_NODE_VISIBILITY",
++        "L2-S05-SESSION_CONTINUITY"
++      ],
++      "current_result": "UNKNOWN",
++      "estimated_time": "20-40 proposed minutes",
++      "evidence_requirements": {
++        "artifact_id": "L2-S05-SOURCE-BOUND-RESULT",
++        "exact_executable_source_ref": null,
++        "expected_state": "NOT_PRESENT_NOT_EXECUTED",
++        "missing_or_skipped_required_cases": "FAIL_IF_EXECUTED_OTHERWISE_UNKNOWN",
++        "producer_rule": "Independent authenticated source binding; self-reported summary alone insufficient",
++        "raw_artifact_preservation": "RETAIN_ORIGINAL_BYTES_AND_SHA256_NO_NORMALIZATION",
++        "required_binding_fields": [
++          "repository",
++          "exact_head",
++          "exact_tree",
++          "contract_versions_sha256",
++          "expected_inventory_sha256",
++          "actual_case_ids",
++          "artifact_sha256",
++          "original_log_sha256",
++          "producer_identity_binding",
++          "run_attempt_job_or_owner_phase_identity",
++          "started_utc",
++          "completed_utc",
++          "source_before_sha256",
++          "source_after_sha256",
++          "execution_class",
++          "authority_scope"
++        ],
++        "required_inventory": "ROOT_PINNED_EXACT_STAGE_SCENARIO_IDS_REQUIRED_BEFORE_EXECUTION",
++        "review_baseline": {
++          "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++          "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
++        },
++        "source_ref_status": "PENDING_ROOT_APPROVED_ASSEMBLED_EXECUTABLE_SOURCE_NOT_THIS_REVIEW_PACKET"
++      },
++      "execution_authorized": false,
++      "failure_action": "STOP_CURRENT_OPERATION",
++      "name": "Existing paper-only engines and terminal visibility across six intended nodes",
++      "order": 5,
++      "pass_predicate": {
++        "comparator": "ALL_REQUIRED_TRUE",
++        "condition": "Every listed check result exactly PASS; no extra/substituted/missing/duplicate IDs",
++        "operands": [
++          "L2-S05-EXISTING_ENGINES",
++          "L2-S05-PAPER_ONLY",
++          "L2-S05-SIX_NODE_VISIBILITY",
++          "L2-S05-SESSION_CONTINUITY"
++        ],
++        "permission_granted": false,
++        "result_if_incomplete": "UNKNOWN"
++      },
++      "predecessor_stage_ids": [
++        "L2-S01",
++        "L2-S02",
++        "L2-S03",
++        "L2-S04"
++      ],
++      "prerequisites": [
++        "ROOT_APPROVED_EXACT_EXECUTABLE_RELEASE",
++        "REQUIRED_GATES_PASS",
++        "EXISTING_NONADMIN_RECOVERY_ACCESS",
++        "SEPARATE_STAGE_AUTHORIZATION"
++      ],
++      "recovery": "Keep provider sends/orders denied; retain stale/partial states",
++      "risk": "MEDIUM",
++      "stage_id": "L2-S05",
++      "unknown_action": "HOLD_NO_CONTINUE_REQUIRE_ROOT_REVIEW"
++    },
++    {
++      "authority_granted": false,
++      "checks": [
++        {
++          "artifact_id": "L2-S06-SOURCE-BOUND-RESULT",
++          "authority_granted": false,
++          "check_id": "L2-S06-GATES_FIRST",
++          "comparator": "EXACT_EQUALS",
++          "expected": true,
++          "fact_field": "all_previous_stages_pass",
++          "failure_action": "STOP_CURRENT_OPERATION",
++          "missing_action": "UNKNOWN_NO_CONTINUE",
++          "observed": null,
++          "result": "UNKNOWN"
++        },
++        {
++          "artifact_id": "L2-S06-SOURCE-BOUND-RESULT",
++          "authority_granted": false,
++          "check_id": "L2-S06-TEN_MINUTES",
++          "comparator": "AT_LEAST",
++          "expected": 600,
++          "fact_field": "actual_observed_duration_seconds",
++          "failure_action": "STOP_CURRENT_OPERATION",
++          "missing_action": "UNKNOWN_NO_CONTINUE",
++          "observed": null,
++          "result": "UNKNOWN"
++        },
++        {
++          "artifact_id": "L2-S06-SOURCE-BOUND-RESULT",
++          "authority_granted": false,
++          "check_id": "L2-S06-PINNED_POLICY",
++          "comparator": "EXACT_EQUALS",
++          "expected": true,
++          "fact_field": "current_provider_egress_budget_policy_approved",
++          "failure_action": "STOP_CURRENT_OPERATION",
++          "missing_action": "UNKNOWN_NO_CONTINUE",
++          "observed": null,
++          "result": "UNKNOWN"
++        },
++        {
++          "artifact_id": "L2-S06-SOURCE-BOUND-RESULT",
++          "authority_granted": false,
++          "check_id": "L2-S06-READ_ONLY",
++          "comparator": "EXACT_EQUALS",
++          "expected": 0,
++          "fact_field": "private_order_or_mutation_count",
++          "failure_action": "STOP_CURRENT_OPERATION",
++          "missing_action": "UNKNOWN_NO_CONTINUE",
++          "observed": null,
++          "result": "UNKNOWN"
++        },
++        {
++          "artifact_id": "L2-S06-SOURCE-BOUND-RESULT",
++          "authority_granted": false,
++          "check_id": "L2-S06-FRESHNESS_GAPS",
++          "comparator": "EXACT_EQUALS",
++          "expected": true,
++          "fact_field": "freshness_disconnect_gap_backfill_cases_pass",
++          "failure_action": "STOP_CURRENT_OPERATION",
++          "missing_action": "UNKNOWN_NO_CONTINUE",
++          "observed": null,
++          "result": "UNKNOWN"
++        }
++      ],
++      "closed_check_ids": [
++        "L2-S06-GATES_FIRST",
++        "L2-S06-TEN_MINUTES",
++        "L2-S06-PINNED_POLICY",
++        "L2-S06-READ_ONLY",
++        "L2-S06-FRESHNESS_GAPS"
++      ],
++      "current_result": "UNKNOWN",
++      "estimated_time": "10-minute observation plus bounded setup/cleanup",
++      "evidence_requirements": {
++        "artifact_id": "L2-S06-SOURCE-BOUND-RESULT",
++        "exact_executable_source_ref": null,
++        "expected_state": "NOT_PRESENT_NOT_EXECUTED",
++        "missing_or_skipped_required_cases": "FAIL_IF_EXECUTED_OTHERWISE_UNKNOWN",
++        "producer_rule": "Independent authenticated source binding; self-reported summary alone insufficient",
++        "raw_artifact_preservation": "RETAIN_ORIGINAL_BYTES_AND_SHA256_NO_NORMALIZATION",
++        "required_binding_fields": [
++          "repository",
++          "exact_head",
++          "exact_tree",
++          "contract_versions_sha256",
++          "expected_inventory_sha256",
++          "actual_case_ids",
++          "artifact_sha256",
++          "original_log_sha256",
++          "producer_identity_binding",
++          "run_attempt_job_or_owner_phase_identity",
++          "started_utc",
++          "completed_utc",
++          "source_before_sha256",
++          "source_after_sha256",
++          "execution_class",
++          "authority_scope"
++        ],
++        "required_inventory": "ROOT_PINNED_EXACT_STAGE_SCENARIO_IDS_REQUIRED_BEFORE_EXECUTION",
++        "review_baseline": {
++          "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++          "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
++        },
++        "source_ref_status": "PENDING_ROOT_APPROVED_ASSEMBLED_EXECUTABLE_SOURCE_NOT_THIS_REVIEW_PACKET"
++      },
++      "execution_authorized": false,
++      "failure_action": "STOP_CURRENT_OPERATION",
++      "name": "Live read-only ten-minute observation AFTER all gates",
++      "order": 6,
++      "pass_predicate": {
++        "comparator": "ALL_REQUIRED_TRUE",
++        "condition": "Every listed check result exactly PASS; no extra/substituted/missing/duplicate IDs",
++        "operands": [
++          "L2-S06-GATES_FIRST",
++          "L2-S06-TEN_MINUTES",
++          "L2-S06-PINNED_POLICY",
++          "L2-S06-READ_ONLY",
++          "L2-S06-FRESHNESS_GAPS"
++        ],
++        "permission_granted": false,
++        "result_if_incomplete": "UNKNOWN"
++      },
++      "predecessor_stage_ids": [
++        "L2-S01",
++        "L2-S02",
++        "L2-S03",
++        "L2-S04",
++        "L2-S05"
++      ],
++      "prerequisites": [
++        "ROOT_APPROVED_EXACT_EXECUTABLE_RELEASE",
++        "REQUIRED_GATES_PASS",
++        "EXISTING_NONADMIN_RECOVERY_ACCESS",
++        "SEPARATE_STAGE_AUTHORIZATION"
++      ],
++      "recovery": "No Bybit send permission here; provider policy/instrument list require exact approval",
++      "risk": "MEDIUM",
++      "stage_id": "L2-S06",
++      "unknown_action": "HOLD_NO_CONTINUE_REQUIRE_ROOT_REVIEW"
++    },
++    {
++      "authority_granted": false,
++      "checks": [
++        {
++          "artifact_id": "L2-S07-SOURCE-BOUND-RESULT",
++          "authority_granted": false,
++          "check_id": "L2-S07-APP_ONLY",
++          "comparator": "EXACT_EQUALS",
++          "expected": "APP_ONLY_APPROVED_PILOT",
++          "fact_field": "mutation_scope",
++          "failure_action": "STOP_CURRENT_OPERATION",
++          "missing_action": "UNKNOWN_NO_CONTINUE",
++          "observed": null,
++          "result": "UNKNOWN"
++        },
++        {
++          "artifact_id": "L2-S07-SOURCE-BOUND-RESULT",
++          "authority_granted": false,
++          "check_id": "L2-S07-AUTHORIZATION",
++          "comparator": "EXACT_EQUALS",
++          "expected": true,
++          "fact_field": "separate_stage_authorization_verified",
++          "failure_action": "STOP_CURRENT_OPERATION",
++          "missing_action": "UNKNOWN_NO_CONTINUE",
++          "observed": null,
++          "result": "UNKNOWN"
++        },
++        {
++          "artifact_id": "L2-S07-SOURCE-BOUND-RESULT",
++          "authority_granted": false,
++          "check_id": "L2-S07-ROLLBACK",
++          "comparator": "EXACT_EQUALS",
++          "expected": true,
++          "fact_field": "prior_admitted_app_state_restored_verified",
++          "failure_action": "STOP_CURRENT_OPERATION",
++          "missing_action": "UNKNOWN_NO_CONTINUE",
++          "observed": null,
++          "result": "UNKNOWN"
++        },
++        {
++          "artifact_id": "L2-S07-SOURCE-BOUND-RESULT",
++          "authority_granted": false,
++          "check_id": "L2-S07-NO_COLLATERAL",
++          "comparator": "EXACT_EQUALS",
++          "expected": true,
++          "fact_field": "existing_data_services_network_unchanged",
++          "failure_action": "STOP_CURRENT_OPERATION",
++          "missing_action": "UNKNOWN_NO_CONTINUE",
++          "observed": null,
++          "result": "UNKNOWN"
++        }
++      ],
++      "closed_check_ids": [
++        "L2-S07-APP_ONLY",
++        "L2-S07-AUTHORIZATION",
++        "L2-S07-ROLLBACK",
++        "L2-S07-NO_COLLATERAL"
++      ],
++      "current_result": "UNKNOWN",
++      "estimated_time": "20-40 proposed minutes",
++      "evidence_requirements": {
++        "artifact_id": "L2-S07-SOURCE-BOUND-RESULT",
++        "exact_executable_source_ref": null,
++        "expected_state": "NOT_PRESENT_NOT_EXECUTED",
++        "missing_or_skipped_required_cases": "FAIL_IF_EXECUTED_OTHERWISE_UNKNOWN",
++        "producer_rule": "Independent authenticated source binding; self-reported summary alone insufficient",
++        "raw_artifact_preservation": "RETAIN_ORIGINAL_BYTES_AND_SHA256_NO_NORMALIZATION",
++        "required_binding_fields": [
++          "repository",
++          "exact_head",
++          "exact_tree",
++          "contract_versions_sha256",
++          "expected_inventory_sha256",
++          "actual_case_ids",
++          "artifact_sha256",
++          "original_log_sha256",
++          "producer_identity_binding",
++          "run_attempt_job_or_owner_phase_identity",
++          "started_utc",
++          "completed_utc",
++          "source_before_sha256",
++          "source_after_sha256",
++          "execution_class",
++          "authority_scope"
++        ],
++        "required_inventory": "ROOT_PINNED_EXACT_STAGE_SCENARIO_IDS_REQUIRED_BEFORE_EXECUTION",
++        "review_baseline": {
++          "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++          "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
++        },
++        "source_ref_status": "PENDING_ROOT_APPROVED_ASSEMBLED_EXECUTABLE_SOURCE_NOT_THIS_REVIEW_PACKET"
++      },
++      "execution_authorized": false,
++      "failure_action": "STOP_CURRENT_OPERATION",
++      "name": "APP_ONLY restart/update/rollback in explicitly approved pilot",
++      "order": 7,
++      "pass_predicate": {
++        "comparator": "ALL_REQUIRED_TRUE",
++        "condition": "Every listed check result exactly PASS; no extra/substituted/missing/duplicate IDs",
++        "operands": [
++          "L2-S07-APP_ONLY",
++          "L2-S07-AUTHORIZATION",
++          "L2-S07-ROLLBACK",
++          "L2-S07-NO_COLLATERAL"
++        ],
++        "permission_granted": false,
++        "result_if_incomplete": "UNKNOWN"
++      },
++      "predecessor_stage_ids": [
++        "L2-S01",
++        "L2-S02",
++        "L2-S03",
++        "L2-S04",
++        "L2-S05",
++        "L2-S06"
++      ],
++      "prerequisites": [
++        "ROOT_APPROVED_EXACT_EXECUTABLE_RELEASE",
++        "REQUIRED_GATES_PASS",
++        "EXISTING_NONADMIN_RECOVERY_ACCESS",
++        "SEPARATE_STAGE_AUTHORIZATION"
++      ],
++      "recovery": "Restore verified prior app state; preserve existing data/services/network",
++      "risk": "HIGH",
++      "stage_id": "L2-S07",
++      "unknown_action": "HOLD_NO_CONTINUE_REQUIRE_ROOT_REVIEW"
++    },
++    {
++      "authority_granted": false,
++      "checks": [
++        {
++          "artifact_id": "L2-S08-SOURCE-BOUND-RESULT",
++          "authority_granted": false,
++          "check_id": "L2-S08-SIMULATOR_PRECEDED",
++          "comparator": "EXACT_EQUALS",
++          "expected": true,
++          "fact_field": "simulator_stage_pass_before_fault",
++          "failure_action": "STOP_CURRENT_OPERATION",
++          "missing_action": "UNKNOWN_NO_CONTINUE",
++          "observed": null,
++          "result": "UNKNOWN"
++        },
++        {
++          "artifact_id": "L2-S08-SOURCE-BOUND-RESULT",
++          "authority_granted": false,
++          "check_id": "L2-S08-AUTHORIZATION",
++          "comparator": "EXACT_EQUALS",
++          "expected": true,
++          "fact_field": "separate_physical_fault_authorization_verified",
++          "failure_action": "STOP_CURRENT_OPERATION",
++          "missing_action": "UNKNOWN_NO_CONTINUE",
++          "observed": null,
++          "result": "UNKNOWN"
++        },
++        {
++          "artifact_id": "L2-S08-SOURCE-BOUND-RESULT",
++          "authority_granted": false,
++          "check_id": "L2-S08-QUORUM_FENCING",
++          "comparator": "EXACT_EQUALS",
++          "expected": true,
++          "fact_field": "required_physical_quorum_fencing_cases_pass",
++          "failure_action": "STOP_CURRENT_OPERATION",
++          "missing_action": "UNKNOWN_NO_CONTINUE",
++          "observed": null,
++          "result": "UNKNOWN"
++        },
++        {
++          "artifact_id": "L2-S08-SOURCE-BOUND-RESULT",
++          "authority_granted": false,
++          "check_id": "L2-S08-RECOVERY",
++          "comparator": "EXACT_EQUALS",
++          "expected": true,
++          "fact_field": "recovery_access_and_data_verified",
++          "failure_action": "STOP_CURRENT_OPERATION",
++          "missing_action": "UNKNOWN_NO_CONTINUE",
++          "observed": null,
++          "result": "UNKNOWN"
++        },
++        {
++          "artifact_id": "L2-S08-SOURCE-BOUND-RESULT",
++          "authority_granted": false,
++          "check_id": "L2-S08-INDEPENDENT_REVIEW",
++          "comparator": "EXACT_EQUALS",
++          "expected": true,
++          "fact_field": "independent_source_bound_acceptance_complete",
++          "failure_action": "STOP_CURRENT_OPERATION",
++          "missing_action": "UNKNOWN_NO_CONTINUE",
++          "observed": null,
++          "result": "UNKNOWN"
++        }
++      ],
++      "closed_check_ids": [
++        "L2-S08-SIMULATOR_PRECEDED",
++        "L2-S08-AUTHORIZATION",
++        "L2-S08-QUORUM_FENCING",
++        "L2-S08-RECOVERY",
++        "L2-S08-INDEPENDENT_REVIEW"
++      ],
++      "current_result": "UNKNOWN",
++      "estimated_time": "Root-defined bounded window required",
++      "evidence_requirements": {
++        "artifact_id": "L2-S08-SOURCE-BOUND-RESULT",
++        "exact_executable_source_ref": null,
++        "expected_state": "NOT_PRESENT_NOT_EXECUTED",
++        "missing_or_skipped_required_cases": "FAIL_IF_EXECUTED_OTHERWISE_UNKNOWN",
++        "producer_rule": "Independent authenticated source binding; self-reported summary alone insufficient",
++        "raw_artifact_preservation": "RETAIN_ORIGINAL_BYTES_AND_SHA256_NO_NORMALIZATION",
++        "required_binding_fields": [
++          "repository",
++          "exact_head",
++          "exact_tree",
++          "contract_versions_sha256",
++          "expected_inventory_sha256",
++          "actual_case_ids",
++          "artifact_sha256",
++          "original_log_sha256",
++          "producer_identity_binding",
++          "run_attempt_job_or_owner_phase_identity",
++          "started_utc",
++          "completed_utc",
++          "source_before_sha256",
++          "source_after_sha256",
++          "execution_class",
++          "authority_scope"
++        ],
++        "required_inventory": "ROOT_PINNED_EXACT_STAGE_SCENARIO_IDS_REQUIRED_BEFORE_EXECUTION",
++        "review_baseline": {
++          "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++          "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
++        },
++        "source_ref_status": "PENDING_ROOT_APPROVED_ASSEMBLED_EXECUTABLE_SOURCE_NOT_THIS_REVIEW_PACKET"
++      },
++      "execution_authorized": false,
++      "failure_action": "STOP_CURRENT_OPERATION",
++      "name": "Separately approved physical failover/recovery and independent acceptance",
++      "order": 8,
++      "pass_predicate": {
++        "comparator": "ALL_REQUIRED_TRUE",
++        "condition": "Every listed check result exactly PASS; no extra/substituted/missing/duplicate IDs",
++        "operands": [
++          "L2-S08-SIMULATOR_PRECEDED",
++          "L2-S08-AUTHORIZATION",
++          "L2-S08-QUORUM_FENCING",
++          "L2-S08-RECOVERY",
++          "L2-S08-INDEPENDENT_REVIEW"
++        ],
++        "permission_granted": false,
++        "result_if_incomplete": "UNKNOWN"
++      },
++      "predecessor_stage_ids": [
++        "L2-S01",
++        "L2-S02",
++        "L2-S03",
++        "L2-S04",
++        "L2-S05",
++        "L2-S06",
++        "L2-S07"
++      ],
++      "prerequisites": [
++        "ROOT_APPROVED_EXACT_EXECUTABLE_RELEASE",
++        "REQUIRED_GATES_PASS",
++        "EXISTING_NONADMIN_RECOVERY_ACCESS",
++        "SEPARATE_STAGE_AUTHORIZATION"
++      ],
++      "recovery": "Fault injection remains unauthorized; simulator precedes any physical fault",
++      "risk": "HIGH",
++      "stage_id": "L2-S08",
++      "unknown_action": "HOLD_NO_CONTINUE_REQUIRE_ROOT_REVIEW"
++    }
++  ],
++  "status": "REVIEW_INPUTS_ONLY",
++  "ten_instruments": {
++    "bybit_sends": "DENY",
++    "current_list": "NOT_VERIFIED_NO_SYMBOLS_INVENTED",
++    "proposed_count": 10,
++    "provider_policy": "NOT_VERIFIED",
++    "source": "APPROVED_IDENTITY_REGISTRY_REQUIRED"
++  },
++  "terminal": "Actual endpoint/auth/continuity/freshness after gates, not cached screenshot or local unit transfer"
++}
+diff --git a/release/acceptance-review/20261110-level2-review1/release-manifest.json b/release/acceptance-review/20261110-level2-review1/release-manifest.json
+new file mode 100644
+index 0000000..e713c24
+--- /dev/null
++++ b/release/acceptance-review/20261110-level2-review1/release-manifest.json
+@@ -0,0 +1,291 @@
++{
++  "approval": "ROOT_APPROVED_FOR_A8_SOURCE_REVIEW_ONLY",
++  "artifact_payloads": [],
++  "base": {
++    "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++    "repository": "YehorBabenko88/unified-system",
++    "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
++  },
++  "code_signing": {
++    "LAB_UNSIGNED": "NO_COMMERCIAL_CERTIFICATE_REQUIRED_BY_LAB_PROFILE",
++    "LAB_other_gates": "SOURCE_INTEGRITY_OWNER_REVIEW_ADMISSION_AND_RUNTIME_PHYSICAL_GATES_STILL_REQUIRED",
++    "TRUSTED_RELEASE": "BLOCKED_TRUSTED_PUBLISHER_CHAIN_REQUIRED_FOR_THIS_PROFILE_ONLY",
++    "permission_granted": false
++  },
++  "concrete_missing_inputs": [
++    "One exact assembled executable source/dependency/contract capsule and explicit owner/source review; not produced here",
++    "Current complete required CI inventory and original source-bound full matrix PASS; F26 and F42 unresolved",
++    "Windows36 child stdout-thread timeout20 RCA/fix/regression; no blind timeout increase",
++    "Trusted runtime source/credential/custody/native auth and same-authority grants/assignment/storage/worker positive proof",
++    "Actual direct-LAN six-node identity/quorum/endpoint/HA recovery acceptance independent of Tailscale",
++    "Current resource/capacity/schedule observations for all six nodes; stale observations cannot grant resources",
++    "Existing nonadmin PC4 execution/recovery channel without new account/token changes",
++    "Approved current ten-instrument identity registry and pinned provider/egress/budget policy; list currently unverified",
++    "TRUSTED_RELEASE-only trusted publisher/signing chain remains blocked; LAB requires no commercial certificate, but still requires separate source integrity/executable admission and all other applicable gates",
++    "Root review approval then independent A8 SOURCE review; source review is not runtime or physical permission",
++    "Full exact source seal for uncommitted hosted47 tools and scoped owner review before adoption",
++    "Explicit pilot/fault-injection/install/restart/update/rollback authorization and recovery proof after gates"
++  ],
++  "entrypoints": [],
++  "executable_release": false,
++  "files": [
++    "release-manifest.json",
++    "integration-baseline.json",
++    "ownership-registry.json",
++    "node-inventory.json",
++    "authority-fencing-v1.json",
++    "assignment-v1.json",
++    "storage-publication-v1.json",
++    "terminan-control-api-v1.json",
++    "ci-evidence-index.json",
++    "rollback-plan.json",
++    "physical-acceptance-plan.json",
++    "SHA256.json"
++  ],
++  "go_no_go": "NO_GO",
++  "installability": "NOT_INSTALLABLE",
++  "installer_compatible": false,
++  "package_kind": "REVIEW_DOCUMENT_PACKET_DISTINCT_FROM_INSTALLER_MANIFEST",
++  "permissions": {
++    "dispatch": "DENY",
++    "fault_injection": "DENY",
++    "installation": "DENY",
++    "physical": "DENY",
++    "production": "DENY",
++    "provider_sends": "DENY",
++    "runtime": "DENY",
++    "tailscale_changes": "DENY",
++    "trading": "DENY"
++  },
++  "public_source_observations": [
++    {
++      "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++      "observed_updated_at": "2026-11-10T20:37:52Z",
++      "pr": 82,
++      "public_pr_url": "https://github.com/YehorBabenko88/unified-system/pull/82",
++      "repository": "YehorBabenko88/unified-system",
++      "selection": "OBSERVED_PUBLIC_SOURCE_INPUT_ONLY",
++      "snapshot": {
++        "admission": "NONE",
++        "bytes": 21106,
++        "origin": "EXISTING_LOCAL_EVIDENCE",
++        "path": "$PRIVATE_CODEX_EVIDENCE/ci-boundary-evidence-20261110/pr82-bfa3-head-original.json",
++        "scope": "PUBLIC_PR_METADATA_SNAPSHOT_NOT_ASSEMBLY",
++        "sha256": "42736e0b9339fc34442f4f3b0d017f378dd709ce6df79b64104d79f86c671adf"
++      },
++      "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98",
++      "tree_origin": "Root supplied full pin; PR body/source metadata corroboration; not independent Git verification of every foreign repository"
++    },
++    {
++      "head": "fb177d14b1e6e399bd9b66ae7cb35d3838acbd81",
++      "observed_updated_at": "2026-11-10T15:16:34Z",
++      "pr": 281,
++      "public_pr_url": "https://github.com/YehorBabenko88/bybit-cluster-grid/pull/281",
++      "repository": "YehorBabenko88/bybit-cluster-grid",
++      "selection": "OBSERVED_PUBLIC_SOURCE_INPUT_ONLY",
++      "snapshot": {
++        "admission": "NONE",
++        "bytes": 20696,
++        "origin": "EXISTING_LOCAL_EVIDENCE",
++        "path": "$PRIVATE_CODEX_EVIDENCE/ci-boundary-evidence-20261110/sixrepo-current-bybit-cluster-grid-pr281.json",
++        "scope": "PUBLIC_PR_METADATA_SNAPSHOT_NOT_ASSEMBLY",
++        "sha256": "da85986cd090e7b6ae4aa9153e5dac14f79b9fa5906fb10157b827d477a559a6"
++      },
++      "tree": "2cba4b0a1ee7621ef213600d6334db8e9ac7dae1",
++      "tree_origin": "Root supplied full pin; PR body/source metadata corroboration; not independent Git verification of every foreign repository"
++    },
++    {
++      "head": "887e3eeaf23ef8d9d1429435bc88bbac8099c6e6",
++      "observed_updated_at": "2026-11-07T17:14:05Z",
++      "pr": 77,
++      "public_pr_url": "https://github.com/YehorBabenko88/strattester/pull/77",
++      "repository": "YehorBabenko88/strattester",
++      "selection": "OBSERVED_PUBLIC_SOURCE_INPUT_ONLY",
++      "snapshot": {
++        "admission": "NONE",
++        "bytes": 19973,
++        "origin": "EXISTING_LOCAL_EVIDENCE",
++        "path": "$PRIVATE_CODEX_EVIDENCE/ci-boundary-evidence-20261110/sixrepo-current-strattester-pr77.json",
++        "scope": "PUBLIC_PR_METADATA_SNAPSHOT_NOT_ASSEMBLY",
++        "sha256": "800b906a133fe3265aa2842e6a7eb5ab187b0cf129b619ad6316d8ed5520df5c"
++      },
++      "tree": "954f3364cb70369705f658e89fcc6ae8ce547eec",
++      "tree_origin": "Root supplied full pin; PR body/source metadata corroboration; not independent Git verification of every foreign repository"
++    },
++    {
++      "head": "2446d04624469e34aa96ed766be7a4887d6d654c",
++      "observed_updated_at": "2026-11-07T07:42:10Z",
++      "pr": 115,
++      "public_pr_url": "https://github.com/YehorBabenko88/math/pull/115",
++      "repository": "YehorBabenko88/math",
++      "selection": "DIAGNOSTIC_ONLY_NOT_SELECTED_TRUSTED_RUNTIME",
++      "snapshot": {
++        "admission": "NONE",
++        "bytes": 19172,
++        "origin": "EXISTING_LOCAL_EVIDENCE",
++        "path": "$PRIVATE_CODEX_EVIDENCE/ci-boundary-evidence-20261110/sixrepo-current-math-pr115.json",
++        "scope": "PUBLIC_PR_METADATA_SNAPSHOT_NOT_ASSEMBLY",
++        "sha256": "da944844ed19a8e902a8a580e6d5f805742478b70738cc1ed9180f813d668a42"
++      },
++      "tree": "12c4e3cbd3557c7f4f634f5241c7e4b51eafba4f",
++      "tree_origin": "Root supplied full pin; PR body/source metadata corroboration; not independent Git verification of every foreign repository"
++    },
++    {
++      "head": "f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1",
++      "observed_updated_at": "2026-11-06T20:19:16Z",
++      "pr": 78,
++      "public_pr_url": "https://github.com/YehorBabenko88/meta_analyse/pull/78",
++      "repository": "YehorBabenko88/meta_analyse",
++      "selection": "OBSERVED_PUBLIC_SOURCE_INPUT_ONLY",
++      "snapshot": {
++        "admission": "NONE",
++        "bytes": 19325,
++        "origin": "EXISTING_LOCAL_EVIDENCE",
++        "path": "$PRIVATE_CODEX_EVIDENCE/ci-boundary-evidence-20261110/sixrepo-current-meta_analyse-pr78.json",
++        "scope": "PUBLIC_PR_METADATA_SNAPSHOT_NOT_ASSEMBLY",
++        "sha256": "3479d203d54674195b84c1dba0e78f43691b856e9a7ec3496cd0b33623907a2a"
++      },
++      "tree": "c155c935a801fa98b7c78219c9798ce1f1be8848",
++      "tree_origin": "Root supplied full pin; PR body/source metadata corroboration; not independent Git verification of every foreign repository"
++    },
++    {
++      "head": "dc810b03c3accf0e6f28fca1d5068f4171bb909d",
++      "observed_updated_at": "2026-11-10T17:32:30Z",
++      "pr": 82,
++      "public_pr_url": "https://github.com/YehorBabenko88/Terminan/pull/82",
++      "repository": "YehorBabenko88/Terminan",
++      "selection": "OBSERVED_PUBLIC_SOURCE_INPUT_ONLY",
++      "snapshot": {
++        "admission": "NONE",
++        "bytes": 18532,
++        "origin": "EXISTING_LOCAL_EVIDENCE",
++        "path": "$PRIVATE_CODEX_EVIDENCE/ci-boundary-evidence-20261110/sixrepo-current-Terminan-pr82.json",
++        "scope": "PUBLIC_PR_METADATA_SNAPSHOT_NOT_ASSEMBLY",
++        "sha256": "6b33cbaa07ddee85e498b6f63adcd514c5dcce2be208da1d139e70636c5f739c"
++      },
++      "tree": "d5bbb6f73c841ba93ae74354ea72cc0989212d92",
++      "tree_origin": "Root supplied full pin; PR body/source metadata corroboration; not independent Git verification of every foreign repository"
++    }
++  ],
++  "review_scope": "May be approved for A8 SOURCE review only; never executable release or runtime/native endpoint admission",
++  "schema": "unified.acceptance-review.level2.release-manifest.v1",
++  "source_combination": "NOT_ASSEMBLED_OR_VERIFIED",
++  "status": "REVIEW_INPUTS_ONLY",
++  "unassembled_inputs": [
++    {
++      "component": "A2 broker",
++      "head": "ab4c3b62a3d160d189f06df01d42c01a7c57e3c5",
++      "qualification": {
++        "methods": 10,
++        "receipt": {
++          "admission": "NONE",
++          "bytes": 264908,
++          "origin": "EXISTING_LOCAL_EVIDENCE",
++          "path": "$PRIVATE_CODEX_EVIDENCE/atomic-read-unit-green-20261110/ACTUAL-RESULT.json",
++          "scope": "LOCAL_MOCK_ONLY_NOT_NATIVE_PROOF",
++          "sha256": "4497f943839d6890d09137abeaf49c720e741d8b9bac770b9f9a000610a71f85"
++        },
++        "scope": "LOCAL_ACTUAL_CODE_MOCK_BACKEND_UNIT_ONLY",
++        "skips": 0,
++        "state": "LOCAL_MOCK_UNIT_PASS"
++      },
++      "repository": "YehorBabenko88/unified-system",
++      "runtime_admission": false,
++      "source_handoff": {
++        "admission": "NONE",
++        "bytes": 1440,
++        "origin": "EXISTING_LOCAL_COMPONENT_CARD",
++        "path": "$PRIVATE_TASK_OUTPUTS/codex-agent-2-high-availability-distributed/outputs/A2-ATOMIC-READ-SOURCE-UNIT-HANDOFF-20261110/HANDOFF.json",
++        "scope": "EXACT_POST_FIX_LOCAL_MOCK10_HANDOFF_PUBLICATION_HELD_NATIVE_PHYSICAL_NO_GO",
++        "sha256": "ebdd074edafbef4690841db09320e5de4ff46eb06434d1de8890c73cd28836f0"
++      },
++      "state": "UNASSEMBLED_LOCAL_INPUT",
++      "tree": "72456e8f5a710be45a80afcd622ca2fcd0cace47"
++    },
++    {
++      "component": "A6 preview RAF disposal",
++      "head": "77fe6dfd85171305930f308f307d1aa2718df2c0",
++      "qualification": {
++        "receipt": {
++          "admission": "NONE",
++          "bytes": 88732,
++          "origin": "EXISTING_LOCAL_EVIDENCE",
++          "path": "$PRIVATE_CODEX_EVIDENCE/terminan-disposal-green-evidence-20261110/receipt.json",
++          "scope": "LOCAL_ACTUAL_JS_FAKE_DOM_RAF_POST_FIX_SIX_CASE_UNIT_ONLY",
++          "sha256": "7b2b6143b03cee8dfd7fd63666f3b00a28f5ac45918b9b55ddd5b7e412179f0a"
++        },
++        "same_six_local_js_cases": "PASS",
++        "scope": "LOCAL_ACTUAL_JS_FAKE_DOM_RAF_POST_FIX_SIX_CASE_UNIT_ONLY",
++        "tap_sha256": "4905dc18ebafcd02d8c8d6b930616552314fa17cc2fac85a8f849ae04617e2d0"
++      },
++      "repository": "YehorBabenko88/Terminan",
++      "runtime_admission": false,
++      "state": "UNASSEMBLED_LOCAL_INPUT",
++      "tree": "f19e14102bfc7cb852e47dec933bfeb34a139698"
++    },
++    {
++      "component": "A4 storage",
++      "head": "1da10616a2b8217930f354e17caaa6fcea22dac4",
++      "qualification": {
++        "cases_per_job": 22,
++        "hosted_jobs": 4,
++        "local_pure6": {
++          "admission": "NONE",
++          "bytes": 407151,
++          "origin": "EXISTING_LOCAL_EVIDENCE",
++          "path": "$PRIVATE_CODEX_EVIDENCE/ci-boundary-evidence-20261110/storage-1da-pure-receipt.json",
++          "scope": "SIX_INVENTORY_CONTROLS_ONLY_NOT_22_FIXTURE_RERUN",
++          "sha256": "30f951f0cd7a7ee871a9a69aa395073700a15d26e519bd835f73fae3f0b563d4"
++        },
++        "separate_inventory_controls": 6,
++        "verification": {
++          "admission": "NONE",
++          "bytes": 3507,
++          "origin": "EXISTING_LOCAL_EVIDENCE",
++          "path": "$PRIVATE_TASK_OUTPUTS/codex-agent-4-distributed-storage-integrity/outputs/PR56-1DA-HOSTED/verification.json",
++          "scope": "FOUR_HOSTED_LOCAL_PREREQUISITE_JOBS_NOT_FULL_CI_NATIVE_OR_PHYSICAL",
++          "sha256": "f50a51788deffe2f67d9f9eb82a82329f247515564b3cdca6c6e8fceff546ddf"
++        }
++      },
++      "repository": "YehorBabenko88/unified-system",
++      "runtime_admission": false,
++      "state": "UNASSEMBLED_SOURCE_INPUT",
++      "tree": "c2b39329924810535add3b02c3f5c5e1b11bdf62"
++    },
++    {
++      "component": "A7 Strattester test delta / hosted47 tools",
++      "head": "de6620eb5577e97db1af11b6807e22a9b61d1090",
++      "qualification": {
++        "green_tests_executed": false,
++        "overall": "HOLD / NO-GO",
++        "receipt": {
++          "admission": "NONE",
++          "bytes": 3389,
++          "origin": "EXISTING_LOCAL_EVIDENCE",
++          "path": "$PRIVATE_TASK_OUTPUTS/codex-agent-7-distributed-research-math/outputs/hosted47-f43-f44-source-fix-final-receipt-20261110.json",
++          "scope": "SOURCE_ONLY_FIX_NOT_GREEN_EXECUTION",
++          "sha256": "959a2fce1ef4ae80fb94b1ce1f079572d7fe1e0c9577ac050ce862dd39140d39"
++        },
++        "source_raw_status": "A8 reported779CRLFmismatches; not raw-qualified, no normalization"
++      },
++      "repository": "YehorBabenko88/strattester",
++      "runtime_admission": false,
++      "state": "UNASSEMBLED_TEST_DELTA_PLUS_UNCOMMITTED_TOOLS_HOLD",
++      "tree": "01e9e95f593e74d0b0a27afca771f37034aef977",
++      "unpublished_tools": {
++        "execution_allocation": "NONE",
++        "implementation_permission": "NONE",
++        "manifest": {
++          "admission": "NONE",
++          "bytes": 5266,
++          "origin": "EXISTING_LOCAL_COMPONENT_CARD",
++          "path": "$PRIVATE_TASK_OUTPUTS/codex-agent-7-distributed-research-math/outputs/hosted47-parser-childpath-controls-source-manifest-20261110.json",
++          "scope": "UNPUBLISHED_SOURCE_ONLY_TOOLS_HOLD_NO_IMPORT_TEST_COMPILE_OR_EXECUTION",
++          "sha256": "222811d6d9298be5effe23b976a30f9cfdbc6a9fbf07bd868d18ac1dbf7011e9"
++        },
++        "publication": "UNPUBLISHED",
++        "status": "HOLD"
++      }
++    }
++  ]
++}
+diff --git a/release/acceptance-review/20261110-level2-review1/rollback-plan.json b/release/acceptance-review/20261110-level2-review1/rollback-plan.json
+new file mode 100644
+index 0000000..6b7e46f
+--- /dev/null
++++ b/release/acceptance-review/20261110-level2-review1/rollback-plan.json
+@@ -0,0 +1,66 @@
++{
++  "approval": "ROOT_APPROVED_FOR_A8_SOURCE_REVIEW_ONLY",
++  "installability": "NOT_INSTALLABLE",
++  "invariants": [
++    "Never delete/replace existing data or services",
++    "Never alter DNS/routes/firewall/adapters/router/Tailscale/security/accounts/tokens",
++    "Never use rollback as permission to retry uncertain effects or clear UNKNOWN debt",
++    "PC2 user applications untouched; preserve recovery access"
++  ],
++  "permissions": {
++    "dispatch": "DENY",
++    "fault_injection": "DENY",
++    "installation": "DENY",
++    "physical": "DENY",
++    "production": "DENY",
++    "provider_sends": "DENY",
++    "runtime": "DENY",
++    "tailscale_changes": "DENY",
++    "trading": "DENY"
++  },
++  "pilot_admission": "BLOCKED_BY_GATES",
++  "plan_status": "PROPOSED_SEQUENTIAL_PLAN_NOT_EXECUTABLE",
++  "proposed_time_budget": "Per-step estimate/recovery window must be set by Root before pilot; no unattended loop or automatic failback",
++  "review_scope": "May be approved for A8 SOURCE review only; never executable release or runtime/native endpoint admission",
++  "rollback_execution": "DENY",
++  "schema": "unified.acceptance-review.level2.rollback-plan.v1",
++  "source_combination": "NOT_ASSEMBLED_OR_VERIFIED",
++  "status": "REVIEW_INPUTS_ONLY",
++  "steps": [
++    {
++      "authorization": false,
++      "order": 1,
++      "recovery": "Abort before mutation if identity/backup uncertain",
++      "risk": "Accidental scope drift",
++      "step": "Record exact pre-change source/config/data evidence and restore target"
++    },
++    {
++      "authorization": false,
++      "order": 2,
++      "recovery": "Retain original unchanged; no destructive restore",
++      "risk": "Incomplete backup or wrong namespace",
++      "step": "Create verified backup into NEW namespace only"
++    },
++    {
++      "authorization": false,
++      "order": 3,
++      "recovery": "Stop new admission and preserve original idempotency/debt",
++      "risk": "Unresolved in-flight writes",
++      "step": "After explicit APP_ONLY pilot permission, drain application-owned work with uncertainty retained"
++    },
++    {
++      "authorization": false,
++      "order": 4,
++      "recovery": "Restore prior admitted app bits/config from verified backup into authorized scope",
++      "risk": "Compatibility/custody failure",
++      "step": "APP_ONLY restart/update to exact admitted candidate, never OS/network/service changes outside pilot"
++    },
++    {
++      "authorization": false,
++      "order": 5,
++      "recovery": "Mark UNKNOWN/FAIL; preserve all receipts and return to owner review",
++      "risk": "False success from partial evidence",
++      "step": "Verify data integrity/visibility/fences and stop on mismatch"
++    }
++  ]
++}
+diff --git a/release/acceptance-review/20261110-level2-review1/storage-publication-v1.json b/release/acceptance-review/20261110-level2-review1/storage-publication-v1.json
+new file mode 100644
+index 0000000..7067b35
+--- /dev/null
++++ b/release/acceptance-review/20261110-level2-review1/storage-publication-v1.json
+@@ -0,0 +1,163 @@
++{
++  "approval": "ROOT_APPROVED_FOR_A8_SOURCE_REVIEW_ONLY",
++  "checkpoint_time": {
++    "commit_confirmation": "SEPARATE_AUTHORITATIVE_REVISION_IDENTITY_VERIFIABLE_EVIDENCE_REQUIRED",
++    "commit_instant": "MAY_BE_UNKNOWN_WITH_NULL_TIMESTAMP",
++    "design": "OPTION1_HISTORICAL_DESIGN_APPROVED_ONLY",
++    "legacy": "ORIGINAL_BYTES_AND_SEMANTICS_PRESERVED",
++    "observed_time": "SEPARATE_QUALIFIED_OBSERVATION_NOT_COMMIT_INSTANT",
++    "real_publication_adapter": "NOT_ADMITTED_BY_CODEC_ACK"
++  },
++  "current_component_cards": [
++    {
++      "admission": "NONE",
++      "bytes": 1281,
++      "origin": "EXISTING_LOCAL_COMPONENT_CARD",
++      "path": "$PRIVATE_TASK_OUTPUTS/codex-agent-4-distributed-storage-integrity/outputs/storage-native-contract-review5/MANIFEST.json",
++      "scope": "REVIEW5_DESIGN_PROPOSAL_FRESH_JOINT_ACK_PENDING_NO_NATIVE_API",
++      "sha256": "bca051d52b070e51aef8a063f73a3408926653bb76e629b49b275158429d1222"
++    },
++    {
++      "admission": "NONE",
++      "bytes": 1575,
++      "origin": "EXISTING_LOCAL_COMPONENT_CARD",
++      "path": "$PRIVATE_TASK_OUTPUTS/codex-agent-4-distributed-storage-integrity/outputs/storage-native-contract-review5/PROTOCOL.md",
++      "scope": "REVIEW5_DESIGN_PROPOSAL_FRESH_JOINT_ACK_PENDING_NO_NATIVE_API",
++      "sha256": "e1f7230da1ae8cf436f64376e65b60dd207e0e1cec3812d5e5594811ca15bf72"
++    }
++  ],
++  "current_storage_input": {
++    "component": "A4 storage",
++    "head": "1da10616a2b8217930f354e17caaa6fcea22dac4",
++    "qualification": {
++      "cases_per_job": 22,
++      "hosted_jobs": 4,
++      "local_pure6": {
++        "admission": "NONE",
++        "bytes": 407151,
++        "origin": "EXISTING_LOCAL_EVIDENCE",
++        "path": "$PRIVATE_CODEX_EVIDENCE/ci-boundary-evidence-20261110/storage-1da-pure-receipt.json",
++        "scope": "SIX_INVENTORY_CONTROLS_ONLY_NOT_22_FIXTURE_RERUN",
++        "sha256": "30f951f0cd7a7ee871a9a69aa395073700a15d26e519bd835f73fae3f0b563d4"
++      },
++      "separate_inventory_controls": 6,
++      "verification": {
++        "admission": "NONE",
++        "bytes": 3507,
++        "origin": "EXISTING_LOCAL_EVIDENCE",
++        "path": "$PRIVATE_TASK_OUTPUTS/codex-agent-4-distributed-storage-integrity/outputs/PR56-1DA-HOSTED/verification.json",
++        "scope": "FOUR_HOSTED_LOCAL_PREREQUISITE_JOBS_NOT_FULL_CI_NATIVE_OR_PHYSICAL",
++        "sha256": "f50a51788deffe2f67d9f9eb82a82329f247515564b3cdca6c6e8fceff546ddf"
++      }
++    },
++    "repository": "YehorBabenko88/unified-system",
++    "runtime_admission": false,
++    "state": "UNASSEMBLED_SOURCE_INPUT",
++    "tree": "c2b39329924810535add3b02c3f5c5e1b11bdf62"
++  },
++  "document_kind": "REFERENCE_CARD_NOT_NEW_WIRE_ABI",
++  "installability": "NOT_INSTALLABLE",
++  "permissions": {
++    "dispatch": "DENY",
++    "fault_injection": "DENY",
++    "installation": "DENY",
++    "physical": "DENY",
++    "production": "DENY",
++    "provider_sends": "DENY",
++    "runtime": "DENY",
++    "tailscale_changes": "DENY",
++    "trading": "DENY"
++  },
++  "references": [
++    {
++      "admission": "NONE",
++      "bytes": 1542,
++      "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++      "path": "acceptance/20261106/storage-publication-v1.json",
++      "repository": "YehorBabenko88/unified-system",
++      "scope": "EXISTING_SOURCE_CONTRACT_NOT_RUNTIME_ADMISSION",
++      "sha256": "fa345997d824db2b5acc2f57ab1f98e664fc79cb5f23b37c03076026a34f6448",
++      "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
++    },
++    {
++      "admission": "NONE",
++      "bytes": 27529,
++      "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++      "path": "acceptance/20261106/proposals/5cc8e6a3557a9d71b6d1ccdf9939be49133deee9219b19029ffd4cf3d3bfa278.json",
++      "repository": "YehorBabenko88/unified-system",
++      "scope": "HISTORICAL_PROPOSAL_REVIEW_ONLY_NO_RUNTIME_ACK",
++      "sha256": "5cc8e6a3557a9d71b6d1ccdf9939be49133deee9219b19029ffd4cf3d3bfa278",
++      "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
++    },
++    {
++      "admission": "NONE",
++      "bytes": 9091,
++      "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++      "path": "acceptance/20261106/proposals/8e0aa17a0eaee24ed78f9ab2f7189916d64af19b3b896523543c237fdbdbf576.json",
++      "repository": "YehorBabenko88/unified-system",
++      "scope": "HISTORICAL_PROPOSAL_REVIEW_ONLY_NO_RUNTIME_ACK",
++      "sha256": "8e0aa17a0eaee24ed78f9ab2f7189916d64af19b3b896523543c237fdbdbf576",
++      "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
++    },
++    {
++      "admission": "NONE",
++      "bytes": 3761,
++      "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++      "path": "acceptance/20261106/proposals/fb82ee72c66defa7e88fc7f502ed3778314e9733d4bbb7baf360e77509d7c6d5.json",
++      "repository": "YehorBabenko88/unified-system",
++      "scope": "HISTORICAL_PROPOSAL_REVIEW_ONLY_NO_RUNTIME_ACK",
++      "sha256": "fb82ee72c66defa7e88fc7f502ed3778314e9733d4bbb7baf360e77509d7c6d5",
++      "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
++    },
++    {
++      "admission": "NONE",
++      "bytes": 1953,
++      "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++      "path": "release/contracts/checkpoint-v3-time/DECISION.json",
++      "repository": "YehorBabenko88/unified-system",
++      "scope": "EXISTING_SOURCE_CONTRACT_NOT_RUNTIME_ADMISSION",
++      "sha256": "aa84f7acbe7632f8d534c96f529c7a39b9b1b26c1a49cf7a69a9366e5c04670e",
++      "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
++    },
++    {
++      "admission": "NONE",
++      "bytes": 2778,
++      "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++      "path": "release/contracts/checkpoint-v3-time/OWNER-DECISION.md",
++      "repository": "YehorBabenko88/unified-system",
++      "scope": "EXISTING_SOURCE_CONTRACT_NOT_RUNTIME_ADMISSION",
++      "sha256": "924de29a15b767d1efbe335717b94ab8120a2320a6efa4f28528e801b44c15ef",
++      "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
++    },
++    {
++      "admission": "NONE",
++      "bytes": 1299,
++      "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++      "path": "release/contracts/checkpoint-v3-time/review1/ROOT-SCOPED-ACK.json",
++      "repository": "YehorBabenko88/unified-system",
++      "scope": "EXISTING_SOURCE_CONTRACT_NOT_RUNTIME_ADMISSION",
++      "sha256": "e6b0e351732cdc02cbb57d558cc7b505c151a69cd128909712660ad8ef168e7e",
++      "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
++    },
++    {
++      "admission": "NONE",
++      "bytes": 9649,
++      "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++      "path": "release/contracts/checkpoint-v3-time/review1/PROTOCOL.md",
++      "repository": "YehorBabenko88/unified-system",
++      "scope": "EXISTING_SOURCE_CONTRACT_NOT_RUNTIME_ADMISSION",
++      "sha256": "79efbcb70d1ed9204fbd8295a4990650d99582196712097280d2483298ad4f8e",
++      "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
++    }
++  ],
++  "review_scope": "May be approved for A8 SOURCE review only; never executable release or runtime/native endpoint admission",
++  "rules": [
++    "No timestamp replaces authority/revision/fence",
++    "Actual native confirmation, stale-writer/noquorum/durability gates remain separate",
++    "Protect last verified copy; backup/restore only in a NEW namespace after authorization",
++    "Never remove existing data/services or silently normalize old contracts"
++  ],
++  "schema": "unified.acceptance-review.level2.storage-publication-v1.v1",
++  "source_combination": "NOT_ASSEMBLED_OR_VERIFIED",
++  "status": "REVIEW_INPUTS_ONLY"
++}
+diff --git a/release/acceptance-review/20261110-level2-review1/terminan-control-api-v1.json b/release/acceptance-review/20261110-level2-review1/terminan-control-api-v1.json
+new file mode 100644
+index 0000000..8c2f377
+--- /dev/null
++++ b/release/acceptance-review/20261110-level2-review1/terminan-control-api-v1.json
+@@ -0,0 +1,172 @@
++{
++  "approval": "ROOT_APPROVED_FOR_A8_SOURCE_REVIEW_ONLY",
++  "current_component_cards": [
++    {
++      "admission": "NONE",
++      "bytes": 4211,
++      "origin": "EXISTING_LOCAL_COMPONENT_CARD",
++      "path": "$PRIVATE_TASK_OUTPUTS/codex-agent-6-distributed-terminan-control/outputs/terminan-sync-v1/preview-benchmark-disposal-source-review1/SOURCE-FIX-77fe6df.json",
++      "scope": "EXACT_SOURCE_FIX_CARD_WITH_SEPARATE_LATER_LOCAL_SIX_JS_RECEIPT",
++      "sha256": "b365b1429d987d931a413861b3e53674f59c467ce42b5d23324f7ef42e0d14bd"
++    }
++  ],
++  "current_preview_input": {
++    "component": "A6 preview RAF disposal",
++    "head": "77fe6dfd85171305930f308f307d1aa2718df2c0",
++    "qualification": {
++      "receipt": {
++        "admission": "NONE",
++        "bytes": 88732,
++        "origin": "EXISTING_LOCAL_EVIDENCE",
++        "path": "$PRIVATE_CODEX_EVIDENCE/terminan-disposal-green-evidence-20261110/receipt.json",
++        "scope": "LOCAL_ACTUAL_JS_FAKE_DOM_RAF_POST_FIX_SIX_CASE_UNIT_ONLY",
++        "sha256": "7b2b6143b03cee8dfd7fd63666f3b00a28f5ac45918b9b55ddd5b7e412179f0a"
++      },
++      "same_six_local_js_cases": "PASS",
++      "scope": "LOCAL_ACTUAL_JS_FAKE_DOM_RAF_POST_FIX_SIX_CASE_UNIT_ONLY",
++      "tap_sha256": "4905dc18ebafcd02d8c8d6b930616552314fa17cc2fac85a8f849ae04617e2d0"
++    },
++    "repository": "YehorBabenko88/Terminan",
++    "runtime_admission": false,
++    "state": "UNASSEMBLED_LOCAL_INPUT",
++    "tree": "f19e14102bfc7cb852e47dec933bfeb34a139698"
++  },
++  "document_kind": "REFERENCE_CARD_NOT_NEW_ENDPOINT_OR_ABI",
++  "domain_schema_registry": "PENDING_EXACT_A3_A4_A5_A7_ACK_NO_DOMAIN_DATA_ADMISSION",
++  "installability": "NOT_INSTALLABLE",
++  "permissions": {
++    "dispatch": "DENY",
++    "fault_injection": "DENY",
++    "installation": "DENY",
++    "physical": "DENY",
++    "production": "DENY",
++    "provider_sends": "DENY",
++    "runtime": "DENY",
++    "tailscale_changes": "DENY",
++    "trading": "DENY"
++  },
++  "references": [
++    {
++      "admission": "NONE",
++      "bytes": 2285,
++      "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++      "path": "acceptance/20261106/terminan-control-api-v1.json",
++      "repository": "YehorBabenko88/unified-system",
++      "scope": "EXISTING_SOURCE_CONTRACT_NOT_RUNTIME_ADMISSION",
++      "sha256": "0d7db7ed99952f942e3fe19004082bd9afbc34f4b85881c5449f5b7a81d935b6",
++      "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
++    },
++    {
++      "admission": "NONE",
++      "bytes": 8757,
++      "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++      "path": "acceptance/20261106/proposals/657fd3d1f7204edf09738709b1014451eeb54377122f1f58e330048caefbf64a.json",
++      "repository": "YehorBabenko88/unified-system",
++      "scope": "HISTORICAL_PROPOSAL_REVIEW_ONLY_NO_RUNTIME_ACK",
++      "sha256": "657fd3d1f7204edf09738709b1014451eeb54377122f1f58e330048caefbf64a",
++      "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
++    },
++    {
++      "admission": "NONE",
++      "bytes": 6188,
++      "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++      "path": "acceptance/20261106/proposals/4b4d227207f19c55d6d6da1d6df73555b79c6f9ed2de0f424a6fdd00fce78b56.json",
++      "repository": "YehorBabenko88/unified-system",
++      "scope": "HISTORICAL_PROPOSAL_REVIEW_ONLY_NO_RUNTIME_ACK",
++      "sha256": "4b4d227207f19c55d6d6da1d6df73555b79c6f9ed2de0f424a6fdd00fce78b56",
++      "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
++    },
++    {
++      "admission": "NONE",
++      "bytes": 1492,
++      "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++      "path": "acceptance/20261106/proposals/1f8e3a4badf5de5d2a6ae63ec0b1c2c0ceb205f443837e6117bd26b1236b89e4.json",
++      "repository": "YehorBabenko88/unified-system",
++      "scope": "HISTORICAL_PROPOSAL_REVIEW_ONLY_NO_RUNTIME_ACK",
++      "sha256": "1f8e3a4badf5de5d2a6ae63ec0b1c2c0ceb205f443837e6117bd26b1236b89e4",
++      "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
++    },
++    {
++      "admission": "NONE",
++      "bytes": 5716,
++      "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++      "path": "acceptance/20261106/proposals/cc7d8068b4d5488cc8c948767041df5d89edef4e1f102644962370f69c5d2d2b.json",
++      "repository": "YehorBabenko88/unified-system",
++      "scope": "HISTORICAL_PROPOSAL_REVIEW_ONLY_NO_RUNTIME_ACK",
++      "sha256": "cc7d8068b4d5488cc8c948767041df5d89edef4e1f102644962370f69c5d2d2b",
++      "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
++    },
++    {
++      "admission": "NONE",
++      "bytes": 1807,
++      "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++      "path": "acceptance/20261106/proposals/2128421ccbbb2d880b71762447fa9cd114b09f6dbfbaf93123b699a60e1f1f3d.md",
++      "repository": "YehorBabenko88/unified-system",
++      "scope": "HISTORICAL_PROPOSAL_REVIEW_ONLY_NO_RUNTIME_ACK",
++      "sha256": "2128421ccbbb2d880b71762447fa9cd114b09f6dbfbaf93123b699a60e1f1f3d",
++      "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
++    },
++    {
++      "admission": "NONE",
++      "bytes": 1271,
++      "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++      "path": "release/contracts/control-mux-closed-review4/registry.json",
++      "repository": "YehorBabenko88/unified-system",
++      "scope": "EXISTING_SOURCE_CONTRACT_NOT_RUNTIME_ADMISSION",
++      "sha256": "32f1f699a12ba19014a052b17f0fba572f9eec8ebb118d56154b9e40bdb2049d",
++      "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
++    },
++    {
++      "admission": "NONE",
++      "bytes": 4898,
++      "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++      "path": "release/contracts/control-mux-closed-review4/MANIFEST.json",
++      "repository": "YehorBabenko88/unified-system",
++      "scope": "EXISTING_SOURCE_CONTRACT_NOT_RUNTIME_ADMISSION",
++      "sha256": "1c1f0311db7204bd47cb758e7e4e4fe2d7723f7d59e90bd13b52f6fb8b1f83c3",
++      "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
++    },
++    {
++      "admission": "NONE",
++      "bytes": 20443,
++      "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++      "path": "release/contracts/control-mux-closed-review4/PROTOCOL.md",
++      "repository": "YehorBabenko88/unified-system",
++      "scope": "EXISTING_SOURCE_CONTRACT_NOT_RUNTIME_ADMISSION",
++      "sha256": "8737de43f8cd422ea40bf30140f2d5149cd2f978955561c07fb8b3c6a6c604aa",
++      "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
++    },
++    {
++      "admission": "NONE",
++      "bytes": 3545,
++      "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++      "path": "release/contracts/control-mux-closed-review4/agent6-scoped-ack.json",
++      "repository": "YehorBabenko88/unified-system",
++      "scope": "EXISTING_SOURCE_CONTRACT_NOT_RUNTIME_ADMISSION",
++      "sha256": "754e55e2ac89ce0d1b7ee8f8146db8bddd530cddf62729d30de57f1cb7150e2e",
++      "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
++    },
++    {
++      "admission": "NONE",
++      "bytes": 3358,
++      "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
++      "path": "release/contracts/control-mux-closed-review4/agent1-scoped-ack.json",
++      "repository": "YehorBabenko88/unified-system",
++      "scope": "EXISTING_SOURCE_CONTRACT_NOT_RUNTIME_ADMISSION",
++      "sha256": "55953d5768db51caf6b4f91325b45da0f06011c3fc0cc074b0f4b2f82d0a7d7b",
++      "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
++    }
++  ],
++  "review4_ack": "HISTORICAL_EXACT_SCHEMA_CANONICAL_OPERATION_COUNTER_HOST_WRITER_MODEL_ONLY",
++  "review_scope": "May be approved for A8 SOURCE review only; never executable release or runtime/native endpoint admission",
++  "rules": [
++    "No Node-specific host codec assurance transferred to browser",
++    "No current native provider/global quota/freshness/retention/physical proof from schema ACK",
++    "Snapshot/event gaps require resnapshot; stale/partial/unavailable remain explicit",
++    "Ten-minute real visibility is a future gated stage, not provided by six JS unit tests"
++  ],
++  "runtime_endpoint_admission": "NONE",
++  "schema": "unified.acceptance-review.level2.terminan-control-api-v1.v1",
++  "source_combination": "NOT_ASSEMBLED_OR_VERIFIED",
++  "status": "REVIEW_INPUTS_ONLY"
++}

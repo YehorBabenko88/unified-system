@@ -1,0 +1,502 @@
+﻿2026-11-10T22:46:30.8831889Z Current runner version: '2.338.2'
+2026-11-10T22:46:30.8865921Z ##[group]Runner Image Provisioner
+2026-11-10T22:46:30.8866934Z Hosted Compute Agent
+2026-11-10T22:46:30.8867459Z Version: 20261103.629
+2026-11-10T22:46:30.8868042Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+2026-11-10T22:46:30.8868853Z Build Date: 2026-11-03T17:26:59Z
+2026-11-10T22:46:30.8869505Z Worker ID: {9c51bb3f-fc84-47f3-8104-c37636a1f854}
+2026-11-10T22:46:30.8870224Z Region: eastus3
+2026-11-10T22:46:30.8870764Z Cloud: Azure
+2026-11-10T22:46:30.8871251Z ##[endgroup]
+2026-11-10T22:46:30.8872639Z ##[group]Operating System
+2026-11-10T22:46:30.8873179Z Microsoft Windows Server 2025
+2026-11-10T22:46:30.8873715Z 10.0.26100
+2026-11-10T22:46:30.8874176Z Datacenter
+2026-11-10T22:46:30.8874617Z ##[endgroup]
+2026-11-10T22:46:30.8875083Z ##[group]Runner Image
+2026-11-10T22:46:30.8875607Z Image: windows-2025-vs2026
+2026-11-10T22:46:30.8876187Z Version: 20261103.298.1
+2026-11-10T22:46:30.8877619Z Included Software: https://github.com/actions/runner-images/blob/win25-vs2026/20261103.298/images/windows/Windows2025-VS2026-Readme.md
+2026-11-10T22:46:30.8879116Z Image Release: https://github.com/actions/runner-images/releases/tag/win25-vs2026%2F20261103.298
+2026-11-10T22:46:30.8879984Z ##[endgroup]
+2026-11-10T22:46:30.8881036Z ##[group]GITHUB_TOKEN Permissions
+2026-11-10T22:46:30.8883171Z Contents: read
+2026-11-10T22:46:30.8883739Z Metadata: read
+2026-11-10T22:46:30.8884219Z ##[endgroup]
+2026-11-10T22:46:30.8886350Z Secret source: Actions
+2026-11-10T22:46:30.8887302Z Cache mode: write
+2026-11-10T22:46:30.8887960Z Prepare workflow directory
+2026-11-10T22:46:30.9456099Z Prepare all required actions
+2026-11-10T22:46:30.9508504Z Getting action download info
+2026-11-10T22:46:31.1923310Z Download action repository 'actions/checkout@11d5960a326750d5838078e36cf38b85af677262' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-11-10T22:46:31.3107458Z Download action repository 'actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+2026-11-10T22:46:31.4436998Z Download action repository 'actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+2026-11-10T22:46:31.5885361Z Download action repository 'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-11-10T22:46:31.9371407Z Complete job name: six-unit (windows-latest)
+2026-11-10T22:46:32.0664739Z ##[group]Run # Own-job cohort guard, not enforcement of other repository workflows.
+2026-11-10T22:46:32.0666212Z [36;1m# Own-job cohort guard, not enforcement of other repository workflows.[0m
+2026-11-10T22:46:32.0667572Z [36;1mforeach ($taskName in @($env:PREVIEW_EVENT_REPOSITORY,$env:PREVIEW_HEAD_REPOSITORY,$env:PREVIEW_BASE_REPOSITORY)) {[0m
+2026-11-10T22:46:32.0669059Z [36;1m  if ($taskName -cne 'YehorBabenko88/Terminan') { throw 'EXACT_SAME_REPOSITORY_REQUIRED' }[0m
+2026-11-10T22:46:32.0669973Z [36;1m}[0m
+2026-11-10T22:46:32.0670998Z [36;1mforeach ($taskId in @($env:PREVIEW_EVENT_REPOSITORY_ID,$env:PREVIEW_HEAD_REPOSITORY_ID,$env:PREVIEW_BASE_REPOSITORY_ID)) {[0m
+2026-11-10T22:46:32.0672401Z [36;1m  if ($taskId -cne '1413341784') { throw 'EXACT_SAME_REPOSITORY_ID_REQUIRED' }[0m
+2026-11-10T22:46:32.0673203Z [36;1m}[0m
+2026-11-10T22:46:32.0673990Z [36;1m$taskRoot = [IO.Path]::GetFullPath($env:GITHUB_WORKSPACE)[0m
+2026-11-10T22:46:32.0674883Z [36;1m$taskCursor = [IO.Path]::GetPathRoot($taskRoot)[0m
+2026-11-10T22:46:32.0676331Z [36;1m$taskParts = @('') + @($taskRoot.Substring($taskCursor.Length).Split([char[]]'\/', [StringSplitOptions]::RemoveEmptyEntries))[0m
+2026-11-10T22:46:32.0677511Z [36;1mforeach ($taskPart in $taskParts) {[0m
+2026-11-10T22:46:32.0678326Z [36;1m  if ($taskPart) { $taskCursor = Join-Path $taskCursor $taskPart }[0m
+2026-11-10T22:46:32.0679462Z [36;1m  $taskItem = Get-Item -LiteralPath $taskCursor -Force[0m
+2026-11-10T22:46:32.0681007Z [36;1m  if (!$taskItem.PSIsContainer -or ($taskItem.Attributes -band [IO.FileAttributes]::ReparsePoint) -or $taskItem.LinkType) { throw 'ORDINARY_WORKSPACE_REQUIRED' }[0m
+2026-11-10T22:46:32.0684178Z [36;1m}[0m
+2026-11-10T22:46:32.0685813Z [36;1mforeach ($taskKey in @('NODE_OPTIONS','NODE_PATH','NODE_COMPILE_CACHE','NODE_V8_COVERAGE','GIT_DIR','GIT_WORK_TREE','GIT_INDEX_FILE','GIT_OBJECT_DIRECTORY','GIT_ALTERNATE_OBJECT_DIRECTORIES','GIT_NAMESPACE','GIT_REPLACE_REF_BASE')) {[0m
+2026-11-10T22:46:32.0688025Z [36;1m  if ([Environment]::GetEnvironmentVariable($taskKey)) { throw 'AMBIENT_SOURCE_OR_NODE_CONFIG' }[0m
+2026-11-10T22:46:32.0689002Z [36;1m}[0m
+2026-11-10T22:46:32.1230783Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-10T22:46:32.1232607Z env:
+2026-11-10T22:46:32.1233068Z   GIT_CONFIG_COUNT: 2
+2026-11-10T22:46:32.1233572Z   GIT_CONFIG_KEY_0: core.autocrlf
+2026-11-10T22:46:32.1234117Z   GIT_CONFIG_VALUE_0: false
+2026-11-10T22:46:32.1234650Z   GIT_CONFIG_KEY_1: core.eol
+2026-11-10T22:46:32.1235204Z   GIT_CONFIG_VALUE_1: lf
+2026-11-10T22:46:32.1235702Z   GIT_NO_REPLACE_OBJECTS: 1
+2026-11-10T22:46:32.1236295Z   PREVIEW_EVENT_REPOSITORY: YehorBabenko88/Terminan
+2026-11-10T22:46:32.1237012Z   PREVIEW_EVENT_REPOSITORY_ID: 1413341784
+2026-11-10T22:46:32.1237689Z   PREVIEW_HEAD_REPOSITORY: YehorBabenko88/Terminan
+2026-11-10T22:46:32.1238359Z   PREVIEW_HEAD_REPOSITORY_ID: 1413341784
+2026-11-10T22:46:32.1239027Z   PREVIEW_BASE_REPOSITORY: YehorBabenko88/Terminan
+2026-11-10T22:46:32.1239692Z   PREVIEW_BASE_REPOSITORY_ID: 1413341784
+2026-11-10T22:46:32.1240258Z ##[endgroup]
+2026-11-10T22:46:32.6819367Z ##[group]Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+2026-11-10T22:46:32.6820934Z with:
+2026-11-10T22:46:32.6821792Z   ref: e23abe3345379e41f979695136fd1261e3cbd238
+2026-11-10T22:46:32.6822891Z   fetch-depth: 0
+2026-11-10T22:46:32.6823813Z   persist-credentials: false
+2026-11-10T22:46:32.6824949Z   repository: YehorBabenko88/Terminan
+2026-11-10T22:46:32.6833455Z   token: ***
+2026-11-10T22:46:32.6834280Z   ssh-strict: true
+2026-11-10T22:46:32.6835089Z   ssh-user: git
+2026-11-10T22:46:32.6835865Z   clean: true
+2026-11-10T22:46:32.6836692Z   sparse-checkout-cone-mode: true
+2026-11-10T22:46:32.6837677Z   fetch-tags: false
+2026-11-10T22:46:32.6838491Z   show-progress: true
+2026-11-10T22:46:32.6839299Z   lfs: false
+2026-11-10T22:46:32.6840050Z   submodules: false
+2026-11-10T22:46:32.6840874Z   set-safe-directory: true
+2026-11-10T22:46:32.6841805Z   allow-unsafe-pr-checkout: false
+2026-11-10T22:46:32.6842734Z env:
+2026-11-10T22:46:32.6843513Z   GIT_CONFIG_COUNT: 2
+2026-11-10T22:46:32.6844544Z   GIT_CONFIG_KEY_0: core.autocrlf
+2026-11-10T22:46:32.6845499Z   GIT_CONFIG_VALUE_0: false
+2026-11-10T22:46:32.6846392Z   GIT_CONFIG_KEY_1: core.eol
+2026-11-10T22:46:32.6847298Z   GIT_CONFIG_VALUE_1: lf
+2026-11-10T22:46:32.6848175Z   GIT_NO_REPLACE_OBJECTS: 1
+2026-11-10T22:46:32.6849370Z   PREVIEW_EVENT_REPOSITORY: YehorBabenko88/Terminan
+2026-11-10T22:46:32.6850557Z   PREVIEW_EVENT_REPOSITORY_ID: 1413341784
+2026-11-10T22:46:32.6851734Z   PREVIEW_HEAD_REPOSITORY: YehorBabenko88/Terminan
+2026-11-10T22:46:32.6852902Z   PREVIEW_HEAD_REPOSITORY_ID: 1413341784
+2026-11-10T22:46:32.6854057Z   PREVIEW_BASE_REPOSITORY: YehorBabenko88/Terminan
+2026-11-10T22:46:32.6855245Z   PREVIEW_BASE_REPOSITORY_ID: 1413341784
+2026-11-10T22:46:32.6856246Z ##[endgroup]
+2026-11-10T22:46:32.8338121Z Syncing repository: YehorBabenko88/Terminan
+2026-11-10T22:46:32.8340770Z ##[group]Getting Git version info
+2026-11-10T22:46:32.8342004Z Working directory is 'D:\a\Terminan\Terminan'
+2026-11-10T22:46:32.9144225Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-10T22:46:33.2046179Z git version 2.56.0.windows.4
+2026-11-10T22:46:33.2094792Z ##[endgroup]
+2026-11-10T22:46:33.2115935Z Temporarily overriding HOME='D:\a\_temp\b0544f99-b925-45d0-b5d3-4dcc72e5e5b1' before making global git config changes
+2026-11-10T22:46:33.2118372Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-10T22:46:33.2126420Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\Terminan\Terminan
+2026-11-10T22:46:33.2744929Z Deleting the contents of 'D:\a\Terminan\Terminan'
+2026-11-10T22:46:33.2751304Z ##[group]Initializing the repository
+2026-11-10T22:46:33.2760579Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\Terminan\Terminan
+2026-11-10T22:46:33.3524943Z Initialized empty Git repository in D:/a/Terminan/Terminan/.git/
+2026-11-10T22:46:33.3582535Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/YehorBabenko88/Terminan
+2026-11-10T22:46:33.4267727Z ##[endgroup]
+2026-11-10T22:46:33.4269080Z ##[group]Disabling automatic garbage collection
+2026-11-10T22:46:33.4276794Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2026-11-10T22:46:33.4673659Z ##[endgroup]
+2026-11-10T22:46:33.4675087Z ##[group]Setting up auth
+2026-11-10T22:46:33.4686772Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-10T22:46:33.5101021Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-10T22:46:34.8502833Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-10T22:46:34.8953973Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-10T22:46:35.4623602Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-10T22:46:35.5018703Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-10T22:46:36.0678994Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-11-10T22:46:36.1075030Z ##[endgroup]
+2026-11-10T22:46:36.1075628Z ##[group]Fetching the repository
+2026-11-10T22:46:36.1093755Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*
+2026-11-10T22:46:37.1479663Z From https://github.com/YehorBabenko88/Terminan
+2026-11-10T22:46:37.1480851Z  * [new branch]      audit/bybit-history-research-overlay-20261030 -> origin/audit/bybit-history-research-overlay-20261030
+2026-11-10T22:46:37.1482382Z  * [new branch]      audit/cache-reliability-20261029 -> origin/audit/cache-reliability-20261029
+2026-11-10T22:46:37.1483337Z  * [new branch]      audit/codex-ls5-port-20261014 -> origin/audit/codex-ls5-port-20261014
+2026-11-10T22:46:37.1484487Z  * [new branch]      audit/codex-trade-contract-validation-20261013 -> origin/audit/codex-trade-contract-validation-20261013
+2026-11-10T22:46:37.1486398Z  * [new branch]      audit/dom-snapshot-recovery-20261013 -> origin/audit/dom-snapshot-recovery-20261013
+2026-11-10T22:46:37.1487353Z  * [new branch]      audit/dom-ui-perf-independent-20261026 -> origin/audit/dom-ui-perf-independent-20261026
+2026-11-10T22:46:37.1488105Z  * [new branch]      audit/g0-evidence-provenance-20261026 -> origin/audit/g0-evidence-provenance-20261026
+2026-11-10T22:46:37.1488922Z  * [new branch]      audit/g0-physical-readonly-preflight-20261026 -> origin/audit/g0-physical-readonly-preflight-20261026
+2026-11-10T22:46:37.1489781Z  * [new branch]      audit/integration-contracts-20261026 -> origin/audit/integration-contracts-20261026
+2026-11-10T22:46:37.1490498Z  * [new branch]      audit/mathlab-tamper-e2e-rejection-20261030 -> origin/audit/mathlab-tamper-e2e-rejection-20261030
+2026-11-10T22:46:37.1491214Z  * [new branch]      audit/pinned-data-contracts-20261026 -> origin/audit/pinned-data-contracts-20261026
+2026-11-10T22:46:37.1492192Z  * [new branch]      audit/r4-session-contract-plan-20261027 -> origin/audit/r4-session-contract-plan-20261027
+2026-11-10T22:46:37.1494070Z  * [new branch]      audit/reliability-fault-injection-g0-20261026 -> origin/audit/reliability-fault-injection-g0-20261026
+2026-11-10T22:46:37.1495479Z  * [new branch]      audit/repo-hardening-20261030 -> origin/audit/repo-hardening-20261030
+2026-11-10T22:46:37.1496442Z  * [new branch]      audit/security-g0-host-20261026 -> origin/audit/security-g0-host-20261026
+2026-11-10T22:46:37.1497508Z  * [new branch]      audit/unified-browser-errors-20261030 -> origin/audit/unified-browser-errors-20261030
+2026-11-10T22:46:37.1498508Z  * [new branch]      audit/unified-visual-qa-20261030 -> origin/audit/unified-visual-qa-20261030
+2026-11-10T22:46:37.1499610Z  * [new branch]      audit/windows-browser-g0-20261026 -> origin/audit/windows-browser-g0-20261026
+2026-11-10T22:46:37.1501010Z  * [new branch]      audit/windows-g0-independent-20261026 -> origin/audit/windows-g0-independent-20261026
+2026-11-10T22:46:37.1502411Z  * [new branch]      codex/infrastructure-consumer-validation-20261030 -> origin/codex/infrastructure-consumer-validation-20261030
+2026-11-10T22:46:37.1503916Z  * [new branch]      codex/instrument-research-overlay-20261030 -> origin/codex/instrument-research-overlay-20261030
+2026-11-10T22:46:37.1505044Z  * [new branch]      codex/math-v21-adapter -> origin/codex/math-v21-adapter
+2026-11-10T22:46:37.1506970Z  * [new branch]      codex/r4-bounded-book-20261030 -> origin/codex/r4-bounded-book-20261030
+2026-11-10T22:46:37.1508068Z  * [new branch]      codex/scientific-lab-usability-20261030 -> origin/codex/scientific-lab-usability-20261030
+2026-11-10T22:46:37.1509385Z  * [new branch]      codex/unified-display-contract-fixes-20261030 -> origin/codex/unified-display-contract-fixes-20261030
+2026-11-10T22:46:37.1510612Z  * [new branch]      codex/visual-scientific-lab-20261030 -> origin/codex/visual-scientific-lab-20261030
+2026-11-10T22:46:37.1511763Z  * [new branch]      codex/workstream-c-readonly-consumer -> origin/codex/workstream-c-readonly-consumer
+2026-11-10T22:46:37.1512813Z  * [new branch]      feat/cache-exact-match-20261029 -> origin/feat/cache-exact-match-20261029
+2026-11-10T22:46:37.1513775Z  * [new branch]      feat/cache-queue-worker-20261029 -> origin/feat/cache-queue-worker-20261029
+2026-11-10T22:46:37.1514688Z  * [new branch]      feat/cache-status-api-20261029 -> origin/feat/cache-status-api-20261029
+2026-11-10T22:46:37.1516093Z  * [new branch]      feat/five-dashboard-d-20261030 -> origin/feat/five-dashboard-d-20261030
+2026-11-10T22:46:37.1516993Z  * [new branch]      feat/independent-dom-engine-20261012 -> origin/feat/independent-dom-engine-20261012
+2026-11-10T22:46:37.1517657Z  * [new branch]      feat/saved-cache-detail-20261029 -> origin/feat/saved-cache-detail-20261029
+2026-11-10T22:46:37.1518304Z  * [new branch]      feat/saved-cache-status-panel-20261029 -> origin/feat/saved-cache-status-panel-20261029
+2026-11-10T22:46:37.1518959Z  * [new branch]      feat/saved-cache-worker-20261029 -> origin/feat/saved-cache-worker-20261029
+2026-11-10T22:46:37.1519564Z  * [new branch]      feat/saved-mtf-aggregation-20261029 -> origin/feat/saved-mtf-aggregation-20261029
+2026-11-10T22:46:37.1520285Z  * [new branch]      feature/authenticated-experiment-view-20261109 -> origin/feature/authenticated-experiment-view-20261109
+2026-11-10T22:46:37.1521053Z  * [new branch]      feature/cleanup-deadline-20261110 -> origin/feature/cleanup-deadline-20261110
+2026-11-10T22:46:37.1522217Z  * [new branch]      feature/exact-loopback-resolver-20261110 -> origin/feature/exact-loopback-resolver-20261110
+2026-11-10T22:46:37.1522967Z  * [new branch]      feature/fresh-render-bootstrap-20261109 -> origin/feature/fresh-render-bootstrap-20261109
+2026-11-10T22:46:37.1523690Z  * [new branch]      feature/fresh-render-diagnostics-20261110 -> origin/feature/fresh-render-diagnostics-20261110
+2026-11-10T22:46:37.1524660Z  * [new branch]      feature/fresh-render-harness-20261109 -> origin/feature/fresh-render-harness-20261109
+2026-11-10T22:46:37.1525376Z  * [new branch]      feature/fresh-render-pathcheck-env-20261109 -> origin/feature/fresh-render-pathcheck-env-20261109
+2026-11-10T22:46:37.1526428Z  * [new branch]      feature/gateway-query-v2-chart-20261107 -> origin/feature/gateway-query-v2-chart-20261107
+2026-11-10T22:46:37.1527761Z  * [new branch]      feature/preview-benchmark-disposal-20261110 -> origin/feature/preview-benchmark-disposal-20261110
+2026-11-10T22:46:37.1529034Z  * [new branch]      feature/scientific-read-prep-20261110 -> origin/feature/scientific-read-prep-20261110
+2026-11-10T22:46:37.1530294Z  * [new branch]      feature/scientific-read-recovery-20261110 -> origin/feature/scientific-read-recovery-20261110
+2026-11-10T22:46:37.1531421Z  * [new branch]      feature/source-owned-gateways -> origin/feature/source-owned-gateways
+2026-11-10T22:46:37.1532489Z  * [new branch]      feature/target-adapter-result-20261109 -> origin/feature/target-adapter-result-20261109
+2026-11-10T22:46:37.1533756Z  * [new branch]      feature/terminan-gateway-artifacts-20261107 -> origin/feature/terminan-gateway-artifacts-20261107
+2026-11-10T22:46:37.1535122Z  * [new branch]      feature/terminan-operations-dashboard-20261107 -> origin/feature/terminan-operations-dashboard-20261107
+2026-11-10T22:46:37.1536443Z  * [new branch]      feature/terminan-sync-v1-20261106 -> origin/feature/terminan-sync-v1-20261106
+2026-11-10T22:46:37.1537736Z  * [new branch]      fix/cache-lookup-scale-20261029 -> origin/fix/cache-lookup-scale-20261029
+2026-11-10T22:46:37.1538742Z  * [new branch]      fix/r2-harness-fail-closed-20261026 -> origin/fix/r2-harness-fail-closed-20261026
+2026-11-10T22:46:37.1539580Z  * [new branch]      fix/r3-browser-fail-closed-20261027 -> origin/fix/r3-browser-fail-closed-20261027
+2026-11-10T22:46:37.1540237Z  * [new branch]      fix/r3-child-transport-health-20261026 -> origin/fix/r3-child-transport-health-20261026
+2026-11-10T22:46:37.1541277Z  * [new branch]      fix/saved-companion-cutoff-window-20261029 -> origin/fix/saved-companion-cutoff-window-20261029
+2026-11-10T22:46:37.1542509Z  * [new branch]      fix/saved-companion-optional-volume-20261029 -> origin/fix/saved-companion-optional-volume-20261029
+2026-11-10T22:46:37.1543213Z  * [new branch]      fix/saved-timeframe-pan-20261029 -> origin/fix/saved-timeframe-pan-20261029
+2026-11-10T22:46:37.1543838Z  * [new branch]      integration/math-lab-tab-v1-20261029 -> origin/integration/math-lab-tab-v1-20261029
+2026-11-10T22:46:37.1544457Z  * [new branch]      integration/physical-g0-20261026 -> origin/integration/physical-g0-20261026
+2026-11-10T22:46:37.1545116Z  * [new branch]      integration/r2-synthetic-preview-20261026 -> origin/integration/r2-synthetic-preview-20261026
+2026-11-10T22:46:37.1545806Z  * [new branch]      integration/r3-measured-stress-20261026 -> origin/integration/r3-measured-stress-20261026
+2026-11-10T22:46:37.1546499Z  * [new branch]      integration/r4-offline-session-20261027 -> origin/integration/r4-offline-session-20261027
+2026-11-10T22:46:37.1547243Z  * [new branch]      integration/ready-source-boundary-20261029 -> origin/integration/ready-source-boundary-20261029
+2026-11-10T22:46:37.1548126Z  * [new branch]      integration/real-history-readonly-discovery-20261029 -> origin/integration/real-history-readonly-discovery-20261029
+2026-11-10T22:46:37.1548943Z  * [new branch]      integration/saved-data-adapters-20261029 -> origin/integration/saved-data-adapters-20261029
+2026-11-10T22:46:37.1549672Z  * [new branch]      integration/supervisor-status-consumer-v1 -> origin/integration/supervisor-status-consumer-v1
+2026-11-10T22:46:37.1550374Z  * [new branch]      integration/unified-runtime-20261030 -> origin/integration/unified-runtime-20261030
+2026-11-10T22:46:37.1551045Z  * [new branch]      integration/unified-workspaces-20261030 -> origin/integration/unified-workspaces-20261030
+2026-11-10T22:46:37.1552709Z  * [new branch]      integration/windows-local-launch-20261030 -> origin/integration/windows-local-launch-20261030
+2026-11-10T22:46:37.1553243Z  * [new branch]      main                   -> origin/main
+2026-11-10T22:46:37.1553727Z  * [new branch]      mission1/composed-terminan-20261031 -> origin/mission1/composed-terminan-20261031
+2026-11-10T22:46:37.1554345Z  * [new branch]      mission3/runtime-dashboard-20261031 -> origin/mission3/runtime-dashboard-20261031
+2026-11-10T22:46:37.1555211Z  * [new branch]      ui/main-navigation-tabs-20261030 -> origin/ui/main-navigation-tabs-20261030
+2026-11-10T22:46:37.1555915Z  * [new branch]      ui/r4-dom-footprint-layout-20261029 -> origin/ui/r4-dom-footprint-layout-20261029
+2026-11-10T22:46:37.1556542Z  * [new branch]      ui/saved-candle-click-sync-20261029 -> origin/ui/saved-candle-click-sync-20261029
+2026-11-10T22:46:37.1557213Z  * [new branch]      ui/saved-linked-candle-companion-20261029 -> origin/ui/saved-linked-candle-companion-20261029
+2026-11-10T22:46:37.1557866Z  * [new branch]      ui/saved-linked-replay-20261029 -> origin/ui/saved-linked-replay-20261029
+2026-11-10T22:46:37.1558525Z  * [new branch]      ui/saved-price-aligned-footprint-20261029 -> origin/ui/saved-price-aligned-footprint-20261029
+2026-11-10T22:46:37.1559203Z  * [new branch]      ui/saved-shared-time-window-20261029 -> origin/ui/saved-shared-time-window-20261029
+2026-11-10T22:46:37.1559768Z  * [new branch]      ui/unified-theme-20261030 -> origin/ui/unified-theme-20261030
+2026-11-10T22:46:37.1561248Z [command]"C:\Program Files\Git\bin\git.exe" rev-parse --verify --quiet e23abe3345379e41f979695136fd1261e3cbd238^{object}
+2026-11-10T22:46:37.1991192Z e23abe3345379e41f979695136fd1261e3cbd238
+2026-11-10T22:46:37.2031451Z ##[endgroup]
+2026-11-10T22:46:37.2031863Z ##[group]Determining the checkout info
+2026-11-10T22:46:37.2033373Z ##[endgroup]
+2026-11-10T22:46:37.2044637Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2026-11-10T22:46:37.2524783Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2026-11-10T22:46:37.2951996Z ##[group]Checking out the ref
+2026-11-10T22:46:37.2961608Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force e23abe3345379e41f979695136fd1261e3cbd238
+2026-11-10T22:46:37.4485091Z Note: switching to 'e23abe3345379e41f979695136fd1261e3cbd238'.
+2026-11-10T22:46:37.4485507Z 
+2026-11-10T22:46:37.4485830Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-11-10T22:46:37.4486553Z changes and commit them, and you can discard any commits you make in this
+2026-11-10T22:46:37.4487309Z state without impacting any branches by switching back to a branch.
+2026-11-10T22:46:37.4487711Z 
+2026-11-10T22:46:37.4487990Z If you want to create a new branch to retain commits you create, you may
+2026-11-10T22:46:37.4488645Z do so (now or later) by using -c with the switch command. Example:
+2026-11-10T22:46:37.4489041Z 
+2026-11-10T22:46:37.4489212Z   git switch -c <new-branch-name>
+2026-11-10T22:46:37.4489506Z 
+2026-11-10T22:46:37.4489652Z Or undo this operation with:
+2026-11-10T22:46:37.4489909Z 
+2026-11-10T22:46:37.4490037Z   git switch -
+2026-11-10T22:46:37.4490192Z 
+2026-11-10T22:46:37.4490504Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-11-10T22:46:37.4490942Z 
+2026-11-10T22:46:37.4491410Z HEAD is now at e23abe3 Gate six-case CI on separate pure controls and exact repository
+2026-11-10T22:46:37.4642091Z ##[endgroup]
+2026-11-10T22:46:37.5138553Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2026-11-10T22:46:37.5505556Z e23abe3345379e41f979695136fd1261e3cbd238
+2026-11-10T22:46:37.5555676Z ##[group]Removing auth
+2026-11-10T22:46:37.5565414Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-10T22:46:37.5967422Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-10T22:46:38.1750691Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-10T22:46:38.2156565Z http.https://github.com/.extraheader
+2026-11-10T22:46:38.2206889Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+2026-11-10T22:46:38.2612131Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-10T22:46:38.8622391Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-10T22:46:38.9024425Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-10T22:46:39.4740945Z ##[endgroup]
+2026-11-10T22:46:39.5376967Z ##[group]Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+2026-11-10T22:46:39.5377582Z with:
+2026-11-10T22:46:39.5377978Z   python-version: 3.12.10
+2026-11-10T22:46:39.5378363Z   architecture: x64
+2026-11-10T22:46:39.5378641Z   check-latest: false
+2026-11-10T22:46:39.5381832Z   token: ***
+2026-11-10T22:46:39.5382118Z   update-environment: true
+2026-11-10T22:46:39.5382424Z   allow-prereleases: false
+2026-11-10T22:46:39.5382749Z   freethreaded: false
+2026-11-10T22:46:39.5383020Z env:
+2026-11-10T22:46:39.5383250Z   GIT_CONFIG_COUNT: 2
+2026-11-10T22:46:39.5383521Z   GIT_CONFIG_KEY_0: core.autocrlf
+2026-11-10T22:46:39.5383827Z   GIT_CONFIG_VALUE_0: false
+2026-11-10T22:46:39.5384108Z   GIT_CONFIG_KEY_1: core.eol
+2026-11-10T22:46:39.5384387Z   GIT_CONFIG_VALUE_1: lf
+2026-11-10T22:46:39.5384671Z   GIT_NO_REPLACE_OBJECTS: 1
+2026-11-10T22:46:39.5385004Z   PREVIEW_EVENT_REPOSITORY: YehorBabenko88/Terminan
+2026-11-10T22:46:39.5385550Z   PREVIEW_EVENT_REPOSITORY_ID: 1413341784
+2026-11-10T22:46:39.5385936Z   PREVIEW_HEAD_REPOSITORY: YehorBabenko88/Terminan
+2026-11-10T22:46:39.5386287Z   PREVIEW_HEAD_REPOSITORY_ID: 1413341784
+2026-11-10T22:46:39.5386634Z   PREVIEW_BASE_REPOSITORY: YehorBabenko88/Terminan
+2026-11-10T22:46:39.5386981Z   PREVIEW_BASE_REPOSITORY_ID: 1413341784
+2026-11-10T22:46:39.5387275Z ##[endgroup]
+2026-11-10T22:46:39.7116753Z ##[group]Installed versions
+2026-11-10T22:46:39.7237449Z (node:5436) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-10T22:46:39.7238124Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-10T22:46:39.7239402Z Successfully set up CPython (3.12.10)
+2026-11-10T22:46:39.7240696Z ##[endgroup]
+2026-11-10T22:46:39.7654183Z ##[group]Run actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+2026-11-10T22:46:39.7654745Z with:
+2026-11-10T22:46:39.7654948Z   node-version: 24.22.1
+2026-11-10T22:46:39.7655191Z   architecture: x64
+2026-11-10T22:46:39.7655394Z   always-auth: false
+2026-11-10T22:46:39.7655599Z   check-latest: false
+2026-11-10T22:46:39.7658282Z   token: ***
+2026-11-10T22:46:39.7658465Z env:
+2026-11-10T22:46:39.7658648Z   GIT_CONFIG_COUNT: 2
+2026-11-10T22:46:39.7658867Z   GIT_CONFIG_KEY_0: core.autocrlf
+2026-11-10T22:46:39.7659124Z   GIT_CONFIG_VALUE_0: false
+2026-11-10T22:46:39.7659365Z   GIT_CONFIG_KEY_1: core.eol
+2026-11-10T22:46:39.7659609Z   GIT_CONFIG_VALUE_1: lf
+2026-11-10T22:46:39.7659843Z   GIT_NO_REPLACE_OBJECTS: 1
+2026-11-10T22:46:39.7660114Z   PREVIEW_EVENT_REPOSITORY: YehorBabenko88/Terminan
+2026-11-10T22:46:39.7660450Z   PREVIEW_EVENT_REPOSITORY_ID: 1413341784
+2026-11-10T22:46:39.7660759Z   PREVIEW_HEAD_REPOSITORY: YehorBabenko88/Terminan
+2026-11-10T22:46:39.7661149Z   PREVIEW_HEAD_REPOSITORY_ID: 1413341784
+2026-11-10T22:46:39.7661451Z   PREVIEW_BASE_REPOSITORY: YehorBabenko88/Terminan
+2026-11-10T22:46:39.7661746Z   PREVIEW_BASE_REPOSITORY_ID: 1413341784
+2026-11-10T22:46:39.7662366Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-10T22:46:39.7662825Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-11-10T22:46:39.7663278Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-10T22:46:39.7663686Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-10T22:46:39.7664082Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-10T22:46:39.7664427Z ##[endgroup]
+2026-11-10T22:46:39.9447983Z Attempting to download 24.22.1...
+2026-11-10T22:46:39.9637728Z (node:4664) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-10T22:46:39.9639276Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-10T22:46:40.6606028Z Acquiring 24.22.1 - x64 from https://github.com/actions/node-versions/releases/download/24.22.1-39619001896/node-24.22.1-win32-x64.7z
+2026-11-10T22:46:41.1881758Z Extracting ...
+2026-11-10T22:46:43.3775783Z Adding to the cache ...
+2026-11-10T22:46:46.7697390Z ##[group]Environment details
+2026-11-10T22:46:47.4796425Z node: v24.22.1
+2026-11-10T22:46:47.4796773Z npm: 11.19.1
+2026-11-10T22:46:47.4799066Z yarn: 1.22.22
+2026-11-10T22:46:47.4799548Z ##[endgroup]
+2026-11-10T22:46:47.5220451Z ##[group]Run function Assert-Ordinary([string]$taskPath, [bool]$taskDirectory) {
+2026-11-10T22:46:47.5221242Z [36;1mfunction Assert-Ordinary([string]$taskPath, [bool]$taskDirectory) {[0m
+2026-11-10T22:46:47.5221669Z [36;1m  $taskFull = [IO.Path]::GetFullPath($taskPath)[0m
+2026-11-10T22:46:47.5222019Z [36;1m  $taskCursor = [IO.Path]::GetPathRoot($taskFull)[0m
+2026-11-10T22:46:47.5222589Z [36;1m  $taskParts = @('') + @($taskFull.Substring($taskCursor.Length).Split([char[]]'\/', [StringSplitOptions]::RemoveEmptyEntries))[0m
+2026-11-10T22:46:47.5223125Z [36;1m  foreach ($taskPart in $taskParts) {[0m
+2026-11-10T22:46:47.5223501Z [36;1m    if ($taskPart) { $taskCursor = Join-Path $taskCursor $taskPart }[0m
+2026-11-10T22:46:47.5223908Z [36;1m    $taskItem = Get-Item -LiteralPath $taskCursor -Force[0m
+2026-11-10T22:46:47.5224551Z [36;1m    if (($taskItem.Attributes -band [IO.FileAttributes]::ReparsePoint) -or $taskItem.LinkType) { throw 'ORDINARY_PATH_REQUIRED' }[0m
+2026-11-10T22:46:47.5225289Z [36;1m    if ($taskCursor -ne $taskFull -and !$taskItem.PSIsContainer) { throw 'ORDINARY_PARENT_REQUIRED' }[0m
+2026-11-10T22:46:47.5225723Z [36;1m  }[0m
+2026-11-10T22:46:47.5226089Z [36;1m  if ($taskItem.PSIsContainer -ne $taskDirectory) { throw 'ORDINARY_PATH_KIND_REQUIRED' }[0m
+2026-11-10T22:46:47.5226504Z [36;1m  return $taskFull[0m
+2026-11-10T22:46:47.5226711Z [36;1m}[0m
+2026-11-10T22:46:47.5226960Z [36;1m$taskRoot = Assert-Ordinary $env:GITHUB_WORKSPACE $true[0m
+2026-11-10T22:46:47.5227328Z [36;1m$taskTemp = Assert-Ordinary $env:RUNNER_TEMP $true[0m
+2026-11-10T22:46:47.5227707Z [36;1mif ($env:RUNNER_ARCH -ne 'X64') { throw 'FIXED_X64_REQUIRED' }[0m
+2026-11-10T22:46:47.5228039Z [36;1mif ($IsWindows) {[0m
+2026-11-10T22:46:47.5228368Z [36;1m  $taskGit = Assert-Ordinary 'C:/Program Files/Git/bin/git.exe' $false[0m
+2026-11-10T22:46:47.5228866Z [36;1m  $taskPython = Assert-Ordinary (Join-Path $env:pythonLocation 'python.exe') $false[0m
+2026-11-10T22:46:47.5229447Z [36;1m  $taskNode = Assert-Ordinary (Join-Path $env:RUNNER_TOOL_CACHE 'node/24.22.1/x64/node.exe') $false[0m
+2026-11-10T22:46:47.5229879Z [36;1m} else {[0m
+2026-11-10T22:46:47.5230112Z [36;1m  $taskGit = Assert-Ordinary '/usr/bin/git' $false[0m
+2026-11-10T22:46:47.5230562Z [36;1m  $taskPython = Assert-Ordinary (Join-Path $env:pythonLocation 'bin/python3.12') $false[0m
+2026-11-10T22:46:47.5231151Z [36;1m  $taskNode = Assert-Ordinary (Join-Path $env:RUNNER_TOOL_CACHE 'node/24.22.1/x64/bin/node') $false[0m
+2026-11-10T22:46:47.5231565Z [36;1m}[0m
+2026-11-10T22:46:47.5231752Z [36;1m$env:PREVIEW_FIXED_GIT = $taskGit[0m
+2026-11-10T22:46:47.5232267Z [36;1m$env:PREVIEW_FIXED_NODE = $taskNode[0m
+2026-11-10T22:46:47.5232699Z [36;1mif (Test-Path -LiteralPath $env:PREVIEW_EVIDENCE) { throw 'FRESH_EVIDENCE_REQUIRED' }[0m
+2026-11-10T22:46:47.5233230Z [36;1mNew-Item -ItemType Directory -Path $env:PREVIEW_EVIDENCE | Out-Null[0m
+2026-11-10T22:46:47.5233680Z [36;1m$taskEvidence = Assert-Ordinary $env:PREVIEW_EVIDENCE $true[0m
+2026-11-10T22:46:47.5235629Z [36;1m$taskEarly = @{scope='PLATFORM_PREFLIGHT_METADATA_ONLY'; root=$taskRoot; python=$taskPython; git=$taskGit; node=$taskNode; expected_head=$env:PREVIEW_EXPECTED_HEAD; event_repository=$env:PREVIEW_EVENT_REPOSITORY; event_repository_id=$env:PREVIEW_EVENT_REPOSITORY_ID; head_repository=$env:PREVIEW_HEAD_REPOSITORY; head_repository_id=$env:PREVIEW_HEAD_REPOSITORY_ID; base_repository=$env:PREVIEW_BASE_REPOSITORY; base_repository_id=$env:PREVIEW_BASE_REPOSITORY_ID; target_test_started=$false; single_link_and_binary_hash='PENDING_PYTHON_BOOTSTRAP'} | ConvertTo-Json[0m
+2026-11-10T22:46:47.5237801Z [36;1m[IO.File]::WriteAllText((Join-Path $taskEvidence 'preflight-facts.json'),$taskEarly,[Text.UTF8Encoding]::new($false))[0m
+2026-11-10T22:46:47.5238839Z [36;1m$taskBootstrap = Join-Path $taskEvidence 'primary-bootstrap.py'[0m
+2026-11-10T22:46:47.5239205Z [36;1m$taskCode = @'[0m
+2026-11-10T22:46:47.5241401Z [36;1mimport hashlib, json, os, pathlib, re, stat, subprocess, sys[0m
+2026-11-10T22:46:47.5241873Z [36;1mroot = pathlib.Path(os.environ['GITHUB_WORKSPACE'])[0m
+2026-11-10T22:46:47.5242245Z [36;1mout = pathlib.Path(os.environ['PREVIEW_EVIDENCE'])[0m
+2026-11-10T22:46:47.5242849Z [36;1mfacts = {'scope':'REVIEWED_WORKFLOW_BOOTSTRAP_NOT_TARGET_CODE_OR_OS_ATTESTATION','qualifier_load_attempted':False,'result':'FAIL'}[0m
+2026-11-10T22:46:47.5243401Z [36;1mdef ordinary(p, directory=False):[0m
+2026-11-10T22:46:47.5243670Z [36;1m    p = pathlib.Path(p)[0m
+2026-11-10T22:46:47.5244061Z [36;1m    if not p.is_absolute() or '..' in p.parts: raise RuntimeError('ABSOLUTE_PATH_REQUIRED')[0m
+2026-11-10T22:46:47.5244511Z [36;1m    for item in [*reversed(p.parents), p]:[0m
+2026-11-10T22:46:47.5244788Z [36;1m        s = item.lstat()[0m
+2026-11-10T22:46:47.5245254Z [36;1m        if stat.S_ISLNK(s.st_mode) or getattr(s,'st_file_attributes',0)&0x400: raise RuntimeError('LINK_REPARSE_DENIED')[0m
+2026-11-10T22:46:47.5245754Z [36;1m        if item!=p or directory:[0m
+2026-11-10T22:46:47.5246131Z [36;1m            if not stat.S_ISDIR(s.st_mode): raise RuntimeError('DIRECTORY_REQUIRED')[0m
+2026-11-10T22:46:47.5246706Z [36;1m        elif not stat.S_ISREG(s.st_mode) or s.st_nlink!=1: raise RuntimeError('SINGLE_LINK_FILE_REQUIRED')[0m
+2026-11-10T22:46:47.5247146Z [36;1m    return p[0m
+2026-11-10T22:46:47.5247350Z [36;1mdef tree(p):[0m
+2026-11-10T22:46:47.5247545Z [36;1m    ordinary(p,True)[0m
+2026-11-10T22:46:47.5247861Z [36;1m    for directory, dirs, files in os.walk(p,followlinks=False):[0m
+2026-11-10T22:46:47.5248283Z [36;1m        for name in dirs: ordinary(pathlib.Path(directory)/name,True)[0m
+2026-11-10T22:46:47.5248720Z [36;1m        for name in files: ordinary(pathlib.Path(directory)/name)[0m
+2026-11-10T22:46:47.5249048Z [36;1mordinary(root,True)[0m
+2026-11-10T22:46:47.5249262Z [36;1mordinary(out,True)[0m
+2026-11-10T22:46:47.5249470Z [36;1mtry:[0m
+2026-11-10T22:46:47.5249903Z [36;1m    names=[os.environ.get(k) for k in ('PREVIEW_EVENT_REPOSITORY','PREVIEW_HEAD_REPOSITORY','PREVIEW_BASE_REPOSITORY')][0m
+2026-11-10T22:46:47.5250674Z [36;1m    repo_ids=[os.environ.get(k) for k in ('PREVIEW_EVENT_REPOSITORY_ID','PREVIEW_HEAD_REPOSITORY_ID','PREVIEW_BASE_REPOSITORY_ID')][0m
+2026-11-10T22:46:47.5251464Z [36;1m    facts['repository_cohort']={'names':names,'ids':repo_ids,'expected_name':'YehorBabenko88/Terminan','expected_id':'1413341784'}[0m
+2026-11-10T22:46:47.5252258Z [36;1m    if names!=['YehorBabenko88/Terminan']*3 or repo_ids!=['1413341784']*3: raise RuntimeError('EXACT_SAME_REPOSITORY_REQUIRED')[0m
+2026-11-10T22:46:47.5252874Z [36;1m    # Root-first ALL path metadata, before primary Git/source/tool bytes.[0m
+2026-11-10T22:46:47.5253968Z [36;1m    tree(root)[0m
+2026-11-10T22:46:47.5254203Z [36;1m    python=ordinary(sys.executable)[0m
+2026-11-10T22:46:47.5254516Z [36;1m    git=ordinary(os.environ['PREVIEW_FIXED_GIT'])[0m
+2026-11-10T22:46:47.5254875Z [36;1m    node=ordinary(os.environ['PREVIEW_FIXED_NODE'])[0m
+2026-11-10T22:46:47.5255526Z [36;1m    if sys.version_info[:3]!=(3,12,10) or not(sys.flags.isolated and sys.flags.no_site and sys.dont_write_bytecode): raise RuntimeError('PYTHON_VERSION_FLAGS')[0m
+2026-11-10T22:46:47.5256665Z [36;1m    for k in ('NODE_OPTIONS','NODE_PATH','NODE_COMPILE_CACHE','NODE_V8_COVERAGE','GIT_DIR','GIT_WORK_TREE','GIT_INDEX_FILE','GIT_OBJECT_DIRECTORY','GIT_ALTERNATE_OBJECT_DIRECTORIES','GIT_NAMESPACE','GIT_REPLACE_REF_BASE'):[0m
+2026-11-10T22:46:47.5257571Z [36;1m        if os.environ.get(k): raise RuntimeError('AMBIENT_SOURCE_CONFIG')[0m
+2026-11-10T22:46:47.5259259Z [36;1m    if os.environ.get('GITHUB_HEAD_REF')!='feature/preview-benchmark-disposal-20261110' or os.environ.get('GITHUB_BASE_REF')!='feature/scientific-read-recovery-20261110' or os.environ.get('PREVIEW_REVIEW_BASE_SHA')!='dc810b03c3accf0e6f28fca1d5068f4171bb909d': raise RuntimeError('EXACT_OWN_STACK_REQUIRED')[0m
+2026-11-10T22:46:47.5260913Z [36;1m    head=os.environ['PREVIEW_EXPECTED_HEAD'][0m
+2026-11-10T22:46:47.5261342Z [36;1m    if not re.fullmatch('[a-f0-9]{40}',head): raise RuntimeError('EXPECTED_HEAD')[0m
+2026-11-10T22:46:47.5262466Z [36;1m    facts['tools']={name:{'path':str(p),'sha256':hashlib.sha256(p.read_bytes()).hexdigest(),'role':role} for name,p,role in [('python',python,'ISOLATED_BOOTSTRAP_QUALIFIER'),('git',git,'FIXED_PRIMARY_GIT_NO_CMD_FALLBACK'),('node',node,'SETUP_NODE_TEST_BINARY_OBSERVED_NOT_SIGNED_PROVENANCE')]}[0m
+2026-11-10T22:46:47.5263455Z [36;1m    def g(*args):[0m
+2026-11-10T22:46:47.5263699Z [36;1m        ordinary(root,True);ordinary(git)[0m
+2026-11-10T22:46:47.5264327Z [36;1m        p=subprocess.run([str(git),'--no-replace-objects','--no-optional-locks','-c','core.fsmonitor=false',*args],cwd=root,capture_output=True,timeout=10)[0m
+2026-11-10T22:46:47.5265100Z [36;1m        if p.returncode or len(p.stdout)>1048576: raise RuntimeError('PRIMARY_GIT_DENIED')[0m
+2026-11-10T22:46:47.5265509Z [36;1m        return p.stdout[0m
+2026-11-10T22:46:47.5265893Z [36;1m    if g('rev-parse','HEAD').decode().strip()!=head: raise RuntimeError('HEAD_MISMATCH')[0m
+2026-11-10T22:46:47.5266358Z [36;1m    filename='tests/preview_benchmark_qualification.py'[0m
+2026-11-10T22:46:47.5266697Z [36;1m    source=ordinary(root/filename)[0m
+2026-11-10T22:46:47.5266970Z [36;1m    raw=g('show',head+':'+filename)[0m
+2026-11-10T22:46:47.5267365Z [36;1m    if raw!=source.read_bytes(): raise RuntimeError('QUALIFIER_PRIMARY_BYTES_MISMATCH')[0m
+2026-11-10T22:46:47.5267792Z [36;1m    pin=hashlib.sha256(raw).hexdigest()[0m
+2026-11-10T22:46:47.5268206Z [36;1m    facts.update(head=head,qualifier_sha256=pin,result='PRIMARY_QUALIFIER_VERIFIED')[0m
+2026-11-10T22:46:47.5268743Z [36;1m    with (out/'bootstrap-facts.json').open('x') as f: json.dump(facts,f,indent=2)[0m
+2026-11-10T22:46:47.5269248Z [36;1m    sys.argv=[str(source),str(root),head,str(out/'unit'),str(node),str(git),pin][0m
+2026-11-10T22:46:47.5269656Z [36;1m    facts['qualifier_load_attempted']=True[0m
+2026-11-10T22:46:47.5270070Z [36;1m    exec(compile(raw,str(source),'exec'),{'__name__':'__main__','__file__':str(source)})[0m
+2026-11-10T22:46:47.5270469Z [36;1mexcept BaseException as error:[0m
+2026-11-10T22:46:47.5270789Z [36;1m    facts['result']='BOOTSTRAP_OR_QUALIFIER_DENIED'[0m
+2026-11-10T22:46:47.5271119Z [36;1m    facts['error_type']=type(error).__name__[0m
+2026-11-10T22:46:47.5271457Z [36;1m    if isinstance(error,SystemExit) and error.code==0:[0m
+2026-11-10T22:46:47.5271809Z [36;1m        facts['result']='QUALIFIER_RETURNED_SUCCESS'[0m
+2026-11-10T22:46:47.5272224Z [36;1m    with (out/'bootstrap-final.json').open('x') as f: json.dump(facts,f,indent=2)[0m
+2026-11-10T22:46:47.5272754Z [36;1m    raise[0m
+2026-11-10T22:46:47.5272936Z [36;1m'@[0m
+2026-11-10T22:46:47.5273265Z [36;1m[IO.File]::WriteAllText($taskBootstrap,$taskCode,[Text.UTF8Encoding]::new($false))[0m
+2026-11-10T22:46:47.5273706Z [36;1m& $taskPython -I -S -B $taskBootstrap[0m
+2026-11-10T22:46:47.5274099Z [36;1mif ($LASTEXITCODE -ne 0) { throw 'PREVIEW_BENCHMARK_QUALIFICATION_FAILED' }[0m
+2026-11-10T22:46:47.5353061Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-10T22:46:47.5353416Z env:
+2026-11-10T22:46:47.5353621Z   GIT_CONFIG_COUNT: 2
+2026-11-10T22:46:47.5353841Z   GIT_CONFIG_KEY_0: core.autocrlf
+2026-11-10T22:46:47.5354085Z   GIT_CONFIG_VALUE_0: false
+2026-11-10T22:46:47.5354300Z   GIT_CONFIG_KEY_1: core.eol
+2026-11-10T22:46:47.5354518Z   GIT_CONFIG_VALUE_1: lf
+2026-11-10T22:46:47.5354728Z   GIT_NO_REPLACE_OBJECTS: 1
+2026-11-10T22:46:47.5354978Z   PREVIEW_EVENT_REPOSITORY: YehorBabenko88/Terminan
+2026-11-10T22:46:47.5355309Z   PREVIEW_EVENT_REPOSITORY_ID: 1413341784
+2026-11-10T22:46:47.5355597Z   PREVIEW_HEAD_REPOSITORY: YehorBabenko88/Terminan
+2026-11-10T22:46:47.5355884Z   PREVIEW_HEAD_REPOSITORY_ID: 1413341784
+2026-11-10T22:46:47.5356162Z   PREVIEW_BASE_REPOSITORY: YehorBabenko88/Terminan
+2026-11-10T22:46:47.5356648Z   PREVIEW_BASE_REPOSITORY_ID: 1413341784
+2026-11-10T22:46:47.5356976Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-10T22:46:47.5357719Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-11-10T22:46:47.5358169Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-10T22:46:47.5358574Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-10T22:46:47.5358967Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-10T22:46:47.5359346Z   PREVIEW_EXPECTED_HEAD: e23abe3345379e41f979695136fd1261e3cbd238
+2026-11-10T22:46:47.5359735Z   PREVIEW_REVIEW_BASE_SHA: dc810b03c3accf0e6f28fca1d5068f4171bb909d
+2026-11-10T22:46:47.5360123Z   PREVIEW_EVIDENCE: D:\a\_temp/preview-benchmark-evidence
+2026-11-10T22:46:47.5360422Z ##[endgroup]
+2026-11-10T22:46:51.9294989Z {"scope": "ACTUAL_JS_FAKE_DOM_RAF_UNIT_ONLY_NOT_BROWSER_NATIVE_PHYSICAL", "result": "PASS", "expected_head": "e23abe3345379e41f979695136fd1261e3cbd238", "tests_started": true}
+2026-11-10T22:46:52.0158538Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+2026-11-10T22:46:52.0158988Z with:
+2026-11-10T22:46:52.0159362Z   name: preview-eight-and-six-windows-latest-e23abe3345379e41f979695136fd1261e3cbd238-1
+2026-11-10T22:46:52.0159844Z   path: D:\a\_temp/preview-benchmark-evidence
+2026-11-10T22:46:52.0160116Z   if-no-files-found: error
+2026-11-10T22:46:52.0160331Z   compression-level: 6
+2026-11-10T22:46:52.0160542Z   overwrite: false
+2026-11-10T22:46:52.0160738Z   include-hidden-files: false
+2026-11-10T22:46:52.0160945Z env:
+2026-11-10T22:46:52.0161107Z   GIT_CONFIG_COUNT: 2
+2026-11-10T22:46:52.0161316Z   GIT_CONFIG_KEY_0: core.autocrlf
+2026-11-10T22:46:52.0161545Z   GIT_CONFIG_VALUE_0: false
+2026-11-10T22:46:52.0161754Z   GIT_CONFIG_KEY_1: core.eol
+2026-11-10T22:46:52.0161961Z   GIT_CONFIG_VALUE_1: lf
+2026-11-10T22:46:52.0162161Z   GIT_NO_REPLACE_OBJECTS: 1
+2026-11-10T22:46:52.0162414Z   PREVIEW_EVENT_REPOSITORY: YehorBabenko88/Terminan
+2026-11-10T22:46:52.0162733Z   PREVIEW_EVENT_REPOSITORY_ID: 1413341784
+2026-11-10T22:46:52.0163010Z   PREVIEW_HEAD_REPOSITORY: YehorBabenko88/Terminan
+2026-11-10T22:46:52.0163293Z   PREVIEW_HEAD_REPOSITORY_ID: 1413341784
+2026-11-10T22:46:52.0163559Z   PREVIEW_BASE_REPOSITORY: YehorBabenko88/Terminan
+2026-11-10T22:46:52.0163830Z   PREVIEW_BASE_REPOSITORY_ID: 1413341784
+2026-11-10T22:46:52.0164139Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-10T22:46:52.0164561Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-11-10T22:46:52.0164984Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-10T22:46:52.0165579Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-10T22:46:52.0165963Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-10T22:46:52.0166260Z ##[endgroup]
+2026-11-10T22:46:52.2228930Z (node:9460) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-10T22:46:52.2230100Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-10T22:46:52.2334891Z With the provided path, there will be 12 files uploaded
+2026-11-10T22:46:52.2340701Z Artifact name is valid!
+2026-11-10T22:46:52.2342295Z Root directory input is valid!
+2026-11-10T22:46:52.5015648Z Beginning upload of artifact content to blob storage
+2026-11-10T22:46:52.5589145Z (node:9460) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-11-10T22:46:52.6477336Z Uploaded bytes 102752
+2026-11-10T22:46:52.6735280Z Finished uploading artifact content to blob storage!
+2026-11-10T22:46:52.6736865Z SHA256 digest of uploaded artifact zip is 49813f3bc9f678e54b811156ba6b4524f37eb649344312e309599416eb3dace5
+2026-11-10T22:46:52.6738625Z Finalizing artifact upload
+2026-11-10T22:46:53.0430062Z Artifact preview-eight-and-six-windows-latest-e23abe3345379e41f979695136fd1261e3cbd238-1.zip successfully finalized. Artifact ID 13810980134
+2026-11-10T22:46:53.0432308Z Artifact preview-eight-and-six-windows-latest-e23abe3345379e41f979695136fd1261e3cbd238-1 has been successfully uploaded! Final size is 102752 bytes. Artifact ID is 13810980134
+2026-11-10T22:46:53.0443223Z Artifact download URL: https://github.com/YehorBabenko88/Terminan/actions/runs/42917337440/artifacts/13810980134
+2026-11-10T22:46:53.0919068Z Post job cleanup.
+2026-11-10T22:46:53.3007578Z (node:8760) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-10T22:46:53.3009135Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-10T22:46:53.3410445Z Post job cleanup.
+2026-11-10T22:46:53.5229717Z (node:4292) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-10T22:46:53.5231433Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-10T22:46:53.5694116Z Post job cleanup.
+2026-11-10T22:46:53.7873870Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-10T22:46:53.8330048Z git version 2.56.0.windows.4
+2026-11-10T22:46:53.8409087Z Temporarily overriding HOME='D:\a\_temp\6b2e7cd1-a68c-49dc-bc55-0ffb86155a8a' before making global git config changes
+2026-11-10T22:46:53.8410475Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-10T22:46:53.8424911Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\Terminan\Terminan
+2026-11-10T22:46:53.8904742Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-10T22:46:53.9466761Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-10T22:46:54.6037225Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-10T22:46:54.6555640Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-10T22:46:55.2567483Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-10T22:46:55.3021621Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-10T22:46:55.9048825Z Cleaning up orphan processes
+2026-11-10T22:46:55.9155113Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@11d5960a326750d5838078e36cf38b85af677262, actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020, actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065, actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

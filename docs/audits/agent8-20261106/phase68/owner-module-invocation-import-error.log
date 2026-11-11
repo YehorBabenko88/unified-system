@@ -1,0 +1,52 @@
+test_backoff_is_bounded_auth_failure_not_retryable (tests.test_lan_transport.RegistryTests.test_backoff_is_bounded_auth_failure_not_retryable) ... ok
+test_duplicate_or_ip_claim_cannot_be_node_identity (tests.test_lan_transport.RegistryTests.test_duplicate_or_ip_claim_cannot_be_node_identity) ... ok
+test_active_control_heartbeats_keep_idle_data_channel_healthy (tests.test_lan_transport.TLSIsolationTests.test_active_control_heartbeats_keep_idle_data_channel_healthy) ... ok
+test_changed_endpoint_reconnect_keeps_certificate_identity_no_replay (tests.test_lan_transport.TLSIsolationTests.test_changed_endpoint_reconnect_keeps_certificate_identity_no_replay) ... ok
+test_close_releases_credit_reservations_and_queue_memory (tests.test_lan_transport.TLSIsolationTests.test_close_releases_credit_reservations_and_queue_memory) ... ok
+test_concurrent_registry_updates_cannot_restore_older_revoked_pin (tests.test_lan_transport.TLSIsolationTests.test_concurrent_registry_updates_cannot_restore_older_revoked_pin) ... ok
+test_control_writer_progresses_while_data_budget_waits (tests.test_lan_transport.TLSIsolationTests.test_control_writer_progresses_while_data_budget_waits) ... ok
+test_credit_backpressure_and_control_lane_while_data_waits (tests.test_lan_transport.TLSIsolationTests.test_credit_backpressure_and_control_lane_while_data_waits) ... ok
+test_fingerprint_and_wrong_uri_cert_rejected (tests.test_lan_transport.TLSIsolationTests.test_fingerprint_and_wrong_uri_cert_rejected) ... ok
+test_isolation_rejects_nonloopback_even_if_registry_admits_it (tests.test_lan_transport.TLSIsolationTests.test_isolation_rejects_nonloopback_even_if_registry_admits_it) ... ok
+test_malformed_frame_rejected_before_payload_allocation (tests.test_lan_transport.TLSIsolationTests.test_malformed_frame_rejected_before_payload_allocation) ... ok
+test_missing_client_certificate_rejected (tests.test_lan_transport.TLSIsolationTests.test_missing_client_certificate_rejected) ... ok
+test_peer_cannot_spoof_control_role (tests.test_lan_transport.TLSIsolationTests.test_peer_cannot_spoof_control_role) ... ok
+test_real_mtls_payload_credit_classes_and_actual_byte_accounting (tests.test_lan_transport.TLSIsolationTests.test_real_mtls_payload_credit_classes_and_actual_byte_accounting) ... ok
+test_registry_revocation_and_cancellation (tests.test_lan_transport.TLSIsolationTests.test_registry_revocation_and_cancellation) ... ok
+test_revoked_pin_during_final_hello_cannot_install_connection (tests.test_lan_transport.TLSIsolationTests.test_revoked_pin_during_final_hello_cannot_install_connection) ... ok
+test_sender_waiting_for_memory_does_not_reset_stream_created_while_waiting (tests.test_lan_transport.TLSIsolationTests.test_sender_waiting_for_memory_does_not_reset_stream_created_while_waiting) ... ok
+test_six_real_isolated_nodes_independent_of_tailscale (tests.test_lan_transport.TLSIsolationTests.test_six_real_isolated_nodes_independent_of_tailscale) ... ok
+test_untrusted_ca_rejected_even_with_correct_leaf_pin (tests.test_lan_transport.TLSIsolationTests.test_untrusted_ca_rejected_even_with_correct_leaf_pin) ... ok
+test_wrong_eku_and_expired_cert_rejected (tests.test_lan_transport.TLSIsolationTests.test_wrong_eku_and_expired_cert_rejected) ... ok
+test_backward_clock_or_changed_policy_fail_closed (tests.test_network_budget.BudgetTests.test_backward_clock_or_changed_policy_fail_closed) ... ok
+test_clock_sample_is_inside_store_transaction_not_before_lock_wait (tests.test_network_budget.BudgetTests.test_clock_sample_is_inside_store_transaction_not_before_lock_wait) ... ok
+test_cluster_allocations_cannot_expand (tests.test_network_budget.BudgetTests.test_cluster_allocations_cannot_expand) ... ok
+test_egress_replay_conflict_and_unverified_receipt_no_mutation (tests.test_network_budget.BudgetTests.test_egress_replay_conflict_and_unverified_receipt_no_mutation) ... ok
+test_egress_unknown_and_cooldown_survive_restart_no_dispatch (tests.test_network_budget.BudgetTests.test_egress_unknown_and_cooldown_survive_restart_no_dispatch) ... ok
+test_foreign_or_incomplete_database_not_adopted (tests.test_network_budget.BudgetTests.test_foreign_or_incomplete_database_not_adopted) ... ok
+test_real_processes_cannot_each_receive_a_fresh_full_budget (tests.test_network_budget.BudgetTests.test_real_processes_cannot_each_receive_a_fresh_full_budget) ... ok
+test_two_instances_share_atomic_debit_and_restart_not_fresh_burst (tests.test_network_budget.BudgetTests.test_two_instances_share_atomic_debit_and_restart_not_fresh_burst) ... ok
+test_binding_rejects_noncanonical_ids_bool_epoch_and_invalid_hash (tests.test_lan_mux_channel.FragmentContractTests.test_binding_rejects_noncanonical_ids_bool_epoch_and_invalid_hash) ... ok
+test_exact_header_and_derived_chunk_count_residual (tests.test_lan_mux_channel.FragmentContractTests.test_exact_header_and_derived_chunk_count_residual) ... ok
+test_malformed_length_count_index_flags_magic_and_kind_rejected (tests.test_lan_mux_channel.FragmentContractTests.test_malformed_length_count_index_flags_magic_and_kind_rejected) ... ok
+test_nonfinal_short_chunk_and_kind_oversize_rejected (tests.test_lan_mux_channel.FragmentContractTests.test_nonfinal_short_chunk_and_kind_oversize_rejected) ... ok
+test_wrong_session_stream_attempt_profile_and_kind_rejected (tests.test_lan_mux_channel.FragmentContractTests.test_wrong_session_stream_attempt_profile_and_kind_rejected) ... ok
+setUpClass (tests.test_lan_mux_channel.MuxTlsTests) ... ERROR
+test_absolute_assembly_deadline_not_refreshed_and_close_releases (tests.test_lan_mux_channel.ReassemblyContractTests.test_absolute_assembly_deadline_not_refreshed_and_close_releases) ... ok
+test_complete_hash_verified_and_memory_retained_until_handoff (tests.test_lan_mux_channel.ReassemblyContractTests.test_complete_hash_verified_and_memory_retained_until_handoff) ... ok
+test_gap_duplicate_interleaving_reject_and_release (tests.test_lan_mux_channel.ReassemblyContractTests.test_gap_duplicate_interleaving_reject_and_release) ... ok
+test_shared_node_pool_denies_before_allocation_and_queue_bound (tests.test_lan_mux_channel.ReassemblyContractTests.test_shared_node_pool_denies_before_allocation_and_queue_bound) ... ok
+test_wrong_whole_hash_rejects_no_partial_and_releases (tests.test_lan_mux_channel.ReassemblyContractTests.test_wrong_whole_hash_rejects_no_partial_and_releases) ... ok
+
+======================================================================
+ERROR: setUpClass (tests.test_lan_mux_channel.MuxTlsTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\worktrees\mission-integration-registry-20261106\unified-system\tests\test_lan_mux_channel.py", line 115, in setUpClass
+    import test_lan_transport as fixtures
+ModuleNotFoundError: No module named 'test_lan_transport'
+
+----------------------------------------------------------------------
+Ran 38 tests in 5.911s
+
+FAILED (errors=1)

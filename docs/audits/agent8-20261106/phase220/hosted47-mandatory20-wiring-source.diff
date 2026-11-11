@@ -1,0 +1,385 @@
+--- green-source/docs/gateway/research/persistence/qualification47/qualify.py
++++ wiring-source/docs/gateway/research/persistence/qualification47/qualify.py
+@@ -12,6 +12,7 @@
+ import json
+ import os
+ from pathlib import Path
++import re
+ import stat
+ import subprocess
+ import sys
+@@ -29,6 +30,30 @@
+ )
+ PHASES = ('setup', 'call', 'teardown')
+ CHILD_PHASES = ('BEFORE_COMMIT', 'AFTER_COMMIT', 'AFTER_COMMIT')
++GIT_PRIMARY = Path('C:/Program Files/Git/bin/git.exe')
++CONTROL_SOURCE_SHA256 = 'f3e8f14f4f4d5e5051795514861722ec790e9c3d8ef9c50d1948a1372b556376'
++CONTROL_IDS = (
++    '__main__.ChildPathAdmissionControls.test_db_parent_file_refuses_before_backend',
++    '__main__.ChildPathAdmissionControls.test_db_parent_junction_refuses_before_backend',
++    '__main__.ChildPathAdmissionControls.test_db_reparse_leaf_refuses_before_backend',
++    '__main__.ChildPathAdmissionControls.test_marker_reparse_leaf_refuses_before_backend',
++    '__main__.ChildPathAdmissionControls.test_ordinary_db_absent_marker_reaches_backend_control',
++    '__main__.ChildPathAdmissionControls.test_ordinary_db_existing_marker_reaches_backend_control',
++    '__main__.ChildPathAdmissionControls.test_temp_junction_refuses_before_backend',
++    '__main__.JunitAdmissionControls.test_file_xml_parent_refuses_before_parser_read_hash',
++    '__main__.JunitAdmissionControls.test_ordinary_bounded_xml_preserves_exact_47_facts_control',
++    '__main__.JunitAdmissionControls.test_oversized_xml_refuses_before_parser_read_hash',
++    '__main__.JunitAdmissionControls.test_reparse_xml_parent_refuses_before_parser_read_hash',
++    '__main__.ReturnedHandleControls.test_invariant_refusal_cleanup_kills_and_waits_known_handle',
++    '__main__.ReturnedHandleControls.test_preconstructor_refusal_creates_no_handle',
++    '__main__.ReturnedHandleControls.test_returned_handle_registered_before_invariant_refusal',
++    '__main__.RootFirstControls.test_file_parent_stops_before_descendant_or_git',
++    '__main__.RootFirstControls.test_file_root_stops_before_leaf_git_or_hash',
++    '__main__.RootFirstControls.test_missing_parent_stops_before_descendant_or_git',
++    '__main__.RootFirstControls.test_ordinary_tree_retains_exact_blob_and_ledger',
++    '__main__.RootFirstControls.test_reparse_parent_stops_before_descendant_or_git',
++    '__main__.RootFirstControls.test_selected_reparse_parent_stops_before_leaf_inspection',
++)
+ 
+ 
+ def need(value, message):
+@@ -126,12 +151,14 @@
+     return physical(root)
+ 
+ 
+-def layout(args):
++def layout(args, deps_required=True):
+     target, deps, evidence = (Path(x).absolute() for x in (args.target, args.deps, args.evidence))
+     namespace = evidence.parent
+     runner_temp = Path(os.environ['RUNNER_TEMP']).absolute()
+-    for root in (runner_temp, namespace, evidence, deps, target):
++    for root in (runner_temp, namespace, evidence, target):
+         ordinary(root)
++    if deps_required:
++        ordinary(deps)
+     need(namespace.is_relative_to(runner_temp) and namespace != runner_temp, 'Not owned runner.temp namespace')
+     need(evidence == namespace / 'evidence' and deps == namespace / 'deps', 'Fixed namespace layout required')
+     need(not target.is_relative_to(namespace) and not namespace.is_relative_to(target), 'Source/state overlap')
+@@ -142,7 +169,7 @@
+     return target, deps, evidence, namespace
+ 
+ 
+-def preflight(target, deps, evidence):
++def source_preflight(target, evidence):
+     expected = read_json(HERE / 'expected47.json')
+     bootstrap = read_json(evidence / 'bootstrap.json')
+     need(bootstrap.get('bootstrap_ok') is True and bootstrap.get('source_verified') is True, 'Bootstrap source not verified')
+@@ -157,6 +184,133 @@
+     need(physical(target) == bootstrap['test_files'], 'Raw test source changed/extras')
+     need(physical(tools) == bootstrap['tool_files'], 'Raw tool source changed/extras')
+     need(len(expected['node_ids']) == len(set(expected['node_ids'])) == 47, 'Frozen inventory invalid')
++    need(len(bootstrap['tool_files']) == 815, 'Separate qualifier source count differs')
++    need(Path(bootstrap['git_primary']) == GIT_PRIMARY and digest(GIT_PRIMARY) == bootstrap['git_sha256'], 'Fixed Git primary changed')
++    need(Path(bootstrap['python']['executable']) == Path(sys.executable)
++         and bootstrap['python']['sha256'] == digest(Path(sys.executable))
++         and bootstrap['python']['version'] == sys.version, 'Bootstrap Windows/Python role differs')
++    need(digest(HERE / 'test_qualifier_controls.py') == CONTROL_SOURCE_SHA256, 'Modeled control source changed')
++    return expected, bootstrap, tools
++
++
++def control_log_facts(evidence):
++    raw = {}
++    for name in ('controls.stdout.log', 'controls.stderr.log'):
++        path = evidence / name
++        info = ordinary(path, 'file')
++        need(info.st_size <= 256 * 1024, 'Control log oversized')
++        with path.open('rb') as stream:
++            raw[name] = stream.read(256 * 1024 + 1)
++        need(len(raw[name]) == info.st_size, 'Control log size changed')
++    need(sum(map(len, raw.values())) <= 256 * 1024, 'Combined control log oversized')
++    text = raw['controls.stderr.log'].decode('utf-8')
++    matches = re.findall(r'^test_\S+ \((__main__\.[^)]+)\) \.\.\. (ok|FAIL|ERROR|skipped[^\r\n]*)\r*$', text, re.M)
++    ids = [node for node, _ in matches]
++    need(len(ids) == len(set(ids)) == 20 and set(ids) == set(CONTROL_IDS), 'Exact 20 control identities missing/duplicated')
++    need(re.search(r'^Ran 20 tests in [0-9.]+s\r*$', text, re.M), 'Modeled control summary missing')
++    return {'tests': 20, 'passed': sum(value == 'ok' for _, value in matches),
++            'failed': sum(value == 'FAIL' for _, value in matches), 'errors': sum(value == 'ERROR' for _, value in matches),
++            'skips': sum(value.startswith('skipped') for _, value in matches), 'ids': ids,
++            'outcomes': [{'id': node, 'status': value} for node, value in matches],
++            'summary_ok': bool(re.search(r'^OK\r*$', text, re.M)),
++            'logs': {name: {'bytes': len(data), 'sha256': hashlib.sha256(data).hexdigest()} for name, data in raw.items()}}
++
++
++def require_controls(evidence, bootstrap):
++    record = read_json(evidence / 'controls.json')
++    need(record['schema'] == 'agent7.hosted.modeled20.facts.v1' and record['observed_pass'] is True, 'Mandatory modeled controls not passed')
++    need(record['tool_head'] == bootstrap['tool_head'] and record['tool_tree'] == bootstrap['tool_tree']
++         and record['test_head'] == bootstrap['test_head'] and record['test_tree'] == bootstrap['test_tree'], 'Control source roles differ')
++    need(record['control_source_sha256'] == CONTROL_SOURCE_SHA256
++         and record['bootstrap_sha256'] == digest(evidence / 'bootstrap.json'), 'Control origin differs')
++    need(record['python_sha256'] == digest(Path(sys.executable)) and record['git_sha256'] == digest(GIT_PRIMARY), 'Control runtime/tool primary changed')
++    need(record['child']['exit_code'] == 0 and record['child']['retired'] is True
++         and record['creation_status'] == 'HELD' and not record['errors']
++         and not record.get('cleanup_required') and not record['cleanup_uncertain']
++         and not record['remaining_new_threads'], 'Control process result uncertain')
++    need(record['source_post'] == {'test': bootstrap['test_files'], 'tool': bootstrap['tool_files']}, 'Control source postcheck differs')
++    facts = control_log_facts(evidence)
++    need(record['facts'] == facts, 'Closed control logs differ')
++    need(facts['passed'] == 20 and facts['failed'] == facts['errors'] == facts['skips'] == 0
++         and facts['summary_ok'], 'Mandatory control outcomes not all passed')
++    return digest(evidence / 'controls.json')
++
++
++def controls(args):
++    """One stdlib-only modeled process; no dependency acquisition or 47 imports."""
++    target, deps, evidence, namespace = layout(args, deps_required=False)
++    need(absent(deps), 'Controls must precede dependency acquisition')
++    names = ('controls-claim.json', 'controls.json', 'controls.stdout.log', 'controls.stderr.log')
++    need(all(absent(evidence / name) for name in names), 'Control stage already used')
++    write_new(evidence / 'controls-claim.json', {'role': 'MODELED20_ONLY', 'run': os.environ['GITHUB_RUN_ID'], 'attempt': os.environ['GITHUB_RUN_ATTEMPT']})
++    record = {'schema': 'agent7.hosted.modeled20.facts.v1', 'observed_pass': False, 'errors': [],
++              'creation_status': 'NOT_STARTED', 'cleanup_uncertain': False, 'child': None,
++              'native_admission': False, 'physical_admission': False, 'hosted47_result': 'NOT_RUN_BY_THIS_STAGE'}
++    child = None
++    started = None
++    initial_threads = {thread.ident for thread in threading.enumerate()}
++    try:
++        expected, bootstrap, tools = source_preflight(target, evidence)
++        record.update(tool_head=bootstrap['tool_head'], tool_tree=bootstrap['tool_tree'],
++                      test_head=bootstrap['test_head'], test_tree=bootstrap['test_tree'],
++                      bootstrap_sha256=digest(evidence / 'bootstrap.json'), control_source_sha256=CONTROL_SOURCE_SHA256,
++                      python_sha256=digest(Path(sys.executable)), git_sha256=digest(GIT_PRIMARY))
++        need(not any(name == 'strattester' or name.startswith('strattester.') for name in sys.modules), 'Project imported before controls')
++        ordinary(HERE / 'test_qualifier_controls.py', 'file')
++        with (evidence / 'controls.stdout.log').open('xb') as stdout, (evidence / 'controls.stderr.log').open('xb') as stderr:
++            record['creation_status'] = 'PENDING'
++            started = time.monotonic()
++            child = subprocess.Popen([sys.executable, '-I', '-S', '-B', str(HERE / 'test_qualifier_controls.py')],
++                                     cwd=evidence, stdout=stdout, stderr=stderr, creationflags=subprocess.CREATE_NO_WINDOW)
++            # Retain the returned held object before post-constructor checks.
++            record['creation_status'] = 'HELD'
++            record['child'] = {'pid': child.pid, 'identity': 'OWN_POPEN_HANDLE', 'role': 'MODELED20_CONTROLLER'}
++            while child.poll() is None:
++                size = sum(ordinary(evidence / name, 'file').st_size for name in ('controls.stdout.log', 'controls.stderr.log'))
++                need(size <= 256 * 1024, 'Control output cap reached')
++                need(time.monotonic() - started < 15, 'Control process wait policy elapsed')
++                time.sleep(0.01)
++            child.wait(timeout=2)
++    except BaseException:
++        record['errors'].append(traceback.format_exc())
++        if record['creation_status'] == 'PENDING':
++            record['creation_status'] = 'UNKNOWN'
++            record['cleanup_uncertain'] = True
++    finally:
++        if child is not None:
++            try:
++                if child.poll() is None:
++                    record['cleanup_required'] = True
++                    child.kill()
++                    child.wait(timeout=2)
++                record['child'].update(exit_code=child.poll(), retired=child.poll() is not None)
++            except BaseException:
++                record['cleanup_uncertain'] = True
++                record['errors'].append(traceback.format_exc())
++        record['measured_process_monitor_seconds'] = None if started is None else time.monotonic() - started
++        record['timing_scope'] = 'Wait policy only; setup/postchecks/finalization separate; no strict whole-operation deadline'
++        record['remaining_new_threads'] = [thread.name for thread in threading.enumerate() if thread.ident not in initial_threads and thread.is_alive()]
++        try:
++            record['source_post'] = {'test': physical(target), 'tool': physical(tools)}
++            need(record['source_post'] == {'test': bootstrap['test_files'], 'tool': bootstrap['tool_files']}, 'Control source changed/extras')
++            need(digest(Path(sys.executable)) == record['python_sha256'] and digest(GIT_PRIMARY) == record['git_sha256'], 'Control runtime/tool changed')
++            record['facts'] = control_log_facts(evidence)
++            facts = record['facts']
++            need(facts['passed'] == 20 and facts['failed'] == facts['errors'] == facts['skips'] == 0
++                 and facts['summary_ok'], 'Modeled control failure/error/skip')
++        except BaseException:
++            record['errors'].append(traceback.format_exc())
++        record['observed_pass'] = bool(not record['errors'] and not record['cleanup_uncertain']
++                                       and not record.get('cleanup_required') and not record['remaining_new_threads']
++                                       and record['creation_status'] == 'HELD' and record['child']
++                                       and record['child'].get('exit_code') == 0 and record['child'].get('retired'))
++        write_new(evidence / 'controls.json', record)
++    return 0 if record['observed_pass'] else 1
++
++
++def preflight(target, deps, evidence):
++    expected, bootstrap, tools = source_preflight(target, evidence)
++    controls_sha = require_controls(evidence, bootstrap)
+     report = read_json(evidence / 'pip-install.json')
+     locked = {w['name'].lower(): w for w in expected['wheels']}
+     acquired = {}
+@@ -175,6 +329,7 @@
+         'tool_head': bootstrap['tool_head'], 'tool_tree': bootstrap['tool_tree'],
+         'bootstrap_sha256': digest(evidence / 'bootstrap.json'), 'expected_sha256': digest(HERE / 'expected47.json'),
+         'requirements_sha256': digest(HERE / 'requirements.lock'), 'pip_report_sha256': digest(evidence / 'pip-install.json'),
++        'modeled20_receipt_sha256': controls_sha,
+         'wheel_acquisition': acquired, 'release_wheel_qualification': 'NOT_CLAIMED',
+         'source_pre': {'test_files': 809, 'tool_files': len(bootstrap['tool_files']), 'raw_git_match': True},
+         'python': {'executable': sys.executable, 'sha256': digest(Path(sys.executable)), 'version': sys.version},
+@@ -397,6 +552,7 @@
+              and candidate['expected_sha256'] == digest(HERE / 'expected47.json')
+              and candidate['requirements_sha256'] == digest(HERE / 'requirements.lock')
+              and candidate['pip_report_sha256'] == digest(evidence / 'pip-install.json'), 'Candidate provenance files changed')
++        need(candidate['modeled20_receipt_sha256'] == require_controls(evidence, bootstrap), 'Mandatory control receipt changed')
+         need(candidate['pytest_exit_code'] == 0 and not candidate['errors'] and candidate['stopfence'], 'Test/controller errors')
+         need(candidate['python']['sha256'] == digest(Path(sys.executable)), 'Interpreter changed between steps')
+         need(set(candidate['source_import_origins'].values()).issubset(set(expected['allowed_source_imports'])), 'Unexpected source import origin')
+@@ -421,6 +577,7 @@
+         terminal.update(classification='HOSTED_UNIT_QUALIFIED', test_head=expected['test_head'], test_tree=expected['test_tree'],
+                         tool_head=bootstrap['tool_head'], tool_tree=bootstrap['tool_tree'], tests=47, phases=141, skips=0,
+                         candidate_sha256=digest(evidence / 'candidate.json'), junit_sha256=digest(evidence / 'pytest.xml'),
++                        modeled_controls={'tests': 20, 'skips': 0, 'receipt_sha256': digest(evidence / 'controls.json'), 'separate_from_staging_cases': True},
+                         finalization='SEPARATE_READBACK_OF_CLOSED_CANDIDATE', job_completion='NOT_OBSERVED_BY_THIS_PROCESS',
+                         artifact_upload='NOT_OBSERVED_BY_THIS_PROCESS', vm_teardown='NOT_INDEPENDENTLY_OBSERVED')
+     except BaseException:
+@@ -432,11 +589,13 @@
+ 
+ def main():
+     parser = argparse.ArgumentParser()
+-    parser.add_argument('command', choices=('run', 'verify'))
++    parser.add_argument('command', choices=('controls', 'run', 'verify'))
+     parser.add_argument('--target', required=True)
+     parser.add_argument('--deps', required=True)
+     parser.add_argument('--evidence', required=True)
+     args = parser.parse_args()
++    if args.command == 'controls':
++        return controls(args)
+     return run(args) if args.command == 'run' else verify(args)
+ 
+ 
+--- green-source/docs/gateway/research/persistence/qualification47/README.md
++++ wiring-source/docs/gateway/research/persistence/qualification47/README.md
+@@ -1,9 +1,10 @@
+ # Frozen artifact-staging unit qualification
+ 
+-**SOURCE FIX PREPARATION ONLY. Root/A8 next pre-execution review pending.** No
++**SOURCE WIRING PREPARATION ONLY. Root/A8 next pre-execution review pending.** No
+ hosted47 test, dependency installation, wheel acquisition, push or dispatch has
+-been performed. Two separately allocated OLD-source pure AST modeled regression
+-attempts are preserved below; no new GREEN execution was performed for this fix.
++been performed. Separately allocated OLD-source RED and corrected-source GREEN
++modeled attempts are preserved below. The current mandatory-stage wiring has
++not been executed; the previous GREEN is not relabeled as its qualification.
+ This is an ordinary disposable Windows unit job proposal,
+ not release, physical, Math, native backend or scientific authority admission.
+ 
+@@ -74,14 +75,16 @@
+ but the returned known handle remains available to the actual kill-and-wait loop.
+ No process-leak or containment claim follows from the pure modeled controls.
+ 
+-The existing nine test bodies/IDs and AST cleanup selector remain unchanged.
+-The only newly allocated fake API is `InertTree.ModelPath.iterdir`, enumerating
++During the initial F43/F44 correction the nine test bodies/IDs and actual cleanup
++selector were preserved. Its only newly allocated fake API was
++`InertTree.ModelPath.iterdir`, enumerating
+ the same in-memory root/folder/item topology and recording calls. Unsafe listing
+ raises a TypeError tripwire, outside the cases' expected refusal catch tuple;
+ the fake cannot manufacture a source-guard PASS by refusing traversal itself.
+ No real directory, reparse point, Popen, cleanup child or Git backend is used.
+ The fixture extension is an explicit causal-comparison difference from the RED
+-file; whole-file identity across RED/GREEN is not claimed. GREEN remains unrun.
++file; whole-file identity across RED/GREEN is not claimed. The later f3e8f14f
++20-case source adds the separately reviewed parser/path fixtures below.
+ 
+ ## Parser and child-path admission follow-up
+ 
+@@ -113,9 +116,62 @@
+ The parser fixture uses only small in-memory XML, including the metadata-only
+ oversize case; it does not create an oversized filesystem object.
+ 
+-No correction GREEN, hosted47 or project engine execution has occurred in this
+-phase. Workflow/pure20 mandatory wiring requires later exact Root review and is
+-not changed by this correction. Frozen809/47/141 and six wheel pins are unchanged.
++The separately allocated corrected-source MODELED20 GREEN on qualifier
++`eaf1652c...` ran **20 PASS / 0 failures / 0 errors / 0 skips**, test exit0.
++Receipt SHA `49d5552efbdb9cdc086557dcebff11de8f0aa1b76f4fd4936a9680cb4da14e55`;
++stderr SHA `ffc79f303b8ee8623cd3e7b394dea8e7cfeef13ad295cfbbd63949b66ad2bd59`.
++A8 phase214 independently verified this narrow source/selected-AST modeled
++result. It did not qualify actual Git dispatch, Windows kernel/namespace safety,
++real child fixture containment, the full qualifier or hosted47. Its measured
++0.390s is the controller process-monitor interval; source guards/hashes precede
++it and postchecks/finalization follow it. No strict whole-operation15s claim.
++Frozen809/47/141 and six wheel pins remain unchanged.
++
++## Mandatory modeled20 stage before staging47 dependencies
++
++The proposed workflow order is now explicit and mandatory:
++
++1. Pinned actions/setup Python and complete inline raw bootstrap of tool815 and
++   frozen target809 before qualifier/control execution. Bootstrap records the
++   ordinary guarded bin Git primary and actual Windows Python executable hash,
++   version and exact tool/test source roles.
++2. `qualify.py controls`: one isolated real Python3.12.10 `-I -S -B` process
++   runs the unchanged `f3e8f14f...` test file, with stdlib/source reads and inert
++   actual-AST metadata/XML/Popen models only. Dependency directory must still
++   be absent; no pytest, target test or project engine is imported by this role.
++3. Only after controls step succeeds, acquire the six hash-locked wheels.
++4. The distinct `run` role validates the closed mandatory controls evidence and
++   then performs exactly47 staging cases/141 phases. `verify` revalidates both
++   separate roles before its staging-only terminal observation.
++
++No 20+47 aggregate case count is emitted. The modeled role has exact20 IDs,
++outcomes and zero-skip predicates in `controls.json` plus separate original
++`controls.stdout.log`/`controls.stderr.log`; staging keeps its original47 IDs,
++141 phases and JUnit. The modeled source SHA and explicit20 IDs are frozen in
++the qualifier without changing `expected47.json`, the test source or the lock.
++If a full20 inventory runs but contains failures/errors/skips, those outcomes
++are retained and the stage fails; missing/ambiguous evidence is not PASS.
++
++The modeled controller uses an own held Popen object and owned external logs,
++with a 15s observed wait policy and 256KiB combined output cap, ordinary cleanup
++kill **and wait** on normal errors and UNKNOWN for unresolved creation. There
++is no in-process hard Timer, OS real-time or strict whole-operation guarantee.
++The existing hosted10min job cancellation policy remains separate. All source
++raw files, Python and Git hashes are checked before/after the modeled role;
++its logs and closed receipt are read back before 47 imports. A returned held
++object is retained immediately, before post-constructor checks.
++
++This stage adds one MODELED20 interpreter child **separate from** the three
++staging47 crash-probe children. It does not expand the staging subprocess
++allowlist, admit a native backend, publish research results, release holds or
++grant current scientific read access. Bootstrap readonly Git processes, wheel
++acquisition and artifact upload are separate hosted setup/finalization effects.
++
++This wiring is SOURCE ONLY and unexecuted. The earlier eaf1652c modeled GREEN
++is preserved as a distinct source revision; no success is transferred to the
++new controller or workflow. Root/A8 exact review must precede any further
++execution/publication. A local commit is also reserved for the subsequent
++approved phase; tracked CRLF files must not be normalized to fabricate raw PASS.
+ 
+ ## Dependency provenance
+ 
+@@ -207,7 +263,8 @@
+ | Current preparation | Source/data/AST reads and five new files; six JSON-only TLS GETs | No qualifier/test imports or execution |
+ | Hosted setup | Pinned actions, owned checkout/dependency/evidence dirs; official network acquisition | No office node, service or production state |
+ | Bootstrap | Readonly Git processes and raw file hashing before tool execution | Separate from the three test children |
+-| Unit run | Pytest, stdlib SQLite/markers, existing bounded threads, three own Python children | Local staging only; no target/provider/native backend |
++| Modeled prerequisite | One isolated stdlib-only Python, unchanged20 source, inert actual-AST models; own log/receipt files | Before wheel acquisition; no target47/project imports; separate count |
++| Unit run | Pytest, stdlib SQLite/markers, existing bounded threads, three staging-only Python children | Separate47 cases; local staging only; no target/provider/native backend |
+ | Normal cleanup | Stopfence; held own child kill **and wait**; thread observations | Unknown or unexpected cleanup fails qualification |
+ | Finalization | Own logs/JUnit/JSON; separate readback; artifact upload of evidence only | No SQLite DBs, dependencies, secrets or raw environment uploaded |
+ 
+--- green-source/.github/workflows/projection-recovery-47.yml
++++ wiring-source/.github/workflows/projection-recovery-47.yml
+@@ -137,11 +137,15 @@
+               envfile=pathlib.Path(os.environ['GITHUB_ENV']).absolute();ordinary(envfile,'file')
+               with envfile.open('a',encoding='utf-8') as out:out.write('A7_NAMESPACE='+str(ns)+'\n')
+               ordinary(workspace)
++              assert sys.platform=='win32' and sys.version_info[:3]==(3,12,10)
++              assert sys.flags.isolated and sys.flags.no_site and sys.dont_write_bytecode
++              python=pathlib.Path(sys.executable).absolute();ordinary(python,'file')
+               tool_tree,tool_files=ledger(tools,os.environ['TOOL_HEAD'],815)
+               test_tree,test_files=ledger(target,test_head,809)
+               assert test_tree=='01e9e95f593e74d0b0a27afca771f37034aef977'
+               ordinary(git,'file')
+-              record={'bootstrap_ok':True,'source_verified':True,'tool_head':os.environ['TOOL_HEAD'],'tool_tree':tool_tree,'tool_root':str(tools),'tool_files':tool_files,'test_head':test_head,'test_tree':test_tree,'test_files':test_files,'bootstrap':'WORKFLOW_INLINE_BEFORE_QUALIFIER_IMPORT','git_sha256':hashlib.sha256(git.read_bytes()).hexdigest()}
++              ordinary(python,'file')
++              record={'bootstrap_ok':True,'source_verified':True,'tool_head':os.environ['TOOL_HEAD'],'tool_tree':tool_tree,'tool_root':str(tools),'tool_files':tool_files,'test_head':test_head,'test_tree':test_tree,'test_files':test_files,'bootstrap':'WORKFLOW_INLINE_BEFORE_QUALIFIER_IMPORT','git_primary':str(git),'git_sha256':hashlib.sha256(git.read_bytes()).hexdigest(),'python':{'executable':str(python),'version':sys.version,'sha256':hashlib.sha256(python.read_bytes()).hexdigest()}}
+               ordinary(evidence)
+               with (evidence/'bootstrap.json').open('x',encoding='utf-8') as out:json.dump(record,out,sort_keys=True,indent=2)
+               ordinary(envfile,'file')
+@@ -153,6 +157,13 @@
+                   ordinary(evidence)
+                   with (evidence/'bootstrap-failure.json').open('x',encoding='utf-8') as out:json.dump(failure,out,sort_keys=True,indent=2)
+               raise
++      - name: Mandatory separate modeled20 controls before dependency acquisition
++        shell: pwsh
++        run: |
++          $deps=Join-Path $env:A7_NAMESPACE 'deps'
++          $evidence=Join-Path $env:A7_NAMESPACE 'evidence'
++          python -I -S -B qualifier-code/docs/gateway/research/persistence/qualification47/qualify.py controls --target target --deps $deps --evidence $evidence
++          exit $LASTEXITCODE
+       - name: Acquire only six hash-locked wheels in owned hosted state
+         shell: pwsh
+         run: |

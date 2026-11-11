@@ -1,0 +1,192 @@
+{
+  "schema": "gateway25.hosted-readonly-verification.v1",
+  "verified_utc": "2026-11-10T16:55:46.900411+00:00",
+  "result": "HOSTED_GATEWAY25_COMPONENT_VERIFIED",
+  "run_id": 42853001010,
+  "run_attempt": 1,
+  "event": "push",
+  "head": "b48ddc5ff083deeecfdf76185117d0e86aa23e2a",
+  "tree": "bc5dd93bfa0662d4be096ef2351942447d6b4039",
+  "run_created_at": "2026-11-10T16:17:15Z",
+  "run_updated_at": "2026-11-10T16:48:59Z",
+  "run_url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42853001010",
+  "platforms": [
+    {
+      "platform": "windows",
+      "job_id": 129958435771,
+      "job_name": "identity (windows-latest, windows)",
+      "runner_id": 1000099730,
+      "runner_name": "GitHub Actions 1000099730",
+      "runner_metadata_origin": "jobs API; matrix job-name mapping to original run ZIP",
+      "started_at": "2026-11-10T16:48:15Z",
+      "completed_at": "2026-11-10T16:48:59Z",
+      "job_log": {
+        "member": "1_identity (windows-latest, windows).txt",
+        "file": "log-members/11.log",
+        "bytes": 35403,
+        "sha256": "dcc46df7f2c269e871ce43f45be9a1ca42a729aba3576d020fd7aea35f28c73d"
+      },
+      "controls_log": {
+        "member": "identity (windows-latest, windows)/5_Run python -I -B docs_intelligence_identity_guard_controls.py.txt",
+        "file": "log-members/17.log",
+        "bytes": 2977,
+        "sha256": "0867ac6520ac71a15c813a392b0031f917209c85218d869e2a5f4ebc718cd856"
+      },
+      "qualifier_log": {
+        "member": "identity (windows-latest, windows)/6_Run python -I -B docs_intelligence_identity_run_qualification.py --expected-head $EXPECTED_HEAD.txt",
+        "file": "log-members/18.log",
+        "bytes": 6178,
+        "sha256": "b1eb871a27abefcf7026335ac088c79a9a98d096660410ac792211092f205a39"
+      },
+      "tests": 25,
+      "unique_ids": [
+        "test_gateway_identity.GatewayIdentityTests.test_actual_tls_read_capability_two_checks_then_replay_denied",
+        "test_gateway_identity.GatewayIdentityTests.test_audit_full_cannot_issue_or_check",
+        "test_gateway_identity.GatewayIdentityTests.test_claims_and_public_constructor_cannot_authenticate",
+        "test_gateway_identity.GatewayIdentityTests.test_clock_rollback_is_permanent_and_monotonic_deadline_independent",
+        "test_gateway_identity.GatewayIdentityTests.test_closed_socket_denies",
+        "test_gateway_identity.GatewayIdentityTests.test_context_exact_original_peer_pin_not_other_registered_entry",
+        "test_gateway_identity.GatewayIdentityTests.test_context_inventory_is_bounded",
+        "test_gateway_identity.GatewayIdentityTests.test_copy_and_foreign_authority_reject",
+        "test_gateway_identity.GatewayIdentityTests.test_cumulative_slow_wall_clock_is_not_allowed_to_drift_forever",
+        "test_gateway_identity.GatewayIdentityTests.test_denial_and_revocation_target_are_audited",
+        "test_gateway_identity.GatewayIdentityTests.test_expected_owner_method_is_one_check_and_never_fake_provider",
+        "test_gateway_identity.GatewayIdentityTests.test_forged_capability_cannot_delegate_to_method_shaped_none_provider",
+        "test_gateway_identity.GatewayIdentityTests.test_forged_exact_type_handle_not_in_issuer_inventory",
+        "test_gateway_identity.GatewayIdentityTests.test_missing_audit_blocks",
+        "test_gateway_identity.GatewayIdentityTests.test_nonread_commissioning_grant_unavailable",
+        "test_gateway_identity.GatewayIdentityTests.test_owner_expected_issuer_rejects_legitimate_foreign_issuer_same_store",
+        "test_gateway_identity.GatewayIdentityTests.test_profile_is_copied_and_cannot_change_grant",
+        "test_gateway_identity.GatewayIdentityTests.test_query_has_seven_current_checks_then_eighth_denied",
+        "test_gateway_identity.GatewayIdentityTests.test_real_elapsed_registry_expiry_denies",
+        "test_gateway_identity.GatewayIdentityTests.test_revocation_and_closed_actual_connection",
+        "test_gateway_identity.GatewayIdentityTests.test_revocation_latches_even_when_audit_full",
+        "test_gateway_identity.GatewayIdentityTests.test_untrusted_ca_and_missing_client_cert_real_handshake_refused",
+        "test_gateway_identity.GatewayIdentityTests.test_wrong_actual_san_denies",
+        "test_gateway_identity.GatewayIdentityTests.test_wrong_request_tool_store_and_view_deny",
+        "test_gateway_identity.StrictTLSFixtureTests.test_generated_chain_handshakes_with_explicit_strict_verification"
+      ],
+      "skips": 0,
+      "qualifier_receipt": {
+        "result": "PASS",
+        "head": "b48ddc5ff083deeecfdf76185117d0e86aa23e2a",
+        "tests": 25,
+        "skips": 0,
+        "raw_files_before_after": 1848,
+        "exact_unique_test_ids": true,
+        "scope": "DISPOSABLE_MTLS_AND_LOCAL_READ_CAPABILITY_ONLY",
+        "cross_owner_read": "NOT_RUN",
+        "nativeauthentication": false
+      },
+      "controls_receipt": {
+        "result": "PASS",
+        "positive_controls": 1,
+        "negative_controls": 11,
+        "scope": "OWNED_SOURCE_GUARDS_NOT_NATIVE_ADMISSION"
+      },
+      "expected_negative_fixture_errors": [
+        "test_tampered_primary_tree_oid_rejected (__main__.SourceControls.test_tampered_primary_tree_oid_rejected) ... error: hash mismatch 08f0f9055af9956caf9bbd59558be96fad522b0d",
+        "2026-11-10T16:48:37.0730456Z error: hash mismatch 08f0f9055af9956caf9bbd59558be96fad522b0d",
+        "2026-11-10T16:48:37.0731399Z fatal: ambiguous argument 'HEAD^{tree}': unknown revision or path not in the working tree."
+      ]
+    },
+    {
+      "platform": "ubuntu",
+      "job_id": 129958436026,
+      "job_name": "identity (ubuntu-24.04, linux)",
+      "runner_id": 1000099631,
+      "runner_name": "GitHub Actions 1000099631",
+      "runner_metadata_origin": "jobs API; matrix job-name mapping to original run ZIP",
+      "started_at": "2026-11-10T16:25:11Z",
+      "completed_at": "2026-11-10T16:25:29Z",
+      "job_log": {
+        "member": "0_identity (ubuntu-24.04, linux).txt",
+        "file": "log-members/0.log",
+        "bytes": 37790,
+        "sha256": "d32328257f1de9ac4de44ac59d93487dc446c01d9421ee2f8dbce4fe56592690"
+      },
+      "controls_log": {
+        "member": "identity (ubuntu-24.04, linux)/5_Run python -I -B docs_intelligence_identity_guard_controls.py.txt",
+        "file": "log-members/6.log",
+        "bytes": 2989,
+        "sha256": "d573b8216ba9ee54a49c9f73000aa598600fcea5b10f6ca91735687493ca48ff"
+      },
+      "qualifier_log": {
+        "member": "identity (ubuntu-24.04, linux)/6_Run python -I -B docs_intelligence_identity_run_qualification.py --expected-head $EXPECTED_HEAD.txt",
+        "file": "log-members/7.log",
+        "bytes": 6178,
+        "sha256": "34f8f722e23f4a586433244970083002fc3d3b101be30e18cb8546adeec6d27c"
+      },
+      "tests": 25,
+      "unique_ids": [
+        "test_gateway_identity.GatewayIdentityTests.test_actual_tls_read_capability_two_checks_then_replay_denied",
+        "test_gateway_identity.GatewayIdentityTests.test_audit_full_cannot_issue_or_check",
+        "test_gateway_identity.GatewayIdentityTests.test_claims_and_public_constructor_cannot_authenticate",
+        "test_gateway_identity.GatewayIdentityTests.test_clock_rollback_is_permanent_and_monotonic_deadline_independent",
+        "test_gateway_identity.GatewayIdentityTests.test_closed_socket_denies",
+        "test_gateway_identity.GatewayIdentityTests.test_context_exact_original_peer_pin_not_other_registered_entry",
+        "test_gateway_identity.GatewayIdentityTests.test_context_inventory_is_bounded",
+        "test_gateway_identity.GatewayIdentityTests.test_copy_and_foreign_authority_reject",
+        "test_gateway_identity.GatewayIdentityTests.test_cumulative_slow_wall_clock_is_not_allowed_to_drift_forever",
+        "test_gateway_identity.GatewayIdentityTests.test_denial_and_revocation_target_are_audited",
+        "test_gateway_identity.GatewayIdentityTests.test_expected_owner_method_is_one_check_and_never_fake_provider",
+        "test_gateway_identity.GatewayIdentityTests.test_forged_capability_cannot_delegate_to_method_shaped_none_provider",
+        "test_gateway_identity.GatewayIdentityTests.test_forged_exact_type_handle_not_in_issuer_inventory",
+        "test_gateway_identity.GatewayIdentityTests.test_missing_audit_blocks",
+        "test_gateway_identity.GatewayIdentityTests.test_nonread_commissioning_grant_unavailable",
+        "test_gateway_identity.GatewayIdentityTests.test_owner_expected_issuer_rejects_legitimate_foreign_issuer_same_store",
+        "test_gateway_identity.GatewayIdentityTests.test_profile_is_copied_and_cannot_change_grant",
+        "test_gateway_identity.GatewayIdentityTests.test_query_has_seven_current_checks_then_eighth_denied",
+        "test_gateway_identity.GatewayIdentityTests.test_real_elapsed_registry_expiry_denies",
+        "test_gateway_identity.GatewayIdentityTests.test_revocation_and_closed_actual_connection",
+        "test_gateway_identity.GatewayIdentityTests.test_revocation_latches_even_when_audit_full",
+        "test_gateway_identity.GatewayIdentityTests.test_untrusted_ca_and_missing_client_cert_real_handshake_refused",
+        "test_gateway_identity.GatewayIdentityTests.test_wrong_actual_san_denies",
+        "test_gateway_identity.GatewayIdentityTests.test_wrong_request_tool_store_and_view_deny",
+        "test_gateway_identity.StrictTLSFixtureTests.test_generated_chain_handshakes_with_explicit_strict_verification"
+      ],
+      "skips": 0,
+      "qualifier_receipt": {
+        "result": "PASS",
+        "head": "b48ddc5ff083deeecfdf76185117d0e86aa23e2a",
+        "tests": 25,
+        "skips": 0,
+        "raw_files_before_after": 1848,
+        "exact_unique_test_ids": true,
+        "scope": "DISPOSABLE_MTLS_AND_LOCAL_READ_CAPABILITY_ONLY",
+        "cross_owner_read": "NOT_RUN",
+        "nativeauthentication": false
+      },
+      "controls_receipt": {
+        "result": "PASS",
+        "positive_controls": 1,
+        "negative_controls": 11,
+        "scope": "OWNED_SOURCE_GUARDS_NOT_NATIVE_ADMISSION"
+      },
+      "expected_negative_fixture_errors": [
+        "test_tampered_primary_tree_oid_rejected (__main__.SourceControls.test_tampered_primary_tree_oid_rejected) ... error: hash mismatch 08f0f9055af9956caf9bbd59558be96fad522b0d",
+        "2026-11-10T16:25:23.0215004Z error: hash mismatch 08f0f9055af9956caf9bbd59558be96fad522b0d",
+        "2026-11-10T16:25:23.0215471Z fatal: ambiguous argument 'HEAD^{tree}': unknown revision or path not in the working tree."
+      ]
+    }
+  ],
+  "source_fixture_sha256": "75caec14f84e0f388d0aaff92d9617223346a8cc895e28830b32e6e1237e2f14",
+  "production_module_sha256": "84093865e8477ef6562100d41137922785446c9cb4e024c9ba7105593a2b36c1",
+  "primary_tree_blob_count": 1848,
+  "artifact_count": 0,
+  "artifact_limitation": "No artifact uploads; individual before/after hash dictionaries are not published. Actual qualifier stdout receipt plus verified exact source asserts equality and1848 raw-primary files.",
+  "guard_scope": "8 unit methods/1 positive+11 negative controls each; corruption fatal stderr is expected negative fixture followed by ok",
+  "scope": "DISPOSABLE_MTLS_AND_LOCAL_READ_CAPABILITY_ONLY",
+  "nativeauthentication": false,
+  "cross_owner_read": "NOT_RUN",
+  "cp313_qualification": false,
+  "full_ci_qualification": false,
+  "f26_transfer": false,
+  "public_submit_admission": false,
+  "physical_admission": false,
+  "local_fixtures_run": false,
+  "source_edits": false,
+  "reruns": false,
+  "closure_decision": "A8 owns F38 closure assessment; evidence supports only this exact Gateway25 component run",
+  "not_transferred_to_pr79_head": "4f0429ce347f396fccecf83b6cfd4d0f9c467a2a"
+}

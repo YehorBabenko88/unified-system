@@ -1,0 +1,39 @@
+{
+  "scope": "REVIEWED_WORKFLOW_BOOTSTRAP_NOT_TARGET_CODE_OR_OS_ATTESTATION",
+  "qualifier_load_attempted": true,
+  "result": "QUALIFIER_RETURNED_SUCCESS",
+  "repository_cohort": {
+    "names": [
+      "YehorBabenko88/Terminan",
+      "YehorBabenko88/Terminan",
+      "YehorBabenko88/Terminan"
+    ],
+    "ids": [
+      "1413341784",
+      "1413341784",
+      "1413341784"
+    ],
+    "expected_name": "YehorBabenko88/Terminan",
+    "expected_id": "1413341784"
+  },
+  "tools": {
+    "python": {
+      "path": "C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\python.exe",
+      "sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a",
+      "role": "ISOLATED_BOOTSTRAP_QUALIFIER"
+    },
+    "git": {
+      "path": "C:\\Program Files\\Git\\bin\\git.exe",
+      "sha256": "20d0dde30a65afb6e5810a883700a94dcd77fbf3b44b32868d45bf7c9b30137c",
+      "role": "FIXED_PRIMARY_GIT_NO_CMD_FALLBACK"
+    },
+    "node": {
+      "path": "C:\\hostedtoolcache\\windows\\node\\24.22.1\\x64\\node.exe",
+      "sha256": "d702daa815eabbff763c7d3808e235cf031cf2ca70211b56847bc72f51e240e5",
+      "role": "SETUP_NODE_TEST_BINARY_OBSERVED_NOT_SIGNED_PROVENANCE"
+    }
+  },
+  "head": "e23abe3345379e41f979695136fd1261e3cbd238",
+  "qualifier_sha256": "8f7970f1dd6f1366110d04e35cca6179c7f7c159e3b7ad89bd276c108d865857",
+  "error_type": "SystemExit"
+}

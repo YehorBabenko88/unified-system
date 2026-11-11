@@ -1,0 +1,362 @@
+{
+  "actual_classifier_subcases_run": 24,
+  "actual_stock_matrix_observed": true,
+  "actual_stock_matrix_profile": {
+    "actual_return_records": {
+      "accept_aggregate_all_cap": "TRUE",
+      "accept_aggregate_single": "TRUE",
+      "accept_leaf": "TRUE",
+      "accept_max_depth": "TRUE",
+      "accept_max_nodes": "TRUE",
+      "accept_method_aggregate": "TRUE",
+      "accept_target_method_aggregate": "TRUE",
+      "reject_cap_prefix": "FALSE",
+      "reject_cycle": "FALSE",
+      "reject_deadline": "FALSE",
+      "reject_depth": "FALSE",
+      "reject_drain_deadline": "FALSE",
+      "reject_empty_aggregate": "FALSE",
+      "reject_launch_failure": "FALSE",
+      "reject_mixed_aggregate": "FALSE",
+      "reject_nested_mixed": "FALSE",
+      "reject_nodes": "FALSE",
+      "reject_nonleaf_cap": "FALSE",
+      "reject_null": "FALSE",
+      "reject_oversized_message": "FALSE",
+      "reject_truthy_nonexception": "FALSE",
+      "reject_unknown_wrapper": "FALSE",
+      "reject_unrelated": "FALSE",
+      "reject_wrong_case": "FALSE"
+    },
+    "attempts": [
+      {
+        "pid": 142644,
+        "returned_handle": true
+      }
+    ],
+    "child_retirement": [
+      {
+        "cleanup_needed": false,
+        "pid": 142644,
+        "returncode": 0,
+        "uncertain": false
+      }
+    ],
+    "elapsed_seconds": 0.5310000000754371,
+    "helper_sha256": "71818734af4f3e1badebec43afb867f106bb4cd692c3a013ad8d4f36126a6b71",
+    "native_authority": false,
+    "powershell_sha256": "60c9b29843624dd8af6b6a7b26147753be6aeef65098b9a503cc50850afe410f",
+    "primary_failure_type": null,
+    "raw_ps_output_independently_preserved": false,
+    "result": "ONE_UNIT_24_STOCK_SUBCASES_PASS",
+    "schema": "stock-matrix-observation.v1",
+    "started_ids": [
+      "native_output_cap_assertion_controls.NativeOutputCapAssertionControls.test_actual_shared_classifier_stock_exception_matrix"
+    ],
+    "subcases": [
+      {
+        "id": "accept_leaf",
+        "passed": true
+      },
+      {
+        "id": "accept_aggregate_single",
+        "passed": true
+      },
+      {
+        "id": "accept_aggregate_all_cap",
+        "passed": true
+      },
+      {
+        "id": "accept_method_aggregate",
+        "passed": true
+      },
+      {
+        "id": "accept_target_method_aggregate",
+        "passed": true
+      },
+      {
+        "id": "accept_max_depth",
+        "passed": true
+      },
+      {
+        "id": "accept_max_nodes",
+        "passed": true
+      },
+      {
+        "id": "reject_null",
+        "passed": true
+      },
+      {
+        "id": "reject_truthy_nonexception",
+        "passed": true
+      },
+      {
+        "id": "reject_deadline",
+        "passed": true
+      },
+      {
+        "id": "reject_drain_deadline",
+        "passed": true
+      },
+      {
+        "id": "reject_launch_failure",
+        "passed": true
+      },
+      {
+        "id": "reject_unrelated",
+        "passed": true
+      },
+      {
+        "id": "reject_wrong_case",
+        "passed": true
+      },
+      {
+        "id": "reject_cap_prefix",
+        "passed": true
+      },
+      {
+        "id": "reject_unknown_wrapper",
+        "passed": true
+      },
+      {
+        "id": "reject_nonleaf_cap",
+        "passed": true
+      },
+      {
+        "id": "reject_empty_aggregate",
+        "passed": true
+      },
+      {
+        "id": "reject_mixed_aggregate",
+        "passed": true
+      },
+      {
+        "id": "reject_nested_mixed",
+        "passed": true
+      },
+      {
+        "id": "reject_cycle",
+        "passed": true
+      },
+      {
+        "id": "reject_depth",
+        "passed": true
+      },
+      {
+        "id": "reject_nodes",
+        "passed": true
+      },
+      {
+        "id": "reject_oversized_message",
+        "passed": true
+      }
+    ],
+    "succeeded_ids": [
+      "native_output_cap_assertion_controls.NativeOutputCapAssertionControls.test_actual_shared_classifier_stock_exception_matrix"
+    ],
+    "test_id": "native_output_cap_assertion_controls.NativeOutputCapAssertionControls.test_actual_shared_classifier_stock_exception_matrix",
+    "test_sha256": "b822f4ec0d89240c1733b546eef3b00967c524da653ad802830c68b2b5f5191e"
+  },
+  "artifacts": {
+    "bootstrap.json": "ae3a19560506964b501fdc2780d208524dd7f15d9477a6201f5a6cbea76d4dfc",
+    "matrix-profile.json": "82f80a3e293fe5e19b38ac76cfd7716a609a77ab751a8ce522019c8215eee2a7",
+    "post-git-clean.stderr.original.bin": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "post-git-clean.stdout.original.bin": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "post-git-identities.stderr.original.bin": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "post-git-identities.stdout.original.bin": "a2e2a4939c6998f6c87d94d90696939cbb00e88de0e170801f72d60fbb86f71c",
+    "post-git-inventory.stderr.original.bin": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "post-git-inventory.stdout.original.bin": "3e9d8ef63d90d97aeceaee3d0ea633edb201d3101d8b2abd3c4721f887ea8b2f",
+    "pre-git-clean.stderr.original.bin": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "pre-git-clean.stdout.original.bin": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "pre-git-identities.stderr.original.bin": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "pre-git-identities.stdout.original.bin": "a2e2a4939c6998f6c87d94d90696939cbb00e88de0e170801f72d60fbb86f71c",
+    "pre-git-inventory.stderr.original.bin": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "pre-git-inventory.stdout.original.bin": "3e9d8ef63d90d97aeceaee3d0ea633edb201d3101d8b2abd3c4721f887ea8b2f",
+    "stock-matrix-unit.stderr.original.bin": "a9b8c329b73a415418274a44f75f7db221456f3fc7ea45fcc203415a68e51ae5",
+    "stock-matrix-unit.stdout.original.bin": "ff01634e60d449ddd6f733397e3a6ffad7f909a1c9d632ae2fe22e0bc80c0d61"
+  },
+  "elapsed_seconds": 5.936999999918044,
+  "fixture_import_allowed": false,
+  "native_authority": false,
+  "observed_owned_powershell_children": 1,
+  "process_roles": [
+    {
+      "cleanup_failures": [],
+      "cleanup_uncertain": false,
+      "combined_output_cap": 262144,
+      "denied": false,
+      "direct_child": true,
+      "evidence_failures": [],
+      "label": "pre-git-identities",
+      "local_bound_failures": [],
+      "local_completion_within_bound": true,
+      "observed_elapsed_including_cleanup_evidence": 0.0779999999795109,
+      "observed_output_bytes": 123,
+      "pid": 169080,
+      "primary_body_failure": null,
+      "reader_threads_retired": true,
+      "retired_returncode": 0,
+      "returncode": 0,
+      "role": "source_git_inspection",
+      "seconds_bound_including_cleanup": 10
+    },
+    {
+      "cleanup_failures": [],
+      "cleanup_uncertain": false,
+      "combined_output_cap": 262144,
+      "denied": false,
+      "direct_child": true,
+      "evidence_failures": [],
+      "label": "pre-git-inventory",
+      "local_bound_failures": [],
+      "local_completion_within_bound": true,
+      "observed_elapsed_including_cleanup_evidence": 0.0779999999795109,
+      "observed_output_bytes": 226906,
+      "pid": 169868,
+      "primary_body_failure": null,
+      "reader_threads_retired": true,
+      "retired_returncode": 0,
+      "returncode": 0,
+      "role": "source_git_inspection",
+      "seconds_bound_including_cleanup": 10
+    },
+    {
+      "cleanup_failures": [],
+      "cleanup_uncertain": false,
+      "combined_output_cap": 262144,
+      "denied": false,
+      "direct_child": true,
+      "evidence_failures": [],
+      "label": "pre-git-clean",
+      "local_bound_failures": [],
+      "local_completion_within_bound": true,
+      "observed_elapsed_including_cleanup_evidence": 0.125,
+      "observed_output_bytes": 0,
+      "pid": 153080,
+      "primary_body_failure": null,
+      "reader_threads_retired": true,
+      "retired_returncode": 0,
+      "returncode": 0,
+      "role": "source_git_inspection",
+      "seconds_bound_including_cleanup": 10
+    },
+    {
+      "cleanup_failures": [],
+      "cleanup_uncertain": false,
+      "combined_output_cap": 262144,
+      "denied": false,
+      "direct_child": true,
+      "evidence_failures": [],
+      "label": "stock-matrix-unit",
+      "local_bound_failures": [],
+      "local_completion_within_bound": true,
+      "observed_elapsed_including_cleanup_evidence": 0.9379999999655411,
+      "observed_output_bytes": 375,
+      "pid": 152736,
+      "primary_body_failure": null,
+      "reader_threads_retired": true,
+      "retired_returncode": 0,
+      "returncode": 0,
+      "role": "actual_classifier_unit_python",
+      "seconds_bound_including_cleanup": 15
+    },
+    {
+      "cleanup_failures": [],
+      "cleanup_uncertain": false,
+      "combined_output_cap": 262144,
+      "denied": false,
+      "direct_child": true,
+      "evidence_failures": [],
+      "label": "post-git-identities",
+      "local_bound_failures": [],
+      "local_completion_within_bound": true,
+      "observed_elapsed_including_cleanup_evidence": 0.06300000008195639,
+      "observed_output_bytes": 123,
+      "pid": 141388,
+      "primary_body_failure": null,
+      "reader_threads_retired": true,
+      "retired_returncode": 0,
+      "returncode": 0,
+      "role": "source_git_inspection",
+      "seconds_bound_including_cleanup": 10
+    },
+    {
+      "cleanup_failures": [],
+      "cleanup_uncertain": false,
+      "combined_output_cap": 262144,
+      "denied": false,
+      "direct_child": true,
+      "evidence_failures": [],
+      "label": "post-git-inventory",
+      "local_bound_failures": [],
+      "local_completion_within_bound": true,
+      "observed_elapsed_including_cleanup_evidence": 0.09399999992456287,
+      "observed_output_bytes": 226906,
+      "pid": 168800,
+      "primary_body_failure": null,
+      "reader_threads_retired": true,
+      "retired_returncode": 0,
+      "returncode": 0,
+      "role": "source_git_inspection",
+      "seconds_bound_including_cleanup": 10
+    },
+    {
+      "cleanup_failures": [],
+      "cleanup_uncertain": false,
+      "combined_output_cap": 262144,
+      "denied": false,
+      "direct_child": true,
+      "evidence_failures": [],
+      "label": "post-git-clean",
+      "local_bound_failures": [],
+      "local_completion_within_bound": true,
+      "observed_elapsed_including_cleanup_evidence": 0.10999999998603016,
+      "observed_output_bytes": 0,
+      "pid": 116204,
+      "primary_body_failure": null,
+      "reader_threads_retired": true,
+      "retired_returncode": 0,
+      "returncode": 0,
+      "role": "source_git_inspection",
+      "seconds_bound_including_cleanup": 10
+    }
+  ],
+  "remaining_new_threads": 0,
+  "result": "ONE_UNIT_24_STOCK_SUBCASES_QUALIFIED",
+  "runtime_after": {
+    "bound_files": 841,
+    "empty_external_pycache_prefix": true,
+    "real_python_sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a",
+    "transitive_os_dll_release_closure": "NOT_PROVEN"
+  },
+  "runtime_before": {
+    "bound_files": 841,
+    "empty_external_pycache_prefix": true,
+    "real_python_sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a",
+    "transitive_os_dll_release_closure": "NOT_PROVEN"
+  },
+  "schema": "native-output-cap-stock-matrix.v1",
+  "scope": "One Python unittest / 24 stock managed exception subcases and one owned PowerShell child; six separate source Git roles. No native C#Run, installation, service, family-hardwall or hostwide process qualification.",
+  "source_after": {
+    "files": 1873,
+    "head": "d69b699466fb8b15785e0a4e886cbf60c8c91dd3",
+    "helper_present_and_pinned": true,
+    "no_extras": true,
+    "raw_git_and_physical_match": true,
+    "source_single_links": true,
+    "tree": "c1fef5f97d1ec475ddcc7d1be02a1d3cd69d8b9c"
+  },
+  "source_before": {
+    "files": 1873,
+    "head": "d69b699466fb8b15785e0a4e886cbf60c8c91dd3",
+    "helper_present_and_pinned": true,
+    "no_extras": true,
+    "raw_git_and_physical_match": true,
+    "source_single_links": true,
+    "tree": "c1fef5f97d1ec475ddcc7d1be02a1d3cd69d8b9c"
+  },
+  "source_head": "d69b699466fb8b15785e0a4e886cbf60c8c91dd3",
+  "source_parent": "756a6701421e804a116a50f997bc015643af341c",
+  "source_tree": "c1fef5f97d1ec475ddcc7d1be02a1d3cd69d8b9c",
+  "stock_matrix_nonmain_source_load_allowed": true
+}

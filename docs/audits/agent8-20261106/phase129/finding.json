@@ -1,0 +1,12 @@
+{
+  "id": "A8-F28",
+  "severity": "P2",
+  "repository": "bybit-cluster-grid",
+  "pr": 277,
+  "observed_head": "19fae71db66a24f7be7bfa8d1682e1831c4720c4",
+  "title": "Failed RootRegistrationCustody context entry retains owned file descriptors and lock",
+  "status": "OPEN_ACTUAL_LOCAL_REPRODUCED",
+  "test": "Own sidecar created between construction and with entry; actual contender before/after explicit cleanup",
+  "evidence": "phase129/executed.py;phase129/stdout.json;phase129/receipt.json",
+  "required_correction": "Separate local successor: if __enter__ validation fails, close only this adapter owned handles, preserve original entry exception if close also fails, never delete persistent lock/DB or foreign resources. Add actual failed-entry regression and independently qualify exact source; old19fae71 immutable."
+}

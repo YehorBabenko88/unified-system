@@ -1,0 +1,453 @@
+{
+  "scope": "ORIGINAL_PR80_WHOLE_COHORT_DATA_NOT_FULLSYSTEM_ACCEPTANCE",
+  "head": "dfb5a2947070c8ebef0b22d9c97719b924909b39",
+  "tree": "dcec97f87f661a5c364775d9a346d17b67db8427",
+  "runs": [
+    {
+      "id": 43046379915,
+      "conclusion": "success",
+      "jobs": 4
+    },
+    {
+      "id": 43046405175,
+      "conclusion": "success",
+      "jobs": 1
+    },
+    {
+      "id": 43046405180,
+      "conclusion": "success",
+      "jobs": 2
+    },
+    {
+      "id": 43046405189,
+      "conclusion": "success",
+      "jobs": 4
+    },
+    {
+      "id": 43046405314,
+      "conclusion": "success",
+      "jobs": 6
+    },
+    {
+      "id": 43046405525,
+      "conclusion": "failure",
+      "jobs": 9
+    }
+  ],
+  "fresh_API": "PR80_DRAFT_EXACT_HEAD_BASE_COMMIT_TREE_6RUN_JOB_ARTIFACT_SETS",
+  "jobs": 26,
+  "workflowSUCCESS": 5,
+  "workflowFAILURE": 1,
+  "original26artifacts": [
+    {
+      "run": 43046379915,
+      "artifact": 13868465463,
+      "sha256": "d811bb33f9a938f6846c212deb95be62cb0ce656a92122cc9550ba6ea1e557c6",
+      "xml": [
+        {
+          "member": "pytest.xml",
+          "testcase_elements": 2166,
+          "failures": 0,
+          "errors": 0,
+          "skips": 54
+        }
+      ],
+      "financial": []
+    },
+    {
+      "run": 43046379915,
+      "artifact": 13867356843,
+      "sha256": "b1aea100f9fe211e2fa5e53325b75058f153c2d53dcd90469097726f137d4ef0",
+      "xml": [
+        {
+          "member": "pytest.xml",
+          "testcase_elements": 2166,
+          "failures": 0,
+          "errors": 0,
+          "skips": 54
+        }
+      ],
+      "financial": []
+    },
+    {
+      "run": 43046379915,
+      "artifact": 13867253638,
+      "sha256": "a3ba1ad81c058b73e7d8b5a393bd34c98c1a4dea6c3def677a9f34899d5d2f90",
+      "xml": [
+        {
+          "member": "pytest.xml",
+          "testcase_elements": 2166,
+          "failures": 0,
+          "errors": 0,
+          "skips": 28
+        }
+      ],
+      "financial": []
+    },
+    {
+      "run": 43046379915,
+      "artifact": 13867098774,
+      "sha256": "2fd8a9ccdf6695b1f6ab60f6fb38c65281aa52edd7667fde9b5430f144df3975",
+      "xml": [
+        {
+          "member": "pytest.xml",
+          "testcase_elements": 2166,
+          "failures": 0,
+          "errors": 0,
+          "skips": 28
+        }
+      ],
+      "financial": []
+    },
+    {
+      "run": 43046405175,
+      "artifact": 13868460121,
+      "sha256": "fbcbaeb150cf7868c82f544ca5935465e02f5fc8d55f1d2b22a31553ea90f939",
+      "xml": [
+        {
+          "member": "regressions.xml",
+          "testcase_elements": 14,
+          "failures": 0,
+          "errors": 0,
+          "skips": 0
+        }
+      ],
+      "financial": []
+    },
+    {
+      "run": 43046405180,
+      "artifact": 13868230213,
+      "sha256": "0a62ea7a4ac2eb91358a0e36fe6a10da8d115563dc172a607d113ca47c66c298",
+      "xml": [],
+      "financial": []
+    },
+    {
+      "run": 43046405180,
+      "artifact": 13867511306,
+      "sha256": "d0dc210d1740d65a568ca0cfcddf10712d0c0a538e3788c011c3652547388bf2",
+      "xml": [],
+      "financial": []
+    },
+    {
+      "run": 43046405189,
+      "artifact": 13868310982,
+      "sha256": "9f7f03daadf7a01865bf20c28202a9e09d0df92f915fd0891855455f1ef175ff",
+      "xml": [
+        {
+          "member": "pytest.xml",
+          "testcase_elements": 2166,
+          "failures": 0,
+          "errors": 0,
+          "skips": 28
+        }
+      ],
+      "financial": []
+    },
+    {
+      "run": 43046405189,
+      "artifact": 13868255559,
+      "sha256": "fa7a10e3f71b610f5ad4a5f87b7235fd116e8e8758f60bbc902b7139033bba7c",
+      "xml": [
+        {
+          "member": "pytest.xml",
+          "testcase_elements": 2166,
+          "failures": 0,
+          "errors": 0,
+          "skips": 54
+        }
+      ],
+      "financial": []
+    },
+    {
+      "run": 43046405189,
+      "artifact": 13867941368,
+      "sha256": "5f7354457b11a26e7d91c4df74a2804775867bfbd2be8bbdc504c32b205da2ab",
+      "xml": [
+        {
+          "member": "pytest.xml",
+          "testcase_elements": 2166,
+          "failures": 0,
+          "errors": 0,
+          "skips": 28
+        }
+      ],
+      "financial": []
+    },
+    {
+      "run": 43046405189,
+      "artifact": 13866754884,
+      "sha256": "5e021c469ceab2b1a9bd06bb0cf930fbd9658e38b8caaa9be634396659b6e6a8",
+      "xml": [
+        {
+          "member": "pytest.xml",
+          "testcase_elements": 2166,
+          "failures": 0,
+          "errors": 0,
+          "skips": 54
+        }
+      ],
+      "financial": []
+    },
+    {
+      "run": 43046405314,
+      "artifact": 13868005617,
+      "sha256": "6a0c41aa38380b5413d45b1dfe35f0d91d8aaa3c73f844f6c6d8019fdaa8dfd4",
+      "xml": [
+        {
+          "member": "tests.xml",
+          "testcase_elements": 254,
+          "failures": 0,
+          "errors": 0,
+          "skips": 0
+        }
+      ],
+      "financial": []
+    },
+    {
+      "run": 43046405314,
+      "artifact": 13867681092,
+      "sha256": "90a68aa11a4d74fdad21025443ab670219bdc74eeaa3e7acdf9e78fb2b309666",
+      "xml": [
+        {
+          "member": "tests.xml",
+          "testcase_elements": 254,
+          "failures": 0,
+          "errors": 0,
+          "skips": 0
+        }
+      ],
+      "financial": []
+    },
+    {
+      "run": 43046405314,
+      "artifact": 13867496417,
+      "sha256": "ab82cf23999c63198970864ac5890ac78b7d02f61422c626df23841e394ffac8",
+      "xml": [
+        {
+          "member": "tests.xml",
+          "testcase_elements": 254,
+          "failures": 0,
+          "errors": 0,
+          "skips": 0
+        }
+      ],
+      "financial": []
+    },
+    {
+      "run": 43046405314,
+      "artifact": 13867411349,
+      "sha256": "01d9af9f2337377333c938a08c26d6097951813759b784ad76c0b25dd9107fc8",
+      "xml": [
+        {
+          "member": "tests.xml",
+          "testcase_elements": 254,
+          "failures": 0,
+          "errors": 0,
+          "skips": 0
+        }
+      ],
+      "financial": []
+    },
+    {
+      "run": 43046405314,
+      "artifact": 13867292447,
+      "sha256": "232377c7de7a3b1bdc3733539eec7531c8cefaeae66ffe2a9c9a31bf479f89da",
+      "xml": [
+        {
+          "member": "tests.xml",
+          "testcase_elements": 254,
+          "failures": 0,
+          "errors": 0,
+          "skips": 0
+        }
+      ],
+      "financial": []
+    },
+    {
+      "run": 43046405314,
+      "artifact": 13866699579,
+      "sha256": "aa0352fd940a10e2edb6adb2efbdecf43ee55bd562d9dce4bf4edf78fea793ac",
+      "xml": [
+        {
+          "member": "tests.xml",
+          "testcase_elements": 254,
+          "failures": 0,
+          "errors": 0,
+          "skips": 0
+        }
+      ],
+      "financial": []
+    },
+    {
+      "run": 43046405525,
+      "artifact": 13868085367,
+      "sha256": "a70c521c6512b35518e0494e0437c3a3fbc02eba6463408d3efebb6483ce6d5d",
+      "xml": [
+        {
+          "member": "data.xml",
+          "testcase_elements": 200,
+          "failures": 0,
+          "errors": 0,
+          "skips": 0
+        }
+      ],
+      "financial": []
+    },
+    {
+      "run": 43046405525,
+      "artifact": 13867476315,
+      "sha256": "66634b4231feb9addf2fe9fd6f8aad4efda907791f2344e9cd5c0185f208574c",
+      "xml": [
+        {
+          "member": "native-tests.xml",
+          "testcase_elements": 30,
+          "failures": 0,
+          "errors": 0,
+          "skips": 0
+        }
+      ],
+      "financial": []
+    },
+    {
+      "run": 43046405525,
+      "artifact": 13867237689,
+      "sha256": "b7600114cebec6a547cadf6ba4ec62740c89320273d44c0cafbc9a54188a2bdc",
+      "xml": [
+        {
+          "member": "integration.xml",
+          "testcase_elements": 125,
+          "failures": 0,
+          "errors": 0,
+          "skips": 0
+        }
+      ],
+      "financial": []
+    },
+    {
+      "run": 43046405525,
+      "artifact": 13867042802,
+      "sha256": "38cb5ace44a8c797f43f4a1ce8bf65b1f126cbc0466721f7af880e2ebb5c27d4",
+      "xml": [
+        {
+          "member": "cpu.xml",
+          "testcase_elements": 141,
+          "failures": 0,
+          "errors": 0,
+          "skips": 0
+        }
+      ],
+      "financial": []
+    },
+    {
+      "run": 43046405525,
+      "artifact": 13867022894,
+      "sha256": "cabc11499f33c7bb2bb4f2de99ae19f61e14427e02393e3eaee9dc0709456d97",
+      "xml": [
+        {
+          "member": "training.xml",
+          "testcase_elements": 85,
+          "failures": 0,
+          "errors": 0,
+          "skips": 0
+        }
+      ],
+      "financial": []
+    },
+    {
+      "run": 43046405525,
+      "artifact": 13866919275,
+      "sha256": "c56f19415eda66610e80a19931b11de4ccb9d096da7d0c9bdd571d60dbe8efd9",
+      "xml": [],
+      "financial": [
+        {
+          "schema": 1,
+          "sha": "dfb5a2947070c8ebef0b22d9c97719b924909b39",
+          "status": "BLOCKED",
+          "trading": "NO-GO",
+          "physical_g1": "NOT_AUTHORIZED",
+          "failed": [],
+          "external": {
+            "windows_native_isolation": "BLOCKED",
+            "full_upstream_equivalence": "BLOCKED",
+            "owner_g1_authorization": "BLOCKED",
+            "real_oos": "BLOCKED",
+            "physical_g0": "BLOCKED",
+            "gpu": "BLOCKED",
+            "grid_coherent_snapshot": "BLOCKED"
+          },
+          "claimed_external": {
+            "grid_coherent_snapshot": "BLOCKED",
+            "real_oos": "BLOCKED",
+            "gpu": "BLOCKED",
+            "full_upstream_equivalence": "BLOCKED"
+          },
+          "evidence_authenticity": "UNVERIFIED_SELF_REPORT",
+          "gates": {
+            "core": "PASS",
+            "data": "PASS",
+            "math": "PASS",
+            "cpu": "PASS",
+            "training": "PASS",
+            "security": "PASS",
+            "integration": "PASS"
+          }
+        }
+      ]
+    },
+    {
+      "run": 43046405525,
+      "artifact": 13866754436,
+      "sha256": "bbf6d927f9dcee30d65aa478cba332f6487c7efa6a21e09983c4e66e522f97cc",
+      "xml": [
+        {
+          "member": "math.xml",
+          "testcase_elements": 191,
+          "failures": 0,
+          "errors": 0,
+          "skips": 0
+        }
+      ],
+      "financial": []
+    },
+    {
+      "run": 43046405525,
+      "artifact": 13866479298,
+      "sha256": "a5697bf7472dc24cce4b0f0f0a8b8d38d7fc3eecef92215ce5a0a826cbaab60c",
+      "xml": [
+        {
+          "member": "security.xml",
+          "testcase_elements": 524,
+          "failures": 0,
+          "errors": 0,
+          "skips": 0
+        }
+      ],
+      "financial": []
+    },
+    {
+      "run": 43046405525,
+      "artifact": 13866449225,
+      "sha256": "3149982f6bf5dea2d3fe9d9d6e63a422f68d3c235f34e97777a754937775248d",
+      "xml": [
+        {
+          "member": "core.xml",
+          "testcase_elements": 594,
+          "failures": 0,
+          "errors": 0,
+          "skips": 0
+        }
+      ],
+      "financial": []
+    }
+  ],
+  "JUnit": "23ZEROFAIL_ERROR;CORE2166ELEMENTS_SUITE2201_WITH35SUBTESTS;WINDOWS28SKIPS_LINUX54SKIPS",
+  "financial": "ENGINEERING_NATIVE_JOB_SUCCESS_AGGREGATE_BLOCKED_EXTERNAL_AUTHENTICITY_UNVERIFIED_SELF_REPORT",
+  "mandatory_all_CI": "NOT_ALL_PASS",
+  "skip_waiver": "NOT_INDEPENDENTLY_ACCEPTED_HERE",
+  "alias_RCA": "UNKNOWN",
+  "old88947": "NOT_TRANSFERRED",
+  "A8_owner_execution": false,
+  "GO_NO_GO": "NO-GO",
+  "PHYSICAL_TESTS": "BLOCKED",
+  "TAILSCALE_REMOVAL": "BLOCKED"
+}

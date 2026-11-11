@@ -1,0 +1,490 @@
+diff --git a/.github/workflows/preparation-integrity.yml b/.github/workflows/preparation-integrity.yml
+index 1caddb8..28d29af 100644
+--- a/.github/workflows/preparation-integrity.yml
++++ b/.github/workflows/preparation-integrity.yml
+@@ -37,23 +37,47 @@ jobs:
+       - name: Bind runner-local path after runner assignment
+         shell: python -I -S -B {0}
+         run: |
+-          import os, pathlib
++          import json, os, pathlib, sys
+           base=pathlib.Path(os.environ['RUNNER_TEMP'])/('preparation-'+os.environ['GITHUB_RUN_ID']+'-'+os.environ['GITHUB_RUN_ATTEMPT'])
++          base.mkdir(parents=True,exist_ok=False)
++          (base/'bootstrap.json').write_text(json.dumps(dict(stage='RUNNER_PATH_BOUND',python=sys.version,expected_head=os.environ['EXPECTED_HEAD'],run_id=os.environ['GITHUB_RUN_ID'],attempt=os.environ['GITHUB_RUN_ATTEMPT'],passed=False),sort_keys=True)+'\n')
+           with open(os.environ['GITHUB_ENV'],'a',encoding='utf-8') as stream:
+               stream.write('QUALIFICATION_BASE='+str(base)+'\n')
+       - name: Download and verify pinned timezone data without importing it
+         shell: bash
+         run: |
+           python -I -S -B - <<'PY'
+-          import hashlib, os, pathlib, stat, subprocess, sys, zipfile
++          import hashlib, json, os, pathlib, stat, subprocess, sys, zipfile
+           root=pathlib.Path.cwd().resolve()
+-          git=pathlib.Path('C:/Program Files/Git/cmd/git.exe' if os.name=='nt' else '/usr/bin/git')
+-          assert git.is_absolute() and not git.is_relative_to(root)
+-          for item in [git,*git.parents]:
+-              info=item.lstat()
+-              assert not item.is_symlink() and not getattr(info,'st_file_attributes',0)&1024
+-              assert (stat.S_ISREG(info.st_mode) and info.st_nlink==1) if item==git else stat.S_ISDIR(info.st_mode)
+-          assert os.name=='nt' or git.stat().st_mode&0o111
++          git=pathlib.Path('C:/Program Files/Git/bin/git.exe' if os.name=='nt' else '/usr/bin/git')
++          base=pathlib.Path(os.environ['QUALIFICATION_BASE'])
++          report=dict(selected_git=str(git),passed=False,raw_sha256=None,ancestors=[],errors=[])
++          report['file']=None
++          def inspect(item):
++              entry=dict(path=str(item))
++              try:
++                  info=item.lstat()
++                  entry.update(mode=info.st_mode,dev=info.st_dev,inode=info.st_ino,nlink=info.st_nlink,size=info.st_size,mtime_ns=info.st_mtime_ns,ctime_ns=info.st_ctime_ns,attributes=getattr(info,'st_file_attributes',0),symlink=item.is_symlink())
++              except OSError as error:
++                  entry['error']=type(error).__name__
++              return entry
++          if not git.is_absolute() or git.is_relative_to(root): report['errors'].append('Git must be absolute and external')
++          if not report['errors']:
++              for item in reversed(git.parents):
++                  entry=inspect(item);report['ancestors'].append(entry)
++                  if 'mode' not in entry or not stat.S_ISDIR(entry['mode']) or entry['symlink'] or entry['attributes']&1024:
++                      report['errors'].append('nonordinary Git parent');break
++          if not report['errors']:
++              file=inspect(git);report['file']=file
++              if 'mode' not in file or not stat.S_ISREG(file['mode']) or file['symlink'] or file['nlink']!=1 or file['attributes']&1024 or file['size']>64*1024*1024: report['errors'].append('nonordinary Git executable')
++              if os.name!='nt' and ('mode' not in file or not file['mode']&0o111): report['errors'].append('Git is not executable')
++          if not report['errors']:
++              try: report['raw_sha256']=hashlib.sha256(git.read_bytes()).hexdigest()
++              except OSError as error: report['errors'].append(type(error).__name__)
++          (base/'download-git-preflight.json').write_text(json.dumps(report,sort_keys=True,indent=2)+'\n')
++          if report['errors']: raise ValueError('; '.join(report['errors']))
++          report['passed']=True
++          (base/'download-git-preflight.json').write_text(json.dumps(report,sort_keys=True,indent=2)+'\n')
+           def raw(*args):
+               return subprocess.check_output([str(git),'--no-replace-objects','--no-optional-locks','-c','core.fsmonitor=false',*args],timeout=30)
+           head=os.environ['EXPECTED_HEAD']
+@@ -63,7 +87,6 @@ jobs:
+           pin='1a403fada01ff9221ca8044d701868fa132215d84beb92242d9acd2147f667a8'
+           line='tzdata==2025.2 --hash=sha256:'+pin
+           assert line in (root/lock).read_text().splitlines()
+-          base=pathlib.Path(os.environ['QUALIFICATION_BASE']);base.mkdir(exist_ok=False)
+           (base/'tzdata.lock').write_text(line+'\n')
+           command=[sys.executable,'-I','-B','-m','pip','--isolated','download','--no-cache-dir','--no-deps','--only-binary=:all:','--require-hashes','--dest',str(base/'wheels'),'-r',str(base/'tzdata.lock')]
+           with (base/'download.log').open('wb') as log:
+@@ -79,15 +102,37 @@ jobs:
+         shell: bash
+         run: |
+           python -I -S -B - <<'PY'
+-          import hashlib, os, pathlib, stat, subprocess, sys
++          import hashlib, json, os, pathlib, stat, subprocess, sys
+           root=pathlib.Path.cwd().resolve()
+-          git=pathlib.Path('C:/Program Files/Git/cmd/git.exe' if os.name=='nt' else '/usr/bin/git')
+-          assert git.is_absolute() and not git.is_relative_to(root)
+-          for item in [git,*git.parents]:
+-              info=item.lstat()
+-              assert not item.is_symlink() and not getattr(info,'st_file_attributes',0)&1024
+-              assert (stat.S_ISREG(info.st_mode) and info.st_nlink==1) if item==git else stat.S_ISDIR(info.st_mode)
+-          assert os.name=='nt' or git.stat().st_mode&0o111
++          git=pathlib.Path('C:/Program Files/Git/bin/git.exe' if os.name=='nt' else '/usr/bin/git')
++          base=pathlib.Path(os.environ['QUALIFICATION_BASE'])
++          report=dict(selected_git=str(git),passed=False,raw_sha256=None,ancestors=[],errors=[])
++          report['file']=None
++          def inspect(item):
++              entry=dict(path=str(item))
++              try:
++                  info=item.lstat()
++                  entry.update(mode=info.st_mode,dev=info.st_dev,inode=info.st_ino,nlink=info.st_nlink,size=info.st_size,mtime_ns=info.st_mtime_ns,ctime_ns=info.st_ctime_ns,attributes=getattr(info,'st_file_attributes',0),symlink=item.is_symlink())
++              except OSError as error:
++                  entry['error']=type(error).__name__
++              return entry
++          if not git.is_absolute() or git.is_relative_to(root): report['errors'].append('Git must be absolute and external')
++          if not report['errors']:
++              for item in reversed(git.parents):
++                  entry=inspect(item);report['ancestors'].append(entry)
++                  if 'mode' not in entry or not stat.S_ISDIR(entry['mode']) or entry['symlink'] or entry['attributes']&1024:
++                      report['errors'].append('nonordinary Git parent');break
++          if not report['errors']:
++              file=inspect(git);report['file']=file
++              if 'mode' not in file or not stat.S_ISREG(file['mode']) or file['symlink'] or file['nlink']!=1 or file['attributes']&1024 or file['size']>64*1024*1024: report['errors'].append('nonordinary Git executable')
++              if os.name!='nt' and ('mode' not in file or not file['mode']&0o111): report['errors'].append('Git is not executable')
++          if not report['errors']:
++              try: report['raw_sha256']=hashlib.sha256(git.read_bytes()).hexdigest()
++              except OSError as error: report['errors'].append(type(error).__name__)
++          (base/'qualifier-git-preflight.json').write_text(json.dumps(report,sort_keys=True,indent=2)+'\n')
++          if report['errors']: raise ValueError('; '.join(report['errors']))
++          report['passed']=True
++          (base/'qualifier-git-preflight.json').write_text(json.dumps(report,sort_keys=True,indent=2)+'\n')
+           head=os.environ['EXPECTED_HEAD'];name='tools/ci/qualify_preparation_integrity.py'
+           def raw(*args):
+               return subprocess.check_output([str(git),'--no-replace-objects','--no-optional-locks','-c','core.fsmonitor=false',*args],timeout=30)
+diff --git a/docs/ci/preparation-windows-preflight-review.md b/docs/ci/preparation-windows-preflight-review.md
+new file mode 100644
+index 0000000..1cd29e9
+--- /dev/null
++++ b/docs/ci/preparation-windows-preflight-review.md
+@@ -0,0 +1,24 @@
++# Preparation Windows Git preflight correction
++
++Source-only repair based on clean Root96b17905a5be923857aa1e778085eaeec6f0f27f. Original Windows job130055333038 stopped at the inline ordinary-Git condition before Scheduler tests. The original log does not identify which conjunct failed or provide the selected file's metadata. Do not relabel that original run PASS or infer its exact hosted filesystem condition from LS5.
++
++Read-only LS5 comparison found C:/Program Files/Git/cmd/git.exe nlink2 and C:/Program Files/Git/bin/git.exe nlink1. Both are43352bytes with SHA25678211c7ed73988da93a6d8a33d47ec6187f464d7ea2a9a00c182bbd7a1ecf30f. No Git file or installation was modified and neither executable was launched by this comparison.
++
++The workflow's two bootstrap sites and the qualifier now explicitly select C:/Program Files/Git/bin/git.exe on Windows, /usr/bin/git on Ubuntu. There is no PATH lookup, fallback or relaxation of ordinary-file, single-link, ancestor, symlink/reparse, external-root or executable-mode checks. Existing no-replacement/no-optional-lock/fsmonitor-disabled arguments remain. Git bytes are read only after absolute/external, root-first ordinary ancestry, selected-file/single-link/executable and64MiB gates pass. Unsafe ancestry stops traversal before selected-file inspection and leaves raw_sha256 null; all execution gates still apply.
++
++The runner-path binding step creates its new external QUALIFICATION_BASE and writes bootstrap.json before subsequent source/Git checks. Both inline sites preserve stage-specific Git preflight JSON before refusal or spawn: selected absolute path, raw SHA256 where safely readable, file mode/device/inode/linkcount/size/timestamps/attributes/symlink observation, ancestor observations/errors and passed=false. The driver's Git preflight similarly persists under its external evidence directory. Passing the path preflight does not qualify source, dependency, tests or runtime. Existing always-upload evidence artifact handling is retained.
++
++TDD evidence: two added pure controls produced original RED11 with one selector assertion failure and one missing evidence-API error; after minimal implementation all11pure controls passed0skip in0.157s. The new metadata control also retains hardlink refusal using only owned inert temporary files, with subprocess launch forbidden. Static workflow Python blocks compile; external evidence creation precedes Git checks. No actual qualifier/main, Scheduler36, tempSQLite, crash child, socket, native, provider or office fixture was executed. The old30 inventory, six integrity IDs, mandatory36 gate, original crash command, existing workflows and all source outside the four allocated paths are untouched. Pure-control count9→11 is explicit.
++
++Preserved local evidence directory: C:/Users/LS-5/.codex/preparation-win-preflight-evidence-20261110.
++
++| Original evidence | SHA256 |
++| --- | --- |
++| red-11.txt | d164f81562e6e2af5749ebb4959628ea2a40917b9b719bbc13ebdf8b2ba02992 |
++| final-green-11.txt | 75a7cf2808d6fbca6bb994c95ab7174352b181b09852f940a74f5893ab66c964 |
++| local-git-readonly-stat.json | b9fe81133374f2062d2cf000410be1b1bd030793a318bd715bfb44ce7e01132b |
++
++This repair is prepared for Draft source review. No dispatch, rerun, cancellation, inventory waiver, workflow removal, Windows/hosted PASS, native/runtime/physical admission or policy change is claimed. New-source hosted qualification uses the existing authorized CI cohort; original failures remain immutable.
++
++
++Independent-review correction: the first diagnostic implementation inspected/hashed the selected file before validating its ancestors. This was a new preflight regression, not a defect attributed to the original hosted source. A new pure mocked-reparse-parent control reproduced selected-file traversal before rejection (unsafe-parent-red-12.txt). Corrected helper and both inline clones validate ancestors root-first and stop below the first unsafe parent; metadata persists passed=false/file=null/raw_sha256=null. The test forbids selected-file lstat/read_bytes and subprocess launch. The existing repository-local and hardlink controls now also require null diagnostic hashes on refusal. Twelve pure controls pass0skip in0.144s (unsafe-parent-green-12.txt). No actual qualifier or Scheduler fixtures were executed after this correction.
+diff --git a/release/integration-snapshots/20261110-root96.json b/release/integration-snapshots/20261110-root96.json
+new file mode 100644
+index 0000000..57491e0
+--- /dev/null
++++ b/release/integration-snapshots/20261110-root96.json
+@@ -0,0 +1,196 @@
++{
++  "schema": "unified.integration.source-observation.v1",
++  "snapshot_id": "20261110-root96",
++  "status": "IN_PROGRESS_NO_GO",
++  "approval": "SOURCE_OBSERVATION_ONLY",
++  "repositories": [
++    {
++      "repository": "YehorBabenko88/unified-system",
++      "head": "96b17905a5be923857aa1e778085eaeec6f0f27f",
++      "tree": "e868213d3fd47739c05aa1fc9f70a8d7658a1333",
++      "role": "OBSERVED_DRAFT_SOURCE_NOT_ADMITTED_RUNTIME"
++    },
++    {
++      "repository": "YehorBabenko88/bybit-cluster-grid",
++      "head": "fb177d14b1e6e399bd9b66ae7cb35d3838acbd81",
++      "tree": "2cba4b0a1ee7621ef213600d6334db8e9ac7dae1",
++      "role": "OBSERVED_DRAFT_SOURCE_NOT_ADMITTED_RUNTIME"
++    },
++    {
++      "repository": "YehorBabenko88/strattester",
++      "head": "887e3eeaf23ef8d9d1429435bc88bbac8099c6e6",
++      "tree": "954f3364cb70369705f658e89fcc6ae8ce547eec",
++      "role": "OBSERVED_DRAFT_SOURCE_NOT_ADMITTED_RUNTIME"
++    },
++    {
++      "repository": "YehorBabenko88/math",
++      "head": "2446d04624469e34aa96ed766be7a4887d6d654c",
++      "tree": "12c4e3cbd3557c7f4f634f5241c7e4b51eafba4f",
++      "role": "OBSERVED_DRAFT_SOURCE_NOT_ADMITTED_RUNTIME"
++    },
++    {
++      "repository": "YehorBabenko88/meta_analyse",
++      "head": "f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1",
++      "tree": "c155c935a801fa98b7c78219c9798ce1f1be8848",
++      "role": "OBSERVED_DRAFT_SOURCE_NOT_ADMITTED_RUNTIME"
++    },
++    {
++      "repository": "YehorBabenko88/Terminan",
++      "head": "dc810b03c3accf0e6f28fca1d5068f4171bb909d",
++      "tree": "d5bbb6f73c841ba93ae74354ea72cc0989212d92",
++      "role": "OBSERVED_DRAFT_SOURCE_NOT_ADMITTED_RUNTIME"
++    }
++  ],
++  "not_a_release_candidate": true,
++  "source_combination_executed": false,
++  "root_draft_pr": "https://github.com/YehorBabenko88/unified-system/pull/82",
++  "inventory": [
++    {
++      "node": "LS5",
++      "role": "CENTRAL_COORDINATOR",
++      "qualification": "LEVEL1_SCOPED_PILOT_ONLY"
++    },
++    {
++      "node": "PC3",
++      "role": "COORDINATOR",
++      "qualification": "READ_ONLY_ONLY"
++    },
++    {
++      "node": "PC4",
++      "role": "COORDINATOR",
++      "qualification": "SMOKE_BLOCKED_NONADMIN_CHANNEL_UNCONFIRMED"
++    },
++    {
++      "node": "PC2",
++      "role": "WORKER",
++      "qualification": "RESOURCE_QUALIFICATION_PENDING_NO_USER_PROCESS_CHANGES"
++    },
++    {
++      "node": "PC1",
++      "role": "WINDOWS_HOME_WORKER",
++      "qualification": "INDEPENDENT_HOME_QUALIFICATION_PENDING"
++    },
++    {
++      "node": "LS7",
++      "role": "WINDOWS_HOME_WORKER",
++      "qualification": "INDEPENDENT_HOME_QUALIFICATION_PENDING"
++    }
++  ],
++  "excluded_nodes": [
++    "ADMINIT"
++  ],
++  "contracts": [
++    {
++      "name": "atomic-read-bridge-design",
++      "sha256": "7c4d9024a0cc78c51f2fceb4efd451d9ec9855f939be0a6b2daa92c4aded46ff",
++      "status": "EXACT_A2_A4_A5_A6_A8_DESIGN_ACK_ONLY; TEST_SOURCE_PREPARATION_ALLOCATED; PRODUCTION_EDIT_HELD"
++    },
++    {
++      "name": "LAN_Approach_A_owner_approved_design",
++      "sha256": "f0d2eb3ccd96d263bdbedc2a2bcdd43238a542807c81e7e2531dccb9225cd7f8",
++      "status": "ISOLATED_IMPLEMENTATION_APPROVED_NOT_RUNTIME_ADMISSION"
++    },
++    {
++      "name": "Bybit_egress_frozen_profile",
++      "sha256": "16606dee585398ae6d92139ffc1cf2ed37a4d2e08759aaa08f0c3b85958b8049",
++      "status": "PROVIDER_SENDS_BLOCKED"
++    }
++  ],
++  "hosted_observations": [
++    {
++      "family": "MissionController58",
++      "run": 42880543983,
++      "status": "ORIGINAL_ARTIFACTS_VERIFIED_WINDOWS_UBUNTU_SCOPED",
++      "evidence_sha256": "d4efd1499fa01cce90469d4f36aa176882065a2ec9360498c9e3de6614c206cf"
++    },
++    {
++      "family": "LAN68",
++      "run": 42880544189,
++      "status": "RUN_SUCCESS_ORIGINAL_EVIDENCE_REVIEW_PENDING"
++    },
++    {
++      "family": "Component161",
++      "run": 42880544101,
++      "status": "RUN_SUCCESS_ORIGINAL_EVIDENCE_REVIEW_PENDING"
++    },
++    {
++      "family": "Gateway25",
++      "run": 42880544065,
++      "status": "RUN_SUCCESS_ORIGINAL_LOG_REVIEW_PENDING"
++    },
++    {
++      "family": "Supervisor132",
++      "run": 42880544083,
++      "status": "RUN_SUCCESS_ORIGINAL_EVIDENCE_REVIEW_PENDING"
++    },
++    {
++      "family": "Preparation36",
++      "run": 42880544154,
++      "status": "WINDOWS_PREFLIGHT_FAILURE; UBUNTU_SUCCESS_ORIGINAL_REVIEW_PENDING"
++    }
++  ],
++  "safety": {
++    "public_submit": "DENY",
++    "logical_mutations": "DISABLED_STRICT_OPTION1",
++    "provider_sends": "BLOCKED",
++    "real_orders": "PROHIBITED",
++    "physical_fault_injection": "NOT_AUTHORIZED",
++    "production_deployment": "NOT_AUTHORIZED",
++    "protected_branch_merge": "NOT_AUTHORIZED",
++    "tailscale_removal": "BLOCKED",
++    "code_signing": "BLOCKED_NO_TRUSTED_PUBLISHER"
++  },
++  "rollback": {
++    "installation_performed_by_snapshot": false,
++    "existing_services_or_data_removed": false,
++    "plan": "No rollout authorized. Preserve current LS5 scoped pilot and existing data; do not replace service/runtime. Any future pilot needs exact artifact/source and backup verification, nonadmin launch gate and reviewed APP_ONLY stop/switchback plan before installation."
++  },
++  "acceptance": {
++    "native_authority": "NOT_ADMITTED",
++    "scheduler_worker": "NATIVE_ADMISSION_PENDING",
++    "storage": "LOCAL_UNATTESTED_NO_COMMITTED_RECEIPT",
++    "terminan": "NO_AUTHENTICATED_SCIENTIFIC_READ",
++    "physical": "BLOCKED_NO_GO"
++  },
++  "coverage": "Six targeted families below are not the complete required CI; mandatory broad failures remain OPEN.",
++  "all_repository_runs_at_head": {
++    "total": 37,
++    "success": 26,
++    "failure": 10,
++    "cancelled": 1,
++    "source": "GitHub Actions original API snapshot retained by Integration Owner; attempt1, no manual retry"
++  },
++  "mandatory_broad_failures": {
++    "six_source_pr_run": 42880544113,
++    "six_source_push_run": 42880534434,
++    "ubuntu_job": 130055333690,
++    "ubuntu_tests": 1181,
++    "ubuntu_errors": 1,
++    "ubuntu_skips": 50,
++    "observed_error": "LAN heartbeat fixture readiness RuntimeError; renewed.get(timeout=3) queue.Empty at tests/test_lan_transport.py:200",
++    "windows": "Four six-source jobs: 1181 tests, three native phase timeout failures, ten skips each. Other broad Windows jobs additionally have 30s native timeout and MUX DISCONNECTED errors.",
++    "root_cause": "NOT_ESTABLISHED_BEYOND_OBSERVED_DEADLINES_AND_READINESS",
++    "F26": "OPEN; scoped LAN68 and Component161 successes do not close broad suite failure",
++    "remaining_failed_runs": [
++      42880544141,
++      42880543902,
++      42880543886,
++      42880543964,
++      42880534329,
++      42880534188,
++      42880534282
++    ],
++    "cancelled_run": 42880534450
++  },
++  "ownership_registry": {
++    "ROOT": "Integration, source assembly, shared ABI and release admission; no protected merge permission",
++    "Agent1": "LAN transport and traffic enforcement",
++    "Agent2": "Authority, fencing and native admission",
++    "Agent3": "Bybit quota/provider policy and market data",
++    "Agent4": "Storage and publication",
++    "Agent5": "Existing Scheduler and assignment",
++    "Agent6": "Terminan and visualization",
++    "Agent7": "Existing research engines and Math native blockers",
++    "Agent8": "Independent audit; scoped findings never imply full acceptance"
++  }
++}
+diff --git a/tests/test_preparation_qualification.py b/tests/test_preparation_qualification.py
+index 9a219fb..f8b3238 100644
+--- a/tests/test_preparation_qualification.py
++++ b/tests/test_preparation_qualification.py
+@@ -97,3 +97,57 @@ class PreparationQualificationControls(unittest.TestCase):
+             external=root.parent/(root.name+"-directory");external.mkdir()
+             self.addCleanup(external.rmdir)
+             with self.assertRaises(ValueError):module.approved_git(root,external)
++
++    def test_windows_git_selector_is_fixed_bin_without_fallback(self):
++        workflow=(DRIVER.parents[2]/'.github/workflows/preparation-integrity.yml').read_text()
++        self.assertNotIn('C:/Program Files/Git/cmd/git.exe',workflow)
++        self.assertEqual(workflow.count('C:/Program Files/Git/bin/git.exe'),2)
++        self.assertEqual(module.selected_git_path('nt'),'C:/Program Files/Git/bin/git.exe')
++        self.assertEqual(module.selected_git_path('posix'),'/usr/bin/git')
++
++    def test_preflight_failure_preserves_metadata_before_any_spawn(self):
++        import json
++        from unittest.mock import patch
++        with tempfile.TemporaryDirectory() as temporary:
++            root=Path(temporary).resolve();candidate=root/'git.exe';candidate.write_bytes(b'inert fixture only')
++            evidence=root/'preflight.json'
++            with patch.object(module.subprocess,'Popen',side_effect=AssertionError('must not spawn')):
++                with self.assertRaises(ValueError):module.approved_git(root,candidate,evidence_path=evidence)
++            record=json.loads(evidence.read_bytes())
++            self.assertEqual(record['selected_git'],str(candidate))
++            self.assertIsNone(record['file'])
++            self.assertIsNone(record['raw_sha256'])
++            self.assertEqual(record['ancestors'],[])
++            self.assertIs(record['passed'],False)
++            # Existing hardlinks remain refused; metadata is diagnostic only.
++            import os
++            repository=root/'repository';repository.mkdir()
++            os.link(candidate,root/'alias.exe')
++            with patch.object(module.subprocess,'Popen',side_effect=AssertionError('must not spawn')):
++                with self.assertRaisesRegex(ValueError,'nonordinary Git executable'):
++                    module.approved_git(repository,candidate,evidence_path=evidence)
++            record=json.loads(evidence.read_bytes())
++            self.assertEqual(record['file']['nlink'],2)
++            self.assertIsNone(record['raw_sha256'])
++            self.assertIs(record['passed'],False)
++
++    def test_unsafe_parent_preserves_null_hash_without_selected_file_access(self):
++        import json
++        from types import SimpleNamespace
++        from unittest.mock import patch
++        with tempfile.TemporaryDirectory() as temporary:
++            root=Path(temporary).resolve();repository=root/'repository';repository.mkdir()
++            candidate=root/'git.exe';candidate.write_bytes(b'inert fixture only');evidence=root/'preflight.json'
++            real_lstat=Path.lstat;real_read=Path.read_bytes;info=real_lstat(root)
++            unsafe=SimpleNamespace(**{name:getattr(info,name) for name in ('st_mode','st_dev','st_ino','st_nlink','st_size','st_mtime_ns','st_ctime_ns')},st_file_attributes=1024)
++            def observe(path,*args,**kwargs):
++                if path==candidate:raise AssertionError('selected file reached through unsafe parent')
++                return unsafe if path==root else real_lstat(path,*args,**kwargs)
++            def read(path,*args,**kwargs):
++                if path==candidate:raise AssertionError('unsafe selected bytes read')
++                return real_read(path,*args,**kwargs)
++            with patch.object(Path,'lstat',observe),patch.object(Path,'read_bytes',read),patch.object(module.subprocess,'Popen',side_effect=AssertionError('must not spawn')):
++                with self.assertRaises(ValueError):module.approved_git(repository,candidate,evidence_path=evidence)
++            record=json.loads(evidence.read_bytes())
++            self.assertIs(record['passed'],False);self.assertIsNone(record['raw_sha256'])
++            self.assertEqual(record['ancestors'][-1]['path'],str(root))
+diff --git a/tools/ci/qualify_preparation_integrity.py b/tools/ci/qualify_preparation_integrity.py
+index 005bff1..e05d0cb 100644
+--- a/tools/ci/qualify_preparation_integrity.py
++++ b/tools/ci/qualify_preparation_integrity.py
+@@ -106,17 +106,48 @@ def validate_zoneinfo(zone,wheel):
+     return dict(version='2025.2',wheel_sha256=TZDATA_SHA256,zoneinfo_files=check_files(zone,files))
+ 
+ 
+-def approved_git(root,path=None):
+-    candidate=Path(path) if path is not None else Path('C:/Program Files/Git/cmd/git.exe' if os.name=='nt' else '/usr/bin/git')
+-    if not candidate.is_absolute() or candidate.is_relative_to(root):raise ValueError('approved Git must be absolute and external')
+-    for parent in candidate.parents:
+-        info=parent.lstat()
+-        if not stat.S_ISDIR(info.st_mode) or parent.is_symlink() or getattr(info,'st_file_attributes',0)&1024:
+-            raise ValueError('nonordinary Git parent')
+-    info=candidate.lstat()
+-    if not stat.S_ISREG(info.st_mode) or candidate.is_symlink() or info.st_nlink!=1 or getattr(info,'st_file_attributes',0)&1024:
+-        raise ValueError('nonordinary Git executable')
+-    if os.name!='nt' and not info.st_mode&0o111:raise ValueError('Git is not executable')
++def selected_git_path(platform):
++    return 'C:/Program Files/Git/bin/git.exe' if platform=='nt' else '/usr/bin/git'
++
++
++def approved_git(root,path=None,*,evidence_path=None):
++    candidate=Path(path) if path is not None else Path(selected_git_path(os.name))
++    record=dict(selected_git=str(candidate),passed=False,raw_sha256=None,ancestors=[])
++    errors=[]
++    def inspect(item):
++        entry=dict(path=str(item))
++        try:
++            info=item.lstat()
++            entry.update(mode=info.st_mode,dev=info.st_dev,inode=info.st_ino,nlink=info.st_nlink,
++                         size=info.st_size,mtime_ns=info.st_mtime_ns,ctime_ns=info.st_ctime_ns,
++                         attributes=getattr(info,'st_file_attributes',0),symlink=item.is_symlink())
++        except OSError as error:
++            entry['error']=type(error).__name__;errors.append('unavailable Git path')
++        return entry
++    record['file']=None
++    if not candidate.is_absolute() or candidate.is_relative_to(root):
++        errors.append('approved Git must be absolute and external')
++    if not errors:
++        for parent in reversed(candidate.parents):
++            entry=inspect(parent);record['ancestors'].append(entry)
++            if 'mode' not in entry or not stat.S_ISDIR(entry['mode']) or entry['symlink'] or entry['attributes']&1024:
++                errors.append('nonordinary Git parent');break
++    if not errors:
++        file=inspect(candidate);record['file']=file
++        if ('mode' not in file or not stat.S_ISREG(file['mode']) or file['symlink']
++                or file['nlink']!=1 or file['attributes']&1024 or file['size']>64*1024*1024):
++            errors.append('nonordinary Git executable')
++        if os.name!='nt' and ('mode' not in file or not file['mode']&0o111):errors.append('Git is not executable')
++    # Never traverse below an unsafe parent or hash bytes before every gate.
++    if not errors:
++        try:record['raw_sha256']=hashlib.sha256(candidate.read_bytes()).hexdigest()
++        except OSError as error:errors.append('unreadable Git bytes: '+type(error).__name__)
++    record['errors']=errors
++    # Persist observations before any refusal or subprocess invocation.
++    if evidence_path is not None:Path(evidence_path).write_text(json.dumps(record,sort_keys=True,indent=2)+'\n')
++    if errors:raise ValueError('; '.join(errors))
++    record['passed']=True
++    if evidence_path is not None:Path(evidence_path).write_text(json.dumps(record,sort_keys=True,indent=2)+'\n')
+     return str(candidate)
+ 
+ 
+@@ -193,13 +224,13 @@ def main():
+         attempt=os.getenv('GITHUB_RUN_ATTEMPT'),job=os.getenv('GITHUB_JOB'),runner_os=sys.platform,
+         python=sys.version,legacy_child_isolated_flags=False,dependency=dependency)
+     try:
+-        git=approved_git(root);before=snapshot(root,git,args.expected_head);receipt['source_before']=before
++        git=approved_git(root,evidence_path=out/'git-preflight.json');before=snapshot(root,git,args.expected_head);receipt['source_before']=before
+         controls=unittest.defaultTestLoader.discover(str(root/'tests'),pattern='test_preparation_qualification.py')
+         with (out/'controls.log').open('w',encoding='utf-8') as log:
+             controls_result=unittest.TextTestRunner(stream=log,verbosity=2).run(controls)
+-        if not controls_result.wasSuccessful() or controls_result.skipped or controls_result.testsRun!=9:
++        if not controls_result.wasSuccessful() or controls_result.skipped or controls_result.testsRun!=12:
+             raise ValueError('pure guard controls failed')
+-        receipt['pure_controls']=9
++        receipt['pure_controls']=12
+         env=os.environ.copy()
+         for key in ('PYTHONPATH','PYTHONHOME','PYTHONPYCACHEPREFIX'):env.pop(key,None)
+         env['PYTHONDONTWRITEBYTECODE']='1'

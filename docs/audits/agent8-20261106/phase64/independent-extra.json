@@ -1,0 +1,25 @@
+{
+  "independent_positive_negative_cases": [
+    "missing_quality",
+    "nonfinite_spread",
+    "boolean_depth",
+    "infinite_qty",
+    "over200levels",
+    "duplicate_price",
+    "SQL_asof_future",
+    "SQL_asof_older_than5s",
+    "SQL_asof_exact5s",
+    "SQL_error_propagates_no_feature_success"
+  ],
+  "count": 10,
+  "skips": 0,
+  "network_provider_real_DB_connections": 0,
+  "known_residual": {
+    "status": "OPEN_P1_REPRODUCED_NOT_CLOSED",
+    "persisted_available_snapshots_after_empty_side_gap": 1,
+    "query_age_seconds": 2,
+    "orderbook_capability_still_true": true,
+    "scope": "PREVIOUS_VALID_ROW_QUERY_ELIGIBLE_UNTIL5S_NO_PERSISTED_INVALIDATION"
+  },
+  "summary_metrics_derivation_or_provenance": "NOT_QUALIFIED_BY_THIS_GATE"
+}

@@ -1,0 +1,265 @@
+{
+  "requirement_id": "A8-STORAGE1DA-HOSTED22",
+  "repository": "unified-system",
+  "PR": 56,
+  "head": "1da10616a2b8217930f354e17caaa6fcea22dac4",
+  "tree": "c2b39329924810535add3b02c3f5c5e1b11bdf62",
+  "original_refs": {
+    "PR56.original.json": {
+      "endpoint": "pulls/56",
+      "bytes": 20051,
+      "sha256": "10aed3d6daf452c29a245f90bad069bc4956a3c9e84d9d76e7e38e793e928250"
+    },
+    "42892587873.run.original.json": {
+      "endpoint": "actions/runs/42892587873",
+      "bytes": 13886,
+      "sha256": "f29188100ef6c8421750acdb7a0dfd3db63503efb8ae4f4a0ecac16393cd756e"
+    },
+    "42892587873.jobs.original.json": {
+      "endpoint": "actions/runs/42892587873/jobs?per_page=100",
+      "bytes": 5454,
+      "sha256": "88e691599d6e7131fa7ea442bb82b6e8d0bc078415129f277b0d484f5b22abdb"
+    },
+    "42892587873.artifacts.original.json": {
+      "endpoint": "actions/runs/42892587873/artifacts?per_page=100",
+      "bytes": 1587,
+      "sha256": "876b2639ac99b35a55bf924f3a2b152e0f6fe0ea6c5d95f452a89ae0e70652a0"
+    },
+    "42892587873.logs.original.zip": {
+      "endpoint": "actions/runs/42892587873/logs",
+      "bytes": 29928,
+      "sha256": "e9b28b9f2625f6c9a128f9e1de7c5b671ccbd0881b1241301f9978801a980eb6"
+    },
+    "13799047107.original.zip": {
+      "endpoint": "actions/artifacts/13799047107/zip",
+      "bytes": 106828,
+      "sha256": "01174d0750926a4e1d4b2289fba37305874f9f19bb507ffbd081ed650fc4c19c"
+    },
+    "13799152197.original.zip": {
+      "endpoint": "actions/artifacts/13799152197/zip",
+      "bytes": 106457,
+      "sha256": "0bd86c7a66328b104e458e3d1b05d22a81e2852181444cd6ec96b1e010fead6b"
+    },
+    "42892580326.run.original.json": {
+      "endpoint": "actions/runs/42892580326",
+      "bytes": 13875,
+      "sha256": "8aeaf98fe6ce4f24ded4c21e6eaf09ada849091c2fcf1fcae4eff910742be88e"
+    },
+    "42892580326.jobs.original.json": {
+      "endpoint": "actions/runs/42892580326/jobs?per_page=100",
+      "bytes": 5454,
+      "sha256": "c2cde66cd02d3b702ce26b48b1a22d78a0694c4444a289b89db1bb171764a1ef"
+    },
+    "42892580326.artifacts.original.json": {
+      "endpoint": "actions/runs/42892580326/artifacts?per_page=100",
+      "bytes": 1587,
+      "sha256": "c015a5a97c4c6cbcbfcc2fb90bf81d3b9de7167db15c56a45eab17d4d7b14b1c"
+    },
+    "42892580326.logs.original.zip": {
+      "endpoint": "actions/runs/42892580326/logs",
+      "bytes": 29848,
+      "sha256": "b56ab1a15c129a7999c856de8371fd926c7c1ff1b6444a330924b0be31494bd1"
+    },
+    "13798114884.original.zip": {
+      "endpoint": "actions/artifacts/13798114884/zip",
+      "bytes": 106829,
+      "sha256": "b442997845a73e78d855afa2a8808e69554bedb882628be515f70ae5f9c7e403"
+    },
+    "13799426232.original.zip": {
+      "endpoint": "actions/artifacts/13799426232/zip",
+      "bytes": 106458,
+      "sha256": "3c8bdecdf816ccde54e7970977f42147fe79b654967e4c495da0477d27f1b1c5"
+    }
+  },
+  "jobs": [
+    {
+      "run": 42892587873,
+      "attempt": 1,
+      "job": 130097270823,
+      "job_name": "local-prerequisites (windows-2022)",
+      "artifact": 13799047107,
+      "zip_sha256": "01174d0750926a4e1d4b2289fba37305874f9f19bb507ffbd081ed650fc4c19c",
+      "suite22_unique_IDs": [
+        "test_actual_inventory_readback.ActualInventoryReadbackTests.test_actual_all_objects_and_metadata_root_readback_has_same_read_identities",
+        "test_actual_inventory_readback.ActualInventoryReadbackTests.test_destination_actual_corruption_and_root_corruption_refuse_observation",
+        "test_actual_inventory_readback.ActualInventoryReadbackTests.test_no_public_constructor_copy_or_pickle_can_mint_native_proof",
+        "test_actual_inventory_readback.ActualInventoryReadbackTests.test_two_actual_local_copies_never_become_two_qualified_domains",
+        "test_fixed_scientific_packet.FixedScientificPacketTests.test_changed_same_length_bytes_rejected_before_decode",
+        "test_fixed_scientific_packet.FixedScientificPacketTests.test_exact_packet_retains_bytes_and_no_authority",
+        "test_fixed_scientific_packet.FixedScientificPacketTests.test_numeric_alias_and_authority_escalation_cannot_enter_profile",
+        "test_fixed_scientific_packet.FixedScientificPacketTests.test_reviewed_digest_units_and_historical_claims",
+        "test_fixed_scientific_packet.FixedScientificPacketTests.test_type_size_and_reencoding_rejected_before_decode",
+        "test_original_intent_recovery.OriginalIntentRecoveryTests.test_append_response_loss_preserves_actual_committed_local_original",
+        "test_original_intent_recovery.OriginalIntentRecoveryTests.test_attempt_marker_remains_unknown_without_automatic_resend",
+        "test_original_intent_recovery.OriginalIntentRecoveryTests.test_corrupt_actual_sqlite_has_closed_unavailable_result",
+        "test_original_intent_recovery.OriginalIntentRecoveryTests.test_crash_after_durable_attempt_marker_retains_same_original",
+        "test_original_intent_recovery.OriginalIntentRecoveryTests.test_exact_original_bytes_survive_journal_reopen_without_native_success",
+        "test_original_intent_recovery.OriginalIntentRecoveryTests.test_exact_retry_does_not_duplicate_and_conflict_never_replaces",
+        "test_original_intent_recovery.OriginalIntentRecoveryTests.test_exhausted_journal_budget_rejects_before_new_staging_io",
+        "test_original_intent_recovery.OriginalIntentRecoveryTests.test_foreign_journal_record_and_wrong_schema_are_not_adopted",
+        "test_original_intent_recovery.OriginalIntentRecoveryTests.test_journal_tamper_fails_and_never_mints_committed_receipt",
+        "test_original_intent_recovery.OriginalIntentRecoveryTests.test_local_record_rejects_claimed_native_commit_or_result_receipt",
+        "test_original_intent_recovery.OriginalIntentRecoveryTests.test_missing_or_corrupt_staged_object_is_explicit_without_republication",
+        "test_original_intent_recovery.OriginalIntentRecoveryTests.test_original_byte_preflight_and_identifiers_reject_before_custom_methods",
+        "test_original_intent_recovery.OriginalIntentRecoveryTests.test_unknown_id_and_attempt_without_retained_original_do_not_create_state"
+      ],
+      "inventory6_unique_names": [
+        "test_duplicate_case_denied",
+        "test_exact_groups_preserve_17_plus_5",
+        "test_extra_case_denied",
+        "test_missing_fixed_case_denied",
+        "test_missing_original_case_denied",
+        "test_same_count_substitution_denied"
+      ],
+      "suite_duration_seconds": "1.542",
+      "source_bindings1523_SHA_match_A8": true,
+      "source_blob_and_size_metadata": "ALL1523_RAW_GIT_BLOB_SHA1_SIZE_SHA256_EXACT",
+      "A4_saved_ZIP_byteequal": true,
+      "all_admission_flags_false": true
+    },
+    {
+      "run": 42892587873,
+      "attempt": 1,
+      "job": 130097271506,
+      "job_name": "local-prerequisites (ubuntu-24.04)",
+      "artifact": 13799152197,
+      "zip_sha256": "0bd86c7a66328b104e458e3d1b05d22a81e2852181444cd6ec96b1e010fead6b",
+      "suite22_unique_IDs": [
+        "test_actual_inventory_readback.ActualInventoryReadbackTests.test_actual_all_objects_and_metadata_root_readback_has_same_read_identities",
+        "test_actual_inventory_readback.ActualInventoryReadbackTests.test_destination_actual_corruption_and_root_corruption_refuse_observation",
+        "test_actual_inventory_readback.ActualInventoryReadbackTests.test_no_public_constructor_copy_or_pickle_can_mint_native_proof",
+        "test_actual_inventory_readback.ActualInventoryReadbackTests.test_two_actual_local_copies_never_become_two_qualified_domains",
+        "test_fixed_scientific_packet.FixedScientificPacketTests.test_changed_same_length_bytes_rejected_before_decode",
+        "test_fixed_scientific_packet.FixedScientificPacketTests.test_exact_packet_retains_bytes_and_no_authority",
+        "test_fixed_scientific_packet.FixedScientificPacketTests.test_numeric_alias_and_authority_escalation_cannot_enter_profile",
+        "test_fixed_scientific_packet.FixedScientificPacketTests.test_reviewed_digest_units_and_historical_claims",
+        "test_fixed_scientific_packet.FixedScientificPacketTests.test_type_size_and_reencoding_rejected_before_decode",
+        "test_original_intent_recovery.OriginalIntentRecoveryTests.test_append_response_loss_preserves_actual_committed_local_original",
+        "test_original_intent_recovery.OriginalIntentRecoveryTests.test_attempt_marker_remains_unknown_without_automatic_resend",
+        "test_original_intent_recovery.OriginalIntentRecoveryTests.test_corrupt_actual_sqlite_has_closed_unavailable_result",
+        "test_original_intent_recovery.OriginalIntentRecoveryTests.test_crash_after_durable_attempt_marker_retains_same_original",
+        "test_original_intent_recovery.OriginalIntentRecoveryTests.test_exact_original_bytes_survive_journal_reopen_without_native_success",
+        "test_original_intent_recovery.OriginalIntentRecoveryTests.test_exact_retry_does_not_duplicate_and_conflict_never_replaces",
+        "test_original_intent_recovery.OriginalIntentRecoveryTests.test_exhausted_journal_budget_rejects_before_new_staging_io",
+        "test_original_intent_recovery.OriginalIntentRecoveryTests.test_foreign_journal_record_and_wrong_schema_are_not_adopted",
+        "test_original_intent_recovery.OriginalIntentRecoveryTests.test_journal_tamper_fails_and_never_mints_committed_receipt",
+        "test_original_intent_recovery.OriginalIntentRecoveryTests.test_local_record_rejects_claimed_native_commit_or_result_receipt",
+        "test_original_intent_recovery.OriginalIntentRecoveryTests.test_missing_or_corrupt_staged_object_is_explicit_without_republication",
+        "test_original_intent_recovery.OriginalIntentRecoveryTests.test_original_byte_preflight_and_identifiers_reject_before_custom_methods",
+        "test_original_intent_recovery.OriginalIntentRecoveryTests.test_unknown_id_and_attempt_without_retained_original_do_not_create_state"
+      ],
+      "inventory6_unique_names": [
+        "test_duplicate_case_denied",
+        "test_exact_groups_preserve_17_plus_5",
+        "test_extra_case_denied",
+        "test_missing_fixed_case_denied",
+        "test_missing_original_case_denied",
+        "test_same_count_substitution_denied"
+      ],
+      "suite_duration_seconds": "0.327",
+      "source_bindings1523_SHA_match_A8": true,
+      "source_blob_and_size_metadata": "ALL1523_RAW_GIT_BLOB_SHA1_SIZE_SHA256_EXACT",
+      "A4_saved_ZIP_byteequal": true,
+      "all_admission_flags_false": true
+    },
+    {
+      "run": 42892580326,
+      "attempt": 1,
+      "job": 130097247188,
+      "job_name": "local-prerequisites (windows-2022)",
+      "artifact": 13798114884,
+      "zip_sha256": "b442997845a73e78d855afa2a8808e69554bedb882628be515f70ae5f9c7e403",
+      "suite22_unique_IDs": [
+        "test_actual_inventory_readback.ActualInventoryReadbackTests.test_actual_all_objects_and_metadata_root_readback_has_same_read_identities",
+        "test_actual_inventory_readback.ActualInventoryReadbackTests.test_destination_actual_corruption_and_root_corruption_refuse_observation",
+        "test_actual_inventory_readback.ActualInventoryReadbackTests.test_no_public_constructor_copy_or_pickle_can_mint_native_proof",
+        "test_actual_inventory_readback.ActualInventoryReadbackTests.test_two_actual_local_copies_never_become_two_qualified_domains",
+        "test_fixed_scientific_packet.FixedScientificPacketTests.test_changed_same_length_bytes_rejected_before_decode",
+        "test_fixed_scientific_packet.FixedScientificPacketTests.test_exact_packet_retains_bytes_and_no_authority",
+        "test_fixed_scientific_packet.FixedScientificPacketTests.test_numeric_alias_and_authority_escalation_cannot_enter_profile",
+        "test_fixed_scientific_packet.FixedScientificPacketTests.test_reviewed_digest_units_and_historical_claims",
+        "test_fixed_scientific_packet.FixedScientificPacketTests.test_type_size_and_reencoding_rejected_before_decode",
+        "test_original_intent_recovery.OriginalIntentRecoveryTests.test_append_response_loss_preserves_actual_committed_local_original",
+        "test_original_intent_recovery.OriginalIntentRecoveryTests.test_attempt_marker_remains_unknown_without_automatic_resend",
+        "test_original_intent_recovery.OriginalIntentRecoveryTests.test_corrupt_actual_sqlite_has_closed_unavailable_result",
+        "test_original_intent_recovery.OriginalIntentRecoveryTests.test_crash_after_durable_attempt_marker_retains_same_original",
+        "test_original_intent_recovery.OriginalIntentRecoveryTests.test_exact_original_bytes_survive_journal_reopen_without_native_success",
+        "test_original_intent_recovery.OriginalIntentRecoveryTests.test_exact_retry_does_not_duplicate_and_conflict_never_replaces",
+        "test_original_intent_recovery.OriginalIntentRecoveryTests.test_exhausted_journal_budget_rejects_before_new_staging_io",
+        "test_original_intent_recovery.OriginalIntentRecoveryTests.test_foreign_journal_record_and_wrong_schema_are_not_adopted",
+        "test_original_intent_recovery.OriginalIntentRecoveryTests.test_journal_tamper_fails_and_never_mints_committed_receipt",
+        "test_original_intent_recovery.OriginalIntentRecoveryTests.test_local_record_rejects_claimed_native_commit_or_result_receipt",
+        "test_original_intent_recovery.OriginalIntentRecoveryTests.test_missing_or_corrupt_staged_object_is_explicit_without_republication",
+        "test_original_intent_recovery.OriginalIntentRecoveryTests.test_original_byte_preflight_and_identifiers_reject_before_custom_methods",
+        "test_original_intent_recovery.OriginalIntentRecoveryTests.test_unknown_id_and_attempt_without_retained_original_do_not_create_state"
+      ],
+      "inventory6_unique_names": [
+        "test_duplicate_case_denied",
+        "test_exact_groups_preserve_17_plus_5",
+        "test_extra_case_denied",
+        "test_missing_fixed_case_denied",
+        "test_missing_original_case_denied",
+        "test_same_count_substitution_denied"
+      ],
+      "suite_duration_seconds": "1.634",
+      "source_bindings1523_SHA_match_A8": true,
+      "source_blob_and_size_metadata": "ALL1523_RAW_GIT_BLOB_SHA1_SIZE_SHA256_EXACT",
+      "A4_saved_ZIP_byteequal": true,
+      "all_admission_flags_false": true
+    },
+    {
+      "run": 42892580326,
+      "attempt": 1,
+      "job": 130097247741,
+      "job_name": "local-prerequisites (ubuntu-24.04)",
+      "artifact": 13799426232,
+      "zip_sha256": "3c8bdecdf816ccde54e7970977f42147fe79b654967e4c495da0477d27f1b1c5",
+      "suite22_unique_IDs": [
+        "test_actual_inventory_readback.ActualInventoryReadbackTests.test_actual_all_objects_and_metadata_root_readback_has_same_read_identities",
+        "test_actual_inventory_readback.ActualInventoryReadbackTests.test_destination_actual_corruption_and_root_corruption_refuse_observation",
+        "test_actual_inventory_readback.ActualInventoryReadbackTests.test_no_public_constructor_copy_or_pickle_can_mint_native_proof",
+        "test_actual_inventory_readback.ActualInventoryReadbackTests.test_two_actual_local_copies_never_become_two_qualified_domains",
+        "test_fixed_scientific_packet.FixedScientificPacketTests.test_changed_same_length_bytes_rejected_before_decode",
+        "test_fixed_scientific_packet.FixedScientificPacketTests.test_exact_packet_retains_bytes_and_no_authority",
+        "test_fixed_scientific_packet.FixedScientificPacketTests.test_numeric_alias_and_authority_escalation_cannot_enter_profile",
+        "test_fixed_scientific_packet.FixedScientificPacketTests.test_reviewed_digest_units_and_historical_claims",
+        "test_fixed_scientific_packet.FixedScientificPacketTests.test_type_size_and_reencoding_rejected_before_decode",
+        "test_original_intent_recovery.OriginalIntentRecoveryTests.test_append_response_loss_preserves_actual_committed_local_original",
+        "test_original_intent_recovery.OriginalIntentRecoveryTests.test_attempt_marker_remains_unknown_without_automatic_resend",
+        "test_original_intent_recovery.OriginalIntentRecoveryTests.test_corrupt_actual_sqlite_has_closed_unavailable_result",
+        "test_original_intent_recovery.OriginalIntentRecoveryTests.test_crash_after_durable_attempt_marker_retains_same_original",
+        "test_original_intent_recovery.OriginalIntentRecoveryTests.test_exact_original_bytes_survive_journal_reopen_without_native_success",
+        "test_original_intent_recovery.OriginalIntentRecoveryTests.test_exact_retry_does_not_duplicate_and_conflict_never_replaces",
+        "test_original_intent_recovery.OriginalIntentRecoveryTests.test_exhausted_journal_budget_rejects_before_new_staging_io",
+        "test_original_intent_recovery.OriginalIntentRecoveryTests.test_foreign_journal_record_and_wrong_schema_are_not_adopted",
+        "test_original_intent_recovery.OriginalIntentRecoveryTests.test_journal_tamper_fails_and_never_mints_committed_receipt",
+        "test_original_intent_recovery.OriginalIntentRecoveryTests.test_local_record_rejects_claimed_native_commit_or_result_receipt",
+        "test_original_intent_recovery.OriginalIntentRecoveryTests.test_missing_or_corrupt_staged_object_is_explicit_without_republication",
+        "test_original_intent_recovery.OriginalIntentRecoveryTests.test_original_byte_preflight_and_identifiers_reject_before_custom_methods",
+        "test_original_intent_recovery.OriginalIntentRecoveryTests.test_unknown_id_and_attempt_without_retained_original_do_not_create_state"
+      ],
+      "inventory6_unique_names": [
+        "test_duplicate_case_denied",
+        "test_exact_groups_preserve_17_plus_5",
+        "test_extra_case_denied",
+        "test_missing_fixed_case_denied",
+        "test_missing_original_case_denied",
+        "test_same_count_substitution_denied"
+      ],
+      "suite_duration_seconds": "0.248",
+      "source_bindings1523_SHA_match_A8": true,
+      "source_blob_and_size_metadata": "ALL1523_RAW_GIT_BLOB_SHA1_SIZE_SHA256_EXACT",
+      "A4_saved_ZIP_byteequal": true,
+      "all_admission_flags_false": true
+    }
+  ],
+  "suite_distinct_ids": 22,
+  "suite_executions": 88,
+  "inventory_distinct_controls": 6,
+  "inventory_executions": 24,
+  "scope": "FOUR_HOSTED_LOCAL_STORAGE_PREREQUISITE_JOBS_NOT_FULL_CI_NATIVE_REPLICA_PHYSICAL_OR_PRODUCTION",
+  "A8_fixture_or_helper_executions": 0,
+  "CI_rerun_or_dispatch": 0,
+  "GO_NO_GO": "NO-GO",
+  "TAILSCALE_REMOVAL": "BLOCKED"
+}

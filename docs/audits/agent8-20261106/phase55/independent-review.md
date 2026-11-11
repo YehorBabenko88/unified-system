@@ -1,0 +1,14 @@
+# Grid PR265 pure response advice review
+
+Requirement BYBIT_RESPONSE_ADVICE_PURE_UNTRUSTED_PARSE. Repository bybit-cluster-grid, Draft PR265, exactHEAD9d71ee33b35048f5bb27875f5f81d151a1184c32/tree8a05f8f6fe21f38328aeecd9a1c0288067003061.
+Environment: own no-hardlink clone, Python3.12 isolated -I-B interpreter/pytest8.4.2, plugin autoload/cache disabled, selected offline test only. No provider/HTTP calls.
+
+Expected/actual: exactly5new allocated paths; all prior tracked paths unchanged. Profile raw10a85b32e4f4485467bb5d74077d7efb40e9f23e033adcbfb64c2e04974b0921 and44inventory rawabaf41c29beb4476a89191ea7023fdfe9bfed87a9b1700c3b557897ac8aa515d matched primary Git/working bytes. Fresh44nodeIDs exactly match committed inventory, all call reports passed,0skip;689primary tracked raw files unchanged before/after. Own execution, not inherited A1 ACK.
+
+Twelve additional cases PASS: seven negative duplicate/header-syntax/control/Unicode/escaped-key/JSON-member probes; five positive contract vectors for ambiguous403+UID,429priority/longer floor,403zero-retry floor,unresolved old HTTPdate,maxremaining no permission. All five positive vectors execute while socket creation and wall/monotonic clocks are patched to raise. Declared profile behavior validated, not independently asserted as current external provider policy.
+
+Provenance: body and header projection hashes bind only input projection bytes. They do not establish source/attempt/send-state/request cost, full response, current egress/NAT/scope/policy membership, timestamps or authority. Unknown/full headers need explicit upstream allowlisted duplicate-preserving projection. Parse exceptions must remain unavailable/fail-closed; no recognized throttle/highremaining is not clearance of existing debt/cooldown/UNKNOWN. No object field constitutes PERMIT/public-IP capacity or clock-derived deadline.
+
+Status PASS_PURE_UNTRUSTED_ADVICE_ONLY. Severity: no new defect found in this bounded parser. Required correction before any integration: actual authority verifies original response provenance/attempt/current policy/NAT scope and persists independently authorized state; no automatic frozen event conversion. No wiring/HTTP/timers/persistence/rate enforcement/native/provider admission qualified. Earlier43+55CI unaffected by this5newfile delta; they were not rerun/inherited here. New44hostedCI not evaluated by this local review. Existing global F16/F17 gaps remain; this own raw check does not close all source/import guards.
+
+Evidence independent-review.json, exact44.json, original.junit.xml, execution logs and independent12.json; reproduction ../review_grid_response_advice.py. Overall broader admission NO-GO; existing6P1/3P2 unchanged. No office/provider/security actions, real orders, fleet/physical/Tailscale-removal admission.

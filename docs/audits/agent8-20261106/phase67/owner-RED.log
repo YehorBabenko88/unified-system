@@ -1,0 +1,50 @@
+test_explicit_directory_and_implicit_parent_are_compatible (tests.test_lab_capsule_archive_namespace.ArchiveNamespaceTests.test_explicit_directory_and_implicit_parent_are_compatible) ... ok
+test_file_parent_conflict_rejected_before_creation (tests.test_lab_capsule_archive_namespace.ArchiveNamespaceTests.test_file_parent_conflict_rejected_before_creation) ... ERROR
+test_implicit_parent_case_alias_rejected_before_creation (tests.test_lab_capsule_archive_namespace.ArchiveNamespaceTests.test_implicit_parent_case_alias_rejected_before_creation) ... FAIL
+test_reverse_file_parent_conflict_rejected_before_creation (tests.test_lab_capsule_archive_namespace.ArchiveNamespaceTests.test_reverse_file_parent_conflict_rejected_before_creation) ... ERROR
+
+======================================================================
+ERROR: test_file_parent_conflict_rejected_before_creation (tests.test_lab_capsule_archive_namespace.ArchiveNamespaceTests.test_file_parent_conflict_rejected_before_creation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\worktrees\mission-integration-registry-20261106\unified-system\tests\test_lab_capsule_archive_namespace.py", line 28, in test_file_parent_conflict_rejected_before_creation
+    self.rejected(['tools/Lib', 'tools/Lib/a.py'])
+  File "C:\Users\LS-5\.codex\worktrees\mission-integration-registry-20261106\unified-system\tests\test_lab_capsule_archive_namespace.py", line 21, in rejected
+    builder.extract(archive, target, 'tools/')
+  File "C:\Users\LS-5\.codex\worktrees\mission-integration-registry-20261106\unified-system\scripts\prepare_lab_capsule.py", line 97, in extract
+    dest.parent.mkdir(parents=True,exist_ok=True)
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\pathlib.py", line 1311, in mkdir
+    os.mkdir(self, mode)
+FileExistsError: [WinError 183] Eine Datei kann nicht erstellt werden, wenn sie bereits vorhanden ist: 'C:\\Users\\LS-5\\AppData\\Local\\Temp\\tmpfq_79dyh\\target\\Lib'
+
+======================================================================
+ERROR: test_reverse_file_parent_conflict_rejected_before_creation (tests.test_lab_capsule_archive_namespace.ArchiveNamespaceTests.test_reverse_file_parent_conflict_rejected_before_creation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\worktrees\mission-integration-registry-20261106\unified-system\tests\test_lab_capsule_archive_namespace.py", line 31, in test_reverse_file_parent_conflict_rejected_before_creation
+    self.rejected(['tools/Lib/a.py', 'tools/Lib'])
+  File "C:\Users\LS-5\.codex\worktrees\mission-integration-registry-20261106\unified-system\tests\test_lab_capsule_archive_namespace.py", line 21, in rejected
+    builder.extract(archive, target, 'tools/')
+  File "C:\Users\LS-5\.codex\worktrees\mission-integration-registry-20261106\unified-system\scripts\prepare_lab_capsule.py", line 98, in extract
+    with z.open(info) as src,dest.open('xb') as out:shutil.copyfileobj(src,out)
+                             ^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: 'C:\\Users\\LS-5\\AppData\\Local\\Temp\\tmpaiysq88y\\target\\Lib'
+
+======================================================================
+FAIL: test_implicit_parent_case_alias_rejected_before_creation (tests.test_lab_capsule_archive_namespace.ArchiveNamespaceTests.test_implicit_parent_case_alias_rejected_before_creation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\worktrees\mission-integration-registry-20261106\unified-system\tests\test_lab_capsule_archive_namespace.py", line 25, in test_implicit_parent_case_alias_rejected_before_creation
+    self.rejected(['tools/Lib/a.py', 'tools/lib/b.py'])
+  File "C:\Users\LS-5\.codex\worktrees\mission-integration-registry-20261106\unified-system\tests\test_lab_capsule_archive_namespace.py", line 20, in rejected
+    with self.assertRaisesRegex(ValueError, 'ARCHIVE_(ALIAS|NAMESPACE_CONFLICT)'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.110s
+
+FAILED (failures=1, errors=2)

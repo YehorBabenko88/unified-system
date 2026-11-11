@@ -1,0 +1,18 @@
+{
+  "version_tag": "141.0.7390.37",
+  "scope": "PRIMARY_STATIC_CORROBORATION_NOT_LOADED_BINARY_SOURCE_ATTESTATION_OR_BROWSER_REPRODUCTION_OR_OFFICE_DNS_RCA",
+  "sources": [
+    {
+      "url": "https://raw.githubusercontent.com/chromium/chromium/141.0.7390.37/net/base/host_mapping_rules.cc",
+      "lines": "41-66,71-96,98-122",
+      "observation": "Mapping checks original host pattern, then exclusions against the original host before replacement. Literal 127.0.0.1 is not the localhost exclusion. URL replacement rejects invalid rewritten URLs."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/chromium/chromium/141.0.7390.37/net/dns/mapped_host_resolver.cc",
+      "lines": "31-55,57-70,72-98",
+      "observation": "SchemeHostPort and service endpoint paths return ERR_NAME_NOT_RESOLVED on invalid URL rewrite. HostPortPair explicitly treats caret NOTFOUND as the failing sentinel; tilde NOTFOUND is not that special case and otherwise proceeds to the underlying implementation."
+    }
+  ],
+  "local_source": "Terminan475 launch options map all hosts to tilde NOTFOUND except localhost; HTTP bind/base/navigation use numeric127.0.0.1",
+  "conclusion": "Source configuration mismatch is corroborated, precise actual binary path and exclusive failure cause are not proven. No real DNS lookup, resolver API, policy edit or browser test was performed by A8. No new finding duplicates existing F36."
+}

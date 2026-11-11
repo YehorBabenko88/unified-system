@@ -1,0 +1,23 @@
+{
+  "test_sha256": "3f7be88ebb61d20627585be4894fb116cf28dffc04fdfd1d44829146aa3bd69a",
+  "source_subject_qualifier": "94277c28a9b25f048b4a0acf26d343d1c08e45ccd940437d0e5bf894126d5d62",
+  "original20": "ALL_PRIOR_TOPLEVEL_DEFINITION_AST_AND20IDS_UNCHANGED",
+  "new8_ids": [
+    "ControlsHeldCleanupControls.test_poll_error_attempts_kill_and_wait_and_denies",
+    "ControlsHeldCleanupControls.test_poll_and_kill_error_still_attempts_wait_and_denies",
+    "ControlsHeldCleanupControls.test_poll_and_wait_error_keeps_unknown_and_denies",
+    "ControlsHeldCleanupControls.test_normal_running_handle_cleanup_control",
+    "MainRunHeldCleanupControls.test_poll_error_attempts_kill_and_wait_and_denies",
+    "MainRunHeldCleanupControls.test_poll_and_kill_error_still_attempts_wait_and_denies",
+    "MainRunHeldCleanupControls.test_poll_and_wait_error_keeps_unknown_and_denies",
+    "MainRunHeldCleanupControls.test_normal_running_handle_cleanup_control"
+  ],
+  "seams": "ACTUAL_NAMED_OUTER_FINALLY_NODES_PLUS_ACTUAL_CONTROL_OBSERVED_PASS_AND_RUN_VERIFY_GATE_NO_CLONED_ALGORITHM",
+  "effects": "OWNER_FUTURE_SELECTED_AST_EXECUTION_WITH_INERT_HANDLE_OSError_ONLY; NO_A8_EXECUTION",
+  "normal_controls": "RUN_CLEANUP_REQUIRED_SHORT_CIRCUITS_BEFORE_UNPOPULATED_COUNT_KEYS; CONTROLS_NORMAL_CLEANUP_DENIED",
+  "review_result": "SCOPED_SOURCE_EFFECT_ACK_FOR_SEPARATE_ROOT28MODELED_RED_DECISION",
+  "actual28": "NOT_RUN_NO_RESULT_PREDICTION_AS_ACTUAL",
+  "mandatory20_pipeline": "DELIBERATELY_STALE_TEST_HASH_AND20IDS_HOLD_NO_HOSTED47",
+  "F50": "OPEN",
+  "GO_NO_GO": "NO-GO"
+}

@@ -1,0 +1,401 @@
+import copy
+import asyncio, json, logging, time, math, hashlib, re, uuid
+from collections import deque
+from collections.abc import Mapping
+import websockets
+from .config import settings
+from .resilience import backoff_delays, wait_for_internet
+from .orderbook import analyze_book, parse_book_levels
+from .data_quality import FeedQuality, safe_float, AVAILABLE, MISSING
+from .continuity import SequenceGuard
+from .book_velocity import BookVelocity
+from .wall_tracker import WallTracker
+from .topic_watchdog import TopicWatchdog
+
+log=logging.getLogger("microstructure")
+
+# Only fields persisted in derivatives_ticker belong in the merged delta state.
+TICKER_FIELDS=frozenset({
+    "openInterest", "openInterestValue", "fundingRate", "fundingIntervalHour",
+    "nextFundingTime", "markPrice", "indexPrice", "lastPrice", "basisRate",
+    "bid1Price", "bid1Size", "ask1Price", "ask1Size", "volume24h", "turnover24h",
+})
+
+
+def public_market_connection(endpoint):
+    """Exact configured socket context, not a remote/exchange identity proof."""
+    endpoints={'wss://stream.bybit.com/v5/public/'+category:category for category in ('linear','inverse','spot')}
+    if type(endpoint) is not str or endpoint not in endpoints:return None
+    return dict(schema='grid.public-market-connection.v1',venue='bybit',category=endpoints[endpoint],endpoint=endpoint,connection_id=uuid.uuid4().hex,scope='PRODUCER_DECLARED_LOCAL_CONNECTION_NOT_REMOTE_AUTHENTICATION')
+
+FUNDING_FIELD_NAMES={'fundingRate':'funding_rate','fundingIntervalHour':'funding_interval_hour','nextFundingTime':'next_funding_time'}
+
+def _ticker_field_observations(previous,updates,event_ms,observed_ms):
+    """Bind only actual funding updates to their own source/process clocks.
+
+    This is process-recorded consistency metadata, not transport authentication,
+    receipt-time attestation or a database ingest clock. A local timestamp fallback
+    is never promoted to an exchange clock. Unrelated deltas cannot refresh it.
+    """
+    result=copy.deepcopy(previous)
+    for raw_name,name in FUNDING_FIELD_NAMES.items():
+        if raw_name not in updates or updates[raw_name] is None:continue
+        old=result.pop(name,None);value=updates[raw_name]
+        clock_ok=(type(event_ms) is int and type(observed_ms) is int
+                  and 0<event_ms<=observed_ms<=253402300799999
+                  and (old is None or event_ms>=old['event_ms'] and observed_ms>=old['observed_ms']))
+        scalar_ok=(type(value) in (int,float) and abs(value)<=1e15 and math.isfinite(value)
+                   or type(value) is str and len(value)<=128 and re.fullmatch(r'-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?',value))
+        if not clock_ok or not scalar_ok:continue
+        if not math.isfinite(float(value)) or abs(float(value))>1e15:continue
+        encoded=json.dumps(value,sort_keys=True,separators=(',',':'),allow_nan=False).encode('utf-8')
+        result[name]={'event_ms':event_ms,'observed_ms':observed_ms,'value_sha256':hashlib.sha256(encoded).hexdigest()}
+    return result
+
+class MicrostructureCollector:
+    """
+    Maintains order books in memory from snapshot+delta messages.
+    Writes throttled analytical snapshots instead of every 20ms delta.
+    Ticker/OI fields are merged because Bybit ticker deltas omit unchanged fields.
+    """
+    def __init__(self, db, snapshot_ms=1000, wall_event_ratio=6.0, max_ticker_age_ms=None):
+        self.db=db
+        if (
+            isinstance(snapshot_ms,bool)
+            or not isinstance(snapshot_ms,int)
+            or snapshot_ms<=0
+        ):
+            raise ValueError("snapshot_ms must be a positive integer")
+        self.snapshot_ms=snapshot_ms
+        if (
+            isinstance(wall_event_ratio,bool)
+            or not isinstance(wall_event_ratio,(int,float))
+            or not math.isfinite(wall_event_ratio)
+            or wall_event_ratio<=0
+        ):
+            raise ValueError("wall_event_ratio must be a finite positive number")
+        self.wall_event_ratio=wall_event_ratio
+        # Opt-in until node clock synchronization is guaranteed.
+        if max_ticker_age_ms is not None and (
+            isinstance(max_ticker_age_ms,bool)
+            or not isinstance(max_ticker_age_ms,int)
+            or max_ticker_age_ms<=0
+        ):
+            raise ValueError("max_ticker_age_ms must be a positive integer or None")
+        self.max_ticker_age_ms=max_ticker_age_ms
+
+    async def run_batch(self, symbols):
+        if symbols is None or isinstance(symbols,(str,bytes,Mapping)):
+            raise ValueError("symbols must be an iterable of instrument names, not None, a string, or a mapping")
+        # Materialize once: generators would otherwise be exhausted by validation.
+        try:
+            symbols=list(symbols)
+        except TypeError as exc:
+            raise ValueError("symbols must be an iterable of instrument names") from exc
+        if not symbols:
+            return
+        if any(
+            not isinstance(symbol,str)
+            or not symbol
+            or not symbol.isascii()
+            or not symbol.isalnum()
+            for symbol in symbols
+        ):
+            raise ValueError("symbols must be nonempty ASCII alphanumeric strings")
+        symbols=list(dict.fromkeys(symbols))
+        delays=backoff_delays()
+        topics=[]
+        for s in symbols:
+            topics += [f"orderbook.50.{s}", f"tickers.{s}"]
+        subscribed_topics=set(topics)
+        books={}
+        tickers={}
+        ticker_observations={}
+        last_book_write={}
+        last_ticker_write={}
+        last_ticker_seen={}
+        quality={}
+        guards={}
+        velocity=BookVelocity()
+        wall_tracker=WallTracker()
+
+        while True:
+            # A new socket starts a new market-data epoch. Never reuse orderbook
+            # sequence guards, ticker deltas, or derived velocity across reconnects.
+            books.clear()
+            tickers.clear()
+            ticker_observations.clear()
+            last_book_write.clear()
+            last_ticker_write.clear()
+            last_ticker_seen.clear()
+            quality.clear()
+            guards.clear()
+            velocity=BookVelocity()
+            wall_tracker=WallTracker()
+            try:
+                await wait_for_internet()
+                actual_endpoint=settings.bybit_ws_url
+                async with websockets.connect(
+                    actual_endpoint,
+                    ping_interval=20, ping_timeout=20,
+                    max_queue=2000, close_timeout=5
+                ) as ws:
+                    connection_context=public_market_connection(actual_endpoint)
+                    # Small subscription batches reduce rejection risk and make reconnect gentler.
+                    # Every request must be acknowledged; otherwise a transport can stay
+                    # healthy while the market subscription itself was rejected.
+                    pending_market_frames=deque()
+                    for i in range(0,len(topics),20):
+                        batch_topics=topics[i:i+20]
+                        await ws.send(json.dumps({"op":"subscribe","args":batch_topics}))
+                        ack_deadline=asyncio.get_running_loop().time()+15
+                        while True:
+                            remaining=ack_deadline-asyncio.get_running_loop().time()
+                            if remaining<=0:
+                                raise asyncio.TimeoutError("Bybit microstructure subscription ACK timeout")
+                            raw=await asyncio.wait_for(ws.recv(),timeout=remaining)
+                            ack=json.loads(raw)
+                            if not isinstance(ack,dict):
+                                raise RuntimeError("invalid Bybit subscription response")
+                            if ack.get("op")=="subscribe":
+                                if ack.get("success") is False:
+                                    raise RuntimeError("Bybit subscription rejected: "+str(ack.get("ret_msg") or ack))
+                                args=(ack.get("data") or {}).get("args") if isinstance(ack.get("data"),dict) else None
+                                if args is None:
+                                    args=ack.get("args")
+                                if args is not None:
+                                    if not isinstance(args,list) or not all(isinstance(topic,str) for topic in args):
+                                        raise RuntimeError("invalid Bybit subscription ACK args")
+                                    if not set(batch_topics).issubset(set(args)):
+                                        continue
+                                if ack.get("success") is not True:
+                                    raise RuntimeError("Bybit subscription rejected: "+str(ack.get("ret_msg") or ack))
+                                break
+                            # Earlier subscription batches can emit snapshots before
+                            # later batches acknowledge. Preserve those frames in order.
+                            if isinstance(ack,dict) and isinstance(ack.get("topic"),str):
+                                if ack["topic"].startswith(("orderbook.","tickers.")):
+                                    if len(pending_market_frames)>=2000:
+                                        raise RuntimeError("subscription market frame buffer overflow")
+                                    pending_market_frames.append(raw)
+                        await asyncio.sleep(0.05)
+                    delays=backoff_delays()
+                    log.info("microstructure connected",extra={"event":"ws_connected","component":"microstructure"})
+                    # A live socket can still have a silently stalled book topic.
+                    # Use monotonic receipt time rather than exchange timestamps.
+                    book_watchdog=TopicWatchdog(symbols,asyncio.get_running_loop().time(),timeout_seconds=120.0)
+
+                    while True:
+                        if pending_market_frames:
+                            raw=pending_market_frames.popleft()
+                        else:
+                            try:
+                                raw=await asyncio.wait_for(ws.recv(),timeout=10)
+                            except asyncio.TimeoutError:
+                                raw=None
+                        now=asyncio.get_running_loop().time()
+                        stalled=book_watchdog.stalled(now)
+                        if stalled:
+                            raise RuntimeError("stalled orderbook topics: "+",".join(stalled[:10]))
+                        if raw is None:
+                            continue
+                        try:
+                            msg=json.loads(raw)
+                        except (json.JSONDecodeError,UnicodeDecodeError,TypeError):
+                            log.warning("invalid market JSON ignored",extra={"event":"invalid_market_json"})
+                            continue
+                        if not isinstance(msg,dict):
+                            log.warning("non-object market frame ignored",extra={"event":"invalid_market_frame"})
+                            continue
+                        topic=msg.get("topic","")
+                        data=msg.get("data") or {}
+                        if not isinstance(topic,str) or not isinstance(data,dict):
+                            log.warning("invalid market envelope ignored",extra={"event":"invalid_market_envelope"})
+                            continue
+                        raw_ts=msg.get("ts")
+                        if raw_ts is None:
+                            ts=int(time.time()*1000)
+                        elif isinstance(raw_ts,int) and not isinstance(raw_ts,bool) and raw_ts>0:
+                            ts=raw_ts
+                        elif isinstance(raw_ts,str) and 0<len(raw_ts)<=20 and raw_ts.isascii() and raw_ts.isdecimal() and int(raw_ts)>0:
+                            ts=int(raw_ts)
+                        else:
+                            if topic in subscribed_topics and topic.startswith('tickers.'):
+                                symbol=topic.split('.',1)[1]
+                                ticker_observations[symbol]=_ticker_field_observations(ticker_observations.get(symbol,{}),data,None,None)
+                            log.warning("invalid market timestamp ignored",extra={"event":"invalid_market_timestamp"})
+                            continue
+
+                        # A corrupt future timestamp can poison ticker monotonic state
+                        # and prevent valid updates from being accepted afterwards.
+                        if ts>int(time.time()*1000)+300000:
+                            if topic in subscribed_topics and topic.startswith('tickers.'):
+                                symbol=topic.split('.',1)[1]
+                                ticker_observations[symbol]=_ticker_field_observations(ticker_observations.get(symbol,{}),data,None,None)
+                            log.warning("future market timestamp ignored",extra={"event":"future_market_timestamp"})
+                            continue
+
+                        if topic.startswith(("tickers.","orderbook.")) and topic not in subscribed_topics:
+                            log.warning("unsubscribed market topic ignored",extra={"event":"unknown_market_topic"})
+                            continue
+
+                        if topic.startswith("tickers."):
+                            # A newly connected socket must not publish replayed
+                            # ticker data from a long-disconnected market epoch.
+                            if self.max_ticker_age_ms is not None and ts<int(time.time()*1000)-self.max_ticker_age_ms:
+                                if topic in subscribed_topics and topic.startswith('tickers.'):
+                                    symbol=topic.split('.',1)[1]
+                                    ticker_observations[symbol]=_ticker_field_observations(ticker_observations.get(symbol,{}),data,None,None)
+                                log.warning("expired ticker ignored",extra={"event":"expired_ticker"})
+                                continue
+                            sym=topic.split(".",1)[1]
+                            if ts<last_ticker_seen.get(sym,-1):
+                                if topic in subscribed_topics and topic.startswith('tickers.'):
+                                    symbol=topic.split('.',1)[1]
+                                    ticker_observations[symbol]=_ticker_field_observations(ticker_observations.get(symbol,{}),data,None,None)
+                                log.warning("stale ticker ignored",extra={"event":"ticker_stale","component":sym})
+                                continue
+                            # Empty/unknown-only ticker deltas must not advance
+                            # the high-water timestamp or fabricate healthy data.
+                            updates={k:v for k,v in data.items() if k in TICKER_FIELDS and v is not None}
+                            if not updates:
+                                log.warning("empty ticker delta ignored",extra={"event":"ticker_empty","component":sym})
+                                continue
+                            last_ticker_seen[sym]=ts
+                            state=tickers.setdefault(sym,{})
+                            quality.setdefault(sym,FeedQuality(sym)).mark("ticker",AVAILABLE)
+                            state.update(updates)
+                            ticker_observations[sym]=_ticker_field_observations(ticker_observations.get(sym,{}),updates,raw_ts,int(time.time()*1000))
+                            if ts-last_ticker_write.get(sym,0) >= self.snapshot_ms:
+                                payload={
+                                    "open_interest":state.get("openInterest"),
+                                    "open_interest_value":state.get("openInterestValue"),
+                                    "funding_rate":state.get("fundingRate"),
+                                    "funding_interval_hour":state.get("fundingIntervalHour"),
+                                    "next_funding_time":state.get("nextFundingTime"),
+                                    "mark_price":state.get("markPrice"),
+                                    "index_price":state.get("indexPrice"),
+                                    "last_price":state.get("lastPrice"),
+                                    "basis_rate":state.get("basisRate"),
+                                    "bid1_price":state.get("bid1Price"),
+                                    "bid1_size":state.get("bid1Size"),
+                                    "ask1_price":state.get("ask1Price"),
+                                    "ask1_size":state.get("ask1Size"),
+                                    "volume24h":state.get("volume24h"),
+                                    "turnover24h":state.get("turnover24h"),
+                                }
+                                q=quality.setdefault(sym,FeedQuality(sym))
+                                q.mark("open_interest", AVAILABLE if payload["open_interest"] is not None else MISSING, "field unavailable")
+                                q.mark("funding", AVAILABLE if payload["funding_rate"] is not None else MISSING, "not supplied/applicable")
+                                payload["_quality"]=q.snapshot()
+                                if connection_context is not None:payload['_producer_connection']=dict(connection_context)
+                                payload['_field_observations']={'schema':'grid.ticker-field-observations.v1','clock_basis':'EXCHANGE_FRAME_TS_AND_PROCESS_WALL_CLOCK','fields':copy.deepcopy(ticker_observations.get(sym,{}))}
+                                await self.db.insert_event(sym,ts,"derivatives_ticker",payload)
+                                last_ticker_write[sym]=ts
+
+                        elif topic.startswith("orderbook."):
+                            sym=topic.split(".")[-1]
+                            state=books.setdefault(sym,{"b":{},"a":{},"u":None,"seq":None})
+                            q=quality.setdefault(sym,FeedQuality(sym))
+                            guard=guards.setdefault(sym,SequenceGuard())
+                            is_snapshot=msg.get("type")=="snapshot" or data.get("u")==1
+                            if is_snapshot and guard.valid:
+                                # Reject stale replay before parsing its potentially corrupt
+                                # levels: a stale malformed snapshot must not erase a good book.
+                                probe=copy.copy(guard)
+                                if not probe.snapshot(data.get("seq"),data.get("u")) and probe.valid:
+                                    log.warning("stale orderbook snapshot ignored",extra={"event":"orderbook_stale_snapshot","component":sym})
+                                    continue
+                            if not is_snapshot and guard.is_stale_delta(data.get("seq"),data.get("u")):
+                                log.warning("stale orderbook delta ignored",extra={"event":"orderbook_stale_delta","component":sym})
+                                continue
+                            try:
+                                bids=parse_book_levels(data.get("b"),snapshot=is_snapshot)
+                                asks=parse_book_levels(data.get("a"),snapshot=is_snapshot)
+                            except (ValueError,TypeError):
+                                guard.valid=False
+                                velocity.state.pop(sym,None)
+                                wall_tracker.state.pop(sym,None)
+                                state["b"].clear(); state["a"].clear()
+                                q.mark("orderbook",MISSING,"malformed orderbook levels")
+                                log.warning("malformed orderbook levels",extra={"event":"orderbook_bad_levels","component":sym})
+                                continue
+                            if is_snapshot:
+                                if not guard.valid:
+                                    velocity.state.pop(sym,None)
+                                    wall_tracker.state.pop(sym,None)
+                                was_valid=guard.valid
+                                if not guard.snapshot(data.get("seq"),data.get("u")):
+                                    if was_valid and guard.valid:
+                                        # Stale replay: retain the newer, valid book.
+                                        log.warning("stale orderbook snapshot ignored",extra={"event":"orderbook_stale_snapshot","component":sym})
+                                        continue
+                                    state["b"].clear(); state["a"].clear()
+                                    q.mark("orderbook",MISSING,"snapshot missing sequence metadata")
+                                    log.warning("orderbook snapshot missing sequence metadata",extra={"event":"orderbook_bad_snapshot","component":sym})
+                                    continue
+                                state["b"]=bids
+                                state["a"]=asks
+                                q.mark("orderbook",AVAILABLE)
+                            elif not guard.delta(data.get("seq"),data.get("u")):
+                                velocity.state.pop(sym,None)
+                                wall_tracker.state.pop(sym,None)
+                                state["b"].clear(); state["a"].clear()
+                                q.mark("orderbook",MISSING,"sequence gap; waiting for fresh snapshot")
+                                log.warning("orderbook sequence gap",extra={"event":"orderbook_gap","component":sym})
+                                continue
+                            else:
+                                for p,qty in bids.items():
+                                    if qty==0: state["b"].pop(p,None)
+                                    else: state["b"][p]=qty
+                                for p,qty in asks.items():
+                                    if qty==0: state["a"].pop(p,None)
+                                    else: state["a"][p]=qty
+                            # Depth-50 streams should never accumulate unbounded levels.
+                            # A malformed sequence must recover from a fresh snapshot.
+                            if len(state["b"])>200 or len(state["a"])>200:
+                                guard.valid=False
+                                velocity.state.pop(sym,None)
+                                wall_tracker.state.pop(sym,None)
+                                state["b"].clear(); state["a"].clear()
+                                q.mark("orderbook",MISSING,"accumulated level limit exceeded")
+                                log.warning("orderbook level limit exceeded",extra={"event":"orderbook_level_overflow","component":sym})
+                                continue
+                            # A crossed or locked book cannot provide a valid spread.
+                            # Drop the epoch instead of publishing misleading metrics.
+                            if state["b"] and state["a"] and max(state["b"])>=min(state["a"]):
+                                guard.valid=False
+                                velocity.state.pop(sym,None)
+                                wall_tracker.state.pop(sym,None)
+                                state["b"].clear(); state["a"].clear()
+                                q.mark("orderbook",MISSING,"crossed or locked orderbook")
+                                log.warning("crossed or locked orderbook",extra={"event":"orderbook_crossed","component":sym})
+                                continue
+                            book_watchdog.observe(sym,now)
+                            state["u"]=data.get("u",state["u"])
+                            state["seq"]=data.get("seq",state["seq"])
+
+                            if ts-last_book_write.get(sym,0) >= self.snapshot_ms:
+                                metrics=analyze_book(list(state["b"].items()),list(state["a"].items()))
+                                metrics.update(velocity.update(sym,ts,state["b"],state["a"]))
+                                walls,removed=wall_tracker.update(sym,ts,metrics["walls"])
+                                metrics["walls"]=walls
+                                metrics["update_id"]=state["u"]
+                                metrics["sequence"]=state["seq"]
+                                metrics["cts"]=data.get("cts")
+                                metrics["_quality"]=q.snapshot()
+                                if connection_context is not None:metrics['_producer_connection']=dict(connection_context)
+                                await self.db.insert_event(sym,ts,"orderbook_snapshot",metrics)
+                                for wall in walls:
+                                    if wall["ratio"] >= self.wall_event_ratio:
+                                        await self.db.insert_event(sym,ts,"liquidity_wall",wall)
+                                for wall in removed:
+                                    await self.db.insert_event(sym,ts,"liquidity_wall_removed",wall)
+                                last_book_write[sym]=ts
+
+            except asyncio.CancelledError:
+                raise
+            except Exception:
+                d=next(delays)
+                log.exception("microstructure stream failed",extra={"event":"reconnect","delay":d})
+                await asyncio.sleep(d)

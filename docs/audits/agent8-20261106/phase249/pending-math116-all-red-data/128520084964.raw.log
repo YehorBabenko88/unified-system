@@ -1,0 +1,360 @@
+﻿2026-11-08T17:53:29.8659992Z Current runner version: '2.338.2'
+2026-11-08T17:53:29.8681093Z ##[group]Runner Image Provisioner
+2026-11-08T17:53:29.8681821Z Hosted Compute Agent
+2026-11-08T17:53:29.8682280Z Version: 20261028.624
+2026-11-08T17:53:29.8682851Z Commit: 54898b74c23fde5556c9b3c3a2290865feef0dfe
+2026-11-08T17:53:29.8683433Z Build Date: 2026-10-28T21:51:42Z
+2026-11-08T17:53:29.8684047Z Worker ID: {70040b5e-955b-4cea-b1a3-6154a396989b}
+2026-11-08T17:53:29.8684658Z Region: northcentralus
+2026-11-08T17:53:29.8685112Z Cloud: Azure
+2026-11-08T17:53:29.8685740Z ##[endgroup]
+2026-11-08T17:53:29.8686838Z ##[group]Operating System
+2026-11-08T17:53:29.8687412Z Ubuntu
+2026-11-08T17:53:29.8687877Z 26.04.1
+2026-11-08T17:53:29.8688293Z LTS
+2026-11-08T17:53:29.8688755Z ##[endgroup]
+2026-11-08T17:53:29.8689202Z ##[group]Runner Image
+2026-11-08T17:53:29.8689744Z Image: ubuntu-26.04
+2026-11-08T17:53:29.8690243Z Version: 20261101.186.1
+2026-11-08T17:53:29.8691282Z Included Software: https://github.com/actions/runner-images/blob/ubuntu26/20261101.186/images/ubuntu/Ubuntu2604-Readme.md
+2026-11-08T17:53:29.8692472Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu26%2F20261101.186
+2026-11-08T17:53:29.8693316Z ##[endgroup]
+2026-11-08T17:53:29.8694226Z ##[group]GITHUB_TOKEN Permissions
+2026-11-08T17:53:29.8696061Z Contents: read
+2026-11-08T17:53:29.8696567Z Metadata: read
+2026-11-08T17:53:29.8697029Z ##[endgroup]
+2026-11-08T17:53:29.8698820Z Secret source: Actions
+2026-11-08T17:53:29.8699633Z Cache mode: write
+2026-11-08T17:53:29.8700282Z Prepare workflow directory
+2026-11-08T17:53:29.9009999Z Prepare all required actions
+2026-11-08T17:53:29.9065585Z Getting action download info
+2026-11-08T17:53:30.1014595Z Download action repository 'actions/checkout@11d5960a326750d5838078e36cf38b85af677262' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-11-08T17:53:30.2164430Z Download action repository 'actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+2026-11-08T17:53:30.3680962Z Download action repository 'actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093' (SHA:d3f86a106a0bac45b974a628896c90dbdf5c8093)
+2026-11-08T17:53:30.6418308Z Download action repository 'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-11-08T17:53:30.8355703Z Complete job name: Full CI coverage
+2026-11-08T17:53:30.9074171Z ##[group]Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+2026-11-08T17:53:30.9075049Z with:
+2026-11-08T17:53:30.9075586Z   persist-credentials: false
+2026-11-08T17:53:30.9076065Z   ref: 20f5d15d5028c598309aa05b8f6e2d834764441b
+2026-11-08T17:53:30.9076584Z   fetch-depth: 0
+2026-11-08T17:53:30.9076984Z   repository: YehorBabenko88/math
+2026-11-08T17:53:30.9080183Z   token: ***
+2026-11-08T17:53:30.9080566Z   ssh-strict: true
+2026-11-08T17:53:30.9080950Z   ssh-user: git
+2026-11-08T17:53:30.9081320Z   clean: true
+2026-11-08T17:53:30.9081730Z   sparse-checkout-cone-mode: true
+2026-11-08T17:53:30.9082188Z   fetch-tags: false
+2026-11-08T17:53:30.9082740Z   show-progress: true
+2026-11-08T17:53:30.9083366Z   lfs: false
+2026-11-08T17:53:30.9083928Z   submodules: false
+2026-11-08T17:53:30.9084330Z   set-safe-directory: true
+2026-11-08T17:53:30.9084771Z   allow-unsafe-pr-checkout: false
+2026-11-08T17:53:30.9085700Z ##[endgroup]
+2026-11-08T17:53:31.1106227Z Syncing repository: YehorBabenko88/math
+2026-11-08T17:53:31.1108045Z ##[group]Getting Git version info
+2026-11-08T17:53:31.1108676Z Working directory is '/home/runner/work/math/math'
+2026-11-08T17:53:31.1124377Z [command]/usr/bin/git version
+2026-11-08T17:53:31.1408629Z git version 2.56.0
+2026-11-08T17:53:31.1425033Z ##[endgroup]
+2026-11-08T17:53:31.1439015Z Temporarily overriding HOME='/home/runner/work/_temp/91cf06f1-ea30-4c17-9e33-0d0edac9bf7d' before making global git config changes
+2026-11-08T17:53:31.1441099Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-08T17:53:31.1443850Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/math/math
+2026-11-08T17:53:31.1526638Z Deleting the contents of '/home/runner/work/math/math'
+2026-11-08T17:53:31.1529843Z ##[group]Initializing the repository
+2026-11-08T17:53:31.1535712Z [command]/usr/bin/git init /home/runner/work/math/math
+2026-11-08T17:53:31.2632934Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-11-08T17:53:31.2634495Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-11-08T17:53:31.2636059Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-11-08T17:53:31.2637342Z hint: call:
+2026-11-08T17:53:31.2638104Z hint:
+2026-11-08T17:53:31.2641389Z hint: 	git config --global init.defaultBranch <name>
+2026-11-08T17:53:31.2642517Z hint:
+2026-11-08T17:53:31.2643565Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-11-08T17:53:31.2645137Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-11-08T17:53:31.2646490Z hint:
+2026-11-08T17:53:31.2647191Z hint: 	git branch -m <name>
+2026-11-08T17:53:31.2647987Z hint:
+2026-11-08T17:53:31.2648819Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-11-08T17:53:31.2649802Z Initialized empty Git repository in /home/runner/work/math/math/.git/
+2026-11-08T17:53:31.2655680Z [command]/usr/bin/git remote add origin https://github.com/YehorBabenko88/math
+2026-11-08T17:53:31.2727629Z ##[endgroup]
+2026-11-08T17:53:31.2729031Z ##[group]Disabling automatic garbage collection
+2026-11-08T17:53:31.2736631Z [command]/usr/bin/git config --local gc.auto 0
+2026-11-08T17:53:31.2767407Z ##[endgroup]
+2026-11-08T17:53:31.2768569Z ##[group]Setting up auth
+2026-11-08T17:53:31.2773318Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-08T17:53:31.2802384Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-08T17:53:31.3130678Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-08T17:53:31.3160506Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-08T17:53:31.3392506Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-08T17:53:31.3424577Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-08T17:53:31.3721475Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-08T17:53:31.3724483Z ##[endgroup]
+2026-11-08T17:53:31.3725630Z ##[group]Fetching the repository
+2026-11-08T17:53:31.3726693Z [command]/usr/bin/git -c protocol.version=2 fetch --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*
+2026-11-08T17:53:31.9630287Z From https://github.com/YehorBabenko88/math
+2026-11-08T17:53:31.9632689Z  * [new branch]      agent7/math-history-statistics-overflow-20261107 -> origin/agent7/math-history-statistics-overflow-20261107
+2026-11-08T17:53:31.9635807Z  * [new branch]      agent7/math-loader-init-diagnostics-20261106 -> origin/agent7/math-loader-init-diagnostics-20261106
+2026-11-08T17:53:31.9638384Z  * [new branch]      agent7/math-loader-init-followup-20261107 -> origin/agent7/math-loader-init-followup-20261107
+2026-11-08T17:53:31.9640557Z  * [new branch]      agent7/math-native-research-20261106 -> origin/agent7/math-native-research-20261106
+2026-11-08T17:53:31.9642920Z  * [new branch]      agent7/math-verifier-import-20261107 -> origin/agent7/math-verifier-import-20261107
+2026-11-08T17:53:31.9645848Z  * [new branch]      audit/ai-codex-pr31-object-format-20261025 -> origin/audit/ai-codex-pr31-object-format-20261025
+2026-11-08T17:53:31.9648654Z  * [new branch]      audit/base-pr31-cb168925-pinned -> origin/audit/base-pr31-cb168925-pinned
+2026-11-08T17:53:31.9650652Z  * [new branch]      audit/book-cutover-hardening -> origin/audit/book-cutover-hardening
+2026-11-08T17:53:31.9652727Z  * [new branch]      audit/book-full-ci-coverage -> origin/audit/book-full-ci-coverage
+2026-11-08T17:53:31.9655185Z  * [new branch]      audit/book-ingestion-trust-boundary-20261022 -> origin/audit/book-ingestion-trust-boundary-20261022
+2026-11-08T17:53:31.9657876Z  * [new branch]      audit/book-migration-integrity -> origin/audit/book-migration-integrity
+2026-11-08T17:53:31.9659777Z  * [new branch]      audit/g0-query-contract -> origin/audit/g0-query-contract
+2026-11-08T17:53:31.9661793Z  * [new branch]      audit/gpt1-pr80-diagnostic-20261027 -> origin/audit/gpt1-pr80-diagnostic-20261027
+2026-11-08T17:53:31.9664199Z  * [new branch]      audit/gpt1-pr80-os-attribution-20261027 -> origin/audit/gpt1-pr80-os-attribution-20261027
+2026-11-08T17:53:31.9666901Z  * [new branch]      audit/gpt1-pr83-admission-review-20261028 -> origin/audit/gpt1-pr83-admission-review-20261028
+2026-11-08T17:53:31.9669351Z  * [new branch]      audit/gpt1-proof-kernel-pr31-20261025 -> origin/audit/gpt1-proof-kernel-pr31-20261025
+2026-11-08T17:53:31.9671577Z  * [new branch]      audit/gpt1-token73-flags-20261026 -> origin/audit/gpt1-token73-flags-20261026
+2026-11-08T17:53:31.9674273Z  * [new branch]      audit/gpt1-token75-76-combined-20261026 -> origin/audit/gpt1-token75-76-combined-20261026
+2026-11-08T17:53:31.9677056Z  * [new branch]      audit/gpt3-kg-pr31-narrow-20261025 -> origin/audit/gpt3-kg-pr31-narrow-20261025
+2026-11-08T17:53:31.9680028Z  * [new branch]      audit/gpt3-kg-pr31-snapshot-20261025 -> origin/audit/gpt3-kg-pr31-snapshot-20261025
+2026-11-08T17:53:31.9683546Z  * [new branch]      audit/gpt5-adminit-provenance-20261025 -> origin/audit/gpt5-adminit-provenance-20261025
+2026-11-08T17:53:31.9686942Z  * [new branch]      audit/gpt5-pr51-package-binding-20261025 -> origin/audit/gpt5-pr51-package-binding-20261025
+2026-11-08T17:53:31.9689519Z  * [new branch]      audit/gpt5-pr57-merge-oidc-20261025 -> origin/audit/gpt5-pr57-merge-oidc-20261025
+2026-11-08T17:53:31.9691992Z  * [new branch]      audit/gpt5-pr60-receiver-20261026 -> origin/audit/gpt5-pr60-receiver-20261026
+2026-11-08T17:53:31.9694719Z  * [new branch]      audit/gpt5-pr64-signed-receipt-20261026 -> origin/audit/gpt5-pr64-signed-receipt-20261026
+2026-11-08T17:53:31.9697443Z  * [new branch]      audit/historical-ci-69-73-20261026 -> origin/audit/historical-ci-69-73-20261026
+2026-11-08T17:53:31.9699822Z  * [new branch]      audit/math-integration-readiness -> origin/audit/math-integration-readiness
+2026-11-08T17:53:31.9702255Z  * [new branch]      audit/math-stabilization-20 -> origin/audit/math-stabilization-20
+2026-11-08T17:53:31.9704768Z  * [new branch]      audit/pr31-independent-acceptance-20261025 -> origin/audit/pr31-independent-acceptance-20261025
+2026-11-08T17:53:31.9707410Z  * [new branch]      audit/pr31-physical-readiness -> origin/audit/pr31-physical-readiness
+2026-11-08T17:53:31.9709630Z  * [new branch]      audit/pr31-qa-correction-20261025 -> origin/audit/pr31-qa-correction-20261025
+2026-11-08T17:53:31.9712076Z  * [new branch]      audit/pr31-win-pg-independent-20261025 -> origin/audit/pr31-win-pg-independent-20261025
+2026-11-08T17:53:31.9714717Z  * [new branch]      audit/pr44-adminit-independent-20261025 -> origin/audit/pr44-adminit-independent-20261025
+2026-11-08T17:53:31.9717447Z  * [new branch]      audit/pr44-g0-independent-20261025 -> origin/audit/pr44-g0-independent-20261025
+2026-11-08T17:53:31.9719707Z  * [new branch]      audit/pr48-final-acceptance -> origin/audit/pr48-final-acceptance
+2026-11-08T17:53:31.9721971Z  * [new branch]      audit/pr51-hosted-privacy-20261025 -> origin/audit/pr51-hosted-privacy-20261025
+2026-11-08T17:53:31.9724657Z  * [new branch]      audit/pr51-independent-negative-20261025 -> origin/audit/pr51-independent-negative-20261025
+2026-11-08T17:53:31.9727721Z  * [new branch]      audit/pr52-hosted-final-acceptance-20261026 -> origin/audit/pr52-hosted-final-acceptance-20261026
+2026-11-08T17:53:31.9730707Z  * [new branch]      audit/pr57-queued-receiver-qa-20261025 -> origin/audit/pr57-queued-receiver-qa-20261025
+2026-11-08T17:53:31.9733342Z  * [new branch]      audit/pr60-independent-hosted-20261026 -> origin/audit/pr60-independent-hosted-20261026
+2026-11-08T17:53:31.9736005Z  * [new branch]      audit/pr60-windows-negative-20261026 -> origin/audit/pr60-windows-negative-20261026
+2026-11-08T17:53:31.9738422Z  * [new branch]      audit/pr64-independent-g0-20261026 -> origin/audit/pr64-independent-g0-20261026
+2026-11-08T17:53:31.9741005Z  * [new branch]      audit/pr82-physical-g0v2-admission-20261027 -> origin/audit/pr82-physical-g0v2-admission-20261027
+2026-11-08T17:53:31.9743457Z  * [new branch]      audit/proof-kernel-v2-20261025 -> origin/audit/proof-kernel-v2-20261025
+2026-11-08T17:53:31.9745804Z  * [new branch]      audit/q01-pr28-real-symlink-20261025 -> origin/audit/q01-pr28-real-symlink-20261025
+2026-11-08T17:53:31.9748331Z  * [new branch]      audit/q01-pr64-phase-boundary-20261026 -> origin/audit/q01-pr64-phase-boundary-20261026
+2026-11-08T17:53:31.9750774Z  * [new branch]      audit/qa-acceptance-gates-20261022 -> origin/audit/qa-acceptance-gates-20261022
+2026-11-08T17:53:31.9753210Z  * [new branch]      audit/sqlite-q01-reliability-20261022 -> origin/audit/sqlite-q01-reliability-20261022
+2026-11-08T17:53:31.9755790Z  * [new branch]      codex/grid-history-kernels-20261030 -> origin/codex/grid-history-kernels-20261030
+2026-11-08T17:53:31.9758259Z  * [new branch]      codex/math-native-console-fix-20261030 -> origin/codex/math-native-console-fix-20261030
+2026-11-08T17:53:31.9761170Z  * [new branch]      codex/math-native-detached-experiment-20261030 -> origin/codex/math-native-detached-experiment-20261030
+2026-11-08T17:53:31.9764983Z  * [new branch]      codex/math-native-harness-audit-20261030 -> origin/codex/math-native-harness-audit-20261030
+2026-11-08T17:53:31.9769093Z  * [new branch]      codex/math-native-loader-diagnostics-20261030 -> origin/codex/math-native-loader-diagnostics-20261030
+2026-11-08T17:53:31.9772160Z  * [new branch]      codex/math-native-loader-trace-20261030 -> origin/codex/math-native-loader-trace-20261030
+2026-11-08T17:53:31.9774861Z  * [new branch]      codex/math-workflow-policy-20261030 -> origin/codex/math-workflow-policy-20261030
+2026-11-08T17:53:31.9777485Z  * [new branch]      codex/platform-matrix-20261030 -> origin/codex/platform-matrix-20261030
+2026-11-08T17:53:31.9780942Z  * [new branch]      codex/unified-history-scientific-20261030 -> origin/codex/unified-history-scientific-20261030
+2026-11-08T17:53:31.9783797Z  * [new branch]      design/ai-codex-orchestrator-gates-20261022 -> origin/design/ai-codex-orchestrator-gates-20261022
+2026-11-08T17:53:31.9786712Z  * [new branch]      draft/knowledge-graph-boundary-20261022 -> origin/draft/knowledge-graph-boundary-20261022
+2026-11-08T17:53:31.9789112Z  * [new branch]      draft/proof-kernel-mvp-20261022 -> origin/draft/proof-kernel-mvp-20261022
+2026-11-08T17:53:31.9791390Z  * [new branch]      feat/adminit-3d-quality-ui-20261029 -> origin/feat/adminit-3d-quality-ui-20261029
+2026-11-08T17:53:31.9793607Z  * [new branch]      feat/book-knowledge-ingestion -> origin/feat/book-knowledge-ingestion
+2026-11-08T17:53:31.9796127Z  * [new branch]      feat/book-knowledge-integration-review -> origin/feat/book-knowledge-integration-review
+2026-11-08T17:53:31.9798403Z  * [new branch]      feat/book-postgres-backend -> origin/feat/book-postgres-backend
+2026-11-08T17:53:31.9800642Z  * [new branch]      feat/book-postgres-cutover-controller -> origin/feat/book-postgres-cutover-controller
+2026-11-08T17:53:31.9803756Z  * [new branch]      feat/book-postgres-integration-test -> origin/feat/book-postgres-integration-test
+2026-11-08T17:53:31.9806397Z  * [new branch]      feat/book-postgres-lossless-json -> origin/feat/book-postgres-lossless-json
+2026-11-08T17:53:31.9808718Z  * [new branch]      feat/causal-feature-screen-20261029 -> origin/feat/causal-feature-screen-20261029
+2026-11-08T17:53:31.9811244Z  * [new branch]      feat/central-scientific-engine-v2 -> origin/feat/central-scientific-engine-v2
+2026-11-08T17:53:31.9813529Z  * [new branch]      feat/disposable-vm-runtime-smoke -> origin/feat/disposable-vm-runtime-smoke
+2026-11-08T17:53:31.9815951Z  * [new branch]      feat/external-vm-host-contract -> origin/feat/external-vm-host-contract
+2026-11-08T17:53:31.9818254Z  * [new branch]      feat/five-bounded-compute-d-20261030 -> origin/feat/five-bounded-compute-d-20261030
+2026-11-08T17:53:31.9820449Z  * [new branch]      feat/g0-bounded-diagnostics -> origin/feat/g0-bounded-diagnostics
+2026-11-08T17:53:31.9822383Z  * [new branch]      feat/g0-offline-preflight -> origin/feat/g0-offline-preflight
+2026-11-08T17:53:31.9824226Z  * [new branch]      feat/g0-structured-token -> origin/feat/g0-structured-token
+2026-11-08T17:53:31.9826774Z  * [new branch]      feat/grid-provenance-contract-gate-20261029 -> origin/feat/grid-provenance-contract-gate-20261029
+2026-11-08T17:53:31.9829569Z  * [new branch]      feat/guarded-validation-selection-20261029 -> origin/feat/guarded-validation-selection-20261029
+2026-11-08T17:53:31.9831947Z  * [new branch]      feat/math-universe-foundation -> origin/feat/math-universe-foundation
+2026-11-08T17:53:31.9834200Z  * [new branch]      feat/math-walk-forward-gated-20261029 -> origin/feat/math-walk-forward-gated-20261029
+2026-11-08T17:53:31.9836930Z  * [new branch]      feat/pr56-confidential-evidence-receiver -> origin/feat/pr56-confidential-evidence-receiver
+2026-11-08T17:53:31.9839635Z  * [new branch]      feat/pr60-hosted-confidential-qualification -> origin/feat/pr60-hosted-confidential-qualification
+2026-11-08T17:53:31.9842083Z  * [new branch]      feat/q01-windows-job-containment -> origin/feat/q01-windows-job-containment
+2026-11-08T17:53:31.9844223Z  * [new branch]      feat/return-research-oos-20261029 -> origin/feat/return-research-oos-20261029
+2026-11-08T17:53:31.9846518Z  * [new branch]      feat/roots-convergence-diagnostics -> origin/feat/roots-convergence-diagnostics
+2026-11-08T17:53:31.9848898Z  * [new branch]      feat/scientific-engine-composition-v21 -> origin/feat/scientific-engine-composition-v21
+2026-11-08T17:53:31.9851004Z  * [new branch]      feature/aim-research-lab -> origin/feature/aim-research-lab
+2026-11-08T17:53:31.9852970Z  * [new branch]      fix/ci-release-provenance -> origin/fix/ci-release-provenance
+2026-11-08T17:53:31.9854756Z  * [new branch]      fix/f01-f02-audit-hardening -> origin/fix/f01-f02-audit-hardening
+2026-11-08T17:53:31.9857051Z  * [new branch]      fix/f03-r06-independent-audit-findings -> origin/fix/f03-r06-independent-audit-findings
+2026-11-08T17:53:31.9859135Z  * [new branch]      fix/g0-csv-escaped-quotes -> origin/fix/g0-csv-escaped-quotes
+2026-11-08T17:53:31.9860797Z  * [new branch]      fix/g0-token-cleanup    -> origin/fix/g0-token-cleanup
+2026-11-08T17:53:31.9862619Z  * [new branch]      fix/immutable-dependency-locks -> origin/fix/immutable-dependency-locks
+2026-11-08T17:53:31.9864752Z  * [new branch]      fix/kernel-result-inert-binding-20 -> origin/fix/kernel-result-inert-binding-20
+2026-11-08T17:53:31.9867188Z  * [new branch]      fix/knowledge-dependency-clone-20 -> origin/fix/knowledge-dependency-clone-20
+2026-11-08T17:53:31.9869245Z  * [new branch]      fix/knowledge-inert-input-20 -> origin/fix/knowledge-inert-input-20
+2026-11-08T17:53:31.9871408Z  * [new branch]      fix/mandatory-postgres-matrix-20261030 -> origin/fix/mandatory-postgres-matrix-20261030
+2026-11-08T17:53:31.9873752Z  * [new branch]      fix/orchestrator-source-identity-20 -> origin/fix/orchestrator-source-identity-20
+2026-11-08T17:53:31.9875913Z  * [new branch]      fix/pg-fenced-lease-clock -> origin/fix/pg-fenced-lease-clock
+2026-11-08T17:53:31.9877711Z  * [new branch]      fix/pg-wait-witness-chain-20 -> origin/fix/pg-wait-witness-chain-20
+2026-11-08T17:53:31.9879900Z  * [new branch]      fix/postgres-registry-worker-integrity -> origin/fix/postgres-registry-worker-integrity
+2026-11-08T17:53:31.9882333Z  * [new branch]      fix/pr31-preflight-source-identity -> origin/fix/pr31-preflight-source-identity
+2026-11-08T17:53:31.9884436Z  * [new branch]      fix/pr31-verifier-pending-state -> origin/fix/pr31-verifier-pending-state
+2026-11-08T17:53:31.9886829Z  * [new branch]      fix/pr44-watchdog-confirmation-20261025 -> origin/fix/pr44-watchdog-confirmation-20261025
+2026-11-08T17:53:31.9888844Z  * [new branch]      fix/pr45-regex-syntax   -> origin/fix/pr45-regex-syntax
+2026-11-08T17:53:31.9890455Z  * [new branch]      fix/pr64-hosted-failure -> origin/fix/pr64-hosted-failure
+2026-11-08T17:53:31.9892461Z  * [new branch]      fix/pr64-watchdog-handle-alias-20261026 -> origin/fix/pr64-watchdog-handle-alias-20261026
+2026-11-08T17:53:31.9894733Z  * [new branch]      fix/pr70-g0-observation-integrity -> origin/fix/pr70-g0-observation-integrity
+2026-11-08T17:53:31.9896983Z  * [new branch]      fix/proof-input-size-boundary-20 -> origin/fix/proof-input-size-boundary-20
+2026-11-08T17:53:31.9899131Z  * [new branch]      fix/q01-detached-journal-stat-20 -> origin/fix/q01-detached-journal-stat-20
+2026-11-08T17:53:31.9901301Z  * [new branch]      fix/qa-evidence-symlink-portability -> origin/fix/qa-evidence-symlink-portability
+2026-11-08T17:53:31.9903476Z  * [new branch]      fix/release-required-contexts-20 -> origin/fix/release-required-contexts-20
+2026-11-08T17:53:31.9905793Z  * [new branch]      fix/scientific-evidence-consistency -> origin/fix/scientific-evidence-consistency
+2026-11-08T17:53:31.9907854Z  * [new branch]      fix/sql-byte-reproducibility -> origin/fix/sql-byte-reproducibility
+2026-11-08T17:53:31.9909813Z  * [new branch]      fix/walk-forward-forecast-guard -> origin/fix/walk-forward-forecast-guard
+2026-11-08T17:53:31.9911794Z  * [new branch]      fix/windows-deployment-safety -> origin/fix/windows-deployment-safety
+2026-11-08T17:53:31.9914420Z  * [new branch]      fix/windows-release-artifact-binding -> origin/fix/windows-release-artifact-binding
+2026-11-08T17:53:31.9916761Z  * [new branch]      integration/g0-diagnostic-os-fix -> origin/integration/g0-diagnostic-os-fix
+2026-11-08T17:53:31.9918863Z  * [new branch]      integration/g0-token-flags-cleanup -> origin/integration/g0-token-flags-cleanup
+2026-11-08T17:53:31.9920994Z  * [new branch]      integration/math-adminit-readiness -> origin/integration/math-adminit-readiness
+2026-11-08T17:53:31.9923475Z  * [new branch]      integration/math-central-engine-v1-20261029 -> origin/integration/math-central-engine-v1-20261029
+2026-11-08T17:53:31.9925647Z  * [new branch]      integration/math-f01-f02 -> origin/integration/math-f01-f02
+2026-11-08T17:53:31.9927279Z  * [new branch]      integration/math-f03-r06 -> origin/integration/math-f03-r06
+2026-11-08T17:53:31.9929612Z  * [new branch]      integration/math-issue20-physical-preflight-20261025 -> origin/integration/math-issue20-physical-preflight-20261025
+2026-11-08T17:53:31.9932313Z  * [new branch]      integration/math-parallel-audit-20261023 -> origin/integration/math-parallel-audit-20261023
+2026-11-08T17:53:31.9934554Z  * [new branch]      integration/math-remediation-abc -> origin/integration/math-remediation-abc
+2026-11-08T17:53:31.9936797Z  * [new branch]      integration/pr51-gpt456-qualification -> origin/integration/pr51-gpt456-qualification
+2026-11-08T17:53:31.9938995Z  * [new branch]      integration/pr57-source-binding-qa -> origin/integration/pr57-source-binding-qa
+2026-11-08T17:53:31.9940951Z  * [new branch]      integration/pr69-g0-readiness -> origin/integration/pr69-g0-readiness
+2026-11-08T17:53:31.9942474Z  * [new branch]      main                    -> origin/main
+2026-11-08T17:53:31.9944249Z  * [new branch]      mission/loader-facts-coarse-diagnostics -> origin/mission/loader-facts-coarse-diagnostics
+2026-11-08T17:53:31.9946520Z  * [new branch]      mission1/composed-math-20261031 -> origin/mission1/composed-math-20261031
+2026-11-08T17:53:31.9948594Z  * [new branch]      mission3/pinned-browser-host-20261031 -> origin/mission3/pinned-browser-host-20261031
+2026-11-08T17:53:31.9950713Z  * [new branch]      review/base-proof-kernel-6c969ab -> origin/review/base-proof-kernel-6c969ab
+2026-11-08T17:53:31.9952893Z  * [new branch]      test/adminit-synthetic-containment -> origin/test/adminit-synthetic-containment
+2026-11-08T17:53:31.9954997Z  * [new branch]      test/pr31-queue-independent-review -> origin/test/pr31-queue-independent-review
+2026-11-08T17:53:31.9957194Z  * [new branch]      test/pr31-windows-harness -> origin/test/pr31-windows-harness
+2026-11-08T17:53:31.9959814Z  * [new branch]      test/pr50-watchdog-qualification -> origin/test/pr50-watchdog-qualification
+2026-11-08T17:53:31.9962616Z  * [new branch]      test/q01-native-forensics-20 -> origin/test/q01-native-forensics-20
+2026-11-08T17:53:31.9965155Z  * [new branch]      test/q01-queue-reliability -> origin/test/q01-queue-reliability
+2026-11-08T17:53:31.9969866Z [command]/usr/bin/git rev-parse --verify --quiet 20f5d15d5028c598309aa05b8f6e2d834764441b^{object}
+2026-11-08T17:53:31.9974673Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules origin 20f5d15d5028c598309aa05b8f6e2d834764441b
+2026-11-08T17:53:32.1548181Z From https://github.com/YehorBabenko88/math
+2026-11-08T17:53:32.1549590Z  * branch            20f5d15d5028c598309aa05b8f6e2d834764441b -> FETCH_HEAD
+2026-11-08T17:53:32.1553218Z ##[endgroup]
+2026-11-08T17:53:32.1554764Z ##[group]Determining the checkout info
+2026-11-08T17:53:32.1556343Z ##[endgroup]
+2026-11-08T17:53:32.1558734Z [command]/usr/bin/git sparse-checkout disable
+2026-11-08T17:53:32.1601731Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-11-08T17:53:32.1628466Z ##[group]Checking out the ref
+2026-11-08T17:53:32.1630595Z [command]/usr/bin/git checkout --progress --force 20f5d15d5028c598309aa05b8f6e2d834764441b
+2026-11-08T17:53:32.2059081Z Note: switching to '20f5d15d5028c598309aa05b8f6e2d834764441b'.
+2026-11-08T17:53:32.2060003Z 
+2026-11-08T17:53:32.2060854Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-11-08T17:53:32.2062732Z changes and commit them, and you can discard any commits you make in this
+2026-11-08T17:53:32.2064481Z state without impacting any branches by switching back to a branch.
+2026-11-08T17:53:32.2065639Z 
+2026-11-08T17:53:32.2066463Z If you want to create a new branch to retain commits you create, you may
+2026-11-08T17:53:32.2068406Z do so (now or later) by using -c with the switch command. Example:
+2026-11-08T17:53:32.2069271Z 
+2026-11-08T17:53:32.2069950Z   git switch -c <new-branch-name>
+2026-11-08T17:53:32.2070803Z 
+2026-11-08T17:53:32.2071465Z Or undo this operation with:
+2026-11-08T17:53:32.2072015Z 
+2026-11-08T17:53:32.2072576Z   git switch -
+2026-11-08T17:53:32.2073009Z 
+2026-11-08T17:53:32.2073902Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-11-08T17:53:32.2075054Z 
+2026-11-08T17:53:32.2076577Z HEAD is now at 20f5d15 Merge b9c2f24b33285b7b0e06aebc354a9c61a909d204 into 917d99672e37db59835a8ab23b03c99826b12d78
+2026-11-08T17:53:32.2080063Z ##[endgroup]
+2026-11-08T17:53:32.2114051Z [command]/usr/bin/git log -1 --format=%H
+2026-11-08T17:53:32.2136870Z 20f5d15d5028c598309aa05b8f6e2d834764441b
+2026-11-08T17:53:32.2144930Z ##[group]Removing auth
+2026-11-08T17:53:32.2147746Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-08T17:53:32.2174078Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-08T17:53:32.2416769Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-08T17:53:32.2438587Z http.https://github.com/.extraheader
+2026-11-08T17:53:32.2444012Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-08T17:53:32.2477955Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-08T17:53:32.2722937Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-08T17:53:32.2754393Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-08T17:53:32.2998485Z ##[endgroup]
+2026-11-08T17:53:32.3294383Z ##[group]Run actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+2026-11-08T17:53:32.3295878Z with:
+2026-11-08T17:53:32.3296575Z   node-version: 24
+2026-11-08T17:53:32.3297337Z   always-auth: false
+2026-11-08T17:53:32.3298104Z   check-latest: false
+2026-11-08T17:53:32.3304707Z   token: ***
+2026-11-08T17:53:32.3305586Z ##[endgroup]
+2026-11-08T17:53:32.4499153Z Found in cache @ /opt/hostedtoolcache/node/24.22.2/x64
+2026-11-08T17:53:32.4501768Z (node:2296) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-08T17:53:32.4504553Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-08T17:53:32.4506567Z ##[group]Environment details
+2026-11-08T17:53:32.7900052Z node: v24.22.2
+2026-11-08T17:53:32.7900925Z npm: 11.19.1
+2026-11-08T17:53:32.7901493Z yarn: 1.22.22
+2026-11-08T17:53:32.7902678Z ##[endgroup]
+2026-11-08T17:53:32.8040826Z ##[group]Run actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+2026-11-08T17:53:32.8041176Z with:
+2026-11-08T17:53:32.8041353Z   pattern: platform-*
+2026-11-08T17:53:32.8041572Z   path: mandatory-platform-artifacts
+2026-11-08T17:53:32.8041802Z   merge-multiple: false
+2026-11-08T17:53:32.8042008Z   repository: YehorBabenko88/math
+2026-11-08T17:53:32.8042214Z   run-id: 42369097913
+2026-11-08T17:53:32.8042392Z ##[endgroup]
+2026-11-08T17:53:32.9454211Z (node:2328) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-08T17:53:32.9455032Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-08T17:53:33.1082031Z Found 10 artifact(s)
+2026-11-08T17:53:33.1082992Z Filtering artifacts by pattern 'platform-*'
+2026-11-08T17:53:33.1098773Z Preparing to download the following artifacts:
+2026-11-08T17:53:33.1099958Z - platform-windows-22 (ID: 13589835911, Size: 9816, Expected Digest: sha256:bf68ad3abb5847290d4be0a484584d684692901314eba7afd927f7ba8220fd23)
+2026-11-08T17:53:33.1101421Z - platform-windows-24 (ID: 13589537364, Size: 9818, Expected Digest: sha256:3c8375364148957a5260eb7dbde680f83184b7016465a615c96cdb25fcf6b5d2)
+2026-11-08T17:53:33.1102543Z - platform-linux-24-18 (ID: 13589431095, Size: 69615, Expected Digest: sha256:9673ec295bf1c03faad96018c3d887f406d0fc1a7219d4aef351ab5e166e1318)
+2026-11-08T17:53:33.1104028Z - platform-linux-22-18 (ID: 13589348346, Size: 69615, Expected Digest: sha256:5a2f24f14309e015f554a92ee0390035a6678946c6acaa49f93110e41cc7dc43)
+2026-11-08T17:53:33.1105063Z - platform-linux-24-16 (ID: 13589167619, Size: 69615, Expected Digest: sha256:6bc0b876613a40cb70c8db2aaa18818fb44e51bfa650d721933f1e97bfcf67e9)
+2026-11-08T17:53:33.1106307Z - platform-linux-22-16 (ID: 13589103003, Size: 69615, Expected Digest: sha256:fd310a4005c30379ad9baaa97a2fb8bcdf72c38881405fb2c7c35ddfefe9d78d)
+2026-11-08T17:53:33.2538682Z Redirecting to blob download url: https://productionresultssa10.blob.core.windows.net/actions-results/98adaf95-0cca-8a59-bf39-a34aa57bb91a/workflow-job-run-b9be2daf-c8d3-59d6-8cd0-6b310d737a1d/artifacts/0f05110c682005904342eb87ced20389071fff49d659d5f22dd1114339f772b5.zip
+2026-11-08T17:53:33.2539986Z Starting download of artifact to: /home/runner/work/math/math/mandatory-platform-artifacts/platform-windows-22
+2026-11-08T17:53:33.2971571Z Redirecting to blob download url: https://productionresultssa10.blob.core.windows.net/actions-results/98adaf95-0cca-8a59-bf39-a34aa57bb91a/workflow-job-run-205585fd-be71-5a6d-a95a-fb0122dbe8d1/artifacts/b38bfcfdcb59aceabb67b286bd38e753bb30cbc5721644dc07964ba7e55ab5a7.zip
+2026-11-08T17:53:33.2973651Z Starting download of artifact to: /home/runner/work/math/math/mandatory-platform-artifacts/platform-linux-22-16
+2026-11-08T17:53:33.3045801Z Redirecting to blob download url: https://productionresultssa10.blob.core.windows.net/actions-results/98adaf95-0cca-8a59-bf39-a34aa57bb91a/workflow-job-run-2b6b0524-facd-5a96-92b8-d7d689048494/artifacts/b69971d3d2f60fd2731a7d1857856ccd7ec265113b7e9b7f37ecd241df71d995.zip
+2026-11-08T17:53:33.3048034Z Starting download of artifact to: /home/runner/work/math/math/mandatory-platform-artifacts/platform-linux-24-16
+2026-11-08T17:53:33.3127042Z Redirecting to blob download url: https://productionresultssa10.blob.core.windows.net/actions-results/98adaf95-0cca-8a59-bf39-a34aa57bb91a/workflow-job-run-ddfe1adc-c990-58f7-ac95-d3cd847acfa3/artifacts/b92df92047b4d0f078f5e9f38cb4794922c2adf6c749f9bb1da944e975a22030.zip
+2026-11-08T17:53:33.3129261Z Starting download of artifact to: /home/runner/work/math/math/mandatory-platform-artifacts/platform-linux-22-18
+2026-11-08T17:53:33.3149897Z Redirecting to blob download url: https://productionresultssa10.blob.core.windows.net/actions-results/98adaf95-0cca-8a59-bf39-a34aa57bb91a/workflow-job-run-aa1512f2-eb35-5e50-8b90-9709c357b538/artifacts/1e2b27aec79e4c0cc4b603ddb835761590e92a5b1931ef2c3a49aba9643b0482.zip
+2026-11-08T17:53:33.3152523Z Starting download of artifact to: /home/runner/work/math/math/mandatory-platform-artifacts/platform-linux-24-18
+2026-11-08T17:53:33.3228378Z Redirecting to blob download url: https://productionresultssa10.blob.core.windows.net/actions-results/98adaf95-0cca-8a59-bf39-a34aa57bb91a/workflow-job-run-1fe975b1-6f63-5da3-966e-a4df577fac73/artifacts/7fc892057b4d44c09f6fe43acc1cb24efa4710462c8444f2079d3e12e0f0755d.zip
+2026-11-08T17:53:33.3229815Z Starting download of artifact to: /home/runner/work/math/math/mandatory-platform-artifacts/platform-windows-24
+2026-11-08T17:53:33.3416284Z (node:2328) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.
+2026-11-08T17:53:33.3474321Z SHA256 digest of downloaded artifact is bf68ad3abb5847290d4be0a484584d684692901314eba7afd927f7ba8220fd23
+2026-11-08T17:53:33.3475124Z Artifact download completed successfully.
+2026-11-08T17:53:33.4274940Z SHA256 digest of downloaded artifact is 6bc0b876613a40cb70c8db2aaa18818fb44e51bfa650d721933f1e97bfcf67e9
+2026-11-08T17:53:33.4275884Z Artifact download completed successfully.
+2026-11-08T17:53:33.4278889Z SHA256 digest of downloaded artifact is fd310a4005c30379ad9baaa97a2fb8bcdf72c38881405fb2c7c35ddfefe9d78d
+2026-11-08T17:53:33.4279674Z Artifact download completed successfully.
+2026-11-08T17:53:33.4297979Z SHA256 digest of downloaded artifact is 3c8375364148957a5260eb7dbde680f83184b7016465a615c96cdb25fcf6b5d2
+2026-11-08T17:53:33.4298834Z Artifact download completed successfully.
+2026-11-08T17:53:33.4315799Z SHA256 digest of downloaded artifact is 9673ec295bf1c03faad96018c3d887f406d0fc1a7219d4aef351ab5e166e1318
+2026-11-08T17:53:33.4316363Z Artifact download completed successfully.
+2026-11-08T17:53:33.4455885Z SHA256 digest of downloaded artifact is 5a2f24f14309e015f554a92ee0390035a6678946c6acaa49f93110e41cc7dc43
+2026-11-08T17:53:33.4456467Z Artifact download completed successfully.
+2026-11-08T17:53:33.4456818Z Total of 6 artifact(s) downloaded
+2026-11-08T17:53:33.4460924Z Download artifact has finished successfully
+2026-11-08T17:53:33.4663510Z ##[group]Run test "$MATRIX_RESULT" = success
+2026-11-08T17:53:33.4663892Z [36;1mtest "$MATRIX_RESULT" = success[0m
+2026-11-08T17:53:33.4716693Z shell: /usr/bin/bash -e {0}
+2026-11-08T17:53:33.4716958Z env:
+2026-11-08T17:53:33.4717162Z   MATRIX_RESULT: failure
+2026-11-08T17:53:33.4717401Z   WINDOWS_RESULT: success
+2026-11-08T17:53:33.4717628Z ##[endgroup]
+2026-11-08T17:53:33.4809271Z ##[error]Process completed with exit code 1.
+2026-11-08T17:53:33.4932962Z Post job cleanup.
+2026-11-08T17:53:33.5623832Z [command]/usr/bin/git version
+2026-11-08T17:53:33.5692241Z git version 2.56.0
+2026-11-08T17:53:33.5721520Z Temporarily overriding HOME='/home/runner/work/_temp/b1bddd9d-e41b-40f2-a65a-7a31cadce93f' before making global git config changes
+2026-11-08T17:53:33.5723153Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-08T17:53:33.5727081Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/math/math
+2026-11-08T17:53:33.5762162Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-08T17:53:33.5793845Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-08T17:53:33.6067357Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-08T17:53:33.6099885Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-08T17:53:33.6369450Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-08T17:53:33.6398840Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-08T17:53:33.6758478Z Cleaning up orphan processes
+2026-11-08T17:53:33.7084876Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@11d5960a326750d5838078e36cf38b85af677262, actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093, actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

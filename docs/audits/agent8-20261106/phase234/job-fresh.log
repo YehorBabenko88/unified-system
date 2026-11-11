@@ -1,0 +1,932 @@
+﻿2026-11-11T00:11:55.4900183Z Current runner version: '2.338.2'
+2026-11-11T00:11:55.4953314Z ##[group]Runner Image Provisioner
+2026-11-11T00:11:55.4954231Z Hosted Compute Agent
+2026-11-11T00:11:55.4954784Z Version: 20261103.629
+2026-11-11T00:11:55.4955347Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+2026-11-11T00:11:55.4956058Z Build Date: 2026-11-03T17:26:59Z
+2026-11-11T00:11:55.4956670Z Worker ID: {9bbbbd57-f4b6-473b-bdf7-ea7cd71cc1b5}
+2026-11-11T00:11:55.4957316Z Region: westus3
+2026-11-11T00:11:55.4957790Z Cloud: Azure
+2026-11-11T00:11:55.4958246Z ##[endgroup]
+2026-11-11T00:11:55.4959415Z ##[group]Operating System
+2026-11-11T00:11:55.4959985Z Microsoft Windows Server 2025
+2026-11-11T00:11:55.4960605Z 10.0.26100
+2026-11-11T00:11:55.4961059Z Datacenter
+2026-11-11T00:11:55.4961531Z ##[endgroup]
+2026-11-11T00:11:55.4962054Z ##[group]Runner Image
+2026-11-11T00:11:55.4962604Z Image: windows-2025-vs2026
+2026-11-11T00:11:55.4963123Z Version: 20261103.298.1
+2026-11-11T00:11:55.4964629Z Included Software: https://github.com/actions/runner-images/blob/win25-vs2026/20261103.298/images/windows/Windows2025-VS2026-Readme.md
+2026-11-11T00:11:55.4966281Z Image Release: https://github.com/actions/runner-images/releases/tag/win25-vs2026%2F20261103.298
+2026-11-11T00:11:55.4967158Z ##[endgroup]
+2026-11-11T00:11:55.4968583Z ##[group]GITHUB_TOKEN Permissions
+2026-11-11T00:11:55.4970488Z Contents: read
+2026-11-11T00:11:55.4971005Z Metadata: read
+2026-11-11T00:11:55.4971524Z ##[endgroup]
+2026-11-11T00:11:55.4973666Z Secret source: Actions
+2026-11-11T00:11:55.4974588Z Cache mode: write
+2026-11-11T00:11:55.4975207Z Prepare workflow directory
+2026-11-11T00:11:55.5507203Z Prepare all required actions
+2026-11-11T00:11:55.5557116Z Getting action download info
+2026-11-11T00:11:55.8445417Z Download action repository 'actions/checkout@11d5960a326750d5838078e36cf38b85af677262' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-11-11T00:11:55.9487458Z Download action repository 'actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+2026-11-11T00:11:56.0794929Z Download action repository 'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-11-11T00:11:56.4120289Z Complete job name: sqlite47
+2026-11-11T00:11:56.5725839Z ##[group]Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+2026-11-11T00:11:56.5727558Z with:
+2026-11-11T00:11:56.5728173Z   ref: 889d787ef053dca1eb0244da10f47a4a4a2cc982
+2026-11-11T00:11:56.5728868Z   path: qualifier-code
+2026-11-11T00:11:56.5729512Z   persist-credentials: false
+2026-11-11T00:11:56.5730113Z   fetch-depth: 0
+2026-11-11T00:11:56.5730638Z   repository: YehorBabenko88/strattester
+2026-11-11T00:11:56.5735235Z   token: ***
+2026-11-11T00:11:56.5735737Z   ssh-strict: true
+2026-11-11T00:11:56.5736234Z   ssh-user: git
+2026-11-11T00:11:56.5736816Z   clean: true
+2026-11-11T00:11:56.5737354Z   sparse-checkout-cone-mode: true
+2026-11-11T00:11:56.5737932Z   fetch-tags: false
+2026-11-11T00:11:56.5738510Z   show-progress: true
+2026-11-11T00:11:56.5739026Z   lfs: false
+2026-11-11T00:11:56.5739492Z   submodules: false
+2026-11-11T00:11:56.5740007Z   set-safe-directory: true
+2026-11-11T00:11:56.5740697Z   allow-unsafe-pr-checkout: false
+2026-11-11T00:11:56.5742192Z env:
+2026-11-11T00:11:56.5742747Z   TOOL_HEAD: 889d787ef053dca1eb0244da10f47a4a4a2cc982
+2026-11-11T00:11:56.5743617Z   PYTHONDONTWRITEBYTECODE: 1
+2026-11-11T00:11:56.5744340Z   PYTEST_DISABLE_PLUGIN_AUTOLOAD: 1
+2026-11-11T00:11:56.5745018Z   GIT_NO_REPLACE_OBJECTS: 1
+2026-11-11T00:11:56.5745576Z   GIT_CONFIG_COUNT: 2
+2026-11-11T00:11:56.5746084Z   GIT_CONFIG_KEY_0: core.autocrlf
+2026-11-11T00:11:56.5746712Z   GIT_CONFIG_VALUE_0: false
+2026-11-11T00:11:56.5747260Z   GIT_CONFIG_KEY_1: core.eol
+2026-11-11T00:11:56.5747832Z   GIT_CONFIG_VALUE_1: lf
+2026-11-11T00:11:56.5748382Z ##[endgroup]
+2026-11-11T00:11:56.7290968Z Syncing repository: YehorBabenko88/strattester
+2026-11-11T00:11:56.7297213Z ##[group]Getting Git version info
+2026-11-11T00:11:56.7305048Z Working directory is 'D:\a\strattester\strattester\qualifier-code'
+2026-11-11T00:11:56.8034233Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-11T00:11:57.1560430Z git version 2.56.0.windows.4
+2026-11-11T00:11:57.1622867Z ##[endgroup]
+2026-11-11T00:11:57.1640571Z Temporarily overriding HOME='D:\a\_temp\c3027666-1e02-4eec-973a-93b784543546' before making global git config changes
+2026-11-11T00:11:57.1641823Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-11T00:11:57.1650163Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\strattester\strattester\qualifier-code
+2026-11-11T00:11:57.2323434Z ##[group]Initializing the repository
+2026-11-11T00:11:57.2333938Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\strattester\strattester\qualifier-code
+2026-11-11T00:11:57.3194405Z Initialized empty Git repository in D:/a/strattester/strattester/qualifier-code/.git/
+2026-11-11T00:11:57.3243823Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/YehorBabenko88/strattester
+2026-11-11T00:11:57.3987528Z ##[endgroup]
+2026-11-11T00:11:57.3988963Z ##[group]Disabling automatic garbage collection
+2026-11-11T00:11:57.3996033Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2026-11-11T00:11:57.4371035Z ##[endgroup]
+2026-11-11T00:11:57.4373209Z ##[group]Setting up auth
+2026-11-11T00:11:57.4384638Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-11T00:11:57.4744211Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-11T00:11:59.0338126Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-11T00:11:59.0691293Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-11T00:11:59.6146012Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-11T00:11:59.6520594Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-11T00:12:00.1841364Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-11-11T00:12:00.2226932Z ##[endgroup]
+2026-11-11T00:12:00.2227848Z ##[group]Fetching the repository
+2026-11-11T00:12:00.2240778Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*
+2026-11-11T00:12:03.0763181Z From https://github.com/YehorBabenko88/strattester
+2026-11-11T00:12:03.0764611Z  * [new branch]      agent7/financial-calculation-boundary-20261107 -> origin/agent7/financial-calculation-boundary-20261107
+2026-11-11T00:12:03.0765932Z  * [new branch]      agent7/gateway-synthetic-research-20261107 -> origin/agent7/gateway-synthetic-research-20261107
+2026-11-11T00:12:03.0767141Z  * [new branch]      agent7/projection-recovery-hosted47-20261110 -> origin/agent7/projection-recovery-hosted47-20261110
+2026-11-11T00:12:03.0768240Z  * [new branch]      agent7/query-meta-bridge-v2-20261107 -> origin/agent7/query-meta-bridge-v2-20261107
+2026-11-11T00:12:03.0769421Z  * [new branch]      agent7/research-paper-recovery-20261106 -> origin/agent7/research-paper-recovery-20261106
+2026-11-11T00:12:03.0770256Z  * [new branch]      agent7/review4-research-paper-domain-20261107 -> origin/agent7/review4-research-paper-domain-20261107
+2026-11-11T00:12:03.0771564Z  * [new branch]      agent7/strat-git-sourceproof-20261106 -> origin/agent7/strat-git-sourceproof-20261106
+2026-11-11T00:12:03.0773951Z  * [new branch]      audit/alphafold-upstream-mechanism-20261024 -> origin/audit/alphafold-upstream-mechanism-20261024
+2026-11-11T00:12:03.0775226Z  * [new branch]      audit/bybit-pagination-retry-20261010 -> origin/audit/bybit-pagination-retry-20261010
+2026-11-11T00:12:03.0777308Z  * [new branch]      audit/candle-finite-timestamp-20261017-0239 -> origin/audit/candle-finite-timestamp-20261017-0239
+2026-11-11T00:12:03.0778447Z  * [new branch]      audit/candle-nonfinite-and-timestamp-20261017 -> origin/audit/candle-nonfinite-and-timestamp-20261017
+2026-11-11T00:12:03.0779321Z  * [new branch]      audit/causal-science-export-20261013 -> origin/audit/causal-science-export-20261013
+2026-11-11T00:12:03.0780303Z  * [new branch]      audit/checkpoint-recovery-cycle -> origin/audit/checkpoint-recovery-cycle
+2026-11-11T00:12:03.0780975Z  * [new branch]      audit/compile-python-gate-20261010 -> origin/audit/compile-python-gate-20261010
+2026-11-11T00:12:03.0781669Z  * [new branch]      audit/compileall-gate-20261011-1838 -> origin/audit/compileall-gate-20261011-1838
+2026-11-11T00:12:03.0782521Z  * [new branch]      audit/compileall-python-sources-20261011 -> origin/audit/compileall-python-sources-20261011
+2026-11-11T00:12:03.0783324Z  * [new branch]      audit/derivatives-nonfinite-guard-20261016-2039 -> origin/audit/derivatives-nonfinite-guard-20261016-2039
+2026-11-11T00:12:03.0784108Z  * [new branch]      audit/derivatives-nonfinite-inputs-20261016 -> origin/audit/derivatives-nonfinite-inputs-20261016
+2026-11-11T00:12:03.0785286Z  * [new branch]      audit/fail-closed-handoff-missing-payload-20261013 -> origin/audit/fail-closed-handoff-missing-payload-20261013
+2026-11-11T00:12:03.0787298Z  * [new branch]      audit/fail-closed-invalid-telemetry-20261014-1239 -> origin/audit/fail-closed-invalid-telemetry-20261014-1239
+2026-11-11T00:12:03.0788281Z  * [new branch]      audit/fail-closed-optional-handoff-20261013-1235 -> origin/audit/fail-closed-optional-handoff-20261013-1235
+2026-11-11T00:12:03.0789183Z  * [new branch]      audit/fail-closed-resource-telemetry-20261014 -> origin/audit/fail-closed-resource-telemetry-20261014
+2026-11-11T00:12:03.0791030Z  * [new branch]      audit/fail-closed-resource-telemetry-20261014-1437 -> origin/audit/fail-closed-resource-telemetry-20261014-1437
+2026-11-11T00:12:03.0791856Z  * [new branch]      audit/finite-market-candles-20261012 -> origin/audit/finite-market-candles-20261012
+2026-11-11T00:12:03.0792536Z  * [new branch]      audit/finite-trade-pnl-20261017-0742 -> origin/audit/finite-trade-pnl-20261017-0742
+2026-11-11T00:12:03.0793155Z  * [new branch]      audit/finite-trade-pnl-20261017-0843 -> origin/audit/finite-trade-pnl-20261017-0843
+2026-11-11T00:12:03.0793921Z  * [new branch]      audit/fix-gateway-parser-tests-20261012-1840 -> origin/audit/fix-gateway-parser-tests-20261012-1840
+2026-11-11T00:12:03.0794666Z  * [new branch]      audit/fix-terminan-gateway-20261011-1939 -> origin/audit/fix-terminan-gateway-20261011-1939
+2026-11-11T00:12:03.0795396Z  * [new branch]      audit/fix-terminan-gateway-20261012-0237 -> origin/audit/fix-terminan-gateway-20261012-0237
+2026-11-11T00:12:03.0796138Z  * [new branch]      audit/fix-terminan-gateway-20261012-1141 -> origin/audit/fix-terminan-gateway-20261012-1141
+2026-11-11T00:12:03.0796804Z  * [new branch]      audit/fix-terminan-gateway-20261012-2137 -> origin/audit/fix-terminan-gateway-20261012-2137
+2026-11-11T00:12:03.0797555Z  * [new branch]      audit/fix-terminan-gateway-import-20261012-0437 -> origin/audit/fix-terminan-gateway-import-20261012-0437
+2026-11-11T00:12:03.0798420Z  * [new branch]      audit/fix-terminan-gateway-import-20261012-0742 -> origin/audit/fix-terminan-gateway-import-20261012-0742
+2026-11-11T00:12:03.0799253Z  * [new branch]      audit/fix-terminan-gateway-import-20261012-1648 -> origin/audit/fix-terminan-gateway-import-20261012-1648
+2026-11-11T00:12:03.0800161Z  * [new branch]      audit/fix-terminan-gateway-parse-20261012-1041 -> origin/audit/fix-terminan-gateway-parse-20261012-1041
+2026-11-11T00:12:03.0801631Z  * [new branch]      audit/fix-terminan-gateway-parse-20261012-1743 -> origin/audit/fix-terminan-gateway-parse-20261012-1743
+2026-11-11T00:12:03.0802465Z  * [new branch]      audit/fix-terminan-gateway-parse-20261012-2341 -> origin/audit/fix-terminan-gateway-parse-20261012-2341
+2026-11-11T00:12:03.0803281Z  * [new branch]      audit/fix-terminan-gateway-parse-20261013-0139 -> origin/audit/fix-terminan-gateway-parse-20261013-0139
+2026-11-11T00:12:03.0804070Z  * [new branch]      audit/fix-terminan-gateway-parser-20261012-1604 -> origin/audit/fix-terminan-gateway-parser-20261012-1604
+2026-11-11T00:12:03.0804903Z  * [new branch]      audit/fix-terminan-gateway-parser-20261012-2242 -> origin/audit/fix-terminan-gateway-parser-20261012-2242
+2026-11-11T00:12:03.0805807Z  * [new branch]      audit/fix-terminan-gateway-parser-20261013-0039 -> origin/audit/fix-terminan-gateway-parser-20261013-0039
+2026-11-11T00:12:03.0806673Z  * [new branch]      audit/fix-terminan-gateway-parser-20261013-0635 -> origin/audit/fix-terminan-gateway-parser-20261013-0635
+2026-11-11T00:12:03.0807612Z  * [new branch]      audit/fix-terminan-gateway-parser-tests-20261013-1138 -> origin/audit/fix-terminan-gateway-parser-tests-20261013-1138
+2026-11-11T00:12:03.0808496Z  * [new branch]      audit/fix-terminan-gateway-syntax-20261012-0338 -> origin/audit/fix-terminan-gateway-syntax-20261012-0338
+2026-11-11T00:12:03.0809267Z  * [new branch]      audit/fix-terminan-gateway-syntax-20261012-0856 -> origin/audit/fix-terminan-gateway-syntax-20261012-0856
+2026-11-11T00:12:03.0810093Z  * [new branch]      audit/fix-terminan-gateway-syntax-20261012-2042 -> origin/audit/fix-terminan-gateway-syntax-20261012-2042
+2026-11-11T00:12:03.0811096Z  * [new branch]      audit/fix-terminan-gateway-syntax-20261013-1235 -> origin/audit/fix-terminan-gateway-syntax-20261013-1235
+2026-11-11T00:12:03.0813177Z  * [new branch]      audit/fix-terminan-gateway-syntax-tests-20261013-0242 -> origin/audit/fix-terminan-gateway-syntax-tests-20261013-0242
+2026-11-11T00:12:03.0814714Z  * [new branch]      audit/frozen-research-parameters-20261018-2344 -> origin/audit/frozen-research-parameters-20261018-2344
+2026-11-11T00:12:03.0816051Z  * [new branch]      audit/funding-revisions -> origin/audit/funding-revisions
+2026-11-11T00:12:03.0816795Z  * [new branch]      audit/g0-collector-deep -> origin/audit/g0-collector-deep
+2026-11-11T00:12:03.0817676Z  * [new branch]      audit/gateway-head-syntax-20261013 -> origin/audit/gateway-head-syntax-20261013
+2026-11-11T00:12:03.0818934Z  * [new branch]      audit/gateway-missing-source-20261014-1042 -> origin/audit/gateway-missing-source-20261014-1042
+2026-11-11T00:12:03.0820006Z  * [new branch]      audit/gateway-parser-fix-20261013-1338 -> origin/audit/gateway-parser-fix-20261013-1338
+2026-11-11T00:12:03.0820926Z  * [new branch]      audit/grid-coherence-next -> origin/audit/grid-coherence-next
+2026-11-11T00:12:03.0821916Z  * [new branch]      audit/history-scientific-handoff-20261030 -> origin/audit/history-scientific-handoff-20261030
+2026-11-11T00:12:03.0823618Z  * [new branch]      audit/housekeeping-finite-policy-20261015-0935 -> origin/audit/housekeeping-finite-policy-20261015-0935
+2026-11-11T00:12:03.0824696Z  * [new branch]      audit/housekeeping-reject-symlink-root-20261016 -> origin/audit/housekeeping-reject-symlink-root-20261016
+2026-11-11T00:12:03.0825842Z  * [new branch]      audit/housekeeping-root-reparse-guard-20261016 -> origin/audit/housekeeping-root-reparse-guard-20261016
+2026-11-11T00:12:03.0826627Z  * [new branch]      audit/housekeeping-root-symlink-20261015-1139 -> origin/audit/housekeeping-root-symlink-20261015-1139
+2026-11-11T00:12:03.0827659Z  * [new branch]      audit/housekeeping-symlink-ancestor-guard-20261016-1840 -> origin/audit/housekeeping-symlink-ancestor-guard-20261016-1840
+2026-11-11T00:12:03.0828501Z  * [new branch]      audit/lease-and-market-integrity-20261010 -> origin/audit/lease-and-market-integrity-20261010
+2026-11-11T00:12:03.0829464Z  * [new branch]      audit/nonfinite-derivatives-validation-20261016 -> origin/audit/nonfinite-derivatives-validation-20261016
+2026-11-11T00:12:03.0830249Z  * [new branch]      audit/physical-pilot-doctor-import-20261012 -> origin/audit/physical-pilot-doctor-import-20261012
+2026-11-11T00:12:03.0830983Z  * [new branch]      audit/preproduction-execution-20261009 -> origin/audit/preproduction-execution-20261009
+2026-11-11T00:12:03.0831754Z  * [new branch]      audit/price-kline-overflow-timestamp-20261017-0537 -> origin/audit/price-kline-overflow-timestamp-20261017-0537
+2026-11-11T00:12:03.0832559Z  * [new branch]      audit/python-compile-gate-20261011-2039 -> origin/audit/python-compile-gate-20261011-2039
+2026-11-11T00:12:03.0833237Z  * [new branch]      audit/python-compile-gate-20261011-2138 -> origin/audit/python-compile-gate-20261011-2138
+2026-11-11T00:12:03.0833960Z  * [new branch]      audit/python-source-compile-gate-20261011-1636 -> origin/audit/python-source-compile-gate-20261011-1636
+2026-11-11T00:12:03.0834695Z  * [new branch]      audit/python-syntax-gate-20261011-2241 -> origin/audit/python-syntax-gate-20261011-2241
+2026-11-11T00:12:03.0835430Z  * [new branch]      audit/quarantine-collision-guard-20261018-0439 -> origin/audit/quarantine-collision-guard-20261018-0439
+2026-11-11T00:12:03.0836186Z  * [new branch]      audit/reject-future-market-schema-20261013 -> origin/audit/reject-future-market-schema-20261013
+2026-11-11T00:12:03.0836999Z  * [new branch]      audit/repair-terminan-gateway-20261013-0439 -> origin/audit/repair-terminan-gateway-20261013-0439
+2026-11-11T00:12:03.0838063Z  * [new branch]      audit/resampling-finite-guard-20261018-1041 -> origin/audit/resampling-finite-guard-20261018-1041
+2026-11-11T00:12:03.0838828Z  * [new branch]      audit/resampling-finite-inputs-20261019-0043 -> origin/audit/resampling-finite-inputs-20261019-0043
+2026-11-11T00:12:03.0839590Z  * [new branch]      audit/resampling-finite-overflow-20261019-0543 -> origin/audit/resampling-finite-overflow-20261019-0543
+2026-11-11T00:12:03.0840382Z  * [new branch]      audit/resampling-finite-overflow-20261019-0639 -> origin/audit/resampling-finite-overflow-20261019-0639
+2026-11-11T00:12:03.0841321Z  * [new branch]      audit/resampling-finite-overflow-guard-20261018-1637 -> origin/audit/resampling-finite-overflow-guard-20261018-1637
+2026-11-11T00:12:03.0842194Z  * [new branch]      audit/resampling-finite-validation-20261019-0336 -> origin/audit/resampling-finite-validation-20261019-0336
+2026-11-11T00:12:03.0842987Z  * [new branch]      audit/resampling-overflow-guard-20261019-0846 -> origin/audit/resampling-overflow-guard-20261019-0846
+2026-11-11T00:12:03.0843957Z  * [new branch]      audit/resampling-overflow-regression-20261018-1937 -> origin/audit/resampling-overflow-regression-20261018-1937
+2026-11-11T00:12:03.0844743Z  * [new branch]      audit/resource-ram-headroom-20261010 -> origin/audit/resource-ram-headroom-20261010
+2026-11-11T00:12:03.0845510Z  * [new branch]      audit/resource-snapshot-fail-closed-20261018-0240 -> origin/audit/resource-snapshot-fail-closed-20261018-0240
+2026-11-11T00:12:03.0846381Z  * [new branch]      audit/resource-telemetry-fail-closed-20261014-1338 -> origin/audit/resource-telemetry-fail-closed-20261014-1338
+2026-11-11T00:12:03.0847397Z  * [new branch]      audit/resource-telemetry-fail-closed-20261014-1535 -> origin/audit/resource-telemetry-fail-closed-20261014-1535
+2026-11-11T00:12:03.0848170Z  * [new branch]      audit/science-adjacent-1m-label-20261017 -> origin/audit/science-adjacent-1m-label-20261017
+2026-11-11T00:12:03.0848903Z  * [new branch]      audit/science-adjacent-1m-label-20261017-1839 -> origin/audit/science-adjacent-1m-label-20261017-1839
+2026-11-11T00:12:03.0849604Z  * [new branch]      audit/science-gap-guard-20261017-1235 -> origin/audit/science-gap-guard-20261017-1235
+2026-11-11T00:12:03.0850578Z  * [new branch]      audit/sqlite-uri-filename-guard-20261018-0742 -> origin/audit/sqlite-uri-filename-guard-20261018-0742
+2026-11-11T00:12:03.0852065Z  * [new branch]      audit/sqlite-wal-portable-snapshot-20261013-1543 -> origin/audit/sqlite-wal-portable-snapshot-20261013-1543
+2026-11-11T00:12:03.0852853Z  * [new branch]      audit/strict-chronological-splits-20261013 -> origin/audit/strict-chronological-splits-20261013
+2026-11-11T00:12:03.0854010Z  * [new branch]      audit/telegram-ack-after-reply-20261018 -> origin/audit/telegram-ack-after-reply-20261018
+2026-11-11T00:12:03.0854693Z  * [new branch]      audit/telegram-blank-message-20261010 -> origin/audit/telegram-blank-message-20261010
+2026-11-11T00:12:03.0855391Z  * [new branch]      audit/telegram-empty-command-guard-20261010 -> origin/audit/telegram-empty-command-guard-20261010
+2026-11-11T00:12:03.0856226Z  * [new branch]      audit/telegram-whitespace-command-guard-20261017-2239 -> origin/audit/telegram-whitespace-command-guard-20261017-2239
+2026-11-11T00:12:03.0857331Z  * [new branch]      audit/telegram-whitespace-guard-20261017-2341 -> origin/audit/telegram-whitespace-guard-20261017-2341
+2026-11-11T00:12:03.0858559Z  * [new branch]      audit/telegram-whitespace-safe-20261010 -> origin/audit/telegram-whitespace-safe-20261010
+2026-11-11T00:12:03.0859653Z  * [new branch]      audit/terminan-finite-pnl-20261017-0938 -> origin/audit/terminan-finite-pnl-20261017-0938
+2026-11-11T00:12:03.0860752Z  * [new branch]      audit/terminan-gateway-compile-20261012-0543 -> origin/audit/terminan-gateway-compile-20261012-0543
+2026-11-11T00:12:03.0861985Z  * [new branch]      audit/terminan-gateway-compile-http-20261013-0542 -> origin/audit/terminan-gateway-compile-http-20261013-0542
+2026-11-11T00:12:03.0863356Z  * [new branch]      audit/terminan-gateway-compile-regression-20261012 -> origin/audit/terminan-gateway-compile-regression-20261012
+2026-11-11T00:12:03.0865190Z  * [new branch]      audit/terminan-gateway-compile-regression-20261013-0843 -> origin/audit/terminan-gateway-compile-regression-20261013-0843
+2026-11-11T00:12:03.0866479Z  * [new branch]      audit/terminan-gateway-cursor-20261011 -> origin/audit/terminan-gateway-cursor-20261011
+2026-11-11T00:12:03.0867594Z  * [new branch]      audit/terminan-gateway-fix-20261012-0140 -> origin/audit/terminan-gateway-fix-20261012-0140
+2026-11-11T00:12:03.0869804Z  * [new branch]      audit/terminan-gateway-parse-20261012-1937 -> origin/audit/terminan-gateway-parse-20261012-1937
+2026-11-11T00:12:03.0871309Z  * [new branch]      audit/terminan-gateway-parse-regression-20261013-0742 -> origin/audit/terminan-gateway-parse-regression-20261013-0742
+2026-11-11T00:12:03.0872657Z  * [new branch]      audit/terminan-gateway-parser-20261013-0343 -> origin/audit/terminan-gateway-parser-20261013-0343
+2026-11-11T00:12:03.0873770Z  * [new branch]      audit/terminan-gateway-regression-20261012-1241 -> origin/audit/terminan-gateway-regression-20261012-1241
+2026-11-11T00:12:03.0874458Z  * [new branch]      audit/terminan-gateway-syntax-20261010 -> origin/audit/terminan-gateway-syntax-20261010
+2026-11-11T00:12:03.0875220Z  * [new branch]      audit/terminan-gateway-syntax-20261011-2343 -> origin/audit/terminan-gateway-syntax-20261011-2343
+2026-11-11T00:12:03.0875886Z  * [new branch]      audit/terminan-gateway-syntax-20261012 -> origin/audit/terminan-gateway-syntax-20261012
+2026-11-11T00:12:03.0876605Z  * [new branch]      audit/terminan-gateway-syntax-20261012-0636 -> origin/audit/terminan-gateway-syntax-20261012-0636
+2026-11-11T00:12:03.0877326Z  * [new branch]      audit/terminan-gateway-syntax-smoke-20261013-1040 -> origin/audit/terminan-gateway-syntax-smoke-20261013-1040
+2026-11-11T00:12:03.0878063Z  * [new branch]      audit/terminan-trade-id-conflict-20261013-2241 -> origin/audit/terminan-trade-id-conflict-20261013-2241
+2026-11-11T00:12:03.0878840Z  * [new branch]      audit/terminan-trades-composite-cursor-20261014 -> origin/audit/terminan-trades-composite-cursor-20261014
+2026-11-11T00:12:03.0879538Z  * [new branch]      audit/trade-journal-conflict-20261014 -> origin/audit/trade-journal-conflict-20261014
+2026-11-11T00:12:03.0880451Z  * [new branch]      audit/trade-journal-conflict-20261014-0142 -> origin/audit/trade-journal-conflict-20261014-0142
+2026-11-11T00:12:03.0881130Z  * [new branch]      audit/trade-journal-conflict-20261014-0236 -> origin/audit/trade-journal-conflict-20261014-0236
+2026-11-11T00:12:03.0881823Z  * [new branch]      audit/trade-journal-finite-amounts-20261014-0443 -> origin/audit/trade-journal-finite-amounts-20261014-0443
+2026-11-11T00:12:03.0882598Z  * [new branch]      audit/trade-journal-idempotency-20261013-2336 -> origin/audit/trade-journal-idempotency-20261013-2336
+2026-11-11T00:12:03.0883351Z  * [new branch]      audit/trade-journal-optional-finite-20261014-0941 -> origin/audit/trade-journal-optional-finite-20261014-0941
+2026-11-11T00:12:03.0884435Z  * [new branch]      audit/wal-consistent-science-package-20261013-0943 -> origin/audit/wal-consistent-science-package-20261013-0943
+2026-11-11T00:12:03.0885180Z  * [new branch]      codex/grid-math-replay-20261030 -> origin/codex/grid-math-replay-20261030
+2026-11-11T00:12:03.0885759Z  * [new branch]      codex/handoff-syntax-repair-20261030 -> origin/codex/handoff-syntax-repair-20261030
+2026-11-11T00:12:03.0886318Z  * [new branch]      codex/provenance-a      -> origin/codex/provenance-a
+2026-11-11T00:12:03.0886854Z  * [new branch]      codex/selective-readonly-provenance -> origin/codex/selective-readonly-provenance
+2026-11-11T00:12:03.0887715Z  * [new branch]      codex/unified-display-handoff-fixes-20261030 -> origin/codex/unified-display-handoff-fixes-20261030
+2026-11-11T00:12:03.0888407Z  * [new branch]      codex/unified-history-consumer-20261030 -> origin/codex/unified-history-consumer-20261030
+2026-11-11T00:12:03.0889078Z  * [new branch]      codex/workstream-a-readonly-results -> origin/codex/workstream-a-readonly-results
+2026-11-11T00:12:03.0889638Z  * [new branch]      cycle2/grid-producer    -> origin/cycle2/grid-producer
+2026-11-11T00:12:03.0890174Z  * [new branch]      cycle2/math-verification -> origin/cycle2/math-verification
+2026-11-11T00:12:03.0890861Z  * [new branch]      cycle2/security         -> origin/cycle2/security
+2026-11-11T00:12:03.0891501Z  * [new branch]      cycle2/structural-model -> origin/cycle2/structural-model
+2026-11-11T00:12:03.0892395Z  * [new branch]      cycle2/training-backtest -> origin/cycle2/training-backtest
+2026-11-11T00:12:03.0893076Z  * [new branch]      design/grid-history-export -> origin/design/grid-history-export
+2026-11-11T00:12:03.0893950Z  * [new branch]      dev/lifecycle-cadence-hardening -> origin/dev/lifecycle-cadence-hardening
+2026-11-11T00:12:03.0894907Z  * [new branch]      engineering/authenticated-funding-intake -> origin/engineering/authenticated-funding-intake
+2026-11-11T00:12:03.0896087Z  * [new branch]      engineering/data-first-scheduler-20261028 -> origin/engineering/data-first-scheduler-20261028
+2026-11-11T00:12:03.0896989Z  * [new branch]      engineering/grid-contract-cycle -> origin/engineering/grid-contract-cycle
+2026-11-11T00:12:03.0897624Z  * [new branch]      engineering/native-sandbox-cycle -> origin/engineering/native-sandbox-cycle
+2026-11-11T00:12:03.0898226Z  * [new branch]      engineering/producer-facts-cycle -> origin/engineering/producer-facts-cycle
+2026-11-11T00:12:03.0898910Z  * [new branch]      engineering/research-funding-contract -> origin/engineering/research-funding-contract
+2026-11-11T00:12:03.0899569Z  * [new branch]      engineering/signed-pipeline-cycle -> origin/engineering/signed-pipeline-cycle
+2026-11-11T00:12:03.0900255Z  * [new branch]      experiment/alphafold-market-geometry-20261024 -> origin/experiment/alphafold-market-geometry-20261024
+2026-11-11T00:12:03.0900957Z  * [new branch]      feat/orderflow-worker-integration -> origin/feat/orderflow-worker-integration
+2026-11-11T00:12:03.0901506Z  * [new branch]      feat/research-e2e-cli   -> origin/feat/research-e2e-cli
+2026-11-11T00:12:03.0901998Z  * [new branch]      feat/standalone-foundation -> origin/feat/standalone-foundation
+2026-11-11T00:12:03.0902835Z  * [new branch]      feature/artifact-result-store-successor-20261107 -> origin/feature/artifact-result-store-successor-20261107
+2026-11-11T00:12:03.0903688Z  * [new branch]      feature/terminan-readonly-gateway -> origin/feature/terminan-readonly-gateway
+2026-11-11T00:12:03.0904235Z  * [new branch]      final/grid-export       -> origin/final/grid-export
+2026-11-11T00:12:03.0904967Z  * [new branch]      final/model-math-import -> origin/final/model-math-import
+2026-11-11T00:12:03.0905452Z  * [new branch]      final/native-build      -> origin/final/native-build
+2026-11-11T00:12:03.0905959Z  * [new branch]      final/research-session  -> origin/final/research-session
+2026-11-11T00:12:03.0906560Z  * [new branch]      financial/funding-authenticated-cycle -> origin/financial/funding-authenticated-cycle
+2026-11-11T00:12:03.0907297Z  * [new branch]      integration/alphafold-financial-system -> origin/integration/alphafold-financial-system
+2026-11-11T00:12:03.0908249Z  * [new branch]      integration/math-external-kernel-contract-20261029 -> origin/integration/math-external-kernel-contract-20261029
+2026-11-11T00:12:03.0908863Z  * [new branch]      main                    -> origin/main
+2026-11-11T00:12:03.0909425Z  * [new branch]      mission1/composed-strattester-20261031 -> origin/mission1/composed-strattester-20261031
+2026-11-11T00:12:03.0910099Z  * [new branch]      mission1/six-module-runtime-20261031 -> origin/mission1/six-module-runtime-20261031
+2026-11-11T00:12:03.0910708Z  * [new branch]      mission3/ci-diagnostics-20261031 -> origin/mission3/ci-diagnostics-20261031
+2026-11-11T00:12:03.0911257Z  * [new branch]      parallel/20261027-g0    -> origin/parallel/20261027-g0
+2026-11-11T00:12:03.0911758Z  * [new branch]      parallel/20261027-grid  -> origin/parallel/20261027-grid
+2026-11-11T00:12:03.0912251Z  * [new branch]      parallel/20261027-math  -> origin/parallel/20261027-math
+2026-11-11T00:12:03.0912716Z  * [new branch]      parallel/20261027-ml    -> origin/parallel/20261027-ml
+2026-11-11T00:12:03.0913167Z  * [new branch]      parallel/20261027-qa    -> origin/parallel/20261027-qa
+2026-11-11T00:12:03.0913651Z  * [new branch]      parallel/20261027-trust -> origin/parallel/20261027-trust
+2026-11-11T00:12:03.0914273Z  * [new branch]      parallel/alphafold-data-sync -> origin/parallel/alphafold-data-sync
+2026-11-11T00:12:03.0914845Z  * [new branch]      parallel/alphafold-grid-math -> origin/parallel/alphafold-grid-math
+2026-11-11T00:12:03.0915587Z  * [new branch]      parallel/alphafold-grid-math-independent-20261026 -> origin/parallel/alphafold-grid-math-independent-20261026
+2026-11-11T00:12:03.0916337Z  * [new branch]      parallel/alphafold-math-parity -> origin/parallel/alphafold-math-parity
+2026-11-11T00:12:03.0916978Z  * [new branch]      parallel/alphafold-original-backend -> origin/parallel/alphafold-original-backend
+2026-11-11T00:12:03.0917648Z  * [new branch]      parallel/alphafold-qa-security -> origin/parallel/alphafold-qa-security
+2026-11-11T00:12:03.0918361Z  * [new branch]      parallel/alphafold-qa-security-pr21 -> origin/parallel/alphafold-qa-security-pr21
+2026-11-11T00:12:03.0919061Z  * [new branch]      parallel/alphafold-structural-gpt1-cycle3 -> origin/parallel/alphafold-structural-gpt1-cycle3
+2026-11-11T00:12:03.0919794Z  * [new branch]      parallel/alphafold-training-backtest -> origin/parallel/alphafold-training-backtest
+2026-11-11T00:12:03.0920559Z  * [new branch]      parallel/alphafold-training-backtest-audit-4f3a4bb -> origin/parallel/alphafold-training-backtest-audit-4f3a4bb
+2026-11-11T00:12:03.0921420Z  * [new branch]      parallel/alphafold-training-backtest-pr21-integration -> origin/parallel/alphafold-training-backtest-pr21-integration
+2026-11-11T00:12:03.0922230Z  * [new branch]      parallel/alphafold-upstream-audit-cycle4 -> origin/parallel/alphafold-upstream-audit-cycle4
+2026-11-11T00:12:03.0922910Z  * [new branch]      parallel/alphafold-windows-native-qa -> origin/parallel/alphafold-windows-native-qa
+2026-11-11T00:12:03.0923493Z  * [new branch]      parallel/ci-qa-package  -> origin/parallel/ci-qa-package
+2026-11-11T00:12:03.0924188Z  * [new branch]      parallel/g0-trust-replay -> origin/parallel/g0-trust-replay
+2026-11-11T00:12:03.0924961Z  * [new branch]      parallel/g0-v2-reporting-only -> origin/parallel/g0-v2-reporting-only
+2026-11-11T00:12:03.0925553Z  * [new branch]      parallel/g0-vm-qualification -> origin/parallel/g0-vm-qualification
+2026-11-11T00:12:03.0926101Z  * [new branch]      parallel/ml-oos-funding -> origin/parallel/ml-oos-funding
+2026-11-11T00:12:03.0926695Z  * [new branch]      parallel/windows-physical-independent -> origin/parallel/windows-physical-independent
+2026-11-11T00:12:03.0927449Z  * [new branch]      research/ls5-history-batches-f1 -> origin/research/ls5-history-batches-f1
+2026-11-11T00:12:03.0928290Z  * [new branch]      review/20261027-ed25519 -> origin/review/20261027-ed25519
+2026-11-11T00:12:03.0928867Z  * [new branch]      review/trust-identity-next -> origin/review/trust-identity-next
+2026-11-11T00:12:03.0930229Z [command]"C:\Program Files\Git\bin\git.exe" rev-parse --verify --quiet 889d787ef053dca1eb0244da10f47a4a4a2cc982^{object}
+2026-11-11T00:12:03.1260781Z 889d787ef053dca1eb0244da10f47a4a4a2cc982
+2026-11-11T00:12:03.1298204Z ##[endgroup]
+2026-11-11T00:12:03.1298943Z ##[group]Determining the checkout info
+2026-11-11T00:12:03.1300840Z ##[endgroup]
+2026-11-11T00:12:03.1310428Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2026-11-11T00:12:03.1806360Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2026-11-11T00:12:03.2219444Z ##[group]Checking out the ref
+2026-11-11T00:12:03.2227347Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force 889d787ef053dca1eb0244da10f47a4a4a2cc982
+2026-11-11T00:12:03.4308701Z Note: switching to '889d787ef053dca1eb0244da10f47a4a4a2cc982'.
+2026-11-11T00:12:03.4309055Z 
+2026-11-11T00:12:03.4309297Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-11-11T00:12:03.4310032Z changes and commit them, and you can discard any commits you make in this
+2026-11-11T00:12:03.4310819Z state without impacting any branches by switching back to a branch.
+2026-11-11T00:12:03.4311531Z 
+2026-11-11T00:12:03.4312185Z If you want to create a new branch to retain commits you create, you may
+2026-11-11T00:12:03.4312687Z do so (now or later) by using -c with the switch command. Example:
+2026-11-11T00:12:03.4312949Z 
+2026-11-11T00:12:03.4313092Z   git switch -c <new-branch-name>
+2026-11-11T00:12:03.4313294Z 
+2026-11-11T00:12:03.4313415Z Or undo this operation with:
+2026-11-11T00:12:03.4313615Z 
+2026-11-11T00:12:03.4313737Z   git switch -
+2026-11-11T00:12:03.4313851Z 
+2026-11-11T00:12:03.4314103Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-11-11T00:12:03.4314373Z 
+2026-11-11T00:12:03.4314683Z HEAD is now at 889d787 Add source-pinned hosted projection recovery qualification
+2026-11-11T00:12:03.4494095Z ##[endgroup]
+2026-11-11T00:12:03.5008799Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2026-11-11T00:12:03.5337886Z 889d787ef053dca1eb0244da10f47a4a4a2cc982
+2026-11-11T00:12:03.5383498Z ##[group]Removing auth
+2026-11-11T00:12:03.5391840Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-11T00:12:03.5760472Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-11T00:12:04.1350395Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-11T00:12:04.1737157Z http.https://github.com/.extraheader
+2026-11-11T00:12:04.1790899Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+2026-11-11T00:12:04.2167059Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-11T00:12:04.7826421Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-11T00:12:04.8234593Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-11T00:12:05.3793337Z ##[endgroup]
+2026-11-11T00:12:05.4222936Z ##[group]Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+2026-11-11T00:12:05.4223492Z with:
+2026-11-11T00:12:05.4223821Z   ref: de6620eb5577e97db1af11b6807e22a9b61d1090
+2026-11-11T00:12:05.4224153Z   path: target
+2026-11-11T00:12:05.4224416Z   persist-credentials: false
+2026-11-11T00:12:05.4224716Z   fetch-depth: 0
+2026-11-11T00:12:05.4224992Z   repository: YehorBabenko88/strattester
+2026-11-11T00:12:05.4227651Z   token: ***
+2026-11-11T00:12:05.4227920Z   ssh-strict: true
+2026-11-11T00:12:05.4228176Z   ssh-user: git
+2026-11-11T00:12:05.4228446Z   clean: true
+2026-11-11T00:12:05.4228717Z   sparse-checkout-cone-mode: true
+2026-11-11T00:12:05.4229028Z   fetch-tags: false
+2026-11-11T00:12:05.4229296Z   show-progress: true
+2026-11-11T00:12:05.4229542Z   lfs: false
+2026-11-11T00:12:05.4229807Z   submodules: false
+2026-11-11T00:12:05.4230078Z   set-safe-directory: true
+2026-11-11T00:12:05.4230420Z   allow-unsafe-pr-checkout: false
+2026-11-11T00:12:05.4230771Z env:
+2026-11-11T00:12:05.4231101Z   TOOL_HEAD: 889d787ef053dca1eb0244da10f47a4a4a2cc982
+2026-11-11T00:12:05.4231451Z   PYTHONDONTWRITEBYTECODE: 1
+2026-11-11T00:12:05.4231741Z   PYTEST_DISABLE_PLUGIN_AUTOLOAD: 1
+2026-11-11T00:12:05.4232068Z   GIT_NO_REPLACE_OBJECTS: 1
+2026-11-11T00:12:05.4232349Z   GIT_CONFIG_COUNT: 2
+2026-11-11T00:12:05.4232610Z   GIT_CONFIG_KEY_0: core.autocrlf
+2026-11-11T00:12:05.4232921Z   GIT_CONFIG_VALUE_0: false
+2026-11-11T00:12:05.4233197Z   GIT_CONFIG_KEY_1: core.eol
+2026-11-11T00:12:05.4233482Z   GIT_CONFIG_VALUE_1: lf
+2026-11-11T00:12:05.4233783Z ##[endgroup]
+2026-11-11T00:12:05.5303819Z Syncing repository: YehorBabenko88/strattester
+2026-11-11T00:12:05.5310155Z ##[group]Getting Git version info
+2026-11-11T00:12:05.5310676Z Working directory is 'D:\a\strattester\strattester\target'
+2026-11-11T00:12:05.5882846Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-11T00:12:05.6216219Z git version 2.56.0.windows.4
+2026-11-11T00:12:05.6258713Z ##[endgroup]
+2026-11-11T00:12:05.6274128Z Temporarily overriding HOME='D:\a\_temp\e8663f1c-da2d-4684-a329-80b7da15244e' before making global git config changes
+2026-11-11T00:12:05.6274817Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-11T00:12:05.6283021Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\strattester\strattester\target
+2026-11-11T00:12:05.6635533Z ##[group]Initializing the repository
+2026-11-11T00:12:05.6644057Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\strattester\strattester\target
+2026-11-11T00:12:05.7019990Z Initialized empty Git repository in D:/a/strattester/strattester/target/.git/
+2026-11-11T00:12:05.7071434Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/YehorBabenko88/strattester
+2026-11-11T00:12:05.7487974Z ##[endgroup]
+2026-11-11T00:12:05.7488740Z ##[group]Disabling automatic garbage collection
+2026-11-11T00:12:05.7498357Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2026-11-11T00:12:05.7838694Z ##[endgroup]
+2026-11-11T00:12:05.7839243Z ##[group]Setting up auth
+2026-11-11T00:12:05.7850820Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-11T00:12:05.8205466Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-11T00:12:06.3790259Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-11T00:12:06.4134291Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-11T00:12:06.9623335Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-11T00:12:07.0094500Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-11T00:12:07.6152253Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-11-11T00:12:07.6584154Z ##[endgroup]
+2026-11-11T00:12:07.6584743Z ##[group]Fetching the repository
+2026-11-11T00:12:07.6596867Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*
+2026-11-11T00:12:08.8689814Z From https://github.com/YehorBabenko88/strattester
+2026-11-11T00:12:08.8690907Z  * [new branch]      agent7/financial-calculation-boundary-20261107 -> origin/agent7/financial-calculation-boundary-20261107
+2026-11-11T00:12:08.8692150Z  * [new branch]      agent7/gateway-synthetic-research-20261107 -> origin/agent7/gateway-synthetic-research-20261107
+2026-11-11T00:12:08.8693242Z  * [new branch]      agent7/projection-recovery-hosted47-20261110 -> origin/agent7/projection-recovery-hosted47-20261110
+2026-11-11T00:12:08.8694634Z  * [new branch]      agent7/query-meta-bridge-v2-20261107 -> origin/agent7/query-meta-bridge-v2-20261107
+2026-11-11T00:12:08.8695602Z  * [new branch]      agent7/research-paper-recovery-20261106 -> origin/agent7/research-paper-recovery-20261106
+2026-11-11T00:12:08.8696700Z  * [new branch]      agent7/review4-research-paper-domain-20261107 -> origin/agent7/review4-research-paper-domain-20261107
+2026-11-11T00:12:08.8697835Z  * [new branch]      agent7/strat-git-sourceproof-20261106 -> origin/agent7/strat-git-sourceproof-20261106
+2026-11-11T00:12:08.8698941Z  * [new branch]      audit/alphafold-upstream-mechanism-20261024 -> origin/audit/alphafold-upstream-mechanism-20261024
+2026-11-11T00:12:08.8700167Z  * [new branch]      audit/bybit-pagination-retry-20261010 -> origin/audit/bybit-pagination-retry-20261010
+2026-11-11T00:12:08.8701564Z  * [new branch]      audit/candle-finite-timestamp-20261017-0239 -> origin/audit/candle-finite-timestamp-20261017-0239
+2026-11-11T00:12:08.8702483Z  * [new branch]      audit/candle-nonfinite-and-timestamp-20261017 -> origin/audit/candle-nonfinite-and-timestamp-20261017
+2026-11-11T00:12:08.8703197Z  * [new branch]      audit/causal-science-export-20261013 -> origin/audit/causal-science-export-20261013
+2026-11-11T00:12:08.8703920Z  * [new branch]      audit/checkpoint-recovery-cycle -> origin/audit/checkpoint-recovery-cycle
+2026-11-11T00:12:08.8704762Z  * [new branch]      audit/compile-python-gate-20261010 -> origin/audit/compile-python-gate-20261010
+2026-11-11T00:12:08.8705410Z  * [new branch]      audit/compileall-gate-20261011-1838 -> origin/audit/compileall-gate-20261011-1838
+2026-11-11T00:12:08.8706130Z  * [new branch]      audit/compileall-python-sources-20261011 -> origin/audit/compileall-python-sources-20261011
+2026-11-11T00:12:08.8706953Z  * [new branch]      audit/derivatives-nonfinite-guard-20261016-2039 -> origin/audit/derivatives-nonfinite-guard-20261016-2039
+2026-11-11T00:12:08.8707684Z  * [new branch]      audit/derivatives-nonfinite-inputs-20261016 -> origin/audit/derivatives-nonfinite-inputs-20261016
+2026-11-11T00:12:08.8708514Z  * [new branch]      audit/fail-closed-handoff-missing-payload-20261013 -> origin/audit/fail-closed-handoff-missing-payload-20261013
+2026-11-11T00:12:08.8709583Z  * [new branch]      audit/fail-closed-invalid-telemetry-20261014-1239 -> origin/audit/fail-closed-invalid-telemetry-20261014-1239
+2026-11-11T00:12:08.8710397Z  * [new branch]      audit/fail-closed-optional-handoff-20261013-1235 -> origin/audit/fail-closed-optional-handoff-20261013-1235
+2026-11-11T00:12:08.8711408Z  * [new branch]      audit/fail-closed-resource-telemetry-20261014 -> origin/audit/fail-closed-resource-telemetry-20261014
+2026-11-11T00:12:08.8713866Z  * [new branch]      audit/fail-closed-resource-telemetry-20261014-1437 -> origin/audit/fail-closed-resource-telemetry-20261014-1437
+2026-11-11T00:12:08.8715361Z  * [new branch]      audit/finite-market-candles-20261012 -> origin/audit/finite-market-candles-20261012
+2026-11-11T00:12:08.8716236Z  * [new branch]      audit/finite-trade-pnl-20261017-0742 -> origin/audit/finite-trade-pnl-20261017-0742
+2026-11-11T00:12:08.8716992Z  * [new branch]      audit/finite-trade-pnl-20261017-0843 -> origin/audit/finite-trade-pnl-20261017-0843
+2026-11-11T00:12:08.8717828Z  * [new branch]      audit/fix-gateway-parser-tests-20261012-1840 -> origin/audit/fix-gateway-parser-tests-20261012-1840
+2026-11-11T00:12:08.8718680Z  * [new branch]      audit/fix-terminan-gateway-20261011-1939 -> origin/audit/fix-terminan-gateway-20261011-1939
+2026-11-11T00:12:08.8719546Z  * [new branch]      audit/fix-terminan-gateway-20261012-0237 -> origin/audit/fix-terminan-gateway-20261012-0237
+2026-11-11T00:12:08.8720303Z  * [new branch]      audit/fix-terminan-gateway-20261012-1141 -> origin/audit/fix-terminan-gateway-20261012-1141
+2026-11-11T00:12:08.8721134Z  * [new branch]      audit/fix-terminan-gateway-20261012-2137 -> origin/audit/fix-terminan-gateway-20261012-2137
+2026-11-11T00:12:08.8721947Z  * [new branch]      audit/fix-terminan-gateway-import-20261012-0437 -> origin/audit/fix-terminan-gateway-import-20261012-0437
+2026-11-11T00:12:08.8722858Z  * [new branch]      audit/fix-terminan-gateway-import-20261012-0742 -> origin/audit/fix-terminan-gateway-import-20261012-0742
+2026-11-11T00:12:08.8723785Z  * [new branch]      audit/fix-terminan-gateway-import-20261012-1648 -> origin/audit/fix-terminan-gateway-import-20261012-1648
+2026-11-11T00:12:08.8724622Z  * [new branch]      audit/fix-terminan-gateway-parse-20261012-1041 -> origin/audit/fix-terminan-gateway-parse-20261012-1041
+2026-11-11T00:12:08.8725546Z  * [new branch]      audit/fix-terminan-gateway-parse-20261012-1743 -> origin/audit/fix-terminan-gateway-parse-20261012-1743
+2026-11-11T00:12:08.8726586Z  * [new branch]      audit/fix-terminan-gateway-parse-20261012-2341 -> origin/audit/fix-terminan-gateway-parse-20261012-2341
+2026-11-11T00:12:08.8727431Z  * [new branch]      audit/fix-terminan-gateway-parse-20261013-0139 -> origin/audit/fix-terminan-gateway-parse-20261013-0139
+2026-11-11T00:12:08.8728557Z  * [new branch]      audit/fix-terminan-gateway-parser-20261012-1604 -> origin/audit/fix-terminan-gateway-parser-20261012-1604
+2026-11-11T00:12:08.8729425Z  * [new branch]      audit/fix-terminan-gateway-parser-20261012-2242 -> origin/audit/fix-terminan-gateway-parser-20261012-2242
+2026-11-11T00:12:08.8731141Z  * [new branch]      audit/fix-terminan-gateway-parser-20261013-0039 -> origin/audit/fix-terminan-gateway-parser-20261013-0039
+2026-11-11T00:12:08.8732565Z  * [new branch]      audit/fix-terminan-gateway-parser-20261013-0635 -> origin/audit/fix-terminan-gateway-parser-20261013-0635
+2026-11-11T00:12:08.8734118Z  * [new branch]      audit/fix-terminan-gateway-parser-tests-20261013-1138 -> origin/audit/fix-terminan-gateway-parser-tests-20261013-1138
+2026-11-11T00:12:08.8735478Z  * [new branch]      audit/fix-terminan-gateway-syntax-20261012-0338 -> origin/audit/fix-terminan-gateway-syntax-20261012-0338
+2026-11-11T00:12:08.8736705Z  * [new branch]      audit/fix-terminan-gateway-syntax-20261012-0856 -> origin/audit/fix-terminan-gateway-syntax-20261012-0856
+2026-11-11T00:12:08.8737909Z  * [new branch]      audit/fix-terminan-gateway-syntax-20261012-2042 -> origin/audit/fix-terminan-gateway-syntax-20261012-2042
+2026-11-11T00:12:08.8739508Z  * [new branch]      audit/fix-terminan-gateway-syntax-20261013-1235 -> origin/audit/fix-terminan-gateway-syntax-20261013-1235
+2026-11-11T00:12:08.8740873Z  * [new branch]      audit/fix-terminan-gateway-syntax-tests-20261013-0242 -> origin/audit/fix-terminan-gateway-syntax-tests-20261013-0242
+2026-11-11T00:12:08.8742281Z  * [new branch]      audit/frozen-research-parameters-20261018-2344 -> origin/audit/frozen-research-parameters-20261018-2344
+2026-11-11T00:12:08.8743472Z  * [new branch]      audit/funding-revisions -> origin/audit/funding-revisions
+2026-11-11T00:12:08.8744262Z  * [new branch]      audit/g0-collector-deep -> origin/audit/g0-collector-deep
+2026-11-11T00:12:08.8745206Z  * [new branch]      audit/gateway-head-syntax-20261013 -> origin/audit/gateway-head-syntax-20261013
+2026-11-11T00:12:08.8746295Z  * [new branch]      audit/gateway-missing-source-20261014-1042 -> origin/audit/gateway-missing-source-20261014-1042
+2026-11-11T00:12:08.8747508Z  * [new branch]      audit/gateway-parser-fix-20261013-1338 -> origin/audit/gateway-parser-fix-20261013-1338
+2026-11-11T00:12:08.8748478Z  * [new branch]      audit/grid-coherence-next -> origin/audit/grid-coherence-next
+2026-11-11T00:12:08.8749732Z  * [new branch]      audit/history-scientific-handoff-20261030 -> origin/audit/history-scientific-handoff-20261030
+2026-11-11T00:12:08.8750912Z  * [new branch]      audit/housekeeping-finite-policy-20261015-0935 -> origin/audit/housekeeping-finite-policy-20261015-0935
+2026-11-11T00:12:08.8752150Z  * [new branch]      audit/housekeeping-reject-symlink-root-20261016 -> origin/audit/housekeeping-reject-symlink-root-20261016
+2026-11-11T00:12:08.8753429Z  * [new branch]      audit/housekeeping-root-reparse-guard-20261016 -> origin/audit/housekeeping-root-reparse-guard-20261016
+2026-11-11T00:12:08.8755013Z  * [new branch]      audit/housekeeping-root-symlink-20261015-1139 -> origin/audit/housekeeping-root-symlink-20261015-1139
+2026-11-11T00:12:08.8756206Z  * [new branch]      audit/housekeeping-symlink-ancestor-guard-20261016-1840 -> origin/audit/housekeeping-symlink-ancestor-guard-20261016-1840
+2026-11-11T00:12:08.8757055Z  * [new branch]      audit/lease-and-market-integrity-20261010 -> origin/audit/lease-and-market-integrity-20261010
+2026-11-11T00:12:08.8758059Z  * [new branch]      audit/nonfinite-derivatives-validation-20261016 -> origin/audit/nonfinite-derivatives-validation-20261016
+2026-11-11T00:12:08.8759120Z  * [new branch]      audit/physical-pilot-doctor-import-20261012 -> origin/audit/physical-pilot-doctor-import-20261012
+2026-11-11T00:12:08.8759899Z  * [new branch]      audit/preproduction-execution-20261009 -> origin/audit/preproduction-execution-20261009
+2026-11-11T00:12:08.8760669Z  * [new branch]      audit/price-kline-overflow-timestamp-20261017-0537 -> origin/audit/price-kline-overflow-timestamp-20261017-0537
+2026-11-11T00:12:08.8761474Z  * [new branch]      audit/python-compile-gate-20261011-2039 -> origin/audit/python-compile-gate-20261011-2039
+2026-11-11T00:12:08.8762171Z  * [new branch]      audit/python-compile-gate-20261011-2138 -> origin/audit/python-compile-gate-20261011-2138
+2026-11-11T00:12:08.8762916Z  * [new branch]      audit/python-source-compile-gate-20261011-1636 -> origin/audit/python-source-compile-gate-20261011-1636
+2026-11-11T00:12:08.8763657Z  * [new branch]      audit/python-syntax-gate-20261011-2241 -> origin/audit/python-syntax-gate-20261011-2241
+2026-11-11T00:12:08.8764425Z  * [new branch]      audit/quarantine-collision-guard-20261018-0439 -> origin/audit/quarantine-collision-guard-20261018-0439
+2026-11-11T00:12:08.8765211Z  * [new branch]      audit/reject-future-market-schema-20261013 -> origin/audit/reject-future-market-schema-20261013
+2026-11-11T00:12:08.8765941Z  * [new branch]      audit/repair-terminan-gateway-20261013-0439 -> origin/audit/repair-terminan-gateway-20261013-0439
+2026-11-11T00:12:08.8766679Z  * [new branch]      audit/resampling-finite-guard-20261018-1041 -> origin/audit/resampling-finite-guard-20261018-1041
+2026-11-11T00:12:08.8767616Z  * [new branch]      audit/resampling-finite-inputs-20261019-0043 -> origin/audit/resampling-finite-inputs-20261019-0043
+2026-11-11T00:12:08.8768374Z  * [new branch]      audit/resampling-finite-overflow-20261019-0543 -> origin/audit/resampling-finite-overflow-20261019-0543
+2026-11-11T00:12:08.8769218Z  * [new branch]      audit/resampling-finite-overflow-20261019-0639 -> origin/audit/resampling-finite-overflow-20261019-0639
+2026-11-11T00:12:08.8770119Z  * [new branch]      audit/resampling-finite-overflow-guard-20261018-1637 -> origin/audit/resampling-finite-overflow-guard-20261018-1637
+2026-11-11T00:12:08.8770953Z  * [new branch]      audit/resampling-finite-validation-20261019-0336 -> origin/audit/resampling-finite-validation-20261019-0336
+2026-11-11T00:12:08.8771728Z  * [new branch]      audit/resampling-overflow-guard-20261019-0846 -> origin/audit/resampling-overflow-guard-20261019-0846
+2026-11-11T00:12:08.8772481Z  * [new branch]      audit/resampling-overflow-regression-20261018-1937 -> origin/audit/resampling-overflow-regression-20261018-1937
+2026-11-11T00:12:08.8773288Z  * [new branch]      audit/resource-ram-headroom-20261010 -> origin/audit/resource-ram-headroom-20261010
+2026-11-11T00:12:08.8774021Z  * [new branch]      audit/resource-snapshot-fail-closed-20261018-0240 -> origin/audit/resource-snapshot-fail-closed-20261018-0240
+2026-11-11T00:12:08.8775187Z  * [new branch]      audit/resource-telemetry-fail-closed-20261014-1338 -> origin/audit/resource-telemetry-fail-closed-20261014-1338
+2026-11-11T00:12:08.8776001Z  * [new branch]      audit/resource-telemetry-fail-closed-20261014-1535 -> origin/audit/resource-telemetry-fail-closed-20261014-1535
+2026-11-11T00:12:08.8776746Z  * [new branch]      audit/science-adjacent-1m-label-20261017 -> origin/audit/science-adjacent-1m-label-20261017
+2026-11-11T00:12:08.8777520Z  * [new branch]      audit/science-adjacent-1m-label-20261017-1839 -> origin/audit/science-adjacent-1m-label-20261017-1839
+2026-11-11T00:12:08.8778289Z  * [new branch]      audit/science-gap-guard-20261017-1235 -> origin/audit/science-gap-guard-20261017-1235
+2026-11-11T00:12:08.8779017Z  * [new branch]      audit/sqlite-uri-filename-guard-20261018-0742 -> origin/audit/sqlite-uri-filename-guard-20261018-0742
+2026-11-11T00:12:08.8779814Z  * [new branch]      audit/sqlite-wal-portable-snapshot-20261013-1543 -> origin/audit/sqlite-wal-portable-snapshot-20261013-1543
+2026-11-11T00:12:08.8780513Z  * [new branch]      audit/strict-chronological-splits-20261013 -> origin/audit/strict-chronological-splits-20261013
+2026-11-11T00:12:08.8781203Z  * [new branch]      audit/telegram-ack-after-reply-20261018 -> origin/audit/telegram-ack-after-reply-20261018
+2026-11-11T00:12:08.8781866Z  * [new branch]      audit/telegram-blank-message-20261010 -> origin/audit/telegram-blank-message-20261010
+2026-11-11T00:12:08.8782812Z  * [new branch]      audit/telegram-empty-command-guard-20261010 -> origin/audit/telegram-empty-command-guard-20261010
+2026-11-11T00:12:08.8783633Z  * [new branch]      audit/telegram-whitespace-command-guard-20261017-2239 -> origin/audit/telegram-whitespace-command-guard-20261017-2239
+2026-11-11T00:12:08.8785183Z  * [new branch]      audit/telegram-whitespace-guard-20261017-2341 -> origin/audit/telegram-whitespace-guard-20261017-2341
+2026-11-11T00:12:08.8786041Z  * [new branch]      audit/telegram-whitespace-safe-20261010 -> origin/audit/telegram-whitespace-safe-20261010
+2026-11-11T00:12:08.8786722Z  * [new branch]      audit/terminan-finite-pnl-20261017-0938 -> origin/audit/terminan-finite-pnl-20261017-0938
+2026-11-11T00:12:08.8787435Z  * [new branch]      audit/terminan-gateway-compile-20261012-0543 -> origin/audit/terminan-gateway-compile-20261012-0543
+2026-11-11T00:12:08.8788267Z  * [new branch]      audit/terminan-gateway-compile-http-20261013-0542 -> origin/audit/terminan-gateway-compile-http-20261013-0542
+2026-11-11T00:12:08.8789060Z  * [new branch]      audit/terminan-gateway-compile-regression-20261012 -> origin/audit/terminan-gateway-compile-regression-20261012
+2026-11-11T00:12:08.8790555Z  * [new branch]      audit/terminan-gateway-compile-regression-20261013-0843 -> origin/audit/terminan-gateway-compile-regression-20261013-0843
+2026-11-11T00:12:08.8791707Z  * [new branch]      audit/terminan-gateway-cursor-20261011 -> origin/audit/terminan-gateway-cursor-20261011
+2026-11-11T00:12:08.8792677Z  * [new branch]      audit/terminan-gateway-fix-20261012-0140 -> origin/audit/terminan-gateway-fix-20261012-0140
+2026-11-11T00:12:08.8794351Z  * [new branch]      audit/terminan-gateway-parse-20261012-1937 -> origin/audit/terminan-gateway-parse-20261012-1937
+2026-11-11T00:12:08.8795634Z  * [new branch]      audit/terminan-gateway-parse-regression-20261013-0742 -> origin/audit/terminan-gateway-parse-regression-20261013-0742
+2026-11-11T00:12:08.8796834Z  * [new branch]      audit/terminan-gateway-parser-20261013-0343 -> origin/audit/terminan-gateway-parser-20261013-0343
+2026-11-11T00:12:08.8797846Z  * [new branch]      audit/terminan-gateway-regression-20261012-1241 -> origin/audit/terminan-gateway-regression-20261012-1241
+2026-11-11T00:12:08.8798882Z  * [new branch]      audit/terminan-gateway-syntax-20261010 -> origin/audit/terminan-gateway-syntax-20261010
+2026-11-11T00:12:08.8799929Z  * [new branch]      audit/terminan-gateway-syntax-20261011-2343 -> origin/audit/terminan-gateway-syntax-20261011-2343
+2026-11-11T00:12:08.8800950Z  * [new branch]      audit/terminan-gateway-syntax-20261012 -> origin/audit/terminan-gateway-syntax-20261012
+2026-11-11T00:12:08.8802067Z  * [new branch]      audit/terminan-gateway-syntax-20261012-0636 -> origin/audit/terminan-gateway-syntax-20261012-0636
+2026-11-11T00:12:08.8803273Z  * [new branch]      audit/terminan-gateway-syntax-smoke-20261013-1040 -> origin/audit/terminan-gateway-syntax-smoke-20261013-1040
+2026-11-11T00:12:08.8804647Z  * [new branch]      audit/terminan-trade-id-conflict-20261013-2241 -> origin/audit/terminan-trade-id-conflict-20261013-2241
+2026-11-11T00:12:08.8805512Z  * [new branch]      audit/terminan-trades-composite-cursor-20261014 -> origin/audit/terminan-trades-composite-cursor-20261014
+2026-11-11T00:12:08.8806262Z  * [new branch]      audit/trade-journal-conflict-20261014 -> origin/audit/trade-journal-conflict-20261014
+2026-11-11T00:12:08.8806963Z  * [new branch]      audit/trade-journal-conflict-20261014-0142 -> origin/audit/trade-journal-conflict-20261014-0142
+2026-11-11T00:12:08.8807624Z  * [new branch]      audit/trade-journal-conflict-20261014-0236 -> origin/audit/trade-journal-conflict-20261014-0236
+2026-11-11T00:12:08.8808519Z  * [new branch]      audit/trade-journal-finite-amounts-20261014-0443 -> origin/audit/trade-journal-finite-amounts-20261014-0443
+2026-11-11T00:12:08.8809591Z  * [new branch]      audit/trade-journal-idempotency-20261013-2336 -> origin/audit/trade-journal-idempotency-20261013-2336
+2026-11-11T00:12:08.8810700Z  * [new branch]      audit/trade-journal-optional-finite-20261014-0941 -> origin/audit/trade-journal-optional-finite-20261014-0941
+2026-11-11T00:12:08.8811871Z  * [new branch]      audit/wal-consistent-science-package-20261013-0943 -> origin/audit/wal-consistent-science-package-20261013-0943
+2026-11-11T00:12:08.8812933Z  * [new branch]      codex/grid-math-replay-20261030 -> origin/codex/grid-math-replay-20261030
+2026-11-11T00:12:08.8813819Z  * [new branch]      codex/handoff-syntax-repair-20261030 -> origin/codex/handoff-syntax-repair-20261030
+2026-11-11T00:12:08.8814641Z  * [new branch]      codex/provenance-a      -> origin/codex/provenance-a
+2026-11-11T00:12:08.8815405Z  * [new branch]      codex/selective-readonly-provenance -> origin/codex/selective-readonly-provenance
+2026-11-11T00:12:08.8816415Z  * [new branch]      codex/unified-display-handoff-fixes-20261030 -> origin/codex/unified-display-handoff-fixes-20261030
+2026-11-11T00:12:08.8817412Z  * [new branch]      codex/unified-history-consumer-20261030 -> origin/codex/unified-history-consumer-20261030
+2026-11-11T00:12:08.8818574Z  * [new branch]      codex/workstream-a-readonly-results -> origin/codex/workstream-a-readonly-results
+2026-11-11T00:12:08.8819633Z  * [new branch]      cycle2/grid-producer    -> origin/cycle2/grid-producer
+2026-11-11T00:12:08.8820341Z  * [new branch]      cycle2/math-verification -> origin/cycle2/math-verification
+2026-11-11T00:12:08.8821074Z  * [new branch]      cycle2/security         -> origin/cycle2/security
+2026-11-11T00:12:08.8821745Z  * [new branch]      cycle2/structural-model -> origin/cycle2/structural-model
+2026-11-11T00:12:08.8822601Z  * [new branch]      cycle2/training-backtest -> origin/cycle2/training-backtest
+2026-11-11T00:12:08.8823353Z  * [new branch]      design/grid-history-export -> origin/design/grid-history-export
+2026-11-11T00:12:08.8824133Z  * [new branch]      dev/lifecycle-cadence-hardening -> origin/dev/lifecycle-cadence-hardening
+2026-11-11T00:12:08.8825392Z  * [new branch]      engineering/authenticated-funding-intake -> origin/engineering/authenticated-funding-intake
+2026-11-11T00:12:08.8826408Z  * [new branch]      engineering/data-first-scheduler-20261028 -> origin/engineering/data-first-scheduler-20261028
+2026-11-11T00:12:08.8827376Z  * [new branch]      engineering/grid-contract-cycle -> origin/engineering/grid-contract-cycle
+2026-11-11T00:12:08.8828244Z  * [new branch]      engineering/native-sandbox-cycle -> origin/engineering/native-sandbox-cycle
+2026-11-11T00:12:08.8829089Z  * [new branch]      engineering/producer-facts-cycle -> origin/engineering/producer-facts-cycle
+2026-11-11T00:12:08.8829984Z  * [new branch]      engineering/research-funding-contract -> origin/engineering/research-funding-contract
+2026-11-11T00:12:08.8830841Z  * [new branch]      engineering/signed-pipeline-cycle -> origin/engineering/signed-pipeline-cycle
+2026-11-11T00:12:08.8831880Z  * [new branch]      experiment/alphafold-market-geometry-20261024 -> origin/experiment/alphafold-market-geometry-20261024
+2026-11-11T00:12:08.8833004Z  * [new branch]      feat/orderflow-worker-integration -> origin/feat/orderflow-worker-integration
+2026-11-11T00:12:08.8833824Z  * [new branch]      feat/research-e2e-cli   -> origin/feat/research-e2e-cli
+2026-11-11T00:12:08.8834627Z  * [new branch]      feat/standalone-foundation -> origin/feat/standalone-foundation
+2026-11-11T00:12:08.8835682Z  * [new branch]      feature/artifact-result-store-successor-20261107 -> origin/feature/artifact-result-store-successor-20261107
+2026-11-11T00:12:08.8836769Z  * [new branch]      feature/terminan-readonly-gateway -> origin/feature/terminan-readonly-gateway
+2026-11-11T00:12:08.8837577Z  * [new branch]      final/grid-export       -> origin/final/grid-export
+2026-11-11T00:12:08.8838283Z  * [new branch]      final/model-math-import -> origin/final/model-math-import
+2026-11-11T00:12:08.8839011Z  * [new branch]      final/native-build      -> origin/final/native-build
+2026-11-11T00:12:08.8839664Z  * [new branch]      final/research-session  -> origin/final/research-session
+2026-11-11T00:12:08.8840504Z  * [new branch]      financial/funding-authenticated-cycle -> origin/financial/funding-authenticated-cycle
+2026-11-11T00:12:08.8841585Z  * [new branch]      integration/alphafold-financial-system -> origin/integration/alphafold-financial-system
+2026-11-11T00:12:08.8842760Z  * [new branch]      integration/math-external-kernel-contract-20261029 -> origin/integration/math-external-kernel-contract-20261029
+2026-11-11T00:12:08.8843691Z  * [new branch]      main                    -> origin/main
+2026-11-11T00:12:08.8844538Z  * [new branch]      mission1/composed-strattester-20261031 -> origin/mission1/composed-strattester-20261031
+2026-11-11T00:12:08.8845907Z  * [new branch]      mission1/six-module-runtime-20261031 -> origin/mission1/six-module-runtime-20261031
+2026-11-11T00:12:08.8846818Z  * [new branch]      mission3/ci-diagnostics-20261031 -> origin/mission3/ci-diagnostics-20261031
+2026-11-11T00:12:08.8847595Z  * [new branch]      parallel/20261027-g0    -> origin/parallel/20261027-g0
+2026-11-11T00:12:08.8848250Z  * [new branch]      parallel/20261027-grid  -> origin/parallel/20261027-grid
+2026-11-11T00:12:08.8849201Z  * [new branch]      parallel/20261027-math  -> origin/parallel/20261027-math
+2026-11-11T00:12:08.8849921Z  * [new branch]      parallel/20261027-ml    -> origin/parallel/20261027-ml
+2026-11-11T00:12:08.8850640Z  * [new branch]      parallel/20261027-qa    -> origin/parallel/20261027-qa
+2026-11-11T00:12:08.8851289Z  * [new branch]      parallel/20261027-trust -> origin/parallel/20261027-trust
+2026-11-11T00:12:08.8852169Z  * [new branch]      parallel/alphafold-data-sync -> origin/parallel/alphafold-data-sync
+2026-11-11T00:12:08.8853018Z  * [new branch]      parallel/alphafold-grid-math -> origin/parallel/alphafold-grid-math
+2026-11-11T00:12:08.8854039Z  * [new branch]      parallel/alphafold-grid-math-independent-20261026 -> origin/parallel/alphafold-grid-math-independent-20261026
+2026-11-11T00:12:08.8855135Z  * [new branch]      parallel/alphafold-math-parity -> origin/parallel/alphafold-math-parity
+2026-11-11T00:12:08.8856254Z  * [new branch]      parallel/alphafold-original-backend -> origin/parallel/alphafold-original-backend
+2026-11-11T00:12:08.8857211Z  * [new branch]      parallel/alphafold-qa-security -> origin/parallel/alphafold-qa-security
+2026-11-11T00:12:08.8858369Z  * [new branch]      parallel/alphafold-qa-security-pr21 -> origin/parallel/alphafold-qa-security-pr21
+2026-11-11T00:12:08.8859474Z  * [new branch]      parallel/alphafold-structural-gpt1-cycle3 -> origin/parallel/alphafold-structural-gpt1-cycle3
+2026-11-11T00:12:08.8860568Z  * [new branch]      parallel/alphafold-training-backtest -> origin/parallel/alphafold-training-backtest
+2026-11-11T00:12:08.8861676Z  * [new branch]      parallel/alphafold-training-backtest-audit-4f3a4bb -> origin/parallel/alphafold-training-backtest-audit-4f3a4bb
+2026-11-11T00:12:08.8863076Z  * [new branch]      parallel/alphafold-training-backtest-pr21-integration -> origin/parallel/alphafold-training-backtest-pr21-integration
+2026-11-11T00:12:08.8864380Z  * [new branch]      parallel/alphafold-upstream-audit-cycle4 -> origin/parallel/alphafold-upstream-audit-cycle4
+2026-11-11T00:12:08.8865763Z  * [new branch]      parallel/alphafold-windows-native-qa -> origin/parallel/alphafold-windows-native-qa
+2026-11-11T00:12:08.8866699Z  * [new branch]      parallel/ci-qa-package  -> origin/parallel/ci-qa-package
+2026-11-11T00:12:08.8867438Z  * [new branch]      parallel/g0-trust-replay -> origin/parallel/g0-trust-replay
+2026-11-11T00:12:08.8868182Z  * [new branch]      parallel/g0-v2-reporting-only -> origin/parallel/g0-v2-reporting-only
+2026-11-11T00:12:08.8869049Z  * [new branch]      parallel/g0-vm-qualification -> origin/parallel/g0-vm-qualification
+2026-11-11T00:12:08.8869898Z  * [new branch]      parallel/ml-oos-funding -> origin/parallel/ml-oos-funding
+2026-11-11T00:12:08.8870839Z  * [new branch]      parallel/windows-physical-independent -> origin/parallel/windows-physical-independent
+2026-11-11T00:12:08.8871835Z  * [new branch]      research/ls5-history-batches-f1 -> origin/research/ls5-history-batches-f1
+2026-11-11T00:12:08.8872651Z  * [new branch]      review/20261027-ed25519 -> origin/review/20261027-ed25519
+2026-11-11T00:12:08.8873405Z  * [new branch]      review/trust-identity-next -> origin/review/trust-identity-next
+2026-11-11T00:12:08.8874976Z [command]"C:\Program Files\Git\bin\git.exe" rev-parse --verify --quiet de6620eb5577e97db1af11b6807e22a9b61d1090^{object}
+2026-11-11T00:12:08.9121658Z de6620eb5577e97db1af11b6807e22a9b61d1090
+2026-11-11T00:12:08.9170021Z ##[endgroup]
+2026-11-11T00:12:08.9170794Z ##[group]Determining the checkout info
+2026-11-11T00:12:08.9171620Z ##[endgroup]
+2026-11-11T00:12:08.9181865Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2026-11-11T00:12:08.9566066Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2026-11-11T00:12:08.9904158Z ##[group]Checking out the ref
+2026-11-11T00:12:08.9913101Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force de6620eb5577e97db1af11b6807e22a9b61d1090
+2026-11-11T00:12:09.1880003Z Note: switching to 'de6620eb5577e97db1af11b6807e22a9b61d1090'.
+2026-11-11T00:12:09.1881052Z 
+2026-11-11T00:12:09.1881596Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-11-11T00:12:09.1882138Z changes and commit them, and you can discard any commits you make in this
+2026-11-11T00:12:09.1882629Z state without impacting any branches by switching back to a branch.
+2026-11-11T00:12:09.1882955Z 
+2026-11-11T00:12:09.1883453Z If you want to create a new branch to retain commits you create, you may
+2026-11-11T00:12:09.1883947Z do so (now or later) by using -c with the switch command. Example:
+2026-11-11T00:12:09.1884194Z 
+2026-11-11T00:12:09.1884781Z   git switch -c <new-branch-name>
+2026-11-11T00:12:09.1884975Z 
+2026-11-11T00:12:09.1885124Z Or undo this operation with:
+2026-11-11T00:12:09.1885278Z 
+2026-11-11T00:12:09.1885394Z   git switch -
+2026-11-11T00:12:09.1885536Z 
+2026-11-11T00:12:09.1885806Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-11-11T00:12:09.1886141Z 
+2026-11-11T00:12:09.1886373Z HEAD is now at de6620e test: qualify local artifact stage crash recovery without issuer
+2026-11-11T00:12:09.2330074Z ##[endgroup]
+2026-11-11T00:12:09.2340309Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2026-11-11T00:12:09.2653024Z de6620eb5577e97db1af11b6807e22a9b61d1090
+2026-11-11T00:12:09.2695636Z ##[group]Removing auth
+2026-11-11T00:12:09.2705375Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-11T00:12:09.3063824Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-11T00:12:09.7841235Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-11T00:12:09.8203509Z http.https://github.com/.extraheader
+2026-11-11T00:12:09.8252071Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+2026-11-11T00:12:09.8609862Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-11T00:12:10.4168557Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-11T00:12:10.4506676Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-11T00:12:10.9777914Z ##[endgroup]
+2026-11-11T00:12:11.0119186Z ##[group]Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+2026-11-11T00:12:11.0119724Z with:
+2026-11-11T00:12:11.0120297Z   python-version: 3.12.10
+2026-11-11T00:12:11.0120663Z   check-latest: false
+2026-11-11T00:12:11.0122934Z   token: ***
+2026-11-11T00:12:11.0123197Z   update-environment: true
+2026-11-11T00:12:11.0123533Z   allow-prereleases: false
+2026-11-11T00:12:11.0123813Z   freethreaded: false
+2026-11-11T00:12:11.0124057Z env:
+2026-11-11T00:12:11.0124344Z   TOOL_HEAD: 889d787ef053dca1eb0244da10f47a4a4a2cc982
+2026-11-11T00:12:11.0124682Z   PYTHONDONTWRITEBYTECODE: 1
+2026-11-11T00:12:11.0124970Z   PYTEST_DISABLE_PLUGIN_AUTOLOAD: 1
+2026-11-11T00:12:11.0125284Z   GIT_NO_REPLACE_OBJECTS: 1
+2026-11-11T00:12:11.0125552Z   GIT_CONFIG_COUNT: 2
+2026-11-11T00:12:11.0125820Z   GIT_CONFIG_KEY_0: core.autocrlf
+2026-11-11T00:12:11.0126152Z   GIT_CONFIG_VALUE_0: false
+2026-11-11T00:12:11.0126418Z   GIT_CONFIG_KEY_1: core.eol
+2026-11-11T00:12:11.0126812Z   GIT_CONFIG_VALUE_1: lf
+2026-11-11T00:12:11.0127061Z ##[endgroup]
+2026-11-11T00:12:11.1547367Z ##[group]Installed versions
+2026-11-11T00:12:11.1638223Z (node:8060) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-11T00:12:11.1640012Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-11T00:12:11.1640914Z Successfully set up CPython (3.12.10)
+2026-11-11T00:12:11.1641738Z ##[endgroup]
+2026-11-11T00:12:11.1959944Z ##[group]Run import hashlib,io,json,os,pathlib,stat,subprocess,sys
+2026-11-11T00:12:11.1960903Z [36;1mimport hashlib,io,json,os,pathlib,stat,subprocess,sys[0m
+2026-11-11T00:12:11.1961493Z [36;1mworkspace=pathlib.Path(os.environ['GITHUB_WORKSPACE']).absolute()[0m
+2026-11-11T00:12:11.1962021Z [36;1mtools=workspace/'qualifier-code';target=workspace/'target'[0m
+2026-11-11T00:12:11.1962528Z [36;1mrunner_temp=pathlib.Path(os.environ['RUNNER_TEMP']).absolute()[0m
+2026-11-11T00:12:11.1963117Z [36;1mns=runner_temp/('agent7-sqlite47-'+os.environ['GITHUB_RUN_ID']+'-'+os.environ['GITHUB_RUN_ATTEMPT'])[0m
+2026-11-11T00:12:11.1963621Z [36;1mevidence=ns/'evidence'[0m
+2026-11-11T00:12:11.1964026Z [36;1mgit=pathlib.Path('C:/Program Files/Git/bin/git.exe')[0m
+2026-11-11T00:12:11.1964510Z [36;1menv={k:v for k,v in os.environ.items() if not k.upper().startswith('GIT_')}[0m
+2026-11-11T00:12:11.1965154Z [36;1menv.update(GIT_CONFIG_NOSYSTEM='1',GIT_CONFIG_GLOBAL=os.devnull)[0m
+2026-11-11T00:12:11.1966066Z [36;1mdef ordinary(path,kind='directory'):[0m
+2026-11-11T00:12:11.1966494Z [36;1m    assert path.is_absolute() and '..' not in path.parts[0m
+2026-11-11T00:12:11.1966902Z [36;1m    chain=[*reversed(path.parents),path][0m
+2026-11-11T00:12:11.1967265Z [36;1m    for index,part in enumerate(chain):[0m
+2026-11-11T00:12:11.1967627Z [36;1m        info=part.lstat()[0m
+2026-11-11T00:12:11.1968082Z [36;1m        assert not stat.S_ISLNK(info.st_mode) and not (getattr(info,'st_file_attributes',0)&1024)[0m
+2026-11-11T00:12:11.1968568Z [36;1m        final=index==len(chain)-1[0m
+2026-11-11T00:12:11.1969019Z [36;1m        if final and kind=='file':assert stat.S_ISREG(info.st_mode) and info.st_nlink==1[0m
+2026-11-11T00:12:11.1969705Z [36;1m        elif final and kind=='either':assert stat.S_ISDIR(info.st_mode) or (stat.S_ISREG(info.st_mode) and info.st_nlink==1)[0m
+2026-11-11T00:12:11.1970277Z [36;1m        else:assert stat.S_ISDIR(info.st_mode)[0m
+2026-11-11T00:12:11.1970625Z [36;1m    return info[0m
+2026-11-11T00:12:11.1970935Z [36;1mdef checked_files(root):[0m
+2026-11-11T00:12:11.1971247Z [36;1m    ordinary(root)[0m
+2026-11-11T00:12:11.1971530Z [36;1m    pending=[root][0m
+2026-11-11T00:12:11.1971845Z [36;1m    while pending:[0m
+2026-11-11T00:12:11.1972186Z [36;1m        directory=pending.pop();ordinary(directory)[0m
+2026-11-11T00:12:11.1972643Z [36;1m        for p in sorted(directory.iterdir(),key=str):[0m
+2026-11-11T00:12:11.1973018Z [36;1m            rel=p.relative_to(root)[0m
+2026-11-11T00:12:11.1973360Z [36;1m            if rel.parts[0]=='.git':continue[0m
+2026-11-11T00:12:11.1973746Z [36;1m            info=ordinary(p,'either')[0m
+2026-11-11T00:12:11.1974136Z [36;1m            if stat.S_ISDIR(info.st_mode):pending.append(p)[0m
+2026-11-11T00:12:11.1974503Z [36;1m            else:yield p[0m
+2026-11-11T00:12:11.1974830Z [36;1mdef g(root,*args,data=None):[0m
+2026-11-11T00:12:11.1975146Z [36;1m    ordinary(root)[0m
+2026-11-11T00:12:11.1975502Z [36;1m    ordinary(root/'.git','either')[0m
+2026-11-11T00:12:11.1975834Z [36;1m    ordinary(git,'file')[0m
+2026-11-11T00:12:11.1976561Z [36;1m    return subprocess.check_output([str(git),'--no-replace-objects','--no-optional-locks','-c','core.fsmonitor=false','-c','core.hooksPath='+os.devnull,*args],cwd=root,env=env,input=data,timeout=30)[0m
+2026-11-11T00:12:11.1977317Z [36;1mdef ledger(root,head,count):[0m
+2026-11-11T00:12:11.1977633Z [36;1m    ordinary(root)[0m
+2026-11-11T00:12:11.1977995Z [36;1m    assert g(root,'rev-parse','HEAD').decode().strip()==head[0m
+2026-11-11T00:12:11.1978542Z [36;1m    assert not g(root,'for-each-ref','refs/replace','--format=%(refname)').strip()[0m
+2026-11-11T00:12:11.1979254Z [36;1m    tree=g(root,'rev-parse','HEAD^{tree}').decode().strip()[0m
+2026-11-11T00:12:11.1979645Z [36;1m    rows=[][0m
+2026-11-11T00:12:11.1980020Z [36;1m    for row in g(root,'ls-tree','-rz','--full-tree','HEAD').split(b'\0'):[0m
+2026-11-11T00:12:11.1981755Z [36;1m        if not row:continue[0m
+2026-11-11T00:12:11.1982181Z [36;1m        info,name=row.split(b'\t',1);mode,kind,oid=info.split()[0m
+2026-11-11T00:12:11.1982629Z [36;1m        assert mode in (b'100644',b'100755') and kind==b'blob'[0m
+2026-11-11T00:12:11.1983154Z [36;1m        rel=name.decode();relative=pathlib.PurePosixPath(rel)[0m
+2026-11-11T00:12:11.1983817Z [36;1m        assert not relative.is_absolute() and '..' not in relative.parts and rel==relative.as_posix() and '\\' not in rel and ':' not in rel[0m
+2026-11-11T00:12:11.1984432Z [36;1m        ordinary(root/rel,'file')[0m
+2026-11-11T00:12:11.1984777Z [36;1m        rows.append((rel,oid))[0m
+2026-11-11T00:12:11.1985096Z [36;1m    assert len(rows)==count[0m
+2026-11-11T00:12:11.1985852Z [36;1m    data=g(root,'cat-file','--batch',data=b''.join(oid+b'\n' for _,oid in rows))[0m
+2026-11-11T00:12:11.1986434Z [36;1m    assert len(data)<=128*1024*1024[0m
+2026-11-11T00:12:11.1986852Z [36;1m    stream=io.BytesIO(data);result={}[0m
+2026-11-11T00:12:11.1987203Z [36;1m    for rel,oid in rows:[0m
+2026-11-11T00:12:11.1987518Z [36;1m        p=root/rel;ordinary(p,'file')[0m
+2026-11-11T00:12:11.1987992Z [36;1m        actual,kind,size=stream.readline().split();raw=stream.read(int(size))[0m
+2026-11-11T00:12:11.1988514Z [36;1m        assert actual==oid and kind==b'blob' and stream.read(1)==b'\n'[0m
+2026-11-11T00:12:11.1989373Z [36;1m        assert hashlib.sha1(b'blob '+str(len(raw)).encode()+b'\0'+raw).hexdigest().encode()==oid[0m
+2026-11-11T00:12:11.1989953Z [36;1m        assert p.read_bytes()==raw and p.suffix not in ('.pyc','.pyo')[0m
+2026-11-11T00:12:11.1990495Z [36;1m        result[rel]={'bytes':len(raw),'sha256':hashlib.sha256(raw).hexdigest()}[0m
+2026-11-11T00:12:11.1990948Z [36;1m    actual=set()[0m
+2026-11-11T00:12:11.1991364Z [36;1m    for p in checked_files(root):actual.add(p.relative_to(root).as_posix())[0m
+2026-11-11T00:12:11.1991799Z [36;1m    assert actual==set(result)[0m
+2026-11-11T00:12:11.1992156Z [36;1m    return tree,result[0m
+2026-11-11T00:12:11.1992531Z [36;1mtest_head='de6620eb5577e97db1af11b6807e22a9b61d1090'[0m
+2026-11-11T00:12:11.1993304Z [36;1mfailure={'bootstrap_ok':False,'source_verified':False,'tool_files':None,'test_files':None,'tool_source_sha256':None,'test_source_sha256':None,'git_sha256':None}[0m
+2026-11-11T00:12:11.1993963Z [36;1mown_evidence=False[0m
+2026-11-11T00:12:11.1994248Z [36;1mtry:[0m
+2026-11-11T00:12:11.1994544Z [36;1m    ordinary(runner_temp)[0m
+2026-11-11T00:12:11.1994873Z [36;1m    try:ns.lstat()[0m
+2026-11-11T00:12:11.1995205Z [36;1m    except FileNotFoundError:pass[0m
+2026-11-11T00:12:11.1995623Z [36;1m    else:raise RuntimeError('Attempt namespace already exists')[0m
+2026-11-11T00:12:11.1996149Z [36;1m    ns.mkdir();ordinary(ns);evidence.mkdir();ordinary(evidence);own_evidence=True[0m
+2026-11-11T00:12:11.1996773Z [36;1m    envfile=pathlib.Path(os.environ['GITHUB_ENV']).absolute();ordinary(envfile,'file')[0m
+2026-11-11T00:12:11.1997360Z [36;1m    with envfile.open('a',encoding='utf-8') as out:out.write('A7_NAMESPACE='+str(ns)+'\n')[0m
+2026-11-11T00:12:11.1997832Z [36;1m    ordinary(workspace)[0m
+2026-11-11T00:12:11.1998223Z [36;1m    assert sys.platform=='win32' and sys.version_info[:3]==(3,12,10)[0m
+2026-11-11T00:12:11.1998723Z [36;1m    assert sys.flags.isolated and sys.flags.no_site and sys.dont_write_bytecode[0m
+2026-11-11T00:12:11.1999280Z [36;1m    python=pathlib.Path(sys.executable).absolute();ordinary(python,'file')[0m
+2026-11-11T00:12:11.1999825Z [36;1m    tool_tree,tool_files=ledger(tools,os.environ['TOOL_HEAD'],815)[0m
+2026-11-11T00:12:11.2000278Z [36;1m    test_tree,test_files=ledger(target,test_head,809)[0m
+2026-11-11T00:12:11.2000883Z [36;1m    assert test_tree=='01e9e95f593e74d0b0a27afca771f37034aef977'[0m
+2026-11-11T00:12:11.2001268Z [36;1m    ordinary(git,'file')[0m
+2026-11-11T00:12:11.2001614Z [36;1m    ordinary(python,'file')[0m
+2026-11-11T00:12:11.2003501Z [36;1m    record={'bootstrap_ok':True,'source_verified':True,'tool_head':os.environ['TOOL_HEAD'],'tool_tree':tool_tree,'tool_root':str(tools),'tool_files':tool_files,'test_head':test_head,'test_tree':test_tree,'test_files':test_files,'bootstrap':'WORKFLOW_INLINE_BEFORE_QUALIFIER_IMPORT','git_primary':str(git),'git_sha256':hashlib.sha256(git.read_bytes()).hexdigest(),'python':{'executable':str(python),'version':sys.version,'sha256':hashlib.sha256(python.read_bytes()).hexdigest()}}[0m
+2026-11-11T00:12:11.2005006Z [36;1m    ordinary(evidence)[0m
+2026-11-11T00:12:11.2005521Z [36;1m    with (evidence/'bootstrap.json').open('x',encoding='utf-8') as out:json.dump(record,out,sort_keys=True,indent=2)[0m
+2026-11-11T00:12:11.2006383Z [36;1m    ordinary(envfile,'file')[0m
+2026-11-11T00:12:11.2006899Z [36;1m    with envfile.open('a',encoding='utf-8') as out:out.write('A7_BOOTSTRAP_OK=1\n')[0m
+2026-11-11T00:12:11.2007356Z [36;1mexcept BaseException as error:[0m
+2026-11-11T00:12:11.2007732Z [36;1m    failure['error_type']=type(error).__name__[0m
+2026-11-11T00:12:11.2008125Z [36;1m    print(json.dumps(failure,sort_keys=True))[0m
+2026-11-11T00:12:11.2008454Z [36;1m    if own_evidence:[0m
+2026-11-11T00:12:11.2008784Z [36;1m        ordinary(evidence)[0m
+2026-11-11T00:12:11.2009331Z [36;1m        with (evidence/'bootstrap-failure.json').open('x',encoding='utf-8') as out:json.dump(failure,out,sort_keys=True,indent=2)[0m
+2026-11-11T00:12:11.2009924Z [36;1m    raise[0m
+2026-11-11T00:12:11.2022218Z shell: C:\hostedtoolcache\windows\Python\3.12.10\x64\python.EXE -I -S -B {0}
+2026-11-11T00:12:11.2022713Z env:
+2026-11-11T00:12:11.2023039Z   TOOL_HEAD: 889d787ef053dca1eb0244da10f47a4a4a2cc982
+2026-11-11T00:12:11.2023416Z   PYTHONDONTWRITEBYTECODE: 1
+2026-11-11T00:12:11.2023739Z   PYTEST_DISABLE_PLUGIN_AUTOLOAD: 1
+2026-11-11T00:12:11.2024088Z   GIT_NO_REPLACE_OBJECTS: 1
+2026-11-11T00:12:11.2024386Z   GIT_CONFIG_COUNT: 2
+2026-11-11T00:12:11.2024667Z   GIT_CONFIG_KEY_0: core.autocrlf
+2026-11-11T00:12:11.2025009Z   GIT_CONFIG_VALUE_0: false
+2026-11-11T00:12:11.2025301Z   GIT_CONFIG_KEY_1: core.eol
+2026-11-11T00:12:11.2025973Z   GIT_CONFIG_VALUE_1: lf
+2026-11-11T00:12:11.2026344Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-11T00:12:11.2026844Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-11-11T00:12:11.2027350Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-11T00:12:11.2027796Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-11T00:12:11.2028241Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-11T00:12:11.2028613Z ##[endgroup]
+2026-11-11T00:12:13.7194366Z ##[group]Run $deps=Join-Path $env:A7_NAMESPACE 'deps'
+2026-11-11T00:12:13.7194927Z [36;1m$deps=Join-Path $env:A7_NAMESPACE 'deps'[0m
+2026-11-11T00:12:13.7195375Z [36;1m$evidence=Join-Path $env:A7_NAMESPACE 'evidence'[0m
+2026-11-11T00:12:13.7196099Z [36;1mpython -I -S -B qualifier-code/docs/gateway/research/persistence/qualification47/qualify.py controls --target target --deps $deps --evidence $evidence[0m
+2026-11-11T00:12:13.7196996Z [36;1mexit $LASTEXITCODE[0m
+2026-11-11T00:12:13.8032116Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-11T00:12:13.8032545Z env:
+2026-11-11T00:12:13.8032965Z   TOOL_HEAD: 889d787ef053dca1eb0244da10f47a4a4a2cc982
+2026-11-11T00:12:13.8033356Z   PYTHONDONTWRITEBYTECODE: 1
+2026-11-11T00:12:13.8033680Z   PYTEST_DISABLE_PLUGIN_AUTOLOAD: 1
+2026-11-11T00:12:13.8034011Z   GIT_NO_REPLACE_OBJECTS: 1
+2026-11-11T00:12:13.8034304Z   GIT_CONFIG_COUNT: 2
+2026-11-11T00:12:13.8034578Z   GIT_CONFIG_KEY_0: core.autocrlf
+2026-11-11T00:12:13.8035040Z   GIT_CONFIG_VALUE_0: false
+2026-11-11T00:12:13.8035511Z   GIT_CONFIG_KEY_1: core.eol
+2026-11-11T00:12:13.8035836Z   GIT_CONFIG_VALUE_1: lf
+2026-11-11T00:12:13.8036250Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-11T00:12:13.8036750Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-11-11T00:12:13.8037238Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-11T00:12:13.8037672Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-11T00:12:13.8038144Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-11T00:12:13.8038572Z   A7_NAMESPACE: D:\a\_temp\agent7-sqlite47-42929428929-1
+2026-11-11T00:12:13.8038920Z   A7_BOOTSTRAP_OK: 1
+2026-11-11T00:12:13.8039210Z ##[endgroup]
+2026-11-11T00:12:16.2039034Z ##[group]Run $ErrorActionPreference='Stop'
+2026-11-11T00:12:16.2039884Z [36;1m$ErrorActionPreference='Stop'[0m
+2026-11-11T00:12:16.2040275Z [36;1m$deps=Join-Path $env:A7_NAMESPACE 'deps'[0m
+2026-11-11T00:12:16.2040749Z [36;1m$report=Join-Path $env:A7_NAMESPACE 'evidence/pip-install.json'[0m
+2026-11-11T00:12:16.2041219Z [36;1mpython -m pip --version[0m
+2026-11-11T00:12:16.2042403Z [36;1mpython -m pip --isolated install --disable-pip-version-check --no-input --only-binary=:all: --no-deps --no-compile --require-hashes --retries 0 --timeout 30 --index-url https://pypi.org/simple --target $deps --report $report -r qualifier-code/docs/gateway/research/persistence/qualification47/requirements.lock[0m
+2026-11-11T00:12:16.2043630Z [36;1mif($LASTEXITCODE -ne 0){exit $LASTEXITCODE}[0m
+2026-11-11T00:12:16.2106489Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-11T00:12:16.2106920Z env:
+2026-11-11T00:12:16.2107383Z   TOOL_HEAD: 889d787ef053dca1eb0244da10f47a4a4a2cc982
+2026-11-11T00:12:16.2107789Z   PYTHONDONTWRITEBYTECODE: 1
+2026-11-11T00:12:16.2108141Z   PYTEST_DISABLE_PLUGIN_AUTOLOAD: 1
+2026-11-11T00:12:16.2108479Z   GIT_NO_REPLACE_OBJECTS: 1
+2026-11-11T00:12:16.2108772Z   GIT_CONFIG_COUNT: 2
+2026-11-11T00:12:16.2109089Z   GIT_CONFIG_KEY_0: core.autocrlf
+2026-11-11T00:12:16.2109399Z   GIT_CONFIG_VALUE_0: false
+2026-11-11T00:12:16.2110262Z   GIT_CONFIG_KEY_1: core.eol
+2026-11-11T00:12:16.2110568Z   GIT_CONFIG_VALUE_1: lf
+2026-11-11T00:12:16.2110925Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-11T00:12:16.2111481Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-11-11T00:12:16.2111967Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-11T00:12:16.2112412Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-11T00:12:16.2112846Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-11T00:12:16.2113253Z   A7_NAMESPACE: D:\a\_temp\agent7-sqlite47-42929428929-1
+2026-11-11T00:12:16.2113634Z   A7_BOOTSTRAP_OK: 1
+2026-11-11T00:12:16.2113907Z ##[endgroup]
+2026-11-11T00:12:17.4184866Z pip 26.3 from C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\site-packages\pip (python 3.12)
+2026-11-11T00:12:17.4185877Z 
+2026-11-11T00:12:20.1296518Z Collecting pytest==9.2.0 (from -r qualifier-code/docs/gateway/research/persistence/qualification47/requirements.lock (line 2))
+2026-11-11T00:12:20.3746412Z   Downloading pytest-9.2.0-py3-none-any.whl (411 kB)
+2026-11-11T00:12:20.5279737Z Collecting pluggy==1.7.0 (from -r qualifier-code/docs/gateway/research/persistence/qualification47/requirements.lock (line 3))
+2026-11-11T00:12:20.5457614Z   Downloading pluggy-1.7.0-py3-none-any.whl (27 kB)
+2026-11-11T00:12:20.5958005Z Collecting packaging==26.3 (from -r qualifier-code/docs/gateway/research/persistence/qualification47/requirements.lock (line 4))
+2026-11-11T00:12:20.6071428Z   Downloading packaging-26.3-py3-none-any.whl (129 kB)
+2026-11-11T00:12:20.6795275Z Collecting iniconfig==2.3.1 (from -r qualifier-code/docs/gateway/research/persistence/qualification47/requirements.lock (line 5))
+2026-11-11T00:12:20.6909014Z   Downloading iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
+2026-11-11T00:12:20.7426550Z Collecting pygments==2.21.0 (from -r qualifier-code/docs/gateway/research/persistence/qualification47/requirements.lock (line 6))
+2026-11-11T00:12:20.7538654Z   Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+2026-11-11T00:12:20.9310850Z      ---------------------------------------- 1.3/1.3 MB 6.3 MB/s  0:00:00
+2026-11-11T00:12:21.1244493Z Collecting colorama==0.4.6 (from -r qualifier-code/docs/gateway/research/persistence/qualification47/requirements.lock (line 7))
+2026-11-11T00:12:21.1415253Z   Downloading colorama-0.4.6-py2.py3-none-any.whl (25 kB)
+2026-11-11T00:12:21.3885706Z Installing collected packages: pytest, pygments, pluggy, packaging, iniconfig, colorama
+2026-11-11T00:12:22.8222528Z 
+2026-11-11T00:12:22.8238362Z Successfully installed colorama-0.4.6 iniconfig-2.3.1 packaging-26.3 pluggy-1.7.0 pygments-2.21.0 pytest-9.2.0
+2026-11-11T00:12:23.3029733Z ##[group]Run $deps=Join-Path $env:A7_NAMESPACE 'deps'
+2026-11-11T00:12:23.3030528Z [36;1m$deps=Join-Path $env:A7_NAMESPACE 'deps'[0m
+2026-11-11T00:12:23.3031206Z [36;1m$evidence=Join-Path $env:A7_NAMESPACE 'evidence'[0m
+2026-11-11T00:12:23.3032672Z [36;1mpython -I -S -B qualifier-code/docs/gateway/research/persistence/qualification47/qualify.py run --target target --deps $deps --evidence $evidence[0m
+2026-11-11T00:12:23.3033740Z [36;1mexit $LASTEXITCODE[0m
+2026-11-11T00:12:23.3111559Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-11T00:12:23.3111997Z env:
+2026-11-11T00:12:23.3112318Z   TOOL_HEAD: 889d787ef053dca1eb0244da10f47a4a4a2cc982
+2026-11-11T00:12:23.3112760Z   PYTHONDONTWRITEBYTECODE: 1
+2026-11-11T00:12:23.3113099Z   PYTEST_DISABLE_PLUGIN_AUTOLOAD: 1
+2026-11-11T00:12:23.3113426Z   GIT_NO_REPLACE_OBJECTS: 1
+2026-11-11T00:12:23.3113735Z   GIT_CONFIG_COUNT: 2
+2026-11-11T00:12:23.3114056Z   GIT_CONFIG_KEY_0: core.autocrlf
+2026-11-11T00:12:23.3114475Z   GIT_CONFIG_VALUE_0: false
+2026-11-11T00:12:23.3114795Z   GIT_CONFIG_KEY_1: core.eol
+2026-11-11T00:12:23.3115116Z   GIT_CONFIG_VALUE_1: lf
+2026-11-11T00:12:23.3115498Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-11T00:12:23.3115976Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-11-11T00:12:23.3116477Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-11T00:12:23.3116918Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-11T00:12:23.3117366Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-11T00:12:23.3117792Z   A7_NAMESPACE: D:\a\_temp\agent7-sqlite47-42929428929-1
+2026-11-11T00:12:23.3118482Z   A7_BOOTSTRAP_OK: 1
+2026-11-11T00:12:23.3118779Z ##[endgroup]
+2026-11-11T00:12:28.5180882Z ##[group]Run $deps=Join-Path $env:A7_NAMESPACE 'deps'
+2026-11-11T00:12:28.5181413Z [36;1m$deps=Join-Path $env:A7_NAMESPACE 'deps'[0m
+2026-11-11T00:12:28.5181809Z [36;1m$evidence=Join-Path $env:A7_NAMESPACE 'evidence'[0m
+2026-11-11T00:12:28.5182567Z [36;1mpython -I -S -B qualifier-code/docs/gateway/research/persistence/qualification47/qualify.py verify --target target --deps $deps --evidence $evidence[0m
+2026-11-11T00:12:28.5183265Z [36;1mexit $LASTEXITCODE[0m
+2026-11-11T00:12:28.5245122Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-11T00:12:28.5245530Z env:
+2026-11-11T00:12:28.5245941Z   TOOL_HEAD: 889d787ef053dca1eb0244da10f47a4a4a2cc982
+2026-11-11T00:12:28.5246316Z   PYTHONDONTWRITEBYTECODE: 1
+2026-11-11T00:12:28.5246655Z   PYTEST_DISABLE_PLUGIN_AUTOLOAD: 1
+2026-11-11T00:12:28.5246980Z   GIT_NO_REPLACE_OBJECTS: 1
+2026-11-11T00:12:28.5247351Z   GIT_CONFIG_COUNT: 2
+2026-11-11T00:12:28.5247666Z   GIT_CONFIG_KEY_0: core.autocrlf
+2026-11-11T00:12:28.5248104Z   GIT_CONFIG_VALUE_0: false
+2026-11-11T00:12:28.5248437Z   GIT_CONFIG_KEY_1: core.eol
+2026-11-11T00:12:28.5248743Z   GIT_CONFIG_VALUE_1: lf
+2026-11-11T00:12:28.5249116Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-11T00:12:28.5249635Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-11-11T00:12:28.5250337Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-11T00:12:28.5250850Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-11T00:12:28.5251308Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-11T00:12:28.5251739Z   A7_NAMESPACE: D:\a\_temp\agent7-sqlite47-42929428929-1
+2026-11-11T00:12:28.5252122Z   A7_BOOTSTRAP_OK: 1
+2026-11-11T00:12:28.5252407Z ##[endgroup]
+2026-11-11T00:12:29.6771150Z {"artifact_upload": "NOT_OBSERVED_BY_THIS_PROCESS", "candidate_sha256": "795f2137a488c5cb791ec09d19b09a55ce96d848c119c60d9ed4f71a2d10cacd", "classification": "HOSTED_UNIT_QUALIFIED", "finalization": "SEPARATE_READBACK_OF_CLOSED_CANDIDATE", "job_completion": "NOT_OBSERVED_BY_THIS_PROCESS", "junit_sha256": "450238c736d1d849b20eb321fea5b827116df28959be8ada6ec115ffe49c462b", "modeled_controls": {"receipt_sha256": "d7ae3b39e079d6c550a5063d072533bc2857887e3ba54f1da8bc9164750a1492", "separate_from_staging_cases": true, "skips": 0, "tests": 28}, "native_admission": false, "phases": 141, "physical_admission": false, "schema": "agent7.hosted.sqlite47.terminal.v2", "skips": 0, "test_head": "de6620eb5577e97db1af11b6807e22a9b61d1090", "test_tree": "01e9e95f593e74d0b0a27afca771f37034aef977", "tests": 47, "tool_head": "889d787ef053dca1eb0244da10f47a4a4a2cc982", "tool_tree": "504f1b2cffe6bbb69babf21cef8171995a459322", "vm_teardown": "NOT_INDEPENDENTLY_OBSERVED"}
+2026-11-11T00:12:29.7523180Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+2026-11-11T00:12:29.7523741Z with:
+2026-11-11T00:12:29.7524026Z   name: projection47-42929428929-1
+2026-11-11T00:12:29.7524590Z   path: D:\a\_temp\agent7-sqlite47-42929428929-1/evidence/
+2026-11-11T00:12:29.7525491Z   if-no-files-found: error
+2026-11-11T00:12:29.7525817Z   retention-days: 7
+2026-11-11T00:12:29.7526179Z   compression-level: 6
+2026-11-11T00:12:29.7526460Z   overwrite: false
+2026-11-11T00:12:29.7526754Z   include-hidden-files: false
+2026-11-11T00:12:29.7527074Z env:
+2026-11-11T00:12:29.7527354Z   TOOL_HEAD: 889d787ef053dca1eb0244da10f47a4a4a2cc982
+2026-11-11T00:12:29.7527738Z   PYTHONDONTWRITEBYTECODE: 1
+2026-11-11T00:12:29.7528066Z   PYTEST_DISABLE_PLUGIN_AUTOLOAD: 1
+2026-11-11T00:12:29.7528378Z   GIT_NO_REPLACE_OBJECTS: 1
+2026-11-11T00:12:29.7528690Z   GIT_CONFIG_COUNT: 2
+2026-11-11T00:12:29.7529002Z   GIT_CONFIG_KEY_0: core.autocrlf
+2026-11-11T00:12:29.7529406Z   GIT_CONFIG_VALUE_0: false
+2026-11-11T00:12:29.7529727Z   GIT_CONFIG_KEY_1: core.eol
+2026-11-11T00:12:29.7530050Z   GIT_CONFIG_VALUE_1: lf
+2026-11-11T00:12:29.7530412Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-11T00:12:29.7530887Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-11-11T00:12:29.7531404Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-11T00:12:29.7531857Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-11T00:12:29.7532309Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-11T00:12:29.7532747Z   A7_NAMESPACE: D:\a\_temp\agent7-sqlite47-42929428929-1
+2026-11-11T00:12:29.7533140Z   A7_BOOTSTRAP_OK: 1
+2026-11-11T00:12:29.7533434Z ##[endgroup]
+2026-11-11T00:12:29.9445576Z (node:9632) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-11T00:12:29.9446586Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-11T00:12:29.9538249Z With the provided path, there will be 11 files uploaded
+2026-11-11T00:12:29.9545093Z Artifact name is valid!
+2026-11-11T00:12:29.9546912Z Root directory input is valid!
+2026-11-11T00:12:30.3029326Z Beginning upload of artifact content to blob storage
+2026-11-11T00:12:30.3642982Z (node:9632) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-11-11T00:12:30.8906793Z Uploaded bytes 333657
+2026-11-11T00:12:30.9579350Z Finished uploading artifact content to blob storage!
+2026-11-11T00:12:30.9580261Z SHA256 digest of uploaded artifact zip is 8f88277e6da04765bb8ad6f68b506100dc4f4f0ae6bdd23f7f95e5d038c9fe88
+2026-11-11T00:12:30.9582954Z Finalizing artifact upload
+2026-11-11T00:12:31.3066814Z Artifact projection47-42929428929-1.zip successfully finalized. Artifact ID 13815317595
+2026-11-11T00:12:31.3067927Z Artifact projection47-42929428929-1 has been successfully uploaded! Final size is 333657 bytes. Artifact ID is 13815317595
+2026-11-11T00:12:31.3078922Z Artifact download URL: https://github.com/YehorBabenko88/strattester/actions/runs/42929428929/artifacts/13815317595
+2026-11-11T00:12:31.3472213Z Post job cleanup.
+2026-11-11T00:12:31.4833379Z (node:8848) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-11T00:12:31.4833990Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-11T00:12:31.5119171Z Post job cleanup.
+2026-11-11T00:12:31.6837200Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-11T00:12:31.7184797Z git version 2.56.0.windows.4
+2026-11-11T00:12:31.7269286Z Temporarily overriding HOME='D:\a\_temp\60bbdbdf-f5cc-4051-95ba-3bceafda0371' before making global git config changes
+2026-11-11T00:12:31.7270314Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-11T00:12:31.7279901Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\strattester\strattester\target
+2026-11-11T00:12:31.7661820Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-11T00:12:31.8050957Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-11T00:12:32.3650792Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-11T00:12:32.4017836Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-11T00:12:32.9509018Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-11T00:12:32.9909613Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-11T00:12:33.5375224Z Post job cleanup.
+2026-11-11T00:12:33.7055608Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-11T00:12:33.7412474Z git version 2.56.0.windows.4
+2026-11-11T00:12:33.7495346Z Temporarily overriding HOME='D:\a\_temp\d93eea63-dc9e-4126-8d6f-5845d3af12d3' before making global git config changes
+2026-11-11T00:12:33.7496332Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-11T00:12:33.7506196Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\strattester\strattester\qualifier-code
+2026-11-11T00:12:33.7888177Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-11T00:12:33.8258729Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-11T00:12:34.3859329Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-11T00:12:34.4227631Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-11T00:12:34.9600542Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-11T00:12:34.9966395Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-11T00:12:35.5779713Z Cleaning up orphan processes
+2026-11-11T00:12:35.6528032Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@11d5960a326750d5838078e36cf38b85af677262, actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065, actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

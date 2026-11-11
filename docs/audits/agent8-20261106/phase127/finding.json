@@ -1,0 +1,17 @@
+{
+  "id": "A8-F27",
+  "severity": "P1",
+  "repository": "bybit-cluster-grid",
+  "pr": 274,
+  "observed_head": "539239e3c11ec9e86aa24365d74a68301fdf1185",
+  "consumer_repository": "unified-system",
+  "consumer_pr": 64,
+  "consumer_head": "0342413b76e5574e7e303bfdd8a4ea2417ae8d93",
+  "title": "Owned Consul HTTP client inherits proxy routing despite literal loopback gate",
+  "status": "OPEN_SOURCE_ISOLATION_BOUNDARY",
+  "test": "Controlled actual client transport selection, no HTTP request",
+  "evidence": "phase127/executed.py;phase127/stdout.json;phase127/source-binding.json",
+  "required_correction": "A2 provide independently admitted owned client construction with ambient proxy routing disabled or equivalently enforced; Root bind consumer/client custody to corrected exact source. Regression must verify route under inherited proxy config and prevent proxy inheritance at construction, not merely change environment after construction. Do not advance qualified source pins silently.",
+  "historical_proxy_use": "NOT_ESTABLISHED",
+  "actual_egress_or_token_leak": "NOT_ESTABLISHED"
+}

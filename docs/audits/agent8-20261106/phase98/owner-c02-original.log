@@ -1,0 +1,24 @@
+test_context_and_capture_have_no_public_constructor (test_broker.BrokerBoundaryTests.test_context_and_capture_have_no_public_constructor) ... ok
+test_missing_or_method_shaped_authority_never_authenticates (test_broker.BrokerBoundaryTests.test_missing_or_method_shaped_authority_never_authenticates) ... ok
+test_native_session_syntax_is_distinct_and_never_a_permission (test_broker.BrokerBoundaryTests.test_native_session_syntax_is_distinct_and_never_a_permission) ... ok
+{"scope": "OWNED_LOOPBACK_LAB_STARTED", "voters": 3, "processes": [131008, 122920, 118676], "endpoints": ["http://127.0.0.1:53917", "http://127.0.0.1:53921", "http://127.0.0.1:53925"], "binary_sha256": "41762ef5b98c8dd9b6852df6cfbceed37e7f0acc5760856be33100f1092475e1", "acl_default": "deny"}
+test_acl_default_deny_client_cannot_write_policy (test_native_broker.NativeBrokerTests.test_acl_default_deny_client_cannot_write_policy) ... Executing <Task pending name='Task-1' coro=<NativeBrokerTests.asyncSetUp() running at C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-2-high-availability-distributed\work\research-broker-primary-final\tests\gateway_research_identity\test_native_broker.py:42> cb=[_run_until_complete_cb() at C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\base_events.py:181] created at C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\runners.py:100> took 0.187 seconds
+ok
+test_actual_mtls_native_session_and_sealed_capture (test_native_broker.NativeBrokerTests.test_actual_mtls_native_session_and_sealed_capture) ... ok
+test_actual_native_policy_revocation_and_session_invalidation (test_native_broker.NativeBrokerTests.test_actual_native_policy_revocation_and_session_invalidation) ... ok
+test_audit_full_invalidation_still_destroys_own_native_session (test_native_broker.NativeBrokerTests.test_audit_full_invalidation_still_destroys_own_native_session) ... ok
+test_close_during_actual_native_create_retires_owned_session (test_native_broker.NativeBrokerTests.test_close_during_actual_native_create_retires_owned_session) ... ok
+test_forward_utc_jump_expires_real_issued_capture (test_native_broker.NativeBrokerTests.test_forward_utc_jump_expires_real_issued_capture) ... ok
+test_invalidate_latches_and_stale_capture_is_no_permission (test_native_broker.NativeBrokerTests.test_invalidate_latches_and_stale_capture_is_no_permission) ... ok
+test_read_scope_cannot_be_upgraded_by_request (test_native_broker.NativeBrokerTests.test_read_scope_cannot_be_upgraded_by_request) ... ok
+test_real_foreign_native_session_cannot_rebind_issued_context (test_native_broker.NativeBrokerTests.test_real_foreign_native_session_cannot_rebind_issued_context) ... ok
+test_shortened_native_policy_expiry_bounds_new_capture (test_native_broker.NativeBrokerTests.test_shortened_native_policy_expiry_bounds_new_capture) ... ok
+test_stale_policy_capture_fails_actual_native_cas (test_native_broker.NativeBrokerTests.test_stale_policy_capture_fails_actual_native_cas) ... ok
+test_z_real_one_of_three_no_quorum_is_unavailable (test_native_broker.NativeBrokerTests.test_z_real_one_of_three_no_quorum_is_unavailable) ... ok
+{"scope": "OWNED_LOOPBACK_LAB_RETIRED", "processes": [{"pid": 131008, "returncode": 1}, {"pid": 122920, "returncode": 1}, {"pid": 118676, "returncode": 1}], "all_owned_processes_waited": true, "foreign_process_operations": 0, "session_retirement": "OWNED_SERVERS_STOPPED_TEMPORARY_DIRECTORY_CLEANUP_FOLLOWS"}
+
+----------------------------------------------------------------------
+Ran 15 tests in 14.070s
+
+OK
+{"result": "PASS", "head": "c02b110a8939674adc676cb203e0d71ffab800d0", "tree": "49af2d81b17297aa3f45aa718a24ec2d121c9c4d", "grid_head": "40e9c8dc274a2746018bc1aa08d103cd0187cecc", "raw_files": 1511, "grid_raw_files": 695, "tests": 15, "skips": 0, "scope": "DISPOSABLE_RESEARCH_PRINCIPAL_NOT_JOB_WORKER_OR_PUBLIC_SUBMIT"}

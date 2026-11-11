@@ -1,0 +1,130 @@
+diff --git a/docs/intelligence/jobs/capacity-source-prerequisites-v1.md b/docs/intelligence/jobs/capacity-source-prerequisites-v1.md
+new file mode 100644
+index 0000000..efc5000
+--- /dev/null
++++ b/docs/intelligence/jobs/capacity-source-prerequisites-v1.md
+@@ -0,0 +1,13 @@
++# Capacity observation source prerequisite v1: local DATA only
++
++Independent branch from PR62 `6f3085c0b4c2e07f11958c64a39603a1f74c2049`. PR60/62 remain immutable. Only A5 gateway_worker.py, its new tests and this design are changed.
++
++Existing host diagnostics timestamp only after K32GetPerformanceInfo. A long query can therefore appear younger than its oldest input. Capture monotonic start and completion, module-owned observation incarnation and elapsed query duration. Keep existing UTC label as diagnostic only; never use it for authority expiry. Preserve `qualified_for_native_admission=False` and all six unsupported resource dimensions.
++
++Retain the old monotonic_ns field as query-completion diagnostic for compatibility, with an explicit semantics label. Freshness evaluation uses the new start/end fields only; never silently reinterpret the legacy field. This is an interval around the OS read, not proof of the OS data's true measurement age or authenticated remote freshness.
++
++Implement frozen pure `CapacityFreshnessV1` result and `capacity_freshness_v1(...)`: exact nonnegative integer timestamps, start<=end<=now, exact matching UUIDv4 observation/expected incarnation. Cross-incarnation samples are unusable; monotonic values are not portable across nodes/boots. This equality check is local DATA validation, not authenticated origin/enrollment proof. Age is now-start, conservatively including query duration. Positive, exact integer max_age_ns must be explicitly supplied; none/invalid means UNSUPPORTED. Reject age>=max_age_ns, including exact boundary. No built-in operational max age: ROOT/A2 policy coACK and load/failure measurements are still required.
++
++Every result keeps admission_supported=False and resources_reserved=False. A fresh snapshot neither reserves free memory nor proves CPU/RSS/disk/network capacity. No actual Assignment/permit/source-qualification capsule is minted. Remote capacity needs an actual qualified issuer protocol; this local helper cannot establish remote freshness.
++
++TDD: malformed/foreign/rollback/query-span/boundary/absent-policy tests RED, implement, verify deterministic query barriers with an inert K32 stub (not native capacity evidence). Run current local suite, read-only review, commit and fresh primary source guard. Two existing explicitly selected actual suspended preparation/inspect/abort cases may verify emitted observation fields; no supervisor crash rerun, Resume, CPU load, qualifier or PR52. Keep actual resource enforcement and native effect gates closed. Separate Draft/evidence and A8 handoff.
+diff --git a/tests/gateway_jobs/test_capacity_freshness.py b/tests/gateway_jobs/test_capacity_freshness.py
+new file mode 100644
+index 0000000..2c4c0f5
+--- /dev/null
++++ b/tests/gateway_jobs/test_capacity_freshness.py
+@@ -0,0 +1,44 @@
++"""Local timestamp-span arithmetic; never remote capacity/admission proof."""
++import dataclasses
++import unittest
++from unittest.mock import patch
++from unified_system import gateway_worker as worker
++
++INC='11111111-1111-4111-8111-111111111111'
++OTHER='22222222-2222-4222-8222-222222222222'
++def freshness(**changes):
++    args=dict(observed_start_ns=100,observed_end_ns=150,now_ns=199,
++              observation_incarnation_id=INC,expected_incarnation_id=INC,max_age_ns=100)
++    args.update(changes);return worker.capacity_freshness_v1(**args)
++
++class CapacityFreshness(unittest.TestCase):
++    def test_query_duration_counts_and_exact_boundary_is_stale(self):
++        result=freshness();self.assertEqual(result.state,'FRESH_LOCAL_DATA_NOT_ADMISSION')
++        self.assertEqual(result.age_ns,99)
++        self.assertEqual(freshness(now_ns=200).state,'STALE')
++        self.assertEqual(freshness(observed_start_ns=0,observed_end_ns=199,now_ns=200).state,'STALE')
++    def test_no_operational_limit_is_invented(self):
++        for limit in (None,0,-1,True,100.0,'100'):
++            with self.subTest(limit=limit):self.assertEqual(freshness(max_age_ns=limit).state,'UNSUPPORTED')
++    def test_foreign_restart_scope_and_clock_rollback_are_unusable(self):
++        self.assertEqual(freshness(observation_incarnation_id=OTHER).state,'FOREIGN_CLOCK_SCOPE')
++        for changes in (dict(observed_start_ns=151),dict(now_ns=149),dict(observed_start_ns=-1),
++                        dict(now_ns=True),dict(observed_end_ns=150.0),dict(expected_incarnation_id='host-name')):
++            with self.subTest(changes=changes):self.assertNotEqual(freshness(**changes).state,'FRESH_LOCAL_DATA_NOT_ADMISSION')
++    def test_result_cannot_be_promoted_to_admission_or_reservation(self):
++        result=freshness();self.assertFalse(result.admission_supported);self.assertFalse(result.resources_reserved)
++        with self.assertRaises(dataclasses.FrozenInstanceError):result.admission_supported=True
++    def test_host_query_records_conservative_actual_call_span(self):
++        class Kernel:
++            def K32GetPerformanceInfo(self,pointer,size):
++                info=pointer._obj;info.page_size=4096;info.commit_total=1;info.commit_limit=4;info.physical_available=2
++                return True
++        with patch.object(worker.time,'monotonic_ns',side_effect=[100,200]):
++            value=worker._attempt_host(Kernel())
++        self.assertEqual(value['observation_started_monotonic_ns'],'100')
++        self.assertEqual(value['observation_completed_monotonic_ns'],'200')
++        self.assertEqual(value['query_duration_ns'],'100')
++        self.assertEqual(value['observation_incarnation_id'],worker._PROCESS_INCARNATION)
++        self.assertEqual(value['monotonic_ns'],'200')
++        self.assertEqual(value['monotonic_ns_semantics'],'QUERY_COMPLETION_DIAGNOSTIC_ONLY_NOT_FRESHNESS')
++        self.assertFalse(value['qualified_for_native_admission'])
+diff --git a/unified_system/gateway_worker.py b/unified_system/gateway_worker.py
+index 817c39c..db980a4 100644
+--- a/unified_system/gateway_worker.py
++++ b/unified_system/gateway_worker.py
+@@ -35,6 +35,35 @@ class CpuHardCapPolicyV1:
+     admission_supported: bool=False
+     behaviorally_qualified: bool=False
+ 
++@dataclass(frozen=True)
++class CapacityFreshnessV1:
++    """Pure local clock-span evaluation, never qualified remote capacity."""
++    state: str
++    reason: str
++    age_ns: int | None=None
++    query_duration_ns: int | None=None
++    policy_version: str='local-capacity-clock-span.v1'
++    admission_supported: bool=False
++    resources_reserved: bool=False
++
++def capacity_freshness_v1(*,observed_start_ns,observed_end_ns,now_ns,
++        observation_incarnation_id,expected_incarnation_id,max_age_ns=None):
++    """No max-age default; same-incarnation DATA only, no issuer proof."""
++    def result(state,reason,age=None,duration=None):return CapacityFreshnessV1(state,reason,age,duration)
++    try:
++        _worker_uuid(observation_incarnation_id);_worker_uuid(expected_incarnation_id)
++    except WorkerUnavailable:return result('UNSUPPORTED','INVALID_OBSERVATION_CLOCK_SCOPE')
++    if observation_incarnation_id!=expected_incarnation_id:
++        return result('FOREIGN_CLOCK_SCOPE','CROSS_INCARNATION_MONOTONIC_COMPARISON_FORBIDDEN')
++    values=(observed_start_ns,observed_end_ns,now_ns)
++    if any(type(v) is not int or v<0 for v in values):return result('UNSUPPORTED','NONNEGATIVE_INTEGER_CLOCK_REQUIRED')
++    if observed_start_ns>observed_end_ns or observed_end_ns>now_ns:
++        return result('CLOCK_UNCERTAIN','CLOCK_ROLLBACK_OR_FUTURE_OBSERVATION')
++    if type(max_age_ns) is not int or max_age_ns<=0:return result('UNSUPPORTED','EXPLICIT_VALID_MAX_AGE_POLICY_REQUIRED')
++    age=now_ns-observed_start_ns;duration=observed_end_ns-observed_start_ns
++    if age>=max_age_ns:return result('STALE','OLDEST_OBSERVATION_AT_OR_BEYOND_POLICY_BOUNDARY',age,duration)
++    return result('FRESH_LOCAL_DATA_NOT_ADMISSION','LOCAL_SPAN_ONLY_NOT_CAPACITY_RESERVATION',age,duration)
++
+ def cpu_hard_cap_policy_v1(requested_millicores,*,processor_groups,active_processor_count,
+         process_affinity_mask,system_affinity_mask,already_reserved_millicores,
+         parent_cpu_control,dfss_state):
+@@ -237,11 +266,18 @@ def _attempt_identity(k,handle):
+ 
+ def _attempt_host(k):
+     info=_AttemptPerformance();info.cb=ctypes.sizeof(info)
+-    _worker_need(k.K32GetPerformanceInfo(ctypes.byref(info),ctypes.sizeof(info)),'OWNED_HOST_OBSERVATION_UNAVAILABLE')
++    started=time.monotonic_ns()
++    success=k.K32GetPerformanceInfo(ctypes.byref(info),ctypes.sizeof(info))
++    completed=time.monotonic_ns()
++    _worker_need(success,'OWNED_HOST_OBSERVATION_UNAVAILABLE')
++    _worker_need(completed>=started,'OWNED_HOST_OBSERVATION_CLOCK_ROLLBACK')
+     _worker_need(info.page_size>0 and info.commit_limit>=info.commit_total,'OWNED_HOST_OBSERVATION_INVALID')
+     return dict(available_commit_bytes=str((info.commit_limit-info.commit_total)*info.page_size),
+                 available_physical_bytes=str(info.physical_available*info.page_size),
+-                observation_utc=datetime.now(timezone.utc).isoformat(),monotonic_ns=str(time.monotonic_ns()),
++                observation_utc=datetime.now(timezone.utc).isoformat(),monotonic_ns=str(completed),
++                monotonic_ns_semantics='QUERY_COMPLETION_DIAGNOSTIC_ONLY_NOT_FRESHNESS',
++                observation_started_monotonic_ns=str(started),observation_completed_monotonic_ns=str(completed),
++                query_duration_ns=str(completed-started),observation_incarnation_id=_PROCESS_INCARNATION,
+                 qualified_for_native_admission=False)
+ 
+ def _attempt_cpu_topology(k,handle):

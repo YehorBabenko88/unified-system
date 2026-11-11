@@ -1,0 +1,291 @@
+﻿2026-11-11T15:49:39.0112476Z Current runner version: '2.338.2'
+2026-11-11T15:49:39.0133877Z ##[group]Runner Image Provisioner
+2026-11-11T15:49:39.0134561Z Hosted Compute Agent
+2026-11-11T15:49:39.0135008Z Version: 20261103.629
+2026-11-11T15:49:39.0135481Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+2026-11-11T15:49:39.0136052Z Build Date: 2026-11-03T17:26:59Z
+2026-11-11T15:49:39.0136601Z Worker ID: {0b9b39b5-2886-49b1-a5e8-bf8f6d82bade}
+2026-11-11T15:49:39.0137134Z Region: westus2
+2026-11-11T15:49:39.0137539Z Cloud: Azure
+2026-11-11T15:49:39.0137927Z ##[endgroup]
+2026-11-11T15:49:39.0138903Z ##[group]Operating System
+2026-11-11T15:49:39.0139367Z Microsoft Windows Server 2025
+2026-11-11T15:49:39.0139800Z 10.0.26100
+2026-11-11T15:49:39.0140576Z Datacenter
+2026-11-11T15:49:39.0140978Z ##[endgroup]
+2026-11-11T15:49:39.0141385Z ##[group]Runner Image
+2026-11-11T15:49:39.0141864Z Image: windows-2025-vs2026
+2026-11-11T15:49:39.0142290Z Version: 20261103.298.1
+2026-11-11T15:49:39.0143526Z Included Software: https://github.com/actions/runner-images/blob/win25-vs2026/20261103.298/images/windows/Windows2025-VS2026-Readme.md
+2026-11-11T15:49:39.0144836Z Image Release: https://github.com/actions/runner-images/releases/tag/win25-vs2026%2F20261103.298
+2026-11-11T15:49:39.0145635Z ##[endgroup]
+2026-11-11T15:49:39.0146471Z ##[group]GITHUB_TOKEN Permissions
+2026-11-11T15:49:39.0147992Z Contents: read
+2026-11-11T15:49:39.0148410Z Metadata: read
+2026-11-11T15:49:39.0148843Z ##[endgroup]
+2026-11-11T15:49:39.0150431Z Secret source: Actions
+2026-11-11T15:49:39.0151118Z Cache mode: write
+2026-11-11T15:49:39.0151628Z Prepare workflow directory
+2026-11-11T15:49:39.0462617Z Prepare all required actions
+2026-11-11T15:49:39.0521211Z Getting action download info
+2026-11-11T15:49:39.3855154Z Download action repository 'actions/checkout@11d5960a326750d5838078e36cf38b85af677262' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-11-11T15:49:39.4898041Z Download action repository 'actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+2026-11-11T15:49:39.7111857Z Complete job name: synthetic (windows-latest)
+2026-11-11T15:49:39.8751951Z ##[group]Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+2026-11-11T15:49:39.8752975Z with:
+2026-11-11T15:49:39.8753327Z   repository: YehorBabenko88/bybit-cluster-grid
+2026-11-11T15:49:39.8756663Z   token: ***
+2026-11-11T15:49:39.8756969Z   ssh-strict: true
+2026-11-11T15:49:39.8757282Z   ssh-user: git
+2026-11-11T15:49:39.8757599Z   persist-credentials: true
+2026-11-11T15:49:39.8757942Z   clean: true
+2026-11-11T15:49:39.8758268Z   sparse-checkout-cone-mode: true
+2026-11-11T15:49:39.8758638Z   fetch-depth: 1
+2026-11-11T15:49:39.8758943Z   fetch-tags: false
+2026-11-11T15:49:39.8759253Z   show-progress: true
+2026-11-11T15:49:39.8759562Z   lfs: false
+2026-11-11T15:49:39.8759848Z   submodules: false
+2026-11-11T15:49:39.8760160Z   set-safe-directory: true
+2026-11-11T15:49:39.8760519Z   allow-unsafe-pr-checkout: false
+2026-11-11T15:49:39.8761146Z ##[endgroup]
+2026-11-11T15:49:40.0024393Z Syncing repository: YehorBabenko88/bybit-cluster-grid
+2026-11-11T15:49:40.0025760Z ##[group]Getting Git version info
+2026-11-11T15:49:40.0026310Z Working directory is 'D:\a\bybit-cluster-grid\bybit-cluster-grid'
+2026-11-11T15:49:40.0567724Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-11T15:49:40.3897638Z git version 2.56.0.windows.4
+2026-11-11T15:49:40.3940464Z ##[endgroup]
+2026-11-11T15:49:40.3955410Z Temporarily overriding HOME='D:\a\_temp\4d0a41fe-328a-4aa9-9649-1aa73efea4a5' before making global git config changes
+2026-11-11T15:49:40.3956409Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-11T15:49:40.3963822Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\bybit-cluster-grid\bybit-cluster-grid
+2026-11-11T15:49:40.4609328Z Deleting the contents of 'D:\a\bybit-cluster-grid\bybit-cluster-grid'
+2026-11-11T15:49:40.4613830Z ##[group]Initializing the repository
+2026-11-11T15:49:40.4621146Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\bybit-cluster-grid\bybit-cluster-grid
+2026-11-11T15:49:40.5345363Z Initialized empty Git repository in D:/a/bybit-cluster-grid/bybit-cluster-grid/.git/
+2026-11-11T15:49:40.5387457Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/YehorBabenko88/bybit-cluster-grid
+2026-11-11T15:49:40.6012822Z ##[endgroup]
+2026-11-11T15:49:40.6013514Z ##[group]Disabling automatic garbage collection
+2026-11-11T15:49:40.6023769Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2026-11-11T15:49:40.6335777Z ##[endgroup]
+2026-11-11T15:49:40.6336666Z ##[group]Setting up auth
+2026-11-11T15:49:40.6344157Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-11T15:49:40.6640710Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-11T15:49:41.9819990Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-11T15:49:42.0109940Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-11T15:49:42.4525929Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-11T15:49:42.4818447Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-11T15:49:42.9441807Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-11-11T15:49:42.9736539Z ##[endgroup]
+2026-11-11T15:49:42.9737070Z ##[group]Fetching the repository
+2026-11-11T15:49:42.9748322Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +71c4d0e4f72d1d09899d251f70c873f1d9906c56:refs/remotes/pull/283/merge
+2026-11-11T15:49:44.2946618Z From https://github.com/YehorBabenko88/bybit-cluster-grid
+2026-11-11T15:49:44.2947815Z  * [new ref]         71c4d0e4f72d1d09899d251f70c873f1d9906c56 -> pull/283/merge
+2026-11-11T15:49:44.2979253Z ##[endgroup]
+2026-11-11T15:49:44.2979934Z ##[group]Determining the checkout info
+2026-11-11T15:49:44.2980777Z ##[endgroup]
+2026-11-11T15:49:44.2989722Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2026-11-11T15:49:44.3323554Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2026-11-11T15:49:44.3603697Z ##[group]Checking out the ref
+2026-11-11T15:49:44.3609968Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force refs/remotes/pull/283/merge
+2026-11-11T15:49:44.5474135Z Note: switching to 'refs/remotes/pull/283/merge'.
+2026-11-11T15:49:44.5474619Z 
+2026-11-11T15:49:44.5474851Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-11-11T15:49:44.5475431Z changes and commit them, and you can discard any commits you make in this
+2026-11-11T15:49:44.5475974Z state without impacting any branches by switching back to a branch.
+2026-11-11T15:49:44.5476368Z 
+2026-11-11T15:49:44.5476626Z If you want to create a new branch to retain commits you create, you may
+2026-11-11T15:49:44.5477134Z do so (now or later) by using -c with the switch command. Example:
+2026-11-11T15:49:44.5477465Z 
+2026-11-11T15:49:44.5477644Z   git switch -c <new-branch-name>
+2026-11-11T15:49:44.5477872Z 
+2026-11-11T15:49:44.5477989Z Or undo this operation with:
+2026-11-11T15:49:44.5478179Z 
+2026-11-11T15:49:44.5478268Z   git switch -
+2026-11-11T15:49:44.5478446Z 
+2026-11-11T15:49:44.5478758Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-11-11T15:49:44.5480420Z 
+2026-11-11T15:49:44.5480879Z HEAD is now at 71c4d0e Merge d6b72b66ff1b85b7e6b956568342ad6bd8bfcfbe into fb177d14b1e6e399bd9b66ae7cb35d3838acbd81
+2026-11-11T15:49:44.5526547Z ##[endgroup]
+2026-11-11T15:49:44.5902723Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2026-11-11T15:49:44.6166499Z 71c4d0e4f72d1d09899d251f70c873f1d9906c56
+2026-11-11T15:49:44.6539041Z ##[group]Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+2026-11-11T15:49:44.6539416Z with:
+2026-11-11T15:49:44.6539571Z   python-version: 3.12
+2026-11-11T15:49:44.6539748Z   check-latest: false
+2026-11-11T15:49:44.6541708Z   token: ***
+2026-11-11T15:49:44.6541870Z   update-environment: true
+2026-11-11T15:49:44.6542054Z   allow-prereleases: false
+2026-11-11T15:49:44.6542218Z   freethreaded: false
+2026-11-11T15:49:44.6542381Z ##[endgroup]
+2026-11-11T15:49:44.7827542Z ##[group]Installed versions
+2026-11-11T15:49:44.8024494Z (node:3404) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-11T15:49:44.8028720Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-11T15:49:44.8029296Z Successfully set up CPython (3.12.10)
+2026-11-11T15:49:44.8029874Z ##[endgroup]
+2026-11-11T15:49:44.8271773Z ##[group]Run python -m pip install -r requirements.txt pytest "psycopg[binary]"
+2026-11-11T15:49:44.8272330Z [36;1mpython -m pip install -r requirements.txt pytest "psycopg[binary]"[0m
+2026-11-11T15:49:44.9188688Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-11T15:49:44.9189184Z env:
+2026-11-11T15:49:44.9189407Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-11T15:49:44.9189806Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-11-11T15:49:44.9190149Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-11T15:49:44.9190448Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-11T15:49:44.9190771Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-11T15:49:44.9191012Z ##[endgroup]
+2026-11-11T15:49:49.7824495Z Collecting pytest
+2026-11-11T15:49:49.9518608Z   Downloading pytest-9.2.0-py3-none-any.whl.metadata (7.9 kB)
+2026-11-11T15:49:50.4264741Z Collecting aiohttp>=3.10 (from -r requirements.txt (line 1))
+2026-11-11T15:49:50.4363171Z   Downloading aiohttp-3.14.5-cp312-cp312-win_amd64.whl.metadata (8.5 kB)
+2026-11-11T15:49:50.5895833Z Collecting websockets>=13.0 (from -r requirements.txt (line 2))
+2026-11-11T15:49:50.5974979Z   Downloading websockets-17.4-cp312-cp312-win_amd64.whl.metadata (6.5 kB)
+2026-11-11T15:49:50.6842889Z Collecting asyncpg>=0.30 (from -r requirements.txt (line 3))
+2026-11-11T15:49:50.6927702Z   Downloading asyncpg-0.32.0-cp312-cp312-win_amd64.whl.metadata (4.5 kB)
+2026-11-11T15:49:50.7789254Z Collecting psutil>=6.0 (from -r requirements.txt (line 4))
+2026-11-11T15:49:50.7875802Z   Downloading psutil-7.2.2-cp37-abi3-win_amd64.whl.metadata (22 kB)
+2026-11-11T15:49:50.9249756Z Collecting pydantic>=2.8 (from -r requirements.txt (line 5))
+2026-11-11T15:49:50.9371023Z   Downloading pydantic-2.14.3-py3-none-any.whl.metadata (141 kB)
+2026-11-11T15:49:51.0161751Z Collecting pydantic-settings>=2.4 (from -r requirements.txt (line 6))
+2026-11-11T15:49:51.0240242Z   Downloading pydantic_settings-2.16.2-py3-none-any.whl.metadata (4.0 kB)
+2026-11-11T15:49:51.0911366Z Collecting fastapi>=0.115 (from -r requirements.txt (line 7))
+2026-11-11T15:49:51.0999666Z   Downloading fastapi-0.162.4-py3-none-any.whl.metadata (27 kB)
+2026-11-11T15:49:51.1534946Z Collecting uvicorn>=0.30 (from uvicorn[standard]>=0.30->-r requirements.txt (line 8))
+2026-11-11T15:49:51.1613430Z   Downloading uvicorn-0.54.0-py3-none-any.whl.metadata (6.6 kB)
+2026-11-11T15:49:51.2078658Z Collecting httpx>=0.27 (from -r requirements.txt (line 9))
+2026-11-11T15:49:51.2213535Z   Downloading httpx-0.28.1-py3-none-any.whl.metadata (7.1 kB)
+2026-11-11T15:49:51.2712008Z Collecting python-dotenv>=1.0 (from -r requirements.txt (line 10))
+2026-11-11T15:49:51.2790130Z   Downloading python_dotenv-1.2.4-py3-none-any.whl.metadata (29 kB)
+2026-11-11T15:49:51.3227631Z Collecting psycopg==3.3.6 (from psycopg[binary]==3.3.6->-r requirements.txt (line 12))
+2026-11-11T15:49:51.3305142Z   Downloading psycopg-3.3.6-py3-none-any.whl.metadata (4.4 kB)
+2026-11-11T15:49:51.3772960Z Collecting typing-extensions>=4.6 (from psycopg[binary])
+2026-11-11T15:49:51.3855621Z   Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+2026-11-11T15:49:51.4275666Z Collecting tzdata (from psycopg[binary])
+2026-11-11T15:49:51.4410113Z   Downloading tzdata-2026.6-py2.py3-none-any.whl.metadata (1.4 kB)
+2026-11-11T15:49:51.5932588Z Collecting psycopg-binary==3.3.6 (from psycopg[binary])
+2026-11-11T15:49:51.6020318Z   Downloading psycopg_binary-3.3.6-cp312-cp312-win_amd64.whl.metadata (2.8 kB)
+2026-11-11T15:49:51.6200604Z Requirement already satisfied: colorama>=0.4 in C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\site-packages (from pytest) (0.4.6)
+2026-11-11T15:49:51.6487591Z Collecting iniconfig>=2 (from pytest)
+2026-11-11T15:49:51.6564882Z   Downloading iniconfig-2.3.1-py3-none-any.whl.metadata (2.8 kB)
+2026-11-11T15:49:51.6736200Z Requirement already satisfied: packaging>=24 in C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\site-packages (from pytest) (26.3)
+2026-11-11T15:49:51.6992122Z Collecting pluggy<2,>=1.6 (from pytest)
+2026-11-11T15:49:51.7071821Z   Downloading pluggy-1.7.0-py3-none-any.whl.metadata (5.0 kB)
+2026-11-11T15:49:51.7517816Z Collecting pygments>=2.15 (from pytest)
+2026-11-11T15:49:51.7631055Z   Downloading pygments-2.21.0-py3-none-any.whl.metadata (2.5 kB)
+2026-11-11T15:49:51.8089711Z Collecting aiohappyeyeballs>=2.5.0 (from aiohttp>=3.10->-r requirements.txt (line 1))
+2026-11-11T15:49:51.8164541Z   Downloading aiohappyeyeballs-2.7.1-py3-none-any.whl.metadata (5.9 kB)
+2026-11-11T15:49:51.8585532Z Collecting aiosignal>=1.4.0 (from aiohttp>=3.10->-r requirements.txt (line 1))
+2026-11-11T15:49:51.8691291Z   Downloading aiosignal-1.4.0-py3-none-any.whl.metadata (3.7 kB)
+2026-11-11T15:49:51.9144841Z Collecting attrs>=17.3.0 (from aiohttp>=3.10->-r requirements.txt (line 1))
+2026-11-11T15:49:51.9218405Z   Downloading attrs-26.1.0-py3-none-any.whl.metadata (8.8 kB)
+2026-11-11T15:49:52.0648201Z Collecting frozenlist>=1.1.1 (from aiohttp>=3.10->-r requirements.txt (line 1))
+2026-11-11T15:49:52.0730000Z   Downloading frozenlist-1.8.0-cp312-cp312-win_amd64.whl.metadata (21 kB)
+2026-11-11T15:49:52.3590114Z Collecting multidict<8.0,>=4.5 (from aiohttp>=3.10->-r requirements.txt (line 1))
+2026-11-11T15:49:52.3679217Z   Downloading multidict-7.2.1-cp312-cp312-win_amd64.whl.metadata (6.3 kB)
+2026-11-11T15:49:52.4556779Z Collecting propcache>=0.2.0 (from aiohttp>=3.10->-r requirements.txt (line 1))
+2026-11-11T15:49:52.4640757Z   Downloading propcache-0.5.4-cp312-cp312-win_amd64.whl.metadata (25 kB)
+2026-11-11T15:49:52.8037884Z Collecting yarl<2.0,>=1.25.1 (from aiohttp>=3.10->-r requirements.txt (line 1))
+2026-11-11T15:49:52.8117795Z   Downloading yarl-1.25.1-cp312-cp312-win_amd64.whl.metadata (115 kB)
+2026-11-11T15:49:52.8875241Z Collecting idna>=2.0 (from yarl<2.0,>=1.25.1->aiohttp>=3.10->-r requirements.txt (line 1))
+2026-11-11T15:49:52.8953762Z   Downloading idna-3.20-py3-none-any.whl.metadata (7.2 kB)
+2026-11-11T15:49:52.9414278Z Collecting annotated-types>=0.6.0 (from pydantic>=2.8->-r requirements.txt (line 5))
+2026-11-11T15:49:52.9490744Z   Downloading annotated_types-0.8.0-py3-none-any.whl.metadata (15 kB)
+2026-11-11T15:49:53.5344437Z Collecting pydantic-core==2.50.4 (from pydantic>=2.8->-r requirements.txt (line 5))
+2026-11-11T15:49:53.5422444Z   Downloading pydantic_core-2.50.4-cp312-cp312-win_amd64.whl.metadata (6.7 kB)
+2026-11-11T15:49:53.5855443Z Collecting typing-inspection>=0.4.4 (from pydantic>=2.8->-r requirements.txt (line 5))
+2026-11-11T15:49:53.5941106Z   Downloading typing_inspection-0.4.5-py3-none-any.whl.metadata (2.6 kB)
+2026-11-11T15:49:53.6511600Z Collecting starlette>=0.46.0 (from fastapi>=0.115->-r requirements.txt (line 7))
+2026-11-11T15:49:53.6584905Z   Downloading starlette-1.10.0-py3-none-any.whl.metadata (6.6 kB)
+2026-11-11T15:49:53.7195928Z Collecting anyio>=4.1.0 (from fastapi>=0.115->-r requirements.txt (line 7))
+2026-11-11T15:49:53.7291957Z   Downloading anyio-4.16.0-py3-none-any.whl.metadata (4.7 kB)
+2026-11-11T15:49:53.7739831Z Collecting annotated-doc>=0.0.2 (from fastapi>=0.115->-r requirements.txt (line 7))
+2026-11-11T15:49:53.7817664Z   Downloading annotated_doc-0.0.6-py3-none-any.whl.metadata (6.5 kB)
+2026-11-11T15:49:53.8293749Z Collecting opentelemetry-api>=1.44.0 (from fastapi>=0.115->-r requirements.txt (line 7))
+2026-11-11T15:49:53.8369804Z   Downloading opentelemetry_api-1.45.2-py3-none-any.whl.metadata (1.4 kB)
+2026-11-11T15:49:53.8585174Z Requirement already satisfied: click>=7.0 in C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\site-packages (from uvicorn>=0.30->uvicorn[standard]>=0.30->-r requirements.txt (line 8)) (8.5.0)
+2026-11-11T15:49:53.8823552Z Collecting h11>=0.8 (from uvicorn>=0.30->uvicorn[standard]>=0.30->-r requirements.txt (line 8))
+2026-11-11T15:49:53.8899378Z   Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+2026-11-11T15:49:53.9406965Z Collecting certifi (from httpx>=0.27->-r requirements.txt (line 9))
+2026-11-11T15:49:53.9485688Z   Downloading certifi-2026.10.23-py3-none-any.whl.metadata (2.5 kB)
+2026-11-11T15:49:53.9953929Z Collecting httpcore==1.* (from httpx>=0.27->-r requirements.txt (line 9))
+2026-11-11T15:49:54.0031694Z   Downloading httpcore-1.0.9-py3-none-any.whl.metadata (21 kB)
+2026-11-11T15:49:54.1046868Z Collecting httptools>=0.8.0 (from uvicorn[standard]>=0.30->-r requirements.txt (line 8))
+2026-11-11T15:49:54.1126989Z   Downloading httptools-0.9.0-cp312-cp312-win_amd64.whl.metadata (3.7 kB)
+2026-11-11T15:49:54.1776402Z Collecting pyyaml>=5.1 (from uvicorn[standard]>=0.30->-r requirements.txt (line 8))
+2026-11-11T15:49:54.1853783Z   Downloading pyyaml-6.0.3-cp312-cp312-win_amd64.whl.metadata (2.4 kB)
+2026-11-11T15:49:54.2716390Z Collecting watchfiles>=0.20 (from uvicorn[standard]>=0.30->-r requirements.txt (line 8))
+2026-11-11T15:49:54.2796308Z   Downloading watchfiles-1.3.0-cp310-abi3-win_amd64.whl.metadata (5.0 kB)
+2026-11-11T15:49:54.3121084Z Downloading psycopg-3.3.6-py3-none-any.whl (215 kB)
+2026-11-11T15:49:54.3586339Z Downloading psycopg_binary-3.3.6-cp312-cp312-win_amd64.whl (3.7 MB)
+2026-11-11T15:49:54.5367930Z    ---------------------------------------- 3.7/3.7 MB 21.8 MB/s  0:00:00
+2026-11-11T15:49:54.5462564Z Downloading pytest-9.2.0-py3-none-any.whl (411 kB)
+2026-11-11T15:49:54.5781447Z Downloading pluggy-1.7.0-py3-none-any.whl (27 kB)
+2026-11-11T15:49:54.6022987Z Downloading aiohttp-3.14.5-cp312-cp312-win_amd64.whl (506 kB)
+2026-11-11T15:49:54.6417468Z Downloading multidict-7.2.1-cp312-cp312-win_amd64.whl (95 kB)
+2026-11-11T15:49:54.6629023Z Downloading yarl-1.25.1-cp312-cp312-win_amd64.whl (102 kB)
+2026-11-11T15:49:54.6898955Z Downloading websockets-17.4-cp312-cp312-win_amd64.whl (219 kB)
+2026-11-11T15:49:54.7172800Z Downloading asyncpg-0.32.0-cp312-cp312-win_amd64.whl (626 kB)
+2026-11-11T15:49:54.7573728Z    ---------------------------------------- 626.8/626.8 kB 11.4 MB/s  0:00:00
+2026-11-11T15:49:54.7650913Z Downloading psutil-7.2.2-cp37-abi3-win_amd64.whl (137 kB)
+2026-11-11T15:49:54.7902174Z Downloading pydantic-2.14.3-py3-none-any.whl (494 kB)
+2026-11-11T15:49:54.8234769Z Downloading pydantic_core-2.50.4-cp312-cp312-win_amd64.whl (2.3 MB)
+2026-11-11T15:49:54.9187603Z    ---------------------------------------- 2.3/2.3 MB 21.3 MB/s  0:00:00
+2026-11-11T15:49:54.9267590Z Downloading pydantic_settings-2.16.2-py3-none-any.whl (81 kB)
+2026-11-11T15:49:54.9501413Z Downloading fastapi-0.162.4-py3-none-any.whl (151 kB)
+2026-11-11T15:49:54.9786718Z Downloading uvicorn-0.54.0-py3-none-any.whl (87 kB)
+2026-11-11T15:49:55.0121561Z Downloading httpx-0.28.1-py3-none-any.whl (73 kB)
+2026-11-11T15:49:55.0367161Z Downloading httpcore-1.0.9-py3-none-any.whl (78 kB)
+2026-11-11T15:49:55.0587742Z Downloading python_dotenv-1.2.4-py3-none-any.whl (23 kB)
+2026-11-11T15:49:55.0847670Z Downloading aiohappyeyeballs-2.7.1-py3-none-any.whl (15 kB)
+2026-11-11T15:49:55.1083807Z Downloading aiosignal-1.4.0-py3-none-any.whl (7.5 kB)
+2026-11-11T15:49:55.1301607Z Downloading annotated_doc-0.0.6-py3-none-any.whl (5.3 kB)
+2026-11-11T15:49:55.1512161Z Downloading annotated_types-0.8.0-py3-none-any.whl (13 kB)
+2026-11-11T15:49:55.1748111Z Downloading anyio-4.16.0-py3-none-any.whl (134 kB)
+2026-11-11T15:49:55.1991331Z Downloading attrs-26.1.0-py3-none-any.whl (67 kB)
+2026-11-11T15:49:55.2254996Z Downloading frozenlist-1.8.0-cp312-cp312-win_amd64.whl (44 kB)
+2026-11-11T15:49:55.2493949Z Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+2026-11-11T15:49:55.2728050Z Downloading idna-3.20-py3-none-any.whl (69 kB)
+2026-11-11T15:49:55.2943532Z Downloading iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
+2026-11-11T15:49:55.3171806Z Downloading opentelemetry_api-1.45.2-py3-none-any.whl (60 kB)
+2026-11-11T15:49:55.3376201Z Downloading propcache-0.5.4-cp312-cp312-win_amd64.whl (46 kB)
+2026-11-11T15:49:55.3598896Z Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+2026-11-11T15:49:55.3969528Z    ---------------------------------------- 1.3/1.3 MB 31.9 MB/s  0:00:00
+2026-11-11T15:49:55.4045719Z Downloading starlette-1.10.0-py3-none-any.whl (80 kB)
+2026-11-11T15:49:55.4333746Z Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+2026-11-11T15:49:55.4542085Z Downloading typing_inspection-0.4.5-py3-none-any.whl (14 kB)
+2026-11-11T15:49:55.4816903Z Downloading httptools-0.9.0-cp312-cp312-win_amd64.whl (92 kB)
+2026-11-11T15:49:55.5033975Z Downloading pyyaml-6.0.3-cp312-cp312-win_amd64.whl (154 kB)
+2026-11-11T15:49:55.5330137Z Downloading watchfiles-1.3.0-cp310-abi3-win_amd64.whl (290 kB)
+2026-11-11T15:49:55.5639874Z Downloading certifi-2026.10.23-py3-none-any.whl (135 kB)
+2026-11-11T15:49:55.5882827Z Downloading tzdata-2026.6-py2.py3-none-any.whl (348 kB)
+2026-11-11T15:49:56.0394559Z Installing collected packages: websockets, tzdata, typing-extensions, pyyaml, python-dotenv, pygments, psycopg-binary, psutil, propcache, pluggy, multidict, iniconfig, idna, httptools, h11, frozenlist, certifi, attrs, asyncpg, annotated-types, annotated-doc, aiohappyeyeballs, yarl, uvicorn, typing-inspection, pytest, pydantic-core, psycopg, opentelemetry-api, httpcore, anyio, aiosignal, watchfiles, starlette, pydantic, httpx, aiohttp, pydantic-settings, fastapi
+2026-11-11T15:50:04.8443015Z 
+2026-11-11T15:50:04.8475806Z Successfully installed aiohappyeyeballs-2.7.1 aiohttp-3.14.5 aiosignal-1.4.0 annotated-doc-0.0.6 annotated-types-0.8.0 anyio-4.16.0 asyncpg-0.32.0 attrs-26.1.0 certifi-2026.10.23 fastapi-0.162.4 frozenlist-1.8.0 h11-0.16.0 httpcore-1.0.9 httptools-0.9.0 httpx-0.28.1 idna-3.20 iniconfig-2.3.1 multidict-7.2.1 opentelemetry-api-1.45.2 pluggy-1.7.0 propcache-0.5.4 psutil-7.2.2 psycopg-3.3.6 psycopg-binary-3.3.6 pydantic-2.14.3 pydantic-core-2.50.4 pydantic-settings-2.16.2 pygments-2.21.0 pytest-9.2.0 python-dotenv-1.2.4 pyyaml-6.0.3 starlette-1.10.0 typing-extensions-4.16.0 typing-inspection-0.4.5 tzdata-2026.6 uvicorn-0.54.0 watchfiles-1.3.0 websockets-17.4 yarl-1.25.1
+2026-11-11T15:50:05.1045345Z ##[group]Run python -m pytest -q tests/test_source_provenance.py tests/test_terminan_gateway_contract.py tests/test_storage_footprint_revision.py tests/test_storage_canonical_replay.py tests/test_migration_history_guard.py
+2026-11-11T15:50:05.1046579Z [36;1mpython -m pytest -q tests/test_source_provenance.py tests/test_terminan_gateway_contract.py tests/test_storage_footprint_revision.py tests/test_storage_canonical_replay.py tests/test_migration_history_guard.py[0m
+2026-11-11T15:50:05.1102956Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-11T15:50:05.1103221Z env:
+2026-11-11T15:50:05.1103448Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-11T15:50:05.1103807Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-11-11T15:50:05.1104312Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-11T15:50:05.1104657Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-11T15:50:05.1104958Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-11T15:50:05.1105196Z ##[endgroup]
+2026-11-11T15:50:15.1636277Z ................s.........................s.......                       [100%]
+2026-11-11T15:50:15.1636599Z 48 passed, 2 skipped in 8.51s
+2026-11-11T15:50:15.3471665Z Post job cleanup.
+2026-11-11T15:50:15.4611413Z (node:8908) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-11T15:50:15.4611982Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-11T15:50:15.4892652Z Post job cleanup.
+2026-11-11T15:50:15.6248446Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-11T15:50:15.6553681Z git version 2.56.0.windows.4
+2026-11-11T15:50:15.6617550Z Temporarily overriding HOME='D:\a\_temp\ffd5369c-e14e-4965-a6fa-d3afd1e354f8' before making global git config changes
+2026-11-11T15:50:15.6618389Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-11T15:50:15.6626760Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\bybit-cluster-grid\bybit-cluster-grid
+2026-11-11T15:50:15.6937174Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-11T15:50:15.7235099Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-11T15:50:16.1987617Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-11T15:50:16.2247868Z http.https://github.com/.extraheader
+2026-11-11T15:50:16.2293274Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+2026-11-11T15:50:16.2687789Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-11T15:50:16.7524209Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-11T15:50:16.7823537Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-11T15:50:17.2431412Z Cleaning up orphan processes
+2026-11-11T15:50:17.2539818Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@11d5960a326750d5838078e36cf38b85af677262, actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

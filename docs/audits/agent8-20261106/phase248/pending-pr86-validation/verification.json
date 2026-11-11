@@ -1,0 +1,15 @@
+{
+  "scope": "ORIGINAL_GITHUB_CONFIG_VALIDATION_DATA",
+  "PR": 86,
+  "exact_head": "5fcac999b1daec75707010573606f486f6dccf4d",
+  "tree": "4104c38700aea12eecfd2db85b92fa77d019e6f0",
+  "run": 43064999840,
+  "attempt": 1,
+  "conclusion": "FAILURE_ZERO_JOBS",
+  "line192": "        shell: python -I -S -B -X \"pycache_prefix=${{ env.QUALIFICATION_BASE }}/pycache-prefix\" {0}",
+  "annotation": "aph cannot be shown A graph will be generated the next time this workflow is run. Annotations 1 error Invalid workflow file: .github/workflows/native-output-cap-assertion.yml#L1 (Line: 192, Col: 16): Unrecognized named-value: 'env'. Located at position 1 within expression: env.QUALIFICATION_BASE Show more Show less html { scroll-behavior: smooth } You can\u2019t perform that action at this time.",
+  "classification": "WORKFLOW_VALIDATION_NOT_POWERSHELL_OR_PYTHON_RUNTIME_FAILURE",
+  "fix_or_retry": "NOT_PERFORMED",
+  "mandatory_CI": "NOT_PASS",
+  "GO_NO_GO": "NO-GO"
+}

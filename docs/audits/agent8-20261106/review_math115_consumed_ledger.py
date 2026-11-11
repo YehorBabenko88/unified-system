@@ -1,0 +1,21 @@
+"""Read-only publication/primary run reconciliation; not proof of human origin or actuation."""
+import hashlib,json,pathlib,subprocess
+r=pathlib.Path(__file__).resolve().parents[1];repo=r/'work/unified-audit';out=r/'outputs/phase53';out.mkdir(exist_ok=True);head='78d544f61304b992ed944396a208c74219e8ae90';intent='5e3b03b4df1e7b94ec718d552061a46f81b59886';consent='1ac3807264feec71cba5ecf9a9dd49bdd28def0e';prefix='release/diagnostic-authorizations/math115-2446d046/';source='2446d04624469e34aa96ed766be7a4887d6d654c'
+def git(*a):return subprocess.check_output(['git','--no-replace-objects','-C',str(repo),*a])
+def read(pin,path):return git('show',pin+':'+prefix+path)
+assert git('rev-parse',head+'^').decode().strip()==intent and git('rev-parse',intent+'^').decode().strip()==consent
+record=read(head,'activation-record.json');assert record==(r/'outputs/phase52/activation-record.original.json').read_bytes();digest=hashlib.sha256(record).hexdigest()
+objects={}
+for name,pin,path in [('consent',consent,'owner-single-use-consent.json'),('intent',intent,'dispatch-ledger.json'),('result',head,'dispatch-ledger.json'),('label-add',head,'activation-api/single-label-add.stdout.json')]:
+ raw=read(pin,path);(out/(name+'.original.json')).write_bytes(raw);objects[name]=json.loads(raw)
+c=objects['consent'];i=objects['intent'];l=objects['result'];assert c['activation_record_sha256']==i['activation_record_sha256']==l['activation_record_sha256']==digest and c['source_head']==i['source_head']==l['source_head']==source
+assert c['max_activations']==1 and not c['automatic_retries'] and c['ambiguous_outcome_consumes_authorization'] and not c['office_actions'] and not c['real_provider_sends'] and not c['production_admission']
+assert i['state']=='DISPATCH_INTENT_AUTHORIZATION_CONSUMED' and l['state']=='ONE_LABEL_EVENT_ACCEPTED_WAITING_RUN_RECONCILIATION' and i['api_label_add_calls_attempted']==l['api_label_add_calls_attempted']==1 and not l['retry_authorized'] and l['unknown_outcome_no_retry']
+def api(name,path):
+ p=subprocess.run(['gh','api',path],capture_output=True,check=True);(out/(name+'.primary.json')).write_bytes(p.stdout);return json.loads(p.stdout)
+run=api('run','repos/YehorBabenko88/math/actions/runs/42352374979');assert run['head_sha']==source and run['run_attempt']==1 and run['event']=='pull_request' and run['actor']['login']==run['triggering_actor']['login']=='YehorBabenko88'
+runs=api('workflow-runs','repos/YehorBabenko88/math/actions/workflows/agent7-loader-init-trace.yml/runs?head_sha='+source+'&event=pull_request&per_page=100');assert runs['total_count']==1 and len(runs['workflow_runs'])==1 and runs['workflow_runs'][0]['id']==run['id']
+labels=api('labels','repos/YehorBabenko88/math/issues/115/labels');label=next(x for x in labels if x['name']=='diag-f-'+source);assert label['description']=='followup-review-sha256:'+digest
+assert any(x['name']==label['name'] and x['description']==label['description'] for x in objects['label-add'])
+report=dict(requirement='MATH115_CONSUMED_LEDGER_AND_SINGLE_RUN_RECONCILIATION',root_head=head,root_tree=git('rev-parse',head+'^{tree}').decode().strip(),consent_commit=consent,intent_commit=intent,published_ancestry='CONSENT_THEN_INTENT_THEN_RESULT_VERIFIED',original_record_raw_unchanged=True,record_sha256=digest,declared_calls=1,primary_workflow_runs_at_exact_source=1,run_id=run['id'],attempt=run['run_attempt'],status=run['status'],conclusion=run['conclusion'],actor=run['actor']['login'],triggering_actor=run['triggering_actor']['login'],event=run['event'],label_current_primary_matches_record_digest=True,consent_human_origin='ROOT_TRANSCRIPTION_BOUND_NOT_INDEPENDENTLY_AUTHENTICATED_HUMAN_CHAT',historical_push_before_API='ROOT_DECLARED_NOT_INDEPENDENT_SERVER_ORDER_ATTESTED',exactly_one_API_call='LEDGER_DECLARED_ONE_PRIMARY_WORKFLOW_RUN_OBSERVED_NOT_GLOBAL_MUTATION_TELEMETRY',authorization_state='CONSUMED_NO_RETRY_REMOVE_RELABEL_RERUN_CANCEL',terminal_public_witness='NOT_AVAILABLE_QUEUED' if run['status']=='queued' else 'REQUIRES_SEPARATE_TERMINAL_ARTIFACT_REVIEW',A8_API_mutations=0,A8_native_execution='NOT_RUN',native_acceptance='BLOCKED',home_physical_acceptance='BLOCKED',overall='NO_GO_ACCEPTANCE')
+(out/'independent-review.json').write_text(json.dumps(report,indent=2),encoding='utf-8');print(json.dumps(report,indent=2))

@@ -1,0 +1,159 @@
+{
+  "scope": "MODELED20_ACTUAL_AST_INERT_BACKENDS_NOT_WINDOWS_KERNEL_REAL_CHILD_OR47",
+  "tests": 20,
+  "passed": 12,
+  "intended_failed": 8,
+  "errors": 0,
+  "skipped": 0,
+  "test_exit_code": 1,
+  "supervisor_exit_code": 0,
+  "supervisor_zero_means": "Evidence orchestration only, NOT tests PASS",
+  "cases": [
+    {
+      "id": "__main__.ChildPathAdmissionControls.test_db_parent_file_refuses_before_backend",
+      "outcome": "FAIL",
+      "expected_negative": true,
+      "classification": "INTENDED_MODELED_REGRESSION_RED"
+    },
+    {
+      "id": "__main__.ChildPathAdmissionControls.test_db_parent_junction_refuses_before_backend",
+      "outcome": "FAIL",
+      "expected_negative": true,
+      "classification": "INTENDED_MODELED_REGRESSION_RED"
+    },
+    {
+      "id": "__main__.ChildPathAdmissionControls.test_db_reparse_leaf_refuses_before_backend",
+      "outcome": "FAIL",
+      "expected_negative": true,
+      "classification": "INTENDED_MODELED_REGRESSION_RED"
+    },
+    {
+      "id": "__main__.ChildPathAdmissionControls.test_marker_reparse_leaf_refuses_before_backend",
+      "outcome": "FAIL",
+      "expected_negative": true,
+      "classification": "INTENDED_MODELED_REGRESSION_RED"
+    },
+    {
+      "id": "__main__.ChildPathAdmissionControls.test_ordinary_db_absent_marker_reaches_backend_control",
+      "outcome": "PASS",
+      "expected_negative": false,
+      "classification": "MODELED_CONTROL_PASS"
+    },
+    {
+      "id": "__main__.ChildPathAdmissionControls.test_ordinary_db_existing_marker_reaches_backend_control",
+      "outcome": "PASS",
+      "expected_negative": false,
+      "classification": "MODELED_CONTROL_PASS"
+    },
+    {
+      "id": "__main__.ChildPathAdmissionControls.test_temp_junction_refuses_before_backend",
+      "outcome": "FAIL",
+      "expected_negative": true,
+      "classification": "INTENDED_MODELED_REGRESSION_RED"
+    },
+    {
+      "id": "__main__.JunitAdmissionControls.test_file_xml_parent_refuses_before_parser_read_hash",
+      "outcome": "FAIL",
+      "expected_negative": true,
+      "classification": "INTENDED_MODELED_REGRESSION_RED"
+    },
+    {
+      "id": "__main__.JunitAdmissionControls.test_ordinary_bounded_xml_preserves_exact_47_facts_control",
+      "outcome": "PASS",
+      "expected_negative": false,
+      "classification": "MODELED_CONTROL_PASS"
+    },
+    {
+      "id": "__main__.JunitAdmissionControls.test_oversized_xml_refuses_before_parser_read_hash",
+      "outcome": "FAIL",
+      "expected_negative": true,
+      "classification": "INTENDED_MODELED_REGRESSION_RED"
+    },
+    {
+      "id": "__main__.JunitAdmissionControls.test_reparse_xml_parent_refuses_before_parser_read_hash",
+      "outcome": "FAIL",
+      "expected_negative": true,
+      "classification": "INTENDED_MODELED_REGRESSION_RED"
+    },
+    {
+      "id": "__main__.ReturnedHandleControls.test_invariant_refusal_cleanup_kills_and_waits_known_handle",
+      "outcome": "PASS",
+      "expected_negative": false,
+      "classification": "MODELED_CONTROL_PASS"
+    },
+    {
+      "id": "__main__.ReturnedHandleControls.test_preconstructor_refusal_creates_no_handle",
+      "outcome": "PASS",
+      "expected_negative": false,
+      "classification": "MODELED_CONTROL_PASS"
+    },
+    {
+      "id": "__main__.ReturnedHandleControls.test_returned_handle_registered_before_invariant_refusal",
+      "outcome": "PASS",
+      "expected_negative": false,
+      "classification": "MODELED_CONTROL_PASS"
+    },
+    {
+      "id": "__main__.RootFirstControls.test_file_parent_stops_before_descendant_or_git",
+      "outcome": "PASS",
+      "expected_negative": false,
+      "classification": "MODELED_CONTROL_PASS"
+    },
+    {
+      "id": "__main__.RootFirstControls.test_file_root_stops_before_leaf_git_or_hash",
+      "outcome": "PASS",
+      "expected_negative": false,
+      "classification": "MODELED_CONTROL_PASS"
+    },
+    {
+      "id": "__main__.RootFirstControls.test_missing_parent_stops_before_descendant_or_git",
+      "outcome": "PASS",
+      "expected_negative": false,
+      "classification": "MODELED_CONTROL_PASS"
+    },
+    {
+      "id": "__main__.RootFirstControls.test_ordinary_tree_retains_exact_blob_and_ledger",
+      "outcome": "PASS",
+      "expected_negative": false,
+      "classification": "MODELED_CONTROL_PASS"
+    },
+    {
+      "id": "__main__.RootFirstControls.test_reparse_parent_stops_before_descendant_or_git",
+      "outcome": "PASS",
+      "expected_negative": false,
+      "classification": "MODELED_CONTROL_PASS"
+    },
+    {
+      "id": "__main__.RootFirstControls.test_selected_reparse_parent_stops_before_leaf_inspection",
+      "outcome": "PASS",
+      "expected_negative": false,
+      "classification": "MODELED_CONTROL_PASS"
+    }
+  ],
+  "original_nine": "9 MODELED PASS on current source; no full hosted47/runtime admission",
+  "new_cases": "5 child-path +3 parser negative intendedRED; 3 positivecontrolsPASS",
+  "child": {
+    "command_flags": [
+      "-I",
+      "-S",
+      "-B"
+    ],
+    "exit_code": 1,
+    "identity": "OWN_POPEN_HANDLE",
+    "pid": 2700,
+    "retired": true
+  },
+  "duration_seconds": 0.3279999999795109,
+  "output_bytes": 12946,
+  "raw_six_prepost_equal": true,
+  "five_implementation_files_unchanged": true,
+  "fixture_or_harness_errors": "NONE observed",
+  "allocation": "CONSUMED_NO_RETRY",
+  "next_gate": "Root must readactualRED before implementation corrections/newexecution",
+  "hashes": {
+    "stderr": "60e427816ce55f0394844dd604bea5a7ee319c75557093e84d1673d42159b0fe",
+    "stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "receipt": "41ef02a83b133b8c31af393e493d6e41f456b9e2e6e223694009bb02b3b4e9e7"
+  },
+  "overall": "HOSTED47_HOLD / NO-GO"
+}

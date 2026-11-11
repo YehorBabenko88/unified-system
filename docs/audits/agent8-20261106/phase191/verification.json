@@ -1,0 +1,82 @@
+{
+  "requirement_id": "A8-ATOMIC-BRIDGE-PREEDIT",
+  "repository": "Unified +Grid reference",
+  "PR": null,
+  "card_sha256": "7c4d9024a0cc78c51f2fceb4efd451d9ec9855f939be0a6b2daa92c4aded46ff",
+  "Unified_base": "96b17905a5be923857aa1e778085eaeec6f0f27f",
+  "Grid_reference": "fb177d14b1e6e399bd9b66ae7cb35d3838acbd81",
+  "sourcepins_match_A8_raw_Git": {
+    "grid_assignment": "5b972b6d81eeaf6f2283584c5b0482552fa9bf0717a4379838900a72da791491",
+    "grid_coordination": "3dd73d3eb3dfb576f7174a94fab05a0f87fe248ffcacccfa19786ccc74f0776b",
+    "grid_runtime": "cfb32db73f1859d9d78b03d886372cc08584c81abd64930b5409a91edc417b64",
+    "unified_broker": "481724cd2efca312773fa4152d1c223b46ced6529d96b2d74f452cdf57932d7f"
+  },
+  "original_refs": {
+    "card": {
+      "seal_sha256": "4a4f4e5fd3eabd1f9b9388c9cd97b94369b91daab78a9c847e326e3e70d71946",
+      "files": {
+        "CARD.md": {
+          "bytes": 23622,
+          "sha256": "7c4d9024a0cc78c51f2fceb4efd451d9ec9855f939be0a6b2daa92c4aded46ff"
+        },
+        "SOURCE-EVIDENCE.json": {
+          "bytes": 11345,
+          "sha256": "e3a9560bea0d1a06bb134f99d4ca93a71dc8f47c14954588e129e48bf06849e2"
+        }
+      }
+    },
+    "model": {
+      "seal_sha256": "a34cfe8ae7cbcf617cef83bd544bffadb700ab5a65c29af618b9f83816d6fbdd",
+      "files": {
+        "CI-DISCOVERY-STATIC.json": {
+          "bytes": 1402,
+          "sha256": "ba4758e95020c2feb1dd65ff8609de89c1d094ebe109ab39056a7d7ef138e4ee"
+        },
+        "CI-EFFECTS.json": {
+          "bytes": 2557,
+          "sha256": "4d6ad113fa72b9b55ea7d182dc3e99c18141dea3d5755d6943fba556bdf0419c"
+        },
+        "MODEL-ORIGINAL.log": {
+          "bytes": 1503,
+          "sha256": "3c00d946144eea7e245a96f3d650fcd0163268c92a6a8f36ad2ec9e136a9d271"
+        },
+        "RECEIPT.json": {
+          "bytes": 2674,
+          "sha256": "a175001bda1a13c0eec41f291de1b23ef00eee40f59d956c8d8d5a8a872a6fc6"
+        },
+        "SOURCE-POST.json": {
+          "bytes": 445076,
+          "sha256": "1270b287edeb97d0e200e562dcc630b88dc36e48cc9dc956d4f96990556ae7be"
+        },
+        "SOURCE-PRE.json": {
+          "bytes": 445076,
+          "sha256": "1270b287edeb97d0e200e562dcc630b88dc36e48cc9dc956d4f96990556ae7be"
+        }
+      }
+    }
+  },
+  "relocated_model_head": "8ef8d9eca6196e8d3aed0aa97ff665806f88c721",
+  "relocated_model_tree": "29bbc301ab76ba04009084c25587190d59c2f99b",
+  "changed_from96": [
+    "A\tdocs/analysis/research-identity/atomic-read-model-review1.md",
+    "A\ttests/test_research_identity_capture_atomicity_model.py"
+  ],
+  "model_raw_Git_prepost_files": 1870,
+  "model_noextras": true,
+  "model_bytes_unchanged_from46c": true,
+  "original_model6_ids": [
+    "test_research_identity_capture_atomicity_model.ResearchIdentityCaptureAtomicityModelTests.test_model_existing_reobserve_and_open_session_reject_mixed_capture",
+    "test_research_identity_capture_atomicity_model.ResearchIdentityCaptureAtomicityModelTests.test_model_interleaving_accepts_never_coexisting_sequential_capture_only",
+    "test_research_identity_capture_atomicity_model.ResearchIdentityCaptureAtomicityModelTests.test_model_local_binding_and_invalidation_checks_remain_required",
+    "test_research_identity_capture_atomicity_model.ResearchIdentityCaptureAtomicityModelTests.test_model_session_invalidation_before_and_after_snapshot_bounds_history",
+    "test_research_identity_capture_atomicity_model.ResearchIdentityCaptureAtomicityModelTests.test_model_snapshot_rejects_unavailable_or_malformed_inventory",
+    "test_research_identity_capture_atomicity_model.ResearchIdentityCaptureAtomicityModelTests.test_model_stable_capture_accepts_unequal_per_key_indexes"
+  ],
+  "card_review": "SCOPED_PREEDIT_DESIGN_ACK_WITH_EXPLICIT_FAILCLOSED_ERROR_CLASSIFICATION_NOT_IMPLEMENTATION_OR_EXECUTION_ACK",
+  "production_edits_by_A8": 0,
+  "A8_project_model_helper_executions": 0,
+  "mock_backend10": "PROPOSED_ONLY_NOT_RUN_NOT_APPROVED_FOR_IMPORT_EXECUTION",
+  "publisher_native_physical": "NOT_QUALIFIED",
+  "GO_NO_GO": "NO-GO",
+  "TAILSCALE_REMOVAL": "BLOCKED"
+}

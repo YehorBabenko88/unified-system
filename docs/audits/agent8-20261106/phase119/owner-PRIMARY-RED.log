@@ -1,0 +1,123 @@
+test_deep_or_noncanonical_native_record_is_rejected (test_assignment_contract.AssignmentContractTests.test_deep_or_noncanonical_native_record_is_rejected) ... ok
+test_default_missing_actual_native_provider_never_touches_consul (test_assignment_contract.AssignmentContractTests.test_default_missing_actual_native_provider_never_touches_consul) ... ok
+test_distinct_storage_records_do_not_alias_issuance_lifecycle_policy_accounting (test_assignment_contract.AssignmentContractTests.test_distinct_storage_records_do_not_alias_issuance_lifecycle_policy_accounting) ... ok
+test_malformed_native_success_response_is_not_commit_confirmation (test_assignment_contract.AssignmentContractTests.test_malformed_native_success_response_is_not_commit_confirmation) ... ok
+test_native_plan_overflow_is_rejected_before_transport (test_assignment_contract.AssignmentContractTests.test_native_plan_overflow_is_rejected_before_transport) ... ok
+test_new_layout_preserves_stable_partition_key_and_rejects_unsafe_original (test_assignment_contract.AssignmentContractTests.test_new_layout_preserves_stable_partition_key_and_rejects_unsafe_original) ... ok
+test_none_boolean_shape_is_not_a_native_provider (test_assignment_contract.AssignmentContractTests.test_none_boolean_shape_is_not_a_native_provider) ... ok
+test_checked_helper_bytes_cannot_be_replaced_by_valid_pyc (test_bootstrap_guard.SourceBootstrapTests.test_checked_helper_bytes_cannot_be_replaced_by_valid_pyc) ... fatal: not a git repository (or any of the parent directories): .git
+ok
+{"scope": "OWNED_LOOPBACK_LAB_STARTED", "voters": 3, "processes": [135556, 103676, 136372], "endpoints": ["http://127.0.0.1:59694", "http://127.0.0.1:59698", "http://127.0.0.1:59702"], "binary_sha256": "41762ef5b98c8dd9b6852df6cfbceed37e7f0acc5760856be33100f1092475e1", "acl_default": "deny"}
+test_actual_authenticated_submit_denies_unqualified_resources_without_job (test_native_job_negative.NativeJobNegativeTests.test_actual_authenticated_submit_denies_unqualified_resources_without_job) ... Executing <Task pending name='Task-10' coro=<NativeJobNegativeTests.asyncSetUp() running at C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-2-high-availability-distributed\work\native-admission-RED-5266620\tests\coordination\assignment_v1\test_native_job_negative.py:18> cb=[_run_until_complete_cb() at C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\base_events.py:181] created at C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\runners.py:100> took 0.188 seconds
+ERROR
+test_actual_destroyed_leader_cannot_reach_resource_gate (test_native_job_negative.NativeJobNegativeTests.test_actual_destroyed_leader_cannot_reach_resource_gate) ... ERROR
+test_actual_revoked_current_policy_never_reaches_resource_gate (test_native_job_negative.NativeJobNegativeTests.test_actual_revoked_current_policy_never_reaches_resource_gate) ... ERROR
+test_fake_context_and_changed_original_cannot_reach_resource_gate (test_native_job_negative.NativeJobNegativeTests.test_fake_context_and_changed_original_cannot_reach_resource_gate) ... ERROR
+test_z_actual_no_quorum_never_returns_gate_or_cached_job_observation (test_native_job_negative.NativeJobNegativeTests.test_z_actual_no_quorum_never_returns_gate_or_cached_job_observation) ... ERROR
+{"scope": "OWNED_LOOPBACK_LAB_RETIRED", "processes": [{"pid": 135556, "returncode": 1}, {"pid": 103676, "returncode": 1}, {"pid": 136372, "returncode": 1}], "all_owned_processes_waited": true, "foreign_process_operations": 0, "session_retirement": "OWNED_SERVERS_STOPPED_TEMPORARY_DIRECTORY_CLEANUP_FOLLOWS"}
+{"scope": "OWNED_LOOPBACK_LAB_STARTED", "voters": 3, "processes": [136520, 134472, 137452], "endpoints": ["http://127.0.0.1:59764", "http://127.0.0.1:59768", "http://127.0.0.1:59772"], "binary_sha256": "41762ef5b98c8dd9b6852df6cfbceed37e7f0acc5760856be33100f1092475e1", "acl_default": "deny"}
+{"scope": "ACTUAL_UNTRUSTED_PROBE_GET_OR_EMPTY_RESPONSE", "response": {"Results": [{"KV": {"LockIndex": 0, "Key": "unified/068ef208-9ecd-4cc7-be81-96022653c19c/runtime-v1/probe-only/snapshot/a", "Flags": 0, "Value": "eyJzY2hlbWEiOiJ1bnRydXN0ZWQubmF0aXZlLXNuYXBzaG90LXByb2JlLnYxIiwidmFsdWUiOiJvbmUifQ==", "CreateIndex": 17, "ModifyIndex": 17}}, {"KV": {"LockIndex": 0, "Key": "unified/068ef208-9ecd-4cc7-be81-96022653c19c/runtime-v1/probe-only/snapshot/not-written", "Flags": 0, "Value": null, "CreateIndex": 0, "ModifyIndex": 0}}], "Errors": null, "Index": 1, "LastContact": 0, "KnownLeader": true, "ConsistencyLevel": "", "NotModified": false, "Backend": 0, "ResultsFilteredByACLs": false}}
+test_00_actual_atomic_existing_and_absent_snapshot (test_native_snapshot.NativeSnapshotTests.test_00_actual_atomic_existing_and_absent_snapshot) ... ok
+test_actual_acl_denial_never_becomes_absence (test_native_snapshot.NativeSnapshotTests.test_actual_acl_denial_never_becomes_absence) ... ok
+{"scope": "OWNED_LOOPBACK_ALL_RESTARTED", "processes": [112096, 136392, 134240], "same_owned_configs_and_data": true}
+test_actual_all_node_restart_retains_raw_snapshot_indices (test_native_snapshot.NativeSnapshotTests.test_actual_all_node_restart_retains_raw_snapshot_indices) ... ok
+{"scope": "ACTUAL_NATIVE_SESSION_FENCE_PROBE_ONLY", "old_token": 35, "new_token": 38, "stale_write": "REJECTED", "successor_probe": "COMMITTED"}
+test_actual_destroyed_leader_prepared_fence_cannot_write_after_takeover (test_native_snapshot.NativeSnapshotTests.test_actual_destroyed_leader_prepared_fence_cannot_write_after_takeover) ... ok
+test_actual_generation_change_rejects_prepared_fence_without_probe_effect (test_native_snapshot.NativeSnapshotTests.test_actual_generation_change_rejects_prepared_fence_without_probe_effect) ... ok
+{"scope": "OWNED_LOOPBACK_ALL_RESTARTED", "processes": [136448, 136612, 133932], "same_owned_configs_and_data": true}
+test_actual_leader_failure_two_voters_keep_snapshot (test_native_snapshot.NativeSnapshotTests.test_actual_leader_failure_two_voters_keep_snapshot) ... ok
+test_actual_stale_snapshot_cas_rolls_back_without_probe_effect (test_native_snapshot.NativeSnapshotTests.test_actual_stale_snapshot_cas_rolls_back_without_probe_effect) ... ok
+test_snapshot_rejects_duplicate_outside_namespace_and_overflow (test_native_snapshot.NativeSnapshotTests.test_snapshot_rejects_duplicate_outside_namespace_and_overflow) ... ok
+test_z_actual_one_of_three_no_quorum_never_returns_cached_snapshot (test_native_snapshot.NativeSnapshotTests.test_z_actual_one_of_three_no_quorum_never_returns_cached_snapshot) ... ok
+{"scope": "OWNED_LOOPBACK_LAB_RETIRED", "processes": [{"pid": 136520, "returncode": 1}, {"pid": 134472, "returncode": 1}, {"pid": 137452, "returncode": 1}, {"pid": 112096, "returncode": 1}, {"pid": 136392, "returncode": 1}, {"pid": 134240, "returncode": 1}, {"pid": 136448, "returncode": 1}, {"pid": 136612, "returncode": 1}, {"pid": 133932, "returncode": 1}], "all_owned_processes_waited": true, "foreign_process_operations": 0, "session_retirement": "OWNED_SERVERS_STOPPED_TEMPORARY_DIRECTORY_CLEANUP_FOLLOWS"}
+test_runtime_fullmatch_bounds_namespace_and_operation_semantics (test_runtime_policy.RuntimePolicyDataTests.test_runtime_fullmatch_bounds_namespace_and_operation_semantics) ... ok
+test_schema_control_and13_terminal_newline_negatives (test_runtime_policy.RuntimePolicyDataTests.test_schema_control_and13_terminal_newline_negatives) ... ok
+test_schema_positive_u63_limit_and_no_implicit_policy_write (test_runtime_policy.RuntimePolicyDataTests.test_schema_positive_u63_limit_and_no_implicit_policy_write) ... ok
+
+======================================================================
+ERROR: test_actual_authenticated_submit_denies_unqualified_resources_without_job (test_native_job_negative.NativeJobNegativeTests.test_actual_authenticated_submit_denies_unqualified_resources_without_job)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-2-high-availability-distributed\work\native-admission-RED-5266620\tests\coordination\assignment_v1\test_native_job_negative.py", line 21, in asyncSetUp
+    self.handler=native.ResearchLabAuthority(self.authority,self.generation,broker=self.broker)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'grid.authority_assignment_v1' has no attribute 'ResearchLabAuthority'
+
+======================================================================
+ERROR: test_actual_destroyed_leader_cannot_reach_resource_gate (test_native_job_negative.NativeJobNegativeTests.test_actual_destroyed_leader_cannot_reach_resource_gate)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-2-high-availability-distributed\work\native-admission-RED-5266620\tests\coordination\assignment_v1\test_native_job_negative.py", line 21, in asyncSetUp
+    self.handler=native.ResearchLabAuthority(self.authority,self.generation,broker=self.broker)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'grid.authority_assignment_v1' has no attribute 'ResearchLabAuthority'
+
+======================================================================
+ERROR: test_actual_revoked_current_policy_never_reaches_resource_gate (test_native_job_negative.NativeJobNegativeTests.test_actual_revoked_current_policy_never_reaches_resource_gate)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-2-high-availability-distributed\work\native-admission-RED-5266620\tests\coordination\assignment_v1\test_native_job_negative.py", line 21, in asyncSetUp
+    self.handler=native.ResearchLabAuthority(self.authority,self.generation,broker=self.broker)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'grid.authority_assignment_v1' has no attribute 'ResearchLabAuthority'
+
+======================================================================
+ERROR: test_fake_context_and_changed_original_cannot_reach_resource_gate (test_native_job_negative.NativeJobNegativeTests.test_fake_context_and_changed_original_cannot_reach_resource_gate)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-2-high-availability-distributed\work\native-admission-RED-5266620\tests\coordination\assignment_v1\test_native_job_negative.py", line 21, in asyncSetUp
+    self.handler=native.ResearchLabAuthority(self.authority,self.generation,broker=self.broker)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'grid.authority_assignment_v1' has no attribute 'ResearchLabAuthority'
+
+======================================================================
+ERROR: test_z_actual_no_quorum_never_returns_gate_or_cached_job_observation (test_native_job_negative.NativeJobNegativeTests.test_z_actual_no_quorum_never_returns_gate_or_cached_job_observation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-2-high-availability-distributed\work\native-admission-RED-5266620\tests\coordination\assignment_v1\test_native_job_negative.py", line 21, in asyncSetUp
+    self.handler=native.ResearchLabAuthority(self.authority,self.generation,broker=self.broker)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'grid.authority_assignment_v1' has no attribute 'ResearchLabAuthority'
+
+----------------------------------------------------------------------
+Ran 25 tests in 17.599s
+
+FAILED (errors=5)
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-2-high-availability-distributed\work\native-admission-RED-5266620\tests\coordination\assignment_v1\run_native_qualification.py", line 35, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-2-high-availability-distributed\work\native-admission-RED-5266620\tests\coordination\assignment_v1\run_native_qualification.py", line 33, in main
+    assert r.wasSuccessful() and r.testsRun==25 and not r.skipped
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

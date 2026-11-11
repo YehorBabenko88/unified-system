@@ -1,0 +1,50 @@
+--- math572_compile7_controller_review3.py
++++ math572_compile7_controller_constructor_successor_review1.py
+@@ -73,7 +73,7 @@
+  k.TerminateJobObject.argtypes=[W.HANDLE,W.UINT];k.TerminateJobObject.restype=W.BOOL
+  k.ResumeThread.argtypes=[W.HANDLE];k.ResumeThread.restype=W.DWORD
+  record={'schema':'math572.compile7.proposal.v1','result':'DENY','errors':[],'source_head':m['head'],'source_tree':m['tree'],'native_runtime_admission':False,'output_cap':CAP,'observed_process_seconds_bound':10,'separate_cleanup_seconds_bound':5,'creation_intent':False,'child':None,'job_assigned_before_resume':False,'descendant_limit':1,'compiler_argv':argv,'startup_class':'UNKNOWN','source_post_equal':False}
+- job=None;hp=None;ht=None;nul=None;read_handles=[];write_handles=[];threads=[];reader_attempts=set();write_attempts=set();writes_closed=set()
++ job=None;hp=None;ht=None;nul=None;read_handles=[];write_handles=[];threads=[];reader_attempts=set();reader_reservations={};write_attempts=set();writes_closed=set()
+  stopped=threading.Event();overflow=threading.Event();watch_done=threading.Event();lock=threading.Lock();buffers={'stdout':bytearray(),'stderr':bytearray()};total=[0];start=None;exit_code=None;uncertain=False
+  reader_state={name:{'started':False,'eof':False,'read_failed':False,'close_ok':False,'close_failed':False,'retired':False,'log_written':False} for name in buffers}
+  def error(code):
+@@ -122,7 +122,12 @@
+     with lock:reader_state[name]['close_failed']=True
+     error('READER_CLOSE_FAILURE')
+  def start_thread(function,args=()):
+-  entry={'thread':threading.Thread(target=function,args=args,daemon=True),'outcome':'UNKNOWN','reader_name':args[1] if function is reader else None};threads.append(entry)
++  entry=reader_reservations[args[0]] if function is reader else {'thread':None,'outcome':'NOT_STARTED','reader_name':None}
++  threads.append(entry)
++  try:entry['thread']=threading.Thread(target=function,args=args,daemon=True)
++  except BaseException:error('THREAD_CONSTRUCTOR_FAILURE');raise
++  # Only the start call can transfer reader custody; constructor failure cannot.
++  entry['outcome']='UNKNOWN'
+   try:entry['thread'].start();entry['outcome']='STARTED'
+   except BaseException:
+    error('THREAD_START_FAILURE')
+@@ -150,6 +155,7 @@
+   if not k.AssignProcessToJobObject(job,hp):raise ValueError('JOB_ASSIGN_DENIED')
+   record['job_assigned_before_resume']=True
+   for r,name in read_handles:
++   reader_reservations[r]={'thread':None,'outcome':'NOT_STARTED','reader_name':name}
+    reader_attempts.add(r);start_thread(reader,(r,name))
+   for w in write_handles:
+    write_attempts.add(w);_winapi.CloseHandle(w);writes_closed.add(w)
+@@ -184,13 +190,15 @@
+    try:_winapi.CloseHandle(w);writes_closed.add(w)
+    except BaseException:error('WRITE_PIPE_CLOSE_FAILURE');uncertain=True
+   for r,name in read_handles:
+-   if r not in reader_attempts:
++   reservation=reader_reservations.get(r)
++   if r not in reader_attempts or (reservation is not None and reservation['outcome']=='NOT_STARTED'):
+     try:_winapi.CloseHandle(r)
+     except BaseException:error('UNSTARTED_READ_PIPE_CLOSE_FAILURE')
+   if nul is not None:
+    try:os.close(nul)
+    except BaseException:error('STDIN_CLOSE_FAILURE')
+   for entry in threads:
++   if entry['outcome']=='NOT_STARTED':continue
+    if entry['outcome']!='STARTED':error('THREAD_START_UNKNOWN');uncertain=True;continue
+    try:entry['thread'].join(timeout=max(0,deadline-time.monotonic()))
+    except BaseException:error('THREAD_JOIN_FAILURE');uncertain=True

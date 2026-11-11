@@ -1,0 +1,51 @@
+{
+  "schema": "agent4.mission-task-delta.v1",
+  "task_id": "A4-STORAGE-IMMUTABLE-PUBLICATION-20261110",
+  "owner": "Agent 4",
+  "repo": "YehorBabenko88/unified-system",
+  "branch": "feature/storage-native-publication-20261109",
+  "head": "1da10616a2b8217930f354e17caaa6fcea22dac4",
+  "tree": "c2b39329924810535add3b02c3f5c5e1b11bdf62",
+  "parent": "cc78e5b0db8fe7f25cec5b99e7ac8804dfcf5493",
+  "local_worktree": "C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-4-distributed-storage-integrity/work/storage-native-publication-20261109",
+  "pr": "https://github.com/YehorBabenko88/unified-system/pull/56",
+  "publication_status": "LOCAL_COMMIT_ONLY_NOT_PUSHED_PENDING_ROOT_A8_REVIEW",
+  "status": "SOURCE_REPAIR_COMPLETE_PURE_TESTED_FIXTURE_LANE_PENDING",
+  "IMPLEMENTED": "Only owned qualifier, new stdlib inventory_controls helper and own report; exact original17 plus separate fixed5, hash-pinned groups, closed unique union22; no source/runtime/shared ABI/workflow changes",
+  "TESTED_LOCAL": {
+    "scope": "Actual inventory validator only; no qualifier main, project imports, fixture discovery, SQLite, ObjectStore or crash child execution",
+    "runtime": "CPython3.12.10 -I -S -B Windows",
+    "tests": 6,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "test_id_prefix": "<run_path>.make_suite.<locals>.InventoryControls.",
+    "test_names": [
+      "test_duplicate_case_denied",
+      "test_exact_groups_preserve_17_plus_5",
+      "test_extra_case_denied",
+      "test_missing_fixed_case_denied",
+      "test_missing_original_case_denied",
+      "test_same_count_substitution_denied"
+    ],
+    "red": "One setup KeyError for missing validate_inventory, not six failing cases",
+    "qualifier_22_fixture_cases": "NOT_RUN on this successor; Root separate lane required"
+  },
+  "TESTED_HOSTED": "NOT_RUN successor; original cc78 attempt1 PR42877585984 and push42877577568 remain EXACT_CASES RED Windows/Ubuntu",
+  "TESTED_PHYSICAL": "NOT_RUN",
+  "ADMITTED_RUNTIME": false,
+  "BLOCKED": "Publication pending Root/A8 source review; actual22 fixture lane unallocated; positive authority/publication/current scientific READ absent",
+  "preserved_group_sha256": "33b577e317ec44aa66ab2b0251831cef884808025dc180b98e4d8323b6017960",
+  "fixed_group_sha256": "234b647d1f74dbbd9e8ed04f4be2d06142b7c7b020d949d2c85067701060a507",
+  "group_hash_encoding": "ASCII newline-joined IDs in preserved order, final newline",
+  "evidence": [
+    {"path": "outputs/INVENTORY-22-PURE-RED-20261110.log", "sha256": "a149dc149776da903118e8d01be2b7a9cd2d0ff6831c82cdecb44a0ed939e1cc"},
+    {"path": "outputs/INVENTORY-22-PURE-GREEN-20261110.log", "sha256": "41e7a415391871742ee10472baa032b4e05b5e080102ff45507c16c2210c75e8"}
+  ],
+  "independent_review": "Scoped static two-code-file review: no actionable P0/P1/P2; reviewer executed no tests/fixtures",
+  "next_executable_step": "Root/A8 exact local source and pure evidence review; publish only after review. Run actual22 only under separate explicit Root lane, then inspect original successor hosted results without rerunning old REDs",
+  "blocking_condition": "No publication review decision or fixture execution allocation yet; strict D4 positive backend gates remain unresolved",
+  "required_authorization": "Root/A8 review before push; Root separate fixture lane before old17/new5 actual suite",
+  "retry_budget": {"old_run_retries": 0, "native": 0, "physical": 0, "fixture_executions_now": 0},
+  "go_no_go": "PURE_SOURCE_REVIEW_READY / PUBLICATION_HELD / RUNTIME_NO_GO"
+}

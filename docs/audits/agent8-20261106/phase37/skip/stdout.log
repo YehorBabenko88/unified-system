@@ -1,0 +1,562 @@
+test_every_proposed_mutation_is_closed (test_agent5_scheduler_components.AuthorityBoundaryTests.test_every_proposed_mutation_is_closed) ... skipped ''
+test_reads_do_not_invent_receipts_or_mutate (test_agent5_scheduler_components.AuthorityBoundaryTests.test_reads_do_not_invent_receipts_or_mutate) ... ok
+test_invalid_raw_reservation_cannot_be_masked_by_local_hold (test_agent5_scheduler_components.DurablePreparationTests.test_invalid_raw_reservation_cannot_be_masked_by_local_hold) ... ok
+test_invalid_resource_input_cannot_mutate_registry (test_agent5_scheduler_components.DurablePreparationTests.test_invalid_resource_input_cannot_mutate_registry) ... ok
+test_job_spec_is_immutable_and_enqueue_idempotent (test_agent5_scheduler_components.DurablePreparationTests.test_job_spec_is_immutable_and_enqueue_idempotent) ... ok
+test_local_event_sequence_is_durable_and_not_authority_epoch (test_agent5_scheduler_components.DurablePreparationTests.test_local_event_sequence_is_durable_and_not_authority_epoch) ... ok
+test_local_holds_prevent_overbooking (test_agent5_scheduler_components.DurablePreparationTests.test_local_holds_prevent_overbooking) ... ok
+test_no_quorum_or_standby_never_creates_new_preparation (test_agent5_scheduler_components.DurablePreparationTests.test_no_quorum_or_standby_never_creates_new_preparation) ... ok
+test_only_never_handed_off_hold_can_be_cancelled (test_agent5_scheduler_components.DurablePreparationTests.test_only_never_handed_off_hold_can_be_cancelled) ... ok
+test_preparation_retry_preserves_original_intent (test_agent5_scheduler_components.DurablePreparationTests.test_preparation_retry_preserves_original_intent) ... ok
+test_process_crash_before_event_commit_recovers_without_partial_hold (test_agent5_scheduler_components.DurablePreparationTests.test_process_crash_before_event_commit_recovers_without_partial_hold) ... ok
+test_registry_survives_restart_without_execution_permission (test_agent5_scheduler_components.DurablePreparationTests.test_registry_survives_restart_without_execution_permission) ... ok
+test_stale_capacity_and_pressure_remain_queued (test_agent5_scheduler_components.DurablePreparationTests.test_stale_capacity_and_pressure_remain_queued) ... ok
+test_transaction_failure_rolls_back_preparation_and_hold (test_agent5_scheduler_components.DurablePreparationTests.test_transaction_failure_rolls_back_preparation_and_hold) ... ok
+test_two_connections_cannot_spend_same_local_capacity (test_agent5_scheduler_components.DurablePreparationTests.test_two_connections_cannot_spend_same_local_capacity) ... ok
+test_unknown_cpu_hold_blocks_incompatible_benchmark_after_restart (test_agent5_scheduler_components.DurablePreparationTests.test_unknown_cpu_hold_blocks_incompatible_benchmark_after_restart) ... ok
+test_unknown_survives_restart_and_never_releases_or_rekeys (test_agent5_scheduler_components.DurablePreparationTests.test_unknown_survives_restart_and_never_releases_or_rekeys) ... ok
+test_cpu_benchmark_capacity_and_locality_affect_ranking (test_agent5_scheduler_components.PlacementTests.test_cpu_benchmark_capacity_and_locality_affect_ranking) ... ok
+test_each_resource_can_exhaust (test_agent5_scheduler_components.PlacementTests.test_each_resource_can_exhaust) ... ok
+test_eligible_is_advisory_candidate (test_agent5_scheduler_components.PlacementTests.test_eligible_is_advisory_candidate) ... ok
+test_exact_capacity_and_pressure_boundaries (test_agent5_scheduler_components.PlacementTests.test_exact_capacity_and_pressure_boundaries) ... ok
+test_health_pressure_roles_schedule_and_benchmark (test_agent5_scheduler_components.PlacementTests.test_health_pressure_roles_schedule_and_benchmark) ... ok
+test_malformed_inputs_fail_closed (test_agent5_scheduler_components.PlacementTests.test_malformed_inputs_fail_closed) ... ok
+test_queue_and_order_independent_tie_break (test_agent5_scheduler_components.PlacementTests.test_queue_and_order_independent_tie_break) ... ok
+test_stale_future_or_previous_incarnation_denied (test_agent5_scheduler_components.PlacementTests.test_stale_future_or_previous_incarnation_denied) ... ok
+test_cross_midnight_and_start_weekday (test_agent5_scheduler_components.ScheduleTests.test_cross_midnight_and_start_weekday) ... ok
+test_drain_is_separate_from_coordinator_policy (test_agent5_scheduler_components.ScheduleTests.test_drain_is_separate_from_coordinator_policy) ... ok
+test_dst_skip_and_both_repeated_hours (test_agent5_scheduler_components.ScheduleTests.test_dst_skip_and_both_repeated_hours) ... ok
+test_invalid_schedule (test_agent5_scheduler_components.ScheduleTests.test_invalid_schedule) ... ok
+test_weekday_iterator_not_consumed_by_validation (test_agent5_scheduler_components.ScheduleTests.test_weekday_iterator_not_consumed_by_validation) ... ok
+test_actual_synthetic_subprocess_idempotent_control (test_agent5_scheduler_runtime.RuntimeTests.test_actual_synthetic_subprocess_idempotent_control) ... ok
+test_benchmark_rejects_unbounded_cpu_and_io (test_agent5_scheduler_runtime.RuntimeTests.test_benchmark_rejects_unbounded_cpu_and_io) ... ok
+test_benchmark_requires_explicit_opt_in (test_agent5_scheduler_runtime.RuntimeTests.test_benchmark_requires_explicit_opt_in) ... ok
+test_crash_after_seal_never_resubmits (test_agent5_scheduler_runtime.RuntimeTests.test_crash_after_seal_never_resubmits) ... ok
+test_drain_before_dispatch_survives_restart (test_agent5_scheduler_runtime.RuntimeTests.test_drain_before_dispatch_survives_restart) ... ok
+test_draining_pauses_but_never_calls_storage_publication (test_agent5_scheduler_runtime.RuntimeTests.test_draining_pauses_but_never_calls_storage_publication) ... ok
+test_duplicate_committed_command_does_not_restart_worker (test_agent5_scheduler_runtime.RuntimeTests.test_duplicate_committed_command_does_not_restart_worker) ... ok
+test_failed_pause_is_retried_during_reconciliation (test_agent5_scheduler_runtime.RuntimeTests.test_failed_pause_is_retried_during_reconciliation) ... ok
+test_idempotency_key_cannot_move_to_new_request (test_agent5_scheduler_runtime.RuntimeTests.test_idempotency_key_cannot_move_to_new_request) ... ok
+test_missing_authority_never_sends (test_agent5_scheduler_runtime.RuntimeTests.test_missing_authority_never_sends) ... ok
+test_new_domain_has_exact_units_and_no_numeric_alias (test_agent5_scheduler_runtime.RuntimeTests.test_new_domain_has_exact_units_and_no_numeric_alias) ... ok
+test_noncanonical_bytes_and_extra_fields_reject (test_agent5_scheduler_runtime.RuntimeTests.test_noncanonical_bytes_and_extra_fields_reject) ... ok
+test_original_intent_is_written_before_handoff (test_agent5_scheduler_runtime.RuntimeTests.test_original_intent_is_written_before_handoff) ... ok
+test_pause_intent_wins_claim_start_race (test_agent5_scheduler_runtime.RuntimeTests.test_pause_intent_wins_claim_start_race) ... ok
+test_same_request_different_full_intent_conflicts (test_agent5_scheduler_runtime.RuntimeTests.test_same_request_different_full_intent_conflicts) ... ok
+test_silent_child_has_bounded_response_wait (test_agent5_scheduler_runtime.RuntimeTests.test_silent_child_has_bounded_response_wait) ... ok
+test_stale_grant_or_reservation_blocks_dispatch (test_agent5_scheduler_runtime.RuntimeTests.test_stale_grant_or_reservation_blocks_dispatch) ... ok
+test_standby_and_pressure_gate_new_assignment (test_agent5_scheduler_runtime.RuntimeTests.test_standby_and_pressure_gate_new_assignment) ... ok
+test_uncertain_worker_start_is_queried_not_restarted (test_agent5_scheduler_runtime.RuntimeTests.test_uncertain_worker_start_is_queried_not_restarted) ... ok
+test_unknown_restart_reconciles_original_never_reexecutes (test_agent5_scheduler_runtime.RuntimeTests.test_unknown_restart_reconciles_original_never_reexecutes) ... ok
+test_unverified_receipt_and_malformed_unknown_remain_uncertain (test_agent5_scheduler_runtime.RuntimeTests.test_unverified_receipt_and_malformed_unknown_remain_uncertain) ... ok
+test_worker_incarnation_change_is_not_rekeyed (test_agent5_scheduler_runtime.RuntimeTests.test_worker_incarnation_change_is_not_rekeyed) ... ok
+
+----------------------------------------------------------------------
+Ran 52 tests in 1.190s
+
+OK (skipped=1)
+
+{
+  "schema": "agent5.component-evidence.v3",
+  "execution": "LOCAL",
+  "repository": null,
+  "run_id": null,
+  "run_attempt": null,
+  "event": null,
+  "workflow_ref": null,
+  "workflow_sha": null,
+  "event_sha": null,
+  "runner_os": "Windows",
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "expected_source_sha": "462935b53ef25d4d9be2371bad1cd7230c65f2e7",
+  "source_before": {
+    "head": "462935b53ef25d4d9be2371bad1cd7230c65f2e7",
+    "tree": "8c7f7d8d3cd5a6b77817d9e7a1761672484e921c",
+    "tracked_status": "",
+    "raw_binding": "REGULAR_FILE_GIT_BLOB_V2_NO_REPLACE_NO_NORMALIZATION",
+    "protected_files": [
+      {
+        "path": ".github/workflows/agent5-components.yml",
+        "git_mode": "100644",
+        "git_blob_oid": "1f6ba625f1c3816b4ec94e515b45f9ba66a64e61",
+        "regular_file": true,
+        "matches_committed_blob": true,
+        "committed_sha256": "91311562600ce569d8acb0e882fca1f3b76a1d22bc952c7e4563d645b8d2ba9d",
+        "actual_sha256": "91311562600ce569d8acb0e882fca1f3b76a1d22bc952c7e4563d645b8d2ba9d",
+        "committed_bytes": 11282,
+        "actual_bytes": 11282
+      },
+      {
+        "path": "docs/scheduler/component-test-inventory-v2.json",
+        "git_mode": "100644",
+        "git_blob_oid": "8a36074a16d4b7ccc3bd34619b13c53114f0c8cf",
+        "regular_file": true,
+        "matches_committed_blob": true,
+        "committed_sha256": "7ecafa073ea2f60e8565c12c4523dbeea8a267c3ee8f2d7e75786fef589c8b6c",
+        "actual_sha256": "7ecafa073ea2f60e8565c12c4523dbeea8a267c3ee8f2d7e75786fef589c8b6c",
+        "committed_bytes": 4830,
+        "actual_bytes": 4830
+      },
+      {
+        "path": "docs/scheduler/component-test-inventory-v3.json",
+        "git_mode": "100644",
+        "git_blob_oid": "d73503ceb752a1a7bd60b9f0d66948e3d538d42d",
+        "regular_file": true,
+        "matches_committed_blob": true,
+        "committed_sha256": "38608b1f71a71f02369f643479d86363aee26fa4c45306dfbe3e3e2f2de563c3",
+        "actual_sha256": "38608b1f71a71f02369f643479d86363aee26fa4c45306dfbe3e3e2f2de563c3",
+        "committed_bytes": 8847,
+        "actual_bytes": 8847
+      },
+      {
+        "path": "scheduler_components/__init__.py",
+        "git_mode": "100644",
+        "git_blob_oid": "ee45910134508d9e736285545237107e6b9101a0",
+        "regular_file": true,
+        "matches_committed_blob": true,
+        "committed_sha256": "42f5884afcd111a1a90e1e4ce75b61a985ceb829876099e99de3520a122bd03c",
+        "actual_sha256": "42f5884afcd111a1a90e1e4ce75b61a985ceb829876099e99de3520a122bd03c",
+        "committed_bytes": 75,
+        "actual_bytes": 75
+      },
+      {
+        "path": "scheduler_components/attempt_registry.py",
+        "git_mode": "100644",
+        "git_blob_oid": "36e81c41f041ca0294e05eaa207db3d37e1c2119",
+        "regular_file": true,
+        "matches_committed_blob": true,
+        "committed_sha256": "5d0198d525a64e77852e72639f5cc33289162ccd0b775942ae1f1331f1b637d3",
+        "actual_sha256": "5d0198d525a64e77852e72639f5cc33289162ccd0b775942ae1f1331f1b637d3",
+        "committed_bytes": 4447,
+        "actual_bytes": 4447
+      },
+      {
+        "path": "scheduler_components/authority_boundary.py",
+        "git_mode": "100644",
+        "git_blob_oid": "166897ef9599a6f2aa5860747e89a997fc3244ea",
+        "regular_file": true,
+        "matches_committed_blob": true,
+        "committed_sha256": "32e8c2f574f43e344ff01fe63638c5acfaee9ea7d864b677538a82d350bb5116",
+        "actual_sha256": "32e8c2f574f43e344ff01fe63638c5acfaee9ea7d864b677538a82d350bb5116",
+        "committed_bytes": 976,
+        "actual_bytes": 976
+      },
+      {
+        "path": "scheduler_components/benchmarks.py",
+        "git_mode": "100644",
+        "git_blob_oid": "941c174423e57442dbdcf2e25f1508c4b6f9d6fc",
+        "regular_file": true,
+        "matches_committed_blob": true,
+        "committed_sha256": "c6b541f87ed626f3578903964e6fb0d6b7fa6b2be417d83b9fdedb575c80de54",
+        "actual_sha256": "c6b541f87ed626f3578903964e6fb0d6b7fa6b2be417d83b9fdedb575c80de54",
+        "committed_bytes": 5669,
+        "actual_bytes": 5669
+      },
+      {
+        "path": "scheduler_components/domain_v1.py",
+        "git_mode": "100644",
+        "git_blob_oid": "20ed6cd1655a73987874bcd9b5ad2a25e27caa7c",
+        "regular_file": true,
+        "matches_committed_blob": true,
+        "committed_sha256": "059e65b8a0fe1da11842b0d87faaa56b7143eda595f22ea831962b20a05bd78a",
+        "actual_sha256": "059e65b8a0fe1da11842b0d87faaa56b7143eda595f22ea831962b20a05bd78a",
+        "committed_bytes": 3505,
+        "actual_bytes": 3505
+      },
+      {
+        "path": "scheduler_components/durable.py",
+        "git_mode": "100644",
+        "git_blob_oid": "2f68318187d230733f53ad9c0fa02ec7e427641f",
+        "regular_file": true,
+        "matches_committed_blob": true,
+        "committed_sha256": "4a3d4b1f32b503a475b9520520bb82c0ef6135d3112776d41b8c551810124fe8",
+        "actual_sha256": "4a3d4b1f32b503a475b9520520bb82c0ef6135d3112776d41b8c551810124fe8",
+        "committed_bytes": 9648,
+        "actual_bytes": 9648
+      },
+      {
+        "path": "scheduler_components/placement.py",
+        "git_mode": "100644",
+        "git_blob_oid": "a84619aa40217b5dca8491eb33d92dd08f126969",
+        "regular_file": true,
+        "matches_committed_blob": true,
+        "committed_sha256": "b8531b959521543dba8e16807ff294cdd48b6618defd738f7874e1907aca267d",
+        "actual_sha256": "b8531b959521543dba8e16807ff294cdd48b6618defd738f7874e1907aca267d",
+        "committed_bytes": 5293,
+        "actual_bytes": 5293
+      },
+      {
+        "path": "scheduler_components/runtime.py",
+        "git_mode": "100644",
+        "git_blob_oid": "a39c842d2a828f62bc05b4bea5d97ab160f86463",
+        "regular_file": true,
+        "matches_committed_blob": true,
+        "committed_sha256": "27bc1c2cb21ac904ec800d8649e77cfe631e9d1aefcd0ac45b20d374ace1f496",
+        "actual_sha256": "27bc1c2cb21ac904ec800d8649e77cfe631e9d1aefcd0ac45b20d374ace1f496",
+        "committed_bytes": 4963,
+        "actual_bytes": 4963
+      },
+      {
+        "path": "scheduler_components/schedules.py",
+        "git_mode": "100644",
+        "git_blob_oid": "db8247691bc8b5e15404c23714b5c04449d472d8",
+        "regular_file": true,
+        "matches_committed_blob": true,
+        "committed_sha256": "baf736216ceb6ca019d3d2ac9a24654b1741a6ada6574bb6e26e729bc1230810",
+        "actual_sha256": "baf736216ceb6ca019d3d2ac9a24654b1741a6ada6574bb6e26e729bc1230810",
+        "committed_bytes": 1285,
+        "actual_bytes": 1285
+      },
+      {
+        "path": "scheduler_components/schemas/command-v1-c3-review1.schema.json",
+        "git_mode": "100644",
+        "git_blob_oid": "30cfef5eb1f4ed5db91977cad76a0ad64c9c2c80",
+        "regular_file": true,
+        "matches_committed_blob": true,
+        "committed_sha256": "cd274d698b53807ed3668fdc4e7fadb095ccee90a903f0787224871cdf94a366",
+        "actual_sha256": "cd274d698b53807ed3668fdc4e7fadb095ccee90a903f0787224871cdf94a366",
+        "committed_bytes": 2666,
+        "actual_bytes": 2666
+      },
+      {
+        "path": "scheduler_components/worker_control.py",
+        "git_mode": "100644",
+        "git_blob_oid": "1dd7cdf43a7e20e4cff9e09578d1165fa56a1f19",
+        "regular_file": true,
+        "matches_committed_blob": true,
+        "committed_sha256": "8aef858c99753e09452af1f472d1dea5f70007fd26cbb142734636c0b6100b95",
+        "actual_sha256": "8aef858c99753e09452af1f472d1dea5f70007fd26cbb142734636c0b6100b95",
+        "committed_bytes": 4638,
+        "actual_bytes": 4638
+      },
+      {
+        "path": "tests/test_agent5_scheduler_components.py",
+        "git_mode": "100644",
+        "git_blob_oid": "c8a70e7423feeaacd46acb764b5ece4df32daa34",
+        "regular_file": true,
+        "matches_committed_blob": true,
+        "committed_sha256": "bd52a739826136c8f2778aae227c3dac2fcab767d079d127faa85d5301bbdce8",
+        "actual_sha256": "bd52a739826136c8f2778aae227c3dac2fcab767d079d127faa85d5301bbdce8",
+        "committed_bytes": 16178,
+        "actual_bytes": 16178
+      },
+      {
+        "path": "tests/test_agent5_scheduler_runtime.py",
+        "git_mode": "100644",
+        "git_blob_oid": "3ae0b28c0370fda73d3b67504a3e99fbfa7e6fd6",
+        "regular_file": true,
+        "matches_committed_blob": true,
+        "committed_sha256": "203c8c9bafd9fdc79af7943ffeab890ca1d3658ece3983f4a3c642c108c2bbf7",
+        "actual_sha256": "203c8c9bafd9fdc79af7943ffeab890ca1d3658ece3983f4a3c642c108c2bbf7",
+        "committed_bytes": 11495,
+        "actual_bytes": 11495
+      }
+    ],
+    "unexpected_protected_files": [],
+    "protected_inputs_valid": true
+  },
+  "required_tests": 52,
+  "required_skips": 0,
+  "qualification": "LOCAL_CODE_AND_SYNTHETIC_PORTS_NOT_NATIVE_AUTHORITY",
+  "test_inventory_sha256": "38608b1f71a71f02369f643479d86363aee26fa4c45306dfbe3e3e2f2de563c3",
+  "expected_test_ids": [
+    "test_agent5_scheduler_components.AuthorityBoundaryTests.test_every_proposed_mutation_is_closed",
+    "test_agent5_scheduler_components.AuthorityBoundaryTests.test_reads_do_not_invent_receipts_or_mutate",
+    "test_agent5_scheduler_components.DurablePreparationTests.test_invalid_raw_reservation_cannot_be_masked_by_local_hold",
+    "test_agent5_scheduler_components.DurablePreparationTests.test_invalid_resource_input_cannot_mutate_registry",
+    "test_agent5_scheduler_components.DurablePreparationTests.test_job_spec_is_immutable_and_enqueue_idempotent",
+    "test_agent5_scheduler_components.DurablePreparationTests.test_local_event_sequence_is_durable_and_not_authority_epoch",
+    "test_agent5_scheduler_components.DurablePreparationTests.test_local_holds_prevent_overbooking",
+    "test_agent5_scheduler_components.DurablePreparationTests.test_no_quorum_or_standby_never_creates_new_preparation",
+    "test_agent5_scheduler_components.DurablePreparationTests.test_only_never_handed_off_hold_can_be_cancelled",
+    "test_agent5_scheduler_components.DurablePreparationTests.test_preparation_retry_preserves_original_intent",
+    "test_agent5_scheduler_components.DurablePreparationTests.test_process_crash_before_event_commit_recovers_without_partial_hold",
+    "test_agent5_scheduler_components.DurablePreparationTests.test_registry_survives_restart_without_execution_permission",
+    "test_agent5_scheduler_components.DurablePreparationTests.test_stale_capacity_and_pressure_remain_queued",
+    "test_agent5_scheduler_components.DurablePreparationTests.test_transaction_failure_rolls_back_preparation_and_hold",
+    "test_agent5_scheduler_components.DurablePreparationTests.test_two_connections_cannot_spend_same_local_capacity",
+    "test_agent5_scheduler_components.DurablePreparationTests.test_unknown_cpu_hold_blocks_incompatible_benchmark_after_restart",
+    "test_agent5_scheduler_components.DurablePreparationTests.test_unknown_survives_restart_and_never_releases_or_rekeys",
+    "test_agent5_scheduler_components.PlacementTests.test_cpu_benchmark_capacity_and_locality_affect_ranking",
+    "test_agent5_scheduler_components.PlacementTests.test_each_resource_can_exhaust",
+    "test_agent5_scheduler_components.PlacementTests.test_eligible_is_advisory_candidate",
+    "test_agent5_scheduler_components.PlacementTests.test_exact_capacity_and_pressure_boundaries",
+    "test_agent5_scheduler_components.PlacementTests.test_health_pressure_roles_schedule_and_benchmark",
+    "test_agent5_scheduler_components.PlacementTests.test_malformed_inputs_fail_closed",
+    "test_agent5_scheduler_components.PlacementTests.test_queue_and_order_independent_tie_break",
+    "test_agent5_scheduler_components.PlacementTests.test_stale_future_or_previous_incarnation_denied",
+    "test_agent5_scheduler_components.ScheduleTests.test_cross_midnight_and_start_weekday",
+    "test_agent5_scheduler_components.ScheduleTests.test_drain_is_separate_from_coordinator_policy",
+    "test_agent5_scheduler_components.ScheduleTests.test_dst_skip_and_both_repeated_hours",
+    "test_agent5_scheduler_components.ScheduleTests.test_invalid_schedule",
+    "test_agent5_scheduler_components.ScheduleTests.test_weekday_iterator_not_consumed_by_validation",
+    "test_agent5_scheduler_runtime.RuntimeTests.test_actual_synthetic_subprocess_idempotent_control",
+    "test_agent5_scheduler_runtime.RuntimeTests.test_benchmark_rejects_unbounded_cpu_and_io",
+    "test_agent5_scheduler_runtime.RuntimeTests.test_benchmark_requires_explicit_opt_in",
+    "test_agent5_scheduler_runtime.RuntimeTests.test_crash_after_seal_never_resubmits",
+    "test_agent5_scheduler_runtime.RuntimeTests.test_drain_before_dispatch_survives_restart",
+    "test_agent5_scheduler_runtime.RuntimeTests.test_draining_pauses_but_never_calls_storage_publication",
+    "test_agent5_scheduler_runtime.RuntimeTests.test_duplicate_committed_command_does_not_restart_worker",
+    "test_agent5_scheduler_runtime.RuntimeTests.test_failed_pause_is_retried_during_reconciliation",
+    "test_agent5_scheduler_runtime.RuntimeTests.test_idempotency_key_cannot_move_to_new_request",
+    "test_agent5_scheduler_runtime.RuntimeTests.test_missing_authority_never_sends",
+    "test_agent5_scheduler_runtime.RuntimeTests.test_new_domain_has_exact_units_and_no_numeric_alias",
+    "test_agent5_scheduler_runtime.RuntimeTests.test_noncanonical_bytes_and_extra_fields_reject",
+    "test_agent5_scheduler_runtime.RuntimeTests.test_original_intent_is_written_before_handoff",
+    "test_agent5_scheduler_runtime.RuntimeTests.test_pause_intent_wins_claim_start_race",
+    "test_agent5_scheduler_runtime.RuntimeTests.test_same_request_different_full_intent_conflicts",
+    "test_agent5_scheduler_runtime.RuntimeTests.test_silent_child_has_bounded_response_wait",
+    "test_agent5_scheduler_runtime.RuntimeTests.test_stale_grant_or_reservation_blocks_dispatch",
+    "test_agent5_scheduler_runtime.RuntimeTests.test_standby_and_pressure_gate_new_assignment",
+    "test_agent5_scheduler_runtime.RuntimeTests.test_uncertain_worker_start_is_queried_not_restarted",
+    "test_agent5_scheduler_runtime.RuntimeTests.test_unknown_restart_reconciles_original_never_reexecutes",
+    "test_agent5_scheduler_runtime.RuntimeTests.test_unverified_receipt_and_malformed_unknown_remain_uncertain",
+    "test_agent5_scheduler_runtime.RuntimeTests.test_worker_incarnation_change_is_not_rekeyed"
+  ],
+  "tests_run": 52,
+  "skips": 1,
+  "failures": 0,
+  "errors": 0,
+  "passed": false,
+  "discovered_test_ids": [
+    "test_agent5_scheduler_components.AuthorityBoundaryTests.test_every_proposed_mutation_is_closed",
+    "test_agent5_scheduler_components.AuthorityBoundaryTests.test_reads_do_not_invent_receipts_or_mutate",
+    "test_agent5_scheduler_components.DurablePreparationTests.test_invalid_raw_reservation_cannot_be_masked_by_local_hold",
+    "test_agent5_scheduler_components.DurablePreparationTests.test_invalid_resource_input_cannot_mutate_registry",
+    "test_agent5_scheduler_components.DurablePreparationTests.test_job_spec_is_immutable_and_enqueue_idempotent",
+    "test_agent5_scheduler_components.DurablePreparationTests.test_local_event_sequence_is_durable_and_not_authority_epoch",
+    "test_agent5_scheduler_components.DurablePreparationTests.test_local_holds_prevent_overbooking",
+    "test_agent5_scheduler_components.DurablePreparationTests.test_no_quorum_or_standby_never_creates_new_preparation",
+    "test_agent5_scheduler_components.DurablePreparationTests.test_only_never_handed_off_hold_can_be_cancelled",
+    "test_agent5_scheduler_components.DurablePreparationTests.test_preparation_retry_preserves_original_intent",
+    "test_agent5_scheduler_components.DurablePreparationTests.test_process_crash_before_event_commit_recovers_without_partial_hold",
+    "test_agent5_scheduler_components.DurablePreparationTests.test_registry_survives_restart_without_execution_permission",
+    "test_agent5_scheduler_components.DurablePreparationTests.test_stale_capacity_and_pressure_remain_queued",
+    "test_agent5_scheduler_components.DurablePreparationTests.test_transaction_failure_rolls_back_preparation_and_hold",
+    "test_agent5_scheduler_components.DurablePreparationTests.test_two_connections_cannot_spend_same_local_capacity",
+    "test_agent5_scheduler_components.DurablePreparationTests.test_unknown_cpu_hold_blocks_incompatible_benchmark_after_restart",
+    "test_agent5_scheduler_components.DurablePreparationTests.test_unknown_survives_restart_and_never_releases_or_rekeys",
+    "test_agent5_scheduler_components.PlacementTests.test_cpu_benchmark_capacity_and_locality_affect_ranking",
+    "test_agent5_scheduler_components.PlacementTests.test_each_resource_can_exhaust",
+    "test_agent5_scheduler_components.PlacementTests.test_eligible_is_advisory_candidate",
+    "test_agent5_scheduler_components.PlacementTests.test_exact_capacity_and_pressure_boundaries",
+    "test_agent5_scheduler_components.PlacementTests.test_health_pressure_roles_schedule_and_benchmark",
+    "test_agent5_scheduler_components.PlacementTests.test_malformed_inputs_fail_closed",
+    "test_agent5_scheduler_components.PlacementTests.test_queue_and_order_independent_tie_break",
+    "test_agent5_scheduler_components.PlacementTests.test_stale_future_or_previous_incarnation_denied",
+    "test_agent5_scheduler_components.ScheduleTests.test_cross_midnight_and_start_weekday",
+    "test_agent5_scheduler_components.ScheduleTests.test_drain_is_separate_from_coordinator_policy",
+    "test_agent5_scheduler_components.ScheduleTests.test_dst_skip_and_both_repeated_hours",
+    "test_agent5_scheduler_components.ScheduleTests.test_invalid_schedule",
+    "test_agent5_scheduler_components.ScheduleTests.test_weekday_iterator_not_consumed_by_validation",
+    "test_agent5_scheduler_runtime.RuntimeTests.test_actual_synthetic_subprocess_idempotent_control",
+    "test_agent5_scheduler_runtime.RuntimeTests.test_benchmark_rejects_unbounded_cpu_and_io",
+    "test_agent5_scheduler_runtime.RuntimeTests.test_benchmark_requires_explicit_opt_in",
+    "test_agent5_scheduler_runtime.RuntimeTests.test_crash_after_seal_never_resubmits",
+    "test_agent5_scheduler_runtime.RuntimeTests.test_drain_before_dispatch_survives_restart",
+    "test_agent5_scheduler_runtime.RuntimeTests.test_draining_pauses_but_never_calls_storage_publication",
+    "test_agent5_scheduler_runtime.RuntimeTests.test_duplicate_committed_command_does_not_restart_worker",
+    "test_agent5_scheduler_runtime.RuntimeTests.test_failed_pause_is_retried_during_reconciliation",
+    "test_agent5_scheduler_runtime.RuntimeTests.test_idempotency_key_cannot_move_to_new_request",
+    "test_agent5_scheduler_runtime.RuntimeTests.test_missing_authority_never_sends",
+    "test_agent5_scheduler_runtime.RuntimeTests.test_new_domain_has_exact_units_and_no_numeric_alias",
+    "test_agent5_scheduler_runtime.RuntimeTests.test_noncanonical_bytes_and_extra_fields_reject",
+    "test_agent5_scheduler_runtime.RuntimeTests.test_original_intent_is_written_before_handoff",
+    "test_agent5_scheduler_runtime.RuntimeTests.test_pause_intent_wins_claim_start_race",
+    "test_agent5_scheduler_runtime.RuntimeTests.test_same_request_different_full_intent_conflicts",
+    "test_agent5_scheduler_runtime.RuntimeTests.test_silent_child_has_bounded_response_wait",
+    "test_agent5_scheduler_runtime.RuntimeTests.test_stale_grant_or_reservation_blocks_dispatch",
+    "test_agent5_scheduler_runtime.RuntimeTests.test_standby_and_pressure_gate_new_assignment",
+    "test_agent5_scheduler_runtime.RuntimeTests.test_uncertain_worker_start_is_queried_not_restarted",
+    "test_agent5_scheduler_runtime.RuntimeTests.test_unknown_restart_reconciles_original_never_reexecutes",
+    "test_agent5_scheduler_runtime.RuntimeTests.test_unverified_receipt_and_malformed_unknown_remain_uncertain",
+    "test_agent5_scheduler_runtime.RuntimeTests.test_worker_incarnation_change_is_not_rekeyed"
+  ],
+  "source_after": {
+    "head": "462935b53ef25d4d9be2371bad1cd7230c65f2e7",
+    "tree": "8c7f7d8d3cd5a6b77817d9e7a1761672484e921c",
+    "tracked_status": "",
+    "raw_binding": "REGULAR_FILE_GIT_BLOB_V2_NO_REPLACE_NO_NORMALIZATION",
+    "protected_files": [
+      {
+        "path": ".github/workflows/agent5-components.yml",
+        "git_mode": "100644",
+        "git_blob_oid": "1f6ba625f1c3816b4ec94e515b45f9ba66a64e61",
+        "regular_file": true,
+        "matches_committed_blob": true,
+        "committed_sha256": "91311562600ce569d8acb0e882fca1f3b76a1d22bc952c7e4563d645b8d2ba9d",
+        "actual_sha256": "91311562600ce569d8acb0e882fca1f3b76a1d22bc952c7e4563d645b8d2ba9d",
+        "committed_bytes": 11282,
+        "actual_bytes": 11282
+      },
+      {
+        "path": "docs/scheduler/component-test-inventory-v2.json",
+        "git_mode": "100644",
+        "git_blob_oid": "8a36074a16d4b7ccc3bd34619b13c53114f0c8cf",
+        "regular_file": true,
+        "matches_committed_blob": true,
+        "committed_sha256": "7ecafa073ea2f60e8565c12c4523dbeea8a267c3ee8f2d7e75786fef589c8b6c",
+        "actual_sha256": "7ecafa073ea2f60e8565c12c4523dbeea8a267c3ee8f2d7e75786fef589c8b6c",
+        "committed_bytes": 4830,
+        "actual_bytes": 4830
+      },
+      {
+        "path": "docs/scheduler/component-test-inventory-v3.json",
+        "git_mode": "100644",
+        "git_blob_oid": "d73503ceb752a1a7bd60b9f0d66948e3d538d42d",
+        "regular_file": true,
+        "matches_committed_blob": true,
+        "committed_sha256": "38608b1f71a71f02369f643479d86363aee26fa4c45306dfbe3e3e2f2de563c3",
+        "actual_sha256": "38608b1f71a71f02369f643479d86363aee26fa4c45306dfbe3e3e2f2de563c3",
+        "committed_bytes": 8847,
+        "actual_bytes": 8847
+      },
+      {
+        "path": "scheduler_components/__init__.py",
+        "git_mode": "100644",
+        "git_blob_oid": "ee45910134508d9e736285545237107e6b9101a0",
+        "regular_file": true,
+        "matches_committed_blob": true,
+        "committed_sha256": "42f5884afcd111a1a90e1e4ce75b61a985ceb829876099e99de3520a122bd03c",
+        "actual_sha256": "42f5884afcd111a1a90e1e4ce75b61a985ceb829876099e99de3520a122bd03c",
+        "committed_bytes": 75,
+        "actual_bytes": 75
+      },
+      {
+        "path": "scheduler_components/attempt_registry.py",
+        "git_mode": "100644",
+        "git_blob_oid": "36e81c41f041ca0294e05eaa207db3d37e1c2119",
+        "regular_file": true,
+        "matches_committed_blob": true,
+        "committed_sha256": "5d0198d525a64e77852e72639f5cc33289162ccd0b775942ae1f1331f1b637d3",
+        "actual_sha256": "5d0198d525a64e77852e72639f5cc33289162ccd0b775942ae1f1331f1b637d3",
+        "committed_bytes": 4447,
+        "actual_bytes": 4447
+      },
+      {
+        "path": "scheduler_components/authority_boundary.py",
+        "git_mode": "100644",
+        "git_blob_oid": "166897ef9599a6f2aa5860747e89a997fc3244ea",
+        "regular_file": true,
+        "matches_committed_blob": true,
+        "committed_sha256": "32e8c2f574f43e344ff01fe63638c5acfaee9ea7d864b677538a82d350bb5116",
+        "actual_sha256": "32e8c2f574f43e344ff01fe63638c5acfaee9ea7d864b677538a82d350bb5116",
+        "committed_bytes": 976,
+        "actual_bytes": 976
+      },
+      {
+        "path": "scheduler_components/benchmarks.py",
+        "git_mode": "100644",
+        "git_blob_oid": "941c174423e57442dbdcf2e25f1508c4b6f9d6fc",
+        "regular_file": true,
+        "matches_committed_blob": true,
+        "committed_sha256": "c6b541f87ed626f3578903964e6fb0d6b7fa6b2be417d83b9fdedb575c80de54",
+        "actual_sha256": "c6b541f87ed626f3578903964e6fb0d6b7fa6b2be417d83b9fdedb575c80de54",
+        "committed_bytes": 5669,
+        "actual_bytes": 5669
+      },
+      {
+        "path": "scheduler_components/domain_v1.py",
+        "git_mode": "100644",
+        "git_blob_oid": "20ed6cd1655a73987874bcd9b5ad2a25e27caa7c",
+        "regular_file": true,
+        "matches_committed_blob": true,
+        "committed_sha256": "059e65b8a0fe1da11842b0d87faaa56b7143eda595f22ea831962b20a05bd78a",
+        "actual_sha256": "059e65b8a0fe1da11842b0d87faaa56b7143eda595f22ea831962b20a05bd78a",
+        "committed_bytes": 3505,
+        "actual_bytes": 3505
+      },
+      {
+        "path": "scheduler_components/durable.py",
+        "git_mode": "100644",
+        "git_blob_oid": "2f68318187d230733f53ad9c0fa02ec7e427641f",
+        "regular_file": true,
+        "matches_committed_blob": true,
+        "committed_sha256": "4a3d4b1f32b503a475b9520520bb82c0ef6135d3112776d41b8c551810124fe8",
+        "actual_sha256": "4a3d4b1f32b503a475b9520520bb82c0ef6135d3112776d41b8c551810124fe8",
+        "committed_bytes": 9648,
+        "actual_bytes": 9648
+      },
+      {
+        "path": "scheduler_components/placement.py",
+        "git_mode": "100644",
+        "git_blob_oid": "a84619aa40217b5dca8491eb33d92dd08f126969",
+        "regular_file": true,
+        "matches_committed_blob": true,
+        "committed_sha256": "b8531b959521543dba8e16807ff294cdd48b6618defd738f7874e1907aca267d",
+        "actual_sha256": "b8531b959521543dba8e16807ff294cdd48b6618defd738f7874e1907aca267d",
+        "committed_bytes": 5293,
+        "actual_bytes": 5293
+      },
+      {
+        "path": "scheduler_components/runtime.py",
+        "git_mode": "100644",
+        "git_blob_oid": "a39c842d2a828f62bc05b4bea5d97ab160f86463",
+        "regular_file": true,
+        "matches_committed_blob": true,
+        "committed_sha256": "27bc1c2cb21ac904ec800d8649e77cfe631e9d1aefcd0ac45b20d374ace1f496",
+        "actual_sha256": "27bc1c2cb21ac904ec800d8649e77cfe631e9d1aefcd0ac45b20d374ace1f496",
+        "committed_bytes": 4963,
+        "actual_bytes": 4963
+      },
+      {
+        "path": "scheduler_components/schedules.py",
+        "git_mode": "100644",
+        "git_blob_oid": "db8247691bc8b5e15404c23714b5c04449d472d8",
+        "regular_file": true,
+        "matches_committed_blob": true,
+        "committed_sha256": "baf736216ceb6ca019d3d2ac9a24654b1741a6ada6574bb6e26e729bc1230810",
+        "actual_sha256": "baf736216ceb6ca019d3d2ac9a24654b1741a6ada6574bb6e26e729bc1230810",
+        "committed_bytes": 1285,
+        "actual_bytes": 1285
+      },
+      {
+        "path": "scheduler_components/schemas/command-v1-c3-review1.schema.json",
+        "git_mode": "100644",
+        "git_blob_oid": "30cfef5eb1f4ed5db91977cad76a0ad64c9c2c80",
+        "regular_file": true,
+        "matches_committed_blob": true,
+        "committed_sha256": "cd274d698b53807ed3668fdc4e7fadb095ccee90a903f0787224871cdf94a366",
+        "actual_sha256": "cd274d698b53807ed3668fdc4e7fadb095ccee90a903f0787224871cdf94a366",
+        "committed_bytes": 2666,
+        "actual_bytes": 2666
+      },
+      {
+        "path": "scheduler_components/worker_control.py",
+        "git_mode": "100644",
+        "git_blob_oid": "1dd7cdf43a7e20e4cff9e09578d1165fa56a1f19",
+        "regular_file": true,
+        "matches_committed_blob": true,
+        "committed_sha256": "8aef858c99753e09452af1f472d1dea5f70007fd26cbb142734636c0b6100b95",
+        "actual_sha256": "8aef858c99753e09452af1f472d1dea5f70007fd26cbb142734636c0b6100b95",
+        "committed_bytes": 4638,
+        "actual_bytes": 4638
+      },
+      {
+        "path": "tests/test_agent5_scheduler_components.py",
+        "git_mode": "100644",
+        "git_blob_oid": "c8a70e7423feeaacd46acb764b5ece4df32daa34",
+        "regular_file": true,
+        "matches_committed_blob": true,
+        "committed_sha256": "bd52a739826136c8f2778aae227c3dac2fcab767d079d127faa85d5301bbdce8",
+        "actual_sha256": "bd52a739826136c8f2778aae227c3dac2fcab767d079d127faa85d5301bbdce8",
+        "committed_bytes": 16178,
+        "actual_bytes": 16178
+      },
+      {
+        "path": "tests/test_agent5_scheduler_runtime.py",
+        "git_mode": "100644",
+        "git_blob_oid": "3ae0b28c0370fda73d3b67504a3e99fbfa7e6fd6",
+        "regular_file": true,
+        "matches_committed_blob": true,
+        "committed_sha256": "203c8c9bafd9fdc79af7943ffeab890ca1d3658ece3983f4a3c642c108c2bbf7",
+        "actual_sha256": "203c8c9bafd9fdc79af7943ffeab890ca1d3658ece3983f4a3c642c108c2bbf7",
+        "committed_bytes": 11495,
+        "actual_bytes": 11495
+      }
+    ],
+    "unexpected_protected_files": [],
+    "protected_inputs_valid": true
+  },
+  "test_log_sha256": "a2cc570401ce769b4211acfe1e2c8933e57e5d219e06a85677672e3c8fcc6ca9"
+}

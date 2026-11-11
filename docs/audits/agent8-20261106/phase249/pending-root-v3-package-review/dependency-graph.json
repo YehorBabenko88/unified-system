@@ -1,0 +1,115 @@
+{
+  "schema": "master-v3.dependency-graph.review.v1",
+  "source_edges": [
+    [
+      "Unified79",
+      "Unified81"
+    ],
+    [
+      "Unified81",
+      "Unified82"
+    ],
+    [
+      "Unified82",
+      "Unified84"
+    ],
+    [
+      "Unified82",
+      "Unified85"
+    ],
+    [
+      "Unified82",
+      "Unified86"
+    ],
+    [
+      "Unified82",
+      "Unified87"
+    ],
+    [
+      "Grid281",
+      "Grid282"
+    ],
+    [
+      "Grid281",
+      "Grid283"
+    ],
+    [
+      "Strattester78",
+      "Strattester79"
+    ],
+    [
+      "Strattester79",
+      "Strattester80"
+    ],
+    [
+      "Terminan81",
+      "Terminan82"
+    ],
+    [
+      "Terminan82",
+      "Terminan83"
+    ]
+  ],
+  "required_existing_not_at_bfa": [
+    "Unified24 runtime.py/attempt_registry.py/single_node.py",
+    "Unified55 exact20/native13 mapping",
+    "Unified65 gateway_jobs.py/gateway_worker.py"
+  ],
+  "runtime_joins": [
+    {
+      "from": "Authenticated Gateway",
+      "to": "A2 current identity/Authority",
+      "state": "BLOCKED_ACTUAL_NATIVE_CAPTURE_AND_D4"
+    },
+    {
+      "from": "A2 issued Assignment",
+      "to": "A5 Scheduler/Worker",
+      "state": "BLOCKED_SYNC_ASYNC_ABI_AND_ISSUED_EVIDENCE"
+    },
+    {
+      "from": "A5 Worker",
+      "to": "A7 Strattester/MetaAnalyse",
+      "state": "BLOCKED_RESOURCE_BOUND_START"
+    },
+    {
+      "from": "A7 actual result",
+      "to": "A2-ordered A4 publication",
+      "state": "BLOCKED_ATOMIC_COMMIT_CUSTODY"
+    },
+    {
+      "from": "A4 current authorized READ",
+      "to": "A6 authenticated Terminan",
+      "state": "BLOCKED_ENDPOINT_CAPABILITY_FINAL_AWAIT_REVALIDATION"
+    }
+  ],
+  "offline_vertical": [
+    "synthetic candles/trades/book snapshot+delta",
+    "reuse Grid283 DATA-only plan",
+    "fixture-only ingestion adapter",
+    "immutable retained raw",
+    "metadata/source/time/hash/coverage/sequence-quality",
+    "checkpoint",
+    "owned restart/recovery",
+    "verified local dataset scope"
+  ],
+  "offline_gaps": [
+    "existing archive_worker deletes raw on success/error: do not invoke for retained-raw vertical",
+    "backfill data/checkpoint transactions separate",
+    "A3 schema pins are owner proposals, not shared admitted ABI",
+    "local checkpoint claims and staged SQLite ARTIFACT are not committed dataset publication"
+  ],
+  "shared_adapter_count": "UNKNOWN; graph edges are inspection joins, not implemented adapter count or complete effort estimate",
+  "permissions": {
+    "public_submit": "DENY",
+    "real_trading": "PROHIBITED",
+    "provider_sends": "BLOCKED",
+    "logical_mutations": "DISABLED_PENDING_STRICT_D4",
+    "production_deployment": "BLOCKED",
+    "runtime_admission": false,
+    "native_admission": false,
+    "physical_admission": false,
+    "installable": false,
+    "tailscale_removal": "BLOCKED",
+    "main_merge": "NOT_AUTHORIZED"
+  }
+}

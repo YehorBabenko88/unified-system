@@ -1,0 +1,77 @@
+{
+  "head": "49406ab9b2349abcf9524a7bc4aa4dc0e0cf0213",
+  "tree": "03439c7a0ef4ace77d0f10364f34da488af4cefd",
+  "module_sha256": "c606b70a4cbe71011659b522eb5ac7f06e149990573533361017c6d12fcde386",
+  "old_definition_AST_equal": [
+    "_uuid",
+    "_positive",
+    "AssignmentLayout.storage_binding",
+    "AssignmentLayout.storage_policy_current",
+    "AssignmentLayout.runtime_policy",
+    "_check",
+    "_cas",
+    "_decode",
+    "parse_runtime_policy",
+    "AssignmentAuthority.__init__",
+    "AssignmentAuthority._read",
+    "AssignmentAuthority._read_snapshot",
+    "AssignmentAuthority._leader_fence",
+    "AssignmentAuthority._transaction",
+    "AssignmentAuthority.execute",
+    "AssignmentAuthority.reconcile",
+    "ResearchLabAuthority.__init__",
+    "ResearchLabAuthority._observe",
+    "ResearchLabAuthority.submit",
+    "ResearchLabAuthority.lookup",
+    "_registration_sha",
+    "_parse_registration_intent",
+    "_parse_registration_custody",
+    "_registration_outer_state",
+    "_replay_registration_custody",
+    "_registration_ordinary",
+    "_registration_local_volume",
+    "RootRegistrationCustody.__init__",
+    "RootRegistrationCustody._ensure_owned",
+    "RootRegistrationCustody._read_verified",
+    "RootRegistrationCustody._append",
+    "RootRegistrationCustody.retain_original",
+    "RootRegistrationCustody.begin_rpc",
+    "RootRegistrationCustody.finish_rpc",
+    "RootRegistrationCustody.read_state",
+    "RootRegistrationCustody.close",
+    "RootRegistrationCustody.__enter__",
+    "RootRegistrationCustody.__copy__",
+    "RootRegistrationCustody.__deepcopy__",
+    "RootRegistrationCustody.__reduce__",
+    "RootRegistrationCustody.__exit__"
+  ],
+  "public_gates": {
+    "commission_unqualified_worker": {
+      "line": 656,
+      "body": "async def commission_unqualified_worker(self, original_intent_bytes, *, leader):\n    self._match_original(original_intent_bytes)\n    raise RegistrationCustodyUnavailable('SOURCE_PREPARATION_ONLY_EXECUTION_GATE_CLOSED')"
+    },
+    "reconcile_unqualified_worker": {
+      "line": 660,
+      "body": "async def reconcile_unqualified_worker(self, original_intent_bytes, *, leader):\n    self._match_original(original_intent_bytes)\n    raise RegistrationCustodyUnavailable('SOURCE_PREPARATION_ONLY_EXECUTION_GATE_CLOSED')"
+    }
+  },
+  "stream_site_lines": [
+    709
+  ],
+  "plan_assignment_line": 830,
+  "planned_ops": [
+    "check-index_generation_existing",
+    "check-index_leader_existing",
+    "check-session_leader_existing",
+    "check-not-exists_registration",
+    "check-not-exists_lock",
+    "cas_create",
+    "lock_new_session"
+  ],
+  "planned_op_count": 7,
+  "pinned_server_expected_results": 5,
+  "cardinality_finding": "SOURCE_INFERENCE_FROM_PINNED_SERVER_NOT_ACTUAL_NATIVE_RESPONSE",
+  "runtime_tests_executed": 0,
+  "project_imports": 0,
+  "native_RPC": 0
+}

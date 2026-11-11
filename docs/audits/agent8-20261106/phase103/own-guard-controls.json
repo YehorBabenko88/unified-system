@@ -1,0 +1,45 @@
+{
+  "node": "v24.22.1",
+  "cases": [
+    {
+      "name": "tracked",
+      "rejected_before_tests": true,
+      "error": "RAW_SOURCE_MISMATCH"
+    },
+    {
+      "name": "untracked",
+      "rejected_before_tests": true,
+      "error": "UNTRACKED_SOURCE"
+    },
+    {
+      "name": "wrong_head",
+      "rejected_before_tests": true,
+      "error": "HEAD_MISMATCH"
+    },
+    {
+      "name": "wrong_flags",
+      "rejected_before_tests": true,
+      "error": "NODE_FLAGS"
+    },
+    {
+      "name": "NODE_OPTIONS",
+      "rejected_before_tests": true,
+      "error": "AMBIENT_NODE_CONFIG"
+    },
+    {
+      "name": "NODE_PATH",
+      "rejected_before_tests": true,
+      "error": "AMBIENT_NODE_CONFIG"
+    },
+    {
+      "name": "NODE_COMPILE_CACHE",
+      "rejected_before_tests": true,
+      "error": "AMBIENT_NODE_CONFIG"
+    },
+    {
+      "name": "NODE_V8_COVERAGE",
+      "rejected_before_tests": true,
+      "error": "AMBIENT_NODE_CONFIG"
+    }
+  ]
+}

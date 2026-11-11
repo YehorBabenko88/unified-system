@@ -1,0 +1,22 @@
+"""Real same-account pipe primitive only; no provisioning/operator bridge."""
+import hashlib,importlib.util,json,os,pathlib,subprocess,sys,uuid
+r=pathlib.Path(__file__).resolve().parents[1];seed=r/'work/review-integration75';out=r/'outputs/phase42/native_pid_correction';out.mkdir(exist_ok=True,parents=True);head='e238558a1d5bc44128b4541531a2cb9e194155e9';repo=r/'work'/('review-pipe4416-'+uuid.uuid4().hex[:8])
+def git(at,*args):return subprocess.check_output(['git','--no-replace-objects','-C',str(at),*args])
+assert git(seed,'rev-parse',head+'^{tree}').decode().strip()=='0ab27ebdc4da8e2a3fa8613b4bac4add1c9c949c'
+subprocess.run(['git','clone','--no-hardlinks','--no-checkout',str(seed),str(repo)],check=True,capture_output=True);subprocess.run(['git','-C',str(repo),'-c','core.autocrlf=false','-c','core.eol=lf','checkout','--detach',head],check=True,capture_output=True)
+def identity():
+ values={}
+ for item in filter(None,git(repo,'ls-tree','-rz',head).split(b'\0')):
+  meta,name=item.split(b'\t',1);mode,kind,oid=meta.split();assert kind==b'blob' and mode in (b'100644',b'100755');raw=(repo/name.decode()).read_bytes();assert hashlib.sha1(b'blob '+str(len(raw)).encode()+b'\0'+raw).hexdigest()==oid.decode();values[name.decode()]=hashlib.sha256(raw).hexdigest()
+ return dict(files=len(values),sha256=hashlib.sha256(json.dumps(values,sort_keys=True).encode()).hexdigest())
+before=identity();scratch=r/'work'/('pipe-native-temp-'+uuid.uuid4().hex[:8]);scratch.mkdir();environment=os.environ.copy();environment.update(TEMP=str(scratch),TMP=str(scratch),PYTHONDONTWRITEBYTECODE='1')
+# Load only this explicit qualification driver, using actual Windows native APIs.
+boot="import importlib.util,pathlib,subprocess\noriginal=subprocess.run\ndef hidden(*a,**k):\n k['creationflags']=k.get('creationflags',0)|getattr(subprocess,'CREATE_NO_WINDOW',0)\n return original(*a,**k)\nsubprocess.run=hidden\nspec=importlib.util.spec_from_file_location('a8_owned_pipe_qualification',"+repr(str(repo/'tests/windows_identity/run_pipe_qualification.py'))+");module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module);module.run(pathlib.Path("+repr(str(out/'independent'))+"))"
+process=subprocess.run([str(r/'work/audit-venv/Scripts/python.exe'),'-I','-B','-c',boot],cwd=repo,env=environment,capture_output=True,timeout=120,creationflags=getattr(subprocess,'CREATE_NO_WINDOW',0));(out/'driver.stdout.log').write_bytes(process.stdout);(out/'driver.stderr.log').write_bytes(process.stderr);assert process.returncode==0,process.stderr.decode(errors='replace')[-2000:]
+receipt=json.loads((out/'independent/receipt.json').read_text());assert receipt['tests']==4 and receipt['skipped']==0 and not receipt['runtime_admission'];script=git(repo,'show',head+':scripts/Test-LocalPipeIdentity.ps1');assert hashlib.sha256(script).hexdigest()==receipt['script_raw_sha256']
+assert all(x['result']['owned_child_stopped'] and not x['result']['runtime_admission'] for x in receipt['cases'])
+wrong=next(x['result'] for x in receipt['cases'] if x['case']=='wrong-pid');assert wrong['kernel_client_pid']!=wrong['expected_client_pid']
+for case in receipt['cases']:
+ if case['case']!='wrong-pid':assert case['result']['kernel_client_pid']==case['result']['expected_client_pid']
+after=identity();assert before==after
+report=dict(head=head,tree='0ab27ebdc4da8e2a3fa8613b4bac4add1c9c949c',raw_before=before,raw_after=after,executed_cases=4,skips=0,script_primary_blob_sha256=receipt['script_raw_sha256'],actual_positive='REAL_KERNEL_PIPE_PID_SAME_ACCOUNT_SID_IDENTIFICATION_TOKEN_AND_REVERT',actual_negative_levels=['Anonymous','Impersonation'],wrong_pid_case='REAL_KERNEL_PID_DIFFERS_FROM_EXPECTED_STILL_LIVE_PARENT_PID',all_owned_children_stopped=True,scope='LOCAL_SAME_ACCOUNT_WINDOWS_NATIVE_PRIMITIVE_ONLY',native_operator_bridge='NOT_IMPLEMENTED',kernel_PID_mismatch_acceptance='PASS_LOCAL_NATIVE_COMPARISON_ONLY',cross_account_DACL_negative='NOT_RUN',RBAC_expiry='NOT_RUN',WINDOWS_ACCEPTANCE='BLOCKED',PHYSICAL_ACCEPTANCE='BLOCKED',overall='NO_GO');(out/'windows-pipe-review.json').write_text(json.dumps(report,indent=2));print(json.dumps(report,indent=2))

@@ -1,0 +1,211 @@
+{
+  "schema": "unified.ls5-stage0-report.v1",
+  "source_head_inspected": "9c585129200cb3510c78b0f4f791eec5b7d85e8a",
+  "observed_at_utc": "2026-11-07T09:11:02.6152052Z",
+  "node": "LS5",
+  "os": {
+    "Caption": "Microsoft Windows 11 Pro",
+    "Version": "10.0.26300",
+    "BuildNumber": "26300",
+    "LastBootUpTime": "2026-10-30T13:28:58.077699+01:00",
+    "FreePhysicalMemory": 37860336,
+    "FreeVirtualMemory": 37220220
+  },
+  "identity": {
+    "sid": "S-1-5-21-12977273-2956189057-260416802-1002",
+    "elevated": false,
+    "name": "LS5\\LS-5"
+  },
+  "free_disk_gib": 1492.49,
+  "free_ram_gib": 36.11,
+  "stage0": "OBSERVATIONS_COMPLETED_WITH_BLOCKERS",
+  "lan_ssh": "FIVE_OF_FIVE_PINNED_AUTHENTICATED_READ_ONLY_CONNECTIONS_OBSERVED",
+  "dns_https": "SIX_OF_SIX_OBSERVED_DNS_AND_HTTPS200",
+  "network_security_configuration_before_after_equal": {
+    "network": true,
+    "firewall": true,
+    "policies": true
+  },
+  "existing_ports": "Full listener snapshot retained; final service/port plan absent, so no conflict-free installation claim",
+  "existing_services": "Selected Unified/Consul/PostgreSQL/SSH/Tailscale/ESET observations only; no service mutation",
+  "backup_admin_access": "SSHD_AND_TEAMVIEWER_RUNNING_BUT_END_TO_END_ADMIN_RECOVERY_NOT_DEMONSTRATED",
+  "test_directory": {
+    "directory": "C:\\Users\\LS-5\\Documents\\Codex\\UnifiedPilot\\LS5-20261107-4b4d98ef222b4f80af346e3c1975840a",
+    "marker_sha256": "e68f4b65b8b189fd7a154eb2d561962af1db80ecf95d26aad5e7abed2615d97e",
+    "owner": "LS5\\LS-5",
+    "sddl": "O:S-1-5-21-12977273-2956189057-260416802-1002G:S-1-5-21-12977273-2956189057-260416802-513D:AI(A;OICIID;0x1301bf;;;S-1-5-21-12977273-2956189057-260416802-1003)(A;OICIID;0x1301bf;;;S-1-5-21-325846225-3212476683-1004600648-3774991215)(A;OICIID;FA;;;SY)(A;OICIID;FA;;;BA)(A;OICIID;FA;;;S-1-5-21-12977273-2956189057-260416802-1002)",
+    "acl_changed": false,
+    "system_changes": false,
+    "installation_performed": false,
+    "security_admission": "NOT_GRANTED",
+    "future_targets_exist": [
+      {
+        "name": "code",
+        "exists": false
+      },
+      {
+        "name": "state",
+        "exists": false
+      },
+      {
+        "name": "backup",
+        "exists": false
+      }
+    ],
+    "supersedes": "test-directory.json had three null target-observation entries from collector serialization; original retained"
+  },
+  "actual_ps5_acl_check": {
+    "schema": "unified.actual-staging-acl-observation.v1",
+    "path": "C:\\Users\\LS-5\\Documents\\Codex\\UnifiedPilot\\LS5-20261107-4b4d98ef222b4f80af346e3c1975840a",
+    "identity_sid": "S-1-5-21-12977273-2956189057-260416802-1002",
+    "observed_at_utc": "2026-11-07T09:20:56.9710738Z",
+    "powershell": "5.1.26100.9711",
+    "namespace": "OBSERVED_NO_REPARSE_FIXED_LOCAL_PATH",
+    "acl": "REJECTED",
+    "acl_changed": false,
+    "admission": "NOT_GRANTED",
+    "acl_error": "Untrusted writable ACL",
+    "backup_access_services": [
+      {
+        "Name": "sshd",
+        "State": "Running",
+        "StartMode": "Auto",
+        "StartName": "LocalSystem"
+      },
+      {
+        "Name": "TeamViewer",
+        "State": "Running",
+        "StartMode": "Auto",
+        "StartName": "LocalSystem"
+      },
+      {
+        "Name": "TermService",
+        "State": "Stopped",
+        "StartMode": "Manual",
+        "StartName": "NT Authority\\NetworkService"
+      },
+      {
+        "Name": "WinRM",
+        "State": "Stopped",
+        "StartMode": "Manual",
+        "StartName": "NT AUTHORITY\\NetworkService"
+      }
+    ],
+    "backup_admin_access": "NOT_DEMONSTRATED_END_TO_END"
+  },
+  "installer_plan_only": {
+    "mode": "PLAN_ONLY",
+    "candidate_manifest_sha256": "3ba41b08735693608b9457e8518169605e1b338f9b5f6cacbe840146389a4a9f",
+    "candidate_status": "PROVISIONAL_NOT_INSTALLABLE",
+    "package_lock_available": false,
+    "package_bytes_available": false,
+    "actual_plan_created": false,
+    "mutations_performed": false,
+    "installation_performed": false,
+    "security_admission": "NOT_GRANTED",
+    "qualification": "ACTUAL_CANDIDATE_INPUT_REFUSAL_NOT_INSTALLER_ACCEPTANCE",
+    "status": "BLOCKED_NO_INSTALLABLE_PACKAGE_LOCK",
+    "rejection": "lock schema",
+    "rejection_scope": "Input manifest is provisional integration schema, not an installer package lock. No converted/fabricated lock or publisher pin supplied.",
+    "separate_pure_model_regressions": {
+      "tests": 9,
+      "skips": 0,
+      "success": true,
+      "scope": "MODEL_ONLY_NOT_LS5_SECURITY_ADMISSION"
+    },
+    "executed_source_head": "9d6857a26842b1c4ce6375a69cef4cdba832b7b1"
+  },
+  "backup_rollback_plan": {
+    "touched_existing_state": false,
+    "only_created_state": "New owned test directory and preparation marker; no installed code/service/database",
+    "baseline_marker_sha256": "e68f4b65b8b189fd7a154eb2d561962af1db80ecf95d26aad5e7abed2615d97e",
+    "production_databases_backed_up_or_changed": false,
+    "before_install_required": [
+      "Exact admitted artifact/dependency/source manifest and installer closure",
+      "Version/data-compatible owned-code rollback bundle",
+      "Backup of each actually affected owned state target",
+      "Actual isolated restore/re-read and recovery rehearsal",
+      "Validated administrative recovery channel",
+      "Current authority fencing and no stale lease/grant revival"
+    ],
+    "rollback_execution": "NOT_RUN_NOT_QUALIFIED",
+    "if_preparation_aborted": "Retain inactive directory/evidence; do not delete or stop preexisting services/data"
+  },
+  "actual_defects_or_refusals": [
+    {
+      "id": "STAGE0-PS5-MODULEPATH",
+      "scope": "Diagnostic child environment only",
+      "red": "Inherited module search path makes Microsoft.PowerShell.Security import fail with duplicate ACL type-data members",
+      "correction": "Use normal System32 WindowsPowerShell module directory only inside the child helper; no persistent env/policy edits",
+      "retest": "Actual PS5.1 ACL function executes and rejects the untrusted writable ACL",
+      "evidence": [
+        "ps5-modulepath-diagnosis.json",
+        "actual-staging-acl.json",
+        "actual-staging-acl-v2.json"
+      ]
+    },
+    {
+      "id": "STAGE0-ROOT-ACL",
+      "status": "REAL_GATE_REJECTED_UNTRUSTED_WRITABLE_ACL",
+      "fix_applied": false,
+      "security_bypass": false
+    },
+    {
+      "id": "STAGE0-TARGET-SERIALIZATION",
+      "scope": "Observer JSON only",
+      "original": "Three null future-target entries retained",
+      "corrected": "v2 explicitly observes code/state/backup absent"
+    }
+  ],
+  "installation_gate": "BLOCKED",
+  "installation_performed": false,
+  "required_release_manifest_status": "PROVISIONAL_NOT_INSTALLABLE",
+  "runtime_or_physical_acceptance": false,
+  "evidence_sha256": {
+    "actual-staging-acl-v2.json": "d16c6acc313803c458f4227f246f7ab6ec5159f9de8872560c5bac32d048e253",
+    "actual-staging-acl-v2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actual-staging-acl-v2.stdout.log": "cbf178d28d9e4bdcb013490b4e751cb1330bea33d6036ee7060b4d86a85e2e88",
+    "actual-staging-acl.json": "ae185455289f8affa7f2eddeca2afd80ed5795c924b3df787a7bf607e2a39e71",
+    "actual-staging-acl.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actual-staging-acl.stdout.log": "2de9a25099ad2f1b213b59eacba7e530abb35c7817487e4848c672ad14565f80",
+    "diagnose-ps5-modulepath.ps1": "d9e7f31bd9d056f87aa70a46069e582a51d4d06685fe4bdb26d5bad01b70e793",
+    "existing-runtime-processes.json": "aee658f29b19d15fd69822daf79a306c15293b35fdf9da4625aca73e4b46e1a0",
+    "installer-plan-only.json": "5433d4bbefe5fe4452cba069ad7adee7f3280278dfe503d687602284a67327af",
+    "installer-security-model-tests.log": "5b53f94a4a24ff70149fbd91179ee18029ab36d7bdd38766a6c8befe42e1755d",
+    "lan-observer.py": "c1439b435e624e02cafa51745caba89f7e412cb056ed1704776ef456860141d4",
+    "lan-observer.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "lan-observer.stdout.log": "2c108c65cca3baed2d02cab96104571a40c8334b13e2eb6b484f7f232faa6bdd",
+    "observation-after.json": "a371cbc1aabbffade18c2b6ec89f3d213541930bf045f8f2b15bb38202a6a31b",
+    "observation.json": "cd416f91d64364a6cdec529f4c153ec1610056bf4e276526a7b5721602686721",
+    "ps5-modulepath-diagnosis.json": "904a0fcf7acb989d86c15af519feb63682e01cadb01e931f66349a0a97e270e5",
+    "ps5-modulepath-diagnosis.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "runtime-observations.json": "d3cecc7575f23a3a4997d70233f4e16ff016d64c7fcab045e035166ec7216f6e",
+    "SecurityPackage.psm1": "cfd30b929c333c7832728f20519aaca7ce7e6e35d15663470bf6dff9ba6b0993",
+    "test-directory-v2.json": "03d4a6ec20e1a61db82e32b400655b20a52d034abd87c53385503c5f0db38406",
+    "test-directory.json": "1678a64a2041a1296f8fbf2d86e99c923d05c15859835dd06ffc6538bc5c9277",
+    "test-staging-acl-v1.ps1.txt": "b579497ca578b99f5bbbe8b3b58bf1f4c7fe50cafddecdd29cb7261000e73546",
+    "test-staging-acl-v2.ps1": "e27a46822b208a740f6da0cc7cd4387b6615efeb403f7b369a30b3d970e0baed",
+    "test-staging-acl.ps1": "b579497ca578b99f5bbbe8b3b58bf1f4c7fe50cafddecdd29cb7261000e73546",
+    "inventory-readonly-20261107T091356645839Z/empty_config": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "inventory-readonly-20261107T091356645839Z/LS5-stderr.bin": "a31f9238162ffb05e0e56ea38c79337b7ff1d1c6e74336f310cb99070d03ae66",
+    "inventory-readonly-20261107T091356645839Z/LS5-stdout.bin": "d085d648d2f372ef6ac0a9c8fdb5afd0a7e394d53205fca0d095edc913b70c0e",
+    "inventory-readonly-20261107T091356645839Z/LS7-known_hosts": "09075d54b79e3a01beb4d59dc0a5d6c71fde305c313494674fffddb3cbe3f9a5",
+    "inventory-readonly-20261107T091356645839Z/LS7-stderr.bin": "8ae92d35f2f1f115b241e134765df4fd902def738c9fe0c405a8fa7a273f8240",
+    "inventory-readonly-20261107T091356645839Z/LS7-stdout.bin": "76cc7445f57e558de48dbcde795182ef96569f1e8bf25e30bfee4e6b8020065c",
+    "inventory-readonly-20261107T091356645839Z/PC1-known_hosts": "4bf1dbf1d465d6e52a83f007dc94802fb057302dfff98ecf568cf4b43c017515",
+    "inventory-readonly-20261107T091356645839Z/PC1-stderr.bin": "452aa782c6edffd27a9a101f2a9dd400c018495091d50635b8b9a5608de84d78",
+    "inventory-readonly-20261107T091356645839Z/PC1-stdout.bin": "7d1b0e24828824f123fbe3a59304fbfa4206baefb7531fac423ab96dd54d8c33",
+    "inventory-readonly-20261107T091356645839Z/PC2-known_hosts": "26a5ce8c6c80cc8c47af0cd3d1a0cfeab9ec8300f066564852749c6939814e7f",
+    "inventory-readonly-20261107T091356645839Z/PC2-stderr.bin": "1186eb6454c2bd99be6f967389faf6db957f5be7f5fe0938aa8c80015b786d14",
+    "inventory-readonly-20261107T091356645839Z/PC2-stdout.bin": "99cdc730b80ad14ee039327de5f193b078ac05dfbc2c1c39e047a8958fa3a29d",
+    "inventory-readonly-20261107T091356645839Z/PC3-known_hosts": "1a04449cbd13bbe4f87c67fd81575354dcb7e9ae4d8981272705af642f78f0bb",
+    "inventory-readonly-20261107T091356645839Z/PC3-stderr.bin": "6fccabc48ca53d86c75b7ecc093a506741a7581b227e2b837941aa43c478cac9",
+    "inventory-readonly-20261107T091356645839Z/PC3-stdout.bin": "fe136640d10f2380cfbd45504762999559ea9d4595dfd73539d00b2c6c76b91c",
+    "inventory-readonly-20261107T091356645839Z/PC4-known_hosts": "a3b8944130edb2184f35c1b834d5593a6a97d8c5a89685eda12a1352c9d6f03b",
+    "inventory-readonly-20261107T091356645839Z/PC4-stderr.bin": "1186eb6454c2bd99be6f967389faf6db957f5be7f5fe0938aa8c80015b786d14",
+    "inventory-readonly-20261107T091356645839Z/PC4-stdout.bin": "d6a697990abef902af3d5b5a68ce3d3f8dcd3f1fc80cc066b1d091353248424a",
+    "inventory-readonly-20261107T091356645839Z/report.json": "53be11e2dffa7d42cb049ea0302467900a8d7d1db0a96adfc29e3bba13497593",
+    "inventory-readonly-20261107T091356645839Z/report.sha256": "1c9cd336316510d4350f52e4bfaddbd17697846ffb0ad23e769ff7c5cfcc8c9d",
+    "staging-marker.json": "e68f4b65b8b189fd7a154eb2d561962af1db80ecf95d26aad5e7abed2615d97e"
+  }
+}

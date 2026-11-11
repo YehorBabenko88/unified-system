@@ -1,0 +1,18 @@
+test_all_frozen_native13_constraints_precede_native_access (test_owned_attempt.OwnedAttemptBoundary.test_all_frozen_native13_constraints_precede_native_access) ... ok
+test_attempt_cannot_be_constructed_or_forged_into_inventory (test_owned_attempt.OwnedAttemptBoundary.test_attempt_cannot_be_constructed_or_forged_into_inventory) ... ok
+test_default_start_still_denies (test_owned_attempt.OwnedAttemptBoundary.test_default_start_still_denies) ... ok
+test_missing_declared_node_denies_preparation (test_owned_attempt.OwnedAttemptBoundary.test_missing_declared_node_denies_preparation) ... ok
+test_original_bytes_are_strict_before_any_process_creation (test_owned_attempt.OwnedAttemptBoundary.test_original_bytes_are_strict_before_any_process_creation) ... ok
+test_preparation_headroom_and_pin_faults_never_create_process (test_owned_attempt.OwnedAttemptBoundary.test_preparation_headroom_and_pin_faults_never_create_process) ... ok
+test_actual_suspended_duplicate_inspect_abort_without_resume (test_owned_attempt.NativeOwnedAttempt.test_actual_suspended_duplicate_inspect_abort_without_resume) ... ok
+test_foreign_inventory_and_changed_original_do_not_adopt_child (test_owned_attempt.NativeOwnedAttempt.test_foreign_inventory_and_changed_original_do_not_adopt_child) ... ok
+test_cleanup_error_still_closes_both_retained_handles (test_worker_limits.WorkerLimits.test_cleanup_error_still_closes_both_retained_handles) ... ok
+test_failed_suspended_termination_not_reported_as_exit (test_worker_limits.WorkerLimits.test_failed_suspended_termination_not_reported_as_exit) ... ok
+test_foreign_handle_rejected_before_native_access (test_worker_limits.WorkerLimits.test_foreign_handle_rejected_before_native_access) ... ok
+test_native_setup_and_readback_fault_assertions (test_worker_limits.WorkerLimits.test_native_setup_and_readback_fault_assertions) ... ok
+test_no_native_grant_no_dispatch (test_worker_limits.WorkerLimits.test_no_native_grant_no_dispatch) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.158s
+
+OK

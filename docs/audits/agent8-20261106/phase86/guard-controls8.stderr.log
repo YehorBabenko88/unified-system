@@ -1,0 +1,18 @@
+test_cache_rejected_before_any_source_import (__main__.SourceControls.test_cache_rejected_before_any_source_import) ... ok
+test_clean_positive_and_tracked_mutation_negative (__main__.SourceControls.test_clean_positive_and_tracked_mutation_negative) ... ok
+test_directory_reparse_rejected (__main__.SourceControls.test_directory_reparse_rejected) ... ok
+test_missing_and_duplicate_test_ids_rejected (__main__.SourceControls.test_missing_and_duplicate_test_ids_rejected) ... ok
+test_root_ancestor_reparse_rejected (__main__.SourceControls.test_root_ancestor_reparse_rejected) ... ok
+test_tampered_primary_blob_oid_rejected (__main__.SourceControls.test_tampered_primary_blob_oid_rejected) ... ok
+test_tampered_primary_tree_oid_rejected (__main__.SourceControls.test_tampered_primary_tree_oid_rejected) ... error: hash mismatch 08f0f9055af9956caf9bbd59558be96fad522b0d
+error: hash mismatch 08f0f9055af9956caf9bbd59558be96fad522b0d
+fatal: ambiguous argument 'HEAD^{tree}': unknown revision or path not in the working tree.
+Use '--' to separate paths from revisions, like this:
+'git <command> [<revision>...] -- [<file>...]'
+ok
+test_unexpected_shadow_rejected (__main__.SourceControls.test_unexpected_shadow_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 4.107s
+
+OK

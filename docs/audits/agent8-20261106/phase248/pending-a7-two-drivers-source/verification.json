@@ -1,0 +1,34 @@
+{
+  "scope": "SOURCE_ONLY_TWO_ORIGINAL_REGRESSION_DRIVERS",
+  "lanes": {
+    "constructor2": {
+      "seal": "04b8b46bfd3d7c02ef0214ad8d1b322e6f8c6115417663761ab7e9e062be59ae",
+      "driver_sha256": "da42bdbc86dc4ff4db563a8afdcc209aab9c198d1cead86867c71fb887bda7f0",
+      "cases": [
+        "owned_compile7_controls.ConstructorCallerRegression.test_actual_constructor_failure_closes_known_unowned_read_handle",
+        "owned_compile7_controls.ConstructorCallerRegression.test_actual_unknown_start_preserves_no_close_control"
+      ],
+      "helpers": "SEVEN_IDENTICAL",
+      "parent": "IDENTICAL_AFTER_SCHEMA_SCOPE_LITERALS",
+      "future_output": "ABSENT",
+      "runtime": "MANIFEST_RAW_PIN_ONLY_NOT_CURRENT841_REHASH"
+    },
+    "summary2": {
+      "seal": "2956cb28453cf8377f9398cce60562363600ea43c7e461163b2486775845c078",
+      "driver_sha256": "b263b23e3893843be2901a302fedbe9761cbe7821d01b8c5cbe7cd6ae952a472",
+      "cases": [
+        "owned_compile7_controls.PublicSummaryBoundaryRegression.test_actual_small_serialized_summary_bounded_positive_control",
+        "owned_compile7_controls.PublicSummaryBoundaryRegression.test_actual_final_summary_expansion_must_obey_public_byte_cap"
+      ],
+      "helpers": "SEVEN_IDENTICAL",
+      "parent": "IDENTICAL_AFTER_SCHEMA_SCOPE_LITERALS",
+      "future_output": "ABSENT",
+      "runtime": "MANIFEST_RAW_PIN_ONLY_NOT_CURRENT841_REHASH"
+    }
+  },
+  "review": "FULL_PARENT_CONSTRUCTOR_CHILD_AND_SUMMARY_DIFF_READ_HELD_A05E_CONTROL_BEFORE_EXEC",
+  "actual_tests": "NOT_RUN",
+  "SOURCE_ACK": "NARROW_PREPARATION_ONLY_SEPARATE_ROOT_ALLOCATION",
+  "kernel_family_hardwall_fullcontroller": "NOT_QUALIFIED",
+  "GO_NO_GO": "NO-GO"
+}

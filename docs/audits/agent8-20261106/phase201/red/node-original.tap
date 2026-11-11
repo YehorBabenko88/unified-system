@@ -1,0 +1,170 @@
+TAP version 13
+# Subtest: r2_metrics_count_held_benchmark_raf
+not ok 1 - r2_metrics_count_held_benchmark_raf
+  ---
+  duration_ms: 8.2338
+  type: 'test'
+  location: 'C:\\Users\\LS-5\\.codex\\terminan-disposal-aa9b4e9-red-qualified\\tests\\test_preview_benchmark_disposal.cjs:104:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    METRICS_OMIT_BENCHMARK_RAF
+    
+    0 !== 1
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 1
+  actual: 0
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\LS-5\.codex\terminan-disposal-aa9b4e9-red-qualified\tests\test_preview_benchmark_disposal.cjs:106:12)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: r2_dispose_settles_held_benchmark_without_frame
+not ok 2 - r2_dispose_settles_held_benchmark_without_frame
+  ---
+  duration_ms: 3.9688
+  type: 'test'
+  location: 'C:\\Users\\LS-5\\.codex\\terminan-disposal-aa9b4e9-red-qualified\\tests\\test_preview_benchmark_disposal.cjs:108:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    DISPOSE_MUST_SETTLE_WITHOUT_DELIVERING_FRAME
+    + actual - expected
+    
+    + null
+    - {
+    -   kind: 'rejected',
+    -   message: 'Benchmark cancelled'
+    - }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    kind: 'rejected'
+    message: 'Benchmark cancelled'
+  actual: ~
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\LS-5\.codex\terminan-disposal-aa9b4e9-red-qualified\tests\test_preview_benchmark_disposal.cjs:111:12)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: r2_seek_settles_superseded_benchmark_without_frame
+not ok 3 - r2_seek_settles_superseded_benchmark_without_frame
+  ---
+  duration_ms: 3.7113
+  type: 'test'
+  location: 'C:\\Users\\LS-5\\.codex\\terminan-disposal-aa9b4e9-red-qualified\\tests\\test_preview_benchmark_disposal.cjs:116:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    SEEK_MUST_SETTLE_WITHOUT_DELIVERING_OLD_FRAME
+    + actual - expected
+    
+    + null
+    - {
+    -   kind: 'rejected',
+    -   message: 'Benchmark cancelled'
+    - }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    kind: 'rejected'
+    message: 'Benchmark cancelled'
+  actual: ~
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\LS-5\.codex\terminan-disposal-aa9b4e9-red-qualified\tests\test_preview_benchmark_disposal.cjs:119:12)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: r4_metrics_count_held_benchmark_raf
+not ok 4 - r4_metrics_count_held_benchmark_raf
+  ---
+  duration_ms: 5.4462
+  type: 'test'
+  location: 'C:\\Users\\LS-5\\.codex\\terminan-disposal-aa9b4e9-red-qualified\\tests\\test_preview_benchmark_disposal.cjs:104:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    METRICS_OMIT_BENCHMARK_RAF
+    
+    0 !== 1
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 1
+  actual: 0
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\LS-5\.codex\terminan-disposal-aa9b4e9-red-qualified\tests\test_preview_benchmark_disposal.cjs:106:12)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: r4_dispose_settles_held_benchmark_without_frame
+not ok 5 - r4_dispose_settles_held_benchmark_without_frame
+  ---
+  duration_ms: 2.5278
+  type: 'test'
+  location: 'C:\\Users\\LS-5\\.codex\\terminan-disposal-aa9b4e9-red-qualified\\tests\\test_preview_benchmark_disposal.cjs:108:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    DISPOSE_MUST_SETTLE_WITHOUT_DELIVERING_FRAME
+    + actual - expected
+    
+    + null
+    - {
+    -   kind: 'rejected',
+    -   message: 'Benchmark cancelled'
+    - }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    kind: 'rejected'
+    message: 'Benchmark cancelled'
+  actual: ~
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\LS-5\.codex\terminan-disposal-aa9b4e9-red-qualified\tests\test_preview_benchmark_disposal.cjs:111:12)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: r4_seek_settles_superseded_benchmark_without_frame
+not ok 6 - r4_seek_settles_superseded_benchmark_without_frame
+  ---
+  duration_ms: 2.5959
+  type: 'test'
+  location: 'C:\\Users\\LS-5\\.codex\\terminan-disposal-aa9b4e9-red-qualified\\tests\\test_preview_benchmark_disposal.cjs:116:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    SEEK_MUST_SETTLE_WITHOUT_DELIVERING_OLD_FRAME
+    + actual - expected
+    
+    + null
+    - {
+    -   kind: 'rejected',
+    -   message: 'Benchmark cancelled'
+    - }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    kind: 'rejected'
+    message: 'Benchmark cancelled'
+  actual: ~
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\LS-5\.codex\terminan-disposal-aa9b4e9-red-qualified\tests\test_preview_benchmark_disposal.cjs:119:12)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 0
+# fail 6
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 45.3514

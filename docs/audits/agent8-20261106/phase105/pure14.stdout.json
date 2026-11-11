@@ -1,0 +1,28 @@
+{
+  "tests": [
+    "test_target_native_mapping_proposal.TargetNativeProposal.test_all_twenty_mutations_are_bound_not_admitted",
+    "test_target_native_mapping_proposal.TargetNativeProposal.test_direct_profile_never_upgraded",
+    "test_target_native_mapping_proposal.TargetNativeProposal.test_dot_key_refuses_instead_of_rewriting",
+    "test_target_native_mapping_proposal.TargetNativeProposal.test_encoding_overflow_refuses_without_truncation",
+    "test_target_native_mapping_proposal.TargetNativeProposal.test_error_data_keeps_known_fact_and_forbids_permissions",
+    "test_target_native_mapping_proposal.TargetNativeProposal.test_float_budget_alias_refuses_even_with_rebound_hashes",
+    "test_target_native_mapping_proposal.TargetNativeProposal.test_identity_and_input_hash_domains_not_aliases",
+    "test_target_native_mapping_proposal.TargetNativeProposal.test_no_profile_self_hash_or_native_digest_cycle",
+    "test_target_native_mapping_proposal.TargetNativeProposal.test_owner_schemas_are_closed_valid_and_distinct",
+    "test_target_native_mapping_proposal.TargetNativeProposal.test_preissued_fields_and_result_handle_refused",
+    "test_target_native_mapping_proposal.TargetNativeProposal.test_primary_sources_and_exact_twenty_field_mapping",
+    "test_target_native_mapping_proposal.TargetNativeProposal.test_profile_principal_registry_mismatch_is_refused",
+    "test_target_native_mapping_proposal.TargetNativeProposal.test_raw_hash_and_base64_join_refuse_changed_bytes",
+    "test_target_native_mapping_proposal.TargetNativeProposal.test_uncommissioned_format_triple_preserves_frozen13"
+  ],
+  "tests_run": 14,
+  "skips": 0,
+  "subcase_counts": {
+    "test_target_native_mapping_proposal.TargetNativeProposal.test_all_twenty_mutations_are_bound_not_admitted": 20,
+    "test_target_native_mapping_proposal.TargetNativeProposal.test_identity_and_input_hash_domains_not_aliases": 4
+  },
+  "runtime_effect_or_import_attempts": [],
+  "jsonschema": "4.25.1",
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "scope": "PURE_FORMAT_AND_HASH_SENSITIVITY_NOT_NATIVE_ADMISSION"
+}

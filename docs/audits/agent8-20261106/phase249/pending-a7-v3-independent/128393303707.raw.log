@@ -1,0 +1,581 @@
+﻿2026-11-07T20:19:04.8865381Z Current runner version: '2.338.2'
+2026-11-07T20:19:04.8894175Z ##[group]Runner Image Provisioner
+2026-11-07T20:19:04.8895126Z Hosted Compute Agent
+2026-11-07T20:19:04.8895866Z Version: 20261028.624
+2026-11-07T20:19:04.8896577Z Commit: 54898b74c23fde5556c9b3c3a2290865feef0dfe
+2026-11-07T20:19:04.8897365Z Build Date: 2026-10-28T21:51:42Z
+2026-11-07T20:19:04.8898109Z Worker ID: {4d345ec1-1c30-420f-893e-ea00b0f3b385}
+2026-11-07T20:19:04.8898845Z Region: westcentralus
+2026-11-07T20:19:04.8899502Z Cloud: Azure
+2026-11-07T20:19:04.8900123Z ##[endgroup]
+2026-11-07T20:19:04.8901479Z ##[group]Operating System
+2026-11-07T20:19:04.8902475Z Ubuntu
+2026-11-07T20:19:04.8903037Z 26.04.1
+2026-11-07T20:19:04.8903670Z LTS
+2026-11-07T20:19:04.8904271Z ##[endgroup]
+2026-11-07T20:19:04.8904851Z ##[group]Runner Image
+2026-11-07T20:19:04.8905543Z Image: ubuntu-26.04
+2026-11-07T20:19:04.8906151Z Version: 20261101.186.1
+2026-11-07T20:19:04.8907516Z Included Software: https://github.com/actions/runner-images/blob/ubuntu26/20261101.186/images/ubuntu/Ubuntu2604-Readme.md
+2026-11-07T20:19:04.8909162Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu26%2F20261101.186
+2026-11-07T20:19:04.8910260Z ##[endgroup]
+2026-11-07T20:19:04.8911446Z ##[group]GITHUB_TOKEN Permissions
+2026-11-07T20:19:04.8913643Z Contents: read
+2026-11-07T20:19:04.8914281Z Metadata: read
+2026-11-07T20:19:04.8914952Z ##[endgroup]
+2026-11-07T20:19:04.8917169Z Secret source: Actions
+2026-11-07T20:19:04.8918464Z Cache mode: write
+2026-11-07T20:19:04.8919259Z Prepare workflow directory
+2026-11-07T20:19:04.9460919Z Prepare all required actions
+2026-11-07T20:19:04.9516165Z Getting action download info
+2026-11-07T20:19:05.2215276Z Download action repository 'actions/checkout@11d5960a326750d5838078e36cf38b85af677262' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-11-07T20:19:05.3526634Z Download action repository 'actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+2026-11-07T20:19:05.4268880Z Download action repository 'actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+2026-11-07T20:19:05.5447705Z Download action repository 'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-11-07T20:19:05.7561657Z Complete job name: synthetic (ubuntu-latest)
+2026-11-07T20:19:05.8402848Z ##[group]Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+2026-11-07T20:19:05.8403956Z with:
+2026-11-07T20:19:05.8404472Z   ref: b9c2f24b33285b7b0e06aebc354a9c61a909d204
+2026-11-07T20:19:05.8405094Z   fetch-depth: 0
+2026-11-07T20:19:05.8405582Z   persist-credentials: false
+2026-11-07T20:19:05.8406133Z   repository: YehorBabenko88/math
+2026-11-07T20:19:05.8409977Z   token: ***
+2026-11-07T20:19:05.8410441Z   ssh-strict: true
+2026-11-07T20:19:05.8410909Z   ssh-user: git
+2026-11-07T20:19:05.8411359Z   clean: true
+2026-11-07T20:19:05.8411829Z   sparse-checkout-cone-mode: true
+2026-11-07T20:19:05.8412563Z   fetch-tags: false
+2026-11-07T20:19:05.8413038Z   show-progress: true
+2026-11-07T20:19:05.8413507Z   lfs: false
+2026-11-07T20:19:05.8413940Z   submodules: false
+2026-11-07T20:19:05.8414409Z   set-safe-directory: true
+2026-11-07T20:19:05.8414934Z   allow-unsafe-pr-checkout: false
+2026-11-07T20:19:05.8415654Z env:
+2026-11-07T20:19:05.8416316Z   EXPECTED_SOURCE_SHA: b9c2f24b33285b7b0e06aebc354a9c61a909d204
+2026-11-07T20:19:05.8417120Z ##[endgroup]
+2026-11-07T20:19:06.2584201Z Syncing repository: YehorBabenko88/math
+2026-11-07T20:19:06.2586563Z ##[group]Getting Git version info
+2026-11-07T20:19:06.2587550Z Working directory is '/home/runner/work/math/math'
+2026-11-07T20:19:06.2588826Z [command]/usr/bin/git version
+2026-11-07T20:19:06.2589382Z git version 2.56.0
+2026-11-07T20:19:06.2610052Z ##[endgroup]
+2026-11-07T20:19:06.2626122Z Temporarily overriding HOME='/home/runner/work/_temp/697879ac-426c-4216-bd7e-78ae10d91421' before making global git config changes
+2026-11-07T20:19:06.2628556Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-07T20:19:06.2631427Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/math/math
+2026-11-07T20:19:06.2691706Z Deleting the contents of '/home/runner/work/math/math'
+2026-11-07T20:19:06.2695219Z ##[group]Initializing the repository
+2026-11-07T20:19:06.2700402Z [command]/usr/bin/git init /home/runner/work/math/math
+2026-11-07T20:19:06.2790160Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-11-07T20:19:06.2792297Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-11-07T20:19:06.2793913Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-11-07T20:19:06.2795130Z hint: call:
+2026-11-07T20:19:06.2795780Z hint:
+2026-11-07T20:19:06.2796600Z hint: 	git config --global init.defaultBranch <name>
+2026-11-07T20:19:06.2797572Z hint:
+2026-11-07T20:19:06.2798214Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-11-07T20:19:06.2799361Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-11-07T20:19:06.2800101Z hint:
+2026-11-07T20:19:06.2800545Z hint: 	git branch -m <name>
+2026-11-07T20:19:06.2801140Z hint:
+2026-11-07T20:19:06.2802293Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-11-07T20:19:06.2803691Z Initialized empty Git repository in /home/runner/work/math/math/.git/
+2026-11-07T20:19:06.2810818Z [command]/usr/bin/git remote add origin https://github.com/YehorBabenko88/math
+2026-11-07T20:19:06.2900593Z ##[endgroup]
+2026-11-07T20:19:06.2901893Z ##[group]Disabling automatic garbage collection
+2026-11-07T20:19:06.2904175Z [command]/usr/bin/git config --local gc.auto 0
+2026-11-07T20:19:06.2947991Z ##[endgroup]
+2026-11-07T20:19:06.2955438Z ##[group]Setting up auth
+2026-11-07T20:19:06.2956714Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-07T20:19:06.3006307Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-07T20:19:06.3463411Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-07T20:19:06.3505879Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-07T20:19:06.3813419Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-07T20:19:06.3855314Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-07T20:19:06.4160733Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-07T20:19:06.4205148Z ##[endgroup]
+2026-11-07T20:19:06.4206007Z ##[group]Fetching the repository
+2026-11-07T20:19:06.4215206Z [command]/usr/bin/git -c protocol.version=2 fetch --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*
+2026-11-07T20:19:07.3456655Z From https://github.com/YehorBabenko88/math
+2026-11-07T20:19:07.3458709Z  * [new branch]      agent7/math-history-statistics-overflow-20261107 -> origin/agent7/math-history-statistics-overflow-20261107
+2026-11-07T20:19:07.3461830Z  * [new branch]      agent7/math-loader-init-diagnostics-20261106 -> origin/agent7/math-loader-init-diagnostics-20261106
+2026-11-07T20:19:07.3465457Z  * [new branch]      agent7/math-loader-init-followup-20261107 -> origin/agent7/math-loader-init-followup-20261107
+2026-11-07T20:19:07.3469067Z  * [new branch]      agent7/math-native-research-20261106 -> origin/agent7/math-native-research-20261106
+2026-11-07T20:19:07.3473026Z  * [new branch]      agent7/math-verifier-import-20261107 -> origin/agent7/math-verifier-import-20261107
+2026-11-07T20:19:07.3476890Z  * [new branch]      audit/ai-codex-pr31-object-format-20261025 -> origin/audit/ai-codex-pr31-object-format-20261025
+2026-11-07T20:19:07.3481620Z  * [new branch]      audit/base-pr31-cb168925-pinned -> origin/audit/base-pr31-cb168925-pinned
+2026-11-07T20:19:07.3485073Z  * [new branch]      audit/book-cutover-hardening -> origin/audit/book-cutover-hardening
+2026-11-07T20:19:07.3488207Z  * [new branch]      audit/book-full-ci-coverage -> origin/audit/book-full-ci-coverage
+2026-11-07T20:19:07.3491547Z  * [new branch]      audit/book-ingestion-trust-boundary-20261022 -> origin/audit/book-ingestion-trust-boundary-20261022
+2026-11-07T20:19:07.3494960Z  * [new branch]      audit/book-migration-integrity -> origin/audit/book-migration-integrity
+2026-11-07T20:19:07.3497524Z  * [new branch]      audit/g0-query-contract -> origin/audit/g0-query-contract
+2026-11-07T20:19:07.3500964Z  * [new branch]      audit/gpt1-pr80-diagnostic-20261027 -> origin/audit/gpt1-pr80-diagnostic-20261027
+2026-11-07T20:19:07.3504747Z  * [new branch]      audit/gpt1-pr80-os-attribution-20261027 -> origin/audit/gpt1-pr80-os-attribution-20261027
+2026-11-07T20:19:07.3508262Z  * [new branch]      audit/gpt1-pr83-admission-review-20261028 -> origin/audit/gpt1-pr83-admission-review-20261028
+2026-11-07T20:19:07.3512181Z  * [new branch]      audit/gpt1-proof-kernel-pr31-20261025 -> origin/audit/gpt1-proof-kernel-pr31-20261025
+2026-11-07T20:19:07.3516025Z  * [new branch]      audit/gpt1-token73-flags-20261026 -> origin/audit/gpt1-token73-flags-20261026
+2026-11-07T20:19:07.3520433Z  * [new branch]      audit/gpt1-token75-76-combined-20261026 -> origin/audit/gpt1-token75-76-combined-20261026
+2026-11-07T20:19:07.3524765Z  * [new branch]      audit/gpt3-kg-pr31-narrow-20261025 -> origin/audit/gpt3-kg-pr31-narrow-20261025
+2026-11-07T20:19:07.3528860Z  * [new branch]      audit/gpt3-kg-pr31-snapshot-20261025 -> origin/audit/gpt3-kg-pr31-snapshot-20261025
+2026-11-07T20:19:07.3533710Z  * [new branch]      audit/gpt5-adminit-provenance-20261025 -> origin/audit/gpt5-adminit-provenance-20261025
+2026-11-07T20:19:07.3538299Z  * [new branch]      audit/gpt5-pr51-package-binding-20261025 -> origin/audit/gpt5-pr51-package-binding-20261025
+2026-11-07T20:19:07.3541447Z  * [new branch]      audit/gpt5-pr57-merge-oidc-20261025 -> origin/audit/gpt5-pr57-merge-oidc-20261025
+2026-11-07T20:19:07.3545258Z  * [new branch]      audit/gpt5-pr60-receiver-20261026 -> origin/audit/gpt5-pr60-receiver-20261026
+2026-11-07T20:19:07.3548759Z  * [new branch]      audit/gpt5-pr64-signed-receipt-20261026 -> origin/audit/gpt5-pr64-signed-receipt-20261026
+2026-11-07T20:19:07.3552349Z  * [new branch]      audit/historical-ci-69-73-20261026 -> origin/audit/historical-ci-69-73-20261026
+2026-11-07T20:19:07.3555643Z  * [new branch]      audit/math-integration-readiness -> origin/audit/math-integration-readiness
+2026-11-07T20:19:07.3558343Z  * [new branch]      audit/math-stabilization-20 -> origin/audit/math-stabilization-20
+2026-11-07T20:19:07.3561431Z  * [new branch]      audit/pr31-independent-acceptance-20261025 -> origin/audit/pr31-independent-acceptance-20261025
+2026-11-07T20:19:07.3564735Z  * [new branch]      audit/pr31-physical-readiness -> origin/audit/pr31-physical-readiness
+2026-11-07T20:19:07.3567557Z  * [new branch]      audit/pr31-qa-correction-20261025 -> origin/audit/pr31-qa-correction-20261025
+2026-11-07T20:19:07.3570680Z  * [new branch]      audit/pr31-win-pg-independent-20261025 -> origin/audit/pr31-win-pg-independent-20261025
+2026-11-07T20:19:07.3574295Z  * [new branch]      audit/pr44-adminit-independent-20261025 -> origin/audit/pr44-adminit-independent-20261025
+2026-11-07T20:19:07.3577599Z  * [new branch]      audit/pr44-g0-independent-20261025 -> origin/audit/pr44-g0-independent-20261025
+2026-11-07T20:19:07.3580285Z  * [new branch]      audit/pr48-final-acceptance -> origin/audit/pr48-final-acceptance
+2026-11-07T20:19:07.3583416Z  * [new branch]      audit/pr51-hosted-privacy-20261025 -> origin/audit/pr51-hosted-privacy-20261025
+2026-11-07T20:19:07.3586647Z  * [new branch]      audit/pr51-independent-negative-20261025 -> origin/audit/pr51-independent-negative-20261025
+2026-11-07T20:19:07.3590889Z  * [new branch]      audit/pr52-hosted-final-acceptance-20261026 -> origin/audit/pr52-hosted-final-acceptance-20261026
+2026-11-07T20:19:07.3594780Z  * [new branch]      audit/pr57-queued-receiver-qa-20261025 -> origin/audit/pr57-queued-receiver-qa-20261025
+2026-11-07T20:19:07.3598254Z  * [new branch]      audit/pr60-independent-hosted-20261026 -> origin/audit/pr60-independent-hosted-20261026
+2026-11-07T20:19:07.3601694Z  * [new branch]      audit/pr60-windows-negative-20261026 -> origin/audit/pr60-windows-negative-20261026
+2026-11-07T20:19:07.3606199Z  * [new branch]      audit/pr64-independent-g0-20261026 -> origin/audit/pr64-independent-g0-20261026
+2026-11-07T20:19:07.3610228Z  * [new branch]      audit/pr82-physical-g0v2-admission-20261027 -> origin/audit/pr82-physical-g0v2-admission-20261027
+2026-11-07T20:19:07.3613682Z  * [new branch]      audit/proof-kernel-v2-20261025 -> origin/audit/proof-kernel-v2-20261025
+2026-11-07T20:19:07.3616642Z  * [new branch]      audit/q01-pr28-real-symlink-20261025 -> origin/audit/q01-pr28-real-symlink-20261025
+2026-11-07T20:19:07.3620567Z  * [new branch]      audit/q01-pr64-phase-boundary-20261026 -> origin/audit/q01-pr64-phase-boundary-20261026
+2026-11-07T20:19:07.3625483Z  * [new branch]      audit/qa-acceptance-gates-20261022 -> origin/audit/qa-acceptance-gates-20261022
+2026-11-07T20:19:07.3630089Z  * [new branch]      audit/sqlite-q01-reliability-20261022 -> origin/audit/sqlite-q01-reliability-20261022
+2026-11-07T20:19:07.3634668Z  * [new branch]      codex/grid-history-kernels-20261030 -> origin/codex/grid-history-kernels-20261030
+2026-11-07T20:19:07.3638658Z  * [new branch]      codex/math-native-console-fix-20261030 -> origin/codex/math-native-console-fix-20261030
+2026-11-07T20:19:07.3642404Z  * [new branch]      codex/math-native-detached-experiment-20261030 -> origin/codex/math-native-detached-experiment-20261030
+2026-11-07T20:19:07.3647043Z  * [new branch]      codex/math-native-harness-audit-20261030 -> origin/codex/math-native-harness-audit-20261030
+2026-11-07T20:19:07.3650889Z  * [new branch]      codex/math-native-loader-diagnostics-20261030 -> origin/codex/math-native-loader-diagnostics-20261030
+2026-11-07T20:19:07.3654593Z  * [new branch]      codex/math-native-loader-trace-20261030 -> origin/codex/math-native-loader-trace-20261030
+2026-11-07T20:19:07.3658133Z  * [new branch]      codex/math-workflow-policy-20261030 -> origin/codex/math-workflow-policy-20261030
+2026-11-07T20:19:07.3661160Z  * [new branch]      codex/platform-matrix-20261030 -> origin/codex/platform-matrix-20261030
+2026-11-07T20:19:07.3664448Z  * [new branch]      codex/unified-history-scientific-20261030 -> origin/codex/unified-history-scientific-20261030
+2026-11-07T20:19:07.3667848Z  * [new branch]      design/ai-codex-orchestrator-gates-20261022 -> origin/design/ai-codex-orchestrator-gates-20261022
+2026-11-07T20:19:07.3671146Z  * [new branch]      draft/knowledge-graph-boundary-20261022 -> origin/draft/knowledge-graph-boundary-20261022
+2026-11-07T20:19:07.3674284Z  * [new branch]      draft/proof-kernel-mvp-20261022 -> origin/draft/proof-kernel-mvp-20261022
+2026-11-07T20:19:07.3677038Z  * [new branch]      feat/adminit-3d-quality-ui-20261029 -> origin/feat/adminit-3d-quality-ui-20261029
+2026-11-07T20:19:07.3679694Z  * [new branch]      feat/book-knowledge-ingestion -> origin/feat/book-knowledge-ingestion
+2026-11-07T20:19:07.3682780Z  * [new branch]      feat/book-knowledge-integration-review -> origin/feat/book-knowledge-integration-review
+2026-11-07T20:19:07.3685577Z  * [new branch]      feat/book-postgres-backend -> origin/feat/book-postgres-backend
+2026-11-07T20:19:07.3688285Z  * [new branch]      feat/book-postgres-cutover-controller -> origin/feat/book-postgres-cutover-controller
+2026-11-07T20:19:07.3691280Z  * [new branch]      feat/book-postgres-integration-test -> origin/feat/book-postgres-integration-test
+2026-11-07T20:19:07.3694317Z  * [new branch]      feat/book-postgres-lossless-json -> origin/feat/book-postgres-lossless-json
+2026-11-07T20:19:07.3697360Z  * [new branch]      feat/causal-feature-screen-20261029 -> origin/feat/causal-feature-screen-20261029
+2026-11-07T20:19:07.3700208Z  * [new branch]      feat/central-scientific-engine-v2 -> origin/feat/central-scientific-engine-v2
+2026-11-07T20:19:07.3703213Z  * [new branch]      feat/disposable-vm-runtime-smoke -> origin/feat/disposable-vm-runtime-smoke
+2026-11-07T20:19:07.3705887Z  * [new branch]      feat/external-vm-host-contract -> origin/feat/external-vm-host-contract
+2026-11-07T20:19:07.3708653Z  * [new branch]      feat/five-bounded-compute-d-20261030 -> origin/feat/five-bounded-compute-d-20261030
+2026-11-07T20:19:07.3711324Z  * [new branch]      feat/g0-bounded-diagnostics -> origin/feat/g0-bounded-diagnostics
+2026-11-07T20:19:07.3713792Z  * [new branch]      feat/g0-offline-preflight -> origin/feat/g0-offline-preflight
+2026-11-07T20:19:07.3716007Z  * [new branch]      feat/g0-structured-token -> origin/feat/g0-structured-token
+2026-11-07T20:19:07.3718834Z  * [new branch]      feat/grid-provenance-contract-gate-20261029 -> origin/feat/grid-provenance-contract-gate-20261029
+2026-11-07T20:19:07.3722482Z  * [new branch]      feat/guarded-validation-selection-20261029 -> origin/feat/guarded-validation-selection-20261029
+2026-11-07T20:19:07.3725451Z  * [new branch]      feat/math-universe-foundation -> origin/feat/math-universe-foundation
+2026-11-07T20:19:07.3728211Z  * [new branch]      feat/math-walk-forward-gated-20261029 -> origin/feat/math-walk-forward-gated-20261029
+2026-11-07T20:19:07.3731339Z  * [new branch]      feat/pr56-confidential-evidence-receiver -> origin/feat/pr56-confidential-evidence-receiver
+2026-11-07T20:19:07.3734929Z  * [new branch]      feat/pr60-hosted-confidential-qualification -> origin/feat/pr60-hosted-confidential-qualification
+2026-11-07T20:19:07.3737998Z  * [new branch]      feat/q01-windows-job-containment -> origin/feat/q01-windows-job-containment
+2026-11-07T20:19:07.3740685Z  * [new branch]      feat/return-research-oos-20261029 -> origin/feat/return-research-oos-20261029
+2026-11-07T20:19:07.3743724Z  * [new branch]      feat/roots-convergence-diagnostics -> origin/feat/roots-convergence-diagnostics
+2026-11-07T20:19:07.3746646Z  * [new branch]      feat/scientific-engine-composition-v21 -> origin/feat/scientific-engine-composition-v21
+2026-11-07T20:19:07.3749687Z  * [new branch]      feature/aim-research-lab -> origin/feature/aim-research-lab
+2026-11-07T20:19:07.3751883Z  * [new branch]      fix/ci-release-provenance -> origin/fix/ci-release-provenance
+2026-11-07T20:19:07.3754265Z  * [new branch]      fix/f01-f02-audit-hardening -> origin/fix/f01-f02-audit-hardening
+2026-11-07T20:19:07.3756868Z  * [new branch]      fix/f03-r06-independent-audit-findings -> origin/fix/f03-r06-independent-audit-findings
+2026-11-07T20:19:07.3759595Z  * [new branch]      fix/g0-csv-escaped-quotes -> origin/fix/g0-csv-escaped-quotes
+2026-11-07T20:19:07.3761617Z  * [new branch]      fix/g0-token-cleanup    -> origin/fix/g0-token-cleanup
+2026-11-07T20:19:07.3764060Z  * [new branch]      fix/immutable-dependency-locks -> origin/fix/immutable-dependency-locks
+2026-11-07T20:19:07.3766741Z  * [new branch]      fix/kernel-result-inert-binding-20 -> origin/fix/kernel-result-inert-binding-20
+2026-11-07T20:19:07.3769467Z  * [new branch]      fix/knowledge-dependency-clone-20 -> origin/fix/knowledge-dependency-clone-20
+2026-11-07T20:19:07.3772116Z  * [new branch]      fix/knowledge-inert-input-20 -> origin/fix/knowledge-inert-input-20
+2026-11-07T20:19:07.3774834Z  * [new branch]      fix/mandatory-postgres-matrix-20261030 -> origin/fix/mandatory-postgres-matrix-20261030
+2026-11-07T20:19:07.3777753Z  * [new branch]      fix/orchestrator-source-identity-20 -> origin/fix/orchestrator-source-identity-20
+2026-11-07T20:19:07.3780241Z  * [new branch]      fix/pg-fenced-lease-clock -> origin/fix/pg-fenced-lease-clock
+2026-11-07T20:19:07.3782652Z  * [new branch]      fix/pg-wait-witness-chain-20 -> origin/fix/pg-wait-witness-chain-20
+2026-11-07T20:19:07.3785545Z  * [new branch]      fix/postgres-registry-worker-integrity -> origin/fix/postgres-registry-worker-integrity
+2026-11-07T20:19:07.3788418Z  * [new branch]      fix/pr31-preflight-source-identity -> origin/fix/pr31-preflight-source-identity
+2026-11-07T20:19:07.3791063Z  * [new branch]      fix/pr31-verifier-pending-state -> origin/fix/pr31-verifier-pending-state
+2026-11-07T20:19:07.3794109Z  * [new branch]      fix/pr44-watchdog-confirmation-20261025 -> origin/fix/pr44-watchdog-confirmation-20261025
+2026-11-07T20:19:07.3796637Z  * [new branch]      fix/pr45-regex-syntax   -> origin/fix/pr45-regex-syntax
+2026-11-07T20:19:07.3798641Z  * [new branch]      fix/pr64-hosted-failure -> origin/fix/pr64-hosted-failure
+2026-11-07T20:19:07.3801172Z  * [new branch]      fix/pr64-watchdog-handle-alias-20261026 -> origin/fix/pr64-watchdog-handle-alias-20261026
+2026-11-07T20:19:07.3804193Z  * [new branch]      fix/pr70-g0-observation-integrity -> origin/fix/pr70-g0-observation-integrity
+2026-11-07T20:19:07.3806798Z  * [new branch]      fix/proof-input-size-boundary-20 -> origin/fix/proof-input-size-boundary-20
+2026-11-07T20:19:07.3809368Z  * [new branch]      fix/q01-detached-journal-stat-20 -> origin/fix/q01-detached-journal-stat-20
+2026-11-07T20:19:07.3812163Z  * [new branch]      fix/qa-evidence-symlink-portability -> origin/fix/qa-evidence-symlink-portability
+2026-11-07T20:19:07.3814888Z  * [new branch]      fix/release-required-contexts-20 -> origin/fix/release-required-contexts-20
+2026-11-07T20:19:07.3817598Z  * [new branch]      fix/scientific-evidence-consistency -> origin/fix/scientific-evidence-consistency
+2026-11-07T20:19:07.3820153Z  * [new branch]      fix/sql-byte-reproducibility -> origin/fix/sql-byte-reproducibility
+2026-11-07T20:19:07.3822657Z  * [new branch]      fix/walk-forward-forecast-guard -> origin/fix/walk-forward-forecast-guard
+2026-11-07T20:19:07.3825116Z  * [new branch]      fix/windows-deployment-safety -> origin/fix/windows-deployment-safety
+2026-11-07T20:19:07.3827734Z  * [new branch]      fix/windows-release-artifact-binding -> origin/fix/windows-release-artifact-binding
+2026-11-07T20:19:07.3830424Z  * [new branch]      integration/g0-diagnostic-os-fix -> origin/integration/g0-diagnostic-os-fix
+2026-11-07T20:19:07.3833198Z  * [new branch]      integration/g0-token-flags-cleanup -> origin/integration/g0-token-flags-cleanup
+2026-11-07T20:19:07.3836088Z  * [new branch]      integration/math-adminit-readiness -> origin/integration/math-adminit-readiness
+2026-11-07T20:19:07.3839021Z  * [new branch]      integration/math-central-engine-v1-20261029 -> origin/integration/math-central-engine-v1-20261029
+2026-11-07T20:19:07.3841590Z  * [new branch]      integration/math-f01-f02 -> origin/integration/math-f01-f02
+2026-11-07T20:19:07.3843789Z  * [new branch]      integration/math-f03-r06 -> origin/integration/math-f03-r06
+2026-11-07T20:19:07.3846701Z  * [new branch]      integration/math-issue20-physical-preflight-20261025 -> origin/integration/math-issue20-physical-preflight-20261025
+2026-11-07T20:19:07.3850107Z  * [new branch]      integration/math-parallel-audit-20261023 -> origin/integration/math-parallel-audit-20261023
+2026-11-07T20:19:07.3852982Z  * [new branch]      integration/math-remediation-abc -> origin/integration/math-remediation-abc
+2026-11-07T20:19:07.3855633Z  * [new branch]      integration/pr51-gpt456-qualification -> origin/integration/pr51-gpt456-qualification
+2026-11-07T20:19:07.3858371Z  * [new branch]      integration/pr57-source-binding-qa -> origin/integration/pr57-source-binding-qa
+2026-11-07T20:19:07.3860833Z  * [new branch]      integration/pr69-g0-readiness -> origin/integration/pr69-g0-readiness
+2026-11-07T20:19:07.3862789Z  * [new branch]      main                    -> origin/main
+2026-11-07T20:19:07.3864958Z  * [new branch]      mission/loader-facts-coarse-diagnostics -> origin/mission/loader-facts-coarse-diagnostics
+2026-11-07T20:19:07.3867913Z  * [new branch]      mission1/composed-math-20261031 -> origin/mission1/composed-math-20261031
+2026-11-07T20:19:07.3870493Z  * [new branch]      mission3/pinned-browser-host-20261031 -> origin/mission3/pinned-browser-host-20261031
+2026-11-07T20:19:07.3873482Z  * [new branch]      review/base-proof-kernel-6c969ab -> origin/review/base-proof-kernel-6c969ab
+2026-11-07T20:19:07.3876022Z  * [new branch]      test/adminit-synthetic-containment -> origin/test/adminit-synthetic-containment
+2026-11-07T20:19:07.3878689Z  * [new branch]      test/pr31-queue-independent-review -> origin/test/pr31-queue-independent-review
+2026-11-07T20:19:07.3880992Z  * [new branch]      test/pr31-windows-harness -> origin/test/pr31-windows-harness
+2026-11-07T20:19:07.3883370Z  * [new branch]      test/pr50-watchdog-qualification -> origin/test/pr50-watchdog-qualification
+2026-11-07T20:19:07.3885712Z  * [new branch]      test/q01-native-forensics-20 -> origin/test/q01-native-forensics-20
+2026-11-07T20:19:07.3887841Z  * [new branch]      test/q01-queue-reliability -> origin/test/q01-queue-reliability
+2026-11-07T20:19:07.3891914Z [command]/usr/bin/git rev-parse --verify --quiet b9c2f24b33285b7b0e06aebc354a9c61a909d204^{object}
+2026-11-07T20:19:07.3893955Z b9c2f24b33285b7b0e06aebc354a9c61a909d204
+2026-11-07T20:19:07.3896738Z ##[endgroup]
+2026-11-07T20:19:07.3898164Z ##[group]Determining the checkout info
+2026-11-07T20:19:07.3899782Z ##[endgroup]
+2026-11-07T20:19:07.3900725Z [command]/usr/bin/git sparse-checkout disable
+2026-11-07T20:19:07.3903501Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-11-07T20:19:07.3906768Z ##[group]Checking out the ref
+2026-11-07T20:19:07.3908423Z [command]/usr/bin/git checkout --progress --force b9c2f24b33285b7b0e06aebc354a9c61a909d204
+2026-11-07T20:19:07.4183168Z Note: switching to 'b9c2f24b33285b7b0e06aebc354a9c61a909d204'.
+2026-11-07T20:19:07.4184330Z 
+2026-11-07T20:19:07.4185108Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-11-07T20:19:07.4187021Z changes and commit them, and you can discard any commits you make in this
+2026-11-07T20:19:07.4188929Z state without impacting any branches by switching back to a branch.
+2026-11-07T20:19:07.4190102Z 
+2026-11-07T20:19:07.4190836Z If you want to create a new branch to retain commits you create, you may
+2026-11-07T20:19:07.4193360Z do so (now or later) by using -c with the switch command. Example:
+2026-11-07T20:19:07.4194851Z 
+2026-11-07T20:19:07.4195465Z   git switch -c <new-branch-name>
+2026-11-07T20:19:07.4196765Z 
+2026-11-07T20:19:07.4197367Z Or undo this operation with:
+2026-11-07T20:19:07.4198287Z 
+2026-11-07T20:19:07.4198835Z   git switch -
+2026-11-07T20:19:07.4199534Z 
+2026-11-07T20:19:07.4200823Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-11-07T20:19:07.4202843Z 
+2026-11-07T20:19:07.4204532Z HEAD is now at b9c2f24 Exercise scientific child no-bytecode regression in hosted component suite
+2026-11-07T20:19:07.4209867Z ##[endgroup]
+2026-11-07T20:19:07.4251621Z [command]/usr/bin/git log -1 --format=%H
+2026-11-07T20:19:07.4281438Z b9c2f24b33285b7b0e06aebc354a9c61a909d204
+2026-11-07T20:19:07.4293327Z ##[group]Removing auth
+2026-11-07T20:19:07.4297750Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-07T20:19:07.4335500Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-07T20:19:07.4643515Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-07T20:19:07.4672528Z http.https://github.com/.extraheader
+2026-11-07T20:19:07.4681153Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-07T20:19:07.4723254Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-07T20:19:07.5031246Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-07T20:19:07.5068372Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-07T20:19:07.5370680Z ##[endgroup]
+2026-11-07T20:19:07.5731163Z ##[group]Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+2026-11-07T20:19:07.5732887Z with:
+2026-11-07T20:19:07.5733688Z   python-version: 3.12
+2026-11-07T20:19:07.5734583Z   check-latest: false
+2026-11-07T20:19:07.5743022Z   token: ***
+2026-11-07T20:19:07.5743851Z   update-environment: true
+2026-11-07T20:19:07.5744823Z   allow-prereleases: false
+2026-11-07T20:19:07.5745790Z   freethreaded: false
+2026-11-07T20:19:07.5746646Z env:
+2026-11-07T20:19:07.5747675Z   EXPECTED_SOURCE_SHA: b9c2f24b33285b7b0e06aebc354a9c61a909d204
+2026-11-07T20:19:07.5749119Z ##[endgroup]
+2026-11-07T20:19:07.7180905Z ##[group]Installed versions
+2026-11-07T20:19:07.7275227Z (node:2540) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-07T20:19:07.7279117Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-07T20:19:07.7281431Z Successfully set up CPython (3.12.16)
+2026-11-07T20:19:07.7284127Z ##[endgroup]
+2026-11-07T20:19:07.7590428Z ##[group]Run actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+2026-11-07T20:19:07.7591942Z with:
+2026-11-07T20:19:07.7592928Z   node-version: 24
+2026-11-07T20:19:07.7593755Z   always-auth: false
+2026-11-07T20:19:07.7594601Z   check-latest: false
+2026-11-07T20:19:07.7603151Z   token: ***
+2026-11-07T20:19:07.7603930Z env:
+2026-11-07T20:19:07.7604964Z   EXPECTED_SOURCE_SHA: b9c2f24b33285b7b0e06aebc354a9c61a909d204
+2026-11-07T20:19:07.7606496Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T20:19:07.7608099Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib/pkgconfig
+2026-11-07T20:19:07.7609733Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T20:19:07.7611189Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T20:19:07.7612900Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T20:19:07.7614367Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib
+2026-11-07T20:19:07.7615687Z ##[endgroup]
+2026-11-07T20:19:07.9215995Z Found in cache @ /opt/hostedtoolcache/node/24.22.2/x64
+2026-11-07T20:19:07.9220209Z (node:2548) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-07T20:19:07.9223348Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-07T20:19:07.9225676Z ##[group]Environment details
+2026-11-07T20:19:08.2972693Z node: v24.22.2
+2026-11-07T20:19:08.2973285Z npm: 11.19.1
+2026-11-07T20:19:08.2973623Z yarn: 1.22.22
+2026-11-07T20:19:08.2974785Z ##[endgroup]
+2026-11-07T20:19:08.3217128Z ##[group]Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+2026-11-07T20:19:08.3217764Z with:
+2026-11-07T20:19:08.3218218Z   repository: YehorBabenko88/bybit-cluster-grid
+2026-11-07T20:19:08.3218795Z   ref: bf9f108b6777085d6725675eac778d61ec55f42b
+2026-11-07T20:19:08.3219307Z   path: reference-grid
+2026-11-07T20:19:08.3219761Z   persist-credentials: false
+2026-11-07T20:19:08.3222702Z   token: ***
+2026-11-07T20:19:08.3223136Z   ssh-strict: true
+2026-11-07T20:19:08.3223555Z   ssh-user: git
+2026-11-07T20:19:08.3223980Z   clean: true
+2026-11-07T20:19:08.3224424Z   sparse-checkout-cone-mode: true
+2026-11-07T20:19:08.3224924Z   fetch-depth: 1
+2026-11-07T20:19:08.3225335Z   fetch-tags: false
+2026-11-07T20:19:08.3225757Z   show-progress: true
+2026-11-07T20:19:08.3226184Z   lfs: false
+2026-11-07T20:19:08.3226581Z   submodules: false
+2026-11-07T20:19:08.3227015Z   set-safe-directory: true
+2026-11-07T20:19:08.3227481Z   allow-unsafe-pr-checkout: false
+2026-11-07T20:19:08.3227989Z env:
+2026-11-07T20:19:08.3228478Z   EXPECTED_SOURCE_SHA: b9c2f24b33285b7b0e06aebc354a9c61a909d204
+2026-11-07T20:19:08.3229137Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T20:19:08.3229827Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib/pkgconfig
+2026-11-07T20:19:08.3230722Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T20:19:08.3231342Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T20:19:08.3232090Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T20:19:08.3232759Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib
+2026-11-07T20:19:08.3233342Z ##[endgroup]
+2026-11-07T20:19:08.4166024Z Syncing repository: YehorBabenko88/bybit-cluster-grid
+2026-11-07T20:19:08.4168120Z ##[group]Getting Git version info
+2026-11-07T20:19:08.4169594Z Working directory is '/home/runner/work/math/math/reference-grid'
+2026-11-07T20:19:08.4196454Z [command]/usr/bin/git version
+2026-11-07T20:19:08.4280658Z git version 2.56.0
+2026-11-07T20:19:08.4302667Z ##[endgroup]
+2026-11-07T20:19:08.4320012Z Temporarily overriding HOME='/home/runner/work/_temp/906d0d42-27d0-4a54-904f-dd4d0177df64' before making global git config changes
+2026-11-07T20:19:08.4322469Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-07T20:19:08.4326933Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/math/math/reference-grid
+2026-11-07T20:19:08.4374416Z ##[group]Initializing the repository
+2026-11-07T20:19:08.4380581Z [command]/usr/bin/git init /home/runner/work/math/math/reference-grid
+2026-11-07T20:19:08.4434473Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-11-07T20:19:08.4436269Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-11-07T20:19:08.4438127Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-11-07T20:19:08.4439540Z hint: call:
+2026-11-07T20:19:08.4440412Z hint:
+2026-11-07T20:19:08.4441557Z hint: 	git config --global init.defaultBranch <name>
+2026-11-07T20:19:08.4442743Z hint:
+2026-11-07T20:19:08.4444311Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-11-07T20:19:08.4445877Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-11-07T20:19:08.4447029Z hint:
+2026-11-07T20:19:08.4447800Z hint: 	git branch -m <name>
+2026-11-07T20:19:08.4448580Z hint:
+2026-11-07T20:19:08.4449703Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-11-07T20:19:08.4451259Z Initialized empty Git repository in /home/runner/work/math/math/reference-grid/.git/
+2026-11-07T20:19:08.4454422Z [command]/usr/bin/git remote add origin https://github.com/YehorBabenko88/bybit-cluster-grid
+2026-11-07T20:19:08.4493762Z ##[endgroup]
+2026-11-07T20:19:08.4494897Z ##[group]Disabling automatic garbage collection
+2026-11-07T20:19:08.4498453Z [command]/usr/bin/git config --local gc.auto 0
+2026-11-07T20:19:08.4538856Z ##[endgroup]
+2026-11-07T20:19:08.4540008Z ##[group]Setting up auth
+2026-11-07T20:19:08.4546495Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-07T20:19:08.4595980Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-07T20:19:08.4997420Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-07T20:19:08.5046486Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-07T20:19:08.5374154Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-07T20:19:08.5417370Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-07T20:19:08.5734806Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-07T20:19:08.5780821Z ##[endgroup]
+2026-11-07T20:19:08.5790328Z ##[group]Fetching the repository
+2026-11-07T20:19:08.5792475Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin bf9f108b6777085d6725675eac778d61ec55f42b
+2026-11-07T20:19:09.1018051Z From https://github.com/YehorBabenko88/bybit-cluster-grid
+2026-11-07T20:19:09.1019937Z  * branch            bf9f108b6777085d6725675eac778d61ec55f42b -> FETCH_HEAD
+2026-11-07T20:19:09.1024914Z ##[endgroup]
+2026-11-07T20:19:09.1026188Z ##[group]Determining the checkout info
+2026-11-07T20:19:09.1027452Z ##[endgroup]
+2026-11-07T20:19:09.1034403Z [command]/usr/bin/git sparse-checkout disable
+2026-11-07T20:19:09.1085905Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-11-07T20:19:09.1121696Z ##[group]Checking out the ref
+2026-11-07T20:19:09.1125591Z [command]/usr/bin/git checkout --progress --force bf9f108b6777085d6725675eac778d61ec55f42b
+2026-11-07T20:19:09.1441188Z Note: switching to 'bf9f108b6777085d6725675eac778d61ec55f42b'.
+2026-11-07T20:19:09.1442542Z 
+2026-11-07T20:19:09.1443745Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-11-07T20:19:09.1445243Z changes and commit them, and you can discard any commits you make in this
+2026-11-07T20:19:09.1446610Z state without impacting any branches by switching back to a branch.
+2026-11-07T20:19:09.1447250Z 
+2026-11-07T20:19:09.1447941Z If you want to create a new branch to retain commits you create, you may
+2026-11-07T20:19:09.1449195Z do so (now or later) by using -c with the switch command. Example:
+2026-11-07T20:19:09.1449761Z 
+2026-11-07T20:19:09.1450203Z   git switch -c <new-branch-name>
+2026-11-07T20:19:09.1450640Z 
+2026-11-07T20:19:09.1451126Z Or undo this operation with:
+2026-11-07T20:19:09.1451574Z 
+2026-11-07T20:19:09.1451943Z   git switch -
+2026-11-07T20:19:09.1452556Z 
+2026-11-07T20:19:09.1453305Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-11-07T20:19:09.1454007Z 
+2026-11-07T20:19:09.1454722Z HEAD is now at bf9f108 Bound decimal price tolerance to floating point ULPs
+2026-11-07T20:19:09.1463619Z ##[endgroup]
+2026-11-07T20:19:09.1500440Z [command]/usr/bin/git log -1 --format=%H
+2026-11-07T20:19:09.1531430Z bf9f108b6777085d6725675eac778d61ec55f42b
+2026-11-07T20:19:09.1543794Z ##[group]Removing auth
+2026-11-07T20:19:09.1548347Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-07T20:19:09.1593677Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-07T20:19:09.1933104Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-07T20:19:09.1965031Z http.https://github.com/.extraheader
+2026-11-07T20:19:09.1975032Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-07T20:19:09.2018717Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-07T20:19:09.2357021Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-07T20:19:09.2403913Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-07T20:19:09.2737757Z ##[endgroup]
+2026-11-07T20:19:09.2945672Z ##[group]Run python scripts/history_ci.py tests 'test_history*.py'
+2026-11-07T20:19:09.2946445Z [36;1mpython scripts/history_ci.py tests 'test_history*.py'[0m
+2026-11-07T20:19:09.3016949Z shell: /usr/bin/bash -e {0}
+2026-11-07T20:19:09.3017260Z env:
+2026-11-07T20:19:09.3017563Z   EXPECTED_SOURCE_SHA: b9c2f24b33285b7b0e06aebc354a9c61a909d204
+2026-11-07T20:19:09.3018011Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T20:19:09.3018452Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib/pkgconfig
+2026-11-07T20:19:09.3019136Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T20:19:09.3019522Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T20:19:09.3019907Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T20:19:09.3020287Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib
+2026-11-07T20:19:09.3020697Z   GRID_REFERENCE: /home/runner/work/math/math/reference-grid
+2026-11-07T20:19:09.3021086Z ##[endgroup]
+2026-11-07T20:19:11.1043533Z test_dirty_tested_source_rejects (test_history_ci_guard.QualificationGuard.test_dirty_tested_source_rejects) ... ok
+2026-11-07T20:19:11.1045395Z test_git_blob_hash_is_raw_even_with_autocrlf_enabled (test_history_ci_guard.QualificationGuard.test_git_blob_hash_is_raw_even_with_autocrlf_enabled) ... ok
+2026-11-07T20:19:11.1047323Z test_receipt_hashes_scientific_sources_alongside_python (test_history_ci_guard.QualificationGuard.test_receipt_hashes_scientific_sources_alongside_python) ... ok
+2026-11-07T20:19:11.1049024Z test_wrong_expected_head_rejects (test_history_ci_guard.QualificationGuard.test_wrong_expected_head_rejects) ... ok
+2026-11-07T20:19:11.1050266Z test_frozen_neighbor_pool (test_history_kernels.Parity.test_frozen_neighbor_pool) ... ok
+2026-11-07T20:19:11.1051516Z test_original_grid_semantics (test_history_kernels.Parity.test_original_grid_semantics) ... ok
+2026-11-07T20:19:11.1053256Z test_prefix_prediction_and_finite_control (test_history_kernels.Parity.test_prefix_prediction_and_finite_control) ... ok
+2026-11-07T20:19:11.1054937Z test_stochastic_bootstrap_and_sizing_parity (test_history_kernels.Parity.test_stochastic_bootstrap_and_sizing_parity) ... ok
+2026-11-07T20:19:11.1056634Z test_actual_child_does_not_generate_bytecode (test_history_scientific.JointContract.test_actual_child_does_not_generate_bytecode) ... ok
+2026-11-07T20:19:11.1058773Z test_injected_source_stale_incomplete_future_train_and_model_reject (test_history_scientific.JointContract.test_injected_source_stale_incomplete_future_train_and_model_reject) ... ok
+2026-11-07T20:19:11.1061235Z test_prefix_result_unchanged_when_unseen_suffix_changes (test_history_scientific.JointContract.test_prefix_result_unchanged_when_unseen_suffix_changes) ... ok
+2026-11-07T20:19:11.1063839Z test_real_composition_preserves_clocks_and_forecast_parity (test_history_scientific.JointContract.test_real_composition_preserves_clocks_and_forecast_parity) ... ok
+2026-11-07T20:19:11.1066156Z test_large_cancellation_retains_representable_small_mean (test_history_statistics_overflow.BootstrapOverflowTests.test_large_cancellation_retains_representable_small_mean) ... ok
+2026-11-07T20:19:11.1068712Z test_large_mixed_sign_block_samples_remain_finite_and_seeded (test_history_statistics_overflow.BootstrapOverflowTests.test_large_mixed_sign_block_samples_remain_finite_and_seeded) ... ok
+2026-11-07T20:19:11.1071049Z test_many_finite_values_do_not_overflow_before_division (test_history_statistics_overflow.BootstrapOverflowTests.test_many_finite_values_do_not_overflow_before_division) ... ok
+2026-11-07T20:19:11.1073386Z test_ordinary_supported_delta_is_preserved (test_history_statistics_overflow.BootstrapOverflowTests.test_ordinary_supported_delta_is_preserved) ... ok
+2026-11-07T20:19:11.1075512Z test_refusal_does_not_mutate_original_trade_records (test_history_statistics_overflow.BootstrapOverflowTests.test_refusal_does_not_mutate_original_trade_records) ... ok
+2026-11-07T20:19:11.1078169Z test_representable_large_block_mean_is_finite (test_history_statistics_overflow.BootstrapOverflowTests.test_representable_large_block_mean_is_finite) ... ok
+2026-11-07T20:19:11.1080333Z test_representable_large_paired_mean_is_finite (test_history_statistics_overflow.BootstrapOverflowTests.test_representable_large_paired_mean_is_finite) ... ok
+2026-11-07T20:19:11.1083017Z test_smallest_representable_delta_does_not_underflow_during_mean (test_history_statistics_overflow.BootstrapOverflowTests.test_smallest_representable_delta_does_not_underflow_during_mean) ... ok
+2026-11-07T20:19:11.1085440Z test_unrepresentable_paired_difference_is_refused (test_history_statistics_overflow.BootstrapOverflowTests.test_unrepresentable_paired_difference_is_refused) ... ok
+2026-11-07T20:19:11.1088048Z test_zero_delta_does_not_become_directional_support (test_history_statistics_overflow.BootstrapOverflowTests.test_zero_delta_does_not_become_directional_support) ... ok
+2026-11-07T20:19:11.1090066Z test_exact_numerical_parity_and_identity_binding (test_history_timed.TimedMath.test_exact_numerical_parity_and_identity_binding) ... ok
+2026-11-07T20:19:11.1091886Z test_published_after_target_is_not_a_future_forecast (test_history_timed.TimedMath.test_published_after_target_is_not_a_future_forecast) ... ok
+2026-11-07T20:19:11.1093862Z test_target_event_time_cannot_overflow_wire_clock (test_history_timed.TimedMath.test_target_event_time_cannot_overflow_wire_clock) ... ok
+2026-11-07T20:19:11.1095484Z test_time_unit_train_and_model_controls (test_history_timed.TimedMath.test_time_unit_train_and_model_controls) ... ok
+2026-11-07T20:19:11.1096194Z 
+2026-11-07T20:19:11.1096600Z ----------------------------------------------------------------------
+2026-11-07T20:19:11.1097208Z Ran 26 tests in 1.202s
+2026-11-07T20:19:11.1097434Z 
+2026-11-07T20:19:11.1097567Z OK
+2026-11-07T20:19:11.1097724Z 
+2026-11-07T20:19:11.1099305Z {"head": "b9c2f24b33285b7b0e06aebc354a9c61a909d204", "tree": "d88c75a3c367eef2cb7246c4f8dd094716f07ddd", "test_exit_code": 0, "receipt_sha256": "22403c33d3f001b05591a78e1abb83eb85984a6789bcfc0e60408a2daaca6c58"}
+2026-11-07T20:19:11.1170124Z ##[group]Run python scripts/history/parity.py
+2026-11-07T20:19:11.1170542Z [36;1mpython scripts/history/parity.py[0m
+2026-11-07T20:19:11.1227781Z shell: /usr/bin/bash -e {0}
+2026-11-07T20:19:11.1228054Z env:
+2026-11-07T20:19:11.1228343Z   EXPECTED_SOURCE_SHA: b9c2f24b33285b7b0e06aebc354a9c61a909d204
+2026-11-07T20:19:11.1228776Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T20:19:11.1229212Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib/pkgconfig
+2026-11-07T20:19:11.1229648Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T20:19:11.1230020Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T20:19:11.1230398Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T20:19:11.1230790Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib
+2026-11-07T20:19:11.1231121Z ##[endgroup]
+2026-11-07T20:19:11.1873597Z Traceback (most recent call last):
+2026-11-07T20:19:11.1874384Z   File "/home/runner/work/math/math/scripts/history/parity.py", line 55, in <module>
+2026-11-07T20:19:11.1874928Z     if __name__ == '__main__': main()
+2026-11-07T20:19:11.1875805Z                                ^^^^^^
+2026-11-07T20:19:11.1876434Z   File "/home/runner/work/math/math/scripts/history/parity.py", line 35, in main
+2026-11-07T20:19:11.1877297Z     if old != new: raise ValueError('HISTORICAL_KERNEL_SOURCE_MISMATCH:' + path)
+2026-11-07T20:19:11.1877764Z                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-11-07T20:19:11.1878310Z ValueError: HISTORICAL_KERNEL_SOURCE_MISMATCH:python/history_statistics.py
+2026-11-07T20:19:11.1964293Z ##[error]Process completed with exit code 1.
+2026-11-07T20:19:11.2050077Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+2026-11-07T20:19:11.2050496Z with:
+2026-11-07T20:19:11.2051115Z   name: history-Linux-b9c2f24b33285b7b0e06aebc354a9c61a909d204
+2026-11-07T20:19:11.2051660Z   path: .history-evidence/*.json
+.history-evidence/SHA256SUMS
+
+2026-11-07T20:19:11.2052407Z   include-hidden-files: true
+2026-11-07T20:19:11.2052905Z   if-no-files-found: error
+2026-11-07T20:19:11.2053310Z   compression-level: 6
+2026-11-07T20:19:11.2053700Z   overwrite: false
+2026-11-07T20:19:11.2054024Z env:
+2026-11-07T20:19:11.2054394Z   EXPECTED_SOURCE_SHA: b9c2f24b33285b7b0e06aebc354a9c61a909d204
+2026-11-07T20:19:11.2054986Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T20:19:11.2055542Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib/pkgconfig
+2026-11-07T20:19:11.2056364Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T20:19:11.2057020Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T20:19:11.2057524Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T20:19:11.2058117Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib
+2026-11-07T20:19:11.2058545Z ##[endgroup]
+2026-11-07T20:19:11.3942209Z (node:2900) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-07T20:19:11.3943074Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-07T20:19:11.4010016Z With the provided path, there will be 2 files uploaded
+2026-11-07T20:19:11.4017754Z Artifact name is valid!
+2026-11-07T20:19:11.4018450Z Root directory input is valid!
+2026-11-07T20:19:11.7249167Z Beginning upload of artifact content to blob storage
+2026-11-07T20:19:11.7600115Z (node:2900) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-11-07T20:19:12.0136114Z Uploaded bytes 36560
+2026-11-07T20:19:12.0736871Z Finished uploading artifact content to blob storage!
+2026-11-07T20:19:12.0738116Z SHA256 digest of uploaded artifact zip is 7ad0fc2d13a82f70c608b64832f3bc2e8b44e31546fa776eb2b781f7bb432184
+2026-11-07T20:19:12.0739033Z Finalizing artifact upload
+2026-11-07T20:19:12.4530084Z Artifact history-Linux-b9c2f24b33285b7b0e06aebc354a9c61a909d204.zip successfully finalized. Artifact ID 13589081515
+2026-11-07T20:19:12.4532182Z Artifact history-Linux-b9c2f24b33285b7b0e06aebc354a9c61a909d204 has been successfully uploaded! Final size is 36560 bytes. Artifact ID is 13589081515
+2026-11-07T20:19:12.4537550Z Artifact download URL: https://github.com/YehorBabenko88/math/actions/runs/42369095537/artifacts/13589081515
+2026-11-07T20:19:12.4707119Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+2026-11-07T20:19:12.4707557Z with:
+2026-11-07T20:19:12.4707878Z   name: history-log-Linux-b9c2f24b33285b7b0e06aebc354a9c61a909d204
+2026-11-07T20:19:12.4708267Z   path: .history-evidence/tests.log
+2026-11-07T20:19:12.4708548Z   include-hidden-files: true
+2026-11-07T20:19:12.4708808Z   if-no-files-found: error
+2026-11-07T20:19:12.4709064Z   compression-level: 6
+2026-11-07T20:19:12.4709293Z   overwrite: false
+2026-11-07T20:19:12.4709509Z env:
+2026-11-07T20:19:12.4709778Z   EXPECTED_SOURCE_SHA: b9c2f24b33285b7b0e06aebc354a9c61a909d204
+2026-11-07T20:19:12.4710201Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T20:19:12.4710634Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib/pkgconfig
+2026-11-07T20:19:12.4711056Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T20:19:12.4711441Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T20:19:12.4711855Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T20:19:12.4712913Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib
+2026-11-07T20:19:12.4713249Z ##[endgroup]
+2026-11-07T20:19:12.6437803Z (node:2912) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-07T20:19:12.6438753Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-07T20:19:12.6506563Z With the provided path, there will be 1 file uploaded
+2026-11-07T20:19:12.6523237Z Artifact name is valid!
+2026-11-07T20:19:12.6533459Z Root directory input is valid!
+2026-11-07T20:19:12.9444326Z Beginning upload of artifact content to blob storage
+2026-11-07T20:19:12.9630742Z (node:2912) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-11-07T20:19:13.1599667Z Uploaded bytes 987
+2026-11-07T20:19:13.2175791Z Finished uploading artifact content to blob storage!
+2026-11-07T20:19:13.2177278Z SHA256 digest of uploaded artifact zip is 554515f7e7069c5128b5685c7e16af67e6c821d91f5272c5bb8cdf1ad7539f50
+2026-11-07T20:19:13.2178002Z Finalizing artifact upload
+2026-11-07T20:19:13.6124907Z Artifact history-log-Linux-b9c2f24b33285b7b0e06aebc354a9c61a909d204.zip successfully finalized. Artifact ID 13588588736
+2026-11-07T20:19:13.6126736Z Artifact history-log-Linux-b9c2f24b33285b7b0e06aebc354a9c61a909d204 has been successfully uploaded! Final size is 987 bytes. Artifact ID is 13588588736
+2026-11-07T20:19:13.6131476Z Artifact download URL: https://github.com/YehorBabenko88/math/actions/runs/42369095537/artifacts/13588588736
+2026-11-07T20:19:13.6364633Z Post job cleanup.
+2026-11-07T20:19:13.7269927Z [command]/usr/bin/git version
+2026-11-07T20:19:13.7327279Z git version 2.56.0
+2026-11-07T20:19:13.7371250Z Temporarily overriding HOME='/home/runner/work/_temp/1fece39d-efd0-44e8-9678-5cedc3727daa' before making global git config changes
+2026-11-07T20:19:13.7372594Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-07T20:19:13.7378205Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/math/math/reference-grid
+2026-11-07T20:19:13.7429472Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-07T20:19:13.7498091Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-07T20:19:13.7863454Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-07T20:19:13.7920882Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-07T20:19:13.8267478Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-07T20:19:13.8311553Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-07T20:19:13.8848812Z Post job cleanup.
+2026-11-07T20:19:13.9765215Z [command]/usr/bin/git version
+2026-11-07T20:19:13.9811914Z git version 2.56.0
+2026-11-07T20:19:13.9856291Z Temporarily overriding HOME='/home/runner/work/_temp/67ff55ac-c5cb-40ac-9bad-83b7209a6c1c' before making global git config changes
+2026-11-07T20:19:13.9857404Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-07T20:19:13.9863156Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/math/math
+2026-11-07T20:19:13.9918737Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-07T20:19:13.9965889Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-07T20:19:14.0353574Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-07T20:19:14.0402268Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-07T20:19:14.0754237Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-07T20:19:14.0797774Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-07T20:19:14.1308795Z Cleaning up orphan processes
+2026-11-07T20:19:14.1711064Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@11d5960a326750d5838078e36cf38b85af677262, actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020, actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065, actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

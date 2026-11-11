@@ -1,0 +1,3 @@
+# Independent bounded source review
+
+Fresh reviewer review_lan_failure_diagnostics initially found data/control IO attribution and stale entry-wait phase, plus snapshot ownership concern. Actual pure regressions captured each; finalbaef addresses them. Reviewer reread final diff and ran ONLY16selectedpuretests underPython3.12 isolation, no TLS/socket/SQLite/native/subprocess fixtures. No remaining important issues within two-file scope; privacy/bounds/nonblocking/original exception/restoration intact. This is diagnostic preparation only, not hosted failure fix or actual heartbeat wrapper runtime validation.

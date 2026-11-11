@@ -1,0 +1,43 @@
+﻿2026-11-10T16:25:23.0520864Z ##[group]Run python -I -B docs/intelligence/identity/run_qualification.py --expected-head "$EXPECTED_HEAD"
+2026-11-10T16:25:23.0521293Z [36;1mpython -I -B docs/intelligence/identity/run_qualification.py --expected-head "$EXPECTED_HEAD"[0m
+2026-11-10T16:25:23.0538381Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-10T16:25:23.0538565Z env:
+2026-11-10T16:25:23.0538716Z   EXPECTED_HEAD: b48ddc5ff083deeecfdf76185117d0e86aa23e2a
+2026-11-10T16:25:23.0538932Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.10/x64
+2026-11-10T16:25:23.0539165Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.10/x64/lib/pkgconfig
+2026-11-10T16:25:23.0539400Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.10/x64
+2026-11-10T16:25:23.0539617Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.10/x64
+2026-11-10T16:25:23.0539829Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.10/x64
+2026-11-10T16:25:23.0540046Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.10/x64/lib
+2026-11-10T16:25:23.0540262Z ##[endgroup]
+2026-11-10T16:25:24.0061422Z test_actual_tls_read_capability_two_checks_then_replay_denied (test_gateway_identity.GatewayIdentityTests.test_actual_tls_read_capability_two_checks_then_replay_denied) ... ok
+2026-11-10T16:25:24.0113460Z test_audit_full_cannot_issue_or_check (test_gateway_identity.GatewayIdentityTests.test_audit_full_cannot_issue_or_check) ... ok
+2026-11-10T16:25:24.0162338Z test_claims_and_public_constructor_cannot_authenticate (test_gateway_identity.GatewayIdentityTests.test_claims_and_public_constructor_cannot_authenticate) ... ok
+2026-11-10T16:25:24.0212441Z test_clock_rollback_is_permanent_and_monotonic_deadline_independent (test_gateway_identity.GatewayIdentityTests.test_clock_rollback_is_permanent_and_monotonic_deadline_independent) ... ok
+2026-11-10T16:25:24.0258932Z test_closed_socket_denies (test_gateway_identity.GatewayIdentityTests.test_closed_socket_denies) ... ok
+2026-11-10T16:25:24.0305178Z test_context_exact_original_peer_pin_not_other_registered_entry (test_gateway_identity.GatewayIdentityTests.test_context_exact_original_peer_pin_not_other_registered_entry) ... ok
+2026-11-10T16:25:24.0514412Z test_context_inventory_is_bounded (test_gateway_identity.GatewayIdentityTests.test_context_inventory_is_bounded) ... ok
+2026-11-10T16:25:24.0574331Z test_copy_and_foreign_authority_reject (test_gateway_identity.GatewayIdentityTests.test_copy_and_foreign_authority_reject) ... ok
+2026-11-10T16:25:24.0629388Z test_cumulative_slow_wall_clock_is_not_allowed_to_drift_forever (test_gateway_identity.GatewayIdentityTests.test_cumulative_slow_wall_clock_is_not_allowed_to_drift_forever) ... ok
+2026-11-10T16:25:24.0680033Z test_denial_and_revocation_target_are_audited (test_gateway_identity.GatewayIdentityTests.test_denial_and_revocation_target_are_audited) ... ok
+2026-11-10T16:25:24.0729785Z test_expected_owner_method_is_one_check_and_never_fake_provider (test_gateway_identity.GatewayIdentityTests.test_expected_owner_method_is_one_check_and_never_fake_provider) ... ok
+2026-11-10T16:25:24.0775524Z test_forged_capability_cannot_delegate_to_method_shaped_none_provider (test_gateway_identity.GatewayIdentityTests.test_forged_capability_cannot_delegate_to_method_shaped_none_provider) ... ok
+2026-11-10T16:25:24.0822164Z test_forged_exact_type_handle_not_in_issuer_inventory (test_gateway_identity.GatewayIdentityTests.test_forged_exact_type_handle_not_in_issuer_inventory) ... ok
+2026-11-10T16:25:24.0867350Z test_missing_audit_blocks (test_gateway_identity.GatewayIdentityTests.test_missing_audit_blocks) ... ok
+2026-11-10T16:25:24.0913784Z test_nonread_commissioning_grant_unavailable (test_gateway_identity.GatewayIdentityTests.test_nonread_commissioning_grant_unavailable) ... ok
+2026-11-10T16:25:24.0961964Z test_owner_expected_issuer_rejects_legitimate_foreign_issuer_same_store (test_gateway_identity.GatewayIdentityTests.test_owner_expected_issuer_rejects_legitimate_foreign_issuer_same_store) ... ok
+2026-11-10T16:25:24.1008332Z test_profile_is_copied_and_cannot_change_grant (test_gateway_identity.GatewayIdentityTests.test_profile_is_copied_and_cannot_change_grant) ... ok
+2026-11-10T16:25:24.1057050Z test_query_has_seven_current_checks_then_eighth_denied (test_gateway_identity.GatewayIdentityTests.test_query_has_seven_current_checks_then_eighth_denied) ... ok
+2026-11-10T16:25:26.1610348Z test_real_elapsed_registry_expiry_denies (test_gateway_identity.GatewayIdentityTests.test_real_elapsed_registry_expiry_denies) ... ok
+2026-11-10T16:25:26.1671802Z test_revocation_and_closed_actual_connection (test_gateway_identity.GatewayIdentityTests.test_revocation_and_closed_actual_connection) ... ok
+2026-11-10T16:25:26.1722248Z test_revocation_latches_even_when_audit_full (test_gateway_identity.GatewayIdentityTests.test_revocation_latches_even_when_audit_full) ... ok
+2026-11-10T16:25:26.1882345Z test_untrusted_ca_and_missing_client_cert_real_handshake_refused (test_gateway_identity.GatewayIdentityTests.test_untrusted_ca_and_missing_client_cert_real_handshake_refused) ... ok
+2026-11-10T16:25:26.1977306Z test_wrong_actual_san_denies (test_gateway_identity.GatewayIdentityTests.test_wrong_actual_san_denies) ... ok
+2026-11-10T16:25:26.2027272Z test_wrong_request_tool_store_and_view_deny (test_gateway_identity.GatewayIdentityTests.test_wrong_request_tool_store_and_view_deny) ... ok
+2026-11-10T16:25:26.2073580Z test_generated_chain_handshakes_with_explicit_strict_verification (test_gateway_identity.StrictTLSFixtureTests.test_generated_chain_handshakes_with_explicit_strict_verification) ... ok
+2026-11-10T16:25:26.2074268Z 
+2026-11-10T16:25:26.2074434Z ----------------------------------------------------------------------
+2026-11-10T16:25:26.2074752Z Ran 25 tests in 2.219s
+2026-11-10T16:25:26.2074842Z 
+2026-11-10T16:25:26.2074891Z OK
+2026-11-10T16:25:26.9478137Z {"result": "PASS", "head": "b48ddc5ff083deeecfdf76185117d0e86aa23e2a", "tests": 25, "skips": 0, "raw_files_before_after": 1848, "exact_unique_test_ids": true, "scope": "DISPOSABLE_MTLS_AND_LOCAL_READ_CAPABILITY_ONLY", "cross_owner_read": "NOT_RUN", "nativeauthentication": false}

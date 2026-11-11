@@ -1,0 +1,41 @@
+[
+  {
+    "job": 129261629678,
+    "bytes": 59555,
+    "sha256": "1fb3fbb80fbebdfbb19e014a53b87e5326f2f997531b35cefe88ac3e71d86f23",
+    "ansi_escape_bytes": 174,
+    "excerpts": [
+      "2026-11-09T16:42:34.4416127Z FAIL: test_active_control_heartbeats_keep_idle_data_channel_healthy (tests.test_lan_transport.TLSIsolationTests.test_active_control_heartbeats_keep_idle_data_channel_healthy)",
+      "2026-11-09T16:42:34.4423064Z AssertionError: True is not false : DEADLINE",
+      "2026-11-09T16:42:34.4423833Z Ran 144 tests in 6.143s",
+      "2026-11-09T16:42:34.4424044Z FAILED (failures=1)",
+      "2026-11-09T16:42:37.2754539Z AssertionError"
+    ]
+  },
+  {
+    "job": 129261630066,
+    "bytes": 60011,
+    "sha256": "3cc136daaa77d9f9b8e2ff7f52b226a680a79959d59413631fa66c3f455349e5",
+    "ansi_escape_bytes": 174,
+    "excerpts": [
+      "2026-11-09T16:44:13.3278466Z ERROR: test_active_control_heartbeats_keep_idle_data_channel_healthy (tests.test_lan_transport.TLSIsolationTests.test_active_control_heartbeats_keep_idle_data_channel_healthy)",
+      "2026-11-09T16:44:13.3298581Z unified_system.lan_transport.TransportError: DEADLINE",
+      "2026-11-09T16:44:13.3299892Z Ran 144 tests in 22.691s",
+      "2026-11-09T16:44:13.3300277Z FAILED (errors=1)",
+      "2026-11-09T16:45:15.3672068Z AssertionError"
+    ]
+  },
+  {
+    "job": 129261630160,
+    "bytes": 60096,
+    "sha256": "e55a1ea689da9cbc8e69585792e9a637363d14e082510201f7dfbd0954a3459f",
+    "ansi_escape_bytes": 174,
+    "excerpts": [
+      "2026-11-09T16:49:04.1186110Z ERROR: test_active_control_heartbeats_keep_idle_data_channel_healthy (tests.test_lan_transport.TLSIsolationTests.test_active_control_heartbeats_keep_idle_data_channel_healthy)",
+      "2026-11-09T16:49:04.1194733Z unified_system.lan_transport.TransportError: DISCONNECTED",
+      "2026-11-09T16:49:04.1195308Z Ran 144 tests in 28.007s",
+      "2026-11-09T16:49:04.1195483Z FAILED (errors=1)",
+      "2026-11-09T16:49:52.0239511Z AssertionError"
+    ]
+  }
+]

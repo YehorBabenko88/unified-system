@@ -1,0 +1,516 @@
+﻿2026-11-10T20:49:08.3776853Z Current runner version: '2.338.2'
+2026-11-10T20:49:08.3803172Z ##[group]Runner Image Provisioner
+2026-11-10T20:49:08.3804238Z Hosted Compute Agent
+2026-11-10T20:49:08.3804813Z Version: 20261028.624
+2026-11-10T20:49:08.3805456Z Commit: 54898b74c23fde5556c9b3c3a2290865feef0dfe
+2026-11-10T20:49:08.3806134Z Build Date: 2026-10-28T21:51:42Z
+2026-11-10T20:49:08.3806745Z Worker ID: {92be5bf1-88d9-4f8a-ba7b-3afb5b03b98e}
+2026-11-10T20:49:08.3807428Z Region: eastus3
+2026-11-10T20:49:08.3807953Z Cloud: Azure
+2026-11-10T20:49:08.3808448Z ##[endgroup]
+2026-11-10T20:49:08.3810198Z ##[group]Operating System
+2026-11-10T20:49:08.3810783Z Ubuntu
+2026-11-10T20:49:08.3811321Z 24.04.5
+2026-11-10T20:49:08.3811814Z LTS
+2026-11-10T20:49:08.3812337Z ##[endgroup]
+2026-11-10T20:49:08.3812844Z ##[group]Runner Image
+2026-11-10T20:49:08.3813706Z Image: ubuntu-24.04
+2026-11-10T20:49:08.3814295Z Version: 20261101.360.1
+2026-11-10T20:49:08.3815538Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261101.360/images/ubuntu/Ubuntu2404-Readme.md
+2026-11-10T20:49:08.3816975Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261101.360
+2026-11-10T20:49:08.3817851Z ##[endgroup]
+2026-11-10T20:49:08.3818974Z ##[group]GITHUB_TOKEN Permissions
+2026-11-10T20:49:08.3821400Z Contents: read
+2026-11-10T20:49:08.3822018Z Metadata: read
+2026-11-10T20:49:08.3822532Z ##[endgroup]
+2026-11-10T20:49:08.3825167Z Secret source: Actions
+2026-11-10T20:49:08.3826201Z Cache mode: write
+2026-11-10T20:49:08.3826846Z Prepare workflow directory
+2026-11-10T20:49:08.4553896Z Prepare all required actions
+2026-11-10T20:49:08.4634281Z Getting action download info
+2026-11-10T20:49:08.7059245Z Download action repository 'actions/checkout@11d5960a326750d5838078e36cf38b85af677262' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-11-10T20:49:08.8590612Z Download action repository 'actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+2026-11-10T20:49:08.9481069Z Download action repository 'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-11-10T20:49:09.1677285Z Complete job name: boundary (ubuntu-24.04, 3.11)
+2026-11-10T20:49:09.2747611Z ##[group]Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+2026-11-10T20:49:09.2748714Z with:
+2026-11-10T20:49:09.2749215Z   ref: bfa3b24d8f209d5e91acfa64819d3ebed4967af7
+2026-11-10T20:49:09.2749808Z   persist-credentials: false
+2026-11-10T20:49:09.2750335Z   repository: YehorBabenko88/unified-system
+2026-11-10T20:49:09.2754500Z   token: ***
+2026-11-10T20:49:09.2754935Z   ssh-strict: true
+2026-11-10T20:49:09.2755364Z   ssh-user: git
+2026-11-10T20:49:09.2755781Z   clean: true
+2026-11-10T20:49:09.2756218Z   sparse-checkout-cone-mode: true
+2026-11-10T20:49:09.2756719Z   fetch-depth: 1
+2026-11-10T20:49:09.2757133Z   fetch-tags: false
+2026-11-10T20:49:09.2757562Z   show-progress: true
+2026-11-10T20:49:09.2758012Z   lfs: false
+2026-11-10T20:49:09.2758436Z   submodules: false
+2026-11-10T20:49:09.2758920Z   set-safe-directory: true
+2026-11-10T20:49:09.2759415Z   allow-unsafe-pr-checkout: false
+2026-11-10T20:49:09.2760409Z env:
+2026-11-10T20:49:09.2760999Z   EXPECTED_HEAD: bfa3b24d8f209d5e91acfa64819d3ebed4967af7
+2026-11-10T20:49:09.2761638Z   PYTHONDONTWRITEBYTECODE: 1
+2026-11-10T20:49:09.2762121Z   GIT_CONFIG_COUNT: 2
+2026-11-10T20:49:09.2762562Z   GIT_CONFIG_KEY_0: core.autocrlf
+2026-11-10T20:49:09.2763200Z   GIT_CONFIG_VALUE_0: false
+2026-11-10T20:49:09.2763679Z   GIT_CONFIG_KEY_1: core.eol
+2026-11-10T20:49:09.2764153Z   GIT_CONFIG_VALUE_1: lf
+2026-11-10T20:49:09.2764600Z ##[endgroup]
+2026-11-10T20:49:09.7605855Z Syncing repository: YehorBabenko88/unified-system
+2026-11-10T20:49:09.7608813Z ##[group]Getting Git version info
+2026-11-10T20:49:09.7609707Z Working directory is '/home/runner/work/unified-system/unified-system'
+2026-11-10T20:49:09.7610869Z [command]/usr/bin/git version
+2026-11-10T20:49:09.7686637Z git version 2.56.0
+2026-11-10T20:49:09.7707102Z ##[endgroup]
+2026-11-10T20:49:09.7723382Z Temporarily overriding HOME='/home/runner/work/_temp/208591b8-bbaa-4746-8dbf-f06f95369aa7' before making global git config changes
+2026-11-10T20:49:09.7726028Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-10T20:49:09.7729781Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/unified-system/unified-system
+2026-11-10T20:49:09.7911949Z Deleting the contents of '/home/runner/work/unified-system/unified-system'
+2026-11-10T20:49:09.7916355Z ##[group]Initializing the repository
+2026-11-10T20:49:09.7920719Z [command]/usr/bin/git init /home/runner/work/unified-system/unified-system
+2026-11-10T20:49:09.8037926Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-11-10T20:49:09.8039103Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-11-10T20:49:09.8040050Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-11-10T20:49:09.8041070Z hint: call:
+2026-11-10T20:49:09.8041466Z hint:
+2026-11-10T20:49:09.8041991Z hint: 	git config --global init.defaultBranch <name>
+2026-11-10T20:49:09.8042568Z hint:
+2026-11-10T20:49:09.8043653Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-11-10T20:49:09.8045151Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-11-10T20:49:09.8046393Z hint:
+2026-11-10T20:49:09.8047021Z hint: 	git branch -m <name>
+2026-11-10T20:49:09.8047799Z hint:
+2026-11-10T20:49:09.8048470Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-11-10T20:49:09.8050144Z Initialized empty Git repository in /home/runner/work/unified-system/unified-system/.git/
+2026-11-10T20:49:09.8064350Z [command]/usr/bin/git remote add origin https://github.com/YehorBabenko88/unified-system
+2026-11-10T20:49:09.8111428Z ##[endgroup]
+2026-11-10T20:49:09.8112792Z ##[group]Disabling automatic garbage collection
+2026-11-10T20:49:09.8116957Z [command]/usr/bin/git config --local gc.auto 0
+2026-11-10T20:49:09.8153197Z ##[endgroup]
+2026-11-10T20:49:09.8154583Z ##[group]Setting up auth
+2026-11-10T20:49:09.8162467Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-10T20:49:09.8205022Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-10T20:49:09.8827160Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-10T20:49:09.8866126Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-10T20:49:09.9107331Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-10T20:49:09.9148467Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-10T20:49:09.9382763Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-10T20:49:09.9446075Z ##[endgroup]
+2026-11-10T20:49:09.9446991Z ##[group]Fetching the repository
+2026-11-10T20:49:09.9462334Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin bfa3b24d8f209d5e91acfa64819d3ebed4967af7
+2026-11-10T20:49:10.8978065Z From https://github.com/YehorBabenko88/unified-system
+2026-11-10T20:49:10.8980720Z  * branch            bfa3b24d8f209d5e91acfa64819d3ebed4967af7 -> FETCH_HEAD
+2026-11-10T20:49:10.8986115Z ##[endgroup]
+2026-11-10T20:49:10.8987268Z ##[group]Determining the checkout info
+2026-11-10T20:49:10.8988428Z ##[endgroup]
+2026-11-10T20:49:10.8989906Z [command]/usr/bin/git sparse-checkout disable
+2026-11-10T20:49:10.9049055Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-11-10T20:49:10.9081767Z ##[group]Checking out the ref
+2026-11-10T20:49:10.9086739Z [command]/usr/bin/git checkout --progress --force bfa3b24d8f209d5e91acfa64819d3ebed4967af7
+2026-11-10T20:49:11.0764701Z Note: switching to 'bfa3b24d8f209d5e91acfa64819d3ebed4967af7'.
+2026-11-10T20:49:11.0765918Z 
+2026-11-10T20:49:11.0766544Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-11-10T20:49:11.0768163Z changes and commit them, and you can discard any commits you make in this
+2026-11-10T20:49:11.0769793Z state without impacting any branches by switching back to a branch.
+2026-11-10T20:49:11.0770751Z 
+2026-11-10T20:49:11.0771492Z If you want to create a new branch to retain commits you create, you may
+2026-11-10T20:49:11.0773307Z do so (now or later) by using -c with the switch command. Example:
+2026-11-10T20:49:11.0774179Z 
+2026-11-10T20:49:11.0774657Z   git switch -c <new-branch-name>
+2026-11-10T20:49:11.0775312Z 
+2026-11-10T20:49:11.0775829Z Or undo this operation with:
+2026-11-10T20:49:11.0776429Z 
+2026-11-10T20:49:11.0776924Z   git switch -
+2026-11-10T20:49:11.0777526Z 
+2026-11-10T20:49:11.0778298Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-11-10T20:49:11.0779348Z 
+2026-11-10T20:49:11.0780360Z HEAD is now at bfa3b24 docs(integration): freeze six-repository observation and mandatory CI blockers
+2026-11-10T20:49:11.0936546Z ##[endgroup]
+2026-11-10T20:49:11.0939622Z [command]/usr/bin/git log -1 --format=%H
+2026-11-10T20:49:11.0968628Z bfa3b24d8f209d5e91acfa64819d3ebed4967af7
+2026-11-10T20:49:11.0977160Z ##[group]Removing auth
+2026-11-10T20:49:11.0981318Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-10T20:49:11.1018929Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-10T20:49:11.1242759Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-10T20:49:11.1278265Z http.https://github.com/.extraheader
+2026-11-10T20:49:11.1286510Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-10T20:49:11.1323919Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-10T20:49:11.1550022Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-10T20:49:11.1588523Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-10T20:49:11.1816942Z ##[endgroup]
+2026-11-10T20:49:11.2174897Z ##[group]Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+2026-11-10T20:49:11.2175562Z with:
+2026-11-10T20:49:11.2175975Z   python-version: 3.11
+2026-11-10T20:49:11.2176421Z   check-latest: false
+2026-11-10T20:49:11.2179369Z   token: ***
+2026-11-10T20:49:11.2179816Z   update-environment: true
+2026-11-10T20:49:11.2180279Z   allow-prereleases: false
+2026-11-10T20:49:11.2180733Z   freethreaded: false
+2026-11-10T20:49:11.2181238Z env:
+2026-11-10T20:49:11.2181710Z   EXPECTED_HEAD: bfa3b24d8f209d5e91acfa64819d3ebed4967af7
+2026-11-10T20:49:11.2182275Z   PYTHONDONTWRITEBYTECODE: 1
+2026-11-10T20:49:11.2182728Z   GIT_CONFIG_COUNT: 2
+2026-11-10T20:49:11.2183495Z   GIT_CONFIG_KEY_0: core.autocrlf
+2026-11-10T20:49:11.2183982Z   GIT_CONFIG_VALUE_0: false
+2026-11-10T20:49:11.2184433Z   GIT_CONFIG_KEY_1: core.eol
+2026-11-10T20:49:11.2184880Z   GIT_CONFIG_VALUE_1: lf
+2026-11-10T20:49:11.2185309Z ##[endgroup]
+2026-11-10T20:49:11.3667993Z ##[group]Installed versions
+2026-11-10T20:49:11.3776649Z (node:2403) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-10T20:49:11.3778366Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-10T20:49:11.3779444Z Successfully set up CPython (3.11.18)
+2026-11-10T20:49:11.3781166Z ##[endgroup]
+2026-11-10T20:49:11.3929436Z ##[group]Run python -m pip install --require-hashes -r release/requirements-integration.lock
+2026-11-10T20:49:11.3930455Z [36;1mpython -m pip install --require-hashes -r release/requirements-integration.lock[0m
+2026-11-10T20:49:11.3961679Z shell: /usr/bin/bash -e {0}
+2026-11-10T20:49:11.3962228Z env:
+2026-11-10T20:49:11.3962747Z   EXPECTED_HEAD: bfa3b24d8f209d5e91acfa64819d3ebed4967af7
+2026-11-10T20:49:11.3963593Z   PYTHONDONTWRITEBYTECODE: 1
+2026-11-10T20:49:11.3964074Z   GIT_CONFIG_COUNT: 2
+2026-11-10T20:49:11.3964538Z   GIT_CONFIG_KEY_0: core.autocrlf
+2026-11-10T20:49:11.3965045Z   GIT_CONFIG_VALUE_0: false
+2026-11-10T20:49:11.3965518Z   GIT_CONFIG_KEY_1: core.eol
+2026-11-10T20:49:11.3965974Z   GIT_CONFIG_VALUE_1: lf
+2026-11-10T20:49:11.3966501Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.18/x64
+2026-11-10T20:49:11.3967189Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.18/x64/lib/pkgconfig
+2026-11-10T20:49:11.3967969Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.18/x64
+2026-11-10T20:49:11.3968893Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.18/x64
+2026-11-10T20:49:11.3969826Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.18/x64
+2026-11-10T20:49:11.3970687Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.18/x64/lib
+2026-11-10T20:49:11.3971239Z ##[endgroup]
+2026-11-10T20:49:13.6432726Z Collecting tzdata==2026.6 (from -r release/requirements-integration.lock (line 1))
+2026-11-10T20:49:13.7946659Z   Downloading tzdata-2026.6-py2.py3-none-any.whl (348 kB)
+2026-11-10T20:49:14.0077051Z Installing collected packages: tzdata
+2026-11-10T20:49:14.0854125Z Successfully installed tzdata-2026.6
+2026-11-10T20:49:14.0862902Z 
+2026-11-10T20:49:14.0863725Z [notice] A new release of pip is available: 26.2.2 -> 26.3
+2026-11-10T20:49:14.0866599Z [notice] To update, run: pip install --upgrade pip
+2026-11-10T20:49:14.1633271Z ##[group]Run import hashlib, io, json, os, pathlib, platform, stat, subprocess, sys, unittest
+2026-11-10T20:49:14.1634086Z [36;1mimport hashlib, io, json, os, pathlib, platform, stat, subprocess, sys, unittest[0m
+2026-11-10T20:49:14.1634503Z [36;1mif __name__ == '__main__':[0m
+2026-11-10T20:49:14.1634810Z [36;1m    expected_head = os.environ['EXPECTED_HEAD'][0m
+2026-11-10T20:49:14.1635405Z [36;1m    git_executable = pathlib.Path('C:/Program Files/Git/cmd/git.exe' if os.name=='nt' else '/usr/bin/git').resolve(strict=True)[0m
+2026-11-10T20:49:14.1636315Z [36;1m    assert git_executable.is_file() and not git_executable.is_relative_to(pathlib.Path.cwd().resolve(strict=True)), 'unadmitted Git bootstrap executable'[0m
+2026-11-10T20:49:14.1637175Z [36;1m    source_git = [str(git_executable), '--no-replace-objects', '--no-optional-locks', '-c', 'core.fsmonitor=false'][0m
+2026-11-10T20:49:14.1637697Z [36;1m    source_objects = {}[0m
+2026-11-10T20:49:14.1638220Z [36;1m    for entry in subprocess.check_output([*source_git,'ls-tree','-r','-z',expected_head]).split(b'\0'):[0m
+2026-11-10T20:49:14.1638713Z [36;1m        if not entry: continue[0m
+2026-11-10T20:49:14.1639022Z [36;1m        metadata, name = entry.split(b'\t',1)[0m
+2026-11-10T20:49:14.1639457Z [36;1m        source_objects[name.decode('utf-8')] = metadata.split()[2].decode('ascii')[0m
+2026-11-10T20:49:14.1639890Z [36;1m    source_paths = tuple(source_objects)[0m
+2026-11-10T20:49:14.1640186Z [36;1m    def git(*args):[0m
+2026-11-10T20:49:14.1640548Z [36;1m        return subprocess.check_output([*source_git, *args], timeout=15)[0m
+2026-11-10T20:49:14.1640939Z [36;1m    def source_receipt():[0m
+2026-11-10T20:49:14.1641259Z [36;1m        head = git('rev-parse', 'HEAD').decode().strip()[0m
+2026-11-10T20:49:14.1641656Z [36;1m        assert head == expected_head, 'unexpected source head'[0m
+2026-11-10T20:49:14.1642079Z [36;1m        tree = git('rev-parse', 'HEAD^{tree}').decode().strip()[0m
+2026-11-10T20:49:14.1642560Z [36;1m        assert tree == git('rev-parse', expected_head + '^{tree}').decode().strip()[0m
+2026-11-10T20:49:14.1644014Z [36;1m        assert not git('status', '--porcelain', '--untracked-files=no', '--ignore-submodules=none').strip(), 'tracked source dirty'[0m
+2026-11-10T20:49:14.1644814Z [36;1m        files = {}[0m
+2026-11-10T20:49:14.1645084Z [36;1m        for name in source_paths:[0m
+2026-11-10T20:49:14.1645387Z [36;1m            path = pathlib.Path(name)[0m
+2026-11-10T20:49:14.1645695Z [36;1m            current = pathlib.Path('.')[0m
+2026-11-10T20:49:14.1646005Z [36;1m            for part in path.parts:[0m
+2026-11-10T20:49:14.1646319Z [36;1m                current = current / part[0m
+2026-11-10T20:49:14.1646640Z [36;1m                metadata = current.lstat()[0m
+2026-11-10T20:49:14.1646977Z [36;1m                assert not stat.S_ISLNK(metadata.st_mode)[0m
+2026-11-10T20:49:14.1647565Z [36;1m                assert not getattr(metadata, 'st_file_attributes', 0) & getattr(stat, 'FILE_ATTRIBUTE_REPARSE_POINT', 1024)[0m
+2026-11-10T20:49:14.1648122Z [36;1m            assert path.is_file(), 'nonregular source input'[0m
+2026-11-10T20:49:14.1648477Z [36;1m            raw = path.read_bytes()[0m
+2026-11-10T20:49:14.1648820Z [36;1m            blob = git('cat-file', 'blob', source_objects[name])[0m
+2026-11-10T20:49:14.1649279Z [36;1m            assert raw == blob, 'raw source differs from committed blob: ' + name[0m
+2026-11-10T20:49:14.1649798Z [36;1m            files[name] = dict(bytes=len(raw), raw_sha256=hashlib.sha256(raw).hexdigest(),[0m
+2026-11-10T20:49:14.1650266Z [36;1m                blob_sha256=hashlib.sha256(blob).hexdigest(),[0m
+2026-11-10T20:49:14.1650643Z [36;1m                git_blob=source_objects[name])[0m
+2026-11-10T20:49:14.1651040Z [36;1m        return dict(head=head, tree=tree, files=files, tracked_clean=True,[0m
+2026-11-10T20:49:14.1651475Z [36;1m            object_resolution='PRIMARY_GIT_OBJECTS_NO_REPLACE')[0m
+2026-11-10T20:49:14.1652070Z [36;1m    def require_source_only_imports(after_tests=False):[0m
+2026-11-10T20:49:14.1652513Z [36;1m        assert sys.flags.isolated, 'fresh isolated interpreter required'[0m
+2026-11-10T20:49:14.1653226Z [36;1m        assert sys.pycache_prefix is None, 'redirected bytecode cache is not admitted'[0m
+2026-11-10T20:49:14.1653702Z [36;1m        root = pathlib.Path.cwd().resolve(strict=True)[0m
+2026-11-10T20:49:14.1654065Z [36;1m        for candidate in root.rglob('*'):[0m
+2026-11-10T20:49:14.1654408Z [36;1m            relative = candidate.relative_to(root)[0m
+2026-11-10T20:49:14.1654759Z [36;1m            if '.git' in relative.parts: continue[0m
+2026-11-10T20:49:14.1655272Z [36;1m            assert candidate.suffix.lower() not in ('.pyc','.pyo'), 'preexisting or generated bytecode rejected'[0m
+2026-11-10T20:49:14.1655805Z [36;1m            if candidate.is_file() or candidate.is_symlink():[0m
+2026-11-10T20:49:14.1656336Z [36;1m                allowed_output = after_tests and relative.as_posix()=='partial-integration-ci-tests.log'[0m
+2026-11-10T20:49:14.1657088Z [36;1m                assert relative.as_posix() in source_objects or allowed_output, 'unexpected repository file rejected: ' + relative.as_posix()[0m
+2026-11-10T20:49:14.1657683Z [36;1m    require_source_only_imports()[0m
+2026-11-10T20:49:14.1657998Z [36;1m    before = source_receipt()[0m
+2026-11-10T20:49:14.1658505Z [36;1m    sys.path.insert(0, str(pathlib.Path.cwd().resolve(strict=True)))[0m
+2026-11-10T20:49:14.1659093Z [36;1m    inventory=json.loads(pathlib.Path('release/component-test-inventory.json').read_bytes())[0m
+2026-11-10T20:49:14.1659825Z [36;1m    suite=unittest.TestSuite(unittest.defaultTestLoader.loadTestsFromName(name) for name in inventory['modules'])[0m
+2026-11-10T20:49:14.1660371Z [36;1m    def cases(value):[0m
+2026-11-10T20:49:14.1660629Z [36;1m        for item in value:[0m
+2026-11-10T20:49:14.1661039Z [36;1m            if isinstance(item, unittest.TestSuite): yield from cases(item)[0m
+2026-11-10T20:49:14.1661487Z [36;1m            else: yield item[0m
+2026-11-10T20:49:14.1661806Z [36;1m    test_ids=[case.id() for case in cases(suite)][0m
+2026-11-10T20:49:14.1662393Z [36;1m    assert inventory['schema']=='unified.integration-component-tests.v6'[0m
+2026-11-10T20:49:14.1662840Z [36;1m    assert inventory['expected_count']==161[0m
+2026-11-10T20:49:14.1663380Z [36;1m    assert len(test_ids)==len(set(test_ids))==161[0m
+2026-11-10T20:49:14.1663753Z [36;1m    assert len(inventory['preserved_prior_ids'])==145[0m
+2026-11-10T20:49:14.1664292Z [36;1m    assert set(inventory['preserved_prior_ids'])<=set(test_ids), 'prior mandatory cases removed'[0m
+2026-11-10T20:49:14.1665089Z [36;1m    assert sorted(test_ids)==inventory['expected_test_ids'], 'mandatory test inventory differs'[0m
+2026-11-10T20:49:14.1665561Z [36;1m    stream = io.StringIO()[0m
+2026-11-10T20:49:14.1665940Z [36;1m    result = unittest.TextTestRunner(stream=stream, verbosity=2).run(suite)[0m
+2026-11-10T20:49:14.1666377Z [36;1m    log = stream.getvalue().encode('utf-8')[0m
+2026-11-10T20:49:14.1666802Z [36;1m    pathlib.Path('partial-integration-ci-tests.log').write_bytes(log)[0m
+2026-11-10T20:49:14.1667228Z [36;1m    print(stream.getvalue(), end='')[0m
+2026-11-10T20:49:14.1667574Z [36;1m    require_source_only_imports(after_tests=True)[0m
+2026-11-10T20:49:14.1667899Z [36;1m    after = source_receipt()[0m
+2026-11-10T20:49:14.1668244Z [36;1m    assert before == after, 'source changed during tests'[0m
+2026-11-10T20:49:14.1668814Z [36;1m    report = dict(schema='unified.partial-integration.ci.v2', head=before['head'], tree=before['tree'],[0m
+2026-11-10T20:49:14.1669444Z [36;1m        source_before=before, source_after=after, mandatory_test_ids=test_ids,[0m
+2026-11-10T20:49:14.1669998Z [36;1m        test_log_sha256=hashlib.sha256(log).hexdigest(), source_binding_passed=True,[0m
+2026-11-10T20:49:14.1670577Z [36;1m        os=platform.system(), python=platform.python_version(), tests=result.testsRun,[0m
+2026-11-10T20:49:14.1671406Z [36;1m        failures=len(result.failures), errors=len(result.errors), skipped=len(result.skipped),[0m
+2026-11-10T20:49:14.1672014Z [36;1m        run=os.environ['GITHUB_RUN_ID'], attempt=os.environ['GITHUB_RUN_ATTEMPT'],[0m
+2026-11-10T20:49:14.1672603Z [36;1m        qualification='PARTIAL_INTEGRATION_COMPONENTS_ONLY_SOURCE_CHECKED_BEFORE_AFTER',[0m
+2026-11-10T20:49:14.1673498Z [36;1m        product_import_policy='ISOLATED_REJECT_REPO_BYTECODE_UNEXPECTED_PY_AND_CACHE_REDIRECT_PRE_POST',[0m
+2026-11-10T20:49:14.1674279Z [36;1m        bootstrap_git_path=str(git_executable), bootstrap_git_raw_sha256=hashlib.sha256(git_executable.read_bytes()).hexdigest(),[0m
+2026-11-10T20:49:14.1674931Z [36;1m        run_metadata='CORRELATION_ONLY_NOT_HOSTED_ATTESTATION',[0m
+2026-11-10T20:49:14.1675406Z [36;1m        runtime_api='NOT_QUALIFIED', physical='NOT_RUN', production='NO_GO')[0m
+2026-11-10T20:49:14.1676078Z [36;1m    pathlib.Path('partial-integration-ci-evidence.json').write_text(json.dumps(report, indent=2), encoding='utf-8')[0m
+2026-11-10T20:49:14.1676783Z [36;1m    assert result.wasSuccessful() and result.testsRun == 161 and not result.skipped[0m
+2026-11-10T20:49:14.1682017Z shell: /opt/hostedtoolcache/Python/3.11.18/x64/bin/python -I -B {0}
+2026-11-10T20:49:14.1682404Z env:
+2026-11-10T20:49:14.1682693Z   EXPECTED_HEAD: bfa3b24d8f209d5e91acfa64819d3ebed4967af7
+2026-11-10T20:49:14.1683308Z   PYTHONDONTWRITEBYTECODE: 1
+2026-11-10T20:49:14.1683571Z   GIT_CONFIG_COUNT: 2
+2026-11-10T20:49:14.1683841Z   GIT_CONFIG_KEY_0: core.autocrlf
+2026-11-10T20:49:14.1684115Z   GIT_CONFIG_VALUE_0: false
+2026-11-10T20:49:14.1684371Z   GIT_CONFIG_KEY_1: core.eol
+2026-11-10T20:49:14.1684616Z   GIT_CONFIG_VALUE_1: lf
+2026-11-10T20:49:14.1684910Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.18/x64
+2026-11-10T20:49:14.1685341Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.18/x64/lib/pkgconfig
+2026-11-10T20:49:14.1685775Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.18/x64
+2026-11-10T20:49:14.1686181Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.18/x64
+2026-11-10T20:49:14.1686567Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.18/x64
+2026-11-10T20:49:14.1687135Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.18/x64/lib
+2026-11-10T20:49:14.1687464Z ##[endgroup]
+2026-11-10T20:49:25.2887580Z test_additional_allocation_cannot_claim_another_scope (tests.test_integration_registry.AcceptanceTests.test_additional_allocation_cannot_claim_another_scope) ... ok
+2026-11-10T20:49:25.2889322Z test_modified_member_and_wrong_external_pin_rejected (tests.test_integration_registry.AcceptanceTests.test_modified_member_and_wrong_external_pin_rejected) ... ok
+2026-11-10T20:49:25.2890955Z test_package_integrity_never_grants_execution (tests.test_integration_registry.AcceptanceTests.test_package_integrity_never_grants_execution) ... ok
+2026-11-10T20:49:25.2892887Z test_agent_cannot_reserve_common_contract_or_activation_files (tests.test_integration_registry.RegistryTests.test_agent_cannot_reserve_common_contract_or_activation_files) ... ok
+2026-11-10T20:49:25.2895275Z test_eight_scopes_isolated_and_conflicting_reservations_denied (tests.test_integration_registry.RegistryTests.test_eight_scopes_isolated_and_conflicting_reservations_denied) ... ok
+2026-11-10T20:49:25.2896542Z test_external_manifest_pin_cannot_be_replaced_by_candidate_claim (tests.test_integration_registry.RegistryTests.test_external_manifest_pin_cannot_be_replaced_by_candidate_claim) ... ok
+2026-11-10T20:49:25.2897661Z test_matching_identity_never_authorizes_runtime_or_trading (tests.test_integration_registry.RegistryTests.test_matching_identity_never_authorizes_runtime_or_trading) ... ok
+2026-11-10T20:49:25.2898774Z test_mixed_missing_extra_head_tree_and_contract_versions_rejected (tests.test_integration_registry.RegistryTests.test_mixed_missing_extra_head_tree_and_contract_versions_rejected) ... ok
+2026-11-10T20:49:25.2900142Z test_real_trading_and_json_duplicate_claims_denied (tests.test_integration_registry.RegistryTests.test_real_trading_and_json_duplicate_claims_denied) ... ok
+2026-11-10T20:49:25.2901238Z test_rehashed_candidate_cannot_hide_changed_contract_or_gate_bytes (tests.test_integration_registry.RegistryTests.test_rehashed_candidate_cannot_hide_changed_contract_or_gate_bytes) ... ok
+2026-11-10T20:49:25.2902195Z test_shared_worktree_denied (tests.test_integration_registry.RegistryTests.test_shared_worktree_denied) ... ok
+2026-11-10T20:49:25.2903219Z test_unsafe_repository_path_spelling_rejected (tests.test_integration_registry.RegistryTests.test_unsafe_repository_path_spelling_rejected) ... ok
+2026-11-10T20:49:25.2904264Z test_windows_path_aliases_and_case_collisions_rejected (tests.test_integration_registry.RegistryTests.test_windows_path_aliases_and_case_collisions_rejected) ... ok
+2026-11-10T20:49:25.2905260Z test_every_proposed_mutation_is_closed (tests.test_agent5_scheduler_components.AuthorityBoundaryTests.test_every_proposed_mutation_is_closed) ... ok
+2026-11-10T20:49:25.2906268Z test_reads_do_not_invent_receipts_or_mutate (tests.test_agent5_scheduler_components.AuthorityBoundaryTests.test_reads_do_not_invent_receipts_or_mutate) ... ok
+2026-11-10T20:49:25.2907380Z test_invalid_raw_reservation_cannot_be_masked_by_local_hold (tests.test_agent5_scheduler_components.DurablePreparationTests.test_invalid_raw_reservation_cannot_be_masked_by_local_hold) ... ok
+2026-11-10T20:49:25.2908562Z test_invalid_resource_input_cannot_mutate_registry (tests.test_agent5_scheduler_components.DurablePreparationTests.test_invalid_resource_input_cannot_mutate_registry) ... ok
+2026-11-10T20:49:25.2909679Z test_job_spec_is_immutable_and_enqueue_idempotent (tests.test_agent5_scheduler_components.DurablePreparationTests.test_job_spec_is_immutable_and_enqueue_idempotent) ... ok
+2026-11-10T20:49:25.2910838Z test_local_event_sequence_is_durable_and_not_authority_epoch (tests.test_agent5_scheduler_components.DurablePreparationTests.test_local_event_sequence_is_durable_and_not_authority_epoch) ... ok
+2026-11-10T20:49:25.2911939Z test_local_holds_prevent_overbooking (tests.test_agent5_scheduler_components.DurablePreparationTests.test_local_holds_prevent_overbooking) ... ok
+2026-11-10T20:49:25.2913354Z test_no_quorum_or_standby_never_creates_new_preparation (tests.test_agent5_scheduler_components.DurablePreparationTests.test_no_quorum_or_standby_never_creates_new_preparation) ... ok
+2026-11-10T20:49:25.2914766Z test_only_never_handed_off_hold_can_be_cancelled (tests.test_agent5_scheduler_components.DurablePreparationTests.test_only_never_handed_off_hold_can_be_cancelled) ... ok
+2026-11-10T20:49:25.2915904Z test_preparation_retry_preserves_original_intent (tests.test_agent5_scheduler_components.DurablePreparationTests.test_preparation_retry_preserves_original_intent) ... ok
+2026-11-10T20:49:25.2917115Z test_process_crash_before_event_commit_recovers_without_partial_hold (tests.test_agent5_scheduler_components.DurablePreparationTests.test_process_crash_before_event_commit_recovers_without_partial_hold) ... ok
+2026-11-10T20:49:25.2918410Z test_registry_survives_restart_without_execution_permission (tests.test_agent5_scheduler_components.DurablePreparationTests.test_registry_survives_restart_without_execution_permission) ... ok
+2026-11-10T20:49:25.2919554Z test_stale_capacity_and_pressure_remain_queued (tests.test_agent5_scheduler_components.DurablePreparationTests.test_stale_capacity_and_pressure_remain_queued) ... ok
+2026-11-10T20:49:25.2920679Z test_transaction_failure_rolls_back_preparation_and_hold (tests.test_agent5_scheduler_components.DurablePreparationTests.test_transaction_failure_rolls_back_preparation_and_hold) ... ok
+2026-11-10T20:49:25.2921839Z test_two_connections_cannot_spend_same_local_capacity (tests.test_agent5_scheduler_components.DurablePreparationTests.test_two_connections_cannot_spend_same_local_capacity) ... ok
+2026-11-10T20:49:25.2923174Z test_unknown_cpu_hold_blocks_incompatible_benchmark_after_restart (tests.test_agent5_scheduler_components.DurablePreparationTests.test_unknown_cpu_hold_blocks_incompatible_benchmark_after_restart) ... ok
+2026-11-10T20:49:25.2924981Z test_unknown_survives_restart_and_never_releases_or_rekeys (tests.test_agent5_scheduler_components.DurablePreparationTests.test_unknown_survives_restart_and_never_releases_or_rekeys) ... ok
+2026-11-10T20:49:25.2926147Z test_cpu_benchmark_capacity_and_locality_affect_ranking (tests.test_agent5_scheduler_components.PlacementTests.test_cpu_benchmark_capacity_and_locality_affect_ranking) ... ok
+2026-11-10T20:49:25.2927118Z test_each_resource_can_exhaust (tests.test_agent5_scheduler_components.PlacementTests.test_each_resource_can_exhaust) ... ok
+2026-11-10T20:49:25.2927965Z test_eligible_is_advisory_candidate (tests.test_agent5_scheduler_components.PlacementTests.test_eligible_is_advisory_candidate) ... ok
+2026-11-10T20:49:25.2928880Z test_exact_capacity_and_pressure_boundaries (tests.test_agent5_scheduler_components.PlacementTests.test_exact_capacity_and_pressure_boundaries) ... ok
+2026-11-10T20:49:25.2929907Z test_health_pressure_roles_schedule_and_benchmark (tests.test_agent5_scheduler_components.PlacementTests.test_health_pressure_roles_schedule_and_benchmark) ... ok
+2026-11-10T20:49:25.2930844Z test_malformed_inputs_fail_closed (tests.test_agent5_scheduler_components.PlacementTests.test_malformed_inputs_fail_closed) ... ok
+2026-11-10T20:49:25.2931733Z test_queue_and_order_independent_tie_break (tests.test_agent5_scheduler_components.PlacementTests.test_queue_and_order_independent_tie_break) ... ok
+2026-11-10T20:49:25.2932706Z test_stale_future_or_previous_incarnation_denied (tests.test_agent5_scheduler_components.PlacementTests.test_stale_future_or_previous_incarnation_denied) ... ok
+2026-11-10T20:49:25.2933840Z test_cross_midnight_and_start_weekday (tests.test_agent5_scheduler_components.ScheduleTests.test_cross_midnight_and_start_weekday) ... ok
+2026-11-10T20:49:25.2934767Z test_drain_is_separate_from_coordinator_policy (tests.test_agent5_scheduler_components.ScheduleTests.test_drain_is_separate_from_coordinator_policy) ... ok
+2026-11-10T20:49:25.2935707Z test_dst_skip_and_both_repeated_hours (tests.test_agent5_scheduler_components.ScheduleTests.test_dst_skip_and_both_repeated_hours) ... ok
+2026-11-10T20:49:25.2936630Z test_invalid_schedule (tests.test_agent5_scheduler_components.ScheduleTests.test_invalid_schedule) ... ok
+2026-11-10T20:49:25.2937481Z test_weekday_iterator_not_consumed_by_validation (tests.test_agent5_scheduler_components.ScheduleTests.test_weekday_iterator_not_consumed_by_validation) ... ok
+2026-11-10T20:49:25.2938555Z test_all_protected_reads_are_unavailable_not_empty_success (tests.test_control_api_readonly.ControlAPITest.test_all_protected_reads_are_unavailable_not_empty_success) ... ok
+2026-11-10T20:49:25.2939763Z test_boundary_does_not_open_files_sockets_or_read_system_time (tests.test_control_api_readonly.ControlAPITest.test_boundary_does_not_open_files_sockets_or_read_system_time) ... ok
+2026-11-10T20:49:25.2940913Z test_claimed_principal_cookie_and_truthy_flags_do_not_authenticate (tests.test_control_api_readonly.ControlAPITest.test_claimed_principal_cookie_and_truthy_flags_do_not_authenticate) ... ok
+2026-11-10T20:49:25.2942071Z test_encoded_traversal_slashes_unicode_and_long_paths_are_invalid (tests.test_control_api_readonly.ControlAPITest.test_encoded_traversal_slashes_unicode_and_long_paths_are_invalid) ... ok
+2026-11-10T20:49:25.2943535Z test_error_envelope_has_no_fabricated_authority_or_request_identity (tests.test_control_api_readonly.ControlAPITest.test_error_envelope_has_no_fabricated_authority_or_request_identity) ... ok
+2026-11-10T20:49:25.2944533Z test_every_effect_route_stays_denied (tests.test_control_api_readonly.ControlAPITest.test_every_effect_route_stays_denied) ... ok
+2026-11-10T20:49:25.2945385Z test_head_errors_never_send_a_response_body (tests.test_control_api_readonly.ControlAPITest.test_head_errors_never_send_a_response_body) ... ok
+2026-11-10T20:49:25.2946265Z test_malformed_wsgi_fields_fail_closed (tests.test_control_api_readonly.ControlAPITest.test_malformed_wsgi_fields_fail_closed) ... ok
+2026-11-10T20:49:25.2947365Z test_mutating_returned_json_cannot_enable_later_requests (tests.test_control_api_readonly.ControlAPITest.test_mutating_returned_json_cannot_enable_later_requests) ... ok
+2026-11-10T20:49:25.2948394Z test_no_provider_or_backend_activation_constructor (tests.test_control_api_readonly.ControlAPITest.test_no_provider_or_backend_activation_constructor) ... ok
+2026-11-10T20:49:25.2949434Z test_nonempty_and_ambiguous_body_framing_denied_without_read (tests.test_control_api_readonly.ControlAPITest.test_nonempty_and_ambiguous_body_framing_denied_without_read) ... ok
+2026-11-10T20:49:25.2950477Z test_oversize_body_claim_rejected_before_buffering (tests.test_control_api_readonly.ControlAPITest.test_oversize_body_claim_rejected_before_buffering) ... ok
+2026-11-10T20:49:25.2951483Z test_public_capabilities_never_claim_admitted_runtime (tests.test_control_api_readonly.ControlAPITest.test_public_capabilities_never_claim_admitted_runtime) ... ok
+2026-11-10T20:49:25.2952545Z test_queries_are_not_treated_as_implemented_resume_or_barrier (tests.test_control_api_readonly.ControlAPITest.test_queries_are_not_treated_as_implemented_resume_or_barrier) ... ok
+2026-11-10T20:49:25.2953772Z test_unknown_route_does_not_look_like_missing_auth (tests.test_control_api_readonly.ControlAPITest.test_unknown_route_does_not_look_like_missing_auth) ... ok
+2026-11-10T20:49:25.2954750Z test_wrong_method_returns_allow_without_activation (tests.test_control_api_readonly.ControlAPITest.test_wrong_method_returns_allow_without_activation) ... ok
+2026-11-10T20:49:25.2955691Z test_backend_absent_never_returns_fake_receipt (tests.test_operator_control_plane.OperatorTests.test_backend_absent_never_returns_fake_receipt) ... ok
+2026-11-10T20:49:25.2956596Z test_current_grants_checked_on_every_retry (tests.test_operator_control_plane.OperatorTests.test_current_grants_checked_on_every_retry) ... ok
+2026-11-10T20:49:25.2957513Z test_malformed_private_receipt_never_disclosed (tests.test_operator_control_plane.OperatorTests.test_malformed_private_receipt_never_disclosed) ... ok
+2026-11-10T20:49:25.2958391Z test_missing_provider_fails_closed (tests.test_operator_control_plane.OperatorTests.test_missing_provider_fails_closed) ... ok
+2026-11-10T20:49:25.2959364Z test_receipt_rechecks_current_actor_scope (tests.test_operator_control_plane.OperatorTests.test_receipt_rechecks_current_actor_scope) ... ok
+2026-11-10T20:49:25.2960336Z test_revocation_during_receipt_query_prevents_disclosure (tests.test_operator_control_plane.OperatorTests.test_revocation_during_receipt_query_prevents_disclosure) ... ok
+2026-11-10T20:49:25.2961426Z test_role_backend_enforced_and_unknown_action_denied (tests.test_operator_control_plane.OperatorTests.test_role_backend_enforced_and_unknown_action_denied) ... ok
+2026-11-10T20:49:25.2962534Z test_serialized_or_unknown_capability_principal_denied (tests.test_operator_control_plane.OperatorTests.test_serialized_or_unknown_capability_principal_denied) ... ok
+2026-11-10T20:49:25.2963456Z test_strict_boundaries (tests.test_operator_control_plane.OperatorTests.test_strict_boundaries) ... ok
+2026-11-10T20:49:25.2964248Z test_submit_receipt_must_match_entire_intent (tests.test_operator_control_plane.OperatorTests.test_submit_receipt_must_match_entire_intent) ... ok
+2026-11-10T20:49:25.2965190Z test_two_windows_retry_and_conflicting_revision (tests.test_operator_control_plane.OperatorTests.test_two_windows_retry_and_conflicting_revision) ... ok
+2026-11-10T20:49:25.2966130Z test_untrusted_actor_role_and_machine_denied (tests.test_operator_control_plane.OperatorTests.test_untrusted_actor_role_and_machine_denied) ... ok
+2026-11-10T20:49:25.2967015Z test_zero_grant_denied_before_backend_io (tests.test_operator_control_plane.OperatorTests.test_zero_grant_denied_before_backend_io) ... ok
+2026-11-10T20:49:25.2967862Z test_invalid_snapshot_cannot_mark_live (tests.test_operator_control_plane.StreamTests.test_invalid_snapshot_cannot_mark_live) ... ok
+2026-11-10T20:49:25.2968718Z test_snapshot_gap_generation_and_staleness (tests.test_operator_control_plane.StreamTests.test_snapshot_gap_generation_and_staleness) ... ok
+2026-11-10T20:49:25.2970008Z test_actual_function_blocks_provider_before_every_network_primitive (tests.test_network_probe_provider_closed.ProviderClosedTests.test_actual_function_blocks_provider_before_every_network_primitive) ... ok
+2026-11-10T20:49:25.2971241Z test_budget_wait_phase_visible_without_sql_or_app_mutation (tests.test_lan_transport.FailureDiagnosticsPureTests.test_budget_wait_phase_visible_without_sql_or_app_mutation) ... ok
+2026-11-10T20:49:25.2972290Z test_connection_busy_does_not_read_state (tests.test_lan_transport.FailureDiagnosticsPureTests.test_connection_busy_does_not_read_state) ... ok
+2026-11-10T20:49:25.2973438Z test_diagnostic_failure_sentinel_preserves_original (tests.test_lan_transport.FailureDiagnosticsPureTests.test_diagnostic_failure_sentinel_preserves_original) ... ok
+2026-11-10T20:49:25.2974611Z test_emit_observer_separates_control_and_data_without_changing_calls (tests.test_lan_transport.FailureDiagnosticsPureTests.test_emit_observer_separates_control_and_data_without_changing_calls) ... ok
+2026-11-10T20:49:25.2975842Z test_fixed_registration_slots_and_one_failure_line (tests.test_lan_transport.FailureDiagnosticsPureTests.test_fixed_registration_slots_and_one_failure_line) ... ok
+2026-11-10T20:49:25.2976890Z test_fixed_shape_ascii_byte_bound_and_privacy (tests.test_lan_transport.FailureDiagnosticsPureTests.test_fixed_shape_ascii_byte_bound_and_privacy) ... ok
+2026-11-10T20:49:25.2977960Z test_frozen_snapshot_matches_the_original_failure_only (tests.test_lan_transport.FailureDiagnosticsPureTests.test_frozen_snapshot_matches_the_original_failure_only) ... ok
+2026-11-10T20:49:25.2979096Z test_full_known_shape_overflow_stays_valid_bounded_and_causal (tests.test_lan_transport.FailureDiagnosticsPureTests.test_full_known_shape_overflow_stays_valid_bounded_and_causal) ... ok
+2026-11-10T20:49:25.2980098Z test_observer_busy_is_nonblocking (tests.test_lan_transport.FailureDiagnosticsPureTests.test_observer_busy_is_nonblocking) ... ok
+2026-11-10T20:49:25.2981112Z test_observer_failure_never_duplicates_or_masks_original_call (tests.test_lan_transport.FailureDiagnosticsPureTests.test_observer_failure_never_duplicates_or_masks_original_call) ... ok
+2026-11-10T20:49:25.2982397Z test_original_exception_and_traceback_preserved (tests.test_lan_transport.FailureDiagnosticsPureTests.test_original_exception_and_traceback_preserved) ... ok
+2026-11-10T20:49:25.2983378Z test_success_emits_nothing (tests.test_lan_transport.FailureDiagnosticsPureTests.test_success_emits_nothing) ... ok
+2026-11-10T20:49:25.2984320Z test_transaction_entry_wait_and_failed_entry_not_stale (tests.test_lan_transport.FailureDiagnosticsPureTests.test_transaction_entry_wait_and_failed_entry_not_stale) ... ok
+2026-11-10T20:49:25.2985324Z test_unknown_objects_never_stringified (tests.test_lan_transport.FailureDiagnosticsPureTests.test_unknown_objects_never_stringified) ... ok
+2026-11-10T20:49:25.2986283Z test_wrappers_call_originals_once_and_restore (tests.test_lan_transport.FailureDiagnosticsPureTests.test_wrappers_call_originals_once_and_restore) ... ok
+2026-11-10T20:49:25.2987264Z test_writer_failure_never_replaces_original (tests.test_lan_transport.FailureDiagnosticsPureTests.test_writer_failure_never_replaces_original) ... ok
+2026-11-10T20:49:25.2988231Z test_backoff_is_bounded_auth_failure_not_retryable (tests.test_lan_transport.RegistryTests.test_backoff_is_bounded_auth_failure_not_retryable) ... ok
+2026-11-10T20:49:25.2989143Z test_duplicate_or_ip_claim_cannot_be_node_identity (tests.test_lan_transport.RegistryTests.test_duplicate_or_ip_claim_cannot_be_node_identity) ... ok
+2026-11-10T20:49:25.2990154Z test_active_control_heartbeats_keep_idle_data_channel_healthy (tests.test_lan_transport.TLSIsolationTests.test_active_control_heartbeats_keep_idle_data_channel_healthy) ... ok
+2026-11-10T20:49:25.2991310Z test_changed_endpoint_reconnect_keeps_certificate_identity_no_replay (tests.test_lan_transport.TLSIsolationTests.test_changed_endpoint_reconnect_keeps_certificate_identity_no_replay) ... ok
+2026-11-10T20:49:25.2992525Z test_close_releases_credit_reservations_and_queue_memory (tests.test_lan_transport.TLSIsolationTests.test_close_releases_credit_reservations_and_queue_memory) ... ok
+2026-11-10T20:49:25.2993699Z test_concurrent_registry_updates_cannot_restore_older_revoked_pin (tests.test_lan_transport.TLSIsolationTests.test_concurrent_registry_updates_cannot_restore_older_revoked_pin) ... ok
+2026-11-10T20:49:25.2994786Z test_control_writer_progresses_while_data_budget_waits (tests.test_lan_transport.TLSIsolationTests.test_control_writer_progresses_while_data_budget_waits) ... ok
+2026-11-10T20:49:25.2995825Z test_credit_backpressure_and_control_lane_while_data_waits (tests.test_lan_transport.TLSIsolationTests.test_credit_backpressure_and_control_lane_while_data_waits) ... ok
+2026-11-10T20:49:25.2996904Z test_expired_idle_peer_without_activity_still_closes_real_tls (tests.test_lan_transport.TLSIsolationTests.test_expired_idle_peer_without_activity_still_closes_real_tls) ... ok
+2026-11-10T20:49:25.2997901Z test_fingerprint_and_wrong_uri_cert_rejected (tests.test_lan_transport.TLSIsolationTests.test_fingerprint_and_wrong_uri_cert_rejected) ... ok
+2026-11-10T20:49:25.2998902Z test_isolation_rejects_nonloopback_even_if_registry_admits_it (tests.test_lan_transport.TLSIsolationTests.test_isolation_rejects_nonloopback_even_if_registry_admits_it) ... ok
+2026-11-10T20:49:25.2999978Z test_malformed_frame_rejected_before_payload_allocation (tests.test_lan_transport.TLSIsolationTests.test_malformed_frame_rejected_before_payload_allocation) ... ok
+2026-11-10T20:49:25.3000922Z test_missing_client_certificate_rejected (tests.test_lan_transport.TLSIsolationTests.test_missing_client_certificate_rejected) ... ok
+2026-11-10T20:49:25.3001748Z test_peer_cannot_spoof_control_role (tests.test_lan_transport.TLSIsolationTests.test_peer_cannot_spoof_control_role) ... ok
+2026-11-10T20:49:25.3002701Z test_real_mtls_payload_credit_classes_and_actual_byte_accounting (tests.test_lan_transport.TLSIsolationTests.test_real_mtls_payload_credit_classes_and_actual_byte_accounting) ... ok
+2026-11-10T20:49:25.3003760Z test_registry_revocation_and_cancellation (tests.test_lan_transport.TLSIsolationTests.test_registry_revocation_and_cancellation) ... ok
+2026-11-10T20:49:25.3004977Z test_revoked_pin_during_final_hello_cannot_install_connection (tests.test_lan_transport.TLSIsolationTests.test_revoked_pin_during_final_hello_cannot_install_connection) ... ok
+2026-11-10T20:49:25.3006158Z test_sender_waiting_for_memory_does_not_reset_stream_created_while_waiting (tests.test_lan_transport.TLSIsolationTests.test_sender_waiting_for_memory_does_not_reset_stream_created_while_waiting) ... ok
+2026-11-10T20:49:25.3007297Z test_six_real_isolated_nodes_independent_of_tailscale (tests.test_lan_transport.TLSIsolationTests.test_six_real_isolated_nodes_independent_of_tailscale) ... ok
+2026-11-10T20:49:25.3008293Z test_untrusted_ca_rejected_even_with_correct_leaf_pin (tests.test_lan_transport.TLSIsolationTests.test_untrusted_ca_rejected_even_with_correct_leaf_pin) ... ok
+2026-11-10T20:49:25.3009215Z test_wrong_eku_and_expired_cert_rejected (tests.test_lan_transport.TLSIsolationTests.test_wrong_eku_and_expired_cert_rejected) ... ok
+2026-11-10T20:49:25.3010243Z test_failed_child_cleans_all_owned_siblings_before_directory_cleanup (tests.test_network_budget.BudgetCleanupTests.test_failed_child_cleans_all_owned_siblings_before_directory_cleanup) ... ok
+2026-11-10T20:49:25.3011298Z test_backward_clock_or_changed_policy_fail_closed (tests.test_network_budget.BudgetTests.test_backward_clock_or_changed_policy_fail_closed) ... ok
+2026-11-10T20:49:25.3012301Z test_clock_sample_is_inside_store_transaction_not_before_lock_wait (tests.test_network_budget.BudgetTests.test_clock_sample_is_inside_store_transaction_not_before_lock_wait) ... ok
+2026-11-10T20:49:25.3013412Z test_cluster_allocations_cannot_expand (tests.test_network_budget.BudgetTests.test_cluster_allocations_cannot_expand) ... ok
+2026-11-10T20:49:25.3014631Z test_egress_replay_conflict_and_unverified_receipt_no_mutation (tests.test_network_budget.BudgetTests.test_egress_replay_conflict_and_unverified_receipt_no_mutation) ... ok
+2026-11-10T20:49:25.3015691Z test_egress_unknown_and_cooldown_survive_restart_no_dispatch (tests.test_network_budget.BudgetTests.test_egress_unknown_and_cooldown_survive_restart_no_dispatch) ... ok
+2026-11-10T20:49:25.3016670Z test_foreign_or_incomplete_database_not_adopted (tests.test_network_budget.BudgetTests.test_foreign_or_incomplete_database_not_adopted) ... ok
+2026-11-10T20:49:25.3017623Z test_real_processes_cannot_each_receive_a_fresh_full_budget (tests.test_network_budget.BudgetTests.test_real_processes_cannot_each_receive_a_fresh_full_budget) ... ok
+2026-11-10T20:49:25.3018680Z test_two_instances_share_atomic_debit_and_restart_not_fresh_burst (tests.test_network_budget.BudgetTests.test_two_instances_share_atomic_debit_and_restart_not_fresh_burst) ... ok
+2026-11-10T20:49:25.3019834Z test_confirmed_unknown_time_is_still_only_an_untrusted_claim (tests.storage.test_checkpoint_vectors.CheckpointVectorTests.test_confirmed_unknown_time_is_still_only_an_untrusted_claim) ... ok
+2026-11-10T20:49:25.3021014Z test_disposable_file_corruption_is_checked_by_real_bytes (tests.storage.test_checkpoint_vectors.CheckpointVectorTests.test_disposable_file_corruption_is_checked_by_real_bytes) ... ok
+2026-11-10T20:49:25.3022170Z test_exact_owner_schema_and_mapping_snapshots_are_bound (tests.storage.test_checkpoint_vectors.CheckpointVectorTests.test_exact_owner_schema_and_mapping_snapshots_are_bound) ... ok
+2026-11-10T20:49:25.3023410Z test_observation_does_not_rewrite_content_or_enable_effect (tests.storage.test_checkpoint_vectors.CheckpointVectorTests.test_observation_does_not_rewrite_content_or_enable_effect) ... ok
+2026-11-10T20:49:25.3024588Z test_unconfirmed_and_counterfeit_evidence_cannot_promote (tests.storage.test_checkpoint_vectors.CheckpointVectorTests.test_unconfirmed_and_counterfeit_evidence_cannot_promote) ... ok
+2026-11-10T20:49:25.3025625Z test_decoded_copy_cannot_rewrite_original_claim (tests.storage.test_contracts.ClaimTests.test_decoded_copy_cannot_rewrite_original_claim) ... ok
+2026-11-10T20:49:25.3026503Z test_parse_is_untrusted_and_cannot_promote (tests.storage.test_contracts.ClaimTests.test_parse_is_untrusted_and_cannot_promote) ... ok
+2026-11-10T20:49:25.3027485Z test_parser_bounds_and_counterfeit_primitive_types (tests.storage.test_contracts.ClaimTests.test_parser_bounds_and_counterfeit_primitive_types) ... ok
+2026-11-10T20:49:25.3028544Z test_parser_rejects_duplicate_numbers_nonascii_and_noncanonical_bytes (tests.storage.test_contracts.ClaimTests.test_parser_rejects_duplicate_numbers_nonascii_and_noncanonical_bytes) ... ok
+2026-11-10T20:49:25.3029652Z test_candidate_is_never_an_executable_delete_permission (tests.storage.test_retention.RetentionTests.test_candidate_is_never_an_executable_delete_permission) ... ok
+2026-11-10T20:49:25.3030760Z test_duplicate_identity_and_bool_budget_and_mutable_pin_inputs_reject (tests.storage.test_retention.RetentionTests.test_duplicate_identity_and_bool_budget_and_mutable_pin_inputs_reject) ... ok
+2026-11-10T20:49:25.3031892Z test_file_exists_or_unavailable_or_wrong_hash_does_not_count (tests.storage.test_retention.RetentionTests.test_file_exists_or_unavailable_or_wrong_hash_does_not_count) ... ok
+2026-11-10T20:49:25.3033110Z test_last_copy_and_missing_verified_survivors_are_retained (tests.storage.test_retention.RetentionTests.test_last_copy_and_missing_verified_survivors_are_retained) ... ok
+2026-11-10T20:49:25.3034180Z test_pins_and_unknown_closure_cannot_be_waived_by_age (tests.storage.test_retention.RetentionTests.test_pins_and_unknown_closure_cannot_be_waived_by_age) ... ok
+2026-11-10T20:49:25.3035215Z test_same_node_or_volume_cannot_supply_independent_survivors (tests.storage.test_retention.RetentionTests.test_same_node_or_volume_cannot_supply_independent_survivors) ... ok
+2026-11-10T20:49:25.3036202Z test_unknown_target_never_becomes_candidate (tests.storage.test_retention.RetentionTests.test_unknown_target_never_becomes_candidate) ... ok
+2026-11-10T20:49:25.3037200Z test_caller_cannot_construct_verified_byte_result (tests.storage.test_segments.SegmentTests.test_caller_cannot_construct_verified_byte_result) ... ok
+2026-11-10T20:49:25.3038122Z test_claim_detaches_mutable_instrument_input (tests.storage.test_segments.SegmentTests.test_claim_detaches_mutable_instrument_input) ... ok
+2026-11-10T20:49:25.3039099Z test_claim_rejects_coercion_unknown_fields_and_invalid_lineage (tests.storage.test_segments.SegmentTests.test_claim_rejects_coercion_unknown_fields_and_invalid_lineage) ... ok
+2026-11-10T20:49:25.3040127Z test_corruption_and_truncation_cannot_match_original (tests.storage.test_segments.SegmentTests.test_corruption_and_truncation_cannot_match_original) ... ok
+2026-11-10T20:49:25.3041083Z test_count_and_size_and_input_limit_are_independent (tests.storage.test_segments.SegmentTests.test_count_and_size_and_input_limit_are_independent) ... ok
+2026-11-10T20:49:25.3042033Z test_framed_bytes_do_not_claim_source_completeness (tests.storage.test_segments.SegmentTests.test_framed_bytes_do_not_claim_source_completeness) ... ok
+2026-11-10T20:49:25.3043197Z test_matching_bytes_are_not_authoritative_verification (tests.storage.test_segments.SegmentTests.test_matching_bytes_are_not_authoritative_verification) ... ok
+2026-11-10T20:49:25.3044130Z test_matching_digest_does_not_waive_framing (tests.storage.test_segments.SegmentTests.test_matching_digest_does_not_waive_framing) ... ok
+2026-11-10T20:49:25.3045004Z test_other_instrument_and_end_boundary_reject (tests.storage.test_segments.SegmentTests.test_other_instrument_and_end_boundary_reject) ... ok
+2026-11-10T20:49:25.3046055Z test_python_equality_objects_cannot_impersonate_typed_fields (tests.storage.test_segments.SegmentTests.test_python_equality_objects_cannot_impersonate_typed_fields) ... ok
+2026-11-10T20:49:25.3047148Z test_duplicate_noncanonical_and_oversized_json_denied (tests.test_security_identity_records.IdentityRecordTests.test_duplicate_noncanonical_and_oversized_json_denied) ... ok
+2026-11-10T20:49:25.3048133Z test_every_binding_mismatch_denied (tests.test_security_identity_records.IdentityRecordTests.test_every_binding_mismatch_denied) ... ok
+2026-11-10T20:49:25.3049238Z test_fixed_keys_cross_bound_and_no_authorization_property (tests.test_security_identity_records.IdentityRecordTests.test_fixed_keys_cross_bound_and_no_authorization_property) ... ok
+2026-11-10T20:49:25.3050304Z test_key_injection_and_noncanonical_uuid_denied (tests.test_security_identity_records.IdentityRecordTests.test_key_injection_and_noncanonical_uuid_denied) ... ok
+2026-11-10T20:49:25.3051280Z test_permissions_and_revision_are_strict (tests.test_security_identity_records.IdentityRecordTests.test_permissions_and_revision_are_strict) ... ok
+2026-11-10T20:49:25.3052346Z test_result_deeply_immutable_and_independent (tests.test_security_identity_records.IdentityRecordTests.test_result_deeply_immutable_and_independent) ... ok
+2026-11-10T20:49:25.3053771Z test_revoked_unknown_missing_and_extra_denied (tests.test_security_identity_records.IdentityRecordTests.test_revoked_unknown_missing_and_extra_denied) ... ok
+2026-11-10T20:49:25.3054750Z test_sid_and_native_logon_id_not_free_form (tests.test_security_identity_records.IdentityRecordTests.test_sid_and_native_logon_id_not_free_form) ... ok
+2026-11-10T20:49:25.3055801Z test_all_fourteen_unique_checks_required_independently (tests.test_windows_qualification.WindowsQualificationTests.test_all_fourteen_unique_checks_required_independently) ... ok
+2026-11-10T20:49:25.3056858Z test_home_cannot_be_assigned_coordinator (tests.test_windows_qualification.WindowsQualificationTests.test_home_cannot_be_assigned_coordinator) ... ok
+2026-11-10T20:49:25.3057852Z test_missing_node_or_unknown_track_rejected (tests.test_windows_qualification.WindowsQualificationTests.test_missing_node_or_unknown_track_rejected) ... ok
+2026-11-10T20:49:25.3058909Z test_pro_receipt_or_status_cannot_be_adopted_for_home (tests.test_windows_qualification.WindowsQualificationTests.test_pro_receipt_or_status_cannot_be_adopted_for_home) ... ok
+2026-11-10T20:49:25.3060190Z test_unqualified_physical_admission_cannot_be_enabled (tests.test_windows_qualification.WindowsQualificationTests.test_unqualified_physical_admission_cannot_be_enabled) ... ok
+2026-11-10T20:49:25.3061317Z test_valid_pending_matrix_never_admits_installation (tests.test_windows_qualification.WindowsQualificationTests.test_valid_pending_matrix_never_admits_installation) ... ok
+2026-11-10T20:49:25.3061906Z 
+2026-11-10T20:49:25.3062094Z ----------------------------------------------------------------------
+2026-11-10T20:49:25.3062449Z Ran 161 tests in 7.387s
+2026-11-10T20:49:25.3062597Z 
+2026-11-10T20:49:25.3150064Z OK
+2026-11-10T20:49:28.5549685Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+2026-11-10T20:49:28.5550095Z with:
+2026-11-10T20:49:28.5550382Z   name: partial-integration-ubuntu-24.04-3.11-42897137429-1
+2026-11-10T20:49:28.5550885Z   path: partial-integration-ci-evidence.json
+partial-integration-ci-tests.log
+
+2026-11-10T20:49:28.5551350Z   if-no-files-found: error
+2026-11-10T20:49:28.5551595Z   compression-level: 6
+2026-11-10T20:49:28.5551821Z   overwrite: false
+2026-11-10T20:49:28.5552043Z   include-hidden-files: false
+2026-11-10T20:49:28.5552299Z env:
+2026-11-10T20:49:28.5552551Z   EXPECTED_HEAD: bfa3b24d8f209d5e91acfa64819d3ebed4967af7
+2026-11-10T20:49:28.5552890Z   PYTHONDONTWRITEBYTECODE: 1
+2026-11-10T20:49:28.5553429Z   GIT_CONFIG_COUNT: 2
+2026-11-10T20:49:28.5553668Z   GIT_CONFIG_KEY_0: core.autocrlf
+2026-11-10T20:49:28.5553926Z   GIT_CONFIG_VALUE_0: false
+2026-11-10T20:49:28.5554164Z   GIT_CONFIG_KEY_1: core.eol
+2026-11-10T20:49:28.5554415Z   GIT_CONFIG_VALUE_1: lf
+2026-11-10T20:49:28.5554765Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.18/x64
+2026-11-10T20:49:28.5555202Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.18/x64/lib/pkgconfig
+2026-11-10T20:49:28.5555614Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.18/x64
+2026-11-10T20:49:28.5555989Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.18/x64
+2026-11-10T20:49:28.5556360Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.18/x64
+2026-11-10T20:49:28.5556743Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.18/x64/lib
+2026-11-10T20:49:28.5557325Z ##[endgroup]
+2026-11-10T20:49:28.7283515Z (node:6471) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-10T20:49:28.7284377Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-10T20:49:28.7367786Z Multiple search paths detected. Calculating the least common ancestor of all paths
+2026-11-10T20:49:28.7370731Z The least common ancestor is /home/runner/work/unified-system/unified-system. This will be the root directory of the artifact
+2026-11-10T20:49:28.7382724Z With the provided path, there will be 2 files uploaded
+2026-11-10T20:49:28.7384148Z Artifact name is valid!
+2026-11-10T20:49:28.7384781Z Root directory input is valid!
+2026-11-10T20:49:28.9946542Z Beginning upload of artifact content to blob storage
+2026-11-10T20:49:29.0507096Z (node:6471) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-11-10T20:49:29.2440217Z Uploaded bytes 290772
+2026-11-10T20:49:29.2747967Z Finished uploading artifact content to blob storage!
+2026-11-10T20:49:29.2749087Z SHA256 digest of uploaded artifact zip is af758e15d65a53d7cdb391c8153d4fe73b7e41253ffe0b56be038ec301112c67
+2026-11-10T20:49:29.2751171Z Finalizing artifact upload
+2026-11-10T20:49:29.6261198Z Artifact partial-integration-ubuntu-24.04-3.11-42897137429-1.zip successfully finalized. Artifact ID 13802306712
+2026-11-10T20:49:29.6263865Z Artifact partial-integration-ubuntu-24.04-3.11-42897137429-1 has been successfully uploaded! Final size is 290772 bytes. Artifact ID is 13802306712
+2026-11-10T20:49:29.6269663Z Artifact download URL: https://github.com/YehorBabenko88/unified-system/actions/runs/42897137429/artifacts/13802306712
+2026-11-10T20:49:29.6444417Z Post job cleanup.
+2026-11-10T20:49:29.7702916Z (node:6484) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-10T20:49:29.7703794Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-10T20:49:29.7888874Z Post job cleanup.
+2026-11-10T20:49:29.8879328Z [command]/usr/bin/git version
+2026-11-10T20:49:29.8939055Z git version 2.56.0
+2026-11-10T20:49:29.8990623Z Temporarily overriding HOME='/home/runner/work/_temp/18bd277c-6a5e-40c7-a810-e1800ad376ae' before making global git config changes
+2026-11-10T20:49:29.8995120Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-10T20:49:29.8998811Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/unified-system/unified-system
+2026-11-10T20:49:29.9064484Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-10T20:49:29.9120666Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-10T20:49:29.9527025Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-10T20:49:29.9585421Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-10T20:49:29.9856776Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-10T20:49:29.9901308Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-10T20:49:30.0286106Z Cleaning up orphan processes
+2026-11-10T20:49:30.0642223Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@11d5960a326750d5838078e36cf38b85af677262, actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065, actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

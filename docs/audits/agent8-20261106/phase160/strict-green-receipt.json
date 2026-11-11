@@ -1,0 +1,45 @@
+{
+  "phase": "FIXTURE_GREEN_FULL_MODULE",
+  "test_ids": [
+    "test_gateway_identity.GatewayIdentityTests.test_actual_tls_read_capability_two_checks_then_replay_denied",
+    "test_gateway_identity.GatewayIdentityTests.test_audit_full_cannot_issue_or_check",
+    "test_gateway_identity.GatewayIdentityTests.test_claims_and_public_constructor_cannot_authenticate",
+    "test_gateway_identity.GatewayIdentityTests.test_clock_rollback_is_permanent_and_monotonic_deadline_independent",
+    "test_gateway_identity.GatewayIdentityTests.test_closed_socket_denies",
+    "test_gateway_identity.GatewayIdentityTests.test_context_exact_original_peer_pin_not_other_registered_entry",
+    "test_gateway_identity.GatewayIdentityTests.test_context_inventory_is_bounded",
+    "test_gateway_identity.GatewayIdentityTests.test_copy_and_foreign_authority_reject",
+    "test_gateway_identity.GatewayIdentityTests.test_cumulative_slow_wall_clock_is_not_allowed_to_drift_forever",
+    "test_gateway_identity.GatewayIdentityTests.test_denial_and_revocation_target_are_audited",
+    "test_gateway_identity.GatewayIdentityTests.test_expected_owner_method_is_one_check_and_never_fake_provider",
+    "test_gateway_identity.GatewayIdentityTests.test_forged_capability_cannot_delegate_to_method_shaped_none_provider",
+    "test_gateway_identity.GatewayIdentityTests.test_forged_exact_type_handle_not_in_issuer_inventory",
+    "test_gateway_identity.GatewayIdentityTests.test_missing_audit_blocks",
+    "test_gateway_identity.GatewayIdentityTests.test_nonread_commissioning_grant_unavailable",
+    "test_gateway_identity.GatewayIdentityTests.test_owner_expected_issuer_rejects_legitimate_foreign_issuer_same_store",
+    "test_gateway_identity.GatewayIdentityTests.test_profile_is_copied_and_cannot_change_grant",
+    "test_gateway_identity.GatewayIdentityTests.test_query_has_seven_current_checks_then_eighth_denied",
+    "test_gateway_identity.GatewayIdentityTests.test_real_elapsed_registry_expiry_denies",
+    "test_gateway_identity.GatewayIdentityTests.test_revocation_and_closed_actual_connection",
+    "test_gateway_identity.GatewayIdentityTests.test_revocation_latches_even_when_audit_full",
+    "test_gateway_identity.GatewayIdentityTests.test_untrusted_ca_and_missing_client_cert_real_handshake_refused",
+    "test_gateway_identity.GatewayIdentityTests.test_wrong_actual_san_denies",
+    "test_gateway_identity.GatewayIdentityTests.test_wrong_request_tool_store_and_view_deny",
+    "test_gateway_identity.StrictTLSFixtureTests.test_generated_chain_handshakes_with_explicit_strict_verification"
+  ],
+  "tests_run": 25,
+  "failures": 0,
+  "errors": 0,
+  "skips": 0,
+  "source_before": {
+    "tests/test_gateway_identity.py": "8be2e36f2ec00b6a685f71322fc0644ea6f5e31313673c2795dcbea163cda276",
+    "unified_system/gateway_identity.py": "86dc7efd440bce3b937f166ea5980ffdd5e9d7df542d6233dbdf08d3634ee061"
+  },
+  "source_after": {
+    "tests/test_gateway_identity.py": "8be2e36f2ec00b6a685f71322fc0644ea6f5e31313673c2795dcbea163cda276",
+    "unified_system/gateway_identity.py": "86dc7efd440bce3b937f166ea5980ffdd5e9d7df542d6233dbdf08d3634ee061"
+  },
+  "threads_remaining": [],
+  "process": "RETURNED",
+  "scope": "OWNED_LOOPBACK_ONLY"
+}

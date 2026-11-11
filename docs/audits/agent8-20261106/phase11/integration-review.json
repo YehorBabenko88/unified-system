@@ -1,0 +1,116 @@
+{
+  "head": "56f4215506f3a6efb7404591753facd69204a1ee",
+  "tree": "359ba67541491a0d2d7fa63b9d2e7b5199b5f2af",
+  "base": "80c25306a7b0230a39cf1150172844ec94452529",
+  "merged_source_blob_matches": {
+    "scheduler": [
+      ".github/workflows/agent5-components.yml",
+      "docs/scheduler/components-plan.md",
+      "docs/scheduler/components.md",
+      "scheduler_components/__init__.py",
+      "scheduler_components/authority_boundary.py",
+      "scheduler_components/placement.py",
+      "scheduler_components/schedules.py",
+      "tests/test_agent5_scheduler_components.py"
+    ],
+    "control": [
+      ".github/workflows/agent2-control-api.yml",
+      "docs/architecture/control-api-readonly.md",
+      "tests/test_control_api_readonly.py",
+      "unified_system/control_api_readonly.py"
+    ],
+    "fixtures": [
+      "tests/native_phase_diagnostics.py",
+      "tests/test_installation_native_diagnostic.py",
+      "tests/test_installation_service.py",
+      "tests/test_installation_transaction.py",
+      "tests/test_native_phase_diagnostics.py",
+      "tests/test_service_activation.py"
+    ]
+  },
+  "source_heads": {
+    "scheduler": "942e5f1d1efb28f97fb5eaae7a216424938dd738",
+    "control": "0b3af3e872b49ed1848815f7f9ffd42444f89b24",
+    "fixtures": "2626e939a7ed44bfb37aa354490329a7260cc24b"
+  },
+  "cases": {
+    "clean": {
+      "exit_code": 0,
+      "expected": "ACCEPT_59",
+      "receipt_emitted": true,
+      "reason": []
+    },
+    "tracked_comment": {
+      "exit_code": 1,
+      "expected": "REJECT",
+      "receipt_emitted": false,
+      "reason": [
+        "AssertionError: tracked source dirty"
+      ]
+    },
+    "hidden_comment": {
+      "exit_code": 1,
+      "expected": "REJECT",
+      "receipt_emitted": false,
+      "reason": [
+        "AssertionError: raw source differs from committed blob: unified_system/control_api_readonly.py"
+      ]
+    },
+    "wrong_head": {
+      "exit_code": 1,
+      "expected": "REJECT",
+      "receipt_emitted": false,
+      "reason": []
+    },
+    "missing_id": {
+      "exit_code": 1,
+      "expected": "REJECT",
+      "receipt_emitted": false,
+      "reason": [
+        "AssertionError"
+      ]
+    },
+    "duplicate_id": {
+      "exit_code": 1,
+      "expected": "REJECT",
+      "receipt_emitted": false,
+      "reason": [
+        "AssertionError"
+      ]
+    },
+    "skip": {
+      "exit_code": 1,
+      "expected": "REJECT",
+      "receipt_emitted": true,
+      "reason": [
+        "AssertionError"
+      ]
+    },
+    "hidden_post_tamper": {
+      "exit_code": 1,
+      "expected": "REJECT",
+      "receipt_emitted": false,
+      "reason": [
+        "AssertionError: raw source differs from committed blob: unified_system/control_api_readonly.py"
+      ]
+    }
+  },
+  "workflow_code_sha256": "cc926c0dd1192c1be0a7303efcc18d9053ccfb79bc3d8f3d4139f259c755cb8f",
+  "mandatory_matrix_inspected": {
+    "os": [
+      "ubuntu-24.04",
+      "windows-latest"
+    ],
+    "python": [
+      "3.11",
+      "3.12"
+    ]
+  },
+  "scope": "LOCAL_WINDOWS_EXACT_CI_BLOCK_SOURCE_CHECKED_SYNTHETIC_COMPONENTS_ONLY",
+  "hosted": "NOT_QUALIFIED",
+  "runtime": "NOT_QUALIFIED",
+  "physical": "BLOCKED",
+  "overall": "NO_GO",
+  "registry_base_files_unchanged_except_attributes": true,
+  "attributes_only_addition": "release/** -text"
+}

@@ -1,0 +1,4 @@
+{"scope": "OWNED_LOOPBACK_LAB_STARTED", "voters": 3, "processes": [125688, 125392, 131764], "endpoints": ["http://127.0.0.1:65306", "http://127.0.0.1:65310", "http://127.0.0.1:65314"], "binary_sha256": "41762ef5b98c8dd9b6852df6cfbceed37e7f0acc5760856be33100f1092475e1", "acl_default": "deny"}
+{"case": "ACTUAL_ELAPSED_EXPIRY_AND_SOURCE_IDENTITY", "clock_patch": false, "other_same_authority_broker_denied": true, "wrong_scope_denied": true, "context_copy_denied": true, "elapsed_expiry_denied": true}
+{"case": "REAL_NATIVE_DESTROY_TARGET_CAS_DENIED", "local_capture_is_evidence_not_permission": true, "target_write_absent": true}
+{"scope": "OWNED_LOOPBACK_LAB_RETIRED", "processes": [{"pid": 125688, "returncode": 1}, {"pid": 125392, "returncode": 1}, {"pid": 131764, "returncode": 1}], "all_owned_processes_waited": true, "foreign_process_operations": 0, "session_retirement": "OWNED_SERVERS_STOPPED_TEMPORARY_DIRECTORY_CLEANUP_FOLLOWS"}

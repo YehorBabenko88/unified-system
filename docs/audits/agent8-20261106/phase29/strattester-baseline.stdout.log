@@ -1,0 +1,77 @@
+....FFFF..                                                               [100%]
+================================== FAILURES ===================================
+_____ test_raw_clean_checkout_ignores_virtual_objects[tree-refs/replace] ______
+
+tmp_path = WindowsPath('C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-8-independent-security-ci/work/a8-provenance-temp-strattester-baseline/test_raw_clean_checkout_ignore4')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001DFF1C37200>
+namespace = 'refs/replace', kind = 'tree'
+
+    @pytest.mark.parametrize('namespace', ['refs/replace', 'refs/agent7-replacements'])
+    @pytest.mark.parametrize('kind', ['clean', 'blob', 'tree', 'commit'])
+    def test_raw_clean_checkout_ignores_virtual_objects(tmp_path, monkeypatch, namespace, kind):
+        f = fixture(tmp_path, monkeypatch, namespace, kind)
+        result = probe(f, tmp_path)
+        assert result.returncode != 0  # Intentional unknown-gate refusal, never PASS.
+>       assert 'unknown gate' in result.stderr
+E       assert 'unknown gate' in 'Traceback (most recent call last):\n  File "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-8-independent-...^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: uncommitted tracked changes cannot certify a HEAD\n'
+E        +  where 'Traceback (most recent call last):\n  File "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-8-independent-...^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: uncommitted tracked changes cannot certify a HEAD\n' = CompletedProcess(args=['C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-8-independent-security-ci\\work\\au...^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: uncommitted tracked changes cannot certify a HEAD\n').stderr
+
+tests\research\test_financial_ci_source_replacements.py:85: AssertionError
+_ test_raw_clean_checkout_ignores_virtual_objects[tree-refs/agent7-replacements] _
+
+tmp_path = WindowsPath('C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-8-independent-security-ci/work/a8-provenance-temp-strattester-baseline/test_raw_clean_checkout_ignore5')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001DFF02E7CB0>
+namespace = 'refs/agent7-replacements', kind = 'tree'
+
+    @pytest.mark.parametrize('namespace', ['refs/replace', 'refs/agent7-replacements'])
+    @pytest.mark.parametrize('kind', ['clean', 'blob', 'tree', 'commit'])
+    def test_raw_clean_checkout_ignores_virtual_objects(tmp_path, monkeypatch, namespace, kind):
+        f = fixture(tmp_path, monkeypatch, namespace, kind)
+        result = probe(f, tmp_path)
+        assert result.returncode != 0  # Intentional unknown-gate refusal, never PASS.
+>       assert 'unknown gate' in result.stderr
+E       assert 'unknown gate' in 'Traceback (most recent call last):\n  File "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-8-independent-...^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: uncommitted tracked changes cannot certify a HEAD\n'
+E        +  where 'Traceback (most recent call last):\n  File "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-8-independent-...^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: uncommitted tracked changes cannot certify a HEAD\n' = CompletedProcess(args=['C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-8-independent-security-ci\\work\\au...^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: uncommitted tracked changes cannot certify a HEAD\n').stderr
+
+tests\research\test_financial_ci_source_replacements.py:85: AssertionError
+____ test_raw_clean_checkout_ignores_virtual_objects[commit-refs/replace] _____
+
+tmp_path = WindowsPath('C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-8-independent-security-ci/work/a8-provenance-temp-strattester-baseline/test_raw_clean_checkout_ignore6')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001DFF1C0F290>
+namespace = 'refs/replace', kind = 'commit'
+
+    @pytest.mark.parametrize('namespace', ['refs/replace', 'refs/agent7-replacements'])
+    @pytest.mark.parametrize('kind', ['clean', 'blob', 'tree', 'commit'])
+    def test_raw_clean_checkout_ignores_virtual_objects(tmp_path, monkeypatch, namespace, kind):
+        f = fixture(tmp_path, monkeypatch, namespace, kind)
+        result = probe(f, tmp_path)
+        assert result.returncode != 0  # Intentional unknown-gate refusal, never PASS.
+>       assert 'unknown gate' in result.stderr
+E       assert 'unknown gate' in 'Traceback (most recent call last):\n  File "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-8-independent-...^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: uncommitted tracked changes cannot certify a HEAD\n'
+E        +  where 'Traceback (most recent call last):\n  File "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-8-independent-...^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: uncommitted tracked changes cannot certify a HEAD\n' = CompletedProcess(args=['C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-8-independent-security-ci\\work\\au...^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: uncommitted tracked changes cannot certify a HEAD\n').stderr
+
+tests\research\test_financial_ci_source_replacements.py:85: AssertionError
+_ test_raw_clean_checkout_ignores_virtual_objects[commit-refs/agent7-replacements] _
+
+tmp_path = WindowsPath('C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-8-independent-security-ci/work/a8-provenance-temp-strattester-baseline/test_raw_clean_checkout_ignore7')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001DFF1C0D700>
+namespace = 'refs/agent7-replacements', kind = 'commit'
+
+    @pytest.mark.parametrize('namespace', ['refs/replace', 'refs/agent7-replacements'])
+    @pytest.mark.parametrize('kind', ['clean', 'blob', 'tree', 'commit'])
+    def test_raw_clean_checkout_ignores_virtual_objects(tmp_path, monkeypatch, namespace, kind):
+        f = fixture(tmp_path, monkeypatch, namespace, kind)
+        result = probe(f, tmp_path)
+        assert result.returncode != 0  # Intentional unknown-gate refusal, never PASS.
+>       assert 'unknown gate' in result.stderr
+E       assert 'unknown gate' in 'Traceback (most recent call last):\n  File "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-8-independent-...^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: uncommitted tracked changes cannot certify a HEAD\n'
+E        +  where 'Traceback (most recent call last):\n  File "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-8-independent-...^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: uncommitted tracked changes cannot certify a HEAD\n' = CompletedProcess(args=['C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-8-independent-security-ci\\work\\au...^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: uncommitted tracked changes cannot certify a HEAD\n').stderr
+
+tests\research\test_financial_ci_source_replacements.py:85: AssertionError
+- generated xml file: C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\outputs\phase29\strattester-baseline.xml -
+=========================== short test summary info ===========================
+FAILED tests/research/test_financial_ci_source_replacements.py::test_raw_clean_checkout_ignores_virtual_objects[tree-refs/replace]
+FAILED tests/research/test_financial_ci_source_replacements.py::test_raw_clean_checkout_ignores_virtual_objects[tree-refs/agent7-replacements]
+FAILED tests/research/test_financial_ci_source_replacements.py::test_raw_clean_checkout_ignores_virtual_objects[commit-refs/replace]
+FAILED tests/research/test_financial_ci_source_replacements.py::test_raw_clean_checkout_ignores_virtual_objects[commit-refs/agent7-replacements]
+4 failed, 6 passed in 10.16s

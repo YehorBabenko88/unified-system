@@ -1,0 +1,29 @@
+# PR69 documentary readiness and isolation-plan review
+
+Exact Unified Draft PR69 HEAD `6043dc005426acf773d667dbec8534ebac38c78f`, tree `fe9606db2a5be20773480e999fa83af9725b4aed`. Independent GitHub metadata confirms current Draft head. Exactly three documentary additions: committed directive copy, proposed smoke plan and normalized readiness JSON. No supervisor, package builder, child bootstrap or physical fixture implementation is included, so none is admitted by this review.
+
+| Requirement ID | Repository / PR / exact HEAD | Verification | Environment | Expected | Actual / status | Evidence | Severity / correction |
+|---|---|---|---|---|---|---|---|
+| A8-LS5-READINESS-EVIDENCE | Unified PR69 /6043dc0 above | Exact readiness hash, nine original raw lengths/hashes, selected projection bindings | Read-only existing files; no new host queries | Preserve original evidence and uncertainty | PASS_DOCUMENTARY: readiness2c9cfe and nine original hashes/lengths match; raw token/job/OS/CPU/time fields checked | [Verification receipt](original-evidence-verification.json), [original PR metadata](GitHub-PR69.original-metadata.json), [primary map](primary-source-map.json) | No independent current physical measurements or execution attestation |
+| A8-LS5-ISOLATION-ADMISSION | Same source | Proposed smoke plan and remaining preconditions | Source/document review only | Exact immutable package, source/guards, nonadmin child, own nested containment before GO, safe cleanup | BLOCKED: package SHA null, isolation review pending; implementation not yet present | Same evidence and committed plan | No physical execution approval; review exact package/supervisor/bootstrap next |
+
+The original readiness file SHA is2c9cfe5de055bf6834d9b27b75e94b875d4d37130decd0996305a42600724356. All nine raw originals were independently read at Root's existing evidence location and checked against declared bytes/SHA. Private raw identity/ACL/service/network inventories are not copied into this audit publication; the verification receipt retains original paths/digests. The committed directive copy hashes961024a6 as stated in the plan; the original user attachment itself was not reacquired in this phase. This comparison does not confer new permissions.
+
+Raw token output contains elevated0/type3. It matches normalized limited/non-elevated fields but contains no separate raw effective-administrator role-check result; normalized effective_administrator=False remains a Root assertion here. It cannot substitute for fresh supervisor AND child token admission. Parent job raw fields match the normalized snapshot: in_jobTrue, innermost query144bytes, flags0x2800, no queried local CPU/memory/active ceilings and full_parent_chain_verifiedFalse. This is not a full ancestor-chain, available-headroom or effective-limit proof. Root's historical snapshots are not A8 runtime observations and are not fresh child identity/resource evidence.
+
+The plan appropriately excludes existing PostgreSQL55432, production stores/credentials, services, working Consul, ACL/security/network changes, breakaway, protected diagnostics, ResumeThread and CPU-rate qualification. It requires ordinary child waiting for bounded pre-GO, actual own assignment/set/query checks, non-elevation, immutable source/tool pins, fresh result-to-render binding, external browser request denial/sandbox retention, watchdog/output bounds and own-family retirement. [Microsoft nested-job documentation](https://learn.microsoft.com/en-us/windows/win32/procthread/nested-jobs) confirms that valid hierarchy/assignment and ancestor constraints matter; existing-parent membership alone proves no new child containment. No Windows Job API was called by A8 in this phase.
+
+Proposed total USER CPU10s, committed job1GiB/process512MiB, active16, output16KiB and wall watchdog30s remain unimplemented/unadmitted plan values. USER CPU is not CPU rate or all CPU time; COMMIT is not RSS; set/query is not general kernel enforcement or worker resource-admission proof; wall watchdog is not a hard real-time guarantee. Source integrity plus explicit own-output accounting is not an unobserved global filesystem-difference guarantee. Production backup verification is explicitly false and rollback implementation pending. These honest limitations do not create an additional implementation defect in a plan-only PR.
+
+No own physical process, JobCreate/Set/Assign, target/browser, network probe, native registration or state-changing host action was performed by A8. Root is the sole proposed physical serial owner. A6 fresh-input harness and its requested pre-GO bootstrap successor are still separate exact-source/package review items. No fixed committed fixture may substitute for fresh target bytes. A8 has no execution-level acceptance or release/adoption ACK for a physical smoke package at this stage.
+
+RELEASE_MANIFEST_STATUS: no immutable smoke package SHA or approved release.
+NODE_INVENTORY_STATUS: LS5 owner readiness originals verified as documentary evidence only; full node admission not established.
+CONTRACT_STATUS: plan constraints reviewed; supervisor/bootstrap/isolation implementation pending.
+OFFLINE_TESTS: no runtime tests; documentary hash/source checks only.
+WINDOWS_CI: not rechecked here; F26 remains open.
+PHYSICAL_TESTS: NOT_RUN_BY_A8; full physical acceptance BLOCKED; proposed disposable smoke isolation admission pending.
+P0_P1_P2: 7 open P1 /5 P2 unchanged; no new implementation finding in this documentary scope. Absence of P0 not proven.
+EVIDENCE: exact PR metadata, raw-original hash receipt and primary map above.
+NEXT_ACTIONS: review immutable package manifest/source/tool hashes and actual supervisor/A6 bootstrap hard guards before any physical execution decision; Root retains sole physical serial lane.
+GO_NO_GO: NO-GO; TAILSCALE_REMOVAL BLOCKED.

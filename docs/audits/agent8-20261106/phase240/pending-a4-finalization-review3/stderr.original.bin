@@ -1,0 +1,34 @@
+test_empty_cache_preserves_prerequisite_receipt (a4_finalization_negative_controls.make_suite.<locals>.FinalizationControls.test_empty_cache_preserves_prerequisite_receipt) ... ok
+test_enumeration_unavailable_records_unknown_receipt (a4_finalization_negative_controls.make_suite.<locals>.FinalizationControls.test_enumeration_unavailable_records_unknown_receipt) ... FAIL
+test_missing_cache_never_enumerates_and_records_unknown (a4_finalization_negative_controls.make_suite.<locals>.FinalizationControls.test_missing_cache_never_enumerates_and_records_unknown) ... FAIL
+test_nonempty_cache_denies (a4_finalization_negative_controls.make_suite.<locals>.FinalizationControls.test_nonempty_cache_denies) ... ok
+test_unsafe_ancestry_never_enumerates_and_records_unknown (a4_finalization_negative_controls.make_suite.<locals>.FinalizationControls.test_unsafe_ancestry_never_enumerates_and_records_unknown) ... FAIL
+
+======================================================================
+FAIL: test_enumeration_unavailable_records_unknown_receipt (a4_finalization_negative_controls.make_suite.<locals>.FinalizationControls.test_enumeration_unavailable_records_unknown_receipt)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-4-distributed-storage-integrity\outputs\review5-finalization-modeled-red-driver-review3\model-inputs\controls_source.py", line 124, in test_enumeration_unavailable_records_unknown_receipt
+    self.assertIsNone(error)
+AssertionError: 'OSError' is not None
+
+======================================================================
+FAIL: test_missing_cache_never_enumerates_and_records_unknown (a4_finalization_negative_controls.make_suite.<locals>.FinalizationControls.test_missing_cache_never_enumerates_and_records_unknown)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-4-distributed-storage-integrity\outputs\review5-finalization-modeled-red-driver-review3\model-inputs\controls_source.py", line 116, in test_missing_cache_never_enumerates_and_records_unknown
+    self.assertFalse(any(event == 'enumerate' for event, _ in trace))
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_unsafe_ancestry_never_enumerates_and_records_unknown (a4_finalization_negative_controls.make_suite.<locals>.FinalizationControls.test_unsafe_ancestry_never_enumerates_and_records_unknown)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-4-distributed-storage-integrity\outputs\review5-finalization-modeled-red-driver-review3\model-inputs\controls_source.py", line 108, in test_unsafe_ancestry_never_enumerates_and_records_unknown
+    self.assertFalse(any(event == 'enumerate' for event, _ in trace))
+AssertionError: True is not false
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.002s
+
+FAILED (failures=3)

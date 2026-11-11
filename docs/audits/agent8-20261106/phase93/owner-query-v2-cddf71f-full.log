@@ -1,0 +1,66 @@
+C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-7-distributed-research-math\work\test-env\Lib\site-packages\pytest_asyncio\plugin.py:300: PytestDeprecationWarning: The configuration option "asyncio_default_fixture_loop_scope" is unset.
+The event loop scope for asynchronous fixtures will default to the "fixture" caching scope. Future versions of pytest-asyncio will default the loop scope for asynchronous fixtures to "function" scope. Set the default fixture loop scope explicitly in order to avoid unexpected behavior in the future. Valid fixture loop scopes are: "function", "class", "module", "package", "session"
+
+  warnings.warn(PytestDeprecationWarning(_DEFAULT_FIXTURE_LOOP_SCOPE_UNSET))
+.......................s..s............................................. [  3%]
+........................................................................ [  6%]
+........................................................................ [ 10%]
+........................................................................ [ 13%]
+...sssssss.s.s....ssss.ssssssss......................................... [ 16%]
+........................................................................ [ 20%]
+................................s........s....................s......... [ 23%]
+................................................................ [ 26%]
+........................................................................ [ 29%]
+........................................................................ [ 33%]
+........................................................................ [ 36%]
+........................................................................ [ 39%]
+..................................................................... [ 43%]
+........................................................................ [ 46%]
+........................................................................ [ 49%]
+........................................................................ [ 53%]
+........................................................................ [ 56%]
+........................................................................ [ 59%]
+.................................................................. [ 62%]
+........................................s............................... [ 66%]
+........................................................................ [ 69%]
+........................................................................ [ 72%]
+........................................................................ [ 76%]
+........................................................................ [ 79%]
+........................................................................ [ 83%]
+.......................................................s...s............ [ 86%]
+.............................................................................................................................. [ 92%]
+........................................................................ [ 95%]
+......................s.s............................................... [ 98%]
+......................                                                   [100%]
+=========================== short test summary info ===========================
+SKIPPED [1] tests\research\test_grid_math_history.py:18: unittest.case.SkipTest: cross-repository fixture refs are required; history-integration CI provisions exact pins
+SKIPPED [4] tests\research\test_grid_math_history_v11.py:15: unittest.case.SkipTest: v1.1 producer refs not provisioned
+SKIPPED [1] tests\deploy\test_owned_results_service.py:236: symlink creation unavailable
+SKIPPED [1] tests\deploy\test_owned_results_service.py:272: symlink creation unavailable
+SKIPPED [1] tests\native\test_native_build.py:87: set NATIVE_BROKER for safe compiled CLI tests
+SKIPPED [1] tests\native\test_native_build.py:51: set NATIVE_BROKER for safe compiled CLI tests
+SKIPPED [1] tests\native\test_native_build.py:81: set NATIVE_BROKER for safe compiled CLI tests
+SKIPPED [1] tests\native\test_native_build.py:60: set NATIVE_BROKER for safe compiled CLI tests
+SKIPPED [1] tests\native\test_native_build.py:69: set NATIVE_BROKER for safe compiled CLI tests
+SKIPPED [1] tests\native\test_native_build.py:75: set NATIVE_BROKER for safe compiled CLI tests
+SKIPPED [1] tests\native\test_native_build.py:93: junction fixture only on disposable hosted Windows
+SKIPPED [1] tests\native\test_native_build.py:137: directory symlink privilege unavailable; hosted Windows junction probe required
+SKIPPED [1] tests\native\test_native_json_metadata.py:4: compiled Windows broker required
+SKIPPED [4] tests\native\test_owner_nonce.py:11: NATIVE_BROKER required for safe compiled nonce validation
+SKIPPED [1] tests\native\test_owner_verifier.py:29: compiled Windows broker required
+SKIPPED [1] tests\native\test_owner_verifier.py:69: compiled Windows broker required
+SKIPPED [1] tests\native\test_owner_verifier.py:46: compiled Windows broker required
+SKIPPED [1] tests\native\test_owner_verifier.py:50: compiled Windows broker required
+SKIPPED [1] tests\native\test_owner_verifier.py:55: compiled Windows broker required
+SKIPPED [1] tests\native\test_owner_verifier.py:40: compiled Windows broker required
+SKIPPED [1] tests\native\test_owner_verifier.py:35: compiled Windows broker required
+SKIPPED [1] tests\native\test_owner_verifier.py:61: compiled Windows broker required
+SKIPPED [1] tests\research\test_alphafold_triangle.py:41: CUDA unavailable
+SKIPPED [1] tests\research\test_alphafold_triangle_attention.py:45: CUDA unavailable
+SKIPPED [1] tests\research\test_composed_history_runtime.py:24: cross-repository source-owner checkouts not provisioned
+SKIPPED [1] tests\research\test_owned_receipt_compatibility.py:78: cross-repository Grid contract checkout unavailable
+SKIPPED [1] tests\test_alphafold_artifact_verify.py:37: symlink unavailable
+SKIPPED [1] tests\test_alphafold_data_sync.py:75: symlink unavailable
+SKIPPED [1] tests\test_quote_paper_export.py:85: Symlink creation unavailable
+SKIPPED [1] tests\test_quote_paper_export.py:92: Symlink creation unavailable
+2116 passed, 36 skipped, 35 subtests passed in 483.14s (0:08:03)

@@ -1,0 +1,89 @@
+test_common_fields_cross_api_mismatch_denied (controller_windows_mode_models.ControllerMetadataModels.test_common_fields_cross_api_mismatch_denied) ... ok
+test_common_fields_same_api_mutation_denied (controller_windows_mode_models.ControllerMetadataModels.test_common_fields_same_api_mutation_denied) ... ok
+test_cross_api_birthtime_mismatch_denied (controller_windows_mode_models.ControllerMetadataModels.test_cross_api_birthtime_mismatch_denied) ... ok
+test_cross_api_file_kind_mismatch_is_denied (controller_windows_mode_models.ControllerMetadataModels.test_cross_api_file_kind_mismatch_is_denied) ... ok
+test_cross_api_missing_birthtime_does_not_alias_ctime (controller_windows_mode_models.ControllerMetadataModels.test_cross_api_missing_birthtime_does_not_alias_ctime) ... ok
+test_equal_birthtime_is_accepted (controller_windows_mode_models.ControllerMetadataModels.test_equal_birthtime_is_accepted) ... ok
+test_fstat_before_after_ctime_mutation_denied (controller_windows_mode_models.ControllerMetadataModels.test_fstat_before_after_ctime_mutation_denied) ... ok
+test_lstat_before_after_ctime_mutation_denied (controller_windows_mode_models.ControllerMetadataModels.test_lstat_before_after_ctime_mutation_denied) ... ok
+test_raw_hash_tampering_still_denied (controller_windows_mode_models.ControllerMetadataModels.test_raw_hash_tampering_still_denied) ... ok
+test_same_api_birthtime_availability_drift_denied (controller_windows_mode_models.ControllerMetadataModels.test_same_api_birthtime_availability_drift_denied) ... ok
+test_same_api_birthtime_mutation_denied (controller_windows_mode_models.ControllerMetadataModels.test_same_api_birthtime_mutation_denied) ... ok
+test_same_api_file_kind_changes_are_denied (controller_windows_mode_models.ControllerMetadataModels.test_same_api_file_kind_changes_are_denied) ... ok
+test_same_api_full_permission_changes_are_denied (controller_windows_mode_models.ControllerMetadataModels.test_same_api_full_permission_changes_are_denied) ... ok
+test_valid_windows_cross_api_ctime_difference (controller_windows_mode_models.ControllerMetadataModels.test_valid_windows_cross_api_ctime_difference) ... ok
+test_windows_cross_api_permission_only_bit_is_accepted (controller_windows_mode_models.ControllerMetadataModels.test_windows_cross_api_permission_only_bit_is_accepted) ... 
+  test_windows_cross_api_permission_only_bit_is_accepted (controller_windows_mode_models.ControllerMetadataModels.test_windows_cross_api_permission_only_bit_is_accepted) (api='pinned_json') ... FAIL
+  test_windows_cross_api_permission_only_bit_is_accepted (controller_windows_mode_models.ControllerMetadataModels.test_windows_cross_api_permission_only_bit_is_accepted) (api='hash_file') ... FAIL
+test_windows_observed_permission_pair_is_accepted (controller_windows_mode_models.ControllerMetadataModels.test_windows_observed_permission_pair_is_accepted) ... 
+  test_windows_observed_permission_pair_is_accepted (controller_windows_mode_models.ControllerMetadataModels.test_windows_observed_permission_pair_is_accepted) (api='pinned_json') ... FAIL
+  test_windows_observed_permission_pair_is_accepted (controller_windows_mode_models.ControllerMetadataModels.test_windows_observed_permission_pair_is_accepted) (api='hash_file') ... FAIL
+
+======================================================================
+FAIL: test_windows_cross_api_permission_only_bit_is_accepted (controller_windows_mode_models.ControllerMetadataModels.test_windows_cross_api_permission_only_bit_is_accepted) (api='pinned_json')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\native-output-cap-prerequisite-756a670-successor-20261111\REVIEW-MODE-COMPATIBILITY-PROPOSAL\test_windows_mode_comparison_models.py", line 163, in accepts
+    result = self.call_actual(api, copy.deepcopy(stats))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\.codex\native-output-cap-prerequisite-756a670-successor-20261111\REVIEW-MODE-COMPATIBILITY-PROPOSAL\test_windows_mode_comparison_models.py", line 156, in call_actual
+    return subject.pinned_json(MODEL_PATH.name, hashlib.sha256(RAW).hexdigest())
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\.codex\native-output-cap-prerequisite-756a670-successor-20261111\controller.py", line 162, in pinned_json
+    need(_metadata_matches(before, opened, same_api=False), 'PREPARATION_INPUT_OPEN_CHANGED')
+  File "C:\Users\LS-5\.codex\native-output-cap-prerequisite-756a670-successor-20261111\controller.py", line 61, in need
+    raise AssertionError(code)
+AssertionError: PREPARATION_INPUT_OPEN_CHANGED
+
+======================================================================
+FAIL: test_windows_cross_api_permission_only_bit_is_accepted (controller_windows_mode_models.ControllerMetadataModels.test_windows_cross_api_permission_only_bit_is_accepted) (api='hash_file')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\native-output-cap-prerequisite-756a670-successor-20261111\REVIEW-MODE-COMPATIBILITY-PROPOSAL\test_windows_mode_comparison_models.py", line 163, in accepts
+    result = self.call_actual(api, copy.deepcopy(stats))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\.codex\native-output-cap-prerequisite-756a670-successor-20261111\REVIEW-MODE-COMPATIBILITY-PROPOSAL\test_windows_mode_comparison_models.py", line 158, in call_actual
+    return subject.hash_file(MODEL_PATH, entry, single=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\.codex\native-output-cap-prerequisite-756a670-successor-20261111\controller.py", line 133, in hash_file
+    need(_metadata_matches(before, opened, same_api=False), 'FILE_OPEN_CHANGED')
+  File "C:\Users\LS-5\.codex\native-output-cap-prerequisite-756a670-successor-20261111\controller.py", line 61, in need
+    raise AssertionError(code)
+AssertionError: FILE_OPEN_CHANGED
+
+======================================================================
+FAIL: test_windows_observed_permission_pair_is_accepted (controller_windows_mode_models.ControllerMetadataModels.test_windows_observed_permission_pair_is_accepted) (api='pinned_json')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\native-output-cap-prerequisite-756a670-successor-20261111\REVIEW-MODE-COMPATIBILITY-PROPOSAL\test_windows_mode_comparison_models.py", line 163, in accepts
+    result = self.call_actual(api, copy.deepcopy(stats))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\.codex\native-output-cap-prerequisite-756a670-successor-20261111\REVIEW-MODE-COMPATIBILITY-PROPOSAL\test_windows_mode_comparison_models.py", line 156, in call_actual
+    return subject.pinned_json(MODEL_PATH.name, hashlib.sha256(RAW).hexdigest())
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\.codex\native-output-cap-prerequisite-756a670-successor-20261111\controller.py", line 162, in pinned_json
+    need(_metadata_matches(before, opened, same_api=False), 'PREPARATION_INPUT_OPEN_CHANGED')
+  File "C:\Users\LS-5\.codex\native-output-cap-prerequisite-756a670-successor-20261111\controller.py", line 61, in need
+    raise AssertionError(code)
+AssertionError: PREPARATION_INPUT_OPEN_CHANGED
+
+======================================================================
+FAIL: test_windows_observed_permission_pair_is_accepted (controller_windows_mode_models.ControllerMetadataModels.test_windows_observed_permission_pair_is_accepted) (api='hash_file')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\native-output-cap-prerequisite-756a670-successor-20261111\REVIEW-MODE-COMPATIBILITY-PROPOSAL\test_windows_mode_comparison_models.py", line 163, in accepts
+    result = self.call_actual(api, copy.deepcopy(stats))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\.codex\native-output-cap-prerequisite-756a670-successor-20261111\REVIEW-MODE-COMPATIBILITY-PROPOSAL\test_windows_mode_comparison_models.py", line 158, in call_actual
+    return subject.hash_file(MODEL_PATH, entry, single=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\.codex\native-output-cap-prerequisite-756a670-successor-20261111\controller.py", line 133, in hash_file
+    need(_metadata_matches(before, opened, same_api=False), 'FILE_OPEN_CHANGED')
+  File "C:\Users\LS-5\.codex\native-output-cap-prerequisite-756a670-successor-20261111\controller.py", line 61, in need
+    raise AssertionError(code)
+AssertionError: FILE_OPEN_CHANGED
+
+----------------------------------------------------------------------
+Ran 16 tests in 0.196s
+
+FAILED (failures=4)

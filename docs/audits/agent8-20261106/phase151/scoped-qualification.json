@@ -1,0 +1,243 @@
+{
+  "exact_head": "e203c0bbeaa176a843a7d80b2eadfefe8fce7385",
+  "docs_head": "615ee6afbe16865ccf1bcf6bc63582b26edd64a1",
+  "docs_tree": "1241465668ca52d19642a470d8e58c8f959f3009",
+  "docs_only_changed_paths": [
+    "docs/master-mission-execution-matrix.json",
+    "docs/physical-dev/LS5-PILOT-E203-RESULT.md",
+    "docs/physical-dev/PHYSICAL-ACCEPTANCE-STAGES.md",
+    "release/physical-dev/ls5-20261109/SOURCE9F5-LOCAL-QUALIFICATION.json",
+    "release/physical-dev/ls5-20261109/SOURCE9F5-LOCAL-TESTS.log",
+    "release/physical-dev/ls5-20261109/SOURCEE203-LOCAL-QUALIFICATION.json",
+    "release/physical-dev/ls5-20261109/SOURCEE203-LOCAL-TESTS.log",
+    "release/physical-dev/ls5-20261109/failed-c/ORIGINAL-RED-INDEX.json",
+    "release/physical-dev/ls5-20261109/failed-c/backend.stderr.log",
+    "release/physical-dev/ls5-20261109/failed-c/backend.stdout.log",
+    "release/physical-dev/ls5-20261109/failed-c/controller.stderr.log",
+    "release/physical-dev/ls5-20261109/failed-c/driver-receipt.json",
+    "release/physical-dev/ls5-20261109/failed-c/smoke-receipt.json",
+    "release/physical-dev/ls5-20261109/failed-d/ORIGINAL-RED-INDEX.json",
+    "release/physical-dev/ls5-20261109/failed-d/backend.stderr.log",
+    "release/physical-dev/ls5-20261109/failed-d/backend.stdout.log",
+    "release/physical-dev/ls5-20261109/failed-d/controller.stderr.log",
+    "release/physical-dev/ls5-20261109/failed-d/driver-receipt.json",
+    "release/physical-dev/ls5-20261109/failed-d/smoke-receipt.json",
+    "release/physical-dev/ls5-20261109/failed-e/ORIGINAL-RED-INDEX.json",
+    "release/physical-dev/ls5-20261109/failed-e/backend.stderr.log",
+    "release/physical-dev/ls5-20261109/failed-e/backend.stdout.log",
+    "release/physical-dev/ls5-20261109/failed-e/driver-receipt.json",
+    "release/physical-dev/ls5-20261109/failed-e/fresh-artifact.json",
+    "release/physical-dev/ls5-20261109/failed-e/fresh-envelope.json",
+    "release/physical-dev/ls5-20261109/failed-e/fresh-request.json",
+    "release/physical-dev/ls5-20261109/failed-e/owned-browser.json",
+    "release/physical-dev/ls5-20261109/failed-e/render-receipt.json",
+    "release/physical-dev/ls5-20261109/failed-e/render.stderr.log",
+    "release/physical-dev/ls5-20261109/failed-e/render.stdout.log",
+    "release/physical-dev/ls5-20261109/failed-e/smoke-receipt.json",
+    "release/physical-dev/ls5-20261109/hosted-e203-stopped-service/CI-QUALIFICATION-REPORT.json",
+    "release/physical-dev/ls5-20261109/hosted-e203-stopped-service/CI-QUALIFICATION-REPORT.md",
+    "release/physical-dev/ls5-20261109/hosted-e203-stopped-service/evidence-sha256.json"
+  ],
+  "jobs": [
+    {
+      "id": 129497843097,
+      "run": 42716081580,
+      "name": "stopped-service (windows-2025)",
+      "unit_ids": [
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_all_office_and_adminit_variants_reject_os_name",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_artifact_ownership_output_is_confined_to_runner_command_file",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_bootstrap_blob_wrong_pin_and_unknown_source_member_fail_closed",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_crlf_operator_file_does_not_replace_exact_lf_git_blob",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_download_rejects_size_hash_and_cross_host_final_response",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_download_requires_pinned_bytes_and_exclusive_destination",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_entry_uses_os_name_and_rejects_before_network_or_acl",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_git_blob_wrong_size_or_pin_is_rejected_without_normalization",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_inert_orchestration_accepts_canonical_fake_tools_under_short_temp_alias",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_inert_orchestration_dry_run_uses_fakes_only_and_preserves_state",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_only_hosted_windows_fresh_descendant_is_admitted_without_effects",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_phase_guard_requires_exact_action_and_plan_digest",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_redirects_require_https_same_host_no_credentials_and_bounded_hops",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_staged_archive_is_only_byte_integrity_and_confined_to_runner_temp",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_workflow_scopes_disposable_matrix_and_report_artifact"
+      ],
+      "unit_count": 15,
+      "skips": 0,
+      "log_sha256": "e78b281df4abab266d084941478f5360e185725caf816f6907183e0720456bce"
+    },
+    {
+      "id": 129497843388,
+      "run": 42716081580,
+      "name": "stopped-service (windows-2022)",
+      "unit_ids": [
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_all_office_and_adminit_variants_reject_os_name",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_artifact_ownership_output_is_confined_to_runner_command_file",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_bootstrap_blob_wrong_pin_and_unknown_source_member_fail_closed",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_crlf_operator_file_does_not_replace_exact_lf_git_blob",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_download_rejects_size_hash_and_cross_host_final_response",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_download_requires_pinned_bytes_and_exclusive_destination",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_entry_uses_os_name_and_rejects_before_network_or_acl",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_git_blob_wrong_size_or_pin_is_rejected_without_normalization",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_inert_orchestration_accepts_canonical_fake_tools_under_short_temp_alias",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_inert_orchestration_dry_run_uses_fakes_only_and_preserves_state",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_only_hosted_windows_fresh_descendant_is_admitted_without_effects",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_phase_guard_requires_exact_action_and_plan_digest",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_redirects_require_https_same_host_no_credentials_and_bounded_hops",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_staged_archive_is_only_byte_integrity_and_confined_to_runner_temp",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_workflow_scopes_disposable_matrix_and_report_artifact"
+      ],
+      "unit_count": 15,
+      "skips": 0,
+      "log_sha256": "be814fefcb725cf76553f3bf5ba960e2e78373e25e701f148e84b3f7c1034c65"
+    },
+    {
+      "id": 129497812412,
+      "run": 42716071876,
+      "name": "stopped-service (windows-2022)",
+      "unit_ids": [
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_all_office_and_adminit_variants_reject_os_name",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_artifact_ownership_output_is_confined_to_runner_command_file",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_bootstrap_blob_wrong_pin_and_unknown_source_member_fail_closed",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_crlf_operator_file_does_not_replace_exact_lf_git_blob",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_download_rejects_size_hash_and_cross_host_final_response",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_download_requires_pinned_bytes_and_exclusive_destination",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_entry_uses_os_name_and_rejects_before_network_or_acl",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_git_blob_wrong_size_or_pin_is_rejected_without_normalization",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_inert_orchestration_accepts_canonical_fake_tools_under_short_temp_alias",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_inert_orchestration_dry_run_uses_fakes_only_and_preserves_state",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_only_hosted_windows_fresh_descendant_is_admitted_without_effects",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_phase_guard_requires_exact_action_and_plan_digest",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_redirects_require_https_same_host_no_credentials_and_bounded_hops",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_staged_archive_is_only_byte_integrity_and_confined_to_runner_temp",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_workflow_scopes_disposable_matrix_and_report_artifact"
+      ],
+      "unit_count": 15,
+      "skips": 0,
+      "log_sha256": "52b98a90e83a43d819d0ccbb2f9243171f0639141fe123e8ff9e5c6b0c808973"
+    },
+    {
+      "id": 129497812918,
+      "run": 42716071876,
+      "name": "stopped-service (windows-2025)",
+      "unit_ids": [
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_all_office_and_adminit_variants_reject_os_name",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_artifact_ownership_output_is_confined_to_runner_command_file",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_bootstrap_blob_wrong_pin_and_unknown_source_member_fail_closed",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_crlf_operator_file_does_not_replace_exact_lf_git_blob",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_download_rejects_size_hash_and_cross_host_final_response",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_download_requires_pinned_bytes_and_exclusive_destination",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_entry_uses_os_name_and_rejects_before_network_or_acl",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_git_blob_wrong_size_or_pin_is_rejected_without_normalization",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_inert_orchestration_accepts_canonical_fake_tools_under_short_temp_alias",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_inert_orchestration_dry_run_uses_fakes_only_and_preserves_state",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_only_hosted_windows_fresh_descendant_is_admitted_without_effects",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_phase_guard_requires_exact_action_and_plan_digest",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_redirects_require_https_same_host_no_credentials_and_bounded_hops",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_staged_archive_is_only_byte_integrity_and_confined_to_runner_temp",
+        "tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_workflow_scopes_disposable_matrix_and_report_artifact"
+      ],
+      "unit_count": 15,
+      "skips": 0,
+      "log_sha256": "ac5ff539ad94fe9c6945132efd07db2cf3578fdf9cf07162197248aca1e2e8ac"
+    }
+  ],
+  "unique_unit_cases": 15,
+  "unit_executions": 60,
+  "artifact_checks": [
+    {
+      "artifact_id": 13718637089,
+      "result": "PASS_COMPONENT_STOPPED_SERVICE_ONLY",
+      "stages": [
+        {
+          "result": "PASS",
+          "stage": "native_create_inspect"
+        },
+        {
+          "code": "ABSENT",
+          "ownership": "RETAINED",
+          "result": "PASS",
+          "scm": "ABSENT",
+          "stage": "native_app_only_remove",
+          "state": "RETAINED",
+          "uninstall_journal": "RETAINED"
+        }
+      ],
+      "physical": "NOT_RUN",
+      "service_start": "NOT_RUN",
+      "source_proof": "NOT_EVALUATED",
+      "publisher_authenticated": false
+    },
+    {
+      "artifact_id": 13718237782,
+      "result": "PASS_COMPONENT_STOPPED_SERVICE_ONLY",
+      "stages": [
+        {
+          "result": "PASS",
+          "stage": "native_create_inspect"
+        },
+        {
+          "code": "ABSENT",
+          "ownership": "RETAINED",
+          "result": "PASS",
+          "scm": "ABSENT",
+          "stage": "native_app_only_remove",
+          "state": "RETAINED",
+          "uninstall_journal": "RETAINED"
+        }
+      ],
+      "physical": "NOT_RUN",
+      "service_start": "NOT_RUN",
+      "source_proof": "NOT_EVALUATED",
+      "publisher_authenticated": false
+    },
+    {
+      "artifact_id": 13718756017,
+      "result": "PASS_COMPONENT_STOPPED_SERVICE_ONLY",
+      "stages": [
+        {
+          "result": "PASS",
+          "stage": "native_create_inspect"
+        },
+        {
+          "code": "ABSENT",
+          "ownership": "RETAINED",
+          "result": "PASS",
+          "scm": "ABSENT",
+          "stage": "native_app_only_remove",
+          "state": "RETAINED",
+          "uninstall_journal": "RETAINED"
+        }
+      ],
+      "physical": "NOT_RUN",
+      "service_start": "NOT_RUN",
+      "source_proof": "NOT_EVALUATED",
+      "publisher_authenticated": false
+    },
+    {
+      "artifact_id": 13716594619,
+      "result": "PASS_COMPONENT_STOPPED_SERVICE_ONLY",
+      "stages": [
+        {
+          "result": "PASS",
+          "stage": "native_create_inspect"
+        },
+        {
+          "code": "ABSENT",
+          "ownership": "RETAINED",
+          "result": "PASS",
+          "scm": "ABSENT",
+          "stage": "native_app_only_remove",
+          "state": "RETAINED",
+          "uninstall_journal": "RETAINED"
+        }
+      ],
+      "physical": "NOT_RUN",
+      "service_start": "NOT_RUN",
+      "source_proof": "NOT_EVALUATED",
+      "publisher_authenticated": false
+    }
+  ],
+  "script_observed_bytes": "CRLF_CHECKOUT_VARIANT_OF_RAW_GIT_BLOB_NOT_IDENTICAL_RAW_BYTES",
+  "scope": "HOSTED_WINDOWS2022_2025_STOPPED_SERVICE_ONLY_NOT_FULL_MATRIX_OR_PHYSICAL",
+  "F26": "OPEN",
+  "A8_service_or_fixture_executions": 0
+}

@@ -1,0 +1,101 @@
+test_invariant_refusal_cleanup_kills_and_waits_known_handle (__main__.ReturnedHandleControls.test_invariant_refusal_cleanup_kills_and_waits_known_handle) ... FAIL
+test_preconstructor_refusal_creates_no_handle (__main__.ReturnedHandleControls.test_preconstructor_refusal_creates_no_handle) ... ok
+test_returned_handle_registered_before_invariant_refusal (__main__.ReturnedHandleControls.test_returned_handle_registered_before_invariant_refusal) ... FAIL
+test_file_parent_stops_before_descendant_or_git (__main__.RootFirstControls.test_file_parent_stops_before_descendant_or_git) ... FAIL
+test_file_root_stops_before_leaf_git_or_hash (__main__.RootFirstControls.test_file_root_stops_before_leaf_git_or_hash) ... FAIL
+test_missing_parent_stops_before_descendant_or_git (__main__.RootFirstControls.test_missing_parent_stops_before_descendant_or_git) ... FAIL
+test_ordinary_tree_retains_exact_blob_and_ledger (__main__.RootFirstControls.test_ordinary_tree_retains_exact_blob_and_ledger) ... ok
+test_reparse_parent_stops_before_descendant_or_git (__main__.RootFirstControls.test_reparse_parent_stops_before_descendant_or_git) ... FAIL
+test_selected_reparse_parent_stops_before_leaf_inspection (__main__.RootFirstControls.test_selected_reparse_parent_stops_before_leaf_inspection) ... FAIL
+
+======================================================================
+FAIL: test_invariant_refusal_cleanup_kills_and_waits_known_handle (__main__.ReturnedHandleControls.test_invariant_refusal_cleanup_kills_and_waits_known_handle)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-7-distributed-research-math\work\projection-recovery-hosted47-20261110\docs\gateway\research\persistence\qualification47\test_qualifier_controls.py", line 283, in test_invariant_refusal_cleanup_kills_and_waits_known_handle
+    self.assertEqual(effects, ['constructor_returned', 'kill_held_handle', ('wait_held_handle', 2)])
+AssertionError: Lists differ: ['constructor_returned'] != ['constructor_returned', 'kill_held_handle', ('wait_held_handle', 2)]
+
+Second list contains 2 additional elements.
+First extra element 1:
+'kill_held_handle'
+
+- ['constructor_returned']
++ ['constructor_returned', 'kill_held_handle', ('wait_held_handle', 2)]
+
+======================================================================
+FAIL: test_returned_handle_registered_before_invariant_refusal (__main__.ReturnedHandleControls.test_returned_handle_registered_before_invariant_refusal)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-7-distributed-research-math\work\projection-recovery-hosted47-20261110\docs\gateway\research\persistence\qualification47\test_qualifier_controls.py", line 275, in test_returned_handle_registered_before_invariant_refusal
+    self.assertEqual(len(held), 1, 'Returned backend handle must already be in cleanup registry')
+AssertionError: 0 != 1 : Returned backend handle must already be in cleanup registry
+
+======================================================================
+FAIL: test_file_parent_stops_before_descendant_or_git (__main__.RootFirstControls.test_file_parent_stops_before_descendant_or_git)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-7-distributed-research-math\work\projection-recovery-hosted47-20261110\docs\gateway\research\persistence\qualification47\test_qualifier_controls.py", line 156, in test_file_parent_stops_before_descendant_or_git
+    self.assert_unsafe_parent_refuses_before_descendants('file')
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-7-distributed-research-math\work\projection-recovery-hosted47-20261110\docs\gateway\research\persistence\qualification47\test_qualifier_controls.py", line 147, in assert_unsafe_parent_refuses_before_descendants
+    self.assertEqual(descendant_events, [], 'Unsafe parent must stop before root/descendant/Git/hash access')
+AssertionError: Lists differ: [('is_symlink', '/sandbox/root'), ('lstat'[636 chars]xt')] != []
+
+First list contains 19 additional elements.
+First extra element 0:
+('is_symlink', '/sandbox/root')
+
+Diff is 745 characters long. Set self.maxDiff to None to see it. : Unsafe parent must stop before root/descendant/Git/hash access
+
+======================================================================
+FAIL: test_file_root_stops_before_leaf_git_or_hash (__main__.RootFirstControls.test_file_root_stops_before_leaf_git_or_hash)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-7-distributed-research-math\work\projection-recovery-hosted47-20261110\docs\gateway\research\persistence\qualification47\test_qualifier_controls.py", line 169, in test_file_root_stops_before_leaf_git_or_hash
+    self.assertFalse(any(op in ('git', 'sha256') or path.startswith(tree.ROOT + '/') for op, path in tree.events))
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_missing_parent_stops_before_descendant_or_git (__main__.RootFirstControls.test_missing_parent_stops_before_descendant_or_git)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-7-distributed-research-math\work\projection-recovery-hosted47-20261110\docs\gateway\research\persistence\qualification47\test_qualifier_controls.py", line 159, in test_missing_parent_stops_before_descendant_or_git
+    self.assert_unsafe_parent_refuses_before_descendants('missing')
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-7-distributed-research-math\work\projection-recovery-hosted47-20261110\docs\gateway\research\persistence\qualification47\test_qualifier_controls.py", line 147, in assert_unsafe_parent_refuses_before_descendants
+    self.assertEqual(descendant_events, [], 'Unsafe parent must stop before root/descendant/Git/hash access')
+AssertionError: Lists differ: [('is_symlink', '/sandbox/root'), ('lstat'[636 chars]xt')] != []
+
+First list contains 19 additional elements.
+First extra element 0:
+('is_symlink', '/sandbox/root')
+
+Diff is 745 characters long. Set self.maxDiff to None to see it. : Unsafe parent must stop before root/descendant/Git/hash access
+
+======================================================================
+FAIL: test_reparse_parent_stops_before_descendant_or_git (__main__.RootFirstControls.test_reparse_parent_stops_before_descendant_or_git)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-7-distributed-research-math\work\projection-recovery-hosted47-20261110\docs\gateway\research\persistence\qualification47\test_qualifier_controls.py", line 153, in test_reparse_parent_stops_before_descendant_or_git
+    self.assert_unsafe_parent_refuses_before_descendants('reparse')
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-7-distributed-research-math\work\projection-recovery-hosted47-20261110\docs\gateway\research\persistence\qualification47\test_qualifier_controls.py", line 147, in assert_unsafe_parent_refuses_before_descendants
+    self.assertEqual(descendant_events, [], 'Unsafe parent must stop before root/descendant/Git/hash access')
+AssertionError: Lists differ: [('is_symlink', '/sandbox/root'), ('lstat'[636 chars]xt')] != []
+
+First list contains 19 additional elements.
+First extra element 0:
+('is_symlink', '/sandbox/root')
+
+Diff is 745 characters long. Set self.maxDiff to None to see it. : Unsafe parent must stop before root/descendant/Git/hash access
+
+======================================================================
+FAIL: test_selected_reparse_parent_stops_before_leaf_inspection (__main__.RootFirstControls.test_selected_reparse_parent_stops_before_leaf_inspection)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-7-distributed-research-math\work\projection-recovery-hosted47-20261110\docs\gateway\research\persistence\qualification47\test_qualifier_controls.py", line 182, in test_selected_reparse_parent_stops_before_leaf_inspection
+    self.assertFalse(any(path == tree.LEAF for _, path in tree.events), 'Selected leaf cannot be inspected through unsafe parent')
+AssertionError: True is not false : Selected leaf cannot be inspected through unsafe parent
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.043s
+
+FAILED (failures=7)

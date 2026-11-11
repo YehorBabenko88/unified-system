@@ -1,0 +1,297 @@
+name: Windows hosted stock output-cap assertion
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  stock24:
+    if: >-
+      github.repository == 'YehorBabenko88/unified-system' && github.repository_id == '1434933263' &&
+      ((github.event_name == 'push' && github.event.repository.id == 1434933263 && github.event.repository.full_name == 'YehorBabenko88/unified-system') ||
+       (github.event_name == 'pull_request' && github.event.pull_request.head.repo.id == 1434933263 && github.event.pull_request.base.repo.id == 1434933263 &&
+        github.event.pull_request.head.repo.full_name == 'YehorBabenko88/unified-system' && github.event.pull_request.base.repo.full_name == 'YehorBabenko88/unified-system'))
+    runs-on: windows-latest
+    timeout-minutes: 5
+    env:
+      EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        env:
+          GIT_CONFIG_COUNT: '2'
+          GIT_CONFIG_KEY_0: core.autocrlf
+          GIT_CONFIG_VALUE_0: 'false'
+          GIT_CONFIG_KEY_1: core.eol
+          GIT_CONFIG_VALUE_1: lf
+        with:
+          ref: ${{ env.EXPECTED_HEAD }}
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12.10'
+      - name: Bind exclusive external evidence path
+        shell: python -I -S -B {0}
+        run: |
+          import json, os, pathlib, stat, sys
+          root=pathlib.Path(os.environ['GITHUB_WORKSPACE'])
+          parent=pathlib.Path(os.environ['RUNNER_TEMP'])
+          assert parent.is_absolute() and not parent.is_relative_to(root)
+          for path in [*reversed(parent.parents),parent]:
+              info=path.lstat()
+              assert stat.S_ISDIR(info.st_mode) and not stat.S_ISLNK(info.st_mode) and not getattr(info,'st_file_attributes',0)&1024
+          base=parent/('stock24-'+os.environ['GITHUB_RUN_ID']+'-'+os.environ['GITHUB_RUN_ATTEMPT'])
+          base.mkdir(exist_ok=False)
+          (base/'bootstrap.json').write_text(json.dumps(dict(stage='PATH_BOUND',passed=False,python=sys.version,head=os.environ['EXPECTED_HEAD'],run_id=os.environ['GITHUB_RUN_ID'],attempt=os.environ['GITHUB_RUN_ATTEMPT']))+'\n')
+          (base/'pycache-prefix').mkdir(exist_ok=False)
+          with open(os.environ['GITHUB_ENV'],'a',encoding='utf8') as stream:
+              stream.write('QUALIFICATION_BASE='+str(base)+'\n')
+      - name: Full primary Git raw-source bootstrap before qualifier import
+        shell: python -I -S -B {0}
+        run: |
+          import hashlib, json, os, pathlib, stat, subprocess, sys, tempfile, time
+          P=pathlib.Path;root=P(os.environ['GITHUB_WORKSPACE']);base=P(os.environ['QUALIFICATION_BASE'])
+          git_path=P('C:/Program Files/Git/bin/git.exe');head=os.environ['EXPECTED_HEAD']
+          report=dict(passed=False,head=head,roles=[],git=None,stage='BOOTSTRAP_ENTERED')
+          def save():
+              (base/'source-bootstrap.json').write_text(json.dumps(report,sort_keys=True,indent=2)+'\n')
+          def ordinary(path,directory=False):
+              assert path.is_absolute()
+              for parent in reversed(path.parents):
+                  info=parent.lstat()
+                  assert stat.S_ISDIR(info.st_mode) and not stat.S_ISLNK(info.st_mode) and not getattr(info,'st_file_attributes',0)&1024
+              info=path.lstat()
+              assert not stat.S_ISLNK(info.st_mode) and not getattr(info,'st_file_attributes',0)&1024
+              assert stat.S_ISDIR(info.st_mode) if directory else stat.S_ISREG(info.st_mode) and info.st_nlink==1
+              return info
+          def raw_file(path,limit):
+              before=ordinary(path);assert 0<=before.st_size<=limit
+              with path.open('rb',buffering=0) as stream:
+                  opened=os.fstat(stream.fileno())
+                  for name in ('st_dev','st_ino','st_size','st_mtime_ns','st_nlink'):
+                      assert type(getattr(before,name)) is int and getattr(before,name)==getattr(opened,name)
+                  assert stat.S_IFMT(before.st_mode)==stat.S_IFMT(opened.st_mode)
+                  if hasattr(before,'st_birthtime_ns') and hasattr(opened,'st_birthtime_ns'):assert before.st_birthtime_ns==opened.st_birthtime_ns
+                  raw=stream.read(before.st_size+1)
+                  after=os.fstat(stream.fileno())
+                  for name in ('st_dev','st_ino','st_mode','st_size','st_mtime_ns','st_nlink','st_ctime_ns'):
+                      assert getattr(opened,name)==getattr(after,name)
+                  assert hasattr(opened,'st_birthtime_ns')==hasattr(after,'st_birthtime_ns')
+                  if hasattr(opened,'st_birthtime_ns'):assert opened.st_birthtime_ns==after.st_birthtime_ns
+              after=ordinary(path)
+              for name in ('st_dev','st_ino','st_mode','st_size','st_mtime_ns','st_nlink','st_ctime_ns'):
+                  assert getattr(before,name)==getattr(after,name)
+              assert hasattr(before,'st_birthtime_ns')==hasattr(after,'st_birthtime_ns')
+              if hasattr(before,'st_birthtime_ns'):assert before.st_birthtime_ns==after.st_birthtime_ns
+              assert len(raw)==before.st_size
+              return raw
+          def git(args,data=b'',limit=262144):
+              assert len(data)<=131072 and limit<=134217728
+              command=[str(git_path),'--no-replace-objects','--no-optional-locks','-c','core.fsmonitor=false','-c','core.hooksPath=NUL','-c','core.useReplaceRefs=false','-c','protocol.allow=never',*args]
+              env={key:value for key,value in os.environ.items() if key.upper() in {'SYSTEMDRIVE','PROGRAMDATA','TEMP','TMP','USERPROFILE','LOCALAPPDATA','APPDATA'}}
+              env.update(SYSTEMROOT='C:\\Windows',WINDIR='C:\\Windows',GIT_CONFIG_NOSYSTEM='1',GIT_CONFIG_SYSTEM=os.devnull,GIT_CONFIG_GLOBAL=os.devnull,GIT_CONFIG_COUNT='0',GIT_NO_REPLACE_OBJECTS='1',GIT_NO_LAZY_FETCH='1',GIT_OPTIONAL_LOCKS='0',GIT_TERMINAL_PROMPT='0')
+              child=None;primary=None;fact=dict(args=args,retired=False,passed=False,cleanup_errors=[],evidence_errors=[]);report['roles'].append(fact)
+              with tempfile.TemporaryFile(dir=base) as source,tempfile.TemporaryFile(dir=base) as output,tempfile.TemporaryFile(dir=base) as error:
+                  source.write(data);source.seek(0);start=time.monotonic()
+                  try:
+                      child=subprocess.Popen(command,cwd=root,env=env,stdin=source,stdout=output,stderr=error,creationflags=subprocess.CREATE_NO_WINDOW)
+                      while child.poll() is None:
+                          assert time.monotonic()-start<29 and os.fstat(output.fileno()).st_size<=limit and os.fstat(error.fileno()).st_size<=65536
+                          time.sleep(.01)
+                  except BaseException as failure:
+                      primary=failure;fact['primary_failure_type']=type(failure).__name__
+                  finally:
+                      if child is not None:
+                          try:
+                              status=child.poll()
+                          except BaseException as failure:
+                              status=None;fact['cleanup_errors'].append(dict(stage='poll',type=type(failure).__name__))
+                          if status is None:
+                              try:child.kill()
+                              except BaseException as failure:fact['cleanup_errors'].append(dict(stage='kill',type=type(failure).__name__))
+                          try:
+                              status=child.wait(timeout=1)
+                              assert type(status) is int
+                              fact.update(returncode=status,retired=True)
+                          except BaseException as failure:fact['cleanup_errors'].append(dict(stage='wait',type=type(failure).__name__))
+                      try:
+                          output.seek(0);error.seek(0);err=error.read(65537)
+                          fact['stderr_truncated']=len(err)>65536
+                          with (base/('bootstrap-git-'+str(len(report['roles']))+'.stderr')).open('xb') as stream:stream.write(err[:65536])
+                      except BaseException as failure:fact['evidence_errors'].append(type(failure).__name__)
+                  if primary is not None:
+                      if fact['cleanup_errors'] or fact['evidence_errors']:primary.add_note('BOOTSTRAP_CLEANUP_OR_EVIDENCE_UNKNOWN')
+                      raise primary
+                  assert fact['retired'] and not fact['cleanup_errors'] and not fact['evidence_errors']
+                  raw=output.read(limit+1)
+                  assert child.returncode==0 and not err and len(raw)<=limit and time.monotonic()-start<=30
+                  fact.update(passed=True,bytes=len(raw),sha256=hashlib.sha256(raw).hexdigest());return raw
+          save()
+          try:
+              assert os.name=='nt' and sys.version_info[:3]==(3,12,10) and sys.flags.isolated and sys.flags.no_site and sys.dont_write_bytecode and sys.pycache_prefix is None
+              assert os.environ['GITHUB_REPOSITORY']=='YehorBabenko88/unified-system' and os.environ['GITHUB_REPOSITORY_ID']=='1434933263'
+              event=json.loads(raw_file(P(os.environ['GITHUB_EVENT_PATH']),2097152))
+              assert event['repository']['full_name']=='YehorBabenko88/unified-system' and event['repository']['id']==1434933263
+              if os.environ['GITHUB_EVENT_NAME']=='pull_request':
+                  pr=event['pull_request'];assert pr['head']['sha']==head
+                  assert all(pr[side]['repo']['id']==1434933263 and pr[side]['repo']['full_name']=='YehorBabenko88/unified-system' for side in ('head','base'))
+              else:
+                  assert os.environ['GITHUB_EVENT_NAME']=='push' and event['after']==head
+              assert len(head)==40 and all(c in '0123456789abcdef' for c in head)
+              ordinary(root,True);ordinary(root/'.git',True);ordinary(base,True)
+              assert not git_path.is_relative_to(root)
+              tool=raw_file(git_path,67108864)
+              info=ordinary(git_path);report['git']=dict(path=str(git_path),bytes=len(tool),sha256=hashlib.sha256(tool).hexdigest(),mode=info.st_mode,nlink=info.st_nlink,dev=info.st_dev,inode=info.st_ino,mtime_ns=info.st_mtime_ns,ctime_ns=info.st_ctime_ns)
+              for name in ('objects/info/alternates','objects/info/http-alternates','refs/replace','info/grafts','commondir'):
+                  path=root/'.git'/name;assert not path.exists() and not path.is_symlink()
+              ids=git(['rev-parse','HEAD','HEAD^{tree}','HEAD^']).decode('ascii').splitlines();assert len(ids)==3 and ids[0]==head
+              listing=git(['ls-tree','-rlz','--full-tree',head]);entries={}
+              for row in listing.split(b'\0'):
+                  if not row:continue
+                  meta,name=row.split(b'\t',1);mode,kind,oid,size=meta.split();name=name.decode('utf8')
+                  assert kind==b'blob' and mode in (b'100644',b'100755') and name not in entries
+                  path=pathlib.PurePosixPath(name);assert not path.is_absolute() and '..' not in path.parts and '\\' not in name
+                  entries[name]=dict(mode=mode.decode(),git_blob=oid.decode(),bytes=int(size))
+              assert len(entries)==1875 and sum(e['bytes'] for e in entries.values())<=134217728 and all(e['bytes']<=67108864 for e in entries.values())
+              request=''.join(e['git_blob']+'\n' for e in entries.values()).encode('ascii')
+              blobs=git(['cat-file','--batch'],request,134217728);cursor=0
+              for name,entry in entries.items():
+                  end=blobs.index(b'\n',cursor);header=blobs[cursor:end].split();cursor=end+1
+                  assert header==[entry['git_blob'].encode(),b'blob',str(entry['bytes']).encode()]
+                  raw=blobs[cursor:cursor+entry['bytes']];cursor+=entry['bytes'];assert blobs[cursor:cursor+1]==b'\n';cursor+=1
+                  assert raw_file(root/name,entry['bytes'])==raw
+                  entry['sha256']=hashlib.sha256(raw).hexdigest()
+              assert cursor==len(blobs)
+              expected_dirs={str(parent).replace('\\','/') for name in entries for parent in pathlib.PurePosixPath(name).parents if str(parent)!='.'}
+              actual=set();directories=set();pending=[root]
+              while pending:
+                  folder=pending.pop();ordinary(folder,True)
+                  for path in folder.iterdir():
+                      if folder==root and path.name=='.git':continue
+                      info=path.lstat();assert not stat.S_ISLNK(info.st_mode) and not getattr(info,'st_file_attributes',0)&1024
+                      relative=path.relative_to(root).as_posix()
+                      if stat.S_ISDIR(info.st_mode):ordinary(path,True);directories.add(relative);pending.append(path)
+                      else:ordinary(path);actual.add(relative)
+              assert actual==set(entries) and directories==expected_dirs
+              assert not git(['status','--porcelain=v1','--untracked-files=all'])
+              ledger=(json.dumps(entries,sort_keys=True,indent=2)+'\n').encode();assert len(ledger)<=2097152
+              with (base/'source-ledger.json').open('xb') as stream:stream.write(ledger)
+              name='tools/ci/qualify_native_output_cap_assertion.py';raw=raw_file(root/name,131072)
+              assert hashlib.sha256(raw).hexdigest()==entries[name]['sha256']
+              with (base/'verified-qualifier.py').open('xb') as stream:stream.write(raw)
+              report.update(passed=True,tree=ids[1],parent=ids[2],files=len(entries),directories=len(directories),raw_source_map_sha256=hashlib.sha256(ledger).hexdigest(),qualifier_sha256=hashlib.sha256(raw).hexdigest(),python=str(pathlib.Path(sys.executable)))
+              with open(os.environ['GITHUB_ENV'],'a',encoding='utf8') as stream:
+                  for key,value in dict(QUALIFIED_TREE=ids[1],QUALIFIED_PARENT=ids[2],SOURCE_LEDGER_SHA256=hashlib.sha256(ledger).hexdigest(),QUALIFIER_SHA256=hashlib.sha256(raw).hexdigest()).items():stream.write(key+'='+value+'\n')
+          except BaseException as error:
+              report['failure_type']=type(error).__name__;raise
+          finally:save()
+      - name: Run exact verified Windows stock24 qualifier
+        id: qualifier
+        shell: python -I -S -B -X "pycache_prefix=${{ env.QUALIFICATION_BASE }}/pycache-prefix" {0}
+        run: |
+          import hashlib, os, pathlib, stat, sys, types
+          base=pathlib.Path(os.environ['QUALIFICATION_BASE']);path=base/'verified-qualifier.py'
+          for parent in reversed(path.parents):
+              info=parent.lstat();assert stat.S_ISDIR(info.st_mode) and not stat.S_ISLNK(info.st_mode) and not getattr(info,'st_file_attributes',0)&1024
+          before=path.lstat();assert stat.S_ISREG(before.st_mode) and before.st_nlink==1 and not getattr(before,'st_file_attributes',0)&1024 and 0<before.st_size<=131072
+          with path.open('rb',buffering=0) as stream:
+              opened=os.fstat(stream.fileno());assert (before.st_dev,before.st_ino,before.st_size,before.st_mtime_ns,before.st_nlink,stat.S_IFMT(before.st_mode))==(opened.st_dev,opened.st_ino,opened.st_size,opened.st_mtime_ns,opened.st_nlink,stat.S_IFMT(opened.st_mode))
+              if hasattr(before,'st_birthtime_ns') and hasattr(opened,'st_birthtime_ns'):assert before.st_birthtime_ns==opened.st_birthtime_ns
+              raw=stream.read(before.st_size+1);after=os.fstat(stream.fileno())
+              assert (opened.st_mode,opened.st_ctime_ns,opened.st_size,opened.st_mtime_ns,opened.st_dev,opened.st_ino,opened.st_nlink)==(after.st_mode,after.st_ctime_ns,after.st_size,after.st_mtime_ns,after.st_dev,after.st_ino,after.st_nlink)
+              assert hasattr(opened,'st_birthtime_ns')==hasattr(after,'st_birthtime_ns')
+              if hasattr(opened,'st_birthtime_ns'):assert opened.st_birthtime_ns==after.st_birthtime_ns
+          after=path.lstat();assert (before.st_mode,before.st_ctime_ns,before.st_size,before.st_mtime_ns,before.st_dev,before.st_ino,before.st_nlink)==(after.st_mode,after.st_ctime_ns,after.st_size,after.st_mtime_ns,after.st_dev,after.st_ino,after.st_nlink)
+          assert hasattr(before,'st_birthtime_ns')==hasattr(after,'st_birthtime_ns')
+          if hasattr(before,'st_birthtime_ns'):assert before.st_birthtime_ns==after.st_birthtime_ns
+          assert len(raw)==before.st_size and hashlib.sha256(raw).hexdigest()==os.environ['QUALIFIER_SHA256']
+          sys.argv=[str(path),'--allocated-stock-matrix-controller']
+          module=types.ModuleType('__main__');module.__file__=str(path);sys.modules['__main__']=module
+          exec(compile(raw,str(path),'exec'),module.__dict__)
+      - name: Independently read closed candidate after actual producer success
+        shell: python -I -S -B {0}
+        env:
+          PRODUCER_OUTCOME: ${{ steps.qualifier.outcome }}
+        run: |
+          import hashlib, json, os, pathlib, stat, time
+          assert os.environ['PRODUCER_OUTCOME']=='success'
+          base=pathlib.Path(os.environ['QUALIFICATION_BASE'])/'allocated-matrix-evidence'
+          def closed(name,limit,parse=True,outer=False):
+              assert pathlib.PureWindowsPath(name).name==name and '/' not in name and '\\' not in name and name not in ('.','..')
+              assert not outer or name in ('runtime-ledger.json','source-ledger.json','verified-qualifier.py','child-driver.py')
+              path=(base.parent if outer else base)/name
+              for parent in reversed(path.parents):
+                  info=parent.lstat();assert stat.S_ISDIR(info.st_mode) and not stat.S_ISLNK(info.st_mode) and not getattr(info,'st_file_attributes',0)&1024
+              before=path.lstat();assert stat.S_ISREG(before.st_mode) and before.st_nlink==1 and not getattr(before,'st_file_attributes',0)&1024 and 0<before.st_size<=limit
+              with path.open('rb',buffering=0) as stream:
+                  opened=os.fstat(stream.fileno())
+                  assert (before.st_dev,before.st_ino,before.st_size,before.st_mtime_ns,before.st_nlink,stat.S_IFMT(before.st_mode))==(opened.st_dev,opened.st_ino,opened.st_size,opened.st_mtime_ns,opened.st_nlink,stat.S_IFMT(opened.st_mode))
+                  if hasattr(before,'st_birthtime_ns') and hasattr(opened,'st_birthtime_ns'):assert before.st_birthtime_ns==opened.st_birthtime_ns
+                  raw=stream.read(before.st_size+1);after=os.fstat(stream.fileno())
+                  for key in ('st_dev','st_ino','st_mode','st_size','st_mtime_ns','st_ctime_ns','st_nlink'):assert getattr(opened,key)==getattr(after,key)
+                  assert hasattr(opened,'st_birthtime_ns')==hasattr(after,'st_birthtime_ns')
+                  if hasattr(opened,'st_birthtime_ns'):assert opened.st_birthtime_ns==after.st_birthtime_ns
+              after=path.lstat()
+              for key in ('st_dev','st_ino','st_mode','st_size','st_mtime_ns','st_ctime_ns','st_nlink'):assert getattr(before,key)==getattr(after,key)
+              assert hasattr(before,'st_birthtime_ns')==hasattr(after,'st_birthtime_ns')
+              if hasattr(before,'st_birthtime_ns'):assert before.st_birthtime_ns==after.st_birthtime_ns
+              assert len(raw)==before.st_size
+              def pairs(items):
+                  result={}
+                  for key,value in items:
+                      assert key not in result;result[key]=value
+                  return result
+              def reject(value):raise AssertionError('NONFINITE_CLOSED_RECEIPT')
+              return raw,json.loads(raw,object_pairs_hook=pairs,parse_constant=reject) if parse else None
+          raw,receipt=closed('receipt.json',2097152);completion_raw,completion=closed('completion.json',4096)
+          assert completion['schema']=='stock24-closed-candidate.v1' and completion['result']=='CLOSED_CANDIDATE_READBACK'
+          assert completion['receipt_sha256']==hashlib.sha256(raw).hexdigest()
+          assert receipt['result']=='CANDIDATE_REQUIRES_EXTERNAL_VERIFICATION' and receipt['post_artifact_within_observed_bound'] is True
+          assert receipt['candidate_checks_passed'] is True and receipt['source_head']==completion['source_head']==os.environ['EXPECTED_HEAD']
+          assert receipt['source_before']==receipt['source_after'] and receipt['source_before']['files']==1875
+          assert receipt['runtime_before']==receipt['runtime_after'] and receipt['actual_classifier_subcases_run']==24
+          runtime,_=closed('runtime-ledger.json',8388608,False,True)
+          assert hashlib.sha256(runtime).hexdigest()==receipt['runtime_ledger_sha256']
+          source,_=closed('source-ledger.json',2097152,False,True)
+          assert hashlib.sha256(source).hexdigest()==os.environ['SOURCE_LEDGER_SHA256']
+          qualifier,_=closed('verified-qualifier.py',131072,False,True)
+          assert hashlib.sha256(qualifier).hexdigest()==os.environ['QUALIFIER_SHA256']
+          driver,_=closed('child-driver.py',65536,False,True)
+          assert hashlib.sha256(driver).hexdigest()==receipt['driver_source_sha256']
+          assert type(receipt['artifacts']) is dict and len(receipt['artifacts'])<=32
+          for name,digest in receipt['artifacts'].items():
+              artifact,_=closed(name,262144,False);assert hashlib.sha256(artifact).hexdigest()==digest
+          _,profile=closed('matrix-profile.json',262144)
+          assert profile['result']=='ONE_UNIT_24_STOCK_SUBCASES_PASS' and len(profile['subcases'])==24
+          ids=[row['id'] for row in profile['subcases']]
+          assert len(set(ids))==24 and all(row['passed'] is True for row in profile['subcases'])
+          assert set(ids)==set(profile['actual_return_records']) and sum(value=='TRUE' for value in profile['actual_return_records'].values())==7
+          assert sum(value=='FALSE' for value in profile['actual_return_records'].values())==17
+          assert receipt['run_id']==os.environ['GITHUB_RUN_ID'] and receipt['run_attempt']==os.environ['GITHUB_RUN_ATTEMPT']
+          assert completion['terminal_publication_self_attested'] is False and receipt['terminal_publication_self_attested'] is False
+          now=time.monotonic();start=completion['controller_started_monotonic']
+          assert type(start) in (int,float) and 0<=now-start<120
+          observation=dict(result='CLOSED_PRODUCER_OBSERVED',producer_step_outcome=os.environ['PRODUCER_OUTCOME'],head=os.environ['EXPECTED_HEAD'],receipt_sha256=hashlib.sha256(raw).hexdigest(),completion_sha256=hashlib.sha256(completion_raw).hexdigest(),elapsed_at_independent_readback=now-start,not_terminal_write_or_family_hardwall_proof=True,native_authority=False)
+          with (base/'external-readback.json').open('x',encoding='utf8') as stream:stream.write(json.dumps(observation,sort_keys=True)+'\n')
+      - name: Preserve bounded source and stock-matrix evidence
+        id: evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: hosted-stock24-${{ github.event.pull_request.head.sha || github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ env.QUALIFICATION_BASE }}/
+          if-no-files-found: error
+      - name: Publish artifact identity
+        if: always()
+        shell: python -I -S -B {0}
+        env:
+          ARTIFACT_ID: ${{ steps.evidence.outputs.artifact-id }}
+          ARTIFACT_DIGEST: ${{ steps.evidence.outputs.artifact-digest }}
+        run: |
+          import os
+          assert os.environ['ARTIFACT_ID'] and len(os.environ['ARTIFACT_DIGEST'])==64
+          with open(os.environ['GITHUB_STEP_SUMMARY'],'a',encoding='utf8') as stream:
+              for name in ('EXPECTED_HEAD','GITHUB_RUN_ID','GITHUB_RUN_ATTEMPT','ARTIFACT_ID','ARTIFACT_DIGEST'):stream.write(name+': '+os.environ[name]+'\n')
+              stream.write('Scope: hosted Windows Server STOCK24 only; no Win11/native workload/runtime admission.\n')

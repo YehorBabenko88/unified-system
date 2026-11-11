@@ -1,0 +1,56 @@
+{
+  "existing_consumer_counterguard": "ResearchLabAuthority._observe then _read_snapshot(identityKeys+leader+job) sees G1/revoked principal and compares raw/index/session to captured old records; CURRENT_IDENTITY_SNAPSHOT_CHANGED rejects. _open_session transaction already check-index binds all4 records plus leader fence, so this trace is not a successful principal-session issuance bypass.",
+  "freshness_boundary": "Revocation after any final atomic read can still race response/local require_capture. Atomicity fix supplies one historical/current-at-read snapshot, never a durable future-use permit or strict UTC-at-commit guarantee.",
+  "kind": "HAND_TRACED_DATA_NOT_EXECUTED_OR_NATIVE_PROOF",
+  "preconditions": [
+    "Actual valid already issued broker context with stable mTLS, no local invalidation/clock expiry; READ_RESEARCH and exact v2 original bytes; all static profile/actor/quota/request joins valid.",
+    "Writer is separately authorized authority owner, not the reader; no assumed public arbitrary-KV permission.",
+    "Root generation and principal/policy can change in Consul; broker operations_lock serializes this broker only, not external writer.",
+    "Native principal lock remains unchanged and leased throughout this recipe; no reliance on TTL expiry."
+  ],
+  "schema": "a2.atomic-read-interleaving-recipe.v1",
+  "static_conclusion": "Returned tuple cannot correspond to one store snapshot: policyRev2 first exists t6, generationG0 endedt4 and ACTIVEprincipal endedt5. No later source recheck inside broker rejects this trace. This is a static counterexample to atomic capture, not a run or positive domain grant.",
+  "trace": [
+    {
+      "event": "context issued earlier under this valid state",
+      "state": "generation G0; profile F; principal ACTIVE actorA policyP quotaQ; policyP revision1 ACTIVE READ_RESEARCH; lock sessionS valid",
+      "t": 0
+    },
+    {
+      "event": "_policy GET generation reads G0/index10",
+      "t": 1
+    },
+    {
+      "event": "_policy GET immutable profile F/index11",
+      "t": 2
+    },
+    {
+      "event": "_policy GET principal ACTIVE/index12",
+      "t": 3
+    },
+    {
+      "event": "authorized writer changes generation to G1/index20 (not another consensus)",
+      "t": 4
+    },
+    {
+      "event": "authorized writer changes principal state REVOKED/index21; other identity fields unchanged",
+      "t": 5
+    },
+    {
+      "event": "authorized writer changes same policy revision2/index22, ACTIVE READ_RESEARCH, same actor/profile/future expiry",
+      "t": 6
+    },
+    {
+      "event": "_policy GET policy revision2/index22; all per-record field joins pass",
+      "t": 7
+    },
+    {
+      "event": "_capture_current GET unchanged session lock/index14; all local peer/deadline/request checks pass",
+      "t": 8
+    },
+    {
+      "event": "source path constructs capture records(G0@10,F@11,ACTIVEprincipal@12,policyRev2@22,lock@14); require_capture local checks have no native reread",
+      "t": 9
+    }
+  ]
+}

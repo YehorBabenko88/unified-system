@@ -1,0 +1,1053 @@
+{
+  "SQL": false,
+  "actual_helper_executed": false,
+  "actual_ids": [
+    "a4_finalization_negative_controls.make_suite.<locals>.FinalizationControls.test_empty_cache_preserves_prerequisite_receipt",
+    "a4_finalization_negative_controls.make_suite.<locals>.FinalizationControls.test_enumeration_unavailable_records_unknown_receipt",
+    "a4_finalization_negative_controls.make_suite.<locals>.FinalizationControls.test_missing_cache_never_enumerates_and_records_unknown",
+    "a4_finalization_negative_controls.make_suite.<locals>.FinalizationControls.test_nonempty_cache_denies",
+    "a4_finalization_negative_controls.make_suite.<locals>.FinalizationControls.test_unsafe_ancestry_never_enumerates_and_records_unknown"
+  ],
+  "actual_prerequisite_executed": false,
+  "boundary_errors": [],
+  "builtin_frozen": [
+    {
+      "name": "sys",
+      "origin": "built-in"
+    },
+    {
+      "name": "builtins",
+      "origin": "built-in"
+    },
+    {
+      "name": "_frozen_importlib",
+      "origin": "frozen"
+    },
+    {
+      "name": "_imp",
+      "origin": "built-in"
+    },
+    {
+      "name": "_thread",
+      "origin": "built-in"
+    },
+    {
+      "name": "_warnings",
+      "origin": "built-in"
+    },
+    {
+      "name": "_weakref",
+      "origin": "built-in"
+    },
+    {
+      "name": "winreg",
+      "origin": "built-in"
+    },
+    {
+      "name": "_io",
+      "origin": "built-in"
+    },
+    {
+      "name": "marshal",
+      "origin": "built-in"
+    },
+    {
+      "name": "nt",
+      "origin": "built-in"
+    },
+    {
+      "name": "_frozen_importlib_external",
+      "origin": "frozen"
+    },
+    {
+      "name": "time",
+      "origin": "built-in"
+    },
+    {
+      "name": "zipimport",
+      "origin": "frozen"
+    },
+    {
+      "name": "_codecs",
+      "origin": "built-in"
+    },
+    {
+      "name": "codecs",
+      "origin": "frozen"
+    },
+    {
+      "name": "_signal",
+      "origin": "built-in"
+    },
+    {
+      "name": "_abc",
+      "origin": "built-in"
+    },
+    {
+      "name": "abc",
+      "origin": "frozen"
+    },
+    {
+      "name": "io",
+      "origin": "frozen"
+    },
+    {
+      "name": "_stat",
+      "origin": "built-in"
+    },
+    {
+      "name": "stat",
+      "origin": "frozen"
+    },
+    {
+      "name": "_collections_abc",
+      "origin": "frozen"
+    },
+    {
+      "name": "genericpath",
+      "origin": "frozen"
+    },
+    {
+      "name": "_winapi",
+      "origin": "built-in"
+    },
+    {
+      "name": "ntpath",
+      "origin": "frozen"
+    },
+    {
+      "name": "os.path",
+      "origin": "frozen"
+    },
+    {
+      "name": "os",
+      "origin": "frozen"
+    },
+    {
+      "name": "_operator",
+      "origin": "built-in"
+    },
+    {
+      "name": "itertools",
+      "origin": "built-in"
+    },
+    {
+      "name": "_collections",
+      "origin": "built-in"
+    },
+    {
+      "name": "_functools",
+      "origin": "built-in"
+    },
+    {
+      "name": "_sre",
+      "origin": "built-in"
+    },
+    {
+      "name": "_json",
+      "origin": "built-in"
+    },
+    {
+      "name": "_blake2",
+      "origin": "built-in"
+    },
+    {
+      "name": "importlib._bootstrap",
+      "origin": "frozen"
+    },
+    {
+      "name": "importlib._bootstrap_external",
+      "origin": "frozen"
+    },
+    {
+      "name": "importlib.machinery",
+      "origin": "frozen"
+    },
+    {
+      "name": "importlib.util",
+      "origin": "frozen"
+    },
+    {
+      "name": "runpy",
+      "origin": "frozen"
+    },
+    {
+      "name": "_tokenize",
+      "origin": "built-in"
+    },
+    {
+      "name": "_heapq",
+      "origin": "built-in"
+    },
+    {
+      "name": "_ast",
+      "origin": "built-in"
+    },
+    {
+      "name": "_opcode",
+      "origin": "built-in"
+    },
+    {
+      "name": "posixpath",
+      "origin": "frozen"
+    },
+    {
+      "name": "errno",
+      "origin": "built-in"
+    },
+    {
+      "name": "math",
+      "origin": "built-in"
+    },
+    {
+      "name": "sys",
+      "origin": "built-in"
+    },
+    {
+      "name": "builtins",
+      "origin": "built-in"
+    },
+    {
+      "name": "_frozen_importlib",
+      "origin": "frozen"
+    },
+    {
+      "name": "_imp",
+      "origin": "built-in"
+    },
+    {
+      "name": "_thread",
+      "origin": "built-in"
+    },
+    {
+      "name": "_warnings",
+      "origin": "built-in"
+    },
+    {
+      "name": "_weakref",
+      "origin": "built-in"
+    },
+    {
+      "name": "winreg",
+      "origin": "built-in"
+    },
+    {
+      "name": "_io",
+      "origin": "built-in"
+    },
+    {
+      "name": "marshal",
+      "origin": "built-in"
+    },
+    {
+      "name": "nt",
+      "origin": "built-in"
+    },
+    {
+      "name": "_frozen_importlib_external",
+      "origin": "frozen"
+    },
+    {
+      "name": "time",
+      "origin": "built-in"
+    },
+    {
+      "name": "zipimport",
+      "origin": "frozen"
+    },
+    {
+      "name": "_codecs",
+      "origin": "built-in"
+    },
+    {
+      "name": "codecs",
+      "origin": "frozen"
+    },
+    {
+      "name": "_signal",
+      "origin": "built-in"
+    },
+    {
+      "name": "_abc",
+      "origin": "built-in"
+    },
+    {
+      "name": "abc",
+      "origin": "frozen"
+    },
+    {
+      "name": "io",
+      "origin": "frozen"
+    },
+    {
+      "name": "_stat",
+      "origin": "built-in"
+    },
+    {
+      "name": "stat",
+      "origin": "frozen"
+    },
+    {
+      "name": "_collections_abc",
+      "origin": "frozen"
+    },
+    {
+      "name": "genericpath",
+      "origin": "frozen"
+    },
+    {
+      "name": "_winapi",
+      "origin": "built-in"
+    },
+    {
+      "name": "ntpath",
+      "origin": "frozen"
+    },
+    {
+      "name": "os.path",
+      "origin": "frozen"
+    },
+    {
+      "name": "os",
+      "origin": "frozen"
+    },
+    {
+      "name": "_operator",
+      "origin": "built-in"
+    },
+    {
+      "name": "itertools",
+      "origin": "built-in"
+    },
+    {
+      "name": "_collections",
+      "origin": "built-in"
+    },
+    {
+      "name": "_functools",
+      "origin": "built-in"
+    },
+    {
+      "name": "_sre",
+      "origin": "built-in"
+    },
+    {
+      "name": "_json",
+      "origin": "built-in"
+    },
+    {
+      "name": "_blake2",
+      "origin": "built-in"
+    },
+    {
+      "name": "importlib._bootstrap",
+      "origin": "frozen"
+    },
+    {
+      "name": "importlib._bootstrap_external",
+      "origin": "frozen"
+    },
+    {
+      "name": "importlib.machinery",
+      "origin": "frozen"
+    },
+    {
+      "name": "importlib.util",
+      "origin": "frozen"
+    },
+    {
+      "name": "runpy",
+      "origin": "frozen"
+    },
+    {
+      "name": "_tokenize",
+      "origin": "built-in"
+    },
+    {
+      "name": "_heapq",
+      "origin": "built-in"
+    },
+    {
+      "name": "_ast",
+      "origin": "built-in"
+    },
+    {
+      "name": "_opcode",
+      "origin": "built-in"
+    },
+    {
+      "name": "posixpath",
+      "origin": "frozen"
+    },
+    {
+      "name": "errno",
+      "origin": "built-in"
+    },
+    {
+      "name": "math",
+      "origin": "built-in"
+    }
+  ],
+  "cleanup": {
+    "cache_empty": true,
+    "new_live_threads": 0
+  },
+  "errors": [],
+  "exception_type": null,
+  "expected_ids": [
+    "a4_finalization_negative_controls.make_suite.<locals>.FinalizationControls.test_empty_cache_preserves_prerequisite_receipt",
+    "a4_finalization_negative_controls.make_suite.<locals>.FinalizationControls.test_nonempty_cache_denies",
+    "a4_finalization_negative_controls.make_suite.<locals>.FinalizationControls.test_unsafe_ancestry_never_enumerates_and_records_unknown",
+    "a4_finalization_negative_controls.make_suite.<locals>.FinalizationControls.test_missing_cache_never_enumerates_and_records_unknown",
+    "a4_finalization_negative_controls.make_suite.<locals>.FinalizationControls.test_enumeration_unavailable_records_unknown_receipt"
+  ],
+  "failures": [],
+  "loaded_origins": [
+    {
+      "name": "encodings.aliases",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\encodings\\aliases.py",
+      "sha256": "1893cfb597bc5eafd38ef03ac85d8874620112514eb42660408811929cc0d6f8"
+    },
+    {
+      "name": "encodings",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\encodings\\__init__.py",
+      "sha256": "8b997e9f7beef09de01c34ac34191866d3ab25e17164e08f411940b070bc3e74"
+    },
+    {
+      "name": "encodings.utf_8",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\encodings\\utf_8.py",
+      "sha256": "9c54c7db8ce0722ca4ddb5f45d4e170357e37991afb3fcdc091721bf6c09257e"
+    },
+    {
+      "name": "encodings.cp1252",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\encodings\\cp1252.py",
+      "sha256": "7acb7b80c29d9ffda0fe79540509439537216df3a259973d54e1fb23c34e7519"
+    },
+    {
+      "name": "types",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\types.py",
+      "sha256": "d7ce485ecd8d4d1531d8f710e538b4d1a49378afacb6ff9231e48c645a9fa95e"
+    },
+    {
+      "name": "operator",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\operator.py",
+      "sha256": "c57b6816cfddfa6e4a126583fca0a2563234018daec2cfb9b5142d855546955c"
+    },
+    {
+      "name": "keyword",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\keyword.py",
+      "sha256": "1f28f509383273238ad86eda04a96343fa0dc10eeaf3189439959d75cdac0a0b"
+    },
+    {
+      "name": "reprlib",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\reprlib.py",
+      "sha256": "53c0c775acd2c7ea3405271e2b8619a5fdc0567a63f263199d594626616184cd"
+    },
+    {
+      "name": "collections",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\collections\\__init__.py",
+      "sha256": "58d1f234b7845ff280f8a195a795f206bc62ce42732caecaf06e6a133ddd6f15"
+    },
+    {
+      "name": "functools",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\functools.py",
+      "sha256": "f0ca5dd563498f8971e410fe9f37083cfcff2052a0f48efcfbe07d6975754864"
+    },
+    {
+      "name": "enum",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\enum.py",
+      "sha256": "5f6126ee55609a8fc27be206803703597e2efdcaad1fb80ab975ecd0e63cd6aa"
+    },
+    {
+      "name": "re._constants",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\re\\_constants.py",
+      "sha256": "8df304954ca75dcd98b9f1f5e3cb5347adc6eaccfc461a94ab914e1b0085e9ab"
+    },
+    {
+      "name": "re._parser",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\re\\_parser.py",
+      "sha256": "bcc84f06d54e2d28506350a60bc1aaaa0efda4221f4ceeb05b2d0f48c712c479"
+    },
+    {
+      "name": "re._casefix",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\re\\_casefix.py",
+      "sha256": "b0dee234e5f8096fc9c1b035ec52d0b1b50cc1f3aea20b360b8be902e53ac752"
+    },
+    {
+      "name": "re._compiler",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\re\\_compiler.py",
+      "sha256": "618f17add086b1dc5314a4e68e9b02a7072cbfb0a401791fd5963dabcd03098c"
+    },
+    {
+      "name": "copyreg",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\copyreg.py",
+      "sha256": "ea2363638fe83e8e5b007013a821841371a615d99414b3c2f8f19152ca109a07"
+    },
+    {
+      "name": "re",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\re\\__init__.py",
+      "sha256": "778cdca1fe51cddb7671d7a158c6bdecee1b7967e9f4a0ddf41cfb5320568c42"
+    },
+    {
+      "name": "json.scanner",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\json\\scanner.py",
+      "sha256": "b2577f9db9f69a0a27f251776349238b17b8b214a01128e7477b0f7d8e24a186"
+    },
+    {
+      "name": "json.decoder",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\json\\decoder.py",
+      "sha256": "9f4cc83197bf1b13fee3ce71a044a4b4987a7eeecd8768206abd31a78e0a3d16"
+    },
+    {
+      "name": "json.encoder",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\json\\encoder.py",
+      "sha256": "497cc84d2b3936f2a25ec6e561a9a3266c4bc4c9661f5841c3b6ec31eaa0edb9"
+    },
+    {
+      "name": "json",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\json\\__init__.py",
+      "sha256": "feb17670e443e5db2723f217727dcc5d5e155c40e4e6935b16061c88542f24e7"
+    },
+    {
+      "name": "_hashlib",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\DLLs\\_hashlib.pyd",
+      "sha256": "03d233dbace599168eaffec823de6ed7beec8c2a4ebfe9b8a3d8e042a59af3ba"
+    },
+    {
+      "name": "hashlib",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\hashlib.py",
+      "sha256": "f0c8900585062c567a283cb782c3c867f86c38516e30f1f98a04ffa775b9a013"
+    },
+    {
+      "name": "warnings",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\warnings.py",
+      "sha256": "0cdd7709b5f38f2a3a1d84893d5d652eaaffd96fb1182e953513998ed09a2e34"
+    },
+    {
+      "name": "importlib",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\importlib\\__init__.py",
+      "sha256": "80ca1730bd367f664ae4bafbe73326bdcaa60fa1029033a9210a355a5168c0fa"
+    },
+    {
+      "name": "importlib._abc",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\importlib\\_abc.py",
+      "sha256": "795157b91862d662ae681c0521daa1311b34b763b955e01505a27c865d848eae"
+    },
+    {
+      "name": "_weakrefset",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\_weakrefset.py",
+      "sha256": "cf8031a6e21150438f3d2964c4152615b91a03894616d5b6930e0f14f44dabda"
+    },
+    {
+      "name": "threading",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\threading.py",
+      "sha256": "feb12e11fd550b71869a8960d6e8c0151e3b1fdc7a2df08a4bf5900affc11c8a"
+    },
+    {
+      "name": "collections.abc",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\collections\\abc.py",
+      "sha256": "7ad86878712fc6682863f12208f4ced5daf2dd82b6ff5ed58207de29d0efa410"
+    },
+    {
+      "name": "token",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\token.py",
+      "sha256": "b4324f039278fa84f7a6fd0b9c51190216ac0cac19e5b1ea4282d8919a114693"
+    },
+    {
+      "name": "tokenize",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\tokenize.py",
+      "sha256": "f386e9870735b6ba7ce4893c0faf0475fe5b6a5f47da7d717433fc488a7bb3b0"
+    },
+    {
+      "name": "linecache",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\linecache.py",
+      "sha256": "30af1d7d7d3c999bb1ee983f3228f8964b5d59ded653ab018d31b73f25a2576f"
+    },
+    {
+      "name": "textwrap",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\textwrap.py",
+      "sha256": "cad00069b2a25a585604d2fa774c288cf5ed70d4464afac16edf821f3a4afd5f"
+    },
+    {
+      "name": "contextlib",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\contextlib.py",
+      "sha256": "a53b1db774f19c6b1e4320c2bc64058c49e3fba58b20b9c1158e5a8d02069890"
+    },
+    {
+      "name": "traceback",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\traceback.py",
+      "sha256": "a6939a8b264d5ab6bf9b32ff247a7419d6e613fd899d0eebe6565207ee87d0f6"
+    },
+    {
+      "name": "unittest.util",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\unittest\\util.py",
+      "sha256": "d1218413dca8c641db891ed05fab47f02404320bea183e9063e511d3660f61db"
+    },
+    {
+      "name": "unittest.result",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\unittest\\result.py",
+      "sha256": "76456254dcf4a5d1d882ebe8d5c00a3714d1059842d2995a570c60c59fc31fc3"
+    },
+    {
+      "name": "heapq",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\heapq.py",
+      "sha256": "5bdbf0450b6721f00fb0508fce97625c9560a87ccae8d551d94a3e220c8195e6"
+    },
+    {
+      "name": "difflib",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\difflib.py",
+      "sha256": "923af786acab9783290252387efc66c39fa8b152e170b066ed4228e380d81008"
+    },
+    {
+      "name": "weakref",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\weakref.py",
+      "sha256": "6721c34ba3c404bf4a443890ed374b546a870c958935a6aa4fdf634876a5a980"
+    },
+    {
+      "name": "copy",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\copy.py",
+      "sha256": "4a28a8fae74106d128ddeed0b59ef38deab2f7b8b9d3bd006130c3cf75b42d34"
+    },
+    {
+      "name": "ast",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\ast.py",
+      "sha256": "57cf6e193f932dcfa3b7080e189d689f510c700d95c3b27e7e8a0d48d2166c2d"
+    },
+    {
+      "name": "opcode",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\opcode.py",
+      "sha256": "3edc2765efb81769f13e958c742f77159cfe6466d2298f656c5a31274ee6537d"
+    },
+    {
+      "name": "dis",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\dis.py",
+      "sha256": "123add22ba17877928a397a279ec7f59c822bbfc6a381423955d8fdf7e47fa54"
+    },
+    {
+      "name": "inspect",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\inspect.py",
+      "sha256": "07ff418cda6eb3f187cdb83b51e7da34e9524ed3cb68235dbcd0efcbde49014c"
+    },
+    {
+      "name": "dataclasses",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\dataclasses.py",
+      "sha256": "3a445bf68189aa04546431ff21084971adfe07bf0bf6639105472c855d0e053b"
+    },
+    {
+      "name": "pprint",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\pprint.py",
+      "sha256": "544dcff1ca7b4ae0cff83f940e011016eb4ad14732afe3e44184c985039430b7"
+    },
+    {
+      "name": "unittest.case",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\unittest\\case.py",
+      "sha256": "11f61a50154773384dda271c8a5abe7fa38698b07d7025f27707a84b27626c29"
+    },
+    {
+      "name": "unittest.suite",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\unittest\\suite.py",
+      "sha256": "26acd439bc5828fcba41c1dc7d2495ce05ed4f9073375e7fbfac05fafdd82e64"
+    },
+    {
+      "name": "fnmatch",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\fnmatch.py",
+      "sha256": "146d27a2853cd14c95ee49cc6130b9f84e2a56618dd1be695cddb20489460425"
+    },
+    {
+      "name": "unittest.loader",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\unittest\\loader.py",
+      "sha256": "37f92ad96ce6511f49754915ecfb362efa7b509afeef99479c4182c7f6203208"
+    },
+    {
+      "name": "gettext",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\gettext.py",
+      "sha256": "da55e22f51bb369819fe4cc1201459c8f18ca948b6ca00137e6dfd7012814d83"
+    },
+    {
+      "name": "argparse",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\argparse.py",
+      "sha256": "8cfce14fba1859a653fc093f396d6789fa32c7b502d78703507429d1d7adf862"
+    },
+    {
+      "name": "signal",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\signal.py",
+      "sha256": "0b7e3d3d39a120142dbf4875d7d79579cad8fee662add30c2375a797f0d2386e"
+    },
+    {
+      "name": "unittest.signals",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\unittest\\signals.py",
+      "sha256": "0ed7cf1cbe0cab769746b3b344f65a659d912c56cd63d1a4280f9b09a77b778f"
+    },
+    {
+      "name": "unittest.runner",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\unittest\\runner.py",
+      "sha256": "b05822336de459dd5ed917417a9e2f903d35a24b715acbb149359d820932a083"
+    },
+    {
+      "name": "unittest.main",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\unittest\\main.py",
+      "sha256": "1d486405df1226fa8ff7b392f150afc6e1239fb186033c28348627c04d9eeedb"
+    },
+    {
+      "name": "unittest",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\unittest\\__init__.py",
+      "sha256": "d9f5034dee11af8558c36dab6f2de6a443296a927af64a729f7ea65b87f3d4bb"
+    },
+    {
+      "name": "urllib",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\urllib\\__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "ipaddress",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\ipaddress.py",
+      "sha256": "98e5d9e9235c4381265d84d3b4d8125822cbfbe352e747190c8be877f6cec2d5"
+    },
+    {
+      "name": "urllib.parse",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\urllib\\parse.py",
+      "sha256": "8e1026b2de5fb7ef9265bf512b6ba11923c3a8bfa48a8b2158475c07c255e1a1"
+    },
+    {
+      "name": "pathlib",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\pathlib.py",
+      "sha256": "cd1557dedcaa1be0459cd59760c5ebac83a3e412e0e1b5bc0b1a82a19563a090"
+    },
+    {
+      "name": "encodings.aliases",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\encodings\\aliases.py",
+      "sha256": "1893cfb597bc5eafd38ef03ac85d8874620112514eb42660408811929cc0d6f8"
+    },
+    {
+      "name": "encodings",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\encodings\\__init__.py",
+      "sha256": "8b997e9f7beef09de01c34ac34191866d3ab25e17164e08f411940b070bc3e74"
+    },
+    {
+      "name": "encodings.utf_8",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\encodings\\utf_8.py",
+      "sha256": "9c54c7db8ce0722ca4ddb5f45d4e170357e37991afb3fcdc091721bf6c09257e"
+    },
+    {
+      "name": "encodings.cp1252",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\encodings\\cp1252.py",
+      "sha256": "7acb7b80c29d9ffda0fe79540509439537216df3a259973d54e1fb23c34e7519"
+    },
+    {
+      "name": "types",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\types.py",
+      "sha256": "d7ce485ecd8d4d1531d8f710e538b4d1a49378afacb6ff9231e48c645a9fa95e"
+    },
+    {
+      "name": "operator",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\operator.py",
+      "sha256": "c57b6816cfddfa6e4a126583fca0a2563234018daec2cfb9b5142d855546955c"
+    },
+    {
+      "name": "keyword",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\keyword.py",
+      "sha256": "1f28f509383273238ad86eda04a96343fa0dc10eeaf3189439959d75cdac0a0b"
+    },
+    {
+      "name": "reprlib",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\reprlib.py",
+      "sha256": "53c0c775acd2c7ea3405271e2b8619a5fdc0567a63f263199d594626616184cd"
+    },
+    {
+      "name": "collections",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\collections\\__init__.py",
+      "sha256": "58d1f234b7845ff280f8a195a795f206bc62ce42732caecaf06e6a133ddd6f15"
+    },
+    {
+      "name": "functools",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\functools.py",
+      "sha256": "f0ca5dd563498f8971e410fe9f37083cfcff2052a0f48efcfbe07d6975754864"
+    },
+    {
+      "name": "enum",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\enum.py",
+      "sha256": "5f6126ee55609a8fc27be206803703597e2efdcaad1fb80ab975ecd0e63cd6aa"
+    },
+    {
+      "name": "re._constants",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\re\\_constants.py",
+      "sha256": "8df304954ca75dcd98b9f1f5e3cb5347adc6eaccfc461a94ab914e1b0085e9ab"
+    },
+    {
+      "name": "re._parser",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\re\\_parser.py",
+      "sha256": "bcc84f06d54e2d28506350a60bc1aaaa0efda4221f4ceeb05b2d0f48c712c479"
+    },
+    {
+      "name": "re._casefix",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\re\\_casefix.py",
+      "sha256": "b0dee234e5f8096fc9c1b035ec52d0b1b50cc1f3aea20b360b8be902e53ac752"
+    },
+    {
+      "name": "re._compiler",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\re\\_compiler.py",
+      "sha256": "618f17add086b1dc5314a4e68e9b02a7072cbfb0a401791fd5963dabcd03098c"
+    },
+    {
+      "name": "copyreg",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\copyreg.py",
+      "sha256": "ea2363638fe83e8e5b007013a821841371a615d99414b3c2f8f19152ca109a07"
+    },
+    {
+      "name": "re",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\re\\__init__.py",
+      "sha256": "778cdca1fe51cddb7671d7a158c6bdecee1b7967e9f4a0ddf41cfb5320568c42"
+    },
+    {
+      "name": "json.scanner",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\json\\scanner.py",
+      "sha256": "b2577f9db9f69a0a27f251776349238b17b8b214a01128e7477b0f7d8e24a186"
+    },
+    {
+      "name": "json.decoder",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\json\\decoder.py",
+      "sha256": "9f4cc83197bf1b13fee3ce71a044a4b4987a7eeecd8768206abd31a78e0a3d16"
+    },
+    {
+      "name": "json.encoder",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\json\\encoder.py",
+      "sha256": "497cc84d2b3936f2a25ec6e561a9a3266c4bc4c9661f5841c3b6ec31eaa0edb9"
+    },
+    {
+      "name": "json",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\json\\__init__.py",
+      "sha256": "feb17670e443e5db2723f217727dcc5d5e155c40e4e6935b16061c88542f24e7"
+    },
+    {
+      "name": "_hashlib",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\DLLs\\_hashlib.pyd",
+      "sha256": "03d233dbace599168eaffec823de6ed7beec8c2a4ebfe9b8a3d8e042a59af3ba"
+    },
+    {
+      "name": "hashlib",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\hashlib.py",
+      "sha256": "f0c8900585062c567a283cb782c3c867f86c38516e30f1f98a04ffa775b9a013"
+    },
+    {
+      "name": "warnings",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\warnings.py",
+      "sha256": "0cdd7709b5f38f2a3a1d84893d5d652eaaffd96fb1182e953513998ed09a2e34"
+    },
+    {
+      "name": "importlib",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\importlib\\__init__.py",
+      "sha256": "80ca1730bd367f664ae4bafbe73326bdcaa60fa1029033a9210a355a5168c0fa"
+    },
+    {
+      "name": "importlib._abc",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\importlib\\_abc.py",
+      "sha256": "795157b91862d662ae681c0521daa1311b34b763b955e01505a27c865d848eae"
+    },
+    {
+      "name": "_weakrefset",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\_weakrefset.py",
+      "sha256": "cf8031a6e21150438f3d2964c4152615b91a03894616d5b6930e0f14f44dabda"
+    },
+    {
+      "name": "threading",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\threading.py",
+      "sha256": "feb12e11fd550b71869a8960d6e8c0151e3b1fdc7a2df08a4bf5900affc11c8a"
+    },
+    {
+      "name": "collections.abc",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\collections\\abc.py",
+      "sha256": "7ad86878712fc6682863f12208f4ced5daf2dd82b6ff5ed58207de29d0efa410"
+    },
+    {
+      "name": "token",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\token.py",
+      "sha256": "b4324f039278fa84f7a6fd0b9c51190216ac0cac19e5b1ea4282d8919a114693"
+    },
+    {
+      "name": "tokenize",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\tokenize.py",
+      "sha256": "f386e9870735b6ba7ce4893c0faf0475fe5b6a5f47da7d717433fc488a7bb3b0"
+    },
+    {
+      "name": "linecache",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\linecache.py",
+      "sha256": "30af1d7d7d3c999bb1ee983f3228f8964b5d59ded653ab018d31b73f25a2576f"
+    },
+    {
+      "name": "textwrap",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\textwrap.py",
+      "sha256": "cad00069b2a25a585604d2fa774c288cf5ed70d4464afac16edf821f3a4afd5f"
+    },
+    {
+      "name": "contextlib",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\contextlib.py",
+      "sha256": "a53b1db774f19c6b1e4320c2bc64058c49e3fba58b20b9c1158e5a8d02069890"
+    },
+    {
+      "name": "traceback",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\traceback.py",
+      "sha256": "a6939a8b264d5ab6bf9b32ff247a7419d6e613fd899d0eebe6565207ee87d0f6"
+    },
+    {
+      "name": "unittest.util",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\unittest\\util.py",
+      "sha256": "d1218413dca8c641db891ed05fab47f02404320bea183e9063e511d3660f61db"
+    },
+    {
+      "name": "unittest.result",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\unittest\\result.py",
+      "sha256": "76456254dcf4a5d1d882ebe8d5c00a3714d1059842d2995a570c60c59fc31fc3"
+    },
+    {
+      "name": "heapq",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\heapq.py",
+      "sha256": "5bdbf0450b6721f00fb0508fce97625c9560a87ccae8d551d94a3e220c8195e6"
+    },
+    {
+      "name": "difflib",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\difflib.py",
+      "sha256": "923af786acab9783290252387efc66c39fa8b152e170b066ed4228e380d81008"
+    },
+    {
+      "name": "weakref",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\weakref.py",
+      "sha256": "6721c34ba3c404bf4a443890ed374b546a870c958935a6aa4fdf634876a5a980"
+    },
+    {
+      "name": "copy",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\copy.py",
+      "sha256": "4a28a8fae74106d128ddeed0b59ef38deab2f7b8b9d3bd006130c3cf75b42d34"
+    },
+    {
+      "name": "ast",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\ast.py",
+      "sha256": "57cf6e193f932dcfa3b7080e189d689f510c700d95c3b27e7e8a0d48d2166c2d"
+    },
+    {
+      "name": "opcode",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\opcode.py",
+      "sha256": "3edc2765efb81769f13e958c742f77159cfe6466d2298f656c5a31274ee6537d"
+    },
+    {
+      "name": "dis",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\dis.py",
+      "sha256": "123add22ba17877928a397a279ec7f59c822bbfc6a381423955d8fdf7e47fa54"
+    },
+    {
+      "name": "inspect",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\inspect.py",
+      "sha256": "07ff418cda6eb3f187cdb83b51e7da34e9524ed3cb68235dbcd0efcbde49014c"
+    },
+    {
+      "name": "dataclasses",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\dataclasses.py",
+      "sha256": "3a445bf68189aa04546431ff21084971adfe07bf0bf6639105472c855d0e053b"
+    },
+    {
+      "name": "pprint",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\pprint.py",
+      "sha256": "544dcff1ca7b4ae0cff83f940e011016eb4ad14732afe3e44184c985039430b7"
+    },
+    {
+      "name": "unittest.case",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\unittest\\case.py",
+      "sha256": "11f61a50154773384dda271c8a5abe7fa38698b07d7025f27707a84b27626c29"
+    },
+    {
+      "name": "unittest.suite",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\unittest\\suite.py",
+      "sha256": "26acd439bc5828fcba41c1dc7d2495ce05ed4f9073375e7fbfac05fafdd82e64"
+    },
+    {
+      "name": "fnmatch",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\fnmatch.py",
+      "sha256": "146d27a2853cd14c95ee49cc6130b9f84e2a56618dd1be695cddb20489460425"
+    },
+    {
+      "name": "unittest.loader",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\unittest\\loader.py",
+      "sha256": "37f92ad96ce6511f49754915ecfb362efa7b509afeef99479c4182c7f6203208"
+    },
+    {
+      "name": "gettext",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\gettext.py",
+      "sha256": "da55e22f51bb369819fe4cc1201459c8f18ca948b6ca00137e6dfd7012814d83"
+    },
+    {
+      "name": "argparse",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\argparse.py",
+      "sha256": "8cfce14fba1859a653fc093f396d6789fa32c7b502d78703507429d1d7adf862"
+    },
+    {
+      "name": "signal",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\signal.py",
+      "sha256": "0b7e3d3d39a120142dbf4875d7d79579cad8fee662add30c2375a797f0d2386e"
+    },
+    {
+      "name": "unittest.signals",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\unittest\\signals.py",
+      "sha256": "0ed7cf1cbe0cab769746b3b344f65a659d912c56cd63d1a4280f9b09a77b778f"
+    },
+    {
+      "name": "unittest.runner",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\unittest\\runner.py",
+      "sha256": "b05822336de459dd5ed917417a9e2f903d35a24b715acbb149359d820932a083"
+    },
+    {
+      "name": "unittest.main",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\unittest\\main.py",
+      "sha256": "1d486405df1226fa8ff7b392f150afc6e1239fb186033c28348627c04d9eeedb"
+    },
+    {
+      "name": "unittest",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\unittest\\__init__.py",
+      "sha256": "d9f5034dee11af8558c36dab6f2de6a443296a927af64a729f7ea65b87f3d4bb"
+    },
+    {
+      "name": "urllib",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\urllib\\__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "ipaddress",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\ipaddress.py",
+      "sha256": "98e5d9e9235c4381265d84d3b4d8125822cbfbe352e747190c8be877f6cec2d5"
+    },
+    {
+      "name": "urllib.parse",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\urllib\\parse.py",
+      "sha256": "8e1026b2de5fb7ef9265bf512b6ba11923c3a8bfa48a8b2158475c07c255e1a1"
+    },
+    {
+      "name": "pathlib",
+      "path": "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\Lib\\pathlib.py",
+      "sha256": "cd1557dedcaa1be0459cd59760c5ebac83a3e412e0e1b5bc0b1a82a19563a090"
+    }
+  ],
+  "native": false,
+  "physical": false,
+  "scope": "ACTUAL_SELECTED_FINALIZATION_AST_WITH_INERT_BACKEND_ONLY",
+  "skips": 0,
+  "source_after": {
+    "controls_source.py": {
+      "bytes": 6984,
+      "sha256": "449594f82c2d989dfc95b51328e70c4fdd7348f128be479861c37892860a697c"
+    },
+    "original_inner.py": {
+      "bytes": 12178,
+      "sha256": "7f38d869c5e2976a228354efaab5195fadf3a2c18022100ffd59bfecb2fbd0ca"
+    }
+  },
+  "source_before": {
+    "controls_source.py": {
+      "bytes": 6984,
+      "sha256": "449594f82c2d989dfc95b51328e70c4fdd7348f128be479861c37892860a697c"
+    },
+    "original_inner.py": {
+      "bytes": 12178,
+      "sha256": "7f38d869c5e2976a228354efaab5195fadf3a2c18022100ffd59bfecb2fbd0ca"
+    }
+  },
+  "state": "MODELED_GREEN",
+  "tests_run": 5
+}

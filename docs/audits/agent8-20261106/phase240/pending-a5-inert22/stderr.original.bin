@@ -1,0 +1,85 @@
+test_completion_bound_includes_pipe_and_handle_close (test_controller_faults_source.ArchivedControllerFaultControls.test_completion_bound_includes_pipe_and_handle_close) ... FAIL
+test_creation_delay_counts_even_when_first_poll_reports_exit (test_controller_faults_source.ArchivedControllerFaultControls.test_creation_delay_counts_even_when_first_poll_reports_exit) ... ok
+test_final_poll_error_is_sticky_and_wait_confirmed_handle_is_closed (test_controller_faults_source.ArchivedControllerFaultControls.test_final_poll_error_is_sticky_and_wait_confirmed_handle_is_closed) ... FAIL
+test_first_join_error_does_not_skip_second_join_or_close (test_controller_faults_source.ArchivedControllerFaultControls.test_first_join_error_does_not_skip_second_join_or_close) ... FAIL
+test_normal_inert_protocol_preserves_expected_red (test_controller_faults_source.ArchivedControllerFaultControls.test_normal_inert_protocol_preserves_expected_red) ... ok
+test_poll_error_still_attempts_kill_wait_and_retains_denial (test_controller_faults_source.ArchivedControllerFaultControls.test_poll_error_still_attempts_kill_wait_and_retains_denial) ... FAIL
+test_primary_receipt_failure_attempts_fallback_and_denies (test_controller_faults_source.ArchivedControllerFaultControls.test_primary_receipt_failure_attempts_fallback_and_denies) ... FAIL
+test_stdout_write_failure_does_not_skip_stderr_or_receipt (test_controller_faults_source.ArchivedControllerFaultControls.test_stdout_write_failure_does_not_skip_stderr_or_receipt) ... FAIL
+test_unstarted_thread_is_not_joined_and_evidence_is_retained (test_controller_faults_source.ArchivedControllerFaultControls.test_unstarted_thread_is_not_joined_and_evidence_is_retained) ... FAIL
+test_completion_bound_includes_pipe_and_handle_close (test_controller_faults_source.FixedControllerFaultControls.test_completion_bound_includes_pipe_and_handle_close) ... ok
+test_creation_delay_counts_even_when_first_poll_reports_exit (test_controller_faults_source.FixedControllerFaultControls.test_creation_delay_counts_even_when_first_poll_reports_exit) ... ok
+test_final_poll_error_is_sticky_and_wait_confirmed_handle_is_closed (test_controller_faults_source.FixedControllerFaultControls.test_final_poll_error_is_sticky_and_wait_confirmed_handle_is_closed) ... ok
+test_first_join_error_does_not_skip_second_join_or_close (test_controller_faults_source.FixedControllerFaultControls.test_first_join_error_does_not_skip_second_join_or_close) ... ok
+test_normal_inert_protocol_preserves_expected_red (test_controller_faults_source.FixedControllerFaultControls.test_normal_inert_protocol_preserves_expected_red) ... ok
+test_poll_error_still_attempts_kill_wait_and_retains_denial (test_controller_faults_source.FixedControllerFaultControls.test_poll_error_still_attempts_kill_wait_and_retains_denial) ... ok
+test_primary_receipt_failure_attempts_fallback_and_denies (test_controller_faults_source.FixedControllerFaultControls.test_primary_receipt_failure_attempts_fallback_and_denies) ... ok
+test_stdout_write_failure_does_not_skip_stderr_or_receipt (test_controller_faults_source.FixedControllerFaultControls.test_stdout_write_failure_does_not_skip_stderr_or_receipt) ... ok
+test_unstarted_thread_is_not_joined_and_evidence_is_retained (test_controller_faults_source.FixedControllerFaultControls.test_unstarted_thread_is_not_joined_and_evidence_is_retained) ... ok
+test_cross_api_file_kind_change_denies_before_read (test_controller_faults_source.FixedBoundedReadControls.test_cross_api_file_kind_change_denies_before_read) ... ok
+test_cross_api_permission_and_ctime_difference_preserves_file_kind (test_controller_faults_source.FixedBoundedReadControls.test_cross_api_permission_and_ctime_difference_preserves_file_kind) ... ok
+test_growing_input_reads_only_pinned_size_plus_one_and_denies (test_controller_faults_source.FixedBoundedReadControls.test_growing_input_reads_only_pinned_size_plus_one_and_denies) ... ok
+test_same_api_metadata_change_denies (test_controller_faults_source.FixedBoundedReadControls.test_same_api_metadata_change_denies) ... ok
+
+======================================================================
+FAIL: test_completion_bound_includes_pipe_and_handle_close (test_controller_faults_source.ArchivedControllerFaultControls.test_completion_bound_includes_pipe_and_handle_close)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<agent5-pinned-controller-fault-model>", line 322, in test_completion_bound_includes_pipe_and_handle_close
+    self.require_retained_denial(boundary)
+  File "<agent5-pinned-controller-fault-model>", line 282, in require_retained_denial
+    self.assertEqual(boundary.code, 2)
+AssertionError: 0 != 2
+
+======================================================================
+FAIL: test_final_poll_error_is_sticky_and_wait_confirmed_handle_is_closed (test_controller_faults_source.ArchivedControllerFaultControls.test_final_poll_error_is_sticky_and_wait_confirmed_handle_is_closed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<agent5-pinned-controller-fault-model>", line 316, in test_final_poll_error_is_sticky_and_wait_confirmed_handle_is_closed
+    self.assertIn('close_handle', boundary.events)
+AssertionError: 'close_handle' not found in ['mkdir:/attempt', 'mkdir:/attempt/empty-cache', 'write:raw-before.json', 'popen', 'start:0', 'start:1', 'poll', 'poll', 'wait', 'join:0', 'join:1', 'poll']
+
+======================================================================
+FAIL: test_first_join_error_does_not_skip_second_join_or_close (test_controller_faults_source.ArchivedControllerFaultControls.test_first_join_error_does_not_skip_second_join_or_close)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<agent5-pinned-controller-fault-model>", line 308, in test_first_join_error_does_not_skip_second_join_or_close
+    self.assertIn('join:1', boundary.events)
+AssertionError: 'join:1' not found in ['mkdir:/attempt', 'mkdir:/attempt/empty-cache', 'write:raw-before.json', 'popen', 'start:0', 'start:1', 'poll', 'poll', 'wait', 'join:0']
+
+======================================================================
+FAIL: test_poll_error_still_attempts_kill_wait_and_retains_denial (test_controller_faults_source.ArchivedControllerFaultControls.test_poll_error_still_attempts_kill_wait_and_retains_denial)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<agent5-pinned-controller-fault-model>", line 295, in test_poll_error_still_attempts_kill_wait_and_retains_denial
+    self.assertIn('kill', boundary.events)
+AssertionError: 'kill' not found in ['mkdir:/attempt', 'mkdir:/attempt/empty-cache', 'write:raw-before.json', 'popen', 'start:0', 'start:1', 'poll', 'poll', 'wait', 'join:0', 'join:1', 'poll']
+
+======================================================================
+FAIL: test_primary_receipt_failure_attempts_fallback_and_denies (test_controller_faults_source.ArchivedControllerFaultControls.test_primary_receipt_failure_attempts_fallback_and_denies)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<agent5-pinned-controller-fault-model>", line 338, in test_primary_receipt_failure_attempts_fallback_and_denies
+    self.assertIn('write:receipt-fallback.json', boundary.events)
+AssertionError: 'write:receipt-fallback.json' not found in ['mkdir:/attempt', 'mkdir:/attempt/empty-cache', 'write:raw-before.json', 'popen', 'start:0', 'start:1', 'poll', 'poll', 'wait', 'join:0', 'join:1', 'poll', 'alive:0', 'alive:1', 'close_pipe:1', 'close_pipe:2', 'close_handle', 'write:stdout.log', 'write:stderr.log', 'write:raw-after.json', 'write:receipt.json']
+
+======================================================================
+FAIL: test_stdout_write_failure_does_not_skip_stderr_or_receipt (test_controller_faults_source.ArchivedControllerFaultControls.test_stdout_write_failure_does_not_skip_stderr_or_receipt)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<agent5-pinned-controller-fault-model>", line 332, in test_stdout_write_failure_does_not_skip_stderr_or_receipt
+    self.assertIn('write:stderr.log', boundary.events)
+AssertionError: 'write:stderr.log' not found in ['mkdir:/attempt', 'mkdir:/attempt/empty-cache', 'write:raw-before.json', 'popen', 'start:0', 'start:1', 'poll', 'poll', 'wait', 'join:0', 'join:1', 'poll', 'alive:0', 'alive:1', 'close_pipe:1', 'close_pipe:2', 'close_handle', 'write:stdout.log']
+
+======================================================================
+FAIL: test_unstarted_thread_is_not_joined_and_evidence_is_retained (test_controller_faults_source.ArchivedControllerFaultControls.test_unstarted_thread_is_not_joined_and_evidence_is_retained)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<agent5-pinned-controller-fault-model>", line 301, in test_unstarted_thread_is_not_joined_and_evidence_is_retained
+    self.assertNotIn('join:0', boundary.events)
+AssertionError: 'join:0' unexpectedly found in ['mkdir:/attempt', 'mkdir:/attempt/empty-cache', 'write:raw-before.json', 'popen', 'start:0', 'poll', 'wait', 'join:0']
+
+----------------------------------------------------------------------
+Ran 22 tests in 0.068s
+
+FAILED (failures=7)

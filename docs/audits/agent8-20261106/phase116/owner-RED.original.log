@@ -1,0 +1,27 @@
+PRIMARY_RED_HEAD 6621362188384fa92e1ac8e45ddbfbb5db7218ac
+PRIMARY_RED_MODULE_SHA 7d9f7c8488407b6ed60e781f75748a89c5d77cfce5925a16df583468ebd1895c
+{"scope": "OWNED_LOOPBACK_LAB_STARTED", "voters": 3, "processes": [137064, 100360, 137496], "endpoints": ["http://127.0.0.1:64154", "http://127.0.0.1:64158", "http://127.0.0.1:64162"], "binary_sha256": "41762ef5b98c8dd9b6852df6cfbceed37e7f0acc5760856be33100f1092475e1", "acl_default": "deny"}
+test_00_actual_atomic_existing_and_absent_snapshot (test_native_snapshot.NativeSnapshotTests.test_00_actual_atomic_existing_and_absent_snapshot) ... Executing <Task pending name='Task-1' coro=<NativeSnapshotTests.asyncSetUp() running at C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-2-high-availability-distributed\work\native-job-admission-20261109\tests\coordination\assignment_v1\test_native_snapshot.py:27> cb=[_run_until_complete_cb() at C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\base_events.py:181] created at C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\runners.py:100> took 0.156 seconds
+{"scope": "ACTUAL_UNTRUSTED_PROBE_GET_OR_EMPTY_RESPONSE", "response": {"Results": [{"KV": {"LockIndex": 0, "Key": "unified/f7572c34-bb38-4b76-bd1e-7f2ca8bb72b5/runtime-v1/probe-only/snapshot/a", "Flags": 0, "Value": "eyJzY2hlbWEiOiJ1bnRydXN0ZWQubmF0aXZlLXNuYXBzaG90LXByb2JlLnYxIiwidmFsdWUiOiJvbmUifQ==", "CreateIndex": 16, "ModifyIndex": 16}}, {"KV": {"LockIndex": 0, "Key": "unified/f7572c34-bb38-4b76-bd1e-7f2ca8bb72b5/runtime-v1/probe-only/snapshot/not-written", "Flags": 0, "Value": null, "CreateIndex": 0, "ModifyIndex": 0}}], "Errors": null, "Index": 1, "LastContact": 0, "KnownLeader": true, "ConsistencyLevel": "", "NotModified": false, "Backend": 0, "ResultsFilteredByACLs": false}}
+ERROR
+{"scope": "OWNED_LOOPBACK_LAB_RETIRED", "processes": [{"pid": 137064, "returncode": 1}, {"pid": 100360, "returncode": 1}, {"pid": 137496, "returncode": 1}], "all_owned_processes_waited": true, "foreign_process_operations": 0, "session_retirement": "OWNED_SERVERS_STOPPED_TEMPORARY_DIRECTORY_CLEANUP_FOLLOWS"}
+
+======================================================================
+ERROR: test_00_actual_atomic_existing_and_absent_snapshot (test_native_snapshot.NativeSnapshotTests.test_00_actual_atomic_existing_and_absent_snapshot)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-2-high-availability-distributed\work\native-job-admission-20261109\tests\coordination\assignment_v1\test_native_snapshot.py", line 32, in test_00_actual_atomic_existing_and_absent_snapshot
+    rows=await self.backend._read_snapshot((self.a,self.missing,self.b))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'AssignmentAuthority' object has no attribute '_read_snapshot'
+
+----------------------------------------------------------------------
+Ran 1 test in 3.464s
+
+FAILED (errors=1)

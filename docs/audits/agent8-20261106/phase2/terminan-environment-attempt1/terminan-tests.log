@@ -1,0 +1,92 @@
+test_duplicate_idempotent (tests.test_cache_queue.CacheQueueTests.test_duplicate_idempotent) ... ok
+test_expired_lease_not_accepted (tests.test_cache_queue.CacheQueueTests.test_expired_lease_not_accepted) ... ok
+test_partial_failed (tests.test_cache_queue.CacheQueueTests.test_partial_failed) ... ok
+test_queue_to_ready_and_persist (tests.test_cache_queue.CacheQueueTests.test_queue_to_ready_and_persist) ... ok
+test_stale_token_rejected (tests.test_cache_queue.CacheQueueTests.test_stale_token_rejected) ... ok
+test_absent_footprint_is_not_a_zero_trade_attestation (tests.test_cache_reliability.ReliabilityTests.test_absent_footprint_is_not_a_zero_trade_attestation) ... ok
+test_compact_preview_corruption_and_coverage (tests.test_cache_reliability.ReliabilityTests.test_compact_preview_corruption_and_coverage) ... ok
+test_completion_cannot_replace_claim_identity (tests.test_cache_reliability.ReliabilityTests.test_completion_cannot_replace_claim_identity) ... ok
+test_concurrent_submissions_idempotent (tests.test_cache_reliability.ReliabilityTests.test_concurrent_submissions_idempotent) ... ok
+test_corrupt_preview_can_be_requeued (tests.test_cache_reliability.ReliabilityTests.test_corrupt_preview_can_be_requeued) ... ok
+test_exact_lookup_uses_index (tests.test_cache_reliability.ReliabilityTests.test_exact_lookup_uses_index) ... ok
+test_exhausted_crash_becomes_failed (tests.test_cache_reliability.ReliabilityTests.test_exhausted_crash_becomes_failed) ... ok
+test_expired_ready_can_be_requeued (tests.test_cache_reliability.ReliabilityTests.test_expired_ready_can_be_requeued) ... ok
+test_finish_rolls_back_payload_on_publish_error (tests.test_cache_reliability.ReliabilityTests.test_finish_rolls_back_payload_on_publish_error) ... ok
+test_http_is_read_only_and_does_not_start_worker (tests.test_cache_reliability.ReliabilityTests.test_http_is_read_only_and_does_not_start_worker) ... ok
+test_incomplete_footprint_volume_and_duplicate (tests.test_cache_reliability.ReliabilityTests.test_incomplete_footprint_volume_and_duplicate) ... ok
+test_legacy_missing_index_never_falls_back_to_scan (tests.test_cache_reliability.ReliabilityTests.test_legacy_missing_index_never_falls_back_to_scan) ... ok
+test_lookup_uses_one_wal_snapshot (tests.test_cache_reliability.ReliabilityTests.test_lookup_uses_one_wal_snapshot) ... ok
+test_manual_preview_is_consistent_with_data_epoch (tests.test_cache_reliability.ReliabilityTests.test_manual_preview_is_consistent_with_data_epoch) ... ok
+test_missing_whole_period_is_incomplete (tests.test_cache_reliability.ReliabilityTests.test_missing_whole_period_is_incomplete) ... ok
+test_preview_reader_never_reads_full_blob_or_computes (tests.test_cache_reliability.ReliabilityTests.test_preview_reader_never_reads_full_blob_or_computes) ... ok
+test_put_eviction_is_atomic (tests.test_cache_reliability.ReliabilityTests.test_put_eviction_is_atomic) ... ok
+test_real_killed_writer_wal_snapshot_and_reclaim (tests.test_cache_reliability.ReliabilityTests.test_real_killed_writer_wal_snapshot_and_reclaim) ... ok
+test_rehashed_but_incomplete_payload_never_ready (tests.test_cache_reliability.ReliabilityTests.test_rehashed_but_incomplete_payload_never_ready) ... ok
+test_retry_is_explicit_and_source_immutable (tests.test_cache_reliability.ReliabilityTests.test_retry_is_explicit_and_source_immutable) ... ok
+test_compute_complete_five_minute (tests.test_saved_cache.SavedCacheTests.test_compute_complete_five_minute) ... ok
+test_compute_partial_is_not_cached (tests.test_saved_cache.SavedCacheTests.test_compute_partial_is_not_cached) ... ok
+test_corrupt_bytes_fail_closed (tests.test_saved_cache.SavedCacheTests.test_corrupt_bytes_fail_closed) ... ok
+test_expiry (tests.test_saved_cache.SavedCacheTests.test_expiry) ... ok
+test_hit_after_reopen (tests.test_saved_cache.SavedCacheTests.test_hit_after_reopen) ... ok
+test_partial_rejected (tests.test_saved_cache.SavedCacheTests.test_partial_rejected) ... ok
+test_revision_change_is_miss (tests.test_saved_cache.SavedCacheTests.test_revision_change_is_miss) ... ok
+test_source_mismatch_rejected (tests.test_saved_cache.SavedCacheTests.test_source_mismatch_rejected) ... ok
+test_unverified_rejected (tests.test_saved_cache.SavedCacheTests.test_unverified_rejected) ... ok
+test_wrong_key_rejected (tests.test_saved_cache.SavedCacheTests.test_wrong_key_rejected) ... ok
+test_old_or_duplicate_snapshot_cannot_recover_invalidated_book (tests.test_snapshot_recovery_audit.SnapshotRecoveryAuditTests.test_old_or_duplicate_snapshot_cannot_recover_invalidated_book) ... ok
+test_bounded (tests.test_dom_stream.StreamTests.test_bounded) ... ok
+test_drain_limit (tests.test_dom_stream.StreamTests.test_drain_limit) ... ok
+test_fifo (tests.test_dom_stream.StreamTests.test_fifo) ... ok
+test_gate_coalesces (tests.test_dom_stream.StreamTests.test_gate_coalesces) ... ok
+test_gate_status_changes (tests.test_dom_stream.StreamTests.test_gate_status_changes) ... ok
+test_invalid_envelope (tests.test_dom_stream.StreamTests.test_invalid_envelope) ... ok
+test_recovery_requires_snapshot (tests.test_dom_stream.StreamTests.test_recovery_requires_snapshot) ... ok
+test_two_symbols (tests.test_dom_stream.StreamTests.test_two_symbols) ... ok
+test_owner_end_is_immutable_and_bound (tests.test_r4_session.R4SessionTests.test_owner_end_is_immutable_and_bound) ... ok
+test_receipt_schema_authority_and_identity (tests.test_r4_session.R4SessionTests.test_receipt_schema_authority_and_identity) ... ok
+test_canonical_pins_and_versioned_negatives (tests.test_r4_contracts.R4Contracts.test_canonical_pins_and_versioned_negatives) ... ok
+test_fail_closed_schema_provenance (tests.test_r4_contracts.R4Contracts.test_fail_closed_schema_provenance) ... ok
+test_freshness_partial_unavailable_epoch (tests.test_r4_contracts.R4Contracts.test_freshness_partial_unavailable_epoch) ... ok
+test_future_nonfinite_null_order (tests.test_r4_contracts.R4Contracts.test_future_nonfinite_null_order) ... ok
+test_gap_and_nullable_poc (tests.test_r4_contracts.R4Contracts.test_gap_and_nullable_poc) ... ok
+test_hash_mismatch_and_unknown_fields (tests.test_r4_contracts.R4Contracts.test_hash_mismatch_and_unknown_fields) ... ok
+test_identity_and_native_timeframe (tests.test_r4_contracts.R4Contracts.test_identity_and_native_timeframe) ... ok
+test_timeout_and_non_object_rows (tests.test_r4_contracts.R4Contracts.test_timeout_and_non_object_rows) ... ok
+test_valid_pinned_sources (tests.test_r4_contracts.R4Contracts.test_valid_pinned_sources) ... ok
+test_closed_trade_requires_positive_exit_price (tests.test_trade_contract_numeric.NumericTradeContractTests.test_closed_trade_requires_positive_exit_price) ... ok
+test_nonfinite_and_unrepresentable_trade_numbers_are_rejected (tests.test_trade_contract_numeric.NumericTradeContractTests.test_nonfinite_and_unrepresentable_trade_numbers_are_rejected) ... ok
+test_open_trade_and_finite_loss_remain_valid (tests.test_trade_contract_numeric.NumericTradeContractTests.test_open_trade_and_finite_loss_remain_valid) ... ok
+test_required_numbers_cannot_be_null_on_an_open_trade (tests.test_trade_contract_numeric.NumericTradeContractTests.test_required_numbers_cannot_be_null_on_an_open_trade) ... ok
+test_timestamps_are_nonnegative_bounded_integer_milliseconds (tests.test_trade_contract_numeric.NumericTradeContractTests.test_timestamps_are_nonnegative_bounded_integer_milliseconds) ... ok
+test_request_workers_are_joined_before_interpreter_shutdown (tests.test_r3_reliability.Reliability.test_request_workers_are_joined_before_interpreter_shutdown) ... ok
+test_reset_while_headers_are_flushed_does_not_write_stderr (tests.test_r3_reliability.Reliability.test_reset_while_headers_are_flushed_does_not_write_stderr) ... ok
+test_admission_reset_and_failed_thread_start_do_not_leak_slots (tests.test_r3_reliability.TransportAndFailures.test_admission_reset_and_failed_thread_start_do_not_leak_slots) ... ok
+test_any_stderr_still_fails_health (tests.test_r3_reliability.TransportAndFailures.test_any_stderr_still_fails_health) ... ERROR
+test_handler_errors_are_fatal_and_never_raw (tests.test_r3_reliability.TransportAndFailures.test_handler_errors_are_fatal_and_never_raw) ... ok
+test_incomplete_requests_are_joined_at_shutdown (tests.test_r3_reliability.TransportAndFailures.test_incomplete_requests_are_joined_at_shutdown) ... ok
+test_metrics_have_fixed_bounded_schema (tests.test_r3_reliability.TransportAndFailures.test_metrics_have_fixed_bounded_schema) ... ok
+test_new_runner_requires_final_diagnostics_and_tamper_fails (tests.test_r3_reliability.TransportAndFailures.test_new_runner_requires_final_diagnostics_and_tamper_fails) ... ERROR
+test_only_IO_boundaries_classify_disconnects (tests.test_r3_reliability.TransportAndFailures.test_only_IO_boundaries_classify_disconnects) ... ok
+test_stderr_tokens_are_diagnostic_never_waivers (tests.test_r3_reliability.TransportAndFailures.test_stderr_tokens_are_diagnostic_never_waivers) ... ok
+test_workers_held_open_are_drained_before_close_returns (tests.test_r3_reliability.TransportAndFailures.test_workers_held_open_are_drained_before_close_returns) ... ok
+
+======================================================================
+ERROR: test_any_stderr_still_fails_health (tests.test_r3_reliability.TransportAndFailures.test_any_stderr_still_fails_health)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\work\terminan-isolated\tests\test_r3_reliability.py", line 73, in test_any_stderr_still_fails_health
+    from test_harness_failclosed import FakeRuntime,SHA
+ModuleNotFoundError: No module named 'test_harness_failclosed'
+
+======================================================================
+ERROR: test_new_runner_requires_final_diagnostics_and_tamper_fails (tests.test_r3_reliability.TransportAndFailures.test_new_runner_requires_final_diagnostics_and_tamper_fails)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-8-independent-security-ci\work\terminan-isolated\tests\test_r3_reliability.py", line 127, in test_new_runner_requires_final_diagnostics_and_tamper_fails
+    from test_harness_failclosed import FakeRuntime,SHA
+ModuleNotFoundError: No module named 'test_harness_failclosed'
+
+----------------------------------------------------------------------
+Ran 71 tests in 4.651s
+
+FAILED (errors=2)

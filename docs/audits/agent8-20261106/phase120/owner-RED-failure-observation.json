@@ -1,0 +1,15 @@
+{
+  "test": "test_owned_supervisor_loss.ActualOwnedSupervisorLoss.test_actual_owner_crash_and_fresh_rejoin_suspended_only",
+  "origin": [
+    "ValueError",
+    "MULTIPLE_OWN_FRAMES"
+  ],
+  "cleanup": [
+    [
+      "watchdog_private_empty_cleanup",
+      "PermissionError",
+      "[WinError 32] Der Prozess kann nicht auf die Datei zugreifen, da sie von einem anderen Prozess verwendet wird: 'C:\\\\Users\\\\LS-5\\\\AppData\\\\Local\\\\Temp\\\\a5-loss-watchdog-nxv893fn'"
+    ]
+  ],
+  "observation": {}
+}

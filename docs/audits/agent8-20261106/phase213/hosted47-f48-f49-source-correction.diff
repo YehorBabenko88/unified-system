@@ -1,0 +1,99 @@
+--- old/docs/gateway/research/persistence/qualification47/qualify.py
++++ new/docs/gateway/research/persistence/qualification47/qualify.py
+@@ -82,6 +82,19 @@
+     except FileNotFoundError:
+         return True
+     return False
++
++
++def admit_child_paths(temp, db, marker):
++    """Local unresolved path checks only; no permit or atomic-race claim."""
++    need(all(p.is_absolute() and '..' not in p.parts for p in (temp, db, marker)), 'Absolute child paths required')
++    need(db.is_relative_to(temp) and marker.is_relative_to(temp)
++         and db.parent == marker.parent and db.name == 'own.sqlite' and marker.name == 'phase.marker', 'Fixed owned child paths required')
++    ordinary(temp)
++    ordinary(db.parent)
++    ordinary(db, 'file')
++    ordinary(marker.parent)
++    if not absent(marker):
++        ordinary(marker, 'file')
+ 
+ 
+ def read_json(path):
+@@ -175,7 +188,14 @@
+ 
+ 
+ def junit_facts(path, ids):
+-    doc = ET.parse(path).getroot()
++    # Metadata and complete unresolved ancestry precede any file read or parser.
++    info = ordinary(path, 'file')
++    limit = 16 * 1024 * 1024
++    need(type(info.st_size) is int and 0 < info.st_size <= limit, 'JUnit metadata size outside bound')
++    with path.open('rb') as stream:
++        raw = stream.read(limit + 1)
++    need(type(raw) is bytes and 0 < len(raw) <= limit and len(raw) == info.st_size, 'JUnit bytes outside admitted size')
++    doc = ET.fromstring(raw)
+     suites = doc.findall('testsuite') if doc.tag == 'testsuites' else [doc]
+     need(suites and all(s.tag == 'testsuite' for s in suites), 'Invalid JUnit root')
+     cases = [c for s in suites for c in s.findall('testcase')]
+@@ -185,7 +205,8 @@
+     need(counts == {'tests': 47, 'failures': 0, 'errors': 0, 'skipped': 0}, 'JUnit failure/skip/count')
+     need(len(actual) == len(set(actual)) == 47 and set(actual) == set(wanted), 'JUnit identities differ')
+     need(not any(c.find(k) is not None for c in cases for k in ('failure', 'error', 'skipped')), 'JUnit error elements')
+-    return {'counts': counts, 'unique': 47, 'sha256': digest(path)}
++    # Hash exactly the buffer parsed above; never reopen the path to hash it.
++    return {'counts': counts, 'unique': 47, 'sha256': hashlib.sha256(raw).hexdigest()}
+ 
+ 
+ def run(args):
+@@ -243,6 +264,7 @@
+                 db, marker = map(Path, command[6:])
+                 need(all(p.is_absolute() and '..' not in p.parts and p.is_relative_to(temp) for p in (db, marker))
+                      and db.parent == marker.parent and db.name == 'own.sqlite' and marker.name == 'phase.marker', 'Own fixed child paths required')
++                admit_child_paths(temp, db, marker)
+                 intent = {'index': index, 'phase': command[5], 'status': 'CREATION_PENDING', 'started_seconds': time.monotonic() - started}
+                 state['creation_intents'].append(intent)
+                 need(pending is None, 'Pending creation already exists')
+--- old/docs/gateway/research/persistence/qualification47/README.md
++++ new/docs/gateway/research/persistence/qualification47/README.md
+@@ -83,6 +83,40 @@
+ The fixture extension is an explicit causal-comparison difference from the RED
+ file; whole-file identity across RED/GREEN is not claimed. GREEN remains unrun.
+ 
++## Parser and child-path admission follow-up
++
++The separately allocated MODELED20 OLD-parser/path attempt ran 20 actual AST
++controls: **12 PASS / 8 intended FAIL / 0 errors / 0 skips**, test exit1. All
++original nine controls passed inside that run; five child-path negatives and
++three parser negatives produced their intended assertions. The three new
++positive controls passed. This is modeled evidence, not Windows/kernel or real
++child safety. Original packet and all source hashes remain preserved:
++receipt SHA `41ef02a83b133b8c31af393e493d6e41f456b9e2e6e223694009bb02b3b4e9e7`.
++
++The current source-only correction applies the reviewed local gates:
++
++- `junit_facts` checks ordinary unresolved ancestry and a single-link regular
++  file, then requires metadata size in 1..16MiB **before** reading or invoking
++  XML parsing. It reads at most limit+1 bytes, rejects overflow/size changes,
++  parses that exact bytes buffer and hashes the same buffer without reopening.
++- `admit_child_paths(temp, db, marker)` repeats the closed lexical bindings,
++  checks the ordinary unresolved temp and complete DB/marker ancestry, requires
++  an ordinary single-link DB, and accepts only an absent or ordinary single-link
++  marker. It executes before creation intent and backend construction. It
++  returns no runtime/authority permit and does not resolve-follow unsafe parents.
++
++These remain point-in-time filesystem checks; no hostile atomic namespace or
++TOCTOU protection is claimed. The 20 test bytes/IDs/assertions remain unchanged
++from the reviewed `f3e8f14f...` source. The lifecycle seam extracts the actual
++path-admission helper and its actual ordinary/absent dependencies; separate path
++rejection cases exercise the actual constructor, not a fake runtime permit.
++The parser fixture uses only small in-memory XML, including the metadata-only
++oversize case; it does not create an oversized filesystem object.
++
++No correction GREEN, hosted47 or project engine execution has occurred in this
++phase. Workflow/pure20 mandatory wiring requires later exact Root review and is
++not changed by this correction. Frozen809/47/141 and six wheel pins are unchanged.
++
+ ## Dependency provenance
+ 
+ Existing core CI installs pyproject version ranges. No usable pytest wheel lock

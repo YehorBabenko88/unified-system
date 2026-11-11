@@ -1,0 +1,31 @@
+test_deep_or_noncanonical_native_record_is_rejected (test_assignment_contract.AssignmentContractTests.test_deep_or_noncanonical_native_record_is_rejected) ... ok
+test_default_missing_actual_native_provider_never_touches_consul (test_assignment_contract.AssignmentContractTests.test_default_missing_actual_native_provider_never_touches_consul) ... ok
+test_distinct_storage_records_do_not_alias_issuance_lifecycle_policy_accounting (test_assignment_contract.AssignmentContractTests.test_distinct_storage_records_do_not_alias_issuance_lifecycle_policy_accounting) ... ok
+test_malformed_native_success_response_is_not_commit_confirmation (test_assignment_contract.AssignmentContractTests.test_malformed_native_success_response_is_not_commit_confirmation) ... ok
+test_native_plan_overflow_is_rejected_before_transport (test_assignment_contract.AssignmentContractTests.test_native_plan_overflow_is_rejected_before_transport) ... ok
+test_new_layout_preserves_stable_partition_key_and_rejects_unsafe_original (test_assignment_contract.AssignmentContractTests.test_new_layout_preserves_stable_partition_key_and_rejects_unsafe_original) ... ok
+test_none_boolean_shape_is_not_a_native_provider (test_assignment_contract.AssignmentContractTests.test_none_boolean_shape_is_not_a_native_provider) ... ok
+test_checked_helper_bytes_cannot_be_replaced_by_valid_pyc (test_bootstrap_guard.SourceBootstrapTests.test_checked_helper_bytes_cannot_be_replaced_by_valid_pyc) ... fatal: not a git repository (or any of the parent directories): .git
+ok
+{"scope": "OWNED_LOOPBACK_LAB_STARTED", "voters": 3, "processes": [124404, 99720, 136884], "endpoints": ["http://127.0.0.1:53512", "http://127.0.0.1:53516", "http://127.0.0.1:53520"], "binary_sha256": "41762ef5b98c8dd9b6852df6cfbceed37e7f0acc5760856be33100f1092475e1", "acl_default": "deny"}
+test_00_actual_atomic_existing_and_absent_snapshot (test_native_snapshot.NativeSnapshotTests.test_00_actual_atomic_existing_and_absent_snapshot) ... Executing <Task pending name='Task-10' coro=<NativeSnapshotTests.asyncSetUp() running at C:\Users\LS-5\Documents\Codex\2026-11-06\codex-agent-2-high-availability-distributed\work\native-snapshot-primary-89134b3\tests\coordination\assignment_v1\test_native_snapshot.py:27> cb=[_run_until_complete_cb() at C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\base_events.py:181] created at C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\asyncio\runners.py:100> took 0.125 seconds
+{"scope": "ACTUAL_UNTRUSTED_PROBE_GET_OR_EMPTY_RESPONSE", "response": {"Results": [{"KV": {"LockIndex": 0, "Key": "unified/09f9f53f-b891-4627-874d-db9310e2980d/runtime-v1/probe-only/snapshot/a", "Flags": 0, "Value": "eyJzY2hlbWEiOiJ1bnRydXN0ZWQubmF0aXZlLXNuYXBzaG90LXByb2JlLnYxIiwidmFsdWUiOiJvbmUifQ==", "CreateIndex": 16, "ModifyIndex": 16}}, {"KV": {"LockIndex": 0, "Key": "unified/09f9f53f-b891-4627-874d-db9310e2980d/runtime-v1/probe-only/snapshot/not-written", "Flags": 0, "Value": null, "CreateIndex": 0, "ModifyIndex": 0}}], "Errors": null, "Index": 1, "LastContact": 0, "KnownLeader": true, "ConsistencyLevel": "", "NotModified": false, "Backend": 0, "ResultsFilteredByACLs": false}}
+ok
+test_actual_acl_denial_never_becomes_absence (test_native_snapshot.NativeSnapshotTests.test_actual_acl_denial_never_becomes_absence) ... ok
+{"scope": "OWNED_LOOPBACK_ALL_RESTARTED", "processes": [136428, 136488, 137732], "same_owned_configs_and_data": true}
+test_actual_all_node_restart_retains_raw_snapshot_indices (test_native_snapshot.NativeSnapshotTests.test_actual_all_node_restart_retains_raw_snapshot_indices) ... ok
+{"scope": "OWNED_LOOPBACK_ALL_RESTARTED", "processes": [136768, 132856, 137576], "same_owned_configs_and_data": true}
+test_actual_leader_failure_two_voters_keep_snapshot (test_native_snapshot.NativeSnapshotTests.test_actual_leader_failure_two_voters_keep_snapshot) ... ok
+test_actual_stale_snapshot_cas_rolls_back_without_probe_effect (test_native_snapshot.NativeSnapshotTests.test_actual_stale_snapshot_cas_rolls_back_without_probe_effect) ... ok
+test_snapshot_rejects_duplicate_outside_namespace_and_overflow (test_native_snapshot.NativeSnapshotTests.test_snapshot_rejects_duplicate_outside_namespace_and_overflow) ... ok
+test_z_actual_one_of_three_no_quorum_never_returns_cached_snapshot (test_native_snapshot.NativeSnapshotTests.test_z_actual_one_of_three_no_quorum_never_returns_cached_snapshot) ... ok
+{"scope": "OWNED_LOOPBACK_LAB_RETIRED", "processes": [{"pid": 124404, "returncode": 1}, {"pid": 99720, "returncode": 1}, {"pid": 136884, "returncode": 1}, {"pid": 136428, "returncode": 1}, {"pid": 136488, "returncode": 1}, {"pid": 137732, "returncode": 1}, {"pid": 136768, "returncode": 1}, {"pid": 132856, "returncode": 1}, {"pid": 137576, "returncode": 1}], "all_owned_processes_waited": true, "foreign_process_operations": 0, "session_retirement": "OWNED_SERVERS_STOPPED_TEMPORARY_DIRECTORY_CLEANUP_FOLLOWS"}
+test_runtime_fullmatch_bounds_namespace_and_operation_semantics (test_runtime_policy.RuntimePolicyDataTests.test_runtime_fullmatch_bounds_namespace_and_operation_semantics) ... ok
+test_schema_control_and13_terminal_newline_negatives (test_runtime_policy.RuntimePolicyDataTests.test_schema_control_and13_terminal_newline_negatives) ... ok
+test_schema_positive_u63_limit_and_no_implicit_policy_write (test_runtime_policy.RuntimePolicyDataTests.test_schema_positive_u63_limit_and_no_implicit_policy_write) ... ok
+
+----------------------------------------------------------------------
+Ran 18 tests in 13.139s
+
+OK
+{"result": "PASS", "scope": "CONSISTENT_NATIVE_RAW_READ_CAS_FAILOVER_RESTART_ONLY_NOT_ISSUED_GRANT", "head": "89134b324d1b3405d249d464b09d889648c685aa", "tree": "87fefd6d2b1163188bd216d4e2e9a82f7a917907", "support_head": "1f6b0b5c231853607f5bec780f1544cd32bf577d", "raw_files": 798, "support_raw_files": 1519, "tests": 18, "skips": 0, "exact_unique_ids": true, "module_sha256": "9301a348f9b0440c8a7288183a9b11e79f344968279cd6b474bc615b1feefe8f"}

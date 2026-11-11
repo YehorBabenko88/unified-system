@@ -1,0 +1,36 @@
+{
+  "scope": "LOCAL_CAPACITY_CLOCK_SPAN_ONLY_NOT_ADMISSION",
+  "head": "31b94952b1c2c9d2fbe6ec918d228198238a8a67",
+  "tree": "915e288233992cb9008726ed60797d5e5aff809b",
+  "base": "6f3085c0b4c2e07f11958c64a39603a1f74c2049",
+  "raw_primary_files": 1664,
+  "default_local_pure_tests": 56,
+  "new_freshness_test_methods": 5,
+  "existing_actual_suspended_tests": 2,
+  "tests": 58,
+  "failures": 0,
+  "errors": 0,
+  "skips": 0,
+  "supervisor_crash_rerun": false,
+  "resume_calls": 0,
+  "authority_effect_calls": 0,
+  "pr52_executed": false,
+  "protected_qualifier_executed": false,
+  "admitted_fields": [],
+  "operational_max_age_ns": null,
+  "public_start": "DENY",
+  "go_no_go": "NO-GO",
+  "retired_owned_pids": [
+    137412,
+    137988
+  ],
+  "runtime": "3.15.2 (tags/v3.15.2:5e58eaa, Oct 25 2026, 17:27:03) [MSC v.1951 64 bit (AMD64)]",
+  "source_sha256": {
+    "unified_system/gateway_worker.py": "60c1f4ec663cd6760d34cc682d59fb1528145e3df035437d15b7ab2c4fb9d811",
+    "tests/gateway_jobs/test_capacity_freshness.py": "2ff405bc6b47af72950a7a27e1eca245eb67479a4edc84aa359e3735e11f5a43"
+  },
+  "evidence_sha256": {
+    "actual-local-spans-and-retired-attempts.json": "c0c72d914c3e952299c8d6dfb8d791bf07f09046e0e3213d615f700aeca6d8f9",
+    "tests.log": "273cc484cb185a8e84031236fa0728672d38c8d2541efefb194428e141302f71"
+  }
+}

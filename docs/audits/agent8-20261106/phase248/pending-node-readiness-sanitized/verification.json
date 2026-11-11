@@ -1,0 +1,284 @@
+{
+  "scope": "SANITIZED_ORIGINAL_READONLY_INVENTORY_DATA_REVIEW_NOT_NEW_PROBE",
+  "summary_sha256": "0644517518503c0a50400f7c774e7e964939972031fbb634aa8da9eecab04c7b",
+  "rows": [
+    {
+      "computer": "LS5",
+      "os": "Microsoft Windows 11 Pro",
+      "free_virtual_kib": 42253660,
+      "free_physical_kib": 42842024,
+      "elevated_admin_role": false,
+      "firewall_profiles": [
+        {
+          "Name": "Domain",
+          "Enabled": 1
+        },
+        {
+          "Name": "Private",
+          "Enabled": 1
+        },
+        {
+          "Name": "Public",
+          "Enabled": 1
+        }
+      ],
+      "services": [
+        {
+          "Name": "sshd",
+          "status": "Running"
+        },
+        {
+          "Name": "Tailscale",
+          "status": "Running"
+        }
+      ]
+    },
+    {
+      "computer": "PC1",
+      "os": "Microsoft Windows 11 Home",
+      "free_virtual_kib": 5556876,
+      "free_physical_kib": 3508128,
+      "elevated_admin_role": true,
+      "firewall_profiles": [
+        {
+          "Name": "Domain",
+          "Enabled": 1
+        },
+        {
+          "Name": "Private",
+          "Enabled": 1
+        },
+        {
+          "Name": "Public",
+          "Enabled": 1
+        }
+      ],
+      "services": [
+        {
+          "Name": "ekrn",
+          "status": "Running"
+        },
+        {
+          "Name": "sshd",
+          "status": "Running"
+        },
+        {
+          "Name": "Tailscale",
+          "status": "Running"
+        }
+      ]
+    },
+    {
+      "computer": "PC2",
+      "os": "Microsoft Windows 11 Pro",
+      "free_virtual_kib": 26365340,
+      "free_physical_kib": 5660468,
+      "elevated_admin_role": true,
+      "firewall_profiles": [
+        {
+          "Name": "Domain",
+          "Enabled": 1
+        },
+        {
+          "Name": "Private",
+          "Enabled": 1
+        },
+        {
+          "Name": "Public",
+          "Enabled": 1
+        }
+      ],
+      "services": [
+        {
+          "Name": "ekrn",
+          "status": "Running"
+        },
+        {
+          "Name": "sshd",
+          "status": "Running"
+        },
+        {
+          "Name": "Tailscale",
+          "status": "Running"
+        }
+      ]
+    },
+    {
+      "computer": "PC3",
+      "os": "Microsoft Windows 11 Pro",
+      "free_virtual_kib": 15557160,
+      "free_physical_kib": 17378792,
+      "elevated_admin_role": true,
+      "firewall_profiles": [
+        {
+          "Name": "Domain",
+          "Enabled": 0
+        },
+        {
+          "Name": "Private",
+          "Enabled": 0
+        },
+        {
+          "Name": "Public",
+          "Enabled": 0
+        }
+      ],
+      "services": [
+        {
+          "Name": "ekrn",
+          "status": "Running"
+        },
+        {
+          "Name": "sshd",
+          "status": "Running"
+        },
+        {
+          "Name": "Tailscale",
+          "status": "Running"
+        }
+      ]
+    },
+    {
+      "computer": "PC4",
+      "os": "Microsoft Windows 11 Pro",
+      "free_virtual_kib": 22162360,
+      "free_physical_kib": 22580412,
+      "elevated_admin_role": true,
+      "firewall_profiles": [
+        {
+          "Name": "Domain",
+          "Enabled": 1
+        },
+        {
+          "Name": "Private",
+          "Enabled": 1
+        },
+        {
+          "Name": "Public",
+          "Enabled": 1
+        }
+      ],
+      "services": [
+        {
+          "Name": "ekrn",
+          "status": "Running"
+        },
+        {
+          "Name": "sshd",
+          "status": "Running"
+        },
+        {
+          "Name": "Tailscale",
+          "status": "Running"
+        }
+      ]
+    },
+    {
+      "computer": "LS7",
+      "os": "Microsoft Windows 11 Home",
+      "free_virtual_kib": 2830588,
+      "free_physical_kib": 2047944,
+      "elevated_admin_role": true,
+      "firewall_profiles": [
+        {
+          "Name": "Domain",
+          "Enabled": 1
+        },
+        {
+          "Name": "Private",
+          "Enabled": 1
+        },
+        {
+          "Name": "Public",
+          "Enabled": 1
+        }
+      ],
+      "services": [
+        {
+          "Name": "ekrn",
+          "status": "Running"
+        },
+        {
+          "Name": "sshd",
+          "status": "Running"
+        },
+        {
+          "Name": "Tailscale",
+          "status": "Running"
+        }
+      ]
+    }
+  ],
+  "original_hash_references": [
+    {
+      "node": "LS5",
+      "original_sha256": "6fa69ffc2ca033027d4ac6cef9a5c02425b23555b62cd85c45e4cf9ac5727d15",
+      "query_errors": 0,
+      "exit_code": 0,
+      "own_client_retired": true,
+      "stderr_nonempty": false,
+      "stderr_characters": 0,
+      "stderr_semantics": "NOT_QUALIFIED_NOT_ASSUMED_EMPTY"
+    },
+    {
+      "node": "PC1",
+      "original_sha256": "6b32f5172e8643436ef6a04c59778afebc98b15585ba773f522e0be603932d72",
+      "query_errors": 0,
+      "exit_code": 0,
+      "own_client_retired": true,
+      "stderr_nonempty": true,
+      "stderr_characters": 13169,
+      "stderr_semantics": "NOT_QUALIFIED_NOT_ASSUMED_EMPTY"
+    },
+    {
+      "node": "PC2",
+      "original_sha256": "369c4808bd5fccf236006111886c831cc0602605d634e4c9783563ff8014583a",
+      "query_errors": 0,
+      "exit_code": 0,
+      "own_client_retired": true,
+      "stderr_nonempty": true,
+      "stderr_characters": 8603,
+      "stderr_semantics": "NOT_QUALIFIED_NOT_ASSUMED_EMPTY"
+    },
+    {
+      "node": "PC3",
+      "original_sha256": "08a73d48e1409020d1f5d452eb834f08343f222f7338995d093ce17b63036e08",
+      "query_errors": 0,
+      "exit_code": 0,
+      "own_client_retired": true,
+      "stderr_nonempty": true,
+      "stderr_characters": 10883,
+      "stderr_semantics": "NOT_QUALIFIED_NOT_ASSUMED_EMPTY"
+    },
+    {
+      "node": "PC4",
+      "original_sha256": "4336b8a8126b06f97a0e7ea9b3212c03ef19224dd9895730975831e39112b9ba",
+      "query_errors": 0,
+      "exit_code": 0,
+      "own_client_retired": true,
+      "stderr_nonempty": true,
+      "stderr_characters": 14966,
+      "stderr_semantics": "NOT_QUALIFIED_NOT_ASSUMED_EMPTY"
+    },
+    {
+      "node": "LS7",
+      "original_sha256": "09d329ae3e023504536682044fab00d5053c22f8cbdc66668fcd4073be5f0411",
+      "query_errors": 0,
+      "exit_code": 0,
+      "own_client_retired": true,
+      "stderr_nonempty": true,
+      "stderr_characters": 17739,
+      "stderr_semantics": "NOT_QUALIFIED_NOT_ASSUMED_EMPTY"
+    }
+  ],
+  "raw_network_configuration": "LOCAL_ONLY_NOT_COPIED",
+  "source_of_observations": "ROOT_ORIGINALS_NOT_A8_NODE_PROBE",
+  "PC3": "THREE_WINDOWS_FIREWALL_PROFILES_DISABLED_EKRN_RUNNING_CAUSE_AGE_UNKNOWN_NO_ATTRIBUTION_NO_ESET_FIREWALL_PROOF",
+  "LS7": "FREE_VIRTUAL_2830588_KIB_NOT_LOAD_ADMITTED",
+  "access": "SSH_TAILSCALE_ALIASES_NOT_DIRECTLAN_HTTPS_MTLS_OR_NONADMIN_WORKER_ADMISSION",
+  "approved_release_inventory": "NOT_ESTABLISHED_BY_OBSERVATION",
+  "no_unapproved_changes": "DECLARED_NO_MUTATION_NOT_GLOBAL_HISTORY_PROOF",
+  "PHYSICAL_TESTS": "BLOCKED",
+  "TAILSCALE_REMOVAL": "BLOCKED",
+  "GO_NO_GO": "NO-GO"
+}

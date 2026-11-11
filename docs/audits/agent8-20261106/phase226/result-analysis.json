@@ -1,0 +1,212 @@
+{
+  "scope": "F50_SELECTED_ACTUAL_AST_MODELED_REGRESSION_NOT_REAL_LEAK_OR_NATIVE",
+  "allocation": "ROOT.A7.F50.MODELED28.RED.ONCE_MCI97_CONSUMED",
+  "tests": 28,
+  "passed": 22,
+  "intended_failed": 6,
+  "errors": 0,
+  "skips": 0,
+  "test_exit_code": 1,
+  "supervisor_exit_code": 0,
+  "supervisor_zero_means": "Evidence orchestration only, NOT test PASS",
+  "test_runtime_seconds": 0.208,
+  "cases": [
+    {
+      "id": "__main__.ChildPathAdmissionControls.test_db_parent_file_refuses_before_backend",
+      "outcome": "PASS",
+      "expected_negative": false,
+      "classification": "MODELED_CONTROL_PASS"
+    },
+    {
+      "id": "__main__.ChildPathAdmissionControls.test_db_parent_junction_refuses_before_backend",
+      "outcome": "PASS",
+      "expected_negative": false,
+      "classification": "MODELED_CONTROL_PASS"
+    },
+    {
+      "id": "__main__.ChildPathAdmissionControls.test_db_reparse_leaf_refuses_before_backend",
+      "outcome": "PASS",
+      "expected_negative": false,
+      "classification": "MODELED_CONTROL_PASS"
+    },
+    {
+      "id": "__main__.ChildPathAdmissionControls.test_marker_reparse_leaf_refuses_before_backend",
+      "outcome": "PASS",
+      "expected_negative": false,
+      "classification": "MODELED_CONTROL_PASS"
+    },
+    {
+      "id": "__main__.ChildPathAdmissionControls.test_ordinary_db_absent_marker_reaches_backend_control",
+      "outcome": "PASS",
+      "expected_negative": false,
+      "classification": "MODELED_CONTROL_PASS"
+    },
+    {
+      "id": "__main__.ChildPathAdmissionControls.test_ordinary_db_existing_marker_reaches_backend_control",
+      "outcome": "PASS",
+      "expected_negative": false,
+      "classification": "MODELED_CONTROL_PASS"
+    },
+    {
+      "id": "__main__.ChildPathAdmissionControls.test_temp_junction_refuses_before_backend",
+      "outcome": "PASS",
+      "expected_negative": false,
+      "classification": "MODELED_CONTROL_PASS"
+    },
+    {
+      "id": "__main__.ControlsHeldCleanupControls.test_normal_running_handle_cleanup_control",
+      "outcome": "PASS",
+      "expected_negative": false,
+      "classification": "MODELED_CONTROL_PASS"
+    },
+    {
+      "id": "__main__.ControlsHeldCleanupControls.test_poll_and_kill_error_still_attempts_wait_and_denies",
+      "outcome": "FAIL",
+      "expected_negative": true,
+      "classification": "INTENDED_MISSING_HELD_KILL_ATTEMPT_RED"
+    },
+    {
+      "id": "__main__.ControlsHeldCleanupControls.test_poll_and_wait_error_keeps_unknown_and_denies",
+      "outcome": "FAIL",
+      "expected_negative": true,
+      "classification": "INTENDED_MISSING_HELD_KILL_ATTEMPT_RED"
+    },
+    {
+      "id": "__main__.ControlsHeldCleanupControls.test_poll_error_attempts_kill_and_wait_and_denies",
+      "outcome": "FAIL",
+      "expected_negative": true,
+      "classification": "INTENDED_MISSING_HELD_KILL_ATTEMPT_RED"
+    },
+    {
+      "id": "__main__.JunitAdmissionControls.test_file_xml_parent_refuses_before_parser_read_hash",
+      "outcome": "PASS",
+      "expected_negative": false,
+      "classification": "MODELED_CONTROL_PASS"
+    },
+    {
+      "id": "__main__.JunitAdmissionControls.test_ordinary_bounded_xml_preserves_exact_47_facts_control",
+      "outcome": "PASS",
+      "expected_negative": false,
+      "classification": "MODELED_CONTROL_PASS"
+    },
+    {
+      "id": "__main__.JunitAdmissionControls.test_oversized_xml_refuses_before_parser_read_hash",
+      "outcome": "PASS",
+      "expected_negative": false,
+      "classification": "MODELED_CONTROL_PASS"
+    },
+    {
+      "id": "__main__.JunitAdmissionControls.test_reparse_xml_parent_refuses_before_parser_read_hash",
+      "outcome": "PASS",
+      "expected_negative": false,
+      "classification": "MODELED_CONTROL_PASS"
+    },
+    {
+      "id": "__main__.MainRunHeldCleanupControls.test_normal_running_handle_cleanup_control",
+      "outcome": "PASS",
+      "expected_negative": false,
+      "classification": "MODELED_CONTROL_PASS"
+    },
+    {
+      "id": "__main__.MainRunHeldCleanupControls.test_poll_and_kill_error_still_attempts_wait_and_denies",
+      "outcome": "FAIL",
+      "expected_negative": true,
+      "classification": "INTENDED_MISSING_HELD_KILL_ATTEMPT_RED"
+    },
+    {
+      "id": "__main__.MainRunHeldCleanupControls.test_poll_and_wait_error_keeps_unknown_and_denies",
+      "outcome": "FAIL",
+      "expected_negative": true,
+      "classification": "INTENDED_MISSING_HELD_KILL_ATTEMPT_RED"
+    },
+    {
+      "id": "__main__.MainRunHeldCleanupControls.test_poll_error_attempts_kill_and_wait_and_denies",
+      "outcome": "FAIL",
+      "expected_negative": true,
+      "classification": "INTENDED_MISSING_HELD_KILL_ATTEMPT_RED"
+    },
+    {
+      "id": "__main__.ReturnedHandleControls.test_invariant_refusal_cleanup_kills_and_waits_known_handle",
+      "outcome": "PASS",
+      "expected_negative": false,
+      "classification": "MODELED_CONTROL_PASS"
+    },
+    {
+      "id": "__main__.ReturnedHandleControls.test_preconstructor_refusal_creates_no_handle",
+      "outcome": "PASS",
+      "expected_negative": false,
+      "classification": "MODELED_CONTROL_PASS"
+    },
+    {
+      "id": "__main__.ReturnedHandleControls.test_returned_handle_registered_before_invariant_refusal",
+      "outcome": "PASS",
+      "expected_negative": false,
+      "classification": "MODELED_CONTROL_PASS"
+    },
+    {
+      "id": "__main__.RootFirstControls.test_file_parent_stops_before_descendant_or_git",
+      "outcome": "PASS",
+      "expected_negative": false,
+      "classification": "MODELED_CONTROL_PASS"
+    },
+    {
+      "id": "__main__.RootFirstControls.test_file_root_stops_before_leaf_git_or_hash",
+      "outcome": "PASS",
+      "expected_negative": false,
+      "classification": "MODELED_CONTROL_PASS"
+    },
+    {
+      "id": "__main__.RootFirstControls.test_missing_parent_stops_before_descendant_or_git",
+      "outcome": "PASS",
+      "expected_negative": false,
+      "classification": "MODELED_CONTROL_PASS"
+    },
+    {
+      "id": "__main__.RootFirstControls.test_ordinary_tree_retains_exact_blob_and_ledger",
+      "outcome": "PASS",
+      "expected_negative": false,
+      "classification": "MODELED_CONTROL_PASS"
+    },
+    {
+      "id": "__main__.RootFirstControls.test_reparse_parent_stops_before_descendant_or_git",
+      "outcome": "PASS",
+      "expected_negative": false,
+      "classification": "MODELED_CONTROL_PASS"
+    },
+    {
+      "id": "__main__.RootFirstControls.test_selected_reparse_parent_stops_before_leaf_inspection",
+      "outcome": "PASS",
+      "expected_negative": false,
+      "classification": "MODELED_CONTROL_PASS"
+    }
+  ],
+  "failure_detail": "All6 fail at actual kill-attempt count0 assertion after injected pollOSError; wait/sticky/DENY assertions later in these negative cases not reached",
+  "deny_scope": "Actual controls observed_pass assignment executed; actual run verify gate extracted, called by normalcleanup control; no negative full-predicate coverage claim",
+  "prior20": "20MODELED PASS inside28, not another20run",
+  "normal_new_controls": "2PASS with inert knownrunningheld cleanup",
+  "child": {
+    "command_flags": [
+      "-I",
+      "-S",
+      "-B"
+    ],
+    "exit_code": 1,
+    "identity": "OWN_POPEN_HANDLE",
+    "pid": 167872,
+    "retired": true
+  },
+  "measured_process_phase_seconds": 0.42099999997299165,
+  "timing_scope": "Guard/sourcehash setup before processphase and posthash/evidence writes after; no whole-operation15s claim",
+  "output_bytes": 10955,
+  "six_pre_post_hashes_equal": true,
+  "implementation_five_unchanged": true,
+  "fixtures_or_harness_errors": "NONE observed",
+  "effects": "One real authorizedPythoncontroller; all simulated cleanup handles/injected errors inert, no actual cleanupchild/Git/SQLite/engine/network/native/47",
+  "next_gate": "RootactualREDreview before implementationfix or any newexecution",
+  "hashes": {
+    "receipt": "901b16c90471cbcc9d715a11b24e5ead88852ccbee6d1f0d6163eca808b7ed4f",
+    "stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr": "2418a64516488943ecfe8de8518506778ab3c8a0ab4b84df53407136e0f2d4b2"
+  },
+  "overall": "F50_MODELED_RED / IMPLEMENTATION_FIXHELD / HOSTED47_HOLD / NO-GO"
+}

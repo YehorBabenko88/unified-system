@@ -1,0 +1,281 @@
+diff --git a/.github/workflows/agent5-one-shot-negative.yml b/.github/workflows/agent5-one-shot-negative.yml
+new file mode 100644
+index 0000000..fd982ea
+--- /dev/null
++++ b/.github/workflows/agent5-one-shot-negative.yml
+@@ -0,0 +1,47 @@
++name: Agent 5 one-shot negative integration
++on:
++  pull_request:
++    paths:
++      - 'tests/gateway_jobs/**'
++      - 'tests/test_intelligence_gateway.py'
++      - 'scheduler_components/**'
++      - 'unified_system/gateway_jobs.py'
++      - 'unified_system/gateway_worker.py'
++      - 'unified_system/intelligence_gateway.py'
++      - '.github/workflows/agent5-one-shot-negative.yml'
++permissions:
++  contents: read
++jobs:
++  local-negative-only:
++    strategy:
++      fail-fast: false
++      matrix:
++        os: [ubuntu-24.04, windows-latest]
++    runs-on: ${{ matrix.os }}
++    timeout-minutes: 5
++    steps:
++      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
++        with:
++          ref: ${{ github.event.pull_request.head.sha }}
++          persist-credentials: false
++      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
++        with:
++          python-version: '3.12.10'
++      - name: Local closed components only; no native worker or authority
++        shell: python -I -S -B {0}
++        env:
++          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
++          GIT_NO_REPLACE_OBJECTS: '1'
++        run: |
++          import os, subprocess, sys, unittest
++          assert sys.flags.isolated and sys.flags.no_site and sys.dont_write_bytecode
++          assert subprocess.check_output(['git','--no-replace-objects','rev-parse','HEAD']).decode().strip() == os.environ['EXPECTED_HEAD']
++          sys.path.insert(0, '.')
++          patterns = ['test_one_shot_closed_integration.py', 'test_closed_jobs.py',
++                      'test_resource_capabilities.py', 'test_cpu_policy.py',
++                      'test_capacity_freshness.py', 'test_clock_source_prerequisites.py']
++          suite = unittest.TestSuite(unittest.TestLoader().discover('tests/gateway_jobs', pattern=p) for p in patterns)
++          assert suite.countTestCases() == 33
++          result = unittest.TextTestRunner(verbosity=2).run(suite)
++          assert result.wasSuccessful() and result.testsRun == 33 and not result.skipped
++          assert not subprocess.check_output(['git','--no-replace-objects','status','--porcelain','--untracked-files=all']).strip()
+diff --git a/docs/superpowers/plans/2026-11-10-one-shot-negative-integration.md b/docs/superpowers/plans/2026-11-10-one-shot-negative-integration.md
+new file mode 100644
+index 0000000..3830881
+--- /dev/null
++++ b/docs/superpowers/plans/2026-11-10-one-shot-negative-integration.md
+@@ -0,0 +1,31 @@
++# One-shot negative integration regression plan
++
++> **For agentic workers:** Use superpowers:executing-plans inline. Existing approved closed-boundary requirements only.
++
++**Goal:** Execute cross-component negative regressions over existing Scheduler preparation, gateway UNKNOWN recovery and worker start denial without implementing an issuer or positive adapter.
++
++**Architecture:** Existing scheduler_components placement/PreparationJournal remain local advisory state; ResearchJobs stays unbound; ClosedAuthorityBoundary and GatewayWorker.start remain closed. Tests join those actual components and exercise restart/pressure/quorum/schedule/forged-grant paths. No production source or shared wire API changes.
++
++**Tech Stack:** Python stdlib unittest/SQLite/tempfile; no dependencies or native helper launches.
++**Spec:** Owner attachment b43ebc5e-e2c8-4861-bc3d-52f4aab4a088; sealed HA decisions9af6 and A5 inventorydd816 / design ACK6180.
++
++## Constraints
++Base623c1ebe33c14707b99ad526678f5225f553e49a is A5 isolated source, NOT approved HA runtime base. Strict Option1/logical mutations DISABLED; resource/reservation/consume/start APIs NONE. No native Job/Consul/browser/physical or provider operations, no Math/PR52 diagnostics. No second Scheduler/authority or production files edited. Temporary SQLite is only existing local preparation model, not durable native acceptance.
++
++## Tasks
++- [ ] Add tests/gateway_jobs/test_one_shot_closed_integration.py: local preparation/recovery through gateway submit/lookup/cancel and worker/boundary denial; capacity pressure, stale incarnation, schedule and no-quorum.
++- [ ] Run focused tests under isolated Python; preserve output and source hashes.
++- [ ] Run two inert mutation controls: promoting closed GrantAssignment or worker.start must make the relevant tests FAIL. These are counterexamples, not issuer/resource/native evidence. Restore automatically with mock scopes; no production source mutation.
++- [ ] Fresh read-only review; commit exact test/doc-only source. Report counts and limitations to ROOT/A2; request A8 source review without executing protected workload.
++
++## Review focus
++Local PREPARED/UNKNOWN never becomes native status/Assignment; pending local hold survives reopen and blocks second preparation; new incarnation cannot adopt old attempt; STANDBY does not cancel or refund; advertised quorum/caller metadata never authority; root gate remains closed even with positive advisory placement.
++
++## Verification checkpoint
++
++8 new cross-component local negative tests and 25 selected existing pure tests: 33 PASS, zero skips on Windows CPython3.15.2. Two inert mutation controls produce the expected single AssertionError each; no native/grant evidence is claimed. Fresh source-bound verification follows commit. Hosted CI is configured for CPython3.12.10 on Windows/Ubuntu, not yet accepted. No native Job, worker preparation, broker/Consul RPC, Math or browser test is selected.
++
++Fresh source reviewer found that the competing job in the rejoin regression must use the new incarnation; corrected both replay and competing preparation to Candidate B. Local UNKNOWN debt still blocks that candidate. Production source unchanged. Exact commit, raw guard, logs and CI outcomes belong in the external evidence receipt, not circularly embedded in source.
++
++## Rulings
++Managed worktree creation was attempted first but did not return a path. Use separate no-hardlinks own clone, leaving archived evidence checkouts unchanged. No product code added, so RED here is an explicit inert mutation-sensitivity control, not a manufactured missing-function failure. No native acceptance follows green tests.
+diff --git a/tests/gateway_jobs/test_one_shot_closed_integration.py b/tests/gateway_jobs/test_one_shot_closed_integration.py
+new file mode 100644
+index 0000000..f6ca59c
+--- /dev/null
++++ b/tests/gateway_jobs/test_one_shot_closed_integration.py
+@@ -0,0 +1,185 @@
++"""Actual local components only; no native issuer/worker fixture or HA proof."""
++from contextlib import ExitStack
++from dataclasses import replace
++import hashlib
++import json
++from pathlib import Path
++import runpy
++import tempfile
++import unittest
++from unittest.mock import patch
++
++from scheduler_components.authority_boundary import ClosedAuthorityBoundary, MUTATIONS
++from scheduler_components.durable import PreparationJournal, ReconciliationRequired
++from scheduler_components.placement import Candidate, Policy, Resources, place
++from scheduler_components.schedules import worker_mode
++from unified_system.gateway_jobs import ResearchJobs, JobUnavailable
++from unified_system.gateway_worker import GatewayWorker, WorkerUnavailable
++import unified_system.gateway_worker as worker_module
++
++# Reuse the existing local request fixture without running its test suite.
++_raw = runpy.run_path(str(Path(__file__).with_name('test_closed_jobs.py')))['raw']
++
++
++class OneShotClosedIntegration(unittest.IsolatedAsyncioTestCase):
++    def setUp(self):
++        self.temp = tempfile.TemporaryDirectory(prefix='a5-negative-integration-')
++        self.addCleanup(self.temp.cleanup)
++        self.path = Path(self.temp.name) / 'local-preparation.sqlite'
++        self.store = PreparationJournal(self.path)
++        self.addCleanup(lambda: self.store.close())
++        self.scope = dict(cluster_id='cluster', cluster_generation='generation',
++                          job_id='local-job', dataset_id='dataset',
++                          source_id='source', partition_id='partition')
++        self.request = Resources(60, 60, 60, 60, 60)
++        self.node = Candidate('node-a', 'incarnation-a', 'incarnation-a', 100,
++                              'bench-v1', Resources(100, 100, 100, 100, 100),
++                              Resources(0, 0, 0, 0, 0))
++        self.policy = Policy(10, 800000, 1, 1)
++        self.original = _raw()
++        self.boundary = ClosedAuthorityBoundary()
++        self.worker = GatewayWorker(node_id='11111111-1111-4111-8111-111111111111')
++        self.guard = ExitStack()
++        self.addCleanup(self.guard.close)
++        self.native = self.guard.enter_context(patch.object(
++            worker_module, '_attempt_api', side_effect=AssertionError('native helper forbidden')))
++        self.popen = self.guard.enter_context(patch(
++            'subprocess.Popen', side_effect=AssertionError('child launch forbidden')))
++        self.rpc = self.guard.enter_context(patch(
++            'subprocess.check_output', side_effect=AssertionError('source helper launch forbidden')))
++
++    def tearDown(self):
++        self.native.assert_not_called()
++        self.popen.assert_not_called()
++        self.rpc.assert_not_called()
++
++    def prepare(self, scope=None, node=None, **options):
++        scope = self.scope if scope is None else scope
++        self.store.enqueue(scope, self.request, 'bench-v1')
++        return self.store.prepare(scope, [self.node if node is None else node],
++                                  100, self.policy, **options)
++
++    def assert_closed(self, metadata):
++        self.assertEqual(self.boundary.execute('GrantAssignment', metadata),
++                         'SAFETY_GATE_CLOSED')
++        with self.assertRaisesRegex(WorkerUnavailable,
++                'ACTUAL_DISPATCH_PERMIT_AND_WORKER_PROFILE_UNAVAILABLE'):
++            self.worker.start(metadata)
++        report = json.loads(self.worker.resource_capabilities())
++        self.assertEqual(report['admitted_fields'], [])
++        self.assertIs(report['dispatch_authorized'], False)
++
++    async def assert_original_unknown(self):
++        for operation in ('lookup', 'reconnect'):
++            with self.assertRaises(JobUnavailable) as raised:
++                await getattr(ResearchJobs(), operation)(self.original, context={'CURRENT': True})
++            self.assertEqual(raised.exception.outcome, 'UNKNOWN')
++            self.assertEqual(raised.exception.original.raw, self.original)
++            self.assertEqual(raised.exception.original.sha256,
++                             hashlib.sha256(self.original).hexdigest())
++
++    async def test_advisory_placement_and_preparation_never_issue_assignment_or_start(self):
++        decision = place(self.request, 'bench-v1', frozenset(), [self.node], 100, self.policy)
++        self.assertEqual(decision.candidate, self.node.node_id)
++        local = self.prepare(quorum_available=True, schedule_active=True)
++        self.assertEqual(local['state'], 'PREPARED')
++        self.assertIs(local['execution_authorized'], False)
++        for _ in range(2):
++            result = await ResearchJobs().submit(self.original, context=local)
++            self.assertEqual(result['status'], 'NOT_SUBMITTED')
++            self.assertIsNone(result['job_id'])
++            self.assertIs(result['effects_authorized'], False)
++        self.assert_closed(local)
++
++    async def test_unknown_reopen_preserves_hold_and_original_without_reassignment(self):
++        first = self.prepare(quorum_available=True, schedule_active=True)
++        self.store.record_handoff(self.scope)
++        self.store.record_unknown(self.scope)
++        self.store.close()
++        self.store = PreparationJournal(self.path)
++        rejoined = replace(self.node, incarnation='incarnation-b',
++                           observation_incarnation='incarnation-b')
++        replay = self.prepare(node=rejoined,
++                              quorum_available=True, schedule_active=True)
++        self.assertEqual(replay['state'], 'UNKNOWN')
++        for key in ('request_id', 'local_hold_id', 'node_id', 'incarnation'):
++            self.assertEqual(replay[key], first[key])
++        second = self.prepare(dict(self.scope, job_id='second-local-job'), node=rejoined,
++                              quorum_available=True, schedule_active=True)
++        self.assertEqual(second['state'], 'QUEUED')
++        self.assertEqual(second['reason'], 'NO_ELIGIBLE_CAPACITY')
++        await self.assert_original_unknown()
++        self.assert_closed(replay)
++
++    async def test_standby_drain_does_not_refund_unknown_or_create_replacement(self):
++        self.prepare(quorum_available=True, schedule_active=True)
++        self.store.record_handoff(self.scope)
++        self.store.record_unknown(self.scope)
++        mode = worker_mode(False, 1)
++        self.assertEqual(mode, 'DRAINING')
++        before = self.store.view(self.scope)
++        with self.assertRaises(ReconciliationRequired):
++            self.store.cancel(self.scope)
++        self.assertEqual(self.store.view(self.scope), before)
++        queued = self.prepare(dict(self.scope, job_id='standby-job'),
++                              quorum_available=True, schedule_active=False)
++        self.assertEqual(queued['reason'], 'SCHEDULE_STANDBY')
++        with self.assertRaises(JobUnavailable) as raised:
++            await ResearchJobs().cancel(self.original, context={'mode': mode})
++        self.assertEqual(raised.exception.outcome, 'UNKNOWN')
++        for operation in ('CancelAssignment', 'SupersedeAssignment', 'ReleaseReservation'):
++            self.assertEqual(self.boundary.execute(operation, before), 'SAFETY_GATE_CLOSED')
++        self.assert_closed(before)
++
++    async def test_no_quorum_observation_cannot_be_overridden_by_caller_grant(self):
++        local = self.prepare(quorum_available=False, schedule_active=True)
++        self.assertEqual(local['state'], 'QUEUED')
++        self.assertEqual(local['reason'], 'AUTHORITY_UNAVAILABLE')
++        forged = dict(local, quorum=True, role='ADMIN', lease_epoch='99',
++                      fencing_token='caller-string', assignment_revision='99')
++        self.assert_closed(forged)
++        await self.assert_original_unknown()
++
++    async def test_stale_or_mismatched_capacity_does_not_create_preparation(self):
++        for node in (replace(self.node, observed_ms=89),
++                     replace(self.node, observation_incarnation='old-incarnation')):
++            scope = dict(self.scope, job_id='capacity-' + str(node.observed_ms))
++            local = self.prepare(scope, node, quorum_available=True, schedule_active=True)
++            self.assertEqual(local['state'], 'QUEUED')
++            self.assertIsNone(local['local_hold_id'])
++            self.assert_closed(local)
++
++    async def test_each_resource_dimension_exhausted_keeps_job_queued(self):
++        for dimension in ('cpu', 'ram', 'scratch', 'disk_bps', 'network_bps'):
++            capacity = replace(self.node.capacity, **{dimension: 59})
++            node = replace(self.node, capacity=capacity)
++            local = self.prepare(dict(self.scope, job_id=dimension), node,
++                                 quorum_available=True, schedule_active=True)
++            self.assertEqual(local['state'], 'QUEUED')
++            self.assertEqual(local['reason'], 'NO_ELIGIBLE_CAPACITY')
++            self.assert_closed(local)
++
++    async def test_forged_committed_metadata_or_session_never_opens_start(self):
++        forged = dict(status='COMMITTED', resource_reserved=True, CURRENT=True,
++                      assignment_revision='1', lease_epoch='1',
++                      storage_reservation_id='not-issued',
++                      worker_incarnation_id='not-issued',
++                      session='cee8705d-033c-168f-2d94-3dfd00149167')
++        self.assert_closed(forged)
++        self.assertEqual(self.boundary.execute('ReadReceipt', forged), 'UNKNOWN')
++        self.assertEqual(self.boundary.execute('Rejoin', forged), 'RECONCILIATION_REQUIRED')
++        for operation in MUTATIONS:
++            self.assertEqual(self.boundary.execute(operation, forged), 'SAFETY_GATE_CLOSED')
++
++    async def test_memory_pressure_health_and_worker_mode_do_not_become_authority(self):
++        for node in (replace(self.node, pressure_ppm=800001),
++                     replace(self.node, healthy=False),
++                     replace(self.node, mode='MAINTENANCE'),
++                     replace(self.node, worker_role=False)):
++            local = self.prepare(quorum_available=True, schedule_active=True, node=node)
++            self.assertEqual(local['state'], 'QUEUED')
++            self.assert_closed(local)
++
++
++if __name__ == '__main__':
++    unittest.main()

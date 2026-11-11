@@ -1,0 +1,245 @@
+[
+  {
+    "sequence": 1,
+    "state": "OBSERVING",
+    "receipt": {
+      "kind": "development-mission",
+      "max_bytes": 16777216,
+      "max_records": 1024,
+      "schema_version": 2
+    },
+    "previous_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  {
+    "sequence": 2,
+    "state": "OBSERVING",
+    "receipt": {
+      "kind": "development-task",
+      "schema_version": 1,
+      "task": {
+        "acceptance_tests": [
+          "test_a"
+        ],
+        "allowed_files": [
+          "src/a.py"
+        ],
+        "approvals": [],
+        "axes": {
+          "integrated": "UNKNOWN",
+          "physical": "UNKNOWN",
+          "source": "UNKNOWN",
+          "tested": "UNKNOWN",
+          "windows": "UNKNOWN"
+        },
+        "base_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "blockers": [],
+        "ci": [],
+        "completion_criteria": [
+          "review"
+        ],
+        "dependencies": [],
+        "evidence": [],
+        "evidence_requirements": [
+          "CI"
+        ],
+        "mission_id": "master",
+        "next_actions": [
+          "test"
+        ],
+        "owner": "agent",
+        "pr_reference": "owner/repo#1",
+        "repository": "owner/repo",
+        "requirements": [
+          "retain context"
+        ],
+        "schema_version": 1,
+        "task_id": "fixture-parent"
+      }
+    },
+    "previous_hash": "66f1a97f7978ef5c0cace278ff0800b6c82e1224a6e01c752d24f4184f3015c9"
+  },
+  {
+    "sequence": 3,
+    "state": "OBSERVING",
+    "receipt": {
+      "kind": "development-task",
+      "schema_version": 1,
+      "task": {
+        "acceptance_tests": [
+          "test_a"
+        ],
+        "allowed_files": [
+          "src/a.py"
+        ],
+        "approvals": [],
+        "axes": {
+          "integrated": "UNKNOWN",
+          "physical": "UNKNOWN",
+          "source": "UNKNOWN",
+          "tested": "UNKNOWN",
+          "windows": "UNKNOWN"
+        },
+        "base_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "blockers": [],
+        "ci": [],
+        "completion_criteria": [
+          "review"
+        ],
+        "dependencies": [
+          "fixture-parent"
+        ],
+        "evidence": [],
+        "evidence_requirements": [
+          "CI"
+        ],
+        "mission_id": "master",
+        "next_actions": [
+          "test"
+        ],
+        "owner": "agent",
+        "pr_reference": "owner/repo#1",
+        "repository": "owner/repo",
+        "requirements": [
+          "retain context"
+        ],
+        "schema_version": 1,
+        "task_id": "fixture-child"
+      }
+    },
+    "previous_hash": "00c257a0933962a4f2048906b74a8c536d9575ccb46912fb26da2394af58c737"
+  },
+  {
+    "sequence": 4,
+    "state": "OBSERVING",
+    "receipt": {
+      "kind": "development-continuation",
+      "metadata": {
+        "blocking_condition": null,
+        "evidence": [
+          {
+            "reference": "synthetic-fixture-evidence",
+            "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+          }
+        ],
+        "last_verified_result": {
+          "scope": "SYNTHETIC_FIXTURE_ONLY",
+          "source_head": "dddddddddddddddddddddddddddddddddddddddd",
+          "source_tree": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+          "status": "PASS",
+          "summary": "Fixture observation"
+        },
+        "next_executable_step": {
+          "description": "Review source evidence",
+          "step_id": "review"
+        },
+        "required_authorization": [
+          "Root review"
+        ],
+        "retry_budget": {
+          "max_retries": 2,
+          "retries_used": 1
+        },
+        "source_head": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "source_tree": "cccccccccccccccccccccccccccccccccccccccc",
+        "status": "IN_PROGRESS"
+      },
+      "schema_version": 2,
+      "task_id": "fixture-child",
+      "task_snapshot_sha256": "956edd96ed1598cb86f572527f1e8927357b90159d9278257837124246ee5974"
+    },
+    "previous_hash": "81d41acc800341d3b1304f25afe7427beb035d811b6ebd428e332db0bc5e1ba8"
+  },
+  {
+    "sequence": 5,
+    "state": "OBSERVING",
+    "receipt": {
+      "kind": "development-task",
+      "schema_version": 1,
+      "task": {
+        "acceptance_tests": [
+          "test_a"
+        ],
+        "allowed_files": [
+          "src/a.py"
+        ],
+        "approvals": [],
+        "axes": {
+          "integrated": "UNKNOWN",
+          "physical": "UNKNOWN",
+          "source": "UNKNOWN",
+          "tested": "UNKNOWN",
+          "windows": "UNKNOWN"
+        },
+        "base_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "blockers": [
+          "fixture drift"
+        ],
+        "ci": [],
+        "completion_criteria": [
+          "review"
+        ],
+        "dependencies": [
+          "fixture-parent"
+        ],
+        "evidence": [],
+        "evidence_requirements": [
+          "CI"
+        ],
+        "mission_id": "master",
+        "next_actions": [
+          "test"
+        ],
+        "owner": "agent",
+        "pr_reference": "owner/repo#1",
+        "repository": "owner/repo",
+        "requirements": [
+          "retain context"
+        ],
+        "schema_version": 1,
+        "task_id": "fixture-child"
+      }
+    },
+    "previous_hash": "f37c94719ba2a7ec4df33b210ce4f94c046426a2d51d47012ba6742fcbbdb832"
+  },
+  {
+    "sequence": 6,
+    "state": "OBSERVING",
+    "receipt": {
+      "kind": "development-continuation",
+      "metadata": {
+        "blocking_condition": null,
+        "evidence": [
+          {
+            "reference": "synthetic-fixture-evidence",
+            "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+          }
+        ],
+        "last_verified_result": {
+          "scope": "SYNTHETIC_FIXTURE_ONLY",
+          "source_head": "dddddddddddddddddddddddddddddddddddddddd",
+          "source_tree": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+          "status": "PASS",
+          "summary": "Fixture observation"
+        },
+        "next_executable_step": {
+          "description": "Review source evidence",
+          "step_id": "review"
+        },
+        "required_authorization": [
+          "Root review"
+        ],
+        "retry_budget": {
+          "max_retries": 2,
+          "retries_used": 1
+        },
+        "source_head": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "source_tree": "cccccccccccccccccccccccccccccccccccccccc",
+        "status": "IN_PROGRESS"
+      },
+      "schema_version": 2,
+      "task_id": "fixture-child",
+      "task_snapshot_sha256": "3323a042a2b12d81aefbb6862368fa1e29b3b69e1830762cfbb5818be814690e"
+    },
+    "previous_hash": "f6e4eedbd9f89cb52a355568fea58bb27c80c0d70a9132123ac0d1fd21b866ee"
+  }
+]

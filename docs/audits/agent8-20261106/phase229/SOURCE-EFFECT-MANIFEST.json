@@ -1,0 +1,91 @@
+{
+  "schema": "controller-windows-mode-fix-source.v1",
+  "state": "SOURCE_ONLY_AWAIT_ROOT_INDEPENDENT_REVIEW_NO_GREEN_ALLOCATION",
+  "old_controller_sha256": "c7b6112aee23739f68942344b983a7a786c7bab339a767410bad2ba3aa34f6fb",
+  "controller_sha256": "ee5612610e0f77a4244c8ea2c5bcb8f6a32004a23ad711ba0d29d440729141ae",
+  "model_sha256": "8f21e600eaffdbd700a1a75d584783dcab1311d547c2662f85bff0ffb403a471",
+  "changes": [
+    "ONLY private _metadata_matches branch: strict integer st_mode, crossAPI S_IFMT equality; SAMEAPI full mode equality and ctime unchanged",
+    "All dev/ino/size/mtime_ns/nlink and shared birthtime checks unchanged",
+    "BOTH hash_file/pinned_json wiring and every other controller byte unchanged",
+    "Model CONTROLLER_SHA constant ONLY; all16 method bodies/IDs/assertions unchanged"
+  ],
+  "checks": {
+    "model_except_SHA_bytes_identical": true,
+    "method_count": 16,
+    "utf8_no_bom_lengths_verified": true,
+    "method_ids": [
+      "test_valid_windows_cross_api_ctime_difference",
+      "test_common_fields_cross_api_mismatch_denied",
+      "test_fstat_before_after_ctime_mutation_denied",
+      "test_lstat_before_after_ctime_mutation_denied",
+      "test_common_fields_same_api_mutation_denied",
+      "test_equal_birthtime_is_accepted",
+      "test_cross_api_birthtime_mismatch_denied",
+      "test_same_api_birthtime_mutation_denied",
+      "test_cross_api_missing_birthtime_does_not_alias_ctime",
+      "test_same_api_birthtime_availability_drift_denied",
+      "test_raw_hash_tampering_still_denied",
+      "test_windows_observed_permission_pair_is_accepted",
+      "test_windows_cross_api_permission_only_bit_is_accepted",
+      "test_cross_api_file_kind_mismatch_is_denied",
+      "test_same_api_full_permission_changes_are_denied",
+      "test_same_api_file_kind_changes_are_denied"
+    ],
+    "outside_comparator_source_bytes_identical": true,
+    "no_ast_parser_or_compiler_invoked": true
+  },
+  "original_red": {
+    "root_reported_assessment": "16methods:14PASS2failed methods/4OPEN_CHANGED subtest assertion headers;0errors/skips; Root semantically accepted intended mode regression; original UNKNOWN receipt NEVER edited",
+    "mci_sequence": 109,
+    "stderr_sha256": "beb530d0817511c34d4338c652da13a5537e9295fa81522769bc5dcdd9d95812",
+    "assessment_provenance": "Root explicit implementation allocation message; not a replacement test result",
+    "original_receipt_result": "UNKNOWN",
+    "receipt_sha256": "79eb38bfbafc2fa70c7a2960493c53b6f8f45f7021000c61eb340929fd8902e2"
+  },
+  "consumed_packets": {
+    "second_receipt": "3770c636b16bbde049e64411222d3121b1eb22f7bde4b12d8bace72b61d30791",
+    "reuse_authorized": false,
+    "first_receipt": "bf8b4c7f87db699658180f53522f022829e1986a214d1ef78a0084ef066465a1",
+    "active_preparation_manifest": "Unchanged historical consumed b32a59; intentionally NOT resealed as a current main-execution packet"
+  },
+  "effects": {
+    "PS_classifier_native_fixture_network_push": false,
+    "model_tests_executed": false,
+    "python_import_compile_execute": false,
+    "source_preparation": "Archive/read/hash/literal comparison plus two fixed-Git readonly no-index diff calls only",
+    "actual_prerequisite_retry": false,
+    "controller_main_executed": false
+  },
+  "next_gate": "Root independent source review, then separate ONE MODELED16 GREEN allocation if authorized; no kernel/runtime/actual prerequisite proof",
+  "pins": {
+    "C:/Users/LS-5/.codex/native-output-cap-prerequisite-756a670-successor-20261111/controller.py": {
+      "bytes": 27141,
+      "sha256": "ee5612610e0f77a4244c8ea2c5bcb8f6a32004a23ad711ba0d29d440729141ae"
+    },
+    "C:/Users/LS-5/.codex/native-output-cap-prerequisite-756a670-successor-20261111/REVIEW-MODE-COMPATIBILITY-PROPOSAL/test_windows_mode_comparison_models.py": {
+      "bytes": 12925,
+      "sha256": "8f21e600eaffdbd700a1a75d584783dcab1311d547c2662f85bff0ffb403a471"
+    },
+    "C:/Users/LS-5/.codex/native-output-cap-prerequisite-756a670-successor-20261111/PREPARATION-MANIFEST.json": {
+      "bytes": 8427,
+      "sha256": "b32a59ccb4330cffecef9200d71dc1d4ea9739b8c6818e00cc227e5676b0bc19"
+    },
+    "C:/Users/LS-5/.codex/native-output-cap-prerequisite-756a670-successor-20261111/source-ledger.json": {
+      "bytes": 475327,
+      "sha256": "74dc7334fa526c6395ae895440f2050df19c86f1a695f406168138d7ee949033"
+    },
+    "C:/Users/LS-5/.codex/native-output-cap-prerequisite-756a670-successor-20261111/runtime-ledger.json": {
+      "bytes": 167973,
+      "sha256": "3625b1be9c8ac3309ba2c974ad35a6b62c7f53e07031a6b4bc3e75b86d4f0046"
+    },
+    "C:/Users/LS-5/.codex/native-output-cap-prerequisite-756a670-successor-20261111/REVIEW-WINDOWS-MODE-FIX-SOURCE-20261111/combined-source.diff": {
+      "bytes": 2455,
+      "sha256": "b2f3bbbfa807173e896d273a8e1c5f59ecc4265ee08663c0e2e8eacadea18604"
+    },
+    "C:/Users/LS-5/.codex/native-output-cap-prerequisite-756a670-successor-20261111/REVIEW-WINDOWS-MODE-FIX-SOURCE-20261111/preserved-originals.json": {
+      "bytes": 2968,
+      "sha256": "3920bffc78bd068329cad7f1d1bb3c687a88ffc144c1c370d429c2d77e8c538a"
+    }
+  }
+}

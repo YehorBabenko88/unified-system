@@ -1,0 +1,51 @@
+{
+  "schema": "modeled16-green.v1",
+  "allocation": "ROOT.WINDOWS.MODE.MODELED16.GREEN.ONCE",
+  "mci_sequence": 112,
+  "pre": {
+    "source_files": 1872,
+    "runtime_files": 841
+  },
+  "result": "MODELED16_GREEN",
+  "scope": "Actual fixed ee561 readers against inert models only; no main/Git/PS/fixture",
+  "output_cap": 262144,
+  "pid": 125896,
+  "exit_code": 0,
+  "signal": null,
+  "retired": true,
+  "readers_closed": true,
+  "elapsed_seconds": 0.732849899999972,
+  "output_bytes": 0,
+  "stderr_sha256": "6eb4f1ad9dbbdcd0772f11b894216d87038e968bbc6d65dbf2c50d4d62a5a91a",
+  "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "post": {
+    "source_files": 1872,
+    "runtime_files": 841
+  },
+  "pins_unchanged": true,
+  "cache_empty": true,
+  "method_lines": [
+    "test_common_fields_cross_api_mismatch_denied (controller_windows_mode_models.ControllerMetadataModels.test_common_fields_cross_api_mismatch_denied) ... ok",
+    "test_common_fields_same_api_mutation_denied (controller_windows_mode_models.ControllerMetadataModels.test_common_fields_same_api_mutation_denied) ... ok",
+    "test_cross_api_birthtime_mismatch_denied (controller_windows_mode_models.ControllerMetadataModels.test_cross_api_birthtime_mismatch_denied) ... ok",
+    "test_cross_api_file_kind_mismatch_is_denied (controller_windows_mode_models.ControllerMetadataModels.test_cross_api_file_kind_mismatch_is_denied) ... ok",
+    "test_cross_api_missing_birthtime_does_not_alias_ctime (controller_windows_mode_models.ControllerMetadataModels.test_cross_api_missing_birthtime_does_not_alias_ctime) ... ok",
+    "test_equal_birthtime_is_accepted (controller_windows_mode_models.ControllerMetadataModels.test_equal_birthtime_is_accepted) ... ok",
+    "test_fstat_before_after_ctime_mutation_denied (controller_windows_mode_models.ControllerMetadataModels.test_fstat_before_after_ctime_mutation_denied) ... ok",
+    "test_lstat_before_after_ctime_mutation_denied (controller_windows_mode_models.ControllerMetadataModels.test_lstat_before_after_ctime_mutation_denied) ... ok",
+    "test_raw_hash_tampering_still_denied (controller_windows_mode_models.ControllerMetadataModels.test_raw_hash_tampering_still_denied) ... ok",
+    "test_same_api_birthtime_availability_drift_denied (controller_windows_mode_models.ControllerMetadataModels.test_same_api_birthtime_availability_drift_denied) ... ok",
+    "test_same_api_birthtime_mutation_denied (controller_windows_mode_models.ControllerMetadataModels.test_same_api_birthtime_mutation_denied) ... ok",
+    "test_same_api_file_kind_changes_are_denied (controller_windows_mode_models.ControllerMetadataModels.test_same_api_file_kind_changes_are_denied) ... ok",
+    "test_same_api_full_permission_changes_are_denied (controller_windows_mode_models.ControllerMetadataModels.test_same_api_full_permission_changes_are_denied) ... ok",
+    "test_valid_windows_cross_api_ctime_difference (controller_windows_mode_models.ControllerMetadataModels.test_valid_windows_cross_api_ctime_difference) ... ok",
+    "test_windows_cross_api_permission_only_bit_is_accepted (controller_windows_mode_models.ControllerMetadataModels.test_windows_cross_api_permission_only_bit_is_accepted) ... ok",
+    "test_windows_observed_permission_pair_is_accepted (controller_windows_mode_models.ControllerMetadataModels.test_windows_observed_permission_pair_is_accepted) ... ok"
+  ],
+  "headers": [],
+  "summary": [
+    "Ran 16 tests in 0.200s",
+    "OK"
+  ],
+  "skips": false
+}

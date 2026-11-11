@@ -1,0 +1,12 @@
+{
+  "id": "A8-F32",
+  "severity": "P2",
+  "repository": "unified-system",
+  "pr": 69,
+  "observed_head": "461ee1d51f432dc1ccf419f22fd7c1cd41095a8e",
+  "title": "Activation cleanup_seconds10 is not an aggregate cleanup deadline",
+  "status": "OPEN_SOURCE_ONLY_ROOT_ACKNOWLEDGED_PRE_EXECUTION_BLOCKER",
+  "test": "Static execute finally / Capture.save / retire_unassigned / watchdog.finish ordering",
+  "evidence": "phase141/source-cleanup-and-reference-review.json;phase141/ls5-package461-b.activation-plan.json;phase141/report.md",
+  "required_correction": "Separate committed source successor with one explicit cleanup deadline and remaining-budget waits/joins plus elapsed and unknown-retirement evidence; preserve original handles and failures, never relabel timeout as PASS. Freeze b without hotpatch. Independently review successor before execution."
+}

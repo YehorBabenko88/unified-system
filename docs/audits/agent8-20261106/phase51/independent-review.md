@@ -1,0 +1,20 @@
+# Minimal executable LS5 pilot blockers
+
+Requirement: LS5_LOCAL_PILOT_EXECUTABLE_BLOCKERS. Unified-system Draft26 reviewed aefa2a9039349445bd3eaee25b12f9b6bec4c01d; tree3fb3d639a46e4ffb2bd8cc22e814651006169b8e. Environment: original local owner attachment plus primary Git reads; no office/LS5 probe or installation.
+
+Owner directive original raw SHA2561dc4bad55cc8d65919e416b1093d7a609181bb9ee997d61031862cab70ad2bf5 is retained as owner-directive.original.txt. It authorizes staged physical pilot conditionally. It does not authorize full production, real trading, provider requests before admission, security/network changes, destructive faults, Tailscale removal, main merge or a protected Math operation without its separate single-use protocol. Earlier blanket pilot prohibition is superseded only within these stage gates; physical acceptance remains unachieved.
+
+| ID | Stage and executable requirement | Current actual result | Owner |
+|---|---|---|---|
+| G1 | Before install: fresh LS5 identity/edition/services/existing-install/disk/test-root inventory and demonstrated alternate administrative access | BLOCKED pending current independently verified readiness; historic inventory insufficient | Root |
+| G2 | Before install: immutable installed-subset manifest/sourceHEAD-tree/artifactSHA/locks/runtime/Windows evidence/account-port-target scope | BLOCKED; reviewed manifest explicitly PROVISIONAL_NOT_INSTALLABLE with null/pending package fields | Root + package owners |
+| G3 | Before install: hash affected-state backup; restore and rollback rehearsal on separate synthetic state; preserve existing DBs/foreign services | BLOCKED; no fresh accepted LS5 backup/rollback evidence | Root + installer/storage |
+| G4 | Real local service/native identity/protected keys/loopback mTLS/authenticated Control API/Terminan, with unauthorized/expiry/revocation negatives | BLOCKED real composition; default503 and synthetic native stand do not establish endpoint | A1/A2/A6 + Root |
+| G5 | Execute14localP2 checks on exact installed RC: install/services/processidentity/keys/mTLS/API/Terminan/storage/scheduler/offlinefixtures/PaperLedger/logs/restart/rollback | NOT_RUN; local source/Consul/pipe primitives cannot substitute | Root + A4/A5/A6/A7 |
+| G6 | Exact-RC mandatory Windows/native evidence; distinct new Root record and single-use Math authorization where protected native operation is required | BLOCKED pending required evidence/token; phase46/model ACK and this directive grant no operation token | Root + A7/A8 |
+
+These are evidence/prerequisite blockers, not six newly discovered implementation defects. Existing P1/P2 counts are unchanged. G1–G3 and applicable security/runtime gates must pass before limited installation; G5 is the subsequent real runtime acceptance, not a condition claiming services already installed. No distributed/fleet PASS is required to pretend single-node local mode is quorum. P4coordinators/P5workers/Home qualification and P6public-data egress are later separate stages. Protected Math absence must remain BLOCKED while independent preparation continues.
+
+Evidence and per-gate expected/actual/correction: ls5-pilot-blockers.json, original directive and reviewed integration-manifest.original.json. Required next action: Root publish exact fresh readiness and concrete installable pilot package/backup/rollback evidence; component owners implement/qualify actual endpoint composition. A8 independently verifies immutable submissions without mock/native-fixture substitutions.
+
+STAGE: LS5_PREPARATION; NODE: LS5; OS_EDITION: historical Pro observation/current not independently reacquired; RELEASE_SHA: no admitted installable RC; INSTALL_STATUS: BLOCKED; RUNTIME_STATUS: NOT_RUN; WINDOWS_NATIVE_STATUS: partial local primitive only; CONTROL_API: real composition BLOCKED; STORAGE/SCHEDULER/TERMINAN/PAPER_SIMULATION: NOT_RUN at pilot; MARKET_DATA: provider admission BLOCKED; OPEN_P0: no confirmed new implementationP0 (Math operation gate BLOCKED); OPEN_P1:6; ROLLBACK_STATUS: unaccepted; GO_NO_GO: NO-GO for installation/runtime acceptance, preparation authorized.

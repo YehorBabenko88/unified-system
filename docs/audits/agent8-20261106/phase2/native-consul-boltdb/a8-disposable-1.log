@@ -1,0 +1,146 @@
+==> Starting Consul agent...
+               Version: '1.22.2'
+            Build Date: '2025-12-17 05:40:06 +0000 UTC'
+               Node ID: 'eeb3d2a8-2341-593e-7cd4-b0f97819860b'
+             Node name: 'a8-disposable-1'
+            Datacenter: 'a8-three' (Segment: '<all>')
+                Server: true (Bootstrap: false)
+           Client Addr: [127.0.0.1] (HTTP: 63351, HTTPS: -1, gRPC: -1, gRPC-TLS: -1, DNS: -1)
+          Cluster Addr: 127.0.0.1 (LAN: 63349, WAN: 63350)
+     Gossip Encryption: false
+      Auto-Encrypt-TLS: false
+           ACL Enabled: false
+     Reporting Enabled: false
+    ACL Default Policy: allow
+             HTTPS TLS: Verify Incoming: false, Verify Outgoing: false, Min Version: TLSv1_2
+              gRPC TLS: Verify Incoming: false, Min Version: TLSv1_2
+      Internal RPC TLS: Verify Incoming: false, Verify Outgoing: false (Verify Hostname: false), Min Version: TLSv1_2
+
+==> Log data will now stream in as it occurs:
+
+2026-11-06T16:30:46.707+0100 [WARN]  agent: bootstrap_expect > 0: expecting 3 servers
+2026-11-06T16:30:46.947+0100 [WARN]  agent.auto_config: bootstrap_expect > 0: expecting 3 servers
+2026-11-06T16:30:46.967+0100 [WARN]  agent: (LAN) couldn't join: number_of_nodes=0
+  error=
+  | 2 errors occurred:
+  | \t* Failed to join 127.0.0.1:63344: dial tcp 127.0.0.1:63344: connectex: No connection could be made because the target machine actively refused it.
+  | \t* Failed to join 127.0.0.1:63354: dial tcp 127.0.0.1:63354: connectex: No connection could be made because the target machine actively refused it.
+  | 
+  
+2026-11-06T16:30:46.967+0100 [WARN]  agent: Join cluster failed, will retry: cluster=LAN retry_interval=30s
+  error=
+  | 2 errors occurred:
+  | \t* Failed to join 127.0.0.1:63344: dial tcp 127.0.0.1:63344: connectex: No connection could be made because the target machine actively refused it.
+  | \t* Failed to join 127.0.0.1:63354: dial tcp 127.0.0.1:63354: connectex: No connection could be made because the target machine actively refused it.
+  | 
+  
+2026-11-06T16:30:48.695+0100 [ERROR] agent.server.rpc: multiplex conn accept failed: conn=from=127.0.0.1:63384 error="read tcp 127.0.0.1:63348->127.0.0.1:63384: wsarecv: An existing connection was forcibly closed by the remote host."
+2026-11-06T16:30:48.706+0100 [ERROR] agent.server.raft: failed to decode incoming command: error="read tcp 127.0.0.1:63348->127.0.0.1:63393: wsarecv: An existing connection was forcibly closed by the remote host."
+2026-11-06T16:30:48.707+0100 [ERROR] agent.server.raft: failed to decode incoming command: error="read tcp 127.0.0.1:63348->127.0.0.1:63395: wsarecv: An existing connection was forcibly closed by the remote host."
+2026-11-06T16:30:48.966+0100 [WARN]  agent: error getting server health from server: server=a8-disposable-0 error="rpc error getting client: failed to get conn: dial tcp 127.0.0.1:0->127.0.0.1:63343: connectex: No connection could be made because the target machine actively refused it."
+2026-11-06T16:30:48.987+0100 [ERROR] agent.http: Request error: method=GET url=/v1/operator/raft/configuration?consistent= from=127.0.0.1:63398 error="rpc error getting client: failed to get conn: dial tcp 127.0.0.1:0->127.0.0.1:63343: connectex: No connection could be made because the target machine actively refused it."
+2026-11-06T16:30:49.180+0100 [ERROR] agent.anti_entropy: failed to sync remote state: error="rpc error getting client: failed to get conn: dial tcp 127.0.0.1:0->127.0.0.1:63343: connectex: No connection could be made because the target machine actively refused it."
+2026-11-06T16:30:49.297+0100 [ERROR] agent.http: Request error: method=GET url=/v1/operator/raft/configuration?consistent= from=127.0.0.1:63398 error="rpc error getting client: failed to get conn: dial tcp 127.0.0.1:0->127.0.0.1:63343: connectex: No connection could be made because the target machine actively refused it."
+2026-11-06T16:30:49.461+0100 [WARN]  agent: Syncing node info failed.: error="rpc error getting client: failed to get conn: dial tcp 127.0.0.1:0->127.0.0.1:63343: connectex: No connection could be made because the target machine actively refused it."
+2026-11-06T16:30:49.461+0100 [ERROR] agent.anti_entropy: failed to sync remote state: error="rpc error getting client: failed to get conn: dial tcp 127.0.0.1:0->127.0.0.1:63343: connectex: No connection could be made because the target machine actively refused it."
+2026-11-06T16:30:49.607+0100 [ERROR] agent.http: Request error: method=GET url=/v1/operator/raft/configuration?consistent= from=127.0.0.1:63398 error="rpc error getting client: failed to get conn: dial tcp 127.0.0.1:0->127.0.0.1:63343: connectex: No connection could be made because the target machine actively refused it."
+2026-11-06T16:30:49.812+0100 [WARN]  agent.server.raft: rejecting pre-vote request since we have a leader: from=127.0.0.1:63353 leader=127.0.0.1:63343 leader-id=90350df9-f733-ffcc-88b6-4dc666a37d24
+2026-11-06T16:30:49.923+0100 [ERROR] agent.http: Request error: method=GET url=/v1/operator/raft/configuration?consistent= from=127.0.0.1:63398 error="rpc error getting client: failed to get conn: dial tcp 127.0.0.1:0->127.0.0.1:63343: connectex: No connection could be made because the target machine actively refused it."
+2026-11-06T16:30:49.966+0100 [WARN]  agent: error getting server health from server: server=a8-disposable-0 error="context deadline exceeded"
+2026-11-06T16:30:50.230+0100 [ERROR] agent.http: Request error: method=GET url=/v1/operator/raft/configuration?consistent= from=127.0.0.1:63398 error="rpc error getting client: failed to get conn: dial tcp 127.0.0.1:0->127.0.0.1:63343: connectex: No connection could be made because the target machine actively refused it."
+2026-11-06T16:30:50.541+0100 [ERROR] agent.http: Request error: method=GET url=/v1/operator/raft/configuration?consistent= from=127.0.0.1:63398 error="rpc error getting client: failed to get conn: dial tcp 127.0.0.1:0->127.0.0.1:63343: connectex: No connection could be made because the target machine actively refused it."
+2026-11-06T16:30:50.703+0100 [WARN]  agent.server.raft: heartbeat timeout reached, starting election: last-leader-addr=127.0.0.1:63343 last-leader-id=90350df9-f733-ffcc-88b6-4dc666a37d24
+2026-11-06T16:30:50.705+0100 [ERROR] agent.server.raft: failed to make requestVote RPC: target="{Voter 90350df9-f733-ffcc-88b6-4dc666a37d24 127.0.0.1:63343}" error="dial tcp 127.0.0.1:0->127.0.0.1:63343: connectex: No connection could be made because the target machine actively refused it." term=3
+2026-11-06T16:30:50.707+0100 [ERROR] agent.server.raft: failed to make requestVote RPC: target="{Voter 90350df9-f733-ffcc-88b6-4dc666a37d24 127.0.0.1:63343}" error="dial tcp 127.0.0.1:0->127.0.0.1:63343: connectex: No connection could be made because the target machine actively refused it." term=3
+2026-11-06T16:30:50.712+0100 [ERROR] agent.server.raft: failed to appendEntries to: peer="{Voter 90350df9-f733-ffcc-88b6-4dc666a37d24 127.0.0.1:63343}" error="dial tcp 127.0.0.1:0->127.0.0.1:63343: connectex: No connection could be made because the target machine actively refused it."
+2026-11-06T16:30:50.717+0100 [ERROR] agent.server.raft: failed to heartbeat to: peer=127.0.0.1:63343 backoff time=10ms error="dial tcp 127.0.0.1:0->127.0.0.1:63343: connectex: No connection could be made because the target machine actively refused it."
+2026-11-06T16:30:50.724+0100 [ERROR] agent.server.raft: failed to appendEntries to: peer="{Voter 90350df9-f733-ffcc-88b6-4dc666a37d24 127.0.0.1:63343}" error="dial tcp 127.0.0.1:0->127.0.0.1:63343: connectex: No connection could be made because the target machine actively refused it."
+2026-11-06T16:30:50.727+0100 [ERROR] agent.server.raft: failed to heartbeat to: peer=127.0.0.1:63343 backoff time=10ms error="dial tcp 127.0.0.1:0->127.0.0.1:63343: connectex: No connection could be made because the target machine actively refused it."
+2026-11-06T16:30:50.734+0100 [ERROR] agent.server.raft: failed to appendEntries to: peer="{Voter 90350df9-f733-ffcc-88b6-4dc666a37d24 127.0.0.1:63343}" error="dial tcp 127.0.0.1:0->127.0.0.1:63343: connectex: No connection could be made because the target machine actively refused it."
+2026-11-06T16:30:50.846+0100 [ERROR] agent.server.raft: failed to appendEntries to: peer="{Voter 90350df9-f733-ffcc-88b6-4dc666a37d24 127.0.0.1:63343}" error="dial tcp 127.0.0.1:0->127.0.0.1:63343: connectex: No connection could be made because the target machine actively refused it."
+2026-11-06T16:30:50.857+0100 [ERROR] agent.server.raft: failed to heartbeat to: peer=127.0.0.1:63343 backoff time=10ms error="dial tcp 127.0.0.1:0->127.0.0.1:63343: connectex: No connection could be made because the target machine actively refused it."
+2026-11-06T16:30:50.869+0100 [ERROR] agent.server.raft: failed to heartbeat to: peer=127.0.0.1:63343 backoff time=20ms error="dial tcp 127.0.0.1:0->127.0.0.1:63343: connectex: No connection could be made because the target machine actively refused it."
+2026-11-06T16:30:50.961+0100 [ERROR] agent.server.raft: failed to appendEntries to: peer="{Voter 90350df9-f733-ffcc-88b6-4dc666a37d24 127.0.0.1:63343}" error="dial tcp 127.0.0.1:0->127.0.0.1:63343: connectex: No connection could be made because the target machine actively refused it."
+2026-11-06T16:30:50.966+0100 [WARN]  agent: error getting server health from server: server=a8-disposable-0 error="rpc error getting client: failed to get conn: dial tcp 127.0.0.1:0->127.0.0.1:63343: connectex: No connection could be made because the target machine actively refused it."
+2026-11-06T16:30:51.005+0100 [ERROR] agent.server.raft: failed to heartbeat to: peer=127.0.0.1:63343 backoff time=40ms error="dial tcp 127.0.0.1:0->127.0.0.1:63343: connectex: No connection could be made because the target machine actively refused it."
+2026-11-06T16:30:51.130+0100 [ERROR] agent.server.raft: failed to appendEntries to: peer="{Voter 90350df9-f733-ffcc-88b6-4dc666a37d24 127.0.0.1:63343}" error="dial tcp 127.0.0.1:0->127.0.0.1:63343: connectex: No connection could be made because the target machine actively refused it."
+2026-11-06T16:30:51.214+0100 [WARN]  agent.server.raft: failed to contact: server-id=90350df9-f733-ffcc-88b6-4dc666a37d24 time=502.0021ms
+2026-11-06T16:30:51.231+0100 [ERROR] agent.server.raft: failed to heartbeat to: peer=127.0.0.1:63343 backoff time=80ms error="dial tcp 127.0.0.1:0->127.0.0.1:63343: connectex: No connection could be made because the target machine actively refused it."
+2026-11-06T16:30:51.371+0100 [ERROR] agent.server.raft: failed to appendEntries to: peer="{Voter 90350df9-f733-ffcc-88b6-4dc666a37d24 127.0.0.1:63343}" error="dial tcp 127.0.0.1:0->127.0.0.1:63343: connectex: No connection could be made because the target machine actively refused it."
+2026-11-06T16:30:51.472+0100 [ERROR] agent.server.raft: failed to heartbeat to: peer=127.0.0.1:63343 backoff time=160ms error="dial tcp 127.0.0.1:0->127.0.0.1:63343: connectex: No connection could be made because the target machine actively refused it."
+2026-11-06T16:30:51.632+0100 [ERROR] agent.server.raft: failed to heartbeat to: peer=127.0.0.1:63343 backoff time=320ms error="dial tcp 127.0.0.1:0->127.0.0.1:63343: connectex: No connection could be made because the target machine actively refused it."
+2026-11-06T16:30:51.693+0100 [WARN]  agent.server.raft: failed to contact: server-id=90350df9-f733-ffcc-88b6-4dc666a37d24 time=981.3266ms
+2026-11-06T16:30:51.764+0100 [ERROR] agent.server.raft: failed to appendEntries to: peer="{Voter 90350df9-f733-ffcc-88b6-4dc666a37d24 127.0.0.1:63343}" error="dial tcp 127.0.0.1:0->127.0.0.1:63343: connectex: No connection could be made because the target machine actively refused it."
+2026-11-06T16:30:51.966+0100 [WARN]  agent: error getting server health from server: server=a8-disposable-0 error="context deadline exceeded"
+2026-11-06T16:30:52.103+0100 [ERROR] agent.server.raft: failed to heartbeat to: peer=127.0.0.1:63343 backoff time=500ms error="dial tcp 127.0.0.1:0->127.0.0.1:63343: connectex: No connection could be made because the target machine actively refused it."
+2026-11-06T16:30:52.157+0100 [WARN]  agent.server.raft: failed to contact: server-id=90350df9-f733-ffcc-88b6-4dc666a37d24 time=1.444678s
+2026-11-06T16:30:52.474+0100 [ERROR] agent.server.raft: failed to appendEntries to: peer="{Voter 90350df9-f733-ffcc-88b6-4dc666a37d24 127.0.0.1:63343}" error="dial tcp 127.0.0.1:0->127.0.0.1:63343: connectex: No connection could be made because the target machine actively refused it."
+2026-11-06T16:30:52.603+0100 [ERROR] agent.server.raft: failed to heartbeat to: peer=127.0.0.1:63343 backoff time=500ms error="dial tcp 127.0.0.1:0->127.0.0.1:63343: connectex: No connection could be made because the target machine actively refused it."
+2026-11-06T16:30:52.966+0100 [WARN]  agent: error getting server health from server: server=a8-disposable-0 error="rpc error getting client: failed to get conn: dial tcp 127.0.0.1:0->127.0.0.1:63343: connectex: No connection could be made because the target machine actively refused it."
+2026-11-06T16:30:53.104+0100 [ERROR] agent.server.raft: failed to heartbeat to: peer=127.0.0.1:63343 backoff time=500ms error="dial tcp 127.0.0.1:0->127.0.0.1:63343: connectex: No connection could be made because the target machine actively refused it."
+2026-11-06T16:30:53.605+0100 [ERROR] agent.server.raft: failed to heartbeat to: peer=127.0.0.1:63343 backoff time=500ms error="dial tcp 127.0.0.1:0->127.0.0.1:63343: connectex: No connection could be made because the target machine actively refused it."
+2026-11-06T16:30:53.827+0100 [ERROR] agent.server.raft: failed to appendEntries to: peer="{Voter 90350df9-f733-ffcc-88b6-4dc666a37d24 127.0.0.1:63343}" error="dial tcp 127.0.0.1:0->127.0.0.1:63343: connectex: No connection could be made because the target machine actively refused it."
+2026-11-06T16:30:53.965+0100 [WARN]  agent: error getting server health from server: server=a8-disposable-0 error="context deadline exceeded"
+2026-11-06T16:30:54.105+0100 [WARN]  agent.server.raft: unable to get address for server, using fallback address: id=90350df9-f733-ffcc-88b6-4dc666a37d24 fallback=127.0.0.1:63343 error="Could not find address for server id 90350df9-f733-ffcc-88b6-4dc666a37d24"
+2026-11-06T16:30:54.105+0100 [ERROR] agent.server.raft: failed to heartbeat to: peer=127.0.0.1:63343 backoff time=500ms error="dial tcp 127.0.0.1:0->127.0.0.1:63343: connectex: No connection could be made because the target machine actively refused it."
+2026-11-06T16:30:54.606+0100 [WARN]  agent.server.raft: unable to get address for server, using fallback address: id=90350df9-f733-ffcc-88b6-4dc666a37d24 fallback=127.0.0.1:63343 error="Could not find address for server id 90350df9-f733-ffcc-88b6-4dc666a37d24"
+2026-11-06T16:30:54.606+0100 [ERROR] agent.server.raft: failed to heartbeat to: peer=127.0.0.1:63343 backoff time=500ms error="dial tcp 127.0.0.1:0->127.0.0.1:63343: connectex: No connection could be made because the target machine actively refused it."
+2026-11-06T16:30:54.965+0100 [WARN]  agent: error getting server health from server: server=a8-disposable-0 error="rpc error getting client: failed to get conn: dial tcp 127.0.0.1:0->127.0.0.1:63343: connectex: No connection could be made because the target machine actively refused it."
+2026-11-06T16:30:55.106+0100 [WARN]  agent.server.raft: unable to get address for server, using fallback address: id=90350df9-f733-ffcc-88b6-4dc666a37d24 fallback=127.0.0.1:63343 error="Could not find address for server id 90350df9-f733-ffcc-88b6-4dc666a37d24"
+2026-11-06T16:30:55.106+0100 [ERROR] agent.server.raft: failed to heartbeat to: peer=127.0.0.1:63343 backoff time=500ms error="dial tcp 127.0.0.1:0->127.0.0.1:63343: connectex: No connection could be made because the target machine actively refused it."
+2026-11-06T16:30:55.683+0100 [WARN]  agent.server.raft: unable to get address for server, using fallback address: id=90350df9-f733-ffcc-88b6-4dc666a37d24 fallback=127.0.0.1:63343 error="Could not find address for server id 90350df9-f733-ffcc-88b6-4dc666a37d24"
+2026-11-06T16:30:55.683+0100 [ERROR] agent.server.raft: failed to heartbeat to: peer=127.0.0.1:63343 backoff time=500ms error="dial tcp 127.0.0.1:0->127.0.0.1:63343: connectex: No connection could be made because the target machine actively refused it."
+2026-11-06T16:30:55.753+0100 [ERROR] agent.server.rpc: multiplex conn accept failed: conn=from=127.0.0.1:63381 error="read tcp 127.0.0.1:63348->127.0.0.1:63381: wsarecv: An existing connection was forcibly closed by the remote host."
+2026-11-06T16:30:55.770+0100 [ERROR] agent.server.raft: failed to decode incoming command: error="read tcp 127.0.0.1:63348->127.0.0.1:63410: wsarecv: An existing connection was forcibly closed by the remote host."
+2026-11-06T16:30:55.782+0100 [ERROR] agent.server.raft: failed to heartbeat to: peer=127.0.0.1:63353 backoff time=10ms error="write tcp 127.0.0.1:63419->127.0.0.1:63353: wsasend: An existing connection was forcibly closed by the remote host."
+2026-11-06T16:30:55.816+0100 [ERROR] agent.server.raft: failed to pipeline appendEntries: peer="{Voter a084b2b4-e0cc-7724-49e2-b42307d319e8 127.0.0.1:63353}" error="write tcp 127.0.0.1:63416->127.0.0.1:63353: wsasend: An existing connection was forcibly closed by the remote host."
+2026-11-06T16:30:55.872+0100 [ERROR] agent.server.raft: failed to appendEntries to: peer="{Voter a084b2b4-e0cc-7724-49e2-b42307d319e8 127.0.0.1:63353}" error="dial tcp 127.0.0.1:0->127.0.0.1:63353: connectex: No connection could be made because the target machine actively refused it."
+2026-11-06T16:30:55.955+0100 [ERROR] agent.server.raft: failed to appendEntries to: peer="{Voter a084b2b4-e0cc-7724-49e2-b42307d319e8 127.0.0.1:63353}" error="dial tcp 127.0.0.1:0->127.0.0.1:63353: connectex: No connection could be made because the target machine actively refused it."
+2026-11-06T16:30:55.966+0100 [WARN]  agent: error getting server health from server: server=a8-disposable-0 error="context deadline exceeded"
+2026-11-06T16:30:55.987+0100 [ERROR] agent.server.raft: failed to heartbeat to: peer=127.0.0.1:63353 backoff time=10ms error="dial tcp 127.0.0.1:0->127.0.0.1:63353: connectex: No connection could be made because the target machine actively refused it."
+2026-11-06T16:30:56.030+0100 [ERROR] agent.server.raft: failed to appendEntries to: peer="{Voter a084b2b4-e0cc-7724-49e2-b42307d319e8 127.0.0.1:63353}" error="dial tcp 127.0.0.1:0->127.0.0.1:63353: connectex: No connection could be made because the target machine actively refused it."
+2026-11-06T16:30:56.109+0100 [ERROR] agent.server.raft: failed to appendEntries to: peer="{Voter a084b2b4-e0cc-7724-49e2-b42307d319e8 127.0.0.1:63353}" error="dial tcp 127.0.0.1:0->127.0.0.1:63353: connectex: No connection could be made because the target machine actively refused it."
+2026-11-06T16:30:56.145+0100 [ERROR] agent.server.raft: failed to heartbeat to: peer=127.0.0.1:63353 backoff time=10ms error="dial tcp 127.0.0.1:0->127.0.0.1:63353: connectex: No connection could be made because the target machine actively refused it."
+2026-11-06T16:30:56.183+0100 [WARN]  agent.server.raft: unable to get address for server, using fallback address: id=90350df9-f733-ffcc-88b6-4dc666a37d24 fallback=127.0.0.1:63343 error="Could not find address for server id 90350df9-f733-ffcc-88b6-4dc666a37d24"
+2026-11-06T16:30:56.183+0100 [ERROR] agent.server.raft: failed to heartbeat to: peer=127.0.0.1:63343 backoff time=500ms error="dial tcp 127.0.0.1:0->127.0.0.1:63343: connectex: No connection could be made because the target machine actively refused it."
+2026-11-06T16:30:56.239+0100 [WARN]  agent.server.raft: failed to contact: server-id=a084b2b4-e0cc-7724-49e2-b42307d319e8 time=500.3181ms
+2026-11-06T16:30:56.239+0100 [WARN]  agent.server.raft: failed to contact quorum of nodes, stepping down
+2026-11-06T16:30:56.239+0100 [ERROR] agent.http: Request error: method=GET url=/v1/kv/lab-a8/e2de3347c7fc4934bf96cd7007c25dd9/commands/generation?consistent= from=127.0.0.1:63398 error="leadership lost while committing log"
+2026-11-06T16:30:56.239+0100 [WARN]  agent.server.controller-runtime: error received from watch: controller=consul.io/reaper-controller managed_type=internal.v1.Tombstone error="rpc error: code = Canceled desc = context canceled"
+2026-11-06T16:30:56.239+0100 [WARN]  agent.server.controller-runtime: error received from watch: controller=consul.io/exported-services-v1-compat managed_type=multicluster.v2.ComputedExportedServices error="rpc error: code = Canceled desc = context canceled"
+2026-11-06T16:30:56.239+0100 [WARN]  agent.server.controller-runtime: error received from watch: controller=consul.io/exported-services-v1-compat managed_type=multicluster.v2.ComputedExportedServices error="rpc error: code = Canceled desc = context canceled"
+2026-11-06T16:30:56.239+0100 [WARN]  agent.server.controller-runtime: error received from watch: controller=consul.io/exported-services-v1-compat managed_type=multicluster.v2.ComputedExportedServices error="rpc error: code = Canceled desc = context canceled"
+2026-11-06T16:30:56.239+0100 [WARN]  agent.server.controller-runtime: error received from watch: controller=consul.io/exported-services-v1-compat managed_type=multicluster.v2.ComputedExportedServices error="rpc error: code = Canceled desc = context canceled"
+2026-11-06T16:30:56.244+0100 [ERROR] agent.server.raft: failed to appendEntries to: peer="{Voter a084b2b4-e0cc-7724-49e2-b42307d319e8 127.0.0.1:63353}" error="dial tcp 127.0.0.1:0->127.0.0.1:63353: connectex: No connection could be made because the target machine actively refused it."
+2026-11-06T16:30:56.388+0100 [WARN]  agent.server.raft: unable to get address for server, using fallback address: id=90350df9-f733-ffcc-88b6-4dc666a37d24 fallback=127.0.0.1:63343 error="Could not find address for server id 90350df9-f733-ffcc-88b6-4dc666a37d24"
+2026-11-06T16:30:56.388+0100 [ERROR] agent.server.raft: failed to appendEntries to: peer="{Voter 90350df9-f733-ffcc-88b6-4dc666a37d24 127.0.0.1:63343}" error="dial tcp 127.0.0.1:0->127.0.0.1:63343: connectex: No connection could be made because the target machine actively refused it."
+2026-11-06T16:30:56.966+0100 [WARN]  agent: error getting server health from server: server=a8-disposable-2 error="rpc error making call: stream closed"
+2026-11-06T16:30:56.966+0100 [WARN]  agent: error getting server health from server: server=a8-disposable-0 error="rpc error getting client: failed to get conn: dial tcp 127.0.0.1:0->127.0.0.1:63343: connectex: No connection could be made because the target machine actively refused it."
+==> Starting Consul agent...
+               Version: '1.22.2'
+            Build Date: '2025-12-17 05:40:06 +0000 UTC'
+               Node ID: 'eeb3d2a8-2341-593e-7cd4-b0f97819860b'
+             Node name: 'a8-disposable-1'
+            Datacenter: 'a8-three' (Segment: '<all>')
+                Server: true (Bootstrap: false)
+           Client Addr: [127.0.0.1] (HTTP: 63351, HTTPS: -1, gRPC: -1, gRPC-TLS: -1, DNS: -1)
+          Cluster Addr: 127.0.0.1 (LAN: 63349, WAN: 63350)
+     Gossip Encryption: false
+      Auto-Encrypt-TLS: false
+           ACL Enabled: false
+     Reporting Enabled: false
+    ACL Default Policy: allow
+             HTTPS TLS: Verify Incoming: false, Verify Outgoing: false, Min Version: TLSv1_2
+              gRPC TLS: Verify Incoming: false, Min Version: TLSv1_2
+      Internal RPC TLS: Verify Incoming: false, Verify Outgoing: false (Verify Hostname: false), Min Version: TLSv1_2
+
+==> Log data will now stream in as it occurs:
+
+2026-11-06T16:30:57.811+0100 [WARN]  agent: bootstrap_expect > 0: expecting 3 servers
+2026-11-06T16:30:58.059+0100 [WARN]  agent.auto_config: bootstrap_expect > 0: expecting 3 servers
+2026-11-06T16:30:58.071+0100 [WARN]  agent.server.serf.wan: serf: Failed to re-join any previously known node
+2026-11-06T16:30:59.353+0100 [WARN]  agent.server.raft: rejecting pre-vote request since our last term is greater: candidate=127.0.0.1:63343 last-term=3 last-candidate-term=2
+2026-11-06T16:30:59.587+0100 [WARN]  agent.server.raft: heartbeat timeout reached, starting election: last-leader-addr= last-leader-id=
+2026-11-06T16:30:59.598+0100 [WARN]  agent.server.raft: appendEntries rejected, sending older logs: peer="{Voter 90350df9-f733-ffcc-88b6-4dc666a37d24 127.0.0.1:63343}" next=13
+2026-11-06T16:31:03.504+0100 [ERROR] agent.server.raft: failed to decode incoming command: error="read tcp 127.0.0.1:63348->127.0.0.1:63517: wsarecv: An existing connection was forcibly closed by the remote host."
+2026-11-06T16:31:03.504+0100 [ERROR] agent.server.rpc: multiplex conn accept failed: conn=from=127.0.0.1:63524 error="read tcp 127.0.0.1:63348->127.0.0.1:63524: wsarecv: An existing connection was forcibly closed by the remote host."

@@ -1,0 +1,1145 @@
+{
+  "approval": "ROOT_APPROVED_FOR_A8_SOURCE_REVIEW_ONLY",
+  "current_pilot_admission": "BLOCKED_BY_GATES",
+  "data_services": "NEVER_REMOVE_EXISTING_DATA_OR_SERVICES",
+  "execution_authorized": false,
+  "fault_injection_authorized": false,
+  "historical_integrity": "EXISTING_RAW_NORMALIZED_CHECKPOINT_ENGINES_ONLY_NO_PARALLEL_PIPELINE",
+  "install_outside_approved_pilot": false,
+  "installability": "NOT_INSTALLABLE",
+  "missing_inputs": [
+    "One exact assembled executable source/dependency/contract capsule and explicit owner/source review; not produced here",
+    "Current complete required CI inventory and original source-bound full matrix PASS; F26 and F42 unresolved",
+    "Windows36 child stdout-thread timeout20 RCA/fix/regression; no blind timeout increase",
+    "Trusted runtime source/credential/custody/native auth and same-authority grants/assignment/storage/worker positive proof",
+    "Actual direct-LAN six-node identity/quorum/endpoint/HA recovery acceptance independent of Tailscale",
+    "Current resource/capacity/schedule observations for all six nodes; stale observations cannot grant resources",
+    "Existing nonadmin PC4 execution/recovery channel without new account/token changes",
+    "Approved current ten-instrument identity registry and pinned provider/egress/budget policy; list currently unverified",
+    "TRUSTED_RELEASE-only trusted publisher/signing chain remains blocked; LAB requires no commercial certificate, but still requires separate source integrity/executable admission and all other applicable gates",
+    "Root review approval then independent A8 SOURCE review; source review is not runtime or physical permission",
+    "Full exact source seal for uncommitted hosted47 tools and scoped owner review before adoption",
+    "Explicit pilot/fault-injection/install/restart/update/rollback authorization and recovery proof after gates"
+  ],
+  "network": "NEVER_ALTER_EXISTING_NETWORKING_TAILSCALE",
+  "network_snapshot_reference": {
+    "bybit_requests": 0,
+    "bytes": 2185,
+    "freshness": "HISTORICAL_SNAPSHOT_NOT_REFRESHED_NOT_CURRENT",
+    "https_nodes_observed": 6,
+    "network_configuration_writes": 0,
+    "observed_first_utc": "2026-11-10T19:09:08.6124003Z",
+    "observed_last_utc": "2026-11-10T19:09:46.1632230Z",
+    "path": "$PRIVATE_CODEX_EVIDENCE/network-egress-readonly-20261110/summary.json",
+    "physical_acceptance": false,
+    "private_principals_and_ips": "OMITTED",
+    "runtime_admission": false,
+    "scope": "ONE_READ_ONLY_HTTPS_IPV4_ENDPOINT_SNAPSHOT_NOT_BYBIT_EGRESS_PROOF",
+    "sha256": "f2ca62fdb33ab7ba8b4e67d98eb896c3621c87a5792b8b08edbc38a2d521cb37",
+    "ssh_remote_nodes_passed": 5,
+    "transport": "FIVE_PINNED_TAILSCALE_SSH_NOT_DIRECT_LAN"
+  },
+  "paper": "EXISTING_ENGINES_ONLY_NO_REAL_ORDERS",
+  "permissions": {
+    "dispatch": "DENY",
+    "fault_injection": "DENY",
+    "installation": "DENY",
+    "physical": "DENY",
+    "production": "DENY",
+    "provider_sends": "DENY",
+    "runtime": "DENY",
+    "tailscale_changes": "DENY",
+    "trading": "DENY"
+  },
+  "plan_status": "PROPOSED_SEQUENTIAL_REVIEW_ONLY",
+  "predicate_profile": {
+    "FAIL": "Any declared mismatch or confirmed guard/security/integrity failure",
+    "PASS": "Only when every declared check is PASS against complete authenticated exact-source artifacts",
+    "UNKNOWN": "Missing, stale, incomplete, conflicting or unauthenticated evidence; never PASS",
+    "authorization_granted": false,
+    "closed_comparators": [
+      "EXACT_EQUALS",
+      "EXACT_SET_EQUALS",
+      "ALL_REQUIRED_TRUE",
+      "IDENTITY_BOUND_EQUALS",
+      "AT_LEAST"
+    ],
+    "closed_result_values": [
+      "PASS",
+      "FAIL",
+      "UNKNOWN"
+    ],
+    "closed_stage_ids": [
+      "L2-S01",
+      "L2-S02",
+      "L2-S03",
+      "L2-S04",
+      "L2-S05",
+      "L2-S06",
+      "L2-S07",
+      "L2-S08"
+    ],
+    "default_result": "UNKNOWN",
+    "execution_engine": "NONE_DEFINED_OR_ADMITTED",
+    "failure_action": "STOP_CURRENT_OPERATION",
+    "predicate_inputs": "FUTURE_SOURCE_BOUND_ARTIFACT_FACTS_ONLY_NO_COMMANDS_CALLBACKS_OR_URL_EXECUTION",
+    "schema": "unified.acceptance-review.declarative-stage-checks.v1",
+    "scope": "REVIEW_PLAN_ONLY_NOT_NEW_RUNTIME_ABI_OR_EXECUTOR",
+    "unknown_action": "HOLD_NO_CONTINUE_REQUIRE_ROOT_REVIEW"
+  },
+  "review_scope": "May be approved for A8 SOURCE review only; never executable release or runtime/native endpoint admission",
+  "schema": "unified.acceptance-review.level2.physical-acceptance-plan.v1",
+  "signing_profile_policy": {
+    "LAB": "COMMERCIAL_CERTIFICATE_NOT_REQUIRED_NO_OTHER_GATE_WAIVER",
+    "TRUSTED_RELEASE": "TRUSTED_PUBLISHER_CHAIN_BLOCKED_PROFILE_ONLY"
+  },
+  "source_combination": "NOT_ASSEMBLED_OR_VERIFIED",
+  "stages": [
+    {
+      "authority_granted": false,
+      "checks": [
+        {
+          "artifact_id": "L2-S01-SOURCE-BOUND-RESULT",
+          "authority_granted": false,
+          "check_id": "L2-S01-SOURCE_ASSEMBLY",
+          "comparator": "EXACT_EQUALS",
+          "expected": true,
+          "fact_field": "assembly_verified",
+          "failure_action": "STOP_CURRENT_OPERATION",
+          "missing_action": "UNKNOWN_NO_CONTINUE",
+          "observed": null,
+          "result": "UNKNOWN"
+        },
+        {
+          "artifact_id": "L2-S01-SOURCE-BOUND-RESULT",
+          "authority_granted": false,
+          "check_id": "L2-S01-REQUIRED_CI",
+          "comparator": "EXACT_EQUALS",
+          "expected": true,
+          "fact_field": "all_required_ci_pass",
+          "failure_action": "STOP_CURRENT_OPERATION",
+          "missing_action": "UNKNOWN_NO_CONTINUE",
+          "observed": null,
+          "result": "UNKNOWN"
+        },
+        {
+          "artifact_id": "L2-S01-SOURCE-BOUND-RESULT",
+          "authority_granted": false,
+          "check_id": "L2-S01-EXACT_RELEASE_REVIEW",
+          "comparator": "EXACT_EQUALS",
+          "expected": true,
+          "fact_field": "root_executable_release_approved",
+          "failure_action": "STOP_CURRENT_OPERATION",
+          "missing_action": "UNKNOWN_NO_CONTINUE",
+          "observed": null,
+          "result": "UNKNOWN"
+        },
+        {
+          "artifact_id": "L2-S01-SOURCE-BOUND-RESULT",
+          "authority_granted": false,
+          "check_id": "L2-S01-RECOVERY_CHANNEL",
+          "comparator": "EXACT_EQUALS",
+          "expected": true,
+          "fact_field": "existing_nonadmin_recovery_verified",
+          "failure_action": "STOP_CURRENT_OPERATION",
+          "missing_action": "UNKNOWN_NO_CONTINUE",
+          "observed": null,
+          "result": "UNKNOWN"
+        },
+        {
+          "artifact_id": "L2-S01-SOURCE-BOUND-RESULT",
+          "authority_granted": false,
+          "check_id": "L2-S01-PROFILE_POLICY",
+          "comparator": "EXACT_EQUALS",
+          "expected": true,
+          "fact_field": "selected_release_profile_integrity_satisfied",
+          "failure_action": "STOP_CURRENT_OPERATION",
+          "missing_action": "UNKNOWN_NO_CONTINUE",
+          "observed": null,
+          "result": "UNKNOWN"
+        }
+      ],
+      "closed_check_ids": [
+        "L2-S01-SOURCE_ASSEMBLY",
+        "L2-S01-REQUIRED_CI",
+        "L2-S01-EXACT_RELEASE_REVIEW",
+        "L2-S01-RECOVERY_CHANNEL",
+        "L2-S01-PROFILE_POLICY"
+      ],
+      "current_result": "UNKNOWN",
+      "estimated_time": "15-30 proposed minutes",
+      "evidence_requirements": {
+        "artifact_id": "L2-S01-SOURCE-BOUND-RESULT",
+        "exact_executable_source_ref": null,
+        "expected_state": "NOT_PRESENT_NOT_EXECUTED",
+        "missing_or_skipped_required_cases": "FAIL_IF_EXECUTED_OTHERWISE_UNKNOWN",
+        "producer_rule": "Independent authenticated source binding; self-reported summary alone insufficient",
+        "raw_artifact_preservation": "RETAIN_ORIGINAL_BYTES_AND_SHA256_NO_NORMALIZATION",
+        "required_binding_fields": [
+          "repository",
+          "exact_head",
+          "exact_tree",
+          "contract_versions_sha256",
+          "expected_inventory_sha256",
+          "actual_case_ids",
+          "artifact_sha256",
+          "original_log_sha256",
+          "producer_identity_binding",
+          "run_attempt_job_or_owner_phase_identity",
+          "started_utc",
+          "completed_utc",
+          "source_before_sha256",
+          "source_after_sha256",
+          "execution_class",
+          "authority_scope"
+        ],
+        "required_inventory": "ROOT_PINNED_EXACT_STAGE_SCENARIO_IDS_REQUIRED_BEFORE_EXECUTION",
+        "review_baseline": {
+          "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
+          "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
+        },
+        "source_ref_status": "PENDING_ROOT_APPROVED_ASSEMBLED_EXECUTABLE_SOURCE_NOT_THIS_REVIEW_PACKET"
+      },
+      "execution_authorized": false,
+      "failure_action": "STOP_CURRENT_OPERATION",
+      "name": "Source/contract/CI/signing and recovery-channel gate review",
+      "order": 1,
+      "pass_predicate": {
+        "comparator": "ALL_REQUIRED_TRUE",
+        "condition": "Every listed check result exactly PASS; no extra/substituted/missing/duplicate IDs",
+        "operands": [
+          "L2-S01-SOURCE_ASSEMBLY",
+          "L2-S01-REQUIRED_CI",
+          "L2-S01-EXACT_RELEASE_REVIEW",
+          "L2-S01-RECOVERY_CHANNEL",
+          "L2-S01-PROFILE_POLICY"
+        ],
+        "permission_granted": false,
+        "result_if_incomplete": "UNKNOWN"
+      },
+      "predecessor_stage_ids": [],
+      "prerequisites": [
+        "ROOT_APPROVED_EXACT_EXECUTABLE_RELEASE",
+        "REQUIRED_GATES_PASS",
+        "EXISTING_NONADMIN_RECOVERY_ACCESS",
+        "SEPARATE_STAGE_AUTHORIZATION"
+      ],
+      "recovery": "Read-only; stop if any source/gate unresolved",
+      "risk": "LOW",
+      "stage_id": "L2-S01",
+      "unknown_action": "HOLD_NO_CONTINUE_REQUIRE_ROOT_REVIEW"
+    },
+    {
+      "authority_granted": false,
+      "checks": [
+        {
+          "artifact_id": "L2-S02-SOURCE-BOUND-RESULT",
+          "authority_granted": false,
+          "check_id": "L2-S02-NEW_NAMESPACE",
+          "comparator": "EXACT_EQUALS",
+          "expected": true,
+          "fact_field": "restore_target_is_new_namespace",
+          "failure_action": "STOP_CURRENT_OPERATION",
+          "missing_action": "UNKNOWN_NO_CONTINUE",
+          "observed": null,
+          "result": "UNKNOWN"
+        },
+        {
+          "artifact_id": "L2-S02-SOURCE-BOUND-RESULT",
+          "authority_granted": false,
+          "check_id": "L2-S02-BACKUP_HASHES",
+          "comparator": "EXACT_EQUALS",
+          "expected": true,
+          "fact_field": "backup_manifest_matches_originals",
+          "failure_action": "STOP_CURRENT_OPERATION",
+          "missing_action": "UNKNOWN_NO_CONTINUE",
+          "observed": null,
+          "result": "UNKNOWN"
+        },
+        {
+          "artifact_id": "L2-S02-SOURCE-BOUND-RESULT",
+          "authority_granted": false,
+          "check_id": "L2-S02-RESTORE_HASHES",
+          "comparator": "EXACT_EQUALS",
+          "expected": true,
+          "fact_field": "restored_manifest_matches_backup",
+          "failure_action": "STOP_CURRENT_OPERATION",
+          "missing_action": "UNKNOWN_NO_CONTINUE",
+          "observed": null,
+          "result": "UNKNOWN"
+        },
+        {
+          "artifact_id": "L2-S02-SOURCE-BOUND-RESULT",
+          "authority_granted": false,
+          "check_id": "L2-S02-ORIGINALS_UNTOUCHED",
+          "comparator": "EXACT_EQUALS",
+          "expected": true,
+          "fact_field": "existing_data_services_unchanged",
+          "failure_action": "STOP_CURRENT_OPERATION",
+          "missing_action": "UNKNOWN_NO_CONTINUE",
+          "observed": null,
+          "result": "UNKNOWN"
+        }
+      ],
+      "closed_check_ids": [
+        "L2-S02-NEW_NAMESPACE",
+        "L2-S02-BACKUP_HASHES",
+        "L2-S02-RESTORE_HASHES",
+        "L2-S02-ORIGINALS_UNTOUCHED"
+      ],
+      "current_result": "UNKNOWN",
+      "estimated_time": "15-30 proposed minutes",
+      "evidence_requirements": {
+        "artifact_id": "L2-S02-SOURCE-BOUND-RESULT",
+        "exact_executable_source_ref": null,
+        "expected_state": "NOT_PRESENT_NOT_EXECUTED",
+        "missing_or_skipped_required_cases": "FAIL_IF_EXECUTED_OTHERWISE_UNKNOWN",
+        "producer_rule": "Independent authenticated source binding; self-reported summary alone insufficient",
+        "raw_artifact_preservation": "RETAIN_ORIGINAL_BYTES_AND_SHA256_NO_NORMALIZATION",
+        "required_binding_fields": [
+          "repository",
+          "exact_head",
+          "exact_tree",
+          "contract_versions_sha256",
+          "expected_inventory_sha256",
+          "actual_case_ids",
+          "artifact_sha256",
+          "original_log_sha256",
+          "producer_identity_binding",
+          "run_attempt_job_or_owner_phase_identity",
+          "started_utc",
+          "completed_utc",
+          "source_before_sha256",
+          "source_after_sha256",
+          "execution_class",
+          "authority_scope"
+        ],
+        "required_inventory": "ROOT_PINNED_EXACT_STAGE_SCENARIO_IDS_REQUIRED_BEFORE_EXECUTION",
+        "review_baseline": {
+          "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
+          "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
+        },
+        "source_ref_status": "PENDING_ROOT_APPROVED_ASSEMBLED_EXECUTABLE_SOURCE_NOT_THIS_REVIEW_PACKET"
+      },
+      "execution_authorized": false,
+      "failure_action": "STOP_CURRENT_OPERATION",
+      "name": "Approved pilot snapshot, backup and restore rehearsal into NEW namespace",
+      "order": 2,
+      "pass_predicate": {
+        "comparator": "ALL_REQUIRED_TRUE",
+        "condition": "Every listed check result exactly PASS; no extra/substituted/missing/duplicate IDs",
+        "operands": [
+          "L2-S02-NEW_NAMESPACE",
+          "L2-S02-BACKUP_HASHES",
+          "L2-S02-RESTORE_HASHES",
+          "L2-S02-ORIGINALS_UNTOUCHED"
+        ],
+        "permission_granted": false,
+        "result_if_incomplete": "UNKNOWN"
+      },
+      "predecessor_stage_ids": [
+        "L2-S01"
+      ],
+      "prerequisites": [
+        "ROOT_APPROVED_EXACT_EXECUTABLE_RELEASE",
+        "REQUIRED_GATES_PASS",
+        "EXISTING_NONADMIN_RECOVERY_ACCESS",
+        "SEPARATE_STAGE_AUTHORIZATION"
+      ],
+      "recovery": "Original data/services untouched; verify backup before later mutation",
+      "risk": "MEDIUM",
+      "stage_id": "L2-S02",
+      "unknown_action": "HOLD_NO_CONTINUE_REQUIRE_ROOT_REVIEW"
+    },
+    {
+      "authority_granted": false,
+      "checks": [
+        {
+          "artifact_id": "L2-S03-SOURCE-BOUND-RESULT",
+          "authority_granted": false,
+          "check_id": "L2-S03-SIMULATOR_FIRST",
+          "comparator": "EXACT_EQUALS",
+          "expected": "SIMULATOR_ONLY",
+          "fact_field": "execution_class",
+          "failure_action": "STOP_CURRENT_OPERATION",
+          "missing_action": "UNKNOWN_NO_CONTINUE",
+          "observed": null,
+          "result": "UNKNOWN"
+        },
+        {
+          "artifact_id": "L2-S03-SOURCE-BOUND-RESULT",
+          "authority_granted": false,
+          "check_id": "L2-S03-NO_QUORUM",
+          "comparator": "EXACT_EQUALS",
+          "expected": true,
+          "fact_field": "no_quorum_new_effects_denied",
+          "failure_action": "STOP_CURRENT_OPERATION",
+          "missing_action": "UNKNOWN_NO_CONTINUE",
+          "observed": null,
+          "result": "UNKNOWN"
+        },
+        {
+          "artifact_id": "L2-S03-SOURCE-BOUND-RESULT",
+          "authority_granted": false,
+          "check_id": "L2-S03-STALE_WRITER",
+          "comparator": "EXACT_EQUALS",
+          "expected": true,
+          "fact_field": "stale_writer_effects_denied",
+          "failure_action": "STOP_CURRENT_OPERATION",
+          "missing_action": "UNKNOWN_NO_CONTINUE",
+          "observed": null,
+          "result": "UNKNOWN"
+        },
+        {
+          "artifact_id": "L2-S03-SOURCE-BOUND-RESULT",
+          "authority_granted": false,
+          "check_id": "L2-S03-UNKNOWN_DEBT",
+          "comparator": "EXACT_EQUALS",
+          "expected": true,
+          "fact_field": "unknown_identity_debt_preserved",
+          "failure_action": "STOP_CURRENT_OPERATION",
+          "missing_action": "UNKNOWN_NO_CONTINUE",
+          "observed": null,
+          "result": "UNKNOWN"
+        }
+      ],
+      "closed_check_ids": [
+        "L2-S03-SIMULATOR_FIRST",
+        "L2-S03-NO_QUORUM",
+        "L2-S03-STALE_WRITER",
+        "L2-S03-UNKNOWN_DEBT"
+      ],
+      "current_result": "UNKNOWN",
+      "estimated_time": "20-40 proposed minutes",
+      "evidence_requirements": {
+        "artifact_id": "L2-S03-SOURCE-BOUND-RESULT",
+        "exact_executable_source_ref": null,
+        "expected_state": "NOT_PRESENT_NOT_EXECUTED",
+        "missing_or_skipped_required_cases": "FAIL_IF_EXECUTED_OTHERWISE_UNKNOWN",
+        "producer_rule": "Independent authenticated source binding; self-reported summary alone insufficient",
+        "raw_artifact_preservation": "RETAIN_ORIGINAL_BYTES_AND_SHA256_NO_NORMALIZATION",
+        "required_binding_fields": [
+          "repository",
+          "exact_head",
+          "exact_tree",
+          "contract_versions_sha256",
+          "expected_inventory_sha256",
+          "actual_case_ids",
+          "artifact_sha256",
+          "original_log_sha256",
+          "producer_identity_binding",
+          "run_attempt_job_or_owner_phase_identity",
+          "started_utc",
+          "completed_utc",
+          "source_before_sha256",
+          "source_after_sha256",
+          "execution_class",
+          "authority_scope"
+        ],
+        "required_inventory": "ROOT_PINNED_EXACT_STAGE_SCENARIO_IDS_REQUIRED_BEFORE_EXECUTION",
+        "review_baseline": {
+          "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
+          "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
+        },
+        "source_ref_status": "PENDING_ROOT_APPROVED_ASSEMBLED_EXECUTABLE_SOURCE_NOT_THIS_REVIEW_PACKET"
+      },
+      "execution_authorized": false,
+      "failure_action": "STOP_CURRENT_OPERATION",
+      "name": "Simulator failover and noquorum/stale-writer scenarios FIRST",
+      "order": 3,
+      "pass_predicate": {
+        "comparator": "ALL_REQUIRED_TRUE",
+        "condition": "Every listed check result exactly PASS; no extra/substituted/missing/duplicate IDs",
+        "operands": [
+          "L2-S03-SIMULATOR_FIRST",
+          "L2-S03-NO_QUORUM",
+          "L2-S03-STALE_WRITER",
+          "L2-S03-UNKNOWN_DEBT"
+        ],
+        "permission_granted": false,
+        "result_if_incomplete": "UNKNOWN"
+      },
+      "predecessor_stage_ids": [
+        "L2-S01",
+        "L2-S02"
+      ],
+      "prerequisites": [
+        "ROOT_APPROVED_EXACT_EXECUTABLE_RELEASE",
+        "REQUIRED_GATES_PASS",
+        "EXISTING_NONADMIN_RECOVERY_ACCESS",
+        "SEPARATE_STAGE_AUTHORIZATION"
+      ],
+      "recovery": "No physical faults; preserve UNKNOWN and simulator evidence",
+      "risk": "MEDIUM",
+      "stage_id": "L2-S03",
+      "unknown_action": "HOLD_NO_CONTINUE_REQUIRE_ROOT_REVIEW"
+    },
+    {
+      "authority_granted": false,
+      "checks": [
+        {
+          "artifact_id": "L2-S04-SOURCE-BOUND-RESULT",
+          "authority_granted": false,
+          "check_id": "L2-S04-TEN_IDENTITIES",
+          "comparator": "EXACT_EQUALS",
+          "expected": 10,
+          "fact_field": "approved_instrument_count",
+          "failure_action": "STOP_CURRENT_OPERATION",
+          "missing_action": "UNKNOWN_NO_CONTINUE",
+          "observed": null,
+          "result": "UNKNOWN"
+        },
+        {
+          "artifact_id": "L2-S04-SOURCE-BOUND-RESULT",
+          "authority_granted": false,
+          "check_id": "L2-S04-REGISTRY_BINDING",
+          "comparator": "EXACT_EQUALS",
+          "expected": true,
+          "fact_field": "approved_registry_policy_bound",
+          "failure_action": "STOP_CURRENT_OPERATION",
+          "missing_action": "UNKNOWN_NO_CONTINUE",
+          "observed": null,
+          "result": "UNKNOWN"
+        },
+        {
+          "artifact_id": "L2-S04-SOURCE-BOUND-RESULT",
+          "authority_granted": false,
+          "check_id": "L2-S04-HISTORICAL_INTEGRITY",
+          "comparator": "EXACT_EQUALS",
+          "expected": true,
+          "fact_field": "all_required_integrity_cases_pass",
+          "failure_action": "STOP_CURRENT_OPERATION",
+          "missing_action": "UNKNOWN_NO_CONTINUE",
+          "observed": null,
+          "result": "UNKNOWN"
+        },
+        {
+          "artifact_id": "L2-S04-SOURCE-BOUND-RESULT",
+          "authority_granted": false,
+          "check_id": "L2-S04-GAPS_DISCLOSED",
+          "comparator": "EXACT_EQUALS",
+          "expected": true,
+          "fact_field": "unverified_gaps_reported_without_invented_completeness",
+          "failure_action": "STOP_CURRENT_OPERATION",
+          "missing_action": "UNKNOWN_NO_CONTINUE",
+          "observed": null,
+          "result": "UNKNOWN"
+        }
+      ],
+      "closed_check_ids": [
+        "L2-S04-TEN_IDENTITIES",
+        "L2-S04-REGISTRY_BINDING",
+        "L2-S04-HISTORICAL_INTEGRITY",
+        "L2-S04-GAPS_DISCLOSED"
+      ],
+      "current_result": "UNKNOWN",
+      "estimated_time": "30-60 proposed minutes",
+      "evidence_requirements": {
+        "artifact_id": "L2-S04-SOURCE-BOUND-RESULT",
+        "exact_executable_source_ref": null,
+        "expected_state": "NOT_PRESENT_NOT_EXECUTED",
+        "missing_or_skipped_required_cases": "FAIL_IF_EXECUTED_OTHERWISE_UNKNOWN",
+        "producer_rule": "Independent authenticated source binding; self-reported summary alone insufficient",
+        "raw_artifact_preservation": "RETAIN_ORIGINAL_BYTES_AND_SHA256_NO_NORMALIZATION",
+        "required_binding_fields": [
+          "repository",
+          "exact_head",
+          "exact_tree",
+          "contract_versions_sha256",
+          "expected_inventory_sha256",
+          "actual_case_ids",
+          "artifact_sha256",
+          "original_log_sha256",
+          "producer_identity_binding",
+          "run_attempt_job_or_owner_phase_identity",
+          "started_utc",
+          "completed_utc",
+          "source_before_sha256",
+          "source_after_sha256",
+          "execution_class",
+          "authority_scope"
+        ],
+        "required_inventory": "ROOT_PINNED_EXACT_STAGE_SCENARIO_IDS_REQUIRED_BEFORE_EXECUTION",
+        "review_baseline": {
+          "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
+          "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
+        },
+        "source_ref_status": "PENDING_ROOT_APPROVED_ASSEMBLED_EXECUTABLE_SOURCE_NOT_THIS_REVIEW_PACKET"
+      },
+      "execution_authorized": false,
+      "failure_action": "STOP_CURRENT_OPERATION",
+      "name": "Approved ten-instrument historical integrity via existing engines",
+      "order": 4,
+      "pass_predicate": {
+        "comparator": "ALL_REQUIRED_TRUE",
+        "condition": "Every listed check result exactly PASS; no extra/substituted/missing/duplicate IDs",
+        "operands": [
+          "L2-S04-TEN_IDENTITIES",
+          "L2-S04-REGISTRY_BINDING",
+          "L2-S04-HISTORICAL_INTEGRITY",
+          "L2-S04-GAPS_DISCLOSED"
+        ],
+        "permission_granted": false,
+        "result_if_incomplete": "UNKNOWN"
+      },
+      "predecessor_stage_ids": [
+        "L2-S01",
+        "L2-S02",
+        "L2-S03"
+      ],
+      "prerequisites": [
+        "ROOT_APPROVED_EXACT_EXECUTABLE_RELEASE",
+        "REQUIRED_GATES_PASS",
+        "EXISTING_NONADMIN_RECOVERY_ACCESS",
+        "SEPARATE_STAGE_AUTHORIZATION"
+      ],
+      "recovery": "Stop on gaps; never synthesize completeness or overwrite originals",
+      "risk": "MEDIUM",
+      "stage_id": "L2-S04",
+      "unknown_action": "HOLD_NO_CONTINUE_REQUIRE_ROOT_REVIEW"
+    },
+    {
+      "authority_granted": false,
+      "checks": [
+        {
+          "artifact_id": "L2-S05-SOURCE-BOUND-RESULT",
+          "authority_granted": false,
+          "check_id": "L2-S05-EXISTING_ENGINES",
+          "comparator": "EXACT_EQUALS",
+          "expected": true,
+          "fact_field": "only_approved_existing_engines_used",
+          "failure_action": "STOP_CURRENT_OPERATION",
+          "missing_action": "UNKNOWN_NO_CONTINUE",
+          "observed": null,
+          "result": "UNKNOWN"
+        },
+        {
+          "artifact_id": "L2-S05-SOURCE-BOUND-RESULT",
+          "authority_granted": false,
+          "check_id": "L2-S05-PAPER_ONLY",
+          "comparator": "EXACT_EQUALS",
+          "expected": 0,
+          "fact_field": "real_order_count",
+          "failure_action": "STOP_CURRENT_OPERATION",
+          "missing_action": "UNKNOWN_NO_CONTINUE",
+          "observed": null,
+          "result": "UNKNOWN"
+        },
+        {
+          "artifact_id": "L2-S05-SOURCE-BOUND-RESULT",
+          "authority_granted": false,
+          "check_id": "L2-S05-SIX_NODE_VISIBILITY",
+          "comparator": "EXACT_EQUALS",
+          "expected": true,
+          "fact_field": "all_six_intended_nodes_visible_with_correct_disclosures",
+          "failure_action": "STOP_CURRENT_OPERATION",
+          "missing_action": "UNKNOWN_NO_CONTINUE",
+          "observed": null,
+          "result": "UNKNOWN"
+        },
+        {
+          "artifact_id": "L2-S05-SOURCE-BOUND-RESULT",
+          "authority_granted": false,
+          "check_id": "L2-S05-SESSION_CONTINUITY",
+          "comparator": "EXACT_EQUALS",
+          "expected": true,
+          "fact_field": "required_session_job_continuity_cases_pass",
+          "failure_action": "STOP_CURRENT_OPERATION",
+          "missing_action": "UNKNOWN_NO_CONTINUE",
+          "observed": null,
+          "result": "UNKNOWN"
+        }
+      ],
+      "closed_check_ids": [
+        "L2-S05-EXISTING_ENGINES",
+        "L2-S05-PAPER_ONLY",
+        "L2-S05-SIX_NODE_VISIBILITY",
+        "L2-S05-SESSION_CONTINUITY"
+      ],
+      "current_result": "UNKNOWN",
+      "estimated_time": "20-40 proposed minutes",
+      "evidence_requirements": {
+        "artifact_id": "L2-S05-SOURCE-BOUND-RESULT",
+        "exact_executable_source_ref": null,
+        "expected_state": "NOT_PRESENT_NOT_EXECUTED",
+        "missing_or_skipped_required_cases": "FAIL_IF_EXECUTED_OTHERWISE_UNKNOWN",
+        "producer_rule": "Independent authenticated source binding; self-reported summary alone insufficient",
+        "raw_artifact_preservation": "RETAIN_ORIGINAL_BYTES_AND_SHA256_NO_NORMALIZATION",
+        "required_binding_fields": [
+          "repository",
+          "exact_head",
+          "exact_tree",
+          "contract_versions_sha256",
+          "expected_inventory_sha256",
+          "actual_case_ids",
+          "artifact_sha256",
+          "original_log_sha256",
+          "producer_identity_binding",
+          "run_attempt_job_or_owner_phase_identity",
+          "started_utc",
+          "completed_utc",
+          "source_before_sha256",
+          "source_after_sha256",
+          "execution_class",
+          "authority_scope"
+        ],
+        "required_inventory": "ROOT_PINNED_EXACT_STAGE_SCENARIO_IDS_REQUIRED_BEFORE_EXECUTION",
+        "review_baseline": {
+          "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
+          "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
+        },
+        "source_ref_status": "PENDING_ROOT_APPROVED_ASSEMBLED_EXECUTABLE_SOURCE_NOT_THIS_REVIEW_PACKET"
+      },
+      "execution_authorized": false,
+      "failure_action": "STOP_CURRENT_OPERATION",
+      "name": "Existing paper-only engines and terminal visibility across six intended nodes",
+      "order": 5,
+      "pass_predicate": {
+        "comparator": "ALL_REQUIRED_TRUE",
+        "condition": "Every listed check result exactly PASS; no extra/substituted/missing/duplicate IDs",
+        "operands": [
+          "L2-S05-EXISTING_ENGINES",
+          "L2-S05-PAPER_ONLY",
+          "L2-S05-SIX_NODE_VISIBILITY",
+          "L2-S05-SESSION_CONTINUITY"
+        ],
+        "permission_granted": false,
+        "result_if_incomplete": "UNKNOWN"
+      },
+      "predecessor_stage_ids": [
+        "L2-S01",
+        "L2-S02",
+        "L2-S03",
+        "L2-S04"
+      ],
+      "prerequisites": [
+        "ROOT_APPROVED_EXACT_EXECUTABLE_RELEASE",
+        "REQUIRED_GATES_PASS",
+        "EXISTING_NONADMIN_RECOVERY_ACCESS",
+        "SEPARATE_STAGE_AUTHORIZATION"
+      ],
+      "recovery": "Keep provider sends/orders denied; retain stale/partial states",
+      "risk": "MEDIUM",
+      "stage_id": "L2-S05",
+      "unknown_action": "HOLD_NO_CONTINUE_REQUIRE_ROOT_REVIEW"
+    },
+    {
+      "authority_granted": false,
+      "checks": [
+        {
+          "artifact_id": "L2-S06-SOURCE-BOUND-RESULT",
+          "authority_granted": false,
+          "check_id": "L2-S06-GATES_FIRST",
+          "comparator": "EXACT_EQUALS",
+          "expected": true,
+          "fact_field": "all_previous_stages_pass",
+          "failure_action": "STOP_CURRENT_OPERATION",
+          "missing_action": "UNKNOWN_NO_CONTINUE",
+          "observed": null,
+          "result": "UNKNOWN"
+        },
+        {
+          "artifact_id": "L2-S06-SOURCE-BOUND-RESULT",
+          "authority_granted": false,
+          "check_id": "L2-S06-TEN_MINUTES",
+          "comparator": "AT_LEAST",
+          "expected": 600,
+          "fact_field": "actual_observed_duration_seconds",
+          "failure_action": "STOP_CURRENT_OPERATION",
+          "missing_action": "UNKNOWN_NO_CONTINUE",
+          "observed": null,
+          "result": "UNKNOWN"
+        },
+        {
+          "artifact_id": "L2-S06-SOURCE-BOUND-RESULT",
+          "authority_granted": false,
+          "check_id": "L2-S06-PINNED_POLICY",
+          "comparator": "EXACT_EQUALS",
+          "expected": true,
+          "fact_field": "current_provider_egress_budget_policy_approved",
+          "failure_action": "STOP_CURRENT_OPERATION",
+          "missing_action": "UNKNOWN_NO_CONTINUE",
+          "observed": null,
+          "result": "UNKNOWN"
+        },
+        {
+          "artifact_id": "L2-S06-SOURCE-BOUND-RESULT",
+          "authority_granted": false,
+          "check_id": "L2-S06-READ_ONLY",
+          "comparator": "EXACT_EQUALS",
+          "expected": 0,
+          "fact_field": "private_order_or_mutation_count",
+          "failure_action": "STOP_CURRENT_OPERATION",
+          "missing_action": "UNKNOWN_NO_CONTINUE",
+          "observed": null,
+          "result": "UNKNOWN"
+        },
+        {
+          "artifact_id": "L2-S06-SOURCE-BOUND-RESULT",
+          "authority_granted": false,
+          "check_id": "L2-S06-FRESHNESS_GAPS",
+          "comparator": "EXACT_EQUALS",
+          "expected": true,
+          "fact_field": "freshness_disconnect_gap_backfill_cases_pass",
+          "failure_action": "STOP_CURRENT_OPERATION",
+          "missing_action": "UNKNOWN_NO_CONTINUE",
+          "observed": null,
+          "result": "UNKNOWN"
+        }
+      ],
+      "closed_check_ids": [
+        "L2-S06-GATES_FIRST",
+        "L2-S06-TEN_MINUTES",
+        "L2-S06-PINNED_POLICY",
+        "L2-S06-READ_ONLY",
+        "L2-S06-FRESHNESS_GAPS"
+      ],
+      "current_result": "UNKNOWN",
+      "estimated_time": "10-minute observation plus bounded setup/cleanup",
+      "evidence_requirements": {
+        "artifact_id": "L2-S06-SOURCE-BOUND-RESULT",
+        "exact_executable_source_ref": null,
+        "expected_state": "NOT_PRESENT_NOT_EXECUTED",
+        "missing_or_skipped_required_cases": "FAIL_IF_EXECUTED_OTHERWISE_UNKNOWN",
+        "producer_rule": "Independent authenticated source binding; self-reported summary alone insufficient",
+        "raw_artifact_preservation": "RETAIN_ORIGINAL_BYTES_AND_SHA256_NO_NORMALIZATION",
+        "required_binding_fields": [
+          "repository",
+          "exact_head",
+          "exact_tree",
+          "contract_versions_sha256",
+          "expected_inventory_sha256",
+          "actual_case_ids",
+          "artifact_sha256",
+          "original_log_sha256",
+          "producer_identity_binding",
+          "run_attempt_job_or_owner_phase_identity",
+          "started_utc",
+          "completed_utc",
+          "source_before_sha256",
+          "source_after_sha256",
+          "execution_class",
+          "authority_scope"
+        ],
+        "required_inventory": "ROOT_PINNED_EXACT_STAGE_SCENARIO_IDS_REQUIRED_BEFORE_EXECUTION",
+        "review_baseline": {
+          "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
+          "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
+        },
+        "source_ref_status": "PENDING_ROOT_APPROVED_ASSEMBLED_EXECUTABLE_SOURCE_NOT_THIS_REVIEW_PACKET"
+      },
+      "execution_authorized": false,
+      "failure_action": "STOP_CURRENT_OPERATION",
+      "name": "Live read-only ten-minute observation AFTER all gates",
+      "order": 6,
+      "pass_predicate": {
+        "comparator": "ALL_REQUIRED_TRUE",
+        "condition": "Every listed check result exactly PASS; no extra/substituted/missing/duplicate IDs",
+        "operands": [
+          "L2-S06-GATES_FIRST",
+          "L2-S06-TEN_MINUTES",
+          "L2-S06-PINNED_POLICY",
+          "L2-S06-READ_ONLY",
+          "L2-S06-FRESHNESS_GAPS"
+        ],
+        "permission_granted": false,
+        "result_if_incomplete": "UNKNOWN"
+      },
+      "predecessor_stage_ids": [
+        "L2-S01",
+        "L2-S02",
+        "L2-S03",
+        "L2-S04",
+        "L2-S05"
+      ],
+      "prerequisites": [
+        "ROOT_APPROVED_EXACT_EXECUTABLE_RELEASE",
+        "REQUIRED_GATES_PASS",
+        "EXISTING_NONADMIN_RECOVERY_ACCESS",
+        "SEPARATE_STAGE_AUTHORIZATION"
+      ],
+      "recovery": "No Bybit send permission here; provider policy/instrument list require exact approval",
+      "risk": "MEDIUM",
+      "stage_id": "L2-S06",
+      "unknown_action": "HOLD_NO_CONTINUE_REQUIRE_ROOT_REVIEW"
+    },
+    {
+      "authority_granted": false,
+      "checks": [
+        {
+          "artifact_id": "L2-S07-SOURCE-BOUND-RESULT",
+          "authority_granted": false,
+          "check_id": "L2-S07-APP_ONLY",
+          "comparator": "EXACT_EQUALS",
+          "expected": "APP_ONLY_APPROVED_PILOT",
+          "fact_field": "mutation_scope",
+          "failure_action": "STOP_CURRENT_OPERATION",
+          "missing_action": "UNKNOWN_NO_CONTINUE",
+          "observed": null,
+          "result": "UNKNOWN"
+        },
+        {
+          "artifact_id": "L2-S07-SOURCE-BOUND-RESULT",
+          "authority_granted": false,
+          "check_id": "L2-S07-AUTHORIZATION",
+          "comparator": "EXACT_EQUALS",
+          "expected": true,
+          "fact_field": "separate_stage_authorization_verified",
+          "failure_action": "STOP_CURRENT_OPERATION",
+          "missing_action": "UNKNOWN_NO_CONTINUE",
+          "observed": null,
+          "result": "UNKNOWN"
+        },
+        {
+          "artifact_id": "L2-S07-SOURCE-BOUND-RESULT",
+          "authority_granted": false,
+          "check_id": "L2-S07-ROLLBACK",
+          "comparator": "EXACT_EQUALS",
+          "expected": true,
+          "fact_field": "prior_admitted_app_state_restored_verified",
+          "failure_action": "STOP_CURRENT_OPERATION",
+          "missing_action": "UNKNOWN_NO_CONTINUE",
+          "observed": null,
+          "result": "UNKNOWN"
+        },
+        {
+          "artifact_id": "L2-S07-SOURCE-BOUND-RESULT",
+          "authority_granted": false,
+          "check_id": "L2-S07-NO_COLLATERAL",
+          "comparator": "EXACT_EQUALS",
+          "expected": true,
+          "fact_field": "existing_data_services_network_unchanged",
+          "failure_action": "STOP_CURRENT_OPERATION",
+          "missing_action": "UNKNOWN_NO_CONTINUE",
+          "observed": null,
+          "result": "UNKNOWN"
+        }
+      ],
+      "closed_check_ids": [
+        "L2-S07-APP_ONLY",
+        "L2-S07-AUTHORIZATION",
+        "L2-S07-ROLLBACK",
+        "L2-S07-NO_COLLATERAL"
+      ],
+      "current_result": "UNKNOWN",
+      "estimated_time": "20-40 proposed minutes",
+      "evidence_requirements": {
+        "artifact_id": "L2-S07-SOURCE-BOUND-RESULT",
+        "exact_executable_source_ref": null,
+        "expected_state": "NOT_PRESENT_NOT_EXECUTED",
+        "missing_or_skipped_required_cases": "FAIL_IF_EXECUTED_OTHERWISE_UNKNOWN",
+        "producer_rule": "Independent authenticated source binding; self-reported summary alone insufficient",
+        "raw_artifact_preservation": "RETAIN_ORIGINAL_BYTES_AND_SHA256_NO_NORMALIZATION",
+        "required_binding_fields": [
+          "repository",
+          "exact_head",
+          "exact_tree",
+          "contract_versions_sha256",
+          "expected_inventory_sha256",
+          "actual_case_ids",
+          "artifact_sha256",
+          "original_log_sha256",
+          "producer_identity_binding",
+          "run_attempt_job_or_owner_phase_identity",
+          "started_utc",
+          "completed_utc",
+          "source_before_sha256",
+          "source_after_sha256",
+          "execution_class",
+          "authority_scope"
+        ],
+        "required_inventory": "ROOT_PINNED_EXACT_STAGE_SCENARIO_IDS_REQUIRED_BEFORE_EXECUTION",
+        "review_baseline": {
+          "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
+          "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
+        },
+        "source_ref_status": "PENDING_ROOT_APPROVED_ASSEMBLED_EXECUTABLE_SOURCE_NOT_THIS_REVIEW_PACKET"
+      },
+      "execution_authorized": false,
+      "failure_action": "STOP_CURRENT_OPERATION",
+      "name": "APP_ONLY restart/update/rollback in explicitly approved pilot",
+      "order": 7,
+      "pass_predicate": {
+        "comparator": "ALL_REQUIRED_TRUE",
+        "condition": "Every listed check result exactly PASS; no extra/substituted/missing/duplicate IDs",
+        "operands": [
+          "L2-S07-APP_ONLY",
+          "L2-S07-AUTHORIZATION",
+          "L2-S07-ROLLBACK",
+          "L2-S07-NO_COLLATERAL"
+        ],
+        "permission_granted": false,
+        "result_if_incomplete": "UNKNOWN"
+      },
+      "predecessor_stage_ids": [
+        "L2-S01",
+        "L2-S02",
+        "L2-S03",
+        "L2-S04",
+        "L2-S05",
+        "L2-S06"
+      ],
+      "prerequisites": [
+        "ROOT_APPROVED_EXACT_EXECUTABLE_RELEASE",
+        "REQUIRED_GATES_PASS",
+        "EXISTING_NONADMIN_RECOVERY_ACCESS",
+        "SEPARATE_STAGE_AUTHORIZATION"
+      ],
+      "recovery": "Restore verified prior app state; preserve existing data/services/network",
+      "risk": "HIGH",
+      "stage_id": "L2-S07",
+      "unknown_action": "HOLD_NO_CONTINUE_REQUIRE_ROOT_REVIEW"
+    },
+    {
+      "authority_granted": false,
+      "checks": [
+        {
+          "artifact_id": "L2-S08-SOURCE-BOUND-RESULT",
+          "authority_granted": false,
+          "check_id": "L2-S08-SIMULATOR_PRECEDED",
+          "comparator": "EXACT_EQUALS",
+          "expected": true,
+          "fact_field": "simulator_stage_pass_before_fault",
+          "failure_action": "STOP_CURRENT_OPERATION",
+          "missing_action": "UNKNOWN_NO_CONTINUE",
+          "observed": null,
+          "result": "UNKNOWN"
+        },
+        {
+          "artifact_id": "L2-S08-SOURCE-BOUND-RESULT",
+          "authority_granted": false,
+          "check_id": "L2-S08-AUTHORIZATION",
+          "comparator": "EXACT_EQUALS",
+          "expected": true,
+          "fact_field": "separate_physical_fault_authorization_verified",
+          "failure_action": "STOP_CURRENT_OPERATION",
+          "missing_action": "UNKNOWN_NO_CONTINUE",
+          "observed": null,
+          "result": "UNKNOWN"
+        },
+        {
+          "artifact_id": "L2-S08-SOURCE-BOUND-RESULT",
+          "authority_granted": false,
+          "check_id": "L2-S08-QUORUM_FENCING",
+          "comparator": "EXACT_EQUALS",
+          "expected": true,
+          "fact_field": "required_physical_quorum_fencing_cases_pass",
+          "failure_action": "STOP_CURRENT_OPERATION",
+          "missing_action": "UNKNOWN_NO_CONTINUE",
+          "observed": null,
+          "result": "UNKNOWN"
+        },
+        {
+          "artifact_id": "L2-S08-SOURCE-BOUND-RESULT",
+          "authority_granted": false,
+          "check_id": "L2-S08-RECOVERY",
+          "comparator": "EXACT_EQUALS",
+          "expected": true,
+          "fact_field": "recovery_access_and_data_verified",
+          "failure_action": "STOP_CURRENT_OPERATION",
+          "missing_action": "UNKNOWN_NO_CONTINUE",
+          "observed": null,
+          "result": "UNKNOWN"
+        },
+        {
+          "artifact_id": "L2-S08-SOURCE-BOUND-RESULT",
+          "authority_granted": false,
+          "check_id": "L2-S08-INDEPENDENT_REVIEW",
+          "comparator": "EXACT_EQUALS",
+          "expected": true,
+          "fact_field": "independent_source_bound_acceptance_complete",
+          "failure_action": "STOP_CURRENT_OPERATION",
+          "missing_action": "UNKNOWN_NO_CONTINUE",
+          "observed": null,
+          "result": "UNKNOWN"
+        }
+      ],
+      "closed_check_ids": [
+        "L2-S08-SIMULATOR_PRECEDED",
+        "L2-S08-AUTHORIZATION",
+        "L2-S08-QUORUM_FENCING",
+        "L2-S08-RECOVERY",
+        "L2-S08-INDEPENDENT_REVIEW"
+      ],
+      "current_result": "UNKNOWN",
+      "estimated_time": "Root-defined bounded window required",
+      "evidence_requirements": {
+        "artifact_id": "L2-S08-SOURCE-BOUND-RESULT",
+        "exact_executable_source_ref": null,
+        "expected_state": "NOT_PRESENT_NOT_EXECUTED",
+        "missing_or_skipped_required_cases": "FAIL_IF_EXECUTED_OTHERWISE_UNKNOWN",
+        "producer_rule": "Independent authenticated source binding; self-reported summary alone insufficient",
+        "raw_artifact_preservation": "RETAIN_ORIGINAL_BYTES_AND_SHA256_NO_NORMALIZATION",
+        "required_binding_fields": [
+          "repository",
+          "exact_head",
+          "exact_tree",
+          "contract_versions_sha256",
+          "expected_inventory_sha256",
+          "actual_case_ids",
+          "artifact_sha256",
+          "original_log_sha256",
+          "producer_identity_binding",
+          "run_attempt_job_or_owner_phase_identity",
+          "started_utc",
+          "completed_utc",
+          "source_before_sha256",
+          "source_after_sha256",
+          "execution_class",
+          "authority_scope"
+        ],
+        "required_inventory": "ROOT_PINNED_EXACT_STAGE_SCENARIO_IDS_REQUIRED_BEFORE_EXECUTION",
+        "review_baseline": {
+          "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
+          "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98"
+        },
+        "source_ref_status": "PENDING_ROOT_APPROVED_ASSEMBLED_EXECUTABLE_SOURCE_NOT_THIS_REVIEW_PACKET"
+      },
+      "execution_authorized": false,
+      "failure_action": "STOP_CURRENT_OPERATION",
+      "name": "Separately approved physical failover/recovery and independent acceptance",
+      "order": 8,
+      "pass_predicate": {
+        "comparator": "ALL_REQUIRED_TRUE",
+        "condition": "Every listed check result exactly PASS; no extra/substituted/missing/duplicate IDs",
+        "operands": [
+          "L2-S08-SIMULATOR_PRECEDED",
+          "L2-S08-AUTHORIZATION",
+          "L2-S08-QUORUM_FENCING",
+          "L2-S08-RECOVERY",
+          "L2-S08-INDEPENDENT_REVIEW"
+        ],
+        "permission_granted": false,
+        "result_if_incomplete": "UNKNOWN"
+      },
+      "predecessor_stage_ids": [
+        "L2-S01",
+        "L2-S02",
+        "L2-S03",
+        "L2-S04",
+        "L2-S05",
+        "L2-S06",
+        "L2-S07"
+      ],
+      "prerequisites": [
+        "ROOT_APPROVED_EXACT_EXECUTABLE_RELEASE",
+        "REQUIRED_GATES_PASS",
+        "EXISTING_NONADMIN_RECOVERY_ACCESS",
+        "SEPARATE_STAGE_AUTHORIZATION"
+      ],
+      "recovery": "Fault injection remains unauthorized; simulator precedes any physical fault",
+      "risk": "HIGH",
+      "stage_id": "L2-S08",
+      "unknown_action": "HOLD_NO_CONTINUE_REQUIRE_ROOT_REVIEW"
+    }
+  ],
+  "status": "REVIEW_INPUTS_ONLY",
+  "ten_instruments": {
+    "bybit_sends": "DENY",
+    "current_list": "NOT_VERIFIED_NO_SYMBOLS_INVENTED",
+    "proposed_count": 10,
+    "provider_policy": "NOT_VERIFIED",
+    "source": "APPROVED_IDENTITY_REGISTRY_REQUIRED"
+  },
+  "terminal": "Actual endpoint/auth/continuity/freshness after gates, not cached screenshot or local unit transfer"
+}

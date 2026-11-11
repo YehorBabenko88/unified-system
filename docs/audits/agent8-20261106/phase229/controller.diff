@@ -1,0 +1,18 @@
+diff --git a/C:/Users/LS-5/.codex/native-output-cap-prerequisite-756a670-successor-20261111/REVIEW-WINDOWS-MODE-FIX-SOURCE-20261111/original-controller.py b/C:/Users/LS-5/.codex/native-output-cap-prerequisite-756a670-successor-20261111/controller.py
+index 4b04687..47aa38d 100644
+--- a/C:/Users/LS-5/.codex/native-output-cap-prerequisite-756a670-successor-20261111/REVIEW-WINDOWS-MODE-FIX-SOURCE-20261111/original-controller.py
++++ b/C:/Users/LS-5/.codex/native-output-cap-prerequisite-756a670-successor-20261111/controller.py
+@@ -104,7 +104,12 @@ def _metadata_matches(left, right, *, same_api: bool) -> bool:
+     for name in common + (('st_ctime_ns',) if same_api else ()):
+         first = getattr(left, name, absent)
+         second = getattr(right, name, absent)
+-        if type(first) is not int or type(second) is not int or first != second:
++        if type(first) is not int or type(second) is not int:
++            return False
++        if name == 'st_mode' and not same_api:
++            if stat.S_IFMT(first) != stat.S_IFMT(second):
++                return False
++        elif first != second:
+             return False
+     first_birth = getattr(left, 'st_birthtime_ns', absent)
+     second_birth = getattr(right, 'st_birthtime_ns', absent)

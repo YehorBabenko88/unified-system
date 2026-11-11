@@ -1,0 +1,398 @@
+{
+  "scope": "PR283_ORIGINAL_TERMINAL_COHORT_DATA_NOT_FULL_SYSTEM_ACCEPTANCE",
+  "head": "d6b72b66ff1b85b7e6b956568342ad6bd8bfcfbe",
+  "tree": "066bbe51900e88dd53541baf29a777037ed10b5b",
+  "base": "fb177d14b1e6e399bd9b66ae7cb35d3838acbd81",
+  "merge_distinct_same_tree": "71c4d0e4f72d1d09899d251f70c873f1d9906c56",
+  "PR_runs": 7,
+  "PR_jobs": 15,
+  "job_SUCCESS": 12,
+  "job_FAILURE": 2,
+  "job_CANCELLED": 1,
+  "extra_push": "43052161163_FAILURE_ZEROJOBS_CAUSEUNKNOWN",
+  "fresh_original_joblogs": [
+    {
+      "id": 130632044631,
+      "name": "synthetic (windows-latest)",
+      "conclusion": "success",
+      "sha256": "fe15c15d6168ed5f39a41797a4008489464d69f004ed2c640bc89eab94df73dc"
+    },
+    {
+      "id": 130632045181,
+      "name": "synthetic (ubuntu-latest)",
+      "conclusion": "success",
+      "sha256": "1034e1234ce6e94b7082768bc94a060fb7bc21fb984a64bd89cef157d3038a24"
+    },
+    {
+      "id": 130632045275,
+      "name": "disposable-postgres",
+      "conclusion": "success",
+      "sha256": "f73da171dc86905d210e3107e02ed661c08f5a029f9730cfc68e34c00c401bb0"
+    },
+    {
+      "id": 130632045127,
+      "name": "synthetic-and-disposable-pg18",
+      "conclusion": "success",
+      "sha256": "243664d9fe152cf480de036cbdf666bf2eb8a270fc8270e3c2bb77c145f97f34"
+    },
+    {
+      "id": 130632047075,
+      "name": "python-preflight (3.11)",
+      "conclusion": "failure",
+      "sha256": "8f92d51c29b0d3caa3d10453889beccce327ee439222e4b160d4f4cfbb120b00"
+    },
+    {
+      "id": 130632047354,
+      "name": "python-preflight (3.12)",
+      "conclusion": "cancelled",
+      "sha256": "d4feaad5212ccaba6341aef0db2e606064cf0cbc06dc754a972619c2960364c6"
+    },
+    {
+      "id": 130632043970,
+      "name": "disposable-postgres",
+      "conclusion": "success",
+      "sha256": "2f50e98d80cb1bd63074cda19c9e8891b749cd2165dfb7cf03e4846e2791e862"
+    },
+    {
+      "id": 130632044243,
+      "name": "synthetic (ubuntu-latest)",
+      "conclusion": "success",
+      "sha256": "daf66c7281b99ab9479f80dba4a65af6a7619d1bbb679f17b7dc7fedffd6878a"
+    },
+    {
+      "id": 130632044619,
+      "name": "synthetic (windows-latest)",
+      "conclusion": "success",
+      "sha256": "7d3e99a8d74264c7584c1b613ae994946c344b8c7533c6c2b845b4bb40369154"
+    },
+    {
+      "id": 130632046039,
+      "name": "linux-postgres18",
+      "conclusion": "failure",
+      "sha256": "e11974e36cbcb65cf80e32e7fde4f3074c21b2ebd33e86ad903df008b93a17aa"
+    },
+    {
+      "id": 130632046174,
+      "name": "windows-contracts (pwsh)",
+      "conclusion": "success",
+      "sha256": "2e455b79dc28e52fd6deef3356fb43680b8fe78b4bd9641a20973299e782cb39"
+    },
+    {
+      "id": 130632046294,
+      "name": "windows-contracts (powershell)",
+      "conclusion": "success",
+      "sha256": "530230bea6c54cc298dc573dc55941f75fe02c8d104eadf9e9594217579341d8"
+    },
+    {
+      "id": 130632045790,
+      "name": "component-sdk (pwsh)",
+      "conclusion": "success",
+      "sha256": "fc1a2f4965b5eb7ab0bf3b4dfa61fed9217b0141dea91e4c763759f9f4ab78bf"
+    },
+    {
+      "id": 130632045987,
+      "name": "component-sdk (powershell)",
+      "conclusion": "success",
+      "sha256": "34ee83d1a58a666f48e18427e1e03656c0f86709d8016e603e7ce2204309ab69"
+    },
+    {
+      "id": 130632045946,
+      "name": "build-windows-bundle",
+      "conclusion": "success",
+      "sha256": "4010981776152bb7142b402ee439fb5695d4fef3c0cd96ca4f09c461b79e119e"
+    }
+  ],
+  "original_artifacts_API_digest_bound": [
+    {
+      "id": 13870660458,
+      "name": "history-log-Linux-d6b72b66ff1b85b7e6b956568342ad6bd8bfcfbe",
+      "bytes": 588,
+      "sha256": "8c5f3f97174ecf373167e81e758181a8017c571113c3a8dab0b02a877a2524b6",
+      "api_digest_match": true,
+      "original_local_path": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-3-bybit-historical-live\\outputs\\MCI186-PR283-ACTUAL-PUBLICATION-20261111\\ARTIFACT-13870660458-ORIGINAL.zip",
+      "members": 1,
+      "xml_data": [],
+      "selected_JSON_closed_fields": [],
+      "large_contents": "NOT_LOADED_OR_EXECUTED"
+    },
+    {
+      "id": 13870335957,
+      "name": "history-log-Windows-d6b72b66ff1b85b7e6b956568342ad6bd8bfcfbe",
+      "bytes": 593,
+      "sha256": "01392930627bda28779566572d33cff529096e69194ffa2cf042ac163e3e82e1",
+      "api_digest_match": true,
+      "original_local_path": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-3-bybit-historical-live\\outputs\\MCI186-PR283-ACTUAL-PUBLICATION-20261111\\ARTIFACT-13870335957-ORIGINAL.zip",
+      "members": 1,
+      "xml_data": [],
+      "selected_JSON_closed_fields": [],
+      "large_contents": "NOT_LOADED_OR_EXECUTED"
+    },
+    {
+      "id": 13869881256,
+      "name": "history-Windows-d6b72b66ff1b85b7e6b956568342ad6bd8bfcfbe",
+      "bytes": 70767,
+      "sha256": "dd8199db14a3660a2405fc3a5a66f8333214dee4941b27fa23965e0a056f166a",
+      "api_digest_match": true,
+      "original_local_path": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-3-bybit-historical-live\\outputs\\MCI186-PR283-ACTUAL-PUBLICATION-20261111\\ARTIFACT-13869881256-ORIGINAL.zip",
+      "members": 2,
+      "xml_data": [],
+      "selected_JSON_closed_fields": [
+        {
+          "member": "receipt.json",
+          "schema": "history.ci.receipt.v1",
+          "scope": null,
+          "head": "d6b72b66ff1b85b7e6b956568342ad6bd8bfcfbe",
+          "result": null,
+          "status": null,
+          "physical": null,
+          "global_status": null
+        }
+      ],
+      "large_contents": "NOT_LOADED_OR_EXECUTED"
+    },
+    {
+      "id": 13869274023,
+      "name": "history-Linux-d6b72b66ff1b85b7e6b956568342ad6bd8bfcfbe",
+      "bytes": 44392,
+      "sha256": "a24e8cd69130370663b128320264c89931e93023b706a7ab41d9ffebd180f26c",
+      "api_digest_match": true,
+      "original_local_path": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-3-bybit-historical-live\\outputs\\MCI186-PR283-ACTUAL-PUBLICATION-20261111\\ARTIFACT-13869274023-ORIGINAL.zip",
+      "members": 2,
+      "xml_data": [],
+      "selected_JSON_closed_fields": [
+        {
+          "member": "receipt.json",
+          "schema": "history.ci.receipt.v1",
+          "scope": null,
+          "head": "d6b72b66ff1b85b7e6b956568342ad6bd8bfcfbe",
+          "result": null,
+          "status": null,
+          "physical": null,
+          "global_status": null
+        }
+      ],
+      "large_contents": "NOT_LOADED_OR_EXECUTED"
+    },
+    {
+      "id": 13869119426,
+      "name": "history-disposable-d6b72b66ff1b85b7e6b956568342ad6bd8bfcfbe",
+      "bytes": 44932,
+      "sha256": "15889644c2027ff292ab6d33255c452b2876723b5935042e94aef2d46df33831",
+      "api_digest_match": true,
+      "original_local_path": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-3-bybit-historical-live\\outputs\\MCI186-PR283-ACTUAL-PUBLICATION-20261111\\ARTIFACT-13869119426-ORIGINAL.zip",
+      "members": 3,
+      "xml_data": [],
+      "selected_JSON_closed_fields": [
+        {
+          "member": "receipt.json",
+          "schema": "history.ci.receipt.v1",
+          "scope": null,
+          "head": "d6b72b66ff1b85b7e6b956568342ad6bd8bfcfbe",
+          "result": null,
+          "status": null,
+          "physical": null,
+          "global_status": null
+        }
+      ],
+      "large_contents": "NOT_LOADED_OR_EXECUTED"
+    },
+    {
+      "id": 13870545973,
+      "name": "mission3-windows-powershell-d6b72b66ff1b85b7e6b956568342ad6bd8bfcfbe-43052196579-1",
+      "bytes": 1984,
+      "sha256": "044556682dec3e839464975711e06b4e7f4f4ed5646e999db145a9ae3d5f4f65",
+      "api_digest_match": true,
+      "original_local_path": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-3-bybit-historical-live\\outputs\\MCI186-PR283-ACTUAL-PUBLICATION-20261111\\ARTIFACT-13870545973-ORIGINAL.zip",
+      "members": 3,
+      "xml_data": [
+        {
+          "member": "mission3-tests.xml",
+          "testcase_elements": 16,
+          "failure_elements": 0,
+          "error_elements": 0,
+          "skip_elements": 0
+        }
+      ],
+      "selected_JSON_closed_fields": [
+        {
+          "member": "mission3-source.json",
+          "schema": "grid.mission3.qualification.v1",
+          "scope": "GITHUB_HOSTED_WINDOWS_CONTRACTS",
+          "head": null,
+          "result": null,
+          "status": null,
+          "physical": "NOT_RUN",
+          "global_status": null
+        }
+      ],
+      "large_contents": "NOT_LOADED_OR_EXECUTED"
+    },
+    {
+      "id": 13870196303,
+      "name": "mission3-windows-pwsh-d6b72b66ff1b85b7e6b956568342ad6bd8bfcfbe-43052196579-1",
+      "bytes": 1896,
+      "sha256": "34c12dbad7797624bab5fb05326f46ec6b8d60ecbd2ab13a01ec60d46688593a",
+      "api_digest_match": true,
+      "original_local_path": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-3-bybit-historical-live\\outputs\\MCI186-PR283-ACTUAL-PUBLICATION-20261111\\ARTIFACT-13870196303-ORIGINAL.zip",
+      "members": 3,
+      "xml_data": [
+        {
+          "member": "mission3-tests.xml",
+          "testcase_elements": 16,
+          "failure_elements": 0,
+          "error_elements": 0,
+          "skip_elements": 0
+        }
+      ],
+      "selected_JSON_closed_fields": [
+        {
+          "member": "mission3-source.json",
+          "schema": "grid.mission3.qualification.v1",
+          "scope": "GITHUB_HOSTED_WINDOWS_CONTRACTS",
+          "head": null,
+          "result": null,
+          "status": null,
+          "physical": "NOT_RUN",
+          "global_status": null
+        }
+      ],
+      "large_contents": "NOT_LOADED_OR_EXECUTED"
+    },
+    {
+      "id": 13870001344,
+      "name": "mission3-linux-pg18-d6b72b66ff1b85b7e6b956568342ad6bd8bfcfbe-43052196579-1",
+      "bytes": 1578,
+      "sha256": "5a89a55c0704e233eb6714fe0d4a99c7714fccbb121ebe702fa196ffffe1bcf1",
+      "api_digest_match": true,
+      "original_local_path": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-3-bybit-historical-live\\outputs\\MCI186-PR283-ACTUAL-PUBLICATION-20261111\\ARTIFACT-13870001344-ORIGINAL.zip",
+      "members": 2,
+      "xml_data": [
+        {
+          "member": "mission3-tests.xml",
+          "testcase_elements": 7,
+          "failure_elements": 0,
+          "error_elements": 7,
+          "skip_elements": 0
+        }
+      ],
+      "selected_JSON_closed_fields": [
+        {
+          "member": "mission3-source.json",
+          "schema": "grid.mission3.qualification.v1",
+          "scope": "DISPOSABLE_CLOUD_POSTGRES18",
+          "head": null,
+          "result": null,
+          "status": null,
+          "physical": "NOT_RUN",
+          "global_status": null
+        }
+      ],
+      "large_contents": "NOT_LOADED_OR_EXECUTED"
+    },
+    {
+      "id": 13869906404,
+      "name": "portable-sdk-pwsh-d6b72b66ff1b85b7e6b956568342ad6bd8bfcfbe-43052196867-1",
+      "bytes": 1120348,
+      "sha256": "5c57c9a538a3bc69c2ea34e2d5cb35ed9824f8f45f40a22a540b22a143b7df47",
+      "api_digest_match": true,
+      "original_local_path": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-3-bybit-historical-live\\outputs\\MCI186-PR283-ACTUAL-PUBLICATION-20261111\\ARTIFACT-13869906404-ORIGINAL.zip",
+      "members": 5,
+      "xml_data": [],
+      "selected_JSON_closed_fields": [
+        {
+          "member": "job.json",
+          "schema": "grid.native-job-tests.v1",
+          "scope": "HARMLESS_PROCESS_CONTAINMENT_ONLY",
+          "head": null,
+          "result": null,
+          "status": null,
+          "physical": "NOT_RUN",
+          "global_status": null
+        },
+        {
+          "member": "source.json",
+          "schema": "grid.portable-sdk-ci.v1",
+          "scope": "EPHEMERAL_COMPONENT_ONLY",
+          "head": null,
+          "result": null,
+          "status": null,
+          "physical": "NOT_RUN",
+          "global_status": "NO_GO"
+        },
+        {
+          "member": "zip.json",
+          "schema": "grid.portable-zip-tests.v1",
+          "scope": "SYNTHETIC_PATH_RESOURCE_ONLY",
+          "head": null,
+          "result": null,
+          "status": null,
+          "physical": "NOT_RUN",
+          "global_status": null
+        }
+      ],
+      "large_contents": "NOT_LOADED_OR_EXECUTED"
+    },
+    {
+      "id": 13869499136,
+      "name": "portable-sdk-powershell-d6b72b66ff1b85b7e6b956568342ad6bd8bfcfbe-43052196867-1",
+      "bytes": 1379937,
+      "sha256": "f00bbc888149a25de740a1ae673b26aabdcce1f8b182b18f2cb72007cd25306e",
+      "api_digest_match": true,
+      "original_local_path": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-3-bybit-historical-live\\outputs\\MCI186-PR283-ACTUAL-PUBLICATION-20261111\\ARTIFACT-13869499136-ORIGINAL.zip",
+      "members": 5,
+      "xml_data": [],
+      "selected_JSON_closed_fields": [
+        {
+          "member": "job.json",
+          "schema": "grid.native-job-tests.v1",
+          "scope": "HARMLESS_PROCESS_CONTAINMENT_ONLY",
+          "head": null,
+          "result": null,
+          "status": null,
+          "physical": "NOT_RUN",
+          "global_status": null
+        },
+        {
+          "member": "source.json",
+          "schema": "grid.portable-sdk-ci.v1",
+          "scope": "EPHEMERAL_COMPONENT_ONLY",
+          "head": null,
+          "result": null,
+          "status": null,
+          "physical": "NOT_RUN",
+          "global_status": "NO_GO"
+        },
+        {
+          "member": "zip.json",
+          "schema": "grid.portable-zip-tests.v1",
+          "scope": "SYNTHETIC_PATH_RESOURCE_ONLY",
+          "head": null,
+          "result": null,
+          "status": null,
+          "physical": "NOT_RUN",
+          "global_status": null
+        }
+      ],
+      "large_contents": "NOT_LOADED_OR_EXECUTED"
+    },
+    {
+      "id": 13869856625,
+      "name": "BybitClusterGrid-windows-71c4d0e4f72d1d09899d251f70c873f1d9906c56",
+      "bytes": 87816701,
+      "sha256": "8fd9fadafc1f0ac2c653b5af1f0054b13dd85298b455e65b8bea9a483220dc72",
+      "api_digest_match": true,
+      "original_local_path": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-3-bybit-historical-live\\outputs\\MCI186-PR283-ACTUAL-PUBLICATION-20261111\\ARTIFACT-13869856625-ORIGINAL.zip",
+      "members": 2,
+      "xml_data": [],
+      "selected_JSON_closed_fields": [],
+      "large_contents": "NOT_LOADED_OR_EXECUTED"
+    }
+  ],
+  "F51": "CLOSED_SCOPED_CORRECTED15_CELL_DESCRIPTOR_AND_ACTUAL15;OLD13_PACKET_PRESERVED",
+  "full62_hosted": "NOT_QUALIFIED_COLLECTION_ABORT;OFFLINE62_SEPARATE",
+  "provider_dynamic_closure": "UNKNOWN_NOT_RUNTIME_GRANT",
+  "A8_owner_execution": false,
+  "GO_NO_GO": "NO-GO",
+  "PHYSICAL_TESTS": "BLOCKED",
+  "TAILSCALE_REMOVAL": "BLOCKED"
+}

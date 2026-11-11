@@ -1,0 +1,38 @@
+--- reviewed92/driver.py
++++ dfb5/driver.py
+@@ -1,10 +1,10 @@
+ """SOURCE PROPOSAL ONLY. Run only after a separate exact-source allocation."""
+ import os,sys,pathlib,stat,json,hashlib,time,subprocess,threading,importlib.util,importlib.machinery,unittest,tempfile
+ BASE=pathlib.Path(__file__).absolute().parent
+-PACKAGE=BASE/'gateway-diagnostics-committed-source-20261111'
+-SOURCE=PACKAGE/'raw816-clone';META=PACKAGE/'meta3-source'
++PACKAGE=BASE/'gateway-canonical-one-case-inputs-review1-20261111'
++SOURCE=BASE/'gateway-canonical-copy-source-20261111/raw816-clone';META=PACKAGE/'meta3-source'
+ REAL=pathlib.Path('C:/Users/LS-5/AppData/Local/Python/pythoncore-3.12-64/python.exe')
+-OUT=BASE/'gateway-one-case-diagnostic-review1-attempt1'
++OUT=BASE/'gateway-canonical-one-case-review1-attempt1'
+ LIMIT=256*1024
+ CASE='_gateway_diag_case.GatewayAdapterTests.test_source_changed_after_calculation_refused'
+ 
+@@ -61,10 +61,10 @@
+  return result
+ def preflight(buffers=None):
+  parsed=[]
+- for p,size,h in [(PACKAGE/'receipt.json',1750,'edde8836f6d898ec102e908f883c33c93e184938bfeb6bf8b536e6d28b62c4a2'),(PACKAGE/'raw816-manifest.json',185062,'1b2381a6698f06f61c0570d06e20f246191621920d217d7d628c987e3060c1a7'),(BASE/'gateway-one-case-runtime841-review1.json',129713,'cf6c3a323a56096bdbfbc6e4de91823cffa286d46ca410572067cabb632c99c1')]:
++ for p,size,h in [(PACKAGE/'receipt.json',2100,'2240d10b93bfb0dc957f5e501ee314c2c6e9d415512e602904666a8f673d0796'),(PACKAGE/'raw816-manifest.json',185062,'2fe093edb524377b8f5bc53bdeff28816dd74ec6d01c313ef18a950f0213ddd1'),(BASE/'gateway-one-case-runtime841-review1.json',129713,'cf6c3a323a56096bdbfbc6e4de91823cffa286d46ca410572067cabb632c99c1')]:
+   raw=bounded_bytes(p,size=size,cap=size,pin=h);parsed.append(json.loads(raw,object_pairs_hook=unique_pairs,parse_constant=invalid_constant))
+  receipt,rows,runtime=parsed
+- if receipt['head']!='0c4f64c897aacd78bbec0e1faa886c7003c353ff':raise ValueError('HEAD_PIN')
++ if receipt['head']!='dfb5a2947070c8ebef0b22d9c97719b924909b39':raise ValueError('HEAD_PIN')
+  if len(rows)!=816 or len(runtime)!=841:raise ValueError('INVENTORY_COUNT')
+  # Runtime extras are not checked: this approved slice excludes site-packages,
+  # caches, documentation and development headers. -I -S -B excludes site hooks.
+@@ -107,7 +107,7 @@
+   if event in ('os.rename','os.replace'):owned(args[0]);owned(args[1])
+  sys.addaudithook(audit)
+  os.environ['GATEWAY_META_SOURCE_ROOT']=str(META)
+- os.environ['GATEWAY_FIXTURE_SOURCE_REVISION']='889d787ef053dca1eb0244da10f47a4a4a2cc982'
++ os.environ['GATEWAY_FIXTURE_SOURCE_REVISION']='dfb5a2947070c8ebef0b22d9c97719b924909b39'
+  original_get_code=importlib.machinery.SourceFileLoader.get_code
+  admitted_names={'support':SOURCE/'tests/gateway_adapter/support.py','_gateway_diag_case':SOURCE/'tests/gateway_adapter/test_gateway_adapter.py','_gateway_adapter_under_test':SOURCE/'strattester/research/gateway_adapter.py'}
+  def admitted_get_code(loader,fullname):

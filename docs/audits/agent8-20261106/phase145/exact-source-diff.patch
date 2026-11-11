@@ -1,0 +1,203 @@
+diff --git a/docs/physical-dev/LS5-SMOKE-SOURCE-REVIEW.md b/docs/physical-dev/LS5-SMOKE-SOURCE-REVIEW.md
+index 9ca94f9..7209f2c 100644
+--- a/docs/physical-dev/LS5-SMOKE-SOURCE-REVIEW.md
++++ b/docs/physical-dev/LS5-SMOKE-SOURCE-REVIEW.md
+@@ -62,6 +62,30 @@ solved by a cooperative deadline. RED `ls5-shared-cleanup-deadline-red.log` is
+ retained;103 combined pure tests pass. This source successor requires a NEW
+ immutable package and review; candidate b will never be hotpatched or started.
+ 
++First actual c attempt: source453/package2ffadb31cc16dd4044d6fb1455c976f0988e4e0c565a1d0d5c6201cf28355ed7
++returned FAIL_OR_UNCONFIRMED, never PASS. Original receipt SHA256
++9fae4e0d06e4911568ed6d3c78f890ee00014ef0ea5e4bbd6608db6a63a59bd6;
++backend exited nonzero with TargetRejected; active0,total1, family371147100ns,
++package unchanged. The original receipt's NOT_RUN markers mean no completion
++evidence, not proof that no adapter code executed. It lacked per-child admission
++data because launch returned identity only after a successful zero exit.
++
++Root reproduced the caller contract defect independently with an inert SQLite
++fixture: DisposableTargetStand requires an already-existing empty own directory;
++bootstrap passed missing direct-state. Existing constructor rejects that path
++before research invocation. The new caller allocates the directory exclusively
++before invoking the unchanged existing constructor; reuse still refuses. RED
++ls5-stand-directory-contract-red.log and original physical RED are retained.
++Known fixed rejection codes can now be logged without arbitrary exception text.
++
++The new evidence path records per-child retained-handle identity/token/actual
++own-Job membership and limit readback BEFORE attempting GO, and persists it on
++failure. GO attempt/flush are distinguished from execution acknowledgement.
++Numeric primary exits and retirement evidence are separate from workload success;
++nonzero still prevents PASS. Pure failed-child regression verifies evidence
++survives that outcome. No c snapshot changes or automatic rerun occurred. New
++source qualification, new package and independent review are required.
++
+ The intended source family is Unified runtime ba2b1cec0c2b114586afb73696e282117eede987,
+ Strattester aed8a7c8a952f96803c207d5e90b133969a47f04, MetaAnalyse
+ f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1 and A6 PR77. The harness itself must also
+diff --git a/tests/physical_dev/test_bootstrap_contract.py b/tests/physical_dev/test_bootstrap_contract.py
+index 8bc2cda..c238b94 100644
+--- a/tests/physical_dev/test_bootstrap_contract.py
++++ b/tests/physical_dev/test_bootstrap_contract.py
+@@ -2,6 +2,18 @@ import unittest,tempfile
+ from pathlib import Path
+ 
+ class BootstrapPathTests(unittest.TestCase):
++    def test_allocate_existing_stand_contract_requires_new_empty_directory(self):
++        from tools.physical_dev.bootstrap import allocate_stand_root
++        from unified_system.gateway_target_adapter import DisposableTargetStand,TargetRejected
++        with tempfile.TemporaryDirectory(prefix='pure-stand-root-') as tmp:
++            root=Path(tmp).resolve()
++            with self.assertRaises(TargetRejected):DisposableTargetStand(str(root/'direct-state'),stratt_source_root=str(root),meta_source_root=str(root))
++            state=allocate_stand_root(root)
++            stand=DisposableTargetStand(str(state),stratt_source_root=str(root),meta_source_root=str(root))
++            try:self.assertEqual(stand.invocations,0);self.assertTrue((state/'direct-journal.db').is_file())
++            finally:stand.close()
++            with self.assertRaises(FileExistsError):allocate_stand_root(root)
++
+     def test_source_git_selection_pins_executable_without_rewriting_target_source(self):
+         from tools.physical_dev.bootstrap import source_git_argv
+         root=Path('C:/sources/stratt');git=Path('C:/tooling/git/cmd/git.exe')
+diff --git a/tests/physical_dev/test_launcher_contract.py b/tests/physical_dev/test_launcher_contract.py
+index 8be9943..b7f3d84 100644
+--- a/tests/physical_dev/test_launcher_contract.py
++++ b/tests/physical_dev/test_launcher_contract.py
+@@ -4,6 +4,21 @@ from pathlib import Path
+ from unittest.mock import patch
+ 
+ class LauncherContractTests(unittest.TestCase):
++    def test_failed_child_keeps_before_go_identity_and_numeric_exit(self):
++        from tools.physical_dev.ls5_smoke import launch,SmokeBlocked
++        from unittest.mock import Mock
++        import subprocess
++        nonce='a'*32;process=Mock();process.pid=1234;process.returncode=71;process.poll.return_value=71
++        capture=Mock();capture.ready.get.return_value=json.dumps({'pid':1234,'nonce':nonce}).encode()+b'\n';capture.count=0;capture.error=None
++        job=Mock();job.attach_before_go.return_value={'pid':1234,'token':{'elevated':False},'own_job_membership_before_go':1}
++        stages={}
++        with patch('subprocess.Popen',return_value=process),patch('subprocess.CREATE_NO_WINDOW',0,create=True),patch('tools.physical_dev.ls5_smoke.Capture',return_value=capture),patch('secrets.token_hex',return_value=nonce),patch('time.perf_counter_ns',return_value=0):
++            with self.assertRaises(SmokeBlocked):launch(job,['fixed','ROOT_NONCE'],Path('fixed'),{},Path('.'),'backend',0,[],[],stages)
++        self.assertEqual(stages['backend']['identity']['pid'],1234)
++        self.assertEqual(stages['backend']['identity']['own_job_membership_before_go'],1)
++        self.assertEqual(stages['backend']['returncode'],71)
++        self.assertEqual(stages['backend']['go_status'],'FLUSH_COMPLETED_NOT_EXECUTION_ACK')
++
+     def test_one_cleanup_deadline_is_shared_by_all_waits(self):
+         from tools.physical_dev.ls5_smoke import cleanup_seconds,SmokeBlocked
+         with patch('time.perf_counter_ns',return_value=100):self.assertEqual(cleanup_seconds(1000000100,5),1)
+diff --git a/tools/physical_dev/bootstrap.py b/tools/physical_dev/bootstrap.py
+index 88cef1f..f2a7eb4 100644
+--- a/tools/physical_dev/bootstrap.py
++++ b/tools/physical_dev/bootstrap.py
+@@ -2,6 +2,12 @@
+ import json,os,queue,re,sys,threading
+ from pathlib import Path
+ 
++def allocate_stand_root(root):
++    root=Path(root)
++    if not root.is_absolute() or root!=root.resolve(strict=True):raise RuntimeError('OWN_CANONICAL_STATE_REQUIRED')
++    state=root/'direct-state';state.mkdir()  # Existing stand expects caller-owned empty directory.
++    return state
++
+ def source_git_argv(argv,git,roots):
+     if not(isinstance(argv,(list,tuple)) and len(argv)==6 and argv[0]=='git'
+             and list(argv[1:3])==['--no-replace-objects','-C'] and argv[4]=='show'
+@@ -76,7 +82,8 @@ def main():
+     sys.addaudithook(audit)
+     from unified_system.gateway_target_adapter import DisposableTargetStand,prepare_target,template_request
+     request=json.dumps(template_request(),sort_keys=True,separators=(',',':'),allow_nan=False).encode('ascii')
+-    stand=DisposableTargetStand(str(root/'direct-state'),stratt_source_root=str(stratt),meta_source_root=str(meta))
++    state=allocate_stand_root(root)
++    stand=DisposableTargetStand(str(state),stratt_source_root=str(stratt),meta_source_root=str(meta))
+     try:
+         value=stand.execute(prepare_target(request),context=stand.local_test_context())
+         if value['status']!='DIRECT_TARGET_PASS' or stand.invocations!=1:raise RuntimeError('ACTUAL_DIRECT_TARGET_NOT_COMPLETED')
+@@ -93,4 +100,6 @@ def main():
+ if __name__=='__main__':
+     try:main()
+     except BaseException as error:
+-        print('SYNTHETIC_BOOTSTRAP_FAILED:'+type(error).__name__,file=sys.stderr,flush=True);raise SystemExit(71)
++        known={'DISPOSABLE_STAND_UNAVAILABLE','LOCAL_TEST_SCOPE_DENIED','TARGET_CONTRACT_REJECTED','TARGET_SOURCE_UNAVAILABLE','TARGET_INPUT_UNAVAILABLE','TARGET_DATASET_UNAVAILABLE'}
++        code=str(error) if str(error) in known else 'DETAILS_WITHHELD'
++        print('SYNTHETIC_BOOTSTRAP_FAILED:'+type(error).__name__+':'+code,file=sys.stderr,flush=True);raise SystemExit(71)
+diff --git a/tools/physical_dev/ls5_smoke.py b/tools/physical_dev/ls5_smoke.py
+index 35609de..0b1d67c 100644
+--- a/tools/physical_dev/ls5_smoke.py
++++ b/tools/physical_dev/ls5_smoke.py
+@@ -232,19 +232,23 @@ def source_bindings(package,manifest):
+             namespace['inventory'](source)
+     return refs
+ 
+-def launch(job,argv,image,env,root,name,started,all_processes,all_captures):
++def launch(job,argv,image,env,root,name,started,all_processes,all_captures,stages):
+     nonce=secrets.token_hex(16);argv=[nonce if value=='ROOT_NONCE' else value for value in argv]
+     process=subprocess.Popen(argv,stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE,
+         cwd=root,env=env,shell=False,close_fds=True,creationflags=subprocess.CREATE_NO_WINDOW)
+     all_processes.append(process);capture=Capture(process);all_captures.append((name,capture))
++    stage={'reported_pid':process.pid,'go_status':'NOT_ATTEMPTED','identity':None,'returncode':None};stages[name]=stage
+     try:
+         try:frame=capture.ready.get(timeout=5)
+         except queue.Empty:raise SmokeBlocked('BOOTSTRAP_READY_TIMEOUT') from None
+         validate_bootstrap(frame,process.pid,nonce)
+         validate_captures(all_captures)
+         identity=job.attach_before_go(process,image)
++        stage['identity']=identity
+         need(stop_reason(started,time.perf_counter_ns(),sum(c.count for _,c in all_captures)) is None,'BEFORE_GO_BUDGET')
++        stage['go_status']='ATTEMPTED_OUTCOME_UNKNOWN'
+         process.stdin.write(('GO '+nonce+'\n').encode('ascii'));process.stdin.flush()
++        stage['go_status']='FLUSH_COMPLETED_NOT_EXECUTION_ACK'
+         while process.poll() is None:
+             reason=stop_reason(started,time.perf_counter_ns(),sum(c.count for _,c in all_captures))
+             need(not reason and not capture.error,reason or capture.error or 'CAPTURE_UNKNOWN')
+@@ -253,6 +257,7 @@ def launch(job,argv,image,env,root,name,started,all_processes,all_captures):
+         need(stop_reason(started,time.perf_counter_ns(),sum(c.count for _,c in all_captures)) is None,'STAGE_COMPLETION_BUDGET')
+         return identity
+     finally:
++        stage['returncode']=process.poll()
+         if process.poll() is not None and process.stdin:process.stdin.close()
+ 
+ def execute(package,manifest_raw,pin,root):
+@@ -267,7 +272,7 @@ def execute(package,manifest_raw,pin,root):
+     result={'schema':'unified.ls5.disposable-smoke.v1','package_sha256':pin,'source_refs':refs,
+         'public_submit':'DENY','publication':'LOCAL_UNATTESTED','resource_qualification':'NOT_GRANTED',
+         'parent_chain':'UNKNOWN_MAY_BE_STRICTER','native_job_admission':False,'physical_cluster_admission':False,
+-        'target':'NOT_RUN','render':'NOT_RUN','cleanup':'PENDING','result':'NOT_PASSED'}
++        'target':'NO_COMPLETION_EVIDENCE','render':'NO_COMPLETION_EVIDENCE','cleanup':'PENDING','result':'NOT_PASSED','stages':{}}
+     started=time.perf_counter_ns()
+     try:
+         # This is the FIRST mutating Job call; sources/isolation must be reviewed.
+@@ -275,12 +280,12 @@ def execute(package,manifest_raw,pin,root):
+         watchdog=OwnWatchdog(job,started);watchdog.start()
+         python=package/'tooling/python/python.exe';git=package/'tooling/git/cmd/git.exe';node=package/'tooling/node/node.exe'
+         backend=package/'sources/harness/tools/physical_dev/bootstrap.py'
+-        result['backend_identity']=launch(job,[str(python),'-I','-S','-B',str(backend),'ROOT_NONCE',str(package),str(root),str(git),'SYNTHETIC_DIRECT_ONLY'],python,env,root,'backend',started,processes,captures)
++        result['backend_identity']=launch(job,[str(python),'-I','-S','-B',str(backend),'ROOT_NONCE',str(package),str(root),str(git),'SYNTHETIC_DIRECT_ONLY'],python,env,root,'backend',started,processes,captures,result['stages'])
+         request=root/'fresh-request.json';envelope=root/'fresh-envelope.json';artifact=root/'fresh-artifact.json'
+         need(artifact.stat().st_size==2070 and digest(artifact)==ARTIFACT,'ACTUAL_TARGET_ARTIFACT')
+         result['target']='ACTUAL_DIRECT_TARGET_BYTES_MATCH';result['artifact_sha256']=ARTIFACT
+         bootstrap=package/'sources/terminan/tests/fresh_render/bootstrap.cjs';module=package/'tooling/node_modules/@playwright/test';browser=package/'tooling/chromium/chrome-win/headless_shell.exe'
+-        result['render_identity']=launch(job,[str(node),'--no-addons',str(bootstrap),'ROOT_NONCE',str(root),str(request),str(envelope),str(artifact),digest(request),digest(envelope),digest(artifact),str(module),str(browser)],node,env,root,'render',started,processes,captures)
++        result['render_identity']=launch(job,[str(node),'--no-addons',str(bootstrap),'ROOT_NONCE',str(root),str(request),str(envelope),str(artifact),digest(request),digest(envelope),digest(artifact),str(module),str(browser)],node,env,root,'render',started,processes,captures,result['stages'])
+         receipts=list(root.glob('fresh-render-*/render-receipt.json'));need(len(receipts)==1,'FRESH_RENDER_RECEIPT_REQUIRED')
+         view=json.loads(receipts[0].read_bytes());need(view.get('result')=='LOCAL_RENDER_PASS_NOT_AUTH_OR_PHYSICAL_ACCEPTANCE' and view.get('cleanup',{}).get('confirmed') is True,'FRESH_RENDER_OR_SDK_CLEANUP_NOT_PASSED')
+         need(view.get('input_sha256')==dict(request=digest(request),envelope=digest(envelope),artifact=digest(artifact)),'FRESH_RENDER_INPUT_BINDING')
+@@ -296,6 +301,8 @@ def execute(package,manifest_raw,pin,root):
+                     job.terminate_own()
+                 result['accounting']=job.wait_empty(cleanup_seconds(cleanup_deadline,10))
+                 for process in processes:process.wait(timeout=cleanup_seconds(cleanup_deadline,5))
++                result['primary_exit_codes']=[p.returncode for p in processes]
++                result['retirement_evidence']={'own_job_active':result['accounting']['active'],'all_retained_primaries_exited':all(type(p.returncode) is int for p in processes),'workload_success_is_separate':True}
+                 result['cleanup']=cleanup_summary(result['accounting']['active'],[p.returncode for p in processes])
+             except BaseException as error:
+                 result['cleanup']='FAILED_OR_UNCONFIRMED';result['cleanup_error']=type(error).__name__
+diff --git a/tools/physical_dev/supervisor.py b/tools/physical_dev/supervisor.py
+index 3d76e6c..4476ca5 100644
+--- a/tools/physical_dev/supervisor.py
++++ b/tools/physical_dev/supervisor.py
+@@ -181,7 +181,8 @@ class WindowsSmokeJob:
+         self._owned();handle,identity=self.api.process_identity(process,expected_image)
+         self.api.check(self.api.k.AssignProcessToJobObject(self.handle,handle),'OWN_JOB_ASSIGN')
+         member=c.c_int();self.api.check(self.api.k.IsProcessInJob(handle,self.handle,c.byref(member)),'OWN_MEMBERSHIP_QUERY');_need(member.value==1,'OWN_MEMBERSHIP_MISSING')
+-        validate_readback(self.read_limits());self.processes.append(process)
++        readback=self.read_limits();validate_readback(readback);self.processes.append(process)
++        identity['own_job_membership_before_go']=member.value;identity['own_job_readback_before_go']=readback
+         return identity
+     def terminate_own(self):
+         self._owned();self.api.check(self.api.k.TerminateJobObject(self.handle,73),'OWN_JOB_TERMINATE');self.terminated=True
