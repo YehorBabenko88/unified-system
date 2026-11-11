@@ -7,7 +7,7 @@ from pathlib import Path
 from urllib.parse import urlsplit
 
 from .model import ObserverError, SourcePolicy, decode, integer, need, parse_snapshot, stamp, version
-from .store import ordinary
+from .store import ObserverStore, ordinary
 
 REPOSITORIES = frozenset('YehorBabenko88/' + name for name in (
     'unified-system', 'bybit-cluster-grid', 'strattester', 'Terminan', 'math', 'meta_analyse'))
@@ -92,7 +92,7 @@ class ReadOnlyHTTPS:
     Physical admission must independently verify the read-only credential and URL.
     """
     def __init__(self, allowed_urls, *, network_admitted=False, token=None,
-                 read_only_credential_confirmed=False):
+                 read_only_credential_confirmed=False, budget_store=None, clock=None):
         need(network_admitted is True, 'NETWORK_ADMISSION_REQUIRED')
         need(type(allowed_urls) is frozenset and 1 <= len(allowed_urls) <= 16, 'EXACT_URL_ALLOWLIST')
         for url in allowed_urls:
@@ -105,15 +105,21 @@ class ReadOnlyHTTPS:
             need(url in allowed, 'READ_ONLY_SOURCE_URL_REQUIRED')
         need(token is None or (type(token) is str and 0 < len(token) <= 512 and
              read_only_credential_confirmed is True), 'READ_ONLY_CREDENTIAL_REQUIRED')
+        need(type(budget_store) is ObserverStore, 'PERSISTENT_GITHUB_BUDGET_REQUIRED')
+        from datetime import datetime, timezone
+        self._clock = clock or (lambda: datetime.now(timezone.utc))
+        self._budget = budget_store
         self._urls, self._token = allowed_urls, token
 
     def __repr__(self): return '<Observer ReadOnlyHTTPS: credentials redacted>'
 
     def get(self, url):
         need(url in self._urls, 'URL_NOT_ADMITTED')
+        self._budget.reserve_github(hashlib.sha256(url.encode()).hexdigest(), self._clock())
         import ssl
         import time
         import urllib.request
+        import urllib.error
         class NoRedirect(urllib.request.HTTPRedirectHandler):
             def redirect_request(self, *args, **kwargs): return None
         headers = {'Accept':'application/vnd.github+json', 'User-Agent':'Unified-Observer/1',
@@ -126,6 +132,8 @@ class ReadOnlyHTTPS:
             deadline = time.monotonic() + 8
             with opener.open(request, timeout=3) as response:
                 need(response.status == 200, 'REMOTE_SOURCE_STATUS')
+                if response.headers.get('X-RateLimit-Remaining') == '0':
+                    self._cooldown(response.headers)
                 chunks = []; total = 0
                 while True:
                     need(time.monotonic() <= deadline, 'REMOTE_SOURCE_OBSERVED_DEADLINE')
@@ -136,8 +144,30 @@ class ReadOnlyHTTPS:
                 raw = b''.join(chunks)
                 need(0 < len(raw) <= 1048576, 'SOURCE_BYTE_LIMIT')
                 return raw
+        except urllib.error.HTTPError as error:
+            if error.code in (403, 429): self._cooldown(error.headers)
+            error.close()
+            raise ObserverError('REMOTE_SOURCE_UNAVAILABLE') from None
         except Exception:
             raise ObserverError('REMOTE_SOURCE_UNAVAILABLE') from None
+
+    def _cooldown(self, headers):
+        # Unknown/malformed reset information waits one hour; never retry here.
+        from email.utils import parsedate_to_datetime
+        from .model import utc
+        now = self._clock(); wait = 3600
+        for key in ('Retry-After', 'X-RateLimit-Reset'):
+            value = headers.get(key)
+            if not isinstance(value, str) or len(value) > 128: continue
+            try:
+                if value.isdigit():
+                    seconds = int(value) - (int(utc(now).timestamp()) if key.endswith('Reset') else 0)
+                elif key == 'Retry-After':
+                    seconds = int((parsedate_to_datetime(value)-utc(now)).total_seconds())
+                else: continue
+                wait = max(wait, min(604800, seconds))
+            except (ValueError, OverflowError, TypeError): pass
+        self._budget.cooldown_github(now, wait)
 
 
 class GitHubSource:

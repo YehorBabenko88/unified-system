@@ -56,7 +56,15 @@ Optional GitHub HTTPS readers use exact public repository GET URLs, verified TLS
 no redirects or ambient proxies, bounded responses and observed read deadlines.
 No token is discovered automatically or reused from Codex/Git. The initial CLI
 config accepts only file exports; live read admission and persisted global GitHub
-rate accounting are a separate qualification before operational API polling.
+rate accounting require qualification before operational API polling. Native
+GitHub GET now requires this Observer's owned persistent state: at most 50
+reservations per rolling hour across sources and restarts, at least 900 seconds
+per exact URL. Reservations occur before any send and are never refunded for
+uncertain outcomes. HTTP 403/429 and exhausted response headers persist a global
+cooldown (at least one hour, longer provider reset bounded to seven days), with
+no automatic retry. This does not prove credential scope or external NAT-wide
+accounting. The configuration poll interval for real GitHub sources must be at
+least 900 seconds; the transport enforces it even if configuration is lower.
 
 Application byte/count/cache bounds are not an OS CPU/RSS hard limit, hostile
 interpreter sandbox, strict kernel deadline or full DLL-origin qualification.

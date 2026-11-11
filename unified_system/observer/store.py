@@ -94,6 +94,9 @@ class ObserverStore:
             need(self.db.execute('PRAGMA application_id').fetchone()[0] == APP_ID and
                  self.db.execute('PRAGMA user_version').fetchone()[0] == 1, 'FOREIGN_STATE_DATABASE')
             need(self.db.execute('SELECT state_id FROM info').fetchall() == [(state_id,)], 'STATE_IDENTITY')
+            # Observer-owned GET accounting, never the cluster's Bybit limiter.
+            self.db.execute('CREATE TABLE IF NOT EXISTS github_attempts(at INTEGER NOT NULL, source TEXT NOT NULL)')
+            self.db.execute('CREATE TABLE IF NOT EXISTS github_cooldown(id INTEGER PRIMARY KEY CHECK(id=1), until_at INTEGER NOT NULL)')
             self.db.execute("UPDATE events SET delivery='UNKNOWN' WHERE delivery='SENDING'")
         except BaseException:
             self.db.close(); self.closed = True; raise
@@ -108,6 +111,30 @@ class ObserverStore:
         with self.lock:
             if not self.closed:
                 self.db.close(); self.closed = True
+
+    def reserve_github(self, source, now):
+        label(source); epoch = int(utc(now).timestamp())
+        with self.lock:
+            self._check(); self.db.execute('BEGIN IMMEDIATE')
+            try:
+                cooldown = self.db.execute('SELECT until_at FROM github_cooldown WHERE id=1').fetchone()
+                need(cooldown is None or epoch >= cooldown[0], 'GITHUB_COOLDOWN')
+                last = self.db.execute('SELECT MAX(at) FROM github_attempts WHERE source=?', (source,)).fetchone()[0]
+                need(last is None or epoch-last >= 900, 'GITHUB_SOURCE_INTERVAL')
+                count = self.db.execute('SELECT COUNT(*) FROM github_attempts WHERE at>?', (epoch-3600,)).fetchone()[0]
+                need(count < 50, 'GITHUB_GLOBAL_HOURLY_LIMIT')
+                self.db.execute('DELETE FROM github_attempts WHERE at<=?', (epoch-3600,))
+                self.db.execute('INSERT INTO github_attempts VALUES(?,?)', (epoch, source))
+                self.db.execute('COMMIT')
+            except BaseException:
+                self.db.execute('ROLLBACK'); raise
+
+    def cooldown_github(self, now, seconds):
+        need(type(seconds) is int and 0 <= seconds <= 604800, 'GITHUB_COOLDOWN_BOUND')
+        until = int(utc(now).timestamp()) + max(3600, seconds)
+        with self.lock:
+            self._check()
+            self.db.execute('INSERT INTO github_cooldown VALUES(1,?) ON CONFLICT(id) DO UPDATE SET until_at=MAX(until_at,excluded.until_at)', (until,))
 
     def record_source(self, source, status, now, source_version):
         label(source); version(source_version); need(status in ('PASS', 'FAIL'), 'SOURCE_AVAILABILITY')
