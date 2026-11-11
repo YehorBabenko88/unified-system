@@ -134,7 +134,7 @@ def dependencies(root, lock):
             require(not part.is_absolute(), 'RECORD_PATH')
             if '..' in part.parts:
                 require(part.parts[:2] == ('..', '..') and len(part.parts) == 4 and part.parts[2] in ('bin', 'Scripts'), 'RECORD_SCRIPT_PATH')
-                path = root / 'bin' / part.name
+                path = root / part.parts[2] / part.name
             else:
                 path = root / part
             require(path.is_relative_to(root) and path.is_file(), 'RECORD_MISSING')
