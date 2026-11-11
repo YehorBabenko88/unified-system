@@ -165,3 +165,56 @@ or any cleanup uncertainty raises the fixed PURE_PS_CLEANUP_UNCERTAIN assertion;
 it cannot produce GREEN. Existing8s/2s/outer15s bounds and case inventory remain.
 This correction is source-reviewed only, not a process-double or actual child
 result. No imports, tests, PowerShell, helper or existing catch edits occurred.
+
+## Implementation source successor — no classifier or native execution
+
+Root MCI118 consumed a separate, fresh prerequisite packet and observed the one
+expected missing-helper assertion: original receipt SHA256
+f90bd7e082c3a8f1a1d455c3e32040305cb07852e8889c7d6de7711452eaac67,
+6.016s, six source-inspection Git roles plus one Python exit1, zero PowerShell
+children/classifier subcases, all readers/children retired, source1872/runtime841
+unchanged. This is NEW_FEATURE_PREREQUISITE_RED, not an execution of the former
+catch or proof of its native failure cause. Both earlier DENY packets and all
+model evidence retain their original classifications and are not rerun here.
+
+The separately authorized source implementation adds only the shared test helper
+and changes this document plus the existing installation test's helper load/env
+and cap catch. Original LF test/document bytes were archived first outside source
+in C:/Users/LS-5/.codex/native-output-cap-implementation-source-20261111. The exact
+24-case matrix source remains SHA256
+b822f4ec0d89240c1733b546eef3b00967c524da653ad802830c68b2b5f5191e.
+
+The helper declares Test-NativeOutputCapException and has no top-level output.
+It emits only a single System.Boolean; list Add/RemoveAt results are suppressed.
+Pass one iteratively validates the entire exact-type, bounded, reference-acyclic
+exception graph WITHOUT any Message getter. Aggregate InnerExceptions is traversed
+without also following its aliasing InnerException. Unknown types, null/empty
+wrappers, repeated identities, more than16 nodes or depth beyond8 reject before
+message checks. No Flatten/GetBaseException/recursive walker is used.
+
+Pass two visits the validated nodes in reverse traversal order: descendants
+before parents. Every message must be a string of at most1024 characters; exact
+InvalidOperationException leaves require ordinal CHILD_OUTPUT_LIMIT and null
+inner. Checking descendants first bounds their messages before Aggregate.Message
+can format them; structural cycles have already been refused. This is a closed,
+stock-exception test contract, not arbitrary hostile-object containment or an
+atomic concurrent graph-mutation guarantee. No source invokes native/IO/network
+APIs, Add-Type or PowerShell autoload/module operations inside the classifier.
+
+The existing native test validates unresolved helper ancestry and a regular
+single-link helper leaf before supplying its absolute path via its existing safe
+environment. Its PowerShell command refuses an already-defined function, dot-loads
+the escaped fixed helper path and refuses any load output. The cap catch calls
+that actual shared function on $_.Exception and rethrows unless the result is
+exactly a true bool. The existing native module, C# workload, Unicode sample,
+70000-character cap workload, phase markers and timeout30 remain unchanged.
+
+Only source editing, byte/diff inspection and a source commit are authorized in
+this phase. No helper parsing/import/execution, Python compilation/test, PowerShell
+matrix, native workload, CI, push or new operational action was performed by the
+implementer. This source is NOT classifier GREEN or Windows/hosted/runtime proof.
+Root must independently review exact helper/catch bytes, then separately allocate
+ONE actual shared-classifier matrix (1 method /24 subcases) and the mandatory
+Windows CI/native workload qualification. No automatic retry or contract broadening
+follows from an unfamiliar real exception graph. Logical mutation remains
+disabled, public submit DENY and overall runtime/physical admission NO-GO.
