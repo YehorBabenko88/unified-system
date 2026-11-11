@@ -69,7 +69,7 @@ def main():
         path = capsule/name; path.parent.mkdir(parents=True, exist_ok=True)
         with path.open('xb') as stream: stream.write(raw)
     expected = json.loads(held['docs/observer/test-inventory.json'])['ids']
-    need(len(expected) == len(set(expected)) == 67, 'DECLARED_INVENTORY')
+    need(len(expected) == len(set(expected)) == 68, 'DECLARED_INVENTORY')
     sys.path.insert(0, str(capsule))
     suite = unittest.defaultTestLoader.discover(str(capsule/'tests/observer'))
     def ids(group):
@@ -91,7 +91,7 @@ def main():
     need(before == after and held == after_held, 'SOURCE_POST_CHANGED')
     capsule_equal = all((capsule/name).read_bytes() == raw for name,raw in held.items())
     ok = (result.wasSuccessful() and not result.skipped and not result.expectedFailures and not result.unexpectedSuccesses
-          and result.testsRun == 67 and sorted(started) == collected == sorted(succeeded) and capsule_equal)
+          and result.testsRun == 68 and sorted(started) == collected == sorted(succeeded) and capsule_equal)
     receipt = {'schema':'observer.offline-qualification.v1', 'head':args.head,
         'tree':git('rev-parse', args.head+'^{tree}').decode().strip(), 'scope':'OFFLINE_OBSERVER_ONLY_NOT_HOSTED_NATIVE_OR_PHYSICAL',
         'status':'SCOPED_OFFLINE_PASS' if ok else 'FAIL', 'tests':result.testsRun,

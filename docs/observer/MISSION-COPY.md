@@ -39,10 +39,16 @@ Root summary whitelist; full requirements, private paths, receipts and reference
 are excluded. Evidence identifies the captured database bytes. These are journal
 observations, not Authority, native runtime admission or physical acceptance.
 
-Nine developer tests cover real existing-core replay on own copies, source SQL
+Ten developer tests cover real existing-core replay on own copies, source SQL
 and mutation traps, source byte/sidecar integrity, source change rejection,
 WAL/hot journal rejection, hardlinks, corrupt/incompatible schema, exact engine
 pins, restart/deduplication and foreign snapshot refusal. They use temporary
 fixtures only, including source containment in the snapshot directory being
 rejected without changes. Source-copy observation is still **NOT RUN** on the
 live journal.
+
+The test fixture's CRLF checkout fallback reads primary blobs at HEAD and then
+requires the same three exact engine pins; no EOL normalization is executed.
+A mocked absent-historical-object regression verifies the actual helper without
+requiring old Git history in a shallow hosted checkout. Production reader logic
+and pins are unchanged. This test is not an actual hosted shallow-clone result.

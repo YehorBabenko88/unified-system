@@ -8,6 +8,7 @@ import subprocess
 import tempfile
 import unittest
 from unittest.mock import patch
+import sys
 
 from unified_system.observer.model import ObserverError,SourcePolicy
 from unified_system.observer.mission import (ENGINE_PINS,ENGINE_VERSION,
@@ -17,6 +18,27 @@ NOW=dt.datetime(2026,11,11,20,tzinfo=dt.timezone.utc)
 ROOT=Path(__file__).resolve().parents[2]
 
 class MissionCopyTests(unittest.TestCase):
+    def test_fixture_primary_binding_does_not_require_historical_git_objects(self):
+        fake_root=self.root/'shallow-checkout';directory=fake_root/'unified_system';directory.mkdir(parents=True)
+        primary={}
+        for name in ENGINE_PINS:
+            raw=(self.root/'engine'/(name+'.py')).read_bytes();primary[name]=raw
+            (directory/(name+'.py')).write_bytes(raw.replace(b'\n',b'\r\n'))
+        calls=[]
+        def local_git(args,**kwargs):
+            calls.append(args)
+            role=args[-1]
+            if not role.startswith('HEAD:unified_system/'):
+                raise subprocess.CalledProcessError(128,args,stderr=b'historical object unavailable')
+            return primary[Path(role.split(':',1)[1]).stem]
+        case=MissionCopyTests('test_admission_and_engine_pin_are_mandatory')
+        try:
+            with patch.object(sys.modules[__name__],'ROOT',fake_root),patch('subprocess.check_output',side_effect=local_git):
+                case.setUp()
+            self.assertEqual(len(calls),3)
+            self.assertEqual(case.path.read_bytes()[:16],b'SQLite format 3\0')
+        finally:case.doCleanups()
+
     def setUp(self):
         self.temp=tempfile.TemporaryDirectory();self.addCleanup(self.temp.cleanup)
         self.root=Path(self.temp.name).resolve();engine=self.root/'engine';engine.mkdir()
@@ -26,7 +48,7 @@ class MissionCopyTests(unittest.TestCase):
                 # Developer worktrees may use CRLF; qualification capsule always
                 # holds exact primary bytes. No normalized source is executed.
                 raw=subprocess.check_output([shutil.which('git'),'--no-replace-objects',
-                    '-C',str(ROOT),'show',ENGINE_VERSION+':unified_system/'+name+'.py'],timeout=5)
+                    '-C',str(ROOT),'show','HEAD:unified_system/'+name+'.py'],timeout=5)
             self.assertEqual(hashlib.sha256(raw).hexdigest(),pin)
             (engine/(name+'.py')).write_bytes(raw)
         self.reader=PinnedExistingMissionReader(engine)

@@ -39,6 +39,14 @@ fixtures, not the live journal. Live source-copy admission remains separate.
 
 ## Current limits
 
+One test-fixture setup originally requested historical engine Git objects when
+the ordinary checkout had CRLF bytes. A shallow stock checkout need not contain
+that historical commit. An inert mocked-history regression reproduced the actual
+helper failure, then the fallback was changed to HEAD primary blobs with the
+same three exact SHA256 checks. No production reader, pin or checkout integrity
+gate changed. The corrected local inventory is 68; hosted qualification of this
+successor is still pending.
+
 All four original hosted Observer jobs actually passed 51 tests. Their original
 ZIP digests matched GitHub artifact metadata, and 20 exported source members
 matched their recorded digests, but `.github/workflows/observer-offline.yml`
