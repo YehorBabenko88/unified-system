@@ -106,6 +106,19 @@ class LockedNativeQualificationControls(unittest.TestCase):
             value.update(changes)
             self.assertFalse(helper.result_ok(**value))
 
+    def test_mock_source_bounds_reads_and_observed_completion(self):
+        tree = ast.parse((ROOT / 'scripts/run_atomic_read_mock_qualification.py').read_bytes())
+        functions = {n.name: n for n in tree.body if isinstance(n, ast.FunctionDef)}
+        read = ast.unparse(functions['read_raw'])
+        self.assertIn('stream.read(size + 1)', read)
+        self.assertIn('before.st_size == size', read)
+        self.assertIn('os.fstat', read)
+        supervise = ast.unparse(functions['supervise'])
+        self.assertLess(supervise.index('started = time.monotonic()'), supervise.index('subprocess.Popen'))
+        self.assertLess(supervise.index('process.wait(timeout=5)'), supervise.index('observed_completion ='))
+        self.assertIn('observed_completion > 90', supervise)
+        self.assertIn('COMPLETION_OBSERVED_AFTER_CHILD_BUDGET', supervise)
+
     def test_native_expected_inventories_and_mock_hash_stay_exact(self):
         import hashlib
         for rel, count in (('docs/intelligence/research-identity/native-profile-v2-20261109/EXPECTED-TESTS.json', 22), ('docs/intelligence/native-negative/EXPECTED-TESTS.json', 21)):
