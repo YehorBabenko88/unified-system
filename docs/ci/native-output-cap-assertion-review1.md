@@ -218,3 +218,73 @@ ONE actual shared-classifier matrix (1 method /24 subcases) and the mandatory
 Windows CI/native workload qualification. No automatic retry or contract broadening
 follows from an unfamiliar real exception graph. Logical mutation remains
 disabled, public submit DENY and overall runtime/physical admission NO-GO.
+
+## Separately observed local STOCK24 and proposed hosted source
+
+Root's separately allocated MCI133→134 observed the exact shared classifier in
+one Python unit method /24 distinct stock exception subcases, actual RETURN
+7 TRUE /17 FALSE, and one normally retired owned PowerShell child exit0. Original
+receipt SHA256 031ec79862874c7483fc9326316b3a506c16bc71c4e2a1a9f4339112b1f5db04;
+profile 82f80a3e293fe5e19b38ac76cfd7716a609a77ab751a8ce522019c8215eee2a7.
+That scope does not include independently retained raw nested PS streams, native
+C# Run, compilation, installation/service behavior, Math or hosted Windows.
+
+The next SOURCE-ONLY lease adds native-output-cap-assertion.yml and its dedicated
+qualify_native_output_cap_assertion.py, updating only this review document.
+Helper7181, matrixb822 and installation-test7f55 remain byte-identical. All old
+workflows/triggers remain unchanged. The new mandatory stock24 job targets
+windows-latest; it qualifies hosted Windows Server stock exceptions only, not
+Win11 Home/Pro or the native workload. No skip, continue-on-error, dependency
+installation, old-workflow filter change or broader timeout is introduced.
+
+The pinned checkout/setup/upload actions use existing full revisions, least
+contents:read and persist-credentials:false. Exact event HEAD is checked out with
+autocrlf=false configured before checkout. Job eligibility binds repository name
+YehorBabenko88/unified-system AND numeric ID1434933263, plus both PR head/base
+repository names/IDs (or push repository identity) before checkout/setup. The
+bootstrap repeats those bindings from the event file and binds the event SHA.
+No same-name repository fallback, pull_request_target or workflow_dispatch exists.
+
+Before any qualifier source compile/import, a stdlib-only isolated bootstrap
+checks fixed C:/Program Files/Git/bin/git.exe with root-first ordinary ancestry,
+single-link/external executable gates BEFORE reading its bytes or spawning it.
+No cmd Git/PATH fallback exists. All Git roles disable replacements, optional
+locks, fsmonitor and hooks. Bounded owned file capture verifies exact HEAD/tree/
+parent, full primary ls-tree/cat-file batch bytes, all1875 tracked raw files,
+ordinary single-link physical files, exact directories, no extras and clean Git.
+The raw source ledger and verified qualifier copy are external, exclusive and
+SHA-bound; a second same-buffer bounded read verifies the copy before execution.
+The fresh external pycache prefix is passed with -I -S -B -X to the qualifier and
+its sole Python unit child. No project import or unittest discovery occurs.
+
+The qualifier reuses the reviewed3bba/9d383 capture core and narrow720b observer
+patterns, with only hosted-path/origin binding adaptations. Its embedded child
+source is written exclusive outside checkout and digest-checked pre/post. Actual
+make_suite() must contain exactly the frozen one method; Result records actual
+start/success/subTest identities, and the wrapper observes actual _run_matrix
+RETURN rather than a copied classifier. It requires one exact fixed System32
+PowerShell NoProfile/NonInteractive/encoded frozen command; the actual returned
+Popen object is held immediately. Original PS8s/retirement2s, Python15s observed
+completion, combined output256KiB and whole120s observations remain. A fallback
+kill, missing profile, unknown handle or cleanup error denies. These are measured
+local completion bounds, not kernel/family hardwall or hostwide containment.
+
+Hosted Python3.12.10/setup origins and selected runtime tree are inventoried and
+hashed pre/post, with a retained bounded runtime ledger. Selection excludes only
+Lib/site-packages, all __pycache__ and pyc/pyo; no dependency is installed. Limits
+are20k runtime files/directories and1GiB aggregate,8MiB runtime ledger,128MiB source
+batch,64MiB individual tool/raw source and bounded per-role evidence. Fixed bin
+Git, setup Python and fixed System32 PowerShell paths/identity/stat/raw digests
+are independently observed pre/post; LS5 tool hashes are NOT reused as hosted
+pins. Only System32 PowerShell permits ordinary OS-servicing hardlinks, as in
+the unchanged matrix's _ordinary_tool role. Hashes/origin/resource observations
+are not publisher verification, loaded-DLL closure, native or runtime authority.
+
+Always-uploaded evidence contains original source/bootstrap failures, role
+stdout/stderr, source/runtime/tool pre/post observations, exact24 RETURN/subtest
+profile and artifact ID/digest. Raw nested PS stdout/stderr are consumed and
+closed by the unchanged matrix and are explicitly NOT independently preserved.
+No execution/import/compile/test/PowerShell/CI/push was authorized or performed
+by the implementer for this source preparation. Root/A8 must review the exact
+committed source and full prospective workflow cohort before any separate push
+allocation. Public submit remains DENY; native/physical/runtime admission NO-GO.
