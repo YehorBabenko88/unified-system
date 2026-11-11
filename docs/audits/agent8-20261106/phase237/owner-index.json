@@ -1,0 +1,900 @@
+{
+  "scope": "ORIGINAL_HOSTED_DATA_ONLY_NO_TEST_RERUN",
+  "pr": "https://github.com/YehorBabenko88/strattester/pull/79",
+  "head": "0c4f64c897aacd78bbec0e1faa886c7003c353ff",
+  "tree": "064ed4b7661fce976f0fd97b236e85d2ebfff7f0",
+  "runs": [
+    {
+      "id": 43041799366,
+      "name": "tests",
+      "event": "push",
+      "head": "0c4f64c897aacd78bbec0e1faa886c7003c353ff",
+      "conclusion": "failure",
+      "created_at": "2026-11-11T14:46:57Z",
+      "updated_at": "2026-11-11T14:56:18Z",
+      "jobs": [
+        {
+          "id": 130595238527,
+          "name": "pytest (ubuntu-latest, 3.13)",
+          "conclusion": "success",
+          "started_at": "2026-11-11T14:47:00Z",
+          "completed_at": "2026-11-11T14:49:13Z"
+        },
+        {
+          "id": 130595239070,
+          "name": "pytest (windows-latest, 3.11)",
+          "conclusion": "failure",
+          "started_at": "2026-11-11T14:47:00Z",
+          "completed_at": "2026-11-11T14:56:17Z"
+        },
+        {
+          "id": 130595239113,
+          "name": "pytest (ubuntu-latest, 3.11)",
+          "conclusion": "success",
+          "started_at": "2026-11-11T14:47:00Z",
+          "completed_at": "2026-11-11T14:49:57Z"
+        },
+        {
+          "id": 130595239258,
+          "name": "pytest (windows-latest, 3.13)",
+          "conclusion": "failure",
+          "started_at": "2026-11-11T14:47:01Z",
+          "completed_at": "2026-11-11T14:54:33Z"
+        }
+      ],
+      "original_files": {
+        "artifacts-api.json": {
+          "bytes": 3209,
+          "sha256": "3faeadb08c4e9668bec719d0c079fad87be4820133351dc214ca1a97cf45710b"
+        },
+        "jobs-api.json": {
+          "bytes": 16538,
+          "sha256": "042f789a50e976c0fa89d250828cabce3adb96d6b7ba4ee4095d8e174a47f3e6"
+        },
+        "logs-original.zip": {
+          "bytes": 569680,
+          "sha256": "0d7ab808796c46db535467358997d7ea0da416e320cccd74b3126f8cdf98b849"
+        },
+        "run-api.json": {
+          "bytes": 13502,
+          "sha256": "886e55ad2e423b0f4210d5342e8fd65a9cf8813ec68737f1c3542f53628b3f49"
+        }
+      }
+    },
+    {
+      "id": 43041826643,
+      "name": "ml-oos-synthetic",
+      "event": "pull_request",
+      "head": "0c4f64c897aacd78bbec0e1faa886c7003c353ff",
+      "conclusion": "success",
+      "created_at": "2026-11-11T14:47:08Z",
+      "updated_at": "2026-11-11T14:48:50Z",
+      "jobs": [
+        {
+          "id": 130595334594,
+          "name": "cpu-e2e",
+          "conclusion": "success",
+          "started_at": "2026-11-11T14:48:02Z",
+          "completed_at": "2026-11-11T14:48:49Z"
+        }
+      ],
+      "original_files": {
+        "artifacts-api.json": {
+          "bytes": 812,
+          "sha256": "8759d005dcf613c644a3ca5fae7700b13c50cb81e5bf159f214d2d65ad85ae8f"
+        },
+        "jobs-api.json": {
+          "bytes": 3127,
+          "sha256": "2e019927315c2875ae319fc4cb511ce0d94b9ded76b288e35025d74779c7e3e6"
+        },
+        "logs-original.zip": {
+          "bytes": 23716,
+          "sha256": "f30a6febc12fcb2ff495a437f8fea809926401d60eb2affb56b21d0b207120ce"
+        },
+        "run-api.json": {
+          "bytes": 13531,
+          "sha256": "f933f3a7c44c5bd321bbe8be0c90ad26caf8598f6567b94801bec8ba22d18bd7"
+        }
+      }
+    },
+    {
+      "id": 43041826648,
+      "name": "Gateway synthetic research component",
+      "event": "pull_request",
+      "head": "0c4f64c897aacd78bbec0e1faa886c7003c353ff",
+      "conclusion": "failure",
+      "created_at": "2026-11-11T14:47:08Z",
+      "updated_at": "2026-11-11T14:47:32Z",
+      "jobs": [
+        {
+          "id": 130595334390,
+          "name": "finite (ubuntu-24.04)",
+          "conclusion": "success",
+          "started_at": "2026-11-11T14:47:13Z",
+          "completed_at": "2026-11-11T14:47:31Z"
+        },
+        {
+          "id": 130595334745,
+          "name": "finite (windows-latest)",
+          "conclusion": "failure",
+          "started_at": "2026-11-11T14:47:12Z",
+          "completed_at": "2026-11-11T14:47:31Z"
+        }
+      ],
+      "original_files": {
+        "artifacts-api.json": {
+          "bytes": 793,
+          "sha256": "a401eeb7448436e865df982fcbcb43973389a6d8eaa3c6965009ef05ce70e9fa"
+        },
+        "jobs-api.json": {
+          "bytes": 5130,
+          "sha256": "ed461101a9f62749ecf9571934ae8e1869f6bca7a61014fea5ae703881300983"
+        },
+        "logs-original.zip": {
+          "bytes": 61797,
+          "sha256": "9ce9f708a1c1f8e725388d39eb6b8d26d678185887e36d01ad63237e03afe30d"
+        },
+        "run-api.json": {
+          "bytes": 13551,
+          "sha256": "6f14099ef033c41e1c19e167746be8b0204bb87e7d2fa2ac7efe9c83fd6ff6e5"
+        }
+      }
+    },
+    {
+      "id": 43041826650,
+      "name": "data-first-scheduler",
+      "event": "pull_request",
+      "head": "0c4f64c897aacd78bbec0e1faa886c7003c353ff",
+      "conclusion": "success",
+      "created_at": "2026-11-11T14:47:08Z",
+      "updated_at": "2026-11-11T14:48:50Z",
+      "jobs": [
+        {
+          "id": 130595334396,
+          "name": "source-regression (windows-latest, 3.11)",
+          "conclusion": "success",
+          "started_at": "2026-11-11T14:47:11Z",
+          "completed_at": "2026-11-11T14:48:42Z"
+        },
+        {
+          "id": 130595334879,
+          "name": "source-regression (ubuntu-latest, 3.11)",
+          "conclusion": "success",
+          "started_at": "2026-11-11T14:47:34Z",
+          "completed_at": "2026-11-11T14:48:01Z"
+        },
+        {
+          "id": 130595334954,
+          "name": "source-regression (windows-latest, 3.12)",
+          "conclusion": "success",
+          "started_at": "2026-11-11T14:47:12Z",
+          "completed_at": "2026-11-11T14:48:50Z"
+        },
+        {
+          "id": 130595334967,
+          "name": "source-regression (ubuntu-latest, 3.12)",
+          "conclusion": "success",
+          "started_at": "2026-11-11T14:48:03Z",
+          "completed_at": "2026-11-11T14:48:32Z"
+        },
+        {
+          "id": 130595335007,
+          "name": "source-regression (ubuntu-latest, 3.13)",
+          "conclusion": "success",
+          "started_at": "2026-11-11T14:47:52Z",
+          "completed_at": "2026-11-11T14:48:19Z"
+        },
+        {
+          "id": 130595335135,
+          "name": "source-regression (windows-latest, 3.13)",
+          "conclusion": "success",
+          "started_at": "2026-11-11T14:47:11Z",
+          "completed_at": "2026-11-11T14:48:25Z"
+        }
+      ],
+      "original_files": {
+        "artifacts-api.json": {
+          "bytes": 4792,
+          "sha256": "a25d5663a528c67cefbb19dff10df73551d5f9e536d2e6d66e1e6b390a9058b1"
+        },
+        "jobs-api.json": {
+          "bytes": 21068,
+          "sha256": "eff0b078e29b1f02a054252accd09b9f622997cebf32eeeab03d00b3c5532149"
+        },
+        "logs-original.zip": {
+          "bytes": 166776,
+          "sha256": "32c3b8fb91a2ba45089def1ad912e28c7062cb4696197518c8c29b41140aaddd"
+        },
+        "run-api.json": {
+          "bytes": 13529,
+          "sha256": "43a281c12e2e8d77a2cbdbdffebe4f64d623e38989321fbcdd0c88a3de83eb5b"
+        }
+      }
+    },
+    {
+      "id": 43041826675,
+      "name": "tests",
+      "event": "pull_request",
+      "head": "0c4f64c897aacd78bbec0e1faa886c7003c353ff",
+      "conclusion": "failure",
+      "created_at": "2026-11-11T14:47:08Z",
+      "updated_at": "2026-11-11T14:55:57Z",
+      "jobs": [
+        {
+          "id": 130595334625,
+          "name": "pytest (windows-latest, 3.11)",
+          "conclusion": "failure",
+          "started_at": "2026-11-11T14:47:12Z",
+          "completed_at": "2026-11-11T14:55:56Z"
+        },
+        {
+          "id": 130595334969,
+          "name": "pytest (windows-latest, 3.13)",
+          "conclusion": "failure",
+          "started_at": "2026-11-11T14:47:12Z",
+          "completed_at": "2026-11-11T14:55:00Z"
+        },
+        {
+          "id": 130595335210,
+          "name": "pytest (ubuntu-latest, 3.13)",
+          "conclusion": "success",
+          "started_at": "2026-11-11T14:47:12Z",
+          "completed_at": "2026-11-11T14:50:20Z"
+        },
+        {
+          "id": 130595335275,
+          "name": "pytest (ubuntu-latest, 3.11)",
+          "conclusion": "success",
+          "started_at": "2026-11-11T14:47:12Z",
+          "completed_at": "2026-11-11T14:49:59Z"
+        }
+      ],
+      "original_files": {
+        "artifacts-api.json": {
+          "bytes": 3209,
+          "sha256": "41aae8d2a3d8975da5f01d5368d2dd11422be39f416bfd87177a8c763c7956a7"
+        },
+        "jobs-api.json": {
+          "bytes": 16538,
+          "sha256": "683bbd8801dc05cbdad3d6e8da2c3a8e41d939a4d17e404e5a117e576586ba39"
+        },
+        "logs-original.zip": {
+          "bytes": 570157,
+          "sha256": "bb9a6610822224903c46c1755843ecfdd8ef60564a730437c4de471800db7b60"
+        },
+        "run-api.json": {
+          "bytes": 13511,
+          "sha256": "d2fd1b57d80f08dd2f0f0af7d5b66df869ca08a1f98126b030f5f9df16abe678"
+        }
+      }
+    },
+    {
+      "id": 43041827260,
+      "name": "financial-integration",
+      "event": "pull_request",
+      "head": "0c4f64c897aacd78bbec0e1faa886c7003c353ff",
+      "conclusion": "failure",
+      "created_at": "2026-11-11T14:47:08Z",
+      "updated_at": "2026-11-11T14:48:58Z",
+      "jobs": [
+        {
+          "id": 130595337084,
+          "name": "math",
+          "conclusion": "success",
+          "started_at": "2026-11-11T14:47:11Z",
+          "completed_at": "2026-11-11T14:47:50Z"
+        },
+        {
+          "id": 130595337400,
+          "name": "cpu",
+          "conclusion": "success",
+          "started_at": "2026-11-11T14:47:12Z",
+          "completed_at": "2026-11-11T14:48:00Z"
+        },
+        {
+          "id": 130595337421,
+          "name": "integration",
+          "conclusion": "success",
+          "started_at": "2026-11-11T14:47:12Z",
+          "completed_at": "2026-11-11T14:48:44Z"
+        },
+        {
+          "id": 130595337573,
+          "name": "security",
+          "conclusion": "success",
+          "started_at": "2026-11-11T14:47:12Z",
+          "completed_at": "2026-11-11T14:48:06Z"
+        },
+        {
+          "id": 130595337577,
+          "name": "core",
+          "conclusion": "success",
+          "started_at": "2026-11-11T14:47:11Z",
+          "completed_at": "2026-11-11T14:48:21Z"
+        },
+        {
+          "id": 130595337738,
+          "name": "training",
+          "conclusion": "success",
+          "started_at": "2026-11-11T14:47:12Z",
+          "completed_at": "2026-11-11T14:48:13Z"
+        },
+        {
+          "id": 130595338124,
+          "name": "native-components / disposable-native-components",
+          "conclusion": "success",
+          "started_at": "2026-11-11T14:47:12Z",
+          "completed_at": "2026-11-11T14:48:06Z"
+        },
+        {
+          "id": 130595338300,
+          "name": "data",
+          "conclusion": "success",
+          "started_at": "2026-11-11T14:47:34Z",
+          "completed_at": "2026-11-11T14:48:45Z"
+        },
+        {
+          "id": 130596257001,
+          "name": "system-acceptance-NO-GO",
+          "conclusion": "failure",
+          "started_at": "2026-11-11T14:48:47Z",
+          "completed_at": "2026-11-11T14:48:57Z"
+        }
+      ],
+      "original_files": {
+        "artifacts-api.json": {
+          "bytes": 7061,
+          "sha256": "9af52a3ffdef1878993bfd70c5628b9ca3bfcb629dc51235c05387f8c7408d6c"
+        },
+        "jobs-api.json": {
+          "bytes": 27018,
+          "sha256": "3a841c1dd85b60818d8ef8cb82e8ecb891e24d703c72a9075cb8632117fffff1"
+        },
+        "logs-original.zip": {
+          "bytes": 203280,
+          "sha256": "21fe60179fbb4e18fb2b8f542fc0410e09f478b90e50afcffcaa94dae716ed73"
+        },
+        "run-api.json": {
+          "bytes": 13744,
+          "sha256": "6f86787cdfe1f4e38db49d36a7292d4286f93a16031bfc22fe1a3ab338958e7a"
+        }
+      }
+    }
+  ],
+  "all_attempt1_terminal": true,
+  "runner_jobs": 26,
+  "workflow_results": {
+    "success": 2,
+    "failure": 4
+  },
+  "closed_diagnostic": {
+    "code": "SOURCE_UNAVAILABLE",
+    "facts": {
+      "absolute": true,
+      "canonical_identity_equal": false,
+      "error_class": "NONE",
+      "ordinary_ancestry": true,
+      "ordinary_single_link_files": true,
+      "pins_match": true,
+      "schema": "gateway.copied-source-admission.v1",
+      "stage": "COMPLETE"
+    },
+    "phase": "COPY_POSITIVE_CALIBRATION"
+  },
+  "diagnostic_occurrences_original_members": [
+    {
+      "run": 43041799366,
+      "member": "0_pytest (windows-latest, 3.13).txt",
+      "fact": {
+        "code": "SOURCE_UNAVAILABLE",
+        "facts": {
+          "absolute": true,
+          "canonical_identity_equal": false,
+          "error_class": "NONE",
+          "ordinary_ancestry": true,
+          "ordinary_single_link_files": true,
+          "pins_match": true,
+          "schema": "gateway.copied-source-admission.v1",
+          "stage": "COMPLETE"
+        },
+        "phase": "COPY_POSITIVE_CALIBRATION"
+      }
+    },
+    {
+      "run": 43041799366,
+      "member": "0_pytest (windows-latest, 3.13).txt",
+      "fact": {
+        "code": "SOURCE_UNAVAILABLE",
+        "facts": {
+          "absolute": true,
+          "canonical_identity_equal": false,
+          "error_class": "NONE",
+          "ordinary_ancestry": true,
+          "ordinary_single_link_files": true,
+          "pins_match": true,
+          "schema": "gateway.copied-source-admission.v1",
+          "stage": "COMPLETE"
+        },
+        "phase": "COPY_POSITIVE_CALIBRATION"
+      }
+    },
+    {
+      "run": 43041799366,
+      "member": "pytest (windows-latest, 3.13)/10_Run full pytest inventory.txt",
+      "fact": {
+        "code": "SOURCE_UNAVAILABLE",
+        "facts": {
+          "absolute": true,
+          "canonical_identity_equal": false,
+          "error_class": "NONE",
+          "ordinary_ancestry": true,
+          "ordinary_single_link_files": true,
+          "pins_match": true,
+          "schema": "gateway.copied-source-admission.v1",
+          "stage": "COMPLETE"
+        },
+        "phase": "COPY_POSITIVE_CALIBRATION"
+      }
+    },
+    {
+      "run": 43041799366,
+      "member": "pytest (windows-latest, 3.13)/10_Run full pytest inventory.txt",
+      "fact": {
+        "code": "SOURCE_UNAVAILABLE",
+        "facts": {
+          "absolute": true,
+          "canonical_identity_equal": false,
+          "error_class": "NONE",
+          "ordinary_ancestry": true,
+          "ordinary_single_link_files": true,
+          "pins_match": true,
+          "schema": "gateway.copied-source-admission.v1",
+          "stage": "COMPLETE"
+        },
+        "phase": "COPY_POSITIVE_CALIBRATION"
+      }
+    },
+    {
+      "run": 43041799366,
+      "member": "2_pytest (windows-latest, 3.11).txt",
+      "fact": {
+        "code": "SOURCE_UNAVAILABLE",
+        "facts": {
+          "absolute": true,
+          "canonical_identity_equal": false,
+          "error_class": "NONE",
+          "ordinary_ancestry": true,
+          "ordinary_single_link_files": true,
+          "pins_match": true,
+          "schema": "gateway.copied-source-admission.v1",
+          "stage": "COMPLETE"
+        },
+        "phase": "COPY_POSITIVE_CALIBRATION"
+      }
+    },
+    {
+      "run": 43041799366,
+      "member": "2_pytest (windows-latest, 3.11).txt",
+      "fact": {
+        "code": "SOURCE_UNAVAILABLE",
+        "facts": {
+          "absolute": true,
+          "canonical_identity_equal": false,
+          "error_class": "NONE",
+          "ordinary_ancestry": true,
+          "ordinary_single_link_files": true,
+          "pins_match": true,
+          "schema": "gateway.copied-source-admission.v1",
+          "stage": "COMPLETE"
+        },
+        "phase": "COPY_POSITIVE_CALIBRATION"
+      }
+    },
+    {
+      "run": 43041799366,
+      "member": "pytest (windows-latest, 3.11)/10_Run full pytest inventory.txt",
+      "fact": {
+        "code": "SOURCE_UNAVAILABLE",
+        "facts": {
+          "absolute": true,
+          "canonical_identity_equal": false,
+          "error_class": "NONE",
+          "ordinary_ancestry": true,
+          "ordinary_single_link_files": true,
+          "pins_match": true,
+          "schema": "gateway.copied-source-admission.v1",
+          "stage": "COMPLETE"
+        },
+        "phase": "COPY_POSITIVE_CALIBRATION"
+      }
+    },
+    {
+      "run": 43041799366,
+      "member": "pytest (windows-latest, 3.11)/10_Run full pytest inventory.txt",
+      "fact": {
+        "code": "SOURCE_UNAVAILABLE",
+        "facts": {
+          "absolute": true,
+          "canonical_identity_equal": false,
+          "error_class": "NONE",
+          "ordinary_ancestry": true,
+          "ordinary_single_link_files": true,
+          "pins_match": true,
+          "schema": "gateway.copied-source-admission.v1",
+          "stage": "COMPLETE"
+        },
+        "phase": "COPY_POSITIVE_CALIBRATION"
+      }
+    },
+    {
+      "run": 43041826648,
+      "member": "1_finite (windows-latest).txt",
+      "fact": {
+        "code": "SOURCE_UNAVAILABLE",
+        "facts": {
+          "absolute": true,
+          "canonical_identity_equal": false,
+          "error_class": "NONE",
+          "ordinary_ancestry": true,
+          "ordinary_single_link_files": true,
+          "pins_match": true,
+          "schema": "gateway.copied-source-admission.v1",
+          "stage": "COMPLETE"
+        },
+        "phase": "COPY_POSITIVE_CALIBRATION"
+      }
+    },
+    {
+      "run": 43041826648,
+      "member": "finite (windows-latest)/4_Exact source and actual Meta calculation and existing financial regressions.txt",
+      "fact": {
+        "code": "SOURCE_UNAVAILABLE",
+        "facts": {
+          "absolute": true,
+          "canonical_identity_equal": false,
+          "error_class": "NONE",
+          "ordinary_ancestry": true,
+          "ordinary_single_link_files": true,
+          "pins_match": true,
+          "schema": "gateway.copied-source-admission.v1",
+          "stage": "COMPLETE"
+        },
+        "phase": "COPY_POSITIVE_CALIBRATION"
+      }
+    },
+    {
+      "run": 43041826675,
+      "member": "2_pytest (windows-latest, 3.13).txt",
+      "fact": {
+        "code": "SOURCE_UNAVAILABLE",
+        "facts": {
+          "absolute": true,
+          "canonical_identity_equal": false,
+          "error_class": "NONE",
+          "ordinary_ancestry": true,
+          "ordinary_single_link_files": true,
+          "pins_match": true,
+          "schema": "gateway.copied-source-admission.v1",
+          "stage": "COMPLETE"
+        },
+        "phase": "COPY_POSITIVE_CALIBRATION"
+      }
+    },
+    {
+      "run": 43041826675,
+      "member": "2_pytest (windows-latest, 3.13).txt",
+      "fact": {
+        "code": "SOURCE_UNAVAILABLE",
+        "facts": {
+          "absolute": true,
+          "canonical_identity_equal": false,
+          "error_class": "NONE",
+          "ordinary_ancestry": true,
+          "ordinary_single_link_files": true,
+          "pins_match": true,
+          "schema": "gateway.copied-source-admission.v1",
+          "stage": "COMPLETE"
+        },
+        "phase": "COPY_POSITIVE_CALIBRATION"
+      }
+    },
+    {
+      "run": 43041826675,
+      "member": "pytest (windows-latest, 3.13)/10_Run full pytest inventory.txt",
+      "fact": {
+        "code": "SOURCE_UNAVAILABLE",
+        "facts": {
+          "absolute": true,
+          "canonical_identity_equal": false,
+          "error_class": "NONE",
+          "ordinary_ancestry": true,
+          "ordinary_single_link_files": true,
+          "pins_match": true,
+          "schema": "gateway.copied-source-admission.v1",
+          "stage": "COMPLETE"
+        },
+        "phase": "COPY_POSITIVE_CALIBRATION"
+      }
+    },
+    {
+      "run": 43041826675,
+      "member": "pytest (windows-latest, 3.13)/10_Run full pytest inventory.txt",
+      "fact": {
+        "code": "SOURCE_UNAVAILABLE",
+        "facts": {
+          "absolute": true,
+          "canonical_identity_equal": false,
+          "error_class": "NONE",
+          "ordinary_ancestry": true,
+          "ordinary_single_link_files": true,
+          "pins_match": true,
+          "schema": "gateway.copied-source-admission.v1",
+          "stage": "COMPLETE"
+        },
+        "phase": "COPY_POSITIVE_CALIBRATION"
+      }
+    },
+    {
+      "run": 43041826675,
+      "member": "3_pytest (windows-latest, 3.11).txt",
+      "fact": {
+        "code": "SOURCE_UNAVAILABLE",
+        "facts": {
+          "absolute": true,
+          "canonical_identity_equal": false,
+          "error_class": "NONE",
+          "ordinary_ancestry": true,
+          "ordinary_single_link_files": true,
+          "pins_match": true,
+          "schema": "gateway.copied-source-admission.v1",
+          "stage": "COMPLETE"
+        },
+        "phase": "COPY_POSITIVE_CALIBRATION"
+      }
+    },
+    {
+      "run": 43041826675,
+      "member": "3_pytest (windows-latest, 3.11).txt",
+      "fact": {
+        "code": "SOURCE_UNAVAILABLE",
+        "facts": {
+          "absolute": true,
+          "canonical_identity_equal": false,
+          "error_class": "NONE",
+          "ordinary_ancestry": true,
+          "ordinary_single_link_files": true,
+          "pins_match": true,
+          "schema": "gateway.copied-source-admission.v1",
+          "stage": "COMPLETE"
+        },
+        "phase": "COPY_POSITIVE_CALIBRATION"
+      }
+    },
+    {
+      "run": 43041826675,
+      "member": "pytest (windows-latest, 3.11)/10_Run full pytest inventory.txt",
+      "fact": {
+        "code": "SOURCE_UNAVAILABLE",
+        "facts": {
+          "absolute": true,
+          "canonical_identity_equal": false,
+          "error_class": "NONE",
+          "ordinary_ancestry": true,
+          "ordinary_single_link_files": true,
+          "pins_match": true,
+          "schema": "gateway.copied-source-admission.v1",
+          "stage": "COMPLETE"
+        },
+        "phase": "COPY_POSITIVE_CALIBRATION"
+      }
+    },
+    {
+      "run": 43041826675,
+      "member": "pytest (windows-latest, 3.11)/10_Run full pytest inventory.txt",
+      "fact": {
+        "code": "SOURCE_UNAVAILABLE",
+        "facts": {
+          "absolute": true,
+          "canonical_identity_equal": false,
+          "error_class": "NONE",
+          "ordinary_ancestry": true,
+          "ordinary_single_link_files": true,
+          "pins_match": true,
+          "schema": "gateway.copied-source-admission.v1",
+          "stage": "COMPLETE"
+        },
+        "phase": "COPY_POSITIVE_CALIBRATION"
+      }
+    }
+  ],
+  "junit": [
+    {
+      "path": "core-pr-artifacts/core-pytest-ubuntu-latest-3.11-0c4f64c897aacd78bbec0e1faa886c7003c353ff/pytest.xml",
+      "testcase_entries_including_subtests": 2166,
+      "failures": 0,
+      "errors": 0,
+      "skips": 54,
+      "sha256": "ec089a5ff5af3e29a386ff5397f3ae843a3eb46bf81dcf223bcedd2e05a0b5d9"
+    },
+    {
+      "path": "core-pr-artifacts/core-pytest-ubuntu-latest-3.13-0c4f64c897aacd78bbec0e1faa886c7003c353ff/pytest.xml",
+      "testcase_entries_including_subtests": 2166,
+      "failures": 0,
+      "errors": 0,
+      "skips": 54,
+      "sha256": "32c5b40e041c1e1a11f63afa3d1ef660385068788df6b2179fb09ab3ffeb2f8b"
+    },
+    {
+      "path": "core-pr-artifacts/core-pytest-windows-latest-3.11-0c4f64c897aacd78bbec0e1faa886c7003c353ff/pytest.xml",
+      "testcase_entries_including_subtests": 2166,
+      "failures": 1,
+      "errors": 0,
+      "skips": 28,
+      "sha256": "7840a8ff1d2b6ea6cbfdeb60a061c6303e17979ff568722a8b3ed5904eb66556"
+    },
+    {
+      "path": "core-pr-artifacts/core-pytest-windows-latest-3.13-0c4f64c897aacd78bbec0e1faa886c7003c353ff/pytest.xml",
+      "testcase_entries_including_subtests": 2166,
+      "failures": 1,
+      "errors": 0,
+      "skips": 28,
+      "sha256": "717ebb68c8b750ff3d48a1aeff633a050af45588b8db97173034134830b47bec"
+    },
+    {
+      "path": "core-push-artifacts/core-pytest-ubuntu-latest-3.11-0c4f64c897aacd78bbec0e1faa886c7003c353ff/pytest.xml",
+      "testcase_entries_including_subtests": 2166,
+      "failures": 0,
+      "errors": 0,
+      "skips": 54,
+      "sha256": "5e2c95fe4baade7006c5051fdfa6fee50b08c81b7522b865d8273f8aaf44e7a5"
+    },
+    {
+      "path": "core-push-artifacts/core-pytest-ubuntu-latest-3.13-0c4f64c897aacd78bbec0e1faa886c7003c353ff/pytest.xml",
+      "testcase_entries_including_subtests": 2166,
+      "failures": 0,
+      "errors": 0,
+      "skips": 54,
+      "sha256": "9209acb7f9f5244c112b0082c723889b9b85812798f6059e8c9a39c670eb88ef"
+    },
+    {
+      "path": "core-push-artifacts/core-pytest-windows-latest-3.11-0c4f64c897aacd78bbec0e1faa886c7003c353ff/pytest.xml",
+      "testcase_entries_including_subtests": 2166,
+      "failures": 1,
+      "errors": 0,
+      "skips": 28,
+      "sha256": "8decabf7022cd96e0c4e1f05c8f1b6f7935beb2c975695b80c3e9cad772a6354"
+    },
+    {
+      "path": "core-push-artifacts/core-pytest-windows-latest-3.13-0c4f64c897aacd78bbec0e1faa886c7003c353ff/pytest.xml",
+      "testcase_entries_including_subtests": 2166,
+      "failures": 1,
+      "errors": 0,
+      "skips": 28,
+      "sha256": "c0e31dc442614d2a0119c2cb0f0a74e23140e50eb0d919a7f6a143131ae26ed8"
+    },
+    {
+      "path": "datafirst-artifacts/data-first-ubuntu-latest-3.11-0c4f64c897aacd78bbec0e1faa886c7003c353ff/tests.xml",
+      "testcase_entries_including_subtests": 254,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "sha256": "8425dbbfa1321235b268b6e0f2886bdebc75aaaa5c8f149560842445fa6ede5e"
+    },
+    {
+      "path": "datafirst-artifacts/data-first-ubuntu-latest-3.12-0c4f64c897aacd78bbec0e1faa886c7003c353ff/tests.xml",
+      "testcase_entries_including_subtests": 254,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "sha256": "a9e07a69fe2fa4f5c419e3288c97fc52494168e3cc4157f0b308e2a57dd0ea48"
+    },
+    {
+      "path": "datafirst-artifacts/data-first-ubuntu-latest-3.13-0c4f64c897aacd78bbec0e1faa886c7003c353ff/tests.xml",
+      "testcase_entries_including_subtests": 254,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "sha256": "02cf0df4d355dc9a17b926825e110593e34da9bacca2e577cc55ec06a01ddc5a"
+    },
+    {
+      "path": "datafirst-artifacts/data-first-windows-latest-3.11-0c4f64c897aacd78bbec0e1faa886c7003c353ff/tests.xml",
+      "testcase_entries_including_subtests": 254,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "sha256": "e7d252f760cbd64e34205baecb7e18ccf0b2a078aa101f75b640a4a021b6cf70"
+    },
+    {
+      "path": "datafirst-artifacts/data-first-windows-latest-3.12-0c4f64c897aacd78bbec0e1faa886c7003c353ff/tests.xml",
+      "testcase_entries_including_subtests": 254,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "sha256": "a564035214f55d95f3ad13e561bb7e86e7a1fb3933c460badd92906b6274b9a1"
+    },
+    {
+      "path": "datafirst-artifacts/data-first-windows-latest-3.13-0c4f64c897aacd78bbec0e1faa886c7003c353ff/tests.xml",
+      "testcase_entries_including_subtests": 254,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "sha256": "de97dc2531e3943fe56fedd9a95650fe940e07ce21fd5f917f8db96119fa3e2e"
+    },
+    {
+      "path": "financial-artifacts/financial-core-0c4f64c897aacd78bbec0e1faa886c7003c353ff/core.xml",
+      "testcase_entries_including_subtests": 594,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "sha256": "e3e9ed97e70efd038bca601b924ce9493c04e856eb454cb912491e8e0a891235"
+    },
+    {
+      "path": "financial-artifacts/financial-cpu-0c4f64c897aacd78bbec0e1faa886c7003c353ff/cpu.xml",
+      "testcase_entries_including_subtests": 141,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "sha256": "5356b2238199a702b55b05d7076bd0817b173a5c0467aada240bb953f64e51cf"
+    },
+    {
+      "path": "financial-artifacts/financial-data-0c4f64c897aacd78bbec0e1faa886c7003c353ff/data.xml",
+      "testcase_entries_including_subtests": 200,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "sha256": "6d7474d936cf734e8ea5df9b6cb6a4e3245180fba040ef9bcd0003ca05d09682"
+    },
+    {
+      "path": "financial-artifacts/financial-integration-0c4f64c897aacd78bbec0e1faa886c7003c353ff/integration.xml",
+      "testcase_entries_including_subtests": 125,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "sha256": "4bcb18b4c3028569527debdc6eea71dbaee1cb263d64684d60d6a6d551c5297a"
+    },
+    {
+      "path": "financial-artifacts/financial-math-0c4f64c897aacd78bbec0e1faa886c7003c353ff/math.xml",
+      "testcase_entries_including_subtests": 191,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "sha256": "ca1529cfa03fee9f49982a7e2ee04980ed1579cec257166d1a01a63d3da6c49e"
+    },
+    {
+      "path": "financial-artifacts/financial-security-0c4f64c897aacd78bbec0e1faa886c7003c353ff/security.xml",
+      "testcase_entries_including_subtests": 524,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "sha256": "399d583922a2c30f0fe5001dc05f2d087f940289a1aa1d50873cc0b4a9dc2bb6"
+    },
+    {
+      "path": "financial-artifacts/financial-training-0c4f64c897aacd78bbec0e1faa886c7003c353ff/training.xml",
+      "testcase_entries_including_subtests": 85,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "sha256": "64586f04dfa05b0fc3bc9d77b012750a0fb006acefa25d79507e5ce0d18119ab"
+    },
+    {
+      "path": "financial-artifacts/native-component-proof-0c4f64c897aacd78bbec0e1faa886c7003c353ff/native-tests.xml",
+      "testcase_entries_including_subtests": 30,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "sha256": "9ffd058ead620a9145b2d70103b95f5cade27e41c5fcb9ca61425a0e08cf3f97"
+    },
+    {
+      "path": "ml-artifacts/ml-oos-synthetic-0c4f64c897aacd78bbec0e1faa886c7003c353ff/regressions.xml",
+      "testcase_entries_including_subtests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "sha256": "0dcd3fb5d0a791e8407dde456c56f68d38a4b6b66d7a703ee666e2c14b1f7e42"
+    }
+  ],
+  "underlying_identity_inequality_cause": "UNKNOWN",
+  "production_security_change": "NONE",
+  "projection47": "NOT_TRIGGERED; old889 scoped result not transferred",
+  "overall": "NO-GO"
+}

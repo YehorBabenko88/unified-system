@@ -3910,3 +3910,6 @@ Phase235 stockmatrix exactd69b699/treec1fef5f SOURCE/DATA ACK only:1873rawGitbou
 
 
 Phase236 actualstockmatrix receipt031ec798/profile82f80a3 independentlyverified:1unit24actualunique subcasesPASS/7TRUE17FALSE/1ownPSretiredexit0,all7rolecountersmatchraw,Gitprepost1873equal,current1873source+841runtime rehashed/cacheempty. LOCALstockclassifierONLY,nestedrawPSnotretained,notnativeF42/fullWindowsCI/physical. NoA8ownerexecution/retry. OverallNO-GO/TailscaleBLOCKED. See phase236/report.md.
+
+
+Phase237 PR79exact0c4f hostedcohort:6attempt1runs26jobs2SUCCESS4FAIL,freshAPI+alloriginalZIPs+23freshAPI-digest-boundartifactXML verified. Corepush/PRWindowsFAIL/GatewayWindowsFAIL;Datafirst6x254+ML14selectedPASS;financialaggregateBLOCKEDexit2 external/authenticityUNVERIFIED. ClosedcanonicalidentityFALSEbeforemutation,underlyingaliasRCAUNKNOWN. MandatoryWindowsFAIL/overallNO-GO/physicalTailscaleBLOCKED. NoA8projectexecution/rerun. See phase237/report.md.
