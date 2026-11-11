@@ -3907,3 +3907,6 @@ Phase234: independent original hosted Windows SQLite47 scoped PASS at stratteste
 
 
 Phase235 stockmatrix exactd69b699/treec1fef5f SOURCE/DATA ACK only:1873rawGitboundsource/841runtime/PS60c9 verified,11corefunctions identical inclcapture roleliteral, adaptation+child read. Prospective1unit24subcases/oneownedPS; actualNOTRUN, nestedrawPSnotretained, no native/physical/family/hardwall qualification. SeparateRootallocation required; overallNO-GO/TailscaleBLOCKED. See phase235/report.md.
+
+
+Phase236 actualstockmatrix receipt031ec798/profile82f80a3 independentlyverified:1unit24actualunique subcasesPASS/7TRUE17FALSE/1ownPSretiredexit0,all7rolecountersmatchraw,Gitprepost1873equal,current1873source+841runtime rehashed/cacheempty. LOCALstockclassifierONLY,nestedrawPSnotretained,notnativeF42/fullWindowsCI/physical. NoA8ownerexecution/retry. OverallNO-GO/TailscaleBLOCKED. See phase236/report.md.
