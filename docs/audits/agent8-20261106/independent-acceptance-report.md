@@ -3913,3 +3913,6 @@ Phase236 actualstockmatrix receipt031ec798/profile82f80a3 independentlyverified:
 
 
 Phase237 PR79exact0c4f hostedcohort:6attempt1runs26jobs2SUCCESS4FAIL,freshAPI+alloriginalZIPs+23freshAPI-digest-boundartifactXML verified. Corepush/PRWindowsFAIL/GatewayWindowsFAIL;Datafirst6x254+ML14selectedPASS;financialaggregateBLOCKEDexit2 external/authenticityUNVERIFIED. ClosedcanonicalidentityFALSEbeforemutation,underlyingaliasRCAUNKNOWN. MandatoryWindowsFAIL/overallNO-GO/physicalTailscaleBLOCKED. NoA8projectexecution/rerun. See phase237/report.md.
+
+
+Phase238 PR80exactdfb5 Gateway43046405180attempt1 HOSTEDCOMPONENT38PASSbothWindowsUbuntu;38originalverboseIDs0skip/mutationOK, freshAPIs/twofreshAPI-digest-boundZIPs/816Gitboundsourcemaps/3calculationhashlinksMeta pins verified. ReplayBYTE_IDENTICALoriginalobservations/notA8execution. No fullcore/nativephysical/aliasRCA/old47transfer. OverallNO-GO/TailscaleBLOCKED. See phase238/report.md.
