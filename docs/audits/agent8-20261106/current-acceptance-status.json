@@ -682,7 +682,7 @@
     "F19": "FIX_VERIFIED_OFFLINE_AT_a2265b0",
     "F26": "OPEN_MANDATORY_COMPONENT_CI_HEARTBEAT_FAILURE_SAME_ROOT_A1_RCA",
     "owner_labelled_positive_native_P0_gates": "OPEN",
-    "F51": "OPEN_P2_READINESS_CI_FORECAST15_NOT13;LEGACY_COUNTS_NOT_RECOMPUTED"
+    "F51": "CLOSED_SCOPED_CORRECTED15CELL_DESCRIPTOR_NO_CI_OR_SAFETY_PROMOTION"
   },
   "EVIDENCE": [
     "phase4/math-source-and-compile-review.json",
@@ -5313,5 +5313,16 @@
     "GO_NO_GO": "NO-GO",
     "PHYSICAL_TESTS": "BLOCKED",
     "TAILSCALE_REMOVAL": "BLOCKED"
+  },
+  "phase243_PR283": {
+    "head": "d6b72b66ff1b85b7e6b956568342ad6bd8bfcfbe",
+    "PRcells": 15,
+    "SUCCESS": 12,
+    "FAILURE": 2,
+    "CANCELLED": 1,
+    "artifact_API_digest_bound": 11,
+    "hosted62": "NOT_QUALIFIED_COLLECTION_ABORT",
+    "F51": "CLOSED_SCOPE_COUNT_ONLY",
+    "GO_NO_GO": "NO-GO"
   }
 }
