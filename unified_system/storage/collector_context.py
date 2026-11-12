@@ -14,7 +14,7 @@ import uuid
 
 from ..journal import Journal
 from .object_store import ObjectStore, _parents, _plain, _read, _write_new
-from .raw_capture import RawCaptureAdapter, RawCaptureProfile
+from .raw_capture import RawCaptureAdapter, RawCaptureProfile, decode_local_link
 
 
 class CollectorBlocked(ValueError):
@@ -76,6 +76,142 @@ class CollectorContextStatus:
     publication_confirmed = property(lambda self: False)
 
 
+@dataclass(frozen=True)
+class CollectorInspectionFile:
+    relative_path: str
+    file_identity: tuple
+    byte_count: int
+    mtime_ns: int
+    sha256: str
+
+
+@dataclass(frozen=True)
+class CollectorContextInspection:
+    context_id: str
+    binding_sha256: str
+    store_id: str
+    state: str
+    writer_flag: str
+    checkpoint: LocalCollectorCheckpoint | None
+    history: tuple
+    orphan_paths: tuple
+    source_files: tuple
+    logical_byte_count: int
+    classification = property(lambda self: 'LOCAL_UNATTESTED')
+    native_outcome = property(lambda self: 'UNKNOWN')
+    publication_confirmed = property(lambda self: False)
+    quiescence_verified = property(lambda self: False)
+
+
+def _decode_lifecycle(rows, context_id, binding_sha256, max_records):
+    _need(len(rows) <= max_records)
+    state, pending, checkpoint, completed = None, None, None, {}
+    fields = {'schema','context_id','binding_sha256','event','writer_incarnation_id',
+              'observation_sha256','raw_journal_digest','reason'}
+    for row in rows:
+        value = row['receipt']
+        _need(row['state'] == 'OBSERVING' and type(value) is dict and set(value) == fields)
+        _need(value['schema'] == 'unified.storage.collector-lifecycle.v1'
+              and value['context_id'] == context_id and value['binding_sha256'] == binding_sha256)
+        _need(type(value['writer_incarnation_id']) is str and re.fullmatch(
+            '[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}',
+            value['writer_incarnation_id']) is not None)
+        event, obs, digest, reason = (value[k] for k in ('event','observation_sha256','raw_journal_digest','reason'))
+        _need(obs is None or _sha(obs)); _need(digest is None or _sha(digest))
+        if reason is not None: _reason(reason)
+        if event == 'OPEN':
+            _need(state in (None,'STOPPED') and pending is None and obs is digest is reason is None)
+            state = 'ACTIVE'
+        elif event == 'INFLIGHT':
+            _need(state == 'ACTIVE' and pending is None and obs is not None and digest is reason is None)
+            pending = obs
+        elif event == 'CHECKPOINT':
+            _need(state == 'ACTIVE' and pending == obs and obs is not None and digest is not None and reason is None)
+            checkpoint = LocalCollectorCheckpoint(context_id, obs, digest, row['sequence'])
+            completed[obs] = checkpoint; pending = None
+        elif event == 'STOPPED':
+            _need(state == 'ACTIVE' and pending is None and obs is digest is None and reason is not None)
+            state = 'STOPPED'
+        elif event in ('UNKNOWN','TERMINAL'):
+            _need(reason is not None and digest is None)
+            _need(state not in ('UNKNOWN','TERMINAL') or event == state)
+            state = event
+        else: raise CollectorBlocked('COLLECTOR_RECOVERY_REQUIRED')
+    return state, pending, checkpoint, completed
+
+
+def _context_footprint(root, profile):
+    store = root/'raw'/'archive'
+    allowed = {root:{'collector-owned.json','writer.lock','lifecycle.sqlite','raw'},
+               root/'raw':{'archive','capture.sqlite'},
+               store:{'owned-root.json','objects','staging'}}
+    size, count = 0, 0
+    directories = {root/'raw',store,store/'objects',store/'staging'}
+    for folder in (*allowed, store/'objects', store/'staging'):
+        names = set()
+        for path in folder.iterdir():
+            _need(len(names) < profile.raw_profile.inventory_file_limit+4)
+            names.add(path.name)
+            if path in directories: _plain(path, directory=True); continue
+            count += 1; _need(count <= profile.raw_profile.inventory_file_limit+3)
+            size += _plain(path, directory=False).st_size
+        if folder in allowed: _need(names == allowed[folder])
+    _need(size <= profile.max_context_bytes, 'COLLECTOR_CAPACITY_EXCEEDED')
+    return size
+
+
+def _inspection_sources(root, profile):
+    """Two bounded complete byte passes; no writer lock or filesystem mutations."""
+    _parents(root)
+    _context_footprint(root, profile)
+    folders = (root, root/'raw', root/'raw/archive', root/'raw/archive/objects', root/'raw/archive/staging')
+    directory_ids = []
+    files, cached, total = [], {}, 0
+    for folder in folders:
+        info = _plain(folder, directory=True)
+        directory_ids.append((str(folder.relative_to(root)), info.st_dev, info.st_ino, info.st_mtime_ns))
+        count = 0
+        for path in folder.iterdir():
+            count += 1
+            _need(count <= profile.raw_profile.inventory_file_limit+4, 'COLLECTOR_CAPACITY_EXCEEDED')
+            if path in folders:
+                _plain(path, directory=True)
+                continue
+            _need(len(files) < profile.raw_profile.inventory_file_limit+3, 'COLLECTOR_CAPACITY_EXCEEDED')
+            info = _plain(path, directory=False)
+            remaining = profile.max_context_bytes-total
+            _need(info.st_size <= remaining, 'COLLECTOR_CAPACITY_EXCEEDED')
+            limit = min(remaining, 8192) if path == root/'collector-owned.json' else remaining
+            if path == root/'writer.lock': limit = min(limit, 1)
+            data, identity = _read(path, limit)
+            total += len(data)
+            current = _plain(path, directory=False)
+            _need((current.st_dev,current.st_ino) == identity and current.st_size == len(data))
+            name = path.relative_to(root).as_posix()
+            files.append(CollectorInspectionFile(name, identity, len(data), current.st_mtime_ns,
+                                                 hashlib.sha256(data).hexdigest()))
+            if name in ('collector-owned.json','writer.lock'): cached[name] = data
+            elif name in ('lifecycle.sqlite','raw/capture.sqlite'): cached[name] = data[:100]
+    for name, dev, ino, mtime in directory_ids:
+        info = _plain(root/name, directory=True)
+        _need((info.st_dev,info.st_ino,info.st_mtime_ns) == (dev,ino,mtime), 'COLLECTOR_SOURCE_CHANGED')
+    return tuple(sorted(files,key=lambda item:item.relative_path)), tuple(directory_ids), cached, total
+
+
+def _inspection_lifecycle_types(rows):
+    """Strict builtins before the shared semantic decoder compares/hash-indexes."""
+    for row in rows:
+        _need(type(row) is dict and all(type(key) is str for key in row))
+        _need(type(row['sequence']) is int and type(row['state']) is str)
+        value = row['receipt']
+        _need(type(value) is dict and all(type(key) is str for key in value))
+        for key in ('schema','context_id','binding_sha256','event','writer_incarnation_id'):
+            _need(key in value and type(value[key]) is str)
+        for key in ('observation_sha256','raw_journal_digest','reason'):
+            _need(key in value and (value[key] is None or type(value[key]) is str))
+
+
+
 class CollectorContext:
     """One Root-owned LOCAL writer. No reopen/reset from UNKNOWN or TERMINAL."""
     @staticmethod
@@ -88,6 +224,63 @@ class CollectorContext:
         _need(_sha(binding_sha256) and type(profile) is CollectorContextProfile)
         profile.check()
         return root
+
+    @classmethod
+    def inspect(cls, root, *, context_id, store_id, binding_sha256, profile):
+        """Observational only. Caller separately owns namespace and quiescence.
+
+        No instance/lease/lock is created; matching snapshots do not prove that
+        other writers cannot run. Reject WAL headers BEFORE opening SQLite RO.
+        """
+        root = cls._inputs(root,context_id,store_id,binding_sha256,profile)
+        before = _inspection_sources(root,profile)
+        files, _, cached, total = before
+        by_name = {item.relative_path:item for item in files}
+        flag = cached['writer.lock']
+        _need(flag in (b'D',b'S',b'U',b'T'))
+        identity = lambda path: list((_plain(path,directory=True).st_dev,_plain(path,directory=True).st_ino))
+        expected = _canonical(dict(schema='unified.storage.collector-context.v1',context_id=context_id,
+            store_id=store_id,binding_sha256=binding_sha256,root=str(root),root_identity=identity(root),
+            raw_identity=identity(root/'raw'),writer_lock_identity=list(by_name['writer.lock'].file_identity),
+            profile=asdict(profile)))
+        _need(cached['collector-owned.json'] == expected)
+        for name in ('lifecycle.sqlite','raw/capture.sqlite'):
+            header = cached[name]
+            _need(len(header) == 100 and header[:16] == b'SQLite format 3\x00'
+                  and header[18:20] == b'\x01\x01', 'COLLECTOR_RECOVERY_REQUIRED')
+        rows = Journal(root/'lifecycle.sqlite').read(max_records=profile.max_lifecycle_records)
+        _inspection_lifecycle_types(rows)
+        state,pending,checkpoint,completed = _decode_lifecycle(rows,context_id,binding_sha256,profile.max_lifecycle_records)
+        # Read the real bounded journal and reuse its existing canonical codec.
+        # Do not call _records(): its default query limit remains100001.
+        raw_rows = Journal(root/'raw/capture.sqlite').read(max_records=profile.raw_profile.max_observations)
+        links = {}
+        for row in raw_rows:
+            _need(type(row['state']) is str and row['state'] == 'OBSERVING')
+            link = decode_local_link(_canonical(row['receipt']))
+            key = link['observation_sha256']
+            _need(key not in links)
+            links[key] = (link,hashlib.sha256(_canonical(row)).hexdigest())
+        _need(sum(link['payload_byte_count'] for link,_ in links.values())
+              <= profile.raw_profile.max_payload_occurrence_bytes, 'COLLECTOR_CAPACITY_EXCEEDED')
+        store = ObjectStore.open(root/'raw/archive',store_id=store_id)
+        reader = RawCaptureAdapter(store,Journal(root/'raw/capture.sqlite'),profile.raw_profile)
+        history = tuple(reader._read(link,digest) for link,digest in links.values())
+        for obs, value in completed.items():
+            _need(obs in links and links[obs][1] == value.raw_journal_digest, 'COLLECTOR_RECOVERY_REQUIRED')
+        expected_objects = set(links)
+        expected_objects.update(link['payload_sha256'] for link,_ in links.values() if link['payload_sha256'] is not None)
+        orphans = tuple(item.relative_path for item in files
+            if item.relative_path.startswith('raw/archive/staging/')
+            or (item.relative_path.startswith('raw/archive/objects/')
+                and item.relative_path.rsplit('/',1)[1] not in expected_objects))
+        if state == 'TERMINAL' or flag == b'T': observed = 'TERMINAL'
+        elif (state == 'STOPPED' and flag == b'S' and pending is None
+              and not orphans and set(completed) == set(links)): observed = 'STOPPED'
+        else: observed = 'UNKNOWN'
+        _need(_inspection_sources(root,profile) == before, 'COLLECTOR_SOURCE_CHANGED')
+        return CollectorContextInspection(context_id,binding_sha256,store_id,observed,flag.decode('ascii'),
+            checkpoint,history,orphans,files,total)
 
     @staticmethod
     def _kernel(fd, acquire):
@@ -214,39 +407,8 @@ class CollectorContext:
     def _scan(self):
         self._check()
         rows = self._life.read()
-        _need(len(rows) <= self._profile.max_lifecycle_records)
-        state, pending, checkpoint, completed = None, None, None, {}
-        fields = {'schema','context_id','binding_sha256','event','writer_incarnation_id',
-                  'observation_sha256','raw_journal_digest','reason'}
-        for row in rows:
-            value = row['receipt']
-            _need(row['state'] == 'OBSERVING' and type(value) is dict and set(value) == fields)
-            _need(value['schema'] == 'unified.storage.collector-lifecycle.v1'
-                  and value['context_id'] == self.context_id and value['binding_sha256'] == self._binding)
-            _need(type(value['writer_incarnation_id']) is str and re.fullmatch(
-                '[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}',
-                value['writer_incarnation_id']) is not None)
-            event, obs, digest, reason = (value[k] for k in ('event','observation_sha256','raw_journal_digest','reason'))
-            _need(obs is None or _sha(obs)); _need(digest is None or _sha(digest))
-            if reason is not None: _reason(reason)
-            if event == 'OPEN':
-                _need(state in (None,'STOPPED') and pending is None and obs is digest is reason is None)
-                state = 'ACTIVE'
-            elif event == 'INFLIGHT':
-                _need(state == 'ACTIVE' and pending is None and obs is not None and digest is reason is None)
-                pending = obs
-            elif event == 'CHECKPOINT':
-                _need(state == 'ACTIVE' and pending == obs and obs is not None and digest is not None and reason is None)
-                checkpoint = LocalCollectorCheckpoint(self.context_id, obs, digest, row['sequence'])
-                completed[obs] = checkpoint; pending = None
-            elif event == 'STOPPED':
-                _need(state == 'ACTIVE' and pending is None and obs is digest is None and reason is not None)
-                state = 'STOPPED'
-            elif event in ('UNKNOWN','TERMINAL'):
-                _need(reason is not None and digest is None)
-                _need(state not in ('UNKNOWN','TERMINAL') or event == state)
-                state = event
-            else: raise CollectorBlocked('COLLECTOR_RECOVERY_REQUIRED')
+        state, pending, checkpoint, completed = _decode_lifecycle(
+            rows, self.context_id, self._binding, self._profile.max_lifecycle_records)
         self._state = 'UNKNOWN' if self._memory_unknown else 'TERMINAL' if self._memory_terminal else state
         self._pending, self._checkpoint, self._completed = pending, checkpoint, completed
         return rows
@@ -270,23 +432,7 @@ class CollectorContext:
             self._memory_unknown, self._state = True, 'UNKNOWN'
 
     def _footprint(self):
-        store = self.root/'raw'/'archive'
-        allowed = {self.root:{'collector-owned.json','writer.lock','lifecycle.sqlite','raw'},
-                   self.root/'raw':{'archive','capture.sqlite'},
-                   store:{'owned-root.json','objects','staging'}}
-        size, count = 0, 0
-        directories = {self.root/'raw',store,store/'objects',store/'staging'}
-        for folder in (*allowed, store/'objects', store/'staging'):
-            names = set()
-            for path in folder.iterdir():
-                _need(len(names) < self._profile.raw_profile.inventory_file_limit+4)
-                names.add(path.name)
-                if path in directories: _plain(path, directory=True); continue
-                count += 1; _need(count <= self._profile.raw_profile.inventory_file_limit+3)
-                size += _plain(path, directory=False).st_size
-            if folder in allowed: _need(names == allowed[folder])
-        _need(size <= self._profile.max_context_bytes, 'COLLECTOR_CAPACITY_EXCEEDED')
-        return size
+        return _context_footprint(self.root, self._profile)
 
     def _ready(self, additional_bytes=0, records=0, payload_count=None):
         _need(not self._closed and self._fd is not None, 'COLLECTOR_CLOSED')
