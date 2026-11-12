@@ -27,7 +27,6 @@ jobs:
       GIT_CONFIG_VALUE_0: 'false'
       GIT_CONFIG_KEY_1: core.eol
       GIT_CONFIG_VALUE_1: lf
-      GRID_GATEWAY_SOURCE_ROOT: ${{ runner.temp }}/grid-gateway-f19
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
@@ -42,6 +41,8 @@ jobs:
         run: |
           python -m pip install --only-binary=:all: --require-hashes -r docs/intelligence/identity/requirements-${{ matrix.lock }}.lock
       - name: Provision one exact public Grid source revision outside Unified checkout
+        env:
+          GRID_GATEWAY_SOURCE_ROOT: ${{ runner.temp }}/grid-gateway-f19
         shell: python -I -S -B {0}
         run: |
           import os,pathlib,subprocess,sys
@@ -57,6 +58,8 @@ jobs:
           run('fetch','--depth=1','origin','f19f7feee0f63da34a20607a8cae59191180aa7c')
           run('checkout','--detach','f19f7feee0f63da34a20607a8cae59191180aa7c')
       - name: Exact unique READ and dependency regressions with primary object guards
+        env:
+          GRID_GATEWAY_SOURCE_ROOT: ${{ runner.temp }}/grid-gateway-f19
         shell: bash
         run: |
           python -I -B docs/intelligence/runtime-integration/run_read_qualification.py
