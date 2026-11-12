@@ -209,6 +209,7 @@ def _snapshot_copy_db(source, destination, expected_seal, max_pages, deadline):
     initial = _plain(destination, directory=False)
     initial_identity = initial.st_dev, initial.st_ino
     src = dst = None
+    primary_error = None
     try:
         src = sqlite3.connect(source.as_uri()+'?mode=ro&immutable=1', uri=True, timeout=1)
         src.execute('PRAGMA query_only = ON')
@@ -231,11 +232,22 @@ def _snapshot_copy_db(source, destination, expected_seal, max_pages, deadline):
 
         src.backup(dst, pages=min(16, max_pages), progress=progress, sleep=0)
         _snapshot_deadline(deadline)
+    except BaseException as error:
+        primary_error = error
+        raise
     finally:
-        if dst is not None:
-            dst.close()
-        if src is not None:
-            src.close()
+        close_errors = []
+        for connection in (dst, src):
+            if connection is not None:
+                try:
+                    connection.close()
+                except BaseException as error:
+                    close_errors.append(error)
+        if close_errors:
+            # Both close attempts ran. Preserve the original operation failure
+            # and every cleanup failure; never report a completed snapshot.
+            errors = ([primary_error] if primary_error is not None else []) + close_errors
+            raise BaseExceptionGroup('local snapshot/close uncertainty; partials retained', errors) from None
     if _snapshot_db_seal(source) != expected_seal:
         raise ValueError('source DB seal changed during backup')
     destination_seal = _snapshot_db_seal(destination)

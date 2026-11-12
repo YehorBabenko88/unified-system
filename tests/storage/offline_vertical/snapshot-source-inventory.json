@@ -1,17 +1,21 @@
 {
-  "scope": "PROSPECTIVE_LOCAL_SNAPSHOT_SOURCE_ONLY",
+  "scope": "PROSPECTIVE_LOCAL_SNAPSHOT_SOURCE_ONLY_A8_CLOSE_FIX",
   "parent_head": "636a54ea221778ba44c6c8d492c3475223dab6c5",
   "parent_tree": "b8674baca0bf8ca62e6de42cf4ec24d4bcf0b8dd",
+  "superseded_source_head": "1e2320da7124457bf18758cd2a9e1814948dec4e",
+  "finding": "A8-STORAGE94-INDEPENDENT-CLOSE",
   "factory": "snapshot_source_cases.make_suite(new_parent,entries,admitted_phases)",
   "prospective_methods": 12,
+  "inert_close_factory": "snapshot_close_source_cases.make_suite(admitted_phases)",
+  "additional_inert_close_methods": 4,
   "tests_run": false,
   "sqlite_backup_run": false,
   "process_phase_run": false,
   "files": [
     {
       "path": "tests/storage/offline_vertical/pilot_phases.py",
-      "bytes": 16178,
-      "sha256": "3d5a2d0da0540e351ff94efd0e30524732bd0ea57650d5432ab7941cda0348c5"
+      "bytes": 16816,
+      "sha256": "a8ced52019164f645a2c8334f1369a3217bbe314048056b4e01aafa028c10f3d"
     },
     {
       "path": "tests/storage/offline_vertical/snapshot_source_cases.py",
@@ -19,9 +23,14 @@
       "sha256": "750d5912a57ba13433d158e28bbcbc352f454820b748a7202d6294178678f36e"
     },
     {
+      "path": "tests/storage/offline_vertical/snapshot_close_source_cases.py",
+      "bytes": 4732,
+      "sha256": "ec1412d08a86c02de50349fd5aa3add2f441b4a6c25f98334acf64211780208e"
+    },
+    {
       "path": "tests/storage/offline_vertical/LOCAL-SNAPSHOT-SOURCE.md",
-      "bytes": 6510,
-      "sha256": "1fbf3acbd96b73db98a69dd00ade7b71a207cd84789545eeaee33bbd1cf357a8"
+      "bytes": 8184,
+      "sha256": "71d87aa38ab23157acb96bc2942cd472a691b700ed82123056872de7419bda3e"
     }
   ],
   "parent_source_package_inventory": "HISTORICAL_PARENT_ONLY_NOT_CURRENT_SNAPSHOT_MANIFEST"
