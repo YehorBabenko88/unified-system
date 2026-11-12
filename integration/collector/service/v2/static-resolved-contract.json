@@ -1,0 +1,51 @@
+{
+  "schema": "unified.collector.c3-contract-decision.v1",
+  "status": "DESIGN_ACK_IMPLEMENTATION_AUTHORIZED_NOT_OPERATIONAL_AUTHORIZATION",
+  "baseline_head": "06cfa5c60de106a3e377455c903f89426b242ce3",
+  "baseline_tree": "f93ed5d7adb2f66e767c7fb25fd5838bb9d7a5eb",
+  "owner_ack": {
+    "owner": "A5",
+    "document": "V2-CI-STATIC-RESOLVED-ACK.md",
+    "sha256": "d25547ad4242b6a7f71247972827b8ef1abab931d48b49f5e0858fcc9d38cedb",
+    "root_decision": "ACCEPTED_FOR_SOURCE_IMPLEMENTATION"
+  },
+  "static_schema": "unified.collector.operational-authorization.v2",
+  "resolved_schema": "unified.collector.resolved-operation-intent.v2",
+  "scope": "ADMISSION_FOR_C3_QUALIFICATION",
+  "graph_profile": "COLLECTOR_C3_FINITE_SYNTHETIC_V2",
+  "stages": ["REGISTER_STOPPED", "PUBLISH_ACTIVATION", "START", "STOP", "INSPECT_STOPPED", "REVOKE_ACTIVATION"],
+  "static_target": {
+    "runner_labels": ["windows-2022", "windows-2025"],
+    "job_name": "collector-c3",
+    "service_name_policy": "UNIFIED_COLLECTOR_V2_INSTALLATION_UUID_SHA256_24",
+    "root_relative_runner_temp": "unified-collector-c3/<canonical installation UUID>",
+    "activation_revision": "authorization_id"
+  },
+  "resolved_only": ["actual computer_name", "absolute paths", "initial service plan SHA256", "actual run/job/runner facts", "phase identity", "capture attempt identity"],
+  "references": ["ABSENT_NEW_NAMESPACE", "SAME_PHASE_OUTPUT"],
+  "evidence_schemas": ["unified.collector.source-admission.v2", "unified.collector.capacity-admission.v2", "unified.collector.resource-outcome.v2"],
+  "owners": {
+    "ROOT_CI": ["pure review codec", "GitHub read-only review-facts provider", "workflow bridge"],
+    "A5": ["protected local admission", "resolved finite operation graph", "existing resource/activation/actuator engines"],
+    "A4": ["read-only closed-context inspection"],
+    "ROOT": ["immutable source assembly", "compatibility review", "final qualification"]
+  },
+  "mandatory_denials": ["missing real provider", "missing actual protected review history", "expired or revoked authorization", "unknown prior effect", "unverified source or capacity", "arbitrary caller operation graph"],
+  "semantics": {
+    "review_facts_are_capability": false,
+    "digest_is_permission": false,
+    "globally_atomic_single_use_claim": false,
+    "unknown_effect": "CONSUMED_NO_AUTOMATIC_REPLAY",
+    "new_a2_authority": false,
+    "old_v1_authorizes_v2": false,
+    "missing_a4_inspector_completion": "UNKNOWN"
+  },
+  "execution": {
+    "records_issued": false,
+    "workflow_dispatch": false,
+    "native_c3": "NOT_AUTHORIZED",
+    "installation": "NOT_AUTHORIZED",
+    "provider_sends": "DENY",
+    "public_submit": "DENY"
+  }
+}
