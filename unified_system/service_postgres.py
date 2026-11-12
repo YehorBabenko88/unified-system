@@ -4,6 +4,7 @@ The private Admin/System receipt is ownership evidence, not runtime readiness.
 Native actions require an external owner phase; tests use inert boundaries.
 """
 import copy,hashlib,json,os,re,socket,stat,time
+from dataclasses import dataclass
 from pathlib import Path
 from urllib.parse import urlsplit
 from . import lab_release,lab_runtime
@@ -14,6 +15,8 @@ from .service_bootstrap import canonical,local,stamp,read_file,parse,WindowsActi
 SCHEMA='unified.owned-postgres.v1'
 PLAN_FIELDS=frozenset(('schema','service_plan','resource_receipt_sha256','profile_sha256','auth_source','auth_sha256','root_identity','state_identity','namespace','data_root','cluster','port','database','user','bootstrap_user','postgresql_files','vendor_sha256','job_sha256','writer_sid','plan_sha256'))
 CONFIG_FILES=('PG_VERSION','postgresql.conf','postgresql.auto.conf','pg_hba.conf','pg_ident.conf')
+# https://learn.microsoft.com/en-us/windows/win32/procthread/process-creation-flags
+_CREATE_SUSPENDED=0x00000004
 CODES=frozenset(('POSTGRES_REJECTED','POSTGRES_OWNER_PHASE_REQUIRED','POSTGRES_OWNER_PHASE_REJECTED','POSTGRES_UNAVAILABLE','POSTGRES_IDENTITY_REJECTED','POSTGRES_ALREADY_EXISTS','POSTGRES_NOT_READY','POSTGRES_PROCESS_REJECTED','POSTGRES_AUTH_REJECTED','POSTGRES_START_PENDING','POSTGRES_POISONED'))
 class PostgresBlocked(ValueError):
  def __init__(self,code='POSTGRES_REJECTED'):self.code=code if code in CODES else 'POSTGRES_REJECTED';super().__init__(self.code)
@@ -30,6 +33,22 @@ def regular(path,limit=1048576):
  with path.open('rb') as stream:
   raw=stream.read(limit+1);s=os.fstat(stream.fileno());need((s.st_dev,s.st_ino,s.st_size,s.st_mtime_ns,s.st_nlink)==before)
  need(stamp(path)==before and len(raw)==before[2]);return raw
+
+@dataclass(frozen=True,slots=True)
+class OwnedProcessSpec:
+ """Neutral layout only; caller must separately admit runtime/token/argv/env."""
+ data_root:str
+ code_root:str
+ job_sha256:str
+ def __post_init__(self):self._checked()
+ def _checked(self):
+  need(type(self) is OwnedProcessSpec)
+  need(type(self.data_root) is str and type(self.code_root) is str and type(self.job_sha256) is str)
+  need(re.fullmatch('[a-f0-9]{64}',self.job_sha256) is not None)
+  data=local(self.data_root);code=local(self.code_root)
+  need(data.is_dir() and code.is_dir())
+  directory(data);directory(code)
+  need(data!=code and data not in code.parents and code not in data.parents)
 
 def postgres_plan(resource,profile,auth_source,*,boundary=None):
  try:
@@ -220,8 +239,10 @@ def _resume_owned_primary(pid,identity,*,kernel=None):
 def _job_class(plan):
  # Existing Grid primitive only: source bytes admitted, no package/backend import
  # or bytecode lookup; resume=False avoids its optional psutil dependency.
- path=Path(plan['service_plan']['code'])/'sources/grid/grid/ml_windows_job.py';raw=regular(path)
- need(sha(raw)==plan['job_sha256']);namespace={'__name__':'_unified_owned_pg_job','__file__':str(path)};exec(compile(raw,str(path),'exec'),namespace)
+ if isinstance(plan,OwnedProcessSpec):
+  need(type(plan) is OwnedProcessSpec);plan._checked()
+ path=Path(plan.code_root if type(plan) is OwnedProcessSpec else plan['service_plan']['code'])/'sources/grid/grid/ml_windows_job.py';raw=regular(path)
+ need(sha(raw)==(plan.job_sha256 if type(plan) is OwnedProcessSpec else plan['job_sha256']));namespace={'__name__':'_unified_owned_pg_job','__file__':str(path)};exec(compile(raw,str(path),'exec'),namespace)
  job=namespace['WindowsJob'];need(callable(getattr(job,'terminate_and_wait',None)),'POSTGRES_PROCESS_REJECTED');return job
 
 def _listener_pid(port,*,api=None):
@@ -446,12 +467,15 @@ class OwnedJobProcess:
  def __init__(self,plan,argv,environment,*,capture=False,restricted=False,launch=None):
   import subprocess,tempfile
   from .runtime_process import _identity
+  if isinstance(plan,OwnedProcessSpec):
+   need(type(plan) is OwnedProcessSpec and restricted is False and launch is None)
+   plan._checked()
   need(os.name=='nt');self.job=None;self.proc=None;self.identity=None;self.output=None;self.error=None;self.launch=launch;self.confirmed_quiescent=False;self.argv=list(argv);self.pid=None
   try:
    job_class=_job_class(plan)
    if capture:
-    self.output=tempfile.TemporaryFile(dir=plan['data_root']);self.error=tempfile.TemporaryFile(dir=plan['data_root'])
-   self.proc=_RestrictedProcess(plan,argv,environment) if restricted else subprocess.Popen(argv,cwd=plan['data_root'],env=environment,stdin=subprocess.PIPE,stdout=self.output if capture else subprocess.DEVNULL,stderr=self.error if capture else subprocess.DEVNULL,creationflags=subprocess.CREATE_SUSPENDED|subprocess.CREATE_NO_WINDOW,shell=False)
+    self.output=tempfile.TemporaryFile(dir=plan.data_root if type(plan) is OwnedProcessSpec else plan['data_root']);self.error=tempfile.TemporaryFile(dir=plan.data_root if type(plan) is OwnedProcessSpec else plan['data_root'])
+   self.proc=_RestrictedProcess(plan,argv,environment) if restricted else subprocess.Popen(argv,cwd=plan.data_root if type(plan) is OwnedProcessSpec else plan['data_root'],env=environment,stdin=subprocess.PIPE,stdout=self.output if capture else subprocess.DEVNULL,stderr=self.error if capture else subprocess.DEVNULL,creationflags=_CREATE_SUSPENDED|subprocess.CREATE_NO_WINDOW,shell=False)
    self.pid=self.proc.pid;self.identity=_identity(self.proc.pid);need(self.identity is not None and Path(self.identity[1])==Path(argv[0]),'POSTGRES_PROCESS_REJECTED')
    self.job=job_class(self.proc.pid,resume_primary_thread=False)
    _resume_owned_primary(self.proc.pid,self.identity)
