@@ -10,7 +10,14 @@ class ProtocolTests(unittest.TestCase):
         v=self.render();self.assertEqual(tuple(n for n,_ in v.scripts),('bootstrap','migrate','verify','readback'));self.assertEqual(len(v.sql_pins()),4)
     def test_pinned_migration_retained_byte_exact(self):self.assertIn(MIGRATION,self.render().script('migrate'))
     def test_real_prepare_execute_parameters_not_text_substitution(self):
-        s=self.render().script('readback');self.assertEqual(s.count(b'PREPARE '),3);self.assertEqual(s.count(b'EXECUTE '),6);self.assertIn(b'$1',s);self.assertIn(b'$2',s)
+        s=self.render().script('readback');self.assertEqual(s.count(b'PREPARE '),3);self.assertEqual(s.count(b'\nEXECUTE collector_read_'),6);self.assertIn(b'$1',s);self.assertIn(b'$2',s)
+    def test_each_actual_readback_select_has_exact_correct_and_mismatch_row_assertions(self):
+        raw=self.render().script('readback');self.assertEqual(raw.count(b'FOR counted_row IN EXECUTE '),6)
+        for i in range(3):
+            self.assertIn(('READBACK_CORRECT_'+str(i)+'_ROWS').encode(),raw);self.assertIn(('READBACK_MISMATCH_'+str(i)+'_ROWS').encode(),raw)
+        for select in [x.strip() for x in READBACK.partition(b'\n')[2].split(b';') if x.strip()][1:4]:self.assertEqual(raw.count(select),3)
+        self.assertEqual(raw.count(b'IF row_count <> 1 THEN'),3);self.assertEqual(raw.count(b'IF row_count <> 0 THEN'),3)
+        self.assertLess(raw.rfind(b'END $read_count_'),raw.index(b'PG_PROTOCOL_V1_READBACK'))
     def test_source_pin_changes_rejected(self):
         for name in ('migration','readback'):
             with self.subTest(name=name),self.assertRaises(ValueError):self.render(**{name:(MIGRATION if name=='migration' else READBACK)+b' '})

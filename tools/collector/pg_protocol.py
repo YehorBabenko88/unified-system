@@ -126,6 +126,14 @@ ROLLBACK;
     require(len(chunks)==5 and chunks[0].endswith(b'BEGIN READ ONLY') and chunks[-1]==b'COMMIT' and all(x.startswith(b'SELECT ') for x in chunks[1:4]))
     query=b'BEGIN READ ONLY;\n'+encoded(checks)
     for i,select in enumerate(chunks[1:4]):
+        # Count the ACTUAL unchanged SELECT independently of psql display output.
+        # This block runs twice overall (before/after restart), before its marker.
+        delimiter=encoded(f'$read_select_{i}$');require(delimiter not in select)
+        count_block=encoded(f'DO $read_count_{i}$\nDECLARE row_count integer; counted_row record;\nBEGIN\n')
+        for label,bound,expected in (('CORRECT',binding,1),('MISMATCH',mismatch,0)):
+            count_block+=b'row_count := 0;\nFOR counted_row IN EXECUTE '+delimiter+select+delimiter
+            count_block+=encoded(f" USING '{cid}'::text,'{bound}'::text LOOP\nrow_count := row_count + 1;\nEND LOOP;\nIF row_count <> {expected} THEN RAISE EXCEPTION 'READBACK_{label}_{i}_ROWS'; END IF;\n")
+        count_block+=encoded(f'END $read_count_{i}$;\n');query+=count_block
         query+=encoded(f'PREPARE collector_read_{i}(text,text) AS ')+select+b';\n'
         query+=encoded(f"EXECUTE collector_read_{i}('{cid}','{binding}');\nEXECUTE collector_read_{i}('{cid}','{mismatch}');\n")
     query+=b'COMMIT;\n'+marker('readback')
