@@ -163,3 +163,40 @@ class PgCustodyTests(unittest.TestCase):
         self.assertIs(entry['process'],process);self.assertEqual(len(calls),1)
         self.assertEqual(calls[0][1]['creationflags'],0x00000004|subprocess.CREATE_NO_WINDOW)
         self.assertFalse(calls[0][1]['shell']);self.assertTrue(calls[0][1]['close_fds'])
+
+    def test_actual_job_setter_closed_profiles_and_win32_flags(self):
+        from types import SimpleNamespace
+        for profile,processes,memory,cpu in [('INNER',32,1073741824,60),('OUTER',64,2147483648,120)]:
+            k=LimitKernel();job=SimpleNamespace(_kernel=k,_job=123);r=pg._configure_job_limits(job,profile)
+            self.assertEqual((r['active_processes'],r['process_memory_bytes'],r['job_memory_bytes'],r['job_user_seconds']),(processes,536870912,memory,cpu));self.assertEqual(k.saved[0],0x230c)
+            self.assertTrue(r['kill_on_close']);self.assertFalse(r['breakaway']);self.assertEqual(k.calls,1)
+            pg._configure_job_limits(job,profile);self.assertEqual(k.calls,1)
+    def test_actual_job_setter_unknown_profile_never_calls_kernel(self):
+        from types import SimpleNamespace
+        k=LimitKernel()
+        with self.assertRaises(ValueError):pg._configure_job_limits(SimpleNamespace(_kernel=k,_job=123),'ARBITRARY')
+        self.assertEqual(k.calls,0)
+    def test_actual_job_readback_mismatch_denies_all_critical_fields(self):
+        from types import SimpleNamespace
+        for field in range(5):
+            k=LimitKernel(tamper=field)
+            with self.subTest(field=field),self.assertRaises(ValueError):pg._configure_job_limits(SimpleNamespace(_kernel=k,_job=123),'INNER')
+    def test_actual_job_query_failure_never_resets_applied_cpu_budget(self):
+        from types import SimpleNamespace
+        k=LimitKernel(query_failure=True);job=SimpleNamespace(_kernel=k,_job=123)
+        with self.assertRaises(ValueError):pg._configure_job_limits(job,'INNER')
+        k.query_failure=False;pg._configure_job_limits(job,'INNER');self.assertEqual(k.calls,1)
+    def test_actual_job_profile_cannot_be_changed(self):
+        from types import SimpleNamespace
+        k=LimitKernel();job=SimpleNamespace(_kernel=k,_job=123);pg._configure_job_limits(job,'INNER')
+        with self.assertRaises(ValueError):pg._configure_job_limits(job,'OUTER')
+        self.assertEqual(k.calls,1)
+class LimitKernel:
+    def __init__(self,tamper=None,query_failure=False):self.saved=None;self.calls=0;self.tamper=tamper;self.query_failure=query_failure
+    def SetInformationJobObject(self,handle,kind,pointer,size):
+        self.calls+=1;x=pointer._obj;self.saved=[x.basic.flags,x.basic.processes,x.basic.job_time,x.process_memory,x.job_memory];return True
+    def QueryInformationJobObject(self,handle,kind,pointer,size,outsize):
+        if self.query_failure:return False
+        values=list(self.saved)
+        if self.tamper is not None:values[self.tamper]+=1
+        x=pointer._obj;x.basic.flags,x.basic.processes,x.basic.job_time,x.process_memory,x.job_memory=values;outsize._obj.value=size;return True

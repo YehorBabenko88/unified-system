@@ -235,6 +235,24 @@ def _held(path,pin=None,size=None,limit=268435456):
     z=_ordinary(p,True);need(len(raw)==a.st_size and same(a)==same(z) and same(b)==same(c))
     need(pin is None or hashlib.sha256(raw).hexdigest()==pin);return raw
 
+def _configure_job_limits(job,profile):
+    """One existing Win32 limit ABI, exactly INNER or reviewed OUTER only."""
+    need(type(profile) is str and profile in ('INNER','OUTER'))
+    import ctypes as c
+    from ctypes import wintypes as w
+    processes,memory,cpu=(32,1073741824,60) if profile=='INNER' else (64,2147483648,120)
+    class Basic(c.Structure):_fields_=[('process_time',c.c_int64),('job_time',c.c_int64),('flags',w.DWORD),('minimum',c.c_size_t),('maximum',c.c_size_t),('processes',w.DWORD),('affinity',c.c_size_t),('priority',w.DWORD),('scheduling',w.DWORD)]
+    class Io(c.Structure):_fields_=[('v'+str(i),c.c_uint64) for i in range(6)]
+    class Extended(c.Structure):_fields_=[('basic',Basic),('io',Io),('process_memory',c.c_size_t),('job_memory',c.c_size_t),('peak_process',c.c_size_t),('peak_job',c.c_size_t)]
+    flags=0x2000|0x8|0x100|0x200|0x4
+    applied=getattr(job,'_collector_limit_profile',None);need(applied is None or applied==profile)
+    if applied is None:
+        limits=Extended();limits.basic.flags=flags;limits.basic.processes=processes;limits.basic.job_time=cpu*10000000;limits.process_memory=536870912;limits.job_memory=memory
+        need(bool(job._kernel.SetInformationJobObject(job._job,9,c.byref(limits),c.sizeof(limits))));job._collector_limit_profile=profile
+    actual=Extended();size=w.DWORD();need(bool(job._kernel.QueryInformationJobObject(job._job,9,c.byref(actual),c.sizeof(actual),c.byref(size))) and size.value==c.sizeof(actual))
+    need(actual.basic.flags==flags and actual.basic.processes==processes and actual.basic.job_time==cpu*10000000 and actual.process_memory==536870912 and actual.job_memory==memory)
+    return dict(LIMITS,active_processes=processes,job_memory_bytes=memory,job_user_seconds=cpu)
+
 class WindowsBackend:
     """Thin native adapter over existing Grid Job + Unified resume/identity APIs.
 
@@ -354,17 +372,7 @@ class WindowsBackend:
         else:need(bool(job._kernel.AssignProcessToJobObject(job._job,self.c.c_void_p(int(proc._handle)))))
         entry['job']=job;self.job=job;return job
     def configure_and_readback(self,job):
-        c=self.c;w=self.w
-        class Basic(c.Structure):_fields_=[('process_time',c.c_int64),('job_time',c.c_int64),('flags',w.DWORD),('minimum',c.c_size_t),('maximum',c.c_size_t),('processes',w.DWORD),('affinity',c.c_size_t),('priority',w.DWORD),('scheduling',w.DWORD)]
-        class Io(c.Structure):_fields_=[('v'+str(i),c.c_uint64) for i in range(6)]
-        class Extended(c.Structure):_fields_=[('basic',Basic),('io',Io),('process_memory',c.c_size_t),('job_memory',c.c_size_t),('peak_process',c.c_size_t),('peak_job',c.c_size_t)]
-        flags=0x2000|0x8|0x100|0x200|0x4
-        if not self.configured:
-            limits=Extended();limits.basic.flags=flags;limits.basic.processes=32;limits.basic.job_time=60*10000000;limits.process_memory=536870912;limits.job_memory=1073741824
-            need(bool(job._kernel.SetInformationJobObject(job._job,9,c.byref(limits),c.sizeof(limits))));self.configured=True
-        actual=Extended();size=w.DWORD();need(bool(job._kernel.QueryInformationJobObject(job._job,9,c.byref(actual),c.sizeof(actual),c.byref(size))) and size.value==c.sizeof(actual))
-        need(actual.basic.flags==flags and actual.basic.processes==32 and actual.basic.job_time==600000000 and actual.process_memory==536870912 and actual.job_memory==1073741824)
-        return dict(LIMITS)
+        result=_configure_job_limits(job,'INNER');self.configured=True;return result
     def member(self,entry,job):
         c=self.c;w=self.w;fn=job._kernel.IsProcessInJob;fn.argtypes=[w.HANDLE,w.HANDLE,c.POINTER(w.BOOL)];fn.restype=w.BOOL;answer=w.BOOL()
         return bool(fn(c.c_void_p(int(entry['process']._handle)),job._job,c.byref(answer))) and bool(answer.value)
