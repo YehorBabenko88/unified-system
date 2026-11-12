@@ -145,3 +145,21 @@ class PgCustodyTests(unittest.TestCase):
         s.run(pg.command_for(s.plan,'initdb'));s.start_server();b.fault='foreign_listener'
         with self.assertRaises(pg.CustodyDenied):s.wait_server_ready()
         self.assertNotIn('psql',s.snapshot()['source_roles']);self.assertFalse(s.snapshot()['transport_ok']);self.assertIn('terminate_job',b.events)
+
+    def test_actual_native_constructor_uses_documented_suspended_flag_with_inert_popen(self):
+        import subprocess
+        from pathlib import Path
+        from types import SimpleNamespace
+        calls=[];original=subprocess.Popen
+        process=SimpleNamespace(_handle=123,pid=456)
+        def popen(*args,**kwargs):calls.append((args,kwargs));return process
+        backend=object.__new__(pg.WindowsBackend);backend.root=Path('C:/INERT/UnifiedCollectorTest/pg-attempt1');backend.secret_root=backend.root/'secrets'
+        backend.c=SimpleNamespace(c_void_p=lambda n:n);backend.kernel=object();backend.w=object()
+        command=pg.command_for(pg.Plan.model(),'initdb');backend.runtime=SimpleNamespace(_win_identity=lambda *args:['INERT',str(Path(command.argv[0]))])
+        entry={}
+        subprocess.Popen=popen
+        try:backend.create_suspended(entry,command)
+        finally:subprocess.Popen=original
+        self.assertIs(entry['process'],process);self.assertEqual(len(calls),1)
+        self.assertEqual(calls[0][1]['creationflags'],0x00000004|subprocess.CREATE_NO_WINDOW)
+        self.assertFalse(calls[0][1]['shell']);self.assertTrue(calls[0][1]['close_fds'])

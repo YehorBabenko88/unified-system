@@ -38,3 +38,9 @@ Original evidence is retained at `C:/Users/LS-5/.codex/collector-pg-inert19-2026
 ## Closed-role specification correction
 
 Root corrected its summary: four SQL roles are bootstrap/migrate/verify/readback. The original rollback enum in f1f7a37 and its historical19PASS remain preserved. The new enum replaces rollback with verify, never adds a fifth role or DROP/cluster adoption. The corrected19 controls have NOT RUN yet. This is a contract correction, not an observed PostgreSQL defect.
+
+## Suspended-process flag compatibility correction
+
+The actual CPython3.12.10 subprocess module has no CREATE_SUSPENDED export. The targeted actual WindowsBackend.create_suspended method was exercised under inert Popen/identity seams without mocking that missing attribute: old51 had50PASS/1ERROR exactly AttributeError before Popen. New Source uses private documented Win32 constant0x00000004 at the same call, retaining CREATE_NO_WINDOW/close_fds/shellFalse and attach-before-resume. Microsoft primary reference: https://learn.microsoft.com/en-us/windows/win32/procthread/process-creation-flags . This is Source/constructor compatibility, not actual process creation proof.
+
+Fresh pure51 (custodian20+protocol14+writer17) PASS,0allflags/forbidden effects, all10Source+841runtime DATA pins equal, cache empty. Child0retired/no capture errors,10743B/observed0.594s. Originals retained at C:/Users/LS-5/.codex/collector-pg-suspended51-{red,green}-20261112. GREEN receipt SHA2ace1859e904139b5d98d952dd3b5c1308f739d348728073befd11be1487380f/stdout539ab1eefd12e69c80eba56c1522acf6df4984b680aface6748dce43ecf1c6df/stderr26fa6131a2d80191236900a442cddf3d57eb63596a3aabdef3928ad6bc115be1. Native APIs/PG/SQL/AppData PGroot remain NOT_RUN.

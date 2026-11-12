@@ -11,6 +11,9 @@ from pathlib import Path, PureWindowsPath
 import threading
 import time
 
+# Documented Win32 flag; CPython3.12 does not export CREATE_SUSPENDED.
+# https://learn.microsoft.com/en-us/windows/win32/procthread/process-creation-flags
+_CREATE_SUSPENDED=0x00000004
 CAP=262144
 INSTALL=PureWindowsPath('C:/Program Files/PostgreSQL/18')
 LEDGER_SHA='0631d79759b3f056e4e573b042beb2fcd4e763a28967127b7d129623a33d6b45'
@@ -338,7 +341,7 @@ class WindowsBackend:
         need(all(any(k.upper()==name and v for k,v in env.items()) for name in ('SYSTEMROOT','WINDIR','COMSPEC')))
         env.update(PATH=str(Path(INSTALL/'bin'))+';'+str(Path(env.get('SystemRoot',env.get('SYSTEMROOT','C:/Windows')))/'System32'),TEMP=str(self.root/'temp'),TMP=str(self.root/'temp'),HOME=str(self.root/'cwd'),USERPROFILE=str(self.root/'cwd'),APPDATA=str(self.root/'cwd'))
         if command.role=='psql':env.update(PGPASSFILE=str(self.secret_root/'pgpass.conf'),PGSSLMODE='disable',PGGSSENCMODE='disable',PGCONNECT_TIMEOUT='2')
-        proc=subprocess.Popen(list(command.argv),executable=command.argv[0],cwd=self.root/'cwd',env=env,stdin=subprocess.DEVNULL,stdout=subprocess.PIPE,stderr=subprocess.PIPE,bufsize=0,shell=False,close_fds=True,creationflags=subprocess.CREATE_SUSPENDED|subprocess.CREATE_NO_WINDOW)
+        proc=subprocess.Popen(list(command.argv),executable=command.argv[0],cwd=self.root/'cwd',env=env,stdin=subprocess.DEVNULL,stdout=subprocess.PIPE,stderr=subprocess.PIPE,bufsize=0,shell=False,close_fds=True,creationflags=_CREATE_SUSPENDED|subprocess.CREATE_NO_WINDOW)
         entry['process']=proc  # Hold immediately; every following action may fail.
         entry['identity']=self.runtime._win_identity(self.kernel,self.w,self.c.c_void_p(int(proc._handle)))
         need(Path(entry['identity'][1])==Path(command.argv[0]));entry['command']=command
