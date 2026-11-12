@@ -1,0 +1,146 @@
+{
+  "schema": "unified.data-first.integration-manifest.v1",
+  "classification": "SOURCE_REGISTRY_AND_EVIDENCE_ONLY_NOT_INSTALLABLE",
+  "integration_base": {
+    "head": "bfa3b24d8f209d5e91acfa64819d3ebed4967af7",
+    "tree": "0145968d0492f0a87d3e1a7e1eecc0b34a0c4a98",
+    "branch": "feature/level2-preparation-integration-20261110",
+    "immutable_url": "https://github.com/YehorBabenko88/unified-system/commit/bfa3b24d8f209d5e91acfa64819d3ebed4967af7"
+  },
+  "component_registry": {
+    "A3": {
+      "repo": "YehorBabenko88/bybit-cluster-grid",
+      "head": "d6b72b66ff1b85b7e6b956568342ad6bd8bfcfbe",
+      "tree": "066bbe51900e88dd53541baf29a777037ed10b5b",
+      "immutable_url": "https://github.com/YehorBabenko88/bybit-cluster-grid/commit/d6b72b66ff1b85b7e6b956568342ad6bd8bfcfbe",
+      "new_owned_source_paths": [
+        "grid/raw_capture.py",
+        "docs/market-data/raw-capture-observation-v1.schema.json",
+        "tests/raw_capture/*"
+      ],
+      "existing_owner_file_hook_scope": [
+        "grid/microstructure.py receive-validation-stop hooks",
+        "grid/worker.py receive-validation-stop hooks"
+      ],
+      "source_only_implementation_permission": true,
+      "adopted_executable": false
+    },
+    "A4": {
+      "repo": "YehorBabenko88/unified-system",
+      "head": "1da10616a2b8217930f354e17caaa6fcea22dac4",
+      "tree": "c2b39329924810535add3b02c3f5c5e1b11bdf62",
+      "immutable_url": "https://github.com/YehorBabenko88/unified-system/commit/1da10616a2b8217930f354e17caaa6fcea22dac4",
+      "new_owned_source_paths": [
+        "unified_system/storage/raw_capture.py",
+        "docs/storage/local-raw-capture-link-v1.schema.json",
+        "tests/storage/raw_capture/*"
+      ],
+      "source_only_implementation_permission": true,
+      "adopted_executable": false
+    }
+  },
+  "immutable_offline_unit_inputs": {
+    "capsule_raw_map": "da11dbb8b9a8d5b5d28fc806941b4b996fa58494f1c8f156807e1248105eda4f",
+    "source_files": 562,
+    "runtime_files": 841,
+    "producer": "f1f548daeeae5f41df497f849a275df512a92b32d02e8d83c47d9fe836fad3b6",
+    "child": "9d16479e157f3dceaad7174f63adf30ed8efff449fb3ebc14c45e694b55fcac4",
+    "parent": "6fe010ca6bd8caec6132a669f947ec4ea4a3a3a56add65b8af7d9c828c0097d2",
+    "outer": "a9ce170bb8c864087e0d5d073383ee0b1dc19c0044de9a2981fedf10264c6c0d",
+    "PR89_source": "636a54ea221778ba44c6c8d492c3475223dab6c5",
+    "PR89_successor_adopted_in_capsule": false,
+    "SAME_SIX_ENTRIES": "FROZEN_SYNTHETIC_BYTES_NOT_REAL_PROVIDER_HISTORY",
+    "source_combination_status": "UNIT_ASSERTIONS_EXECUTED_FINAL_ORIGIN_BOUNDARY_REFUSED_NOT_RELEASE_QUALIFIED"
+  },
+  "source_compatibility_decision": {
+    "sha256": "887ad08552808029f420571768c3def4601014a4646079404ecdfe9823e1a776",
+    "at_utc": "2026-11-12T15:23:53.0305688Z",
+    "status": "APPROVED_SOURCE_IMPLEMENTATION_AND_BOUNDED_OFFLINE_TDD_ONLY",
+    "scope": "ROOT_SOURCE_ONLY_DECISION_NOT_RUNTIME_PROVIDER_PHYSICAL_OR_AUTHORITY_ADMISSION",
+    "contracts": [
+      {
+        "id": "A3_RAW_CAPTURE_SCHEMA",
+        "original_basename": "raw-capture-v1.schema.json",
+        "sha256": "3fd5fd8a9d845d73f9b16f53d838386af01982b026d13b7ada67e09c0b1d7936",
+        "visibility": "PRIVATE_ORIGINAL_SHA_ONLY_NO_PUBLIC_LINK",
+        "admission": "SOURCE_ONLY"
+      },
+      {
+        "id": "A3_SOURCE_PROPOSAL",
+        "original_basename": "PROPOSAL.md",
+        "sha256": "ca44937d4e94d3078e0757a8c85a078072886ee04283eda6adbe43727d72ccea",
+        "visibility": "PRIVATE_ORIGINAL_SHA_ONLY_NO_PUBLIC_LINK",
+        "admission": "SOURCE_ONLY"
+      },
+      {
+        "id": "A4_LOCAL_LINK_SCHEMA",
+        "original_basename": "local-link.schema.json",
+        "sha256": "47c35113eba1836b94944aea4a15c1d01b9035bebfbc1f0792ca04961de00d57",
+        "visibility": "PRIVATE_ORIGINAL_SHA_ONLY_NO_PUBLIC_LINK",
+        "admission": "SOURCE_ONLY"
+      },
+      {
+        "id": "A4_SOURCE_CONTRACT",
+        "original_basename": "CONTRACT.md",
+        "sha256": "cc9c2ebb3e38d5bac2ee10810de930e5e4d5314082a37cd46e342fa1d409eb00",
+        "visibility": "PRIVATE_ORIGINAL_SHA_ONLY_NO_PUBLIC_LINK",
+        "admission": "SOURCE_ONLY"
+      },
+      {
+        "id": "RAW_PROFILE_AND_READBACK_REVIEW2",
+        "original_basename": "PROFILE-AND-READBACK-REVIEW2.md",
+        "sha256": "f04000d9871ca7e9702bb255aab19f4f7c3a05fd06d52c03ff40a3875614dfda",
+        "visibility": "PRIVATE_ORIGINAL_SHA_ONLY_NO_PUBLIC_LINK",
+        "admission": "SOURCE_ONLY"
+      },
+      {
+        "id": "JOINT_SCOPED_SOURCE_ACK_REVIEW3",
+        "original_basename": "JOINT-REVIEW3-SCOPED-ACK.md",
+        "sha256": "e19bfce48bff6641a22cc3f1d9832322dcfcd12764d0e111b754a960f7c4c3c1",
+        "visibility": "PRIVATE_ORIGINAL_SHA_ONLY_NO_PUBLIC_LINK",
+        "admission": "SOURCE_ONLY"
+      }
+    ],
+    "bounded_source_profile": {
+      "observations": 16,
+      "payload_occurrence_bytes": 4194304,
+      "frame_bytes": 1048576,
+      "observation_bytes": 16384,
+      "inflight": 1,
+      "reserved_control_slots_within16": 2,
+      "logical_observed_state_bytes": 16777216,
+      "physical_hard_quota": "UNQUALIFIED_BLOCKED",
+      "headroom_inventory_required_before_write_admission": true
+    },
+    "requirements": [
+      "Exact canonical codecs enforce whole-string/u63/calendar/lexical/null/empty semantics independently of JSON schema",
+      "Source TDD only with mock provider and new owned bounded test scratch, no physical fault injection or external sends",
+      "No hard quota/durability/publication/authority claims; unknown inventory/headroom/orphans deny new writes",
+      "All exceptions remain terminal for raw profile; no auto retry/reset/adoption",
+      "Each owner separate worktree feature branch and Draft PR; no shared core edits or protected merge",
+      "Frozen562/f1/PR89 pipeline and existing failed evidence unchanged"
+    ],
+    "new_ABI_created_by_this_manifest": false
+  },
+  "separate_PR90": {
+    "url": "https://github.com/YehorBabenko88/unified-system/pull/90",
+    "head": "c9229a5dce98d451cd9f8d0246da1d4c67710219",
+    "tree": "56fd6cd1b92e45ebfa3b59ccb9541318e4545252",
+    "purpose": "CI_STEP_ENV_CONTEXT_FIX_ONLY",
+    "adopted_in_data_pilot": false
+  },
+  "gates": {
+    "A2": "BLOCKED_COMMUNICATION_NO_ACK_INFERRED",
+    "M0": "NOT_ACCEPTED",
+    "M1": "NOT_ACCEPTED_FINAL_BOUNDARY_FAILURE",
+    "M2": "NOT_ACCEPTED_NOT_RUN",
+    "runtime": "NO_GO",
+    "native_positive": "DENY",
+    "physical": "NO_GO",
+    "bybit_public_sends": "DENY",
+    "production": "BLOCKED",
+    "public_submit": "DENY"
+  },
+  "report_file_sha256": "38eaa653996cf7e8e99fd7aeb27db167ba8cbd841d37a76fc59a933fa043d3dd",
+  "package_permissions": "DOCUMENTATION_ONLY_NO_MERGE_INSTALL_DISPATCH_OR_GATE_CHANGE"
+}
