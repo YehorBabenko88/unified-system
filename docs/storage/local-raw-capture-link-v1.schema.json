@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Proposed local raw capture Journal receipt, not authority",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "classification", "observation_sha256", "observation_byte_count", "payload_sha256", "payload_byte_count"],
+  "properties": {
+    "schema": {"const": "unified.storage.local-raw-capture-link.v1"},
+    "classification": {"const": "LOCAL_UNATTESTED"},
+    "observation_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "observation_byte_count": {"type": "integer", "minimum": 1, "maximum": 16384},
+    "payload_sha256": {"oneOf": [{"type": "null"}, {"type": "string", "pattern": "^[0-9a-f]{64}$"}]},
+    "payload_byte_count": {"type": "integer", "minimum": 0, "maximum": 1048576}
+  },
+  "allOf": [{
+    "if": {"properties": {"payload_sha256": {"type": "null"}}},
+    "then": {"properties": {"payload_byte_count": {"const": 0}}}
+  }]
+}
