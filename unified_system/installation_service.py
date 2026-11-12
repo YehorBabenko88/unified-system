@@ -164,6 +164,7 @@ class WindowsServiceBoundary:
 
 def service_plan(capsule_root,manifest_sha256,root,installation_id,node_id,role,boundary):
  report=lab_release.verify_capsule(capsule_root,manifest_sha256);m=report['manifest']
+ need(m.get('schema')=='unified.lab-release.v1') # Collector kind cannot enter this fixed V1 service contract.
  for value in (installation_id,node_id):identifier(value)
  if role=='SINGLE-PC':role='SINGLE_PC'
  need(role in ('CONTROL','WORKER','SINGLE_PC'))
@@ -199,6 +200,7 @@ def _check_plan(plan):
  need(plan['role'] in ('CONTROL','WORKER','SINGLE_PC'))
  source=_safe(plan['capsule_root']);need(source!=root and source not in root.parents and root not in source.parents)
  report=lab_release.verify_capsule(source,plan['manifest_sha256']);m=report['manifest']
+ need(m.get('schema')=='unified.lab-release.v1') # Direct resource/checker callers cannot bypass the factory kind guard.
  for key,relative in [('nssm','runtime/nssm/nssm.exe'),('python','runtime/python/python.exe'),('bootstrap','sources/unified-system/unified_system/owned_python.py'),('entry','sources/unified-system/unified_system/service_entry.py')]:
   need(relative in m['files'] and plan[key]==str(root/'code'/relative) and plan[key+'_sha256']==m['files'][relative]['sha256'])
  need(plan['nssm_sha256']==NSSM_PIN and plan['executor_sha256']==hashlib.sha256(lab_release.regular(MODULE).read_bytes()).hexdigest())

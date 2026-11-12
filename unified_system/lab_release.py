@@ -19,6 +19,10 @@ LIMIT=32*1024*1024
 FILE_LIMIT=512*1024*1024
 TOTAL_LIMIT=8*1024*1024*1024
 REPOSITORIES={n:'YehorBabenko88/'+{'grid':'bybit-cluster-grid','terminan':'Terminan'}.get(n,n) for n in MODULE_IDS}
+COLLECTOR_SCHEMA='unified.lab-release.collector.v1'
+COLLECTOR_SOURCES=frozenset(('unified-system','grid'))
+COLLECTOR_PERMISSIONS=frozenset(('provider_rest','provider_websocket','trading','training','math',
+                               'public_submit','authority_mutation','service_creation','acl_changes'))
 
 
 def need(ok):
@@ -69,7 +73,7 @@ def hash_file(path,*,copy_to=None):
     return {'sha256':h.hexdigest(),'bytes':count}
 
 
-def parse_manifest(raw,expected_sha256):
+def _parse_v1_manifest(raw,expected_sha256):
     digest(expected_sha256);need(type(raw) is bytes and 0<len(raw)<=LIMIT)
     need(hashlib.sha256(raw).hexdigest()==expected_sha256)
     def unique(pairs):
@@ -130,6 +134,153 @@ def parse_manifest(raw,expected_sha256):
     return m
 
 
+def _canonical_document(raw):
+    def unique(pairs):
+        out={}
+        for key,value in pairs:need(key not in out);out[key]=value
+        return out
+    value=json.loads(raw.decode('utf8'),object_pairs_hook=unique,parse_constant=lambda _:need(False))
+    need(canonical(value)==raw)
+    return value
+
+
+def _collector_pin_map(pins):
+    need(type(pins) is dict and 1<=len(pins)<=100000)
+    seen=set()
+    for name,pin in pins.items():
+        relative(name);need(name.casefold() not in seen);seen.add(name.casefold())
+        exact(pin,('sha256','bytes','blob_oid'));digest(pin['sha256']);digest(pin['blob_oid'],40)
+        need(type(pin['bytes']) is int and 0<=pin['bytes']<=FILE_LIMIT)
+
+
+def _collector_source_files(m):
+    """Final explicit source map; supplied commit/tree metadata is not attested."""
+    need(type(m['sources']) is dict and set(m['sources'])==COLLECTOR_SOURCES)
+    final={};entries=0
+    for name,source in m['sources'].items():
+        exact(source,('repository','root','commit','tree','version','dependencies','file_pins'))
+        need(source['repository']==REPOSITORIES[name] and source['root']=='sources/'+name)
+        digest(source['commit'],40);digest(source['tree'],40)
+        need(type(source['version']) is str and re.fullmatch(r'\d+\.\d+\.\d+(?:[-+][A-Za-z0-9.-]{1,40})?',source['version']))
+        need(type(source['dependencies']) is dict and set(source['dependencies'])<=COLLECTOR_SOURCES-{name})
+        for dep,version in source['dependencies'].items():need(version==m['sources'][dep]['version'])
+        _collector_pin_map(source['file_pins']);entries+=len(source['file_pins'])
+        final[name]=dict(source['file_pins'])
+    active=set();visited=set()
+    def visit(name):
+        need(name not in active)
+        if name in visited:return
+        active.add(name)
+        for dep in m['sources'][name]['dependencies']:visit(dep)
+        active.remove(name);visited.add(name)
+    for name in COLLECTOR_SOURCES:visit(name)
+    need(type(m['overlays']) is list and len(m['overlays'])<=16)
+    for overlay in m['overlays']:
+        exact(overlay,('source','commit','tree','files'))
+        need(type(overlay['source']) is str and overlay['source'] in COLLECTOR_SOURCES)
+        digest(overlay['commit'],40);digest(overlay['tree'],40)
+        _collector_pin_map(overlay['files']);entries+=len(overlay['files']);need(entries<=100000)
+        final[overlay['source']].update(overlay['files'])
+    need(entries<=100000)
+    result={m['sources'][name]['root']+'/'+path:pin for name,pins in final.items() for path,pin in pins.items()}
+    need(set(result)=={path for path in m['files'] if path.startswith('sources/')})
+    for path,pin in result.items():need(m['files'][path]=={'sha256':pin['sha256'],'bytes':pin['bytes']})
+    return result
+
+
+def _parse_collector_manifest(m):
+    exact(m,('schema','mode','release_id','sequence','permissions','sources','files','directories',
+             'dependencies','collector_profile','source_manifest','git','runtime','overlays'))
+    need(m['schema']==COLLECTOR_SCHEMA and m['mode']=='SYNTHETIC_OFFLINE')
+    exact(m['permissions'],COLLECTOR_PERMISSIONS);need(all(value is False for value in m['permissions'].values()))
+    need(type(m['release_id']) is str and re.fullmatch('[A-Za-z0-9][A-Za-z0-9_.-]{0,79}',m['release_id']))
+    need(type(m['sequence']) is int and 1<=m['sequence']<=2**53-1)
+    need(type(m['files']) is dict and 1<=len(m['files'])<=100000)
+    seen=set();total=0
+    for name,pin in m['files'].items():
+        relative(name);need(name.casefold()!='lab-release.json' and name.casefold() not in seen);seen.add(name.casefold())
+        need(Path(name).name.casefold() not in ('.env','.env.local','.env.production'))
+        exact(pin,('sha256','bytes'));digest(pin['sha256'])
+        need(type(pin['bytes']) is int and 0<=pin['bytes']<=FILE_LIMIT);total+=pin['bytes']
+    need(total<=TOTAL_LIMIT)
+    dirs=m['directories'];need(type(dirs) is list and len(dirs)<=100000 and dirs==sorted(set(dirs)))
+    seen_dirs=set()
+    for name in dirs:
+        relative(name);need(name.casefold() not in seen and name.casefold() not in seen_dirs);seen_dirs.add(name.casefold())
+        if name.startswith('sources/'):
+            need(any(name=='sources/'+source or name.startswith('sources/'+source+'/') for source in COLLECTOR_SOURCES))
+    for name in list(m['files'])+dirs:
+        need(all(p.as_posix() in dirs for p in Path(name).parents if str(p)!='.'))
+    for key in ('collector_profile','source_manifest','git'):
+        relative(m[key]);need(m[key] in m['files'])
+    need(m['collector_profile']!=m['source_manifest'])
+    need(m['files'][m['collector_profile']]['bytes']<=32768)
+    _collector_source_files(m)
+    exact(m['runtime'],('python','lock'))
+    python=m['runtime']['python'];lock=m['runtime']['lock']
+    exact(python,('path','version','sha256'));exact(lock,('path','sha256'))
+    need(python['version']=='3.12.10')
+    for item in (python,lock):
+        relative(item['path']);digest(item['sha256'])
+        need(item['path'] in m['files'] and item['sha256']==m['files'][item['path']]['sha256'])
+    deps=m['dependencies'];need(type(deps) is list and 1<=len(deps)<=256)
+    seen=set();python_dep=False
+    for dep in deps:
+        exact(dep,('name','version','lock_path','lock_sha256'));relative(dep['name']);relative(dep['lock_path']);digest(dep['lock_sha256'])
+        need(dep['name'].casefold() not in seen);seen.add(dep['name'].casefold())
+        need(type(dep['version']) is str and re.fullmatch(r'[0-9][A-Za-z0-9_.+-]{0,79}',dep['version']))
+        need(dep['lock_path'] in m['files'] and dep['lock_sha256']==m['files'][dep['lock_path']]['sha256'])
+        if dep['name']=='python':
+            need(dep['version']==python['version'] and dep['lock_path']==lock['path'] and dep['lock_sha256']==lock['sha256'])
+            python_dep=True
+    need(python_dep)
+    return m
+
+
+def parse_manifest(raw,expected_sha256):
+    digest(expected_sha256);need(type(raw) is bytes and 0<len(raw)<=LIMIT)
+    need(hashlib.sha256(raw).hexdigest()==expected_sha256)
+    m=_canonical_document(raw)
+    if type(m) is dict and m.get('schema')==COLLECTOR_SCHEMA:return _parse_collector_manifest(m)
+    # The original parser body and accepted V1 result remain unchanged.
+    return _parse_v1_manifest(raw,expected_sha256)
+
+
+def _verify_collector_source(path,pin):
+    path=regular(path);sha=hashlib.sha256()
+    blob=hashlib.sha1(b'blob '+str(pin['bytes']).encode('ascii')+b'\0');count=0
+    with path.open('rb') as stream:
+        before=os.fstat(stream.fileno());need(before.st_size==pin['bytes'])
+        while count<pin['bytes']+1:
+            block=stream.read(min(1024*1024,pin['bytes']+1-count))
+            if not block:break
+            count+=len(block);sha.update(block);blob.update(block)
+        after=os.fstat(stream.fileno());current=regular(path).lstat()
+        fields=lambda s:(s.st_dev,s.st_ino,s.st_size,s.st_mtime_ns,s.st_nlink)
+        need(fields(before)==fields(after)==fields(current) and before.st_ctime_ns==after.st_ctime_ns)
+    need(count==pin['bytes'] and sha.hexdigest()==pin['sha256'] and blob.hexdigest()==pin['blob_oid'])
+
+
+def _verify_collector_profile(root,m):
+    path=regular(root/m['collector_profile']);need(path.stat().st_size<=32768)
+    with path.open('rb') as stream:
+        before=os.fstat(stream.fileno());raw=stream.read(32769);after=os.fstat(stream.fileno())
+    current=regular(path).lstat();fields=lambda s:(s.st_dev,s.st_ino,s.st_size,s.st_mtime_ns,s.st_nlink)
+    need(fields(before)==fields(after)==fields(current) and before.st_ctime_ns==after.st_ctime_ns and len(raw)==before.st_size)
+    need(_pin_from_bytes(raw)==m['files'][m['collector_profile']])
+    profile=_canonical_document(raw);need(type(profile) is dict)
+    need(profile.get('schema')=='unified.data-only-collector.profile.v1' and profile.get('mode')=='SYNTHETIC_OFFLINE')
+    need(profile.get('grid_launch_profile')=='grid.data-only-collector.v1' and profile.get('instrument_identity')=='synthetic-btcusdt-v1')
+    need(profile.get('source_manifest_sha256')==m['files'][m['source_manifest']]['sha256'])
+    exact(profile.get('network'),('rest','websocket'));need(all(value is False for value in profile['network'].values()))
+    exact(profile.get('features'),('trading','training','math','public_submit','authority_mutation'))
+    need(all(value is False for value in profile['features'].values()))
+
+
+def _pin_from_bytes(raw):
+    return {'sha256':hashlib.sha256(raw).hexdigest(),'bytes':len(raw)}
+
+
 def verify_capsule(root,expected_sha256):
     need(Path(root).is_absolute())
     root=_safe_path(root).resolve();need(root.is_absolute() and root.is_dir())
@@ -148,7 +299,16 @@ def verify_capsule(root,expected_sha256):
     # Git has intentional empty metadata directories; admit their exact names
     # explicitly rather than ignoring arbitrary unlisted empty namespaces.
     need(directories==set(m['directories']))
+    if m['schema']==COLLECTOR_SCHEMA:
+        for name,pin in _collector_source_files(m).items():_verify_collector_source(root/name,pin)
+        _verify_collector_profile(root,m)
     need(manifest.read_bytes()==raw)
+    if m['schema']==COLLECTOR_SCHEMA:
+        return dict(mode='SYNTHETIC_OFFLINE',manifest_sha256=expected_sha256,release_id=m['release_id'],
+                    publisher_trust='NOT_REQUIRED_FOR_LAB',files_verified=len(found),
+                    source_provenance='PINNED_METADATA_ONLY_VERIFY_PRIMARY_GIT_MEMBERSHIP_BEFORE_EXECUTION',
+                    trading_authorized=False,execution='DATA_ONLY',execution_authority=False,
+                    service_admission=False,profile_policy='RUNTIME_VALIDATION_REQUIRED',physical_acceptance='NOT_RUN',manifest=m)
     return dict(mode='LAB_SIMULATION',manifest_sha256=expected_sha256,release_id=m['release_id'],
                 publisher_trust='NOT_REQUIRED_FOR_LAB',files_verified=len(found),
                 source_provenance='PINNED_METADATA_ONLY_VERIFY_SOURCES_BEFORE_EXECUTION',
