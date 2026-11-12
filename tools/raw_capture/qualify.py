@@ -21,6 +21,7 @@ import sys
 import threading
 import time
 import unittest
+from urllib.parse import urlsplit, unquote_to_bytes
 
 GRID = ('53b842df817d37b006809d73f9b6195348d32cc2', '19a12a6b76f89ee6c170051bc34f50290295f406')
 STORAGE = ('01d7cf17f47a6bfa930a36808a4b0065c5f0f053', '599f39e91ea83fb1233b3bd5fb407755626b9468')
@@ -140,6 +141,48 @@ DATA_ONLY = {'grid/worker.py', 'docs/market-data/raw-capture-observation-v1.sche
 
 class Denied(RuntimeError): pass
 class Prerequisite(Denied): pass
+
+
+def diagnostic_fact(stage, role, exc):
+    stages = {'ENTRY', 'SOURCE_ROOT_ORDINARY', 'SOURCE_GIT_METADATA', 'GIT_EXECUTABLE_ORDINARY', 'GIT_PRIMARY_COMMAND', 'PRIMARY_OBJECTS', 'RAW_SOURCE_INVENTORY'}
+    classes = {FileNotFoundError: 'FileNotFoundError', PermissionError: 'PermissionError',
+               NotADirectoryError: 'NotADirectoryError', IsADirectoryError: 'IsADirectoryError',
+               OSError: 'OSError', UnicodeDecodeError: 'UnicodeDecodeError', Denied: 'Denied'}
+    known = type(exc) in classes
+    def number(name):
+        if not known: return None
+        try:
+            value = getattr(exc, name, None)
+            return value if type(value) is int and 0 <= value <= 65535 else None
+        except BaseException: return None
+    return {'stage': stage if stage in stages else 'UNKNOWN',
+            'role': role if role in ('root', 'grid', 'storage') else 'UNKNOWN',
+            'exception_class': classes.get(type(exc), 'UNKNOWN'),
+            'errno': number('errno'), 'winerror': number('winerror')}
+
+
+class BoundaryFault(Denied):
+    def __init__(self, fact):
+        self.fact = fact
+        super().__init__('PREFLIGHT_BOUNDARY')
+
+
+def retain_git_failure(evidence, role, phase, command, result):
+    """Bounded prefixes, explicitly not complete output beyond 64KiB/stream."""
+    fact = {'command': command, 'returncode': result['returncode'], 'capture_reason': result['reason'],
+            'observed_combined_bytes': result['total_bytes'], 'streams': {}, 'evidence_errors': []}
+    if evidence is None: return fact
+    need(role in ('root', 'grid', 'storage') and phase in ('before', 'after') and command in ('rev-parse', 'ls-tree', 'cat-file'), 'DIAGNOSTIC_IDENTITY')
+    for name in ('stdout', 'stderr'):
+        raw = result[name]; prefix = raw[:65536]
+        filename = 'git-'+phase+'-'+role+'-'+command+'-'+name+'.prefix.log'
+        item = {'file': filename, 'captured_bytes': len(raw), 'retained_bytes': len(prefix),
+                'truncated': len(prefix) != len(raw), 'sha256': hashlib.sha256(prefix).hexdigest()}
+        fact['streams'][name] = item
+        try:
+            with (evidence/filename).open('xb') as f: f.write(prefix)
+        except BaseException: fact['evidence_errors'].append(name.upper()+'_PRESERVATION_UNKNOWN')
+    return fact
 
 
 def need(value, code):
@@ -342,62 +385,79 @@ def git_env():
     return env
 
 
-def primary(root, head, tree=None):
+def primary(root, head, tree=None, role='root', evidence=None, phase='before'):
     """Recompute all commit/tree/blob OIDs, compare EVERY working raw file."""
-    ordinary(root); need(re.fullmatch('[0-9a-f]{40}', head) is not None, 'HEAD_PIN')
-    gitdir = ordinary(root/'.git')  # hosted standalone checkouts only
-    need(not any(os.path.lexists(gitdir/p) for p in ('objects/info/alternates', 'refs/replace', 'shallow', 'info/grafts')), 'FOREIGN_OBJECT_SOURCE')
-    executable = Path('C:/Program Files/Git/mingw64/bin/git.exe') if os.name == 'nt' else Path('/usr/bin/git')
-    ordinary(executable, True, single=False)
-    def run(args, limit, data=None):
-        result = capture([str(executable), '--no-replace-objects', '-c', 'core.fsmonitor=false', '-c', 'core.untrackedCache=false', '-c', 'core.hooksPath='+os.devnull, '-C', str(root), *args], root, git_env(), 60, limit, data)
-        need(result['reason'] is None and result['returncode'] == 0 and not result['stderr'], 'PRIMARY_GIT')
-        return result['stdout']
-    need(run(['rev-parse', 'HEAD'], 128).strip().decode() == head, 'WORKTREE_HEAD')
-    listing = run(['ls-tree', '-r', '-t', '-z', head], 2*1024*1024)
-    requested = {head}; listing_files = {}; listing_trees = set()
-    for line in listing.split(b'\0'):
-        if not line: continue
-        meta, name = line.split(b'\t', 1); mode, kind, oid = meta.decode().split(' ')
-        path = name.decode(); need(not path.startswith('/') and all(safe_component(p) for p in path.split('/')), 'LISTING_PATH')
-        need(kind in ('blob', 'tree') and re.fullmatch('[0-9a-f]{40}', oid), 'LISTING_OBJECT')
-        requested.add(oid)
-        if kind == 'blob': need(path not in listing_files, 'LISTING_DUPLICATE'); listing_files[path] = oid
-        else: listing_trees.add(path)
-    commit = run(['cat-file', 'commit', head], MAX_BLOB)
-    check_object(head, 'commit', commit)
-    root_tree = commit.split(b'\n', 1)[0].removeprefix(b'tree ').decode()
-    need(re.fullmatch('[0-9a-f]{40}', root_tree) and (tree is None or root_tree == tree), 'COMMIT_TREE')
-    requested.add(root_tree); ordered = sorted(requested)
-    objects = parse_batch(run(['cat-file', '--batch'], MAX_SOURCE, ('\n'.join(ordered)+'\n').encode()), ordered)
-    need(objects[head] == ('commit', commit), 'COMMIT_BATCH')
-    files = {}; dirs = set(); visited = {head}
-    def descend(oid, prefix='', depth=0):
-        need(depth < 32 and oid in objects and objects[oid][0] == 'tree', 'TREE_CLOSURE')
-        visited.add(oid)
-        for mode, name, child in parse_tree(objects[oid][1]):
-            path = prefix+name
-            if mode == '40000': dirs.add(path); descend(child, path+'/', depth+1)
-            else:
-                need(child in objects and objects[child][0] == 'blob', 'BLOB_CLOSURE'); visited.add(child)
-                content = objects[child][1]; need(len(files) < 4096, 'SOURCE_COUNT')
-                files[path] = {'oid': child, 'bytes': len(content), 'sha256': hashlib.sha256(content).hexdigest()}
-    descend(root_tree)
-    need(visited == requested and {p:v['oid'] for p,v in files.items()} == listing_files and dirs == listing_trees, 'PRIMARY_TREE_INVENTORY')
-    need(sum(v['bytes'] for v in files.values()) <= MAX_SOURCE, 'SOURCE_TOTAL')
-    seen = set(); seen_dirs = set()
-    def walk(directory, prefix=''):
-        ordinary(directory)
-        for child in directory.iterdir():
-            if not prefix and child.name == '.git': continue
-            rel = prefix+child.name; s = child.lstat()
-            if stat.S_ISDIR(s.st_mode):
-                need(rel in dirs, 'EXTRA_DIRECTORY'); ordinary(child); seen_dirs.add(rel); walk(child, rel+'/')
-            else:
-                need(rel in files, 'EXTRA_FILE'); content = raw_file(child, MAX_BLOB)
-                need(len(content) == files[rel]['bytes'] and hashlib.sha256(content).hexdigest() == files[rel]['sha256'], 'RAW_SOURCE_MISMATCH'); seen.add(rel)
-    walk(root); need(seen == set(files) and seen_dirs == dirs, 'RAW_INVENTORY')
-    return {'head': head, 'tree': root_tree, 'files': files, 'directories': sorted(dirs)}
+    stage = 'SOURCE_ROOT_ORDINARY'
+    try:
+        ordinary(root); need(re.fullmatch('[0-9a-f]{40}', head) is not None, 'HEAD_PIN')
+        stage = 'SOURCE_GIT_METADATA'
+        gitdir = ordinary(root/'.git')  # hosted standalone checkouts only
+        need(not any(os.path.lexists(gitdir/p) for p in ('objects/info/alternates', 'refs/replace', 'shallow', 'info/grafts')), 'FOREIGN_OBJECT_SOURCE')
+        executable = Path('C:/Program Files/Git/mingw64/bin/git.exe') if os.name == 'nt' else Path('/usr/bin/git')
+        stage = 'GIT_EXECUTABLE_ORDINARY'
+        ordinary(executable, True, single=False)
+        def run(args, limit, data=None):
+            nonlocal stage
+            stage = 'GIT_PRIMARY_COMMAND'
+            result = capture([str(executable), '--no-replace-objects', '-c', 'core.fsmonitor=false', '-c', 'core.untrackedCache=false', '-c', 'core.hooksPath='+os.devnull, '-C', str(root), *args], root, git_env(), 60, limit, data)
+            if result['reason'] is not None or result['returncode'] != 0 or result['stderr']:
+                fact = diagnostic_fact(stage, role, Denied('PRIMARY_GIT'))
+                fact['git'] = retain_git_failure(evidence, role, phase, args[0], result)
+                raise BoundaryFault(fact)
+            need(result['reason'] is None and result['returncode'] == 0 and not result['stderr'], 'PRIMARY_GIT')
+            return result['stdout']
+        need(run(['rev-parse', 'HEAD'], 128).strip().decode() == head, 'WORKTREE_HEAD')
+        listing = run(['ls-tree', '-r', '-t', '-z', head], 2*1024*1024)
+        requested = {head}; listing_files = {}; listing_trees = set()
+        for line in listing.split(b'\0'):
+            if not line: continue
+            meta, name = line.split(b'\t', 1); mode, kind, oid = meta.decode().split(' ')
+            path = name.decode(); need(not path.startswith('/') and all(safe_component(p) for p in path.split('/')), 'LISTING_PATH')
+            need(kind in ('blob', 'tree') and re.fullmatch('[0-9a-f]{40}', oid), 'LISTING_OBJECT')
+            requested.add(oid)
+            if kind == 'blob': need(path not in listing_files, 'LISTING_DUPLICATE'); listing_files[path] = oid
+            else: listing_trees.add(path)
+        commit = run(['cat-file', 'commit', head], MAX_BLOB)
+        check_object(head, 'commit', commit)
+        root_tree = commit.split(b'\n', 1)[0].removeprefix(b'tree ').decode()
+        need(re.fullmatch('[0-9a-f]{40}', root_tree) and (tree is None or root_tree == tree), 'COMMIT_TREE')
+        requested.add(root_tree); ordered = sorted(requested)
+        batch = run(['cat-file', '--batch'], MAX_SOURCE, ('\n'.join(ordered)+'\n').encode())
+        stage = 'PRIMARY_OBJECTS'
+        objects = parse_batch(batch, ordered)
+        need(objects[head] == ('commit', commit), 'COMMIT_BATCH')
+        files = {}; dirs = set(); visited = {head}
+        def descend(oid, prefix='', depth=0):
+            need(depth < 32 and oid in objects and objects[oid][0] == 'tree', 'TREE_CLOSURE')
+            visited.add(oid)
+            for mode, name, child in parse_tree(objects[oid][1]):
+                path = prefix+name
+                if mode == '40000': dirs.add(path); descend(child, path+'/', depth+1)
+                else:
+                    need(child in objects and objects[child][0] == 'blob', 'BLOB_CLOSURE'); visited.add(child)
+                    content = objects[child][1]; need(len(files) < 4096, 'SOURCE_COUNT')
+                    files[path] = {'oid': child, 'bytes': len(content), 'sha256': hashlib.sha256(content).hexdigest()}
+        descend(root_tree)
+        need(visited == requested and {p:v['oid'] for p,v in files.items()} == listing_files and dirs == listing_trees, 'PRIMARY_TREE_INVENTORY')
+        need(sum(v['bytes'] for v in files.values()) <= MAX_SOURCE, 'SOURCE_TOTAL')
+        seen = set(); seen_dirs = set()
+        def walk(directory, prefix=''):
+            ordinary(directory)
+            for child in directory.iterdir():
+                if not prefix and child.name == '.git': continue
+                rel = prefix+child.name; s = child.lstat()
+                if stat.S_ISDIR(s.st_mode):
+                    need(rel in dirs, 'EXTRA_DIRECTORY'); ordinary(child); seen_dirs.add(rel); walk(child, rel+'/')
+                else:
+                    need(rel in files, 'EXTRA_FILE'); content = raw_file(child, MAX_BLOB)
+                    need(len(content) == files[rel]['bytes'] and hashlib.sha256(content).hexdigest() == files[rel]['sha256'], 'RAW_SOURCE_MISMATCH'); seen.add(rel)
+        stage = 'RAW_SOURCE_INVENTORY'
+        walk(root); need(seen == set(files) and seen_dirs == dirs, 'RAW_INVENTORY')
+        return {'head': head, 'tree': root_tree, 'files': files, 'directories': sorted(dirs)}
+
+    except BoundaryFault: raise
+    except BaseException as exc:
+        raise BoundaryFault(diagnostic_fact(stage, role, exc)) from None
 
 
 def verify_roles(root, pins, ledger):
@@ -425,7 +485,17 @@ def owned_effect_guard(scratch, result_path):
         need(path.is_relative_to(scratch) or (result and path == result_path), 'WRITE_OUTSIDE_OWNED_STATE')
     def hook(event, args):
         effect_event(event, args)
-        if event == 'sqlite3.connect': writable(args[0])
+        if event == 'sqlite3.connect':
+            value = args[0]
+            if isinstance(value, str) and value.startswith('file:'):
+                parts = urlsplit(value)
+                need(parts.scheme == 'file' and not parts.netloc and parts.query == 'mode=ro' and not parts.fragment, 'SQLITE_URI_FORM')
+                decoded = unquote_to_bytes(parts.path).decode('utf-8', 'strict')
+                path = Path(decoded[1:] if os.name == 'nt' else decoded)
+                need(path.is_absolute() and '..' not in path.parts and path.as_uri()+'?mode=ro' == value, 'SQLITE_URI_CANONICAL')
+                writable(path)  # outside-owned denial precedes filesystem access
+                ordinary(path, True)  # existing single-link ordinary owned DB only
+            else: writable(value)
         elif event == 'open':
             mode, flags = args[1:3]
             if (isinstance(flags, int) and flags & (os.O_WRONLY | os.O_RDWR | os.O_CREAT | os.O_TRUNC | os.O_APPEND)) or (isinstance(mode, str) and any(c in mode for c in 'wax+')):
@@ -574,7 +644,10 @@ def main():
     need(sys.version_info[:3] == (3, 12, 10) and sys.flags.isolated and sys.flags.no_site and sys.flags.dont_write_bytecode, 'INTERPRETER_PROFILE')
     need(len(sys.argv) == 6 and sys.argv[1] in ('--parent', '--worker'), 'CLOSED_ENTRY')
     mode = sys.argv[1]; root, grid, storage, out = [Path(p) for p in sys.argv[2:]]
-    for path in (root, grid, storage): ordinary(path)
+    for role, path in (('root', root), ('grid', grid), ('storage', storage)):
+        try: ordinary(path)
+        except BaseException as exc:
+            raise BoundaryFault(diagnostic_fact('SOURCE_ROOT_ORDINARY', role, exc)) from None
     ordinary(out.parent)
     need(len({str(p).casefold() for p in (root, grid, storage, out)}) == 4 and not any(out.is_relative_to(p) or p.is_relative_to(out) for p in (root, grid, storage)), 'ROOT_SEPARATION')
     prefix = out/('worker-cache' if mode == '--worker' else 'parent-cache')
@@ -582,10 +655,10 @@ def main():
     if mode == '--worker':
         ordinary(out); worker(root, grid, storage, out); return 0
     out.mkdir()  # exclusive: never overwrite or clean a previous attempt
-    source_before = {}; source_after = {}; process = None; faults = []; phase = 'SOURCE_PREFLIGHT'
+    source_before = {}; source_after = {}; process = None; faults = []; phase = 'SOURCE_PREFLIGHT'; diagnostics = []
     expected = os.environ.get('EXPECTED_HEAD', '')
     try:
-        source_before = {'root': primary(root, expected), 'grid': primary(grid, *GRID), 'storage': primary(storage, *STORAGE)}
+        source_before = {'root': primary(root, expected, role='root', evidence=out), 'grid': primary(grid, *GRID, role='grid', evidence=out), 'storage': primary(storage, *STORAGE, role='storage', evidence=out)}
         need(sum(item['bytes'] for repo in source_before.values() for item in repo['files'].values()) <= MAX_CAPTURE, 'ALL_SOURCE_TOTAL')
         verify_roles(grid, GRID_PINS, source_before['grid']); verify_roles(storage, STORAGE_PINS, source_before['storage'])
         save(out/'source-before.json', source_before)
@@ -602,10 +675,13 @@ def main():
         need(actual['status'] == 'PASS' and actual['testsRun'] == 58 and all(record['outcome'] == 'PASS' for record in actual['records']) and all(value is False for value in actual['flags'].values()), 'ACTUAL_RESULT')
     except BaseException as exc:
         faults.append(str(exc) if isinstance(exc, Denied) and re.fullmatch('[A-Z_]+', str(exc)) else 'BOUNDARY_UNKNOWN')
+        if isinstance(exc, BoundaryFault): diagnostics.append(exc.fact)
     finally:
         for role, source, head, tree in (('root', root, expected, None), ('grid', grid, *GRID), ('storage', storage, *STORAGE)):
-            try: source_after[role] = primary(source, head, tree)
-            except BaseException: faults.append('SOURCE_POST_'+role.upper())
+            try: source_after[role] = primary(source, head, tree, role=role, evidence=out, phase='after')
+            except BaseException as exc:
+                faults.append('SOURCE_POST_'+role.upper())
+                if isinstance(exc, BoundaryFault): diagnostics.append(exc.fact)
         try: save(out/'source-after.json', source_after)
         except BaseException: faults.append('POST_EVIDENCE')
         if source_before != source_after: faults.append('SOURCE_CHANGED_OR_UNKNOWN')
@@ -623,8 +699,14 @@ def main():
             need(not (out/'parent-cache').exists() and not (out/'worker-cache').exists(), 'CACHE_CREATED')
             save(out/'artifact-inputs.json', evidence_index(out))
         except BaseException: faults.append('EVIDENCE_INDEX_UNKNOWN')
-        save(out/'qualification.json', {'schema': 'raw-capture.optional-qualification.v1', 'status': 'PASS' if not faults else 'FAILURE_OR_UNKNOWN', 'last_stage': phase, 'faults': faults, 'process': process, 'source': {r:{k:v[k] for k in ('head', 'tree')} for r,v in source_before.items()}, 'owner_source_effects_ACKs': OWNER_ACKS, 'authority': 'NONE', 'mandatory_grid_collection': 'OPEN_UNCHANGED', 'A2': 'BLOCKED_NO_WAIVER', 'physical_quota': 'NOT_CLAIMED', 'runtime': 'HOSTED_LAB_OBSERVED_NOT_ROOT_RELEASE_ADMITTED'})
+        save(out/'qualification.json', {'schema': 'raw-capture.optional-qualification.v1', 'status': 'PASS' if not faults else 'FAILURE_OR_UNKNOWN', 'last_stage': phase, 'faults': faults, 'preflight_diagnostics': diagnostics, 'process': process, 'source': {r:{k:v[k] for k in ('head', 'tree')} for r,v in source_before.items()}, 'owner_source_effects_ACKs': OWNER_ACKS, 'authority': 'NONE', 'mandatory_grid_collection': 'OPEN_UNCHANGED', 'A2': 'BLOCKED_NO_WAIVER', 'physical_quota': 'NOT_CLAIMED', 'runtime': 'HOSTED_LAB_OBSERVED_NOT_ROOT_RELEASE_ADMITTED'})
     return 1 if faults else 0
 
 
-if __name__ == '__main__': sys.exit(main())
+if __name__ == '__main__':
+    try: code = main()
+    except BaseException as exc:
+        fact = exc.fact if isinstance(exc, BoundaryFault) else diagnostic_fact('ENTRY', None, exc)
+        print(json.dumps({'status': 'FAILURE_OR_UNKNOWN', 'preflight_diagnostic': fact}), file=sys.stderr)
+        code = 1
+    sys.exit(code)

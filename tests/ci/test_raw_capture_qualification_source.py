@@ -161,5 +161,93 @@ class SourceQualificationGuards(unittest.TestCase):
         self.assertIsNotNone(facts['reason'])
         self.assertIn('CLEANUP_CLOCK_UNKNOWN', facts['errors'])
 
+    def test_exact_owned_readonly_sqlite_uri_uses_actual_hook_and_ordinary(self):
+        scratch = ROOT / 'hypothetical-owned-state'
+        database = scratch / 'capture.sqlite'
+        hook = Q.owned_effect_guard(scratch, ROOT / 'hypothetical-result.json')
+        caught = None
+        with patch.object(Q, 'ordinary', return_value=database) as check:
+            try: hook('sqlite3.connect', (database.as_uri() + '?mode=ro',))
+            except BaseException as exc: caught = type(exc).__name__
+        self.assertIsNone(caught)
+        check.assert_called_once_with(database, True)
+
+    def test_sqlite_uri_alias_query_remote_and_foreign_paths_denied(self):
+        scratch = ROOT / 'hypothetical-owned-state'; uri = (scratch / 'capture.sqlite').as_uri()
+        hook = Q.owned_effect_guard(scratch, ROOT / 'hypothetical-result.json')
+        invalid = [uri, uri+'?mode=rw', uri+'?mode=ro&cache=shared', uri+'?mode=ro#x',
+                   uri.replace('file:///', 'file://localhost/')+'?mode=ro',
+                   uri.replace('file:///', 'file://remote.invalid/')+'?mode=ro',
+                   uri.replace('capture.sqlite', '%63apture.sqlite')+'?mode=ro',
+                   uri.replace('capture.sqlite', 'x/../capture.sqlite')+'?mode=ro',
+                   uri.replace('capture.sqlite', 'x%2F..%2Fcapture.sqlite')+'?mode=ro',
+                   ' '+uri+'?mode=ro', uri+'?mode=%72o', uri+'?mode=ro&mode=ro',
+                   (ROOT/'foreign.sqlite').as_uri()+'?mode=ro']
+        with patch.object(Q, 'ordinary') as check:
+            for value in invalid:
+                with self.subTest(value=value), self.assertRaises(Q.Denied): hook('sqlite3.connect', (value,))
+        check.assert_not_called()
+
+    def test_sqlite_readonly_uri_does_not_bypass_ordinary_alias_guard(self):
+        scratch = ROOT / 'hypothetical-owned-state'; uri = (scratch / 'capture.sqlite').as_uri()+'?mode=ro'
+        hook = Q.owned_effect_guard(scratch, ROOT/'hypothetical-result.json')
+        with patch.object(Q, 'ordinary', side_effect=Q.Denied('PATH_ALIAS')):
+            with self.assertRaises(Q.Denied) as denied: hook('sqlite3.connect', (uri,))
+        self.assertEqual(str(denied.exception), 'PATH_ALIAS')
+
+    def test_actual_primary_boundary_records_closed_facts_before_git(self):
+        private = 'PRIVATE-PATH-TOKEN-MESSAGE-MUST-NOT-BE-LOGGED'
+        for error, expected in ((FileNotFoundError(2, private), 'FileNotFoundError'),
+                                (PermissionError(13, private), 'PermissionError'),
+                                (RuntimeError(private), 'UNKNOWN')):
+            caught = None
+            with patch.object(Q, 'ordinary', side_effect=error), patch.object(Q.subprocess, 'Popen') as spawn:
+                try: Q.primary(ROOT, '0'*40)
+                except BaseException as exc: caught = exc
+            spawn.assert_not_called()
+            fact = getattr(caught, 'fact', {})
+            self.assertEqual(fact.get('stage'), 'SOURCE_ROOT_ORDINARY')
+            self.assertEqual(fact.get('role'), 'root')
+            self.assertEqual(fact.get('exception_class'), expected)
+            self.assertNotIn(private, repr(fact))
+
+    def test_actual_git_role_precheck_fault_has_no_fallback_or_spawn(self):
+        visited = []
+        def ordinary(path, *args, **kwargs):
+            visited.append(path)
+            if str(path).endswith('git.exe') or path == Path('/usr/bin/git'):
+                raise FileNotFoundError(2, 'PRIVATE-MESSAGE-NOT-FOR-REPORT')
+            return path
+        caught = None
+        with patch.object(Q, 'ordinary', side_effect=ordinary), patch.object(Q.os.path, 'lexists', return_value=False), patch.object(Q.subprocess, 'Popen') as spawn:
+            try: Q.primary(ROOT, '0'*40, role='grid')
+            except BaseException as exc: caught = exc
+        spawn.assert_not_called()
+        self.assertEqual(len(visited), 3)
+        self.assertEqual(getattr(caught, 'fact', {}).get('stage'), 'GIT_EXECUTABLE_ORDINARY')
+        self.assertEqual(caught.fact['role'], 'grid')
+        self.assertEqual(caught.fact['errno'], 2)
+
+    def test_git_failure_prefix_cap_and_independent_stream_preservation(self):
+        attempted = []; saved = {}
+        class Sink:
+            def __init__(self, name): self.name = name
+            def open(self, mode):
+                attempted.append(self.name)
+                if 'stdout' in self.name: raise OSError('INERT-WRITE-FAULT')
+                return self
+            def __enter__(self): return self
+            def __exit__(self, *args): pass
+            def write(self, raw): saved[self.name] = raw
+        class Evidence:
+            def __truediv__(self, name): return Sink(name)
+        result = {'returncode': 1, 'reason': None, 'total_bytes': 140000,
+                  'stdout': b'x'*70000, 'stderr': b'y'*70000}
+        fact = Q.retain_git_failure(Evidence(), 'root', 'before', 'rev-parse', result)
+        self.assertEqual(len(attempted), 2)
+        self.assertEqual(len(next(iter(saved.values()))), 65536)
+        self.assertTrue(fact['streams']['stdout']['truncated'])
+        self.assertEqual(fact['evidence_errors'], ['STDOUT_PRESERVATION_UNKNOWN'])
+
 
 if __name__ == '__main__': unittest.main()
