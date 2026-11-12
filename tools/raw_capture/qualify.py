@@ -393,7 +393,7 @@ def primary(root, head, tree=None, role='root', evidence=None, phase='before'):
         stage = 'SOURCE_GIT_METADATA'
         gitdir = ordinary(root/'.git')  # hosted standalone checkouts only
         need(not any(os.path.lexists(gitdir/p) for p in ('objects/info/alternates', 'refs/replace', 'shallow', 'info/grafts')), 'FOREIGN_OBJECT_SOURCE')
-        executable = Path('C:/Program Files/Git/mingw64/bin/git.exe') if os.name == 'nt' else Path('/usr/bin/git')
+        executable = Path('C:/Program Files/Git/bin/git.exe') if os.name == 'nt' else Path('/usr/bin/git')
         stage = 'GIT_EXECUTABLE_ORDINARY'
         ordinary(executable, True, single=False)
         def run(args, limit, data=None):

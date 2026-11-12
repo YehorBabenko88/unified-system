@@ -249,5 +249,50 @@ class SourceQualificationGuards(unittest.TestCase):
         self.assertTrue(fact['streams']['stdout']['truncated'])
         self.assertEqual(fact['evidence_errors'], ['STDOUT_PRESERVATION_UNKNOWN'])
 
+    def test_windows_uses_reviewed_absolute_bin_when_old_binding_missing(self):
+        old = Path('C:/Program Files/Git/mingw64/bin/git.exe')
+        selected = Path('C:/Program Files/Git/bin/git.exe'); visited = []
+        def ordinary(path, *args, **kwargs):
+            visited.append(path)
+            if path == old: raise FileNotFoundError(2, 'INERT_OLD_MISSING')
+            if path == selected: raise Q.Denied('INERT_SELECTED_PRECHECK')
+            return path
+        proxy = SimpleNamespace(name='nt', path=SimpleNamespace(lexists=lambda path: False))
+        caught = None
+        with patch.object(Q, 'os', proxy), patch.object(Q, 'ordinary', side_effect=ordinary), patch.object(Q.subprocess, 'Popen') as spawn:
+            try: Q.primary(ROOT, '0'*40)
+            except BaseException as exc: caught = exc
+        spawn.assert_not_called()
+        self.assertEqual(visited, [ROOT, ROOT/'.git', selected])
+        self.assertEqual(getattr(caught, 'fact', {}).get('exception_class'), 'Denied')
+
+    def test_missing_reviewed_windows_bin_denies_without_fallback(self):
+        selected = Path('C:/Program Files/Git/bin/git.exe'); visited = []
+        def ordinary(path, *args, **kwargs):
+            visited.append(path)
+            if str(path).endswith('git.exe'): raise FileNotFoundError(2, 'INERT_SELECTED_MISSING')
+            return path
+        proxy = SimpleNamespace(name='nt', path=SimpleNamespace(lexists=lambda path: False))
+        caught = None
+        with patch.object(Q, 'os', proxy), patch.object(Q, 'ordinary', side_effect=ordinary), patch.object(Q.subprocess, 'Popen') as spawn:
+            try: Q.primary(ROOT, '0'*40)
+            except BaseException as exc: caught = exc
+        spawn.assert_not_called()
+        self.assertEqual(visited, [ROOT, ROOT/'.git', selected])
+        self.assertEqual(getattr(caught, 'fact', {}).get('stage'), 'GIT_EXECUTABLE_ORDINARY')
+        self.assertEqual(caught.fact['exception_class'], 'FileNotFoundError')
+
+    def test_linux_fixed_usr_bin_binding_is_unchanged(self):
+        visited = []
+        def ordinary(path, *args, **kwargs):
+            visited.append(path)
+            if path == Path('/usr/bin/git'): raise Q.Denied('INERT_LINUX_PRECHECK')
+            return path
+        proxy = SimpleNamespace(name='posix', path=SimpleNamespace(lexists=lambda path: False))
+        with patch.object(Q, 'os', proxy), patch.object(Q, 'ordinary', side_effect=ordinary), patch.object(Q.subprocess, 'Popen') as spawn:
+            with self.assertRaises(Q.Denied): Q.primary(ROOT, '0'*40)
+        spawn.assert_not_called()
+        self.assertEqual(visited, [ROOT, ROOT/'.git', Path('/usr/bin/git')])
+
 
 if __name__ == '__main__': unittest.main()
