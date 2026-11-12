@@ -1,0 +1,56 @@
+name: Explicit Collector builder15 inert qualification
+on:
+  pull_request:
+    paths:
+      - 'tools/collector/build_package.py'
+      - 'tools/collector/qualify_builder.py'
+      - 'tools/raw_capture/qualify.py'
+      - 'tools/collector/qualify.py'
+      - 'tests/collector/test_package_builder.py'
+      - 'tests/ci/test_collector_builder_qualification_source.py'
+      - 'docs/collector/package-builder-v1.md'
+      - '.github/workflows/collector-builder-qualified.yml'
+permissions:
+  contents: read
+jobs:
+  builder-only:
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-24.04]
+    runs-on: ${{ matrix.os }}
+    env:
+      EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+      GIT_NO_REPLACE_OBJECTS: '1'
+      GIT_CONFIG_COUNT: '2'
+      GIT_CONFIG_KEY_0: core.autocrlf
+      GIT_CONFIG_VALUE_0: 'false'
+      GIT_CONFIG_KEY_1: core.eol
+      GIT_CONFIG_VALUE_1: lf
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12.10'
+          architecture: x64
+      - name: Pure builder qualification source regressions
+        shell: bash
+        run: |
+          python -I -S -B -c "import importlib.util,unittest;from pathlib import Path;p=Path('tests/ci/test_collector_builder_qualification_source.py').absolute();s=importlib.util.spec_from_file_location('builder_lane_source',p);m=importlib.util.module_from_spec(s);s.loader.exec_module(m);r=unittest.TextTestRunner(verbosity=2).run(unittest.defaultTestLoader.loadTestsFromModule(m));raise SystemExit(not r.wasSuccessful())"
+      - name: One explicit inert builder15 child
+        shell: bash
+        env:
+          BUILDER_OUT: ${{ runner.temp }}/builder15-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.os }}
+        run: |
+          python -I -S -B "$GITHUB_WORKSPACE/tools/collector/qualify_builder.py" --parent --root "$GITHUB_WORKSPACE" --out "$BUILDER_OUT"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: ${{ always() }}
+        with:
+          name: builder15-${{ matrix.os }}-${{ github.event.pull_request.head.sha }}
+          path: ${{ runner.temp }}/builder15-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.os }}/evidence
+          if-no-files-found: warn
