@@ -19,6 +19,8 @@ class ProtocolTests(unittest.TestCase):
             with self.subTest(name=name),self.assertRaises(ValueError):self.render(**{name:value})
     def test_credentials_private_not_repr_or_public_manifest(self):
         v=self.render();self.assertNotIn('c'*64,repr(v));self.assertNotIn('d'*64,repr(v));self.assertNotIn('c'*64,str(v.public_manifest()));self.assertIn(b'd'*64,v.script('bootstrap'))
+    def test_public_bootstrap_digest_redacted_internal_pin_retained(self):
+        v=self.render();secret_hash=p.digest(v.script('bootstrap'));self.assertNotIn(secret_hash,str(v.public_manifest()));self.assertEqual(v.sql_pins()[0][1],secret_hash);self.assertNotIn(secret_hash,str(p.run_protocol(Custodian(v),v,Writer())))
     def test_credentials_must_differ(self):
         with self.assertRaises(ValueError):self.render(app_password='c'*64)
     def test_no_drop_service_or_port_fallback(self):

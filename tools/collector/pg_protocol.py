@@ -32,7 +32,7 @@ class Protocol:
         require(name in SQL_NAMES);return dict(self.scripts)[name]
     def sql_pins(self):return tuple((n,digest(raw),len(raw)) for n,raw in self.scripts)
     def private_files(self):return tuple(('sql/'+n+'.sql',raw,n=='bootstrap') for n,raw in self.scripts)+self.secrets
-    def public_manifest(self):return {'scope':'DISPOSABLE_SQL_PROTOCOL_NOT_AUTHORITY','sql_pins':self.sql_pins(),'context_id':self.context_id,'binding_sha256':self.binding_sha256,'production_qualified':False}
+    def public_manifest(self):return {'scope':'DISPOSABLE_SQL_PROTOCOL_NOT_AUTHORITY','sql_pins':tuple((n,'PRIVATE_REDACTED' if n=='bootstrap' else sha,size) for n,sha,size in self.sql_pins()),'context_id':self.context_id,'binding_sha256':self.binding_sha256,'production_qualified':False}
 
 def render_protocol(*,migration,readback,context_id,binding_sha256,admin_password,app_password):
     # Bound buffers and exact upstream bytes before ANY decode/SQL decomposition.
@@ -156,4 +156,4 @@ def run_protocol(custodian,protocol,writer):
     out,err=custodian.private_output();require(type(out) is bytes and type(err) is bytes)
     lines=[x.strip() for x in out.splitlines()]
     require(all(lines.count(b'PG_PROTOCOL_V1_'+n.upper().encode())==(2 if n=='readback' else 1) for n in SQL_NAMES))
-    return {'scope':'OWN_DISPOSABLE_SQL_ASSERTIONS_ONLY','sql_assertions_observed':True,'restart_readback_observed':True,'production_qualified':False,'backup_restore_qualified':False,'adapter_qualified':False,'custody':receipt,'sql_pins':protocol.sql_pins()}
+    return {'scope':'OWN_DISPOSABLE_SQL_ASSERTIONS_ONLY','sql_assertions_observed':True,'restart_readback_observed':True,'production_qualified':False,'backup_restore_qualified':False,'adapter_qualified':False,'custody':receipt,'sql_pins':protocol.public_manifest()['sql_pins']}
