@@ -7,7 +7,7 @@ from pathlib import Path
 import sys
 
 IDENTITY_SHA = "84093865e8477ef6562100d41137922785446c9cb4e024c9ba7105593a2b36c1"
-FIXTURE_SHA = "b26fe114c778a8b8a95bc3de822dd7c7a4f57dd12277e9fdcbc96cfb5bc4199f"
+FIXTURE_SHA = "75caec14f84e0f388d0aaff92d9617223346a8cc895e28830b32e6e1237e2f14"
 
 
 def load_owner():
