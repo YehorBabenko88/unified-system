@@ -1,0 +1,141 @@
+{
+  "schema": "unified.data-first.acceptance-report.v1",
+  "classification": "SANITIZED_EVIDENCE_REPORT_NOT_EXECUTABLE_RELEASE",
+  "observed_at_utc": "2026-11-12T15:28:07.0166865Z",
+  "mission_checkpoint": 310,
+  "overall": "FAILURE_OR_UNKNOWN",
+  "mission": "IN_PROGRESS_NO_GO",
+  "deployment_stage": "STEP3_SOFTWARE_UNIT_EXECUTED_FINAL_ORIGIN_GATE_REFUSED",
+  "acceptance": {
+    "M0": {
+      "accepted": false,
+      "original_status": "NOT_ACCEPTED"
+    },
+    "M1": {
+      "accepted": false,
+      "original_status": "NOT_ACCEPTED_FINAL_BOUNDARY_FAILURE"
+    },
+    "M2": {
+      "accepted": false,
+      "original_status": "NOT_RUN"
+    },
+    "other_milestones": {
+      "M3": "NOT_ADMITTED",
+      "M8": "NOT_ACCEPTED",
+      "M4": "NOT_RUN",
+      "M5": "NOT_RUN",
+      "M7": "NOT_ACCEPTED",
+      "M6": "NOT_ACCEPTED"
+    },
+    "data_pilot": "NOT_ACCEPTED",
+    "real_history": "NOT_CAPTURED"
+  },
+  "actual_software_evidence": {
+    "native_key_map_controls": {
+      "tests": 10,
+      "status": "PASS_SCOPED_ONLY"
+    },
+    "lab_role_loader_controls": {
+      "tests": 13,
+      "status": "PASS_SCOPED_ONLY"
+    },
+    "adapter_storage_unit": {
+      "assertions": 11,
+      "assertions_status": "PASS",
+      "overall_status": "FAILURE_OR_UNKNOWN",
+      "final_error": "origin_post:FILELESS_WITHOUT_SPEC",
+      "fileless_creator_identity": "UNPROVEN",
+      "denied_name_dictionary_match": "_cython_3_3_0",
+      "denied_name_sha256": "baba04371fc5731862a7713c00d1ab6b5b9111a360aa7a8b7f8d469bf6f71054",
+      "producer_calls": 1,
+      "same_source562_runtime841": true,
+      "owned_selfpipe_count": 2,
+      "owned_selfpipes_retired": true
+    },
+    "scoped_a8_statement": "SCOPED10_AND13_PASS; ACTUAL11_ASSERTIONS_PASS_FINAL_ORIGIN_REFUSAL_VERIFIED; SQL_FACTS_ROOT_INSTRUMENTATION",
+    "pass_transfer": "NONE_TO_FULL_RUNTIME_CI_NATIVE_PHYSICAL_OR_REAL_HISTORY"
+  },
+  "root_read_only_storage_observation": {
+    "authority": "LOCAL_UNATTESTED",
+    "query": "READ_ONLY_SELECT_COUNT_ON_OWN_SYNTHETIC_TEST_STATE",
+    "rows": 1,
+    "database_bytes": 8192,
+    "database_sha256": "81dc12b402c02012a2d74dc9b56c1c194ffa3547735a9ff9721543961487e806",
+    "objects": 9,
+    "object_bytes": 4502,
+    "logical_files": 14,
+    "logical_file_bytes": 13062,
+    "six_payload_bytes": 2960,
+    "market_sql_rows": 0,
+    "market_schema": "NOT_CREATED",
+    "includes_duplicate_local_test_store_contexts": true,
+    "physical_quota": "NOT_ENFORCED_OR_QUALIFIED",
+    "backup_restore": "NOT_RUN",
+    "recovery": "SAME_PROCESS_REOPEN_ASSERTIONS_ONLY_NOT_PROCESS_RESTART"
+  },
+  "data": {
+    "history_downloaded": 0,
+    "live_events_received": 0,
+    "event_origin": "SYNTHETIC_ONLY",
+    "earliest_event_utc": "2026-01-01T00:00:00+00:00",
+    "latest_fixture_minute_utc": "2026-01-01T00:02:00+00:00",
+    "missing_fixture_minute_utc": "2026-01-01T00:01:00+00:00",
+    "real_coverage": "UNKNOWN",
+    "checkpoint": "OPAQUE_LOCAL_UNKNOWN_INTENT; NOT_AUTHORITATIVE_HISTORICAL_CHECKPOINT",
+    "live_last_event": "NOT_RUN"
+  },
+  "process_observation": {
+    "host_role": "LS5",
+    "elevated": false,
+    "root_outer_started_utc": "2026-11-12T15:19:37.7518594Z",
+    "recorded_process_count": 3,
+    "all_recorded_retired": true,
+    "all_recorded_exit_codes": 1,
+    "target_start_time": "NOT_RETAINED",
+    "tool_observed_seconds": 9.1234858,
+    "target_observed_seconds": 5.391,
+    "cpu_user_time": "NOT_MEASURED",
+    "peak_ram": "NOT_MEASURED",
+    "native_resource_quota": "NOT_QUALIFIED"
+  },
+  "separate_ci_configuration_fix": {
+    "draft_pr": "https://github.com/YehorBabenko88/unified-system/pull/90",
+    "head": "c9229a5dce98d451cd9f8d0246da1d4c67710219",
+    "tree": "56fd6cd1b92e45ebfa3b59ccb9541318e4545252",
+    "source_regression_tests": 3,
+    "source_regression_status": "PASS",
+    "original_red_run": 43242400182,
+    "new_run": 43247132248,
+    "hosted_status_at_report": "TWO_JOBS_QUEUED_NOT_PASS",
+    "data_pilot_adoption": false
+  },
+  "permissions": {
+    "bybit_public_provider_sends": "DENY",
+    "all_provider_sends": "BLOCKED",
+    "public_submit": "DENY",
+    "physical": "NO_GO",
+    "production": "BLOCKED_UNTOUCHED",
+    "real_trading": "PROHIBITED",
+    "tailscale_removal": "BLOCKED",
+    "authority_mutation": "DISABLED",
+    "A2_ack": "BLOCKED_COMMUNICATION_NOT_INFERRED"
+  },
+  "code_signing": {
+    "TRUSTED_RELEASE": "BLOCKED_NO_TRUSTED_PUBLISHER",
+    "LAB_unsigned": "ALLOWED_ONLY_SUBJECT_TO_ALL_OTHER_GATES"
+  },
+  "private_original_evidence": {
+    "references_are": "SHA256_IDENTITIES_ONLY_NOT_PUBLIC_ARTIFACT_LINKS",
+    "master_report_v2_sha256": "c54345c35d5b7b9c9e1c2c5f55175de2da022a6137edb5bf3c2d29f0ce496674",
+    "raw_contract_decision_sha256": "887ad08552808029f420571768c3def4601014a4646079404ecdfe9823e1a776",
+    "actual_result_sha256": "ca5bc5e8548bd36525104ca8c63977ed023fc8d12211448bc753b74ad42a550c",
+    "observer_receipt_sha256": "5b9477540cd4dac247ac2dd4321094638a9507a326abf65e1d5ac0848959e2c3",
+    "storage_readback_sha256": "f22809771efc3bec764facee9cfac72f165b4d524c39fe241d9ccc9b72bbbd75"
+  },
+  "limitations": [
+    "Snapshot facts only; no continuous runtime installed or Level2 acceptance.",
+    "Private paths, accounts/SIDs, addresses, DB locations and raw API bodies omitted.",
+    "Final origin refusal preserved; no creator alias or new origin admission inferred.",
+    "Old or separately scoped passes are not full CI/native/physical acceptance."
+  ]
+}
