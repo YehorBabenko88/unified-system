@@ -1,0 +1,68 @@
+name: Optional offline raw capture 58 unit qualification
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/raw-capture-offline-qualified.yml'
+      - 'tools/raw_capture/qualify.py'
+      - 'tests/ci/test_raw_capture_qualification_source.py'
+permissions:
+  contents: read
+jobs:
+  offline-unit:
+    timeout-minutes: 12
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-24.04]
+    runs-on: ${{ matrix.os }}
+    env:
+      EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+      PYTHONDONTWRITEBYTECODE: '1'
+      GIT_NO_REPLACE_OBJECTS: '1'
+      GIT_CONFIG_COUNT: '2'
+      GIT_CONFIG_KEY_0: core.autocrlf
+      GIT_CONFIG_VALUE_0: 'false'
+      GIT_CONFIG_KEY_1: core.eol
+      GIT_CONFIG_VALUE_1: lf
+    steps:
+      - name: Exact qualifier source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: qualification-source
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Exact owner Grid source, no execution
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: YehorBabenko88/bybit-cluster-grid
+          ref: 53b842df817d37b006809d73f9b6195348d32cc2
+          path: grid-source
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Exact owner Storage source, no execution
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: YehorBabenko88/unified-system
+          ref: 01d7cf17f47a6bfa930a36808a4b0065c5f0f053
+          path: storage-source
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12.10'
+          architecture: x64
+      - name: One exact offline unit child, full raw source before and after
+        shell: bash
+        env:
+          QUALIFICATION_OUT: ${{ runner.temp }}/raw-capture-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.os }}
+        run: |
+          python -I -S -B -X "pycache_prefix=$QUALIFICATION_OUT/parent-cache" "$GITHUB_WORKSPACE/qualification-source/tools/raw_capture/qualify.py" --parent "$GITHUB_WORKSPACE/qualification-source" "$GITHUB_WORKSPACE/grid-source" "$GITHUB_WORKSPACE/storage-source" "$QUALIFICATION_OUT"
+      - name: Retain original logs, exact IDs, raw source maps and owned synthetic state
+        if: ${{ always() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: optional-raw-capture-58-${{ matrix.os }}-${{ github.sha }}
+          path: ${{ runner.temp }}/raw-capture-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.os }}
+          if-no-files-found: error
+          retention-days: 14
