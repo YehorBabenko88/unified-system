@@ -17,7 +17,7 @@ LEDGER_SHA='0631d79759b3f056e4e573b042beb2fcd4e763a28967127b7d129623a33d6b45'
 JOB_SHA='7fd6223de3e28052b1254fa9e33e638132c6db89388bbb2d994b35970802a25c'
 LIMITS={'active_processes':32,'job_memory_bytes':1073741824,'process_memory_bytes':536870912,'job_user_seconds':60,'kill_on_close':True,'breakaway':False}
 CAPS={'initdb':60.,'server':15.,'psql':30.,'stop':10.}
-SQL_NAMES=('bootstrap','migrate','readback','rollback')
+SQL_NAMES=('bootstrap','migrate','verify','readback')
 
 def need(value,code='PG_CUSTODY_DENIED'):
     if value is not True:raise ValueError(code)

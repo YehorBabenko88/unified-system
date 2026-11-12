@@ -124,6 +124,9 @@ class PgCustodyTests(unittest.TestCase):
     def test_command_roles_have_no_arbitrary_executable_or_port(self):
         plan=pg.Plan.model();command=pg.command_for(plan,'stop');self.assertEqual(command.role,'stop');self.assertNotIn('kill',command.argv);self.assertIn('55483',pg.command_for(plan,'server').argv)
         with self.assertRaises(ValueError):pg.command_for(plan,'register')
+        self.assertEqual(pg.SQL_NAMES,('bootstrap','migrate','verify','readback'))
+        self.assertEqual(pg.command_for(plan,'psql','verify').sql_name,'verify')
+        with self.assertRaises(ValueError):pg.command_for(plan,'psql','rollback')
     def test_model_plan_is_never_native_admission(self):
         self.assertFalse(pg.Plan.model().native)
         with self.assertRaises(ValueError):pg.WindowsBackend(pg.Plan.model(),None,None)

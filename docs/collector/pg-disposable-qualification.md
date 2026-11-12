@@ -33,3 +33,8 @@ The external A4/Root packet must still define secret provisioning, SQL content/p
 ONE allocated inert19 attempt completed: 19 actual methods passed; failures/errors/skips/expectedFailures/unexpectedSuccesses all0, forbidden-effect attempts0, source pins unchanged. The retained child exited0 and retired with no capture errors, output4278B, observed child/cleanup0.563s. Full841 runtime DATA bytes were equal before/after and fresh pycache remained empty. This is FakeBackend control evidence only; PostgreSQL, native Job APIs and SQL were NOT RUN.
 
 Original evidence is retained at `C:/Users/LS-5/.codex/collector-pg-inert19-20261112/evidence/`: receipt SHA32629627d0bba78b63074cea6c9c1ea87988f4a6dab19f9ffaa6c5d9161fc904; stdout SHA117ddcb0ae319ec8655970439e467d058f8de049b45f52744bdb41d975660761; stderr SHAf4158f8d49e41e81ad855b14590756724484174fe0262527b88bf7df65473dbe. Historical NOT RUN statements above describe Source preparation, not this later allocated inert attempt. No native lease is implied.
+
+
+## Closed-role specification correction
+
+Root corrected its summary: four SQL roles are bootstrap/migrate/verify/readback. The original rollback enum in f1f7a37 and its historical19PASS remain preserved. The new enum replaces rollback with verify, never adds a fifth role or DROP/cluster adoption. The corrected19 controls have NOT RUN yet. This is a contract correction, not an observed PostgreSQL defect.
