@@ -7,9 +7,12 @@ import hashlib
 import json
 from pathlib import Path
 import sqlite3
+import time
+import re
 
 from unified_system.journal import Journal
-from unified_system.storage.object_store import ObjectStore
+from unified_system.storage.object_store import ObjectStore, _parents, _plain, _read as _read_owned_file
+from unified_system.storage.contracts import _UUID
 from unified_system.storage.publication_records import RetainedPublicationIntent
 from unified_system.storage.publication_recovery import PendingPublicationJournal
 from unified_system.storage.result_publication import (
@@ -84,11 +87,11 @@ def seed(new_root, entries):
     return inspect(root, claim.canonical_bytes)
 
 
-def inspect(owned_root, expected_closure_bytes):
+def inspect(owned_root, expected_closure_bytes, *, expected_store_id=STORE_ID):
     """M1: bounded read-only reopen. Root must prove prior child retirement."""
     root = _path(owned_root)
     claim = _claim(expected_closure_bytes)
-    store = ObjectStore.open(root / 'archive', store_id=STORE_ID)
+    store = ObjectStore.open(root / 'archive', store_id=expected_store_id)
     if store.read(claim.sha256, max_bytes=32768) != expected_closure_bytes:
         raise ValueError('expected closure bytes changed')
     observed = readback_local_closure(store, claim)
@@ -146,3 +149,164 @@ def restore(owned_root, expected_closure_bytes, new_restore_parent):
                 restored_object_count=len(readback.objects), committed=False,
                 native_outcome='UNKNOWN', journal_restored=False,
                 physical_backup_verified=False)
+
+
+def _snapshot_deadline(deadline):
+    now = time.monotonic_ns()
+    if type(deadline) is not int or not 0 < deadline-now <= 30_000_000_000:
+        raise ValueError('local snapshot deadline expired or invalid')
+
+
+def _snapshot_sha(value):
+    return type(value) is str and re.fullmatch(r'[0-9a-f]{64}', value) is not None
+
+
+def _snapshot_db_seal(path):
+    _parents(path.parent)
+    for suffix in ('-wal', '-shm', '-journal'):
+        sidecar = path.with_name(path.name + suffix)
+        if sidecar.exists() or sidecar.is_symlink():
+            raise ValueError('sidecar present; stopped immutable snapshot not admitted')
+    raw, identity = _read_owned_file(path, 65536)
+    if not raw:
+        raise ValueError('source database is empty')
+    return dict(sha256=hashlib.sha256(raw).hexdigest(), bytes=len(raw), file_identity=identity)
+
+
+def _snapshot_names(path, maximum):
+    names = set()
+    for child in path.iterdir():
+        if len(names) >= maximum:
+            raise ValueError('snapshot namespace inventory exceeds profile')
+        names.add(child.name)
+    return names
+
+
+def _snapshot_namespace(root, claim, expected_id):
+    _parents(root)
+    if _snapshot_names(root, 2) != {'archive', 'local.sqlite'}:
+        raise ValueError('unknown source context files; no adoption')
+    store = ObjectStore.open(root/'archive', store_id=expected_id)
+    if _snapshot_names(root/'archive', 3) != {'owned-root.json', 'objects', 'staging'}:
+        raise ValueError('unknown store files; no adoption')
+    if any((root/'archive'/'staging').iterdir()):
+        raise ValueError('incomplete staging; no snapshot promotion')
+    expected = {entry['sha256'] for entry in claim.value['objects']} | {claim.sha256}
+    if len(expected) != 7 or _snapshot_names(root/'archive'/'objects', 7) != expected:
+        raise ValueError('missing or orphan objects; no snapshot promotion')
+    readback_local_closure(store, claim)
+    return store
+
+
+def _snapshot_copy_db(source, destination, expected_seal, max_pages, deadline):
+    """SQLite backup API, no live directory copy; Root must retire all writers."""
+    _snapshot_deadline(deadline)
+    if _snapshot_db_seal(source) != expected_seal:
+        raise ValueError('source DB seal changed before backup')
+    _parents(destination.parent)
+    with destination.open('xb'):
+        pass
+    initial = _plain(destination, directory=False)
+    initial_identity = initial.st_dev, initial.st_ino
+    src = dst = None
+    try:
+        src = sqlite3.connect(source.as_uri()+'?mode=ro&immutable=1', uri=True, timeout=1)
+        src.execute('PRAGMA query_only = ON')
+        src.execute('PRAGMA temp_store = MEMORY')
+        page_count = src.execute('PRAGMA page_count').fetchone()[0]
+        page_size = src.execute('PRAGMA page_size').fetchone()[0]
+        if (type(page_count) is not int or not 1 <= page_count <= max_pages
+                or type(page_size) is not int or not 512 <= page_size <= 65536
+                or page_count*page_size != expected_seal['bytes']):
+            raise ValueError('source database page profile mismatch')
+        dst = sqlite3.connect(destination.as_uri()+'?mode=rw', uri=True, timeout=1)
+        dst.execute('PRAGMA temp_store = MEMORY')
+
+        def progress(status, remaining, total):
+            _snapshot_deadline(deadline)
+            if (status not in (sqlite3.SQLITE_OK, sqlite3.SQLITE_DONE)
+                    or type(total) is not int or not 1 <= total <= max_pages
+                    or type(remaining) is not int or not 0 <= remaining <= total):
+                raise ValueError('backup busy/locked/status/page bound; no retry')
+
+        src.backup(dst, pages=min(16, max_pages), progress=progress, sleep=0)
+        _snapshot_deadline(deadline)
+    finally:
+        if dst is not None:
+            dst.close()
+        if src is not None:
+            src.close()
+    if _snapshot_db_seal(source) != expected_seal:
+        raise ValueError('source DB seal changed during backup')
+    destination_seal = _snapshot_db_seal(destination)
+    if tuple(destination_seal['file_identity']) != initial_identity:
+        raise ValueError('exclusive destination database identity changed')
+    _snapshot_deadline(deadline)
+    return destination_seal
+
+
+def snapshot_restore(owned_root, expected_closure_bytes, new_backup_root, new_restored_root,
+        *, expected_source_store_id, expected_backup_store_id, expected_restored_store_id,
+        source_database_sha256, source_database_byte_count, source_database_file_identity,
+        stopped_writer_barrier_sha256, max_backup_pages, deadline_monotonic_ns):
+    """Prospective local SQLite+immutable snapshot, NOT MASTER M2 acceptance.
+
+    The barrier hash is a Root evidence reference, not proof of process retirement.
+    Root must verify STOPPED_WRITER_BARRIER before admitting this call. Every
+    partial artifact is retained on failure; source writes/cleanup never occur.
+    """
+    _snapshot_deadline(deadline_monotonic_ns)
+    if (not _snapshot_sha(source_database_sha256)
+            or not _snapshot_sha(stopped_writer_barrier_sha256)
+            or type(source_database_byte_count) is not int
+            or not 1 <= source_database_byte_count <= 65536
+            or type(source_database_file_identity) is not tuple
+            or len(source_database_file_identity) != 2
+            or any(type(x) is not int or x < 0 for x in source_database_file_identity)
+            or type(max_backup_pages) is not int or not 1 <= max_backup_pages <= 128):
+        raise ValueError('invalid explicit snapshot source seal/barrier/bounds')
+    ids = (expected_source_store_id, expected_backup_store_id, expected_restored_store_id)
+    if any(type(x) is not str or _UUID.fullmatch(x) is None for x in ids) or len(set(ids)) != 3:
+        raise ValueError('three distinct Root-pinned owned store IDs required')
+    root, backup, restored = map(_path, (owned_root, new_backup_root, new_restored_root))
+    paths = (root, backup, restored)
+    if (len(set(paths)) != 3 or any(a in b.parents for a in paths for b in paths if a != b)
+            or backup.exists() or backup.is_symlink() or restored.exists() or restored.is_symlink()):
+        raise ValueError('new distinct nonnested destination roots required')
+    _parents(backup.parent)
+    _parents(restored.parent)
+    claim = _claim(expected_closure_bytes)
+    source_seal = dict(sha256=source_database_sha256, bytes=source_database_byte_count,
+                       file_identity=source_database_file_identity)
+    if _snapshot_db_seal(root/'local.sqlite') != source_seal:
+        raise ValueError('exact stopped source database seal mismatch')
+    source = _snapshot_namespace(root, claim, expected_source_store_id)
+    before = inspect(root, expected_closure_bytes, expected_store_id=expected_source_store_id)
+    _snapshot_deadline(deadline_monotonic_ns)
+    backup.mkdir(exist_ok=False)
+    backup_store = ObjectStore.create(backup/'archive', store_id=expected_backup_store_id)
+    copy_local_closure(source, backup_store, claim)
+    backup_seal = _snapshot_copy_db(root/'local.sqlite', backup/'local.sqlite', source_seal,
+                                    max_backup_pages, deadline_monotonic_ns)
+    _snapshot_namespace(backup, claim, expected_backup_store_id)
+    backup_readback = inspect(backup, expected_closure_bytes, expected_store_id=expected_backup_store_id)
+    if backup_readback != before:
+        raise ValueError('backup logical records or payloads differ')
+    _snapshot_deadline(deadline_monotonic_ns)
+    restored.mkdir(exist_ok=False)
+    restored_store = ObjectStore.create(restored/'archive', store_id=expected_restored_store_id)
+    copy_local_closure(backup_store, restored_store, claim)
+    restored_seal = _snapshot_copy_db(backup/'local.sqlite', restored/'local.sqlite', backup_seal,
+                                      max_backup_pages, deadline_monotonic_ns)
+    _snapshot_namespace(restored, claim, expected_restored_store_id)
+    readback = inspect(restored, expected_closure_bytes, expected_store_id=expected_restored_store_id)
+    if readback != before or _snapshot_db_seal(root/'local.sqlite') != source_seal:
+        raise ValueError('restored records or original source changed')
+    _snapshot_deadline(deadline_monotonic_ns)
+    return dict(scope='LOCAL_SOFTWARE_IMMUTABLE_AND_SQLITE_SNAPSHOT',
+        closure_sha256=claim.sha256, restored_object_count=7, journal_row_count=2,
+        journal_restored=True, logical_records_equal=True, native_outcome='UNKNOWN',
+        committed=False, physical_backup_verified=False, process_restart_verified=False,
+        stopped_writer_barrier_sha256=stopped_writer_barrier_sha256,
+        source_database=source_seal, backup_database=backup_seal,
+        restored_database=restored_seal, restored_readback=readback)
