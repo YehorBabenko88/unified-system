@@ -131,7 +131,6 @@ class StaticSelectorTests(unittest.TestCase):
         for root in ('relative',self.root/'..'/self.root.name,True):
             with patch.object(bridge,'_primary_source',side_effect=AssertionError('GIT')),self.assertRaises(bridge.StaticPreflightBlocked):bridge.select_static_authorization(self.raw,context=self.ctx,source_root=root,now=fixtures.NOW)
 
-if __name__=='__main__':unittest.main()
 
 
 class EnvironmentConfigurationTests(unittest.TestCase):
@@ -197,3 +196,5 @@ class EnvironmentConfigurationTests(unittest.TestCase):
     def test_no_public_token_opener_facts_or_selection_override(self):
         for key in ('token','opener','facts','provider','selected'):
             with self.assertRaises(TypeError):bridge.observe_protected_environment_config(self.raw,context=self.ctx,**{key:True})
+
+if __name__=='__main__':unittest.main()

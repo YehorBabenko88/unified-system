@@ -51,8 +51,10 @@ callback, supplied API facts or selected/True override is accepted. Token/header
 URLs/errors are not emitted or hashed. LocalService never receives this helper
 or a CI token; later genuine Admin preflight is its intended consumer.
 
-Before JSON decoding, response must be exact bytes and bounded; existing strict
-JSON rejects duplicate/nonfinite keys/values. GitHub metadata extras are allowed,
+Before JSON decoding, response must be exact bytes and bounded; the unchanged legacy JSON decoder
+rejects duplicate keys but does not reject all nonfinite constants: NaN in
+ignored metadata may be accepted. Security projection values still require exact
+builtin types and ranges, so nonfinite security values deny. GitHub metadata extras are allowed,
 while all security facts have exact builtin types before comparison: positive
 environment ID/exact fixed name;1..16 protection rules with unique positive IDs
 and known unique types; exactly one required_reviewers; actual bool
