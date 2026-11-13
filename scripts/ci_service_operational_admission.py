@@ -54,25 +54,29 @@ def validate(ctx, raw, environment, history=None, *, now=None):
     expiry = datetime.datetime.strptime(record['expires_at'], '%Y-%m-%dT%H:%M:%SZ').replace(tzinfo=datetime.timezone.utc).timestamp()
     now = time.time() if now is None else now
     need(now < expiry <= now + 86400)
-    need(environment.get('name') == ENVIRONMENT and type(environment.get('id')) is int)
+    return verify_protected_review(ctx, environment, history, environment_name=ENVIRONMENT, approved_by=record['approved_by'])
+
+
+def verify_protected_review(ctx, environment, history, *, environment_name, approved_by):
+    """Existing review checks only; None history preserves legacy preflight semantics."""
+    need(environment.get('name') == environment_name and type(environment.get('id')) is int)
     rules = [r for r in environment.get('protection_rules', []) if r.get('type') == 'required_reviewers']
     need(len(rules) == 1)
     reviewers = rules[0].get('reviewers', [])
     need(reviewers and all(r.get('type') == 'User' for r in reviewers))
-    need(record['approved_by'] in [r['reviewer']['login'] for r in reviewers])
+    need(approved_by in [r['reviewer']['login'] for r in reviewers])
     need(type(rules[0].get('prevent_self_review')) is bool)
     if rules[0]['prevent_self_review']:
-        need(bool(ctx.get('actor')) and record['approved_by'].lower() != ctx['actor'].lower())
+        need(bool(ctx.get('actor')) and approved_by.lower() != ctx['actor'].lower())
     if history is not None:
         need(isinstance(history, list))
-        relevant = [r for r in history if any(e.get('id') == environment['id'] and e.get('name') == ENVIRONMENT for e in r.get('environments', []))]
+        relevant = [r for r in history if any(e.get('id') == environment['id'] and e.get('name') == environment_name for e in r.get('environments', []))]
         # No ordering assumption, rejected or ambiguous histories cannot admit.
         need(len(relevant) == 1)
         review = relevant[0]
         need(review.get('state') == 'approved' and review.get('user', {}).get('type') == 'User')
-        need(review['user'].get('login') == record['approved_by'])
-    return record['approved_by']
-
+        need(review['user'].get('login') == approved_by)
+    return approved_by
 
 class NoRedirect(HTTPRedirectHandler):
     def redirect_request(self, *args):
