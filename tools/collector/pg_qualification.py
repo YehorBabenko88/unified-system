@@ -94,20 +94,24 @@ def public_denial_receipt(error):
     def container(v,t):
         if type(v) is not t or id(v) in seen:return False
         seen.add(id(v));return True
-    if not container(r,dict) or set(r)!=keys or r['scope']!='OWNED_PG_TOOL_CUSTODY_ONLY':return None
+    def dictionary(v,expected):
+        # Iterating an exact dict's keys does not hash/compare them. Reject
+        # subclasses before set creation, equality, lookup or copying any key.
+        return container(v,dict) and len(v)==len(expected) and all(type(k) is str for k in v) and set(v)==expected
+    if not dictionary(r,keys) or type(r['scope']) is not str or r['scope']!='OWNED_PG_TOOL_CUSTODY_ONLY':return None
     if any(type(r[k]) is not bool for k in bools) or r['database_qualified'] is not False:return None
     if any(type(r[k]) is not int or not 0<=r[k]<=limit for k,limit in ints.items()):return None
     if not container(r['errors'],list) or len(r['errors'])>64:return None
     errors=[]
     for row in r['errors']:
-        if not container(row,dict) or set(row)!= {'code','error_type'} or type(row['code']) is not str or row['code'] not in codes:return None
+        if not dictionary(row,{'code','error_type'}) or type(row['code']) is not str or row['code'] not in codes:return None
         et=row['error_type']
         if et is not None and (type(et) is not str or et not in types):return None
         errors.append(dict(row))
     if not container(r['entries'],list) or len(r['entries'])>16:return None
     entries=[]
     for row in r['entries']:
-        if not container(row,dict) or set(row)!= {'role','sql_name','waited','primary_closed','pipes_closed','readers_retired','creation_unknown'}:return None
+        if not dictionary(row,{'role','sql_name','waited','primary_closed','pipes_closed','readers_retired','creation_unknown'}):return None
         if type(row['role']) is not str or row['role'] not in CAPS:return None
         if row['sql_name'] is not None and (type(row['sql_name']) is not str or row['sql_name'] not in SQL_NAMES):return None
         if (row['role']=='psql')!=(row['sql_name'] is not None):return None
@@ -115,8 +119,10 @@ def public_denial_receipt(error):
         if not container(row['pipes_closed'],list) or len(row['pipes_closed'])!=2 or any(type(v) is not bool for v in row['pipes_closed']):return None
         entries.append({**row,'pipes_closed':list(row['pipes_closed'])})
     roles=r['source_roles']
-    if not container(roles,list) or roles!=[e['role'] for e in entries]:return None
-    return {**r,'errors':errors,'entries':entries,'source_roles':list(roles),'command_counts':{n:sum(e['role']==n for e in entries) for n in CAPS},'sql_counts':{n:sum(e['role']=='psql' and e['sql_name']==n for e in entries) for n in SQL_NAMES}}
+    if not container(roles,list) or len(roles)>16 or any(type(v) is not str or v not in CAPS for v in roles):return None
+    validated_roles=[e['role'] for e in entries]
+    if roles!=validated_roles:return None
+    return {**r,'scope':'OWNED_PG_TOOL_CUSTODY_ONLY','errors':errors,'entries':entries,'source_roles':validated_roles,'command_counts':{n:sum(e['role']==n for e in entries) for n in CAPS},'sql_counts':{n:sum(e['role']=='psql' and e['sql_name']==n for e in entries) for n in SQL_NAMES}}
 
 class PgCustodian:
     """Fixed serial phase transport; no retries, autonomous restart or DB verdict."""

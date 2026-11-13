@@ -77,6 +77,34 @@ class Backend:
     def after(self):self.events.append('postcheck')
 
 class PgCustodyTests(unittest.TestCase):
+    def test_projection_rejects_string_alias_values_without_callbacks_or_leaks(self):
+        b,s,r=self.run_inert('poll');calls=[]
+        class Alias(str):
+            def __eq__(self,other):calls.append('eq');return True
+            def __ne__(self,other):calls.append('ne');return False
+            def __hash__(self):calls.append('hash');return str.__hash__(self)
+        import copy
+        for slot in ('scope','source_roles','error_code','error_type','entry_role','sql_name'):
+            v=copy.deepcopy(r);alias=Alias('PRIVATE_SENTINEL')
+            if slot=='scope':v['scope']=alias
+            elif slot=='source_roles':v['source_roles']=[alias]
+            elif slot=='error_code':v['errors'][0]['code']=alias
+            elif slot=='error_type':v['errors'][0]['error_type']=alias
+            elif slot=='entry_role':v['entries'][0]['role']=alias
+            else:v['entries'][0]['sql_name']=alias
+            calls.clear()
+            with self.subTest(slot=slot):
+                result=pg.public_denial_receipt(pg.CustodyDenied(v));self.assertIsNone(result);self.assertEqual(calls,[]);self.assertNotIn('PRIVATE_SENTINEL',str(result))
+    def test_projection_rejects_nonbuiltin_keys_before_hash_or_equality(self):
+        import copy
+        b,s,r=self.run_inert('poll');calls=[]
+        class Key(str):
+            def __eq__(self,other):calls.append('eq');return str.__eq__(self,other)
+            def __hash__(self):calls.append('hash');return str.__hash__(self)
+        for slot in ('root','error','entry'):
+            v=copy.deepcopy(r);row=v if slot=='root' else v['errors'][0] if slot=='error' else v['entries'][0]
+            key=next(iter(row));value=row.pop(key);row[Key(key)]=value;calls.clear()
+            with self.subTest(slot=slot):self.assertIsNone(pg.public_denial_receipt(pg.CustodyDenied(v)));self.assertEqual(calls,[])
     def test_fixed_native_attempt2_root_rejects_old_alias_and_foreign_profile(self):
         from pathlib import Path
         profile=Path('C:/Users/INERT');root=profile/'AppData/Local/UnifiedCollectorTest/pg-attempt2'
