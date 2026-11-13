@@ -8,7 +8,7 @@ sys.path.insert(0,str(ROOT))
 def load(path,name):
     spec=importlib.util.spec_from_file_location(name,path);module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module);return module
 bridge=load(ROOT/'scripts/ci_collector_c3_workflow_bridge_v2.py','static_bridge_under_test')
-fixtures=load(ROOT/'tests/test_ci_collector_operational_admission.py','frozen_v2_fixture_data')
+fixtures=load(Path(os.environ.get('C3_STATIC_SUPPLIER_ROOT',str(ROOT)))/'tests/test_ci_collector_operational_admission.py','frozen_v2_fixture_data')
 from unified_system import collector_operational_review as codec
 
 class StaticSelectorTests(unittest.TestCase):
@@ -132,3 +132,68 @@ class StaticSelectorTests(unittest.TestCase):
             with patch.object(bridge,'_primary_source',side_effect=AssertionError('GIT')),self.assertRaises(bridge.StaticPreflightBlocked):bridge.select_static_authorization(self.raw,context=self.ctx,source_root=root,now=fixtures.NOW)
 
 if __name__=='__main__':unittest.main()
+
+
+class EnvironmentConfigurationTests(unittest.TestCase):
+    def setUp(self):
+        self.auth=fixtures.authorization();self.raw=codec.encode(self.auth)
+        self.ctx=dict(event='workflow_dispatch',repository=codec.REPOSITORY,sha='a'*40,source_sha='a'*40,attempt='1',run_id='123',actor='actor',authorization_commit='e'*40,authorization_sha256=hashlib.sha256(self.raw).hexdigest(),job_name='collector-preflight',runner_name='GitHub Actions 1')
+        self.env=dict(id=42,name='collector-c3-operational-v2',protection_rules=[dict(id=9,type='required_reviewers',prevent_self_review=False,reviewers=[dict(type='User',reviewer=dict(id=7,login='operator',type='User'))])],can_admins_bypass=True,metadata='permitted API metadata')
+    def call(self,raw=None,ctx=None):
+        from scripts import ci_service_operational_admission as legacy
+        body=codec.encode(self.env) if raw is None else raw
+        with patch.dict(os.environ,{'GITHUB_TOKEN':'inert-unit-token'},clear=False),patch.object(legacy,'get',return_value=body) as get:
+            value=bridge.observe_protected_environment_config(self.raw,context=self.ctx if ctx is None else ctx,now=fixtures.NOW)
+        return value,get
+    def test_existing_config_is_observation_only_and_fixed_get(self):
+        value,get=self.call();self.assertEqual(value['status'],'CONFIG_OBSERVED_NOT_ADMITTED');self.assertIs(value['selected'],False);self.assertIs(value['execution_authority'],False)
+        self.assertIn('ACTUAL_PROTECTED_REVIEW_NOT_ACQUIRED',value['missing_gates']);self.assertEqual(value['environment']['required_reviewer'],dict(id=7,login='operator'))
+        get.assert_called_once_with('https://api.github.com/repos/'+codec.REPOSITORY+'/environments/collector-c3-operational-v2','inert-unit-token')
+        self.assertNotIn('inert-unit-token',json.dumps(value));self.assertEqual(value['response_body'],dict(sha256=hashlib.sha256(codec.encode(self.env)).hexdigest(),bytes=len(codec.encode(self.env))))
+    def test_missing_environment_rule_or_team_never_admits(self):
+        for field,value in [('id',0),('id',True),('name','missing'),('protection_rules',[])]:
+            env=copy.deepcopy(self.env);env[field]=value
+            with self.subTest(field=field),self.assertRaises(bridge.StaticPreflightBlocked):self.call(codec.encode(env))
+        self.env['protection_rules'][0]['reviewers'][0]['type']='Team'
+        with self.assertRaises(bridge.StaticPreflightBlocked):self.call()
+    def test_duplicate_rule_unknown_meaning_and_bad_boolean_deny(self):
+        rule=self.env['protection_rules'][0]
+        for rules in ([rule,rule],[dict(id=10,type='unknown')],[dict(rule,prevent_self_review=0)]):
+            env=dict(self.env,protection_rules=rules)
+            with self.assertRaises(bridge.StaticPreflightBlocked):self.call(codec.encode(env))
+        self.env['can_admins_bypass']=1
+        with self.assertRaises(bridge.StaticPreflightBlocked):self.call()
+    def test_reviewer_ids_logins_and_types_are_exact_unique(self):
+        rule=self.env['protection_rules'][0]
+        for user in (dict(id=True,login='operator',type='User'),dict(id=0,login='operator',type='User'),dict(id=7,login=7,type='User'),dict(id=7,login='operator',type='Bot')):
+            rule['reviewers']=[dict(type='User',reviewer=user)]
+            with self.assertRaises(bridge.StaticPreflightBlocked):self.call()
+        for other in (dict(id=7,login='different',type='User'),dict(id=8,login='OPERATOR',type='User')):
+            rule['reviewers']=[dict(type='User',reviewer=dict(id=7,login='operator',type='User')),dict(type='User',reviewer=other)]
+            with self.assertRaises(bridge.StaticPreflightBlocked):self.call()
+    def test_existing_self_review_policy_is_respected_without_second_person_requirement(self):
+        self.ctx['actor']='operator';self.call()
+        self.env['protection_rules'][0]['prevent_self_review']=True
+        with self.assertRaises(bridge.StaticPreflightBlocked):self.call()
+    def test_raw_subclass_duplicates_oversize_and_malformed_deny(self):
+        class Bytes(bytes):pass
+        for raw in (Bytes(codec.encode(self.env)),b'{"id":1,"id":2}',b' '*65537,b'not json'):
+            with self.assertRaises(bridge.StaticPreflightBlocked):self.call(raw)
+    def test_context_and_authorization_deny_before_get(self):
+        from scripts import ci_service_operational_admission as legacy
+        with patch.object(legacy,'get',side_effect=AssertionError('must not acquire')) as get:
+            for ctx in (dict(self.ctx,event='push'),dict(self.ctx,authorization_sha256='f'*64)):
+                with self.assertRaises(bridge.StaticPreflightBlocked):bridge.observe_protected_environment_config(self.raw,context=ctx,now=fixtures.NOW)
+            self.assertEqual(get.call_count,0)
+    def test_token_required_closed_and_never_leaks_errors(self):
+        from scripts import ci_service_operational_admission as legacy
+        for token in ('','a\nb','x'*4097):
+            with patch.dict(os.environ,{'GITHUB_TOKEN':token}),patch.object(legacy,'get') as get:
+                with self.assertRaises(bridge.StaticPreflightBlocked) as caught:bridge.observe_protected_environment_config(self.raw,context=self.ctx,now=fixtures.NOW)
+                self.assertEqual(get.call_count,0);self.assertNotIn(token if token else 'secret',str(caught.exception))
+        with patch.dict(os.environ,{'GITHUB_TOKEN':'secret'}),patch.object(legacy,'get',side_effect=RuntimeError('secret signed URL')):
+            with self.assertRaises(bridge.StaticPreflightBlocked) as caught:bridge.observe_protected_environment_config(self.raw,context=self.ctx,now=fixtures.NOW)
+            self.assertEqual(str(caught.exception),'CONFIG_ACQUISITION_REJECTED')
+    def test_no_public_token_opener_facts_or_selection_override(self):
+        for key in ('token','opener','facts','provider','selected'):
+            with self.assertRaises(TypeError):bridge.observe_protected_environment_config(self.raw,context=self.ctx,**{key:True})

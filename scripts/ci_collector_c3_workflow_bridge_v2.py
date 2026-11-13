@@ -19,7 +19,7 @@ HELPER_SHA256='b4fdd6cc2dea47a4fe8da0ce400004a20e36d4f401fb9bb37d20c0a597857df5'
 MISSING_GATES=('QUALIFIED_WORKFLOW_BRIDGE_MISSING','QUALIFIED_FACTORY_MISSING',
  'QUALIFIED_ARTIFACT_SOURCE_CLOSURE_MISSING','ACTUAL_PROTECTED_REVIEW_NOT_ACQUIRED',
  'ACTUAL_SOURCE_CAPACITY_OWNER_ADMISSION_MISSING')
-CODES=frozenset(('STATIC_CONTEXT_REJECTED','STATIC_AUTHORIZATION_REJECTED','STATIC_SOURCE_VERIFICATION_FAILED','STATIC_PREFLIGHT_BLOCKED'))
+CODES=frozenset(('STATIC_CONTEXT_REJECTED','STATIC_AUTHORIZATION_REJECTED','STATIC_SOURCE_VERIFICATION_FAILED','STATIC_PREFLIGHT_BLOCKED','CONFIG_CONTEXT_REJECTED','CONFIG_AUTHORIZATION_REJECTED','CONFIG_ACQUISITION_REJECTED','CONFIG_PROTECTION_REJECTED'))
 
 class StaticPreflightBlocked(ValueError):
     def __init__(self,code):
@@ -135,3 +135,84 @@ def select_static_authorization(authorization_raw:bytes,*,context:dict,source_ro
       source=authorization['source'],source_evidence=evidence,target=authorization['target'],
       capsule=authorization['capsule'],missing_gates=list(MISSING_GATES))
     return json.loads(json.dumps(result,allow_nan=False))
+
+
+ENVIRONMENT_NAME='collector-c3-operational-v2'
+ENVIRONMENT_ENDPOINT='https://api.github.com/repos/'+codec.REPOSITORY+'/environments/'+ENVIRONMENT_NAME
+
+
+def _environment_config_raw():
+    """Fixed broker-only readonly acquisition; never a review or permission."""
+    from scripts import ci_service_operational_admission as legacy
+    token=os.environ.get('GITHUB_TOKEN')
+    _need(type(token) is str and 0<len(token)<=4096 and '\r' not in token and '\n' not in token)
+    return legacy.get(ENVIRONMENT_ENDPOINT,token)
+
+
+def _config_projection(environment,approved_by,context):
+    from scripts import ci_service_operational_admission as legacy
+    _need(type(environment) is dict)
+    codec.integer(environment.get('id'));_need(type(environment.get('name')) is str and environment['name']==ENVIRONMENT_NAME)
+    for key in ('can_admins_bypass',):
+        if key in environment:_need(type(environment[key]) is bool)
+    if environment.get('deployment_branch_policy') is not None:
+        policy=environment['deployment_branch_policy'];_keys(policy,{'protected_branches','custom_branch_policies'})
+        _need(all(type(value) is bool for value in policy.values()))
+    rules=environment.get('protection_rules');_need(type(rules) is list and 1<=len(rules)<=16)
+    seen_ids=set();seen_types=set();required=None
+    for rule in rules:
+        _need(type(rule) is dict);codec.integer(rule.get('id'))
+        kind=rule.get('type');_need(type(kind) is str and kind in ('required_reviewers','wait_timer'))
+        _need(rule['id'] not in seen_ids and kind not in seen_types);seen_ids.add(rule['id']);seen_types.add(kind)
+        if 'can_admins_bypass' in rule:_need(type(rule['can_admins_bypass']) is bool)
+        if kind=='wait_timer':codec.integer(rule.get('wait_timer'),0,43200);continue
+        required=rule;_need(type(rule.get('prevent_self_review')) is bool)
+        reviewers=rule.get('reviewers');_need(type(reviewers) is list and 1<=len(reviewers)<=100)
+        ids=set();logins=set()
+        for item in reviewers:
+            _need(type(item) is dict and type(item.get('type')) is str and item['type']=='User')
+            user=item.get('reviewer');_need(type(user) is dict)
+            codec.integer(user.get('id'));codec.text(user.get('login'),r'[A-Za-z0-9-]{1,39}')
+            _need(type(user.get('type')) is str and user['type']=='User')
+            _need(user['id'] not in ids and user['login'].lower() not in logins)
+            ids.add(user['id']);logins.add(user['login'].lower())
+    _need(required is not None)
+    # None means CONFIG ONLY, preserving the original legacy preflight semantics.
+    # It MUST NOT stand in for V2's later non-None actual review history.
+    legacy.verify_protected_review(context,environment,None,environment_name=ENVIRONMENT_NAME,approved_by=approved_by)
+    matches=[item['reviewer'] for item in required['reviewers'] if item['reviewer']['login']==approved_by]
+    _need(len(matches)==1)
+    return dict(id=environment['id'],name=ENVIRONMENT_NAME,
+        required_reviewer=dict(id=matches[0]['id'],login=matches[0]['login']),
+        prevent_self_review=required['prevent_self_review'])
+
+
+def observe_protected_environment_config(authorization_raw:bytes,*,context:dict,now=None)->dict:
+    """CONFIG_OBSERVED_NOT_ADMITTED; cannot select/schedule a job or call A5.
+
+    Invoke in a job with NO environment declaration before any environment job
+    can be scheduled. Missing/403/redirect/unconfigured protection always deny.
+    This API does not implement workflow routing or attest future scheduling.
+    """
+    try:_context(context)
+    except Exception:raise StaticPreflightBlocked('CONFIG_CONTEXT_REJECTED') from None
+    try:
+        _need(type(authorization_raw) is bytes and 0<len(authorization_raw)<=codec.LIMIT)
+        _need(hashlib.sha256(authorization_raw).hexdigest()==context['authorization_sha256'])
+        _need(now is None or type(now) in (int,float) and math.isfinite(now))
+        authorization=codec.parse_authorization(authorization_raw,now=now)
+        _need(authorization['source']['head']==context['sha'])
+    except Exception:raise StaticPreflightBlocked('CONFIG_AUTHORIZATION_REJECTED') from None
+    try:
+        raw=_environment_config_raw()
+        _need(type(raw) is bytes and 0<len(raw)<=codec.LIMIT)
+    except Exception:raise StaticPreflightBlocked('CONFIG_ACQUISITION_REJECTED') from None
+    try:
+        from scripts import ci_service_operational_admission as legacy
+        environment=legacy.decode_json(raw)
+        projection=_config_projection(environment,authorization['approved_by'],context)
+        result=dict(status='CONFIG_OBSERVED_NOT_ADMITTED',selected=False,execution_authority=False,
+            environment=projection,response_body=dict(sha256=hashlib.sha256(raw).hexdigest(),bytes=len(raw)),
+            missing_gates=list(MISSING_GATES))
+        return json.loads(json.dumps(result,sort_keys=True,separators=(',',':'),allow_nan=False))
+    except Exception:raise StaticPreflightBlocked('CONFIG_PROTECTION_REJECTED') from None
