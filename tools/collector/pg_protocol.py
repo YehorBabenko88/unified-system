@@ -61,7 +61,22 @@ END $bootstrap_lock$;
 """)+marker('bootstrap')
     # PostgreSQL's bootstrap SUPERUSER is immutable. Lock LOGIN/password while
     # this one bootstrap session is still open, then retire that psql primary.
-    migration_script=migration+marker('migrate')
+    # Client-handle retirement alone does not establish server-backend absence.
+    # One fresh read-only activity snapshot checks every DB/state for that OID;
+    # nullable/private columns are never used as an absence predicate.
+    preflight=encoded("""BEGIN READ ONLY;
+DO $app_preflight$
+DECLARE bootstrap_oid oid; app_oid oid;
+BEGIN
+ IF current_user <> 'unified_lab_collector_app' OR session_user <> 'unified_lab_collector_app' OR current_database() <> 'unified_lab_collector_c0c2' THEN RAISE EXCEPTION 'APP_PREFLIGHT_IDENTITY'; END IF;
+ SELECT oid INTO STRICT bootstrap_oid FROM pg_catalog.pg_roles WHERE rolname='unified_bootstrap_collector_c0c2' AND rolsuper AND NOT rolcanlogin;
+ SELECT oid INTO STRICT app_oid FROM pg_catalog.pg_roles WHERE rolname='unified_lab_collector_app';
+ IF (SELECT count(*) FROM pg_catalog.pg_stat_activity WHERE pid=pg_catalog.pg_backend_pid() AND usesysid=app_oid) <> 1 THEN RAISE EXCEPTION 'BOOTSTRAP_SELF_VISIBILITY'; END IF;
+ IF EXISTS (SELECT 1 FROM pg_catalog.pg_stat_activity WHERE usesysid=bootstrap_oid) THEN RAISE EXCEPTION 'BOOTSTRAP_BACKEND_PRESENT'; END IF;
+END $app_preflight$;
+COMMIT;
+""")
+    migration_script=preflight+migration+marker('migrate')
     payload=digest(b'hello');obs=digest(b'qualification-observation');journal=digest(b'qualification-journal')
     fixture=f"""BEGIN;
 INSERT INTO collector_metadata_v1.instrument VALUES ('SYNTHETIC:PG:V1','SYNTHETIC',NULL);
