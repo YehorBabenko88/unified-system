@@ -40,7 +40,18 @@ PINS={
  ('logger','unified_system/collector_logging.py'):'0fabda35f20eb9480d2c1565914fcaac041c5d9e91167b55d5d94ccc546f1c71',
  ('logger','tests/collector/test_logging.py'):'840511730ac1350c13218de9452b082d3b464b9cb1c7b7d911d8c07241091c24',
 }
-ADOPTED={path:digest for (role,path),digest in PINS.items() if path.startswith('unified_system/')}
+# Current Root production bytes are separate from the immutable historical A4
+# supplier. The latter remains pinned/tested as its own source input below.
+CURRENT_ROOT_SOURCES={
+ 'unified_system/storage/collector_context.py':{
+  'bytes':27665,'sha256':'84b52f42298c157a146f4937a06ff3d618e81c4c3e8ef9eab1a6974b38374165',
+  'oid':'198e77d9efb81e7217170ee8d9fb13e393bc460a',
+  'source_owner_head':'e2e0adf0fd68ef5446913fda6f003c249d335a32',
+  'source_owner_tree':'c3bc6b6826516835c181584d7f9dda5d7478cf34',
+  'root_adoption_commit':'1e734fe9b9dfa04c1576a27cadd5837cbf8a1a4b',
+  'root_adoption_tree':'f41f95b33feadd5a2d7a3bc148725445b92c0045'}}
+ADOPTED={path:digest for (role,path),digest in PINS.items()
+         if path.startswith('unified_system/') and path not in CURRENT_ROOT_SOURCES}
 MANIFEST='integration/collector/v1/source-inputs.json'
 PERMISSIONS={'real_provider_sends','service_creation','acl_changes','production_sql','training','trading','public_submit','authority_mutation'}
 UNIT_MODULES=[('test_profile','tests/collector/test_profile.py'),('test_entry','tests/collector/test_entry.py'),
@@ -92,6 +103,15 @@ def check_manifest(doc):
 
 def check_adopted(files):
  for name,digest in ADOPTED.items():need(name in files and files[name]['sha256']==digest,'ROOT_OWNER_ADOPTION_MISMATCH')
+ current=[]
+ for name,pin in CURRENT_ROOT_SOURCES.items():
+  need(name in files,'ROOT_CURRENT_SOURCE_MISMATCH');row=files[name]
+  need(type(row) is dict and type(row.get('bytes')) is int and type(row.get('sha256')) is str and
+       type(row.get('oid')) is str and (row['bytes'],row['sha256'],row['oid'])==
+       (pin['bytes'],pin['sha256'],pin['oid']),'ROOT_CURRENT_SOURCE_MISMATCH')
+  current.append(dict(path=name,**pin,origin_role='root',historical_supplier_role='a4',
+      historical_supplier_head=INPUTS['a4'][0],historical_supplier_sha256=PINS[('a4',name)],replacement_in_stage=False))
+ return current
 
 
 def remaining_budget(start,now,used):
@@ -159,6 +179,7 @@ def verify_tree(q,root,files):
 
 
 def stage_sources(q,paths,ledgers,out):
+ current=check_adopted(ledgers['root']['files'])
  stage=out/'stage';stage.mkdir();result={};overlays=[]
  for role,origin in (('unified','root'),('grid','grid')):
   target=stage/role;target.mkdir();result[role]={'files':{}}
@@ -168,6 +189,12 @@ def stage_sources(q,paths,ledgers,out):
    dest=target/name;dest.parent.mkdir(parents=True,exist_ok=True)
    with dest.open('xb') as f:f.write(raw)
    result[role]['files'][name]={**pin,'origin_role':origin,'origin_head':ledgers[origin]['head']}
+ # Root's current implementation was already copied from the Root primary
+ # tree. Record its provenance; never overwrite it with historical A4 bytes.
+ current=[dict(binding,origin_head=ledgers['root']['head']) for binding in current]
+ for binding in current:
+  row=result['unified']['files'][binding['path']]
+  row['kind']='ROOT_CURRENT_SOURCE_BINDING_NOT_OVERWRITE';row['root_current_source_binding']=binding
  def copy(role,name,target_role,kind,replace=False):
   pin=ledgers[role]['files'][name];need(pin['sha256']==PINS[(role,name)],'OWNER_SUPPORT_PIN')
   files=result[target_role]['files'];before=files.get(name)
@@ -186,7 +213,7 @@ def stage_sources(q,paths,ledgers,out):
   if name.startswith('tests/') or name.startswith('sql/'):
    copy(role,name,'grid' if role=='a5' else 'unified','STATIC_SQL_ONLY' if name.startswith('sql/') else 'OWNER_TEST_SUPPORT')
  for role,entry in result.items():verify_tree(q,stage/role,entry['files'])
- return {'roles':result,'ordered_overlays':overlays,'production_merge_claim':False}
+ return {'roles':result,'ordered_overlays':overlays,'root_current_source_bindings':current,'production_merge_claim':False}
 
 
 def runtime_data(q):

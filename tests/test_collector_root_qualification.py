@@ -86,8 +86,22 @@ class RootQualificationTests(unittest.TestCase):
 
  def test_no_process_network_or_dll_acquisition(self):
   from unittest.mock import patch
-  with patch('subprocess.Popen',side_effect=AssertionError('process forbidden')),patch('socket.socket',side_effect=AssertionError('network forbidden')),patch('ctypes.WinDLL',side_effect=AssertionError('DLL forbidden')),patch('threading.Thread.start',side_effect=AssertionError('thread forbidden')):
+  with patch('subprocess.Popen',side_effect=AssertionError('process forbidden')) as process,patch('socket.socket',side_effect=AssertionError('network forbidden')) as network,patch('ctypes.WinDLL',side_effect=AssertionError('DLL forbidden'),create=True) as dll,patch('threading.Thread.start',side_effect=AssertionError('thread forbidden')) as thread:
    self.assertIs(self.call()['execution_authority'],False)
+   for sentinel in (process,network,dll,thread):sentinel.assert_not_called()
+ def test_no_acquisition_fixture_without_platform_windll_attribute(self):
+  import sys
+  import types
+  from unittest.mock import patch
+  original=sys.modules.get('ctypes');fake=types.ModuleType('ctypes')
+  self.assertFalse(hasattr(fake,'WinDLL'))
+  try:
+   with patch.dict(sys.modules,{'ctypes':fake}):
+    self.test_no_process_network_or_dll_acquisition()
+    self.assertFalse(hasattr(fake,'WinDLL'))
+  finally:
+   self.assertIs(sys.modules.get('ctypes'),original)
+   self.assertFalse(hasattr(fake,'WinDLL'))
  def test_old_schema_and_software_authority_deny(self):
   self.release['schema']='unified.owned-collector-stopped-service.v1';self.sync()
   with self.assertRaises(ValueError):self.call()
