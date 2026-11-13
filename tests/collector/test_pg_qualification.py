@@ -107,7 +107,7 @@ class PgCustodyTests(unittest.TestCase):
             with self.subTest(slot=slot):self.assertIsNone(pg.public_denial_receipt(pg.CustodyDenied(v)));self.assertEqual(calls,[])
     def test_fixed_native_attempt2_root_rejects_old_alias_and_foreign_profile(self):
         from pathlib import Path
-        profile=Path('C:/Users/INERT');root=profile/'AppData/Local/UnifiedCollectorTest/pg-attempt2'
+        profile=Path(Path.cwd().anchor)/'INERT';root=profile/'AppData/Local/UnifiedCollectorTest/pg-attempt2'
         pg._require_native_root(root,profile)
         for wrong in (root.parent/'pg-attempt1',root/'..',Path('C:/Users/OTHER/AppData/Local/UnifiedCollectorTest/pg-attempt2'),str(root)):
             with self.subTest(wrong=type(wrong).__name__),self.assertRaises(ValueError):pg._require_native_root(wrong,profile)
@@ -226,20 +226,21 @@ class PgCustodyTests(unittest.TestCase):
 
     def test_actual_native_constructor_uses_documented_suspended_flag_with_inert_popen(self):
         import subprocess
+        from unittest.mock import patch
         from pathlib import Path
         from types import SimpleNamespace
-        calls=[];original=subprocess.Popen
+        calls=[]
         process=SimpleNamespace(_handle=123,pid=456)
         def popen(*args,**kwargs):calls.append((args,kwargs));return process
         backend=object.__new__(pg.WindowsBackend);backend.root=Path('C:/INERT/UnifiedCollectorTest/pg-attempt1');backend.secret_root=backend.root/'secrets'
         backend.c=SimpleNamespace(c_void_p=lambda n:n);backend.kernel=object();backend.w=object()
         command=pg.command_for(pg.Plan.model(),'initdb');backend.runtime=SimpleNamespace(_win_identity=lambda *args:['INERT',str(Path(command.argv[0]))])
         entry={}
-        subprocess.Popen=popen
-        try:backend.create_suspended(entry,command)
-        finally:subprocess.Popen=original
+        # Data-only Win32 flag exists only while Popen is the inert test double.
+        with patch.object(subprocess,'Popen',popen),patch.object(subprocess,'CREATE_NO_WINDOW',0x08000000,create=True):
+            backend.create_suspended(entry,command)
         self.assertIs(entry['process'],process);self.assertEqual(len(calls),1)
-        self.assertEqual(calls[0][1]['creationflags'],0x00000004|subprocess.CREATE_NO_WINDOW)
+        self.assertEqual(calls[0][1]['creationflags'],0x00000004|0x08000000)
         self.assertFalse(calls[0][1]['shell']);self.assertTrue(calls[0][1]['close_fds'])
 
     def test_actual_job_setter_closed_profiles_and_win32_flags(self):
