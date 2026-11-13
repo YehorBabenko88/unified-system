@@ -208,13 +208,13 @@ class ServiceResourceTests(unittest.TestCase):
   command="try{Get-UnifiedPoisonProbe -ErrorAction Stop}catch{Write-Output 'POISON_NOT_FOUND'}"
   executable=service._native_tools()['powershell']['path']
   control=service._environment();control['PSModulePath']=str(modules)
-  from tests.native_phase_diagnostics import phase,run_phased
-  control_command=phase('ENTRY')+phase('CONTROL_LOOKUP_BEGIN')+command+';'+phase('CONTROL_LOOKUP_END')+phase('DONE')
+  from tests.native_phase_diagnostics import build_ps_probe,run_phased
+  control_command=build_ps_probe('CONTROL_LOOKUP',command)
   result=run_phased([executable,'-NoProfile','-NonInteractive','-Command',control_command],env=control)
   self.assertEqual(result.returncode,0);self.assertTrue(marker.exists(),'control must demonstrate actual poison autoload');marker.unlink()
   with patch.dict(os.environ,{'PSModulePath':str(modules)}):safe=service._environment()
   self.assertEqual(safe['PSModulePath'],str(service._system_directory()/'WindowsPowerShell/v1.0/Modules'))
-  safe_command=phase('ENTRY')+phase('SAFE_LOOKUP_BEGIN')+command+';'+phase('SAFE_LOOKUP_END')+phase('DONE')
+  safe_command=build_ps_probe('SAFE_LOOKUP',command)
   result=run_phased([executable,'-NoProfile','-NonInteractive','-Command',safe_command],env=safe)
   self.assertEqual(result.returncode,0);self.assertIn(b'POISON_NOT_FOUND',result.stdout);self.assertFalse(marker.exists())
 
@@ -245,16 +245,8 @@ class ServiceResourceTests(unittest.TestCase):
   env=service._environment();env['UNIFIED_TEST_MODULE']=str(module)
   # These child processes only emit known strings; no SCM/ACL API is called.
   command+=";$ps=Join-Path ([Environment]::SystemDirectory) 'WindowsPowerShell\\v1.0\\powershell.exe';$child=\"[Console]::OutputEncoding=[Text.Encoding]::GetEncoding([Globalization.CultureInfo]::CurrentCulture.TextInfo.OEMCodePage);[Console]::Write('C:\\LAB\\'+[char]0xdc+[char]0xe9)\";$enc=[Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($child));$value=[UnifiedStoppedServiceNative]::Run($ps,('-NoProfile -NonInteractive -EncodedCommand '+$enc));if($value -cne ('C:\\LAB\\'+[char]0xdc+[char]0xe9)){throw 'UNICODE_ROUNDTRIP_REJECTED'};$large=\"[Console]::Write(('x'*70000))\";$enc=[Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($large));$limited=$false;try{$null=[UnifiedStoppedServiceNative]::Run($ps,('-NoProfile -NonInteractive -EncodedCommand '+$enc))}catch{$limited=$true};if(-not $limited){throw 'OUTPUT_CAP_NOT_ENFORCED'};Write-Output 'UNICODE_AND_OUTPUT_BOUND_VERIFIED'"
-  from tests.native_phase_diagnostics import phase,run_phased
-  command=phase('ENTRY')+command.replace('$null=[Management.Automation.Language.Parser]::ParseFile',phase('PARSE_BEGIN')+'$null=[Management.Automation.Language.Parser]::ParseFile',1)
-  command=command.replace(';if($e.Count)', ';'+phase('PARSE_END')+'if($e.Count)',1)
-  command=command.replace('$m=Import-Module',phase('IMPORT_BEGIN')+'$m=Import-Module',1)
-  command=command.replace(';& $m {Add-Type',';'+phase('IMPORT_END')+'& $m {'+phase('COMPILE_BEGIN')+'Add-Type',1)
-  command=command.replace(";Write-Output 'DECLARATIONS_COMPILED'",';'+phase('COMPILE_END')+"Write-Output 'DECLARATIONS_COMPILED'",1)
-  command=command.replace('$value=[UnifiedStoppedServiceNative]::Run',phase('UNICODE_BEGIN')+'$value=[UnifiedStoppedServiceNative]::Run',1)
-  command=command.replace(';if($value -cne',';'+phase('UNICODE_END')+'if($value -cne',1)
-  command=command.replace('try{$null=[UnifiedStoppedServiceNative]::Run',phase('CAP_BEGIN')+'try{$null=[UnifiedStoppedServiceNative]::Run',1)
-  command=command.replace(';if(-not $limited)',';'+phase('CAP_END')+'if(-not $limited)',1)+';'+phase('DONE')
+  from tests.native_phase_diagnostics import build_ps_probe,run_phased
+  command=build_ps_probe('MODULE_COMPILE',command)
   result=run_phased([service._native_tools()['powershell']['path'],'-NoProfile','-NonInteractive','-Command',command],env=env,timeout=30)
   self.assertEqual(result.returncode,0,result.stderr.decode(errors='replace'));self.assertIn(b'DECLARATIONS_COMPILED',result.stdout);self.assertIn(b'UNICODE_AND_OUTPUT_BOUND_VERIFIED',result.stdout)
 

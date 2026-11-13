@@ -1,0 +1,90 @@
+name: Optional Collector offline software qualification
+on:
+  pull_request:
+    paths:
+      - 'unified_system/collector_*.py'
+      - 'unified_system/storage/collector_context.py'
+      - 'unified_system/storage/raw_capture.py'
+      - 'tests/collector/**'
+      - 'integration/collector/**'
+      - 'sql/collector/**'
+      - 'tools/collector/qualify.py'
+      - 'tests/ci/test_collector_qualification_source.py'
+      - '.github/workflows/collector-offline-qualified.yml'
+permissions:
+  contents: read
+jobs:
+  software-only:
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-24.04]
+    runs-on: ${{ matrix.os }}
+    env:
+      EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+      PYTHONDONTWRITEBYTECODE: '1'
+      GIT_NO_REPLACE_OBJECTS: '1'
+      GIT_CONFIG_COUNT: '2'
+      GIT_CONFIG_KEY_0: core.autocrlf
+      GIT_CONFIG_VALUE_0: 'false'
+      GIT_CONFIG_KEY_1: core.eol
+      GIT_CONFIG_VALUE_1: lf
+    steps:
+      - name: Exact Root candidate
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: root-source
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Exact Grid Worker source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: YehorBabenko88/bybit-cluster-grid
+          ref: 3bfddc3811e5f88a2b24b5026025f772814f3eb4
+          path: grid-source
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Exact A5 input, one explicit overlay rather than a merge
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: YehorBabenko88/bybit-cluster-grid
+          ref: dec4ac619239f9c84982850be2bb6a7cb896e370
+          path: a5-source
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Exact A4 context, raw and static SQL source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: YehorBabenko88/unified-system
+          ref: 602cb6a66cab820947ef6915479c4490ff101358
+          path: a4-source
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Exact logger input
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: YehorBabenko88/unified-system
+          ref: 07eb13bef9099da750d50943120ac5fdc98db9c6
+          path: logger-source
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12.10'
+          architecture: x64
+      - name: Explicit units, actual E2E and serial owned-process recovery
+        shell: bash
+        env:
+          COLLECTOR_OUT: ${{ runner.temp }}/collector-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.os }}
+        run: |
+          python -I -S -B -X "pycache_prefix=$COLLECTOR_OUT/parent-cache" "$GITHUB_WORKSPACE/root-source/tools/collector/qualify.py" --parent --root "$GITHUB_WORKSPACE/root-source" --grid "$GITHUB_WORKSPACE/grid-source" --a5 "$GITHUB_WORKSPACE/a5-source" --a4 "$GITHUB_WORKSPACE/a4-source" --logger "$GITHUB_WORKSPACE/logger-source" --out "$COLLECTOR_OUT" --include-a5-ast
+      - name: Original evidence and NEW synthetic state, not staged source copies
+        if: ${{ always() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: collector-software-${{ matrix.os }}-${{ github.event.pull_request.head.sha }}
+          path: ${{ runner.temp }}/collector-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.os }}/evidence
+          if-no-files-found: error
+          retention-days: 14
