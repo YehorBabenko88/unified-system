@@ -32,6 +32,14 @@ class IO:
         if self.fault=='close':raise OSError('INERT')
         del self.opened[fd]
 class PrivateWriterTests(unittest.TestCase):
+    def test_native_io_uses_exact_shared_attempt2_root_gate_before_io(self):
+        from pathlib import Path
+        from tools.collector import pg_qualification as q
+        profile=Path('C:/Users/INERT');plan=object();backend=SimpleNamespace(plan=plan,root=profile/'AppData/Local/UnifiedCollectorTest/pg-attempt2',context_identity=('INERT',profile))
+        c=SimpleNamespace(backend=backend,plan=plan)
+        self.assertEqual(w._NativeIO(c).root,backend.root)
+        backend.root=backend.root.parent/'pg-attempt1'
+        with self.assertRaises(ValueError):w._NativeIO(c)
     def setup_writer(self):
         v=packet();io=IO();c=SimpleNamespace(plan=SimpleNamespace(native=False,sql_pins=v.sql_pins()),backend=None);return v,io,w.PrivateWriter(c,v,io=io)
     def stage(self,v,writer):

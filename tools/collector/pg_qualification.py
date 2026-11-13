@@ -25,6 +25,12 @@ SQL_NAMES=('bootstrap','migrate','verify','readback')
 def need(value,code='PG_CUSTODY_DENIED'):
     if value is not True:raise ValueError(code)
 
+def _require_native_root(root,profile):
+    """One new native attempt only; lexical native strings, no alias resolution."""
+    need(type(root) is type(Path()) and type(profile) is type(Path()))
+    need(profile.is_absolute() and root.is_absolute() and '..' not in root.parts and '..' not in profile.parts)
+    need(str(root)==str(profile/'AppData/Local/UnifiedCollectorTest/pg-attempt2'))
+
 @dataclass(frozen=True)
 class Plan:
     root:str
@@ -110,7 +116,7 @@ def public_denial_receipt(error):
         entries.append({**row,'pipes_closed':list(row['pipes_closed'])})
     roles=r['source_roles']
     if not container(roles,list) or roles!=[e['role'] for e in entries]:return None
-    return {**r,'errors':errors,'entries':entries,'source_roles':list(roles)}
+    return {**r,'errors':errors,'entries':entries,'source_roles':list(roles),'command_counts':{n:sum(e['role']==n for e in entries) for n in CAPS},'sql_counts':{n:sum(e['role']=='psql' and e['sql_name']==n for e in entries) for n in SQL_NAMES}}
 
 class PgCustodian:
     """Fixed serial phase transport; no retries, autonomous restart or DB verdict."""
@@ -380,7 +386,7 @@ class WindowsBackend:
         need(seen==set(self.files) and dirs==expected_dirs)
     def admit(self,plan):
         need(plan is self.plan);sid,profile=self._token();local=profile/'AppData/Local'
-        need(self.root==local/'UnifiedCollectorTest/pg-attempt1');_ordinary(local);self._private(local,sid)
+        _require_native_root(self.root,profile);_ordinary(local);self._private(local,sid)
         need(not self.root.exists() and not self.root.is_symlink());self._seal_inputs();
         try:self.pg._listener_pid(55483)
         except self.pg.PostgresStartPending:pass

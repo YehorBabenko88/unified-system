@@ -77,6 +77,12 @@ class Backend:
     def after(self):self.events.append('postcheck')
 
 class PgCustodyTests(unittest.TestCase):
+    def test_fixed_native_attempt2_root_rejects_old_alias_and_foreign_profile(self):
+        from pathlib import Path
+        profile=Path('C:/Users/INERT');root=profile/'AppData/Local/UnifiedCollectorTest/pg-attempt2'
+        pg._require_native_root(root,profile)
+        for wrong in (root.parent/'pg-attempt1',root/'..',Path('C:/Users/OTHER/AppData/Local/UnifiedCollectorTest/pg-attempt2'),str(root)):
+            with self.subTest(wrong=type(wrong).__name__),self.assertRaises(ValueError):pg._require_native_root(wrong,profile)
     def test_receipt_tracks_actual_primary_and_pipe_close_acknowledgements(self):
         b,s,r=self.run_inert();e=r['entries'][0]
         self.assertIs(e['primary_closed'],True);self.assertEqual(e['pipes_closed'],[True,True])
@@ -89,6 +95,7 @@ class PgCustodyTests(unittest.TestCase):
     def test_denial_projection_detached_closed_and_private(self):
         b,s,r=self.run_inert('poll');e=pg.CustodyDenied(r);v=pg.public_denial_receipt(e)
         self.assertEqual(v['scope'],'OWNED_PG_TOOL_CUSTODY_ONLY');self.assertNotIn('inert',str(v))
+        self.assertEqual(v['command_counts'],{'initdb':1,'server':0,'psql':0,'stop':0});self.assertEqual(v['sql_counts'],dict.fromkeys(pg.SQL_NAMES,0))
         r['errors'][0]['code']='PASSWORD_SECRET';self.assertNotIn('PASSWORD_SECRET',str(v))
         self.assertIsNone(pg.public_denial_receipt(RuntimeError('PRIVATE')))
         class Other(pg.CustodyDenied):pass

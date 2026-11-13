@@ -79,7 +79,8 @@ class _NativeIO:
         self.backend=custodian.backend;self.root=self.backend.root;self._fds={}
         require(self.backend.plan is custodian.plan and self.backend.context_identity is not None)
         sid,profile=self.backend.context_identity
-        require(str(self.root)==str(profile/'AppData/Local/UnifiedCollectorTest/pg-attempt1'))
+        from .pg_qualification import _require_native_root
+        _require_native_root(self.root,profile)
     def _context(self):
         require(self.backend._token()==self.backend.context_identity)
         s=_ordinary(self.root);require((s.st_dev,s.st_ino)==self.backend.root_identity);self.backend._private(self.root,self.backend.context_identity[0])
@@ -134,7 +135,7 @@ def run_native_disposable(*,migration,readback,context_id,binding_sha256,admin_p
     custodian=None;stage='RENDER';failure=None;cleanup_error=False;result=None
     try:
         protocol=render_protocol(migration=migration,readback=readback,context_id=context_id,binding_sha256=binding_sha256,admin_password=admin_password,app_password=app_password)
-        plan=Plan('C:/Users/LS-5/AppData/Local/UnifiedCollectorTest/pg-attempt1',native=True,sql_pins=protocol.sql_pins())
+        plan=Plan('C:/Users/LS-5/AppData/Local/UnifiedCollectorTest/pg-attempt2',native=True,sql_pins=protocol.sql_pins())
         stage='NATIVE_BINDING';backend=WindowsBackend(plan,support_modules,job_source)
         stage='ROOT_ADMISSION';custodian=PgCustodian(plan,backend)
         stage='PRIVATE_STAGING';writer=PrivateWriter(custodian,protocol)
