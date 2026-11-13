@@ -71,6 +71,47 @@ class Capture:
 class CustodyDenied(RuntimeError):
     def __init__(self,receipt):self.receipt=receipt;super().__init__('PG_QUALIFICATION_DENIED')
 
+def public_denial_receipt(error):
+    """Exact exception only; detached bounded DATA, never exception/SQL strings.
+
+    Malformed, aliased or extended receipt graphs are unknown (None), not partly
+    trusted. This conveys observed acknowledgements, never a database verdict.
+    """
+    if type(error) is not CustodyDenied:return None
+    r=error.receipt
+    bools=('closed','family_retired','readers_retired','forced_server_retirement','primary_waited_all','primary_closed_all','pipes_closed_all','protocol_complete','transport_ok','database_qualified')
+    ints={'error_overflow':2**63-1,'server_starts':2,'confirmed_stops':2,'output_observed':2**63-1,'output_retained':CAP}
+    keys={'scope','errors','entries','source_roles',*bools,*ints}
+    codes=frozenset(('CLOCK_UNCERTAIN','PRIMARY_FAILURE','READER_JOIN_UNCERTAIN','READER_STATE_UNCERTAIN','PIPE_CLOSE_UNCERTAIN','READERS_NOT_RETIRED','JOB_RETIREMENT_UNCERTAIN','CREATION_OR_JOB_OUTCOME_UNKNOWN','PRIMARY_POLL_UNCERTAIN','PRIMARY_KILL_UNCERTAIN','PRIMARY_WAIT_UNCERTAIN','PRIMARY_HANDLE_CLOSE_UNCERTAIN','OUTPUT_LIMIT_OR_READER_FAILURE','POSTCHECK_UNCERTAIN','CLEANUP_OBSERVED_DEADLINE'))
+    types=frozenset(('ValueError','RuntimeError','OSError','PermissionError','TimeoutError','AssertionError','UNKNOWN'))
+    seen=set()
+    def container(v,t):
+        if type(v) is not t or id(v) in seen:return False
+        seen.add(id(v));return True
+    if not container(r,dict) or set(r)!=keys or r['scope']!='OWNED_PG_TOOL_CUSTODY_ONLY':return None
+    if any(type(r[k]) is not bool for k in bools) or r['database_qualified'] is not False:return None
+    if any(type(r[k]) is not int or not 0<=r[k]<=limit for k,limit in ints.items()):return None
+    if not container(r['errors'],list) or len(r['errors'])>64:return None
+    errors=[]
+    for row in r['errors']:
+        if not container(row,dict) or set(row)!= {'code','error_type'} or type(row['code']) is not str or row['code'] not in codes:return None
+        et=row['error_type']
+        if et is not None and (type(et) is not str or et not in types):return None
+        errors.append(dict(row))
+    if not container(r['entries'],list) or len(r['entries'])>16:return None
+    entries=[]
+    for row in r['entries']:
+        if not container(row,dict) or set(row)!= {'role','sql_name','waited','primary_closed','pipes_closed','readers_retired','creation_unknown'}:return None
+        if type(row['role']) is not str or row['role'] not in CAPS:return None
+        if row['sql_name'] is not None and (type(row['sql_name']) is not str or row['sql_name'] not in SQL_NAMES):return None
+        if (row['role']=='psql')!=(row['sql_name'] is not None):return None
+        if any(type(row[k]) is not bool for k in ('waited','primary_closed','readers_retired','creation_unknown')):return None
+        if not container(row['pipes_closed'],list) or len(row['pipes_closed'])!=2 or any(type(v) is not bool for v in row['pipes_closed']):return None
+        entries.append({**row,'pipes_closed':list(row['pipes_closed'])})
+    roles=r['source_roles']
+    if not container(roles,list) or roles!=[e['role'] for e in entries]:return None
+    return {**r,'errors':errors,'entries':entries,'source_roles':list(roles)}
+
 class PgCustodian:
     """Fixed serial phase transport; no retries, autonomous restart or DB verdict."""
     def __init__(self,plan,backend,*,clock=time.monotonic):
@@ -81,7 +122,9 @@ class PgCustodian:
         n=self.clock();need(type(n) in (int,float) and math.isfinite(n));return n
     def _error(self,code,error=None):
         self.error_total+=1
-        if len(self.errors)<64:self.errors.append({'code':code,'error_type':None if error is None else type(error).__name__[:64]})
+        if len(self.errors)<64:
+            known=(ValueError,RuntimeError,OSError,PermissionError,TimeoutError,AssertionError)
+            self.errors.append({'code':code,'error_type':None if error is None else type(error).__name__ if type(error) in known else 'UNKNOWN'})
     def _remaining(self,end):
         try:return max(0.,end-self._now())
         except BaseException as e:self._error('CLOCK_UNCERTAIN',e);return 0.
@@ -89,7 +132,7 @@ class PgCustodian:
     def _launch(self,command,phase_end):
         need(command==command_for(self.plan,command.role,command.sql_name or 'migrate'))
         need(len(self.records)<16);self.backend.before_command(command);need(self._now()<=phase_end)
-        entry={'role':command.role,'process':None,'job':None,'readers':[],'waited':False,'resumed':False,'creation_unknown':True}
+        entry={'role':command.role,'sql_name':command.sql_name,'process':None,'job':None,'readers':[],'waited':False,'primary_closed':False,'pipes_closed':[False,False],'resumed':False,'creation_unknown':True}
         self.records.append(entry)  # Reserve BEFORE constructors/native creation.
         self.backend.create_suspended(entry,command);need(entry['process'] is not None);entry['creation_unknown']=False
         self.job=self.backend.attach(entry,self.job)
@@ -113,13 +156,16 @@ class PgCustodian:
             if not owner['safe']:safe=False
         if safe:
             for which in (0,1):
-                try:self.backend.close_pipe(entry,which)
+                if entry['pipes_closed'][which]:continue
+                try:self.backend.close_pipe(entry,which);entry['pipes_closed'][which]=True
                 except BaseException as e:self._error('PIPE_CLOSE_UNCERTAIN',e)
         else:self._error('READERS_NOT_RETIRED')
         return safe
     def _wait(self,entry,end):
         code=self.backend.wait(entry,self._remaining(end));entry['waited']=True;need(code==0)
         need(self._join(entry,end));need(not self.capture.failed)
+        if not entry['primary_closed']:
+            self.backend.close_primary(entry);entry['primary_closed']=True
     def run(self,command):
         try:
             self._healthy();need(command.role!='server')
@@ -169,6 +215,8 @@ class PgCustodian:
         reader_states=[]
         for entry in self.records:
             if entry['process'] is None:self.family_retired=False;continue
+            if entry['primary_closed']:
+                reader_states.append(self._join(entry,cleanup_end));continue
             kill=True
             try:kill=self.backend.poll(entry) is None
             except BaseException as e:self._error('PRIMARY_POLL_UNCERTAIN',e)
@@ -179,7 +227,7 @@ class PgCustodian:
             except BaseException as e:self._error('PRIMARY_WAIT_UNCERTAIN',e)
             reader_states.append(self._join(entry,cleanup_end))
             if entry['waited']:
-                try:self.backend.close_primary(entry)
+                try:self.backend.close_primary(entry);entry['primary_closed']=True
                 except BaseException as e:self._error('PRIMARY_HANDLE_CLOSE_UNCERTAIN',e)
         self.readers_retired=all(reader_states) and len(reader_states)==len(self.records)
         if self.capture.failed:self._error('OUTPUT_LIMIT_OR_READER_FAILURE')
@@ -190,7 +238,12 @@ class PgCustodian:
         except BaseException as e:self._error('CLOCK_UNCERTAIN',e)
         return self.snapshot()
     def snapshot(self):
-        return {'scope':'OWNED_PG_TOOL_CUSTODY_ONLY','closed':self.closed,'family_retired':self.family_retired,'readers_retired':self.readers_retired,'errors':list(self.errors),'error_overflow':self.error_total-len(self.errors),'server_starts':self.server_starts,'confirmed_stops':self.confirmed_stops,'forced_server_retirement':self.server is not None,'primary_waited_all':all(e['waited'] for e in self.records),'protocol_complete':self.init_done and self.server_starts==self.confirmed_stops and self.server_starts>0 and self.sql_count>0,'output_observed':self.capture.total,'output_retained':sum(map(len,self.capture.private_bytes())),'transport_ok':bool(self.records) and self.closed and self.family_retired and self.readers_retired and not self.errors,'database_qualified':False,'source_roles':[e['role'] for e in self.records]}
+        entries=[{'role':e['role'],'sql_name':e['sql_name'],'waited':e['waited'],'primary_closed':e['primary_closed'],'pipes_closed':list(e['pipes_closed']),'readers_retired':len(e['readers'])==2 and all(o['safe'] for o in e['readers']),'creation_unknown':e['creation_unknown']} for e in self.records]
+        primary=all(e['primary_closed'] for e in entries);pipes=all(all(e['pipes_closed']) for e in entries)
+        return {'scope':'OWNED_PG_TOOL_CUSTODY_ONLY','closed':self.closed,'family_retired':self.family_retired,'readers_retired':self.readers_retired,'errors':list(self.errors),'error_overflow':self.error_total-len(self.errors),'server_starts':self.server_starts,'confirmed_stops':self.confirmed_stops,'forced_server_retirement':self.server is not None,'primary_waited_all':all(e['waited'] for e in self.records),'primary_closed_all':primary,'pipes_closed_all':pipes,'entries':entries,'protocol_complete':self.init_done and self.server_starts==self.confirmed_stops and self.server_starts>0 and self.sql_count>0,'output_observed':self.capture.total,'output_retained':sum(map(len,self.capture.private_bytes())),'transport_ok':bool(self.records) and self.closed and self.family_retired and self.readers_retired and primary and pipes and not self.errors,'database_qualified':False,'source_roles':[e['role'] for e in self.records]}
+    def bootstrap_session_retired(self):
+        rows=[e for e in self.records if e['role']=='psql' and e['sql_name']=='bootstrap']
+        return len(rows)==1 and rows[0]['waited'] and rows[0]['primary_closed'] and all(rows[0]['pipes_closed']) and len(rows[0]['readers'])==2 and all(o['safe'] for o in rows[0]['readers']) and not self.errors
     def private_output(self):return self.capture.private_bytes()
     def __enter__(self):return self
     def __exit__(self,*exc):self.close();return False

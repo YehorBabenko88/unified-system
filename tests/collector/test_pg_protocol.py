@@ -4,6 +4,26 @@ from tools.collector import pg_protocol as p
 MIGRATION=b"-- SOURCE ONLY. Execute only in a newly authorized isolated PostgreSQL database.\n-- Fail on namespace reuse. This projection grants no publication authority.\nBEGIN;\nCREATE SCHEMA collector_metadata_v1;\nCREATE TABLE collector_metadata_v1.instrument (\n    instrument_id text PRIMARY KEY CHECK (length(instrument_id) BETWEEN 1 AND 256),\n    identity_kind text NOT NULL CHECK (identity_kind IN ('SYNTHETIC', 'UNKNOWN')),\n    identity_contract_sha256 text CHECK (identity_contract_sha256 ~ '^[0-9a-f]{64}$')\n);\nCREATE TABLE collector_metadata_v1.context (\n    context_id text PRIMARY KEY CHECK (context_id ~ '^[0-9a-f]{32}$'),\n    instrument_id text NOT NULL REFERENCES collector_metadata_v1.instrument(instrument_id),\n    binding_sha256 text NOT NULL CHECK (binding_sha256 ~ '^[0-9a-f]{64}$'),\n    store_id uuid NOT NULL,\n    custody text NOT NULL CHECK (custody = 'LOCAL_UNATTESTED'),\n    lifecycle_state text NOT NULL CHECK (lifecycle_state IN ('ACTIVE','STOPPED','UNKNOWN','TERMINAL')),\n    UNIQUE (context_id, binding_sha256)\n);\nCREATE TABLE collector_metadata_v1.observation_ref (\n    context_id text NOT NULL REFERENCES collector_metadata_v1.context(context_id),\n    observation_sha256 text NOT NULL CHECK (observation_sha256 ~ '^[0-9a-f]{64}$'),\n    raw_journal_digest text NOT NULL CHECK (raw_journal_digest ~ '^[0-9a-f]{64}$'),\n    payload_sha256 text CHECK (payload_sha256 ~ '^[0-9a-f]{64}$'),\n    payload_byte_count integer NOT NULL CHECK (payload_byte_count BETWEEN 0 AND 1048576),\n    observation_kind text NOT NULL CHECK (observation_kind IN ('OPAQUE','SYNTHETIC','GAP')),\n    continuity text NOT NULL CHECK (continuity = 'UNKNOWN'),\n    PRIMARY KEY (context_id, observation_sha256),\n    UNIQUE (context_id, observation_sha256, raw_journal_digest),\n    CHECK (payload_sha256 IS NOT NULL OR payload_byte_count = 0)\n);\nCREATE TABLE collector_metadata_v1.local_checkpoint (\n    context_id text PRIMARY KEY,\n    observation_sha256 text NOT NULL,\n    raw_journal_digest text NOT NULL,\n    local_lifecycle_sequence integer NOT NULL CHECK (local_lifecycle_sequence BETWEEN 1 AND 128),\n    native_outcome text NOT NULL CHECK (native_outcome = 'UNKNOWN'),\n    publication_confirmed boolean NOT NULL CHECK (publication_confirmed = false),\n    FOREIGN KEY (context_id, observation_sha256, raw_journal_digest)\n        REFERENCES collector_metadata_v1.observation_ref\n            (context_id, observation_sha256, raw_journal_digest)\n);\nCREATE TABLE collector_metadata_v1.retention_hold (\n    context_id text NOT NULL REFERENCES collector_metadata_v1.context(context_id),\n    hold_id text NOT NULL CHECK (length(hold_id) BETWEEN 1 AND 256),\n    reason text NOT NULL CHECK (length(reason) BETWEEN 1 AND 1024),\n    PRIMARY KEY (context_id, hold_id)\n);\nCOMMIT;\n"
 READBACK=b'-- SOURCE ONLY. Bind $1=context_id and $2=binding_sha256; read-only projection.\nBEGIN READ ONLY;\nSELECT c.context_id, c.instrument_id, c.binding_sha256, c.store_id,\n       c.custody, c.lifecycle_state, i.identity_kind, i.identity_contract_sha256,\n       p.observation_sha256, p.raw_journal_digest, p.local_lifecycle_sequence,\n       p.native_outcome, p.publication_confirmed\nFROM collector_metadata_v1.context AS c\nJOIN collector_metadata_v1.instrument AS i USING (instrument_id)\nLEFT JOIN collector_metadata_v1.local_checkpoint AS p USING (context_id)\nWHERE c.context_id = $1 AND c.binding_sha256 = $2;\nSELECT observation_sha256, raw_journal_digest, payload_sha256,\n       payload_byte_count, observation_kind, continuity\nFROM collector_metadata_v1.observation_ref\nWHERE context_id = $1 AND EXISTS (\n    SELECT 1 FROM collector_metadata_v1.context\n    WHERE context_id = $1 AND binding_sha256 = $2)\nORDER BY observation_sha256\nLIMIT 17;\nSELECT hold_id, reason FROM collector_metadata_v1.retention_hold\nWHERE context_id = $1 AND EXISTS (\n    SELECT 1 FROM collector_metadata_v1.context\n    WHERE context_id = $1 AND binding_sha256 = $2)\nORDER BY hold_id LIMIT 129;\nCOMMIT;\n'
 class ProtocolTests(unittest.TestCase):
+    def test_bootstrap_immutable_superuser_locked_and_verified_in_same_session(self):
+        raw=self.render().script('bootstrap')
+        self.assertNotIn(b'ALTER ROLE unified_bootstrap_collector_c0c2 NOSUPERUSER',raw)
+        lock=b'ALTER ROLE unified_bootstrap_collector_c0c2 NOLOGIN PASSWORD NULL;'
+        self.assertIn(lock,raw);self.assertIn(b'FROM pg_authid',raw)
+        self.assertIn(b'rolsuper AND NOT rolcanlogin AND rolpassword IS NULL',raw)
+        self.assertIn(b'count(*)',raw);self.assertLess(raw.index(lock),raw.index(b'FROM pg_authid'))
+        self.assertLess(raw.index(b'FROM pg_authid'),raw.index(b'PG_PROTOCOL_V1_BOOTSTRAP'))
+    def test_app_checks_exact_session_and_no_bootstrap_membership_or_set_role(self):
+        raw=self.render().script('verify')
+        self.assertIn(b"session_user <> 'unified_lab_collector_app'",raw)
+        self.assertIn(b'NOT rolsuper AND NOT rolcreatedb AND NOT rolcreaterole',raw)
+        self.assertIn(b'NOT rolreplication AND NOT rolbypassrls',raw)
+        self.assertIn(b"pg_has_role(current_user,'unified_bootstrap_collector_c0c2','MEMBER')",raw)
+        self.assertIn(b"pg_has_role(current_user,'unified_bootstrap_collector_c0c2','SET')",raw)
+        self.assertIn(b'BOOTSTRAP_MEMBERSHIP',raw);self.assertIn(b'BOOTSTRAP_LOCK',raw)
+    def test_bootstrap_unretired_session_prevents_any_app_command(self):
+        v=self.render();fake=Custodian(v);fake.bootstrap_session_retired=lambda:False
+        with self.assertRaises(ValueError):p.run_protocol(fake,v,Writer())
+        self.assertEqual(fake.events,['initdb','start','ready','bootstrap','close'])
     def render(self,**kw):
         args=dict(migration=MIGRATION,readback=READBACK,context_id='a'*32,binding_sha256='b'*64,admin_password='c'*64,app_password='d'*64);args.update(kw);return p.render_protocol(**args)
     def test_exact_four_roles_and_pins(self):
@@ -60,5 +80,6 @@ class Custodian:
         if c.role=='psql' and self.fault!='marker':self.output+=('PG_PROTOCOL_V1_'+name.upper()+'\n').encode()
     def start_server(self):self.events.append('start')
     def wait_server_ready(self):self.events.append('ready')
+    def bootstrap_session_retired(self):return True
     def close(self):self.events.append('close');return dict(transport_ok=True,protocol_complete=True)
     def private_output(self):return self.output,b''

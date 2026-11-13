@@ -77,6 +77,49 @@ class Backend:
     def after(self):self.events.append('postcheck')
 
 class PgCustodyTests(unittest.TestCase):
+    def test_receipt_tracks_actual_primary_and_pipe_close_acknowledgements(self):
+        b,s,r=self.run_inert();e=r['entries'][0]
+        self.assertIs(e['primary_closed'],True);self.assertEqual(e['pipes_closed'],[True,True])
+        self.assertIs(r['primary_closed_all'],True);self.assertIs(r['pipes_closed_all'],True)
+    def test_pipe_close_failure_is_sticky_not_family_retirement_proof(self):
+        b=Backend();s=pg.PgCustodian(pg.Plan.model(),b,clock=b.clock)
+        def bad(*args):raise RuntimeError('PRIVATE SQL PASSWORD')
+        b.close_pipe=bad;s.run(pg.command_for(s.plan,'initdb'));r=s.close()
+        self.assertTrue(r['family_retired']);self.assertFalse(r['pipes_closed_all']);self.assertFalse(r['transport_ok'])
+    def test_denial_projection_detached_closed_and_private(self):
+        b,s,r=self.run_inert('poll');e=pg.CustodyDenied(r);v=pg.public_denial_receipt(e)
+        self.assertEqual(v['scope'],'OWNED_PG_TOOL_CUSTODY_ONLY');self.assertNotIn('inert',str(v))
+        r['errors'][0]['code']='PASSWORD_SECRET';self.assertNotIn('PASSWORD_SECRET',str(v))
+        self.assertIsNone(pg.public_denial_receipt(RuntimeError('PRIVATE')))
+        class Other(pg.CustodyDenied):pass
+        self.assertIsNone(pg.public_denial_receipt(Other(r)))
+    def test_denial_projection_rejects_type_alias_unknown_and_oversize(self):
+        import copy
+        b,s,r=self.run_inert('poll')
+        for key,value in [('errors',[{'code':'PRIVATE_SECRET','error_type':'RuntimeError'}]),('output_observed',True),('source_roles',['PASSWORD']),('entries',[{}]*17)]:
+            altered=copy.deepcopy(r);altered[key]=value
+            with self.subTest(key=key):self.assertIsNone(pg.public_denial_receipt(pg.CustodyDenied(altered)))
+    def test_pending_cleanup_projection_never_claims_closed_handles(self):
+        b,s,r=self.run_inert('reader_start');v=pg.public_denial_receipt(pg.CustodyDenied(r))
+        self.assertFalse(v['pipes_closed_all']);self.assertFalse(v['readers_retired']);self.assertFalse(v['transport_ok'])
+    def test_projection_rejects_aliased_and_truncated_receipts(self):
+        import copy
+        b,s,r=self.run_inert('poll');r['errors'].append(r['errors'][0])
+        self.assertIsNone(pg.public_denial_receipt(pg.CustodyDenied(r)))
+        r=s.snapshot();del r['primary_closed_all']
+        self.assertIsNone(pg.public_denial_receipt(pg.CustodyDenied(r)))
+    def test_primary_close_failure_has_no_acknowledgement(self):
+        b=Backend();s=pg.PgCustodian(pg.Plan.model(),b,clock=b.clock)
+        b.close_primary=lambda *args:(_ for _ in ()).throw(RuntimeError('PRIVATE'))
+        with self.assertRaises(pg.CustodyDenied):s.run(pg.command_for(s.plan,'initdb'))
+        r=s.close();self.assertFalse(r['primary_closed_all']);self.assertFalse(r['transport_ok'])
+        self.assertIsNotNone(pg.public_denial_receipt(pg.CustodyDenied(r)))
+    def test_unknown_error_class_is_normalized_without_classname_disclosure(self):
+        class PRIVATE_PASSWORD_CLASS(Exception):pass
+        b=Backend();s=pg.PgCustodian(pg.Plan.model(),b,clock=b.clock)
+        s._error('PRIMARY_FAILURE',PRIVATE_PASSWORD_CLASS('secret'));r=s.close()
+        v=pg.public_denial_receipt(pg.CustodyDenied(r));self.assertIsNotNone(v)
+        self.assertNotIn('PRIVATE_PASSWORD',str(v));self.assertEqual(v['errors'][0]['error_type'],'UNKNOWN')
     def run_inert(self,fault=None,output=None):
         backend=Backend(fault)
         if output is not None:backend.output=output

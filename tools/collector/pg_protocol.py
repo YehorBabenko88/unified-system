@@ -52,10 +52,15 @@ GRANT CONNECT,TEMPORARY ON DATABASE unified_lab_collector_c0c2 TO unified_lab_co
 ALTER ROLE unified_lab_collector_app SET statement_timeout='5s';
 ALTER ROLE unified_lab_collector_app SET lock_timeout='1s';
 ALTER ROLE unified_lab_collector_app SET idle_in_transaction_session_timeout='2s';
-ALTER ROLE unified_bootstrap_collector_c0c2 NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION NOBYPASSRLS;
+ALTER ROLE unified_bootstrap_collector_c0c2 NOLOGIN PASSWORD NULL;
+DO $bootstrap_lock$
+BEGIN
+ IF current_user <> 'unified_bootstrap_collector_c0c2' OR session_user <> 'unified_bootstrap_collector_c0c2' THEN RAISE EXCEPTION 'BOOTSTRAP_SESSION'; END IF;
+ IF (SELECT count(*) FROM pg_authid WHERE rolname='unified_bootstrap_collector_c0c2' AND rolsuper AND NOT rolcanlogin AND rolpassword IS NULL) <> 1 THEN RAISE EXCEPTION 'BOOTSTRAP_LOCK'; END IF;
+END $bootstrap_lock$;
 """)+marker('bootstrap')
-    # Bootstrap is necessarily the initial initdb superuser, then demoted after
-    # provisioning. No permanent service role or existing account is adopted.
+    # PostgreSQL's bootstrap SUPERUSER is immutable. Lock LOGIN/password while
+    # this one bootstrap session is still open, then retire that psql primary.
     migration_script=migration+marker('migrate')
     payload=digest(b'hello');obs=digest(b'qualification-observation');journal=digest(b'qualification-journal')
     fixture=f"""BEGIN;
@@ -68,8 +73,10 @@ COMMIT;
 """
     checks=f"""DO $assert$
 BEGIN
- IF current_user <> 'unified_lab_collector_app' OR current_database() <> 'unified_lab_collector_c0c2' THEN RAISE EXCEPTION 'ROLE_OR_DATABASE'; END IF;
- IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname IN ('unified_lab_collector_app','unified_bootstrap_collector_c0c2') AND (rolsuper OR rolcreatedb OR rolcreaterole OR rolreplication OR rolbypassrls)) THEN RAISE EXCEPTION 'ROLE_PRIVILEGES'; END IF;
+ IF current_user <> 'unified_lab_collector_app' OR session_user <> 'unified_lab_collector_app' OR current_database() <> 'unified_lab_collector_c0c2' THEN RAISE EXCEPTION 'ROLE_OR_DATABASE'; END IF;
+ IF (SELECT count(*) FROM pg_roles WHERE rolname='unified_lab_collector_app' AND NOT rolsuper AND NOT rolcreatedb AND NOT rolcreaterole AND NOT rolreplication AND NOT rolbypassrls AND rolcanlogin AND NOT rolinherit) <> 1 THEN RAISE EXCEPTION 'ROLE_PRIVILEGES'; END IF;
+ IF (SELECT count(*) FROM pg_roles WHERE rolname='unified_bootstrap_collector_c0c2' AND rolsuper AND NOT rolcanlogin) <> 1 THEN RAISE EXCEPTION 'BOOTSTRAP_LOCK'; END IF;
+ IF EXISTS (SELECT 1 FROM pg_auth_members WHERE member=(SELECT oid FROM pg_roles WHERE rolname=current_user)) OR pg_has_role(current_user,'unified_bootstrap_collector_c0c2','MEMBER') OR pg_has_role(current_user,'unified_bootstrap_collector_c0c2','SET') THEN RAISE EXCEPTION 'BOOTSTRAP_MEMBERSHIP'; END IF;
  IF NOT EXISTS (SELECT 1 FROM pg_namespace n JOIN pg_roles r ON n.nspowner=r.oid WHERE n.nspname='collector_metadata_v1' AND r.rolname=current_user) THEN RAISE EXCEPTION 'SCHEMA_OWNER'; END IF;
  IF has_database_privilege(current_user,'postgres','CONNECT') OR has_database_privilege(current_user,'template1','CONNECT') THEN RAISE EXCEPTION 'DATABASE_ISOLATION'; END IF;
  IF (SELECT count(*) FROM collector_metadata_v1.instrument) <> 1 OR NOT EXISTS (SELECT 1 FROM collector_metadata_v1.instrument WHERE instrument_id='SYNTHETIC:PG:V1' AND identity_kind='SYNTHETIC' AND identity_contract_sha256 IS NULL) THEN RAISE EXCEPTION 'INSTRUMENT'; END IF;
@@ -154,7 +161,9 @@ def run_protocol(custodian,protocol,writer):
         for path,raw,secret in protocol.private_files():writer(path,raw,secret)
         custodian.run(command_for(custodian.plan,'initdb'))
         custodian.start_server();custodian.wait_server_ready()
-        for role in SQL_NAMES:custodian.run(command_for(custodian.plan,'psql',role))
+        for role in SQL_NAMES:
+            custodian.run(command_for(custodian.plan,'psql',role))
+            if role=='bootstrap':require(custodian.bootstrap_session_retired() is True)
         custodian.run(command_for(custodian.plan,'stop'))
         custodian.start_server();custodian.wait_server_ready()
         custodian.run(command_for(custodian.plan,'psql','readback'))
