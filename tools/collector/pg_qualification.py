@@ -29,7 +29,7 @@ def _require_native_root(root,profile):
     """One new native attempt only; lexical native strings, no alias resolution."""
     need(type(root) is type(Path()) and type(profile) is type(Path()))
     need(profile.is_absolute() and root.is_absolute() and '..' not in root.parts and '..' not in profile.parts)
-    need(str(root)==str(profile/'AppData/Local/UnifiedCollectorTest/pg-attempt2'))
+    need(str(root)==str(profile/'AppData/Local/UnifiedCollectorTest/pg-attempt3'))
 
 @dataclass(frozen=True)
 class Plan:
@@ -51,7 +51,7 @@ def command_for(plan,role,sql_name='migrate'):
     cluster=str(root/'cluster')
     if role=='initdb':args=('--pgdata',cluster,'--username','unified_bootstrap_collector_c0c2','--encoding','UTF8','--no-locale','--auth-local','scram-sha-256','--auth-host','scram-sha-256','--pwfile',str(root/'secrets/bootstrap-password'),'--data-checksums','--no-clean','--no-instructions')
     elif role=='server':
-        settings=('listen_addresses=127.0.0.1','unix_socket_directories=','max_connections=8','shared_buffers=16MB','work_mem=1MB','maintenance_work_mem=16MB','temp_file_limit=16MB','max_wal_size=128MB','min_wal_size=32MB','fsync=on','full_page_writes=on','synchronous_commit=on','logging_collector=off','log_destination=stderr','log_statement=none','log_min_error_statement=panic','shared_preload_libraries=','session_preload_libraries=','local_preload_libraries=','archive_mode=off','archive_command=','restore_command=')
+        settings=('listen_addresses=127.0.0.1','unix_socket_directories=','max_connections=8','shared_buffers=16MB','work_mem=1MB','maintenance_work_mem=16MB','temp_file_limit=16MB','max_wal_size=128MB','min_wal_size=32MB','fsync=on','full_page_writes=on','synchronous_commit=on','logging_collector=off','log_destination=stderr','lc_messages=C','log_line_prefix=%p ','log_min_messages=log','log_error_verbosity=terse','log_statement=none','log_min_error_statement=panic','shared_preload_libraries=','session_preload_libraries=','local_preload_libraries=','archive_mode=off','archive_command=','restore_command=')
         args=('-D',cluster,'-h','127.0.0.1','-p','55483')+tuple(x for item in settings for x in ('-c',item))
     elif role=='psql':
         need(sql_name in SQL_NAMES)
@@ -62,13 +62,48 @@ def command_for(plan,role,sql_name='migrate'):
     else:raise ValueError('CLOSED_PG_ROLE_REQUIRED')
     return Command(role,(exe,)+args,sql_name if role=='psql' else None)
 
+class _ServerReady:
+    """Private same-entry stderr observation, never a token or public log row."""
+    def __init__(self,capture,entry,pipe):
+        need(type(entry) is dict and type(entry.get('role')) is str and entry['role']=='server' and entry.get('process') is not None and entry.get('job') is not None)
+        process=entry['process'];pid=process.pid;identity=entry.get('identity')
+        need(type(pid) is int and 0<pid<2**32 and pipe is process.stderr)
+        need(type(identity) in (list,tuple) and len(identity)==2 and all(type(v) is str and 0<len(v)<=32768 for v in identity))
+        need(entry.get('resumed',False) is False and entry.get('resume_attempted',False) is False)
+        self.capture=capture;self.entry=entry;self.process=process;self.job=entry['job'];self.pipe=pipe;self.pid=pid;self.identity=tuple(identity)
+        self.expected=str(pid).encode('ascii')+b' LOG:  database system is ready to accept connections';self.pending=bytearray();self.seen=False;self.failed=False
+    def matches(self,entry,job):
+        if entry is not self.entry or type(entry) is not dict or type(entry.get('role')) is not str or entry['role']!='server' or entry.get('_server_marker') is not self or entry.get('process') is not self.process or entry.get('job') is not self.job or job is not self.job:return False
+        identity=entry.get('identity');pid=self.process.pid
+        return type(pid) is int and pid==self.pid and self.process.stderr is self.pipe and type(identity) in (list,tuple) and len(identity)==2 and all(type(v) is str for v in identity) and tuple(identity)==self.identity
+    def feed(self,raw):
+        # Caller holds Capture.lock and has already accounted combined bytes.
+        if self.capture.failed or not self.matches(self.entry,self.job):self.failed=True;self.capture.failed=True;return
+        for value in raw:
+            if value==10:
+                line=bytes(self.pending);self.pending.clear()
+                if line.endswith(b'\r'):line=line[:-1]
+                if line==self.expected:self.seen=True
+            elif len(self.pending)>=4096:self.failed=True;self.capture.failed=True;self.pending.clear();return
+            else:self.pending.append(value)
+    def ready(self,entry,job):
+        with self.capture.lock:
+            return not self.capture.failed and not self.failed and self.seen and any(self is s for s in self.capture._servers) and self.matches(entry,job)
+
 class Capture:
-    def __init__(self):self.lock=threading.Lock();self.parts=[bytearray(),bytearray()];self.total=0;self.failed=False;self.reader_errors=[]
-    def feed(self,which,raw):
+    def __init__(self):self.lock=threading.Lock();self.parts=[bytearray(),bytearray()];self.total=0;self.failed=False;self.reader_errors=[];self._servers=[]
+    def bind_server(self,entry,pipe):
         with self.lock:
-            if type(raw) is not bytes:self.failed=True;return
+            need(len(self._servers)<2 and not any(s.entry is entry for s in self._servers))
+            state=_ServerReady(self,entry,pipe);self._servers.append(state);entry['_server_marker']=state;return state
+    def feed(self,which,raw,*,server=None):
+        with self.lock:
+            if type(which) is not int or which not in (0,1) or type(raw) is not bytes:self.failed=True;return
             room=max(0,CAP-self.total);self.total+=len(raw);self.parts[which].extend(raw[:room])
             if self.total>CAP:self.failed=True
+            if server is not None:
+                if which!=1 or type(server) is not _ServerReady or not any(server is s for s in self._servers):self.failed=True;return
+                server.feed(raw)
     def reader_error(self):
         with self.lock:self.failed=True;self.reader_errors.append('PIPE_READER_FAILURE')
     def private_bytes(self):
@@ -261,14 +296,14 @@ class PgCustodian:
     def __exit__(self,*exc):self.close();return False
 
 class _PipeReader:
-    def __init__(self,pipe,which,capture):
+    def __init__(self,pipe,which,capture,server=None):
         self.pipe=pipe;self.capture=capture
         def drain():
             try:
                 while True:
                     block=pipe.read(4096)
                     if not block:break
-                    capture.feed(which,block)
+                    capture.feed(which,block,server=server)
             except BaseException:capture.reader_error()
             finally:
                 try:pipe.close()
@@ -447,9 +482,19 @@ class WindowsBackend:
         except self.pg.PostgresStartPending:return False
         need(pid==entry['process'].pid)
         need(self.runtime._win_identity(self.kernel,self.w,self.c.c_void_p(int(entry['process']._handle)))==entry['identity'])
+        marker=entry.get('_server_marker')
+        if type(marker) is not _ServerReady or marker.ready(entry,job) is not True:return False
+        # A marker records a state transition, not perpetual availability.
+        # Keep the current held identity/Job/listener checks around it.
+        need(self.poll(entry) is None and self.member(entry,job))
+        need(self.pg._listener_pid(55483)==entry['process'].pid)
+        need(self.runtime._win_identity(self.kernel,self.w,self.c.c_void_p(int(entry['process']._handle)))==entry['identity'])
         return True
     def resume(self,entry):self.pg._resume_owned_primary(entry['process'].pid,entry['identity'])
-    def reader(self,entry,which,capture):return _PipeReader((entry['process'].stdout,entry['process'].stderr)[which],which,capture)
+    def reader(self,entry,which,capture):
+        pipe=(entry['process'].stdout,entry['process'].stderr)[which]
+        server=capture.bind_server(entry,pipe) if entry['role']=='server' and which==1 else None
+        return _PipeReader(pipe,which,capture,server=server)
     def poll(self,entry):return entry['process'].poll()
     def wait(self,entry,timeout):return entry['process'].wait(timeout=max(0.,timeout))
     def kill_primary(self,entry):entry['process'].kill()

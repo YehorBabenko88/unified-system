@@ -108,9 +108,14 @@ class PgCustodyTests(unittest.TestCase):
     def test_fixed_native_attempt2_root_rejects_old_alias_and_foreign_profile(self):
         from pathlib import Path
         profile=Path(Path.cwd().anchor)/'INERT';root=profile/'AppData/Local/UnifiedCollectorTest/pg-attempt2'
-        pg._require_native_root(root,profile)
-        for wrong in (root.parent/'pg-attempt1',root/'..',Path('C:/Users/OTHER/AppData/Local/UnifiedCollectorTest/pg-attempt2'),str(root)):
+        for wrong in (root,root.parent/'pg-attempt1',root/'..',Path('C:/Users/OTHER/AppData/Local/UnifiedCollectorTest/pg-attempt2'),str(root)):
             with self.subTest(wrong=type(wrong).__name__),self.assertRaises(ValueError):pg._require_native_root(wrong,profile)
+    def test_fixed_native_attempt3_positive_consumed_roots_and_aliases_deny(self):
+        from pathlib import Path
+        profile=Path(Path.cwd().anchor)/'INERT';root=profile/'AppData/Local/UnifiedCollectorTest/pg-attempt3'
+        pg._require_native_root(root,profile)
+        for wrong in (root.parent/'pg-attempt1',root.parent/'pg-attempt2',root/'..',str(root),Path(Path.cwd().anchor)/'OTHER/AppData/Local/UnifiedCollectorTest/pg-attempt3'):
+            with self.subTest(kind=type(wrong).__name__),self.assertRaises(ValueError):pg._require_native_root(wrong,profile)
     def test_receipt_tracks_actual_primary_and_pipe_close_acknowledgements(self):
         b,s,r=self.run_inert();e=r['entries'][0]
         self.assertIs(e['primary_closed'],True);self.assertEqual(e['pipes_closed'],[True,True])
@@ -279,3 +284,85 @@ class LimitKernel:
         values=list(self.saved)
         if self.tamper is not None:values[self.tamper]+=1
         x=pointer._obj;x.basic.flags,x.basic.processes,x.basic.job_time,x.process_memory,x.job_memory=values;outsize._obj.value=size;return True
+
+class ServerReadinessTests(unittest.TestCase):
+    """Actual helper predicates/parser; inert streams/entries, never a fake DB."""
+    def entry(self,pid=17):
+        from types import SimpleNamespace
+        return dict(role='server',process=SimpleNamespace(pid=pid,_handle=1,stderr=object()),job=object(),identity=['INERT_CREATION','INERT_IMAGE'])
+    def backend(self,entry):
+        from types import SimpleNamespace
+        b=object.__new__(pg.WindowsBackend);b.kernel=object();b.w=object();b.c=SimpleNamespace(c_void_p=lambda v:v)
+        b.poll=lambda e:None;b.member=lambda e,j:True;b.pg=SimpleNamespace(_listener_pid=lambda port:entry['process'].pid)
+        b.runtime=SimpleNamespace(_win_identity=lambda *args:list(entry['identity']));return b
+    def bound(self,pid=17):
+        e=self.entry(pid);c=pg.Capture();watch=c.bind_server(e,e['process'].stderr);return e,c,watch
+    def marker(self,pid=17):return str(pid).encode()+b' LOG:  database system is ready to accept connections\n'
+    def test_owned_tcp_listener_without_normal_marker_is_not_ready(self):
+        e=self.entry();b=self.backend(e)
+        self.assertFalse(b.server_ready(e,e['job']),'owned listening socket is not PostgreSQL accepting connections')
+    def test_exact_server_stderr_marker_and_owned_transport_are_ready(self):
+        e,c,w=self.bound();c.feed(1,self.marker(),server=w);self.assertTrue(self.backend(e).server_ready(e,e['job']))
+    def test_marker_every_chunk_boundary_and_crlf_require_complete_record(self):
+        raw=self.marker()
+        for index in range(len(raw)):
+            e,c,w=self.bound();c.feed(1,raw[:index],server=w);self.assertFalse(self.backend(e).server_ready(e,e['job']))
+            c.feed(1,raw[index:],server=w);self.assertTrue(self.backend(e).server_ready(e,e['job']))
+        e,c,w=self.bound();c.feed(1,raw[:-1]+b'\r\n',server=w);self.assertTrue(self.backend(e).server_ready(e,e['job']))
+    def test_wrong_pid_substring_recovery_marker_and_extra_text_deny(self):
+        for raw in (self.marker(18),b'PREFIX '+self.marker(),self.marker().replace(b'connections',b'read-only connections'),self.marker()[:-1]+b' EXTRA\n',self.marker()[:-1]):
+            e,c,w=self.bound();c.feed(1,raw,server=w)
+            with self.subTest(kind=len(raw)):self.assertFalse(self.backend(e).server_ready(e,e['job']))
+    def test_shared_initdb_psql_and_stdout_bytes_cannot_mint_marker(self):
+        e,c,w=self.bound();c.feed(1,self.marker());c.feed(0,self.marker());self.assertFalse(self.backend(e).server_ready(e,e['job']))
+        c.feed(0,self.marker(),server=w);self.assertFalse(self.backend(e).server_ready(e,e['job']));self.assertTrue(c.failed)
+        other=self.entry();other['role']='initdb'
+        with self.assertRaises(ValueError):pg.Capture().bind_server(other,other['process'].stderr)
+    def test_line_overflow_reader_error_and_combined_output_overflow_are_sticky(self):
+        for fault in ('line','reader','combined'):
+            e,c,w=self.bound()
+            if fault=='line':c.feed(1,b'x'*4097+b'\n',server=w)
+            elif fault=='reader':c.reader_error()
+            else:c.feed(0,b'x'*(pg.CAP+1))
+            c.feed(1,self.marker(),server=w)
+            with self.subTest(fault=fault):self.assertTrue(c.failed);self.assertFalse(self.backend(e).server_ready(e,e['job']))
+    def test_restart_entry_cannot_use_previous_marker_or_copied_state(self):
+        e,c,w=self.bound();c.feed(1,self.marker(),server=w);e2=self.entry(18);w2=c.bind_server(e2,e2['process'].stderr)
+        self.assertTrue(self.backend(e).server_ready(e,e['job']));self.assertFalse(self.backend(e2).server_ready(e2,e2['job']))
+        e2['_server_marker']=w;self.assertFalse(self.backend(e2).server_ready(e2,e2['job']))
+    def test_process_identity_job_or_pipe_rebinding_denies(self):
+        from types import SimpleNamespace
+        for field in ('identity','job','process','stderr'):
+            e,c,w=self.bound();c.feed(1,self.marker(),server=w);b=self.backend(e)
+            if field=='identity':e['identity']=['OTHER','INERT_IMAGE']
+            elif field=='job':e['job']=object()
+            elif field=='process':e['process']=SimpleNamespace(pid=17,_handle=1,stderr=object())
+            else:e['process'].stderr=object()
+            with self.subTest(field=field):self.assertFalse(b.server_ready(e,e['job']))
+    def test_exited_process_foreign_listener_or_foreign_job_never_ready(self):
+        e,c,w=self.bound();c.feed(1,self.marker(),server=w);b=self.backend(e);b.poll=lambda e:1
+        with self.assertRaises(ValueError):b.server_ready(e,e['job'])
+        b=self.backend(e);b.pg._listener_pid=lambda p:999
+        with self.assertRaises(ValueError):b.server_ready(e,e['job'])
+        b=self.backend(e);self.assertFalse(b.server_ready(e,object()))
+    def test_only_actual_server_stderr_reader_binds_observer_before_start(self):
+        from types import SimpleNamespace
+        e=self.entry();e['process'].stdout=object();c=pg.Capture();b=self.backend(e);calls=[];old=pg._PipeReader
+        def reader(pipe,which,capture,server=None):calls.append((pipe,which,server));return object()
+        pg._PipeReader=reader
+        try:b.reader(e,0,c);b.reader(e,1,c)
+        finally:pg._PipeReader=old
+        self.assertIsNone(calls[0][2]);self.assertIsNotNone(calls[1][2]);self.assertIs(calls[1][2],e['_server_marker'])
+        self.assertFalse(calls[1][2].seen)
+        late=self.entry();late['resumed']=True
+        with self.assertRaises(ValueError):pg.Capture().bind_server(late,late['process'].stderr)
+    def test_no_bootstrap_launch_while_ready_predicate_remains_false(self):
+        b=Backend();s=pg.PgCustodian(pg.Plan.model(),b,clock=b.clock);s.run(pg.command_for(s.plan,'initdb'));s.start_server()
+        b.server_ready=lambda *args:False
+        with self.assertRaises(pg.CustodyDenied):s.wait_server_ready()
+        self.assertNotIn('psql',s.snapshot()['source_roles']);self.assertIn('terminate_job',b.events)
+    def test_server_command_closed_logging_and_existing_budgets_roles_preserved(self):
+        args=pg.command_for(pg.Plan.model(),'server').argv
+        for setting in ('lc_messages=C','log_line_prefix=%p ','log_min_messages=log','log_error_verbosity=terse','logging_collector=off','log_destination=stderr','log_statement=none','log_min_error_statement=panic'):
+            with self.subTest(setting=setting):self.assertIn(setting,args)
+        self.assertEqual(pg.SQL_NAMES,('bootstrap','migrate','verify','readback'));self.assertEqual(pg.CAPS['server'],15.);self.assertEqual(pg.CAP,262144)

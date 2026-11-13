@@ -37,9 +37,16 @@ class PrivateWriterTests(unittest.TestCase):
         from tools.collector import pg_qualification as q
         profile=Path(Path.cwd().anchor)/'INERT';plan=object();backend=SimpleNamespace(plan=plan,root=profile/'AppData/Local/UnifiedCollectorTest/pg-attempt2',context_identity=('INERT',profile))
         c=SimpleNamespace(backend=backend,plan=plan)
-        self.assertEqual(w._NativeIO(c).root,backend.root)
+        with self.assertRaises(ValueError):w._NativeIO(c)
         backend.root=backend.root.parent/'pg-attempt1'
         with self.assertRaises(ValueError):w._NativeIO(c)
+    def test_native_io_attempt3_positive_consumed_roots_negative_before_io(self):
+        from pathlib import Path
+        profile=Path(Path.cwd().anchor)/'INERT';plan=object();backend=SimpleNamespace(plan=plan,root=profile/'AppData/Local/UnifiedCollectorTest/pg-attempt3',context_identity=('INERT',profile))
+        c=SimpleNamespace(backend=backend,plan=plan);self.assertEqual(w._NativeIO(c).root,backend.root)
+        for name in ('pg-attempt1','pg-attempt2'):
+            backend.root=profile/'AppData/Local/UnifiedCollectorTest'/name
+            with self.subTest(name=name),self.assertRaises(ValueError):w._NativeIO(c)
     def setup_writer(self):
         v=packet();io=IO();c=SimpleNamespace(plan=SimpleNamespace(native=False,sql_pins=v.sql_pins()),backend=None);return v,io,w.PrivateWriter(c,v,io=io)
     def stage(self,v,writer):
