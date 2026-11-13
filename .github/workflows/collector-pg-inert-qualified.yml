@@ -1,4 +1,4 @@
-name: PG inert unit73 qualification
+name: PG inert unit87 qualification
 on:
   pull_request:
     paths: ['tools/collector/pg_*.py', 'tests/collector/test_pg_*.py', 'tools/collector/qualify_pg_inert.py', 'tests/ci/test_collector_pg_inert_qualification_source.py', '.github/workflows/collector-pg-inert-qualified.yml']
@@ -11,7 +11,7 @@ env:
   GIT_CONFIG_KEY_1: core.eol
   GIT_CONFIG_VALUE_1: lf
 jobs:
-  inert73:
+  inert87:
     strategy:
       fail-fast: false
       matrix:
@@ -35,10 +35,10 @@ jobs:
         with:
           python-version: '3.12.10'
           architecture: x64
-      - name: Exact source and inert73 only, no PG or native actions
+      - name: Exact source and inert87 only, no PG or native actions
         env:
           EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
-          PG_INERT_OUT: ${{ runner.temp }}/pg-inert73-${{ github.run_id }}-${{ github.run_attempt }}
+          PG_INERT_OUT: ${{ runner.temp }}/pg-inert87-${{ github.run_id }}-${{ github.run_attempt }}
         shell: python -I -S -B {0}
         run: |
           import os,pathlib,subprocess,sys
@@ -50,6 +50,6 @@ jobs:
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
-          name: pg-inert73-${{ matrix.os }}-${{ github.run_id }}-${{ github.run_attempt }}
-          path: ${{ runner.temp }}/pg-inert73-${{ github.run_id }}-${{ github.run_attempt }}/evidence
+          name: pg-inert87-${{ matrix.os }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/pg-inert87-${{ github.run_id }}-${{ github.run_attempt }}/evidence
           if-no-files-found: warn
