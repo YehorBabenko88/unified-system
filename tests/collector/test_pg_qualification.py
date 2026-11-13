@@ -237,7 +237,7 @@ class PgCustodyTests(unittest.TestCase):
         command=pg.command_for(pg.Plan.model(),'initdb');backend.runtime=SimpleNamespace(_win_identity=lambda *args:['INERT',str(Path(command.argv[0]))])
         entry={}
         # Data-only Win32 flag exists only while Popen is the inert test double.
-        with patch.object(subprocess,'Popen',popen),patch.object(subprocess,'CREATE_NO_WINDOW',0x08000000,create=True):
+        with patch.object(subprocess,'Popen',popen),patch.object(subprocess,'CREATE_NO_WINDOW',0x08000000,create=True),patch.dict(pg.os.environ,{'SYSTEMROOT':'C:/INERT/Windows','WINDIR':'C:/INERT/Windows','COMSPEC':'C:/INERT/Windows/System32/cmd.exe'},clear=True):
             backend.create_suspended(entry,command)
         self.assertIs(entry['process'],process);self.assertEqual(len(calls),1)
         self.assertEqual(calls[0][1]['creationflags'],0x00000004|0x08000000)
