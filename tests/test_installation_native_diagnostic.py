@@ -1,7 +1,7 @@
 """Closed failure stages only; no native service effects in these tests."""
 import json,unittest,os,subprocess
 from unified_system import installation_service as service
-from tests.native_phase_diagnostics import phase,run_phased
+from tests.native_phase_diagnostics import build_ps_probe,run_phased
 
 class NativeDiagnosticTests(unittest.TestCase):
  @unittest.skipUnless(os.name=='nt','PowerShell fake registry bootstrap; no registry operations')
@@ -23,22 +23,14 @@ try{& $m {param($key) Write-NewOwnedNssmApplication $key 'C:\LAB\python.exe'} $p
 if(!$rejected -or $parent.Creates -ne 0 -or $parameters.Saved -cne 'FOREIGN'){throw 'FOREIGN_ADOPTED'}
 Write-Output 'INERT_NSSM_BOOTSTRAP_VERIFIED'
 '''
-  command=phase('ENTRY')+command.replace('$m=Import-Module',phase('IMPORT_BEGIN')+'$m=Import-Module',1)
-  command=command.replace('$parameters=',phase('IMPORT_END')+phase('MEMBER_BEGIN')+phase('OBJECT_BEGIN')+'$parameters=',1)
-  command=command.replace('$parameters|Add-Member',phase('OBJECT_END')+phase('FIRST_MEMBER_BEGIN')+'$parameters|Add-Member',1)
-  command=command.replace('$parameters|Add-Member ScriptMethod GetValue ',phase('FIRST_MEMBER_END')+'$parameters|Add-Member ScriptMethod GetValue ',1)
-  command=command.replace('& $m {param($key)',phase('MEMBER_END')+'& $m {param($key)',1)+phase('DONE')
+  command=build_ps_probe('NSSM_BOOTSTRAP',command)
   env=service._environment();env['UNIFIED_TEST_MODULE']=str(service.MODULE)
   child=run_phased([service._native_tools()['powershell']['path'],'-NoProfile','-NonInteractive','-Command',command],env=env)
   self.assertIn(b'INERT_NSSM_BOOTSTRAP_VERIFIED',child.stdout)
  @unittest.skipUnless(os.name=='nt','Windows unprivileged child exit observation')
  def test_real_child_exit_code_without_service_or_acl_operations(self):
   command="$ErrorActionPreference='Stop';$m=Import-Module -Name ([WildcardPattern]::Escape($env:UNIFIED_TEST_MODULE)) -PassThru;& $m {Add-Type -TypeDefinition $script:Native;$script:NativeStage='NSSM_SET_APPLICATION'};$ps=Join-Path ([Environment]::SystemDirectory) 'WindowsPowerShell\\v1.0\\powershell.exe';try{$null=[UnifiedStoppedServiceNative]::Run($ps,'-NoProfile -NonInteractive -Command \"exit 7\"')}catch{};if((Get-UnifiedOwnedNativeExitCode) -ne 7){throw 'EXIT_FACT_REJECTED'};Write-Output 'EXIT_FACT_VERIFIED'"
-  command=phase('ENTRY')+command.replace('$m=Import-Module',phase('IMPORT_BEGIN')+'$m=Import-Module',1)
-  command=command.replace(';& $m {Add-Type',';'+phase('IMPORT_END')+'& $m {'+phase('COMPILE_BEGIN')+'Add-Type',1)
-  command=command.replace("$script:NativeStage='NSSM_SET_APPLICATION'",phase('COMPILE_END')+"$script:NativeStage='NSSM_SET_APPLICATION'",1)
-  command=command.replace('try{$null=',phase('CHILD_BEGIN')+'try{$null=',1)
-  command=command.replace('catch{};if(',"catch{};"+phase('CHILD_END')+'if(',1)+';'+phase('DONE')
+  command=build_ps_probe('CHILD_EXIT',command)
   env=service._environment();env['UNIFIED_TEST_MODULE']=str(service.MODULE)
   child=run_phased([service._native_tools()['powershell']['path'],'-NoProfile','-NonInteractive','-Command',command],env=env)
   self.assertIn(b'EXIT_FACT_VERIFIED',child.stdout)

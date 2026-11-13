@@ -184,8 +184,108 @@ function Write-NewOwnedNssmApplication($ServiceKey,[string]$Application){
   if($parameters.GetValue('Application',$null,[Microsoft.Win32.RegistryValueOptions]::DoNotExpandEnvironmentNames) -cne $Application -or $parameters.GetValueKind('Application') -ne [Microsoft.Win32.RegistryValueKind]::ExpandString){throw 'NSSM_APPLICATION_SEED_REJECTED'}
  }finally{$parameters.Dispose()}
 }
+function Get-OwnedCollectorExecutorPin {
+ # Integrity of the imported executor file, not operational approval. The future
+ # Python boundary must independently pin exact primary bytes before invocation.
+ $module=$MyInvocation.MyCommand.Module
+ if($null -eq $module -or [string]::IsNullOrEmpty($module.Path)){throw 'COLLECTOR_EXECUTOR_UNAVAILABLE'}
+ $stream=$null;$hash=$null;$primary=$null;$result=$null
+ $cleanup=[Collections.Generic.List[Exception]]::new()
+ try{
+  $stream=[IO.File]::OpenRead($module.Path)
+  $hash=[Security.Cryptography.SHA256]::Create()
+  if($stream.Length -le 0 -or $stream.Length -gt 1048576){throw 'COLLECTOR_EXECUTOR_SIZE_REJECTED'}
+  $result=([BitConverter]::ToString($hash.ComputeHash($stream))).Replace('-','').ToLowerInvariant()
+ }catch{$primary=$_}
+ finally{
+  if($null -ne $hash){try{$hash.Dispose()}catch{$cleanup.Add($_.Exception)}}
+  if($null -ne $stream){try{$stream.Dispose()}catch{$cleanup.Add($_.Exception)}}
+ }
+ if($cleanup.Count -gt 0){
+  $failures=[Collections.Generic.List[Exception]]::new()
+  if($null -ne $primary){$failures.Add($primary.Exception)}
+  foreach($failure in $cleanup){$failures.Add($failure)}
+  throw [AggregateException]::new('COLLECTOR_EXECUTOR_CUSTODY_UNCERTAIN',$failures.ToArray())
+ }
+ if($null -ne $primary){throw $primary}
+ return $result
+}
+function ConvertTo-OwnedCollectorString([string]$Value){
+ $text=[Text.StringBuilder]::new();$null=$text.Append('"')
+ foreach($char in $Value.ToCharArray()){
+  $n=[int]$char
+  switch($n){
+   8 {$null=$text.Append('\b');continue}
+   9 {$null=$text.Append('\t');continue}
+   10 {$null=$text.Append('\n');continue}
+   12 {$null=$text.Append('\f');continue}
+   13 {$null=$text.Append('\r');continue}
+   34 {$null=$text.Append('\"');continue}
+   92 {$null=$text.Append('\\');continue}
+   default {if($n -lt 32 -or $n -gt 126){$null=$text.Append(('\u{0:x4}' -f $n))}else{$null=$text.Append($char)}}
+  }
+ }
+ $null=$text.Append('"');return $text.ToString()
+}
+function ConvertTo-OwnedCollectorCanonical($Value,[string]$Omit=''){
+ if($Value -is [string]){return ConvertTo-OwnedCollectorString $Value}
+ if($null -eq $Value -or $Value.GetType() -ne [Management.Automation.PSCustomObject]){throw 'COLLECTOR_CANONICAL_TYPE_REJECTED'}
+ [string[]]$keys=@($Value.PSObject.Properties.Name);[Array]::Sort($keys,[StringComparer]::Ordinal)
+ $parts=@();foreach($key in $keys){if($key -cne $Omit){$parts+=((ConvertTo-OwnedCollectorString $key)+':'+(ConvertTo-OwnedCollectorCanonical $Value.$key))}}
+ return '{'+($parts -join ',')+'}'
+}
+function Assert-OwnedCollectorKeys($Value,[string[]]$Fields){
+ if($null -eq $Value -or $Value.GetType() -ne [Management.Automation.PSCustomObject]){throw 'COLLECTOR_CLOSED_KEYS_REQUIRED'}
+ $properties=@($Value.PSObject.Properties)
+ if($properties.Count -ne $Fields.Count){throw 'COLLECTOR_CLOSED_KEYS_REQUIRED'}
+ foreach($property in $properties){if($property.MemberType -ne [Management.Automation.PSMemberTypes]::NoteProperty -or $property.Name -cnotin $Fields){throw 'COLLECTOR_CLOSED_KEYS_REQUIRED'}}
+}
+function Assert-OwnedCollectorPlan($p){
+ $fields=@('schema','installation_id','node_id','computer_name','role','root','code','state','capsule_root','manifest_sha256','service_name','service_sid','nssm','nssm_sha256','python','python_sha256','bootstrap','bootstrap_sha256','entry','entry_sha256','parameters','executor_sha256','native_tools','activation','plan_sha256','collector_profile_sha256','source_manifest_sha256','collector_bootstrap_sha256','security_helper_sha256','job_helper_sha256')
+ Assert-OwnedCollectorKeys $p $fields
+ foreach($field in $fields){if($field -cne 'native_tools' -and ($p.$field -isnot [string] -or $p.$field.Length -gt 8192)){throw 'COLLECTOR_EXACT_STRING_REQUIRED'}}
+ Assert-OwnedCollectorKeys $p.native_tools @('sc','powershell')
+ foreach($tool in @($p.native_tools.sc,$p.native_tools.powershell)){
+  Assert-OwnedCollectorKeys $tool @('path','sha256')
+  if($tool.path -isnot [string] -or $tool.sha256 -isnot [string]){throw 'COLLECTOR_EXACT_STRING_REQUIRED'}
+ }
+ if($p.schema -cne 'unified.owned-collector-stopped-service.v1' -or $p.role -cne 'COLLECTOR' -or $p.activation -cne 'BLOCKED'){throw 'COLLECTOR_KIND_REJECTED'}
+ foreach($field in $fields){if($field.EndsWith('_sha256',[StringComparison]::Ordinal) -and $p.$field -cnotmatch '^[a-f0-9]{64}\z'){throw 'COLLECTOR_DIGEST_REJECTED'}}
+ foreach($field in @('installation_id','node_id','computer_name')){if($p.$field -cnotmatch '^[A-Za-z0-9][A-Za-z0-9_-]{0,63}\z'){throw 'COLLECTOR_LABEL_REJECTED'}}
+ # Match Python _path inputs; derived code/member paths are root-bound below.
+ foreach($path in @($p.root,$p.capsule_root,$p.native_tools.sc.path,$p.native_tools.powershell.path)){if($path.Length -gt 4096){throw 'COLLECTOR_PATH_REJECTED'}}
+ foreach($path in @($p.root,$p.code,$p.state,$p.capsule_root,$p.nssm,$p.python,$p.bootstrap,$p.entry,$p.native_tools.sc.path,$p.native_tools.powershell.path)){
+  if($path.Length -gt 8192 -or $path -cnotmatch '^[A-Za-z]:\\' -or $path -match '["\x00-\x1f]' -or [IO.Path]::GetFullPath($path) -cne $path){throw 'COLLECTOR_PATH_REJECTED'}
+ }
+ $code=[IO.Path]::Combine($p.root,'code')
+ if($p.code -cne $code -or $p.state -cne [IO.Path]::Combine($p.root,'state') -or $p.nssm -cne [IO.Path]::Combine($code,'runtime\nssm\nssm.exe') -or $p.python -cne [IO.Path]::Combine($code,'runtime\python\python.exe') -or $p.bootstrap -cne [IO.Path]::Combine($code,'sources\unified-system\unified_system\collector_service_bootstrap.py') -or $p.entry -cne [IO.Path]::Combine($code,'sources\unified-system\unified_system\collector_service_entry.py') -or $p.parameters -cne ('-I -S -B "'+$p.entry+'"')){throw 'COLLECTOR_ROOT_BINDING_MISMATCH'}
+ $comparison=[StringComparison]::OrdinalIgnoreCase
+ if([string]::Equals($p.root,$p.capsule_root,$comparison) -or $p.root.StartsWith($p.capsule_root.TrimEnd('\')+'\',$comparison) -or $p.capsule_root.StartsWith($p.root.TrimEnd('\')+'\',$comparison)){throw 'COLLECTOR_ROOT_OVERLAP'}
+ $pins=@{entry_sha256='3645dddef0ac6479edcc22ac61203db14fe802aa37641fa50ef2c1535f46f3cb';bootstrap_sha256='6d3be096e0df7d7633b14b55ec9d049e25b537bb530ba17f995c10a357b85005';collector_bootstrap_sha256='6d3be096e0df7d7633b14b55ec9d049e25b537bb530ba17f995c10a357b85005';security_helper_sha256='a8012a04c4a0507a72bd6ba38c63ad0af855d5f25efea7669ea11db1386d8d45';nssm_sha256='eee9c44c29c2be011f1f1e43bb8c3fca888cb81053022ec5a0060035de16d848'}
+ foreach($field in $pins.Keys){if($p.$field -cne $pins[$field]){throw 'COLLECTOR_REVIEWED_PIN_MISMATCH'}}
+ if($p.executor_sha256 -cne (Get-OwnedCollectorExecutorPin)){throw 'COLLECTOR_EXECUTOR_PIN_MISMATCH'}
+ foreach($tool in @($p.native_tools.sc,$p.native_tools.powershell)){if($tool.sha256 -cnotmatch '^[a-f0-9]{64}\z'){throw 'COLLECTOR_DIGEST_REJECTED'}}
+ $identity=[pscustomobject]@{domain=$p.schema;installation_id=$p.installation_id;node_id=$p.node_id}
+ $name='UnifiedCollector_'+(Hash-OwnedText ((ConvertTo-OwnedCollectorCanonical $identity)+"`n")).Substring(0,24)
+ if($p.service_name -cne $name -or $p.service_sid -cnotmatch '^S-1-5-80-(?:[0-9]+-){4}[0-9]+\z'){throw 'COLLECTOR_SERVICE_BINDING_MISMATCH'}
+ if((Hash-OwnedText ((ConvertTo-OwnedCollectorCanonical $p 'plan_sha256')+"`n")) -cne $p.plan_sha256){throw 'COLLECTOR_PLAN_SEAL_MISMATCH'}
+}
+function Get-OwnedCollectorExpected($Plan){
+ Assert-OwnedCollectorPlan $Plan
+ return @{service_name=$Plan.service_name;service_sid=$Plan.service_sid;account='NT AUTHORITY\LocalService';start_type=3;sid_type=1;state=1;binary_path='"'+$Plan.nssm+'"';application=$Plan.python;parameters=$Plan.parameters;directory=$Plan.code;app_exit='Exit';marker=$Plan.plan_sha256;acl_policy='EXACT_SERVICE_SID_V1';execution_authority=$false}
+}
+function Invoke-OwnedCollectorService($Request){
+ Assert-OwnedCollectorKeys $Request @('action','plan')
+ if($Request.action -isnot [string] -or $Request.action -cnotin @('BEGIN','SEAL','REGISTER','INSPECT')){throw 'COLLECTOR_ACTION_REJECTED'}
+ Assert-OwnedCollectorPlan $Request.plan
+ # No real independent operational provider or new-kind phase-bound Python
+ # boundary exists yet. No admin/SID/member/native/ACL command precedes this.
+ # Hashes and syntactically valid plans are data, never permission to mutate.
+ throw 'COLLECTOR_OPERATIONAL_ADAPTER_NOT_AVAILABLE'
+}
 function Invoke-UnifiedOwnedService($Request){
  $p=$Request.plan
+ if($p.schema -is [string] -and $p.schema -ceq 'unified.owned-collector-stopped-service.v1'){return Invoke-OwnedCollectorService $Request}
  if(-not [string]::Equals([string]$p.computer_name,[Environment]::MachineName,[StringComparison]::OrdinalIgnoreCase)){throw 'COMPUTER_BINDING_MISMATCH'}
  Assert-OwnedAdmin
  $ps=Join-Path ([Environment]::SystemDirectory) 'WindowsPowerShell\v1.0\powershell.exe'

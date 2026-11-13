@@ -16,12 +16,14 @@ class Journal:
             db.execute("CREATE TABLE IF NOT EXISTS transitions (sequence INTEGER PRIMARY KEY, state TEXT NOT NULL, receipt TEXT, previous_hash TEXT NOT NULL, digest TEXT NOT NULL)")
             db.commit()
 
-    def read(self):
+    def read(self, *, max_records=100000):
+        if type(max_records) is not int or not 1 <= max_records <= 100000:
+            raise ContractError("invalid journal read bound")
         if not self.path.is_file():
             return []
         with closing(sqlite3.connect(self.path.resolve().as_uri() + "?mode=ro", uri=True, timeout=5)) as db:
-            rows=db.execute("SELECT sequence,state,receipt,previous_hash,digest FROM transitions ORDER BY sequence LIMIT 100001").fetchall()
-        if len(rows)>100000:
+            rows=db.execute("SELECT sequence,state,receipt,previous_hash,digest FROM transitions ORDER BY sequence LIMIT ?", (max_records+1,)).fetchall()
+        if len(rows)>max_records:
             raise ContractError("journal capacity exceeded")
         import hashlib
         previous="0"*64
