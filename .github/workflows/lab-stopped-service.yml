@@ -1,12 +1,59 @@
 name: Disposable Windows stopped-service acceptance
-on: [push, pull_request, workflow_dispatch]
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      source_sha:
+        description: Exact source SHA reviewed for hosted operational effects
+        required: true
+        type: string
+      authorization_commit:
+        description: Exact commit containing operator scope record
+        required: true
+        type: string
+      authorization_sha256:
+        description: Record integrity hash (does not grant approval)
+        required: true
+        type: string
 permissions:
   contents: read
 concurrency:
   group: stopped-service-${{ github.event_name }}-${{ github.event.pull_request.head.sha || github.sha }}
   cancel-in-progress: true
 jobs:
+  admission:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      actions: read
+    outputs:
+      admitted: ${{ steps.admission.outputs.admitted }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Pure admission and stopped-service guard regressions
+        run: python -B -m unittest tests.test_ci_service_operational_admission tests.test_ci_stopped_service_acceptance -v
+      - name: C3_OPERATIONAL_ADMISSION_BLOCKED unless exact dispatch prerequisites validate
+        id: admission
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CI_SOURCE_SHA: ${{ inputs.source_sha }}
+          CI_AUTHORIZATION_COMMIT: ${{ inputs.authorization_commit }}
+          CI_AUTHORIZATION_SHA256: ${{ inputs.authorization_sha256 }}
+        run: python -B scripts/ci_service_operational_admission.py --phase preflight
   stopped-service:
+    needs: admission
+    if: ${{ github.event_name == 'workflow_dispatch' && needs.admission.result == 'success' && needs.admission.outputs.admitted == 'true' }}
+    environment: collector-c3-stopped-service
+    permissions:
+      contents: read
+      actions: read
     strategy:
       fail-fast: false
       matrix:
@@ -24,6 +71,13 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Verify actual run-specific protected environment review before any native effects
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CI_SOURCE_SHA: ${{ inputs.source_sha }}
+          CI_AUTHORIZATION_COMMIT: ${{ inputs.authorization_commit }}
+          CI_AUTHORIZATION_SHA256: ${{ inputs.authorization_sha256 }}
+        run: python -B scripts/ci_service_operational_admission.py --phase review
       - name: Guard and fixed-download regressions without SCM effects
         run: python -B -m unittest tests.test_ci_stopped_service_acceptance -v
       - name: Fetch exact reviewed Grid transport helper outside checkout
