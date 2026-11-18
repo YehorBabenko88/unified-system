@@ -98,7 +98,8 @@ class GuardianTests(unittest.TestCase):
             self.assertEqual(2, record_scan(p, r))
             self.assertTrue(verify_history(p))
             import sqlite3
-            with sqlite3.connect(p) as db:
+            from contextlib import closing
+            with closing(sqlite3.connect(p)) as db, db:
                 db.execute("UPDATE scans SET report_json='tampered' WHERE seq=1")
             self.assertFalse(verify_history(p))
 
