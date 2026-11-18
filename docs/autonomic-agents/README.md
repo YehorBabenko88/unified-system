@@ -37,14 +37,14 @@ Data/strategy/Math outputs are not admitted to runtime/market decisions.
 From repository root on Python >=3.11:
 
 ```powershell
-python -I -B -m unittest discover -s autonomic_guardian/tests -v
-python -I -B -m autonomic_guardian --snapshot example.json --journal guardian-owned.sqlite
+python -B -m unittest discover -s autonomic_guardian/tests -v
+python -B -m autonomic_guardian --snapshot example.json --journal guardian-owned.sqlite
 ```
 
 Optional continuous **foreground** monitoring (no service installation):
 
 ```powershell
-python -I -B -m autonomic_guardian --snapshot example.json --journal guardian-owned.sqlite --loop --interval 30
+python -B -m autonomic_guardian --snapshot example.json --journal guardian-owned.sqlite --loop --interval 30
 ```
 
 Use an operator-owned directory; no credentials in snapshots. To use actual
