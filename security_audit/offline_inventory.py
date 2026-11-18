@@ -86,7 +86,34 @@ def scan(roots: dict[str, Path]) -> dict[str, Any]:
                     findings.append({"repository": repo, "path": rel, "rule": code, "level": "REVIEW"})
             if rel.startswith(".github/workflows/") and p.suffix.lower() in (".yml", ".yaml"):
                 seen["workflows_examined"] += 1
-                for action in ACTION.findall(text):
+                # A minority of valid GitHub workflows use JSON, which is a YAML subset.
+                # Parsing it avoids false "no permissions" and missed action uses.
+                if text.lstrip().startswith("{"):
+                    try:
+                        workflow = json.loads(text)
+                    except json.JSONDecodeError:
+                        findings.append({"repository": repo, "path": rel, "rule": "INVALID_JSON_WORKFLOW", "level": "REVIEW"})
+                        continue
+                    jobs = workflow.get("jobs", {}) if isinstance(workflow, dict) else {}
+                    if not isinstance(jobs, dict):
+                        jobs = {}
+                    actions = []
+                    for job in jobs.values():
+                        if isinstance(job, dict) and isinstance(job.get("steps", []), list):
+                            actions.extend(
+                                step["uses"] for step in job["steps"]
+                                if isinstance(step, dict) and isinstance(step.get("uses"), str)
+                            )
+                    permissions_declared = isinstance(workflow, dict) and "permissions" in workflow
+                    if not permissions_declared:
+                        permissions_declared = bool(jobs) and all(
+                            isinstance(job, dict) and "permissions" in job
+                            for job in jobs.values()
+                        )
+                else:
+                    actions = ACTION.findall(text)
+                    permissions_declared = bool(re.search(r"^\s*permissions\s*:", text, re.M))
+                for action in actions:
                     if action.startswith("./") or action.startswith("docker://"):
                         continue
                     if not COMMIT_PIN.search(action):
@@ -94,7 +121,7 @@ def scan(roots: dict[str, Path]) -> dict[str, Any]:
                 for code, regex in WORKFLOW_STRINGS.items():
                     if regex.search(text):
                         findings.append({"repository": repo, "path": rel, "rule": code, "level": "REVIEW"})
-                if not re.search(r"^\s*permissions\s*:", text, re.M):
+                if not permissions_declared:
                     findings.append({"repository": repo, "path": rel, "rule": "TOKEN_PERMISSIONS_UNDECLARED", "level": "REVIEW"})
             if rel in ("requirements.txt", "requirements-ml.txt") and REQUIREMENT.search(text):
                 findings.append({"repository": repo, "path": rel, "rule": "OPEN_DEPENDENCY_RANGE", "level": "REVIEW"})
