@@ -9,6 +9,7 @@ from __future__ import annotations
 import hashlib
 import json
 import math
+from contextlib import closing
 from datetime import datetime, timezone
 from pathlib import Path
 import sqlite3
@@ -267,7 +268,7 @@ def record_scan(db_path: str | Path, report: dict[str, Any]) -> int:
     if target.is_symlink():
         raise EvidenceError("journal path must not be a symlink")
     target.parent.mkdir(parents=True, exist_ok=True)
-    with sqlite3.connect(target, timeout=3) as db:
+    with closing(sqlite3.connect(target, timeout=3)) as db, db:
         db.execute("PRAGMA busy_timeout=3000")
         db.execute("PRAGMA synchronous=FULL")
         db.execute("CREATE TABLE IF NOT EXISTS scans ("
@@ -287,7 +288,7 @@ def record_scan(db_path: str | Path, report: dict[str, Any]) -> int:
 
 def verify_history(db_path: str | Path) -> bool:
     """Detect internal record corruption. Not a signed/tamper-proof ledger."""
-    with sqlite3.connect(f"file:{Path(db_path).resolve().as_posix()}?mode=ro", uri=True) as db:
+    with closing(sqlite3.connect(f"file:{Path(db_path).resolve().as_posix()}?mode=ro", uri=True)) as db:
         previous = ZERO
         for prior, digest, payload in db.execute(
             "SELECT previous_sha,record_sha,report_json FROM scans ORDER BY seq"
