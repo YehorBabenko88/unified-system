@@ -23,6 +23,27 @@ but the actual implementations exist in Draft branches. All five are public.
 No PR branch is assumed merged into main; several PRs have stacked/sibling
 bases and cannot be treated as a unified executable release.
 
+## Complete 95-workflow static pin/permission inventory (source text)
+
+All 95 workflow blobs in the exact candidate heads above were inspected by
+a bounded read-only GitHub source scan. Tag-based `uses:` actions were identified
+in **25 workflows**: Grid **0/13**, Strattester **1/2**,
+Math **0/23**, Unified **18/45**, Terminan **6/12**. These are
+supply-chain **review items**, not evidence of malicious workflow behavior.
+
+A single `math/.github/workflows/bounded-experiment.yml` lacks an explicit
+`permissions` declaration in the examined file. Strattester's MWI workflow
+is a **JSON-form YAML workflow** and DOES declare `permissions: contents: read`;
+a YAML-line-only scanner would incorrectly flag it; the offline scanner now
+parses JSON-form steps and permissions.
+
+Across these 95 sampled workflow blobs, no literal `pull_request_target:`
+event or explicit `permissions: write-all` was observed. This is a limited
+static pattern inventory, **not** an exhaustive GitHub Actions security review.
+Some workflow source constructs and templates need proper YAML/JSON semantic
+parsing and actual runner execution before being declared secure. Existing
+OIDC `id-token: write` in Math requires bounded audience/subject validation.
+
 ## Confirmed exact-byte cross-repository duplication (Git blob OIDs matched)
 
 | Grid path | Math path | Status |
