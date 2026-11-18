@@ -49,6 +49,23 @@ class OfflineAuditTests(unittest.TestCase):
             self.assertIn("TOKEN_PERMISSIONS_UNDECLARED", rules)
             self.assertEqual("NOT_ESTABLISHED", result["security_clearance"])
 
+    def test_json_workflow_uses_and_permissions(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp) / "strattester"
+            wf = repo / ".github" / "workflows"
+            wf.mkdir(parents=True)
+            object_form = {
+                "name": "JSON workflow",
+                "on": {"pull_request": {}},
+                "permissions": {"contents": "read"},
+                "jobs": {"test": {"steps": [{"uses": "actions/checkout@" + "a"*40}]}}
+            }
+            (wf / "test.yml").write_text(json.dumps(object_form), encoding="utf-8")
+            result = scan({"strattester": repo})
+            rules = {f["rule"] for f in result["review_findings"]}
+            self.assertNotIn("TOKEN_PERMISSIONS_UNDECLARED", rules)
+            self.assertNotIn("ACTION_UNPINNED", rules)
+
     def test_pinned_workflow_unchallenged_by_two_rules(self):
         with tempfile.TemporaryDirectory() as tmp:
             repo = Path(tmp) / "strattester"
