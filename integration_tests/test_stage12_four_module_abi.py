@@ -329,5 +329,27 @@ class Stage17OwnerBoundaryGates(unittest.TestCase):
         )
 
 
+    def test_meta_math_sdk_pin_tracks_canonical_rounding(self):
+        """Reject a stale Meta parity oracle claiming current Math compatibility."""
+        from decimal import Decimal, Inexact, Rounded, localcontext
+        import re
+        from market_profile_math import price_bucket
+        source = (EXTERNAL / "meta_analyse" / "scripts" /
+                  "check_math_consumer_parity.py").read_text(encoding="utf-8")
+        expected_math = PINS["math"]
+        self.assertRegex(source, r'MATH_SHA\s*=\s*"[a-f0-9]{40}"')
+        declared = re.search(r'MATH_SHA\s*=\s*"([a-f0-9]{40})"', source)
+        self.assertEqual(declared.group(1), expected_math,
+                         "Meta consumer tests pin retired Math before deterministic rounding")
+        for precision in (3, 5, 28):
+            with self.subTest(precision=precision):
+                with localcontext() as context:
+                    context.prec = precision
+                    context.traps[Inexact] = True
+                    context.traps[Rounded] = True
+                    self.assertEqual(price_bucket(
+                        Decimal("100.005"), Decimal("0.01")), Decimal("100.01"))
+
+
 if __name__ == "__main__":
     unittest.main()
