@@ -18,11 +18,11 @@ import unittest
 ROOT = Path(__file__).resolve().parents[1]
 EXTERNAL = ROOT / "external"
 PINNED = {
-    "math": "7cf195742146a054cc2d48a4f45753f9b74978c5",
-    "meta_analyse": "9d0fb5c79a5da13b23f8daa066035b09f676a6fc",
-    "Terminan": "711dd40d8114ca291ec7fc7666312912d15cbdde",
-    "bybit-cluster-grid": "186c7e71a5a9573500218455cb34e13fad7e23a4",
-    "strattester": "c7e065a57ca2d18a690573764e8def0f67bc6564",
+    "math": "98d6783522aac7155cbb4635e5b29239746d88e0",
+    "meta_analyse": "b9755d749e598ec3e063740dd099cd8d922299bc",
+    "Terminan": "f1abc777a8da0c8748c1cb80b37a09a8464340db",
+    "bybit-cluster-grid": "f4dc0409e8ace1628a0e307675505f3a7b626dce",
+    "strattester": "1000dccd9ba85eafa4b72bc40a76afae73ca1cee",
 }
 
 
@@ -62,7 +62,10 @@ class PinnedInstalledCandidate(unittest.TestCase):
 
     def test_single_math_owner_and_legacy_batch_boundary(self):
         self.assertEqual(self.math.MAX_ORDERFLOW_BATCH, 20_000)
-        self.assertIs(self.meta.aggregate_orderflow, self.math.aggregate_orderflow)
+        compute_api = importlib.import_module("market_compute_api")
+        self.assertEqual(compute_api.STREAM_ABI, "math.market.orderflow.stream.v1")
+        self.assertIs(self.meta.aggregate_orderflow_stream,
+                      compute_api.aggregate_orderflow_stream)
         self.assertTrue(callable(self.math.aggregate_orderflow_stream))
         self.assertEqual(
             self.math.aggregate_orderflow(list(self.rows(20_000)),
