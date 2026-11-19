@@ -1,4 +1,5 @@
 import copy
+from pathlib import Path
 import unittest
 from unittest.mock import patch
 
@@ -88,3 +89,19 @@ class CoordinationTests(unittest.TestCase):
             with self.assertRaises(CohortMoved):
                 stable_manifest(self.config, self.api)
             self.assertEqual(collect.call_count, 3)
+
+    def test_workflow_checks_exact_source_and_separates_review_from_publishing(self):
+        root = Path(__file__).resolve().parents[1]
+        workflow = (root / ".github/workflows/stage13-coordination.yml").read_text()
+        jobs = workflow.split("\njobs:\n", 1)[1]
+        tests, observe = jobs.split("\n  observe:\n", 1)
+        observe, publish = observe.split("\n  publish:\n", 1)
+        for block in (tests, observe):
+            self.assertIn("ref: ${{ env.EXPECTED_HEAD }}", block)
+            self.assertIn("git', 'rev-parse', 'HEAD'", block)
+            self.assertIn("COORDINATOR_SOURCE_HEAD_MISMATCH", block)
+        self.assertIn("pull_request.head.sha || github.sha", workflow)
+        self.assertIn("group: stage13-coordination-${{ github.event_name == 'pull_request'", workflow)
+        self.assertIn("github.event.pull_request.head.sha || 'publisher'", workflow)
+        self.assertIn("github.ref_name == github.event.repository.default_branch", publish)
+        self.assertNotIn("issues: write", tests + observe)

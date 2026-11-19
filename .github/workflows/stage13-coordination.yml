@@ -24,8 +24,12 @@ on:
     - cron: '19 */3 * * *'
 permissions:
   contents: read
+env:
+  EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
 concurrency:
-  group: stage13-coordination
+  # Review runs use read-only permissions and different commits can validate
+  # independently. Keep scheduled/manual publications in one serial group.
+  group: stage13-coordination-${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || 'publisher' }}
   cancel-in-progress: false
 
 jobs:
@@ -39,10 +43,19 @@ jobs:
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
+          ref: ${{ env.EXPECTED_HEAD }}
           persist-credentials: false
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with:
           python-version: '3.12'
+      - name: Verify exact checkout
+        shell: python
+        run: |
+          import os
+          import subprocess
+          head = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
+          if head != os.environ['EXPECTED_HEAD']:
+              raise SystemExit('COORDINATOR_SOURCE_HEAD_MISMATCH')
       - run: >-
           python -B -m unittest tests.test_stage13_coordination
           tests.test_stage13_worker_admission tests.test_fleet_control
@@ -63,10 +76,19 @@ jobs:
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
+          ref: ${{ env.EXPECTED_HEAD }}
           persist-credentials: false
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with:
           python-version: '3.12'
+      - name: Verify exact checkout
+        shell: python
+        run: |
+          import os
+          import subprocess
+          head = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
+          if head != os.environ['EXPECTED_HEAD']:
+              raise SystemExit('COORDINATOR_SOURCE_HEAD_MISMATCH')
       - name: Observe GitHub cohort
         run: python -B scripts/stage13_coordination.py --output observation --coordinator-tests "$TEST_RESULT"
         env:
