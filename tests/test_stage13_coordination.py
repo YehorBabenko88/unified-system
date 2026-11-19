@@ -1,7 +1,8 @@
 import copy
 import unittest
+from unittest.mock import patch
 
-from scripts.stage13_coordination import manifest
+from scripts.stage13_coordination import CohortMoved, manifest, stable_manifest
 
 
 class CoordinationTests(unittest.TestCase):
@@ -76,3 +77,14 @@ class CoordinationTests(unittest.TestCase):
 
         with self.assertRaisesRegex(ValueError, "Cohort moved"):
             manifest(self.config, changing_api)
+
+    def test_retry_restarts_collection_and_remains_bounded(self):
+        with patch("scripts.stage13_coordination.manifest",
+                   side_effect=[CohortMoved("drift"), {"fresh": True}]) as collect:
+            self.assertEqual(stable_manifest(self.config, self.api), {"fresh": True})
+            self.assertEqual(collect.call_count, 2)
+        with patch("scripts.stage13_coordination.manifest",
+                   side_effect=CohortMoved("drift")) as collect:
+            with self.assertRaises(CohortMoved):
+                stable_manifest(self.config, self.api)
+            self.assertEqual(collect.call_count, 3)

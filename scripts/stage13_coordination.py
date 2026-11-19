@@ -1,4 +1,4 @@
-"""Observe a reviewed PR cohort and generate an advisory A–F work queue."""
+"""Observe a reviewed PR cohort and generate an advisory Aâ€“F work queue."""
 import argparse
 from collections import Counter, defaultdict
 import hashlib
@@ -10,6 +10,10 @@ import subprocess
 SHA = re.compile(r"[a-f0-9]{40}")
 LANE_ISSUES = dict(zip("ABCDEF", range(117, 123)))
 ROOT = Path(__file__).resolve().parents[1]
+
+
+class CohortMoved(ValueError):
+    pass
 
 
 def github(endpoint):
@@ -71,7 +75,7 @@ def manifest(config, api=github):
     for name, pr in observed.items():
         current = api(f"repos/{pr['repository']}/pulls/{pr['pr']}")
         if (current["head"]["sha"], current["base"]["sha"]) != (pr["head"], pr["base"]):
-            raise ValueError("Cohort moved during collection; retry next cycle")
+            raise CohortMoved(f"Cohort moved during collection: {name}")
         if pr["state"] != "open" or pr["head_repository"] != pr["repository"]:
             blockers[name].append("SOURCE_NOT_ADMITTED")
         if pr["mergeable"] is not True:
@@ -112,6 +116,15 @@ def manifest(config, api=github):
     }
 
 
+def stable_manifest(config, api=github):
+    for retry in range(3):
+        try:
+            return manifest(config, api)
+        except CohortMoved:
+            if retry == 2:
+                raise
+
+
 def reports(result, config, directory):
     payload = json.dumps(result, sort_keys=True, indent=2, ensure_ascii=True) + "\n"
     digest = hashlib.sha256(payload.encode()).hexdigest()
@@ -129,7 +142,7 @@ def reports(result, config, directory):
         for key, entry in result["queue"].items():
             if lane in (key, "MASTER"):
                 for source, reasons in entry["candidates"].items():
-                    lines.append(f"- Lane {key}, #{entry['issue']}, {source} — " +
+                    lines.append(f"- Lane {key}, #{entry['issue']}, {source} â€” " +
                                  (", ".join(reasons) or "Review exact-cohort compatibility"))
         (directory / f"issue-{task['issue']}.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
@@ -141,7 +154,7 @@ def main():
                         default="skipped")
     args = parser.parse_args()
     config = json.loads((ROOT / "release/stage13-cohort.json").read_text(encoding="utf-8"))
-    result = manifest(config)
+    result = stable_manifest(config)
     result["coordinator_tests"] = args.coordinator_tests
     reports(result, config, args.output)
 
