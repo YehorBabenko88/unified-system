@@ -350,6 +350,8 @@ class GitHistoryAuditTests(unittest.TestCase):
                 report["redacted_secret_shape_counts"]["GITHUB_CLASSIC_TOKEN_SHAPE"], 1
             )
             self.assertNotIn(marker, json.dumps(report))
+            self.assertTrue(report["requires_private_triage"])
+            self.assertGreater(report["candidate_object_count"], 0)
             self.assertGreaterEqual(report["local_pr_head_refs"], 1)
             self.assertFalse(report["remote_ref_completeness_verified"])
             self.assertEqual("NOT_ESTABLISHED", report["full_security_clearance"])
