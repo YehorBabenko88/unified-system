@@ -77,8 +77,9 @@ jobs:
         run: git -C external/math fetch --no-tags --depth 1 https://github.com/YehorBabenko88/math.git 3a9c542841e160f8b1924f155aaa2d1a676dfd04
       - name: Install Math, Terminan and Grid wheels from exact source
         run: |
-          python -m pip install --disable-pip-version-check setuptools==80.9.0 wheel==0.45.1 websockets==15.0.1
-          python -m pip install --disable-pip-version-check --no-build-isolation --no-deps ./external/math ./external/Terminan ./external/bybit-cluster-grid
+          python -m pip install --disable-pip-version-check setuptools==80.9.0 wheel==0.45.1 websockets==15.0.1 pytest==8.3.5 pytest-asyncio==0.26.0 httpx==0.28.1
+          python -m pip install --disable-pip-version-check --no-build-isolation ./external/math ./external/Terminan ./external/bybit-cluster-grid
+          python -m pip check
         shell: bash
       - name: Run independent acceptance and simulated recovery checks
         run: python -B -m unittest discover -s integration_tests -p test_stage8_crossrepo.py -v

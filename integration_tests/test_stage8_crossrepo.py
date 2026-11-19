@@ -238,18 +238,29 @@ class PinnedInstalledCandidate(unittest.TestCase):
                 restored.import_meta_fills("meta-archive", [[8, *row[1:]]], receipt)
             self.assertEqual(list(restored.restore_meta_fills("meta-archive")), [row])
 
-    def test_terminan_installed_offline_replay_receipt_recovery(self):
+    def test_terminan_installed_full_suite(self):
         subprocess.run(
             [sys.executable, "-I", "-B", "-m", "unittest", "discover",
-             "-s", "tests", "-p", "test_paper_ledger.py", "-v"],
-            cwd=EXTERNAL / "Terminan", check=True, timeout=60,
+             "-s", str(EXTERNAL / "Terminan" / "tests"), "-v"],
+            cwd=ROOT, check=True, timeout=60,
         )
 
-    def test_terminan_installed_paper_journal_ack_crash_and_restore(self):
+    def test_meta_offline_delivery_uses_installed_terminan_journal(self):
+        meta = EXTERNAL / "meta_analyse"
+        with tempfile.TemporaryDirectory(prefix="meta-delivery-", dir=ROOT) as scratch:
+            subprocess.run(
+                [sys.executable, "-I", "-B", "-m", "pytest", "-q",
+                 "--basetemp", str(Path(scratch) / "pytest"),
+                 "-c", str(meta / "pyproject.toml"),
+                 str(meta / "tests" / "test_offline_paper_delivery.py")],
+                cwd=ROOT, check=True, timeout=60,
+            )
+
+    def test_unified_c3_requires_operational_admission(self):
         subprocess.run(
-            [sys.executable, "-I", "-B", "-m", "unittest", "discover",
-             "-s", str(EXTERNAL / "Terminan" / "tests"), "-p", "test_paper_journal.py", "-v"],
-            cwd=ROOT, check=True, timeout=60,
+            [sys.executable, "-B", "-m", "unittest", "discover",
+             "-s", "tests", "-p", "test_ci_service_operational_admission.py", "-v"],
+            cwd=EXTERNAL / "unified-system", check=True, timeout=60,
         )
 
     def test_terminan_trade_dto_rejects_non_finite_values(self):
@@ -283,6 +294,13 @@ class PinnedInstalledCandidate(unittest.TestCase):
             if item.parts[0] == "grid" and item.suffix == ".py"
         }
         self.assertEqual(installed, allowed, "Grid installed Python modules differ from its allowlist")
+        for module in sorted(installed):
+            with self.subTest(module=module):
+                name = "grid" if module == "__init__" else f"grid.{module}"
+                location = Path(importlib.import_module(name).__file__).resolve()
+                self.assertEqual(
+                    location, Path(distribution.locate_file(f"grid/{module}.py")).resolve(),
+                )
 
     def test_grid_and_terminan_owner_boundary(self):
         from grid import terminan_gateway
