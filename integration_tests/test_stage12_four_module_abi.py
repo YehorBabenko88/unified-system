@@ -157,5 +157,53 @@ class FourModuleIndependentABITests(unittest.TestCase):
         self.assertTrue({"apply_sizing", "ruin_stats", "trade_net_pnl"} <= functions)
 
 
+class Stage17OwnerBoundaryGates(unittest.TestCase):
+    """Negative acceptance tests; fail until canonical owners finish migration."""
+
+    def test_grid_level_timeframes_and_dto_are_accepted_by_math(self):
+        from grid.history_snapshot import TIMEFRAME_MINUTES, rollup_snapshot
+        from market_compute_api import TIMEFRAME_LEVELS_ABI
+        from market_profile_math import _LEVEL_PERIOD_MS
+        self.assertEqual(TIMEFRAME_LEVELS_ABI, "math.market.levels.binary64.v1")
+        required = {"1h", "4h", "1d", "1w"}
+        self.assertTrue(required <= set(TIMEFRAME_MINUTES),
+                        "Grid missing canonical Math/Terminan level timeframes")
+        self.assertTrue(required <= set(_LEVEL_PERIOD_MS))
+        # Grid is the sole rollup owner. The qualified envelope, not a guessed
+        # time conversion, must provide explicit closed candle/availability data.
+        import inspect
+        text = inspect.getsource(rollup_snapshot)
+        self.assertIn("available_at_ms", text)
+        self.assertIn("watermark_ms", text)
+
+    def test_strattester_legacy_six_column_rows_have_readonly_admission(self):
+        from terminan import research_archive
+        # The legacy source has no staged table or fencing columns. A safe
+        # import must be explicit; do NOT invoke Strattester ResultStore.open,
+        # which mutates SQLite with ALTER TABLE and CREATE TABLE.
+        self.assertTrue(
+            callable(getattr(research_archive, "research_result_receipt", None))
+        )
+        from inspect import signature
+        source = (EXTERNAL / "strattester" / "strattester" /
+                  "persistence" / "result_store.py").read_text(encoding="utf-8")
+        self.assertIn("ALTER TABLE research_results", source)
+        admitted = getattr(research_archive, "normalize_legacy_research_results", None)
+        self.assertTrue(callable(admitted),
+                        "Terminan has no read-only six-column result adapter")
+        self.assertIn("rows", signature(admitted).parameters)
+
+    def test_coordinator_never_trusts_worker_derived_approval(self):
+        source = (EXTERNAL / "unified-system" / "scripts" /
+                  "stage13_worker_admission.py").read_text(encoding="utf-8")
+        self.assertNotIn("approval != (scope.owner, digest)", source,
+                         "A tuple of public owner text and worker-computed digest "
+                         "does not authenticate an independent reviewer")
+        self.assertTrue(
+            ("verify_approval" in source or "verified_reviewer" in source),
+            "Coordinator requires externally verified reviewer admission",
+        )
+
+
 if __name__ == "__main__":
     unittest.main()
