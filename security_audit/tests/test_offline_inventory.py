@@ -246,5 +246,66 @@ class ArchitectureOwnershipTests(unittest.TestCase):
             architecture_scan({})
 
 
+class MetaImportInventoryTests(unittest.TestCase):
+    def test_meta_imports_and_entrypoints_are_reviewable_not_deletable(self):
+        from security_audit.offline_inventory import meta_import_inventory
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            pkg = root / "src" / "meta_analyse"
+            pkg.mkdir(parents=True)
+            (pkg / "__init__.py").write_text("", encoding="utf-8")
+            (pkg / "core.py").write_text("class PaperEngine:\n    pass\n", encoding="utf-8")
+            (pkg / "desktop.py").write_text(
+                "from .core import PaperEngine\n"
+                "def main():\n    return PaperEngine\n",
+                encoding="utf-8",
+            )
+            (root / "pyproject.toml").write_text(
+                "[project.scripts]\nmeta-analyse = \"meta_analyse.desktop:main\"\n",
+                encoding="utf-8",
+            )
+            result = meta_import_inventory(root)
+            self.assertIn("meta_analyse.core", result["modules"])
+            self.assertIn("PaperEngine", result["modules"]["meta_analyse.core"]["symbols"])
+            self.assertIn({
+                "source": "meta_analyse.desktop",
+                "target": "meta_analyse.core",
+                "symbol": "PaperEngine",
+            }, result["edges"])
+            self.assertIn(
+                'meta-analyse = "meta_analyse.desktop:main"',
+                result["entrypoints"],
+            )
+            self.assertFalse(result["archival_ready"])
+            self.assertFalse(result["unused_symbols_proven"])
+            self.assertFalse(result["external_consumers_verified"])
+            self.assertEqual(0, result["automatic_deletions"])
+
+    def test_dynamic_import_does_not_prove_unused_and_parse_errors_fail_closed(self):
+        from security_audit.offline_inventory import meta_import_inventory
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            pkg = root / "src" / "meta_analyse"
+            pkg.mkdir(parents=True)
+            (pkg / "runtime.py").write_text(
+                "from importlib import import_module\n"
+                "target = import_module('meta_analyse.core')\n",
+                encoding="utf-8",
+            )
+            (pkg / "invalid.py").write_text("def broken(\n", encoding="utf-8")
+            result = meta_import_inventory(root)
+            reasons = {x["reason"] for x in result["pending"]}
+            self.assertIn("DYNAMIC_CALL_REVIEW", reasons)
+            self.assertIn("PYTHON_PARSE_ERROR", reasons)
+            self.assertFalse(result["all_runtime_consumers_switched"])
+            self.assertFalse(result["archival_ready"])
+
+    def test_missing_meta_source_is_denied(self):
+        from security_audit.offline_inventory import meta_import_inventory
+        with tempfile.TemporaryDirectory() as tmp:
+            with self.assertRaises(ValueError):
+                meta_import_inventory(Path(tmp))
+
+
 if __name__ == "__main__":
     unittest.main()
