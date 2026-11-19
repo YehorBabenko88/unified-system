@@ -52,3 +52,29 @@ reporting. Keep credentials outside GitHub artifacts. Report only after the
 runner acknowledges the ticket and returns its exact commit and test receipt.
 Provide an operator stop switch that disables ticket claims and revokes the
 worker identity. No unattended connector is enabled by this PR.
+
+## Offline admission interface
+
+`scripts.stage13_worker_admission.WorkerAdmission` is the opt-in gate for a
+future connector. Instantiate it with a local operator-owned SQLite path and
+a fixed `WorkerScope`. Pass `enabled=True` only in the trusted connector.
+Build `approval=(owner_id, ticket_digest(ticket))` from an independently
+authenticated approval record, and `current=(repository, branch, HEAD,
+manifest_sha256)` from trusted GitHub and artifact verification. Never
+construct either tuple from an issue, PR body, or the ticket itself. Supply
+`now` from the connector's clock. Each ticket expires within 15 minutes,
+binds literal authorized paths and specifies a single allowlisted test ID.
+
+`claim` returns an audit digest and consumes the ticket. A ledger admits at
+most one active ticket, at least 60 seconds apart, and at most 256 total.
+`finish` records an idempotent terminal outcome. `stop` permanently blocks
+new claims in that ledger. A connector must terminate running work outside
+the admission class when stopping, and recheck remote HEAD and allowed paths
+before writing. A crash with an unfinished claim blocks subsequent claims
+until the authorized operator reconciles the outcome. Do not replace a
+ledger to retry a consumed ticket. The audit stores hashes, identifiers,
+scope and outcome, without credential values or raw issue text.
+
+This interface has no command runner, approval authentication backend,
+credential issuer, or process cancellation. It is not wired into Actions
+and the published manifest continues to report NOT_CONNECTED.
