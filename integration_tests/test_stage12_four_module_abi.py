@@ -79,6 +79,21 @@ class FourModuleIndependentABITests(unittest.TestCase):
         self.assertEqual(Path(spec.origin).resolve(),
                          Path(dist.locate_file("grid/__init__.py")).resolve())
 
+    def test_grid_wheel_excludes_science_and_strategy_engines(self):
+        dist = importlib.metadata.distribution("unified-grid-market-data")
+        files = {str(path).replace("\\", "/") for path in dist.files or ()}
+        not_market_data = {
+            "grid/strategy_executor.py",
+            "grid/strategy_runtime.py",
+            "grid/strategy_statistics.py",
+            "grid/position_sizing_research.py",
+            "grid/scientific_simulation.py",
+            "grid/scientific_orchestrator.py",
+        }
+        self.assertFalse(not_market_data & files,
+                         "Grid distribution still ships non-Grid scientific/trading "
+                         "implementations; move consumers and code before release")
+
     def test_python_support_policy_is_explicit(self):
         for name in ("math", "Terminan"):
             config = tomllib.loads((EXTERNAL / name / "pyproject.toml")
