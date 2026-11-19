@@ -20,7 +20,7 @@ import unittest
 ROOT = Path(__file__).resolve().parents[1]
 EXTERNAL = ROOT / "external"
 PINS = {
-    "math": "3c5841573eee579331df7d8e992017b35b0d4ce7",
+    "math": "d76de56feccdaede3dfd40f0ed939d337e58d557",
     "bybit-cluster-grid": "b4bd236d198b503001907d53a455a378659d5408",
     "unified-system": "79c2730b1d1c0d7aab69bab0523108039b5a3d85",
     "Terminan": "dec68f4f5fc8e0c4cc89f9ddd975d71eee60b527",
