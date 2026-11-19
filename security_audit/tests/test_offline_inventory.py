@@ -307,5 +307,77 @@ class MetaImportInventoryTests(unittest.TestCase):
                 meta_import_inventory(Path(tmp))
 
 
+class GitHistoryAuditTests(unittest.TestCase):
+    """Only disposable synthetic Git history; no remote GitHub access or real tokens."""
+
+    def _git(self, root, *args):
+        import subprocess
+        return subprocess.run(
+            ["git", "-C", str(root), *args], check=True,
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=20,
+        )
+
+    def _repo(self, root):
+        self._git(root, "init", "-q")
+        self._git(root, "config", "user.name", "Audit Fixture")
+        self._git(root, "config", "user.email", "audit-fixture@example.invalid")
+
+    def _commit(self, root, message):
+        self._git(root, "add", "-A")
+        self._git(root, "commit", "-qm", message)
+
+    def test_deleted_secret_still_observed_without_disclosure(self):
+        import shutil
+        if shutil.which("git") is None:
+            self.skipTest("Git is not installed")
+        from security_audit.offline_inventory import scan_git_history
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            self._repo(root)
+            marker = "ghp_" + "Z" * 36  # synthetic marker; no real token
+            target = root / "never-publish.txt"
+            target.write_text("value=" + marker, encoding="utf-8")
+            self._commit(root, "historical synthetic secret")
+            target.unlink()
+            (root / "public.txt").write_text("no secrets here\n", encoding="utf-8")
+            self._commit(root, "remove synthetic marker")
+            # Simulates an accessible pull-request head ref for coverage accounting.
+            self._git(root, "update-ref", "refs/pull/1/head", "HEAD")
+            worktree = root / "public.txt"
+            self.assertNotIn(marker, worktree.read_text(encoding="utf-8"))
+            report = scan_git_history(root)
+            self.assertGreaterEqual(
+                report["redacted_secret_shape_counts"]["GITHUB_CLASSIC_TOKEN_SHAPE"], 1
+            )
+            self.assertNotIn(marker, json.dumps(report))
+            self.assertGreaterEqual(report["local_pr_head_refs"], 1)
+            self.assertFalse(report["remote_ref_completeness_verified"])
+            self.assertEqual("NOT_ESTABLISHED", report["full_security_clearance"])
+            self.assertFalse(report["repository_retirement_ready"])
+
+    def test_large_blob_is_explicitly_unscanned(self):
+        import shutil
+        if shutil.which("git") is None:
+            self.skipTest("Git is not installed")
+        from security_audit.offline_inventory import scan_git_history
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            self._repo(root)
+            (root / "large.bin").write_bytes(b"x" * 1500)
+            self._commit(root, "bounded scan fixture")
+            report = scan_git_history(root, max_blob_bytes=512)
+            self.assertEqual(1, report["oversize_blob_objects_unscanned"])
+            self.assertFalse(report["local_ref_scan_complete"])
+
+    def test_non_git_directory_refused(self):
+        import shutil
+        if shutil.which("git") is None:
+            self.skipTest("Git is not installed")
+        from security_audit.offline_inventory import scan_git_history
+        with tempfile.TemporaryDirectory() as temp:
+            with self.assertRaises(ValueError):
+                scan_git_history(Path(temp))
+
+
 if __name__ == "__main__":
     unittest.main()
