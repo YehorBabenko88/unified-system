@@ -20,12 +20,12 @@ import unittest
 ROOT = Path(__file__).resolve().parents[1]
 EXTERNAL = ROOT / "external"
 PINS = {
-    "math": "d76de56feccdaede3dfd40f0ed939d337e58d557",
-    "bybit-cluster-grid": "b4bd236d198b503001907d53a455a378659d5408",
+    "math": "5080c09e4165e26205a589a17e84c2f86bc370e6",
+    "bybit-cluster-grid": "204d75f08c6a965ba4cbe485f3ee21ab96df9145",
     "unified-system": "79c2730b1d1c0d7aab69bab0523108039b5a3d85",
-    "Terminan": "dec68f4f5fc8e0c4cc89f9ddd975d71eee60b527",
-    "meta_analyse": "dc9b0789a8a56f0ad30ec74d5d3f4bb26464f910",
-    "strattester": "a007968bd74987cf71852f8f82ba1c7e54c3742c",
+    "Terminan": "7b15cacb03cd51477d0d7b4254694e0db923f092",
+    "meta_analyse": "707e0d0d1e42d1495cb2213d4dc0b23f09a7521a",
+    "strattester": "9d8e27fdd31d66b50416308b097daf2dacfd46c3",
 }
 
 
@@ -98,9 +98,13 @@ class FourModuleIndependentABITests(unittest.TestCase):
         for name in ("math", "Terminan"):
             config = tomllib.loads((EXTERNAL / name / "pyproject.toml")
                                    .read_text(encoding="utf-8"))
-            self.assertEqual(config["project"]["requires-python"], ">=3.12",
-                             f"{name} must not be reported 3.11 compatible")
-        self.assertGreaterEqual(sys.version_info[:2], (3, 12))
+            self.assertEqual(config["project"]["requires-python"], ">=3.11",
+                             f"{name} must explicitly qualify Python 3.11")
+            dist_name = ("unified-math-kernels" if name == "math"
+                         else "unified-terminan")
+            dist = importlib.metadata.distribution(dist_name)
+            self.assertEqual(dist.metadata["Requires-Python"], ">=3.11")
+        self.assertGreaterEqual(sys.version_info[:2], (3, 11))
 
     def test_market_gateway_never_executes_strategy(self):
         grid = (EXTERNAL / "bybit-cluster-grid" /
