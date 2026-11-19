@@ -250,14 +250,22 @@ class Stage17OwnerBoundaryGates(unittest.TestCase):
                         start_ms=start, end_ms=end, as_of_ms=as_of)
 
     def test_strattester_legacy_six_column_rows_have_readonly_admission(self):
-        """Verify old six-column rows without calling the mutating ResultStore.open."""
+        """Real frozen exporter→Terminan archive; original bytes remain unchanged."""
         import hashlib
         import sqlite3
         import tempfile
         from contextlib import closing
-        from terminan.research_archive import ResearchArchive, research_result_receipt
+        from strattester.persistence.frozen_results import import_frozen_results
+        from terminan.research_archive import ResearchArchive
         from terminan.paper_ledger import PaperReplayLedger
+        from importlib import metadata
 
+        installed = metadata.distribution("strattester")
+        import strattester.persistence.frozen_results as frozen
+        self.assertEqual(
+            Path(frozen.__file__).resolve(),
+            Path(installed.locate_file("strattester/persistence/frozen_results.py")).resolve()
+        )
         old_row = ("run-1", "BTCUSDT", "POC", "v1", 1780000000.25,
                    '{"original": 1, "raw":"preserved"}')
         with tempfile.TemporaryDirectory() as root:
@@ -272,30 +280,34 @@ class Stage17OwnerBoundaryGates(unittest.TestCase):
                 )
                 db.execute("INSERT INTO research_results VALUES (?,?,?,?,?,?)", old_row)
             before = hashlib.sha256(source.read_bytes()).hexdigest()
-            # mode=ro; never invoke Strattester ResultStore.open (ALTER/CREATE/WAL).
-            uri = source.resolve().as_uri() + "?mode=ro"
-            with closing(sqlite3.connect(uri, uri=True)) as db:
-                rows = db.execute(
-                    "SELECT run_id,symbol,strategy_id,strategy_version,created_at,metrics "
-                    "FROM research_results ORDER BY run_id,symbol,strategy_id,strategy_version"
-                ).fetchall()
-                staged = db.execute(
-                    "SELECT 1 FROM sqlite_master WHERE name='staged_research_results'"
-                ).fetchone()
-            self.assertIsNone(staged)
-            tables = {"research_results": rows}
-            receipt = research_result_receipt(before, tables)
-            target = ResearchArchive(PaperReplayLedger(Path(root) / "terminan.db"))
-            self.assertEqual(
-                target.import_snapshot("legacy-6", tables, receipt), receipt
-            )
+            dest = Path(root) / "terminan.db"
+            receipt = import_frozen_results(source, before, "legacy-6", dest)
+            self.assertEqual(receipt["tables"]["research_results"]["row_count"], 1)
+            target = ResearchArchive(PaperReplayLedger(dest))
             self.assertEqual(
                 list(target.read_snapshot("legacy-6")),
                 [("research_results", "LEGACY_UNFENCED", old_row)],
             )
             self.assertEqual(hashlib.sha256(source.read_bytes()).hexdigest(), before)
-            # Import again with the same immutable identity, not a second fill/row.
-            self.assertEqual(target.import_snapshot("legacy-6", tables, receipt), receipt)
+            self.assertEqual(import_frozen_results(source, before, "legacy-6", dest),
+                             receipt)
+            self.assertEqual(hashlib.sha256(source.read_bytes()).hexdigest(), before)
+
+            # A table with the SAME column names but no declared constraints
+            # is not the pinned historical six-column schema.
+            malformed = Path(root) / "spoofed.db"
+            with closing(sqlite3.connect(malformed)) as db, db:
+                db.execute("CREATE TABLE research_results ("
+                           "run_id TEXT, symbol TEXT, strategy_id TEXT, "
+                           "strategy_version TEXT, created_at REAL, metrics TEXT)")
+                db.execute("INSERT INTO research_results VALUES (?,?,?,?,?,?)", old_row)
+            wrong_before = hashlib.sha256(malformed.read_bytes()).hexdigest()
+            with self.assertRaisesRegex(ValueError, "unrecognized published result schema"):
+                import_frozen_results(malformed, wrong_before, "spoofed", dest)
+            self.assertEqual(hashlib.sha256(malformed.read_bytes()).hexdigest(),
+                             wrong_before)
+            with self.assertRaises(KeyError):
+                list(target.read_snapshot("spoofed"))
 
     def test_coordinator_never_trusts_worker_derived_approval(self):
         """Independent approval is a trusted HMAC, not (owner, digest(ticket))."""
