@@ -200,13 +200,19 @@ class FleetControl:
         except sqlite3.Error as e: raise FleetError('backup failed') from e
     @classmethod
     def restore(cls,backup,target,voters):
+        """Recover a disposable ledger while preserving captured lease deadlines.
+
+        A backup cannot fence assignments issued after it was taken. Restored
+        state remains PLAN_ONLY and must never serve as live failover authority.
+        """
         if Path(target).exists(): raise FleetError('restore target exists')
         try:
             with connection(Path(backup).resolve().as_uri()+'?mode=ro',uri=True) as src, connection(target) as dst: src.backup(dst)
             f=cls(target,voters)
             def invalidate(s):
                 s.update(incarnation=uuid.uuid4().hex,leader=None)
-                for j in s['jobs'].values(): j['lease']=None
+                # Keep the previous reservations. A new election invalidates
+                # their authority, but placement still waits until they expire.
                 for n in s['nodes'].values():
                     if n['state']!='RETIRED': n.update(state='APPROVED',heartbeat=None)
             f._transaction(invalidate); return f
