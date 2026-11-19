@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from contextlib import closing, nullcontext
 from datetime import datetime, timedelta, timezone
-from decimal import Decimal, localcontext
+from decimal import Decimal, Inexact, Rounded, localcontext
 from importlib import metadata
 from pathlib import Path
 import hashlib
@@ -18,6 +18,7 @@ import os
 import sqlite3
 import subprocess
 import sys
+import sysconfig
 import tempfile
 import unittest
 from unittest.mock import Mock, call, patch
@@ -244,6 +245,28 @@ class PinnedInstalledCandidate(unittest.TestCase):
              "-s", str(EXTERNAL / "Terminan" / "tests"), "-v"],
             cwd=ROOT, check=True, timeout=60,
         )
+
+    def test_terminan_owner_frozen_grid_levels_compatibility(self):
+        check = EXTERNAL / "Terminan" / "tests" / "check_installed_grid_levels.py"
+        env = dict(os.environ, TERMINAN_COHORT_PATH=sysconfig.get_path("purelib"))
+        subprocess.run(
+            [sys.executable, "-I", "-B", str(check)],
+            cwd=ROOT, env=env, check=True, timeout=60,
+        )
+
+    def test_meta_minute_uses_installed_math_price_bucket(self):
+        from meta_analyse import core
+
+        self.assertIs(core.price_bucket, self.math.price_bucket)
+        trade = core.Trade(
+            "BTCUSDT", datetime(2026, 10, 19, 12, tzinfo=timezone.utc),
+            Decimal("100.005"), Decimal("1"), "Buy",
+        )
+        with localcontext() as context:
+            context.prec = 5
+            minute = core.new_minute(trade, Decimal("0.01"))
+            self.assertEqual(minute.profile, {Decimal("100.01"): Decimal("1")})
+            self.assertEqual(minute.poc, Decimal("100.01"))
 
     def test_meta_offline_delivery_uses_installed_terminan_journal(self):
         meta = EXTERNAL / "meta_analyse"
@@ -511,11 +534,20 @@ class MathResearchVsTradingBoundaryTests(unittest.TestCase):
     def test_math_half_up_price_bucket_is_independent_of_decimal_precision(self):
         from market_profile_math import price_bucket
 
-        for precision in (5, 28):
-            with self.subTest(precision=precision), localcontext() as context:
-                context.prec = precision
-                self.assertEqual(price_bucket(Decimal("100.005"), Decimal("0.01")),
-                                 Decimal("100.01"))
+        for precision in (3, 5, 28):
+            for traps in (False, True):
+                with self.subTest(precision=precision, traps=traps), localcontext() as context:
+                    context.prec = precision
+                    context.traps[Inexact] = traps
+                    context.traps[Rounded] = traps
+                    for price, tick, expected in (
+                        ("100.0049", "0.01", "100.00"),
+                        ("100.005", "0.01", "100.01"),
+                        ("100.0051", "0.01", "100.01"),
+                        ("1.075", "0.050", "1.100"),
+                    ):
+                        result = price_bucket(Decimal(price), Decimal(tick))
+                        self.assertEqual(result.as_tuple(), Decimal(expected).as_tuple())
 
     def test_runtime_api_has_no_trade_execution_verb(self):
         from market_compute_api import ALGORITHMS
