@@ -166,7 +166,7 @@ class MathResearchVsTradingBoundaryTests(unittest.TestCase):
     def test_math_installed_sdk_is_not_trading_engine(self):
         from importlib import metadata
         distribution = metadata.distribution("unified-math-kernels")
-        exposed = {name.lower() for name in distribution.files or ()}
+        exposed = {str(name).lower() for name in distribution.files or ()}
         forbidden = (
             "history_sizing.py", "paper.py", "backtest.py",
             "execution.py", "strategy_runner.py",
