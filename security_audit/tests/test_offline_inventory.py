@@ -230,6 +230,23 @@ class ArchitectureOwnershipTests(unittest.TestCase):
                           {x["rule"] for x in result["ownership_findings"]})
             self.assertFalse(result["distributed_orchestrator_verified"])
 
+    def test_math_trade_semantics_flagged_without_execution(self):
+        from security_audit.offline_inventory import architecture_scan
+        with tempfile.TemporaryDirectory() as tmp:
+            math = Path(tmp) / "math"
+            math.mkdir()
+            (math / "history_sizing.py").write_text(
+                "def apply_sizing(trades):\n"
+                "    # virtual position sizing and PnL after slippage\n"
+                "    return trades\n", encoding="utf-8")
+            (math / "pure.py").write_text(
+                "def mean(values): return sum(values) / len(values)\n",
+                encoding="utf-8")
+            rows = architecture_scan({"math": math})["ownership_findings"]
+            targets = [x["path"] for x in rows
+                       if x["rule"] == "ARCH_MATH_TRADE_SEMANTICS_REVIEW"]
+            self.assertEqual(["history_sizing.py"], targets)
+
     def test_invalid_and_oversize_fail_closed(self):
         from security_audit.offline_inventory import architecture_scan
         with tempfile.TemporaryDirectory() as tmp:
