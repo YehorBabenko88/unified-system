@@ -25,13 +25,13 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: YehorBabenko88/math
-          ref: d76de56feccdaede3dfd40f0ed939d337e58d557
+          ref: 5080c09e4165e26205a589a17e84c2f86bc370e6
           path: external/math
           persist-credentials: false
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: YehorBabenko88/bybit-cluster-grid
-          ref: b4bd236d198b503001907d53a455a378659d5408
+          ref: 204d75f08c6a965ba4cbe485f3ee21ab96df9145
           path: external/bybit-cluster-grid
           persist-credentials: false
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
@@ -43,19 +43,19 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: YehorBabenko88/Terminan
-          ref: dec68f4f5fc8e0c4cc89f9ddd975d71eee60b527
+          ref: 7b15cacb03cd51477d0d7b4254694e0db923f092
           path: external/Terminan
           persist-credentials: false
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: YehorBabenko88/meta_analyse
-          ref: dc9b0789a8a56f0ad30ec74d5d3f4bb26464f910
+          ref: 707e0d0d1e42d1495cb2213d4dc0b23f09a7521a
           path: external/meta_analyse
           persist-credentials: false
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: YehorBabenko88/strattester
-          ref: a007968bd74987cf71852f8f82ba1c7e54c3742c
+          ref: 9d8e27fdd31d66b50416308b097daf2dacfd46c3
           path: external/strattester
           persist-credentials: false
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
@@ -81,7 +81,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: YehorBabenko88/bybit-cluster-grid
-          ref: b4bd236d198b503001907d53a455a378659d5408
+          ref: 204d75f08c6a965ba4cbe485f3ee21ab96df9145
           persist-credentials: false
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with:
