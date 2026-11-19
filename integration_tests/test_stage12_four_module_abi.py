@@ -257,6 +257,7 @@ class Stage17OwnerBoundaryGates(unittest.TestCase):
         import hashlib
         import sqlite3
         import tempfile
+        from contextlib import closing
         from terminan.research_archive import ResearchArchive, research_result_receipt
         from terminan.paper_ledger import PaperReplayLedger
 
@@ -264,7 +265,7 @@ class Stage17OwnerBoundaryGates(unittest.TestCase):
                    '{"original": 1, "raw":"preserved"}')
         with tempfile.TemporaryDirectory() as root:
             source = Path(root) / "strattester-original.db"
-            with sqlite3.connect(source) as db:
+            with closing(sqlite3.connect(source)) as db, db:
                 db.execute(
                     "CREATE TABLE research_results (run_id TEXT, symbol TEXT, "
                     "strategy_id TEXT, strategy_version TEXT, "
@@ -274,7 +275,7 @@ class Stage17OwnerBoundaryGates(unittest.TestCase):
             before = hashlib.sha256(source.read_bytes()).hexdigest()
             # mode=ro; never invoke Strattester ResultStore.open (ALTER/CREATE/WAL).
             uri = source.resolve().as_uri() + "?mode=ro"
-            with sqlite3.connect(uri, uri=True) as db:
+            with closing(sqlite3.connect(uri, uri=True)) as db:
                 rows = db.execute(
                     "SELECT run_id,symbol,strategy_id,strategy_version,created_at,metrics "
                     "FROM research_results ORDER BY run_id,symbol,strategy_id,strategy_version"
