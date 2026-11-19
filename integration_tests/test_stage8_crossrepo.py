@@ -6,28 +6,24 @@ not permission to weaken an existing safety limit.
 """
 from __future__ import annotations
 
+from datetime import datetime, timedelta, timezone
 from decimal import Decimal
 from importlib import metadata
 from pathlib import Path
 import hashlib
 import importlib
+import json
 import os
 import subprocess
 import sys
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 
 ROOT = Path(__file__).resolve().parents[1]
 EXTERNAL = ROOT / "external"
-PINNED = {
-    "unified-system": "2a2ae2bca079b53b364fdd4c5dcb091849f5eb6d",
-    "math": "150910fff08c896f243fdf7e64ec18611420a4d2",
-    "meta_analyse": "cd7a74d314f97d130d88bb99e81263f50b0b8835",
-    "Terminan": "b07939d0339f725396b15936bfd4de9b9db3d1a7",
-    "bybit-cluster-grid": "3176010ddf5ed8f5028448ed99506185683891b5",
-    "strattester": "a5be637762ab3cddb649feea50653d138938af2c",
-}
+COHORT_PATH = Path(__file__).with_name("crossrepo-cohort.json")
+PINNED = json.loads(COHORT_PATH.read_text(encoding="utf-8"))["heads"]
 
 
 class PinnedInstalledCandidate(unittest.TestCase):
@@ -48,7 +44,6 @@ class PinnedInstalledCandidate(unittest.TestCase):
         # The Math computation must resolve from a built/installed distribution,
         # not from a direct project checkout or an accidental PYTHONPATH fallback.
         sys.path.insert(0, str(EXTERNAL / "meta_analyse" / "src"))
-        sys.path.insert(0, str(EXTERNAL / "bybit-cluster-grid"))
         cls.math = importlib.import_module("market_profile_math")
         if Path(cls.math.__file__).resolve().is_relative_to((EXTERNAL / "math").resolve()):
             raise AssertionError("Math source checkout bypassed installed SDK")
@@ -57,10 +52,9 @@ class PinnedInstalledCandidate(unittest.TestCase):
 
     @staticmethod
     def rows(n):
-        from decimal import Decimal as D
         # One-shot iterable. Preserves event order, precision and unknown side.
         for i in range(n):
-            yield (i * 100, D("100.00000001"), D("1.25"),
+            yield (i * 100, Decimal("100.00000001"), Decimal("1.25"),
                    ("buy", "sell", "unknown")[i % 3])
 
     def test_single_math_owner_and_legacy_batch_boundary(self):
@@ -158,10 +152,49 @@ class PinnedInstalledCandidate(unittest.TestCase):
             Path(distribution.locate_file("terminan/paper.py")).resolve(),
         )
 
+    def test_meta_forwards_paper_fill_to_storage(self):
+        from meta_analyse.runtime import Runtime
+
+        store = Mock(spec=["profile", "paper_fill"])
+        runtime = Runtime(metascalp=None, exchange=None, store=store)
+        self.assertFalse(runtime.paper.enabled)
+        runtime.paper.enabled = True
+        runtime.symbols = ["BTCUSDT"]
+        start = datetime(2026, 10, 19, 12, tzinfo=timezone.utc)
+
+        for seconds, price in ((0, "100"), (60, "102"), (61, "100")):
+            events = runtime.receive({
+                "Type": "trade_update",
+                "Data": {"ticker": "BTCUSDT", "trades": [{
+                    "time": (start + timedelta(seconds=seconds)).isoformat(),
+                    "price": price, "size": "1", "side": "Buy",
+                }]},
+            })
+
+        self.assertEqual(len(runtime.paper.fills), 1)
+        fill = runtime.paper.fills[0]
+        self.assertEqual(events, [("paper_fill", "BTCUSDT", fill)])
+        store.paper_fill.assert_called_once_with(fill)
+
+    def test_grid_wheel_excludes_strategy_and_scientific_runtime(self):
+        distribution = metadata.distribution("unified-grid-market-data")
+        self.assertTrue(distribution.files, "Grid wheel file manifest missing")
+        forbidden = {
+            "scientific_service.py", "scientific_simulation.py",
+            "strategy_runner.py", "strategy_runtime.py",
+        }
+        packaged = {path.name.casefold() for path in distribution.files}
+        self.assertFalse(forbidden & packaged, "Grid wheel still packages another module's runtime")
+
     def test_grid_and_terminan_owner_boundary(self):
         from grid import terminan_gateway
-        from terminan import contracts
-        from terminan import data
+        from terminan import contracts, data
+
+        grid_distribution = metadata.distribution("unified-grid-market-data")
+        self.assertEqual(
+            Path(terminan_gateway.__file__).resolve(),
+            Path(grid_distribution.locate_file("grid/terminan_gateway.py")).resolve(),
+        )
         self.assertEqual(contracts.StrategyRegistry.__module__,
                          "terminan.contracts")
         self.assertFalse((EXTERNAL / "Terminan" / "terminan" /
