@@ -20,12 +20,12 @@ import unittest
 ROOT = Path(__file__).resolve().parents[1]
 EXTERNAL = ROOT / "external"
 PINS = {
-    "math": "bb9cd1fac956620b0ab59482e8b7fd9e8b1f003b",
-    "bybit-cluster-grid": "0615fbf9d3bc0919a817e391c150275462cb5143",
-    "unified-system": "0b2aa679428dda7e0593a565b216b406533eb522",
-    "Terminan": "5a3a752ae680b948979010101db2d5698ffa0aef",
-    "meta_analyse": "707e0d0d1e42d1495cb2213d4dc0b23f09a7521a",
-    "strattester": "9d8e27fdd31d66b50416308b097daf2dacfd46c3",
+    "math": "8de3858cd5ca9a63dc3cd10f5f5cdec870ef4440",
+    "bybit-cluster-grid": "beed235e6883aeee808eb1b80fc80a2a35057202",
+    "unified-system": "04f32a12c0f3b58c0bebe402f2d9057cf4671cf3",
+    "Terminan": "4035647edb332260859850ad2a3ffc1044a4c818",
+    "meta_analyse": "f4880de89a59ea2e557b47daaa74ae491ac240fb",
+    "strattester": "55e652295882220303506cc18ce6c99027b6ca35",
 }
 
 
@@ -161,25 +161,21 @@ class Stage17OwnerBoundaryGates(unittest.TestCase):
     """Negative acceptance tests; fail until canonical owners finish migration."""
 
     def test_grid_level_timeframes_and_dto_are_accepted_by_math(self):
-        """Synthetic, source-unattested v2 Grid→Terminan→Math ABI rehearsal."""
+        """Synthetic v4 multi-candle Grid→Terminan→Math, never LIVE authentication."""
         from unittest.mock import patch
         from grid.history_snapshot import (MULTIPIN_MINUTES, plan_multipin,
                                            read_multipin_rollup)
         from grid.provenance import digest
-        from terminan.levels import grid_level_candles, untouched_levels
+        from terminan.levels import grid_level_candles, levels_from_grid_series
         from market_compute_api import TIMEFRAME_LEVELS_ABI
-        from market_profile_math import _LEVEL_PERIOD_MS
 
         self.assertEqual(TIMEFRAME_LEVELS_ABI, "math.market.levels.binary64.v1")
-        required = {"1h", "4h", "1d", "1w"}
-        self.assertTrue(required <= set(MULTIPIN_MINUTES))
-        self.assertTrue(required <= set(_LEVEL_PERIOD_MS))
         day = 86_400_000
-        for timeframe in sorted(required):
+        for timeframe in ("1h", "4h", "1d", "1w"):
             with self.subTest(timeframe=timeframe):
                 width = MULTIPIN_MINUTES[timeframe] * 60_000
                 start = 4 * day if timeframe == "1w" else 0
-                end, as_of = start + width, start + width + 60_000
+                end, as_of = start + 2 * width, start + 2 * width + 60_000
                 catalog, envelopes, pins = {}, {}, []
                 cursor = start
                 while cursor < end:
@@ -216,7 +212,7 @@ class Stage17OwnerBoundaryGates(unittest.TestCase):
                     }
                     cursor = page_end
                 selection = {
-                    "schema": "grid.history.multipin.v1",
+                    "schema": "grid.history.selection.v4",
                     "timeframe": timeframe, "snapshot_ids": pins,
                     "start_ms": start, "end_ms": end,
                     "venue": "bybit", "market_type": "linear",
@@ -224,33 +220,32 @@ class Stage17OwnerBoundaryGates(unittest.TestCase):
                 }
                 pages = plan_multipin(selection, catalog)
                 self.assertEqual(len(pages), len(pins))
-
                 def load(_conn, page, _catalog, *, continuing):
                     self.assertEqual(continuing, page["snapshot_id"] != pins[0])
                     return envelopes[page["snapshot_id"]]
-
                 with patch("grid.history_snapshot.select_snapshot", side_effect=load):
-                    rollup = read_multipin_rollup(None, selection, pages, catalog)
+                    result = read_multipin_rollup(None, selection, pages, catalog)
+                self.assertEqual(result["schema"], "grid.history.rollup.v3")
+                self.assertEqual(len(result["rows"]), 2)
                 candles = grid_level_candles(
-                    rollup, trusted_fingerprint=rollup["dataset_fingerprint"],
+                    result, trusted_fingerprint=result["dataset_fingerprint"],
                     symbol="BTCUSDT", market_type="linear",
-                    timeframe=timeframe, start_ms=start, end_ms=end,
-                    as_of_ms=as_of,
-                )
-                self.assertEqual(
-                    candles, [{"t": start, "h": 12.0, "l": 8.0, "complete": True}]
-                )
-                self.assertEqual(
-                    len(untouched_levels(candles, timeframe, as_of)), 2
-                )
-                damaged = dict(rollup, rows=[dict(rollup["rows"][0], high=999.0)])
+                    timeframe=timeframe, start_ms=start, end_ms=end, as_of_ms=as_of)
+                self.assertEqual(candles, [
+                    {"t": start, "h": 12.0, "l": 8.0, "complete": True},
+                    {"t": start + width, "h": 12.0, "l": 8.0, "complete": True},
+                ])
+                self.assertTrue(levels_from_grid_series(
+                    result, trusted_fingerprint=result["dataset_fingerprint"],
+                    symbol="BTCUSDT", market_type="linear",
+                    timeframe=timeframe, start_ms=start, end_ms=end, as_of_ms=as_of))
+                altered = dict(result, rows=[dict(result["rows"][0], high=999.0),
+                                             result["rows"][1]])
                 with self.assertRaises(ValueError):
                     grid_level_candles(
-                        damaged, trusted_fingerprint=rollup["dataset_fingerprint"],
-                        symbol="BTCUSDT", market_type="linear",
-                        timeframe=timeframe, start_ms=start, end_ms=end,
-                        as_of_ms=as_of,
-                    )
+                        altered, trusted_fingerprint=result["dataset_fingerprint"],
+                        symbol="BTCUSDT", market_type="linear", timeframe=timeframe,
+                        start_ms=start, end_ms=end, as_of_ms=as_of)
 
     def test_strattester_legacy_six_column_rows_have_readonly_admission(self):
         """Verify old six-column rows without calling the mutating ResultStore.open."""
