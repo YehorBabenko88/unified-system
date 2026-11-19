@@ -163,6 +163,109 @@ def scan(roots: dict[str, Path]) -> dict[str, Any]:
     }
 
 
+
+# Architecture ownership observations are intentionally separate from security
+# clearance. These are AST/static findings, never execution or deletion grants.
+import ast
+
+ARCHITECTURE_OWNERSHIP_VERSION = "unified.architecture.static.v1"
+EXCHANGE_MODULES = frozenset(("pybit", "ccxt", "bybit"))
+EXCHANGE_HOST_PATTERN = re.compile(r"(?:api(?:-testnet)?\.bybit\.com|stream(?:-testnet)?\.bybit\.com)", re.I)
+SQL_BOOTSTRAP_PATTERN = re.compile(
+    r"\b(?:CREATE\s+(?:DATABASE|ROLE|USER)|initdb|pg_ctl\s+init)\b", re.I
+)
+DIRECT_MARKET_WRITE_PATTERN = re.compile(
+    r"\b(?:INSERT\s+INTO|UPDATE|DELETE\s+FROM)\s+"
+    r"(?:[a-z_][\w]*\.)?(?:ohlcv(?:_1m)?|market_trades|orderbook|funding|open_interest)\b",
+    re.I,
+)
+RUNTIME_SUFFIXES = frozenset((".py", ".js", ".ts", ".ps1", ".sh", ".sql"))
+
+
+def architecture_scan(roots: dict[str, Path]) -> dict[str, Any]:
+    """Find cross-repo ownership violations without importing or executing code.
+
+    Static matches are review candidates. A complete integration graph additionally
+    needs exact-head checkout, dynamic import tracing, API tests and owner ACK.
+    """
+    if not roots or set(roots) - set(REPOS):
+        raise ValueError("unknown repository scope")
+    findings: list[dict[str, str]] = []
+    reviewed: dict[str, dict[str, int]] = {}
+    for repo in REPOS:
+        if repo not in roots:
+            continue
+        root = Path(roots[repo])
+        if not root.is_dir() or root.is_symlink():
+            raise ValueError("repository path not a real directory")
+        counts = {"runtime_files_examined": 0, "python_files_parsed": 0,
+                  "oversize_files_unscanned": 0, "python_parse_errors": 0}
+        for p in _files(root):
+            if p.suffix.lower() not in RUNTIME_SUFFIXES:
+                continue
+            rel = p.relative_to(root).as_posix()
+            if p.stat().st_size > MAX_FILE_BYTES:
+                counts["oversize_files_unscanned"] += 1
+                findings.append({"repository": repo, "path": rel,
+                                 "rule": "ARCH_OVERSIZE_UNSCANNED", "level": "BLOCKED"})
+                continue
+            counts["runtime_files_examined"] += 1
+            src = p.read_text(encoding="utf-8", errors="replace")
+            if repo != "bybit-cluster-grid" and (
+                EXCHANGE_HOST_PATTERN.search(src) or
+                re.search(r"\b(?:from|import)\s+(?:pybit|ccxt)\b", src)
+            ):
+                findings.append({"repository": repo, "path": rel,
+                                 "rule": "ARCH_EXCHANGE_CLIENT_OUTSIDE_GRID",
+                                 "level": "REVIEW"})
+            if repo != "unified-system" and SQL_BOOTSTRAP_PATTERN.search(src):
+                findings.append({"repository": repo, "path": rel,
+                                 "rule": "ARCH_DB_PROVISIONING_OUTSIDE_UNIFIED",
+                                 "level": "REVIEW"})
+            if repo != "bybit-cluster-grid" and DIRECT_MARKET_WRITE_PATTERN.search(src):
+                findings.append({"repository": repo, "path": rel,
+                                 "rule": "ARCH_MARKET_TABLE_WRITE_OUTSIDE_GRID",
+                                 "level": "REVIEW"})
+            if p.suffix.lower() == ".py":
+                try:
+                    tree = ast.parse(src, filename=rel)
+                except SyntaxError:
+                    counts["python_parse_errors"] += 1
+                    findings.append({"repository": repo, "path": rel,
+                                     "rule": "ARCH_PYTHON_PARSE_ERROR", "level": "REVIEW"})
+                    continue
+                counts["python_files_parsed"] += 1
+                for node in ast.walk(tree):
+                    if isinstance(node, ast.Import):
+                        modules = [alias.name for alias in node.names]
+                    elif isinstance(node, ast.ImportFrom):
+                        modules = [node.module or ""]
+                    else:
+                        modules = []
+                    if repo != "bybit-cluster-grid" and any(
+                        m == "pybit" or m.startswith("pybit.") or
+                        m == "ccxt" or m.startswith("ccxt.")
+                        for m in modules
+                    ):
+                        findings.append({"repository": repo, "path": rel,
+                                         "rule": "ARCH_EXCHANGE_IMPORT_OUTSIDE_GRID",
+                                         "level": "REVIEW"})
+        reviewed[repo] = counts
+    findings.sort(key=lambda x: (x["repository"], x["path"], x["rule"]))
+    return {
+        "schema": ARCHITECTURE_OWNERSHIP_VERSION,
+        "mode": "READ_ONLY_STATIC_NOT_RUNTIME_PROOF",
+        "observed_repositories": list(reviewed),
+        "observed_files": reviewed,
+        "ownership_findings": findings,
+        "automatic_removals": 0,
+        "cross_repo_runtime_imports_verified": False,
+        "db_role_permissions_verified": False,
+        "distributed_orchestrator_verified": False,
+        "ready_to_merge": False,
+        "release_status": "NO_GO",
+    }
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Read-only six-repo security and duplicate code audit")
     for name in REPOS:
