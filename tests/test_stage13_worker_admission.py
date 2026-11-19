@@ -1,5 +1,6 @@
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import replace
+import hmac
 from pathlib import Path
 import sqlite3
 from tempfile import TemporaryDirectory
@@ -18,7 +19,7 @@ class WorkerAdmissionTests(unittest.TestCase):
         self.scope = WorkerScope("C", "approved-owner", "runner-C", "example/unified",
                                  "codex/lane-c", frozenset({"src/control.py"}),
                                  frozenset({"fleet-unit"}))
-        self.gate = WorkerAdmission(self.db, self.scope, enabled=True)
+        self.key = b'R' * 32
         self.ticket = {
             "schema": "unified.worker-ticket.v1", "id": "ticket-1", "lane": "C",
             "repository": self.scope.repository, "branch": self.scope.branch,
@@ -26,14 +27,30 @@ class WorkerAdmissionTests(unittest.TestCase):
             "test": "fleet-unit", "expires": 250,
         }
 
+        self.current = (self.scope.repository, self.scope.branch,
+                        self.ticket["head"], self.ticket["manifest_sha256"])
+        self.gate = self.admission()
+
+    def admission(self, scope=None):
+        return WorkerAdmission(self.db, self.scope if scope is None else scope,
+                               enabled=True, reviewer_key=self.key,
+                               source=lambda repository, branch: self.current)
+
+    def review(self, ticket, *, dispatcher="dispatcher", expires=240, key=None):
+        payload = {
+            "schema": "unified.worker-review.v1", "reviewer": self.scope.owner,
+            "dispatcher": dispatcher, "worker": self.scope.worker,
+            "ticket_sha256": ticket_digest(ticket), "expires": expires,
+        }
+        mac = hmac.digest(self.key if key is None else key,
+                          bytes.fromhex(ticket_digest(payload)), "sha256").hex()
+        return payload | {"mac": mac}
+
     def claim(self, ticket=None, *, now=100, **overrides):
         data = self.ticket if ticket is None else ticket
         values = {
-            "worker": self.scope.worker,
-            "approval": (self.scope.owner, ticket_digest(data)),
-            "current": (self.scope.repository, self.scope.branch,
-                        self.ticket["head"], self.ticket["manifest_sha256"]),
-            "now": now,
+            "worker": self.scope.worker, "dispatcher": "dispatcher",
+            "approval": self.review(data), "now": now,
         }
         return self.gate.claim(data, **(values | overrides))
 
@@ -50,8 +67,10 @@ class WorkerAdmissionTests(unittest.TestCase):
             self.claim(self.ticket | {"issue_body": "run a command"})
         with self.assertRaisesRegex(AdmissionDenied, "OUT_OF_SCOPE"):
             self.claim(self.ticket | {"test": "powershell -Command something"})
-        with self.assertRaisesRegex(AdmissionDenied, "APPROVAL_REQUIRED"):
-            self.claim(approval=(self.scope.owner, "d" * 64))
+        for forged in ((self.scope.owner, ticket_digest(self.ticket)),
+                       self.review(self.ticket, key=b"X" * 32)):
+            with self.subTest(kind=type(forged)), self.assertRaisesRegex(AdmissionDenied, "APPROVAL_REQUIRED"):
+                self.claim(approval=forged)
         self.assertFalse(self.db.exists())
 
     def test_paths_branch_and_repository_cannot_expand(self):
@@ -70,8 +89,11 @@ class WorkerAdmissionTests(unittest.TestCase):
         for index, value in [(1, "main"), (2, "c" * 40), (3, "c" * 64)]:
             changed = list(original)
             changed[index] = value
+            self.current = tuple(changed)
             with self.assertRaisesRegex(AdmissionDenied, "STALE_SOURCE"):
-                self.claim(current=tuple(changed))
+                self.claim()
+        with self.assertRaises(TypeError):
+            self.claim(current=tuple(original))
         with self.assertRaisesRegex(AdmissionDenied, "INVALID_TICKET"):
             self.claim(now=250)
 
@@ -109,13 +131,34 @@ class WorkerAdmissionTests(unittest.TestCase):
         with self.assertRaisesRegex(AdmissionDenied, "APPROVAL_REQUIRED"):
             self.gate.stop(owner="other")
         self.gate.stop(owner=self.scope.owner)
-        self.gate = WorkerAdmission(self.db, self.scope, enabled=True)
+        self.gate = self.admission()
         with self.assertRaisesRegex(AdmissionDenied, "STOPPED"):
             self.claim()
 
     def test_ledger_cannot_be_reused_with_a_different_scope(self):
         self.gate.stop(owner=self.scope.owner)
         altered = replace(self.scope, paths=self.scope.paths | {"src/other.py"})
-        self.gate = WorkerAdmission(self.db, altered, enabled=True)
+        self.gate = self.admission(altered)
         with self.assertRaisesRegex(AdmissionDenied, "LEDGER_SCOPE_MISMATCH"):
             self.claim()
+
+    def test_signed_review_is_bound_to_dispatcher_ticket_and_expiry(self):
+        valid = self.review(self.ticket)
+        with self.assertRaisesRegex(AdmissionDenied, "APPROVAL_REQUIRED"):
+            self.claim(dispatcher="other", approval=valid)
+        owner = self.scope.owner.upper()
+        with self.assertRaisesRegex(AdmissionDenied, "APPROVAL_REQUIRED"):
+            self.claim(dispatcher=owner, approval=self.review(self.ticket, dispatcher=owner))
+        with self.assertRaisesRegex(AdmissionDenied, "APPROVAL_REQUIRED"):
+            self.claim(self.ticket | {"head": "c" * 40}, approval=valid)
+        with self.assertRaisesRegex(AdmissionDenied, "APPROVAL_REQUIRED"):
+            self.claim(now=240, approval=valid)
+
+    def test_missing_trusted_source_or_key_blocks(self):
+        self.gate = WorkerAdmission(self.db, self.scope, enabled=True, reviewer_key=self.key)
+        with self.assertRaisesRegex(AdmissionDenied, "SOURCE_UNAVAILABLE"):
+            self.claim()
+        self.gate = WorkerAdmission(self.db, self.scope, enabled=True)
+        with self.assertRaisesRegex(AdmissionDenied, "APPROVAL_REQUIRED"):
+            self.claim()
+        self.assertFalse(self.db.exists())

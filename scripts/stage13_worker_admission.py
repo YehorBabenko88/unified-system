@@ -2,6 +2,7 @@
 from contextlib import closing, contextmanager
 from dataclasses import dataclass
 import hashlib
+import hmac
 import json
 import re
 import sqlite3
@@ -12,6 +13,8 @@ IDENTIFIER = re.compile(r"[A-Za-z0-9_-]{1,64}")
 PATH = re.compile(r"[a-zA-Z0-9_./-]{1,240}")
 FIELDS = {"schema", "id", "lane", "repository", "branch", "head", "manifest_sha256",
           "paths", "test", "expires"}
+APPROVAL_FIELDS = {"schema", "reviewer", "dispatcher", "worker", "ticket_sha256",
+                   "expires", "mac"}
 MAX_TICKETS = 256
 MIN_CLAIM_INTERVAL = 60
 
@@ -48,14 +51,18 @@ def safe_path(path):
 class WorkerAdmission:
     """One private ledger per connector, with one active claim and no retries.
 
-    Scope, approval, clock and repository state come from trusted callers.
+    The gate and external reviewer service hold the lane key. Workers and
+    publishers never receive it. The identity, clock and source adapters
+    must run in the trusted gate process.
     Keep this ledger in an operator-owned directory outside all checkouts.
     """
 
-    def __init__(self, database, scope, *, enabled=False):
+    def __init__(self, database, scope, *, enabled=False, reviewer_key=None, source=None):
         self.database = database
         self.scope = scope
         self.enabled = enabled is True
+        self._reviewer_key = reviewer_key
+        self._source = source
         self.scope_digest = ticket_digest({
             "lane": scope.lane, "owner": scope.owner, "worker": scope.worker,
             "repository": scope.repository, "branch": scope.branch,
@@ -77,7 +84,33 @@ class WorkerAdmission:
                        "evidence TEXT NOT NULL, outcome TEXT)")
             yield db
 
-    def claim(self, ticket, *, worker, approval, current, now):
+    def _verify_review(self, approval, dispatcher, digest, ticket_expiry, now):
+        scope = self.scope
+        if (
+            type(self._reviewer_key) is not bytes or len(self._reviewer_key) != 32
+            or type(approval) is not dict or set(approval) != APPROVAL_FIELDS
+            or type(dispatcher) is not str or not IDENTIFIER.fullmatch(dispatcher)
+            or dispatcher.casefold() == scope.owner.casefold()
+            or scope.worker.casefold() == scope.owner.casefold()
+        ):
+            raise AdmissionDenied("APPROVAL_REQUIRED")
+        payload = {
+            "schema": "unified.worker-review.v1", "reviewer": scope.owner,
+            "dispatcher": dispatcher, "worker": scope.worker, "ticket_sha256": digest,
+            "expires": approval["expires"],
+        }
+        mac = approval["mac"]
+        if (
+            type(payload["expires"]) is not int or not now < payload["expires"] <= ticket_expiry
+            or type(mac) is not str or not DIGEST.fullmatch(mac)
+            or any(approval[key] != value for key, value in payload.items())
+        ):
+            raise AdmissionDenied("APPROVAL_REQUIRED")
+        expected = hmac.digest(self._reviewer_key, bytes.fromhex(ticket_digest(payload)), "sha256")
+        if not hmac.compare_digest(bytes.fromhex(mac), expected):
+            raise AdmissionDenied("APPROVAL_REQUIRED")
+
+    def claim(self, ticket, *, worker, dispatcher, approval, now):
         scope = self.scope
         if not self.enabled or worker != scope.worker:
             raise AdmissionDenied("EXECUTOR_DISABLED_OR_UNKNOWN")
@@ -105,15 +138,21 @@ class WorkerAdmission:
         ):
             raise AdmissionDenied("OUT_OF_SCOPE")
         digest = ticket_digest(ticket)
-        if approval != (scope.owner, digest):
-            raise AdmissionDenied("APPROVAL_REQUIRED")
+        self._verify_review(approval, dispatcher, digest, ticket["expires"], now)
+        if not callable(self._source):
+            raise AdmissionDenied("SOURCE_UNAVAILABLE")
+        try:
+            current = self._source(scope.repository, scope.branch)
+        except Exception:
+            raise AdmissionDenied("SOURCE_UNAVAILABLE") from None
         if current != (scope.repository, scope.branch, ticket["head"], ticket["manifest_sha256"]):
             raise AdmissionDenied("STALE_SOURCE")
         evidence = json.dumps({
             "head": ticket["head"], "manifest_sha256": ticket["manifest_sha256"],
             "paths": paths, "test_digest": hashlib.sha256(ticket["test"].encode()).hexdigest(),
             "repository": scope.repository, "branch": scope.branch,
-            "lane": scope.lane, "expires": ticket["expires"],
+            "lane": scope.lane, "expires": ticket["expires"], "dispatcher": dispatcher,
+            "review_sha256": ticket_digest(approval), "review_expires": approval["expires"],
         }, sort_keys=True)
         with self.transaction() as db:
             if db.execute("SELECT stopped FROM settings").fetchone()[0] != 0:

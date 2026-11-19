@@ -58,12 +58,24 @@ worker identity. No unattended connector is enabled by this PR.
 `scripts.stage13_worker_admission.WorkerAdmission` is the opt-in gate for a
 future connector. Instantiate it with a local operator-owned SQLite path and
 a fixed `WorkerScope`. Pass `enabled=True` only in the trusted connector.
-Build `approval=(owner_id, ticket_digest(ticket))` from an independently
-authenticated approval record, and `current=(repository, branch, HEAD,
-manifest_sha256)` from trusted GitHub and artifact verification. Never
-construct either tuple from an issue, PR body, or the ticket itself. Supply
-`now` from the connector's clock. Each ticket expires within 15 minutes,
-binds literal authorized paths and specifies a single allowlisted test ID.
+Provision a random 32-byte lane-specific HMAC key to the trusted admission
+service and the isolated reviewer service through a secret manager. Keep it
+out of the worker, issue publisher, Git repository and artifacts. Bind
+`source(repository, branch)` when constructing the gate. It must read the
+current branch identity from GitHub and return the repository, branch, HEAD
+and verified artifact digest. The claim API accepts no source-state override.
+
+The reviewer service must authenticate the human reviewer and verify lane
+authority before issuing a `unified.worker-review.v1` envelope. Its fields
+are `schema`, `reviewer`, `dispatcher`, `worker`, `ticket_sha256`, `expires`
+(Unix seconds), and lowercase hex `mac`. Compute the MAC as HMAC-SHA256 over
+the raw 32 bytes of the canonical JSON digest (see `ticket_digest`) of the
+envelope with `mac` omitted. The ticket digest binds repository, branch,
+exact HEAD, manifest digest, allowed paths, test ID and ticket expiry.
+The reviewed dispatcher must differ from the owner even when letter case
+differs. Derive dispatcher and worker identities from authenticated sessions
+at the gate, never from an issue, PR body or the review envelope. The
+approval expires no later than the ticket. Supply `now` from the gate clock.
 
 `claim` returns an audit digest and consumes the ticket. A ledger admits at
 most one active ticket, at least 60 seconds apart, and at most 256 total.
@@ -75,6 +87,6 @@ until the authorized operator reconciles the outcome. Do not replace a
 ledger to retry a consumed ticket. The audit stores hashes, identifiers,
 scope and outcome, without credential values or raw issue text.
 
-This interface has no command runner, approval authentication backend,
+This interface has no command runner, reviewer identity provider or signer service,
 credential issuer, or process cancellation. It is not wired into Actions
 and the published manifest continues to report NOT_CONNECTED.
