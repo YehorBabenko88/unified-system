@@ -276,6 +276,94 @@ def architecture_scan(roots: dict[str, Path]) -> dict[str, Any]:
         "release_status": "NO_GO",
     }
 
+
+def meta_import_inventory(root: Path) -> dict[str, Any]:
+    """Statically enumerate Meta imports, entrypoints and direct consumers.
+
+    Never infer that a function is UNUSED merely because no edge is found.
+    Dynamic imports, external projects, Windows scripts and deployed services
+    require separate human and runtime qualification.
+    """
+    root = Path(root)
+    if not root.is_dir() or root.is_symlink():
+        raise ValueError("Meta repository path must be a real directory")
+    package = root / "src" / "meta_analyse"
+    if not package.is_dir():
+        raise ValueError("Meta package source tree missing")
+    modules: dict[str, dict[str, Any]] = {}
+    edges: list[dict[str, str]] = []
+    pending: list[dict[str, str]] = []
+    for path in _files(package):
+        if path.suffix != ".py":
+            continue
+        rel = path.relative_to(root).as_posix()
+        if path.stat().st_size > MAX_FILE_BYTES:
+            pending.append({"path": rel, "reason": "OVERSIZE_UNSCANNED"})
+            continue
+        module = "meta_analyse." + ".".join(path.relative_to(package).with_suffix("").parts)
+        raw = path.read_text(encoding="utf-8", errors="replace")
+        try:
+            tree = ast.parse(raw, filename=rel)
+        except SyntaxError:
+            pending.append({"path": rel, "reason": "PYTHON_PARSE_ERROR"})
+            continue
+        public = sorted({
+            node.name for node in tree.body
+            if isinstance(node, (ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef))
+            and not node.name.startswith("_")
+        })
+        modules[module] = {"path": rel, "symbols": public}
+        for node in ast.walk(tree):
+            if isinstance(node, ast.ImportFrom):
+                if node.level:
+                    prefix = module.rsplit(".", 1)[0]
+                    parts = prefix.split(".")
+                    up = node.level - 1
+                    if up >= len(parts):
+                        pending.append({"path": rel, "reason": "UNRESOLVED_RELATIVE_IMPORT"})
+                        continue
+                    target = ".".join(parts[:len(parts) - up] + ([node.module] if node.module else []))
+                else:
+                    target = node.module or ""
+                if target.startswith("meta_analyse"):
+                    for alias in node.names:
+                        edges.append({"source": module, "target": target, "symbol": alias.name})
+            elif isinstance(node, ast.Import):
+                for alias in node.names:
+                    if alias.name.startswith("meta_analyse"):
+                        edges.append({"source": module, "target": alias.name, "symbol": "*"})
+            elif isinstance(node, ast.Call):
+                fn = node.func
+                name = fn.id if isinstance(fn, ast.Name) else (
+                    fn.attr if isinstance(fn, ast.Attribute) else None
+                )
+                if name in ("__import__", "import_module", "exec", "eval"):
+                    pending.append({"path": rel, "reason": "DYNAMIC_CALL_REVIEW"})
+    script = root / "pyproject.toml"
+    entrypoints: list[str] = []
+    if script.is_file() and script.stat().st_size <= MAX_FILE_BYTES:
+        body = script.read_text(encoding="utf-8", errors="replace")
+        in_scripts = False
+        for line in body.splitlines():
+            stripped = line.strip()
+            if stripped.startswith("[") and stripped.endswith("]"):
+                in_scripts = stripped == "[project.scripts]"
+            elif in_scripts and "=" in stripped and not stripped.startswith("#"):
+                entrypoints.append(stripped.split("#", 1)[0].strip())
+    return {
+        "schema": "unified.meta.import-inventory.v1",
+        "mode": "STATIC_ONLY_NO_EXECUTION",
+        "modules": {key: modules[key] for key in sorted(modules)},
+        "edges": sorted(edges, key=lambda e: (e["source"], e["target"], e["symbol"])),
+        "entrypoints": sorted(entrypoints),
+        "pending": sorted(pending, key=lambda v: (v["path"], v["reason"])),
+        "external_consumers_verified": False,
+        "all_runtime_consumers_switched": False,
+        "unused_symbols_proven": False,
+        "archival_ready": False,
+        "automatic_deletions": 0,
+    }
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Read-only six-repo security and duplicate code audit")
     for name in REPOS:
