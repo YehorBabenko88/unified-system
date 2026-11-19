@@ -380,7 +380,9 @@ def meta_import_inventory(root: Path) -> dict[str, Any]:
     }
 
 
-def scan_git_history(repo_path: Path, *, max_blob_bytes: int = MAX_FILE_BYTES) -> dict[str, Any]:
+def scan_git_history(repo_path: Path, *, max_blob_bytes: int = MAX_FILE_BYTES,
+                     stream_large_blobs: bool = False,
+                     max_stream_blob_bytes: int = 268_435_456) -> dict[str, Any]:
     """Read Git objects reachable from *local* refs, never execute repository code.
 
     The output is deliberately redacted. This does not verify remote ref
@@ -395,6 +397,10 @@ def scan_git_history(repo_path: Path, *, max_blob_bytes: int = MAX_FILE_BYTES) -
         raise ValueError("invalid Git repository directory")
     if not (0 < max_blob_bytes <= MAX_FILE_BYTES):
         raise ValueError("invalid scan byte cap")
+    if type(stream_large_blobs) is not bool or not (
+        max_blob_bytes <= max_stream_blob_bytes <= 268_435_456
+    ):
+        raise ValueError("invalid streaming scan bounds")
 
     def git(*args: str) -> str:
         result = subprocess.run(
@@ -451,9 +457,39 @@ def scan_git_history(repo_path: Path, *, max_blob_bytes: int = MAX_FILE_BYTES) -
                 chunks.append(part)
         return b"".join(chunks) if retain else b""
 
+    # All current token-shape rules are ASCII; scan bytes so a token split across
+    # read boundaries is not missed, without retaining oversized blob contents.
+    byte_rules = {
+        name: re.compile(regex.pattern.encode("ascii"), regex.flags & re.IGNORECASE)
+        for name, regex in SECRETS.items()
+    }
+
+    def scan_large_blob(count: int) -> tuple[set[str], bool]:
+        assert proc.stdout is not None
+        matches: set[str] = set()
+        previous = b""
+        first = True
+        is_lfs_pointer = False
+        while count:
+            part = proc.stdout.read(min(count, 65536))
+            if not part:
+                raise ValueError("truncated oversized Git blob stream")
+            count -= len(part)
+            if first:
+                is_lfs_pointer = part.startswith(b"version https://git-lfs.github.com/spec/v1\n")
+                first = False
+            window = previous + part
+            for name, regex in byte_rules.items():
+                if name not in matches and regex.search(window):
+                    matches.add(name)
+            # Longer than every bounded secret-shape rule; no full-blob retention.
+            previous = window[-256:]
+        return matches, is_lfs_pointer
+
     rule_counts = {name: 0 for name in SECRETS}
     blobs = 0
     skipped = 0
+    streamed_blobs = 0
     lfs_pointers = 0
     try:
         assert proc.stdout is not None
@@ -466,12 +502,24 @@ def scan_git_history(repo_path: Path, *, max_blob_bytes: int = MAX_FILE_BYTES) -
             if size < 0:
                 raise ValueError("invalid Git object length")
             retain = object_type == "blob" and size <= max_blob_bytes
-            payload = read_exact(size, retain)
+            streaming = (object_type == "blob" and stream_large_blobs
+                         and max_blob_bytes < size <= max_stream_blob_bytes)
+            if streaming:
+                matched_rules, lfs_pointer = scan_large_blob(size)
+                payload = b""
+            else:
+                payload = read_exact(size, retain)
             if proc.stdout.read(1) != b"\n":
                 raise ValueError("invalid Git object delimiter")
             if object_type != "blob":
                 continue
             blobs += 1
+            if streaming:
+                streamed_blobs += 1
+                lfs_pointers += int(lfs_pointer)
+                for name in matched_rules:
+                    rule_counts[name] += 1
+                continue
             if not retain:
                 skipped += 1
                 continue
@@ -499,6 +547,7 @@ def scan_git_history(repo_path: Path, *, max_blob_bytes: int = MAX_FILE_BYTES) -
         "reachable_git_objects": len(object_ids),
         "blob_objects_examined": blobs - skipped,
         "oversize_blob_objects_unscanned": skipped,
+        "oversize_blob_objects_streamed": streamed_blobs,
         "git_lfs_pointers": lfs_pointers,
         "shallow_clone": shallow != "false",
         "local_ref_scan_complete": shallow == "false" and skipped == 0,
