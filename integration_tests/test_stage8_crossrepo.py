@@ -278,6 +278,48 @@ class PinnedInstalledCandidate(unittest.TestCase):
                 with self.subTest(field=field, value=value), self.assertRaises(ValueError):
                     TradeEvent.parse(dict(trade, **{field: value}))
 
+    def test_grid_installed_pinned_history_rollup(self):
+        grid_tests = EXTERNAL / "bybit-cluster-grid" / "tests"
+        subprocess.run(
+            [sys.executable, "-I", "-B", "-m", "pytest", "-q",
+             str(grid_tests / "test_terminan_gateway_contract.py"),
+             "-k", "pinned_history_rollup or pinned_rollup_refuses"],
+            cwd=ROOT, check=True, timeout=60,
+        )
+
+    def test_grid_exposes_required_levels_timeframes(self):
+        from grid.history_snapshot import TIMEFRAME_MINUTES
+
+        required = {"1h": 60, "4h": 240, "1d": 1440, "1w": 10080}
+        self.assertEqual(
+            {timeframe: TIMEFRAME_MINUTES.get(timeframe) for timeframe in required},
+            required,
+            "Grid history must supply every timeframe required by the level pipeline",
+        )
+
+    def test_terminan_can_read_six_column_strattester_results_without_changes(self):
+        from terminan.data import research
+
+        with tempfile.TemporaryDirectory() as directory:
+            source = Path(directory) / "old-results.sqlite3"
+            with closing(sqlite3.connect(source)) as db, db:
+                db.execute(
+                    "CREATE TABLE research_results (run_id TEXT, symbol TEXT, strategy_id TEXT, "
+                    "strategy_version TEXT, created_at REAL, metrics TEXT)"
+                )
+                db.execute(
+                    "INSERT INTO research_results VALUES (?, ?, ?, ?, ?, ?)",
+                    ("legacy-1", "BTCUSDT", "research", "1", 123.5, '{"score": 1.2}'),
+                )
+            before = hashlib.sha256(source.read_bytes()).hexdigest()
+            with patch.dict(os.environ, {"TERMINAN_RESULTS_DB": str(source)}):
+                self.assertEqual(research("BTCUSDT"), [{
+                    "run_id": "legacy-1", "strategy": "research", "version": "1",
+                    "created_at": 123.5, "metrics": {"score": 1.2},
+                }])
+            self.assertEqual(hashlib.sha256(source.read_bytes()).hexdigest(), before)
+            self.assertEqual(list(source.parent.iterdir()), [source])
+
     def test_grid_wheel_excludes_strategy_and_scientific_runtime(self):
         distribution = metadata.distribution("unified-grid-market-data")
         self.assertTrue(distribution.files, "Grid wheel file manifest missing")
