@@ -9,7 +9,8 @@
     "terminan": {"lane": "D", "repo": "Terminan", "pr": 91, "depends_on": ["math", "grid", "unified"]},
     "meta-owner": {"lane": "E", "repo": "meta_analyse", "pr": 81, "depends_on": ["terminan"]},
     "meta-cutover": {"lane": "E", "repo": "meta_analyse", "pr": 82, "depends_on": ["meta-owner"]},
-    "strattester-cutover": {"lane": "E", "repo": "strattester", "pr": 88, "depends_on": ["terminan"]},
+    "strattester-owner": {"lane": "E", "repo": "strattester", "pr": 87, "depends_on": ["terminan"]},
+    "strattester-cutover": {"lane": "E", "repo": "strattester", "pr": 89, "depends_on": ["strattester-owner"]},
     "independent-ci": {"lane": "F", "repo": "unified-system", "pr": 124, "depends_on": ["math", "grid", "unified", "terminan", "meta-cutover", "strattester-cutover"]}
   }
 }

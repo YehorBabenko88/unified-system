@@ -80,11 +80,13 @@ class NoRedirect(HTTPRedirectHandler):
 
 
 def get(url, token, *, opener=None):
-    need(url.startswith('https://api.github.com/repos/'+REPOSITORY+'/') or
-         url.startswith('https://raw.githubusercontent.com/'+REPOSITORY+'/'))
-    headers = {'Accept': 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28'}
-    if token:
-        headers['Authorization'] = 'Bearer '+token
+    api_request = url.startswith('https://api.github.com/repos/'+REPOSITORY+'/')
+    need(api_request or url.startswith('https://raw.githubusercontent.com/'+REPOSITORY+'/'))
+    headers = {}
+    if api_request:
+        headers = {'Accept': 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28'}
+        if token:
+            headers['Authorization'] = 'Bearer '+token
     opener = build_opener(NoRedirect()) if opener is None else opener
     with opener.open(Request(url, headers=headers, method='GET'), timeout=20) as response:
         need(response.geturl() == url and response.status == 200 and not response.headers.get('Link'))

@@ -115,6 +115,28 @@ class AdmissionTests(unittest.TestCase):
                     self.assertEqual(guard.main(), 1)
             validate.assert_not_called()
 
+    def test_public_authorization_record_fetch_never_sends_api_token(self):
+        raw_url = ('https://raw.githubusercontent.com/' + guard.REPOSITORY +
+                   '/' + 'b'*40 + '/docs/collector/ci-operational-authorization.json')
+        api_url = 'https://api.github.com/repos/' + guard.REPOSITORY + '/environments/' + guard.ENVIRONMENT
+
+        class Response(io.BytesIO):
+            status = 200
+            headers = {}
+
+            def geturl(self):
+                return url
+
+        for url, expected in [(raw_url, None), (api_url, 'Bearer fixture-token')]:
+            with self.subTest(url=url):
+                class Opener:
+                    def open(self, request, timeout):
+                        self_test.assertEqual(request.get_header('Authorization'), expected)
+                        return Response(b'{}')
+
+                self_test = self
+                self.assertEqual(guard.get(url, 'fixture-token', opener=Opener()), b'{}')
+
     def test_redirect_and_oversized_or_non200_http_fail_closed(self):
         with self.assertRaises(ValueError):
             guard.NoRedirect().redirect_request(None, None, None, None, None, None)
