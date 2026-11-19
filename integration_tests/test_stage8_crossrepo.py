@@ -1,29 +1,32 @@
 """Pinned cross-repository installed-candidate acceptance, independent of unit CI.
 
 Run only with the Stage 8 checkout workflow. These tests never contact Bybit,
-PostgreSQL, a production host, or start a service. Failures are release blockers,
+PostgreSQL or a production host. Terminan's receipt tests use disposable loopback. Failures are release blockers,
 not permission to weaken an existing safety limit.
 """
 from __future__ import annotations
 
+from contextlib import closing, nullcontext
+from datetime import datetime, timedelta, timezone
 from decimal import Decimal
 from importlib import metadata
 from pathlib import Path
+import hashlib
 import importlib
+import json
+import os
+import sqlite3
 import subprocess
 import sys
+import tempfile
 import unittest
+from unittest.mock import Mock, call, patch
 
 
 ROOT = Path(__file__).resolve().parents[1]
 EXTERNAL = ROOT / "external"
-PINNED = {
-    "math": "98d6783522aac7155cbb4635e5b29239746d88e0",
-    "meta_analyse": "b9755d749e598ec3e063740dd099cd8d922299bc",
-    "Terminan": "f1abc777a8da0c8748c1cb80b37a09a8464340db",
-    "bybit-cluster-grid": "f4dc0409e8ace1628a0e307675505f3a7b626dce",
-    "strattester": "1000dccd9ba85eafa4b72bc40a76afae73ca1cee",
-}
+COHORT_PATH = Path(__file__).with_name("crossrepo-cohort.json")
+PINNED = json.loads(COHORT_PATH.read_text(encoding="utf-8"))["heads"]
 
 
 class PinnedInstalledCandidate(unittest.TestCase):
@@ -44,8 +47,6 @@ class PinnedInstalledCandidate(unittest.TestCase):
         # The Math computation must resolve from a built/installed distribution,
         # not from a direct project checkout or an accidental PYTHONPATH fallback.
         sys.path.insert(0, str(EXTERNAL / "meta_analyse" / "src"))
-        sys.path.insert(0, str(EXTERNAL / "Terminan"))
-        sys.path.insert(0, str(EXTERNAL / "bybit-cluster-grid"))
         cls.math = importlib.import_module("market_profile_math")
         if Path(cls.math.__file__).resolve().is_relative_to((EXTERNAL / "math").resolve()):
             raise AssertionError("Math source checkout bypassed installed SDK")
@@ -54,10 +55,9 @@ class PinnedInstalledCandidate(unittest.TestCase):
 
     @staticmethod
     def rows(n):
-        from decimal import Decimal as D
         # One-shot iterable. Preserves event order, precision and unknown side.
         for i in range(n):
-            yield (i * 100, D("100.00000001"), D("1.25"),
+            yield (i * 100, Decimal("100.00000001"), Decimal("1.25"),
                    ("buy", "sell", "unknown")[i % 3])
 
     def test_single_math_owner_and_legacy_batch_boundary(self):
@@ -122,8 +122,6 @@ class PinnedInstalledCandidate(unittest.TestCase):
         self.assertEqual(list(data), [], "input iterator must be consumed once")
 
     def test_meta_runtime_adapter_100k_uses_single_math_stream(self):
-        # This is deliberately RED until Meta #81 switches its actual runtime
-        # adapter from list+batch to Math's canonical streaming entrypoint.
         self.assertIs(self.meta.aggregate_orderflow_stream,
                       self.math.aggregate_orderflow_stream)
         for n in (19_999, 20_000, 20_001, 100_000):
@@ -138,42 +136,198 @@ class PinnedInstalledCandidate(unittest.TestCase):
                                  Decimal("1.25") * (((n + 2) // 3) -
                                                     ((n + 1) // 3)))
 
+    def test_unified_two_node_recovery_and_data_rollback(self):
+        subprocess.run(
+            [sys.executable, "-B", "-m", "unittest", "discover",
+             "-s", "tests", "-p", "test_fleet_control.py", "-v"],
+            cwd=EXTERNAL / "unified-system", check=True, timeout=60,
+        )
+
+    def test_meta_runtime_uses_installed_terminan_paper_engine(self):
+        from meta_analyse.runtime import Runtime
+        from terminan.paper import PaperEngine
+
+        runtime = Runtime(metascalp=None, exchange=None)
+        self.assertIs(type(runtime.paper), PaperEngine)
+        distribution = metadata.distribution("unified-terminan")
+        self.assertEqual(
+            Path(sys.modules[PaperEngine.__module__].__file__).resolve(),
+            Path(distribution.locate_file("terminan/paper.py")).resolve(),
+        )
+
+    @staticmethod
+    def meta_packet(seconds, price):
+        start = datetime(2026, 10, 19, 12, tzinfo=timezone.utc)
+        return {
+            "Type": "trade_update",
+            "Data": {"ticker": "BTCUSDT", "trades": [{
+                "time": (start + timedelta(seconds=seconds)).isoformat(),
+                "price": price, "size": "1", "side": "Buy",
+            }]},
+        }
+
+    def test_meta_refuses_storage_and_live_paper_before_mutation(self):
+        from meta_analyse.runtime import DurableSinksRequired, Runtime
+
+        store = Mock(spec=["profile", "paper_fill", "connect"])
+        cases = ((store, False, False), (store, False, True), (None, True, True))
+        for legacy_store, running, paper_enabled in cases:
+            with self.subTest(legacy_store=legacy_store is not None, paper_enabled=paper_enabled):
+                runtime = Runtime(metascalp=None, exchange=None, store=legacy_store)
+                runtime.running = running
+                runtime.paper.enabled = paper_enabled
+                runtime.symbols = ["BTCUSDT"]
+                with self.assertRaisesRegex(DurableSinksRequired, "^GRID_TERMINAN_DURABLE_SINKS_REQUIRED$"):
+                    runtime.receive(self.meta_packet(0, "100"))
+                self.assertEqual(runtime.minutes, {})
+                self.assertEqual(runtime.flow, {})
+                self.assertEqual(runtime.paper.reference, {})
+                self.assertEqual(runtime.paper.positions, {})
+                self.assertEqual(runtime.paper.fills, [])
+        self.assertEqual(store.mock_calls, [])
+
+    def test_meta_offline_fill_is_unpersisted(self):
+        from meta_analyse.runtime import Runtime
+
+        runtime = Runtime(metascalp=None, exchange=None, store=None)
+        self.assertFalse(runtime.paper.enabled)
+        runtime.paper.enabled = True
+        runtime.symbols = ["BTCUSDT"]
+        self.assertEqual(runtime.receive(self.meta_packet(0, "100")), [])
+        runtime.receive(self.meta_packet(60, "102"))
+        events = runtime.receive(self.meta_packet(61, "100"))
+        self.assertEqual(len(runtime.paper.fills), 1)
+        self.assertEqual(events, [("paper_fill", "BTCUSDT", runtime.paper.fills[0])])
+        reopened = Runtime(metascalp=None, exchange=None, store=None)
+        self.assertEqual(reopened.paper.fills, [], "Offline fill must be treated as UNPERSISTED")
+
+    def test_meta_historical_digest_matches_terminan_archive_after_restore(self):
+        from meta_analyse.retirement_receipt import persisted_state_receipt
+        from terminan.paper_ledger import PaperReplayLedger
+
+        row = [7, "BTCUSDT", "short", "102.0000", "100.00", "target",
+               "1.23", "0.10", "1.13", "2026-11-19T00:00:00.123456+00:00"]
+        typed_row = [*row[:3], Decimal(row[3]), Decimal(row[4]), row[5],
+                     *(Decimal(value) for value in row[6:9]), datetime.fromisoformat(row[9])]
+        cursor = Mock()
+        cursor.fetchmany.side_effect = [[typed_row], []]
+        connection = Mock()
+        connection.transaction.return_value = nullcontext()
+        connection.execute.side_effect = [None, cursor]
+        store = Mock(expected_cluster="synthetic")
+        store.connect.return_value = nullcontext(connection)
+        receipt = persisted_state_receipt(store, "paper_fills")
+        self.assertEqual(connection.mock_calls, [
+            call.transaction(),
+            call.execute("SET TRANSACTION READ ONLY"),
+            call.execute("SELECT id,symbol,side,entry,exit,reason,gross,fees,net,exit_ts "
+                         "FROM meta_analyse.paper_fills ORDER BY id"),
+        ])
+        self.assertEqual(receipt["row_count"], 1)
+        with tempfile.TemporaryDirectory() as directory:
+            original = Path(directory) / "original.db"
+            backup = Path(directory) / "backup.db"
+            ledger = PaperReplayLedger(original)
+            self.assertEqual(ledger.import_meta_fills("meta-archive", [row], receipt), receipt)
+            with closing(sqlite3.connect(original)) as source, closing(sqlite3.connect(backup)) as target:
+                source.backup(target)
+            restored = PaperReplayLedger(backup)
+            self.assertEqual(list(restored.restore_meta_fills("meta-archive")), [row])
+            self.assertEqual(restored.import_meta_fills("meta-archive", [row], receipt), receipt)
+            with self.assertRaises(ValueError):
+                restored.import_meta_fills("meta-archive", [[8, *row[1:]]], receipt)
+            self.assertEqual(list(restored.restore_meta_fills("meta-archive")), [row])
+
+    def test_terminan_installed_offline_replay_receipt_recovery(self):
+        subprocess.run(
+            [sys.executable, "-I", "-B", "-m", "unittest", "discover",
+             "-s", "tests", "-p", "test_paper_ledger.py", "-v"],
+            cwd=EXTERNAL / "Terminan", check=True, timeout=60,
+        )
+
+    def test_terminan_installed_paper_journal_ack_crash_and_restore(self):
+        subprocess.run(
+            [sys.executable, "-I", "-B", "-m", "unittest", "discover",
+             "-s", str(EXTERNAL / "Terminan" / "tests"), "-p", "test_paper_journal.py", "-v"],
+            cwd=ROOT, check=True, timeout=60,
+        )
+
+    def test_terminan_trade_dto_rejects_non_finite_values(self):
+        from terminan.contracts import TradeEvent
+
+        trade = {
+            "run_id": "offline", "strategy_id": "paper", "symbol": "BTCUSDT",
+            "trade_id": "fill-1", "entry_ms": 1000, "exit_ms": 2000,
+            "side": "short", "entry_price": 102.0, "exit_price": 100.0,
+            "quantity": 1.0, "pnl": 2.0,
+        }
+        self.assertEqual(TradeEvent.parse(trade).trade_id, "fill-1")
+        for field in ("entry_price", "exit_price", "quantity", "pnl"):
+            for value in (float("nan"), float("inf"), float("-inf")):
+                with self.subTest(field=field, value=value), self.assertRaises(ValueError):
+                    TradeEvent.parse(dict(trade, **{field: value}))
+
+    def test_grid_wheel_excludes_strategy_and_scientific_runtime(self):
+        distribution = metadata.distribution("unified-grid-market-data")
+        self.assertTrue(distribution.files, "Grid wheel file manifest missing")
+        forbidden = {
+            "scientific_service.py", "scientific_simulation.py",
+            "strategy_runner.py", "strategy_runtime.py",
+        }
+        packaged = {path.name.casefold() for path in distribution.files}
+        self.assertFalse(forbidden & packaged, "Grid wheel still packages another module's runtime")
+        manifest = EXTERNAL / "bybit-cluster-grid" / "market-wheel-modules.txt"
+        allowed = set(manifest.read_text(encoding="utf-8").split())
+        installed = {
+            item.stem for item in distribution.files
+            if item.parts[0] == "grid" and item.suffix == ".py"
+        }
+        self.assertEqual(installed, allowed, "Grid installed Python modules differ from its allowlist")
+
     def test_grid_and_terminan_owner_boundary(self):
         from grid import terminan_gateway
-        from terminan import contracts
-        from terminan import data
+        from terminan import contracts, data
+
+        grid_distribution = metadata.distribution("unified-grid-market-data")
+        self.assertEqual(
+            Path(terminan_gateway.__file__).resolve(),
+            Path(grid_distribution.locate_file("grid/terminan_gateway.py")).resolve(),
+        )
         self.assertEqual(contracts.StrategyRegistry.__module__,
                          "terminan.contracts")
         self.assertFalse((EXTERNAL / "Terminan" / "terminan" /
                           "strategies.py").exists())
-        caps = terminan_gateway.snapshot("/internal/v1/capabilities")
+        distribution = metadata.distribution("unified-terminan")
+        self.assertEqual(
+            Path(contracts.__file__).resolve(),
+            Path(distribution.locate_file("terminan/contracts.py")).resolve(),
+        )
+        offline_env = {"TERMINAN_GRID_API_PORT": "", "TERMINAN_GRID_DSN": ""}
+        with patch.dict(os.environ, offline_env):
+            caps = terminan_gateway.snapshot("/internal/v1/capabilities")
+            self.assertEqual(data.grid_candles("BTCUSDT"), [])
+            self.assertEqual(data.footprint("BTCUSDT"), [])
         self.assertEqual(caps["producer"], "bybit-cluster-grid")
         self.assertEqual(caps["capabilities"]["candles"], "UNAVAILABLE")
         self.assertFalse(caps["meta_absorption"]["consumer_cutover"])
-        self.assertEqual(data.grid_candles("BTCUSDT"), [])
-        self.assertEqual(data.footprint("BTCUSDT"), [])
         self.assertNotIn("pybit", sys.modules)
 
 
 class MathResearchVsTradingBoundaryTests(unittest.TestCase):
-    """Semantic contract: Math may research outcomes, never decide trade sizes.
-
-    The immutable historical kernel is an acknowledged migration blocker.
-    Until Terminan owns the policy and consumers switch, this test must stay
-    RED instead of deleting the file or suppressing the check.
-    """
+    """Check the installed research API and retirement of the sizing source."""
 
     def test_math_installed_sdk_is_not_trading_engine(self):
-        from importlib import metadata
         distribution = metadata.distribution("unified-math-kernels")
-        exposed = {name.lower() for name in distribution.files or ()}
+        self.assertTrue(distribution.files, "Math wheel file manifest missing")
+        exposed = {path.name.casefold() for path in distribution.files}
         forbidden = (
             "history_sizing.py", "paper.py", "backtest.py",
             "execution.py", "strategy_runner.py",
         )
-        for suffix in forbidden:
-            self.assertFalse(any(str(path).endswith(suffix) for path in exposed),
-                             f"Math wheel contains execution policy {suffix}")
+        for filename in forbidden:
+            self.assertNotIn(
+                filename, exposed, f"Math wheel contains execution policy {filename}",
+            )
         import market_compute_api
         self.assertFalse(market_compute_api.compute_batch({
             "schema": "math.market.compute.v1",
@@ -190,27 +344,22 @@ class MathResearchVsTradingBoundaryTests(unittest.TestCase):
         })["execution_authority"])
 
     def test_no_active_trade_size_policy_in_math_source(self):
-        import ast
-        root = EXTERNAL / "math" / "python"
-        legacy = root / "history_sizing.py"
-        self.assertTrue(legacy.is_file(), "historical source must be preserved")
-        source = ast.parse(legacy.read_text(encoding="utf-8"))
-        functions = {n.name: n for n in source.body if isinstance(n, ast.FunctionDef)}
-        # No change to historical evidence is authorized by this test. Instead,
-        # keep the release gate red until apply_sizing policy is moved.
-        active = functions.get("apply_sizing")
-        if active:
-            policy_literals = {
-                n.value for n in ast.walk(active)
-                if isinstance(n, ast.Constant) and isinstance(n.value, str)
-            }
-            forbidden = {"MARTINGALE", "ANTI_MARTINGALE", "size_multiplier"}
-            self.assertFalse(
-                forbidden & policy_literals,
-                "Math history_sizing.apply_sizing remains an execution "
-                "policy: move consumers/logic to Terminan, preserve old "
-                "pinned historical profile and test rollback",
-            )
+        math_root = EXTERNAL / "math"
+        legacy = "python/history_sizing.py"
+        git = ["git", "--no-replace-objects", "-C", str(math_root)]
+        self.assertFalse(
+            subprocess.check_output([*git, "ls-tree", "HEAD", "--", legacy], timeout=5),
+            "Math still tracks the retired position-sizing module",
+        )
+        self.assertFalse((math_root / legacy).exists(), "Retired position-sizing module is importable")
+        original = subprocess.check_output(
+            [*git, "show", "3a9c542841e160f8b1924f155aaa2d1a676dfd04:" + legacy], timeout=5,
+        )
+        self.assertEqual(
+            hashlib.sha256(original).hexdigest(),
+            "ad050a83871842d9fa77559738dee7b71fd5ba75325bc3f633956729d460ef73",
+            "Original Math sizing source must remain available for parity",
+        )
 
     def test_runtime_api_has_no_trade_execution_verb(self):
         from market_compute_api import ALGORITHMS

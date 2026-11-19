@@ -1,5 +1,11 @@
 name: Stage 8 pinned cross-repository installed candidate
 on:
+  workflow_dispatch:
+    inputs:
+      cohort:
+        description: Exact-head manifest JSON (optional when using committed cohort)
+        required: false
+        type: string
   pull_request:
     paths:
       - "integration_tests/**"
@@ -21,45 +27,66 @@ jobs:
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: "3.12"
+      - name: Validate exact-head manifest
+        id: cohort
+        env:
+          REQUESTED_COHORT: ${{ inputs.cohort }}
+        run: python integration_tests/prepare_crossrepo_cohort.py
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: YehorBabenko88/math
-          ref: 98d6783522aac7155cbb4635e5b29239746d88e0
+          ref: ${{ steps.cohort.outputs['math'] }}
           path: external/math
           persist-credentials: false
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: YehorBabenko88/meta_analyse
-          ref: b9755d749e598ec3e063740dd099cd8d922299bc
+          ref: ${{ steps.cohort.outputs['meta_analyse'] }}
           path: external/meta_analyse
           persist-credentials: false
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: YehorBabenko88/Terminan
-          ref: f1abc777a8da0c8748c1cb80b37a09a8464340db
+          ref: ${{ steps.cohort.outputs['Terminan'] }}
           path: external/Terminan
           persist-credentials: false
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: YehorBabenko88/bybit-cluster-grid
-          ref: f4dc0409e8ace1628a0e307675505f3a7b626dce
+          ref: ${{ steps.cohort.outputs['bybit-cluster-grid'] }}
           path: external/bybit-cluster-grid
           persist-credentials: false
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: YehorBabenko88/strattester
-          ref: 1000dccd9ba85eafa4b72bc40a76afae73ca1cee
+          ref: ${{ steps.cohort.outputs['strattester'] }}
           path: external/strattester
           persist-credentials: false
-      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
-          python-version: "3.12"
-      - name: Install reviewed Math wheel from exact source
+          repository: YehorBabenko88/unified-system
+          ref: ${{ steps.cohort.outputs['unified-system'] }}
+          path: external/unified-system
+          persist-credentials: false
+      - name: Fetch the historical Math parity object
+        run: git -C external/math fetch --no-tags --depth 1 https://github.com/YehorBabenko88/math.git 3a9c542841e160f8b1924f155aaa2d1a676dfd04
+      - name: Install Math, Terminan and Grid wheels from exact source
         run: |
-          python -m pip install --disable-pip-version-check setuptools==80.9.0 wheel==0.45.1
-          python -m pip install --disable-pip-version-check --no-build-isolation --no-deps ./external/math
+          python -m pip install --disable-pip-version-check setuptools==80.9.0 wheel==0.45.1 websockets==15.0.1
+          python -m pip install --disable-pip-version-check --no-build-isolation --no-deps ./external/math ./external/Terminan ./external/bybit-cluster-grid
         shell: bash
-      - name: Assert installed SDK and real Meta runtime 100k contract
+      - name: Run independent acceptance and simulated recovery checks
         run: python -B -m unittest discover -s integration_tests -p test_stage8_crossrepo.py -v
         shell: bash
+      - name: Upload exact-head test cohort
+        if: always() && steps.cohort.outcome == 'success'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: crossrepo-cohort-${{ matrix.os }}
+          path: integration_tests/crossrepo-cohort.json
+          if-no-files-found: error
