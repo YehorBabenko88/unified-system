@@ -172,7 +172,7 @@ ARCHITECTURE_OWNERSHIP_VERSION = "unified.architecture.static.v1"
 EXCHANGE_MODULES = frozenset(("pybit", "ccxt", "bybit"))
 EXCHANGE_HOST_PATTERN = re.compile(r"(?:api(?:-testnet)?\.bybit\.com|stream(?:-testnet)?\.bybit\.com)", re.I)
 SQL_BOOTSTRAP_PATTERN = re.compile(
-    r"\b(?:CREATE\s+(?:DATABASE|ROLE|USER)|initdb|pg_ctl\s+init)\b", re.I
+    r"\bCREATE\s+(?:DATABASE|ROLE|USER)\b|\binitdb\b|\bpg_ctl\s+init\b", re.I
 )
 DIRECT_MARKET_WRITE_PATTERN = re.compile(
     r"\b(?:INSERT\s+INTO|UPDATE|DELETE\s+FROM)\s+"
