@@ -115,6 +115,22 @@ class FourModuleIndependentABITests(unittest.TestCase):
             self.assertNotIn(pattern, grid)
         self.assertIn("/internal/v1/history/snapshots/read", grid)
 
+    def test_installed_grid_readonly_capabilities_are_not_live(self):
+        from grid import terminan_gateway as source
+        dist = importlib.metadata.distribution("unified-grid-market-data")
+        self.assertEqual(Path(source.__file__).resolve(),
+                         Path(dist.locate_file("grid/terminan_gateway.py")).resolve())
+        response = source.snapshot("/internal/v1/capabilities")
+        self.assertEqual(response["api_version"], {"major": 1, "minor": 0})
+        self.assertEqual(response["producer"], "bybit-cluster-grid")
+        self.assertTrue(response["read_only"])
+        self.assertEqual(response["status"], "UNAVAILABLE")
+        self.assertEqual(response["capabilities"]["candles"], "UNAVAILABLE")
+        self.assertFalse(response["capabilities"]["live_l2"])
+        self.assertFalse(response["meta_absorption"]["consumer_cutover"])
+        self.assertFalse(response["execution_authority"] if "execution_authority"
+                         in response else response.get("trading_authorized", False))
+
     def test_unified_fleet_has_no_market_execution(self):
         source = (EXTERNAL / "unified-system" / "unified_system" /
                   "fleet_control.py").read_text(encoding="utf-8")
