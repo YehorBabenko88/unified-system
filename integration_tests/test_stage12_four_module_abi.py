@@ -264,9 +264,11 @@ class Stage17OwnerBoundaryGates(unittest.TestCase):
             source = Path(root) / "strattester-original.db"
             with closing(sqlite3.connect(source)) as db, db:
                 db.execute(
-                    "CREATE TABLE research_results (run_id TEXT, symbol TEXT, "
-                    "strategy_id TEXT, strategy_version TEXT, "
-                    "created_at REAL, metrics TEXT)"
+                    "CREATE TABLE research_results ("
+                    "run_id TEXT NOT NULL, symbol TEXT NOT NULL, "
+                    "strategy_id TEXT NOT NULL, strategy_version TEXT NOT NULL, "
+                    "created_at REAL NOT NULL, metrics TEXT NOT NULL, "
+                    "PRIMARY KEY(run_id,symbol,strategy_id,strategy_version))"
                 )
                 db.execute("INSERT INTO research_results VALUES (?,?,?,?,?,?)", old_row)
             before = hashlib.sha256(source.read_bytes()).hexdigest()
