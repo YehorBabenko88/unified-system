@@ -161,20 +161,96 @@ class Stage17OwnerBoundaryGates(unittest.TestCase):
     """Negative acceptance tests; fail until canonical owners finish migration."""
 
     def test_grid_level_timeframes_and_dto_are_accepted_by_math(self):
-        from grid.history_snapshot import TIMEFRAME_MINUTES, rollup_snapshot
+        """Synthetic, source-unattested v2 Grid→Terminan→Math ABI rehearsal."""
+        from unittest.mock import patch
+        from grid.history_snapshot import (MULTIPIN_MINUTES, plan_multipin,
+                                           read_multipin_rollup)
+        from grid.provenance import digest
+        from terminan.levels import grid_level_candles, untouched_levels
         from market_compute_api import TIMEFRAME_LEVELS_ABI
         from market_profile_math import _LEVEL_PERIOD_MS
+
         self.assertEqual(TIMEFRAME_LEVELS_ABI, "math.market.levels.binary64.v1")
         required = {"1h", "4h", "1d", "1w"}
-        self.assertTrue(required <= set(TIMEFRAME_MINUTES),
-                        "Grid missing canonical Math/Terminan level timeframes")
+        self.assertTrue(required <= set(MULTIPIN_MINUTES))
         self.assertTrue(required <= set(_LEVEL_PERIOD_MS))
-        # Grid is the sole rollup owner. The qualified envelope, not a guessed
-        # time conversion, must provide explicit closed candle/availability data.
-        import inspect
-        text = inspect.getsource(rollup_snapshot)
-        self.assertIn("available_at_ms", text)
-        self.assertIn("watermark_ms", text)
+        day = 86_400_000
+        for timeframe in sorted(required):
+            with self.subTest(timeframe=timeframe):
+                width = MULTIPIN_MINUTES[timeframe] * 60_000
+                start = 4 * day if timeframe == "1w" else 0
+                end, as_of = start + width, start + width + 60_000
+                catalog, envelopes, pins = {}, {}, []
+                cursor = start
+                while cursor < end:
+                    page_end = min(end, cursor + 1_800 * 60_000)
+                    entry = {
+                        "request": {
+                            "venue": "bybit", "market_type": "linear",
+                            "symbol": "BTCUSDT", "start_ms": cursor,
+                            "end_ms": page_end, "as_of_ms": as_of,
+                            "units": {"price": "quote/base", "volume": "base"},
+                        },
+                        "trust": {
+                            "evidence_class": "HISTORICAL", "identity": "fixture",
+                            "source_revision": "fixture-v1", "epoch": "fixture",
+                        },
+                    }
+                    pin = digest(entry)
+                    catalog[pin] = entry
+                    pins.append(pin)
+                    minute_rows = [
+                        {"event_start_ms": t, "event_end_ms": t + 60_000,
+                         "open": 10.0, "close": 10.0,
+                         "high": 12.0, "low": 8.0, "volume": 1.0,
+                         "available_at_ms": t + 60_000,
+                         "watermark_ms": t + 60_000}
+                        for t in range(cursor, page_end, 60_000)
+                    ]
+                    envelopes[pin] = {
+                        "rows": minute_rows,
+                        "dataset_id": "fixture-" + str(len(pins)),
+                        "dataset_fingerprint": digest(minute_rows),
+                        "source": {},
+                        "request": entry["request"],
+                    }
+                    cursor = page_end
+                selection = {
+                    "schema": "grid.history.multipin.v1",
+                    "timeframe": timeframe, "snapshot_ids": pins,
+                    "start_ms": start, "end_ms": end,
+                    "venue": "bybit", "market_type": "linear",
+                    "symbol": "BTCUSDT",
+                }
+                pages = plan_multipin(selection, catalog)
+                self.assertEqual(len(pages), len(pins))
+
+                def load(_conn, page, _catalog, *, continuing):
+                    self.assertEqual(continuing, page["snapshot_id"] != pins[0])
+                    return envelopes[page["snapshot_id"]]
+
+                with patch("grid.history_snapshot.select_snapshot", side_effect=load):
+                    rollup = read_multipin_rollup(None, selection, pages, catalog)
+                candles = grid_level_candles(
+                    rollup, trusted_fingerprint=rollup["dataset_fingerprint"],
+                    symbol="BTCUSDT", market_type="linear",
+                    timeframe=timeframe, start_ms=start, end_ms=end,
+                    as_of_ms=as_of,
+                )
+                self.assertEqual(
+                    candles, [{"t": start, "h": 12.0, "l": 8.0, "complete": True}]
+                )
+                self.assertEqual(
+                    len(untouched_levels(candles, timeframe, as_of)), 2
+                )
+                damaged = dict(rollup, rows=[dict(rollup["rows"][0], high=999.0)])
+                with self.assertRaises(ValueError):
+                    grid_level_candles(
+                        damaged, trusted_fingerprint=rollup["dataset_fingerprint"],
+                        symbol="BTCUSDT", market_type="linear",
+                        timeframe=timeframe, start_ms=start, end_ms=end,
+                        as_of_ms=as_of,
+                    )
 
     def test_strattester_legacy_six_column_rows_have_readonly_admission(self):
         """Verify old six-column rows without calling the mutating ResultStore.open."""
