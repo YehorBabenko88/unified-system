@@ -1,0 +1,94 @@
+name: Stage 13 coordination
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/stage13-coordination.yml'
+      - 'release/stage13-cohort.json'
+      - 'scripts/stage13_coordination.py'
+      - 'tests/test_stage13_coordination.py'
+      - 'docs/operations/stage13-coordination.md'
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: Publish changed observations from the default branch
+        type: boolean
+        default: false
+  schedule:
+    - cron: '19 */3 * * *'
+permissions:
+  contents: read
+concurrency:
+  group: stage13-coordination
+  cancel-in-progress: false
+
+jobs:
+  tests:
+    timeout-minutes: 5
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - run: python -B -m unittest tests.test_stage13_coordination tests.test_fleet_control
+
+  observe:
+    needs: tests
+    if: always() && !cancelled()
+    timeout-minutes: 8
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+      pull-requests: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - name: Observe GitHub cohort
+        run: python -B scripts/stage13_coordination.py --output observation --coordinator-tests "$TEST_RESULT"
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TEST_RESULT: ${{ needs.tests.result }}
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: stage13-observation
+          path: observation/
+          if-no-files-found: error
+
+  publish:
+    needs: observe
+    if: github.repository == 'YehorBabenko88/unified-system' && github.ref_name == github.event.repository.default_branch && (github.event_name == 'schedule' || inputs.publish)
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: stage13-observation
+          path: observation
+      - name: Publish changed observation to existing issues
+        shell: bash
+        run: |
+          set -euo pipefail
+          for issue in 111 117 118 119 120 121 122; do
+            report="observation/issue-$issue.md"
+            marker="$(head -n 1 "$report")"
+            previous="$(gh issue view "$issue" --repo "$GITHUB_REPOSITORY" --json comments --jq '[.comments[] | select(.author.login == "github-actions" or .author.login == "github-actions[bot]") | .body | split("\n")[0] | select(startswith("<!-- unified-stage13:"))] | last // ""')"
+            if [[ "$marker" != "$previous" ]]; then
+              gh issue comment "$issue" --repo "$GITHUB_REPOSITORY" --body-file "$report"
+            fi
+          done
+        env:
+          GH_TOKEN: ${{ github.token }}

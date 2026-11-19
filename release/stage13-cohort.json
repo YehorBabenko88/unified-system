@@ -1,0 +1,15 @@
+{
+  "schema": "unified.release-cohort.v1",
+  "owner": "YehorBabenko88",
+  "master": 111,
+  "sources": {
+    "math": {"lane": "A", "repo": "math", "pr": 122, "depends_on": []},
+    "grid": {"lane": "B", "repo": "bybit-cluster-grid", "pr": 295, "depends_on": []},
+    "unified": {"lane": "C", "repo": "unified-system", "pr": 123, "depends_on": []},
+    "terminan": {"lane": "D", "repo": "Terminan", "pr": 91, "depends_on": ["math", "grid", "unified"]},
+    "meta-owner": {"lane": "E", "repo": "meta_analyse", "pr": 81, "depends_on": ["terminan"]},
+    "meta-cutover": {"lane": "E", "repo": "meta_analyse", "pr": 82, "depends_on": ["meta-owner"]},
+    "strattester-cutover": {"lane": "E", "repo": "strattester", "pr": 88, "depends_on": ["terminan"]},
+    "independent-ci": {"lane": "F", "repo": "unified-system", "pr": 124, "depends_on": ["math", "grid", "unified", "terminan", "meta-cutover", "strattester-cutover"]}
+  }
+}
