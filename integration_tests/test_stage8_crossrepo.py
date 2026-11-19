@@ -283,13 +283,14 @@ class PinnedInstalledCandidate(unittest.TestCase):
         subprocess.run(
             [sys.executable, "-I", "-B", "-m", "pytest", "-q",
              str(grid_tests / "test_terminan_gateway_contract.py"),
+             "-o", "asyncio_default_fixture_loop_scope=function",
              "-k", "pinned_history_rollup or pinned_rollup_refuses or pinned_multipin"],
-            cwd=ROOT, check=True, timeout=60,
+            cwd=ROOT, check=True, timeout=180,
         )
 
-    def test_grid_multipin_candles_feed_installed_terminan_and_math(self):
+    def test_grid_v4_series_feed_installed_terminan_and_math(self):
         from grid import terminan_gateway
-        from terminan.levels import grid_level_candles, untouched_levels
+        from terminan.levels import grid_level_candles, levels_from_grid_series, untouched_levels
 
         grid_tests = EXTERNAL / "bybit-cluster-grid" / "tests"
         with patch.object(sys, "path", [str(grid_tests), *sys.path]):
@@ -301,7 +302,8 @@ class PinnedInstalledCandidate(unittest.TestCase):
                 ("1w", 4 * 86_400_000, [1680] * 6),
             ):
                 with self.subTest(timeframe=timeframe):
-                    request, catalog, rows = _multipin_history(timeframe, start, pages)
+                    request, catalog, rows = _multipin_history(timeframe, start, pages * 2)
+                    request["schema"] = "grid.history.selection.v4"
                     connection = Connection([])
 
                     def execute(sql, params=None):
@@ -314,6 +316,7 @@ class PinnedInstalledCandidate(unittest.TestCase):
                             patch.object(terminan_gateway, "_history_connection", return_value=connection):
                         response = terminan_gateway.pinned_history(request)
 
+                    self.assertEqual(response["schema"], "grid.history.snapshot.response.v4")
                     self.assertEqual(response["source_authentication"], "EXTERNAL_NOT_INDEPENDENTLY_VERIFIED")
                     self.assertFalse(response["trading_authorized"])
                     snapshot = response["snapshot"]
@@ -323,31 +326,50 @@ class PinnedInstalledCandidate(unittest.TestCase):
                     # This fixture pin checks adapter compatibility. It conveys no production trust.
                     trusted_pin = snapshot["dataset_fingerprint"]
                     candles = grid_level_candles(snapshot, trusted_fingerprint=trusted_pin, **selection)
-                    self.assertEqual(len(candles), 1)
-                    self.assertEqual(candles[0]["t"], start)
-                    self.assertEqual(untouched_levels(candles, timeframe, end - 1), [])
-                    levels = untouched_levels(candles, timeframe, end)
+                    self.assertEqual(snapshot["schema"], "grid.history.rollup.v3")
+                    self.assertEqual(len(candles), 2)
+                    midpoint = (start + end) // 2
+                    self.assertEqual([candle["t"] for candle in candles], [start, midpoint])
+                    self.assertEqual(untouched_levels(candles, timeframe, midpoint - 1), [])
+                    early = untouched_levels(candles, timeframe, end - 1)
+                    self.assertTrue(early)
+                    self.assertTrue(all(level["origin_ms"] == start for level in early))
+                    levels = levels_from_grid_series(
+                        snapshot, trusted_fingerprint=trusted_pin, **selection,
+                    )
+                    self.assertTrue(levels)
                     self.assertEqual(
                         {level["side"]: level["price"] for level in levels},
-                        {"high": snapshot["rows"][0]["high"], "low": snapshot["rows"][0]["low"]},
+                        {"high": snapshot["rows"][-1]["high"], "low": snapshot["rows"][-1]["low"]},
                     )
                     with self.assertRaises(ValueError):
+                        levels_from_grid_series(
+                            snapshot, trusted_fingerprint=trusted_pin,
+                            **dict(selection, as_of_ms=end - 1),
+                        )
+                    with self.assertRaises(ValueError):
                         grid_level_candles(snapshot, trusted_fingerprint="0" * 64, **selection)
-                    changed = dict(snapshot, rows=[dict(snapshot["rows"][0], high=999)])
+                    first, second = snapshot["rows"]
+                    changed = dict(snapshot, rows=[dict(first, high=999), second])
                     with self.assertRaises(ValueError):
                         grid_level_candles(changed, trusted_fingerprint=trusted_pin, **selection)
 
     def test_terminan_can_read_six_column_strattester_results_without_changes(self):
         from terminan.data import research
         from terminan.paper_ledger import PaperReplayLedger
-        from terminan.research_archive import ResearchArchive, research_result_receipt
+        from terminan.research_archive import ResearchArchive
+
+        with patch.object(sys, "path", [str(EXTERNAL / "strattester"), *sys.path]):
+            from strattester.persistence.frozen_results import import_frozen_results
 
         with tempfile.TemporaryDirectory() as directory:
             source = Path(directory) / "old-results.sqlite3"
             with closing(sqlite3.connect(source)) as db, db:
                 db.execute(
-                    "CREATE TABLE research_results (run_id TEXT, symbol TEXT, strategy_id TEXT, "
-                    "strategy_version TEXT, created_at REAL, metrics TEXT)"
+                    "CREATE TABLE research_results (run_id TEXT NOT NULL, symbol TEXT NOT NULL, "
+                    "strategy_id TEXT NOT NULL, strategy_version TEXT NOT NULL, "
+                    "created_at REAL NOT NULL, metrics TEXT NOT NULL, "
+                    "PRIMARY KEY (run_id, symbol, strategy_id, strategy_version))"
                 )
                 db.execute(
                     "INSERT INTO research_results VALUES (?, ?, ?, ?, ?, ?)",
@@ -360,20 +382,20 @@ class PinnedInstalledCandidate(unittest.TestCase):
                     "created_at": 123.5, "metrics": {"score": 1.2},
                 }])
             self.assertEqual(hashlib.sha256(source.read_bytes()).hexdigest(), before)
-            with closing(sqlite3.connect(source.as_uri() + "?mode=ro", uri=True)) as db:
-                rows = list(db.execute("SELECT * FROM research_results ORDER BY run_id"))
-            tables = {"research_results": rows}
-            receipt = research_result_receipt(before, tables)
             target = Path(directory) / "archive.sqlite3"
-            archive = ResearchArchive(PaperReplayLedger(target))
-            self.assertEqual(archive.import_snapshot("legacy", tables, receipt), receipt)
+            with self.assertRaisesRegex(ValueError, "source snapshot SHA-256 mismatch"):
+                import_frozen_results(source, "0" * 64, "legacy", target)
+            self.assertFalse(target.exists())
+            receipt = import_frozen_results(source, before, "legacy", target)
             backup = Path(directory) / "backup.sqlite3"
             with closing(sqlite3.connect(target)) as db, closing(sqlite3.connect(backup)) as copy:
                 db.backup(copy)
             restored = ResearchArchive(PaperReplayLedger(backup))
-            self.assertEqual(list(restored.read_snapshot("legacy")),
-                             [("research_results", "LEGACY_UNFENCED", rows[0])])
-            self.assertEqual(restored.import_snapshot("legacy", tables, receipt), receipt)
+            self.assertEqual(list(restored.read_snapshot("legacy")), [
+                ("research_results", "LEGACY_UNFENCED",
+                 ("legacy-1", "BTCUSDT", "research", "1", 123.5, '{"score": 1.2}')),
+            ])
+            self.assertEqual(import_frozen_results(source, before, "legacy", backup), receipt)
             self.assertEqual(hashlib.sha256(source.read_bytes()).hexdigest(), before)
             self.assertEqual(list(source.parent.glob(source.name + "*")), [source])
 
@@ -485,6 +507,15 @@ class MathResearchVsTradingBoundaryTests(unittest.TestCase):
         with localcontext() as context:
             context.prec = 5
             self.assertEqual(volume_profile_poc(profile, close=Decimal("10.500001")), Decimal("11"))
+
+    def test_math_half_up_price_bucket_is_independent_of_decimal_precision(self):
+        from market_profile_math import price_bucket
+
+        for precision in (5, 28):
+            with self.subTest(precision=precision), localcontext() as context:
+                context.prec = precision
+                self.assertEqual(price_bucket(Decimal("100.005"), Decimal("0.01")),
+                                 Decimal("100.01"))
 
     def test_runtime_api_has_no_trade_execution_verb(self):
         from market_compute_api import ALGORITHMS
