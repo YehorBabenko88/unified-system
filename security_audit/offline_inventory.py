@@ -181,6 +181,16 @@ DIRECT_MARKET_WRITE_PATTERN = re.compile(
     re.I,
 )
 RUNTIME_SUFFIXES = frozenset((".py", ".js", ".ts", ".ps1", ".sh", ".sql"))
+
+# Stage 9: trade-execution semantics do not belong to Math even when
+# documented as "research only". These are review candidates, not auto-deletes.
+MATH_TRADE_SEMANTICS = re.compile(
+    r"(?:\b(?:paper(?:_trading)?|virtual[_ -]?(?:order|position)|"
+    r"slippage|commission|pnl|position[_ -]?sizing|martingale|"
+    r"trade[_ -]?execution|fill[_ -]?price)\b)",
+    re.I,
+)
+
 SSH_TRUST_BYPASS_PATTERN = re.compile(
     r"(?:StrictHostKeyChecking\s*[= ]\s*no\b|"
     r"UserKnownHostsFile\s*[= ]\s*/dev/null\b|"
@@ -232,6 +242,10 @@ def architecture_scan(roots: dict[str, Path]) -> dict[str, Any]:
             if repo != "bybit-cluster-grid" and DIRECT_MARKET_WRITE_PATTERN.search(src):
                 findings.append({"repository": repo, "path": rel,
                                  "rule": "ARCH_MARKET_TABLE_WRITE_OUTSIDE_GRID",
+                                 "level": "REVIEW"})
+            if repo == "math" and MATH_TRADE_SEMANTICS.search(src):
+                findings.append({"repository": repo, "path": rel,
+                                 "rule": "ARCH_MATH_TRADE_SEMANTICS_REVIEW",
                                  "level": "REVIEW"})
             if SSH_TRUST_BYPASS_PATTERN.search(src):
                 findings.append({"repository": repo, "path": rel,
