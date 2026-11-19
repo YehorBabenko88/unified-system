@@ -196,7 +196,7 @@ def _read_exact(sock,n,deadline,on_idle=None):
     return bytes(out)
 
 
-def _read_frame(sock,budget,peer,deadline,on_idle=None):
+def _read_frame(sock,budget,peer,deadline,on_idle=None,cancel=None):
     first=_read_exact(sock,1,deadline,on_idle)
     body_deadline=time.monotonic()+5 if on_idle is not None else min(deadline,time.monotonic()+5)
     hsize,size=_PREFIX.unpack(first+_read_exact(sock,_PREFIX.size-1,body_deadline))
@@ -208,7 +208,7 @@ def _read_frame(sock,budget,peer,deadline,on_idle=None):
     _need(_uuid(header['message_id']))
     _need(header['traffic_class']!='control' or header['kind']=='MUX_FRAGMENT' or size<=MAX_CONTROL,'FRAME_BOUNDS')
     _need(header['kind'] not in ('OPEN','CREDIT','PING','PONG') or size==0,'FRAME_BOUNDS')
-    budget.wait_take('rx',peer,header['traffic_class'],_PREFIX.size+hsize+size,deadline=body_deadline)
+    budget.wait_take('rx',peer,header['traffic_class'],_PREFIX.size+hsize+size,deadline=body_deadline,cancel=cancel)
     payload=_read_exact(sock,size,body_deadline)
     return header,payload
 
@@ -239,6 +239,12 @@ class Delivery:
     message_id: str
     payload: bytes
     record_kind: str='APP'
+
+
+class _Cancellation:
+    """Preserve caller cancellation and stop accounting as soon as we close."""
+    def __init__(self,closed,caller):self.closed,self.caller=closed,caller
+    def is_set(self):return self.closed.is_set() or self.caller is not None and self.caller.is_set()
 
 
 class Connection:
@@ -273,7 +279,7 @@ class Connection:
     def _emit(self,kind,stream,cls,payload=b'',value=0,*,deadline=None,cancel=None,message_id=None):
         self._current();channel='data' if kind=='MUX_FRAGMENT' or kind=='APP' and cls!='control' else 'control'
         _write_frame(self.channels[channel],self.locks[channel],self.owner.budget,self.peer_id,
-                     kind,stream,cls,payload,value,deadline or time.monotonic()+5,cancel,message_id)
+                     kind,stream,cls,payload,value,deadline or time.monotonic()+5,_Cancellation(self.closed_event,cancel),message_id)
 
     def send(self,payload,traffic_class='live',*,stream_id=None,deadline=None,cancel=None):
         return self._send(payload,traffic_class,stream_id=stream_id,deadline=deadline,cancel=cancel,kind='APP')
@@ -361,7 +367,7 @@ class Connection:
         try:
             while not self.closed:
                 h,payload=_read_frame(self.channels[channel],self.owner.budget,self.peer_id,time.monotonic()+IDLE_TIMEOUT,
-                                      on_idle=lambda:time.monotonic()-self.last_rx<IDLE_TIMEOUT)
+                                      on_idle=lambda:time.monotonic()-self.last_rx<IDLE_TIMEOUT,cancel=self.closed_event)
                 self.last_rx=time.monotonic()
                 self._current();kind=h['kind'];stream=h['stream'];cls=h['traffic_class']
                 if kind in ('PING','PONG'):
@@ -591,4 +597,16 @@ class LanTransport:
 
     def close(self):
         if self.listener is not None:self.listener.close();self.listener=None
-        for connection in list(self.connections.values()):connection.close()
+        connections=list(self.connections.values())
+        # Signal every peer before waiting: a blocked writer may need its peer
+        # reader to observe socket shutdown before it releases SQLite accounting.
+        for connection in connections:connection.close()
+        deadline=time.monotonic()+3
+        workers=[]
+        for connection in connections:
+            wrapper=getattr(connection,'_mux_channel',None)
+            if wrapper is not None:wrapper._abort('MUX_CLOSED');workers.append(wrapper.thread)
+            workers.extend(connection.threads)
+        for worker in workers:
+            if worker is not threading.current_thread():worker.join(max(0,deadline-time.monotonic()))
+        _need(not any(worker.is_alive() for worker in workers if worker is not threading.current_thread()),'SHUTDOWN_DEADLINE')
