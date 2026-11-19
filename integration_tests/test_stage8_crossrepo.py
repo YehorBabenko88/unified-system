@@ -155,5 +155,72 @@ class PinnedInstalledCandidate(unittest.TestCase):
         self.assertNotIn("pybit", sys.modules)
 
 
+class MathResearchVsTradingBoundaryTests(unittest.TestCase):
+    """Semantic contract: Math may research outcomes, never decide trade sizes.
+
+    The immutable historical kernel is an acknowledged migration blocker.
+    Until Terminan owns the policy and consumers switch, this test must stay
+    RED instead of deleting the file or suppressing the check.
+    """
+
+    def test_math_installed_sdk_is_not_trading_engine(self):
+        from importlib import metadata
+        distribution = metadata.distribution("unified-math-kernels")
+        exposed = {name.lower() for name in distribution.files or ()}
+        forbidden = (
+            "history_sizing.py", "paper.py", "backtest.py",
+            "execution.py", "strategy_runner.py",
+        )
+        for suffix in forbidden:
+            self.assertFalse(any(str(path).endswith(suffix) for path in exposed),
+                             f"Math wheel contains execution policy {suffix}")
+        import market_compute_api
+        self.assertFalse(market_compute_api.compute_batch({
+            "schema": "math.market.compute.v1",
+            "execution_authority": False,
+            "source": {
+                "snapshot_sha256": "0" * 64,
+                "as_of_ms": 0,
+                "units": {"price": "quote/base", "volume": "base"},
+            },
+            "operations": [{
+                "operation": "executed_volume_delta",
+                "input": {"buy": "1", "sell": "0"},
+            }],
+        })["execution_authority"])
+
+    def test_no_active_trade_size_policy_in_math_source(self):
+        import ast
+        root = EXTERNAL / "math" / "python"
+        legacy = root / "history_sizing.py"
+        self.assertTrue(legacy.is_file(), "historical source must be preserved")
+        source = ast.parse(legacy.read_text(encoding="utf-8"))
+        functions = {n.name: n for n in source.body if isinstance(n, ast.FunctionDef)}
+        # No change to historical evidence is authorized by this test. Instead,
+        # keep the release gate red until apply_sizing policy is moved.
+        active = functions.get("apply_sizing")
+        if active:
+            policy_literals = {
+                n.value for n in ast.walk(active)
+                if isinstance(n, ast.Constant) and isinstance(n.value, str)
+            }
+            forbidden = {"MARTINGALE", "ANTI_MARTINGALE", "size_multiplier"}
+            self.assertFalse(
+                forbidden & policy_literals,
+                "Math history_sizing.apply_sizing remains an execution "
+                "policy: move consumers/logic to Terminan, preserve old "
+                "pinned historical profile and test rollback",
+            )
+
+    def test_runtime_api_has_no_trade_execution_verb(self):
+        from market_compute_api import ALGORITHMS
+        trading_ops = {
+            "open_position", "close_position", "place_order",
+            "simulate_fill", "execute_strategy", "apply_sizing",
+            "calculate_trade_pnl", "paper_trade",
+        }
+        self.assertFalse(set(ALGORITHMS) & trading_ops)
+
+
 if __name__ == "__main__":
     unittest.main()
