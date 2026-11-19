@@ -398,7 +398,7 @@ class GitHistoryAuditTests(unittest.TestCase):
             self._repo(root)
             marker = b"ghp_" + b"Z" * 36  # synthetic shape only
             (root / "large.bin").write_bytes(
-                b"q" * 65532 + marker + b"r" * 4096
+                b"q" * 65531 + b"\n" + marker + b"\n" + b"r" * 4095
             )
             self._commit(root, "cross-chunk synthetic fixture")
             report = scan_git_history(
