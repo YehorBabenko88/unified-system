@@ -25,31 +25,31 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: YehorBabenko88/math
-          ref: 7cf195742146a054cc2d48a4f45753f9b74978c5
+          ref: 98d6783522aac7155cbb4635e5b29239746d88e0
           path: external/math
           persist-credentials: false
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: YehorBabenko88/meta_analyse
-          ref: 9d0fb5c79a5da13b23f8daa066035b09f676a6fc
+          ref: b9755d749e598ec3e063740dd099cd8d922299bc
           path: external/meta_analyse
           persist-credentials: false
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: YehorBabenko88/Terminan
-          ref: 711dd40d8114ca291ec7fc7666312912d15cbdde
+          ref: f1abc777a8da0c8748c1cb80b37a09a8464340db
           path: external/Terminan
           persist-credentials: false
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: YehorBabenko88/bybit-cluster-grid
-          ref: 186c7e71a5a9573500218455cb34e13fad7e23a4
+          ref: f4dc0409e8ace1628a0e307675505f3a7b626dce
           path: external/bybit-cluster-grid
           persist-credentials: false
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: YehorBabenko88/strattester
-          ref: c7e065a57ca2d18a690573764e8def0f67bc6564
+          ref: 1000dccd9ba85eafa4b72bc40a76afae73ca1cee
           path: external/strattester
           persist-credentials: false
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
