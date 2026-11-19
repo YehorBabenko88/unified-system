@@ -177,31 +177,67 @@ class Stage17OwnerBoundaryGates(unittest.TestCase):
         self.assertIn("watermark_ms", text)
 
     def test_strattester_legacy_six_column_rows_have_readonly_admission(self):
-        from terminan import research_archive
-        # The legacy source has no staged table or fencing columns. A safe
-        # import must be explicit; do NOT invoke Strattester ResultStore.open,
-        # which mutates SQLite with ALTER TABLE and CREATE TABLE.
-        self.assertTrue(
-            callable(getattr(research_archive, "research_result_receipt", None))
-        )
-        from inspect import signature
-        source = (EXTERNAL / "strattester" / "strattester" /
-                  "persistence" / "result_store.py").read_text(encoding="utf-8")
-        self.assertIn("ALTER TABLE research_results", source)
-        admitted = getattr(research_archive, "normalize_legacy_research_results", None)
-        self.assertTrue(callable(admitted),
-                        "Terminan has no read-only six-column result adapter")
-        self.assertIn("rows", signature(admitted).parameters)
+        """Verify old six-column rows without calling the mutating ResultStore.open."""
+        import hashlib
+        import sqlite3
+        import tempfile
+        from terminan.research_archive import ResearchArchive, research_result_receipt
+        from terminan.paper_ledger import PaperReplayLedger
+
+        old_row = ("run-1", "BTCUSDT", "POC", "v1", 1780000000.25,
+                   '{"original": 1, "raw":"preserved"}')
+        with tempfile.TemporaryDirectory() as root:
+            source = Path(root) / "strattester-original.db"
+            with sqlite3.connect(source) as db:
+                db.execute(
+                    "CREATE TABLE research_results (run_id TEXT, symbol TEXT, "
+                    "strategy_id TEXT, strategy_version TEXT, "
+                    "created_at REAL, metrics TEXT)"
+                )
+                db.execute("INSERT INTO research_results VALUES (?,?,?,?,?,?)", old_row)
+            before = hashlib.sha256(source.read_bytes()).hexdigest()
+            # mode=ro; never invoke Strattester ResultStore.open (ALTER/CREATE/WAL).
+            uri = source.resolve().as_uri() + "?mode=ro"
+            with sqlite3.connect(uri, uri=True) as db:
+                rows = db.execute(
+                    "SELECT run_id,symbol,strategy_id,strategy_version,created_at,metrics "
+                    "FROM research_results ORDER BY run_id,symbol,strategy_id,strategy_version"
+                ).fetchall()
+                staged = db.execute(
+                    "SELECT 1 FROM sqlite_master WHERE name='staged_research_results'"
+                ).fetchone()
+            self.assertIsNone(staged)
+            tables = {"research_results": rows}
+            receipt = research_result_receipt(before, tables)
+            target = ResearchArchive(PaperReplayLedger(Path(root) / "terminan.db"))
+            self.assertEqual(
+                target.import_snapshot("legacy-6", tables, receipt), receipt
+            )
+            self.assertEqual(
+                list(target.read_snapshot("legacy-6")),
+                [("research_results", "LEGACY_UNFENCED", old_row)],
+            )
+            self.assertEqual(hashlib.sha256(source.read_bytes()).hexdigest(), before)
+            # Import again with the same immutable identity, not a second fill/row.
+            self.assertEqual(target.import_snapshot("legacy-6", tables, receipt), receipt)
 
     def test_coordinator_never_trusts_worker_derived_approval(self):
+        """Independent approval is a trusted HMAC, not (owner, digest(ticket))."""
+        import subprocess
         source = (EXTERNAL / "unified-system" / "scripts" /
                   "stage13_worker_admission.py").read_text(encoding="utf-8")
-        self.assertNotIn("approval != (scope.owner, digest)", source,
-                         "A tuple of public owner text and worker-computed digest "
-                         "does not authenticate an independent reviewer")
-        self.assertTrue(
-            ("verify_approval" in source or "verified_reviewer" in source),
-            "Coordinator requires externally verified reviewer admission",
+        self.assertNotIn("approval != (scope.owner, digest)", source)
+        self.assertIn("def _verify_review(", source)
+        self.assertIn("hmac.compare_digest", source)
+        self.assertIn("reviewer_key", source)
+        self.assertIn("dispatcher.casefold() == scope.owner.casefold()", source)
+        self.assertIn("if not callable(self._source)", source)
+        # Execute the canonical owner's negative tests, rather than recreate
+        # an independent signing implementation in the integration suite.
+        subprocess.run(
+            [sys.executable, "-B", "-m", "unittest",
+             "tests.test_stage13_worker_admission", "-v"],
+            cwd=EXTERNAL / "unified-system", check=True, timeout=45,
         )
 
 
