@@ -61,13 +61,14 @@ jobs:
           from security_audit.offline_inventory import REPOS, scan_git_history
           blocked = False
           for name in REPOS:
-              report = scan_git_history(Path(os.environ["SECURITY_MIRRORS"]) / (name + ".git"))
+              report = scan_git_history(Path(os.environ["SECURITY_MIRRORS"]) / (name + ".git"), stream_large_blobs=True)
               candidates = sum(report["redacted_secret_shape_counts"].values())
               print(
                   f"{name}: refs={report['local_refs']} "
                   f"pr_refs={report['local_pr_head_refs']} "
                   f"blobs_examined={report['blob_objects_examined']} "
                   f"oversize={report['oversize_blob_objects_unscanned']} "
+                  f"oversize_streamed={report['oversize_blob_objects_streamed']} "
                   f"lfs_pointers={report['git_lfs_pointers']} "
                   f"redacted_candidate_objects={candidates} "
                   f"clearance={report['full_security_clearance']}"
