@@ -19,14 +19,14 @@ class AdmissionTests(unittest.TestCase):
     def setUp(self):
         self.context = dict(event='workflow_dispatch', repository=guard.REPOSITORY,
                             sha='a'*40, source_sha='a'*40, attempt='1', run_id='123',
-                            authorization_commit='b'*40, actor='operator')
+                            authorization_commit='b'*40, actor='dispatcher')
         self.record = dict(status='APPROVED', SourceKind='explicit_operator_record',
                            repository=guard.REPOSITORY, source_sha='a'*40,
                            workflow=guard.WORKFLOW, environment=guard.ENVIRONMENT,
                            matrix=list(guard.MATRIX), permissions=list(guard.EFFECTS),
                            attempt=1, approved_by='operator', expires_at=datetime.datetime.fromtimestamp(1900003600, datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'))
         self.environment = dict(id=7, name=guard.ENVIRONMENT, protection_rules=[
-            dict(type='required_reviewers', prevent_self_review=False,
+            dict(type='required_reviewers', prevent_self_review=True,
                  reviewers=[dict(type='User', reviewer=dict(login='operator'))])])
         self.history = [dict(state='approved', user=dict(login='operator', type='User'),
                              environments=[dict(id=7, name=guard.ENVIRONMENT)])]
@@ -62,12 +62,17 @@ class AdmissionTests(unittest.TestCase):
             with self.subTest(env=env), self.assertRaises(ValueError):
                 self.check(environment=env)
 
-    def test_existing_prevent_self_review_policy_is_respected(self):
-        env = copy.deepcopy(self.environment)
-        env['protection_rules'][0]['prevent_self_review'] = True
-        with self.assertRaises(ValueError):
-            self.check(environment=env)
-        self.assertEqual(self.check(context=dict(self.context, actor='dispatcher'), environment=env), 'operator')
+    def test_environment_must_enforce_independent_review(self):
+        for value in (False, None, 1):
+            env = copy.deepcopy(self.environment)
+            env['protection_rules'][0]['prevent_self_review'] = value
+            with self.subTest(setting=value), self.assertRaises(ValueError):
+                self.check(environment=env)
+
+    def test_dispatcher_cannot_be_reviewer_even_with_matching_history(self):
+        for actor in ('operator', 'OPERATOR', ''):
+            with self.subTest(actor=actor), self.assertRaises(ValueError):
+                self.check(context=dict(self.context, actor=actor))
 
     def test_duplicate_record_and_remote_metadata_keys_are_rejected(self):
         for raw in [b'{"status":"DENIED","status":"APPROVED"}',
@@ -114,6 +119,28 @@ class AdmissionTests(unittest.TestCase):
                 with patch('sys.argv', ['guard', '--phase', 'review']):
                     self.assertEqual(guard.main(), 1)
             validate.assert_not_called()
+
+    def test_public_authorization_record_fetch_never_sends_api_token(self):
+        raw_url = ('https://raw.githubusercontent.com/' + guard.REPOSITORY +
+                   '/' + 'b'*40 + '/docs/collector/ci-operational-authorization.json')
+        api_url = 'https://api.github.com/repos/' + guard.REPOSITORY + '/environments/' + guard.ENVIRONMENT
+
+        class Response(io.BytesIO):
+            status = 200
+            headers = {}
+
+            def geturl(self):
+                return url
+
+        for url, expected in [(raw_url, None), (api_url, 'Bearer fixture-token')]:
+            with self.subTest(url=url):
+                class Opener:
+                    def open(self, request, timeout):
+                        self_test.assertEqual(request.get_header('Authorization'), expected)
+                        return Response(b'{}')
+
+                self_test = self
+                self.assertEqual(guard.get(url, 'fixture-token', opener=Opener()), b'{}')
 
     def test_redirect_and_oversized_or_non200_http_fail_closed(self):
         with self.assertRaises(ValueError):

@@ -60,9 +60,10 @@ def validate(ctx, raw, environment, history=None, *, now=None):
     reviewers = rules[0].get('reviewers', [])
     need(reviewers and all(r.get('type') == 'User' for r in reviewers))
     need(record['approved_by'] in [r['reviewer']['login'] for r in reviewers])
-    need(type(rules[0].get('prevent_self_review')) is bool)
-    if rules[0]['prevent_self_review']:
-        need(bool(ctx.get('actor')) and record['approved_by'].lower() != ctx['actor'].lower())
+    need(rules[0].get('prevent_self_review') is True)
+    actor = ctx.get('actor')
+    need(type(actor) is str and re.fullmatch(r'[A-Za-z0-9-]{1,39}', actor))
+    need(record['approved_by'].lower() != actor.lower())
     if history is not None:
         need(isinstance(history, list))
         relevant = [r for r in history if any(e.get('id') == environment['id'] and e.get('name') == ENVIRONMENT for e in r.get('environments', []))]
@@ -80,11 +81,13 @@ class NoRedirect(HTTPRedirectHandler):
 
 
 def get(url, token, *, opener=None):
-    need(url.startswith('https://api.github.com/repos/'+REPOSITORY+'/') or
-         url.startswith('https://raw.githubusercontent.com/'+REPOSITORY+'/'))
-    headers = {'Accept': 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28'}
-    if token:
-        headers['Authorization'] = 'Bearer '+token
+    api_request = url.startswith('https://api.github.com/repos/'+REPOSITORY+'/')
+    need(api_request or url.startswith('https://raw.githubusercontent.com/'+REPOSITORY+'/'))
+    headers = {}
+    if api_request:
+        headers = {'Accept': 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28'}
+        if token:
+            headers['Authorization'] = 'Bearer '+token
     opener = build_opener(NoRedirect()) if opener is None else opener
     with opener.open(Request(url, headers=headers, method='GET'), timeout=20) as response:
         need(response.geturl() == url and response.status == 200 and not response.headers.get('Link'))

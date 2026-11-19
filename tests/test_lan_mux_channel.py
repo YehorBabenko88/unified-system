@@ -120,8 +120,9 @@ class MuxTlsTests(unittest.TestCase):
 
     def setUp(self):
         self.fixture=self.fixtures.TLSIsolationTests();self.fixture.setUp()
-
-    def tearDown(self):self.fixture.tearDown()
+        # Channel cleanups registered later must run before closing the
+        # transport fixture and removing its SQLite budget files.
+        self.addCleanup(self.fixture.tearDown)
 
     def pair(self,server_protocol='unified-lan-mux-v1',client_protocol='unified-lan-mux-v1'):
         from pathlib import Path
@@ -179,13 +180,26 @@ class MuxTlsTests(unittest.TestCase):
     def test_complete_large_messages_real_mtls_and_budget_overhead(self):
         import queue,threading,time
         client,server,c,s,left,right,binding=self.channels()
-        for kind,size in ((3,133128),(4,2097152)):
+        for kind,size,transfer_budget in ((3,133128,10),(4,2097152,60)):
             payload=b'Z'*size;outcome=queue.Queue();beforetx=client.budget.counters()['tx'];beforerx=server.budget.counters()['rx']
+            # Use the protocol's bounded transfer deadlines, including the
+            # durable per-fragment budget debits on each endpoint.
+            deadline=time.monotonic()+transfer_budget
             def send():
-                try:outcome.put(left.send(kind,payload,deadline=time.monotonic()+5))
+                try:outcome.put(left.send(kind,payload,deadline=deadline))
                 except Exception as exc:outcome.put(exc)
-            t=threading.Thread(target=send);t.start();got=right.receive(deadline=time.monotonic()+5);t.join(5)
-            self.assertFalse(t.is_alive());result=outcome.get(timeout=1)
+            sender=threading.Thread(target=send)
+            sender.start()
+            try:
+                got=right.receive(deadline=deadline)
+            except BaseException:
+                left.close()
+                right.close()
+                raise
+            finally:
+                sender.join(max(0,deadline-time.monotonic())+3)
+                self.assertFalse(sender.is_alive(),'Mux sender still owns the test transport')
+            result=outcome.get(timeout=1)
             if isinstance(result,Exception):raise result
             self.assertEqual((got.kind,got.transfer_id,got.payload),(kind,result,payload))
             minimum=size+mux.HEADER.size*((size+mux.CHUNK_SIZE-1)//mux.CHUNK_SIZE)

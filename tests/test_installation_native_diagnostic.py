@@ -33,12 +33,19 @@ Write-Output 'INERT_NSSM_BOOTSTRAP_VERIFIED'
   self.assertIn(b'INERT_NSSM_BOOTSTRAP_VERIFIED',child.stdout)
  @unittest.skipUnless(os.name=='nt','Windows unprivileged child exit observation')
  def test_real_child_exit_code_without_service_or_acl_operations(self):
-  command="$ErrorActionPreference='Stop';$m=Import-Module -Name ([WildcardPattern]::Escape($env:UNIFIED_TEST_MODULE)) -PassThru;& $m {Add-Type -TypeDefinition $script:Native;$script:NativeStage='NSSM_SET_APPLICATION'};$ps=Join-Path ([Environment]::SystemDirectory) 'WindowsPowerShell\\v1.0\\powershell.exe';try{$null=[UnifiedStoppedServiceNative]::Run($ps,'-NoProfile -NonInteractive -Command \"exit 7\"')}catch{};if((Get-UnifiedOwnedNativeExitCode) -ne 7){throw 'EXIT_FACT_REJECTED'};Write-Output 'EXIT_FACT_VERIFIED'"
-  command=phase('ENTRY')+command.replace('$m=Import-Module',phase('IMPORT_BEGIN')+'$m=Import-Module',1)
-  command=command.replace(';& $m {Add-Type',';'+phase('IMPORT_END')+'& $m {'+phase('COMPILE_BEGIN')+'Add-Type',1)
-  command=command.replace("$script:NativeStage='NSSM_SET_APPLICATION'",phase('COMPILE_END')+"$script:NativeStage='NSSM_SET_APPLICATION'",1)
-  command=command.replace('try{$null=',phase('CHILD_BEGIN')+'try{$null=',1)
-  command=command.replace('catch{};if(',"catch{};"+phase('CHILD_END')+'if(',1)+';'+phase('DONE')
+  # Exercise the same native process/exit-code boundary without booting a
+  # second PowerShell. /d disables cmd's registry-configured AutoRun hooks.
+  command=(
+   phase('ENTRY')+"$ErrorActionPreference='Stop';"
+   +phase('IMPORT_BEGIN')+"$m=Import-Module -Name ([WildcardPattern]::Escape($env:UNIFIED_TEST_MODULE)) -PassThru;"
+   +phase('IMPORT_END')+"& $m {"
+   +phase('COMPILE_BEGIN')+"Add-Type -TypeDefinition $script:Native;"
+   +phase('COMPILE_END')+"$script:NativeStage='NSSM_SET_APPLICATION'};"
+   +"$exe=[IO.Path]::Combine([Environment]::SystemDirectory,'cmd.exe');"
+   +phase('CHILD_BEGIN')+"try{$null=[UnifiedStoppedServiceNative]::Run($exe,'/d /c exit /b 7')}catch{};"
+   +phase('CHILD_END')+"if((& $m.ExportedFunctions['Get-UnifiedOwnedNativeExitCode']) -ne 7){throw 'EXIT_FACT_REJECTED'};"
+   +"[Console]::Out.WriteLine('EXIT_FACT_VERIFIED');"+phase('DONE')
+  )
   env=service._environment();env['UNIFIED_TEST_MODULE']=str(service.MODULE)
   child=run_phased([service._native_tools()['powershell']['path'],'-NoProfile','-NonInteractive','-Command',command],env=env)
   self.assertIn(b'EXIT_FACT_VERIFIED',child.stdout)

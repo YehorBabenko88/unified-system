@@ -40,10 +40,10 @@ history, including nested objects; ambiguous status or scope values cannot admit
 
 The read-only preflight must observe an already configured GitHub environment with
 required explicit User reviewers before the native job can declare that environment.
-Team-only/ambiguous configurations fail closed. This code never creates environments,
-changes settings or weakens `prevent_self_review`. GitHub enforces the existing
-environment review policy. Operator identity or a committed APPROVED string alone
-does not prove a human approved anything.
+The environment must have `prevent_self_review` enabled and the named reviewer
+must differ from the dispatcher, including case variants. Team-only or ambiguous
+configurations fail closed. This verifier does not create or modify the environment.
+Operator identity or a committed APPROVED string alone cannot establish approval.
 
 After GitHub releases the protected environment job, a second guard revalidates the
 record, expiry and configuration and reads approval history for this exact run ID.
