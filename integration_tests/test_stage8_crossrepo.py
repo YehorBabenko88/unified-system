@@ -144,6 +144,20 @@ class PinnedInstalledCandidate(unittest.TestCase):
             cwd=EXTERNAL / "unified-system", check=True, timeout=60,
         )
 
+    def test_unified_shutdown_releases_real_sqlite_accounting_workers(self):
+        subprocess.run(
+            [sys.executable, "-B", "-m", "unittest", "discover",
+             "-s", "tests", "-p", "test_lan_shutdown.py", "-v"],
+            cwd=EXTERNAL / "unified-system", check=True, timeout=60,
+        )
+
+    def test_unified_preview_rejection_remains_bounded_and_returns_http_status(self):
+        subprocess.run(
+            [sys.executable, "-B", "-m", "unittest", "discover",
+             "-s", "tests", "-p", "test_installation_preview.py", "-v"],
+            cwd=EXTERNAL / "unified-system", check=True, timeout=60,
+        )
+
     def test_meta_runtime_uses_installed_terminan_paper_engine(self):
         from meta_analyse.runtime import Runtime
         from terminan.paper import PaperEngine
