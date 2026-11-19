@@ -10,19 +10,21 @@ from decimal import Decimal
 from importlib import metadata
 from pathlib import Path
 import importlib
+import os
 import subprocess
 import sys
 import unittest
+from unittest.mock import patch
 
 
 ROOT = Path(__file__).resolve().parents[1]
 EXTERNAL = ROOT / "external"
 PINNED = {
-    "math": "98d6783522aac7155cbb4635e5b29239746d88e0",
-    "meta_analyse": "b9755d749e598ec3e063740dd099cd8d922299bc",
-    "Terminan": "f1abc777a8da0c8748c1cb80b37a09a8464340db",
-    "bybit-cluster-grid": "f4dc0409e8ace1628a0e307675505f3a7b626dce",
-    "strattester": "1000dccd9ba85eafa4b72bc40a76afae73ca1cee",
+    "math": "c12b2b4d177af5ed07ee3ea23854acf646cf06b2",
+    "meta_analyse": "c2e9318aeafacae4f3a44f926eec9a14b57eac36",
+    "Terminan": "ffe7abfc172a97fffdbde1b2d388e73c016eddcf",
+    "bybit-cluster-grid": "531a19aa803bec840273656bdb8768a8466a44ad",
+    "strattester": "d49eb69c52d469c153f5dbc147875a56134a656e",
 }
 
 
@@ -44,7 +46,6 @@ class PinnedInstalledCandidate(unittest.TestCase):
         # The Math computation must resolve from a built/installed distribution,
         # not from a direct project checkout or an accidental PYTHONPATH fallback.
         sys.path.insert(0, str(EXTERNAL / "meta_analyse" / "src"))
-        sys.path.insert(0, str(EXTERNAL / "Terminan"))
         sys.path.insert(0, str(EXTERNAL / "bybit-cluster-grid"))
         cls.math = importlib.import_module("market_profile_math")
         if Path(cls.math.__file__).resolve().is_relative_to((EXTERNAL / "math").resolve()):
@@ -122,8 +123,6 @@ class PinnedInstalledCandidate(unittest.TestCase):
         self.assertEqual(list(data), [], "input iterator must be consumed once")
 
     def test_meta_runtime_adapter_100k_uses_single_math_stream(self):
-        # This is deliberately RED until Meta #81 switches its actual runtime
-        # adapter from list+batch to Math's canonical streaming entrypoint.
         self.assertIs(self.meta.aggregate_orderflow_stream,
                       self.math.aggregate_orderflow_stream)
         for n in (19_999, 20_000, 20_001, 100_000):
@@ -138,6 +137,18 @@ class PinnedInstalledCandidate(unittest.TestCase):
                                  Decimal("1.25") * (((n + 2) // 3) -
                                                     ((n + 1) // 3)))
 
+    def test_meta_runtime_uses_installed_terminan_paper_engine(self):
+        from meta_analyse.runtime import Runtime
+        from terminan.paper import PaperEngine
+
+        runtime = Runtime(metascalp=None, exchange=None)
+        self.assertIs(type(runtime.paper), PaperEngine)
+        distribution = metadata.distribution("unified-terminan")
+        self.assertEqual(
+            Path(sys.modules[PaperEngine.__module__].__file__).resolve(),
+            Path(distribution.locate_file("terminan/paper.py")).resolve(),
+        )
+
     def test_grid_and_terminan_owner_boundary(self):
         from grid import terminan_gateway
         from terminan import contracts
@@ -146,12 +157,19 @@ class PinnedInstalledCandidate(unittest.TestCase):
                          "terminan.contracts")
         self.assertFalse((EXTERNAL / "Terminan" / "terminan" /
                           "strategies.py").exists())
-        caps = terminan_gateway.snapshot("/internal/v1/capabilities")
+        distribution = metadata.distribution("unified-terminan")
+        self.assertEqual(
+            Path(contracts.__file__).resolve(),
+            Path(distribution.locate_file("terminan/contracts.py")).resolve(),
+        )
+        offline_env = {"TERMINAN_GRID_API_PORT": "", "TERMINAN_GRID_DSN": ""}
+        with patch.dict(os.environ, offline_env):
+            caps = terminan_gateway.snapshot("/internal/v1/capabilities")
+            self.assertEqual(data.grid_candles("BTCUSDT"), [])
+            self.assertEqual(data.footprint("BTCUSDT"), [])
         self.assertEqual(caps["producer"], "bybit-cluster-grid")
         self.assertEqual(caps["capabilities"]["candles"], "UNAVAILABLE")
         self.assertFalse(caps["meta_absorption"]["consumer_cutover"])
-        self.assertEqual(data.grid_candles("BTCUSDT"), [])
-        self.assertEqual(data.footprint("BTCUSDT"), [])
         self.assertNotIn("pybit", sys.modules)
 
 
@@ -164,16 +182,17 @@ class MathResearchVsTradingBoundaryTests(unittest.TestCase):
     """
 
     def test_math_installed_sdk_is_not_trading_engine(self):
-        from importlib import metadata
         distribution = metadata.distribution("unified-math-kernels")
-        exposed = {name.lower() for name in distribution.files or ()}
+        self.assertTrue(distribution.files, "Math wheel file manifest missing")
+        exposed = {path.name.casefold() for path in distribution.files}
         forbidden = (
             "history_sizing.py", "paper.py", "backtest.py",
             "execution.py", "strategy_runner.py",
         )
-        for suffix in forbidden:
-            self.assertFalse(any(str(path).endswith(suffix) for path in exposed),
-                             f"Math wheel contains execution policy {suffix}")
+        for filename in forbidden:
+            self.assertNotIn(
+                filename, exposed, f"Math wheel contains execution policy {filename}",
+            )
         import market_compute_api
         self.assertFalse(market_compute_api.compute_batch({
             "schema": "math.market.compute.v1",
