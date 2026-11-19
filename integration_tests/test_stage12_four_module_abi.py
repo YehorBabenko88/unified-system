@@ -24,7 +24,7 @@ PINS = {
     "bybit-cluster-grid": "beed235e6883aeee808eb1b80fc80a2a35057202",
     "unified-system": "04f32a12c0f3b58c0bebe402f2d9057cf4671cf3",
     "Terminan": "4035647edb332260859850ad2a3ffc1044a4c818",
-    "meta_analyse": "f4880de89a59ea2e557b47daaa74ae491ac240fb",
+    "meta_analyse": "b1a4d6a41054f0040a88dc80b585380fb6b4f323",
     "strattester": "55e652295882220303506cc18ce6c99027b6ca35",
 }
 
