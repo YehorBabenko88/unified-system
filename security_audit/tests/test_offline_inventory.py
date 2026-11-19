@@ -218,6 +218,18 @@ class ArchitectureOwnershipTests(unittest.TestCase):
             self.assertFalse(result["db_role_permissions_verified"])
             self.assertEqual(0, result["automatic_removals"])
 
+    def test_ssh_host_trust_bypass_is_visible(self):
+        from security_audit.offline_inventory import architecture_scan
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "unified-system"
+            root.mkdir()
+            (root / "unsafe.ps1").write_text(
+                "ssh -o StrictHostKeyChecking=no host\\n", encoding="utf-8")
+            result = architecture_scan({"unified-system": root})
+            self.assertIn("ARCH_SSH_HOST_TRUST_BYPASS_REVIEW",
+                          {x["rule"] for x in result["ownership_findings"]})
+            self.assertFalse(result["distributed_orchestrator_verified"])
+
     def test_invalid_and_oversize_fail_closed(self):
         from security_audit.offline_inventory import architecture_scan
         with tempfile.TemporaryDirectory() as tmp:

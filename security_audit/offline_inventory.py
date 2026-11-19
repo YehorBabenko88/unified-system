@@ -180,6 +180,12 @@ DIRECT_MARKET_WRITE_PATTERN = re.compile(
     re.I,
 )
 RUNTIME_SUFFIXES = frozenset((".py", ".js", ".ts", ".ps1", ".sh", ".sql"))
+SSH_TRUST_BYPASS_PATTERN = re.compile(
+    r"(?:StrictHostKeyChecking\s*[= ]\s*no\b|"
+    r"UserKnownHostsFile\s*[= ]\s*/dev/null\b|"
+    r"sshpass\s+-p(?:\s|$))", re.I,
+)
+
 
 
 def architecture_scan(roots: dict[str, Path]) -> dict[str, Any]:
@@ -225,6 +231,10 @@ def architecture_scan(roots: dict[str, Path]) -> dict[str, Any]:
             if repo != "bybit-cluster-grid" and DIRECT_MARKET_WRITE_PATTERN.search(src):
                 findings.append({"repository": repo, "path": rel,
                                  "rule": "ARCH_MARKET_TABLE_WRITE_OUTSIDE_GRID",
+                                 "level": "REVIEW"})
+            if SSH_TRUST_BYPASS_PATTERN.search(src):
+                findings.append({"repository": repo, "path": rel,
+                                 "rule": "ARCH_SSH_HOST_TRUST_BYPASS_REVIEW",
                                  "level": "REVIEW"})
             if p.suffix.lower() == ".py":
                 try:
