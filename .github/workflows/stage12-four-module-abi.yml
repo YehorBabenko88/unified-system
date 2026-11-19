@@ -25,37 +25,37 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: YehorBabenko88/math
-          ref: bb9cd1fac956620b0ab59482e8b7fd9e8b1f003b
+          ref: 8de3858cd5ca9a63dc3cd10f5f5cdec870ef4440
           path: external/math
           persist-credentials: false
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: YehorBabenko88/bybit-cluster-grid
-          ref: 0615fbf9d3bc0919a817e391c150275462cb5143
+          ref: beed235e6883aeee808eb1b80fc80a2a35057202
           path: external/bybit-cluster-grid
           persist-credentials: false
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: YehorBabenko88/unified-system
-          ref: 0b2aa679428dda7e0593a565b216b406533eb522
+          ref: 04f32a12c0f3b58c0bebe402f2d9057cf4671cf3
           path: external/unified-system
           persist-credentials: false
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: YehorBabenko88/Terminan
-          ref: 5a3a752ae680b948979010101db2d5698ffa0aef
+          ref: 4035647edb332260859850ad2a3ffc1044a4c818
           path: external/Terminan
           persist-credentials: false
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: YehorBabenko88/meta_analyse
-          ref: 707e0d0d1e42d1495cb2213d4dc0b23f09a7521a
+          ref: f4880de89a59ea2e557b47daaa74ae491ac240fb
           path: external/meta_analyse
           persist-credentials: false
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: YehorBabenko88/strattester
-          ref: 9d8e27fdd31d66b50416308b097daf2dacfd46c3
+          ref: 55e652295882220303506cc18ce6c99027b6ca35
           path: external/strattester
           persist-credentials: false
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
@@ -81,7 +81,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: YehorBabenko88/bybit-cluster-grid
-          ref: 0615fbf9d3bc0919a817e391c150275462cb5143
+          ref: beed235e6883aeee808eb1b80fc80a2a35057202
           persist-credentials: false
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with:
