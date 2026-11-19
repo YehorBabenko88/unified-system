@@ -118,6 +118,17 @@ class OfflineAuditTests(unittest.TestCase):
             self.assertNotIn(secret, report)
             self.assertEqual("NOT_ESTABLISHED", result["security_clearance"])
 
+    def test_retirement_security_clearance_is_never_automatic(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp) / "strattester"
+            repo.mkdir()
+            result = scan({"strattester": repo})
+            self.assertFalse(result["full_history_scanned"])
+            self.assertFalse(result["all_pr_heads_scanned"])
+            self.assertFalse(result["lfs_objects_scanned"])
+            self.assertEqual("NOT_ESTABLISHED", result["archival_security_clearance"])
+            self.assertEqual(0, result["automatic_removals"])
+
     def test_empty_scope_denied(self):
         with self.assertRaises(ValueError):
             scan({})

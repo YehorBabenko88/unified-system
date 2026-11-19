@@ -18,6 +18,7 @@ REPOS = ("bybit-cluster-grid", "strattester", "math", "unified-system", "Termina
 CODE_SUFFIX = frozenset((".py", ".js", ".mjs", ".cjs", ".ts", ".sql"))
 CONFIG_SUFFIX = frozenset((".ps1", ".sh", ".bat", ".cmd", ".toml", ".ini", ".cfg", ".config", ".properties", ".yml", ".yaml", ".json", ".env", ".pem", ".key"))
 SENSITIVE_NAMES = frozenset((".env", ".env.local", ".npmrc", ".pypirc", "id_rsa", "id_ed25519"))
+GIT_HISTORY_NOTE = "Working trees do not include deleted commits, remote PR refs, tags or LFS content."
 MAX_FILE_BYTES = 2_000_000
 MAX_FILES_PER_REPO = 15_000
 ACTION = re.compile(r"^\s*-\s*uses:\s*['\"]?([^'\"\s#]+)", re.M)
@@ -154,6 +155,9 @@ def scan(roots: dict[str, Path]) -> dict[str, Any]:
                               or any(row["oversize_files_unscanned"] for row in counters.values())
                               else "WORKTREE_ONLY_NOT_GIT_HISTORY",
         "full_history_scanned": False,
+        "all_pr_heads_scanned": False,
+        "lfs_objects_scanned": False,
+        "archival_security_clearance": "NOT_ESTABLISHED",
         "security_clearance": "NOT_ESTABLISHED",
         "secrets_exposure_clearance": "NOT_ESTABLISHED",
     }
