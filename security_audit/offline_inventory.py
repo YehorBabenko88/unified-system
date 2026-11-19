@@ -1,8 +1,9 @@
 """Read-only, offline security and cross-repository overlap inventory.
 
 Observations are review candidates, not vulnerability confirmations.
-No GitHub/network/SSH/SQL access, subprocesses, code import, file mutations
-or automatic deletion of suspected duplicates.
+The worktree scanner never invokes subprocesses or imports target code.
+The optional Git-history scanner invokes only read-only Git commands against
+local repositories; neither mode performs network access, writes or deletion.
 """
 from __future__ import annotations
 
