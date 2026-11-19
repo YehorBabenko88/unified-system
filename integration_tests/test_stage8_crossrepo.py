@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from contextlib import closing, nullcontext
 from datetime import datetime, timedelta, timezone
-from decimal import Decimal
+from decimal import Decimal, localcontext
 from importlib import metadata
 from pathlib import Path
 import hashlib
@@ -283,22 +283,64 @@ class PinnedInstalledCandidate(unittest.TestCase):
         subprocess.run(
             [sys.executable, "-I", "-B", "-m", "pytest", "-q",
              str(grid_tests / "test_terminan_gateway_contract.py"),
-             "-k", "pinned_history_rollup or pinned_rollup_refuses"],
+             "-k", "pinned_history_rollup or pinned_rollup_refuses or pinned_multipin"],
             cwd=ROOT, check=True, timeout=60,
         )
 
-    def test_grid_exposes_required_levels_timeframes(self):
-        from grid.history_snapshot import TIMEFRAME_MINUTES
+    def test_grid_multipin_candles_feed_installed_terminan_and_math(self):
+        from grid import terminan_gateway
+        from terminan.levels import grid_level_candles, untouched_levels
 
-        required = {"1h": 60, "4h": 240, "1d": 1440, "1w": 10080}
-        self.assertEqual(
-            {timeframe: TIMEFRAME_MINUTES.get(timeframe) for timeframe in required},
-            required,
-            "Grid history must supply every timeframe required by the level pipeline",
-        )
+        grid_tests = EXTERNAL / "bybit-cluster-grid" / "tests"
+        with patch.object(sys, "path", [str(grid_tests), *sys.path]):
+            from test_history_snapshot import Connection
+            from test_terminan_gateway_contract import _multipin_history
+
+            for timeframe, start, pages in (
+                ("1h", 0, [60]), ("4h", 0, [120, 120]), ("1d", 0, [1440]),
+                ("1w", 4 * 86_400_000, [1680] * 6),
+            ):
+                with self.subTest(timeframe=timeframe):
+                    request, catalog, rows = _multipin_history(timeframe, start, pages)
+                    connection = Connection([])
+
+                    def execute(sql, params=None):
+                        connection.calls.append((sql, params))
+                        if params:
+                            connection.rows = rows[params[1]]
+
+                    with patch.object(connection, "execute", side_effect=execute), \
+                            patch.object(terminan_gateway, "_snapshot_catalog", return_value=catalog), \
+                            patch.object(terminan_gateway, "_history_connection", return_value=connection):
+                        response = terminan_gateway.pinned_history(request)
+
+                    self.assertEqual(response["source_authentication"], "EXTERNAL_NOT_INDEPENDENTLY_VERIFIED")
+                    self.assertFalse(response["trading_authorized"])
+                    snapshot = response["snapshot"]
+                    end = request["end_ms"]
+                    selection = dict(symbol=request["symbol"], market_type=request["market_type"],
+                                     timeframe=timeframe, start_ms=start, end_ms=end, as_of_ms=end)
+                    # This fixture pin checks adapter compatibility. It conveys no production trust.
+                    trusted_pin = snapshot["dataset_fingerprint"]
+                    candles = grid_level_candles(snapshot, trusted_fingerprint=trusted_pin, **selection)
+                    self.assertEqual(len(candles), 1)
+                    self.assertEqual(candles[0]["t"], start)
+                    self.assertEqual(untouched_levels(candles, timeframe, end - 1), [])
+                    levels = untouched_levels(candles, timeframe, end)
+                    self.assertEqual(
+                        {level["side"]: level["price"] for level in levels},
+                        {"high": snapshot["rows"][0]["high"], "low": snapshot["rows"][0]["low"]},
+                    )
+                    with self.assertRaises(ValueError):
+                        grid_level_candles(snapshot, trusted_fingerprint="0" * 64, **selection)
+                    changed = dict(snapshot, rows=[dict(snapshot["rows"][0], high=999)])
+                    with self.assertRaises(ValueError):
+                        grid_level_candles(changed, trusted_fingerprint=trusted_pin, **selection)
 
     def test_terminan_can_read_six_column_strattester_results_without_changes(self):
         from terminan.data import research
+        from terminan.paper_ledger import PaperReplayLedger
+        from terminan.research_archive import ResearchArchive, research_result_receipt
 
         with tempfile.TemporaryDirectory() as directory:
             source = Path(directory) / "old-results.sqlite3"
@@ -318,7 +360,22 @@ class PinnedInstalledCandidate(unittest.TestCase):
                     "created_at": 123.5, "metrics": {"score": 1.2},
                 }])
             self.assertEqual(hashlib.sha256(source.read_bytes()).hexdigest(), before)
-            self.assertEqual(list(source.parent.iterdir()), [source])
+            with closing(sqlite3.connect(source.as_uri() + "?mode=ro", uri=True)) as db:
+                rows = list(db.execute("SELECT * FROM research_results ORDER BY run_id"))
+            tables = {"research_results": rows}
+            receipt = research_result_receipt(before, tables)
+            target = Path(directory) / "archive.sqlite3"
+            archive = ResearchArchive(PaperReplayLedger(target))
+            self.assertEqual(archive.import_snapshot("legacy", tables, receipt), receipt)
+            backup = Path(directory) / "backup.sqlite3"
+            with closing(sqlite3.connect(target)) as db, closing(sqlite3.connect(backup)) as copy:
+                db.backup(copy)
+            restored = ResearchArchive(PaperReplayLedger(backup))
+            self.assertEqual(list(restored.read_snapshot("legacy")),
+                             [("research_results", "LEGACY_UNFENCED", rows[0])])
+            self.assertEqual(restored.import_snapshot("legacy", tables, receipt), receipt)
+            self.assertEqual(hashlib.sha256(source.read_bytes()).hexdigest(), before)
+            self.assertEqual(list(source.parent.glob(source.name + "*")), [source])
 
     def test_grid_wheel_excludes_strategy_and_scientific_runtime(self):
         distribution = metadata.distribution("unified-grid-market-data")
@@ -420,6 +477,14 @@ class MathResearchVsTradingBoundaryTests(unittest.TestCase):
             "ad050a83871842d9fa77559738dee7b71fd5ba75325bc3f633956729d460ef73",
             "Original Math sizing source must remain available for parity",
         )
+
+    def test_math_poc_nearest_close_is_independent_of_decimal_precision(self):
+        from market_profile_math import volume_profile_poc
+
+        profile = {Decimal("10"): Decimal("1"), Decimal("11"): Decimal("1")}
+        with localcontext() as context:
+            context.prec = 5
+            self.assertEqual(volume_profile_poc(profile, close=Decimal("10.500001")), Decimal("11"))
 
     def test_runtime_api_has_no_trade_execution_verb(self):
         from market_compute_api import ALGORITHMS
