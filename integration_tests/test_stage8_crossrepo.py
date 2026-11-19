@@ -245,6 +245,28 @@ class PinnedInstalledCandidate(unittest.TestCase):
             cwd=EXTERNAL / "Terminan", check=True, timeout=60,
         )
 
+    def test_terminan_installed_paper_journal_ack_crash_and_restore(self):
+        subprocess.run(
+            [sys.executable, "-I", "-B", "-m", "unittest", "discover",
+             "-s", str(EXTERNAL / "Terminan" / "tests"), "-p", "test_paper_journal.py", "-v"],
+            cwd=ROOT, check=True, timeout=60,
+        )
+
+    def test_terminan_trade_dto_rejects_non_finite_values(self):
+        from terminan.contracts import TradeEvent
+
+        trade = {
+            "run_id": "offline", "strategy_id": "paper", "symbol": "BTCUSDT",
+            "trade_id": "fill-1", "entry_ms": 1000, "exit_ms": 2000,
+            "side": "short", "entry_price": 102.0, "exit_price": 100.0,
+            "quantity": 1.0, "pnl": 2.0,
+        }
+        self.assertEqual(TradeEvent.parse(trade).trade_id, "fill-1")
+        for field in ("entry_price", "exit_price", "quantity", "pnl"):
+            for value in (float("nan"), float("inf"), float("-inf")):
+                with self.subTest(field=field, value=value), self.assertRaises(ValueError):
+                    TradeEvent.parse(dict(trade, **{field: value}))
+
     def test_grid_wheel_excludes_strategy_and_scientific_runtime(self):
         distribution = metadata.distribution("unified-grid-market-data")
         self.assertTrue(distribution.files, "Grid wheel file manifest missing")
@@ -254,6 +276,13 @@ class PinnedInstalledCandidate(unittest.TestCase):
         }
         packaged = {path.name.casefold() for path in distribution.files}
         self.assertFalse(forbidden & packaged, "Grid wheel still packages another module's runtime")
+        manifest = EXTERNAL / "bybit-cluster-grid" / "market-wheel-modules.txt"
+        allowed = set(manifest.read_text(encoding="utf-8").split())
+        installed = {
+            item.stem for item in distribution.files
+            if item.parts[0] == "grid" and item.suffix == ".py"
+        }
+        self.assertEqual(installed, allowed, "Grid installed Python modules differ from its allowlist")
 
     def test_grid_and_terminan_owner_boundary(self):
         from grid import terminan_gateway
