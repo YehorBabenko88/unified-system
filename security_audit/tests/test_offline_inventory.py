@@ -133,6 +133,35 @@ class OfflineAuditTests(unittest.TestCase):
             (repo / "large.py").write_bytes(b"x" * 2_000_001)
             result = scan({"Terminan": repo})
             self.assertEqual(0, result["observed_files"]["Terminan"]["files_examined"])
+            self.assertEqual(1, result["observed_files"]["Terminan"]["oversize_files_unscanned"])
+            self.assertIn("OVERSIZE_FILE_NOT_SCANNED", {row["rule"] for row in result["review_findings"]})
+            self.assertEqual("WORKTREE_PARTIAL", result["scope_completeness"])
+
+    def test_sensitive_env_file_scanned_without_disclosure(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp) / "meta_analyse"
+            repo.mkdir()
+            secret = "ghp_" + "X" * 36
+            (repo / ".env").write_text("TOKEN=" + secret, encoding="utf-8")
+            result = scan({"meta_analyse": repo})
+            rules = {row["rule"] for row in result["review_findings"]}
+            self.assertIn("SENSITIVE_CONFIG_PATH_REVIEW", rules)
+            self.assertIn("GITHUB_CLASSIC_TOKEN_SHAPE", rules)
+            self.assertNotIn(secret, json.dumps(result))
+            self.assertFalse(result["full_history_scanned"])
+
+    def test_six_worktrees_never_claim_history_clearance(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            from security_audit.offline_inventory import REPOS
+            paths = {}
+            for name in REPOS:
+                p = Path(tmp) / name
+                p.mkdir()
+                paths[name] = p
+            result = scan(paths)
+            self.assertEqual("WORKTREE_ONLY_NOT_GIT_HISTORY", result["scope_completeness"])
+            self.assertFalse(result["full_history_scanned"])
+            self.assertEqual("NOT_ESTABLISHED", result["security_clearance"])
 
 
 if __name__ == "__main__":

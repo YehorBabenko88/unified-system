@@ -16,6 +16,8 @@ from typing import Any
 
 REPOS = ("bybit-cluster-grid", "strattester", "math", "unified-system", "Terminan", "meta_analyse")
 CODE_SUFFIX = frozenset((".py", ".js", ".mjs", ".cjs", ".ts", ".sql"))
+CONFIG_SUFFIX = frozenset((".ps1", ".sh", ".bat", ".cmd", ".toml", ".ini", ".cfg", ".config", ".properties", ".yml", ".yaml", ".json", ".env", ".pem", ".key"))
+SENSITIVE_NAMES = frozenset((".env", ".env.local", ".npmrc", ".pypirc", "id_rsa", "id_ed25519"))
 MAX_FILE_BYTES = 2_000_000
 MAX_FILES_PER_REPO = 15_000
 ACTION = re.compile(r"^\s*-\s*uses:\s*['\"]?([^'\"\s#]+)", re.M)
@@ -50,8 +52,6 @@ def _files(root: Path):
             count += 1
             if count > MAX_FILES_PER_REPO:
                 raise ValueError("repository file cap exceeded")
-            if p.stat().st_size > MAX_FILE_BYTES:
-                continue
             yield p
 
 
@@ -67,9 +67,15 @@ def scan(roots: dict[str, Path]) -> dict[str, Any]:
         root = Path(roots[repo])
         if not root.is_dir() or root.is_symlink():
             raise ValueError("repository path not a real directory")
-        seen = {"files_examined": 0, "workflows_examined": 0, "code_files_examined": 0}
+        seen = {"files_examined": 0, "workflows_examined": 0, "code_files_examined": 0,
+                "oversize_files_unscanned": 0}
         for p in _files(root):
             rel = p.relative_to(root).as_posix()
+            if p.stat().st_size > MAX_FILE_BYTES:
+                seen["oversize_files_unscanned"] += 1
+                findings.append({"repository": repo, "path": rel,
+                                 "rule": "OVERSIZE_FILE_NOT_SCANNED", "level": "REVIEW"})
+                continue
             raw = p.read_bytes()
             seen["files_examined"] += 1
             if p.suffix.lower() in CODE_SUFFIX:
@@ -77,7 +83,12 @@ def scan(roots: dict[str, Path]) -> dict[str, Any]:
                 digest = git_blob_oid(raw)
                 digest_map.setdefault(digest, []).append({"repository": repo, "path": rel, "git_blob_oid": digest})
             relevant = (rel.startswith(".github/workflows/") and p.suffix.lower() in (".yml", ".yaml"))
-            relevant = relevant or p.suffix.lower() in CODE_SUFFIX or rel in ("requirements.txt", "requirements-ml.txt", "pyproject.toml", "package.json")
+            relevant = (relevant or p.suffix.lower() in CODE_SUFFIX | CONFIG_SUFFIX
+                        or p.name in SENSITIVE_NAMES or p.name.startswith(".env.")
+                        or rel in ("requirements.txt", "requirements-ml.txt", "pyproject.toml", "package.json"))
+            if p.name in SENSITIVE_NAMES or p.name.startswith(".env."):
+                findings.append({"repository": repo, "path": rel,
+                                 "rule": "SENSITIVE_CONFIG_PATH_REVIEW", "level": "REVIEW"})
             if not relevant:
                 continue
             text = raw.decode("utf-8", errors="replace")
@@ -139,6 +150,10 @@ def scan(roots: dict[str, Path]) -> dict[str, Any]:
         "review_findings": findings,
         "exact_cross_repo_code_duplicates": duplicated,
         "automatic_removals": 0,
+        "scope_completeness": "WORKTREE_PARTIAL" if set(roots) != set(REPOS)
+                              or any(row["oversize_files_unscanned"] for row in counters.values())
+                              else "WORKTREE_ONLY_NOT_GIT_HISTORY",
+        "full_history_scanned": False,
         "security_clearance": "NOT_ESTABLISHED",
         "secrets_exposure_clearance": "NOT_ESTABLISHED",
     }
