@@ -60,9 +60,10 @@ def validate(ctx, raw, environment, history=None, *, now=None):
     reviewers = rules[0].get('reviewers', [])
     need(reviewers and all(r.get('type') == 'User' for r in reviewers))
     need(record['approved_by'] in [r['reviewer']['login'] for r in reviewers])
-    need(type(rules[0].get('prevent_self_review')) is bool)
-    if rules[0]['prevent_self_review']:
-        need(bool(ctx.get('actor')) and record['approved_by'].lower() != ctx['actor'].lower())
+    need(rules[0].get('prevent_self_review') is True)
+    actor = ctx.get('actor')
+    need(type(actor) is str and re.fullmatch(r'[A-Za-z0-9-]{1,39}', actor))
+    need(record['approved_by'].lower() != actor.lower())
     if history is not None:
         need(isinstance(history, list))
         relevant = [r for r in history if any(e.get('id') == environment['id'] and e.get('name') == ENVIRONMENT for e in r.get('environments', []))]
