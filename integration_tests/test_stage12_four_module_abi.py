@@ -128,8 +128,8 @@ class FourModuleIndependentABITests(unittest.TestCase):
         self.assertEqual(response["capabilities"]["candles"], "UNAVAILABLE")
         self.assertFalse(response["capabilities"]["live_l2"])
         self.assertFalse(response["meta_absorption"]["consumer_cutover"])
-        self.assertFalse(response["execution_authority"] if "execution_authority"
-                         in response else response.get("trading_authorized", False))
+        self.assertFalse(response["meta_absorption"]["execution_authority"])
+        self.assertFalse(response["meta_absorption"]["trading_authorized"])
 
     def test_unified_fleet_has_no_market_execution(self):
         source = (EXTERNAL / "unified-system" / "unified_system" /
