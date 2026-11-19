@@ -51,6 +51,22 @@ class _Handler(WSGIRequestHandler):
         labels={400:'Bad Request',431:'Request Header Fields Too Large'}
         body=b'REQUEST_REJECTED\n'
         self.wfile.write(('HTTP/1.0 '+str(code)+' '+labels[code]+'\r\nConnection: close\r\nContent-Type: text/plain\r\nContent-Length: '+str(len(body))+"\r\nCache-Control: no-store\r\nX-Content-Type-Options: nosniff\r\nContent-Security-Policy: default-src 'none'; frame-ancestors 'none'\r\nReferrer-Policy: no-referrer\r\n\r\n").encode('ascii')+body)
+        # Windows may reset a socket closed with unread oversized headers,
+        # discarding an otherwise complete rejection response at the client.
+        # Send FIN first, then discard at most one header budget within the
+        # existing absolute request deadline. No request bytes are retained.
+        self.wfile.flush()
+        self.connection.shutdown(socket.SHUT_WR)
+        remaining=MAX_HEADER_BYTES
+        while remaining>0:
+            duration=self._request_deadline-time.monotonic()
+            if duration<=0:break
+            self.connection.settimeout(min(.05,duration))
+            try:chunk=self.connection.recv(min(512,remaining))
+            except socket.timeout:break
+            if not chunk:break
+            remaining-=len(chunk)
+
     def send_error(self,code,message=None,explain=None):self._reject(400)
     def _line(self):
         # Poll the raw socket: on Windows shutdown need not immediately wake a

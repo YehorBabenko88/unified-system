@@ -164,8 +164,8 @@ class TLSIsolationTests(unittest.TestCase):
         from tests.lan_failure_diagnostics import FailureDiagnostics
         original=lan._read_frame;ready=threading.Event();control={};data={}
         renewed=queue.Queue();forced=set();seen_control=set();lock=threading.Lock()
-        def read(sock,budget,peer,deadline,on_idle=None):
-            if on_idle is None:return original(sock,budget,peer,deadline)
+        def read(sock,budget,peer,deadline,on_idle=None,**kwargs):
+            if on_idle is None:return original(sock,budget,peer,deadline,**kwargs)
             if not ready.wait(3):raise RuntimeError('fixture connection readiness')
             key=id(sock)
             # Reentry proves Connection._reader processed the prior heartbeat
@@ -178,8 +178,8 @@ class TLSIsolationTests(unittest.TestCase):
                     if not data[key].wait(3):raise RuntimeError('fixture control heartbeat readiness')
                     def idle():
                         healthy=on_idle();renewed.put(healthy);return healthy
-                    return original(sock,budget,peer,time.monotonic()-1,on_idle=idle)
-            result=original(sock,budget,peer,deadline,on_idle=on_idle)
+                    return original(sock,budget,peer,time.monotonic()-1,on_idle=idle,**kwargs)
+            result=original(sock,budget,peer,deadline,on_idle=on_idle,**kwargs)
             if key in control and result[0]['kind'] in ('PING','PONG'):seen_control.add(key)
             return result
         from contextlib import ExitStack
@@ -210,12 +210,12 @@ class TLSIsolationTests(unittest.TestCase):
     def test_expired_idle_peer_without_activity_still_closes_real_tls(self):
         import unified_system.lan_transport as lan
         original=lan._read_frame;ready=threading.Event();data=set()
-        def read(sock,budget,peer,deadline,on_idle=None):
-            if on_idle is None:return original(sock,budget,peer,deadline)
+        def read(sock,budget,peer,deadline,on_idle=None,**kwargs):
+            if on_idle is None:return original(sock,budget,peer,deadline,**kwargs)
             if not ready.wait(3):raise RuntimeError('fixture connection readiness')
             if id(sock) in data:
-                return original(sock,budget,peer,time.monotonic()-1,on_idle=lambda:False)
-            return original(sock,budget,peer,deadline,on_idle=on_idle)
+                return original(sock,budget,peer,time.monotonic()-1,on_idle=lambda:False,**kwargs)
+            return original(sock,budget,peer,deadline,on_idle=on_idle,**kwargs)
         with patch.object(lan,'_read_frame',side_effect=read):
             client,server,c,s=self.pair();data.update((id(c.channels['data']),id(s.channels['data'])))
             ready.set()

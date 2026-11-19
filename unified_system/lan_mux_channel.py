@@ -176,8 +176,11 @@ class LanMuxChannel:
         self.rx=Reassembler(binding,connection.nonce,connection.owner.memory,expected_receive_kinds)
         with connection.cv:
             connection._current();_need(not hasattr(connection,'_mux_channel'),'MUX_WRAPPER_ALREADY_BOUND')
+            # Publish only after start, while holding the same lock used by
+            # connection.close. Shutdown must never observe an unstarted worker.
+            self.thread=threading.Thread(target=self._reader,name='lan-mux-reassembly',daemon=True)
+            self.thread.start()
             connection._mux_channel=self
-        self.thread=threading.Thread(target=self._reader,name='lan-mux-reassembly',daemon=True);self.thread.start()
 
     def _abort(self,reason):
         with self.cv:
