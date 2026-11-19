@@ -12,6 +12,7 @@ on:
       - 'tests/test_ci_service_operational_admission.py'
       - 'tests/test_ci_stopped_service_acceptance.py'
       - 'tests/test_lan_mux_channel.py'
+      - 'tests/test_installation_native_diagnostic.py'
       - 'docs/operations/stage13-coordination.md'
   workflow_dispatch:
     inputs:
@@ -47,6 +48,8 @@ jobs:
           tests.test_stage13_worker_admission tests.test_fleet_control
           tests.test_ci_service_operational_admission tests.test_ci_stopped_service_acceptance
       - run: python -B -m unittest discover -s tests -p test_lan_mux_channel.py
+      - if: runner.os == 'Windows'
+        run: python -B -m unittest tests.test_installation_native_diagnostic
 
   observe:
     needs: tests
