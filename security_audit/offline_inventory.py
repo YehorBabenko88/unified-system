@@ -364,6 +364,137 @@ def meta_import_inventory(root: Path) -> dict[str, Any]:
         "automatic_deletions": 0,
     }
 
+
+def scan_git_history(repo_path: Path, *, max_blob_bytes: int = MAX_FILE_BYTES) -> dict[str, Any]:
+    """Read Git objects reachable from *local* refs, never execute repository code.
+
+    The output is deliberately redacted. This does not verify remote ref
+    completeness, deleted unreachable objects, Git LFS payloads or credential
+    validity. It is independent of the existing worktree-only scan().
+    """
+    import subprocess
+    import threading
+
+    root = Path(repo_path)
+    if not root.is_dir() or root.is_symlink():
+        raise ValueError("invalid Git repository directory")
+    if not (0 < max_blob_bytes <= MAX_FILE_BYTES):
+        raise ValueError("invalid scan byte cap")
+
+    def git(*args: str) -> str:
+        result = subprocess.run(
+            ["git", "-C", str(root), *args], stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL, check=False, timeout=120,
+            env={**os.environ, "GIT_TERMINAL_PROMPT": "0",
+                 "GIT_OPTIONAL_LOCKS": "0"},
+        )
+        if result.returncode:
+            raise ValueError("Git operation failed; history scan is incomplete")
+        return result.stdout.decode("utf-8", errors="replace")
+
+    shallow = git("rev-parse", "--is-shallow-repository").strip()
+    refs = git("for-each-ref", "--format=%(refname)").splitlines()
+    objects = git("rev-list", "--objects", "--all").splitlines()
+    object_ids = list(dict.fromkeys(
+        line.split(" ", 1)[0] for line in objects if line.strip()
+    ))
+    if not refs or not object_ids or len(object_ids) > 500_000:
+        raise ValueError("missing refs or object inventory exceeds safety cap")
+    if any(not re.fullmatch(r"[0-9a-f]{40}|[0-9a-f]{64}", x) for x in object_ids):
+        raise ValueError("invalid Git object identifier")
+
+    command = ["git", "-C", str(root), "cat-file", "--batch"]
+    proc = subprocess.Popen(
+        command, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+        stderr=subprocess.DEVNULL,
+        env={**os.environ, "GIT_TERMINAL_PROMPT": "0",
+             "GIT_OPTIONAL_LOCKS": "0"},
+    )
+    writer_errors: list[str] = []
+
+    def writer() -> None:
+        try:
+            assert proc.stdin is not None
+            for oid in object_ids:
+                proc.stdin.write((oid + "\n").encode("ascii"))
+            proc.stdin.close()
+        except (OSError, ValueError):
+            writer_errors.append("git batch input failure")
+
+    thread = threading.Thread(target=writer, daemon=True)
+    thread.start()
+
+    def read_exact(count: int, retain: bool) -> bytes:
+        assert proc.stdout is not None
+        chunks: list[bytes] = []
+        while count:
+            part = proc.stdout.read(min(count, 65536))
+            if not part:
+                raise ValueError("truncated Git object stream")
+            count -= len(part)
+            if retain:
+                chunks.append(part)
+        return b"".join(chunks) if retain else b""
+
+    rule_counts = {name: 0 for name in SECRETS}
+    blobs = 0
+    skipped = 0
+    lfs_pointers = 0
+    try:
+        assert proc.stdout is not None
+        for expected in object_ids:
+            header = proc.stdout.readline().decode("ascii", errors="replace").strip()
+            parts = header.split()
+            if len(parts) != 3 or parts[0] != expected or not parts[2].isdigit():
+                raise ValueError("invalid Git object batch response")
+            object_type, size = parts[1], int(parts[2])
+            if size < 0:
+                raise ValueError("invalid Git object length")
+            retain = object_type == "blob" and size <= max_blob_bytes
+            payload = read_exact(size, retain)
+            if proc.stdout.read(1) != b"\n":
+                raise ValueError("invalid Git object delimiter")
+            if object_type != "blob":
+                continue
+            blobs += 1
+            if not retain:
+                skipped += 1
+                continue
+            if payload.startswith(b"version https://git-lfs.github.com/spec/v1\n"):
+                lfs_pointers += 1
+            decoded = payload.decode("utf-8", errors="replace")
+            for name, pattern in SECRETS.items():
+                if pattern.search(decoded):
+                    rule_counts[name] += 1
+        thread.join(timeout=30)
+        if thread.is_alive() or writer_errors or proc.wait(timeout=30):
+            raise ValueError("Git history scan did not complete")
+    except Exception:
+        proc.kill()
+        proc.wait()
+        raise
+
+    return {
+        "schema": "unified.security.local-git-history.v1",
+        "mode": "READ_ONLY_GIT_OBJECTS_NO_REPOSITORY_EXECUTION",
+        "local_refs": len(refs),
+        "local_pr_head_refs": sum(x.startswith("refs/pull/") or
+                                  x.startswith("refs/remotes/pr/") for x in refs),
+        "local_tags": sum(x.startswith("refs/tags/") for x in refs),
+        "reachable_git_objects": len(object_ids),
+        "blob_objects_examined": blobs - skipped,
+        "oversize_blob_objects_unscanned": skipped,
+        "git_lfs_pointers": lfs_pointers,
+        "shallow_clone": shallow != "false",
+        "local_ref_scan_complete": shallow == "false" and skipped == 0,
+        "remote_ref_completeness_verified": False,
+        "lfs_payloads_scanned": False,
+        "redacted_secret_shape_counts": rule_counts,
+        "full_security_clearance": "NOT_ESTABLISHED",
+        "repository_retirement_ready": False,
+        "automatic_removals": 0,
+    }
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Read-only six-repo security and duplicate code audit")
     for name in REPOS:
