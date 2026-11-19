@@ -1,11 +1,12 @@
 """Pinned cross-repository installed-candidate acceptance, independent of unit CI.
 
 Run only with the Stage 8 checkout workflow. These tests never contact Bybit,
-PostgreSQL, a production host, or start a service. Failures are release blockers,
+PostgreSQL or a production host. Terminan's receipt tests use disposable loopback. Failures are release blockers,
 not permission to weaken an existing safety limit.
 """
 from __future__ import annotations
 
+from contextlib import closing, nullcontext
 from datetime import datetime, timedelta, timezone
 from decimal import Decimal
 from importlib import metadata
@@ -14,10 +15,12 @@ import hashlib
 import importlib
 import json
 import os
+import sqlite3
 import subprocess
 import sys
+import tempfile
 import unittest
-from unittest.mock import Mock, patch
+from unittest.mock import Mock, call, patch
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -152,29 +155,95 @@ class PinnedInstalledCandidate(unittest.TestCase):
             Path(distribution.locate_file("terminan/paper.py")).resolve(),
         )
 
-    def test_meta_forwards_paper_fill_to_storage(self):
+    @staticmethod
+    def meta_packet(seconds, price):
+        start = datetime(2026, 10, 19, 12, tzinfo=timezone.utc)
+        return {
+            "Type": "trade_update",
+            "Data": {"ticker": "BTCUSDT", "trades": [{
+                "time": (start + timedelta(seconds=seconds)).isoformat(),
+                "price": price, "size": "1", "side": "Buy",
+            }]},
+        }
+
+    def test_meta_refuses_storage_and_live_paper_before_mutation(self):
+        from meta_analyse.runtime import DurableSinksRequired, Runtime
+
+        store = Mock(spec=["profile", "paper_fill", "connect"])
+        cases = ((store, False, False), (store, False, True), (None, True, True))
+        for legacy_store, running, paper_enabled in cases:
+            with self.subTest(legacy_store=legacy_store is not None, paper_enabled=paper_enabled):
+                runtime = Runtime(metascalp=None, exchange=None, store=legacy_store)
+                runtime.running = running
+                runtime.paper.enabled = paper_enabled
+                runtime.symbols = ["BTCUSDT"]
+                with self.assertRaisesRegex(DurableSinksRequired, "^GRID_TERMINAN_DURABLE_SINKS_REQUIRED$"):
+                    runtime.receive(self.meta_packet(0, "100"))
+                self.assertEqual(runtime.minutes, {})
+                self.assertEqual(runtime.flow, {})
+                self.assertEqual(runtime.paper.reference, {})
+                self.assertEqual(runtime.paper.positions, {})
+                self.assertEqual(runtime.paper.fills, [])
+        self.assertEqual(store.mock_calls, [])
+
+    def test_meta_offline_fill_is_unpersisted(self):
         from meta_analyse.runtime import Runtime
 
-        store = Mock(spec=["profile", "paper_fill"])
-        runtime = Runtime(metascalp=None, exchange=None, store=store)
+        runtime = Runtime(metascalp=None, exchange=None, store=None)
         self.assertFalse(runtime.paper.enabled)
         runtime.paper.enabled = True
         runtime.symbols = ["BTCUSDT"]
-        start = datetime(2026, 10, 19, 12, tzinfo=timezone.utc)
-
-        for seconds, price in ((0, "100"), (60, "102"), (61, "100")):
-            events = runtime.receive({
-                "Type": "trade_update",
-                "Data": {"ticker": "BTCUSDT", "trades": [{
-                    "time": (start + timedelta(seconds=seconds)).isoformat(),
-                    "price": price, "size": "1", "side": "Buy",
-                }]},
-            })
-
+        self.assertEqual(runtime.receive(self.meta_packet(0, "100")), [])
+        runtime.receive(self.meta_packet(60, "102"))
+        events = runtime.receive(self.meta_packet(61, "100"))
         self.assertEqual(len(runtime.paper.fills), 1)
-        fill = runtime.paper.fills[0]
-        self.assertEqual(events, [("paper_fill", "BTCUSDT", fill)])
-        store.paper_fill.assert_called_once_with(fill)
+        self.assertEqual(events, [("paper_fill", "BTCUSDT", runtime.paper.fills[0])])
+        reopened = Runtime(metascalp=None, exchange=None, store=None)
+        self.assertEqual(reopened.paper.fills, [], "Offline fill must be treated as UNPERSISTED")
+
+    def test_meta_historical_digest_matches_terminan_archive_after_restore(self):
+        from meta_analyse.retirement_receipt import persisted_state_receipt
+        from terminan.paper_ledger import PaperReplayLedger
+
+        row = [7, "BTCUSDT", "short", "102.0000", "100.00", "target",
+               "1.23", "0.10", "1.13", "2026-11-19T00:00:00.123456+00:00"]
+        typed_row = [*row[:3], Decimal(row[3]), Decimal(row[4]), row[5],
+                     *(Decimal(value) for value in row[6:9]), datetime.fromisoformat(row[9])]
+        cursor = Mock()
+        cursor.fetchmany.side_effect = [[typed_row], []]
+        connection = Mock()
+        connection.transaction.return_value = nullcontext()
+        connection.execute.side_effect = [None, cursor]
+        store = Mock(expected_cluster="synthetic")
+        store.connect.return_value = nullcontext(connection)
+        receipt = persisted_state_receipt(store, "paper_fills")
+        self.assertEqual(connection.mock_calls, [
+            call.transaction(),
+            call.execute("SET TRANSACTION READ ONLY"),
+            call.execute("SELECT id,symbol,side,entry,exit,reason,gross,fees,net,exit_ts "
+                         "FROM meta_analyse.paper_fills ORDER BY id"),
+        ])
+        self.assertEqual(receipt["row_count"], 1)
+        with tempfile.TemporaryDirectory() as directory:
+            original = Path(directory) / "original.db"
+            backup = Path(directory) / "backup.db"
+            ledger = PaperReplayLedger(original)
+            self.assertEqual(ledger.import_meta_fills("meta-archive", [row], receipt), receipt)
+            with closing(sqlite3.connect(original)) as source, closing(sqlite3.connect(backup)) as target:
+                source.backup(target)
+            restored = PaperReplayLedger(backup)
+            self.assertEqual(list(restored.restore_meta_fills("meta-archive")), [row])
+            self.assertEqual(restored.import_meta_fills("meta-archive", [row], receipt), receipt)
+            with self.assertRaises(ValueError):
+                restored.import_meta_fills("meta-archive", [[8, *row[1:]]], receipt)
+            self.assertEqual(list(restored.restore_meta_fills("meta-archive")), [row])
+
+    def test_terminan_installed_offline_replay_receipt_recovery(self):
+        subprocess.run(
+            [sys.executable, "-I", "-B", "-m", "unittest", "discover",
+             "-s", "tests", "-p", "test_paper_ledger.py", "-v"],
+            cwd=EXTERNAL / "Terminan", check=True, timeout=60,
+        )
 
     def test_grid_wheel_excludes_strategy_and_scientific_runtime(self):
         distribution = metadata.distribution("unified-grid-market-data")
