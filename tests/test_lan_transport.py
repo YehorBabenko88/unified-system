@@ -367,11 +367,18 @@ class TLSIsolationTests(unittest.TestCase):
         doc['nodes'][0]['endpoints'][0]['port']=port
         for node in NODES[1:]:
             client=self.transport(node,PeerRegistry.from_document(doc));outcome=queue.Queue()
+            # Both sides share the transport's normal five-second connect budget.
+            deadline=time.monotonic()+5
             def accept():
-                try:outcome.put(server.accept(deadline=time.monotonic()+3))
+                try:outcome.put(server.accept(deadline=deadline))
                 except Exception as exc:outcome.put(exc)
             thread=threading.Thread(target=accept);thread.start()
-            c=client.connect('LS5',deadline=time.monotonic()+3);thread.join(4)
+            try:
+                c=client.connect('LS5',deadline=deadline)
+            finally:
+                # Teardown must not race the accept thread's SQLite accounting.
+                thread.join(max(0,deadline-time.monotonic())+3)
+                self.assertFalse(thread.is_alive(),'TLS accept did not shut down')
             s=outcome.get(timeout=1)
             if isinstance(s,Exception):raise s
             c.send(node.encode(),deadline=time.monotonic()+3)

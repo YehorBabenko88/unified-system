@@ -66,6 +66,33 @@ class FleetTests(unittest.TestCase):
                 self.assertEqual(before,self.f.snapshot(10));break
         else: self.fail('SQLite page limit did not exhaust')
 
+
+    def test_two_node_restore_waits_for_outstanding_lease(self):
+        self.ready(2)
+        voters = ['a', 'b', 'c']
+        capacity = {'cpu': 8, 'memory': 16, 'disk': 100}
+        self.f.submit('x', {'cpu': 1, 'memory': 1, 'disk': 1})
+        old = self.f.place('x', 10, 1)
+        self.assertEqual(old['node'], '0')
+
+        backup = Path(self.tmp.name) / 'backup.db'
+        self.f.backup(backup)
+        recovered = FleetControl.restore(backup, Path(self.tmp.name) / 'recovered.db', voters)
+        recovered.heartbeat('1', 1, 2, 11, capacity)
+        recovered.elect(2, 'c', ['b', 'c'], 11, 100)
+        self.assertTrue(self.f.validate_lease('x', old['token'], 11))
+        self.assertFalse(recovered.validate_lease('x', old['token'], 11))
+        with self.assertRaisesRegex(FleetError, 'previous lease must expire'):
+            recovered.place('x', 11, 2)
+
+        self.assertFalse(self.f.validate_lease('x', old['token'], old['expires']))
+        recovered.heartbeat('1', 1, 3, old['expires'], capacity)
+        replacement = recovered.place('x', old['expires'], 2)
+        self.assertEqual(replacement['node'], '1')
+        self.assertNotEqual(replacement['token'], old['token'])
+        self.assertEqual(recovered.place('x', old['expires'], 2), replacement)
+        self.assertFalse(replacement['execution_authorized'])
+
     def test_clock_rollback_and_leader_loss(self):
         self.ready(); self.f.submit('x',{'cpu':1,'memory':1,'disk':1})
         with self.assertRaises(FleetError): self.f.place('x',9,1)
@@ -125,7 +152,25 @@ class FleetTests(unittest.TestCase):
         self.assertEqual(history[-1]['state'],'RETIRED');self.assertEqual(history[-1]['epoch'],1)
     def test_capacity_and_huge_numbers_fail_closed(self):
         with self.assertRaises(FleetError):self.f.submit('huge',{'cpu':10**1000,'memory':1,'disk':1})
-        for i in range(256):self.f.approve_node(str(i),1,'z','approved')
-        with self.assertRaises(FleetError):self.f.approve_node('overflow',1,'z','approved')
-        for i in range(1024):self.f.submit(str(i),{'cpu':1,'memory':1,'disk':1})
-        with self.assertRaises(FleetError):self.f.submit('overflow',{'cpu':1,'memory':1,'disk':1})
+        # Seed one valid example through each public path, then expand the
+        # fixture in one transaction. This case tests limits, not disk throughput.
+        self.f.approve_node('0', 1, 'z', 'approved')
+        requirements = {'cpu': 1, 'memory': 1, 'disk': 1}
+        self.f.submit('0', requirements)
+
+        def fill_ledger(state):
+            node = state['nodes']['0']
+            job = state['jobs']['0']
+            state['nodes'] = {str(i): dict(node, id=str(i)) for i in range(256)}
+            state['jobs'] = {str(i): job for i in range(1024)}
+
+        self.f._transaction(fill_ledger)
+        self.f.approve_node('0', 2, 'z', 'approved')
+        self.f.submit('0', requirements)
+        with self.assertRaisesRegex(FleetError, 'node capacity'):
+            self.f.approve_node('overflow', 1, 'z', 'approved')
+        with self.assertRaisesRegex(FleetError, 'job capacity'):
+            self.f.submit('overflow', requirements)
+        snapshot = self.f.snapshot(0)
+        self.assertEqual(len(snapshot['nodes']), 256)
+        self.assertEqual(len(snapshot['jobs']), 1024)
