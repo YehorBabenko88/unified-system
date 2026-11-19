@@ -26,33 +26,41 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: YehorBabenko88/math
-          ref: c12b2b4d177af5ed07ee3ea23854acf646cf06b2
+          ref: 150910fff08c896f243fdf7e64ec18611420a4d2
           path: external/math
           persist-credentials: false
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: YehorBabenko88/meta_analyse
-          ref: c2e9318aeafacae4f3a44f926eec9a14b57eac36
+          ref: cd7a74d314f97d130d88bb99e81263f50b0b8835
           path: external/meta_analyse
           persist-credentials: false
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: YehorBabenko88/Terminan
-          ref: ffe7abfc172a97fffdbde1b2d388e73c016eddcf
+          ref: b07939d0339f725396b15936bfd4de9b9db3d1a7
           path: external/Terminan
           persist-credentials: false
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: YehorBabenko88/bybit-cluster-grid
-          ref: 531a19aa803bec840273656bdb8768a8466a44ad
+          ref: 3176010ddf5ed8f5028448ed99506185683891b5
           path: external/bybit-cluster-grid
           persist-credentials: false
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: YehorBabenko88/strattester
-          ref: d49eb69c52d469c153f5dbc147875a56134a656e
+          ref: a5be637762ab3cddb649feea50653d138938af2c
           path: external/strattester
           persist-credentials: false
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          repository: YehorBabenko88/unified-system
+          ref: 2a2ae2bca079b53b364fdd4c5dcb091849f5eb6d
+          path: external/unified-system
+          persist-credentials: false
+      - name: Fetch the historical Math parity object
+        run: git -C external/math fetch --no-tags --depth 1 https://github.com/YehorBabenko88/math.git 3a9c542841e160f8b1924f155aaa2d1a676dfd04
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with:
           python-version: "3.12"
@@ -61,6 +69,6 @@ jobs:
           python -m pip install --disable-pip-version-check setuptools==80.9.0 wheel==0.45.1 websockets==15.0.1
           python -m pip install --disable-pip-version-check --no-build-isolation --no-deps ./external/math ./external/Terminan
         shell: bash
-      - name: Assert installed SDK and real Meta runtime 100k contract
+      - name: Run independent acceptance and simulated recovery checks
         run: python -B -m unittest discover -s integration_tests -p test_stage8_crossrepo.py -v
         shell: bash

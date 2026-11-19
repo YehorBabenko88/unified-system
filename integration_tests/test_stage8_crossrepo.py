@@ -9,6 +9,7 @@ from __future__ import annotations
 from decimal import Decimal
 from importlib import metadata
 from pathlib import Path
+import hashlib
 import importlib
 import os
 import subprocess
@@ -20,11 +21,12 @@ from unittest.mock import patch
 ROOT = Path(__file__).resolve().parents[1]
 EXTERNAL = ROOT / "external"
 PINNED = {
-    "math": "c12b2b4d177af5ed07ee3ea23854acf646cf06b2",
-    "meta_analyse": "c2e9318aeafacae4f3a44f926eec9a14b57eac36",
-    "Terminan": "ffe7abfc172a97fffdbde1b2d388e73c016eddcf",
-    "bybit-cluster-grid": "531a19aa803bec840273656bdb8768a8466a44ad",
-    "strattester": "d49eb69c52d469c153f5dbc147875a56134a656e",
+    "unified-system": "2a2ae2bca079b53b364fdd4c5dcb091849f5eb6d",
+    "math": "150910fff08c896f243fdf7e64ec18611420a4d2",
+    "meta_analyse": "cd7a74d314f97d130d88bb99e81263f50b0b8835",
+    "Terminan": "b07939d0339f725396b15936bfd4de9b9db3d1a7",
+    "bybit-cluster-grid": "3176010ddf5ed8f5028448ed99506185683891b5",
+    "strattester": "a5be637762ab3cddb649feea50653d138938af2c",
 }
 
 
@@ -137,6 +139,13 @@ class PinnedInstalledCandidate(unittest.TestCase):
                                  Decimal("1.25") * (((n + 2) // 3) -
                                                     ((n + 1) // 3)))
 
+    def test_unified_two_node_recovery_and_data_rollback(self):
+        subprocess.run(
+            [sys.executable, "-B", "-m", "unittest", "discover",
+             "-s", "tests", "-p", "test_fleet_control.py", "-v"],
+            cwd=EXTERNAL / "unified-system", check=True, timeout=60,
+        )
+
     def test_meta_runtime_uses_installed_terminan_paper_engine(self):
         from meta_analyse.runtime import Runtime
         from terminan.paper import PaperEngine
@@ -174,12 +183,7 @@ class PinnedInstalledCandidate(unittest.TestCase):
 
 
 class MathResearchVsTradingBoundaryTests(unittest.TestCase):
-    """Semantic contract: Math may research outcomes, never decide trade sizes.
-
-    The immutable historical kernel is an acknowledged migration blocker.
-    Until Terminan owns the policy and consumers switch, this test must stay
-    RED instead of deleting the file or suppressing the check.
-    """
+    """Check the installed research API and retirement of the sizing source."""
 
     def test_math_installed_sdk_is_not_trading_engine(self):
         distribution = metadata.distribution("unified-math-kernels")
@@ -209,27 +213,22 @@ class MathResearchVsTradingBoundaryTests(unittest.TestCase):
         })["execution_authority"])
 
     def test_no_active_trade_size_policy_in_math_source(self):
-        import ast
-        root = EXTERNAL / "math" / "python"
-        legacy = root / "history_sizing.py"
-        self.assertTrue(legacy.is_file(), "historical source must be preserved")
-        source = ast.parse(legacy.read_text(encoding="utf-8"))
-        functions = {n.name: n for n in source.body if isinstance(n, ast.FunctionDef)}
-        # No change to historical evidence is authorized by this test. Instead,
-        # keep the release gate red until apply_sizing policy is moved.
-        active = functions.get("apply_sizing")
-        if active:
-            policy_literals = {
-                n.value for n in ast.walk(active)
-                if isinstance(n, ast.Constant) and isinstance(n.value, str)
-            }
-            forbidden = {"MARTINGALE", "ANTI_MARTINGALE", "size_multiplier"}
-            self.assertFalse(
-                forbidden & policy_literals,
-                "Math history_sizing.apply_sizing remains an execution "
-                "policy: move consumers/logic to Terminan, preserve old "
-                "pinned historical profile and test rollback",
-            )
+        math_root = EXTERNAL / "math"
+        legacy = "python/history_sizing.py"
+        git = ["git", "--no-replace-objects", "-C", str(math_root)]
+        self.assertFalse(
+            subprocess.check_output([*git, "ls-tree", "HEAD", "--", legacy], timeout=5),
+            "Math still tracks the retired position-sizing module",
+        )
+        self.assertFalse((math_root / legacy).exists(), "Retired position-sizing module is importable")
+        original = subprocess.check_output(
+            [*git, "show", "3a9c542841e160f8b1924f155aaa2d1a676dfd04:" + legacy], timeout=5,
+        )
+        self.assertEqual(
+            hashlib.sha256(original).hexdigest(),
+            "ad050a83871842d9fa77559738dee7b71fd5ba75325bc3f633956729d460ef73",
+            "Original Math sizing source must remain available for parity",
+        )
 
     def test_runtime_api_has_no_trade_execution_verb(self):
         from market_compute_api import ALGORITHMS
