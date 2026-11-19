@@ -152,7 +152,25 @@ class FleetTests(unittest.TestCase):
         self.assertEqual(history[-1]['state'],'RETIRED');self.assertEqual(history[-1]['epoch'],1)
     def test_capacity_and_huge_numbers_fail_closed(self):
         with self.assertRaises(FleetError):self.f.submit('huge',{'cpu':10**1000,'memory':1,'disk':1})
-        for i in range(256):self.f.approve_node(str(i),1,'z','approved')
-        with self.assertRaises(FleetError):self.f.approve_node('overflow',1,'z','approved')
-        for i in range(1024):self.f.submit(str(i),{'cpu':1,'memory':1,'disk':1})
-        with self.assertRaises(FleetError):self.f.submit('overflow',{'cpu':1,'memory':1,'disk':1})
+        # Seed one valid example through each public path, then expand the
+        # fixture in one transaction. This case tests limits, not disk throughput.
+        self.f.approve_node('0', 1, 'z', 'approved')
+        requirements = {'cpu': 1, 'memory': 1, 'disk': 1}
+        self.f.submit('0', requirements)
+
+        def fill_ledger(state):
+            node = state['nodes']['0']
+            job = state['jobs']['0']
+            state['nodes'] = {str(i): dict(node, id=str(i)) for i in range(256)}
+            state['jobs'] = {str(i): job for i in range(1024)}
+
+        self.f._transaction(fill_ledger)
+        self.f.approve_node('0', 2, 'z', 'approved')
+        self.f.submit('0', requirements)
+        with self.assertRaisesRegex(FleetError, 'node capacity'):
+            self.f.approve_node('overflow', 1, 'z', 'approved')
+        with self.assertRaisesRegex(FleetError, 'job capacity'):
+            self.f.submit('overflow', requirements)
+        snapshot = self.f.snapshot(0)
+        self.assertEqual(len(snapshot['nodes']), 256)
+        self.assertEqual(len(snapshot['jobs']), 1024)
