@@ -388,6 +388,50 @@ class GitHistoryAuditTests(unittest.TestCase):
             self.assertEqual(1, report["oversize_blob_objects_unscanned"])
             self.assertFalse(report["local_ref_scan_complete"])
 
+    def test_streamed_big_blob_token_across_chunk_boundary_without_leak(self):
+        import shutil
+        if shutil.which("git") is None:
+            self.skipTest("Git is not installed")
+        from security_audit.offline_inventory import scan_git_history
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            self._repo(root)
+            marker = b"ghp_" + b"Z" * 36  # synthetic shape only
+            (root / "large.bin").write_bytes(
+                b"q" * 65532 + marker + b"r" * 4096
+            )
+            self._commit(root, "cross-chunk synthetic fixture")
+            report = scan_git_history(
+                root, max_blob_bytes=512, stream_large_blobs=True,
+                max_stream_blob_bytes=150_000,
+            )
+            self.assertEqual(1, report["oversize_blob_objects_streamed"])
+            self.assertEqual(0, report["oversize_blob_objects_unscanned"])
+            self.assertGreaterEqual(
+                report["redacted_secret_shape_counts"]["GITHUB_CLASSIC_TOKEN_SHAPE"], 1
+            )
+            self.assertNotIn(marker.decode(), json.dumps(report))
+            self.assertTrue(report["requires_private_triage"])
+            self.assertEqual("NOT_ESTABLISHED", report["full_security_clearance"])
+
+    def test_streaming_size_cap_keeps_unscanned_blocker(self):
+        import shutil
+        if shutil.which("git") is None:
+            self.skipTest("Git is not installed")
+        from security_audit.offline_inventory import scan_git_history
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            self._repo(root)
+            (root / "large.bin").write_bytes(b"x" * 3000)
+            self._commit(root, "oversized object beyond streaming cap")
+            report = scan_git_history(
+                root, max_blob_bytes=512, stream_large_blobs=True,
+                max_stream_blob_bytes=2048,
+            )
+            self.assertEqual(0, report["oversize_blob_objects_streamed"])
+            self.assertEqual(1, report["oversize_blob_objects_unscanned"])
+            self.assertFalse(report["local_ref_scan_complete"])
+
     def test_non_git_directory_refused(self):
         import shutil
         if shutil.which("git") is None:
