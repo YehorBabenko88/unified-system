@@ -491,6 +491,8 @@ def scan_git_history(repo_path: Path, *, max_blob_bytes: int = MAX_FILE_BYTES) -
         "remote_ref_completeness_verified": False,
         "lfs_payloads_scanned": False,
         "redacted_secret_shape_counts": rule_counts,
+        "candidate_object_count": sum(rule_counts.values()),
+        "requires_private_triage": any(rule_counts.values()),
         "full_security_clearance": "NOT_ESTABLISHED",
         "repository_retirement_ready": False,
         "automatic_removals": 0,
