@@ -55,7 +55,9 @@ class PreviewTests(unittest.TestCase):
             self.assertIn(b' 200 ',response.split(b'\r\n')[0])
             payload=b'GET / HTTP/1.1\r\nHost: '+host.authority.encode()+b'\r\n\r\nSECRET GET /execute HTTP/1.1\r\n\r\n'
             response=self.request(host,payload);self.assertEqual(response.count(b'HTTP/1.0 '),1);self.assertNotIn(b'SECRET',response)
-            self.assertIn(b' 431 ',self.get(host,extra=b'X-Test: '+b'a'*9000+b'\r\n').split(b'\r\n')[0])
+            response=self.get(host,extra=b'X-Test: '+b'a'*9000+b'\r\n')
+            self.assertIn(b' 431 ',response.split(b'\r\n')[0])
+            self.assertEqual(response.split(b'\r\n\r\n',1)[1],b'REQUEST_REJECTED\n')
     def test_slow_request_and_lifetime_cleanup(self):
         host=InstallationPreview(self.progress,duration=0.3,request_timeout=0.1)
         with host:
