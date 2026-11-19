@@ -81,3 +81,23 @@ Pinned candidate `YehorBabenko88/meta_analyse` Draft PR #81 `b49505da42a274f7232
 - **Physical hosts tested**: zero for this security audit. **Archive readiness**: NOT_READY; **merge-to-main**: NO; **release**: NO_GO.
 
 Source of detailed runtime candidate mapping: `meta_analyse/docs/unified-stage3-retirement-map.md` at the pinned PR #81 HEAD. Security scans remain mandatory and uncompleted.
+
+## Stage 6: independent selected-source inspection on latest Meta PR head
+
+A separate GitHub source API spot check inspected **11 individual files** at Meta PR #81 HEAD `05b9b211cea5a9f2089e321f4cc4e451db54ad61` (this is a newer, distinct source snapshot than the pinned `b49505da...` baseline above). Exact reviewed paths and Git blob OIDs:
+
+| Meta path | Git blob SHA | Non-exhaustive observed concern |
+|---|---|---|
+| `src/meta_analyse/desktop.py` | `9b10af6d2f3de30b25a841585012711c4b186486` | `Window`/Qt UI source still present; CLI launch guard does not prove runtime removal |
+| `src/meta_analyse/desktop_service.py` | `465aff13205eea66cfcf6a0110748c7434c08469` | `BybitPublic` reference and `DesktopService` |
+| `src/meta_analyse/headless_service.py` | `d90e2c2e12f3585edac73a5dc51212c1dae6c623` | Separate `SourceVerifier` and listener/server candidate |
+| `src/meta_analyse/exchange.py` | `3bf46d5624be3508636f1b4470e4d0df66de2188` | `BybitPublic` client class |
+| `src/meta_analyse/collector.py` | `a38243a7ab3d45d0cb5f599b9a3910b224252ce5` | `CollectorService.run` and Bybit client |
+| `src/meta_analyse/raw_trades.py` | `a73dbe7c14f8e825565be5828b49d81c1dfb0510` | `RawTradeStream.run` and direct streaming |
+| `src/meta_analyse/pg_cluster_plan.py` | `e2a01227e905edcd7b916faf3bf49025059d94bf` | `plan_only` legacy PG cluster planning; not evidence of active provisioning |
+| `src/meta_analyse/storage.py` | `4dfeda0fa3904949f5bf466fe6f6b384a0e8c8df` | `Store.initialize`, `paper_fill`, `candle_batch` persistence candidate |
+| `src/meta_analyse/market_collector.py` | `d1b4b9b14cc2b126ea9257ff4db60b36b8ecc29b` | `MarketCollector.start` |
+| `pyproject.toml` | `5c1d9e843c4e644e10377ef91fe1c9670f2a4b07` | Standalone Meta console entrypoint still declared |
+| `install.ps1` | `684ad7850ab0aca8ec6592f5c9ce4ab77fd74f50` | Legacy installation script remains in source |
+
+These are **source-presence and keyword/function-name signals only**, not exhaustive call-graph/runtime/network evidence or confirmed vulnerabilities. No secret material was emitted in the review. Local audit host could not resolve `github.com`; full Git mirror and Gitleaks/TruffleHog/LFS secret audits therefore remain **NOT RUN**. The current HEAD may advance independently. Source repo retirement is **NOT_READY**, regardless of an offline test PASS.
