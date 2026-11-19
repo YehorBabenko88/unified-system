@@ -175,5 +175,64 @@ class OfflineAuditTests(unittest.TestCase):
             self.assertEqual("NOT_ESTABLISHED", result["security_clearance"])
 
 
+class ArchitectureOwnershipTests(unittest.TestCase):
+    def test_crossrepo_ownership_is_static_and_fail_closed(self):
+        from security_audit.offline_inventory import architecture_scan
+        with tempfile.TemporaryDirectory() as tmp:
+            roots = {name: Path(tmp) / name for name in ("math", "bybit-cluster-grid", "unified-system")}
+            for root in roots.values():
+                root.mkdir()
+            (roots["math"] / "wrong.py").write_text(
+                "from pybit.unified_trading import HTTP\n"
+                "client = HTTP()\n"
+                "bad = 'https://api.bybit.com'\n",
+                encoding="utf-8",
+            )
+            (roots["bybit-cluster-grid"] / "good.py").write_text(
+                "from pybit.unified_trading import HTTP\n",
+                encoding="utf-8",
+            )
+            (roots["math"] / "bootstrap.sql").write_text("CREATE DATABASE duplicate;", encoding="utf-8")
+            (roots["math"] / "writer.sql").write_text(
+                "INSERT INTO public.ohlcv_1m VALUES (1);", encoding="utf-8")
+            result = architecture_scan(roots)
+            rules = {(x["repository"], x["rule"]) for x in result["ownership_findings"]}
+            self.assertIn(("math", "ARCH_EXCHANGE_IMPORT_OUTSIDE_GRID"), rules)
+            self.assertIn(("math", "ARCH_DB_PROVISIONING_OUTSIDE_UNIFIED"), rules)
+            self.assertIn(("math", "ARCH_MARKET_TABLE_WRITE_OUTSIDE_GRID"), rules)
+            self.assertNotIn(("bybit-cluster-grid", "ARCH_EXCHANGE_IMPORT_OUTSIDE_GRID"), rules)
+            self.assertFalse(result["ready_to_merge"])
+            self.assertFalse(result["cross_repo_runtime_imports_verified"])
+            self.assertEqual("NO_GO", result["release_status"])
+
+    def test_no_execution_and_no_false_clean_runtime_claim(self):
+        from security_audit.offline_inventory import architecture_scan
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "Terminan"
+            path.mkdir()
+            (path / "safe.py").write_text(
+                "raise RuntimeError('should never execute or import')\n", encoding="utf-8")
+            result = architecture_scan({"Terminan": path})
+            self.assertEqual([], result["ownership_findings"])
+            self.assertFalse(result["distributed_orchestrator_verified"])
+            self.assertFalse(result["db_role_permissions_verified"])
+            self.assertEqual(0, result["automatic_removals"])
+
+    def test_invalid_and_oversize_fail_closed(self):
+        from security_audit.offline_inventory import architecture_scan
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "strattester"
+            path.mkdir()
+            (path / "large.py").write_bytes(b"a" * 2_000_001)
+            (path / "bad.py").write_text("def unfinished(\n", encoding="utf-8")
+            result = architecture_scan({"strattester": path})
+            rules = {x["rule"] for x in result["ownership_findings"]}
+            self.assertIn("ARCH_OVERSIZE_UNSCANNED", rules)
+            self.assertIn("ARCH_PYTHON_PARSE_ERROR", rules)
+            self.assertFalse(result["ready_to_merge"])
+        with self.assertRaises(ValueError):
+            architecture_scan({})
+
+
 if __name__ == "__main__":
     unittest.main()
