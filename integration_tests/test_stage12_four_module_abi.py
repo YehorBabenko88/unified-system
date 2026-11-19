@@ -207,7 +207,9 @@ class Stage17OwnerBoundaryGates(unittest.TestCase):
                         "rows": minute_rows,
                         "dataset_id": "fixture-" + str(len(pins)),
                         "dataset_fingerprint": digest(minute_rows),
-                        "source": {},
+                        "source": {"identity": "fixture",
+                                   "source_revision": "fixture-v1",
+                                   "epoch": "fixture"},
                         "request": entry["request"],
                     }
                     cursor = page_end
