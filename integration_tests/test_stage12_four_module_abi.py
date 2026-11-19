@@ -21,7 +21,7 @@ ROOT = Path(__file__).resolve().parents[1]
 EXTERNAL = ROOT / "external"
 PINS = {
     "math": "3c5841573eee579331df7d8e992017b35b0d4ce7",
-    "bybit-cluster-grid": "a57282f63b77c79bad0a447fca0c2df923baed80",
+    "bybit-cluster-grid": "b4bd236d198b503001907d53a455a378659d5408",
     "unified-system": "79c2730b1d1c0d7aab69bab0523108039b5a3d85",
     "Terminan": "dec68f4f5fc8e0c4cc89f9ddd975d71eee60b527",
     "meta_analyse": "dc9b0789a8a56f0ad30ec74d5d3f4bb26464f910",
@@ -65,8 +65,19 @@ class FourModuleIndependentABITests(unittest.TestCase):
         self.assertTrue(build.is_file(),
                         "Grid has no independent wheel metadata/SDK contract")
         config = tomllib.loads(build.read_text(encoding="utf-8"))
-        self.assertTrue(config["project"]["name"])
-        self.assertTrue(config["project"]["requires-python"])
+        self.assertEqual(config["project"]["name"], "unified-grid-market-data")
+        self.assertEqual(config["project"]["requires-python"], ">=3.11")
+        dist = importlib.metadata.distribution("unified-grid-market-data")
+        self.assertEqual(dist.version, "0.1.0")
+        self.assertTrue(dist.files, "installed Grid wheel manifest missing")
+        installed = {str(path).replace("\\\\", "/") for path in dist.files}
+        self.assertIn("grid/__init__.py", installed)
+        self.assertIn("grid/terminan_gateway.py", installed)
+        self.assertIn("grid/schema.sql", installed)
+        spec = importlib.util.find_spec("grid")
+        self.assertIsNotNone(spec)
+        self.assertEqual(Path(spec.origin).resolve(),
+                         Path(dist.locate_file("grid/__init__.py")).resolve())
 
     def test_python_support_policy_is_explicit(self):
         for name in ("math", "Terminan"):
