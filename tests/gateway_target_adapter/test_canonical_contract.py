@@ -4,12 +4,13 @@ from unittest.mock import patch
 from unified_system import gateway_target_adapter as adapter
 class CanonicalContractTests(unittest.TestCase):
  def test_current_target_is_only_canonical_terminan_and_v2(self):
-  q=adapter.template_request();self.assertEqual(q['schema'],'unified.gateway.target-request.v2');self.assertEqual(q['target_kind'],'terminan');self.assertEqual(q['target_capability'],'terminan.ohlcv.untouched_levels.v1');self.assertEqual(q['target_version'],'75a906d36574bfdc19acd966e79a6c168dc71ad4');self.assertEqual(adapter.MATH_HEAD,'a5868944bf1bae813403a32b22d329c1da6f8238');self.assertEqual(q['result_schema'],'unified.gateway.direct-target-result.v2')
+  q=adapter.template_request();self.assertEqual(q['schema'],'unified.gateway.target-request.v2');self.assertEqual(q['target_kind'],'terminan');self.assertEqual(q['target_capability'],'terminan.ohlcv.untouched_levels.v1');self.assertEqual(q['target_version'],'042b075dda0fc8cf6bb829d758632cfa989e8e55');self.assertEqual(adapter.MATH_HEAD,'e80d622eed7c01b109062b68e750f2b70bcccff7');self.assertEqual(q['result_schema'],'unified.gateway.direct-target-result.v2')
  def test_old_v1_meta_request_has_no_active_alias(self):
   q=adapter.template_request();q.update(schema='unified.gateway.target-request.v1',target_kind='MetaAnalyse',target_capability='meta.ohlcv.untouched_levels.v1')
   with self.assertRaises(adapter.TargetRejected):adapter.prepare_target(adapter._canonical(q))
-  q=adapter.template_request();q['target_version']='b99913690ce29ce60e73414cc4d626ca989916ce'
-  with self.assertRaises(adapter.TargetRejected):adapter.prepare_target(adapter._canonical(q))
+  for old_version in ('b99913690ce29ce60e73414cc4d626ca989916ce','75a906d36574bfdc19acd966e79a6c168dc71ad4'):
+   q=adapter.template_request();q['target_version']=old_version
+   with self.subTest(old_version=old_version),self.assertRaises(adapter.TargetRejected):adapter.prepare_target(adapter._canonical(q))
  def test_registry_contains_no_old_active_owner_or_entrypoint(self):
   raw=json.dumps(adapter.capability_registry());self.assertIn('market_math.untouched_decimal_levels',raw);self.assertNotIn('market_math.untouched_levels',raw);self.assertNotIn('strattester',raw);self.assertNotIn('meta_analyse',raw);self.assertNotIn('MetaAnalyse',raw);self.assertNotIn('UNRESOLVED',raw)
  def kwargs(self):return dict(terminan_source_root=os.environ['TARGET_TERMINAN_ROOT'],math_source_root=os.environ['TARGET_MATH_ROOT'],git_executable=os.environ['TARGET_GIT'],git_sha256=os.environ['TARGET_GIT_SHA256'],runtime_sha256=os.environ['TARGET_RUNTIME_SHA256'])
