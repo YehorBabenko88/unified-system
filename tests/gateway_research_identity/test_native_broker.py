@@ -11,6 +11,7 @@ from unified_system.authority_codec import canonical
 from unified_system.gateway_identity import GatewayAuditSink
 from unified_system.gateway_research_identity import ResearchIdentityBroker,ResearchIdentityDenied,ResearchIdentityUnavailable
 from consul_lab import ConsulLab
+from canonical_profile_fixture import bind_profile
 
 ROOT=Path(__file__).resolve().parents[2]
 fixture_raw=subprocess.check_output(['git','--no-replace-objects','-C',str(ROOT),'show',
@@ -45,15 +46,15 @@ class NativeBrokerTests(unittest.IsolatedAsyncioTestCase):
                 raw=await response.aread()
                 self.session_responses.append(dict(status=response.status_code,raw=raw.decode('ascii')))
         self.authority.client.event_hooks['response'].append(observe)  # observes REAL transport, no mock response
-        self.prefix=self.authority.config.namespace+'/runtime-v1/research-lab-v1/'+self.realm+'/'
+        self.prefix=self.authority.config.namespace+'/runtime-v2/canonical-research-v3/'+self.realm+'/'
         self.fingerprint=hashlib.sha256(self.tls.client_der).hexdigest()
         expiry=(datetime.now(timezone.utc)+timedelta(minutes=5)).strftime('%Y-%m-%dT%H:%M:%SZ')
-        self.profile=dict(schema='unified.authority.research-lab-profile.v1-review1',cluster_id=self.cluster,
+        self.profile=dict(cluster_id=self.cluster,
             realm_id=self.realm,principal_registry={self.fingerprint:self.actor},
-            input_request_sha256='c548e2ffcd542d5d741682303694b3c6d06507740f158a6e30089b2d5355f648',
-            producer_head='aed8a7c8a952f96803c207d5e90b133969a47f04',
             resources=dict(cpu_millicores='1000',resident_memory_bytes='268435456',max_artifact_bytes='1048576'),
             expiry_semantics='NATIVE_SESSION_INVALIDATION_NOT_UTC_AT_COMMIT',expires_utc=expiry)
+        self.job=str(uuid.uuid4());self.original=str(uuid.uuid4())
+        self.target=bind_profile(self.profile,request_id=self.original,job_id=self.job,generation=self.generation,actor=self.actor,quota_owner='lab-quota')
         self.profile_sha=hashlib.sha256(canonical(self.profile)).hexdigest()
         self.principal=dict(schema='unified.authority.research-lab-principal.v1-review1',actor_id=self.actor,
             service_id=self.service,certificate_sha256=self.fingerprint,quota_owner_id='lab-quota',policy_id=self.policy,
@@ -71,19 +72,21 @@ class NativeBrokerTests(unittest.IsolatedAsyncioTestCase):
             profile_sha256=self.profile_sha,server_ssl_context=self.tls.server_context,
             server_certificate_der=self.tls.server_der,audit_sink=self.audit)
         self.addAsyncCleanup(self.broker.close)
+    def submit(self):
+        return dict(schema='unified.gateway.canonical-job-submit.v2',operation='SUBMIT_RESEARCH',cluster_id=self.cluster,cluster_generation=self.generation,request_id=self.original,job_id=self.job,original_actor_principal_id=self.actor,quota_owner_id=self.target['quota_owner'],idempotency_key=self.target['idempotency_key'],commissioned_profile_sha256=self.profile_sha,input_request_sha256=self.profile['input_request_sha256'],producer_head=self.profile['producer_head'],math_head=self.profile['math_head'],resources=self.profile['resources'])
     async def put(self,key,value):
         result=await self.authority._request('PUT','/v1/kv/'+key,content=canonical(value));self.assertIs(result,True)
     async def test_actual_mtls_native_session_and_sealed_capture(self):
         context=await self.broker.open_session(self.tls.accepted,leader=self.leader)
-        capture=await self.broker.capture_current(context,scope='SUBMIT_RESEARCH',request_bytes=b'original-intent')
+        capture=await self.broker.capture_current(context,scope='SUBMIT_RESEARCH',request_bytes=canonical(self.submit()))
         snapshot=ResearchIdentityBroker.require_capture(self.broker,capture,expected_authority=self.authority,
-            scope='SUBMIT_RESEARCH',request_bytes=b'original-intent')
+            scope='SUBMIT_RESEARCH',request_bytes=canonical(self.submit()))
         self.assertEqual(snapshot.actor_id,self.actor)
         class ScopeEqualityClaim:
             def __eq__(self,other):return True
         with self.assertRaises(ResearchIdentityDenied):
             self.broker.require_capture(capture,expected_authority=self.authority,
-                scope=ScopeEqualityClaim(),request_bytes=b'original-intent')
+                scope=ScopeEqualityClaim(),request_bytes=canonical(self.submit()))
         with self.assertRaises(ResearchIdentityDenied):
             self.broker.require_capture(capture,expected_authority=self.authority,
                 scope='SUBMIT_RESEARCH',request_bytes=b'x'*16385)
@@ -99,7 +102,7 @@ class NativeBrokerTests(unittest.IsolatedAsyncioTestCase):
         self.assertIs(self.tls.client.getpeercert(binary_form=True)==self.tls.server_der,True)
         with self.assertRaises(ResearchIdentityDenied):
             ResearchIdentityBroker.require_capture(self.broker,capture,expected_authority=object(),
-                scope='SUBMIT_RESEARCH',request_bytes=b'original-intent')
+                scope='SUBMIT_RESEARCH',request_bytes=canonical(self.submit()))
         with self.assertRaises(ResearchIdentityDenied):
             ResearchIdentityBroker.require_capture(self.broker,capture,expected_authority=self.authority,
                 scope='SUBMIT_RESEARCH',request_bytes=b'changed-intent')
@@ -122,29 +125,29 @@ class NativeBrokerTests(unittest.IsolatedAsyncioTestCase):
         context=await self.broker.open_session(self.tls.accepted,leader=self.leader)
         await self.put(self.prefix+'policies/'+self.policy,dict(self.policy_body,state='REVOKED',revision='2'))
         with self.assertRaises(ResearchIdentityDenied):
-            await self.broker.capture_current(context,scope='SUBMIT_RESEARCH',request_bytes=b'original')
+            await self.broker.capture_current(context,scope='SUBMIT_RESEARCH',request_bytes=canonical(self.submit()))
         await self.put(self.prefix+'policies/'+self.policy,dict(self.policy_body,revision='3'))
-        capture=await self.broker.capture_current(context,scope='SUBMIT_RESEARCH',request_bytes=b'original')
-        snapshot=self.broker.require_capture(capture,expected_authority=self.authority,scope='SUBMIT_RESEARCH',request_bytes=b'original')
+        capture=await self.broker.capture_current(context,scope='SUBMIT_RESEARCH',request_bytes=canonical(self.submit()))
+        snapshot=self.broker.require_capture(capture,expected_authority=self.authority,scope='SUBMIT_RESEARCH',request_bytes=canonical(self.submit()))
         await self.authority._request('PUT','/v1/session/destroy/'+snapshot.session_id)
         with self.assertRaises(ResearchIdentityDenied):
-            await self.broker.capture_current(context,scope='SUBMIT_RESEARCH',request_bytes=b'original')
+            await self.broker.capture_current(context,scope='SUBMIT_RESEARCH',request_bytes=canonical(self.submit()))
     async def test_forward_utc_jump_expires_real_issued_capture(self):
         expiry=datetime.now(timezone.utc)+timedelta(seconds=30)
         await self.put(self.prefix+'policies/'+self.policy,dict(self.policy_body,expires_utc=expiry.strftime('%Y-%m-%dT%H:%M:%SZ')))
         context=await self.broker.open_session(self.tls.accepted,leader=self.leader)
-        capture=await self.broker.capture_current(context,scope='SUBMIT_RESEARCH',request_bytes=b'clock')
+        capture=await self.broker.capture_current(context,scope='SUBMIT_RESEARCH',request_bytes=canonical(self.submit()))
         with patch('unified_system.gateway_research_identity._utc',return_value=expiry.timestamp()+1):
             with self.assertRaises(ResearchIdentityDenied):
-                self.broker.require_capture(capture,expected_authority=self.authority,scope='SUBMIT_RESEARCH',request_bytes=b'clock')
+                self.broker.require_capture(capture,expected_authority=self.authority,scope='SUBMIT_RESEARCH',request_bytes=canonical(self.submit()))
     async def test_shortened_native_policy_expiry_bounds_new_capture(self):
         context=await self.broker.open_session(self.tls.accepted,leader=self.leader)
         expiry=datetime.now(timezone.utc)+timedelta(seconds=30)
         await self.put(self.prefix+'policies/'+self.policy,dict(self.policy_body,revision='2',expires_utc=expiry.strftime('%Y-%m-%dT%H:%M:%SZ')))
-        capture=await self.broker.capture_current(context,scope='SUBMIT_RESEARCH',request_bytes=b'shortened')
+        capture=await self.broker.capture_current(context,scope='SUBMIT_RESEARCH',request_bytes=canonical(self.submit()))
         with patch('unified_system.gateway_research_identity._utc',return_value=expiry.timestamp()+1):
             with self.assertRaises(ResearchIdentityDenied):
-                self.broker.require_capture(capture,expected_authority=self.authority,scope='SUBMIT_RESEARCH',request_bytes=b'shortened')
+                self.broker.require_capture(capture,expected_authority=self.authority,scope='SUBMIT_RESEARCH',request_bytes=canonical(self.submit()))
     async def test_acl_default_deny_client_cannot_write_policy(self):
         status,_=self.lab.request(self.lab.nodes[0],'PUT','/v1/kv/'+self.prefix+'policies/'+self.policy,
                                   canonical(dict(self.policy_body,state='ACTIVE')),authenticated=False)
@@ -180,14 +183,14 @@ class NativeBrokerTests(unittest.IsolatedAsyncioTestCase):
             await self.broker.capture_current(context,scope='SUBMIT_RESEARCH',request_bytes=b'{"role":"admin"}')
     async def test_invalidate_latches_and_stale_capture_is_no_permission(self):
         context=await self.broker.open_session(self.tls.accepted,leader=self.leader)
-        capture=await self.broker.capture_current(context,scope='SUBMIT_RESEARCH',request_bytes=b'original')
+        capture=await self.broker.capture_current(context,scope='SUBMIT_RESEARCH',request_bytes=canonical(self.submit()))
         await self.broker.invalidate_context(context)
         with self.assertRaises(ResearchIdentityDenied):
-            self.broker.require_capture(capture,expected_authority=self.authority,scope='SUBMIT_RESEARCH',request_bytes=b'original')
+            self.broker.require_capture(capture,expected_authority=self.authority,scope='SUBMIT_RESEARCH',request_bytes=canonical(self.submit()))
     async def test_stale_policy_capture_fails_actual_native_cas(self):
         context=await self.broker.open_session(self.tls.accepted,leader=self.leader)
-        capture=await self.broker.capture_current(context,scope='SUBMIT_RESEARCH',request_bytes=b'original')
-        snapshot=self.broker.require_capture(capture,expected_authority=self.authority,scope='SUBMIT_RESEARCH',request_bytes=b'original')
+        capture=await self.broker.capture_current(context,scope='SUBMIT_RESEARCH',request_bytes=canonical(self.submit()))
+        snapshot=self.broker.require_capture(capture,expected_authority=self.authority,scope='SUBMIT_RESEARCH',request_bytes=canonical(self.submit()))
         await self.put(self.prefix+'policies/'+self.policy,dict(self.policy_body,state='REVOKED',revision='2'))
         probe=self.prefix+'identity-native-probes/'+str(uuid.uuid4())
         ops=[{'KV':dict(Verb='check-index',Key=r.key,Index=r.index)} for r in snapshot.records]
@@ -197,8 +200,8 @@ class NativeBrokerTests(unittest.IsolatedAsyncioTestCase):
         self.assertIsNone(await self.authority._request('GET','/v1/kv/'+probe,params={'consistent':''},missing_ok=True))
     async def test_real_foreign_native_session_cannot_rebind_issued_context(self):
         context=await self.broker.open_session(self.tls.accepted,leader=self.leader)
-        capture=await self.broker.capture_current(context,scope='SUBMIT_RESEARCH',request_bytes=b'original')
-        snapshot=self.broker.require_capture(capture,expected_authority=self.authority,scope='SUBMIT_RESEARCH',request_bytes=b'original')
+        capture=await self.broker.capture_current(context,scope='SUBMIT_RESEARCH',request_bytes=canonical(self.submit()))
+        snapshot=self.broker.require_capture(capture,expected_authority=self.authority,scope='SUBMIT_RESEARCH',request_bytes=canonical(self.submit()))
         lock=snapshot.records[-1]
         other=await self.authority._request('PUT','/v1/session/create',json={
             'Name':'foreign-negative-only','TTL':'10s','Behavior':'release','LockDelay':'0s','NodeChecks':[]})
@@ -207,12 +210,12 @@ class NativeBrokerTests(unittest.IsolatedAsyncioTestCase):
             self.assertIs(await self.authority._request('PUT','/v1/kv/'+lock.key,
                 params={'acquire':other['ID']},content=lock.raw),True)
             with self.assertRaises(ResearchIdentityDenied):
-                await self.broker.capture_current(context,scope='SUBMIT_RESEARCH',request_bytes=b'original')
+                await self.broker.capture_current(context,scope='SUBMIT_RESEARCH',request_bytes=canonical(self.submit()))
         finally: await self.authority._request('PUT','/v1/session/destroy/'+other['ID'])
     async def test_audit_full_invalidation_still_destroys_own_native_session(self):
         context=await self.broker.open_session(self.tls.accepted,leader=self.leader)
-        capture=await self.broker.capture_current(context,scope='SUBMIT_RESEARCH',request_bytes=b'original')
-        snapshot=self.broker.require_capture(capture,expected_authority=self.authority,scope='SUBMIT_RESEARCH',request_bytes=b'original')
+        capture=await self.broker.capture_current(context,scope='SUBMIT_RESEARCH',request_bytes=canonical(self.submit()))
+        snapshot=self.broker.require_capture(capture,expected_authority=self.authority,scope='SUBMIT_RESEARCH',request_bytes=canonical(self.submit()))
         self.audit._max=len(self.audit._events)
         with self.assertRaises(ResearchIdentityUnavailable): await self.broker.invalidate_context(context)
         self.audit.drain()
@@ -220,13 +223,13 @@ class NativeBrokerTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(await self.authority._request('GET','/v1/session/info/'+snapshot.session_id,missing_ok=True),[])
         self.assertEqual((await self.broker._read(snapshot.records[-1].key)).session,'')
         with self.assertRaises(ResearchIdentityDenied):
-            self.broker.require_capture(capture,expected_authority=self.authority,scope='SUBMIT_RESEARCH',request_bytes=b'original')
+            self.broker.require_capture(capture,expected_authority=self.authority,scope='SUBMIT_RESEARCH',request_bytes=canonical(self.submit()))
     async def test_z_real_one_of_three_no_quorum_is_unavailable(self):
         context=await self.broker.open_session(self.tls.accepted,leader=self.leader)
         for p in self.lab.processes[1:]:
             if p.poll() is None: p.kill()
             p.wait(timeout=10)
         with self.assertRaises(ResearchIdentityUnavailable):
-            await self.broker.capture_current(context,scope='SUBMIT_RESEARCH',request_bytes=b'original')
+            await self.broker.capture_current(context,scope='SUBMIT_RESEARCH',request_bytes=canonical(self.submit()))
 
 if __name__=='__main__': unittest.main()

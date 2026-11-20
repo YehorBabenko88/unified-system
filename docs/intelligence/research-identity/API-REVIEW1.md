@@ -1,3 +1,5 @@
+> Historical v1 contract. The active non-adopting canonical v3 contract is [canonical-native-profile/DESIGN.md](../canonical-native-profile/DESIGN.md). This document does not commission the current broker.
+
 # Actual disposable research principal/session source — API review1
 
 Root allocated NEW files only on f155126a95e80139b1b9679c1870ffd66c29360e /

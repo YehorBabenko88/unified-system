@@ -1,7 +1,7 @@
 """Root-only exact-source native harness. Importing this module performs no effects.
 
 The pure guard group uses refusing crypto import shapes, never PKI success.
-Only the separate unchanged native21/22 groups establish disposable native proof.
+Only the separate mandatory native21/22 groups establish disposable native proof.
 """
 import argparse,ast,functools,hashlib,json,os,platform,re,stat,subprocess,sys,unittest
 from pathlib import Path
@@ -101,6 +101,9 @@ def main(profile,script):
     pure=subprocess.run([sys.executable,'-I','-B',str(root/'tests/gateway_research_identity/run_root_authority_inert.py')],capture_output=True,timeout=60)
     (out/'root-source-guards.log').write_bytes(pure.stdout+pure.stderr)
     if pure.returncode:raise ValueError('ROOT_SOURCE_GUARDS_FAILED')
+    binding_pure=subprocess.run([sys.executable,'-I','-B',str(root/'tests/gateway_research_identity/run_canonical_binding_inert.py')],capture_output=True,timeout=60)
+    (out/'canonical-binding-data.log').write_bytes(binding_pure.stdout+binding_pure.stderr)
+    if binding_pure.returncode:raise ValueError('CANONICAL_BINDING_DATA_FAILED')
     guard['physical'](before)
     config=manifest['profiles'][profile]
     expected=json.loads((root/config['expected_cases']).read_bytes())
@@ -127,7 +130,7 @@ def main(profile,script):
         validate_retirement(owned,config['owned_processes'])
         binding=True
         passed=result_passed(result,len(expected))
-        report=dict(schema='unified.root-owned-native.source-qualification.v2',profile=profile,scope=config['scope'],head=args.expected_head,tree=tree,passed=passed,source_binding_passed=binding,native_test_ids=actual,native_tests=None if result is None else result.testsRun,failures=None if result is None else len(result.failures),errors=None if result is None else len(result.errors),skips=None if result is None else len(result.skipped),root_source_guard_tests=len(guard_cases),pure_guard_process_retired=True,root_source_guard_scope='INERT_SOURCE_ONLY_CRYPTO_OPERATIONS_REFUSE',primary_before=before,module_origins=origins,owned_processes_retired=owned,source_helper_sha256=HELPER_SHA,python=sys.version,git_path=str(git_path),git_sha256=hashlib.sha256(git_path.read_bytes()).hexdigest(),public_submit='DENY',native_job_permission=False,full_scientific_e2e=False,physical='NOT_RUN',production='NO_GO')
+        report=dict(schema='unified.root-owned-native.source-qualification.v2',profile=profile,scope=config['scope'],head=args.expected_head,tree=tree,passed=passed,source_binding_passed=binding,native_test_ids=actual,native_tests=None if result is None else result.testsRun,failures=None if result is None else len(result.failures),errors=None if result is None else len(result.errors),skips=None if result is None else len(result.skipped),root_source_guard_tests=len(guard_cases),canonical_binding_data_tests=9,canonical_binding_native_proof=False,pure_guard_process_retired=True,root_source_guard_scope='INERT_SOURCE_ONLY_CRYPTO_OPERATIONS_REFUSE',primary_before=before,module_origins=origins,owned_processes_retired=owned,source_helper_sha256=HELPER_SHA,python=sys.version,git_path=str(git_path),git_sha256=hashlib.sha256(git_path.read_bytes()).hexdigest(),public_submit='DENY',native_job_permission=False,full_scientific_e2e=False,physical='NOT_RUN',production='NO_GO')
         report['native_log_sha256']=hashlib.sha256((out/'native-tests.log').read_bytes()).hexdigest()
         (out/'qualification.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
     if not passed:raise ValueError('NATIVE_QUALIFICATION_FAILED_OR_SKIPPED')
