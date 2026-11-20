@@ -1,5 +1,5 @@
 import {apiFailure,apiFailureFrom,apiBoundFailure} from './diagnostics.mjs';
-import{createHash,createPublicKey,verify}from'node:crypto';import{need,blocked,strictJson,exact,oid,id,hex,stageBlocked}from'./strict.mjs';
+import{createHash,createPublicKey,verify}from'node:crypto';import{need,blocked,strictJson,exact,oid,id,hex,stageBlocked,stageCode}from'./strict.mjs';
 const issuer='https://token.actions.githubusercontent.com';
 function part(value){need(typeof value==='string'&&/^[A-Za-z0-9_-]+$/.test(value));const b=Buffer.from(value,'base64url');need(b.toString('base64url')===value);return b;}
 // Relational source evidence only: not workload authentication or admission.
@@ -29,7 +29,7 @@ export function verifyWorkload(token,{jwks,policy:p,challenge:c,platform,now}={}
  need(same(j0.id,c.jobId)&&same(j0.run_id,c.runId)&&j0.head_sha===c.runHead&&j0.status==='in_progress'&&j0.name===p.jobName&&j0.check_run_url==='https://api.github.com/repos/'+p.repository+'/check-runs/'+c.checkRunId);need(s.sha===c.sourceHead&&s.commit?.tree?.sha===c.sourceTree);
  stage='E_OIDC_SOURCE';verifySourceBinding({policy:p,challenge:c,platform});
  return Object.freeze({repository:p.repository,sourceHead:c.sourceHead,sourceTree:c.sourceTree,runId:c.runId,attempt:c.attempt,jobId:c.jobId,checkRunId:c.checkRunId,tokenSha256:createHash('sha256').update(token).digest('hex'),jtiSha256:createHash('sha256').update(v.jti).digest('hex'),expiresAt:Math.min(v.exp,c.expiresAt)});
- }catch(error){if(error.code)throw error;stageBlocked(stage);}
+ }catch(error){stageBlocked(stageCode(error,stage));}
 }
 // Fixed HTTPS origin and bounded response; no sender-supplied URL or redirects.
 export async function fetchGitHubJson(path,{fetcher=fetch,authorization}={}){try{need(typeof path==='string'&&/^\/(?:repos\/YehorBabenko88\/math\/[A-Za-z0-9_./?=-]+|\.well-known\/jwks)$/.test(path)&&!path.includes('..'));const jwks=path==='/.well-known/jwks';const url=(jwks?issuer:'https://api.github.com')+path;const headers={Accept:'application/json'};if(!jwks&&authorization)headers.Authorization=authorization;const response=await fetcher(url,{headers,redirect:'error',signal:AbortSignal.timeout(5000)});if(!response.ok)throw apiFailure(response.status);need(new URL(response.url||url).origin===new URL(url).origin);let size=0;const chunks=[];for await(const chunk of response.body){size+=chunk.length;if(size>1048576)throw apiBoundFailure();chunks.push(Buffer.from(chunk));}return strictJson(Buffer.concat(chunks),1048576);}catch(error){throw apiFailureFrom(error);}}

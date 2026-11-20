@@ -1,6 +1,6 @@
 # Source qualification scope
 
-Local result:92 inert/static control groups in five direct Node programs;29 JavaScript files and one inline workflow program pass syntax checking. No worker/hosted collector, key generation/signing/OIDC request, native SQLite, application SourceFence, provider or shell is executed locally. API failures use network-forbidden fakes and cannot produce a successful authentication result.
+Local result:134 inert/static control groups in six direct Node programs;30 JavaScript files and one inline workflow program pass syntax checking. No worker/hosted collector, key generation/signing/OIDC request, native SQLite, application SourceFence, provider or shell is executed locally. API failures use network-forbidden fakes and cannot produce a successful authentication result.
 
 The twenty original functional auth/privacy/receipt/archive/journal test roles are ported under tests/hosted and syntax-checked only. They are mandatory captured-output hosted tests in the reusable workflow before its real issuer request. The workflow does not publish captured test output or exception text. Three loader roles map to static controls; three caller/isolation roles remain explicit Math handoff obligations. No claim is made that the complete original26 roles or live auth have passed locally.
 

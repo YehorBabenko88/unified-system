@@ -18,5 +18,5 @@ export const id=x=>typeof x==='string'&&/^[1-9][0-9]{0,19}$/.test(x);
 
 // Public diagnostic codes are closed enums; never copy error text or claim values.
 export const evidenceStages=Object.freeze(['E_INTERNAL','E_ENVELOPE','E_UNSEAL','E_API','E_OIDC_HEADER','E_OIDC_JWKS','E_OIDC_SIGNATURE','E_OIDC_ISSUER','E_OIDC_POLICY','E_OIDC_CHALLENGE','E_OIDC_BINDING','E_OIDC_TIME','E_OIDC_PLATFORM','E_OIDC_SOURCE','E_COLLECTOR_PIN','E_ZIP','E_JOURNAL','E_BOOTSTRAP','E_LOADER_API','E_LOADER_BYTES','E_CHILD','E_TESTS',...INIT_CODES,...API_CODES]);
-export function stageCode(error,fallback='E_INTERNAL'){return evidenceStages.includes(error?.code)?error.code:(evidenceStages.includes(fallback)?fallback:'E_INTERNAL');}
+export function stageCode(error,fallback='E_INTERNAL'){let code;try{if(error!==null&&(typeof error==='object'||typeof error==='function')){const d=Object.getOwnPropertyDescriptor(error,'code');if(d&&Object.hasOwn(d,'value'))code=d.value;}}catch{}return evidenceStages.includes(code)?code:(evidenceStages.includes(fallback)?fallback:'E_INTERNAL');}
 export function stageBlocked(code){const error=Error('Confidential evidence BLOCKED');error.code=stageCode({code});throw error;}
