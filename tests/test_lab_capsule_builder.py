@@ -122,16 +122,52 @@ class BuilderTests(unittest.TestCase):
         del pinned['psycopg-binary']
         with self.assertRaisesRegex(ValueError,'NATIVE_PROBE_LOCK_MISMATCH'):builder.native_probe(pinned)
     def test_generated_runtime_satisfies_real_supervisor_contract(self):
+        import copy
+        from unittest.mock import patch
         from unified_system.runtime_cli import validate_config
+        from unified_system.lab_runtime import validate_config as validate_lab
         with tempfile.TemporaryDirectory() as temporary:
-            root=Path(temporary).resolve();tool=root/'tool.exe';tool.write_bytes(b'inert')
-            bootstrap=root/'sources/unified-system/unified_system/owned_python.py';bootstrap.parent.mkdir(parents=True);bootstrap.write_bytes(b'inert')
-            sources={n:dict(root='sources/'+n,commit='a'*40,version='1.0.0') for n in builder.NAMES}
+            root=Path(temporary).resolve()/'capsule';state=root.parent/'state'
+            tool=root/'runtime/tool'
+            sources={n:dict(root='sources/'+n,commit='a'*40,version='1.0.0',dependencies={dep:'1.0.0' for dep in builder.GRAPH[n]}) for n in builder.NAMES}
             snapshots={n:{'runtime_files':{'entry.py':{'raw_sha256':'b'*64}}} for n in builder.NAMES}
-            config=builder.runtime_config(root,root.parent/(root.name+'-state'),sources,snapshots,tool,tool,tool,
-                                          'lab-unit',(root.parent/'private-auth.json','c'*64),55459)
+            ports=dict(zip(sorted(builder.NAMES),range(19000,19004)))
+            with patch.object(builder,'sha',return_value='c'*64),patch.object(builder,'free_ports',side_effect=AssertionError('NO SOCKET')),patch('subprocess.Popen',side_effect=AssertionError('NO PROCESS')):
+                config=builder.runtime_config(root,state,sources,snapshots,tool,tool,tool,'lab-unit',pgport=55459,ports=ports)
+            self.assertEqual(set(builder.NAMES),{'unified_system','market_data','math','terminan'})
+            self.assertEqual(set(config['programs']),{'market_data','math','terminan'})
             self.assertEqual(validate_config(config,allow_physical=True),config)
-            self.assertEqual(config['programs']['terminan']['env']['TERMINAN_LAB_SNAPSHOT'],str(root.parent/(root.name+'-state')/'public/lab-market-paper.json'))
+            files={tool.relative_to(root).as_posix():{'sha256':'c'*64,'bytes':1}}
+            for name in builder.NAMES:files['sources/'+name+'/entry.py']={'sha256':'b'*64,'bytes':1}
+            files['sources/unified_system/unified_system/owned_python.py']={'sha256':'c'*64,'bytes':1}
+            manifest={'sources':sources,'files':files,'release_id':'lab-unit','git':tool.relative_to(root).as_posix()}
+            admitted=validate_lab(config,manifest,root,hostname='LS5')
+            for name,p in admitted['programs'].items():
+                self.assertEqual(p['env']['UNIFIED_SOURCE_ROOT'],str(root/'sources/unified_system'))
+                self.assertNotIn('GRID_SHARED_TOKEN',p['env'])
+                if name!='math':self.assertEqual(p['health_url'],f"http://127.0.0.1:{ports[name]}/health")
+            market=config['programs']['market_data']
+            self.assertEqual(market['argv'][-3:],['market_data.cli','--','serve'])
+            self.assertEqual(market['env']['MARKET_DATA_PORT'],str(ports['market_data']))
+            self.assertEqual(config['programs']['terminan']['argv'][-4:],['--host','127.0.0.1','--port',str(ports['terminan'])])
+            self.assertEqual(config['programs']['terminan']['env']['TERMINAN_LAB_SNAPSHOT'],str(state/'public/lab-market-paper.json'))
+
+    def test_runtime_generator_rejects_retired_auth_roster_and_ambiguous_ports(self):
+        from unittest.mock import patch
+        root=Path(tempfile.gettempdir()).resolve()/'inert-fixture'
+        sources={n:dict(root='sources/'+n,commit='a'*40,version='1.0.0') for n in builder.NAMES}
+        snapshots={n:{'runtime_files':{}} for n in builder.NAMES}
+        ports=dict(zip(sorted(builder.NAMES),range(19000,19004)))
+        with patch.object(builder,'sha',return_value='c'*64),patch.object(builder,'free_ports',side_effect=AssertionError('NO SOCKET')),patch('subprocess.Popen',side_effect=AssertionError('NO PROCESS')):
+            with self.assertRaisesRegex(ValueError,'RETIRED_AUTH_PROFILE_REJECTED'):
+                builder.runtime_config(root,root.parent/'state',sources,snapshots,root/'tool',root/'tool',root/'tool','fixture',auth=(root/'old-auth','a'*64),ports=ports)
+            retired=dict(sources);retired['grid']=retired.pop('market_data')
+            with self.assertRaisesRegex(ValueError,'CANONICAL_SOURCE_ROSTER_REQUIRED'):
+                builder.runtime_config(root,root.parent/'state',retired,snapshots,root/'tool',root/'tool',root/'tool','fixture',ports=ports)
+            for invalid in ({name:19000 for name in ports},{**ports,'market_data':True},{**ports,'market_data':0}):
+                with self.subTest(invalid=invalid),self.assertRaisesRegex(ValueError,'DISTINCT_LOOPBACK_PORTS_REQUIRED'):
+                    builder.runtime_config(root,root.parent/'state',sources,snapshots,root/'tool',root/'tool',root/'tool','fixture',ports=invalid)
+
     def test_lexical_parent_alias_rejected_before_creation(self):
         with tempfile.TemporaryDirectory() as temporary:
             parent=Path(temporary).resolve()

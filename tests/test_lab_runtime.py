@@ -15,6 +15,9 @@ import unittest
 from unittest.mock import patch
 from unified_system import lab_runtime as lab
 from unified_system.module_catalog import MODULE_IDS
+# Stable reusable test helpers now draw their four-owner roster from the catalog.
+from tests.test_lab_release import fixture
+from tests.test_runtime_cli import fixture as runtime_fixture
 
 
 class CanonicalLabRuntimePolicyTests(unittest.TestCase):
