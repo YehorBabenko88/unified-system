@@ -56,7 +56,7 @@ class ActivationTests(unittest.TestCase):
   self.root=self.fixture.root/'service';self.root.mkdir();self.kernel=FakeKernel();self.boundary=FakeBoundary(self.kernel);self.revision='revision-1'
   auth={'schema':'unified.lab.grid-auth.v3','node_id':'PC1','role':'WORKER','release_id':'lab-1','source_commit':'a'*40,'grid_shared_token':None,'node_credential':'C'*64,'postgres_password':None}
   self.auth=self.fixture.root/'source-auth.json';self.auth.write_bytes(lab_release.canonical(auth));auth_hash=hashlib.sha256(self.auth.read_bytes()).hexdigest()
-  target=self.fixture.target();target.pop('auth_binding',None);target.pop('coordinator_port',None)
+  target=self.fixture.target();# Canonical target has no retired fleet or coordinator fields.
   target.update(node_id='PC1',credential_root=str(self.root/'activation/revisions'/self.revision/'credentials'),database_credential_binding=None)
   self.profile=self.fixture.derive(target)
   plan={'schema':'unified.owned-stopped-service.v1','plan_sha256':'b'*64,'root':str(self.root),'code':target['code_root'],'state':target['state_root'],'installation_id':'install-1','node_id':'PC1','computer_name':'LABHOST','role':'WORKER','service_name':'UnifiedLab_fixture','service_sid':SID,'manifest_sha256':self.fixture.pin}
@@ -151,7 +151,8 @@ class ActivationTests(unittest.TestCase):
   self.assertEqual(result.returncode,0);self.assertEqual(result.stdout,b'');self.assertEqual(result.stderr,b'')
   self.assertFalse((self.root/'activation').exists())
  def test_bounded_regular_auth_source_rejects_before_revision_creation(self):
-  self.auth.write_bytes(b'x'*8193);self.database_credential_source=self.auth
+  self.control_profile('CONTROL');self.auth.write_bytes(b'x'*8193)
+  self.profile['database_credential_binding']['sha256']=hashlib.sha256(self.auth.read_bytes()).hexdigest()
   with self.assertRaises(ActivationBlocked):self.publish()
   self.assertEqual(self.boundary.calls,[]);self.assertFalse((self.root/'activation').exists())
 
@@ -160,7 +161,7 @@ class ActivationTests(unittest.TestCase):
   from unified_system.service_postgres import AUTH_SCHEMA
   auth=dict(schema=AUTH_SCHEMA,node_id='PC1',release_id='lab-1',source_commit='a'*40,database='unified_lab_install1',user='unified_lab_install1',postgres_password='d'*64)
   self.auth.write_bytes(lab_release.canonical(auth));target=self.fixture.target(role)
-  target.pop('auth_binding',None);target.pop('coordinator_port',None)
+  # Canonical target has no retired fleet or coordinator fields.
   target.update(node_id='PC1',credential_root=str(self.root/'activation/revisions'/self.revision/'credentials'),database_credential_binding={'path':str(self.root/'activation/revisions'/self.revision/'credentials/postgres.json'),'sha256':hashlib.sha256(self.auth.read_bytes()).hexdigest()})
   self.profile=self.fixture.derive(target);self.database_credential_source=self.auth
  def test_control_and_single_pc_transit_credentials_use_role_context(self):

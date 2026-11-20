@@ -65,6 +65,12 @@ class PostgresBoundaryTests(unittest.TestCase):
  def provision(self,**changes):return pg.provision_postgres(self.plan,owner_phase=changes.get('owner_phase',self.owner),boundary=self.boundary)
  def grant(self,receipt):
   return SimpleNamespace(descriptor={'service_plan':copy.deepcopy(self.resource.plan),'database_credential_sha256':self.plan['auth_sha256'],'qualification_refs':{'database_evidence_sha256':receipt['receipt_sha256']}},_kernel=Kernel(),service_sid=self.resource.plan['service_sid'],profile=copy.deepcopy(self.profile),require_current=lambda:True)
+ def test_plan_rejects_private_credential_hash_outside_profile_binding(self):
+  with self.assertRaises(pg.PostgresBlocked):pg.postgres_plan(self.resource,self.profile,self.auth,auth_sha256='0'*64,boundary=self.boundary)
+  self.assertEqual(self.boundary.calls,[]);self.assertFalse(Path(self.plan['namespace']).exists())
+ def test_old_owned_receipt_schema_is_not_adopted(self):
+  plan=copy.deepcopy(self.plan);plan['schema']='unified.owned-postgres.v1';plan['plan_sha256']=pg.seal({k:v for k,v in plan.items() if k!='plan_sha256'})
+  with self.assertRaises(pg.PostgresBlocked):pg.check_plan(plan)
  def test_missing_owner_phase_precedes_native_effects(self):
   with self.assertRaises(pg.PostgresBlocked):self.provision(owner_phase=None)
   self.assertEqual(self.boundary.calls,[]);self.assertFalse(Path(self.plan['namespace']).exists())
