@@ -1,7 +1,7 @@
 import unittest
 from unified_system.compatibility import validate_response
 from unified_system.contracts import ContractError
-from unified_system.status_api import ReadOnlySupervisorApp
+from unified_system.status_api import ReadOnlyControlPlaneApp
 import json
 
 class CompatibilityTests(unittest.TestCase):
@@ -22,7 +22,7 @@ class CompatibilityTests(unittest.TestCase):
         x=self.payload("unified_system");x["trading_authorized"]=True
         with self.assertRaises(ContractError):validate_response("unified_system","health",503,x)
     def test_supervisor_wsgi(self):
-        app=ReadOnlySupervisorApp()
+        app=ReadOnlyControlPlaneApp()
         captured=[]
         result=b"".join(app({"REQUEST_METHOD":"GET","PATH_INFO":"/internal/v1/health","QUERY_STRING":""},lambda s,h:captured.append(s)))
         self.assertFalse(validate_response("unified_system","health",503,json.loads(result))["production_ready"])

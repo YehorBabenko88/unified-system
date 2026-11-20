@@ -4,14 +4,14 @@ import json
 import threading
 import unittest
 from wsgiref.simple_server import make_server,WSGIRequestHandler
-from unified_system.status_api import ReadOnlySupervisorApp
+from unified_system.status_api import ReadOnlyControlPlaneApp
 
 class Quiet(WSGIRequestHandler):
     def log_message(self,*args):pass
 
 class StatusHTTPTests(unittest.TestCase):
     def test_loopback_get_and_post(self):
-        server=make_server("127.0.0.1",0,ReadOnlySupervisorApp(),handler_class=Quiet)
+        server=make_server("127.0.0.1",0,ReadOnlyControlPlaneApp(),handler_class=Quiet)
         worker=threading.Thread(target=server.serve_forever,daemon=True)
         worker.start()
         try:

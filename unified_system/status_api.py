@@ -7,7 +7,7 @@ from .contracts import ContractError
 
 _PATHS = frozenset(("/internal/v1/capabilities", "/internal/v1/health", "/internal/v1/status"))
 
-class ReadOnlySupervisorApp:
+class ReadOnlyControlPlaneApp:
     def __init__(self, provider=None):
         self.provider = provider
 

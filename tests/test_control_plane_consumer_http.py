@@ -1,18 +1,18 @@
-"""Disposable real HTTP Supervisor-to-Terminan-style consumer test."""
+"""Disposable loopback HTTP consumer of the Root read-only control-plane API."""
 import http.client
 import json
 import threading
 import unittest
 from wsgiref.simple_server import make_server,WSGIRequestHandler
-from unified_system.status_api import ReadOnlySupervisorApp
+from unified_system.status_api import ReadOnlyControlPlaneApp
 from unified_system.compatibility import validate_response
 
 class Quiet(WSGIRequestHandler):
     def log_message(self,*args):pass
 
-class SupervisorConsumerHTTP(unittest.TestCase):
+class ControlPlaneConsumerHTTP(unittest.TestCase):
     def test_actual_loopback_health(self):
-        app=ReadOnlySupervisorApp(lambda:{"state":"BLOCKED"})
+        app=ReadOnlyControlPlaneApp(lambda:{"state":"BLOCKED"})
         server=make_server("127.0.0.1",0,app,handler_class=Quiet)
         thread=threading.Thread(target=server.serve_forever,daemon=True)
         thread.start()
