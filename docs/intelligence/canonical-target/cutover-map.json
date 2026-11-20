@@ -1,0 +1,29 @@
+{
+  "schema": "unified.canonical-target.cutover.v2",
+  "root_base": "31db6660079e759dc6207d9b62f03acb89381236",
+  "active_owners": [
+    "terminan",
+    "math"
+  ],
+  "old_to_new": {
+    "strattester.research.gateway_adapter.execute_synthetic_research": "terminan.analytics.ohlcv_research.analyze_ohlcv_research",
+    "meta_analyse.ohlcv_research_adapter.analyze_ohlcv_research": "terminan.analytics.ohlcv_research.analyze_ohlcv_research",
+    "meta_analyse.core.untouched_levels": "market_math.untouched_levels",
+    "unified.gateway.target-request.v1": "unified.gateway.target-request.v2",
+    "unified.gateway.direct-target-result.v1": "unified.gateway.direct-target-result.v2",
+    "unified.direct-target.journal.v1": "unified.canonical-target.journal.v2"
+  },
+  "persistent_namespace": {
+    "original": "stand.marker/stand.lock/direct-journal.db",
+    "canonical": "canonical-target.v2.marker/canonical-target.v2.lock/canonical-target.v2.sqlite",
+    "adoption": false,
+    "automatic_rewrite": false,
+    "originals_preserved": true
+  },
+  "remaining_root_owned": [
+    "gateway_research_identity native binding/profile versioning",
+    "existing old workflow/env commissioning consumers",
+    "actual process-crash/native CPU/RSS/ownership qualification"
+  ],
+  "execution_authority": false
+}
