@@ -55,3 +55,20 @@ class CaptureSchemaProvisioningTests(unittest.TestCase):
    b._sql=failed
    with self.assertRaises(pg.PostgresBlocked):b.provision_capture_schema(p,object())
    self.assertEqual(len(calls),1);self.assertEqual(path.read_bytes(),RAW)
+ def test_oversized_pin_refuses_before_large_temporary_allocation(self):
+  import tracemalloc
+  from unified_system.capture_schema import prepared_capture_sql
+  wide={str(i):0 for i in range(200000)}
+  tracemalloc.start()
+  try:
+   with self.assertRaises(ValueError):prepared_capture_sql(RAW,wide)
+   peak=tracemalloc.get_traced_memory()[1]
+  finally:tracemalloc.stop()
+  self.assertLess(peak,65536)
+ def test_hostile_sha_equality_is_not_called(self):
+  from unified_system.capture_schema import prepared_capture_sql
+  calls=[]
+  class Hostile:
+   def __eq__(self,other):calls.append(True);raise AssertionError('SHA_CALLBACK_FORBIDDEN')
+  with self.assertRaises(ValueError):prepared_capture_sql(RAW,{'sha256':Hostile(),'bytes':len(RAW)})
+  self.assertEqual(calls,[])
