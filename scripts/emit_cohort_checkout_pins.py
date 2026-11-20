@@ -14,7 +14,7 @@ def checkout_pins(cohort):
 
 def main(argv=None):
  p=argparse.ArgumentParser();p.add_argument('--cohort',required=True);args=p.parse_args(argv)
- raw=pathlib.Path(args.cohort).read_bytes()
+ with pathlib.Path(args.cohort).open('rb') as source:raw=source.read(65537)
  if len(raw)>65536:raise ValueError('bounded cohort required')
  pins=checkout_pins(json.loads(raw))
  with open(os.environ['GITHUB_OUTPUT'],'a',encoding='utf8') as output:
