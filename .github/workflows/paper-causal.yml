@@ -39,7 +39,7 @@ jobs:
           GIT_CONFIG_VALUE_1: lf
         with:
           repository: YehorBabenko88/strattester
-          ref: e1ea525273aa2181e7357ca84a774ac2fb30ced0
+          ref: a44ce268c39170dfd377b25c75aa3648fcf3476e
           path: .source/market_data
           persist-credentials: false
           fetch-depth: 0
@@ -76,6 +76,7 @@ jobs:
         shell: python
         run: |
           import subprocess,sys
+          subprocess.run([sys.executable,'-I','-S','-B','-m','unittest','discover','-s','tests','-p','test_cohort_workflow_pins.py','-v'],check=True)
           subprocess.run([sys.executable,'-I','-S','-B','-m','unittest','discover','-s','tests','-p','test_ci_paper_causal.py','-v'],check=True)
       - name: Exact four sources, raw-built installed SDKs, twenty-one actual offline roles
         shell: python
