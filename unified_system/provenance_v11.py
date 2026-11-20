@@ -13,7 +13,7 @@ HEX64=re.compile(r"[0-9a-f]{64}\Z")
 def _digest(value):
     return hashlib.sha256(json.dumps(value,sort_keys=True,separators=(",",":"),allow_nan=False).encode()).hexdigest()
 
-def qualify_historical(record, admitted=()):
+def inspect_historical_receipt(record, admitted=()):
     denied={"status":"UNAVAILABLE","reason":"HISTORICAL_PROVENANCE_UNQUALIFIED","trading_authorized":False}
     if not isinstance(record,dict):
         return denied
