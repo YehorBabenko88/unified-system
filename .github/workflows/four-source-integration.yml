@@ -60,6 +60,8 @@ jobs:
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with:
           python-version: ${{ matrix.python }}
+      - name: Verify retired integration custody and open obligations
+        run: python -I -S -B scripts/check_retired_integration_archive.py
       - name: Exact four source fences and raw-built installed pure SDK contracts
         shell: python
         env:
