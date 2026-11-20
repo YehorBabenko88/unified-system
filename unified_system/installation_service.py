@@ -21,8 +21,8 @@ NSSM_PIN='eee9c44c29c2be011f1f1e43bb8c3fca888cb81053022ec5a0060035de16d848'
 # Exact reviewed LF Git blobs, independent of operator checkout EOLs.
 # Protected entry still needs kernel/revision/full runtime admission; these
 # hashes are not publisher trust. Candidate bytes are never normalized.
-SERVICE_ENTRY_SHA256='6c01d2a0dc3e621c910d10626f803d287da75c5e4f165fd1121ef6a3943fe769'
-SERVICE_BOOTSTRAP_SHA256='a8012a04c4a0507a72bd6ba38c63ad0af855d5f25efea7669ea11db1386d8d45'
+SERVICE_ENTRY_SHA256='e3dc03655f4d482f404c594b594f4c0e2c7efe012593e2c28dea13a172d0ebf1'
+SERVICE_BOOTSTRAP_SHA256='5ce73710f6d0fbfd88517372979b3182eded9b7f1f569789806de63b886307c4'
 BLOCKED_ENTRY_SHA256=SERVICE_ENTRY_SHA256 # Legacy public constant; entry is now gated.
 SCHEMA='unified.owned-stopped-service.v1'
 ACTIONS={'BEGIN','SEAL','REGISTER','INSPECT'}
@@ -172,10 +172,10 @@ def service_plan(capsule_root,manifest_sha256,root,installation_id,node_id,role,
  need(root.parent.is_dir() and source!=root and root not in source.parents and source not in root.parents)
  name='UnifiedLab_'+seal({'installation_id':installation_id,'node_id':node_id})[:24]
  sid=boundary.sid(name);need(parse_service_sid(sid,0)==sid)
- code=root/'code';python='runtime/python/python.exe';nssm='runtime/nssm/nssm.exe';bootstrap='sources/unified-system/unified_system/owned_python.py';entry='sources/unified-system/unified_system/service_entry.py'
+ code=root/'code';python='runtime/python/python.exe';nssm='runtime/nssm/nssm.exe';bootstrap='sources/unified_system/unified_system/owned_python.py';entry='sources/unified_system/unified_system/service_entry.py'
  need({python,nssm,bootstrap,entry}<=set(m['files']) and m['files'][nssm]['sha256']==NSSM_PIN)
  need(m['files'][entry]['sha256']==SERVICE_ENTRY_SHA256)
- need(m['files'].get('sources/unified-system/unified_system/service_bootstrap.py',{}).get('sha256')==SERVICE_BOOTSTRAP_SHA256)
+ need(m['files'].get('sources/unified_system/unified_system/service_bootstrap.py',{}).get('sha256')==SERVICE_BOOTSTRAP_SHA256)
 
  body=dict(schema=SCHEMA,installation_id=installation_id,node_id=node_id,computer_name=boundary.computer_name(),role=role,root=str(root),code=str(code),state=str(root/'state'),
   capsule_root=str(source),manifest_sha256=manifest_sha256,service_name=name,service_sid=sid,
@@ -201,11 +201,11 @@ def _check_plan(plan):
  source=_safe(plan['capsule_root']);need(source!=root and source not in root.parents and root not in source.parents)
  report=lab_release.verify_capsule(source,plan['manifest_sha256']);m=report['manifest']
  need(m.get('schema')=='unified.lab-release.v1') # Direct resource/checker callers cannot bypass the factory kind guard.
- for key,relative in [('nssm','runtime/nssm/nssm.exe'),('python','runtime/python/python.exe'),('bootstrap','sources/unified-system/unified_system/owned_python.py'),('entry','sources/unified-system/unified_system/service_entry.py')]:
+ for key,relative in [('nssm','runtime/nssm/nssm.exe'),('python','runtime/python/python.exe'),('bootstrap','sources/unified_system/unified_system/owned_python.py'),('entry','sources/unified_system/unified_system/service_entry.py')]:
   need(relative in m['files'] and plan[key]==str(root/'code'/relative) and plan[key+'_sha256']==m['files'][relative]['sha256'])
  need(plan['nssm_sha256']==NSSM_PIN and plan['executor_sha256']==hashlib.sha256(lab_release.regular(MODULE).read_bytes()).hexdigest())
  need(plan['entry_sha256']==SERVICE_ENTRY_SHA256)
- need(m['files'].get('sources/unified-system/unified_system/service_bootstrap.py',{}).get('sha256')==SERVICE_BOOTSTRAP_SHA256)
+ need(m['files'].get('sources/unified_system/unified_system/service_bootstrap.py',{}).get('sha256')==SERVICE_BOOTSTRAP_SHA256)
  need(plan['parameters']=='-I -S -B \"'+plan['entry']+'\"')
  return copy.deepcopy(plan)
 
