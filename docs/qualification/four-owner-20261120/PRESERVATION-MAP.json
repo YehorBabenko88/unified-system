@@ -203,5 +203,19 @@
     "verify_provenance_handoff": "Missing/untrusted/tampered/version/authority denials via canonical Data/Root/Term APIs."
   },
   "source_fence": "Existing integration.source_guard.SourceFence actual four head/source pre/post and raw SDK origin proof is executed only on hosted runners. Local pure proof never claims SourceFence/native custody.",
-  "release_status": "NO_GO"
+  "release_status": "NO_GO",
+  "canonical_cli_renames": {
+    "verify_five_boundary.py": "verify_owner_boundary.py",
+    "verify_three_module_chain.py": "verify_market_analysis_chain.py",
+    "verify_handoff_roundtrip.py": "verify_result_handoff.py",
+    "verify_provenance_handoff.py": "verify_result_provenance.py"
+  },
+  "consumer_workflow_cutover": {
+    "baseline": "f341979eabb3fa600951478b16b3294facdd1fde",
+    "old_positional_upstream_cli_removed": true,
+    "canonical_reusable": ".github/workflows/owner-source-suite.yml",
+    "retained_platform": "ubuntu-24.04 / Python3.11",
+    "full_matrix": "four-source-integration.yml Windows/Linux Python3.11/3.12/3.13",
+    "owner_boundary": "owner-boundary.yml retains full Root discovery"
+  }
 }
