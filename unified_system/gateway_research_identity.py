@@ -26,10 +26,10 @@ from .authority_codec import canonical, measure_native_plan
 
 SCOPES=frozenset(('SUBMIT_RESEARCH','READ_RESEARCH','CANCEL_OWN_JOB'))
 _PROFILE_V3='unified.authority.canonical-research-profile.v3'
-_TARGET_SCHEMA_SHA='ce8b469c684c2322a828234b9ca605a43ee7811ba1e38e422b5c08c20ac570f2'
+_TARGET_SCHEMA_SHA='229d5f54f266ce2eafe91eb60e51b30234d99d746c5438f782c3f1d88c590c4b'
 _INPUT_SHA='4a8b7be2fa7cfbf72399e4abf864287feb8b10a28977aea2970846b8fb97e7e9'
-_PRODUCER='742d9681b9b57e0252182e3edf4c1dd90ba19c53'
-_MATH='0dcb85e76214453e2e1ff2abdfb8734cde5922b5'
+_PRODUCER='a2f63228aeb7436721eaf3fe6251c94ab7e5e087'
+_MATH='7ed299b6480b2cb683ee91bd162ed9d76e99aa7f'
 
 class ResearchIdentityDenied(RuntimeError): pass
 class ResearchIdentityUnavailable(RuntimeError): pass
@@ -105,7 +105,7 @@ def _target_binding(profile,*,generation,actor,quota_owner):
     target=_decode_target(raw)
     _fields(target,'schema request_id target_kind target_capability target_version dataset_manifest_id dataset_revision experiment_id strategy_version parameters_digest execution_mode resource_budget quota_owner principal_id authority_generation assignment_revision fencing_token idempotency_key result_schema result_artifact_ref')
     expected=dict(schema='unified.gateway.target-native-request.v2',target_kind='terminan',
-        target_capability='terminan.ohlcv.untouched_levels.v1',target_version='742d9681b9b57e0252182e3edf4c1dd90ba19c53',
+        target_capability='terminan.ohlcv.untouched_levels.v1',target_version='a2f63228aeb7436721eaf3fe6251c94ab7e5e087',
         dataset_manifest_id='local-sha256:44639dea28a646d2a308655d7adc3f85e24a90bda22971632f88d1dd9760c938',
         dataset_revision='CANONICAL_FIXTURE_2',experiment_id='fixture.gateway.btc.levels',strategy_version=None,
         parameters_digest=_INPUT_SHA,execution_mode='NATIVE_RESEARCH_ADMISSION_REQUEST_NOT_PERMISSION',

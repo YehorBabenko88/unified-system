@@ -20,7 +20,7 @@ class CanonicalNativeBindingTests(unittest.TestCase):
  def rebind(self):
   raw=target_bytes(self.target);self.profile['target_binding'].update(target_request_canonical_base64=base64.b64encode(raw).decode('ascii'),target_request_sha256=hashlib.sha256(raw).hexdigest())
  def test_canonical_binding_matches_exact_schema_and_both_sources(self):
-  self.assertEqual(self.core._PRODUCER,'742d9681b9b57e0252182e3edf4c1dd90ba19c53');self.assertEqual(self.core._MATH,'0dcb85e76214453e2e1ff2abdfb8734cde5922b5')
+  self.assertEqual(self.core._PRODUCER,'a2f63228aeb7436721eaf3fe6251c94ab7e5e087');self.assertEqual(self.core._MATH,'7ed299b6480b2cb683ee91bd162ed9d76e99aa7f')
   self.assertEqual(self.check(),self.profile['target_binding'])
   self.assertEqual(hashlib.sha256((ROOT/'docs/intelligence/canonical-native-profile/request.schema.json').read_bytes()).hexdigest(),TARGET_SCHEMA_SHA)
  def test_every_retired_profile_schema_is_refused(self):
@@ -34,7 +34,7 @@ class CanonicalNativeBindingTests(unittest.TestCase):
    with self.subTest(key=key),self.assertRaises(self.core.ResearchIdentityDenied):self.check()
  def test_math_and_producer_rebinding_cannot_change_fixed_cohort(self):
   original=copy.deepcopy(self.profile)
-  for key,values in (('math_head',('f'*40,'de8194f71311a6d7dddb69be9de812030ed1f13f','a5868944bf1bae813403a32b22d329c1da6f8238','e80d622eed7c01b109062b68e750f2b70bcccff7','370972f2eeec18824fecd3ec471f0a514e7dd030','b3cb935aee7d6569d6fd0cfaff70ea9b9e5f0df3')),('producer_head',('f'*40,'b99913690ce29ce60e73414cc4d626ca989916ce','75a906d36574bfdc19acd966e79a6c168dc71ad4','042b075dda0fc8cf6bb829d758632cfa989e8e55','221a2562f70558e7753a92499fee1c3f2e706bfb','fc0bed4937ab5dbb039320aae48e49b01b31bb43'))):
+  for key,values in (('math_head',('f'*40,'de8194f71311a6d7dddb69be9de812030ed1f13f','a5868944bf1bae813403a32b22d329c1da6f8238','e80d622eed7c01b109062b68e750f2b70bcccff7','370972f2eeec18824fecd3ec471f0a514e7dd030','b3cb935aee7d6569d6fd0cfaff70ea9b9e5f0df3','0dcb85e76214453e2e1ff2abdfb8734cde5922b5')),('producer_head',('f'*40,'b99913690ce29ce60e73414cc4d626ca989916ce','75a906d36574bfdc19acd966e79a6c168dc71ad4','042b075dda0fc8cf6bb829d758632cfa989e8e55','221a2562f70558e7753a92499fee1c3f2e706bfb','fc0bed4937ab5dbb039320aae48e49b01b31bb43','742d9681b9b57e0252182e3edf4c1dd90ba19c53'))):
    for value in values:
     self.profile=copy.deepcopy(original);self.profile[key]=value;self.profile['target_binding'][key]=value
     with self.subTest(key=key,value=value),self.assertRaises(self.core.ResearchIdentityDenied):self.check()
