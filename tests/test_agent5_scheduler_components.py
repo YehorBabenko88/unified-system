@@ -144,19 +144,15 @@ class DurablePreparationTests(unittest.TestCase):
 
     def test_process_crash_before_event_commit_recovers_without_partial_hold(self):
         self.enqueue()
-        code = """
-import json, os, sys
-from scheduler_components.durable import PreparationJournal
-from scheduler_components.placement import Candidate, Resources, Policy
-store = PreparationJournal(sys.argv[1])
-scope = json.loads(sys.argv[2])
-store._event = lambda *args: os._exit(23)
-node = Candidate('node-a','process-a','process-a',90,'bench-v1',Resources(100,100,100,100,100),Resources(0,0,0,0,0))
-store.prepare(scope,[node],100,Policy(10,800000,1,1),quorum_available=True,schedule_active=True)
-"""
-        import json
-        crashed = subprocess.run([sys.executable, '-c', code, str(self.path), json.dumps(self.scope)],
-                                  cwd=Path(__file__).resolve().parents[1], capture_output=True, timeout=20)
+        from tests.preparation_crash_probe import build_command, phase_summary
+        root = Path(__file__).resolve().parents[1]
+        phases = Path(self.temp.name) / 'crash-phases'
+        cache = Path(self.temp.name).resolve() / 'crash-cache'
+        try:
+            crashed = subprocess.run(build_command(sys.executable, root, self.path, self.scope, phases, cache),
+                                     cwd=root, capture_output=True, timeout=20)
+        except subprocess.TimeoutExpired:
+            self.fail('CRASH_CHILD_TIMEOUT phases=' + phase_summary(phases))
         self.assertEqual(23, crashed.returncode, crashed.stderr.decode(errors='replace'))
         self.assertEqual('QUEUED', self.store.view(self.scope).get('state'))
         self.assertIsNone(self.store.view(self.scope).get('request_id'))
