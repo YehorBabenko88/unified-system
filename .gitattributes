@@ -22,3 +22,13 @@ unified_system/gateway_native_negative.py text eol=lf
 
 # Immutable qualification source snapshots retain exact original Git bytes.
 docs/qualification/four-owner-20261120/original-source/* -text
+
+# Preserve exact historical command-store source and fixture lock bytes.
+docs/migration/consul-command-store/*.raw.txt -text
+docs/ci/operator-command/requirements-linux.lock -text
+unified_system/consul_command_store.py text eol=lf
+scripts/operator_contract_ci.py text eol=lf
+scripts/run_operator_command_contracts.py text eol=lf
+tests/test_consul_command_store.py text eol=lf
+tests/test_operator_command_composition.py text eol=lf
+tests/test_operator_contract_ci.py text eol=lf

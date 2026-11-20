@@ -1,0 +1,45 @@
+{
+  "schema": "unified.command-store-migration.v1",
+  "source_head": "55e74863c3c28bf4cbcb4ded4d3359f98bf93f71",
+  "root_base": "a0c7662b17aafc854b981654c8a12a42732b8853",
+  "source_blobs": {
+    "grid/coordination_commands.py": "bb16443fd4f195dde1a5c72de9f352c64fe36c0e",
+    "tests/coordination/test_coordination_commands.py": "c091fe9402e502cce55322c6c47e0ea5f359dd1f",
+    "lab/consul/requirements-three-linux.lock": "aa7a629032e6788935c914301678a77d47df7654"
+  },
+  "raw_sha256": {
+    "backend": "488884612f32a13fa680d516b1cda1cdde7d7a0da614cccee67e3feaab45b633",
+    "tests": "9b16a257a39c6f623af0db07d67fb4e9de5430c458df58a9aeb011a4703e5c80",
+    "fixture_lock": "6654ea74257c1141553c34cef2e9de5355b9b7ddb3ab4a834ae382ae0fd47b12"
+  },
+  "symbol_map": {
+    "grid.coordination_commands.CoordinationCommands": "unified_system.consul_command_store.ConsulCommandStore",
+    "grid.coordination_commands.CurrentPrincipal": "unified_system.operator_control_plane.CurrentPrincipal",
+    "grid.coordination.canonical/CoordinationLost/CoordinationUnavailable": "unified_system.consul_authority (existing implementation)",
+    "grid.coordination_commands.parse_command/validate_receipt/CommandDenied": "unified_system.consul_command_store (same bounded storage/public decoding contracts)"
+  },
+  "test_map": {
+    "tests/coordination/test_coordination_commands.py": "tests/test_consul_command_store.py (all50parametercases retained+1sharedDTOguard)",
+    "tests/test_operator_grid_composition.py": "tests/test_operator_command_composition.py (same3compositionroles)",
+    "operator-grid-contracts": "operator-command-contracts (Root-only SourceFence and rawcopiedlock)"
+  },
+  "storage": {
+    "key_namespace": "UNCHANGED: authority.config.namespace + /commands/",
+    "wire_schemas": [
+      "unified.command.v1",
+      "unified.command-receipt.v1",
+      "unified.research-control.v1"
+    ],
+    "existing_data": "NO_WRITES_OR_MIGRATION_PERFORMED",
+    "historical_source_repository": "RETAINED; no destruction/rename"
+  },
+  "authority": {
+    "authentication": "NOT_CREATED",
+    "effects": "PENDING_UNWIRED",
+    "consensus": "MODELED_ONLY",
+    "instant_revocation": "P0_NOT_QUALIFIED",
+    "native_sspi": "NOT_RUN",
+    "physical": "NOT_RUN",
+    "production": "NO_GO"
+  }
+}

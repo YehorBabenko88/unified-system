@@ -1,34 +1,13 @@
-"""Actual Gateway->Grid bridge; modeled HTTP Consul only, no native/HA PASS.
-
-Run with GRID_TEST_ROOT pointing to the reviewed Grid checkout. Absence skips
-explicitly; the fixture is never admitted as a runtime identity provider.
-"""
-import importlib.util
+"""Actual Root Gateway -> Root command store; fake HTTP Consul, no native/HA PASS."""
 import asyncio
-import os
-from pathlib import Path
-import sys
 import unittest
 from unified_system.operator_control_plane import OperatorGateway, CurrentPrincipal, AuthorizationDenied
+from unified_system.consul_command_store import ConsulCommandStore
+from tests import test_consul_command_store as fixtures
 
-GRID_ROOT=os.environ.get('GRID_TEST_ROOT')
 
-
-@unittest.skipUnless(GRID_ROOT,'GRID_TEST_ROOT required for actual cross-repository composition')
-class GridCompositionTests(unittest.IsolatedAsyncioTestCase):
+class CommandCompositionTests(unittest.IsolatedAsyncioTestCase):
     async def asyncSetUp(self):
-        root=Path(GRID_ROOT).resolve()
-        if not (root/'grid/coordination_commands.py').is_file():
-            self.fail('GRID_TEST_ROOT does not contain actual Grid bridge')
-        sys.path.insert(0,str(root))
-        self.addCleanup(lambda: sys.path.remove(str(root)))
-        from grid.coordination_commands import CoordinationCommands
-        import grid.coordination_commands as actual_bridge
-        self.assertEqual(Path(actual_bridge.__file__).resolve(),root/'grid/coordination_commands.py',
-                         'composition imported a different Grid checkout')
-        spec=importlib.util.spec_from_file_location('modeled_grid_commands_fixture',
-            root/'tests/coordination/test_coordination_commands.py')
-        fixtures=importlib.util.module_from_spec(spec);spec.loader.exec_module(fixtures)
         self.fixtures=fixtures
         self.authority,self.client,self.store,self.state=fixtures.fixture()
         await self.client.__aenter__()
@@ -40,7 +19,7 @@ class GridCompositionTests(unittest.IsolatedAsyncioTestCase):
                 if not provider.active or context!='MODELED_HUMAN': raise AuthorizationDenied('revoked')
                 return CurrentPrincipal('human-test',3,'HUMAN',frozenset({'research.control','control.commands.read'}))
         self.provider=ModeledProvider()
-        self.bridge=CoordinationCommands(self.authority,fixtures.GEN,principal_provider=self.provider)
+        self.bridge=ConsulCommandStore(self.authority,fixtures.GEN,principal_provider=self.provider)
         self.gateway=OperatorGateway(self.bridge,self.provider)
     def envelope(self):
         value=self.fixtures.command()
