@@ -106,12 +106,13 @@ class ExistingAdmissionTests(unittest.TestCase):
   case.publish();grant=bootstrap.read_protected_activation(case.root,kernel=case.kernel)
   expected=lab_runtime.validate_config(grant.profile['runtime_config'],case.fixture.manifest,grant.code_root,hostname=grant.computer_name,offline_context=grant.profile['offline_context'])
   def make(config,authorize,**kwargs):
-   self.assertEqual(config,expected);grid=config['programs']['market_data']['env']
-   self.assertEqual((grid['ROLE'],grid['NODE_ID'],grid['NODE_ROLE']),('worker','PC1','WORKER'));self.assertIn('TEMP',grid)
+   self.assertEqual(config,expected);environment=config['programs']['market_data']['env']
+   self.assertIn('TEMP',environment)
+   self.assertFalse({'ROLE','NODE_ROLE','NODE_CREDENTIAL','GRID_SHARED_TOKEN','PGPASSWORD'} & set(environment))
    return object()
   with patch('unified_system.lab_runtime.verify_sources',return_value={}):
    config,auth=bootstrap._runtime_admission(grant,{'manifest':case.fixture.manifest})
-   self.assertEqual(config,expected);self.assertEqual(auth,{'NODE_CREDENTIAL':'C'*64})
+   self.assertEqual(config,expected);self.assertEqual(auth,{})
    with patch.object(bootstrap,'_admit_capsule',return_value={'manifest':case.fixture.manifest}),patch('unified_system.lab_privileges.remove_lab_write_bypass_privileges'),patch('unified_system.lab_runtime.make_runtime',side_effect=make) as construct,patch('unified_system.lab_runtime.run_runtime'):
     self.assertEqual(bootstrap.run_protected_runtime(grant),0);construct.assert_called_once()
 
@@ -135,13 +136,13 @@ class RawEntryTests(unittest.TestCase):
  def setUp(self):
   self.temp=tempfile.TemporaryDirectory();self.addCleanup(self.temp.cleanup);self.root=Path(self.temp.name).resolve()
  def test_raw_entry_rejects_unpinned_bootstrap_before_its_code_executes(self):
-  entry=self.root/'service/code/sources/unified-system/unified_system/service_entry.py';entry.parent.mkdir(parents=True)
+  entry=self.root/'service/code/sources/unified_system/unified_system/service_entry.py';entry.parent.mkdir(parents=True)
   entry.write_bytes((ROOT/'unified_system/service_entry.py').read_bytes())
   marker=self.root/'EXECUTED';entry.with_name('service_bootstrap.py').write_text('from pathlib import Path;Path('+repr(str(marker))+').touch()')
   result=subprocess.run([sys.executable,'-I','-S','-B',str(entry)],capture_output=True,timeout=10)
   self.assertEqual(result.returncode,78);self.assertEqual(result.stdout.replace(b'\r\n',b'\n'),b'BLOCKED_SERVICE_ACTIVATION\n');self.assertEqual(result.stderr,b'');self.assertFalse(marker.exists())
  def test_exact_reviewed_bootstrap_still_requires_actual_service_token_and_grant(self):
-  entry=self.root/'service/code/sources/unified-system/unified_system/service_entry.py';entry.parent.mkdir(parents=True)
+  entry=self.root/'service/code/sources/unified_system/unified_system/service_entry.py';entry.parent.mkdir(parents=True)
   entry.write_bytes((ROOT/'unified_system/service_entry.py').read_bytes().replace(b'\r\n',b'\n'))
   helper=entry.with_name('service_bootstrap.py');helper.write_bytes((ROOT/'unified_system/service_bootstrap.py').read_bytes().replace(b'\r\n',b'\n'))
   from unified_system import installation_service
@@ -151,16 +152,16 @@ class RawEntryTests(unittest.TestCase):
   self.assertFalse((self.root/'service/activation').exists());self.assertFalse((self.root/'service/state').exists())
 
  def _source_only_loader_case(self,mode):
-  source=self.root/'code/sources/unified-system/unified_system';source.mkdir(parents=True);files={}
+  source=self.root/'code/sources/unified_system/unified_system';source.mkdir(parents=True);files={}
   for name in bootstrap.VERIFIER_IMPORTS:
    raw=(ROOT/'unified_system'/name).read_bytes().replace(b'\r\n',b'\n');(source/name).write_bytes(raw)
-   files['sources/unified-system/unified_system/'+name]={'bytes':len(raw),'sha256':hashlib.sha256(raw).hexdigest()}
-  guard=self.root/'code/sources/unified-system/integration/source_guard.py';guard.parent.mkdir();raw=(ROOT/'integration/source_guard.py').read_bytes().replace(b'\r\n',b'\n');guard.write_bytes(raw);files['sources/unified-system/integration/source_guard.py']={'bytes':len(raw),'sha256':hashlib.sha256(raw).hexdigest()}
-  (self.root/'manifest.json').write_text(json.dumps({'files':files,'directories':['sources/unified-system/integration']}))
+   files['sources/unified_system/unified_system/'+name]={'bytes':len(raw),'sha256':hashlib.sha256(raw).hexdigest()}
+  guard=self.root/'code/sources/unified_system/integration/source_guard.py';guard.parent.mkdir();raw=(ROOT/'integration/source_guard.py').read_bytes().replace(b'\r\n',b'\n');guard.write_bytes(raw);files['sources/unified_system/integration/source_guard.py']={'bytes':len(raw),'sha256':hashlib.sha256(raw).hexdigest()}
+  (self.root/'manifest.json').write_text(json.dumps({'files':files,'directories':['sources/unified_system/integration']}))
   # Cache matches source timestamp/size but would create a marker if imported.
   script="""import runpy,sys,json,types,py_compile,os,struct,marshal,importlib.util
 from pathlib import Path
-ns=runpy.run_path(sys.argv[1]);root=Path(sys.argv[2]);source=root/'code/sources/unified-system/unified_system/lab_release.py';marker=root/'CACHE_EXECUTED'
+ns=runpy.run_path(sys.argv[1]);root=Path(sys.argv[2]);source=root/'code/sources/unified_system/unified_system/lab_release.py';marker=root/'CACHE_EXECUTED'
 cache=Path(importlib.util.cache_from_source(str(source)));cache.parent.mkdir(exist_ok=True)
 info=source.stat();raw=importlib.util.MAGIC_NUMBER+struct.pack('<III',0,int(info.st_mtime),info.st_size)+marshal.dumps(compile('from pathlib import Path;Path('+repr(str(marker))+').touch()',str(source),'exec'));cache.write_bytes(raw)
 class Kernel:
