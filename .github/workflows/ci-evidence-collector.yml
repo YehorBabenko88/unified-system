@@ -33,7 +33,7 @@ jobs:
           import{mkdirSync,writeFileSync,readFileSync,lstatSync}from'node:fs';import{resolve,dirname,join}from'node:path';import{createHash}from'node:crypto';import{spawnSync}from'node:child_process';
           const manifest = {
             "tools/ci_evidence/strict.mjs": "0728aae4211c32bf0a7f19e91d91a36ebf190a2a95282e716864640e58fc37c8",
-            "tools/ci_evidence/github_identity.mjs": "769a947e8ed2344119dcfb93b0426e0f4581a3655a16a7aaac9e711f3ad219a6",
+            "tools/ci_evidence/github_identity.mjs": "7cfbb0804c0164a3d6693fcd9e78f6dc10cd90c91a12515060b547b5cd0e7803",
             "tools/ci_evidence/envelope.mjs": "b081be5d7789bd508026c748075e2435e4e61df8f21905119f4e1cc2f0508c9f",
             "tools/ci_evidence/receiver_journal.mjs": "f2491c60e7f56b9ce41ce0874d704da2ed8e622dc5bd174013a631de61169911",
             "tools/ci_evidence/zip.mjs": "633be9954ee26f182989592a24829de6f2318a5552263c23f2c6b871e98a08f2",
@@ -60,7 +60,7 @@ jobs:
             "tools/ci_evidence/tests/inert_identity_policy.mjs": "c28a4f7aa70eaf39ece804d89732d1696254d92bd87d99ed58598c542dec2d85",
             "tools/ci_evidence/tests/inert_public_diagnostics.mjs": "c8818f5808a0f3d45ed14fea56a1b83bbf0826c7d6c41c9ceb07bf71084ef6ff",
             "tools/ci_evidence/tests/inert_loader.mjs": "8728e30959b3a57075d3c3ed5095a782d19c01e05d7da7d3bcdbc84dce785400",
-            "tools/ci_evidence/tests/inert_api_failures.mjs": "62614a3bc2f0af046d57eb489522d9f26931c2c123ba0a4b355aee6928ec1b8e",
+            "tools/ci_evidence/tests/inert_api_failures.mjs": "1b1db00a3140b17965a82d5296ef2f9b425b16cd37bd0cf4c8be218726f2149a",
             "tools/ci_evidence/tests/inert_stage_codes.mjs": "752e0b41ad1b440030b9294ec274ea340b6b49c48aec72f8f5a53ce01568ba5d"
           };
           let code='E_BOOTSTRAP';const temp=resolve(process.env.RUNNER_TEMP),publicFile=join(temp,'unified-ci-evidence-public/qualification.json');

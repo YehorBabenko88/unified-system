@@ -31,6 +31,22 @@ export function verifyWorkload(token,{jwks,policy:p,challenge:c,platform,now}={}
  return Object.freeze({repository:p.repository,sourceHead:c.sourceHead,sourceTree:c.sourceTree,runId:c.runId,attempt:c.attempt,jobId:c.jobId,checkRunId:c.checkRunId,tokenSha256:createHash('sha256').update(token).digest('hex'),jtiSha256:createHash('sha256').update(v.jti).digest('hex'),expiresAt:Math.min(v.exp,c.expiresAt)});
  }catch(error){stageBlocked(stageCode(error,stage));}
 }
+async function readApiBody(response){
+ const limit=1048576;
+ need(Number.isSafeInteger(limit)&&limit>0&&limit<=1048576&&response.body&&typeof response.body[Symbol.asyncIterator]==='function');
+ const storage=Buffer.alloc(limit),deadline=performance.now()+5000;let size=0,count=0,finished=false,iterator,pendingReject=null,timedOut=false;
+ const timer=setTimeout(()=>{timedOut=true;if(pendingReject)pendingReject(Error('API_BODY_DEADLINE'));},5000);
+ function next(){return new Promise((resolve,reject)=>{pendingReject=reject;try{Promise.resolve(iterator.next()).then(step=>{if(pendingReject===reject)pendingReject=null;resolve(step);},error=>{if(pendingReject===reject)pendingReject=null;reject(error);});}catch(error){pendingReject=null;reject(error);}});}
+ try{
+  iterator=response.body[Symbol.asyncIterator]();
+  for(;;){
+   need(!timedOut&&performance.now()<=deadline);const step=await next();need(!timedOut&&performance.now()<=deadline&&step!==null&&typeof step==='object'&&typeof step.done==='boolean');
+   if(step.done){finished=true;need(size>0);return storage.subarray(0,size);}
+   const chunk=step.value;if(++count>4096)throw apiBoundFailure();need((Buffer.isBuffer(chunk)||chunk instanceof Uint8Array)&&[Buffer.prototype,Uint8Array.prototype].includes(Object.getPrototypeOf(chunk))&&Object.getOwnPropertyDescriptor(chunk,'byteLength')===undefined&&Object.getOwnPropertyDescriptor(chunk,'length')===undefined);
+   const bytes=chunk.byteLength;if(bytes===0||size+bytes>limit)throw apiBoundFailure();storage.set(chunk,size);size+=bytes;
+  }
+ }finally{clearTimeout(timer);pendingReject=null;if(!finished&&iterator&&typeof iterator.return==='function'){try{Promise.resolve(iterator.return()).catch(()=>{});}catch{}}}
+}
 // Fixed HTTPS origin and bounded response; no sender-supplied URL or redirects.
-export async function fetchGitHubJson(path,{fetcher=fetch,authorization}={}){try{need(typeof path==='string'&&/^\/(?:repos\/YehorBabenko88\/math\/[A-Za-z0-9_./?=-]+|\.well-known\/jwks)$/.test(path)&&!path.includes('..'));const jwks=path==='/.well-known/jwks';const url=(jwks?issuer:'https://api.github.com')+path;const headers={Accept:'application/json'};if(!jwks&&authorization)headers.Authorization=authorization;const response=await fetcher(url,{headers,redirect:'error',signal:AbortSignal.timeout(5000)});if(!response.ok)throw apiFailure(response.status);need(new URL(response.url||url).origin===new URL(url).origin);let size=0;const chunks=[];for await(const chunk of response.body){size+=chunk.length;if(size>1048576)throw apiBoundFailure();chunks.push(Buffer.from(chunk));}return strictJson(Buffer.concat(chunks),1048576);}catch(error){throw apiFailureFrom(error);}}
+export async function fetchGitHubJson(path,{fetcher=fetch,authorization}={}){try{need(typeof path==='string'&&/^\/(?:repos\/YehorBabenko88\/math\/[A-Za-z0-9_./?=-]+|\.well-known\/jwks)$/.test(path)&&!path.includes('..'));const jwks=path==='/.well-known/jwks';const url=(jwks?issuer:'https://api.github.com')+path;const headers={Accept:'application/json'};if(!jwks&&authorization)headers.Authorization=authorization;const response=await fetcher(url,{headers,redirect:'error',signal:AbortSignal.timeout(5000)});if(!response.ok)throw apiFailure(response.status);need(new URL(response.url||url).origin===new URL(url).origin);return strictJson(await readApiBody(response),1048576);}catch(error){throw apiFailureFrom(error);}}
 export async function readPlatform(c,options){need(id(c.runId)&&id(c.attempt)&&id(c.jobId)&&oid(c.sourceHead));const root='/repos/YehorBabenko88/math';const [run,job,commit,jobs]=await Promise.all([fetchGitHubJson(root+'/actions/runs/'+c.runId,options),fetchGitHubJson(root+'/actions/jobs/'+c.jobId,options),fetchGitHubJson(root+'/git/commits/'+c.sourceHead,options),fetchGitHubJson(root+'/actions/runs/'+c.runId+'/attempts/'+c.attempt+'/jobs?per_page=100',options)]);need(Number.isSafeInteger(jobs.total_count)&&jobs.total_count>0&&jobs.total_count<=100&&Array.isArray(jobs.jobs)&&jobs.jobs.length===jobs.total_count&&jobs.jobs.filter(j=>String(j.id)===c.jobId).length===1);const listed=jobs.jobs.find(j=>String(j.id)===c.jobId);need(listed.check_run_url===job.check_run_url&&listed.name===job.name&&listed.head_sha===job.head_sha);return{run,job,commit,jobs};}

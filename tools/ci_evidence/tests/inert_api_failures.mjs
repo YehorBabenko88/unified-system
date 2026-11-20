@@ -24,4 +24,19 @@ assert.equal(verifySourceBinding({policy:discovered.policy,challenge:discovered.
 for(const commit of [{...gitCommit,sha:'0'.repeat(40)},{...gitCommit,tree:{sha:'0'.repeat(40)}},{sha:gitCommit.sha,commit:{tree:gitCommit.tree},parents:gitCommit.parents},{...gitCommit,parents:[...gitCommit.parents].reverse()},{...gitCommit,parents:gitCommit.parents.slice(1)},{...gitCommit,parents:[...gitCommit.parents,{sha:'c'.repeat(40)}]}]){assert.throws(()=>verifySourceBinding({policy:discovered.policy,challenge:discovered.context,platform:{...platform,commit}}));controls++;}
 assert.equal(Object.hasOwn(gitCommit,'commit'),false);controls++;
 
+
+let emptyCount=0;await refused(async()=>({ok:true,url:'https://api.github.com'+route,body:(async function*(){for(let i=0;i<20000;i++){emptyCount++;yield Buffer.alloc(0);}})()}),'E_API_BOUND');assert.equal(emptyCount,1);
+let tinyCount=0;await refused(async()=>({ok:true,url:'https://api.github.com'+route,body:(async function*(){for(let i=0;i<5000;i++){tinyCount++;yield Buffer.from(' ');}yield Buffer.from('{}');})()}),'E_API_BOUND');assert.equal(tinyCount,4097);
+const partial=await fetchGitHubJson(route,{fetcher:async()=>({ok:true,url:'https://api.github.com'+route,body:(async function*(){yield Buffer.from('{');yield Buffer.from('}');})()})});assert.equal(JSON.stringify(partial),'{}');controls++;
+await refused(async()=>({ok:true,url:'https://api.github.com'+route,body:(async function*(){})()}),'E_API_RESPONSE');
+let byteCallbacks=0;await refused(async()=>({ok:true,url:'https://api.github.com'+route,body:(async function*(){yield{valueOf(){byteCallbacks++;throw Error(secret);}};})()}),'E_API_RESPONSE');assert.equal(byteCallbacks,0);
+
+
+const {readFileSync}=await import('node:fs');const vm=await import('node:vm');const apiSource=readFileSync(new URL('../github_identity.mjs',import.meta.url),'utf8'),ab=apiSource.indexOf('async function readApiBody('),ae=apiSource.indexOf('\n// Fixed HTTPS origin',ab);assert(ab>=0&&ae>ab);
+function apiBodyModel(){let clock=0,timer,closed=0;const read=vm.runInNewContext('('+apiSource.slice(ab,ae)+')',{Buffer,Uint8Array,Symbol,Promise,performance:{now:()=>clock},setTimeout:fn=>{timer=fn;return 1;},clearTimeout:()=>{closed++;},apiBoundFailure:()=>Error('INERT_API_BOUND'),need:x=>{if(!x)throw Error('INERT_API_RESPONSE');}});return{read,late(){clock=5001;},expire(){assert.equal(typeof timer,'function');timer();},get closed(){return closed;}};}
+let am=apiBodyModel();async function* complete(){yield Buffer.from('{');yield Buffer.from('}');}assert.equal((await am.read({body:complete()})).toString(),'{}');assert.equal(am.closed,1);controls++;
+am=apiBodyModel();let ended=0;const silent={ [Symbol.asyncIterator](){return{next(){return new Promise(()=>{});},return(){ended++;return Promise.resolve({done:true});}};}};const waiting=am.read({body:silent});am.expire();await assert.rejects(waiting);assert.equal(ended,1);assert.equal(am.closed,1);controls++;
+am=apiBodyModel();const late={ [Symbol.asyncIterator](){return{async next(){am.late();return{done:false,value:Buffer.from('{}')};},return(){return{done:true};}};}};await assert.rejects(am.read({body:late}));controls++;
+am=apiBodyModel();const failedClose={ [Symbol.asyncIterator](){return{async next(){return{done:false,value:Buffer.alloc(0)};},return(){return Promise.reject(Error(secret));}};}};await assert.rejects(am.read({body:failedClose}));assert.equal(am.closed,1);controls++;
+
 console.log(JSON.stringify({controls,status:'PASS_INERT_API_FAILURES_ONLY',network:'NOT_RUN',PKI:'NOT_RUN',SQLite:'NOT_RUN'}));
