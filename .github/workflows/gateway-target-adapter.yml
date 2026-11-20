@@ -57,8 +57,9 @@ jobs:
           root=workspace/'sources/unified_system'
           out=pathlib.Path(os.environ['RUNNER_TEMP'])/'canonical-target-evidence'
           git=pathlib.Path(shutil.which('git')).resolve(strict=True)
+          runtime=pathlib.Path(sys.executable).resolve(strict=True)
           digest=lambda path:hashlib.sha256(path.read_bytes()).hexdigest()
-          command=[sys.executable,'-I','-S','-B','-X','pycache_prefix='+str(out/'cache'),str(root/'docs/intelligence/canonical-target/run_qualification.py'),'--root',str(root),'--root-head',os.environ['EXPECTED_HEAD'],'--terminan-root',str(workspace/'sources/terminan'),'--math-root',str(workspace/'sources/math'),'--git',str(git),'--git-sha256',digest(git),'--runtime-sha256',digest(pathlib.Path(sys.executable)),'--out',str(out),'--include-process-crash']
+          command=[str(runtime),'-I','-S','-B','-X','pycache_prefix='+str(out/'cache'),str(root/'docs/intelligence/canonical-target/run_qualification.py'),'--root',str(root),'--root-head',os.environ['EXPECTED_HEAD'],'--terminan-root',str(workspace/'sources/terminan'),'--math-root',str(workspace/'sources/math'),'--git',str(git),'--git-sha256',digest(git),'--runtime-sha256',digest(runtime),'--out',str(out),'--include-process-crash']
           subprocess.run(command,check=True,timeout=600)
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
