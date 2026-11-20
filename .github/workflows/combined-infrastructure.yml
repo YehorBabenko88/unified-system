@@ -1,9 +1,16 @@
-name: Combined infrastructure cross-stream smoke
-on: [push, pull_request]
+name: Canonical four-owner combined infrastructure source smoke
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
 permissions:
   contents: read
+concurrency:
+  group: root-components-combined-${{ github.event_name }}-${{ github.event.pull_request.head.sha || github.sha }}
+  cancel-in-progress: true
 jobs:
-  combined:
+  component:
     strategy:
       fail-fast: false
       matrix:
@@ -12,18 +19,30 @@ jobs:
     runs-on: ${{ matrix.os }}
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        env:
+          GIT_CONFIG_COUNT: '2'
+          GIT_CONFIG_KEY_0: core.autocrlf
+          GIT_CONFIG_VALUE_0: 'false'
+          GIT_CONFIG_KEY_1: core.eol
+          GIT_CONFIG_VALUE_1: lf
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
-      - uses: actions/setup-python@v5
+          fetch-depth: 0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with:
           python-version: ${{ matrix.python }}
-      - name: Exact source identity
-        shell: pwsh
+      - name: Exact source-bound combined mandatory cases
+        shell: python
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
-          if ((git rev-parse HEAD).Trim() -ne '${{ github.event.pull_request.head.sha || github.sha }}') { throw 'source SHA mismatch' }
-      - name: Combined fleet lifecycle release-boundary regressions
-        run: python -m unittest discover -s tests -p test_combined_control_plane.py -v
-      - name: Syntax and static imports
-        run: python -m compileall -q unified_system tests
+          import os,pathlib,subprocess,sys
+          subprocess.run([sys.executable,'-I','-B','scripts/qualify_root_components.py','--group','combined','--expected-head',os.environ['EXPECTED_HEAD'],'--out',str(pathlib.Path(os.environ['RUNNER_TEMP'])/'root-components-combined')],check=True)
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: root-components-combined-${{ matrix.os }}-${{ matrix.python || '3.12.10' }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/root-components-combined/
+          if-no-files-found: error
