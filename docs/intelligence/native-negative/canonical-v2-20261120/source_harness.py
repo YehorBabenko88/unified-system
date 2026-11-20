@@ -34,7 +34,7 @@ def validate_retirement(rows,expected_count):
         raise ValueError('OWNED_PROCESS_NOT_RETIRED')
 
 def result_passed(result,expected_count):
-    return result is not None and result.wasSuccessful() and result.testsRun==expected_count and not result.skipped
+    return result is not None and result.wasSuccessful() and result.testsRun==expected_count and not result.skipped and not result.expectedFailures and not result.unexpectedSuccesses
 
 def case_ids(suite):
     for test in suite:

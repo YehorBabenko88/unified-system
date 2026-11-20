@@ -23,3 +23,5 @@ Original docs/native-negative v1 evidence/manifest and research native-profile-v
 Local validation is limited to pure calibrations, explicit inert source guards and syntax/AST/raw pin validation. Actual hosted native results and independent review remain required.
 
 Local receipt:9 pure refusal calibrations PASS Python3.11/3.12;27 audited inert source guards PASS Python3.12. Bare Python3.11 source-guard invocation stopped at missing httpx and is NOT_RUN in that environment; no dependency was installed. Actual native/Consul/TLS are NOT_RUN locally. All43 original native-group test method ASTs are unchanged; only fixture dependency bootstrap and runner selection changed. See SOURCE-PRESERVATION.json.
+
+Integrated Root review adds explicit expectedFailures/unexpectedSuccesses rejection to native and inert result gates. Ten pure calibrations pass on Python3.11/3.12, including a real unittest.TestResult that otherwise reports success with an expected failure. Original21/22 native IDs and all43 native method bodies remain unchanged. Native qualification remains NOT_RUN locally.

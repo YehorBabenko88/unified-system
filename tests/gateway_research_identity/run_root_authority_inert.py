@@ -17,6 +17,6 @@ def main():
   actual=list(ids(suite))
   if len(actual)!=len(set(actual)) or len(expected)!=len(set(expected)) or sorted(actual)!=sorted(expected):raise ValueError('EXACT_ROOT_GUARD_CASE_IDS_REQUIRED')
   with proof.audit:result=unittest.TextTestRunner(verbosity=2).run(suite)
- return not (result.wasSuccessful() and result.testsRun==len(expected) and not result.skipped)
+ return not (result.wasSuccessful() and result.testsRun==len(expected) and not result.skipped and not result.expectedFailures and not result.unexpectedSuccesses)
 
 if __name__=='__main__':raise SystemExit(main())

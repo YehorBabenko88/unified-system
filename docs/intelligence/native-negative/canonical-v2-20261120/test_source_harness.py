@@ -19,9 +19,9 @@ class SourceHarnessCalibrationTests(unittest.TestCase):
   with self.assertRaises(ValueError):h.validate_manifest(manifest,{'unified_system/consul_authority.py':{'sha256':'b'*64}})
  def test_no_skip_failure_or_partial_native_execution_can_pass(self):
   from types import SimpleNamespace
-  good=SimpleNamespace(wasSuccessful=lambda:True,testsRun=22,skipped=[])
+  good=SimpleNamespace(wasSuccessful=lambda:True,testsRun=22,skipped=[],expectedFailures=[],unexpectedSuccesses=[])
   self.assertTrue(h.result_passed(good,22))
-  for result in (None,SimpleNamespace(wasSuccessful=lambda:False,testsRun=22,skipped=[]),SimpleNamespace(wasSuccessful=lambda:True,testsRun=22,skipped=[('x','skip')]),SimpleNamespace(wasSuccessful=lambda:True,testsRun=21,skipped=[])):
+  for result in (None,SimpleNamespace(wasSuccessful=lambda:False,testsRun=22,skipped=[],expectedFailures=[],unexpectedSuccesses=[]),SimpleNamespace(wasSuccessful=lambda:True,testsRun=22,skipped=[('x','skip')],expectedFailures=[],unexpectedSuccesses=[]),SimpleNamespace(wasSuccessful=lambda:True,testsRun=21,skipped=[],expectedFailures=[],unexpectedSuccesses=[])):
    self.assertFalse(h.result_passed(result,22))
  def test_owned_process_retirement_refuses_missing_live_foreign_or_ambiguous_pid(self):
   rows=[{'pid':1,'returncode':0},{'pid':2,'returncode':-9},{'pid':3,'returncode':0}]
@@ -74,5 +74,14 @@ class SourceHarnessCalibrationTests(unittest.TestCase):
    with self.assertRaisesRegex(ValueError,'HEAD_MISMATCH'):module.main()
    self.assertEqual(mocked.call_count,1)
    self.assertEqual(mocked.call_args.args[0][-2:],['rev-parse','HEAD'])
+
+ def test_expected_failure_and_unexpected_success_are_not_native_pass(self):
+  result=unittest.TestResult();result.testsRun=21
+  self.assertTrue(h.result_passed(result,21))
+  result.expectedFailures=[('case','expected failure')]
+  self.assertTrue(result.wasSuccessful())
+  self.assertFalse(h.result_passed(result,21))
+  result.expectedFailures=[];result.unexpectedSuccesses=['case']
+  self.assertFalse(h.result_passed(result,21))
 
 if __name__=='__main__':unittest.main()
