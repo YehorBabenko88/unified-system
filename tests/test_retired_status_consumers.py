@@ -51,11 +51,11 @@ class RetiredConsumerTests(unittest.TestCase):
   self.assertEqual(report['runtime_qualification'],'NOT_RUN');self.assertEqual(report['release_status'],'NO_GO')
   for name in ('execution_authority','trading_authorized','source_capability'):self.assertIs(report[name],False)
  def test_canonical_pure_identity_and_unknown_history_stay_denied(self):
-  from unified_system.provenance_v11 import qualify_historical,inspect_market_data_snapshot
+  from unified_system.provenance_v11 import inspect_historical_receipt,inspect_market_data_snapshot
   from unified_system.compatibility import validate_response
   from unified_system.contracts import ContractError
   value=inspect_market_data_snapshot({'api_version':{'major':1,'minor':1},'producer':'market_data','status':'PARTIAL','reason':'EXCHANGE_COMPLETENESS_UNATTESTED'})
   self.assertEqual(value['status'],'PARTIAL');self.assertFalse(value['trading_authorized'])
-  self.assertEqual(qualify_historical({})['status'],'UNAVAILABLE')
+  self.assertEqual(inspect_historical_receipt({})['status'],'UNAVAILABLE')
   for old in ('grid','strattester','supervisor'):
    with self.subTest(old=old),self.assertRaises(ContractError):validate_response(old,'health',503,{})
