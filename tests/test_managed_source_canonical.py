@@ -35,13 +35,22 @@ class CanonicalManagedSourceTests(unittest.TestCase):
         root,manifest,grant=self.fixture();live=[True];grant.require_current=lambda:live[0]
         scope=StartupSourceAdmission(grant,{},manifest);live[0]=False
         with self.assertRaises(ActivationBlocked):scope.source_identity('terminan')
-    def test_unported_operational_auth_fails_before_old_credential_reader(self):
+    def test_readonly_serve_never_reads_retired_fleet_credentials(self):
         from unified_system import service_bootstrap as boot,lab_runtime
         root,manifest,grant=self.fixture()
         grant.profile=dict(runtime_config={},offline_context={});grant.computer_name='fixture'
         with patch.object(lab_runtime,'validate_config',return_value={}),patch.object(lab_runtime,'verify_sources'),patch.object(lab_runtime,'read_grid_auth',side_effect=AssertionError('retired authorization cannot be adopted')):
-            with self.assertRaises(ActivationBlocked) as caught:boot._runtime_admission(grant,dict(manifest=manifest))
-        self.assertEqual(caught.exception.code,'ACTIVATION_MARKET_DATA_AUTH_UNPORTED')
+            self.assertEqual(boot._runtime_admission(grant,dict(manifest=manifest)),({},{}))
+
+    def test_readonly_serve_still_refuses_source_or_grant_revocation(self):
+        from unified_system import service_bootstrap as boot,lab_runtime
+        root,manifest,grant=self.fixture()
+        grant.profile=dict(runtime_config={},offline_context={});grant.computer_name='fixture'
+        for revoked_source in (True,False):
+            grant.require_current=lambda: (_ for _ in ()).throw(ActivationBlocked('ACTIVATION_REVOKED'))
+            failure=ActivationBlocked('ACTIVATION_CODE_REJECTED') if revoked_source else None
+            with self.subTest(source=revoked_source),patch.object(lab_runtime,'validate_config',return_value={}),patch.object(lab_runtime,'verify_sources',side_effect=failure),self.assertRaises(ActivationBlocked):
+                boot._runtime_admission(grant,dict(manifest=manifest))
 
     def test_raw_entry_argument_parser_rejects_retired_modes_without_native_execution(self):
         from unified_system.service_entry import _valid_arguments
