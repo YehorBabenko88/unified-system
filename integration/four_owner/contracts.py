@@ -34,4 +34,5 @@ def runtime_gate(kind,source_proof):
  return dict(schema='unified.four-owner.mandatory-runtime-gate.v1',kind=kind,status='BLOCKED',passed=False,release_status='NO_GO',source_qualification=source_proof.get('qualification','NOT_RUN'),
   missing_proofs=['CANONICAL_STARTUP_ADMISSION_REQUIRED','PROTECTED_FOUR_OWNER_LIVE_SOURCE_AND_DATABASE_CAPABILITY_NOT_QUALIFIED','CANONICAL_MONITOR_SOURCE_ADAPTER_NOT_CONNECTED','CANONICAL_BROWSER_ROUTE_AND_CONTROL_PORT_NOT_QUALIFIED','TERMINAN_CANONICAL_PRODUCER_RESULT_LEDGER_GRAPH_DISPLAY_HANDOFF_NOT_QUALIFIED'],
   preserved_browser_cases=list(BROWSER_CASES),preserved_runtime_obligations=['OWNED_START_AND_AUTHENTICATED_READINESS','ACTUAL_RUNTIME_DISPLAY','UNAUTHENTICATED_HEALTH_DENIAL','OWNED_STOP','SOURCE_POSTCHECK','PRIVATE_CLEANUP'],
+  preserved_legacy_obligation_inventory='docs/migration/retired-six-owner/role-inventory.json',
   native_installation='NOT_RUN',physical='NOT_RUN',production='NO_GO',execution_authority=False,trading_authorized=False)
