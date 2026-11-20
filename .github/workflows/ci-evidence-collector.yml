@@ -1,0 +1,97 @@
+name: Root pinned confidential CI evidence collector
+on:
+  workflow_call:
+    inputs:
+      collector-sha:
+        required: true
+        type: string
+permissions:
+  contents: read
+  actions: read
+  id-token: write
+jobs:
+  collector:
+    if: github.repository == 'YehorBabenko88/math' && github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      NODE_NO_WARNINGS: '1'
+      NODE_DEBUG: ''
+      NODE_DEBUG_NATIVE: ''
+    steps:
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24.20.0'
+      - name: Verify Root tool bytes and qualify only the Math workload
+        id: collect
+        env:
+          QUALIFICATION_COLLECTOR_SHA: ${{ inputs.collector-sha }}
+          QUALIFICATION_API_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          node --input-type=module <<'COLLECTOR'
+          import{mkdirSync,writeFileSync,readFileSync,lstatSync}from'node:fs';import{resolve,dirname,join}from'node:path';import{createHash}from'node:crypto';import{spawnSync}from'node:child_process';
+          const manifest = {
+            "tools/ci_evidence/strict.mjs": "45eae9b819c8e0a51ac7059d416d04d3bd838f6446ada600272889cc68a16438",
+            "tools/ci_evidence/github_identity.mjs": "735a9018d7119837f580dfa194902b0062a7e9e98d6bf91a1f87630de7849adc",
+            "tools/ci_evidence/envelope.mjs": "b081be5d7789bd508026c748075e2435e4e61df8f21905119f4e1cc2f0508c9f",
+            "tools/ci_evidence/receiver_journal.mjs": "f2491c60e7f56b9ce41ce0874d704da2ed8e622dc5bd174013a631de61169911",
+            "tools/ci_evidence/zip.mjs": "633be9954ee26f182989592a24829de6f2318a5552263c23f2c6b871e98a08f2",
+            "tools/ci_evidence/oidc_request.mjs": "d7ed8a0b202d49f213480f6fdcc26f06eb604429a14758642d64a59d5cea19c9",
+            "tools/ci_evidence/context.mjs": "064ecedaaef980cfb4b754f3179c4cb46f09bae1affadb5a540bcd90005aaeda",
+            "tools/ci_evidence/session.mjs": "3b7ce1eef8b3b876fe7d505db21db88db28bbc94409fef1fbbe458e2fe45ef0a",
+            "tools/ci_evidence/synthetic_bundle.mjs": "459caade33cacf7d50b508225b1dedb435159f69ea0b2560fda68ef9102d522c",
+            "tools/ci_evidence/public_summary.mjs": "3d4f63dd2ceb7766965249acd3aa6aafe6e27f59786449f0633ec353ddd1a1ea",
+            "tools/ci_evidence/worker.mjs": "f582b6121c087cba68e50d5b895476280961185e439504fa607f66619ac9fd53",
+            "tools/ci_evidence/hosted.mjs": "2af2b85baba6d9b893982dd7e49a14b9672b2c45bcb228bbfa23e89dacacc6b5",
+            "tools/ci_evidence/diagnostics.mjs": "ed9238d1f92bda2296aaa41c24b984d4647417f657573b9e0179309213f2a075",
+            "tools/ci_evidence/context_init.mjs": "cde73bbfcff528323c4ade54a859ed24d4cf55180239d6460369df95b7983c2c",
+            "tools/ci_evidence/identity_policy.mjs": "8b72983e9d558822ab0c7e79140cdcd9e8f071edfcb961da4eb70fe30506e4a4",
+            "tools/ci_evidence/tests/hosted/confidential-collector-context.test.mjs": "86ce03ba99071c730265796d4d5c9d4c80433b2a896746df93e89c53deacbe9a",
+            "tools/ci_evidence/tests/hosted/confidential-collector-oidc.test.mjs": "6bf2d64169d5929d17d3d6fa9b520e9900d591bbd9b5695e81a2328915e9d008",
+            "tools/ci_evidence/tests/hosted/confidential-pr64-blocked-projection.test.mjs": "801fb26109119ff3be23469501b742f787f87f357291d0a16c14e280c50e4e25",
+            "tools/ci_evidence/tests/hosted/confidential-public-privacy.test.mjs": "73d47e8490f66de445c022998efc7e27bdd798cd933e1cd9c1a35ea1e7f12b35",
+            "tools/ci_evidence/tests/hosted/confidential-receipt-schema.test.mjs": "7ec5cee99e715fdf469415f15eb88d6ee820ee8d6ffaa493b889a323a1736fe8",
+            "tools/ci_evidence/tests/hosted/confidential-stage-codes.test.mjs": "ba1f8ea20437a98202e9abd2df8b140a890b7ad84f8725577ad656d20fe06509",
+            "tools/ci_evidence/tests/hosted/confidential-synthetic-bundle.test.mjs": "4ac30205221a156d296f8eeab928b520c8a2036a623673c38e0f67a74865b64d",
+            "tools/ci_evidence/tests/hosted/confidential-synthetic-session.test.mjs": "2734ebd54fa48efd9954755c98221124a52ebc16dc43a1f0ead90d008c2285bb",
+            "tools/ci_evidence/tests/hosted/fixtures/context.mjs": "646b35ddaebc03edeaef88da6d213d0807298fe174ed8d17160fd103a4d7f7c9",
+            "tools/ci_evidence/tests/inert_initialization.mjs": "0625035e72b4d372ccdd463c929c1cbb1c2aef73fa8ccdc57ccc8d3a163c65ad",
+            "tools/ci_evidence/tests/inert_identity_policy.mjs": "c28a4f7aa70eaf39ece804d89732d1696254d92bd87d99ed58598c542dec2d85",
+            "tools/ci_evidence/tests/inert_public_diagnostics.mjs": "c8818f5808a0f3d45ed14fea56a1b83bbf0826c7d6c41c9ceb07bf71084ef6ff",
+            "tools/ci_evidence/tests/inert_loader.mjs": "8728e30959b3a57075d3c3ed5095a782d19c01e05d7da7d3bcdbc84dce785400",
+            "tools/ci_evidence/tests/inert_api_failures.mjs": "2c27ec139b08c053bec5d518d6d123f99eeaf216fbd8a351fca74be1e8f6a7cc"
+          };
+          let code='E_BOOTSTRAP';const temp=resolve(process.env.RUNNER_TEMP),publicFile=join(temp,'unified-ci-evidence-public/qualification.json');
+          const check=ok=>{if(!ok)throw Error('CI_EVIDENCE_BLOCKED');};
+          try{
+           check(process.env.GITHUB_ACTIONS==='true'&&process.env.RUNNER_ENVIRONMENT==='github-hosted'&&process.platform==='linux'&&process.env.GITHUB_REPOSITORY==='YehorBabenko88/math'&&!process.env.NODE_OPTIONS&&!process.env.NODE_PATH&&!process.env.NODE_DEBUG&&!process.env.NODE_DEBUG_NATIVE);
+           const ref=process.env.QUALIFICATION_COLLECTOR_SHA;check(/^[a-f0-9]{40}$/.test(ref));for(let p=temp;;p=dirname(p)){check(lstatSync(p).isDirectory()&&!lstatSync(p).isSymbolicLink());if(dirname(p)===p)break;}
+           const root=join(temp,'unified-ci-evidence-kit');mkdirSync(root,{mode:0o700});
+           const api=async path=>{const r=await fetch('https://api.github.com/repos/YehorBabenko88/unified-system/'+path,{headers:{Authorization:'Bearer '+process.env.QUALIFICATION_API_TOKEN,Accept:'application/vnd.github+json'},redirect:'error',signal:AbortSignal.timeout(5000)});check(r.ok);let n=0;const chunks=[];for await(const chunk of r.body){n+=chunk.length;check(n<=1048576);chunks.push(Buffer.from(chunk));}return JSON.parse(Buffer.concat(chunks).toString('utf8'));};
+           const entries=tree=>{check(tree.truncated===false&&Array.isArray(tree.tree)&&tree.tree.length<=4096);return tree.tree;};
+           const member=(tree,path,type,mode)=>{const found=entries(tree).filter(e=>e.path===path);check(found.length===1&&found[0].type===type&&found[0].mode===mode&&/^[a-f0-9]{40}$/.test(found[0].sha));return found[0];};
+           const blob=async entry=>{const b=await api('git/blobs/'+entry.sha);check(b.encoding==='base64'&&Number.isSafeInteger(b.size)&&b.size<131072);const raw=Buffer.from(b.content,'base64');check(raw.length===b.size&&createHash('sha1').update(Buffer.concat([Buffer.from('blob '+raw.length+'\0'),raw])).digest('hex')===entry.sha);return raw;};
+           const save=(path,raw)=>{check(!path.includes('..')&&!path.includes('\\'));mkdirSync(dirname(join(root,path)),{recursive:true,mode:0o700});writeFileSync(join(root,path),raw,{flag:'wx',mode:0o600});};
+           code='E_LOADER_API';const commit=await api('git/commits/'+ref);check(commit.sha===ref&&/^[a-f0-9]{40}$/.test(commit.tree?.sha));const top=await api('git/trees/'+commit.tree.sha);
+           const tools=await api('git/trees/'+member(top,'tools','tree','040000').sha);const tool=await api('git/trees/'+member(tools,'ci_evidence','tree','040000').sha+'?recursive=1');
+           code='E_LOADER_BYTES';for(const[path,expected]of Object.entries(manifest)){check(/^tools\/ci_evidence\/[A-Za-z0-9_./-]+\.mjs$/.test(path)&&/^[a-f0-9]{64}$/.test(expected));const raw=await blob(member(tool,path.slice('tools/ci_evidence/'.length),'blob','100644'));check(createHash('sha256').update(raw).digest('hex')===expected);save(path,raw);}
+           // The workflow is bound through its immutable Git tree/blob, not a self-referential SHA256 literal.
+           const github=await api('git/trees/'+member(top,'.github','tree','040000').sha);const workflows=await api('git/trees/'+member(github,'workflows','tree','040000').sha);save('.github/workflows/ci-evidence-collector.yml',await blob(member(workflows,'ci-evidence-collector.yml','blob','100644')));
+           code='E_TESTS';const env={NODE_NO_WARNINGS:'1',NODE_DEBUG:'',NODE_DEBUG_NATIVE:'',TMPDIR:temp,TEMP:temp,TMP:temp};
+           for(const name of ["inert_initialization.mjs","inert_identity_policy.mjs","inert_public_diagnostics.mjs","inert_loader.mjs","inert_api_failures.mjs"]){const r=spawnSync(process.execPath,[join(root,'tools/ci_evidence/tests',name)],{encoding:'utf8',timeout:30000,maxBuffer:1048576,env});check(!r.error&&r.status===0);}
+           const roles=spawnSync(process.execPath,['--test',...["tools/ci_evidence/tests/hosted/confidential-collector-context.test.mjs","tools/ci_evidence/tests/hosted/confidential-collector-oidc.test.mjs","tools/ci_evidence/tests/hosted/confidential-pr64-blocked-projection.test.mjs","tools/ci_evidence/tests/hosted/confidential-public-privacy.test.mjs","tools/ci_evidence/tests/hosted/confidential-receipt-schema.test.mjs","tools/ci_evidence/tests/hosted/confidential-stage-codes.test.mjs","tools/ci_evidence/tests/hosted/confidential-synthetic-bundle.test.mjs","tools/ci_evidence/tests/hosted/confidential-synthetic-session.test.mjs"].map(p=>join(root,p))],{encoding:'utf8',timeout:120000,maxBuffer:1048576,env});check(!roles.error&&roles.status===0);
+           code='E_CHILD';const child=spawnSync(process.execPath,[join(root,'tools/ci_evidence/hosted.mjs')],{encoding:'utf8',timeout:180000,maxBuffer:65536,env:process.env});
+           const data=JSON.parse(readFileSync(publicFile,'utf8'));const {validatePublicSummary}=await import('node:url').then(({pathToFileURL})=>import(pathToFileURL(join(root,'tools/ci_evidence/public_summary.mjs')).href));validatePublicSummary(data);
+           check(!child.error&&((child.status===0&&data.status!=='BLOCKED'&&child.stdout.trim()==='SYNTHETIC_CONFIDENTIAL_QUALIFICATION_PASS'&&child.stderr==='')||(child.status!==0&&data.status==='BLOCKED'&&child.stdout===''&&child.stderr.trim()==='SYNTHETIC_CONFIDENTIAL_QUALIFICATION_BLOCKED')));
+           writeFileSync(process.env.GITHUB_OUTPUT,'safe_public=true\n',{flag:'a'});console.log(child.status===0?'PINNED_SYNTHETIC_QUALIFICATION_PASS':'PINNED_SYNTHETIC_QUALIFICATION_BLOCKED:'+data.code);process.exitCode=child.status===0?0:1;
+          }catch{console.error('PINNED_SYNTHETIC_QUALIFICATION_BLOCKED:'+code);process.exitCode=1;}
+          COLLECTOR
+      - name: Public allowlist summary only
+        if: always() && steps.collect.outputs.safe_public == 'true'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: root-ci-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/unified-ci-evidence-public/qualification.json
+          if-no-files-found: error
+          retention-days: 14
