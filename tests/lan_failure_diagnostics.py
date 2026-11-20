@@ -1,4 +1,4 @@
-"""Test-only, best-effort heartbeat failure line. No runtime/authority API.
+"""Test-only, best-effort LAN failure line. No runtime/authority API.
 
 Exactly two connection/store slots; bounded IO scalars, never an event trace.
 Worker callbacks never print. Original calls run once even if observation fails.
@@ -189,7 +189,7 @@ class FailureDiagnostics:
 
     @contextlib.contextmanager
     def observe(self,lan,budget):
-        """Only the selected heartbeat case installs these test-process wrappers."""
+        """Selected LAN cases install these test-process wrappers without retries."""
         owner=self;self._errors=(lan.TransportError,budget.BudgetError)
         transaction=budget._Store.transaction;wait=budget.NodeBudget.wait_take
         send=lan.Connection._send;emit=lan.Connection._emit;read=lan._read_exact
