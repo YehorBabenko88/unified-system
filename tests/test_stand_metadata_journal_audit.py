@@ -28,3 +28,9 @@ class StandJournalAuditTests(unittest.TestCase):
    def startswith(self,*args):raise AssertionError('HOSTILE_CALLBACK')
   for value in (None,True,1,Hostile(str(self.path))):
    with self.subTest(kind=type(value).__name__),self.assertRaises(RuntimeError):self.module.private_journal_path(value,self.out)
+ def test_unc_device_and_mixed_prefixes_refuse_before_metadata(self):
+  from unittest.mock import patch
+  values=(str(self.root/'foreign.sqlite'),(self.root/'foreign.sqlite').as_uri()+'?mode=ro',self.out.as_uri()+'/%2e%2e/foreign.sqlite?mode=ro','file:////fixture.invalid/share/name?mode=ro','file:///%5c%5cfixture.invalid/share/name?mode=ro','//fixture.invalid/share/name',chr(92)*2+'fixture.invalid/share/name','/'+chr(92)+'fixture.invalid/share/name',chr(92)+'?'+chr(92)+'C:'+chr(92)+'foreign')
+  with patch.object(self.module.pathlib.Path,'resolve',side_effect=AssertionError('FOREIGN_METADATA_FORBIDDEN')):
+   for value in values:
+    with self.subTest(value=value),self.assertRaises(RuntimeError):self.module.private_journal_path(value,self.out)

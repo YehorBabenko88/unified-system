@@ -9,7 +9,10 @@ def private_journal_path(value,out):
   if parsed.netloc or parsed.fragment or parsed.query!='mode=ro':raise RuntimeError('PRIVATE_JOURNAL_REQUIRED')
   value=unquote(parsed.path)
   if os.name=='nt' and len(value)>2 and value[0]=='/' and value[2]==':':value=value[1:]
- path=pathlib.Path(value).resolve()
+ if value.startswith(('//',chr(92),'/'+chr(92))):raise RuntimeError('PRIVATE_JOURNAL_REQUIRED')
+ candidate=pathlib.Path(value)
+ if not candidate.is_absolute() or '..' in candidate.parts or not candidate.is_relative_to(out):raise RuntimeError('PRIVATE_JOURNAL_REQUIRED')
+ path=candidate.resolve()
  if not path.is_relative_to(out):raise RuntimeError('PRIVATE_JOURNAL_REQUIRED')
  return path
 
