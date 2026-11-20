@@ -1,6 +1,6 @@
 # Canonical market query integration
 
-Candidate source owners: Data owner-transfer candidate `2f0d9a8f089e7c80635f769f9741af15847e4103`, Math141 `b3cb935aee7d6569d6fd0cfaff70ea9b9e5f0df3`, Term123 `fc0bed4937ab5dbb039320aae48e49b01b31bb43`. Root remains ENCLOSING_HEAD/NO_GO.
+Candidate source owners: Data121 `2478cad274f9d1f2dde6617b6b22a2576dc83f45`, Math141 `b3cb935aee7d6569d6fd0cfaff70ea9b9e5f0df3`, Term123 `fc0bed4937ab5dbb039320aae48e49b01b31bb43`. Root remains ENCLOSING_HEAD/NO_GO.
 
 |Previous active location/name|Canonical owner/location|Scope|
 |---|---|---|
