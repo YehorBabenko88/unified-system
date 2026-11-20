@@ -16,7 +16,7 @@ try{
  need((lstatSync(root).mode&0o077)===0);
  const plan=JSON.parse(readFileSync(new URL('./role-plan.json',import.meta.url)));
  const proof=JSON.parse(readFileSync(join(root,'bootstrap-proof.json')));need(proof.runner_workflow_source===process.env.ROLE_MATRIX_SHA&&/^[a-f0-9]{40}$/.test(proof.runner_workflow_source)&&/^[a-f0-9]{64}$/.test(proof.runner_workflow_sha256));
- const kit=Object.entries(proof.kit_hashes);need(kit.length===6);
+ const kit=Object.entries(proof.kit_hashes);need(kit.length===7);
  function sourceBytes(){
   const all=[...Object.entries(plan.files),...kit];need(new Set(all.map(x=>x[0])).size===all.length);
   for(const [path,hash]of all){need(/^[A-Za-z0-9_./-]+$/.test(path)&&!path.includes('..')&&/^[a-f0-9]{64}$/.test(hash));const file=join(root,path),st=lstatSync(file);need(st.isFile()&&!st.isSymbolicLink()&&st.nlink===1&&st.size<=131072&&sha(readFileSync(file))===hash);}

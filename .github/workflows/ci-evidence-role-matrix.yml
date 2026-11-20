@@ -59,11 +59,12 @@ jobs:
           import {mkdtempSync,mkdirSync,writeFileSync,readFileSync,lstatSync,realpathSync} from 'node:fs';
           import {join,dirname} from 'node:path';import {createHash} from 'node:crypto';import {spawnSync} from 'node:child_process';
           const KIT_MANIFEST = {
-            "tools/ci_evidence_role_matrix/contract.mjs": "097636e0ab651f81546a7f101871d541b0b54a2eed000579d2f9c6cca34ab0f1",
+            "tools/ci_evidence_role_matrix/contract.mjs": "494b6756817a2a63f2342f5b8b086817210fbcd280b8e31540ecc3d9fb82a372",
             "tools/ci_evidence_role_matrix/reporter.mjs": "0628416798808ccc5b2a388f0fcf8738b47bd83e13213c7b2f8564e5067cbe83",
-            "tools/ci_evidence_role_matrix/runner.mjs": "6fbec65037803efc365951387b34dbe9f87995ebea98007a13bc7f353d5897b1",
+            "tools/ci_evidence_role_matrix/runner.mjs": "203150192e1d143bdc4e478e6547ccea642d47dfa7247b28c198099f3a11ff94",
             "tools/ci_evidence_role_matrix/role-plan.json": "f10588add861f403fd9d3a9f3b0253942d78c0179477af9f02abdc15a7034ac4",
-            "tools/ci_evidence_role_matrix/inert.mjs": "29d4cc76861385b99183e04329a7d8ac967ebdc0bb8776661018c734a3aae77e"
+            "tools/ci_evidence_role_matrix/inert.mjs": "a3d05d412e22fcaf9f84a1ec04e3badc5b91f8501bcca75abc0fe9d16c26dabb",
+            "tools/ci_evidence_role_matrix/aggregate.mjs": "3be8735df9931958b50d1eaffbb30c9e633b56aff01a0cf870cc05cda9e4b52d"
           };
           const need=value=>{if(!value)throw Error('ROLE_MATRIX_REFUSED');},hash=raw=>createHash('sha256').update(raw).digest('hex');
           let phase='E_BOOTSTRAP_PROFILE';

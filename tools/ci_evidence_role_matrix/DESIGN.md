@@ -10,7 +10,7 @@ Exact Math54c3274538b2e4c3f0063db34b8f1f835d5dafeb ledger custody is recorded un
 
 ## Execution and disclosure
 
-A bounded tree/blob loader fetches only verified raw Git bytes at exact Root pins, without checkout or ambient application imports. Before/post hashes cover all31 R1 source files and all6 runner files/workflow. The eight owned test files execute only hosted; a custom reporter discards raw stdout, diagnostics and errors, admitting only the exact31 unique top-level passing event identities. Fail/skip/todo/cancel/duplicate/missing/unexpected events refuse. The existing unchanged R1 inert_loader executes once for the three original static loader roles; its51 internal controls are not51 transferred roles.
+A bounded tree/blob loader fetches only verified raw Git bytes at exact Root pins, without checkout or ambient application imports. Before/post hashes cover all31 R1 source files and all7 runner files/workflow. The eight owned test files execute only hosted; a custom reporter discards raw stdout, diagnostics and errors, admitting only the exact31 unique top-level passing event identities. Fail/skip/todo/cancel/duplicate/missing/unexpected events refuse. The existing unchanged R1 inert_loader executes once for the three original static loader roles; its51 internal controls are not51 transferred roles.
 
 PG service settings preserve the original disposable math_universe_test/math_test fixture. A fixed psql SHOW server_version_num query checks the actual server major in each cell before role execution. Node major is independently checked. No provider/user database is accessed. Fixture credentials go only to that psql child; test children receive a minimal environment without GitHub/OIDC/PG credentials, and all children use the fresh private source directory.
 
@@ -27,3 +27,7 @@ Local execution is limited to inert contract/parser/fake-REST/reporter/static-by
 ## RAlpha role-library update
 
 Role source006418285667b38810b7ecd1de9807b6db166fa3 includes the accepted minimal native Git commit metadata repair. The31raw Git inputs remain30JS plus the collector workflow. Only six source hashes change; all34role IDs/order, original Math54c ledger/raw workflow and all four required cells remain exact. provenance/ralpha-source-repin.json binds every current file to its actual Git blob and records changed hashes. This is source custody, not hosted role acceptance. The runner/workflow matrix SHA is independently fixed only after this candidate is reviewed/published; no future SHA is guessed.
+
+## Source-only aggregate validator
+
+AGGREGATE.md defines the bounded pure four-cell consistency API and the mandatory real hosted archive-custody followup. The runner kit now contains six modules/data files plus its workflow (seven hash-bound files); RAlpha role-library31inputs remain unchanged. Successful fake consistency deliberately remains coverage HELD/NO_GO. Math six-axis validation is not copied or accepted via a boolean/callback.

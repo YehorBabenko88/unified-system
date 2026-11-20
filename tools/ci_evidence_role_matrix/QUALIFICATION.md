@@ -9,3 +9,7 @@ Pure replay: run inert.mjs directly with Node; run inert_source.mjs with the exp
 All existing Root files, especially the one-job confidential collector workflow and tools/ci_evidence closure, remain unchanged. The new matrix workflow is a separate caller handoff, not a change to collector job cardinality or a current Root SDK assertion.
 
 RAlpha repin candidate:54inert contract controls +56inert source/privacy/loader controls pass with read-only Node permission mode and no child/worker/addon capability. The source31files were independently exported from actual006418 Git blobs. A new pin calibration fails on prior82bf and passes on RAlpha; old-source receipts refuse. Actual31Node tests/signatures/SQLite/PG/REST/four hosted cells remain NOT_RUN/HELD. No current Math coverage is promoted.
+
+Aggregate descendant: the existing inert contract program includes current-run completed-job/artifact/receipt-set calibrations; the source program verifies all six kit entries. All source-only positives remain HELD for coverage and NOT_EVALUATED for download custody. No actual hosted artifacts, GitHub requests, four cells, signatures, PG or SQLite are run locally.
+
+Final source count for this descendant:102contract controls +57source controls =159inert controls. Original RAlpha110controls remain represented; added48aggregate refusals/configuration cases and one additional manifest-entry hash check explain the count. Six module programs plus one workflow inline program compile without evaluation.

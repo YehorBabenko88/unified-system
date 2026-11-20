@@ -16,7 +16,8 @@ export function projectTerminal(event,plan,root){
  return Object.freeze({id:roles[0].id,status:'PASS'});
 }
 export function requireTerminals(terminals,plan){planned(plan);need(Array.isArray(terminals)&&terminals.length===31);const expected=plan.roles.filter(role=>role.kind==='HOSTED').map(role=>role.id).sort();for(const value of terminals){closed(value,['id','status']);need(hash(value.id)&&value.status==='PASS');}need(JSON.stringify(terminals.map(x=>x.id).sort())===JSON.stringify(expected));return terminals;}
-export function bindWorkload(run,jobs,pr,expected){
+export function bindWorkload(run,jobs,pr,expected,jobPhase='in_progress'){
+ need(jobPhase==='in_progress'||jobPhase==='completed');
  const cell=validateCell(expected.cell);need(oid(expected.runnerSource));need(Array.isArray(run?.referenced_workflows)&&run.referenced_workflows.length<=32&&run.referenced_workflows.filter(value=>value.path==='YehorBabenko88/unified-system/.github/workflows/ci-evidence-role-matrix.yml@'+expected.runnerSource&&value.sha===expected.runnerSource).length===1);
  need(['push','pull_request','workflow_dispatch'].includes(expected.event)&&id(expected.runId)&&id(expected.attempt)&&oid(expected.workloadHead));
  need(Number.isSafeInteger(run?.id)&&run.id>0&&Number.isSafeInteger(run.run_attempt)&&run.run_attempt>0);
@@ -32,7 +33,7 @@ export function bindWorkload(run,jobs,pr,expected){
  need(Number.isSafeInteger(jobs?.total_count)&&jobs.total_count>0&&jobs.total_count<=100&&Array.isArray(jobs.jobs)&&jobs.jobs.length===jobs.total_count);
  const label='Root transferred unit roles '+cell.cell;
  const found=jobs.jobs.filter(job=>typeof job.name==='string'&&job.name.length<=512&&(job.name===label||job.name.endsWith(' / '+label)));need(found.length===1);const job=found[0];
- need(Number.isSafeInteger(job.id)&&job.id>0&&Number.isSafeInteger(job.run_id)&&Number.isSafeInteger(job.run_attempt)&&String(job.run_id)===expected.runId&&String(job.run_attempt)===expected.attempt&&job.status==='in_progress'&&job.head_sha===run.head_sha);
+ need(Number.isSafeInteger(job.id)&&job.id>0&&Number.isSafeInteger(job.run_id)&&Number.isSafeInteger(job.run_attempt)&&String(job.run_id)===expected.runId&&String(job.run_attempt)===expected.attempt&&job.status===jobPhase&&(jobPhase!=='completed'||job.conclusion==='success')&&job.head_sha===run.head_sha);
  const prefix='https://api.github.com/repos/YehorBabenko88/math/check-runs/';need(typeof job.check_run_url==='string'&&job.check_run_url.startsWith(prefix));const checkId=job.check_run_url.slice(prefix.length);need(id(checkId));
  return Object.freeze({workload_event:expected.event,workload_head:expected.workloadHead,run_head:run.head_sha,run_id:expected.runId,attempt:expected.attempt,job_id:String(job.id),check_run_id:checkId,cell:cell.cell});
 }

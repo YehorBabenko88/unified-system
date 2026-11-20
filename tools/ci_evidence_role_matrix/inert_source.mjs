@@ -3,7 +3,7 @@ import {parseTerminals} from './contract.mjs';import reporter from './reporter.m
 const root=new URL('../../',import.meta.url),workflow=readFileSync(new URL('.github/workflows/ci-evidence-role-matrix.yml',root),'utf8'),plan=JSON.parse(readFileSync(new URL('./role-plan.json',import.meta.url)));
 assert.equal(process.argv.length,3);const roleRoot=pathToFileURL(resolve(process.argv[2])+'/');
 let checks=0;assert.equal(plan.role_source,'006418285667b38810b7ecd1de9807b6db166fa3');checks++;const sha=raw=>createHash('sha256').update(raw).digest('hex');
-const manifest=JSON.parse(workflow.match(/const KIT_MANIFEST = (\{[\s\S]*?\n\s*\});/)[1]);assert.equal(Object.keys(manifest).length,5);
+const manifest=JSON.parse(workflow.match(/const KIT_MANIFEST = (\{[\s\S]*?\n\s*\});/)[1]);assert.equal(Object.keys(manifest).length,6);
 for(const[path,hash]of Object.entries(manifest)){assert.equal(sha(readFileSync(new URL(path,root))),hash);checks++;}
 assert.doesNotMatch(workflow,/id-token:|secrets\.|actions\/checkout|include-hidden-files|pull_request_target/);checks++;assert.doesNotMatch(workflow,/^  workflow_dispatch:/m);
 assert.match(workflow,/node: \['22', '24'\]/);assert.match(workflow,/postgres: \['16', '18'\]/);assert.match(workflow,/contents: read\n  actions: read/);checks++;
