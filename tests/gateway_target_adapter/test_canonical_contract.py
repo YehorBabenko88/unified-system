@@ -4,11 +4,11 @@ from unittest.mock import patch
 from unified_system import gateway_target_adapter as adapter
 class CanonicalContractTests(unittest.TestCase):
  def test_current_target_is_only_canonical_terminan_and_v2(self):
-  q=adapter.template_request();self.assertEqual(q['schema'],'unified.gateway.target-request.v2');self.assertEqual(q['target_kind'],'terminan');self.assertEqual(q['target_capability'],'terminan.ohlcv.untouched_levels.v1');self.assertEqual(q['target_version'],'221a2562f70558e7753a92499fee1c3f2e706bfb');self.assertEqual(adapter.MATH_HEAD,'370972f2eeec18824fecd3ec471f0a514e7dd030');self.assertEqual(q['result_schema'],'unified.gateway.direct-target-result.v2')
+  q=adapter.template_request();self.assertEqual(q['schema'],'unified.gateway.target-request.v2');self.assertEqual(q['target_kind'],'terminan');self.assertEqual(q['target_capability'],'terminan.ohlcv.untouched_levels.v1');self.assertEqual(q['target_version'],'fc0bed4937ab5dbb039320aae48e49b01b31bb43');self.assertEqual(adapter.MATH_HEAD,'b3cb935aee7d6569d6fd0cfaff70ea9b9e5f0df3');self.assertEqual(q['result_schema'],'unified.gateway.direct-target-result.v2')
  def test_old_v1_meta_request_has_no_active_alias(self):
   q=adapter.template_request();q.update(schema='unified.gateway.target-request.v1',target_kind='MetaAnalyse',target_capability='meta.ohlcv.untouched_levels.v1')
   with self.assertRaises(adapter.TargetRejected):adapter.prepare_target(adapter._canonical(q))
-  for old_version in ('b99913690ce29ce60e73414cc4d626ca989916ce','75a906d36574bfdc19acd966e79a6c168dc71ad4','042b075dda0fc8cf6bb829d758632cfa989e8e55'):
+  for old_version in ('b99913690ce29ce60e73414cc4d626ca989916ce','75a906d36574bfdc19acd966e79a6c168dc71ad4','042b075dda0fc8cf6bb829d758632cfa989e8e55','221a2562f70558e7753a92499fee1c3f2e706bfb'):
    q=adapter.template_request();q['target_version']=old_version
    with self.subTest(old_version=old_version),self.assertRaises(adapter.TargetRejected):adapter.prepare_target(adapter._canonical(q))
  def test_registry_contains_no_old_active_owner_or_entrypoint(self):
