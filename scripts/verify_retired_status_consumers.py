@@ -11,6 +11,12 @@ def _raw(path,limit):
  if len(raw)>limit:raise ValueError('ARCHIVE_BYTE_BOUND')
  return raw
 
+def _preserved_ast_dump(node):
+ # Python3.13 defaults to omitting empty optional lists. Keep the original
+ # fingerprint representation; older interpreters do not accept show_empty.
+ try:return ast.dump(node,include_attributes=False,show_empty=True)
+ except TypeError:return ast.dump(node,include_attributes=False)
+
 def verify_inventory(root):
  root=pathlib.Path(root).resolve();raw=_raw(root/INVENTORY,65536)
  if hashlib.sha256(raw).hexdigest()!=INVENTORY_SHA256:raise ValueError('INVENTORY_SOURCE_PIN_MISMATCH')
@@ -25,7 +31,7 @@ def verify_inventory(root):
   if item['path'].endswith('.py'):
    tree=ast.parse(data);compile(data,item['path'],'exec',dont_inherit=True)
    for n in ast.walk(tree):
-    if isinstance(n,ast.Assert):assertions.append(dict(path=item['path'],line=n.lineno,expression=ast.unparse(n.test),ast_sha256=hashlib.sha256(ast.dump(n,include_attributes=False).encode()).hexdigest()))
+    if isinstance(n,ast.Assert):assertions.append(dict(path=item['path'],line=n.lineno,expression=ast.unparse(n.test),ast_sha256=hashlib.sha256(_preserved_ast_dump(n).encode()).hexdigest()))
  if assertions!=value['assertions'] or len(assertions)!=14:raise ValueError('ORIGINAL_ASSERTIONS_NOT_PRESERVED')
  roles=value['roles'];held=tuple(r['id'] for r in roles if r['status']=='HELD')
  if held!=HELD_ROLES or len(roles)!=16 or len({r['id'] for r in roles})!=16:raise ValueError('REQUIRED_RUNTIME_OBLIGATIONS_MISSING')

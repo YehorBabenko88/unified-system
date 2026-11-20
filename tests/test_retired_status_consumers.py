@@ -59,3 +59,20 @@ class RetiredConsumerTests(unittest.TestCase):
   self.assertEqual(inspect_historical_receipt({})['status'],'UNAVAILABLE')
   for old in ('grid','strattester','supervisor'):
    with self.subTest(old=old),self.assertRaises(ContractError):validate_response(old,'health',503,{})
+ def test_ast_dump_requests_empty_optional_fields_on_new_interpreters(self):
+  from unittest.mock import patch
+  checker=self.checker();original=checker.ast.dump;calls=[]
+  def modern_dump(node,include_attributes=False,*,show_empty=False):
+   calls.append(show_empty)
+   return original(node,include_attributes=include_attributes) if show_empty else 'EMPTY_OPTIONALS_OMITTED'
+  with patch.object(checker.ast,'dump',modern_dump):
+   self.assertEqual(checker.verify_inventory(ROOT)['assertions'],14)
+  self.assertEqual(calls,[True]*14)
+ def test_legacy_ast_dump_without_keyword_preserves_original_fingerprints(self):
+  from unittest.mock import patch
+  checker=self.checker();original=checker.ast.dump;calls=[]
+  def legacy_dump(node,include_attributes=False):
+   calls.append(True);return original(node,include_attributes=include_attributes)
+  with patch.object(checker.ast,'dump',legacy_dump):
+   self.assertEqual(checker.verify_inventory(ROOT)['assertions'],14)
+  self.assertEqual(len(calls),14)
