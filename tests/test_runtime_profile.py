@@ -33,14 +33,14 @@ class RuntimeProfileTests(unittest.TestCase):
   self.manifest['files'],self.manifest['directories']=control.inventory(self.base)
   raw=lab_release.canonical(self.manifest);(self.base/'lab-release.json').write_bytes(raw);self.pin=hashlib.sha256(raw).hexdigest()
  def target(self,role='WORKER'):
-  return dict(installation_id='install-1',node_id='NODE1',computer_name='LABHOST',role=role,code_root=str(self.root/'service/code'),state_root=str(self.root/'service/state'),credential_root=str(self.root/'service/activation/credentials'),ports=dict(zip(sorted(control.NAMES),range(26000,26004))),coordinator_port=29000 if role=='WORKER' else None,auth_binding={'path':str(self.root/'service/activation/credentials/module-auth.json'),'sha256':'c'*64},postgres_binding=None if role=='WORKER' else {'database':'unified_lab_install1','user':'unified_lab_install1','port':55479})
+  return dict(installation_id='install-1',node_id='NODE1',computer_name='LABHOST',role=role,code_root=str(self.root/'service/code'),state_root=str(self.root/'service/state'),credential_root=str(self.root/'service/activation/credentials'),ports=dict(zip(sorted(control.NAMES),range(26000,26004))),database_credential_binding=None if role=='WORKER' else {'path':str(self.root/'service/activation/credentials/postgres.json'),'sha256':'c'*64},postgres_binding=None if role=='WORKER' else {'database':'unified_lab_install1','user':'unified_lab_install1','port':55479})
  def derive(self,target=None):return derive_runtime_profile(self.config,self.manifest,base_manifest_sha256=self.pin,target=self.target() if target is None else target)
  def test_all_roles_are_pure_derived_data_never_execution_admission(self):
   before=copy.deepcopy((self.config,self.manifest));files=sorted(str(p) for p in self.root.rglob('*'))
   for role in ('CONTROL','WORKER','SINGLE_PC','SINGLE-PC'):
    with self.subTest(role=role),patch('subprocess.Popen',side_effect=AssertionError('NO PROCESS')),patch('socket.socket',side_effect=AssertionError('NO NETWORK')),patch.object(lab_runtime,'read_grid_auth',side_effect=AssertionError('NO SECRET READ')):
     result=self.derive(self.target(role));c=result['runtime_config'];context=result['offline_context']
-    self.assertEqual(result['status'],'DERIVED_PROFILE_ONLY');self.assertFalse(result['execution_authority']);self.assertEqual(result['activation'],'BLOCKED')
+    self.assertEqual(result['schema'],'unified.runtime-profile.v2');self.assertEqual(result['database_credential_binding'],self.target(role)['database_credential_binding']);self.assertEqual(result['status'],'DERIVED_PROFILE_ONLY');self.assertFalse(result['execution_authority']);self.assertEqual(result['activation'],'BLOCKED')
     self.assertEqual(lab_runtime.validate_config(c,self.manifest,Path(c['programs']['market_data']['cwd']).parents[1],hostname='LABHOST',offline_context=context),c)
     self.assertEqual(c['release_sha256'],self.pin);self.assertEqual(c['node_id'],'NODE1')
     for name,program in c['programs'].items():
@@ -60,7 +60,7 @@ class RuntimeProfileTests(unittest.TestCase):
   with self.assertRaises(ValueError):b.worker_config(self.config,**kwargs)
 
  def test_closed_target_secret_fields_wrong_roles_ports_and_paths_rejected(self):
-  cases=[{'role':'PRODUCTION'},{'password':'SECRET'},{'auth_binding':{'path':self.target()['auth_binding']['path'],'sha256':'c'*64,'token':'SECRET'}},{'postgres_binding':{'database':'unified_lab_x','user':'unified_lab_x','port':55479}},{'code_root':str(self.base)},{'state_root':str(self.base/'state')},{'auth_binding':{'path':str(self.root/'service/state/foreign.json'),'sha256':'c'*64}},{'credential_root':self.target()['state_root']},{'ports':{**self.target()['ports'],'grid':True}},{'coordinator_port':self.target()['ports']['market_data']}]
+  cases=[{'role':'PRODUCTION'},{'password':'SECRET'},{'database_credential_binding':{'path':self.target('CONTROL')['database_credential_binding']['path'],'sha256':'c'*64,'token':'SECRET'}},{'postgres_binding':{'database':'unified_lab_x','user':'unified_lab_x','port':55479}},{'code_root':str(self.base)},{'state_root':str(self.base/'state')},{'database_credential_binding':{'path':str(self.root/'service/state/foreign.json'),'sha256':'c'*64}},{'credential_root':self.target()['state_root']},{'ports':{**self.target()['ports'],'grid':True}},{'coordinator_port':self.target()['ports']['market_data']}]
   for changes in cases:
    with self.subTest(changes=changes),self.assertRaises(ValueError):self.derive({**self.target(),**changes})
   for binding in (None,{'database':'postgres','user':'postgres','port':5432},{'database':'unified_lab_x','user':'unified_lab_x','port':55479,'password':'SECRET'}):
@@ -70,8 +70,15 @@ class RuntimeProfileTests(unittest.TestCase):
   changed=copy.deepcopy(self.config);changed['programs']['market_data']['argv'][-1]='malicious';manifest=copy.deepcopy(self.manifest);raw=lab_release.canonical(changed);manifest['files']['runtime.json']={'sha256':hashlib.sha256(raw).hexdigest(),'bytes':len(raw)}
   pin=hashlib.sha256(lab_release.canonical(manifest)).hexdigest()
   with self.assertRaises(ValueError):derive_runtime_profile(changed,manifest,base_manifest_sha256=pin,target=self.target())
+ def test_retired_fleet_auth_fields_never_enter_canonical_profile(self):
+  target=self.target();result=self.derive(target)
+  self.assertIsNone(result['database_credential_binding'])
+  for field,value in (('auth_binding',{'path':'legacy','sha256':'a'*64}),('coordinator_port',29000)):
+   with self.subTest(field=field),self.assertRaises(ValueError):self.derive({**target,field:value})
+  for program in result['runtime_config']['programs'].values():
+   self.assertTrue(set(program['env']).isdisjoint({'GRID_LAB_AUTH_PATH','GRID_LAB_AUTH_SHA256','PGPASSWORD','NODE_CREDENTIAL'}))
  def test_aliases_are_snapshotted_and_extra_config_context_never_enters_cli(self):
-  target=self.target('SINGLE_PC');result=self.derive(target);target['auth_binding']['path']='changed';self.config['programs']['market_data']['env']['ROLE']='changed'
+  target=self.target('SINGLE_PC');result=self.derive(target);target['database_credential_binding']['path']='changed';self.config['programs']['market_data']['env']['ROLE']='changed'
   self.assertNotIn('changed',json.dumps(result));self.assertEqual(result['offline_context']['scope'],'OFFLINE_VALIDATION_ONLY')
   raw=copy.deepcopy(result['runtime_config']);raw['offline_context']=result['offline_context']
   with self.assertRaises(ValueError):lab_runtime.validate_config(raw,self.manifest,Path(target['code_root']),hostname='LABHOST')

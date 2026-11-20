@@ -17,7 +17,7 @@ PATH_ENV=frozenset(('UNIFIED_GIT_EXECUTABLE','UNIFIED_SOURCE_ROOT','PROGRAMDATA'
  'ML_ARTIFACT_ROOT','ARCHIVE_ROOT','STRATEGY_CACHE_DIR','TEMP','TMP','USERPROFILE','HOME',
  'APPDATA','LOCALAPPDATA','TERMINAN_RUNTIME_V2_SNAPSHOT','TERMINAN_LAB_SNAPSHOT',
  'MARKET_DATA_PINNED_HISTORY_CATALOG'))
-TARGET_KEYS={'installation_id','node_id','computer_name','role','code_root','state_root','credential_root','ports','coordinator_port','auth_binding','postgres_binding'}
+TARGET_KEYS={'installation_id','node_id','computer_name','role','code_root','state_root','credential_root','ports','database_credential_binding','postgres_binding'}
 
 
 def need(ok):
@@ -39,7 +39,7 @@ def _path(value,*,legacy_base=False):
  return safe_path(value)
 
 
-def rebase_config(config,*,node_id,role,old_root,new_root,new_state,ports,coordinator_port,auth_path,auth_sha256,postgres_dsn=None):
+def rebase_config(config,*,node_id,role,old_root,new_root,new_state,ports,database_credential_path=None,database_credential_sha256=None,postgres_dsn=None):
  """Shared pure transform; worker facade retains its existing caller guards.
 
  Only reviewed path slots are rebased. High-level derivation validates both the
@@ -48,11 +48,11 @@ def rebase_config(config,*,node_id,role,old_root,new_root,new_state,ports,coordi
  config=copy.deepcopy(config);ports=copy.deepcopy(ports)
  need(role in ('CONTROL','WORKER','SINGLE_PC') and type(node_id) is str and re.fullmatch('[A-Za-z0-9_-]{1,64}',node_id))
  need(type(ports) is dict and set(ports)==MODULES and all(type(p) is int and 1024<=p<=65535 for p in ports.values()) and len(set(ports.values()))==len(MODULES))
- if role=='WORKER':need(type(coordinator_port) is int and 1024<=coordinator_port<=65535 and coordinator_port not in ports.values() and postgres_dsn is None)
- else:need(coordinator_port is None)
- old_root=_path(old_root,legacy_base=True);new_root=_path(new_root);old_state=_path(config['state_root'],legacy_base=True);new_state=_path(new_state);auth_path=_path(auth_path)
+ if role=='WORKER':need(postgres_dsn is None and database_credential_path is None and database_credential_sha256 is None)
+ else:
+  credential=_path(database_credential_path);lab_release.digest(database_credential_sha256)
+ old_root=_path(old_root,legacy_base=True);new_root=_path(new_root);old_state=_path(config['state_root'],legacy_base=True);new_state=_path(new_state)
  need(new_root!=new_state and new_root not in new_state.parents and new_state not in new_root.parents)
- need(type(auth_sha256) is str and re.fullmatch('[a-f0-9]{64}',auth_sha256))
  def text(value):
   if type(value) is not str:return value
   for old,new in ((old_root,new_root),(old_state,new_state)):
@@ -108,8 +108,11 @@ def _derive_runtime_profile(base_config,base_manifest,*,base_manifest_sha256,tar
  code=_path(target['code_root']);state=_path(target['state_root']);credential=_path(target['credential_root'])
  for left,right in ((code,state),(code,credential),(state,credential),(code,old_root.resolve(strict=False)),(state,old_root.resolve(strict=False)),(credential,old_root.resolve(strict=False))):
   need(left!=right and left not in right.parents and right not in left.parents)
- auth=target['auth_binding'];need(type(auth) is dict and set(auth)=={'path','sha256'})
- path=_path(auth['path']);need(credential in path.parents);lab_release.digest(auth['sha256'])
+ binding=target['database_credential_binding'];path=None;credential_pin=None
+ if role=='WORKER':need(binding is None)
+ else:
+  need(type(binding) is dict and set(binding)=={'path','sha256'})
+  path=_path(binding['path']);need(credential in path.parents);lab_release.digest(binding['sha256']);credential_pin=binding['sha256']
  pg=target['postgres_binding'];dsn=None
  if role=='WORKER':need(pg is None)
  else:
@@ -117,12 +120,12 @@ def _derive_runtime_profile(base_config,base_manifest,*,base_manifest_sha256,tar
   for field in ('database','user'):need(type(pg[field]) is str and re.fullmatch('unified_lab_[a-z0-9_]{1,48}',pg[field]))
   need(type(pg['port']) is int and 1024<=pg['port']<=65535 and pg['port'] not in target['ports'].values())
   dsn=f"postgresql://{pg['user']}@127.0.0.1:{pg['port']}/{pg['database']}"
- derived=rebase_config(config,node_id=target['node_id'],role=role,old_root=old_root,new_root=code,new_state=state,ports=target['ports'],coordinator_port=target['coordinator_port'],auth_path=path,auth_sha256=auth['sha256'],postgres_dsn=dsn)
+ derived=rebase_config(config,node_id=target['node_id'],role=role,old_root=old_root,new_root=code,new_state=state,ports=target['ports'],database_credential_path=path,database_credential_sha256=credential_pin,postgres_dsn=dsn)
  derived['release_sha256']=base_manifest_sha256
  context=dict(scope='OFFLINE_VALIDATION_ONLY',role=role,node_id=target['node_id'],computer_name=target['computer_name'],credential_root=str(credential))
  derived=lab_runtime.validate_config(derived,manifest,code,hostname=target['computer_name'],offline_context=context)
- receipt=dict(schema='unified.runtime-profile-derivation.v1',base_manifest_sha256=base_manifest_sha256,base_config_sha256=hashlib.sha256(raw).hexdigest(),profile_sha256=hashlib.sha256(lab_release.canonical(derived)).hexdigest(),installation_id=target['installation_id'],node_id=target['node_id'],computer_name=target['computer_name'],role=role,sources=copy.deepcopy(manifest['sources']))
- return dict(schema='unified.runtime-profile.v1',status='DERIVED_PROFILE_ONLY',runtime_config=derived,offline_context=context,derivation_receipt=receipt,
+ receipt=dict(schema='unified.runtime-profile-derivation.v2',base_manifest_sha256=base_manifest_sha256,base_config_sha256=hashlib.sha256(raw).hexdigest(),profile_sha256=hashlib.sha256(lab_release.canonical(derived)).hexdigest(),installation_id=target['installation_id'],node_id=target['node_id'],computer_name=target['computer_name'],role=role,sources=copy.deepcopy(manifest['sources']))
+ return dict(schema='unified.runtime-profile.v2',status='DERIVED_PROFILE_ONLY',database_credential_binding=copy.deepcopy(binding),runtime_config=derived,offline_context=context,derivation_receipt=receipt,
   activation='BLOCKED',execution_authority=False,source_proof='NOT_EVALUATED',acl_qualification='NOT_EVALUATED',credential_qualification='NOT_EVALUATED',database_ownership='NOT_EVALUATED',capacity='NOT_EVALUATED',physical_acceptance='NOT_RUN')
 
 
