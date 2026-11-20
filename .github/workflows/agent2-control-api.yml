@@ -1,6 +1,7 @@
 name: Agent 2 P0 Control API boundary
 on:
   push:
+    branches: [main]
     paths:
       - 'unified_system/control_api_readonly.py'
       - 'tests/test_control_api_readonly.py'

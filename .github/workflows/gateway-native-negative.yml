@@ -3,6 +3,7 @@ on:
   pull_request:
     paths: ["unified_system/consul_authority.py","unified_system/authority_codec.py","unified_system/research_authority.py","unified_system/gateway_research_identity.py","unified_system/gateway_native_negative.py","unified_system/gateway_identity.py","tests/gateway_native_negative/**","tests/gateway_research_identity/**","docs/intelligence/native-negative/**","docs/intelligence/research-identity/**","docs/intelligence/canonical-native-profile/**","release/integration/native-negative-v2/**",".github/workflows/gateway-native-negative.yml"]
   push:
+    branches: [main]
     paths: ["unified_system/consul_authority.py","unified_system/authority_codec.py","unified_system/research_authority.py","unified_system/gateway_research_identity.py","unified_system/gateway_native_negative.py","unified_system/gateway_identity.py","tests/gateway_native_negative/**","tests/gateway_research_identity/**","docs/intelligence/native-negative/**","docs/intelligence/research-identity/**","docs/intelligence/canonical-native-profile/**","release/integration/native-negative-v2/**",".github/workflows/gateway-native-negative.yml"]
 permissions:
   contents: read

@@ -1,5 +1,8 @@
 name: Canonical four-owner source boundary and retained Root regression
-on: [push, pull_request]
+on:
+  push:
+    branches: [main]
+  pull_request:
 permissions:
   contents: read
 jobs:

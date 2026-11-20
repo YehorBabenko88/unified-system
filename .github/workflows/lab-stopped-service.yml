@@ -1,6 +1,7 @@
 name: Disposable Windows stopped-service acceptance
 on:
   push:
+    branches: [main]
   pull_request:
   workflow_dispatch:
     inputs:
