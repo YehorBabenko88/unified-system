@@ -3,12 +3,17 @@ import argparse,hashlib,importlib.metadata,importlib.util,json,pathlib,sys,types
 
 def main():
  parser=argparse.ArgumentParser()
- for key in ('root','site','bindings','root-bindings','out'):parser.add_argument('--'+key,required=True)
+ for key in ('root','site','bindings','root-bindings','out','cache'):parser.add_argument('--'+key,required=True)
  parser.add_argument('--suite',choices=('all','chain','history','handoff','provenance'),default='all')
  args=parser.parse_args();root=pathlib.Path(args.root).resolve();site=pathlib.Path(args.site).resolve();out=pathlib.Path(args.out).resolve()
- if not (sys.flags.isolated and sys.dont_write_bytecode):raise ValueError('ISOLATED_INSTALLED_PROFILE_REQUIRED')
+ if not (sys.flags.isolated and sys.flags.no_site and sys.dont_write_bytecode):raise ValueError('ISOLATED_INSTALLED_PROFILE_REQUIRED')
  bindings=json.loads(pathlib.Path(args.bindings).read_bytes())
  root_bindings=json.loads(pathlib.Path(args.root_bindings).read_bytes())
+ helper_path=root/'integration/four_owner/import_custody.py';helper_raw=helper_path.read_bytes()
+ if hashlib.sha256(helper_raw).hexdigest()!=root_bindings['integration/four_owner/import_custody.py']:raise ValueError('IMPORT_CUSTODY_RAW_ROOT_BINDING_REJECTED')
+ custody={'__name__':'raw_import_custody','__file__':str(helper_path)}
+ exec(compile(helper_raw,str(helper_path),'exec',dont_inherit=True),custody)
+ cache_state=custody['begin'](pathlib.Path(args.cache),(root,site))
  for relative,record in bindings.items():
   path=site/relative
   if not path.resolve().is_relative_to(site) or hashlib.sha256(path.read_bytes()).hexdigest()!=record['sha256']:raise ValueError('INSTALLED_SOURCE_BYTES_MISMATCH')
@@ -23,6 +28,7 @@ def main():
  sys.path[:0]=[str(site),str(root),str(root/'tests'),str(root/'tests/four_owner')]
  for old in ('grid','strattester','meta_analyse','market_profile_math'):
   if importlib.util.find_spec(old) is not None:raise ValueError('RETIRED_IMPORT_AVAILABLE')
+ cache_control=custody['controlled_probe'](out/'bytecode-control',cache_state)
  from integration.four_owner.contracts import require_cases,result_complete
  expected=json.loads((root/'integration/four_owner/EXPECTED-TESTS.json').read_bytes())
  if args.suite!='all':
@@ -56,8 +62,9 @@ def main():
  for distribution,module in (('market-data','market_data'),('unified-terminan','terminan'),('unified-math-kernels','market_math')):
   dist=importlib.metadata.distribution(distribution);file=pathlib.Path(sys.modules[module].__file__).resolve()
   if file!=pathlib.Path(dist.locate_file(file.relative_to(site))).resolve():raise ValueError('METADATA_ORIGIN_MISMATCH')
+ cache_origins=custody['verify_loaded'](cache_state,root,site)
  passed=result_complete(result,len(expected))
- report=dict(schema='unified.four-owner.installed-sdk-tests.v1',status='PASS_SCOPED' if passed else 'FAIL',scope='SYNTHETIC_INSTALLED_SDK_AND_FAKE_ROOT_DRIVER_ONLY',suite=args.suite,tests=result.testsRun,case_ids=actual,failures=len(result.failures),errors=len(result.errors),skips=len(result.skipped),expected_failures=len(result.expectedFailures),unexpected_successes=len(result.unexpectedSuccesses),sdk_origins=origins,source_fences='PARENT_REQUIRED_NOT_EVALUATED_BY_CHILD',refusing_native_import_shape=True,actual_process=False,actual_sql=False,native_installation='NOT_RUN',physical='NOT_RUN',release_status='NO_GO',execution_authority=False,trading_authorized=False)
+ report=dict(schema='unified.four-owner.installed-sdk-tests.v1',status='PASS_SCOPED' if passed else 'FAIL',scope='SYNTHETIC_INSTALLED_SDK_AND_FAKE_ROOT_DRIVER_ONLY',suite=args.suite,tests=result.testsRun,case_ids=actual,failures=len(result.failures),errors=len(result.errors),skips=len(result.skipped),expected_failures=len(result.expectedFailures),unexpected_successes=len(result.unexpectedSuccesses),sdk_origins=origins,unchecked_hash_control=cache_control,import_cache_origins=cache_origins,import_cache_policy='FRESH_EXTERNAL_CLI_PREFIX_NO_PRELOADED_APP_EMPTY_PRE_POST',source_fences='PARENT_REQUIRED_NOT_EVALUATED_BY_CHILD',refusing_native_import_shape=True,actual_process=False,actual_sql=False,native_installation='NOT_RUN',physical='NOT_RUN',release_status='NO_GO',execution_authority=False,trading_authorized=False)
  (out/'installed-tests.json').write_text(json.dumps(report,sort_keys=True,indent=2)+'\n',encoding='utf8')
  return 0 if passed else 1
 if __name__=='__main__':raise SystemExit(main())
