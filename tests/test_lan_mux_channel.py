@@ -178,20 +178,33 @@ class MuxTlsTests(unittest.TestCase):
 
     def test_complete_large_messages_real_mtls_and_budget_overhead(self):
         import queue,threading,time
-        client,server,c,s,left,right,binding=self.channels()
-        for kind,size in ((3,133128),(4,2097152)):
-            payload=b'Z'*size;outcome=queue.Queue();beforetx=client.budget.counters()['tx'];beforerx=server.budget.counters()['rx']
-            def send():
-                try:outcome.put(left.send(kind,payload,deadline=time.monotonic()+5))
-                except Exception as exc:outcome.put(exc)
-            t=threading.Thread(target=send);t.start();got=right.receive(deadline=time.monotonic()+5);t.join(5)
-            self.assertFalse(t.is_alive());result=outcome.get(timeout=1)
-            if isinstance(result,Exception):raise result
-            self.assertEqual((got.kind,got.transfer_id,got.payload),(kind,result,payload))
-            minimum=size+mux.HEADER.size*((size+mux.CHUNK_SIZE-1)//mux.CHUNK_SIZE)
-            self.assertGreater(client.budget.counters()['tx']-beforetx,minimum)
-            self.assertGreater(server.budget.counters()['rx']-beforerx,minimum)
-        left.close();right.close();self.assertEqual((client.memory.used,server.memory.used),(0,0))
+        import unified_system.lan_transport as lan
+        import unified_system.network_budget as budget
+        from tests.lan_failure_diagnostics import FailureDiagnostics
+        # Keep the existing real TLS, durable accounting and five-second bounds.
+        # On failure, observe the existing bounded phase/counter schema rather
+        # than guessing whether the sender, credit lane or SQLite stalled.
+        with FailureDiagnostics().observe(lan,budget) as diagnostics:
+            client,server,c,s,left,right,binding=self.channels()
+            diagnostics.register_connection(c);diagnostics.register_connection(s)
+            for kind,size in ((3,133128),(4,2097152)):
+                payload=b'Z'*size;outcome=queue.Queue();beforetx=client.budget.counters()['tx'];beforerx=server.budget.counters()['rx']
+                def send():
+                    try:outcome.put(left.send(kind,payload,deadline=time.monotonic()+5))
+                    except Exception as exc:outcome.put(exc)
+                t=threading.Thread(target=send);t.start()
+                try:
+                    with diagnostics.failure_boundary():
+                        got=right.receive(deadline=time.monotonic()+5);t.join(5)
+                        self.assertFalse(t.is_alive());result=outcome.get(timeout=1)
+                        if isinstance(result,Exception):raise result
+                        self.assertEqual((got.kind,got.transfer_id,got.payload),(kind,result,payload))
+                        minimum=size+mux.HEADER.size*((size+mux.CHUNK_SIZE-1)//mux.CHUNK_SIZE)
+                        self.assertGreater(client.budget.counters()['tx']-beforetx,minimum)
+                        self.assertGreater(server.budget.counters()['rx']-beforerx,minimum)
+                finally:
+                    if t.is_alive():left.close();t.join(5)
+            left.close();right.close();self.assertEqual((client.memory.used,server.memory.used),(0,0))
 
     def test_real_hash_failure_no_complete_payload_and_memory_cleanup(self):
         import time
