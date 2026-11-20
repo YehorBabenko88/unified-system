@@ -15,3 +15,5 @@ Aggregate descendant: the existing inert contract program includes current-run c
 Final source count for this descendant:102contract controls +57source controls =159inert controls. Original RAlpha110controls remain represented; added48aggregate refusals/configuration cases and one additional manifest-entry hash check explain the count. Six module programs plus one workflow inline program compile without evaluation.
 
 Artifact-custody descendant:172inert contract/parser/fake-HTTP controls +59source controls =231controls pass in read-only Node permission mode without child/worker/addon capability. One already-existing official BLOCKED artifact was read-only downloaded for wire-format evidence; no artifact content was executed. Actual new four-cell collection, signatures, SQLite, PG and native execution remain NOT_RUN.
+
+Fragment descendant:172contract controls +66source controls =238inert controls. Source controls include seven deterministic private body-resource cases; no actual network/ZIP/native operation is added by those seven cases. Shared RAlpha API fragment hardening is separate and not claimed here.

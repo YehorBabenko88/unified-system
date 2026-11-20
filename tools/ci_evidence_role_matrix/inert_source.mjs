@@ -31,4 +31,15 @@ const role=plan.roles.find(x=>x.kind==='HOSTED');process.env.ROLE_SOURCE_ROOT='/
 async function* events(values){yield* values;}let text='';for await(const chunk of reporter(events([{type:'test:diagnostic',data:{message:'SECRET_SENTINEL'}},{type:'test:pass',data:{name:role.original.name,file:'/private/role-source/'+role.target,nesting:0,details:{}}}]))){text+=chunk;}assert.equal(text,JSON.stringify({id:role.id,status:'PASS'})+'\n');assert(!text.includes('SECRET_SENTINEL'));checks++;
 text='';for await(const chunk of reporter(events([{type:'test:fail',data:{name:'SECRET_SENTINEL',details:{error:new Error('SECRET_SENTINEL')}}}]))){text+=chunk;}assert.equal(text,'{"refused":"E_TEST_EVENT"}\n');checks++;
 for(const bad of ['SECRET_SENTINEL','x'.repeat(131073),'{}\n'.repeat(32)]){assert.throws(()=>parseTerminals(bad,plan));checks++;}
+
+const custodySource=readFileSync(new URL('./artifact_custody.mjs',import.meta.url),'utf8');const bs=custodySource.indexOf('async function body('),be=custodySource.indexOf('\nasync function archive',bs);assert(bs>=0&&be>bs);
+function streamModel(){let timeout=null,cleared=0,clock=0;const read=vm.runInNewContext('('+custodySource.slice(bs,be)+')',{Buffer,Uint8Array,Symbol,Promise,performance:{now:()=>clock},setTimeout:fn=>{timeout=fn;return 1;},clearTimeout:()=>{cleared++;},need:x=>{if(!x)throw Error('INERT_BODY_REFUSAL');}});return{read,expire(){assert.equal(typeof timeout,'function');timeout();},late(){clock=10001;},get cleared(){return cleared;}};}
+let sm=streamModel();let emptyCalls=0;async function* emptyFragments(){for(let i=0;i<20000;i++){emptyCalls++;yield Buffer.alloc(0);}}await assert.rejects(sm.read({body:emptyFragments()},1));assert.equal(emptyCalls,1);assert.equal(sm.cleared,1);checks++;
+sm=streamModel();let tinyCalls=0;async function* tinyFragments(){for(let i=0;i<5000;i++){tinyCalls++;yield Buffer.from('x');}}await assert.rejects(sm.read({body:tinyFragments()},10000));assert.equal(tinyCalls,4097);checks++;
+sm=streamModel();async function* validFragments(){yield Buffer.from('a');yield Buffer.from('b');}assert.equal((await sm.read({body:validFragments()},2)).toString(),'ab');assert.equal(sm.cleared,1);checks++;
+sm=streamModel();await assert.rejects(sm.read({body:validFragments()},1));checks++;
+sm=streamModel();async function* noBytes(){}await assert.rejects(sm.read({body:noBytes()},1));checks++;
+sm=streamModel();let returned=0;const stalled={ [Symbol.asyncIterator](){return{next(){return new Promise(()=>{});},return(){returned++;return Promise.resolve({done:true});}};}};const pending=sm.read({body:stalled},1);sm.expire();await assert.rejects(pending);assert.equal(returned,1);assert.equal(sm.cleared,1);checks++;
+sm=streamModel();const delayed={ [Symbol.asyncIterator](){return{async next(){sm.late();return{done:false,value:Buffer.from('x')};},return(){return{done:true};}};}};await assert.rejects(sm.read({body:delayed},1));checks++;
+
 console.log(JSON.stringify({checks,status:'PASS_INERT_SOURCE_ONLY',authority:'NONE',production:'NO_GO'}));
