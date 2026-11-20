@@ -4,15 +4,17 @@ Only the protected raw dispatcher constructs this adapter after full admission.
 It delegates revocation to the live grant and grants no execution or network
 capability. Imported library code/test doubles are not kernel qualification.
 """
-import copy,hashlib
+import copy
 from pathlib import Path
 from .service_bootstrap import local,need
 
-MODULES=frozenset(('unified-system','grid','strattester','meta_analyse','terminan','math'))
+from .module_catalog import MODULE_IDS
+MODULES=MODULE_IDS
 
 class StartupSourceAdmission:
  def __init__(self,grant,config,manifest):
   need(grant is not None and not isinstance(grant,dict) and callable(getattr(grant,'require_current',None)))
+  need(type(manifest) is dict and type(manifest.get('sources')) is dict and set(manifest['sources'])==set(MODULES),'ACTIVATION_CODE_REJECTED')
   self._grant=grant;self._config=copy.deepcopy(config);self._manifest=copy.deepcopy(manifest)
   self._roots={};self._identities={}
   need(grant.require_current() is True)
@@ -39,11 +41,3 @@ class StartupSourceAdmission:
  def source_identity(self,module_id):
   self.require_current();need(module_id in MODULES)
   return copy.deepcopy(self._manifest['sources'][module_id])
- def verification_launch(self,module_id):
-  self.require_current();need(module_id=='strattester')
-  root=self._grant.code_root;python=local(self._config['programs'][module_id]['argv'][0])
-  entry=local(self._roots['unified-system']/'unified_system/service_entry.py')
-  for path in (python,entry):
-   relative=path.relative_to(root).as_posix();info=path.stat();need(path.is_file() and info.st_nlink==1 and info.st_size<=64*1024*1024)
-   need(hashlib.sha256(path.read_bytes()).hexdigest()==self._manifest['files'][relative]['sha256'])
-  self.require_current();return [str(python),'-I','-S','-B',str(entry),'--verify-module-source',module_id]

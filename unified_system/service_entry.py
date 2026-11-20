@@ -5,13 +5,17 @@ for LAB simulation, never publisher authentication or a readiness assertion.
 """
 import sys
 
-BOOTSTRAP_SHA256='a8012a04c4a0507a72bd6ba38c63ad0af855d5f25efea7669ea11db1386d8d45'
+BOOTSTRAP_SHA256='5ce73710f6d0fbfd88517372979b3182eded9b7f1f569789806de63b886307c4'
+
+
+def _valid_arguments(args):
+ return type(args) is list and (args==[] or (len(args)==2 and args[0]=='--module-source' and args[1] in ('market_data','terminan')))
 
 
 def main():
  try:
   args=sys.argv[1:]
-  valid=args in ([],['--data-first'],['--data-first-worker']) or len(args)==2 and (args[0]=='--module-source' and args[1] in ('meta_analyse','strattester','terminan','grid') or args==['--verify-module-source','strattester'])
+  valid=_valid_arguments(args)
   if not (sys.flags.isolated and sys.flags.no_site and sys.flags.dont_write_bytecode and valid):raise ValueError()
   import ctypes,hashlib,importlib.util,os,stat
   from pathlib import Path
@@ -33,8 +37,7 @@ def main():
   namespace={'__name__':'_unified_protected_bootstrap','__file__':str(helper)}
   exec(compile(raw,str(helper),'exec'),namespace)
   grant=namespace['read_protected_activation'](entry.parents[4])
-  if len(args)==2:return namespace['run_protected_module'](grant,args[1],verify_only=args[0]=='--verify-module-source')
-  if args:return namespace['run_protected_data_first'](grant,worker=args[0]=='--data-first-worker')
+  if len(args)==2:return namespace['run_protected_module'](grant,args[1])
   return namespace['run_protected_runtime'](grant)
  except Exception:
   print('BLOCKED_SERVICE_ACTIVATION')

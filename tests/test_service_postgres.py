@@ -19,7 +19,7 @@ class Boundary:
   self.calls.append('prepare');Path(plan['namespace']).mkdir();Path(plan['data_root']).mkdir()
  def admit_auth(self,plan):self.calls.append('auth_acl')
  def release_id(self,plan):return 'lab-1'
- def grid_commit(self,plan):return 'a'*40
+ def market_data_commit(self,plan):return 'a'*40
  def initialize(self,plan,password):
   self.calls.append('initialize');Path(plan['cluster']).mkdir();(Path(plan['cluster'])/'PG_VERSION').write_bytes(b'18')
   for name in pg.CONFIG_FILES:
@@ -53,14 +53,14 @@ class PostgresBoundaryTests(unittest.TestCase):
   from tests.test_lab_capsule_builder import builder
   vendor={'postgresql':{'version':'postgres (PostgreSQL) 18.1','files':builder.inventory(base/'runtime/postgresql')[0]}}
   (base/'locks').mkdir();(base/'locks/vendor.json').write_bytes(lab_release.canonical(vendor))
-  job=base/'sources/grid/grid/ml_windows_job.py';job.parent.mkdir(parents=True);job.write_bytes(b'INERT_JOB_NOT_EXECUTED')
+  job=base/pg.JOB_SOURCE;job.parent.mkdir(parents=True,exist_ok=True);job.write_bytes(b'INERT_JOB_NOT_EXECUTED')
   (base/'lab-release.json').unlink();self.fixture.manifest['files'],self.fixture.manifest['directories']=builder.inventory(base)
   raw=lab_release.canonical(self.fixture.manifest);(base/'lab-release.json').write_bytes(raw);self.fixture.pin=hashlib.sha256(raw).hexdigest()
   self.root=self.fixture.root/'service';self.root.mkdir();(self.root/'state').mkdir();lab_release.stage_capsule(base,self.root/'code',self.fixture.pin)
-  self.auth=self.fixture.root/'protected-auth.json';self.auth.write_bytes(lab_release.canonical(dict(schema='unified.lab.grid-auth.v3',node_id='NODE1',role='CONTROL',release_id='lab-1',source_commit='a'*40,grid_shared_token='d'*64,node_credential=None,postgres_password='c'*64)))
+  self.auth=self.fixture.root/'protected-auth.json';self.auth.write_bytes(lab_release.canonical(dict(schema=pg.AUTH_SCHEMA,node_id='NODE1',release_id='lab-1',source_commit='a'*40,database='unified_lab_install1',user='unified_lab_install1',postgres_password='c'*64)))
   target=self.fixture.target('CONTROL');target['auth_binding']['sha256']=hashlib.sha256(self.auth.read_bytes()).hexdigest();self.profile=self.fixture.derive(target)
   self.resource=Resource(dict(root=str(self.root),code=str(self.root/'code'),state=str(self.root/'state'),manifest_sha256=self.fixture.pin,role='CONTROL',computer_name='LABHOST',node_id='NODE1',installation_id='install-1',service_sid='S-1-5-80-1-2-3-4-5',plan_sha256='b'*64))
-  self.boundary=Boundary();self.plan=pg.postgres_plan(self.resource,self.profile,self.auth,boundary=self.boundary);self.calls=[]
+  self.boundary=Boundary();self.plan=pg.postgres_plan(self.resource,self.profile,self.auth,auth_sha256=hashlib.sha256(self.auth.read_bytes()).hexdigest(),boundary=self.boundary);self.calls=[]
  def owner(self,action,pin):self.calls.append((action,pin));return True
  def provision(self,**changes):return pg.provision_postgres(self.plan,owner_phase=changes.get('owner_phase',self.owner),boundary=self.boundary)
  def grant(self,receipt):
@@ -246,7 +246,7 @@ class LaunchRecoveryTests(unittest.TestCase):
   self.assertEqual(lease.journal.read(),before);lease.no_process()
  def test_old_job_without_synchronous_quiescence_is_rejected_before_any_spawn(self):
   from unittest.mock import patch
-  code=Path(self.plan['service_plan']['code']);job=code/'sources/grid/grid/ml_windows_job.py'
+  code=Path(self.plan['service_plan']['code']);job=code/pg.JOB_SOURCE
   raw=b'class WindowsJob:\n def close(self):pass\n';job.write_bytes(raw);plan=copy.deepcopy(self.plan);plan['job_sha256']=hashlib.sha256(raw).hexdigest()
   with patch('subprocess.Popen') as spawn:
    with self.assertRaises(pg.PostgresBlocked):pg._job_class(plan)
@@ -259,3 +259,48 @@ class LaunchRecoveryTests(unittest.TestCase):
   self.assertEqual((Path(self.plan['cluster'])/'postmaster.pid').read_text().splitlines()[0],'999')
 
 if __name__=='__main__':unittest.main()
+
+
+class CanonicalPostgresSourceTests(unittest.TestCase):
+ def fixture(self):
+  plan={'service_plan':{'node_id':'NODE1','role':'CONTROL'},'database':'unified_lab_fixture','user':'unified_lab_fixture'}
+  record={'schema':pg.AUTH_SCHEMA,'node_id':'NODE1','release_id':'fixture','source_commit':'a'*40,'database':plan['database'],'user':plan['user'],'postgres_password':'p'*64}
+  return plan,record
+ def read(self,plan,record):
+  return pg._postgres_password(lab_release.canonical(record),plan,release_id='fixture',source_commit='a'*40)
+ def test_dedicated_database_credential_has_no_fleet_token_fields(self):
+  plan,record=self.fixture();self.assertEqual(self.read(plan,record),'p'*64)
+  for field,value in (('schema','unified.lab.grid-auth.v3'),('node_id','OTHER'),('release_id','other'),('source_commit','b'*40),('database','other'),('user','other'),('postgres_password','short'),('postgres_password',True),('grid_shared_token','g'*64)):
+   changed={**record,field:value}
+   with self.subTest(field=field,value=value),self.assertRaises(pg.PostgresBlocked) as caught:self.read(plan,changed)
+   self.assertNotIn('p'*64,str(caught.exception))
+ def test_worker_duplicate_or_oversize_credential_refused(self):
+  plan,record=self.fixture();plan['service_plan']['role']='WORKER'
+  with self.assertRaises(pg.PostgresBlocked):self.read(plan,record)
+  plan['service_plan']['role']='CONTROL'
+  for raw in (b'{"schema":1,"schema":2}',b'x'*8193):
+   with self.assertRaises(pg.PostgresBlocked):pg._postgres_password(raw,plan,release_id='fixture',source_commit='a'*40)
+ def test_canonical_job_bytes_are_pinned_before_loading(self):
+  with tempfile.TemporaryDirectory() as temp:
+   root=Path(temp).resolve();target=root/pg.JOB_SOURCE;target.parent.mkdir(parents=True)
+   source=(ROOT/'unified_system/windows_job.py').read_bytes();target.write_bytes(source)
+   plan={'service_plan':{'code':str(root)},'job_sha256':hashlib.sha256(source).hexdigest()}
+   klass=pg._job_class(plan);self.assertTrue(callable(klass.terminate_and_wait))
+   target.write_bytes(source+b'\n# tampered')
+   with self.assertRaises(pg.PostgresBlocked):pg._job_class(plan)
+ def test_job_quiescence_and_failure_retain_handle_with_fake_kernel(self):
+  from unified_system.windows_job import WindowsJob
+  from unittest.mock import patch
+  class API:
+   def __init__(self,active=0,query=True,close=True):self.active=active;self.query=query;self.close=close;self.closed=[]
+   def TerminateJobObject(self,handle,code):return True
+   def QueryInformationJobObject(self,handle,kind,info,size,length):info._obj.ActiveProcesses=self.active;return self.query
+   def CloseHandle(self,handle):self.closed.append(handle);return self.close
+  for active,query,close,error in ((0,True,True,None),(1,True,True,TimeoutError),(0,False,True,OSError),(0,True,False,OSError)):
+   job=WindowsJob.__new__(WindowsJob);job._job=123;job._kernel=API(active,query,close)
+   ticks=iter([0,0,0,0,1])
+   with self.subTest(active=active,query=query,close=close),patch('unified_system.windows_job.time.monotonic',side_effect=lambda:next(ticks)),patch('unified_system.windows_job.time.sleep'):
+    if error:
+     with self.assertRaises(error):job.terminate_and_wait(.1)
+     self.assertEqual(job._job,123)
+    else:self.assertIs(job.terminate_and_wait(.1),True);self.assertIsNone(job._job)
