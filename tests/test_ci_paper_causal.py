@@ -4,6 +4,8 @@ The real Git fixture remains mandatory hosted; local pure runs select other case
 import importlib.util,importlib,json,os,pathlib,subprocess,sys,tempfile,unittest,hashlib
 from unittest.mock import patch
 ROOT=pathlib.Path(__file__).resolve().parents[1]
+# Isolated unittest discovery adds tests/, so declare the owned source root.
+sys.path.insert(0,str(ROOT))
 def load(relative,name):
  spec=importlib.util.spec_from_file_location(name,ROOT/relative);module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module);return module
 class CausalGateTests(unittest.TestCase):
@@ -76,7 +78,8 @@ class CausalGateTests(unittest.TestCase):
   from types import SimpleNamespace
   with self.assertRaises(ValueError):runner.require_interpreter(SimpleNamespace(isolated=1,no_site=0,dont_write_bytecode=1))
   with tempfile.TemporaryDirectory() as tmp:
-   site=pathlib.Path(tmp);bindings={}
+   # The installed CLI resolves site before calling its raw-byte validators.
+   site=pathlib.Path(tmp).resolve();bindings={}
    for name,owner in (('market_math.py','math'),('market_data/__init__.py','market_data'),('terminan/__init__.py','terminan')):
     p=site/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(b'# inert metadata fixture\n');bindings[name]=dict(owner=owner,sha256=hashlib.sha256(p.read_bytes()).hexdigest())
    runner.check_sdk_bindings(site,bindings)
