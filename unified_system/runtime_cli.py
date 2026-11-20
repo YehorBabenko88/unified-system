@@ -1,9 +1,9 @@
 """Prepare-only runtime CLI with an explicit disposable hosted Windows test lane.
 
 This CLI is not a production trust bridge. Publisher signature, enrollment and
-fenced rollout permits belong to Grid deployment_agent. Config contents cannot
-authorize themselves. Actual legacy module functional adapters are still needed;
-process liveness and a listening port never synthesize readiness.
+fenced rollout permits belong to the protected infrastructure lifecycle. Config
+contents cannot authorize themselves. Source, ownership and functional module
+qualification remain separate from process liveness.
 """
 import argparse
 import copy
@@ -37,8 +37,7 @@ def need(ok):
 def validate_config(c,*,allow_physical=False):
     need(type(c) is dict and set(c)=={'schema','node_id','release_id','release_sha256',
         'state_root','snapshot_path','http_port','tick_seconds','specs','programs'})
-    need(c['schema'] in ('unified.runtime.config.v1','unified.runtime.config.v2'))
-    builtin=c['schema']=='unified.runtime.config.v2'
+    need(c['schema']=='unified.runtime.config.v2')
     need(type(c['node_id']) is str and re.fullmatch('[A-Za-z0-9_-]{1,64}',c['node_id']) and (allow_physical is True or c['node_id'].upper() not in ('ADMINIT','LS5','PC4')))
     need(type(c['release_id']) is str and re.fullmatch('[A-Za-z0-9_.:-]{1,128}',c['release_id']))
     need(type(c['release_sha256']) is str and re.fullmatch('[0-9a-f]{64}',c['release_sha256']))
@@ -53,9 +52,9 @@ def validate_config(c,*,allow_physical=False):
         spec=ModuleSpec(**item);_valid(spec)
         need(spec.module_id not in specs);specs[spec.module_id]=spec
     need(set(specs)==MODULE_IDS);RuntimeSupervisor._order(specs)
-    expected=MODULE_IDS-{'unified_system'} if builtin else MODULE_IDS
+    expected=MODULE_IDS-{'unified_system'}
     need(type(c['programs']) is dict and set(c['programs'])==expected)
-    if builtin:need(c['http_port']>0 and c['tick_seconds']<=.25)
+    need(c['http_port']>0 and c['tick_seconds']<=.25)
     for p in c['programs'].values():
         need(type(p) is dict and {'argv','cwd','health_url','executable_sha256','file_pins'}<=set(p)<= {'argv','cwd','health_url','executable_sha256','file_pins','env','ca_file','external_file_pins','health_timeout_seconds'})
         timeout=p.get('health_timeout_seconds',.5)
@@ -196,20 +195,20 @@ def write_snapshot(path,snapshot):
 
 
 def make_runtime(c,authorize,*,child_environment=None):
+    need(c['schema']=='unified.runtime.config.v2')
     root=Path(c['state_root'])
     driver=ProcessDriver(root/'private-processes',c['programs'],authorize=authorize,child_environment=child_environment)
-    if c['schema']=='unified.runtime.config.v2':
-        from .runtime_builtin import BuiltinRuntimeDriver
-        driver=BuiltinRuntimeDriver(driver,journal_path=root/'runtime.sqlite',snapshot_path=c['snapshot_path'],
-            http_port=c['http_port'],node_id=c['node_id'],release_id=c['release_id'],
-            release_sha256=c['release_sha256'],authorize=authorize)
+    from .runtime_builtin import BuiltinRuntimeDriver
+    driver=BuiltinRuntimeDriver(driver,journal_path=root/'runtime.sqlite',snapshot_path=c['snapshot_path'],
+        http_port=c['http_port'],node_id=c['node_id'],release_id=c['release_id'],
+        release_sha256=c['release_sha256'],authorize=authorize)
     return RuntimeSupervisor(root/'runtime.sqlite',driver,[ModuleSpec(**x) for x in c['specs']],
         release_id=c['release_id'],release_sha256=c['release_sha256'],node_id=c['node_id'])
 
 
 def run_runtime(c,runtime,*,stop_event,continuation=None):
     # The optional probe is supplied by the protected service admission layer.
-    # It grants no authority by itself. Legacy callers keep their existing gate.
+    # It supplements the caller start admission and grants no authority itself.
     # Fail before binding/writing on initial denial; revocation during execution
     # uses the same owned-stop/final-publish path as any runtime failure.
     def require_continuation():

@@ -9,11 +9,15 @@ def fixture(root):
     code=root/'code';code.mkdir();(code/'worker.py').write_text('fixture')
     pin=hashlib.sha256(exe.read_bytes()).hexdigest()
     specs=[dict(module_id=n,version='1.0.0',api_major=1,dependencies=[],start_timeout=5) for n in sorted(MODULE_IDS)]
-    programs={n:dict(argv=[str(exe),str(code/'worker.py')],cwd=str(code),health_url='http://127.0.0.1:19000/ready',executable_sha256=pin,file_pins={'worker.py':'a'*64}) for n in MODULE_IDS}
-    return dict(schema='unified.runtime.config.v1',node_id='lab-node',release_id='r1',release_sha256='b'*64,state_root=str(root/'state'),snapshot_path=str(root/'public/runtime.json'),http_port=0,tick_seconds=.1,specs=specs,programs=programs)
+    programs={n:dict(argv=[str(exe),str(code/'worker.py')],cwd=str(code),health_url='http://127.0.0.1:19000/ready',executable_sha256=pin,file_pins={'worker.py':'a'*64}) for n in MODULE_IDS-{'unified_system'}}
+    return dict(schema='unified.runtime.config.v2',node_id='lab-node',release_id='r1',release_sha256='b'*64,state_root=str(root/'state'),snapshot_path=str(root/'public/runtime.json'),http_port=19003,tick_seconds=.1,specs=specs,programs=programs)
 
 
 class CliTests(unittest.TestCase):
+    def test_retired_external_controller_config_is_refused(self):
+        c=copy.deepcopy(self.config);c["schema"]="unified.runtime.config.v1"
+        with self.assertRaises(ValueError):cli.validate_config(c)
+
     def setUp(self):
         self.temp=tempfile.TemporaryDirectory(prefix='mission3-cli-');self.addCleanup(self.temp.cleanup)
         self.root=pathlib.Path(self.temp.name);self.config=fixture(self.root)
@@ -63,7 +67,6 @@ class CliTests(unittest.TestCase):
 
     def builtin_config(self):
         c=copy.deepcopy(self.config);c['schema']='unified.runtime.config.v2'
-        c['programs'].pop('unified_system')
         with socket.socket() as listener:
             listener.bind(('127.0.0.1',0));c['http_port']=listener.getsockname()[1]
         return c
