@@ -33,6 +33,12 @@ class PrivateDataCapabilityTests(unittest.TestCase):
   with patch('unified_system.runtime_process.subprocess.Popen',return_value=child) as spawn,patch('unified_system.runtime_process._identity',return_value=['owned','exe']):
    self.driver.start(ModuleSpec('market_data','1.0.0'),'r','e'*32)
   self.assertEqual(spawn.call_args.kwargs['env']['PGPASSWORD'],'SYNTHETIC_ONLY_PASSWORD');self.assertNotIn(KEY,spawn.call_args.kwargs['env'])
+ def test_private_injection_never_mutates_environment_provider_mapping(self):
+  original={'PGPASSWORD':'SYNTHETIC_ONLY_PASSWORD'};self.driver.child_environment=lambda _:original
+  child=SimpleNamespace(pid=22,stdin=io.BytesIO())
+  with patch('unified_system.runtime_process.subprocess.Popen',return_value=child),patch('unified_system.runtime_process._identity',return_value=['owned','exe']):self.driver.start(ModuleSpec('terminan','1.0.0'),'r','c'*32)
+  self.assertEqual(original,{'PGPASSWORD':'SYNTHETIC_ONLY_PASSWORD'})
+  self.assertNotIn(KEY,self.programs['terminan']['env'])
  def test_public_configuration_override_is_rejected_even_after_construction(self):
   for key in (KEY,KEY.lower(),'PGPASSWORD','pgpassfile'):
    self.programs['terminan']['env'][key]='injected'
