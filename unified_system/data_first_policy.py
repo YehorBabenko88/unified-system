@@ -21,7 +21,7 @@ def validate_data_first_grant(value,manifest):
    and value['workspace_relative']=='data-first')
   source=value['source_commit']
   _need(type(source) is str and re.fullmatch('[a-f0-9]{40}',source)
-   and source==manifest['sources']['strattester']['commit'])
+   and source==manifest['sources']['market_data']['commit'])
   pins=value['strategy_fingerprints'];categories=value['categories'];limits=value['limits']
   _need(type(pins) is list and 1<=len(pins)<=128)
   _need(all(type(pin) is str and re.fullmatch('[a-f0-9]{64}',pin) for pin in pins)

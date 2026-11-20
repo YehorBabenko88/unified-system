@@ -6,12 +6,12 @@ from .fleet_snapshot import validate_fleet
 class ReadOnlyLifecycleApp:
     def __init__(self,provider=None):self.provider=provider
     def __call__(self,environ,start_response):
-        data={'schema':'unified.lifecycle.v1','api_version':{'major':1,'minor':0},'producer':'unified-system',
+        data={'schema':'unified.lifecycle.v2','api_version':{'major':2,'minor':0},'producer':'unified_system',
               'mode':'PLAN_ONLY','status':'UNAVAILABLE','reason':'LIFECYCLE_UNAVAILABLE',
               'execution_authorized':False,'trading_authorized':False,'physical_acceptance':'NOT_RUN'}
         status=503
         if environ.get('REQUEST_METHOD')!='GET':status=405;data['reason']='METHOD_NOT_ALLOWED'
-        elif environ.get('PATH_INFO')!='/internal/v1/lifecycle':status=404;data['reason']='NOT_FOUND'
+        elif environ.get('PATH_INFO')!='/internal/v2/lifecycle':status=404;data['reason']='NOT_FOUND'
         elif environ.get('QUERY_STRING'):status=400;data['reason']='QUERY_NOT_SUPPORTED'
         else:
             try:

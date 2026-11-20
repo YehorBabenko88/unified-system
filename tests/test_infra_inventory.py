@@ -5,14 +5,14 @@ from unified_system.fleet_policy import FleetPolicyError
 NOW=1800000000000
 def node(i):
     return dict(id="PC"+str(i),state="ACTIVE",cpu=.2,memory=.25,disk=.4,
-        modules=["grid","strattester","math","terminan","unified-system"],
+        modules=["market_data","math","terminan","unified_system"],
         zone="room1",last_heartbeat_ms=NOW-500,epoch=1)
 
 class InventoryTests(unittest.TestCase):
     def test_six_pc_db_sizes(self):
         r=summarize_fleet([node(i) for i in range(1,7)],NOW,
-            [{"id":"grid","engine":"postgresql","size_bytes":2048,"status":"OBSERVED","owner":"grid"},
-             {"id":"research","engine":"sqlite","size_bytes":None,"status":"UNAVAILABLE","owner":"strattester"}])
+            [{"id":"market_data","engine":"postgresql","size_bytes":2048,"status":"OBSERVED","owner":"market_data"},
+             {"id":"research","engine":"sqlite","size_bytes":None,"status":"UNAVAILABLE","owner":"terminan"}])
         self.assertEqual(r["active_nodes"],6)
         self.assertEqual(r["database_total_bytes_observed"],2048)
         self.assertEqual(r["unknown_database_sizes"],1)
@@ -24,5 +24,5 @@ class InventoryTests(unittest.TestCase):
         with self.assertRaises(FleetPolicyError):summarize_fleet([],NOW,[db,db])
     def test_unknown_size_negative(self):
         with self.assertRaises(FleetPolicyError):
-            summarize_fleet([],NOW,[{"id":"x","engine":"postgresql","size_bytes":-1,"status":"OBSERVED","owner":"grid"}])
+            summarize_fleet([],NOW,[{"id":"x","engine":"postgresql","size_bytes":-1,"status":"OBSERVED","owner":"market_data"}])
 if __name__=="__main__":unittest.main()

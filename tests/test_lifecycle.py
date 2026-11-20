@@ -122,7 +122,7 @@ class LifecycleTests(unittest.TestCase):
         self.life.verifier=lambda stage,value,**transition:dict(verdict='VERIFIED_SYNTHETIC',stage=stage,status='RUNNING',completed=0,total=0)
         with self.assertRaises(ContractError):self.apply(STAGES[0])
     def test_read_only_api_and_safe_provider_failure(self):
-        def request(app,method='GET',path='/internal/v1/lifecycle',query=''):
+        def request(app,method='GET',path='/internal/v2/lifecycle',query=''):
             response=[]
             body=b''.join(app({'REQUEST_METHOD':method,'PATH_INFO':path,'QUERY_STRING':query},lambda s,h:response.append(s)))
             return int(response[0].split()[0]),json.loads(body)
@@ -134,6 +134,9 @@ class LifecycleTests(unittest.TestCase):
         def bad():raise RuntimeError('private diagnostic')
         code,value=request(ReadOnlyLifecycleApp(bad))
         self.assertEqual(code,503);self.assertNotIn('private diagnostic',json.dumps(value))
+        self.assertEqual(value['schema'],'unified.lifecycle.v2')
+        self.assertEqual(value['producer'],'unified_system')
+        self.assertEqual(request(ReadOnlyLifecycleApp(bad),path='/internal/v1/lifecycle')[0],404)
         value=self.life.snapshot();value['execution_authorized']=True
         self.assertEqual(request(ReadOnlyLifecycleApp(lambda:value))[0],503)
 

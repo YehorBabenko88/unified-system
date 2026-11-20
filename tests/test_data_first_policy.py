@@ -4,7 +4,7 @@ from unified_system.data_first_policy import validate_data_first_grant
 
 class PolicyTests(unittest.TestCase):
  def setUp(self):
-  self.manifest={'sources':{'strattester':{'commit':'a'*40}}}
+  self.manifest={'sources':{'market_data':{'commit':'a'*40}}}
   self.value=dict(schema='unified.data-first-runtime.v1',source_commit='a'*40,
    strategy_fingerprints=['b'*64],categories=['linear'],network_scope='BYBIT_PUBLIC_GET_ONLY',
    workspace_relative='data-first',limits=dict(timeout_seconds=120,ram_limit_mb=1024,

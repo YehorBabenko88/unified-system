@@ -29,7 +29,7 @@ class CombinedControlPlaneTests(unittest.TestCase):
             self.assertIs(lease["execution_authorized"], False)
             lifecycle = Lifecycle(
                 root / "lifecycle.sqlite",
-                ["unified-system", "terminan", "strattester", "grid", "math"],
+                ["unified_system", "market_data", "math", "terminan"],
                 fleet_provider=lambda: fleet.status_snapshot(101000),
             )
             view = lifecycle.initialize()
@@ -55,7 +55,7 @@ class CombinedControlPlaneTests(unittest.TestCase):
 
             fake_bytes = b"synthetic artifact"
             release = ReleasePin(
-                producer="strattester",
+                producer="terminan",
                 revision="a" * 40,
                 tree="b" * 40,
                 artifact_sha256=hashlib.sha256(fake_bytes).hexdigest(),
