@@ -28,8 +28,8 @@ from scripts import prepare_lab_capsule as builder
 from tests.test_lab_release import fixture
 
 ERROR = 'CI_STOPPED_SERVICE_REJECTED'
-ENTRY_BYTES = 2484
-BOOTSTRAP_BYTES = 25050
+ENTRY_BYTES = 2307
+BOOTSTRAP_BYTES = 24560
 
 
 def need(value):
@@ -179,9 +179,9 @@ def make_capsule(root, payload, expected):
     manifest['dependencies'][0]['version'] = platform.python_version()
     additions = {'runtime/nssm/nssm.exe': payload,
                  'runtime/python/python.exe': lab_release.regular(sys.executable).read_bytes(),
-                 'sources/unified-system/unified_system/owned_python.py': (REPO/'unified_system/owned_python.py').read_bytes(),
-                 'sources/unified-system/unified_system/service_entry.py': entry,
-                 'sources/unified-system/unified_system/service_bootstrap.py': bootstrap}
+                 'sources/unified_system/unified_system/owned_python.py': (REPO/'unified_system/owned_python.py').read_bytes(),
+                 'sources/unified_system/unified_system/service_entry.py': entry,
+                 'sources/unified_system/unified_system/service_bootstrap.py': bootstrap}
     for relative, raw in additions.items():
         path = root/relative
         path.parent.mkdir(parents=True, exist_ok=True)
