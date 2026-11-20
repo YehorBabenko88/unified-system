@@ -13,3 +13,7 @@ Local proof:6 new pure calibrations +15 existing fleet/inventory +6 existing mis
 No Root paper/publication/core/native/bootstrap/installer code, external owner source, job cancellation or security settings are changed.
 
 The six pure qualifier calibrations are also mandatory separate hosted gates before each unchanged component roster; their IDs/counts are reported separately rather than folded into161/132.
+
+## Canonical historical registry selector followup
+
+The prior161/145 statements above describe their original frozen roster. The current final roster is162: all13 relocated registry IDs explicitly translate to tests.test_historical_registry, all prior145 obligations remain translated, and the existing historical-registry gate is additive. groups.json retains original ID arrays and the exact13 map. No legacy import alias is restored. Full162 hosted execution remains NOT_RUN locally.

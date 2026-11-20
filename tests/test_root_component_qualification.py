@@ -32,7 +32,7 @@ class ComponentQualificationTests(unittest.TestCase):
    self.assertEqual(h.require_output(root,base/'fresh'),base/'fresh')
  def test_preserved_rosters_include_all_original_cases_and_physical_nodes(self):
   h=self.helper();groups=h.load_groups(ROOT)
-  self.assertEqual({k:len(v['expected_ids']) for k,v in groups.items()},{'final':161,'supervisor':132,'combined':2,'fleet':15})
+  self.assertEqual({k:len(v['expected_ids']) for k,v in groups.items()},{'final':162,'supervisor':132,'combined':2,'fleet':15})
   self.assertEqual(len(groups['final']['preserved_prior_ids']),145)
   self.assertTrue(set(groups['final']['preserved_prior_ids'])<=set(groups['final']['expected_ids']))
   self.assertIn('test_combined_control_plane.CombinedControlPlaneTests.test_six_node_fleet_visible_to_lifecycle_without_execution_authority',groups['combined']['expected_ids'])

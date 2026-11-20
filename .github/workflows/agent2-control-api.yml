@@ -43,12 +43,13 @@ jobs:
       - name: Denial and unavailable boundary tests (mandatory, no skips)
         shell: python
         run: |
-          import hashlib, io, json, os, pathlib, platform, stat, subprocess, unittest
+          import hashlib, io, json, os, pathlib, platform, stat, subprocess, sys, unittest
           expected_head = os.environ['EXPECTED_HEAD']
           source_paths = (
               '.github/workflows/agent2-control-api.yml',
               'docs/architecture/control-api-readonly.md',
               'tests/test_control_api_readonly.py',
+              'tests/__init__.py',
               'unified_system/control_api_readonly.py',
               'unified_system/__init__.py',
           )
@@ -78,6 +79,9 @@ jobs:
                       git_blob=git('rev-parse', expected_head + ':' + name).decode().strip())
               return dict(head=head, tree=tree, files=files, tracked_clean=True)
           before = source_receipt()
+          source_root = pathlib.Path.cwd().resolve(strict=True)
+          assert (source_root / "tests/test_control_api_readonly.py").is_file(), "mandatory source root missing"
+          sys.path.insert(0, str(source_root))
           expected_names = (
               'test_all_protected_reads_are_unavailable_not_empty_success',
               'test_boundary_does_not_open_files_sockets_or_read_system_time',
@@ -96,7 +100,7 @@ jobs:
               'test_unknown_route_does_not_look_like_missing_auth',
               'test_wrong_method_returns_allow_without_activation',
           )
-          suite = unittest.defaultTestLoader.discover('tests', pattern='test_control_api_readonly.py')
+          suite = unittest.defaultTestLoader.discover(str(source_root / 'tests'), pattern='test_control_api_readonly.py', top_level_dir=str(source_root))
           def cases(value):
               for item in value:
                   if isinstance(item, unittest.TestSuite):
@@ -104,7 +108,7 @@ jobs:
                   else:
                       yield item
           test_ids = [case.id() for case in cases(suite)]
-          expected_ids = ['test_control_api_readonly.ControlAPITest.' + name for name in expected_names]
+          expected_ids = ['tests.test_control_api_readonly.ControlAPITest.' + name for name in expected_names]
           assert sorted(test_ids) == sorted(expected_ids), 'mandatory test inventory differs'
           stream = io.StringIO()
           result = unittest.TextTestRunner(stream=stream, verbosity=2).run(suite)

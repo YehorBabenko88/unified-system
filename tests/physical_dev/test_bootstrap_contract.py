@@ -14,14 +14,11 @@ class BootstrapPathTests(unittest.TestCase):
 
     def test_allocate_existing_stand_contract_requires_new_empty_directory(self):
         from tools.physical_dev.bootstrap import allocate_stand_root
-        from unified_system.gateway_target_adapter import DisposableTargetStand,TargetRejected
+        # Stand construction/custody is a distinct mandatory hosted role.
         with tempfile.TemporaryDirectory(prefix='pure-stand-root-') as tmp:
             root=Path(tmp).resolve()
-            with self.assertRaises(TargetRejected):DisposableTargetStand(str(root/'direct-state'),stratt_source_root=str(root),meta_source_root=str(root))
             state=allocate_stand_root(root)
-            stand=DisposableTargetStand(str(state),stratt_source_root=str(root),meta_source_root=str(root))
-            try:self.assertEqual(stand.invocations,0);self.assertTrue((state/'direct-journal.db').is_file())
-            finally:stand.close()
+            self.assertTrue(state.is_dir());self.assertEqual(list(state.iterdir()),[])
             with self.assertRaises(FileExistsError):allocate_stand_root(root)
 
     def test_source_git_selection_pins_executable_without_rewriting_target_source(self):

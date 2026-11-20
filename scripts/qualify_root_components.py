@@ -38,7 +38,14 @@ def load_groups(root):
  groups=value['groups']
  if set(groups)!={'final','supervisor','combined','fleet'}:raise ValueError('CLOSED_COMPONENT_GROUPS')
  for config in groups.values():require_ids(config['expected_ids'],config['expected_ids'])
- if not set(groups['final']['preserved_prior_ids'])<=set(groups['final']['expected_ids']):raise ValueError('PRIOR_MANDATORY_CASE_REMOVED')
+ final=groups['final'];mapping=final['historical_registry_id_map']
+ if len(mapping)!=13 or any(type(old) is not str or new!=old.replace('tests.test_integration_registry.','tests.test_historical_registry.') or not old.startswith('tests.test_integration_registry.') for old,new in mapping.items()):raise ValueError('HISTORICAL_ROLE_MAP_REQUIRED')
+ original=final['original_expected_ids'];prior=final['original_preserved_prior_ids']
+ require_ids(original,original);require_ids(prior,prior)
+ translated={mapping.get(name,name) for name in original}
+ gate='tests.test_historical_registry_gate.RegistryResultGateTests.test_exact_success_gate_refuses_all_non_success_unittest_outcomes'
+ if len(original)!=161 or len(prior)!=145 or set(mapping)!={name for name in original if name.startswith('tests.test_integration_registry.')} or set(final['expected_ids'])!=translated|{gate}:raise ValueError('ORIGINAL_FINAL_ROLES_NOT_PRESERVED')
+ if set(final['preserved_prior_ids'])!={mapping.get(name,name) for name in prior} or not set(final['preserved_prior_ids'])<=set(final['expected_ids']):raise ValueError('PRIOR_MANDATORY_CASE_REMOVED')
  return groups
 
 def strict_repository(fence):
