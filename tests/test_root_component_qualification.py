@@ -53,3 +53,5 @@ class ComponentWorkflowPreservationTests(unittest.TestCase):
    for axis in ('3.11','3.12','3.13','3.12.10'):
     if "'"+axis+"'" in original:self.assertIn("'"+axis+"'",current)
   self.assertFalse((ROOT/'.github/workflows/five-module-infra.yml').exists())
+
+if __name__=='__main__':unittest.main()
