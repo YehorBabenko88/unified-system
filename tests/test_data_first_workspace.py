@@ -7,7 +7,7 @@ from unified_system import data_first_workspace as workspace
 class WorkspaceTests(unittest.TestCase):
  def setUp(self):
   self.temp=tempfile.TemporaryDirectory();self.addCleanup(self.temp.cleanup);self.root=Path(self.temp.name).resolve()/'service';self.root.mkdir();self.state=self.root/'state';self.state.mkdir();self.active=True
-  self.manifest={'sources':{'strattester':{'commit':'a'*40}}}
+  self.manifest={'sources':{'market_data':{'commit':'a'*40}}}
   self.policy=dict(schema='unified.data-first-runtime.v1',source_commit='a'*40,strategy_fingerprints=['b'*64],categories=['linear'],network_scope='BYBIT_PUBLIC_GET_ONLY',workspace_relative='data-first',limits=dict(timeout_seconds=30,ram_limit_mb=128,max_pages=1,max_observations=100,requests_per_second=1))
   self.plan=dict(installation_id='install-1',node_id='NODE1',service_name='UnifiedLab_test',service_sid='S-1-5-80-1-2-3-4-5',computer_name='LABHOST',root=str(self.root),state=str(self.state))
   self.grant=SimpleNamespace(profile={'data_first':self.policy},descriptor={'service_plan':self.plan},service_sid=self.plan['service_sid'],computer_name='LABHOST',require_current=lambda:self.active)
@@ -16,9 +16,13 @@ class WorkspaceTests(unittest.TestCase):
   first=self.admit();self.assertEqual(first.root,self.state/'data-first');self.assertIs(first.require_current(),True)
   for name in ('market','results','logs','state','data-first-abc123'):(first.root/name).mkdir()
   (first.root/'market'/'retained').write_bytes(b'cache')
-  self.manifest['sources']['strattester']['commit']='c'*40;self.policy['source_commit']='c'*40
+  self.manifest['sources']['market_data']['commit']='c'*40;self.policy['source_commit']='c'*40
   second=self.admit();self.assertEqual((second.root/'market'/'retained').read_bytes(),b'cache');self.assertIs(second.require_current(),True)
   self.assertNotIn('source_commit',(first.root/'data-first-owned.json').read_text())
+ def test_retired_source_owner_is_rejected_before_workspace_creation(self):
+  self.manifest['sources']['strattester']=self.manifest['sources'].pop('market_data')
+  with self.assertRaises(workspace.WorkspaceBlocked):self.admit()
+  self.assertFalse((self.state/'data-first').exists())
  def test_missing_or_invalid_permission_never_creates_workspace(self):
   for value in (None,{},dict(self.policy,workspace_relative='../foreign')):
    self.grant.profile['data_first']=value

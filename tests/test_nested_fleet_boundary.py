@@ -35,7 +35,7 @@ class NestedFleetBoundaryTests(unittest.TestCase):
                     snapshot = life.snapshot(); snapshot['fleet'] = forged
                     codes = []
                     b''.join(ReadOnlyLifecycleApp(lambda: snapshot)(
-                        {'REQUEST_METHOD':'GET','PATH_INFO':'/internal/v1/lifecycle'},
+                        {'REQUEST_METHOD':'GET','PATH_INFO':'/internal/v2/lifecycle'},
                         lambda code, headers: codes.append(code)))
                     self.assertEqual(codes, ['503 Service Unavailable'])
 
@@ -54,6 +54,6 @@ class NestedFleetBoundaryTests(unittest.TestCase):
             snapshot['fleet'] = {'nodes': [], 'execution_authorized': True}
             codes = []
             app = ReadOnlyLifecycleApp(lambda: snapshot)
-            body = b''.join(app({'REQUEST_METHOD':'GET', 'PATH_INFO':'/internal/v1/lifecycle'}, lambda code, headers: codes.append(code)))
+            body = b''.join(app({'REQUEST_METHOD':'GET', 'PATH_INFO':'/internal/v2/lifecycle'}, lambda code, headers: codes.append(code)))
             self.assertEqual(codes, ['503 Service Unavailable'])
             self.assertIs(json.loads(body)['execution_authorized'], False)
