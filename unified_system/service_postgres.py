@@ -162,7 +162,7 @@ def read_postgres_ownership(grant,*,boundary=None):
   raw,_=read_file(anchor/'receipt.json',262144,kernel,grant.service_sid,anchor)
   need(sha(raw)==grant.descriptor['qualification_refs']['database_evidence_sha256'],'POSTGRES_IDENTITY_REJECTED');record=parse(raw)
   need(type(record) is dict and set(record)=={'schema','plan','data_identity','cluster_identity','system_identifier','config_files','pgpass_sha256','state','runtime_readiness'} and record['schema']==SCHEMA and record['state']=='PROVISIONED_STOPPED' and record['runtime_readiness']=='NOT_PROVEN')
-  pgplan=check_plan(record['plan']);need(pgplan['service_plan']==plan and pgplan['auth_sha256']==grant.descriptor['auth_sha256'] and pgplan['profile_sha256']==sha(canonical(grant.profile)),'POSTGRES_IDENTITY_REJECTED')
+  pgplan=check_plan(record['plan']);need(pgplan['service_plan']==plan and pgplan['auth_sha256']==grant.descriptor['database_credential_sha256'] and pgplan['profile_sha256']==sha(canonical(grant.profile)),'POSTGRES_IDENTITY_REJECTED')
   need(directory(pgplan['data_root'])==record['data_identity'] and directory(pgplan['cluster'])==record['cluster_identity'],'POSTGRES_IDENTITY_REJECTED')
   need(set(record['config_files'])==set(CONFIG_FILES))
   for name in CONFIG_FILES:need(lab_release.hash_file(Path(pgplan['cluster'])/name)==record['config_files'][name],'POSTGRES_IDENTITY_REJECTED')

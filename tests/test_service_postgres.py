@@ -58,13 +58,13 @@ class PostgresBoundaryTests(unittest.TestCase):
   raw=lab_release.canonical(self.fixture.manifest);(base/'lab-release.json').write_bytes(raw);self.fixture.pin=hashlib.sha256(raw).hexdigest()
   self.root=self.fixture.root/'service';self.root.mkdir();(self.root/'state').mkdir();lab_release.stage_capsule(base,self.root/'code',self.fixture.pin)
   self.auth=self.fixture.root/'protected-auth.json';self.auth.write_bytes(lab_release.canonical(dict(schema=pg.AUTH_SCHEMA,node_id='NODE1',release_id='lab-1',source_commit='a'*40,database='unified_lab_install1',user='unified_lab_install1',postgres_password='c'*64)))
-  target=self.fixture.target('CONTROL');target['auth_binding']['sha256']=hashlib.sha256(self.auth.read_bytes()).hexdigest();self.profile=self.fixture.derive(target)
+  target=self.fixture.target('CONTROL');target['database_credential_binding']['sha256']=hashlib.sha256(self.auth.read_bytes()).hexdigest();self.profile=self.fixture.derive(target)
   self.resource=Resource(dict(root=str(self.root),code=str(self.root/'code'),state=str(self.root/'state'),manifest_sha256=self.fixture.pin,role='CONTROL',computer_name='LABHOST',node_id='NODE1',installation_id='install-1',service_sid='S-1-5-80-1-2-3-4-5',plan_sha256='b'*64))
   self.boundary=Boundary();self.plan=pg.postgres_plan(self.resource,self.profile,self.auth,auth_sha256=hashlib.sha256(self.auth.read_bytes()).hexdigest(),boundary=self.boundary);self.calls=[]
  def owner(self,action,pin):self.calls.append((action,pin));return True
  def provision(self,**changes):return pg.provision_postgres(self.plan,owner_phase=changes.get('owner_phase',self.owner),boundary=self.boundary)
  def grant(self,receipt):
-  return SimpleNamespace(descriptor={'service_plan':copy.deepcopy(self.resource.plan),'auth_sha256':self.plan['auth_sha256'],'qualification_refs':{'database_evidence_sha256':receipt['receipt_sha256']}},_kernel=Kernel(),service_sid=self.resource.plan['service_sid'],profile=copy.deepcopy(self.profile),require_current=lambda:True)
+  return SimpleNamespace(descriptor={'service_plan':copy.deepcopy(self.resource.plan),'database_credential_sha256':self.plan['auth_sha256'],'qualification_refs':{'database_evidence_sha256':receipt['receipt_sha256']}},_kernel=Kernel(),service_sid=self.resource.plan['service_sid'],profile=copy.deepcopy(self.profile),require_current=lambda:True)
  def test_missing_owner_phase_precedes_native_effects(self):
   with self.assertRaises(pg.PostgresBlocked):self.provision(owner_phase=None)
   self.assertEqual(self.boundary.calls,[]);self.assertFalse(Path(self.plan['namespace']).exists())

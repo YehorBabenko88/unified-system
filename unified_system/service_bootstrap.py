@@ -8,7 +8,7 @@ import copy,ctypes,hashlib,json,os,re,stat
 from pathlib import Path
 
 POINTER_SCHEMA='unified.service-activation-pointer.v1'
-DESCRIPTOR_SCHEMA='unified.service-activation.v1'
+DESCRIPTOR_SCHEMA='unified.service-activation.v2'
 REVOKED_SCHEMA='unified.service-activation-revoked.v1'
 
 ERROR_CODES=frozenset(('ACTIVATION_DATA_FIRST_UNPORTED','ACTIVATION_AMBIENT_IMPORT_REJECTED','ACTIVATION_CODE_REJECTED','ACTIVATION_DATABASE_GATE_UNAVAILABLE','ACTIVATION_RUNTIME_REJECTED',)+('ACTIVATION_ACL_REJECTED', 'ACTIVATION_AUTH_REJECTED', 'ACTIVATION_CONCURRENT_UPDATE', 'ACTIVATION_ELEVATED_WRITER_REQUIRED', 'ACTIVATION_FILE_REJECTED', 'ACTIVATION_HOST_REJECTED', 'ACTIVATION_IDENTITY_CHANGED', 'ACTIVATION_KERNEL_REJECTED', 'ACTIVATION_LINK_REJECTED', 'ACTIVATION_NAMESPACE_REJECTED', 'ACTIVATION_NATIVE_REJECTED', 'ACTIVATION_OWNER_PHASE_REJECTED', 'ACTIVATION_OWNER_PHASE_REQUIRED', 'ACTIVATION_PATH_REJECTED', 'ACTIVATION_PLATFORM_REJECTED', 'ACTIVATION_QUALIFICATION_REJECTED', 'ACTIVATION_QUALIFICATION_REQUIRED', 'ACTIVATION_REJECTED', 'ACTIVATION_REVISION_CHANGED', 'ACTIVATION_REVOKED', 'ACTIVATION_SERVICE_TOKEN_REQUIRED', 'ACTIVATION_SIZE_REJECTED', 'ACTIVATION_UNAVAILABLE'))
@@ -131,7 +131,7 @@ class ProtectedActivation:
  @property
  def profile(self):return copy.deepcopy(self._profile)
  @property
- def auth_path(self):return self._paths['auth']
+ def database_credential_path(self):return self._paths.get('database_credential')
  @property
  def code_root(self):return Path(self._descriptor['service_plan']['code'])
  @property
@@ -145,7 +145,7 @@ class ProtectedActivation:
    need(self._kernel.identity()==self._identity,'ACTIVATION_IDENTITY_CHANGED')
    raw,identity=read_file(self._paths['pointer'],8192,self._kernel,self.service_sid,self._root/'activation')
    need(identity==self._identities['pointer'] and hashlib.sha256(raw).hexdigest()==self._pointer_hash,'ACTIVATION_REVOKED')
-   for name in ('descriptor','profile','auth'):
+   for name in ('descriptor','profile',*(('database_credential',) if 'database_credential' in self._paths else ())):
     self._kernel.require_readonly(self._paths[name],self.service_sid,self._root/'activation');need(stamp(self._paths[name])==self._identities[name],'ACTIVATION_REVISION_CHANGED')
    return True
   except ActivationBlocked:raise
@@ -159,10 +159,10 @@ def read_protected_activation(service_root,*,kernel=None):
   anchor=root/'activation';paths={'pointer':anchor/'current.json'};identities={}
   raw,identities['pointer']=read_file(paths['pointer'],8192,kernel,sid,anchor);pointer_hash=hashlib.sha256(raw).hexdigest();pointer=parse(raw)
   need(type(pointer) is dict and set(pointer)=={'schema','revision_id','descriptor_sha256'} and pointer['schema']==POINTER_SCHEMA,'ACTIVATION_REVOKED');label(pointer['revision_id']);digest(pointer['descriptor_sha256'])
-  revision=anchor/'revisions'/pointer['revision_id'];paths.update(descriptor=revision/'descriptor.json',profile=revision/'profile.json',auth=revision/'credentials/auth.json')
+  revision=anchor/'revisions'/pointer['revision_id'];paths.update(descriptor=revision/'descriptor.json',profile=revision/'profile.json')
   raw,identities['descriptor']=read_file(paths['descriptor'],262144,kernel,sid,anchor);need(hashlib.sha256(raw).hexdigest()==pointer['descriptor_sha256']);descriptor=parse(raw)
-  need(type(descriptor) is dict and set(descriptor)=={'schema','activation_plan_sha256','revision_id','service_plan','resource_receipt_sha256','profile_sha256','auth_sha256','qualification_refs'} and descriptor['schema']==DESCRIPTOR_SCHEMA and descriptor['revision_id']==pointer['revision_id'])
-  for field in ('activation_plan_sha256','resource_receipt_sha256','profile_sha256','auth_sha256'):digest(descriptor[field])
+  need(type(descriptor) is dict and set(descriptor)=={'schema','activation_plan_sha256','revision_id','service_plan','resource_receipt_sha256','profile_sha256','database_credential_sha256','qualification_refs'} and descriptor['schema']==DESCRIPTOR_SCHEMA and descriptor['revision_id']==pointer['revision_id'])
+  for field in ('activation_plan_sha256','resource_receipt_sha256','profile_sha256'):digest(descriptor[field])
   plan=descriptor['service_plan'];need(type(plan) is dict and plan['service_sid']==sid and plan['computer_name'].casefold()==identity['computer_name'].casefold(),'ACTIVATION_IDENTITY_CHANGED')
   need(plan['root']==str(root) and plan['code']==str(root/'code') and plan['state']==str(root/'state') and plan['role'] in ('CONTROL','WORKER','SINGLE_PC'))
   digest(plan['manifest_sha256']);refs=descriptor['qualification_refs'];need(type(refs) is dict and set(refs)=={'phase_id','source_evidence_sha256','capacity_evidence_sha256','database_evidence_sha256'});label(refs['phase_id'])
@@ -170,13 +170,21 @@ def read_protected_activation(service_root,*,kernel=None):
   if plan['role']=='WORKER':need(refs['database_evidence_sha256'] is None)
   else:digest(refs['database_evidence_sha256'])
   raw,identities['profile']=read_file(paths['profile'],4*1024*1024,kernel,sid,anchor);need(hashlib.sha256(raw).hexdigest()==descriptor['profile_sha256']);profile=parse(raw)
-  raw,identities['auth']=read_file(paths['auth'],8192,kernel,sid,anchor);need(hashlib.sha256(raw).hexdigest()==descriptor['auth_sha256'])
+  if plan['role']=='WORKER':need(descriptor['database_credential_sha256'] is None)
+  else:
+   digest(descriptor['database_credential_sha256']);paths['database_credential']=revision/'credentials/postgres.json'
+   raw,identities['database_credential']=read_file(paths['database_credential'],8192,kernel,sid,anchor)
+   need(hashlib.sha256(raw).hexdigest()==descriptor['database_credential_sha256'])
+  need(profile.get('schema')=='unified.runtime-profile.v2' and profile.get('derivation_receipt',{}).get('schema')=='unified.runtime-profile-derivation.v2')
+  binding=profile['database_credential_binding']
+  if plan['role']=='WORKER':need(binding is None)
+  else:need(binding=={'path':str(paths['database_credential']),'sha256':descriptor['database_credential_sha256']})
   config=profile['runtime_config'];context=profile['offline_context']
   need(context=={'scope':'OFFLINE_VALIDATION_ONLY','role':plan['role'],'node_id':plan['node_id'],'computer_name':plan['computer_name'],'credential_root':str(revision/'credentials')})
   need(config['node_id']==plan['node_id'] and config['state_root']==plan['state'] and config['release_sha256']==plan['manifest_sha256'])
   need(type(config.get('programs')) is dict and set(config['programs'])<= {'market_data','math','terminan'})
-  # This reader establishes only protected ownership/integrity. Credential
-  # semantics are not adopted; canonical runtime admission below stays blocked.
+  # This reader establishes protected ownership/integrity; application bearer
+  # identity and database receipt ownership remain separate runtime gates.
   result=ProtectedActivation(root,kernel,identity,descriptor,profile,paths,identities,pointer_hash);result.require_current();return result
  except ActivationBlocked:raise
  except Exception:raise ActivationBlocked('ACTIVATION_UNAVAILABLE') from None
