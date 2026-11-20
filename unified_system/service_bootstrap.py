@@ -295,7 +295,7 @@ def run_protected_runtime(grant,*,stop_event=None):
    except Exception:return False
   def environment(module):
    result=lab_runtime.child_environment()
-   if module=='market_data':result.update(auth)
+   if module=='market_data' and database is not None:result.update(database.runtime_environment(module))
    return result
   # All filesystem writes and runtime imports occur after the gates above.
   from unified_system.lab_privileges import remove_lab_write_bypass_privileges

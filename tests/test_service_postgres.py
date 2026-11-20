@@ -310,3 +310,26 @@ class CanonicalPostgresSourceTests(unittest.TestCase):
      with self.assertRaises(error):job.terminate_and_wait(.1)
      self.assertEqual(job._job,123)
     else:self.assertIs(job.terminate_and_wait(.1),True);self.assertIsNone(job._job)
+
+class PostgresPrivateEnvironmentTests(unittest.TestCase):
+ def fixture(self):
+  password='SYNTHETIC_PRIVATE_FIXTURE_ONLY_12345678';raw=('127.0.0.1:55479:unified_lab_fixture:unified_lab_fixture:'+password+'\n').encode()
+  plan={'namespace':str(ROOT/'inert-private-namespace'),'port':55479,'database':'unified_lab_fixture','user':'unified_lab_fixture'}
+  grant=SimpleNamespace(require_current=lambda:True,_kernel=None,service_sid='fixture')
+  owned=pg.PostgresOwnership(grant,{'plan':plan,'pgpass_sha256':hashlib.sha256(raw).hexdigest()},SimpleNamespace(require_running=lambda *_:True));owned.server=SimpleNamespace(alive=lambda:True)
+  return owned,raw,password
+ def test_only_data_child_receives_dedicated_owned_password(self):
+  from unittest.mock import patch
+  owned,raw,password=self.fixture()
+  with patch.object(pg,'read_file',return_value=(raw,None)) as read:
+   self.assertEqual(owned.runtime_environment('math'),{});self.assertEqual(owned.runtime_environment('terminan'),{});read.assert_not_called()
+   self.assertEqual(owned.runtime_environment('market_data'),{'PGPASSWORD':password})
+  self.assertNotIn(password,repr(owned.record))
+ def test_revoked_or_tampered_secret_never_reaches_child(self):
+  from unittest.mock import patch
+  for failure in ('revoke','tamper','duplicate'):
+   owned,raw,password=self.fixture()
+   if failure=='revoke':owned.grant.require_current=lambda:False
+   elif failure=='tamper':raw=b'changed'
+   else:raw=raw+raw;owned._record['pgpass_sha256']=hashlib.sha256(raw).hexdigest()
+   with self.subTest(failure=failure),patch.object(pg,'read_file',return_value=(raw,None)),self.assertRaises(pg.PostgresBlocked):owned.runtime_environment('market_data')

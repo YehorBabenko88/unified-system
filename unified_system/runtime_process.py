@@ -82,6 +82,15 @@ def _identity(pid):
     except (FileNotFoundError,ProcessLookupError):return None
 
 
+PRIVATE_DATA_CAPABILITY_ENV='UNIFIED_MARKET_DATA_READ_CAPABILITY'
+
+def _public_environment(program):
+    value=program.get('env',{})
+    if type(value) is not dict or any(type(key) is not str or key.upper() in (PRIVATE_DATA_CAPABILITY_ENV,'PGPASSWORD','PGPASSFILE') for key in value):
+        raise ValueError('private capability cannot be configured')
+    return value
+
+
 class ProcessDriver:
     def __init__(self,root,programs,*,authorize=None,child_environment=None):
         self.root=_safe_path(root);self.root.mkdir(parents=True,exist_ok=True)
@@ -91,6 +100,7 @@ class ProcessDriver:
         if type(programs) is not dict or not 1<=len(programs)<=64:raise ValueError('bounded programs required')
         extra_health_budget=0.
         for name,p in programs.items():
+            _public_environment(p)
             timeout=p.get('health_timeout_seconds',.5)
             if type(timeout) not in (int,float) or not math.isfinite(timeout) or not .05<=timeout<=1.:
                 raise ValueError('invalid health deadline')
@@ -139,6 +149,7 @@ class ProcessDriver:
             with os.fdopen(fd,'w') as f:json.dump(data,f);f.flush();os.fsync(f.fileno())
             os.replace(temp,path)
     def _verify(self,module):
+        _public_environment(self.programs[module])
         p=self.programs[module];exe=_safe_path(p['argv'][0]);cwd=_safe_path(p['cwd'])
         if _sha(exe)!=p['executable_sha256']:raise ValueError('runtime executable integrity')
         for file,pin in p['file_pins'].items():
@@ -147,12 +158,37 @@ class ProcessDriver:
         for file,pin in p.get('external_file_pins',{}).items():
             target=_safe_path(file)
             if not target.is_file() or _sha(target)!=pin:raise ValueError('runtime external file integrity')
+    def _market_data_read_capability(self,release_id):
+        """Transient private child handoff, never program configuration or status."""
+        from types import SimpleNamespace
+        candidates=[]
+        for handle in tuple(self.children):
+            record=self._load(handle)
+            if record['module_id']=='market_data' and self.alive(handle):candidates.append((handle,record))
+        if len(candidates)!=1:raise ValueError('owned market data source unavailable')
+        handle,record=candidates[0]
+        if (record['release_id']!=release_id or record['state']!='RUNNING'
+                or record['created'] is None or not re.fullmatch('[a-f0-9]{64}',record['token'])):
+            raise ValueError('market data source identity unavailable')
+        program=self.programs['market_data'];url=urlsplit(program['health_url'])
+        if program['health_url']!=f'http://127.0.0.1:{url.port}/health':raise ValueError('market data source endpoint rejected')
+        commit=_public_environment(program).get('UNIFIED_SOURCE_COMMIT','')
+        if type(commit) is not str or not re.fullmatch('[a-f0-9]{40}',commit) or record.get('source_commit')!=commit:raise ValueError('market data source revision unavailable')
+        spec=SimpleNamespace(module_id='market_data',version=record['version'])
+        ready=self.ready(spec,handle,release_id)
+        if (type(ready) is not dict or ready.get('ready') is not True
+                or ready.get('module_id')!='market_data' or ready.get('version')!=record['version']
+                or ready.get('release_id')!=release_id):
+            raise ValueError('market data source not ready')
+        return dict(port=url.port,token=record['token'],source_commit=commit,release_id=release_id,epoch=handle)
+
     def start(self,spec,release_id,operation_id):
         path=self._file(operation_id)
         phase='AUTHORIZATION_REJECTED'
         try:
             if self.authorize('start',spec.module_id) is not True:raise ValueError('runtime execution not authorized')
             phase='INTEGRITY_REJECTED';self._verify(spec.module_id)
+            capability=self._market_data_read_capability(release_id) if spec.module_id=='terminan' else None
         except Exception:
             # This live driver witnessed rejection before the durable STARTING
             # intent or Popen. An absent file alone is never that evidence.
@@ -164,14 +200,21 @@ class ProcessDriver:
         if path.exists():
             d=self._load(operation_id)
             if (d['module_id'],d['version'],d['release_id'])!=(spec.module_id,spec.version,release_id):raise ValueError('operation identity mismatch')
+            if capability is not None and d.get('market_data_epoch')!=capability['epoch']:raise ValueError('dependency epoch changed')
             if not self.alive(operation_id):raise ValueError('ambiguous prior process start')
             return operation_id
         d=dict(pid=None,created=None,module_id=spec.module_id,version=spec.version,release_id=release_id,
                token=secrets.token_hex(32),state='STARTING')
+        if spec.module_id=='market_data':d['source_commit']=_public_environment(self.programs[spec.module_id]).get('UNIFIED_SOURCE_COMMIT')
+        if capability is not None:d['market_data_epoch']=capability['epoch']
         self._save(operation_id,d,new=True)
         p=self.programs[spec.module_id]
         env=os.environ.copy() if self.child_environment is None else self.child_environment(spec.module_id)
-        env.update(p.get('env',{}))
+        env.update(_public_environment(p))
+        for key in tuple(env):
+            if key.upper()==PRIVATE_DATA_CAPABILITY_ENV or (key.upper() in ('PGPASSWORD','PGPASSFILE') and (spec.module_id!='market_data' or self.child_environment is None)):del env[key]
+        if capability is not None:
+            env[PRIVATE_DATA_CAPABILITY_ENV]=json.dumps(capability,separators=(',',':'),allow_nan=False)
         cache=tempfile.mkdtemp(prefix=operation_id+'-cache-',dir=self.root)
         os.chmod(cache,0o700)
         env.update(PYTHONPYCACHEPREFIX=cache,PYTHONDONTWRITEBYTECODE='1',UNIFIED_PRIVATE_CACHE_ROOT=cache)
