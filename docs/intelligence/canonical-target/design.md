@@ -1,3 +1,5 @@
+> Historical design record. Current accepted SDK pins and literal hash migration are in SDK-PIN-MIGRATION-20261120.md and CONTRACT.md; old planning references below are retained as provenance.
+
 # Canonical direct target port design
 
 Base Root31db6660079e759dc6207d9b62f03acb89381236. Implementation ownership after Root approval: unified_system/gateway_target_adapter.py, tests/gateway_target_adapter and related target documentation only. gateway_research_identity.py, commissioned authority/native binding and all other Root files remain Root-owned and unchanged. No installer, service, trust, source DB or network action.

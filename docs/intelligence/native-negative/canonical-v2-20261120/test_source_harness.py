@@ -61,20 +61,20 @@ class SourceHarnessCalibrationTests(unittest.TestCase):
 
 
  def test_bootstraps_reject_git_override_before_any_process(self):
-  import os,subprocess,types
+  import os,subprocess,sys,types
   from unittest.mock import patch
   repo=ROOT.parents[3]
   for relative in ('docs/intelligence/native-negative/canonical-v2-20261120/run_qualification.py','docs/intelligence/research-identity/native-profile-v3-20261120/run_qualification.py'):
    file=repo/relative;module=types.ModuleType('inert_bootstrap');module.__file__=str(file)
    exec(compile(file.read_bytes(),str(file),'exec'),module.__dict__)
-   with patch.dict(os.environ,{'GIT_DIR':'foreign-source'}),patch.object(subprocess,'check_output',side_effect=AssertionError('PROCESS_FORBIDDEN')):
+   with patch.object(sys,'pycache_prefix',None),patch.dict(os.environ,{'GIT_DIR':'foreign-source'}),patch.object(subprocess,'check_output',side_effect=AssertionError('PROCESS_FORBIDDEN')):
     with self.assertRaisesRegex(ValueError,'GIT_ENV_OVERRIDE_REJECTED'):module.main()
  def test_bootstrap_head_mismatch_refuses_before_helper_execution(self):
   import os,subprocess,sys,types
   from unittest.mock import patch
   file=ROOT/'run_qualification.py';module=types.ModuleType('inert_bootstrap');module.__file__=str(file)
   exec(compile(file.read_bytes(),str(file),'exec'),module.__dict__)
-  with patch.object(sys,'argv',[str(file),'--expected-head','a'*40]),patch.object(subprocess,'check_output',return_value=('b'*40).encode()) as mocked:
+  with patch.object(sys,'pycache_prefix',None),patch.object(sys,'argv',[str(file),'--expected-head','a'*40]),patch.object(subprocess,'check_output',return_value=('b'*40).encode()) as mocked:
    with self.assertRaisesRegex(ValueError,'HEAD_MISMATCH'):module.main()
    self.assertEqual(mocked.call_count,1)
    self.assertEqual(mocked.call_args.args[0][-2:],['rev-parse','HEAD'])

@@ -20,6 +20,7 @@ class CanonicalNativeBindingTests(unittest.TestCase):
  def rebind(self):
   raw=target_bytes(self.target);self.profile['target_binding'].update(target_request_canonical_base64=base64.b64encode(raw).decode('ascii'),target_request_sha256=hashlib.sha256(raw).hexdigest())
  def test_canonical_binding_matches_exact_schema_and_both_sources(self):
+  self.assertEqual(self.core._PRODUCER,'75a906d36574bfdc19acd966e79a6c168dc71ad4');self.assertEqual(self.core._MATH,'a5868944bf1bae813403a32b22d329c1da6f8238')
   self.assertEqual(self.check(),self.profile['target_binding'])
   self.assertEqual(hashlib.sha256((ROOT/'docs/intelligence/canonical-native-profile/request.schema.json').read_bytes()).hexdigest(),TARGET_SCHEMA_SHA)
  def test_every_retired_profile_schema_is_refused(self):
@@ -33,9 +34,10 @@ class CanonicalNativeBindingTests(unittest.TestCase):
    with self.subTest(key=key),self.assertRaises(self.core.ResearchIdentityDenied):self.check()
  def test_math_and_producer_rebinding_cannot_change_fixed_cohort(self):
   original=copy.deepcopy(self.profile)
-  for key in ('math_head','producer_head'):
-   self.profile=copy.deepcopy(original);self.profile[key]='f'*40;self.profile['target_binding'][key]='f'*40
-   with self.subTest(key=key),self.assertRaises(self.core.ResearchIdentityDenied):self.check()
+  for key,values in (('math_head',('f'*40,'de8194f71311a6d7dddb69be9de812030ed1f13f')),('producer_head',('f'*40,'b99913690ce29ce60e73414cc4d626ca989916ce'))):
+   for value in values:
+    self.profile=copy.deepcopy(original);self.profile[key]=value;self.profile['target_binding'][key]=value
+    with self.subTest(key=key,value=value),self.assertRaises(self.core.ResearchIdentityDenied):self.check()
  def test_actor_generation_and_quota_join_are_literal(self):
   original=copy.deepcopy(self.target)
   for key,value in (('principal_id',self.generation),('authority_generation',self.actor),('quota_owner','other-quota')):

@@ -20,7 +20,7 @@ _PINS={
     'unified_system.consul_authority':'5d318cf2e993c00488b965673b9d3e4c4ce870023bc828a4c9929f2cfb30c69e',
     'unified_system.authority_codec':'7cf2e162ef18d1be37ae94cb1b350bc0c0d8ad96fc9cac0e6b983362a63ee35e',
     'unified_system.research_authority':'9bc61d1f62d97f30bd46ef88a1f02cefb091caca6317b7f00670427f108fc68e',
-    'unified_system.gateway_research_identity':'4ab708291fe16b5df75d1a5d710d965db9a7f017877f4ee38ab071ab54763a68',
+    'unified_system.gateway_research_identity':'acd4fe82cc436396fa69599e5182eaaf0702697e22ec43f6cb0fcadb9f53c626',
     'unified_system.gateway_identity':'84093865e8477ef6562100d41137922785446c9cb4e024c9ba7105593a2b36c1',
 }
 
