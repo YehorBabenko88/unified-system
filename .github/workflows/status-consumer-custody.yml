@@ -16,12 +16,14 @@ jobs:
         with:
           python-version: '3.12'
       - name: Verify raw archives and explicit held role contracts
-        shell: python -I -S -B -X pycache_prefix=${{ runner.temp }}/status-custody-tests {0}
+        shell: bash
         run: |
+          python -I -S -B -X "pycache_prefix=$RUNNER_TEMP/status-custody-tests" - <<'PY'
           import sys,unittest
           sys.path.insert(0,'.')
           result=unittest.TextTestRunner(verbosity=2).run(unittest.defaultTestLoader.loadTestsFromName('tests.test_retired_status_consumers'))
           assert result.testsRun==5 and result.wasSuccessful() and not result.skipped and not result.expectedFailures and not result.unexpectedSuccesses
+          PY
       - name: Archive custody receipt is not runtime acceptance
         shell: bash
         run: python -I -S -B -X "pycache_prefix=$RUNNER_TEMP/status-custody-receipt" scripts/verify_retired_status_consumers.py --output "$RUNNER_TEMP/status-consumer-custody.json"
