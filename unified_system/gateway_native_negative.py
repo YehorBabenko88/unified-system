@@ -17,10 +17,10 @@ class NativeNegativeDenied(RuntimeError):
     pass
 
 _PINS={
-    'grid.coordination':'3dd73d3eb3dfb576f7174a94fab05a0f87fe248ffcacccfa19786ccc74f0776b',
-    'grid.authority_runtime_v1':'cfb32db73f1859d9d78b03d886372cc08584c81abd64930b5409a91edc417b64',
-    'grid.authority_assignment_v1':'5b972b6d81eeaf6f2283584c5b0482552fa9bf0717a4379838900a72da791491',
-    'unified_system.gateway_research_identity':'481724cd2efca312773fa4152d1c223b46ced6529d96b2d74f452cdf57932d7f',
+    'unified_system.consul_authority':'5d318cf2e993c00488b965673b9d3e4c4ce870023bc828a4c9929f2cfb30c69e',
+    'unified_system.authority_codec':'7cf2e162ef18d1be37ae94cb1b350bc0c0d8ad96fc9cac0e6b983362a63ee35e',
+    'unified_system.research_authority':'4a01a7a0c5f7cb6d086a17e4df019fe35169b25517a4c6c6f4ddb5d651553fb3',
+    'unified_system.gateway_research_identity':'06066277812133a9cc152f7a95a05e5ff6c23dda1ab7e05232ad800474b2e41d',
     'unified_system.gateway_identity':'84093865e8477ef6562100d41137922785446c9cb4e024c9ba7105593a2b36c1',
 }
 
@@ -40,10 +40,10 @@ def _fixed_types():
         info=path.lstat()
         if not stat.S_ISREG(info.st_mode) or info.st_nlink!=1 or hashlib.sha256(path.read_bytes()).hexdigest()!=_PINS[name]:
             raise NativeNegativeDenied('SOURCE_PIN_MISMATCH')
-    return (modules['grid.coordination'].ConsulSessionAuthority,
+    return (modules['unified_system.consul_authority'].ConsulSessionAuthority,
         modules['unified_system.gateway_research_identity'].ResearchIdentityBroker,
-        modules['grid.authority_assignment_v1'].ResearchLabAuthority,
-        modules['grid.authority_assignment_v1'].ResearchAdmissionResult)
+        modules['unified_system.research_authority'].ResearchLabAuthority,
+        modules['unified_system.research_authority'].ResearchAdmissionResult)
 
 def _loopback_endpoints(endpoints,lab):
     if lab is not True or type(endpoints) is not tuple or not 1<=len(endpoints)<=3:

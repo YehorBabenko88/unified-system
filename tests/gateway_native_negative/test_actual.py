@@ -5,7 +5,7 @@ import json
 from datetime import datetime,timedelta,timezone
 import unittest
 import test_native_profile_v2 as fixture
-from grid.authority_assignment_v1 import ResearchAdmissionResult
+from unified_system.research_authority import ResearchAdmissionResult
 from unified_system.gateway_research_identity import ResearchIdentityBroker, ResearchIdentityDenied
 
 class GatewayNegativeTests(unittest.IsolatedAsyncioTestCase):
@@ -23,7 +23,7 @@ class GatewayNegativeTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_closed_owned_client_rejected_before_constructor_auth(self):
         from unified_system.gateway_native_negative import DisposableNativeNegativeGateway,NativeNegativeDenied
-        from grid.coordination import ConsulSessionAuthority
+        from unified_system.consul_authority import ConsulSessionAuthority
         extra=ConsulSessionAuthority(self.authority.config)
         broker=ResearchIdentityBroker(authority=extra,generation=self.generation,realm_id=self.realm,
             profile_sha256=self.profile_sha,server_ssl_context=self.tls.server_context,
@@ -61,7 +61,7 @@ class GatewayNegativeTests(unittest.IsolatedAsyncioTestCase):
     async def test_actual_lost_client_custody_preserves_error_without_proxy_cleanup(self):
         import httpx,threading
         from http.server import HTTPServer,BaseHTTPRequestHandler
-        from grid.coordination import ConsulSessionAuthority
+        from unified_system.consul_authority import ConsulSessionAuthority
         from unified_system.gateway_native_negative import DisposableNativeNegativeGateway
         gateway=DisposableNativeNegativeGateway(self.authority,self.generation,broker=self.broker)
         counts={'requests':0};ready=threading.Event()
