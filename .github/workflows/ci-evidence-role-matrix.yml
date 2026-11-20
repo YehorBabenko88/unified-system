@@ -59,11 +59,11 @@ jobs:
           import {mkdtempSync,mkdirSync,writeFileSync,readFileSync,lstatSync,realpathSync} from 'node:fs';
           import {join,dirname} from 'node:path';import {createHash} from 'node:crypto';import {spawnSync} from 'node:child_process';
           const KIT_MANIFEST = {
-            "tools/ci_evidence_role_matrix/contract.mjs": "101ee1197ad6bf7d90977158636f0550402df1b5a3b54f8a470ce30350cc9da8",
+            "tools/ci_evidence_role_matrix/contract.mjs": "097636e0ab651f81546a7f101871d541b0b54a2eed000579d2f9c6cca34ab0f1",
             "tools/ci_evidence_role_matrix/reporter.mjs": "0628416798808ccc5b2a388f0fcf8738b47bd83e13213c7b2f8564e5067cbe83",
             "tools/ci_evidence_role_matrix/runner.mjs": "6fbec65037803efc365951387b34dbe9f87995ebea98007a13bc7f353d5897b1",
-            "tools/ci_evidence_role_matrix/role-plan.json": "999cb5025c50c7354f271c8461c81a0663242e41f6d2c5b5702256caf66f1743",
-            "tools/ci_evidence_role_matrix/inert.mjs": "0566682977b370f5f7d67113876dbc74133a4cbca11ee3fd0189766fdb5b5744"
+            "tools/ci_evidence_role_matrix/role-plan.json": "f10588add861f403fd9d3a9f3b0253942d78c0179477af9f02abdc15a7034ac4",
+            "tools/ci_evidence_role_matrix/inert.mjs": "29d4cc76861385b99183e04329a7d8ac967ebdc0bb8776661018c734a3aae77e"
           };
           const need=value=>{if(!value)throw Error('ROLE_MATRIX_REFUSED');},hash=raw=>createHash('sha256').update(raw).digest('hex');
           let phase='E_BOOTSTRAP_PROFILE';
@@ -85,7 +85,7 @@ jobs:
            function save(path,raw){need(/^[A-Za-z0-9_./-]+$/.test(path)&&!path.includes('..'));mkdirSync(dirname(join(root,path)),{recursive:true,mode:0o700});writeFileSync(join(root,path),raw,{flag:'wx',mode:0o600});}
            phase='E_RUNNER_SOURCE';for(const[path,expected]of Object.entries(KIT_MANIFEST)){const raw=await source(pin,path);need(hash(raw)===expected);save(path,raw);}
            const workflowPath='.github/workflows/ci-evidence-role-matrix.yml',workflow=await source(pin,workflowPath);save(workflowPath,workflow);
-           const plan=JSON.parse(readFileSync(join(root,'tools/ci_evidence_role_matrix/role-plan.json')));need(plan.role_source==='82bf1578c5e36bafd76615661fbb3fe4e22dca55'&&Object.keys(plan.files).length===31);
+           const plan=JSON.parse(readFileSync(join(root,'tools/ci_evidence_role_matrix/role-plan.json')));need(plan.role_source==='006418285667b38810b7ecd1de9807b6db166fa3'&&Object.keys(plan.files).length===31);
            phase='E_ROLE_SOURCE';for(const[path,expected]of Object.entries(plan.files)){const raw=await source(plan.role_source,path);need(hash(raw)===expected);save(path,raw);}
            writeFileSync(join(root,'bootstrap-proof.json'),JSON.stringify({runner_workflow_source:pin,runner_workflow_sha256:hash(workflow),kit_hashes:{...KIT_MANIFEST,[workflowPath]:hash(workflow)}}),{flag:'wx',mode:0o600});
            phase='E_INERT_CONTROLS';const controls=spawnSync(process.execPath,[join(root,'tools/ci_evidence_role_matrix/inert.mjs')],{cwd:root,encoding:'utf8',timeout:30000,maxBuffer:131072,env:{NODE_NO_WARNINGS:'1'}});need(!controls.error&&controls.status===0&&controls.signal===null&&controls.stderr==='');

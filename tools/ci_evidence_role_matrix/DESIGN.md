@@ -4,7 +4,7 @@ This separate reusable workflow preserves four original Linux profiles: Node22/2
 
 ## Independent source identities
 
-Role source is immutable Root82bf1578c5e36bafd76615661fbb3fe4e22dca55: its30 JavaScript runtime/test files and original collector workflow are unchanged. The new runner/workflow source is a separate immutable matrix-sha input; caller must pin its reusable workflow ref to that same SHA. GitHub REST referenced_workflows must contain that exact source ref/SHA. Observed Math repository/run/attempt/job/check-run/head are independently bound by REST. These are consistency/correlation checks, never issuer authentication or authorization, and role source is not a claim about the current Root SDK/cohort.
+Role source is immutable Root006418285667b38810b7ecd1de9807b6db166fa3: its30 JavaScript runtime/test files and original collector workflow are unchanged. The new runner/workflow source is a separate immutable matrix-sha input; caller must pin its reusable workflow ref to that same SHA. GitHub REST referenced_workflows must contain that exact source ref/SHA. Observed Math repository/run/attempt/job/check-run/head are independently bound by REST. These are consistency/correlation checks, never issuer authentication or authorization, and role source is not a claim about the current Root SDK/cohort.
 
 Exact Math54c3274538b2e4c3f0063db34b8f1f835d5dafeb ledger custody is recorded under provenance/. Each public role ID is SHA256(JSON.stringify([original.file, original.parent ?? null, original.name, original.occurrence])). All34 source IDs are fixed:31 observed top-level test events (20 declaration sites plus11 generated events, zero parented events) and3 mapped static loader roles. No assertion/function count replaces event identities.
 
@@ -23,3 +23,7 @@ Preserve only original push, pull_request and workflow_dispatch events. PR sourc
 ## Acceptance limits
 
 Local execution is limited to inert contract/parser/fake-REST/reporter/static-byte controls and syntax checking. The actual31-role Node test child, signature/SQLite fixtures, PostgreSQL, reusable workflow and four-cell receipts remain HOSTED_NOT_RUN until exact-head CI. The Math aggregate consumer is a later independent handoff; no source-only receipt or local fake becomes positive hosted evidence.
+
+## RAlpha role-library update
+
+Role source006418285667b38810b7ecd1de9807b6db166fa3 includes the accepted minimal native Git commit metadata repair. The31raw Git inputs remain30JS plus the collector workflow. Only six source hashes change; all34role IDs/order, original Math54c ledger/raw workflow and all four required cells remain exact. provenance/ralpha-source-repin.json binds every current file to its actual Git blob and records changed hashes. This is source custody, not hosted role acceptance. The runner/workflow matrix SHA is independently fixed only after this candidate is reviewed/published; no future SHA is guessed.

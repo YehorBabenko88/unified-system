@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {validateCell,projectTerminal,requireTerminals,makeReceipt,validateReceipt,bindWorkload} from './contract.mjs';
 const plan=JSON.parse(readFileSync(new URL('./role-plan.json',import.meta.url)));
-let checks=0;
+let checks=0;assert.equal(plan.role_source,'006418285667b38810b7ecd1de9807b6db166fa3');checks++;
 for(const cell of plan.cells){assert.equal(validateCell(cell).cell,cell);checks++;}
 for(const bad of ['linux-20-16','windows-22-16','linux-22-17','linux-22-16/secret',null]){assert.throws(()=>validateCell(bad));checks++;}
 const role=plan.roles.find(x=>x.kind==='HOSTED'),root='/private/role-source';
@@ -32,4 +32,5 @@ assert.throws(()=>makeReceipt(plan,context,{cell:'linux-22-16',actualNode:'24',p
 assert.throws(()=>makeReceipt(plan,context,{cell:'linux-22-16',actualNode:'22',pgVersion:'160009',terminals,staticPassed:1}));checks++;
 for(const value of ['10',true,Number.MAX_SAFE_INTEGER+1]){assert.throws(()=>bindWorkload({...run,id:value},{total_count:1,jobs:[job]},pr,expected));checks++;}
 assert.throws(()=>bindWorkload({...run,referenced_workflows:[]},{total_count:1,jobs:[job]},pr,expected));checks++;
+assert.throws(()=>makeReceipt({...plan,role_source:'82bf1578c5e36bafd76615661fbb3fe4e22dca55'},context,{cell:'linux-22-16',actualNode:'22',pgVersion:'160009',terminals,staticPassed:true}));checks++;
 console.log(JSON.stringify({checks,status:'PASS_INERT_ONLY',authority:'NONE',production:'NO_GO'}));

@@ -7,3 +7,5 @@ Five JavaScript modules and the actual embedded workflow bootstrap compile witho
 Pure replay: run inert.mjs directly with Node; run inert_source.mjs with the explicit path to a raw82bf source export. In both cases only fake REST functions and synthetic event iterators execute. Never run runner.mjs locally: its production path requires a GitHub-hosted Linux job, actual REST binding, disposable PG fixture and the immutable Root source loader.
 
 All existing Root files, especially the one-job confidential collector workflow and tools/ci_evidence closure, remain unchanged. The new matrix workflow is a separate caller handoff, not a change to collector job cardinality or a current Root SDK assertion.
+
+RAlpha repin candidate:54inert contract controls +56inert source/privacy/loader controls pass with read-only Node permission mode and no child/worker/addon capability. The source31files were independently exported from actual006418 Git blobs. A new pin calibration fails on prior82bf and passes on RAlpha; old-source receipts refuse. Actual31Node tests/signatures/SQLite/PG/REST/four hosted cells remain NOT_RUN/HELD. No current Math coverage is promoted.
