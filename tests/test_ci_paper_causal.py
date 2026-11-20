@@ -36,7 +36,7 @@ class CausalGateTests(unittest.TestCase):
   from integration.source_guard import SourceFence
   q=self.module().builder()
   with tempfile.TemporaryDirectory() as tmp:
-   base=pathlib.Path(tmp);root=base/'candidate';root.mkdir();cache=base/'cache';cache.mkdir()
+   base=pathlib.Path(tmp).resolve();root=base/'candidate';root.mkdir();cache=base/'cache';cache.mkdir()
    def git(*args):return subprocess.check_output(['git','--no-replace-objects','-c','core.hooksPath='+str(base/'no-hooks'),'-c','commit.gpgsign=false','-C',str(root),*args],text=True).strip()
    git('init');git('config','user.name','Synthetic');git('config','user.email','synthetic@example.invalid');git('config','core.autocrlf','false');git('remote','add','origin','https://github.com/YehorBabenko88/Terminan.git');(root/'tracked.py').write_bytes(b'first\n');git('add','tracked.py');git('commit','-m','synthetic');head=git('rev-parse','HEAD')
    old_cache=sys.pycache_prefix
@@ -52,7 +52,7 @@ class CausalGateTests(unittest.TestCase):
  def test_output_must_be_outside_every_source_checkout(self):
   q=self.module().builder()
   with tempfile.TemporaryDirectory() as tmp:
-   root=pathlib.Path(tmp)/'repo';root.mkdir()
+   root=pathlib.Path(tmp).resolve()/'repo';root.mkdir()
    for out in (root,root/'evidence'):
     with self.assertRaises(ValueError):q.require_external_output(out,[root])
    q.require_external_output(pathlib.Path(tmp)/'evidence',[root])
@@ -65,7 +65,7 @@ class CausalGateTests(unittest.TestCase):
    def file(self,*a,**kw):pass
    def finish(self):finished.append(self.root);raise ValueError('CHANGED_SOURCE')
   with tempfile.TemporaryDirectory() as tmp:
-   base=pathlib.Path(tmp);root=base/'root';root.mkdir();out=base/'evidence';cohort=json.loads((ROOT/'integration/four_owner/cohort.json').read_bytes());(root/'cohort.json').write_text(json.dumps(cohort));cache=sys.pycache_prefix;paths=list(sys.path)
+   base=pathlib.Path(tmp).resolve();root=base/'root';root.mkdir();out=base/'evidence';cohort=json.loads((ROOT/'integration/four_owner/cohort.json').read_bytes());(root/'cohort.json').write_text(json.dumps(cohort));cache=sys.pycache_prefix;paths=list(sys.path)
    try:
     q.ROOT=root
     with patch.dict(os.environ,{'GITHUB_ACTIONS':'true','RUNNER_ENVIRONMENT':'github-hosted'}),patch('integration.source_guard.SourceFence',Fence),patch.object(q.venv,'EnvBuilder') as builder,patch.object(q,'call',side_effect=ValueError('BEFORE_ANY_CHILD')):
