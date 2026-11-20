@@ -2,7 +2,7 @@ import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import patch
-from scripts.operator_contract_ci import REQUIRED_CASES, validate_junit, require_pin, require_fixture_lock, receipt
+from scripts.operator_contract_ci import HELPER_CASES, REQUIRED_CASES, validate_junit, require_pin, require_fixture_lock, receipt
 
 
 class EvidenceTests(unittest.TestCase):
@@ -36,6 +36,17 @@ class EvidenceTests(unittest.TestCase):
                             xml([('foreign.Case', 'test_foreign')] + REQUIRED_CASES[1:]), xml([])):
                 path.write_text(content)
                 with self.assertRaises(ValueError): validate_junit(path)
+
+        # The actual helper-mode inventory is distinct from the86 primary cases.
+        self.assertEqual(len(HELPER_CASES),10)
+        with tempfile.TemporaryDirectory() as folder:
+            path=Path(folder)/'helpers.xml'
+            path.write_text(xml(HELPER_CASES));self.assertEqual(validate_junit(path,expected=HELPER_CASES),10)
+            # Lists from a JSON-shaped manifest must normalize identically.
+            self.assertEqual(validate_junit(path,expected=[list(pair) for pair in HELPER_CASES]),10)
+            for content in (xml(HELPER_CASES[:-1]),xml(HELPER_CASES+[HELPER_CASES[0]]),xml(HELPER_CASES,'<skipped/>'),xml(HELPER_CASES,'<failure/>'),xml(HELPER_CASES,'<error/>'),xml([('foreign.Case','unexpected')]+HELPER_CASES[1:])):
+                path.write_text(content)
+                with self.assertRaises(ValueError):validate_junit(path,expected=HELPER_CASES)
 
     def test_receipt_uses_existing_root_fence_before_and_after_and_no_grid(self):
         import integration.source_guard as source_guard
