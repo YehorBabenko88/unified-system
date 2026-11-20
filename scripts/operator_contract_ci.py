@@ -114,10 +114,17 @@ def require_fixture_lock(raw):
 
 def validate_junit(path, *, expected=None):
     expected = REQUIRED_CASES if expected is None else expected
+    if (type(expected) not in (list, tuple) or not expected
+            or any(type(pair) not in (list, tuple) or len(pair) != 2
+                   or any(type(value) is not str or not value for value in pair)
+                   for pair in expected)):
+        raise ValueError('INVALID_EXPECTED_TEST_INVENTORY')
+    expected = tuple(tuple(pair) for pair in expected)
+    if len(set(expected)) != len(expected):raise ValueError('INVALID_EXPECTED_TEST_INVENTORY')
     root = ET.parse(path).getroot()
     cases = root.findall('.//testcase')
     observed = [(case.get('classname'), case.get('name')) for case in cases]
-    if (len(observed) != len(expected) or len(set(observed)) != len(REQUIRED_CASES)
+    if (len(observed) != len(expected) or len(set(observed)) != len(expected)
             or set(observed) != set(expected)
             or root.findall('.//skipped') or root.findall('.//failure') or root.findall('.//error')):
         raise ValueError('REQUIRED_TEST_INVENTORY_FAILED')
