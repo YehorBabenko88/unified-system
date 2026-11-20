@@ -1,0 +1,78 @@
+{
+  "schema": "unified.native-negative.root-owned-source.v2",
+  "source_identity": "ENCLOSING_PRIMARY_GIT_COMMIT",
+  "source_base": "31db6660079e759dc6207d9b62f03acb89381236",
+  "root_modules_sha256": {
+    "unified_system/consul_authority.py": "5d318cf2e993c00488b965673b9d3e4c4ce870023bc828a4c9929f2cfb30c69e",
+    "unified_system/authority_codec.py": "7cf2e162ef18d1be37ae94cb1b350bc0c0d8ad96fc9cac0e6b983362a63ee35e",
+    "unified_system/research_authority.py": "4a01a7a0c5f7cb6d086a17e4df019fe35169b25517a4c6c6f4ddb5d651553fb3",
+    "unified_system/gateway_research_identity.py": "06066277812133a9cc152f7a95a05e5ff6c23dda1ab7e05232ad800474b2e41d",
+    "unified_system/gateway_native_negative.py": "468f99e018dfaeb96e75ac34960fbe26516d57f87da07443e54acbbde0fe8dff",
+    "unified_system/gateway_identity.py": "84093865e8477ef6562100d41137922785446c9cb4e024c9ba7105593a2b36c1"
+  },
+  "public_submit": "DENY",
+  "public_http_endpoint": false,
+  "full_scientific_e2e": false,
+  "positive_job_or_worker_admission": false,
+  "quota_or_assignment_issuer": false,
+  "storage_publication": "LOCAL_UNATTESTED",
+  "physical": "NOT_RUN",
+  "production": "NO_GO",
+  "root_source_guards": {
+    "expected_cases": "docs/intelligence/native-negative/canonical-v2-20261120/ROOT-GUARD-TESTS.json",
+    "tests": 27,
+    "scope": "INERT_SOURCE_ONLY_CRYPTO_OPERATIONS_REFUSE"
+  },
+  "profiles": {
+    "native_negative": {
+      "expected_cases": "docs/intelligence/native-negative/canonical-v2-20261120/EXPECTED-TESTS.json",
+      "test_modules": [
+        [
+          "gateway_native_negative",
+          "test_actual"
+        ],
+        [
+          "gateway_native_negative",
+          "test_boundary"
+        ]
+      ],
+      "native_classes": [
+        [
+          "test_actual",
+          "GatewayNegativeTests"
+        ]
+      ],
+      "owned_processes": 3,
+      "scope": "REAL_MTLS_INTERNAL_NEGATIVE_COMPOSITION_NO_HTTP_ENDPOINT"
+    },
+    "research_identity": {
+      "expected_cases": "docs/intelligence/research-identity/native-profile-v3-20261120/EXPECTED-TESTS.json",
+      "test_modules": [
+        [
+          "gateway_research_identity",
+          "test_broker"
+        ],
+        [
+          "gateway_research_identity",
+          "test_native_broker"
+        ],
+        [
+          "gateway_research_identity",
+          "test_native_profile_v2"
+        ]
+      ],
+      "native_classes": [
+        [
+          "test_native_broker",
+          "NativeBrokerTests"
+        ],
+        [
+          "test_native_profile_v2",
+          "NativeProfileV2Tests"
+        ]
+      ],
+      "owned_processes": 6,
+      "scope": "ACTUAL_DISPOSABLE_PROFILE_V2_PRINCIPAL_NOT_JOB_RESOURCE_DISPATCH_OR_STORAGE_GRANT"
+    }
+  }
+}

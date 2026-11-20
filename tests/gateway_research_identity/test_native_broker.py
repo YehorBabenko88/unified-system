@@ -6,8 +6,6 @@ from unittest.mock import patch
 from jsonschema import Draft202012Validator
 import subprocess
 
-GRID=Path(os.environ.get('A2_RESEARCH_GRID_SOURCE','C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-2-high-availability-distributed/work/grid-assignment-native-20261107'))
-sys.path.insert(0,str(GRID))
 from unified_system.consul_authority import ConsulConfig,ConsulSessionAuthority,CoordinationLost
 from unified_system.authority_codec import canonical
 from unified_system.gateway_identity import GatewayAuditSink
@@ -25,8 +23,7 @@ class NativeBrokerTests(unittest.IsolatedAsyncioTestCase):
     @classmethod
     def setUpClass(cls):
         cls.temp=tempfile.TemporaryDirectory(prefix='a2-native-principal-')
-        cls.lab=ConsulLab(os.environ.get('A2_RESEARCH_CONSUL_BINARY',
-            'C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-8-independent-security-ci/work/consul-bin/extracted/consul.exe'),Path(cls.temp.name)/'consul')
+        cls.lab=ConsulLab(os.environ['A2_RESEARCH_CONSUL_BINARY'],Path(cls.temp.name)/'consul')
         try: cls.lab.__enter__()
         except BaseException: cls.temp.cleanup();raise
     @classmethod
