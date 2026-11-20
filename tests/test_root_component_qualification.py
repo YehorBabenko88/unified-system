@@ -36,7 +36,6 @@ class ComponentQualificationTests(unittest.TestCase):
   self.assertEqual(len(groups['final']['preserved_prior_ids']),145)
   self.assertTrue(set(groups['final']['preserved_prior_ids'])<=set(groups['final']['expected_ids']))
   self.assertIn('test_combined_control_plane.CombinedControlPlaneTests.test_six_node_fleet_visible_to_lifecycle_without_execution_authority',groups['combined']['expected_ids'])
-if __name__=='__main__':unittest.main()
 
 class ComponentWorkflowPreservationTests(unittest.TestCase):
  def test_push_main_only_preserves_every_prior_pull_path_and_python_axis(self):
@@ -54,4 +53,8 @@ class ComponentWorkflowPreservationTests(unittest.TestCase):
     if "'"+axis+"'" in original:self.assertIn("'"+axis+"'",current)
   self.assertFalse((ROOT/'.github/workflows/five-module-infra.yml').exists())
 
-if __name__=='__main__':unittest.main()
+
+if __name__=='__main__':
+ import sys
+ if unittest.defaultTestLoader.loadTestsFromModule(sys.modules[__name__]).countTestCases()!=6:raise ValueError('ALL_SIX_COMPONENT_CALIBRATIONS_REQUIRED')
+ unittest.main()
