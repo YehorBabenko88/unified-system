@@ -7,29 +7,29 @@ def fixture():
     modules={name:dict(version='1.0.0',commit='a'*40,tree='b'*40,api_major=1,
         dependencies={},artifact=dict(path='modules/'+name+'.zip',sha256='c'*64,bytes=100),
         provenance=dict(repository='owner/'+name,run_id='123',attempt=1,workflow_sha='a'*40)) for name in MODULE_IDS}
-    return dict(schema='unified.release.v3',release_id='release-1',sequence=1,
+    return dict(schema='unified.release.v4',release_id='release-1',sequence=1,
         publisher_sha256='d'*64,modules=modules,execution_authority=False,trading_authorized=False)
 
 
 class ManifestTests(unittest.TestCase):
-    def test_closed_six_module_manifest_roundtrip_is_not_signature_authority(self):
+    def test_closed_four_module_manifest_roundtrip_is_not_signature_authority(self):
         m=fixture();self.assertEqual(validate_manifest(m,expected_publisher='d'*64),m)
         self.assertEqual(parse_manifest(canonical(m),expected_publisher='d'*64),m)
     def test_missing_alias_and_extra_module_fail(self):
         for replacement in (None,'UNIFIED','other'):
-            m=fixture();m['modules'].pop('meta_analyse')
-            if replacement:m['modules'][replacement]=fixture()['modules']['meta_analyse']
+            m=fixture();m['modules'].pop('terminan')
+            if replacement:m['modules'][replacement]=fixture()['modules']['terminan']
             with self.assertRaises(ValueError):validate_manifest(m,expected_publisher='d'*64)
     def test_untrusted_publisher_downgrade_wrong_provenance_and_units(self):
         for key,value in [('publisher_sha256','e'*64),('schema','unified.release.v2'),('sequence',True),('execution_authority',True)]:
             m=fixture();m[key]=value
             with self.assertRaises(ValueError):validate_manifest(m,expected_publisher='d'*64)
-        m=fixture();m['modules']['grid']['provenance']['workflow_sha']='e'*40
+        m=fixture();m['modules']['market_data']['provenance']['workflow_sha']='e'*40
         with self.assertRaises(ValueError):validate_manifest(m,expected_publisher='d'*64)
     def test_dependency_closure_cycles_and_casefold_paths_rejected(self):
-        m=fixture();m['modules']['math']['dependencies']={'grid':'9.0.0'}
+        m=fixture();m['modules']['math']['dependencies']={'market_data':'9.0.0'}
         with self.assertRaises(ValueError):validate_manifest(m,expected_publisher='d'*64)
-        m=fixture();m['modules']['math']['dependencies']={'grid':'1.0.0'};m['modules']['grid']['dependencies']={'math':'1.0.0'}
+        m=fixture();m['modules']['math']['dependencies']={'market_data':'1.0.0'};m['modules']['market_data']['dependencies']={'math':'1.0.0'}
         with self.assertRaises(ValueError):validate_manifest(m,expected_publisher='d'*64)
         m=fixture();m['modules']['math']['artifact']['path']='../bad.zip'
         with self.assertRaises(ValueError):validate_manifest(m,expected_publisher='d'*64)
@@ -48,7 +48,7 @@ class ManifestTests(unittest.TestCase):
             validate_manifest(m,expected_publisher='d'*64)
             for name,module in m['modules'].items():_valid(ModuleSpec(name,module['version']))
         for version in ('r1','latest','release-2','1.2'):
-            m=fixture();m['modules']['grid']['version']=version
+            m=fixture();m['modules']['market_data']['version']=version
             with self.assertRaises(ValueError):validate_manifest(m,expected_publisher='d'*64)
 
     def test_actual_source_bundle_builder_preserves_exact_git_head(self):

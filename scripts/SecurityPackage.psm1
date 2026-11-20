@@ -79,8 +79,7 @@ function Test-UnifiedPackageSignature {
 function Assert-UnifiedManifestContract($data, [string]$identity) {
     if ($data.schema -isnot [string] -or $data.identity_sid -cne $identity) { throw 'Manifest schema or identity mismatch' }
     switch -CaseSensitive ($data.schema) {
-        'unified.windows-package-lock.v1' { $sourceNames = @('grid','strattester','unified','terminan','math') }
-        'unified.windows-package-lock.v2' { $sourceNames = @('unified-system','grid','strattester','math','meta_analyse','terminan') }
+        'unified.windows-package-lock.v3' { $sourceNames = @('unified_system','market_data','math','terminan') }
         default { throw 'Unknown manifest schema' }
     }
     if ($data.requirements.powershell -isnot [string] -or $data.requirements.powershell -cne '5.1,7' -or ($data.requirements.postgresql_major -isnot [int] -and $data.requirements.postgresql_major -isnot [long]) -or $data.requirements.postgresql_major -ne 18) { throw 'PS5.1/7 and PG18 contract required' }

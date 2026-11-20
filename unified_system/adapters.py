@@ -2,7 +2,7 @@
 from .contracts import ContractError
 
 def normalize_source(name, snapshot):
-    if name not in ("strattester", "grid") or not isinstance(snapshot, dict):
+    if name not in ("terminan", "market_data") or not isinstance(snapshot, dict):
         raise ContractError("invalid source")
     if set(snapshot) != {"source", "status", "timestamp_ms", "items", "synthetic"}:
         raise ContractError("invalid source snapshot")
@@ -19,8 +19,8 @@ def normalize_source(name, snapshot):
         raise ContractError("unavailable source cannot publish items")
     return {"source":name,"status":snapshot["status"],"timestamp_ms":snapshot["timestamp_ms"],"count":len(items),"provenance":"SYNTHETIC_ONLY"}
 
-def compose_dashboard(strattester=None,grid=None):
+def compose_dashboard(terminan=None,market_data=None):
     sources={}
-    for name,data in (("strattester",strattester),("grid",grid)):
+    for name,data in (("terminan",terminan),("market_data",market_data)):
         sources[name]={"status":"UNAVAILABLE","provenance":"NONE"} if data is None else normalize_source(name,data)
     return {"mode":"READ_ONLY_SYNTHETIC","sources":sources,"trading_authorized":False}

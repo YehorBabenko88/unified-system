@@ -1,22 +1,22 @@
-"""Pure five-module lifecycle visibility and dependency gates; no process launches."""
+"""Pure four-module lifecycle visibility and dependency gates; no process launches."""
 from .contracts import ContractError
 
-STAGES=("INFRA_PREFLIGHT","INFRA_READY","STRAT_PREPARE","STRAT_HISTORY_SYNC",
-        "STRAT_RESEARCH","STRAT_RESULT_SEALED","HANDOFF_VERIFY",
-        "GRID_MARKET_READY","TERMINAN_OBSERVING","STEADY_STATE")
+STAGES=("INFRA_PREFLIGHT","INFRA_READY","ANALYSIS_PREPARE","MARKET_HISTORY_SYNC",
+        "ANALYSIS_RESEARCH","ANALYSIS_RESULT_SEALED","HANDOFF_VERIFY",
+        "MARKET_DATA_READY","TERMINAN_OBSERVING","STEADY_STATE")
 VALID=frozenset(("NOT_STARTED","RUNNING","WAITING","BLOCKED","DEGRADED","COMPLETE"))
 # Terminan is an independent observer after infrastructure readiness. It must
 # remain operational even when research/handoff/market stages are blocked.
 DEPENDENCIES={
     "INFRA_READY":("INFRA_PREFLIGHT",),
-    "STRAT_PREPARE":("INFRA_READY",),
-    "STRAT_HISTORY_SYNC":("STRAT_PREPARE",),
-    "STRAT_RESEARCH":("STRAT_HISTORY_SYNC",),
-    "STRAT_RESULT_SEALED":("STRAT_RESEARCH",),
-    "HANDOFF_VERIFY":("STRAT_RESULT_SEALED",),
-    "GRID_MARKET_READY":("HANDOFF_VERIFY",),
+    "ANALYSIS_PREPARE":("INFRA_READY",),
+    "MARKET_HISTORY_SYNC":("ANALYSIS_PREPARE",),
+    "ANALYSIS_RESEARCH":("MARKET_HISTORY_SYNC",),
+    "ANALYSIS_RESULT_SEALED":("ANALYSIS_RESEARCH",),
+    "HANDOFF_VERIFY":("ANALYSIS_RESULT_SEALED",),
+    "MARKET_DATA_READY":("HANDOFF_VERIFY",),
     "TERMINAN_OBSERVING":("INFRA_READY",),
-    "STEADY_STATE":("GRID_MARKET_READY",),
+    "STEADY_STATE":("MARKET_DATA_READY",),
 }
 
 def describe_progress(stage_status):

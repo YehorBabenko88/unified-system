@@ -42,7 +42,7 @@ class Coordinator:
     def observe(self):
         if self.supervisor.state != "HANDOFF_VERIFIED":
             raise ContractError("handoff not verified")
-        state="OBSERVING" if {"grid","terminan"} <= self.supervisor.installed else "DEGRADED"
+        state="OBSERVING" if {"market_data","terminan"} <= self.supervisor.installed else "DEGRADED"
         self.journal.append(state,self.supervisor.receipt)
         self.supervisor.state=state
         return self.snapshot()

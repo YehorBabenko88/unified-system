@@ -45,7 +45,7 @@ def validate_config(c,*,allow_physical=False):
     need(type(c['http_port']) is int and 0<=c['http_port']<=65535)
     need(type(c['tick_seconds']) in (int,float) and math.isfinite(c['tick_seconds']) and .05<=c['tick_seconds']<=5)
     for key in ('state_root','snapshot_path'):need(type(c[key]) is str and Path(c[key]).is_absolute())
-    need(type(c['specs']) is list and len(c['specs'])==6)
+    need(type(c['specs']) is list and len(c['specs'])==len(MODULE_IDS))
     specs={}
     from .runtime import _valid
     for item in c['specs']:
@@ -53,7 +53,7 @@ def validate_config(c,*,allow_physical=False):
         spec=ModuleSpec(**item);_valid(spec)
         need(spec.module_id not in specs);specs[spec.module_id]=spec
     need(set(specs)==MODULE_IDS);RuntimeSupervisor._order(specs)
-    expected=MODULE_IDS-{'unified-system'} if builtin else MODULE_IDS
+    expected=MODULE_IDS-{'unified_system'} if builtin else MODULE_IDS
     need(type(c['programs']) is dict and set(c['programs'])==expected)
     if builtin:need(c['http_port']>0 and c['tick_seconds']<=.25)
     for p in c['programs'].values():
@@ -260,7 +260,7 @@ def main(argv=None):
     try:
         c,raw=read_config(args.config)
         if not args.execute:
-            print('PREPARE_ONLY; modules=6; processes=NOT_STARTED; physical=NOT_AUTHORIZED; production_trust_bridge=UNSUPPORTED')
+            print(f'PREPARE_ONLY; modules={len(MODULE_IDS)}; processes=NOT_STARTED; physical=NOT_AUTHORIZED; production_trust_bridge=UNSUPPORTED')
             return 0
         need(args.scope=='ephemeral-ci')
         need(type(args.config_sha256) is str and re.fullmatch('[0-9a-f]{64}',args.config_sha256) and hashlib.sha256(raw).hexdigest()==args.config_sha256)

@@ -4,8 +4,7 @@ import json
 import re
 from .module_catalog import MODULE_IDS
 
-SCHEMA = "unified.windows-package-lock.v1"
-SCHEMA_V2 = "unified.windows-package-lock.v2"
+SCHEMA = "unified.windows-package-lock.v3"
 REQUIRED = {"python", "postgresql", "openssh", "tailscale", "service-wrapper"}
 HEX = re.compile(r"[0-9a-f]{64}\Z")
 SID = re.compile(r"S-1-5-(?:[0-9]+-)*[0-9]+\Z")
@@ -28,12 +27,12 @@ def _path(value):
 
 def validate_package_lock(lock, package_bytes):
     """Validate synthetic/offline supplied bytes; no signature or source authority claim."""
-    if not isinstance(lock, dict) or type(lock.get("schema")) is not str or lock.get("schema") not in (SCHEMA, SCHEMA_V2):
+    if not isinstance(lock, dict) or lock.get("schema") != SCHEMA:
         _reject("lock schema")
     if not isinstance(lock.get("identity_sid"), str) or not SID.fullmatch(lock["identity_sid"]):
         _reject("signed identity required")
     sources = lock.get("sources")
-    expected_sources = set(MODULE_IDS) if lock["schema"] == SCHEMA_V2 else {"grid", "strattester", "unified", "terminan", "math"}
+    expected_sources = set(MODULE_IDS)
     if not isinstance(sources, dict) or set(sources) != expected_sources:
         _reject("exact source inventory")
     for source in sources.values():

@@ -5,7 +5,7 @@ from pathlib import Path
 from unified_system.runtime import ModuleSpec, RuntimeSupervisor
 
 
-CORE = ('unified-system','grid','math','strattester','meta_analyse','terminan')
+CORE = ('unified_system','market_data','math','terminan')
 
 
 class Driver:
@@ -26,7 +26,7 @@ class Driver:
 
 
 def specs():
-    return [ModuleSpec(name,'1.0.0',dependencies=('math',) if name=='strattester' else ()) for name in CORE]
+    return [ModuleSpec(name,'1.0.0',dependencies=('math',) if name=='terminan' else ()) for name in CORE]
 
 
 class RuntimeTests(unittest.TestCase):
@@ -36,41 +36,41 @@ class RuntimeTests(unittest.TestCase):
     def runtime(self, **kw):
         return RuntimeSupervisor(self.path,self.driver,specs(),release_id='candidate-1',
                                  release_sha256='a'*64,node_id='cloud-test',clock=lambda:self.now,**kw)
-    def test_six_real_driver_states_and_dependency_order(self):
+    def test_four_real_driver_states_and_dependency_order(self):
         r=self.runtime();r.start();r.tick()
         self.assertTrue(r.health_release('candidate-1')['ready'])
         order=[name for op,name in self.driver.calls if op=='start']
-        self.assertLess(order.index('math'),order.index('strattester'))
-        self.assertEqual(len(self.driver.running),6)
-        r.start();r.tick();self.assertEqual(len(self.driver.running),6)
+        self.assertLess(order.index('math'),order.index('terminan'))
+        self.assertEqual(len(self.driver.running),4)
+        r.start();r.tick();self.assertEqual(len(self.driver.running),4)
         self.assertEqual(r.snapshot()['schema'],'unified.runtime.v2')
         self.assertFalse(r.snapshot()['physical_deployment_allowed'])
     def test_port_or_pid_without_functional_identity_never_ready(self):
         self.driver.unready.add('math');r=self.runtime();r.start();r.tick()
         self.assertFalse(r.health_release('candidate-1')['ready'])
-        self.assertNotIn(('start','strattester'),self.driver.calls)
+        self.assertNotIn(('start','terminan'),self.driver.calls)
         self.assertEqual(r.snapshot()['modules']['math']['state'],'STARTING')
     def test_admin_stop_survives_recreation_and_start_requires_explicit_resume(self):
         r=self.runtime();r.start();r.tick();r.stop()
         again=self.runtime();again.start();again.tick()
         self.assertEqual(self.driver.running,{})
-        again.resume();again.tick();self.assertEqual(len(self.driver.running),6)
+        again.resume();again.tick();self.assertEqual(len(self.driver.running),4)
     def test_crash_recovery_backoff_and_stale_dependents(self):
         r=self.runtime();r.start();r.tick();self.driver.crashed.add('math');r.tick()
         self.assertFalse(r.health_release('candidate-1')['ready'])
-        self.assertNotEqual(r.snapshot()['modules']['strattester']['state'],'READY')
+        self.assertNotEqual(r.snapshot()['modules']['terminan']['state'],'READY')
         self.driver.crashed.clear();self.now+=10;r.tick();r.tick()
         self.assertTrue(r.health_release('candidate-1')['ready'])
     def test_stop_reverse_dependencies_and_hot_extension_without_global_restart(self):
         r=self.runtime();r.start();r.tick();before=len(self.driver.calls)
-        r.register(ModuleSpec('research-extra','1.0.0',dependencies=('math',)))
-        r.start_module('research-extra');r.tick()
-        self.assertEqual(self.driver.calls[before:],[('start','research-extra')])
+        r.register(ModuleSpec('research_extra','1.0.0',dependencies=('math',)))
+        r.start_module('research_extra');r.tick()
+        self.assertEqual(self.driver.calls[before:],[('start','research_extra')])
         with self.assertRaises(ValueError):r.unregister('math')
         with self.assertRaises(ValueError):r.stop_module('math')
-        r.stop_module('research-extra');r.unregister('research-extra')
+        r.stop_module('research_extra');r.unregister('research_extra')
         r.stop();stops=[n for op,n in self.driver.calls if op=='stop']
-        self.assertLess(stops.index('strattester'),stops.index('math'))
+        self.assertLess(stops.index('terminan'),stops.index('math'))
     def test_bad_versions_cycles_and_missing_dependencies_before_side_effects(self):
         for bad in (ModuleSpec('bad','1.0.0',dependencies=('missing',)),
                     ModuleSpec('bad','1.0.0',api_major=True),ModuleSpec('bad','invalid')):
@@ -136,7 +136,7 @@ class RuntimeConcurrencyTests(unittest.TestCase):
         try:self.assertTrue(b.is_alive(),'second supervisor observed an in-flight process side effect')
         finally:release.set();a.join(4);b.join(4)
         self.assertFalse(errors);self.assertTrue(seen[0]['ready'])
-        self.assertEqual(len(self.driver.running),6)
+        self.assertEqual(len(self.driver.running),4)
     def test_failed_stop_is_quarantined_until_explicit_cleanup(self):
         r=self.runtime();r.start();r.tick()
         self.driver.ready=lambda *args: (_ for _ in ()).throw(RuntimeError('lost health'))

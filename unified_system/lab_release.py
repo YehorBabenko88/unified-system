@@ -18,9 +18,14 @@ from .runtime_process import _safe_path
 LIMIT=32*1024*1024
 FILE_LIMIT=512*1024*1024
 TOTAL_LIMIT=8*1024*1024*1024
-REPOSITORIES={n:'YehorBabenko88/'+{'grid':'bybit-cluster-grid','terminan':'Terminan'}.get(n,n) for n in MODULE_IDS}
+REPOSITORIES={
+    'unified_system':'YehorBabenko88/unified-system',
+    'market_data':'YehorBabenko88/strattester',
+    'math':'YehorBabenko88/math',
+    'terminan':'YehorBabenko88/Terminan',
+}
 COLLECTOR_SCHEMA='unified.lab-release.collector.v1'
-COLLECTOR_SOURCES=frozenset(('unified-system','grid'))
+COLLECTOR_SOURCES=frozenset(('unified_system','market_data'))
 COLLECTOR_PERMISSIONS=frozenset(('provider_rest','provider_websocket','trading','training','math',
                                'public_submit','authority_mutation','service_creation','acl_changes'))
 

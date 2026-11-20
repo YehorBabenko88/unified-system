@@ -9,9 +9,9 @@ class CoordinatorTests(unittest.TestCase):
         self.temp=tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
         self.path=Path(self.temp.name)/"journal.sqlite"
-        self.c=Coordinator(self.path,("strattester","grid","terminan"))
+        self.c=Coordinator(self.path,("terminan","market_data","terminan"))
         self.dataset="a"*64
-        self.env={"schema_version":1,"producer":"strattester","run_id":"r1","dataset_fingerprint":self.dataset,"status":"SEALED","capabilities":["historical_research"],"payload":{}}
+        self.env={"schema_version":1,"producer":"terminan","run_id":"r1","dataset_fingerprint":self.dataset,"status":"SEALED","capabilities":["historical_research"],"payload":{}}
         self.env["sha256"]=seal(self.env)
     def test_lifecycle(self):
         self.c.initialize();self.c.preflight();self.c.accept(self.env,self.dataset)
@@ -19,7 +19,7 @@ class CoordinatorTests(unittest.TestCase):
         self.assertEqual(self.c.snapshot()["journal_records"],4)
     def test_reboot_fail_closed(self):
         self.c.initialize();self.c.preflight()
-        second=Coordinator(self.path,("strattester","grid","terminan"))
+        second=Coordinator(self.path,("terminan","market_data","terminan"))
         self.assertEqual(second.initialize()["state"],"BLOCKED")
         with self.assertRaises(ContractError):second.preflight()
     def test_bad_handoff_persists_block(self):
@@ -28,7 +28,7 @@ class CoordinatorTests(unittest.TestCase):
         self.assertEqual(self.c.snapshot()["state"],"BLOCKED")
         self.assertEqual(Coordinator(self.path,()).initialize()["state"],"BLOCKED")
     def test_absent_grid_degrades(self):
-        c=Coordinator(self.path,("strattester","terminan"))
+        c=Coordinator(self.path,("terminan","terminan"))
         c.initialize();c.preflight();c.accept(self.env,self.dataset)
         self.assertEqual(c.observe()["state"],"DEGRADED")
 if __name__=="__main__":unittest.main()

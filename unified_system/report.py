@@ -3,8 +3,8 @@ import json
 from .adapters import compose_dashboard
 from .contracts import ContractError, canonical
 
-def build_report(*, strattester=None, grid=None):
-    report=compose_dashboard(strattester,grid)
+def build_report(*, terminan=None, market_data=None):
+    report=compose_dashboard(terminan,market_data)
     if any(source["status"] in ("STALE","UNAVAILABLE") for source in report["sources"].values()):
         report["overall"]="DEGRADED"
     else:

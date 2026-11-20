@@ -17,7 +17,7 @@ def fixture(root):
     put('runtime.json',b'{}\n');put('deps/requirements.lock',b'example==1.0\n')
     put('tools/git.exe',b'inert fixture, never executed')
     sources={}
-    repos={'grid':'bybit-cluster-grid','terminan':'Terminan'}
+    repos={'unified_system':'unified-system','market_data':'strattester','terminan':'Terminan'}
     for name in MODULE_IDS:
         put('sources/'+name+'/inert.txt',b'fixture')
         put('sources/'+name+'/empty.txt',b'')
@@ -34,6 +34,14 @@ def fixture(root):
 
 
 class LabReleaseTests(unittest.TestCase):
+    def test_canonical_owners_pin_real_repositories(self):
+        self.assertEqual(lab.REPOSITORIES, {
+            "unified_system": "YehorBabenko88/unified-system",
+            "market_data": "YehorBabenko88/strattester",
+            "math": "YehorBabenko88/math",
+            "terminan": "YehorBabenko88/Terminan",
+        })
+
     def test_pinned_vendor_filenames_allow_internal_spaces_and_parentheses(self):
         for name in ('dependencies/site-packages/setuptools/launcher manifest.xml',
                      'dependencies/site-packages/setuptools/script (dev).tmpl',
@@ -110,7 +118,7 @@ class LabReleaseTests(unittest.TestCase):
             with self.assertRaises(ValueError):lab.verify_capsule(self.root,hashlib.sha256(altered).hexdigest())
 
     def test_even_hash_admitted_active_dotenv_cannot_bypass_lab_settings(self):
-        raw=b'BYBIT_API_KEY=INERT_TEST_SECRET\n';name='sources/grid/.env'
+        raw=b'BYBIT_API_KEY=INERT_TEST_SECRET\n';name='sources/market_data/.env'
         (self.root/name).write_bytes(raw)
         self.m['files'][name]={'sha256':hashlib.sha256(raw).hexdigest(),'bytes':len(raw)}
         with self.assertRaises(ValueError):lab.verify_capsule(self.root,self.publish())

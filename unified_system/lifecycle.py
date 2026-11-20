@@ -7,13 +7,14 @@ import uuid
 from contextlib import closing
 from pathlib import Path
 from .contracts import ContractError
+from .module_catalog import MODULE_IDS
 from .fleet_snapshot import validate_fleet
 
-STAGES=('INFRA_PREFLIGHT','INFRA_READY','STRAT_HISTORY_SYNC','STRAT_RESULT_SEALED',
-        'HANDOFF_VERIFY','GRID_MARKET_READY','STEADY_STATE')
-MODULES=frozenset(('unified-system','terminan','strattester','grid','math'))
+STAGES=('INFRA_PREFLIGHT','INFRA_READY','MARKET_HISTORY_SYNC','ANALYSIS_RESULT_SEALED',
+        'HANDOFF_VERIFY','MARKET_DATA_READY','STEADY_STATE')
+MODULES=MODULE_IDS
 STATUS=frozenset(('NOT_STARTED','RUNNING','WAITING','BLOCKED','COMPLETE','CANCELLED'))
-REQUIRED=dict(zip(STAGES,('unified-system','unified-system','strattester','strattester','unified-system','grid','unified-system')))
+REQUIRED=dict(zip(STAGES,('unified_system','unified_system','market_data','terminan','unified_system','market_data','unified_system')))
 ZERO='0'*64
 
 def canonical(value):
@@ -24,11 +25,11 @@ def integer(value,low=0,high=2**53-1):
     if type(value) is not int or not low<=value<=high:raise ContractError('invalid lifecycle integer')
     return value
 def modules(value):
-    if not isinstance(value,list) or len(value)>5 or any(type(x) is not str or x not in MODULES for x in value) or len(set(value))!=len(value):
+    if not isinstance(value,list) or len(value)>len(MODULES) or any(type(x) is not str or x not in MODULES for x in value) or len(set(value))!=len(value):
         raise ContractError('invalid module inventory')
     return sorted(value)
 def initial(available):
-    return {'schema':'unified.lifecycle.v1','api_version':{'major':1,'minor':0},'producer':'unified-system',
+    return {'schema':'unified.lifecycle.v2','api_version':{'major':2,'minor':0},'producer':'unified_system',
             'mode':'PLAN_ONLY','epoch':str(uuid.uuid4()),'sequence':0,'available_modules':modules(available),
             'stages':[dict(stage=s,status='NOT_STARTED',completed=0,total=0,reason='NOT_STARTED') for s in STAGES],
             'observer':{'status':'NOT_STARTED','reason':'NOT_STARTED'},'math':{'status':'NOT_STARTED','reason':'NOT_STARTED'},
@@ -40,7 +41,7 @@ def validate(state):
         template=initial([])
         if not isinstance(state,dict) or set(state)!=set(template):raise ContractError('invalid lifecycle schema')
         if state['schema']!=template['schema'] or state['api_version']!=template['api_version'] or any(type(v) is not int for v in state['api_version'].values()):raise ContractError('invalid lifecycle version')
-        if state['producer']!='unified-system' or state['mode']!='PLAN_ONLY' or state['execution_authorized'] is not False or state['trading_authorized'] is not False or state['physical_acceptance']!='NOT_RUN' or state['source_provenance']!='UNVERIFIED' or state['paper']!={'status':'NOT_AUTHORIZED'}:raise ContractError('invalid lifecycle authority')
+        if state['producer']!='unified_system' or state['mode']!='PLAN_ONLY' or state['execution_authorized'] is not False or state['trading_authorized'] is not False or state['physical_acceptance']!='NOT_RUN' or state['source_provenance']!='UNVERIFIED' or state['paper']!={'status':'NOT_AUTHORIZED'}:raise ContractError('invalid lifecycle authority')
         if type(state['epoch']) is not str:raise ContractError('invalid epoch')
         uuid.UUID(state['epoch']);integer(state['sequence']);modules(state['available_modules'])
         if len(state['stages'])!=len(STAGES):raise ContractError('invalid stages')

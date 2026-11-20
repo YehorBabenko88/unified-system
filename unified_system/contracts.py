@@ -20,7 +20,7 @@ def validate_handoff(envelope, expected_dataset):
         raise ContractError("invalid envelope fields")
     if type(envelope["schema_version"]) is not int or envelope["schema_version"] != 1:
         raise ContractError("incompatible schema")
-    if not isinstance(envelope["producer"], str) or envelope["producer"] != "strattester":
+    if not isinstance(envelope["producer"], str) or envelope["producer"] != "terminan":
         raise ContractError("invalid producer")
     if not isinstance(envelope["run_id"], str) or not _ID.fullmatch(envelope["run_id"]):
         raise ContractError("invalid run id")

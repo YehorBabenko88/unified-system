@@ -9,7 +9,7 @@ from unified_system.lifecycle import Lifecycle, STAGES
 from unified_system.contracts import ContractError
 from unified_system.lifecycle_api import ReadOnlyLifecycleApp
 
-MODULES=['unified-system','terminan','strattester','grid','math']
+MODULES=['unified_system','market_data','math','terminan']
 def verifier(stage, value, **transition):
     return dict(verdict='VERIFIED_SYNTHETIC',stage=stage,**transition) if value == {'source_owned':stage} else {'verdict':'UNAVAILABLE'}
 
@@ -26,8 +26,20 @@ class LifecycleTests(unittest.TestCase):
         return self.life.apply('op-'+str(self.counter),s['epoch'],s['sequence'],stage,status,{'source_owned':stage},**kwargs)
     def infra(self):
         self.apply(STAGES[0]);self.apply(STAGES[1]);self.apply('terminan','RUNNING')
+    def test_version_and_retired_owners_are_rejected(self):
+        from unified_system.lifecycle import initial, validate
+        state = initial(MODULES)
+        self.assertEqual(state["schema"], "unified.lifecycle.v2")
+        self.assertEqual(state["producer"], "unified_system")
+        for old in ("grid", "strattester", "meta_analyse", "unified-system"):
+            with self.subTest(old=old), self.assertRaises(ContractError):
+                initial([old])
+        state["schema"] = "unified.lifecycle.v1"
+        with self.assertRaises(ContractError):
+            validate(state)
+
     def test_sequence_and_no_authority(self):
-        with self.assertRaises(ContractError):self.apply('GRID_MARKET_READY')
+        with self.assertRaises(ContractError):self.apply('MARKET_DATA_READY')
         self.infra()
         for stage in STAGES[2:]:self.apply(stage)
         s=self.life.snapshot()
@@ -57,8 +69,8 @@ class LifecycleTests(unittest.TestCase):
         restart.recover(s['epoch'],s['sequence'])
         self.assertTrue(all(x['status']=='NOT_STARTED' for x in restart.snapshot()['stages']))
         self.assertNotEqual(restart.snapshot()['epoch'],s['epoch'])
-    def test_missing_modules_zero_to_five(self):
-        for n in range(6):
+    def test_missing_modules_zero_to_four(self):
+        for n in range(5):
             life=Lifecycle(Path(self.tmp.name)/('n'+str(n)+'.db'),MODULES[:n],verifier=verifier);life.initialize()
             self.assertEqual(len(life.snapshot()['available_modules']),n)
             if not n:
@@ -67,11 +79,11 @@ class LifecycleTests(unittest.TestCase):
     def test_cancel_retry_cannot_retain_handoff(self):
         self.infra()
         for stage in STAGES[2:]:self.apply(stage)
-        self.apply('STRAT_HISTORY_SYNC','CANCELLED')
+        self.apply('MARKET_HISTORY_SYNC','CANCELLED')
         states={x['stage']:x['status'] for x in self.life.snapshot()['stages']}
         self.assertEqual(states['HANDOFF_VERIFY'],'NOT_STARTED')
-        self.assertEqual(states['GRID_MARKET_READY'],'NOT_STARTED')
-        self.apply('STRAT_HISTORY_SYNC','RUNNING')
+        self.assertEqual(states['MARKET_DATA_READY'],'NOT_STARTED')
+        self.apply('MARKET_HISTORY_SYNC','RUNNING')
     def test_tampered_state_rejected(self):
         self.infra()
         with closing(sqlite3.connect(self.path)) as db, db:db.execute("UPDATE lifecycle_state SET snapshot='{}'")

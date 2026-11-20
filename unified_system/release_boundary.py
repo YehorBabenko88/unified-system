@@ -27,7 +27,7 @@ class ReleasePin:
     tree:str
     artifact_sha256:str
     def __post_init__(self):
-        if self.producer not in ('strattester','bybit-cluster-grid') or not hex_string(self.revision,40) or not hex_string(self.tree,40) or not hex_string(self.artifact_sha256,64):raise ValueError('release pin schema')
+        if self.producer not in ('terminan','market_data') or not hex_string(self.revision,40) or not hex_string(self.tree,40) or not hex_string(self.artifact_sha256,64):raise ValueError('release pin schema')
     def matches(self,revision,tree,artifact_bytes):
         return (revision==self.revision and tree==self.tree and isinstance(artifact_bytes,bytes)
                 and 0<len(artifact_bytes)<=33554432 and hashlib.sha256(artifact_bytes).hexdigest()==self.artifact_sha256)
@@ -35,7 +35,7 @@ class ReleasePin:
 def validate_owned(record):
     """Independent reconstruction of exact input windows, not a hash-only check."""
     if not isinstance(record,dict) or len(canonical(record))>900000:return 'ARTIFACT_BOUNDS'
-    if not v11(record.get('api_version')) or record.get('producer')!='strattester':return 'RECORD_VERSION'
+    if not v11(record.get('api_version')) or record.get('producer')!='terminan':return 'RECORD_VERSION'
     if record.get('mode')!='HISTORICAL' or record.get('execution_authority') is not False:return 'HISTORICAL_ONLY'
     if not text(record['producer_identity']) or not hex_string(record['source_revision'],40):return 'PRODUCER_IDENTITY'
     for key in ('run_id','producer_epoch'):
@@ -80,7 +80,7 @@ def validate_owned(record):
 
 class HistoricalBoundary:
     def __init__(self,release,admitted_receipts,*,artifact_bytes=None):
-        if not isinstance(release,ReleasePin) or release.producer!='strattester':raise ValueError('Strattester release required')
+        if not isinstance(release,ReleasePin) or release.producer!='terminan':raise ValueError('Terminan release required')
         self.release=release;self.admitted=frozenset(tuple(x) for x in admitted_receipts);self.artifact_bytes=artifact_bytes
         if len(self.admitted)>10000:raise ValueError('receipt policy bounds')
     def verify(self,record,*,observed_revision,observed_tree,artifact_bytes):
@@ -98,7 +98,7 @@ class HistoricalBoundary:
                     'execution_authorized':False,'trading_authorized':False,'physical_acceptance':'NOT_RUN'}
         except (KeyError,TypeError,ValueError,AttributeError,OverflowError,RecursionError):return deny('MALFORMED_SOURCE_RECORD')
     def lifecycle_verifier(self,stage,evidence,*,status,completed,total):
-        if stage not in ('STRAT_RESULT_SEALED','HANDOFF_VERIFY') or status!='COMPLETE' or not integer(completed) or not integer(total) or completed!=total:return deny('UNSUPPORTED_SOURCE_STAGE')
+        if stage not in ('ANALYSIS_RESULT_SEALED','HANDOFF_VERIFY') or status!='COMPLETE' or not integer(completed) or not integer(total) or completed!=total:return deny('UNSUPPORTED_SOURCE_STAGE')
         try:result=self.verify(evidence['record'],observed_revision=evidence['revision'],observed_tree=evidence['tree'],artifact_bytes=self.artifact_bytes)
         except (TypeError,KeyError):return deny('MALFORMED_SOURCE_RECORD')
         if result['verdict']=='VERIFIED_SOURCE_RECEIPT':result.update(stage=stage,status=status,completed=completed,total=total)
@@ -108,7 +108,7 @@ def inspect_market(payload,*,now_ms=None):
     """Observe unqualified market data without making ingestion imply order authority."""
     result={'status':'UNAVAILABLE','reason':'GRID_SOURCE_UNQUALIFIED','market_truth':'NOT_ATTESTED','ingestion_requires_trading':False,'trading_authorized':False}
     try:
-        if not isinstance(payload,dict) or len(canonical(payload))>8388608 or payload.get('producer')!='bybit-cluster-grid' or not v11(payload.get('api_version')) or payload.get('read_only') is not True:return result
+        if not isinstance(payload,dict) or len(canonical(payload))>8388608 or payload.get('producer')!='market_data' or not v11(payload.get('api_version')) or payload.get('read_only') is not True:return result
         if payload.get('execution_authority',False) is not False or payload.get('trading_authorized',False) is not False:return result
         status=payload.get('status')
         if status not in ('PARTIAL','STALE','GAP','UNAVAILABLE'):
@@ -118,7 +118,7 @@ def inspect_market(payload,*,now_ms=None):
         if not isinstance(rows,list) or not 1<=len(rows)<=1000 or payload['dataset_fingerprint']!=digest(rows):return result
         times=[];epochs=set()
         for row in rows:
-            if not v11(row['api_version']) or row['producer']!='bybit-cluster-grid' or row['representation']!='historical_aggregate' or row['execution_authority'] is not False:return result
+            if not v11(row['api_version']) or row['producer']!='market_data' or row['representation']!='historical_aggregate' or row['execution_authority'] is not False:return result
             if row.get('status') not in ('PARTIAL','STALE','GAP') or row.get('quality_status') not in ('GOOD','DEGRADED') or row.get('symbol')!=payload.get('symbol') or row.get('timeframe')!='1m' or payload.get('timeframe')!='1m':return result
             candle=row['candle'];levels=row['levels']
             if any(not number(candle.get(k)) for k in ('open','high','low','close','buy_volume','sell_volume','delta','poc_price')) or not integer(candle.get('trade_count')):return result
@@ -155,7 +155,7 @@ def inspect_market(payload,*,now_ms=None):
 
 class MarketBoundary:
     def __init__(self,release):
-        if not isinstance(release,ReleasePin) or release.producer!='bybit-cluster-grid':raise ValueError('Grid release required')
+        if not isinstance(release,ReleasePin) or release.producer!='market_data':raise ValueError('Market data release required')
         self.release=release
     def inspect(self,payload,*,observed_revision,observed_tree,artifact_bytes,now_ms=None):
         if not self.release.matches(observed_revision,observed_tree,artifact_bytes):return {'status':'UNAVAILABLE','reason':'RELEASE_PIN_MISMATCH','trading_authorized':False,'ingestion_requires_trading':False}
