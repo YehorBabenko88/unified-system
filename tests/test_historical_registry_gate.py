@@ -5,7 +5,7 @@ import unittest
 
 class RegistryResultGateTests(unittest.TestCase):
     def test_exact_success_gate_refuses_all_non_success_unittest_outcomes(self):
-        raw=(Path(__file__).resolve().parents[1]/'.github/workflows/integration-registry.yml').read_text(encoding='utf8')
+        raw=(Path(__file__).resolve().parents[1]/'.github/workflows/historical-registry.yml').read_text(encoding='utf8')
         lines=[line.strip() for line in raw.splitlines() if line.strip().startswith('assert result.testsRun==13 ')]
         self.assertEqual(len(lines),1)
         expression=ast.parse(lines[0]).body[0].test

@@ -1,17 +1,17 @@
-name: Integration registry identity and ownership
+name: Historical coordination audit regression
 on:
   pull_request:
     paths:
       - 'coordination/**'
-      - 'unified_system/integration_registry.py'
-      - 'tests/test_integration_registry.py'
-      - 'tests/test_integration_registry_gate.py'
-      - '.github/workflows/integration-registry.yml'
+      - 'scripts/historical_registry.py'
+      - 'tests/test_historical_registry.py'
+      - 'tests/test_historical_registry_gate.py'
+      - '.github/workflows/historical-registry.yml'
   workflow_dispatch:
 permissions:
   contents: read
 concurrency:
-  group: integration-registry-${{ github.ref }}
+  group: historical-registry-${{ github.ref }}
   cancel-in-progress: false
 jobs:
   registry:
@@ -40,7 +40,7 @@ jobs:
         run: |
           import sys,unittest
           sys.path.insert(0,'.')
-          suite=unittest.defaultTestLoader.loadTestsFromName('tests.test_integration_registry_gate')
+          suite=unittest.defaultTestLoader.loadTestsFromName('tests.test_historical_registry_gate')
           result=unittest.TextTestRunner(verbosity=2).run(suite)
           assert result.testsRun==1 and result.wasSuccessful() and not result.skipped and not result.expectedFailures and not result.unexpectedSuccesses
       - name: Required registry negative tests and source receipt
@@ -56,7 +56,7 @@ jobs:
               files={name:hashlib.sha256(pathlib.Path(name).read_bytes()).hexdigest() for name in git('ls-files','-z').decode().split('\0') if name}
               return {'head':git('rev-parse','HEAD').decode(),'tree':git('rev-parse','HEAD^{tree}').decode(),'files':files}
           before=source()
-          suite=unittest.defaultTestLoader.loadTestsFromName('tests.test_integration_registry')
+          suite=unittest.defaultTestLoader.loadTestsFromName('tests.test_historical_registry')
           result=unittest.TextTestRunner(verbosity=2).run(suite)
           after=source()
           assert before==after

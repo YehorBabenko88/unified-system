@@ -1,7 +1,7 @@
 import copy,hashlib,json,shutil,tempfile
 from pathlib import Path
 import unittest
-from unified_system.integration_registry import RegistryRejected,decode,verify_identity,verify_ownership
+from scripts.historical_registry import RegistryRejected,decode,verify_identity,verify_ownership
 
 ROOT=Path(__file__).resolve().parents[1]/'coordination'
 
@@ -60,13 +60,13 @@ class RegistryTests(unittest.TestCase):
 
 class AcceptanceTests(unittest.TestCase):
     def test_package_integrity_never_grants_execution(self):
-        from unified_system.integration_registry import verify_acceptance_package
+        from scripts.historical_registry import verify_acceptance_package
         package=ROOT.parent/'acceptance/20261106'
         pin=hashlib.sha256((package/'package-index.json').read_bytes()).hexdigest()
         result=verify_acceptance_package(package,expected_index_sha256=pin)
         self.assertFalse(result['physical_authorized']);self.assertEqual(result['go'],'NO-GO')
     def test_modified_member_and_wrong_external_pin_rejected(self):
-        from unified_system.integration_registry import verify_acceptance_package
+        from scripts.historical_registry import verify_acceptance_package
         source=ROOT.parent/'acceptance/20261106'
         pin=hashlib.sha256((source/'package-index.json').read_bytes()).hexdigest()
         with self.assertRaises(RegistryRejected):verify_acceptance_package(source,expected_index_sha256='0'*64)
