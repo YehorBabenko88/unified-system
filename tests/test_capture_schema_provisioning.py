@@ -11,7 +11,7 @@ class Boundary(pg.WindowsPostgresBoundary):
  def _sql(self,plan,server,sql,**kwargs):self.sql.append((sql,kwargs));return b''
 class CaptureSchemaProvisioningTests(unittest.TestCase):
  def setup(self,folder):
-  root=Path(folder);p=root/ASSET;p.parent.mkdir(parents=True);p.write_bytes(RAW)
+  root=Path(folder).resolve();p=root/ASSET;p.parent.mkdir(parents=True);p.write_bytes(RAW)
   return Boundary(root),{'service_plan':{'code':str(root)},'user':'unified_lab_test'},p
  def test_declared_data_asset_creates_only_fresh_public_tables_in_transaction(self):
   with tempfile.TemporaryDirectory() as f:

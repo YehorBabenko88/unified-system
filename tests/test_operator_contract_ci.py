@@ -150,7 +150,7 @@ class EvidenceTests(unittest.TestCase):
             for name in tuple(sys.modules):
                 if api['application'](name):del sys.modules[name]
             with tempfile.TemporaryDirectory() as folder:
-                base=Path(folder);cache=base/'cache';sys.pycache_prefix=str(cache);state=api['begin'](cache,())
+                base=Path(folder).resolve();cache=base/'cache';sys.pycache_prefix=str(cache);state=api['begin'](cache,())
                 source=base/'constant.py';source.write_bytes(b'VALUE=1\n')
                 fixture=types.ModuleType('unified_system.constant_fixture');fixture.__file__=str(source);fixture.__cached__=str(base/'foreign.pyc')
                 sys.modules[fixture.__name__]=fixture
