@@ -21,7 +21,7 @@ class CompatibilityTests(unittest.TestCase):
     def test_supervisor_authority(self):
         x=self.payload("unified_system");x["trading_authorized"]=True
         with self.assertRaises(ContractError):validate_response("unified_system","health",503,x)
-    def test_supervisor_wsgi(self):
+    def test_control_plane_wsgi(self):
         app=ReadOnlyControlPlaneApp()
         captured=[]
         result=b"".join(app({"REQUEST_METHOD":"GET","PATH_INFO":"/internal/v1/health","QUERY_STRING":""},lambda s,h:captured.append(s)))

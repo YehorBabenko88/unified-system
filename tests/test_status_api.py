@@ -42,7 +42,7 @@ class StatusAPITests(unittest.TestCase):
         code, body, _ = call(ReadOnlyControlPlaneApp(fail), "/internal/v1/health")
         self.assertEqual(code, 503)
         self.assertEqual(body["status"], "UNAVAILABLE")
-        self.assertEqual(body["reason"], "SUPERVISOR_UNAVAILABLE")
+        self.assertEqual(body["reason"], "CONTROL_PLANE_UNAVAILABLE")
         self.assertNotIn("sensitive diagnostic", json.dumps(body))
         self.assertIs(body["trading_authorized"], False)
 if __name__=="__main__":unittest.main()

@@ -33,7 +33,7 @@ class ReadOnlyControlPlaneApp:
         elif path == "/internal/v1/capabilities":
             status = 200
             data["status"] = "AVAILABLE"
-            data["capabilities"] = {"supervisor_status":True,
+            data["capabilities"] = {"control_plane_status":True,
                                      "trading":False,
                                      "physical_deployment":False}
         else:
@@ -42,18 +42,18 @@ class ReadOnlyControlPlaneApp:
             try:
                 value = self.provider() if self.provider is not None else None
                 if not isinstance(value, dict):
-                    data["reason"] = "SUPERVISOR_UNAVAILABLE"
+                    data["reason"] = "CONTROL_PLANE_UNAVAILABLE"
                 else:
                     source_state = value.get("state")
                     if source_state not in ("INSTALLED","INFRA_READY","HANDOFF_VERIFIED","OBSERVING","DEGRADED","BLOCKED"):
-                        data["reason"] = "INVALID_SUPERVISOR_STATE"
+                        data["reason"] = "INVALID_CONTROL_PLANE_STATE"
                     else:
                         status = 200
                         data["status"] = "AVAILABLE"
                         data["state"] = source_state
                         data["reason"] = "SOURCE_PROVENANCE_UNQUALIFIED"
             except Exception:
-                data["reason"] = "SUPERVISOR_UNAVAILABLE"
+                data["reason"] = "CONTROL_PLANE_UNAVAILABLE"
         body=json.dumps(data,sort_keys=True,separators=(",",":"),allow_nan=False).encode("utf-8")
         labels={200:"OK",400:"Bad Request",404:"Not Found",405:"Method Not Allowed",503:"Service Unavailable"}
         headers=[("Content-Type","application/json"),
