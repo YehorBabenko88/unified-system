@@ -179,9 +179,15 @@
       "cls": "ResearchIdentityBroker",
       "name": "__init__",
       "original_ast_sha256": "76915926390eb424ac13a49568e43f6a3969dbef99d07a58122fce359643ff32",
-      "expected_ast_sha256": "407351f32c15118e914aedf509694d9be35b4c3789d6c2d12cfc2c6b15800bda",
-      "declared_replacements": [],
-      "declared_constructor_change": "Drop retired import-unavailable disjunct only; exact Root type and owned-client/SSL/audit guards unchanged"
+      "expected_ast_sha256": "0bcbc6fe0a2f8c93fd3d96a3309885483facc8a12f76225650a71ea7123ce029",
+      "declared_replacements": [
+        [
+          "runtime-v1/research-lab-v1/",
+          "runtime-v2/canonical-research-v3/"
+        ]
+      ],
+      "declared_constructor_change": "Drop retired import-unavailable disjunct only; exact Root type and owned-client/SSL/audit guards unchanged; canonical protocol namespace changed exclusively to runtime-v2/canonical-research-v3, no old KV record adoption",
+      "previous_expected_ast_sha256": "407351f32c15118e914aedf509694d9be35b4c3789d6c2d12cfc2c6b15800bda"
     },
     {
       "target": "authority_codec.py",
@@ -238,7 +244,7 @@
       "cls": "ResearchLabAuthority",
       "name": "_observe",
       "original_ast_sha256": "eea829a6cb9fd1d5a5a6f6278a44b91a385cc918d8d39b95d45d5e473d008f4c",
-      "expected_ast_sha256": "fd079abca1a9459ddd3c89f967056d683dcd3c6cb1fb457ce1e8382ecfa11c70",
+      "expected_ast_sha256": "d742cac1d68b70ef5167761388b36c31c1def1d01a33d69b03cbacc3cf8fe42c",
       "declared_replacements": [
         [
           "CURRENT_GRID_LEADER_REQUIRED",
@@ -248,14 +254,26 @@
           "AssignmentUnavailable",
           "ResearchAuthorityUnavailable"
         ]
-      ]
+      ],
+      "pre_canonical_protocol_ast_sha256": "fd079abca1a9459ddd3c89f967056d683dcd3c6cb1fb457ce1e8382ecfa11c70",
+      "declared_canonical_protocol_transform": {
+        "constants": {
+          "unified.gateway.lab-job-submit.v1-review1": "unified.gateway.canonical-job-submit.v2",
+          "unified.authority.target-bound-research-profile.v2-review1": "unified.authority.canonical-research-profile.v3",
+          "runtime-v1/research-lab-v1/": "runtime-v2/canonical-research-v3/",
+          "EXACT_ORIGINAL_LAB13_REQUIRED": "EXACT_CANONICAL_ORIGINAL_REQUIRED"
+        },
+        "parameter": "original_lab13_bytes -> original_request_bytes",
+        "closed_submit_fields_addition": "math_head",
+        "profile_policy": "only canonical v3; Math SHA required; always verify target binding and exact original request"
+      }
     },
     {
       "target": "research_authority.py",
       "cls": "ResearchLabAuthority",
       "name": "submit",
       "original_ast_sha256": "2091390927fda009e689a4e3d7907caa2f086b394c447e3119a57d9223f44efd",
-      "expected_ast_sha256": "2091390927fda009e689a4e3d7907caa2f086b394c447e3119a57d9223f44efd",
+      "expected_ast_sha256": "f83922b0b917eff6b8da9f2e7002fff61f8371c0f1e520bd18c837555c2dd21a",
       "declared_replacements": [
         [
           "CURRENT_GRID_LEADER_REQUIRED",
@@ -265,14 +283,26 @@
           "AssignmentUnavailable",
           "ResearchAuthorityUnavailable"
         ]
-      ]
+      ],
+      "pre_canonical_protocol_ast_sha256": "2091390927fda009e689a4e3d7907caa2f086b394c447e3119a57d9223f44efd",
+      "declared_canonical_protocol_transform": {
+        "constants": {
+          "unified.gateway.lab-job-submit.v1-review1": "unified.gateway.canonical-job-submit.v2",
+          "unified.authority.target-bound-research-profile.v2-review1": "unified.authority.canonical-research-profile.v3",
+          "runtime-v1/research-lab-v1/": "runtime-v2/canonical-research-v3/",
+          "EXACT_ORIGINAL_LAB13_REQUIRED": "EXACT_CANONICAL_ORIGINAL_REQUIRED"
+        },
+        "parameter": "original_lab13_bytes -> original_request_bytes",
+        "closed_submit_fields_addition": "math_head",
+        "profile_policy": "only canonical v3; Math SHA required; always verify target binding and exact original request"
+      }
     },
     {
       "target": "research_authority.py",
       "cls": "ResearchLabAuthority",
       "name": "lookup",
       "original_ast_sha256": "9c87ebdd6ecb575be22fbe92741139a71c68c1ea3a376457e00d30105c645e92",
-      "expected_ast_sha256": "9c87ebdd6ecb575be22fbe92741139a71c68c1ea3a376457e00d30105c645e92",
+      "expected_ast_sha256": "c532568f14b1c4b0228d0981ffd3b6a74cc2b60f7b2992eef669c74ab99a5e7c",
       "declared_replacements": [
         [
           "CURRENT_GRID_LEADER_REQUIRED",
@@ -282,7 +312,19 @@
           "AssignmentUnavailable",
           "ResearchAuthorityUnavailable"
         ]
-      ]
+      ],
+      "pre_canonical_protocol_ast_sha256": "9c87ebdd6ecb575be22fbe92741139a71c68c1ea3a376457e00d30105c645e92",
+      "declared_canonical_protocol_transform": {
+        "constants": {
+          "unified.gateway.lab-job-submit.v1-review1": "unified.gateway.canonical-job-submit.v2",
+          "unified.authority.target-bound-research-profile.v2-review1": "unified.authority.canonical-research-profile.v3",
+          "runtime-v1/research-lab-v1/": "runtime-v2/canonical-research-v3/",
+          "EXACT_ORIGINAL_LAB13_REQUIRED": "EXACT_CANONICAL_ORIGINAL_REQUIRED"
+        },
+        "parameter": "original_lab13_bytes -> original_request_bytes",
+        "closed_submit_fields_addition": "math_head",
+        "profile_policy": "only canonical v3; Math SHA required; always verify target binding and exact original request"
+      }
     },
     {
       "target": "gateway_research_identity.py",
@@ -321,8 +363,20 @@
       "cls": "ResearchIdentityBroker",
       "name": "_policy",
       "original_ast_sha256": "6f99e6d7d0f370bb5ba6130f252855ee98d20821db257d79477af85edcbc0b30",
-      "expected_ast_sha256": "6f99e6d7d0f370bb5ba6130f252855ee98d20821db257d79477af85edcbc0b30",
-      "declared_replacements": []
+      "expected_ast_sha256": "77df584401ca66844362601dd6973a859412441dd9b657d111451c29bdab3a62",
+      "declared_replacements": [],
+      "pre_canonical_protocol_ast_sha256": "6f99e6d7d0f370bb5ba6130f252855ee98d20821db257d79477af85edcbc0b30",
+      "declared_canonical_protocol_transform": {
+        "constants": {
+          "unified.gateway.lab-job-submit.v1-review1": "unified.gateway.canonical-job-submit.v2",
+          "unified.authority.target-bound-research-profile.v2-review1": "unified.authority.canonical-research-profile.v3",
+          "runtime-v1/research-lab-v1/": "runtime-v2/canonical-research-v3/",
+          "EXACT_ORIGINAL_LAB13_REQUIRED": "EXACT_CANONICAL_ORIGINAL_REQUIRED"
+        },
+        "parameter": "original_lab13_bytes -> original_request_bytes",
+        "closed_submit_fields_addition": "math_head",
+        "profile_policy": "only canonical v3; Math SHA required; always verify target binding and exact original request"
+      }
     },
     {
       "target": "gateway_research_identity.py",
@@ -369,8 +423,20 @@
       "cls": "ResearchIdentityBroker",
       "name": "_capture_current",
       "original_ast_sha256": "68b7bcb13b7391ffc4ec317883cd299c8d9e5763fb65ad391655967dff59a654",
-      "expected_ast_sha256": "68b7bcb13b7391ffc4ec317883cd299c8d9e5763fb65ad391655967dff59a654",
-      "declared_replacements": []
+      "expected_ast_sha256": "adda9d43437f650bd48efda4c2b3acb0a2fe0373217564481c1235bd3779b372",
+      "declared_replacements": [],
+      "pre_canonical_protocol_ast_sha256": "68b7bcb13b7391ffc4ec317883cd299c8d9e5763fb65ad391655967dff59a654",
+      "declared_canonical_protocol_transform": {
+        "constants": {
+          "unified.gateway.lab-job-submit.v1-review1": "unified.gateway.canonical-job-submit.v2",
+          "unified.authority.target-bound-research-profile.v2-review1": "unified.authority.canonical-research-profile.v3",
+          "runtime-v1/research-lab-v1/": "runtime-v2/canonical-research-v3/",
+          "EXACT_ORIGINAL_LAB13_REQUIRED": "EXACT_CANONICAL_ORIGINAL_REQUIRED"
+        },
+        "parameter": "original_lab13_bytes -> original_request_bytes",
+        "closed_submit_fields_addition": "math_head",
+        "profile_policy": "only canonical v3; Math SHA required; always verify target binding and exact original request"
+      }
     },
     {
       "target": "gateway_research_identity.py",
@@ -405,5 +471,6 @@
       "declared_replacements": []
     }
   ],
-  "ast_normalization": "Omit only empty Python3.12 type_params fields for Python3.11 parity"
+  "ast_normalization": "Omit only empty Python3.12 type_params fields for Python3.11 parity",
+  "canonical_protocol_base": "b3abfb4542df7b28c7f3dd57d5ff34cda5f9746f"
 }

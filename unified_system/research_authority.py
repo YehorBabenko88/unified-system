@@ -132,17 +132,17 @@ class ResearchLabAuthority:
         command=_decode(original)
         fields={'schema','operation','cluster_id','cluster_generation','request_id','job_id',
                 'original_actor_principal_id','quota_owner_id','idempotency_key',
-                'commissioned_profile_sha256','input_request_sha256','producer_head','resources'}
-        if (set(command)!=fields or command['schema']!='unified.gateway.lab-job-submit.v1-review1'
+                'commissioned_profile_sha256','input_request_sha256','producer_head','math_head','resources'}
+        if (set(command)!=fields or command['schema']!='unified.gateway.canonical-job-submit.v2'
                 or command['operation']!='SUBMIT_RESEARCH'):
-            raise ValueError('EXACT_ORIGINAL_LAB13_REQUIRED')
+            raise ValueError('EXACT_CANONICAL_ORIGINAL_REQUIRED')
         authority=self._native.authority
         if scope=='SUBMIT_RESEARCH' and not await authority.validate(leader):
             raise ResearchAuthorityUnavailable('CURRENT_AUTHORITY_LEASE_REQUIRED')
         capture=await ResearchIdentityBroker.capture_current(self._broker,context,scope=scope,request_bytes=original)
         identity=ResearchIdentityBroker.require_capture(self._broker,capture,expected_authority=authority,scope=scope,request_bytes=original)
         profile=_decode(identity.records[1].raw)
-        if (profile.get('schema')!='unified.authority.target-bound-research-profile.v2-review1'
+        if (profile.get('schema')!='unified.authority.canonical-research-profile.v3'
                 or profile.get('cluster_id')!=command['cluster_id']
                 or command['cluster_generation']!=self._native.generation
                 or identity.actor_id!=command['original_actor_principal_id']
@@ -152,7 +152,7 @@ class ResearchLabAuthority:
         realm=_uuid(profile['realm_id']);job=_uuid(command['job_id'])
         namespace=authority.config.namespace
         if namespace!='unified/'+_uuid(command['cluster_id']):raise ValueError('CLUSTER_BINDING')
-        job_key=namespace+'/runtime-v1/research-lab-v1/'+realm+'/jobs/'+job
+        job_key=namespace+'/runtime-v2/canonical-research-v3/'+realm+'/jobs/'+job
         keys=tuple(r.key for r in identity.records)
         generation_key=namespace+'/commands/generation'
         if generation_key not in keys:raise ResearchAuthorityUnavailable('CURRENT_GENERATION_SOURCE_REQUIRED')
@@ -171,15 +171,15 @@ class ResearchLabAuthority:
         ResearchIdentityBroker.require_capture(self._broker,capture,expected_authority=authority,scope=scope,request_bytes=original)
         return rows[-1]
 
-    async def submit(self,original_lab13_bytes,*,context,leader,owned_attempt=None):
-        job=await self._observe(original_lab13_bytes,context=context,scope='SUBMIT_RESEARCH',leader=leader)
+    async def submit(self,original_request_bytes,*,context,leader,owned_attempt=None):
+        job=await self._observe(original_request_bytes,context=context,scope='SUBMIT_RESEARCH',leader=leader)
         # No caller-supplied attempt/boolean/method shape can bypass this gate.
         reason='JOB_RECONCILIATION_API_UNQUALIFIED' if job.index else 'NATIVE_WORKER_RESOURCE_API_UNQUALIFIED'
-        return ResearchAdmissionResult('UNKNOWN' if job.index else 'DENIED',reason,hashlib.sha256(original_lab13_bytes).hexdigest())
+        return ResearchAdmissionResult('UNKNOWN' if job.index else 'DENIED',reason,hashlib.sha256(original_request_bytes).hexdigest())
 
-    async def lookup(self,original_lab13_bytes,*,context):
-        await self._observe(original_lab13_bytes,context=context,scope='READ_RESEARCH')
+    async def lookup(self,original_request_bytes,*,context):
+        await self._observe(original_request_bytes,context=context,scope='READ_RESEARCH')
         # Snapshot absence is not never-committed evidence. Do not manufacture a
         # NOT_FOUND receipt or expose arbitrary native job record payloads.
-        return ResearchAdmissionResult('UNKNOWN','JOB_RECONCILIATION_API_UNQUALIFIED',hashlib.sha256(original_lab13_bytes).hexdigest())
+        return ResearchAdmissionResult('UNKNOWN','JOB_RECONCILIATION_API_UNQUALIFIED',hashlib.sha256(original_request_bytes).hexdigest())
 

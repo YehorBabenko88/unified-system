@@ -4,21 +4,21 @@ import asyncio
 import json
 from datetime import datetime,timedelta,timezone
 import unittest
-import test_native_profile_v2 as fixture
+import test_canonical_native_profile as fixture
 from unified_system.research_authority import ResearchAdmissionResult
 from unified_system.gateway_research_identity import ResearchIdentityBroker, ResearchIdentityDenied
 
 class GatewayNegativeTests(unittest.IsolatedAsyncioTestCase):
     @classmethod
-    def setUpClass(cls):fixture.NativeProfileV2Tests.setUpClass.__func__(cls)
+    def setUpClass(cls):fixture.CanonicalNativeProfileTests.setUpClass.__func__(cls)
     @classmethod
-    def tearDownClass(cls):fixture.NativeProfileV2Tests.tearDownClass.__func__(cls)
-    put=fixture.NativeProfileV2Tests.put
-    commission=fixture.NativeProfileV2Tests.commission
-    rebind_target=fixture.NativeProfileV2Tests.rebind_target
-    submit=fixture.NativeProfileV2Tests.submit
+    def tearDownClass(cls):fixture.CanonicalNativeProfileTests.tearDownClass.__func__(cls)
+    put=fixture.CanonicalNativeProfileTests.put
+    commission=fixture.CanonicalNativeProfileTests.commission
+    rebind_target=fixture.CanonicalNativeProfileTests.rebind_target
+    submit=fixture.CanonicalNativeProfileTests.submit
     async def asyncSetUp(self):
-        await fixture.NativeProfileV2Tests.asyncSetUp(self)
+        await fixture.CanonicalNativeProfileTests.asyncSetUp(self)
         self.original_bytes=fixture.canonical(self.submit())
 
     async def test_closed_owned_client_rejected_before_constructor_auth(self):
