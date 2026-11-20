@@ -64,7 +64,9 @@ class RetiredConsumerTests(unittest.TestCase):
   checker=self.checker();original=checker.ast.dump;calls=[]
   def modern_dump(node,include_attributes=False,*,show_empty=False):
    calls.append(show_empty)
-   return original(node,include_attributes=include_attributes) if show_empty else 'EMPTY_OPTIONALS_OMITTED'
+   if not show_empty:return 'EMPTY_OPTIONALS_OMITTED'
+   try:return original(node,include_attributes=include_attributes,show_empty=True)
+   except TypeError:return original(node,include_attributes=include_attributes)
   with patch.object(checker.ast,'dump',modern_dump):
    self.assertEqual(checker.verify_inventory(ROOT)['assertions'],14)
   self.assertEqual(calls,[True]*14)
@@ -72,7 +74,9 @@ class RetiredConsumerTests(unittest.TestCase):
   from unittest.mock import patch
   checker=self.checker();original=checker.ast.dump;calls=[]
   def legacy_dump(node,include_attributes=False):
-   calls.append(True);return original(node,include_attributes=include_attributes)
+   calls.append(True)
+   try:return original(node,include_attributes=include_attributes,show_empty=True)
+   except TypeError:return original(node,include_attributes=include_attributes)
   with patch.object(checker.ast,'dump',legacy_dump):
    self.assertEqual(checker.verify_inventory(ROOT)['assertions'],14)
   self.assertEqual(len(calls),14)

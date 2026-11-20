@@ -239,7 +239,9 @@ class OwnedPythonTests(unittest.TestCase):
             helper=package/'helper.py';helper.write_text("VALUE='honest'\n")
             poison=root/'poison.py';poison.write_text("VALUE='poison'\n")
             os.utime(poison,ns=(helper.stat().st_atime_ns,helper.stat().st_mtime_ns))
-            cached=Path(__import__('importlib.util',fromlist=['cache_from_source']).cache_from_source(str(helper)))
+            from unittest.mock import patch
+            with patch.object(sys,'pycache_prefix',None):
+                cached=Path(__import__('importlib.util',fromlist=['cache_from_source']).cache_from_source(str(helper)))
             cached.parent.mkdir();py_compile.compile(str(poison),cfile=str(cached),doraise=True)
             (package/'app.py').write_text("from .helper import VALUE\nimport json,os,sys\nprint(json.dumps(dict(value=VALUE,pid=os.getpid(),token=os.environ['UNIFIED_INSTANCE_TOKEN'],cache=sys.pycache_prefix,isolated=sys.flags.isolated,no_site=sys.flags.no_site,no_write=sys.dont_write_bytecode)))\n")
             dependency=root/'dependency';dependency.mkdir();marker=root/'UNWANTED'

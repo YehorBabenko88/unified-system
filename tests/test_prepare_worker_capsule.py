@@ -155,7 +155,9 @@ class OperatorClosureTests(unittest.TestCase):
             honest=operator/'unified_system/__init__.py';poison=parent/'poison.py';raw=b'raise RuntimeError("POISON_BYTECODE_EXECUTED")\n'
             self.assertLessEqual(len(raw),honest.stat().st_size);poison.write_bytes(raw.ljust(honest.stat().st_size,b' '))
             os.utime(poison,ns=(honest.stat().st_atime_ns,honest.stat().st_mtime_ns))
-            cache=Path(importlib.util.cache_from_source(str(honest)));cache.parent.mkdir();py_compile.compile(str(poison),cfile=str(cache),dfile=str(honest),doraise=True)
+            from unittest.mock import patch
+            with patch.object(sys,'pycache_prefix',None):cache=Path(importlib.util.cache_from_source(str(honest)))
+            cache.parent.mkdir();py_compile.compile(str(poison),cfile=str(cache),dfile=str(honest),doraise=True)
             command='''import sys,runpy,pathlib
 root=pathlib.Path(sys.argv[1]);ns=runpy.run_path(str(root/'scripts/prepare_worker_capsule.py'),run_name='owned_operator_test')
 try:

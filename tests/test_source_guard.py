@@ -138,12 +138,14 @@ class SourceGuardTests(unittest.TestCase):
     def test_forged_timestamp_bytecode_denied_and_fresh_cache_loads_real_source(self):
         api=self.guard();source=self.root/'pkg/__init__.py';original=source.stat()
         source.write_text('VALUE=9\n');os.utime(source,ns=(original.st_atime_ns,original.st_mtime_ns))
-        py_compile.compile(str(source),doraise=True)
-        source.write_text('VALUE=1\n');os.utime(source,ns=(original.st_atime_ns,original.st_mtime_ns))
-        spec=importlib.util.spec_from_file_location('unsafe_probe',source)
-        unsafe=importlib.util.module_from_spec(spec);spec.loader.exec_module(unsafe)
-        self.assertEqual(unsafe.VALUE,9,'fixture must prove forged cache actually loads')
-        with self.assertRaisesRegex(api.SourceQualificationError,'UNTRACKED_SOURCE'):api.SourceFence(self.root).check()
+        # Place the forged artifact inside the owned source, independently of CI's external cache.
+        with patch.object(sys,'pycache_prefix',None):
+            py_compile.compile(str(source),doraise=True)
+            source.write_text('VALUE=1\n');os.utime(source,ns=(original.st_atime_ns,original.st_mtime_ns))
+            spec=importlib.util.spec_from_file_location('unsafe_probe',source)
+            unsafe=importlib.util.module_from_spec(spec);spec.loader.exec_module(unsafe)
+            self.assertEqual(unsafe.VALUE,9,'fixture must prove forged cache actually loads')
+            with self.assertRaisesRegex(api.SourceQualificationError,'UNTRACKED_SOURCE'):api.SourceFence(self.root).check()
         with tempfile.TemporaryDirectory() as cache,patch.object(sys,'pycache_prefix',cache):
             fence=api.SourceFence(self.root,isolated_cache=cache);fence.check()
             spec=importlib.util.spec_from_file_location('safe_probe',source)

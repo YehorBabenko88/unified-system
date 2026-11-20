@@ -177,6 +177,10 @@ class NativeSqlFencingTests(unittest.TestCase):
   self.plan={'data_root':str(self.root),'cluster':str(self.root/'cluster'),'port':55479,'database':'unified_lab_fixture','user':'unified_lab_fixture','bootstrap_user':'unified_bootstrap_fixture','service_plan':{'code':str(self.root/'code')}}
   self.passfile=self.root/'bootstrap/pgpass.conf';self.passfile.write_text('127.0.0.1:55479:*:unified_bootstrap_fixture:'+('c'*64)+'\n')
   self.boundary=pg.WindowsPostgresBoundary();self.boundary.secret_files[self.passfile]=pg.stamp(self.passfile)
+  from unified_system.capture_schema import CAPTURE_SCHEMA_SOURCE
+  asset=(Path(__file__).parent/'fixtures/capture-schema-b5ca636.sql').read_bytes()
+  target=self.root/'code'/CAPTURE_SCHEMA_SOURCE;target.parent.mkdir(parents=True);target.write_bytes(asset)
+  self.boundary.manifest={'files':{CAPTURE_SCHEMA_SOURCE:{'bytes':len(asset),'sha256':hashlib.sha256(asset).hexdigest()}}}
   self.server=SimpleNamespace(alive=lambda:True)
  def test_nologin_occurs_only_after_successful_application_identity_probe(self):
   from unittest.mock import patch

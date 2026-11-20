@@ -1,6 +1,18 @@
 """Mandatory hosted metadata/own-SQLite role; no workload/source invocation."""
 import argparse,hashlib,importlib.util,json,os,pathlib,sys,unittest
 ROOT=pathlib.Path(__file__).resolve().parents[1]
+def private_journal_path(value,out):
+ if type(value) is not str:raise RuntimeError('PRIVATE_JOURNAL_REQUIRED')
+ if value.startswith('file:'):
+  from urllib.parse import urlsplit,unquote
+  parsed=urlsplit(value)
+  if parsed.netloc or parsed.fragment or parsed.query!='mode=ro':raise RuntimeError('PRIVATE_JOURNAL_REQUIRED')
+  value=unquote(parsed.path)
+  if os.name=='nt' and len(value)>2 and value[0]=='/' and value[2]==':':value=value[1:]
+ path=pathlib.Path(value).resolve()
+ if not path.is_relative_to(out):raise RuntimeError('PRIVATE_JOURNAL_REQUIRED')
+ return path
+
 def main():
  p=argparse.ArgumentParser();p.add_argument('--expected-head',required=True);p.add_argument('--out',required=True);args=p.parse_args()
  if not(sys.flags.isolated and sys.flags.no_site and sys.dont_write_bytecode):raise ValueError('ISOLATED_METADATA_PROFILE_REQUIRED')
@@ -18,7 +30,7 @@ def main():
   if event.startswith(('socket.','subprocess.')) or event in ('os.system','os.startfile','os.posix_spawn','os.exec'):raise RuntimeError('METADATA_CASE_EFFECT_DENIED')
   if event=='ctypes.dlopen' and arguments[0]!='kernel32':raise RuntimeError('METADATA_DLL_DENIED')
   if event=='ctypes.dlsym' and arguments[1]!='GetDriveTypeW':raise RuntimeError('METADATA_SYMBOL_DENIED')
-  if event=='sqlite3.connect' and not pathlib.Path(arguments[0]).resolve().is_relative_to(out):raise RuntimeError('PRIVATE_JOURNAL_REQUIRED')
+  if event=='sqlite3.connect':private_journal_path(arguments[0],out)
  sys.addaudithook(audit)
  result=None
  try:
