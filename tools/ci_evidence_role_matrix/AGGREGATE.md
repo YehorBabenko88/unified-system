@@ -13,3 +13,7 @@ Successful consistency returns CONSISTENT_SOURCE_ONLY with coverage HELD, downlo
 Real hosted acceptance still requires a separately reviewed bounded Root archive reader/downloader: fixed GitHub repository/currentrun/artifactID only, validate actual ZIP digest against GitHub metadata (not against JSON), bound compressed/uncompressed bytes, allow exactly the one cell receipt member with CRC/path/extension checks and no filesystem extraction. Existing STORE-only parser is not suitable for GitHub's deflated artifacts and MUST NOT silently bypass them. Until that real loader runs on exact sources, source-only consistent fake packets are never promoted.
 
 Math retains the actual existing validateCoverage validator for six original Math axes. A later thin Math orchestration must explicitly require both the valid six-Math result and real four-Root download validation. This module has no callback or self-asserted sixPassed flag. Six Math axes, four Root cells, original34role IDs and all historical188/1234proof obligations remain preserved. No future published matrix SHA is guessed here.
+
+## Implemented archive-custody descendant
+
+ARTIFACT-CUSTODY.md documents the separately reviewed bounded current-run HTTP/ZIP boundary. The pure packet function continues to return HELD; only the network/archive function can report narrow four-Root unit artifact custody after ZIP digest/CRC/decompression/current metadata and all four receipt bindings. No actual new four-cell hosted result is claimed by source tests.

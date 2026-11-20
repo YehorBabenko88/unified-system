@@ -31,3 +31,5 @@ Role source006418285667b38810b7ecd1de9807b6db166fa3 includes the accepted minima
 ## Source-only aggregate validator
 
 AGGREGATE.md defines the bounded pure four-cell consistency API and the mandatory real hosted archive-custody followup. The runner kit now contains six modules/data files plus its workflow (seven hash-bound files); RAlpha role-library31inputs remain unchanged. Successful fake consistency deliberately remains coverage HELD/NO_GO. Math six-axis validation is not copied or accepted via a boolean/callback.
+
+The archive-custody descendant expands the real runner kit to eight entries plus workflow (nine hashes), while the independent RAlpha role-library remains31files. ARTIFACT-CUSTODY.md defines the bounded ZIP/HTTPS path and no-authority outputs.
