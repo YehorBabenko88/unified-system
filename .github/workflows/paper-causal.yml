@@ -30,6 +30,13 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
           fetch-depth: 0
+      - name: Read SDK checkout commits from active qualification cohort
+        id: cohort
+        shell: python -I -S -B {0}
+        run: |
+          import runpy,sys
+          sys.argv=["scripts/emit_cohort_checkout_pins.py","--cohort","docs/qualification/offline-causal-20261120/cohort.json"]
+          runpy.run_path(sys.argv[0],run_name="__main__")
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         env:
           GIT_CONFIG_COUNT: '2'
@@ -39,7 +46,7 @@ jobs:
           GIT_CONFIG_VALUE_1: lf
         with:
           repository: YehorBabenko88/strattester
-          ref: a44ce268c39170dfd377b25c75aa3648fcf3476e
+          ref: ${{ steps.cohort.outputs.market_data }}
           path: .source/market_data
           persist-credentials: false
           fetch-depth: 0
@@ -52,7 +59,7 @@ jobs:
           GIT_CONFIG_VALUE_1: lf
         with:
           repository: YehorBabenko88/math
-          ref: a5868944bf1bae813403a32b22d329c1da6f8238
+          ref: ${{ steps.cohort.outputs.math }}
           path: .source/math
           persist-credentials: false
           fetch-depth: 0
@@ -65,7 +72,7 @@ jobs:
           GIT_CONFIG_VALUE_1: lf
         with:
           repository: YehorBabenko88/Terminan
-          ref: 75a906d36574bfdc19acd966e79a6c168dc71ad4
+          ref: ${{ steps.cohort.outputs.terminan }}
           path: .source/terminan
           persist-credentials: false
           fetch-depth: 0
@@ -76,7 +83,6 @@ jobs:
         shell: python
         run: |
           import subprocess,sys
-          subprocess.run([sys.executable,'-I','-S','-B','-m','unittest','discover','-s','tests','-p','test_cohort_workflow_pins.py','-v'],check=True)
           subprocess.run([sys.executable,'-I','-S','-B','-m','unittest','discover','-s','tests','-p','test_ci_paper_causal.py','-v'],check=True)
       - name: Exact four sources, raw-built installed SDKs, twenty-one actual offline roles
         shell: python
