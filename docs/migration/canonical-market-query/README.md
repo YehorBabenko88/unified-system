@@ -1,6 +1,6 @@
 # Canonical market query integration
 
-Candidate source owners: Data119 `839fc78d4fbd79b7b5a662a141dc8d2fe889ba92`, Math140 `370972f2eeec18824fecd3ec471f0a514e7dd030`, Term122 `221a2562f70558e7753a92499fee1c3f2e706bfb`. Root remains ENCLOSING_HEAD/NO_GO.
+Candidate source owners: Data owner-transfer candidate `2f0d9a8f089e7c80635f769f9741af15847e4103`, Math141 `b3cb935aee7d6569d6fd0cfaff70ea9b9e5f0df3`, Term123 `fc0bed4937ab5dbb039320aae48e49b01b31bb43`. Root remains ENCLOSING_HEAD/NO_GO.
 
 |Previous active location/name|Canonical owner/location|Scope|
 |---|---|---|
@@ -10,8 +10,10 @@ Candidate source owners: Data119 `839fc78d4fbd79b7b5a662a141dc8d2fe889ba92`, Mat
 |Root Git-show/exec provisioning/query_source_root|Fixed canonical Root reader + qualified SDK site|No source selector or active Grid dependency|
 |GRID_SOURCE_UNQUALIFIED|MARKET_DATA_SOURCE_UNQUALIFIED|Canonical source-status reason; no legacy acceptance alias|
 
-Root146909573 cohort emitter removes duplicate checkout SHA literals. Root147d1f407 and independently reviewed Root1489f14d1 source pin/hash cascades move active target/native metadata to the same Term122/Math140 pair; immutable prior proof records and43native test methods stay unchanged. A complete original15query issuer/store role map is in ../canonical-query-role-map.json. Data keeps original53preparation+9codec obligations; Math adds independent numeric coverage. No missing native or provider proof is counted as source-only PASS.
+Root146909573 cohort emitter removes duplicate checkout SHA literals. Root147d1f407 and independently reviewed Root1489f14d1 remain immutable prior pin/hash snapshots. Active target/native metadata follows the current Term123/Math141 pair; immutable prior proof records and43native test methods stay unchanged. A complete original15query issuer/store role map is in ../canonical-query-role-map.json. Data keeps original53preparation+9codec obligations; Math adds independent numeric coverage. No missing native or provider proof is counted as source-only PASS.
 
 The six extra Root refusal cases live with the SDK-dependent hosted READ tests, reusing the canonical request fixture. They are explicit additions, not replacements for the12actual issuer/capability and5HTTPS roles. Local runs with unavailable cryptography validate denial only and do not qualify the identity ABI. All168READ cases remain mandatory hosted. Full source/artifact/CI evidence is pinned only after this enclosing candidate is frozen.
 
 No main merge, branch/history deletion, installer/service/protection change or user-data migration is performed by this source refactor. Release status remainsNO_GO.
+
+Research-import validation now belongs to `terminan.research_import.validate_research_import`. Data removes the research endpoint/environment/capability and exposes only `market_data.history_api` without an old module alias. Root retains a distinct independent receipt inspector that never admits source authenticity.
