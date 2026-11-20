@@ -39,7 +39,7 @@ class CanonicalManagedSourceTests(unittest.TestCase):
         from unified_system import service_bootstrap as boot,lab_runtime
         root,manifest,grant=self.fixture()
         grant.profile=dict(runtime_config={},offline_context={});grant.computer_name='fixture'
-        with patch.object(lab_runtime,'validate_config',return_value={}),patch.object(lab_runtime,'verify_sources'),patch.object(lab_runtime,'read_grid_auth',side_effect=AssertionError('retired authorization cannot be adopted')):
+        with patch.object(lab_runtime,'validate_config',return_value={}),patch.object(lab_runtime,'verify_sources'):
             self.assertEqual(boot._runtime_admission(grant,dict(manifest=manifest)),({},{}))
 
     def test_readonly_serve_still_refuses_source_or_grant_revocation(self):

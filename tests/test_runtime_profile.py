@@ -38,7 +38,7 @@ class RuntimeProfileTests(unittest.TestCase):
  def test_all_roles_are_pure_derived_data_never_execution_admission(self):
   before=copy.deepcopy((self.config,self.manifest));files=sorted(str(p) for p in self.root.rglob('*'))
   for role in ('CONTROL','WORKER','SINGLE_PC','SINGLE-PC'):
-   with self.subTest(role=role),patch('subprocess.Popen',side_effect=AssertionError('NO PROCESS')),patch('socket.socket',side_effect=AssertionError('NO NETWORK')),patch.object(lab_runtime,'read_grid_auth',side_effect=AssertionError('NO SECRET READ')):
+   with self.subTest(role=role),patch('subprocess.Popen',side_effect=AssertionError('NO PROCESS')),patch('socket.socket',side_effect=AssertionError('NO NETWORK')):
     result=self.derive(self.target(role));c=result['runtime_config'];context=result['offline_context']
     self.assertEqual(result['schema'],'unified.runtime-profile.v2');self.assertEqual(result['database_credential_binding'],self.target(role)['database_credential_binding']);self.assertEqual(result['status'],'DERIVED_PROFILE_ONLY');self.assertFalse(result['execution_authority']);self.assertEqual(result['activation'],'BLOCKED')
     self.assertEqual(lab_runtime.validate_config(c,self.manifest,Path(c['programs']['market_data']['cwd']).parents[1],hostname='LABHOST',offline_context=context),c)

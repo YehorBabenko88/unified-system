@@ -2,7 +2,7 @@
 
 Operator code/closure and lock digest must be independently pinned before launch.
 Never import this tool from an unadmitted payload. No services are installed.
-Worker preparation never enrolls, stores credentials or starts a process.
+Worker preparation stages a fresh source capsule using the admitted ACL backend.
 Protected service activation is a separate owner-admitted lifecycle.
 The externally pinned operator lock has exactly schema, files, and
 source_manifest_sha256s (1..16 sorted unique owner-approved source manifest pins).
@@ -280,7 +280,7 @@ def prepare_worker(archive,archive_pin,source_pin,target,state,node,ports):
 
 
 def inspect_worker(root,manifest_pin):
-    """Verify canonical worker source bytes; never starts a process or service."""
+    """Verify canonical worker source bytes using pinned Git."""
     from unified_system.lab_runtime import prepare
     root=safe(root);config,report=prepare(root,manifest_pin)
     check_worker_host(config['node_id'])

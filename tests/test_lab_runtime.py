@@ -168,19 +168,7 @@ class CanonicalLabRuntimePolicyTests(unittest.TestCase):
         with patch.object(source_guard,'SourceFence',Fence),patch.object(Fence,'check',return_value={'tree':'0'*40,'runtime_files':{}}):
             with self.assertRaises(ValueError):lab.verify_sources(root,m)
 
-    def test_historical_auth_reader_retains_hash_and_worker_secret_refusals(self):
-        import json
-        self.credential.mkdir()
-        record=dict(schema='unified.lab.grid-auth.v3',node_id='PC1',role='WORKER',release_id='fixture',source_commit='a'*40,grid_shared_token=None,node_credential='w'*64,postgres_password=None)
-        target=self.credential/'historical.json'
-        def write():
-            raw=lab.lab_release.canonical(record);target.write_bytes(raw);return hashlib.sha256(raw).hexdigest()
-        pin=write()
-        self.assertEqual(lab.read_grid_auth(target,pin,node_id='PC1',release_id='fixture',source_commit='a'*40),{'NODE_CREDENTIAL':'w'*64})
-        with self.assertRaises(ValueError):lab.read_grid_auth(target,'0'*64,node_id='PC1',release_id='fixture',source_commit='a'*40)
-        for changes in ({'schema':'unified.lab.grid-auth.v2'},{'grid_shared_token':'a'*64},{'postgres_password':'b'*64},{'node_id':'PC2'}):
-            baseline=copy.deepcopy(record);record.update(changes)
-            with self.subTest(changes=changes),self.assertRaises(ValueError):lab.read_grid_auth(target,write(),node_id='PC1',release_id='fixture',source_commit='a'*40)
-            record.clear();record.update(baseline)
+    def test_retired_fleet_credential_parser_is_absent(self):
+        self.assertFalse(hasattr(lab,'read_grid_auth'))
 
 if __name__=='__main__':unittest.main()

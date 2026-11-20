@@ -161,48 +161,6 @@ def validate_config(c,m,root,*,hostname=None,offline_context=None):
     return c
 
 
-def read_grid_auth(path,expected_sha256,*,node_id,release_id,source_commit,role_context=None):
-    """Read exact LAB auth shape. Role context is data, not startup authority.
-
-    Service callers must independently admit the protected profile/ACL, current
-    token/host and pinned credential bytes before launching anything. This reader
-    does not create an activation path or change legacy CLI admission.
-    """
-    context=_offline_context(role_context,node_id)
-    need(type(node_id) is str and re.fullmatch('[A-Za-z0-9][A-Za-z0-9_-]{0,63}',node_id))
-    if context is None:need(node_id.upper() in LAB_NODES)
-    control=(node_id.upper()=='LS5') if context is None else context['role'] in ('CONTROL','SINGLE_PC')
-    lab_release.digest(expected_sha256)
-    path=lab_release.regular(path);need(path.stat().st_size<=8192)
-    if context is not None:
-        credential=_safe_path(context['credential_root']).resolve()
-        need(credential in path.resolve().parents)
-    with path.open('rb') as stream:raw=stream.read(8193)
-    need(len(raw)<=8192 and hashlib.sha256(raw).hexdigest()==expected_sha256)
-    def unique(pairs):
-        out={}
-        for key,value in pairs:need(key not in out);out[key]=value
-        return out
-    record=json.loads(raw.decode('utf8'),object_pairs_hook=unique)
-    lab_release.exact(record,('schema','node_id','role','release_id','source_commit','grid_shared_token','node_credential','postgres_password'))
-    need(record['schema'] in ('unified.lab.grid-auth.v2','unified.lab.grid-auth.v3'))
-    need(record['node_id']==node_id and record['release_id']==release_id and record['source_commit']==source_commit)
-    need(record['role']==('CONTROL' if control else 'WORKER'))
-    if control:
-        # CONTROL retains its own fleet secret and isolated database password.
-        need(record['node_credential'] is None)
-        lab_release.digest(record['grid_shared_token'])
-        lab_release.digest(record['postgres_password'])
-        return {'GRID_SHARED_TOKEN':record['grid_shared_token'],'PGPASSWORD':record['postgres_password']}
-    # Existing Grid node authentication already accepts the enrolled credential.
-    # Legacy worker v2/global-token records are deliberately not upgraded here.
-    need(record['schema']=='unified.lab.grid-auth.v3')
-    need(record['grid_shared_token'] is None and record['postgres_password'] is None)
-    need(type(record['node_credential']) is str and re.fullmatch('[A-Za-z0-9_-]{64,128}',record['node_credential']))
-    return {'NODE_CREDENTIAL':record['node_credential']}
-
-
-
 def verify_sources(root,m,*,owner_admitted_root=None):
     # Explicit protected-service caller data only. prepare()/CLI do not opt in;
     # startup must separately verify kernel ownership and the complete capsule.
