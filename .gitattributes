@@ -6,3 +6,7 @@ integration/windows-candidate/requirements-cp312-win_amd64-cpu.lock -text
 coordination/*.json text eol=lf
 acceptance/20261106/** -text
 release/** -text
+
+# Managed dispatcher raw-byte identity is independent of Windows checkout defaults.
+unified_system/service_entry.py text eol=lf
+unified_system/service_bootstrap.py text eol=lf
