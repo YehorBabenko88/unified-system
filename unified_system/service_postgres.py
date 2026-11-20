@@ -48,6 +48,8 @@ def postgres_plan(resource,profile,auth_source,*,auth_sha256,boundary=None):
   need(files==pg['files'] and all(name.split('/')[0] in ('bin','lib','share') for name in files))
   need({'bin/initdb.exe','bin/postgres.exe','bin/psql.exe','bin/libpq.dll'}<=set(files) and any(name.startswith('lib/') for name in files) and any(name.startswith('share/') for name in files))
   lab_release.digest(auth_sha256)
+  need(profile.get('schema')=='unified.runtime-profile.v2')
+  need(profile.get('database_credential_binding')=={'path':str(local(context['credential_root'])/'postgres.json'),'sha256':auth_sha256},'POSTGRES_AUTH_REJECTED')
   job=JOB_SOURCE;need(job in manifest['files'])
   dsn=urlsplit(config['programs']['market_data']['env']['MARKET_DATA_DSN']);need(dsn.scheme=='postgresql' and dsn.hostname=='127.0.0.1' and dsn.password is None and not dsn.query and not dsn.fragment)
   user=dsn.username;database=dsn.path[1:]
