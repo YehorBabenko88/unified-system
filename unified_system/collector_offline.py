@@ -1,4 +1,4 @@
-"""Finite synthetic composition of existing Worker/raw/Storage components.
+"""Finite synthetic composition of canonical collector/raw and existing infrastructure storage components.
 
 No scheduler, provider transport, authority or alternate storage is defined here.
 This developer path cannot activate a protected service or public submission.
@@ -28,7 +28,7 @@ def synthetic_frames():
  return (json.dumps({'topic':'publicTrade.BTCUSDT','data':[{'T':1794441600000,
   's':'BTCUSDT','p':'100','v':'2','S':'Buy','i':'synthetic-1'}]},separators=(',',':')).encode('ascii'),)
 
-def _grid_revision(raw):
+def _market_data_revision(raw):
  _need(type(raw) is bytes and 0<len(raw)<=262144)
  def unique(pairs):
   out={}
@@ -38,15 +38,15 @@ def _grid_revision(raw):
  def nonfinite(_):raise CollectorOfflineBlocked()
  try:value=json.loads(raw.decode('utf-8'),object_pairs_hook=unique,parse_constant=nonfinite)
  except (ValueError,UnicodeError,RecursionError):raise CollectorOfflineBlocked() from None
- _need(type(value) is dict and value.get('schema')=='unified.collector.integration-manifest.v1'
-       and value.get('execution_scope')=='SYNTHETIC_OFFLINE')
- permissions=value.get('permissions')
+ _need(type(value) is dict and set(value)=={'schema','execution_scope','permissions','sources'}
+       and value['schema']=='unified.collector.integration-manifest.v2'
+       and value['execution_scope']=='SYNTHETIC_OFFLINE')
+ permissions=value['permissions']
  _need(type(permissions) is dict and set(permissions)=={'real_provider_sends','service_creation','acl_changes',
   'production_sql','training','trading','public_submit','authority_mutation'} and all(v is False for v in permissions.values()))
- components=value.get('new_components');_need(type(components) is list and len(components)<=16)
- owners=[item for item in components if type(item) is dict and item.get('owner')=='A3']
- _need(len(owners)==1)
- revision=owners[0].get('head');_need(type(revision) is str and re.fullmatch('[a-f0-9]{40}',revision) is not None)
+ sources=value['sources'];_need(type(sources) is dict and set(sources)=={'market_data'})
+ source=sources['market_data'];_need(type(source) is dict and set(source)=={'commit'})
+ revision=source['commit'];_need(type(revision) is str and re.fullmatch('[a-f0-9]{40}',revision) is not None)
  return revision
 
 async def collect_synthetic(profile,*,manifest_bytes,frames,state_root,code_root,observed_at_ms,resume=False):
@@ -60,7 +60,7 @@ and this function's local custody receipts are not that admission or authority.
  _need(type(manifest_bytes) is bytes and 0<len(manifest_bytes)<=262144)
  try:checked=decode_collector_profile(profile.encoded,manifest_sha256=hashlib.sha256(manifest_bytes).hexdigest())
  except CollectorProfileRejected as error:raise CollectorOfflineBlocked() from error
- config=checked.document;revision=_grid_revision(manifest_bytes);limits=config['limits']
+ config=checked.document;revision=_market_data_revision(manifest_bytes);limits=config['limits']
  _need(type(observed_at_ms) is int and 0<observed_at_ms<2**63)
  _need(type(frames) is tuple and 1<=len(frames)<=limits['frames'])
  sizes=[]
@@ -75,8 +75,8 @@ and this function's local custody receipts are not that admission or authority.
  _need(stat.S_ISDIR(code_root.lstat().st_mode) and stat.S_ISDIR(state_root.parent.lstat().st_mode))
  _need(state_root!=code_root and code_root not in state_root.parents and state_root not in code_root.parents)
  # These are actual existing components, imported only after finite input checks.
- from grid.worker import Worker,COLLECTOR_PROFILE
- from grid.raw_capture import RawCaptureRecorder,RawCaptureProfile as GridRawProfile,decode_observation
+ from market_data.synthetic_collector import SyntheticCollector,SYNTHETIC_COLLECTOR_PROFILE
+ from market_data.raw_capture import RawCaptureRecorder,RawCaptureProfile as DataRawProfile,decode_observation
  from .storage.collector_context import CollectorContext,CollectorContextProfile
  from .storage.raw_capture import RawCaptureProfile as StoreRawProfile
  from .collector_logging import CollectorLog,LogLimits
@@ -108,7 +108,7 @@ and this function's local custody receipts are not that admission or authority.
   initial=await context.read_history()
   inspect_history(initial) # Invalid/unreadable history cannot become zero gaps.
   previous=None if not initial else asdict(await context.checkpoint())
-  # The pinned finite Worker v1 emits frame + validated/gap per input and
+  # The canonical finite synthetic collector emits frame + validated/gap per input and
   # reserves two TOTAL-context slots for disconnect/error control. A fresh
   # recorder after restart must not turn persisted usage into a fresh pool.
   if (len(initial)+2*len(frames)>16-2
@@ -120,9 +120,9 @@ and this function's local custody receipts are not that admission or authority.
    _need(not factory_calls);factory_calls.append((symbol,endpoint));context.require_ready()
    return RawCaptureRecorder(context,instrument=dict(exchange='bybit',category='linear',symbol='BTCUSDT',instrument_version='1'),
     producer_source_revision=revision,source_kind='SYNTHETIC',endpoint=endpoint,
-    profile=GridRawProfile(16,4194304,1048576,16384,2))
-  worker=Worker(launch_profile=COLLECTOR_PROFILE,raw_capture_factory=factory)
-  received=await worker.receive_offline(frames,symbol='BTCUSDT',endpoint='synthetic://bybit/linear',observed_at_ms=observed_at_ms)
+    profile=DataRawProfile(16,4194304,1048576,16384,2))
+  collector=SyntheticCollector(profile=SYNTHETIC_COLLECTOR_PROFILE,raw_capture_factory=factory)
+  received=await collector.receive_offline(frames,symbol='BTCUSDT',endpoint='synthetic://bybit/linear',observed_at_ms=observed_at_ms)
   _need(len(factory_calls)==1 and time.monotonic()-started<=limits['duration_seconds'])
   facts=await context.read_history();checkpoint=await context.checkpoint()
   history_values=inspect_history(facts)
@@ -139,7 +139,7 @@ and this function's local custody receipts are not that admission or authority.
   log.emit(event='CHECKPOINT',state='RUNNING',digest=checkpoint.raw_journal_digest)
   stopped=await context.stop();_need(stopped.state=='STOPPED')
   log.emit(event='SHUTDOWN',state='STOPPED',count=len(facts))
-  result=dict(schema='unified.collector.offline-result.v1',phase='STOPPED',scope='SYNTHETIC_OFFLINE',
+  result=dict(schema='unified.collector.offline-result.v2',phase='STOPPED',scope='SYNTHETIC_OFFLINE',
    classification='LOCAL_UNATTESTED',counter_epoch=config['context_id'],profile_sha256=checked.sha256,
    source_manifest_sha256=config['source_manifest_sha256'],raw_frames_received=len(frames),
    raw_received_bytes=sum(sizes),raw_observations_stored=len(facts),raw_payload_occurrence_bytes=payload_occurrences,

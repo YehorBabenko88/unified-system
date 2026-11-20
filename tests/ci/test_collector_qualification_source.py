@@ -153,12 +153,15 @@ class CollectorQualificationSourceTests(unittest.TestCase):
         import hashlib
         self.assertEqual(hashlib.sha256(raw).hexdigest(),Q.HELPER_SHA256)
 
-    def test_workflow_is_readonly_five_checkout_pinned_and_no_dispatch(self):
+    def test_canonical_workflow_is_readonly_two_sources_pinned_and_no_dispatch(self):
         text=(ROOT/'.github/workflows/collector-offline-qualified.yml').read_text()
         self.assertIn('contents: read',text);self.assertIn('fail-fast: false',text)
         self.assertNotIn('workflow_dispatch:',text)
-        self.assertEqual(text.count('persist-credentials: false'),5)
-        for head,_ in Q.INPUTS.values():self.assertIn(head,text)
+        self.assertEqual(text.count('persist-credentials: false'),2)
+        self.assertIn('ecc2c5d95997bfb68dd2242bca4146184e0485f3',text)
+        self.assertNotIn('bybit-cluster-grid',text)
+        self.assertIn('qualify_canonical.py',text)
+        self.assertIn("python: ['3.11', '3.12']",text)
         for pin in ('11d5960a326750d5838078e36cf38b85af677262','a26af69be951a213d495a4c3e4e4022e16d87065','ea165f8d65b6e75b540449e92b4886f43607fa02'):self.assertIn(pin,text)
         self.assertIn('/evidence',text)
 
