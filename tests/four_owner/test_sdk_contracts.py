@@ -13,7 +13,7 @@ from market_data.public_trades import Trade,execution_record
 from market_data.footprint_state import FootprintBuilder
 from market_data.history_export_v11 import export_records_v11
 from market_data.provenance import digest
-from market_data.research_handoff import accept_handoff
+from terminan.research_import import validate_research_import
 from terminan.analytics.orderflow_adapters import from_records
 from terminan.analytics.orderflow_aggregation import aggregate_by_time,aggregate_by_price
 from terminan.analytics.market_history import analyze_market_history
@@ -90,15 +90,15 @@ class CanonicalSdkTests(unittest.TestCase):
   self.assertEqual(set(MODULES),{'unified_system','market_data','math','terminan'})
   import test_release_boundary as fixture
   record=copy.deepcopy(fixture.RECORD);pin=(record['producer_identity'],record['source_revision'],record['run_id'],record['completion_receipt'])
-  self.assertEqual(accept_handoff(record,())["status"],'UNAVAILABLE')
-  accepted=accept_handoff(record,(pin,));self.assertEqual(accepted['status'],'ACCEPTED_HISTORICAL');self.assertIs(accepted['trading_authorized'],False)
+  self.assertEqual(validate_research_import(record,())["status"],'UNAVAILABLE')
+  accepted=validate_research_import(record,(pin,));self.assertEqual(accepted['status'],'ACCEPTED_HISTORICAL');self.assertIs(accepted['trading_authorized'],False)
   historical=fixture.boundary().verify(record,observed_revision=fixture.PIN.revision,observed_tree=fixture.PIN.tree,artifact_bytes=fixture.ARTIFACT)
   self.assertEqual(historical['verdict'],'VERIFIED_SOURCE_RECEIPT');self.assertIs(historical['execution_authorized'],False);self.assertIs(historical['trading_authorized'],False);self.assertEqual(historical['physical_acceptance'],'NOT_RUN')
   for version in ({'major':True,'minor':1},{'major':2,'minor':0}):
-   invalid=copy.deepcopy(record);invalid['api_version']=version;self.assertEqual(accept_handoff(invalid,(pin,))['status'],'UNAVAILABLE')
-  self.assertEqual(accept_handoff({'schema':'terminan.paper.result.v2','status':'COMPLETE'},(pin,))['status'],'UNAVAILABLE')
+   invalid=copy.deepcopy(record);invalid['api_version']=version;self.assertEqual(validate_research_import(invalid,(pin,))['status'],'UNAVAILABLE')
+  self.assertEqual(validate_research_import({'schema':'terminan.paper.result.v2','status':'COMPLETE'},(pin,))['status'],'UNAVAILABLE')
   record['metrics']['sum']=999
-  self.assertEqual(accept_handoff(record,(pin,))['reason'],'RESEARCH_RECEIPT_CORRUPT')
+  self.assertEqual(validate_research_import(record,(pin,))['reason'],'RESEARCH_RECEIPT_CORRUPT')
   self.assertEqual(fixture.boundary().verify(record,observed_revision=fixture.PIN.revision,observed_tree=fixture.PIN.tree,artifact_bytes=fixture.ARTIFACT)['verdict'],'UNAVAILABLE')
  def test_actual_data_profile_math_and_sole_terminal_replay_remain_unattested(self):
   request=replay_request();before=copy.deepcopy(request)
