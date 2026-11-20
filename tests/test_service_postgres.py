@@ -53,7 +53,7 @@ class PostgresBoundaryTests(unittest.TestCase):
   from tests.test_lab_capsule_builder import builder
   vendor={'postgresql':{'version':'postgres (PostgreSQL) 18.1','files':builder.inventory(base/'runtime/postgresql')[0]}}
   (base/'locks').mkdir();(base/'locks/vendor.json').write_bytes(lab_release.canonical(vendor))
-  job=base/pg.JOB_SOURCE;job.parent.mkdir(parents=True);job.write_bytes(b'INERT_JOB_NOT_EXECUTED')
+  job=base/pg.JOB_SOURCE;job.parent.mkdir(parents=True,exist_ok=True);job.write_bytes(b'INERT_JOB_NOT_EXECUTED')
   (base/'lab-release.json').unlink();self.fixture.manifest['files'],self.fixture.manifest['directories']=builder.inventory(base)
   raw=lab_release.canonical(self.fixture.manifest);(base/'lab-release.json').write_bytes(raw);self.fixture.pin=hashlib.sha256(raw).hexdigest()
   self.root=self.fixture.root/'service';self.root.mkdir();(self.root/'state').mkdir();lab_release.stage_capsule(base,self.root/'code',self.fixture.pin)
@@ -246,7 +246,7 @@ class LaunchRecoveryTests(unittest.TestCase):
   self.assertEqual(lease.journal.read(),before);lease.no_process()
  def test_old_job_without_synchronous_quiescence_is_rejected_before_any_spawn(self):
   from unittest.mock import patch
-  code=Path(self.plan['service_plan']['code']);job=code/'sources/grid/grid/ml_windows_job.py'
+  code=Path(self.plan['service_plan']['code']);job=code/pg.JOB_SOURCE
   raw=b'class WindowsJob:\n def close(self):pass\n';job.write_bytes(raw);plan=copy.deepcopy(self.plan);plan['job_sha256']=hashlib.sha256(raw).hexdigest()
   with patch('subprocess.Popen') as spawn:
    with self.assertRaises(pg.PostgresBlocked):pg._job_class(plan)
