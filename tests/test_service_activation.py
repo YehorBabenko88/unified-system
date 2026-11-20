@@ -39,7 +39,7 @@ class ActivationTests(unittest.TestCase):
  def test_research_configuration_is_protected_but_never_self_authorizing(self):
   from tests.test_data_first_policy import PolicyTests
   case=PolicyTests();case.setUp();policy=case.value
-  policy['source_commit']=self.fixture.manifest['sources']['strattester']['commit']
+  policy['source_commit']=self.fixture.manifest['sources']['market_data']['commit']
   lab_release.stage_capsule(self.fixture.base,self.resource.plan['code'],self.fixture.pin)
   self.profile['data_first']=policy
   with self.assertRaises(ActivationBlocked):self.publish(owner_phase=None)
@@ -56,20 +56,32 @@ class ActivationTests(unittest.TestCase):
   self.root=self.fixture.root/'service';self.root.mkdir();self.kernel=FakeKernel();self.boundary=FakeBoundary(self.kernel);self.revision='revision-1'
   auth={'schema':'unified.lab.grid-auth.v3','node_id':'PC1','role':'WORKER','release_id':'lab-1','source_commit':'a'*40,'grid_shared_token':None,'node_credential':'C'*64,'postgres_password':None}
   self.auth=self.fixture.root/'source-auth.json';self.auth.write_bytes(lab_release.canonical(auth));auth_hash=hashlib.sha256(self.auth.read_bytes()).hexdigest()
-  target=self.fixture.target();target.update(node_id='PC1',credential_root=str(self.root/'activation/revisions'/self.revision/'credentials'),auth_binding={'path':str(self.root/'activation/revisions'/self.revision/'credentials/auth.json'),'sha256':auth_hash})
+  target=self.fixture.target();target.pop('auth_binding',None);target.pop('coordinator_port',None)
+  target.update(node_id='PC1',credential_root=str(self.root/'activation/revisions'/self.revision/'credentials'),database_credential_binding=None)
   self.profile=self.fixture.derive(target)
   plan={'schema':'unified.owned-stopped-service.v1','plan_sha256':'b'*64,'root':str(self.root),'code':target['code_root'],'state':target['state_root'],'installation_id':'install-1','node_id':'PC1','computer_name':'LABHOST','role':'WORKER','service_name':'UnifiedLab_fixture','service_sid':SID,'manifest_sha256':self.fixture.pin}
   self.resource=FakeResource(plan);self.refs={'phase_id':'phase-1','source_evidence_sha256':'1'*64,'capacity_evidence_sha256':'2'*64,'database_evidence_sha256':None};self.grants=[]
  def owner(self,action,pin):self.grants.append((action,pin));return True
  def publish(self,**changes):
   args=dict(revision_id=self.revision,qualification_refs=self.refs,owner_phase=self.owner,qualify=lambda p,r:True,boundary=self.boundary)
-  args.update(changes);return publish_activation(self.resource,self.profile,self.auth,**args)
+  args.update(changes);return publish_activation(self.resource,self.profile,database_credential_source=getattr(self,'database_credential_source',None),**args)
  def test_roundtrip_protected_artifacts_are_not_runtime_readiness(self):
   receipt=self.publish();self.assertEqual(receipt['status'],'ACTIVATION_REVISION_PUBLISHED');self.assertEqual(receipt['readiness'],'NOT_PROVEN')
   grant=read_protected_activation(self.root,kernel=self.kernel);self.assertIs(grant.require_current(),True)
-  self.assertEqual(grant.profile,self.profile);self.assertEqual(grant.manifest_sha256,self.fixture.pin);self.assertEqual(grant.auth_path.read_bytes(),self.auth.read_bytes())
+  self.assertEqual(grant.profile,self.profile);self.assertEqual(grant.manifest_sha256,self.fixture.pin);self.assertIsNone(grant.database_credential_path);self.assertFalse((self.root/'activation/revisions'/self.revision/'credentials/postgres.json').exists())
   exposed=grant.profile;exposed['runtime_config']['node_id']='forged';self.assertEqual(grant.profile['runtime_config']['node_id'],'PC1')
   self.assertTrue(all(pin==receipt['activation_plan_sha256'] for _,pin in self.grants))
+ def test_old_descriptor_schema_is_not_adopted_with_consistent_hashes(self):
+  self.publish();revision=self.root/'activation/revisions'/self.revision
+  descriptor=json.loads((revision/'descriptor.json').read_bytes());descriptor['schema']='unified.service-activation.v1'
+  raw=lab_release.canonical(descriptor);(revision/'descriptor.json').write_bytes(raw)
+  pointer=self.root/'activation/current.json';value=json.loads(pointer.read_bytes());value['descriptor_sha256']=hashlib.sha256(raw).hexdigest();pointer.write_bytes(lab_release.canonical(value))
+  with self.assertRaises(ActivationBlocked):read_protected_activation(self.root,kernel=self.kernel)
+ def test_dedicated_database_credential_tamper_invalidates_live_grant(self):
+  self.control_profile('CONTROL');self.publish();grant=read_protected_activation(self.root,kernel=self.kernel)
+  credential=grant.database_credential_path;credential.write_bytes(b'{}')
+  with self.assertRaises(ActivationBlocked):grant.require_current()
+  with self.assertRaises(ActivationBlocked):read_protected_activation(self.root,kernel=self.kernel)
  def test_no_owner_or_external_qualification_means_no_effects(self):
   for changes in ({'owner_phase':None},{'qualify':None},{'owner_phase':lambda a,p:False},{'qualify':lambda p,r:False}):
    with self.subTest(changes=changes),self.assertRaises(ActivationBlocked):self.publish(**changes)
@@ -87,7 +99,7 @@ class ActivationTests(unittest.TestCase):
   self.publish();grant=read_protected_activation(self.root,kernel=self.kernel)
   revoke_activation(self.resource,owner_phase=self.owner,boundary=self.boundary)
   with self.assertRaises(ActivationBlocked):grant.require_current()
-  self.assertTrue(grant.auth_path.exists());self.assertTrue((self.root/'activation/revisions'/self.revision/'profile.json').exists())
+  self.assertIsNone(grant.database_credential_path);self.assertTrue((self.root/'activation/revisions'/self.revision/'profile.json').exists())
  def test_tampered_immutable_profile_or_auth_is_never_admitted(self):
   self.publish();path=self.root/'activation/revisions'/self.revision/'profile.json';path.write_bytes(b'{}')
   with self.assertRaises(ActivationBlocked):read_protected_activation(self.root,kernel=self.kernel)
@@ -139,23 +151,27 @@ class ActivationTests(unittest.TestCase):
   self.assertEqual(result.returncode,0);self.assertEqual(result.stdout,b'');self.assertEqual(result.stderr,b'')
   self.assertFalse((self.root/'activation').exists())
  def test_bounded_regular_auth_source_rejects_before_revision_creation(self):
-  self.auth.write_bytes(b'x'*8193)
+  self.auth.write_bytes(b'x'*8193);self.database_credential_source=self.auth
   with self.assertRaises(ActivationBlocked):self.publish()
   self.assertEqual(self.boundary.calls,[]);self.assertFalse((self.root/'activation').exists())
 
+ def control_profile(self,role):
+  self.revision='revision-'+role;self.resource.plan['role']=role;self.refs['database_evidence_sha256']='3'*64
+  from unified_system.service_postgres import AUTH_SCHEMA
+  auth=dict(schema=AUTH_SCHEMA,node_id='PC1',release_id='lab-1',source_commit='a'*40,database='unified_lab_install1',user='unified_lab_install1',postgres_password='d'*64)
+  self.auth.write_bytes(lab_release.canonical(auth));target=self.fixture.target(role)
+  target.pop('auth_binding',None);target.pop('coordinator_port',None)
+  target.update(node_id='PC1',credential_root=str(self.root/'activation/revisions'/self.revision/'credentials'),database_credential_binding={'path':str(self.root/'activation/revisions'/self.revision/'credentials/postgres.json'),'sha256':hashlib.sha256(self.auth.read_bytes()).hexdigest()})
+  self.profile=self.fixture.derive(target);self.database_credential_source=self.auth
  def test_control_and_single_pc_transit_credentials_use_role_context(self):
   for role in ('CONTROL','SINGLE_PC'):
    with self.subTest(role=role):
-    self.revision='revision-'+role;self.resource.plan['role']=role;self.refs['database_evidence_sha256']='3'*64
-    auth=dict(schema='unified.lab.grid-auth.v3',node_id='PC1',role='CONTROL',release_id='lab-1',source_commit='a'*40,grid_shared_token='c'*64,node_credential=None,postgres_password='d'*64)
-    self.auth.write_bytes(lab_release.canonical(auth));target=self.fixture.target(role)
-    target.update(node_id='PC1',credential_root=str(self.root/'activation/revisions'/self.revision/'credentials'),auth_binding={'path':str(self.root/'activation/revisions'/self.revision/'credentials/auth.json'),'sha256':hashlib.sha256(self.auth.read_bytes()).hexdigest()})
-    self.profile=self.fixture.derive(target);self.assertEqual(self.publish()['readiness'],'NOT_PROVEN')
-    self.assertEqual(read_protected_activation(self.root,kernel=self.kernel).profile['offline_context']['role'],role)
+    self.control_profile(role);self.assertEqual(self.publish()['readiness'],'NOT_PROVEN')
+    grant=read_protected_activation(self.root,kernel=self.kernel)
+    self.assertEqual(grant.profile['offline_context']['role'],role)
+    self.assertEqual(grant.database_credential_path.read_bytes(),self.auth.read_bytes())
  def test_worker_transit_auth_never_admits_database_secrets(self):
-  auth=json.loads(self.auth.read_bytes());auth['postgres_password']='d'*64;self.auth.write_bytes(lab_release.canonical(auth))
-  self.profile['runtime_config']['programs']['grid']['env']['GRID_LAB_AUTH_SHA256']=hashlib.sha256(self.auth.read_bytes()).hexdigest()
-  self.profile['derivation_receipt']['profile_sha256']=hashlib.sha256(lab_release.canonical(self.profile['runtime_config'])).hexdigest()
+  self.database_credential_source=self.auth
   with self.assertRaises(ActivationBlocked):self.publish()
   self.assertEqual(self.boundary.calls,[])
  def test_callback_directory_replacement_cannot_redirect_artifact_writes(self):
@@ -206,8 +222,8 @@ class ActivationTests(unittest.TestCase):
    profile=copy.deepcopy(self.profile)
    if field in ('role','node_id','computer_name'):profile['offline_context'][field]='OTHER'
    elif field=='release_sha256':profile['runtime_config'][field]='0'*64
-   elif field=='auth_path':profile['runtime_config']['programs']['grid']['env']['GRID_LAB_AUTH_PATH']=str(self.auth)
-   else:profile['runtime_config']['programs']['grid']['env']['GRID_LAB_AUTH_SHA256']='0'*64
+   elif field=='auth_path':profile['database_credential_binding']={'path':str(self.auth),'sha256':'a'*64}
+   else:profile['database_credential_binding']={'path':str(revision/'credentials/postgres.json'),'sha256':'0'*64}
    raw=lab_release.canonical(profile);(revision/'profile.json').write_bytes(raw);descriptor['profile_sha256']=hashlib.sha256(raw).hexdigest()
    raw=lab_release.canonical(descriptor);(revision/'descriptor.json').write_bytes(raw);pointer['descriptor_sha256']=hashlib.sha256(raw).hexdigest();(self.root/'activation/current.json').write_bytes(lab_release.canonical(pointer))
    with self.subTest(field=field),self.assertRaises(ActivationBlocked):read_protected_activation(self.root,kernel=self.kernel)

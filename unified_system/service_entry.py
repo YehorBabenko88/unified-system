@@ -5,7 +5,7 @@ for LAB simulation, never publisher authentication or a readiness assertion.
 """
 import sys
 
-BOOTSTRAP_SHA256='5ce73710f6d0fbfd88517372979b3182eded9b7f1f569789806de63b886307c4'
+BOOTSTRAP_SHA256='a4ad04ab1cf41f7753b06baaf9746876b4eb341a9800c202ee544841e17a7795'
 
 
 def _valid_arguments(args):
