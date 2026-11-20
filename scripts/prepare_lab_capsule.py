@@ -267,8 +267,9 @@ def npm_environment(env,node,git,cache,state):
 def build(args):
     root,state=destinations(args.output,args.state_root)
     need(args.node=='LS5' and socket.gethostname().split('.')[0].upper()=='LS5','LS5_ONLY')
-    need(re.fullmatch('[A-Za-z0-9][A-Za-z0-9_.-]{0,79}',args.release_id),'RELEASE_ID_INVALID')
-    need(1024<=args.postgres_port<=65535,'POSTGRES_PORT_INVALID')
+    need(type(args.release_id) is str and re.fullmatch('[A-Za-z0-9][A-Za-z0-9_.-]{0,79}',args.release_id),'RELEASE_ID_INVALID')
+    need(type(args.sequence) is int and args.sequence>0,'SEQUENCE_INVALID')
+    need(type(args.postgres_port) is int and 1024<=args.postgres_port<=65535,'POSTGRES_PORT_INVALID')
     with socket.socket() as probe:probe.bind(('127.0.0.1',args.postgres_port))
     from unified_system import lab_release,windows_wheels
     from integration.source_guard import SourceFence
@@ -323,8 +324,7 @@ def build(args):
             inventory(origin/part);shutil.copytree(origin/part,dest/part,symlinks=False)
         vendor['postgresql']={'version':run([dest/'bin/postgres.exe','--version'],env),'files':inventory(dest)[0]}
     write(root/'locks/vendor.json',vendor)
-    auth=new_auth(state,args.release_id,heads['grid'])
-    config=runtime_config(root,state,sources,snapshots,git,python,node,args.release_id,auth,args.postgres_port)
+    config=runtime_config(root,state,sources,snapshots,git,python,node,args.release_id,pgport=args.postgres_port)
     write(root/'runtime-config.json',config)
     # pip moves private staging directories with protected OWNER_RIGHTS ACLs.
     # Normalize only that exact recognized shape before final byte admission.
