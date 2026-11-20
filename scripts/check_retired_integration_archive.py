@@ -3,7 +3,9 @@ import hashlib,json,pathlib
 ROOT=pathlib.Path(__file__).resolve().parents[1]
 INVENTORY='docs/migration/retired-six-owner/role-inventory.json'
 def verify(root=ROOT):
- root=pathlib.Path(root).resolve();inventory=json.loads((root/INVENTORY).read_bytes())
+ root=pathlib.Path(root).resolve();raw_inventory=(root/INVENTORY).read_bytes()
+ if hashlib.sha256(raw_inventory).hexdigest()!='fbe43f169ac50828c75b9d8aa2baf5feb2a2f870d2d01b512705c6a9b898601b':raise ValueError('RETIRED_COMPLETE_OBLIGATION_MAP_CHANGED')
+ inventory=json.loads(raw_inventory)
  if inventory['root_head']!='186a723aea60aaeb9eb51a59a66999bc485a06e1' or len(inventory['bundle'])!=6:raise ValueError('RETIRED_SOURCE_INVENTORY_REJECTED')
  for key,count in (('source_roles',14),('runtime_roles',16),('browser_roles',4)):
   roles=inventory[key]

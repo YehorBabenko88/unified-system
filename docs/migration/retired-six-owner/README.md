@@ -5,3 +5,5 @@ Six unscheduled legacy entrypoints/configuration files are removed from integrat
 ROLE-INVENTORY.md and role-inventory.json preserve all14source,16runtime and4browser roles, including every NOT_TRANSFERRED/PARTIAL obligation. The independent Term monitor, protected actual four-owner start/auth/stop/postcheck chain, generic research sync/results HTTP handoff and owned PostgreSQL proof remain release blockers. Current offline causal SDK tests do not prove those different contracts.
 
 The mandatory current runtime/browser gate still fails closed, points to this inventory and makes no release or execution grant. CI verifies archive byte hashes, absence of the retired active entrypoints and the unchanged role counts. This is source cleanup, not completion of those tests. No user data or Git history is removed.
+
+Independent P2 review found that cardinality alone accepted same-count duplicated roles. The custody checker now binds the complete immutable historical role-map bytes by SHA256 before interpreting them; changing or substituting roles requires an explicit reviewed source change. Duplicate source/runtime/browser roster probes must all refuse.
