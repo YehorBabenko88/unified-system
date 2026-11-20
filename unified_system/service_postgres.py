@@ -701,6 +701,18 @@ catch{[Console]::Out.Write('{"error":"POSTGRES_REJECTED"}');exit 1}"""
    finally:
     if connection is not None:connection.close()
 
+ def provision_capture_schema(self,plan,server):
+  # Only configure's already fresh owned database is eligible. Data owns the
+  # asset; Root owns transaction/provisioning. No runtime schema repair/adoption.
+  from .capture_schema import CAPTURE_SCHEMA_SOURCE,prepared_capture_sql
+  self._permit(plan,'PROVISION_CAPTURE_SCHEMA_NATIVE')
+  try:
+   pin=self.manifest['files'][CAPTURE_SCHEMA_SOURCE]
+   raw=regular(local(Path(plan['service_plan']['code'])/CAPTURE_SCHEMA_SOURCE),65536)
+   sql=prepared_capture_sql(raw,pin)
+  except Exception:raise PostgresBlocked('POSTGRES_IDENTITY_REJECTED') from None
+  self._sql(plan,server,sql,user=plan['user'],provision=True)
+
  def configure(self,plan,server,password):
   self._permit(plan,'CONFIGURE_POSTGRES_NATIVE');deadline=time.monotonic()+20
   while True:
@@ -716,6 +728,7 @@ catch{[Console]::Out.Write('{"error":"POSTGRES_REJECTED"}');exit 1}"""
   # Real app login/permissions/data/system identity must succeed before the
   # bootstrap role is disabled. Every SQL session is fenced to our own Job.
   before=self.ready(plan,server,provision=True);validate_sql(plan,before,bootstrap_login=True)
+  self.provision_capture_schema(plan,server)
   self._sql(plan,server,'ALTER ROLE '+plan['bootstrap_user']+' NOLOGIN;',database='postgres',user=plan['bootstrap_user'],provision=True)
 
  def ready(self,plan,server,provision=False):

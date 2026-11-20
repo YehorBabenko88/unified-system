@@ -1,0 +1,7 @@
+# Capture schema lifecycle
+
+Data b5ca6363be1f530fbbb4c44fdc1e8f747aaef87d owns market_data/capture_schema.sql, SHA256 81ed2eee67f5287f6760eca6e45930901395fa1a6685f993287dac413dfe1a7f. Root consumes the admitted capsule member sources/market_data/market_data/capture_schema.sql during fresh database configuration, after a real app login check and before bootstrap login is disabled. Root verifies manifest bytes/hash and this supported asset revision.
+
+Only provisioning transforms CREATE TABLE IF NOT EXISTS to explicit CREATE TABLE public. and wraps all three tables in one transaction with catalog-only search_path. Any existing table fails; runtime never provisions, repairs or adopts an existing schema. Root does not duplicate Data table definitions as executable code. The raw test fixture is bound to the Data source for inert SQL-capture tests only. Existing data retention, ownership, stop/recovery and service restrictions remain unchanged.
+
+Local checks execute the real provisioning method AST with inert SQL/permission/file adapters, plus actual pure SQL policy. Full service_postgres import triggers ctypes on Windows and was blocked by the audit guard; it is NOT_RUN locally. These are orchestration/source checks, not ACL, native or database acceptance. Real PostgreSQL, rollback-on-collision, install/update and service stop/recovery must pass separately on hosted fixtures. NO_GO until then.

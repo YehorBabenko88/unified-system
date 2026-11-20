@@ -46,3 +46,6 @@ docs/migration/retired-status-consumers-20261120/role-inventory.json -text
 # Exact schema/helper guards must survive default Windows checkout.
 docs/intelligence/canonical-native-profile/request.schema.json -text
 docs/intelligence/identity/run_qualification.py -text
+
+# Data-owned schema fixture must retain original Git bytes on Windows.
+tests/fixtures/capture-schema-b5ca636.sql -text
