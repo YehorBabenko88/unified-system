@@ -35,3 +35,6 @@ tests/test_operator_contract_ci.py text eol=lf
 
 # Raw historical integration provenance must never be newline-normalized.
 docs/migration/retired-six-owner/raw/*.txt -text
+
+# Exact historical consumer script/workflow bytes; never imported or scheduled.
+docs/migration/retired-status-consumers-20261120/raw/*.txt -text

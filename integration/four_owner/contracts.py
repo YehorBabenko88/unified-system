@@ -30,9 +30,12 @@ def require_cases(actual,expected):
 def result_complete(result,count):
  return result.wasSuccessful() and result.testsRun==count and not result.skipped and not result.expectedFailures and not result.unexpectedSuccesses
 
+STATUS_CONSUMER_HELD_ROLES=("PARTIAL_TO_TERMINAL_GAP_DISPLAY","UNAVAILABLE_TERMINAL_DISPLAY","WRONG_PRODUCER_HTTP_REFUSAL","WRONG_PRODUCER_HTTP_RETIREMENT","WRONG_PRODUCER_ENV_PATH_RESTORATION","ROOT_BLOCKED_TO_TERMINAL_MONITOR_HTTP","MONITOR_UNVERIFIED_NO_TRADE","MONITOR_HTTP_RETIREMENT","MONITOR_ENV_PATH_RESTORATION",)
+
 def runtime_gate(kind,source_proof):
  return dict(schema='unified.four-owner.mandatory-runtime-gate.v1',kind=kind,status='BLOCKED',passed=False,release_status='NO_GO',source_qualification=source_proof.get('qualification','NOT_RUN'),
-  missing_proofs=['CANONICAL_STARTUP_ADMISSION_REQUIRED','PROTECTED_FOUR_OWNER_LIVE_SOURCE_AND_DATABASE_CAPABILITY_NOT_QUALIFIED','CANONICAL_MONITOR_SOURCE_ADAPTER_NOT_CONNECTED','CANONICAL_BROWSER_ROUTE_AND_CONTROL_PORT_NOT_QUALIFIED','TERMINAN_CANONICAL_PRODUCER_RESULT_LEDGER_GRAPH_DISPLAY_HANDOFF_NOT_QUALIFIED'],
+  missing_proofs=['LEGACY_STATUS_CONSUMER_COMPOSITION_NOT_QUALIFIED','CANONICAL_STARTUP_ADMISSION_REQUIRED','PROTECTED_FOUR_OWNER_LIVE_SOURCE_AND_DATABASE_CAPABILITY_NOT_QUALIFIED','CANONICAL_MONITOR_SOURCE_ADAPTER_NOT_CONNECTED','CANONICAL_BROWSER_ROUTE_AND_CONTROL_PORT_NOT_QUALIFIED','TERMINAN_CANONICAL_PRODUCER_RESULT_LEDGER_GRAPH_DISPLAY_HANDOFF_NOT_QUALIFIED'],
   preserved_browser_cases=list(BROWSER_CASES),preserved_runtime_obligations=['OWNED_START_AND_AUTHENTICATED_READINESS','ACTUAL_RUNTIME_DISPLAY','UNAUTHENTICATED_HEALTH_DENIAL','OWNED_STOP','SOURCE_POSTCHECK','PRIVATE_CLEANUP'],
   preserved_legacy_obligation_inventory='docs/migration/retired-six-owner/role-inventory.json',
+  additional_legacy_obligation_inventory='docs/migration/retired-status-consumers-20261120/role-inventory.json',held_status_consumer_roles=list(STATUS_CONSUMER_HELD_ROLES),
   native_installation='NOT_RUN',physical='NOT_RUN',production='NO_GO',execution_authority=False,trading_authorized=False)
