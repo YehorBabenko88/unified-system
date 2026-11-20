@@ -131,6 +131,17 @@ def validate_sql(plan,proof,system_identifier=None,*,bootstrap_login=False):
  if system_identifier is not None:need(value==system_identifier,'POSTGRES_IDENTITY_REJECTED')
  need(proof['bootstrap_login'] is bootstrap_login and all(proof[key] is False for key in ('superuser','createdb','createrole','replication','bypassrls')),'POSTGRES_NOT_READY');return True
 
+def _pgpass_password(raw,plan,*,database,user):
+ try:
+  matches=[]
+  for line in raw.decode('ascii').splitlines():
+   fields=line.split(':');need(len(fields)==5,'POSTGRES_AUTH_REJECTED')
+   if fields[:2]==['127.0.0.1',str(plan['port'])] and fields[2] in (database,'*') and fields[3]==user:matches.append(fields[4])
+  need(len(matches)==1 and re.fullmatch('[A-Za-z0-9_-]{32,128}',matches[0]) is not None,'POSTGRES_AUTH_REJECTED')
+  return matches[0]
+ except PostgresBlocked:raise
+ except Exception:raise PostgresBlocked('POSTGRES_AUTH_REJECTED') from None
+
 class PostgresOwnership:
  def __init__(self,grant,record,boundary):self.grant=grant;self._record=copy.deepcopy(record);self.boundary=boundary;self.server=None
  @property
@@ -152,7 +163,14 @@ class PostgresOwnership:
   except Exception:
    self.close();raise PostgresBlocked('POSTGRES_NOT_READY') from None
  def require_current(self):
-  self.grant.require_current();self.boundary.require_running(self.grant,self._record);need(self.server is not None and self.server.alive(),'POSTGRES_PROCESS_REJECTED');return True
+  need(self.grant.require_current() is True,'POSTGRES_IDENTITY_REJECTED');need(self.boundary.require_running(self.grant,self._record) is True,'POSTGRES_IDENTITY_REJECTED');need(self.server is not None and self.server.alive(),'POSTGRES_PROCESS_REJECTED');return True
+ def runtime_environment(self,module_id):
+  if module_id!='market_data':return {}
+  self.require_current();plan=self._record['plan'];anchor=Path(plan['namespace'])
+  raw,_=read_file(anchor/'pgpass.conf',8192,self.grant._kernel,self.grant.service_sid,anchor)
+  need(sha(raw)==self._record['pgpass_sha256'],'POSTGRES_AUTH_REJECTED')
+  password=_pgpass_password(raw,plan,database=plan['database'],user=plan['user'])
+  self.require_current();return {'PGPASSWORD':password}
  def close(self):
   if self.server is not None:
    server=self.server;self.boundary.stop(self.record['plan'],server);self.server=None
@@ -666,10 +684,7 @@ catch{[Console]::Out.Write('{"error":"POSTGRES_REJECTED"}');exit 1}"""
   user=user or plan['user'];database=database or plan['database'];passfile=Path(self._env(plan,provision=provision)['PGPASSFILE']);password=None
   if provision:need(stamp(passfile)==self.secret_files[passfile],'POSTGRES_AUTH_REJECTED')
   else:need(sha(regular(passfile,8192))==self.runtime_record['pgpass_sha256'],'POSTGRES_AUTH_REJECTED')
-  for line in regular(passfile,8192).decode('ascii').splitlines():
-   fields=line.split(':');need(len(fields)==5)
-   if fields[:2]==['127.0.0.1',str(plan['port'])] and fields[2] in (database,'*') and fields[3]==user:password=fields[4]
-  need(password is not None and re.fullmatch('[A-Za-z0-9_-]{32,128}',password),'POSTGRES_AUTH_REJECTED')
+  password=_pgpass_password(regular(passfile,8192),plan,database=database,user=user)
   root=Path(plan['service_plan']['code'])/'runtime/postgresql';dll_path=local(root/'bin/libpq.dll');need(lab_release.hash_file(dll_path)==plan['postgresql_files']['bin/libpq.dll'])
   connection=None
   with ExitStack() as stack:
