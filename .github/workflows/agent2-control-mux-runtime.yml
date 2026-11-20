@@ -62,5 +62,9 @@ jobs:
         if: always()
         with:
           name: agent2-control-mux-${{ matrix.os }}
-          path: .lab-evidence
+          path: |
+            .lab-evidence/source-bound.json
+            .lab-evidence/source-guard-controls.json
+            .lab-evidence/reconciliation-review2-models.json
+          include-hidden-files: true
           if-no-files-found: error
