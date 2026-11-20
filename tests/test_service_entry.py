@@ -52,10 +52,10 @@ class ProtectedRuntimeTests(unittest.TestCase):
    self.assertEqual(read.call_count,2)
   self.assertEqual(events[0],'sql-ready');self.assertEqual(events[-1],'close');self.assertIn('pg-current',events)
  def test_worker_uses_existing_runtime_full_restart_gate_and_cheap_continuation(self):
-  auth={'NODE_CREDENTIAL':'c'*64};events=[]
+  auth={};events=[]
   def make(config,authorize,child_environment):
    events.append('make');self.assertFalse(authorize('stop','market_data'));self.assertFalse(authorize('start','unknown'))
-   self.assertTrue(authorize('start','market_data'));self.assertEqual(child_environment('market_data')['NODE_CREDENTIAL'],'c'*64)
+   self.assertTrue(authorize('start','market_data'));self.assertNotIn('PGPASSWORD',child_environment('market_data'))
    self.assertNotIn('NODE_CREDENTIAL',child_environment('math'));return object()
   def run(config,runtime,*,stop_event,continuation):
    events.append('run');self.assertIs(continuation(),True);self.active=False
@@ -63,6 +63,17 @@ class ProtectedRuntimeTests(unittest.TestCase):
   with patch.object(bootstrap,'_admit_capsule',return_value={'manifest':{}}) as initial,patch.object(bootstrap,'_runtime_admission',return_value=(self.config,auth)),patch.object(bootstrap,'_repeat_admission',return_value=(self.config,auth)) as restart,patch('unified_system.lab_privileges.remove_lab_write_bypass_privileges'),patch('unified_system.lab_runtime.make_runtime',side_effect=make),patch('unified_system.lab_runtime.run_runtime',side_effect=run):
    self.assertEqual(bootstrap.run_protected_runtime(self.grant),0);initial.assert_called_once();restart.assert_called_once()
   self.assertEqual(events,['make','run']);self.assertFalse((self.root/'state').exists())
+ def test_owned_database_password_is_private_to_market_data_child(self):
+  self.grant.descriptor['service_plan']['role']='CONTROL';calls=[]
+  def private(module):calls.append(module);return {'PGPASSWORD':'SYNTHETIC_ONLY_PASSWORD'}
+  pg=SimpleNamespace(start=lambda:None,require_current=lambda:True,close=lambda:None,runtime_environment=private)
+  def make(config,authorize,child_environment):
+   self.assertEqual(child_environment('market_data')['PGPASSWORD'],'SYNTHETIC_ONLY_PASSWORD')
+   for module in ('math','terminan'):self.assertNotIn('PGPASSWORD',child_environment(module))
+   self.assertNotIn('SYNTHETIC_ONLY_PASSWORD',json.dumps(config));return object()
+  with patch.object(bootstrap,'_admit_capsule',return_value={'manifest':{}}),patch.object(bootstrap,'_runtime_admission',return_value=(self.config,{})),patch('unified_system.service_postgres.read_postgres_ownership',return_value=pg),patch('unified_system.lab_privileges.remove_lab_write_bypass_privileges'),patch('unified_system.lab_runtime.make_runtime',side_effect=make),patch('unified_system.lab_runtime.run_runtime'):
+   self.assertEqual(bootstrap.run_protected_runtime(self.grant),0)
+  self.assertEqual(calls,['market_data'])
  def test_worker_never_reads_or_starts_postgres(self):
   with patch.object(bootstrap,'_admit_capsule',return_value={'manifest':{}}),patch.object(bootstrap,'_runtime_admission',return_value=(self.config,{})),patch('unified_system.service_postgres.read_postgres_ownership') as read,patch('unified_system.lab_privileges.remove_lab_write_bypass_privileges'),patch('unified_system.lab_runtime.make_runtime'),patch('unified_system.lab_runtime.run_runtime'):
    self.assertEqual(bootstrap.run_protected_runtime(self.grant),0);read.assert_not_called()
