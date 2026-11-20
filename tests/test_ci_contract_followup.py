@@ -23,6 +23,25 @@ class ContractFollowupTests(unittest.TestCase):
    with tempfile.TemporaryDirectory() as temporary:
     base=pathlib.Path(temporary);manifest=base/helper.MANIFEST;manifest.parent.mkdir(parents=True);manifest.write_text(json.dumps(altered))
     with self.assertRaises(ValueError):helper.load_groups(base)
+  # Same-count edits across all four copies must not replace original obligations.
+  for self_pin in (False,True):
+   altered=copy.deepcopy(value);item=altered['groups']['final']
+   old=next(x for x in item['original_preserved_prior_ids'] if x in item['original_expected_ids'] and x in item['expected_ids'] and not x.startswith('tests.test_integration_registry.'))
+   replacement=old+'_SUBSTITUTED_SAME_COUNT'
+   for key in ('original_expected_ids','original_preserved_prior_ids','expected_ids','preserved_prior_ids'):item[key]=[replacement if x==old else x for x in item[key]]
+   if self_pin:
+    import hashlib
+    item['original_payload_sha256']=hashlib.sha256(json.dumps({'expected_ids':item['original_expected_ids'],'preserved_prior_ids':item['original_preserved_prior_ids']},sort_keys=True,separators=(',',':'),ensure_ascii=True).encode('ascii')).hexdigest()
+   with tempfile.TemporaryDirectory() as temporary:
+    base=pathlib.Path(temporary);manifest=base/helper.MANIFEST;manifest.parent.mkdir(parents=True);manifest.write_text(json.dumps(altered))
+    with self.assertRaises(ValueError):helper.load_groups(base)
+  with patch.object(helper,'ORIGINAL_FINAL_PAYLOAD_SHA256','0'*64,create=True),self.assertRaises(ValueError):helper.load_groups(ROOT)
+  # Shape/resource refusal must precede hashing/sets/JSON allocation.
+  for ids in (['x'*2049],['x']*4097,['x'*65]*4096):
+   with patch.object(helper,'set',side_effect=AssertionError('SET_BEFORE_PREFLIGHT'),create=True),self.assertRaises(ValueError):helper.require_ids(ids,ids)
+  with tempfile.TemporaryDirectory() as temporary:
+   base=pathlib.Path(temporary);manifest=base/helper.MANIFEST;manifest.parent.mkdir(parents=True);manifest.write_bytes(b' '*1048577)
+   with patch.object(helper.json,'loads',side_effect=AssertionError('JSON_BEFORE_BYTE_BOUND')),self.assertRaises(ValueError):helper.load_groups(base)
  def test_control_inventory_source_root_is_added_after_source_receipt(self):
   raw=(ROOT/'.github/workflows/agent2-control-api.yml').read_text()
   self.assertIn('sys.path.insert(0, str(source_root))',raw)

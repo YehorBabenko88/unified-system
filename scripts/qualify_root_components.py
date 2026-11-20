@@ -5,14 +5,31 @@ Import-safe pure calibrations are separate from main's hosted Git/process tests.
 import argparse,hashlib,json,os,pathlib,stat,sys,unittest
 ROOT=pathlib.Path(__file__).resolve().parents[1]
 MANIFEST='docs/qualification/root-components-20261120/groups.json'
+# Independent historical obligation pin from the actual published Root035 Git blob.
+ORIGINAL_FINAL_SOURCE_COMMIT='035ad06fbe7cc15fd4ab1f40a7029afe9cf8fbdf'
+ORIGINAL_FINAL_SOURCE_BLOB='44e237868ac857a6c47279a8e5405d69cae74704'
+ORIGINAL_FINAL_SOURCE_RAW_SHA256='fa337c890ebd33b65cccfc577b70b41a120d974bbd14fb1cef9e0934e1176fda'
+ORIGINAL_FINAL_PAYLOAD_SHA256='5ca6f840a1e645d48a05e63adb29974f74f332f63fbca4f3b3edae615a4c391a'
+MAX_MANIFEST_BYTES=1048576
+MAX_COMPONENT_IDS=4096
+MAX_COMPONENT_ID_CHARS=2048
+MAX_COMPONENT_ID_TEXT=262144
 
 def result_passed(result,count):
  return (result is not None and result.wasSuccessful() and result.testsRun==count
          and not result.skipped and not result.expectedFailures and not result.unexpectedSuccesses)
 
+def _preflight_ids(value):
+ if type(value) is not list or not 1<=len(value)<=MAX_COMPONENT_IDS:raise ValueError('BOUNDED_COMPONENT_IDS_REQUIRED')
+ total=0
+ for item in value:
+  if type(item) is not str or not 1<=len(item)<=MAX_COMPONENT_ID_CHARS:raise ValueError('BOUNDED_COMPONENT_ID_TEXT_REQUIRED')
+  total+=len(item)
+  if total>MAX_COMPONENT_ID_TEXT:raise ValueError('COMPONENT_ID_TEXT_BUDGET')
+
 def require_ids(actual,expected):
- if (type(expected) is not list or not expected or any(type(x) is not str for x in expected)
-     or len(set(expected))!=len(expected) or len(set(actual))!=len(actual) or sorted(actual)!=sorted(expected)):
+ _preflight_ids(actual);_preflight_ids(expected)
+ if len(set(expected))!=len(expected) or len(set(actual))!=len(actual) or sorted(actual)!=sorted(expected):
   raise ValueError('EXACT_UNIQUE_COMPONENT_CASES_REQUIRED')
  return sorted(actual)
 
@@ -33,15 +50,23 @@ def require_output(root,out):
  return out
 
 def load_groups(root):
- value=json.loads((root/MANIFEST).read_bytes())
+ with (root/MANIFEST).open('rb') as stream:raw=stream.read(MAX_MANIFEST_BYTES+1)
+ if len(raw)>MAX_MANIFEST_BYTES:raise ValueError('COMPONENT_MANIFEST_BYTE_BOUND')
+ value=json.loads(raw)
+ if type(value) is not dict or len(value)>32 or not all(key in value for key in ('schema','release_status','groups')):raise ValueError('COMPONENT_SCOPE')
  if value['schema']!='unified.root-component-workflows.v1' or value['release_status']!='NO_GO':raise ValueError('COMPONENT_SCOPE')
  groups=value['groups']
- if set(groups)!={'final','supervisor','combined','fleet'}:raise ValueError('CLOSED_COMPONENT_GROUPS')
- for config in groups.values():require_ids(config['expected_ids'],config['expected_ids'])
+ if type(groups) is not dict or len(groups)!=4 or set(groups)!={'final','supervisor','combined','fleet'}:raise ValueError('CLOSED_COMPONENT_GROUPS')
+ for config in groups.values():
+  if type(config) is not dict or len(config)>32 or 'expected_ids' not in config:raise ValueError('COMPONENT_GROUP_SHAPE')
+  require_ids(config['expected_ids'],config['expected_ids'])
+ if not all(key in groups['final'] for key in ('historical_registry_id_map','original_expected_ids','original_preserved_prior_ids','preserved_prior_ids')):raise ValueError('FINAL_COMPONENT_HISTORY_SHAPE')
  final=groups['final'];mapping=final['historical_registry_id_map']
- if len(mapping)!=13 or any(type(old) is not str or new!=old.replace('tests.test_integration_registry.','tests.test_historical_registry.') or not old.startswith('tests.test_integration_registry.') for old,new in mapping.items()):raise ValueError('HISTORICAL_ROLE_MAP_REQUIRED')
+ if type(mapping) is not dict or len(mapping)!=13 or any(type(old) is not str or type(new) is not str or not 1<=len(old)<=MAX_COMPONENT_ID_CHARS or not 1<=len(new)<=MAX_COMPONENT_ID_CHARS or new!=old.replace('tests.test_integration_registry.','tests.test_historical_registry.') or not old.startswith('tests.test_integration_registry.') for old,new in mapping.items()):raise ValueError('HISTORICAL_ROLE_MAP_REQUIRED')
  original=final['original_expected_ids'];prior=final['original_preserved_prior_ids']
- require_ids(original,original);require_ids(prior,prior)
+ require_ids(original,original);require_ids(prior,prior);require_ids(final['preserved_prior_ids'],final['preserved_prior_ids'])
+ payload=json.dumps({'expected_ids':original,'preserved_prior_ids':prior},sort_keys=True,separators=(',',':'),ensure_ascii=True,allow_nan=False).encode('ascii')
+ if hashlib.sha256(payload).hexdigest()!=ORIGINAL_FINAL_PAYLOAD_SHA256:raise ValueError('ORIGINAL_FINAL_BASELINE_PIN_MISMATCH')
  translated={mapping.get(name,name) for name in original}
  gate='tests.test_historical_registry_gate.RegistryResultGateTests.test_exact_success_gate_refuses_all_non_success_unittest_outcomes'
  if len(original)!=161 or len(prior)!=145 or set(mapping)!={name for name in original if name.startswith('tests.test_integration_registry.')} or set(final['expected_ids'])!=translated|{gate}:raise ValueError('ORIGINAL_FINAL_ROLES_NOT_PRESERVED')
