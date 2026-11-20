@@ -98,6 +98,9 @@ REQUIRED_CASES = [
 ]
 
 
+HELPER_CASES = [["tests.test_operator_contract_ci.EvidenceTests","test_root_pin_is_required_and_fence_owns_exact_head_check"],["tests.test_operator_contract_ci.EvidenceTests","test_only_exact_root_fixture_lock_admitted"],["tests.test_operator_contract_ci.EvidenceTests","test_inventory_requires_every_unique_case_no_skip_or_failure"],["tests.test_operator_contract_ci.EvidenceTests","test_receipt_uses_existing_root_fence_before_and_after_and_no_grid"],["tests.test_operator_contract_ci.EvidenceTests","test_execution_helper_refuses_unqualified_runtime_before_imports"],["tests.test_operator_contract_ci.EvidenceTests","test_execution_helper_checks_foreign_cached_app_after_pytest"],["tests.test_operator_contract_ci.EvidenceTests","test_shared_cache_refuses_reused_and_polluted_prefix"],["tests.test_operator_contract_ci.EvidenceTests","test_shared_cache_rejects_preloaded_application"],["tests.test_operator_contract_ci.EvidenceTests","test_shared_cache_rejects_reflected_cached_path"],["tests.test_operator_contract_ci.EvidenceTests","test_shared_cache_cli_prefix_must_match"]]
+
+
 def require_pin(value):
     if type(value) is not str or re.fullmatch('[0-9a-f]{40}', value) is None:
         raise ValueError('ROOT_PIN_REQUIRED')
@@ -109,12 +112,13 @@ def require_fixture_lock(raw):
     return FIXTURE_LOCK_SHA256
 
 
-def validate_junit(path):
+def validate_junit(path, *, expected=None):
+    expected = REQUIRED_CASES if expected is None else expected
     root = ET.parse(path).getroot()
     cases = root.findall('.//testcase')
     observed = [(case.get('classname'), case.get('name')) for case in cases]
-    if (len(observed) != len(REQUIRED_CASES) or len(set(observed)) != len(REQUIRED_CASES)
-            or set(observed) != set(REQUIRED_CASES)
+    if (len(observed) != len(expected) or len(set(observed)) != len(REQUIRED_CASES)
+            or set(observed) != set(expected)
             or root.findall('.//skipped') or root.findall('.//failure') or root.findall('.//error')):
         raise ValueError('REQUIRED_TEST_INVENTORY_FAILED')
     return len(cases)
@@ -135,6 +139,7 @@ def receipt(unified, expected_unified, junit=None):
         source = fence.check()
         fence.module(guard_module)
         fence.file(__file__, python=True)
+        fence.file(unified / 'integration/four_owner/import_custody.py', python=True)
         lock = unified / 'docs/ci/operator-command/requirements-linux.lock'
         fence.file(lock)
         lock_hash = require_fixture_lock(lock.read_bytes())
@@ -161,4 +166,14 @@ if __name__ == '__main__':
     source = Path(args.unified).resolve()
     if output == source or source in output.parents:
         raise ValueError('EVIDENCE_MUST_BE_OUTSIDE_CHECKOUTS')
-    output.write_text(json.dumps(receipt(args.unified, args.expected_unified, args.junit), indent=2))
+    helper = source / 'integration/four_owner/import_custody.py'
+    api = {'__name__': 'raw_operator_receipt_custody', '__file__': str(helper)}
+    exec(compile(helper.read_bytes(), str(helper), 'exec', dont_inherit=True), api)
+    if sys.pycache_prefix is None:raise ValueError('ISOLATED_CACHE_REQUIRED')
+    state = api['begin'](Path(sys.pycache_prefix), (source,))
+    value = receipt(args.unified, args.expected_unified, args.junit)
+    value['import_cache'] = api['verify_loaded'](state, source, source)
+    value['cache_empty'] = True
+    value['execution_authority'] = False
+    value['trading_authorized'] = False
+    output.write_text(json.dumps(value, indent=2))

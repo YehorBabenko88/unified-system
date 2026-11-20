@@ -32,7 +32,7 @@ jobs:
         run: mkdir "$RUNNER_TEMP/operator-command-${{ github.run_id }}-${{ github.run_attempt }}"
       - name: Verify exact Root source tree before dependency setup
         run: >-
-          python -I -S -B -X "pycache_prefix=$RUNNER_TEMP/operator-command-${{ github.run_id }}-${{ github.run_attempt }}/cache" unified/scripts/operator_contract_ci.py
+          python -I -S -B -X "pycache_prefix=$RUNNER_TEMP/operator-command-${{ github.run_id }}-${{ github.run_attempt }}/cache-preflight" unified/scripts/operator_contract_ci.py
           --unified "$GITHUB_WORKSPACE/unified"
           --expected-unified "$EXPECTED_UNIFIED_SHA"
           --report "$RUNNER_TEMP/operator-command-${{ github.run_id }}-${{ github.run_attempt }}/source-before.json"
@@ -44,13 +44,20 @@ jobs:
       - name: Required actual Gateway and Root command-store composition with exact test inventory
         working-directory: unified
         run: |
-          "$RUNNER_TEMP/operator-fixture-venv/bin/python" -I -S -B -X "pycache_prefix=$RUNNER_TEMP/operator-command-${{ github.run_id }}-${{ github.run_attempt }}/cache" scripts/run_operator_command_contracts.py --expected-head "$EXPECTED_UNIFIED_SHA" --dependencies "$RUNNER_TEMP/operator-fixture-venv/lib/python3.12/site-packages" --basetemp "$RUNNER_TEMP/operator-pytest-${{ github.run_id }}-${{ github.run_attempt }}" --junit "$RUNNER_TEMP/operator-command-${{ github.run_id }}-${{ github.run_attempt }}/contracts.xml" --origins "$RUNNER_TEMP/operator-command-${{ github.run_id }}-${{ github.run_attempt }}/origins.json"
-      - name: Verify evidence helper invariants
+          "$RUNNER_TEMP/operator-fixture-venv/bin/python" -I -S -B -X "pycache_prefix=$RUNNER_TEMP/operator-command-${{ github.run_id }}-${{ github.run_attempt }}/cache-main" scripts/run_operator_command_contracts.py --expected-head "$EXPECTED_UNIFIED_SHA" --dependencies "$RUNNER_TEMP/operator-fixture-venv/lib/python3.12/site-packages" --basetemp "$RUNNER_TEMP/operator-pytest-${{ github.run_id }}-${{ github.run_attempt }}" --junit "$RUNNER_TEMP/operator-command-${{ github.run_id }}-${{ github.run_attempt }}/contracts.xml" --origins "$RUNNER_TEMP/operator-command-${{ github.run_id }}-${{ github.run_attempt }}/origins.json"
+      - name: Ten exact helper invariants with independent fresh import cache
         working-directory: unified
-        run: python -I -S -B -X "pycache_prefix=$RUNNER_TEMP/operator-command-${{ github.run_id }}-${{ github.run_attempt }}/helper-cache" -c 'import pathlib,sys,unittest; cache=pathlib.Path(sys.pycache_prefix); assert not cache.exists(); sys.path.insert(0,"."); r=unittest.TextTestRunner().run(unittest.defaultTestLoader.loadTestsFromName("tests.test_operator_contract_ci")); assert not cache.exists(); sys.exit(not (r.wasSuccessful() and r.testsRun==6 and not r.skipped and not r.expectedFailures and not r.unexpectedSuccesses))'
+        run: >-
+          "$RUNNER_TEMP/operator-fixture-venv/bin/python" -I -S -B -X "pycache_prefix=$RUNNER_TEMP/operator-command-${{ github.run_id }}-${{ github.run_attempt }}/cache-helpers" scripts/run_operator_command_contracts.py
+          --expected-head "$EXPECTED_UNIFIED_SHA"
+          --dependencies "$RUNNER_TEMP/operator-fixture-venv/lib/python3.12/site-packages"
+          --suite helpers
+          --basetemp "$RUNNER_TEMP/operator-helper-pytest-${{ github.run_id }}-${{ github.run_attempt }}"
+          --junit "$RUNNER_TEMP/operator-command-${{ github.run_id }}-${{ github.run_attempt }}/helpers.xml"
+          --origins "$RUNNER_TEMP/operator-command-${{ github.run_id }}-${{ github.run_attempt }}/helper-origins.json"
       - name: Required exact inventory and final source receipt
         run: >-
-          python -I -S -B -X "pycache_prefix=$RUNNER_TEMP/operator-command-${{ github.run_id }}-${{ github.run_attempt }}/cache" unified/scripts/operator_contract_ci.py
+          python -I -S -B -X "pycache_prefix=$RUNNER_TEMP/operator-command-${{ github.run_id }}-${{ github.run_attempt }}/cache-postflight" unified/scripts/operator_contract_ci.py
           --unified "$GITHUB_WORKSPACE/unified"
           --expected-unified "$EXPECTED_UNIFIED_SHA"
           --junit "$RUNNER_TEMP/operator-command-${{ github.run_id }}-${{ github.run_attempt }}/contracts.xml"
