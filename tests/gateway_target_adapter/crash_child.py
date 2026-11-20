@@ -5,7 +5,7 @@ from pathlib import Path
 import sys
 sys.path.insert(0,sys.argv[1])
 from unified_system.gateway_target_adapter import DisposableTargetStand,prepare_target,template_request
-stand=DisposableTargetStand(Path(sys.argv[2]),stratt_source_root=sys.argv[3],meta_source_root=sys.argv[4])
+stand=DisposableTargetStand(Path(sys.argv[2]),terminan_source_root=sys.argv[3],math_source_root=sys.argv[4],git_executable=os.environ['TARGET_GIT'],git_sha256=os.environ['TARGET_GIT_SHA256'],runtime_sha256=os.environ['TARGET_RUNTIME_SHA256'])
 original=stand._invoke
 def fault(check):
     if sys.argv[5]=='AFTER':original(check)
