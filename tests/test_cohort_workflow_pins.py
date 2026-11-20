@@ -4,12 +4,15 @@ ROOT=pathlib.Path(__file__).resolve().parents[1]
 def checkout_pins(text):
  result={};blocks=re.split(r'(?m)^      - ',text)
  for block in blocks:
-  if not block.startswith('uses: actions/checkout@'):continue
-  repo=re.search(r'(?m)^          repository: ([A-Za-z0-9_/-]+)$',block)
-  ref=re.search(r'(?m)^          ref: ([a-f0-9]{40})$',block)
-  if repo and ref:
-   if repo[1] in result:raise ValueError('duplicate source checkout')
-   result[repo[1]]=ref[1]
+  first=block.splitlines()[0] if block.splitlines() else ''
+  rows=re.findall(r'(?m)^          repository: (.+)$',block)
+  if not rows:continue # Root checkout has no repository override.
+  if not re.fullmatch(r"uses: ['\"]?actions/checkout@[A-Za-z0-9_.-]+['\"]?",first):raise ValueError('unrecognized source checkout action')
+  if len(rows)!=1 or not re.fullmatch(r'YehorBabenko88/(?:strattester|math|Terminan)',rows[0]):raise ValueError('closed canonical SDK repository required')
+  refs=re.findall(r'(?m)^          ref: (.+)$',block)
+  if len(refs)!=1 or not re.fullmatch(r'[a-f0-9]{40}',refs[0]):raise ValueError('literal committed SDK source required')
+  if rows[0] in result:raise ValueError('duplicate source checkout')
+  result[rows[0]]=refs[0]
  return result
 class CohortWorkflowPinsTests(unittest.TestCase):
  def check(self,workflow,cohort):
@@ -24,5 +27,6 @@ class CohortWorkflowPinsTests(unittest.TestCase):
   pin=cohort['sources']['math']['commit']
   with self.assertRaises(AssertionError):self.check(workflow.replace(pin,'0'*40),cohort)
   block="      - uses: actions/checkout@fixed\n        with:\n          repository: YehorBabenko88/math\n          ref: "+pin+chr(10)
-  with self.assertRaises(ValueError):checkout_pins(workflow+chr(10)+block)
+  for duplicate in (block,block.replace(pin,'${{ github.sha }}'),block.replace('ref: '+pin,'ref: main'),block.replace('ref: '+pin,'ref: '+pin+chr(10)+'          ref: '+pin)):
+   with self.assertRaises(ValueError):checkout_pins(workflow+chr(10)+duplicate)
 if __name__=='__main__':unittest.main()
