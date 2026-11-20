@@ -1,6 +1,6 @@
 # Canonical market query integration
 
-Candidate source owners: Data121 `2478cad274f9d1f2dde6617b6b22a2576dc83f45`, Math141 `b3cb935aee7d6569d6fd0cfaff70ea9b9e5f0df3`, Term123 `fc0bed4937ab5dbb039320aae48e49b01b31bb43`. Root remains ENCLOSING_HEAD/NO_GO.
+Candidate source owners: Data `b5ca6363be1f530fbbb4c44fdc1e8f747aaef87d`, Math `0dcb85e76214453e2e1ff2abdfb8734cde5922b5`, Terminan `742d9681b9b57e0252182e3edf4c1dd90ba19c53`. Root remains ENCLOSING_HEAD/NO_GO.
 
 |Previous active location/name|Canonical owner/location|Scope|
 |---|---|---|
@@ -10,7 +10,7 @@ Candidate source owners: Data121 `2478cad274f9d1f2dde6617b6b22a2576dc83f45`, Mat
 |Root Git-show/exec provisioning/query_source_root|Fixed canonical Root reader + qualified SDK site|No source selector or active Grid dependency|
 |GRID_SOURCE_UNQUALIFIED|MARKET_DATA_SOURCE_UNQUALIFIED|Canonical source-status reason; no legacy acceptance alias|
 
-Root146909573 cohort emitter removes duplicate checkout SHA literals. Root147d1f407 and independently reviewed Root1489f14d1 remain immutable prior pin/hash snapshots. Active target/native metadata follows the current Term123/Math141 pair; immutable prior proof records and43native test methods stay unchanged. A complete original15query issuer/store role map is in ../canonical-query-role-map.json. Data keeps original53preparation+9codec obligations; Math adds independent numeric coverage. No missing native or provider proof is counted as source-only PASS.
+Root146909573 cohort emitter removes duplicate checkout SHA literals. Root147d1f407 and independently reviewed Root1489f14d1 remain immutable prior pin/hash snapshots. Active target/native metadata follows the current exact Terminan/Math pair; immutable prior proof records and43native test methods stay unchanged. A complete original15query issuer/store role map is in ../canonical-query-role-map.json. Data keeps original53preparation+9codec obligations; Math adds independent numeric coverage. No missing native or provider proof is counted as source-only PASS.
 
 The six extra Root refusal cases live with the SDK-dependent hosted READ tests, reusing the canonical request fixture. They are explicit additions, not replacements for the12actual issuer/capability and5HTTPS roles. Local runs with unavailable cryptography validate denial only and do not qualify the identity ABI. All168READ cases remain mandatory hosted. Full source/artifact/CI evidence is pinned only after this enclosing candidate is frozen.
 
