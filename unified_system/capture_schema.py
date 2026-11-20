@@ -5,7 +5,9 @@ CAPTURE_SCHEMA_SHA256='81ed2eee67f5287f6760eca6e45930901395fa1a6685f993287dac413
 def prepared_capture_sql(raw,pin):
     """Bind the supported Data asset; make every existing-table collision fail."""
     if (type(raw) is not bytes or not 0<len(raw)<=65536 or type(pin) is not dict
-            or set(pin)!={'sha256','bytes'} or type(pin['bytes']) is not int
+            or len(pin)!=2 or any(type(key) is not str or key not in ('sha256','bytes') for key in pin)
+            or type(pin['sha256']) is not str or len(pin['sha256'])!=64
+            or type(pin['bytes']) is not int
             or pin['bytes']!=len(raw) or pin['sha256']!=CAPTURE_SCHEMA_SHA256
             or hashlib.sha256(raw).hexdigest()!=CAPTURE_SCHEMA_SHA256):
         raise ValueError('CAPTURE_SCHEMA_SOURCE_REJECTED')
