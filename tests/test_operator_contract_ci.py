@@ -82,5 +82,76 @@ class EvidenceTests(unittest.TestCase):
                 return "fixture-module"
         foreign = types.SimpleNamespace(__file__="FOREIGN_APP.py")
         with tempfile.TemporaryDirectory() as folder, patch.object(source_guard, "SourceFence", Fence), patch.object(pytest, "main", return_value=0), patch.dict(sys.modules, {"unified_system.foreign_cached_test": foreign}), patch.object(sys, "path", sys.path.copy()), patch.object(sys, "pycache_prefix", str(Path(folder) / "cache")):
-            with self.assertRaisesRegex(ValueError, "IMPORT_ORIGIN_OUTSIDE_TREE"):
+            with self.assertRaisesRegex(ValueError, "PRELOADED_APPLICATION_MODULE_REJECTED"):
                 run("a" * 40, folder, Path(folder)/"temp", Path(folder)/"result.xml")
+
+        # Separate post-test fake: preserve the original after-pytest obligation.
+        # No SourceFence/Git/provider is executed; shared post-cache verifier is real.
+        from scripts import run_operator_command_contracts as runner
+        api = self.cache_api()
+        with tempfile.TemporaryDirectory() as folder:
+            cache = Path(folder) / 'post-cache';cache.mkdir()
+            state = (cache, api['plain_directory'](cache))
+            reflected = types.SimpleNamespace(__file__=str(root/'unified_system/operator_control_plane.py'), __cached__=str(Path(folder)/'foreign.pyc'))
+            with patch.object(source_guard,'SourceFence',Fence), patch.object(pytest,'main',return_value=0) as executed, patch('scripts.operator_contract_ci.validate_junit',return_value=86), patch.object(runner,'cache_bootstrap',return_value=(api,state,root/'integration/four_owner/import_custody.py')), patch.dict(sys.modules,{'unified_system.reflected_cache_fixture':reflected}), patch.object(sys,'path',sys.path.copy()), patch.object(sys,'pycache_prefix',str(cache)):
+                with self.assertRaisesRegex(ValueError,'APPLICATION_CACHED_PATH_REJECTED'):
+                    run('a'*40,folder,Path(folder)/'temp',Path(folder)/'result.xml')
+                executed.assert_called_once()
+
+    @staticmethod
+    def cache_api():
+        root = Path(__file__).resolve().parents[1]
+        helper = root / 'integration/four_owner/import_custody.py'
+        api = {'__name__': 'constant_cache_fixture', '__file__': str(helper)}
+        exec(compile(helper.read_bytes(), str(helper), 'exec', dont_inherit=True), api)
+        return api
+
+    def test_shared_cache_refuses_reused_and_polluted_prefix(self):
+        import sys
+        api = self.cache_api()
+        # Only a harmless cache fixture: no app code is imported under this prefix.
+        before = dict(sys.modules);prefix = sys.pycache_prefix
+        try:
+            for name in tuple(sys.modules):
+                if api['application'](name): del sys.modules[name]
+            with tempfile.TemporaryDirectory() as folder:
+                cache = Path(folder) / 'fresh';sys.pycache_prefix = str(cache)
+                state = api['begin'](cache, ())
+                with self.assertRaisesRegex(ValueError, 'FRESH_IMPORT_CACHE_REQUIRED'):api['begin'](cache, ())
+                (cache / 'poison.pyc').write_bytes(b'constant-only fixture')
+                with self.assertRaisesRegex(ValueError, 'IMPORT_CACHE_NOT_EMPTY_OR_CHANGED'):api['empty'](state)
+        finally:
+            sys.pycache_prefix = prefix
+            for name in tuple(sys.modules):
+                if name not in before:del sys.modules[name]
+            sys.modules.update(before)
+
+    def test_shared_cache_rejects_preloaded_application(self):
+        import sys,types
+        api = self.cache_api()
+        with tempfile.TemporaryDirectory() as folder, patch.dict(sys.modules, {'unified_system.constant_fixture': types.ModuleType('constant_fixture')}), patch.object(sys,'pycache_prefix',str(Path(folder)/'cache')):
+            with self.assertRaisesRegex(ValueError,'PRELOADED_APPLICATION_MODULE_REJECTED'):api['begin'](Path(sys.pycache_prefix),())
+
+    def test_shared_cache_rejects_reflected_cached_path(self):
+        import sys,types
+        api = self.cache_api();before = dict(sys.modules);prefix = sys.pycache_prefix
+        try:
+            for name in tuple(sys.modules):
+                if api['application'](name):del sys.modules[name]
+            with tempfile.TemporaryDirectory() as folder:
+                base=Path(folder);cache=base/'cache';sys.pycache_prefix=str(cache);state=api['begin'](cache,())
+                source=base/'constant.py';source.write_bytes(b'VALUE=1\n')
+                fixture=types.ModuleType('unified_system.constant_fixture');fixture.__file__=str(source);fixture.__cached__=str(base/'foreign.pyc')
+                sys.modules[fixture.__name__]=fixture
+                with self.assertRaisesRegex(ValueError,'APPLICATION_CACHED_PATH_REJECTED'):api['verify_loaded'](state,base,base)
+        finally:
+            sys.pycache_prefix=prefix
+            for name in tuple(sys.modules):
+                if name not in before:del sys.modules[name]
+            sys.modules.update(before)
+
+    def test_shared_cache_cli_prefix_must_match(self):
+        import sys
+        api=self.cache_api()
+        with tempfile.TemporaryDirectory() as folder,patch.object(sys,'pycache_prefix',str(Path(folder)/'declared')):
+            with self.assertRaisesRegex(ValueError,'MATCHING_CLI_IMPORT_CACHE_PREFIX_REQUIRED'):api['begin'](Path(folder)/'other',())
