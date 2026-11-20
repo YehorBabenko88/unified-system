@@ -81,7 +81,7 @@ class BuilderTests(unittest.TestCase):
         from unified_system.lab_capsule_acl import FreshCodeRoot
         with tempfile.TemporaryDirectory() as temporary:
             root=Path(temporary).resolve();cache=root/'cache';cache.mkdir()
-            args=SimpleNamespace(output=root/'capsule',state_root=root/'state',node='LS5',release_id='fixture',postgres_port=55459,cache=cache,nssm_archive=None)
+            args=SimpleNamespace(output=root/'capsule',state_root=root/'state',node='LS5',release_id='fixture',sequence=1,postgres_port=55459,cache=cache,nssm_archive=None)
             def pinned_other_inputs(path):
                 return builder.LOCK_SHA if Path(path).name.endswith('.lock') else builder.ARCHIVES[Path(path).name]
             for invalid in (None,b'BAD_ARCHIVE_TEST_NEVER_EXECUTED'):
@@ -122,16 +122,52 @@ class BuilderTests(unittest.TestCase):
         del pinned['psycopg-binary']
         with self.assertRaisesRegex(ValueError,'NATIVE_PROBE_LOCK_MISMATCH'):builder.native_probe(pinned)
     def test_generated_runtime_satisfies_real_supervisor_contract(self):
+        import copy
+        from unittest.mock import patch
         from unified_system.runtime_cli import validate_config
+        from unified_system.lab_runtime import validate_config as validate_lab
         with tempfile.TemporaryDirectory() as temporary:
-            root=Path(temporary).resolve();tool=root/'tool.exe';tool.write_bytes(b'inert')
-            bootstrap=root/'sources/unified-system/unified_system/owned_python.py';bootstrap.parent.mkdir(parents=True);bootstrap.write_bytes(b'inert')
-            sources={n:dict(root='sources/'+n,commit='a'*40,version='1.0.0') for n in builder.NAMES}
+            root=Path(temporary).resolve()/'capsule';state=root.parent/'state'
+            tool=root/'runtime/tool'
+            sources={n:dict(root='sources/'+n,commit='a'*40,version='1.0.0',dependencies={dep:'1.0.0' for dep in builder.GRAPH[n]}) for n in builder.NAMES}
             snapshots={n:{'runtime_files':{'entry.py':{'raw_sha256':'b'*64}}} for n in builder.NAMES}
-            config=builder.runtime_config(root,root.parent/(root.name+'-state'),sources,snapshots,tool,tool,tool,
-                                          'lab-unit',(root.parent/'private-auth.json','c'*64),55459)
+            ports=dict(zip(sorted(builder.NAMES),range(19000,19004)))
+            with patch.object(builder,'sha',return_value='c'*64),patch.object(builder,'free_ports',side_effect=AssertionError('NO SOCKET')),patch('subprocess.Popen',side_effect=AssertionError('NO PROCESS')):
+                config=builder.runtime_config(root,state,sources,snapshots,tool,tool,tool,'lab-unit',pgport=55459,ports=ports)
+            self.assertEqual(set(builder.NAMES),{'unified_system','market_data','math','terminan'})
+            self.assertEqual(set(config['programs']),{'market_data','math','terminan'})
             self.assertEqual(validate_config(config,allow_physical=True),config)
-            self.assertEqual(config['programs']['terminan']['env']['TERMINAN_LAB_SNAPSHOT'],str(root.parent/(root.name+'-state')/'public/lab-market-paper.json'))
+            files={tool.relative_to(root).as_posix():{'sha256':'c'*64,'bytes':1}}
+            for name in builder.NAMES:files['sources/'+name+'/entry.py']={'sha256':'b'*64,'bytes':1}
+            files['sources/unified_system/unified_system/owned_python.py']={'sha256':'c'*64,'bytes':1}
+            manifest={'sources':sources,'files':files,'release_id':'lab-unit','git':tool.relative_to(root).as_posix()}
+            admitted=validate_lab(config,manifest,root,hostname='LS5')
+            for name,p in admitted['programs'].items():
+                self.assertEqual(p['env']['UNIFIED_SOURCE_ROOT'],str(root/'sources/unified_system'))
+                self.assertNotIn('GRID_SHARED_TOKEN',p['env'])
+                if name!='math':self.assertEqual(p['health_url'],f"http://127.0.0.1:{ports[name]}/health")
+            market=config['programs']['market_data']
+            self.assertEqual(market['argv'][-3:],['market_data.cli','--','serve'])
+            self.assertEqual(market['env']['MARKET_DATA_PORT'],str(ports['market_data']))
+            self.assertEqual(config['programs']['terminan']['argv'][-4:],['--host','127.0.0.1','--port',str(ports['terminan'])])
+            self.assertEqual(config['programs']['terminan']['env']['TERMINAN_LAB_SNAPSHOT'],str(state/'public/lab-market-paper.json'))
+
+    def test_runtime_generator_rejects_retired_auth_roster_and_ambiguous_ports(self):
+        from unittest.mock import patch
+        root=Path(tempfile.gettempdir()).resolve()/'inert-fixture'
+        sources={n:dict(root='sources/'+n,commit='a'*40,version='1.0.0') for n in builder.NAMES}
+        snapshots={n:{'runtime_files':{}} for n in builder.NAMES}
+        ports=dict(zip(sorted(builder.NAMES),range(19000,19004)))
+        with patch.object(builder,'sha',return_value='c'*64),patch.object(builder,'free_ports',side_effect=AssertionError('NO SOCKET')),patch('subprocess.Popen',side_effect=AssertionError('NO PROCESS')):
+            with self.assertRaisesRegex(ValueError,'RETIRED_AUTH_PROFILE_REJECTED'):
+                builder.runtime_config(root,root.parent/'state',sources,snapshots,root/'tool',root/'tool',root/'tool','fixture',auth=(root/'old-auth','a'*64),ports=ports)
+            retired=dict(sources);retired['grid']=retired.pop('market_data')
+            with self.assertRaisesRegex(ValueError,'CANONICAL_SOURCE_ROSTER_REQUIRED'):
+                builder.runtime_config(root,root.parent/'state',retired,snapshots,root/'tool',root/'tool',root/'tool','fixture',ports=ports)
+            for invalid in ({name:19000 for name in ports},{**ports,'market_data':True},{**ports,'market_data':0}):
+                with self.subTest(invalid=invalid),self.assertRaisesRegex(ValueError,'DISTINCT_LOOPBACK_PORTS_REQUIRED'):
+                    builder.runtime_config(root,root.parent/'state',sources,snapshots,root/'tool',root/'tool',root/'tool','fixture',ports=invalid)
+
     def test_lexical_parent_alias_rejected_before_creation(self):
         with tempfile.TemporaryDirectory() as temporary:
             parent=Path(temporary).resolve()
@@ -215,5 +251,73 @@ class BuilderTests(unittest.TestCase):
                 with patch.object(builder,'run') as runner:
                     with self.assertRaisesRegex(ValueError,reason):builder.require_clean(source,git,{})
                     runner.assert_not_called()
+
+
+    def test_full_build_canonical_source_simulation_reaches_manifest_without_retired_auth(self):
+        """Control-flow proof only: no tool, ACL, native import or service executes."""
+        from contextlib import ExitStack
+        from types import SimpleNamespace
+        from unittest.mock import patch
+        from unified_system import lab_release, lab_runtime, windows_wheels
+        from unified_system.lab_capsule_acl import FreshCodeRoot
+        from integration.source_guard import SourceFence
+        with tempfile.TemporaryDirectory() as temporary, ExitStack() as stack:
+            parent=Path(temporary).resolve();workspace=parent/'workspace';workspace.mkdir()
+            lock=workspace/'unified-system/integration/windows-candidate/requirements-cp312-win_amd64-cpu.lock'
+            lock.parent.mkdir(parents=True);lock.write_bytes((ROOT/'integration/windows-candidate/requirements-cp312-win_amd64-cpu.lock').read_bytes())
+            expected={n:p['version'] for n,p in windows_wheels.parse_compiled_lock(lock.read_bytes()).items()}
+            root=parent/'capsule';state=parent/'state';cache=parent/'cache';cache.mkdir()
+            args=SimpleNamespace(output=root,state_root=state,node='LS5',release_id='fixture',sequence=1,postgres_port=55459,cache=cache,nssm_archive=None,npm_cache=None,include_postgres=False)
+            def extraction(archive,target,prefix=''):
+                target.mkdir();(target/'inert').write_bytes(b'NOT_EXECUTED')
+            def clone(source,target,head,repository,git,env):target.mkdir();(target/'entry.py').write_bytes(b'# inert source')
+            def digest(p):
+                p=Path(p)
+                if p==lock:return builder.LOCK_SHA
+                return builder.ARCHIVES.get(p.name,'c'*64)
+            def create(p):p.mkdir();return SimpleNamespace(normalize_installer_acls=lambda:None,seal=lambda pin:None)
+            def stage(archive,target):target.mkdir();return {'version':'inert'}
+            stack.enter_context(patch.object(builder,'WORKSPACE',workspace))
+            stack.enter_context(patch.object(builder.socket,'gethostname',return_value='LS5'))
+            stack.enter_context(patch.object(builder.socket,'socket'))
+            stack.enter_context(patch.object(builder,'free_ports',return_value=dict(zip(builder.NAMES,range(19000,19004)))))
+            stack.enter_context(patch.object(builder,'sha',side_effect=digest))
+            stack.enter_context(patch.object(builder,'nssm_payload',return_value=(b'INERT',{})))
+            stack.enter_context(patch.object(builder,'stage_nssm',side_effect=stage))
+            stack.enter_context(patch.object(builder,'extract',side_effect=extraction))
+            stack.enter_context(patch.object(builder,'require_clean',return_value='a'*40))
+            stack.enter_context(patch.object(builder,'clone_source',side_effect=clone))
+            stack.enter_context(patch.object(builder,'bundled_pip_member',return_value='tools/pip.whl'))
+            stack.enter_context(patch.object(builder,'run',return_value='INERT_NO_EXECUTION'))
+            stack.enter_context(patch.object(builder,'npm_environment',return_value={}))
+            stack.enter_context(patch.object(windows_wheels,'validate_windows_wheels',return_value={'result':'CANDIDATE_BYTES_MATCH','wheels':[{}]*72,'candidate_bytes':431771071}))
+            stack.enter_context(patch.object(builder.importlib.metadata,'distributions',return_value=[SimpleNamespace(metadata={'Name':n},version=v) for n,v in expected.items()]))
+            stack.enter_context(patch.object(FreshCodeRoot,'create',side_effect=create))
+            stack.enter_context(patch.object(SourceFence,'check',return_value={'tree':'b'*40,'runtime_files':{'entry.py':{'raw_sha256':'c'*64,'comparison':'RAW_IDENTICAL'}}}))
+            stack.enter_context(patch.object(lab_release,'verify_capsule',return_value={}))
+            stack.enter_context(patch.object(lab_runtime,'validate_config',return_value={}))
+            stack.enter_context(patch.object(lab_runtime,'verify_sources',return_value={}))
+            stack.enter_context(patch('subprocess.Popen',side_effect=AssertionError('NATIVE_FORBIDDEN')))
+            result=builder.build(args)
+            import json
+            config=json.loads((root/'runtime-config.json').read_bytes());manifest=json.loads((root/'lab-release.json').read_bytes())
+            self.assertEqual(set(manifest['sources']),{'unified_system','market_data','math','terminan'})
+            self.assertEqual(set(config['programs']),{'market_data','math','terminan'})
+            self.assertEqual(config['programs']['market_data']['argv'][-3:],['market_data.cli','--','serve'])
+            self.assertFalse(result['services_started']);self.assertFalse(result['database_provisioned'])
+            self.assertFalse(any('auth' in p.name.lower() for p in state.iterdir()))
+
+
+    def test_build_invalid_scalar_inputs_precede_socket_acl_or_process(self):
+        from types import SimpleNamespace
+        from unittest.mock import patch
+        from unified_system.lab_capsule_acl import FreshCodeRoot
+        with tempfile.TemporaryDirectory() as temporary:
+            parent=Path(temporary).resolve()
+            base=dict(output=parent/'capsule',state_root=parent/'state',node='LS5',release_id='fixture',sequence=1,postgres_port=55459)
+            for field,value,reason in [('sequence',True,'SEQUENCE_INVALID'),('sequence',0,'SEQUENCE_INVALID'),('postgres_port',55459.0,'POSTGRES_PORT_INVALID'),('postgres_port',True,'POSTGRES_PORT_INVALID'),('release_id',True,'RELEASE_ID_INVALID')]:
+                with self.subTest(field=field,value=value),patch.object(builder.socket,'gethostname',return_value='LS5'),patch.object(builder.socket,'socket',side_effect=AssertionError('NO SOCKET')),patch.object(FreshCodeRoot,'create',side_effect=AssertionError('NO ACL')),patch('subprocess.Popen',side_effect=AssertionError('NO PROCESS')):
+                    with self.assertRaisesRegex(ValueError,reason):builder.build(SimpleNamespace(**{**base,field:value}))
+                self.assertEqual(list(parent.iterdir()),[])
 
 if __name__=='__main__':unittest.main()

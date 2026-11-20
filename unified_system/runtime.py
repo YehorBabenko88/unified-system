@@ -30,7 +30,8 @@ class ModuleSpec:
 
 def _valid(spec):
     if (not isinstance(spec,ModuleSpec) or type(spec.module_id) is not str
-            or not re.fullmatch(r'[a-z][a-z0-9_-]{0,63}',spec.module_id)
+            or not re.fullmatch(r'[a-z][a-z0-9_]{0,63}',spec.module_id)
+            or spec.module_id in ('grid', 'strattester', 'meta_analyse')
             or type(spec.version) is not str
             or not re.fullmatch(r'\d+\.\d+\.\d+(?:[-+][A-Za-z0-9.-]{1,40})?',spec.version)
             or type(spec.api_major) is not int or spec.api_major!=1
@@ -277,11 +278,11 @@ class RuntimeSupervisor:
             modules={n:dict(version=specs[n].version,api_major=specs[n].api_major,dependencies=list(specs[n].dependencies),
                             state=s['state'],ready=s['state']=='READY',attempt=s['attempt'],reason=s['reason'],
                             administrative_stop=s['admin_stop']) for n,s in sorted(states.items())}
-            return dict(schema='unified.runtime.v2',api_version={'major':2,'minor':0},producer='unified-system',
+            return dict(schema='unified.runtime.v2',api_version={'major':2,'minor':0},producer='unified_system',
                         node_id=self.node_id,release_id=self.release_id,release_sha256=self.release_sha256,
                         revision=db.execute('SELECT revision FROM identity WHERE id=1').fetchone()[0],
                         mode='LOCAL_RUNTIME_PREDEPLOYMENT',modules=modules,
-                        ready=all(modules[n]['ready'] for n in MODULE_IDS),fleet_authority='grid',
+                        ready=all(modules[n]['ready'] for n in MODULE_IDS),fleet_authority='unified_system',
                         trading_authorized=False,physical='NOT_RUN',physical_deployment_allowed=False)
     def health_release(self,release_id):
         view=self.snapshot()

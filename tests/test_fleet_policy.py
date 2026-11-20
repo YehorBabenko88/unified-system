@@ -5,7 +5,7 @@ NOW=1800000000000
 
 def node(i,**kw):
     out=dict(id=f"PC{i}",state="ACTIVE",cpu=.2,memory=.25,disk=.4,
-             modules=["grid","strattester","math","terminan","unified-system"],
+             modules=["market_data","math","terminan","unified_system"],
              zone=f"room{i%2}",last_heartbeat_ms=NOW-500,epoch=1)
     out.update(kw)
     return out
@@ -36,7 +36,7 @@ class FleetPolicyTests(unittest.TestCase):
         p=plan_placement([node(1,cpu=.9)],[job(1)],NOW,quorum=True)
         self.assertEqual(p["proposed"][0]["state"],"NO_CAPACITY")
     def test_missing_module(self):
-        p=plan_placement([node(1,modules=["grid"])],[job(1)],NOW,quorum=True)
+        p=plan_placement([node(1,modules=["market_data"])],[job(1)],NOW,quorum=True)
         self.assertIsNone(p["proposed"][0]["candidate"])
     def test_invalid_utilization(self):
         with self.assertRaises(FleetPolicyError):
@@ -47,6 +47,13 @@ class FleetPolicyTests(unittest.TestCase):
     def test_drain(self):
         p=plan_placement([node(1,state="DRAINING"),node(2)],[job(1)],NOW,quorum=True)
         self.assertEqual(p["proposed"][0]["candidate"],"PC2")
+    def test_allows_market_data_and_refuses_retired_owner(self):
+        p=plan_placement([node(1,modules=["market_data"])],[job(1,module="market_data")],NOW,quorum=True)
+        self.assertEqual(p["proposed"][0]["candidate"],"PC1")
+        for retired in ("grid","strattester","meta_analyse","unified-system"):
+            with self.subTest(retired=retired), self.assertRaises(FleetPolicyError):
+                topology([node(1,modules=[retired])],NOW)
+
     def test_allows_math_only(self):
         p=plan_placement([node(1,modules=["math"])],[job(1)],NOW,quorum=True)
         self.assertEqual(p["proposed"][0]["candidate"],"PC1")

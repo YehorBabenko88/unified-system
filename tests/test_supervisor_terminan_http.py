@@ -23,7 +23,7 @@ class SupervisorConsumerHTTP(unittest.TestCase):
             self.assertEqual(response.status,200)
             data=json.loads(response.read())
             connection.close()
-            result=validate_response("supervisor","health",200,data)
+            result=validate_response("unified_system","health",200,data)
             self.assertEqual(result["contract"],"V1_SHAPE_VALID")
             self.assertEqual(data["state"],"BLOCKED")
             self.assertFalse(data["trading_authorized"])

@@ -9,11 +9,15 @@ def fixture(root):
     code=root/'code';code.mkdir();(code/'worker.py').write_text('fixture')
     pin=hashlib.sha256(exe.read_bytes()).hexdigest()
     specs=[dict(module_id=n,version='1.0.0',api_major=1,dependencies=[],start_timeout=5) for n in sorted(MODULE_IDS)]
-    programs={n:dict(argv=[str(exe),str(code/'worker.py')],cwd=str(code),health_url='http://127.0.0.1:19000/ready',executable_sha256=pin,file_pins={'worker.py':'a'*64}) for n in MODULE_IDS}
-    return dict(schema='unified.runtime.config.v1',node_id='lab-node',release_id='r1',release_sha256='b'*64,state_root=str(root/'state'),snapshot_path=str(root/'public/runtime.json'),http_port=0,tick_seconds=.1,specs=specs,programs=programs)
+    programs={n:dict(argv=[str(exe),str(code/'worker.py')],cwd=str(code),health_url='http://127.0.0.1:19000/ready',executable_sha256=pin,file_pins={'worker.py':'a'*64}) for n in MODULE_IDS-{'unified_system'}}
+    return dict(schema='unified.runtime.config.v2',node_id='lab-node',release_id='r1',release_sha256='b'*64,state_root=str(root/'state'),snapshot_path=str(root/'public/runtime.json'),http_port=19003,tick_seconds=.1,specs=specs,programs=programs)
 
 
 class CliTests(unittest.TestCase):
+    def test_retired_external_controller_config_is_refused(self):
+        c=copy.deepcopy(self.config);c["schema"]="unified.runtime.config.v1"
+        with self.assertRaises(ValueError):cli.validate_config(c)
+
     def setUp(self):
         self.temp=tempfile.TemporaryDirectory(prefix='mission3-cli-');self.addCleanup(self.temp.cleanup)
         self.root=pathlib.Path(self.temp.name);self.config=fixture(self.root)
@@ -23,12 +27,12 @@ class CliTests(unittest.TestCase):
             self.assertEqual(cli.main(['--config',str(self.path)]),0)
         self.assertFalse((self.root/'state').exists());self.assertFalse((self.root/'public').exists())
     def test_explicit_health_budget_is_bounded_before_prepare(self):
-        c=copy.deepcopy(self.config);c['programs']['meta_analyse']['health_timeout_seconds']=1.
+        c=copy.deepcopy(self.config);c['programs']['terminan']['health_timeout_seconds']=1.
         self.assertEqual(cli.validate_config(c),c)
         c['programs']['math']['health_timeout_seconds']=1.
         with self.assertRaises(ValueError):cli.validate_config(c)
         for value in (True,0,1.01,float('nan'),float('inf'),'1'):
-            c=copy.deepcopy(self.config);c['programs']['meta_analyse']['health_timeout_seconds']=value
+            c=copy.deepcopy(self.config);c['programs']['terminan']['health_timeout_seconds']=value
             with self.subTest(value=value),self.assertRaises(ValueError):cli.validate_config(c)
     def test_execute_without_actual_hosted_scope_and_external_pin_is_denied(self):
         for args in (['--execute'],['--scope','ephemeral-ci','--execute'],['--scope','prepare','--execute']):
@@ -63,7 +67,6 @@ class CliTests(unittest.TestCase):
 
     def builtin_config(self):
         c=copy.deepcopy(self.config);c['schema']='unified.runtime.config.v2'
-        c['programs'].pop('unified-system')
         with socket.socket() as listener:
             listener.bind(('127.0.0.1',0));c['http_port']=listener.getsockname()[1]
         return c
@@ -71,16 +74,16 @@ class CliTests(unittest.TestCase):
         c=self.builtin_config();cli.validate_config(c)
         for fault in ('self_process','slow','unbound_port'):
             invalid=copy.deepcopy(c)
-            if fault=='self_process':invalid['programs']['unified-system']=invalid['programs']['math']
+            if fault=='self_process':invalid['programs']['unified_system']=invalid['programs']['math']
             if fault=='slow':invalid['tick_seconds']=1
             if fault=='unbound_port':invalid['http_port']=0
             with self.assertRaises(ValueError):cli.validate_config(invalid)
     def test_actual_cli_builtin_uses_live_journal_snapshot_api_without_child_controller(self):
         import time
         c=self.builtin_config();cli.validate_config(c)
-        runtime=cli.make_runtime(c,lambda action,module:module=='unified-system')
-        # Component-only proof: keep the five unqualified processes STOPPED.
-        runtime.start=lambda:runtime.start_module('unified-system')
+        runtime=cli.make_runtime(c,lambda action,module:module=='unified_system')
+        # Component-only proof: keep the three unqualified processes STOPPED.
+        runtime.start=lambda:runtime.start_module('unified_system')
         stop=threading.Event();errors=[]
         def run():
             try:cli.run_runtime(c,runtime,stop_event=stop)
@@ -89,10 +92,10 @@ class CliTests(unittest.TestCase):
         try:
             deadline=time.monotonic()+4
             while time.monotonic()<deadline:
-                if runtime.snapshot()['modules']['unified-system']['ready']:break
+                if runtime.snapshot()['modules']['unified_system']['ready']:break
                 time.sleep(.025)
             snapshot=runtime.snapshot()
-            self.assertTrue(snapshot['modules']['unified-system']['ready'])
+            self.assertTrue(snapshot['modules']['unified_system']['ready'])
             self.assertFalse(snapshot['ready'])
             self.assertFalse(runtime.driver.delegate.children,'no second controller or unauthorized child')
         finally:stop.set();worker.join(4)

@@ -4,26 +4,26 @@ import asyncio
 import json
 from datetime import datetime,timedelta,timezone
 import unittest
-import test_native_profile_v2 as fixture
-from grid.authority_assignment_v1 import ResearchAdmissionResult
+import test_canonical_native_profile as fixture
+from unified_system.research_authority import ResearchAdmissionResult
 from unified_system.gateway_research_identity import ResearchIdentityBroker, ResearchIdentityDenied
 
 class GatewayNegativeTests(unittest.IsolatedAsyncioTestCase):
     @classmethod
-    def setUpClass(cls):fixture.NativeProfileV2Tests.setUpClass.__func__(cls)
+    def setUpClass(cls):fixture.CanonicalNativeProfileTests.setUpClass.__func__(cls)
     @classmethod
-    def tearDownClass(cls):fixture.NativeProfileV2Tests.tearDownClass.__func__(cls)
-    put=fixture.NativeProfileV2Tests.put
-    commission=fixture.NativeProfileV2Tests.commission
-    rebind_target=fixture.NativeProfileV2Tests.rebind_target
-    submit=fixture.NativeProfileV2Tests.submit
+    def tearDownClass(cls):fixture.CanonicalNativeProfileTests.tearDownClass.__func__(cls)
+    put=fixture.CanonicalNativeProfileTests.put
+    commission=fixture.CanonicalNativeProfileTests.commission
+    rebind_target=fixture.CanonicalNativeProfileTests.rebind_target
+    submit=fixture.CanonicalNativeProfileTests.submit
     async def asyncSetUp(self):
-        await fixture.NativeProfileV2Tests.asyncSetUp(self)
+        await fixture.CanonicalNativeProfileTests.asyncSetUp(self)
         self.original_bytes=fixture.canonical(self.submit())
 
     async def test_closed_owned_client_rejected_before_constructor_auth(self):
         from unified_system.gateway_native_negative import DisposableNativeNegativeGateway,NativeNegativeDenied
-        from grid.coordination import ConsulSessionAuthority
+        from unified_system.consul_authority import ConsulSessionAuthority
         extra=ConsulSessionAuthority(self.authority.config)
         broker=ResearchIdentityBroker(authority=extra,generation=self.generation,realm_id=self.realm,
             profile_sha256=self.profile_sha,server_ssl_context=self.tls.server_context,
@@ -61,7 +61,7 @@ class GatewayNegativeTests(unittest.IsolatedAsyncioTestCase):
     async def test_actual_lost_client_custody_preserves_error_without_proxy_cleanup(self):
         import httpx,threading
         from http.server import HTTPServer,BaseHTTPRequestHandler
-        from grid.coordination import ConsulSessionAuthority
+        from unified_system.consul_authority import ConsulSessionAuthority
         from unified_system.gateway_native_negative import DisposableNativeNegativeGateway
         gateway=DisposableNativeNegativeGateway(self.authority,self.generation,broker=self.broker)
         counts={'requests':0};ready=threading.Event()

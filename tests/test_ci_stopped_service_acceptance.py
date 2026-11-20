@@ -37,7 +37,7 @@ class HostedStoppedServiceTests(unittest.TestCase):
 
     def reviewed_entry(self):
         # Fixture snapshot only; production reads exact clean-HEAD Git blobs.
-        raw=(ROOT/'unified_system/service_entry.py').read_bytes().replace(b'\r\n',b'\n')
+        raw=(ROOT/'unified_system/service_entry.py').read_bytes()
         self.assertEqual(len(raw),lane.ENTRY_BYTES)
         self.assertEqual(hashlib.sha256(raw).hexdigest(),lane.service.SERVICE_ENTRY_SHA256)
         return raw
@@ -180,7 +180,7 @@ class HostedStoppedServiceTests(unittest.TestCase):
             with patch.object(lane.service,'current_computer_name',return_value='TEST-PC'),patch.object(lane,'source_identity',return_value=identity):
                 with patch.object(lane.FreshCodeRoot,'create',side_effect=PrivateRoot),patch.object(lane,'download_archive',side_effect=download):
                     with patch.object(lane.builder,'nssm_payload',return_value=(payload,{'scope':'INERT_UNIT_FIXTURE'})),patch.object(lane.builder,'NSSM_MEMBER_SHA256',pin),patch.object(lane.service,'NSSM_PIN',pin):
-                        with patch.object(lane.service,'WindowsServiceBoundary',return_value=backend),patch.object(lane,'WindowsRemovalBoundary',return_value=FakeRemoval(backend)),patch.object(lane,'read_tool_versions',return_value={'scope':'INERT_UNIT_FIXTURE'}),patch.object(lane,'entry_blob',return_value=(entry,{'origin':'INERT_UNIT_FIXTURE'})),patch.object(lane,'bootstrap_blob',return_value=((ROOT/'unified_system/service_bootstrap.py').read_bytes().replace(b'\r\n',b'\n'),{'origin':'INERT_UNIT_FIXTURE'})),patch.object(lane,'publish_owned_reports'),redirect_stdout(captured):
+                        with patch.object(lane.service,'WindowsServiceBoundary',return_value=backend),patch.object(lane,'WindowsRemovalBoundary',return_value=FakeRemoval(backend)),patch.object(lane,'read_tool_versions',return_value={'scope':'INERT_UNIT_FIXTURE'}),patch.object(lane,'entry_blob',return_value=(entry,{'origin':'INERT_UNIT_FIXTURE'})),patch.object(lane,'bootstrap_blob',return_value=((ROOT/'unified_system/service_bootstrap.py').read_bytes(),{'origin':'INERT_UNIT_FIXTURE'})),patch.object(lane,'publish_owned_reports'),redirect_stdout(captured):
                             result=lane.main(['--root',str(self.target),'--expected-sha','a'*40])
         facts=None
         if result != 0:
@@ -211,17 +211,17 @@ class HostedStoppedServiceTests(unittest.TestCase):
         (source/'owned_python.py').write_bytes(b'INERT_BOOTSTRAP')
         payload=b'INERT_NSSM';pin=hashlib.sha256(payload).hexdigest()
         with patch.object(lane,'REPO',operator),patch.object(lane,'source_identity',return_value={'head':'a'*40}),patch.object(lane.shutil,'which',return_value='git'),patch.object(lane.sys,'executable',str(self.python)):
-            with patch.object(lane.subprocess,'check_output',side_effect=[str(lane.ENTRY_BYTES).encode()+b'\n',entry,str(lane.BOOTSTRAP_BYTES).encode()+b'\n',(ROOT/'unified_system/service_bootstrap.py').read_bytes().replace(b'\r\n',b'\n')]) as git:
+            with patch.object(lane.subprocess,'check_output',side_effect=[str(lane.ENTRY_BYTES).encode()+b'\n',entry,str(lane.BOOTSTRAP_BYTES).encode()+b'\n',(ROOT/'unified_system/service_bootstrap.py').read_bytes()]) as git:
                 with patch.object(lane.builder,'NSSM_MEMBER_SHA256',pin),patch.object(lane.service,'NSSM_PIN',pin):
                     manifest_pin,leaves,origin=lane.make_capsule(self.target,payload,'a'*40)
-        staged=self.target/'sources/unified-system/unified_system/service_entry.py'
+        staged=self.target/'sources/unified_system/unified_system/service_entry.py'
         self.assertEqual(staged.read_bytes(),entry)
         self.assertEqual((self.target/'runtime/python/python.exe').read_bytes(),self.python.read_bytes())
         self.assertEqual((source/'service_entry.py').read_bytes(),entry.replace(b'\n',b'\r\n'))
         self.assertEqual(origin['origin'],'EXACT_HEAD_GIT_BLOB')
         self.assertEqual(origin['sha256'],lane.service.SERVICE_ENTRY_SHA256)
         self.assertEqual(origin['bootstrap']['sha256'],lane.service.SERVICE_BOOTSTRAP_SHA256)
-        self.assertEqual((self.target/'sources/unified-system/unified_system/service_bootstrap.py').read_bytes(),(ROOT/'unified_system/service_bootstrap.py').read_bytes().replace(b'\r\n',b'\n'))
+        self.assertEqual((self.target/'sources/unified_system/unified_system/service_bootstrap.py').read_bytes(),(ROOT/'unified_system/service_bootstrap.py').read_bytes())
         self.assertEqual(git.call_args_list[-1].args[0],['git','-C',str(operator),'cat-file','blob','a'*40+':unified_system/service_bootstrap.py'])
         self.assertEqual(git.call_args_list[1].args[0],['git','-C',str(operator),'cat-file','blob','a'*40+':unified_system/service_entry.py'])
         manifest=lane.lab_release.verify_capsule(self.target,manifest_pin)['manifest']

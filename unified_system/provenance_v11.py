@@ -21,7 +21,7 @@ def qualify_historical(record, admitted=()):
         version=record["api_version"]
         if type(version.get("major")) is not int or type(version.get("minor")) is not int or version!={"major":1,"minor":1}:
             return dict(denied,reason="INCOMPATIBLE_RECORD_VERSION")
-        if record.get("producer")!="strattester" or record.get("mode")!="HISTORICAL" or record.get("execution_authority") is not False:
+        if record.get("producer")!="terminan" or record.get("mode")!="HISTORICAL" or record.get("execution_authority") is not False:
             return denied
         revision=record["source_revision"]; receipt=record["completion_receipt"]; dataset=record["dataset"]
         if type(revision) is not str or not HEX40.fullmatch(revision) or type(receipt) is not str or not HEX64.fullmatch(receipt):
@@ -43,9 +43,9 @@ def qualify_historical(record, admitted=()):
     except (KeyError,TypeError,ValueError,OverflowError,RecursionError,AttributeError):
         return denied
 
-def inspect_grid_snapshot(payload):
-    denied={"status":"UNAVAILABLE","reason":"GRID_PROVENANCE_UNQUALIFIED","trading_authorized":False}
-    if not isinstance(payload,dict) or payload.get("producer")!="bybit-cluster-grid":
+def inspect_market_data_snapshot(payload):
+    denied={"status":"UNAVAILABLE","reason":"MARKET_DATA_PROVENANCE_UNQUALIFIED","trading_authorized":False}
+    if not isinstance(payload,dict) or payload.get("producer")!="market_data":
         return denied
     version=payload.get("api_version")
     if not isinstance(version,dict) or type(version.get("major")) is not int or version.get("major")!=1:

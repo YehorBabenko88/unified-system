@@ -1,9 +1,10 @@
 """Pure fail-closed fleet topology/placement plan. No network/process/database I/O."""
 import math
 import re
+from .module_catalog import MODULE_IDS
 
 _ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9_.:-]{0,63}\Z")
-_MODULES = frozenset(("grid", "strattester", "math", "terminan", "unified-system"))
+_MODULES = MODULE_IDS
 _STATES = frozenset(("ACTIVE", "DRAINING", "SUSPECT", "OFFLINE", "RETIRED", "QUARANTINED"))
 
 class FleetPolicyError(ValueError):

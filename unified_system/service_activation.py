@@ -46,6 +46,7 @@ def _permission(owner,boundary,action,plan):
 def _profile(resource,profile,revision_id,qualification_refs):
  record=resource.recorded();service=copy.deepcopy(record['plan']);profile=copy.deepcopy(profile);refs=copy.deepcopy(qualification_refs);label(revision_id)
  root=local(service['root']);revision=root/'activation/revisions'/revision_id;config=profile['runtime_config'];context=profile['offline_context'];receipt=profile['derivation_receipt']
+ need(profile.get('schema')=='unified.runtime-profile.v2' and receipt.get('schema')=='unified.runtime-profile-derivation.v2')
  need(profile['status']=='DERIVED_PROFILE_ONLY' and profile['execution_authority'] is False and profile['activation']=='BLOCKED')
  need(config['node_id']==service['node_id'] and config['state_root']==service['state'] and config['release_sha256']==service['manifest_sha256'])
  need(context=={'scope':'OFFLINE_VALIDATION_ONLY','role':service['role'],'node_id':service['node_id'],'computer_name':service['computer_name'],'credential_root':str(revision/'credentials')})
@@ -54,13 +55,17 @@ def _profile(resource,profile,revision_id,qualification_refs):
   from .data_first_policy import validate_data_first_grant
   manifest=lab_release.verify_capsule(service['code'],service['manifest_sha256'])['manifest']
   validate_data_first_grant(profile['data_first'],manifest)
- need(config['programs']['grid']['env']['GRID_LAB_AUTH_PATH']==str(revision/'credentials/auth.json'))
- auth_hash=config['programs']['grid']['env']['GRID_LAB_AUTH_SHA256'];digest(auth_hash)
+ binding=profile.get('database_credential_binding')
+ if service['role']=='WORKER':
+  need(binding is None,'ACTIVATION_AUTH_REJECTED');auth_hash=None
+ else:
+  need(type(binding) is dict and set(binding)=={'path','sha256'} and binding['path']==str(revision/'credentials/postgres.json'),'ACTIVATION_AUTH_REJECTED')
+  auth_hash=binding['sha256'];digest(auth_hash)
  need(type(refs) is dict and set(refs)=={'phase_id','source_evidence_sha256','capacity_evidence_sha256','database_evidence_sha256'});label(refs['phase_id'])
  for field in ('source_evidence_sha256','capacity_evidence_sha256'):digest(refs[field])
  if service['role']=='WORKER':need(refs['database_evidence_sha256'] is None)
  else:digest(refs['database_evidence_sha256'])
- body={'schema':DESCRIPTOR_SCHEMA,'revision_id':revision_id,'service_plan':service,'resource_receipt_sha256':record['receipt_sha256'],'profile_sha256':_hash(canonical(profile)),'auth_sha256':auth_hash,'qualification_refs':refs,'previous_pointer_sha256':_pointer_hash(root)}
+ body={'schema':DESCRIPTOR_SCHEMA,'revision_id':revision_id,'service_plan':service,'resource_receipt_sha256':record['receipt_sha256'],'profile_sha256':_hash(canonical(profile)),'database_credential_sha256':auth_hash,'qualification_refs':refs,'previous_pointer_sha256':_pointer_hash(root)}
  return {**body,'activation_plan_sha256':_hash(canonical(body))},profile
 
 @contextmanager
@@ -122,7 +127,7 @@ class WindowsRevisionBoundary:
   with temporary.open('xb') as stream:stream.write(pointer);stream.flush();os.fsync(stream.fileno())
   self._acl(plan,files=[temporary]);_check_directories(pins);local(temporary);local(root/'current.json');os.replace(temporary,root/'current.json')
 
-def publish_activation(resource,profile,auth_source,*,revision_id,qualification_refs,owner_phase=None,qualify=None,boundary=None):
+def publish_activation(resource,profile,*,database_credential_source=None,revision_id,qualification_refs,owner_phase=None,qualify=None,boundary=None):
  try:
   plan,profile=_profile(resource,profile,revision_id,qualification_refs);root=Path(plan['service_plan']['root']);initial={root:_directory_identity(root)};boundary=WindowsRevisionBoundary() if boundary is None else boundary
   need(callable(qualify),'ACTIVATION_QUALIFICATION_REQUIRED')
@@ -130,16 +135,24 @@ def publish_activation(resource,profile,auth_source,*,revision_id,qualification_
   except Exception:raise ActivationBlocked('ACTIVATION_QUALIFICATION_REJECTED') from None
   need(qualified is True,'ACTIVATION_QUALIFICATION_REJECTED');_permission(owner_phase,boundary,'PUBLISH_SERVICE_ACTIVATION',plan)
   resource.inspect(lambda action,pin:(_permission(owner_phase,boundary,'VERIFY_SERVICE_RESOURCE',plan) or True))
-  auth=_file(auth_source);need(_hash(auth)==plan['auth_sha256'],'ACTIVATION_AUTH_REJECTED')
-  service=plan['service_plan'];grid=profile['derivation_receipt']['sources']['grid']
-  context=copy.deepcopy(profile['offline_context']);context['credential_root']=str(local(auth_source).parent)
-  lab_runtime.read_grid_auth(auth_source,plan['auth_sha256'],node_id=service['node_id'],release_id=profile['runtime_config']['release_id'],source_commit=grid['commit'],role_context=context)
+  service=plan['service_plan'];auth=None
+  if service['role']=='WORKER':need(database_credential_source is None,'ACTIVATION_AUTH_REJECTED')
+  else:
+   auth=_file(database_credential_source);need(_hash(auth)==plan['database_credential_sha256'],'ACTIVATION_AUTH_REJECTED')
+   from .service_postgres import _postgres_password
+   from urllib.parse import urlsplit
+   dsn=urlsplit(profile['runtime_config']['programs']['market_data']['env']['MARKET_DATA_DSN'])
+   dbplan={'service_plan':service,'database':dsn.path[1:],'user':dsn.username}
+   try:_postgres_password(auth,dbplan,release_id=profile['runtime_config']['release_id'],source_commit=profile['derivation_receipt']['sources']['market_data']['commit'])
+   except Exception:raise ActivationBlocked('ACTIVATION_AUTH_REJECTED') from None
   descriptor={key:value for key,value in plan.items() if key!='previous_pointer_sha256'}
   _check_directories(initial)
   _permission(owner_phase,boundary,'CREATE_ACTIVATION_REVISION',plan);_check_directories(initial);boundary.prepare(copy.deepcopy(plan))
   _check_directories(initial);pins=_pin_directories(root,revision_id)
   revision=Path(service['root'])/'activation/revisions'/revision_id
-  for name,raw in [('profile.json',canonical(profile)),('credentials/auth.json',auth),('descriptor.json',canonical(descriptor))]:
+  artifacts=[('profile.json',canonical(profile)),('descriptor.json',canonical(descriptor))]
+  if auth is not None:artifacts.append(('credentials/postgres.json',auth))
+  for name,raw in artifacts:
    _permission(owner_phase,boundary,'WRITE_ACTIVATION_ARTIFACT',plan);_check_directories(pins);local(revision/name)
    with (revision/name).open('xb') as stream:stream.write(raw);stream.flush();os.fsync(stream.fileno())
   _permission(owner_phase,boundary,'SEAL_ACTIVATION_REVISION',plan);_check_directories(pins);boundary.seal(copy.deepcopy(plan))

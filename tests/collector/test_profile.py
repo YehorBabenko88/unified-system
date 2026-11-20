@@ -3,7 +3,7 @@ import copy,hashlib,json,unittest
 from unified_system import collector_profile as cp
 
 def fixture():
- return {'schema':'unified.data-only-collector.profile.v1','mode':'SYNTHETIC_OFFLINE','grid_launch_profile':'grid.data-only-collector.v1','context_id':'1'*32,'store_id':'96dce424-a40b-4f25-8500-26738dd278e5','source_manifest_sha256':'a'*64,'instrument_identity':'synthetic-btcusdt-v1','limits':{'frames':4,'frame_bytes':1048576,'raw_bytes':4194304,'duration_seconds':30},'network':{'rest':False,'websocket':False},'features':{'trading':False,'training':False,'math':False,'public_submit':False,'authority_mutation':False},'logging':{'schema':'unified.collector.logging.v1','max_file_bytes':65536,'file_count':3}}
+ return {'schema':'unified.synthetic-collector.profile.v2','mode':'SYNTHETIC_OFFLINE','collector_profile':'market_data.synthetic-collector.v1','context_id':'1'*32,'store_id':'96dce424-a40b-4f25-8500-26738dd278e5','source_manifest_sha256':'a'*64,'instrument_identity':'synthetic-btcusdt-v1','limits':{'frames':4,'frame_bytes':1048576,'raw_bytes':4194304,'duration_seconds':30},'network':{'rest':False,'websocket':False},'features':{'trading':False,'training':False,'math':False,'public_submit':False,'authority_mutation':False},'logging':{'schema':'unified.collector.logging.v1','max_file_bytes':65536,'file_count':3}}
 
 class ProfileTests(unittest.TestCase):
  def parse(self,value):return cp.validate_collector_profile(value,manifest_sha256='a'*64)
@@ -16,7 +16,7 @@ class ProfileTests(unittest.TestCase):
   calls=[]
   class Trap(str):
    def __eq__(self,other):calls.append('eq');return True
-  for field in ('schema','mode','grid_launch_profile','instrument_identity','source_manifest_sha256'):
+  for field in ('schema','mode','collector_profile','instrument_identity','source_manifest_sha256'):
    value=fixture();value[field]=Trap('wrong');calls.clear()
    with self.subTest(field=field),self.assertRaises(cp.CollectorProfileRejected):self.parse(value)
    self.assertEqual(calls,[])
@@ -55,7 +55,7 @@ class ProfileTests(unittest.TestCase):
   value=fixture();value['source_manifest_sha256']='b'*64
   with self.assertRaises(cp.CollectorProfileRejected):self.parse(value)
  def test_unknown_fields_versions_and_live_mode_fail_closed(self):
-  for patch in ({'schema':'v2'},{'mode':'LIVE'},{'grid_launch_profile':None},{'instrument_identity':'BTCUSDT'},{'authority':'approved'}):
+  for patch in ({'schema':'v2'},{'mode':'LIVE'},{'collector_profile':None},{'instrument_identity':'BTCUSDT'},{'authority':'approved'}):
    value=fixture();value.update(patch)
    with self.subTest(patch=patch),self.assertRaises(cp.CollectorProfileRejected):self.parse(value)
  def test_limits_reject_bool_negative_oversize_and_inconsistent_budget(self):
@@ -77,6 +77,10 @@ class ProfileTests(unittest.TestCase):
   self.assertEqual(decoded.encoded,profile.encoded)
   plan=cp.collector_plan(profile)
   self.assertEqual(plan['status'],'PLAN_ONLY_NOT_EXECUTION_AUTHORITY');self.assertFalse(plan['provider_sends']);self.assertFalse(plan['installed'])
+ def test_retired_grid_profile_has_no_compatibility_alias(self):
+  value=fixture();value['schema']='unified.data-only-collector.profile.v1'
+  value['grid_launch_profile']=value.pop('collector_profile')
+  with self.assertRaises(cp.CollectorProfileRejected):self.parse(value)
  def test_direct_dataclass_construction_cannot_skip_plan_validation(self):
   for raw in (b'[]',b'not-json',b'{"source_manifest_sha256":null}'):
    with self.subTest(raw=raw),self.assertRaises(cp.CollectorProfileRejected):cp.collector_plan(cp.CollectorProfile(raw))

@@ -47,7 +47,7 @@ try {
  try {$prepared=& $Python -I -S -B $preparer --source-root $SourceRoot --source-pins $SourcePinsPath --source-pins-sha256 $SourcePinsSha256 --template $Template --artifact-root $ArtifactRoot --output $stage.FullName --publisher $ExpectedPublisherSha256; $result=$LASTEXITCODE} finally {Pop-Location}
  if ($result -ne 0) { throw 'RELEASE_PREPARATION_REJECTED' }
  $proof=$prepared|ConvertFrom-Json
- if($proof.schema -cne 'unified.release.preparation.v1' -or $proof.signed -ne $false -or $proof.modules -ne 6 -or $proof.release_sha256 -cnotmatch '^[0-9a-f]{64}$'){throw 'RELEASE_PREPARATION_REJECTED'}
+ if($proof.schema -cne 'unified.release.preparation.v1' -or $proof.signed -ne $false -or $proof.modules -ne 4 -or $proof.release_sha256 -cnotmatch '^[0-9a-f]{64}$'){throw 'RELEASE_PREPARATION_REJECTED'}
  $manifestStream=[IO.File]::Open((Join-Path $stage.FullName 'release.json'),[IO.FileMode]::Open,[IO.FileAccess]::Read,[IO.FileShare]::Read);$locks.Add($manifestStream)
  if($manifestStream.Length -lt 1 -or $manifestStream.Length -gt 1048576){throw 'RELEASE_PREPARATION_REJECTED'}
  $bytes=New-Object byte[] ([int]$manifestStream.Length);$offset=0

@@ -31,13 +31,13 @@ print(json.dumps(dict(before=before,after=current_privilege_state(),first=first,
 
 
 class LabPrivilegeEntrypointTests(unittest.TestCase):
-    def test_failure_blocks_before_capsule_preparation(self):
+    def test_unadmitted_execute_blocks_before_privilege_change_or_capsule_preparation(self):
         from unittest.mock import patch
         from unified_system import lab_runtime
-        with (patch('unified_system.lab_privileges.remove_lab_write_bypass_privileges',side_effect=ValueError('LAB_PRIVILEGE_REMOVAL_FAILED')),
+        with (patch('unified_system.lab_privileges.remove_lab_write_bypass_privileges',side_effect=AssertionError('must not touch privileges')) as reduce,
               patch.object(lab_runtime,'prepare') as prepare):
             self.assertEqual(lab_runtime.main(['--mode','LAB_SIMULATION','--root',str(Path.cwd()),'--manifest-sha256','a'*64,'--execute']),1)
-            prepare.assert_not_called()
+            prepare.assert_not_called();reduce.assert_not_called()
 
     def test_unsupported_platform_fails_closed(self):
         from unittest.mock import patch
@@ -75,7 +75,7 @@ class LabPrivilegeEntrypointTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,'LAB_PRIVILEGE_QUERY_BOUNDS'):
                 lab_privileges._snapshot(c,w,fake,None,ENTRY)
 
-    def test_execute_reduces_before_prepare_but_verification_and_trusted_do_not(self):
+    def test_execute_requires_admission_before_privileges_but_verification_only_prepares(self):
         from unittest.mock import patch
         from unified_system import lab_runtime
         events=[]
@@ -83,7 +83,7 @@ class LabPrivilegeEntrypointTests(unittest.TestCase):
         with (patch('unified_system.lab_privileges.remove_lab_write_bypass_privileges',side_effect=lambda:events.append('reduce')),
               patch.object(lab_runtime,'prepare',side_effect=reject_prepare)):
             lab_runtime.main(['--mode','LAB_SIMULATION','--root',str(Path.cwd()),'--manifest-sha256','a'*64,'--execute'])
-            self.assertEqual(events,['reduce','prepare']);events.clear()
+            self.assertEqual(events,[]);events.clear()
             lab_runtime.main(['--mode','LAB_SIMULATION','--root',str(Path.cwd()),'--manifest-sha256','a'*64])
             self.assertEqual(events,['prepare']);events.clear()
             lab_runtime.main(['--mode','TRUSTED_RELEASE','--root',str(Path.cwd()),'--manifest-sha256','a'*64,'--execute'])

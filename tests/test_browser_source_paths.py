@@ -1,25 +1,16 @@
-"""CLI-relative source paths must reach the same strict source fence on Windows."""
-import json
+"""Relative canonical proof paths cannot turn an unqualified source into a grant."""
+import contextlib,importlib.util,io,json,os
 from pathlib import Path
-import subprocess
-import sys
-import tempfile
-import unittest
-
-
+import tempfile,unittest
+from unittest.mock import patch
 class BrowserSourcePathTests(unittest.TestCase):
-    def test_relative_source_arguments_do_not_bypass_or_break_qualification(self):
-        script=Path(__file__).resolve().parents[1]/'integration/verify_chromium.py'
-        with tempfile.TemporaryDirectory() as temporary:
-            root=Path(temporary);(root/'source').mkdir();(root/'evidence').mkdir()
-            evidence=root/'evidence/evidence.json'
-            evidence.write_text(json.dumps({'qualification':'NOT_RUN'}))
-            command=[sys.executable,'-B',str(script),'--output','evidence']
-            for name in ('terminan','math','grid','strattester'):command+=['--'+name,'source']
-            result=subprocess.run(command,cwd=root,capture_output=True,text=True,timeout=15)
-            self.assertNotEqual(result.returncode,0)
-            self.assertIn('BROWSER_UNQUALIFIED:SOURCE_RUN_UNQUALIFIED',result.stderr)
-            self.assertEqual(json.loads(evidence.read_text())['browser'],{'qualification':'UNQUALIFIED','reason':'SOURCE_RUN_UNQUALIFIED'})
-
-
+ def test_relative_source_arguments_do_not_bypass_or_break_qualification(self):
+  root=Path(__file__).resolve().parents[1];script=root/'integration/verify_chromium.py'
+  spec=importlib.util.spec_from_file_location('canonical_browser_gate',script);module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+  with tempfile.TemporaryDirectory() as temporary:
+   base=Path(temporary);(base/'evidence').mkdir();(base/'evidence/source.json').write_text(json.dumps({'qualification':'NOT_RUN'}))
+   error=io.StringIO()
+   with patch('os.getcwd',return_value=str(base)),contextlib.redirect_stderr(error):code=module.main(['--source-proof','evidence/source.json','--output','result'])
+   self.assertNotEqual(code,0);self.assertIn('BROWSER_UNQUALIFIED:SOURCE_RUN_UNQUALIFIED',error.getvalue())
+   report=json.loads((base/'result/evidence.json').read_bytes());self.assertEqual(report['status'],'BLOCKED');self.assertFalse(report['passed']);self.assertEqual(report['missing_proofs'][0],'SOURCE_RUN_UNQUALIFIED');self.assertEqual(report['release_status'],'NO_GO')
 if __name__=='__main__':unittest.main()

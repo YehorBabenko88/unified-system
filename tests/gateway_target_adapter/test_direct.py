@@ -18,8 +18,9 @@ from unified_system.gateway_target_adapter import (
 )
 
 FIXTURE=Path(__file__).parent/'fixtures'
-STRATT=os.environ['TARGET_STRATT_ROOT']
-META=os.environ['TARGET_META_ROOT']
+TERMINAN=os.environ['TARGET_TERMINAN_ROOT']
+MATH=os.environ['TARGET_MATH_ROOT']
+CUSTODY=dict(terminan_source_root=TERMINAN,math_source_root=MATH,git_executable=os.environ['TARGET_GIT'],git_sha256=os.environ['TARGET_GIT_SHA256'],runtime_sha256=os.environ['TARGET_RUNTIME_SHA256'])
 
 
 def encode(value):return json.dumps(value,sort_keys=True,separators=(',',':')).encode()
@@ -30,7 +31,7 @@ class DirectTests(unittest.TestCase):
         self.temp=tempfile.TemporaryDirectory(prefix='target-adapter-test-')
         self.addCleanup(self.temp.cleanup)
         self.root=Path(self.temp.name)/'stand';self.root.mkdir()
-        self.stand=DisposableTargetStand(self.root,stratt_source_root=STRATT,meta_source_root=META)
+        self.stand=DisposableTargetStand(self.root,**CUSTODY)
         self.addCleanup(self.stand.close)
         self.q=template_request()
         self.context=self.stand.local_test_context()
@@ -53,7 +54,7 @@ class DirectTests(unittest.TestCase):
         first=self.run_target();self.assertEqual(first,self.run_target())
         self.assertEqual(self.stand.invocations,1)
         self.stand.close()
-        other=DisposableTargetStand(self.root,stratt_source_root=STRATT,meta_source_root=META)
+        other=DisposableTargetStand(self.root,**CUSTODY)
         self.addCleanup(other.close)
         self.assertEqual(first,other.execute(prepare_target(encode(self.q)),context=other.local_test_context()))
         self.assertEqual(other.invocations,0)
@@ -108,21 +109,21 @@ class DirectTests(unittest.TestCase):
         self.assertEqual(self.stand.invocations,0)
 
     def test_source_mismatch_fails_without_claimed_result_and_never_retries(self):
-        self.stand.stratt_source_root=str(Path(self.temp.name)/'missing')
+        self.stand.terminan_source_root=str(Path(self.temp.name)/'missing')
         result=self.run_target();self.assertEqual(result['status'],'FAILED')
         self.assertIsNone(result['result']);self.assertEqual(result,self.run_target())
 
     def test_concurrent_local_writer_refused(self):
-        with self.assertRaises(TargetRejected):DisposableTargetStand(self.root,stratt_source_root=STRATT,meta_source_root=META)
+        with self.assertRaises(TargetRejected):DisposableTargetStand(self.root,**CUSTODY)
 
     def test_partial_journal_cannot_return_or_reexecute(self):
         self.run_target()
-        path=self.root/'direct-journal.db'
+        path=self.root/'canonical-target.v2.sqlite'
         self.stand.close();path.write_bytes(b'partial')
-        with self.assertRaises(TargetRejected):DisposableTargetStand(self.root,stratt_source_root=STRATT,meta_source_root=META)
+        with self.assertRaises(TargetRejected):DisposableTargetStand(self.root,**CUSTODY)
 
     def test_registry_reports_unavailable_targets_truthfully(self):
-        rows=capability_registry();self.assertEqual(len(rows),5)
+        rows=capability_registry();self.assertEqual(len(rows),4)
         self.assertEqual(sum(x['availability']=='DIRECT_DISPOSABLE_ONLY' for x in rows),1)
         self.assertTrue(all(x['scheduler_admission']=='BLOCKED' for x in rows))
 
@@ -147,7 +148,7 @@ class DirectTests(unittest.TestCase):
         # not necessarily the raw spelling passed by SQLite callers.
         # Do not deduplicate WindowsPath objects before extracting raw strings:
         # WindowsPath equality deliberately collapses different drive casing.
-        paths=(self.root/'direct-journal.db',self.stand._journal.path,intended)
+        paths=(self.root/'canonical-target.v2.sqlite',self.stand._journal.path,intended)
         self.assertTrue(all(path.resolve()==intended for path in paths))
         ordinary={str(path) for path in paths}
         readonly={path.as_uri()+'?mode=ro' for path in paths}
@@ -165,8 +166,8 @@ class DirectTests(unittest.TestCase):
                              (str(self.root/'..'/'stand-sibling'/'dotdot.sqlite'),False),
                              ((sibling/'uri.sqlite').as_uri()+'?mode=rwc',True)]:
                 with self.assertRaises(RuntimeError):sqlite3.connect(path,uri=uri)
-            for path,uri in [(str(self.root/'direct-journal.db'),False),
-                             ((self.root/'direct-journal.db').as_uri()+'?mode=ro',True)]:
+            for path,uri in [(str(self.root/'canonical-target.v2.sqlite'),False),
+                             ((self.root/'canonical-target.v2.sqlite').as_uri()+'?mode=ro',True)]:
                 positive=sqlite3.connect(path,uri=uri)
                 try:self.assertEqual(positive.execute('SELECT 1').fetchone(),(1,))
                 finally:positive.close()
@@ -215,7 +216,7 @@ class DirectTests(unittest.TestCase):
     def test_fixed_profile_output_tampering_after_actual_target_refused(self):
         for mutation in ('row','clock','finance','byte_count'):
             with tempfile.TemporaryDirectory(prefix='fixed-target-negative-') as root:
-                stand=DisposableTargetStand(root,stratt_source_root=STRATT,meta_source_root=META)
+                stand=DisposableTargetStand(root,**CUSTODY)
                 original=stand._invoke
                 def tamper(check):
                     value=original(check);artifact=json.loads(value['artifact_bytes'])
@@ -244,11 +245,11 @@ class DirectTests(unittest.TestCase):
         self.stand.close()
         for phase in ('BEFORE','AFTER'):
             with tempfile.TemporaryDirectory(prefix='target-own-crash-') as root:
-                command=[sys.executable,'-I','-B',str(Path(__file__).with_name('crash_child.py')),
-                         str(Path(__file__).resolve().parents[2]),root,STRATT,META,phase]
+                command=[sys.executable,'-I','-S','-B','-X','pycache_prefix='+sys.pycache_prefix,str(Path(__file__).with_name('crash_child.py')),
+                         str(Path(__file__).resolve().parents[2]),root,TERMINAN,MATH,phase]
                 run=subprocess.run(command,timeout=20,capture_output=True)
                 self.assertEqual(run.returncode,73,run.stderr.decode(errors='replace'))
-                stand=DisposableTargetStand(root,stratt_source_root=STRATT,meta_source_root=META)
+                stand=DisposableTargetStand(root,**CUSTODY)
                 try:
                     value=stand.execute(prepare_target(encode(self.q)),context=stand.local_test_context())
                     self.assertEqual(value['status'],'UNKNOWN');self.assertEqual(stand.invocations,0)

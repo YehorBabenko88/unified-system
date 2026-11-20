@@ -1,4 +1,4 @@
-"""Immutable six-owner release contract; external CMS pin is the trust anchor.
+"""Immutable four-owner release contract; external CMS pin is the trust anchor.
 
 Validation proves schema/version closure and integrity only. A GitHub workflow
 success, content hash or manifest publisher field cannot authorize deployment.
@@ -30,7 +30,7 @@ def label(value):
 def validate_manifest(m,*,expected_publisher):
     hexdigest(expected_publisher,64)
     fields(m,('schema','release_id','sequence','publisher_sha256','modules','execution_authority','trading_authorized'))
-    need(m['schema']=='unified.release.v3' and m['publisher_sha256']==expected_publisher)
+    need(m['schema']=='unified.release.v4' and m['publisher_sha256']==expected_publisher)
     label(m['release_id']);need(type(m['sequence']) is int and 1<=m['sequence']<=2**53-1)
     need(m['execution_authority'] is False and m['trading_authorized'] is False)
     need(type(m['modules']) is dict and set(m['modules'])==MODULE_IDS)

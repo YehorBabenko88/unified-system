@@ -1,0 +1,76 @@
+{
+  "schema": "unified.four-owner.source-cohort.v1",
+  "release_status": "NO_GO",
+  "execution_authority": false,
+  "trading_authorized": false,
+  "sources": {
+    "unified_system": {
+      "commit": "ENCLOSING_HEAD",
+      "base": "07400889f5400a847493380ae5230387c104196a",
+      "repository": "YehorBabenko88/unified-system"
+    },
+    "market_data": {
+      "commit": "a44ce268c39170dfd377b25c75aa3648fcf3476e",
+      "repository": "YehorBabenko88/strattester",
+      "distribution": "market-data",
+      "package": "market_data",
+      "metadata_version": "0.1.0",
+      "build_members": [
+        "pyproject.toml",
+        "README.md",
+        "market_data/"
+      ]
+    },
+    "math": {
+      "commit": "a5868944bf1bae813403a32b22d329c1da6f8238",
+      "repository": "YehorBabenko88/math",
+      "distribution": "unified-math-kernels",
+      "package": "market_math",
+      "metadata_version": "0.1.0",
+      "build_members": [
+        "pyproject.toml",
+        "python/market_math.py",
+        "python/market_compute_api.py",
+        "python/history_statistics.py"
+      ]
+    },
+    "terminan": {
+      "commit": "75a906d36574bfdc19acd966e79a6c168dc71ad4",
+      "repository": "YehorBabenko88/Terminan",
+      "distribution": "unified-terminan",
+      "package": "terminan",
+      "metadata_version": "0.1.0",
+      "build_members": [
+        "pyproject.toml",
+        "README.md",
+        "terminan/"
+      ]
+    }
+  },
+  "builders": {
+    "setuptools": "80.9.0",
+    "wheel": "0.45.1"
+  },
+  "scope": "SYNTHETIC_INSTALLED_SDK_AND_ROOT_SOURCE_ONLY",
+  "unqualified": {
+    "source_authenticity": "NOT_EVALUATED",
+    "point_in_time_availability": "UNKNOWN",
+    "native_installation": "NOT_RUN",
+    "physical": "NOT_RUN",
+    "production": "NO_GO"
+  },
+  "scientific_runtime": {
+    "source": "math",
+    "test": "tests/bounded-experiment.test.mjs",
+    "tests": 6,
+    "case_ids": [
+      "bounded worker delegates to existing numerical engine",
+      "cancel before and during work terminates isolated worker",
+      "deadline and invalid input fail closed",
+      "admission limits simultaneous workers",
+      "loopback HTTP bounded API executes and rejects authority",
+      "slow experiment body has absolute deadline"
+    ],
+    "scope": "HOSTED_BOUNDED_NODE_WORKER_AND_LOOPBACK_ONLY_NOT_NATIVE_INSTALLATION"
+  }
+}

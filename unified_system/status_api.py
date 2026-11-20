@@ -16,7 +16,7 @@ class ReadOnlySupervisorApp:
         path = environ.get("PATH_INFO")
         status = 503
         data = {"api_version":{"major":1,"minor":0},
-                "producer":"unified-system",
+                "producer":"unified_system",
                 "read_only":True,"status":"UNAVAILABLE",
                 "provenance":"UNVERIFIED",
                 "trading_authorized":False,

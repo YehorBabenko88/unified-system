@@ -11,7 +11,9 @@ from .contracts import seal
 from .journal import Journal
 from .service_bootstrap import canonical,local,stamp,read_file,parse,WindowsActivationKernel
 
-SCHEMA='unified.owned-postgres.v1'
+SCHEMA='unified.owned-postgres.v2'
+AUTH_SCHEMA='unified.market-data.postgres-auth.v1'
+JOB_SOURCE='sources/unified_system/unified_system/windows_job.py'
 PLAN_FIELDS=frozenset(('schema','service_plan','resource_receipt_sha256','profile_sha256','auth_source','auth_sha256','root_identity','state_identity','namespace','data_root','cluster','port','database','user','bootstrap_user','postgresql_files','vendor_sha256','job_sha256','writer_sid','plan_sha256'))
 CONFIG_FILES=('PG_VERSION','postgresql.conf','postgresql.auto.conf','pg_hba.conf','pg_ident.conf')
 CODES=frozenset(('POSTGRES_REJECTED','POSTGRES_OWNER_PHASE_REQUIRED','POSTGRES_OWNER_PHASE_REJECTED','POSTGRES_UNAVAILABLE','POSTGRES_IDENTITY_REJECTED','POSTGRES_ALREADY_EXISTS','POSTGRES_NOT_READY','POSTGRES_PROCESS_REJECTED','POSTGRES_AUTH_REJECTED','POSTGRES_START_PENDING','POSTGRES_POISONED'))
@@ -31,7 +33,7 @@ def regular(path,limit=1048576):
   raw=stream.read(limit+1);s=os.fstat(stream.fileno());need((s.st_dev,s.st_ino,s.st_size,s.st_mtime_ns,s.st_nlink)==before)
  need(stamp(path)==before and len(raw)==before[2]);return raw
 
-def postgres_plan(resource,profile,auth_source,*,boundary=None):
+def postgres_plan(resource,profile,auth_source,*,auth_sha256,boundary=None):
  try:
   record=resource.recorded();service=record['plan'];profile=copy.deepcopy(profile);config=profile['runtime_config'];context=profile['offline_context']
   need(service['role'] in ('CONTROL','SINGLE_PC') and context['role']==service['role'])
@@ -45,14 +47,17 @@ def postgres_plan(resource,profile,auth_source,*,boundary=None):
   prefix='runtime/postgresql/';files={name[len(prefix):]:pin for name,pin in manifest['files'].items() if name.startswith(prefix)}
   need(files==pg['files'] and all(name.split('/')[0] in ('bin','lib','share') for name in files))
   need({'bin/initdb.exe','bin/postgres.exe','bin/psql.exe','bin/libpq.dll'}<=set(files) and any(name.startswith('lib/') for name in files) and any(name.startswith('share/') for name in files))
-  job='sources/grid/grid/ml_windows_job.py';need(job in manifest['files'])
-  dsn=urlsplit(config['programs']['grid']['env']['POSTGRES_DSN']);need(dsn.scheme=='postgresql' and dsn.hostname=='127.0.0.1' and dsn.password is None and not dsn.query and not dsn.fragment)
+  lab_release.digest(auth_sha256)
+  need(profile.get('schema')=='unified.runtime-profile.v2')
+  need(profile.get('database_credential_binding')=={'path':str(local(context['credential_root'])/'postgres.json'),'sha256':auth_sha256},'POSTGRES_AUTH_REJECTED')
+  job=JOB_SOURCE;need(job in manifest['files'])
+  dsn=urlsplit(config['programs']['market_data']['env']['MARKET_DATA_DSN']);need(dsn.scheme=='postgresql' and dsn.hostname=='127.0.0.1' and dsn.password is None and not dsn.query and not dsn.fragment)
   user=dsn.username;database=dsn.path[1:]
   for value in (user,database):need(type(value) is str and re.fullmatch('unified_lab_[a-z0-9_]{1,48}',value))
   need(type(dsn.port) is int and 1024<=dsn.port<=65535)
   boundary=WindowsPostgresBoundary() if boundary is None else boundary;writer=boundary.writer_identity()
   need(writer['computer_name'].casefold()==service['computer_name'].casefold())
-  body=dict(schema=SCHEMA,service_plan=service,resource_receipt_sha256=record['receipt_sha256'],profile_sha256=sha(canonical(profile)),auth_source=str(source),auth_sha256=config['programs']['grid']['env']['GRID_LAB_AUTH_SHA256'],root_identity=directory(root),state_identity=directory(state),namespace=str(root/'postgres-ownership'),data_root=str(state/'postgres'),cluster=str(state/'postgres/cluster'),port=dsn.port,database=database,user=user,bootstrap_user='unified_bootstrap_'+service['plan_sha256'][:24],postgresql_files=files,vendor_sha256=sha(vendor_raw),job_sha256=manifest['files'][job]['sha256'],writer_sid=writer['user_sid'])
+  body=dict(schema=SCHEMA,service_plan=service,resource_receipt_sha256=record['receipt_sha256'],profile_sha256=sha(canonical(profile)),auth_source=str(source),auth_sha256=auth_sha256,root_identity=directory(root),state_identity=directory(state),namespace=str(root/'postgres-ownership'),data_root=str(state/'postgres'),cluster=str(state/'postgres/cluster'),port=dsn.port,database=database,user=user,bootstrap_user='unified_bootstrap_'+service['plan_sha256'][:24],postgresql_files=files,vendor_sha256=sha(vendor_raw),job_sha256=manifest['files'][job]['sha256'],writer_sid=writer['user_sid'])
   return {**body,'plan_sha256':seal(body)}
  except PostgresBlocked:raise
  except Exception:raise PostgresBlocked() from None
@@ -72,6 +77,22 @@ def permission(owner,boundary,action,plan):
 def _record(journal,plan,stage,**facts):
  journal.append('OBSERVING',{'schema':SCHEMA,'plan_sha256':plan['plan_sha256'],'stage':stage,**facts})
 
+
+def _postgres_password(raw,plan,*,release_id,source_commit):
+ """Private provisioning credential only; never a fleet token or startup grant."""
+ try:
+  need(type(raw) is bytes and 0<len(raw)<=8192,'POSTGRES_AUTH_REJECTED')
+  record=parse(raw)
+  need(type(record) is dict and set(record)=={'schema','node_id','release_id','source_commit','database','user','postgres_password'},'POSTGRES_AUTH_REJECTED')
+  need(record['schema']==AUTH_SCHEMA and plan['service_plan']['role'] in ('CONTROL','SINGLE_PC'),'POSTGRES_AUTH_REJECTED')
+  need(record['node_id']==plan['service_plan']['node_id'] and record['release_id']==release_id and record['source_commit']==source_commit,'POSTGRES_AUTH_REJECTED')
+  need(record['database']==plan['database'] and record['user']==plan['user'],'POSTGRES_AUTH_REJECTED')
+  password=record['postgres_password']
+  need(type(password) is str and re.fullmatch('[A-Za-z0-9_-]{32,128}',password) is not None,'POSTGRES_AUTH_REJECTED')
+  return password
+ except PostgresBlocked:raise
+ except Exception:raise PostgresBlocked('POSTGRES_AUTH_REJECTED') from None
+
 def provision_postgres(plan,*,owner_phase=None,boundary=None):
  server=None;prepared=False;finished=False
  try:
@@ -86,9 +107,7 @@ def provision_postgres(plan,*,owner_phase=None,boundary=None):
   journal=Journal(namespace/'provision.sqlite');journal.initialize();_record(journal,plan,'ROOTS_CREATED',data_identity=pins[data])
   # Read existing CONTROL credentials only after protected secret admission.
   boundary.admit_auth(plan);source=local(plan['auth_source']);raw=regular(source,8192);need(sha(raw)==plan['auth_sha256'],'POSTGRES_AUTH_REJECTED')
-  context=dict(scope='OFFLINE_VALIDATION_ONLY',role=plan['service_plan']['role'],node_id=plan['service_plan']['node_id'],computer_name=plan['service_plan']['computer_name'],credential_root=str(source.parent))
-  auth=lab_runtime.read_grid_auth(source,plan['auth_sha256'],node_id=context['node_id'],release_id=boundary.release_id(plan),source_commit=boundary.grid_commit(plan),role_context=context)
-  password=auth['PGPASSWORD'];need(re.fullmatch('[A-Za-z0-9_-]{32,128}',password) is not None,'POSTGRES_AUTH_REJECTED')
+  password=_postgres_password(raw,plan,release_id=boundary.release_id(plan),source_commit=boundary.market_data_commit(plan))
   guard('INITIALIZE_POSTGRES');boundary.initialize(plan,password);_record(journal,plan,'INITIALIZED')
   guard('START_PROVISION_POSTGRES');server=boundary.start(plan,provision=True);_record(journal,plan,'PROVISION_PROCESS_OWNED')
   guard('CREATE_POSTGRES_DATABASE');boundary.configure(plan,server,password)
@@ -112,6 +131,17 @@ def validate_sql(plan,proof,system_identifier=None,*,bootstrap_login=False):
  if system_identifier is not None:need(value==system_identifier,'POSTGRES_IDENTITY_REJECTED')
  need(proof['bootstrap_login'] is bootstrap_login and all(proof[key] is False for key in ('superuser','createdb','createrole','replication','bypassrls')),'POSTGRES_NOT_READY');return True
 
+def _pgpass_password(raw,plan,*,database,user):
+ try:
+  matches=[]
+  for line in raw.decode('ascii').splitlines():
+   fields=line.split(':');need(len(fields)==5,'POSTGRES_AUTH_REJECTED')
+   if fields[:2]==['127.0.0.1',str(plan['port'])] and fields[2] in (database,'*') and fields[3]==user:matches.append(fields[4])
+  need(len(matches)==1 and re.fullmatch('[A-Za-z0-9_-]{32,128}',matches[0]) is not None,'POSTGRES_AUTH_REJECTED')
+  return matches[0]
+ except PostgresBlocked:raise
+ except Exception:raise PostgresBlocked('POSTGRES_AUTH_REJECTED') from None
+
 class PostgresOwnership:
  def __init__(self,grant,record,boundary):self.grant=grant;self._record=copy.deepcopy(record);self.boundary=boundary;self.server=None
  @property
@@ -133,7 +163,14 @@ class PostgresOwnership:
   except Exception:
    self.close();raise PostgresBlocked('POSTGRES_NOT_READY') from None
  def require_current(self):
-  self.grant.require_current();self.boundary.require_running(self.grant,self._record);need(self.server is not None and self.server.alive(),'POSTGRES_PROCESS_REJECTED');return True
+  need(self.grant.require_current() is True,'POSTGRES_IDENTITY_REJECTED');need(self.boundary.require_running(self.grant,self._record) is True,'POSTGRES_IDENTITY_REJECTED');need(self.server is not None and self.server.alive(),'POSTGRES_PROCESS_REJECTED');return True
+ def runtime_environment(self,module_id):
+  if module_id!='market_data':return {}
+  self.require_current();plan=self._record['plan'];anchor=Path(plan['namespace'])
+  raw,_=read_file(anchor/'pgpass.conf',8192,self.grant._kernel,self.grant.service_sid,anchor)
+  need(sha(raw)==self._record['pgpass_sha256'],'POSTGRES_AUTH_REJECTED')
+  password=_pgpass_password(raw,plan,database=plan['database'],user=plan['user'])
+  self.require_current();return {'PGPASSWORD':password}
  def close(self):
   if self.server is not None:
    server=self.server;self.boundary.stop(self.record['plan'],server);self.server=None
@@ -145,7 +182,7 @@ def read_postgres_ownership(grant,*,boundary=None):
   raw,_=read_file(anchor/'receipt.json',262144,kernel,grant.service_sid,anchor)
   need(sha(raw)==grant.descriptor['qualification_refs']['database_evidence_sha256'],'POSTGRES_IDENTITY_REJECTED');record=parse(raw)
   need(type(record) is dict and set(record)=={'schema','plan','data_identity','cluster_identity','system_identifier','config_files','pgpass_sha256','state','runtime_readiness'} and record['schema']==SCHEMA and record['state']=='PROVISIONED_STOPPED' and record['runtime_readiness']=='NOT_PROVEN')
-  pgplan=check_plan(record['plan']);need(pgplan['service_plan']==plan and pgplan['auth_sha256']==grant.descriptor['auth_sha256'] and pgplan['profile_sha256']==sha(canonical(grant.profile)),'POSTGRES_IDENTITY_REJECTED')
+  pgplan=check_plan(record['plan']);need(pgplan['service_plan']==plan and pgplan['auth_sha256']==grant.descriptor['database_credential_sha256'] and pgplan['profile_sha256']==sha(canonical(grant.profile)),'POSTGRES_IDENTITY_REJECTED')
   need(directory(pgplan['data_root'])==record['data_identity'] and directory(pgplan['cluster'])==record['cluster_identity'],'POSTGRES_IDENTITY_REJECTED')
   need(set(record['config_files'])==set(CONFIG_FILES))
   for name in CONFIG_FILES:need(lab_release.hash_file(Path(pgplan['cluster'])/name)==record['config_files'][name],'POSTGRES_IDENTITY_REJECTED')
@@ -218,9 +255,9 @@ def _resume_owned_primary(pid,identity,*,kernel=None):
 
 
 def _job_class(plan):
- # Existing Grid primitive only: source bytes admitted, no package/backend import
+ # Single Unified-owned primitive: source bytes admitted, no package/backend import
  # or bytecode lookup; resume=False avoids its optional psutil dependency.
- path=Path(plan['service_plan']['code'])/'sources/grid/grid/ml_windows_job.py';raw=regular(path)
+ path=Path(plan['service_plan']['code'])/JOB_SOURCE;raw=regular(path)
  need(sha(raw)==plan['job_sha256']);namespace={'__name__':'_unified_owned_pg_job','__file__':str(path)};exec(compile(raw,str(path),'exec'),namespace)
  job=namespace['WindowsJob'];need(callable(getattr(job,'terminate_and_wait',None)),'POSTGRES_PROCESS_REJECTED');return job
 
@@ -528,7 +565,7 @@ class WindowsPostgresBoundary:
   lab_runtime.verify_sources(root,self.manifest,owner_admitted_root=root)
   need(sha(regular(root/'locks/vendor.json'))==plan['vendor_sha256'])
  def release_id(self,plan):return self.manifest['release_id']
- def grid_commit(self,plan):return self.manifest['sources']['grid']['commit']
+ def market_data_commit(self,plan):return self.manifest['sources']['market_data']['commit']
  def admit_auth(self,plan):
   # Transit CONTROL credentials must already be protected by the owner broker.
   # Their containing directory is explicitly admitted; no service-owned file.
@@ -647,10 +684,7 @@ catch{[Console]::Out.Write('{"error":"POSTGRES_REJECTED"}');exit 1}"""
   user=user or plan['user'];database=database or plan['database'];passfile=Path(self._env(plan,provision=provision)['PGPASSFILE']);password=None
   if provision:need(stamp(passfile)==self.secret_files[passfile],'POSTGRES_AUTH_REJECTED')
   else:need(sha(regular(passfile,8192))==self.runtime_record['pgpass_sha256'],'POSTGRES_AUTH_REJECTED')
-  for line in regular(passfile,8192).decode('ascii').splitlines():
-   fields=line.split(':');need(len(fields)==5)
-   if fields[:2]==['127.0.0.1',str(plan['port'])] and fields[2] in (database,'*') and fields[3]==user:password=fields[4]
-  need(password is not None and re.fullmatch('[A-Za-z0-9_-]{32,128}',password),'POSTGRES_AUTH_REJECTED')
+  password=_pgpass_password(regular(passfile,8192),plan,database=database,user=user)
   root=Path(plan['service_plan']['code'])/'runtime/postgresql';dll_path=local(root/'bin/libpq.dll');need(lab_release.hash_file(dll_path)==plan['postgresql_files']['bin/libpq.dll'])
   connection=None
   with ExitStack() as stack:

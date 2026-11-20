@@ -8,10 +8,10 @@ import copy,ctypes,hashlib,json,os,re,stat
 from pathlib import Path
 
 POINTER_SCHEMA='unified.service-activation-pointer.v1'
-DESCRIPTOR_SCHEMA='unified.service-activation.v1'
+DESCRIPTOR_SCHEMA='unified.service-activation.v2'
 REVOKED_SCHEMA='unified.service-activation-revoked.v1'
 
-ERROR_CODES=frozenset(('ACTIVATION_AMBIENT_IMPORT_REJECTED','ACTIVATION_CODE_REJECTED','ACTIVATION_DATABASE_GATE_UNAVAILABLE','ACTIVATION_RUNTIME_REJECTED',)+('ACTIVATION_ACL_REJECTED', 'ACTIVATION_AUTH_REJECTED', 'ACTIVATION_CONCURRENT_UPDATE', 'ACTIVATION_ELEVATED_WRITER_REQUIRED', 'ACTIVATION_FILE_REJECTED', 'ACTIVATION_HOST_REJECTED', 'ACTIVATION_IDENTITY_CHANGED', 'ACTIVATION_KERNEL_REJECTED', 'ACTIVATION_LINK_REJECTED', 'ACTIVATION_NAMESPACE_REJECTED', 'ACTIVATION_NATIVE_REJECTED', 'ACTIVATION_OWNER_PHASE_REJECTED', 'ACTIVATION_OWNER_PHASE_REQUIRED', 'ACTIVATION_PATH_REJECTED', 'ACTIVATION_PLATFORM_REJECTED', 'ACTIVATION_QUALIFICATION_REJECTED', 'ACTIVATION_QUALIFICATION_REQUIRED', 'ACTIVATION_REJECTED', 'ACTIVATION_REVISION_CHANGED', 'ACTIVATION_REVOKED', 'ACTIVATION_SERVICE_TOKEN_REQUIRED', 'ACTIVATION_SIZE_REJECTED', 'ACTIVATION_UNAVAILABLE'))
+ERROR_CODES=frozenset(('ACTIVATION_DATA_FIRST_UNPORTED','ACTIVATION_AMBIENT_IMPORT_REJECTED','ACTIVATION_CODE_REJECTED','ACTIVATION_DATABASE_GATE_UNAVAILABLE','ACTIVATION_RUNTIME_REJECTED',)+('ACTIVATION_ACL_REJECTED', 'ACTIVATION_AUTH_REJECTED', 'ACTIVATION_CONCURRENT_UPDATE', 'ACTIVATION_ELEVATED_WRITER_REQUIRED', 'ACTIVATION_FILE_REJECTED', 'ACTIVATION_HOST_REJECTED', 'ACTIVATION_IDENTITY_CHANGED', 'ACTIVATION_KERNEL_REJECTED', 'ACTIVATION_LINK_REJECTED', 'ACTIVATION_NAMESPACE_REJECTED', 'ACTIVATION_NATIVE_REJECTED', 'ACTIVATION_OWNER_PHASE_REJECTED', 'ACTIVATION_OWNER_PHASE_REQUIRED', 'ACTIVATION_PATH_REJECTED', 'ACTIVATION_PLATFORM_REJECTED', 'ACTIVATION_QUALIFICATION_REJECTED', 'ACTIVATION_QUALIFICATION_REQUIRED', 'ACTIVATION_REJECTED', 'ACTIVATION_REVISION_CHANGED', 'ACTIVATION_REVOKED', 'ACTIVATION_SERVICE_TOKEN_REQUIRED', 'ACTIVATION_SIZE_REJECTED', 'ACTIVATION_UNAVAILABLE'))
 
 class ActivationBlocked(ValueError):
  def __init__(self,code='ACTIVATION_REJECTED'):
@@ -131,7 +131,7 @@ class ProtectedActivation:
  @property
  def profile(self):return copy.deepcopy(self._profile)
  @property
- def auth_path(self):return self._paths['auth']
+ def database_credential_path(self):return self._paths.get('database_credential')
  @property
  def code_root(self):return Path(self._descriptor['service_plan']['code'])
  @property
@@ -145,7 +145,7 @@ class ProtectedActivation:
    need(self._kernel.identity()==self._identity,'ACTIVATION_IDENTITY_CHANGED')
    raw,identity=read_file(self._paths['pointer'],8192,self._kernel,self.service_sid,self._root/'activation')
    need(identity==self._identities['pointer'] and hashlib.sha256(raw).hexdigest()==self._pointer_hash,'ACTIVATION_REVOKED')
-   for name in ('descriptor','profile','auth'):
+   for name in ('descriptor','profile',*(('database_credential',) if 'database_credential' in self._paths else ())):
     self._kernel.require_readonly(self._paths[name],self.service_sid,self._root/'activation');need(stamp(self._paths[name])==self._identities[name],'ACTIVATION_REVISION_CHANGED')
    return True
   except ActivationBlocked:raise
@@ -159,10 +159,10 @@ def read_protected_activation(service_root,*,kernel=None):
   anchor=root/'activation';paths={'pointer':anchor/'current.json'};identities={}
   raw,identities['pointer']=read_file(paths['pointer'],8192,kernel,sid,anchor);pointer_hash=hashlib.sha256(raw).hexdigest();pointer=parse(raw)
   need(type(pointer) is dict and set(pointer)=={'schema','revision_id','descriptor_sha256'} and pointer['schema']==POINTER_SCHEMA,'ACTIVATION_REVOKED');label(pointer['revision_id']);digest(pointer['descriptor_sha256'])
-  revision=anchor/'revisions'/pointer['revision_id'];paths.update(descriptor=revision/'descriptor.json',profile=revision/'profile.json',auth=revision/'credentials/auth.json')
+  revision=anchor/'revisions'/pointer['revision_id'];paths.update(descriptor=revision/'descriptor.json',profile=revision/'profile.json')
   raw,identities['descriptor']=read_file(paths['descriptor'],262144,kernel,sid,anchor);need(hashlib.sha256(raw).hexdigest()==pointer['descriptor_sha256']);descriptor=parse(raw)
-  need(type(descriptor) is dict and set(descriptor)=={'schema','activation_plan_sha256','revision_id','service_plan','resource_receipt_sha256','profile_sha256','auth_sha256','qualification_refs'} and descriptor['schema']==DESCRIPTOR_SCHEMA and descriptor['revision_id']==pointer['revision_id'])
-  for field in ('activation_plan_sha256','resource_receipt_sha256','profile_sha256','auth_sha256'):digest(descriptor[field])
+  need(type(descriptor) is dict and set(descriptor)=={'schema','activation_plan_sha256','revision_id','service_plan','resource_receipt_sha256','profile_sha256','database_credential_sha256','qualification_refs'} and descriptor['schema']==DESCRIPTOR_SCHEMA and descriptor['revision_id']==pointer['revision_id'])
+  for field in ('activation_plan_sha256','resource_receipt_sha256','profile_sha256'):digest(descriptor[field])
   plan=descriptor['service_plan'];need(type(plan) is dict and plan['service_sid']==sid and plan['computer_name'].casefold()==identity['computer_name'].casefold(),'ACTIVATION_IDENTITY_CHANGED')
   need(plan['root']==str(root) and plan['code']==str(root/'code') and plan['state']==str(root/'state') and plan['role'] in ('CONTROL','WORKER','SINGLE_PC'))
   digest(plan['manifest_sha256']);refs=descriptor['qualification_refs'];need(type(refs) is dict and set(refs)=={'phase_id','source_evidence_sha256','capacity_evidence_sha256','database_evidence_sha256'});label(refs['phase_id'])
@@ -170,11 +170,21 @@ def read_protected_activation(service_root,*,kernel=None):
   if plan['role']=='WORKER':need(refs['database_evidence_sha256'] is None)
   else:digest(refs['database_evidence_sha256'])
   raw,identities['profile']=read_file(paths['profile'],4*1024*1024,kernel,sid,anchor);need(hashlib.sha256(raw).hexdigest()==descriptor['profile_sha256']);profile=parse(raw)
-  raw,identities['auth']=read_file(paths['auth'],8192,kernel,sid,anchor);need(hashlib.sha256(raw).hexdigest()==descriptor['auth_sha256'])
+  if plan['role']=='WORKER':need(descriptor['database_credential_sha256'] is None)
+  else:
+   digest(descriptor['database_credential_sha256']);paths['database_credential']=revision/'credentials/postgres.json'
+   raw,identities['database_credential']=read_file(paths['database_credential'],8192,kernel,sid,anchor)
+   need(hashlib.sha256(raw).hexdigest()==descriptor['database_credential_sha256'])
+  need(profile.get('schema')=='unified.runtime-profile.v2' and profile.get('derivation_receipt',{}).get('schema')=='unified.runtime-profile-derivation.v2')
+  binding=profile['database_credential_binding']
+  if plan['role']=='WORKER':need(binding is None)
+  else:need(binding=={'path':str(paths['database_credential']),'sha256':descriptor['database_credential_sha256']})
   config=profile['runtime_config'];context=profile['offline_context']
   need(context=={'scope':'OFFLINE_VALIDATION_ONLY','role':plan['role'],'node_id':plan['node_id'],'computer_name':plan['computer_name'],'credential_root':str(revision/'credentials')})
   need(config['node_id']==plan['node_id'] and config['state_root']==plan['state'] and config['release_sha256']==plan['manifest_sha256'])
-  need(config['programs']['grid']['env']['GRID_LAB_AUTH_PATH']==str(paths['auth']) and config['programs']['grid']['env']['GRID_LAB_AUTH_SHA256']==descriptor['auth_sha256'])
+  need(type(config.get('programs')) is dict and set(config['programs'])<= {'market_data','math','terminan'})
+  # This reader establishes protected ownership/integrity; application bearer
+  # identity and database receipt ownership remain separate runtime gates.
   result=ProtectedActivation(root,kernel,identity,descriptor,profile,paths,identities,pointer_hash);result.require_current();return result
  except ActivationBlocked:raise
  except Exception:raise ActivationBlocked('ACTIVATION_UNAVAILABLE') from None
@@ -186,13 +196,13 @@ VERIFIER_IMPORTS=('__init__.py','module_catalog.py','runtime_process.py','lab_re
 
 def _import_verifier(grant,manifest):
  import importlib,importlib.abc,importlib.util,sys
- source=grant.code_root/'sources/unified-system'
+ source=grant.code_root/'sources/unified_system'
  need(not any(name=='unified_system' or name.startswith('unified_system.') or name=='integration' or name.startswith('integration.') for name in sys.modules),'ACTIVATION_AMBIENT_IMPORT_REJECTED')
- admitted={'sources/unified-system/unified_system/'+name for name in VERIFIER_IMPORTS};runtime_enabled=False
+ admitted={'sources/unified_system/unified_system/'+name for name in VERIFIER_IMPORTS};runtime_enabled=False
  class OwnedSourceLoader(importlib.abc.MetaPathFinder,importlib.abc.Loader):
   def find_spec(self,fullname,path=None,target=None):
    if fullname.split('.')[0] not in ('unified_system','integration'):return None
-   relative='sources/unified-system/'+fullname.replace('.','/')
+   relative='sources/unified_system/'+fullname.replace('.','/')
    if fullname=='integration' and runtime_enabled and relative in manifest['directories']:
     grant._kernel.require_readonly(grant.code_root/relative,grant.service_sid,grant.code_root)
     spec=importlib.machinery.ModuleSpec(fullname,None,is_package=True);spec.submodule_search_locations=[str(grant.code_root/relative)];return spec
@@ -201,7 +211,7 @@ def _import_verifier(grant,manifest):
    return importlib.util.spec_from_loader(fullname,self,origin=str(grant.code_root/relative),is_package=package)
   def create_module(self,spec):return None
   def exec_module(self,module):
-   name=module.__spec__.name;relative='sources/unified-system/'+name.replace('.','/')
+   name=module.__spec__.name;relative='sources/unified_system/'+name.replace('.','/')
    package=module.__spec__.submodule_search_locations is not None;relative+=('/__init__.py' if package else '.py')
    pin=manifest['files'][relative];need(type(pin) is dict and set(pin)=={'bytes','sha256'} and type(pin['bytes']) is int and 0<pin['bytes']<=1048576)
    digest(pin['sha256']);raw,_=read_file(grant.code_root/relative,1048576,grant._kernel,grant.service_sid,grant.code_root)
@@ -214,7 +224,7 @@ def _import_verifier(grant,manifest):
   def admit_runtime(self):
    nonlocal runtime_enabled
    runtime_enabled=True
-   admitted.update(name for name in manifest['files'] if name.startswith(('sources/unified-system/unified_system/','sources/unified-system/integration/')) and name.endswith('.py'))
+   admitted.update(name for name in manifest['files'] if name.startswith(('sources/unified_system/unified_system/','sources/unified_system/integration/')) and name.endswith('.py'))
  loader=OwnedSourceLoader();sys.meta_path.insert(0,loader)
  try:verifier=importlib.import_module('unified_system.lab_release')
  except Exception:
@@ -238,8 +248,10 @@ def _runtime_admission(grant,report):
  config=grant.profile['runtime_config'];context=grant.profile['offline_context'];manifest=report['manifest']
  config=lab_runtime.validate_config(config,manifest,grant.code_root,hostname=grant.computer_name,offline_context=context)
  lab_runtime.verify_sources(grant.code_root,manifest,owner_admitted_root=grant.code_root)
- auth=lab_runtime.read_grid_auth(grant.auth_path,grant.descriptor['auth_sha256'],node_id=config['node_id'],release_id=config['release_id'],source_commit=manifest['sources']['grid']['commit'],role_context=context)
- grant.require_current();return config,auth
+ need(grant.require_current() is True,'ACTIVATION_REVOKED')
+ # Read-only serve uses ProcessDriver per-start private bearer plus live source admission.
+ # Database ownership/credentials remain a separate mandatory receipt gate.
+ return config,{}
 
 def _repeat_admission(grant,verifier):
  grant.require_current();report=verifier.verify_capsule(grant.code_root,grant.manifest_sha256)
@@ -257,6 +269,7 @@ def run_protected_runtime(grant,*,stop_event=None):
  database=None
  try:
   grant.require_current()
+  need(grant.profile.get('data_first') is None,'ACTIVATION_DATA_FIRST_UNPORTED')
   report=_admit_capsule(grant);config,auth=_runtime_admission(grant,report)
   if grant.descriptor['service_plan']['role'] in ('CONTROL','SINGLE_PC'):
    from unified_system.service_postgres import read_postgres_ownership
@@ -282,7 +295,7 @@ def run_protected_runtime(grant,*,stop_event=None):
    except Exception:return False
   def environment(module):
    result=lab_runtime.child_environment()
-   if module=='grid':result.update(auth)
+   if module=='market_data' and database is not None:result.update(database.runtime_environment(module))
    return result
   # All filesystem writes and runtime imports occur after the gates above.
   from unified_system.lab_privileges import remove_lab_write_bypass_privileges
@@ -290,13 +303,10 @@ def run_protected_runtime(grant,*,stop_event=None):
   if database is not None:database.start()
   for program in config['programs'].values():
    for key,value in program['env'].items():
-    if key.upper() in ('TEMP','TMP','USERPROFILE','HOME','APPDATA','LOCALAPPDATA','PROGRAMDATA','PROGRAMFILES','ML_ARTIFACT_ROOT','ARCHIVE_ROOT','STRATEGY_CACHE_DIR','GRID_CONTROL_SNAPSHOTS'):
+    if key.upper() in ('TEMP','TMP','USERPROFILE','HOME','APPDATA','LOCALAPPDATA','PROGRAMDATA','PROGRAMFILES','ML_ARTIFACT_ROOT','ARCHIVE_ROOT','STRATEGY_CACHE_DIR','MARKET_DATA_CONTROL_SNAPSHOTS'):
      target=local(value);need(Path(config['state_root'])==target or Path(config['state_root']) in target.parents);grant.require_current();target.mkdir(parents=True,exist_ok=True)
   from unified_system.service_module_runtime import protected_programs
   effective=protected_programs(config,grant,report['manifest'])
-  if grant.profile.get('data_first') is not None and grant.descriptor['service_plan']['role']=='WORKER':
-   from unified_system.data_first_service import worker_program
-   effective=worker_program(effective,grant,report['manifest'])
   grant.require_current();runtime=lab_runtime.make_runtime(effective,authorize,child_environment=environment)
   stop=threading.Event() if stop_event is None else stop_event;previous={}
   try:
@@ -314,37 +324,15 @@ def run_protected_runtime(grant,*,stop_event=None):
    except Exception:raise ActivationBlocked('ACTIVATION_DATABASE_GATE_UNAVAILABLE') from None
 
 
-def run_protected_data_first(grant,*,worker=False):
- """One existing Grid-assigned research child; no database/controller startup.
-
- Fixed raw mode independently repeats kernel, capsule, source and workspace
- admission. Serialized job input never supplies construction authority.
- """
- try:
-  need(grant.require_current() is True)
-  report=_admit_capsule(grant);config,_auth=_runtime_admission(grant,report)
-  from unified_system.data_first_policy import validate_data_first_grant
-  cap=validate_data_first_grant(grant.profile.get('data_first'),report['manifest'])
-  from unified_system.lab_privileges import remove_lab_write_bypass_privileges
-  remove_lab_write_bypass_privileges();need(grant.require_current() is True)
-  from unified_system.data_first_service import serve_research
-  if worker:
-   from unified_system.data_first_service import serve_worker
-   return serve_worker(grant,config,report['manifest'],cap)
-  return serve_research(grant,config,report['manifest'],cap)
- except ActivationBlocked:raise
- except Exception:raise ActivationBlocked('ACTIVATION_RUNTIME_REJECTED') from None
-
-
-def run_protected_module(grant,module_id,*,verify_only=False):
+def run_protected_module(grant,module_id):
  """Fixed Python module dispatch with independent live kernel readmission."""
  try:
-  need(module_id in ('meta_analyse','strattester','terminan','grid') and (not verify_only or module_id=='strattester'))
+  need(module_id in ('market_data','terminan'))
   need(grant.require_current() is True)
   report=_admit_capsule(grant);config,_auth=_runtime_admission(grant,report)
   from unified_system.lab_privileges import remove_lab_write_bypass_privileges
   remove_lab_write_bypass_privileges();need(grant.require_current() is True)
   from unified_system.service_module_runtime import serve_module
-  return serve_module(grant,config,report['manifest'],module_id,verify_only=verify_only)
+  return serve_module(grant,config,report['manifest'],module_id)
  except ActivationBlocked:raise
  except Exception:raise ActivationBlocked('ACTIVATION_RUNTIME_REJECTED') from None

@@ -23,8 +23,8 @@ import zipfile
 
 WORKSPACE=Path(r'C:\Projects\UnifiedWorkspace')
 CACHE=WORKSPACE/'.local-runs/btc-20261102-01'
-NAMES={'unified-system':'unified-system','grid':'bybit-cluster-grid','strattester':'strattester','math':'math','meta_analyse':'meta_analyse','terminan':'Terminan'}
-GRAPH={'unified-system':[],'grid':['unified-system'],'math':['unified-system'],'meta_analyse':['grid','math'],'strattester':['grid','math'],'terminan':['meta_analyse','strattester']}
+NAMES={'unified_system':'unified-system','market_data':'strattester','math':'math','terminan':'Terminan'}
+GRAPH={'unified_system':[],'market_data':['unified_system'],'math':['unified_system'],'terminan':['market_data','math']}
 ARCHIVES={'python.3.12.10.nupkg':'0eb85c2dfccccf1b17352de4c397f69194035b7d37149eacc16f1147d93de3b8','node-v22.23.4-win-x64.zip':'cbc74b5e0982c9dbb41525fd8fb5dcd32fbee237863f7829072f4639a1ce5f20','MinGit-2.56.0.4-64-bit.zip':'e3bf78351fe777fba47ddee5950082f8a98bb0f02604fdc7ba3ee2cb68ffa877'}
 NSSM_FILENAME='nssm-2.24-101-g897c7ad.zip'
 NSSM_MEMBER='nssm-2.24-101-g897c7ad/win64/nssm.exe'
@@ -181,22 +181,6 @@ def clone_source(source,target,head,repository,git,env):
     command('remote','add','origin','https://github.com/'+repository+'.git')
     need(command('rev-parse','HEAD')==head,'SNAPSHOT_HEAD_CHANGED')
 
-def new_auth(state,release,commit):
-    need(os.name=='nt','WINDOWS_PRIVATE_ACL_REQUIRED')
-    env=environment();system=Path(os.environ['SYSTEMROOT'])/'System32'
-    sid=run([system/'whoami.exe','/user','/fo','csv','/nh'],env).split(',')[-1].strip('"')
-    need(re.fullmatch(r'S-1-5-[0-9-]+',sid),'CURRENT_SID_UNVERIFIED')
-    run([system/'icacls.exe',state,'/inheritance:r','/grant:r','*'+sid+':(OI)(CI)F','*S-1-5-18:(OI)(CI)F','*S-1-5-32-544:(OI)(CI)F'],env)
-    # A new directory has no explicit inherited entries after inheritance removal.
-    # Verify the resulting ACL through a fixed local PowerShell expression.
-    literal="'"+str(state).replace("'","''")+"'"
-    expression="$a=Get-Acl -LiteralPath "+literal+"; if(-not $a.AreAccessRulesProtected){exit 2}; $a.Access | ForEach-Object {if($_.AccessControlType -ne 'Allow' -or $_.IsInherited -or $_.FileSystemRights -ne 'FullControl'){exit 3}; $_.IdentityReference.Translate([System.Security.Principal.SecurityIdentifier]).Value}"
-    actual=run([system/'WindowsPowerShell/v1.0/powershell.exe','-NoProfile','-NonInteractive','-Command',expression],env).splitlines()
-    need(set(actual)=={sid,'S-1-5-18','S-1-5-32-544'},'PRIVATE_ACL_UNVERIFIED')
-    private=state/'private';private.mkdir();path=private/'grid-auth.json'
-    write(path,dict(schema='unified.lab.grid-auth.v2',node_id='LS5',role='CONTROL',release_id=release,source_commit=commit,grid_shared_token=os.urandom(32).hex(),node_credential=None,postgres_password=os.urandom(32).hex()))
-    return path,sha(path)
-
 def free_ports(names):
     sockets=[]
     try:
@@ -206,25 +190,33 @@ def free_ports(names):
     finally:
         for s in sockets:s.close()
 
-def runtime_config(root,state,sources,snapshots,git,python,node,release,auth,pgport):
-    ports=free_ports(NAMES);bootstrap=root/'sources/unified-system/unified_system/owned_python.py';deps=root/'dependencies/site-packages';unified=root/'sources/unified-system'
-    common={'PATH':str(git.parent),'UNIFIED_GIT_EXECUTABLE':str(git),'UNIFIED_GIT_SHA256':sha(git),'UNIFIED_SOURCE_ROOT':str(unified),'UNIFIED_ROOT_SOURCE_COMMIT':sources['unified-system']['commit'],'GIT_CONFIG_NOSYSTEM':'1','GIT_CONFIG_GLOBAL':os.devnull,'GIT_CONFIG_SYSTEM':os.devnull,'GIT_NO_REPLACE_OBJECTS':'1','GIT_NO_LAZY_FETCH':'1','NO_PROXY':'127.0.0.1,localhost'}
+def runtime_config(root,state,sources,snapshots,git,python,node,release,auth=None,pgport=55459,*,ports=None):
+    """Generate canonical source-bound config data; never starts a component.
+
+    Managed authentication comes from a qualified per-instance callback and
+    token, never a retired Grid shared-token profile or a candidate JSON grant.
+    Callers may supply pre-reserved ports; pure tests supply inert port numbers.
+    """
+    need(auth is None,'RETIRED_AUTH_PROFILE_REJECTED')
+    need(set(sources)==set(NAMES) and set(snapshots)==set(NAMES),'CANONICAL_SOURCE_ROSTER_REQUIRED')
+    ports=free_ports(NAMES) if ports is None else dict(ports)
+    need(set(ports)==set(NAMES) and all(type(p) is int and 1024<=p<=65535 for p in ports.values()) and len(set(ports.values()))==len(NAMES),'DISTINCT_LOOPBACK_PORTS_REQUIRED')
+    need(type(pgport) is int and 1024<=pgport<=65535,'POSTGRES_PORT_INVALID')
+    unified=root/sources['unified_system']['root'];bootstrap=unified/'unified_system/owned_python.py';deps=root/'dependencies/site-packages'
+    common={'PATH':str(git.parent),'UNIFIED_GIT_EXECUTABLE':str(git),'UNIFIED_GIT_SHA256':sha(git),'UNIFIED_SOURCE_ROOT':str(unified),'UNIFIED_ROOT_SOURCE_COMMIT':sources['unified_system']['commit'],'GIT_CONFIG_NOSYSTEM':'1','GIT_CONFIG_GLOBAL':os.devnull,'GIT_CONFIG_SYSTEM':os.devnull,'GIT_NO_REPLACE_OBJECTS':'1','GIT_NO_LAZY_FETCH':'1','NO_PROXY':'127.0.0.1,localhost'}
     programs={}
-    for name,module,args in [('meta_analyse','meta_analyse.headless_service',['--execute','--port',str(ports['meta_analyse'])]),('strattester','strattester.owned_results_service',['--serve','--store',str(state/'results.sqlite3'),'--port',str(ports['strattester'])]),('terminan','terminan.unified_runner',['--expected-sha',sources['terminan']['commit'],'--port',str(ports['terminan'])]),('grid','uvicorn',['grid.coordinator:app','--host','127.0.0.1','--port',str(ports['grid']),'--no-access-log']),('math',None,[])]:
-        source=root/sources[name]['root'];argv=[str(python),'-I','-S','-B',str(bootstrap),'--source-root',str(deps if name=='grid' else source)]
-        for dep in ([source] if name=='grid' else [])+([unified] if name=='strattester' else [])+[deps]:
-            if name=='grid' and dep==deps:continue
-            argv+=['--dependency-root',str(dep)]
-        argv+=['--module',module or '', '--',*args]
+    for name,module,args in [('market_data','market_data.cli',['serve']),('terminan','terminan.server',['--host','127.0.0.1','--port',str(ports['terminan'])]),('math',None,[])]:
+        source=root/sources[name]['root']
+        argv=[str(python),'-I','-S','-B',str(bootstrap),'--source-root',str(source),'--dependency-root',str(deps),'--module',module or '', '--',*args]
         if name=='math':argv=[str(node),str(source/'src/math-engine-server.mjs')]
-        programs[name]={'argv':argv,'cwd':str(source),'executable_sha256':sha(node if name=='math' else python),'file_pins':{n:p['raw_sha256'] for n,p in snapshots[name]['runtime_files'].items()},'external_file_pins':{str(git):sha(git),**({str(bootstrap):sha(bootstrap)} if name!='math' else {})},'health_url':f'http://127.0.0.1:{ports[name]}/internal/v2/module/health','env':{**common,'UNIFIED_SOURCE_COMMIT':sources[name]['commit']}}
-    programs['meta_analyse']['health_timeout_seconds']=1.
+        health='/internal/v2/module/health' if name=='math' else '/health'
+        programs[name]={'argv':argv,'cwd':str(source),'executable_sha256':sha(node if name=='math' else python),'file_pins':{n:p['raw_sha256'] for n,p in snapshots[name]['runtime_files'].items()},'external_file_pins':{str(git):sha(git),**({str(bootstrap):sha(bootstrap)} if name!='math' else {})},'health_url':f'http://127.0.0.1:{ports[name]}{health}','env':{**common,'UNIFIED_SOURCE_COMMIT':sources[name]['commit']}}
     programs['math']['env']['MATH_ENGINE_PORT']=str(ports['math'])
     programs['terminan']['env']['TERMINAN_RUNTIME_V2_SNAPSHOT']=str(state/'public/runtime.json')
     programs['terminan']['env']['TERMINAN_LAB_SNAPSHOT']=str(state/'public/lab-market-paper.json')
     suffix=re.sub('[^a-z0-9_]','_',release.lower())[:40]
-    programs['grid']['env'].update(POSTGRES_DSN=f'postgresql://unified_lab_{suffix}@127.0.0.1:{pgport}/unified_lab_{suffix}',ROLE='coordinator',NODE_ID='LS5',NODE_ROLE='CONTROL',GRID_COORDINATION_MODE='legacy',GRID_COORDINATION_ISOLATED_LAB='true',GRID_HA_REQUIRED='false',GRID_LAB_AUTH_PATH=str(auth[0]),GRID_LAB_AUTH_SHA256=auth[1],GRID_CONTROL_JOURNAL=str(state/'grid/control.json'),GRID_CONTROL_SNAPSHOTS=str(state/'grid/snapshots'),LOG_LEVEL='WARNING',RETENTION_ENABLED='false')
-    return dict(schema='unified.runtime.config.v2',node_id='LS5',release_id=release,release_sha256='0'*64,state_root=str(state),snapshot_path=str(state/'public/runtime.json'),http_port=ports['unified-system'],tick_seconds=.1,specs=[dict(module_id=n,version='1.0.0',api_major=1,dependencies=GRAPH[n],start_timeout=60) for n in NAMES],programs=programs)
+    programs['market_data']['env'].update(MARKET_DATA_PORT=str(ports['market_data']),MARKET_DATA_DSN=f'postgresql://unified_lab_{suffix}_read@127.0.0.1:{pgport}/unified_lab_{suffix}',LOG_LEVEL='WARNING',RETENTION_ENABLED='false')
+    return dict(schema='unified.runtime.config.v2',node_id='LS5',release_id=release,release_sha256='0'*64,state_root=str(state),snapshot_path=str(state/'public/runtime.json'),http_port=ports['unified_system'],tick_seconds=.1,specs=[dict(module_id=n,version=sources[n].get('version','1.0.0'),api_major=1,dependencies=GRAPH[n],start_timeout=60) for n in NAMES],programs=programs)
 
 # Distribution-to-native-module mapping for this admitted lock, not an inferred
 # import-name transformation. Probe only installed, explicitly pinned packages.
@@ -275,8 +267,9 @@ def npm_environment(env,node,git,cache,state):
 def build(args):
     root,state=destinations(args.output,args.state_root)
     need(args.node=='LS5' and socket.gethostname().split('.')[0].upper()=='LS5','LS5_ONLY')
-    need(re.fullmatch('[A-Za-z0-9][A-Za-z0-9_.-]{0,79}',args.release_id),'RELEASE_ID_INVALID')
-    need(1024<=args.postgres_port<=65535,'POSTGRES_PORT_INVALID')
+    need(type(args.release_id) is str and re.fullmatch('[A-Za-z0-9][A-Za-z0-9_.-]{0,79}',args.release_id),'RELEASE_ID_INVALID')
+    need(type(args.sequence) is int and args.sequence>0,'SEQUENCE_INVALID')
+    need(type(args.postgres_port) is int and 1024<=args.postgres_port<=65535,'POSTGRES_PORT_INVALID')
     with socket.socket() as probe:probe.bind(('127.0.0.1',args.postgres_port))
     from unified_system import lab_release,windows_wheels
     from integration.source_guard import SourceFence
@@ -331,8 +324,7 @@ def build(args):
             inventory(origin/part);shutil.copytree(origin/part,dest/part,symlinks=False)
         vendor['postgresql']={'version':run([dest/'bin/postgres.exe','--version'],env),'files':inventory(dest)[0]}
     write(root/'locks/vendor.json',vendor)
-    auth=new_auth(state,args.release_id,heads['grid'])
-    config=runtime_config(root,state,sources,snapshots,git,python,node,args.release_id,auth,args.postgres_port)
+    config=runtime_config(root,state,sources,snapshots,git,python,node,args.release_id,pgport=args.postgres_port)
     write(root/'runtime-config.json',config)
     # pip moves private staging directories with protected OWNER_RIGHTS ACLs.
     # Normalize only that exact recognized shape before final byte admission.

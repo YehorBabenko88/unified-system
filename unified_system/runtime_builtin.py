@@ -21,7 +21,7 @@ from pathlib import Path
 from .module_catalog import MODULE_IDS
 from .runtime_process import _safe_path
 
-# Six-core baseline: five .5s delegated probes + .25s tick + .35s own
+# Conservative publication budget: delegated probes + .25s tick + .35s own
 # HTTP + .15s journal margin, plus at most .5s explicitly allocated extra probe
 # time across ProcessDriver, rounded to four seconds. Each actual registered
 # extension adds .5s; the journal's 64-module limit bounds the age at 33s.
@@ -86,7 +86,7 @@ class BuiltinRuntimeDriver:
         finally:db.close()
 
     def _own(self,op):
-        revision,modules=self._journal();spec,state=modules['unified-system']
+        revision,modules=self._journal();spec,state=modules['unified_system']
         _need(state['handle']==op)
         return revision,spec,state
 
@@ -120,8 +120,8 @@ class BuiltinRuntimeDriver:
         self.publication=(hashlib.sha256(raw).digest(),revision,time.monotonic(),self.generation)
 
     def start(self,spec,release_id,operation_id):
-        if spec.module_id!='unified-system':return self.delegate.start(spec,release_id,operation_id)
-        _need(self.authorize('start','unified-system') is True)
+        if spec.module_id!='unified_system':return self.delegate.start(spec,release_id,operation_id)
+        _need(self.authorize('start','unified_system') is True)
         _need(release_id==self.identity['release_id'] and type(operation_id) is str
               and re.fullmatch('[a-f0-9-]{32,36}',operation_id))
         revision,saved,state=self._own(operation_id)
@@ -162,13 +162,13 @@ class BuiltinRuntimeDriver:
         finally:timer.cancel();connection.close();timer.join()
 
     def ready(self,spec,handle,release_id):
-        if spec.module_id!='unified-system':return self.delegate.ready(spec,handle,release_id)
+        if spec.module_id!='unified_system':return self.delegate.ready(spec,handle,release_id)
         try:
             _need(self.alive(handle) and release_id==self.identity['release_id'])
             record=self.operations[handle];_need(record['identity']==(spec.version,release_id,self.generation))
             digest,revision,stamp,generation=self.publication
             _need(generation==self.generation)
-            current,modules=self._journal();saved,state=modules['unified-system']
+            current,modules=self._journal();saved,state=modules['unified_system']
             _need(state['handle']==handle)
             max_age=PUBLICATION_MAX_AGE+PUBLICATION_EXTRA_MODULE_AGE*(len(modules)-len(MODULE_IDS))
             _need(0<=time.monotonic()-stamp<=max_age)
@@ -177,7 +177,7 @@ class BuiltinRuntimeDriver:
             _need(hashlib.sha256(self._file_bytes()).digest()==digest)
             _need(hashlib.sha256(self._http_bytes()).digest()==digest)
             _need(0<=time.monotonic()-stamp<=max_age)
-            return dict(module_id='unified-system',version=spec.version,release_id=release_id,ready=True)
+            return dict(module_id='unified_system',version=spec.version,release_id=release_id,ready=True)
         except Exception:return {'ready':False}
 
     def stop(self,handle):

@@ -9,16 +9,16 @@ class SequencePlanTests(unittest.TestCase):
         self.assertFalse(result["paper_trading_authorized"])
     def test_research_then_grid(self):
         x=describe_progress({"INFRA_PREFLIGHT":"COMPLETE","INFRA_READY":"COMPLETE",
-            "STRAT_PREPARE":"COMPLETE","STRAT_HISTORY_SYNC":"COMPLETE",
-            "STRAT_RESEARCH":"COMPLETE","STRAT_RESULT_SEALED":"COMPLETE",
-            "HANDOFF_VERIFY":"COMPLETE","GRID_MARKET_READY":"RUNNING"})
+            "ANALYSIS_PREPARE":"COMPLETE","MARKET_HISTORY_SYNC":"COMPLETE",
+            "ANALYSIS_RESEARCH":"COMPLETE","ANALYSIS_RESULT_SEALED":"COMPLETE",
+            "HANDOFF_VERIFY":"COMPLETE","MARKET_DATA_READY":"RUNNING"})
         self.assertEqual(x["stages"][7]["status"],"RUNNING")
     def test_block(self):
         with self.assertRaises(ContractError):
-            describe_progress({"STRAT_RESEARCH":"BLOCKED","GRID_MARKET_READY":"RUNNING"})
+            describe_progress({"ANALYSIS_RESEARCH":"BLOCKED","MARKET_DATA_READY":"RUNNING"})
     def test_terminan_remains_available_when_research_blocked(self):
         x=describe_progress({"INFRA_PREFLIGHT":"COMPLETE","INFRA_READY":"COMPLETE",
-            "STRAT_RESEARCH":"BLOCKED","TERMINAN_OBSERVING":"RUNNING"})
+            "ANALYSIS_RESEARCH":"BLOCKED","TERMINAN_OBSERVING":"RUNNING"})
         self.assertEqual(x["stages"][8]["status"],"RUNNING")
         self.assertFalse(x["execution_authorized"])
     def test_terminan_cannot_start_if_infrastructure_blocked(self):
@@ -26,10 +26,10 @@ class SequencePlanTests(unittest.TestCase):
             describe_progress({"INFRA_READY":"BLOCKED","TERMINAN_OBSERVING":"RUNNING"})
     def test_grid_requires_unblocked_handoff(self):
         with self.assertRaises(ContractError):
-            describe_progress({"HANDOFF_VERIFY":"BLOCKED","GRID_MARKET_READY":"RUNNING"})
+            describe_progress({"HANDOFF_VERIFY":"BLOCKED","MARKET_DATA_READY":"RUNNING"})
     def test_transitive_block(self):
         with self.assertRaises(ContractError):
-            describe_progress({"STRAT_HISTORY_SYNC":"BLOCKED","GRID_MARKET_READY":"RUNNING"})
+            describe_progress({"MARKET_HISTORY_SYNC":"BLOCKED","MARKET_DATA_READY":"RUNNING"})
     def test_observer_independent_of_handoff_block(self):
         x=describe_progress({"INFRA_READY":"COMPLETE","HANDOFF_VERIFY":"BLOCKED",
                              "TERMINAN_OBSERVING":"RUNNING"})

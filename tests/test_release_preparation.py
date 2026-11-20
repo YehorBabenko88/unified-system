@@ -39,6 +39,7 @@ class ReleasePreparationTests(unittest.TestCase):
         r=subprocess.run(self.command(output),capture_output=True,text=True,timeout=15)
         self.assertEqual(r.returncode,0,r.stderr)
         evidence=json.loads(r.stdout);raw=(output/'release.json').read_bytes()
+        self.assertEqual(evidence['modules'],4)
         self.assertEqual(evidence['release_sha256'],hashlib.sha256(raw).hexdigest())
         self.assertFalse((output/'release.p7s').exists())
         marker=self.root/'untrusted-executed'

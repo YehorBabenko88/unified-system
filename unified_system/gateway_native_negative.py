@@ -17,10 +17,10 @@ class NativeNegativeDenied(RuntimeError):
     pass
 
 _PINS={
-    'grid.coordination':'3dd73d3eb3dfb576f7174a94fab05a0f87fe248ffcacccfa19786ccc74f0776b',
-    'grid.authority_runtime_v1':'cfb32db73f1859d9d78b03d886372cc08584c81abd64930b5409a91edc417b64',
-    'grid.authority_assignment_v1':'5b972b6d81eeaf6f2283584c5b0482552fa9bf0717a4379838900a72da791491',
-    'unified_system.gateway_research_identity':'481724cd2efca312773fa4152d1c223b46ced6529d96b2d74f452cdf57932d7f',
+    'unified_system.consul_authority':'5d318cf2e993c00488b965673b9d3e4c4ce870023bc828a4c9929f2cfb30c69e',
+    'unified_system.authority_codec':'7cf2e162ef18d1be37ae94cb1b350bc0c0d8ad96fc9cac0e6b983362a63ee35e',
+    'unified_system.research_authority':'9bc61d1f62d97f30bd46ef88a1f02cefb091caca6317b7f00670427f108fc68e',
+    'unified_system.gateway_research_identity':'acd4fe82cc436396fa69599e5182eaaf0702697e22ec43f6cb0fcadb9f53c626',
     'unified_system.gateway_identity':'84093865e8477ef6562100d41137922785446c9cb4e024c9ba7105593a2b36c1',
 }
 
@@ -40,10 +40,10 @@ def _fixed_types():
         info=path.lstat()
         if not stat.S_ISREG(info.st_mode) or info.st_nlink!=1 or hashlib.sha256(path.read_bytes()).hexdigest()!=_PINS[name]:
             raise NativeNegativeDenied('SOURCE_PIN_MISMATCH')
-    return (modules['grid.coordination'].ConsulSessionAuthority,
+    return (modules['unified_system.consul_authority'].ConsulSessionAuthority,
         modules['unified_system.gateway_research_identity'].ResearchIdentityBroker,
-        modules['grid.authority_assignment_v1'].ResearchLabAuthority,
-        modules['grid.authority_assignment_v1'].ResearchAdmissionResult)
+        modules['unified_system.research_authority'].ResearchLabAuthority,
+        modules['unified_system.research_authority'].ResearchAdmissionResult)
 
 def _loopback_endpoints(endpoints,lab):
     if lab is not True or type(endpoints) is not tuple or not 1<=len(endpoints)<=3:
@@ -126,11 +126,11 @@ class DisposableNativeNegativeGateway:
         self._authority=authority;self._broker=broker;self._config=authority.config
         self._loop=asyncio.get_running_loop();self._thread=threading.get_ident();self._busy=False
 
-    async def submit(self,original_lab13_bytes,*,accepted_tls,leader):
-        return await self._call(original_lab13_bytes,accepted_tls=accepted_tls,leader=leader,operation='submit')
+    async def submit(self,original_request_bytes,*,accepted_tls,leader):
+        return await self._call(original_request_bytes,accepted_tls=accepted_tls,leader=leader,operation='submit')
 
-    async def lookup(self,original_lab13_bytes,*,accepted_tls,leader):
-        return await self._call(original_lab13_bytes,accepted_tls=accepted_tls,leader=leader,operation='lookup')
+    async def lookup(self,original_request_bytes,*,accepted_tls,leader):
+        return await self._call(original_request_bytes,accepted_tls=accepted_tls,leader=leader,operation='lookup')
 
     async def _call(self,original,*,accepted_tls,leader,operation):
         if type(self) is not DisposableNativeNegativeGateway or threading.get_ident()!=self._thread or asyncio.get_running_loop() is not self._loop:

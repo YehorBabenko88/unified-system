@@ -1,0 +1,88 @@
+{
+  "schema": "unified.offline-causal.local-evidence.v1",
+  "release_status": "NO_GO",
+  "source_binding": "WORKINGTREE_SOURCE_HASHES_LOCAL_NOT_PARENT_SOURCE_FENCE",
+  "sdk_raw_members": 109,
+  "cohort": {
+    "market_data": "e1ea525273aa2181e7357ca84a774ac2fb30ced0",
+    "math": "a5868944bf1bae813403a32b22d329c1da6f8238",
+    "terminan": "75a906d36574bfdc19acd966e79a6c168dc71ad4"
+  },
+  "semantic_compile": {
+    "files": 391,
+    "executed": false,
+    "pyc_written": false
+  },
+  "runners": [
+    {
+      "python": "311",
+      "kind": "sdk",
+      "status": "PASS_SCOPED",
+      "tests": 26,
+      "cache_control": {
+        "scope": "CONTROLLED_CONSTANT_ONLY_NO_APP_OR_AUTHENTICATION",
+        "source_sha256": "044b17bb113e00dd0019457ad6f3d34825fa4f884ab9e857a455aa0e0e2b8d00",
+        "source_unchanged": true,
+        "with_fresh_prefix": "APPROVED_SOURCE",
+        "without_prefix": "UNAPPROVED_CONTROL"
+      }
+    },
+    {
+      "python": "311",
+      "kind": "causal",
+      "status": "PASS_SCOPED",
+      "tests": 21,
+      "cache_control": {
+        "scope": "CONTROLLED_CONSTANT_ONLY_NO_APP_OR_AUTHENTICATION",
+        "source_sha256": "044b17bb113e00dd0019457ad6f3d34825fa4f884ab9e857a455aa0e0e2b8d00",
+        "source_unchanged": true,
+        "with_fresh_prefix": "APPROVED_SOURCE",
+        "without_prefix": "UNAPPROVED_CONTROL"
+      }
+    },
+    {
+      "python": "312",
+      "kind": "sdk",
+      "status": "PASS_SCOPED",
+      "tests": 26,
+      "cache_control": {
+        "scope": "CONTROLLED_CONSTANT_ONLY_NO_APP_OR_AUTHENTICATION",
+        "source_sha256": "044b17bb113e00dd0019457ad6f3d34825fa4f884ab9e857a455aa0e0e2b8d00",
+        "source_unchanged": true,
+        "with_fresh_prefix": "APPROVED_SOURCE",
+        "without_prefix": "UNAPPROVED_CONTROL"
+      }
+    },
+    {
+      "python": "312",
+      "kind": "causal",
+      "status": "PASS_SCOPED",
+      "tests": 21,
+      "cache_control": {
+        "scope": "CONTROLLED_CONSTANT_ONLY_NO_APP_OR_AUTHENTICATION",
+        "source_sha256": "044b17bb113e00dd0019457ad6f3d34825fa4f884ab9e857a455aa0e0e2b8d00",
+        "source_unchanged": true,
+        "with_fresh_prefix": "APPROVED_SOURCE",
+        "without_prefix": "UNAPPROVED_CONTROL"
+      }
+    }
+  ],
+  "ci_gate_local": {
+    "tests": 6,
+    "python": [
+      "3.11",
+      "3.12"
+    ],
+    "actual_git_case": "HOSTED_MANDATORY_NOT_RUN_LOCALLY"
+  },
+  "native": "NOT_RUN",
+  "production": "NO_GO",
+  "execution_authority": false,
+  "trading_authorized": false,
+  "evidence_hashes": {
+    "sdk-raw-git-proof.json": "5de9bfe2777160a05621a99117649c32dd514362ebab0da1b98df318eab6d2f1",
+    "both-cache-runners.json": "d7c2b894bdddfad99711857affed92f5c71b165520f983541035d1633f219a4b",
+    "actual-sdk-pyc-control/actual-sdk-controlled-poison.json": "30ad36d097f15425b3cbd11bbb54c3d415e931cf0bf7435698635eed80562846",
+    "actual-sdk-pyc-control/guard-negative-controls.json": "7453aa08e0c165ae2462f79996afd3847191db55a1c17a45678a1c3ca80b9184"
+  }
+}

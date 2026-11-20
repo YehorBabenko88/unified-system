@@ -31,7 +31,7 @@ class PackagePreflightTests(unittest.TestCase):
    if source.exists():
     target=self.repo/name;target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(source,target)
   def git(*args):return subprocess.check_output([str(self.git),'-C',str(self.repo),*args],stderr=subprocess.PIPE).decode().strip()
-  self.command_git=git;git('init');git('add','.');git('-c','user.name=Test','-c','user.email=test@example.invalid','commit','-m','trusted fixture')
+  self.command_git=git;git('init');git('config','core.hooksPath',os.devnull);git('add','.');git('-c','user.name=Test','-c','user.email=test@example.invalid','commit','-m','trusted fixture')
   self.head=git('rev-parse','HEAD');self.tree=git('rev-parse','HEAD^{tree}');self.guardpin=hashlib.sha256((self.repo/'integration/source_guard.py').read_bytes()).hexdigest()
   manifest=fixture()
   for name,descriptor in manifest['modules'].items():
@@ -41,14 +41,14 @@ class PackagePreflightTests(unittest.TestCase):
   return [sys.executable,'-I','-S','-B',str(self.repo/'unified_system/package_preflight.py'),'--source-root',str(self.repo),'--source-head',self.head,'--source-tree',self.tree,'--source-guard-sha256',self.guardpin,'--git-executable',str(self.git),'--git-sha256',self.gitpin,'--package-root',str(self.package),'--publisher-sha256','d'*64,'--cache-root',str(self.cache_parent)]
  def run_preflight(self,command=None,env=None):
   return subprocess.run(command or self.command(),env=env,capture_output=True,text=True,timeout=20)
- def test_real_raw_preflight_all_six_artifacts_and_no_authority(self):
+ def test_real_raw_preflight_all_four_artifacts_and_no_authority(self):
   before={str(p):p.read_bytes() for p in self.package.rglob('*') if p.is_file()}
   phase='RAW_LAUNCH'
   try:
    result=self.run_preflight();phase='RETURN_CODE';self.assertEqual(result.returncode,0,result.stderr);phase='JSON_DECODE';out=json.loads(result.stdout)
    phase='CONTRACT_ASSERTIONS'
    self.assertEqual(out['manifest_sha256'],hashlib.sha256((self.package/'release.json').read_bytes()).hexdigest())
-   self.assertEqual(out['signature'],'EXTERNAL_CMS_REQUIRED');self.assertEqual(out['modules'],6);self.assertEqual(out['mode'],'PREPARE_ONLY')
+   self.assertEqual(out['signature'],'EXTERNAL_CMS_REQUIRED');self.assertEqual(out['modules'],4);self.assertEqual(out['mode'],'PREPARE_ONLY')
    self.assertFalse(out['execution_authority']);self.assertFalse(out['trading_authorized']);self.assertFalse(out['physical_deployment_allowed'])
    self.assertEqual(before,{str(p):p.read_bytes() for p in self.package.rglob('*') if p.is_file()})
    self.assertEqual(self.command_git('status','--porcelain'),'');self.assertEqual(list(self.cache_parent.iterdir()),[])
@@ -83,4 +83,4 @@ class PackagePreflightTests(unittest.TestCase):
    bad=command.copy();bad.remove(flag)
    with self.subTest(flag=flag):self.assertNotEqual(self.run_preflight(bad).returncode,0)
   bad=command.copy();bad[bad.index('--package-root')+1]='relative';self.assertNotEqual(self.run_preflight(bad).returncode,0)
-  (self.package/'modules/grid.zip').write_bytes(b'tamper');self.assertNotEqual(self.run_preflight().returncode,0)
+  (self.package/'modules/market_data.zip').write_bytes(b'tamper');self.assertNotEqual(self.run_preflight().returncode,0)

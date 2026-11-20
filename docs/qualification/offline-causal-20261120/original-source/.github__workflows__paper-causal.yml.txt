@@ -1,0 +1,87 @@
+name: Mandatory synthetic causal paper composition
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  paper-causal:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-2025]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    env:
+      UNIFIED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+      GRID_HEAD: 204897c9f3f6ccaf33ae6d02415b97d0049d7e1e
+      STRATT_HEAD: 25eb939f8a816a80ac7c042ce75ec4d9173cd4ce
+      TERMINAN_HEAD: de89c9be291cf89f389698aa9b43045ecd636447
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ env.UNIFIED_HEAD }}
+          path: source/unified
+          persist-credentials: false
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          repository: YehorBabenko88/bybit-cluster-grid
+          ref: ${{ env.GRID_HEAD }}
+          path: source/grid
+          persist-credentials: false
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          repository: YehorBabenko88/strattester
+          ref: ${{ env.STRATT_HEAD }}
+          path: source/stratt
+          persist-credentials: false
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          repository: YehorBabenko88/Terminan
+          ref: ${{ env.TERMINAN_HEAD }}
+          path: source/terminan
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - name: Install hash-locked test fixture dependencies outside sources
+        shell: python
+        run: |
+          import os, subprocess, sys
+          from pathlib import Path
+          evidence = Path(os.environ['RUNNER_TEMP']) / 'causal-paper-evidence'
+          evidence.mkdir()
+          lock = evidence / 'test-requirements.txt'
+          lock.write_text('''pytest==8.3.5 --hash=sha256:c69214aa47deac29fad6c2a4f590b9c4a9fdb16a403176fe154b79c0b4d4d820
+          iniconfig==2.1.0 --hash=sha256:9deba5723312380e77435581c6bf4935c94cbfab9b1ed33ef8d238ea168eb760
+          packaging==24.2 --hash=sha256:09abb1bccd265c01f4a3aa3f7a7db064b36514d2cba19a2f694fe6150451a759
+          pluggy==1.5.0 --hash=sha256:44e1ad92c8ca002de6377e165f3e0f1be63266ab4d554740532335b9d75ea669
+          colorama==0.4.6 --hash=sha256:4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6
+          ''', encoding='utf-8')
+          subprocess.run([sys.executable, '-m', 'pip', '--isolated', 'install', '--disable-pip-version-check',
+              '--require-hashes', '--no-deps', '--no-compile', '--only-binary=:all:',
+              '--target', str(Path(os.environ['RUNNER_TEMP']) / 'causal-paper-test-deps'),
+              '--report', str(evidence / 'pip-report.json'), '-r', str(lock)], check=True)
+      - name: Gate regression checks
+        shell: python
+        run: |
+          import subprocess, sys
+          subprocess.run([sys.executable, '-I', '-S', '-B', '-m', 'unittest', 'discover',
+              '-s', 'source/unified/tests', '-p', 'test_ci_paper_causal.py'], check=True)
+      - name: All sixteen actual composed tests without skips
+        shell: python
+        run: |
+          import os, subprocess, sys
+          from pathlib import Path
+          command = [sys.executable, '-I', '-S', '-B', 'source/unified/scripts/ci_paper_causal.py']
+          for name in ('unified', 'grid', 'stratt', 'terminan'):
+              command += ['--' + name + '-root', str(Path('source') / name),
+                          '--' + name + '-head', os.environ[name.upper() + '_HEAD']]
+          command += ['--test-deps-root', str(Path(os.environ['RUNNER_TEMP']) / 'causal-paper-test-deps'),
+                      '--output', str(Path(os.environ['RUNNER_TEMP']) / 'causal-paper-evidence' / 'report.json')]
+          subprocess.run(command, check=True)
+      - name: Preserve synthetic evidence even on failure
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: synthetic-causal-paper-${{ matrix.os }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/causal-paper-evidence
+          if-no-files-found: error

@@ -1,0 +1,77 @@
+name: Canonical owner source subset
+on:
+  workflow_call:
+    inputs:
+      suite:
+        required: true
+        type: string
+permissions:
+  contents: read
+jobs:
+  source-subset:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        env:
+          GIT_CONFIG_COUNT: '1'
+          GIT_CONFIG_KEY_0: core.autocrlf
+          GIT_CONFIG_VALUE_0: 'false'
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        env:
+          GIT_CONFIG_COUNT: '1'
+          GIT_CONFIG_KEY_0: core.autocrlf
+          GIT_CONFIG_VALUE_0: 'false'
+        with:
+          repository: YehorBabenko88/strattester
+          ref: a44ce268c39170dfd377b25c75aa3648fcf3476e
+          path: .source/market_data
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        env:
+          GIT_CONFIG_COUNT: '1'
+          GIT_CONFIG_KEY_0: core.autocrlf
+          GIT_CONFIG_VALUE_0: 'false'
+        with:
+          repository: YehorBabenko88/math
+          ref: a5868944bf1bae813403a32b22d329c1da6f8238
+          path: .source/math
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        env:
+          GIT_CONFIG_COUNT: '1'
+          GIT_CONFIG_KEY_0: core.autocrlf
+          GIT_CONFIG_VALUE_0: 'false'
+        with:
+          repository: YehorBabenko88/Terminan
+          ref: 75a906d36574bfdc19acd966e79a6c168dc71ad4
+          path: .source/terminan
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.11'
+      - name: Exact canonical sources and actual installed SDK subset
+        shell: python
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+          QUALIFICATION_SUITE: ${{ inputs.suite }}
+        run: |
+          import os,pathlib,subprocess,sys
+          entries={'chain':'verify_market_analysis_chain.py','handoff':'verify_result_handoff.py','provenance':'verify_result_provenance.py'}
+          suite=os.environ['QUALIFICATION_SUITE']
+          entry=entries[suite]
+          out=pathlib.Path(os.environ['RUNNER_TEMP'])/('canonical-owner-'+suite)
+          subprocess.run([sys.executable,'-I','-B',str(pathlib.Path('scripts')/entry),'--root-head',os.environ['EXPECTED_HEAD'],'--market-data','.source/market_data','--math','.source/math','--terminan','.source/terminan','--out',str(out)],check=True)
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: canonical-owner-${{ inputs.suite }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/canonical-owner-${{ inputs.suite }}/
+          if-no-files-found: error

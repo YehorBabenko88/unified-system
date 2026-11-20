@@ -17,7 +17,7 @@ class ProtectedRuntimeTests(unittest.TestCase):
    self.checks+=1
    if not self.active:raise bootstrap.ActivationBlocked('ACTIVATION_REVOKED')
    return True
-  self.config={'state_root':str(self.root/'state'),'programs':{'grid':{'env':{}}}}
+  self.config={'state_root':str(self.root/'state'),'programs':{'market_data':{'env':{}}}}
   self.grant=SimpleNamespace(require_current=current,descriptor={'service_plan':{'role':'WORKER'}},profile={'runtime_config':self.config})
  def test_control_and_single_pc_require_actual_owned_pg_before_runtime(self):
   for role in ('CONTROL','SINGLE_PC'):
@@ -44,7 +44,7 @@ class ProtectedRuntimeTests(unittest.TestCase):
   def pgcurrent():events.append('pg-current');return self.grant.require_current()
   pg=SimpleNamespace(start=lambda:events.append('sql-ready'),require_current=pgcurrent,close=lambda:events.append('close'))
   def make(config,authorize,**kwargs):
-   self.assertTrue(authorize('start','grid'));return object()
+   self.assertTrue(authorize('start','market_data'));return object()
   def run(config,runtime,*,stop_event,continuation):
    self.assertIs(continuation(),True);self.active=False;continuation()
   with patch.object(bootstrap,'_admit_capsule',return_value={'manifest':{}}),patch.object(bootstrap,'_runtime_admission',return_value=(self.config,{})),patch.object(bootstrap,'_repeat_admission',return_value=(self.config,{})),patch('unified_system.service_postgres.read_postgres_ownership',return_value=pg) as read,patch('unified_system.lab_privileges.remove_lab_write_bypass_privileges'),patch('unified_system.lab_runtime.make_runtime',side_effect=make),patch('unified_system.lab_runtime.run_runtime',side_effect=run):
@@ -52,10 +52,10 @@ class ProtectedRuntimeTests(unittest.TestCase):
    self.assertEqual(read.call_count,2)
   self.assertEqual(events[0],'sql-ready');self.assertEqual(events[-1],'close');self.assertIn('pg-current',events)
  def test_worker_uses_existing_runtime_full_restart_gate_and_cheap_continuation(self):
-  auth={'NODE_CREDENTIAL':'c'*64};events=[]
+  auth={};events=[]
   def make(config,authorize,child_environment):
-   events.append('make');self.assertFalse(authorize('stop','grid'));self.assertFalse(authorize('start','unknown'))
-   self.assertTrue(authorize('start','grid'));self.assertEqual(child_environment('grid')['NODE_CREDENTIAL'],'c'*64)
+   events.append('make');self.assertFalse(authorize('stop','market_data'));self.assertFalse(authorize('start','unknown'))
+   self.assertTrue(authorize('start','market_data'));self.assertNotIn('PGPASSWORD',child_environment('market_data'))
    self.assertNotIn('NODE_CREDENTIAL',child_environment('math'));return object()
   def run(config,runtime,*,stop_event,continuation):
    events.append('run');self.assertIs(continuation(),True);self.active=False
@@ -63,6 +63,17 @@ class ProtectedRuntimeTests(unittest.TestCase):
   with patch.object(bootstrap,'_admit_capsule',return_value={'manifest':{}}) as initial,patch.object(bootstrap,'_runtime_admission',return_value=(self.config,auth)),patch.object(bootstrap,'_repeat_admission',return_value=(self.config,auth)) as restart,patch('unified_system.lab_privileges.remove_lab_write_bypass_privileges'),patch('unified_system.lab_runtime.make_runtime',side_effect=make),patch('unified_system.lab_runtime.run_runtime',side_effect=run):
    self.assertEqual(bootstrap.run_protected_runtime(self.grant),0);initial.assert_called_once();restart.assert_called_once()
   self.assertEqual(events,['make','run']);self.assertFalse((self.root/'state').exists())
+ def test_owned_database_password_is_private_to_market_data_child(self):
+  self.grant.descriptor['service_plan']['role']='CONTROL';calls=[]
+  def private(module):calls.append(module);return {'PGPASSWORD':'SYNTHETIC_ONLY_PASSWORD'}
+  pg=SimpleNamespace(start=lambda:None,require_current=lambda:True,close=lambda:None,runtime_environment=private)
+  def make(config,authorize,child_environment):
+   self.assertEqual(child_environment('market_data')['PGPASSWORD'],'SYNTHETIC_ONLY_PASSWORD')
+   for module in ('math','terminan'):self.assertNotIn('PGPASSWORD',child_environment(module))
+   self.assertNotIn('SYNTHETIC_ONLY_PASSWORD',json.dumps(config));return object()
+  with patch.object(bootstrap,'_admit_capsule',return_value={'manifest':{}}),patch.object(bootstrap,'_runtime_admission',return_value=(self.config,{})),patch('unified_system.service_postgres.read_postgres_ownership',return_value=pg),patch('unified_system.lab_privileges.remove_lab_write_bypass_privileges'),patch('unified_system.lab_runtime.make_runtime',side_effect=make),patch('unified_system.lab_runtime.run_runtime'):
+   self.assertEqual(bootstrap.run_protected_runtime(self.grant),0)
+  self.assertEqual(calls,['market_data'])
  def test_worker_never_reads_or_starts_postgres(self):
   with patch.object(bootstrap,'_admit_capsule',return_value={'manifest':{}}),patch.object(bootstrap,'_runtime_admission',return_value=(self.config,{})),patch('unified_system.service_postgres.read_postgres_ownership') as read,patch('unified_system.lab_privileges.remove_lab_write_bypass_privileges'),patch('unified_system.lab_runtime.make_runtime'),patch('unified_system.lab_runtime.run_runtime'):
    self.assertEqual(bootstrap.run_protected_runtime(self.grant),0);read.assert_not_called()
@@ -81,7 +92,7 @@ class ProtectedRuntimeTests(unittest.TestCase):
   self.assertFalse((self.root/'state').exists())
  def test_failed_restart_admission_denies_child_start(self):
   def make(config,authorize,**kwargs):
-   self.assertFalse(authorize('start','grid'));return object()
+   self.assertFalse(authorize('start','market_data'));return object()
   with patch.object(bootstrap,'_admit_capsule',return_value={'manifest':{}}),patch.object(bootstrap,'_runtime_admission',return_value=(self.config,{})),patch.object(bootstrap,'_repeat_admission',side_effect=ValueError('private-error')),patch('unified_system.lab_privileges.remove_lab_write_bypass_privileges'),patch('unified_system.lab_runtime.make_runtime',side_effect=make),patch('unified_system.lab_runtime.run_runtime'):
    self.assertEqual(bootstrap.run_protected_runtime(self.grant),0)
 
@@ -100,18 +111,19 @@ class ExistingAdmissionTests(unittest.TestCase):
   from tests import test_service_activation as fixtures
   from unified_system import lab_runtime,lab_release
   case=fixtures.ActivationTests('test_roundtrip_protected_artifacts_are_not_runtime_readiness');case.setUp();self.addCleanup(case.doCleanups)
-  env=case.profile['runtime_config']['programs']['grid']['env']
+  env=case.profile['runtime_config']['programs']['market_data']['env']
   for key in ('ROLE','NODE_ID','NODE_ROLE','TEMP','TMP'):env.pop(key,None)
   case.profile['derivation_receipt']['profile_sha256']=hashlib.sha256(lab_release.canonical(case.profile['runtime_config'])).hexdigest()
   case.publish();grant=bootstrap.read_protected_activation(case.root,kernel=case.kernel)
   expected=lab_runtime.validate_config(grant.profile['runtime_config'],case.fixture.manifest,grant.code_root,hostname=grant.computer_name,offline_context=grant.profile['offline_context'])
   def make(config,authorize,**kwargs):
-   self.assertEqual(config,expected);grid=config['programs']['grid']['env']
-   self.assertEqual((grid['ROLE'],grid['NODE_ID'],grid['NODE_ROLE']),('worker','PC1','WORKER'));self.assertIn('TEMP',grid)
+   self.assertEqual(config,expected);environment=config['programs']['market_data']['env']
+   self.assertIn('TEMP',environment)
+   self.assertFalse({'ROLE','NODE_ROLE','NODE_CREDENTIAL','GRID_SHARED_TOKEN','PGPASSWORD'} & set(environment))
    return object()
   with patch('unified_system.lab_runtime.verify_sources',return_value={}):
    config,auth=bootstrap._runtime_admission(grant,{'manifest':case.fixture.manifest})
-   self.assertEqual(config,expected);self.assertEqual(auth,{'NODE_CREDENTIAL':'C'*64})
+   self.assertEqual(config,expected);self.assertEqual(auth,{})
    with patch.object(bootstrap,'_admit_capsule',return_value={'manifest':case.fixture.manifest}),patch('unified_system.lab_privileges.remove_lab_write_bypass_privileges'),patch('unified_system.lab_runtime.make_runtime',side_effect=make) as construct,patch('unified_system.lab_runtime.run_runtime'):
     self.assertEqual(bootstrap.run_protected_runtime(grant),0);construct.assert_called_once()
 
@@ -121,7 +133,7 @@ class ExistingAdmissionTests(unittest.TestCase):
   receipt=case.provision();grant=case.grant(receipt);config=grant.profile['runtime_config'];events=[]
   def make(config,authorize,**kwargs):
    self.assertTrue(case.boundary.servers[-1].alive());self.assertIn('ready',case.boundary.calls)
-   self.assertTrue(authorize('start','grid'));events.append('make');return object()
+   self.assertTrue(authorize('start','market_data'));events.append('make');return object()
   with patch.object(bootstrap,'_admit_capsule',return_value={'manifest':{}}),patch.object(bootstrap,'_runtime_admission',return_value=(config,{})),patch.object(bootstrap,'_repeat_admission',return_value=(config,{})),patch('unified_system.service_postgres.WindowsPostgresBoundary',return_value=case.boundary),patch('unified_system.lab_privileges.remove_lab_write_bypass_privileges'),patch('unified_system.lab_runtime.make_runtime',side_effect=make),patch('unified_system.lab_runtime.run_runtime'):
    self.assertEqual(bootstrap.run_protected_runtime(grant),0)
   self.assertEqual(events,['make']);self.assertTrue(all(server.closed for server in case.boundary.servers));self.assertEqual(len(case.boundary.servers),2)
@@ -135,13 +147,13 @@ class RawEntryTests(unittest.TestCase):
  def setUp(self):
   self.temp=tempfile.TemporaryDirectory();self.addCleanup(self.temp.cleanup);self.root=Path(self.temp.name).resolve()
  def test_raw_entry_rejects_unpinned_bootstrap_before_its_code_executes(self):
-  entry=self.root/'service/code/sources/unified-system/unified_system/service_entry.py';entry.parent.mkdir(parents=True)
+  entry=self.root/'service/code/sources/unified_system/unified_system/service_entry.py';entry.parent.mkdir(parents=True)
   entry.write_bytes((ROOT/'unified_system/service_entry.py').read_bytes())
   marker=self.root/'EXECUTED';entry.with_name('service_bootstrap.py').write_text('from pathlib import Path;Path('+repr(str(marker))+').touch()')
   result=subprocess.run([sys.executable,'-I','-S','-B',str(entry)],capture_output=True,timeout=10)
   self.assertEqual(result.returncode,78);self.assertEqual(result.stdout.replace(b'\r\n',b'\n'),b'BLOCKED_SERVICE_ACTIVATION\n');self.assertEqual(result.stderr,b'');self.assertFalse(marker.exists())
  def test_exact_reviewed_bootstrap_still_requires_actual_service_token_and_grant(self):
-  entry=self.root/'service/code/sources/unified-system/unified_system/service_entry.py';entry.parent.mkdir(parents=True)
+  entry=self.root/'service/code/sources/unified_system/unified_system/service_entry.py';entry.parent.mkdir(parents=True)
   entry.write_bytes((ROOT/'unified_system/service_entry.py').read_bytes().replace(b'\r\n',b'\n'))
   helper=entry.with_name('service_bootstrap.py');helper.write_bytes((ROOT/'unified_system/service_bootstrap.py').read_bytes().replace(b'\r\n',b'\n'))
   from unified_system import installation_service
@@ -151,16 +163,16 @@ class RawEntryTests(unittest.TestCase):
   self.assertFalse((self.root/'service/activation').exists());self.assertFalse((self.root/'service/state').exists())
 
  def _source_only_loader_case(self,mode):
-  source=self.root/'code/sources/unified-system/unified_system';source.mkdir(parents=True);files={}
+  source=self.root/'code/sources/unified_system/unified_system';source.mkdir(parents=True);files={}
   for name in bootstrap.VERIFIER_IMPORTS:
    raw=(ROOT/'unified_system'/name).read_bytes().replace(b'\r\n',b'\n');(source/name).write_bytes(raw)
-   files['sources/unified-system/unified_system/'+name]={'bytes':len(raw),'sha256':hashlib.sha256(raw).hexdigest()}
-  guard=self.root/'code/sources/unified-system/integration/source_guard.py';guard.parent.mkdir();raw=(ROOT/'integration/source_guard.py').read_bytes().replace(b'\r\n',b'\n');guard.write_bytes(raw);files['sources/unified-system/integration/source_guard.py']={'bytes':len(raw),'sha256':hashlib.sha256(raw).hexdigest()}
-  (self.root/'manifest.json').write_text(json.dumps({'files':files,'directories':['sources/unified-system/integration']}))
+   files['sources/unified_system/unified_system/'+name]={'bytes':len(raw),'sha256':hashlib.sha256(raw).hexdigest()}
+  guard=self.root/'code/sources/unified_system/integration/source_guard.py';guard.parent.mkdir();raw=(ROOT/'integration/source_guard.py').read_bytes().replace(b'\r\n',b'\n');guard.write_bytes(raw);files['sources/unified_system/integration/source_guard.py']={'bytes':len(raw),'sha256':hashlib.sha256(raw).hexdigest()}
+  (self.root/'manifest.json').write_text(json.dumps({'files':files,'directories':['sources/unified_system/integration']}))
   # Cache matches source timestamp/size but would create a marker if imported.
   script="""import runpy,sys,json,types,py_compile,os,struct,marshal,importlib.util
 from pathlib import Path
-ns=runpy.run_path(sys.argv[1]);root=Path(sys.argv[2]);source=root/'code/sources/unified-system/unified_system/lab_release.py';marker=root/'CACHE_EXECUTED'
+ns=runpy.run_path(sys.argv[1]);root=Path(sys.argv[2]);source=root/'code/sources/unified_system/unified_system/lab_release.py';marker=root/'CACHE_EXECUTED'
 cache=Path(importlib.util.cache_from_source(str(source)));cache.parent.mkdir(exist_ok=True)
 info=source.stat();raw=importlib.util.MAGIC_NUMBER+struct.pack('<III',0,int(info.st_mtime),info.st_size)+marshal.dumps(compile('from pathlib import Path;Path('+repr(str(marker))+').touch()',str(source),'exec'));cache.write_bytes(raw)
 class Kernel:

@@ -1,8 +1,8 @@
 """Contract-only cross-repository compatibility; no runtime provenance claims."""
 from .contracts import ContractError
 
-EXPECTED = {"strattester":"strattester","grid":"bybit-cluster-grid","supervisor":"unified-system"}
-ROUTES = {"strattester":("capabilities","health"),"grid":("capabilities","health"),"supervisor":("capabilities","health","status")}
+EXPECTED = {"terminan":"terminan","market_data":"market_data","unified_system":"unified_system"}
+ROUTES = {"terminan":("capabilities","health"),"market_data":("capabilities","health"),"unified_system":("capabilities","health","status")}
 
 def validate_response(name, endpoint, http_status, payload):
     if name not in EXPECTED or endpoint not in ROUTES[name]:
@@ -20,8 +20,8 @@ def validate_response(name, endpoint, http_status, payload):
         raise ContractError("unknown source state")
     if http_status==503 and payload["status"]!="UNAVAILABLE":
         raise ContractError("false available")
-    if endpoint=="health" and name in ("grid","strattester") and payload["status"]!="UNAVAILABLE":
+    if endpoint=="health" and name in ("market_data","terminan") and payload["status"]!="UNAVAILABLE":
         raise ContractError("source provenance not qualified")
-    if name=="supervisor" and (payload.get("trading_authorized") is not False or payload.get("physical_acceptance")!="NOT_RUN"):
+    if name=="unified_system" and (payload.get("trading_authorized") is not False or payload.get("physical_acceptance")!="NOT_RUN"):
         raise ContractError("unexpected authority")
     return {"name":name,"endpoint":endpoint,"contract":"V1_SHAPE_VALID","source_provenance":"UNVERIFIED","production_ready":False}

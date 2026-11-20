@@ -5,7 +5,7 @@ from .registry import negotiate
 from .module_catalog import MODULE_IDS
 
 def validate_lock(lock):
-    if not isinstance(lock, dict) or set(lock) != {"lock_version", "modules"} or type(lock["lock_version"]) is not int or lock["lock_version"] != 1:
+    if not isinstance(lock, dict) or set(lock) != {"lock_version", "modules"} or type(lock["lock_version"]) is not int or lock["lock_version"] != 2:
         raise ContractError("invalid lock")
     modules=lock["modules"]
     if not isinstance(modules, list) or len(modules)>len(MODULE_IDS):

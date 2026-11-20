@@ -2,14 +2,19 @@
 import copy,json,sys
 from pathlib import Path
 from jsonschema import Draft202012Validator
-root=Path(sys.argv[1]);docs=root/'docs/intelligence/target-adapter'
+root=Path(sys.argv[1]);docs=root/'docs/intelligence/canonical-target'
 schemas={key:json.loads((docs/(key+'.schema.json')).read_bytes()) for key in ('request','success-result','refusal-result')}
 for value in schemas.values():Draft202012Validator.check_schema(value)
 validators={key:Draft202012Validator(value) for key,value in schemas.items()}
-sample=json.loads((docs/'sample-result.WIP.json').read_bytes())
+sample=json.loads((docs/'sample-result.v2.json').read_bytes())
 checks=[]
 def check(name,kind,value,valid):
     actual=validators[kind].is_valid(value);checks.append({'name':name,'expected':valid,'actual':actual})
+request=json.loads((docs/'sample-request.v2.json').read_bytes())
+check('actual_request','request',request,True)
+for key,bad in [('schema','unified.gateway.target-request.v1'),('target_kind','MetaAnalyse'),('target_capability','meta.ohlcv.untouched_levels.v1'),('target_version','0'*40),('result_schema','unified.gateway.direct-target-result.v1'),('authority_generation','claimed'),('result_artifact_ref',{'path':'foreign'})]:
+    value=copy.deepcopy(request);value[key]=bad;check('request:'+key,'request',value,False)
+value=copy.deepcopy(request);value['resource_budget']['max_executions']=True;check('request:bool-budget','request',value,False)
 check('actual_success','success-result',sample,True)
 for kind in ('success-result','refusal-result'):
     value=copy.deepcopy(sample)
