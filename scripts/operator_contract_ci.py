@@ -8,7 +8,8 @@ import runpy
 import xml.etree.ElementTree as ET
 
 GRID_SHA='55e74863c3c28bf4cbcb4ded4d3359f98bf93f71'
-REQUIRED_CASES=[('tests.test_operator_control_plane.OperatorTests', 'test_missing_provider_fails_closed'),
+REQUIRED_CASES=[('tests.test_lifecycle.LifecycleTests', 'test_version_and_retired_owners_are_rejected'),
+ ('tests.test_operator_control_plane.OperatorTests', 'test_missing_provider_fails_closed'),
  ('tests.test_operator_control_plane.OperatorTests', 'test_untrusted_actor_role_and_machine_denied'),
  ('tests.test_operator_control_plane.OperatorTests', 'test_current_grants_checked_on_every_retry'),
  ('tests.test_operator_control_plane.OperatorTests', 'test_role_backend_enforced_and_unknown_action_denied'),
@@ -36,7 +37,7 @@ REQUIRED_CASES=[('tests.test_operator_control_plane.OperatorTests', 'test_missin
  ('tests.test_lifecycle.LifecycleTests', 'test_idempotency_collision_and_sequence'),
  ('tests.test_lifecycle.LifecycleTests', 'test_default_verifier_denies_self_assertion'),
  ('tests.test_lifecycle.LifecycleTests', 'test_recovery_revalidates_and_invalidates_downstream'),
- ('tests.test_lifecycle.LifecycleTests', 'test_missing_modules_zero_to_five'),
+ ('tests.test_lifecycle.LifecycleTests', 'test_missing_modules_zero_to_four'),
  ('tests.test_lifecycle.LifecycleTests', 'test_cancel_retry_cannot_retain_handoff'),
  ('tests.test_lifecycle.LifecycleTests', 'test_tampered_state_rejected'),
  ('tests.test_lifecycle.LifecycleTests', 'test_failed_commit_does_not_advance'),
@@ -57,7 +58,7 @@ def validate_junit(path):
     root=ET.parse(path).getroot()
     cases=root.findall('.//testcase')
     observed=[(c.get('classname'),c.get('name')) for c in cases]
-    if (len(observed)!=34 or len(set(observed))!=34 or set(observed)!=set(REQUIRED_CASES)
+    if (len(observed)!=35 or len(set(observed))!=35 or set(observed)!=set(REQUIRED_CASES)
             or root.findall('.//skipped') or root.findall('.//failure') or root.findall('.//error')):
         raise ValueError('REQUIRED_TEST_INVENTORY_FAILED')
     return len(cases)
