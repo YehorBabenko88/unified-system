@@ -2,9 +2,8 @@
 
 Operator code/closure and lock digest must be independently pinned before launch.
 Never import this tool from an unadmitted payload. No services are installed.
-The run operation is inert unless explicitly selected with --execute.
-Enrollment stdin is exactly {"enrollment_token":"..."}; node-only WORKER v3
-never accepts or stores a fleet token or database password.
+Worker preparation never enrolls, stores credentials or starts a process.
+Protected service activation is a separate owner-admitted lifecycle.
 The externally pinned operator lock has exactly schema, files, and
 source_manifest_sha256s (1..16 sorted unique owner-approved source manifest pins).
 Files map operator-relative Python source paths (including this script) to SHA256.
@@ -30,7 +29,7 @@ import time
 import zipfile
 
 WORKERS={'PC1':'Easy','PC2':'Leitstelle1','PC3':'LS03e','PC4':'LS4','LS7':'LS-07'}
-MODULES={'unified-system','grid','math','meta_analyse','strattester','terminan'}
+MODULES={'unified_system','market_data','math','terminan'}
 ARCHIVE_LIMIT=9*1024**3
 
 
@@ -232,74 +231,29 @@ def check_worker_host(node):
     need(node in WORKERS and socket.gethostname().split('.')[0].casefold() in (node.casefold(),WORKERS[node].casefold()),'ACTUAL_WORKER_HOST_REQUIRED')
 
 
-def read_private(stream):
-    try:
-        raw=stream.read(4097);need(type(raw) is bytes and 0<len(raw)<=4096)
-        value=json.loads(raw,object_pairs_hook=unique)
-        need(type(value) is dict and set(value)=={'enrollment_token'})
-        need(type(value['enrollment_token']) is str and re.fullmatch('[A-Za-z0-9_-]{32,256}',value['enrollment_token']))
-        return value
-    except Exception:raise ValueError('PRIVATE_INPUT_REJECTED') from None
-
-
-def enroll(port,node,token,timeout=5):
-    need(type(port) is int and 1024<=port<=65535 and node in WORKERS and .05<=timeout<=5)
-    deadline=time.monotonic()+timeout;body=json.dumps(dict(enrollment_token=token,node_id=node),separators=(',',':')).encode()
-    request=(f'POST /enroll HTTP/1.1\r\nHost: 127.0.0.1:{port}\r\nContent-Type: application/json\r\nContent-Length: {len(body)}\r\nConnection: close\r\n\r\n').encode()+body
-    try:
-        with socket.create_connection(('127.0.0.1',port),timeout=min(2,timeout)) as wire:
-            def budget():
-                left=deadline-time.monotonic();need(left>0);wire.settimeout(left)
-            budget();wire.sendall(request);data=b''
-            while b'\r\n\r\n' not in data:
-                budget();block=wire.recv(1024);need(block);data+=block;need(len(data)<=8192)
-            header,data=data.split(b'\r\n\r\n',1);lines=header.split(b'\r\n');need(lines[0] in (b'HTTP/1.1 200 OK',b'HTTP/1.0 200 OK'))
-            headers={}
-            for line in lines[1:]:
-                key,sep,value=line.partition(b':');key=key.lower()
-                need(sep and re.fullmatch(b'[a-z0-9-]{1,64}',key) and key not in headers);headers[key]=value.strip()
-            need(b'transfer-encoding' not in headers and b'content-encoding' not in headers)
-            length=headers.get(b'content-length',b'');need(re.fullmatch(b'[0-9]{1,4}',length) and 1<=int(length)<=4096)
-            length=int(length);need(len(data)<=length)
-            while len(data)<length:
-                budget();block=wire.recv(min(1024,length-len(data)));need(block);data+=block
-            budget();reply=json.loads(data,object_pairs_hook=unique)
-            need(type(reply) is dict and set(reply)=={'node_id','credential','install_mode'})
-            need(reply['node_id']==node and reply['install_mode']=='PILOT' and type(reply['credential']) is str and re.fullmatch('[A-Za-z0-9_-]{64,128}',reply['credential']))
-            return reply['credential']
-    except Exception:raise ValueError('CONTROL_ENROLLMENT_REJECTED') from None
-
-
-def worker_config(config,*,node_id,old_root,new_root,new_state,ports,coordinator_port,auth_path,auth_sha256):
-    if node_id not in WORKERS or set(ports)!=MODULES:raise ValueError('WORKER_TARGET_REQUIRED')
-    if any(type(p) is not int or not 1024<=p<=65535 for p in [*ports.values(),coordinator_port]) or len(set(ports.values()))!=6 or coordinator_port in ports.values():
+def worker_config(config,*,node_id,old_root,new_root,new_state,ports):
+    if node_id not in WORKERS or type(ports) is not dict or set(ports)!=MODULES:
+        raise ValueError('WORKER_TARGET_REQUIRED')
+    if any(type(p) is not int or not 1024<=p<=65535 for p in ports.values()) or len(set(ports.values()))!=len(MODULES):
         raise ValueError('BOUND_LOOPBACK_PORTS_REQUIRED')
-    old_root=Path(old_root);new_root=Path(new_root);old_state=Path(config['state_root']);new_state=Path(new_state)
-    if not all(p.is_absolute() for p in (old_root,new_root,old_state,new_state,Path(auth_path))):raise ValueError('ABSOLUTE_PATH_REQUIRED')
-    if new_root==new_state or new_root in new_state.parents or new_state in new_root.parents:raise ValueError('DISJOINT_STATE_REQUIRED')
-    if new_state not in Path(auth_path).parents or not isinstance(auth_sha256,str) or not re.fullmatch('[a-f0-9]{64}',auth_sha256):raise ValueError('PRIVATE_AUTH_BINDING_REQUIRED')
-    # One reviewed data transform, imported only from the pinned operator closure.
     from unified_system.runtime_profile import rebase_config
-    return rebase_config(config,node_id=node_id,role='WORKER',old_root=old_root,new_root=new_root,new_state=new_state,
-                         ports=ports,coordinator_port=coordinator_port,auth_path=auth_path,auth_sha256=auth_sha256)
+    return rebase_config(config,node_id=node_id,role='WORKER',old_root=old_root,new_root=new_root,new_state=new_state,ports=ports)
 
 
-
-def prepare_worker(archive,archive_pin,source_pin,target,state,node,ports,coordinator_port,private_stream):
+def prepare_worker(archive,archive_pin,source_pin,target,state,node,ports):
     from unified_system import lab_release,lab_runtime
     from unified_system.lab_capsule_acl import FreshCodeRoot
     import tempfile
     check_worker_host(node)
     target=safe(target);state=safe(state)
     need(target.parent==state.parent and target!=state and target.parent.is_dir() and not target.exists() and not state.exists())
-    need(set(ports)==MODULES and all(type(p) is int and 1024<=p<=65535 for p in [*ports.values(),coordinator_port]))
-    need(len(set(ports.values()))==6 and coordinator_port not in ports.values())
+    need(type(ports) is dict and set(ports)==MODULES and all(type(p) is int and 1024<=p<=65535 for p in ports.values()))
+    need(len(set(ports.values()))==len(MODULES))
     m=check_archive(archive,archive_pin,source_pin)
     # Complete ZIP admission precedes all new output/state creation.
     owned=FreshCodeRoot.create(target)
     private_state=FreshCodeRoot.create(state)
     # FreshCodeRoot has just verified the exact private FullControl ACL.
-    secrets=read_private(private_stream)
     extract_verified(archive,target,m,source_pin,archive_pin)
     temporary=state/'operator-temp';temporary.mkdir()
     previous=tempfile.tempdir
@@ -307,23 +261,9 @@ def prepare_worker(archive,archive_pin,source_pin,target,state,node,ports,coordi
         tempfile.tempdir=str(temporary)
         lab_release.verify_capsule(target,source_pin);prove_sources(target,m)
         config=json.loads(read_file(target/m['runtime_config'],lab_release.FILE_LIMIT),object_pairs_hook=unique)
-        old_root=Path(config['programs']['grid']['env']['UNIFIED_SOURCE_ROOT']).parents[1]
-        auth_path=state/'private/grid-auth.json'
-        # Validate the complete rebased public profile before consuming a token.
-        candidate=worker_config(config,node_id=node,old_root=old_root,new_root=target,new_state=state,ports=ports,
-            coordinator_port=coordinator_port,auth_path=auth_path,auth_sha256='0'*64)
+        old_root=Path(config['programs']['market_data']['env']['UNIFIED_SOURCE_ROOT']).parents[1]
+        candidate=worker_config(config,node_id=node,old_root=old_root,new_root=target,new_state=state,ports=ports)
         lab_runtime.validate_config(candidate,m,target)
-        credential=enroll(coordinator_port,node,secrets['enrollment_token'])
-        auth=dict(schema='unified.lab.grid-auth.v3',node_id=node,role='WORKER',release_id=m['release_id'],
-            source_commit=m['sources']['grid']['commit'],grid_shared_token=None,
-            node_credential=credential,postgres_password=None)
-        auth_raw=canonical(auth);auth_path.parent.mkdir()
-        with auth_path.open('xb') as out:out.write(auth_raw);out.flush();os.fsync(out.fileno())
-        auth_pin=hashlib.sha256(auth_raw).hexdigest()
-        # This existing reader independently checks role, scope and no database password.
-        lab_runtime.read_grid_auth(auth_path,auth_pin,node_id=node,release_id=m['release_id'],source_commit=m['sources']['grid']['commit'])
-        candidate=worker_config(config,node_id=node,old_root=old_root,new_root=target,new_state=state,ports=ports,
-            coordinator_port=coordinator_port,auth_path=auth_path,auth_sha256=auth_pin)
         config_raw=canonical(candidate)
         need(hash_path(target/m['runtime_config'])==m['files'][m['runtime_config']]['sha256'])
         with (target/m['runtime_config']).open('wb') as out:out.write(config_raw);out.flush();os.fsync(out.fileno())
@@ -334,54 +274,25 @@ def prepare_worker(archive,archive_pin,source_pin,target,state,node,ports,coordi
         lab_release.verify_capsule(target,final_pin);lab_runtime.validate_config(candidate,final,target);prove_sources(target,final)
         owned.seal(final_pin)
     finally:tempfile.tempdir=previous
-    return dict(result='PREPARED_ENROLLED_PILOT_WORKER',node_id=node,source_manifest_sha256=source_pin,
+    return dict(result='PREPARED_READ_ONLY_WORKER',node_id=node,source_manifest_sha256=source_pin,
         manifest_sha256=final_pin,capsule=str(target),state_root=str(state),services='NOT_STARTED',
         runtime_readiness='NOT_TESTED',physical_acceptance='NOT_RUN')
 
 
-def run_worker(root,manifest_pin,*,execute=False):
-    """Launch an owner-pinned derived worker through its admitted raw bootstrap.
-
-    The external operator lock must authorize this individual worker manifest
-    digest, obtained from its verified preparation receipt, before this call.
-    The common CONTROL manifest pin does not authorize an arbitrary derived pin.
-    """
-    from unified_system.lab_runtime import prepare,child_environment,read_grid_auth
-    root=safe(root)
-    config,report=prepare(root,manifest_pin)
+def inspect_worker(root,manifest_pin):
+    """Verify canonical worker source bytes; never starts a process or service."""
+    from unified_system.lab_runtime import prepare
+    root=safe(root);config,report=prepare(root,manifest_pin)
     check_worker_host(config['node_id'])
-    need(config['programs']['grid']['env'].get('ROLE')=='worker')
-    manifest=report['manifest'];source=root/'sources/unified-system'
-    env=config['programs']['grid']['env']
-    auth=read_grid_auth(env['GRID_LAB_AUTH_PATH'],env['GRID_LAB_AUTH_SHA256'],
-        node_id=config['node_id'],release_id=config['release_id'],source_commit=manifest['sources']['grid']['commit'])
-    auth.clear()  # Never pass this reader's credential values to the bootstrap environment.
-    def pin(relative):
-        raw=read_file(root/relative,32*1024*1024)
-        expected=manifest['files'][relative]
-        digest=hashlib.sha256(raw).hexdigest()
-        need(len(raw)==expected['bytes'] and digest==expected['sha256'])
-        return digest
-    pin('sources/unified-system/unified_system/package_preflight.py')
-    guard=pin('sources/unified-system/integration/source_guard.py')
-    git=pin(manifest['git'])
-    result=dict(result='WORKER_RUNTIME_ADMITTED_NOT_STARTED',node_id=config['node_id'],
-        release_id=config['release_id'],manifest_sha256=manifest_pin,services='NOT_INSTALLED',
-        physical_acceptance='NOT_RUN',trading_authorized=False)
-    if not execute:return result
-    cache=safe(Path(config['state_root'])/'bootstrap-cache');cache.mkdir(exist_ok=True);safe(cache)
-    args=[sys.executable,'-I','-S','-B',str(source/'unified_system/package_preflight.py'),
-        '--source-root',str(source),'--source-head',manifest['sources']['unified-system']['commit'],
-        '--source-tree',manifest['sources']['unified-system']['tree'],
-        '--source-guard-sha256',guard,'--git-executable',str(root/manifest['git']),
-        '--git-sha256',git,'--cache-root',str(cache),'--operation','lab','--lab-root',str(root),
-        '--lab-manifest-sha256',manifest_pin,'--execute-lab']
-    child=subprocess.Popen(args,env=child_environment())
-    while True:
-        try:code=child.wait();break
-        except KeyboardInterrupt:continue  # Shared foreground Ctrl-C reaches owned cleanup.
-    result.update(result='WORKER_RUNTIME_EXITED',exit_code=code)
-    return result
+    need(set(config['programs'])=={'market_data','math','terminan'})
+    for program in config['programs'].values():
+        need(not {k.upper() for k in program.get('env',{})}.intersection({'MARKET_DATA_DSN','PGPASSWORD','NODE_CREDENTIAL'}))
+    manifest=report['manifest'];source=root/manifest['sources']['unified_system']['root']
+    for relative in ('unified_system/package_preflight.py','integration/source_guard.py'):
+        path=source/relative;key=path.relative_to(root).as_posix();raw=read_file(path,32*1024*1024)
+        need(manifest['files'][key]==dict(sha256=hashlib.sha256(raw).hexdigest(),bytes=len(raw)))
+    return dict(result='WORKER_SOURCE_VERIFIED_NOT_STARTED',node_id=config['node_id'],release_id=config['release_id'],
+        manifest_sha256=manifest_pin,services='NOT_INSTALLED',physical_acceptance='NOT_RUN',trading_authorized=False)
 
 
 def main(argv=None):
@@ -395,23 +306,22 @@ def main(argv=None):
     prepare=sub.add_parser('prepare');prepare.add_argument('--archive',required=True);prepare.add_argument('--archive-sha256',required=True)
     prepare.add_argument('--source-manifest-sha256',required=True);prepare.add_argument('--target',required=True);prepare.add_argument('--state',required=True)
     prepare.add_argument('--node',required=True,choices=sorted(WORKERS));prepare.add_argument('--ports-json',required=True)
-    prepare.add_argument('--coordinator-port',type=int,required=True);prepare.add_argument('--enroll',action='store_true')
-    run=sub.add_parser('run');run.add_argument('--root',required=True)
+    prepare.add_argument('--materialize',action='store_true')
+    run=sub.add_parser('inspect');run.add_argument('--root',required=True)
     run.add_argument('--source-manifest-sha256',required=True,help='Owner-pinned individual worker manifest, not the common archive pin')
-    run.add_argument('--execute',action='store_true')
     args=parser.parse_args(argv)
     try:
         allowed=admit_operator(args.operator_root,args.operator_lock,args.operator_lock_sha256)
         need(args.source_manifest_sha256 in allowed,'SOURCE_MANIFEST_NOT_ADMITTED')
         if args.operation=='export':result=export_archive(Path(args.source),Path(args.archive),args.source_manifest_sha256)
-        elif args.operation=='run':result=run_worker(Path(args.root),args.source_manifest_sha256,execute=args.execute)
-        elif not args.enroll:
+        elif args.operation=='inspect':result=inspect_worker(Path(args.root),args.source_manifest_sha256)
+        elif not args.materialize:
             check_worker_host(args.node);check_archive(Path(args.archive),args.archive_sha256,args.source_manifest_sha256)
-            result=dict(result='ARCHIVE_BYTES_VERIFIED_ONLY',enrollment='NOT_PERFORMED',outputs='NOT_CREATED',runtime_readiness='NOT_TESTED')
+            result=dict(result='ARCHIVE_BYTES_VERIFIED_ONLY',credentials='NOT_CREATED',outputs='NOT_CREATED',runtime_readiness='NOT_TESTED')
         else:
             ports=json.loads(args.ports_json,object_pairs_hook=unique)
             result=prepare_worker(Path(args.archive),args.archive_sha256,args.source_manifest_sha256,
-                Path(args.target),Path(args.state),args.node,ports,args.coordinator_port,sys.stdin.buffer)
+                Path(args.target),Path(args.state),args.node,ports)
         print(json.dumps(result,sort_keys=True));return 0 if result.get('exit_code',0)==0 else 1
     except Exception:
         print('WORKER_CAPSULE_REJECTED');return 1

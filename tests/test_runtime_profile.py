@@ -56,7 +56,7 @@ class RuntimeProfileTests(unittest.TestCase):
    self.assertEqual(result.returncode,0,result.stderr)
    self.addCleanup(lambda:os.rmdir(alias) if alias.exists() else None)
   else:alias.symlink_to(self.base,target_is_directory=True)
-  b=worker_builder();kwargs=dict(node_id='PC1',old_root=alias,new_root=self.root/'worker',new_state=self.root/'worker-state',ports=self.target()['ports'],coordinator_port=29000,auth_path=self.root/'worker-state/private/auth.json',auth_sha256='d'*64)
+  b=worker_builder();kwargs=dict(node_id='PC1',old_root=alias,new_root=self.root/'worker',new_state=self.root/'worker-state',ports=self.target()['ports'])
   with self.assertRaises(ValueError):b.worker_config(self.config,**kwargs)
 
  def test_closed_target_secret_fields_wrong_roles_ports_and_paths_rejected(self):

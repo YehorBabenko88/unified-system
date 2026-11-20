@@ -8,8 +8,6 @@ from pathlib import Path
 import socket
 import sys
 import tempfile
-import threading
-import time
 import unittest
 from unittest.mock import patch
 import zipfile
@@ -22,89 +20,36 @@ def builder():
     module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module);return module
 
 
-class WorkerRunTests(unittest.TestCase):
-    def setUp(self):
-        self.auth=patch('unified_system.lab_runtime.read_grid_auth',return_value={})
-        self.auth.start();self.addCleanup(self.auth.stop)
+class WorkerInspectTests(unittest.TestCase):
     def fixture(self,parent):
-        # Hosted Windows TEMP may use an 8.3 alias. The production path gate
-        # intentionally rejects aliases; give this positive fixture a canonical root.
-        parent=parent.resolve()
-        root=parent/'code';root.mkdir();state=parent/'state';state.mkdir()
-        self.assertEqual(root,root.resolve())
-        names=['sources/unified-system/unified_system/package_preflight.py','sources/unified-system/integration/source_guard.py','runtime/git.exe']
-        files={}
-        for name in names:
-            p=root/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(name.encode())
-            files[name]={'sha256':hashlib.sha256(p.read_bytes()).hexdigest(),'bytes':p.stat().st_size}
-        config={'node_id':'PC1','release_id':'lab-test','state_root':str(state),'programs':{'grid':{'env':{'ROLE':'worker','GRID_LAB_AUTH_PATH':str(state/'auth.json'),'GRID_LAB_AUTH_SHA256':'c'*64}}}}
-        manifest={'files':files,'git':'runtime/git.exe','sources':{'unified-system':{'commit':'a'*40,'tree':'b'*40},'grid':{'commit':'d'*40}}}
+        root=parent/'code';root.mkdir();files={}
+        for name in ('sources/unified_system/unified_system/package_preflight.py','sources/unified_system/integration/source_guard.py'):
+            path=root/name;path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(name.encode())
+            files[name]=dict(sha256=hashlib.sha256(path.read_bytes()).hexdigest(),bytes=path.stat().st_size)
+        config=dict(node_id='PC1',release_id='test',programs={n:dict(env={}) for n in ('market_data','math','terminan')})
+        manifest=dict(files=files,sources={'unified_system':{'root':'sources/unified_system'}})
         return root,config,{'manifest':manifest}
-
-    def test_run_admission_failure_never_starts_child(self):
+    def test_inspection_never_starts_process_or_creates_credentials(self):
         b=builder()
-        with patch('unified_system.lab_runtime.prepare',side_effect=ValueError('rejected')),patch('subprocess.Popen') as child:
-            with self.assertRaises(ValueError):b.run_worker(Path('unused'),'a'*64,execute=True)
-            child.assert_not_called()
-
-    def test_run_is_inert_by_default_and_does_not_create_cache(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root,config,report=self.fixture(Path(tmp).resolve());before=sorted(str(p) for p in root.rglob('*'))
+            with patch('unified_system.lab_runtime.prepare',return_value=(config,report)),patch.object(b,'check_worker_host'),patch('subprocess.Popen',side_effect=AssertionError('NO CHILD')):
+                self.assertEqual(b.inspect_worker(root,'a'*64)['result'],'WORKER_SOURCE_VERIFIED_NOT_STARTED')
+            self.assertEqual(before,sorted(str(p) for p in root.rglob('*')))
+    def test_changed_bootstrap_and_secret_bearing_program_are_refused(self):
         b=builder()
-        with tempfile.TemporaryDirectory(prefix='worker-run-') as directory:
-            root,config,report=self.fixture(Path(directory))
-            with patch('unified_system.lab_runtime.prepare',return_value=(config,report)),patch.object(b,'check_worker_host'),patch('subprocess.Popen') as child:
-                result=b.run_worker(root,'a'*64)
-            self.assertEqual(result['result'],'WORKER_RUNTIME_ADMITTED_NOT_STARTED')
-            self.assertFalse((Path(config['state_root'])/'bootstrap-cache').exists());child.assert_not_called()
-
-    def test_run_rejects_control_host_and_changed_bootstrap_before_spawn(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root,config,report=self.fixture(Path(tmp).resolve())
+            with patch('unified_system.lab_runtime.prepare',return_value=(config,report)),patch.object(b,'check_worker_host'):
+                config['programs']['market_data']['env']['MARKET_DATA_DSN']='forbidden'
+                with self.assertRaises(ValueError):b.inspect_worker(root,'a'*64)
+                config['programs']['market_data']['env'].clear();(root/'sources/unified_system/unified_system/package_preflight.py').write_bytes(b'changed')
+                with self.assertRaises(ValueError):b.inspect_worker(root,'a'*64)
+    def test_retired_enrollment_and_execution_apis_are_absent(self):
         b=builder()
-        with tempfile.TemporaryDirectory(prefix='worker-run-') as directory:
-            root,config,report=self.fixture(Path(directory))
-            with patch('unified_system.lab_runtime.prepare',return_value=(config,report)),patch.object(b,'check_worker_host',side_effect=ValueError('host')),patch('subprocess.Popen') as child:
-                with self.assertRaises(ValueError):b.run_worker(root,'a'*64,execute=True)
-                child.assert_not_called()
-            (root/'sources/unified-system/unified_system/package_preflight.py').write_bytes(b'changed')
-            with patch('unified_system.lab_runtime.prepare',return_value=(config,report)),patch.object(b,'check_worker_host'),patch('subprocess.Popen') as child:
-                with self.assertRaises(ValueError):b.run_worker(root,'a'*64,execute=True)
-                child.assert_not_called()
-
-    def test_run_preserves_foreground_owned_cleanup_and_passes_exact_pins(self):
-        b=builder()
-        with tempfile.TemporaryDirectory(prefix='worker-run-') as directory:
-            root,config,report=self.fixture(Path(directory))
-            with patch('unified_system.lab_runtime.prepare',return_value=(config,report)),patch.object(b,'check_worker_host'),patch('subprocess.Popen') as spawn:
-                child=spawn.return_value;child.wait.side_effect=[KeyboardInterrupt(),0]
-                result=b.run_worker(root,'a'*64,execute=True)
-                args=spawn.call_args.args[0]
-                self.assertIn('--execute-lab',args);self.assertEqual(args[args.index('--lab-manifest-sha256')+1],'a'*64)
-                self.assertEqual(args[args.index('--source-head')+1],'a'*40)
-                self.assertEqual(args[args.index('--source-tree')+1],'b'*40)
-                self.assertEqual(child.wait.call_count,2);child.kill.assert_not_called();child.terminate.assert_not_called()
-                self.assertNotIn('PGPASSWORD',spawn.call_args.kwargs['env'])
-                self.assertEqual(result['exit_code'],0)
-
-    def test_run_denies_invalid_private_auth_before_bootstrap(self):
-        b=builder()
-        with tempfile.TemporaryDirectory(prefix='worker-run-') as directory:
-            root,config,report=self.fixture(Path(directory))
-            with patch('unified_system.lab_runtime.prepare',return_value=(config,report)),patch.object(b,'check_worker_host'),patch('unified_system.lab_runtime.read_grid_auth',side_effect=ValueError('auth')),patch('subprocess.Popen') as child:
-                with self.assertRaises(ValueError):b.run_worker(root,'a'*64,execute=True)
-                child.assert_not_called()
-
-    def test_run_rejects_guard_and_git_mutation_before_spawn(self):
-        for name in ('sources/unified-system/integration/source_guard.py','runtime/git.exe'):
-            with self.subTest(name=name),tempfile.TemporaryDirectory(prefix='worker-run-') as directory:
-                b=builder();root,config,report=self.fixture(Path(directory));(root/name).write_bytes(b'changed')
-                with patch('unified_system.lab_runtime.prepare',return_value=(config,report)),patch.object(b,'check_worker_host'),patch('subprocess.Popen') as child:
-                    with self.assertRaises(ValueError):b.run_worker(root,'a'*64,execute=True)
-                    child.assert_not_called()
-
-    def test_cli_requires_individual_derived_pin_and_propagates_nonzero_exit(self):
-        b=builder();args=['--operator-root','unused','--operator-lock','unused','--operator-lock-sha256','a'*64,'run','--root','unused','--source-manifest-sha256','b'*64,'--execute']
-        with patch.object(b,'admit_operator',return_value=frozenset(['a'*64])),patch.object(b,'run_worker') as run,patch('builtins.print'):
-            self.assertEqual(b.main(args),1);run.assert_not_called()
-        with patch.object(b,'admit_operator',return_value=frozenset(['a'*64,'b'*64])),patch.object(b,'run_worker',return_value={'exit_code':7}),patch('builtins.print'):
-            self.assertEqual(b.main(args),1)
+        for name in ('read_private','enroll','run_worker'):self.assertFalse(hasattr(b,name))
+        with patch.object(b,'admit_operator',side_effect=AssertionError('NO ADMISSION')):
+            with self.assertRaises(SystemExit):b.main(['--operator-root','x','--operator-lock','y','--operator-lock-sha256','a'*64,'run'])
 
 
 def synthetic_source(root):
@@ -112,7 +57,7 @@ def synthetic_source(root):
     from unified_system.lab_release import canonical
     m=fixture(root)
     # Preserve an intentional Git-like empty namespace in the exact closure.
-    empty=root/'sources/grid/empty';empty.mkdir();m['directories']=sorted([*m['directories'],'sources/grid/empty'])
+    empty=root/'sources/market_data/empty';empty.mkdir();m['directories']=sorted([*m['directories'],'sources/market_data/empty'])
     raw=canonical(m);(root/'lab-release.json').write_bytes(raw)
     return hashlib.sha256(raw).hexdigest()
 
@@ -126,11 +71,11 @@ class WorkerArchiveTests(unittest.TestCase):
             # Mocked source proof is explicit: this test qualifies ZIP closure only.
             with patch.object(b,'prove_sources',return_value=None):receipt=b.export_archive(source,archive,pin)
             manifest=b.check_archive(archive,receipt['archive_sha256'],pin)
-            self.assertIn('sources/grid/empty',manifest['directories'])
+            self.assertIn('sources/market_data/empty',manifest['directories'])
             target=parent/'expanded';target.mkdir();b.extract_verified(archive,target,manifest,pin,receipt['archive_sha256'])
             from unified_system.lab_release import verify_capsule
             self.assertEqual(verify_capsule(target,pin)['manifest'],manifest)
-            self.assertEqual(list((target/'sources/grid/empty').iterdir()),[])
+            self.assertEqual(list((target/'sources/market_data/empty').iterdir()),[])
     def test_failed_source_proof_precedes_archive_creation(self):
         b=builder()
         with tempfile.TemporaryDirectory(prefix='worker-builder-') as directory:
@@ -169,73 +114,29 @@ class WorkerArchiveTests(unittest.TestCase):
         for logical,host in [('PC1','LS5'),('LS5','LS5'),('ADMINIT','ADMINIT'),('PC1','arbitrary')]:
             with self.subTest(logical=logical,host=host),patch.object(b.socket,'gethostname',return_value=host):
                 with self.assertRaises(ValueError):b.check_worker_host(logical)
-    def test_private_stdin_json_is_exact_bounded_and_never_accepts_database_credentials(self):
-        b=builder();valid={'enrollment_token':'T'*43}
-        self.assertEqual(b.read_private(io.BytesIO(json.dumps(valid).encode())),valid)
-        for raw in [b'X'*4097,b'{"enrollment_token":"a","enrollment_token":"b"}',json.dumps({**valid,'PGPASSWORD':'forbidden'}).encode(),json.dumps({**valid,'grid_shared_token':'a'*64}).encode()]:
-            with self.assertRaises(ValueError):b.read_private(io.BytesIO(raw))
 
 
-class MockedControlTests(unittest.TestCase):
-    """Loopback HTTP is a labeled mock, never an actual CONTROL receipt."""
-    def exchange(self,response,*,drip=False):
-        b=builder();listener=socket.socket();listener.bind(('127.0.0.1',0));listener.listen(1);port=listener.getsockname()[1];received=[]
-        def server():
-            try:
-                connection,_=listener.accept()
-                with connection:
-                    received.append(connection.recv(4096))
-                    if drip:
-                        for byte in response:
-                            try:connection.sendall(bytes([byte]));time.sleep(.02)
-                            except OSError:break
-                    else:connection.sendall(response)
-            finally:listener.close()
-        task=threading.Thread(target=server,daemon=True);task.start()
-        began=time.monotonic()
-        try:return b.enroll(port,'PC1','T'*43,timeout=.25 if drip else 2),received
-        finally:task.join(2);self.assertLess(time.monotonic()-began,3)
-    def test_accepts_exact_pilot_enrollment_and_sends_only_enrollment_payload(self):
-        raw=json.dumps(dict(node_id='PC1',credential='C'*64,install_mode='PILOT')).encode()
-        response=b'HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: '+str(len(raw)).encode()+b'\r\n\r\n'+raw
-        result,requests=self.exchange(response)
-        self.assertEqual(result,'C'*64);self.assertIn(b'POST /enroll HTTP/1.1',requests[0]);self.assertNotIn(b'grid_shared_token',requests[0])
-    def test_redirect_wrong_role_duplicate_lengths_and_oversized_response_reject(self):
-        for header,body in [(b'HTTP/1.1 302 Found\r\nContent-Length: 0',b''),(b'HTTP/1.1 200 OK\r\nContent-Length: 5000',b''),(b'HTTP/1.1 200 OK\r\nContent-Length: 0\r\nContent-Length: 0',b'')]:
-            with self.assertRaises(ValueError):self.exchange(header+b'\r\n\r\n'+body)
-        raw=json.dumps(dict(node_id='PC1',credential='C'*64,install_mode='NORMAL')).encode()
-        with self.assertRaises(ValueError):self.exchange(b'HTTP/1.1 200 OK\r\nContent-Length: '+str(len(raw)).encode()+b'\r\n\r\n'+raw)
-    def test_absolute_deadline_rejects_dripping_response(self):
-        with self.assertRaises(ValueError):self.exchange(b'HTTP/1.1 200 OK\r\nContent-Length: 0\r\n\r\n',drip=True)
+
+
 
 class WorkerTransformTests(unittest.TestCase):
-    def test_rebases_all_program_paths_and_removes_control_database_role(self):
+    def context(self):
+        from tests.test_runtime_profile import RuntimeProfileTests
+        case=RuntimeProfileTests();case.setUp();self.addCleanup(case.doCleanups);return case
+    def test_rebases_canonical_programs_and_removes_database_access(self):
+        case=self.context();b=builder();before=json.dumps(case.config,sort_keys=True)
+        ports=dict(zip(sorted(b.MODULES),range(26000,26004)))
+        result=b.worker_config(case.config,node_id='PC1',old_root=case.base,new_root=case.root/'worker',new_state=case.root/'worker-state',ports=ports)
+        self.assertEqual(set(result['programs']),{'market_data','math','terminan'})
+        self.assertNotIn('MARKET_DATA_DSN',result['programs']['market_data']['env']);self.assertNotIn(str(case.base),json.dumps(result))
+        self.assertEqual(json.dumps(case.config,sort_keys=True),before)
+        with self.assertRaises(TypeError):b.worker_config(case.config,node_id='PC1',old_root=case.base,new_root=case.root/'x',new_state=case.root/'y',ports=ports,auth_path='retired')
+    def test_invalid_archive_precedes_any_code_or_state_creation(self):
         b=builder()
-        with tempfile.TemporaryDirectory(prefix='worker-builder-') as directory:
-            parent=Path(directory).resolve();old=parent/'old';state=parent/'old-state';target=parent/'new';newstate=parent/'new-state'
-            ports=dict(zip(sorted(b.MODULES),range(26000,26006)))
-            config={'node_id':'LS5','state_root':str(state),'snapshot_path':str(state/'public/runtime.json'),'programs':{}}
-            for name in b.MODULES-{'unified-system'}:
-                args=[str(old/'python.exe'),'-I','-S','-B',str(old/'sources/unified-system/unified_system/owned_python.py'),'--source-root',str(old/'sources'/name)]
-                if name=='grid':args+=['--dependency-root',str(old/'sources/grid')]
-                args+=['--module','uvicorn' if name=='grid' else 'example','--','--port','20000']
-                config['programs'][name]={'argv':args,'cwd':str(old/'sources'/name),'health_url':'http://127.0.0.1:20000/internal/v2/module/health','env':{'UNIFIED_SOURCE_ROOT':str(old/'sources/unified-system')}}
-            config['programs']['grid']['env']['POSTGRES_DSN']='postgresql://unified_lab_old@127.0.0.1:55459/unified_lab_old'
-            result=b.worker_config(config,node_id='PC1',old_root=old,new_root=target,new_state=newstate,ports=ports,coordinator_port=29000,auth_path=newstate/'private/grid-auth.json',auth_sha256='a'*64)
-            env=result['programs']['grid']['env'];self.assertEqual(env['ROLE'],'worker');self.assertNotIn('POSTGRES_DSN',env);self.assertNotIn('PGPASSWORD',env)
-            self.assertIn('grid.owned_worker_service',result['programs']['grid']['argv']);self.assertNotIn(str(old),json.dumps(result))
-            self.assertIn('POSTGRES_DSN',config['programs']['grid']['env'])
-            config['programs']['math']['env']['POSTGRES_DSN']='postgresql://unexpected'
-            with self.assertRaises(ValueError):b.worker_config(config,node_id='PC1',old_root=old,new_root=target,new_state=newstate,ports=ports,coordinator_port=29000,auth_path=newstate/'private/grid-auth.json',auth_sha256='a'*64)
-
-    def test_invalid_archive_precedes_code_state_creation_and_private_stdin(self):
-        b=builder()
-        with tempfile.TemporaryDirectory(prefix='worker-builder-') as directory:
-            parent=Path(directory).resolve();archive=parent/'bad.zip';archive.write_bytes(b'not a capsule');target=parent/'code';state=parent/'state'
-            class PrivateNeverRead:
-                def read(self,*args):raise AssertionError('secret read before admission')
+        with tempfile.TemporaryDirectory() as tmp:
+            parent=Path(tmp).resolve();archive=parent/'bad.zip';archive.write_bytes(b'not a capsule');target=parent/'code';state=parent/'state'
             with patch.object(b.socket,'gethostname',return_value='Easy'):
-                with self.assertRaises(ValueError):b.prepare_worker(archive,'0'*64,'a'*64,target,state,'PC1',dict(zip(sorted(b.MODULES),range(26000,26006))),29000,PrivateNeverRead())
+                with self.assertRaises(ValueError):b.prepare_worker(archive,'0'*64,'a'*64,target,state,'PC1',dict(zip(sorted(b.MODULES),range(26000,26004))))
             self.assertFalse(target.exists());self.assertFalse(state.exists())
 
 class OperatorClosureTests(unittest.TestCase):
@@ -285,63 +186,48 @@ except ValueError:
             self.assertEqual(result.returncode,7,result.stderr);self.assertEqual(result.stdout.strip(),'PIN_DENIED')
 
 
-@unittest.skipUnless(os.name=='nt','Native Windows worker ACL pipeline')
-class NativeMockedWorkerPipelineTests(unittest.TestCase):
-    def test_mocked_control_worker_capsule_is_rebased_private_and_sealed(self):
-        """Synthetic sources plus mock CONTROL; proves staging only, no readiness."""
-        from unified_system import lab_release,lab_runtime
-        from tests.test_lab_release import fixture
-        from tests.test_lab_capsule_acl import ps
-        spec=importlib.util.spec_from_file_location('owned_control_fixture_builder',ROOT/'scripts/prepare_lab_capsule.py')
-        control=importlib.util.module_from_spec(spec);spec.loader.exec_module(control)
-        b=builder()
-        with tempfile.TemporaryDirectory(prefix='worker-builder-') as directory:
-            parent=Path(directory).resolve();source=parent/'source';source.mkdir();m=fixture(source)
-            for name,raw in [('sources/unified-system/unified_system/owned_python.py',b'# Synthetic; never executed\n'),('sources/math/src/math-engine-server.mjs',b'// Synthetic; never executed\n')]:
-                p=source/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(raw);m['files'][name]=dict(sha256=hashlib.sha256(raw).hexdigest(),bytes=len(raw))
-            for name in m['sources']:m['sources'][name]['dependencies']={d:'1.0.0' for d in control.GRAPH[name]}
-            snapshots={name:{'runtime_files':{'inert.txt':{'raw_sha256':m['files']['sources/'+name+'/inert.txt']['sha256']}}} for name in m['sources']}
-            tool=source/'tools/git.exe';config=control.runtime_config(source,parent/'source-state',m['sources'],snapshots,tool,tool,tool,'lab-1',(parent/'source-state/private/grid-auth.json','a'*64),55459)
-            raw=lab_release.canonical(config);(source/'runtime.json').write_bytes(raw);m['files']['runtime.json']=dict(sha256=hashlib.sha256(raw).hexdigest(),bytes=len(raw))
-            m['directories']=sorted(p.relative_to(source).as_posix() for p in source.rglob('*') if p.is_dir())
-            raw=lab_release.canonical(m);(source/'lab-release.json').write_bytes(raw);pin=hashlib.sha256(raw).hexdigest();archive=parent/'source.zip'
-            with patch.object(b,'prove_sources',return_value=None):export=b.export_archive(source,archive,pin)
-            target=parent/'code';state=parent/'state';ports=dict(zip(sorted(b.MODULES),range(26000,26006)))
-            with patch.object(b.socket,'gethostname',return_value='Easy'),patch.object(b,'prove_sources',return_value=None),patch.object(b,'enroll',return_value='C'*64) as forbidden:
-                with self.assertRaises(ValueError):b.prepare_worker(archive,export['archive_sha256'],pin,parent/'rejected-code',parent/'rejected-state','PC1',ports,29000,io.BytesIO(json.dumps(dict(enrollment_token='T'*43,grid_shared_token='a'*64)).encode()))
-                forbidden.assert_not_called()
+def prepared_worker_fixture(test,*,native=False):
+    from tests.test_runtime_profile import RuntimeProfileTests
+    from unified_system import lab_release,lab_runtime
+    case=RuntimeProfileTests();case.setUp();test.addCleanup(case.doCleanups);b=builder();pin=case.pin;archive=case.root/'source.zip'
+    with patch.object(b,'prove_sources',return_value=None):receipt=b.export_archive(case.base,archive,pin)
+    target=case.root/'worker';state=case.root/'worker-state';ports=dict(zip(sorted(b.MODULES),range(26000,26004)));sealed=[]
+    class InertRoot:
+        def __init__(self,path):self.path=path
+        @classmethod
+        def create(cls,path):path.mkdir();return cls(path)
+        def seal(self,pin):sealed.append(pin)
+    from contextlib import nullcontext
+    boundary=nullcontext() if native else patch('unified_system.lab_capsule_acl.FreshCodeRoot',InertRoot)
+    with boundary,patch.object(b.socket,'gethostname',return_value='Easy'),patch.object(b,'prove_sources',return_value=None):
+        result=b.prepare_worker(archive,receipt['archive_sha256'],pin,target,state,'PC1',ports)
+    final=lab_release.verify_capsule(target,result['manifest_sha256'])['manifest'];config=json.loads((target/'runtime.json').read_bytes())
+    lab_runtime.validate_config(config,final,target,hostname='Easy')
+    test.assertEqual(final['sources'],case.manifest['sources']);test.assertFalse((state/'private').exists())
+    test.assertNotIn('MARKET_DATA_DSN',config['programs']['market_data']['env']);test.assertEqual(result['runtime_readiness'],'NOT_TESTED')
+    return case,target,state,result,sealed
 
-            listener=socket.socket();listener.bind(('127.0.0.1',0));listener.listen(1);port=listener.getsockname()[1]
-            while port in ports.values():ports={k:v+10 for k,v in ports.items()}
-            def mock_control():
-                try:
-                    connection,_=listener.accept()
-                    with connection:
-                        connection.recv(4096)
-                        body=json.dumps(dict(node_id='PC1',credential='C'*64,install_mode='PILOT')).encode()
-                        connection.sendall(b'HTTP/1.1 200 OK\r\nContent-Length: '+str(len(body)).encode()+b'\r\n\r\n'+body)
-                finally:listener.close()
-            task=threading.Thread(target=mock_control,daemon=True);task.start()
-            try:
-                with patch.object(b.socket,'gethostname',return_value='Easy'),patch.object(b,'prove_sources',return_value=None):
-                    result=b.prepare_worker(archive,export['archive_sha256'],pin,target,state,'PC1',ports,port,io.BytesIO(json.dumps(dict(enrollment_token='T'*43)).encode()))
-                final=lab_release.verify_capsule(target,result['manifest_sha256'])['manifest']
-                public=json.loads((target/'runtime.json').read_bytes());lab_runtime.validate_config(public,final,target,hostname='PC1')
-                self.assertEqual(final['sources'],m['sources']);self.assertEqual(final['directories'],m['directories'])
-                auth=json.loads((state/'private/grid-auth.json').read_bytes());self.assertEqual(auth['role'],'WORKER');self.assertEqual(auth['schema'],'unified.lab.grid-auth.v3');self.assertIsNone(auth['postgres_password']);self.assertIsNone(auth['grid_shared_token'])
-                self.assertEqual(auth['node_credential'],'C'*64);self.assertNotIn('POSTGRES_DSN',public['programs']['grid']['env']);self.assertNotIn('GRID_SHARED_TOKEN',public['programs']['grid']['env']);self.assertNotIn('PGPASSWORD',public['programs']['grid']['env'])
-                self.assertNotIn('enrollment_token',(state/'private/grid-auth.json').read_text())
-                with self.assertRaises(PermissionError):(target/'accidental.pyc').write_bytes(b'blocked')
-                (state/'own.log').write_text('writable');self.assertEqual(result['runtime_readiness'],'NOT_TESTED')
-            finally:
-                listener.close();task.join(2)
-                if target.exists():
-                    # Only this test's own fresh absolute code root is unsealed.
-                    self.assertEqual(target.parent,parent);self.assertTrue(parent.name.startswith('worker-builder-'))
-                    self.assertEqual(target.resolve(),target);self.assertFalse(target.is_symlink())
-                    literal="'"+str(target).replace("'","''")+"'"
-                    cleanup=ps("$ErrorActionPreference='Stop';$p="+literal+";$a=Get-Acl -LiteralPath $p;$a.SetAccessRuleProtection($true,$false);foreach($r in @($a.GetAccessRules($true,$false,[Security.Principal.SecurityIdentifier]))){$a.RemoveAccessRuleSpecific($r)};$sid=[Security.Principal.WindowsIdentity]::GetCurrent().User;$a.AddAccessRule([Security.AccessControl.FileSystemAccessRule]::new($sid,'FullControl','ContainerInherit,ObjectInherit','None','Allow'));(Get-Item -LiteralPath $p).SetAccessControl($a)")
-                    self.assertEqual(cleanup.returncode,0,cleanup.stderr)
+class InertWorkerPipelineTests(unittest.TestCase):
+    def test_full_prepare_stages_four_sources_without_credentials_or_processes(self):
+        with patch('subprocess.Popen',side_effect=AssertionError('NO CHILD')),patch('socket.socket',side_effect=AssertionError('NO NETWORK')):
+            case,target,state,result,sealed=prepared_worker_fixture(self)
+        self.assertEqual(sealed,[result['manifest_sha256']]);self.assertEqual(result['result'],'PREPARED_READ_ONLY_WORKER')
+
+@unittest.skipUnless(sys.platform=='win32','Windows NTFS ACL acceptance')
+class NativeWorkerAclTests(unittest.TestCase):
+    def test_prepared_worker_code_is_immutable_but_state_is_writable(self):
+        from tests.test_lab_capsule_acl import ps
+        case=target=None
+        try:
+            case,target,state,result,_=prepared_worker_fixture(self,native=True)
+            with self.assertRaises(PermissionError):(target/'accidental.pyc').write_bytes(b'blocked')
+            (state/'own.log').write_text('writable')
+        finally:
+            if target is not None and target.exists():
+                self.assertEqual(target.parent,case.root);self.assertEqual(target.resolve(),target);self.assertFalse(target.is_symlink())
+                literal="'"+str(target).replace("'","''")+"'"
+                cleanup=ps("$ErrorActionPreference='Stop';$p="+literal+";$a=Get-Acl -LiteralPath $p;$a.SetAccessRuleProtection($true,$false);foreach($r in @($a.GetAccessRules($true,$false,[Security.Principal.SecurityIdentifier]))){$a.RemoveAccessRuleSpecific($r)};$sid=[Security.Principal.WindowsIdentity]::GetCurrent().User;$a.AddAccessRule([Security.AccessControl.FileSystemAccessRule]::new($sid,'FullControl','ContainerInherit,ObjectInherit','None','Allow'));(Get-Item -LiteralPath $p).SetAccessControl($a)")
+                self.assertEqual(cleanup.returncode,0,cleanup.stderr)
 
 
 class ExternalSourcePolicyTests(unittest.TestCase):
@@ -351,7 +237,7 @@ class ExternalSourcePolicyTests(unittest.TestCase):
             parent=Path(directory).resolve()
             common=['--operator-root',str(parent),'--operator-lock',str(parent/'lock.json'),'--operator-lock-sha256','f'*64,
                 'prepare','--archive',str(parent/'source.zip'),'--archive-sha256','c'*64,'--target',str(parent/'code'),
-                '--state',str(parent/'state'),'--node','PC1','--ports-json','{}','--coordinator-port','29000','--enroll']
+                '--state',str(parent/'state'),'--node','PC1','--ports-json','{}','--materialize']
             for pin,expected in [('b'*64,False),('a'*64,True)]:
                 with patch.object(b,'admit_operator',return_value=frozenset({'a'*64})),patch.object(b,'prepare_worker',return_value={'scope':'MOCK_ROUTING_ONLY'}) as prepare,patch.object(b.sys,'stdout',io.StringIO()):
                     result=b.main([*common,'--source-manifest-sha256',pin])
