@@ -20,3 +20,19 @@ Security scope: source edits and reviewed pure Python checks only. No PowerShell
 Confirmed obsolete deletion: `unified_system/fixtures.py` and its exclusive `tests/test_fixtures.py` consumer. The module only admitted two hardcoded historical Grid/Strattester revisions; no active Python caller remained. Current source/release admission uses the full manifest and exact source-fence checks. Immutable historical evidence files and Git history remain unchanged.
 
 Removed the obsolete synthetic demo CLI and exclusive Supervisor/Coordinator/dashboard/report implementations after confirming all active callers were in that demo closure. The shared canonical hash utilities and durable Journal remain because installer, mission and storage consumers use them. The actual entry point is `python -m unified_system --config ...` with prepare as the default. Retired Grid fleet-credential parsing was removed after the service/worker consumers moved to private process capabilities and dedicated database credentials.
+
+## Exact naming and route map
+
+| Retired active name | Canonical name or disposition |
+|---|---|
+| Python `market_profile_math` | `market_math`; no forwarding module |
+| runtime configuration `unified.runtime-config.v1` | v2 with one built-in Root and three child programs |
+| runtime profile v1 / `auth_binding` | `unified.runtime-profile.v2` / `database_credential_binding` |
+| Grid fleet token for read-only data | private process-bound `UNIFIED_MARKET_DATA_READ_CAPABILITY` |
+| `/internal/v1/lifecycle` | `/internal/v2/lifecycle` |
+| protected `--data-first-worker` / research dispatch | removed; canonical source entry accepts only `market_data` and `terminan` |
+| old external controller program | removed; Root is the built-in lifecycle controller |
+
+The unreachable `data_first_service.py` dispatcher has been deleted. The raw protected entry rejects retired arguments before platform or application imports. Directory ownership guards and historical evidence have not been deleted.
+
+Unfinished source transfers remain explicit blockers: the finite synthetic collector still imports Grid's Worker/raw observation implementation; the research identity broker still imports Grid's Consul authority; the causal paper pipeline still imports Grid research and Strattester paper accounting. Their unique behavior must move to the correct owner and pass independent tests before removal. They are not compatible aliases or evidence of completed consolidation.

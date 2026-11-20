@@ -15,7 +15,7 @@ from unified_system.installation_service import service_plan
 from unified_system import installation_service as service
 from tests.test_lab_release import fixture as v1_fixture
 
-KIND = 'unified.lab-release.collector.v1'
+KIND = 'unified.lab-release.collector.v2'
 PERMISSIONS = ('provider_rest', 'provider_websocket', 'trading', 'training', 'math',
                'public_submit', 'authority_mutation', 'service_creation', 'acl_changes')
 
@@ -36,8 +36,8 @@ def fixture(root):
         p.write_bytes(raw)
         files[name] = pin(raw)
     put('source-manifest.json', lab.canonical({'fixture': 'source ledger, not source attestation'}))
-    put('collector.json', lab.canonical(dict(schema='unified.data-only-collector.profile.v1',
-        mode='SYNTHETIC_OFFLINE', grid_launch_profile='grid.data-only-collector.v1',
+    put('collector.json', lab.canonical(dict(schema='unified.synthetic-collector.profile.v2',
+        mode='SYNTHETIC_OFFLINE', collector_profile='market_data.synthetic-collector.v1',
         source_manifest_sha256=files['source-manifest.json']['sha256'],
         instrument_identity='synthetic-btcusdt-v1', network=dict(rest=False, websocket=False),
         features=dict(trading=False, training=False, math=False, public_submit=False, authority_mutation=False))))
@@ -45,7 +45,7 @@ def fixture(root):
     put('dependencies/requirements.lock', b'fixture==1.0\n')
     put('tools/git.exe', b'INERT GIT NEVER EXECUTED')
     sources = {}
-    for name, repository in [('unified-system', 'unified-system'), ('grid', 'bybit-cluster-grid')]:
+    for name, repository in [('unified_system', 'unified-system'), ('market_data', 'strattester')]:
         raw = ('inert ' + name + '\n').encode()
         put('sources/' + name + '/module.txt', raw)
         sources[name] = dict(repository='YehorBabenko88/' + repository, root='sources/' + name,
@@ -126,8 +126,8 @@ class CollectorCapsuleTests(unittest.TestCase):
                         service_name='UnifiedLab_'+service.seal(dict(installation_id='installation', node_id='node'))[:24],
                         service_sid='S-1-5-80-1-2-3-4-5', nssm=str(code/'runtime/nssm/nssm.exe'),
                         nssm_sha256=service.NSSM_PIN, python=str(code/'runtime/python/python.exe'),
-                        python_sha256='b'*64, bootstrap=str(code/'sources/unified-system/unified_system/owned_python.py'),
-                        bootstrap_sha256='c'*64, entry=str(code/'sources/unified-system/unified_system/service_entry.py'),
+                        python_sha256='b'*64, bootstrap=str(code/'sources/unified_system/unified_system/owned_python.py'),
+                        bootstrap_sha256='c'*64, entry=str(code/'sources/unified_system/unified_system/service_entry.py'),
                         entry_sha256=service.SERVICE_ENTRY_SHA256,
                         executor_sha256=hashlib.sha256(service.MODULE.read_bytes()).hexdigest(),
                         native_tools={name:dict(path=str(Path(parent).resolve()/(name+'.exe')),sha256='d'*64)
@@ -146,14 +146,14 @@ class CollectorCapsuleTests(unittest.TestCase):
         original = copy.deepcopy(self.m)
         for mutation in ('file_alias', 'pin_alias', 'cycle', 'foreign_overlay', 'runtime_version', 'primary_extra'):
             self.m = copy.deepcopy(original)
-            if mutation == 'file_alias': self.m['files']['SOURCES/grid/module.txt'] = self.m['files']['sources/grid/module.txt']
-            if mutation == 'pin_alias': self.m['sources']['grid']['file_pins']['MODULE.txt'] = self.m['sources']['grid']['file_pins']['module.txt']
+            if mutation == 'file_alias': self.m['files']['SOURCES/market_data/module.txt'] = self.m['files']['sources/market_data/module.txt']
+            if mutation == 'pin_alias': self.m['sources']['market_data']['file_pins']['MODULE.txt'] = self.m['sources']['market_data']['file_pins']['module.txt']
             if mutation == 'cycle':
-                self.m['sources']['grid']['dependencies'] = {'unified-system': '1.0.0'}
-                self.m['sources']['unified-system']['dependencies'] = {'grid': '1.0.0'}
+                self.m['sources']['market_data']['dependencies'] = {'unified_system': '1.0.0'}
+                self.m['sources']['unified_system']['dependencies'] = {'market_data': '1.0.0'}
             if mutation == 'foreign_overlay': self.m['overlays'] = [dict(source='math', commit='c'*40, tree='d'*40, files={'x': source_pin(b'x')})]
             if mutation == 'runtime_version': self.m['runtime']['python']['version'] = '3.11.10'
-            if mutation == 'primary_extra': self.m['sources']['grid']['file_pins']['missing.py'] = source_pin(b'missing')
+            if mutation == 'primary_extra': self.m['sources']['market_data']['file_pins']['missing.py'] = source_pin(b'missing')
             with self.subTest(mutation=mutation), self.assertRaises(ValueError): self.verify()
 
     def test_permission_true_integer_or_extra_rejected(self):
@@ -166,7 +166,7 @@ class CollectorCapsuleTests(unittest.TestCase):
         with self.assertRaises(ValueError): self.verify()
 
     def test_missing_foreign_or_case_alias_source_rejected(self):
-        for replacement in ({'grid': self.m['sources']['grid']}, dict(self.m['sources'], math=self.m['sources']['grid'])):
+        for replacement in ({'grid': self.m['sources']['market_data']}, dict(self.m['sources'], math=self.m['sources']['market_data'])):
             with self.subTest(keys=list(replacement)):
                 current = self.m['sources']
                 self.m['sources'] = replacement
@@ -174,16 +174,16 @@ class CollectorCapsuleTests(unittest.TestCase):
                 self.m['sources'] = current
 
     def test_declared_source_oid_mismatch_rejected_even_when_sha_matches(self):
-        self.m['sources']['grid']['file_pins']['module.txt']['blob_oid'] = '0' * 40
+        self.m['sources']['market_data']['file_pins']['module.txt']['blob_oid'] = '0' * 40
         with self.assertRaises(ValueError): self.verify()
 
     def test_ordered_overlays_require_final_bytes_and_final_git_oid(self):
         for i, raw in enumerate((b'first overlay\n', b'final overlay\n')):
-            self.m['overlays'].append(dict(source='grid', commit=str(i + 1) * 40, tree='c' * 40,
+            self.m['overlays'].append(dict(source='market_data', commit=str(i + 1) * 40, tree='c' * 40,
                                            files={'module.txt': source_pin(raw)}))
-        path = self.root / 'sources/grid/module.txt'
+        path = self.root / 'sources/market_data/module.txt'
         path.write_bytes(raw)
-        self.m['files']['sources/grid/module.txt'] = pin(raw)
+        self.m['files']['sources/market_data/module.txt'] = pin(raw)
         self.assertEqual(self.verify()['manifest']['overlays'], self.m['overlays'])
         self.m['overlays'].reverse()
         with self.assertRaises(ValueError): self.verify()
@@ -191,7 +191,7 @@ class CollectorCapsuleTests(unittest.TestCase):
     def test_overlay_cannot_escape_root_or_add_unlisted_source_file(self):
         raw = b'not there'
         for name in ('../escape.py', 'new.py'):
-            self.m['overlays'] = [dict(source='grid', commit='c' * 40, tree='d' * 40, files={name: source_pin(raw)})]
+            self.m['overlays'] = [dict(source='market_data', commit='c' * 40, tree='d' * 40, files={name: source_pin(raw)})]
             with self.subTest(name=name), self.assertRaises(ValueError): self.verify()
 
     def test_lock_or_runtime_pin_mismatch_rejected(self):
@@ -212,7 +212,7 @@ class CollectorCapsuleTests(unittest.TestCase):
 
     def test_single_link_and_symlink_protections_reused(self):
         self.verify()
-        path = self.root / 'sources/grid/module.txt'
+        path = self.root / 'sources/market_data/module.txt'
         alias = self.root / 'hardlink'
         os.link(path, alias)
         with self.assertRaises(ValueError): self.verify()

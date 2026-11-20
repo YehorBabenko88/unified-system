@@ -24,7 +24,7 @@ REPOSITORIES={
     'math':'YehorBabenko88/math',
     'terminan':'YehorBabenko88/Terminan',
 }
-COLLECTOR_SCHEMA='unified.lab-release.collector.v1'
+COLLECTOR_SCHEMA='unified.lab-release.collector.v2'
 COLLECTOR_SOURCES=frozenset(('unified_system','market_data'))
 COLLECTOR_PERMISSIONS=frozenset(('provider_rest','provider_websocket','trading','training','math',
                                'public_submit','authority_mutation','service_creation','acl_changes'))
@@ -274,8 +274,8 @@ def _verify_collector_profile(root,m):
     need(fields(before)==fields(after)==fields(current) and before.st_ctime_ns==after.st_ctime_ns and len(raw)==before.st_size)
     need(_pin_from_bytes(raw)==m['files'][m['collector_profile']])
     profile=_canonical_document(raw);need(type(profile) is dict)
-    need(profile.get('schema')=='unified.data-only-collector.profile.v1' and profile.get('mode')=='SYNTHETIC_OFFLINE')
-    need(profile.get('grid_launch_profile')=='grid.data-only-collector.v1' and profile.get('instrument_identity')=='synthetic-btcusdt-v1')
+    need(profile.get('schema')=='unified.synthetic-collector.profile.v2' and profile.get('mode')=='SYNTHETIC_OFFLINE')
+    need(profile.get('collector_profile')=='market_data.synthetic-collector.v1' and profile.get('instrument_identity')=='synthetic-btcusdt-v1')
     need(profile.get('source_manifest_sha256')==m['files'][m['source_manifest']]['sha256'])
     exact(profile.get('network'),('rest','websocket'));need(all(value is False for value in profile['network'].values()))
     exact(profile.get('features'),('trading','training','math','public_submit','authority_mutation'))

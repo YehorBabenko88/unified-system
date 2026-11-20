@@ -8,10 +8,10 @@ import hashlib
 import json
 import re
 
-SCHEMA = 'unified.data-only-collector.profile.v1'
-GRID_PROFILE = 'grid.data-only-collector.v1'
+SCHEMA = 'unified.synthetic-collector.profile.v2'
+SYNTHETIC_PROFILE = 'market_data.synthetic-collector.v1'
 LOG_SCHEMA = 'unified.collector.logging.v1'
-_FIELDS = frozenset(('schema','mode','grid_launch_profile','context_id','store_id',
+_FIELDS = frozenset(('schema','mode','collector_profile','context_id','store_id',
  'source_manifest_sha256','instrument_identity','limits','network','features','logging'))
 _FEATURES = frozenset(('trading','training','math','public_submit','authority_mutation'))
 
@@ -43,7 +43,7 @@ def validate_collector_profile(value,*,manifest_sha256):
  try:
   _keys(value,_FIELDS)
   _string(value['schema'],SCHEMA);_string(value['mode'],'SYNTHETIC_OFFLINE')
-  _string(value['grid_launch_profile'],GRID_PROFILE)
+  _string(value['collector_profile'],SYNTHETIC_PROFILE)
   _need(type(manifest_sha256) is str and re.fullmatch(r'[a-f0-9]{64}',manifest_sha256) is not None)
   _string(value['source_manifest_sha256'],manifest_sha256)
   context=value['context_id'];_need(type(context) is str and re.fullmatch(r'[a-f0-9]{32}',context) is not None)
@@ -90,7 +90,7 @@ def collector_plan(profile):
   checked=decode_collector_profile(profile.encoded,manifest_sha256=document.get('source_manifest_sha256'))
  except CollectorProfileRejected:raise
  except (ValueError,TypeError,AttributeError,RecursionError):raise CollectorProfileRejected() from None
- return dict(schema='unified.data-only-collector.plan.v1',status='PLAN_ONLY_NOT_EXECUTION_AUTHORITY',
-  profile_sha256=checked.sha256,profile_schema=SCHEMA,grid_launch_profile=GRID_PROFILE,
+ return dict(schema='unified.synthetic-collector.plan.v2',status='PLAN_ONLY_NOT_EXECUTION_AUTHORITY',
+  profile_sha256=checked.sha256,profile_schema=SCHEMA,collector_profile=SYNTHETIC_PROFILE,
   provider_sends=False,installed=False,service_admission=False,
   scope='SYNTHETIC_OFFLINE_LOCAL_UNATTESTED',limits=checked.document['limits'],logging=checked.document['logging'])
