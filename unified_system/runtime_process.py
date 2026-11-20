@@ -210,6 +210,7 @@ class ProcessDriver:
         self._save(operation_id,d,new=True)
         p=self.programs[spec.module_id]
         env=os.environ.copy() if self.child_environment is None else self.child_environment(spec.module_id)
+        env=dict(env)  # Providers may return a cached/public mapping; never mutate it.
         env.update(_public_environment(p))
         for key in tuple(env):
             if key.upper()==PRIVATE_DATA_CAPABILITY_ENV or (key.upper() in ('PGPASSWORD','PGPASSFILE') and (spec.module_id!='market_data' or self.child_environment is None)):del env[key]
