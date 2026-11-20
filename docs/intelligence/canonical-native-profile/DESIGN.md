@@ -2,7 +2,7 @@
 
 Status: SOURCE_CANDIDATE / NO_GO. Native process, mTLS, Consul and installer checks were NOT_RUN locally under the security restriction.
 
-Root owns native identity/admission infrastructure. The only scientific producer is Terminan 75a906d36574bfdc19acd966e79a6c168dc71ad4, using Math a5868944bf1bae813403a32b22d329c1da6f8238 and the same canonical three-row input as the direct gateway. Neither this profile nor a successful identity capture issues a job, resources, worker, storage publication or trading permission.
+Root owns native identity/admission infrastructure. The only scientific producer is Terminan 042b075dda0fc8cf6bb829d758632cfa989e8e55, using Math e80d622eed7c01b109062b68e750f2b70bcccff7 and the same canonical three-row input as the direct gateway. Neither this profile nor a successful identity capture issues a job, resources, worker, storage publication or trading permission.
 
 The broker accepts only unified.authority.canonical-research-profile.v3. Its closed target binding includes both exact source revisions. Native target request v2 is a separate schema and mode from direct synthetic target request v2; conversion is refused. The exact canonical submit is version2 with fourteen fields including math_head; cancellation separately binds the original submit digest.
 
