@@ -16,3 +16,5 @@ Lifecycle names: `STRAT_HISTORY_SYNC` → `MARKET_HISTORY_SYNC`; `STRAT_RESULT_S
 Remaining release gates: protected service bootstrap/source-admission closure, data-first orchestration split, capsule builder and installer source closure, exact-SHA Windows/Linux CI, native install/update/recovery/uninstall, physical Qt acceptance, complete migration of unique Grid/Meta functionality and necessary data. Historical repository/source preservation is intentional until those gates pass. No repository/branch/data deletion is implied by this candidate.
 
 Security scope: source edits and reviewed pure Python checks only. No PowerShell/CMD replay, Windows installer/service action, protection changes, live trading or real funds. Norton incident remains INVESTIGATION_REQUIRED.
+
+Confirmed obsolete deletion: `unified_system/fixtures.py` and its exclusive `tests/test_fixtures.py` consumer. The module only admitted two hardcoded historical Grid/Strattester revisions; no active Python caller remained. Current source/release admission uses the full manifest and exact source-fence checks. Immutable historical evidence files and Git history remain unchanged.

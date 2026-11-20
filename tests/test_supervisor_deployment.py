@@ -22,7 +22,7 @@ class DeploymentPlanTests(unittest.TestCase):
         plan=self.adapter.rollout([self.node(n) for n in ('LS7','PC2','PC3','LS5','PC1','PC4')])
         self.assertEqual([s['node']['node_id'] for s in plan['steps']],['LS5','PC4','PC3','PC2','PC1','LS7'])
         self.assertEqual(plan['manifest_sha256'],self.pin)
-        self.assertEqual(len(plan['source_pins']),6);self.assertEqual(plan['max_concurrent_nodes'],1)
+        self.assertEqual(len(plan['source_pins']),4);self.assertEqual(plan['max_concurrent_nodes'],1)
         self.assertEqual(plan['mode'],'PLAN_ONLY');self.assertFalse(plan['effects_authorized'])
         self.assertTrue(all(s['authority_freshness']=='UNKNOWN' for s in plan['steps']))
     def test_original_input_not_mutated_and_edition_qualification_separate(self):
@@ -67,7 +67,7 @@ class DeploymentPlanTests(unittest.TestCase):
         self.assertEqual(plan['installed_release'],'NOT_OBSERVED')
     def test_returned_plan_mutation_does_not_change_adapter(self):
         a=self.adapter.rollout([self.node()]);a['source_pins'].clear()
-        b=self.adapter.rollout([self.node()]);self.assertEqual(len(b['source_pins']),6)
+        b=self.adapter.rollout([self.node()]);self.assertEqual(len(b['source_pins']),4)
 
 
 class ServicePrototypeTests(unittest.TestCase):

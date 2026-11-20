@@ -33,8 +33,8 @@ class IntegrationTests(unittest.TestCase):
         self.assertEqual(result["lifecycle"]["state"],"OBSERVING")
         self.assertEqual(result["dashboard"]["overall"],"SYNTHETIC_READY")
         self.assertFalse(result["terminan_connected"])
-    def test_missing_grid(self):
-        result=synthetic_pipeline(self.path,modules=("strattester","terminan"))
+    def test_missing_market_data(self):
+        result=synthetic_pipeline(self.path,modules=("terminan",))
         self.assertEqual(result["lifecycle"]["state"],"DEGRADED")
         self.assertEqual(result["dashboard"]["overall"],"DEGRADED")
     def test_restart_blocked(self):
