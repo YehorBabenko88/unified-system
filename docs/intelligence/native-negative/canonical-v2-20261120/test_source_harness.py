@@ -34,7 +34,11 @@ class SourceHarnessCalibrationTests(unittest.TestCase):
   new_negative=json.loads((ROOT/'EXPECTED-TESTS.json').read_bytes())
   old_research=json.loads((repo/'docs/intelligence/research-identity/native-profile-v2-20261109/EXPECTED-TESTS.json').read_bytes())
   new_research=json.loads((repo/'docs/intelligence/research-identity/native-profile-v3-20261120/EXPECTED-TESTS.json').read_bytes())
-  self.assertEqual(old_negative,new_negative);self.assertEqual(old_research,new_research)
+  self.assertEqual(old_negative,new_negative)
+  mapping=json.loads((repo/'docs/intelligence/canonical-native-profile/case-cutover-map.json').read_bytes())
+  self.assertEqual(mapping['old_ids'],old_research);self.assertEqual(mapping['new_ids'],new_research)
+  self.assertEqual(len(mapping['old_ids']),len(set(mapping['new_ids'])))
+  self.assertEqual([mapping['old_to_new'][name] for name in old_research],new_research)
   guards=json.loads((ROOT/'ROOT-GUARD-TESTS.json').read_bytes());self.assertEqual(len(guards),27)
   self.assertNotEqual(set(guards),set(new_research))
 
@@ -83,5 +87,26 @@ class SourceHarnessCalibrationTests(unittest.TestCase):
   self.assertFalse(h.result_passed(result,21))
   result.expectedFailures=[];result.unexpectedSuccesses=['case']
   self.assertFalse(h.result_passed(result,21))
+
+ def test_every_preserved_case_body_matches_declared_protocol_ast_proof(self):
+  import ast,hashlib
+  repo=ROOT.parents[3]
+  proof=json.loads((repo/'docs/intelligence/canonical-native-profile/native-case-method-transform-proof.json').read_bytes())
+  self.assertEqual(proof['baseline'],'b3abfb4542df7b28c7f3dd57d5ff34cda5f9746f')
+  rows=proof['case_bodies_exact_except_declared_protocol_changes'];self.assertEqual(len(rows),43)
+  actual=[]
+  for row in rows:
+   folder='gateway_native_negative' if row['new_module'] in ('test_actual.py','test_boundary.py') else 'gateway_research_identity'
+   tree=ast.parse((repo/'tests'/folder/row['new_module']).read_bytes())
+   cls=next(node for node in tree.body if isinstance(node,ast.ClassDef) and node.name==row['new_class'])
+   node=next(node for node in cls.body if isinstance(node,(ast.FunctionDef,ast.AsyncFunctionDef)) and node.name==row['new_method'])
+   for part in ast.walk(node):
+    if hasattr(part,'type_params') and not part.type_params:del part.type_params
+   self.assertEqual(hashlib.sha256(ast.dump(node,include_attributes=False).encode()).hexdigest(),row['new_ast_sha256'])
+   self.assertIs(row['exact_declared_transform'],True)
+   actual.append(row['new_module'][:-3]+'.'+row['new_class']+'.'+row['new_method'])
+  manifest=json.loads((repo/'release/integration/native-negative-v2/manifest.json').read_bytes())
+  expected=[case for profile in manifest['profiles'].values() for case in json.loads((repo/profile['expected_cases']).read_bytes())]
+  self.assertEqual(h.validate_ids(actual,expected),sorted(expected))
 
 if __name__=='__main__':unittest.main()

@@ -19,8 +19,8 @@ class NativeNegativeDenied(RuntimeError):
 _PINS={
     'unified_system.consul_authority':'5d318cf2e993c00488b965673b9d3e4c4ce870023bc828a4c9929f2cfb30c69e',
     'unified_system.authority_codec':'7cf2e162ef18d1be37ae94cb1b350bc0c0d8ad96fc9cac0e6b983362a63ee35e',
-    'unified_system.research_authority':'4a01a7a0c5f7cb6d086a17e4df019fe35169b25517a4c6c6f4ddb5d651553fb3',
-    'unified_system.gateway_research_identity':'06066277812133a9cc152f7a95a05e5ff6c23dda1ab7e05232ad800474b2e41d',
+    'unified_system.research_authority':'9bc61d1f62d97f30bd46ef88a1f02cefb091caca6317b7f00670427f108fc68e',
+    'unified_system.gateway_research_identity':'4ab708291fe16b5df75d1a5d710d965db9a7f017877f4ee38ab071ab54763a68',
     'unified_system.gateway_identity':'84093865e8477ef6562100d41137922785446c9cb4e024c9ba7105593a2b36c1',
 }
 
@@ -126,11 +126,11 @@ class DisposableNativeNegativeGateway:
         self._authority=authority;self._broker=broker;self._config=authority.config
         self._loop=asyncio.get_running_loop();self._thread=threading.get_ident();self._busy=False
 
-    async def submit(self,original_lab13_bytes,*,accepted_tls,leader):
-        return await self._call(original_lab13_bytes,accepted_tls=accepted_tls,leader=leader,operation='submit')
+    async def submit(self,original_request_bytes,*,accepted_tls,leader):
+        return await self._call(original_request_bytes,accepted_tls=accepted_tls,leader=leader,operation='submit')
 
-    async def lookup(self,original_lab13_bytes,*,accepted_tls,leader):
-        return await self._call(original_lab13_bytes,accepted_tls=accepted_tls,leader=leader,operation='lookup')
+    async def lookup(self,original_request_bytes,*,accepted_tls,leader):
+        return await self._call(original_request_bytes,accepted_tls=accepted_tls,leader=leader,operation='lookup')
 
     async def _call(self,original,*,accepted_tls,leader,operation):
         if type(self) is not DisposableNativeNegativeGateway or threading.get_ident()!=self._thread or asyncio.get_running_loop() is not self._loop:
