@@ -106,7 +106,7 @@ class HistoricalBoundary:
 
 def inspect_market(payload,*,now_ms=None):
     """Observe unqualified market data without making ingestion imply order authority."""
-    result={'status':'UNAVAILABLE','reason':'GRID_SOURCE_UNQUALIFIED','market_truth':'NOT_ATTESTED','ingestion_requires_trading':False,'trading_authorized':False}
+    result={'status':'UNAVAILABLE','reason':'MARKET_DATA_SOURCE_UNQUALIFIED','market_truth':'NOT_ATTESTED','ingestion_requires_trading':False,'trading_authorized':False}
     try:
         if not isinstance(payload,dict) or len(canonical(payload))>8388608 or payload.get('producer')!='market_data' or not v11(payload.get('api_version')) or payload.get('read_only') is not True:return result
         if payload.get('execution_authority',False) is not False or payload.get('trading_authorized',False) is not False:return result

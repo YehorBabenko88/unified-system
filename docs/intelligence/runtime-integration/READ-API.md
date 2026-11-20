@@ -1,52 +1,13 @@
-# Disposable authenticated READ composition
+# Canonical disposable READ composition
 
-Root owns two explicit temporary factories: commission_disposable_manifest_front
-and commission_disposable_query_front. Their trusted provisioning objects never
-come from HTTP fields: actual Root SSLContext, fixed commissioned synthetic
-service/user/resource profile, ObjectStore instance, initialized private Journal,
-and actual client SSLContext for commissioning. No bool/role text enables them.
-The real own-client probe verifies the actual loaded server DER before resources
-open. A2 then authenticates each resource connection and issues a request/tool/
-view/store-bound capability; consumer uses the independently expected SAME issuer.
+Root owns commission_disposable_manifest_front and commission_disposable_query_front. Provisioning uses actual Root SSL contexts, a commissioned synthetic service/resource profile, one ObjectStore and an initialized private Journal. HTTP fields cannot select source code, factories, modules, issuer objects or stores. The commissioning probe checks the actual server DER; each resource read then uses the same actual Root issuer and request/tool/view/store-bound capability.
 
-POST /intelligence/v1/manifest consumes the exact closed A4 v1-review2 request and
-returns A4 canonical bytes, at most32768. POST /intelligence/v1/query consumes
-exact A3 query v1-review2 and returns a separately versioned Root envelope carrying
-UNCHANGED owner_result plus its canonical byte SHA256. Declared synthetic units
-are quote-per-base/base/quote. The complete Gateway view cap is32768, stricter than
-A3's1MiB owner limit; excess denies the whole response, never truncates. Header
-limit8192/32fields and request transport deadline2sec remain; this is not hard
-kernel preemption of SQLite/filesystem/native calls. No streaming/keepalive.
+POST /intelligence/v1/manifest retains the canonical Root storage request. POST /intelligence/v1/query accepts only market_data.gateway.ohlcv-query.v1-review2. Pure Data prepares/decodes/projects the domain; Math alone validates numerical minute grids and exact OHLCV/turnover. Root alone decodes the storage manifest, checks the fixed normalized synthetic lineage, reads six objects under the existing actual capability and rechecks it after projection. A caller-supplied Data context never grants access. The old Grid blob loader and query_source_root selector are removed.
 
-Query provisioning loads ONLY reviewed raw Git blob f19f7feee0f63da34a20607a8cae59191180aa7c:
-grid/gateway_query.py, SHA2561186062afaf7d87609acf934a8cf2f55405f7786bdc0f76516956ff89424b9cd.
-No source path/version/module/callback is accepted in HTTP. Private namespace is
-not a whole-Grid package or production source admission. Unified's canonical
-identity/store classes stay single-instance. Later installed packaging is a separate
-gate; no floating-branch or provider source loading is supported.
+Root wraps the unchanged pure Data result and its canonical-byte digest. The complete Gateway view cap remains32768, stricter than Data's1MiB domain budget: excess denies the complete response. Transport limits remain8192header bytes/32fields and2seconds; there is no streaming/keepalive or hard kernel preemption. Serialized audit writes through the existing Journal precede owner IO and response; failure/corruption denies without repair. This is a disposable single-writer read profile, not consensus, production ACL or instantaneous external revocation proof.
 
-The factories configure one read tool each, not all34 proposed logical tools.
-Public capabilities show configured local scope, not current user authorization.
-Root serializes admitted read operations, durably records local audit batches
-using existing Journal before owner IO and before response, and refuses disclosure
-on audit failure/corruption without repair. This is a private disposable single-
-writer journal, not consensus or production ACL/Windows crash qualification.
-Authorization check ordering is bounded pre-read/final-owner-check, not an atomic
-claim about instantaneous external revocation vs bytes already in flight.
+Hosted qualification checks out Root as a primary root directory and the three SDK repositories as sibling.source primaries. Checkout commits come directly from the active cohort JSON. The existing four-owner qualifier builds and tests real wheels; READ rechecks all four source primaries and exact repository origins before/after, binds the complete112SDK members to their canonical Git paths, verifies installed wheel/distribution ownership and fresh startup bytecode custody, and binds hash-pinned cryptographic dependency files. Git EOL overrides apply only to checkout steps; SourceFence override rejection is unchanged.
 
-Own actual HTTPS tests cover real read/gap/digest/audit, wrong view403/zero reads,
-chain-valid unregistered principal401/zero reads, explicit restart/duplicate read,
-and corrupt own audit503/zero reads/no repair. A reproduced SQLite exception
-initially escaped the handler; specific SQLite errors now fail closed. Retain RED.
-Manifest tests use actual one-read/two-check A4 consumer. Source qualification runs
-all146exact IDs: Root17+offline16+identity24+Storage62+disclosure27. Crypto dependencies
-are owner-hashlocked; unlike old25-case stdlib stand, this profile allows pinned
-site packages and does not close global environment/native findings.
+The mandatory READ inventory is168: all147prior roles,12transferred query issuer/capability roles,3owned-fixture roles and6explicit refusal cases. All5actual HTTPS query roles and original assertions are retained. Missing/duplicate/failed/skipped/xfail/xpass cases refuse success. Local source validation uses inert controls only; actual READ168/TLS and primary SourceFence execution remain hosted-required and NOT_RUN locally.
 
-Synthetic fixture packet/hash correction is retained under release/evidence/
-gateway-runtime-synthetic-profile-review1. Original gapped query is not a contiguous
-Meta input. Provider coverage UNKNOWN, publication/registry UNPROVEN, local hashes
-not replica proofs, native human authentication false. Read results are not jobs,
-registry receipts or published visualization artifacts. Job/cancel/result-promote,
-whole Gateway E2E, exact hosted terminal CI, native/HomePro/physical/production
-remain separate blocked gates. No real orders, office/security changes or Math retry.
+Current new synthetic fixtures live in tests/gateway_runtime/query_fixtures. Original packets and historical evidence stay unchanged. Provider coverage staysUNKNOWN; publication/registry/source completeness remainUNPROVEN; pure Data does not authenticate the session. Native human authentication, job submission/publication, actual installation/update/recovery, production and physical acceptance remain separate gates. No real orders, user data deletion or protection changes are performed.

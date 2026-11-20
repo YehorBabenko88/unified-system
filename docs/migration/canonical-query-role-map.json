@@ -1,0 +1,178 @@
+{
+  "schema": "unified.canonical-query-role-map.v1",
+  "scope": "SOURCE_PORT_ONLY_NOT_LOCAL_NATIVE_ACCEPTANCE",
+  "plan": {
+    "goal": "Move original12 authenticated+3ownedstore query roles to actual Root identity/ObjectStore/manifest and actual canonical Data domain; no Grid executor or dual-source source loader.",
+    "files": [
+      "tests/gateway_runtime/test_query_owner_capabilities.py",
+      "tests/gateway_runtime/test_query_owned_fixture.py",
+      "docs/migration/canonical-query-role-map.json"
+    ],
+    "steps": [
+      "Preserve original role names/assertions and raw provenance",
+      "Use direct current Root TLSFixture/issuer/ObjectStore; Data prepare/index/project own all domain validation",
+      "Compile and AST-check only under local restrictions; mandatory actual hosted execution without skips",
+      "Parent owns Git/workflow/source qualification and independent review"
+    ],
+    "verification": "Local source/AST/compile only. Native TLS cryptography, ObjectStore/process/provider/real crash NOT_RUN locally; no fake grants."
+  },
+  "original_source": {
+    "grid_commit": "f19f7feee0f63da34a20607a8cae59191180aa7c",
+    "input_directory": "outputs/grid-query-transfer-inputs-f19f7fee/tests/gateway_query",
+    "files": [
+      {
+        "path": "test_authenticated_query.py",
+        "sha256": "92716ba930dadbe746d56442385fe047e1a397678b8cdcd967ae635d8f5f8820",
+        "blob": "bd2c41732dee579e0921a2de5f1d8eec5f963252"
+      },
+      {
+        "path": "test_owned_store_fixture.py",
+        "sha256": "6e383f6e98e12d156d73839af1c6da477ce50b6c10e7cab08f48c917fc1d7971",
+        "blob": "d9813fe521660833f56ce5205e72235fa95f72d6"
+      }
+    ]
+  },
+  "dependencies": {
+    "data": "693c6deae2300e49612fc78514fd333aa5d831be",
+    "data_tested_runtime": "c176fb10225695c5a4327701270617ee12a0c435",
+    "math": "e80d622eed7c01b109062b68e750f2b70bcccff7",
+    "root_reader": "unified_system.market_data_query.read_market_data",
+    "data_domain": "market_data.gateway_query"
+  },
+  "roles": [
+    {
+      "original": "AuthenticatedQueryTests.test_actual_tls_six_read_query_returns_only_requested_row_and_explicit_gap",
+      "canonical": "test_query_owner_capabilities.QueryOwnerCapabilityTests.test_actual_tls_six_read_query_returns_only_requested_row_and_explicit_gap",
+      "assertions": "Retained: actual TLS identity, exact private issuer/store/request binding, read count7currentchecks, revocation/expiry before disclosure; source capsule helper retired for Root-only source qualification.",
+      "local": "NOT_RUN_NATIVE_HOSTED_MANDATORY"
+    },
+    {
+      "original": "AuthenticatedQueryTests.test_missing_capability_denies_before_store_attribute_access",
+      "canonical": "test_query_owner_capabilities.QueryOwnerCapabilityTests.test_missing_capability_denies_before_store_attribute_access",
+      "assertions": "Retained: actual TLS identity, exact private issuer/store/request binding, read count7currentchecks, revocation/expiry before disclosure; source capsule helper retired for Root-only source qualification.",
+      "local": "NOT_RUN_NATIVE_HOSTED_MANDATORY"
+    },
+    {
+      "original": "AuthenticatedQueryTests.test_legitimate_foreign_issuer_same_store_denies_zero_reads",
+      "canonical": "test_query_owner_capabilities.QueryOwnerCapabilityTests.test_legitimate_foreign_issuer_same_store_denies_zero_reads",
+      "assertions": "Retained: actual TLS identity, exact private issuer/store/request binding, read count7currentchecks, revocation/expiry before disclosure; source capsule helper retired for Root-only source qualification.",
+      "local": "NOT_RUN_NATIVE_HOSTED_MANDATORY"
+    },
+    {
+      "original": "AuthenticatedQueryTests.test_wrong_view_full_query_digest_denies_zero_reads",
+      "canonical": "test_query_owner_capabilities.QueryOwnerCapabilityTests.test_wrong_view_full_query_digest_denies_zero_reads",
+      "assertions": "Retained: actual TLS identity, exact private issuer/store/request binding, read count7currentchecks, revocation/expiry before disclosure; source capsule helper retired for Root-only source qualification.",
+      "local": "NOT_RUN_NATIVE_HOSTED_MANDATORY"
+    },
+    {
+      "original": "AuthenticatedQueryTests.test_real_revocation_after_last_read_blocks_output",
+      "canonical": "test_query_owner_capabilities.QueryOwnerCapabilityTests.test_real_revocation_after_last_read_blocks_output",
+      "assertions": "Retained: actual TLS identity, exact private issuer/store/request binding, read count7currentchecks, revocation/expiry before disclosure; source capsule helper retired for Root-only source qualification.",
+      "local": "NOT_RUN_NATIVE_HOSTED_MANDATORY"
+    },
+    {
+      "original": "AuthenticatedQueryTests.test_actual_revoked_capability_denies_before_first_read",
+      "canonical": "test_query_owner_capabilities.QueryOwnerCapabilityTests.test_actual_revoked_capability_denies_before_first_read",
+      "assertions": "Retained: actual TLS identity, exact private issuer/store/request binding, read count7currentchecks, revocation/expiry before disclosure; source capsule helper retired for Root-only source qualification.",
+      "local": "NOT_RUN_NATIVE_HOSTED_MANDATORY"
+    },
+    {
+      "original": "AuthenticatedQueryTests.test_other_actual_store_same_uuid_denies_before_read",
+      "canonical": "test_query_owner_capabilities.QueryOwnerCapabilityTests.test_other_actual_store_same_uuid_denies_before_read",
+      "assertions": "Retained: actual TLS identity, exact private issuer/store/request binding, read count7currentchecks, revocation/expiry before disclosure; source capsule helper retired for Root-only source qualification.",
+      "local": "NOT_RUN_NATIVE_HOSTED_MANDATORY"
+    },
+    {
+      "original": "AuthenticatedQueryTests.test_manifest_tool_capability_cannot_authorize_query",
+      "canonical": "test_query_owner_capabilities.QueryOwnerCapabilityTests.test_manifest_tool_capability_cannot_authorize_query",
+      "assertions": "Retained: actual TLS identity, exact private issuer/store/request binding, read count7currentchecks, revocation/expiry before disclosure; source capsule helper retired for Root-only source qualification.",
+      "local": "NOT_RUN_NATIVE_HOSTED_MANDATORY"
+    },
+    {
+      "original": "AuthenticatedQueryTests.test_changed_range_and_event_cut_full_digest_denies_before_read",
+      "canonical": "test_query_owner_capabilities.QueryOwnerCapabilityTests.test_changed_range_and_event_cut_full_digest_denies_before_read",
+      "assertions": "Retained: actual TLS identity, exact private issuer/store/request binding, read count7currentchecks, revocation/expiry before disclosure; source capsule helper retired for Root-only source qualification.",
+      "local": "NOT_RUN_NATIVE_HOSTED_MANDATORY"
+    },
+    {
+      "original": "AuthenticatedQueryTests.test_authorized_missing_dependency_returns_error_no_success_empty_history",
+      "canonical": "test_query_owner_capabilities.QueryOwnerCapabilityTests.test_authorized_missing_dependency_returns_error_no_success_empty_history",
+      "assertions": "Retained: actual TLS identity, exact private issuer/store/request binding, read count7currentchecks, revocation/expiry before disclosure; source capsule helper retired for Root-only source qualification.",
+      "local": "NOT_RUN_NATIVE_HOSTED_MANDATORY"
+    },
+    {
+      "original": "AuthenticatedQueryTests.test_full_fixture_query_returns_two_rows_and_gap_with_new_actual_permit",
+      "canonical": "test_query_owner_capabilities.QueryOwnerCapabilityTests.test_full_fixture_query_returns_two_rows_and_gap_with_new_actual_permit",
+      "assertions": "Retained: actual TLS identity, exact private issuer/store/request binding, read count7currentchecks, revocation/expiry before disclosure; source capsule helper retired for Root-only source qualification.",
+      "local": "NOT_RUN_NATIVE_HOSTED_MANDATORY"
+    },
+    {
+      "original": "AuthenticatedQueryTests.test_actual_elapsed_registry_expiry_denies_query_zero_reads",
+      "canonical": "test_query_owner_capabilities.QueryOwnerCapabilityTests.test_actual_elapsed_registry_expiry_denies_query_zero_reads",
+      "assertions": "Retained: actual TLS identity, exact private issuer/store/request binding, read count7currentchecks, revocation/expiry before disclosure; source capsule helper retired for Root-only source qualification.",
+      "local": "NOT_RUN_NATIVE_HOSTED_MANDATORY"
+    },
+    {
+      "original": "OwnedStoreFixtureTests.test_actual_six_reads_reopen_and_codec_keep_gap_explicit",
+      "canonical": "test_query_owned_fixture.QueryOwnedFixtureTests.test_actual_six_reads_reopen_and_codec_keep_gap_explicit",
+      "assertions": "Retained six actual bounded ObjectStore reads/reopen identity/manifest publication and closure false/GAP/providerUNKNOWN. Direct Data decode replaced by actual public prepare/index/project, no capability fabricated. Exact fixture byte total3433→3468 after namespace reseal.",
+      "local": "NOT_RUN_LOCAL_SOURCE_PORT_ONLY"
+    },
+    {
+      "original": "OwnedStoreFixtureTests.test_actual_store_missing_object_refuses",
+      "canonical": "test_query_owned_fixture.QueryOwnedFixtureTests.test_actual_store_missing_object_refuses",
+      "assertions": "Original missing/corrupt-owned-object refusal assertions retained.",
+      "local": "NOT_RUN_LOCAL_SOURCE_PORT_ONLY"
+    },
+    {
+      "original": "OwnedStoreFixtureTests.test_actual_store_modified_owned_object_refuses_hash",
+      "canonical": "test_query_owned_fixture.QueryOwnedFixtureTests.test_actual_store_modified_owned_object_refuses_hash",
+      "assertions": "Original missing/corrupt-owned-object refusal assertions retained.",
+      "local": "NOT_RUN_LOCAL_SOURCE_PORT_ONLY"
+    }
+  ],
+  "fixture_reseal": {
+    "old_total_bytes": 3433,
+    "new_total_bytes": 3468,
+    "reason": "Canonical market_data domain namespace and hashes; Root generic manifest remains decoded only by Root.",
+    "files": [
+      {
+        "name": "manifest",
+        "bytes": 861,
+        "sha256": "220da472fb772b3bdc45f9644b16714d0a20d2876dad0a21c876772f03cdb141"
+      },
+      {
+        "name": "data-schema",
+        "bytes": 337,
+        "sha256": "c99eacf8b4161f367f038a5d6e447aec6c829d30567d92769b3a206087c2525b"
+      },
+      {
+        "name": "segment-index",
+        "bytes": 461,
+        "sha256": "e65c1db3675e867ab0d1119119c8b26b0688c4995b15e5d4518367d4db0614c6"
+      },
+      {
+        "name": "rows",
+        "bytes": 379,
+        "sha256": "4617a918caf19b279ddf5f4f79a42644fb2715e0547bc38c9e888f0b7f630b6c"
+      },
+      {
+        "name": "coverage",
+        "bytes": 797,
+        "sha256": "f719a49d075f9f0ca30e3bb8eaba80e1175af895e7c37dde5b3a5ffc98d2c872"
+      },
+      {
+        "name": "dependencies",
+        "bytes": 633,
+        "sha256": "c692e1759e6fe9b107c18931f7e47b3058150b52ef33bf2553e1da6b51e768fc"
+      }
+    ]
+  },
+  "source_custody": {
+    "old": "Dual A2/A4 environment-driven source loader and skipUnless helpers",
+    "canonical": "One Root source checkout and frozen SDK source/byte custody enforced by Parent workflow/qualifier; direct current Root imports and exact Root module paths. No duplicated verifier, source aliases, optional skip, fake issuer or permission DTO."
+  },
+  "release_status": "NO_GO",
+  "execution_authority": false,
+  "trading_authorized": false
+}

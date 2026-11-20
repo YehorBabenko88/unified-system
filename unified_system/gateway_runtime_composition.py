@@ -14,10 +14,6 @@ import sqlite3
 import threading
 import time
 import hashlib
-import importlib.util
-import pathlib
-import subprocess
-import sys
 from datetime import datetime, timezone
 
 from .intelligence_gateway import catalog
@@ -321,7 +317,7 @@ class _ManifestComposition:
         from .gateway_identity import GatewayIdentityDenied
         adapter=self.query_adapter
         try:
-            request=adapter.prepare_query(raw).as_dict()
+            request=adapter.domain.prepare_query(raw).as_dict()
             binding=dict(schema='unified.gateway.read-binding.v1-review2',dataset_id=request['dataset_id'],
                 dataset_revision=request['dataset_revision'],manifest_sha256=request['knowledge_cut']['manifest_sha256'],
                 schema_sha256=request['data_schema_sha256'],consumer_id=request['consumer_context']['consumer_id'],
@@ -329,7 +325,7 @@ class _ManifestComposition:
             capability=self.authority.authorize_read(context,tool_name='unified.query_market_data',
                 request_bytes=raw,binding=binding,owned_store=self.store)
             self.flush('QUERY_ISSUED_BEFORE_OWNER_IO')
-            result=adapter.query_market_data(raw,owner_read_capability=capability,
+            result=adapter.read_market_data(raw,owner_read_capability=capability,
                 expected_identity_authority=self.authority,pinned_owned_store=self.store)
             if type(result) is not dict or result.get('status')!='SYNTHETIC_QUERY_RESULT':
                 raise RuntimeError('ACTUAL_QUERY_NOT_EXECUTED')
@@ -346,7 +342,7 @@ class _ManifestComposition:
         except GatewayIdentityDenied:
             self.flush('QUERY_DENIED')
             return 403,b'{"code":"READ_DENIED"}'
-        except adapter.QueryFormatError:
+        except adapter.domain.QueryFormatError:
             self.flush('QUERY_FORMAT_OR_CONTENT_REFUSED')
             return 400,b'{"code":"QUERY_FORMAT_OR_CONTENT_REFUSED"}'
 
@@ -404,28 +400,9 @@ def _commission_front(*,server_ssl_context,profile,pinned_owned_store,
 
 
 def commission_disposable_query_front(*,server_ssl_context,profile,pinned_owned_store,
-        audit_journal,commissioning_client_context,query_source_root):
-    """Own-stand source provisioning, not a path/version/callback in HTTP input.
-
-    Only the reviewed Grid module is read from a fixed immutable Git revision and
-    checked by its SHA256 before evaluation. This does not admit whole Grid or
-    production packaging. Existing A2/A4 canonical classes remain in Unified.
-    """
-    git='C:/Program Files/Git/cmd/git.exe' if sys.platform=='win32' else '/usr/bin/git'
-    raw=subprocess.check_output([git,'--no-replace-objects','-C',str(pathlib.Path(query_source_root)),
-        'show','f19f7feee0f63da34a20607a8cae59191180aa7c:grid/gateway_query.py'],timeout=15)
-    if hashlib.sha256(raw).hexdigest()!='1186062afaf7d87609acf934a8cf2f55405f7786bdc0f76516956ff89424b9cd':
-        raise RuntimeError('GRID_QUERY_SOURCE_PIN_MISMATCH')
-    name='_unified_owned_grid_query_f19f7fee'
-    if name in sys.modules:
-        raise RuntimeError('GRID_QUERY_NAMESPACE_OCCUPIED')
-    module=importlib.util.module_from_spec(importlib.util.spec_from_loader(name,loader=None))
-    sys.modules[name]=module
-    try:
-        exec(compile(raw,'<owned-grid-query-f19f7fee>','exec'),module.__dict__)
-        return _commission_front(server_ssl_context=server_ssl_context,profile=profile,
-            pinned_owned_store=pinned_owned_store,audit_journal=audit_journal,
-            commissioning_client_context=commissioning_client_context,query_adapter=module)
-    finally:
-        if sys.modules.get(name) is module:
-            del sys.modules[name]
+        audit_journal,commissioning_client_context):
+    """Fixed canonical Root reader and installed Data SDK; no source selector."""
+    from . import market_data_query
+    return _commission_front(server_ssl_context=server_ssl_context,profile=profile,
+        pinned_owned_store=pinned_owned_store,audit_journal=audit_journal,
+        commissioning_client_context=commissioning_client_context,query_adapter=market_data_query)

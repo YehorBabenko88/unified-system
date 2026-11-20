@@ -1,7 +1,6 @@
-"""Actual HTTPS -> fixed Grid reader -> ObjectStore under real A2 mTLS caps."""
+"""Actual HTTPS -> canonical Data/Math + Root reads under real mTLS caps."""
 import hashlib
 import json
-import os
 from pathlib import Path
 import socket
 import sys
@@ -12,15 +11,15 @@ import test_manifest_front as fixtures
 from unified_system.gateway_runtime_composition import commission_disposable_query_front
 
 
+QUERY_FIXTURE=Path(__file__).resolve().parent/'query_fixtures'
+
 class QueryFrontTests(unittest.TestCase):
     def setUp(self):
         self.fixture=fixtures.ManifestFrontTests();self.fixture.setUp()
         self.addCleanup(self.fixture.doCleanups)
-        self.request=json.loads((fixtures.FIXTURE/'actual-query.request.canonical.json').read_bytes())
-        self.source=os.environ.get('GRID_GATEWAY_SOURCE_ROOT',
-            'C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-3-bybit-historical-live/work/grid-gateway-query')
-        for name in ('data-schema','segment-index','rows','coverage','dependencies'):
-            self.fixture.store.put((fixtures.FIXTURE/(name+'.canonical.json')).read_bytes())
+        self.request=json.loads((QUERY_FIXTURE/'actual-query.request.canonical.json').read_bytes())
+        for name in ('manifest','data-schema','segment-index','rows','coverage','dependencies'):
+            self.fixture.store.put((QUERY_FIXTURE/(name+'.canonical.json')).read_bytes())
         q=self.request
         self.binding=dict(schema='unified.gateway.read-binding.v1-review2',dataset_id=q['dataset_id'],
             dataset_revision=q['dataset_revision'],manifest_sha256=q['knowledge_cut']['manifest_sha256'],
@@ -31,7 +30,7 @@ class QueryFrontTests(unittest.TestCase):
         f=self.fixture
         front=commission_disposable_query_front(server_ssl_context=f.tls.server_context,
             profile=f.profile,pinned_owned_store=f.store,audit_journal=f.audit,
-            commissioning_client_context=f.client_context,query_source_root=self.source)
+            commissioning_client_context=f.client_context)
         self.addCleanup(front.close);return front
 
     def get(self,front,request):
