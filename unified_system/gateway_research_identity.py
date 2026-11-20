@@ -21,11 +21,8 @@ from cryptography.x509.oid import ExtendedKeyUsageOID
 import httpx
 from .gateway_identity import GatewayAuditSink, GatewayIdentityUnavailable
 
-try:
-    from grid.coordination import ConsulSessionAuthority, CoordinationUnavailable
-    from grid.authority_runtime_v1 import canonical, measure_native_plan
-except ImportError:
-    ConsulSessionAuthority = None
+from .consul_authority import ConsulSessionAuthority, CoordinationUnavailable
+from .authority_codec import canonical, measure_native_plan
 
 SCOPES=frozenset(('SUBMIT_RESEARCH','READ_RESEARCH','CANCEL_OWN_JOB'))
 _PROFILE_V2='unified.authority.target-bound-research-profile.v2-review1'
@@ -185,7 +182,7 @@ class ResearchIdentityCapture(ResearchPrincipalContext):
 
 class ResearchIdentityBroker:
     def __init__(self,*,authority,generation,realm_id,profile_sha256,server_ssl_context,server_certificate_der,audit_sink):
-        if (ConsulSessionAuthority is None or type(authority) is not ConsulSessionAuthority
+        if (type(authority) is not ConsulSessionAuthority
                 or not authority._owns_client or type(authority.client) is not httpx.AsyncClient
                 or type(authority.client._transport) is not httpx.AsyncHTTPTransport
                 or not authority.config.isolated_lab or not authority.config.acl_token

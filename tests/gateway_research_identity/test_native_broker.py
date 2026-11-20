@@ -8,8 +8,8 @@ import subprocess
 
 GRID=Path(os.environ.get('A2_RESEARCH_GRID_SOURCE','C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-2-high-availability-distributed/work/grid-assignment-native-20261107'))
 sys.path.insert(0,str(GRID))
-from grid.coordination import ConsulConfig,ConsulSessionAuthority,CoordinationLost
-from grid.authority_runtime_v1 import canonical
+from unified_system.consul_authority import ConsulConfig,ConsulSessionAuthority,CoordinationLost
+from unified_system.authority_codec import canonical
 from unified_system.gateway_identity import GatewayAuditSink
 from unified_system.gateway_research_identity import ResearchIdentityBroker,ResearchIdentityDenied,ResearchIdentityUnavailable
 from consul_lab import ConsulLab

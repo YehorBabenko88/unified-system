@@ -1,7 +1,7 @@
 """Pure negative-DATA and loopback validation; not native permission proofs."""
 import hashlib
 import unittest
-from grid.authority_assignment_v1 import ResearchAdmissionResult
+from unified_system.research_authority import ResearchAdmissionResult
 
 class NegativeDataTests(unittest.TestCase):
     def test_exact_negative_data_and_original_digest(self):
@@ -37,7 +37,7 @@ class NegativeDataTests(unittest.TestCase):
         from unified_system.gateway_native_negative import _fixed_types,NativeNegativeDenied
         from pathlib import Path
         import tempfile
-        from grid import authority_assignment_v1 as actual
+        from unified_system import research_authority as actual
         original=actual.__file__;raw=Path(original).read_bytes()
         with tempfile.TemporaryDirectory(prefix='negative-source-calibration-') as temp:
             changed=Path(temp).resolve()/'foreign_source.py';changed.write_bytes(b'NOT_THE_COMMISSIONED_SOURCE')
@@ -50,7 +50,7 @@ class NegativeDataTests(unittest.TestCase):
 class ClientOwnershipTests(unittest.IsolatedAsyncioTestCase):
     async def test_actual_injected_client_rejected_without_network_request(self):
         import httpx
-        from grid.coordination import ConsulConfig,ConsulSessionAuthority
+        from unified_system.consul_authority import ConsulConfig,ConsulSessionAuthority
         from unified_system.gateway_native_negative import _owned_client,NativeNegativeDenied
         client=httpx.AsyncClient(trust_env=False,follow_redirects=False)
         authority=ConsulSessionAuthority(ConsulConfig(('http://127.0.0.1:1',),'owned-boundary',isolated_lab=True),client=client)
