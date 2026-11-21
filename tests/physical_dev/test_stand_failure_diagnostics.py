@@ -47,3 +47,52 @@ class StandFailureDiagnosticsTests(unittest.TestCase):
   except BaseException as caught:self.assertIs(caught,original)
   else:self.fail('original exception missing')
   self.assertIsNone(sys.gettrace())
+
+
+ def source_note(self,source):
+  from integration.source_guard import SourceQualificationError
+  outer=Rejected('DISPOSABLE_STAND_UNAVAILABLE')
+  class Stand(InertStand):
+   def __init__(self):
+    try:self._runtime_custody()
+    except SourceQualificationError:raise outer from None
+   def _runtime_custody(self):raise source
+  with self.assertRaises(Rejected) as caught:
+   with observe_constructor(Stand,InertJournal,Rejected):Stand()
+  self.assertIs(caught.exception,outer)
+  self.assertIsNone(sys.gettrace())
+  return outer.__notes__[0]
+ def test_only_exact_two_source_namespace_codes_are_observed(self):
+  from integration.source_guard import SourceQualificationError
+  for code in ('EXTERNAL_SOURCE_NAMESPACE','LINKED_SOURCE_METADATA'):
+   with self.subTest(code=code):
+    original=SourceQualificationError(code);note=self.source_note(original)
+    self.assertIn('RUNTIME_CUSTODY:'+code,note)
+    self.assertTrue(note.isascii());self.assertLessEqual(len(note),1024)
+ def test_source_error_args_are_closed_literal_bounded_and_never_coerced(self):
+  from integration.source_guard import SourceQualificationError
+  calls=[]
+  class Text(str):
+   def __hash__(self):calls.append('hash');raise AssertionError('SOURCE_SUBCLASS_HASH')
+   def __eq__(self,other):calls.append('eq');raise AssertionError('SOURCE_SUBCLASS_EQ')
+  class Object:
+   def __str__(self):calls.append('str');raise AssertionError('SOURCE_ARG_COERCION')
+  for args in (('SECRET_SENTINEL/path/token',),('SECRET_SENTINEL'*1000,),('EXTERNAL_SOURCE_NAMESPACE','SECRET_SENTINEL'),(Text('EXTERNAL_SOURCE_NAMESPACE'),),(Object(),),()):
+   note=self.source_note(SourceQualificationError(*args))
+   self.assertIn('RUNTIME_CUSTODY:OTHER_ERROR',note)
+   self.assertNotIn('SECRET_SENTINEL',note)
+   self.assertNotIn('EXTERNAL_SOURCE_NAMESPACE',note)
+  self.assertEqual(calls,[])
+ def test_source_exception_subclass_identity_is_not_accepted_or_inspected(self):
+  from integration.source_guard import SourceQualificationError
+  calls=[]
+  class Hostile(type):
+   def __hash__(self):calls.append('hash');raise AssertionError('SOURCE_TYPE_HASH')
+   def __eq__(self,other):calls.append('eq');raise AssertionError('SOURCE_TYPE_EQ')
+  class Subclass(SourceQualificationError,metaclass=Hostile):
+   @property
+   def args(self):calls.append('args');raise AssertionError('SOURCE_SUBCLASS_ARGS')
+  note=self.source_note(Subclass('EXTERNAL_SOURCE_NAMESPACE'))
+  self.assertIn('RUNTIME_CUSTODY:OTHER_ERROR',note)
+  self.assertNotIn('EXTERNAL_SOURCE_NAMESPACE',note)
+  self.assertEqual(calls,[])

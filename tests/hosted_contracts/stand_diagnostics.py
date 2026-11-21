@@ -1,8 +1,10 @@
 """Closed test-only constructor failure observations; no authority or guard changes."""
 import sys
 from contextlib import contextmanager
+from integration.source_guard import SourceQualificationError
 
 _CODES=frozenset(('TARGET_CONTRACT_REJECTED','ISOLATED_RUNTIME_REQUIRED','RUNTIME_PIN_MISMATCH','ISOLATED_CACHE_REQUIRED','FRESH_ISOLATED_CACHE_REQUIRED','PRIVATE_CACHE_REQUIRED','CACHE_SOURCE_OVERLAP','UNQUALIFIED_IMPORT_HOOK'))
+_SOURCE_CODES=('EXTERNAL_SOURCE_NAMESPACE','LINKED_SOURCE_METADATA')
 _TYPES=((ValueError,'VALUE_ERROR'),(RuntimeError,'RUNTIME_ERROR'),(OSError,'OS_ERROR'),(FileNotFoundError,'FILE_NOT_FOUND'),(PermissionError,'PERMISSION_ERROR'),(AssertionError,'ASSERTION_ERROR'))
 
 @contextmanager
@@ -20,6 +22,10 @@ def observe_constructor(stand_type,journal_type,rejected_type):
             if kind is rejected_type:
                 args=value.args
                 code=args[0] if len(args)==1 and type(args[0]) is str and args[0] in _CODES else 'TARGET_REJECTED'
+            elif kind is SourceQualificationError:
+                args=value.args
+                if (type(args) is tuple and len(args)==1 and type(args[0]) is str
+                        and len(args[0])<=64 and args[0] in _SOURCE_CODES):code=args[0]
             else:code=next((label for expected,label in _TYPES if kind is expected),'OTHER_ERROR')
             events.append(stage+':'+code)
         return trace
