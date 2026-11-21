@@ -2,6 +2,7 @@
 import argparse,hashlib,importlib.util,json,os,pathlib,sys,unittest
 ROOT=pathlib.Path(__file__).resolve().parents[1]
 def private_journal_path(value,out):
+ if type(value) is pathlib.PosixPath or type(value) is pathlib.WindowsPath:value=str(value)
  if type(value) is not str:raise RuntimeError('PRIVATE_JOURNAL_REQUIRED')
  if value.startswith('file:'):
   from urllib.parse import urlsplit,unquote
@@ -25,7 +26,7 @@ def main():
  sys.path.insert(0,str(ROOT))
  from integration.source_guard import SourceFence
  fence=SourceFence(ROOT,args.expected_head,isolated_cache=cache);before=fence.check()
- paths=('scripts/qualify_stand_construction.py','tests/hosted_contracts/stand_construction.py','tests/physical_dev/test_bootstrap_contract.py','.github/workflows/ls5-physical-dev-source.yml')
+ paths=('scripts/qualify_stand_construction.py','tests/hosted_contracts/stand_construction.py','tests/hosted_contracts/stand_diagnostics.py','tests/__init__.py','tests/physical_dev/test_bootstrap_contract.py','.github/workflows/ls5-physical-dev-source.yml')
  for name in paths:fence.file(ROOT/name,python=name.endswith('.py'))
  active=[True]
  def audit(event,arguments):
@@ -43,7 +44,7 @@ def main():
   if suite.countTestCases()!=1 or next(iter(next(iter(suite)))).id()!=expected:raise ValueError('EXACT_METADATA_ROLE_REQUIRED')
   with (out/'tests.log').open('w',encoding='utf8') as log:result=unittest.TextTestRunner(stream=log,verbosity=2).run(suite)
   for name,loaded in tuple(sys.modules.items()):
-   if name.split('.')[0] in ('unified_system','tools','integration') or name=='hosted_stand_construction':
+   if name.split('.')[0] in ('unified_system','tools','integration','tests') or name=='hosted_stand_construction':
     if getattr(loaded,'__file__',None):fence.module(loaded)
  finally:
   active[0]=False;after=fence.finish()

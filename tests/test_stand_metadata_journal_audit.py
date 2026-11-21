@@ -34,3 +34,11 @@ class StandJournalAuditTests(unittest.TestCase):
   with patch.object(self.module.pathlib.Path,'resolve',side_effect=AssertionError('FOREIGN_METADATA_FORBIDDEN')):
    for value in values:
     with self.subTest(value=value),self.assertRaises(RuntimeError):self.module.private_journal_path(value,self.out)
+ def test_actual_sqlite_path_argument_is_accepted_without_fspath_adapters(self):
+  self.assertEqual(self.module.private_journal_path(self.path,self.out),self.path)
+  class HostilePath(type(self.path)):
+   def __str__(self):raise AssertionError('FOREIGN_PATH_CALLBACK')
+  class ForeignPathLike:
+   def __fspath__(self):raise AssertionError('FOREIGN_FSPATH_CALLBACK')
+  for value in (HostilePath(self.path),ForeignPathLike()):
+   with self.assertRaises(RuntimeError):self.module.private_journal_path(value,self.out)
