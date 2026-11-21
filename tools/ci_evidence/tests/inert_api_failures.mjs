@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 globalThis.fetch=()=>{throw Error('REAL_NETWORK_FORBIDDEN');};
+let bodyLibrary;try{bodyLibrary=await import('../http_body.mjs');}catch(e){if(e.code!=='ERR_MODULE_NOT_FOUND')throw e;}assert.equal(typeof bodyLibrary?.readHttpBody,'function','one shared bounded body reader required');
 const {fetchGitHubJson}=await import('../github_identity.mjs');const {atInitPhase,publicInitFailure}=await import('../diagnostics.mjs');
 const route='/repos/YehorBabenko88/math/actions/runs/1';let controls=0;const secret='SYNTHETIC_PRIVATE_BEARER_ERROR_SENTINEL';
 async function refused(fetcher,code,path=route){let error;try{await atInitPhase('CONTEXT_API_RUN',()=>fetchGitHubJson(path,{fetcher,authorization:'Bearer '+secret}));}catch(e){error=e;}const safe=publicInitFailure(error);assert.deepEqual(safe,{phase:'CONTEXT_API_RUN',code});assert(!JSON.stringify(safe).includes(secret));controls++;}
@@ -32,11 +33,24 @@ await refused(async()=>({ok:true,url:'https://api.github.com'+route,body:(async 
 let byteCallbacks=0;await refused(async()=>({ok:true,url:'https://api.github.com'+route,body:(async function*(){yield{valueOf(){byteCallbacks++;throw Error(secret);}};})()}),'E_API_RESPONSE');assert.equal(byteCallbacks,0);
 
 
-const {readFileSync}=await import('node:fs');const vm=await import('node:vm');const apiSource=readFileSync(new URL('../github_identity.mjs',import.meta.url),'utf8'),ab=apiSource.indexOf('async function readApiBody('),ae=apiSource.indexOf('\n// Fixed HTTPS origin',ab);assert(ab>=0&&ae>ab);
-function apiBodyModel(){let clock=0,timer,closed=0;const read=vm.runInNewContext('('+apiSource.slice(ab,ae)+')',{Buffer,Uint8Array,Symbol,Promise,performance:{now:()=>clock},setTimeout:fn=>{timer=fn;return 1;},clearTimeout:()=>{closed++;},apiBoundFailure:()=>Error('INERT_API_BOUND'),need:x=>{if(!x)throw Error('INERT_API_RESPONSE');}});return{read,late(){clock=5001;},expire(){assert.equal(typeof timer,'function');timer();},get closed(){return closed;}};}
+const {readFileSync}=await import('node:fs');const vm=await import('node:vm');const sharedSource=readFileSync(new URL('../http_body.mjs',import.meta.url),'utf8');
+function apiBodyModel(timeoutMs=5000,maxBytes=1048576){let clock=0,timer,closed=0,delay;const read=vm.runInNewContext('(function(){'+sharedSource.replace(/^export /gm,'')+';return response=>readHttpBody(response,{maxBytes:'+maxBytes+',timeoutMs:'+timeoutMs+'});})()',{Buffer,Uint8Array,Symbol,Promise,performance:{now:()=>clock},setTimeout:(fn,ms)=>{timer=fn;delay=ms;return 1;},clearTimeout:()=>{closed++;}});return{read,late(value=5001){clock=value;},expire(){assert.equal(typeof timer,'function');timer();},get closed(){return closed;},get delay(){return delay;}};}
+
 let am=apiBodyModel();async function* complete(){yield Buffer.from('{');yield Buffer.from('}');}assert.equal((await am.read({body:complete()})).toString(),'{}');assert.equal(am.closed,1);controls++;
 am=apiBodyModel();let ended=0;const silent={ [Symbol.asyncIterator](){return{next(){return new Promise(()=>{});},return(){ended++;return Promise.resolve({done:true});}};}};const waiting=am.read({body:silent});am.expire();await assert.rejects(waiting);assert.equal(ended,1);assert.equal(am.closed,1);controls++;
 am=apiBodyModel();const late={ [Symbol.asyncIterator](){return{async next(){am.late();return{done:false,value:Buffer.from('{}')};},return(){return{done:true};}};}};await assert.rejects(am.read({body:late}));controls++;
 am=apiBodyModel();const failedClose={ [Symbol.asyncIterator](){return{async next(){return{done:false,value:Buffer.alloc(0)};},return(){return Promise.reject(Error(secret));}};}};await assert.rejects(am.read({body:failedClose}));assert.equal(am.closed,1);controls++;
+
+
+// The same implementation also supplies the artifact10s policy, not another reader.
+am=apiBodyModel(10000,2);async function* withinArtifactDeadline(){am.late(5001);yield Buffer.from('{}');}assert.equal((await am.read({body:withinArtifactDeadline()})).toString(),'{}');assert.equal(am.delay,10000);controls++;
+am=apiBodyModel(10000,2);async function* pastArtifactDeadline(){am.late(10001);yield Buffer.from('{}');}await assert.rejects(am.read({body:pastArtifactDeadline()}));controls++;
+am=apiBodyModel(10000,1);let artifactEmpty=0;async function* artifactEmptyFragments(){for(let i=0;i<20000;i++){artifactEmpty++;yield Buffer.alloc(0);}}await assert.rejects(am.read({body:artifactEmptyFragments()}));assert.equal(artifactEmpty,1);controls++;
+am=apiBodyModel(10000,10000);let artifactTiny=0;async function* artifactTinyFragments(){for(let i=0;i<5000;i++){artifactTiny++;yield Buffer.from('x');}}await assert.rejects(am.read({body:artifactTinyFragments()}));assert.equal(artifactTiny,4097);controls++;
+am=apiBodyModel(10000,1);const waitingArtifact=am.read({body:silent});am.expire();await assert.rejects(waitingArtifact);assert.equal(am.delay,10000);controls++;
+const {readHttpBody,httpBodyFailure}=bodyLibrary;let optionCallbacks=0,bodyTouches=0;const wrongOptions=[undefined,null,true,{}, {maxBytes:0,timeoutMs:5000},{maxBytes:true,timeoutMs:5000},{maxBytes:1048577,timeoutMs:5000},{maxBytes:1,timeoutMs:0},{maxBytes:1,timeoutMs:5001},{maxBytes:1,timeoutMs:10001},{maxBytes:1,timeoutMs:5000,errorPolicy:()=>true}];const accessor={maxBytes:1};Object.defineProperty(accessor,'timeoutMs',{enumerable:true,get(){optionCallbacks++;throw Error(secret);}});wrongOptions.push(accessor);
+for(const options of wrongOptions){const response={get body(){bodyTouches++;throw Error(secret);}};await assert.rejects(readHttpBody(response,options),e=>httpBodyFailure(e)==='RESPONSE');controls++;}assert.equal(bodyTouches,0);assert.equal(optionCallbacks,0);
+const forged={get code(){optionCallbacks++;throw Error(secret);},kind:'BOUND'};assert.equal(httpBodyFailure(forged),undefined);assert.equal(optionCallbacks,0);controls++;
+let foreignReads=0;const foreignError=new Proxy({}, {get(){foreignReads++;throw Error(secret);}});async function* failForeign(){throw foreignError;}await assert.rejects(readHttpBody({body:failForeign()},{maxBytes:1,timeoutMs:5000}),e=>httpBodyFailure(e)==='RESPONSE'&&e.message==='HTTP_BODY_REFUSED');assert.equal(foreignReads,0);controls++;
 
 console.log(JSON.stringify({controls,status:'PASS_INERT_API_FAILURES_ONLY',network:'NOT_RUN',PKI:'NOT_RUN',SQLite:'NOT_RUN'}));

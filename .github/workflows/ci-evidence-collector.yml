@@ -33,7 +33,7 @@ jobs:
           import{mkdirSync,writeFileSync,readFileSync,lstatSync}from'node:fs';import{resolve,dirname,join}from'node:path';import{createHash}from'node:crypto';import{spawnSync}from'node:child_process';
           const manifest = {
             "tools/ci_evidence/strict.mjs": "0728aae4211c32bf0a7f19e91d91a36ebf190a2a95282e716864640e58fc37c8",
-            "tools/ci_evidence/github_identity.mjs": "7cfbb0804c0164a3d6693fcd9e78f6dc10cd90c91a12515060b547b5cd0e7803",
+            "tools/ci_evidence/github_identity.mjs": "71e7fc45cad9846ec8f6750c073616b56796b44151c43de99682b22d36dcfb99",
             "tools/ci_evidence/envelope.mjs": "b081be5d7789bd508026c748075e2435e4e61df8f21905119f4e1cc2f0508c9f",
             "tools/ci_evidence/receiver_journal.mjs": "f2491c60e7f56b9ce41ce0874d704da2ed8e622dc5bd174013a631de61169911",
             "tools/ci_evidence/zip.mjs": "633be9954ee26f182989592a24829de6f2318a5552263c23f2c6b871e98a08f2",
@@ -60,8 +60,9 @@ jobs:
             "tools/ci_evidence/tests/inert_identity_policy.mjs": "c28a4f7aa70eaf39ece804d89732d1696254d92bd87d99ed58598c542dec2d85",
             "tools/ci_evidence/tests/inert_public_diagnostics.mjs": "c8818f5808a0f3d45ed14fea56a1b83bbf0826c7d6c41c9ceb07bf71084ef6ff",
             "tools/ci_evidence/tests/inert_loader.mjs": "8728e30959b3a57075d3c3ed5095a782d19c01e05d7da7d3bcdbc84dce785400",
-            "tools/ci_evidence/tests/inert_api_failures.mjs": "1b1db00a3140b17965a82d5296ef2f9b425b16cd37bd0cf4c8be218726f2149a",
-            "tools/ci_evidence/tests/inert_stage_codes.mjs": "752e0b41ad1b440030b9294ec274ea340b6b49c48aec72f8f5a53ce01568ba5d"
+            "tools/ci_evidence/tests/inert_api_failures.mjs": "d4dbc9e2f059f7fd1af7c80eec8b5de7073973a1112e19acdb263a9c4361557b",
+            "tools/ci_evidence/tests/inert_stage_codes.mjs": "752e0b41ad1b440030b9294ec274ea340b6b49c48aec72f8f5a53ce01568ba5d",
+            "tools/ci_evidence/http_body.mjs": "cab089a1aaac6ef495279acb4967943750604461f9e4711b06cd0a64922c4d91"
           };
           let code='E_BOOTSTRAP';const temp=resolve(process.env.RUNNER_TEMP),publicFile=join(temp,'unified-ci-evidence-public/qualification.json');
           const check=ok=>{if(!ok)throw Error('CI_EVIDENCE_BLOCKED');};

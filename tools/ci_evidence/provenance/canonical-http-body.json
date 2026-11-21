@@ -1,0 +1,26 @@
+{
+  "schema": "unified.canonical-http-body-source.v1",
+  "base": "8f9b25828d50d4970d5bd374b8c072eab81db616",
+  "implementation": "tools/ci_evidence/http_body.mjs",
+  "api_policy": {
+    "maxBytes": 1048576,
+    "timeoutMs": 5000,
+    "bound_code": "E_API_BOUND"
+  },
+  "artifact_policy_available_not_yet_wired": {
+    "timeoutMs": 10000,
+    "maxBytes": "1..1048576"
+  },
+  "fragment_budget": 4096,
+  "source_js_files": 31,
+  "future_role_library_files": 32,
+  "original_role_ids": 34,
+  "required_root_cells": 4,
+  "inert_groups": 173,
+  "api_groups": 45,
+  "loader_groups": 52,
+  "error_policy": "IDENTITY_OWNED_NO_CALLBACK",
+  "phase": "A_LIBRARY_ONLY_RBRAVO_PUBLICATION_REQUIRED",
+  "network_native_oidc_sqlite": "NOT_RUN",
+  "production": "NO_GO"
+}
