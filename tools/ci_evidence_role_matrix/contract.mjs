@@ -22,7 +22,7 @@ export function bindWorkload(run,jobs,pr,expected,jobPhase='in_progress'){
  const cell=validateCell(expected.cell);need(oid(expected.runnerSource));need(Array.isArray(run?.referenced_workflows)&&run.referenced_workflows.length<=32&&run.referenced_workflows.filter(value=>value.path==='YehorBabenko88/unified-system/.github/workflows/ci-evidence-role-matrix.yml@'+expected.runnerSource&&value.sha===expected.runnerSource).length===1);
  need(['push','pull_request','workflow_dispatch'].includes(expected.event)&&id(expected.runId)&&id(expected.attempt)&&oid(expected.workloadHead));
  need(Number.isSafeInteger(run?.id)&&run.id>0&&Number.isSafeInteger(run.run_attempt)&&run.run_attempt>0);
- need(run?.repository?.full_name==='YehorBabenko88/math'&&String(run.id)===expected.runId&&String(run.run_attempt)===expected.attempt&&run.event===expected.event&&run.status==='in_progress'&&oid(run.head_sha));
+ need(run?.repository?.full_name==='YehorBabenko88/math'&&String(run.id)===expected.runId&&String(run.run_attempt)===expected.attempt&&run.event===expected.event&&(run.status==='in_progress'||jobPhase==='in_progress'&&run.status==='queued')&&oid(run.head_sha));
  if(expected.event==='pull_request'){
   need(Number.isSafeInteger(pr?.number)&&pr.number>0&&id(expected.prNumber)&&expected.ref==='refs/pull/'+expected.prNumber+'/merge'&&run.head_sha===expected.workloadHead);
   need(Array.isArray(run.pull_requests)&&run.pull_requests.length===1&&String(run.pull_requests[0].number)===expected.prNumber&&run.pull_requests[0].head?.sha===expected.workloadHead);

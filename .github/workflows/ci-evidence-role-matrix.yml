@@ -94,11 +94,11 @@ jobs:
           import {mkdtempSync,mkdirSync,writeFileSync,readFileSync,lstatSync,realpathSync,openSync,fstatSync,readSync,closeSync,constants} from 'node:fs';
           import {join,dirname,resolve} from 'node:path';import {createHash} from 'node:crypto';import {spawnSync} from 'node:child_process';
           const KIT_MANIFEST = {
-           "tools/ci_evidence_role_matrix/contract.mjs": "102bf2daf538aea0ec3d5cb17f22aea30e2d1595ab42faf720f8982623fe419f",
+           "tools/ci_evidence_role_matrix/contract.mjs": "e5cfdefcd581e9ca572f55578dcf7c2eb77121a87dcb50cf0bb0a096e49dc2dc",
            "tools/ci_evidence_role_matrix/reporter.mjs": "0628416798808ccc5b2a388f0fcf8738b47bd83e13213c7b2f8564e5067cbe83",
            "tools/ci_evidence_role_matrix/runner.mjs": "92bdcb8d8769af1b9224d156b23f18b37e62ae7396b1fee4d9234ce6948597d2",
            "tools/ci_evidence_role_matrix/role-plan.json": "ae8caf3476fd98336b578cf1f9b772b1e69883867af9b77e86f4e50cb33c0fde",
-           "tools/ci_evidence_role_matrix/inert.mjs": "7b644a7d8b9502d8a8c9efbb6795070ba7a93031673f72efdca4c16e09614646",
+           "tools/ci_evidence_role_matrix/inert.mjs": "bab7abf44ba31fb8103f554c850beb98fd1a3afa326e176a0cd76b7eebd91971",
            "tools/ci_evidence_role_matrix/aggregate.mjs": "9ac181eae838f79837a960a091aa7fa14e2f5dbd5324fda313abdc7668eb17ff",
            "tools/ci_evidence_role_matrix/artifact_zip.mjs": "73bf0170a1d84329b34ed59c2669186a60867ee8dee66ad6683b617087afc15f",
            "tools/ci_evidence_role_matrix/artifact_custody.mjs": "578064c2cdec153497cbd6cafc6d372a154c266d8c1db37155801ff472c50301"

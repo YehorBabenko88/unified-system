@@ -152,4 +152,35 @@ for(const [target,key,changed,flag]of [['run','run_attempt',undefined,'RA_MISSIN
 for(const [target,key]of [['run','run_attempt'],['run','head_sha'],['run','referenced_workflows'],['job','run_attempt'],['job','head_sha'],['job','check_run_url'],['expected','attempt'],['expected','workloadHead'],['expected','runnerSource']]){let reads=0;const r={...run},j={total_count:1,jobs:[{...job}]},e={...diagnosticExpected};const value=target==='run'?r:target==='job'?j.jobs[0]:e;Object.defineProperty(value,key,{get(){reads++;throw Error('SECRET_SENTINEL');}});const code=workloadBindingDiagnostic(r,j,e);assert(!code.includes('SECRET'));assert.equal(reads,0);checks++;}
 for(const nested of ['workflow-list','workflow-row']){let traps=0;const proxy=new Proxy([], {get(){traps++;throw Error('SECRET_SENTINEL');},getOwnPropertyDescriptor(){traps++;throw Error('SECRET_SENTINEL');},ownKeys(){traps++;throw Error('SECRET_SENTINEL');}});const code=workloadBindingDiagnostic({...run,referenced_workflows:nested==='workflow-list'?proxy:[proxy]},diagnosticJobs,diagnosticExpected);assert(code.includes('__WF_INVALID__'));assert.equal(traps,0);checks++;}
 
+
+// Aggregate run status can lag an already active exact producer job. No status is normalized.
+const originalProducerBinding=bindWorkload(run,{total_count:1,jobs:[job]},pr,expected);
+for(const runStatus of ['queued','in_progress','requested','waiting','pending','completed',null])for(const phase of ['in_progress','completed'])for(const jobStatus of ['in_progress','queued','waiting','pending','completed','cancelled',null])for(const conclusion of ['success','failure',null]){
+ const r={...structuredClone(run),status:runStatus},j={total_count:1,jobs:[{...job,status:jobStatus,conclusion}]};const before=JSON.stringify({r,j});
+ const allowed=(runStatus==='in_progress'||phase==='in_progress'&&runStatus==='queued')&&jobStatus===phase&&(phase!=='completed'||conclusion==='success');
+ if(allowed)assert.deepEqual(bindWorkload(r,j,pr,expected,phase),originalProducerBinding);else assert.throws(()=>bindWorkload(r,j,pr,expected,phase));
+ assert.equal(JSON.stringify({r,j}),before);checks++;
+}
+for(const event of ['push','workflow_dispatch']){const r={...run,status:'queued',event,head_branch:'main',head_repository:{full_name:'YehorBabenko88/math'},pull_requests:[]};assert.equal(bindWorkload(r,{total_count:1,jobs:[job]},null,{...expected,event,ref:'refs/heads/main'}).workload_event,event);assert.equal(r.status,'queued');checks++;}
+const queuedProducerNegatives=[
+ (r,j,p,e)=>r.id=11,(r,j,p,e)=>r.id=0,(r,j,p,e)=>r.run_attempt=3,(r,j,p,e)=>r.repository.full_name='foreign/math',(r,j,p,e)=>r.event='schedule',
+ (r,j,p,e)=>r.referenced_workflows=[],(r,j,p,e)=>r.referenced_workflows[0].sha='f'.repeat(40),(r,j,p,e)=>r.referenced_workflows[0].path='foreign/workflow',
+ (r,j,p,e)=>r.referenced_workflows.push({...r.referenced_workflows[0]}),(r,j,p,e)=>r.head_sha='f'.repeat(40),(r,j,p,e)=>r.pull_requests=[],
+ (r,j,p,e)=>r.pull_requests[0].number=2,(r,j,p,e)=>r.pull_requests[0].head.sha='f'.repeat(40),
+ (r,j,p,e)=>j.jobs[0].id=0,(r,j,p,e)=>j.jobs[0].run_id=11,(r,j,p,e)=>j.jobs[0].run_attempt=3,(r,j,p,e)=>j.jobs[0].head_sha='f'.repeat(40),
+ (r,j,p,e)=>j.jobs[0].status='queued',(r,j,p,e)=>j.jobs[0].status='completed',(r,j,p,e)=>j.jobs[0].status='cancelled',
+ (r,j,p,e)=>j.jobs[0].check_run_url='https://foreign.invalid/check-runs/30',(r,j,p,e)=>j.jobs[0].check_run_url+='?secret=1',(r,j,p,e)=>j.jobs[0].check_run_url='https://api.github.com/repos/YehorBabenko88/math/check-runs/0',
+ (r,j,p,e)=>{j.jobs.push({...j.jobs[0]});j.total_count=2;},(r,j,p,e)=>j.total_count=101,(r,j,p,e)=>j.jobs[0].name='Root transferred unit roles linux-24-16',
+ (r,j,p,e)=>p.number=2,(r,j,p,e)=>p.head.sha='f'.repeat(40),(r,j,p,e)=>p.base.repo.full_name='foreign/math',(r,j,p,e)=>p.head.repo.full_name='invalid/repo/path',
+ (r,j,p,e)=>e.event='schedule',(r,j,p,e)=>e.ref='refs/pull/2/merge',(r,j,p,e)=>e.prNumber='2',(r,j,p,e)=>e.workloadHead='f'.repeat(40),
+ (r,j,p,e)=>e.runnerSource='f'.repeat(40),(r,j,p,e)=>e.runId='11',(r,j,p,e)=>e.attempt='3',(r,j,p,e)=>e.cell='linux-24-16'
+];
+for(const change of queuedProducerNegatives){const r=structuredClone(run),j={total_count:1,jobs:[structuredClone(job)]},p=structuredClone(pr),e={...expected};r.status='queued';change(r,j,p,e);assert.throws(()=>bindWorkload(r,j,p,e));checks++;}
+const queuedRun={...run,status:'queued'};assert.equal(workloadBindingDiagnostic(queuedRun,{total_count:1,jobs:[job]},expected).startsWith('R_QUEUED__J_IN_PROGRESS__'),true);assert.equal(queuedRun.status,'queued');checks++;
+// Preserve queued refusal for the completed consumer and all artifact-custody entry points.
+assert.throws(()=>bindWorkload(queuedRun,{total_count:1,jobs:[{...job,status:'completed',conclusion:'success'}]},pr,expected,'completed'));checks++;
+const queuedConsumer=structuredClone(packet);queuedConsumer.run.status='queued';assert.equal(qualify(queuedConsumer).status,'HELD');checks++;
+const queuedDownload=structuredClone(downloadsPacket);queuedDownload.run.status='queued';assert.equal(planRootRoleDownloads(JSON.stringify(metadataPacket(queuedDownload))).status,'HELD');checks++;
+const queuedCustody=await invoke({packet:p=>p.run.status='queued'});assert.equal(queuedCustody.result.status,'HELD');assert.equal(queuedCustody.state.apiZip,0);assert.equal(queuedCustody.result.authority,'NONE');checks++;
+
 console.log(JSON.stringify({checks,status:'PASS_INERT_ONLY',authority:'NONE',production:'NO_GO'}));
