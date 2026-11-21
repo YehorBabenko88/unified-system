@@ -1,3 +1,4 @@
+import {readHttpBody} from '../ci_evidence/http_body.mjs';
 import {readFileSync,writeFileSync,mkdirSync,lstatSync,realpathSync} from 'node:fs';
 import {resolve,join,dirname} from 'node:path';
 import {pathToFileURL} from 'node:url';
@@ -22,7 +23,7 @@ try{
   for(const [path,hash]of all){need(/^[A-Za-z0-9_./-]+$/.test(path)&&!path.includes('..')&&/^[a-f0-9]{64}$/.test(hash));const file=join(root,path),st=lstatSync(file);need(st.isFile()&&!st.isSymbolicLink()&&st.nlink===1&&st.size<=131072&&sha(readFileSync(file))===hash);}
  }
  phase='E_SOURCE';sourceBytes();
- const api=async path=>{const response=await fetch('https://api.github.com/repos/YehorBabenko88/math/'+path,{headers:{Authorization:'Bearer '+process.env.ROLE_MATRIX_API_TOKEN,Accept:'application/vnd.github+json'},redirect:'error',signal:AbortSignal.timeout(5000)});need(response.ok);let count=0;const chunks=[];for await(const chunk of response.body){count+=chunk.length;need(count<=1048576);chunks.push(Buffer.from(chunk));}return JSON.parse(Buffer.concat(chunks).toString('utf8'));};
+ const api=async path=>{const response=await fetch('https://api.github.com/repos/YehorBabenko88/math/'+path,{headers:{Authorization:'Bearer '+process.env.ROLE_MATRIX_API_TOKEN,Accept:'application/vnd.github+json'},redirect:'error',signal:AbortSignal.timeout(5000)});need(response.ok);return JSON.parse((await readHttpBody(response,{maxBytes:1048576,timeoutMs:5000})).toString('utf8'));};
  phase='E_WORKLOAD';const runId=process.env.GITHUB_RUN_ID,attempt=process.env.GITHUB_RUN_ATTEMPT,prNumber=process.env.ROLE_MATRIX_PR_NUMBER;need(/^[1-9][0-9]{0,19}$/.test(runId)&&/^[1-9][0-9]{0,19}$/.test(attempt)&&(process.env.GITHUB_EVENT_NAME!=='pull_request'||/^[1-9][0-9]{0,19}$/.test(prNumber)));
  const [run,jobs,pr]=await Promise.all([api('actions/runs/'+runId),api('actions/runs/'+runId+'/attempts/'+attempt+'/jobs?per_page=100'),process.env.GITHUB_EVENT_NAME==='pull_request'?api('pulls/'+prNumber):Promise.resolve(null)]);
  const bound=bindWorkload(run,jobs,pr,{event:process.env.GITHUB_EVENT_NAME,ref:process.env.GITHUB_REF,runnerSource:proof.runner_workflow_source,runId,attempt,prNumber,workloadHead:process.env.ROLE_MATRIX_WORKLOAD_HEAD,cell:cell.cell});
@@ -32,7 +33,7 @@ try{
  need(!pg.error&&pg.status===0&&pg.signal===null&&pg.stderr==='');const version=pg.stdout.trim();need(new RegExp('^'+cell.postgres+'[0-9]{4}$').test(version));
  phase='E_STATIC_ROLES';const env={NODE_NO_WARNINGS:'1',NODE_DEBUG:'',NODE_DEBUG_NATIVE:'',TMPDIR:root,TEMP:root,TMP:root,ROLE_SOURCE_ROOT:root};
  const staticRun=spawnSync(process.execPath,['--no-warnings',join(root,'tools/ci_evidence/tests/inert_loader.mjs')],{cwd:root,encoding:'utf8',timeout:30000,maxBuffer:131072,env});
- need(!staticRun.error&&staticRun.status===0&&staticRun.signal===null&&staticRun.stderr==='');const staticResult=JSON.parse(staticRun.stdout);need(Object.keys(staticResult).sort().join(',')==='controls,liveAuth,status'&&staticResult.controls===51&&staticResult.status==='PASS_STATIC_SOURCE_ONLY'&&staticResult.liveAuth==='NOT_RUN');
+ need(!staticRun.error&&staticRun.status===0&&staticRun.signal===null&&staticRun.stderr==='');const staticResult=JSON.parse(staticRun.stdout);need(Object.keys(staticResult).sort().join(',')==='controls,liveAuth,status'&&staticResult.controls===92&&staticResult.status==='PASS_STATIC_SOURCE_ONLY'&&staticResult.liveAuth==='NOT_RUN');
  phase='E_HOSTED_ROLES';const files=[...new Set(plan.roles.filter(role=>role.kind==='HOSTED').map(role=>role.target))];need(files.length===8);
  const reporter=pathToFileURL(join(root,'tools/ci_evidence_role_matrix/reporter.mjs')).href;
  const tests=spawnSync(process.execPath,['--no-warnings','--test','--test-concurrency=1','--test-reporter='+reporter,...files.map(path=>join(root,path))],{cwd:root,encoding:'utf8',timeout:120000,maxBuffer:1048576,env});

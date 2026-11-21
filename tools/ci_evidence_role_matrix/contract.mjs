@@ -6,7 +6,7 @@ const hash=value=>typeof value==='string'&&/^[a-f0-9]{64}$/.test(value);
 const id=value=>typeof value==='string'&&/^[1-9][0-9]{0,19}$/.test(value);
 function closed(value,fields){need(value!==null&&typeof value==='object'&&!Array.isArray(value)&&Object.getPrototypeOf(value)===Object.prototype);const d=Object.getOwnPropertyDescriptors(value);need(Object.keys(d).length===fields.length&&fields.every(key=>Object.hasOwn(d,key)&&Object.hasOwn(d[key],'value')));}
 export function validateCell(cell){need(typeof cell==='string'&&/^linux-(22|24)-(16|18)$/.test(cell));const[,node,postgres]=cell.split('-');return Object.freeze({cell,node,postgres});}
-function planned(plan){need(plan.schema==='unified.ci-evidence-role-plan.v1'&&plan.role_source==='006418285667b38810b7ecd1de9807b6db166fa3'&&Array.isArray(plan.roles)&&plan.roles.length===34&&new Set(plan.roles.map(x=>x.id)).size===34);need(plan.roles.filter(x=>x.kind==='HOSTED').length===31&&plan.roles.filter(x=>x.kind==='STATIC').length===3);for(const role of plan.roles)need(hash(role.id)&&role.original.parent===null&&role.original.occurrence===1);return plan;}
+function planned(plan){need(plan.schema==='unified.ci-evidence-role-plan.v1'&&plan.role_source==='4ba390b8e12070499d54b12e5609c683c00607ee'&&plan.files&&Object.hasOwn(plan.files,'tools/ci_evidence/http_body.mjs')&&Array.isArray(plan.roles)&&plan.roles.length===34&&new Set(plan.roles.map(x=>x.id)).size===34);need(plan.roles.filter(x=>x.kind==='HOSTED').length===31&&plan.roles.filter(x=>x.kind==='STATIC').length===3);for(const role of plan.roles)need(hash(role.id)&&role.original.parent===null&&role.original.occurrence===1);return plan;}
 export function projectTerminal(event,plan,root){
  planned(plan);need(event!==null&&typeof event==='object'&&typeof event.type==='string');
  if(event.type!=='test:pass'&&event.type!=='test:fail')return null;
@@ -23,7 +23,7 @@ export function bindWorkload(run,jobs,pr,expected,jobPhase='in_progress'){
  need(Number.isSafeInteger(run?.id)&&run.id>0&&Number.isSafeInteger(run.run_attempt)&&run.run_attempt>0);
  need(run?.repository?.full_name==='YehorBabenko88/math'&&String(run.id)===expected.runId&&String(run.run_attempt)===expected.attempt&&run.event===expected.event&&run.status==='in_progress'&&oid(run.head_sha));
  if(expected.event==='pull_request'){
-  need(Number.isSafeInteger(pr?.number)&&pr.number>0&&id(expected.prNumber)&&expected.ref==='refs/pull/'+expected.prNumber+'/merge');
+  need(Number.isSafeInteger(pr?.number)&&pr.number>0&&id(expected.prNumber)&&expected.ref==='refs/pull/'+expected.prNumber+'/merge'&&run.head_sha===expected.workloadHead);
   need(Array.isArray(run.pull_requests)&&run.pull_requests.length===1&&String(run.pull_requests[0].number)===expected.prNumber&&run.pull_requests[0].head?.sha===expected.workloadHead);
   need(String(pr?.number)===expected.prNumber&&pr.head?.sha===expected.workloadHead&&typeof pr.head?.repo?.full_name==='string'&&new RegExp('^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$').test(pr.head.repo.full_name)&&pr.base?.repo?.full_name==='YehorBabenko88/math');
  }else{
@@ -38,15 +38,15 @@ export function bindWorkload(run,jobs,pr,expected,jobPhase='in_progress'){
  return Object.freeze({workload_event:expected.event,workload_head:expected.workloadHead,run_head:run.head_sha,run_id:expected.runId,attempt:expected.attempt,job_id:String(job.id),check_run_id:checkId,cell:cell.cell});
 }
 const contextFields=['workload_event','cell','workload_head','run_head','run_id','attempt','job_id','check_run_id','runner_workflow_source','runner_workflow_sha256'];
-function context(ctx){closed(ctx,contextFields);validateCell(ctx.cell);need(['push','pull_request','workflow_dispatch'].includes(ctx.workload_event));need(oid(ctx.workload_head)&&oid(ctx.run_head)&&oid(ctx.runner_workflow_source)&&hash(ctx.runner_workflow_sha256));for(const key of ['run_id','attempt','job_id','check_run_id'])need(id(ctx[key]));}
+function context(ctx){closed(ctx,contextFields);validateCell(ctx.cell);need(['push','pull_request','workflow_dispatch'].includes(ctx.workload_event));need(oid(ctx.workload_head)&&oid(ctx.run_head)&&oid(ctx.runner_workflow_source)&&hash(ctx.runner_workflow_sha256));if(ctx.workload_event==='pull_request')need(ctx.run_head===ctx.workload_head);for(const key of ['run_id','attempt','job_id','check_run_id'])need(id(ctx[key]));}
 export function makeReceipt(plan,ctx,observed){
  planned(plan);context(ctx);const cell=validateCell(observed.cell);need(ctx.cell===cell.cell);need(observed.actualNode===cell.node&&typeof observed.pgVersion==='string'&&new RegExp('^'+cell.postgres+'[0-9]{4}$').test(observed.pgVersion));requireTerminals(observed.terminals,plan);need(observed.staticPassed===true);
- const files=Object.keys(plan.files).sort().map(path=>plan.files[path]);need(files.length===31&&files.every(hash));
+ const files=Object.keys(plan.files).sort().map(path=>plan.files[path]);need(files.length===32&&files.every(hash));
  return {schema:'unified.ci-evidence-role-cell.v1',role_source:plan.role_source,runner_workflow_source:ctx.runner_workflow_source,runner_workflow_sha256:ctx.runner_workflow_sha256,workload_repository:'YehorBabenko88/math',workload_event:ctx.workload_event,workload_head:ctx.workload_head,run_head:ctx.run_head,run_id:ctx.run_id,attempt:ctx.attempt,job_id:ctx.job_id,check_run_id:ctx.check_run_id,cell:cell.cell,node_major:cell.node,postgres_major:cell.postgres,postgres_version_num:observed.pgVersion,roles:plan.roles.map(role=>({id:role.id,status:'PASS'})),file_hashes:files,scope:'UNIT_ONLY',authority:'NONE',source_authentication:'NOT_EVALUATED',native_acceptance:'NOT_QUALIFIED',production:'NO_GO'};
 }
 export function validateReceipt(receipt,plan,ctx){
  closed(receipt,['schema','role_source','runner_workflow_source','runner_workflow_sha256','workload_repository','workload_event','workload_head','run_head','run_id','attempt','job_id','check_run_id','cell','node_major','postgres_major','postgres_version_num','roles','file_hashes','scope','authority','source_authentication','native_acceptance','production']);
- need(Array.isArray(receipt.roles)&&receipt.roles.length===34&&Array.isArray(receipt.file_hashes)&&receipt.file_hashes.length===31);for(const role of receipt.roles){closed(role,['id','status']);need(hash(role.id)&&role.status==='PASS');}need(receipt.file_hashes.every(hash));
+ need(Array.isArray(receipt.roles)&&receipt.roles.length===34&&Array.isArray(receipt.file_hashes)&&receipt.file_hashes.length===32);for(const role of receipt.roles){closed(role,['id','status']);need(hash(role.id)&&role.status==='PASS');}need(receipt.file_hashes.every(hash));
  context(ctx);const expected=makeReceipt(plan,ctx,{cell:receipt.cell,actualNode:receipt.node_major,pgVersion:receipt.postgres_version_num,terminals:plan.roles.filter(x=>x.kind==='HOSTED').map(x=>({id:x.id,status:'PASS'})),staticPassed:true});closed(receipt,Object.keys(expected));need(JSON.stringify(receipt)===JSON.stringify(expected));return true;
 }
 export function parseTerminals(text,plan){

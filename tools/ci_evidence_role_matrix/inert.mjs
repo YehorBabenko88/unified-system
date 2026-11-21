@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {validateCell,projectTerminal,requireTerminals,makeReceipt,validateReceipt,bindWorkload} from './contract.mjs';
 const plan=JSON.parse(readFileSync(new URL('./role-plan.json',import.meta.url)));
-let checks=0;assert.equal(plan.role_source,'006418285667b38810b7ecd1de9807b6db166fa3');checks++;
+let checks=0;assert(Object.hasOwn(plan.files,'tools/ci_evidence/http_body.mjs'),'PUBLISHED_RBRAVO_HELPER_SOURCE_REQUIRED');checks++;assert.equal(plan.role_source,'4ba390b8e12070499d54b12e5609c683c00607ee');checks++;
 for(const cell of plan.cells){assert.equal(validateCell(cell).cell,cell);checks++;}
 for(const bad of ['linux-20-16','windows-22-16','linux-22-17','linux-22-16/secret',null]){assert.throws(()=>validateCell(bad));checks++;}
 const role=plan.roles.find(x=>x.kind==='HOSTED'),root='/private/role-source';
@@ -11,10 +11,12 @@ assert.equal(projectTerminal(event,plan,root).id,role.id);checks++;
 for(const changed of [{type:'test:fail'}, {data:{...event.data,skip:true}},{data:{...event.data,todo:true}},{data:{...event.data,nesting:1}},{data:{...event.data,name:'SECRET_SENTINEL'}},{data:{...event.data,file:'/unowned/secret'}}]){assert.throws(()=>projectTerminal({...event,...changed},plan,root));checks++;}
 const terminals=plan.roles.filter(x=>x.kind==='HOSTED').map(x=>({id:x.id,status:'PASS'}));assert.equal(requireTerminals(terminals,plan).length,31);checks++;
 for(const wrong of [terminals.slice(1),[...terminals,terminals[0]],[...terminals.slice(1),{id:'f'.repeat(64),status:'PASS'}],terminals.map((x,i)=>i?x:{...x,status:'SKIP'})]){assert.throws(()=>requireTerminals(wrong,plan));checks++;}
-const context={workload_event:'pull_request',cell:'linux-22-16',workload_head:'a'.repeat(40),run_head:'b'.repeat(40),run_id:'10',attempt:'2',job_id:'20',check_run_id:'30',runner_workflow_source:'c'.repeat(40),runner_workflow_sha256:'d'.repeat(64)};
+const context={workload_event:'pull_request',cell:'linux-22-16',workload_head:'a'.repeat(40),run_head:'a'.repeat(40),run_id:'10',attempt:'2',job_id:'20',check_run_id:'30',runner_workflow_source:'c'.repeat(40),runner_workflow_sha256:'d'.repeat(64)};
 const receipt=makeReceipt(plan,context,{cell:'linux-22-16',actualNode:'22',pgVersion:'160009',terminals,staticPassed:true});assert.equal(validateReceipt(receipt,plan,context),true);checks++;
 for(const changed of [{token:'SECRET_SENTINEL'},{authority:'GRANTED'},{roles:receipt.roles.slice(1)},{postgres_version_num:'180001'},{cell:'linux-22-18',postgres_major:'18',postgres_version_num:'180001'},{file_hashes:[]},{runner_workflow_source:'e'.repeat(40)}]){assert.throws(()=>validateReceipt({...receipt,...changed},plan,context));checks++;}
-const run={referenced_workflows:[{path:'YehorBabenko88/unified-system/.github/workflows/ci-evidence-role-matrix.yml@'+'c'.repeat(40),sha:'c'.repeat(40)}],id:10,run_attempt:2,repository:{full_name:'YehorBabenko88/math'},event:'pull_request',status:'in_progress',head_sha:'b'.repeat(40),pull_requests:[{number:1,head:{sha:'a'.repeat(40)}}]};
+assert.throws(()=>makeReceipt(plan,{...context,run_head:'b'.repeat(40)},{cell:'linux-22-16',actualNode:'22',pgVersion:'160009',terminals,staticPassed:true}));checks++;
+assert.throws(()=>validateReceipt({...receipt,run_head:'b'.repeat(40)},plan,{...context,run_head:'b'.repeat(40)}));checks++;
+const run={referenced_workflows:[{path:'YehorBabenko88/unified-system/.github/workflows/ci-evidence-role-matrix.yml@'+'c'.repeat(40),sha:'c'.repeat(40)}],id:10,run_attempt:2,repository:{full_name:'YehorBabenko88/math'},event:'pull_request',status:'in_progress',head_sha:'a'.repeat(40),pull_requests:[{number:1,head:{sha:'a'.repeat(40)}}]};
 const job={id:20,run_id:10,run_attempt:2,status:'in_progress',head_sha:run.head_sha,name:'caller / Root transferred unit roles linux-22-16',check_run_url:'https://api.github.com/repos/YehorBabenko88/math/check-runs/30'};
 const pr={number:1,head:{sha:'a'.repeat(40),repo:{full_name:'YehorBabenko88/math'}},base:{repo:{full_name:'YehorBabenko88/math'}}};
 const expected={event:'pull_request',ref:'refs/pull/1/merge',runnerSource:'c'.repeat(40),runId:'10',attempt:'2',prNumber:'1',workloadHead:'a'.repeat(40),cell:'linux-22-16'};
@@ -31,6 +33,7 @@ assert.equal(bindWorkload(run,{total_count:1,jobs:[job]},{...pr,head:{...pr.head
 assert.throws(()=>makeReceipt(plan,context,{cell:'linux-22-16',actualNode:'24',pgVersion:'160009',terminals,staticPassed:true}));checks++;
 assert.throws(()=>makeReceipt(plan,context,{cell:'linux-22-16',actualNode:'22',pgVersion:'160009',terminals,staticPassed:1}));checks++;
 for(const value of ['10',true,Number.MAX_SAFE_INTEGER+1]){assert.throws(()=>bindWorkload({...run,id:value},{total_count:1,jobs:[job]},pr,expected));checks++;}
+assert.throws(()=>bindWorkload({...run,head_sha:'b'.repeat(40)},{total_count:1,jobs:[{...job,head_sha:'b'.repeat(40)}]},pr,expected));checks++;
 assert.throws(()=>bindWorkload({...run,referenced_workflows:[]},{total_count:1,jobs:[job]},pr,expected));checks++;
 assert.throws(()=>makeReceipt({...plan,role_source:'82bf1578c5e36bafd76615661fbb3fe4e22dca55'},context,{cell:'linux-22-16',actualNode:'22',pgVersion:'160009',terminals,staticPassed:true}));checks++;
 
@@ -53,7 +56,7 @@ const changes=[
  p=>p.receipts.pop(),p=>p.receipts.push(p.receipts[0]),p=>p.receipts[1]=p.receipts[0],p=>p.receipts[0].artifact_id='999',
  p=>p.receipts[0].content='{}\n',p=>p.receipts[0].content+=' ',p=>p.receipts[0].content=p.receipts[0].content.replace('{','{\"schema\":\"forged\",'),
  p=>alter(p,0,r=>r.authority='GRANTED'),p=>alter(p,0,r=>r.roles[0].status='XFAIL'),p=>alter(p,0,r=>r.roles.pop()),p=>alter(p,0,r=>r.file_hashes[0]='f'.repeat(64)),p=>alter(p,0,r=>r.postgres_version_num='180001'),p=>alter(p,0,r=>r.node_major='24'),p=>alter(p,0,r=>r.runner_workflow_sha256='0'.repeat(64)),
- p=>p.expected.runId='11',p=>p.expected.attempt='3',p=>p.expected.workloadHead='f'.repeat(40),p=>p.run.referenced_workflows=[],p=>delete p.run.head_branch,p=>delete p.artifacts.artifacts[0].workflow_run.head_branch,p=>p.jobs.jobs[1].check_run_url=p.jobs.jobs[0].check_run_url,
+ p=>{p.run.head_sha='b'.repeat(40);for(const j of p.jobs.jobs)j.head_sha=p.run.head_sha;for(const a of p.artifacts.artifacts)a.workflow_run.head_sha=p.run.head_sha;for(let i=0;i<4;i++)alter(p,i,r=>r.run_head=p.run.head_sha);},p=>p.expected.runId='11',p=>p.expected.attempt='3',p=>p.expected.workloadHead='f'.repeat(40),p=>p.run.referenced_workflows=[],p=>delete p.run.head_branch,p=>delete p.artifacts.artifacts[0].workflow_run.head_branch,p=>p.jobs.jobs[1].check_run_url=p.jobs.jobs[0].check_run_url,
  p=>p.jobs.jobs[0].status='in_progress',p=>p.jobs.jobs[0].conclusion='cancelled',p=>p.jobs.jobs[0].conclusion='skipped',p=>p.jobs.jobs[0].head_sha='f'.repeat(40),p=>p.jobs.jobs[0].run_attempt=3,p=>p.jobs.jobs.push(p.jobs.jobs[0]),p=>{p.jobs.jobs.push(p.jobs.jobs[0]);p.jobs.total_count++;},
  p=>p.artifacts.artifacts[0].expired=true,p=>p.artifacts.artifacts[0].size_in_bytes=1048577,p=>p.artifacts.artifacts[0].name+='-stale',p=>p.artifacts.artifacts[0].workflow_run.id=11,p=>p.artifacts.artifacts[0].workflow_run.repository_id=2,p=>p.artifacts.artifacts[0].workflow_run.head_sha='f'.repeat(40),p=>p.artifacts.artifacts[0].workflow_run.head_branch='other',p=>{p.artifacts.artifacts.push({...p.artifacts.artifacts[0],id:99});p.artifacts.total_count++;},
  p=>p.extra='SECRET_SENTINEL'

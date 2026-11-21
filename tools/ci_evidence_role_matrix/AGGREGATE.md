@@ -17,3 +17,14 @@ Math retains the actual existing validateCoverage validator for six original Mat
 ## Implemented archive-custody descendant
 
 ARTIFACT-CUSTODY.md documents the separately reviewed bounded current-run HTTP/ZIP boundary. The pure packet function continues to return HELD; only the network/archive function can report narrow four-Root unit artifact custody after ZIP digest/CRC/decompression/current metadata and all four receipt bindings. No actual new four-cell hosted result is claimed by source tests.
+
+
+## RBravo source and bounded HTTP handoff (2026-11-21)
+
+The active role library is pinned to 4ba390b8e12070499d54b12e5609c683c00607ee with 32 raw Git inputs (31 JavaScript files and the collector workflow). `provenance/rbravo-source-repin.json` records each Git blob OID and SHA-256. The original 34 role identities and four Linux cells are unchanged; older source proofs remain historical and immutable.
+
+The matrix bootstrap uses one pinned, Root-only checkout in a fresh private path, disables credentials and autocrlf, validates the literal source SHA before checkout, and checks the canonical HTTP helper raw hash before detached import. Runtime staging obtains that same helper from the declared role-source closure. Bootstrap API, runner API and artifact downloads delegate to the single Root-owned HTTP reader (5-second API and 10-second artifact policies); the duplicate private artifact reader is removed. The measured RBravo loader roster is 92 static controls.
+
+For pull requests, run.head_sha, workloadHead and the actual PR head must agree before and after artifact collection and in receipts. This is distinct from Math six-axis tested merge SHA: its existing merge parent/tree verification remains a separate requirement and is not replaced by equality with the PR head.
+
+Local evidence: 177 contract/fake-artifact controls + 88 source controls pass in Node read-only permission mode; actual RBravo loader has 92 static controls. Eight module programs and two workflow inline programs compile without execution. The original mismatched run/PR-head witness accepted before the new association guard and refuses afterwards. No GitHub checkout action, hosted role, signature, OIDC, SQLite, PG, provider or native code was executed locally. Actual four-cell download custody and all six Math axes remain mandatory. Calibration positives confer no C3/admission authority; overall coverage remains HELD and release NO_GO.
