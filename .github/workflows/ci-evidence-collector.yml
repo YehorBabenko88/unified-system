@@ -22,15 +22,50 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: '24.20.0'
+      - name: Prepare exact Root helper checkout
+        id: bootstrap_source
+        shell: bash
+        env:
+          ROOT_BOOTSTRAP_REF: ${{ inputs.collector-sha }}
+        run: |
+          node --input-type=module <<'ROOT_SOURCE'
+          import{mkdtempSync,lstatSync,realpathSync,appendFileSync}from'node:fs';import{join,dirname,basename,isAbsolute}from'node:path';
+          const check=ok=>{if(!ok)throw Error('ROOT_HELPER_CHECKOUT_BLOCKED');};
+          function rootInput(value){if(typeof value!=='string'||!/^[a-f0-9]{40}$/.test(value))throw Error('ROOT_CHECKOUT_INPUT_REFUSED');return value;}
+          try{
+           const ref=rootInput(process.env.ROOT_BOOTSTRAP_REF);
+           check(process.env.GITHUB_ACTIONS==='true'&&process.env.RUNNER_ENVIRONMENT==='github-hosted'&&process.platform==='linux'&&process.env.GITHUB_REPOSITORY==='YehorBabenko88/math'&&!process.env.NODE_OPTIONS&&!process.env.NODE_PATH&&!process.env.NODE_DEBUG&&!process.env.NODE_DEBUG_NATIVE);
+           const declared=process.env.GITHUB_WORKSPACE;check(typeof declared==='string'&&declared.length<=4096&&isAbsolute(declared)&&!/[\r\n\0]/.test(declared));const workspace=realpathSync(declared);check(!/[\r\n\0]/.test(workspace));
+           for(let part=workspace;;part=dirname(part)){const s=lstatSync(part);check(s.isDirectory()&&!s.isSymbolicLink());if(dirname(part)===part)break;}
+           check(typeof process.env.GITHUB_OUTPUT==='string'&&isAbsolute(process.env.GITHUB_OUTPUT)&&!/[\r\n\0]/.test(process.env.GITHUB_OUTPUT));
+           const parent=mkdtempSync(join(workspace,'.root-evidence-source-'));check((lstatSync(parent).mode&0o077)===0);
+           appendFileSync(process.env.GITHUB_OUTPUT,'source_sha='+ref+'\ncheckout_path='+basename(parent)+'/root\ncheckout_abs='+join(parent,'root')+'\n');console.log('ROOT_HELPER_CHECKOUT_INPUT_READY');
+          }catch{console.error('ROOT_HELPER_CHECKOUT_BLOCKED');process.exitCode=1;}
+          ROOT_SOURCE
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        env:
+          GIT_CONFIG_COUNT: '1'
+          GIT_CONFIG_KEY_0: core.autocrlf
+          GIT_CONFIG_VALUE_0: 'false'
+        with:
+          repository: YehorBabenko88/unified-system
+          ref: ${{ steps.bootstrap_source.outputs.source_sha }}
+          path: ${{ steps.bootstrap_source.outputs.checkout_path }}
+          persist-credentials: false
+          fetch-depth: 1
+          set-safe-directory: false
+          submodules: false
+          lfs: false
       - name: Verify Root tool bytes and qualify only the Math workload
         id: collect
         env:
           QUALIFICATION_COLLECTOR_SHA: ${{ inputs.collector-sha }}
+          QUALIFICATION_ROOT_CHECKOUT: ${{ steps.bootstrap_source.outputs.checkout_abs }}
           QUALIFICATION_API_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           node --input-type=module <<'COLLECTOR'
-          import{mkdirSync,writeFileSync,readFileSync,lstatSync}from'node:fs';import{resolve,dirname,join}from'node:path';import{createHash}from'node:crypto';import{spawnSync}from'node:child_process';
+          import{mkdirSync,writeFileSync,readFileSync,lstatSync,realpathSync,openSync,fstatSync,readSync,closeSync,constants}from'node:fs';import{resolve,dirname,join}from'node:path';import{createHash}from'node:crypto';import{spawnSync}from'node:child_process';
           const manifest = {
             "tools/ci_evidence/strict.mjs": "0728aae4211c32bf0a7f19e91d91a36ebf190a2a95282e716864640e58fc37c8",
             "tools/ci_evidence/github_identity.mjs": "71e7fc45cad9846ec8f6750c073616b56796b44151c43de99682b22d36dcfb99",
@@ -59,18 +94,26 @@ jobs:
             "tools/ci_evidence/tests/inert_initialization.mjs": "0625035e72b4d372ccdd463c929c1cbb1c2aef73fa8ccdc57ccc8d3a163c65ad",
             "tools/ci_evidence/tests/inert_identity_policy.mjs": "c28a4f7aa70eaf39ece804d89732d1696254d92bd87d99ed58598c542dec2d85",
             "tools/ci_evidence/tests/inert_public_diagnostics.mjs": "c8818f5808a0f3d45ed14fea56a1b83bbf0826c7d6c41c9ceb07bf71084ef6ff",
-            "tools/ci_evidence/tests/inert_loader.mjs": "8728e30959b3a57075d3c3ed5095a782d19c01e05d7da7d3bcdbc84dce785400",
+            "tools/ci_evidence/tests/inert_loader.mjs": "da2c0e9081001414f2e794575ccaafbc6fdd912016acaab3d05814461e928d11",
             "tools/ci_evidence/tests/inert_api_failures.mjs": "d4dbc9e2f059f7fd1af7c80eec8b5de7073973a1112e19acdb263a9c4361557b",
             "tools/ci_evidence/tests/inert_stage_codes.mjs": "752e0b41ad1b440030b9294ec274ea340b6b49c48aec72f8f5a53ce01568ba5d",
             "tools/ci_evidence/http_body.mjs": "cab089a1aaac6ef495279acb4967943750604461f9e4711b06cd0a64922c4d91"
           };
           let code='E_BOOTSTRAP';const temp=resolve(process.env.RUNNER_TEMP),publicFile=join(temp,'unified-ci-evidence-public/qualification.json');
           const check=ok=>{if(!ok)throw Error('CI_EVIDENCE_BLOCKED');};
+          function readOwned(path,maximum){
+           check(Number.isSafeInteger(maximum)&&maximum>0&&maximum<=131072);const fd=openSync(path,constants.O_RDONLY|constants.O_NOFOLLOW);
+           try{const before=fstatSync(fd,{bigint:true});check(before.isFile()&&before.nlink===1n&&before.size>0n&&before.size<=BigInt(maximum));const raw=Buffer.alloc(maximum+1),count=readSync(fd,raw,0,raw.length,0);check(count===Number(before.size)&&count<=maximum);const after=fstatSync(fd,{bigint:true}),named=lstatSync(path,{bigint:true});check(after.isFile()&&named.isFile()&&!named.isSymbolicLink()&&after.nlink===1n&&named.nlink===1n&&['dev','ino','size','mtimeNs','ctimeNs'].every(k=>before[k]===after[k]&&after[k]===named[k]));return raw.subarray(0,count);}finally{closeSync(fd);}
+          }
+          function rootHead(raw,ref){check(Buffer.isBuffer(raw)&&raw.equals(Buffer.from(ref+'\n','ascii')));}
           try{
            check(process.env.GITHUB_ACTIONS==='true'&&process.env.RUNNER_ENVIRONMENT==='github-hosted'&&process.platform==='linux'&&process.env.GITHUB_REPOSITORY==='YehorBabenko88/math'&&!process.env.NODE_OPTIONS&&!process.env.NODE_PATH&&!process.env.NODE_DEBUG&&!process.env.NODE_DEBUG_NATIVE);
            const ref=process.env.QUALIFICATION_COLLECTOR_SHA;check(/^[a-f0-9]{40}$/.test(ref));for(let p=temp;;p=dirname(p)){check(lstatSync(p).isDirectory()&&!lstatSync(p).isSymbolicLink());if(dirname(p)===p)break;}
+           const workspace=realpathSync(process.env.GITHUB_WORKSPACE),sourceDir=resolve(process.env.QUALIFICATION_ROOT_CHECKOUT);check(sourceDir===process.env.QUALIFICATION_ROOT_CHECKOUT&&dirname(dirname(sourceDir))===workspace&&/^[.]root-evidence-source-[A-Za-z0-9]{6}$/.test(sourceDir.slice(workspace.length+1).split('/')[0])&&sourceDir.endsWith('/root'));
+           check((lstatSync(dirname(sourceDir)).mode&0o077)===0&&Number.isInteger(constants.O_NOFOLLOW)&&constants.O_NOFOLLOW>0);for(let part=join(sourceDir,'tools/ci_evidence');;part=dirname(part)){const st=lstatSync(part);check(st.isDirectory()&&!st.isSymbolicLink());if(dirname(part)===part)break;}const gitDir=lstatSync(join(sourceDir,'.git'));check(gitDir.isDirectory()&&!gitDir.isSymbolicLink());rootHead(readOwned(join(sourceDir,'.git/HEAD'),41),ref);
+           const helperRaw=readOwned(join(sourceDir,'tools/ci_evidence/http_body.mjs'),131072);check(createHash('sha256').update(helperRaw).digest('hex')===manifest['tools/ci_evidence/http_body.mjs']);const helper=await import('data:text/javascript;base64,'+helperRaw.toString('base64'));check(typeof helper.readHttpBody==='function');
            const root=join(temp,'unified-ci-evidence-kit');mkdirSync(root,{mode:0o700});
-           const api=async path=>{const r=await fetch('https://api.github.com/repos/YehorBabenko88/unified-system/'+path,{headers:{Authorization:'Bearer '+process.env.QUALIFICATION_API_TOKEN,Accept:'application/vnd.github+json'},redirect:'error',signal:AbortSignal.timeout(5000)});check(r.ok);let n=0;const chunks=[];for await(const chunk of r.body){n+=chunk.length;check(n<=1048576);chunks.push(Buffer.from(chunk));}return JSON.parse(Buffer.concat(chunks).toString('utf8'));};
+           const api=async path=>{const r=await fetch('https://api.github.com/repos/YehorBabenko88/unified-system/'+path,{headers:{Authorization:'Bearer '+process.env.QUALIFICATION_API_TOKEN,Accept:'application/vnd.github+json'},redirect:'error',signal:AbortSignal.timeout(5000)});check(r.ok);return JSON.parse((await helper.readHttpBody(r,{maxBytes:1048576,timeoutMs:5000})).toString('utf8'));};
            const entries=tree=>{check(tree.truncated===false&&Array.isArray(tree.tree)&&tree.tree.length<=4096);return tree.tree;};
            const member=(tree,path,type,mode)=>{const found=entries(tree).filter(e=>e.path===path);check(found.length===1&&found[0].type===type&&found[0].mode===mode&&/^[a-f0-9]{40}$/.test(found[0].sha));return found[0];};
            const blob=async entry=>{const b=await api('git/blobs/'+entry.sha);check(b.encoding==='base64'&&Number.isSafeInteger(b.size)&&b.size<131072);const raw=Buffer.from(b.content,'base64');check(raw.length===b.size&&createHash('sha1').update(Buffer.concat([Buffer.from('blob '+raw.length+'\0'),raw])).digest('hex')===entry.sha);return raw;};
