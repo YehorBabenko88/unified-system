@@ -16,6 +16,21 @@ function matrixCheckoutContract(text){assert.equal((text.match(/uses: actions\/c
 assert.equal(matrixCheckoutContract(workflow),true);checks++;
 for(const change of [x=>x.replace('repository: YehorBabenko88/unified-system','repository: YehorBabenko88/math'),x=>x.replace('steps.matrix_bootstrap_source.outputs.source_sha','github.sha'),x=>x.replace('persist-credentials: false','persist-credentials: true'),x=>x.replace('steps.matrix_bootstrap_source.outputs.checkout_path','inputs.path'),x=>x+expectedCheckout,x=>x.replace('checkout@11d5960a326750d5838078e36cf38b85af677262','checkout@'+'0'.repeat(40)),x=>x.replace("GIT_CONFIG_VALUE_0: 'false'","GIT_CONFIG_VALUE_0: 'true'"),x=>x+'  extra:\n    runs-on: ubuntu-latest\n']){assert.throws(()=>matrixCheckoutContract(change(workflow)));checks++;}
 const preflight=workflow.split("node --input-type=module <<'ROOT_MATRIX_SOURCE'\n")[1]?.split('\n          ROOT_MATRIX_SOURCE')[0];assert(preflight);const rootPin=vm.runInNewContext('('+preflight.match(/function rootInput\(value\)\{[^\n]+\}/)[0]+')');assert.equal(rootPin('a'.repeat(40)),'a'.repeat(40));checks++;for(const value of [null,true,'main','A'.repeat(40),'a'.repeat(39),'a'.repeat(41)]){assert.throws(()=>rootPin(value));checks++;}
+
+// Execute the actual bootstrap path statement with its declared imports; compiling alone misses unbound names.
+function bootstrapPathBindings(text){
+ const block=text.split("node --input-type=module <<'ROLE_MATRIX'\n")[1]?.split('\n          ROLE_MATRIX')[0];assert(block);
+ const names=block.match(/import \{([^}]+)\} from 'node:path'/)[1].split(',');
+ const statement=block.match(/const workspace=realpathSync\(process.env.GITHUB_WORKSPACE\),sourceDir=[^\n]+/)[0];
+ const pathRoot='/inert/workspace',source=pathRoot+'/.root-role-source-Ab12Cd/root';
+ const bindings={join:(...parts)=>parts.join('/'),dirname:value=>value.slice(0,value.lastIndexOf('/')),resolve:value=>value};
+ const context={realpathSync:value=>value,process:{env:{GITHUB_WORKSPACE:pathRoot,ROLE_MATRIX_ROOT_CHECKOUT:source}},check:assert};
+ for(const name of names){assert(Object.hasOwn(bindings,name));context[name]=bindings[name];}
+ return vm.runInNewContext(statement+';sourceDir',context);
+}
+assert.equal(bootstrapPathBindings(workflow),'/inert/workspace/.root-role-source-Ab12Cd/root');checks++;
+assert.throws(()=>bootstrapPathBindings(workflow.replace('import {join,dirname,resolve}', 'import {join,dirname}')),/resolve is not defined/);checks++;
+
 const seed=vm.runInNewContext('('+workflow.match(/const ROOT_HTTP_BODY = Object.freeze\((\{[^\n]+\})\);/)[1]+')');assert.equal(seed.path,'tools/ci_evidence/http_body.mjs');assert.equal(seed.sha256,plan.files[seed.path]);assert(workflow.includes('helper.readHttpBody(response,{maxBytes:1048576,timeoutMs:5000})'));assert(!workflow.includes('const chunks=[]'));checks++;
 assert(workflow.includes('/^[.]root-role-source-[A-Za-z0-9]{6}$/'));assert(preflight.includes("mkdtempSync(join(workspace,'.root-role-source-'))"));assert(workflow.indexOf("digest('hex')===ROOT_HTTP_BODY.sha256")<workflow.indexOf("await import('data:text/javascript;base64,'"));checks++;
 const runner=readFileSync(new URL('./runner.mjs',import.meta.url),'utf8');assert(runner.includes('readHttpBody(response,{maxBytes:1048576,timeoutMs:5000})'));assert(runner.includes('staticResult.controls===92'));assert(!runner.includes('const chunks=[]'));checks++;

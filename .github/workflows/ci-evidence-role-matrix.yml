@@ -92,7 +92,7 @@ jobs:
         run: |
           node --input-type=module <<'ROLE_MATRIX'
           import {mkdtempSync,mkdirSync,writeFileSync,readFileSync,lstatSync,realpathSync,openSync,fstatSync,readSync,closeSync,constants} from 'node:fs';
-          import {join,dirname} from 'node:path';import {createHash} from 'node:crypto';import {spawnSync} from 'node:child_process';
+          import {join,dirname,resolve} from 'node:path';import {createHash} from 'node:crypto';import {spawnSync} from 'node:child_process';
           const KIT_MANIFEST = {
            "tools/ci_evidence_role_matrix/contract.mjs": "47008c4b1aa8e7b07ed7ad60712ddf0366ff318ba86d463657b7bfde9a515626",
            "tools/ci_evidence_role_matrix/reporter.mjs": "0628416798808ccc5b2a388f0fcf8738b47bd83e13213c7b2f8564e5067cbe83",
