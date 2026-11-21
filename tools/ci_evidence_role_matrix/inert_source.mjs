@@ -72,4 +72,18 @@ sm=streamModel();async function* noBytes(){}await assert.rejects(sm.read({body:n
 sm=streamModel();let returned=0;const stalled={ [Symbol.asyncIterator](){return{next(){return new Promise(()=>{});},return(){returned++;return Promise.resolve({done:true});}};}};const pending=sm.read({body:stalled},1);sm.expire();await assert.rejects(pending);assert.equal(returned,1);assert.equal(sm.cleared,1);checks++;
 sm=streamModel();const delayed={ [Symbol.asyncIterator](){return{async next(){sm.late();return{done:false,value:Buffer.from('x')};},return(){return{done:true};}};}};await assert.rejects(sm.read({body:delayed},1));checks++;
 
+
+// Child diagnostics disclose only fixed stage codes, never child-controlled bytes.
+const diagnosticSource=workflow.match(/function runnerDiagnostic\(value\)\{[^\n]+\}/)?.[0];assert(diagnosticSource,'CLOSED_RUNNER_DIAGNOSTIC_REQUIRED');
+const diagnose=vm.runInNewContext('('+diagnosticSource+')');
+const failedChild={status:1,signal:null,stdout:'',stderr:'ROLE_MATRIX_BLOCKED:E_WORKLOAD_BIND\n'};
+assert.equal(diagnose(failedChild),'E_WORKLOAD_BIND');checks++;
+for(const value of [null,true,'SECRET_SENTINEL',{}, {status:1,signal:null,stdout:'SECRET_SENTINEL',stderr:failedChild.stderr},{...failedChild,stderr:'SECRET_SENTINEL'},{...failedChild,stderr:failedChild.stderr+'SECRET_SENTINEL'},{...failedChild,stderr:'ROLE_MATRIX_BLOCKED:E_NOT_APPROVED\n'}]){const code=diagnose(value);assert(/^E_CHILD_(SHAPE|RESULT)$/.test(code));assert(!code.includes('SECRET'));checks++;}
+assert.equal(diagnose({...failedChild,error:new Error('SECRET_SENTINEL')}),'E_CHILD_EXECUTION');checks++;
+assert.equal(diagnose({...failedChild,signal:'SIGTERM'}),'E_CHILD_SIGNAL');checks++;
+for(const key of ['status','signal','stdout','stderr','error']){let reads=0;const hostile={...failedChild};Object.defineProperty(hostile,key,{get(){reads++;throw Error('SECRET_SENTINEL');}});assert.equal(diagnose(hostile),'E_CHILD_SHAPE');assert.equal(reads,0);checks++;}
+
+const runnerStages=[...new Set([...runner.matchAll(/phase='(E_[A-Z_]+)'/g)].map(x=>x[1]))];for(const code of runnerStages){assert.equal(diagnose({...failedChild,stderr:'ROLE_MATRIX_BLOCKED:'+code+'\n'}),code);checks++;}
+assert(workflow.includes("console.error('ROLE_MATRIX_RUNNER_DIAGNOSTIC:'+runnerDiagnostic(child))"));assert(!workflow.includes('console.error(child.stderr)'));checks++;
+
 console.log(JSON.stringify({checks,status:'PASS_INERT_SOURCE_ONLY',authority:'NONE',production:'NO_GO'}));
