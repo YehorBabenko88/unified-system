@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {validateCell,projectTerminal,requireTerminals,makeReceipt,validateReceipt,bindWorkload} from './contract.mjs';
+import {validateCell,projectTerminal,requireTerminals,makeReceipt,validateReceipt,bindWorkload,workloadBindingDiagnostic} from './contract.mjs';
 const plan=JSON.parse(readFileSync(new URL('./role-plan.json',import.meta.url)));
 let checks=0;assert(Object.hasOwn(plan.files,'tools/ci_evidence/http_body.mjs'),'PUBLISHED_RBRAVO_HELPER_SOURCE_REQUIRED');checks++;assert.equal(plan.role_source,'4ba390b8e12070499d54b12e5609c683c00607ee');checks++;
 for(const cell of plan.cells){assert.equal(validateCell(cell).cell,cell);checks++;}
@@ -132,5 +132,24 @@ let optionCallbacks=0;const accessor={fetcher:noNetwork};Object.defineProperty(a
 
 
 for(const field of ['length',Symbol.iterator]){let callbacks=0;const hostile=Buffer.from(cellZip);Object.defineProperty(hostile,field,{get(){callbacks++;throw Error('INERT_PRIVATE_TOKEN');}});assert.throws(()=>readArtifactMember(hostile,cellName,zipHash(cellZip)));assert.equal(callbacks,0);checks++;}
+
+
+// Binding diagnostics are closed metadata observations, NEVER binding/coverage success.
+const diagnosticExpected={...expected};const diagnosticJobs={total_count:1,jobs:[job]};
+assert.equal(workloadBindingDiagnostic(run,diagnosticJobs,diagnosticExpected),'R_IN_PROGRESS__J_IN_PROGRESS__REF_PR_MERGE_SHAPE__RA_MATCH__JA_MATCH__RH_MATCH__JH_MATCH__WF_MATCH__CHECK_SHAPE');checks++;
+for(const status of ['queued','waiting','requested','pending','completed','in_progress']){assert(workloadBindingDiagnostic({...run,status},diagnosticJobs,diagnosticExpected).startsWith('R_'+status.toUpperCase()+'__'));checks++;}
+for(const status of ['queued','waiting','pending','completed','in_progress']){assert(workloadBindingDiagnostic(run,{total_count:1,jobs:[{...job,status}]},diagnosticExpected).includes('__J_'+status.toUpperCase()+'__'));checks++;}
+assert(workloadBindingDiagnostic({...run,status:'SECRET_SENTINEL'},diagnosticJobs,diagnosticExpected).startsWith('R_OTHER__'));checks++;
+for(const ref of ['refs/heads/main','refs/pull/2/merge','SECRET_SENTINEL']){const code=workloadBindingDiagnostic(run,diagnosticJobs,{...diagnosticExpected,ref});assert(!code.includes('SECRET'));assert(!code.includes('__REF_PR_MERGE_SHAPE__'));checks++;}
+for(const [event,ref,suffix]of [['push','refs/heads/main','REF_HEADS_SHAPE'],['workflow_dispatch','refs/tags/v1','REF_TAGS_SHAPE'],['push','refs/heads/../bad','REF_INVALID']]){assert(workloadBindingDiagnostic(run,diagnosticJobs,{...diagnosticExpected,event,ref}).includes('__'+suffix+'__'));checks++;}
+for(const value of [{total_count:0,jobs:[]},{total_count:2,jobs:[job,job]},{total_count:101,jobs:[job]}]){const code=workloadBindingDiagnostic(run,value,diagnosticExpected);assert(/__J_(MISSING|AMBIGUOUS|BAD_DATA)__/.test(code));checks++;}
+for(const [target,key]of [['run','status'],['jobs','jobs'],['jobs','total_count'],['job','name'],['job','status'],['expected','event'],['expected','ref'],['expected','cell'],['expected','prNumber']]){let reads=0;let r={...run},j={total_count:1,jobs:[{...job}]},e={...diagnosticExpected};const object=target==='run'?r:target==='jobs'?j:target==='job'?j.jobs[0]:e;Object.defineProperty(object,key,{get(){reads++;throw Error('SECRET_SENTINEL');}});const code=workloadBindingDiagnostic(r,j,e);assert(!code.includes('SECRET'));assert.equal(reads,0);checks++;}
+for(const target of ['run','jobs','list','job','expected']){let traps=0;const proxy=new Proxy({}, {get(){traps++;throw Error('SECRET_SENTINEL');},ownKeys(){traps++;throw Error('SECRET_SENTINEL');},getOwnPropertyDescriptor(){traps++;throw Error('SECRET_SENTINEL');},getPrototypeOf(){traps++;throw Error('SECRET_SENTINEL');}});let r=run,j=diagnosticJobs,e=diagnosticExpected;if(target==='run')r=proxy;else if(target==='jobs')j=proxy;else if(target==='list')j={total_count:1,jobs:proxy};else if(target==='job')j={total_count:1,jobs:[proxy]};else e=proxy;const code=workloadBindingDiagnostic(r,j,e);assert(!code.includes('SECRET'));assert.equal(traps,0);checks++;}
+const revoked=Proxy.revocable({},{});revoked.revoke();assert(workloadBindingDiagnostic(revoked.proxy,diagnosticJobs,diagnosticExpected).startsWith('R_UNAVAILABLE__'));checks++;
+
+
+for(const [target,key,changed,flag]of [['run','run_attempt',undefined,'RA_MISSING'],['run','run_attempt','2','RA_INVALID'],['run','run_attempt',3,'RA_MISMATCH'],['job','run_attempt',undefined,'JA_MISSING'],['job','run_attempt',3,'JA_MISMATCH'],['run','head_sha',undefined,'RH_MISSING'],['run','head_sha','f'.repeat(40),'RH_MISMATCH'],['job','head_sha',undefined,'JH_MISSING'],['job','head_sha','f'.repeat(40),'JH_MISMATCH'],['run','referenced_workflows',undefined,'WF_MISSING'],['run','referenced_workflows',[],'WF_MISSING'],['run','referenced_workflows',[{}],'WF_MISSING'],['job','check_run_url',undefined,'CHECK_MISSING'],['job','check_run_url','SECRET_SENTINEL','CHECK_INVALID']]){const r={...run},j={total_count:1,jobs:[{...job}]};const targetObject=target==='run'?r:j.jobs[0];if(changed===undefined)delete targetObject[key];else targetObject[key]=changed;const code=workloadBindingDiagnostic(r,j,diagnosticExpected);assert(code.includes('__'+flag));assert(!code.includes('SECRET'));checks++;}
+for(const [target,key]of [['run','run_attempt'],['run','head_sha'],['run','referenced_workflows'],['job','run_attempt'],['job','head_sha'],['job','check_run_url'],['expected','attempt'],['expected','workloadHead'],['expected','runnerSource']]){let reads=0;const r={...run},j={total_count:1,jobs:[{...job}]},e={...diagnosticExpected};const value=target==='run'?r:target==='job'?j.jobs[0]:e;Object.defineProperty(value,key,{get(){reads++;throw Error('SECRET_SENTINEL');}});const code=workloadBindingDiagnostic(r,j,e);assert(!code.includes('SECRET'));assert.equal(reads,0);checks++;}
+for(const nested of ['workflow-list','workflow-row']){let traps=0;const proxy=new Proxy([], {get(){traps++;throw Error('SECRET_SENTINEL');},getOwnPropertyDescriptor(){traps++;throw Error('SECRET_SENTINEL');},ownKeys(){traps++;throw Error('SECRET_SENTINEL');}});const code=workloadBindingDiagnostic({...run,referenced_workflows:nested==='workflow-list'?proxy:[proxy]},diagnosticJobs,diagnosticExpected);assert(code.includes('__WF_INVALID__'));assert.equal(traps,0);checks++;}
 
 console.log(JSON.stringify({checks,status:'PASS_INERT_ONLY',authority:'NONE',production:'NO_GO'}));

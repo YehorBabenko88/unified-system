@@ -4,7 +4,7 @@ import {resolve,join,dirname} from 'node:path';
 import {pathToFileURL} from 'node:url';
 import {createHash} from 'node:crypto';
 import {spawnSync} from 'node:child_process';
-import {validateCell,parseTerminals,bindWorkload,makeReceipt,validateReceipt} from './contract.mjs';
+import {validateCell,parseTerminals,bindWorkload,workloadBindingDiagnostic,makeReceipt,validateReceipt} from './contract.mjs';
 const sha=raw=>createHash('sha256').update(raw).digest('hex');
 const need=value=>{if(!value)throw Error('ROLE_MATRIX_REFUSED');};
 let phase='E_PROFILE';
@@ -26,7 +26,8 @@ try{
  const api=async path=>{const response=await fetch('https://api.github.com/repos/YehorBabenko88/math/'+path,{headers:{Authorization:'Bearer '+process.env.ROLE_MATRIX_API_TOKEN,Accept:'application/vnd.github+json'},redirect:'error',signal:AbortSignal.timeout(5000)});need(response.ok);return JSON.parse((await readHttpBody(response,{maxBytes:1048576,timeoutMs:5000})).toString('utf8'));};
  phase='E_WORKLOAD';const runId=process.env.GITHUB_RUN_ID,attempt=process.env.GITHUB_RUN_ATTEMPT,prNumber=process.env.ROLE_MATRIX_PR_NUMBER;need(/^[1-9][0-9]{0,19}$/.test(runId)&&/^[1-9][0-9]{0,19}$/.test(attempt)&&(process.env.GITHUB_EVENT_NAME!=='pull_request'||/^[1-9][0-9]{0,19}$/.test(prNumber)));
  phase='E_WORKLOAD_METADATA';const [run,jobs,pr]=await Promise.all([api('actions/runs/'+runId),api('actions/runs/'+runId+'/attempts/'+attempt+'/jobs?per_page=100'),process.env.GITHUB_EVENT_NAME==='pull_request'?api('pulls/'+prNumber):Promise.resolve(null)]);
- phase='E_WORKLOAD_BIND';const bound=bindWorkload(run,jobs,pr,{event:process.env.GITHUB_EVENT_NAME,ref:process.env.GITHUB_REF,runnerSource:proof.runner_workflow_source,runId,attempt,prNumber,workloadHead:process.env.ROLE_MATRIX_WORKLOAD_HEAD,cell:cell.cell});
+ phase='E_WORKLOAD_BIND';const expected={event:process.env.GITHUB_EVENT_NAME,ref:process.env.GITHUB_REF,runnerSource:proof.runner_workflow_source,runId,attempt,prNumber,workloadHead:process.env.ROLE_MATRIX_WORKLOAD_HEAD,cell:cell.cell};
+ let bound;try{bound=bindWorkload(run,jobs,pr,expected);}catch{console.error('ROLE_MATRIX_BIND_DIAGNOSTIC:'+workloadBindingDiagnostic(run,jobs,expected));throw Error('ROLE_MATRIX_WORKLOAD_BIND_REFUSED');}
  const context={...bound,runner_workflow_source:proof.runner_workflow_source,runner_workflow_sha256:proof.runner_workflow_sha256};
  phase='E_PG_PROFILE';need(process.env.PGHOST==='127.0.0.1'&&process.env.PGPORT==='5432'&&process.env.PGDATABASE==='math_universe_test'&&process.env.PGUSER==='math_test'&&process.env.PGPASSWORD==='math_test_ci_only');
  phase='E_PG_QUERY';const pg=spawnSync('/usr/bin/psql',['-X','-A','-t','-v','ON_ERROR_STOP=1','-c','SHOW server_version_num'],{encoding:'utf8',timeout:10000,maxBuffer:4096,env:{PATH:'/usr/bin:/bin',PGHOST:'127.0.0.1',PGPORT:'5432',PGDATABASE:'math_universe_test',PGUSER:'math_test',PGPASSWORD:'math_test_ci_only',LC_ALL:'C'}});

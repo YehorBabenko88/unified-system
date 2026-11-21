@@ -86,4 +86,10 @@ for(const key of ['status','signal','stdout','stderr','error']){let reads=0;cons
 const runnerStages=[...new Set([...runner.matchAll(/phase='(E_[A-Z_]+)'/g)].map(x=>x[1]))];for(const code of runnerStages){assert.equal(diagnose({...failedChild,stderr:'ROLE_MATRIX_BLOCKED:'+code+'\n'}),code);checks++;}
 assert(workflow.includes("console.error('ROLE_MATRIX_RUNNER_DIAGNOSTIC:'+runnerDiagnostic(child))"));assert(!workflow.includes('console.error(child.stderr)'));checks++;
 
+
+const bindingPacket='ROLE_MATRIX_BIND_DIAGNOSTIC:R_IN_PROGRESS__J_QUEUED__REF_PR_MERGE_SHAPE__RA_MATCH__JA_MISSING__RH_MATCH__JH_MATCH__WF_MATCH__CHECK_SHAPE\nROLE_MATRIX_BLOCKED:E_WORKLOAD_BIND\n';
+assert.equal(diagnose({...failedChild,stderr:bindingPacket}),'E_WORKLOAD_BIND__R_IN_PROGRESS__J_QUEUED__REF_PR_MERGE_SHAPE__RA_MATCH__JA_MISSING__RH_MATCH__JH_MATCH__WF_MATCH__CHECK_SHAPE');checks++;
+for(const raw of [bindingPacket+'SECRET_SENTINEL',bindingPacket.replace('J_QUEUED','J_SECRET_SENTINEL'),bindingPacket.replace('REF_PR_MERGE_SHAPE','REF_UNKNOWN'),bindingPacket.replace('BLOCKED:E_WORKLOAD_BIND','BLOCKED:E_PG_QUERY'),bindingPacket.replace('R_IN_PROGRESS','R_in_progress')]){assert.equal(diagnose({...failedChild,stderr:raw}),'E_CHILD_RESULT');checks++;}
+assert.equal(diagnose({...failedChild,stderr:bindingPacket,stdout:'SECRET_SENTINEL'}),'E_CHILD_RESULT');checks++;
+
 console.log(JSON.stringify({checks,status:'PASS_INERT_SOURCE_ONLY',authority:'NONE',production:'NO_GO'}));

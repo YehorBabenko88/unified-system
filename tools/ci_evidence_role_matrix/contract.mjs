@@ -1,3 +1,4 @@
+import {types as _bindTypes} from 'node:util';
 import {resolve} from 'node:path';
 const reject=()=>{throw Error('ROLE_MATRIX_REFUSED');};
 const need=value=>{if(!value)reject();};
@@ -52,4 +53,72 @@ export function validateReceipt(receipt,plan,ctx){
 export function parseTerminals(text,plan){
  need(typeof text==='string'&&text.length<=131072);const lines=text.trimEnd().split('\n');need(lines.length===31&&lines.every(line=>line.length<=256));
  const values=lines.map(line=>{try{return JSON.parse(line);}catch{reject();}});return requireTerminals(values,plan);
+}
+
+// Descriptor-only diagnostic projection. It never calls bindWorkload or grants acceptance.
+const _bindUnavailable=Symbol('unavailable');
+function _bindRecord(value){return value!==null&&typeof value==='object'&&!_bindTypes.isProxy(value)&&!Array.isArray(value);}
+function _bindData(value,key){
+ if(value===null||typeof value!=='object'||_bindTypes.isProxy(value))return _bindUnavailable;
+ const descriptor=Object.getOwnPropertyDescriptor(value,key);
+ return descriptor&&Object.hasOwn(descriptor,'value')?descriptor.value:_bindUnavailable;
+}
+function _bindStatus(value,prefix){
+ if(value===_bindUnavailable)return prefix+'UNAVAILABLE';
+ const states=['in_progress','queued','waiting','requested','pending','completed'];
+ return typeof value==='string'&&value.length<=32&&states.includes(value)?prefix+value.toUpperCase():prefix+'OTHER';
+}
+function _bindJobSnapshot(jobs,expected){
+ if(!_bindRecord(jobs)||!_bindRecord(expected))return{status:'J_BAD_DATA',job:null};
+ const cell=_bindData(expected,'cell');if(typeof cell!=='string'||!/^linux-(22|24)-(16|18)$/.test(cell))return{status:'J_BAD_EXPECTED',job:null};
+ const list=_bindData(jobs,'jobs'),count=_bindData(jobs,'total_count');
+ if(list===null||typeof list!=='object'||_bindTypes.isProxy(list)||!Array.isArray(list))return{status:'J_BAD_DATA',job:null};
+ const length=_bindData(list,'length');if(!Number.isSafeInteger(length)||length<0||length>100||count!==length)return{status:'J_BAD_DATA',job:null};
+ const label='Root transferred unit roles '+cell;let found=null,matches=0;
+ for(let index=0;index<length;index++){
+  const item=_bindData(list,String(index));if(!_bindRecord(item))return{status:'J_BAD_DATA',job:null};
+  const name=_bindData(item,'name');if(typeof name!=='string'||name.length>512)return{status:'J_BAD_DATA',job:null};
+  if(name===label||name.endsWith(' / '+label)){found=item;matches++;}
+ }
+ if(matches===0)return{status:'J_MISSING',job:null};if(matches!==1)return{status:'J_AMBIGUOUS',job:null};return{status:_bindStatus(_bindData(found,'status'),'J_'),job:found};
+}
+function _bindRefShape(expected){
+ if(!_bindRecord(expected))return'REF_UNAVAILABLE';
+ const event=_bindData(expected,'event'),ref=_bindData(expected,'ref');
+ if(typeof event!=='string'||typeof ref!=='string'||ref.length>512)return'REF_UNAVAILABLE';
+ if(event==='pull_request'){
+  const number=_bindData(expected,'prNumber');if(typeof number!=='string'||!/^[1-9][0-9]{0,19}$/.test(number))return'REF_UNAVAILABLE';
+  return ref==='refs/pull/'+number+'/merge'?'REF_PR_MERGE_SHAPE':'REF_PR_OTHER';
+ }
+ if(event!=='push'&&event!=='workflow_dispatch')return'REF_EVENT';
+ if(ref.length>256||!/^[A-Za-z0-9._/-]+$/.test(ref)||ref.includes('..'))return'REF_INVALID';
+ if(ref.startsWith('refs/heads/')&&ref.length>11)return'REF_HEADS_SHAPE';
+ if(ref.startsWith('refs/tags/')&&ref.length>10)return'REF_TAGS_SHAPE';return'REF_INVALID';
+}
+function _bindFieldMatch(record,key,expected,kind){
+ const value=_bindRecord(record)?_bindData(record,key):_bindUnavailable;if(value===_bindUnavailable)return'MISSING';
+ if(typeof expected!=='string'||(kind==='attempt'?!/^[1-9][0-9]{0,19}$/.test(expected):!/^[a-f0-9]{40}$/.test(expected)))return'UNAVAILABLE';
+ if(kind==='attempt')return Number.isSafeInteger(value)&&value>0?(String(value)===expected?'MATCH':'MISMATCH'):'INVALID';
+ return typeof value==='string'&&/^[a-f0-9]{40}$/.test(value)?(value===expected?'MATCH':'MISMATCH'):'INVALID';
+}
+function _bindWorkflowFlag(run,expected){
+ const list=_bindRecord(run)?_bindData(run,'referenced_workflows'):_bindUnavailable;
+ if(list===_bindUnavailable)return'MISSING';if(list===null||typeof list!=='object'||_bindTypes.isProxy(list)||!Array.isArray(list))return'INVALID';
+ const source=_bindRecord(expected)?_bindData(expected,'runnerSource'):_bindUnavailable;if(typeof source!=='string'||!/^[a-f0-9]{40}$/.test(source))return'UNAVAILABLE';
+ const length=_bindData(list,'length');if(!Number.isSafeInteger(length)||length<0||length>32)return'INVALID';if(length===0)return'MISSING';let matches=0;
+ for(let index=0;index<length;index++){
+  const row=_bindData(list,String(index));if(!_bindRecord(row))return'INVALID';const path=_bindData(row,'path'),sha=_bindData(row,'sha');
+  if(path===_bindUnavailable||sha===_bindUnavailable)return'MISSING';if(typeof path!=='string'||path.length>512||typeof sha!=='string'||!/^[a-f0-9]{40}$/.test(sha))return'INVALID';
+  if(path==='YehorBabenko88/unified-system/.github/workflows/ci-evidence-role-matrix.yml@'+source&&sha===source)matches++;
+ }return matches===1?'MATCH':'MISMATCH';
+}
+function _bindCheckShape(job){
+ const value=_bindRecord(job)?_bindData(job,'check_run_url'):_bindUnavailable;if(value===_bindUnavailable)return'MISSING';
+ const prefix='https://api.github.com/repos/YehorBabenko88/math/check-runs/';return typeof value==='string'&&value.length<=256&&value.startsWith(prefix)&&/^[1-9][0-9]{0,19}$/.test(value.slice(prefix.length))?'SHAPE':'INVALID';
+}
+export function workloadBindingDiagnostic(run,jobs,expected){
+ try{
+  const selected=_bindJobSnapshot(jobs,expected),attempt=_bindRecord(expected)?_bindData(expected,'attempt'):_bindUnavailable,head=_bindRecord(expected)?_bindData(expected,'workloadHead'):_bindUnavailable,runHead=_bindRecord(run)?_bindData(run,'head_sha'):_bindUnavailable;
+  return _bindStatus(_bindRecord(run)?_bindData(run,'status'):_bindUnavailable,'R_')+'__'+selected.status+'__'+_bindRefShape(expected)+'__RA_'+_bindFieldMatch(run,'run_attempt',attempt,'attempt')+'__JA_'+_bindFieldMatch(selected.job,'run_attempt',attempt,'attempt')+'__RH_'+_bindFieldMatch(run,'head_sha',head,'head')+'__JH_'+_bindFieldMatch(selected.job,'head_sha',runHead,'head')+'__WF_'+_bindWorkflowFlag(run,expected)+'__CHECK_'+_bindCheckShape(selected.job);
+ }catch{return'R_UNAVAILABLE__J_UNAVAILABLE__REF_UNAVAILABLE__RA_UNAVAILABLE__JA_UNAVAILABLE__RH_UNAVAILABLE__JH_UNAVAILABLE__WF_UNAVAILABLE__CHECK_INVALID';}
 }
