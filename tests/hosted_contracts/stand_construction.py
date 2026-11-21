@@ -19,7 +19,10 @@ class StandConstructionTests(unittest.TestCase):
    args=dict(terminan_source_root=str(terminan),math_source_root=str(math),git_executable=str(git),git_sha256=hashlib.sha256(git.read_bytes()).hexdigest(),runtime_sha256=hashlib.sha256(runtime.read_bytes()).hexdigest())
    with self.assertRaises(TargetRejected):DisposableTargetStand(str(root/'direct-state'),**args)
    state=allocate_stand_root(root)
-   stand=DisposableTargetStand(str(state),**args)
+   from unified_system.journal import Journal
+   from tests.hosted_contracts.stand_diagnostics import observe_constructor
+   with observe_constructor(DisposableTargetStand,Journal,TargetRejected):
+    stand=DisposableTargetStand(str(state),**args)
    try:
     self.assertEqual(stand.invocations,0)
     self.assertTrue((state/'canonical-target.v2.sqlite').is_file())
