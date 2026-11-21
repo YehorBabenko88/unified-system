@@ -34,3 +34,16 @@ class StandFailureDiagnosticsTests(unittest.TestCase):
    def _runtime_custody(self):pass
   with observe_constructor(Stand,InertJournal,Rejected):Stand()
   self.assertIsNone(sys.gettrace())
+ def test_foreign_exception_type_callbacks_cannot_replace_original(self):
+  class Hostile(type):
+   def __hash__(self):raise AssertionError('FOREIGN_HASH_CALLED')
+   def __eq__(self,other):raise AssertionError('FOREIGN_EQUALITY_CALLED')
+  class Foreign(RuntimeError,metaclass=Hostile):pass
+  original=Foreign('SECRET_SENTINEL')
+  class Stand(InertStand):
+   def _runtime_custody(self):raise original
+  try:
+   with observe_constructor(Stand,InertJournal,Rejected):Stand()
+  except BaseException as caught:self.assertIs(caught,original)
+  else:self.fail('original exception missing')
+  self.assertIsNone(sys.gettrace())

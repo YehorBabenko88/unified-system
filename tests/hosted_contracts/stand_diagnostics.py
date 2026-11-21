@@ -3,7 +3,7 @@ import sys
 from contextlib import contextmanager
 
 _CODES=frozenset(('TARGET_CONTRACT_REJECTED','ISOLATED_RUNTIME_REQUIRED','RUNTIME_PIN_MISMATCH','ISOLATED_CACHE_REQUIRED','FRESH_ISOLATED_CACHE_REQUIRED','PRIVATE_CACHE_REQUIRED','CACHE_SOURCE_OVERLAP','UNQUALIFIED_IMPORT_HOOK'))
-_TYPES={ValueError:'VALUE_ERROR',RuntimeError:'RUNTIME_ERROR',OSError:'OS_ERROR',FileNotFoundError:'FILE_NOT_FOUND',PermissionError:'PERMISSION_ERROR',AssertionError:'ASSERTION_ERROR'}
+_TYPES=((ValueError,'VALUE_ERROR'),(RuntimeError,'RUNTIME_ERROR'),(OSError,'OS_ERROR'),(FileNotFoundError,'FILE_NOT_FOUND'),(PermissionError,'PERMISSION_ERROR'),(AssertionError,'ASSERTION_ERROR'))
 
 @contextmanager
 def observe_constructor(stand_type,journal_type,rejected_type):
@@ -20,7 +20,7 @@ def observe_constructor(stand_type,journal_type,rejected_type):
             if kind is rejected_type:
                 args=value.args
                 code=args[0] if len(args)==1 and type(args[0]) is str and args[0] in _CODES else 'TARGET_REJECTED'
-            elif kind in _TYPES:code=_TYPES[kind]
+            else:code=next((label for expected,label in _TYPES if kind is expected),'OTHER_ERROR')
             events.append(stage+':'+code)
         return trace
     sys.settrace(trace)
