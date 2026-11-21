@@ -232,7 +232,7 @@ jobs:
           out=pathlib.Path(os.environ['RUNNER_TEMP']).resolve(strict=True)/('stand-metadata-'+os.environ['GITHUB_JOB']+'-'+os.environ['GITHUB_RUN_ID']+'-'+os.environ['GITHUB_RUN_ATTEMPT'])
           out.mkdir(mode=0o700)
           cache=out/'cache';cache.mkdir(mode=0o700)
-          subprocess.run([sys.executable,'-I','-S','-B','-X','pycache_prefix='+str(cache),'scripts/qualify_stand_construction.py','--expected-head',os.environ['EXPECTED_HEAD'],'--out',str(out)],check=True)
+          subprocess.run([str(pathlib.Path(sys.executable).resolve(strict=True)),'-I','-S','-B','-X','pycache_prefix='+str(cache),'scripts/qualify_stand_construction.py','--expected-head',os.environ['EXPECTED_HEAD'],'--out',str(out)],check=True)
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
