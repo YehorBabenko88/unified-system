@@ -1,0 +1,276 @@
+{
+  "schema": "four-owner.volatility-consumer-migration-plan.v1",
+  "pins": {
+    "data": "b5ca6363be1f530fbbb4c44fdc1e8f747aaef87d",
+    "math": "7ed299b6480b2cb683ee91bd162ed9d76e99aa7f",
+    "terminan": "a2f63228aeb7436721eaf3fe6251c94ab7e5e087"
+  },
+  "implementation_changes": false,
+  "original_remaining": 518,
+  "deduction": 0,
+  "roles": [
+    {
+      "path": "tests/research/test_hypotheses.py",
+      "name": "test_research_hypothesis_families_have_controls_and_ablations",
+      "line": 6,
+      "assertions": 4,
+      "ast_sha256": "a8a3869752bc0c4901bf22138df3e2445325b914ed81d58389c3764f7ce8c510",
+      "inventory_bound": true,
+      "owner": "Terminan",
+      "classification": "DEPENDENT_BUNDLE_HELD"
+    },
+    {
+      "path": "tests/research/test_hypotheses.py",
+      "name": "test_smc_mtf_hypothesis_records_bias_and_entry_timeframes",
+      "line": 16,
+      "assertions": 2,
+      "ast_sha256": "3f7eb58524f3e37eb7c923fbc5648e15a995cacaa34c43642fd1e7bc6ca16067",
+      "inventory_bound": true,
+      "owner": "Terminan",
+      "classification": "DEPENDENT_BUNDLE_HELD"
+    },
+    {
+      "path": "tests/research/test_pattern_evaluation.py",
+      "name": "test_pattern_evaluator_is_chronological_and_returns_verdict",
+      "line": 12,
+      "assertions": 4,
+      "ast_sha256": "ba815e6c3e3232de90093b100ea54492ee9b249f8f6a94d33b3f3548d147d3a1",
+      "inventory_bound": true,
+      "owner": "Terminan",
+      "classification": "DEPENDENT_BUNDLE_HELD"
+    },
+    {
+      "path": "tests/research/test_pattern_evaluation.py",
+      "name": "test_empty_pattern_never_becomes_keep",
+      "line": 24,
+      "assertions": 1,
+      "ast_sha256": "7a8397bbd2188a9639d95106137dbc4b888981b48328eac846a051ec7db091eb",
+      "inventory_bound": true,
+      "owner": "Terminan",
+      "classification": "DEPENDENT_BUNDLE_HELD"
+    },
+    {
+      "path": "tests/research/test_scalp_bootstrap.py",
+      "name": "test_historical_scalp_contract_never_fabricates_l2",
+      "line": 11,
+      "assertions": 2,
+      "ast_sha256": "00e7201872fed0d15284a5fcb6f15fe35b940a6b357e95bb3bdc23263b02cf6a",
+      "inventory_bound": true,
+      "owner": "Terminan",
+      "classification": "DEPENDENT_BUNDLE_HELD"
+    },
+    {
+      "path": "tests/research/test_scalp_bootstrap.py",
+      "name": "test_historical_scalp_known_at_is_after_event",
+      "line": 19,
+      "assertions": 1,
+      "ast_sha256": "9ce6d8134c698e3d08b9130044bfe85203ff0f6b7a0f16d9bf1c6e57713bfa01",
+      "inventory_bound": true,
+      "owner": "Terminan",
+      "classification": "DEPENDENT_BUNDLE_HELD"
+    },
+    {
+      "path": "tests/research/test_scalp_entries.py",
+      "name": "test_only_implemented_scalps_are_executable",
+      "line": 12,
+      "assertions": 1,
+      "ast_sha256": "9515ac26ca68931c9679d009e24db06f089b122715686bc77f3c58bf01325aa9",
+      "inventory_bound": true,
+      "owner": "Terminan",
+      "classification": "DEPENDENT_BUNDLE_HELD"
+    },
+    {
+      "path": "tests/research/test_scalp_entries.py",
+      "name": "test_sweep_entry_never_precedes_confirmed_event",
+      "line": 17,
+      "assertions": 1,
+      "ast_sha256": "220978969c7e9effa8ad76a7926972011950feeb4e115a1a786f0c0e880ab8b3",
+      "inventory_bound": true,
+      "owner": "Terminan",
+      "classification": "DEPENDENT_BUNDLE_HELD"
+    },
+    {
+      "path": "tests/research/test_scalp_entries.py",
+      "name": "test_breakout_bar_is_not_reused_as_retest",
+      "line": 23,
+      "assertions": 1,
+      "ast_sha256": "3acf413231a62f1c24605ee7a90ecc864d59fe62597b52dabf17ac35d43c9d8c",
+      "inventory_bound": true,
+      "owner": "Terminan",
+      "classification": "DEPENDENT_BUNDLE_HELD"
+    },
+    {
+      "path": "tests/research/test_scalp_entries.py",
+      "name": "test_volatility_entry_waits_for_snapshot_known_at",
+      "line": 29,
+      "assertions": 1,
+      "ast_sha256": "0e0a78f0d9ad99bc8a292f1e081f881a4a20b77300aafa1bc2c09ae62e08c867",
+      "inventory_bound": true,
+      "owner": "Terminan",
+      "classification": "DEPENDENT_BUNDLE_HELD"
+    },
+    {
+      "path": "tests/research/test_scalp_entries.py",
+      "name": "test_poc_reclaim_uses_only_profile_known_by_decision",
+      "line": 34,
+      "assertions": 1,
+      "ast_sha256": "0e356b005115260d05db0100e5c7ef1a170f057bbf07fcf8be973fe7dcac39ce",
+      "inventory_bound": true,
+      "owner": "Terminan",
+      "classification": "DEPENDENT_BUNDLE_HELD"
+    },
+    {
+      "path": "tests/research/test_trade_context.py",
+      "name": "test_entry_context_uses_latest_snapshot_known_at_entry",
+      "line": 5,
+      "assertions": 4,
+      "ast_sha256": "a68bfadacdaf78ae30619a2d9d9aa76772ccc0369b908b5162696394f08d9acd",
+      "inventory_bound": true,
+      "owner": "Terminan",
+      "classification": "PROPOSED_FIRST_COMPLETE_TWO_ROLE_TRANCHE"
+    },
+    {
+      "path": "tests/research/test_trade_context.py",
+      "name": "test_future_context_is_never_attached",
+      "line": 20,
+      "assertions": 2,
+      "ast_sha256": "552b3fe147c1909e602498c48013644d28de8741c1d4bc2c735f7773bfa88b6e",
+      "inventory_bound": true,
+      "owner": "Terminan",
+      "classification": "PROPOSED_FIRST_COMPLETE_TWO_ROLE_TRANCHE"
+    },
+    {
+      "path": "tests/research/test_volatility.py",
+      "name": "test_observatory_computes_causal_metrics_and_regime",
+      "line": 7,
+      "assertions": 8,
+      "ast_sha256": "932a13593171e5da525292d852af66026c1859a9d8b91e6a564d91a9bd07fc83",
+      "inventory_bound": true,
+      "owner": "Terminan",
+      "classification": "CANONICAL_METRICS_EXISTS_CONSUMER_REMOVAL_HELD"
+    },
+    {
+      "path": "tests/research/test_volatility.py",
+      "name": "test_future_rows_cannot_reclassify_old_snapshot",
+      "line": 27,
+      "assertions": 1,
+      "ast_sha256": "8630b3b85634f26064505c346b2f71b4466a851e0c09324737550996235f6d9e",
+      "inventory_bound": true,
+      "owner": "Terminan",
+      "classification": "CANONICAL_METRICS_EXISTS_CONSUMER_REMOVAL_HELD"
+    },
+    {
+      "path": "tests/research/test_volatility.py",
+      "name": "test_percentile_uses_only_prior_history",
+      "line": 40,
+      "assertions": 1,
+      "ast_sha256": "be799f637a4f739fbc98751caafb632ce5d2751f42862df78ad9ff2ade7a52b3",
+      "inventory_bound": true,
+      "owner": "Terminan",
+      "classification": "CANONICAL_METRICS_EXISTS_CONSUMER_REMOVAL_HELD"
+    }
+  ],
+  "direct_role_count": 12,
+  "adjacent_roles_count": 4,
+  "adjacent_role_scope": "hypothesis2/pattern-evaluation2 retained in full; no partial deletion of mixed role",
+  "runtime_coordinator_roles_held": [
+    "tests/runtime/test_bootstrap_completion.py::test_completion_waits_for_all_terminal_jobs",
+    "tests/runtime/test_bootstrap_completion.py::test_failed_job_blocks_handoff"
+  ],
+  "field_map": {
+    "event_time": "event_start_ms",
+    "known_at": "available_at_ms",
+    "atr_pct": "atr_fraction",
+    "realized_vol": "realized_volatility",
+    "parkinson_vol": "parkinson_volatility",
+    "range_pct": "range_fraction",
+    "volume_expansion": "volume_ratio",
+    "turnover_expansion": "turnover_ratio",
+    "percentile": "atr_percentile",
+    "regime": "regime",
+    "version": "version; explicit canonical version literal, no v1 acceptance alias"
+  },
+  "call_map": {
+    "VolatilityObservatory(...).snapshots(rows,bar_ms=...)": "terminan.volatility.VolatilityAnalyzer(...).analyze(rows,bar_duration_ms=...)"
+  },
+  "clock_rule": "EVERY input row explicit available_at_ms; Math consumes entire prefix max. Missing/delayed clocks are refusal/qualification, never nominal bar end reconstruction.",
+  "first_tranche": {
+    "owner": "Terminan",
+    "proposed_files": [
+      "terminan/entry_context.py",
+      "tests/test_entry_context.py"
+    ],
+    "source_remove_after_acceptance": [
+      "strattester/research/trade_context.py",
+      "tests/research/test_trade_context.py"
+    ],
+    "eligible_original_roles_after_complete_proof": 2,
+    "requires": [
+      "existing VolatilityMetrics exact canonical fields",
+      "explicit immutable typed profile-summary DTO with declared availability, no profile calculation/admission",
+      "whole two original assertions families including metadata preservation/profile cutoff; delay/unsorted/immutability/bounds negatives added"
+    ],
+    "production_callers": "NONE in exact b5 tracked source; only two original test callers",
+    "numeric_formulas": "NONE; type/clock selection and DTO projection only; any domainnumeric predicate delegates existing Math",
+    "not_a_compatibility_adapter": true
+  },
+  "next_tranches": [
+    {
+      "owner": "Math",
+      "scope": "nearest-level distance/midpoint,bps ratios,volume/flow ratios,scalp entry risk/retouch/body predicates,scientific returns/descriptive/rolling/nonlinear/statistics/profile algorithms; exact source policies before new kernels",
+      "no_local_formula_copy": true
+    },
+    {
+      "owner": "Terminan",
+      "scope": "scalp_entries strategies+typed signals/causal state/profile context; pattern evaluation and single-paper-engine simulation; strategy catalog strings retarget after real implementation",
+      "depends": [
+        "Math kernels",
+        "canonical typed profile/SMC/orderflow observations",
+        "no parallel simulator"
+      ]
+    },
+    {
+      "owner": "Data",
+      "scope": "explicit source-carried availability+exact turnover/history projection only; no research metrics/strategy/exports",
+      "blocker": "current history.v1.1 omits turnover. Cannot fabricate turnover0 or t+bar availability; schema/receipt extension or explicit caller-provided qualified candle contract needed."
+    },
+    {
+      "owner": "Terminan",
+      "scope": "historical scalp/scientific analysis pure bounded packet from canonical Data, repair future-state leakage, no directstore access/export publication"
+    },
+    {
+      "owner": "Root",
+      "scope": "completion lifecycle/job-status/application orchestration/custody/publication after real Term APIs; no analytics/math; retire old BootstrapCompletionCoordinator only after state/handoff obligations preserve"
+    }
+  ],
+  "confirmed_old_source_defect": {
+    "file": "strattester/research/scalp_bootstrap.py",
+    "nature": "current declared state uses next-row close",
+    "actual_both_python": [
+      {
+        "future_close": 110,
+        "event": 1200000,
+        "declared_known": 1260000,
+        "state": "BREAKOUT"
+      },
+      {
+        "future_close": 90,
+        "event": 1200000,
+        "declared_known": 1260000,
+        "state": "REJECTION"
+      }
+    ],
+    "canonical_policy": "Outcome may be separately future-labelled, but cannot influence current-state feature under earlier available_at_ms; add causalprefix invariance regression before port."
+  },
+  "removal_gate": "NO volatility.py deletion until scalp_bootstrap/scientific_bootstrap and all original DTO consumers/tests retarget; archive originals exact; no legacy aliases",
+  "not_run": [
+    "SQL",
+    "provider",
+    "child",
+    "native",
+    "SourceFence",
+    "simulation execution",
+    "full legacy discovery"
+  ],
+  "release": "NO_GO"
+}
