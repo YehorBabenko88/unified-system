@@ -1,0 +1,2 @@
+# Source revision pinning
+This module pins *reviewed source candidate* SHAs for Strattester PR43 and Grid PR249 and validates supplied HTTP envelope shapes. It does not fetch GitHub artifacts, import source modules, authenticate running processes or attest producer identity. An arbitrary caller may supply a pinned SHA string; it is not runtime evidence. A complete cross-repository E2E acceptance must execute actual pinned source code in disposable CI and independently verify the resulting artifacts. No deployment, trading or physical actions.

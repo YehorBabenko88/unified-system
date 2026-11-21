@@ -1,0 +1,44 @@
+{
+  "schema": "unified.root-producer-status-compat.v1",
+  "base": "878c4d0910977c742d25193b35b5c678ab6dbe7b",
+  "observedMath": "03cb90154da720a9f44e5ee576692da2897e99ea",
+  "observedRuns": [
+    {
+      "id": "44855073477",
+      "event": "push",
+      "attempt": "1"
+    },
+    {
+      "id": "44855080295",
+      "event": "pull_request",
+      "attempt": "1"
+    }
+  ],
+  "actualFailure": "R_QUEUED__J_IN_PROGRESS_WITH_MATCHED_ATTEMPT_HEAD_WORKFLOW_CHECK_FLAGS",
+  "actualPriorCoverage": "EACH_RUN_TWO_ROOT_CELLS_SUCCESS_TWO_FAILURE_NOT_QUALIFIED",
+  "change": "Only producer jobPhase in_progress may bind aggregate run queued; unique matching current job must still be in_progress with every original identity guard",
+  "completedConsumer": "run.status in_progress EXACT; completed success jobs; original artifact pre/post metadata and ZIP custody unchanged",
+  "noStatusNormalization": true,
+  "noRetry": true,
+  "noTimeoutGrowth": true,
+  "oldContractInverseSHA256": "102bf2daf538aea0ec3d5cb17f22aea30e2d1595ab42faf720f8982623fe419f",
+  "normalizedNewContractSHA256": "102bf2daf538aea0ec3d5cb17f22aea30e2d1595ab42faf720f8982623fe419f",
+  "testGroups": {
+    "prior": 239,
+    "statusPhaseJobConclusionMatrix": 294,
+    "queuedPushDispatch": 2,
+    "queuedIdentityNegatives": 38,
+    "queuedDiagnosticAndConsumerCustodyNegatives": 5,
+    "total": 578
+  },
+  "originalRoles": 34,
+  "roleInputs": 32,
+  "roleSource": "4ba390b8e12070499d54b12e5609c683c00607ee",
+  "cells": 4,
+  "scope": "UNIT_ONLY",
+  "authority": "NONE",
+  "source_authentication": "NOT_EVALUATED",
+  "native_acceptance": "NOT_QUALIFIED",
+  "production": "NO_GO",
+  "actualNewHostedCI": "NOT_RUN"
+}

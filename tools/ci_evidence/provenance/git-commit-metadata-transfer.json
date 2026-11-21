@@ -1,0 +1,52 @@
+{
+  "schema": "unified.ci-evidence.git-commit-metadata-transfer.v1",
+  "base": "176b4da0d67648b5fb4c941cdff5f9d8269ec57c",
+  "authority": "NONE_SOURCE_ONLY",
+  "changes": [
+    {
+      "from": "/repos/YehorBabenko88/math/commits/:sha",
+      "to": "/repos/YehorBabenko88/math/git/commits/:sha"
+    },
+    {
+      "from": "commit.commit.tree.sha / platform.commit.commit.tree.sha",
+      "to": "commit.tree.sha / platform.commit.tree.sha"
+    }
+  ],
+  "normalization_proof": [
+    {
+      "path": "tools/ci_evidence/context.mjs",
+      "base_sha256": "064ecedaaef980cfb4b754f3179c4cb46f09bae1affadb5a540bcd90005aaeda",
+      "candidate_sha256": "1deb79d21868ff0cdc8ce7871b07e696e1c4e11c08ac2cfbc966da3bd0e8cfd4",
+      "exact_after_declared_transform": true
+    },
+    {
+      "path": "tools/ci_evidence/github_identity.mjs",
+      "base_sha256": "8e0d9d51e23de8fc05688986b36f2651b642ad41826d5cee126024b5a821a0e6",
+      "candidate_sha256": "769a947e8ed2344119dcfb93b0426e0f4581a3655a16a7aaac9e711f3ad219a6",
+      "exact_after_declared_transform": true
+    },
+    {
+      "path": "tools/ci_evidence/tests/hosted/fixtures/context.mjs",
+      "base_sha256": "646b35ddaebc03edeaef88da6d213d0807298fe174ed8d17160fd103a4d7f7c9",
+      "candidate_sha256": "0f038a215ba5b458dde42afa9309a4cc84cb99a0e937fb46a50697bd0101193b",
+      "exact_after_declared_transform": true
+    },
+    {
+      "path": "tools/ci_evidence/tests/hosted/confidential-collector-context.test.mjs",
+      "base_sha256": "86ce03ba99071c730265796d4d5c9d4c80433b2a896746df93e89c53deacbe9a",
+      "candidate_sha256": "e0d48d41cb0c1e3122869240ba410f661e56a22e60a5da80d2153bb100fd1a41",
+      "exact_after_declared_transform": true
+    }
+  ],
+  "historical_raw_archives": 24,
+  "historical_archives_unchanged": true,
+  "hosted_event_roles": 31,
+  "hosted_role_names_counts": "UNCHANGED_NOT_RUN",
+  "api_response_bound_bytes": 1048576,
+  "measured_merge": "040c5a63a06d5ff07e8fb4c665d3f964d0152736",
+  "measured_rest_chars": 1301326,
+  "measured_git_chars": 2622,
+  "local_inert_groups": 144,
+  "live_auth": "NOT_RUN",
+  "production": "NO_GO"
+}

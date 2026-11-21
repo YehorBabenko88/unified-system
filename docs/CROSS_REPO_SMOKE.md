@@ -1,0 +1,2 @@
+# Pinned cross-repository source smoke
+The workflow checks out actual immutable Strattester PR43 and Grid PR249 source commits and imports only their read-only contract modules. It checks actual source-owned unavailable responses plus the Unified Supervisor WSGI unavailable response. It performs no database connections, installation, physical G0/G1, exchange subscriptions, live data access or trading. This is a narrow actual-code contract smoke, **not** source provenance acceptance or a full E2E. CI success must be assessed at exact current HEAD and attempt.

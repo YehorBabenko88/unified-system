@@ -1,0 +1,39 @@
+{
+  "draft_pr": "https://github.com/YehorBabenko88/Terminan/pull/78",
+  "branch": "feature/fresh-render-diagnostics-20261110",
+  "base": "161ea1e0fc3a3a4cd64783b0e111e1e119e14d71",
+  "head": "458de55b7170d23f2e7ab3a5d72597b2a0124653",
+  "tree": "135159a2daa9fb035f620cca26c84c471d339260",
+  "source_delta": "4_ADDED_PLUS_BOOTSTRAP_HARNESS_MODIFIED_ONLY",
+  "raw_checkout": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-6-distributed-terminan-control\\work\\render-diagnostics-qualified-458de55",
+  "pins_sha256": {
+    "bootstrap": "9f6dc64e4087089ec6b989924a1a449ebc2cce985b10532f0eb556130c0ef9df",
+    "harness": "661294b79b243aab74fc51ba56caadd988e81435447aa0afed020f03c4016b3f",
+    "diagnostics": "1de4447a0955e6df3e3fdc8837092c037acde711aa673d65f8e6da6c693875c8",
+    "owned_lifecycle": "2f0e10d191f882d39b7c18ef2d434f18c1094e287f7882d2f198c5ba19aed01a",
+    "guard_unchanged": "f14689e5a92c1704f974fdf8cf9cc9aaf79881ca7a6b16f1bcc7487037580810",
+    "renderer_unchanged": "574dbf0882577708ab1e4c0ed73d6401eb6fabce3b3dc1b1375fc5952689241f"
+  },
+  "tests": {
+    "pass": 18,
+    "skip": 0,
+    "scope": "PURE_HELPERS_INERT_HANDLE_STREAM_DOUBLES_AND_STATIC_SOURCE_ONLY",
+    "primary_raw_files": 404,
+    "raw_pre_post_equal": true,
+    "node": "v24.22.1",
+    "old_43_native_subprocess_tests": "NOT_RERUN_EXPLICIT_ROOT_RESTRICTION"
+  },
+  "review": {
+    "kind": "INDEPENDENT_STATIC",
+    "P2": "late mandatory telemetry/PASS receipt ordering RED then fixed; recheck clean",
+    "remaining_local_actionable_findings": [],
+    "A8_F36_global_status": "RCA_UNKNOWN_NOT_CLOSED_BY_THIS_CHANGE"
+  },
+  "original_e_result": "ROOT_REPORTED_BACKEND_PASS_RENDER_AND_COMPLETE_SMOKE_FAIL_UNCHANGED",
+  "RCA": "INCOMPLETE_LOCAL_GENERIC_FAILURE_AND_LATER_WATCHDOG_ARE_SEPARATE",
+  "performance": "NOT_MEASURED_NO_CAUSAL_PS_CLAIM",
+  "PS_batching": "DESIGN_PENDING_NOT_IMPLEMENTED_NO_CHECKS_SKIPPED",
+  "budgets": "UNCHANGED_ROOT_20S_USER10S_COMMIT1GIB_NO_AUTORETRY",
+  "runtime": "NEW_SOURCE_PACKAGE_SDK_BROWSER_PS_JOB_PHYSICAL_ACCEPTANCE_NOT_RUN",
+  "overall": "PREPARED_FOR_ROOT_REVIEW_RUNTIME_NO_GO"
+}

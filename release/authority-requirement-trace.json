@@ -1,0 +1,132 @@
+{
+  "scope": "ELEVEN_OWNER_MASTER_ATTACHMENTS_ONLY_NOT_ALL_PEER_CHAT_INSTRUCTIONS",
+  "files": [
+    {
+      "attachment_id": "f5fdb1c4-d1a7-4658-bacf-1f42eab33c13",
+      "sha256": "4e4d98eadcbfb761ceecf2bfb15c9762628a46fb0e43f405b7dbbb39685e5c74",
+      "matches": [
+        {
+          "line": 211,
+          "text": "   Generic capture, квоты, deadlines и старые четыре native cases"
+        }
+      ]
+    },
+    {
+      "attachment_id": "1210fa46-6bbc-4789-a678-c223177b5f51",
+      "sha256": "d0191e1c22de43390890a7769508ebd5247fd960ea5b552286ce41bd6c2cd37f",
+      "matches": [
+        {
+          "line": 89,
+          "text": "- Heartbeats, leases/fencing и согласованность состояния."
+        }
+      ]
+    },
+    {
+      "attachment_id": "92d06c12-9866-4230-8981-23b216cd26a6",
+      "sha256": "d6019b60f94aa3868faac1b9188a7ca21e48bac376d0f3f4a184cb306055cdbc",
+      "matches": [
+        {
+          "line": 387,
+          "text": "- Lease ownership."
+        }
+      ]
+    },
+    {
+      "attachment_id": "0a4f7194-e399-440d-98ed-ec9f0bed94d8",
+      "sha256": "c26f792f7e06030352e3a100f327d9bf7fb13f579413857c440806e9be57e842",
+      "matches": [
+        {
+          "line": 267,
+          "text": "- TTL для подтверждений."
+        },
+        {
+          "line": 292,
+          "text": "3. Истечение lease."
+        },
+        {
+          "line": 326,
+          "text": "Проверь существующую архитектуру leases и coordinator ownership."
+        },
+        {
+          "line": 441,
+          "text": "- Проверь истечение lease."
+        }
+      ]
+    },
+    {
+      "attachment_id": "6e8b79a8-b016-498a-87af-28796fb2c4a9",
+      "sha256": "2779d88fe9d6255b9744e2fc6035c3c81b5fceee3ef52af0e0f8bc6967c28519",
+      "matches": [
+        {
+          "line": 11,
+          "text": "4. Проверить истечение leases."
+        },
+        {
+          "line": 20,
+          "text": "После восстановления LS5 оркестратор должен согласовать состояние компьютеров, задания, leases, checkpoints и результаты."
+        },
+        {
+          "line": 81,
+          "text": "- Lease."
+        }
+      ]
+    },
+    {
+      "attachment_id": "62558744-9b4f-41a9-8681-514799df3c7f",
+      "sha256": "edb698b975ad91a2f5d79d4c95714b5ce889a6b6097191d0ecbd80907b43a974",
+      "matches": [
+        {
+          "line": 172,
+          "text": "- Distributed leases."
+        },
+        {
+          "line": 303,
+          "text": "- Lease recovery."
+        }
+      ]
+    },
+    {
+      "attachment_id": "5fcb24fe-9893-47a7-b0ea-29ffc2510d56",
+      "sha256": "c3019ab2c0491aa0fa7c651d76de4156d0ead4fe65208dd4fe772927b8acafaf",
+      "matches": []
+    },
+    {
+      "attachment_id": "bfa03aa7-e15e-4053-a4f7-0064a0b609e8",
+      "sha256": "78e37a29dba0d38b96bb6fb7c0017ff8f5b32bf63affba315b84a455dde5b564",
+      "matches": [
+        {
+          "line": 85,
+          "text": "5. Учёт активных leases и внешних потребителей."
+        }
+      ]
+    },
+    {
+      "attachment_id": "2b6887a0-4e97-445c-b597-0fcc229ab3a9",
+      "sha256": "4b15daf85c3579aef94433762f7563f4b21f9556229d527a17ad72faa0555540",
+      "matches": [
+        {
+          "line": 199,
+          "text": "9. Lease-based ownership."
+        }
+      ]
+    },
+    {
+      "attachment_id": "a9667306-36ea-4fb8-b03c-e31d340d0b0c",
+      "sha256": "7191148712b688b489ece9203524e74792783a1404ed7cf1577794959ba457c6",
+      "matches": []
+    },
+    {
+      "attachment_id": "8945c7fb-21ae-474c-a730-8f029f3a8998",
+      "sha256": "c3346adc3ecb910d3a347d35191817d6dc9e0d9068d912ce8eb89801361eb2cd",
+      "matches": [
+        {
+          "line": 233,
+          "text": "- Lease epochs."
+        }
+      ]
+    }
+  ],
+  "no_semantics_changed": true,
+  "search_pattern": "\\b(?:wall.clock|commit.time|expiry|deadlines?|leases?|TTL)\\b|истеч",
+  "literal_clock_requirement_conclusion": "NOT_FOUND_IN_THIS_ATTACHMENT_SCOPE; PEER_CHAT_AND_APPROVED_CONTRACT_TRACE_PENDING"
+}

@@ -1,0 +1,50 @@
+{
+  "schema": "unified.native-negative.original-red-index.v1",
+  "head": "39abee0b108dd352344cd013fa83587dadc55374",
+  "tree": "c804f2022d0913f2a4fee8055ba657ab0ee067c6",
+  "grid_head": "539239e3c11ec9e86aa24365d74a68301fdf1185",
+  "tests": 1,
+  "errors": 1,
+  "failures": 0,
+  "skips": 0,
+  "cause": "MISSING_NEW_GATEWAY_COMPOSITION_MODULE",
+  "actual_feature_passed": false,
+  "primary_raw_before_after_equal": true,
+  "primary_file_counts": {
+    "root": 1626,
+    "grid": 800
+  },
+  "executed_test": {
+    "blob": "5cf2e7599edc52bc4bb497960cdec03c782efb8a",
+    "bytes": 2324,
+    "sha256": "969014374e4bba0aa954aa7b975f4bb42d5ac06575f17c247bb925c834a8d35e"
+  },
+  "owned_processes_retired": [
+    {
+      "pid": 133552,
+      "returncode": 1
+    },
+    {
+      "pid": 134772,
+      "returncode": 1
+    },
+    {
+      "pid": 133920,
+      "returncode": 1
+    }
+  ],
+  "qualification_sha256": "19265e8be0f8621a81474a8bd0c636b74886216ab0c7062a51926f8a47ec5aac",
+  "test_log_sha256": "be65a5ace1170509b78a41314d65976914bafd0dac68bd27eb80caab9843eca4",
+  "additional_working_red": {
+    "negative-private-operation-RED.log": {
+      "sha256": "0711f6cc926516dc738e2136a9e709becce9d4de9efd79ddac49abe49d3342ea",
+      "scope": "WORKING_TREE_REPRODUCTION_NOT_PRIMARY_SOURCE_QUALIFICATION"
+    },
+    "negative-config-rebind-RED.log": {
+      "sha256": "9b1bec0a0484e7678068b7b514ba25c9dc49d61f8a3eead545ad261e81f6a3fa",
+      "scope": "WORKING_TREE_REPRODUCTION_NOT_PRIMARY_SOURCE_QUALIFICATION"
+    }
+  },
+  "native_job_permission": false,
+  "public_submit": "DENY"
+}

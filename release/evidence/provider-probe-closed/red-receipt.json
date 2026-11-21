@@ -1,0 +1,15 @@
+{
+  "command": [
+    "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\python.exe",
+    "-I",
+    "-S",
+    "-B",
+    "-c",
+    "import sys,unittest;sys.path.insert(0,'.');s=unittest.defaultTestLoader.discover('tests',pattern='test_network_probe_provider_closed.py');r=unittest.TextTestRunner(verbosity=2).run(s);raise SystemExit(not r.wasSuccessful())"
+  ],
+  "cwd": "C:\\Users\\LS-5\\.codex\\worktrees\\root-provider-probe-safety",
+  "exit_code": 1,
+  "product_probe_sha256": "0e93c6bc207b41712dae31112c8f19af3ae68ae32b7840b16d218b790c22c0dc",
+  "test_sha256": "3809c2e5c4496f29a2bbdb868792944ebe21717e06d0d2148fcb444762d5d429",
+  "scope": "ACTUAL_FUNCTION_WITH_ALL3_NETWORK_AST_SEAMS_STUBBED_NO_NETWORK_CALLS"
+}

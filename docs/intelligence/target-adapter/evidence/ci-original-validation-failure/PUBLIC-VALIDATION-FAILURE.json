@@ -1,0 +1,69 @@
+{
+  "schema": "unified.public-workflow-validation-failure.v1",
+  "repository": "YehorBabenko88/unified-system",
+  "pull_request": 54,
+  "original_source_sha": "cf7dad91bf0d3a24073c91e0d3e326e6d9e7d2db",
+  "workflow_id": 412148873,
+  "workflow_path": ".github/workflows/gateway-target-adapter.yml",
+  "registration_state": "active",
+  "run": {
+    "id": 42631650396,
+    "workflow_id": 412148873,
+    "head_sha": "cf7dad91bf0d3a24073c91e0d3e326e6d9e7d2db",
+    "run_attempt": 1,
+    "event": "push",
+    "name": ".github/workflows/gateway-target-adapter.yml",
+    "path": ".github/workflows/gateway-target-adapter.yml",
+    "status": "completed",
+    "conclusion": "failure",
+    "created_at": "2026-11-09T14:07:54Z",
+    "updated_at": "2026-11-09T14:07:54Z",
+    "run_started_at": "2026-11-09T14:07:54Z",
+    "check_suite_id": 115465225936
+  },
+  "jobs": {
+    "total_count": 0,
+    "job_ids": []
+  },
+  "suite": {
+    "id": 115465225936,
+    "head_sha": "cf7dad91bf0d3a24073c91e0d3e326e6d9e7d2db",
+    "status": "completed",
+    "conclusion": "failure",
+    "latest_check_runs_count": 0,
+    "check_runs_rerequestable": null,
+    "runs_rerequestable": false
+  },
+  "annotation": {
+    "source_url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42631650396",
+    "error_count": 1,
+    "workflow_path": ".github/workflows/gateway-target-adapter.yml",
+    "locations": [
+      {
+        "line": 24,
+        "column": 27,
+        "expression": "runner.temp",
+        "error": "Unrecognized named-value: 'runner'"
+      },
+      {
+        "line": 25,
+        "column": 25,
+        "expression": "runner.temp",
+        "error": "Unrecognized named-value: 'runner'"
+      }
+    ]
+  },
+  "classification": "CONFIRMED_GITHUB_WORKFLOW_EXPRESSION_VALIDATION_FAILURE",
+  "observation_window_utc": [
+    "2026-11-09T14:11:02.208468+00:00",
+    "2026-11-09T14:12:04.549562+00:00"
+  ],
+  "api_get_count": 8,
+  "original_run_mutated": false,
+  "protected_math_access": false,
+  "raw_local_evidence": {
+    "target_original_jobs_http_sha256": "a3e51463f443f059ed213989d1dce9c96f9cec6bcfd006f1e9a5749e5339bcc4",
+    "target_original_suite_http_sha256": "1be6a4cb3a621168bb48d21d888a9fe0f2db402e8e2ef0b62018666dc1a57945",
+    "report_sha256": "64489d073417f1e14f0a1e40a90f71f6afb5668a18d0238f4d82ee63a79d23b2"
+  }
+}

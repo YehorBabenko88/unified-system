@@ -1,0 +1,63 @@
+{
+  "head": "be5cb942436f82f374375eabb255768bb139797f",
+  "tree": "3472c7324f0450bd2dbfddd27dfbd32d56c0f382",
+  "base": "0c21256e30aeb3a4184dda97a2bebf24c047acd0",
+  "changed_paths": [
+    ".github/workflows/agent2-control-mux-runtime.yml",
+    "docs/control-mux/get-reconciliation-plan.md",
+    "docs/control-mux/get-reconciliation-runtime.md",
+    "docs/control-mux/progress.md",
+    "tests/control_mux/get_real_cases.py",
+    "tests/control_mux/source_runner.py",
+    "tests/control_mux/test_get_http.py",
+    "tests/control_mux/test_real_consul.py",
+    "tests/control_mux/test_reconciliation.py",
+    "unified_system/control_mux/commands.py",
+    "unified_system/control_mux/consul_store.py",
+    "unified_system/control_mux/http_api.py",
+    "unified_system/control_mux/reconciliation.py"
+  ],
+  "frozen_review4_and_GETreview2_raw_unchanged": true,
+  "retained_real": 42,
+  "new_real_GET": 30,
+  "retained_units": 18,
+  "new_units": 15,
+  "native_ABI_pin_sha256": "9a910e6f337e765cc281f364e901948f4e7017d25e319779ab436e0a15d2518a",
+  "native_ABI": "EXACT_TYPED_FOUR_KIND_SOURCE_PROPOSAL_ONLY_NO_NATIVE_PROVIDER",
+  "owner_sourcebound_verified_as_correlation_only": true,
+  "original_owner_RED_logs": [
+    {
+      "file": "CONTROL-MUX-GET-BE5CB94-PARSER-RED.log",
+      "sha256": "651a06b68cc1b1a270cc8891e77562a1e72c6970291cd13720a39fc3fd37d354",
+      "scope": "ORIGINAL_OWNER_RED_NOT_INDEPENDENTLY_REEXECUTED"
+    },
+    {
+      "file": "CONTROL-MUX-GET-BE5CB94-DOCUMENT-RED.log",
+      "sha256": "c1ed5f2c619fffd3771e3c3639c90b79bc7196b665529cc53d9497e40f8a8cde",
+      "scope": "ORIGINAL_OWNER_RED_NOT_INDEPENDENTLY_REEXECUTED"
+    },
+    {
+      "file": "CONTROL-MUX-GET-BE5CB94-ACTUAL-ENDPOINT-RED.log",
+      "sha256": "b8bad0187754c4521c0eae660b9124cc80c36a2db52c6a10c90795f9a95d40c8",
+      "scope": "ORIGINAL_OWNER_RED_NOT_INDEPENDENTLY_REEXECUTED"
+    }
+  ],
+  "ci_snapshot": [
+    {
+      "id": 42361292167,
+      "head_sha": "be5cb942436f82f374375eabb255768bb139797f",
+      "run_attempt": 1,
+      "status": "queued",
+      "conclusion": null,
+      "event": "pull_request"
+    },
+    {
+      "id": 42361289232,
+      "head_sha": "be5cb942436f82f374375eabb255768bb139797f",
+      "run_attempt": 1,
+      "status": "queued",
+      "conclusion": null,
+      "event": "push"
+    }
+  ]
+}

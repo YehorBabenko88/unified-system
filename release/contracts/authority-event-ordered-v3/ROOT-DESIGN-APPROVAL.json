@@ -1,0 +1,55 @@
+{
+  "schema": "unified.authority-profile-design-approval.v1",
+  "profile": "unified.authority.event-ordered.v3",
+  "proposal_sha256": "d9d02baec67d5efbdb3124626d6e9d017cc9d5a2d19025f9293f4cc9f789a8d5",
+  "review_date": "2026-11-06",
+  "peer_acks": {
+    "A1": {
+      "path": "A1.md",
+      "sha256": "ae45213fec6e0f719adac449285eac78bab3be34a284d97799639695ea4c082f",
+      "scope": "NEW_PROFILE_SCOPED_SEMANTIC_DESIGN_ONLY_NOT_RUNTIME"
+    },
+    "A3": {
+      "path": "A3.md",
+      "sha256": "88dcbbf854602e68fc0a5bc948f38fae3c9fc20bdb13403821699be4c1be18e1",
+      "scope": "NEW_PROFILE_SCOPED_SEMANTIC_DESIGN_ONLY_NOT_RUNTIME"
+    },
+    "A4": {
+      "path": "A4.json",
+      "sha256": "f52e52af168f61de51a5853f186c9d29270d8e6110fb48e63c364078b71d5c7a",
+      "scope": "NEW_PROFILE_SCOPED_SEMANTIC_DESIGN_ONLY_NOT_RUNTIME"
+    },
+    "A5": {
+      "path": "A5.json",
+      "sha256": "ca44e28c211c05590a3f9fab2eb358422bceca11a99819d6d9653705c09708ec",
+      "scope": "NEW_PROFILE_SCOPED_SEMANTIC_DESIGN_ONLY_NOT_RUNTIME"
+    },
+    "A6": {
+      "path": "A6.json",
+      "sha256": "486e07c3ac613742ad097dbbd7a6e7ba182f379052b731ab23bc3b80d39373a2",
+      "scope": "NEW_PROFILE_SCOPED_SEMANTIC_DESIGN_ONLY_NOT_RUNTIME"
+    },
+    "A7": {
+      "path": "A7.json",
+      "sha256": "71cb1f1586b74d92ae8c375235653108e08ce70ab2e1388f15b9614bdde04097",
+      "scope": "NEW_PROFILE_SCOPED_SEMANTIC_DESIGN_ONLY_NOT_RUNTIME"
+    }
+  },
+  "root_decision": "DESIGN_APPROVED_NEW_PROFILE_ONLY",
+  "expiry_definition": "REAL_CONSUL_SESSION_INVALIDATION_OR_COMMITTED_GRANT_REVOCATION_TERMINAL_SUPERSESSION",
+  "stale_rule": "INVALIDATION_FIRST_REJECTS_OLD_OWNER_EVEN_WITHOUT_SUCCESSOR; PUBLICATION_FIRST_PRESERVES_ONE_IMMUTABLE_RECEIPT",
+  "wall_clock_display": "ESTIMATE_NOT_AUTHORITY_EXPIRY_EVENT",
+  "unchanged_safety": [
+    "Sole existing Consul/Raft authority",
+    "No-majority cannot commit new mutation",
+    "Atomic leader+lease sessions/indexes+generation+grant+assignment+closure+actual allocation+budget+idempotency checks",
+    "Unknown outcomes/debt preserved; no automatic rekey or replay effect",
+    "Civil-time/provider/credential/confirmation expiry and paused external containment remain independently enforced"
+  ],
+  "compatibility": "NO_CHECKPOINT_V1_OR_OLD_STRICT_PROFILE_REINTERPRETATION; NEW_SCHEMA_AND_EXPLICIT_ADAPTER_ACK_REQUIRED",
+  "mandatory_committed_at_utc": "A3/A4 exact new audit-field mapping required; never fabricate exact commit time or silently remove owner-required audit fields",
+  "implementation": "INDEPENDENT_NEW_MODULES_AND_TEST_HARNESS_MAY_BE_ALLOCATED; SHARED_WIRING_LOCKED",
+  "runtime_admission": "BLOCKED",
+  "physical_admission": "BLOCKED",
+  "old_gates_opened": false
+}

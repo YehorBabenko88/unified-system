@@ -1,0 +1,483 @@
+{
+  "AGENT1_NATIVE_PR": {
+    "pr": 45,
+    "head": "f58e68b5893b353bd9a7438c0843cd68ec200b19",
+    "scope": "RESOURCE_BINDING_ONLY",
+    "a8_review": "c1b04c2d776f43976e1af550f5e8b15adbf05bf0",
+    "native_tls_auth_admission": false
+  },
+  "AUTH_IDENTITY": {
+    "component_pr": 48,
+    "head": "9428e3d8a74e5ee93dcd6c3caef59dcd7b98c8ab",
+    "actual_stand_mtls": "PASS_LOCAL",
+    "native_human": false
+  },
+  "DATA_QUERY": {
+    "head": "f19f7feee0f63da34a20607a8cae59191180aa7c",
+    "actual_gateway_https": "PASS_LOCAL_EXACT_F155",
+    "provider_coverage": "UNKNOWN"
+  },
+  "STORAGE_DISCLOSURE": {
+    "pr": 49,
+    "head": "ec5ee6feadc4977af8b0fbaee7f82927d777ab94",
+    "actual_gateway_https": "PASS_LOCAL_EXACT_F155",
+    "publication": "UNPROVEN"
+  },
+  "JOB_SUBMISSION": {
+    "pr": 47,
+    "head": "3e498de973536c2d6393f83abe7d59cb1452a9b4",
+    "state": "NOT_SUBMITTED_PREPARATION_ONLY"
+  },
+  "JOB_CANCELLATION": "PENDING",
+  "RESEARCH_ADAPTER": {
+    "pr": 75,
+    "head": "aed8a7c8a952f96803c207d5e90b133969a47f04",
+    "local_component": "ACTUAL_META_COMPUTED_TEST_ONLY",
+    "a8_review": "88684052f5adf3ef418dbd2b874f96bdbb13664a",
+    "query_bridge_v2": {
+      "pr": 76,
+      "head": "6e58eb8bfa428cf88d54abd84418b58d67569814",
+      "tested_source": "5b4d9fafbc3ef64454f23e3c48621536b67f42dc",
+      "owner_targeted_tests": 54,
+      "full_suite": "LOCAL_CONFIGURED_CDD_PASS_CLEAN; HOSTED_NATIVE_CROSSREPO_GATES_PENDING",
+      "job_admission": false,
+      "configured_full_pytest": {
+        "tests_passed": 2116,
+        "skips": 36,
+        "subtests_passed": 35,
+        "failures": 0,
+        "errors": 0,
+        "primary_source_files": 819,
+        "primary_source_unchanged": true,
+        "clean_capsule_guard": "FAILED_OWN_STATE_FILES_CREATED",
+        "source_capsule_admission": false
+      },
+      "independent_review": {
+        "commit": "3cd35bfd0fcd320c74a442427af4355bf64e560f",
+        "path": "docs/audits/agent8-20261106/phase90/report.md",
+        "report_sha256": "7d811fff0080fb2d51644417ee51c95c2a7a647a9503249bbf1517d932d12d5d",
+        "source": "6e58eb8bfa428cf88d54abd84418b58d67569814",
+        "targeted_tests": 54,
+        "skips": 0,
+        "primary_raw_files": 819,
+        "full2116_rerun_by_a8": false,
+        "strict_postfull_capsule": "FAILED_RETAINED_NO_ADMISSION"
+      },
+      "test_state_fix": {
+        "source": "cddf71fab478f788d7289da9648f8a2f9287d1f8",
+        "owner_narrow_tests": 1,
+        "owner_targeted_tests": 54,
+        "fresh_full_suite": {
+          "source": "cddf71fab478f788d7289da9648f8a2f9287d1f8",
+          "tests_passed": 2116,
+          "skips": 36,
+          "subtests": 35,
+          "owner_strict_guard": "PASS_819_PRIMARY_NO_EXTRAS",
+          "root_log_xml_hash_verification": "PASS_2152_CASES_36_SKIP_0_FAILURE_ERROR",
+          "a8_review": {
+            "report": {
+              "commit": "d30ac89c9b22c4452f719bc39b36a74388e00b8b",
+              "path": "docs/audits/agent8-20261106/phase93/report.md",
+              "sha256": "adea87ede9bafa47b896ab987ee1156e62b944b40ef7912dba7943c94c09f4d6"
+            },
+            "independent_targeted_tests": 54,
+            "source": "cddf71fab478f788d7289da9648f8a2f9287d1f8",
+            "full2116_rerun": false,
+            "owner_original_receipts_and_current_819_clean_inventory_verified": true
+          },
+          "native_and_crossrepo_skips": "NOT_MANDATORY_ACCEPTANCE_PASS"
+        },
+        "original_6e_failure_preserved": true
+      }
+    }
+  },
+  "VISUALIZATION_API": {
+    "pr": 71,
+    "head": "8eef1a256081d987ff7c1b4024efe2cb16048680",
+    "local_chart": "ACTUAL_COMPUTED_IMMUTABLE_ARTIFACT",
+    "authenticated_retrieval": "NONE",
+    "query_v2": {
+      "pr": 72,
+      "head": "b70725220eed43e371a3c08f1c87fcabd984a45d",
+      "tree": "fb1859899a41a6976f39023ff1caeb4323b519bb",
+      "owner_node_tests": 41,
+      "skips": 0,
+      "owner_primary_raw_files": 371,
+      "owner_guards": 8,
+      "owner_browser_checks": "REPORTED_PASS_LOCAL_ONLY",
+      "independent_review": "REQUESTED_A8",
+      "endpoint": "NOT_BOUND",
+      "authenticated_retrieval": false,
+      "hosted_ci": "QUEUED_AT_OWNER_SNAPSHOT",
+      "physical": "NOT_RUN"
+    }
+  },
+  "VERTICAL_E2E": "NOT_COMPLETE_JOB_AUTHORITY_PUBLICATION_REGISTRY_BLOCKED",
+  "A8_REVIEW": {
+    "entry_matrix": "121ad998ae68c8da60cb55aa991be2f602f7c788",
+    "offline_pass_not_transferred": true,
+    "latest_read_review": "PHASE89_PUBLISHED_EXACT_815_146; BCF\u0410243_INDEPENDENT_MANIFEST3_ONLY",
+    "full_40_row_acceptance": "NOT_CLOSED",
+    "observer_fix": {
+      "finding": "A8-F20_P2_TEST_INSTRUMENTATION",
+      "status": "FIX_VERIFIED_OFFLINE",
+      "source": "bcfa243b6ecb5389270152612217f8d89643a248",
+      "tree": "5df31e286a0ae4ed21832c19387b22ad6bd1ef08",
+      "independent_manifest_tls_tests": 3,
+      "skips": 0,
+      "primary_raw_files": 1516,
+      "source_before_after_equal": true,
+      "full146_independent_at_this_source": false,
+      "phase89_primary_report": {
+        "commit": "97b8500db900bac5e90ac1f92d8acbbb9fee942a",
+        "path": "docs/audits/agent8-20261106/phase89/report.md",
+        "sha256": "a0395179248a65d90bec610b8294857481f3cb72a84dd06c73b3fa8375099a1c"
+      }
+    }
+  },
+  "GATEWAY_BASE_SHA": "6825964bf52375b134c6eb4487808963a0d128ed",
+  "SUPERVISOR_COMPATIBILITY": {
+    "pr": 38,
+    "head": "a2265b0d53e3d6ee8814aa28f5c612d537a0f195",
+    "four_source_test_files": "RAW_GIT_EQUAL",
+    "native_service_qualification": false
+  },
+  "CI_STATUS": {
+    "gateway44": {
+      "total": 35,
+      "queued": 33,
+      "pending": 2
+    },
+    "supervisor38": {
+      "total": 33,
+      "queued": 32,
+      "pending": 1
+    },
+    "actions_enabled": true,
+    "self_hosted_runners": 0,
+    "selected_labels": [
+      "windows-latest",
+      "ubuntu-24.04"
+    ],
+    "queue_root_cause": "UNKNOWN",
+    "retries": 0,
+    "runner_report": "release/evidence/gateway-runtime-runner-blocker-20261107/RUNNER-BLOCKER-REPORT.json",
+    "identity_corrected_yaml": {
+      "head": "9428e3d8a74e5ee93dcd6c3caef59dcd7b98c8ab",
+      "run": 42386792204,
+      "state": "QUEUED_AT_LAST_OBSERVATION",
+      "jobs": [
+        128445767814,
+        128445767843
+      ]
+    },
+    "old_identity_invalid_yaml": "LOCALLY_REPRODUCED_FIXED; ORIGINAL_GITHUB_FAILURE_ANNOTATION_UNAVAILABLE"
+  },
+  "REMAINING_P0": [
+    "Actual SUBMIT_RESEARCH/Assignment/fencing/dispatch contract and implementation",
+    "Actual result publication/receipt projection and independent two-domain lab admission",
+    "New query-to-Meta v2 shared contract plus actual job/renderer integration"
+  ],
+  "REMAINING_P1": [
+    "Terminal exact-head hosted CI",
+    "Native Windows and Home/Pro qualification separate"
+  ],
+  "NEXT_ACTION": "Finish exact source owner review; implement isolated native research broker/dispatch and v2 chart; qualify existing registry projection",
+  "GO_NO_GO": "IN_PROGRESS / NO-GO",
+  "OFFLINE_EVIDENCE": "UNCHANGED",
+  "OWNERSHIP": "A1_A7_ACK_RECEIVED",
+  "ACTUAL_E2E_PASS": false,
+  "ROOT_TLS_FRONT": {
+    "source": "37b3b029cd6b5a273ea5e7ea04eee8485347de31",
+    "tests": 25,
+    "breakdown": "9_ACTUAL_LOOPBACK_TLS_PLUS16_OFFLINE",
+    "source_raw_before_after": 1416,
+    "owner_identity_installed": false,
+    "protected_routes": "503_NO_BODY_READ",
+    "independent_review": {
+      "url": "https://github.com/YehorBabenko88/unified-system/blob/682791a29fc318d8d6f02b64247ee7ce7104abe4/docs/audits/agent8-20261106/phase83/independent-review.md",
+      "commit": "682791a29fc318d8d6f02b64247ee7ce7104abe4",
+      "status": "PASS_BOUNDED_FRONT_ONLY",
+      "extra_http_cases": 11,
+      "saturation": "FOUR_WORKERS_FIFTH_REFUSED",
+      "cleanup": "OWNED_THREADS_ENDED",
+      "sourceguard_negatives": 4,
+      "runtime_milestone": false
+    }
+  },
+  "COMPONENT_COMPOSITION": {
+    "source": "fafeb8e16c01e1973594a21d5e55d10110e2c6fa",
+    "tests": 111,
+    "skips": 0,
+    "source_files": 1461,
+    "qualification": "LOCAL_COMPONENTS_ONLY_NOT_VERTICAL_E2E",
+    "driver": "EXTERNAL_TARGETED_SELECTOR"
+  },
+  "ROOT_READ_QUALIFICATION": {
+    "head": "bcfa243b6ecb5389270152612217f8d89643a248",
+    "tests": 146,
+    "skips": 0,
+    "source_inventory_equal": true,
+    "scope": "DISPOSABLE_AUTHENTICATED_READ_ONLY_NOT_JOB_VERTICAL_E2E",
+    "evidence": "release/evidence/gateway-runtime-observer-fix-20261107/index.json"
+  },
+  "remaining_expiry_gate": "STRICT_UTC_AT_CONSENSUS_COMMIT_NOT_ESTABLISHED_NO_DISPATCH_ON_UNCERTAIN",
+  "two_domain_lab": "NOT_ADMITTED_SAME_VOLUME_COPIES_NOT_SUFFICIENT",
+  "CURRENT_OWNER_REVIEW": {
+    "manifest": "A4_NEW_STATIC_815_SOURCE_ACK_4f54649e879694e69574223568bbd3dd386d0a2c3f25ed99a557b706ab0a8b96",
+    "query": "A3_NEW_STATIC_815_SOURCE_ACK_64b3f3a13503f49433d6a512f0bd93b2127a94589f9cea0bd3a195d29ee0c383",
+    "historical_ack_scope": "COMPONENT_OR_WIP_DIRECTION_NOT_EXACT_CAPSULE_ADMISSION"
+  },
+  "WORKSPACE_RECOVERY": {
+    "remote_source": "698477486746848c4b530b2b29d29cc6021e30cc",
+    "method": "FRESH_SEPARATE_CLONE_FROM_GITHUB",
+    "reason": "PRIOR_WORKTREE_DIRECTORY_ABSENT_REASON_UNKNOWN",
+    "evidence_clone_unchanged": true,
+    "new_runtime_test_claim": false
+  },
+  "WORKER_CONTAINMENT": {
+    "pr": 51,
+    "head": "480109277c1e80a666f3dbba84b5807cacd2b460",
+    "tree": "651fff9bb987fead6414b4492acc0891873cac27",
+    "owner_receipt_sha256": "d3470fdcba3252e568b5ee8a28747b2df69d19f6973ada25141012726486825d",
+    "owner_unit_assertions": 5,
+    "owner_native_probes": 3,
+    "owner_raw_source_files": 1400,
+    "source_guard": "OWNER_REPORTED_EQUAL_NO_EXTRAS",
+    "independent_review": {
+      "source": "480109277c1e80a666f3dbba84b5807cacd2b460",
+      "unit_tests": 5,
+      "skips": 0,
+      "primary_files": 1400,
+      "source_inventory_equal": true,
+      "native_probes_rerun": false,
+      "original_receipt_verified": true,
+      "binary_layout_readback_verified": true,
+      "memory_discrepancy": "CONFIRMED_UNRESOLVED_NOT_PASS",
+      "new_material_source_findings": 0,
+      "phase91_primary_report": "PENDING"
+    },
+    "memory_qualification": "UNQUALIFIED_PEAK_JOB_544940032_EXCEEDS_CAP_268435456",
+    "cpu_qualification": "FIXED_NATIVE_10_PERCENT_NOT_ONE_CORE_OR_RESERVED_MILLICORES",
+    "output_deadline_headroom": "NOT_QUALIFIED",
+    "gateway_start": "DENY",
+    "worker_admission": false
+  },
+  "RESULT_STORE_SLICE_A": {
+    "source": "2f98f3501ea8274ebda8798a5c5b6e4f4910f2ee",
+    "tree": "79c2ab87d04f18ea78c71ace67413fffe346e177",
+    "base": "aed8a7c8a952f96803c207d5e90b133969a47f04",
+    "owner_persistence_tests": 41,
+    "owner_skips": 0,
+    "source_qualification": "PENDING",
+    "review": "A4_SCOPED_LOCAL_STAGING_SOURCE_COMPATIBILITY_ACK_AT_887E",
+    "concurrent_migration": "OWNER_REPORTED_REPRODUCED_FIXED_WRITE_LOCK_BEFORE_DDL",
+    "project_and_read": "ALWAYS_DENY_NATIVE_AUTHORITY_ABI_UNAVAILABLE",
+    "publication_receipt": "NULL",
+    "native_admission": false,
+    "required_correction": "MIGRATION_EXCEPTION_WRITE_LOCK_P2_CLOSED_BY_A4_TARGETED_VERIFICATION",
+    "fix_candidate": {
+      "source": "887e3eeaf23ef8d9d1429435bc88bbac8099c6e6",
+      "tree": "954f3364cb70369705f658e89fcc6ae8ce547eec",
+      "owner_tests": 45,
+      "skips": 0,
+      "owner_regressions": "RETAINED_TRACEBACK_WRITER_AVAILABLE; BASEEXCEPTION_CLEANUP; CLEANUP_FAILURE_PRESERVES_ORIGINAL",
+      "independent_review": {
+        "owner": "A4",
+        "targeted_sqlite_checks": 3,
+        "passed": 3,
+        "sha256": "c5876f92d8f3a7d5c3042ad481a0ea7b5effe624a90db7923e092fa3a8d54152",
+        "source": "887e3eeaf23ef8d9d1429435bc88bbac8099c6e6",
+        "owner45_counts_transferred": false,
+        "native_admission": false
+      },
+      "source_qualification": "PENDING"
+    },
+    "independent_review": {
+      "report": {
+        "commit": "d30ac89c9b22c4452f719bc39b36a74388e00b8b",
+        "path": "docs/audits/agent8-20261106/phase95/report.md",
+        "sha256": "fcd157fa3efaec250de6ac80600588844021c571878c8a24e08131c7530426d0"
+      },
+      "source": "887e3eeaf23ef8d9d1429435bc88bbac8099c6e6",
+      "tests": 45,
+      "skips": 0,
+      "primary_files": 806,
+      "no_extras": true,
+      "full_suite_rerun": false,
+      "project_read": "DENY",
+      "native_admission": false
+    },
+    "configured_full_regression": {
+      "source": "887e3eeaf23ef8d9d1429435bc88bbac8099c6e6",
+      "passed": 2127,
+      "skips": 36,
+      "subtests": 35,
+      "owner_strict_postfull_guard": "PASS_806_PRIMARY_UNCHANGED_NO_EXTRAS",
+      "root_original_log_xml_hashes": "VERIFIED_2163_CASES_36_SKIPS_ZERO_FAILURE_ERROR",
+      "a8_full_suite_rerun": false,
+      "a8_evidence_review": {
+        "commit": "331fa6e6a690251623e334296bb7a43cd79f1198",
+        "path": "docs/audits/agent8-20261106/phase97/report.md",
+        "sha256": "640fb6f66bf18918f83e6d535f7faa61e22a498d84ab70823abd2839ba3d80d0",
+        "original_log_xml_receipt_digests": "VERIFIED",
+        "current_owner806_raw_inventory": "READ_ONLY_SNAPSHOT_MATCH_NO_EXTRAS",
+        "full_pytest_rerun": false,
+        "native_or_distributed_admission": false
+      },
+      "native_and_crossrepo_skips": "NOT_MANDATORY_GATE_PASS"
+    }
+  },
+  "WORKER_MEMORY_DIAGNOSTIC": {
+    "pr": 52,
+    "head": "06efbb904fa594fcd677c7eb3b4d2691b8f3edcd",
+    "tree": "07fc574e9d7da0da3447ee17cec73bb0fb5a9329",
+    "review": "ROOT_AND_A8_SOURCE_ONLY_NO_IMPORT_EXECUTION_NATIVE_CALL",
+    "confirmed_material_source_defect": false,
+    "execution_authorized": false,
+    "prerequisites": [
+      "TRUSTED_SOURCE_CUSTODY_NOT_ONE_TIME_HASH_READ_TO_LAUNCH_PROOF",
+      "DIRECT_BASE_INTERPRETER_PROCESS_COUNT_DISTINCT_CASE_COUNT",
+      "EXTERNAL_WHOLE_INVOCATION_WATCHDOG_INCLUDING_SETUP_CLEANUP"
+    ],
+    "memory_rca": "NOT_ESTABLISHED",
+    "runtime_admission": false,
+    "a8_report": {
+      "commit": "d30ac89c9b22c4452f719bc39b36a74388e00b8b",
+      "path": "docs/audits/agent8-20261106/phase94/report.md",
+      "sha256": "c46b59e5f13b891305f89e472959132582afcb2300c39aebf6c222b56cbc4741"
+    },
+    "source_only_successor": {
+      "head": "16b46ee8ffa1e437c0a6fa4f98071477f0b6abeb",
+      "tree": "03ebd787b3fe0fbe6b4ea6740a8fbcae391cd8c4",
+      "script_sha256": "cc7508827c738193357e4a7af9bad2694239f7fd99998da626d7ee122e5fca5b",
+      "owner_source_receipt_sha256": "c10a63d6c325e45da70060a1b69b35e1bb1ec741d92fafb2735f8f72dc055c1b",
+      "owner_primary_files": 1402,
+      "review": {
+        "commit": "02d73bf24913c2fe36b346768a39089f0238058d",
+        "path": "docs/audits/agent8-20261106/phase96/report.md",
+        "sha256": "958fd13de59706094380544bc5a150a197f7ea37281a2078a3da7eaaea0f6794",
+        "scope": "STATIC_READ_ONLY_NO_IMPORT_EXECUTION_NATIVE_CALL",
+        "confirmed_material_source_findings": 0,
+        "execution_ack": false
+      },
+      "execution_authorized": false,
+      "custody_mechanism": "NOT_IMPLEMENTED_NOT_QUALIFIED",
+      "external_supervisor": "PLAN_ONLY_NOT_QUALIFIED",
+      "imports_invocations_nativecalls_allocations_tests": 0
+    }
+  },
+  "NATIVE_SESSION_CONTRACT_SUCCESSOR": {
+    "schema_sha256": "9bdb1084004fcc6cfb76fa0f1bce0013b6a26a9b288cbb71c82db621feb4f4d0",
+    "native_evidence_sha256": "bd1c5976812e09a1585cabff995a9454330da165a436dc6c0053a526785426fe",
+    "root_verified_delta": "ONLY_NATIVE_ID_DEFINITION_REFERENCE_AND_SCHEMA_VERSION",
+    "a5_format_ack_sha256": "0e9aa7f6d5c71cb8b2cbe44ea16010172d21741abdcce8e73080aecf11c33e5b",
+    "a4_ack": "aa5d1cfe8f1a59079d29f9c31456f94a0c175cb4d465efc21b6b2242956a3e60",
+    "freeze": "FORMAT_ONLY_PRIMARY_SCHEMA_HASH_VERIFIED_JOINT_ACKS_RECEIVED",
+    "counter_precision": {
+      "status": "A5_CORRECTED_OWN_SUBSET_ALL_FOUR_FIELDS_VERIFIED",
+      "fields": [
+        "assignment",
+        "attempt",
+        "lease",
+        "realm"
+      ],
+      "original_a2_a4_four_count_defect": false,
+      "addendum_sha256": "00256bc9f558ba9d716fd665b209762c099806274e050370feca903def247703"
+    },
+    "native_authority_admission": false,
+    "full_plan_measurement": "REQUIRED_NO_PRIOR_BUDGET_TRANSFER",
+    "root_ack": "SCOPED_FORMAT_ONLY",
+    "primary_commit": "81f20c30b1a6f10663a7eb73e398305b01c0b71d"
+  },
+  "RESEARCH_IDENTITY_BROKER": {
+    "pr": 53,
+    "head": "c02b110a8939674adc676cb203e0d71ffab800d0",
+    "tree": "49af2d81b17297aa3f45aa718a24ec2d121c9c4d",
+    "module_sha256": "81ca69e9de3789c21beb96176efc2e4c60106e240f96562017bbd5cc3b89d961",
+    "owner_qualified_tests": 15,
+    "skips": 0,
+    "owner_primary_files": {
+      "unified": 1511,
+      "grid": 695
+    },
+    "owner_native_process_cleanup": "REPORTED_OWN_THREE_VOTERS_RETIRED",
+    "a8_review": {
+      "source": "c02b110a8939674adc676cb203e0d71ffab800d0",
+      "independent_unique_tests": 15,
+      "skips": 0,
+      "additional_actual_tls_consul_scenarios": 2,
+      "primary_files": {
+        "unified": 1511,
+        "grid": 695
+      },
+      "before_after_equal": true,
+      "owned_process_cleanup": "ALL_SIX_OWN_CONSUL_PROCESSES_WAITED_FOREIGN_ZERO",
+      "historical_expiry_red_green": "WIP_NO_ORIGINAL_SOURCE_SHA_NOT_PRIMARY_PINNED_EVIDENCE",
+      "historical_capacity_race_red": "NOT_SOURCE_PINNED_CURRENT_GREEN_ONLY",
+      "full_capacity128_race": "NOT_RUN",
+      "phase98": {
+        "commit": "fb63e6f34e0558d3ac42381ec190ee2edcf7dfc7",
+        "path": "docs/audits/agent8-20261106/phase98/report.md",
+        "sha256": "06865c6fdb64a4c0955655fac2d9f4edb180bd2932a27329ca80a2ec507a902e",
+        "source": "c02b110a8939674adc676cb203e0d71ffab800d0",
+        "successor_transfer": false
+      },
+      "native_job_or_public_submit_admission": false
+    },
+    "a5_api_review": {
+      "scope": "CAPTURE_ABI_COMPATIBILITY_ACK_ONLY_NO_ASSIGNMENT_OR_WIRING",
+      "source": "c02b110a8939674adc676cb203e0d71ffab800d0",
+      "artifact_sha256": "1efd383aad31dcde68049a65dca3b83a0069c4e8bb396e480020f6eb35254e84",
+      "native_calls_by_reviewer": 0,
+      "hardening_recommendation": "SYMMETRIC_REQUIRE_CAPTURE_SCOPE_TYPE_AND_PREHASH_REQUEST_BOUND",
+      "scope_bypass_reproduced": false,
+      "owner_investigation": "REQUESTED"
+    },
+    "pr_mergeability_snapshot": "MERGEABLE_UNSTABLE_NOT_MERGED",
+    "public_submit": "DENY",
+    "native_job_admission": false,
+    "hosted_ci": "PENDING",
+    "strict_utc_at_commit": "OPEN",
+    "typed_guard_successor": {
+      "source": "65169396d550989b6b9fc78d4f3a64a1c906172b",
+      "tree": "f67c605fb7d5530029bd0ff28cecf4c18c18737d",
+      "module_sha256": "1e9f4bb1c7a563b3cf5e19f432f5799941448df212a2ddb9a7de9df1d99cb543",
+      "a5_source_delta_ack_sha256": "e70aed81b7e52ccf1171a3ac56b4e4809dad274c276b36bf5662e8e23ee5f93d",
+      "scope": "499_TO_651_ONE_GUARD_EIGHT_ASSERTIONS; C02_TO_651_ADDS_INTERVENING_WORKFLOW_DEPENDENCIES_AND_14_TEST_LINES",
+      "native_privilege_escalation_demonstrated": false,
+      "source_qualification": {
+        "scope": "OWNER_EXACT_SOURCE_QUALIFIED_NOT_RUNTIME_ADMITTED",
+        "tests": 15,
+        "skips": 0,
+        "primary_files": {
+          "unified": 1514,
+          "grid": 695
+        },
+        "before_after": "OWNER_REPORTED_EQUAL",
+        "root_raw_log_sha256_verified": "d66a04958fd425d80e56ae0e7bbfad8053900a414ca63ca6277661435d2bf44f",
+        "independent_a8_review": "REQUESTED"
+      },
+      "independent_native_rerun_by_a5": false,
+      "runtime_wiring": false,
+      "delta_base_addendum_sha256": "687ed98bab7ed2e1ac24accdf6e4b5724433a57d577ae17e33964bf69ac59c74",
+      "a8_review": {
+        "commit": "7ca5d1c76ec2e664520b04bef1ad5861ebad6751",
+        "path": "docs/audits/agent8-20261106/phase99/report.md",
+        "sha256": "7d6e1a3d7701e311de7ad2fbfe1664b1f57db8004df2d426cdc6275959b2ed7d",
+        "source": "65169396d550989b6b9fc78d4f3a64a1c906172b",
+        "independent_modified_test_ids": 1,
+        "skips": 0,
+        "primary_files": {
+          "unified": 1514,
+          "grid": 695
+        },
+        "before_after_equal": true,
+        "owner_full15_originals": "VERIFIED_NOT_RERUN_BY_A8",
+        "workflow_linux_hosted": "SOURCE_REVIEW_ONLY_NOT_EXECUTED",
+        "target_adapter": "NOT_BOUND",
+        "public_submit": "DENY"
+      }
+    }
+  }
+}

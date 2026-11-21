@@ -1,0 +1,34 @@
+import sys,os,asyncio,platform,unittest
+from pathlib import Path
+source=Path(sys.argv[1]);sys.path[:0]=[str(source),sys.argv[2]]
+os.environ['PYTEST_DISABLE_PLUGIN_AUTOLOAD']='1'
+platform.system=lambda:'Windows'
+platform.node=lambda:'STRICT_FIXTURE'
+# Explicitly qualified test infrastructure only: one selector loop/self-pipe before audit.
+loop=asyncio.SelectorEventLoop();asyncio.set_event_loop(loop)
+class SharedRunner:
+ def __init__(self,*args,**kwargs):pass
+ def __enter__(self):return self
+ def __exit__(self,*args):pass
+ def get_loop(self):return loop
+ def close(self):pass
+ def run(self,coro,*,context=None):
+  return loop.run_until_complete(coro) if context is None else context.run(loop.run_until_complete,coro)
+asyncio.Runner=SharedRunner
+def run(coro,*,debug=None):return loop.run_until_complete(coro)
+asyncio.run=run
+def audit(event,args):
+ if event=='subprocess.Popen' or event=='os.system' or event.startswith('socket.') or event.startswith('ctypes.'):
+  raise AssertionError('forbidden during test: '+event)
+sys.addaudithook(audit)
+# Optional console cosmetics absent in strict fixture; no native colorama DLL import.
+sys.modules['colorama']=None
+import pytest
+result=pytest.main([str(source/'tests/test_operator_control_plane.py'),str(source/'tests/test_operator_command_composition.py'),str(source/'tests/test_lifecycle.py'),str(source/'tests/test_consul_command_store.py'),'--rootdir='+str(source),'--junitxml='+sys.argv[3],'--noconftest','-p','no:cacheprovider','-q'])
+from scripts.operator_contract_ci import validate_junit
+assert validate_junit(sys.argv[3])==86
+helper_result=pytest.main([str(source/'tests/test_operator_contract_ci.py'),'--rootdir='+str(source),'--noconftest','-p','no:cacheprovider','-q'])
+assert helper_result==0
+print('STRICT_RESULT',result,'INFRA_SELECTOR_LOOP_BEFORE_AUDIT; NO_CONSENSUS_QUALIFICATION')
+loop.close()
+raise SystemExit(result)

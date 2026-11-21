@@ -1,0 +1,100 @@
+name: Mandatory canonical offline causal composition
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: canonical-offline-causal-${{ github.event_name }}-${{ github.event.pull_request.head.sha || github.sha }}
+  cancel-in-progress: true
+jobs:
+  paper-causal:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-2025]
+        python: ['3.11', '3.12']
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        env:
+          GIT_CONFIG_COUNT: '2'
+          GIT_CONFIG_KEY_0: core.autocrlf
+          GIT_CONFIG_VALUE_0: 'false'
+          GIT_CONFIG_KEY_1: core.eol
+          GIT_CONFIG_VALUE_1: lf
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Read SDK checkout commits from active qualification cohort
+        id: cohort
+        shell: python -I -S -B {0}
+        run: |
+          import runpy,sys
+          sys.argv=["scripts/emit_cohort_checkout_pins.py","--cohort","docs/qualification/offline-causal-20261120/cohort.json"]
+          runpy.run_path(sys.argv[0],run_name="__main__")
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        env:
+          GIT_CONFIG_COUNT: '2'
+          GIT_CONFIG_KEY_0: core.autocrlf
+          GIT_CONFIG_VALUE_0: 'false'
+          GIT_CONFIG_KEY_1: core.eol
+          GIT_CONFIG_VALUE_1: lf
+        with:
+          repository: YehorBabenko88/strattester
+          ref: ${{ steps.cohort.outputs.market_data }}
+          path: .source/market_data
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        env:
+          GIT_CONFIG_COUNT: '2'
+          GIT_CONFIG_KEY_0: core.autocrlf
+          GIT_CONFIG_VALUE_0: 'false'
+          GIT_CONFIG_KEY_1: core.eol
+          GIT_CONFIG_VALUE_1: lf
+        with:
+          repository: YehorBabenko88/math
+          ref: ${{ steps.cohort.outputs.math }}
+          path: .source/math
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        env:
+          GIT_CONFIG_COUNT: '2'
+          GIT_CONFIG_KEY_0: core.autocrlf
+          GIT_CONFIG_VALUE_0: 'false'
+          GIT_CONFIG_KEY_1: core.eol
+          GIT_CONFIG_VALUE_1: lf
+        with:
+          repository: YehorBabenko88/Terminan
+          ref: ${{ steps.cohort.outputs.terminan }}
+          path: .source/terminan
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: ${{ matrix.python }}
+      - name: All seven actual CI-gate regressions (including real disposable Git fixture)
+        shell: python
+        run: |
+          import subprocess,sys
+          subprocess.run([sys.executable,'-I','-S','-B','-m','unittest','discover','-s','tests','-p','test_ci_paper_causal.py','-v'],check=True)
+      - name: Exact four sources, raw-built installed SDKs, twenty-one actual offline roles
+        shell: python
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          import os,pathlib,subprocess,sys
+          subprocess.run([sys.executable,'-I','-S','-B','scripts/ci_paper_causal.py','--root-head',os.environ['EXPECTED_HEAD'],'--market-data','.source/market_data','--math','.source/math','--terminan','.source/terminan','--out',str(pathlib.Path(os.environ['RUNNER_TEMP'])/'canonical-offline-causal')],check=True)
+      - name: Preserve scoped source/artifact/private-SQLite evidence on every outcome
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: canonical-offline-causal-${{ matrix.os }}-${{ matrix.python }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/canonical-offline-causal/
+          if-no-files-found: error

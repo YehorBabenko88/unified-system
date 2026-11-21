@@ -1,0 +1,11 @@
+name: Canonical market data math analysis source chain
+on:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-contract:
+    uses: ./.github/workflows/owner-source-suite.yml
+    with:
+      suite: chain

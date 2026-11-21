@@ -1,0 +1,271 @@
+name: Agent4 manifest codec
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/agent4-manifest-codec.yml'
+      - 'unified_system/storage/**'
+      - 'tests/storage/**'
+      - 'docs/storage/**'
+  push:
+    branches: ['feature/storage-manifest-codec-20261107']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: agent4-manifest-${{ github.event_name }}-${{ github.event.pull_request.head.sha || github.sha }}
+  cancel-in-progress: true
+jobs:
+  storage-local:
+    name: storage-local (${{ matrix.os }}, CPython 3.12.10)
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-2022]
+    steps:
+      - name: Exact source checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        env:
+          GIT_CONFIG_COUNT: '2'
+          GIT_CONFIG_KEY_0: core.autocrlf
+          GIT_CONFIG_VALUE_0: 'false'
+          GIT_CONFIG_KEY_1: core.eol
+          GIT_CONFIG_VALUE_1: lf
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+          fetch-depth: 1
+      - name: Exact standard-library interpreter
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12.10'
+          architecture: x64
+      - name: Primary Git guard and exact 62 local cases
+        shell: python -I -S -B {0}
+        env:
+          A4_EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          """Dedicated CI body: primary Git bytes before project imports, local tests only."""
+          import hashlib
+          import json
+          import os
+          from pathlib import Path
+          import platform
+          import stat
+          import subprocess
+          import sys
+          import unittest
+
+          ROOT = Path(os.environ["GITHUB_WORKSPACE"]).absolute()
+          EVIDENCE = Path(os.environ["RUNNER_TEMP"])/"agent4-manifest-evidence"
+          EVIDENCE.mkdir(exist_ok=False)
+          EXPECTED_CASES = [
+              "storage.runtime.test_backup.BackupTests.test_actual_three_root_roundtrip_and_inventory_binding",
+              "storage.runtime.test_backup.BackupTests.test_copy_alone_is_not_restore_success",
+              "storage.runtime.test_backup.BackupTests.test_corrupted_backup_cannot_pass_restore",
+              "storage.runtime.test_backup.BackupTests.test_missing_or_wrong_length_inventory_fails",
+              "storage.runtime.test_backup.BackupTests.test_same_store_alias_empty_duplicate_and_unbounded_inventory_rejected",
+              "storage.runtime.test_checkpoint_recovery.CheckpointRecoveryTests.test_missing_and_corrupted_checkpoint_objects_never_resume",
+              "storage.runtime.test_checkpoint_recovery.CheckpointRecoveryTests.test_readback_does_not_establish_checkpoint_or_cursor_authority",
+              "storage.runtime.test_manifest.ManifestCodecProposal.test_actual_manifest_object_readback_and_corruption_rejection",
+              "storage.runtime.test_manifest.ManifestCodecProposal.test_all_string_leaves_reject_terminal_lf",
+              "storage.runtime.test_manifest.ManifestCodecProposal.test_changed_kind_partition_or_instrument_cannot_succeed_same_lineage",
+              "storage.runtime.test_manifest.ManifestCodecProposal.test_constructor_and_decoded_copy_cannot_rewrite_claim",
+              "storage.runtime.test_manifest.ManifestCodecProposal.test_counter_and_unknown_noncanonical_duplicate_fields_rejected",
+              "storage.runtime.test_manifest.ManifestCodecProposal.test_exact_canonical_bytes_and_lineage_digest_remain_untrusted",
+              "storage.runtime.test_manifest.ManifestCodecProposal.test_genesis_semantics_and_overflow_never_reset_revision",
+              "storage.runtime.test_manifest.ManifestCodecProposal.test_genesis_successor_and_wrong_predecessor_or_lineage",
+              "storage.runtime.test_manifest.ManifestCodecProposal.test_hashes_missing_objects_and_unsupported_claims_never_verify_closure",
+              "storage.runtime.test_manifest.ManifestCodecProposal.test_instrument_counter_profile_and_lineage_are_not_coerced",
+              "storage.runtime.test_object_store.ObjectStoreTests.test_actual_bytes_are_content_addressed_and_survive_reopen",
+              "storage.runtime.test_object_store.ObjectStoreTests.test_corruption_is_not_repaired_by_duplicate_put",
+              "storage.runtime.test_object_store.ObjectStoreTests.test_duplicate_and_concurrent_publication_do_not_replace_bytes",
+              "storage.runtime.test_object_store.ObjectStoreTests.test_existing_directory_is_not_implicitly_adopted",
+              "storage.runtime.test_object_store.ObjectStoreTests.test_failed_fsync_never_returns_an_object_receipt",
+              "storage.runtime.test_object_store.ObjectStoreTests.test_hardlinked_object_and_request_paths_are_rejected",
+              "storage.runtime.test_object_store.ObjectStoreTests.test_interrupted_link_leaves_only_invisible_staging",
+              "storage.runtime.test_object_store.ObjectStoreTests.test_local_size_limit_never_bypasses_full_object_verification",
+              "storage.runtime.test_object_store.ObjectStoreTests.test_missing_object_is_explicit_not_empty_data",
+              "storage.runtime.test_object_store.ObjectStoreTests.test_short_writes_are_completed_and_zero_write_fails",
+              "storage.runtime.test_object_store.ObjectStoreTests.test_verification_identity_comes_from_same_verified_read",
+              "storage.runtime.test_object_store.ObjectStoreTests.test_wrong_store_identity_and_changed_root_are_rejected",
+              "storage.runtime.test_publication_adapter.PublicationAdapterTests.test_missing_native_backend_never_accepts_a_claim",
+              "storage.runtime.test_publication_adapter.PublicationAdapterTests.test_no_caller_callback_or_boolean_can_admit_backend",
+              "storage.runtime.test_publication_adapter.PublicationAdapterTests.test_reconciliation_cannot_rekey_or_infer_absence",
+              "storage.runtime.test_reservation_binding.ReservationBindingProposal.test_counter_domains_remain_distinct_and_no_numeric_coercion",
+              "storage.runtime.test_reservation_binding.ReservationBindingProposal.test_local_binding_observation_never_grants_publication",
+              "storage.runtime.test_reservation_binding.ReservationBindingProposal.test_own_revocation_or_exhaustion_denies",
+              "storage.runtime.test_reservation_binding.ReservationBindingProposal.test_unrelated_accounting_churn_does_not_rewrite_issuance",
+              "storage.test_checkpoint_vectors.CheckpointVectorTests.test_confirmed_unknown_time_is_still_only_an_untrusted_claim",
+              "storage.test_checkpoint_vectors.CheckpointVectorTests.test_disposable_file_corruption_is_checked_by_real_bytes",
+              "storage.test_checkpoint_vectors.CheckpointVectorTests.test_exact_owner_schema_and_mapping_snapshots_are_bound",
+              "storage.test_checkpoint_vectors.CheckpointVectorTests.test_observation_does_not_rewrite_content_or_enable_effect",
+              "storage.test_checkpoint_vectors.CheckpointVectorTests.test_unconfirmed_and_counterfeit_evidence_cannot_promote",
+              "storage.test_contracts.ClaimTests.test_decoded_copy_cannot_rewrite_original_claim",
+              "storage.test_contracts.ClaimTests.test_parse_is_untrusted_and_cannot_promote",
+              "storage.test_contracts.ClaimTests.test_parser_bounds_and_counterfeit_primitive_types",
+              "storage.test_contracts.ClaimTests.test_parser_rejects_duplicate_numbers_nonascii_and_noncanonical_bytes",
+              "storage.test_retention.RetentionTests.test_candidate_is_never_an_executable_delete_permission",
+              "storage.test_retention.RetentionTests.test_duplicate_identity_and_bool_budget_and_mutable_pin_inputs_reject",
+              "storage.test_retention.RetentionTests.test_file_exists_or_unavailable_or_wrong_hash_does_not_count",
+              "storage.test_retention.RetentionTests.test_last_copy_and_missing_verified_survivors_are_retained",
+              "storage.test_retention.RetentionTests.test_pins_and_unknown_closure_cannot_be_waived_by_age",
+              "storage.test_retention.RetentionTests.test_same_node_or_volume_cannot_supply_independent_survivors",
+              "storage.test_retention.RetentionTests.test_unknown_target_never_becomes_candidate",
+              "storage.test_segments.SegmentTests.test_caller_cannot_construct_verified_byte_result",
+              "storage.test_segments.SegmentTests.test_claim_detaches_mutable_instrument_input",
+              "storage.test_segments.SegmentTests.test_claim_rejects_coercion_unknown_fields_and_invalid_lineage",
+              "storage.test_segments.SegmentTests.test_corruption_and_truncation_cannot_match_original",
+              "storage.test_segments.SegmentTests.test_count_and_size_and_input_limit_are_independent",
+              "storage.test_segments.SegmentTests.test_framed_bytes_do_not_claim_source_completeness",
+              "storage.test_segments.SegmentTests.test_matching_bytes_are_not_authoritative_verification",
+              "storage.test_segments.SegmentTests.test_matching_digest_does_not_waive_framing",
+              "storage.test_segments.SegmentTests.test_other_instrument_and_end_boundary_reject",
+              "storage.test_segments.SegmentTests.test_python_equality_objects_cannot_impersonate_typed_fields"
+          ]
+
+
+          def git(*args):
+              return subprocess.check_output(["git", "--no-replace-objects", "-C", str(ROOT), *args])
+
+
+          def guard(condition, reason):
+              if not condition:
+                  raise RuntimeError(reason)
+
+
+          def plain(path, directory=False):
+              info = path.lstat()
+              guard(not stat.S_ISLNK(info.st_mode) and not (getattr(info, "st_file_attributes", 0) & 1024), "SOURCE_ALIAS")
+              guard(stat.S_ISDIR(info.st_mode) if directory else stat.S_ISREG(info.st_mode), "SOURCE_KIND")
+              if not directory:
+                  guard(info.st_nlink == 1, "SOURCE_HARDLINK")
+
+
+          def physical_inventory(expected):
+              directories = {"."}
+              for name in expected:
+                  directories.update(p.as_posix() for p in Path(name).parents)
+              found = {}
+              plain(ROOT, directory=True)
+              for current, dirs, files in os.walk(ROOT, followlinks=False):
+                  parent = Path(current)
+                  if parent == ROOT:
+                      dirs[:] = [name for name in dirs if name != ".git"]
+                      files[:] = [name for name in files if name != ".git"]
+                  for name in dirs:
+                      path = parent/name
+                      relative = path.relative_to(ROOT).as_posix()
+                      guard(relative in directories and name != "__pycache__", "UNEXPECTED_SOURCE_DIRECTORY")
+                      plain(path, directory=True)
+                  for name in files:
+                      path = parent/name
+                      relative = path.relative_to(ROOT).as_posix()
+                      guard(relative in expected and path.suffix not in (".pyc", ".pyo"), "UNEXPECTED_SOURCE_FILE")
+                      plain(path)
+                      raw = path.read_bytes()
+                      found[relative] = dict(bytes=len(raw), sha256=hashlib.sha256(raw).hexdigest())
+              guard(set(found) == set(expected), "SOURCE_INVENTORY_MISMATCH")
+              for name, record in found.items():
+                  guard(record == {k: expected[name][k] for k in ("bytes", "sha256")}, "PRIMARY_GIT_BYTES_MISMATCH:"+name)
+              return found
+
+
+          def primary_objects():
+              guard(not git("for-each-ref", "--format=%(refname)", "refs/replace").strip(), "REPLACE_REFS")
+              for name in ("info/grafts", "objects/info/alternates"):
+                  path = Path(git("rev-parse", "--git-path", name).decode().strip())
+                  if not path.is_absolute():
+                      path = ROOT/path
+                  guard(not path.exists(), "NONPRIMARY_OBJECT_OVERLAY")
+              rows = []
+              for entry in git("ls-tree", "-rz", "--full-tree", "HEAD").split(b"\x00"):
+                  if not entry:
+                      continue
+                  meta, raw_name = entry.split(b"\t", 1)
+                  mode, kind, blob = meta.split()
+                  guard(mode in (b"100644", b"100755") and kind == b"blob", "NONREGULAR_GIT_SOURCE")
+                  name = raw_name.decode("utf-8")
+                  guard(not Path(name).is_absolute() and ".." not in Path(name).parts, "GIT_PATH_INVALID")
+                  rows.append((name, blob))
+              packed = subprocess.check_output(["git", "--no-replace-objects", "-C", str(ROOT), "cat-file", "--batch"],
+                                               input=b"".join(blob+b"\n" for _, blob in rows))
+              result, offset = {}, 0
+              for name, blob in rows:
+                  end = packed.index(b"\n", offset)
+                  object_id, kind, size = packed[offset:end].split()
+                  guard(object_id == blob and kind == b"blob", "PRIMARY_GIT_OBJECT_MISMATCH")
+                  length = int(size)
+                  raw = packed[end+1:end+1+length]
+                  guard(len(raw) == length and packed[end+1+length:end+2+length] == b"\n", "PRIMARY_GIT_OBJECT_TRUNCATED")
+                  result[name] = dict(git_blob=blob.decode(), bytes=length, sha256=hashlib.sha256(raw).hexdigest())
+                  offset = end+2+length
+              guard(offset == len(packed), "PRIMARY_GIT_TRAILING_BYTES")
+              return result
+
+
+          def cases(suite):
+              for test in suite:
+                  if isinstance(test, unittest.TestSuite):
+                      yield from cases(test)
+                  else:
+                      yield test.id()
+
+
+          def main():
+              guard(platform.python_version() == "3.12.10", "CPYTHON_VERSION")
+              guard(sys.flags.isolated and sys.flags.no_site and sys.dont_write_bytecode, "INTERPRETER_ISOLATION")
+              head = git("rev-parse", "HEAD").decode().strip()
+              guard(head == os.environ["A4_EXPECTED_HEAD"], "EXACT_HEAD_MISMATCH")
+              tree = git("rev-parse", "HEAD^{tree}").decode().strip()
+              expected = primary_objects()
+              before = physical_inventory(expected)  # BEFORE any project/test imports.
+              guard(not git("status", "--porcelain", "--untracked-files=all").strip(), "DIRTY_SOURCE_BEFORE_TESTS")
+              sys.path[:0] = [str(ROOT), str(ROOT/"tests")]
+              suite = unittest.defaultTestLoader.discover(str(ROOT/"tests/storage"), top_level_dir=str(ROOT/"tests"))
+              actual = sorted(cases(suite))
+              guard(len(EXPECTED_CASES) == 62 and actual == EXPECTED_CASES, "EXACT_62_CASE_INVENTORY")
+              with (EVIDENCE/"tests.log").open("w", encoding="utf-8") as log:
+                  result = unittest.TextTestRunner(stream=log, verbosity=2).run(suite)
+              after = physical_inventory(expected)
+              guard(before == after, "SOURCE_CHANGED_DURING_TESTS")
+              guard(git("rev-parse", "HEAD").decode().strip() == head and
+                    git("rev-parse", "HEAD^{tree}").decode().strip() == tree, "HEAD_CHANGED_DURING_TESTS")
+              guard(not git("status", "--porcelain", "--untracked-files=all").strip(), "DIRTY_SOURCE_AFTER_TESTS")
+              origins = {}
+              for name, module in tuple(sys.modules.items()):
+                  if name == "unified_system" or name.startswith("unified_system.") or name == "storage" or name.startswith("storage."):
+                      path = getattr(module, "__file__", None)
+                      guard(path is not None, "PROJECT_MODULE_ORIGIN_MISSING")
+                      relative = Path(path).resolve().relative_to(ROOT.resolve()).as_posix()
+                      guard(relative in expected and Path(path).suffix == ".py", "PROJECT_MODULE_ORIGIN_INVALID")
+                      origins[name] = relative
+              passed = result.wasSuccessful() and result.testsRun == 62 and not result.skipped
+              report = dict(schema="agent4.manifest-codec.hosted-source-evidence.v1", passed=passed,
+                  head=head, tree=tree, os=platform.platform(), python=sys.version,
+                  tests_run=result.testsRun, skips=len(result.skipped), cases=actual,
+                  primary_git_bindings=expected, physical_before=before, physical_after=after, project_module_origins=origins,
+                  run_id=os.environ.get("GITHUB_RUN_ID"), attempt=os.environ.get("GITHUB_RUN_ATTEMPT"),
+                  workflow_sha=os.environ.get("GITHUB_WORKFLOW_SHA"), script_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+                  registry_verified=False, closure_verified=False, native_publication_qualified=False,
+                  physical_windows_qualified=False, production_admission=False, global_f16_closed=False)
+              (EVIDENCE/"evidence.json").write_text(json.dumps(report, sort_keys=True, indent=2)+"\n", encoding="utf-8")
+              guard(passed, "LOCAL_TEST_FAILURE_OR_SKIP")
+              print(json.dumps(dict(passed=passed, head=head, tree=tree, tests=62, skips=0, primary_files=len(expected))))
+
+
+          try:
+              main()
+          except Exception as exc:
+              (EVIDENCE/"failure.json").write_text(json.dumps(dict(status="FAILED_NO_QUALIFICATION", error=type(exc).__name__, reason=str(exc),
+                  production_admission=False), sort_keys=True)+"\n", encoding="utf-8")
+              raise
+      - name: Upload source-bound local evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: agent4-manifest-${{ matrix.os }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/agent4-manifest-evidence
+          if-no-files-found: error
+          retention-days: 14

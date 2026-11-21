@@ -1,0 +1,46 @@
+RUNNER BLOCKER REPORT - one bounded read-only observation
+Observation UTC: 2026-11-07T14:51:46.441992+00:00 to 2026-11-07T14:51:47.925804+00:00
+Repository: YehorBabenko88/unified-system; owner type User; public; not archived/disabled.
+Result: QUEUED / UNASSIGNED. Scheduler, hosted-capacity, account-restriction and billing root cause: UNKNOWN.
+
+Confirmed execution blocker: selected Gateway and Supervisor jobs remain queued, conclusion=null, runner_id=0, runner_group_id=0, steps=[], completed_at=null. API started_at is populated; that is not proof that a runner executed a step.
+
+Workflow 410399075; run 42382684342; attempt 1; source 6825964bf52375b134c6eb4487808963a0d128ed; status queued; conclusion None; created 2026-11-07T14:40:18Z; updated 2026-11-07T14:40:18Z; API run_started_at 2026-11-07T14:40:17Z; jobs 2.
+  Job 128433449851: labels=['windows-latest']; queued; runner_id=0 UNASSIGNED; created=2026-11-07T14:40:18Z; started_at=2026-11-07T14:40:18Z; completed_at=None; steps=0.
+  Job 128433450068: labels=['ubuntu-24.04']; queued; runner_id=0 UNASSIGNED; created=2026-11-07T14:40:18Z; started_at=2026-11-07T14:40:18Z; completed_at=None; steps=0.
+Workflow 410300724; run 42374963918; attempt 1; source a2265b0d53e3d6ee8814aa28f5c612d537a0f195; status queued; conclusion None; created 2026-11-07T13:00:35Z; updated 2026-11-07T13:00:35Z; API run_started_at 2026-11-07T13:00:35Z; jobs 2.
+  Job 128410564851: labels=['ubuntu-24.04']; queued; runner_id=0 UNASSIGNED; created=2026-11-07T13:00:35Z; started_at=2026-11-07T13:00:35Z; completed_at=None; steps=0.
+  Job 128410564993: labels=['windows-latest']; queued; runner_id=0 UNASSIGNED; created=2026-11-07T13:00:35Z; started_at=2026-11-07T13:00:35Z; completed_at=None; steps=0.
+Workflow 409466885; run 42382684214; attempt 1; source 6825964bf52375b134c6eb4487808963a0d128ed; status pending; conclusion None; created 2026-11-07T14:40:17Z; updated 2026-11-07T14:40:18Z; API run_started_at 2026-11-07T14:40:17Z; jobs 0.
+
+Exact workflow/source findings:
+- Gateway at 6825964bf52375b134c6eb4487808963a0d128ed and Supervisor at a2265b0d53e3d6ee8814aa28f5c612d537a0f195 both request standard ubuntu-24.04/windows-latest hosted labels, not self-hosted. Neither exact workflow defines concurrency, environment approval or reusable workflow calls. Their separate push and pull_request triggers explain distinct original run IDs; this audit created no runs.
+- Registry pending run has zero jobs. Its exact source defines concurrency group integration-registry-${{ github.ref }}, cancel-in-progress:false. Operator Grid source similarly defines operator-grid-${{ github.ref }}. A concurrency blocker is plausible for pending runs, but no occupying run/group was observed: cause remains UNKNOWN.
+
+Runner/account availability:
+- Baseline capture at 2026-11-07T14:49:17.645079+00:00: Gateway35 runs (33queued/2pending), Supervisor33 (32queued/1pending); repository self-hosted inventory0. Baseline Actions enabled=true/allowed_actions=all; workflow token defaults read. Those baseline facts were reused, not polled again.
+- A zero self-hosted inventory does not measure the standard GitHub-hosted Windows/Ubuntu pool and does not establish a missing-runner configuration defect for these selected workflows.
+- Repository GET returned HTTP200 and authenticated repository admin/maintain/push/triage/pull=true. Repository access is confirmed; account-level Actions eligibility, policy restrictions, concurrency consumption and hosted scheduling capacity are UNKNOWN.
+- Personal billing usage GET returned HTTP404 Not Found. No usage, budget, payment status, eligibility or exhaustion evidence was returned. HTTP404 cannot distinguish unavailable billing API/visibility from absent data; billing cause remains UNKNOWN.
+- Organization runner-groups GET returned HTTP404; the owner is a personal User, not an Organization. This organization-only endpoint supplies no personal runner-group/capacity evidence. Do not infer runner-group denial from that404.
+- Official docs identify these labels as standard GitHub-hosted runners and standard public-repository usage as free/unlimited; that documentation does not prove this account is unsuspended, scheduler capacity is available or account restrictions are absent.
+
+No supported diagnosis of a code defect, billing exhaustion, provider outage, invalid labels or missing self-hosted registration. The next discriminating evidence would be an owner-visible Actions/account restriction banner or GitHub scheduler/support diagnosis. No code change, settings change or automatic retry is justified by these captures.
+
+Capture bounds:9 fixed GET endpoints, each once,35-second subprocess timeout, no pagination/polling/retry. Entire HTTP responses including headers and stderr are preserved. Parsed .json files are derived; .http files are original stdout captures. No secrets/tokens were printed. No mutation, protected Math request, raw job log, test execution, process kill or worktree edit occurred.
+
+Primary documentation:
+https://docs.github.com/en/actions/reference/runners/github-hosted-runners
+https://docs.github.com/en/rest/actions/self-hosted-runner-groups
+https://docs.github.com/en/rest/billing/usage
+
+Evidence hashes:
+gateway44-selected-run.http SHA256 e58b4032f0cd4ebe2217c1bfc4497d218feb37947086555228708f3f7ad41c82 ; HTTP/2.0 200 OK ; capture 2026-11-07T14:51:46.450748+00:00 to 2026-11-07T14:51:46.907849+00:00
+gateway44-selected-jobs.http SHA256 86303f2eece0572e547c9d1b25041a3d8f607768ce8d9025f3a2f536a0f9761e ; HTTP/2.0 200 OK ; capture 2026-11-07T14:51:46.450748+00:00 to 2026-11-07T14:51:46.895681+00:00
+supervisor38-selected-run.http SHA256 15e830bf1404f752a76cfb256dc42bb3bcde96749b7d4d8c5c0ca17813866cf2 ; HTTP/2.0 200 OK ; capture 2026-11-07T14:51:46.451748+00:00 to 2026-11-07T14:51:46.900311+00:00
+supervisor38-selected-jobs.http SHA256 ad4efa44062ed38c6e5727ff78f55dee91c0ac5dd00868ff4a59b0cf5e43de20 ; HTTP/2.0 200 OK ; capture 2026-11-07T14:51:46.896826+00:00 to 2026-11-07T14:51:47.325482+00:00
+registry44-pending-run.http SHA256 bed92b9c85d7beab534aa46117093268d0f2c184d3b61404151494402e7ac0b8 ; HTTP/2.0 200 OK ; capture 2026-11-07T14:51:46.900311+00:00 to 2026-11-07T14:51:47.371460+00:00
+registry44-pending-jobs.http SHA256 843c9f90c2169cec5e9580b1dba4b5db28629d08e04561e9d5d25f84f2bb3797 ; HTTP/2.0 200 OK ; capture 2026-11-07T14:51:46.907849+00:00 to 2026-11-07T14:51:47.286653+00:00
+repository-account-permissions.http SHA256 82229694d2dee6ef963faecf54d64337653de50373c483da2167a33d22575085 ; HTTP/2.0 200 OK ; capture 2026-11-07T14:51:47.286653+00:00 to 2026-11-07T14:51:47.925804+00:00
+personal-billing-usage.http SHA256 36263a2a7bdba68cbfdd77e9c63bbd4bbec04af275713933a40930b7d17b835b ; HTTP/2.0 404 Not Found ; capture 2026-11-07T14:51:47.325482+00:00 to 2026-11-07T14:51:47.720120+00:00
+owner-runner-groups-access.http SHA256 6c42bd642f02f6a38f554867437458483f57cb03a51f4f9c462a757e33283dc3 ; HTTP/2.0 404 Not Found ; capture 2026-11-07T14:51:47.371460+00:00 to 2026-11-07T14:51:47.711835+00:00

@@ -1,0 +1,105 @@
+$ErrorActionPreference='Stop'
+Import-Module (Join-Path $PSScriptRoot '../../scripts/SecurityPackage.psm1') -Force
+Add-Type -AssemblyName System.Security
+if ($PSVersionTable.PSEdition -eq 'Core') { Add-Type -AssemblyName System.Security.Cryptography.Pkcs }
+$rsa=[Security.Cryptography.RSA]::Create(2048)
+$cert=$null
+try {
+  $request=New-Object Security.Cryptography.X509Certificates.CertificateRequest('CN=CI Disposable Only',$rsa,[Security.Cryptography.HashAlgorithmName]::SHA256,[Security.Cryptography.RSASignaturePadding]::Pkcs1)
+  $cert=$request.CreateSelfSigned([DateTimeOffset]::UtcNow.AddDays(-1),[DateTimeOffset]::UtcNow.AddDays(1))
+  $bytes=[Text.Encoding]::UTF8.GetBytes('{"synthetic":true}')
+  $cms=New-Object Security.Cryptography.Pkcs.SignedCms((New-Object Security.Cryptography.Pkcs.ContentInfo(,$bytes)),$true)
+  $signer=New-Object Security.Cryptography.Pkcs.CmsSigner($cert)
+  $signer.DigestAlgorithm=New-Object Security.Cryptography.Oid('2.16.840.1.101.3.4.2.1')
+  $cms.ComputeSignature($signer)
+  $sha=[Security.Cryptography.SHA256]::Create()
+  try {$pin=([BitConverter]::ToString($sha.ComputeHash($cert.RawData))).Replace('-','').ToLowerInvariant()} finally {$sha.Dispose()}
+  $signature=$cms.Encode()
+  Test-UnifiedPackageSignature $bytes $signature $pin
+  function Reject([scriptblock]$action) {$rejected=$false; try {& $action} catch {$rejected=$true}; if (!$rejected) {throw 'Expected rejection'}}
+  Reject {Test-UnifiedPackageSignature $bytes $signature ('0'*64)}
+  Reject {Test-UnifiedPackageSignature ([Text.Encoding]::UTF8.GetBytes('tamper')) $signature $pin}
+  Reject {Test-UnifiedPackageSignature $bytes ([byte[]]@(1,2,3)) $pin}
+  Reject {Test-UnifiedPackageSignature ([byte[]]@()) $signature $pin}
+  Reject {Test-UnifiedPackageSignature $bytes $signature 'latest'}
+  $module=Get-Module SecurityPackage
+  # Real detached CMS signatures bind each schema and inventory before contract validation.
+  foreach ($schema in @('unified.windows-package-lock.v1','unified.windows-package-lock.v2')) {
+    $names = if ($schema.EndsWith('.v1')) { @('grid','strattester','unified','terminan','math') } else { @('unified-system','grid','strattester','math','meta_analyse','terminan') }
+    $sources = [ordered]@{}
+    foreach ($name in $names) { $sources[$name] = @{commit=('a'*40);tree=('b'*40)} }
+    $manifest = @{schema=$schema;identity_sid='S-1-5-21-100';sources=$sources;requirements=@{powershell='5.1,7';postgresql_major=18}}
+    $manifestBytes = [Text.Encoding]::UTF8.GetBytes(($manifest | ConvertTo-Json -Depth 8 -Compress))
+    $manifestCms = New-Object Security.Cryptography.Pkcs.SignedCms((New-Object Security.Cryptography.Pkcs.ContentInfo(,$manifestBytes)),$true)
+    $manifestCms.ComputeSignature($signer)
+    Test-UnifiedPackageSignature $manifestBytes $manifestCms.Encode() $pin
+    $parsed = [Text.Encoding]::UTF8.GetString($manifestBytes) | ConvertFrom-Json
+    & $module {param($data) Assert-UnifiedManifestContract $data 'S-1-5-21-100'} $parsed
+    Reject { Test-UnifiedPackageSignature ([Text.Encoding]::UTF8.GetBytes('{}')) $manifestCms.Encode() $pin }
+    foreach ($name in $names) {
+      $bad = [Text.Encoding]::UTF8.GetString($manifestBytes) | ConvertFrom-Json
+      $bad.sources.PSObject.Properties.Remove($name)
+      Reject { & $module {param($data) Assert-UnifiedManifestContract $data 'S-1-5-21-100'} $bad }
+    }
+    foreach ($mutation in @('extra','alias','schema','downgrade','source-type','pin','pg','ps','identity')) {
+      $bad = [Text.Encoding]::UTF8.GetString($manifestBytes) | ConvertFrom-Json
+      switch ($mutation) {
+        'extra' { $bad.sources | Add-Member -NotePropertyName unknown -NotePropertyValue @{commit=('a'*40);tree=('b'*40)} }
+        'alias' { $name = if ($schema.EndsWith('.v2')) {'unified-system'} else {'unified'}; $bad.sources.PSObject.Properties.Remove($name); $bad.sources | Add-Member -NotePropertyName UNIFIED -NotePropertyValue @{commit=('a'*40);tree=('b'*40)} }
+        'schema' { $bad.schema = 'unified.windows-package-lock.v3' }
+        'downgrade' { $bad.schema = if ($schema.EndsWith('.v2')) {'unified.windows-package-lock.v1'} else {'unified.windows-package-lock.v2'} }
+        'source-type' { $bad.sources = @() }
+        'pin' { $bad.sources.grid.commit = $true }
+        'pg' { $bad.requirements.postgresql_major = '18' }
+        'ps' { $bad.requirements.powershell = '7' }
+        'identity' { $bad.identity_sid = 'admin' }
+      }
+      Reject { & $module {param($data) Assert-UnifiedManifestContract $data 'S-1-5-21-100'} $bad }
+    }
+  }
+  foreach ($path in @('../x','//server/share','C:/outside','C:\x:ads')) {Reject {& $module {param($p) Assert-LocalPath $p} $path}}
+  # Native PS5.1/7 regression: reject a real harmless local junction BEFORE
+  # Get-Item can probe a descendant. Observer stays private to this module.
+  $temporaryRoot=[IO.Path]::GetTempPath().TrimEnd('\')
+  & $module {param($p) Assert-LocalPath $p} $temporaryRoot
+  $fixture=Join-Path $temporaryRoot ('security-path-'+[Guid]::NewGuid().ToString('N'))
+  $target=Join-Path $fixture 'target'
+  $junction=Join-Path $fixture 'junction'
+  try {
+    [void][IO.Directory]::CreateDirectory($target)
+    $leaf=Join-Path $target 'innocent.txt';[IO.File]::WriteAllText($leaf,'local test fixture')
+    & $module {param($p) Assert-LocalPath $p} $leaf
+    Reject { & $module {param($p) Assert-LocalPath $p} (Join-Path $fixture 'missing.txt') }
+    [void](New-Item -ItemType Junction -Path $junction -Target $target -ErrorAction Stop)
+    $probe=Join-Path $junction 'innocent.txt'
+    & $module {
+      param($probePath,$junctionPath)
+      $script:PathProbeCalls=New-Object 'System.Collections.Generic.List[string]'
+      function script:Get-Item {
+        [CmdletBinding()]
+        param([string]$LiteralPath,[switch]$Force)
+        $script:PathProbeCalls.Add($LiteralPath)
+        Microsoft.PowerShell.Management\Get-Item -LiteralPath $LiteralPath -Force:$Force -ErrorAction Stop
+      }
+      try {
+        $rejected=$false;try { Assert-LocalPath $probePath } catch {$rejected=$true}
+        if (!$rejected) {throw 'Junction path was not rejected'}
+        if ($script:PathProbeCalls -icontains $probePath) {throw 'Descendant metadata probed before rejecting junction'}
+        if ($script:PathProbeCalls -inotcontains $junctionPath) {throw 'Actual junction metadata was not checked'}
+      } finally {
+        Remove-Item Function:script:Get-Item -ErrorAction SilentlyContinue
+        Remove-Variable PathProbeCalls -Scope Script -ErrorAction SilentlyContinue
+      }
+    } $probe $junction
+  } finally {
+    if ([IO.Directory]::Exists($junction)) {[IO.Directory]::Delete($junction)}
+    if ([IO.Directory]::Exists($fixture)) {Remove-Item -LiteralPath $fixture -Recurse -Force}
+  }
+  & $module { Assert-AclFacts 'S-1-5-21-100' 'S-1-5-21-100' @() }
+  Reject { & $module { Assert-AclFacts 'S-1-1-0' 'S-1-5-21-100' @() } }
+  foreach ($right in @([int64]2,[int64]4,[int64]16,[int64]64,[int64]256,[int64]65536,[int64]262144,[int64]524288)) {
+    Reject { & $module { param($r) Assert-AclFacts 'S-1-5-21-100' 'S-1-5-21-100' @([pscustomobject]@{Type='Allow';Sid='S-1-1-0';Rights=$r;InheritOnly=$false}) } $right }
+  }
+  & $module { Assert-AclFacts 'S-1-5-21-100' 'S-1-5-21-100' @([pscustomobject]@{Type='Allow';Sid='S-1-1-0';Rights=[int64]2;InheritOnly=$true}) }
+  Write-Output "PASS in-memory synthetic signatures ($($PSVersionTable.PSVersion)); physical NOT_RUN"
+} finally {if ($null -ne $cert) {$cert.Dispose()}; $rsa.Dispose()}

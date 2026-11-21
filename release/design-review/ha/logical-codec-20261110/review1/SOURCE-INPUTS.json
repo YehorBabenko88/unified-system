@@ -1,0 +1,43 @@
+{
+  "schema": "unified.ha.pure-design-inputs.v1",
+  "date": "2026-11-10",
+  "scope": "DESIGN_ONLY_NOT_ACTUAL_COMMISSIONED_PROFILE_OR_NATIVE_GRANT",
+  "predecessor_seal": "9af6e969ab9bf4dfd8089a34fec1c30bf88573f29e63ec342714fb1e18ca0b61",
+  "root_direction": {
+    "source": "Direct Integration Owner message 2026-11-10",
+    "D2_BASE": "NONE_APPROVED",
+    "D2_LINEAGE": "CERTIFIED_NEVER_ISSUED_REQUIREMENT_DIRECTION_ONLY_NO_PROVISIONING",
+    "D4_TIME": "OPTION1_STRICT_COMMIT_EXPIRY_LOGICAL_MUTATIONS_DISABLED",
+    "implementation": false,
+    "native_writes": false
+  },
+  "files": {
+    "TARGET-NATIVE-MAPPING-REVIEW1-20261109/SAMPLE-NOT-ISSUED-lab-submit.canonical.json": {
+      "sha256": "b1675ccb47475d4d70788f3033cd9f05507ad320435d63d667d893aa07f00e71",
+      "bytes": 787
+    },
+    "TARGET-NATIVE-MAPPING-REVIEW1-20261109/SAMPLE-NOT-COMMISSIONED-profile.canonical.json": {
+      "sha256": "72d92e1ff023f00823b65637f3c79bc080510f8a02cfe24b3c4715286d43299c",
+      "bytes": 2748
+    },
+    "RESEARCH-LAB-ADMISSION-REVIEW2/quota-ledger.schema.json": {
+      "sha256": "5d73a2dce07d7a51d3ab9a43bdae17f525be7dc1ee8fda8a10c8305d08f0b03d",
+      "bytes": 2902
+    },
+    "HA-ROOT-R1-R3-DESIGN-ACK-20261109.json": {
+      "sha256": "2d3a042364db8a186289c7ecc9000e192fc56ef0e0ecec491505eec12355e4a1",
+      "bytes": 2401
+    }
+  },
+  "sample_profile_semantics": "NATIVE_SESSION_INVALIDATION_NOT_UTC_AT_COMMIT",
+  "strict_policy_compatible": false,
+  "actual_broker_policy_source": {
+    "head": "327a3e2ca6106d2d39eb8f0da3802560e63b09e6",
+    "path": "unified_system/gateway_research_identity.py",
+    "sha256": "481724cd2efca312773fa4152d1c223b46ced6529d96b2d74f452cdf57932d7f",
+    "constraint": "_policy requires exact non-UTC-at-commit expiry_semantics; no automatic strict profile conversion"
+  },
+  "module_imports": 0,
+  "native_rpc": 0,
+  "job_browser_physical_calls": 0
+}

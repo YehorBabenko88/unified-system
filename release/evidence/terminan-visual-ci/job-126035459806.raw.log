@@ -1,0 +1,506 @@
+﻿2026-11-03T16:05:26.2856991Z Current runner version: '2.338.2'
+2026-11-03T16:05:26.2879677Z ##[group]Runner Image Provisioner
+2026-11-03T16:05:26.2880217Z Hosted Compute Agent
+2026-11-03T16:05:26.2880601Z Version: 20261021.618
+2026-11-03T16:05:26.2881071Z Commit: 21505ad2541d5be6135ed84fc33697146cf75b8e
+2026-11-03T16:05:26.2881501Z Build Date: 2026-10-21T00:45:21Z
+2026-11-03T16:05:26.2881903Z Worker ID: {12073cdb-796d-452e-8ff7-90e7f441d8f8}
+2026-11-03T16:05:26.2882312Z Region: centralus
+2026-11-03T16:05:26.2882611Z Cloud: Azure
+2026-11-03T16:05:26.2882921Z ##[endgroup]
+2026-11-03T16:05:26.2883724Z ##[group]Operating System
+2026-11-03T16:05:26.2884083Z Microsoft Windows Server 2025
+2026-11-03T16:05:26.2884430Z 10.0.26100
+2026-11-03T16:05:26.2884725Z Datacenter
+2026-11-03T16:05:26.2885030Z ##[endgroup]
+2026-11-03T16:05:26.2885339Z ##[group]Runner Image
+2026-11-03T16:05:26.2885665Z Image: windows-2025-vs2026
+2026-11-03T16:05:26.2886009Z Version: 20261030.294.1
+2026-11-03T16:05:26.2887091Z Included Software: https://github.com/actions/runner-images/blob/win25-vs2026/20261030.294/images/windows/Windows2025-VS2026-Readme.md
+2026-11-03T16:05:26.2888041Z Image Release: https://github.com/actions/runner-images/releases/tag/win25-vs2026%2F20261030.294
+2026-11-03T16:05:26.2888587Z ##[endgroup]
+2026-11-03T16:05:26.2889241Z ##[group]GITHUB_TOKEN Permissions
+2026-11-03T16:05:26.2890691Z Contents: read
+2026-11-03T16:05:26.2891129Z Metadata: read
+2026-11-03T16:05:26.2891534Z ##[endgroup]
+2026-11-03T16:05:26.2893268Z Secret source: Actions
+2026-11-03T16:05:26.2893747Z Cache mode: write
+2026-11-03T16:05:26.2894334Z Prepare workflow directory
+2026-11-03T16:05:26.3211434Z Prepare all required actions
+2026-11-03T16:05:26.3246611Z Getting action download info
+2026-11-03T16:05:26.6300385Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-11-03T16:05:26.7385059Z Download action repository 'actions/setup-python@v5' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+2026-11-03T16:05:26.8533149Z Download action repository 'actions/setup-node@v4' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+2026-11-03T16:05:27.0829094Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-11-03T16:05:27.3370131Z Complete job name: visual (windows-latest)
+2026-11-03T16:05:27.4985531Z ##[group]Run actions/checkout@v4
+2026-11-03T16:05:27.4986487Z with:
+2026-11-03T16:05:27.4986869Z   path: candidate
+2026-11-03T16:05:27.4987329Z   ref: e05004fa366971cbada0d24deed275a9ab583d7d
+2026-11-03T16:05:27.4987893Z   persist-credentials: false
+2026-11-03T16:05:27.4988401Z   repository: YehorBabenko88/Terminan
+2026-11-03T16:05:27.4992431Z   token: ***
+2026-11-03T16:05:27.4992816Z   ssh-strict: true
+2026-11-03T16:05:27.4993211Z   ssh-user: git
+2026-11-03T16:05:27.4993596Z   clean: true
+2026-11-03T16:05:27.4994010Z   sparse-checkout-cone-mode: true
+2026-11-03T16:05:27.4994490Z   fetch-depth: 1
+2026-11-03T16:05:27.4994884Z   fetch-tags: false
+2026-11-03T16:05:27.4995324Z   show-progress: true
+2026-11-03T16:05:27.4996364Z   lfs: false
+2026-11-03T16:05:27.4996830Z   submodules: false
+2026-11-03T16:05:27.4998183Z   set-safe-directory: true
+2026-11-03T16:05:27.4998690Z   allow-unsafe-pr-checkout: false
+2026-11-03T16:05:27.5000101Z ##[endgroup]
+2026-11-03T16:05:27.6234484Z Syncing repository: YehorBabenko88/Terminan
+2026-11-03T16:05:27.6236392Z ##[group]Getting Git version info
+2026-11-03T16:05:27.6237020Z Working directory is 'D:\a\Terminan\Terminan\candidate'
+2026-11-03T16:05:27.6909689Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-03T16:05:28.1026369Z git version 2.56.0.windows.4
+2026-11-03T16:05:28.1067952Z ##[endgroup]
+2026-11-03T16:05:28.1082623Z Temporarily overriding HOME='D:\a\_temp\b65088a6-444e-48e8-a970-73144316c9d2' before making global git config changes
+2026-11-03T16:05:28.1083213Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-03T16:05:28.1090219Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\Terminan\Terminan\candidate
+2026-11-03T16:05:28.1673495Z ##[group]Initializing the repository
+2026-11-03T16:05:28.1681109Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\Terminan\Terminan\candidate
+2026-11-03T16:05:28.2748606Z Initialized empty Git repository in D:/a/Terminan/Terminan/candidate/.git/
+2026-11-03T16:05:28.2793123Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/YehorBabenko88/Terminan
+2026-11-03T16:05:28.3536505Z ##[endgroup]
+2026-11-03T16:05:28.3537159Z ##[group]Disabling automatic garbage collection
+2026-11-03T16:05:28.3546206Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2026-11-03T16:05:28.3894698Z ##[endgroup]
+2026-11-03T16:05:28.3895312Z ##[group]Setting up auth
+2026-11-03T16:05:28.3905053Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-03T16:05:28.4340534Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-03T16:05:29.9808268Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-03T16:05:30.0107090Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-03T16:05:30.4687888Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-03T16:05:30.4992047Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-03T16:05:30.9621495Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-11-03T16:05:30.9934178Z ##[endgroup]
+2026-11-03T16:05:30.9934672Z ##[group]Fetching the repository
+2026-11-03T16:05:30.9946938Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin e05004fa366971cbada0d24deed275a9ab583d7d
+2026-11-03T16:05:32.3813503Z From https://github.com/YehorBabenko88/Terminan
+2026-11-03T16:05:32.3814035Z  * branch            e05004fa366971cbada0d24deed275a9ab583d7d -> FETCH_HEAD
+2026-11-03T16:05:32.3849549Z ##[endgroup]
+2026-11-03T16:05:32.3849908Z ##[group]Determining the checkout info
+2026-11-03T16:05:32.3851360Z ##[endgroup]
+2026-11-03T16:05:32.3858793Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2026-11-03T16:05:32.4327852Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2026-11-03T16:05:32.4645589Z ##[group]Checking out the ref
+2026-11-03T16:05:32.4646053Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force e05004fa366971cbada0d24deed275a9ab583d7d
+2026-11-03T16:05:32.5560285Z Note: switching to 'e05004fa366971cbada0d24deed275a9ab583d7d'.
+2026-11-03T16:05:32.5560546Z 
+2026-11-03T16:05:32.5560939Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-11-03T16:05:32.5561260Z changes and commit them, and you can discard any commits you make in this
+2026-11-03T16:05:32.5561520Z state without impacting any branches by switching back to a branch.
+2026-11-03T16:05:32.5561678Z 
+2026-11-03T16:05:32.5561778Z If you want to create a new branch to retain commits you create, you may
+2026-11-03T16:05:32.5562043Z do so (now or later) by using -c with the switch command. Example:
+2026-11-03T16:05:32.5562207Z 
+2026-11-03T16:05:32.5562308Z   git switch -c <new-branch-name>
+2026-11-03T16:05:32.5562478Z 
+2026-11-03T16:05:32.5562542Z Or undo this operation with:
+2026-11-03T16:05:32.5562684Z 
+2026-11-03T16:05:32.5562775Z   git switch -
+2026-11-03T16:05:32.5563664Z 
+2026-11-03T16:05:32.5563788Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-11-03T16:05:32.5563972Z 
+2026-11-03T16:05:32.5564184Z HEAD is now at e05004f Provision immutable sibling sources for runtime and visual contract workflows
+2026-11-03T16:05:32.5622910Z ##[endgroup]
+2026-11-03T16:05:32.5993708Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2026-11-03T16:05:32.6244477Z e05004fa366971cbada0d24deed275a9ab583d7d
+2026-11-03T16:05:32.6280066Z ##[group]Removing auth
+2026-11-03T16:05:32.6286893Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-03T16:05:32.6554012Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-03T16:05:33.0784193Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-03T16:05:33.1016166Z http.https://github.com/.extraheader
+2026-11-03T16:05:33.1049111Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+2026-11-03T16:05:33.1312401Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-03T16:05:33.5516932Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-03T16:05:33.5794884Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-03T16:05:34.0084508Z ##[endgroup]
+2026-11-03T16:05:34.0404740Z ##[group]Run actions/checkout@v4
+2026-11-03T16:05:34.0404924Z with:
+2026-11-03T16:05:34.0405083Z   repository: YehorBabenko88/bybit-cluster-grid
+2026-11-03T16:05:34.0405256Z   ref: d537d525296ef34f727996e240ae6c60102c6082
+2026-11-03T16:05:34.0405397Z   path: grid
+2026-11-03T16:05:34.0405504Z   persist-credentials: false
+2026-11-03T16:05:34.0406877Z   token: ***
+2026-11-03T16:05:34.0406983Z   ssh-strict: true
+2026-11-03T16:05:34.0407084Z   ssh-user: git
+2026-11-03T16:05:34.0407181Z   clean: true
+2026-11-03T16:05:34.0407299Z   sparse-checkout-cone-mode: true
+2026-11-03T16:05:34.0407434Z   fetch-depth: 1
+2026-11-03T16:05:34.0407536Z   fetch-tags: false
+2026-11-03T16:05:34.0407641Z   show-progress: true
+2026-11-03T16:05:34.0407752Z   lfs: false
+2026-11-03T16:05:34.0407845Z   submodules: false
+2026-11-03T16:05:34.0407954Z   set-safe-directory: true
+2026-11-03T16:05:34.0408090Z   allow-unsafe-pr-checkout: false
+2026-11-03T16:05:34.0408228Z ##[endgroup]
+2026-11-03T16:05:34.1164633Z Syncing repository: YehorBabenko88/bybit-cluster-grid
+2026-11-03T16:05:34.1167844Z ##[group]Getting Git version info
+2026-11-03T16:05:34.1168414Z Working directory is 'D:\a\Terminan\Terminan\grid'
+2026-11-03T16:05:34.1558988Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-03T16:05:34.1817472Z git version 2.56.0.windows.4
+2026-11-03T16:05:34.1854094Z ##[endgroup]
+2026-11-03T16:05:34.1866164Z Temporarily overriding HOME='D:\a\_temp\5d3ec4fa-916a-4aa5-9f29-640e4fd1ca60' before making global git config changes
+2026-11-03T16:05:34.1866559Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-03T16:05:34.1873335Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\Terminan\Terminan\grid
+2026-11-03T16:05:34.2143792Z ##[group]Initializing the repository
+2026-11-03T16:05:34.2151025Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\Terminan\Terminan\grid
+2026-11-03T16:05:34.2441715Z Initialized empty Git repository in D:/a/Terminan/Terminan/grid/.git/
+2026-11-03T16:05:34.2480717Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/YehorBabenko88/bybit-cluster-grid
+2026-11-03T16:05:34.2784860Z ##[endgroup]
+2026-11-03T16:05:34.2785424Z ##[group]Disabling automatic garbage collection
+2026-11-03T16:05:34.2794384Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2026-11-03T16:05:34.3098287Z ##[endgroup]
+2026-11-03T16:05:34.3098523Z ##[group]Setting up auth
+2026-11-03T16:05:34.3109674Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-03T16:05:34.3415583Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-03T16:05:34.8008632Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-03T16:05:34.8271734Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-03T16:05:35.2441499Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-03T16:05:35.2733617Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-03T16:05:35.6794879Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-11-03T16:05:35.7267961Z ##[endgroup]
+2026-11-03T16:05:35.7268239Z ##[group]Fetching the repository
+2026-11-03T16:05:35.7280465Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin d537d525296ef34f727996e240ae6c60102c6082
+2026-11-03T16:05:36.4410652Z From https://github.com/YehorBabenko88/bybit-cluster-grid
+2026-11-03T16:05:36.4410993Z  * branch            d537d525296ef34f727996e240ae6c60102c6082 -> FETCH_HEAD
+2026-11-03T16:05:36.4443055Z ##[endgroup]
+2026-11-03T16:05:36.4443295Z ##[group]Determining the checkout info
+2026-11-03T16:05:36.4444869Z ##[endgroup]
+2026-11-03T16:05:36.4451900Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2026-11-03T16:05:36.4759182Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2026-11-03T16:05:36.5036614Z ##[group]Checking out the ref
+2026-11-03T16:05:36.5044531Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force d537d525296ef34f727996e240ae6c60102c6082
+2026-11-03T16:05:36.5930899Z Note: switching to 'd537d525296ef34f727996e240ae6c60102c6082'.
+2026-11-03T16:05:36.5931179Z 
+2026-11-03T16:05:36.5931395Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-11-03T16:05:36.5931804Z changes and commit them, and you can discard any commits you make in this
+2026-11-03T16:05:36.5932081Z state without impacting any branches by switching back to a branch.
+2026-11-03T16:05:36.5932231Z 
+2026-11-03T16:05:36.5932327Z If you want to create a new branch to retain commits you create, you may
+2026-11-03T16:05:36.5932575Z do so (now or later) by using -c with the switch command. Example:
+2026-11-03T16:05:36.5932708Z 
+2026-11-03T16:05:36.5932770Z   git switch -c <new-branch-name>
+2026-11-03T16:05:36.5932860Z 
+2026-11-03T16:05:36.5932915Z Or undo this operation with:
+2026-11-03T16:05:36.5932997Z 
+2026-11-03T16:05:36.5933043Z   git switch -
+2026-11-03T16:05:36.5933110Z 
+2026-11-03T16:05:36.5933220Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-11-03T16:05:36.5933385Z 
+2026-11-03T16:05:36.5933495Z HEAD is now at d537d52 Run Windows bundle CI on every main commit (#165)
+2026-11-03T16:05:36.5981545Z ##[endgroup]
+2026-11-03T16:05:36.6265288Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2026-11-03T16:05:36.6492777Z d537d525296ef34f727996e240ae6c60102c6082
+2026-11-03T16:05:36.6526350Z ##[group]Removing auth
+2026-11-03T16:05:36.6532660Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-03T16:05:36.6793099Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-03T16:05:37.0807105Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-03T16:05:37.1026546Z http.https://github.com/.extraheader
+2026-11-03T16:05:37.1054834Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+2026-11-03T16:05:37.1330571Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-03T16:05:37.5239104Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-03T16:05:37.5488615Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-03T16:05:37.9503391Z ##[endgroup]
+2026-11-03T16:05:37.9812244Z ##[group]Run actions/checkout@v4
+2026-11-03T16:05:37.9812432Z with:
+2026-11-03T16:05:37.9812552Z   repository: YehorBabenko88/strattester
+2026-11-03T16:05:37.9812721Z   ref: 37ff7e9d12a4d2dccd788fc493c28557dbe8bcea
+2026-11-03T16:05:37.9812875Z   path: strattester
+2026-11-03T16:05:37.9812994Z   persist-credentials: false
+2026-11-03T16:05:37.9814310Z   token: ***
+2026-11-03T16:05:37.9814420Z   ssh-strict: true
+2026-11-03T16:05:37.9814526Z   ssh-user: git
+2026-11-03T16:05:37.9814627Z   clean: true
+2026-11-03T16:05:37.9814753Z   sparse-checkout-cone-mode: true
+2026-11-03T16:05:37.9814891Z   fetch-depth: 1
+2026-11-03T16:05:37.9814996Z   fetch-tags: false
+2026-11-03T16:05:37.9815102Z   show-progress: true
+2026-11-03T16:05:37.9815206Z   lfs: false
+2026-11-03T16:05:37.9815303Z   submodules: false
+2026-11-03T16:05:37.9815415Z   set-safe-directory: true
+2026-11-03T16:05:37.9815546Z   allow-unsafe-pr-checkout: false
+2026-11-03T16:05:37.9815680Z ##[endgroup]
+2026-11-03T16:05:38.0561865Z Syncing repository: YehorBabenko88/strattester
+2026-11-03T16:05:38.0566469Z ##[group]Getting Git version info
+2026-11-03T16:05:38.0566878Z Working directory is 'D:\a\Terminan\Terminan\strattester'
+2026-11-03T16:05:38.0892990Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-03T16:05:38.1147409Z git version 2.56.0.windows.4
+2026-11-03T16:05:38.1184659Z ##[endgroup]
+2026-11-03T16:05:38.1196857Z Temporarily overriding HOME='D:\a\_temp\a398a3f4-0553-4816-a0dd-619f2ae9ba59' before making global git config changes
+2026-11-03T16:05:38.1197258Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-03T16:05:38.1204284Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\Terminan\Terminan\strattester
+2026-11-03T16:05:38.1495710Z ##[group]Initializing the repository
+2026-11-03T16:05:38.1503536Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\Terminan\Terminan\strattester
+2026-11-03T16:05:38.1804769Z Initialized empty Git repository in D:/a/Terminan/Terminan/strattester/.git/
+2026-11-03T16:05:38.1847243Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/YehorBabenko88/strattester
+2026-11-03T16:05:38.2158044Z ##[endgroup]
+2026-11-03T16:05:38.2158302Z ##[group]Disabling automatic garbage collection
+2026-11-03T16:05:38.2166410Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2026-11-03T16:05:38.2447511Z ##[endgroup]
+2026-11-03T16:05:38.2447744Z ##[group]Setting up auth
+2026-11-03T16:05:38.2458157Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-03T16:05:38.2765879Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-03T16:05:38.8088322Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-03T16:05:38.8363408Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-03T16:05:39.2578979Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-03T16:05:39.2865612Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-03T16:05:39.7385488Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-11-03T16:05:39.7675132Z ##[endgroup]
+2026-11-03T16:05:39.7675372Z ##[group]Fetching the repository
+2026-11-03T16:05:39.7685965Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin 37ff7e9d12a4d2dccd788fc493c28557dbe8bcea
+2026-11-03T16:05:40.3530054Z From https://github.com/YehorBabenko88/strattester
+2026-11-03T16:05:40.3530491Z  * branch            37ff7e9d12a4d2dccd788fc493c28557dbe8bcea -> FETCH_HEAD
+2026-11-03T16:05:40.3561899Z ##[endgroup]
+2026-11-03T16:05:40.3562133Z ##[group]Determining the checkout info
+2026-11-03T16:05:40.3563694Z ##[endgroup]
+2026-11-03T16:05:40.3571018Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2026-11-03T16:05:40.3862886Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2026-11-03T16:05:40.4133292Z ##[group]Checking out the ref
+2026-11-03T16:05:40.4145231Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force 37ff7e9d12a4d2dccd788fc493c28557dbe8bcea
+2026-11-03T16:05:40.4789901Z Note: switching to '37ff7e9d12a4d2dccd788fc493c28557dbe8bcea'.
+2026-11-03T16:05:40.4790204Z 
+2026-11-03T16:05:40.4790426Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-11-03T16:05:40.4790853Z changes and commit them, and you can discard any commits you make in this
+2026-11-03T16:05:40.4791278Z state without impacting any branches by switching back to a branch.
+2026-11-03T16:05:40.4791512Z 
+2026-11-03T16:05:40.4791662Z If you want to create a new branch to retain commits you create, you may
+2026-11-03T16:05:40.4792032Z do so (now or later) by using -c with the switch command. Example:
+2026-11-03T16:05:40.4792259Z 
+2026-11-03T16:05:40.4792344Z   git switch -c <new-branch-name>
+2026-11-03T16:05:40.4792517Z 
+2026-11-03T16:05:40.4792599Z Or undo this operation with:
+2026-11-03T16:05:40.4792746Z 
+2026-11-03T16:05:40.4792823Z   git switch -
+2026-11-03T16:05:40.4792927Z 
+2026-11-03T16:05:40.4793118Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-11-03T16:05:40.4793395Z 
+2026-11-03T16:05:40.4793639Z HEAD is now at 37ff7e9 fix: harden lease recovery, market integrity and service intent (#8)
+2026-11-03T16:05:40.4838200Z ##[endgroup]
+2026-11-03T16:05:40.5133701Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2026-11-03T16:05:40.5395326Z 37ff7e9d12a4d2dccd788fc493c28557dbe8bcea
+2026-11-03T16:05:40.5433002Z ##[group]Removing auth
+2026-11-03T16:05:40.5440098Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-03T16:05:40.5721294Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-03T16:05:40.9779717Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-03T16:05:41.0029887Z http.https://github.com/.extraheader
+2026-11-03T16:05:41.0066659Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+2026-11-03T16:05:41.0356672Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-03T16:05:41.4863430Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-03T16:05:41.5131763Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-03T16:05:41.9439379Z ##[endgroup]
+2026-11-03T16:05:41.9702877Z ##[group]Run actions/setup-python@v5
+2026-11-03T16:05:41.9703079Z with:
+2026-11-03T16:05:41.9703191Z   python-version: 3.12
+2026-11-03T16:05:41.9703311Z   check-latest: false
+2026-11-03T16:05:41.9704687Z   token: ***
+2026-11-03T16:05:41.9704805Z   update-environment: true
+2026-11-03T16:05:41.9704942Z   allow-prereleases: false
+2026-11-03T16:05:41.9705073Z   freethreaded: false
+2026-11-03T16:05:41.9705194Z ##[endgroup]
+2026-11-03T16:05:42.0811265Z ##[group]Installed versions
+2026-11-03T16:05:42.1032870Z (node:6720) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-03T16:05:42.1033278Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-03T16:05:42.1034093Z Successfully set up CPython (3.12.10)
+2026-11-03T16:05:42.1034467Z ##[endgroup]
+2026-11-03T16:05:42.1268625Z ##[group]Run actions/setup-node@v4
+2026-11-03T16:05:42.1268812Z with:
+2026-11-03T16:05:42.1268942Z   node-version: 24
+2026-11-03T16:05:42.1269058Z   always-auth: false
+2026-11-03T16:05:42.1269171Z   check-latest: false
+2026-11-03T16:05:42.1270476Z   token: ***
+2026-11-03T16:05:42.1270582Z env:
+2026-11-03T16:05:42.1270733Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:05:42.1271013Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-11-03T16:05:42.1271264Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:05:42.1271490Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:05:42.1271969Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:05:42.1272149Z ##[endgroup]
+2026-11-03T16:05:42.2559253Z Found in cache @ C:\hostedtoolcache\windows\node\24.22.2\x64
+2026-11-03T16:05:42.2564347Z (node:8100) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-03T16:05:42.2566320Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-03T16:05:42.2566663Z ##[group]Environment details
+2026-11-03T16:05:47.9109388Z node: v24.22.2
+2026-11-03T16:05:47.9109580Z npm: 11.19.1
+2026-11-03T16:05:47.9109689Z yarn: 1.22.22
+2026-11-03T16:05:47.9110120Z ##[endgroup]
+2026-11-03T16:05:47.9347542Z ##[group]Run npm ci --ignore-scripts
+2026-11-03T16:05:47.9347810Z [36;1mnpm ci --ignore-scripts[0m
+2026-11-03T16:05:48.0093840Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-03T16:05:48.0094068Z env:
+2026-11-03T16:05:48.0094245Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:05:48.0094504Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-11-03T16:05:48.0094766Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:05:48.0095002Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:05:48.0095225Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:05:48.0095623Z ##[endgroup]
+2026-11-03T16:05:59.3491177Z 
+2026-11-03T16:05:59.3498158Z added 3 packages, and audited 4 packages in 11s
+2026-11-03T16:05:59.3499128Z 
+2026-11-03T16:05:59.3499380Z found 0 vulnerabilities
+2026-11-03T16:06:00.9152374Z ##[group]Run node node_modules/@playwright/test/cli.js install --with-deps chromium
+2026-11-03T16:06:00.9153398Z [36;1mnode node_modules/@playwright/test/cli.js install --with-deps chromium[0m
+2026-11-03T16:06:00.9206053Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-03T16:06:00.9206261Z env:
+2026-11-03T16:06:00.9206429Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:06:00.9206693Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-11-03T16:06:00.9206947Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:06:00.9207177Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:06:00.9207421Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:06:00.9207599Z ##[endgroup]
+2026-11-03T16:08:17.8201289Z 
+2026-11-03T16:08:17.8208861Z Success Restart Needed Exit Code      Feature Result                               
+2026-11-03T16:08:17.8210831Z ------- -------------- ---------      --------------                               
+2026-11-03T16:08:17.8213120Z True    No             Success        {Media Foundation}                           
+2026-11-03T16:08:17.8214872Z 
+2026-11-03T16:08:17.8214909Z 
+2026-11-03T16:08:17.9107765Z Downloading Chromium 141.0.7390.37 (playwright build v1194)[2m from https://cdn.playwright.dev/dbazure/download/playwright/builds/chromium/1194/chromium-win64.zip[22m
+2026-11-03T16:08:18.1022919Z |                                                                                |   0% of 148.9 MiB
+2026-11-03T16:08:18.2500032Z |■■■■■■■■                                                                        |  10% of 148.9 MiB
+2026-11-03T16:08:18.3095855Z |■■■■■■■■■■■■■■■■                                                                |  20% of 148.9 MiB
+2026-11-03T16:08:18.3693392Z |■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 148.9 MiB
+2026-11-03T16:08:18.4288767Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 148.9 MiB
+2026-11-03T16:08:18.4923548Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 148.9 MiB
+2026-11-03T16:08:18.5524655Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 148.9 MiB
+2026-11-03T16:08:18.6054082Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 148.9 MiB
+2026-11-03T16:08:18.6832265Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 148.9 MiB
+2026-11-03T16:08:18.7437799Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 148.9 MiB
+2026-11-03T16:08:18.7976224Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 148.9 MiB
+2026-11-03T16:08:23.4435819Z Chromium 141.0.7390.37 (playwright build v1194) downloaded to C:\Users\runneradmin\AppData\Local\ms-playwright\chromium-1194
+2026-11-03T16:08:23.4441381Z Downloading FFMPEG playwright build v1011[2m from https://cdn.playwright.dev/dbazure/download/playwright/builds/ffmpeg/1011/ffmpeg-win64.zip[22m
+2026-11-03T16:08:23.6169329Z |                                                                                |   0% of 1.3 MiB
+2026-11-03T16:08:23.6441596Z |■■■■■■■■                                                                        |  10% of 1.3 MiB
+2026-11-03T16:08:23.6585139Z |■■■■■■■■■■■■■■■■                                                                |  20% of 1.3 MiB
+2026-11-03T16:08:23.6628881Z |■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 1.3 MiB
+2026-11-03T16:08:23.6719120Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 1.3 MiB
+2026-11-03T16:08:23.6746837Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  51% of 1.3 MiB
+2026-11-03T16:08:23.6773684Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  61% of 1.3 MiB
+2026-11-03T16:08:23.6792993Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 1.3 MiB
+2026-11-03T16:08:23.6858190Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 1.3 MiB
+2026-11-03T16:08:23.6868251Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 1.3 MiB
+2026-11-03T16:08:23.6882906Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 1.3 MiB
+2026-11-03T16:08:23.7313980Z FFMPEG playwright build v1011 downloaded to C:\Users\runneradmin\AppData\Local\ms-playwright\ffmpeg-1011
+2026-11-03T16:08:23.7320175Z Downloading Chromium Headless Shell 141.0.7390.37 (playwright build v1194)[2m from https://cdn.playwright.dev/dbazure/download/playwright/builds/chromium/1194/chromium-headless-shell-win64.zip[22m
+2026-11-03T16:08:23.9293507Z |                                                                                |   0% of 91 MiB
+2026-11-03T16:08:24.0496329Z |■■■■■■■■                                                                        |  10% of 91 MiB
+2026-11-03T16:08:24.0946970Z |■■■■■■■■■■■■■■■■                                                                |  20% of 91 MiB
+2026-11-03T16:08:24.1419083Z |■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 91 MiB
+2026-11-03T16:08:24.1772663Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 91 MiB
+2026-11-03T16:08:24.2167809Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 91 MiB
+2026-11-03T16:08:24.2565658Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 91 MiB
+2026-11-03T16:08:24.2908918Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 91 MiB
+2026-11-03T16:08:24.3243774Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 91 MiB
+2026-11-03T16:08:24.3566471Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 91 MiB
+2026-11-03T16:08:24.3903591Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 91 MiB
+2026-11-03T16:08:26.6078094Z Chromium Headless Shell 141.0.7390.37 (playwright build v1194) downloaded to C:\Users\runneradmin\AppData\Local\ms-playwright\chromium_headless_shell-1194
+2026-11-03T16:08:26.6083462Z Downloading Winldd playwright build v1007[2m from https://cdn.playwright.dev/dbazure/download/playwright/builds/winldd/1007/winldd-win64.zip[22m
+2026-11-03T16:08:26.8458822Z |■■■■■■■■                                                                        |  12% of 0.1 MiB
+2026-11-03T16:08:26.8484786Z |■■■■■■■■■■■■■■■■                                                                |  25% of 0.1 MiB
+2026-11-03T16:08:26.8576583Z |■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  38% of 0.1 MiB
+2026-11-03T16:08:26.8594465Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 0.1 MiB
+2026-11-03T16:08:26.8616805Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  63% of 0.1 MiB
+2026-11-03T16:08:26.8634510Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  76% of 0.1 MiB
+2026-11-03T16:08:26.8719681Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  89% of 0.1 MiB
+2026-11-03T16:08:26.8724351Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 0.1 MiB
+2026-11-03T16:08:26.9567106Z Winldd playwright build v1007 downloaded to C:\Users\runneradmin\AppData\Local\ms-playwright\winldd-1007
+2026-11-03T16:08:27.2381811Z ##[group]Run python -m unittest discover -s tests -q
+2026-11-03T16:08:27.2382159Z [36;1mpython -m unittest discover -s tests -q[0m
+2026-11-03T16:08:27.2443694Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-03T16:08:27.2443974Z env:
+2026-11-03T16:08:27.2444201Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:08:27.2444534Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-11-03T16:08:27.2444851Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:08:27.2445144Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:08:27.2445561Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:08:27.2445809Z ##[endgroup]
+2026-11-03T16:09:15.1937564Z ----------------------------------------------------------------------
+2026-11-03T16:09:15.1938215Z Ran 406 tests in 43.208s
+2026-11-03T16:09:15.1938328Z 
+2026-11-03T16:09:15.1938511Z OK
+2026-11-03T16:09:15.1939923Z Terminan read-only: http://127.0.0.1:8766
+2026-11-03T16:09:15.3057711Z ##[group]Run $sha=git rev-parse HEAD
+2026-11-03T16:09:15.3058028Z [36;1m$sha=git rev-parse HEAD[0m
+2026-11-03T16:09:15.3058384Z [36;1mpowershell.exe -NoProfile -File scripts/Invoke-VisualQA.ps1 -ExpectedSha $sha -EvidenceRoot reports/visual-ci[0m
+2026-11-03T16:09:15.3058723Z [36;1mexit $LASTEXITCODE[0m
+2026-11-03T16:09:15.3112298Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-03T16:09:15.3112544Z env:
+2026-11-03T16:09:15.3112771Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:09:15.3113070Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-11-03T16:09:15.3113370Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:09:15.3113645Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:09:15.3113928Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:09:15.3114158Z ##[endgroup]
+2026-11-03T16:10:10.7017709Z {"exit_code": 31, "result": "FAIL", "invocation": "544f48e6ccb649638686dcff2d5e4070"}
+2026-11-03T16:10:12.9857485Z ##[error]Process completed with exit code 1.
+2026-11-03T16:10:13.0043350Z ##[group]Run actions/upload-artifact@v4
+2026-11-03T16:10:13.0043596Z with:
+2026-11-03T16:10:13.0043765Z   name: visual-windows-latest-1
+2026-11-03T16:10:13.0043950Z   path: candidate/reports/
+2026-11-03T16:10:13.0044158Z   if-no-files-found: warn
+2026-11-03T16:10:13.0044328Z   compression-level: 6
+2026-11-03T16:10:13.0044489Z   overwrite: false
+2026-11-03T16:10:13.0044647Z   include-hidden-files: false
+2026-11-03T16:10:13.0044822Z env:
+2026-11-03T16:10:13.0045022Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:10:13.0045332Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-11-03T16:10:13.0045642Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:10:13.0045918Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:10:13.0046203Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-03T16:10:13.0046429Z ##[endgroup]
+2026-11-03T16:10:13.1368728Z (node:7404) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-03T16:10:13.1369584Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-03T16:10:13.1426362Z With the provided path, there will be 4 files uploaded
+2026-11-03T16:10:13.1429773Z Artifact name is valid!
+2026-11-03T16:10:13.1430938Z Root directory input is valid!
+2026-11-03T16:10:13.4151270Z Beginning upload of artifact content to blob storage
+2026-11-03T16:10:13.4433169Z (node:7404) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-11-03T16:10:13.6627975Z Uploaded bytes 72563
+2026-11-03T16:10:13.7480801Z Finished uploading artifact content to blob storage!
+2026-11-03T16:10:13.7481528Z SHA256 digest of uploaded artifact zip is 36019289c77576124b84187756e34afb16e2b76f322afd9cb31a49b1c6173f2b
+2026-11-03T16:10:13.7482635Z Finalizing artifact upload
+2026-11-03T16:10:14.2354132Z Artifact visual-windows-latest-1.zip successfully finalized. Artifact ID 13247593485
+2026-11-03T16:10:14.2355314Z Artifact visual-windows-latest-1 has been successfully uploaded! Final size is 72563 bytes. Artifact ID is 13247593485
+2026-11-03T16:10:14.2364792Z Artifact download URL: https://github.com/YehorBabenko88/Terminan/actions/runs/41669714074/artifacts/13247593485
+2026-11-03T16:10:14.2659519Z Post job cleanup.
+2026-11-03T16:10:14.3795178Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-03T16:10:14.4060308Z git version 2.56.0.windows.4
+2026-11-03T16:10:14.4114328Z Temporarily overriding HOME='D:\a\_temp\25e8f029-736c-43e0-8a01-0a6e762b0c26' before making global git config changes
+2026-11-03T16:10:14.4114887Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-03T16:10:14.4121933Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\Terminan\Terminan\strattester
+2026-11-03T16:10:14.4427829Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-03T16:10:14.4742263Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-03T16:10:14.9197704Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-03T16:10:14.9485001Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-03T16:10:15.3975557Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-03T16:10:15.4268563Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-03T16:10:15.9660991Z Post job cleanup.
+2026-11-03T16:10:16.0846362Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-03T16:10:16.1115520Z git version 2.56.0.windows.4
+2026-11-03T16:10:16.1173785Z Temporarily overriding HOME='D:\a\_temp\b249c569-eaad-4e9c-9cdd-8afefb0a002e' before making global git config changes
+2026-11-03T16:10:16.1174262Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-03T16:10:16.1181717Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\Terminan\Terminan\grid
+2026-11-03T16:10:16.1488033Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-03T16:10:16.1788038Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-03T16:10:16.6340926Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-03T16:10:16.6644092Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-03T16:10:17.1099196Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-03T16:10:17.1404018Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-03T16:10:17.6242911Z Post job cleanup.
+2026-11-03T16:10:17.7418557Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-03T16:10:17.7683805Z git version 2.56.0.windows.4
+2026-11-03T16:10:17.7741707Z Temporarily overriding HOME='D:\a\_temp\30e50f93-e9f9-4bc6-b7b5-64ead6750a41' before making global git config changes
+2026-11-03T16:10:17.7742264Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-03T16:10:17.7749707Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\Terminan\Terminan\candidate
+2026-11-03T16:10:17.8057566Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-03T16:10:17.8364057Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-03T16:10:18.3133928Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-03T16:10:18.3441025Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-03T16:10:18.8190037Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-03T16:10:18.8498281Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-03T16:10:19.3263229Z Cleaning up orphan processes
+2026-11-03T16:10:19.3616599Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-node@v4, actions/setup-python@v5, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

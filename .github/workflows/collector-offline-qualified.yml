@@ -1,0 +1,74 @@
+name: Canonical synthetic collector source qualification
+on:
+  pull_request:
+    paths:
+      - 'unified_system/collector_*.py'
+      - 'unified_system/storage/collector_context.py'
+      - 'unified_system/storage/raw_capture.py'
+      - 'tests/collector/**'
+      - 'integration/collector/**'
+      - 'sql/collector/**'
+      - 'tools/collector/qualify_canonical.py'
+      - 'tests/ci/test_collector_qualification_source.py'
+      - '.github/workflows/collector-offline-qualified.yml'
+permissions:
+  contents: read
+jobs:
+  software-only:
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-24.04]
+        python: ['3.11', '3.12']
+    runs-on: ${{ matrix.os }}
+    env:
+      EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+      PYTHONDONTWRITEBYTECODE: '1'
+      GIT_NO_REPLACE_OBJECTS: '1'
+    steps:
+      - name: Exact Root candidate
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        env:
+          GIT_CONFIG_COUNT: '2'
+          GIT_CONFIG_KEY_0: core.autocrlf
+          GIT_CONFIG_VALUE_0: 'false'
+          GIT_CONFIG_KEY_1: core.eol
+          GIT_CONFIG_VALUE_1: lf
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: root-source
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Exact canonical Data collector
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        env:
+          GIT_CONFIG_COUNT: '2'
+          GIT_CONFIG_KEY_0: core.autocrlf
+          GIT_CONFIG_VALUE_0: 'false'
+          GIT_CONFIG_KEY_1: core.eol
+          GIT_CONFIG_VALUE_1: lf
+        with:
+          repository: YehorBabenko88/strattester
+          ref: 622e99dcd169d471279b5d38204d29a01eaf8647
+          path: data-source
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: ${{ matrix.python }}
+          architecture: x64
+      - name: Exact-source units and actual finite capture recovery
+        shell: bash
+        env:
+          COLLECTOR_OUT: ${{ runner.temp }}/collector-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.os }}-${{ matrix.python }}
+        run: |
+          python -I -S -B -X "pycache_prefix=$COLLECTOR_OUT/cache" "$GITHUB_WORKSPACE/root-source/tools/collector/qualify_canonical.py" --root "$GITHUB_WORKSPACE/root-source" --root-head "$EXPECTED_HEAD" --data "$GITHUB_WORKSPACE/data-source" --data-head 622e99dcd169d471279b5d38204d29a01eaf8647 --out "$COLLECTOR_OUT"
+      - name: Original evidence and NEW synthetic state, not staged source copies
+        if: ${{ always() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: collector-software-${{ matrix.os }}-${{ matrix.python }}-${{ github.event.pull_request.head.sha }}
+          path: ${{ runner.temp }}/collector-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.os }}-${{ matrix.python }}/evidence.json
+          if-no-files-found: error
+          retention-days: 14
