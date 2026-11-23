@@ -20,7 +20,7 @@ class CanonicalNativeBindingTests(unittest.TestCase):
  def rebind(self):
   raw=target_bytes(self.target);self.profile['target_binding'].update(target_request_canonical_base64=base64.b64encode(raw).decode('ascii'),target_request_sha256=hashlib.sha256(raw).hexdigest())
  def test_canonical_binding_matches_exact_schema_and_both_sources(self):
-  self.assertEqual(self.core._PRODUCER,'975fa456e93c1fbd63f574cad24d3c1b616c0e24');self.assertEqual(self.core._MATH,'53fe518c012280557bc0f2b6fec9465942638d44')
+  self.assertEqual(self.core._PRODUCER,'edfd1e2dfbd9fd6fcc34d0e22ec9f7cc7444b1d7');self.assertEqual(self.core._MATH,'e3c56dd913bd5401b06b825dadc408e070edc691')
   self.assertEqual(self.check(),self.profile['target_binding'])
   self.assertEqual(hashlib.sha256((ROOT/'docs/intelligence/canonical-native-profile/request.schema.json').read_bytes()).hexdigest(),TARGET_SCHEMA_SHA)
  def test_every_retired_profile_schema_is_refused(self):
