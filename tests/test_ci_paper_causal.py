@@ -97,4 +97,38 @@ class CausalGateTests(unittest.TestCase):
     (site/'unified_math_kernels-0.1.0.dist-info/METADATA').write_text('Metadata-Version: 2.1\nName: unified-math-kernels\nVersion: 9\n');importlib.invalidate_caches()
     with self.assertRaises(ValueError):runner.check_sdk_metadata(site)
    finally:sys.path[:]=old
+ def test_active_causal_cli_and_workflow_share_one_primary_cohort(self):
+  m=self.module();self.assertEqual(m.COHORT,'integration/four_owner/cohort.json')
+  workflow=(ROOT/'.github/workflows/paper-causal.yml').read_text()
+  self.assertIn('"--cohort","integration/four_owner/cohort.json"',workflow)
+  self.assertNotIn('docs/qualification/offline-causal-20261120/cohort.json',workflow)
+  self.assertFalse((ROOT/'docs/qualification/offline-causal-20261120/cohort.json').exists())
+  archive=ROOT/'docs/qualification/offline-causal-20261120/original-source/cohort-ad550-retained112.json.txt'
+  self.assertEqual(hashlib.sha256(archive.read_bytes()).hexdigest(),'42d45bbc16e0af6b14295c6796ae29424fdcf9ed3ca6cfb8d878f1af626d0ac1')
+ def test_causal_requires_repository_origin_pre_and_post_without_optional_flag(self):
+  q=self.module().builder();calls=[]
+  class RefusingFacade:
+   def __init__(self,root,*args,**kwargs):self.root=root;self.before=None
+   def check(self):self.before={};return self.before
+   def module(self,*args,**kwargs):pass
+   def file(self,*args,**kwargs):pass
+   def finish(self):return {}
+  def origin(fence,repository):calls.append((fence.root,repository));return 'https://github.com/'+repository
+  with tempfile.TemporaryDirectory() as tmp:
+   base=pathlib.Path(tmp).resolve();root=base/'root';root.mkdir();cohort=json.loads((ROOT/'integration/four_owner/cohort.json').read_bytes());self.assertNotIn('enforce_repository_origins',cohort);(root/'cohort.json').write_text(json.dumps(cohort));old_cache=sys.pycache_prefix;old_path=list(sys.path)
+   try:
+    q.ROOT=root
+    with patch.dict(os.environ,{'GITHUB_ACTIONS':'true','RUNNER_ENVIRONMENT':'github-hosted'}),patch('integration.source_guard.SourceFence',RefusingFacade),patch.object(q,'require_source_origin',side_effect=origin),patch.object(q.venv,'EnvBuilder') as factory,patch.object(q,'call',side_effect=AssertionError('CHILD_NOT_PERMITTED')):
+     factory.return_value.create.side_effect=ValueError('STOP_BEFORE_ANY_CHILD')
+     with self.assertRaisesRegex(ValueError,'STOP_BEFORE_ANY_CHILD'):q.main(['--root-head','a'*40,'--market-data',str(base/'data'),'--math',str(base/'math'),'--terminan',str(base/'term'),'--out',str(base/'out')],suite='causal',cohort_file='cohort.json')
+    self.assertEqual(len(calls),8);self.assertEqual(calls[:4],calls[4:]);self.assertEqual({name for _,name in calls},{v['repository'] for v in cohort['sources'].values()})
+    self.assertEqual(json.loads((base/'out/evidence.json').read_text())['qualification'],'FAIL')
+   finally:sys.pycache_prefix=old_cache;sys.path[:]=old_path
+ def test_causal_non_sdk_mode_refuses_before_output_callbacks(self):
+  q=self.module().builder();called=[]
+  def touched(*args):called.append('OUTPUT_CALLBACK');raise AssertionError('CALLBACK_BEFORE_MODE_REFUSAL')
+  with patch.dict(os.environ,{'GITHUB_ACTIONS':'true','RUNNER_ENVIRONMENT':'github-hosted'}),patch.object(q,'require_external_output',side_effect=touched):
+   with self.assertRaisesRegex(ValueError,'CAUSAL_SDK_MODE_REQUIRED'):q.main(['--root-head','a'*40,'--market-data','unused-data','--math','unused-math','--terminan','unused-term','--out','unused-output','--mode','scientific-runtime'],suite='causal')
+  self.assertEqual(called,[])
+
 if __name__=='__main__':unittest.main()

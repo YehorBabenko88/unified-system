@@ -35,7 +35,7 @@ jobs:
         shell: python -I -S -B {0}
         run: |
           import runpy,sys
-          sys.argv=["scripts/emit_cohort_checkout_pins.py","--cohort","docs/qualification/offline-causal-20261120/cohort.json"]
+          sys.argv=["scripts/emit_cohort_checkout_pins.py","--cohort","integration/four_owner/cohort.json"]
           runpy.run_path(sys.argv[0],run_name="__main__")
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         env:
@@ -79,7 +79,7 @@ jobs:
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with:
           python-version: ${{ matrix.python }}
-      - name: All seven actual CI-gate regressions (including real disposable Git fixture)
+      - name: All ten actual CI-gate regressions (including real disposable Git fixture)
         shell: python
         run: |
           import subprocess,sys

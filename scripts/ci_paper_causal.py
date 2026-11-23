@@ -3,7 +3,7 @@ No provider/native/service admission or old-source compatibility CLI exists.
 """
 import io,json,pathlib,sys,types,unittest
 ROOT=pathlib.Path(__file__).resolve().parents[1]
-COHORT='docs/qualification/offline-causal-20261120/cohort.json'
+COHORT='integration/four_owner/cohort.json'
 RUNNER='integration/four_owner/run_causal_installed.py'
 EXPECTED_IDS=tuple(json.loads((ROOT/'docs/qualification/offline-causal-20261120/EXPECTED-TESTS.json').read_bytes()))
 ROLE_IDS=tuple(row['replacement'] for row in json.loads((ROOT/'docs/qualification/offline-causal-20261120/preservation-map.json').read_bytes())['roles'])

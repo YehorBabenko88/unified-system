@@ -21,6 +21,7 @@ def main(argv=None,*,suite='all',cohort_file='integration/four_owner/cohort.json
  for name in ('root-head','market-data','math','terminan','out'):parser.add_argument('--'+name,required=True)
  parser.add_argument('--mode',choices=('sdk','scientific-runtime'),default='sdk')
  args=parser.parse_args(argv)
+ if suite=='causal' and args.mode!='sdk':raise ValueError('CAUSAL_SDK_MODE_REQUIRED')
  if not (sys.flags.isolated and sys.dont_write_bytecode):raise ValueError('ISOLATED_NO_BYTECODE_REQUIRED')
  if os.environ.get('GITHUB_ACTIONS')!='true' or os.environ.get('RUNNER_ENVIRONMENT')!='github-hosted':raise ValueError('HOSTED_SOURCE_QUALIFICATION_ONLY')
  paths={'unified_system':ROOT,'market_data':pathlib.Path(args.market_data).absolute(),'math':pathlib.Path(args.math).absolute(),'terminan':pathlib.Path(args.terminan).absolute()}
@@ -40,7 +41,7 @@ def main(argv=None,*,suite='all',cohort_file='integration/four_owner/cohort.json
   before={name:fence.check() for name,fence in fences.items()};report['source_before']=before
   for module in (sys.modules['integration.source_guard'],sys.modules['integration.four_owner.contracts']):fences['unified_system'].module(module)
   fences['unified_system'].file(__file__,python=True);fences['unified_system'].file(cohort_path);fences['unified_system'].file(runner_path,python=True)
-  if manifest.get('enforce_repository_origins') is True:report['source_origins_before']={name:require_source_origin(fence,manifest['sources'][name]['repository']) for name,fence in fences.items()}
+  if suite=='causal' or manifest.get('enforce_repository_origins') is True:report['source_origins_before']={name:require_source_origin(fence,manifest['sources'][name]['repository']) for name,fence in fences.items()}
   if args.mode=='scientific-runtime':
    config=manifest['scientific_runtime'];test=paths['math']/config['test'];fences['math'].file(test)
    node=shutil.which('node')
@@ -97,7 +98,7 @@ def main(argv=None,*,suite='all',cohort_file='integration/four_owner/cohort.json
    if fence.before is not None:
     try:post[name]=fence.finish()
     except BaseException as exc:post_errors.append(dict(owner=name,error_type=type(exc).__name__))
-  if manifest.get('enforce_repository_origins') is True and not post_errors:
+  if (suite=='causal' or manifest.get('enforce_repository_origins') is True) and not post_errors:
    try:
     report['source_origins_after']={name:require_source_origin(fence,manifest['sources'][name]['repository']) for name,fence in fences.items()}
     if report['source_origins_after']!=report.get('source_origins_before'):post_errors.append(dict(owner='all',error_type='SOURCE_ORIGIN_CHANGED'))
