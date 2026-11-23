@@ -158,7 +158,7 @@ class CollectorQualificationSourceTests(unittest.TestCase):
         self.assertIn('contents: read',text);self.assertIn('fail-fast: false',text)
         self.assertNotIn('workflow_dispatch:',text)
         self.assertEqual(text.count('persist-credentials: false'),2)
-        self.assertIn('622e99dcd169d471279b5d38204d29a01eaf8647',text)
+        self.assertIn('d6f6f65d0c51d8d643bec06356f114cab6fa0576',text)
         self.assertNotIn('bybit-cluster-grid',text)
         self.assertIn('qualify_canonical.py',text)
         self.assertIn("python: ['3.11', '3.12']",text)

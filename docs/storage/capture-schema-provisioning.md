@@ -1,6 +1,6 @@
 # Capture schema lifecycle
 
-Data 622e99dcd169d471279b5d38204d29a01eaf8647 owns market_data/capture_schema.sql, SHA256 81ed2eee67f5287f6760eca6e45930901395fa1a6685f993287dac413dfe1a7f. Root consumes the admitted capsule member sources/market_data/market_data/capture_schema.sql during fresh database configuration, after a real app login check and before bootstrap login is disabled. Root verifies manifest bytes/hash and this supported asset revision.
+Data d6f6f65d0c51d8d643bec06356f114cab6fa0576 owns market_data/capture_schema.sql, SHA256 81ed2eee67f5287f6760eca6e45930901395fa1a6685f993287dac413dfe1a7f. Root consumes the admitted capsule member sources/market_data/market_data/capture_schema.sql during fresh database configuration, after a real app login check and before bootstrap login is disabled. Root verifies manifest bytes/hash and this supported asset revision.
 
 Only provisioning transforms CREATE TABLE IF NOT EXISTS to explicit CREATE TABLE public. and wraps all three tables in one transaction with catalog-only search_path. Any existing table fails; runtime never provisions, repairs or adopts an existing schema. Root does not duplicate Data table definitions as executable code. The raw test fixture is bound to the Data source for inert SQL-capture tests only. Existing data retention, ownership, stop/recovery and service restrictions remain unchanged.
 

@@ -1,6 +1,6 @@
 # Canonical direct target contract v2
 
-Entry: unified_system.gateway_target_adapter.DisposableTargetStand. Private commissioning arguments: root, terminan_source_root, math_source_root, absolute git_executable, git_sha256, runtime_sha256. Sources are fixed Terminan edfd1e2dfbd9fd6fcc34d0e22ec9f7cc7444b1d7 and Math e3c56dd913bd5401b06b825dadc408e070edc691. Runtime must already use -I -S -B with a separate fresh private isolated cache; these consistency checks are not publisher/Windows/kernel authentication. Public submit remains denied. The Root-owned canonical-native-profile v3 source binding is aligned separately; native execution with these source pins remains NOT_RUN.
+Entry: unified_system.gateway_target_adapter.DisposableTargetStand. Private commissioning arguments: root, terminan_source_root, math_source_root, absolute git_executable, git_sha256, runtime_sha256. Sources are fixed Terminan 3e943b90d5395682ec5266e1660b39ec0048288e and Math 9ed369ddd41ae32c4b3a9434f0b29d6dcf51154f. Runtime must already use -I -S -B with a separate fresh private isolated cache; these consistency checks are not publisher/Windows/kernel authentication. Public submit remains denied. The Root-owned canonical-native-profile v3 source binding is aligned separately; native execution with these source pins remains NOT_RUN.
 
 Actual computation is existing Terminan analyze_ohlcv_research using canonical Math untouched_levels. No Strattester/Meta adapter, callback analytics grant, second simulator, data provider or SQL source is called. The fixed original literal three-row engineering fixture retains caller-declared historical source lineage, never claiming canonical Data produced it or attested PIT/stream coverage. New canonical request/dataset/schema hashes are separate from historical bytes.
 
@@ -12,6 +12,6 @@ New JSON schemas and samples are in this directory. The old target-adapter direc
 
 ## Qualification workflow cutover
 
-The active gateway workflow checks out only Root, Terminan edfd1e2dfbd9fd6fcc34d0e22ec9f7cc7444b1d7 and Math e3c56dd913bd5401b06b825dadc408e070edc691 as separate primary repositories. Checkout-only LF overrides do not enter SourceFence. Windows/Linux and Python 3.11/3.12 remain required.
+The active gateway workflow checks out only Root, Terminan 3e943b90d5395682ec5266e1660b39ec0048288e and Math 9ed369ddd41ae32c4b3a9434f0b29d6dcf51154f as separate primary repositories. Checkout-only LF overrides do not enter SourceFence. Windows/Linux and Python 3.11/3.12 remain required.
 
 The default source runner forbids all child processes except pinned read-only Git. Hosted CI additionally uses `--include-process-crash`: only the tracked crash_child.py with the fixed isolated interpreter flags, owned empty temporary directory, exact sources/cache and BEFORE/AFTER phase is admitted. Arbitrary Python commands, foreign sources and nonempty stands are rejected by a pure negative calibration. This restores the existing real process-fault obligation; it does not admit native/service tests. Local process-fault execution remains NOT_RUN under the security pause. Every result remains LOCAL_UNATTESTED / NO_GO.

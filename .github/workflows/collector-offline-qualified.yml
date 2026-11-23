@@ -50,7 +50,7 @@ jobs:
           GIT_CONFIG_VALUE_1: lf
         with:
           repository: YehorBabenko88/strattester
-          ref: 622e99dcd169d471279b5d38204d29a01eaf8647
+          ref: d6f6f65d0c51d8d643bec06356f114cab6fa0576
           path: data-source
           persist-credentials: false
           fetch-depth: 0
@@ -63,7 +63,7 @@ jobs:
         env:
           COLLECTOR_OUT: ${{ runner.temp }}/collector-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.os }}-${{ matrix.python }}
         run: |
-          python -I -S -B -X "pycache_prefix=$COLLECTOR_OUT/cache" "$GITHUB_WORKSPACE/root-source/tools/collector/qualify_canonical.py" --root "$GITHUB_WORKSPACE/root-source" --root-head "$EXPECTED_HEAD" --data "$GITHUB_WORKSPACE/data-source" --data-head 622e99dcd169d471279b5d38204d29a01eaf8647 --out "$COLLECTOR_OUT"
+          python -I -S -B -X "pycache_prefix=$COLLECTOR_OUT/cache" "$GITHUB_WORKSPACE/root-source/tools/collector/qualify_canonical.py" --root "$GITHUB_WORKSPACE/root-source" --root-head "$EXPECTED_HEAD" --data "$GITHUB_WORKSPACE/data-source" --data-head d6f6f65d0c51d8d643bec06356f114cab6fa0576 --out "$COLLECTOR_OUT"
       - name: Original evidence and NEW synthetic state, not staged source copies
         if: ${{ always() }}
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
