@@ -1,9 +1,9 @@
 """Canonical request DATA for disposable tests, never a commissioning API."""
 import base64,hashlib,json
 PROFILE_SCHEMA='unified.authority.canonical-research-profile.v3'
-TARGET_SCHEMA_SHA='1944897e577bee4082889a0e3e296eb8bdbd1b18a0940f99604973624ec905e1'
+TARGET_SCHEMA_SHA='fa4627bb63a9766dbd21a6ae103f84ca093d3c7bdf5851b5604062982a21478c'
 INPUT_SHA='4a8b7be2fa7cfbf72399e4abf864287feb8b10a28977aea2970846b8fb97e7e9'
-PRODUCER='66700ba2d3587eacbb66af252051fd5580fcb4d6'
+PRODUCER='975fa456e93c1fbd63f574cad24d3c1b616c0e24'
 MATH='53fe518c012280557bc0f2b6fec9465942638d44'
 def target_bytes(value):return json.dumps(value,sort_keys=True,separators=(',',':'),ensure_ascii=True,allow_nan=False).encode('ascii')
 def bind_profile(profile,*,request_id,job_id,generation,actor,quota_owner):

@@ -1,6 +1,6 @@
 # Canonical market query integration
 
-Candidate source owners: Data `622e99dcd169d471279b5d38204d29a01eaf8647`, Math `53fe518c012280557bc0f2b6fec9465942638d44`, Terminan `66700ba2d3587eacbb66af252051fd5580fcb4d6`. Root remains ENCLOSING_HEAD/NO_GO.
+Candidate source owners: Data `622e99dcd169d471279b5d38204d29a01eaf8647`, Math `53fe518c012280557bc0f2b6fec9465942638d44`, Terminan `975fa456e93c1fbd63f574cad24d3c1b616c0e24`. Root remains ENCLOSING_HEAD/NO_GO.
 
 |Previous active location/name|Canonical owner/location|Scope|
 |---|---|---|
