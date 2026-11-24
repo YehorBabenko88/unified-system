@@ -27,12 +27,12 @@ from .journal import Journal
 REQUEST_SCHEMA='unified.gateway.target-request.v2'
 RESULT_SCHEMA='unified.gateway.direct-target-result.v2'
 CAPABILITY='terminan.ohlcv.untouched_levels.v1'
-TERMINAN_HEAD='83f2f50cc8a94d9bffa9fbdf14c3cc229f4c1984'
-MATH_HEAD='9379384606492af33619bc9168d259917da296a0'
+TERMINAN_HEAD='353d16b2126609579018fafe3f76047b465bb289'
+MATH_HEAD='9e6acbd9e12a91189f57234828e31640983af553'
 DATASET_SHA='44639dea28a646d2a308655d7adc3f85e24a90bda22971632f88d1dd9760c938'
 RESEARCH_SHA='4a8b7be2fa7cfbf72399e4abf864287feb8b10a28977aea2970846b8fb97e7e9'
 EXPECTED_ARTIFACT_SHA='c7cdb408d8536fa4db3dcb714ff7ae7d64c562a45189005b23242d7da3991174'
-EXPECTED_DESCRIPTOR_SHA='af7b32de6084aa34253346074483282666ca26490384778753c488372d5fb5c1'
+EXPECTED_DESCRIPTOR_SHA='bcc3386f72ea586d3b6e26cef11c168da26fd03f6bc641d0a35cf3d5c93ef6b5'
 _FIXED_RESEARCH=json.loads("{\"analysis_now_ms\":360000,\"decision_ms\":300000,\"experiment\":{\"id\":\"fixture.gateway.btc.levels\",\"revision\":\"2\"},\"operation\":\"terminan.ohlcv.untouched_levels.v1\",\"payload\":{\"as_of_ms\":300000,\"dataset_id\":\"4cce8c09a40f4b5c231054e48971be6cb912742018f72ea0093009cc024b33d5\",\"end_ms\":180000,\"evidence_class\":\"SYNTHETIC\",\"market_type\":\"linear\",\"rows\":[{\"close\":11,\"event_end_ms\":60000,\"event_start_ms\":0,\"high\":12,\"low\":8,\"open\":10,\"volume\":3},{\"close\":10,\"event_end_ms\":120000,\"event_start_ms\":60000,\"high\":11,\"low\":9,\"open\":10,\"volume\":2},{\"close\":12,\"event_end_ms\":180000,\"event_start_ms\":120000,\"high\":12,\"low\":10,\"open\":11,\"volume\":4}],\"schema\":\"terminan.ohlcv.research.request.v1\",\"source\":{\"identity\":\"SYNTHETIC_GATEWAY_FIXTURE\",\"kind\":\"HISTORICAL_BACKFILL\",\"raw_sha256\":\"82a2c7750f843c97edaf2b1400ef986ccd976ff4eb510a0ea10c5e2fd6ca6ecf\",\"retrieval_id\":\"fixture_btc_3rows\",\"retrieved_at_ms\":240000,\"source_revision\":\"6360a75a428c0cb1538085820381324bc4dd9d6f\"},\"start_ms\":0,\"symbol\":\"BTCUSDT\",\"timeframe\":\"1m\",\"units\":{\"price\":\"USDT/BTC\",\"volume\":\"BTC\"},\"venue\":\"bybit\"},\"schema\":\"unified.gateway.fixed-ohlcv.request.v2\"}")
 LOCAL_PRINCIPAL='11111111-1111-4111-8111-111111111111'
 BUDGET={'max_input_bytes':16384,'max_output_bytes':16384,'max_rows':3,'max_executions':1}

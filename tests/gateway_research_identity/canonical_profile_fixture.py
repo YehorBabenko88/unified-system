@@ -1,10 +1,10 @@
 """Canonical request DATA for disposable tests, never a commissioning API."""
 import base64,hashlib,json
 PROFILE_SCHEMA='unified.authority.canonical-research-profile.v3'
-TARGET_SCHEMA_SHA='3d547214b697f65680645f7217a0ae56f1b2d506676872aeb3f0e675a3a1f5c6'
+TARGET_SCHEMA_SHA='732cc509448a7befc9dac2fb3a7bf71df69669b4da77cd8e9e34d52199d33551'
 INPUT_SHA='4a8b7be2fa7cfbf72399e4abf864287feb8b10a28977aea2970846b8fb97e7e9'
-PRODUCER='83f2f50cc8a94d9bffa9fbdf14c3cc229f4c1984'
-MATH='9379384606492af33619bc9168d259917da296a0'
+PRODUCER='353d16b2126609579018fafe3f76047b465bb289'
+MATH='9e6acbd9e12a91189f57234828e31640983af553'
 def target_bytes(value):return json.dumps(value,sort_keys=True,separators=(',',':'),ensure_ascii=True,allow_nan=False).encode('ascii')
 def bind_profile(profile,*,request_id,job_id,generation,actor,quota_owner):
  target=dict(schema='unified.gateway.target-native-request.v2',request_id=request_id,target_kind='terminan',target_capability='terminan.ohlcv.untouched_levels.v1',target_version=PRODUCER,dataset_manifest_id='local-sha256:44639dea28a646d2a308655d7adc3f85e24a90bda22971632f88d1dd9760c938',dataset_revision='CANONICAL_FIXTURE_2',experiment_id='fixture.gateway.btc.levels',strategy_version=None,parameters_digest=INPUT_SHA,execution_mode='NATIVE_RESEARCH_ADMISSION_REQUEST_NOT_PERMISSION',resource_budget=dict(max_input_bytes=16384,max_output_bytes=16384,max_rows=3,max_executions=1),quota_owner=quota_owner,principal_id=actor,authority_generation=generation,assignment_revision=None,fencing_token=None,idempotency_key='native_original_2',result_schema='unified.gateway.native-target-observation.v2',result_artifact_ref=None)

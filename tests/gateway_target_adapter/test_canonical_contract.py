@@ -4,7 +4,7 @@ from unittest.mock import patch
 from unified_system import gateway_target_adapter as adapter
 class CanonicalContractTests(unittest.TestCase):
  def test_current_target_is_only_canonical_terminan_and_v2(self):
-  q=adapter.template_request();self.assertEqual(q['schema'],'unified.gateway.target-request.v2');self.assertEqual(q['target_kind'],'terminan');self.assertEqual(q['target_capability'],'terminan.ohlcv.untouched_levels.v1');self.assertEqual(q['target_version'],'83f2f50cc8a94d9bffa9fbdf14c3cc229f4c1984');self.assertEqual(adapter.MATH_HEAD,'9379384606492af33619bc9168d259917da296a0');self.assertEqual(q['result_schema'],'unified.gateway.direct-target-result.v2')
+  q=adapter.template_request();self.assertEqual(q['schema'],'unified.gateway.target-request.v2');self.assertEqual(q['target_kind'],'terminan');self.assertEqual(q['target_capability'],'terminan.ohlcv.untouched_levels.v1');self.assertEqual(q['target_version'],'353d16b2126609579018fafe3f76047b465bb289');self.assertEqual(adapter.MATH_HEAD,'9e6acbd9e12a91189f57234828e31640983af553');self.assertEqual(q['result_schema'],'unified.gateway.direct-target-result.v2')
  def test_old_v1_meta_request_has_no_active_alias(self):
   q=adapter.template_request();q.update(schema='unified.gateway.target-request.v1',target_kind='MetaAnalyse',target_capability='meta.ohlcv.untouched_levels.v1')
   with self.assertRaises(adapter.TargetRejected):adapter.prepare_target(adapter._canonical(q))
