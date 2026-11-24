@@ -1,0 +1,33 @@
+{
+  "qualification": "STRUCTURAL_CANONICAL_LOOKUP_MODEL_COUNTEREXAMPLES_ONLY",
+  "numeric_C3": [
+    {
+      "raw_accepted_by_model_C3": "{\"n\":1.0}",
+      "node_parse_stringify": "{\"n\":1}",
+      "same_bytes": false
+    },
+    {
+      "raw_accepted_by_model_C3": "{\"n\":-0.0}",
+      "node_parse_stringify": "{\"n\":0}",
+      "same_bytes": false
+    },
+    {
+      "raw_accepted_by_model_C3": "{\"n\":1e-07}",
+      "node_parse_stringify": "{\"n\":1e-7}",
+      "same_bytes": false
+    },
+    {
+      "raw_accepted_by_model_C3": "{\"n\":100000000000000000000}",
+      "node_parse_stringify": "{\"n\":100000000000000000000}",
+      "same_bytes": true
+    }
+  ],
+  "wrong_terminal_status": {
+    "operation": "OPEN_CONNECTION",
+    "original_route": "/control/v3/connections",
+    "http_status": "204",
+    "result": null,
+    "actual_model_lookup": "HISTORICAL_MODEL_MATCH_NOT_PERMISSION",
+    "expected": "UNAVAILABLE_CONFLICT; OPEN requires201/OPENED,204 is ACK/CLOSED only"
+  }
+}

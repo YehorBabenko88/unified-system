@@ -1,0 +1,393 @@
+{
+  "schema": "unified.retired-status-consumer-inventory.v1",
+  "root_head": "dcb74e30109fa51676b465080fde8076e9e1f645",
+  "scope": "STATIC_RAW_GIT_SOURCE_AND_PURE_CONTRACTS_ONLY",
+  "executed_legacy_scripts": false,
+  "archived": [
+    {
+      "path": ".github/workflows/cross-repo-smoke.yml",
+      "archive": "docs/migration/retired-status-consumers-20261120/raw/.github__workflows__cross-repo-smoke.yml.txt",
+      "bytes": 1230,
+      "sha256": "804efabb108d414331471846f11700e963d0fe5a092266da80d06538792a6a61",
+      "head": "dcb74e30109fa51676b465080fde8076e9e1f645",
+      "git_blob": "4294627ba84a2842ab913f466197807cf9c67c07"
+    },
+    {
+      "path": "scripts/verify_cross_repo.py",
+      "archive": "docs/migration/retired-status-consumers-20261120/raw/scripts__verify_cross_repo.py.txt",
+      "bytes": 1972,
+      "sha256": "665e13ca0d13377ade995ccb52a7ccc5d5797de8494959de00f003dac6b49e0b",
+      "head": "dcb74e30109fa51676b465080fde8076e9e1f645",
+      "git_blob": "87c3c23e77308292162a1f3477d86706d728ff4c"
+    },
+    {
+      "path": ".github/workflows/unified-terminan-status.yml",
+      "archive": "docs/migration/retired-status-consumers-20261120/raw/.github__workflows__unified-terminan-status.yml.txt",
+      "bytes": 713,
+      "sha256": "80091a6bd41d504aee8221d6253b2734d17565d8ef890a272f5b2972112d7364",
+      "head": "dcb74e30109fa51676b465080fde8076e9e1f645",
+      "git_blob": "0a140c8f014faddb9531f5a5291796a228741f65"
+    },
+    {
+      "path": "scripts/verify_unified_to_terminan.py",
+      "archive": "docs/migration/retired-status-consumers-20261120/raw/scripts__verify_unified_to_terminan.py.txt",
+      "bytes": 1340,
+      "sha256": "9cec53ea01f20e060434aca71116de0f1d538afec4a7d4ea72da2686e12f5d39",
+      "head": "dcb74e30109fa51676b465080fde8076e9e1f645",
+      "git_blob": "c61d6f68d2d073208e8033c67ad568411e6b8861"
+    },
+    {
+      "path": ".github/workflows/terminan-supervisor-http.yml",
+      "archive": "docs/migration/retired-status-consumers-20261120/raw/.github__workflows__terminan-supervisor-http.yml.txt",
+      "bytes": 722,
+      "sha256": "f51b18ec172cc4a90a22589cc859343f1ede026d549e10dc1f3923ca87ca6376",
+      "head": "dcb74e30109fa51676b465080fde8076e9e1f645",
+      "git_blob": "cebdedfc0ebe00ba2678e264211dfa01b5496577"
+    },
+    {
+      "path": "scripts/verify_terminan_supervisor_http.py",
+      "archive": "docs/migration/retired-status-consumers-20261120/raw/scripts__verify_terminan_supervisor_http.py.txt",
+      "bytes": 1800,
+      "sha256": "7714ae6cb98bf1befbdf660cad64f9015b5cd9d691343e8692f1b438755e3cc6",
+      "head": "dcb74e30109fa51676b465080fde8076e9e1f645",
+      "git_blob": "f8c6e7b40e5154d576395812d00dff044436cfc3"
+    },
+    {
+      "path": ".github/workflows/real-supervisor-terminan.yml",
+      "archive": "docs/migration/retired-status-consumers-20261120/raw/.github__workflows__real-supervisor-terminan.yml.txt",
+      "bytes": 719,
+      "sha256": "0263a2fef846e643973625b3a0ace3e5b25181a7cce945424b53cc15810fc310",
+      "head": "dcb74e30109fa51676b465080fde8076e9e1f645",
+      "git_blob": "59fbd3a15903d5e1714562d06818106d846ceea3"
+    },
+    {
+      "path": "scripts/verify_real_supervisor_terminan.py",
+      "archive": "docs/migration/retired-status-consumers-20261120/raw/scripts__verify_real_supervisor_terminan.py.txt",
+      "bytes": 1512,
+      "sha256": "ac37fa1292a3e11651d219d754d7c94a55a21871830d50ce690ba1110bbd46ec",
+      "head": "dcb74e30109fa51676b465080fde8076e9e1f645",
+      "git_blob": "25334c2ed64b01a79de9b63912d508d5cc333fdf"
+    }
+  ],
+  "assertions": [
+    {
+      "path": "scripts/verify_cross_repo.py",
+      "line": 27,
+      "expression": "status == 503 and s['status'] == 'UNAVAILABLE' and (s['producer'] == 'strattester')",
+      "ast_sha256": "0a4330a900a42014c8736df66599bb097e9e9a663e7b3de41709f3ade0ba7b7d"
+    },
+    {
+      "path": "scripts/verify_cross_repo.py",
+      "line": 29,
+      "expression": "g['producer'] == 'bybit-cluster-grid' and g['status'] == 'UNAVAILABLE'",
+      "ast_sha256": "39467c6911be80c2b49ad7d8f0513339ee9b6bedb928544a73e2242eb669f00d"
+    },
+    {
+      "path": "scripts/verify_cross_repo.py",
+      "line": 31,
+      "expression": "status == 503 and u['status'] == 'UNAVAILABLE' and (u['trading_authorized'] is False)",
+      "ast_sha256": "10aa43647c3a3946f8c3b63513eeb9c6fa77ffd8188b1dce86a3807e173f0340"
+    },
+    {
+      "path": "scripts/verify_unified_to_terminan.py",
+      "line": 14,
+      "expression": "grid['status'] == 'PARTIAL'",
+      "ast_sha256": "b7ac8a8f201aacb13fb45d41b404f5724fdd6977f23b60f20206d2c54184b32b"
+    },
+    {
+      "path": "scripts/verify_unified_to_terminan.py",
+      "line": 18,
+      "expression": "rendered['state'] == 'GAP' and rendered['provenance'] == 'AGGREGATED_HISTORY_NOT_L2'",
+      "ast_sha256": "5556a6d37b33ef538329d1b1484714ae3ef822f387ad291ee560b5d7fe4b9447"
+    },
+    {
+      "path": "scripts/verify_unified_to_terminan.py",
+      "line": 20,
+      "expression": "denied['status'] == 'UNAVAILABLE'",
+      "ast_sha256": "375b1e1134905c5c3190e455367ea72d1cb27c4582f5513a17333bff1e97dd92"
+    },
+    {
+      "path": "scripts/verify_unified_to_terminan.py",
+      "line": 23,
+      "expression": "unavailable['state'] == 'UNAVAILABLE'",
+      "ast_sha256": "1d374859a3a35a13d7fb37facbdcf531b04d2e797f4d0f798ea6140d9ddb65ee"
+    },
+    {
+      "path": "scripts/verify_terminan_supervisor_http.py",
+      "line": 38,
+      "expression": "not thread.is_alive()",
+      "ast_sha256": "c00a221686771eead28ffe9f214bbf3a0434fffb51cd8fb9367b7563cffb7462"
+    },
+    {
+      "path": "scripts/verify_terminan_supervisor_http.py",
+      "line": 31,
+      "expression": "response['state'] == 'UNAVAILABLE'",
+      "ast_sha256": "65a4fbf80a2f1c27d10350bc67e4a2caeb69c52223fa863046eea0bac5710435"
+    },
+    {
+      "path": "scripts/verify_terminan_supervisor_http.py",
+      "line": 32,
+      "expression": "response['reason'] == 'SOURCE_CONTRACT_INVALID_OR_UNAVAILABLE'",
+      "ast_sha256": "d59b9b536964b899afdf1cbcb210e0d873971c5a2e5073b617a392291d3451bf"
+    },
+    {
+      "path": "scripts/verify_real_supervisor_terminan.py",
+      "line": 24,
+      "expression": "result['supervisor']['state'] == 'BLOCKED'",
+      "ast_sha256": "fa3f28e9aeef18a7d0bc66d0c0fe81d6b0f996339497526092b30b1d7fcee14b"
+    },
+    {
+      "path": "scripts/verify_real_supervisor_terminan.py",
+      "line": 25,
+      "expression": "result['supervisor']['provenance'] == 'UNVERIFIED'",
+      "ast_sha256": "a04be28a2349d7763279bef5b95ebf1ca789bf5e3a24558a3d44d3511977c912"
+    },
+    {
+      "path": "scripts/verify_real_supervisor_terminan.py",
+      "line": 26,
+      "expression": "result['trading_authorized'] is False",
+      "ast_sha256": "1199939b108ea0fd5566899745785b9ccf369e97551d6806b9f9783f70024d6b"
+    },
+    {
+      "path": "scripts/verify_real_supervisor_terminan.py",
+      "line": 29,
+      "expression": "not thread.is_alive()",
+      "ast_sha256": "c00a221686771eead28ffe9f214bbf3a0434fffb51cd8fb9367b7563cffb7462"
+    }
+  ],
+  "roles": [
+    {
+      "id": "EXACT_OWNER_SOURCE_PINS",
+      "source": {
+        "path": ".github/workflows/cross-repo-smoke.yml",
+        "line": 29,
+        "contains": "Verify pinned source revisions"
+      },
+      "status": "TRANSFERRED",
+      "obligation": "Externally selected exact source revisions are checked before consumer use.",
+      "replacements": [
+        "scripts/qualify_four_owner.py",
+        "tests/four_owner/test_runner_contract.py::FourOwnerContractTests.test_exact_four_owner_roster_and_closed_denials"
+      ],
+      "remaining": ""
+    },
+    {
+      "id": "TERMINAL_RESEARCH_HEALTH_COMPOSITION",
+      "source": {
+        "path": "scripts/verify_cross_repo.py",
+        "line": 26,
+        "contains": "status,s=wsgi"
+      },
+      "status": "PARTIAL",
+      "obligation": "Research-owner health is503 UNAVAILABLE with exact producer identity.",
+      "replacements": [
+        "tests/test_compatibility.py::CompatibilityTests.test_terminan"
+      ],
+      "remaining": "Current protected canonical Terminan research endpoint composition not qualified."
+    },
+    {
+      "id": "DATA_CAPABILITY_HEALTH_COMPOSITION",
+      "source": {
+        "path": "scripts/verify_cross_repo.py",
+        "line": 28,
+        "contains": "g=grid.qualified_snapshot"
+      },
+      "status": "PARTIAL",
+      "obligation": "Data-owner capability observation remains explicitly UNAVAILABLE.",
+      "replacements": [
+        "tests/test_compatibility.py::CompatibilityTests.test_grid"
+      ],
+      "remaining": "Actual Data119 protectedcapability/health transport composition not qualified."
+    },
+    {
+      "id": "ROOT_ABSENT_STATUS_DENIES_TRADING",
+      "source": {
+        "path": "scripts/verify_cross_repo.py",
+        "line": 30,
+        "contains": "status,u=wsgi"
+      },
+      "status": "TRANSFERRED",
+      "obligation": "Absent Root control-plane source503 UNAVAILABLE with no trading authority.",
+      "replacements": [
+        "tests/test_status_api.py::StatusAPITests.test_absent",
+        "tests/test_compatibility.py::CompatibilityTests.test_supervisor_wsgi"
+      ],
+      "remaining": ""
+    },
+    {
+      "id": "CANONICAL_OWNER_IDENTITY_ENVELOPES",
+      "source": {
+        "path": "scripts/verify_cross_repo.py",
+        "line": 33,
+        "contains": "validate_response(\"strattester\""
+      },
+      "status": "PARTIAL",
+      "obligation": "All owner envelopes must bind supported owner identity/version/read-only state.",
+      "replacements": [
+        "tests/test_compatibility.py::CompatibilityTests.test_producer_mismatch",
+        "tests/test_compatibility.py::CompatibilityTests.test_bool_major",
+        "tests/test_compatibility.py::CompatibilityTests.test_supervisor_authority"
+      ],
+      "remaining": "Canonical pure envelopechecks do not establish independent source endpoint transport."
+    },
+    {
+      "id": "PARTIAL_SOURCE_NEVER_COMPLETE",
+      "source": {
+        "path": "scripts/verify_unified_to_terminan.py",
+        "line": 14,
+        "contains": "assert grid[\"status\"]"
+      },
+      "status": "TRANSFERRED",
+      "obligation": "A declared partial data observation remains PARTIAL and unqualified.",
+      "replacements": [
+        "tests/test_provenance_v11.py::ProvenanceV11Tests.test_grid_partial"
+      ],
+      "remaining": ""
+    },
+    {
+      "id": "PARTIAL_TO_TERMINAL_GAP_DISPLAY",
+      "source": {
+        "path": "scripts/verify_unified_to_terminan.py",
+        "line": 18,
+        "contains": "assert rendered[\"state\"]"
+      },
+      "status": "HELD",
+      "obligation": "Canonical Terminan must render aggregated/unverified partial history asGAP without claimingL2.",
+      "replacements": [
+        "integration/four_owner/contracts.py::runtime_gate"
+      ],
+      "remaining": "No canonical actual Terminan presentation consumer equivalent to retired present_source exists."
+    },
+    {
+      "id": "UNKNOWN_HISTORY_DENIED",
+      "source": {
+        "path": "scripts/verify_unified_to_terminan.py",
+        "line": 20,
+        "contains": "assert denied[\"status\"]"
+      },
+      "status": "TRANSFERRED",
+      "obligation": "Missing/unadmitted historical proof yields UNAVAILABLE.",
+      "replacements": [
+        "tests/test_provenance_v11.py::ProvenanceV11Tests.test_no_trust",
+        "tests/test_retired_status_consumers.py::RetiredConsumerTests.test_canonical_pure_identity_and_unknown_history_stay_denied"
+      ],
+      "remaining": ""
+    },
+    {
+      "id": "UNAVAILABLE_TERMINAL_DISPLAY",
+      "source": {
+        "path": "scripts/verify_unified_to_terminan.py",
+        "line": 23,
+        "contains": "assert unavailable[\"state\"]"
+      },
+      "status": "HELD",
+      "obligation": "Terminan visibly preserves unavailable historical source status.",
+      "replacements": [
+        "integration/four_owner/contracts.py::runtime_gate"
+      ],
+      "remaining": "Actual canonical monitor/read-only presentation not composed."
+    },
+    {
+      "id": "WRONG_PRODUCER_HTTP_REFUSAL",
+      "source": {
+        "path": "scripts/verify_terminan_supervisor_http.py",
+        "line": 30,
+        "contains": "response=consumer.source_contract"
+      },
+      "status": "HELD",
+      "obligation": "An actual canonical Terminan HTTP consumer rejects Root response on Data producer channel with UNAVAILABLE and correct refusalreason.",
+      "replacements": [
+        "tests/test_compatibility.py::CompatibilityTests.test_producer_mismatch"
+      ],
+      "remaining": "Pure identity negative is not actual consumer/network composition; no oldconsumer facade allowed."
+    },
+    {
+      "id": "WRONG_PRODUCER_HTTP_RETIREMENT",
+      "source": {
+        "path": "scripts/verify_terminan_supervisor_http.py",
+        "line": 37,
+        "contains": "server.shutdown()"
+      },
+      "status": "HELD",
+      "obligation": "Owned HTTP listener closes and thread joins within3seconds after wrongproducer exercise.",
+      "replacements": [],
+      "remaining": "Actual canonical source capability/startup and ownedtransport cleanup not qualified."
+    },
+    {
+      "id": "WRONG_PRODUCER_ENV_PATH_RESTORATION",
+      "source": {
+        "path": "scripts/verify_terminan_supervisor_http.py",
+        "line": 40,
+        "contains": "sys.path.pop(0)"
+      },
+      "status": "HELD",
+      "obligation": "Disposable consumer searchpath and temporaryport environment are restored in finally.",
+      "replacements": [],
+      "remaining": "A new canonical physicaldriver must prove equivalent cleanup without retiredportenv aliases."
+    },
+    {
+      "id": "ROOT_BLOCKED_TO_TERMINAL_MONITOR_HTTP",
+      "source": {
+        "path": "scripts/verify_real_supervisor_terminan.py",
+        "line": 24,
+        "contains": "assert result[\"supervisor\"][\"state\"]"
+      },
+      "status": "HELD",
+      "obligation": "Actual Root HTTP BLOCKED status reaches canonical Terminan monitor unchanged.",
+      "replacements": [],
+      "remaining": "CANONICAL_MONITOR_SOURCE_ADAPTER_NOT_CONNECTED"
+    },
+    {
+      "id": "MONITOR_UNVERIFIED_NO_TRADE",
+      "source": {
+        "path": "scripts/verify_real_supervisor_terminan.py",
+        "line": 25,
+        "contains": "assert result[\"supervisor\"][\"provenance\"]"
+      },
+      "status": "HELD",
+      "obligation": "Monitor retains UNVERIFIED provenance and trading_authorized False from actual composition.",
+      "replacements": [
+        "tests/test_status_api.py::StatusAPITests.test_snapshot"
+      ],
+      "remaining": "Pure Root endpointshape does not prove current Terminan monitor disclosure."
+    },
+    {
+      "id": "MONITOR_HTTP_RETIREMENT",
+      "source": {
+        "path": "scripts/verify_real_supervisor_terminan.py",
+        "line": 28,
+        "contains": "server.shutdown()"
+      },
+      "status": "HELD",
+      "obligation": "Owned monitor HTTP server closes and thread retirement is verified.",
+      "replacements": [],
+      "remaining": "Actual canonical listener/consumer cleanup not qualified."
+    },
+    {
+      "id": "MONITOR_ENV_PATH_RESTORATION",
+      "source": {
+        "path": "scripts/verify_real_supervisor_terminan.py",
+        "line": 31,
+        "contains": "sys.path.pop(0)"
+      },
+      "status": "HELD",
+      "obligation": "Temporary monitor routing/env/mock/searchpath restore in finally.",
+      "replacements": [],
+      "remaining": "No alias of retired Terminan consumer/env is introduced."
+    }
+  ],
+  "retired_workflows": [
+    ".github/workflows/cross-repo-smoke.yml",
+    ".github/workflows/unified-terminan-status.yml",
+    ".github/workflows/terminan-supervisor-http.yml",
+    ".github/workflows/real-supervisor-terminan.yml"
+  ],
+  "retired_scripts": [
+    "scripts/verify_cross_repo.py",
+    "scripts/verify_unified_to_terminan.py",
+    "scripts/verify_terminan_supervisor_http.py",
+    "scripts/verify_real_supervisor_terminan.py"
+  ],
+  "production": "NO_GO",
+  "actual_http_native": "NOT_RUN"
+}

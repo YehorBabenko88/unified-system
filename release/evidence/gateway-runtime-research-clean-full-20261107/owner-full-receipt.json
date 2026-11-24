@@ -1,0 +1,175 @@
+{
+  "head": "cddf71fab478f788d7289da9648f8a2f9287d1f8",
+  "tree": "513debc70d34b6fae74c9876dae0616a8e998c05",
+  "scope": "LOCAL_WINDOWS_CONFIGURED_REGRESSION_NOT_HOSTED_OR_NATIVE_ACCEPTANCE",
+  "tests": {
+    "passed": 2116,
+    "skipped": 36,
+    "subtests_passed": 35,
+    "exit_code": 0,
+    "seconds": "483.14",
+    "xml_testcases": 2152
+  },
+  "source_primary_files": 819,
+  "source_before_after": "BYTE_IDENTICAL_NO_EXTRA_FILES_STRICT_GUARD_PASS",
+  "skips": [
+    {
+      "name": "::tests.research.test_grid_math_history",
+      "reason": "collection skipped"
+    },
+    {
+      "name": "::tests.research.test_grid_math_history_v11",
+      "reason": "collection skipped"
+    },
+    {
+      "name": "::tests.research.test_history_joint",
+      "reason": "collection skipped"
+    },
+    {
+      "name": "::tests.research.test_history_scientific_handoff",
+      "reason": "collection skipped"
+    },
+    {
+      "name": "::tests.research.test_history_terminan_review",
+      "reason": "collection skipped"
+    },
+    {
+      "name": "tests.deploy.test_owned_results_service::test_wal_link_rejected_before_exists_or_target_probe",
+      "reason": "symlink creation unavailable"
+    },
+    {
+      "name": "tests.deploy.test_owned_results_service::test_existing_qualified_api_does_not_probe_wal_link",
+      "reason": "symlink creation unavailable"
+    },
+    {
+      "name": "tests.native.test_native_build.NativeCliTests::test_diagnose_rejects_extra_arguments",
+      "reason": "set NATIVE_BROKER for safe compiled CLI tests"
+    },
+    {
+      "name": "tests.native.test_native_build.NativeCliTests::test_diagnostic_binds_actual_binary_and_stays_blocked",
+      "reason": "set NATIVE_BROKER for safe compiled CLI tests"
+    },
+    {
+      "name": "tests.native.test_native_build.NativeCliTests::test_handle_selftest_is_refused_without_disposable_vm_guard",
+      "reason": "set NATIVE_BROKER for safe compiled CLI tests"
+    },
+    {
+      "name": "tests.native.test_native_build.NativeCliTests::test_launch_does_not_execute_arbitrary_command",
+      "reason": "set NATIVE_BROKER for safe compiled CLI tests"
+    },
+    {
+      "name": "tests.native.test_native_build.NativeCliTests::test_selftest_is_refused_without_disposable_vm_guard",
+      "reason": "set NATIVE_BROKER for safe compiled CLI tests"
+    },
+    {
+      "name": "tests.native.test_native_build.NativeCliTests::test_wfp_selftest_is_refused_without_disposable_vm_guard",
+      "reason": "set NATIVE_BROKER for safe compiled CLI tests"
+    },
+    {
+      "name": "tests.native.test_native_build.CacheDeletionTests::test_hosted_windows_junction_never_deletes_target",
+      "reason": "junction fixture only on disposable hosted Windows"
+    },
+    {
+      "name": "tests.native.test_native_build.CacheDeletionTests::test_refuses_symlink_into_outside_cache",
+      "reason": "directory symlink privilege unavailable; hosted Windows junction probe required"
+    },
+    {
+      "name": "tests.native.test_native_json_metadata.NativeMetadataTests::test_cleanup_boolean_metadata_is_canonical_json",
+      "reason": "compiled Windows broker required"
+    },
+    {
+      "name": "tests.native.test_owner_nonce::test_owner_nonce_malformed_values_rejected_before_native_filesystem_access",
+      "reason": "NATIVE_BROKER required for safe compiled nonce validation"
+    },
+    {
+      "name": "tests.native.test_owner_nonce::test_owner_nonce_namespace_aliases_rejected_before_native_filesystem_access",
+      "reason": "NATIVE_BROKER required for safe compiled nonce validation"
+    },
+    {
+      "name": "tests.native.test_owner_nonce::test_owner_nonce_selftest_refuses_physical_host_before_native_filesystem_access",
+      "reason": "NATIVE_BROKER required for safe compiled nonce validation"
+    },
+    {
+      "name": "tests.native.test_owner_nonce::test_owner_nonce_device_stems_with_spaces_are_rejected_by_pure_path_validation",
+      "reason": "NATIVE_BROKER required for safe compiled nonce validation"
+    },
+    {
+      "name": "tests.native.test_owner_verifier.NativeOwnerTests::test_independent_openssl_signature_and_native_verifier_agree",
+      "reason": "compiled Windows broker required"
+    },
+    {
+      "name": "tests.native.test_owner_verifier.NativeOwnerTests::test_malformed_owner_request_never_authorizes",
+      "reason": "compiled Windows broker required"
+    },
+    {
+      "name": "tests.native.test_owner_verifier.NativeOwnerTests::test_monotonic_owner_clock_rejects_late_admission_and_rollback",
+      "reason": "compiled Windows broker required"
+    },
+    {
+      "name": "tests.native.test_owner_verifier.NativeOwnerTests::test_public_producer_fixture_key_cannot_be_aliased_as_owner",
+      "reason": "compiled Windows broker required"
+    },
+    {
+      "name": "tests.native.test_owner_verifier.NativeOwnerTests::test_signed_wrong_vm_inputs_expiry_and_boolean_limits_fail",
+      "reason": "compiled Windows broker required"
+    },
+    {
+      "name": "tests.native.test_owner_verifier.NativeOwnerTests::test_trusted_fixture_setup_resolves_os_temporary_directory_alias",
+      "reason": "compiled Windows broker required"
+    },
+    {
+      "name": "tests.native.test_owner_verifier.NativeOwnerTests::test_unmeasured_deployment_package_cannot_be_verified",
+      "reason": "compiled Windows broker required"
+    },
+    {
+      "name": "tests.native.test_owner_verifier.NativeOwnerTests::test_vm_measurement_is_read_only",
+      "reason": "compiled Windows broker required"
+    },
+    {
+      "name": "tests.research.test_alphafold_triangle::test_gpu_cpu_forward_parity",
+      "reason": "CUDA unavailable"
+    },
+    {
+      "name": "tests.research.test_alphafold_triangle_attention::test_cuda_cpu_forward",
+      "reason": "CUDA unavailable"
+    },
+    {
+      "name": "tests.research.test_composed_history_runtime::test_grid_math_backtest_and_scientific_result_make_one_inert_display",
+      "reason": "cross-repository source-owner checkouts not provisioned"
+    },
+    {
+      "name": "tests.research.test_owned_receipt_compatibility::test_actual_grid_handoff_accepts_only_exact_owner_receipt",
+      "reason": "cross-repository Grid contract checkout unavailable"
+    },
+    {
+      "name": "tests.test_alphafold_artifact_verify::test_symlink_artifact_rejected",
+      "reason": "symlink unavailable"
+    },
+    {
+      "name": "tests.test_alphafold_data_sync::test_reject_symlink_source",
+      "reason": "symlink unavailable"
+    },
+    {
+      "name": "tests.test_quote_paper_export::test_export_rejects_unsafe_or_unrelated_paths_without_adoption[symlink]",
+      "reason": "Symlink creation unavailable"
+    },
+    {
+      "name": "tests.test_quote_paper_export::test_export_rejects_unsafe_or_unrelated_paths_without_adoption[dangling_sidecar]",
+      "reason": "Symlink creation unavailable"
+    }
+  ],
+  "files": {
+    "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-7-distributed-research-math\\outputs\\query-v2-cddf71f-full.log": {
+      "bytes": 6204,
+      "sha256": "0fa1e1a4b42966a39e7031d96e3b52b484b1dd81d557b805d8a00ff46430f651"
+    },
+    "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-7-distributed-research-math\\outputs\\query-v2-cddf71f-full.xml": {
+      "bytes": 324985,
+      "sha256": "0d5ec1579e49ba7d8a1dd97d5bcf07599eadeebb40cd8d3baa631b4bfff121e9"
+    }
+  },
+  "native_admission": false,
+  "publication": "NONE",
+  "physical_admission": false,
+  "hosted_ci": "PENDING"
+}

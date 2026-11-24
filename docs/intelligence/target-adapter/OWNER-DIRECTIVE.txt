@@ -1,0 +1,277 @@
+# CODEX — MASTER MISSION CONTINUATION
+## Intelligence Gateway Target Adapter v1
+
+**STATUS: IN_PROGRESS / NO-GO**
+
+**PUBLIC_SUBMIT: DENY**
+
+**PHYSICAL_DEPLOYMENT: BLOCKED**
+
+### 1. Цель
+
+Реализовать первый фактически исполняемый путь между Intelligence Gateway и существующими исследовательскими модулями Unified.
+
+Не открывать публичный submit до прохождения обязательных authority, identity, quota, scheduler и storage gates.
+
+Не создавать новый Scheduler, PaperLedger, Math engine или Experiment Registry.
+
+### 2. Source and ownership
+
+ROOT должен:
+
+1. Проверить текущие exact HEAD/tree всех затрагиваемых репозиториев.
+2. Определить актуальную базу Intelligence Gateway PR #44 и связанные PR.
+3. Проверить уже существующие target adapters.
+4. Назначить владельца файлов.
+5. Создать отдельную feature-ветку.
+6. Сохранить неизменными опубликованные immutable evidence.
+7. Не изменять shared contracts без соответствующих owner ACK.
+
+Не использовать старые HEAD из переписки как автоматически актуальные.
+
+### 3. Target Adapter Contract
+
+Создать версионированный контракт, который описывает:
+
+- `request_id`
+- `target_kind`
+- `target_capability`
+- `target_version`
+- `dataset_manifest_id`
+- `dataset_revision`
+- `experiment_id`
+- `strategy_version`
+- `parameters_digest`
+- `execution_mode`
+- `resource_budget`
+- `quota_owner`
+- `principal_id`
+- `authority_generation`
+- `assignment_revision`
+- `fencing_token`
+- `idempotency_key`
+- `result_schema`
+- `result_artifact_ref`
+
+Контракт не должен содержать секреты или произвольные shell-команды.
+
+Наличие этих полей не является доказательством действительной авторизации. Проверять их через соответствующих владельцев.
+
+### 4. Target Capability Registry
+
+Подготовить реестр возможностей существующих исполнителей.
+
+Первоначально:
+
+- Strattester historical backtest.
+- Strattester historical replay.
+- Math statistical computation.
+- MetaAnalyse supported analysis.
+- Trader Intelligence offline reconstruction.
+
+Для каждой capability указать:
+
+- Owning repository.
+- Exact implementation entrypoint.
+- Supported input schema.
+- Supported output schema.
+- Required dataset.
+- Required resource budget.
+- Required authority scope.
+- Cancellation semantics.
+- Recovery semantics.
+- Known limitations.
+
+Если реализация отсутствует или не проверена, выставлять `UNAVAILABLE`.
+
+Не создавать фиктивный runtime endpoint.
+
+### 5. Первый исполняемый вертикальный сценарий
+
+Начать с одного полностью изолированного сценария:
+
+**Gateway prepared request → Target Adapter → Existing research implementation → Verified result.**
+
+Рекомендуемый сценарий:
+
+Рассчитать детерминированную статистику по заранее закреплённому синтетическому датасету.
+
+Условия:
+
+1. Данные immutable.
+2. Используется существующий исследовательский код.
+3. Все входные версии закреплены.
+4. Нет доступа к production database.
+5. Нет реальных биржевых запросов.
+6. Нет настоящих ордеров.
+7. Результат воспроизводим.
+8. Результат содержит digest и provenance.
+9. Повтор одного request_id не создаёт второе выполнение.
+10. Ошибки и UNKNOWN сохраняются.
+
+Не подменять реальный target mock-функцией, возвращающей заранее записанный PASS.
+
+### 6. Scheduler Integration
+
+Agent 5 и Agent 2 должны определить:
+
+- Реальный submit admission.
+- Job ownership.
+- Resource quota.
+- Assignment.
+- Lease.
+- Fencing.
+- Status.
+- Cancellation.
+- Restart reconciliation.
+
+Пока actual authority/scheduler backend не допущен, выполнять только disposable direct-target tests в явно изолированном режиме.
+
+Не выдавать прямой запуск target за распределённый scheduler PASS.
+
+### 7. Result Integration
+
+Agent 4 должен согласовать:
+
+- Result identity.
+- Immutable artifact.
+- Content digest.
+- Dataset provenance.
+- Experiment identity.
+- Publication status.
+- Reconciliation.
+- Access scope.
+
+До подтверждения storage publication использовать изолированный результат с явным `LOCAL_UNATTESTED`.
+
+Не выдавать локальный файл за глобально подтверждённый artifact.
+
+### 8. Terminan
+
+Agent 6 должен подготовить отображение результата.
+
+Первый сценарий:
+
+- Experiment ID.
+- Target capability.
+- Dataset identity.
+- Parameters.
+- Result.
+- Statistical units.
+- Execution status.
+- Provenance.
+- Limitations.
+
+Если authenticated visualization API отсутствует, проверить только disposable rendering.
+
+Не объявлять production visualization PASS.
+
+### 9. Trader Intelligence
+
+Добавить отдельную capability для offline-реконструкции публичных исполнений.
+
+Первоначально использовать синтетические или разрешённые локальные sample datasets.
+
+Не включать сетевую загрузку, создание аккаунтов или production ingestion в первый target adapter.
+
+Сохранять различие между подтверждёнными fills и реконструированными позициями.
+
+### 10. Security and negative tests
+
+Обязательные проверки:
+
+- Unauthorized principal.
+- Missing scope.
+- Expired authorization.
+- Wrong target.
+- Wrong dataset.
+- Stale assignment.
+- Revoked lease.
+- Duplicate request.
+- Idempotency collision.
+- Unknown result.
+- Crash before execution.
+- Crash after execution.
+- Partial artifact.
+- Invalid financial units.
+- Resource budget exceeded.
+- Cancellation race.
+- Prompt injection in research parameters.
+- Forbidden exchange order operation.
+
+Ни один негативный сценарий не должен приводить к скрытому исполнению.
+
+### 11. Agent 8 Independent Acceptance
+
+Agent 8 должен проверить:
+
+- Exact source.
+- Actual existing target invocation.
+- Input/output contract.
+- No production side effects.
+- Idempotency.
+- Result reproducibility.
+- Failure behavior.
+- Windows tests.
+- Source-bound evidence.
+
+Разделять:
+
+`PREPARATION_PASS`
+
+`DIRECT_TARGET_PASS`
+
+`SCHEDULER_INTEGRATION_PASS`
+
+`AUTHENTICATED_GATEWAY_PASS`
+
+`PHYSICAL_PASS`
+
+Не переносить PASS между уровнями.
+
+### 12. Следующий результат
+
+Предоставить:
+
+TARGET_ADAPTER_PR:
+EXACT_HEAD:
+TARGET_CAPABILITY:
+REAL_ENTRYPOINT:
+DATASET_SHA256:
+INPUT_SCHEMA:
+OUTPUT_SCHEMA:
+DIRECT_TARGET_RESULT:
+SCHEDULER_RESULT:
+AUTHORITY_RESULT:
+STORAGE_RESULT:
+TERMINAN_RESULT:
+NEGATIVE_TESTS:
+WINDOWS_CI:
+A8_REVIEW:
+PUBLIC_SUBMIT:
+NEXT_ACTION:
+GO_NO_GO:
+
+### 13. Execution directive
+
+Начинай реализацию Target Adapter v1 сейчас.
+
+Не останавливайся после design review.
+
+Если реальный target уже существует, используй его.
+
+Если нужный owner contract отсутствует, реализуй только безопасную независимую часть и передай конкретный вопрос владельцу.
+
+Не изменяй работающий runtime без допуска.
+
+**ISOLATED_TARGET_ADAPTER_IMPLEMENTATION: AUTHORIZED**
+
+**DIRECT_DISPOSABLE_TESTING: AUTHORIZED**
+
+**PUBLIC_SUBMIT: DENY**
+
+**REAL_SCHEDULER_DISPATCH: BLOCKED UNTIL ADMISSION**
+
+**PRODUCTION_RUNTIME: BLOCKED**
+
+**MASTER MISSION: IN_PROGRESS / NO-GO**

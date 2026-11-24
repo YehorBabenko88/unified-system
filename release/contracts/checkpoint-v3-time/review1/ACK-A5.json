@@ -1,0 +1,69 @@
+{
+  "reviewer": "Agent5",
+  "verdict": "SCOPED_EXACT_CONTENT_EVIDENCE_SCHEMA_CONSUMER_DESIGN_ACK",
+  "input_sha256": {
+    "schema.json": "4de720d9391e5a89c0577b5298c283e742fbfe490c4454c184e31c2348589ea4",
+    "PROTOCOL.md": "79efbcb70d1ed9204fbd8295a4990650d99582196712097280d2483298ad4f8e",
+    "golden-vectors.json": "69ef7786400030ae1bb9dbf4bd1fb30c6b6e50ac9690437536aa669a7c18b0d4"
+  },
+  "owner_decision_sha256": "aa84f7acbe7632f8d534c96f529c7a39b9b1b26c1a49cf7a69a9366e5c04670e",
+  "fixture_hashes": {
+    "confirmed-observed.canonical.json": "ab4b0d7d2af33576943dab2f65abb2b533cdc8da77cff5ed7552aef7f867db4f",
+    "confirmed-unknown-time.canonical.json": "71f0be33ccd96448c95574d7127d04792db2862a4fdad8161ff819c80aae5329",
+    "MODEL-publication-evidence.json": "b19b2be10d83b8d76e0bf2a85403ac905f80c8a8b89c729c7ee7c1b64499b5d8",
+    "publication-content.canonical.json": "230d90d91183a17b268fcf157e0d5e7ebbe0c15cdeedf0ed4b650bf960cbe8b3",
+    "schema.json": "4de720d9391e5a89c0577b5298c283e742fbfe490c4454c184e31c2348589ea4",
+    "unconfirmed.canonical.json": "44afdcc9c2981575653c11a0e611eba6e8a0925a5c5eeb84be5850c252a3e5a0"
+  },
+  "checks": [
+    {
+      "case": "confirmed_unknown_time",
+      "structurally_valid": true
+    },
+    {
+      "case": "confirmed_observed_time",
+      "structurally_valid": true
+    },
+    {
+      "case": "unconfirmed_without_content_or_evidence",
+      "structurally_valid": true
+    },
+    {
+      "case": "old_time_alias_rejected",
+      "structurally_valid": false
+    },
+    {
+      "case": "exact_commit_timestamp_rejected_in_this_profile",
+      "structurally_valid": false
+    },
+    {
+      "case": "committed_without_publication_evidence_rejected",
+      "structurally_valid": false
+    },
+    {
+      "case": "unconfirmed_cannot_carry_committed_content",
+      "structurally_valid": false
+    }
+  ],
+  "static_bindings": "Golden duplicate identity/fence/revision/hash bindings match; observed and unknown-time envelopes retain identical immutable content.",
+  "accepted": [
+    "Exact owner committed_at_utc:null +commit_time_status:UNKNOWN_COMMIT_INSTANT; no aliases.",
+    "Separate qualified confirmed_observed_at_utc, no time-based commit proof or hash back-reference.",
+    "COMMIT_UNCONFIRMED closed variant has no committed content/proof; lifecycle receipt is insufficient.",
+    "Every parsed variant is an UNTRUSTED claim; pure codec promotion always denied pending an admitted actual A2/A4 proof adapter.",
+    "Job_id is grant provenance, not checkpoint lineage or job completion; old versions require explicit readers.",
+    "Current historical disclosure authorization and original UNKNOWN receipt reconciliation remain mandatory."
+  ],
+  "changes_requested": [],
+  "pure_claim_codec_can_proceed_independently": true,
+  "boundaries": [
+    "No actual producer/proof/receipt authenticity verified.",
+    "No runtime clock,checkpoint durability,stale-worker or physical acceptance established.",
+    "Schema-only u63/calendar/native-session/cross-object checks require protocol semantic validation in codec/producer.",
+    "Publication wire REVIEW3 raw133d922df1edef3694120e204223049edae19b84a914bb528f2368fdb6f30d77 is a separate ACK, not covered here."
+  ],
+  "full_api_ack": false,
+  "runtime_ack": false,
+  "source_or_shared_schema_changes": "NONE",
+  "go_no_go": "INTEGRATION_PENDING_NO_GO"
+}

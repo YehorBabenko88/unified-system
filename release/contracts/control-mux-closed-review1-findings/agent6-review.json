@@ -1,0 +1,48 @@
+{
+  "schema": "terminan.control-mux-closed-review1-review.v1",
+  "reviewed_manifest_sha256": "ce7a510ab16033d7d108a06700ef0002f313bed6133a2599e273388ba296578a",
+  "reviewed_schema_sha256": "36d09e982b65d6125e5e5cd3ca7c381cbe57409a039d069835f34e621bae651b",
+  "reviewed_protocol_sha256": "42babababb51e478644c9c92267b4b19378e32032c419394b4cdaf7054715dd5",
+  "reviewed_preimages_sha256": "7baad6ff7fe295aa752dbace6b97b39db23fced64c1f1d6863ae3ea8efab103d",
+  "fresh_full_abi_verdict": "NOT_ACKED_MODEL_GATE_BLOCKER",
+  "scoped_positive_assessment": [
+    "All9 member raw hashes/lengths plus manifest verified; profile schema hash and registry binding have no self-hash cycle.",
+    "Closed request/result/error/mux payload tags, typed nulls/epochs/targets and credential exclusion are meaningful structure; route/header/domain/provider relationships remain semantic.",
+    "Request UUID global immutable unique index with native CAS across owner/actor/generation/profile, scoped command-key collisions and current-capability lookup explicitly address prior ambiguity concerns; missing/ambiguous links fail closed by stated protocol.",
+    "Exact admission-body/command/key preimage examples reproduced; empty204 body hash/null schema and terminal409-rejection rules are explicitly stated, but operation-result enforcement is incomplete in provided lookup model.",
+    "Connection-scoped liveness and whole-connection outer failure rule preserve corrigendum intent; per-subscription authority/state remains independent."
+  ],
+  "findings": [
+    {
+      "id": "A6-CLOSED-R1-01",
+      "related": "A1-CLOSED-R1-01",
+      "priority": "P1_MODEL_ACK_GATE",
+      "confirmed": "Independent reproduction: OPEN_CONNECTION original preimage +COMPLETED +204empty hash-consistent records returns HISTORICAL_MODEL_MATCH_NOT_PERMISSION. OPEN requires201OPENED;204 is valid only for ACK/CLOSED actions.",
+      "root_cause": "model_lookup checks terminal state/status membership and hashes, not pinned operation/state/http-status/result-definition compatibility. Cryptographic self-consistency is insufficient semantic validity.",
+      "required": "A2 new immutable revision with closed compatibility matrix and fail-closed model enforcement. Cover OPEN204/OPEN201UNKNOWN/OPEN201error, wrong-operation, DELETE201; preserve valid definitive409 rejection and204 ACK/CLOSED. No repair of review1 bytes or shared consumers.",
+      "qualification": "Synthetic lookup counterexample, not an endpoint exploit or authority/native finding."
+    },
+    {
+      "id": "A6-CLOSED-R1-02",
+      "priority": "CANONICAL_NUMBER_ABI_CLARIFICATION_BEFORE_BROWSER_DATA_ADMISSION",
+      "confirmed": "C3 model accepts numeric1.0,-0.0,1e-07; native JSparse/stringify yields1,0,1e-7. Generic resource.value schema permits finite JSONnumbers, but normative C3 gives no number lexical/rounding/negative-zero algorithm. Native JSONstringify is not claimed to implement C3; differences demonstrate need for an explicit cross-language rule.",
+      "required": "Pin a language-independent finite-number/canonical representation policy and golden cross-language vectors, or explicitly prohibit numeric JSONvalues in C3 and require domain-owned exact strings under a reviewed schema. Do not silently coerce paper/metrics amounts or rewrite bytes after hashing. String-only admission examples already match; no numeric domain is admitted by this review.",
+      "qualification": "Consumer canonicalization/profile completeness issue; existing domain-registry gate remains closed."
+    }
+  ],
+  "minor_doc_note": "PROTOCOL calls command preimage17fields; actual closed schema/corrigendum enumerate15. Correct documentation in a new revision; no missing field inferred solely from prose count.",
+  "verification": {
+    "manifest_and_members": "MATCH_9MEMBERS",
+    "schema_and_models": 40,
+    "result": "SCHEMA_CANONICAL_LOOKUP_MODELS_MATCH",
+    "counterexamples": "A2-CLOSED-MUX-REVIEW1-PROBES.json",
+    "copied_execution": "Own work directory only; A2 review1 preserved",
+    "qualification": "SCHEMA_CANONICAL_LOOKUP_MODELS_ONLY"
+  },
+  "owner_correction": "A2 owns new immutable revision/manifest; fresh A1/A6/ROOT review required.",
+  "consumer_head_unchanged": "42686cd8fafcefaed3c5df5adaee5173d27543fd",
+  "shared_consumers_PR31_frozen_schema_changes": "NONE",
+  "runtime_or_native_admission": "NOT_AVAILABLE",
+  "physical_provider_qualification": "NOT_RUN",
+  "go_no_go": "NO-GO"
+}

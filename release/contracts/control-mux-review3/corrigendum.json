@@ -1,0 +1,89 @@
+{
+  "schema": "unified.control-multiplex-abi.review3-corrigendum",
+  "status": "FRESH_A1_A6_ROOT_EXACT_REVIEW_PENDING_NO_RUNTIME_ADMISSION",
+  "base": {
+    "path": "CONTROL-MULTIPLEX-ABI-REVIEW2.md",
+    "sha256_raw": "456a133b91385f6d5fa0e86d201d5eb72040d1dc2d824d96ee321d1450ba9042",
+    "rule": "Preserve original bytes. This corrigendum overrides only the topics enumerated here. No prior ACK transfer."
+  },
+  "cursor_bootstrap": {
+    "opened_result_additions": {
+      "initial_mux_cursor": "Opaque integrity-protected base64url cursor,1..2048bytes, issued by trusted producer in durable OPENED result",
+      "initial_mux_sequence": "0 canonical u63 decimal string"
+    },
+    "cursor_binding": "Exact connection_id, connection_epoch, admitted principal/session and quota owner/delegation/policy revision, initial position0, profile/schema hash and replay bounds. Contains no bearer credentials. Inner snapshot cursor never substitutes for outer mux cursor.",
+    "issuance": "Connection allocation and immutable OPENED command receipt atomically bind initial position/cursor reference. Exact authorized duplicate OPEN returns original connection/epoch/result, not another cursor or slot. Cursor validity is separately checked; observing historical result does not revive an expired session/cursor.",
+    "stream_start": "GET events requires initial_mux_cursor and X-Stream-Attempt-ID canonical UUIDv4. First admitted stream start durably binds attempt to connection epoch. No concurrent second delivery for the same connection. Original stream-start response loss is UNKNOWN; never retry a different attempt or attach a second socket without qualified old-delivery containment. A disconnected stream requires a fresh connection/snapshot after old slot containment, not implicit continuation.",
+    "first_frame": "mux_sequence=1 after the admitted initial position0. Every outer frame kind, including notices and liveness, increments sequence exactly1 within that connection epoch. Overflow denies/terminates; never reset on restart.",
+    "sequence_rules": [
+      "Require exact admitted connection_id/epoch before accepting any frame.",
+      "Expected next sequence applies atomically after complete outer validation.",
+      "Exact duplicate immediately last accepted sequence and identical canonical frame bytes is inert; it refreshes no authority or freshness.",
+      "Same sequence with different bytes, any sequence gap, an older non-last sequence, unknown connection epoch or unestablished starting position is a connection-level protocol failure, not a guessed per-subscription gap.",
+      "No persistent replay continuation after producer/consumer disconnect is promised. Retained command results support reconciliation only, not an authorization to resume a socket."
+    ],
+    "subscription_and_snapshot": "SUBSCRIBED and snapshot ACK do not reissue/reset outer cursor or mux sequence. Snapshot cursor is the independently bound view-change position. Outer sequence orders interleaving across subscriptions; it does not fill an inner delta gap, verify a root or establish authority. Concurrent subscribe/snapshot-ready notices enter the same contiguous outer sequence."
+  },
+  "canonical_command_identity": {
+    "exact_fields": [
+      "profile_schema_sha256",
+      "quota_owner_id",
+      "original_actor_principal_id",
+      "original_actor_session_id",
+      "request_id",
+      "idempotency_key",
+      "http_method",
+      "operation",
+      "canonical_path",
+      "connection_id",
+      "subscription_id",
+      "snapshot_id",
+      "expected_connection_epoch",
+      "expected_subscription_epoch",
+      "canonical_body_sha256"
+    ],
+    "typing": "UUID identities canonical lowercasev4 or explicit null where target absent; epochs canonical bounded positive u63 decimal strings or null for not-applicable. Path is canonical parsed route plus exact target IDs; no percent/empty/duplicate path aliases. Full command digest covers every field. DELETE has SHA256 of zero raw body bytes and rejects nonempty body.",
+    "headers": {
+      "X-Request-ID": "Canonical UUIDv4 equal to body request_id where a body exists; mandatory for DELETE",
+      "Idempotency-Key": "Bounded canonical ASCII ID,1..128bytes; immutable original command identity",
+      "X-Expected-Connection-Epoch": "Canonical positive u63 decimal string for subscription creation, snapshot ACK, connection/subscription DELETE; equal to body field if present",
+      "X-Expected-Subscription-Epoch": "Canonical positive u63 decimal string for snapshot ACK and subscription DELETE; equal to body field if present",
+      "X-Stream-Attempt-ID": "Canonical UUIDv4 for first events GET; stream-start identity distinct from admission request_id",
+      "X-CSRF-Token": "Provider-validated human-cookie CSRF token; separate from idempotency and never a quota credential"
+    },
+    "cross_target_reuse": "Idempotency ledger scope is quota owner+original actor principal+key. Reusing same key for different method/operation/path/target/epoch/body/session/request conflicts even if DELETE bodies are both empty. Do not include target in the lookup key in a way that makes cross-target reuse silently new.",
+    "unknown_vs_rejection": "Transport loss/unverified commit is UNKNOWN, never role/epoch rejection. A definitive role/epoch rejection requires current verified provider/authority decision and original command receipt reconciliation. HTTP409 alone does not prove a lost earlier command failed.",
+    "authorized_reconciliation": "GET /control/v3/commands/<request_uuid> returns current-authorized original immutable admission receipt/outcome. Current HUMAN owner or explicitly admitted delegated service may read only its permitted original command scope. New authenticated session may read historical result under a real ReconcileControlAdmission capability, but cannot impersonate original session, alter command digest, replay original cursor as current, mint another slot or rekey unresolved command. Missing/unavailable receipt remains UNKNOWN until qualified reconciliation establishes resolution.",
+    "reauthenticated_recovery": "Historical OPENED receipt/cursor bound to an old session is evidence only. Current-authorized close/drain may target that old connection using a NEW explicit command and expected epoch, never an altered retry of the old command. New connection requires qualified old-slot release or an actually free reserved slot. No automatic session alias or silent reattachment."
+  },
+  "failure_attribution": {
+    "connection_failure": [
+      "Incomplete or assembly-deadline-exceeded outer SSE event",
+      "Oversize outer frame or noncanonical/unparseable JSON",
+      "Invalid outer schema/hash/connection/epoch or unknown mux sequence gap",
+      "Conflicting duplicate or unauthenticated outer frame",
+      "Unvalidated subscription identity or inconsistent null connection-notice target"
+    ],
+    "connection_action": "Immediately clear LIVE for ALL subscriptions on that connection, discard every incomplete/partially applied frame, stop accepting that delivery epoch and close/drain connection. Global slot is not reusable until independently qualified termination/containment. Error notice is best effort under byte caps, never required for local failure detection. Other independently admitted connections retain their own state/freshness.",
+    "subscription_failure": "Only after complete authenticated outer validation establishes exact current subscription_id/epoch may an inner domain/root/change-sequence/snapshot/payload error be isolated to that subscription. Clear its LIVE and resnapshot; other subscriptions may continue on intact contiguous outer transport. No partial inner change apply.",
+    "clarification": "Review2 'clear only affected subscription' applies ONLY to attributable inner failures. It does not apply to outer framing/transport identity/sequence failures."
+  },
+  "required_negative_vectors": [
+    "OPENED issues position0 and first outer frame1; snapshot cursor cannot bootstrap mux",
+    "Lost OPEN/stream-start response reconciles original identity without new socket/slot",
+    "Last exact duplicate inert; conflicting duplicate/gap/old epoch clears all connection subscriptions LIVE",
+    "Same empty DELETE key on different target/method/epoch conflicts",
+    "Reauthenticated historical read does not revive original cursor/session or permit rekey",
+    "Incomplete/oversize/unparseable outer frame clears all; authenticated attributable inner error isolates one",
+    "Concurrent subscribe/snapshot ACK never resets outer sequence"
+  ],
+  "remaining_full_abi_dependencies": [
+    "Pinned closed request/result/error/frame/payload schemas and exact hashes by agreed schema editor",
+    "Qualified real human/service delegation, CSRF, global command/slot/epoch/byte/encoder registry",
+    "Independent old-delivery containment, actual two-producer8physical9logical load/relocation evidence",
+    "Source/domain caps, actual authority read barriers and measured native/socket/memory/time limits"
+  ],
+  "old_bytes_changed": false,
+  "product_code_changed": false,
+  "runtime_ack": false
+}

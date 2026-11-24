@@ -1,0 +1,69 @@
+{
+  "schema": "unified.ci-source-snapshot.v1",
+  "scope": "CONNECTOR_PR_TRIGGERED_FIRST_PAGE_ONLY_NOT_FULL_MATRIX_ACCEPTANCE",
+  "repository": "strattester",
+  "source_head": "88a180b29afe9c85ddea26ef98cbe0bec8de24a6",
+  "response": {
+    "content": [
+      {
+        "type": "text",
+        "text": "Action completed."
+      }
+    ],
+    "structuredContent": {
+      "workflow_runs": [
+        {
+          "id": 42287349783,
+          "name": "financial-integration",
+          "status": "completed",
+          "conclusion": "failure",
+          "run_number": 342,
+          "jobs_url": "https://api.github.com/repos/YehorBabenko88/strattester/actions/runs/42287349783/jobs",
+          "logs_url": "https://api.github.com/repos/YehorBabenko88/strattester/actions/runs/42287349783/logs",
+          "workflow_id": 395183489
+        },
+        {
+          "id": 42287349590,
+          "name": "ml-oos-synthetic",
+          "status": "completed",
+          "conclusion": "success",
+          "run_number": 42,
+          "jobs_url": "https://api.github.com/repos/YehorBabenko88/strattester/actions/runs/42287349590/jobs",
+          "logs_url": "https://api.github.com/repos/YehorBabenko88/strattester/actions/runs/42287349590/logs",
+          "workflow_id": 398567966
+        },
+        {
+          "id": 42287349637,
+          "name": "alphafold-research-cpu",
+          "status": "completed",
+          "conclusion": "success",
+          "run_number": 276,
+          "jobs_url": "https://api.github.com/repos/YehorBabenko88/strattester/actions/runs/42287349637/jobs",
+          "logs_url": "https://api.github.com/repos/YehorBabenko88/strattester/actions/runs/42287349637/logs",
+          "workflow_id": 395133948
+        },
+        {
+          "id": 42287349538,
+          "name": "data-first-scheduler",
+          "status": "completed",
+          "conclusion": "success",
+          "run_number": 38,
+          "jobs_url": "https://api.github.com/repos/YehorBabenko88/strattester/actions/runs/42287349538/jobs",
+          "logs_url": "https://api.github.com/repos/YehorBabenko88/strattester/actions/runs/42287349538/logs",
+          "workflow_id": 399659607
+        },
+        {
+          "id": 42287349607,
+          "name": "tests",
+          "status": "completed",
+          "conclusion": "success",
+          "run_number": 2559,
+          "jobs_url": "https://api.github.com/repos/YehorBabenko88/strattester/actions/runs/42287349607/jobs",
+          "logs_url": "https://api.github.com/repos/YehorBabenko88/strattester/actions/runs/42287349607/logs",
+          "workflow_id": 371988053
+        }
+      ]
+    },
+    "isError": false
+  }
+}

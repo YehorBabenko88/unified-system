@@ -1,0 +1,67 @@
+{
+  "schema": "unified.ci-contract-role-transfer.v1",
+  "base": "d311578d681bade033da51c6622106894bde356b",
+  "historical_registry": {
+    "original_source_commit": "9bed98c13cd54ace341756a673a4ff8c2edc4bfc",
+    "original_test_path": "tests/test_integration_registry.py",
+    "original_test_sha256": "196301a22473a86e5ab5a84f5f5ba3f2cb3f9e60695895cb58e38fd70aeffc11",
+    "sole_method_normalization": {
+      "ImportFrom": "unified_system.integration_registry -> scripts.historical_registry"
+    },
+    "mapping": {
+      "tests.test_integration_registry.AcceptanceTests.test_additional_allocation_cannot_claim_another_scope": "tests.test_historical_registry.AcceptanceTests.test_additional_allocation_cannot_claim_another_scope",
+      "tests.test_integration_registry.AcceptanceTests.test_modified_member_and_wrong_external_pin_rejected": "tests.test_historical_registry.AcceptanceTests.test_modified_member_and_wrong_external_pin_rejected",
+      "tests.test_integration_registry.AcceptanceTests.test_package_integrity_never_grants_execution": "tests.test_historical_registry.AcceptanceTests.test_package_integrity_never_grants_execution",
+      "tests.test_integration_registry.RegistryTests.test_agent_cannot_reserve_common_contract_or_activation_files": "tests.test_historical_registry.RegistryTests.test_agent_cannot_reserve_common_contract_or_activation_files",
+      "tests.test_integration_registry.RegistryTests.test_eight_scopes_isolated_and_conflicting_reservations_denied": "tests.test_historical_registry.RegistryTests.test_eight_scopes_isolated_and_conflicting_reservations_denied",
+      "tests.test_integration_registry.RegistryTests.test_external_manifest_pin_cannot_be_replaced_by_candidate_claim": "tests.test_historical_registry.RegistryTests.test_external_manifest_pin_cannot_be_replaced_by_candidate_claim",
+      "tests.test_integration_registry.RegistryTests.test_matching_identity_never_authorizes_runtime_or_trading": "tests.test_historical_registry.RegistryTests.test_matching_identity_never_authorizes_runtime_or_trading",
+      "tests.test_integration_registry.RegistryTests.test_mixed_missing_extra_head_tree_and_contract_versions_rejected": "tests.test_historical_registry.RegistryTests.test_mixed_missing_extra_head_tree_and_contract_versions_rejected",
+      "tests.test_integration_registry.RegistryTests.test_real_trading_and_json_duplicate_claims_denied": "tests.test_historical_registry.RegistryTests.test_real_trading_and_json_duplicate_claims_denied",
+      "tests.test_integration_registry.RegistryTests.test_rehashed_candidate_cannot_hide_changed_contract_or_gate_bytes": "tests.test_historical_registry.RegistryTests.test_rehashed_candidate_cannot_hide_changed_contract_or_gate_bytes",
+      "tests.test_integration_registry.RegistryTests.test_shared_worktree_denied": "tests.test_historical_registry.RegistryTests.test_shared_worktree_denied",
+      "tests.test_integration_registry.RegistryTests.test_unsafe_repository_path_spelling_rejected": "tests.test_historical_registry.RegistryTests.test_unsafe_repository_path_spelling_rejected",
+      "tests.test_integration_registry.RegistryTests.test_windows_path_aliases_and_case_collisions_rejected": "tests.test_historical_registry.RegistryTests.test_windows_path_aliases_and_case_collisions_rejected"
+    },
+    "original_expected_count": 161,
+    "new_expected_count": 162,
+    "prior_original_count": 145,
+    "prior_translated_count": 145,
+    "new_gate": "tests.test_historical_registry_gate.RegistryResultGateTests.test_exact_success_gate_refuses_all_non_success_unittest_outcomes"
+  },
+  "physical_construction": {
+    "original": "tests.physical_dev.test_bootstrap_contract.BootstrapPathTests.test_allocate_existing_stand_contract_requires_new_empty_directory",
+    "roles": [
+      {
+        "intent": "missing direct-state refused",
+        "target": "hosted_stand_construction.StandConstructionTests.test_actual_canonical_constructor_preserves_private_stand_obligations",
+        "local_status": "NOT_RUN"
+      },
+      {
+        "intent": "stand.invocations == 0",
+        "target": "hosted_stand_construction.StandConstructionTests.test_actual_canonical_constructor_preserves_private_stand_obligations",
+        "local_status": "NOT_RUN"
+      },
+      {
+        "intent": "private journal file exists",
+        "target": "hosted_stand_construction.StandConstructionTests.test_actual_canonical_constructor_preserves_private_stand_obligations",
+        "approved_literal_change": "direct-journal.db -> canonical-target.v2.sqlite",
+        "local_status": "NOT_RUN"
+      },
+      {
+        "intent": "reallocation existing directory raises FileExistsError",
+        "target": "original pure allocation test plus hosted case",
+        "local_status": "PURE_ONLY"
+      }
+    ],
+    "native_admission": "NOT_QUALIFIED",
+    "source_workload": "NOT_INVOKED"
+  },
+  "control_api": {
+    "original_count": 16,
+    "new_count": 16,
+    "id_prefix_translation": "test_control_api_readonly.ControlAPITest. -> tests.test_control_api_readonly.ControlAPITest.",
+    "reason": "ordinary tracked tests package and explicit Root top_level_dir",
+    "test_method_AST_changed": false
+  }
+}

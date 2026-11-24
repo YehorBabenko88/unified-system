@@ -1,0 +1,317 @@
+{
+  "schema": "unified.readonly-route-observation.v1",
+  "started_utc": "2026-11-06T18:54:07.208386+00:00",
+  "script_sha256": "f35cf78295168df0d6d566d1b095ab4a92a082dceb0274816c5d4d625e3f75c4",
+  "source_config_sha256": "a66fe8fff9eff8011bbd54704c0f543fd6d7b44026b0f7996b56b587e3bcd540",
+  "prior_known_hosts_sha256": "7bfcff98d0ec28cf23a7e2782ac26ce0a3024520fd60822f25de063e83f0233b",
+  "physical_fault_injection": false,
+  "configuration_mutations": false,
+  "adminit_contacted": false,
+  "results": [
+    {
+      "node": "LS5",
+      "started_utc": "2026-11-06T18:54:07.208386+00:00",
+      "finished_utc": "2026-11-06T18:54:11.322616+00:00",
+      "duration_ms": 4109,
+      "process_exit_code": 0,
+      "stdout_sha256": "03c5fcf690dc202d0a59d2c932b5724d8a34fa5f9280024d4d4e2e58483b248e",
+      "stderr_sha256": "6cc62bc895a8cfac950ecd99019161018989cd112c57fd0a2a117db808d5ed72",
+      "stderr_bytes": 8520,
+      "status": "OBSERVED_READ_ONLY_INVENTORY",
+      "observation": {
+        "schema": "unified.route-readonly-inventory.v1",
+        "node": "LS5",
+        "observed_utc": "2026-11-06T18:54:11.2489749Z",
+        "exit_code": 0,
+        "routes": [
+          {
+            "destination": "192.168.2.11",
+            "source": "192.168.2.173",
+            "interface_index": 12,
+            "interface_alias": "Ethernet",
+            "destination_prefix": "192.168.2.0/24",
+            "next_hop": "0.0.0.0",
+            "adapter_description": "Realtek Gaming 2.5GbE Family Controller",
+            "adapter_status": "Up",
+            "hardware_interface": true,
+            "virtual": false
+          },
+          {
+            "destination": "192.168.2.12",
+            "source": "192.168.2.173",
+            "interface_index": 12,
+            "interface_alias": "Ethernet",
+            "destination_prefix": "192.168.2.0/24",
+            "next_hop": "0.0.0.0",
+            "adapter_description": "Realtek Gaming 2.5GbE Family Controller",
+            "adapter_status": "Up",
+            "hardware_interface": true,
+            "virtual": false
+          },
+          {
+            "destination": "192.168.2.104",
+            "source": "192.168.2.173",
+            "interface_index": 12,
+            "interface_alias": "Ethernet",
+            "destination_prefix": "192.168.2.0/24",
+            "next_hop": "0.0.0.0",
+            "adapter_description": "Realtek Gaming 2.5GbE Family Controller",
+            "adapter_status": "Up",
+            "hardware_interface": true,
+            "virtual": false
+          },
+          {
+            "destination": "192.168.2.115",
+            "source": "192.168.2.173",
+            "interface_index": 12,
+            "interface_alias": "Ethernet",
+            "destination_prefix": "192.168.2.0/24",
+            "next_hop": "0.0.0.0",
+            "adapter_description": "Realtek Gaming 2.5GbE Family Controller",
+            "adapter_status": "Up",
+            "hardware_interface": true,
+            "virtual": false
+          },
+          {
+            "destination": "192.168.2.141",
+            "source": "192.168.2.173",
+            "interface_index": 12,
+            "interface_alias": "Ethernet",
+            "destination_prefix": "192.168.2.0/24",
+            "next_hop": "0.0.0.0",
+            "adapter_description": "Realtek Gaming 2.5GbE Family Controller",
+            "adapter_status": "Up",
+            "hardware_interface": true,
+            "virtual": false
+          }
+        ],
+        "dns": {
+          "name": "www.microsoft.com",
+          "latency_ms": 705,
+          "answers": [
+            "23.37.194.81"
+          ]
+        },
+        "component_errors": [],
+        "configuration_mutations": false,
+        "service_mutations": false,
+        "bybit_http_requests": 0
+      }
+    },
+    {
+      "node": "PC1",
+      "started_utc": "2026-11-06T18:54:11.324120+00:00",
+      "finished_utc": "2026-11-06T18:54:14.159392+00:00",
+      "duration_ms": 2828,
+      "process_exit_code": 0,
+      "stdout_sha256": "f42fb0f475551dafa0bc6211957aab2ded6fa6f52aa6b4c38a00a0947dc7e982",
+      "stderr_sha256": "94139bfd833087734d41318e5268681752fcb0409b55bb9025ee229990c5a7dd",
+      "stderr_bytes": 2616,
+      "status": "OBSERVED_READ_ONLY_INVENTORY",
+      "observation": {
+        "schema": "unified.route-readonly-inventory.v1",
+        "node": "PC1",
+        "observed_utc": "2026-11-06T18:54:13.5956237Z",
+        "exit_code": 0,
+        "routes": [
+          {
+            "destination": "192.168.2.173",
+            "source": "192.168.2.11",
+            "interface_index": 17,
+            "interface_alias": "Ethernet",
+            "destination_prefix": "192.168.2.0/24",
+            "next_hop": "0.0.0.0",
+            "adapter_description": "Realtek PCIe GbE Family Controller",
+            "adapter_status": "Up",
+            "hardware_interface": true,
+            "virtual": false
+          }
+        ],
+        "dns": {
+          "name": "www.microsoft.com",
+          "latency_ms": 658,
+          "answers": [
+            "23.37.194.81"
+          ]
+        },
+        "component_errors": [],
+        "configuration_mutations": false,
+        "service_mutations": false,
+        "bybit_http_requests": 0
+      }
+    },
+    {
+      "node": "PC2",
+      "started_utc": "2026-11-06T18:54:14.162833+00:00",
+      "finished_utc": "2026-11-06T18:54:16.559616+00:00",
+      "duration_ms": 2391,
+      "process_exit_code": 0,
+      "stdout_sha256": "b4a6217f06fc43ae978cc330a1b440c4daf6290a18b8bfe765b5337a2f52cf50",
+      "stderr_sha256": "ffa349f326040f0be443fbd276e69ce9c13c2eb26566fe3ce0059cfa51719795",
+      "stderr_bytes": 2617,
+      "status": "OBSERVED_READ_ONLY_INVENTORY",
+      "observation": {
+        "schema": "unified.route-readonly-inventory.v1",
+        "node": "PC2",
+        "observed_utc": "2026-11-06T18:54:16.3343214Z",
+        "exit_code": 0,
+        "routes": [
+          {
+            "destination": "192.168.2.173",
+            "source": "192.168.2.12",
+            "interface_index": 9,
+            "interface_alias": "Ethernet",
+            "destination_prefix": "192.168.2.0/24",
+            "next_hop": "0.0.0.0",
+            "adapter_description": "Intel(R) Ethernet Connection (11) I219-LM",
+            "adapter_status": "Up",
+            "hardware_interface": true,
+            "virtual": false
+          }
+        ],
+        "dns": {
+          "name": "www.microsoft.com",
+          "latency_ms": 419,
+          "answers": [
+            "23.37.194.81"
+          ]
+        },
+        "component_errors": [],
+        "configuration_mutations": false,
+        "service_mutations": false,
+        "bybit_http_requests": 0
+      }
+    },
+    {
+      "node": "PC3",
+      "started_utc": "2026-11-06T18:54:16.561616+00:00",
+      "finished_utc": "2026-11-06T18:54:18.722460+00:00",
+      "duration_ms": 2171,
+      "process_exit_code": 0,
+      "stdout_sha256": "c2d50df9bc8ce7792f753833ef8ec572704c74497b805f3431871893aa396ec5",
+      "stderr_sha256": "eb6e2f4496e2ce08795d47d367a776ebc1eb45ad7837f4c6bbeb4ee455866d75",
+      "stderr_bytes": 2617,
+      "status": "OBSERVED_READ_ONLY_INVENTORY",
+      "observation": {
+        "schema": "unified.route-readonly-inventory.v1",
+        "node": "PC3",
+        "observed_utc": "2026-11-06T18:54:19.0518199Z",
+        "exit_code": 0,
+        "routes": [
+          {
+            "destination": "192.168.2.173",
+            "source": "192.168.2.104",
+            "interface_index": 7,
+            "interface_alias": "Ethernet",
+            "destination_prefix": "192.168.2.0/24",
+            "next_hop": "0.0.0.0",
+            "adapter_description": "Intel(R) Ethernet Connection (7) I219-LM",
+            "adapter_status": "Up",
+            "hardware_interface": true,
+            "virtual": false
+          }
+        ],
+        "dns": {
+          "name": "www.microsoft.com",
+          "latency_ms": 398,
+          "answers": [
+            "23.37.194.81"
+          ]
+        },
+        "component_errors": [],
+        "configuration_mutations": false,
+        "service_mutations": false,
+        "bybit_http_requests": 0
+      }
+    },
+    {
+      "node": "PC4",
+      "started_utc": "2026-11-06T18:54:18.723964+00:00",
+      "finished_utc": "2026-11-06T18:54:20.109802+00:00",
+      "duration_ms": 1375,
+      "process_exit_code": 0,
+      "stdout_sha256": "685169721a135bf536b67efcd7bf877ef00b943001fa2b91b52824fb52146c3a",
+      "stderr_sha256": "0a42e94a7ab771677cccfc8d79f9508e1cb0324a38a466b90542aae9c37c4f36",
+      "stderr_bytes": 2617,
+      "status": "OBSERVED_READ_ONLY_INVENTORY",
+      "observation": {
+        "schema": "unified.route-readonly-inventory.v1",
+        "node": "PC4",
+        "observed_utc": "2026-11-06T18:54:20.2992258Z",
+        "exit_code": 0,
+        "routes": [
+          {
+            "destination": "192.168.2.173",
+            "source": "192.168.2.115",
+            "interface_index": 22,
+            "interface_alias": "Ethernet",
+            "destination_prefix": "192.168.2.0/24",
+            "next_hop": "0.0.0.0",
+            "adapter_description": "Realtek Gaming 2.5GbE Family Controller",
+            "adapter_status": "Up",
+            "hardware_interface": true,
+            "virtual": false
+          }
+        ],
+        "dns": {
+          "name": "www.microsoft.com",
+          "latency_ms": 234,
+          "answers": [
+            "23.37.194.81"
+          ]
+        },
+        "component_errors": [],
+        "configuration_mutations": false,
+        "service_mutations": false,
+        "bybit_http_requests": 0
+      }
+    },
+    {
+      "node": "LS7",
+      "started_utc": "2026-11-06T18:54:20.110806+00:00",
+      "finished_utc": "2026-11-06T18:54:22.440742+00:00",
+      "duration_ms": 2344,
+      "process_exit_code": 0,
+      "stdout_sha256": "b8c9631ffbc0066e3740b5ad9011ee76980d67ec542ce7947d241a43980fa8ba",
+      "stderr_sha256": "e2e8b479e7114aea3bcc32c3abd34f7d828f7224f7ce30b174995d66df244daf",
+      "stderr_bytes": 2618,
+      "status": "OBSERVED_READ_ONLY_INVENTORY",
+      "observation": {
+        "schema": "unified.route-readonly-inventory.v1",
+        "node": "LS7",
+        "observed_utc": "2026-11-06T18:54:22.4543854Z",
+        "exit_code": 0,
+        "routes": [
+          {
+            "destination": "192.168.2.173",
+            "source": "192.168.2.141",
+            "interface_index": 18,
+            "interface_alias": "WLAN",
+            "destination_prefix": "192.168.2.0/24",
+            "next_hop": "0.0.0.0",
+            "adapter_description": "Intel(R) Wi-Fi 6E AX211 160MHz",
+            "adapter_status": "Up",
+            "hardware_interface": true,
+            "virtual": false
+          }
+        ],
+        "dns": {
+          "name": "www.microsoft.com",
+          "latency_ms": 356,
+          "answers": [
+            "23.37.194.81"
+          ]
+        },
+        "component_errors": [],
+        "configuration_mutations": false,
+        "service_mutations": false,
+        "bybit_http_requests": 0
+      }
+    }
+  ],
+  "bybit_route_equivalence": "NOT_PROVEN",
+  "finished_utc": "2026-11-06T18:54:22.442246+00:00",
+  "observed_nodes": 6,
+  "runtime_readiness": "NOT_QUALIFIED",
+  "installation_authorized": false
+}

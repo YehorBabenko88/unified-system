@@ -1,0 +1,755 @@
+{
+  "date": "2026-11-09",
+  "timezone": "Europe/Berlin",
+  "scope": "READ_ONLY_PRIMARY_SOURCE_INVENTORY_NOT_RUNTIME_ADMISSION",
+  "execution": "NOT_EXECUTED",
+  "tests": "NOT_RUN",
+  "submission": "NOT_SUBMITTED",
+  "shared_edits": 0,
+  "sources": [
+    {
+      "repository": "YehorBabenko88/strattester",
+      "head": "cddf71fab478f788d7289da9648f8a2f9287d1f8",
+      "tree": "513debc70d34b6fae74c9876dae0616a8e998c05",
+      "files": [
+        {
+          "path": "strattester/research/gateway_adapter.py",
+          "git_blob": "7835fd0c9deabdccede99244d1adb3b83561a4b9",
+          "bytes": 22917,
+          "sha256": "45657294beed5284f7f08416e70637e9b914907353d0c331c7bff224057dbddb",
+          "public_api": [
+            {
+              "name": "execute_synthetic_research",
+              "line": 188,
+              "arguments": "request_bytes, *, meta_source_root, cancel_check"
+            },
+            {
+              "name": "execute_query_synthetic_research",
+              "line": 275,
+              "arguments": "request_bytes, *, upstream_query_request_bytes, upstream_query_result_bytes, meta_source_root, cancel_check"
+            }
+          ],
+          "classes": [
+            {
+              "name": "GatewayResearchError",
+              "line": 35
+            },
+            {
+              "name": "GatewayResearchCancelled",
+              "line": 41
+            }
+          ]
+        },
+        {
+          "path": "strattester/engine/executor.py",
+          "git_blob": "cbe8fc2049e623d39d99c4f388f8ed0ee36476aa",
+          "bytes": 6717,
+          "sha256": "a208b50c1fd96fc8b517519e570fc5ac7af0c91b7e59f06dca079edbff1f95c3",
+          "public_api": [
+            {
+              "name": "requirements_ready",
+              "line": 88,
+              "arguments": "definition, store, symbol, start_ms=None, end_ms=None, closed_before_ms=None"
+            },
+            {
+              "name": "require_execution_permission",
+              "line": 99,
+              "arguments": "definition, research_permission=None"
+            },
+            {
+              "name": "execute_strategy",
+              "line": 106,
+              "arguments": "definition, store, symbol, checkpoint=None, start_ms=None, end_ms=None, *, research_permission=None, cancel=lambda: False, closed_before_ms=None"
+            }
+          ],
+          "classes": [
+            {
+              "name": "StrategyResult",
+              "line": 7
+            },
+            {
+              "name": "ResearchExecutionPermit",
+              "line": 14
+            },
+            {
+              "name": "StrategyContext",
+              "line": 26
+            }
+          ]
+        },
+        {
+          "path": "strattester/engine/checkpoints.py",
+          "git_blob": "c79d93d3efd8eb94694bc88b6d810ecae79ea0ce",
+          "bytes": 1252,
+          "sha256": "b43bae1658f9ca0eccecaa078918062978fab2b5b021453913f2f2a70b132ef7",
+          "public_api": [
+            {
+              "name": "checkpoint_compatible",
+              "line": 11,
+              "arguments": "cp: Checkpoint, config_hash: str, strategy_fingerprint: str | None"
+            },
+            {
+              "name": "encode_checkpoint",
+              "line": 14,
+              "arguments": "cp: Checkpoint"
+            },
+            {
+              "name": "decode_checkpoint",
+              "line": 20,
+              "arguments": "raw: str"
+            },
+            {
+              "name": "require_compatible_checkpoint",
+              "line": 26,
+              "arguments": "raw: str | None, job_id: str, config_hash: str, strategy_fingerprint: str | None"
+            }
+          ],
+          "classes": [
+            {
+              "name": "Checkpoint",
+              "line": 5
+            }
+          ]
+        },
+        {
+          "path": "strattester/research/provenance.py",
+          "git_blob": "410173bb39d9eff1cffd505a15f03ec714ba9fa9",
+          "bytes": 15652,
+          "sha256": "a0911b71b1a92cac4dd3b023c8f8cc2bf55f354c256e0475e2efa94ab6555c19",
+          "public_api": [
+            {
+              "name": "canonical",
+              "line": 11,
+              "arguments": "value"
+            },
+            {
+              "name": "digest",
+              "line": 15,
+              "arguments": "value"
+            },
+            {
+              "name": "row_quality",
+              "line": 19,
+              "arguments": "dataset, row"
+            },
+            {
+              "name": "validate",
+              "line": 51,
+              "arguments": "record"
+            },
+            {
+              "name": "snapshot_inputs",
+              "line": 132,
+              "arguments": "definition, store, symbol, start_ms, end_ms"
+            },
+            {
+              "name": "execute_owned",
+              "line": 189,
+              "arguments": "definition, store, symbol, start_ms, end_ms, result_store, *, source_identity, market_type, producer_identity, source_revision, model, execution_assumptions, parameters=None, checkpoint=None, lease_validator=lambda: True, cancelled=lambda: False, research_permission=None, closed_before_ms=None"
+            }
+          ],
+          "classes": [
+            {
+              "name": "FrozenDatasets",
+              "line": 105
+            }
+          ]
+        },
+        {
+          "path": "strattester/research/runner.py",
+          "git_blob": "e058bd223e894bdc628963447554017481f28c96",
+          "bytes": 2503,
+          "sha256": "21b4d6e068a0d063958582591c8a7a26431531fcdeba70e42791721213778454",
+          "public_api": [],
+          "classes": [
+            {
+              "name": "ResearchRunner",
+              "line": 5
+            }
+          ]
+        },
+        {
+          "path": "strattester/research/quote_paper.py",
+          "git_blob": "77687980026485c9db5cc883f6135978bc72f933",
+          "bytes": 20137,
+          "sha256": "c0afdec0472c17ef022657662facac04b45a58309251badf442ee39055517d81",
+          "public_api": [
+            {
+              "name": "need",
+              "line": 17,
+              "arguments": "ok"
+            },
+            {
+              "name": "canonical",
+              "line": 19,
+              "arguments": "v"
+            },
+            {
+              "name": "digest",
+              "line": 20,
+              "arguments": "v"
+            },
+            {
+              "name": "fields",
+              "line": 21,
+              "arguments": "v, keys"
+            },
+            {
+              "name": "clock",
+              "line": 22,
+              "arguments": "v"
+            },
+            {
+              "name": "num",
+              "line": 23,
+              "arguments": "v, lo=0, hi=1000000000000.0"
+            },
+            {
+              "name": "label",
+              "line": 24,
+              "arguments": "v"
+            },
+            {
+              "name": "receipt",
+              "line": 25,
+              "arguments": "v, keys"
+            },
+            {
+              "name": "evaluate",
+              "line": 31,
+              "arguments": "p, *, now_ms"
+            }
+          ],
+          "classes": [
+            {
+              "name": "PaperSnapshotBlocked",
+              "line": 81
+            },
+            {
+              "name": "PaperLedger",
+              "line": 89
+            }
+          ]
+        },
+        {
+          "path": "strattester/research/financial_attested_inference.py",
+          "git_blob": "fcd6d52de77033d317416a95672ffd8d8ed8f342",
+          "bytes": 3593,
+          "sha256": "3200cea2c72edd239ee50018eadae94ecd902b18a6c40e96ccd8d0b10d21fedb",
+          "public_api": [
+            {
+              "name": "run_attested_offline",
+              "line": 40,
+              "arguments": "request, *, policy, verifier, max_work_bytes=512 * 1024 * 1024, cancel=lambda: False"
+            }
+          ],
+          "classes": [
+            {
+              "name": "AttestedInferenceRequest",
+              "line": 13
+            },
+            {
+              "name": "OfflineInferenceResult",
+              "line": 35
+            }
+          ]
+        },
+        {
+          "path": "strattester/research/financial_offline_jobs.py",
+          "git_blob": "35723006d12a942334b778b86aa7060671cb8e82",
+          "bytes": 6423,
+          "sha256": "1889fad09f56facf1257ced671db1cc99c1ad5e30899bfba4a1403d12866d729",
+          "public_api": [
+            {
+              "name": "stream_offline_jobs",
+              "line": 29,
+              "arguments": "jobs, *, verifier, max_requests=32, max_input_bytes=512 * 1024 * 1024, max_work_bytes=512 * 1024 * 1024, cancel=lambda: False, output_root=None"
+            },
+            {
+              "name": "publish_result",
+              "line": 78,
+              "arguments": "output_root, job_identity, payload"
+            }
+          ],
+          "classes": [
+            {
+              "name": "OfflineJob",
+              "line": 24
+            }
+          ]
+        },
+        {
+          "path": "strattester/research/financial_experiment_session.py",
+          "git_blob": "eafa1ec9e0350fde9c33a87213b3dadeeb5e884b",
+          "bytes": 6915,
+          "sha256": "f74c36bb6d8f4ee743d8864d0ddf58314faf5307f13e86d85ab41095039cd741",
+          "public_api": [
+            {
+              "name": "exact",
+              "line": 15,
+              "arguments": "value, keys"
+            },
+            {
+              "name": "decode_examples",
+              "line": 19,
+              "arguments": "payload, cancel"
+            },
+            {
+              "name": "run_experiment_file",
+              "line": 40,
+              "arguments": "source_path, source_sha256, output_dir, *, enable_research=False, cancel=lambda: False"
+            }
+          ],
+          "classes": []
+        },
+        {
+          "path": "strattester/research/financial_checkpoint.py",
+          "git_blob": "03c4ddfc19fa69d26c2483f53cbaf1f8f1eed4ce",
+          "bytes": 6619,
+          "sha256": "43071b448b7465cbdce1fddc4f5eef7d6bc09790d7f0e12e6093e88a90223724",
+          "public_api": [
+            {
+              "name": "model_fingerprint",
+              "line": 19,
+              "arguments": "model"
+            },
+            {
+              "name": "save_checkpoint",
+              "line": 30,
+              "arguments": "model, path, *, dataset_sha256, seed, max_bytes=8 * 1024 * 1024"
+            },
+            {
+              "name": "load_checkpoint",
+              "line": 65,
+              "arguments": "path, expected_sha256, *, max_bytes=8 * 1024 * 1024"
+            },
+            {
+              "name": "inspect_checkpoint_recovery",
+              "line": 100,
+              "arguments": "path, expected_sha256, *, dataset_sha256, seed"
+            }
+          ],
+          "classes": []
+        },
+        {
+          "path": "strattester/research/financial_contract.py",
+          "git_blob": "8b874756425826fb0d03a27762a6d7d927cfda8e",
+          "bytes": 4526,
+          "sha256": "ada78b82136d7aad78db45621da78c0cfb0817d16717a29c74d553a4c3bf1721",
+          "public_api": [
+            {
+              "name": "integer",
+              "line": 10,
+              "arguments": "value, name, minimum=0"
+            },
+            {
+              "name": "digest",
+              "line": 16,
+              "arguments": "value, length=64"
+            },
+            {
+              "name": "finite",
+              "line": 22,
+              "arguments": "value, name"
+            },
+            {
+              "name": "timestamp_ns",
+              "line": 28,
+              "arguments": "value, unit"
+            }
+          ],
+          "classes": [
+            {
+              "name": "Instrument",
+              "line": 36
+            },
+            {
+              "name": "Bar",
+              "line": 48
+            },
+            {
+              "name": "Snapshot",
+              "line": 86
+            },
+            {
+              "name": "Prediction",
+              "line": 111
+            }
+          ]
+        },
+        {
+          "path": "strattester/research/financial_signed_export.py",
+          "git_blob": "4963dcb711759cd48efd3fe98efe39b1a6861f23",
+          "bytes": 9292,
+          "sha256": "5c447cf2f8e3b0e8576de8fcea8852e727446e83554821e1d091c4f4af1aff66",
+          "public_api": [
+            {
+              "name": "identity",
+              "line": 17,
+              "arguments": "value"
+            },
+            {
+              "name": "load_attested_export",
+              "line": 75,
+              "arguments": "*, manifest_path, manifest_sha256, snapshot_path, trust_store_path, trust_store_sha256, policy, verifier, max_snapshot_bytes=8 * 1024 * 1024, cancel=lambda: False"
+            }
+          ],
+          "classes": [
+            {
+              "name": "SourceIdentity",
+              "line": 23
+            },
+            {
+              "name": "MarketPartition",
+              "line": 35
+            },
+            {
+              "name": "ExportPolicy",
+              "line": 47
+            },
+            {
+              "name": "AttestedExport",
+              "line": 70
+            }
+          ]
+        },
+        {
+          "path": "docs/gateway/research/request.schema.json",
+          "git_blob": "e4b019177af0373a595ca457b4086dd49b183c4f",
+          "bytes": 7233,
+          "sha256": "7338a91675611c8f5ead41f334f657e0fe682ab6c5567b5a16387d90dbc928ac",
+          "schema_id": "urn:stratt.gateway.synthetic.research.request.v1-review1",
+          "closed_top_level": true,
+          "required": [
+            "schema",
+            "operation",
+            "experiment",
+            "payload",
+            "decision_ms",
+            "analysis_now_ms"
+          ]
+        },
+        {
+          "path": "docs/gateway/research/result.schema.json",
+          "git_blob": "b010cebf1ec050004ba377c4a70f224ffa1b043a",
+          "bytes": 10766,
+          "sha256": "a14286cdf1fdeb3cb0b826575f231346a517706a8cf39f7b5727b78811e4eef4",
+          "schema_id": "urn:stratt.gateway.synthetic.research.result.v1-review1",
+          "closed_top_level": true,
+          "required": [
+            "schema",
+            "state",
+            "scope",
+            "experiment",
+            "request_raw_sha256",
+            "artifact",
+            "provenance",
+            "clocks",
+            "series_semantics",
+            "financial",
+            "execution_authority",
+            "trading_authorized",
+            "training_authorized",
+            "production_runtime_admission"
+          ]
+        },
+        {
+          "path": "docs/gateway/research/meta-result.schema.json",
+          "git_blob": "89fb0e9b1156f54cc6dcf760b8dc1b2728678f7d",
+          "bytes": 8054,
+          "sha256": "8a831f84129eb3ba06034ca88e081703d2c07db4da96281d555021f4961a156e",
+          "schema_id": "urn:stratt.gateway.meta-result.boundary.v1-review1",
+          "closed_top_level": true,
+          "required": [
+            "schema",
+            "mode",
+            "venue",
+            "market_type",
+            "symbol",
+            "timeframe",
+            "units",
+            "evidence_class",
+            "source",
+            "dataset_id",
+            "request_digest",
+            "decision_ms",
+            "snapshot_as_of_ms",
+            "window_start_ms",
+            "window_end_ms",
+            "data_available_at_ms",
+            "calculated_at_ms",
+            "rows",
+            "levels",
+            "quality_status",
+            "coverage_status",
+            "source_authenticity",
+            "clock_assumptions",
+            "missing_capabilities",
+            "execution_authority",
+            "trading_authorized",
+            "training_authorized",
+            "h_b_eligible"
+          ]
+        },
+        {
+          "path": "docs/gateway/research/query-v2-request.schema.json",
+          "git_blob": "1a4605edfdd8502566a552726cf2b316721f9c45",
+          "bytes": 7927,
+          "sha256": "f4918d49e2755927044bbad2b8226e5df3961767a384ba15b4a3f14d5af8fb36",
+          "schema_id": "urn:stratt.gateway.synthetic.research.request.v2-review1",
+          "closed_top_level": true,
+          "required": [
+            "schema",
+            "operation",
+            "experiment",
+            "payload",
+            "decision_ms",
+            "analysis_now_ms",
+            "upstream_binding"
+          ]
+        },
+        {
+          "path": "docs/gateway/research/query-v2-result.schema.json",
+          "git_blob": "d2a7ed99073647937380f3e67d25d5d890e862f0",
+          "bytes": 19008,
+          "sha256": "d274eec55193939b0cb5aa243d564f06b7b882d4ebad4f22f60ed91e1c599745",
+          "schema_id": "urn:stratt.gateway.synthetic.research.result.v2-review1",
+          "closed_top_level": true,
+          "required": [
+            "schema",
+            "state",
+            "scope",
+            "experiment",
+            "request_raw_sha256",
+            "artifact",
+            "provenance",
+            "clocks",
+            "series_semantics",
+            "financial",
+            "execution_authority",
+            "trading_authorized",
+            "training_authorized",
+            "production_runtime_admission",
+            "upstream_binding"
+          ]
+        }
+      ]
+    },
+    {
+      "repository": "YehorBabenko88/math",
+      "head": "b9c2f24b33285b7b0e06aebc354a9c61a909d204",
+      "tree": "d88c75a3c367eef2cb7246c4f8dd094716f07ddd",
+      "files": [
+        {
+          "path": "python/history_statistics.py",
+          "git_blob": "a1ffeaa88ab14b7f47aac608ee1ad3ad016b4fa1",
+          "bytes": 3205,
+          "sha256": "c6db429dd77c88abe263c52dd0db4e5e76f321657dec53eb1ccec44280197371",
+          "public_api": [
+            {
+              "name": "paired_expectancy_bootstrap",
+              "line": 22,
+              "arguments": "base_trades, variant_trades, key='signal_id', runs=1000, seed=17"
+            },
+            {
+              "name": "block_bootstrap_expectancy",
+              "line": 52,
+              "arguments": "trades, block_size=20, runs=1000, seed=23"
+            }
+          ],
+          "classes": []
+        },
+        {
+          "path": "python/history_worker.py",
+          "git_blob": "9e081c38b4f8de95306cf6738bdb3560fd6aa5c1",
+          "bytes": 2759,
+          "sha256": "c0f3f47f9613cd3bfde6e2b0a96e8f6a3c8699bfa9d162c98ad0f3166f9ddaba",
+          "public_api": [
+            {
+              "name": "canonical",
+              "line": 17,
+              "arguments": "v"
+            },
+            {
+              "name": "frozen_analog_forecast",
+              "line": 19,
+              "arguments": "x, train_count"
+            },
+            {
+              "name": "evaluate",
+              "line": 34,
+              "arguments": "q"
+            },
+            {
+              "name": "main",
+              "line": 49,
+              "arguments": ""
+            }
+          ],
+          "classes": []
+        },
+        {
+          "path": "python/history_contract.py",
+          "git_blob": "129631b64ce98da1ff31654098df4bc1399a2e10",
+          "bytes": 4494,
+          "sha256": "5b1c013704f58b8b7f5c75413e17fcc3eed19ab104489b4881b2af978d8a9729",
+          "public_api": [
+            {
+              "name": "digest",
+              "line": 9,
+              "arguments": "v"
+            },
+            {
+              "name": "hexpin",
+              "line": 10,
+              "arguments": "v, n=64"
+            },
+            {
+              "name": "clock",
+              "line": 11,
+              "arguments": "v"
+            },
+            {
+              "name": "number",
+              "line": 12,
+              "arguments": "v"
+            },
+            {
+              "name": "evaluate_timed_request",
+              "line": 15,
+              "arguments": "q"
+            }
+          ],
+          "classes": []
+        },
+        {
+          "path": "python/history_scientific_worker.py",
+          "git_blob": "836c886d69c878c31d014acf8da3dd4234694999",
+          "bytes": 3707,
+          "sha256": "88a0557d86d94c851ddacdcc9a22618f653ee132b75c50cd6066c7a2c17ec5fb",
+          "public_api": [
+            {
+              "name": "evaluate_joint",
+              "line": 19,
+              "arguments": "q, node"
+            },
+            {
+              "name": "main",
+              "line": 63,
+              "arguments": ""
+            }
+          ],
+          "classes": []
+        },
+        {
+          "path": "scripts/history/scientific-stdio.mjs",
+          "git_blob": "b10cf69a7c6dea42f7809a58110d89fb633320a6",
+          "bytes": 639,
+          "sha256": "15133a6d5e2ae243899e8476ba1b30b370b9bbc8234046033958dfe891e202d3"
+        }
+      ]
+    },
+    {
+      "repository": "YehorBabenko88/meta_analyse",
+      "head": "f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1",
+      "tree": "c155c935a801fa98b7c78219c9798ce1f1be8848",
+      "files": [
+        {
+          "path": "src/meta_analyse/__init__.py",
+          "git_blob": "5a2d4cc5464a036a82852ddb0ab78f349608cc03",
+          "bytes": 98,
+          "sha256": "70d2201e97a9d8b57973b8328ce7e2938e85096035a867aab8b37b35ee1e1883",
+          "public_api": [],
+          "classes": []
+        },
+        {
+          "path": "src/meta_analyse/core.py",
+          "git_blob": "d75c40244f5a486f87d710e818c2194212a74f67",
+          "bytes": 8145,
+          "sha256": "caa15e51394d3c204ecbcf557cd13ce7a6853b5c8005c4d266971f3f14177170",
+          "public_api": [
+            {
+              "name": "floor_minute",
+              "line": 10,
+              "arguments": "ts: datetime"
+            },
+            {
+              "name": "price_bucket",
+              "line": 15,
+              "arguments": "price: Decimal, tick: Decimal"
+            },
+            {
+              "name": "untouched_levels",
+              "line": 36,
+              "arguments": "candles: list[Candle], timeframe: str"
+            },
+            {
+              "name": "new_minute",
+              "line": 93,
+              "arguments": "t: Trade, tick: Decimal, complete: bool=True"
+            }
+          ],
+          "classes": [
+            {
+              "name": "Candle",
+              "line": 21
+            },
+            {
+              "name": "Level",
+              "line": 30
+            },
+            {
+              "name": "Trade",
+              "line": 48
+            },
+            {
+              "name": "Minute",
+              "line": 58
+            },
+            {
+              "name": "Position",
+              "line": 99
+            },
+            {
+              "name": "PaperFill",
+              "line": 110
+            },
+            {
+              "name": "PaperEngine",
+              "line": 121
+            },
+            {
+              "name": "RollingFlow",
+              "line": 187
+            }
+          ]
+        },
+        {
+          "path": "src/meta_analyse/ohlcv_research_adapter.py",
+          "git_blob": "e1e4c28e28039a61a69a311ed65f1e102c2f2db5",
+          "bytes": 6252,
+          "sha256": "39b165c945f4d5c00fdf96c460d9bf4e34a32c9cb30483d9be6d88f45403a90f",
+          "public_api": [
+            {
+              "name": "analyze_ohlcv_research",
+              "line": 38,
+              "arguments": "payload, *, decision_ms, now_ms=None"
+            }
+          ],
+          "classes": []
+        }
+      ]
+    }
+  ],
+  "remote_default_main_heads_metadata_only_not_admitted": {
+    "strattester": "37ff7e9d12a4d2dccd788fc493c28557dbe8bcea",
+    "math": "ccfe97dd88b1ebee9bd19795002a30d0bd1c1ca3",
+    "meta_analyse": "2317c79d78654d8006d99b914532a089554677da"
+  },
+  "remote_revalidated_owner_pins": {
+    "strattester_pr76": "cddf71fab478f788d7289da9648f8a2f9287d1f8",
+    "strattester_pr77": "887e3eeaf23ef8d9d1429435bc88bbac8099c6e6",
+    "math_pr116": "b9c2f24b33285b7b0e06aebc354a9c61a909d204",
+    "meta_pr78": "f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1"
+  }
+}

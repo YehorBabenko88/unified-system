@@ -1,0 +1,176 @@
+{
+  "cases": [
+    "storage.runtime.test_backup.BackupTests.test_actual_three_root_roundtrip_and_inventory_binding",
+    "storage.runtime.test_backup.BackupTests.test_copy_alone_is_not_restore_success",
+    "storage.runtime.test_backup.BackupTests.test_corrupted_backup_cannot_pass_restore",
+    "storage.runtime.test_backup.BackupTests.test_missing_or_wrong_length_inventory_fails",
+    "storage.runtime.test_backup.BackupTests.test_same_store_alias_empty_duplicate_and_unbounded_inventory_rejected",
+    "storage.runtime.test_object_store.ObjectStoreTests.test_actual_bytes_are_content_addressed_and_survive_reopen",
+    "storage.runtime.test_object_store.ObjectStoreTests.test_corruption_is_not_repaired_by_duplicate_put",
+    "storage.runtime.test_object_store.ObjectStoreTests.test_duplicate_and_concurrent_publication_do_not_replace_bytes",
+    "storage.runtime.test_object_store.ObjectStoreTests.test_existing_directory_is_not_implicitly_adopted",
+    "storage.runtime.test_object_store.ObjectStoreTests.test_failed_fsync_never_returns_an_object_receipt",
+    "storage.runtime.test_object_store.ObjectStoreTests.test_hardlinked_object_and_request_paths_are_rejected",
+    "storage.runtime.test_object_store.ObjectStoreTests.test_interrupted_link_leaves_only_invisible_staging",
+    "storage.runtime.test_object_store.ObjectStoreTests.test_local_size_limit_never_bypasses_full_object_verification",
+    "storage.runtime.test_object_store.ObjectStoreTests.test_missing_object_is_explicit_not_empty_data",
+    "storage.runtime.test_object_store.ObjectStoreTests.test_short_writes_are_completed_and_zero_write_fails",
+    "storage.runtime.test_object_store.ObjectStoreTests.test_verification_identity_comes_from_same_verified_read",
+    "storage.runtime.test_object_store.ObjectStoreTests.test_wrong_store_identity_and_changed_root_are_rejected",
+    "storage.test_checkpoint_vectors.CheckpointVectorTests.test_confirmed_unknown_time_is_still_only_an_untrusted_claim",
+    "storage.test_checkpoint_vectors.CheckpointVectorTests.test_disposable_file_corruption_is_checked_by_real_bytes",
+    "storage.test_checkpoint_vectors.CheckpointVectorTests.test_exact_owner_schema_and_mapping_snapshots_are_bound",
+    "storage.test_checkpoint_vectors.CheckpointVectorTests.test_observation_does_not_rewrite_content_or_enable_effect",
+    "storage.test_checkpoint_vectors.CheckpointVectorTests.test_unconfirmed_and_counterfeit_evidence_cannot_promote",
+    "storage.test_contracts.ClaimTests.test_decoded_copy_cannot_rewrite_original_claim",
+    "storage.test_contracts.ClaimTests.test_parse_is_untrusted_and_cannot_promote",
+    "storage.test_contracts.ClaimTests.test_parser_bounds_and_counterfeit_primitive_types",
+    "storage.test_contracts.ClaimTests.test_parser_rejects_duplicate_numbers_nonascii_and_noncanonical_bytes",
+    "storage.test_retention.RetentionTests.test_candidate_is_never_an_executable_delete_permission",
+    "storage.test_retention.RetentionTests.test_duplicate_identity_and_bool_budget_and_mutable_pin_inputs_reject",
+    "storage.test_retention.RetentionTests.test_file_exists_or_unavailable_or_wrong_hash_does_not_count",
+    "storage.test_retention.RetentionTests.test_last_copy_and_missing_verified_survivors_are_retained",
+    "storage.test_retention.RetentionTests.test_pins_and_unknown_closure_cannot_be_waived_by_age",
+    "storage.test_retention.RetentionTests.test_same_node_or_volume_cannot_supply_independent_survivors",
+    "storage.test_retention.RetentionTests.test_unknown_target_never_becomes_candidate",
+    "storage.test_segments.SegmentTests.test_caller_cannot_construct_verified_byte_result",
+    "storage.test_segments.SegmentTests.test_claim_detaches_mutable_instrument_input",
+    "storage.test_segments.SegmentTests.test_claim_rejects_coercion_unknown_fields_and_invalid_lineage",
+    "storage.test_segments.SegmentTests.test_corruption_and_truncation_cannot_match_original",
+    "storage.test_segments.SegmentTests.test_count_and_size_and_input_limit_are_independent",
+    "storage.test_segments.SegmentTests.test_framed_bytes_do_not_claim_source_completeness",
+    "storage.test_segments.SegmentTests.test_matching_bytes_are_not_authoritative_verification",
+    "storage.test_segments.SegmentTests.test_matching_digest_does_not_waive_framing",
+    "storage.test_segments.SegmentTests.test_other_instrument_and_end_boundary_reject",
+    "storage.test_segments.SegmentTests.test_python_equality_objects_cannot_impersonate_typed_fields"
+  ],
+  "dirty": false,
+  "head": "cd0286dee5fc41cb7a35b0b6ac431a7ebfc25dfb",
+  "passed": true,
+  "pilot_rollback_qualified": false,
+  "platform": "Windows-11-10.0.26300-SP0",
+  "production_admission": false,
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "schema": "storage.isolated-fs.evidence.review1",
+  "skips": 0,
+  "source_bindings": {
+    "docs/storage/STAGE1.md": {
+      "bytes": 6120,
+      "sha256": "5f564ff8c22a5f7f81887cce1f544793ddbf531cab5b98f3c626256944355186"
+    },
+    "docs/storage/progress.md": {
+      "bytes": 2545,
+      "sha256": "152f3883a81c253b8a59c03a16629c6211a91541722630b431de8669997609df"
+    },
+    "docs/storage/runtime/ISOLATED-FS.md": {
+      "bytes": 2953,
+      "sha256": "5136f25c912fcc12053e866a5aa404f7af357caa9b78b05f0c4f7ecfb045771b"
+    },
+    "docs/storage/stage1-plan.md": {
+      "bytes": 3010,
+      "sha256": "3d086ff4da859970bf0226e4295c7240d3aba6750775758c60c47b98fa7a33c0"
+    },
+    "tests/storage/.gitattributes": {
+      "bytes": 115,
+      "sha256": "76e1413fcfc05dbbe361f7823d5e28558f979ca7a12d3f224536f48f3c0a8313"
+    },
+    "tests/storage/__init__.py": {
+      "bytes": 54,
+      "sha256": "35382deb265c37f89b23b2cb455d5d30569af8d4d852a053129cb3f161880a05"
+    },
+    "tests/storage/fixtures/checkpoint_v3/confirmed-observed.canonical.json": {
+      "bytes": 4688,
+      "sha256": "ab4b0d7d2af33576943dab2f65abb2b533cdc8da77cff5ed7552aef7f867db4f"
+    },
+    "tests/storage/fixtures/checkpoint_v3/confirmed-unknown-time.canonical.json": {
+      "bytes": 4628,
+      "sha256": "71f0be33ccd96448c95574d7127d04792db2862a4fdad8161ff819c80aae5329"
+    },
+    "tests/storage/fixtures/checkpoint_v3/golden-vectors.json": {
+      "bytes": 1241,
+      "sha256": "69ef7786400030ae1bb9dbf4bd1fb30c6b6e50ac9690437536aa669a7c18b0d4"
+    },
+    "tests/storage/fixtures/checkpoint_v3/producer-mapping-review4.json": {
+      "bytes": 5069,
+      "sha256": "570437ac72c718b46d620db04e58b768dc962db34df856cc7ad25313462ac539"
+    },
+    "tests/storage/fixtures/checkpoint_v3/publication-content.canonical.json": {
+      "bytes": 2338,
+      "sha256": "230d90d91183a17b268fcf157e0d5e7ebbe0c15cdeedf0ed4b650bf960cbe8b3"
+    },
+    "tests/storage/fixtures/checkpoint_v3/schema.json": {
+      "bytes": 22861,
+      "sha256": "4de720d9391e5a89c0577b5298c283e742fbfe490c4454c184e31c2348589ea4"
+    },
+    "tests/storage/fixtures/checkpoint_v3/unconfirmed.canonical.json": {
+      "bytes": 513,
+      "sha256": "44afdcc9c2981575653c11a0e611eba6e8a0925a5c5eeb84be5850c252a3e5a0"
+    },
+    "tests/storage/probe_runner_guard.py": {
+      "bytes": 3266,
+      "sha256": "78d50d27c194d69b351c3190b9098f5787bc7439726bcef6db07f3ee6a2a57b3"
+    },
+    "tests/storage/run_stage1.py": {
+      "bytes": 4670,
+      "sha256": "75f30201c2d2c4d24ac8c373c76800f4b472a11f32639fa5e1d27dfb52be1a08"
+    },
+    "tests/storage/runtime/__init__.py": {
+      "bytes": 82,
+      "sha256": "a36fad0ec97fd2f35c0cc536fcdde05bc67ccecf01b56ac054ec1a2d9f368605"
+    },
+    "tests/storage/runtime/run_isolated.py": {
+      "bytes": 3704,
+      "sha256": "1b2db0bf5f5e0672e3939267c03ad8868f850610c628458000d0b1be62a16343"
+    },
+    "tests/storage/runtime/test_backup.py": {
+      "bytes": 2726,
+      "sha256": "53b39f7d1e6dde809e3462cbbe1354d48f02bb1ab994374141965f39501c0a9b"
+    },
+    "tests/storage/runtime/test_object_store.py": {
+      "bytes": 6053,
+      "sha256": "177d4a4b9675d5620a6251a03ae463c73351ef99b52426eed272fbd5d834c4ac"
+    },
+    "tests/storage/test_checkpoint_vectors.py": {
+      "bytes": 3451,
+      "sha256": "5e5638781ca54e080ecdd76a65a80dd1bc749b5cd70d220da3e4dc2a8457bbfb"
+    },
+    "tests/storage/test_contracts.py": {
+      "bytes": 1431,
+      "sha256": "6bb4796e8c0c63e30a548a4033a0f34b0f8fd74773757475e8e3f99950ad8bec"
+    },
+    "tests/storage/test_retention.py": {
+      "bytes": 4164,
+      "sha256": "61679b66855d9b6d2b52d58ffb909f8c5d2e45f2293b1478a6f533d414aba4ec"
+    },
+    "tests/storage/test_segments.py": {
+      "bytes": 4647,
+      "sha256": "a1d7486ca1fcdac310b64b01ca9c64c44bc9491acb36267e8637201efbbe5b50"
+    },
+    "unified_system/storage/__init__.py": {
+      "bytes": 84,
+      "sha256": "b1e9fb9689b449be9532be0393a6ea52fc5c70f9b3ef6aa598937b313b9bddee"
+    },
+    "unified_system/storage/backup.py": {
+      "bytes": 3507,
+      "sha256": "25dbafec09e9e2e5411eb4a0a03e1caf8f9c78374125b057afd3d3ad84537be7"
+    },
+    "unified_system/storage/contracts.py": {
+      "bytes": 5978,
+      "sha256": "1c9225b15a59b5f6c706de30664ea00094d3b293034e594e4113db9a76cb0e38"
+    },
+    "unified_system/storage/object_store.py": {
+      "bytes": 9211,
+      "sha256": "193c4e68e48dcdda212412ed7bd00d23afa04fe36bffb84c074948602bb8f739"
+    },
+    "unified_system/storage/retention.py": {
+      "bytes": 3869,
+      "sha256": "69861ec2006d91d98091d35512700a5f8f322f1c33580fcc2a7150cc3644bc23"
+    },
+    "unified_system/storage/segments.py": {
+      "bytes": 2128,
+      "sha256": "e4a0a40d228a26d1c99388961b5afa1709686664ac57ef0d7842a80657e48eb9"
+    }
+  },
+  "tests_run": 43,
+  "tree": "84b714253c3e10017046e1a7a5981738a05e06e6"
+}

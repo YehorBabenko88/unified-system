@@ -1,0 +1,255 @@
+{
+  "schema": "unified.offline-causal.preservation.v1",
+  "base": "4a6188e8a988acec134bfec1ac1875fd7b67f57f",
+  "status": "ALL_SIXTEEN_ROLES_TRANSFERRED_SOURCE_AND_ISOLATED_WHEEL_CASES",
+  "original_raw": {
+    "unified_system/lab_paper_pipeline.py": {
+      "snapshot": "unified_system__lab_paper_pipeline.py.txt",
+      "sha256": "0a6bbd8366958ddf3eb80e81882bb230a1141312da0773a16cb4365edc4d1826"
+    },
+    "tests/test_lab_paper_pipeline.py": {
+      "snapshot": "tests__test_lab_paper_pipeline.py.txt",
+      "sha256": "b27b89d33906ae5d8880c65c6ece4d8bdac2675054ce1489ea9bb8902f696a07"
+    },
+    "scripts/ci_paper_causal.py": {
+      "snapshot": "scripts__ci_paper_causal.py.txt",
+      "sha256": "e897565de8cd94462f00fae6c5bbf88df86892a50176d5fa5850824676ee66a3"
+    },
+    ".github/workflows/paper-causal.yml": {
+      "snapshot": ".github__workflows__paper-causal.yml.txt",
+      "sha256": "108b8e4ee82570e037fe6f1c43fe496316f94997ab7f6c6af2eba529571d5635"
+    }
+  },
+  "roles": [
+    {
+      "original": "test_lab_paper_pipeline.GuardTests.test_numeric_funding_representation_is_exact_without_rounding_milliseconds",
+      "replacement": "test_offline_causal_pipeline.GuardTests.test_canonical_math_exact_funding_units",
+      "proof": "PASS_SCOPED_BOTH_PYTHON_3_11_3_12",
+      "original_native_word_scope": "Original local SQLite/reader software, not actual protected native admission",
+      "sdk_cohort": {
+        "data": "e1ea525273aa2181e7357ca84a774ac2fb30ced0",
+        "math": "a5868944bf1bae813403a32b22d329c1da6f8238",
+        "terminan": "75a906d36574bfdc19acd966e79a6c168dc71ad4"
+      }
+    },
+    {
+      "original": "test_lab_paper_pipeline.GuardTests.test_missing_kernel_source_admission_precedes_all_factories_and_files",
+      "replacement": "test_offline_causal_pipeline.GuardTests.test_freshness_refusal_precedes_factories_and_files",
+      "proof": "PASS_SCOPED_BOTH_PYTHON_3_11_3_12",
+      "original_native_word_scope": "Original local SQLite/reader software, not actual protected native admission",
+      "sdk_cohort": {
+        "data": "e1ea525273aa2181e7357ca84a774ac2fb30ced0",
+        "math": "a5868944bf1bae813403a32b22d329c1da6f8238",
+        "terminan": "75a906d36574bfdc19acd966e79a6c168dc71ad4"
+      }
+    },
+    {
+      "original": "test_lab_paper_pipeline.ComposedTests.test_ten_actual_strategy_risk_later_quotes_native_ledger_and_writer",
+      "replacement": "test_offline_causal_pipeline.ComposedTests.test_ten_symbols_actual_sdk_store_journal_roundtrip",
+      "proof": "PASS_SCOPED_BOTH_PYTHON_3_11_3_12",
+      "original_native_word_scope": "Original local SQLite/reader software, not actual protected native admission",
+      "sdk_cohort": {
+        "data": "e1ea525273aa2181e7357ca84a774ac2fb30ced0",
+        "math": "a5868944bf1bae813403a32b22d329c1da6f8238",
+        "terminan": "75a906d36574bfdc19acd966e79a6c168dc71ad4"
+      }
+    },
+    {
+      "original": "test_lab_paper_pipeline.ComposedTests.test_unknown_funding_and_legacy_context_never_create_paper_fill",
+      "replacement": "test_offline_causal_pipeline.ComposedTests.test_unknown_funding_and_unavailable_context_never_fill",
+      "proof": "PASS_SCOPED_BOTH_PYTHON_3_11_3_12",
+      "original_native_word_scope": "Original local SQLite/reader software, not actual protected native admission",
+      "sdk_cohort": {
+        "data": "e1ea525273aa2181e7357ca84a774ac2fb30ced0",
+        "math": "a5868944bf1bae813403a32b22d329c1da6f8238",
+        "terminan": "75a906d36574bfdc19acd966e79a6c168dc71ad4"
+      }
+    },
+    {
+      "original": "test_lab_paper_pipeline.ComposedTests.test_funding_survives_actual_processing_delay_without_relabelling_selection",
+      "replacement": "test_offline_causal_pipeline.ComposedTests.test_processing_delay_preserves_declared_source_clocks",
+      "proof": "PASS_SCOPED_BOTH_PYTHON_3_11_3_12",
+      "original_native_word_scope": "Original local SQLite/reader software, not actual protected native admission",
+      "sdk_cohort": {
+        "data": "e1ea525273aa2181e7357ca84a774ac2fb30ced0",
+        "math": "a5868944bf1bae813403a32b22d329c1da6f8238",
+        "terminan": "75a906d36574bfdc19acd966e79a6c168dc71ad4"
+      }
+    },
+    {
+      "original": "test_lab_paper_pipeline.ComposedTests.test_fractional_hour_and_integral_float_funding_values_keep_exact_units",
+      "replacement": "test_offline_causal_pipeline.ComposedTests.test_fractional_funding_units_reach_actual_session",
+      "proof": "PASS_SCOPED_BOTH_PYTHON_3_11_3_12",
+      "original_native_word_scope": "Original local SQLite/reader software, not actual protected native admission",
+      "sdk_cohort": {
+        "data": "e1ea525273aa2181e7357ca84a774ac2fb30ced0",
+        "math": "a5868944bf1bae813403a32b22d329c1da6f8238",
+        "terminan": "75a906d36574bfdc19acd966e79a6c168dc71ad4"
+      }
+    },
+    {
+      "original": "test_lab_paper_pipeline.ComposedTests.test_risk_processing_cannot_refresh_expired_strategy_window",
+      "replacement": "test_offline_causal_pipeline.ComposedTests.test_risk_delay_does_not_refresh_proposal_ttl",
+      "proof": "PASS_SCOPED_BOTH_PYTHON_3_11_3_12",
+      "original_native_word_scope": "Original local SQLite/reader software, not actual protected native admission",
+      "sdk_cohort": {
+        "data": "e1ea525273aa2181e7357ca84a774ac2fb30ced0",
+        "math": "a5868944bf1bae813403a32b22d329c1da6f8238",
+        "terminan": "75a906d36574bfdc19acd966e79a6c168dc71ad4"
+      }
+    },
+    {
+      "original": "test_lab_paper_pipeline.ComposedTests.test_reconnect_retains_uncertain_collateral_and_never_reuses_old_book",
+      "replacement": "test_offline_causal_pipeline.ComposedTests.test_reconnect_retains_uncertain_collateral",
+      "proof": "PASS_SCOPED_BOTH_PYTHON_3_11_3_12",
+      "original_native_word_scope": "Original local SQLite/reader software, not actual protected native admission",
+      "sdk_cohort": {
+        "data": "e1ea525273aa2181e7357ca84a774ac2fb30ced0",
+        "math": "a5868944bf1bae813403a32b22d329c1da6f8238",
+        "terminan": "75a906d36574bfdc19acd966e79a6c168dc71ad4"
+      }
+    },
+    {
+      "original": "test_lab_paper_pipeline.ComposedTests.test_publication_failure_stops_without_retry_or_new_source_io",
+      "replacement": "test_offline_causal_pipeline.ComposedTests.test_publication_uncertainty_blocks_without_retry_or_source_read",
+      "proof": "PASS_SCOPED_BOTH_PYTHON_3_11_3_12",
+      "original_native_word_scope": "Original local SQLite/reader software, not actual protected native admission",
+      "sdk_cohort": {
+        "data": "e1ea525273aa2181e7357ca84a774ac2fb30ced0",
+        "math": "a5868944bf1bae813403a32b22d329c1da6f8238",
+        "terminan": "75a906d36574bfdc19acd966e79a6c168dc71ad4"
+      }
+    },
+    {
+      "original": "test_lab_paper_pipeline.ComposedTests.test_tiny_hold_budget_rejects_ten_minute_plan_before_audit_creation",
+      "replacement": "test_offline_causal_pipeline.ComposedTests.test_capacity_refuses_before_audit_factories",
+      "proof": "PASS_SCOPED_BOTH_PYTHON_3_11_3_12",
+      "original_native_word_scope": "Original local SQLite/reader software, not actual protected native admission",
+      "sdk_cohort": {
+        "data": "e1ea525273aa2181e7357ca84a774ac2fb30ced0",
+        "math": "a5868944bf1bae813403a32b22d329c1da6f8238",
+        "terminan": "75a906d36574bfdc19acd966e79a6c168dc71ad4"
+      }
+    },
+    {
+      "original": "test_lab_paper_pipeline.ComposedTests.test_first_new_quote_before_latency_is_not_relabelled_as_a_fill",
+      "replacement": "test_offline_causal_pipeline.ComposedTests.test_early_quote_is_not_relabelled_as_entry",
+      "proof": "PASS_SCOPED_BOTH_PYTHON_3_11_3_12",
+      "original_native_word_scope": "Original local SQLite/reader software, not actual protected native admission",
+      "sdk_cohort": {
+        "data": "e1ea525273aa2181e7357ca84a774ac2fb30ced0",
+        "math": "a5868944bf1bae813403a32b22d329c1da6f8238",
+        "terminan": "75a906d36574bfdc19acd966e79a6c168dc71ad4"
+      }
+    },
+    {
+      "original": "test_lab_paper_pipeline.ComposedTests.test_revocation_stops_before_another_source_read_and_preserves_cash_reservation",
+      "replacement": "test_offline_causal_pipeline.ComposedTests.test_revocation_precedes_read_and_preserves_collateral",
+      "proof": "PASS_SCOPED_BOTH_PYTHON_3_11_3_12",
+      "original_native_word_scope": "Original local SQLite/reader software, not actual protected native admission",
+      "sdk_cohort": {
+        "data": "e1ea525273aa2181e7357ca84a774ac2fb30ced0",
+        "math": "a5868944bf1bae813403a32b22d329c1da6f8238",
+        "terminan": "75a906d36574bfdc19acd966e79a6c168dc71ad4"
+      }
+    },
+    {
+      "original": "test_lab_paper_pipeline.ComposedTests.test_elapsed_window_stops_reads_without_claiming_qualification",
+      "replacement": "test_offline_causal_pipeline.ComposedTests.test_elapsed_window_does_not_read_source",
+      "proof": "PASS_SCOPED_BOTH_PYTHON_3_11_3_12",
+      "original_native_word_scope": "Original local SQLite/reader software, not actual protected native admission",
+      "sdk_cohort": {
+        "data": "e1ea525273aa2181e7357ca84a774ac2fb30ced0",
+        "math": "a5868944bf1bae813403a32b22d329c1da6f8238",
+        "terminan": "75a906d36574bfdc19acd966e79a6c168dc71ad4"
+      }
+    },
+    {
+      "original": "test_lab_paper_pipeline.ComposedTests.test_provider_failure_holds_cursor_then_normal_poll_uses_real_later_asof",
+      "replacement": "test_offline_causal_pipeline.ComposedTests.test_provider_failure_preserves_cursor_and_later_request_cut",
+      "proof": "PASS_SCOPED_BOTH_PYTHON_3_11_3_12",
+      "original_native_word_scope": "Original local SQLite/reader software, not actual protected native admission",
+      "sdk_cohort": {
+        "data": "e1ea525273aa2181e7357ca84a774ac2fb30ced0",
+        "math": "a5868944bf1bae813403a32b22d329c1da6f8238",
+        "terminan": "75a906d36574bfdc19acd966e79a6c168dc71ad4"
+      }
+    },
+    {
+      "original": "test_lab_paper_pipeline.ComposedTests.test_foreign_native_ledger_trade_stops_before_writer_callback",
+      "replacement": "test_offline_causal_pipeline.ComposedTests.test_foreign_financial_result_refuses_before_object_publication",
+      "proof": "PASS_SCOPED_BOTH_PYTHON_3_11_3_12",
+      "original_native_word_scope": "Original local SQLite/reader software, not actual protected native admission",
+      "sdk_cohort": {
+        "data": "e1ea525273aa2181e7357ca84a774ac2fb30ced0",
+        "math": "a5868944bf1bae813403a32b22d329c1da6f8238",
+        "terminan": "75a906d36574bfdc19acd966e79a6c168dc71ad4"
+      }
+    },
+    {
+      "original": "test_lab_paper_pipeline.ComposedTests.test_actual_native_result_reaches_existing_writer_and_pinned_term_reader",
+      "replacement": "test_offline_causal_pipeline.ComposedTests.test_actual_artifact_store_to_term_reader_and_idempotent_readback",
+      "proof": "PASS_SCOPED_BOTH_PYTHON_3_11_3_12",
+      "original_native_word_scope": "Original local SQLite/reader software, not actual protected native admission",
+      "sdk_cohort": {
+        "data": "e1ea525273aa2181e7357ca84a774ac2fb30ced0",
+        "math": "a5868944bf1bae813403a32b22d329c1da6f8238",
+        "terminan": "75a906d36574bfdc19acd966e79a6c168dc71ad4"
+      }
+    }
+  ],
+  "release_status": "NO_GO",
+  "targeted_custody_cases": [
+    "test_audit_tamper_latches_and_restored_bytes_cannot_retry",
+    "test_source_object_and_audit_precede_actual_session_consumption",
+    "test_journal_commit_unknown_blocks_without_source_or_audit_retry",
+    "test_unretained_source_descriptor_cannot_become_root_evidence",
+    "test_forged_receipt_equality_cannot_rebind_an_artifact_read"
+  ],
+  "original_ci_gate_tests": {
+    "snapshot": "tests__test_ci_paper_causal.py.txt",
+    "sha256": "6db1d45a71dca786158e7f8099f4f84ff469cfc838b38ef26965afeeae655935",
+    "preserved_roles": 7,
+    "actual_git_case": "HOSTED_MANDATORY_NOT_RUN_LOCALLY",
+    "obsolete_test_dependencies": "No pytest/custom dependency target required by the canonical unittest SDK suite; actual SDK metadata/version/preload/no-site gates replace that inventory.",
+    "case_map": [
+      {
+        "original": "test_ci_paper_causal.CausalGateTests.test_closed_inventory_has_exact_sixteen_unique_cases",
+        "replacement": "test_ci_paper_causal.CausalGateTests.test_closed_inventory_has_exact_sixteen_unique_cases",
+        "local_scope": "PASS_PURE_BOTH_PYTHONS"
+      },
+      {
+        "original": "test_ci_paper_causal.CausalGateTests.test_any_skip_or_missing_started_case_rejects_success",
+        "replacement": "test_ci_paper_causal.CausalGateTests.test_any_skip_or_missing_started_case_rejects_success",
+        "local_scope": "PASS_PURE_BOTH_PYTHONS"
+      },
+      {
+        "original": "test_ci_paper_causal.CausalGateTests.test_actual_failure_cannot_be_reported_as_pass",
+        "replacement": "test_ci_paper_causal.CausalGateTests.test_actual_failure_cannot_be_reported_as_pass",
+        "local_scope": "PASS_PURE_BOTH_PYTHONS"
+      },
+      {
+        "original": "test_ci_paper_causal.CausalGateTests.test_source_snapshot_proves_origin_head_cleanliness_and_raw_bytes",
+        "replacement": "test_ci_paper_causal.CausalGateTests.test_source_snapshot_proves_origin_head_cleanliness_and_raw_bytes",
+        "local_scope": "NOT_RUN_LOCAL_ACTUAL_GIT_FIXTURE_HOSTED_MANDATORY"
+      },
+      {
+        "original": "test_ci_paper_causal.CausalGateTests.test_output_must_be_outside_every_source_checkout",
+        "replacement": "test_ci_paper_causal.CausalGateTests.test_output_must_be_outside_every_source_checkout",
+        "local_scope": "PASS_PURE_BOTH_PYTHONS"
+      },
+      {
+        "original": "test_ci_paper_causal.CausalGateTests.test_source_change_after_tests_rejects_qualification",
+        "replacement": "test_ci_paper_causal.CausalGateTests.test_source_change_after_tests_rejects_qualification",
+        "local_scope": "PASS_PURE_BOTH_PYTHONS"
+      },
+      {
+        "original": "test_ci_paper_causal.CausalGateTests.test_isolated_test_dependencies_reject_missing_version_or_pth_preload",
+        "replacement": "test_ci_paper_causal.CausalGateTests.test_isolated_test_dependencies_reject_missing_version_or_pth_preload",
+        "local_scope": "PASS_PURE_BOTH_PYTHONS"
+      }
+    ]
+  },
+  "runtime_case_count": 21,
+  "shared_inert_sdk_case_count": 26
+}

@@ -1,0 +1,301 @@
+{
+  "source_head": "9c585129200cb3510c78b0f4f791eec5b7d85e8a",
+  "workflows": {
+    ".github/workflows/agent2-control-api.yml": {
+      "sha256": "78a0846054aa5e837189f19ca53c567f614f01a9bdacf747612129a0ef7b15fb",
+      "selected_execution_configuration": [
+        {
+          "line": 25,
+          "text": "    runs-on: ${{ matrix.os }}"
+        },
+        {
+          "line": 26,
+          "text": "    timeout-minutes: 5"
+        }
+      ]
+    },
+    ".github/workflows/agent2-control-mux-runtime.yml": {
+      "sha256": "68e2153a7fbaa9fdf5bcb28945e9e70df2b0525d2cac7ab2b93724ed6de694a1",
+      "selected_execution_configuration": [
+        {
+          "line": 17,
+          "text": "    runs-on: ${{ matrix.os }}"
+        },
+        {
+          "line": 18,
+          "text": "    timeout-minutes: 10"
+        }
+      ]
+    },
+    ".github/workflows/agent5-components.yml": {
+      "sha256": "516272313cedcd47141b918875ca06903f59b27c5888cda8ba117404d1f8f497",
+      "selected_execution_configuration": [
+        {
+          "line": 15,
+          "text": "    runs-on: windows-latest"
+        },
+        {
+          "line": 16,
+          "text": "    timeout-minutes: 10"
+        }
+      ]
+    },
+    ".github/workflows/combined-infrastructure.yml": {
+      "sha256": "0daf93f0fd05d93e9b0093bc66e496a93dd521ce09a3645afa8c17a249549bc0",
+      "selected_execution_configuration": [
+        {
+          "line": 12,
+          "text": "    runs-on: ${{ matrix.os }}"
+        },
+        {
+          "line": 13,
+          "text": "    timeout-minutes: 15"
+        }
+      ]
+    },
+    ".github/workflows/cross-repo-smoke.yml": {
+      "sha256": "804efabb108d414331471846f11700e963d0fe5a092266da80d06538792a6a61",
+      "selected_execution_configuration": [
+        {
+          "line": 9,
+          "text": "    runs-on: ubuntu-latest"
+        }
+      ]
+    },
+    ".github/workflows/final-integration.yml": {
+      "sha256": "d06751f1e0857bc5a3f1dd886cb753f48ec63d5f48f4f3813084fb27586e13d4",
+      "selected_execution_configuration": [
+        {
+          "line": 16,
+          "text": "    runs-on: ${{ matrix.os }}"
+        },
+        {
+          "line": 17,
+          "text": "    timeout-minutes: 5"
+        }
+      ]
+    },
+    ".github/workflows/five-boundary.yml": {
+      "sha256": "9324e3d083025f0f088189f29a7bdbb1e8e2b54c06e43dcd8d3828450299b277",
+      "selected_execution_configuration": [
+        {
+          "line": 11,
+          "text": "    runs-on: ${{ matrix.os }}"
+        },
+        {
+          "line": 12,
+          "text": "    timeout-minutes: 20"
+        }
+      ]
+    },
+    ".github/workflows/five-module-infra.yml": {
+      "sha256": "ebdd41235f6cdebfb0932f997fdce440a1eb02a0b3392f2a86a4bb5bfa677c70",
+      "selected_execution_configuration": [
+        {
+          "line": 12,
+          "text": "    runs-on: ${{ matrix.os }}"
+        }
+      ]
+    },
+    ".github/workflows/five-source-integration.yml": {
+      "sha256": "be3f9bf87d0e0fe67b1c2a5d72bea4072f58611fe8a056081161813ab53e0d56",
+      "selected_execution_configuration": [
+        {
+          "line": 5,
+          "text": "concurrency:"
+        },
+        {
+          "line": 6,
+          "text": "  group: actual-six-source-${{ github.event_name }}-${{ github.event.pull_request.head.sha || github.sha }}"
+        },
+        {
+          "line": 7,
+          "text": "  cancel-in-progress: true"
+        },
+        {
+          "line": 15,
+          "text": "    runs-on: ${{ matrix.os }}"
+        },
+        {
+          "line": 16,
+          "text": "    timeout-minutes: 30"
+        }
+      ]
+    },
+    ".github/workflows/fleet-control.yml": {
+      "sha256": "280c1a1306e9b35d41fe5ecf1566950b347834a6ecd2cd91d7ca906e5436e972",
+      "selected_execution_configuration": [
+        {
+          "line": 12,
+          "text": "    runs-on: ${{ matrix.os }}"
+        }
+      ]
+    },
+    ".github/workflows/handoff-roundtrip.yml": {
+      "sha256": "3b4119f470be10420345e2bccf6a3a876269ce4c6cb4ed360d219f4f28986de3",
+      "selected_execution_configuration": [
+        {
+          "line": 9,
+          "text": "    runs-on: ubuntu-latest"
+        }
+      ]
+    },
+    ".github/workflows/installer-security.yml": {
+      "sha256": "d82355b463b2a7ca1bb23667e8122085e26b78f0faf7561c09adcf7f7d9d24e4",
+      "selected_execution_configuration": [
+        {
+          "line": 7,
+          "text": "    runs-on: windows-latest"
+        }
+      ]
+    },
+    ".github/workflows/lab-stopped-service.yml": {
+      "sha256": "fb48b6d7af657534159110a1e3627259b87980a29167e613183d73d7d1d83323",
+      "selected_execution_configuration": [
+        {
+          "line": 5,
+          "text": "concurrency:"
+        },
+        {
+          "line": 6,
+          "text": "  group: stopped-service-${{ github.event_name }}-${{ github.event.pull_request.head.sha || github.sha }}"
+        },
+        {
+          "line": 7,
+          "text": "  cancel-in-progress: true"
+        },
+        {
+          "line": 14,
+          "text": "    runs-on: ${{ matrix.os }}"
+        },
+        {
+          "line": 15,
+          "text": "    timeout-minutes: 15"
+        }
+      ]
+    },
+    ".github/workflows/lifecycle-evidence.yml": {
+      "sha256": "f5fc2ea636b780a55ae20575a02708245474061c2ccd5cf0ca9fd0039a087809",
+      "selected_execution_configuration": [
+        {
+          "line": 11,
+          "text": "    runs-on: ${{ matrix.os }}"
+        },
+        {
+          "line": 12,
+          "text": "    timeout-minutes: 20"
+        }
+      ]
+    },
+    ".github/workflows/loopback-status.yml": {
+      "sha256": "4deb87638cfc761a825154c4be2f32f266b2a5ccc74aec157a189778733513bd",
+      "selected_execution_configuration": [
+        {
+          "line": 14,
+          "text": "    runs-on: ${{ matrix.os }}"
+        }
+      ]
+    },
+    ".github/workflows/operator-grid-contracts.yml": {
+      "sha256": "7ef759d37e55bc66ebc9b3a7b68155beac4e3d708e18a8caddca1b1201c006e4",
+      "selected_execution_configuration": [
+        {
+          "line": 7,
+          "text": "concurrency:"
+        },
+        {
+          "line": 8,
+          "text": "  group: operator-grid-${{ github.ref }}"
+        },
+        {
+          "line": 9,
+          "text": "  cancel-in-progress: false"
+        },
+        {
+          "line": 12,
+          "text": "    runs-on: ubuntu-24.04"
+        },
+        {
+          "line": 13,
+          "text": "    timeout-minutes: 10"
+        }
+      ]
+    },
+    ".github/workflows/paper-causal.yml": {
+      "sha256": "108b8e4ee82570e037fe6f1c43fe496316f94997ab7f6c6af2eba529571d5635",
+      "selected_execution_configuration": [
+        {
+          "line": 11,
+          "text": "    runs-on: ${{ matrix.os }}"
+        },
+        {
+          "line": 12,
+          "text": "    timeout-minutes: 15"
+        }
+      ]
+    },
+    ".github/workflows/provenance-handoff-smoke.yml": {
+      "sha256": "2e75c213af7f595c2c4f57666f51f6228895b0b8f85ceadb7c9ebf37cc0021ac",
+      "selected_execution_configuration": [
+        {
+          "line": 9,
+          "text": "    runs-on: ubuntu-latest"
+        }
+      ]
+    },
+    ".github/workflows/real-supervisor-terminan.yml": {
+      "sha256": "0263a2fef846e643973625b3a0ace3e5b25181a7cce945424b53cc15810fc310",
+      "selected_execution_configuration": [
+        {
+          "line": 9,
+          "text": "    runs-on: ubuntu-latest"
+        }
+      ]
+    },
+    ".github/workflows/terminan-contract-smoke.yml": {
+      "sha256": "643193327d79fdf727ba5fac8e6040e6513d3098a8a86749b0daf0c1240357dc",
+      "selected_execution_configuration": [
+        {
+          "line": 9,
+          "text": "    runs-on: ubuntu-latest"
+        }
+      ]
+    },
+    ".github/workflows/terminan-supervisor-http.yml": {
+      "sha256": "f51b18ec172cc4a90a22589cc859343f1ede026d549e10dc1f3923ca87ca6376",
+      "selected_execution_configuration": [
+        {
+          "line": 9,
+          "text": "    runs-on: ubuntu-latest"
+        }
+      ]
+    },
+    ".github/workflows/tests.yml": {
+      "sha256": "2bb0558d6a73763ab651fdbe63e10a23d5b0833821752ee4395b5f41dc643fed",
+      "selected_execution_configuration": [
+        {
+          "line": 12,
+          "text": "    runs-on: ${{ matrix.os }}"
+        }
+      ]
+    },
+    ".github/workflows/three-module-chain.yml": {
+      "sha256": "362ff3958c4a2d6f43afe99ffeabdbc4976e71160b1897371583330afe807fff",
+      "selected_execution_configuration": [
+        {
+          "line": 9,
+          "text": "    runs-on: ubuntu-latest"
+        }
+      ]
+    },
+    ".github/workflows/unified-terminan-status.yml": {
+      "sha256": "80091a6bd41d504aee8221d6253b2734d17565d8ef890a272f5b2972112d7364",
+      "selected_execution_configuration": [
+        {
+          "line": 9,
+          "text": "    runs-on: ubuntu-latest"
+        }
+      ]
+    }
+  }
+}

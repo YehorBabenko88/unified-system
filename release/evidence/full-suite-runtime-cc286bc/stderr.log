@@ -1,0 +1,81 @@
+warning: in the working copy of 'tracked.py', LF will be replaced by CRLF the next time Git touches it
+BLOCKED: RUNTIME_CLI_REJECTED; physical=NOT_AUTHORIZED
+BLOCKED: RUNTIME_CLI_REJECTED; physical=NOT_AUTHORIZED
+BLOCKED: RUNTIME_CLI_REJECTED; physical=NOT_AUTHORIZED
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 64527)
+Traceback (most recent call last):
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\socketserver.py", line 697, in process_request_thread
+    self.finish_request(request, client_address)
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\socketserver.py", line 766, in __init__
+    self.handle()
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\http\server.py", line 436, in handle
+    self.handle_one_request()
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\http\server.py", line 404, in handle_one_request
+    self.raw_requestline = self.rfile.readline(65537)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\socket.py", line 720, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+ConnectionAbortedError: [WinError 10053] Eine bestehende Verbindung wurde softwaregesteuert
+durch den Hostcomputer abgebrochen
+----------------------------------------
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 64528)
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 64529)
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 64530)
+Traceback (most recent call last):
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\socketserver.py", line 697, in process_request_thread
+    self.finish_request(request, client_address)
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\socketserver.py", line 766, in __init__
+    self.handle()
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\http\server.py", line 436, in handle
+    self.handle_one_request()
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\http\server.py", line 404, in handle_one_request
+    self.raw_requestline = self.rfile.readline(65537)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\socket.py", line 720, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+BrokenPipeError: [WinError 10058] Eine Anforderung zum Senden oder Empfangen von Daten wurde verhindert, da der Socket in diese Richtung bereits durch einen vorangegangenen shutdown-Aufruf heruntergefahren worden war
+----------------------------------------
+Traceback (most recent call last):
+Traceback (most recent call last):
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\socketserver.py", line 697, in process_request_thread
+    self.finish_request(request, client_address)
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\socketserver.py", line 697, in process_request_thread
+    self.finish_request(request, client_address)
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\socketserver.py", line 766, in __init__
+    self.handle()
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\socketserver.py", line 766, in __init__
+    self.handle()
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\http\server.py", line 436, in handle
+    self.handle_one_request()
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\http\server.py", line 436, in handle
+    self.handle_one_request()
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\http\server.py", line 404, in handle_one_request
+    self.raw_requestline = self.rfile.readline(65537)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\http\server.py", line 404, in handle_one_request
+    self.raw_requestline = self.rfile.readline(65537)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\socket.py", line 720, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\socket.py", line 720, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+BrokenPipeError: [WinError 10058] Eine Anforderung zum Senden oder Empfangen von Daten wurde verhindert, da der Socket in diese Richtung bereits durch einen vorangegangenen shutdown-Aufruf heruntergefahren worden war
+BrokenPipeError: [WinError 10058] Eine Anforderung zum Senden oder Empfangen von Daten wurde verhindert, da der Socket in diese Richtung bereits durch einen vorangegangenen shutdown-Aufruf heruntergefahren worden war
+----------------------------------------
+----------------------------------------

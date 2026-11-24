@@ -1,0 +1,48 @@
+name: Supervisor local-only source-bound component integration (132 cases)
+on:
+  pull_request:
+    paths: ['unified_system/**', 'tests/test_node_task_journal.py', 'tests/test_node_supervisor_v2.py', 'tests/test_ci_queue_controller.py', 'tests/test_mission_controller.py', 'tests/test_journal.py', 'tests/test_supervisor_deployment.py', 'tests/test_supervisor_local_integration.py', 'tests/test_lab_release.py', 'tests/test_installation_service.py', 'release/evidence/supervisor-local-integration-fixtures/**', '.github/workflows/supervisor-local-integration.yml', 'scheduler_components/**', 'tools/ci/**', '.github/workflows/preparation-integrity.yml', '.github/workflows/durable-mission-controller.yml', 'tests/test_mission_workflow_inventory.py', 'scripts/qualify_root_components.py', 'tests/test_root_component_qualification.py', 'docs/qualification/root-components-20261120/**']
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: root-components-supervisor-${{ github.event_name }}-${{ github.event.pull_request.head.sha || github.sha }}
+  cancel-in-progress: true
+jobs:
+  component:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        env:
+          GIT_CONFIG_COUNT: '2'
+          GIT_CONFIG_KEY_0: core.autocrlf
+          GIT_CONFIG_VALUE_0: 'false'
+          GIT_CONFIG_KEY_1: core.eol
+          GIT_CONFIG_VALUE_1: lf
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12.10'
+      - name: Exact source-bound supervisor mandatory cases
+        shell: python -I -S -B {0}
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          import os,pathlib,subprocess,sys
+          subprocess.run([sys.executable,'-I','-S','-B','scripts/qualify_root_components.py','--group','supervisor','--expected-head',os.environ['EXPECTED_HEAD'],'--out',str(pathlib.Path(os.environ['RUNNER_TEMP'])/'root-components-supervisor')],check=True)
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: root-components-supervisor-${{ matrix.os }}-${{ matrix.python || '3.12.10' }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/root-components-supervisor/
+          if-no-files-found: error

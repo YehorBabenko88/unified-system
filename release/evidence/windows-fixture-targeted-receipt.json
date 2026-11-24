@@ -1,0 +1,20 @@
+{
+  "schema": "unified.local-targeted-windows.v1",
+  "head": "b76cf0774dcaca11716931a5ec4ea482e9f297b4",
+  "parents_integrated": [
+    "8171eebd6bfbcc83fd82038c6d9f42d012ac822a",
+    "2626e939a7ed44bfb37aa354490329a7260cc24b"
+  ],
+  "command": [
+    "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\python.exe",
+    "-I",
+    "-S",
+    "-B",
+    "-c",
+    "import sys,unittest;sys.path.insert(0,'.');s=unittest.TestSuite(unittest.defaultTestLoader.loadTestsFromName(n)for n in ['tests.test_installation_transaction', 'tests.test_service_activation', 'tests.test_installation_native_diagnostic', 'tests.test_installation_service', 'tests.test_native_phase_diagnostics']);r=unittest.TextTestRunner(verbosity=2).run(s);raise SystemExit(not r.wasSuccessful())"
+  ],
+  "exit_code": 0,
+  "stdout_sha256": "f6efd4fa00982663f7959f9a1d2aa2512b1ba41362afd2ac63a9818aa53ebcd1",
+  "stderr_sha256": "b5af47c8ba5ce56622e5b8ac1afa9427ade8db6abfa6a41fcb3f9b94c472ae84",
+  "qualification": "LOCAL_ONLY_NOT_HOSTED_NATIVE_OR_PHYSICAL_ACCEPTANCE"
+}

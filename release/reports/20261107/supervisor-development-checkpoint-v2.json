@@ -1,0 +1,50 @@
+{
+  "schema": "unified.supervisor-development-checkpoint.v2",
+  "source_head": "39c52ca7486760f0223cdb71001a5f3c3b454df8",
+  "source_tree": "548a4e2243a224ad86073c39bfec465e6e61251f",
+  "pr": "https://github.com/YehorBabenko88/unified-system/pull/42",
+  "integration_test_pr": "https://github.com/YehorBabenko88/unified-system/pull/43",
+  "local_tests": 121,
+  "local_skips": 0,
+  "qualification": "LOCAL_COMPONENT_INTEGRATION_ONLY",
+  "software_ready": false,
+  "master_mission": "IN_PROGRESS / NO-GO",
+  "node_operations": {
+    "local_receipts_only": [
+      "REPORT_STATUS",
+      "CHECK_HEALTH"
+    ],
+    "other_allowlisted_operations": "BLOCKED_PLAN_ONLY",
+    "native_authority": false
+  },
+  "ci_controller": "CAPTURE_INGESTION_ONLY_NO_NETWORK_COLLECTOR",
+  "service": "PLAN_PROTOTYPE_NOT_INSTALLED",
+  "dashboard": {
+    "pr": "https://github.com/YehorBabenko88/Terminan/pull/70",
+    "head": "c752dff751d964c57daf3b3afe4987ea3377839b",
+    "backend_collector": "NONE"
+  },
+  "independent_review": {
+    "status": "PASS_LOCAL_BOUNDED_SLICE_ONLY",
+    "review_commit": "9f71240b6fce541ccbe37a3f747f932eee12e76c",
+    "source_head": "39c52ca7486760f0223cdb71001a5f3c3b454df8",
+    "url": "https://github.com/YehorBabenko88/unified-system/blob/9f71240b6fce541ccbe37a3f747f932eee12e76c/docs/audits/agent8-20261106/phase78/independent-review.md",
+    "tests": 121,
+    "source_files": 1361,
+    "symlink_vector": "NOT_RUN_HOST_PRIVILEGE",
+    "native_or_physical_qualification": false
+  },
+  "physical_installation": "NOT_AUTHORIZED_BY_DIRECTIVE",
+  "trusted_release": "BLOCKED_NO_TRUSTED_PUBLISHER",
+  "remaining": [
+    "Actual native identity/key/IPC admission and authority/fencing adapter",
+    "Actual Control API/Scheduler/Storage publication integration",
+    "Eleven remaining allowlisted operations",
+    "Bounded read-only CI collector and trustworthy dashboard producer",
+    "Disposable Windows service restart/logoff and rollback execution",
+    "Separate Windows Pro/Home qualification",
+    "Required terminal hosted CI; independent native/runtime qualification remains pending"
+  ],
+  "evidence_index": "release/evidence/supervisor-local-composition-20261107/index.json",
+  "release_manifest": "PROVISIONAL_NOT_INSTALLABLE_UNCHANGED"
+}

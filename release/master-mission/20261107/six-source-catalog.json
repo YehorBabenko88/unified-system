@@ -1,0 +1,193 @@
+{
+  "unified-system": {
+    "head": "eb0c6486524c7d7f4d3dc390abebc0107db2c858",
+    "tree": "0536eb5fa5984ea281974fec2386c547555b0ce9",
+    "pr": 26,
+    "source_file_count": 1255,
+    "candidate_entrypoint_paths_not_execution_proof": [
+      "unified_system/cli.py"
+    ],
+    "project_manifest_facts": {
+      "release/requirements-integration.lock": {
+        "sha256": "f0e5813affe34a3872badf69b782d15578df5d1919f51afe7dae60da6a4d3daa",
+        "bytes": 94
+      }
+    },
+    "status": "PARTIAL",
+    "integrated_full_runtime": false,
+    "physical_verified": false
+  },
+  "bybit-cluster-grid": {
+    "head": "7a19ab40c30efef431bb16f0ddc91960608bf597",
+    "tree": "e7adbc40562e962ae529d157eebeacd550c5b7f6",
+    "pr": 265,
+    "source_file_count": 689,
+    "candidate_entrypoint_paths_not_execution_proof": [
+      "grid/worker.py"
+    ],
+    "project_manifest_facts": {
+      "requirements.txt": {
+        "sha256": "0bea9e0fc705570d541af38d649b02f455843cdfcdbdc26a3175e15b206a7072",
+        "bytes": 254
+      },
+      "requirements-ml.txt": {
+        "sha256": "71ee33b59a8444a86fff1c7e7986e0ecf7820c92437482056be9a6cca6a7eff6",
+        "bytes": 278
+      }
+    },
+    "status": "PARTIAL",
+    "integrated_full_runtime": false,
+    "physical_verified": false
+  },
+  "strattester": {
+    "head": "a56c24a0f25a0c5ea9222fcd953a49536c91dfc9",
+    "tree": "69728afcfaba28d95c8de52e5ca773b75be09a5f",
+    "pr": 73,
+    "source_file_count": 774,
+    "candidate_entrypoint_paths_not_execution_proof": [
+      "strattester/runtime/worker.py",
+      "tools/ls5_history/worker.py"
+    ],
+    "project_manifest_facts": {
+      "pyproject.toml": {
+        "sha256": "cf48d1fa28822a6f82e0828563a4192ade3cbaeb3221634ae4f9450bf62d2110",
+        "bytes": 742,
+        "project": {
+          "name": "strattester",
+          "version": "0.1.0",
+          "requires-python": ">=3.11",
+          "dependencies": [
+            "requests>=2.31,<3",
+            "psutil>=5.9,<8",
+            "tzdata>=2025.2"
+          ],
+          "optional-dependencies": {
+            "dev": [
+              "pytest>=8.2,<10",
+              "pytest-json-report>=1.5,<2",
+              "numpy>=2,<3",
+              "filelock>=4.2.1,<5",
+              "PyNaCl==1.6.2"
+            ],
+            "research": [
+              "torch==2.14.1",
+              "pytest-json-report>=1.5,<2",
+              "filelock>=4.2.1,<5",
+              "PyNaCl==1.6.2"
+            ],
+            "postgres": [
+              "psycopg[binary]>=3.3.6,<4"
+            ]
+          }
+        }
+      }
+    },
+    "status": "PARTIAL",
+    "integrated_full_runtime": false,
+    "physical_verified": false
+  },
+  "math": {
+    "head": "917d99672e37db59835a8ab23b03c99826b12d78",
+    "tree": "0e8c7a3712fbbcddee0e0c9e5b8d5f10f34bde69",
+    "pr": 112,
+    "source_file_count": 684,
+    "candidate_entrypoint_paths_not_execution_proof": [
+      "scripts/q01-lab/worker.mjs",
+      "src/book-ingestion/worker.mjs",
+      "src/confidential-collector/worker.mjs"
+    ],
+    "project_manifest_facts": {
+      "package.json": {
+        "sha256": "bfc702070231f1e642344567155bf99dcc41241850109358be40ae38b9106161",
+        "bytes": 308,
+        "name": "math-universe",
+        "scripts": {
+          "test": "node --test tests/*.test.mjs tests/*.windows.mjs tests/*.cross.mjs",
+          "test:e2e": "playwright test"
+        },
+        "engines": null,
+        "dependencies": {}
+      },
+      "package-lock.json": {
+        "sha256": "944b7dcca798cb8e6fd257a89c67ab2cd619fb53fcb9952cd7761b6d1b33f523",
+        "bytes": 7914
+      }
+    },
+    "status": "PARTIAL",
+    "integrated_full_runtime": false,
+    "physical_verified": false
+  },
+  "meta_analyse": {
+    "head": "f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1",
+    "tree": "c155c935a801fa98b7c78219c9798ce1f1be8848",
+    "pr": 78,
+    "source_file_count": 782,
+    "candidate_entrypoint_paths_not_execution_proof": [],
+    "project_manifest_facts": {
+      "pyproject.toml": {
+        "sha256": "9f05d436a9a5d6aef7ec9dbdb2576164ba9408ee16ecd89bd3567dfc655e46d4",
+        "bytes": 904,
+        "project": {
+          "name": "meta-analyse",
+          "version": "0.1.0",
+          "description": "Read-only market analytics and paper simulation companion for MetaScalp",
+          "requires-python": ">=3.11",
+          "dependencies": [
+            "httpx>=0.27,<1",
+            "websockets>=13,<16",
+            "psycopg[binary]>=3.2,<4",
+            "PySide6>=6.8,<7"
+          ],
+          "optional-dependencies": {
+            "test": [
+              "pytest>=8,<10",
+              "pytest-asyncio>=0.24,<2",
+              "hypothesis==6.170.6"
+            ],
+            "archive": [
+              "aiohttp>=3.10,<4"
+            ]
+          },
+          "scripts": {
+            "meta-analyse": "meta_analyse.desktop:main"
+          }
+        }
+      }
+    },
+    "status": "PARTIAL",
+    "integrated_full_runtime": false,
+    "physical_verified": false
+  },
+  "Terminan": {
+    "head": "10e07ef108d155b9ca2278eec6a8361cb92fa488",
+    "tree": "899ab6ec331784aa4e512050c75665cecfa9385e",
+    "pr": 69,
+    "source_file_count": 335,
+    "candidate_entrypoint_paths_not_execution_proof": [
+      "terminan/__main__.py",
+      "terminan/server.py",
+      "terminan/sync/serve.py"
+    ],
+    "project_manifest_facts": {
+      "package.json": {
+        "sha256": "fc4307059227bf33b607db56af48925f04aa7741e6b77e4a2efc3558ad00c2af",
+        "bytes": 365,
+        "name": "terminan-r2-offline-preview",
+        "scripts": {
+          "test:browser": "playwright test",
+          "test:history": "playwright test -c playwright.history.config.cjs",
+          "test:ui": "node tests/check_ui_script.cjs && node tests/check_ui_refresh_race.cjs"
+        },
+        "engines": null,
+        "dependencies": {}
+      },
+      "package-lock.json": {
+        "sha256": "8cfc5b4d350efe0b29e5b7bf1f89501757b0d37ce680ab6c11cfde61561a7403",
+        "bytes": 2262
+      }
+    },
+    "status": "PARTIAL",
+    "integrated_full_runtime": false,
+    "physical_verified": false
+  }
+}

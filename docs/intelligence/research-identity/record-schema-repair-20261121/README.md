@@ -1,0 +1,9 @@
+# Canonical record-schema freshness repair
+
+Base Root006418285667b38810b7ecd1de9807b6db166fa3. Hosted native22-case jobs reached21 passes/1error: Draft202012 validation of the actual canonical profile used obsolete Termb999/Mathde819/native-target-schema342 constants. A pure DTO reproduces exactly five violations. The fixed4a8 input-request digest was already correct and remains unchanged.
+
+The generator now imports without source writes. Explicit generation derives Term/Math revisions from the current four-owner cohort and target-schema hash/input digest from the actual canonical-native request schema. It refuses disagreement with the active native binding manifest, raw broker module hash or its four literal binding constants, before writing any generated record. It imports no broker, SourceFence, crypto, TLS, database or native implementation.
+
+Only five profile const positions change and the RECORD-MANIFEST profile hash cascades. Principal/policy/principal_session schemas are raw-byte identical; record fieldsets/types, additionalProperties, enums, resource caps and UUID/session patterns are unchanged. Existing authority/session guards, runtime modules, SDK pins, workflows and historical archives are untouched.
+
+Six stdlib-only pure regressions pass Python3.11/3.12 under denied socket/child/ctypes/SQLite/system effects. They cover import purity, checked-in freshness, actual fixture joins, retired literals, incoherent input refusal and coherent future source derivation. Existing approved global jsonschema was used only on Python3.12: actual canonical DTO validates and ten retired-pin/schema vectors refuse. No new dependency is installed or required by the six committed regressions. Native/TLS/Consul/SQL/SourceFence executions are NOT_RUN locally; schema validity never issues authority. NO_GO.

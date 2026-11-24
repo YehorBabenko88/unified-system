@@ -1,0 +1,29 @@
+{
+  "effective_schemas": {
+    "job": "review3/job.schema.json",
+    "phase_receipt": "review3/phase-receipt.schema.json",
+    "private_observation": "review4/private-observation.schema.json",
+    "public_observation": "review4/public-observation.schema.json",
+    "quota_ledger": "review1/quota-ledger.schema.json",
+    "quota_policy": "review1/quota-policy.schema.json",
+    "rights": "review1/rights.schema.json"
+  },
+  "implementation_authorized": false,
+  "implementation_base": "NONE_APPROVED",
+  "native_calls_authorized": false,
+  "scope": "PROPOSED_DESIGN_COMPOSITION_NOT_WIRE_RUNTIME_FREEZE",
+  "seals": {
+    "review1/SHA256.json": "f9b17f268e0a6b877fbb6b99013c1bb450d0ebad0269fdc48244fe517b29eaec",
+    "review2/SHA256.json": "de0100d1ea8d793094e0232e34fc04c13b61b9d3bd7dee372d55095e0afce7dc",
+    "review3/SHA256.json": "b4237bf61d6c862368bcdb27ba4dbd919ca1e43e4221a9053c82efd749fa63e7",
+    "review4/SHA256.json": "cbe74100205a59d73bdc591294f96e8b6a9697e45bcc64ad8d7fd2ab779e0735"
+  },
+  "semantic_contracts": [
+    "review1/CONTRACT.md",
+    "review2/CONTRACT-ADDENDUM.md",
+    "review3/CONTRACT-ADDENDUM.md",
+    "review4/OBSERVATION-CONTRACT.md"
+  ],
+  "source_predicate_checks": "READ_ONLY_SELECTED_REGEX_PAIRING_PUBLIC_BRANCH_NOT_SCHEMA_ENGINE_OR_RUNTIME",
+  "strict_time_policy": "OPTION1_MUTATIONS_DISABLED_PENDING_OPERATOR_DECISION"
+}

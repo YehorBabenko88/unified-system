@@ -1,0 +1,63 @@
+{
+  "source_head": "cc286bce5e51e3670bd8a6cdfd3b663307268703",
+  "skips": [
+    {
+      "test": "test_artifacts.ArtifactTests.test_symlink",
+      "reason": "symlink unavailable"
+    },
+    {
+      "test": "test_lab_capsule_acl.CapsuleAclTests.test_foreign_owner_refuses_normalization_before_acl_changes",
+      "reason": "Current token cannot assign SYSTEM as foreign test owner"
+    },
+    {
+      "test": "test_lab_capsule_acl.CapsuleAclTests.test_protected_file_foreign_owner_is_rejected",
+      "reason": "Current token cannot assign SYSTEM as foreign file owner"
+    },
+    {
+      "test": "test_lab_capsule_acl.CapsuleAclTests.test_token_default_admin_owner_descendants_are_supported_conditionally",
+      "reason": "Current token is not an unfiltered administrator with Administrators default owner"
+    },
+    {
+      "test": "test_lab_capsule_builder.BuilderTests.test_dangling_link_rejected",
+      "reason": "Windows symlink privilege unavailable"
+    },
+    {
+      "test": "test_lab_observation_writer.ProducerTests.test_real_term_validator_roundtrip_when_explicitly_supplied",
+      "reason": "explicit admitted Term checkout and raw source pin not configured"
+    },
+    {
+      "test": "test_lab_observation_writer.WriterTests.test_symlink_parent_rejected_before_directory_creation",
+      "reason": "symlink privilege unavailable"
+    },
+    {
+      "test": "setUpClass (test_lab_paper_pipeline.ComposedTests)",
+      "reason": "explicit Grid/Stratt source checkouts absent; composed runtime NOT_RUN"
+    },
+    {
+      "test": "test_lab_runtime.LabRuntimePolicyTests.test_actual_grid_worker_heartbeat_uses_node_only_auth_mock_control_source_fixture",
+      "reason": "Optional sibling Grid source and test dependencies not provisioned"
+    },
+    {
+      "test": "test_operator_grid_composition.GridCompositionTests.test_commit_retry_read_and_unknown_reconcile_actual_bridge",
+      "reason": "GRID_TEST_ROOT required for actual cross-repository composition"
+    },
+    {
+      "test": "test_operator_grid_composition.GridCompositionTests.test_lost_response_reconciles_same_command_and_two_windows",
+      "reason": "GRID_TEST_ROOT required for actual cross-repository composition"
+    },
+    {
+      "test": "test_operator_grid_composition.GridCompositionTests.test_no_quorum_unknown_has_no_invented_owner",
+      "reason": "GRID_TEST_ROOT required for actual cross-repository composition"
+    },
+    {
+      "test": "test_runtime_process.PathPolicyTests.test_dangling_links_are_not_valid_future_paths",
+      "reason": "symlink privilege unavailable"
+    },
+    {
+      "test": "test_runtime_process.PathPolicyTests.test_linked_ancestor_rejected_before_descendant_metadata",
+      "reason": "symlink privilege unavailable"
+    }
+  ],
+  "waivers": [],
+  "status": "UNWAIVED_NOT_FULL_ACCEPTANCE"
+}

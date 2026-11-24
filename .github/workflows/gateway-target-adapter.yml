@@ -1,0 +1,69 @@
+name: Canonical gateway target qualification
+on:
+  pull_request:
+    paths: ['unified_system/gateway_target_adapter.py', 'integration/source_guard.py', 'tests/gateway_target_adapter/**', 'docs/intelligence/canonical-target/**', '.github/workflows/gateway-target-adapter.yml']
+permissions:
+  contents: read
+jobs:
+  direct-target:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-24.04]
+        python: ['3.11', '3.12']
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    env:
+      EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+      PYTHONDONTWRITEBYTECODE: '1'
+      GIT_NO_REPLACE_OBJECTS: '1'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        env: &checkout_lf
+          GIT_CONFIG_COUNT: '2'
+          GIT_CONFIG_KEY_0: core.autocrlf
+          GIT_CONFIG_VALUE_0: 'false'
+          GIT_CONFIG_KEY_1: core.eol
+          GIT_CONFIG_VALUE_1: lf
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: sources/unified_system
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        env: *checkout_lf
+        with:
+          repository: YehorBabenko88/Terminan
+          ref: 353d16b2126609579018fafe3f76047b465bb289
+          path: sources/terminan
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        env: *checkout_lf
+        with:
+          repository: YehorBabenko88/math
+          ref: 9e6acbd9e12a91189f57234828e31640983af553
+          path: sources/math
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Canonical calculation and mandatory owned process crash recovery
+        shell: python -I -S -B {0}
+        run: |
+          import hashlib,os,pathlib,shutil,subprocess,sys
+          workspace=pathlib.Path(os.environ['GITHUB_WORKSPACE'])
+          root=workspace/'sources/unified_system'
+          out=pathlib.Path(os.environ['RUNNER_TEMP'])/'canonical-target-evidence'
+          git=pathlib.Path(shutil.which('git')).resolve(strict=True)
+          runtime=pathlib.Path(sys.executable).resolve(strict=True)
+          digest=lambda path:hashlib.sha256(path.read_bytes()).hexdigest()
+          command=[str(runtime),'-I','-S','-B','-X','pycache_prefix='+str(out/'cache'),str(root/'docs/intelligence/canonical-target/run_qualification.py'),'--root',str(root),'--root-head',os.environ['EXPECTED_HEAD'],'--terminan-root',str(workspace/'sources/terminan'),'--math-root',str(workspace/'sources/math'),'--git',str(git),'--git-sha256',digest(git),'--runtime-sha256',digest(runtime),'--out',str(out),'--include-process-crash']
+          subprocess.run(command,check=True,timeout=600)
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: canonical-target-${{ matrix.os }}-${{ matrix.python }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/canonical-target-evidence
+          if-no-files-found: error
