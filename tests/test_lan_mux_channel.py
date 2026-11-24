@@ -242,10 +242,12 @@ class MuxTlsTests(unittest.TestCase):
 
     def test_actual_node_budget_blocks_fragment_writes(self):
         import time
+        from fractions import Fraction
         client,server,c,s,left,right,binding=self.channels()
         left.send(3,b'warm');self.assertEqual(right.receive().payload,b'warm')
-        with client.budget.transaction() as con:fixed=con.execute('SELECT last_ms FROM meta WHERE id=1').fetchone()[0]/1000
-        client.budget.clock=lambda:fixed  # Explicit isolated-clock seam; actual debit/store/socket are real.
+        with client.budget.transaction() as con:
+            fixed=Fraction(con.execute('SELECT last_ms FROM meta WHERE id=1').fetchone()[0],1000)
+            client.budget.clock=lambda:fixed  # Exact isolated test clock, installed before releasing the shared lock.
         for size in (1048576,65536,4096,256,16,1):
             while client.budget.try_take('tx','LS5','control',size):pass
         before=client.budget.counters()['tx']
