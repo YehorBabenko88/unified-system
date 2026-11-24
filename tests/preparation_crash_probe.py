@@ -48,7 +48,7 @@ def timeout_output(value):
     if value is None:
         result.update(kind='none',size=0,redacted=False)
         return result
-    if type(value) not in (bytes,str):return result
+    if type(value) is not bytes and type(value) is not str:return result
     limit=1024
     result.update(kind='bytes' if type(value) is bytes else 'str',size=len(value),truncated=len(value)>limit)
     text=value[:limit].decode('utf-8',errors='replace') if type(value) is bytes else value[:limit]

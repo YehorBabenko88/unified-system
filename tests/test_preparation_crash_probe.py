@@ -59,6 +59,22 @@ class ProbeTests(unittest.TestCase):
    def __str__(self):raise AssertionError('coercion')
    def __bool__(self):raise AssertionError('truthiness')
   self.assertEqual(dict(kind='unsupported',size=None,truncated=False,entry_marker=False,exceptions=[],redacted=True),m.timeout_output(Refuse()))
+  callbacks=[]
+  class HostileMeta(type):
+   def __eq__(cls,other):
+    callbacks.append('METACLASS_EQ');raise RuntimeError('UNTRUSTED_METACLASS_CALLBACK')
+  class Hostile(metaclass=HostileMeta):
+   def __str__(self):
+    callbacks.append('STR');raise RuntimeError('UNTRUSTED_STR_CALLBACK')
+   def __bool__(self):
+    callbacks.append('BOOL');raise RuntimeError('UNTRUSTED_BOOL_CALLBACK')
+   def __len__(self):
+    callbacks.append('LEN');raise RuntimeError('UNTRUSTED_LEN_CALLBACK')
+  try:result=m.timeout_output(Hostile())
+  except RuntimeError:self.fail('unsupported output invoked a callback: '+','.join(callbacks))
+  self.assertEqual(dict(kind='unsupported',size=None,truncated=False,entry_marker=False,exceptions=[],redacted=True),result)
+  self.assertEqual([],callbacks)
+
  def test_timeout_failure_uses_projected_streams_without_command_text(self):
   import ast
   m=self.api();self.assertTrue(hasattr(m,'timeout_evidence'),'timeout evidence missing');summary=m.timeout_evidence(b'PREPARATION_PYTHON_ENTERED\n',b'ValueError: SECRET')
