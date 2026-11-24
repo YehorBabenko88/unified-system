@@ -144,15 +144,16 @@ class DurablePreparationTests(unittest.TestCase):
 
     def test_process_crash_before_event_commit_recovers_without_partial_hold(self):
         self.enqueue()
-        from tests.preparation_crash_probe import build_command, phase_summary
+        from tests.preparation_crash_probe import build_command, phase_summary, timeout_evidence
         root = Path(__file__).resolve().parents[1]
         phases = Path(self.temp.name) / 'crash-phases'
         cache = Path(self.temp.name).resolve() / 'crash-cache'
         try:
             crashed = subprocess.run(build_command(sys.executable, root, self.path, self.scope, phases, cache),
                                      cwd=root, capture_output=True, timeout=20)
-        except subprocess.TimeoutExpired:
-            self.fail('CRASH_CHILD_TIMEOUT phases=' + phase_summary(phases))
+        except subprocess.TimeoutExpired as error:
+            self.fail('CRASH_CHILD_TIMEOUT phases=' + phase_summary(phases) +
+                      ' output=' + timeout_evidence(error.stdout,error.stderr))
         self.assertEqual(23, crashed.returncode, crashed.stderr.decode(errors='replace'))
         self.assertEqual('QUEUED', self.store.view(self.scope).get('state'))
         self.assertIsNone(self.store.view(self.scope).get('request_id'))

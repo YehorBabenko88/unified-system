@@ -3,6 +3,7 @@ import json
 from pathlib import Path
 PHASES=('ENTRY','IMPORT_BEGIN','IMPORT_END','JOURNAL_OPEN','PREPARE_BEGIN','CRASH_HOOK','RETURNED_WITHOUT_CRASH')
 CRASH_CODE = r'''
+print('PREPARATION_PYTHON_ENTERED',flush=True)
 import json, os, sys
 from pathlib import Path
 phase_path=Path(sys.argv[4])
@@ -39,3 +40,30 @@ def phase_summary(path):
     except UnicodeError:return 'INVALID_PHASE_RECORD'
     if not values or any(value not in PHASES for value in values) or len(values)>len(PHASES):return 'INVALID_PHASE_RECORD'
     return ','.join(values)
+
+# Only a bounded closed projection is published: arbitrary output may contain secrets.
+# Exception names below are observed text tokens, never an attributed timeout cause.
+def timeout_output(value):
+    result=dict(kind='unsupported',size=None,truncated=False,entry_marker=False,exceptions=[],redacted=True)
+    if value is None:
+        result.update(kind='none',size=0,redacted=False)
+        return result
+    if type(value) not in (bytes,str):return result
+    limit=1024
+    result.update(kind='bytes' if type(value) is bytes else 'str',size=len(value),truncated=len(value)>limit)
+    text=value[:limit].decode('utf-8',errors='replace') if type(value) is bytes else value[:limit]
+    lines=text.splitlines()
+    if result['truncated'] and not text.endswith(('\n','\r')):lines=lines[:-1]
+    exceptions=('ImportError','ModuleNotFoundError','SyntaxError','IndentationError','TabError','OSError','PermissionError','FileNotFoundError','UnicodeError','UnicodeDecodeError','RuntimeError','ValueError')
+    result['redacted']=False
+    for line in lines:
+        if line=='PREPARATION_PYTHON_ENTERED':result['entry_marker']=True
+        elif line:
+            result['redacted']=True
+            for name in exceptions:
+                if line.startswith(name+':') and name not in result['exceptions']:result['exceptions'].append(name)
+    if result['truncated']:result['redacted']=True
+    return result
+
+def timeout_evidence(stdout,stderr):
+    return json.dumps(dict(stdout=timeout_output(stdout),stderr=timeout_output(stderr)),sort_keys=True,separators=(',',':'))
