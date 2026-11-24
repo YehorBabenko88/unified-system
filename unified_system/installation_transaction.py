@@ -19,12 +19,12 @@ from .journal import Journal
 from .installation_progress import identifier,safe as safe_journal
 from .lab_capsule_acl import _safe as safe_path
 
-SCHEMA='unified.installation-transaction.v1'
+SCHEMA='unified.installation-transaction.v2'
 MAX_RECORDS=64
 MAX_RECEIPT_BYTES=65536
 PLAN_KEYS={'schema','installation_id','node_id','operation_id','role','manifest_sha256',
  'capsule_root','install_root','state_root','release_id','sources','source_proof',
- 'activation','grid_boundary','service_boundary','capacity_gate','capsule_source_provenance'}
+ 'activation','application_boundary','service_boundary','capacity_gate','capsule_source_provenance'}
 
 
 def need(ok):
@@ -55,7 +55,7 @@ def validate_plan(plan):
    if left!=right:need(left not in right.parents)
  need(len(set(paths))==3)
  need(plan['source_proof']=='NOT_EVALUATED' and plan['activation']=='BLOCKED' and
-      plan['grid_boundary']=='EXISTING_EPHEMERAL_GUARD_UNCHANGED' and
+      plan['application_boundary']=='EXISTING_EPHEMERAL_GUARD_UNCHANGED' and
       plan['service_boundary']=='BLOCKED_NSSM_CLOSURE_SCOPED_ACL_GIT_IDENTITY_PENDING' and
       plan['capacity_gate']=='NOT_EVALUATED' and plan['capsule_source_provenance']=='PINNED_METADATA_ONLY_VERIFY_SOURCES_BEFORE_EXECUTION')
  need(type(plan['sources']) is dict and set(plan['sources'])==lab_release.MODULE_IDS)
@@ -85,7 +85,7 @@ def source_plan(*,capsule_root,install_root,state_root,installation_id,node_id,o
   release_id=m['release_id'],sources={key:{field:value[field] for field in ('commit','tree')} for key,value in m['sources'].items()},
   source_proof='NOT_EVALUATED',activation='BLOCKED',capacity_gate='NOT_EVALUATED',
   capsule_source_provenance=report['source_provenance'],
-  grid_boundary='EXISTING_EPHEMERAL_GUARD_UNCHANGED',
+  application_boundary='EXISTING_EPHEMERAL_GUARD_UNCHANGED',
   service_boundary='BLOCKED_NSSM_CLOSURE_SCOPED_ACL_GIT_IDENTITY_PENDING'))
 
 

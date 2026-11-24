@@ -1,4 +1,4 @@
-"""Control admission on existing Grid authority; no election or local authority.
+"""Control admission on Root-owned Consul authority; no new election or local authority.
 First executable slice: OPERATOR OPEN and current-authorized reconciliation.
 NODE delegation, streams, close containment and subscriptions are not admitted.
 """
@@ -44,7 +44,7 @@ def _uuid(value):
 
 class MuxAuthority:
     def __init__(self,authority,generation,*,admission=None):
-        # authority is the existing qualified Grid ConsulSessionAuthority supplied
+        # authority is the existing qualified Root-owned ConsulSessionAuthority supplied
         # by trusted composition, not a caller-selected endpoint or KV gateway.
         self.authority=authority;self.generation=_uuid(generation);self.admission=admission
         self.prefix=authority.config.namespace+'/control-v3/'

@@ -113,7 +113,7 @@ class LocalIntegrationTests(unittest.TestCase):
         self.assertEqual(report["source_provenance"],"PINNED_METADATA_ONLY_VERIFY_SOURCES_BEFORE_EXECUTION")
         install=self.root/"install";state=self.root/"state"
         preparation=self.deployment.prepare_install(self.node(),install_root=install,state_root=state,installation_id="install1",operation_id="prepare1")
-        self.assertEqual(preparation["transaction_plan"]["schema"],"unified.installation-transaction.v1")
+        self.assertEqual(preparation["transaction_plan"]["schema"],"unified.installation-transaction.v2")
         self.assertEqual(preparation["transaction_plan"]["activation"],"BLOCKED")
         self.assertEqual(preparation["mode"],"PLAN_ONLY");self.assertFalse(preparation["effects_authorized"])
         previous=dict(release_id="previous",manifest_sha256="b"*64,backup_sha256="c"*64)

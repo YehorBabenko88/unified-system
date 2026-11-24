@@ -45,7 +45,7 @@ class DeploymentPlanTests(unittest.TestCase):
         self.assertFalse((self.root/'install').exists());self.assertFalse((self.root/'state').exists())
     def test_prepare_reuses_existing_inactive_transaction_plan_without_writes(self):
         plan=self.adapter.prepare_install(self.node(),install_root=self.root/'install',state_root=self.root/'state',installation_id='i1',operation_id='op1')
-        self.assertEqual(plan['transaction_plan']['schema'],'unified.installation-transaction.v1')
+        self.assertEqual(plan['transaction_plan']['schema'],'unified.installation-transaction.v2')
         self.assertEqual(plan['transaction_plan']['activation'],'BLOCKED');self.assertEqual(plan['mode'],'PLAN_ONLY')
         self.assertFalse((self.root/'install').exists());self.assertFalse((self.root/'state').exists())
         self.assertFalse(plan['effects_authorized'])

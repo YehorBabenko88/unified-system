@@ -1,4 +1,4 @@
-"""Node-local process lifecycle. Grid remains the distributed fleet authority.
+"""Node-local process lifecycle; distributed fleet authority belongs to Root.
 
 This durable journal is NOT distributed consensus. Drivers must implement
 idempotent start by operation_id, owned-process stop and functional readiness.
