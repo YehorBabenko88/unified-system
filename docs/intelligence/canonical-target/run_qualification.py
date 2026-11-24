@@ -43,7 +43,7 @@ def main(argv=None):
  not_run='test_actual_owned_process_crash_before_and_after_calculation_stays_unknown'
  cases=[test_direct.DirectTests(name) for name in unittest.defaultTestLoader.getTestCaseNames(test_direct.DirectTests) if a.include_process_crash or name!=not_run]
  suite=unittest.TestSuite(cases);suite.addTests(unittest.defaultTestLoader.loadTestsFromModule(test_canonical_contract));suite.addTests(unittest.defaultTestLoader.loadTestsFromModule(test_qualification_policy));expected=suite.countTestCases()
- report=dict(schema='unified.canonical-target.qualification.v2',status='FAIL',root_sha=a.root_head,terminan_sha='26af145a1c53d85f607fc18c4fd200f0a42b0f73',math_sha='9379384606492af33619bc9168d259917da296a0',scope='SYNTHETIC_LOCAL_UNATTESTED',native='NOT_RUN',actual_process_crash='NOT_RUN',network='PROHIBITED',execution_authority=False,release_status='NO_GO')
+ report=dict(schema='unified.canonical-target.qualification.v2',status='FAIL',root_sha=a.root_head,terminan_sha='f6f516252b230ef7f87cd58a1bdab920796cc904',math_sha='9379384606492af33619bc9168d259917da296a0',scope='SYNTHETIC_LOCAL_UNATTESTED',native='NOT_RUN',actual_process_crash='NOT_RUN',network='PROHIBITED',execution_authority=False,release_status='NO_GO')
  try:
   result=unittest.TextTestRunner(verbosity=2).run(suite)
   if not (result.wasSuccessful() and result.testsRun==expected and not result.skipped and not result.expectedFailures and not result.unexpectedSuccesses):raise ValueError('all scoped cases must pass')
