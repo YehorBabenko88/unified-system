@@ -1,0 +1,55 @@
+name: Diagnostic Windows P0 (Workstream A, MASTER #111)
+# Diagnostic only: measures, never changes product/test bounds or protections.
+on:
+  push:
+    branches: ['claude/a-windows-ps-diagnostic-*']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  powershell-timing:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, windows-2022]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Probe PowerShell child phases (full vs restricted env, cold vs warm)
+        run: python -I -B tools/diagnostics/windows_powershell_probe.py
+      - name: Reproduce the three failing tests unchanged (15 s bound kept)
+        if: always()
+        run: |
+          python -m pip install --only-binary=:all: --require-hashes -r docs/ci/requirements-unittest.lock
+          python -m unittest -v tests.test_installation_native_diagnostic tests.test_installation_service.ServiceResourceTests.test_poisoned_parent_module_path_cannot_autoload_user_module
+        continue-on-error: true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: powershell-timing-${{ matrix.os }}
+          path: diag.json
+          if-no-files-found: warn
+  lan-mtls-disconnect:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --only-binary=:all: --require-hashes -r docs/ci/requirements-unittest.lock
+      - name: Repeat the failing large-message mTLS test 5x (deadlines unchanged)
+        shell: bash
+        run: |
+          for i in 1 2 3 4 5; do
+            echo "=== attempt $i"
+            python -X faulthandler -m unittest -v tests.test_lan_mux_channel.MuxTlsTests.test_complete_large_messages_real_mtls_and_budget_overhead 2>&1 | tail -60 || true
+          done
