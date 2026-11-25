@@ -66,7 +66,8 @@ def _run(argv,*,env,payload=None,timeout=30,limit=262144,encoding='utf8',errors=
  with tempfile.TemporaryFile() as source,tempfile.TemporaryFile() as out,tempfile.TemporaryFile() as error:
   if payload is not None:source.write(payload)
   source.seek(0)
-  child=subprocess.Popen(argv,env=env,stdin=source,stdout=out,stderr=error)
+  # Fixed trusted working directory: never the caller's (possibly writable) cwd.
+  child=subprocess.Popen(argv,env=env,stdin=source,stdout=out,stderr=error,cwd=child_directory())
   try:
    deadline=time.monotonic()+timeout
    while child.poll() is None:
@@ -126,11 +127,59 @@ def _native_tools():
  return tools
 
 
+# Windows PowerShell 5.1 child contract (Workstream A2, unified-system#151).
+# Measured on windows-2022/2025: without PATH and with the restricted
+# PSModulePath, the first cmdlet/type/command resolution spent 18-28 s in
+# module discovery. Instead of widening PSModulePath (which would re-open user
+# module autoload) children disable autoloading and import only the three
+# trusted in-box modules by absolute System32 path, then prove that every loaded
+# module comes from there. PATH is a fixed system list, never inherited.
+TRUSTED_POWERSHELL_MODULES=('Microsoft.PowerShell.Utility','Microsoft.PowerShell.Management','Microsoft.PowerShell.Security')
+POWERSHELL_PRELUDE=("$PSModuleAutoLoadingPreference='None';$ErrorActionPreference='Stop';"
+ "$UnifiedTrustedModules=[Environment]::SystemDirectory+'\\WindowsPowerShell\\v1.0\\Modules\\';"
+ "foreach($UnifiedName in @('"+"','".join(TRUSTED_POWERSHELL_MODULES)+"')){"
+ "[void](Import-Module -Name ($UnifiedTrustedModules+$UnifiedName+'\\'+$UnifiedName+'.psd1') -PassThru -ErrorAction Stop)};"
+ "foreach($UnifiedLoaded in @(Get-Module)){if(-not $UnifiedLoaded.Path.StartsWith($UnifiedTrustedModules,[StringComparison]::OrdinalIgnoreCase)){"
+ "[Console]::Error.WriteLine('UNTRUSTED_POWERSHELL_MODULE');exit 87}};"
+ "Remove-Variable -Name UnifiedName,UnifiedLoaded -ErrorAction SilentlyContinue;")
+
+
+def child_directory():
+ """Working directory for every native child: the OS system directory."""
+ return str(_system_directory()) if os.name=='nt' else None
+
+
+def _system_path(directory):
+ return ';'.join(str(p) for p in (directory,directory.parent,directory/'Wbem',directory/'WindowsPowerShell/v1.0'))
+
+
 def _environment():
+ """Minimal controlled child environment; nothing path-like is inherited."""
  directory=_system_directory()
  env={k:v for k,v in os.environ.items() if k.upper() in {'SYSTEMDRIVE','PROGRAMDATA','TEMP','TMP','USERPROFILE','LOCALAPPDATA','APPDATA'}}
- env.update(SYSTEMROOT=str(directory.parent),WINDIR=str(directory.parent),PSModulePath=str(directory/'WindowsPowerShell/v1.0/Modules'))
+ env.update(SYSTEMROOT=str(directory.parent),WINDIR=str(directory.parent),PSModulePath=str(directory/'WindowsPowerShell/v1.0/Modules'),
+  PATH=_system_path(directory),PATHEXT='.COM;.EXE',ComSpec=str(directory/'cmd.exe'))
  return env
+
+
+def trusted_module_manifests():
+ """Absolute in-box module manifests the prelude imports; links/reparse refused."""
+ base=_system_directory()/'WindowsPowerShell/v1.0/Modules'
+ result=[]
+ for name in TRUSTED_POWERSHELL_MODULES:
+  path=_safe(base/name/(name+'.psd1'));info=path.lstat()
+  need(stat.S_ISREG(info.st_mode) and not getattr(info,'st_file_attributes',0)&0x400)
+  result.append(str(path))
+ return result
+
+
+def powershell_argv(executable,code):
+ """The only way native children run PowerShell: absolute executable,
+ no profile/logo/interaction, encoded command with the trusted prelude."""
+ executable=str(executable)
+ need(Path(executable).is_absolute() and Path(executable).name.casefold()=='powershell.exe' and type(code) is str)
+ encoded=base64.b64encode((POWERSHELL_PRELUDE+code).encode('utf-16le')).decode('ascii')
+ return [executable,'-NoLogo','-NoProfile','-NonInteractive','-EncodedCommand',encoded]
 
 
 class WindowsServiceBoundary:
@@ -150,12 +199,11 @@ class WindowsServiceBoundary:
   need(hashlib.sha256(lab_release.regular(MODULE).read_bytes()).hexdigest()==plan['executor_sha256'])
   # Static bootstrap only. Paths/request data are never interpolated into code.
   code="$ErrorActionPreference='Stop';[Console]::OutputEncoding=[Text.UTF8Encoding]::new($false);[Console]::InputEncoding=[Text.UTF8Encoding]::new($false);try{Import-Module -Name ([WildcardPattern]::Escape($env:UNIFIED_SERVICE_MODULE)) -Force; $r=[Console]::In.ReadToEnd()|ConvertFrom-Json; Invoke-UnifiedOwnedService $r|ConvertTo-Json -Depth 12 -Compress}catch{$stage='UNAVAILABLE';$childCode=$null;try{$stage=Get-UnifiedOwnedServiceStage;$childCode=Get-UnifiedOwnedNativeExitCode}catch{};@{error='OWNED_SERVICE_REJECTED';native_stage=$stage;native_exit_code=$childCode}|ConvertTo-Json -Compress;exit 1}"
-  encoded=base64.b64encode(code.encode('utf-16le')).decode('ascii')
   env=_environment();env['UNIFIED_SERVICE_MODULE']=str(MODULE)
   request={'action':action,'plan':plan}
   need(len(canonical(request))<=32768)
   ps=Path(plan['native_tools']['powershell']['path']);need(_native_hash(ps)==plan['native_tools']['powershell']['sha256'])
-  output,status=_run([str(ps),'-NoProfile','-NonInteractive','-EncodedCommand',encoded],env=env,payload=canonical(request),timeout=60)
+  output,status=_run(powershell_argv(ps,code),env=env,payload=canonical(request),timeout=60)
   result=_native_result(output,status)
   if action=='BEGIN':
    need(result=={'root_created':True});facts=_safe(plan['root']).stat();return {'root_device':facts.st_dev,'root_inode':facts.st_ino}

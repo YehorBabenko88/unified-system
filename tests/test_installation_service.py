@@ -215,7 +215,7 @@ class ServiceResourceTests(unittest.TestCase):
   with patch.dict(os.environ,{'PSModulePath':str(modules)}):safe=service._environment()
   self.assertEqual(safe['PSModulePath'],str(service._system_directory()/'WindowsPowerShell/v1.0/Modules'))
   safe_command=phase('ENTRY')+phase('SAFE_LOOKUP_BEGIN')+command+';'+phase('SAFE_LOOKUP_END')+phase('DONE')
-  result=run_phased([executable,'-NoProfile','-NonInteractive','-Command',safe_command],env=safe)
+  result=run_phased(service.powershell_argv(executable,safe_command),env=safe,cwd=service.child_directory())
   self.assertEqual(result.returncode,0);self.assertIn(b'POISON_NOT_FOUND',result.stdout);self.assertFalse(marker.exists())
 
  @unittest.skipUnless(os.name=='nt','GetSystemDirectoryW native path consistency')

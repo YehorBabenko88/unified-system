@@ -596,8 +596,8 @@ if($q.mode -ceq 'PREPARE'){
 foreach($item in @(Get-Item -LiteralPath $p.namespace -Force)+@(Get-ChildItem -LiteralPath $p.namespace -Force -Recurse)){Assert-OwnedPath $item.FullName;$a=Get-Acl -LiteralPath $item.FullName;$a.SetOwner([Security.Principal.SecurityIdentifier]::new('S-1-5-32-544'));$item.SetAccessControl($a)}
 } $q;[Console]::Out.Write('{"ok":true}')}
 catch{[Console]::Out.Write('{"error":"POSTGRES_REJECTED"}');exit 1}"""
-  env=service._environment();env['UNIFIED_SERVICE_MODULE']=str(service.MODULE);encoded=base64.b64encode(code.encode('utf-16le')).decode()
-  raw,status=service._run([plan['service_plan']['native_tools']['powershell']['path'],'-NoProfile','-NonInteractive','-EncodedCommand',encoded],env=env,payload=canonical({'plan':plan,'mode':mode}),timeout=60)
+  env=service._environment();env['UNIFIED_SERVICE_MODULE']=str(service.MODULE)
+  raw,status=service._run(service.powershell_argv(plan['service_plan']['native_tools']['powershell']['path'],code),env=env,payload=canonical({'plan':plan,'mode':mode}),timeout=60)
   need(status==0 and json.loads(raw)=={'ok':True})
  def retain_failure(self,plan):self._ps(plan,'FAILURE')
  def prepare(self,plan):
