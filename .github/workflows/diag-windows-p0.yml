@@ -19,19 +19,13 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Probe PowerShell child phases (full vs restricted env, cold vs warm)
-        run: python -I -B tools/diagnostics/windows_powershell_probe.py
-      - name: Reproduce the three failing tests unchanged (15 s bound kept)
-        if: always()
-        run: |
-          python -m pip install --only-binary=:all: --require-hashes -r docs/ci/requirements-unittest.lock
-          python -m unittest -v tests.test_installation_native_diagnostic tests.test_installation_service.ServiceResourceTests.test_poisoned_parent_module_path_cannot_autoload_user_module
-        continue-on-error: true
+      - name: Round 2 - bisect the missing environment for Windows PowerShell 5.1
+        run: python -B tools/diagnostics/windows_powershell_bisect.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: powershell-timing-${{ matrix.os }}
-          path: diag.json
+          path: bisect.json
           if-no-files-found: warn
   lan-mtls-disconnect:
     strategy:
@@ -51,5 +45,5 @@ jobs:
         run: |
           for i in 1 2 3 4 5; do
             echo "=== attempt $i"
-            python -X faulthandler -m unittest -v tests.test_lan_mux_channel.MuxTlsTests.test_complete_large_messages_real_mtls_and_budget_overhead 2>&1 | tail -60 || true
+            PYTHONPATH=tests python -X faulthandler -m unittest -v tests.test_lan_mux_channel.MuxTlsTests.test_complete_large_messages_real_mtls_and_budget_overhead 2>&1 | tail -60 || true
           done
