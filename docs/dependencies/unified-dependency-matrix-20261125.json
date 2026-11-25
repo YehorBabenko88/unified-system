@@ -1,0 +1,2466 @@
+{
+ "schema": "f2-unified-dependency-matrix/1",
+ "generated": "2026-11-25",
+ "issue": "YehorBabenko88/unified-system#156",
+ "source": "Workstream F dependencies.json + git archive of candidate trees",
+ "candidates": {
+  "unified-system": "f05f9a73581b1c15c4cc78da2801c9f2f5dd08d0",
+  "bybit-cluster-grid": "c9ffdaa2af52c4d55871a48655a77a0c669da80f",
+  "strattester": "3850995a6c28ed29b05cef4ba067e587d5033453",
+  "Terminan": "353d16b2126609579018fafe3f76047b465bb289",
+  "math": "9e6acbd9e12a91189f57234828e31640983af553",
+  "meta_analyse": "b1a4d6a41054f0040a88dc80b585380fb6b4f323"
+ },
+ "post_candidate_notes": [
+  "bybit-cluster-grid claude/b1-market-data-relocation-20261125 (bf29f81) replaced pyproject.toml with strattester@3850995 bytes: psycopg[binary]>=3.2,<4 (range, allows 3.3.6) and added .github/workflows/market-data-pure.yml with psycopg[binary]>=3.2,<4, pytest==8.3.5, pytest-asyncio==0.26.0. Kept unchanged to preserve the B1 byte-identity invariant."
+ ],
+ "packages": [
+  {
+   "package": "aiohttp",
+   "target": "3.14.5",
+   "rationale": "Highest exact pin among live (project/test/workflow) manifests.",
+   "repos": [
+    "bybit-cluster-grid",
+    "meta_analyse",
+    "strattester",
+    "unified-system"
+   ],
+   "occurrences": [
+    {
+     "repo": "unified-system",
+     "file": "integration/windows-candidate/requirements-cp312-win_amd64-cpu.lock",
+     "role": "project",
+     "spec": "==3.14.5",
+     "exact": "3.14.5",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "bybit-cluster-grid",
+     "file": "requirements.txt",
+     "role": "project",
+     "spec": ">=3.10",
+     "exact": null,
+     "hashed": false,
+     "kind": "manifest",
+     "status": "RANGE-ALLOWS-TARGET"
+    },
+    {
+     "repo": "bybit-cluster-grid",
+     "file": "pyproject.toml[project.dependencies]",
+     "role": "project",
+     "spec": ">=3.10,<4",
+     "exact": null,
+     "hashed": false,
+     "kind": "manifest",
+     "status": "RANGE-ALLOWS-TARGET"
+    },
+    {
+     "repo": "strattester",
+     "file": "pyproject.toml[project.dependencies]",
+     "role": "project",
+     "spec": ">=3.10,<4",
+     "exact": null,
+     "hashed": false,
+     "kind": "manifest",
+     "status": "RANGE-ALLOWS-TARGET"
+    },
+    {
+     "repo": "strattester",
+     "file": ".github/workflows/market-data-pure.yml:62",
+     "role": "workflow",
+     "spec": ">=3.10,<4",
+     "exact": null,
+     "hashed": false,
+     "kind": "workflow",
+     "status": "RANGE-ALLOWS-TARGET"
+    },
+    {
+     "repo": "meta_analyse",
+     "file": "pyproject.toml[optional[archive]]",
+     "role": "project",
+     "spec": ">=3.10,<4",
+     "exact": null,
+     "hashed": false,
+     "kind": "manifest",
+     "status": "RANGE-ALLOWS-TARGET"
+    }
+   ]
+  },
+  {
+   "package": "anyio",
+   "target": "4.16.0",
+   "rationale": "Highest exact pin among live (project/test/workflow) manifests.",
+   "repos": [
+    "bybit-cluster-grid",
+    "meta_analyse",
+    "unified-system"
+   ],
+   "occurrences": [
+    {
+     "repo": "unified-system",
+     "file": "integration/windows-candidate/requirements-cp312-win_amd64-cpu.lock",
+     "role": "project",
+     "spec": "==4.15.1",
+     "exact": "4.15.1",
+     "hashed": true,
+     "kind": "lock",
+     "status": "BLOCKED-HASH-LOCK (regenerate with network: CI/owner)"
+    },
+    {
+     "repo": "unified-system",
+     "file": "tests/control_mux/requirements.lock",
+     "role": "test",
+     "spec": "==4.16.0",
+     "exact": "4.16.0",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "unified-system",
+     "file": "docs/intelligence/research-identity/requirements-linux.lock",
+     "role": "evidence/docs copy",
+     "spec": "==4.16.0",
+     "exact": "4.16.0",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "unified-system",
+     "file": "docs/intelligence/research-identity/requirements-windows.lock",
+     "role": "evidence/docs copy",
+     "spec": "==4.16.0",
+     "exact": "4.16.0",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "unified-system",
+     "file": "docs/ci/requirements-unittest.lock",
+     "role": "live (CI: installer-security.yml, lifecycle-evidence.yml, owner-boundary.yml, preparation-integrity.yml, tests.yml; F registry said evidence copy)",
+     "spec": "==4.14.2",
+     "exact": "4.14.2",
+     "hashed": true,
+     "kind": "lock",
+     "status": "BLOCKED-HASH-LOCK (regenerate with network: CI/owner)"
+    },
+    {
+     "repo": "unified-system",
+     "file": "docs/ci/operator-command/requirements-linux.lock",
+     "role": "live (CI: operator-command-contracts.yml; F registry said evidence copy)",
+     "spec": "==4.14.2",
+     "exact": "4.14.2",
+     "hashed": true,
+     "kind": "lock",
+     "status": "BLOCKED-HASH-LOCK (regenerate with network: CI/owner)"
+    },
+    {
+     "repo": "bybit-cluster-grid",
+     "file": "lab/consul/requirements-three-linux.lock",
+     "role": "project",
+     "spec": "==4.14.2",
+     "exact": "4.14.2",
+     "hashed": true,
+     "kind": "lock",
+     "status": "BLOCKED-HASH-LOCK (regenerate with network: CI/owner)"
+    },
+    {
+     "repo": "bybit-cluster-grid",
+     "file": "scripts/agent2-event-v3/requirements.lock",
+     "role": "project",
+     "spec": "==4.14.2",
+     "exact": "4.14.2",
+     "hashed": true,
+     "kind": "lock",
+     "status": "BLOCKED-HASH-LOCK (regenerate with network: CI/owner)"
+    },
+    {
+     "repo": "meta_analyse",
+     "file": "requirements.lock",
+     "role": "project",
+     "spec": "==4.15.1",
+     "exact": "4.15.1",
+     "hashed": false,
+     "kind": "lock",
+     "status": "DIFFERS (owner/CI decision)"
+    }
+   ]
+  },
+  {
+   "package": "asyncpg",
+   "target": "0.32.0",
+   "rationale": "Highest exact pin among live (project/test/workflow) manifests.",
+   "repos": [
+    "bybit-cluster-grid",
+    "strattester",
+    "unified-system"
+   ],
+   "occurrences": [
+    {
+     "repo": "unified-system",
+     "file": "integration/windows-candidate/requirements-cp312-win_amd64-cpu.lock",
+     "role": "project",
+     "spec": "==0.32.0",
+     "exact": "0.32.0",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "bybit-cluster-grid",
+     "file": "requirements.txt",
+     "role": "project",
+     "spec": ">=0.30",
+     "exact": null,
+     "hashed": false,
+     "kind": "manifest",
+     "status": "RANGE-ALLOWS-TARGET"
+    },
+    {
+     "repo": "strattester",
+     "file": "pyproject.toml[optional[ingestion]]",
+     "role": "project",
+     "spec": ">=0.29,<1",
+     "exact": null,
+     "hashed": false,
+     "kind": "manifest",
+     "status": "RANGE-ALLOWS-TARGET"
+    }
+   ]
+  },
+  {
+   "package": "certifi",
+   "target": "2026.10.23",
+   "rationale": "Highest exact pin among live (project/test/workflow) manifests.",
+   "repos": [
+    "bybit-cluster-grid",
+    "meta_analyse",
+    "unified-system"
+   ],
+   "occurrences": [
+    {
+     "repo": "unified-system",
+     "file": "integration/windows-candidate/requirements-cp312-win_amd64-cpu.lock",
+     "role": "project",
+     "spec": "==2026.7.22",
+     "exact": "2026.7.22",
+     "hashed": true,
+     "kind": "lock",
+     "status": "BLOCKED-HASH-LOCK (regenerate with network: CI/owner)"
+    },
+    {
+     "repo": "unified-system",
+     "file": "tests/control_mux/requirements.lock",
+     "role": "test",
+     "spec": "==2026.10.23",
+     "exact": "2026.10.23",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "unified-system",
+     "file": "docs/intelligence/research-identity/requirements-linux.lock",
+     "role": "evidence/docs copy",
+     "spec": "==2026.10.23",
+     "exact": "2026.10.23",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "unified-system",
+     "file": "docs/intelligence/research-identity/requirements-windows.lock",
+     "role": "evidence/docs copy",
+     "spec": "==2026.10.23",
+     "exact": "2026.10.23",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "unified-system",
+     "file": "docs/ci/requirements-unittest.lock",
+     "role": "live (CI: installer-security.yml, lifecycle-evidence.yml, owner-boundary.yml, preparation-integrity.yml, tests.yml; F registry said evidence copy)",
+     "spec": "==2026.10.19",
+     "exact": "2026.10.19",
+     "hashed": true,
+     "kind": "lock",
+     "status": "BLOCKED-HASH-LOCK (regenerate with network: CI/owner)"
+    },
+    {
+     "repo": "unified-system",
+     "file": "docs/ci/operator-command/requirements-linux.lock",
+     "role": "live (CI: operator-command-contracts.yml; F registry said evidence copy)",
+     "spec": "==2026.10.19",
+     "exact": "2026.10.19",
+     "hashed": true,
+     "kind": "lock",
+     "status": "BLOCKED-HASH-LOCK (regenerate with network: CI/owner)"
+    },
+    {
+     "repo": "bybit-cluster-grid",
+     "file": "lab/consul/requirements-three-linux.lock",
+     "role": "project",
+     "spec": "==2026.10.19",
+     "exact": "2026.10.19",
+     "hashed": true,
+     "kind": "lock",
+     "status": "BLOCKED-HASH-LOCK (regenerate with network: CI/owner)"
+    },
+    {
+     "repo": "bybit-cluster-grid",
+     "file": "scripts/agent2-event-v3/requirements.lock",
+     "role": "project",
+     "spec": "==2026.10.19",
+     "exact": "2026.10.19",
+     "hashed": true,
+     "kind": "lock",
+     "status": "BLOCKED-HASH-LOCK (regenerate with network: CI/owner)"
+    },
+    {
+     "repo": "meta_analyse",
+     "file": "requirements.lock",
+     "role": "project",
+     "spec": "==2026.7.22",
+     "exact": "2026.7.22",
+     "hashed": false,
+     "kind": "lock",
+     "status": "DIFFERS (owner/CI decision)"
+    }
+   ]
+  },
+  {
+   "package": "colorama",
+   "target": "0.4.6",
+   "rationale": "Highest exact pin among live (project/test/workflow) manifests.",
+   "repos": [
+    "Terminan",
+    "bybit-cluster-grid",
+    "meta_analyse",
+    "unified-system"
+   ],
+   "occurrences": [
+    {
+     "repo": "unified-system",
+     "file": "integration/windows-candidate/requirements-cp312-win_amd64-cpu.lock",
+     "role": "project",
+     "spec": "==0.4.6",
+     "exact": "0.4.6",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "unified-system",
+     "file": "docs/ci/requirements-unittest.lock",
+     "role": "live (CI: installer-security.yml, lifecycle-evidence.yml, owner-boundary.yml, preparation-integrity.yml, tests.yml; F registry said evidence copy)",
+     "spec": "==0.4.6 ; sys_platform == \"win32\"",
+     "exact": "0.4.6",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "bybit-cluster-grid",
+     "file": "scripts/agent2-event-v3/requirements.lock",
+     "role": "project",
+     "spec": "==0.4.6 ; sys_platform == \"win32\"",
+     "exact": "0.4.6",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "Terminan",
+     "file": "requirements-test.lock",
+     "role": "project",
+     "spec": "==0.4.6",
+     "exact": "0.4.6",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "meta_analyse",
+     "file": "requirements.lock",
+     "role": "project",
+     "spec": "==0.4.6 ; sys_platform == 'win32'",
+     "exact": "0.4.6",
+     "hashed": false,
+     "kind": "lock",
+     "status": "OK"
+    }
+   ]
+  },
+  {
+   "package": "fastapi",
+   "target": "0.162.0",
+   "rationale": "Highest exact pin among live (project/test/workflow) manifests.",
+   "repos": [
+    "bybit-cluster-grid",
+    "unified-system"
+   ],
+   "occurrences": [
+    {
+     "repo": "unified-system",
+     "file": "integration/windows-candidate/requirements-cp312-win_amd64-cpu.lock",
+     "role": "project",
+     "spec": "==0.162.0",
+     "exact": "0.162.0",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "bybit-cluster-grid",
+     "file": "requirements.txt",
+     "role": "project",
+     "spec": ">=0.115",
+     "exact": null,
+     "hashed": false,
+     "kind": "manifest",
+     "status": "RANGE-ALLOWS-TARGET"
+    }
+   ]
+  },
+  {
+   "package": "h11",
+   "target": "0.16.0",
+   "rationale": "Highest exact pin among live (project/test/workflow) manifests.",
+   "repos": [
+    "bybit-cluster-grid",
+    "meta_analyse",
+    "unified-system"
+   ],
+   "occurrences": [
+    {
+     "repo": "unified-system",
+     "file": "integration/windows-candidate/requirements-cp312-win_amd64-cpu.lock",
+     "role": "project",
+     "spec": "==0.16.0",
+     "exact": "0.16.0",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "unified-system",
+     "file": "tests/control_mux/requirements.lock",
+     "role": "test",
+     "spec": "==0.16.0",
+     "exact": "0.16.0",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "unified-system",
+     "file": "docs/intelligence/research-identity/requirements-linux.lock",
+     "role": "evidence/docs copy",
+     "spec": "==0.16.0",
+     "exact": "0.16.0",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "unified-system",
+     "file": "docs/intelligence/research-identity/requirements-windows.lock",
+     "role": "evidence/docs copy",
+     "spec": "==0.16.0",
+     "exact": "0.16.0",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "unified-system",
+     "file": "docs/ci/requirements-unittest.lock",
+     "role": "live (CI: installer-security.yml, lifecycle-evidence.yml, owner-boundary.yml, preparation-integrity.yml, tests.yml; F registry said evidence copy)",
+     "spec": "==0.16.0",
+     "exact": "0.16.0",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "unified-system",
+     "file": "docs/ci/operator-command/requirements-linux.lock",
+     "role": "live (CI: operator-command-contracts.yml; F registry said evidence copy)",
+     "spec": "==0.16.0",
+     "exact": "0.16.0",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "bybit-cluster-grid",
+     "file": "lab/consul/requirements-three-linux.lock",
+     "role": "project",
+     "spec": "==0.16.0",
+     "exact": "0.16.0",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "bybit-cluster-grid",
+     "file": "scripts/agent2-event-v3/requirements.lock",
+     "role": "project",
+     "spec": "==0.16.0",
+     "exact": "0.16.0",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "meta_analyse",
+     "file": "requirements.lock",
+     "role": "project",
+     "spec": "==0.16.0",
+     "exact": "0.16.0",
+     "hashed": false,
+     "kind": "lock",
+     "status": "OK"
+    }
+   ]
+  },
+  {
+   "package": "httpcore",
+   "target": "1.0.9",
+   "rationale": "Highest exact pin among live (project/test/workflow) manifests.",
+   "repos": [
+    "bybit-cluster-grid",
+    "meta_analyse",
+    "unified-system"
+   ],
+   "occurrences": [
+    {
+     "repo": "unified-system",
+     "file": "integration/windows-candidate/requirements-cp312-win_amd64-cpu.lock",
+     "role": "project",
+     "spec": "==1.0.9",
+     "exact": "1.0.9",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "unified-system",
+     "file": "tests/control_mux/requirements.lock",
+     "role": "test",
+     "spec": "==1.0.9",
+     "exact": "1.0.9",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "unified-system",
+     "file": "docs/intelligence/research-identity/requirements-linux.lock",
+     "role": "evidence/docs copy",
+     "spec": "==1.0.9",
+     "exact": "1.0.9",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "unified-system",
+     "file": "docs/intelligence/research-identity/requirements-windows.lock",
+     "role": "evidence/docs copy",
+     "spec": "==1.0.9",
+     "exact": "1.0.9",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "unified-system",
+     "file": "docs/ci/requirements-unittest.lock",
+     "role": "live (CI: installer-security.yml, lifecycle-evidence.yml, owner-boundary.yml, preparation-integrity.yml, tests.yml; F registry said evidence copy)",
+     "spec": "==1.0.9",
+     "exact": "1.0.9",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "unified-system",
+     "file": "docs/ci/operator-command/requirements-linux.lock",
+     "role": "live (CI: operator-command-contracts.yml; F registry said evidence copy)",
+     "spec": "==1.0.9",
+     "exact": "1.0.9",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "bybit-cluster-grid",
+     "file": "lab/consul/requirements-three-linux.lock",
+     "role": "project",
+     "spec": "==1.0.9",
+     "exact": "1.0.9",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "bybit-cluster-grid",
+     "file": "scripts/agent2-event-v3/requirements.lock",
+     "role": "project",
+     "spec": "==1.0.9",
+     "exact": "1.0.9",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "meta_analyse",
+     "file": "requirements.lock",
+     "role": "project",
+     "spec": "==1.0.9",
+     "exact": "1.0.9",
+     "hashed": false,
+     "kind": "lock",
+     "status": "OK"
+    }
+   ]
+  },
+  {
+   "package": "httpx",
+   "target": "0.28.1",
+   "rationale": "Highest exact pin among live (project/test/workflow) manifests.",
+   "repos": [
+    "bybit-cluster-grid",
+    "meta_analyse",
+    "unified-system"
+   ],
+   "occurrences": [
+    {
+     "repo": "unified-system",
+     "file": "integration/windows-candidate/requirements-cp312-win_amd64-cpu.lock",
+     "role": "project",
+     "spec": "==0.28.1",
+     "exact": "0.28.1",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "unified-system",
+     "file": "tests/control_mux/requirements.lock",
+     "role": "test",
+     "spec": "==0.28.1",
+     "exact": "0.28.1",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "unified-system",
+     "file": "docs/intelligence/research-identity/requirements-linux.lock",
+     "role": "evidence/docs copy",
+     "spec": "==0.28.1",
+     "exact": "0.28.1",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "unified-system",
+     "file": "docs/intelligence/research-identity/requirements-windows.lock",
+     "role": "evidence/docs copy",
+     "spec": "==0.28.1",
+     "exact": "0.28.1",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "unified-system",
+     "file": "docs/ci/requirements-unittest.lock",
+     "role": "live (CI: installer-security.yml, lifecycle-evidence.yml, owner-boundary.yml, preparation-integrity.yml, tests.yml; F registry said evidence copy)",
+     "spec": "==0.28.1",
+     "exact": "0.28.1",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "unified-system",
+     "file": "docs/ci/operator-command/requirements-linux.lock",
+     "role": "live (CI: operator-command-contracts.yml; F registry said evidence copy)",
+     "spec": "==0.28.1",
+     "exact": "0.28.1",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "bybit-cluster-grid",
+     "file": "requirements.txt",
+     "role": "project",
+     "spec": ">=0.27",
+     "exact": null,
+     "hashed": false,
+     "kind": "manifest",
+     "status": "RANGE-ALLOWS-TARGET"
+    },
+    {
+     "repo": "bybit-cluster-grid",
+     "file": "lab/consul/requirements-three-linux.lock",
+     "role": "project",
+     "spec": "==0.28.1",
+     "exact": "0.28.1",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "bybit-cluster-grid",
+     "file": "scripts/agent2-event-v3/requirements.lock",
+     "role": "project",
+     "spec": "==0.28.1",
+     "exact": "0.28.1",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "meta_analyse",
+     "file": "requirements.lock",
+     "role": "project",
+     "spec": "==0.28.1",
+     "exact": "0.28.1",
+     "hashed": false,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "meta_analyse",
+     "file": "pyproject.toml[project.dependencies]",
+     "role": "project",
+     "spec": ">=0.27,<1",
+     "exact": null,
+     "hashed": false,
+     "kind": "manifest",
+     "status": "RANGE-ALLOWS-TARGET"
+    }
+   ]
+  },
+  {
+   "package": "hypothesis",
+   "target": "6.170.6",
+   "rationale": "Highest exact pin among live (project/test/workflow) manifests.",
+   "repos": [
+    "meta_analyse",
+    "unified-system"
+   ],
+   "occurrences": [
+    {
+     "repo": "unified-system",
+     "file": "integration/windows-candidate/requirements-cp312-win_amd64-cpu.lock",
+     "role": "project",
+     "spec": "==6.170.6",
+     "exact": "6.170.6",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "meta_analyse",
+     "file": "requirements.lock",
+     "role": "project",
+     "spec": "==6.170.6",
+     "exact": "6.170.6",
+     "hashed": false,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "meta_analyse",
+     "file": "requirements-identity-synthetic.txt",
+     "role": "project",
+     "spec": "==6.170.6",
+     "exact": "6.170.6",
+     "hashed": false,
+     "kind": "manifest",
+     "status": "OK"
+    },
+    {
+     "repo": "meta_analyse",
+     "file": "pyproject.toml[optional[test]]",
+     "role": "project",
+     "spec": "==6.170.6",
+     "exact": "6.170.6",
+     "hashed": false,
+     "kind": "manifest",
+     "status": "OK"
+    }
+   ]
+  },
+  {
+   "package": "idna",
+   "target": "3.20",
+   "rationale": "Highest exact pin among live (project/test/workflow) manifests.",
+   "repos": [
+    "bybit-cluster-grid",
+    "meta_analyse",
+    "unified-system"
+   ],
+   "occurrences": [
+    {
+     "repo": "unified-system",
+     "file": "integration/windows-candidate/requirements-cp312-win_amd64-cpu.lock",
+     "role": "project",
+     "spec": "==3.20",
+     "exact": "3.20",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "unified-system",
+     "file": "tests/control_mux/requirements.lock",
+     "role": "test",
+     "spec": "==3.20",
+     "exact": "3.20",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "unified-system",
+     "file": "docs/intelligence/research-identity/requirements-linux.lock",
+     "role": "evidence/docs copy",
+     "spec": "==3.20",
+     "exact": "3.20",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "unified-system",
+     "file": "docs/intelligence/research-identity/requirements-windows.lock",
+     "role": "evidence/docs copy",
+     "spec": "==3.20",
+     "exact": "3.20",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "unified-system",
+     "file": "docs/ci/requirements-unittest.lock",
+     "role": "live (CI: installer-security.yml, lifecycle-evidence.yml, owner-boundary.yml, preparation-integrity.yml, tests.yml; F registry said evidence copy)",
+     "spec": "==3.15",
+     "exact": "3.15",
+     "hashed": true,
+     "kind": "lock",
+     "status": "BLOCKED-HASH-LOCK (regenerate with network: CI/owner)"
+    },
+    {
+     "repo": "unified-system",
+     "file": "docs/ci/operator-command/requirements-linux.lock",
+     "role": "live (CI: operator-command-contracts.yml; F registry said evidence copy)",
+     "spec": "==3.15",
+     "exact": "3.15",
+     "hashed": true,
+     "kind": "lock",
+     "status": "BLOCKED-HASH-LOCK (regenerate with network: CI/owner)"
+    },
+    {
+     "repo": "bybit-cluster-grid",
+     "file": "lab/consul/requirements-three-linux.lock",
+     "role": "project",
+     "spec": "==3.15",
+     "exact": "3.15",
+     "hashed": true,
+     "kind": "lock",
+     "status": "BLOCKED-HASH-LOCK (regenerate with network: CI/owner)"
+    },
+    {
+     "repo": "bybit-cluster-grid",
+     "file": "scripts/agent2-event-v3/requirements.lock",
+     "role": "project",
+     "spec": "==3.15",
+     "exact": "3.15",
+     "hashed": true,
+     "kind": "lock",
+     "status": "BLOCKED-HASH-LOCK (regenerate with network: CI/owner)"
+    },
+    {
+     "repo": "meta_analyse",
+     "file": "requirements.lock",
+     "role": "project",
+     "spec": "==3.20",
+     "exact": "3.20",
+     "hashed": false,
+     "kind": "lock",
+     "status": "OK"
+    }
+   ]
+  },
+  {
+   "package": "iniconfig",
+   "target": "2.3.1",
+   "rationale": "Highest exact pin among live (project/test/workflow) manifests.",
+   "repos": [
+    "Terminan",
+    "bybit-cluster-grid",
+    "meta_analyse",
+    "unified-system"
+   ],
+   "occurrences": [
+    {
+     "repo": "unified-system",
+     "file": "integration/windows-candidate/requirements-cp312-win_amd64-cpu.lock",
+     "role": "project",
+     "spec": "==2.3.1",
+     "exact": "2.3.1",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "unified-system",
+     "file": "docs/ci/requirements-unittest.lock",
+     "role": "live (CI: installer-security.yml, lifecycle-evidence.yml, owner-boundary.yml, preparation-integrity.yml, tests.yml; F registry said evidence copy)",
+     "spec": "==2.3.0",
+     "exact": "2.3.0",
+     "hashed": true,
+     "kind": "lock",
+     "status": "BLOCKED-HASH-LOCK (regenerate with network: CI/owner)"
+    },
+    {
+     "repo": "unified-system",
+     "file": "docs/ci/operator-command/requirements-linux.lock",
+     "role": "live (CI: operator-command-contracts.yml; F registry said evidence copy)",
+     "spec": "==2.3.0",
+     "exact": "2.3.0",
+     "hashed": true,
+     "kind": "lock",
+     "status": "BLOCKED-HASH-LOCK (regenerate with network: CI/owner)"
+    },
+    {
+     "repo": "bybit-cluster-grid",
+     "file": "lab/consul/requirements-three-linux.lock",
+     "role": "project",
+     "spec": "==2.3.0",
+     "exact": "2.3.0",
+     "hashed": true,
+     "kind": "lock",
+     "status": "BLOCKED-HASH-LOCK (regenerate with network: CI/owner)"
+    },
+    {
+     "repo": "bybit-cluster-grid",
+     "file": "scripts/agent2-event-v3/requirements.lock",
+     "role": "project",
+     "spec": "==2.3.0",
+     "exact": "2.3.0",
+     "hashed": true,
+     "kind": "lock",
+     "status": "BLOCKED-HASH-LOCK (regenerate with network: CI/owner)"
+    },
+    {
+     "repo": "Terminan",
+     "file": "requirements-test.lock",
+     "role": "project",
+     "spec": "==2.3.1",
+     "exact": "2.3.1",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "meta_analyse",
+     "file": "requirements.lock",
+     "role": "project",
+     "spec": "==2.3.1",
+     "exact": "2.3.1",
+     "hashed": false,
+     "kind": "lock",
+     "status": "OK"
+    }
+   ]
+  },
+  {
+   "package": "jsonschema",
+   "target": "4.25.1",
+   "rationale": "Highest exact pin among live (project/test/workflow) manifests.",
+   "repos": [
+    "bybit-cluster-grid",
+    "unified-system"
+   ],
+   "occurrences": [
+    {
+     "repo": "unified-system",
+     "file": "tests/control_mux/requirements.lock",
+     "role": "test",
+     "spec": "==4.25.1",
+     "exact": "4.25.1",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "unified-system",
+     "file": "docs/intelligence/research-identity/requirements-linux.lock",
+     "role": "evidence/docs copy",
+     "spec": "==4.25.1",
+     "exact": "4.25.1",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "unified-system",
+     "file": "docs/intelligence/research-identity/requirements-windows.lock",
+     "role": "evidence/docs copy",
+     "spec": "==4.25.1",
+     "exact": "4.25.1",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "bybit-cluster-grid",
+     "file": ".github/workflows/preflight.yml:63",
+     "role": "workflow",
+     "spec": "==4.23.0",
+     "exact": "4.23.0",
+     "hashed": false,
+     "kind": "workflow",
+     "status": "DIFFERS (owner/CI decision)"
+    }
+   ]
+  },
+  {
+   "package": "numpy",
+   "target": "2.5.4",
+   "rationale": "Highest exact pin among live (project/test/workflow) manifests.",
+   "repos": [
+    "bybit-cluster-grid",
+    "unified-system"
+   ],
+   "occurrences": [
+    {
+     "repo": "unified-system",
+     "file": "integration/windows-candidate/requirements-cp312-win_amd64-cpu.lock",
+     "role": "project",
+     "spec": "==2.5.4",
+     "exact": "2.5.4",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "bybit-cluster-grid",
+     "file": "requirements-ml.txt",
+     "role": "project",
+     "spec": ">=2.0,<3",
+     "exact": null,
+     "hashed": false,
+     "kind": "manifest",
+     "status": "RANGE-ALLOWS-TARGET"
+    }
+   ]
+  },
+  {
+   "package": "packaging",
+   "target": "26.3",
+   "rationale": "Highest exact pin among live (project/test/workflow) manifests.",
+   "repos": [
+    "Terminan",
+    "bybit-cluster-grid",
+    "meta_analyse",
+    "unified-system"
+   ],
+   "occurrences": [
+    {
+     "repo": "unified-system",
+     "file": "integration/windows-candidate/requirements-cp312-win_amd64-cpu.lock",
+     "role": "project",
+     "spec": "==26.3",
+     "exact": "26.3",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "unified-system",
+     "file": "docs/ci/requirements-unittest.lock",
+     "role": "live (CI: installer-security.yml, lifecycle-evidence.yml, owner-boundary.yml, preparation-integrity.yml, tests.yml; F registry said evidence copy)",
+     "spec": "==26.0",
+     "exact": "26.0",
+     "hashed": true,
+     "kind": "lock",
+     "status": "BLOCKED-HASH-LOCK (regenerate with network: CI/owner)"
+    },
+    {
+     "repo": "unified-system",
+     "file": "docs/ci/operator-command/requirements-linux.lock",
+     "role": "live (CI: operator-command-contracts.yml; F registry said evidence copy)",
+     "spec": "==26.0",
+     "exact": "26.0",
+     "hashed": true,
+     "kind": "lock",
+     "status": "BLOCKED-HASH-LOCK (regenerate with network: CI/owner)"
+    },
+    {
+     "repo": "bybit-cluster-grid",
+     "file": "lab/consul/requirements-three-linux.lock",
+     "role": "project",
+     "spec": "==26.0",
+     "exact": "26.0",
+     "hashed": true,
+     "kind": "lock",
+     "status": "BLOCKED-HASH-LOCK (regenerate with network: CI/owner)"
+    },
+    {
+     "repo": "bybit-cluster-grid",
+     "file": "scripts/agent2-event-v3/requirements.lock",
+     "role": "project",
+     "spec": "==26.0",
+     "exact": "26.0",
+     "hashed": true,
+     "kind": "lock",
+     "status": "BLOCKED-HASH-LOCK (regenerate with network: CI/owner)"
+    },
+    {
+     "repo": "Terminan",
+     "file": "requirements-test.lock",
+     "role": "project",
+     "spec": "==26.3",
+     "exact": "26.3",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "meta_analyse",
+     "file": "requirements.lock",
+     "role": "project",
+     "spec": "==26.3",
+     "exact": "26.3",
+     "hashed": false,
+     "kind": "lock",
+     "status": "OK"
+    }
+   ]
+  },
+  {
+   "package": "pluggy",
+   "target": "1.7.0",
+   "rationale": "Highest exact pin among live (project/test/workflow) manifests.",
+   "repos": [
+    "Terminan",
+    "bybit-cluster-grid",
+    "meta_analyse",
+    "unified-system"
+   ],
+   "occurrences": [
+    {
+     "repo": "unified-system",
+     "file": "integration/windows-candidate/requirements-cp312-win_amd64-cpu.lock",
+     "role": "project",
+     "spec": "==1.7.0",
+     "exact": "1.7.0",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "unified-system",
+     "file": "docs/ci/requirements-unittest.lock",
+     "role": "live (CI: installer-security.yml, lifecycle-evidence.yml, owner-boundary.yml, preparation-integrity.yml, tests.yml; F registry said evidence copy)",
+     "spec": "==1.6.0",
+     "exact": "1.6.0",
+     "hashed": true,
+     "kind": "lock",
+     "status": "BLOCKED-HASH-LOCK (regenerate with network: CI/owner)"
+    },
+    {
+     "repo": "unified-system",
+     "file": "docs/ci/operator-command/requirements-linux.lock",
+     "role": "live (CI: operator-command-contracts.yml; F registry said evidence copy)",
+     "spec": "==1.6.0",
+     "exact": "1.6.0",
+     "hashed": true,
+     "kind": "lock",
+     "status": "BLOCKED-HASH-LOCK (regenerate with network: CI/owner)"
+    },
+    {
+     "repo": "bybit-cluster-grid",
+     "file": "lab/consul/requirements-three-linux.lock",
+     "role": "project",
+     "spec": "==1.6.0",
+     "exact": "1.6.0",
+     "hashed": true,
+     "kind": "lock",
+     "status": "BLOCKED-HASH-LOCK (regenerate with network: CI/owner)"
+    },
+    {
+     "repo": "bybit-cluster-grid",
+     "file": "scripts/agent2-event-v3/requirements.lock",
+     "role": "project",
+     "spec": "==1.6.0",
+     "exact": "1.6.0",
+     "hashed": true,
+     "kind": "lock",
+     "status": "BLOCKED-HASH-LOCK (regenerate with network: CI/owner)"
+    },
+    {
+     "repo": "Terminan",
+     "file": "requirements-test.lock",
+     "role": "project",
+     "spec": "==1.7.0",
+     "exact": "1.7.0",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "meta_analyse",
+     "file": "requirements.lock",
+     "role": "project",
+     "spec": "==1.7.0",
+     "exact": "1.7.0",
+     "hashed": false,
+     "kind": "lock",
+     "status": "OK"
+    }
+   ]
+  },
+  {
+   "package": "psutil",
+   "target": "7.2.2",
+   "rationale": "Highest exact pin among live (project/test/workflow) manifests.",
+   "repos": [
+    "bybit-cluster-grid",
+    "strattester",
+    "unified-system"
+   ],
+   "occurrences": [
+    {
+     "repo": "unified-system",
+     "file": "integration/windows-candidate/requirements-cp312-win_amd64-cpu.lock",
+     "role": "project",
+     "spec": "==7.2.2",
+     "exact": "7.2.2",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "bybit-cluster-grid",
+     "file": "requirements.txt",
+     "role": "project",
+     "spec": ">=6.0",
+     "exact": null,
+     "hashed": false,
+     "kind": "manifest",
+     "status": "RANGE-ALLOWS-TARGET"
+    },
+    {
+     "repo": "strattester",
+     "file": "pyproject.toml[optional[legacy-test]]",
+     "role": "project",
+     "spec": ">=5.9,<8",
+     "exact": null,
+     "hashed": false,
+     "kind": "manifest",
+     "status": "RANGE-ALLOWS-TARGET"
+    }
+   ]
+  },
+  {
+   "package": "psycopg",
+   "target": "3.3.6",
+   "rationale": "Owner/F2 target; highest exact pin in project locks (unified-system Windows lock, meta lock, grid requirements.txt).",
+   "repos": [
+    "bybit-cluster-grid",
+    "meta_analyse",
+    "strattester",
+    "unified-system"
+   ],
+   "occurrences": [
+    {
+     "repo": "unified-system",
+     "file": "integration/windows-candidate/requirements-cp312-win_amd64-cpu.lock",
+     "role": "project",
+     "spec": "==3.3.6",
+     "exact": "3.3.6",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "bybit-cluster-grid",
+     "file": "requirements.txt",
+     "role": "project",
+     "spec": "==3.3.6",
+     "exact": "3.3.6",
+     "hashed": false,
+     "kind": "manifest",
+     "status": "OK"
+    },
+    {
+     "repo": "bybit-cluster-grid",
+     "file": "pyproject.toml[project.dependencies]",
+     "role": "project",
+     "spec": "==3.3.6",
+     "exact": "3.3.6",
+     "hashed": false,
+     "kind": "manifest",
+     "status": "OK"
+    },
+    {
+     "repo": "bybit-cluster-grid",
+     "file": ".github/workflows/history-integration.yml:73",
+     "role": "workflow",
+     "spec": "==3.3.2",
+     "exact": "3.3.2",
+     "hashed": false,
+     "kind": "workflow",
+     "status": "CHANGED-IN-PR: grid PR #297 (claude/f2-deps-grid-20261125)"
+    },
+    {
+     "repo": "strattester",
+     "file": "pyproject.toml[project.dependencies]",
+     "role": "project",
+     "spec": ">=3.2,<4",
+     "exact": null,
+     "hashed": false,
+     "kind": "manifest",
+     "status": "CHANGED-IN-PR: strattester PR #122 (claude/f2-deps-strattester-20261125)"
+    },
+    {
+     "repo": "strattester",
+     "file": ".github/workflows/market-data-pure.yml:62",
+     "role": "workflow",
+     "spec": ">=3.2,<4",
+     "exact": null,
+     "hashed": false,
+     "kind": "workflow",
+     "status": "CHANGED-IN-PR: strattester PR #122 (claude/f2-deps-strattester-20261125)"
+    },
+    {
+     "repo": "meta_analyse",
+     "file": "requirements.lock",
+     "role": "project",
+     "spec": "==3.3.6",
+     "exact": "3.3.6",
+     "hashed": false,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "meta_analyse",
+     "file": "pyproject.toml[project.dependencies]",
+     "role": "project",
+     "spec": ">=3.2,<4",
+     "exact": null,
+     "hashed": false,
+     "kind": "manifest",
+     "status": "RANGE-ALLOWS-TARGET"
+    }
+   ]
+  },
+  {
+   "package": "psycopg-binary",
+   "target": "3.3.6",
+   "rationale": "Follows psycopg 3.3.6.",
+   "repos": [
+    "meta_analyse",
+    "unified-system"
+   ],
+   "occurrences": [
+    {
+     "repo": "unified-system",
+     "file": "integration/windows-candidate/requirements-cp312-win_amd64-cpu.lock",
+     "role": "project",
+     "spec": "==3.3.6",
+     "exact": "3.3.6",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "meta_analyse",
+     "file": "requirements.lock",
+     "role": "project",
+     "spec": "==3.3.6 ; implementation_name != 'pypy'",
+     "exact": "3.3.6",
+     "hashed": false,
+     "kind": "lock",
+     "status": "OK"
+    }
+   ]
+  },
+  {
+   "package": "pydantic",
+   "target": "2.14.2",
+   "rationale": "Highest exact pin among live (project/test/workflow) manifests.",
+   "repos": [
+    "bybit-cluster-grid",
+    "unified-system"
+   ],
+   "occurrences": [
+    {
+     "repo": "unified-system",
+     "file": "integration/windows-candidate/requirements-cp312-win_amd64-cpu.lock",
+     "role": "project",
+     "spec": "==2.14.2",
+     "exact": "2.14.2",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "bybit-cluster-grid",
+     "file": "requirements.txt",
+     "role": "project",
+     "spec": ">=2.8",
+     "exact": null,
+     "hashed": false,
+     "kind": "manifest",
+     "status": "RANGE-ALLOWS-TARGET"
+    }
+   ]
+  },
+  {
+   "package": "pydantic-settings",
+   "target": "2.16.2",
+   "rationale": "Highest exact pin among live (project/test/workflow) manifests.",
+   "repos": [
+    "bybit-cluster-grid",
+    "unified-system"
+   ],
+   "occurrences": [
+    {
+     "repo": "unified-system",
+     "file": "integration/windows-candidate/requirements-cp312-win_amd64-cpu.lock",
+     "role": "project",
+     "spec": "==2.16.2",
+     "exact": "2.16.2",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "bybit-cluster-grid",
+     "file": "requirements.txt",
+     "role": "project",
+     "spec": ">=2.4",
+     "exact": null,
+     "hashed": false,
+     "kind": "manifest",
+     "status": "RANGE-ALLOWS-TARGET"
+    }
+   ]
+  },
+  {
+   "package": "pygments",
+   "target": "2.21.0",
+   "rationale": "Highest exact pin among live (project/test/workflow) manifests.",
+   "repos": [
+    "Terminan",
+    "bybit-cluster-grid",
+    "meta_analyse",
+    "unified-system"
+   ],
+   "occurrences": [
+    {
+     "repo": "unified-system",
+     "file": "integration/windows-candidate/requirements-cp312-win_amd64-cpu.lock",
+     "role": "project",
+     "spec": "==2.21.0",
+     "exact": "2.21.0",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "unified-system",
+     "file": "docs/ci/requirements-unittest.lock",
+     "role": "live (CI: installer-security.yml, lifecycle-evidence.yml, owner-boundary.yml, preparation-integrity.yml, tests.yml; F registry said evidence copy)",
+     "spec": "==2.20.0",
+     "exact": "2.20.0",
+     "hashed": true,
+     "kind": "lock",
+     "status": "BLOCKED-HASH-LOCK (regenerate with network: CI/owner)"
+    },
+    {
+     "repo": "unified-system",
+     "file": "docs/ci/operator-command/requirements-linux.lock",
+     "role": "live (CI: operator-command-contracts.yml; F registry said evidence copy)",
+     "spec": "==2.20.0",
+     "exact": "2.20.0",
+     "hashed": true,
+     "kind": "lock",
+     "status": "BLOCKED-HASH-LOCK (regenerate with network: CI/owner)"
+    },
+    {
+     "repo": "bybit-cluster-grid",
+     "file": "lab/consul/requirements-three-linux.lock",
+     "role": "project",
+     "spec": "==2.20.0",
+     "exact": "2.20.0",
+     "hashed": true,
+     "kind": "lock",
+     "status": "BLOCKED-HASH-LOCK (regenerate with network: CI/owner)"
+    },
+    {
+     "repo": "bybit-cluster-grid",
+     "file": "scripts/agent2-event-v3/requirements.lock",
+     "role": "project",
+     "spec": "==2.20.0",
+     "exact": "2.20.0",
+     "hashed": true,
+     "kind": "lock",
+     "status": "BLOCKED-HASH-LOCK (regenerate with network: CI/owner)"
+    },
+    {
+     "repo": "Terminan",
+     "file": "requirements-test.lock",
+     "role": "project",
+     "spec": "==2.21.0",
+     "exact": "2.21.0",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "meta_analyse",
+     "file": "requirements.lock",
+     "role": "project",
+     "spec": "==2.21.0",
+     "exact": "2.21.0",
+     "hashed": false,
+     "kind": "lock",
+     "status": "OK"
+    }
+   ]
+  },
+  {
+   "package": "pyside6",
+   "target": "6.12.0",
+   "rationale": "Highest exact pin among live (project/test/workflow) manifests.",
+   "repos": [
+    "Terminan",
+    "meta_analyse",
+    "unified-system"
+   ],
+   "occurrences": [
+    {
+     "repo": "unified-system",
+     "file": "integration/windows-candidate/requirements-cp312-win_amd64-cpu.lock",
+     "role": "project",
+     "spec": "==6.12.0",
+     "exact": "6.12.0",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "Terminan",
+     "file": "pyproject.toml[optional[desktop]]",
+     "role": "project",
+     "spec": ">=6.7,<7",
+     "exact": null,
+     "hashed": false,
+     "kind": "manifest",
+     "status": "RANGE-ALLOWS-TARGET"
+    },
+    {
+     "repo": "meta_analyse",
+     "file": "requirements.lock",
+     "role": "project",
+     "spec": "==6.12.0",
+     "exact": "6.12.0",
+     "hashed": false,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "meta_analyse",
+     "file": "pyproject.toml[project.dependencies]",
+     "role": "project",
+     "spec": ">=6.8,<7",
+     "exact": null,
+     "hashed": false,
+     "kind": "manifest",
+     "status": "RANGE-ALLOWS-TARGET"
+    }
+   ]
+  },
+  {
+   "package": "pyside6-addons",
+   "target": "6.12.0",
+   "rationale": "Highest exact pin among live (project/test/workflow) manifests.",
+   "repos": [
+    "meta_analyse",
+    "unified-system"
+   ],
+   "occurrences": [
+    {
+     "repo": "unified-system",
+     "file": "integration/windows-candidate/requirements-cp312-win_amd64-cpu.lock",
+     "role": "project",
+     "spec": "==6.12.0",
+     "exact": "6.12.0",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "meta_analyse",
+     "file": "requirements.lock",
+     "role": "project",
+     "spec": "==6.12.0",
+     "exact": "6.12.0",
+     "hashed": false,
+     "kind": "lock",
+     "status": "OK"
+    }
+   ]
+  },
+  {
+   "package": "pyside6-essentials",
+   "target": "6.12.0",
+   "rationale": "Highest exact pin among live (project/test/workflow) manifests.",
+   "repos": [
+    "meta_analyse",
+    "unified-system"
+   ],
+   "occurrences": [
+    {
+     "repo": "unified-system",
+     "file": "integration/windows-candidate/requirements-cp312-win_amd64-cpu.lock",
+     "role": "project",
+     "spec": "==6.12.0",
+     "exact": "6.12.0",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "meta_analyse",
+     "file": "requirements.lock",
+     "role": "project",
+     "spec": "==6.12.0",
+     "exact": "6.12.0",
+     "hashed": false,
+     "kind": "lock",
+     "status": "OK"
+    }
+   ]
+  },
+  {
+   "package": "pyside6-pdf",
+   "target": "6.12.0.140",
+   "rationale": "Highest exact pin among live (project/test/workflow) manifests.",
+   "repos": [
+    "meta_analyse",
+    "unified-system"
+   ],
+   "occurrences": [
+    {
+     "repo": "unified-system",
+     "file": "integration/windows-candidate/requirements-cp312-win_amd64-cpu.lock",
+     "role": "project",
+     "spec": "==6.12.0.140",
+     "exact": "6.12.0.140",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "meta_analyse",
+     "file": "requirements.lock",
+     "role": "project",
+     "spec": "==6.12.0.140",
+     "exact": "6.12.0.140",
+     "hashed": false,
+     "kind": "lock",
+     "status": "OK"
+    }
+   ]
+  },
+  {
+   "package": "pyside6-webengine",
+   "target": "6.12.0.140",
+   "rationale": "Highest exact pin among live (project/test/workflow) manifests.",
+   "repos": [
+    "meta_analyse",
+    "unified-system"
+   ],
+   "occurrences": [
+    {
+     "repo": "unified-system",
+     "file": "integration/windows-candidate/requirements-cp312-win_amd64-cpu.lock",
+     "role": "project",
+     "spec": "==6.12.0.140",
+     "exact": "6.12.0.140",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "meta_analyse",
+     "file": "requirements.lock",
+     "role": "project",
+     "spec": "==6.12.0.140",
+     "exact": "6.12.0.140",
+     "hashed": false,
+     "kind": "lock",
+     "status": "OK"
+    }
+   ]
+  },
+  {
+   "package": "pytest",
+   "target": "9.1.1",
+   "rationale": "Highest exact pin among live (project/test/workflow) manifests.",
+   "repos": [
+    "Terminan",
+    "bybit-cluster-grid",
+    "meta_analyse",
+    "strattester",
+    "unified-system"
+   ],
+   "occurrences": [
+    {
+     "repo": "unified-system",
+     "file": "integration/windows-candidate/requirements-cp312-win_amd64-cpu.lock",
+     "role": "project",
+     "spec": "==9.1.1",
+     "exact": "9.1.1",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "unified-system",
+     "file": "docs/ci/requirements-unittest.lock",
+     "role": "live (CI: installer-security.yml, lifecycle-evidence.yml, owner-boundary.yml, preparation-integrity.yml, tests.yml; F registry said evidence copy)",
+     "spec": "==9.0.3",
+     "exact": "9.0.3",
+     "hashed": true,
+     "kind": "lock",
+     "status": "BLOCKED-HASH-LOCK (regenerate with network: CI/owner)"
+    },
+    {
+     "repo": "unified-system",
+     "file": "docs/ci/operator-command/requirements-linux.lock",
+     "role": "live (CI: operator-command-contracts.yml; F registry said evidence copy)",
+     "spec": "==9.0.3",
+     "exact": "9.0.3",
+     "hashed": true,
+     "kind": "lock",
+     "status": "BLOCKED-HASH-LOCK (regenerate with network: CI/owner)"
+    },
+    {
+     "repo": "bybit-cluster-grid",
+     "file": "lab/consul/requirements-three-linux.lock",
+     "role": "project",
+     "spec": "==9.0.3",
+     "exact": "9.0.3",
+     "hashed": true,
+     "kind": "lock",
+     "status": "BLOCKED-HASH-LOCK (regenerate with network: CI/owner)"
+    },
+    {
+     "repo": "bybit-cluster-grid",
+     "file": "scripts/agent2-event-v3/requirements.lock",
+     "role": "project",
+     "spec": "==9.0.3",
+     "exact": "9.0.3",
+     "hashed": true,
+     "kind": "lock",
+     "status": "BLOCKED-HASH-LOCK (regenerate with network: CI/owner)"
+    },
+    {
+     "repo": "strattester",
+     "file": "pyproject.toml[optional[test]]",
+     "role": "project",
+     "spec": "==8.3.5",
+     "exact": "8.3.5",
+     "hashed": false,
+     "kind": "manifest",
+     "status": "DIFFERS (owner/CI decision)"
+    },
+    {
+     "repo": "strattester",
+     "file": ".github/workflows/market-data-pure.yml:62",
+     "role": "workflow",
+     "spec": "==8.3.5",
+     "exact": "8.3.5",
+     "hashed": false,
+     "kind": "workflow",
+     "status": "DIFFERS (owner/CI decision)"
+    },
+    {
+     "repo": "Terminan",
+     "file": "requirements-test.lock",
+     "role": "project",
+     "spec": "==9.1.1",
+     "exact": "9.1.1",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "meta_analyse",
+     "file": "requirements.lock",
+     "role": "project",
+     "spec": "==9.1.1",
+     "exact": "9.1.1",
+     "hashed": false,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "meta_analyse",
+     "file": "pyproject.toml[optional[test]]",
+     "role": "project",
+     "spec": ">=8,<10",
+     "exact": null,
+     "hashed": false,
+     "kind": "manifest",
+     "status": "RANGE-ALLOWS-TARGET"
+    }
+   ]
+  },
+  {
+   "package": "pytest-asyncio",
+   "target": "1.4.0",
+   "rationale": "Highest exact pin among live (project/test/workflow) manifests.",
+   "repos": [
+    "Terminan",
+    "meta_analyse",
+    "strattester",
+    "unified-system"
+   ],
+   "occurrences": [
+    {
+     "repo": "unified-system",
+     "file": "integration/windows-candidate/requirements-cp312-win_amd64-cpu.lock",
+     "role": "project",
+     "spec": "==1.4.0",
+     "exact": "1.4.0",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "strattester",
+     "file": "pyproject.toml[optional[test]]",
+     "role": "project",
+     "spec": "==0.26.0",
+     "exact": "0.26.0",
+     "hashed": false,
+     "kind": "manifest",
+     "status": "DIFFERS (owner/CI decision)"
+    },
+    {
+     "repo": "strattester",
+     "file": ".github/workflows/market-data-pure.yml:62",
+     "role": "workflow",
+     "spec": "==0.26.0",
+     "exact": "0.26.0",
+     "hashed": false,
+     "kind": "workflow",
+     "status": "DIFFERS (owner/CI decision)"
+    },
+    {
+     "repo": "Terminan",
+     "file": "requirements-test.lock",
+     "role": "project",
+     "spec": "==1.4.0",
+     "exact": "1.4.0",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "meta_analyse",
+     "file": "requirements.lock",
+     "role": "project",
+     "spec": "==1.4.0",
+     "exact": "1.4.0",
+     "hashed": false,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "meta_analyse",
+     "file": "pyproject.toml[optional[test]]",
+     "role": "project",
+     "spec": ">=0.24,<2",
+     "exact": null,
+     "hashed": false,
+     "kind": "manifest",
+     "status": "RANGE-ALLOWS-TARGET"
+    }
+   ]
+  },
+  {
+   "package": "python-dotenv",
+   "target": "1.2.4",
+   "rationale": "Highest exact pin among live (project/test/workflow) manifests.",
+   "repos": [
+    "bybit-cluster-grid",
+    "unified-system"
+   ],
+   "occurrences": [
+    {
+     "repo": "unified-system",
+     "file": "integration/windows-candidate/requirements-cp312-win_amd64-cpu.lock",
+     "role": "project",
+     "spec": "==1.2.4",
+     "exact": "1.2.4",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "bybit-cluster-grid",
+     "file": "requirements.txt",
+     "role": "project",
+     "spec": ">=1.0",
+     "exact": null,
+     "hashed": false,
+     "kind": "manifest",
+     "status": "RANGE-ALLOWS-TARGET"
+    }
+   ]
+  },
+  {
+   "package": "requests",
+   "target": "2.34.2",
+   "rationale": "Highest exact pin among live (project/test/workflow) manifests.",
+   "repos": [
+    "strattester",
+    "unified-system"
+   ],
+   "occurrences": [
+    {
+     "repo": "unified-system",
+     "file": "integration/windows-candidate/requirements-cp312-win_amd64-cpu.lock",
+     "role": "project",
+     "spec": "==2.34.2",
+     "exact": "2.34.2",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "strattester",
+     "file": "pyproject.toml[optional[legacy-test]]",
+     "role": "project",
+     "spec": ">=2.31,<3",
+     "exact": null,
+     "hashed": false,
+     "kind": "manifest",
+     "status": "RANGE-ALLOWS-TARGET"
+    }
+   ]
+  },
+  {
+   "package": "setuptools",
+   "target": null,
+   "rationale": "Build backend constraint (pyproject [build-system]) vs runtime lock pin; not a runtime dependency, not unified here.",
+   "repos": [
+    "Terminan",
+    "bybit-cluster-grid",
+    "math",
+    "meta_analyse",
+    "strattester",
+    "unified-system"
+   ],
+   "occurrences": [
+    {
+     "repo": "unified-system",
+     "file": "integration/windows-candidate/requirements-cp312-win_amd64-cpu.lock",
+     "role": "project",
+     "spec": "==84.2.1",
+     "exact": "84.2.1",
+     "hashed": true,
+     "kind": "lock",
+     "status": "N/A"
+    },
+    {
+     "repo": "bybit-cluster-grid",
+     "file": "pyproject.toml[build-system]",
+     "role": "project",
+     "spec": ">=75,<83",
+     "exact": null,
+     "hashed": false,
+     "kind": "build-system",
+     "status": "N/A"
+    },
+    {
+     "repo": "strattester",
+     "file": "pyproject.toml[build-system]",
+     "role": "project",
+     "spec": ">=75,<83",
+     "exact": null,
+     "hashed": false,
+     "kind": "build-system",
+     "status": "N/A"
+    },
+    {
+     "repo": "strattester",
+     "file": ".github/workflows/market-data-pure.yml:62",
+     "role": "workflow",
+     "spec": ">=75,<83",
+     "exact": null,
+     "hashed": false,
+     "kind": "workflow",
+     "status": "N/A"
+    },
+    {
+     "repo": "Terminan",
+     "file": "pyproject.toml[build-system]",
+     "role": "project",
+     "spec": ">=75,<83",
+     "exact": null,
+     "hashed": false,
+     "kind": "build-system",
+     "status": "N/A"
+    },
+    {
+     "repo": "math",
+     "file": "pyproject.toml[build-system]",
+     "role": "project",
+     "spec": ">=75,<83",
+     "exact": null,
+     "hashed": false,
+     "kind": "build-system",
+     "status": "N/A"
+    },
+    {
+     "repo": "meta_analyse",
+     "file": "pyproject.toml[build-system]",
+     "role": "project",
+     "spec": ">=70",
+     "exact": null,
+     "hashed": false,
+     "kind": "build-system",
+     "status": "N/A"
+    }
+   ]
+  },
+  {
+   "package": "shiboken6",
+   "target": "6.12.0",
+   "rationale": "Highest exact pin among live (project/test/workflow) manifests.",
+   "repos": [
+    "meta_analyse",
+    "unified-system"
+   ],
+   "occurrences": [
+    {
+     "repo": "unified-system",
+     "file": "integration/windows-candidate/requirements-cp312-win_amd64-cpu.lock",
+     "role": "project",
+     "spec": "==6.12.0",
+     "exact": "6.12.0",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "meta_analyse",
+     "file": "requirements.lock",
+     "role": "project",
+     "spec": "==6.12.0",
+     "exact": "6.12.0",
+     "hashed": false,
+     "kind": "lock",
+     "status": "OK"
+    }
+   ]
+  },
+  {
+   "package": "sortedcontainers",
+   "target": "2.4.0",
+   "rationale": "Highest exact pin among live (project/test/workflow) manifests.",
+   "repos": [
+    "meta_analyse",
+    "unified-system"
+   ],
+   "occurrences": [
+    {
+     "repo": "unified-system",
+     "file": "integration/windows-candidate/requirements-cp312-win_amd64-cpu.lock",
+     "role": "project",
+     "spec": "==2.4.0",
+     "exact": "2.4.0",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "meta_analyse",
+     "file": "requirements.lock",
+     "role": "project",
+     "spec": "==2.4.0",
+     "exact": "2.4.0",
+     "hashed": false,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "meta_analyse",
+     "file": "requirements-identity-synthetic.txt",
+     "role": "project",
+     "spec": "==2.4.0",
+     "exact": "2.4.0",
+     "hashed": false,
+     "kind": "manifest",
+     "status": "OK"
+    }
+   ]
+  },
+  {
+   "package": "typing-extensions",
+   "target": "4.16.0",
+   "rationale": "Highest exact pin among live (project/test/workflow) manifests.",
+   "repos": [
+    "Terminan",
+    "bybit-cluster-grid",
+    "meta_analyse",
+    "unified-system"
+   ],
+   "occurrences": [
+    {
+     "repo": "unified-system",
+     "file": "integration/windows-candidate/requirements-cp312-win_amd64-cpu.lock",
+     "role": "project",
+     "spec": "==4.16.0",
+     "exact": "4.16.0",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "unified-system",
+     "file": "tests/control_mux/requirements.lock",
+     "role": "test",
+     "spec": "==4.16.0",
+     "exact": "4.16.0",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "unified-system",
+     "file": "docs/intelligence/research-identity/requirements-linux.lock",
+     "role": "evidence/docs copy",
+     "spec": "==4.16.0",
+     "exact": "4.16.0",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "unified-system",
+     "file": "docs/intelligence/research-identity/requirements-windows.lock",
+     "role": "evidence/docs copy",
+     "spec": "==4.16.0",
+     "exact": "4.16.0",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "unified-system",
+     "file": "docs/ci/requirements-unittest.lock",
+     "role": "live (CI: installer-security.yml, lifecycle-evidence.yml, owner-boundary.yml, preparation-integrity.yml, tests.yml; F registry said evidence copy)",
+     "spec": "==4.15.0",
+     "exact": "4.15.0",
+     "hashed": true,
+     "kind": "lock",
+     "status": "BLOCKED-HASH-LOCK (regenerate with network: CI/owner)"
+    },
+    {
+     "repo": "unified-system",
+     "file": "docs/ci/operator-command/requirements-linux.lock",
+     "role": "live (CI: operator-command-contracts.yml; F registry said evidence copy)",
+     "spec": "==4.15.0",
+     "exact": "4.15.0",
+     "hashed": true,
+     "kind": "lock",
+     "status": "BLOCKED-HASH-LOCK (regenerate with network: CI/owner)"
+    },
+    {
+     "repo": "bybit-cluster-grid",
+     "file": "lab/consul/requirements-three-linux.lock",
+     "role": "project",
+     "spec": "==4.15.0",
+     "exact": "4.15.0",
+     "hashed": true,
+     "kind": "lock",
+     "status": "BLOCKED-HASH-LOCK (regenerate with network: CI/owner)"
+    },
+    {
+     "repo": "bybit-cluster-grid",
+     "file": "scripts/agent2-event-v3/requirements.lock",
+     "role": "project",
+     "spec": "==4.15.0",
+     "exact": "4.15.0",
+     "hashed": true,
+     "kind": "lock",
+     "status": "BLOCKED-HASH-LOCK (regenerate with network: CI/owner)"
+    },
+    {
+     "repo": "Terminan",
+     "file": "requirements-test.lock",
+     "role": "project",
+     "spec": "==4.16.0",
+     "exact": "4.16.0",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "meta_analyse",
+     "file": "requirements.lock",
+     "role": "project",
+     "spec": "==4.16.0 ; python_full_version < '3.15'",
+     "exact": "4.16.0",
+     "hashed": false,
+     "kind": "lock",
+     "status": "OK"
+    }
+   ]
+  },
+  {
+   "package": "tzdata",
+   "target": "2026.6",
+   "rationale": "Highest exact pin among live (project/test/workflow) manifests.",
+   "repos": [
+    "meta_analyse",
+    "unified-system"
+   ],
+   "occurrences": [
+    {
+     "repo": "unified-system",
+     "file": "integration/windows-candidate/requirements-cp312-win_amd64-cpu.lock",
+     "role": "project",
+     "spec": "==2026.5",
+     "exact": "2026.5",
+     "hashed": true,
+     "kind": "lock",
+     "status": "BLOCKED-HASH-LOCK (regenerate with network: CI/owner)"
+    },
+    {
+     "repo": "unified-system",
+     "file": "release/requirements-integration.lock",
+     "role": "live (CI: final-integration.yml; F registry said evidence copy)",
+     "spec": "==2026.6",
+     "exact": "2026.6",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "unified-system",
+     "file": "docs/ci/requirements-unittest.lock",
+     "role": "live (CI: installer-security.yml, lifecycle-evidence.yml, owner-boundary.yml, preparation-integrity.yml, tests.yml; F registry said evidence copy)",
+     "spec": "==2025.2",
+     "exact": "2025.2",
+     "hashed": true,
+     "kind": "lock",
+     "status": "BLOCKED-HASH-LOCK (regenerate with network: CI/owner)"
+    },
+    {
+     "repo": "unified-system",
+     "file": ".github/workflows/agent5-components.yml:32",
+     "role": "workflow",
+     "spec": "==2026.6",
+     "exact": "2026.6",
+     "hashed": false,
+     "kind": "workflow",
+     "status": "OK"
+    },
+    {
+     "repo": "meta_analyse",
+     "file": "requirements.lock",
+     "role": "project",
+     "spec": "==2026.5 ; sys_platform == 'win32'",
+     "exact": "2026.5",
+     "hashed": false,
+     "kind": "lock",
+     "status": "DIFFERS (owner/CI decision)"
+    }
+   ]
+  },
+  {
+   "package": "uvicorn",
+   "target": "0.54.0",
+   "rationale": "Highest exact pin among live (project/test/workflow) manifests.",
+   "repos": [
+    "bybit-cluster-grid",
+    "unified-system"
+   ],
+   "occurrences": [
+    {
+     "repo": "unified-system",
+     "file": "integration/windows-candidate/requirements-cp312-win_amd64-cpu.lock",
+     "role": "project",
+     "spec": "==0.54.0",
+     "exact": "0.54.0",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "bybit-cluster-grid",
+     "file": "requirements.txt",
+     "role": "project",
+     "spec": ">=0.30",
+     "exact": null,
+     "hashed": false,
+     "kind": "manifest",
+     "status": "RANGE-ALLOWS-TARGET"
+    }
+   ]
+  },
+  {
+   "package": "websockets",
+   "target": "15.0.1",
+   "rationale": "Highest exact pin among live (project/test/workflow) manifests.",
+   "repos": [
+    "bybit-cluster-grid",
+    "meta_analyse",
+    "strattester",
+    "unified-system"
+   ],
+   "occurrences": [
+    {
+     "repo": "unified-system",
+     "file": "integration/windows-candidate/requirements-cp312-win_amd64-cpu.lock",
+     "role": "project",
+     "spec": "==15.0.1",
+     "exact": "15.0.1",
+     "hashed": true,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "bybit-cluster-grid",
+     "file": "requirements.txt",
+     "role": "project",
+     "spec": ">=13.0",
+     "exact": null,
+     "hashed": false,
+     "kind": "manifest",
+     "status": "RANGE-ALLOWS-TARGET"
+    },
+    {
+     "repo": "strattester",
+     "file": "pyproject.toml[project.dependencies]",
+     "role": "project",
+     "spec": ">=15,<16",
+     "exact": null,
+     "hashed": false,
+     "kind": "manifest",
+     "status": "RANGE-ALLOWS-TARGET"
+    },
+    {
+     "repo": "strattester",
+     "file": ".github/workflows/market-data-pure.yml:62",
+     "role": "workflow",
+     "spec": ">=15,<16",
+     "exact": null,
+     "hashed": false,
+     "kind": "workflow",
+     "status": "RANGE-ALLOWS-TARGET"
+    },
+    {
+     "repo": "meta_analyse",
+     "file": "requirements.lock",
+     "role": "project",
+     "spec": "==15.0.1",
+     "exact": "15.0.1",
+     "hashed": false,
+     "kind": "lock",
+     "status": "OK"
+    },
+    {
+     "repo": "meta_analyse",
+     "file": "pyproject.toml[project.dependencies]",
+     "role": "project",
+     "spec": ">=13,<16",
+     "exact": null,
+     "hashed": false,
+     "kind": "manifest",
+     "status": "RANGE-ALLOWS-TARGET"
+    }
+   ]
+  },
+  {
+   "package": "wheel",
+   "target": null,
+   "rationale": "Build backend constraint (pyproject [build-system]) vs runtime lock pin; not a runtime dependency, not unified here.",
+   "repos": [
+    "Terminan",
+    "bybit-cluster-grid",
+    "meta_analyse",
+    "strattester"
+   ],
+   "occurrences": [
+    {
+     "repo": "bybit-cluster-grid",
+     "file": "pyproject.toml[build-system]",
+     "role": "project",
+     "spec": "",
+     "exact": null,
+     "hashed": false,
+     "kind": "build-system",
+     "status": "N/A"
+    },
+    {
+     "repo": "strattester",
+     "file": "pyproject.toml[build-system]",
+     "role": "project",
+     "spec": "",
+     "exact": null,
+     "hashed": false,
+     "kind": "build-system",
+     "status": "N/A"
+    },
+    {
+     "repo": "Terminan",
+     "file": "pyproject.toml[build-system]",
+     "role": "project",
+     "spec": "",
+     "exact": null,
+     "hashed": false,
+     "kind": "build-system",
+     "status": "N/A"
+    },
+    {
+     "repo": "meta_analyse",
+     "file": "pyproject.toml[build-system]",
+     "role": "project",
+     "spec": "",
+     "exact": null,
+     "hashed": false,
+     "kind": "build-system",
+     "status": "N/A"
+    }
+   ]
+  }
+ ]
+}
