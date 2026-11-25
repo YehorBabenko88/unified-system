@@ -167,12 +167,11 @@ class FreshCodeRoot:
 
     def _apply(self,operation):
         root=self._owned()
-        env={k:v for k,v in os.environ.items() if k.upper() in
-             {'SYSTEMROOT','WINDIR','SYSTEMDRIVE','TEMP','TMP','USERPROFILE','LOCALAPPDATA','APPDATA','OS'}}
-        env.update(UNIFIED_ACL_OWNED_ROOT=str(root),UNIFIED_ACL_OPERATION=operation)
-        powershell=Path(os.environ['SYSTEMROOT'])/'System32/WindowsPowerShell/v1.0/powershell.exe'
-        encoded=base64.b64encode(_SCRIPT.encode('utf-16le')).decode('ascii')
-        result=subprocess.run([str(powershell),'-NoProfile','-NonInteractive','-EncodedCommand',encoded],
+        # Hardened launcher (A2, #151): executable from GetSystemDirectoryW, closed
+        # environment, autoload disabled, in-box modules only, System32 cwd.
+        from . import windows_powershell
+        env=windows_powershell.environment({'UNIFIED_ACL_OWNED_ROOT':str(root),'UNIFIED_ACL_OPERATION':operation})
+        result=subprocess.run(windows_powershell.argv(_SCRIPT),cwd=windows_powershell.working_directory(),
             env=env,stdin=subprocess.DEVNULL,stdout=subprocess.PIPE,stderr=subprocess.PIPE,timeout=600)
         if result.returncode!=0 or result.stdout.decode('utf-8',errors='replace').strip()!='OWNED_ACL_VERIFIED':
             detail=result.stderr.decode('utf-8',errors='replace')

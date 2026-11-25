@@ -1,4 +1,5 @@
 """Closed failure stages only; no native service effects in these tests."""
+from unified_system import windows_powershell
 import json,unittest,os,subprocess
 from unified_system import installation_service as service
 from tests.native_phase_diagnostics import phase,run_phased
@@ -29,7 +30,7 @@ Write-Output 'INERT_NSSM_BOOTSTRAP_VERIFIED'
   command=command.replace('$parameters|Add-Member ScriptMethod GetValue ',phase('FIRST_MEMBER_END')+'$parameters|Add-Member ScriptMethod GetValue ',1)
   command=command.replace('& $m {param($key)',phase('MEMBER_END')+'& $m {param($key)',1)+phase('DONE')
   env=service._environment();env['UNIFIED_TEST_MODULE']=str(service.MODULE)
-  child=run_phased([service._native_tools()['powershell']['path'],'-NoProfile','-NonInteractive','-Command',command],env=env)
+  child=run_phased(windows_powershell.argv(command,powershell=service._native_tools()['powershell']['path']),env=env)
   self.assertIn(b'INERT_NSSM_BOOTSTRAP_VERIFIED',child.stdout)
  @unittest.skipUnless(os.name=='nt','Windows unprivileged child exit observation')
  def test_real_child_exit_code_without_service_or_acl_operations(self):
@@ -40,7 +41,7 @@ Write-Output 'INERT_NSSM_BOOTSTRAP_VERIFIED'
   command=command.replace('try{$null=',phase('CHILD_BEGIN')+'try{$null=',1)
   command=command.replace('catch{};if(',"catch{};"+phase('CHILD_END')+'if(',1)+';'+phase('DONE')
   env=service._environment();env['UNIFIED_TEST_MODULE']=str(service.MODULE)
-  child=run_phased([service._native_tools()['powershell']['path'],'-NoProfile','-NonInteractive','-Command',command],env=env)
+  child=run_phased(windows_powershell.argv(command,powershell=service._native_tools()['powershell']['path']),env=env)
   self.assertIn(b'EXIT_FACT_VERIFIED',child.stdout)
  def test_nssm_exit_code_is_bounded_numeric_fact_without_raw_output(self):
   for code in (1,2,5,0xc0000142):

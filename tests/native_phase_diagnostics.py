@@ -30,11 +30,14 @@ def phase_summary(raw):
  return ','.join(result)
 
 
-def run_phased(argv,*,env,timeout=15):
+def run_phased(argv,*,env,timeout=15,cwd=None):
  """Existing fatal 15/30 second bounds; one attempt, no raw child data."""
  if type(timeout) is not int or timeout not in (15,30):raise ValueError('UNKNOWN_DIAGNOSTIC_BOUND')
+ if cwd is None:
+  from unified_system import windows_powershell
+  cwd=windows_powershell.working_directory()
  started=time.monotonic()
- try:result=subprocess.run(argv,env=env,capture_output=True,timeout=timeout)
+ try:result=subprocess.run(argv,env=env,capture_output=True,timeout=timeout,cwd=cwd)
  except subprocess.TimeoutExpired as error:
   summary=phase_summary(error.stderr)
   # Drop raw TimeoutExpired args/output from the displayed exception chain.

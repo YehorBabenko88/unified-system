@@ -10,6 +10,7 @@ OS identity/hash checks do not attest the host or contain a malicious administra
 import base64,copy,hashlib,json,os,re,subprocess,tempfile,time,sqlite3,ctypes,stat
 from contextlib import closing
 from pathlib import Path
+from . import windows_powershell
 from . import lab_release
 from .contracts import canonical,seal
 from .installation_progress import identifier,safe as safe_journal
@@ -63,10 +64,12 @@ def parse_service_sid(output,exit_code):
 
 
 def _run(argv,*,env,payload=None,timeout=30,limit=262144,encoding='utf8',errors='strict'):
+ # Fixed System32 working directory: no current-directory planting of DLLs or executables.
+ cwd=windows_powershell.working_directory(_system_directory())
  with tempfile.TemporaryFile() as source,tempfile.TemporaryFile() as out,tempfile.TemporaryFile() as error:
   if payload is not None:source.write(payload)
   source.seek(0)
-  child=subprocess.Popen(argv,env=env,stdin=source,stdout=out,stderr=error)
+  child=subprocess.Popen(argv,env=env,cwd=cwd,stdin=source,stdout=out,stderr=error)
   try:
    deadline=time.monotonic()+timeout
    while child.poll() is None:
@@ -127,10 +130,8 @@ def _native_tools():
 
 
 def _environment():
- directory=_system_directory()
- env={k:v for k,v in os.environ.items() if k.upper() in {'SYSTEMDRIVE','PROGRAMDATA','TEMP','TMP','USERPROFILE','LOCALAPPDATA','APPDATA'}}
- env.update(SYSTEMROOT=str(directory.parent),WINDIR=str(directory.parent),PSModulePath=str(directory/'WindowsPowerShell/v1.0/Modules'))
- return env
+ # Closed child environment from the single hardened launcher (A2, #151).
+ return windows_powershell.environment(directory=_system_directory())
 
 
 class WindowsServiceBoundary:
@@ -150,12 +151,11 @@ class WindowsServiceBoundary:
   need(hashlib.sha256(lab_release.regular(MODULE).read_bytes()).hexdigest()==plan['executor_sha256'])
   # Static bootstrap only. Paths/request data are never interpolated into code.
   code="$ErrorActionPreference='Stop';[Console]::OutputEncoding=[Text.UTF8Encoding]::new($false);[Console]::InputEncoding=[Text.UTF8Encoding]::new($false);try{Import-Module -Name ([WildcardPattern]::Escape($env:UNIFIED_SERVICE_MODULE)) -Force; $r=[Console]::In.ReadToEnd()|ConvertFrom-Json; Invoke-UnifiedOwnedService $r|ConvertTo-Json -Depth 12 -Compress}catch{$stage='UNAVAILABLE';$childCode=$null;try{$stage=Get-UnifiedOwnedServiceStage;$childCode=Get-UnifiedOwnedNativeExitCode}catch{};@{error='OWNED_SERVICE_REJECTED';native_stage=$stage;native_exit_code=$childCode}|ConvertTo-Json -Compress;exit 1}"
-  encoded=base64.b64encode(code.encode('utf-16le')).decode('ascii')
-  env=_environment();env['UNIFIED_SERVICE_MODULE']=str(MODULE)
+  env=windows_powershell.environment({'UNIFIED_SERVICE_MODULE':str(MODULE)},directory=_system_directory())
   request={'action':action,'plan':plan}
   need(len(canonical(request))<=32768)
   ps=Path(plan['native_tools']['powershell']['path']);need(_native_hash(ps)==plan['native_tools']['powershell']['sha256'])
-  output,status=_run([str(ps),'-NoProfile','-NonInteractive','-EncodedCommand',encoded],env=env,payload=canonical(request),timeout=60)
+  output,status=_run(windows_powershell.argv(code,powershell=ps),env=env,payload=canonical(request),timeout=60)
   result=_native_result(output,status)
   if action=='BEGIN':
    need(result=={'root_created':True});facts=_safe(plan['root']).stat();return {'root_device':facts.st_dev,'root_inode':facts.st_ino}

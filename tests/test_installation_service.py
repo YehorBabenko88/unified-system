@@ -1,4 +1,5 @@
 """Stopped service orchestration against isolated fake Windows boundaries only."""
+from unified_system import windows_powershell
 import copy,hashlib,os,tempfile,unittest
 from pathlib import Path
 from unittest.mock import patch
@@ -215,7 +216,7 @@ class ServiceResourceTests(unittest.TestCase):
   with patch.dict(os.environ,{'PSModulePath':str(modules)}):safe=service._environment()
   self.assertEqual(safe['PSModulePath'],str(service._system_directory()/'WindowsPowerShell/v1.0/Modules'))
   safe_command=phase('ENTRY')+phase('SAFE_LOOKUP_BEGIN')+command+';'+phase('SAFE_LOOKUP_END')+phase('DONE')
-  result=run_phased([executable,'-NoProfile','-NonInteractive','-Command',safe_command],env=safe)
+  result=run_phased(windows_powershell.argv(safe_command,powershell=executable),env=safe)
   self.assertEqual(result.returncode,0);self.assertIn(b'POISON_NOT_FOUND',result.stdout);self.assertFalse(marker.exists())
 
  @unittest.skipUnless(os.name=='nt','GetSystemDirectoryW native path consistency')
@@ -255,7 +256,7 @@ class ServiceResourceTests(unittest.TestCase):
   command=command.replace(';if($value -cne',';'+phase('UNICODE_END')+'if($value -cne',1)
   command=command.replace('try{$null=[UnifiedStoppedServiceNative]::Run',phase('CAP_BEGIN')+'try{$null=[UnifiedStoppedServiceNative]::Run',1)
   command=command.replace(';if(-not $limited)',';'+phase('CAP_END')+'if(-not $limited)',1)+';'+phase('DONE')
-  result=run_phased([service._native_tools()['powershell']['path'],'-NoProfile','-NonInteractive','-Command',command],env=env,timeout=30)
+  result=run_phased(windows_powershell.argv(command,powershell=service._native_tools()['powershell']['path']),env=env,timeout=30)
   self.assertEqual(result.returncode,0,result.stderr.decode(errors='replace'));self.assertIn(b'DECLARATIONS_COMPILED',result.stdout);self.assertIn(b'UNICODE_AND_OUTPUT_BOUND_VERIFIED',result.stdout)
 
  def test_static_module_no_start_stop_delete_or_policy_bypass(self):
