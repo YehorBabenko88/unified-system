@@ -1,0 +1,115 @@
+name: Diagnostic C3 LAN mTLS DISCONNECTED (MASTER #111 / #151)
+# Diagnostic only: records close side/reason/exception and timing. It never
+# changes product or test deadlines, TLS settings, certificates or gates.
+on:
+  push:
+    branches: ['claude/c3-lan-mtls-*']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  lan-suite:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest]
+        python: ['3.11', '3.12', '3.13']
+        load: [serial, parallel]
+        include:
+          - os: ubuntu-24.04
+            python: '3.12'
+            load: serial
+          - os: ubuntu-24.04
+            python: '3.12'
+            load: parallel
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 40
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Same LAN Mux suite order (transport, budget, mux) under recording probe
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/probe"
+          if [ "${{ matrix.load }}" = serial ]; then
+            python -B tools/diagnostics/lan_mtls_probe.py --suite lan+coverage --iterations 6 --label serial --out "$RUNNER_TEMP/probe/serial.json" || true
+          else
+            # Parallel load: three concurrent suite processes plus two CPU burners.
+            python -B -c "import time;e=time.time()+600;[0 for _ in iter(lambda:time.time()<e,False)]" & B1=$!
+            python -B -c "import time;e=time.time()+600;[0 for _ in iter(lambda:time.time()<e,False)]" & B2=$!
+            PIDS=""
+            for p in 1 2 3; do
+              python -B tools/diagnostics/lan_mtls_probe.py --suite lan+coverage --iterations 4 --label parallel-$p --out "$RUNNER_TEMP/probe/parallel-$p.json" > "$RUNNER_TEMP/probe/parallel-$p.log" 2>&1 &
+              PIDS="$PIDS $!"
+            done
+            for pid in $PIDS; do wait $pid || true; done
+            kill $B1 $B2 || true
+            grep -h "PROBE" "$RUNNER_TEMP"/probe/parallel-*.log || true
+          fi
+      - name: Summary
+        if: always()
+        shell: bash
+        run: python -B tools/diagnostics/lan_mtls_summary.py "$RUNNER_TEMP/probe"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: c3-lan-probe-${{ matrix.os }}-${{ matrix.python }}-${{ matrix.load }}
+          path: ${{ runner.temp }}/probe
+          if-no-files-found: warn
+  full-suite-windows:
+    # Same conditions as Installer security PLAN_ONLY (windows-latest, py3.11,
+    # full discovery); LAN rows are recorded by the probe.
+    strategy:
+      fail-fast: false
+      matrix:
+        rep: [1, 2]
+    runs-on: windows-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: 'python -m pip install --only-binary=:all: --require-hashes -r docs/ci/requirements-unittest.lock'
+      - name: Full discovery under recording probe
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/probe"
+          python -B tools/diagnostics/lan_mtls_probe.py --suite full --iterations 1 --label full --out "$RUNNER_TEMP/probe/full.json" > "$RUNNER_TEMP/probe/full.log" 2>&1 || true
+          grep -E "^PROBE|PROBE_EVENT" "$RUNNER_TEMP/probe/full.log" | head -400 || true
+      - name: Summary
+        if: always()
+        shell: bash
+        run: python -B tools/diagnostics/lan_mtls_summary.py "$RUNNER_TEMP/probe"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: c3-full-suite-probe-${{ matrix.rep }}
+          path: ${{ runner.temp }}/probe
+          if-no-files-found: warn
+  sqlite-latency:
+    # Measures the budget store's per-transaction cost model (fresh connection,
+    # BEGIN IMMEDIATE, synchronous=FULL) on the runner's temp volume.
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-24.04]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - shell: bash
+        run: python -B tools/diagnostics/lan_budget_latency.py
