@@ -94,3 +94,33 @@ jobs:
           name: lab-e2e-${{ matrix.os }}
           path: lab-e2e-report.json
           if-no-files-found: warn
+  postgres18-lifecycle:
+    # C2: dedicated temporary PostgreSQL 18 cluster; no default cluster is
+    # created and no existing instance or port 5432 is touched.
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - name: Install PostgreSQL 18 binaries (PGDG) without a default cluster
+        run: |
+          sudo install -d /etc/postgresql-common/createcluster.d
+          echo 'create_main_cluster = false' | sudo tee /etc/postgresql-common/createcluster.d/no-main.conf
+          sudo apt-get update -q
+          sudo apt-get install -y -q postgresql-common
+          sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y
+          sudo apt-get install -y -q postgresql-18
+          /usr/lib/postgresql/18/bin/postgres --version
+          test -z "$(pg_lsclusters -h 2>/dev/null | grep '^18 ')" && echo NO_DEFAULT_18_CLUSTER
+      - name: Lifecycle, roles, duplicates, immutability, crash recovery, cleanup
+        env:
+          LAB_POSTGRES_BIN: /usr/lib/postgresql/18/bin
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: |
+          python -B -m unittest -v tests.test_lab_postgres
+          test -z "$(pgrep -u "$(id -u)" -f 'postgres -D' || true)" && echo NO_LAB_POSTGRES_LEFT
