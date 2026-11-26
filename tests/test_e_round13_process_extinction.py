@@ -41,9 +41,10 @@ class TriStateProcessTests(unittest.TestCase):
         fake=SimpleNamespace(pid=1234,poll=lambda:None)
         driver=object.__new__(ProcessDriver)
         driver.children={"x":fake}
-        driver._load=lambda h:{"pid":1234,"created":["stamp","image"]}
-        with self.assertRaises(ResourceFenceBlocked):
-            observe_owned_process_extinction(driver,"x")
+        with patch.object(ProcessDriver,"_load",
+                          return_value={"pid":1234,"created":["stamp","image"]}):
+            with self.assertRaises(ResourceFenceBlocked):
+                observe_owned_process_extinction(driver,"x")
 
 
 if __name__=="__main__":
