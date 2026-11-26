@@ -231,7 +231,7 @@ class NativeCRecoveryTests(unittest.TestCase):
         try:
             self.assertTrue(entered.wait(5))
             with self.assertRaisesRegex(
-                    LabAdmissionRejected,"LAB_RECOVERY_REENTRY_OR_POISONED"):
+                    LabAdmissionRejected,"LAB_RECOVERY_STOPPED_OWNER_MISMATCH"):
                 self._recover()
         finally:
             release.set()
@@ -255,13 +255,13 @@ class NativeCRecoveryTests(unittest.TestCase):
         finally:
             self.pg.stop=original
         with self.assertRaisesRegex(LabAdmissionRejected,
-                                    "LAB_RECOVERY_REENTRY_OR_POISONED"):
+                                    "LAB_RECOVERY_STOPPED_OWNER_MISMATCH"):
             self._recover()
 
     def test_recovery_reentry_denied_after_successful_attempt(self):
         self._recover()
         with self.assertRaisesRegex(LabAdmissionRejected,
-                                    "LAB_RECOVERY_REENTRY_OR_POISONED"):
+                                    "LAB_RECOVERY_STOPPED_OWNER_MISMATCH"):
             self._recover()
 
     def test_recovery_wrong_identity_poisoned_and_no_restart(self):
@@ -269,7 +269,7 @@ class NativeCRecoveryTests(unittest.TestCase):
         with self.assertRaises(LabAdmissionRejected):
             self._recover(old=bad)
         with self.assertRaisesRegex(LabAdmissionRejected,
-                                    "LAB_RECOVERY_REENTRY_OR_POISONED"):
+                                    "LAB_RECOVERY_STOPPED_OWNER_MISMATCH"):
             self._recover()
 
     def test_unknown_commit_conflicting_immutable_row_stays_unverified(self):
