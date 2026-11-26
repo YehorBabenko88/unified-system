@@ -645,5 +645,32 @@
       "NATIVE_PG18_E2E",
       "PACKAGED_INSTALLED_PROVENANCE"
     ]
+  },
+  "round18": {
+    "exact_heads": {
+      "A": "7d849df3765c84fd0542aa51537e418fc6d50e15",
+      "B": "6391e5e25495be05a092a484e4ec6ae752fc084e",
+      "C": "099c27a0ae6a20b8f2cca6e589381b1a39af86d1",
+      "D": "d2695eb4a33a6b18a9191a6351bd1075ea4492fe",
+      "E": "5ecc6fbf852b94b36d1b6c585b4c130db33f2b1b"
+    },
+    "writer": {
+      "blob": "82af4c4688c8e027dee3ae64113c23c436931abf",
+      "sha256": "e637d570d750bc7d38e4f16da213b04babbb59c87af57872b417233f72f2e489",
+      "sha256_origin": "MASTER supplied; not independently hashed"
+    },
+    "unchanged_blobs": [
+      "98ed95029785413eb8fbc5687af39ff6bd0bf2cf",
+      "ab93c6d421c3d3f0232060f6ded7ac01bf8eeda0",
+      "52ed338cb5e1e5641fd9cf9f401b280fc3500a9b"
+    ],
+    "packaging_blob": "782c75d5699ae4a1d828a8d8dcd33be726a30938",
+    "authority_blob": "b3687271b42206c2ebae951f8ef5cad1264065db",
+    "wheel_status": "NOT_VERIFIED",
+    "permit_status": "LAB_OPERATION_INSTALLED_WHEEL_UNVERIFIED",
+    "integration": "9349d7f3ed93ef82d120976816b968e0b716b067",
+    "historical_sections": "components and round17 retained for historical tests; round18 supersedes them",
+    "qualification_tool": "tools/f_wheel_qualification.py",
+    "admitted": false
   }
 }
