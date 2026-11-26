@@ -353,6 +353,11 @@ class LabPostgres:
               'writer_can_truncate', has_table_privilege('lab_writer', c.oid, 'TRUNCATE'),
               'reader_can_select', has_table_privilege('lab_reader', c.oid, 'SELECT'),
               'reader_can_insert', has_table_privilege('lab_reader', c.oid, 'INSERT'),
+              'reader_can_update', has_table_privilege('lab_reader', c.oid, 'UPDATE'),
+              'reader_can_delete', has_table_privilege('lab_reader', c.oid, 'DELETE'),
+              'reader_can_truncate', has_table_privilege('lab_reader', c.oid, 'TRUNCATE'),
+              'writer_can_temp', has_database_privilege('lab_writer', current_database(), 'TEMP'),
+              'reader_can_temp', has_database_privilege('lab_reader', current_database(), 'TEMP'),
               'writer_can_schema_create',
                  has_schema_privilege('lab_writer', 'public', 'CREATE'),
               'reader_can_schema_create',
@@ -381,6 +386,8 @@ class LabPostgres:
         required = ('writer_can_insert', 'reader_can_select', 'reader_role_readonly')
         forbidden = ('writer_can_select', 'writer_can_update', 'writer_can_delete',
                      'writer_can_truncate', 'reader_can_insert',
+                     'reader_can_update', 'reader_can_delete', 'reader_can_truncate',
+                     'writer_can_temp', 'reader_can_temp',
                      'writer_can_schema_create', 'reader_can_schema_create')
         need(type(witness) is dict and
              witness.get('witness_schema') == 'lab-postgres-custody.v1'
