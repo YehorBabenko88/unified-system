@@ -189,8 +189,12 @@ class NativePg18V2Tests(unittest.TestCase):
             write_row(self.writer, generation=1, token=100, ids=identities,
                       fp="5"*64, content_id="6"*64)
         self.writer.rollback()
-        # Native production still requires owner-verified old-process death.
-        # Closing the old writer is the deliberate LAB quiescence proof here.
+        # Even an asserted quiescence boolean must NOT override PostgreSQL's
+        # independent observation that the prior backend is still connected.
+        with self.assertRaisesRegex(LabAdmissionRejected, "LAB_FENCE_CLAIM_DENIED"):
+            self.claim(self.other, 2, 101, self.identity(), quiescent=True)
+        # Native production additionally requires old OS-process extinction.
+        # Closing the old backend is the deliberate LAB quiescence proof here.
         self.writer.close()
         self.writer = None
         identities2 = self.identity()
