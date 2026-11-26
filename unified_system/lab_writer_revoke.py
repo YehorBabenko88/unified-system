@@ -87,7 +87,9 @@ class LabWriterRevoker:
             _need(self._last is not None, "LAB_REVOCATION_RETRY_DENIED")
             return self._last
         self._once = True
-        self._guard.revoke()
+        # Suspected remote lease loss, poisoned SQL or any shutdown attempt
+        # irrevocably denies this Root epoch before OS or SQL side effects.
+        self._guard.block_transfer()
         stages = {"child_stopped": False, "sql_fence_revoked": False,
                   "consul_released": False, "child_extinct": False,
                   "old_backend_rejected": False}
@@ -104,13 +106,45 @@ class LabWriterRevoker:
             pass
         # If normal SQL is poisoned, never enqueue revoke on the uncertain
         # writer backend. Independent C-owned cluster recovery is required.
-        try:
-            stages["sql_fence_revoked"] = (
-                await blocked(lambda: self._c.revoke_lab_fence(
-                    self._pg, generation=self._generation,
-                    token=self._token)) is True)
-        except BaseException:
-            pass
+        # C's old exported short ABI (generation, token) cannot attest
+        # exact original backend PID+start or committed inactive readback.
+        # Never silently fall back to it. C owns the sole canonical SQL
+        # implementation and will expose the reviewed backend-bound ABI;
+        # until that source is integrated the stage is deliberately UNKNOWN.
+        # Do not enqueue speculative SQL into a poisoned original executor.
+        exact_revoke = getattr(self._c, "revoke_lab_fence", None)
+        if getattr(exact_revoke, "__name__", "") == "revoke_lab_fence":
+            try:
+                # The additional mandatory backend_start is sourced only
+                # from C's original server-observed live fence receipt;
+                # never trust one supplied by a caller/JSON.
+                receipt = await blocked(lambda: self._c.revalidate_lab_fence(
+                    self._pg, identity=self._guard._identity,
+                    generation=self._generation, backend_pid=self._backend_pid))
+                if (type(receipt) is dict
+                        and receipt.get("schema") == "lab-postgres-fence-revalidation.v1"
+                        and receipt.get("scope") == "ISOLATED_LAB_ONLY"
+                        and receipt.get("owner") == self._guard._identity.owner
+                        and receipt.get("namespace") == self._guard._identity.namespace
+                        and receipt.get("generation") == self._generation
+                        and receipt.get("token") == self._token
+                        and receipt.get("backend_pid") == self._backend_pid
+                        and type(receipt.get("backend_start")) is str
+                        and bool(receipt["backend_start"])):
+                    # Only C exact backend-bound ABI can reach this call.
+                    # Old C rejects the additional kwargs: FAIL CLOSED.
+                    stages["sql_fence_revoked"] = (
+                        await blocked(lambda: exact_revoke(
+                            self._pg,
+                            owner=self._guard._identity.owner,
+                            namespace=self._guard._identity.namespace,
+                            generation=self._generation, token=self._token,
+                            backend_pid=self._backend_pid,
+                            backend_start=receipt["backend_start"])) is True)
+            except BaseException:
+                # Including TypeError from the old C signature: no SQL
+                # authorization, no compatibility fallback, no new owner.
+                pass
         # The original Consul lease is deliberately NOT released here.
         # SQL revocation and local child stop do not prove old backend
         # extinction or irreversible COMMIT. A replacement Root lease must
