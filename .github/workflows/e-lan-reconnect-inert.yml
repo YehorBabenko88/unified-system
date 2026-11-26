@@ -5,6 +5,12 @@ on:
       - 'unified_system/lan_transport.py'
       - 'unified_system/grid_writer_fence_model.py'
       - 'unified_system/grid_writer_lab_bridge.py'
+      - 'unified_system/lab_writer_authority.py'
+      - 'unified_system/lab_process_extinction.py'
+      - 'tests/test_e_lab_writer_authority_inert.py'
+      - 'tests/test_e_round11_grid_runtime_cohort_pin.py'
+      - 'tests/test_e_round17_writer_permit.py'
+      - 'tests/test_e_round19_owned_job_observer.py'
       - 'tests/test_e_lab_bridge_inert.py'
       - 'unified_system/market_data_entry_contract.py'
       - 'unified_system/lab_release.py'
@@ -52,3 +58,8 @@ jobs:
         run: python -B -m unittest discover -s tests -p test_grid_writer_fence_model.py -v
       - name: Verify LAB-only Grid v2 entrypoint and private read-capability negatives
         run: python -B -m unittest discover -s tests -p 'test_e_*_inert.py' -v
+      - name: Validate exact E Root writer and process observation contracts (no native admission)
+        run: |
+          python -B -m unittest discover -s tests -p 'test_e_round11_grid_runtime_cohort_pin.py' -v
+          python -B -m unittest discover -s tests -p 'test_e_round17_writer_permit.py' -v
+          python -B -m unittest discover -s tests -p 'test_e_round19_owned_job_observer.py' -v
