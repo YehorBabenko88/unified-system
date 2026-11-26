@@ -22,7 +22,7 @@
       "id": "A",
       "repo": "YehorBabenko88/unified-system",
       "pr": 162,
-      "head_sha": "324d6bfd85624e21213180dc66a9c67d4ac790ce",
+      "head_sha": "5bcaed7d916d72837064da9ab938e28c35695624",
       "role": "native process lifetime",
       "native_status": "NOT_VERIFIED"
     },
@@ -30,7 +30,7 @@
       "id": "B",
       "repo": "YehorBabenko88/bybit-cluster-grid",
       "pr": 300,
-      "head_sha": "8594cc8812225dee6c4f292a7692486bb443ca06",
+      "head_sha": "20656417e61d26a294809cf649c37a37906b6dcf",
       "role": "canonical Bybit market-data writer and collector",
       "native_status": "NOT_VERIFIED"
     },
@@ -46,7 +46,7 @@
       "id": "C",
       "repo": "YehorBabenko88/unified-system",
       "pr": 163,
-      "head_sha": "3046f9dbfe9b587370ba0bffbfb716b59a4f56ca",
+      "head_sha": "3bbd846dff646164903aeec2e2ef5cca7de1b9b0",
       "role": "PostgreSQL native resource fence",
       "native_status": "NOT_VERIFIED"
     },
@@ -54,16 +54,16 @@
       "id": "D",
       "repo": "YehorBabenko88/Terminan",
       "pr": 126,
-      "head_sha": "254c6888e1b6665bdf83ff42794e2389a53c8ace",
+      "head_sha": "4fd05211f10aa69108b598b0849abc842ec91899",
       "role": "canonical strategies/paper/chart",
       "native_status": "NOT_VERIFIED",
-      "component_ci": "exact HEAD 254c6888: two workflow runs IN_PROGRESS at 2026-11-26 snapshot, no concluded success"
+      "component_ci": "Round17 snapshot exact HEAD 4fd05211: 2 workflow runs success; component scope only, not full native E2E."
     },
     {
       "id": "E",
       "repo": "YehorBabenko88/unified-system",
       "pr": 164,
-      "head_sha": "5490cf118eccb27e59905a89d4c5dac2c8b3fcbc",
+      "head_sha": "d231a0ad657b7e12f89ddc9cde2ef6b5b028a125",
       "role": "Root lease, lifecycle and writer grant",
       "native_status": "NOT_VERIFIED"
     },
@@ -71,7 +71,7 @@
       "id": "F",
       "repo": "YehorBabenko88/unified-system",
       "pr": 165,
-      "head_sha_at_source_snapshot": "77429474a487b12496d86f9f8000d261bbdaee0d",
+      "head_sha_at_source_snapshot": "5570856074437362ff7b7af0306cc386ec6cff4f",
       "self_reference": "Read live PR HEAD; do not pin the SHA of the same file's future commit",
       "role": "security, Git consolidation, release qualification"
     },
@@ -404,49 +404,57 @@
         "id": "C_STOPPED_NULL",
         "severity": "P0",
         "status": "OPEN",
-        "basis": "C recover accepts state None and pg.started False, with no old owner-bound STOPPED token"
+        "basis": "C recover accepts state None and pg.started False, with no old owner-bound STOPPED token",
+        "historical_snapshot_only": true
       },
       {
         "id": "C_RESOURCE_CUSTODY",
         "severity": "P0",
         "status": "OPEN",
-        "basis": "C _STATES[pg] and E _RECOVERY_OWNERS.add(pg) are per-object; cannot exclude separate objects for same physical PG data root"
+        "basis": "C _STATES[pg] and E _RECOVERY_OWNERS.add(pg) are per-object; cannot exclude separate objects for same physical PG data root",
+        "historical_snapshot_only": true
       },
       {
         "id": "A_POSTMASTER_WITNESS",
         "severity": "P0",
         "status": "OPEN",
-        "basis": "A RetainedOsProcessWait implemented but C recovery does not import/use it around physical postmaster stop/restart"
+        "basis": "A RetainedOsProcessWait implemented but C recovery does not import/use it around physical postmaster stop/restart",
+        "historical_snapshot_only": true
       },
       {
         "id": "E_PROCESS_BIND",
         "severity": "P0",
         "status": "OPEN",
-        "basis": "E only tests exact RootProcessExtinction Python type, not authenticated exact old owner/instance/release/generation/epoch"
+        "basis": "E only tests exact RootProcessExtinction Python type, not authenticated exact old owner/instance/release/generation/epoch",
+        "historical_snapshot_only": true
       },
       {
         "id": "E_OLD_MUTABLE",
         "severity": "P0",
         "status": "OPEN",
-        "basis": "E old accepted as dict, passed to worker and read after await; mutable after validation"
+        "basis": "E old accepted as dict, passed to worker and read after await; mutable after validation",
+        "historical_snapshot_only": true
       },
       {
         "id": "B_NATIVE_ABI",
         "severity": "P0",
         "status": "OPEN",
-        "basis": "B canonical writer sync require_current() is True versus E async grant; no production-safe owner-thread grant implemented"
+        "basis": "B canonical writer sync require_current() is True versus E async grant; no production-safe owner-thread grant implemented",
+        "historical_snapshot_only": true
       },
       {
         "id": "NATIVE_PG18",
         "severity": "P0",
         "status": "OPEN",
-        "basis": "no concluded exact-head native PG18/Windows/Consul recovery E2E"
+        "basis": "no concluded exact-head native PG18/Windows/Consul recovery E2E",
+        "historical_snapshot_only": true
       },
       {
         "id": "BUILD_SECURITY",
         "severity": "P1",
         "status": "OPEN",
-        "basis": "source wheel/sdist installed imports, reproducible lock, LFS/archive historical secrets unverified"
+        "basis": "source wheel/sdist installed imports, reproducible lock, LFS/archive historical secrets unverified",
+        "historical_snapshot_only": true
       }
     ],
     "frozen_file_sha256": {
@@ -463,7 +471,7 @@
       "entrypoint": "NOT_VERIFIED",
       "sql_schema": "NOT_VERIFIED",
       "dependency_lock": "NOT_VERIFIED",
-      "os_evidence": "INCOMPLETE",
+      "os_evidence": "HISTORICAL_ROUND16_SNAPSHOT",
       "postgres_e2e": "NOT_VERIFIED",
       "writer_abi": "BLOCKED",
       "full_e2e": "NOT_VERIFIED"
@@ -501,5 +509,141 @@
       }
     },
     "contract": "docs/git-consolidation/round16-native-cohort-gates.md"
+  },
+  "round17": {
+    "schema": "unified.f.round17-source-cohort.v1",
+    "date": "2026-11-26",
+    "snapshot_atomic": false,
+    "exact_heads": {
+      "A": "5bcaed7d916d72837064da9ab938e28c35695624",
+      "B": "20656417e61d26a294809cf649c37a37906b6dcf",
+      "B_CUSTODY": "39a6cf4d8c039ca99bbfc00ca7cc2359bef5c60c",
+      "C": "3bbd846dff646164903aeec2e2ef5cca7de1b9b0",
+      "D": "4fd05211f10aa69108b598b0849abc842ec91899",
+      "E": "d231a0ad657b7e12f89ddc9cde2ef6b5b028a125",
+      "META": "902db7e28571e851de09d127a9ebad6f120efecd"
+    },
+    "source_blobs": [
+      {
+        "owner": "A",
+        "path": "unified_system/runtime_process.py",
+        "head": "5bcaed7d916d72837064da9ab938e28c35695624",
+        "blob": "3c948515932584ae72fd3acaa0d5c21f877a50bf"
+      },
+      {
+        "owner": "C",
+        "path": "unified_system/lab_pg_recovery.py",
+        "head": "3bbd846dff646164903aeec2e2ef5cca7de1b9b0",
+        "blob": "877ca501323c4387883084851564e814f9920d45"
+      },
+      {
+        "owner": "C",
+        "path": "unified_system/lab_pg_fence.py",
+        "head": "3bbd846dff646164903aeec2e2ef5cca7de1b9b0",
+        "blob": "d525940eba4b2a57c15b9127854c839000e6af0b"
+      },
+      {
+        "owner": "C",
+        "path": "unified_system/lab_postgres.py",
+        "head": "3bbd846dff646164903aeec2e2ef5cca7de1b9b0",
+        "blob": "35c71f64b6a37ca100a7c608192150edfc09288d"
+      },
+      {
+        "owner": "E",
+        "path": "unified_system/lab_pg_recovery_lane.py",
+        "head": "d231a0ad657b7e12f89ddc9cde2ef6b5b028a125",
+        "blob": "954d6af2d35578340730db44f725d2758c2643e3"
+      },
+      {
+        "owner": "E",
+        "path": "unified_system/lab_writer_revoke.py",
+        "head": "d231a0ad657b7e12f89ddc9cde2ef6b5b028a125",
+        "blob": "5cff0321098c17f9241c58f974645cf76ff4dd14"
+      },
+      {
+        "owner": "B",
+        "path": "grid/canonical_lab_fenced_writer.py",
+        "head": "20656417e61d26a294809cf649c37a37906b6dcf",
+        "blob": "8b93466a79fa234468a3cdc44106bd5e153e81c4"
+      }
+    ],
+    "integration": {
+      "pr": 166,
+      "head_sha": "9349d7f3ed93ef82d120976816b968e0b716b067",
+      "draft": true,
+      "runtime_changed": false,
+      "approval": "BLOCKED"
+    },
+    "source_capabilities": {
+      "A_retain_descendant_census": "IMPLEMENTED_READ_ONLY_INCOMPLETE",
+      "A_windows_job": "IMPLEMENTED_NOT_IN_PROCESS_DRIVER_START",
+      "A_create_suspended": "NOT_IMPLEMENTED",
+      "A_complete_extinction": "ALWAYS_DENIED",
+      "C_original_owner_and_pgdata_inode": "SOURCE_IMPLEMENTED",
+      "C_retained_postmaster": "SOURCE_IMPLEMENTED",
+      "C_process_local_physical_exclusion": "IMPLEMENTED_SINGLE_PROCESS_ONLY",
+      "C_cross_process_lock": "NOT_IMPLEMENTED",
+      "C_native_wal": "TESTS_AUTHORED_NO_CONFIRMED_RUN",
+      "E_pg_dispatch": "UNCONDITIONAL_DENY_LAB_ROOT_BOUND_EXTINCTION_NOT_IMPLEMENTED",
+      "B_protected_writer_abi": "NOT_IMPLEMENTED",
+      "D_poc_research": "SOURCE_IMPLEMENTED_NOT_HISTORICAL_PARITY"
+    },
+    "release_evidence": {
+      "git_blobs": "VERIFIED_GITHUB_CONNECTOR",
+      "source_sha256": "GRID_FROZEN_CHECKED_FROM_B_TEST_SOURCE",
+      "wheel": "NOT_VERIFIED",
+      "sdist": "NOT_VERIFIED",
+      "installed_import": "NOT_VERIFIED",
+      "entrypoint": "NOT_VERIFIED",
+      "dependency_lock": "NOT_VERIFIED",
+      "sql_schema": "NOT_VERIFIED",
+      "native_windows": "NOT_VERIFIED",
+      "native_pg18": "NOT_VERIFIED",
+      "full_e2e": "NOT_VERIFIED",
+      "security_full_history": "NOT_VERIFIED",
+      "lfs_archive": "NOT_VERIFIED",
+      "installer": "NOT_VERIFIED"
+    },
+    "workflow_first_page": {
+      "A": {
+        "queued": 18,
+        "pending": 1
+      },
+      "B": {
+        "queued": 15
+      },
+      "C": {
+        "queued": 20,
+        "pending": 2
+      },
+      "D": {
+        "success": 2
+      },
+      "E": {
+        "queued": 19,
+        "pending": 1
+      },
+      "F_at_previous_head": {
+        "queued": 14,
+        "pending": 1
+      },
+      "integration": {
+        "queued": 23,
+        "pending": 2
+      },
+      "meta": {
+        "success": 1,
+        "skipped": 1
+      }
+    },
+    "blocking_gates": [
+      "A_SUSPENDED_JOB_PROCESS_CREATION",
+      "A_FULL_OWNED_DESCENDANT_AND_LISTENER_EXTINCTION",
+      "C_INTERPROCESS_PG_RESOURCE_LOCK",
+      "E_BOUND_EXTINCTION_ISSUER_VERIFIER",
+      "B_C_E_OWNER_THREAD_WRITER_GRANT",
+      "NATIVE_PG18_E2E",
+      "PACKAGED_INSTALLED_PROVENANCE"
+    ]
   }
 }
