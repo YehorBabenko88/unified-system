@@ -341,9 +341,9 @@ def _fence_state(pg, old, deadline):
 
 
 def _crashed_control_attested(pg, deadline):
-    """Independent PG18 pg_controldata check after test-only SIGKILL.
+    """Independent PG18 pg_controldata check after test-only postmaster SIGKILL.
 
-    Only a real dirty postmaster control state can qualify the crash branch;
+    A real dirty postmaster control state qualifies the process-crash branch;
     a graceful shutdown / missing control data never counts as WAL recovery.
     """
     pg._verify_owned()
@@ -364,7 +364,7 @@ def _crashed_control_attested(pg, deadline):
 
 
 def _wal_replay_readback(pg, *, fault, log_position, deadline):
-    if fault != "POWER_LOSS_TEST":
+    if fault != "PROCESS_CRASH_TEST":
         return "CLEAN_SHUTDOWN_ONLY"
     _remaining(deadline)
     pg._verify_owned()
@@ -380,20 +380,20 @@ def _wal_replay_readback(pg, *, fault, log_position, deadline):
          and "redo starts at" in tail
          and "database system is ready to accept connections" in tail,
          "LAB_RECOVERY_WAL_REPLAY_NOT_ATTESTED")
-    return "LAB_CRASH_REPLAY_LOG_VERIFIED"
+    return "LAB_PROCESS_CRASH_WAL_REPLAY_LOG_VERIFIED"
 
 
 def _stop_started(pg, deadline, *, fault="CLEAN"):
     need(pg.started is True, "LAB_RECOVERY_NOT_STARTED")
-    need(fault in ("CLEAN", "POWER_LOSS_TEST"),
+    need(fault in ("CLEAN", "PROCESS_CRASH_TEST"),
          "LAB_RECOVERY_FAULT_MODE_INVALID")
     wait, pid, created = _retain_owned_postmaster(pg, deadline)
     log_position = 0
     try:
-        if fault == "POWER_LOSS_TEST":
-            # A physical, disposable LAB-only power-loss experiment. Never
+        if fault == "PROCESS_CRASH_TEST":
+            # A disposable LAB postmaster SIGKILL test (NOT power loss). Never
             # expose this from Root's production recovery dispatcher.
-            need(os.environ.get("LAB_C_PG18_WAL_FAULT_TEST") == "1",
+            need(os.environ.get("LAB_C_PG18_PROCESS_CRASH_TEST") == "1",
                  "LAB_RECOVERY_FAULT_INJECTION_NOT_ALLOWED")
             pg._verify_owned()
             if pg.log.exists():
@@ -406,7 +406,7 @@ def _stop_started(pg, deadline, *, fault="CLEAN"):
         need(wait.wait_exited(min(60, _remaining(deadline))) is True,
              "LAB_RECOVERY_OLD_POSTMASTER_NOT_EXITED")
         need(pg.started is False, "LAB_RECOVERY_STOP_NOT_CONFIRMED")
-        if fault == "POWER_LOSS_TEST":
+        if fault == "PROCESS_CRASH_TEST":
             _crashed_control_attested(pg, deadline)
     finally:
         wait.close()
@@ -513,10 +513,10 @@ def contain_exclusive_lab_cluster(pg, *, old, quiesced=False,
     need(quiesced is True, "LAB_RECOVERY_QUIESCENCE_REQUIRED")
     need(type(max_seconds) in (int, float) and 10 <= max_seconds <= 180,
          "LAB_RECOVERY_DEADLINE_INVALID")
-    need(type(fault) is str and fault in ("CLEAN", "POWER_LOSS_TEST"),
+    need(type(fault) is str and fault in ("CLEAN", "PROCESS_CRASH_TEST"),
          "LAB_RECOVERY_FAULT_MODE_INVALID")
     need(fault == "CLEAN" or
-         os.environ.get("LAB_C_PG18_WAL_FAULT_TEST") == "1",
+         os.environ.get("LAB_C_PG18_PROCESS_CRASH_TEST") == "1",
          "LAB_RECOVERY_FAULT_INJECTION_NOT_ALLOWED")
     old = _validate_old(old)
     deadline = time.monotonic() + max_seconds
