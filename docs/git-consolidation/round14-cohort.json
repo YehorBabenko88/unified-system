@@ -1,0 +1,262 @@
+{
+  "schema": "unified.f.round14-cohort.v1",
+  "date": "2026-11-26",
+  "snapshot_atomic": false,
+  "release": {
+    "code": "NO_GO",
+    "production": "NO_GO",
+    "real_trading": false,
+    "native_recovery": "NOT_VERIFIED",
+    "full_system_e2e": "NOT_VERIFIED"
+  },
+  "integration": {
+    "pr": 166,
+    "branch": "gpt/f-round7-root-integrated-20261126",
+    "head_sha": "9349d7f3ed93ef82d120976816b968e0b716b067",
+    "immutable_until_master_authorizes": true,
+    "allowed_test_only": "tests/test_windows_native_child_contract.py",
+    "new_runtime_included": false
+  },
+  "components": [
+    {
+      "id": "A",
+      "repo": "YehorBabenko88/unified-system",
+      "pr": 162,
+      "head_sha": "eeb991e233bb97849c947f96effd70d0e9ae2337",
+      "role": "native process lifetime",
+      "native_status": "NOT_VERIFIED"
+    },
+    {
+      "id": "B",
+      "repo": "YehorBabenko88/bybit-cluster-grid",
+      "pr": 300,
+      "head_sha": "30bf50eb70162d679f305b7cbb8286a9404193d6",
+      "role": "canonical Bybit market-data writer and collector",
+      "native_status": "NOT_VERIFIED"
+    },
+    {
+      "id": "B_CUSTODY",
+      "repo": "YehorBabenko88/bybit-cluster-grid",
+      "pr": 299,
+      "head_sha": "39a6cf4d8c039ca99bbfc00ca7cc2359bef5c60c",
+      "role": "migration custody",
+      "native_status": "NOT_VERIFIED"
+    },
+    {
+      "id": "C",
+      "repo": "YehorBabenko88/unified-system",
+      "pr": 163,
+      "head_sha": "5a049e59604d8b6a2811eb78873af5227a62df77",
+      "role": "PostgreSQL native resource fence",
+      "native_status": "NOT_VERIFIED"
+    },
+    {
+      "id": "D",
+      "repo": "YehorBabenko88/Terminan",
+      "pr": 126,
+      "head_sha": "55731b1a228738b389538ade9af607c9443cb4de",
+      "role": "canonical strategies/paper/chart",
+      "native_status": "NOT_VERIFIED",
+      "component_ci": "14/14 jobs SUCCESS reported by MASTER, not full native E2E"
+    },
+    {
+      "id": "E",
+      "repo": "YehorBabenko88/unified-system",
+      "pr": 164,
+      "head_sha": "307ed14b7fe6e5a420140fae7cfd2cf59470b6d4",
+      "role": "Root lease, lifecycle and writer grant",
+      "native_status": "NOT_VERIFIED"
+    },
+    {
+      "id": "F",
+      "repo": "YehorBabenko88/unified-system",
+      "pr": 165,
+      "head_sha_at_source_snapshot": "dfe167c237f018d085295f958da2761a7572198e",
+      "self_reference": "Read live PR HEAD; do not pin the SHA of the same file's future commit",
+      "role": "security, Git consolidation, release qualification"
+    },
+    {
+      "id": "MATH",
+      "repo": "YehorBabenko88/math",
+      "head_sha": "9e6acbd9e12a91189f57234828e31640983af553",
+      "role": "canonical computation",
+      "native_status": "NOT_VERIFIED"
+    },
+    {
+      "id": "META",
+      "repo": "YehorBabenko88/meta_analyse",
+      "pr": 86,
+      "head_sha": "902db7e28571e851de09d127a9ebad6f120efecd",
+      "role": "historical migration only",
+      "component_ci": "hosted-success-not-release"
+    }
+  ],
+  "exact_b30_source_files": [
+    {
+      "path": "grid/canonical_lab_fenced_writer.py",
+      "git_blob": "8b93466a79fa234468a3cdc44106bd5e153e81c4",
+      "size_bytes": 8543
+    },
+    {
+      "path": "grid/canonical_lab_continuous_collector.py",
+      "git_blob": "52ed338cb5e1e5641fd9cf9f401b280fc3500a9b",
+      "size_bytes": 19554
+    },
+    {
+      "path": "grid/c_lab_journal_adapter.py",
+      "git_blob": "ab93c6d421c3d3f0232060f6ded7ac01bf8eeda0",
+      "size_bytes": 6613
+    },
+    {
+      "path": "grid/c_async_fenced_writer.py",
+      "git_blob": "98ed95029785413eb8fbc5687af39ff6bd0bf2cf",
+      "size_bytes": 2273
+    }
+  ],
+  "source_qualifications": [
+    {
+      "path": "unified_system/runtime_process.py",
+      "owner": "A",
+      "commit": "eeb991e233bb97849c947f96effd70d0e9ae2337",
+      "git_blob": "b3ac50e176ab1fa7d139b6adb3006ab89a075548"
+    },
+    {
+      "path": "unified_system/lab_pg_fence.py",
+      "owner": "C",
+      "commit": "5a049e59604d8b6a2811eb78873af5227a62df77",
+      "git_blob": "fb9eed514a02ec2eb2b05ff1ca44b700fd231b56"
+    },
+    {
+      "path": "unified_system/lab_writer_revoke.py",
+      "owner": "E",
+      "commit": "307ed14b7fe6e5a420140fae7cfd2cf59470b6d4",
+      "git_blob": "45fa10af7d580d430d0f6fc87d4933c7fa961864"
+    },
+    {
+      "path": "unified_system/lab_process_extinction.py",
+      "owner": "E",
+      "commit": "307ed14b7fe6e5a420140fae7cfd2cf59470b6d4",
+      "git_blob": "f770e8e66a4fafc7fee42aed56de03b9be1c2780"
+    }
+  ],
+  "build_provenance": {
+    "git_trees": "NOT_VERIFIED",
+    "package_name": "market-data",
+    "package_version": "0.2.0.dev0_HISTORICAL_UNREVALIDATED",
+    "wheel_sha256": "NOT_BUILT_OR_NOT_ATTESTED",
+    "sdist_sha256": "NOT_BUILT_OR_NOT_ATTESTED",
+    "installed_file_sha256": "NOT_VERIFIED",
+    "installed_imports": "NOT_VERIFIED",
+    "runtime_entrypoint": "NOT_VERIFIED",
+    "cross_os_dependency_lock": "NOT_VERIFIED",
+    "python_versions": [
+      "3.11",
+      "3.12",
+      "3.13"
+    ],
+    "pg_version_target": "18",
+    "os_targets": [
+      "Windows Server 2022",
+      "Windows Server 2025",
+      "Ubuntu"
+    ],
+    "api_version": "NOT_VERIFIED",
+    "dto_schema_version": "NOT_VERIFIED",
+    "sql_schema_version": "NOT_VERIFIED",
+    "migration_version": "NOT_VERIFIED"
+  },
+  "gates": [
+    {
+      "id": "PROCESS_EXTINCTION",
+      "status": "BLOCKED",
+      "owners": [
+        "A",
+        "E"
+      ],
+      "proof": "single Root-owned native process witness with descendant+listener census; UNKNOWN never promotes"
+    },
+    {
+      "id": "BACKEND_EXTINCTION",
+      "status": "BLOCKED",
+      "owners": [
+        "C",
+        "E"
+      ],
+      "proof": "fresh independent C recovery lane with exact backend identity and WAL readback"
+    },
+    {
+      "id": "WRITER_ABI",
+      "status": "BLOCKED",
+      "owners": [
+        "B",
+        "C",
+        "E"
+      ],
+      "proof": "same-worker same-backend sealed authority; no fake sync True"
+    },
+    {
+      "id": "JOURNAL_RECOVERY",
+      "status": "BLOCKED",
+      "owners": [
+        "B",
+        "C",
+        "E"
+      ],
+      "proof": "durable checkpoint/high-water/pending and ambiguous COMMIT reconciliation"
+    },
+    {
+      "id": "BUILD_INSTALL",
+      "status": "BLOCKED",
+      "owners": [
+        "B",
+        "F"
+      ],
+      "proof": "source→wheel→sdist→install→import→entrypoint checksums"
+    },
+    {
+      "id": "SECURITY",
+      "status": "BLOCKED",
+      "owners": [
+        "F"
+      ],
+      "proof": "full-history, nested-archive, LFS, secrets and pinned CI evidence"
+    },
+    {
+      "id": "DEDUPE",
+      "status": "BLOCKED",
+      "owners": [
+        "F",
+        "B",
+        "D",
+        "E"
+      ],
+      "proof": "historical AST 178 claimed, categories 174, Grid↔Root 32 claimed versus 31 itemized; no retirement"
+    },
+    {
+      "id": "FULL_NATIVE",
+      "status": "BLOCKED",
+      "owners": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F"
+      ],
+      "proof": "independent disposable Windows+PG18 E2E with stale denial"
+    }
+  ],
+  "prohibited_duplicates": [
+    "second supervisor",
+    "second Bybit client",
+    "second SQL writer",
+    "second PaperEngine",
+    "second PostgreSQL owner",
+    "second process observer"
+  ],
+  "published_checks": {
+    "source_git_blobs": "VERIFIED_CONNECTOR_FETCH",
+    "artifact_and_runtime": "NOT_VERIFIED",
+    "new_round14_tests": "NOT_RUN"
+  }
+}
