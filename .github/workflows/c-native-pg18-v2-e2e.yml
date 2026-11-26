@@ -18,6 +18,8 @@ jobs:
       LAB_D_ROOT: ${{ github.workspace }}/upstream/terminan
       LAB_MATH_SHA: 9e6acbd9e12a91189f57234828e31640983af553
       LAB_MATH_ROOT: ${{ github.workspace }}/upstream/math/python
+      LAB_E_ROOT_SHA: 2c993d873cc53a784a64ff525465770bb5bb4a39
+      LAB_E_MODEL_BLOB_SHA: 71c74a2c0d8c1c0120412124ef1d12d53b691581
       LAB_POSTGRES_BIN: /usr/lib/postgresql/18/bin
       PYTHONDONTWRITEBYTECODE: '1'
     steps:
@@ -26,6 +28,27 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
+      - name: Load exact E-owned WriterLeaseIdentity without vendoring another type
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --proto '=https' --tlsv1.2 -fsSL \
+            "https://raw.githubusercontent.com/YehorBabenko88/unified-system/$LAB_E_ROOT_SHA/unified_system/grid_writer_fence_model.py" \
+            -o /tmp/e-exact-writer-fence-model.py
+          python - <<'PY'
+          from pathlib import Path
+          import subprocess
+          expected="71c74a2c0d8c1c0120412124ef1d12d53b691581"
+          path=Path("/tmp/e-exact-writer-fence-model.py")
+          blob=subprocess.check_output(["git","hash-object","--",str(path)],text=True).strip()
+          if blob!=expected:
+              raise SystemExit("E_MODEL_PINNED_BLOB_MISMATCH")
+          target=Path("unified_system/grid_writer_fence_model.py")
+          if target.exists():
+              raise SystemExit("E_MODEL_DUPLICATE_IMPLEMENTATION_DENIED")
+          target.write_bytes(path.read_bytes())
+          print("E_MODEL_IMPORTED_EXACT_BLOB="+blob)
+          PY
       - name: Checkout exact B canonical v2 wheel source
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
