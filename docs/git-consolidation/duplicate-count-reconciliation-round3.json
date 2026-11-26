@@ -78,5 +78,36 @@
   },
   "disposition": "INVESTIGATION_REQUIRED",
   "acceptance_rule": "Stable function-level IDs require explicit repo+path+qualname+normalized AST digest on exact source SHA; verify live consumers and no unique behavior before removal.",
-  "no_deletion_authorized": true
+  "no_deletion_authorized": true,
+  "round4_review": {
+    "observed": "2026-11-26",
+    "method": "Source report arithmetic and pinned AST instrument inspection, no full historical rerun",
+    "status": "UNRESOLVED_NO_FABRICATED_GROUPS",
+    "arithmetic": {
+      "category_total": 178,
+      "category_rows_sum": 174,
+      "unattributed_category_groups": 4,
+      "grid_unified_claimed": 32,
+      "grid_unified_five_families_sum": 31,
+      "grid_unified_unattributed": 1
+    },
+    "stable_family_ids": [
+      "GU-F01",
+      "GU-F02",
+      "GU-F03",
+      "GU-F04",
+      "GU-F05"
+    ],
+    "function_id_rule": "GU- + first 20 hex of normalized AST body sha256; emitted only by successfully completed pinned Git source job, not supplied by family claims",
+    "pinned_ast_job": {
+      "run_id": 45858738583,
+      "source_grid_sha": "c9ffdaa2af52c4d55871a48655a77a0c669da80f",
+      "source_unified_sha": "f05f9a73581b1c15c4cc78da2801c9f2f5dd08d0",
+      "artifact_name": "f-grid-root-ast-inventory",
+      "state": "QUEUED_AT_REVIEW",
+      "absence_of_result": "No function-level IDs asserted"
+    },
+    "interpretation": "The missing four category entries and missing one Grid-Unified detailed group may be presentation/reporting omissions or source-method differences; not assignable without exact AST report and original scope.",
+    "deletion_authorized": false
+  }
 }
