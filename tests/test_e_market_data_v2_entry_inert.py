@@ -117,6 +117,15 @@ class RootGridV2InertTests(unittest.TestCase):
                 self.grant, {"programs":{"market_data":old}},
                 self.legacy, "market_data")
 
+    def test_v2_cannot_escape_lab_or_reuse_collector_manifest(self):
+        for key,value in (("schema","unified.lab-release.collector.v2"),
+                          ("mode","TRUSTED_RELEASE"),("mode","PRODUCTION")):
+            m=copy.deepcopy(self.manifest)
+            m[key]=value
+            with self.subTest(key=key,value=value),self.assertRaises(
+                    MarketDataEntryRejected):
+                entry_for_manifest(m)
+
     def test_missing_or_injected_module_hash_refused(self):
         for path in V2_FILES:
             changed = copy.deepcopy(self.manifest)
