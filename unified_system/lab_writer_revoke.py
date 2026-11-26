@@ -73,9 +73,10 @@ class LabWriterRevoker:
     async def revoke(self, *, blocking_timeout=10.0):
         """Always attempt every cleanup stage; never claim partial success.
 
-        Order: deny local guard; stop OS child via independent Root lane;
-        attempt C SQL revoke only through the original SQL worker; verify
-        child/fence. Defer Consul release until independent old-backend and
+        Order: deny local guard; retain C live exact-backend identity on
+        original SQL worker; stop OS child on independent Root lane; invoke
+        C exact durable SQL revoke using the privately retained incarnation;
+        verify old backend state. This is NOT owner transfer permission. Defer Consul release until independent old-backend and
         old-process extinction, WAL reconciliation and trusted Root finalize.
         If PostgreSQL is down,
         SQL revocation is UNKNOWN, not successful. On recovery the C fence
@@ -100,11 +101,6 @@ class LabWriterRevoker:
             # Timeout means UNKNOWN, never assume the write/stop was cancelled.
             return await self._executor.call(call, timeout=blocking_timeout)
 
-        try:
-            await self._stop_lane.stop_owned(self._handle,timeout=blocking_timeout)
-            stages["child_stopped"] = True
-        except BaseException:
-            pass
         # If normal SQL is poisoned, never enqueue revoke on the uncertain
         # writer backend. Independent C-owned cluster recovery is required.
         # C's old exported short ABI (generation, token) cannot attest
@@ -125,37 +121,66 @@ class LabWriterRevoker:
                                            "token", "backend_pid", "backend_start")))
         except (TypeError, ValueError):
             exact_abi = False
-        if exact_abi:
+        # Snapshot the EXACT old active backend while it still exists.
+        # The Root epoch is already irreversibly transfer-blocked above;
+        # obtaining this C receipt cannot issue another operation permit.
+        # No arbitrary/caller-provided backend_start is ever accepted.
+        frozen_backend_start = None
+        if exact_abi and not self._executor.poisoned:
             try:
-                # The additional mandatory backend_start is sourced only
-                # from C's original server-observed live fence receipt;
-                # never trust one supplied by a caller/JSON.
                 receipt = await blocked(lambda: self._c.revalidate_lab_fence(
                     self._pg, identity=self._guard._identity,
                     generation=self._generation, backend_pid=self._backend_pid))
+                identity = self._guard._identity
                 if (type(receipt) is dict
                         and receipt.get("schema") == "lab-postgres-fence-revalidation.v1"
                         and receipt.get("scope") == "ISOLATED_LAB_ONLY"
-                        and receipt.get("owner") == self._guard._identity.owner
-                        and receipt.get("namespace") == self._guard._identity.namespace
+                        and receipt.get("resource_id") == "grid-market-data-primary"
+                        and receipt.get("owner") == identity.owner
+                        and receipt.get("namespace") == identity.namespace
                         and receipt.get("generation") == self._generation
                         and receipt.get("token") == self._token
                         and receipt.get("backend_pid") == self._backend_pid
+                        and receipt.get("session_id") == identity.session_id
+                        and receipt.get("instance_id") == identity.instance_id
+                        and receipt.get("node_incarnation_id") == identity.node_incarnation_id
+                        and receipt.get("source_sha256") == identity.source_sha256
+                        and receipt.get("schema_sha256") == identity.schema_sha256
+                        and receipt.get("db_backend_observed") is True
+                        and receipt.get("db_fence_current_at_read") is True
+                        and receipt.get("native_writer_admitted") is False
+                        and receipt.get("trading_authorized") is False
                         and type(receipt.get("backend_start")) is str
                         and bool(receipt["backend_start"])):
-                    # Only C exact backend-bound ABI can reach this call.
-                    # Old C rejects the additional kwargs: FAIL CLOSED.
-                    stages["sql_fence_revoked"] = (
-                        await blocked(lambda: exact_revoke(
-                            self._pg,
-                            owner=self._guard._identity.owner,
-                            namespace=self._guard._identity.namespace,
-                            generation=self._generation, token=self._token,
-                            backend_pid=self._backend_pid,
-                            backend_start=receipt["backend_start"])) is True)
+                    frozen_backend_start = receipt["backend_start"]
             except BaseException:
-                # Including TypeError from the old C signature: no SQL
-                # authorization, no compatibility fallback, no new owner.
+                # Unknown, timeout, poisoned executor or stale backend:
+                # do NOT infer the original identity from a missing PID.
+                pass
+
+        # Stop only AFTER capturing the original server-observed
+        # incarnation. A successful stop may remove pg_stat_activity and
+        # make live-only C revalidation impossible by design.
+        try:
+            await self._stop_lane.stop_owned(self._handle,timeout=blocking_timeout)
+            stages["child_stopped"] = True
+        except BaseException:
+            pass
+        if exact_abi and frozen_backend_start is not None:
+            try:
+                stages["sql_fence_revoked"] = (
+                    await blocked(lambda: exact_revoke(
+                        self._pg,
+                        owner=self._guard._identity.owner,
+                        namespace=self._guard._identity.namespace,
+                        generation=self._generation,
+                        token=self._token,
+                        backend_pid=self._backend_pid,
+                        backend_start=frozen_backend_start,
+                        timeout=blocking_timeout)) is True)
+            except BaseException:
+                # C owns the original exact UPDATE and fresh durable readback.
+                # Unknown COMMIT or lock timeout is never assumed successful.
                 pass
         # The original Consul lease is deliberately NOT released here.
         # SQL revocation and local child stop do not prove old backend
