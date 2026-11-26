@@ -1,0 +1,36 @@
+name: F exact-SHA registry and historical secret triage tests
+
+on:
+  pull_request:
+    paths:
+      - 'tools/git_consolidation_snapshot.py'
+      - 'tools/git_history_secret_triage.py'
+      - 'tests/test_git_consolidation_snapshot.py'
+      - 'tests/test_git_history_secret_triage.py'
+      - 'docs/git-consolidation/**'
+      - '.github/workflows/f-git-security.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  independent-negative-tests:
+    name: F negative tests
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: ['3.11', '3.12', '3.13']
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Offline read-only inventory and fake-token binary tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest discover -s tests -p 'test_git_*.py' -v
