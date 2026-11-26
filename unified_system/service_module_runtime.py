@@ -64,7 +64,8 @@ def serve_module(grant,config,manifest,module_id):
    # C-owned transactional fence + native legacy process quiescence are not
    # admitted yet. Source pinning must never silently enable a second writer.
    from .grid_writer_fence_model import native_writer_admission
-   native_writer_admission()
+   need(native_writer_admission(source,manifest,config) is True,
+        'NATIVE_DB_FENCE_NOT_ADMITTED')
   module=importlib.import_module(entry)
   return module.main(arguments,startup_admission=source)
  previous=sys.argv
