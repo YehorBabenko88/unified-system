@@ -37,8 +37,12 @@ class NativeCRecoveryTests(unittest.TestCase):
         self.writer = None
         self.old = None
         self.addCleanup(self.cleanup)
+        # Retain the original C-locked object even if initdb fails before
+        # initialize() returns. Cleanup must never delete an unverified root.
         self.pg = LabPostgres(os.environ["LAB_POSTGRES_BIN"], self.root,
-                              min_major=18).initialize().start()
+                              min_major=18)
+        self.pg.initialize()
+        self.pg.start()
         self.assertEqual(self.pg.major, 18)
         self.assertNotEqual(self.pg.port, 5432)
         self.pg.provision(canonical_schema())
@@ -115,6 +119,49 @@ class NativeCRecoveryTests(unittest.TestCase):
             recover_exclusive_lab_cluster(
                 MaliciousPg(), old=self.old,
                 quiesced=True, max_seconds=180)
+
+    def test_initialization_failure_keeps_kernel_lock_until_safe_abort(self):
+        # Real native OS file lock, fault injected BEFORE the initdb child is
+        # launched. This is not a simulated WAL-replay or power-loss test.
+        from unittest.mock import patch
+        from unified_system import lab_pg_recovery as c
+        extra=Path(tempfile.mkdtemp(prefix="c-round14-recovery-"))
+        extra.chmod(0o700)
+        original=LabPostgres(os.environ["LAB_POSTGRES_BIN"],extra,min_major=18)
+        try:
+            with patch.object(Path,"mkdir",
+                              side_effect=PermissionError("C_NATIVE_PRE_INITDB_FAULT")):
+                with self.assertRaisesRegex(PermissionError,
+                                            "C_NATIVE_PRE_INITDB_FAULT"):
+                    original.initialize()
+            self.assertEqual(original._initdb_phase,"NOT_STARTED")
+            locked=extra/".lab-postgres-recovery.lock"
+            self.assertTrue(locked.is_file())
+            code=(
+                "import fcntl,os,sys\n"
+                "fd=os.open(sys.argv[1],os.O_RDWR)\n"
+                "try:\n"
+                " fcntl.flock(fd,fcntl.LOCK_EX|fcntl.LOCK_NB)\n"
+                "except BlockingIOError:\n"
+                " sys.exit(77)\n"
+                "sys.exit(0)\n"
+            )
+            outsider=subprocess.run(
+                [sys.executable,"-B","-c",code,str(locked)],
+                capture_output=True,text=True,timeout=10,check=False)
+            self.assertEqual(outsider.returncode,77,outsider.stderr)
+            original._initdb_phase="RUNNING_OR_EXIT_UNKNOWN"
+            with self.assertRaisesRegex(
+                    LabAdmissionRejected,"LAB_NATIVE_PG_BOOTSTRAP_ABORT_UNKNOWN"):
+                c._dispose_native_pg18_fixture(original)
+            self.assertTrue(locked.is_file())
+            original._initdb_phase="NOT_STARTED"
+            self.assertTrue(c._dispose_native_pg18_fixture(original))
+        finally:
+            # Never remove unknown/actively owned OS resources in cleanup.
+            root_key=(*original._root_identity,str(extra.resolve(strict=True)))
+            if root_key not in c._BOOTSTRAP_ROOTS and root_key not in c._STATES:
+                shutil.rmtree(extra)
 
     def test_direct_lifecycle_entrypoints_rejected_without_c_lock(self):
         # No caller, even with the LabPostgres instance, may bypass C's
