@@ -147,10 +147,10 @@ def recover_exclusive_lab_cluster(pg, *, old, streams=(), quiesced=False,
     old = _validate_old(old)
     deadline = time.monotonic() + max_seconds
     with _GUARD:
-        state = _STATES.get(id(pg))
+        state = _STATES.get(pg)
         if state is not None:
             raise LabAdmissionRejected("LAB_RECOVERY_REENTRY_OR_POISONED")
-        _STATES[id(pg)] = "IN_PROGRESS"
+        _STATES[pg] = "IN_PROGRESS"
     try:
         _remaining(deadline)
         _require_pg(pg)
@@ -199,9 +199,9 @@ def recover_exclusive_lab_cluster(pg, *, old, streams=(), quiesced=False,
         # Keep the C-owned recovery object permanently quarantined after
         # an unknown outcome. No retry while a previous worker may be alive.
         with _GUARD:
-            _STATES[id(pg)] = "POISONED"
+            _STATES[pg] = "POISONED"
         raise
     finally:
         with _GUARD:
-            if _STATES.get(id(pg)) == "IN_PROGRESS":
-                _STATES[id(pg)] = "COMPLETE_DENIED"
+            if _STATES.get(pg) == "IN_PROGRESS":
+                _STATES[pg] = "COMPLETE_DENIED"
