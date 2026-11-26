@@ -254,6 +254,48 @@ class BridgeTests(unittest.TestCase):
                                     "LAB_C_FENCE_REVALIDATION_REJECTED"):
             self.assess()
 
+    def test_new_writer_cohort_not_silently_pinned_under_old_b(self):
+        from unified_system.grid_writer_lab_bridge import (
+            verified_grid_writer_adapter_pin,
+        )
+        with self.assertRaisesRegex(
+            ResourceFenceBlocked,"LAB_GRID_WRITER_COHORT_NOT_PINN"):
+            verified_grid_writer_adapter_pin(
+                self.source,self.manifest,self.source_root)
+
+    def test_explicit_writer_pin_still_never_grants_native(self):
+        from unified_system.grid_writer_lab_bridge import (
+            GRID_WRITER_PATH,GRID_WRITER_COMMIT,
+            verified_grid_writer_adapter_pin,
+        )
+        import hashlib
+        manifest=dict(self.manifest)
+        manifest["sources"]={
+            "market_data":dict(self.manifest["sources"]["market_data"],
+                               commit=GRID_WRITER_COMMIT)}
+        manifest["files"]=dict(self.manifest["files"])
+        raw=b"synthetic-grid-writer-inert"
+        path=self.source_root/GRID_WRITER_PATH
+        path.parent.mkdir(parents=True,exist_ok=True)
+        path.write_bytes(raw)
+        manifest["files"]["sources/market_data/"+GRID_WRITER_PATH]={
+            "sha256":hashlib.sha256(raw).hexdigest(),"bytes":len(raw)}
+        source=Source(self.source_root)
+        original=source.source_scope
+        source.source_scope=lambda module,actual,commit: (
+            self.source_root if commit==GRID_WRITER_COMMIT
+            and module=="market_data" and actual==self.source_root
+            else original(module,actual,commit))
+        result=verified_grid_writer_adapter_pin(
+            source,manifest,self.source_root)
+        self.assertEqual(result["source_commit"],GRID_WRITER_COMMIT)
+        self.assertIs(result["native_admitted"],False)
+        self.assertIs(result["trading_authorized"],False)
+        path.write_bytes(b"tamper")
+        with self.assertRaises(ResourceFenceBlocked):
+            verified_grid_writer_adapter_pin(
+                source,manifest,self.source_root)
+
     def test_direct_native_bridge_admission_always_denied(self):
         with self.assertRaisesRegex(ResourceFenceBlocked,
                                     "NATIVE_DB_FENCE_NOT_ADMITTED"):
