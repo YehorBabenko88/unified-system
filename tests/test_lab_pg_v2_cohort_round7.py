@@ -28,6 +28,7 @@ from unified_system.lab_pg_fence import (
 from unified_system.lab_simulation_admission import LabAdmissionRejected
 
 B_SHA="3265d441717f2bc01b82e759b5d8df06cb516fa4"
+B_JOURNAL_BLOB="3bfc4daad0eea65982e3c7c92610d9660afe0e71"
 D_SHA="05fef5e9527ae02149017b586d311da8870baf25"
 MATH_SHA="9e6acbd9e12a91189f57234828e31640983af553"
 E_SHA="2c993d873cc53a784a64ff525465770bb5bb4a39"
@@ -297,6 +298,36 @@ class Round7OwnedPg18Integrated(unittest.TestCase):
         exact=verify_existing_lab_checkpoint(self.pg,**query,
                                               stream_id="bybit:BTCUSDT:1m")
         self.assertEqual(exact["state"],"EXACT_ALREADY_ACKNOWLEDGED")
+        self.assertEqual(exact["symbol"],"BTCUSDT")
+        # Actual B COwnedLabJournal must validate the unmodified C receipt.
+        # Import only the exact source-pinned B adapter; no wheel shadowing.
+        journal_source=self.b/"grid/c_lab_journal_adapter.py"
+        if git_blob(journal_source)!=B_JOURNAL_BLOB:
+            raise AssertionError("ROUND11_B_JOURNAL_PIN_MISMATCH")
+        import asyncio
+        import importlib.util
+        import types
+        # This package is deliberately *not* in the market-data wheel.
+        # Isolate source checkout under a private module prefix.
+        if "_c_round11_grid" not in sys.modules:
+            package=types.ModuleType("_c_round11_grid")
+            package.__path__=[str(self.b/"grid")]
+            sys.modules["_c_round11_grid"]=package
+        spec=importlib.util.spec_from_file_location(
+            "_c_round11_grid.c_lab_journal_adapter",journal_source)
+        loaded=importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(loaded)
+        owner_journal=loaded.COwnedLabJournal(
+            c_module=__import__("unified_system.lab_pg_checkpoint",
+                                fromlist=["verify_existing_lab_checkpoint"]),
+            pg=self.pg,identity=self.identity,generation=1,
+            backend_pid=self.pid(self.primary),
+            stream_id="bybit:BTCUSDT:1m")
+        minute_key=dict(symbol="BTCUSDT",start_ms=record["start_ms"],
+                        fingerprint=record["dataset_fingerprint"],
+                        content_id=digest(record))
+        verified=asyncio.run(owner_journal.exact_existing_checkpoint(minute_key))
+        self.assertEqual(verified,exact)
         self.assertFalse(exact["native_admitted"])
         self.assertEqual(verify_existing_lab_checkpoint(
             self.pg,**dict(query,content_id="b"*64),

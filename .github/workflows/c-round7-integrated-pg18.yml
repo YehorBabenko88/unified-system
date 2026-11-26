@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
-      LAB_GRID_SHA: 3265d441717f2bc01b82e759b5d8df06cb516fa4
+      LAB_GRID_SHA: 6d27510b9f6c2bfa918d36b3b743e57678a184fe
       LAB_GRID_ROOT: ${{ github.workspace }}/upstream/grid
       LAB_D_SHA: 05fef5e9527ae02149017b586d311da8870baf25
       LAB_D_ROOT: ${{ github.workspace }}/upstream/terminan
@@ -20,6 +20,7 @@ jobs:
       LAB_E_SHA: 2c993d873cc53a784a64ff525465770bb5bb4a39
       LAB_E_MODEL_BLOB_SHA: 71c74a2c0d8c1c0120412124ef1d12d53b691581
       LAB_B_ADAPTER_BLOB_SHA: 8b93466a79fa234468a3cdc44106bd5e153e81c4
+      LAB_B_JOURNAL_BLOB_SHA: 3bfc4daad0eea65982e3c7c92610d9660afe0e71
       LAB_POSTGRES_BIN: /usr/lib/postgresql/18/bin
       PYTHONDONTWRITEBYTECODE: '1'
     steps:
@@ -57,6 +58,7 @@ jobs:
           test "$(git -C upstream/terminan rev-parse HEAD)" = "$LAB_D_SHA"
           test "$(git -C upstream/math rev-parse HEAD)" = "$LAB_MATH_SHA"
           test "$(git hash-object upstream/grid/grid/canonical_lab_fenced_writer.py)" = "$LAB_B_ADAPTER_BLOB_SHA"
+          test "$(git hash-object upstream/grid/grid/c_lab_journal_adapter.py)" = "$LAB_B_JOURNAL_BLOB_SHA"
           curl --proto '=https' --tlsv1.2 -fsSL \
             "https://raw.githubusercontent.com/YehorBabenko88/unified-system/$LAB_E_SHA/unified_system/grid_writer_fence_model.py" \
             -o /tmp/c-e-model.py
