@@ -201,7 +201,11 @@ class ProcessDriver:
             d=self._load(operation_id)
             if (d['module_id'],d['version'],d['release_id'])!=(spec.module_id,spec.version,release_id):raise ValueError('operation identity mismatch')
             if capability is not None and d.get('market_data_epoch')!=capability['epoch']:raise ValueError('dependency epoch changed')
-            if not self.alive(operation_id):raise ValueError('ambiguous prior process start')
+            # Re-attaching by operation ID requires positive same-incarnation OS
+            # evidence; alive() maps access-denied/invalid records to False and
+            # cannot be a process-ownership or recovery proof.
+            if self.owned_process_state(operation_id) != 'STILL_ALIVE':
+                raise ValueError('ambiguous prior process start')
             return operation_id
         d=dict(pid=None,created=None,module_id=spec.module_id,version=spec.version,release_id=release_id,
                token=secrets.token_hex(32),state='STARTING')
@@ -322,17 +326,27 @@ class ProcessDriver:
             return
         d=self._load(handle)
         if d['state']=='STOPPED':
-            if handle in self.children:self.children[handle].wait(timeout=5)
-            if handle in self.children and self.children[handle].stdin:self.children[handle].stdin.close()
+            # Historical STOPPED JSON is not OS extinction; a retained exact
+            # process exit is the only local process-level confirmation.
+            # STARTING/prestart authorization rejection has no child to kill,
+            # but must not be converted to an OS-exit receipt.
+            if d['pid'] is not None:
+                if self.owned_process_state(handle) != 'EXTINCT':
+                    raise ValueError('stopped record OS extinction unverified')
+            if handle in self.children and self.children[handle].stdin:
+                self.children[handle].stdin.close()
             return
         if d['pid'] is None:
             child=self.children.get(handle)
             if child is None or child.poll() is None:raise ValueError('ambiguous prior process start')
         identity=_identity(d['pid'])
         if identity is None:
-            if handle in self.children:
-                self.children[handle].wait(timeout=5)
-                if self.children[handle].stdin:self.children[handle].stdin.close()
+            # PID disappearance or failed lookup by itself proves nothing.
+            # Only the retained original Popen wait confirms child exit.
+            if self.owned_process_state(handle) != 'EXTINCT':
+                raise ValueError('owned process extinction unverified')
+            if handle in self.children and self.children[handle].stdin:
+                self.children[handle].stdin.close()
             d['state']='STOPPED';self._save(handle,d);return
         if identity!=d['created']:raise ValueError('refuse unrelated process stop')
         if os.name=='nt':
@@ -354,5 +368,8 @@ class ProcessDriver:
             finally:os.close(fd)
         if handle in self.children:
             self.children[handle].wait(timeout=5)
-            if self.children[handle].stdin:self.children[handle].stdin.close()
+        if self.owned_process_state(handle) != 'EXTINCT':
+            raise ValueError('owned process extinction unverified')
+        if handle in self.children and self.children[handle].stdin:
+            self.children[handle].stdin.close()
         d['state']='STOPPED';self._save(handle,d)
