@@ -137,7 +137,6 @@ def recover_exclusive_lab_cluster(pg, *, old, streams=(), quiesced=False,
     """
     # Validate exact class BEFORE any method, including ownership checks.
     need(type(pg) is LabPostgres, "LAB_RECOVERY_PG_TYPE_INVALID")
-    _require_pg(pg)
     need(quiesced is True, "LAB_RECOVERY_QUIESCENCE_REQUIRED")
     need(type(max_seconds) in (int, float) and 10 <= max_seconds <= 300,
          "LAB_RECOVERY_DEADLINE_INVALID")
@@ -153,6 +152,7 @@ def recover_exclusive_lab_cluster(pg, *, old, streams=(), quiesced=False,
             raise LabAdmissionRejected("LAB_RECOVERY_REENTRY_OR_POISONED")
         _STATES[id(pg)] = "IN_PROGRESS"
     try:
+        _require_pg(pg)
         # If E stop-only already completed on this same owner object, do
         # not stop a second time; verify and restart through C only.
         if pg.started is True:
