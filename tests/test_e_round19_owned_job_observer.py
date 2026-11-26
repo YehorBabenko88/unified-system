@@ -81,12 +81,32 @@ class EOwnedJobObservationTests(unittest.TestCase):
         child._job=SimpleNamespace(_handle=99,_assigned=True)
         driver.children["original"]=child
         driver._load=lambda _: dict(pid=4242,created=[1,2],state="STOPPED")
+        # A old process-only observation MUST NOT be used for retained Job.
         driver.owned_process_state=lambda _: EXTINCT
+        driver.owned_job_stop_state=lambda _: "UNKNOWN"
         result=observe_owned_process_extinction(driver,"original")
-        self.assertEqual(result.state,EXTINCT)
+        self.assertEqual(result.state,"UNKNOWN")
         self.assertFalse(result.listener_owner_verified)
         self.assertFalse(result.native_admitted)
-        self.assertEqual(result.reason,"A_RETAINED_HANDLE_EXITED_LISTENER_UNVERIFIED")
+        self.assertEqual(result.reason,"A_ROOT_OS_IDENTITY_UNKNOWN")
+
+    @unittest.skipUnless(_OwnedWindowsChild is not None,
+                         "A Windows Job runtime not integrated on E branch")
+    def test_original_job_zero_members_remains_non_native(self):
+        driver=self._driver()
+        child=object.__new__(_OwnedWindowsChild)
+        child.pid=4242
+        child._handle=88
+        child._job=SimpleNamespace(_handle=99,_assigned=True)
+        driver.children["original"]=child
+        driver._load=lambda _: dict(pid=4242,created=[1,2],state="STOPPED")
+        driver.owned_process_state=lambda _: "UNKNOWN"
+        driver.owned_job_stop_state=lambda _: EXTINCT
+        result=observe_owned_process_extinction(driver,"original")
+        self.assertEqual(result.state,EXTINCT)
+        self.assertEqual(result.reason,"A_ORIGINAL_JOB_ZERO_MEMBERS_LISTENER_UNVERIFIED")
+        self.assertFalse(result.listener_owner_verified)
+        self.assertFalse(result.native_admitted)
 
 
 if __name__=="__main__":
