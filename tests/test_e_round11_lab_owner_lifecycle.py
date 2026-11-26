@@ -13,6 +13,7 @@ from unified_system.grid_writer_fence_model import ResourceFenceBlocked
 from unified_system.lab_owner_executor import LabOwnerExecutor
 from unified_system.lab_writer_revoke import LabWriterRevoker
 from unified_system.lab_root_child_witness import RootGridChildWitness
+from unified_system.lab_root_stop_lane import LabRootStopLane
 
 class SimulatedCStaleFence(Exception):
     """Test-only stand-in for C's exported LabAdmissionRejected type."""
@@ -119,6 +120,12 @@ class RevocationStateTests(unittest.IsolatedAsyncioTestCase):
         owner._once = False
         owner._last = None
         owner._executor = executor
+        class StopLane:
+            async def stop_owned(self, handle, *, timeout):
+                owner._driver.stop(handle)
+            async def old_child_extinct(self, handle, *, timeout):
+                return owner._driver.alive(handle) is False
+        owner._stop_lane = StopLane()
         return owner, events, executor
 
     async def test_all_owner_revocations_complete_and_checked(self):
@@ -144,6 +151,23 @@ class RevocationStateTests(unittest.IsolatedAsyncioTestCase):
             self.assertFalse(result.old_backend_rejected)
             self.assertIn("release", events)
             self.assertIn("alive", events)
+        finally:
+            executor.close()
+
+    async def test_poisoned_sql_lane_does_not_block_independent_os_stop(self):
+        owner, events, executor = self.make_revoker()
+        try:
+            # No SQL is allowed after an ambiguous previous COMMIT.
+            with executor._lock:
+                executor._poisoned = True
+            result = await owner.revoke(blocking_timeout=1)
+            self.assertEqual(result.result, "PARTIAL_DENIED")
+            self.assertTrue(result.child_stopped)
+            self.assertTrue(result.child_extinct)
+            self.assertFalse(result.sql_fence_revoked)
+            self.assertIn("stop", events)
+            self.assertIn("alive", events)
+            self.assertNotIn("sql", events)
         finally:
             executor.close()
 
