@@ -254,6 +254,7 @@ class Connection:
         self.channels=channels;self.locks={k:threading.Lock() for k in channels}
         self.cv=threading.Condition(threading.RLock());self.closed=False;self.error=None
         self.closed_event=threading.Event();self.created_at=time.monotonic()
+        self.close_source='NONE'
         self.last_rx=self.created_at
         self.outgoing=deque();self.incoming=deque();self.queued_bytes=0
         self.tx_streams={};self.rx_streams={};self.reserved=0;self.control_held=0
@@ -269,7 +270,7 @@ class Connection:
         try:
             while not self.closed_event.wait(HEARTBEAT_INTERVAL):
                 self._emit('PING',0,'control')
-        except (OSError,ValueError) as exc:self.close(str(exc))
+        except (OSError,ValueError) as exc:self.close(str(exc),source='HEARTBEAT')
 
     def _current(self):
         _need(not self.closed,'DISCONNECTED')
@@ -361,7 +362,7 @@ class Connection:
                     with self.cv:
                         self.queued_bytes-=len(job['payload']);self.owner.memory.release(len(job['payload']))
                         job['done'].set();self.cv.notify_all()
-        except (OSError,ValueError) as exc:self.close(str(exc))
+        except (OSError,ValueError) as exc:self.close(str(exc),source='SENDER')
 
     def _reader(self,channel):
         try:
@@ -413,7 +414,8 @@ class Connection:
                             _need(s is not None and s['cls']==cls and s['received']+len(payload)<=s['grant'],'CREDIT_BOUNDS')
                             s['received']+=len(payload)
                         self.incoming.append(Delivery(self.peer_id,stream,cls,h['message_id'],payload,kind));self.cv.notify_all()
-        except (OSError,ValueError) as exc:self.close(str(exc))
+        except (OSError,ValueError) as exc:
+            self.close(str(exc),source='READER_'+channel.upper())
 
     def receive(self,*,deadline=None,cancel=None):
         return self._receive('APP',deadline=deadline,cancel=cancel)
@@ -439,10 +441,12 @@ class Connection:
         if grant is not None:self._emit('CREDIT',delivery.stream_id,'control',value=grant)
         return delivery
 
-    def close(self,reason='CLOSED'):
+    def close(self,reason='CLOSED',*,source='OTHER'):
         with self.cv:
             if self.closed:return
-            self.closed=True;self.error=reason;self.closed_event.set()
+            self.closed=True;self.error=reason
+            self.close_source=source if source in ('READER_CONTROL','READER_DATA','SENDER','HEARTBEAT','OTHER') else 'OTHER'
+            self.closed_event.set()
             for job in self.outgoing:
                 job['error']='DISCONNECTED';job['done'].set()
                 self.owner.memory.release(len(job['payload']));self.queued_bytes-=len(job['payload'])
