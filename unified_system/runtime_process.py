@@ -515,6 +515,68 @@ class OwnedWindowsJob:
 
 
 
+
+class _OwnedWindowsChild:
+    """Popen-compatible retained process owner, not an arbitrary PID wrapper."""
+
+    def __init__(self, pid, kernel_handle, job):
+        if type(pid) is not int or pid <= 1 or type(kernel_handle) is not int:
+            raise ValueError('owned Windows child identity invalid')
+        self.pid = pid
+        self._handle = kernel_handle
+        self._job = job
+        self.stdin = None
+        self._exit_code = None
+
+    def poll(self):
+        if self._exit_code is not None:
+            return self._exit_code
+        from ctypes import wintypes as w
+        k = ctypes.WinDLL('kernel32', use_last_error=True)
+        k.WaitForSingleObject.argtypes = [w.HANDLE,w.DWORD]
+        k.WaitForSingleObject.restype = w.DWORD
+        k.GetExitCodeProcess.argtypes = [w.HANDLE,ctypes.POINTER(w.DWORD)]
+        k.GetExitCodeProcess.restype = w.BOOL
+        state = k.WaitForSingleObject(self._handle, 0)
+        if state == 0x102:
+            return None
+        if state != 0:
+            raise OSError('owned Windows child wait failed')
+        code = w.DWORD()
+        if not k.GetExitCodeProcess(self._handle, ctypes.byref(code)):
+            raise OSError('owned Windows child exit status unavailable')
+        self._exit_code = int(code.value)
+        return self._exit_code
+
+    def wait(self, timeout=None):
+        from ctypes import wintypes as w
+        if timeout is not None and (type(timeout) not in (int,float)
+                                    or not math.isfinite(timeout) or timeout < 0):
+            raise ValueError('owned Windows child wait timeout invalid')
+        k = ctypes.WinDLL('kernel32', use_last_error=True)
+        k.WaitForSingleObject.argtypes = [w.HANDLE,w.DWORD]
+        k.WaitForSingleObject.restype = w.DWORD
+        millis = 0xffffffff if timeout is None else min(0xfffffffe,int(timeout*1000))
+        result = k.WaitForSingleObject(self._handle, millis)
+        if result == 0x102:
+            raise subprocess.TimeoutExpired(['owned Windows child'], timeout)
+        if result != 0:
+            raise OSError('owned Windows child wait failed')
+        return self.poll()
+
+    def close_owned_handles(self):
+        if self._handle is None: return
+        k = ctypes.WinDLL('kernel32', use_last_error=True)
+        from ctypes import wintypes as w
+        k.CloseHandle.argtypes = [w.HANDLE]
+        k.CloseHandle.restype = w.BOOL
+        # Closing this private Job may terminate descendants. Only A's exact
+        # owned Job created before the process ran is ever closed here.
+        self._job.close()
+        k.CloseHandle(self._handle)
+        self._handle = None
+
+
 def _launch_owned_windows_job_process(argv, cwd, env):
     """Launch a new subprocess suspended and attach before any user code.
 
@@ -571,7 +633,6 @@ def _launch_owned_windows_job_process(argv, cwd, env):
     ) + '\0'
     env_buffer = ctypes.create_unicode_buffer(environment)
     created = False
-    resumed = False
     try:
         # CREATE_SUSPENDED | CREATE_UNICODE_ENVIRONMENT | CREATE_NO_WINDOW
         # Creation cannot execute any process code until ResumeThread.
@@ -591,8 +652,23 @@ def _launch_owned_windows_job_process(argv, cwd, env):
         # the original trusted CreateProcessW PROCESS_INFORMATION pair.
         if kernel.ResumeThread(info.thread) != 1:
             raise ValueError('Windows suspended resume failed')
-        resumed = True
-        return int(info.pid), job
+        from subprocess import _winapi
+        # Retain a duplicated SYNCHRONIZE-capable kernel handle after the
+        # original PROCESS_INFORMATION pair is closed. Do not return a PID-
+        # only pseudo-Popen; wait()/poll() must target the same OS object.
+        duplicate = w.HANDLE()
+        kernel.GetCurrentProcess.argtypes = []
+        kernel.GetCurrentProcess.restype = w.HANDLE
+        kernel.DuplicateHandle.argtypes = [w.HANDLE,w.HANDLE,w.HANDLE,ctypes.POINTER(w.HANDLE),w.DWORD,w.BOOL,w.DWORD]
+        kernel.DuplicateHandle.restype = w.BOOL
+        here = kernel.GetCurrentProcess()
+        if not kernel.DuplicateHandle(here,info.process,here,ctypes.byref(duplicate),0,False,0x2):
+            raise ValueError('Windows retained child handle unavailable')
+        try:
+            return _OwnedWindowsChild(int(info.pid), int(duplicate.value), job)
+        except BaseException:
+            kernel.CloseHandle(duplicate)
+            raise
     except BaseException:
         if created and info.process:
             kernel.TerminateProcess(info.process, 1)
