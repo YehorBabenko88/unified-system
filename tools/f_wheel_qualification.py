@@ -11,6 +11,8 @@ import configparser
 import csv
 import hashlib
 import io
+import os
+import contextlib
 import pathlib
 import re
 import stat
@@ -42,19 +44,121 @@ def _safe_member(name: str) -> tuple[str, ...]:
     return parts
 
 
-def _installed_bytes(root: pathlib.Path, parts: tuple[str, ...]) -> bytes:
-    path = root
-    for part in parts:
-        path = path / part
-        if path.is_symlink():
-            raise ValueError("installed symlink")
+@contextlib.contextmanager
+def _root_fd(installed_root):
+    """Retain the original directory inode for every installed-file open.
+
+    This is POSIX-only forensic inspection, NOT a protected runtime install.
+    A Windows protected-handle implementation must be separately reviewed.
+    """
+    if os.name != "posix" or not hasattr(os, "O_NOFOLLOW") or not hasattr(os, "O_DIRECTORY"):
+        raise ValueError("protected directory-fd inspection unsupported")
+    path = pathlib.Path(installed_root)
+    if path.is_symlink():
+        raise ValueError("installed root symlink")
+    fd = os.open(path, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC)
     try:
-        resolved = path.resolve(strict=True)
-        if not resolved.is_relative_to(root) or not resolved.is_file():
-            raise ValueError("installed path escapes root or is not a file")
-        return resolved.read_bytes()
-    except (FileNotFoundError, NotADirectoryError) as exc:
-        raise ValueError("installed member absent") from exc
+        before = os.fstat(fd)
+        after = os.stat(path, follow_symlinks=False)
+        if not stat.S_ISDIR(before.st_mode) or (before.st_dev, before.st_ino) != (after.st_dev, after.st_ino):
+            raise ValueError("installed root identity changed")
+        yield fd
+    finally:
+        os.close(fd)
+
+
+def _installed_bytes(root_fd: int, parts: tuple[str, ...]) -> bytes:
+    """Read through retained directory FDs; reject symlink replacement races."""
+    if not parts or any('/' in part or part in ('', '.', '..') for part in parts):
+        raise ValueError("invalid installed file path")
+    fd = os.dup(root_fd)
+    try:
+        for part in parts[:-1]:
+            next_fd = os.open(part, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC, dir_fd=fd)
+            os.close(fd)
+            fd = next_fd
+        file_fd = os.open(parts[-1], os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC, dir_fd=fd)
+        try:
+            original = os.fstat(file_fd)
+            if not stat.S_ISREG(original.st_mode) or original.st_size > _MAX_ARCHIVE_BYTES:
+                raise ValueError("installed member is not a bounded regular file")
+            chunks = []
+            remaining = _MAX_ARCHIVE_BYTES + 1
+            while remaining:
+                chunk = os.read(file_fd, min(1024 * 1024, remaining))
+                if not chunk:
+                    break
+                chunks.append(chunk)
+                remaining -= len(chunk)
+            if remaining == 0:
+                raise ValueError("installed member exceeds byte budget")
+            final = os.fstat(file_fd)
+            fields = lambda x: (x.st_dev, x.st_ino, x.st_size, x.st_mtime_ns, x.st_ctime_ns)
+            if fields(original) != fields(final):
+                raise ValueError("installed member modified during inspection")
+            return b''.join(chunks)
+        finally:
+            os.close(file_fd)
+    except (OSError, FileNotFoundError) as exc:
+        raise ValueError("installed member inaccessible or replaced") from exc
+    finally:
+        os.close(fd)
+
+
+def _installed_closure(root_fd: int) -> set[str]:
+    """Reject unrecorded import-shadowing files and all untrusted bytecode."""
+    discovered = set()
+    def walk(parent_fd, prefix):
+        with os.scandir(parent_fd) as iterator:
+            entries = list(iterator)
+        for entry in entries:
+            name = entry.name
+            current = prefix + (name,)
+            _safe_member('/'.join(current))
+            if entry.is_symlink():
+                raise ValueError("installed closure contains symlink")
+            if entry.is_dir(follow_symlinks=False):
+                sub = os.open(name, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC, dir_fd=parent_fd)
+                try:
+                    walk(sub, current)
+                finally:
+                    os.close(sub)
+            elif entry.is_file(follow_symlinks=False):
+                if name.endswith(('.pyc', '.pyo', '.pth', '.egg-link')) or name in ('sitecustomize.py', 'usercustomize.py'):
+                    raise ValueError("untrusted installed import or bytecode")
+                discovered.add('/'.join(current))
+            else:
+                raise ValueError("unsupported installed closure node")
+    walk(root_fd, ())
+    return discovered
+
+
+def _wheel_bytes_snapshot(wheel) -> bytes:
+    """Hash and ZipFile must inspect precisely this ONE immutable bytes object."""
+    if not hasattr(os, "O_NOFOLLOW"):
+        raise ValueError("safe wheel descriptor inspection unsupported")
+    fd = os.open(wheel, os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC)
+    try:
+        first = os.fstat(fd)
+        if not stat.S_ISREG(first.st_mode) or first.st_size > _MAX_ARCHIVE_BYTES + 1024 * 1024:
+            raise ValueError("wheel is not a bounded regular file")
+        chunks = []
+        remaining = _MAX_ARCHIVE_BYTES + 1024 * 1024 + 1
+        while remaining:
+            chunk = os.read(fd, min(1024 * 1024, remaining))
+            if not chunk:
+                break
+            chunks.append(chunk)
+            remaining -= len(chunk)
+        if remaining == 0:
+            raise ValueError("wheel exceeds byte budget")
+        end = os.fstat(fd)
+        fields = lambda x: (x.st_dev, x.st_ino, x.st_size, x.st_mtime_ns, x.st_ctime_ns)
+        if fields(first) != fields(end):
+            raise ValueError("wheel changed while reading")
+        return b''.join(chunks)
+    finally:
+        os.close(fd)
 
 
 def qualify_wheel(
@@ -82,14 +186,12 @@ def qualify_wheel(
     if expected_entrypoints is not None and (not isinstance(expected_entrypoints, dict)
                                               or not expected_entrypoints):
         raise ValueError("invalid entrypoint pin")
-    root = pathlib.Path(installed_root).resolve(strict=True)
-    if not root.is_dir():
-        raise ValueError("installed root is not a directory")
     wheel_path = pathlib.Path(wheel)
-    if _digest(wheel_path.read_bytes()) != expected_sha256:
+    wheel_bytes = _wheel_bytes_snapshot(wheel_path)
+    if _digest(wheel_bytes) != expected_sha256:
         raise ValueError("wheel digest mismatch")
 
-    with zipfile.ZipFile(wheel_path, "r") as archive:
+    with _root_fd(installed_root) as root_fd, zipfile.ZipFile(io.BytesIO(wheel_bytes), "r") as archive:
         entries = archive.infolist()
         if not entries or len(entries) > _MAX_ARCHIVE_ENTRIES:
             raise ValueError("wheel member count invalid")
@@ -159,10 +261,11 @@ def qualify_wheel(
         # pip rewrites the INSTALLED RECORD: it adds INSTALLER, scripts,
         # direct_url.json, and often un-hashed __pycache__ entries. The wheel
         # RECORD and installed RECORD are different sources of evidence.
-        installed_record_bytes = _installed_bytes(root, _safe_member(record_name))
+        installed_record_bytes = _installed_bytes(root_fd, _safe_member(record_name))
         installed_rows = list(csv.reader(io.StringIO(installed_record_bytes.decode("utf-8"), newline="")))
         installed_seen: set[str] = set()
         auxiliary_unhashed = 0
+        recorded_closure = set()
         for row in installed_rows:
             if len(row) != 3:
                 raise ValueError("installed RECORD row invalid")
@@ -173,6 +276,7 @@ def qualify_wheel(
             if name == record_name:
                 if encoded or size:
                     raise ValueError("installed RECORD self-hash invalid")
+                recorded_closure.add(name)
                 continue
             if name.startswith("../../bin/"):
                 # Strict pip --target script path only; other venv schemes
@@ -184,20 +288,30 @@ def qualify_wheel(
                 parts = ("bin", script)
             else:
                 parts = _safe_member(name)
-            data = _installed_bytes(root, parts)
+            normalized_installed = '/'.join(parts)
+            permitted_installer_metadata = {
+                dist_dir + "/INSTALLER", dist_dir + "/REQUESTED", dist_dir + "/direct_url.json",
+            }
+            if name not in payload and not name.startswith("../../bin/") and name not in permitted_installer_metadata:
+                raise ValueError("unexpected non-wheel installed member")
+            if normalized_installed in recorded_closure:
+                raise ValueError("duplicate normalized installed path")
+            recorded_closure.add(normalized_installed)
+            data = _installed_bytes(root_fd, parts)
             if name in payload and data != payload[name]:
                 raise ValueError("wheel member changed during install")
             if not encoded and not size:
                 if (not name.endswith(".pyc") or "__pycache__" not in parts
                         or name in payload):
                     raise ValueError("unhashed installed runtime member")
-                auxiliary_unhashed += 1
-                continue
+                raise ValueError("unverified installed bytecode")
             actual = "sha256=" + base64.urlsafe_b64encode(hashlib.sha256(data).digest()).decode().rstrip("=")
             if encoded != actual or size != str(len(data)):
                 raise ValueError("installed RECORD integrity mismatch")
         if installed_seen.intersection(payload.keys()) != payload.keys():
             raise ValueError("installed RECORD omits wheel member")
+        if _installed_closure(root_fd) != recorded_closure:
+            raise ValueError("installed closure has unrecorded or shadowing files")
         for name, expected in source_files.items():
             if name not in payload or _digest(payload[name]) != expected or name.endswith("/RECORD"):
                 raise ValueError("source bytes mismatch or missing runtime module")
