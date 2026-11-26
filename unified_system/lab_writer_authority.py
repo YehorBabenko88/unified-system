@@ -160,6 +160,67 @@ class LabWriterAuthority:
         self._writer_grant = grant
         return grant
 
+    async def issue_operation_permit(self, *, executor, operation_id,
+                                     content_id, package_identity, entrypoint):
+        """Issue a bounded non-bool operation capability from this Root owner.
+
+        Issuance is inert unless the original, protected LabWriterGrant was
+        admitted. C's attested backend_start is read from its real SQL fence.
+        The only SQL writer remains B; a permit is not a DB authorization.
+        """
+        import re
+        from .service_bootstrap import ProtectedActivation
+        _need(type(executor) is LabOwnerExecutor and executor is self._executor
+              and not executor.poisoned,
+              "LAB_OPERATION_EXECUTOR_MISMATCH")
+        _need(type(operation_id) is str
+              and re.fullmatch(r"[0-9a-f]{32}", operation_id) is not None
+              and type(content_id) is str
+              and re.fullmatch(r"[0-9a-f]{64}", content_id) is not None,
+              "LAB_OPERATION_IDENTITY_REJECTED")
+        _need(type(package_identity) is str
+              and re.fullmatch(r"[0-9a-f]{64}", package_identity) is not None
+              and entrypoint == "grid.canonical_lab_fenced_writer"
+              and type(entrypoint) is str,
+              "LAB_OPERATION_PACKAGE_IDENTITY_REJECTED")
+        grant = self._writer_grant
+        _need(type(grant) is LabWriterGrant
+              and not grant._revoked and not self._revoked,
+              "LAB_OPERATION_ORIGINAL_ROOT_GRANT_REQUIRED")
+        _need(await grant.require_write_current() is grant,
+              "LAB_OPERATION_GRANT_STALE")
+        protected=self._source._grant
+        _need(type(protected) is ProtectedActivation
+              and protected.require_current() is True,
+              "LAB_OPERATION_PROTECTED_ROOT_REQUIRED")
+        def read_backend():
+            return self._c.revalidate_lab_fence(
+                self._pg, identity=self._identity,
+                generation=self._generation, backend_pid=self._backend_pid)
+        receipt=await executor.call(read_backend,timeout=10.0)
+        _need(type(receipt) is dict
+              and receipt.get("schema")=="lab-postgres-fence-revalidation.v1"
+              and receipt.get("backend_pid")==self._backend_pid
+              and type(receipt.get("backend_start")) is str
+              and bool(receipt["backend_start"])
+              and receipt.get("owner")==self._identity.owner
+              and receipt.get("namespace")==self._identity.namespace
+              and receipt.get("generation")==self._generation
+              and receipt.get("token")==self._identity.token
+              and receipt.get("session_id")==self._identity.session_id
+              and receipt.get("source_sha256")==self._identity.source_sha256
+              and receipt.get("schema_sha256")==self._identity.schema_sha256
+              and receipt.get("db_backend_observed") is True
+              and receipt.get("db_fence_current_at_read") is True,
+              "LAB_OPERATION_C_BACKEND_UNVERIFIED")
+        _need(not self._revoked and not grant._revoked
+              and protected.require_current() is True
+              and self._source.require_current() is True,
+              "LAB_OPERATION_ISSUANCE_REVOKED")
+        return LabWriterOperationPermit(
+            _ISSUANCE_SEAL, grant, executor, operation_id, content_id,
+            package_identity, entrypoint, receipt["backend_start"])
+
     def revoke(self):
         # Local deny first; SQL/Consul/OS require the separate Root revoker.
         self._revoked = True
@@ -200,6 +261,8 @@ class LabWriterAuthority:
                   and receipt.get("generation") == self._generation
                   and receipt.get("token") == self._identity.token
                   and receipt.get("backend_pid") == self._backend_pid
+              and type(receipt.get("backend_start")) is str
+              and bool(receipt.get("backend_start"))
                   and receipt.get("session_id") == self._identity.session_id
                   and receipt.get("source_sha256") == self._identity.source_sha256
                   and receipt.get("schema_sha256") == self._identity.schema_sha256
@@ -292,3 +355,74 @@ class LabWriterGrant:
             self.revoke()
             self._authority.revoke()
             raise
+
+
+class LabWriterOperationPermit:
+    """One Root-issued, one-operation, owner-thread typed LAB capability.
+
+    A synchronous local identity gate cannot replace the C SQL fence. B must
+    validate it inside its original SQL transaction both before and after
+    actual SQL, with the C fence still enforcing the durable generation.
+    """
+    __slots__=("_grant","_executor","_thread","_operation_id",
+               "_content_id","_package_identity","_entrypoint","_backend_start",
+               "_owner","_namespace","_generation","_token","_epoch",
+               "_backend_pid","_used","_revoked")
+
+    def __init__(self,seal,grant,executor,operation_id,content_id,
+                 package_identity,entrypoint,backend_start):
+        _need(seal is _ISSUANCE_SEAL and type(grant) is LabWriterGrant
+              and grant._authority._writer_grant is grant
+              and not grant._revoked and not grant._authority._revoked
+              and type(executor) is LabOwnerExecutor
+              and executor is grant._authority._executor,
+              "LAB_OPERATION_NOT_ROOT_ISSUED")
+        a=grant._authority
+        self._grant,self._executor=grant,executor
+        self._thread=None
+        self._operation_id,self._content_id=operation_id,content_id
+        self._package_identity,self._entrypoint=package_identity,entrypoint
+        self._backend_start=backend_start
+        self._owner,self._namespace=a._identity.owner,a._identity.namespace
+        self._generation,self._token=a._generation,a._identity.token
+        self._epoch,self._backend_pid=a._epoch,a._backend_pid
+        self._used=False
+        self._revoked=False
+
+    def revoke(self):
+        self._revoked=True
+
+    def require_current(self, *, executor, operation_id, content_id,
+                        package_identity, entrypoint, backend_pid,
+                        backend_start):
+        """Synchronous and IO-free check, MUST run in original SQL worker."""
+        from threading import get_ident
+        a=self._grant._authority
+        _need(type(self) is LabWriterOperationPermit
+              and not self._used and not self._revoked
+              and not self._grant._revoked and not a._revoked
+              and a._writer_grant is self._grant
+              and a._executor is self._executor
+              and executor is self._executor
+              and self._executor.owner_thread_id==get_ident()
+              and not self._executor.poisoned,
+              "LAB_OPERATION_WRONG_OWNER_OR_REVOKED")
+        _need(self._operation_id==operation_id
+              and self._content_id==content_id
+              and self._package_identity==package_identity
+              and self._entrypoint==entrypoint
+              and self._backend_pid==backend_pid
+              and self._backend_start==backend_start
+              and self._generation==a._generation
+              and self._token==a._identity.token
+              and self._epoch==a._epoch
+              and self._owner==a._identity.owner
+              and self._namespace==a._identity.namespace,
+              "LAB_OPERATION_IDENTITY_CHANGED")
+        return self
+
+    def consume(self, **kwargs):
+        """One-way post-SQL validation; denial leaves C transaction to abort."""
+        self.require_current(**kwargs)
+        self._used=True
+        return self
