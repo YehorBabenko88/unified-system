@@ -197,7 +197,7 @@ class NativePg18V2Tests(unittest.TestCase):
             "SELECT backend_start FROM pg_catalog.pg_stat_activity "
             f"WHERE pid={pid}")
 
-    def test_old_lab_backend_exact_owner_termination_and_no_implicit_promotion(self):
+    def test_old_lab_backend_observation_does_not_authorize_takeover(self):
         from unified_system.lab_pg_fence import (
             observe_old_lab_backend, terminate_old_lab_backend)
         ids = self.identity()
@@ -207,24 +207,20 @@ class NativePg18V2Tests(unittest.TestCase):
         kwargs = dict(owner=_OWNER, namespace=_NAMESPACE, generation=1,
                       token=100, backend_pid=pid, backend_start=start)
         self.assertEqual(observe_old_lab_backend(self.pg, **kwargs), "STILL_ALIVE")
-        self.assertEqual(observe_old_lab_backend(
-            self.pg, **dict(kwargs, token=101)), "UNKNOWN")
-        self.assertEqual(terminate_old_lab_backend(
-            self.pg, **dict(kwargs, token=101)), "UNKNOWN")
+        # No safe PID+start atomic actuator exists: STOP is intentionally
+        # fail-closed, and must never terminate or grant during uncertainty.
+        self.assertEqual(terminate_old_lab_backend(self.pg, **kwargs), "UNKNOWN")
         self.assertEqual(observe_old_lab_backend(self.pg, **kwargs), "STILL_ALIVE")
-        # Owner-only backend termination MUST NOT imply native admission.
-        self.assertEqual(terminate_old_lab_backend(self.pg, **kwargs), "EXTINCT")
-        self.assertEqual(observe_old_lab_backend(self.pg, **kwargs), "EXTINCT")
         with self.assertRaisesRegex(LabAdmissionRejected, "LAB_FENCE_CLAIM_DENIED"):
             self.claim(self.other, 2, 101, self.identity())
         self.assertTrue(revoke_lab_fence(self.pg, generation=1, token=100))
-        self.assertTrue(self.claim(self.other, 2, 101, self.identity()))
-        # Stale session is unusable, even if its connection object remains.
-        with self.assertRaises(self.psycopg.OperationalError):
-            with self.writer.cursor() as cur:
-                cur.execute("SELECT 1")
+        with self.assertRaisesRegex(LabAdmissionRejected, "LAB_FENCE_CLAIM_DENIED"):
+            self.claim(self.other, 2, 101, self.identity())
         self.writer.close()
         self.writer = None
+        self.assertEqual(observe_old_lab_backend(self.pg, **kwargs), "EXTINCT")
+        # This SQL-only observation is not Root/Consul/OS extinction proof.
+        self.assertTrue(self.claim(self.other, 2, 101, self.identity()))
 
     def test_old_lab_backend_foreign_identity_and_access_errors_fail_closed(self):
         from unified_system.lab_pg_fence import (
