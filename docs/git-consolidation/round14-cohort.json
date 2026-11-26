@@ -22,7 +22,7 @@
       "id": "A",
       "repo": "YehorBabenko88/unified-system",
       "pr": 162,
-      "head_sha": "5bcaed7d916d72837064da9ab938e28c35695624",
+      "head_sha": "8b066e373690f43befe107ff7aa474c270c8ad4c",
       "role": "native process lifetime",
       "native_status": "NOT_VERIFIED"
     },
@@ -30,7 +30,7 @@
       "id": "B",
       "repo": "YehorBabenko88/bybit-cluster-grid",
       "pr": 300,
-      "head_sha": "20656417e61d26a294809cf649c37a37906b6dcf",
+      "head_sha": "9e0d57c4c0f2d01bc381ada090b62d23566b32aa",
       "role": "canonical Bybit market-data writer and collector",
       "native_status": "NOT_VERIFIED"
     },
@@ -46,7 +46,7 @@
       "id": "C",
       "repo": "YehorBabenko88/unified-system",
       "pr": 163,
-      "head_sha": "3bbd846dff646164903aeec2e2ef5cca7de1b9b0",
+      "head_sha": "3f0d3410ac708da9776e5ad1407d864adcde34b0",
       "role": "PostgreSQL native resource fence",
       "native_status": "NOT_VERIFIED"
     },
@@ -54,16 +54,16 @@
       "id": "D",
       "repo": "YehorBabenko88/Terminan",
       "pr": 126,
-      "head_sha": "4fd05211f10aa69108b598b0849abc842ec91899",
+      "head_sha": "89022d7885d279bb1fd2f695b59f2c243b431ad2",
       "role": "canonical strategies/paper/chart",
       "native_status": "NOT_VERIFIED",
-      "component_ci": "Round17 snapshot exact HEAD 4fd05211: 2 workflow runs success; component scope only, not full native E2E."
+      "component_ci": "Exact Round19 D89022 HEAD: 1 successful workflow, 1 failed workflow; two Python3.12 build jobs fail, complete log root cause not F-owned."
     },
     {
       "id": "E",
       "repo": "YehorBabenko88/unified-system",
       "pr": 164,
-      "head_sha": "d231a0ad657b7e12f89ddc9cde2ef6b5b028a125",
+      "head_sha": "1c2edb2564c48a1348d3ad4ee94fe8fa0b425b18",
       "role": "Root lease, lifecycle and writer grant",
       "native_status": "NOT_VERIFIED"
     },
@@ -71,7 +71,7 @@
       "id": "F",
       "repo": "YehorBabenko88/unified-system",
       "pr": 165,
-      "head_sha_at_source_snapshot": "5570856074437362ff7b7af0306cc386ec6cff4f",
+      "head_sha_at_source_snapshot": "f6b36c814dd5612df164db28cf43139822bb886e",
       "self_reference": "Read live PR HEAD; do not pin the SHA of the same file's future commit",
       "role": "security, Git consolidation, release qualification"
     },
@@ -859,6 +859,117 @@
       "number": 166,
       "sha": "9349d7f3ed93ef82d120976816b968e0b716b067",
       "changed": false
+    },
+    "code": "NO_GO",
+    "production": "NO_GO"
+  },
+  "round19": {
+    "schema": "unified.f.round19-offline-wheel-hardening.v1",
+    "date": "2026-11-26",
+    "snapshot_atomic": false,
+    "heads": {
+      "A": "8b066e373690f43befe107ff7aa474c270c8ad4c",
+      "B": "9e0d57c4c0f2d01bc381ada090b62d23566b32aa",
+      "C": "3f0d3410ac708da9776e5ad1407d864adcde34b0",
+      "D": "89022d7885d279bb1fd2f695b59f2c243b431ad2",
+      "E": "1c2edb2564c48a1348d3ad4ee94fe8fa0b425b18",
+      "B_CUSTODY": "39a6cf4d8c039ca99bbfc00ca7cc2359bef5c60c",
+      "META": "902db7e28571e851de09d127a9ebad6f120efecd"
+    },
+    "source_blobs": {
+      "A": {
+        "path": "unified_system/runtime_process.py",
+        "head": "8b066e373690f43befe107ff7aa474c270c8ad4c",
+        "blob": "99986aae5e675d4e22a2fcd24089da652f0ae546",
+        "historical_SCM_extinction": "DENIED"
+      },
+      "C": {
+        "path": "unified_system/lab_pg_recovery.py",
+        "head": "3f0d3410ac708da9776e5ad1407d864adcde34b0",
+        "blob": "a7f5989803c3c5f7dd0c8987815c8e56371c114b",
+        "PG18_native": "NOT_VERIFIED"
+      },
+      "C_postgres": {
+        "path": "unified_system/lab_postgres.py",
+        "head": "3f0d3410ac708da9776e5ad1407d864adcde34b0",
+        "blob": "cfe8334c41e26a61716f2d4514e3ee677d99f349"
+      },
+      "E": {
+        "path": "unified_system/lab_writer_authority.py",
+        "head": "1c2edb2564c48a1348d3ad4ee94fe8fa0b425b18",
+        "blob": "ed966cc79aee3da33a5c658737486139c16b7e3c",
+        "issuance": "DENIED_LAB_OPERATION_INSTALLED_WHEEL_UNVERIFIED"
+      },
+      "B_manifest": {
+        "path": "pyproject.toml",
+        "head": "9e0d57c4c0f2d01bc381ada090b62d23566b32aa",
+        "blob": "4fb4e72360605cd92b3afab3837015b4ac29dace"
+      },
+      "B_writer": {
+        "path": "grid/canonical_lab_fenced_writer.py",
+        "head": "9e0d57c4c0f2d01bc381ada090b62d23566b32aa",
+        "blob": "247d7fab2738e1892a05979e407f637f9df62784"
+      }
+    },
+    "B_exact_source_pins": "docs/git-consolidation/round18-b-wheel-source-pins.json",
+    "B_real_wheel": "NOT_BUILT_OR_INSTALLED_BY_F",
+    "B_sdist": "NOT_BUILT_OR_INSTALLED_BY_F",
+    "F_tool": {
+      "path": "tools/f_wheel_qualification.py",
+      "git_blob": "5abc9c5dd3aa97082d1217986d2e66a065c9c3ad",
+      "sha256": "230361e5520d57e16ba0ded262d0370a1703b25ed9b6a3363d358c6e499d5ba6",
+      "test_path": "tests/test_f_wheel_qualification.py",
+      "git_blob_tests": "4c8f5388d1492305aa1070a244ecab6d777e5106",
+      "sha256_tests": "15603094bfa6614f64bc64c289675a7c769de6e1157ce0bf9d9befb752a60a6d",
+      "tests": "34/34 PASS; Python 3.13.5; synthetic offline pip --no-index --no-deps --no-compile --target",
+      "checked_in_local_exact_git_blob": true,
+      "wheel_read": "ONE_IMMUTABLE_BYTES_SNAPSHOT",
+      "installed_read": "POSIX_ROOT_DIR_FD_OPENAT_NOFOLLOW",
+      "installed_closure": "REJECT_EXTRA_PY_PTH_PYC_UNRECORDED",
+      "platform_win": "DENIED_UNTIL_PROTECTED_NATIVE_HANDLE",
+      "root_writer_authority": false
+    },
+    "source_to_wheel_authenticated": false,
+    "root_install_protected": false,
+    "runtime_import_origin_verified": false,
+    "dependency_lock_verified": false,
+    "sql_and_commit_proven": false,
+    "full_native_e2e_verified": false,
+    "integration": {
+      "pr": 166,
+      "head": "9349d7f3ed93ef82d120976816b968e0b716b067",
+      "changed": false,
+      "gate": "BLOCKED"
+    },
+    "ci_first_page": {
+      "A": {
+        "queued": 18,
+        "pending": 1
+      },
+      "B": {
+        "queued": 12,
+        "pending": 3
+      },
+      "C": {
+        "queued": 19,
+        "pending": 2
+      },
+      "D": {
+        "success": 1,
+        "failure": 1
+      },
+      "E": {
+        "queued": 19,
+        "pending": 1
+      },
+      "F_at_initial_round19": {
+        "queued": 17,
+        "pending": 1
+      },
+      "integration": {
+        "queued": 23,
+        "pending": 2
+      }
     },
     "code": "NO_GO",
     "production": "NO_GO"
