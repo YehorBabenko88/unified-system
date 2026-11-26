@@ -59,11 +59,27 @@ def _win_api():
     return k,w
 
 
+def _win_creation_time(k,w,handle):
+    """OS creation timestamp from the original retained kernel process handle.
+
+    QueryFullProcessImageNameW can fail after process exit. Unlike PID/name
+    lookup, GetProcessTimes remains bound to the original kernel object.
+    """
+    a,b,c,d=(w.FILETIME() for _ in range(4))
+    if not k.GetProcessTimes(handle,ctypes.byref(a),ctypes.byref(b),
+                             ctypes.byref(c),ctypes.byref(d)):
+        raise ValueError(
+            f'original Windows process creation time unavailable Win32={ctypes.get_last_error()}')
+    return str((a.dwHighDateTime<<32)|a.dwLowDateTime)
+
+
 def _win_identity(k,w,handle):
-    a,b,c,d=(w.FILETIME() for _ in range(4));buf=ctypes.create_unicode_buffer(32768);size=w.DWORD(len(buf))
-    if not k.GetProcessTimes(handle,ctypes.byref(a),ctypes.byref(b),ctypes.byref(c),ctypes.byref(d)):raise ValueError('process identity unavailable')
-    if not k.QueryFullProcessImageNameW(handle,0,buf,ctypes.byref(size)):raise ValueError('process executable unavailable')
-    return [str((a.dwHighDateTime<<32)|a.dwLowDateTime),str(Path(buf.value).resolve()).casefold()]
+    creation=_win_creation_time(k,w,handle)
+    buf=ctypes.create_unicode_buffer(32768);size=w.DWORD(len(buf))
+    if not k.QueryFullProcessImageNameW(handle,0,buf,ctypes.byref(size)):
+        raise ValueError(
+            f'process executable unavailable Win32={ctypes.get_last_error()}')
+    return [creation,str(Path(buf.value).resolve()).casefold()]
 
 
 def _identity(pid):
@@ -1383,9 +1399,14 @@ class ProcessDriver:
                         or child._job._assigned is not True):
                     return 'UNKNOWN'
                 k, w = _win_api()
-                if tuple(_win_identity(k, w, child._handle)) != bound[2]:
+                if _win_creation_time(k, w, child._handle) != bound[2][0]:
                     return 'UNKNOWN'
                 process_status = k.WaitForSingleObject(child._handle, 0)
+                if process_status == 0x102:
+                    # While still live, independently verify original image
+                    # against launch-time identity, not merely creation time.
+                    if tuple(_win_identity(k, w, child._handle)) != bound[2]:
+                        return 'UNKNOWN'
                 members = child._job.active_process_count()
                 if process_status == 0 and members == 0:
                     return 'EXTINCT'
@@ -1496,10 +1517,15 @@ class ProcessDriver:
                 or d.get('release_id')!=release or d.get('token')!=token):
             raise ValueError('durable LAB release identity changed')
         k,w=_win_api()
-        if tuple(_win_identity(k,w,child._handle))!=identity:
-            raise ValueError('original process identity changed')
-        # This is the actual executable behind the original retained
-        # process handle, not a caller-supplied hash or a PID-only lookup.
+        # The creation timestamp is queried again from the ORIGINAL
+        # retained kernel handle, even after exit. Executable identity was
+        # observed from that handle while alive and issuer-bound before resume
+        # / durable publication. Never reconstruct identity from a PID or
+        # stale STOPPED JSON after process shutdown.
+        if _win_creation_time(k,w,child._handle)!=identity[0]:
+            raise ValueError('original process creation identity changed')
+        # Verify the exact retained executable path/hash recorded at launch;
+        # this independently detects subsequent replacement or tampering.
         if _sha(identity[1])!=digest:
             raise ValueError('owned executable bytes changed')
         if k.WaitForSingleObject(child._handle,0)!=0 or child._job.active_process_count()!=0:
