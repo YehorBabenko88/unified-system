@@ -316,6 +316,11 @@ class Round7OwnedPg18Integrated(unittest.TestCase):
             self.pg.dsn("lab_writer"),autocommit=True)
         with self.assertRaises(LabAdmissionRejected):
             self.claim(self.primary,generation=2,token=101)
+        # Reconnected process with previous generation/token must not write.
+        with self.assertRaises(self.psycopg.Error):
+            self.adapter(self.primary,identity=self.identity,
+                         generation=1,token=100).write(
+                record,content_id="e"*64)
         self.assertTrue(revoke_lab_fence(self.pg,generation=1,token=100))
         with self.assertRaises(LabAdmissionRejected):
             self.claim(self.primary,generation=2,token=100)
@@ -331,6 +336,18 @@ class Round7OwnedPg18Integrated(unittest.TestCase):
             backend_pid=self.pid(self.primary))
         self.assertTrue(fresh["db_fence_current_at_read"])
         self.assertFalse(fresh["root_consul_admitted"])
+        # Even after promotion, a fresh connection cannot replay old authority.
+        with self.assertRaises(self.psycopg.Error):
+            self.adapter(self.primary,identity=self.identity,
+                         generation=1,token=100).write(
+                record,content_id="f"*64)
+        # WAL integrity is a record-level invariant, not only a count.
+        from market_data import history_api
+        os.environ["MARKET_DATA_DSN"]=self.pg.dsn("lab_reader")
+        restored=history_api.immutable_minutes("BTCUSDT",1,2**63-1)
+        self.assertEqual(len(restored),1)
+        self.assertEqual(restored[0]["dataset_fingerprint"],
+                         record["dataset_fingerprint"])
         self.assertEqual(self.pg.sql("SELECT count(*) FROM provenance_minutes"),"1")
         self.assertEqual(self.pg.sql("SELECT token FROM lab_writer_fence"),"101")
 
