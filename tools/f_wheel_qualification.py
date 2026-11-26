@@ -218,7 +218,7 @@ def qualify_wheel(
         "installed_bytes_match": True,
         "installed_record_verified": True,
         "unhashed_install_auxiliary_count": auxiliary_unhashed,
-        "all_installed_bytes_authenticated": auxiliary_unhashed == 0,
+        "all_installed_bytes_authenticated": False,  # no authenticated install closure or import proof
         "source_bytes_match": True,
         "entrypoint_metadata_match": expected_entrypoints is not None,
         "import_origin_verified": False,
