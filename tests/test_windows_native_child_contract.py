@@ -677,9 +677,9 @@ class WindowsNativeSuspendedLaunchTests(unittest.TestCase):
         from unified_system.runtime_process import OwnedWindowsJob
         sentinel = self.worker.with_name('execution-sentinel')
         self.worker.write_text(
-            'import os\\n'
+            'import os\n'
             'with open(os.environ["JOB_TEST_SENTINEL"], "w") as f:'
-            ' f.write("ran")\\n',
+            ' f.write("ran")\n',
             encoding='utf-8')
         program = self.driver.programs['market_data']
         program['file_pins']['job_worker.py'] = hashlib.sha256(
@@ -701,9 +701,9 @@ class WindowsNativeSuspendedLaunchTests(unittest.TestCase):
         from unified_system.runtime import ModuleSpec
         sentinel = self.worker.with_name('resume-execution-sentinel')
         self.worker.write_text(
-            'import os\\n'
+            'import os\n'
             'with open(os.environ["JOB_TEST_SENTINEL"], "w") as f:'
-            ' f.write("ran")\\n',
+            ' f.write("ran")\n',
             encoding='utf-8')
         program = self.driver.programs['market_data']
         program['file_pins']['job_worker.py'] = hashlib.sha256(
