@@ -47,6 +47,7 @@ class LabWriterAuthority:
         "_authority", "_lease", "_source", "_identity", "_generation",
         "_pg", "_c", "_quiescence", "_backend_pid", "_postmaster",
         "_process", "_epoch", "_revoked", "_executor", "_writer_grant",
+        "_transfer_blocked",
     )
 
     def __init__(self, *, authority, lease, source, identity, generation,
@@ -96,6 +97,11 @@ class LabWriterAuthority:
         self._executor = executor
         self._epoch = secrets.token_hex(32)
         self._revoked = False
+        # Fail-closed original Root epoch latch. External Consul loss or an
+        # uncertain SQL/OS result cannot authorize another owner on expiry.
+        # Only a separate, verified C/A/Consul takeover protocol could ever
+        # admit a fresh epoch; this instance never resets the latch.
+        self._transfer_blocked = False
         self._writer_grant = None
         try:
             _need(pg._verify_owned() is None,
@@ -171,6 +177,7 @@ class LabWriterAuthority:
         """
         import re
         from .service_bootstrap import ProtectedActivation
+        _need(not self.transfer_blocked, "LAB_OPERATION_TRANSFER_BLOCKED")
         _need(type(executor) is LabOwnerExecutor and executor is self._executor
               and not executor.poisoned,
               "LAB_OPERATION_EXECUTOR_MISMATCH")
@@ -253,10 +260,27 @@ class LabWriterAuthority:
         # operation permit until F/A bind real wheel+entrypoint attestation.
         raise ResourceFenceBlocked("LAB_OPERATION_INSTALLED_WHEEL_UNVERIFIED")
 
+    @property
+    def transfer_blocked(self):
+        # Read-only status, NEVER proof that transfer has become safe.
+        return self._transfer_blocked is True or self._revoked is True
+
+    def block_transfer(self):
+        """Irreversibly quarantine this original Root epoch on uncertainty.
+
+        Local latch only: it neither alters C's durable SQL fence nor
+        consumes A's Job receipt. A replacement owner must separately prove
+        old backend/process extinction, committed exact SQL revoke,
+        reconciliation and a protected new lease/release.
+        """
+        self._transfer_blocked = True
+        self.revoke()
+
     def revoke(self):
         # Local deny first; SQL/Consul/OS require the separate Root revoker.
         # Uninitialized/forged instances must also fail CLOSED, rather
         # than masking the original denial with AttributeError.
+        self._transfer_blocked = True
         self._revoked = True
         grant = getattr(self, "_writer_grant", None)
         if type(grant) is LabWriterGrant:
@@ -265,7 +289,7 @@ class LabWriterAuthority:
     async def check(self):
         """Re-read owner state; refuse stale lease/backend/child or any outage."""
         try:
-            _need(not self._revoked, "LAB_ROOT_AUTHORITY_REVOKED")
+            _need(not self.transfer_blocked, "LAB_ROOT_AUTHORITY_REVOKED")
             _need(self._source.require_current() is True,
                   "LAB_ROOT_SOURCE_REVOKED")
             _need(await self._authority.validate(self._lease) is True,
