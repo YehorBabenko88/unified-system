@@ -1,0 +1,146 @@
+name: C Round7 targeted PG18 Grid writer Terminan (LAB only)
+on:
+  pull_request:
+permissions:
+  contents: read
+concurrency:
+  group: c-r7-native-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  owned-pg18-canonical-writer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      LAB_GRID_SHA: 29a7ac17aea548f4e40081623523173dd2afa191
+      LAB_GRID_ROOT: ${{ github.workspace }}/upstream/grid
+      LAB_D_SHA: 05fef5e9527ae02149017b586d311da8870baf25
+      LAB_D_ROOT: ${{ github.workspace }}/upstream/terminan
+      LAB_MATH_SHA: 9e6acbd9e12a91189f57234828e31640983af553
+      LAB_MATH_ROOT: ${{ github.workspace }}/upstream/math/python
+      LAB_E_SHA: 2c993d873cc53a784a64ff525465770bb5bb4a39
+      LAB_E_MODEL_BLOB_SHA: 71c74a2c0d8c1c0120412124ef1d12d53b691581
+      LAB_B_ADAPTER_BLOB_SHA: 8b93466a79fa234468a3cdc44106bd5e153e81c4
+      LAB_B_JOURNAL_BLOB_SHA: ab93c6d421c3d3f0232060f6ded7ac01bf8eeda0
+      LAB_B_COLLECTOR_BLOB_SHA: eb93d2d14be40c19ecc18c226272c1ddd894ba3c
+      LAB_B_ASYNC_WRITER_BLOB_SHA: 98ed95029785413eb8fbc5687af39ff6bd0bf2cf
+      LAB_E_OWNER_EXECUTOR_BLOB_SHA: 3697289e8be15dd77912a461041f8f247491b2ec
+      LAB_POSTGRES_BIN: /usr/lib/postgresql/18/bin
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - name: Checkout current exact C or combined non-main candidate
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Checkout frozen B writer and canonical v2 wheel source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: YehorBabenko88/bybit-cluster-grid
+          ref: ${{ env.LAB_GRID_SHA }}
+          path: upstream/grid
+          persist-credentials: false
+      - name: Checkout frozen D managed Terminan v2
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: YehorBabenko88/Terminan
+          ref: ${{ env.LAB_D_SHA }}
+          path: upstream/terminan
+          persist-credentials: false
+      - name: Checkout pinned Math source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: YehorBabenko88/math
+          ref: ${{ env.LAB_MATH_SHA }}
+          path: upstream/math
+          persist-credentials: false
+      - name: Fail closed on any source mismatch and import exact E-owned type
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C upstream/grid rev-parse HEAD)" = "$LAB_GRID_SHA"
+          test "$(git -C upstream/terminan rev-parse HEAD)" = "$LAB_D_SHA"
+          test "$(git -C upstream/math rev-parse HEAD)" = "$LAB_MATH_SHA"
+          test "$(git hash-object upstream/grid/grid/canonical_lab_fenced_writer.py)" = "$LAB_B_ADAPTER_BLOB_SHA"
+          test "$(git hash-object upstream/grid/grid/c_lab_journal_adapter.py)" = "$LAB_B_JOURNAL_BLOB_SHA"
+          test "$(git hash-object upstream/grid/grid/canonical_lab_continuous_collector.py)" = "$LAB_B_COLLECTOR_BLOB_SHA"
+          test "$(git hash-object upstream/grid/grid/c_async_fenced_writer.py)" = "$LAB_B_ASYNC_WRITER_BLOB_SHA"
+          curl --proto '=https' --tlsv1.2 -fsSL \
+            "https://raw.githubusercontent.com/YehorBabenko88/unified-system/$LAB_E_SHA/unified_system/grid_writer_fence_model.py" \
+            -o /tmp/c-e-model.py
+          test "$(git hash-object /tmp/c-e-model.py)" = "$LAB_E_MODEL_BLOB_SHA"
+          python - <<'PY'
+          from pathlib import Path
+          from subprocess import check_output
+          import os
+          target=Path("unified_system/grid_writer_fence_model.py")
+          raw=Path("/tmp/c-e-model.py").read_bytes()
+          if target.exists():
+              if target.read_bytes()!=raw:
+                  raise SystemExit("ROUND7_E_MODEL_CONFLICTING_EXISTING_TYPE")
+              print("ROUND7_EXISTING_E_MODEL_EXACT")
+          else:
+              target.write_bytes(raw)
+              print("ROUND7_E_MODEL_PINNED_IMPORT")
+          sha=check_output(["git","hash-object",str(target)],text=True).strip()
+          if sha!=os.environ["LAB_E_MODEL_BLOB_SHA"]:
+              raise SystemExit("ROUND7_E_MODEL_BLOB_VERIFY_FAILED")
+          PY
+          curl --proto '=https' --tlsv1.2 -fsSL \
+            "https://raw.githubusercontent.com/YehorBabenko88/unified-system/7e3f6cc17a82fe5acd0af000de0673607be39e0b/unified_system/lab_owner_executor.py" \
+            -o /tmp/c-e-owner-executor.py
+          test "$(git hash-object /tmp/c-e-owner-executor.py)" = "$LAB_E_OWNER_EXECUTOR_BLOB_SHA"
+          python - <<'PY'
+          from pathlib import Path
+          dest=Path("unified_system/lab_owner_executor.py")
+          raw=Path("/tmp/c-e-owner-executor.py").read_bytes()
+          if dest.exists() and dest.read_bytes()!=raw:
+              raise SystemExit("ROUND12_E_OWNER_EXECUTOR_SOURCE_CONFLICT")
+          if not dest.exists():
+              dest.write_bytes(raw)
+          PY
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - name: Install PostgreSQL 18 binaries without touching existing cluster
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo install -d /etc/postgresql-common/createcluster.d
+          echo 'create_main_cluster = false' | sudo tee /etc/postgresql-common/createcluster.d/no-main.conf
+          sudo apt-get update -q
+          sudo apt-get install -y -q postgresql-common
+          sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y
+          sudo apt-get install -y -q postgresql-18
+          "$LAB_POSTGRES_BIN/postgres" --version
+          pg_lsclusters -h || true
+      - name: Install one pinned Market Data v2 wheel and psycopg
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip wheel --no-deps --wheel-dir native-wheel upstream/grid
+          test "$(find native-wheel -maxdepth 1 -name 'market_data-*.whl' | wc -l)" -eq 1
+          python -m pip install --no-deps native-wheel/market_data-*.whl
+          python -m pip install "psycopg[binary]==3.3.6"
+          python - <<'PY'
+          from importlib.metadata import version
+          import market_data, market_data_v2
+          if version("market-data")!="0.2.0.dev0":
+              raise SystemExit("ROUND7_ONLY_ONE_V2_WHEEL_REQUIRED")
+          PY
+      - name: Execute exact two real PostgreSQL18 / Grid writer / Terminan tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -B - <<'PY'
+          import unittest
+          from tests import test_lab_pg_v2_cohort_round7
+          suite=unittest.defaultTestLoader.loadTestsFromModule(test_lab_pg_v2_cohort_round7)
+          required=suite.countTestCases()
+          if required!=2:
+              raise SystemExit(f"ROUND7_INTEGRATED_ROSTER_MISMATCH:{required}")
+          result=unittest.TextTestRunner(verbosity=2).run(suite)
+          if result.testsRun!=required or result.skipped or not result.wasSuccessful():
+              raise SystemExit("ROUND7_NATIVE_PG18_NOT_ACCEPTED")
+          print(f"ROUND7_NATIVE_PG18_CASES={result.testsRun};SKIPPED=0")
+          print("SYNTHETIC_LAB_DATA_ONLY;ROOT_NATIVE_DENIED;CODE_NO_GO;PRODUCTION_NO_GO")
+          PY

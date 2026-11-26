@@ -95,14 +95,31 @@ jobs:
           path: lab-e2e-report.json
           if-no-files-found: warn
   postgres18-lifecycle:
-    # C2: dedicated temporary PostgreSQL 18 cluster; no default cluster is
-    # created and no existing instance or port 5432 is touched.
+    # C2: isolated user-owned PostgreSQL 18 cluster. Never modify existing
+    # clusters, regardless of what the hosted image already contains.
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    env:
+      LAB_GRID_SHA: bf9cbe8949dd1a2979aa7d63a55e2df9e139d625
+      LAB_GRID_ROOT: ${{ github.workspace }}/grid-source
+      LAB_MATH_SHA: 9e6acbd9e12a91189f57234828e31640983af553
+      LAB_MATH_ROOT: ${{ github.workspace }}/math-source/python
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: YehorBabenko88/bybit-cluster-grid
+          ref: ${{ env.LAB_GRID_SHA }}
+          path: grid-source
+          persist-credentials: false
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: YehorBabenko88/math
+          ref: ${{ env.LAB_MATH_SHA }}
+          path: math-source
           persist-credentials: false
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with:
@@ -116,11 +133,27 @@ jobs:
           sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y
           sudo apt-get install -y -q postgresql-18
           /usr/lib/postgresql/18/bin/postgres --version
-          test -z "$(pg_lsclusters -h 2>/dev/null | grep '^18 ')" && echo NO_DEFAULT_18_CLUSTER
+          # Hosted runners may already contain a distro-managed PostgreSQL 18
+          # cluster.  Never stop/drop it: the LAB owns only its own pgdata.
+          pg_lsclusters -h || true
+          echo LAB_WILL_USE_SEPARATE_OWNED_CLUSTER
       - name: Lifecycle, roles, duplicates, immutability, crash recovery, cleanup
         env:
           LAB_POSTGRES_BIN: /usr/lib/postgresql/18/bin
           PYTHONDONTWRITEBYTECODE: '1'
         run: |
-          python -B -m unittest -v tests.test_lab_postgres
-          test -z "$(pgrep -u "$(id -u)" -f 'postgres -D' || true)" && echo NO_LAB_POSTGRES_LEFT
+          python -B - <<'PY'
+          import os, unittest
+          from tests import test_lab_postgres
+          suite = unittest.defaultTestLoader.loadTestsFromModule(test_lab_postgres)
+          count = suite.countTestCases()
+          if count < 5:
+              raise SystemExit(f'LAB_PG_TEST_COUNT_TOO_LOW:{count}')
+          for key in ('LAB_POSTGRES_BIN', 'LAB_GRID_SHA', 'LAB_GRID_ROOT', 'LAB_MATH_SHA', 'LAB_MATH_ROOT'):
+              if not os.environ.get(key):
+                  raise SystemExit('LAB_PG_REQUIRED_INPUT_MISSING:' + key)
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful() or result.skipped or result.testsRun != count:
+              raise SystemExit(f'LAB_PG_NOT_ACCEPTED: executed={result.testsRun} expected={count} skipped={len(result.skipped)}')
+          print(f'LAB_PG_TESTS_EXECUTED={result.testsRun};SKIPPED=0')
+          PY

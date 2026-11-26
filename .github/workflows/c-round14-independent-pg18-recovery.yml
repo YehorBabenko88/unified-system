@@ -1,0 +1,93 @@
+name: C Round14 independent isolated PG18 recovery (LAB only)
+on:
+  pull_request:
+permissions:
+  contents: read
+concurrency:
+  group: c-r14-recovery-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+jobs:
+  c-owned-recovery-pg18:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      LAB_POSTGRES_BIN: /usr/lib/postgresql/18/bin
+      LAB_C_PG18_NATIVE_TEST: '1'
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - name: Checkout exact PR HEAD
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Checkout exact A-owned OS evidence source for isolated native cohort
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: YehorBabenko88/unified-system
+          ref: 743329b1161e8967335d5c6d6e1ea8bd669251ee
+          path: upstream/a-retained-os
+          persist-credentials: false
+      - name: Verify A source Git blob before test-only overlay
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C upstream/a-retained-os rev-parse HEAD)" = "743329b1161e8967335d5c6d6e1ea8bd669251ee"
+          test "$(git hash-object upstream/a-retained-os/unified_system/runtime_process.py)" = "06e9389d4d53b62ffe72c81d0a12f4eda5b63b50"
+          # Test checkout only: A owns this source. C never commits an
+          # alternative process observer or copies A into the PR branch.
+          cp upstream/a-retained-os/unified_system/runtime_process.py unified_system/runtime_process.py
+          test "$(git hash-object unified_system/runtime_process.py)" = "06e9389d4d53b62ffe72c81d0a12f4eda5b63b50"
+      - name: Checkout E-owned exact fenced identity model for C SQL binding
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: YehorBabenko88/unified-system
+          ref: 1c2edb2564c48a1348d3ad4ee94fe8fa0b425b18
+          path: upstream/e-identity
+          persist-credentials: false
+      - name: Verify E model source blob in test-only workspace
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C upstream/e-identity rev-parse HEAD)" = "1c2edb2564c48a1348d3ad4ee94fe8fa0b425b18"
+          test "$(git hash-object upstream/e-identity/unified_system/grid_writer_fence_model.py)" = "71c74a2c0d8c1c0120412124ef1d12d53b691581"
+          cp upstream/e-identity/unified_system/grid_writer_fence_model.py unified_system/grid_writer_fence_model.py
+          test "$(git hash-object unified_system/grid_writer_fence_model.py)" = "71c74a2c0d8c1c0120412124ef1d12d53b691581"
+      - name: Python 3.12
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - name: Install PostgreSQL 18 binaries without provisioning main or port 5432
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo install -d /etc/postgresql-common/createcluster.d
+          echo 'create_main_cluster = false' | sudo tee /etc/postgresql-common/createcluster.d/no-main.conf
+          sudo apt-get update -q
+          sudo apt-get install -y -q postgresql-common
+          sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y
+          sudo apt-get install -y -q postgresql-18
+          "$LAB_POSTGRES_BIN/postgres" --version
+      - name: Install pinned PostgreSQL Python client
+        shell: bash
+        run: |
+          python -m pip install "psycopg[binary]==3.3.6"
+      - name: Compile exact C recovery sources and test module
+        run: |
+          python -m py_compile unified_system/grid_writer_fence_model.py unified_system/runtime_process.py unified_system/lab_postgres.py unified_system/lab_pg_fence.py unified_system/lab_pg_checkpoint.py unified_system/lab_pg_recovery.py tests/test_c_round14_pg_recovery.py
+      - name: Run exactly 25 native PostgreSQL18 recovery cases (zero skip)
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -B - <<'PY'
+          import unittest
+          from tests import test_c_round14_pg_recovery
+          suite=unittest.defaultTestLoader.loadTestsFromModule(test_c_round14_pg_recovery)
+          count=suite.countTestCases()
+          if count != 25:
+              raise SystemExit(f"C_R14_RECOVERY_ROSTER_UNEXPECTED:{count}")
+          outcome=unittest.TextTestRunner(verbosity=2).run(suite)
+          if outcome.testsRun!=count or outcome.skipped or not outcome.wasSuccessful():
+              raise SystemExit("C_R14_RECOVERY_NATIVE_PG18_DENIED")
+          print(f"C_R14_RECOVERY_NATIVE_PASS={count};SKIPS=0")
+          print("ISOLATED_LAB_ONLY;NO_ROOT_RECEIPT;CODE_NO_GO;PRODUCTION_NO_GO")
+          PY
