@@ -90,3 +90,89 @@ class RootGridChildWitness:
             raise
         except Exception:
             raise ResourceFenceBlocked("LAB_ROOT_CHILD_ROSTER_UNVERIFIED") from None
+
+
+class RootManagedQuiescence:
+    """Actually inspect every durable Root ProcessDriver market-data record.
+
+    Tracks processes owned by this exact ProcessDriver root and the current
+    token-checked loopback health listener. It does NOT claim to enumerate
+    arbitrary foreign system services; A/Root must separately exclude those
+    before adopting an existing host into the controlled LAB.
+    """
+
+    __slots__ = ("_current", "_driver", "_root", "_release_id")
+
+    def __init__(self, current):
+        _need(type(current) is RootGridChildWitness,
+              "LAB_ROOT_QUIESCENCE_CHILD_REQUIRED")
+        self._current = current
+        self._driver = current._driver
+        self._root = self._driver.root
+        self._release_id = current._release_id
+        _need(self.require_current() is True,
+              "LAB_ROOT_QUIESCENCE_NOT_CURRENT")
+
+    def require_current(self):
+        from pathlib import Path
+        from .runtime_process import _safe_path
+        try:
+            self._current.require_current()
+            _need(_safe_path(self._driver.root) == self._root,
+                  "LAB_ROOT_PROCESS_STATE_ROOT_CHANGED")
+            records = tuple(sorted(Path(self._root).glob("*.json")))
+            _need(len(records) <= 4096,
+                  "LAB_ROOT_PROCESS_RECORD_BUDGET_EXCEEDED")
+            found_current = False
+            for path in records:
+                handle = path.stem
+                _need(re.fullmatch(r"[a-f0-9-]{32,36}", handle) is not None,
+                      "LAB_ROOT_PROCESS_RECORD_UNRECOGNIZED")
+                record = self._driver._load(handle)
+                if record.get("module_id") != "market_data":
+                    continue
+                if handle == self._current._handle:
+                    found_current = True
+                    _need(record.get("state") == "RUNNING",
+                          "LAB_ROOT_CURRENT_GRID_NOT_RUNNING")
+                    continue
+                # A STOPPED status alone is not extinction: re-read the
+                # original OS incarnation even if the PID was later reused.
+                _need(record.get("state") == "STOPPED",
+                      "LAB_ROOT_OLD_GRID_NOT_STOPPED")
+                pid = record.get("pid")
+                created = record.get("created")
+                if pid is not None:
+                    _need(type(pid) is int and pid > 1
+                          and created is not None
+                          and _identity(pid) != created,
+                          "LAB_ROOT_OLD_GRID_OS_STILL_RUNNING")
+            _need(found_current, "LAB_ROOT_CURRENT_GRID_RECORD_MISSING")
+            return True
+        except ResourceFenceBlocked:
+            raise
+        except Exception:
+            raise ResourceFenceBlocked("LAB_ROOT_PROCESS_INVENTORY_UNVERIFIED") from None
+
+    def confirmed_quiescent(self):
+        from types import SimpleNamespace
+        try:
+            self.require_current()
+            record = self._driver._load(self._current._handle)
+            spec = SimpleNamespace(
+                module_id="market_data", version=record["version"])
+            # Root ProcessDriver.ready checks the actual loopback listener's
+            # private token, release, module identity and executable hashes.
+            ready = self._driver.ready(
+                spec, self._current._handle, self._release_id)
+            _need(type(ready) is dict and ready.get("ready") is True
+                  and ready.get("module_id") == "market_data"
+                  and ready.get("version") == record["version"]
+                  and ready.get("release_id") == self._release_id,
+                  "LAB_ROOT_CURRENT_GRID_LISTENER_UNVERIFIED")
+            self.require_current()
+            return True
+        except ResourceFenceBlocked:
+            raise
+        except Exception:
+            raise ResourceFenceBlocked("LAB_ROOT_LISTENER_QUIESCENCE_UNVERIFIED") from None
