@@ -482,6 +482,10 @@ class ProcessDriverFailClosedStopTests(unittest.TestCase):
             'health_url': 'http://127.0.0.1:18766/health',
             'executable_sha256': 'a' * 64,
             'file_pins': {'worker.py': 'b' * 64}}}
+        # Prevent unrelated preflight fixture gaps from masking the intended
+        # old-operation OS-identity refusal before any spawn attempt.
+        self.driver._job_launch_bindings = {}
+        self.driver._job_receipts = {}
         self.driver.authorize = lambda action, module: True
         self.op = '7' * 32
         self.driver._save(self.op, dict(
