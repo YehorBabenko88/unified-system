@@ -137,7 +137,10 @@ def _wheel_bytes_snapshot(wheel) -> bytes:
     """Hash and ZipFile must inspect precisely this ONE immutable bytes object."""
     if not hasattr(os, "O_NOFOLLOW"):
         raise ValueError("safe wheel descriptor inspection unsupported")
-    fd = os.open(wheel, os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC)
+    try:
+        fd = os.open(wheel, os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC)
+    except OSError as exc:
+        raise ValueError("wheel inaccessible or symlink") from exc
     try:
         first = os.fstat(fd)
         if not stat.S_ISREG(first.st_mode) or first.st_size > _MAX_ARCHIVE_BYTES + 1024 * 1024:
