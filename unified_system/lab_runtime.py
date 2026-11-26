@@ -17,6 +17,7 @@ from urllib.parse import urlsplit
 
 from . import lab_release
 from .module_catalog import MODULE_IDS
+from .market_data_entry_contract import MarketDataEntryRejected,entry_for_manifest
 from .runtime_cli import validate_config as base_config,read_config,make_runtime,run_runtime
 from .runtime_process import _safe_path
 
@@ -78,8 +79,13 @@ def launch_profile(name,p,root,m,state,node_id,*,offline_context=None):
         need(index+1<len(argv));value=_safe_path(argv[index+1]).resolve();need(root in value.parents)
         (roots if argv[index]=='--source-root' else dependencies).append(value);index+=2
     need(roots==[source] and len(dependencies)==len(set(dependencies)) and len(dependencies)<=16)
-    modules={'market_data':'market_data.cli','terminan':'terminan.server'}
-    need(argv[index:index+3]==['--module',modules[name],'--'])
+    # The same exact-v2 selector is used by the protected dispatcher.
+    # No implicit Grid source migration or unpinned generic module loader.
+    try:
+        entry=entry_for_manifest(m) if name=='market_data' else 'terminan.server'
+    except MarketDataEntryRejected:
+        need(False)
+    need(argv[index:index+3]==['--module',entry,'--'])
     tail=argv[index+3:]
     if name=='market_data':
         need(tail==['serve'])
