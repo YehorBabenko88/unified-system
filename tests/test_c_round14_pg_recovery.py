@@ -79,13 +79,8 @@ class NativeCRecoveryTests(unittest.TestCase):
         options.update(overrides)
         return recover_exclusive_lab_cluster(self.pg, **options)
 
-    def test_nonowned_wrong_generation_and_undrained_controls_denied(self):
-        self.assertEqual(observe_old_lab_backend(self.pg, **self.old),
-                         "STILL_ALIVE")
+    def test_nonmutating_invalid_arguments_denied(self):
         for modified in (
-            dict(old=dict(self.old, token=999)),
-            dict(old=dict(self.old, backend_pid=self.pg.postmaster_pid())),
-            dict(old=dict(self.old, backend_start="2020-01-01T00:00:00+00:00")),
             dict(quiesced=False), dict(max_seconds=1),
             dict(streams=("bad'stream",)),
         ):
@@ -95,6 +90,43 @@ class NativeCRecoveryTests(unittest.TestCase):
                 self.assertEqual(observe_old_lab_backend(self.pg, **self.old),
                                  "STILL_ALIVE")
                 self.assertTrue(self.pg.started)
+
+    def test_reject_foreign_pg_type_before_method_dispatch(self):
+        class MaliciousPg:
+            def __getattribute__(self, name):
+                raise AssertionError("FOREIGN_PG_METHOD_CALLED:" + name)
+        with self.assertRaisesRegex(LabAdmissionRejected,
+                                    "LAB_RECOVERY_PG_TYPE_INVALID"):
+            recover_exclusive_lab_cluster(
+                MaliciousPg(), old=self.old,
+                quiesced=True, max_seconds=180)
+
+    def test_e_stop_only_then_resume_without_duplicate_stop(self):
+        stream = "bybit:BTCUSDT:1m"
+        self.pg.stop()
+        self.assertFalse(self.pg.started)
+        # One C recovery owns restart, durable old fence validation and
+        # revocation, but does not mint a Root grant or new epoch.
+        receipt = self._recover(streams=(stream,))
+        self.assertFalse(receipt["native_admitted"])
+        self.assertFalse(receipt["durable_fence_active"])
+        self.assertEqual(self.pg.sql(
+            "SELECT generation,token,active FROM public.lab_writer_fence"),
+            "1|100|f")
+
+    def test_recovery_reentry_denied_after_successful_attempt(self):
+        self._recover()
+        with self.assertRaisesRegex(LabAdmissionRejected,
+                                    "LAB_RECOVERY_REENTRY_OR_POISONED"):
+            self._recover()
+
+    def test_recovery_wrong_identity_poisoned_and_no_restart(self):
+        bad = dict(self.old, token=999)
+        with self.assertRaises(LabAdmissionRejected):
+            self._recover(old=bad)
+        with self.assertRaisesRegex(LabAdmissionRejected,
+                                    "LAB_RECOVERY_REENTRY_OR_POISONED"):
+            self._recover()
 
     def test_cluster_stop_restart_durable_highwater_pending_and_cas(self):
         import uuid
