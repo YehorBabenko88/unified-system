@@ -419,9 +419,13 @@ class WindowsRootProcessExitRaceTests(unittest.TestCase):
         self.child.terminate()
         self.child.wait(timeout=5)
         self.assertIsNotNone(self.child.poll())
-        # Retained handle observed an actual exit, independent of later PID
-        # reuse; this alone does not certify listener/descendant extinction.
-        self.assertNotEqual(_identity(self.pid), self.created)
+        # Retained handle observed actual exit; a PID-only lookup is merely
+        # a second, non-authoritative sample and can be inaccessible/reused.
+        try:
+            after = _identity(self.pid)
+        except ValueError:
+            after = None
+        self.assertNotEqual(after, self.created)
 
     def test_native_live_process_identity_is_not_exit(self):
         from unified_system.runtime_process import _identity
