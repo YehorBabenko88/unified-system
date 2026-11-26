@@ -149,8 +149,23 @@ class LabPostgres:
                  and marker_info.st_nlink == 1
                  and not self._marker.is_symlink()
                  and not (getattr(marker_info, 'st_file_attributes', 0) & 0x400)
-                 and (marker_info.st_dev, marker_info.st_ino) == self._marker_identity
-                 and self._marker.read_text(encoding='ascii') == self._nonce,
+                 and (marker_info.st_dev, marker_info.st_ino) == self._marker_identity,
+                 'LAB_PG_OWNERSHIP_LOST')
+            marker_flags = (os.O_RDONLY | getattr(os, 'O_NOFOLLOW', 0)
+                            | getattr(os, 'O_CLOEXEC', 0))
+            marker_fd = os.open(self._marker, marker_flags)
+            try:
+                opened = os.fstat(marker_fd)
+                need(stat.S_ISREG(opened.st_mode)
+                     and opened.st_nlink == 1
+                     and (opened.st_dev, opened.st_ino) == self._marker_identity
+                     and os.read(marker_fd, 256) == self._nonce.encode('ascii'),
+                     'LAB_PG_OWNERSHIP_LOST')
+            finally:
+                os.close(marker_fd)
+            again = self._marker.lstat()
+            need((again.st_dev, again.st_ino) == self._marker_identity
+                 and stat.S_ISREG(again.st_mode),
                  'LAB_PG_OWNERSHIP_LOST')
             if os.name != 'nt':
                 need(info.st_uid == os.getuid() and not (info.st_mode & 0o077), 'LAB_PG_ROOT_UNSAFE')
