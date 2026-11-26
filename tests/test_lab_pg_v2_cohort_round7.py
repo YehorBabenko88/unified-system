@@ -214,7 +214,7 @@ class Round7OwnedPg18Integrated(unittest.TestCase):
             native_admission=admission or self.root_admission,
             bound_backend_pid=self.pid(conn))
 
-    def synthetic_minute(self, *, minute_offset=1):
+    def synthetic_minute(self, *, minute_offset=1, close_value=2.0):
         from market_data.provenance import minute_record, producer
         if type(minute_offset) is not int or not 1<=minute_offset<=10:
             raise AssertionError("ROUND9_MINUTE_OFFSET_INVALID")
@@ -227,7 +227,7 @@ class Round7OwnedPg18Integrated(unittest.TestCase):
             "source_provenance":producer(
                 "isolated-round7","a"*40,
                 "wss://stream.bybit.com/v5/public/linear"),
-            "open":1.0,"high":2.0,"low":1.0,"close":2.0,
+            "open":1.0,"high":2.0,"low":1.0,"close":close_value,
             "buy_volume":1.0,"sell_volume":0.0,"delta":1.0,
             "trade_count":1,"poc_price":2.0,"quality_status":"GOOD",
             "quality_reasons":[],"levels":[{
@@ -452,6 +452,26 @@ class Round7OwnedPg18Integrated(unittest.TestCase):
         self.assertEqual(self.pg.sql(
             "SELECT count(*),count(DISTINCT fingerprint)"
             " FROM provenance_minutes"),"3|3")
+        # A provider-conflicting, same symbol/interval record can coexist in
+        # the immutable raw provenance schema. C must flag ambiguity rather
+        # than certify either content as a durable cursor.
+        divergent=self.synthetic_minute(minute_offset=1,close_value=1.5)
+        self.assertNotEqual(divergent["dataset_fingerprint"],
+                            gap["dataset_fingerprint"])
+        self.adapter(self.primary,identity=newer,generation=2,token=101).write(
+            divergent,content_id=digest(divergent))
+        self.assertEqual(self.pg.sql(
+            "SELECT count(*),count(DISTINCT fingerprint)"
+            " FROM provenance_minutes"),"4|4")
+        disagreement=read_committed_lab_minute(
+            self.pg,identity=newer,generation=2,
+            backend_pid=self.pid(self.primary),
+            symbol="BTCUSDT",start_ms=gap["start_ms"],
+            fingerprint=gap["dataset_fingerprint"],content_id=digest(gap))
+        self.assertEqual(disagreement["status"],"CONFLICT")
+        with self.assertRaisesRegex(LabAdmissionRejected,
+                                    "LAB_CURSOR_DURABLE_RECORD_CORRUPT"):
+            read_lab_cursor(self.pg,stream_id="bybit:BTCUSDT:1m")
 
 
 if __name__=="__main__":
