@@ -197,7 +197,13 @@ class LabWriterAuthority:
             return self._c.revalidate_lab_fence(
                 self._pg, identity=self._identity,
                 generation=self._generation, backend_pid=self._backend_pid)
-        receipt=await executor.call(read_backend,timeout=10.0)
+        try:
+            receipt=await executor.call(read_backend,timeout=10.0)
+        except BaseException:
+            # The original C call may still be running after cancellation;
+            # the complete Root epoch is no longer usable.
+            self.revoke()
+            raise
         _need(type(receipt) is dict
               and receipt.get("schema")=="lab-postgres-fence-revalidation.v1"
               and receipt.get("backend_pid")==self._backend_pid
