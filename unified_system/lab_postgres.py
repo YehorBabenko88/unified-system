@@ -270,7 +270,9 @@ class LabPostgres:
         need(self.port != 5432, 'LAB_PG_PORT_REJECTED')
         return self
 
-    def start(self):
+    def start(self, *, timeout=180):
+        need(type(timeout) in (int, float) and 1 <= timeout <= 180,
+             'LAB_PG_START_TIMEOUT_INVALID')
         self._verify_owned()
         need(self.port is not None and self.port != 5432, 'LAB_PG_PORT_REJECTED')
         # Refuse foreign/stale pid files; only a previously crashed owned
@@ -279,8 +281,8 @@ class LabPostgres:
             need(not self.started, 'LAB_PG_ALREADY_STARTED')
             self._verify_stale_after_crash()
         result = subprocess.run([str(self.tools['pg_ctl']), '-D', str(self.data), '-l', str(self.log),
-                                 '-o', self._options(), '-w', '-t', '120', 'start'],
-                                capture_output=True, timeout=180, env=self._env('lab_owner'))
+                                 '-o', self._options(), '-w', '-t', str(max(1, min(120, int(timeout)-1))), 'start'],
+                                capture_output=True, timeout=timeout, env=self._env('lab_owner'))
         need(result.returncode == 0, 'LAB_PG_START_FAILED')
         pid = self._verify_postmaster()
         self._owned_pid = pid
@@ -292,11 +294,13 @@ class LabPostgres:
         self._crashed = False
         return self
 
-    def sql(self, statement, *, role='lab_owner', database=None):
+    def sql(self, statement, *, role='lab_owner', database=None, timeout=120):
+        need(type(timeout) in (int, float) and 1 <= timeout <= 120,
+             'LAB_PG_SQL_TIMEOUT_INVALID')
         result = subprocess.run([str(self.tools['psql']), '-X', '-q', '-A', '-t', '-v', 'ON_ERROR_STOP=1',
                                  '-h', '127.0.0.1', '-p', str(self.port), '-U', role,
                                  '-d', database or self.database, '-c', statement],
-                                capture_output=True, text=True, timeout=120, env=self._env(role))
+                                capture_output=True, text=True, timeout=timeout, env=self._env(role))
         if result.returncode != 0:
             lines = result.stderr.strip().splitlines() or ['?']
             error = next((line for line in lines if 'ERROR:' in line), lines[-1])
@@ -477,7 +481,9 @@ class LabPostgres:
         report['amcheck'] = has_amcheck
         return report
 
-    def stop(self):
+    def stop(self, *, timeout=120):
+        need(type(timeout) in (int, float) and 1 <= timeout <= 120,
+             'LAB_PG_STOP_TIMEOUT_INVALID')
         self._verify_owned()
         if not self.data.exists():
             return
@@ -498,7 +504,7 @@ class LabPostgres:
                     signal.pidfd_send_signal(handle, signal.SIGINT)
                 finally:
                     os.close(handle)
-                deadline = time.monotonic() + 60
+                deadline = time.monotonic() + min(timeout, 60)
                 while (self.data / 'postmaster.pid').exists() and time.monotonic() < deadline:
                     time.sleep(0.2)
             else:
