@@ -668,6 +668,34 @@ class WindowsNativeSuspendedLaunchTests(unittest.TestCase):
         self.driver.stop(op)
         self.assertEqual(self.driver._load(op)['state'], 'STOPPED')
 
+    def test_native_exited_image_lookup_unavailable_but_original_kernel_creation_verified(self):
+        """Real original Job + process handles; post-exit image lookup is not usable."""
+        from unified_system.runtime import ModuleSpec
+        from unified_system.runtime_process import _win_api, _win_creation_time
+        op = self.driver.start(ModuleSpec('market_data', '1.0.0'),
+                               'disposable-lab', self.op)
+        self.addCleanup(self._cleanup)
+        child = self.driver.children[op]
+        bound = self.driver._job_launch_bindings[op]
+        k, w = _win_api()
+        self.assertEqual(_win_creation_time(k, w, child._handle), bound[2][0])
+        self.driver.stop(op)
+        self.assertEqual(self.driver.owned_job_stop_state(op), 'EXTINCT')
+        with patch('unified_system.runtime_process._win_identity',
+                   side_effect=ValueError('injected image query unavailable after exit')):
+            # The original process kernel HANDLE, creation timestamp and
+            # launch-bound image hash still must qualify the same receipt.
+            receipt = self.driver.job_extinction_receipt(op)
+            self.assertEqual(receipt.creation_time, bound[2][0])
+            self.assertEqual(receipt.executable, bound[2][1])
+            self.assertEqual(receipt.process_handle, child._handle)
+            self.assertEqual(receipt.job_handle, child._job._handle)
+        # Mutating original creation-time witness must never allow a receipt.
+        with patch('unified_system.runtime_process._win_creation_time',
+                   return_value='0'):
+            with self.assertRaisesRegex(ValueError, 'creation identity changed'):
+                self.driver.job_extinction_receipt(op)
+
     def test_native_foreign_driver_cannot_observe_exact_job_stop(self):
         from unified_system.runtime import ModuleSpec
         from unified_system.runtime_process import ProcessDriver
@@ -766,6 +794,18 @@ class WindowsNativeSuspendedLaunchTests(unittest.TestCase):
         self.assertEqual(self.driver._load(op)['state'], 'RUNNING')
         self.driver._job_launch_bindings[op] = original
         self.driver.stop(op)
+
+    def test_native_restricted_child_reports_explicit_abnormal_exit(self):
+        """Unexpected loader exit cannot become executable/SCM success evidence."""
+        from unified_system.runtime import ModuleSpec
+        op = self.driver.start(ModuleSpec('market_data', '1.0.0'),
+                               'disposable-lab', self.op)
+        self.addCleanup(self._cleanup)
+        child = self.driver.children[op]
+        self.assertIsNone(child.poll(), 'restricted process exited before executing pinned fixture')
+        # Native Windows loader errors such as 0xC0000142 must not be
+        # mislabelled as a normal Python child return code.
+        self.assertEqual(self.driver.owned_job_stop_state(op), 'STILL_ALIVE')
 
     def test_native_restricted_child_cannot_obtain_scm_create_right(self):
         import hashlib
