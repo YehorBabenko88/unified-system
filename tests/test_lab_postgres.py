@@ -5,6 +5,9 @@ not root. Product minimum is 18; LAB_POSTGRES_MIN_MAJOR may lower it for local
 development only (CI uses PostgreSQL 18).
 """
 import os
+import json
+import time
+import copy
 import shutil
 import sys
 import subprocess
@@ -138,6 +141,79 @@ class LabPostgresLifecycle(unittest.TestCase):
         self.assertIn('database system was interrupted', pg.log.read_text())
         pg.stop()
         self.assertFalse((pg.data / 'postmaster.pid').exists())
+
+    @unittest.skipUnless(os.environ.get('LAB_GRID_ROOT') and os.environ.get('LAB_MATH_ROOT'),
+                         'needs pinned Grid and Math source trees')
+    def test_canonical_provenance_readback_and_refusal(self):
+        """Synthetic Grid → Math integrity → PG18 → Grid reader, no exchange claim."""
+        grid_root = os.environ['LAB_GRID_ROOT']
+        math_root = os.environ['LAB_MATH_ROOT']
+        expected = os.environ['LAB_MATH_SHA']
+        actual = subprocess.check_output(['git', '-C', str(Path(math_root).parent),
+                                          'rev-parse', 'HEAD'], text=True).strip()
+        self.assertEqual(actual, expected, 'LAB_MATH_SHA_MISMATCH')
+        sys.path[:0] = [grid_root, math_root]
+        try:
+            from market_data.provenance import minute_record, producer, digest, canonical
+            from market_data.provenance_gateway import read_snapshot
+            start = (int(time.time() * 1000) // 60000 - 1) * 60000
+            row = dict(symbol='BTCUSDT', start_ms=start,
+                       source_event_start_ms=start + 1, source_event_end_ms=start + 59999,
+                       source_provenance=producer('lab-fixture', 'a' * 40,
+                           'wss://stream.bybit.com/v5/public/linear'),
+                       open=1, high=2, low=1, close=2, buy_volume=1,
+                       sell_volume=0, delta=1, trade_count=1, poc_price=2,
+                       quality_status='GOOD', quality_reasons=[],
+                       levels=[dict(price=2, buy_volume=1, sell_volume=0,
+                                    delta=1, volume=1, buy_count=1, sell_count=0)])
+            record = minute_record(row, int(time.time() * 1000), 'lab-fixture')
+            self.assertEqual(record['status'], 'PARTIAL')
+            self.assertFalse(record['coverage']['exchange_completeness_attested'])
+            self.assertEqual(digest({k: v for k, v in record.items()
+                                     if k != 'dataset_fingerprint'}), record['dataset_fingerprint'])
+            self.pg = pg = LabPostgres(BIN, self.root, min_major=MIN).initialize().start()
+            pg.provision(canonical_schema())
+
+            def persist(symbol, payload, content_id):
+                body = canonical(payload).decode('ascii').replace("'", "''")
+                pg.sql("INSERT INTO provenance_minutes(fingerprint,content_id,symbol,start_ms,record)"
+                       " VALUES ('" + payload['dataset_fingerprint'] + "','" + content_id +
+                       "','" + symbol + "'," + str(start) + ",'" + body + "'::jsonb)",
+                       role='lab_writer')
+
+            persist('BTCUSDT', record, digest(row))
+            raw = pg.sql("SELECT record::text FROM provenance_minutes "
+                         "WHERE symbol='BTCUSDT'", role='lab_reader')
+            self.assertEqual(json.loads(raw), record)
+            previous = os.environ.get('MARKET_DATA_PROVENANCE_READ')
+            os.environ['MARKET_DATA_PROVENANCE_READ'] = '1'
+            try:
+                def reader(symbol, limit, before_ms):
+                    result = pg.sql("SELECT record::text FROM provenance_minutes WHERE symbol='" +
+                                    symbol + "' AND start_ms<" + str(before_ms) +
+                                    " ORDER BY start_ms DESC LIMIT " + str(limit),
+                                    role='lab_reader')
+                    return [json.loads(line) for line in result.splitlines() if line]
+                good = read_snapshot({}, 'BTCUSDT', 10, None, reader)
+                self.assertEqual(good['status'], 'PARTIAL')
+                self.assertEqual(good['reason'], 'EXCHANGE_COMPLETENESS_UNATTESTED')
+                self.assertFalse(good['execution_authority'])
+                self.assertTrue(good['immutable'])
+                # A structurally valid JSONB row with forged digest must be
+                # rejected by the consumer even though PostgreSQL stores it.
+                bad = copy.deepcopy(record)
+                bad['symbol'] = 'ETHUSDT'
+                persist('ETHUSDT', bad, 'b' * 64)
+                rejected = read_snapshot({}, 'ETHUSDT', 10, None, reader)
+                self.assertEqual(rejected['reason'], 'SNAPSHOT_INTEGRITY_FAILED')
+                self.assertNotIn('rows', rejected)
+            finally:
+                if previous is None:
+                    os.environ.pop('MARKET_DATA_PROVENANCE_READ', None)
+                else:
+                    os.environ['MARKET_DATA_PROVENANCE_READ'] = previous
+        finally:
+            del sys.path[:2]
 
     def test_refuses_old_version_and_foreign_paths(self):
         with self.assertRaisesRegex(LabAdmissionRejected, 'TOO_OLD'):
