@@ -398,6 +398,12 @@ class LabPostgres:
         else:
             from . import lab_pg_recovery as c
             c._require_initial_lab_cluster(self)
+            # A prior pg_ctl invocation may have timed out after spawning
+            # the postmaster. Never retry initial start without original
+            # process-incarnation proof; C recovery is the only restart lane.
+            need(self._initial_start_attempted is False
+                 and self._initdb_phase == 'COMPLETE',
+                 'LAB_PG_INITIAL_START_ALREADY_ATTEMPTED_OR_UNKNOWN')
         need(self.port is not None and self.port != 5432, 'LAB_PG_PORT_REJECTED')
         # Refuse foreign/stale pid files; only a previously crashed owned
         # postmaster is eligible for WAL recovery via pg_ctl.
