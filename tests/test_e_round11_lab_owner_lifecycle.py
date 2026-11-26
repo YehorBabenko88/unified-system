@@ -13,7 +13,10 @@ from unified_system.grid_writer_fence_model import ResourceFenceBlocked
 from unified_system.lab_owner_executor import LabOwnerExecutor
 from unified_system.lab_writer_revoke import LabWriterRevoker
 from unified_system.lab_root_child_witness import RootGridChildWitness
-from unified_system.lab_simulation_admission import LabAdmissionRejected
+
+class SimulatedCStaleFence(Exception):
+    """Test-only stand-in for C's exported LabAdmissionRejected type."""
+
 
 
 class SerialOwnerExecutorTests(unittest.IsolatedAsyncioTestCase):
@@ -85,6 +88,7 @@ class RevocationStateTests(unittest.IsolatedAsyncioTestCase):
                 events.append("alive")
                 return False
         class SQL:
+            LabAdmissionRejected = SimulatedCStaleFence
             def revoke_lab_fence(self, pg, *, generation, token):
                 events.append("sql")
                 if sql_fault:
@@ -93,7 +97,7 @@ class RevocationStateTests(unittest.IsolatedAsyncioTestCase):
             def revalidate_lab_fence(self, pg, *, identity, generation, backend_pid):
                 events.append("revalidate")
                 if stale_code:
-                    raise LabAdmissionRejected("LAB_FENCE_REVALIDATION_DENIED")
+                    raise SimulatedCStaleFence("LAB_FENCE_REVALIDATION_DENIED")
                 return {"db_fence_current_at_read": True}
         class Consul:
             async def release(self, lease):
