@@ -317,5 +317,71 @@ HTTPServer(("127.0.0.1", int(os.environ["PORT"])), Handler).serve_forever()
         self.assertEqual(self.driver._load(op)['state'], 'RUNNING')
 
 
+class OwnedProcessProofFailureTests(unittest.TestCase):
+    """Synthetic negative cases: absence/uncertainty never authorizes replacement.
+
+    These intentionally do not assert host-wide Windows TCP ownership or
+    PostgreSQL backend extinction. They prove the existing driver must not
+    signal an unrelated PID and expose a fail-closed requirement for Root.
+    """
+
+    def test_stale_pid_creation_identity_refuses_stop_before_signal(self):
+        from unified_system.runtime_process import ProcessDriver
+        driver = object.__new__(ProcessDriver)
+        driver.root = Path(tempfile.mkdtemp(prefix='a-os-identity-'))
+        self.addCleanup(shutil.rmtree, driver.root, True)
+        op = 'a' * 32
+        driver._save(op, dict(pid=34567, created=['old-boot:1', 'old.exe'],
+                              module_id='market_data', version='1.0',
+                              release_id='lab', token='b' * 64,
+                              state='RUNNING'), new=True)
+        driver.children = {}
+        with patch('unified_system.runtime_process._identity',
+                   return_value=['new-boot:2', 'other.exe']):
+            with self.assertRaisesRegex(ValueError, 'refuse unrelated process'):
+                driver.stop(op)
+            self.assertEqual(driver._load(op)['state'], 'RUNNING')
+
+    def test_unavailable_identity_must_not_be_treated_as_verified_extinction(self):
+        from unified_system.runtime_process import ProcessDriver
+        driver = object.__new__(ProcessDriver)
+        driver.root = Path(tempfile.mkdtemp(prefix='a-os-uncertain-'))
+        self.addCleanup(shutil.rmtree, driver.root, True)
+        op = 'c' * 32
+        driver._save(op, dict(pid=34567, created=['old-boot:1', 'old.exe'],
+                              module_id='market_data', version='1.0',
+                              release_id='lab', token='d' * 64,
+                              state='RUNNING'), new=True)
+        driver.children = {}
+        with patch('unified_system.runtime_process._identity',
+                   side_effect=ValueError('access denied')):
+            # Existing alive() is a liveness hint, NOT an extinction receipt.
+            self.assertFalse(driver.alive(op))
+            self.assertEqual(driver._load(op)['state'], 'RUNNING')
+            with self.assertRaisesRegex(ValueError, 'access denied'):
+                driver.stop(op)
+            self.assertEqual(driver._load(op)['state'], 'RUNNING')
+
+    def test_stopped_record_is_not_an_os_exit_receipt(self):
+        from unified_system.runtime_process import ProcessDriver
+        driver = object.__new__(ProcessDriver)
+        driver.root = Path(tempfile.mkdtemp(prefix='a-os-record-'))
+        self.addCleanup(shutil.rmtree, driver.root, True)
+        op = 'e' * 32
+        driver._save(op, dict(pid=34567, created=['old-boot:1', 'old.exe'],
+                              module_id='market_data', version='1.0',
+                              release_id='lab', token='f' * 64,
+                              state='STOPPED'), new=True)
+        driver.children = {}
+        with patch('unified_system.runtime_process._identity',
+                   return_value=['old-boot:1', 'old.exe']):
+            self.assertFalse(driver.alive(op))
+            # A still-live original incarnation must block fresh owner admission.
+            self.assertEqual(driver._load(op)['state'], 'STOPPED')
+            self.assertEqual(
+                __import__('unified_system.runtime_process', fromlist=['_identity'])._identity(34567),
+                ['old-boot:1', 'old.exe'])
+
+
 if __name__ == '__main__':
     unittest.main()
