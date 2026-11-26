@@ -23,6 +23,8 @@ from .lab_pg_checkpoint import _stream, read_lab_pending, read_lab_checkpoint
 # a poisoned worker. One C process, one exclusive LAB data root.
 _GUARD = threading.Lock()
 _STATES = {}
+# Also exclude distinct mount/path aliases that reference the SAME pgdata inode.
+_DATA_OWNERS = {}
 
 
 @dataclass(frozen=True)
@@ -68,6 +70,10 @@ def _old_tuple(old):
 def _begin(pg, root, old, *, mode):
     """No stop/start may overlap across distinct objects for one root."""
     with _GUARD:
+        data = _data_identity(pg)
+        previous_root = _DATA_OWNERS.get(data)
+        need(previous_root is None or previous_root == root,
+             "LAB_RECOVERY_PHYSICAL_DATA_ALREADY_OWNED")
         existing = _STATES.get(root)
         if mode == "STOP_ONLY":
             need(existing is None, "LAB_RECOVERY_RESOURCE_ALREADY_OWNED")
@@ -90,8 +96,9 @@ def _begin(pg, root, old, *, mode):
             pg=pg, root=root, data_identity=_data_identity(pg),
             marker=pg._nonce, old=_old_tuple(old),
             phase="IN_PROGRESS")
+        _DATA_OWNERS[data] = root
         _STATES[root] = _OwnedRecovery(
-            pg=pg, root=root, data_identity=_data_identity(pg),
+            pg=pg, root=root, data_identity=data,
             marker=pg._nonce, old=_old_tuple(old),
             phase="IN_PROGRESS",
             old_postmaster_pid=preserved.old_postmaster_pid,
