@@ -602,6 +602,23 @@ class WindowsRootProcessExitRaceTests(unittest.TestCase):
         self.assertIsNone(self.child.poll())
 
 
+    def test_toolhelp_descendants_find_our_real_child(self):
+        from unified_system.runtime_process import (
+            _identity, _windows_process_descendant_snapshot)
+        own_created = _identity(os.getpid())
+        self.assertIsNotNone(own_created)
+        seen = dict(_windows_process_descendant_snapshot(os.getpid(), own_created))
+        self.assertIn(self.pid, seen)
+        self.assertEqual(seen[self.pid], tuple(self.created))
+
+    def test_toolhelp_foreign_root_incarnation_is_denied(self):
+        from unified_system.runtime_process import _windows_process_descendant_snapshot
+        with self.assertRaisesRegex(ValueError, 'root identity changed'):
+            _windows_process_descendant_snapshot(
+                os.getpid(), ['foreign-creation', '/foreign/exe'])
+        self.assertIsNone(self.child.poll())
+
+
     def test_native_live_process_identity_is_not_exit(self):
         from unified_system.runtime_process import _identity
         self.assertIsNone(self.child.poll())
