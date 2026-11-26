@@ -1,6 +1,6 @@
 """E/A Root-owned tri-state OS process observation (NOT a grant).
 
-ProcessDriver.alive() deliberately maps identity errors to False and is NOT
+A ProcessDriver.owned_process_state() is the sole tri-state authority; alive() maps identity errors to False and is NOT
 an extinction witness. A process can have disappeared, reused its PID or
 be inaccessible; only an exact owned retained Popen handle, completion wait,
 durable process identity and *separate* endpoint ownership census can later
@@ -12,7 +12,7 @@ import os
 import subprocess
 
 from .grid_writer_fence_model import ResourceFenceBlocked, _need
-from .runtime_process import ProcessDriver, _identity
+from .runtime_process import ProcessDriver
 
 EXTINCT="EXTINCT"
 STILL_ALIVE="STILL_ALIVE"
@@ -64,28 +64,25 @@ def observe_owned_process_extinction(driver, handle):
         raise ResourceFenceBlocked(
             "LAB_PROCESS_OBSERVATION_OWNER_UNVERIFIED") from None
     try:
-        # poll() consumes exactly the retained Popen process handle status.
-        # A NULL process is not enough to infer listener-owner extinction.
-        code=child.poll()
-        if code is None:
-            actual=_identity(pid)
-            if actual is None:
-                return RootProcessObservation(
-                    "unified.root-process-observation.v1",UNKNOWN,handle,
-                    pid,created,"RETAINED_RUNNING_BUT_IDENTITY_UNAVAILABLE")
-            if actual!=created:
-                return RootProcessObservation(
-                    "unified.root-process-observation.v1",UNKNOWN,handle,
-                    pid,created,"RETAINED_HANDLE_IDENTITY_MISMATCH")
+        # Canonical OS tri-state logic is A-owned ProcessDriver. E never
+        # creates a parallel PID/identity interpretation. Recheck the
+        # retained exact operation record on each call and refuse mismatch.
+        _need(record.get("state") in ("RUNNING", "STOPPED"),
+              "LAB_PROCESS_OBSERVATION_STATE_INVALID")
+        state=driver.owned_process_state(handle)
+        _need(state in (EXTINCT,STILL_ALIVE,UNKNOWN),
+              "LAB_PROCESS_OBSERVATION_UNEXPECTED_OS_STATE")
+        if state == EXTINCT:
             return RootProcessObservation(
-                "unified.root-process-observation.v1",STILL_ALIVE,handle,
-                pid,created,"RETAINED_HANDLE_RUNNING")
-        # A retained handle has reached terminal wait. This does not prove
-        # descendants, TCP listener owner, or C PostgreSQL backend extinction.
-        child.wait(timeout=.5)
+                "unified.root-process-observation.v1",EXTINCT,handle,pid,
+                created,"A_RETAINED_HANDLE_EXITED_LISTENER_UNVERIFIED")
+        if state == STILL_ALIVE:
+            return RootProcessObservation(
+                "unified.root-process-observation.v1",STILL_ALIVE,handle,pid,
+                created,"A_RETAINED_HANDLE_STILL_ALIVE")
         return RootProcessObservation(
-            "unified.root-process-observation.v1",EXTINCT,handle,
-            pid,created,"RETAINED_HANDLE_EXITED_LISTENER_UNVERIFIED")
+            "unified.root-process-observation.v1",UNKNOWN,handle,pid,
+            created,"A_ROOT_OS_IDENTITY_UNKNOWN")
     except (PermissionError, OSError, subprocess.TimeoutExpired, ValueError):
         return RootProcessObservation(
             "unified.root-process-observation.v1",UNKNOWN,handle,
