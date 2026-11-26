@@ -556,8 +556,8 @@ class WindowsNativeSuspendedLaunchTests(unittest.TestCase):
         root = Path(self.tmp.name)
         self.worker = root / 'job_worker.py'
         self.worker.write_text(
-            'import time\\n'
-            'time.sleep(30)\\n', encoding='utf-8')
+            'import time\n'
+            'time.sleep(30)\n', encoding='utf-8')
         python = Path(sys.executable).resolve()
         with socket.socket() as sock:
             sock.bind(('127.0.0.1', 0))
