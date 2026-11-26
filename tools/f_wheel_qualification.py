@@ -156,9 +156,49 @@ def qualify_wheel(
                     raise ValueError("RECORD integrity mismatch")
         if recorded != payload.keys():
             raise ValueError("wheel contains unrecorded member")
-        for name, data in payload.items():
-            if _installed_bytes(root, _safe_member(name)) != data:
-                raise ValueError("installed member byte mismatch")
+        # pip rewrites the INSTALLED RECORD: it adds INSTALLER, scripts,
+        # direct_url.json, and often un-hashed __pycache__ entries. The wheel
+        # RECORD and installed RECORD are different sources of evidence.
+        installed_record_bytes = _installed_bytes(root, _safe_member(record_name))
+        installed_rows = list(csv.reader(io.StringIO(installed_record_bytes.decode("utf-8"), newline="")))
+        installed_seen: set[str] = set()
+        auxiliary_unhashed = 0
+        for row in installed_rows:
+            if len(row) != 3:
+                raise ValueError("installed RECORD row invalid")
+            name, encoded, size = row
+            if name in installed_seen:
+                raise ValueError("duplicate installed RECORD member")
+            installed_seen.add(name)
+            if name == record_name:
+                if encoded or size:
+                    raise ValueError("installed RECORD self-hash invalid")
+                continue
+            if name.startswith("../../bin/"):
+                # Strict pip --target script path only; other venv schemes
+                # must be admitted through a separately reviewed runner.
+                script = name.removeprefix("../../bin/")
+                if (not expected_entrypoints or script not in expected_entrypoints
+                        or not script or "/" in script or chr(92) in script):
+                    raise ValueError("unexpected installed script path")
+                parts = ("bin", script)
+            else:
+                parts = _safe_member(name)
+            data = _installed_bytes(root, parts)
+            if name in payload and data != payload[name]:
+                raise ValueError("wheel member changed during install")
+            if not encoded and not size:
+                if (not name.endswith(".pyc") or "__pycache__" not in parts
+                        or name in payload):
+                    raise ValueError("unhashed installed runtime member")
+                auxiliary_unhashed += 1
+                continue
+            actual = "sha256=" + base64.urlsafe_b64encode(hashlib.sha256(data).digest()).decode().rstrip("=")
+            if encoded != actual or size != str(len(data)):
+                raise ValueError("installed RECORD integrity mismatch")
+        if installed_seen.intersection(payload.keys()) != payload.keys():
+            raise ValueError("installed RECORD omits wheel member")
+
         for name, expected in source_files.items():
             if name not in payload or _digest(payload[name]) != expected or name.endswith("/RECORD"):
                 raise ValueError("source bytes mismatch or missing runtime module")
@@ -178,6 +218,8 @@ def qualify_wheel(
         "wheel_bytes_match": True,
         "installed_bytes_match": True,
         "installed_record_verified": True,
+        "unhashed_install_auxiliary_count": auxiliary_unhashed,
+        "all_installed_bytes_authenticated": auxiliary_unhashed == 0,
         "source_bytes_match": True,
         "entrypoint_metadata_match": expected_entrypoints is not None,
         "import_origin_verified": False,
