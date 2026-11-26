@@ -459,6 +459,63 @@ class RetainedRootProcessStateTests(unittest.TestCase):
 
 
 
+
+class ProcessDriverFailClosedStopTests(unittest.TestCase):
+    """Synthetic negatives only; no OS process or foreign PID is touched."""
+
+    def setUp(self):
+        from unified_system.runtime_process import ProcessDriver
+        self.driver = object.__new__(ProcessDriver)
+        self.driver.root = Path(tempfile.mkdtemp(prefix='a-round15-stop-'))
+        self.addCleanup(shutil.rmtree, self.driver.root, True)
+        self.driver.children = {}
+        self.driver.prestart_rejections = {}
+        self.driver.authorize = lambda action, module: True
+        self.op = '7' * 32
+        self.driver._save(self.op, dict(
+            pid=98765, created=['boot:7', '/isolated/python'],
+            module_id='market_data', version='1.0',
+            release_id='lab', token='b' * 64,
+            state='RUNNING'), new=True)
+
+    def test_disappearing_pid_without_retained_exit_denies_stopped(self):
+        with patch('unified_system.runtime_process._identity', return_value=None):
+            with self.assertRaisesRegex(ValueError, 'extinction unverified'):
+                self.driver.stop(self.op)
+        self.assertEqual(self.driver._load(self.op)['state'], 'RUNNING')
+
+    def test_stale_stopped_record_without_handle_denies_stop_receipt(self):
+        record = self.driver._load(self.op)
+        record['state'] = 'STOPPED'
+        self.driver._save(self.op, record)
+        with self.assertRaisesRegex(ValueError, 'extinction unverified'):
+            self.driver.stop(self.op)
+
+    def test_reused_operation_cannot_rely_on_boolean_alive_hint(self):
+        from types import SimpleNamespace
+        record = self.driver._load(self.op)
+        spec = SimpleNamespace(module_id='market_data', version='1.0')
+        with patch.object(self.driver, '_verify', return_value=None), \
+             patch.object(self.driver, 'alive', return_value=True):
+            with self.assertRaisesRegex(ValueError, 'ambiguous prior'):
+                self.driver.start(spec, record['release_id'], self.op)
+        self.assertEqual(self.driver._load(self.op)['state'], 'RUNNING')
+
+
+@unittest.skipUnless(WINDOWS, 'requires native Windows SCM enumeration')
+class WindowsNativeScmCensusTests(unittest.TestCase):
+    """Read-only native SCM census, not a signed Root ownership receipt."""
+
+    def test_kernel_scm_roster_is_bounded_and_stable_shape(self):
+        from unified_system.runtime_process import _windows_service_process_roster
+        entries = _windows_service_process_roster()
+        self.assertIsInstance(entries, tuple)
+        self.assertEqual(entries, tuple(sorted(set(entries))))
+        for service_name, pid in entries:
+            self.assertTrue(service_name)
+            self.assertGreater(pid, 0)
+
+
 @unittest.skipUnless(WINDOWS, 'requires native Windows IP Helper ownership table')
 class WindowsKernelTcpOwnershipTests(unittest.TestCase):
     """Actual local socket; diagnostic kernel table, not a Root grant."""
