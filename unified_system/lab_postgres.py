@@ -95,6 +95,64 @@ class LabPostgres:
         except (OSError, ValueError) as error:
             raise LabAdmissionRejected('LAB_PG_OWNERSHIP_LOST') from error
 
+    def _os_process_identity(self, pid, recorded_start):
+        """Fail closed unless the PID still identifies our postgres executable
+        and the OS process creation time matches postmaster.pid."""
+        need(recorded_start > 0, 'LAB_PG_PID_UNVERIFIED')
+        try:
+            if os.name == 'nt':
+                import ctypes
+                from ctypes import wintypes
+                kernel = ctypes.WinDLL('kernel32', use_last_error=True)
+                kernel.OpenProcess.argtypes = (wintypes.DWORD, wintypes.BOOL, wintypes.DWORD)
+                kernel.OpenProcess.restype = wintypes.HANDLE
+                kernel.QueryFullProcessImageNameW.argtypes = (
+                    wintypes.HANDLE, wintypes.DWORD, wintypes.LPWSTR, ctypes.POINTER(wintypes.DWORD))
+                kernel.QueryFullProcessImageNameW.restype = wintypes.BOOL
+                kernel.GetProcessTimes.argtypes = (
+                    wintypes.HANDLE, ctypes.POINTER(wintypes.FILETIME), ctypes.POINTER(wintypes.FILETIME),
+                    ctypes.POINTER(wintypes.FILETIME), ctypes.POINTER(wintypes.FILETIME))
+                kernel.GetProcessTimes.restype = wintypes.BOOL
+                handle = kernel.OpenProcess(0x1000, False, pid)  # QUERY_LIMITED_INFORMATION
+                need(bool(handle), 'LAB_PG_PID_UNVERIFIED')
+                try:
+                    path_buf = ctypes.create_unicode_buffer(32768)
+                    size = wintypes.DWORD(len(path_buf))
+                    need(bool(kernel.QueryFullProcessImageNameW(handle, 0, path_buf, ctypes.byref(size))),
+                         'LAB_PG_PID_UNVERIFIED')
+                    need(os.path.normcase(os.path.realpath(path_buf.value)) ==
+                         os.path.normcase(os.path.realpath(str(self.tools['postgres']))),
+                         'LAB_PG_PID_FOREIGN')
+                    created = wintypes.FILETIME()
+                    ended, kernel_time, user_time = wintypes.FILETIME(), wintypes.FILETIME(), wintypes.FILETIME()
+                    need(bool(kernel.GetProcessTimes(handle, ctypes.byref(created), ctypes.byref(ended),
+                                                     ctypes.byref(kernel_time), ctypes.byref(user_time))),
+                         'LAB_PG_PID_UNVERIFIED')
+                    ticks = (created.dwHighDateTime << 32) | created.dwLowDateTime
+                    started_at = (ticks - 116444736000000000) / 10000000
+                finally:
+                    kernel.CloseHandle(handle)
+            else:
+                proc = Path('/proc') / str(pid)
+                need(proc.is_dir(), 'LAB_PG_PID_UNVERIFIED')
+                need((proc / 'exe').resolve(strict=True) ==
+                     self.tools['postgres'].resolve(strict=True), 'LAB_PG_PID_FOREIGN')
+                stat_fields = (proc / 'stat').read_text().rsplit(')', 1)[1].strip().split()
+                start_ticks = int(stat_fields[19])  # /proc/PID/stat field 22
+                btime_line = next(line for line in Path('/proc/stat').read_text().splitlines()
+                                  if line.startswith('btime '))
+                started_at = int(btime_line.split()[1]) + start_ticks / os.sysconf('SC_CLK_TCK')
+                args = (proc / 'cmdline').read_bytes().split(b'\\x00')
+                need(any(args[i] == b'-D' and i + 1 < len(args) and
+                         Path(os.fsdecode(args[i + 1])).resolve() == self.data.resolve()
+                         for i in range(len(args))), 'LAB_PG_PID_FOREIGN')
+                status = (proc / 'status').read_text().splitlines()
+                uid = next(line for line in status if line.startswith('Uid:')).split()[1]
+                need(int(uid) == os.getuid(), 'LAB_PG_PID_FOREIGN')
+            need(abs(started_at - recorded_start) <= 5, 'LAB_PG_PID_START_MISMATCH')
+        except (OSError, ValueError, IndexError, StopIteration) as error:
+            raise LabAdmissionRejected('LAB_PG_PID_UNVERIFIED') from error
+
     def _verify_postmaster(self):
         self._verify_owned()
         pidfile = self.data / 'postmaster.pid'
@@ -104,8 +162,10 @@ class LabPostgres:
             pid = int(lines[0])
             data_path = Path(lines[1]).resolve(strict=True)
             port = int(lines[3])
+            recorded_start = int(lines[2])
             need(pid > 1 and data_path == self.data.resolve(strict=True)
                  and port == self.port, 'LAB_PG_PID_UNVERIFIED')
+            self._os_process_identity(pid, recorded_start)
             # pid alone is unsafe: pid reuse can target an unrelated service.
             if self.started:
                 need(pid == self._owned_pid, 'LAB_PG_PID_CHANGED')
@@ -211,9 +271,29 @@ class LabPostgres:
         need(self.started, 'LAB_PG_NOT_STARTED')
         pid = self.postmaster_pid()
         if os.name == 'nt':
-            subprocess.run([str(self.tools['pg_ctl']), 'kill', 'KILL', str(pid)], capture_output=True, timeout=30)
+            # Windows process HANDLE is stable even if another process later
+            # reuses the numeric PID. Revalidate identity before termination.
+            import ctypes
+            from ctypes import wintypes
+            kernel = ctypes.WinDLL('kernel32', use_last_error=True)
+            kernel.OpenProcess.argtypes = (wintypes.DWORD, wintypes.BOOL, wintypes.DWORD)
+            kernel.OpenProcess.restype = wintypes.HANDLE
+            handle = kernel.OpenProcess(0x1001, False, pid)  # TERMINATE | QUERY_LIMITED_INFORMATION
+            need(bool(handle), 'LAB_PG_PID_UNVERIFIED')
+            try:
+                self._verify_postmaster()
+                need(bool(kernel.TerminateProcess(handle, 1)), 'LAB_PG_CRASH_FAILED')
+            finally:
+                kernel.CloseHandle(handle)
         else:
-            os.kill(pid, signal.SIGKILL)
+            need(hasattr(os, 'pidfd_open') and hasattr(signal, 'pidfd_send_signal'),
+                 'LAB_PG_PIDFD_UNAVAILABLE')
+            pidfd = os.pidfd_open(pid)
+            try:
+                self._verify_postmaster()
+                signal.pidfd_send_signal(pidfd, signal.SIGKILL)
+            finally:
+                os.close(pidfd)
         deadline = time.monotonic() + 60
         while time.monotonic() < deadline:
             try:
