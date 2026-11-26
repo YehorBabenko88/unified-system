@@ -26,6 +26,8 @@ from unified_system.lab_simulation_admission import LabAdmissionRejected
 _SHA_GRID = "f57781a947af138a2099bebe553b89c3c5ee726e"
 _SHA_D = "cf1448f8d30399f8787f69f9abfcb5cf992a4209"
 _SHA_MATH = "9e6acbd9e12a91189f57234828e31640983af553"
+_OWNER = "unified-system"
+_NAMESPACE = "unified/lab"
 _SOURCE_SHA = "a" * 64
 _SCHEMA_SHA = "b" * 64
 
@@ -52,13 +54,15 @@ def require_sources():
 
 
 def write_row(conn, *, generation, token, ids, fp, content_id,
+              owner=_OWNER, namespace=_NAMESPACE,
               symbol="BTCUSDT", start_ms=60000, record=None):
     sql = """SELECT public.lab_fenced_insert(
-       %s::bigint,%s::bigint,%s::uuid,%s::uuid,%s::uuid,
+       %s::text,%s::text,%s::bigint,%s::bigint,
+       %s::uuid,%s::uuid,%s::uuid,
        %s::text,%s::text,%s::text,%s::text,%s::text,
        %s::bigint,%s::jsonb)"""
     with conn.cursor() as cur:
-        cur.execute(sql, (generation, token, *ids, _SOURCE_SHA,
+        cur.execute(sql, (owner, namespace, generation, token, *ids, _SOURCE_SHA,
                          _SCHEMA_SHA, fp, content_id, symbol,
                          start_ms, json.dumps(record or {"sample": 1})))
     conn.commit()
@@ -153,7 +157,8 @@ class NativePg18V2Tests(unittest.TestCase):
             return cur.fetchone()[0]
 
     def claim(self, conn, generation, token, ids, *, quiescent=True):
-        return claim_lab_fence(self.pg, generation=generation, token=token,
+        return claim_lab_fence(self.pg, owner=_OWNER, namespace=_NAMESPACE,
+            generation=generation, token=token,
             session_id=ids[0], instance_id=ids[1],
             node_incarnation_id=ids[2], source_sha256=_SOURCE_SHA,
             schema_sha256=_SCHEMA_SHA, backend_pid=self.backend_pid(conn),
