@@ -247,9 +247,10 @@ def _crashed_control_attested(pg, deadline):
          "LAB_RECOVERY_PG_CONTROL_NOT_CRASHED")
 
 
-def _wal_replay_readback(pg, *, fault, log_position):
+def _wal_replay_readback(pg, *, fault, log_position, deadline):
     if fault != "POWER_LOSS_TEST":
         return "CLEAN_SHUTDOWN_ONLY"
+    _remaining(deadline)
     pg._verify_owned()
     need(type(log_position) is int and log_position >= 0,
          "LAB_RECOVERY_LOG_POSITION_INVALID")
@@ -258,6 +259,7 @@ def _wal_replay_readback(pg, *, fault, log_position):
     with pg.log.open("rb") as log:
         log.seek(log_position)
         tail=log.read(4*1024*1024).decode("utf-8", errors="replace")
+    _remaining(deadline)
     need("automatic recovery in progress" in tail
          and "redo starts at" in tail
          and "database system is ready to accept connections" in tail,
@@ -491,7 +493,7 @@ def recover_exclusive_lab_cluster(pg, *, old, streams=(), quiesced=False,
             fault = previous_state.wal_fault
             log_position = previous_state.log_position
         wal_readback = _wal_replay_readback(
-            pg, fault=fault, log_position=log_position)
+            pg, fault=fault, log_position=log_position, deadline=deadline)
         _remaining(deadline)
         need(observe_old_lab_backend(pg, **old,
              timeout=min(120, _remaining(deadline))) == "EXTINCT",
