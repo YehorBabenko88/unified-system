@@ -73,6 +73,7 @@ class QualificationTests(unittest.TestCase):
     def test_fixture_verified_bytes_but_never_grants_authority(self):
         result = self.scan()
         self.assertTrue(result["installed_record_verified"])
+        self.assertFalse(result["all_installed_bytes_authenticated"])
         self.assertTrue(result["entrypoint_metadata_match"])
         for k in ("release_authenticated", "root_admitted", "writer_admitted", "import_origin_verified", "runtime_entrypoint_verified"):
             self.assertFalse(result[k])
