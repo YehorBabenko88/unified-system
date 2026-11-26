@@ -362,6 +362,11 @@ class NativePg18V2Tests(unittest.TestCase):
     def test_native_crash_recovers_fence_high_water_without_old_writer(self):
         ids = self.identity()
         self.assertTrue(self.claim(self.writer, 1, 200, ids))
+        first_pid = self.backend_pid(self.writer)
+        first_receipt = revalidate_lab_fence(
+            self.pg, identity=self.lease_identity(ids, 200),
+            generation=1, backend_pid=first_pid)
+        self.assertTrue(first_receipt["db_backend_observed"])
         write_row(self.writer, source_sha=self.source_sha, schema_sha=self.schema_sha, generation=1, token=200, ids=ids,
                   fp="9"*64, content_id="a"*64)
         self.writer.close()
@@ -372,6 +377,11 @@ class NativePg18V2Tests(unittest.TestCase):
         self.assertFalse(self.pg.started)
         self.pg.start()
         self.assertNotEqual(self.pg.postmaster_pid(), killed_pid)
+        with self.assertRaisesRegex(LabAdmissionRejected,
+                                    "LAB_FENCE_REVALIDATION_DENIED"):
+            revalidate_lab_fence(
+                self.pg, identity=self.lease_identity(ids, 200),
+                generation=1, backend_pid=first_pid)
         self.assertEqual(self.pg.sql(
             "SELECT generation,token,active FROM lab_writer_fence"), "1|200|t")
         self.assertEqual(self.pg.sql("SELECT count(*) FROM provenance_minutes"),
