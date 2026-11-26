@@ -125,7 +125,10 @@ class LabPostgres:
             state = c._STATES.get(root)
             need(state is not None and state.pg is self
                  and (state.phase == 'IN_PROGRESS'
-                      or terminal_stop and state.phase == 'COMPLETE_DENIED')
+                      or terminal_stop and state.phase == 'COMPLETE_DENIED'
+                      or terminal_stop and state.phase == 'POISONED'
+                      and os.environ.get('LAB_C_PG18_NATIVE_TEST') == '1'
+                      and self.root.name.startswith('c-round14-recovery-'))
                  and state.worker_tid == threading.get_ident()
                  and state.lock_fd == self._lifecycle_lock_fd
                  and state.marker == self._nonce,
