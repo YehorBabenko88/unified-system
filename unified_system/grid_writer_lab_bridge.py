@@ -128,13 +128,14 @@ def _require_native_owner_contract(authority, lease, source, manifest,
           "LAB_QUIESCENCE_WITNESS_REQUIRED")
     _need(c_module is not None
           and callable(getattr(c_module, "fenced_lab_witness", None))
-          and callable(getattr(c_module, "fence_identity", None)),
+          and callable(getattr(c_module, "fence_identity", None))
+          and callable(getattr(c_module, "revalidate_lab_fence", None)),
           "LAB_C_CANONICAL_FENCE_REQUIRED")
 
 
 async def assess_lab_c_fence(*, authority, lease, source, manifest, identity,
                              generation, pg, c_module, legacy_witness,
-                             source_root):
+                             source_root, backend_pid):
     """Read-only multi-owner assessment; even positive result cannot start.
 
     Caller must independently supply protected Root objects: do not accept
@@ -144,6 +145,8 @@ async def assess_lab_c_fence(*, authority, lease, source, manifest, identity,
     """
     try:
         from .consul_authority import ConsulLease, ConsulSessionAuthority
+        _need(type(backend_pid) is int and 1<backend_pid<2**31,
+              "LAB_WRITER_BACKEND_PID_REQUIRED")
         _need(type(authority) is ConsulSessionAuthority
               and authority.config.isolated_lab is True
               and type(lease) is ConsulLease,
@@ -185,6 +188,29 @@ async def assess_lab_c_fence(*, authority, lease, source, manifest, identity,
               and witness.get("execution_authority") is False
               and witness.get("trading_authorized") is False,
               "LAB_C_CUSTODY_UNVERIFIED")
+        # C's actual owner-side revalidation binds generation to the current
+        # original DB backend + backend_start. Never trust a caller JSON token.
+        receipt=c_module.revalidate_lab_fence(
+            pg,identity=identity,generation=generation,backend_pid=backend_pid)
+        expected={
+            "schema":"lab-postgres-fence-revalidation.v1",
+            "scope":SCOPE,"resource_id":_RESOURCE,
+            "generation":generation,"token":identity.token,
+            "backend_pid":backend_pid,"owner":identity.owner,
+            "namespace":identity.namespace,
+            "session_id":identity.session_id,
+            "instance_id":identity.instance_id,
+            "node_incarnation_id":identity.node_incarnation_id,
+            "source_sha256":actual_source,
+            "schema_sha256":actual_schema,
+            "db_backend_observed":True,"db_fence_current_at_read":True,
+            "root_consul_admitted":False,
+            "host_old_process_quiescence_attested":False,
+            "native_writer_admitted":False,"paper_admitted":False,
+            "execution_authority":False,"trading_authorized":False,
+        }
+        _need(type(receipt) is dict and receipt==expected,
+              "LAB_C_FENCE_REVALIDATION_REJECTED")
         # The window between two reads is not an atomic native grant. This is
         # for diagnosis only; real admission needs owner-controlled lifecycle
         # and a C transaction acquired under the same Root authority.

@@ -54,3 +54,16 @@ executed C/B native PG18 lanes. No real provider/exchange authenticity,
 completeness or paper/trading capability is asserted.
 
 **CODE NO_GO / PRODUCTION NO_GO.**
+
+## C Round-6 owner-side readback revalidation (post initial design)
+
+C [#163](https://github.com/YehorBabenko88/unified-system/pull/163)
+introduced `revalidate_lab_fence(pg, identity, generation, backend_pid)`.
+The E read-only bridge now **requires** that exact C API and strictly compares
+its full 21-field `lab-postgres-fence-revalidation.v1` receipt against E's
+typed `WriterLeaseIdentity`, exact C backend PID, current generation, active
+PostgreSQL backend start identity, and source/schema digests. It also requires
+the receipt to declare `native_writer_admitted=false` and to **NOT** claim
+Root Consul or host process proof. Stale/revoked DB generation and a receipt
+forged to grant native execution are rejected. C remains the only SQL owner:
+the bridge never claims/releases a writer and has no database write.

@@ -132,14 +132,34 @@ class BridgeTests(unittest.TestCase):
                 "writer_exec":True,"reader_exec":False,
                 "execution_authority":False,"trading_authorized":False,
             },
+            revalidate_lab_fence=self._fake_revalidate,
             claim_lab_fence=c_claim,
         )
+    def _fake_revalidate(self,pg,*,identity,generation,backend_pid):
+        return {
+            "schema":"lab-postgres-fence-revalidation.v1",
+            "scope":"ISOLATED_LAB_ONLY",
+            "resource_id":"grid-market-data-primary",
+            "generation":generation,"token":identity.token,
+            "backend_pid":backend_pid,"owner":identity.owner,
+            "namespace":identity.namespace,
+            "session_id":identity.session_id,
+            "instance_id":identity.instance_id,
+            "node_incarnation_id":identity.node_incarnation_id,
+            "source_sha256":identity.source_sha256,
+            "schema_sha256":identity.schema_sha256,
+            "db_backend_observed":True,"db_fence_current_at_read":True,
+            "root_consul_admitted":False,
+            "host_old_process_quiescence_attested":False,
+            "native_writer_admitted":False,"paper_admitted":False,
+            "execution_authority":False,"trading_authorized":False,
+        }
     def assess(self):
         return asyncio.run(assess_lab_c_fence(
             authority=self.authority,lease=self.lease,source=self.source,
             manifest=self.manifest,identity=self.identity,generation=1,
             pg=self.pg,c_module=self.c,legacy_witness=self.legacy,
-            source_root=self.source_root,
+            source_root=self.source_root,backend_pid=1408,
         ))
 
     def test_pinned_source_and_consul_shape_checks_never_grant_native(self):
@@ -217,6 +237,21 @@ class BridgeTests(unittest.TestCase):
             client_key="key",isolated_lab=False,
         )
         with self.assertRaises(ResourceFenceBlocked):
+            self.assess()
+
+    def test_stale_or_revoked_c_fence_never_passes_read_only_assessment(self):
+        self.c.revalidate_lab_fence=lambda *args,**kwargs: (_ for _ in ()).throw(
+            ValueError("LAB_FENCE_REVALIDATION_DENIED"))
+        with self.assertRaisesRegex(ResourceFenceBlocked,
+                                    "LAB_FENCE_ASSESSMENT_REJECTED"):
+            self.assess()
+        self.assertEqual(self.c_claims,[])
+
+    def test_forged_c_revalidation_receipt_never_passes(self):
+        self.c.revalidate_lab_fence=lambda *args,**kwargs: dict(
+            self._fake_revalidate(*args,**kwargs),native_writer_admitted=True)
+        with self.assertRaisesRegex(ResourceFenceBlocked,
+                                    "LAB_C_FENCE_REVALIDATION_REJECTED"):
             self.assess()
 
     def test_direct_native_bridge_admission_always_denied(self):
