@@ -89,54 +89,11 @@ class LabPgRecoveryLane:
         # never authority. Refuse BEFORE _submitted, thread creation or C IO.
         # Only A/C/E-approved evidence verification may replace this gate.
         raise ResourceFenceBlocked("LAB_ROOT_BOUND_EXTINCTION_NOT_IMPLEMENTED")
-        with self._lock:
-            _need(not self._busy and not self._submitted
-                  and not self._poisoned and not self._closed,
-                  "LAB_PG_RECOVERY_ALREADY_SUBMITTED")
-            self._busy=True
-            self._submitted=True
-            self._worker_done_event.clear()
-        try:
-            from .lab_pg_recovery import recover_exclusive_lab_cluster
-            def c_recovery():
-                try:
-                    return recover_exclusive_lab_cluster(
-                        self._pg,old=old,streams=streams,quiesced=True,
-                        max_seconds=max_seconds)
-                finally:
-                    # This event is set in the actual OS worker thread, not
-                    # by an asyncio wrapper cancelled after timeout.
-                    self._worker_done_event.set()
-            future=asyncio.get_running_loop().run_in_executor(
-                self._pool,c_recovery)
-            with self._lock:self._future=future
-            result=await asyncio.wait_for(asyncio.shield(future),
-                                          timeout=max_seconds)
-            _need(type(result) is dict
-                  and result.get("schema") ==
-                  "c-isolated-pg18-recovery-diagnostic.v2"
-                  and result.get("scope") == "ISOLATED_LAB_ONLY"
-                  and result.get("old_generation") == old.get("generation")
-                  and result.get("old_token") == old.get("token")
-                  and result.get("old_backend_pid") == old.get("backend_pid")
-                  and result.get("old_backend_start") == old.get("backend_start")
-                  and result.get("durable_fence_active") is False
-                  and type(result.get("stream_snapshots")) is dict
-                  and result.get("native_admitted") is False
-                  and result.get("root_consul_admitted") is False
-                  and result.get("execution_authority") is False
-                  and result.get("paper_admitted") is False
-                  and result.get("trading_authorized") is False,
-                  "LAB_C_RECOVERY_RESULT_UNVERIFIED")
-            self._last=result
-            return LabPgRecoveryObservation(
-                "unified.root-pg-recovery-dispatch.v2",
-                "C_DIAGNOSTIC_COMPLETE",worker_done=True)
-        except BaseException:
-            with self._lock:self._poisoned=True
-            raise
-        finally:
-            with self._lock:self._busy=False
+        # This source is deliberately inert: no new worker is ever submitted
+        # until A verifies the exact retired process tree and C verifies its
+        # matching backend incarnation under a mutually authenticated Root
+        # owner operation. Keep the original dispatcher contract for a
+        # coordinated A/C/E replacement, not a speculative native bypass.
 
     def close(self):
         with self._lock:
