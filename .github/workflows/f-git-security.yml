@@ -66,3 +66,41 @@ jobs:
           set -euo pipefail
           python tools/git_history_secret_triage.py --repo . --output "${RUNNER_TEMP}/f-history-scan.json"
           python -c 'import json,os; d=json.load(open(os.path.join(os.environ["RUNNER_TEMP"],"f-history-scan.json"))); assert d["blobs_scanned"]>0; print("historical_triage_blobs="+str(d["blobs_scanned"])+"; potential_pattern_blob_count="+str(len(d["findings"]))+"; NO_SECRET_FREE_CLAIM")'
+
+  pinned-grid-root-ast-inventory:
+    name: F pinned Grid-Root function fingerprints (metadata only)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          repository: YehorBabenko88/bybit-cluster-grid
+          ref: c9ffdaa2af52c4d55871a48655a77a0c669da80f
+          path: .sources/grid
+          persist-credentials: false
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          repository: YehorBabenko88/unified-system
+          ref: f05f9a73581b1c15c4cc78da2801c9f2f5dd08d0
+          path: .sources/root
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: '3.12'
+      - name: Compute exact-source AST IDs without importing code
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/git_duplicate_ast_inventory.py --grid .sources/grid --unified .sources/root --grid-sha c9ffdaa2af52c4d55871a48655a77a0c669da80f --unified-sha f05f9a73581b1c15c4cc78da2801c9f2f5dd08d0 --output "${RUNNER_TEMP}/grid-root-dedup.json"
+          python -c 'import json,os; p=os.path.join(os.environ["RUNNER_TEMP"],"grid-root-dedup.json"); d=json.load(open(p)); assert d["status"]=="REVIEW_REQUIRED"; assert all(not row["deletion_authorized"] for row in d["matches"]); print("GRID_ROOT_AST_MATCH_PAIRS="+str(d["match_pair_count"])+"; historic_32_unverified")'
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: f-grid-root-ast-inventory
+          path: ${{ runner.temp }}/grid-root-dedup.json
+          if-no-files-found: error
+          retention-days: 7
