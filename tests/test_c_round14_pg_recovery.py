@@ -293,7 +293,7 @@ class NativeCRecoveryTests(unittest.TestCase):
                 self.pg,identity=identity,generation=1,
                 backend_pid=self.old["backend_pid"])
 
-    def test_native_power_loss_wal_replay_with_immutable_pending_checkpoint(self):
+    def test_native_process_crash_wal_replay_with_immutable_pending_checkpoint(self):
         from unittest.mock import patch
         stream="bybit:BTCUSDT:1m"
         symbol="BTCUSDT"
@@ -322,16 +322,16 @@ class NativeCRecoveryTests(unittest.TestCase):
             f"'{fp}','{cid}','unified-system','unified/lab',1,100)")
         self.assertEqual(read_lab_pending(
             self.pg,stream_id=stream)["content_id"],cid)
-        with patch.dict(os.environ,{"LAB_C_PG18_WAL_FAULT_TEST":"1"}):
+        with patch.dict(os.environ,{"LAB_C_PG18_PROCESS_CRASH_TEST":"1"}):
             contained=contain_exclusive_lab_cluster(
                 self.pg,old=dict(self.old),quiesced=True,
-                max_seconds=180,fault="POWER_LOSS_TEST")
+                max_seconds=180,fault="PROCESS_CRASH_TEST")
             self.assertEqual(contained["state"],"UNKNOWN")
             self.assertFalse(contained["old_backend_extinct"])
             self.assertFalse(self.pg.started)
             recovered=self._recover(streams=(stream,),max_seconds=250)
         self.assertEqual(recovered["wal_recovery"],
-                         "LAB_CRASH_REPLAY_LOG_VERIFIED")
+                         "LAB_PROCESS_CRASH_WAL_REPLAY_LOG_VERIFIED")
         self.assertFalse(recovered["native_admitted"])
         snap=recovered["stream_snapshots"][stream]
         self.assertEqual(snap["immutable_outcome"],"MATCH")
