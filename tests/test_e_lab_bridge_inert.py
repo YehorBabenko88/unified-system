@@ -131,6 +131,11 @@ class BridgeTests(unittest.TestCase):
                 "scope":"ISOLATED_LAB_ONLY","direct_writer_insert":False,
                 "writer_exec":True,"reader_exec":False,
                 "execution_authority":False,"trading_authorized":False,
+                "fence_writer_select":False,"fence_writer_update":False,
+                "fence_reader_select":False,"function_owner":"lab_owner",
+                "function_security_definer":True,
+                "function_search_path_pinned":True,
+                "fence_owner":"lab_owner","fence_state_count":1,
             },
             revalidate_lab_fence=self._fake_revalidate,
             claim_lab_fence=c_claim,
@@ -230,6 +235,25 @@ class BridgeTests(unittest.TestCase):
         with self.assertRaises(ResourceFenceBlocked):
             self.assess()
 
+    def test_c_owner_and_security_definer_attestation_are_required(self):
+        original=self.c.fenced_lab_witness
+        mutations=(
+            ("function_owner","lab_writer"),
+            ("function_security_definer",False),
+            ("function_search_path_pinned",False),
+            ("fence_owner","lab_reader"),
+            ("fence_writer_select",True),
+            ("fence_writer_update",True),
+            ("fence_reader_select",True),
+            ("fence_state_count",2),
+        )
+        for key,value in mutations:
+            self.c.fenced_lab_witness=lambda _,k=key,v=value:dict(
+                original(self.pg),**{k:v})
+            with self.subTest(key=key),self.assertRaises(ResourceFenceBlocked):
+                self.assess()
+        self.c.fenced_lab_witness=original
+
     def test_untrusted_production_authority_not_accepted(self):
         self.authority.config=ConsulConfig(
             ("https://127.0.0.1:8500",),"unified/primary",
@@ -253,6 +277,48 @@ class BridgeTests(unittest.TestCase):
         with self.assertRaisesRegex(ResourceFenceBlocked,
                                     "LAB_C_FENCE_REVALIDATION_REJECTED"):
             self.assess()
+
+    def test_new_writer_cohort_not_silently_pinned_under_old_b(self):
+        from unified_system.grid_writer_lab_bridge import (
+            verified_grid_writer_adapter_pin,
+        )
+        with self.assertRaisesRegex(
+            ResourceFenceBlocked,"LAB_GRID_WRITER_COHORT_NOT_PINN"):
+            verified_grid_writer_adapter_pin(
+                self.source,self.manifest,self.source_root)
+
+    def test_explicit_writer_pin_still_never_grants_native(self):
+        from unified_system.grid_writer_lab_bridge import (
+            GRID_WRITER_PATH,GRID_WRITER_COMMIT,
+            verified_grid_writer_adapter_pin,
+        )
+        import hashlib
+        manifest=dict(self.manifest)
+        manifest["sources"]={
+            "market_data":dict(self.manifest["sources"]["market_data"],
+                               commit=GRID_WRITER_COMMIT)}
+        manifest["files"]=dict(self.manifest["files"])
+        raw=b"synthetic-grid-writer-inert"
+        path=self.source_root/GRID_WRITER_PATH
+        path.parent.mkdir(parents=True,exist_ok=True)
+        path.write_bytes(raw)
+        manifest["files"]["sources/market_data/"+GRID_WRITER_PATH]={
+            "sha256":hashlib.sha256(raw).hexdigest(),"bytes":len(raw)}
+        source=Source(self.source_root)
+        original=source.source_scope
+        source.source_scope=lambda module,actual,commit: (
+            self.source_root if commit==GRID_WRITER_COMMIT
+            and module=="market_data" and actual==self.source_root
+            else original(module,actual,commit))
+        result=verified_grid_writer_adapter_pin(
+            source,manifest,self.source_root)
+        self.assertEqual(result["source_commit"],GRID_WRITER_COMMIT)
+        self.assertIs(result["native_admitted"],False)
+        self.assertIs(result["trading_authorized"],False)
+        path.write_bytes(b"tamper")
+        with self.assertRaises(ResourceFenceBlocked):
+            verified_grid_writer_adapter_pin(
+                source,manifest,self.source_root)
 
     def test_direct_native_bridge_admission_always_denied(self):
         with self.assertRaisesRegex(ResourceFenceBlocked,

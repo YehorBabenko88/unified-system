@@ -94,6 +94,68 @@ def verified_grid_source_digests(source, manifest, source_root):
         raise ResourceFenceBlocked("LAB_SOURCE_DIGEST_NOT_ATTESTED") from None
 
 
+# Only a declared, source-verified, explicitly enumerated B Grid adapter may
+# participate in a later combined Root/C writer acceptance. The adapter lives
+# outside the Market Data wheel and is NOT imported or run here.
+GRID_WRITER_PATH = "grid/canonical_lab_fenced_writer.py"
+GRID_WRITER_COMMIT = "3265d441717f2bc01b82e759b5d8df06cb516fa4"
+GRID_WRITER_BLOB = "8b93466a79fa234468a3cdc44106bd5e153e81c4"
+
+
+def verified_grid_writer_adapter_pin(source, manifest, source_root):
+    """Verify B adapter bytes and exact installed source tree cohort.
+
+    The present `entry_for_manifest` is frozen to the older approved B read
+    cohort. This function refuses implicit relabeling of the new writer: a
+    future combined LAB manifest must explicitly carry its NEW B commit.
+    Always diagnostic; never enough to authorize execution.
+    """
+    _need(type(manifest) is dict and type(manifest.get("sources")) is dict
+          and type(manifest.get("files")) is dict,
+          "LAB_GRID_WRITER_PIN_MISSING")
+    src=manifest["sources"].get("market_data")
+    _need(type(src) is dict and src.get("repository") == GRID_REPOSITORY
+          and src.get("commit") == GRID_WRITER_COMMIT,
+          "LAB_GRID_WRITER_COHORT_NOT_PINNED")
+    path="sources/market_data/"+GRID_WRITER_PATH
+    pin=manifest["files"].get(path)
+    _need(type(pin) is dict and set(pin)=={"sha256","bytes"}
+          and type(pin["sha256"]) is str and len(pin["sha256"])==64
+          and type(pin["bytes"]) is int and 0<pin["bytes"]<=1024*1024,
+          "LAB_GRID_WRITER_PIN_MISSING")
+    _need(source.require_current() is True,
+          "LAB_SOURCE_REVOKED")
+    try:
+        from .lab_release import regular
+        root=Path(source_root).resolve(strict=True)
+        selected=source.source_scope(
+            "market_data",root,GRID_WRITER_COMMIT)
+        _need(Path(selected).resolve(strict=True)==root,
+              "LAB_GRID_WRITER_ROOT_REJECTED")
+        import hashlib
+        raw=regular(root/GRID_WRITER_PATH).read_bytes()
+        _need(len(raw)==pin["bytes"]
+              and hashlib.sha256(raw).hexdigest()==pin["sha256"],
+              "LAB_GRID_WRITER_BYTES_CHANGED")
+        _need(source.require_current() is True,
+              "LAB_SOURCE_REVOKED")
+        return {
+            "schema":"unified.grid-canonical-lab-writer-pin.v1",
+            "source_commit":GRID_WRITER_COMMIT,
+            "git_blob_sha1":GRID_WRITER_BLOB,
+            "relative_path":GRID_WRITER_PATH,
+            "file_sha256":pin["sha256"],
+            "size_bytes":pin["bytes"],
+            "native_admitted":False,
+            "trading_authorized":False,
+        }
+    except ResourceFenceBlocked:
+        raise
+    except Exception:
+        raise ResourceFenceBlocked(
+            "LAB_GRID_WRITER_BYTES_NOT_ATTESTED") from None
+
+
 def _require_native_owner_contract(authority, lease, source, manifest,
                                    identity, generation,
                                    legacy_witness, pg, c_module):
@@ -180,6 +242,15 @@ async def assess_lab_c_fence(*, authority, lease, source, manifest, identity,
               "LAB_C_FENCE_ABI_REJECTED")
         witness=c_module.fenced_lab_witness(pg)
         _need(type(witness) is dict
+              and witness.get("fence_writer_select") is False
+              and witness.get("fence_writer_update") is False
+              and witness.get("fence_reader_select") is False
+              and witness.get("function_owner") == "lab_owner"
+              and witness.get("function_security_definer") is True
+              and witness.get("function_search_path_pinned") is True
+              and witness.get("fence_owner") == "lab_owner"
+              and type(witness.get("fence_state_count")) is int
+              and 0 <= witness["fence_state_count"] <= 1
               and witness.get("schema") == C_FENCE_SCHEMA
               and witness.get("scope") == SCOPE
               and witness.get("direct_writer_insert") is False

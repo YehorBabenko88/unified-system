@@ -67,3 +67,20 @@ the receipt to declare `native_writer_admitted=false` and to **NOT** claim
 Root Consul or host process proof. Stale/revoked DB generation and a receipt
 forged to grant native execution are rejected. C remains the only SQL owner:
 the bridge never claims/releases a writer and has no database write.
+
+## Round 7 explicit B writer source cohort guard
+
+B writer `grid/canonical_lab_fenced_writer.py` is a **different** B
+source cohort `3265d441717f2bc01b82e759b5d8df06cb516fa4` with Git
+blob `8b93466a79fa234468a3cdc44106bd5e153e81c4`; not packaged into
+the earlier `market-data==0.2.0.dev0` wheel and NOT covered by the old
+`f57781a9` source selector. New read-only helper
+`verified_grid_writer_adapter_pin` rejects trying to pass that writer
+through an old cohort and checks an explicitly new manifest SHA256 file
+pin + source-scope binding for a fresh combined LAB-only candidate. Its
+result **always** says `native_admitted=False` and
+`trading_authorized=False`. The helper does not grant a runtime, install
+packages, create a connection or invoke the writer. B/C/F must coordinate
+the full source-tree Git integrity and independently hashed wheel after
+their verified non-main integration candidate is constructed. Synthetic
+adapter bytes in the test do not prove actual Git blob identity.
