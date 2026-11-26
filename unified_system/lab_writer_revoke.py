@@ -99,7 +99,7 @@ class LabWriterRevoker:
                 await blocked(lambda: self._c.revoke_lab_fence(
                     self._pg, generation=self._generation,
                     token=self._token)) is True)
-        except Exception:
+        except BaseException:
             pass
         try:
             await self._authority.release(self._lease)
