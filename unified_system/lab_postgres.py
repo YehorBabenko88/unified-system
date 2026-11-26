@@ -155,10 +155,10 @@ class LabPostgres:
                      and (self._data_identity is None or
                           (data_info.st_dev, data_info.st_ino) == self._data_identity),
                      'LAB_PG_DATA_FOREIGN')
-            elif self._data_identity is not None:
-                raise LabAdmissionRejected('LAB_PG_DATA_DISAPPEARED')
                 if os.name != 'nt':
                     need(data_info.st_uid == os.getuid(), 'LAB_PG_DATA_FOREIGN')
+            elif self._data_identity is not None:
+                raise LabAdmissionRejected('LAB_PG_DATA_DISAPPEARED')
         except (OSError, ValueError) as error:
             raise LabAdmissionRejected('LAB_PG_OWNERSHIP_LOST') from error
 
