@@ -460,10 +460,32 @@ class _WindowsNonServiceLabToken:
             # CreateRestrictedToken's disabled group list.
             disable_count = 1 if enabled_admin.value else 0
             disabled_ptr = ctypes.byref(disabled) if disable_count else None
+            # DISABLE_MAX_PRIVILEGE only disables rights and could leave
+            # re-enableable privileges. DELETE every privilege except the
+            # harmless traverse-bypass SeChangeNotify privilege instead.
+            class Luid(ctypes.Structure):
+                _fields_ = [('low', w.DWORD), ('high', w.LONG)]
+            class LuidAttributes(ctypes.Structure):
+                _fields_ = [('luid', Luid), ('attributes', w.DWORD)]
+            a.LookupPrivilegeValueW.argtypes = [
+                w.LPCWSTR, w.LPCWSTR, ctypes.POINTER(Luid)]
+            a.LookupPrivilegeValueW.restype = w.BOOL
+            permitted = Luid()
+            if not a.LookupPrivilegeValueW(None, 'SeChangeNotifyPrivilege',
+                                           ctypes.byref(permitted)):
+                raise ValueError('LAB allowed privilege identity unavailable')
+            roster = self._token_privileges(source)
+            remove = [(lo, hi) for lo, hi, attrs in roster
+                      if (lo, hi) != (permitted.low, permitted.high)]
+            if len(remove) > 128:
+                raise ValueError('LAB privilege deletion unbounded')
+            delete_entries = (LuidAttributes * len(remove))(
+                *(LuidAttributes(Luid(lo, hi), 0) for lo, hi in remove))
+            delete_ptr = (ctypes.cast(delete_entries, ctypes.c_void_p)
+                          if remove else None)
             restricted = w.HANDLE()
-            # DISABLE_MAX_PRIVILEGE; enabled Administrators becomes deny-only.
-            if not a.CreateRestrictedToken(source, 0x1, disable_count, disabled_ptr,
-                                           0, None, 0, None,
+            if not a.CreateRestrictedToken(source, 0, disable_count, disabled_ptr,
+                                           len(remove), delete_ptr, 0, None,
                                            ctypes.byref(restricted)):
                 raise ValueError('LAB restricted primary token creation denied')
             self._handle = restricted
@@ -479,6 +501,31 @@ class _WindowsNonServiceLabToken:
             if source: k.CloseHandle(source)
             if admin_sid: k.LocalFree(admin_sid)
             if low_sid: k.LocalFree(low_sid)
+
+    def _token_privileges(self, token):
+        """Return the exact current Windows TOKEN_PRIVILEGES LUID roster."""
+        import struct
+        from ctypes import wintypes as w
+        need = w.DWORD(0)
+        self._a.GetTokenInformation(token, 3, None, 0, ctypes.byref(need))
+        if (ctypes.get_last_error() != 122
+                or not 4 <= need.value <= 8192):
+            raise ValueError('LAB token privileges unavailable')
+        buf = ctypes.create_string_buffer(need.value)
+        if not self._a.GetTokenInformation(
+                token, 3, buf, need.value, ctypes.byref(need)):
+            raise ValueError('LAB token privileges inaccessible')
+        count = struct.unpack_from('<I', buf.raw, 0)[0]
+        if count > 128 or 4 + count * 12 > need.value:
+            raise ValueError('LAB token privilege roster invalid')
+        out = []
+        for index in range(count):
+            low, high_unsigned, attrs = struct.unpack_from(
+                '<III', buf.raw, 4 + index * 12)
+            out.append((low, ctypes.c_int32(high_unsigned).value, attrs))
+        if len({(lo, hi) for lo, hi, _ in out}) != len(out):
+            raise ValueError('LAB duplicate token privileges')
+        return tuple(out)
 
     def _verify_token(self, token, admin_sid=None, low_sid=None):
         from ctypes import wintypes as w
@@ -508,10 +555,8 @@ class _WindowsNonServiceLabToken:
             label = self._MandatoryLabel.from_buffer(buf)
             if not label.label.sid or not a.EqualSid(label.label.sid, low_sid):
                 raise ValueError('LAB token is not Low Integrity')
-            # The restricted LAB token must not retain any enabled privilege
-            # except SeChangeNotifyPrivilege. Validate the REAL token returned
-            # by Windows rather than trusting CreateRestrictedToken's call.
-            import struct
+            # The child must not have dangerous privileges even DISABLED:
+            # AdjustTokenPrivileges could re-enable a disabled privilege.
             class Luid(ctypes.Structure):
                 _fields_ = [('low', w.DWORD), ('high', w.LONG)]
             a.LookupPrivilegeValueW.argtypes = [
@@ -521,24 +566,10 @@ class _WindowsNonServiceLabToken:
             if not a.LookupPrivilegeValueW(None, 'SeChangeNotifyPrivilege',
                                            ctypes.byref(allowed)):
                 raise ValueError('LAB allowed privilege identity unavailable')
-            priv_size = w.DWORD(0)
-            a.GetTokenInformation(token, 3, None, 0, ctypes.byref(priv_size))
-            if (ctypes.get_last_error() != 122
-                    or not 4 <= priv_size.value <= 8192):
-                raise ValueError('LAB token privileges unavailable')
-            priv_buf = ctypes.create_string_buffer(priv_size.value)
-            if not a.GetTokenInformation(token, 3, priv_buf, priv_size.value,
-                                         ctypes.byref(priv_size)):
-                raise ValueError('LAB token privileges inaccessible')
-            count = struct.unpack_from('<I', priv_buf.raw, 0)[0]
-            if count > 128 or 4 + count * 12 > priv_size.value:
-                raise ValueError('LAB token privilege roster invalid')
-            for index in range(count):
-                low, high_unsigned, attrs = struct.unpack_from(
-                    '<III', priv_buf.raw, 4 + index * 12)
-                high = ctypes.c_int32(high_unsigned).value
-                if attrs & 0x2 and (low, high) != (allowed.low, allowed.high):
-                    raise ValueError('LAB token retained an enabled privilege')
+            roster = self._token_privileges(token)
+            if any((lo, hi) != (allowed.low, allowed.high)
+                   for lo, hi, attrs in roster):
+                raise ValueError('LAB token contains a re-enableable privilege')
             # Test the *actual* token against local SCM DACL. This does not
             # register, start, stop or alter any service.
             scm = ctypes.WinDLL('advapi32', use_last_error=True)
