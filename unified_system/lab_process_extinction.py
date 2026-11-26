@@ -63,10 +63,19 @@ def observe_owned_process_extinction(driver, handle):
         # _OwnedWindowsChild, NOT a subprocess.Popen subclass. Accept only
         # that exact A-owned class from A's canonical module; never accept an
         # arbitrary duck-typed lookalike or caller-provided PID.
-        from .runtime_process import _OwnedWindowsChild
-        _need(type(child) in (subprocess.Popen, _OwnedWindowsChild)
+        from . import runtime_process as _a_runtime
+        # E's standalone branch predates A's protected job launcher. Its
+        # Windows child class must come from the actual integrated A module,
+        # not a fabricated fallback, injected type name or caller object.
+        owned_class = getattr(_a_runtime, "_OwnedWindowsChild", None)
+        if owned_class is not None:
+            _need(type(owned_class) is type,
+                  "LAB_PROCESS_OBSERVATION_A_RUNTIME_UNQUALIFIED")
+        is_windows_child = (owned_class is not None
+                            and type(child) is owned_class)
+        _need((type(child) is subprocess.Popen or is_windows_child)
               and child.pid==pid
-              and (type(child) is not _OwnedWindowsChild
+              and (not is_windows_child
                    or (child._handle is not None
                        and child._job is not None
                        and child._job._handle is not None
