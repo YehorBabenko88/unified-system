@@ -65,8 +65,12 @@ class RootGridChildWitness:
                   and record.get("source_commit") == self._source_commit
                   and record.get("release_id") == self._release_id,
                   "LAB_ROOT_CHILD_IDENTITY_CHANGED")
-            _need(self._driver.alive(self._handle) is True
-                  and _identity(self._pid) == self._created,
+            # Use A's single canonical OS tri-state instead of alive().
+            # A missing/incompatible A build is UNKNOWN and denies grant.
+            observer=getattr(self._driver,"owned_process_state",None)
+            _need(callable(observer)
+                  and observer(self._handle)=="STILL_ALIVE"
+                  and _identity(self._pid)==self._created,
                   "LAB_ROOT_CHILD_OS_IDENTITY_LOST")
             return True
         except ResourceFenceBlocked:
@@ -77,12 +81,23 @@ class RootGridChildWitness:
     def confirmed_single_child(self):
         self.require_current()
         try:
-            active = []
+            observer=getattr(self._driver,"owned_process_state",None)
+            _need(callable(observer),"LAB_ROOT_CANONICAL_OS_OBSERVER_REQUIRED")
+            active=[]
             for handle in tuple(self._driver.children):
-                record = self._driver._load(handle)
-                if (record.get("module_id") == "market_data"
-                        and self._driver.alive(handle)):
-                    active.append(handle)
+                record=self._driver._load(handle)
+                if record.get("module_id") != "market_data":
+                    continue
+                state=observer(handle)
+                _need(state in ("EXTINCT","STILL_ALIVE","UNKNOWN"),
+                      "LAB_ROOT_CHILD_OS_OBSERVER_INVALID")
+                _need(state!="UNKNOWN","LAB_ROOT_OLD_GRID_OS_UNKNOWN")
+                if state=="STILL_ALIVE":active.append(handle)
+                if handle!=self._handle:
+                    # No old child can be accepted on Popen-only extinction;
+                    # independent descendant+TCP census is still missing.
+                    raise ResourceFenceBlocked(
+                        "LAB_ROOT_OLD_GRID_LISTENER_PROOF_REQUIRED")
             _need(active == [self._handle],
                   "LAB_ROOT_MULTIPLE_GRID_CHILDREN")
             return True
