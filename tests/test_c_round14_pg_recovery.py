@@ -104,6 +104,19 @@ class NativeCRecoveryTests(unittest.TestCase):
                 MaliciousPg(), old=self.old,
                 quiesced=True, max_seconds=180)
 
+    def test_direct_lifecycle_entrypoints_rejected_without_c_lock(self):
+        # No caller, even with the LabPostgres instance, may bypass C's
+        # original OS-backed resource owner after first startup.
+        for operation in (lambda: self.pg.stop(),
+                          lambda: self.pg.crash(),
+                          lambda: self.pg.start()):
+            with self.subTest(operation=operation):
+                with self.assertRaises(LabAdmissionRejected):
+                    operation()
+                self.assertTrue(self.pg.started)
+                self.assertEqual(observe_old_lab_backend(
+                    self.pg, **self.old), "STILL_ALIVE")
+
     def test_kernel_lock_survives_stop_only_and_recovery(self):
         # A separate interpreter tries to lock the SAME inode, without
         # inheriting the owner's C descriptor. This is a kernel test.
@@ -294,12 +307,14 @@ class NativeCRecoveryTests(unittest.TestCase):
 
     def test_raw_stopped_postmaster_without_c_witness_denied(self):
         # A foreign/manual stop is not a protected C STOPPED_UNVERIFIED state.
-        self.pg.stop()
-        self.assertFalse(self.pg.started)
         with self.assertRaisesRegex(LabAdmissionRejected,
-                                    "LAB_RECOVERY_STOPPED_WITHOUT_C_EVIDENCE"):
-            self._recover()
-        self.assertFalse(self.pg.started)
+                                    "LAB_PG_C_OWNED_LIFECYCLE_REQUIRED"):
+            self.pg.stop()
+        self.assertTrue(self.pg.started)
+        # A raw caller cannot stop the original PG owner, so it also cannot
+        # manufacture a STOPPED_UNVERIFIED C-recovery receipt.
+        self.assertEqual(observe_old_lab_backend(self.pg, **self.old),
+                         "STILL_ALIVE")
 
     def test_stopped_old_identity_mutation_denied_before_restart(self):
         contained=contain_exclusive_lab_cluster(
