@@ -238,13 +238,13 @@ class NativeCRecoveryTests(unittest.TestCase):
         path=self.root/".lab-postgres-recovery.lock"
         self.assertTrue(path.is_file())
         code=(
-            "import fcntl,os,sys\\n"
-            "fd=os.open(sys.argv[1],os.O_RDWR)\\n"
-            "try:\\n"
-            " fcntl.flock(fd,fcntl.LOCK_EX|fcntl.LOCK_NB)\\n"
-            "except BlockingIOError:\\n"
-            " sys.exit(77)\\n"
-            "sys.exit(0)\\n"
+            "import fcntl,os,sys\n"
+            "fd=os.open(sys.argv[1],os.O_RDWR)\n"
+            "try:\n"
+            " fcntl.flock(fd,fcntl.LOCK_EX|fcntl.LOCK_NB)\n"
+            "except BlockingIOError:\n"
+            " sys.exit(77)\n"
+            "sys.exit(0)\n"
         )
         outsider=subprocess.run(
             [sys.executable,"-B","-c",code,str(path)],
