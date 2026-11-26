@@ -104,8 +104,8 @@ class WindowsRevisionBoundary:
   need(_hash(lab_release.regular(service.MODULE).read_bytes())==p['executor_sha256'])
   code="$ErrorActionPreference='Stop';[Console]::OutputEncoding=[Text.UTF8Encoding]::new($false);try{$r=[Console]::In.ReadToEnd()|ConvertFrom-Json;$m=Import-Module -Name ([WildcardPattern]::Escape($env:UNIFIED_SERVICE_MODULE)) -PassThru;& $m {param($r) Assert-OwnedAdmin;Assert-OwnedMarker $r.plan;foreach($p in $r.directories){Assert-OwnedPath $p;Set-OwnedAcl $p $r.plan.service_sid 'ReadAndExecute'};foreach($p in $r.files){Assert-OwnedPath $p;$a=Get-Acl -LiteralPath $p;$a.SetOwner([Security.Principal.SecurityIdentifier]::new('S-1-5-32-544'));(Get-Item -LiteralPath $p -Force).SetAccessControl($a)}} $r;[Console]::Out.Write('{\"ok\":true}')}catch{[Console]::Out.Write('{\"error\":\"ACTIVATION_NATIVE_REJECTED\"}');exit 1}"
   import base64
-  encoded=base64.b64encode(code.encode('utf-16le')).decode('ascii');env=service._environment();env['UNIFIED_SERVICE_MODULE']=str(service.MODULE)
-  output,status=service._run([p['native_tools']['powershell']['path'],'-NoProfile','-NonInteractive','-EncodedCommand',encoded],env=env,payload=canonical({'plan':p,'directories':[str(x) for x in directories],'files':[str(x) for x in files]}),timeout=60)
+  env=service._environment();env['UNIFIED_SERVICE_MODULE']=str(service.MODULE)
+  output,status=service._run(service.powershell_argv(p['native_tools']['powershell']['path'],code),env=env,payload=canonical({'plan':p,'directories':[str(x) for x in directories],'files':[str(x) for x in files]}),timeout=60)
   need(status==0 and json.loads(output)=={'ok':True},'ACTIVATION_NATIVE_REJECTED')
  def prepare(self,plan):
   self._assert_writer(plan)

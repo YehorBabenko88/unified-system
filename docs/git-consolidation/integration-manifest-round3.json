@@ -1,0 +1,449 @@
+{
+  "schema": "unified.git-integration-manifest.v2",
+  "observed_date": "2026-11-26",
+  "point_in_time_not_atomic": true,
+  "canonical_owners": {
+    "Bybit_and_market_data": "bybit-cluster-grid",
+    "computations": "math",
+    "strategy_paper_browser": "Terminan",
+    "infrastructure_services_postgres": "unified-system"
+  },
+  "release": {
+    "code": "NO_GO",
+    "production": "NO_GO",
+    "real_trading_allowed": false,
+    "paper_authorized_by_PARTIAL": false
+  },
+  "entries": [
+    {
+      "id": "A",
+      "owner": "A",
+      "repo": "unified-system",
+      "pr": 162,
+      "sha": "0ad4a4dc55390fb3ccae146e9461ca5595efbca7",
+      "base": "573d76938ab398cd23b37a247eb783ce3c58f389",
+      "focus": "Windows native child/PowerShell environment",
+      "contract": "hosted CI and native admission, no timeout weakening",
+      "status": "UNQUALIFIED"
+    },
+    {
+      "id": "B1",
+      "owner": "B",
+      "repo": "bybit-cluster-grid",
+      "pr": 299,
+      "sha": "39a6cf4d8c039ca99bbfc00ca7cc2359bef5c60c",
+      "base": "c9ffdaa2af52c4d55871a48655a77a0c669da80f",
+      "focus": "Grid market_data migration, sealed 902 roster and canonical Bybit owner",
+      "contract": "canonical producer market_data; Grid owns data/transport and versioned route",
+      "status": "UNQUALIFIED"
+    },
+    {
+      "id": "B2",
+      "owner": "B",
+      "repo": "bybit-cluster-grid",
+      "pr": 300,
+      "sha": "4deeda39e36facead834b3dc7bbe3e8796b5c067",
+      "base": "4391a5c2a5a3ce58d0b0446069ba42efc29e9c70",
+      "focus": "pure qualified-read envelope v1 (not deployed authenticated route)",
+      "contract": "status PARTIAL never implies exchange-complete/paper authorization",
+      "status": "NATIVE_PG_AUTHORED_NOT_EXECUTED"
+    },
+    {
+      "id": "C",
+      "owner": "C",
+      "repo": "unified-system",
+      "pr": 163,
+      "sha": "dc60465385c8201254efd94c36049ecdbcec59c1",
+      "base": "4c5a0a943bc50ca820f1a897afe3311a582e9344",
+      "focus": "owned PostgreSQL 18 and LAB admission",
+      "contract": "writer/storage fencing, canonical Grid producer name/migration 47, immutable witness",
+      "status": "FENCE_AUTHORED_NATIVE_CI_QUEUED"
+    },
+    {
+      "id": "D1",
+      "owner": "D",
+      "repo": "Terminan",
+      "pr": 126,
+      "sha": "fb64be03dda72307bed4be4b25e5d51242882769",
+      "base": "61aa7e17d440ce4d5a7d372cedcedfe47e3144de",
+      "focus": "qualified PARTIAL read/chart without paper authorization",
+      "contract": "currently Grid history_api v1.1, not B qualified-read-envelope.v1 route",
+      "status": "COMPONENT_CI_SUCCESS_NOT_NATIVE_E2E"
+    },
+    {
+      "id": "D2",
+      "owner": "D",
+      "repo": "Terminan",
+      "pr": 127,
+      "sha": "9846eef2d504ef3d57572b6bd6a26b370a056db1",
+      "base": "61aa7e17d440ce4d5a7d372cedcedfe47e3144de",
+      "focus": "book spread tick parity via Math tick_distance",
+      "contract": "same book_summary.py patch as D1; other changes differ",
+      "status": "COMPONENT_CI_ONLY"
+    },
+    {
+      "id": "E",
+      "owner": "E",
+      "repo": "unified-system",
+      "pr": 164,
+      "sha": "24800aa1c4f362af3d2c717f2ad75a7fc92e2f3f",
+      "base": "f05f9a73581b1c15c4cc78da2801c9f2f5dd08d0",
+      "focus": "LAN first-close and Root exclusive authority",
+      "contract": "Consul lease alone insufficient; C PG resource fence + B writer exclusion",
+      "status": "LAB_V2_SELECTORS_AUTHORED_NATIVE_DENY"
+    },
+    {
+      "id": "F",
+      "owner": "F",
+      "repo": "unified-system",
+      "pr": 165,
+      "sha": "181ca4be7d543deee271e508f19d363b9fceae8b",
+      "base": "f05f9a73581b1c15c4cc78da2801c9f2f5dd08d0",
+      "focus": "exact SHA registry, history secret triage, dependency/PR arbitration",
+      "contract": "read-only; no branch deletion; no runtime ownership",
+      "status": "CI_QUEUED"
+    },
+    {
+      "id": "META_F",
+      "owner": "F",
+      "repo": "meta_analyse",
+      "pr": 86,
+      "sha": "902db7e28571e851de09d127a9ebad6f120efecd",
+      "base": "7bd4cb9048f261d7936f2a9640f05ff8f42b1c77",
+      "focus": "SHA-pinned CI + TLS fixture exclusion and archive guard",
+      "contract": "stacked on #85, preserve #84 artifact scan, original PRs retained",
+      "status": "HOSTED_COMPONENT_CI_SUCCESS_NOT_RELEASE"
+    }
+  ],
+  "comparisons": [
+    {
+      "from": "B1",
+      "to": "B2",
+      "kind": "DIVERGED",
+      "evidence": "Current B1 39a6cf4d... to B2 1e9be8ef... compare status diverged, ahead 31 behind 7, merge-base 173054632b081c09774b3c2555a920e1763093d6. B owner must reconcile.",
+      "action": "rebase/cherry-pick only by B with exact source and tests, do not auto-merge"
+    },
+    {
+      "from": "D1",
+      "to": "D2",
+      "kind": "DIVERGED_WITH_IDENTICAL_SHARED_PATCH",
+      "evidence": "D2 9846eef2... to D1 dd2d3d3f... diverged, ahead 32 behind 2, merge-base 61aa7e17d440ce4d5a7d372cedcedfe47e3144de; exact PR #126/#127 book_summary.py patches identical, but full lineage/semantics not proven.",
+      "action": "D to combine validated changes and rerun exact-head tests"
+    },
+    {
+      "from": "F",
+      "to": "E",
+      "kind": "SIBLING_NONOVERLAPPING_SOURCE",
+      "evidence": "Both Root canonical base f05f9a7; F docs/tools/test_git, E LAN source/tests and own workflow",
+      "action": "integration acceptance still needed; not a merged cohort"
+    },
+    {
+      "from": "F",
+      "to": "C",
+      "kind": "DIFFERENT_BASE_STACK",
+      "evidence": "C stacked on Claude admission; F canonical Root base",
+      "action": "C source owner keeps PG files; F documents SHA only"
+    },
+    {
+      "from": "META_F",
+      "to": "META_F",
+      "kind": "STACKED_REVIEW",
+      "evidence": "Meta #86 parent #85; #84 TLS guard source copied with overlapping workflow manually integrated",
+      "action": "CI/real wheel-sdist scan required"
+    }
+  ],
+  "blockers": [
+    {
+      "code": "B_READ_ROUTE",
+      "owner": "B",
+      "fact": "qualified-read-envelope.v1 pure draft, not authenticated sealed Data49 read route"
+    },
+    {
+      "code": "C_PRODUCER_ID",
+      "owner": "B/C",
+      "fact": "legacy bybit-cluster-grid producer differs from canonical market_data; no silent rehash"
+    },
+    {
+      "code": "C_DB_WITNESS",
+      "owner": "C/E",
+      "fact": "owner-only PG18 storage, immutable readback and monotonic fencing unverified"
+    },
+    {
+      "code": "D_AUTHORIZATION",
+      "owner": "D",
+      "fact": "PARTIAL chart read is not strategy or paper admission"
+    },
+    {
+      "code": "E_WRITER_EXCLUSION",
+      "owner": "E/B/C",
+      "fact": "Root Consul lease alone cannot exclude legacy writer bypass"
+    },
+    {
+      "code": "F_SECURITY",
+      "owner": "F",
+      "fact": "full-history secrets, real release archives and exact-head CI unaccepted"
+    }
+  ],
+  "evidence_policy": "No CI success inferred from PR state, test authorship, or artifact names; exact source HEAD required before integration.",
+  "deletion_policy": "No branch/PR close or history rewrite without MASTER approval",
+  "round": 6,
+  "observation": "GitHub API exact PR HEADs observed 2026-11-26, sequential and non-atomic",
+  "round4_evidence": {
+    "source": "Live GitHub connector reads, non-atomic. CI runs pinned to exact source SHA, not PR merge-ref.",
+    "meta_release_guard": {
+      "sha": "902db7e28571e851de09d127a9ebad6f120efecd",
+      "run_id": 45855456213,
+      "conclusion": "success",
+      "jobs": [
+        "linux:success",
+        "windows:success",
+        "archive-pinned-contract:success",
+        "platform-coverage:success"
+      ],
+      "gate_step": "Build wheel and sdist from tracked source and reject private key material",
+      "gate_step_result": "success",
+      "caveat": "Hosted packaging script success; independent archive-bytes examination and full-history/LFS/nested archives not attested."
+    },
+    "meta_synthetic": {
+      "run_id": 45855456022,
+      "conclusion": "skipped",
+      "reason": "Workflow job-level if allowlists eight legacy branches; F branch gpt/f-meta-artifact-guard-20261126 is not included; no acceptance claimed."
+    },
+    "unified_f": {
+      "sha": "c15cf1c31789f370b8a025c56dac202cfdda3715",
+      "run_id": 45860897164,
+      "conclusion": "QUEUED_AT_CURRENT_HEAD",
+      "historical_scan": "NOT_EXECUTED",
+      "ast_inventory": "NOT_EXECUTED"
+    },
+    "grid_ancestry": {
+      "status": "diverged",
+      "b1": "39a6cf4d8c039ca99bbfc00ca7cc2359bef5c60c",
+      "b2": "1e9be8ef70ef4502168d58dd399b44541b9c447f",
+      "ahead_by_b2": 31,
+      "behind_by_b2": 7,
+      "merge_base": "173054632b081c09774b3c2555a920e1763093d6"
+    },
+    "terminan_127_preservation": {
+      "combined_pr": 126,
+      "combined_head": "dd2d3d3f86079419756e1210aef769d7e02f0bde",
+      "legacy_pr": 127,
+      "legacy_head": "9846eef2d504ef3d57572b6bd6a26b370a056db1",
+      "book_summary_patch": "exact PR patch identical",
+      "tests_file": "tests/test_meta_book_spread_parity.py",
+      "status": "PATCH_PRESENT_NOT_RUNTIME_EQUIVALENCE"
+    },
+    "unified_f_note": "Manifest contains last independently observed source SHAs; F's own HEAD is a moving self-reference (the manifest commit changes its HEAD); the active exact F SHA is the PR HEAD and cannot be a self-hash inside its own committed manifest.",
+    "windows_owner": {
+      "sha": "0ad4a4dc55390fb3ccae146e9461ca5595efbca7",
+      "windows_native_ci": "45854254373 QUEUED (A report)",
+      "offline_ci": "45854254208 QUEUED (A report)",
+      "status": "WINDOWS_DLL_PROVENANCE_UNATTESTED"
+    }
+  },
+  "integration_order": [
+    {
+      "step": 1,
+      "owner": "B",
+      "action": "Qualify exact f57781a9 single-distribution wheel and strict 902 roster; provide built wheel SHA256 and cross-platform lock receipts"
+    },
+    {
+      "step": 2,
+      "owner": "C",
+      "action": "Implement disposable native PG18 resource-side transaction fence and owner-only witness, include stale writer/process and crash negatives"
+    },
+    {
+      "step": 3,
+      "owner": "E",
+      "action": "Atomic dual protected Root entrypoint pin for Grid v2 and Terminan capability, prove old listeners and legacy writers quiescent"
+    },
+    {
+      "step": 4,
+      "owner": "D",
+      "action": "After exact B wheel qualifies, repin synthetic cross-repo compatibility at latest B and join native C/E B->D read-only positive/negative E2E"
+    },
+    {
+      "step": 5,
+      "owner": "A/F",
+      "action": "Prove Windows native trust/lifecycle, finish F current-head CI, historical scan, pinned AST and dependency build evidence; do not confuse queued with fail"
+    },
+    {
+      "step": 6,
+      "owner": "MASTER",
+      "action": "Only after source-authenticity and native end-to-end proof consider integration; no automatic merge or deletion"
+    }
+  ],
+  "round5": {
+    "snapshot": "Direct GitHub PR head and associated first-page run reads, sequential not atomic",
+    "f_pr_165_head_at_observation": "4a35f8cc688f193eb23b3056c860a0570b0d5f2d",
+    "f_exact_ci": {
+      "run_id": 45861023245,
+      "status": "QUEUED",
+      "jobs_seen": 8,
+      "jobs_queued": 8,
+      "history_scan": "NOT_EXECUTED",
+      "ast_scan": "NOT_EXECUTED",
+      "causal_runner_diagnosis": "UNPROVEN; no access to runner settings/quota; no retry justified"
+    },
+    "component_ci": {
+      "A": "18 queued",
+      "B1": "12 queued 1 pending",
+      "B2": "13 queued 1 pending",
+      "C": "17 queued 1 pending",
+      "D": "2 completed-success workflows: 45860937342 and 45860937430 (14 success jobs reported; synthetic DB read seam)",
+      "E": "19 queued 1 pending",
+      "F": "17 queued 1 pending",
+      "META": "45855456213 success; 45855456022 intentionally skipped"
+    },
+    "sdk_v2": {
+      "repo": "bybit-cluster-grid",
+      "pr": 300,
+      "sha": "f57781a947af138a2099bebe553b89c3c5ee726e",
+      "distribution": "market-data",
+      "version": "0.2.0.dev0",
+      "single_distribution": true,
+      "added_package": "market_data_v2",
+      "wheel_sha256": "NOT_AVAILABLE_NO_BUILD_ARTIFACT",
+      "source_manifest": "49 original Data files plus 3 Math fixed bindings (52) preserved per B evidence; independent released wheel not yet qualified",
+      "guard_fix_paths": [
+        "scripts/check_market_package.py",
+        "MANIFEST.in",
+        ".github/workflows/market-data-pure.yml",
+        "tests/market_data/test_v2_wheel_guard.py",
+        ".github/workflows/gpt-b-qualified-read-contract.yml"
+      ],
+      "wheel_gate": "40 authored tests; execution pending at B2 exact HEAD"
+    },
+    "grid_tree_vs_ancestry": {
+      "b1": "39a6cf4d8c039ca99bbfc00ca7cc2359bef5c60c",
+      "b2": "f57781a947af138a2099bebe553b89c3c5ee726e",
+      "ancestry": "DIVERGED",
+      "full_tree_diff_files_reported_by_B": 16,
+      "original_902_roster_blob_preserved_reported_by_B": true,
+      "semantics": "CONTENT_PRESERVATION_ONLY_NOT_ANCESTRY_REPAIR"
+    },
+    "d_cohort": {
+      "sha": "cf1448f8d30399f8787f69f9abfcb5cf992a4209",
+      "pinned_B_sha": "1e9be8ef70ef4502168d58dd399b44541b9c447f",
+      "pinned_Math_sha": "9e6acbd9e12a91189f57234828e31640983af553",
+      "main_ci": "45860937342 SUCCESS",
+      "cross_repo_ci": "45860937430 SUCCESS",
+      "scope": "Managed B v2 HTTP + D chart with synthetic producer and MOCKED DB reader; NOT_NATIVE_POSTGRESQL_E2E",
+      "latest_B_sha_qualification": "NOT_PROVEN_BY_D_RUN"
+    },
+    "C_E_boundary": {
+      "C_sha": "89ccdf58b31c8466fc45b9d8235acddc9c6b3428",
+      "C_old_Grid_sha": "bf9cbe8949dd1a2979aa7d63a55e2df9e139d625",
+      "C_old_Terminan_sha": "353d16b2126609579018fafe3f76047b465bb289",
+      "E_sha": "0855d1b33a44f30059464806ceebae51f598f16a",
+      "root_legacy_module": "market_data.cli",
+      "required_new_module": "market_data_v2.read_api",
+      "required_root_guards": [
+        "unified_system/service_module_runtime.py::ENTRIES",
+        "unified_system/lab_runtime.py::launch_profile"
+      ],
+      "required_witness": "native owned PG18 -> B v2 private HTTP -> D chart, with non-bypassable transaction-side single writer fence and stale-owner negatives"
+    },
+    "history_ast": "UNPROVEN",
+    "security": "NO_SECRET_FREE_ATTESTATION",
+    "release": "CODE NO_GO / PRODUCTION NO_GO"
+  },
+  "round6": {
+    "checkpoint": "2026-11-26",
+    "snapshot_non_atomic": true,
+    "reported_sha_self_ref": "Manifest F entry pins pre-write observed PR HEAD, final HEAD must be read from PR #165; cannot SHA self-reference.",
+    "source_heads": {
+      "A": "0ad4a4dc55390fb3ccae146e9461ca5595efbca7",
+      "B1": "39a6cf4d8c039ca99bbfc00ca7cc2359bef5c60c",
+      "B2": "4deeda39e36facead834b3dc7bbe3e8796b5c067",
+      "C": "dc60465385c8201254efd94c36049ecdbcec59c1",
+      "D1": "fb64be03dda72307bed4be4b25e5d51242882769",
+      "E": "24800aa1c4f362af3d2c717f2ad75a7fc92e2f3f",
+      "F": "181ca4be7d543deee271e508f19d363b9fceae8b",
+      "META_F": "902db7e28571e851de09d127a9ebad6f120efecd"
+    },
+    "exact_ci": {
+      "A": "18 QUEUED",
+      "B1": "12 QUEUED 1 PENDING",
+      "B2": "15 QUEUED",
+      "C": "19 QUEUED 1 PENDING",
+      "D": "2 SUCCESS workflows (14 jobs reported) at fb64be03, still synthetic reader",
+      "E": "19 QUEUED 1 PENDING",
+      "F": "18 QUEUED at 181ca4be; current doc commit will require re-observation",
+      "Meta": "1 SUCCESS 1 SKIPPED at 902db7e2"
+    },
+    "source_cohorts": {
+      "B_latest": "4deeda39e36facead834b3dc7bbe3e8796b5c067",
+      "B_C_E_frozen": "f57781a947af138a2099bebe553b89c3c5ee726e",
+      "B_D_synthetic": "1e9be8ef70ef4502168d58dd399b44541b9c447f",
+      "C_latest": "dc60465385c8201254efd94c36049ecdbcec59c1",
+      "C_B_native_test_pinned": "dcedaa870b5b8de566ff7bfa03182e3a43d19db5",
+      "D_latest": "fb64be03dda72307bed4be4b25e5d51242882769",
+      "D_C_native_test_pinned": "cf1448f8d30399f8787f69f9abfcb5cf992a4209",
+      "E_latest": "24800aa1c4f362af3d2c717f2ad75a7fc92e2f3f",
+      "Math": "9e6acbd9e12a91189f57234828e31640983af553",
+      "distribution": "market-data==0.2.0.dev0",
+      "built_wheel_sha256": "NOT_ATTESTED"
+    },
+    "root_integration_candidate": {
+      "common_base": "f05f9a73581b1c15c4cc78da2801c9f2f5dd08d0",
+      "prs": [
+        162,
+        163,
+        164,
+        165
+      ],
+      "exact_head_order": [
+        "0ad4a4dc55390fb3ccae146e9461ca5595efbca7",
+        "dc60465385c8201254efd94c36049ecdbcec59c1",
+        "24800aa1c4f362af3d2c717f2ad75a7fc92e2f3f",
+        "181ca4be7d543deee271e508f19d363b9fceae8b"
+      ],
+      "base_ancestry": "ALL_FOUR_AHEAD_OF_F05_WITH_ZERO_BEHIND",
+      "pr_changed_path_overlaps": 0,
+      "comparison_scope": "Across paginated PR changed filenames, no identical files between pairs; absence of path overlap is NOT runtime merge/ABI/security proof.",
+      "no_merge_performed": true,
+      "proposal": "Use isolated disposable integration branch only after MASTER approval, preserve all four draft PRs; one staged dry-run tree / exact SHA CI, no main merge or service start.",
+      "semantic_blockers": [
+        "native C PostgreSQL writer fence must bind B actual collector same-connection SQL",
+        "E native writer admission default denies; needs independent Root/C epoch, native legacy process quiescence and revoke",
+        "B latest and C/E frozen B sources differ as revision even though runtime may be byte-equal",
+        "D latest parser exceeds C native pinned D version and must be re-qualified",
+        "GitHub CI queue prevents exact-head validation",
+        "full-history/LFS and nested archive secret coverage incomplete"
+      ]
+    },
+    "queue_investigation": {
+      "repository": "unified-system",
+      "queued_workflow_runs": 2400,
+      "in_progress_workflow_runs": 61,
+      "source": "GET /actions/runs?status=queued|in_progress&per_page=1 total_count",
+      "as_of": "2026-11-26",
+      "A_previous_queued_report": 1571,
+      "delta_snapshot": 829,
+      "scope": "observed counts, not an inferred cause",
+      "f_run": "45862370430",
+      "f_jobs_queued": 8,
+      "A_run": "45854254373",
+      "A_jobs_queued": 6,
+      "job_runner_started_at": "UNASSIGNED",
+      "operator_concurrency": {
+        "workflow": ".github/workflows/operator-command-contracts.yml",
+        "group": "operator-command-${{ github.ref }}",
+        "cancel_in_progress": false,
+        "cancelled_examples": [
+          45864301167,
+          45864285659,
+          45863980091
+        ],
+        "explanation": "single pending per group can be replaced by newer queued run even cancel-in-progress:false; source workflow mechanism observed, cancelled run cause not independently attested"
+      },
+      "restricted_permissions": "Actions admin/settings/runner endpoints unavailable through current connector",
+      "root_cause": "NOT_PROVEN",
+      "cancellation_policy": "PROPOSE_ONLY_NO_ACTION",
+      "potential_superseded_rule": "Same PR+workflow, older SHA, no unique artifact/required gate, owner reviewed; never mass cancel until MASTER authorization"
+    },
+    "history_ast_status": "DEDICATED_F_RUN_QUEUED_NOT_EXECUTED",
+    "release_status": "CODE NO_GO / PRODUCTION NO_GO"
+  }
+}

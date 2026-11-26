@@ -1,0 +1,131 @@
+name: C native PostgreSQL 18 Grid v2 Terminan E2E (LAB only)
+on:
+  pull_request:
+permissions:
+  contents: read
+concurrency:
+  group: c-native-pg18-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pg18-grid-v2-terminan-native:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      LAB_GRID_SHA: f57781a947af138a2099bebe553b89c3c5ee726e
+      LAB_GRID_ROOT: ${{ github.workspace }}/upstream/grid
+      LAB_D_SHA: cf1448f8d30399f8787f69f9abfcb5cf992a4209
+      LAB_D_ROOT: ${{ github.workspace }}/upstream/terminan
+      LAB_MATH_SHA: 9e6acbd9e12a91189f57234828e31640983af553
+      LAB_MATH_ROOT: ${{ github.workspace }}/upstream/math/python
+      LAB_E_ROOT_SHA: 2c993d873cc53a784a64ff525465770bb5bb4a39
+      LAB_E_MODEL_BLOB_SHA: 71c74a2c0d8c1c0120412124ef1d12d53b691581
+      LAB_POSTGRES_BIN: /usr/lib/postgresql/18/bin
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - name: Checkout exact C PR HEAD
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Load exact E-owned WriterLeaseIdentity without vendoring another type
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --proto '=https' --tlsv1.2 -fsSL \
+            "https://raw.githubusercontent.com/YehorBabenko88/unified-system/$LAB_E_ROOT_SHA/unified_system/grid_writer_fence_model.py" \
+            -o /tmp/e-exact-writer-fence-model.py
+          python - <<'PY'
+          from pathlib import Path
+          import subprocess
+          import os
+          expected=os.environ["LAB_E_MODEL_BLOB_SHA"]
+          path=Path("/tmp/e-exact-writer-fence-model.py")
+          blob=subprocess.check_output(["git","hash-object","--",str(path)],text=True).strip()
+          if blob!=expected:
+              raise SystemExit("E_MODEL_PINNED_BLOB_MISMATCH")
+          target=Path("unified_system/grid_writer_fence_model.py")
+          if target.exists():
+              if target.read_bytes()!=path.read_bytes():
+                  raise SystemExit("E_MODEL_CONFLICTING_EXISTING_TYPE")
+              print("E_MODEL_ALREADY_PRESENT_EXACT_BLOB="+blob)
+          else:
+              target.write_bytes(path.read_bytes())
+              print("E_MODEL_IMPORTED_EXACT_BLOB="+blob)
+          PY
+      - name: Checkout exact B canonical v2 wheel source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: YehorBabenko88/bybit-cluster-grid
+          ref: ${{ env.LAB_GRID_SHA }}
+          path: upstream/grid
+          persist-credentials: false
+      - name: Checkout exact D Terminan managed v2 client
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: YehorBabenko88/Terminan
+          ref: ${{ env.LAB_D_SHA }}
+          path: upstream/terminan
+          persist-credentials: false
+      - name: Checkout pinned Math numeric integrity source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: YehorBabenko88/math
+          ref: ${{ env.LAB_MATH_SHA }}
+          path: upstream/math
+          persist-credentials: false
+      - name: Verify Git SHA pins
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C upstream/grid rev-parse HEAD)" = "$LAB_GRID_SHA"
+          test "$(git -C upstream/terminan rev-parse HEAD)" = "$LAB_D_SHA"
+          test "$(git -C upstream/math rev-parse HEAD)" = "$LAB_MATH_SHA"
+          test -f upstream/grid/market_data_v2/read_api.py
+          test -f upstream/grid/grid/migrations.py
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - name: Install PG18 without creating or modifying distro clusters
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo install -d /etc/postgresql-common/createcluster.d
+          echo 'create_main_cluster = false' | sudo tee /etc/postgresql-common/createcluster.d/no-main.conf
+          sudo apt-get update -q
+          sudo apt-get install -y -q postgresql-common
+          sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y
+          sudo apt-get install -y -q postgresql-18
+          "$LAB_POSTGRES_BIN/postgres" --version
+          pg_lsclusters -h || true
+      - name: Build and install exactly one B market-data v2 distribution
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip wheel --no-deps --wheel-dir native-wheel upstream/grid
+          test "$(find native-wheel -maxdepth 1 -name 'market_data-*.whl' | wc -l)" -eq 1
+          python -m pip install --no-deps native-wheel/market_data-*.whl
+          python -m pip install "psycopg[binary]==3.3.6"
+          python - <<'PY'
+          import importlib.metadata as meta
+          import market_data, market_data_v2
+          assert meta.version("market-data") == "0.2.0.dev0"
+          print("B_V2_ONE_WHEEL_INSTALLED=True")
+          PY
+      - name: Native PG18 fence and managed HTTP to Terminan chart
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -B - <<'PY'
+          import unittest
+          from tests import test_lab_pg_v2_native
+          suite=unittest.defaultTestLoader.loadTestsFromModule(test_lab_pg_v2_native)
+          required=suite.countTestCases()
+          if required != 4:
+              raise SystemExit(f"NATIVE_PG18_ROSTER_MISMATCH:{required}:expected=4")
+          outcome=unittest.TextTestRunner(verbosity=2).run(suite)
+          if not outcome.wasSuccessful() or outcome.skipped or outcome.testsRun != required:
+              raise SystemExit("NATIVE_PG18_GATE_FAILED")
+          print(f"NATIVE_PG18_CASES={outcome.testsRun};SKIPPED=0")
+          print("SYNTHETIC_CANONICAL_SOURCE_ONLY;PROVIDER_UNATTESTED;PAPER=false;PRODUCTION=NO_GO")
+          PY
