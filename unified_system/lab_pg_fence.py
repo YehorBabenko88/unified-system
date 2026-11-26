@@ -327,19 +327,19 @@ def revalidate_lab_fence(pg, *, identity, generation, backend_pid):
 
 def observe_old_lab_backend(pg, *, owner, namespace, generation, token,
                             backend_pid, backend_start):
-    """Read-only tri-state observation; never a transferable Root grant.
+    """Read-only old-backend observation; not a transferable Root grant.
 
-    Exact session identity and database must match the durable LAB fence.
-    An absent PID or a reused PID is insufficient to infer extinction unless
-    the original fenced identity is still present and matches all arguments.
+    A missing/mismatched row, inaccessible PostgreSQL, or any ambiguous
+    identity is UNKNOWN. The exact old backend start comes from the durable
+    fence and must match the trusted caller's expected value.
     """
     import datetime
     pg._verify_owned()
     need(pg.started, "LAB_PG_NOT_STARTED")
     pg._verify_postmaster()
     owner, namespace = _scope(owner, namespace)
-    need(type(generation) is int and generation > 0
-         and type(token) is int and token > 0,
+    need(type(generation) is int and 0 < generation < 2**63
+         and type(token) is int and 0 < token < 2**63,
          "LAB_BACKEND_FENCE_ARGUMENTS")
     need(type(backend_pid) is int and 0 < backend_pid < 2**31,
          "LAB_BACKEND_PID_INVALID")
@@ -350,8 +350,6 @@ def observe_old_lab_backend(pg, *, owner, namespace, generation, token,
     except ValueError as exc:
         raise LabAdmissionRejected("LAB_BACKEND_START_INVALID") from exc
     need(started.tzinfo is not None, "LAB_BACKEND_START_INVALID")
-    # The client cannot choose an arbitrary PID: the row ties the operation
-    # to one already recorded writer, exact old generation and server start.
     query = (
         "SELECT CASE WHEN "
         f"f.owner='{owner}' AND f.namespace='{namespace}'"
@@ -379,12 +377,11 @@ def observe_old_lab_backend(pg, *, owner, namespace, generation, token,
 
 def terminate_old_lab_backend(pg, *, owner, namespace, generation, token,
                               backend_pid, backend_start):
-    """Bounded, owner-only LAB termination; never a RootBackendExtinction.
+    """Bounded isolated LAB stop, not issuance of RootBackendExtinction.
 
-    Requires PostgreSQL to validate the exact *old* backend identity in the
-    same SQL statement as pg_terminate_backend, not Python check-then-kill.
-    A PID that has been reused, an inaccessible session or a lock conflict
-    gives UNKNOWN. No claim or lease is issued by this function.
+    pg_terminate_backend is guarded by the old durable fence identity and
+    pg_stat_activity backend_start in one SQL statement. The owner must still
+    revalidate the fence, WAL, pending and external Root evidence separately.
     """
     before = observe_old_lab_backend(
         pg, owner=owner, namespace=namespace, generation=generation,
@@ -392,15 +389,12 @@ def terminate_old_lab_backend(pg, *, owner, namespace, generation, token,
     if before != "STILL_ALIVE":
         return before
     owner, namespace = _scope(owner, namespace)
-    # postgres parameter true means wait for termination, bounded to 3000 ms.
-    # Query uses the exact durable row and pg_stat_activity in one statement;
-    # a concurrent PID incarnation change must not be promoted to proof.
     query = (
         "WITH target AS MATERIALIZED ("
         " SELECT a.pid FROM public.lab_writer_fence f"
         " JOIN pg_catalog.pg_stat_activity a"
         " ON a.pid=f.backend_pid AND a.backend_start=f.backend_start"
-        f" WHERE f.resource_id='grid-market-data-primary'"
+        " WHERE f.resource_id='grid-market-data-primary'"
         f" AND f.owner='{owner}' AND f.namespace='{namespace}'"
         f" AND f.generation={generation} AND f.token={token}"
         f" AND f.backend_pid={backend_pid}"
@@ -417,7 +411,4 @@ def terminate_old_lab_backend(pg, *, owner, namespace, generation, token,
     after = observe_old_lab_backend(
         pg, owner=owner, namespace=namespace, generation=generation,
         token=token, backend_pid=backend_pid, backend_start=backend_start)
-    # This is only a momentary SQL observation. The E Root must independently
-    # prove process extinction, reconcile WAL/pending and revoke the durable
-    # fence before any new generation.
     return "EXTINCT" if after == "EXTINCT" else "UNKNOWN"
