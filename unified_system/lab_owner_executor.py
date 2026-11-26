@@ -6,7 +6,7 @@ accept new SQL or stop operations until owner-led process/DB recovery.
 """
 import asyncio
 from concurrent.futures import ThreadPoolExecutor
-from threading import Lock, Event
+from threading import Lock, Event, get_ident
 from .grid_writer_fence_model import ResourceFenceBlocked, _need
 
 
@@ -14,7 +14,7 @@ class LabOwnerExecutor:
     """One bounded serial worker; fail permanently closed after uncertainty."""
 
     __slots__ = ("_pool", "_lock", "_busy", "_poisoned", "_closed",
-                 "_worker_done", "_ever_submitted")
+                 "_worker_done", "_ever_submitted", "_owner_thread_id")
 
     def __init__(self):
         self._pool = ThreadPoolExecutor(max_workers=1, thread_name_prefix="lab-root-sql")
@@ -24,6 +24,13 @@ class LabOwnerExecutor:
         self._closed = False
         self._worker_done = Event()
         self._ever_submitted = False
+        self._owner_thread_id = None
+
+    @property
+    def owner_thread_id(self):
+        """Actual original serial ThreadPool worker, never a caller claim."""
+        with self._lock:
+            return self._owner_thread_id
 
     @property
     def poisoned(self):
@@ -52,6 +59,12 @@ class LabOwnerExecutor:
             self._ever_submitted = True
             self._worker_done.clear()
         def bounded_owner_operation():
+            with self._lock:
+                tid = get_ident()
+                if self._owner_thread_id is None:
+                    self._owner_thread_id = tid
+                _need(self._owner_thread_id == tid,
+                      "LAB_ROOT_EXECUTOR_THREAD_REPLACED")
             try:
                 return operation()
             finally:
