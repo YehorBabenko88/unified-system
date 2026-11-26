@@ -118,5 +118,9 @@ def write_matches_model(current, identity, generation):
 
 
 def native_writer_admission(*_args, **_kwargs):
-    """Explicitly unavailable until a C-owned DB and Root native gate exist."""
+    """Legacy actuator remains denied until authenticated Root/C custody exists.
+
+    The LAB assessment in grid_writer_lab_bridge is never an actuator grant:
+    it does not turn caller-supplied evidence into service or SQL authority.
+    """
     raise ResourceFenceBlocked("NATIVE_DB_FENCE_NOT_ADMITTED")
