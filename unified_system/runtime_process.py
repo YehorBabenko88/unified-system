@@ -784,6 +784,7 @@ def _public_environment(program):
 class WindowsJobExtinctionReceipt:
     operation_id: str
     release_id: str
+    instance_token: str
     pid: int
     creation_time: str
     executable: str
@@ -960,7 +961,7 @@ class ProcessDriver:
                 k,w=_win_api()
                 exact=tuple(_win_identity(k,w,proc._handle))
                 if exact!=tuple(created):raise ValueError('retained identity mismatch')
-                self._job_launch_bindings[operation_id]=(proc,release_id,exact,p['executable_sha256'],urlsplit(p['health_url']).port)
+                self._job_launch_bindings[operation_id]=(proc,release_id,exact,p['executable_sha256'],urlsplit(p['health_url']).port,d['token'])
                 d['windows_job_contained']=True
             self._save(operation_id,d)
         except BaseException:
@@ -1061,12 +1062,25 @@ class ProcessDriver:
         except (OSError,ValueError,TypeError,KeyError,http.client.HTTPException):return result
     def _observe_job_extinction(self, handle):
         if os.name!='nt':raise ValueError('native Job evidence unavailable')
-        child,release,identity,digest,port=self._job_launch_bindings[handle]
-        if self.children.get(handle) is not child or not child._handle or not child._job._handle:
+        try:
+            child,release,identity,digest,port,token=self._job_launch_bindings[handle]
+        except (KeyError,ValueError,TypeError):
+            raise ValueError('original Job binding unavailable') from None
+        if (self.children.get(handle) is not child or not child._handle
+                or not child._job._handle or child._job._assigned is not True):
             raise ValueError('original retained Job evidence unavailable')
+        d=self._load(handle)
+        if (d.get('windows_job_contained') is not True
+                or d.get('pid')!=child.pid or d.get('created')!=list(identity)
+                or d.get('release_id')!=release or d.get('token')!=token):
+            raise ValueError('durable LAB release identity changed')
         k,w=_win_api()
         if tuple(_win_identity(k,w,child._handle))!=identity:
             raise ValueError('original process identity changed')
+        # This is the actual executable behind the original retained
+        # process handle, not a caller-supplied hash or a PID-only lookup.
+        if _sha(identity[1])!=digest:
+            raise ValueError('owned executable bytes changed')
         if k.WaitForSingleObject(child._handle,0)!=0 or child._job.active_process_count()!=0:
             raise ValueError('original Job not extinct')
         listeners=tuple(sorted(_windows_tcp_listener_owner_pids(port)))
@@ -1076,7 +1090,7 @@ class ProcessDriver:
         if listeners or scm:raise ValueError('TCP or SCM ownership unresolved')
         if child._job.active_process_count()!=0:
             raise ValueError('Job membership changed')
-        return WindowsJobExtinctionReceipt(handle,release,child.pid,*identity,digest,port,
+        return WindowsJobExtinctionReceipt(handle,release,token,child.pid,*identity,digest,port,
                                            child._handle,child._job._handle,0,listeners,scm)
 
     def job_extinction_receipt(self, handle):
@@ -1094,7 +1108,9 @@ class ProcessDriver:
         Python callers in this process are part of the trusted boundary.
         """
         with self._job_evidence_lock:
-            if (self._job_receipts.get(operation_id) is not receipt
+            if (type(receipt) is not WindowsJobExtinctionReceipt
+                    or self._job_receipts.get(operation_id) is not receipt
+                    or receipt.operation_id!=operation_id
                     or receipt.release_id!=release_id
                     or self._observe_job_extinction(operation_id)!=receipt):
                 raise ValueError('Job extinction receipt invalid')
