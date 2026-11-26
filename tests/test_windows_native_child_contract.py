@@ -767,6 +767,8 @@ class WindowsNativeSuspendedLaunchTests(unittest.TestCase):
                               'disposable-lab', self.op)
         self.assertNotIn(self.op, self.driver.children)
         self.assertNotIn(self.op, self.driver._job_receipts)
+        self.assertFalse(self.driver._file(self.op).exists(),
+                         'unqualified policy must reject before STARTING')
 
     def test_native_token_verification_denies_before_resume(self):
         from unified_system.runtime import ModuleSpec
@@ -779,6 +781,58 @@ class WindowsNativeSuspendedLaunchTests(unittest.TestCase):
         self.assertNotIn(self.op, self.driver.children)
         self.assertNotIn(self.op, self.driver._job_launch_bindings)
         self.assertEqual(self.driver._load(self.op)['state'], 'STARTING')
+
+    def test_native_missing_restricted_token_never_falls_back(self):
+        from unified_system.runtime import ModuleSpec
+        from unified_system.runtime_process import _WindowsNonServiceLabToken
+        with patch.object(_WindowsNonServiceLabToken, '__init__',
+                          side_effect=ValueError('forced restricted token unavailable')):
+            with self.assertRaisesRegex(ValueError, 'forced restricted token unavailable'):
+                self.driver.start(ModuleSpec('market_data','1.0.0'),
+                                  'disposable-lab', self.op)
+        self.assertNotIn(self.op, self.driver.children)
+        self.assertNotIn(self.op, self.driver._job_launch_bindings)
+        self.assertNotIn(self.op, self.driver._job_receipts)
+        self.assertEqual(self.driver._load(self.op)['state'], 'STARTING')
+
+    def test_native_child_token_has_no_reenableable_privileges(self):
+        from unified_system.runtime import ModuleSpec
+        from unified_system.runtime_process import _WindowsNonServiceLabToken
+        op = self.driver.start(ModuleSpec('market_data','1.0.0'),
+                               'disposable-lab', self.op)
+        self.addCleanup(self._cleanup)
+        child = self.driver.children[op]
+        # Re-query the actual suspended-launch child's token, not a user
+        # supplied privilege set. The helper's internal token is already
+        # closed; the kernel process object is the sole source.
+        from ctypes import wintypes as w
+        import ctypes
+        a = ctypes.WinDLL('advapi32', use_last_error=True)
+        k = ctypes.WinDLL('kernel32', use_last_error=True)
+        a.OpenProcessToken.argtypes = [w.HANDLE, w.DWORD, ctypes.POINTER(w.HANDLE)]
+        a.OpenProcessToken.restype = w.BOOL
+        k.CloseHandle.argtypes = [w.HANDLE]
+        token = w.HANDLE()
+        self.assertTrue(a.OpenProcessToken(child._handle, 0x0002 | 0x0004 | 0x0008,
+                                           ctypes.byref(token)))
+        try:
+            # Construct a read-only verifier without creating a second token
+            # or acting as an independent lifecycle supervisor.
+            verifier = object.__new__(_WindowsNonServiceLabToken)
+            verifier._a, verifier._k = a, k
+            roster = verifier._token_privileges(token)
+            class Luid(ctypes.Structure):
+                _fields_ = [('low', w.DWORD), ('high', w.LONG)]
+            a.LookupPrivilegeValueW.argtypes = [
+                w.LPCWSTR, w.LPCWSTR, ctypes.POINTER(Luid)]
+            a.LookupPrivilegeValueW.restype = w.BOOL
+            allowed = Luid()
+            self.assertTrue(a.LookupPrivilegeValueW(
+                None, 'SeChangeNotifyPrivilege', ctypes.byref(allowed)))
+            self.assertTrue(all((lo, hi) == (allowed.low, allowed.high)
+                                for lo, hi, attrs in roster), roster)
+        finally:
+            k.CloseHandle(token)
 
     def test_native_createprocess_failure_no_published_child(self):
         import os
