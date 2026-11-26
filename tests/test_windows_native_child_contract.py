@@ -383,5 +383,53 @@ class OwnedProcessProofFailureTests(unittest.TestCase):
                 ['old-boot:1', 'old.exe'])
 
 
+@unittest.skipUnless(WINDOWS, 'requires disposable native Windows process identity')
+class WindowsRootProcessExitRaceTests(unittest.TestCase):
+    """Exercise native retained process identity without production services.
+
+    E owns the canonical sealed RootProcessObservation implementation. These
+    tests use the already-existing A ProcessDriver and do NOT issue receipts,
+    claim listener ownership, or touch PostgreSQL.
+    """
+
+    def setUp(self):
+        import subprocess
+        import sys
+        self.root = Path(tempfile.mkdtemp(prefix='a-exit-race-'))
+        self.addCleanup(shutil.rmtree, self.root, True)
+        self.child = subprocess.Popen(
+            [sys.executable, '-c', 'import time; time.sleep(30)'],
+            stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL, cwd=str(self.root))
+        self.addCleanup(self._cleanup_child)
+        from unified_system.runtime_process import _identity
+        self.pid = self.child.pid
+        self.created = _identity(self.pid)
+        self.assertIsNotNone(self.created)
+
+    def _cleanup_child(self):
+        if self.child.poll() is None:
+            self.child.terminate()
+        self.child.wait(timeout=5)
+
+    def test_native_retained_handle_exit_not_equivalent_to_pid_only(self):
+        from unified_system.runtime_process import _identity
+        self.assertEqual(_identity(self.pid), self.created)
+        self.assertIsNone(self.child.poll())
+        self.child.terminate()
+        self.child.wait(timeout=5)
+        self.assertIsNotNone(self.child.poll())
+        # Retained handle observed an actual exit, independent of later PID
+        # reuse; this alone does not certify listener/descendant extinction.
+        self.assertNotEqual(_identity(self.pid), self.created)
+
+    def test_native_live_process_identity_is_not_exit(self):
+        from unified_system.runtime_process import _identity
+        self.assertIsNone(self.child.poll())
+        self.assertEqual(_identity(self.pid), self.created)
+        # No attempt to stop a foreign process or manipulate system services.
+
+
+
 if __name__ == '__main__':
     unittest.main()
