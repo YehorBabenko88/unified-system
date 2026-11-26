@@ -42,11 +42,11 @@
       "owner": "B",
       "repo": "bybit-cluster-grid",
       "pr": 300,
-      "sha": "1e9be8ef70ef4502168d58dd399b44541b9c447f",
+      "sha": "f57781a947af138a2099bebe553b89c3c5ee726e",
       "base": "4391a5c2a5a3ce58d0b0446069ba42efc29e9c70",
       "focus": "pure qualified-read envelope v1 (not deployed authenticated route)",
       "contract": "status PARTIAL never implies exchange-complete/paper authorization",
-      "status": "UNQUALIFIED"
+      "status": "SDK_V2_WHEEL_GUARD_AUTHORED_CI_QUEUED"
     },
     {
       "id": "C",
@@ -64,11 +64,11 @@
       "owner": "D",
       "repo": "Terminan",
       "pr": 126,
-      "sha": "dd2d3d3f86079419756e1210aef769d7e02f0bde",
+      "sha": "cf1448f8d30399f8787f69f9abfcb5cf992a4209",
       "base": "61aa7e17d440ce4d5a7d372cedcedfe47e3144de",
       "focus": "qualified PARTIAL read/chart without paper authorization",
       "contract": "currently Grid history_api v1.1, not B qualified-read-envelope.v1 route",
-      "status": "COMPONENT_CI_ONLY"
+      "status": "COMPONENT_CI_SUCCESS_SYNTHETIC_B_HTTP"
     },
     {
       "id": "D2",
@@ -186,7 +186,7 @@
   ],
   "evidence_policy": "No CI success inferred from PR state, test authorship, or artifact names; exact source HEAD required before integration.",
   "deletion_policy": "No branch/PR close or history rewrite without MASTER approval",
-  "round": 4,
+  "round": 5,
   "observation": "GitHub API exact PR HEADs observed 2026-11-26, sequential and non-atomic",
   "round4_evidence": {
     "source": "Live GitHub connector reads, non-atomic. CI runs pinned to exact source SHA, not PR merge-ref.",
@@ -244,33 +244,108 @@
   "integration_order": [
     {
       "step": 1,
-      "owner": "A/F",
-      "action": "Qualify Root Windows native gate and F historical/AST CI independently; no release admission"
+      "owner": "B",
+      "action": "Qualify exact f57781a9 single-distribution wheel and strict 902 roster; provide built wheel SHA256 and cross-platform lock receipts"
     },
     {
       "step": 2,
-      "owner": "B",
-      "action": "Reconcile #299/#300 divergent qualified-read route, single Grid market-data distribution; pin immutable source SHA"
+      "owner": "C",
+      "action": "Implement disposable native PG18 resource-side transaction fence and owner-only witness, include stale writer/process and crash negatives"
     },
     {
       "step": 3,
-      "owner": "C/E",
-      "action": "Establish owned PostgreSQL single-writer resource fence, Root lease and durable provenance with B agreement"
+      "owner": "E",
+      "action": "Atomic dual protected Root entrypoint pin for Grid v2 and Terminan capability, prove old listeners and legacy writers quiescent"
     },
     {
       "step": 4,
       "owner": "D",
-      "action": "Verify #126 preserves #127 book-spread tick parity, consumes qualified B route read-only; PARTIAL cannot enter paper"
+      "action": "After exact B wheel qualifies, repin synthetic cross-repo compatibility at latest B and join native C/E B->D read-only positive/negative E2E"
     },
     {
       "step": 5,
-      "owner": "F",
-      "action": "Revalidate exact-head CI, dependency lock and cross-platform wheel artifacts; update conflict ledger before MASTER integration decision"
+      "owner": "A/F",
+      "action": "Prove Windows native trust/lifecycle, finish F current-head CI, historical scan, pinned AST and dependency build evidence; do not confuse queued with fail"
     },
     {
       "step": 6,
       "owner": "MASTER",
-      "action": "Approve or reject integration only after independent end-to-end and physical Windows acceptance; keep Strattester/Meta source and refs"
+      "action": "Only after source-authenticity and native end-to-end proof consider integration; no automatic merge or deletion"
     }
-  ]
+  ],
+  "round5": {
+    "snapshot": "Direct GitHub PR head and associated first-page run reads, sequential not atomic",
+    "f_pr_165_head_at_observation": "4a35f8cc688f193eb23b3056c860a0570b0d5f2d",
+    "f_exact_ci": {
+      "run_id": 45861023245,
+      "status": "QUEUED",
+      "jobs_seen": 8,
+      "jobs_queued": 8,
+      "history_scan": "NOT_EXECUTED",
+      "ast_scan": "NOT_EXECUTED",
+      "causal_runner_diagnosis": "UNPROVEN; no access to runner settings/quota; no retry justified"
+    },
+    "component_ci": {
+      "A": "18 queued",
+      "B1": "12 queued 1 pending",
+      "B2": "13 queued 1 pending",
+      "C": "17 queued 1 pending",
+      "D": "2 completed-success workflows: 45860937342 and 45860937430 (14 success jobs reported; synthetic DB read seam)",
+      "E": "19 queued 1 pending",
+      "F": "17 queued 1 pending",
+      "META": "45855456213 success; 45855456022 intentionally skipped"
+    },
+    "sdk_v2": {
+      "repo": "bybit-cluster-grid",
+      "pr": 300,
+      "sha": "f57781a947af138a2099bebe553b89c3c5ee726e",
+      "distribution": "market-data",
+      "version": "0.2.0.dev0",
+      "single_distribution": true,
+      "added_package": "market_data_v2",
+      "wheel_sha256": "NOT_AVAILABLE_NO_BUILD_ARTIFACT",
+      "source_manifest": "49 original Data files plus 3 Math fixed bindings (52) preserved per B evidence; independent released wheel not yet qualified",
+      "guard_fix_paths": [
+        "scripts/check_market_package.py",
+        "MANIFEST.in",
+        ".github/workflows/market-data-pure.yml",
+        "tests/market_data/test_v2_wheel_guard.py",
+        ".github/workflows/gpt-b-qualified-read-contract.yml"
+      ],
+      "wheel_gate": "40 authored tests; execution pending at B2 exact HEAD"
+    },
+    "grid_tree_vs_ancestry": {
+      "b1": "39a6cf4d8c039ca99bbfc00ca7cc2359bef5c60c",
+      "b2": "f57781a947af138a2099bebe553b89c3c5ee726e",
+      "ancestry": "DIVERGED",
+      "full_tree_diff_files_reported_by_B": 16,
+      "original_902_roster_blob_preserved_reported_by_B": true,
+      "semantics": "CONTENT_PRESERVATION_ONLY_NOT_ANCESTRY_REPAIR"
+    },
+    "d_cohort": {
+      "sha": "cf1448f8d30399f8787f69f9abfcb5cf992a4209",
+      "pinned_B_sha": "1e9be8ef70ef4502168d58dd399b44541b9c447f",
+      "pinned_Math_sha": "9e6acbd9e12a91189f57234828e31640983af553",
+      "main_ci": "45860937342 SUCCESS",
+      "cross_repo_ci": "45860937430 SUCCESS",
+      "scope": "Managed B v2 HTTP + D chart with synthetic producer and MOCKED DB reader; NOT_NATIVE_POSTGRESQL_E2E",
+      "latest_B_sha_qualification": "NOT_PROVEN_BY_D_RUN"
+    },
+    "C_E_boundary": {
+      "C_sha": "89ccdf58b31c8466fc45b9d8235acddc9c6b3428",
+      "C_old_Grid_sha": "bf9cbe8949dd1a2979aa7d63a55e2df9e139d625",
+      "C_old_Terminan_sha": "353d16b2126609579018fafe3f76047b465bb289",
+      "E_sha": "0855d1b33a44f30059464806ceebae51f598f16a",
+      "root_legacy_module": "market_data.cli",
+      "required_new_module": "market_data_v2.read_api",
+      "required_root_guards": [
+        "unified_system/service_module_runtime.py::ENTRIES",
+        "unified_system/lab_runtime.py::launch_profile"
+      ],
+      "required_witness": "native owned PG18 -> B v2 private HTTP -> D chart, with non-bypassable transaction-side single writer fence and stale-owner negatives"
+    },
+    "history_ast": "UNPROVEN",
+    "security": "NO_SECRET_FREE_ATTESTATION",
+    "release": "CODE NO_GO / PRODUCTION NO_GO"
+  }
 }
