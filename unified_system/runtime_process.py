@@ -1015,6 +1015,12 @@ class ProcessDriver:
             del self.prestart_rejections[handle]
             return
         d=self._load(handle)
+        if d.get('windows_job_contained') is True:
+            child=self.children.get(handle)
+            if (type(child) is not _OwnedWindowsChild
+                    or child.pid != d.get('pid') or child._job._handle is None
+                    or child._job._assigned is not True):
+                raise ValueError('owned Windows Job original handle required')
         if d['state']=='STOPPED':
             # Historical STOPPED JSON is not OS extinction; a retained exact
             # process exit is the only local process-level confirmation.
@@ -1088,6 +1094,12 @@ class ProcessDriver:
             self.children[handle].stdin.close()
         child=self.children.get(handle)
         if isinstance(child,_OwnedWindowsChild):
+            # Query the SAME retained kernel Job, allowing member teardown
+            # bounded time after the root process exit, without trusting an
+            # empty PID/port snapshot. UNKNOWN or timeout must preserve RUNNING.
+            deadline=time.monotonic()+3
+            while child._job.active_process_count()!=0 and time.monotonic()<deadline:
+                time.sleep(.02)
             if child._job.active_process_count()!=0:
                 raise ValueError('owned Windows Job descendants still active')
         d['state']='STOPPED';self._save(handle,d)
