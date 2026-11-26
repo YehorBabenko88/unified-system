@@ -257,6 +257,41 @@ class NativePg18V2Tests(unittest.TestCase):
             self.pg.sql("UPDATE lab_writer_fence SET token=999",
                         role="lab_writer")
 
+    def test_32_real_pg_contenders_same_resource_have_one_winner(self):
+        from concurrent.futures import ThreadPoolExecutor
+        # Each contender owns a separate PostgreSQL backend, never a shared
+        # Python mutex. The DB primary-key/CAS arbitrates the actual winner.
+        def one_contender(index):
+            with self.psycopg.connect(self.pg.dsn("lab_writer")) as conn:
+                with conn.cursor() as cur:
+                    cur.execute("SELECT pg_backend_pid()")
+                    pid = cur.fetchone()[0]
+                ids = self.identity()
+                try:
+                    accepted = claim_lab_fence(
+                        self.pg, owner=_OWNER, namespace=_NAMESPACE,
+                        generation=1, token=500,
+                        session_id=ids[0], instance_id=ids[1],
+                        node_incarnation_id=ids[2],
+                        source_sha256=self.source_sha,
+                        schema_sha256=self.schema_sha,
+                        backend_pid=pid,
+                        previous_quiescence_verified=True)
+                    return (index, accepted)
+                except LabAdmissionRejected:
+                    return (index, False)
+        with ThreadPoolExecutor(max_workers=8) as pool:
+            results = list(pool.map(one_contender, range(32)))
+        winners = [i for i, admitted in results if admitted is True]
+        self.assertEqual(len(winners), 1)
+        self.assertEqual(self.pg.sql(
+            "SELECT count(*),min(generation),min(token) FROM lab_writer_fence"),
+            "1|1|500")
+        self.assertEqual(self.pg.sql(
+            "SELECT has_table_privilege('lab_writer',"
+            "'provenance_minutes','INSERT')"), "f")
+        self.assertFalse(fenced_lab_witness(self.pg)["trading_authorized"])
+
     def test_native_crash_recovers_fence_high_water_without_old_writer(self):
         ids = self.identity()
         self.assertTrue(self.claim(self.writer, 1, 200, ids))
