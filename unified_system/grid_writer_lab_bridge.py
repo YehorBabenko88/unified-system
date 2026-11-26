@@ -242,6 +242,15 @@ async def assess_lab_c_fence(*, authority, lease, source, manifest, identity,
               "LAB_C_FENCE_ABI_REJECTED")
         witness=c_module.fenced_lab_witness(pg)
         _need(type(witness) is dict
+              and witness.get("fence_writer_select") is False
+              and witness.get("fence_writer_update") is False
+              and witness.get("fence_reader_select") is False
+              and witness.get("function_owner") == "lab_owner"
+              and witness.get("function_security_definer") is True
+              and witness.get("function_search_path_pinned") is True
+              and witness.get("fence_owner") == "lab_owner"
+              and type(witness.get("fence_state_count")) is int
+              and 0 <= witness["fence_state_count"] <= 1
               and witness.get("schema") == C_FENCE_SCHEMA
               and witness.get("scope") == SCOPE
               and witness.get("direct_writer_insert") is False

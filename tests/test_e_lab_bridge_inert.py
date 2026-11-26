@@ -131,6 +131,11 @@ class BridgeTests(unittest.TestCase):
                 "scope":"ISOLATED_LAB_ONLY","direct_writer_insert":False,
                 "writer_exec":True,"reader_exec":False,
                 "execution_authority":False,"trading_authorized":False,
+                "fence_writer_select":False,"fence_writer_update":False,
+                "fence_reader_select":False,"function_owner":"lab_owner",
+                "function_security_definer":True,
+                "function_search_path_pinned":True,
+                "fence_owner":"lab_owner","fence_state_count":1,
             },
             revalidate_lab_fence=self._fake_revalidate,
             claim_lab_fence=c_claim,
@@ -229,6 +234,25 @@ class BridgeTests(unittest.TestCase):
             original(self.pg),direct_writer_insert=True)
         with self.assertRaises(ResourceFenceBlocked):
             self.assess()
+
+    def test_c_owner_and_security_definer_attestation_are_required(self):
+        original=self.c.fenced_lab_witness
+        mutations=(
+            ("function_owner","lab_writer"),
+            ("function_security_definer",False),
+            ("function_search_path_pinned",False),
+            ("fence_owner","lab_reader"),
+            ("fence_writer_select",True),
+            ("fence_writer_update",True),
+            ("fence_reader_select",True),
+            ("fence_state_count",2),
+        )
+        for key,value in mutations:
+            self.c.fenced_lab_witness=lambda _,k=key,v=value:dict(
+                original(self.pg),**{k:v})
+            with self.subTest(key=key),self.assertRaises(ResourceFenceBlocked):
+                self.assess()
+        self.c.fenced_lab_witness=original
 
     def test_untrusted_production_authority_not_accepted(self):
         self.authority.config=ConsulConfig(
