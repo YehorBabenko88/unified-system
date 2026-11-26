@@ -807,6 +807,62 @@ class WindowsNativeSuspendedLaunchTests(unittest.TestCase):
         # mislabelled as a normal Python child return code.
         self.assertEqual(self.driver.owned_job_stop_state(op), 'STILL_ALIVE')
 
+    def test_native_detached_console_diagnostic_preserves_restricted_token_and_job(self):
+        """Disposable runner probe: alter console topology ONLY, not identity/ACL.
+
+        This does not qualify production flags, the installed release or a
+        Root/SQL/SCM grant. Existing CREATE_NO_WINDOW remains the shipped path.
+        """
+        import ctypes
+        import sys
+        from ctypes import wintypes as w
+        from unified_system.runtime import ModuleSpec
+        from unified_system.runtime_process import _WindowsNonServiceLabToken
+
+        kernel = ctypes.WinDLL('kernel32', use_last_error=True)
+        kernel.GetConsoleWindow.restype = w.HWND
+        host_console = bool(kernel.GetConsoleWindow())
+        print('LAB_DLL_INIT_DIAG parent_console=%s python=%s'
+              % (host_console, sys.version.split()[0]), flush=True)
+
+        def detached_create_suspended(token, kernel, argv, command,
+                                     env_buffer, cwd, startup, info):
+            # Exact original restricted token and CreateProcessAsUserW. Only
+            # CREATE_NO_WINDOW (0x08000000) is changed to DETACHED_PROCESS
+            # (0x8) for this one disposable CI fixture; inherited handles
+            # remain FALSE and suspended Job assignment is unchanged.
+            a = token._a
+            a.CreateProcessAsUserW.argtypes = [
+                w.HANDLE, w.LPCWSTR, w.LPWSTR, ctypes.c_void_p,
+                ctypes.c_void_p, w.BOOL, w.DWORD, ctypes.c_void_p,
+                w.LPCWSTR, ctypes.c_void_p, ctypes.c_void_p]
+            a.CreateProcessAsUserW.restype = w.BOOL
+            result = a.CreateProcessAsUserW(
+                token._handle, str(argv[0]), command, None, None, False,
+                0x00000004 | 0x00000400 | 0x00000008,
+                ctypes.cast(env_buffer, ctypes.c_void_p), str(cwd),
+                ctypes.byref(startup), ctypes.byref(info))
+            if not result:
+                print('LAB_DLL_INIT_DIAG detached_create_win32=%d'
+                      % ctypes.get_last_error(), flush=True)
+            return bool(result)
+
+        with patch.object(_WindowsNonServiceLabToken, 'create_suspended',
+                          detached_create_suspended):
+            op = self.driver.start(ModuleSpec('market_data', '1.0.0'),
+                                   'disposable-lab', self.op)
+        self.addCleanup(self._cleanup)
+        child = self.driver.children[op]
+        status = child.poll()
+        print('LAB_DLL_INIT_DIAG detached_status=%s original_job=%s'
+              % (('STILL_ALIVE' if status is None else
+                  '0x%08X' % status), bool(child._job._assigned)), flush=True)
+        # A successful detached experiment is NOT permission to switch the
+        # production launcher; separate security review is mandatory.
+        self.assertIsNone(
+            status, 'restricted child did not survive isolated DETACHED_PROCESS '
+                    'console-topology experiment')
+
     def test_native_restricted_child_cannot_obtain_scm_create_right(self):
         import hashlib
         from unified_system.runtime import ModuleSpec
