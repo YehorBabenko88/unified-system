@@ -652,7 +652,6 @@ def _launch_owned_windows_job_process(argv, cwd, env):
     # Explicitly inherit NO handles; no child stdin or secret pipe is needed
     # for this isolated LAB path. A local preexisting Popen-based process
     # remains the only owner for non-LAB launches.
-    job = OwnedWindowsJob()
     info = ProcessInformation()
     startup = StartupInfo()
     startup.cb = ctypes.sizeof(startup)
@@ -662,6 +661,10 @@ def _launch_owned_windows_job_process(argv, cwd, env):
         for k,v in sorted(env.items(), key=lambda item:item[0].casefold())
     ) + '\0'
     env_buffer = ctypes.create_unicode_buffer(environment)
+    # Do not allocate a kill-on-close Job before fallible command/env
+    # validation has completed. On every subsequent launch error the
+    # original process and Job handles are released by the same path.
+    job = OwnedWindowsJob()
     created = False
     try:
         # CREATE_SUSPENDED | CREATE_UNICODE_ENVIRONMENT | CREATE_NO_WINDOW
@@ -972,6 +975,9 @@ class ProcessDriver:
                 # Close the private KILL_ON_JOB_CLOSE handle on failed
                 # publication, never leave an unauthorized descendant.
                 proc.close_owned_handles()
+                self.children.pop(operation_id,None)
+                self._job_launch_bindings.pop(operation_id,None)
+                self._job_receipts.pop(operation_id,None)
             raise
         return operation_id
     def owned_process_state(self, handle):
