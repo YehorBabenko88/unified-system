@@ -145,6 +145,27 @@ class LabPostgresLifecycle(unittest.TestCase):
         pg.sql('CREATE TABLE lab_private_owner_only(x int)')
         with self.assertRaises(LabAdmissionRejected):
             pg.sql('SELECT * FROM lab_private_owner_only', role='lab_reader')
+        witness = pg.provenance_storage_witness()
+        self.assertEqual(witness['witness_schema'], 'lab-postgres-custody.v1')
+        self.assertEqual(witness['storage_immutability'], 'ROLE_AND_TRIGGER_GUARDED_LAB_ONLY')
+        self.assertEqual(witness['immutable_trigger_count'], 1)
+        self.assertFalse(witness['writer_can_select'])
+        self.assertFalse(witness['writer_can_update'])
+        self.assertFalse(witness['writer_can_delete'])
+        self.assertFalse(witness['reader_can_insert'])
+        self.assertFalse(witness['execution_authority'])
+        self.assertFalse(witness['trading_authorized'])
+        # An altered grant or disabled immutability trigger invalidates the
+        # witness even when a previously observed record still hashes correctly.
+        pg.sql('GRANT SELECT ON provenance_minutes TO lab_writer')
+        with self.assertRaisesRegex(LabAdmissionRejected, 'LAB_PG_CUSTODY_NOT_VERIFIED'):
+            pg.provenance_storage_witness()
+        pg.sql('REVOKE SELECT ON provenance_minutes FROM lab_writer')
+        pg.sql('ALTER TABLE provenance_minutes DISABLE TRIGGER provenance_minutes_immutable')
+        with self.assertRaisesRegex(LabAdmissionRejected, 'LAB_PG_CUSTODY_NOT_VERIFIED'):
+            pg.provenance_storage_witness()
+        pg.sql('ALTER TABLE provenance_minutes ENABLE TRIGGER provenance_minutes_immutable')
+        self.assertEqual(pg.provenance_storage_witness()['immutable_trigger_count'], 1)
         # Crash without shutdown checkpoint, then WAL recovery.
         pg.sql(insert(11), role='lab_writer')
         pid = pg.crash()
@@ -189,6 +210,10 @@ class LabPostgresLifecycle(unittest.TestCase):
                                      if k != 'dataset_fingerprint'}), record['dataset_fingerprint'])
             self.pg = pg = LabPostgres(BIN, self.root, min_major=MIN).initialize().start()
             pg.provision(canonical_schema())
+            witness = pg.provenance_storage_witness()
+            self.assertEqual(witness['storage_immutability'],
+                             'ROLE_AND_TRIGGER_GUARDED_LAB_ONLY')
+            self.assertFalse(witness['execution_authority'])
 
             def persist(symbol, payload, content_id):
                 body = canonical(payload).decode('ascii').replace("'", "''")
