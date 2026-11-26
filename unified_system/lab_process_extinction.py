@@ -1,7 +1,8 @@
 """E/A Root-owned tri-state OS process observation (NOT a grant).
 
-A ProcessDriver.owned_process_state() is the sole tri-state authority; alive() maps identity errors to False and is NOT
-an extinction witness. A process can have disappeared, reused its PID or
+A's ProcessDriver owns BOTH canonical OS observations: owned_process_state()
+for original Popen and owned_job_stop_state() for a real retained Windows Job.
+alive() maps identity errors to False and is NOT an extinction witness. A process can have disappeared, reused its PID or
 be inaccessible; only A's original retained process object, completion wait,
 durable process identity and *separate* endpoint ownership census can later
 qualify RootProcessExtinction. This observer returns UNKNOWN unless all
@@ -44,8 +45,10 @@ def observe_owned_process_extinction(driver, handle):
     """Read OS state without treating errors or PID reuse as extinction.
 
     Root's original A-owned retained process handles improve on PID existence.
-    The returned EXTINCT is *local process-only*, never full listener/descendant
-    proof or a RootProcessExtinction grant. That requires A owner review.
+    A Windows Job EXTINCT requires both the original process and Job's zero
+    active members. Non-Job Popen EXTINCT remains process-only.
+    Neither observation supplies A's issuer-retained one-time Job receipt,
+    historical SCM/TCP ownership, Consul or C backend proof; never a grant.
     """
     _need(type(driver) is ProcessDriver and
           type(handle) is str and handle in driver.children,
@@ -90,7 +93,11 @@ def observe_owned_process_extinction(driver, handle):
         # retained exact operation record on each call and refuse mismatch.
         _need(record.get("state") in ("RUNNING", "STOPPED"),
               "LAB_PROCESS_OBSERVATION_STATE_INVALID")
-        observer=getattr(driver,"owned_process_state",None)
+        # Crucial A ABI distinction: a signalled Windows process is NOT
+        # evidence that the original Job has zero descendants. Only A's
+        # owner-locked, original-handle owned_job_stop_state may say so.
+        observer=getattr(driver,"owned_job_stop_state" if is_windows_child
+                         else "owned_process_state",None)
         if not callable(observer):
             return RootProcessObservation(
                 "unified.root-process-observation.v1",UNKNOWN,handle,pid,
@@ -101,11 +108,14 @@ def observe_owned_process_extinction(driver, handle):
         if state == EXTINCT:
             return RootProcessObservation(
                 "unified.root-process-observation.v1",EXTINCT,handle,pid,
-                created,"A_RETAINED_HANDLE_EXITED_LISTENER_UNVERIFIED")
+                created,("A_ORIGINAL_JOB_ZERO_MEMBERS_LISTENER_UNVERIFIED"
+                         if is_windows_child else
+                         "A_RETAINED_HANDLE_EXITED_LISTENER_UNVERIFIED"))
         if state == STILL_ALIVE:
             return RootProcessObservation(
                 "unified.root-process-observation.v1",STILL_ALIVE,handle,pid,
-                created,"A_RETAINED_HANDLE_STILL_ALIVE")
+                created,("A_ORIGINAL_JOB_STILL_ALIVE" if is_windows_child
+                         else "A_RETAINED_HANDLE_STILL_ALIVE"))
         return RootProcessObservation(
             "unified.root-process-observation.v1",UNKNOWN,handle,pid,
             created,"A_ROOT_OS_IDENTITY_UNKNOWN")
