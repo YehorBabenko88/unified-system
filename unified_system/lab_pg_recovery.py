@@ -112,6 +112,43 @@ def _revoke(pg, old, deadline):
          "LAB_RECOVERY_REVOCATION_UNVERIFIED")
 
 
+def _pending_outcome(pg, pending, deadline):
+    """Read-only exact immutable outcome after unknown COMMIT.
+
+    Duplicate-key errors, cursor presence, and pending metadata alone are
+    never delivery ACK. NO retry/INSERT occurs in this SQL recovery lane.
+    """
+    if pending is None:
+        return "ABSENT"
+    symbol = pending["symbol"]
+    start_ms = pending["start_ms"]
+    fingerprint = pending["fingerprint"]
+    content_id = pending["content_id"]
+    # All values are already checked by read_lab_pending's C-owned parser.
+    query = (
+        "SELECT CASE"
+        " WHEN EXISTS (SELECT 1 FROM public.provenance_minutes p"
+        f" WHERE p.symbol='{symbol}' AND p.start_ms={start_ms}"
+        f" AND p.fingerprint='{fingerprint}'"
+        f" AND p.content_id='{content_id}'"
+        f" AND p.record->>'dataset_fingerprint'='{fingerprint}')"
+        " AND NOT EXISTS (SELECT 1 FROM public.provenance_minutes q"
+        f" WHERE q.symbol='{symbol}' AND q.start_ms={start_ms}"
+        f" AND (q.fingerprint<>'{fingerprint}'"
+        f" OR q.content_id<>'{content_id}'"
+        f" OR q.record->>'dataset_fingerprint' IS DISTINCT FROM '{fingerprint}'))"
+        " THEN 'MATCH'"
+        " WHEN EXISTS (SELECT 1 FROM public.provenance_minutes p"
+        f" WHERE p.symbol='{symbol}' AND p.start_ms={start_ms}"
+        f" OR p.fingerprint='{fingerprint}') THEN 'CONFLICT'"
+        " ELSE 'MISSING' END"
+    )
+    result = _bounded_sql(pg, query, deadline)
+    need(result in ("MATCH", "CONFLICT", "MISSING"),
+         "LAB_RECOVERY_IMMUTABLE_OUTCOME_UNVERIFIED")
+    return result
+
+
 def _snapshot(pg, streams, deadline):
     """Read durable SQL from separate C-owned subprocesses, never replay."""
     result = {}
@@ -125,7 +162,10 @@ def _snapshot(pg, streams, deadline):
         checkpoint = read_lab_checkpoint(pg, stream_id=stream,
                                          timeout=min(120, _remaining(deadline)))
         _remaining(deadline)
-        result[stream] = {"pending": pending, "checkpoint": checkpoint}
+        outcome = _pending_outcome(pg, pending, deadline)
+        _remaining(deadline)
+        result[stream] = {"pending": pending, "checkpoint": checkpoint,
+                          "immutable_outcome": outcome}
     return result
 
 
