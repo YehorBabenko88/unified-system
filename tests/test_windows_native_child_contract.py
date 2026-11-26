@@ -857,8 +857,6 @@ class WindowsNativeSuspendedLaunchTests(unittest.TestCase):
             'import os, subprocess, sys, time\n'
             'p = subprocess.Popen([sys.executable, os.path.join(os.path.dirname(__file__),'
             ' "descendant_worker.py")], close_fds=True)\n'
-            'with open(os.environ["JOB_TEST_PID_FILE"], "w") as out:'
-            ' out.write(str(p.pid))\n'
             'time.sleep(30)\n',
             encoding='utf-8')
         program = self.driver.programs['market_data']
@@ -866,17 +864,22 @@ class WindowsNativeSuspendedLaunchTests(unittest.TestCase):
             self.worker.read_bytes()).hexdigest()
         program['file_pins']['descendant_worker.py'] = hashlib.sha256(
             secondary.read_bytes()).hexdigest()
-        pid_file = self.worker.with_name('grandchild.pid')
-        program['env'] = {'JOB_TEST_PID_FILE': str(pid_file)}
+        program['env'] = {}
         op = self.driver.start(ModuleSpec('market_data', '1.0.0'),
                                'disposable-lab', self.op)
         self.addCleanup(self._cleanup)
         child = self.driver.children[op]
         deadline = time.monotonic() + 5
-        while not pid_file.exists() and time.monotonic() < deadline:
+        members = ()
+        while time.monotonic() < deadline:
+            members = child._job.observe_member_pids()
+            if len(members) >= 2:
+                break
             time.sleep(.05)
-        self.assertTrue(pid_file.exists(), 'LAB child never spawned a descendant')
-        pid = int(pid_file.read_text())
+        self.assertEqual(len(members), 2, 'LAB child never created a Job descendant')
+        descendants = set(members) - {child.pid}
+        self.assertEqual(len(descendants), 1)
+        pid = descendants.pop()
         identity = _identity(pid)
         self.assertIsNotNone(identity)
         with RetainedOsProcessWait(pid, identity) as witness:
