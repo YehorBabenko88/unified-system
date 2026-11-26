@@ -117,6 +117,93 @@ class NativeCRecoveryTests(unittest.TestCase):
                 self.assertEqual(observe_old_lab_backend(
                     self.pg, **self.old), "STILL_ALIVE")
 
+    def test_owner_marker_inode_replacement_denied(self):
+        # Exact same nonce at a newly created inode is NOT the original
+        # owner marker. Preserve original marker for safe fixture teardown.
+        path=self.pg._marker
+        prior=self.root/".c-native-original-marker"
+        nonce=path.read_text(encoding="ascii")
+        os.replace(path,prior)
+        try:
+            path.write_text(nonce,encoding="ascii")
+            path.chmod(0o600)
+            with self.assertRaisesRegex(LabAdmissionRejected,
+                                         "LAB_PG_OWNERSHIP_LOST"):
+                self._recover()
+            self.assertTrue(self.pg.started)
+        finally:
+            path.unlink(missing_ok=True)
+            os.replace(prior,path)
+        self.assertFalse(self._recover()["native_admitted"])
+
+    def test_lock_inode_replacement_denies_restart(self):
+        contained=contain_exclusive_lab_cluster(
+            self.pg,old=self.old,quiesced=True,max_seconds=120)
+        self.assertEqual(contained["state"],"UNKNOWN")
+        path=self.root/".lab-postgres-recovery.lock"
+        prior=self.root/".c-native-original-lock"
+        payload=path.read_bytes()
+        os.replace(path,prior)
+        try:
+            path.write_bytes(payload)
+            path.chmod(0o600)
+            with self.assertRaisesRegex(LabAdmissionRejected,
+                                         "LAB_RECOVERY_OS_LOCK_LOST"):
+                self._recover()
+            self.assertFalse(self.pg.started)
+        finally:
+            path.unlink(missing_ok=True)
+            os.replace(prior,path)
+        self.assertFalse(self._recover()["native_admitted"])
+
+    def test_same_inode_reopened_fd_denied_even_with_original_nonce(self):
+        from unified_system import lab_pg_recovery as c
+        contained=contain_exclusive_lab_cluster(
+            self.pg,old=self.old,quiesced=True,max_seconds=120)
+        self.assertEqual(contained["state"],"UNKNOWN")
+        root=c._resource(self.pg)
+        state=c._STATES[root]
+        original_fd=state.lock_fd
+        retained=os.dup(original_fd)
+        path=self.root/".lab-postgres-recovery.lock"
+        os.close(original_fd)
+        replacement=os.open(path,os.O_RDWR)
+        try:
+            if replacement != original_fd:
+                os.dup2(replacement,original_fd,inheritable=False)
+            with self.assertRaisesRegex(LabAdmissionRejected,
+                      "LAB_RECOVERY_OS_LOCK_DESCRIPTION_CHANGED"):
+                self._recover()
+            self.assertFalse(self.pg.started)
+        finally:
+            if replacement != original_fd:
+                os.close(replacement)
+            # Restore the original open file description, which was kept
+            # kernel-locked by both the witness and the temporary duplicate.
+            os.dup2(retained,original_fd,inheritable=False)
+            os.close(retained)
+        self.assertFalse(self._recover()["native_admitted"])
+
+    def test_fork_inherits_fd_but_c_worker_rejected(self):
+        if not hasattr(os,"fork"):
+            self.fail("C_NATIVE_POSIX_FORK_REQUIRED")
+        contain_exclusive_lab_cluster(
+            self.pg,old=self.old,quiesced=True,max_seconds=120)
+        child=os.fork()
+        if child==0:
+            try:
+                self.pg.start(timeout=10)
+            except LabAdmissionRejected:
+                os._exit(77)
+            except BaseException:
+                os._exit(78)
+            os._exit(0)
+        waited,status=os.waitpid(child,0)
+        self.assertEqual(waited,child)
+        self.assertTrue(os.WIFEXITED(status))
+        self.assertEqual(os.WEXITSTATUS(status),77)
+        self.assertFalse(self._recover()["native_admitted"])
+
     def test_kernel_lock_survives_stop_only_and_recovery(self):
         # A separate interpreter tries to lock the SAME inode, without
         # inheriting the owner's C descriptor. This is a kernel test.
