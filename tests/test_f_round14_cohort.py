@@ -201,7 +201,8 @@ class Round14CohortTests(unittest.TestCase):
         for owner, sha in expected.items():
             with self.subTest(owner=owner):
                 self.assertEqual(r["heads"][owner], sha)
-                self.assertEqual(current[owner], sha)
+                self.assertRegex(r["live_capture"]["head_sha_by_owner"][owner], SHA40)
+                self.assertEqual(current[owner], r["live_capture"]["head_sha_by_owner"][owner])
         self.assertEqual(r["source_blobs"]["B_writer"]["blob"],
                          "247d7fab2738e1892a05979e407f637f9df62784")
         self.assertEqual(r["source_blobs"]["A"]["historical_SCM_extinction"], "DENIED")
@@ -229,6 +230,26 @@ class Round14CohortTests(unittest.TestCase):
         self.assertIsNone(pins["expected_sdist_sha256"])
         self.assertFalse(pins["actual_b_wheel_installed"])
         self.assertFalse(pins["release_authenticated"])
+
+
+    def test_round19_live_source_snapshot_and_e_protected_deny(self):
+        r = self.data["round19"]
+        live = r["live_capture"]
+        self.assertIs(live["snapshot_atomic"], False)
+        self.assertEqual(live["source_blobs"]["B_writer"]["blob"],
+                         "247d7fab2738e1892a05979e407f637f9df62784")
+        self.assertEqual(live["source_blobs"]["E"]["blob"],
+                         "ed966cc79aee3da33a5c658737486139c16b7e3c")
+        for row in live["source_blobs"].values():
+            self.assertRegex(row["blob"], SHA40)
+            self.assertRegex(row["head"], SHA40)
+        self.assertEqual(live["E_permit"], "DENIED_LAB_OPERATION_INSTALLED_WHEEL_UNVERIFIED")
+        self.assertEqual(live["A_extinction"], "DENIED_HISTORICAL_SCM_CHILD_MEMBERSHIP")
+        self.assertFalse(live["F_offline_tool_verified"]["root_authorized"])
+        self.assertFalse(live["F_offline_tool_verified"]["real_B_wheel"])
+        self.assertEqual(live["F_offline_tool_verified"]["tests_passed"], 34)
+        self.assertEqual(live["release"], "CODE_NO_GO_PRODUCTION_NO_GO")
+        self.assertFalse(live["master_integration"]["changed"])
 
 if __name__ == "__main__":
     unittest.main()
