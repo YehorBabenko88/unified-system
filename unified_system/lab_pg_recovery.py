@@ -10,6 +10,8 @@ import time
 import os
 import stat
 import subprocess
+import socket
+import tempfile
 from datetime import datetime
 from dataclasses import dataclass
 from types import MappingProxyType
@@ -342,6 +344,72 @@ def _require_held_recovery_lock(pg, root, old):
         fd = current.lock_fd
         witness_fd = current.lock_witness_fd
     _verify_cluster_os_lock(pg, fd, witness_fd)
+
+
+def _dispose_native_pg18_fixture(pg):
+    """One-way C-owned teardown ONLY for original isolated native test root.
+
+    Never a Root/Consul admission, new stop/start supervisor, service path,
+    recovery retry, DB promotion, or proof about real infrastructure. A test
+    may dispose its own PG only after the C worker has completed or denied;
+    an active/foreign worker, missing OS lock, PID or listener uncertainty
+    prevents deletion. The method never deletes filesystem data itself.
+    """
+    need(os.environ.get("LAB_C_PG18_NATIVE_TEST") == "1"
+         and type(pg) is LabPostgres and pg.root.is_absolute()
+         and pg.root.name.startswith("c-round14-recovery-")
+         and pg.root.parent.resolve(strict=True)
+             == __import__("pathlib").Path(tempfile.gettempdir()).resolve(strict=True),
+         "LAB_NATIVE_PG_FIXTURE_ONLY")
+    _require_pg(pg)
+    root = _resource(pg)
+    with _GUARD:
+        state = _STATES.get(root)
+        boot = _BOOTSTRAP_ROOTS.get(root)
+        need(state is not None and state.pg is pg
+             and state.worker_tid == threading.get_ident()
+             and state.phase in ("COMPLETE_DENIED", "POISONED",
+                                 "STOPPED_UNVERIFIED")
+             and boot is not None and boot[0] is pg
+             and state.lock_fd == boot[1]
+             and state.lock_witness_fd == boot[2]
+             and state.marker == pg._nonce,
+             "LAB_NATIVE_PG_WORKER_OR_STATE_UNVERIFIED")
+        fd, witness_fd = state.lock_fd, state.lock_witness_fd
+    _verify_cluster_os_lock(pg, fd, witness_fd)
+    if pg.started:
+        # Retain A's actual original kernel process object *before* the
+        # single C-owned terminal stop. The old process must then exit.
+        wait, _, _ = _retain_owned_postmaster(pg, time.monotonic() + 90)
+        try:
+            pg.stop(timeout=60)
+            need(wait.wait_exited(30) is True,
+                 "LAB_NATIVE_PG_POSTMASTER_NOT_EXTINCT")
+        finally:
+            wait.close()
+    need(pg.started is False
+         and not (pg.data / "postmaster.pid").exists(),
+         "LAB_NATIVE_PG_STOP_UNVERIFIED")
+    # Closing a listening socket alone is not a full Root extinction proof.
+    # Here it is an additional disposable-fixture deletion guard only.
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as probe:
+        probe.settimeout(1.0)
+        need(probe.connect_ex(("127.0.0.1", pg.port)) != 0,
+             "LAB_NATIVE_PG_LISTENER_STILL_ACTIVE")
+    _verify_cluster_os_lock(pg, fd, witness_fd)
+    with _GUARD:
+        current = _STATES.get(root)
+        need(current is state and current.worker_tid == threading.get_ident()
+             and current.phase == state.phase
+             and _BOOTSTRAP_ROOTS.get(root) == boot,
+             "LAB_NATIVE_PG_TEARDOWN_OWNER_CHANGED")
+        os.close(witness_fd)
+        os.close(fd)
+        _STATES.pop(root)
+        _BOOTSTRAP_ROOTS.pop(root)
+        if _DATA_OWNERS.get(state.data_identity) == root:
+            _DATA_OWNERS.pop(state.data_identity)
+    return True
 
 
 def _retain_owned_postmaster(pg, deadline):
