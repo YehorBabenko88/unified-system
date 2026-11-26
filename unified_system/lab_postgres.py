@@ -368,8 +368,7 @@ class LabPostgres:
                      AND (t.tgtype & 2) = 2
                      AND (t.tgtype & 16) = 16
                      AND (t.tgtype & 8) = 8
-                     AND pg_get_triggerdef(t.oid) ILIKE
-                        '%reject_provenance_mutation%')
+                     AND t.tgfoid = 'reject_provenance_mutation()'::regprocedure)
             )
             FROM pg_class c
             WHERE c.oid='public.provenance_minutes'::regclass
