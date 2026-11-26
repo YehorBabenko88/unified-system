@@ -88,10 +88,10 @@ class Round14CohortTests(unittest.TestCase):
             "E": "d231a0ad657b7e12f89ddc9cde2ef6b5b028a125",
             "META": "902db7e28571e851de09d127a9ebad6f120efecd",
         }
-        rows = {row["id"]: row for row in self.data["components"]}
+        historical = self.data["round17"]["exact_heads"]
         for label, sha in expected_heads.items():
             with self.subTest(component=label):
-                self.assertEqual(rows[label]["head_sha"], sha)
+                self.assertEqual(historical[label], sha)
         hashes = self.data["round15"]["b30_source_sha256"]
         self.assertEqual(set(hashes), set(EXPECTED))
         for path, sha in hashes.items():
@@ -150,10 +150,10 @@ class Round14CohortTests(unittest.TestCase):
         self.assertEqual(r["schema"], "unified.f.round17-source-cohort.v1")
         self.assertIs(r["integration"]["runtime_changed"], False)
         self.assertEqual(r["integration"]["head_sha"], "9349d7f3ed93ef82d120976816b968e0b716b067")
-        current = {row["id"]: row.get("head_sha") for row in self.data["components"]}
         for owner, pin in r["exact_heads"].items():
             with self.subTest(owner=owner):
-                self.assertEqual(current[owner], pin)
+                self.assertRegex(pin, SHA40)
+        self.assertNotEqual(r["exact_heads"]["A"], self.data["round19"]["heads"]["A"])
         self.assertEqual(len(r["source_blobs"]), 7)
         for row in r["source_blobs"]:
             with self.subTest(path=row["path"]):
@@ -186,6 +186,49 @@ class Round14CohortTests(unittest.TestCase):
                 self.assertIn(pin, doc)
         self.assertIn("LAB_ROOT_BOUND_EXTINCTION_NOT_IMPLEMENTED", doc)
         self.assertIn("CODE NO_GO / PRODUCTION NO_GO", doc)
+
+
+    def test_round19_actual_heads_and_source_gates(self):
+        r = self.data["round19"]
+        expected = {
+            "A": "8b066e373690f43befe107ff7aa474c270c8ad4c",
+            "B": "9e0d57c4c0f2d01bc381ada090b62d23566b32aa",
+            "C": "3f0d3410ac708da9776e5ad1407d864adcde34b0",
+            "D": "89022d7885d279bb1fd2f695b59f2c243b431ad2",
+            "E": "1c2edb2564c48a1348d3ad4ee94fe8fa0b425b18",
+        }
+        current = {row["id"]: row.get("head_sha") for row in self.data["components"]}
+        for owner, sha in expected.items():
+            with self.subTest(owner=owner):
+                self.assertEqual(r["heads"][owner], sha)
+                self.assertEqual(current[owner], sha)
+        self.assertEqual(r["source_blobs"]["B_writer"]["blob"],
+                         "247d7fab2738e1892a05979e407f637f9df62784")
+        self.assertEqual(r["source_blobs"]["A"]["historical_SCM_extinction"], "DENIED")
+        self.assertFalse(r["source_to_wheel_authenticated"])
+        self.assertFalse(r["root_install_protected"])
+        self.assertFalse(r["runtime_import_origin_verified"])
+        self.assertFalse(r["full_native_e2e_verified"])
+        self.assertFalse(r["F_tool"]["root_writer_authority"])
+        self.assertEqual(r["F_tool"]["wheel_read"], "ONE_IMMUTABLE_BYTES_SNAPSHOT")
+        self.assertEqual(r["F_tool"]["platform_win"], "DENIED_UNTIL_PROTECTED_NATIVE_HANDLE")
+        self.assertEqual(r["code"], "NO_GO")
+        self.assertEqual(r["production"], "NO_GO")
+
+    def test_round19_market_data_allowlist_is_source_only(self):
+        pins = json.loads((ROOT / "round18-b-wheel-source-pins.json").read_text(encoding="utf-8"))
+        self.assertEqual(pins["source_commit"], self.data["round19"]["heads"]["B"])
+        self.assertEqual(pins["expected_distribution"], "market-data")
+        self.assertEqual(len(pins["source_files"]), 5)
+        self.assertIn("grid/__init__.py", pins["source_files"])
+        self.assertIn("grid/canonical_lab_fenced_writer.py", pins["source_files"])
+        for path, digest in pins["source_files"].items():
+            with self.subTest(path=path):
+                self.assertRegex(digest, re.compile(r"^[0-9a-f]{64}$"))
+        self.assertIsNone(pins["expected_wheel_sha256"])
+        self.assertIsNone(pins["expected_sdist_sha256"])
+        self.assertFalse(pins["actual_b_wheel_installed"])
+        self.assertFalse(pins["release_authenticated"])
 
 if __name__ == "__main__":
     unittest.main()
