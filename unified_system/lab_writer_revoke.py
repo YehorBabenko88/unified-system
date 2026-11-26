@@ -14,7 +14,6 @@ from .grid_writer_fence_model import ResourceFenceBlocked, _need
 from .lab_writer_authority import LabWriterAuthority
 from .runtime_process import ProcessDriver
 from .lab_owner_executor import LabOwnerExecutor
-from .lab_simulation_admission import LabAdmissionRejected
 
 _SCHEMA = "unified.lab-root-writer-revocation.v1"
 
@@ -121,15 +120,17 @@ class LabWriterRevoker:
             await blocked(lambda: self._c.revalidate_lab_fence(
                 self._pg, identity=self._guard._identity,
                 generation=self._generation, backend_pid=self._backend_pid))
-        except LabAdmissionRejected as exc:
-            # Only C's explicit stale-fence refusal after an acknowledged
-            # owner SQL revoke is evidence. A connection failure, timeout,
-            # cancel or unrelated exception proves nothing about old writer.
+        except BaseException as exc:
+            # Bind the exception class to the exact injected C canonical
+            # module. E standalone intentionally does NOT import C sources.
+            # Only a C stale-fence denial (not network/timeout/cancellation)
+            # after successful SQL revocation can be considered evidence.
+            c_rejected = getattr(self._c, "LabAdmissionRejected", None)
             stages["old_backend_rejected"] = (
-                stages["sql_fence_revoked"] and
-                str(exc) == "LAB_FENCE_REVALIDATION_DENIED")
-        except BaseException:
-            stages["old_backend_rejected"] = False
+                stages["sql_fence_revoked"]
+                and type(c_rejected) is type
+                and type(exc) is c_rejected
+                and str(exc) == "LAB_FENCE_REVALIDATION_DENIED")
         valid = all(stages.values())
         self._last = LabRevocationReport(
             _SCHEMA, "REVOKED_VERIFIED" if valid else "PARTIAL_DENIED",
