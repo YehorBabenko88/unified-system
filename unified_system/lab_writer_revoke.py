@@ -15,6 +15,7 @@ from .lab_writer_authority import LabWriterAuthority
 from .runtime_process import ProcessDriver
 from .lab_owner_executor import LabOwnerExecutor
 from .lab_root_stop_lane import LabRootStopLane
+from .lab_process_extinction import RootProcessObservation, EXTINCT
 
 _SCHEMA = "unified.lab-root-writer-revocation.v1"
 
@@ -113,9 +114,14 @@ class LabWriterRevoker:
         except Exception:
             pass
         try:
+            observation = await self._stop_lane.old_child_extinct(
+                self._handle,timeout=blocking_timeout)
+            # Retained-handle exit alone does not attest socket ownership
+            # or descendants. Never mint a full RootProcessExtinction here.
             stages["child_extinct"] = (
-                await self._stop_lane.old_child_extinct(
-                    self._handle,timeout=blocking_timeout) is True)
+                type(observation) is RootProcessObservation
+                and observation.state == EXTINCT
+                and observation.listener_owner_verified is True)
         except Exception:
             pass
         try:
