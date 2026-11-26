@@ -246,7 +246,7 @@ def commit_verified_lab_cursor(pg, *, identity, generation, backend_pid,
             "trading_authorized":False,"paper_admitted":False}
 
 
-def read_lab_cursor(pg, *, stream_id):
+def read_lab_cursor(pg, *, stream_id, timeout=120):
     """Read-only owner-side WAL cursor state; never bearer or permission."""
     pg._verify_owned()
     need(pg.started, "LAB_PG_NOT_STARTED")
@@ -269,7 +269,7 @@ def read_lab_cursor(pg, *, stream_id):
         f" WHERE c.stream_id='{stream_id}')"
         " SELECT COALESCE((SELECT CASE WHEN matched"
         " THEN cursor_value::text ELSE 'CORRUPT' END FROM state),'ABSENT')"
-    )
+    , timeout=timeout)
     need(result != "CORRUPT", "LAB_CURSOR_DURABLE_RECORD_CORRUPT")
     if result == "ABSENT":
         return None
@@ -373,17 +373,17 @@ def verify_existing_lab_checkpoint(pg, *, identity, generation, backend_pid,
     }
 
 
-def read_lab_checkpoint(pg, *, stream_id):
+def read_lab_checkpoint(pg, *, stream_id, timeout=120):
     """Owner diagnostic: confirmed cursor plus immutable source identity."""
     stream_id=_stream(stream_id)
-    cursor=read_lab_cursor(pg,stream_id=stream_id)
+    cursor=read_lab_cursor(pg,stream_id=stream_id,timeout=timeout)
     if cursor is None:
         return None
     result=pg.sql(
         "SELECT symbol,source_start_ms,fingerprint,content_id"
         " FROM public.lab_stream_checkpoint"
         f" WHERE stream_id='{stream_id}' AND cursor_value={cursor}"
-    )
+    , timeout=timeout)
     fields=result.split("|")
     need(len(fields)==4, "LAB_CURSOR_METADATA_CORRUPT")
     symbol,ms,fp,cid=fields
@@ -394,7 +394,7 @@ def read_lab_checkpoint(pg, *, stream_id):
             "scope":"ISOLATED_LAB_ONLY","native_admitted":False}
 
 
-def read_lab_pending(pg, *, stream_id):
+def read_lab_pending(pg, *, stream_id, timeout=120):
     """Owner diagnostic: durable unresolved minute survives process/WAL crash."""
     pg._verify_owned()
     need(pg.started,"LAB_PG_NOT_STARTED")
@@ -405,7 +405,7 @@ def read_lab_pending(pg, *, stream_id):
         "generation,token,source_sha256,schema_sha256"
         " FROM public.lab_stream_pending"
         f" WHERE stream_id='{stream_id}'"
-    )
+    , timeout=timeout)
     if result=="":
         return None
     fields=result.split("|")
