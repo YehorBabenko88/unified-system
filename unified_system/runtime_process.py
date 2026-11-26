@@ -885,10 +885,32 @@ class ProcessDriver:
         env.update(PYTHONPYCACHEPREFIX=cache,PYTHONDONTWRITEBYTECODE='1',UNIFIED_PRIVATE_CACHE_ROOT=cache)
         env.update(UNIFIED_MODULE_ID=spec.module_id,UNIFIED_MODULE_VERSION=spec.version,
                    UNIFIED_RELEASE_ID=release_id,UNIFIED_INSTANCE_TOKEN=d['token'])
-        proc=subprocess.Popen(p['argv'],cwd=p['cwd'],env=env,stdin=subprocess.PIPE,
-                              stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,shell=False)
+        # Only a pinned, explicitly disposable LAB program uses the new
+        # atomic Windows Job launch. Never silently change production starts.
+        lab_job = (os.name == 'nt' and
+                   p.get('disposable_lab_windows_job') is True and
+                   spec.module_id == 'market_data')
+        proc = (_launch_owned_windows_job_process(p['argv'],p['cwd'],env)
+                if lab_job else
+                subprocess.Popen(p['argv'],cwd=p['cwd'],env=env,stdin=subprocess.PIPE,
+                                 stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,shell=False))
         self.children[operation_id]=proc
-        d.update(pid=proc.pid,created=_identity(proc.pid),state='RUNNING');self._save(operation_id,d)
+        try:
+            created=_identity(proc.pid)
+            if created is None or (lab_job and
+                    (not isinstance(proc,_OwnedWindowsChild) or
+                     proc._job.active_process_count() < 1)):
+                raise ValueError('owned LAB Windows process identity unverified')
+            d.update(pid=proc.pid,created=created,state='RUNNING')
+            if lab_job:
+                d['windows_job_contained']=True
+            self._save(operation_id,d)
+        except BaseException:
+            # Do not release a newly launched Job without killing its own
+            # private child; no user/foreign process is ever assigned.
+            if lab_job and isinstance(proc,_OwnedWindowsChild):
+                proc.close_owned_handles()
+            raise
         return operation_id
     def owned_process_state(self, handle):
         """Read-only Root OS witness: EXTINCT, STILL_ALIVE, or UNKNOWN.
@@ -1046,3 +1068,8 @@ class ProcessDriver:
         if handle in self.children and self.children[handle].stdin:
             self.children[handle].stdin.close()
         d['state']='STOPPED';self._save(handle,d)
+        child=self.children.get(handle)
+        if isinstance(child,_OwnedWindowsChild):
+            if child._job.active_process_count()!=0:
+                raise ValueError('owned Windows Job descendants still active')
+            child.close_owned_handles()
