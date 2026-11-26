@@ -42,6 +42,7 @@ class _OwnedRecovery:
     wal_fault: str = "CLEAN"
     log_position: int = 0
     lock_fd: int = -1
+    worker_tid: int = 0
 
 
 def _resource(pg):
@@ -208,7 +209,8 @@ def _begin(pg, root, old, *, mode):
             preserved = _OwnedRecovery(
                 pg=pg, root=root, data_identity=data,
                 marker=pg._nonce, old=_old_tuple(old),
-                phase="IN_PROGRESS", lock_fd=fd)
+                phase="IN_PROGRESS", lock_fd=fd,
+                worker_tid=threading.get_ident())
         _DATA_OWNERS[data] = root
         _STATES[root] = _OwnedRecovery(
             pg=pg, root=root, data_identity=data,
@@ -218,7 +220,8 @@ def _begin(pg, root, old, *, mode):
             old_os_incarnation=preserved.old_os_incarnation,
             wal_fault=preserved.wal_fault,
             log_position=preserved.log_position,
-            lock_fd=fd)
+            lock_fd=fd,
+            worker_tid=threading.get_ident())
         return existing
 
 
@@ -231,7 +234,8 @@ def _state(root, pg, old, phase, *, pid=0, os_identity=(),
              and prior.old == _old_tuple(old)
              and prior.root == root
              and prior.data_identity == _data_identity(pg)
-             and prior.marker == pg._nonce,
+             and prior.marker == pg._nonce
+             and prior.worker_tid == threading.get_ident(),
              "LAB_RECOVERY_STATE_MISMATCH")
         _STATES[root] = _OwnedRecovery(
             pg=pg, root=root, data_identity=prior.data_identity,
@@ -241,13 +245,16 @@ def _state(root, pg, old, phase, *, pid=0, os_identity=(),
             old_os_incarnation=os_identity or prior.old_os_incarnation,
             wal_fault=wal_fault if wal_fault != "CLEAN" else prior.wal_fault,
             log_position=log_position or prior.log_position,
-            lock_fd=prior.lock_fd)
+            lock_fd=prior.lock_fd,
+            worker_tid=prior.worker_tid)
 
 
 def _poison(root, pg):
     with _GUARD:
         prior = _STATES.get(root)
-        if prior is not None and prior.pg is pg:
+        if (prior is not None and prior.pg is pg
+                and prior.worker_tid == threading.get_ident()
+                and prior.phase == "IN_PROGRESS"):
             _STATES[root] = _OwnedRecovery(
                 pg=prior.pg, root=prior.root, data_identity=prior.data_identity,
                 marker=prior.marker,
@@ -255,7 +262,8 @@ def _poison(root, pg):
                 old_postmaster_pid=prior.old_postmaster_pid,
                 old_os_incarnation=prior.old_os_incarnation,
                 wal_fault=prior.wal_fault, log_position=prior.log_position,
-                lock_fd=prior.lock_fd)
+                lock_fd=prior.lock_fd,
+                worker_tid=prior.worker_tid)
 
 
 def _require_held_recovery_lock(pg, root, old):
@@ -263,7 +271,8 @@ def _require_held_recovery_lock(pg, root, old):
         current = _STATES.get(root)
         need(current is not None and current.phase == "IN_PROGRESS"
              and current.pg is pg and current.old == _old_tuple(old)
-             and current.marker == pg._nonce,
+             and current.marker == pg._nonce
+             and current.worker_tid == threading.get_ident(),
              "LAB_RECOVERY_OS_LOCK_OWNER_MISMATCH")
         fd = current.lock_fd
     _verify_cluster_os_lock(pg, fd)
@@ -669,7 +678,9 @@ def recover_exclusive_lab_cluster(pg, *, old, streams=(), quiesced=False,
         if root is not None:
             with _GUARD:
                 prior = _STATES.get(root)
-                if prior is not None and prior.pg is pg and prior.phase == "IN_PROGRESS":
+                if (prior is not None and prior.pg is pg
+                        and prior.phase == "IN_PROGRESS"
+                        and prior.worker_tid == threading.get_ident()):
                     _STATES[root] = _OwnedRecovery(
                         pg=prior.pg, root=prior.root,
                         data_identity=prior.data_identity,
@@ -678,4 +689,5 @@ def recover_exclusive_lab_cluster(pg, *, old, streams=(), quiesced=False,
                         old_postmaster_pid=prior.old_postmaster_pid,
                         old_os_incarnation=prior.old_os_incarnation,
                         wal_fault=prior.wal_fault, log_position=prior.log_position,
-                        lock_fd=prior.lock_fd)
+                        lock_fd=prior.lock_fd,
+                        worker_tid=prior.worker_tid)
