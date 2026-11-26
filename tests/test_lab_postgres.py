@@ -8,6 +8,7 @@ import os
 import shutil
 import tempfile
 import unittest
+from unittest import mock
 from pathlib import Path
 
 from unified_system.lab_postgres import LabPostgres
@@ -77,6 +78,23 @@ class LabPostgresLifecycle(unittest.TestCase):
         with self.assertRaises(LabAdmissionRejected):
             pg.sql("INSERT INTO provenance_minutes(fingerprint,content_id,symbol,start_ms,record) "
                    "VALUES ('nothex','x','BTCUSDT',0,'{}')", role='lab_writer')
+        # A forged or unverifiable PID must never be signaled or stopped.
+        with mock.patch.object(pg, '_os_process_identity',
+                               side_effect=LabAdmissionRejected('LAB_PG_PID_FOREIGN')):
+            with self.assertRaisesRegex(LabAdmissionRejected, 'PID_FOREIGN'):
+                pg.crash()
+            with self.assertRaisesRegex(LabAdmissionRejected, 'PID_FOREIGN'):
+                pg.stop()
+        self.assertEqual(pg.sql('SELECT count(*) FROM provenance_minutes'), '10')
+        # A replaced ownership marker must not grant shutdown authority.
+        original_marker = pg._marker.read_text()
+        pg._marker.write_text('replaced')
+        try:
+            with self.assertRaisesRegex(LabAdmissionRejected, 'OWNERSHIP_LOST'):
+                pg.stop()
+        finally:
+            pg._marker.write_text(original_marker)
+        self.assertEqual(pg.sql('SELECT count(*) FROM provenance_minutes'), '10')
         # Crash without shutdown checkpoint, then WAL recovery.
         pg.sql(insert(11), role='lab_writer')
         pid = pg.crash()
