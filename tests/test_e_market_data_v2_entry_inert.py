@@ -110,12 +110,16 @@ class RootGridV2InertTests(unittest.TestCase):
             if repository != "YehorBabenko88/strattester":
                 with self.assertRaises(ValueError):
                     lab_release.parse_manifest(raw,hashlib.sha256(raw).hexdigest())
-        # Old Strattester manifest explicitly cannot request the new module.
-        old = self.program()
+        # Retain all otherwise valid pinned paths: rejection must be due to
+        # the *selected module*, not an absent executable in a smaller fixture.
+        legacy = copy.deepcopy(self.manifest)
+        legacy["sources"]["market_data"] = copy.deepcopy(
+            self.legacy["sources"]["market_data"])
+        old = self.program(V2_ENTRY)
         with self.assertRaises(ActivationBlocked):
             service_module_runtime._module_arguments(
                 self.grant, {"programs":{"market_data":old}},
-                self.legacy, "market_data")
+                legacy, "market_data")
 
     def test_v2_cannot_escape_lab_or_reuse_collector_manifest(self):
         for key,value in (("schema","unified.lab-release.collector.v2"),
