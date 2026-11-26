@@ -79,6 +79,48 @@ class LabPostgres:
         self._owned_start_time = None
         self._owned_pidfile_inode = None
         self._crashed = False
+        self._lifecycle_thread = None
+        self._lifecycle_pid = None
+        self._lifecycle_lock_fd = -1
+
+    def _bind_recovery_lifecycle(self, lock_fd):
+        """Private C recovery handoff; caller must be the original C lock owner.
+
+        A raw integer FD or old Python object is not a grant. C's original
+        state machine verifies the exact retained OS lock before binding.
+        """
+        from . import lab_pg_recovery as c
+        import threading
+        root = c._resource(self)
+        with c._GUARD:
+            state = c._STATES.get(root)
+            need(state is not None and state.pg is self
+                 and state.lock_fd == lock_fd
+                 and state.phase == "IN_PROGRESS",
+                 'LAB_PG_RECOVERY_OWNER_MISSING')
+        c._verify_cluster_os_lock(self, lock_fd)
+        self._lifecycle_thread = threading.get_ident()
+        self._lifecycle_pid = os.getpid()
+        self._lifecycle_lock_fd = lock_fd
+
+    def _require_recovery_lifecycle(self):
+        """No direct post-initialization PG start/stop/crash entrypoint."""
+        from . import lab_pg_recovery as c
+        import threading
+        need(self._lifecycle_thread == threading.get_ident()
+             and self._lifecycle_pid == os.getpid()
+             and type(self._lifecycle_lock_fd) is int
+             and self._lifecycle_lock_fd >= 0,
+             'LAB_PG_C_OWNED_LIFECYCLE_REQUIRED')
+        root = c._resource(self)
+        with c._GUARD:
+            state = c._STATES.get(root)
+            need(state is not None and state.pg is self
+                 and state.phase == 'IN_PROGRESS'
+                 and state.lock_fd == self._lifecycle_lock_fd
+                 and state.marker == self._nonce,
+                 'LAB_PG_RECOVERY_WORKER_STALE')
+        c._verify_cluster_os_lock(self, self._lifecycle_lock_fd)
 
     # ------------------------------------------------------------------
     def _verify_owned(self):
@@ -274,6 +316,8 @@ class LabPostgres:
         need(type(timeout) in (int, float) and 1 <= timeout <= 180,
              'LAB_PG_START_TIMEOUT_INVALID')
         self._verify_owned()
+        if self._owned_pid is not None or self._crashed:
+            self._require_recovery_lifecycle()
         need(self.port is not None and self.port != 5432, 'LAB_PG_PORT_REJECTED')
         # Refuse foreign/stale pid files; only a previously crashed owned
         # postmaster is eligible for WAL recovery via pg_ctl.
@@ -425,6 +469,7 @@ class LabPostgres:
         need(type(timeout) in (int,float) and 10 <= timeout <= 120,
              'LAB_PG_CRASH_TIMEOUT_INVALID')
         deadline = time.monotonic() + timeout
+        self._require_recovery_lifecycle()
         need(self.started, 'LAB_PG_NOT_STARTED')
         pid = self.postmaster_pid()
         if os.name == 'nt':
@@ -487,6 +532,10 @@ class LabPostgres:
         need(type(timeout) in (int, float) and 1 <= timeout <= 120,
              'LAB_PG_STOP_TIMEOUT_INVALID')
         self._verify_owned()
+        # Teardown of an empty/uninitialized root is safe. Any previously
+        # started cluster needs C's original, OS-locked lifecycle.
+        if self._owned_pid is not None or self.started or self._crashed:
+            self._require_recovery_lifecycle()
         if not self.data.exists():
             return
         if (self.data / 'postmaster.pid').exists():
