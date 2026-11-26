@@ -257,6 +257,56 @@ class LabPostgresLifecycle(unittest.TestCase):
         finally:
             del sys.path[:2]
 
+    def test_canonical_grid_producer_retained_without_relabel(self):
+        """On pinned Grid+Math, persist original producer bytes via lab writer.
+
+        Do not silently convert legacy bybit-cluster-grid records to the
+        canonical market_data producer. This test proves custody of an exact
+        source-generated canonical record, not provider authenticity.
+        """
+        grid_root = os.environ.get('LAB_GRID_ROOT')
+        math_root = os.environ.get('LAB_MATH_ROOT')
+        if not (grid_root and math_root):
+            self.fail('canonical producer requires both pinned source trees')
+        sys.path[:0] = [grid_root, math_root]
+        try:
+            from market_data.provenance import minute_record, producer, digest, canonical
+            import uuid
+            start = (int(time.time() * 1000) // 60000 - 1) * 60000
+            row = dict(symbol='BTCUSDT', start_ms=start,
+                source_event_start_ms=start + 1,
+                source_event_end_ms=start + 59999,
+                source_provenance=producer('lab-fixture', 'a' * 40,
+                    'wss://stream.bybit.com/v5/public/linear'),
+                open=1, high=2, low=1, close=2, buy_volume=1,
+                sell_volume=0, delta=1, trade_count=1, poc_price=2,
+                quality_status='GOOD', quality_reasons=[],
+                levels=[dict(price=2, buy_volume=1, sell_volume=0, delta=1,
+                             volume=1, buy_count=1, sell_count=0)])
+            record = minute_record(row, int(time.time() * 1000), 'lab-fixture')
+            self.assertEqual(record['producer'], 'market_data')
+            self.assertFalse(record['execution_authority'])
+            self.pg = pg = LabPostgres(BIN, self.root, min_major=MIN).initialize().start()
+            pg.provision(canonical_schema())
+            fingerprint = record['dataset_fingerprint']
+            content_id = digest(row)
+            blob = canonical(record).decode('ascii').replace("'", "''")
+            pg.sql("INSERT INTO provenance_minutes"
+                   "(fingerprint, content_id, symbol, start_ms, record) VALUES "
+                   f"('{fingerprint}', '{content_id}', 'BTCUSDT', {start},"
+                   f" '{blob}'::jsonb)", role='lab_writer')
+            result = json.loads(pg.sql(
+                "SELECT record::text FROM provenance_minutes WHERE fingerprint='"
+                + fingerprint + "'", role='lab_reader'))
+            self.assertEqual(result['producer'], 'market_data')
+            self.assertEqual(result['dataset_fingerprint'], fingerprint)
+            self.assertEqual(canonical(result), canonical(record))
+            witness = pg.provenance_storage_witness()
+            self.assertFalse(witness['execution_authority'])
+            self.assertEqual(witness['scope'], 'ISOLATED_LAB_ONLY')
+        finally:
+            del sys.path[:2]
+
     def test_occupied_port_and_reserved_5432_fail_closed(self):
         self.pg = pg = LabPostgres(BIN, self.root, min_major=MIN).initialize()
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as blocker:
