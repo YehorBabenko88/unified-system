@@ -5,6 +5,7 @@ authorization callback. Default execution is denied. PID reuse, stale release
 health and ambiguous interrupted starts fail closed. Health is loopback only.
 """
 import ctypes
+from dataclasses import dataclass
 import hashlib
 import http.client
 import json
@@ -774,11 +775,30 @@ def _public_environment(program):
     return value
 
 
+@dataclass(frozen=True, slots=True)
+class WindowsJobExtinctionReceipt:
+    operation_id: str
+    release_id: str
+    pid: int
+    creation_time: str
+    executable: str
+    executable_sha256: str
+    port: int
+    process_handle: int
+    job_handle: int
+    active_members: int
+    listener_owners: tuple
+    scm_owners: tuple
+
+
 class ProcessDriver:
     def __init__(self,root,programs,*,authorize=None,child_environment=None):
         self.root=_safe_path(root);self.root.mkdir(parents=True,exist_ok=True)
         self.programs=programs;self.authorize=authorize or (lambda action,module:False);self.children={}
         self.prestart_rejections={}
+        self._job_receipts={}
+        self._job_launch_bindings={}
+        self._job_evidence_lock=threading.RLock()
         self.child_environment=child_environment
         if type(programs) is not dict or not 1<=len(programs)<=64:raise ValueError('bounded programs required')
         extra_health_budget=0.
@@ -932,6 +952,10 @@ class ProcessDriver:
                 raise ValueError('owned LAB Windows process identity unverified')
             d.update(pid=proc.pid,created=created,state='RUNNING')
             if lab_job:
+                k,w=_win_api()
+                exact=tuple(_win_identity(k,w,proc._handle))
+                if exact!=tuple(created):raise ValueError('retained identity mismatch')
+                self._job_launch_bindings[operation_id]=(proc,release_id,exact,p['executable_sha256'],urlsplit(p['health_url']).port)
                 d['windows_job_contained']=True
             self._save(operation_id,d)
         except BaseException:
@@ -1030,6 +1054,50 @@ class ProcessDriver:
             finally:
                 deadline.cancel();connection.close();deadline.join()
         except (OSError,ValueError,TypeError,KeyError,http.client.HTTPException):return result
+    def _observe_job_extinction(self, handle):
+        if os.name!='nt':raise ValueError('native Job evidence unavailable')
+        child,release,identity,digest,port=self._job_launch_bindings[handle]
+        if self.children.get(handle) is not child or not child._handle or not child._job._handle:
+            raise ValueError('original retained Job evidence unavailable')
+        k,w=_win_api()
+        if tuple(_win_identity(k,w,child._handle))!=identity:
+            raise ValueError('original process identity changed')
+        if k.WaitForSingleObject(child._handle,0)!=0 or child._job.active_process_count()!=0:
+            raise ValueError('original Job not extinct')
+        listeners=tuple(sorted(_windows_tcp_listener_owner_pids(port)))
+        # Require an empty configured endpoint and no SCM association with
+        # the retained root PID. This is a snapshot, not a port reservation.
+        scm=tuple(x for x in _windows_service_process_roster() if x[1]==child.pid)
+        if listeners or scm:raise ValueError('TCP or SCM ownership unresolved')
+        if child._job.active_process_count()!=0:
+            raise ValueError('Job membership changed')
+        return WindowsJobExtinctionReceipt(handle,release,child.pid,*identity,digest,port,
+                                           child._handle,child._job._handle,0,listeners,scm)
+
+    def job_extinction_receipt(self, handle):
+        """Return only an issuer-retained receipt, never reconstruct from JSON."""
+        with self._job_evidence_lock:
+            receipt=self._job_receipts.get(handle)
+            if receipt is None or self._observe_job_extinction(handle)!=receipt:
+                raise ValueError('Job extinction evidence unavailable')
+            return receipt
+
+    def consume_job_extinction(self, receipt, *, release_id, operation_id):
+        """One-time OS evidence consumption by trusted in-process Root.
+
+        Not a lease or writer grant; Root must separately bind owner/epoch.
+        Python callers in this process are part of the trusted boundary.
+        """
+        with self._job_evidence_lock:
+            if (self._job_receipts.get(operation_id) is not receipt
+                    or receipt.release_id!=release_id
+                    or self._observe_job_extinction(operation_id)!=receipt):
+                raise ValueError('Job extinction receipt invalid')
+            self.children[operation_id].close_owned_handles()
+            del self._job_receipts[operation_id]
+            del self._job_launch_bindings[operation_id]
+            return receipt
+
     def stop(self,handle):
         path=self._file(handle)
         if handle in self.prestart_rejections and not path.exists() and handle not in self.children:
@@ -1059,7 +1127,7 @@ class ProcessDriver:
             if isinstance(child,_OwnedWindowsChild):
                 if child._job.active_process_count()!=0:
                     raise ValueError('owned Windows Job descendants still active')
-                child.close_owned_handles()
+                self.job_extinction_receipt(handle)
             return
         if d['pid'] is None:
             child=self.children.get(handle)
@@ -1077,8 +1145,10 @@ class ProcessDriver:
                 raise ValueError('owned Windows Job root exit unverified')
             if child._job.active_process_count()!=0:
                 raise ValueError('owned Windows Job descendants still active')
-            d['state']='STOPPED';self._save(handle,d)
-            child.close_owned_handles()
+            with self._job_evidence_lock:
+                receipt=self._observe_job_extinction(handle)
+                d['state']='STOPPED';self._save(handle,d)
+                self._job_receipts[handle]=receipt
             return
         identity=_identity(d['pid'])
         if identity is None:
