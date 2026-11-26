@@ -585,7 +585,7 @@ class WindowsNativeSuspendedLaunchTests(unittest.TestCase):
         child = self.driver.children[op]
         self.assertIsInstance(child, _OwnedWindowsChild)
         self.assertTrue(child._job._assigned)
-        self.assertTrue(child._job._no_scm_capability_verified)
+        self.assertIs(type(child._job._no_scm_capability_verified), object)
         self.assertGreaterEqual(child._job.active_process_count(), 1)
         self.assertIn(child.pid, child._job.observe_member_pids())
         self.assertEqual(self.driver.owned_process_state(op), 'STILL_ALIVE')
@@ -637,7 +637,8 @@ class WindowsNativeSuspendedLaunchTests(unittest.TestCase):
                                'disposable-lab', self.op)
         self.addCleanup(self._cleanup)
         child = self.driver.children[op]
-        child._job._no_scm_capability_verified = False
+        issuer_proof = child._job._no_scm_capability_verified
+        child._job._no_scm_capability_verified = True
         with self.assertRaisesRegex(
                 ValueError, 'historical Windows SCM process membership unproven'):
             self.driver.stop(op)
@@ -646,7 +647,7 @@ class WindowsNativeSuspendedLaunchTests(unittest.TestCase):
         self.assertEqual(child._job.active_process_count(), 0)
         self.assertEqual(self.driver.owned_job_stop_state(op), 'EXTINCT')
         self.assertIsNotNone(child._handle)
-        child._job._no_scm_capability_verified = True
+        child._job._no_scm_capability_verified = issuer_proof
         self.driver.stop(op)
         self.assertEqual(self.driver._load(op)['state'], 'STOPPED')
 
