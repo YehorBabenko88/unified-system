@@ -4,6 +4,8 @@ Only a new, isolated, marker-owned non-5432 disposable cluster is touched.
 The test's Root quiescence flag is NOT trusted production authorization.
 """
 import os
+import subprocess
+import sys
 import shutil
 import tempfile
 import unittest
@@ -101,6 +103,75 @@ class NativeCRecoveryTests(unittest.TestCase):
             recover_exclusive_lab_cluster(
                 MaliciousPg(), old=self.old,
                 quiesced=True, max_seconds=180)
+
+    def test_kernel_lock_survives_stop_only_and_recovery(self):
+        # A separate interpreter tries to lock the SAME inode, without
+        # inheriting the owner's C descriptor. This is a kernel test.
+        import fcntl
+        contained=contain_exclusive_lab_cluster(
+            self.pg,old=dict(self.old),quiesced=True,max_seconds=120)
+        self.assertEqual(contained["state"],"UNKNOWN")
+        path=self.root/".lab-postgres-recovery.lock"
+        self.assertTrue(path.is_file())
+        code=(
+            "import os,sys,fcntl\n"
+            "fd=os.open(sys.argv[1],os.O_RDWR)\n"
+            "try:\n"
+            " fcntl.flock(fd,fcntl.LOCK_EX|fcntl.LOCK_NB)\n"
+            "except BlockingIOError:\n"
+            " sys.exit(77)\n"
+            "sys.exit(0)\n"
+        )
+        outsider=subprocess.run(
+            [sys.executable,"-B","-c",code,str(path)],
+            capture_output=True,text=True,timeout=10,check=False)
+        self.assertEqual(outsider.returncode,77,outsider.stderr)
+        receipt=self._recover()
+        self.assertFalse(receipt["native_admitted"])
+        again=subprocess.run(
+            [sys.executable,"-B","-c",code,str(path)],
+            capture_output=True,text=True,timeout=10,check=False)
+        self.assertEqual(again.returncode,77,again.stderr)
+
+    def test_external_process_lock_denies_c_before_any_stop(self):
+        # This process owns the ORIGINAL disposable PG, but an independent
+        # LAB child already holds C's exact OS locking region. Recovery
+        # must NEVER race the other OS-level owner or signal postmaster.
+        from unified_system.lab_pg_recovery import _acquire_cluster_os_lock
+        fd=_acquire_cluster_os_lock(self.pg)
+        os.close(fd)
+        path=self.root/".lab-postgres-recovery.lock"
+        code=(
+            "import fcntl,os,sys\n"
+            "fd=os.open(sys.argv[1],os.O_RDWR)\n"
+            "fcntl.flock(fd,fcntl.LOCK_EX)\n"
+            "print('C_NATIVE_LOCK_HELD',flush=True)\n"
+            "sys.stdin.readline()\n"
+        )
+        child=subprocess.Popen(
+            [sys.executable,"-B","-c",code,str(path)],
+            stdin=subprocess.PIPE,stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,text=True)
+        try:
+            self.assertEqual(child.stdout.readline().strip(),
+                             "C_NATIVE_LOCK_HELD")
+            with self.assertRaisesRegex(
+                    LabAdmissionRejected,
+                    "LAB_RECOVERY_CROSS_PROCESS_LOCK_BUSY"):
+                self._recover()
+            self.assertTrue(self.pg.started)
+            self.assertEqual(observe_old_lab_backend(
+                self.pg,**self.old),"STILL_ALIVE")
+        finally:
+            if child.poll() is None:
+                child.stdin.write("end\\n")
+                child.stdin.flush()
+                child.wait(timeout=15)
+            child.stdin.close()
+            child.stdout.close()
+            child.stderr.close()
+        receipt=self._recover()
+        self.assertFalse(receipt["native_admitted"])
 
     def test_e_stop_only_then_resume_without_duplicate_stop(self):
         # Future E executor delegates to C's ONE serialized stop-only entry.
