@@ -75,6 +75,8 @@ class LabPostgres:
         self.started = False
         self._owned_pid = None
         self._owned_start_time = None
+        self._owned_pidfile_inode = None
+        self._crashed = False
 
     # ------------------------------------------------------------------
     def _verify_owned(self):
@@ -173,6 +175,49 @@ class LabPostgres:
         except (OSError, ValueError, IndexError) as error:
             raise LabAdmissionRejected('LAB_PG_PID_UNVERIFIED') from error
 
+    @staticmethod
+    def _pid_is_live(pid):
+        """Treat access denial as live; never infer a foreign PID is safe."""
+        if os.name == 'nt':
+            import ctypes
+            from ctypes import wintypes
+            kernel = ctypes.WinDLL('kernel32', use_last_error=True)
+            kernel.OpenProcess.argtypes = (wintypes.DWORD, wintypes.BOOL, wintypes.DWORD)
+            kernel.OpenProcess.restype = wintypes.HANDLE
+            handle = kernel.OpenProcess(0x1000, False, pid)
+            if handle:
+                kernel.CloseHandle(handle)
+                return True
+            need(ctypes.get_last_error() in (87, 1168), 'LAB_PG_PID_ACCESS_DENIED')
+            return False
+        try:
+            os.kill(pid, 0)
+            return True
+        except ProcessLookupError:
+            return False
+        except PermissionError:
+            return True
+
+    def _verify_stale_after_crash(self):
+        """Only the exact stale file from *our* confirmed crash may be reused."""
+        self._verify_owned()
+        need(self._crashed and not self.started and self._owned_pid is not None,
+             'LAB_PG_STALE_UNVERIFIED')
+        pidfile = self.data / 'postmaster.pid'
+        need(pidfile.is_file() and not pidfile.is_symlink(), 'LAB_PG_STALE_UNVERIFIED')
+        info = pidfile.lstat()
+        need((info.st_dev, info.st_ino) == self._owned_pidfile_inode, 'LAB_PG_PIDFILE_CHANGED')
+        try:
+            lines = pidfile.read_text().splitlines()
+            pid, started, port = int(lines[0]), int(lines[2]), int(lines[3])
+            data = Path(lines[1]).resolve(strict=True)
+        except (IndexError, OSError, ValueError) as error:
+            raise LabAdmissionRejected('LAB_PG_STALE_UNVERIFIED') from error
+        need(pid == self._owned_pid and started == self._owned_start_time and
+             port == self.port and data == self.data.resolve(strict=True),
+             'LAB_PG_STALE_UNVERIFIED')
+        need(not self._pid_is_live(pid), 'LAB_PG_STALE_PID_LIVE')
+
     def _env(self, role):
         # Child-scoped password; never the parent's PG* variables.
         env = {k: v for k, v in os.environ.items()
@@ -218,14 +263,19 @@ class LabPostgres:
         # postmaster is eligible for WAL recovery via pg_ctl.
         if (self.data / 'postmaster.pid').exists():
             need(not self.started, 'LAB_PG_ALREADY_STARTED')
-            self._verify_postmaster()
+            self._verify_stale_after_crash()
         result = subprocess.run([str(self.tools['pg_ctl']), '-D', str(self.data), '-l', str(self.log),
                                  '-o', self._options(), '-w', '-t', '120', 'start'],
                                 capture_output=True, timeout=180, env=self._env('lab_owner'))
         need(result.returncode == 0, 'LAB_PG_START_FAILED')
         pid = self._verify_postmaster()
         self._owned_pid = pid
+        lines = (self.data / 'postmaster.pid').read_text().splitlines()
+        self._owned_start_time = int(lines[2])
+        info = (self.data / 'postmaster.pid').lstat()
+        self._owned_pidfile_inode = (info.st_dev, info.st_ino)
         self.started = True
+        self._crashed = False
         return self
 
     def sql(self, statement, *, role='lab_owner', database=None):
@@ -302,9 +352,12 @@ class LabPostgres:
             except OSError:
                 break
             time.sleep(0.2)
-        # Backends exit once the postmaster is gone; give them a bounded moment.
-        time.sleep(2)
+        # Do not authorize recovery until the original PID has disappeared.
+        while time.monotonic() < deadline and self._pid_is_live(pid):
+            time.sleep(0.2)
+        need(not self._pid_is_live(pid), 'LAB_PG_CRASH_NOT_CONFIRMED')
         self.started = False
+        self._crashed = True
         return pid
 
     def integrity(self, tables):
@@ -329,6 +382,10 @@ class LabPostgres:
         if not self.data.exists():
             return
         if (self.data / 'postmaster.pid').exists():
+            if self._crashed:
+                self._verify_stale_after_crash()
+                self.started = False
+                return
             self._verify_postmaster()
             subprocess.run([str(self.tools['pg_ctl']), '-D', str(self.data), '-m', 'fast', '-w', '-t', '60', 'stop'],
                            capture_output=True, timeout=120, env=self._env('lab_owner'))
