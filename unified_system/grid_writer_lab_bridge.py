@@ -302,22 +302,24 @@ def native_writer_admission(*_args, **_kwargs):
     raise ResourceFenceBlocked("NATIVE_DB_FENCE_NOT_ADMITTED")
 
 
-# E Round11: exact B continuous/adapter cohort, distinct from the historical
+# E Round12: exact B continuous/adapter cohort, distinct from the historical
 # B3265 one-shot writer. No implicit upgrade, no native launch grant. F must
 # explicitly review and pin the FULL source/release/wheel in its sole PR.
-GRID_RUNTIME_LAB_SHA = "34da839e5da3ddb2c7be92b09762f63b7585b2f0"
+GRID_RUNTIME_LAB_SHA = "29a7ac17aea548f4e40081623523173dd2afa191"
 _GRID_RUNTIME_BLOBS = {
     "grid/canonical_lab_fenced_writer.py":
         "8b93466a79fa234468a3cdc44106bd5e153e81c4",
     "grid/canonical_lab_continuous_collector.py":
-        "7c3eb22957907ea9b1f44f860f02ceb749944b85",
+        "eb93d2d14be40c19ecc18c226272c1ddd894ba3c",
     "grid/c_lab_journal_adapter.py":
         "ab93c6d421c3d3f0232060f6ded7ac01bf8eeda0",
+    "grid/c_async_fenced_writer.py":
+        "98ed95029785413eb8fbc5687af39ff6bd0bf2cf",
 }
 
 
 def verified_grid_runtime_cohort_pin(source, manifest, source_root):
-    """Verify exact *current* B continuous LAB source bytes, no code import.
+    """Verify four exact B continuous LAB source files, no code import.
 
     The protected Root capsule must separately verify all source/wheel files.
     Git object hashes here are repository evidence, not publisher signatures.
