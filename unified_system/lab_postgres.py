@@ -104,7 +104,7 @@ class LabPostgres:
                  and state.phase == "IN_PROGRESS"
                  and state.worker_tid == threading.get_ident(),
                  'LAB_PG_RECOVERY_OWNER_MISSING')
-        c._verify_cluster_os_lock(self, lock_fd)
+        c._verify_cluster_os_lock(self, lock_fd, state.lock_witness_fd)
         self._lifecycle_thread = threading.get_ident()
         self._lifecycle_pid = os.getpid()
         self._lifecycle_lock_fd = lock_fd
@@ -128,7 +128,8 @@ class LabPostgres:
                  and state.lock_fd == self._lifecycle_lock_fd
                  and state.marker == self._nonce,
                  'LAB_PG_RECOVERY_WORKER_STALE')
-        c._verify_cluster_os_lock(self, self._lifecycle_lock_fd)
+        c._verify_cluster_os_lock(self, self._lifecycle_lock_fd,
+                                  state.lock_witness_fd)
 
     # ------------------------------------------------------------------
     def _verify_owned(self):
