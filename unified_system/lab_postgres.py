@@ -405,8 +405,25 @@ class LabPostgres:
                 self._verify_stale_after_crash()
                 self.started = False
                 return
-            self._verify_postmaster()
-            subprocess.run([str(self.tools['pg_ctl']), '-D', str(self.data), '-m', 'fast', '-w', '-t', '60', 'stop'],
-                           capture_output=True, timeout=120, env=self._env('lab_owner'))
+            pid = self._verify_postmaster()
+            if os.name != 'nt':
+                need(hasattr(os, 'pidfd_open') and hasattr(signal, 'pidfd_send_signal'),
+                     'LAB_PG_PIDFD_UNAVAILABLE')
+                # PostgreSQL postmaster SIGINT = fast shutdown.  Signal the
+                # exact kernel process handle, never an unverified numeric PID.
+                handle = os.pidfd_open(pid)
+                try:
+                    self._verify_postmaster()
+                    signal.pidfd_send_signal(handle, signal.SIGINT)
+                finally:
+                    os.close(handle)
+                deadline = time.monotonic() + 60
+                while (self.data / 'postmaster.pid').exists() and time.monotonic() < deadline:
+                    time.sleep(0.2)
+            else:
+                # Windows native fast-stop remains pg_ctl-managed, with an
+                # independently verified postmaster identity before the call.
+                subprocess.run([str(self.tools['pg_ctl']), '-D', str(self.data), '-m', 'fast', '-w', '-t', '60', 'stop'],
+                               capture_output=True, timeout=120, env=self._env('lab_owner'))
         need(not (self.data / 'postmaster.pid').exists(), 'LAB_PG_STOP_FAILED')
         self.started = False
