@@ -114,15 +114,14 @@ def _revoke(pg, old, deadline):
 
 def _snapshot(pg, streams, deadline):
     result = {}
-    # The pre-existing C checkpoint helpers use pg.sql without a deadline.
-    # During this owned, serialized recovery only, apply the SAME monotonic
-    # budget to their SQL subprocess calls. Restore the method in finally.
+    # Existing checkpoint helpers are owned by C but use pg.sql without a
+    # deadline. Apply the same monotonic budget in this serialized LAB lane.
     original = pg.sql
     def budgeted(statement, *, role="lab_owner", database=None, timeout=120):
         return original(statement, role=role, database=database,
                         timeout=min(timeout, 120, _remaining(deadline)))
-    # LabPostgres is a private isolated owner instance. C serializes calls
-    # within this dispatcher; E must not run a separate stop-only operation.
+    # C serializes this dispatcher, but E still must not invoke a second
+    # independent stop-only operation on this object.
     pg.sql = budgeted
     try:
         for stream in streams:
