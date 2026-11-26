@@ -7,18 +7,136 @@ Grid restart. Never call arbitrary pg_terminate_backend(pid).
 """
 import threading
 import time
+import os
 from datetime import datetime
+from dataclasses import dataclass
+from types import MappingProxyType
 
 from .lab_simulation_admission import LabAdmissionRejected, need
 from .lab_postgres import LabPostgres
 from .lab_pg_fence import _scope, fenced_lab_witness, observe_old_lab_backend
 from .lab_pg_checkpoint import _stream, read_lab_pending, read_lab_checkpoint
 
-# Per-object C ownership. A STOP timeout leaves the entry permanently
-# poisoned for this Python process rather than releasing it for a second
-# concurrent stop/start. A fresh supervisor must establish external proof.
+# C solely arbitrates the *physical* private data root, not Python object id.
+# Strong references deliberately prevent registry eviction after TIMEOUT or
+# a poisoned worker. One C process, one exclusive LAB data root.
 _GUARD = threading.Lock()
 _STATES = {}
+
+
+@dataclass(frozen=True)
+class _OwnedRecovery:
+    pg: object
+    root: tuple
+    marker: str
+    old: tuple
+    phase: str
+    old_postmaster_pid: int = 0
+    old_os_incarnation: tuple = ()
+
+
+def _resource(pg):
+    """Validate original C marker and bind one physically identical data root."""
+    pg._verify_owned()
+    root = pg.root.resolve(strict=True)
+    data = pg.data.resolve(strict=True)
+    need(data.parent == root and data.name == "pgdata",
+         "LAB_RECOVERY_DATA_ROOT_MISMATCH")
+    st = root.stat()
+    ds = data.stat()
+    need((st.st_dev, st.st_ino) == pg._root_identity,
+         "LAB_RECOVERY_ROOT_CHANGED")
+    return (st.st_dev, st.st_ino, ds.st_dev, ds.st_ino, str(root))
+
+
+def _old_tuple(old):
+    return tuple(old[field] for field in (
+        "owner", "namespace", "generation", "token",
+        "backend_pid", "backend_start"))
+
+
+def _begin(pg, root, old, *, mode):
+    """No stop/start may overlap across distinct objects for one root."""
+    with _GUARD:
+        existing = _STATES.get(root)
+        if mode == "STOP_ONLY":
+            need(existing is None, "LAB_RECOVERY_RESOURCE_ALREADY_OWNED")
+        elif existing is None:
+            # A live backend may be recovered from an original owner; a
+            # previously stopped object without our old retained proof may not.
+            need(pg.started is True,
+                 "LAB_RECOVERY_STOPPED_WITHOUT_C_EVIDENCE")
+        else:
+            need(existing.phase == "STOPPED_UNVERIFIED"
+                 and existing.pg is pg and existing.root == root
+                 and existing.marker == pg._nonce
+                 and existing.old == _old_tuple(old)
+                 and existing.old_postmaster_pid > 1
+                 and len(existing.old_os_incarnation) == 2
+                 and pg.started is False,
+                 "LAB_RECOVERY_STOPPED_OWNER_MISMATCH")
+        preserved = existing if existing is not None else _OwnedRecovery(
+            pg=pg, root=root, marker=pg._nonce, old=_old_tuple(old),
+            phase="IN_PROGRESS")
+        _STATES[root] = _OwnedRecovery(
+            pg=pg, root=root, marker=pg._nonce, old=_old_tuple(old),
+            phase="IN_PROGRESS",
+            old_postmaster_pid=preserved.old_postmaster_pid,
+            old_os_incarnation=preserved.old_os_incarnation)
+        return existing
+
+
+def _state(root, pg, old, phase, *, pid=0, os_identity=()):
+    with _GUARD:
+        prior = _STATES.get(root)
+        need(prior is not None and prior.pg is pg
+             and prior.old == _old_tuple(old)
+             and prior.root == root and prior.marker == pg._nonce,
+             "LAB_RECOVERY_STATE_MISMATCH")
+        _STATES[root] = _OwnedRecovery(
+            pg=pg, root=root, marker=pg._nonce, old=_old_tuple(old),
+            phase=phase,
+            old_postmaster_pid=pid or prior.old_postmaster_pid,
+            old_os_incarnation=os_identity or prior.old_os_incarnation)
+
+
+def _poison(root, pg):
+    with _GUARD:
+        prior = _STATES.get(root)
+        if prior is not None and prior.pg is pg:
+            _STATES[root] = _OwnedRecovery(
+                pg=prior.pg, root=prior.root, marker=prior.marker,
+                old=prior.old, phase="POISONED",
+                old_postmaster_pid=prior.old_postmaster_pid,
+                old_os_incarnation=prior.old_os_incarnation)
+
+
+def _retain_owned_postmaster(pg, deadline):
+    """A's *single* retained OS identity primitive, after C owner checks.
+
+    Its live kernel object is held across C's original pg.stop(). A missing
+    A implementation fails CLOSED; no alternate process observer is made.
+    """
+    try:
+        from .runtime_process import RetainedOsProcessWait, _identity
+    except ImportError as exc:
+        raise LabAdmissionRejected(
+            "LAB_RECOVERY_A_RETAINED_OS_SOURCE_REQUIRED") from exc
+    pid = pg._verify_postmaster()
+    created = _identity(pid)
+    need(type(created) is list and len(created) == 2
+         and all(type(v) is str and v for v in created),
+         "LAB_RECOVERY_OS_IDENTITY_UNKNOWN")
+    need(os.path.normcase(os.path.realpath(created[1])) ==
+         os.path.normcase(os.path.realpath(str(pg.tools["postgres"]))),
+         "LAB_RECOVERY_OS_IMAGE_MISMATCH")
+    _remaining(deadline)
+    try:
+        wait = RetainedOsProcessWait(pid, created)
+    except Exception as exc:
+        raise LabAdmissionRejected(
+            "LAB_RECOVERY_RETAINED_HANDLE_UNKNOWN") from exc
+    return wait, pid, tuple(created)
 
 
 def _require_pg(pg):
@@ -49,7 +167,7 @@ def _validate_old(old):
     except ValueError as exc:
         raise LabAdmissionRejected("LAB_RECOVERY_BACKEND_START_INVALID") from exc
     need(parsed.tzinfo is not None, "LAB_RECOVERY_BACKEND_START_INVALID")
-    return dict(old, owner=owner, namespace=namespace)
+    return MappingProxyType(dict(old, owner=owner, namespace=namespace))
 
 
 def _remaining(deadline):
@@ -77,9 +195,15 @@ def _fence_state(pg, old, deadline):
 
 def _stop_started(pg, deadline):
     need(pg.started is True, "LAB_RECOVERY_NOT_STARTED")
-    pg._verify_postmaster()
-    pg.stop(timeout=min(120, _remaining(deadline)))
-    need(pg.started is False, "LAB_RECOVERY_STOP_NOT_CONFIRMED")
+    wait, pid, created = _retain_owned_postmaster(pg, deadline)
+    try:
+        pg.stop(timeout=min(120, _remaining(deadline)))
+        need(wait.wait_exited(min(60, _remaining(deadline))) is True,
+             "LAB_RECOVERY_OLD_POSTMASTER_NOT_EXITED")
+        need(pg.started is False, "LAB_RECOVERY_STOP_NOT_CONFIRMED")
+    finally:
+        wait.close()
+    return pid, created
 
 
 def _restart_stopped(pg, deadline):
@@ -184,12 +308,12 @@ def contain_exclusive_lab_cluster(pg, *, old, quiesced=False,
          "LAB_RECOVERY_DEADLINE_INVALID")
     old = _validate_old(old)
     deadline = time.monotonic() + max_seconds
-    with _GUARD:
-        need(_STATES.get(pg) is None, "LAB_RECOVERY_REENTRY_OR_POISONED")
-        _STATES[pg] = "IN_PROGRESS"
+    root = None
     try:
         _remaining(deadline)
         _require_pg(pg)
+        root = _resource(pg)
+        _begin(pg, root, old, mode="STOP_ONLY")
         need(pg.started is True, "LAB_RECOVERY_NOT_STARTED")
         need(observe_old_lab_backend(
             pg, **old, timeout=min(120, _remaining(deadline))) == "STILL_ALIVE",
@@ -197,10 +321,10 @@ def contain_exclusive_lab_cluster(pg, *, old, quiesced=False,
         need(_fence_state(pg, old, deadline) ==
              f"{old['generation']}|{old['token']}|t|{old['backend_pid']}",
              "LAB_RECOVERY_OLD_FENCE_MISMATCH")
-        _stop_started(pg, deadline)
+        pid, created = _stop_started(pg, deadline)
         _remaining(deadline)
-        with _GUARD:
-            _STATES[pg] = "STOPPED_UNVERIFIED"
+        _state(root, pg, old, "STOPPED_UNVERIFIED",
+               pid=pid, os_identity=created)
         return {"schema": "c-isolated-pg18-containment.v1",
                 "scope": "ISOLATED_LAB_ONLY",
                 "state": "UNKNOWN",
@@ -209,8 +333,8 @@ def contain_exclusive_lab_cluster(pg, *, old, quiesced=False,
                 "native_admitted": False,
                 "trading_authorized": False}
     except BaseException:
-        with _GUARD:
-            _STATES[pg] = "POISONED"
+        if root is not None:
+            _poison(root, pg)
         raise
 
 
@@ -233,16 +357,12 @@ def recover_exclusive_lab_cluster(pg, *, old, streams=(), quiesced=False,
     need(len(set(streams)) == len(streams), "LAB_RECOVERY_DUPLICATE_STREAM")
     old = _validate_old(old)
     deadline = time.monotonic() + max_seconds
-    with _GUARD:
-        state = _STATES.get(pg)
-        if state not in (None, "STOPPED_UNVERIFIED"):
-            raise LabAdmissionRejected("LAB_RECOVERY_REENTRY_OR_POISONED")
-        # Prior stop-only is a narrow C-contained state; NEVER trust it as
-        # a Root/OS extinction receipt. It only allows SQL revalidation.
-        _STATES[pg] = "IN_PROGRESS"
+    root = None
     try:
         _remaining(deadline)
         _require_pg(pg)
+        root = _resource(pg)
+        previous = _begin(pg, root, old, mode="RECOVER")
         _remaining(deadline)
         # If E stop-only already completed on this same owner object, do
         # not stop a second time; verify and restart through C only.
@@ -253,9 +373,18 @@ def recover_exclusive_lab_cluster(pg, *, old, streams=(), quiesced=False,
             need(_fence_state(pg, old, deadline) ==
                  f"{old['generation']}|{old['token']}|t|{old['backend_pid']}",
                  "LAB_RECOVERY_OLD_FENCE_MISMATCH")
-            _stop_started(pg, deadline)
+            pid, created = _stop_started(pg, deadline)
+            _state(root, pg, old, "IN_PROGRESS",
+                   pid=pid, os_identity=created)
         else:
-            need(pg.started is False, "LAB_RECOVERY_UNKNOWN_CLUSTER_STATE")
+            need(previous is not None
+                 and previous.phase == "STOPPED_UNVERIFIED"
+                 and previous.pg is pg
+                 and previous.old == _old_tuple(old)
+                 and previous.old_postmaster_pid > 1
+                 and len(previous.old_os_incarnation) == 2
+                 and pg.started is False,
+                 "LAB_RECOVERY_STOPPED_WITHOUT_C_EVIDENCE")
         _remaining(deadline)
         _restart_stopped(pg, deadline)
         need(observe_old_lab_backend(pg, **old,
@@ -288,12 +417,17 @@ def recover_exclusive_lab_cluster(pg, *, old, streams=(), quiesced=False,
             "trading_authorized": False,
         }
     except BaseException:
-        # Keep the C-owned recovery object permanently quarantined after
-        # an unknown outcome. No retry while a previous worker may be alive.
-        with _GUARD:
-            _STATES[pg] = "POISONED"
+        # An uncertain worker stays quarantined across same physical root.
+        if root is not None:
+            _poison(root, pg)
         raise
     finally:
-        with _GUARD:
-            if _STATES.get(pg) == "IN_PROGRESS":
-                _STATES[pg] = "COMPLETE_DENIED"
+        if root is not None:
+            with _GUARD:
+                prior = _STATES.get(root)
+                if prior is not None and prior.pg is pg and prior.phase == "IN_PROGRESS":
+                    _STATES[root] = _OwnedRecovery(
+                        pg=prior.pg, root=prior.root, marker=prior.marker,
+                        old=prior.old, phase="COMPLETE_DENIED",
+                        old_postmaster_pid=prior.old_postmaster_pid,
+                        old_os_incarnation=prior.old_os_incarnation)
