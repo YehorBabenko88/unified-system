@@ -102,6 +102,9 @@ def claim_lab_fence(pg, *, generation, token, session_id, instance_id,
                     node_incarnation_id, source_sha256, schema_sha256,
                     backend_pid, previous_quiescence_verified=False):
     """LAB CAS, not production authority. Backend identity comes from PG itself."""
+    pg._verify_owned()
+    need(pg.started, "LAB_PG_NOT_STARTED")
+    pg._verify_postmaster()
     need(previous_quiescence_verified is True, "LAB_FENCE_QUIESCENCE_REQUIRED")
     need(type(generation) is int and 0 < generation < 2**63
          and type(token) is int and 0 < token < 2**63,
@@ -140,6 +143,9 @@ def claim_lab_fence(pg, *, generation, token, session_id, instance_id,
 
 def revoke_lab_fence(pg, *, generation, token):
     """Owner-only revocation; high-water persists across restart."""
+    pg._verify_owned()
+    need(pg.started, "LAB_PG_NOT_STARTED")
+    pg._verify_postmaster()
     need(type(generation) is int and generation>0
          and type(token) is int and token>0, "LAB_FENCE_TOKEN_INVALID")
     result = pg.sql(
