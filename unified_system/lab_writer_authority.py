@@ -11,6 +11,7 @@ integration and real-process acceptance are separately completed.
 """
 from dataclasses import dataclass
 from types import ModuleType
+import asyncio
 import secrets
 from .grid_writer_fence_model import (
     ResourceFenceBlocked, WriterLeaseIdentity, _need,
@@ -217,6 +218,11 @@ class LabWriterAuthority:
         except ResourceFenceBlocked:
             self.revoke()
             raise
+        except asyncio.CancelledError:
+            # A cancelled task may leave the C backend operation in flight.
+            # Poison the entire epoch; never retry a possibly committed SQL.
+            self.revoke()
+            raise
         except Exception:
             self.revoke()
             raise ResourceFenceBlocked("LAB_ROOT_AUTHORITY_UNVERIFIED") from None
@@ -257,25 +263,32 @@ class LabWriterGrant:
     async def require_write_current(self):
         from .service_bootstrap import ProtectedActivation
         from .grid_writer_lab_bridge import verified_grid_writer_adapter_pin
-        _need(not self._revoked and not self._authority._revoked
-              and self._authority._writer_grant is self,
-              "LAB_ROOT_GRANT_REVOKED")
-        protected = self._authority._source._grant
-        _need(type(protected) is ProtectedActivation
-              and protected.require_current() is True,
-              "LAB_ROOT_PROTECTED_ACTIVATION_REVOKED")
-        status = await self._authority.check()
-        _need(type(status) is LabAuthorityStatus
-              and status.epoch == self._epoch
-              and status.generation == self._authority._generation,
-              "LAB_ROOT_GRANT_OWNER_ROTATED")
-        current_pin = verified_grid_writer_adapter_pin(
-            self._authority._source, self._authority._source._manifest,
-            self._authority._source._roots["market_data"])
-        _need(current_pin == self._pin,
-              "LAB_ROOT_GRID_WRITER_PIN_CHANGED")
-        _need(protected.require_current() is True
-              and not self._authority._revoked
-              and not self._revoked,
-              "LAB_ROOT_GRANT_CHANGED_DURING_CHECK")
-        return self
+        try:
+            _need(not self._revoked and not self._authority._revoked
+                  and self._authority._writer_grant is self,
+                  "LAB_ROOT_GRANT_REVOKED")
+            protected = self._authority._source._grant
+            _need(type(protected) is ProtectedActivation
+                  and protected.require_current() is True,
+                  "LAB_ROOT_PROTECTED_ACTIVATION_REVOKED")
+            status = await self._authority.check()
+            _need(type(status) is LabAuthorityStatus
+                  and status.epoch == self._epoch
+                  and status.generation == self._authority._generation,
+                  "LAB_ROOT_GRANT_OWNER_ROTATED")
+            current_pin = verified_grid_writer_adapter_pin(
+                self._authority._source, self._authority._source._manifest,
+                self._authority._source._roots["market_data"])
+            _need(current_pin == self._pin,
+                  "LAB_ROOT_GRID_WRITER_PIN_CHANGED")
+            _need(protected.require_current() is True
+                  and not self._authority._revoked
+                  and not self._revoked,
+                  "LAB_ROOT_GRANT_CHANGED_DURING_CHECK")
+            return self
+        except BaseException:
+            # A failed per-operation check is an irreversible epoch loss.
+            # The Root lifecycle separately stops the child and revokes C/Consul.
+            self.revoke()
+            self._authority.revoke()
+            raise
