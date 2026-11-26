@@ -203,6 +203,7 @@ class LabPostgresLifecycle(unittest.TestCase):
                 # rejected by the consumer even though PostgreSQL stores it.
                 bad = copy.deepcopy(record)
                 bad['symbol'] = 'ETHUSDT'
+                bad['dataset_fingerprint'] = 'c' * 64
                 persist('ETHUSDT', bad, 'b' * 64)
                 rejected = read_snapshot({}, 'ETHUSDT', 10, None, reader)
                 self.assertEqual(rejected['reason'], 'SNAPSHOT_INTEGRITY_FAILED')
