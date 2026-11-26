@@ -589,7 +589,9 @@ class WindowsNativeSuspendedLaunchTests(unittest.TestCase):
         self.assertGreaterEqual(child._job.active_process_count(), 1)
         self.assertIn(child.pid, child._job.observe_member_pids())
         self.assertEqual(self.driver.owned_process_state(op), 'STILL_ALIVE')
+        self.assertEqual(self.driver.owned_job_stop_state(op), 'STILL_ALIVE')
         self.driver.stop(op)
+        self.assertEqual(self.driver.owned_job_stop_state(op), 'EXTINCT')
         self.assertEqual(self.driver._load(op)['state'], 'STOPPED')
         self.assertEqual(self.driver.owned_process_state(op), 'EXTINCT')
         receipt = self.driver.job_extinction_receipt(op)
@@ -608,6 +610,7 @@ class WindowsNativeSuspendedLaunchTests(unittest.TestCase):
             receipt, release_id='disposable-lab', operation_id=op), receipt)
         self.assertIsNone(child._handle)
         self.assertIsNone(child._job._handle)
+        self.assertEqual(self.driver.owned_job_stop_state(op), 'UNKNOWN')
         with self.assertRaises(ValueError):
             self.driver.consume_job_extinction(
                 receipt, release_id='disposable-lab', operation_id=op)
@@ -641,10 +644,25 @@ class WindowsNativeSuspendedLaunchTests(unittest.TestCase):
         self.assertEqual(self.driver._load(op)['state'], 'RUNNING')
         self.assertNotIn(op, self.driver._job_receipts)
         self.assertEqual(child._job.active_process_count(), 0)
+        self.assertEqual(self.driver.owned_job_stop_state(op), 'EXTINCT')
         self.assertIsNotNone(child._handle)
         child._job._no_scm_capability_verified = True
         self.driver.stop(op)
         self.assertEqual(self.driver._load(op)['state'], 'STOPPED')
+
+    def test_native_foreign_driver_cannot_observe_exact_job_stop(self):
+        from unified_system.runtime import ModuleSpec
+        from unified_system.runtime_process import ProcessDriver
+        op = self.driver.start(ModuleSpec('market_data','1.0.0'),
+                               'disposable-lab', self.op)
+        self.addCleanup(self._cleanup)
+        other = ProcessDriver(self.driver.root, self.driver.programs,
+                              authorize=lambda *_: False)
+        self.assertEqual(other.owned_job_stop_state(op), 'UNKNOWN')
+        self.assertEqual(self.driver.owned_job_stop_state(op), 'STILL_ALIVE')
+        self.driver.stop(op)
+        self.assertEqual(self.driver.owned_job_stop_state(op), 'EXTINCT')
+        self.assertEqual(other.owned_job_stop_state(op), 'UNKNOWN')
 
     def test_native_historical_child_scm_association_denies(self):
         from unified_system.runtime import ModuleSpec
