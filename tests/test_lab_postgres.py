@@ -271,7 +271,6 @@ class LabPostgresLifecycle(unittest.TestCase):
         sys.path[:0] = [grid_root, math_root]
         try:
             from market_data.provenance import minute_record, producer, digest, canonical
-            import uuid
             start = (int(time.time() * 1000) // 60000 - 1) * 60000
             row = dict(symbol='BTCUSDT', start_ms=start,
                 source_event_start_ms=start + 1,
