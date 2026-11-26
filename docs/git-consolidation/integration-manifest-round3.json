@@ -1,0 +1,189 @@
+{
+  "schema": "unified.git-integration-manifest.v1",
+  "observed_date": "2026-11-26",
+  "point_in_time_not_atomic": true,
+  "canonical_owners": {
+    "Bybit_and_market_data": "bybit-cluster-grid",
+    "computations": "math",
+    "strategy_paper_browser": "Terminan",
+    "infrastructure_services_postgres": "unified-system"
+  },
+  "release": {
+    "code": "NO_GO",
+    "production": "NO_GO",
+    "real_trading_allowed": false,
+    "paper_authorized_by_PARTIAL": false
+  },
+  "entries": [
+    {
+      "id": "A",
+      "owner": "A",
+      "repo": "unified-system",
+      "pr": 162,
+      "sha": "0ad4a4dc55390fb3ccae146e9461ca5595efbca7",
+      "base": "573d76938ab398cd23b37a247eb783ce3c58f389",
+      "focus": "Windows native child/PowerShell environment",
+      "contract": "hosted CI and native admission, no timeout weakening",
+      "status": "UNQUALIFIED"
+    },
+    {
+      "id": "B1",
+      "owner": "B",
+      "repo": "bybit-cluster-grid",
+      "pr": 299,
+      "sha": "39a6cf4d8c039ca99bbfc00ca7cc2359bef5c60c",
+      "base": "c9ffdaa2af52c4d55871a48655a77a0c669da80f",
+      "focus": "Grid market_data migration, sealed 902 roster and canonical Bybit owner",
+      "contract": "canonical producer market_data; Grid owns data/transport and versioned route",
+      "status": "UNQUALIFIED"
+    },
+    {
+      "id": "B2",
+      "owner": "B",
+      "repo": "bybit-cluster-grid",
+      "pr": 300,
+      "sha": "8553657f234c39c7b7c157cf3dea9b87214b1adb",
+      "base": "4391a5c2a5a3ce58d0b0446069ba42efc29e9c70",
+      "focus": "pure qualified-read envelope v1 (not deployed authenticated route)",
+      "contract": "status PARTIAL never implies exchange-complete/paper authorization",
+      "status": "UNQUALIFIED"
+    },
+    {
+      "id": "C",
+      "owner": "C",
+      "repo": "unified-system",
+      "pr": 163,
+      "sha": "5478e9eafc15c6327ac9ea0f86dd73f14cec2747",
+      "base": "4c5a0a943bc50ca820f1a897afe3311a582e9344",
+      "focus": "owned PostgreSQL 18 and LAB admission",
+      "contract": "writer/storage fencing, canonical Grid producer name/migration 47, immutable witness",
+      "status": "UNQUALIFIED"
+    },
+    {
+      "id": "D1",
+      "owner": "D",
+      "repo": "Terminan",
+      "pr": 126,
+      "sha": "b4b26cf45c04f2cb9d8c1088ee2a4629568f4eac",
+      "base": "61aa7e17d440ce4d5a7d372cedcedfe47e3144de",
+      "focus": "qualified PARTIAL read/chart without paper authorization",
+      "contract": "currently Grid history_api v1.1, not B qualified-read-envelope.v1 route",
+      "status": "COMPONENT_CI_ONLY"
+    },
+    {
+      "id": "D2",
+      "owner": "D",
+      "repo": "Terminan",
+      "pr": 127,
+      "sha": "9846eef2d504ef3d57572b6bd6a26b370a056db1",
+      "base": "61aa7e17d440ce4d5a7d372cedcedfe47e3144de",
+      "focus": "book spread tick parity via Math tick_distance",
+      "contract": "same book_summary.py patch as D1; other changes differ",
+      "status": "COMPONENT_CI_ONLY"
+    },
+    {
+      "id": "E",
+      "owner": "E",
+      "repo": "unified-system",
+      "pr": 164,
+      "sha": "acbe5589d0acdab208927d0964e4a8d190c34a1e",
+      "base": "f05f9a73581b1c15c4cc78da2801c9f2f5dd08d0",
+      "focus": "LAN first-close and Root exclusive authority",
+      "contract": "Consul lease alone insufficient; C PG resource fence + B writer exclusion",
+      "status": "UNQUALIFIED"
+    },
+    {
+      "id": "F",
+      "owner": "F",
+      "repo": "unified-system",
+      "pr": 165,
+      "sha": "efbe123133fa6003d99673d3b1e43a33f728f553",
+      "base": "f05f9a73581b1c15c4cc78da2801c9f2f5dd08d0",
+      "focus": "exact SHA registry, history secret triage, dependency/PR arbitration",
+      "contract": "read-only; no branch deletion; no runtime ownership",
+      "status": "UNQUALIFIED"
+    },
+    {
+      "id": "META_F",
+      "owner": "F",
+      "repo": "meta_analyse",
+      "pr": 86,
+      "sha": "902db7e28571e851de09d127a9ebad6f120efecd",
+      "base": "7bd4cb9048f261d7936f2a9640f05ff8f42b1c77",
+      "focus": "SHA-pinned CI + TLS fixture exclusion and archive guard",
+      "contract": "stacked on #85, preserve #84 artifact scan, original PRs retained",
+      "status": "UNQUALIFIED"
+    }
+  ],
+  "comparisons": [
+    {
+      "from": "B1",
+      "to": "B2",
+      "kind": "DIVERGED",
+      "evidence": "Git compare current B1..B2 ahead 7 behind 7, B2 was based on prior B1 SHA 4391a5c2",
+      "action": "rebase/cherry-pick only by B with exact source and tests, do not auto-merge"
+    },
+    {
+      "from": "D1",
+      "to": "D2",
+      "kind": "DIVERGED_WITH_IDENTICAL_SHARED_PATCH",
+      "evidence": "both PR file patches terminan/analytics/book_summary.py identical; Git compare HEADs ahead 2 behind 14",
+      "action": "D to combine validated changes and rerun exact-head tests"
+    },
+    {
+      "from": "F",
+      "to": "E",
+      "kind": "SIBLING_NONOVERLAPPING_SOURCE",
+      "evidence": "Both Root canonical base f05f9a7; F docs/tools/test_git, E LAN source/tests and own workflow",
+      "action": "integration acceptance still needed; not a merged cohort"
+    },
+    {
+      "from": "F",
+      "to": "C",
+      "kind": "DIFFERENT_BASE_STACK",
+      "evidence": "C stacked on Claude admission; F canonical Root base",
+      "action": "C source owner keeps PG files; F documents SHA only"
+    },
+    {
+      "from": "META_F",
+      "to": "META_F",
+      "kind": "STACKED_REVIEW",
+      "evidence": "Meta #86 parent #85; #84 TLS guard source copied with overlapping workflow manually integrated",
+      "action": "CI/real wheel-sdist scan required"
+    }
+  ],
+  "blockers": [
+    {
+      "code": "B_READ_ROUTE",
+      "owner": "B",
+      "fact": "qualified-read-envelope.v1 pure draft, not authenticated sealed Data49 read route"
+    },
+    {
+      "code": "C_PRODUCER_ID",
+      "owner": "B/C",
+      "fact": "legacy bybit-cluster-grid producer differs from canonical market_data; no silent rehash"
+    },
+    {
+      "code": "C_DB_WITNESS",
+      "owner": "C/E",
+      "fact": "owner-only PG18 storage, immutable readback and monotonic fencing unverified"
+    },
+    {
+      "code": "D_AUTHORIZATION",
+      "owner": "D",
+      "fact": "PARTIAL chart read is not strategy or paper admission"
+    },
+    {
+      "code": "E_WRITER_EXCLUSION",
+      "owner": "E/B/C",
+      "fact": "Root Consul lease alone cannot exclude legacy writer bypass"
+    },
+    {
+      "code": "F_SECURITY",
+      "owner": "F",
+      "fact": "full-history secrets, real release archives and exact-head CI unaccepted"
+    }
+  ],
+  "evidence_policy": "No CI success inferred from PR state, test authorship, or artifact names; exact source HEAD required before integration.",
+  "deletion_policy": "No branch/PR close or history rewrite without MASTER approval"
+}
