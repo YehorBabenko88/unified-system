@@ -76,6 +76,16 @@ class RootGridV2InertTests(unittest.TestCase):
             "env": {"MARKET_DATA_PORT": str(self.port)},
         }
 
+    def test_root_module_spec_semver_and_exact_pep440_wheel_split(self):
+        from unified_system.runtime import ModuleSpec, _valid
+        self.assertIsNone(_valid(ModuleSpec("market_data", V2_SOURCE_VERSION)))
+        with self.assertRaises(ValueError):
+            _valid(ModuleSpec("market_data", V2_WHEEL_VERSION))
+        self.assertEqual(self.manifest["sources"]["market_data"]["version"],
+                         V2_SOURCE_VERSION)
+        self.assertEqual(next(dep["version"] for dep in self.manifest["dependencies"]
+                              if dep["name"] == "market-data"), V2_WHEEL_VERSION)
+
     def test_explicit_grid_source_selects_only_v2(self):
         self.assertEqual(entry_for_manifest(self.manifest), V2_ENTRY)
         self.assertEqual(entry_for_manifest(self.legacy), LEGACY_ENTRY)
