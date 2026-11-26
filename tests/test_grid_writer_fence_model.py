@@ -13,8 +13,8 @@ from unified_system.grid_writer_fence_model import (
 
 def identity(token=100, *, instance=None, session=None, source="a" * 64,
              schema="b" * 64):
-    return WriterLeaseIdentity("root-controller", session or str(uuid.uuid4()),
-                               token, instance or str(uuid.uuid4()), source,
+    return WriterLeaseIdentity("root-controller", str(uuid.uuid4()) if session is None else session,
+                               token, str(uuid.uuid4()) if instance is None else instance, source,
                                schema)
 
 
