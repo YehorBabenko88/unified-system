@@ -143,10 +143,13 @@ class RootManagedQuiescence:
                 pid = record.get("pid")
                 created = record.get("created")
                 if pid is not None:
-                    _need(type(pid) is int and pid > 1
-                          and created is not None
-                          and _identity(pid) != created,
-                          "LAB_ROOT_OLD_GRID_OS_STILL_RUNNING")
+                    _need(type(pid) is int and pid > 1 and created is not None,
+                          "LAB_ROOT_OLD_GRID_OS_IDENTITY_MISSING")
+                    # A positive mismatch can be PID reuse, not verified
+                    # extinction. None can be a kernel race. Neither is a
+                    # reliable Root-only old-owner extinction receipt.
+                    raise ResourceFenceBlocked(
+                        "LAB_ROOT_OLD_GRID_EXTINCTION_PROOF_REQUIRED")
             _need(found_current, "LAB_ROOT_CURRENT_GRID_RECORD_MISSING")
             return True
         except ResourceFenceBlocked:
