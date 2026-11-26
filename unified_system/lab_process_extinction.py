@@ -11,7 +11,7 @@ from dataclasses import dataclass
 import os
 import subprocess
 
-from .grid_writer_fence_model import _need
+from .grid_writer_fence_model import ResourceFenceBlocked, _need
 from .runtime_process import ProcessDriver, _identity
 
 EXTINCT="EXTINCT"
@@ -49,14 +49,20 @@ def observe_owned_process_extinction(driver, handle):
     _need(type(driver) is ProcessDriver and
           type(handle) is str and handle in driver.children,
           "LAB_PROCESS_OBSERVATION_OWNER_REQUIRED")
-    record=driver._load(handle)
-    pid=record.get("pid")
-    created=record.get("created")
-    _need(type(pid) is int and pid>1 and created is not None,
-          "LAB_PROCESS_OBSERVATION_RECORD_UNQUALIFIED")
-    child=driver.children.get(handle)
-    _need(type(child) is subprocess.Popen and child.pid==pid,
-          "LAB_PROCESS_OBSERVATION_RETAINED_HANDLE_REQUIRED")
+    # A record read/access failure must never turn into a positive exit.
+    # Without trusted PID and creation identity we cannot issue a receipt.
+    try:
+        record=driver._load(handle)
+        pid=record.get("pid")
+        created=record.get("created")
+        _need(type(pid) is int and pid>1 and created is not None,
+              "LAB_PROCESS_OBSERVATION_RECORD_UNQUALIFIED")
+        child=driver.children.get(handle)
+        _need(type(child) is subprocess.Popen and child.pid==pid,
+              "LAB_PROCESS_OBSERVATION_RETAINED_HANDLE_REQUIRED")
+    except Exception:
+        raise ResourceFenceBlocked(
+            "LAB_PROCESS_OBSERVATION_OWNER_UNVERIFIED") from None
     try:
         # poll() consumes exactly the retained Popen process handle status.
         # A NULL process is not enough to infer listener-owner extinction.
