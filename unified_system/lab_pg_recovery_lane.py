@@ -84,18 +84,11 @@ class LabPgRecoveryLane:
         cluster recovery. Until that exact type is integrated this fails closed.
         The C recovery diagnostic's caller quiesced flag is NOT a Root grant.
         """
-        # The two full Root extinction receipts are not yet implemented.
-        # Do NOT let a temporary public class or bool enable C lifecycle.
-        from . import lab_writer_revoke as revoker_module
-        proof_type=getattr(revoker_module,"RootProcessExtinction",None)
-        _need(type(proof_type) is type
-              and type(root_process_evidence) is proof_type,
-              "LAB_ROOT_PROCESS_EXTINCTION_REQUIRED")
-        # Further binding to actual old/new owner is required before release.
-        _need(type(old) is dict and type(streams) in (tuple,list)
-              and type(max_seconds) in (int,float)
-              and 10<=max_seconds<=180,
-              "LAB_PG_RECOVERY_ARGUMENTS_INVALID")
+        # ROUND16: no A-owned sealed, incarnation/descendant/listener-bound
+        # RootProcessExtinction issuer has been integrated. A type match is
+        # never authority. Refuse BEFORE _submitted, thread creation or C IO.
+        # Only A/C/E-approved evidence verification may replace this gate.
+        raise ResourceFenceBlocked("LAB_ROOT_BOUND_EXTINCTION_NOT_IMPLEMENTED")
         with self._lock:
             _need(not self._busy and not self._submitted
                   and not self._poisoned and not self._closed,
