@@ -42,33 +42,33 @@
       "owner": "B",
       "repo": "bybit-cluster-grid",
       "pr": 300,
-      "sha": "f57781a947af138a2099bebe553b89c3c5ee726e",
+      "sha": "4deeda39e36facead834b3dc7bbe3e8796b5c067",
       "base": "4391a5c2a5a3ce58d0b0446069ba42efc29e9c70",
       "focus": "pure qualified-read envelope v1 (not deployed authenticated route)",
       "contract": "status PARTIAL never implies exchange-complete/paper authorization",
-      "status": "SDK_V2_WHEEL_GUARD_AUTHORED_CI_QUEUED"
+      "status": "NATIVE_PG_AUTHORED_NOT_EXECUTED"
     },
     {
       "id": "C",
       "owner": "C",
       "repo": "unified-system",
       "pr": 163,
-      "sha": "89ccdf58b31c8466fc45b9d8235acddc9c6b3428",
+      "sha": "dc60465385c8201254efd94c36049ecdbcec59c1",
       "base": "4c5a0a943bc50ca820f1a897afe3311a582e9344",
       "focus": "owned PostgreSQL 18 and LAB admission",
       "contract": "writer/storage fencing, canonical Grid producer name/migration 47, immutable witness",
-      "status": "UNQUALIFIED"
+      "status": "FENCE_AUTHORED_NATIVE_CI_QUEUED"
     },
     {
       "id": "D1",
       "owner": "D",
       "repo": "Terminan",
       "pr": 126,
-      "sha": "cf1448f8d30399f8787f69f9abfcb5cf992a4209",
+      "sha": "fb64be03dda72307bed4be4b25e5d51242882769",
       "base": "61aa7e17d440ce4d5a7d372cedcedfe47e3144de",
       "focus": "qualified PARTIAL read/chart without paper authorization",
       "contract": "currently Grid history_api v1.1, not B qualified-read-envelope.v1 route",
-      "status": "COMPONENT_CI_SUCCESS_SYNTHETIC_B_HTTP"
+      "status": "COMPONENT_CI_SUCCESS_NOT_NATIVE_E2E"
     },
     {
       "id": "D2",
@@ -86,18 +86,18 @@
       "owner": "E",
       "repo": "unified-system",
       "pr": 164,
-      "sha": "0855d1b33a44f30059464806ceebae51f598f16a",
+      "sha": "24800aa1c4f362af3d2c717f2ad75a7fc92e2f3f",
       "base": "f05f9a73581b1c15c4cc78da2801c9f2f5dd08d0",
       "focus": "LAN first-close and Root exclusive authority",
       "contract": "Consul lease alone insufficient; C PG resource fence + B writer exclusion",
-      "status": "UNQUALIFIED"
+      "status": "LAB_V2_SELECTORS_AUTHORED_NATIVE_DENY"
     },
     {
       "id": "F",
       "owner": "F",
       "repo": "unified-system",
       "pr": 165,
-      "sha": "6a6397865caf3e9c6dccea7f5718352f97439f92",
+      "sha": "181ca4be7d543deee271e508f19d363b9fceae8b",
       "base": "f05f9a73581b1c15c4cc78da2801c9f2f5dd08d0",
       "focus": "exact SHA registry, history secret triage, dependency/PR arbitration",
       "contract": "read-only; no branch deletion; no runtime ownership",
@@ -186,7 +186,7 @@
   ],
   "evidence_policy": "No CI success inferred from PR state, test authorship, or artifact names; exact source HEAD required before integration.",
   "deletion_policy": "No branch/PR close or history rewrite without MASTER approval",
-  "round": 5,
+  "round": 6,
   "observation": "GitHub API exact PR HEADs observed 2026-11-26, sequential and non-atomic",
   "round4_evidence": {
     "source": "Live GitHub connector reads, non-atomic. CI runs pinned to exact source SHA, not PR merge-ref.",
@@ -347,5 +347,103 @@
     "history_ast": "UNPROVEN",
     "security": "NO_SECRET_FREE_ATTESTATION",
     "release": "CODE NO_GO / PRODUCTION NO_GO"
+  },
+  "round6": {
+    "checkpoint": "2026-11-26",
+    "snapshot_non_atomic": true,
+    "reported_sha_self_ref": "Manifest F entry pins pre-write observed PR HEAD, final HEAD must be read from PR #165; cannot SHA self-reference.",
+    "source_heads": {
+      "A": "0ad4a4dc55390fb3ccae146e9461ca5595efbca7",
+      "B1": "39a6cf4d8c039ca99bbfc00ca7cc2359bef5c60c",
+      "B2": "4deeda39e36facead834b3dc7bbe3e8796b5c067",
+      "C": "dc60465385c8201254efd94c36049ecdbcec59c1",
+      "D1": "fb64be03dda72307bed4be4b25e5d51242882769",
+      "E": "24800aa1c4f362af3d2c717f2ad75a7fc92e2f3f",
+      "F": "181ca4be7d543deee271e508f19d363b9fceae8b",
+      "META_F": "902db7e28571e851de09d127a9ebad6f120efecd"
+    },
+    "exact_ci": {
+      "A": "18 QUEUED",
+      "B1": "12 QUEUED 1 PENDING",
+      "B2": "15 QUEUED",
+      "C": "19 QUEUED 1 PENDING",
+      "D": "2 SUCCESS workflows (14 jobs reported) at fb64be03, still synthetic reader",
+      "E": "19 QUEUED 1 PENDING",
+      "F": "18 QUEUED at 181ca4be; current doc commit will require re-observation",
+      "Meta": "1 SUCCESS 1 SKIPPED at 902db7e2"
+    },
+    "source_cohorts": {
+      "B_latest": "4deeda39e36facead834b3dc7bbe3e8796b5c067",
+      "B_C_E_frozen": "f57781a947af138a2099bebe553b89c3c5ee726e",
+      "B_D_synthetic": "1e9be8ef70ef4502168d58dd399b44541b9c447f",
+      "C_latest": "dc60465385c8201254efd94c36049ecdbcec59c1",
+      "C_B_native_test_pinned": "dcedaa870b5b8de566ff7bfa03182e3a43d19db5",
+      "D_latest": "fb64be03dda72307bed4be4b25e5d51242882769",
+      "D_C_native_test_pinned": "cf1448f8d30399f8787f69f9abfcb5cf992a4209",
+      "E_latest": "24800aa1c4f362af3d2c717f2ad75a7fc92e2f3f",
+      "Math": "9e6acbd9e12a91189f57234828e31640983af553",
+      "distribution": "market-data==0.2.0.dev0",
+      "built_wheel_sha256": "NOT_ATTESTED"
+    },
+    "root_integration_candidate": {
+      "common_base": "f05f9a73581b1c15c4cc78da2801c9f2f5dd08d0",
+      "prs": [
+        162,
+        163,
+        164,
+        165
+      ],
+      "exact_head_order": [
+        "0ad4a4dc55390fb3ccae146e9461ca5595efbca7",
+        "dc60465385c8201254efd94c36049ecdbcec59c1",
+        "24800aa1c4f362af3d2c717f2ad75a7fc92e2f3f",
+        "181ca4be7d543deee271e508f19d363b9fceae8b"
+      ],
+      "base_ancestry": "ALL_FOUR_AHEAD_OF_F05_WITH_ZERO_BEHIND",
+      "pr_changed_path_overlaps": 0,
+      "comparison_scope": "Across paginated PR changed filenames, no identical files between pairs; absence of path overlap is NOT runtime merge/ABI/security proof.",
+      "no_merge_performed": true,
+      "proposal": "Use isolated disposable integration branch only after MASTER approval, preserve all four draft PRs; one staged dry-run tree / exact SHA CI, no main merge or service start.",
+      "semantic_blockers": [
+        "native C PostgreSQL writer fence must bind B actual collector same-connection SQL",
+        "E native writer admission default denies; needs independent Root/C epoch, native legacy process quiescence and revoke",
+        "B latest and C/E frozen B sources differ as revision even though runtime may be byte-equal",
+        "D latest parser exceeds C native pinned D version and must be re-qualified",
+        "GitHub CI queue prevents exact-head validation",
+        "full-history/LFS and nested archive secret coverage incomplete"
+      ]
+    },
+    "queue_investigation": {
+      "repository": "unified-system",
+      "queued_workflow_runs": 2400,
+      "in_progress_workflow_runs": 61,
+      "source": "GET /actions/runs?status=queued|in_progress&per_page=1 total_count",
+      "as_of": "2026-11-26",
+      "A_previous_queued_report": 1571,
+      "delta_snapshot": 829,
+      "scope": "observed counts, not an inferred cause",
+      "f_run": "45862370430",
+      "f_jobs_queued": 8,
+      "A_run": "45854254373",
+      "A_jobs_queued": 6,
+      "job_runner_started_at": "UNASSIGNED",
+      "operator_concurrency": {
+        "workflow": ".github/workflows/operator-command-contracts.yml",
+        "group": "operator-command-${{ github.ref }}",
+        "cancel_in_progress": false,
+        "cancelled_examples": [
+          45864301167,
+          45864285659,
+          45863980091
+        ],
+        "explanation": "single pending per group can be replaced by newer queued run even cancel-in-progress:false; source workflow mechanism observed, cancelled run cause not independently attested"
+      },
+      "restricted_permissions": "Actions admin/settings/runner endpoints unavailable through current connector",
+      "root_cause": "NOT_PROVEN",
+      "cancellation_policy": "PROPOSE_ONLY_NO_ACTION",
+      "potential_superseded_rule": "Same PR+workflow, older SHA, no unique artifact/required gate, owner reviewed; never mass cancel until MASTER authorization"
+    },
+    "history_ast_status": "DEDICATED_F_RUN_QUEUED_NOT_EXECUTED",
+    "release_status": "CODE NO_GO / PRODUCTION NO_GO"
   }
 }
