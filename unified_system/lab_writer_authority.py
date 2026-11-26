@@ -102,6 +102,15 @@ class LabWriterAuthority:
     def epoch(self):
         return self._epoch
 
+    async def require_current(self):
+        """Typed async LAB read guard for B; no boolean admission conversion.
+
+        Deliberately has no synchronous counterpart. B must await this method
+        and inspect the returned LabAuthorityStatus; True is never returned.
+        A positive read is not a service, exchange, or database write grant.
+        """
+        return await self.check()
+
     def revoke(self):
         # Local irrevocable refusal; C SQL ownership must ALSO be revoked by
         # its sole owner when the session changes. No SQL is issued here.
