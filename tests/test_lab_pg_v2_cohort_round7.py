@@ -123,6 +123,7 @@ class Round7OwnedPg18Integrated(unittest.TestCase):
         self.server=None
         self.worker=None
         self.old_client=None
+        self.test_clock_ms=int(time.time()*1000)
         self.tmp=Path(tempfile.mkdtemp(prefix="round7-c-owned-pg18-"))
         self.tmp.chmod(0o700)
         self.addCleanup(self.cleanup)
@@ -143,6 +144,8 @@ class Round7OwnedPg18Integrated(unittest.TestCase):
             raise AssertionError("ROUND7_FOREIGN_PG_VERSION_OR_PORT")
         self.pg.provision(canonical_schema())
         install_lab_fence(self.pg)
+        from unified_system.lab_pg_checkpoint import install_lab_checkpoint
+        install_lab_checkpoint(self.pg)
         self.assertFalse(fenced_lab_witness(self.pg)["direct_writer_insert"])
         import psycopg
         self.psycopg=psycopg
@@ -211,10 +214,12 @@ class Round7OwnedPg18Integrated(unittest.TestCase):
             native_admission=admission or self.root_admission,
             bound_backend_pid=self.pid(conn))
 
-    def synthetic_minute(self):
+    def synthetic_minute(self, *, minute_offset=1):
         from market_data.provenance import minute_record, producer
-        now=int(time.time()*1000)
-        start=(now//60000-1)*60000
+        if type(minute_offset) is not int or not 1<=minute_offset<=10:
+            raise AssertionError("ROUND9_MINUTE_OFFSET_INVALID")
+        now=self.test_clock_ms
+        start=(now//60000-minute_offset)*60000
         record=minute_record({
             "symbol":"BTCUSDT","start_ms":start,
             "source_event_start_ms":start+1,
@@ -252,6 +257,40 @@ class Round7OwnedPg18Integrated(unittest.TestCase):
         self.assertEqual(result["status"],"LOCAL_COMMIT_RETURNED")
         self.assertFalse(result["trading_authorized"])
         self.assertEqual(self.pg.sql("SELECT count(*) FROM provenance_minutes"),"1")
+        from unified_system.lab_pg_checkpoint import (
+            read_committed_lab_minute, commit_verified_lab_cursor,
+            read_lab_cursor)
+        original_id=digest(record)
+        query=dict(identity=self.identity,generation=1,
+                   backend_pid=self.pid(self.primary),
+                   symbol="BTCUSDT",start_ms=record["start_ms"],
+                   fingerprint=record["dataset_fingerprint"],
+                   content_id=original_id)
+        committed=read_committed_lab_minute(self.pg,**query)
+        self.assertEqual(committed["status"],"MATCH")
+        self.assertFalse(committed["native_admitted"])
+        conflict=read_committed_lab_minute(
+            self.pg,**dict(query,content_id="e"*64))
+        self.assertEqual(conflict["status"],"CONFLICT")
+        missing=read_committed_lab_minute(
+            self.pg,**dict(query,fingerprint="d"*64,
+                          symbol="ETHUSDT",content_id="f"*64))
+        self.assertEqual(missing["status"],"MISSING")
+        checkpoint=dict(query,stream_id="bybit:BTCUSDT:1m",
+                        cursor=record["start_ms"])
+        saved=commit_verified_lab_cursor(self.pg,**checkpoint)
+        self.assertTrue(saved["committed_record_verified"])
+        self.assertFalse(saved["contiguous_source_coverage_attested"])
+        self.assertEqual(read_lab_cursor(self.pg,
+                         stream_id="bybit:BTCUSDT:1m"),record["start_ms"])
+        with self.assertRaises(LabAdmissionRejected):
+            commit_verified_lab_cursor(self.pg,**checkpoint)
+        with self.assertRaises(LabAdmissionRejected):
+            commit_verified_lab_cursor(
+                self.pg,**dict(checkpoint,backend_pid=self.pid(self.foreign)))
+        with self.assertRaises(LabAdmissionRejected):
+            commit_verified_lab_cursor(
+                self.pg,**dict(checkpoint,cursor=record["start_ms"]+60000))
         os.environ["MARKET_DATA_DSN"]=self.pg.dsn("lab_reader")
         rows=history_api.immutable_minutes("BTCUSDT",1,2**63-1)
         self.assertEqual(len(rows),1)
@@ -282,6 +321,8 @@ class Round7OwnedPg18Integrated(unittest.TestCase):
             self.adapter(self.foreign).write(record,content_id="c"*64)
         self.assertTrue(revoke_lab_fence(self.pg,generation=1,token=100))
         with self.assertRaises(LabAdmissionRejected):
+            commit_verified_lab_cursor(self.pg,**checkpoint)
+        with self.assertRaises(LabAdmissionRejected):
             revalidate_lab_fence(
                 self.pg,identity=self.identity,generation=1,
                 backend_pid=self.pid(self.primary))
@@ -296,8 +337,20 @@ class Round7OwnedPg18Integrated(unittest.TestCase):
     def test_reconnect_after_pg_crash_cannot_reuse_previous_token(self):
         from market_data.provenance import digest
         self.assertTrue(self.claim(self.primary))
-        record=self.synthetic_minute()
+        record=self.synthetic_minute(minute_offset=3)
         self.adapter(self.primary).write(record,content_id=digest(record))
+        from unified_system.lab_pg_checkpoint import (
+            commit_verified_lab_cursor, read_committed_lab_minute,
+            read_lab_cursor)
+        cursor_fields=dict(
+            stream_id="bybit:BTCUSDT:1m",cursor=record["start_ms"],
+            symbol="BTCUSDT",start_ms=record["start_ms"],
+            fingerprint=record["dataset_fingerprint"],
+            content_id=digest(record))
+        initial=commit_verified_lab_cursor(
+            self.pg,identity=self.identity,generation=1,
+            backend_pid=self.pid(self.primary),**cursor_fields)
+        self.assertTrue(initial["committed_record_verified"])
         old_pid=self.pid(self.primary)
         self.primary.close()
         self.primary=None
@@ -312,6 +365,9 @@ class Round7OwnedPg18Integrated(unittest.TestCase):
                 generation=1,backend_pid=old_pid)
         self.assertEqual(self.pg.sql(
             "SELECT generation,token,active FROM lab_writer_fence"),"1|100|t")
+        self.assertEqual(read_lab_cursor(
+            self.pg,stream_id="bybit:BTCUSDT:1m"),
+            record["start_ms"])
         self.primary=self.psycopg.connect(
             self.pg.dsn("lab_writer"),autocommit=True)
         with self.assertRaises(LabAdmissionRejected):
@@ -336,6 +392,17 @@ class Round7OwnedPg18Integrated(unittest.TestCase):
             backend_pid=self.pid(self.primary))
         self.assertTrue(fresh["db_fence_current_at_read"])
         self.assertFalse(fresh["root_consul_admitted"])
+        restored_receipt=read_committed_lab_minute(
+            self.pg,identity=newer,generation=2,
+            backend_pid=self.pid(self.primary),
+            symbol="BTCUSDT",start_ms=record["start_ms"],
+            fingerprint=record["dataset_fingerprint"],content_id=digest(record))
+        self.assertEqual(restored_receipt["status"],"MATCH")
+        self.assertFalse(restored_receipt["native_admitted"])
+        with self.assertRaises(LabAdmissionRejected):
+            commit_verified_lab_cursor(
+                self.pg,identity=newer,generation=2,
+                backend_pid=self.pid(self.primary),**cursor_fields)
         # Even after promotion, a fresh connection cannot replay old authority.
         with self.assertRaises(self.psycopg.Error):
             self.adapter(self.primary,identity=self.identity,
@@ -350,6 +417,41 @@ class Round7OwnedPg18Integrated(unittest.TestCase):
                          record["dataset_fingerprint"])
         self.assertEqual(self.pg.sql("SELECT count(*) FROM provenance_minutes"),"1")
         self.assertEqual(self.pg.sql("SELECT token FROM lab_writer_fence"),"101")
+        # A later minute can be stored out of order but cannot advance the
+        # durable contiguous cursor while the missing intermediate minute is
+        # unacknowledged. B owns backfill; C owns this monotonic CAS.
+        gap=self.synthetic_minute(minute_offset=1)
+        self.adapter(self.primary,identity=newer,generation=2,token=101).write(
+            gap,content_id=digest(gap))
+        gap_fields=dict(cursor_fields,cursor=gap["start_ms"],
+                        start_ms=gap["start_ms"],
+                        fingerprint=gap["dataset_fingerprint"],
+                        content_id=digest(gap))
+        with self.assertRaisesRegex(LabAdmissionRejected,
+                                    "LAB_CURSOR_CAS_OR_READBACK_DENIED"):
+            commit_verified_lab_cursor(
+                self.pg,identity=newer,generation=2,
+                backend_pid=self.pid(self.primary),**gap_fields)
+        self.assertEqual(read_lab_cursor(
+            self.pg,stream_id="bybit:BTCUSDT:1m"),record["start_ms"])
+        missing=self.synthetic_minute(minute_offset=2)
+        self.adapter(self.primary,identity=newer,generation=2,token=101).write(
+            missing,content_id=digest(missing))
+        middle_fields=dict(cursor_fields,cursor=missing["start_ms"],
+                           start_ms=missing["start_ms"],
+                           fingerprint=missing["dataset_fingerprint"],
+                           content_id=digest(missing))
+        commit_verified_lab_cursor(
+            self.pg,identity=newer,generation=2,
+            backend_pid=self.pid(self.primary),**middle_fields)
+        commit_verified_lab_cursor(
+            self.pg,identity=newer,generation=2,
+            backend_pid=self.pid(self.primary),**gap_fields)
+        self.assertEqual(read_lab_cursor(
+            self.pg,stream_id="bybit:BTCUSDT:1m"),gap["start_ms"])
+        self.assertEqual(self.pg.sql(
+            "SELECT count(*),count(DISTINCT fingerprint)"
+            " FROM provenance_minutes"),"3|3")
 
 
 if __name__=="__main__":
