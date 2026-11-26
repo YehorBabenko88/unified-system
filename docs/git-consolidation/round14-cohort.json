@@ -735,10 +735,10 @@
     "operation_authority": "DENIED",
     "f_tool": {
       "path": "tools/f_wheel_qualification.py",
-      "blob": "1d4d8c301a0c56155907bc2dff2b55ee43ef0e91",
-      "sha256": "63b24c49435bf7d7dc90598135211aa245342b6f780373d54b7a82f41323c50e",
+      "blob": "310264da7a3b79632843c6a9f09628c7e80235a0",
+      "sha256": "f8a177d6c729577cf02a60fc3a6f12e002cc01640faabcd4a676c36a0c372350",
       "tests_path": "tests/test_f_wheel_qualification.py",
-      "tests_blob": "a591e8be052684d1f47a54604ab8a6e22fa20e78",
+      "tests_blob": "9f58333bac69ce3e2b966a53f81b1419e0764acd",
       "local_python": "3.13.5",
       "local_unittest_result": "26_PASS_0_FAIL_0_SKIP",
       "local_py_compile": "PASS",
@@ -749,7 +749,11 @@
       "pip_installed_record_rewrite": "SUPPORTED_AND_VERIFIED_SYNTHETIC",
       "pip_installed_script_tamper": "DENIED_SYNTHETIC",
       "pip_generated_pyc_unhashed": "MARKED_UNAUTHENTICATED",
-      "wheel_build_reproducibility": "FIXED_TIME_SYNTHETIC_WHEEL_ONLY"
+      "wheel_build_reproducibility": "FIXED_TIME_SYNTHETIC_WHEEL_ONLY",
+      "all_installed_bytes_authenticated": false,
+      "installed_pip_target_RECORD": "SOURCE_ARCHIVE_AND_INSTALLED_RECORD_VALIDATED_INDEPENDENTLY",
+      "system_import_hooks_or_pth": "NOT_VERIFIED",
+      "signed_activation": "NOT_VERIFIED"
     },
     "installed_record_bytes": "OFFLINE_PIP_INSTALL_SYNTHETIC_ONLY",
     "runtime_import_origin": "NOT_VERIFIED",
