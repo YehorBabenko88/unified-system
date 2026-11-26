@@ -13,8 +13,6 @@ _SHA64 = re.compile(r"[0-9a-f]{64}\Z")
 _RESOURCE = "grid-market-data-primary"
 _OWNER_PATTERN = re.compile(r"[A-Za-z0-9_.:-]{1,128}\Z")
 _NAMESPACE_PATTERN = re.compile(r"[A-Za-z0-9_-]+(?:/[A-Za-z0-9_-]+)*\Z")
-_SIGNATURE = ("bigint,bigint,uuid,uuid,uuid,text,text,"
-              "text,text,text,bigint,jsonb")
 
 def _id(value):
     need(type(value) is str, "LAB_FENCE_ID_INVALID")
@@ -193,8 +191,6 @@ def fenced_lab_witness(pg):
     pg._verify_owned()
     need(pg.started, "LAB_PG_NOT_STARTED")
     pg._verify_postmaster()
-    definition = ("public.lab_fenced_insert(bigint,bigint,uuid,uuid,uuid,"
-                  "text,text,text,text,text,bigint,jsonb)")
     result = pg.sql("""
        SELECT json_build_object(
            'schema','lab-postgres-fenced-custody.v1',
