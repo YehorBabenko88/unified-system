@@ -302,8 +302,8 @@ class NativePg18V2Tests(unittest.TestCase):
         from queue import Queue
         import threading
 
-        # 32 separate live PostgreSQL backends, no application mutex. They
-        # remain alive until the main thread verifies one DB/CAS winner.
+        # All 32 contender sessions remain open through DB/CAS resolution.
+        # Use a bounded real PostgreSQL cohort; no Python mutex decides winner.
         count = 32
         ready = threading.Barrier(count + 1, timeout=45)
         release = threading.Event()
@@ -336,6 +336,9 @@ class NativePg18V2Tests(unittest.TestCase):
                         results.put((index, accepted))
                     except LabAdmissionRejected:
                         results.put((index, False))
+                    except BaseException as failure:
+                        results.put((index, failure))
+                        raise
                 finally:
                     if not release.wait(90):
                         raise AssertionError("CONTENDER_RELEASE_TIMEOUT")
@@ -345,6 +348,12 @@ class NativePg18V2Tests(unittest.TestCase):
             try:
                 ready.wait()
                 outcomes = [results.get(timeout=60) for _ in range(count)]
+                failures = [(i, value) for i, value in outcomes
+                            if isinstance(value, BaseException)]
+                if failures:
+                    raise AssertionError(
+                        "CONTENDER_UNEXPECTED_FAILURE:" +
+                        ",".join(str(i) for i, _ in failures))
                 winners = [i for i, admitted in outcomes if admitted is True]
                 self.assertEqual(len(winners), 1)
                 self.assertEqual(self.pg.sql(
