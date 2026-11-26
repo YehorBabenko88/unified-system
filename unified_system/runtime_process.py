@@ -1064,6 +1064,22 @@ class ProcessDriver:
         if d['pid'] is None:
             child=self.children.get(handle)
             if child is None or child.poll() is None:raise ValueError('ambiguous prior process start')
+        child=self.children.get(handle)
+        if isinstance(child,_OwnedWindowsChild):
+            # Only the original A-owned Job created before this child ran.
+            # Never terminate a PID-only or externally adopted process.
+            state=self.owned_process_state(handle)
+            if state not in ('STILL_ALIVE','EXTINCT'):
+                raise ValueError('owned Windows Job root identity unverified')
+            child._job.terminate_owned_tree(child._handle, timeout=5)
+            child.wait(timeout=5)
+            if self.owned_process_state(handle) != 'EXTINCT':
+                raise ValueError('owned Windows Job root exit unverified')
+            if child._job.active_process_count()!=0:
+                raise ValueError('owned Windows Job descendants still active')
+            d['state']='STOPPED';self._save(handle,d)
+            child.close_owned_handles()
+            return
         identity=_identity(d['pid'])
         if identity is None:
             # PID disappearance or failed lookup by itself proves nothing.
