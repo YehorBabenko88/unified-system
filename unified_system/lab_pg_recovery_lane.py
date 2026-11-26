@@ -121,9 +121,19 @@ class LabPgRecoveryLane:
                                           timeout=max_seconds)
             _need(type(result) is dict
                   and result.get("schema") ==
-                  "c-isolated-pg18-recovery-diagnostic.v1"
+                  "c-isolated-pg18-recovery-diagnostic.v2"
+                  and result.get("scope") == "ISOLATED_LAB_ONLY"
+                  and result.get("old_generation") == old.get("generation")
+                  and result.get("old_token") == old.get("token")
+                  and result.get("old_backend_pid") == old.get("backend_pid")
+                  and result.get("old_backend_start") == old.get("backend_start")
+                  and result.get("durable_fence_active") is False
+                  and type(result.get("stream_snapshots")) is dict
                   and result.get("native_admitted") is False
-                  and result.get("root_consul_admitted") is False,
+                  and result.get("root_consul_admitted") is False
+                  and result.get("execution_authority") is False
+                  and result.get("paper_admitted") is False
+                  and result.get("trading_authorized") is False,
                   "LAB_C_RECOVERY_RESULT_UNVERIFIED")
             self._last=result
             return LabPgRecoveryObservation(
