@@ -502,6 +502,31 @@ class ProcessDriverFailClosedStopTests(unittest.TestCase):
         self.assertEqual(self.driver._load(self.op)['state'], 'RUNNING')
 
 
+
+@unittest.skipUnless(WINDOWS, 'requires native Windows Job Object')
+class WindowsNativeJobContainmentTests(unittest.TestCase):
+    """Temporary Job Object only; no production child or service is touched."""
+
+    def test_empty_owned_job_has_zero_members_and_no_external_adoption(self):
+        from unified_system.runtime_process import OwnedWindowsJob
+        with OwnedWindowsJob() as job:
+            self.assertEqual(job.active_process_count(), 0)
+            self.assertFalse(job._assigned)
+            with self.assertRaisesRegex(ValueError, 'suspended launch required'):
+                job.assign_suspended_child(None)
+            with self.assertRaisesRegex(ValueError, 'not assigned'):
+                job.resume_suspended_child(None)
+        with self.assertRaisesRegex(ValueError, 'closed'):
+            job.active_process_count()
+
+    def test_job_is_not_an_exit_receipt_for_uncontained_process(self):
+        from unified_system.runtime_process import OwnedWindowsJob
+        with OwnedWindowsJob() as job:
+            self.assertEqual(job.active_process_count(), 0)
+            # The real independent Popen from setUp is never adopted, and
+            # zero owned members does NOT prove the old process exited.
+
+
 @unittest.skipUnless(WINDOWS, 'requires native Windows SCM enumeration')
 class WindowsNativeScmCensusTests(unittest.TestCase):
     """Read-only native SCM census, not a signed Root ownership receipt."""
