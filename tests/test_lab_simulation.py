@@ -161,7 +161,7 @@ class EnvironmentTests(unittest.TestCase):
 
     def test_only_loopback_dsn(self):
         self.assertTrue(loopback_dsn('postgresql://reader:' + 'a' * 16 + '@127.0.0.1:5433/lab'))
-        for dsn in ('postgresql://reader:' + 'a' * 16 + '@10.0.0.5:5432/lab', 'postgresql://reader@127.0.0.1:5432/lab'):
+        for dsn in ('postgresql://reader:' + 'a' * 16 + '@10.0.0.5:5432/lab', 'postgresql://reader@127.0.0.1:5432/lab', 'postgresql://reader:' + 'a' * 16 + '@127.0.0.1:5432/lab'):
             self.assertFalse(loopback_dsn(dsn))
             with self.assertRaisesRegex(LabAdmissionRejected, 'LOOPBACK'):
                 child_environment({}, {'MARKET_DATA_DSN': dsn})
