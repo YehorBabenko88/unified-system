@@ -21,11 +21,13 @@ monotone candidate token, **not** a PostgreSQL transaction constraint.
 
 `unified_system/grid_writer_fence_model.py` is a pure, inert transition
 validator with exact `WriterLeaseIdentity` fields:
-`owner` (bounded stable identifier), `session_id` (UUID4), `token` (positive
-signed 63-bit integer), `instance_id` (UUID4), `source_sha256`, `schema_sha256`
-(exact lowercase SHA256). Model state includes
+`owner` (bounded stable identifier), `namespace` (pinned Root Consul
+namespace), `session_id` (UUID4), `token` (positive signed 63-bit integer),
+`instance_id` and `node_incarnation_id` (UUID4), `source_sha256`,
+`schema_sha256` (exact lowercase SHA256). Model state includes
 `schema=unified.grid-writer-fence-model.v1`,
-`scope=ISOLATED_LAB_ONLY`, durable `generation`, `identity`, `active`.
+`scope=ISOLATED_LAB_ONLY`, `resource_id=grid-market-data-primary`,
+durable `generation`, `identity`, `active`.
 `claim_model` requires a strictly greater token even after a stop; it
 rejects active old writer, missing old-process quiescence and token replay.
 `write_matches_model` checks exact identity and generation; **it is not a
@@ -107,7 +109,7 @@ Terminan data.
 
 ### Evidence limits
 
-E authored 12 pure tests, including 32-contender simulation and 100
+E authored 13 pure tests, including 32-contender simulation and 100
 stop/reacquisition transitions, and added them to E's six-cell inert workflow.
 A Python in-memory lock used by this test illustrates CAS ordering **only**.
 It is not a real PostgreSQL lock, does not test concurrent SQL sessions,
