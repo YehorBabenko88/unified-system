@@ -107,7 +107,6 @@ class NativeCRecoveryTests(unittest.TestCase):
     def test_kernel_lock_survives_stop_only_and_recovery(self):
         # A separate interpreter tries to lock the SAME inode, without
         # inheriting the owner's C descriptor. This is a kernel test.
-        import fcntl
         contained=contain_exclusive_lab_cluster(
             self.pg,old=dict(self.old),quiesced=True,max_seconds=120)
         self.assertEqual(contained["state"],"UNKNOWN")
@@ -153,6 +152,9 @@ class NativeCRecoveryTests(unittest.TestCase):
             stdin=subprocess.PIPE,stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,text=True)
         try:
+            import select
+            ready, _, _ = select.select([child.stdout], [], [], 10)
+            self.assertTrue(ready, "C_NATIVE_LOCK_CHILD_START_TIMEOUT")
             self.assertEqual(child.stdout.readline().strip(),
                              "C_NATIVE_LOCK_HELD")
             with self.assertRaisesRegex(
@@ -164,9 +166,14 @@ class NativeCRecoveryTests(unittest.TestCase):
                 self.pg,**self.old),"STILL_ALIVE")
         finally:
             if child.poll() is None:
-                child.stdin.write("end\\n")
-                child.stdin.flush()
-                child.wait(timeout=15)
+                try:
+                    child.stdin.write("end\n")
+                    child.stdin.flush()
+                    child.wait(timeout=15)
+                except (BrokenPipeError, subprocess.TimeoutExpired):
+                    # The test may stop only the disposable child it created.
+                    child.kill()
+                    child.wait(timeout=10)
             child.stdin.close()
             child.stdout.close()
             child.stderr.close()
