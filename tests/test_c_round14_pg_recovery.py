@@ -150,7 +150,8 @@ class NativeCRecoveryTests(unittest.TestCase):
         # LAB child already holds C's exact OS locking region. Recovery
         # must NEVER race the other OS-level owner or signal postmaster.
         from unified_system.lab_pg_recovery import _acquire_cluster_os_lock
-        fd=_acquire_cluster_os_lock(self.pg)
+        fd,witness_fd=_acquire_cluster_os_lock(self.pg)
+        os.close(witness_fd)
         os.close(fd)
         path=self.root/".lab-postgres-recovery.lock"
         code=(
