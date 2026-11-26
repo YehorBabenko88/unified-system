@@ -161,7 +161,8 @@ class LabWriterAuthority:
         return grant
 
     async def issue_operation_permit(self, *, executor, operation_id,
-                                     content_id, package_identity, entrypoint):
+                                     content_id, package_identity, entrypoint,
+                                     symbol=None, start_ms=None, fingerprint=None):
         """Issue a bounded non-bool operation capability from this Root owner.
 
         Issuance is inert unless the original, protected LabWriterGrant was
@@ -183,6 +184,12 @@ class LabWriterAuthority:
               and type(entrypoint) is str
               and entrypoint == "grid.canonical_lab_fenced_writer",
               "LAB_OPERATION_PACKAGE_IDENTITY_REJECTED")
+        _need(type(symbol) is str and re.fullmatch(r"[A-Z0-9]{1,32}", symbol) is not None
+              and type(start_ms) is int and 0 <= start_ms < 2**63
+              and start_ms % 60000 == 0
+              and type(fingerprint) is str
+              and re.fullmatch(r"[0-9a-f]{64}", fingerprint) is not None,
+              "LAB_OPERATION_RECORD_IDENTITY_REJECTED")
         grant = self._writer_grant
         _need(type(grant) is LabWriterGrant
               and not grant._revoked and not self._revoked,
@@ -226,7 +233,9 @@ class LabWriterAuthority:
               "LAB_OPERATION_C_BACKEND_UNVERIFIED")
         _need(not self._revoked and not grant._revoked
               and protected.require_current() is True
-              and self._source.require_current() is True,
+              and self._source.require_current() is True
+              and await self._authority.validate(self._lease) is True
+              and not self._revoked and not grant._revoked,
               "LAB_OPERATION_ISSUANCE_REVOKED")
         # A caller may choose any 64-character digest; until Root validates
         # it against the installed wheel, denying is mandatory. This code
@@ -383,10 +392,11 @@ class LabWriterOperationPermit:
     __slots__=("_grant","_executor","_thread","_operation_id",
                "_content_id","_package_identity","_entrypoint","_backend_start",
                "_owner","_namespace","_generation","_token","_epoch",
-               "_backend_pid","_used","_revoked")
+               "_backend_pid","_used","_revoked","_symbol","_start_ms","_fingerprint","_deadline")
 
     def __init__(self,seal,grant,executor,operation_id,content_id,
-                 package_identity,entrypoint,backend_start):
+                 package_identity,entrypoint,backend_start, *, symbol=None,
+                 start_ms=None,fingerprint=None):
         _need(seal is _ISSUANCE_SEAL and type(grant) is LabWriterGrant
               and grant._authority._writer_grant is grant
               and not grant._revoked and not grant._authority._revoked
@@ -402,6 +412,9 @@ class LabWriterOperationPermit:
         self._owner,self._namespace=a._identity.owner,a._identity.namespace
         self._generation,self._token=a._generation,a._identity.token
         self._epoch,self._backend_pid=a._epoch,a._backend_pid
+        import time
+        self._symbol,self._start_ms,self._fingerprint=symbol,start_ms,fingerprint
+        self._deadline=time.monotonic()+5.0
         self._used=False
         self._revoked=False
 
@@ -410,11 +423,14 @@ class LabWriterOperationPermit:
 
     def require_current(self, *, executor, operation_id, content_id,
                         package_identity, entrypoint, backend_pid,
-                        backend_start):
+                        backend_start, symbol, start_ms, fingerprint,
+                        owner, namespace, generation, token, epoch):
         """Synchronous and IO-free check, MUST run in original SQL worker."""
         from threading import get_ident
+        import time
         a=self._grant._authority
         _need(type(self) is LabWriterOperationPermit
+              and time.monotonic() < self._deadline
               and not self._used and not self._revoked
               and not self._grant._revoked and not a._revoked
               and a._writer_grant is self._grant
@@ -423,7 +439,15 @@ class LabWriterOperationPermit:
               and self._executor.owner_thread_id==get_ident()
               and not self._executor.poisoned,
               "LAB_OPERATION_WRONG_OWNER_OR_REVOKED")
-        _need(self._operation_id==operation_id
+        _need(type(symbol) is str and self._symbol==symbol
+              and type(start_ms) is int and self._start_ms==start_ms
+              and type(fingerprint) is str and self._fingerprint==fingerprint
+              and type(owner) is str and self._owner==owner
+              and type(namespace) is str and self._namespace==namespace
+              and type(generation) is int and self._generation==generation
+              and type(token) is int and self._token==token
+              and type(epoch) is str and self._epoch==epoch
+              and self._operation_id==operation_id
               and self._content_id==content_id
               and self._package_identity==package_identity
               and self._entrypoint==entrypoint
