@@ -101,6 +101,8 @@ def recover_exclusive_lab_cluster(pg, *, old, streams=(), quiesced=False,
     # shutdown aborts old SQL transactions rather than relying on a poisoned
     # thread, and PG performs WAL-safe shutdown.
     pg.stop()
+    # Verify against the immutable OS postmaster incarnation recorded by
+    # LabPostgres, not merely a now-reusable numeric PID.
     need(not pg.started and not pg._pid_is_live(initial_pid),
          "LAB_RECOVERY_OLD_POSTMASTER_UNVERIFIED")
     need(time.monotonic() < deadline, "LAB_RECOVERY_TIMEOUT")
