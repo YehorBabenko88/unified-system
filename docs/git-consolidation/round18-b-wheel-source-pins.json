@@ -1,7 +1,7 @@
 {
   "schema": "unified.f.round18-b-wheel-pins.v1",
   "repository": "YehorBabenko88/bybit-cluster-grid",
-  "source_commit": "6d9373a435f4f99ff15f999622c4e1143d9a832e",
+  "source_commit": "9e0d57c4c0f2d01bc381ada090b62d23566b32aa",
   "source_manifest": {
     "path": "pyproject.toml",
     "blob": "4fb4e72360605cd92b3afab3837015b4ac29dace",
@@ -9,7 +9,8 @@
     "distribution": "market-data",
     "version": "0.2.0.dev0",
     "packaging": "existing market-data project plus 4 explicitly enumerated dotted grid py-modules; no second writer",
-    "wheel_actually_built": false
+    "wheel_actually_built": false,
+    "head": "9e0d57c4c0f2d01bc381ada090b62d23566b32aa"
   },
   "expected_wheel_members": [
     {
@@ -61,5 +62,7 @@
   "actual_writer_permit_authorized": false,
   "release_authenticated": false,
   "consumer": "tools/f_wheel_qualification.py",
-  "notes": "Read-only F machine-input candidate. Caller-supplied pins are NOT an authenticated Root release attestation. B owner builds wheel from exact protected tree and E/A validate process/release/activation separately. No second writer or new integration branch."
+  "notes": "Read-only F machine-input candidate. Caller-supplied pins are NOT an authenticated Root release attestation. B owner builds wheel from exact protected tree and E/A validate process/release/activation separately. No second writer or new integration branch.",
+  "sha256_recomputed_on_round19": false,
+  "round19_note": "GitHub exact B9e0 blob identity verified for pyproject, grid/__init__, and all four canonical modules. They match the previously independently computed source hashes; original wheel/sdist remains unbuilt and unverified."
 }
