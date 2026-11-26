@@ -9,7 +9,7 @@ No new recovery, writer grant, epoch or generation is permitted on UNKNOWN.
 import asyncio
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
-from threading import Lock
+from threading import Lock, Event
 from .grid_writer_fence_model import ResourceFenceBlocked, _need
 
 # One original C owner object => at most one E recovery dispatcher, including
@@ -38,7 +38,7 @@ class LabPgRecoveryLane:
     """E dispatches one C-owned canonical recovery and never duplicates it."""
 
     __slots__=("_pg","_pool","_lock","_future","_busy","_closed",
-               "_poisoned","_submitted","_last")
+               "_poisoned","_submitted","_last","_worker_done_event")
 
     def __init__(self, pg):
         # C class does not exist in E standalone: only integrated source may
@@ -62,6 +62,7 @@ class LabPgRecoveryLane:
         self._poisoned=False
         self._submitted=False
         self._last=None
+        self._worker_done_event=Event()
 
     @property
     def poisoned(self):
@@ -72,7 +73,7 @@ class LabPgRecoveryLane:
         # A finished Python Future is not enough to prove OS, SQL, WAL,
         # source, lease or backend ownership. Do not expose as recovery GO.
         with self._lock:
-            return self._future is not None and self._future.done()
+            return self._submitted and self._worker_done_event.is_set()
 
     async def recover_once(self, *, old, streams=(), max_seconds=120,
                            root_process_evidence=None):
@@ -101,12 +102,18 @@ class LabPgRecoveryLane:
                   "LAB_PG_RECOVERY_ALREADY_SUBMITTED")
             self._busy=True
             self._submitted=True
+            self._worker_done_event.clear()
         try:
             from .lab_pg_recovery import recover_exclusive_lab_cluster
             def c_recovery():
-                return recover_exclusive_lab_cluster(
-                    self._pg,old=old,streams=streams,quiesced=True,
-                    max_seconds=max_seconds)
+                try:
+                    return recover_exclusive_lab_cluster(
+                        self._pg,old=old,streams=streams,quiesced=True,
+                        max_seconds=max_seconds)
+                finally:
+                    # This event is set in the actual OS worker thread, not
+                    # by an asyncio wrapper cancelled after timeout.
+                    self._worker_done_event.set()
             future=asyncio.get_running_loop().run_in_executor(
                 self._pool,c_recovery)
             with self._lock:self._future=future
