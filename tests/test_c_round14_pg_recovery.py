@@ -232,54 +232,28 @@ class NativeCRecoveryTests(unittest.TestCase):
             capture_output=True,text=True,timeout=10,check=False)
         self.assertEqual(again.returncode,77,again.stderr)
 
-    def test_external_process_lock_denies_c_before_any_stop(self):
-        # This process owns the ORIGINAL disposable PG, but an independent
-        # LAB child already holds C's exact OS locking region. Recovery
-        # must NEVER race the other OS-level owner or signal postmaster.
-        from unified_system.lab_pg_recovery import _acquire_cluster_os_lock
-        fd,witness_fd=_acquire_cluster_os_lock(self.pg)
-        os.close(witness_fd)
-        os.close(fd)
+    def test_external_process_cannot_preempt_original_bootstrap_lock(self):
+        # C owns one original OS lock since initdb, not merely once
+        # recovery starts. A different Python interpreter cannot preempt it.
         path=self.root/".lab-postgres-recovery.lock"
+        self.assertTrue(path.is_file())
         code=(
-            "import fcntl,os,sys\n"
-            "fd=os.open(sys.argv[1],os.O_RDWR)\n"
-            "fcntl.flock(fd,fcntl.LOCK_EX)\n"
-            "print('C_NATIVE_LOCK_HELD',flush=True)\n"
-            "sys.stdin.readline()\n"
+            "import fcntl,os,sys\\n"
+            "fd=os.open(sys.argv[1],os.O_RDWR)\\n"
+            "try:\\n"
+            " fcntl.flock(fd,fcntl.LOCK_EX|fcntl.LOCK_NB)\\n"
+            "except BlockingIOError:\\n"
+            " sys.exit(77)\\n"
+            "sys.exit(0)\\n"
         )
-        child=subprocess.Popen(
+        outsider=subprocess.run(
             [sys.executable,"-B","-c",code,str(path)],
-            stdin=subprocess.PIPE,stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,text=True)
-        try:
-            import select
-            ready, _, _ = select.select([child.stdout], [], [], 10)
-            self.assertTrue(ready, "C_NATIVE_LOCK_CHILD_START_TIMEOUT")
-            self.assertEqual(child.stdout.readline().strip(),
-                             "C_NATIVE_LOCK_HELD")
-            with self.assertRaisesRegex(
-                    LabAdmissionRejected,
-                    "LAB_RECOVERY_CROSS_PROCESS_LOCK_BUSY"):
-                self._recover()
-            self.assertTrue(self.pg.started)
-            self.assertEqual(observe_old_lab_backend(
-                self.pg,**self.old),"STILL_ALIVE")
-        finally:
-            if child.poll() is None:
-                try:
-                    child.stdin.write("end\n")
-                    child.stdin.flush()
-                    child.wait(timeout=15)
-                except (BrokenPipeError, subprocess.TimeoutExpired):
-                    # The test may stop only the disposable child it created.
-                    child.kill()
-                    child.wait(timeout=10)
-            child.stdin.close()
-            child.stdout.close()
-            child.stderr.close()
-        receipt=self._recover()
-        self.assertFalse(receipt["native_admitted"])
+            capture_output=True,text=True,timeout=10,check=False)
+        self.assertEqual(outsider.returncode,77,outsider.stderr)
+        self.assertTrue(self.pg.started)
+        self.assertEqual(observe_old_lab_backend(
+            self.pg,**self.old),"STILL_ALIVE")
+        self.assertFalse(self._recover()["native_admitted"])
 
     def test_e_stop_only_then_resume_without_duplicate_stop(self):
         # Future E executor delegates to C's ONE serialized stop-only entry.
