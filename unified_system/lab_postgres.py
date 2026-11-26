@@ -327,6 +327,77 @@ class LabPostgres:
         self.sql("GRANT SELECT ON TABLE provenance_minutes TO lab_reader")
         return self
 
+    def provenance_storage_witness(self):
+        """Owner-only, scoped PostgreSQL custody facts; not provider authenticity.
+
+        This proves catalogue permissions and a configured immutability trigger
+        for this isolated cluster. It does not upgrade exchange provenance,
+        grant paper authority, or assert protection from the cluster owner.
+        """
+        self._verify_owned()
+        need(self.started, 'LAB_PG_NOT_STARTED')
+        self._verify_postmaster()
+        result = self.sql("""
+            SELECT json_build_object(
+              'witness_schema', 'lab-postgres-custody.v1',
+              'scope', 'ISOLATED_LAB_ONLY',
+              'database', current_database(),
+              'table', 'public.provenance_minutes',
+              'table_owner', pg_get_userbyid(c.relowner),
+              'writer_can_insert', has_table_privilege('lab_writer', c.oid, 'INSERT'),
+              'writer_can_select', has_table_privilege('lab_writer', c.oid, 'SELECT'),
+              'writer_can_update', has_table_privilege('lab_writer', c.oid, 'UPDATE'),
+              'writer_can_delete', has_table_privilege('lab_writer', c.oid, 'DELETE'),
+              'writer_can_truncate', has_table_privilege('lab_writer', c.oid, 'TRUNCATE'),
+              'reader_can_select', has_table_privilege('lab_reader', c.oid, 'SELECT'),
+              'reader_can_insert', has_table_privilege('lab_reader', c.oid, 'INSERT'),
+              'writer_can_schema_create',
+                 has_schema_privilege('lab_writer', 'public', 'CREATE'),
+              'reader_can_schema_create',
+                 has_schema_privilege('lab_reader', 'public', 'CREATE'),
+              'reader_role_readonly',
+                 (SELECT rolconfig @> ARRAY['default_transaction_read_only=on']
+                    FROM pg_roles WHERE rolname='lab_reader'),
+              'immutable_trigger_count',
+                 (SELECT count(*) FROM pg_trigger t
+                   WHERE t.tgrelid = c.oid
+                     AND NOT t.tgisinternal AND t.tgenabled = 'O'
+                     AND (t.tgtype & 1) = 1
+                     AND (t.tgtype & 16) = 16
+                     AND (t.tgtype & 8) = 8
+                     AND pg_get_triggerdef(t.oid) ILIKE
+                        '%reject_provenance_mutation%')
+            )
+            FROM pg_class c
+            WHERE c.oid='public.provenance_minutes'::regclass
+        """)
+        import json
+        try:
+            witness = json.loads(result)
+        except (TypeError, ValueError) as error:
+            raise LabAdmissionRejected('LAB_PG_CUSTODY_RECEIPT_INVALID') from error
+        required = ('writer_can_insert', 'reader_can_select', 'reader_role_readonly')
+        forbidden = ('writer_can_select', 'writer_can_update', 'writer_can_delete',
+                     'writer_can_truncate', 'reader_can_insert',
+                     'writer_can_schema_create', 'reader_can_schema_create')
+        need(witness.get('witness_schema') == 'lab-postgres-custody.v1'
+             and witness.get('scope') == 'ISOLATED_LAB_ONLY'
+             and witness.get('database') == self.database
+             and witness.get('table') == 'public.provenance_minutes'
+             and witness.get('table_owner') == 'lab_owner'
+             and all(witness.get(k) is True for k in required)
+             and all(witness.get(k) is False for k in forbidden)
+             and witness.get('immutable_trigger_count') == 1,
+             'LAB_PG_CUSTODY_NOT_VERIFIED')
+        # A trigger/catlog receipt is not cryptographic attestation. A
+        # privileged owner or server admin can still mutate storage.
+        witness['storage_immutability'] = 'ROLE_AND_TRIGGER_GUARDED_LAB_ONLY'
+        witness['source_authenticity'] = 'NOT_INDEPENDENTLY_ATTESTED'
+        witness['exchange_completeness'] = 'NOT_ATTESTED'
+        witness['execution_authority'] = False
+        witness['trading_authorized'] = False
+        return witness
+
     def dsn(self, role):
         need(role in ('lab_writer', 'lab_reader'), 'LAB_PG_ROLE_REJECTED')
         return f'postgresql://{role}:{self.passwords[role]}@127.0.0.1:{self.port}/{self.database}'
