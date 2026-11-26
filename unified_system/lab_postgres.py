@@ -420,8 +420,11 @@ class LabPostgres:
     def postmaster_pid(self):
         return self._verify_postmaster()
 
-    def crash(self):
-        """Simulate a power-loss style abort of the postmaster (no shutdown checkpoint)."""
+    def crash(self, *, timeout=120):
+        """LAB-only power-loss simulation, bounded by caller's C deadline."""
+        need(type(timeout) in (int,float) and 10 <= timeout <= 120,
+             'LAB_PG_CRASH_TIMEOUT_INVALID')
+        deadline = time.monotonic() + timeout
         need(self.started, 'LAB_PG_NOT_STARTED')
         pid = self.postmaster_pid()
         if os.name == 'nt':
@@ -448,7 +451,6 @@ class LabPostgres:
                 signal.pidfd_send_signal(pidfd, signal.SIGKILL)
             finally:
                 os.close(pidfd)
-        deadline = time.monotonic() + 60
         while time.monotonic() < deadline:
             try:
                 with socket.create_connection(('127.0.0.1', self.port), timeout=0.5):
