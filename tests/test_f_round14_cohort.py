@@ -202,7 +202,7 @@ class Round14CohortTests(unittest.TestCase):
             with self.subTest(owner=owner):
                 self.assertEqual(r["heads"][owner], sha)
                 self.assertRegex(r["live_capture"]["head_sha_by_owner"][owner], SHA40)
-                self.assertEqual(current[owner], r["live_capture"]["head_sha_by_owner"][owner])
+                self.assertEqual(current[owner], self.data["round20"]["initial_heads"][owner])
         self.assertEqual(r["source_blobs"]["B_writer"]["blob"],
                          "247d7fab2738e1892a05979e407f637f9df62784")
         self.assertEqual(r["source_blobs"]["A"]["historical_SCM_extinction"], "DENIED")
@@ -250,6 +250,30 @@ class Round14CohortTests(unittest.TestCase):
         self.assertEqual(live["F_offline_tool_verified"]["tests_passed"], 34)
         self.assertEqual(live["release"], "CODE_NO_GO_PRODUCTION_NO_GO")
         self.assertFalse(live["master_integration"]["changed"])
+
+
+    def test_round20_original_evidence_scope_not_conflated(self):
+        evidence = self.data["round20"]
+        self.assertEqual(evidence["schema"], "unified.f.round20-evidence-first.v1")
+        self.assertEqual(evidence["D_actual_proof"]["ubuntu_312_archive"]["archive_sha256"],
+                         "6bb62bc1f6fadcc4d32d43b7acbd48d9b7ad7fec2bcc10c00c8eb974384b7e5f")
+        members = evidence["D_actual_proof"]["ubuntu_312_archive"]["members"]
+        self.assertEqual({entry["name"] for entry in members},
+                         {"math-proof.json", "terminan-proof.json", "market-data-proof.json"})
+        self.assertEqual(next(v["source_sha"] for v in members if v["name"] == "market-data-proof.json"),
+                         "3850995a6c28ed29b05cef4ba067e587d5033453")
+        self.assertNotEqual(evidence["B_canonical_runtime"]["source"],
+                            "3850995a6c28ed29b05cef4ba067e587d5033453")
+        self.assertIsNone(evidence["B_canonical_runtime"]["wheel_sha256"])
+        self.assertIsNone(evidence["B_canonical_runtime"]["sdist_sha256"])
+        self.assertEqual(evidence["actual_B_b9e0_workflow"]["status"], "QUEUED")
+        self.assertEqual(evidence["actual_B_b9e0_workflow"]["artifacts"], 0)
+        self.assertEqual(evidence["protected_windows_package_identity"], "DENIED_UNVERIFIED_NATIVE_WINDOWS")
+        self.assertFalse(evidence["release_authenticated"])
+        self.assertEqual(evidence["issuance"], "DENIED_LAB_OPERATION_INSTALLED_WHEEL_UNVERIFIED")
+        self.assertFalse(evidence["integration"]["runtime_changed"])
+        self.assertEqual(evidence["code"], "NO_GO")
+        self.assertEqual(evidence["production"], "NO_GO")
 
 if __name__ == "__main__":
     unittest.main()
