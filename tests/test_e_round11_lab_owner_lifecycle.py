@@ -142,9 +142,9 @@ class RevocationStateTests(unittest.IsolatedAsyncioTestCase):
             result = await owner.revoke(blocking_timeout=1)
             self.assertEqual(result.result, "PARTIAL_DENIED")
             self.assertFalse(result.child_extinct)
+            self.assertFalse(result.consul_released)
             self.assertEqual(events,
-                             ["local", "stop", "sql", "release",
-                              "validate", "alive", "revalidate"])
+                             ["local", "stop", "sql", "alive", "revalidate"])
             self.assertFalse(result.native_admitted)
             self.assertFalse(result.trading_authorized)
             self.assertIs(await owner.revoke(), result)
@@ -158,7 +158,8 @@ class RevocationStateTests(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(result.result, "PARTIAL_DENIED")
             self.assertFalse(result.sql_fence_revoked)
             self.assertFalse(result.old_backend_rejected)
-            self.assertIn("release", events)
+            self.assertNotIn("release", events)
+            self.assertFalse(result.consul_released)
             self.assertIn("alive", events)
         finally:
             executor.close()
