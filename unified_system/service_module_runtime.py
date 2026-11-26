@@ -5,8 +5,14 @@ from urllib.parse import urlsplit
 from .module_catalog import MODULE_IDS
 from .service_bootstrap import need,local
 from .service_source_admission import StartupSourceAdmission
+from .market_data_entry_contract import (MarketDataEntryRejected,V2_ENTRY,entry_for_manifest)
 
 ENTRIES={'market_data':'market_data.cli','terminan':'terminan.server'}
+
+def _entry(module_id,manifest):
+ if module_id!='market_data':return ENTRIES[module_id]
+ try:return entry_for_manifest(manifest)
+ except MarketDataEntryRejected:need(False,'ACTIVATION_CODE_REJECTED')
 
 def _module_arguments(grant,config,manifest,module_id):
  need(module_id in ENTRIES and type(config.get('programs')) is dict)
@@ -24,7 +30,7 @@ def _module_arguments(grant,config,manifest,module_id):
  arguments=['serve'] if module_id=='market_data' else ['--host','127.0.0.1','--port',str(port)]
  if module_id=='market_data':need(program.get('env',{}).get('MARKET_DATA_PORT')==str(port))
  need(original==[str(python),'-I','-S','-B',str(bootstrap),'--source-root',str(source),
-                 '--dependency-root',str(dependencies),'--module',ENTRIES[module_id],'--',*arguments])
+                 '--dependency-root',str(dependencies),'--module',_entry(module_id,manifest),'--',*arguments])
  return arguments
 
 def protected_programs(config,grant,manifest):
@@ -53,7 +59,13 @@ def serve_module(grant,config,manifest,module_id):
  original=config['programs'][module_id]['argv']
  def run():
   need(source.require_current() is True)
-  module=importlib.import_module(ENTRIES[module_id])
+  entry=_entry(module_id,manifest)
+  if entry==V2_ENTRY:
+   # C-owned transactional fence + native legacy process quiescence are not
+   # admitted yet. Source pinning must never silently enable a second writer.
+   from .grid_writer_fence_model import native_writer_admission
+   native_writer_admission()
+  module=importlib.import_module(entry)
   return module.main(arguments,startup_admission=source)
  previous=sys.argv
  try:
