@@ -10,6 +10,7 @@ service_module_runtime admission remains denied until the A/B/C runtime
 integration and real-process acceptance are separately completed.
 """
 from dataclasses import dataclass
+from types import ModuleType
 import secrets
 from .grid_writer_fence_model import (
     ResourceFenceBlocked, WriterLeaseIdentity, _need,
@@ -69,8 +70,10 @@ class LabWriterAuthority:
               and callable(getattr(pg, "_verify_owned", None))
               and callable(getattr(pg, "_verify_postmaster", None)),
               "LAB_ROOT_OWNED_POSTGRES_REQUIRED")
-        _need(c_module is not None
-              and callable(getattr(c_module, "revalidate_lab_fence", None)),
+        _need(type(c_module) is ModuleType
+              and c_module.__name__ == "unified_system.lab_pg_fence"
+              and callable(getattr(c_module, "revalidate_lab_fence", None))
+              and callable(getattr(c_module, "revoke_lab_fence", None)),
               "LAB_ROOT_CANONICAL_SQL_REQUIRED")
         _need(type(executor) is LabOwnerExecutor,
               "LAB_ROOT_SERIAL_EXECUTOR_REQUIRED")
