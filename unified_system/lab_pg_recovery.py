@@ -121,9 +121,8 @@ def _snapshot(pg, streams, deadline):
     def budgeted(statement, *, role="lab_owner", database=None, timeout=120):
         return original(statement, role=role, database=database,
                         timeout=min(timeout, 120, _remaining(deadline)))
-    # LabPostgres is a private isolated owner instance. A temporary method
-    # override is safe only while this exact C recovery lock is held and E
-    # must not run its separate stop-only lane concurrently.
+    # LabPostgres is a private isolated owner instance. C serializes calls
+    # within this dispatcher; E must not run a separate stop-only operation.
     pg.sql = budgeted
     try:
         for stream in streams:
@@ -146,7 +145,10 @@ def recover_exclusive_lab_cluster(pg, *, old, streams=(), quiesced=False,
     the same owner object persists and C can read the saved durable fence
     after starting. The caller's quiesced flag is for synthetic LAB only.
     """
-    _require_pg(pg)  # Must precede any caller-controlled pg method.
+    from .lab_postgres import LabPostgres
+    need(type(pg) is LabPostgres, "LAB_RECOVERY_PG_TYPE_INVALID")
+    # Validate identity before touching any untrusted pg method.
+    _require_pg(pg)
     need(quiesced is True, "LAB_RECOVERY_QUIESCENCE_REQUIRED")
     need(type(max_seconds) in (int, float) and 10 <= max_seconds <= 300,
          "LAB_RECOVERY_DEADLINE_INVALID")
