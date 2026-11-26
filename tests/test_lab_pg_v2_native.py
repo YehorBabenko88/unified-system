@@ -299,16 +299,24 @@ class NativePg18V2Tests(unittest.TestCase):
 
     def test_32_real_pg_contenders_same_resource_have_one_winner(self):
         from concurrent.futures import ThreadPoolExecutor
-        # Each contender owns a separate PostgreSQL backend, never a shared
-        # Python mutex. The DB primary-key/CAS arbitrates the actual winner.
+        import threading
+
+        # Real concurrent PostgreSQL backends. A readiness barrier prevents
+        # one contender from closing before other contenders have reached
+        # the DB. Only the PostgreSQL row/CAS serializes authority.
+        contenders = 32
+        ready = threading.Barrier(contenders + 1, timeout=30)
+        release = threading.Event()
+
         def one_contender(index):
             with self.psycopg.connect(self.pg.dsn("lab_writer")) as conn:
                 with conn.cursor() as cur:
                     cur.execute("SELECT pg_backend_pid()")
                     pid = cur.fetchone()[0]
                 ids = self.identity()
+                ready.wait()
                 try:
-                    accepted = claim_lab_fence(
+                    admitted = claim_lab_fence(
                         self.pg, owner=_OWNER, namespace=_NAMESPACE,
                         generation=1, token=500,
                         session_id=ids[0], instance_id=ids[1],
@@ -317,20 +325,39 @@ class NativePg18V2Tests(unittest.TestCase):
                         schema_sha256=self.schema_sha,
                         backend_pid=pid,
                         previous_quiescence_verified=True)
-                    return (index, accepted)
+                    if admitted:
+                        receipt = revalidate_lab_fence(
+                            self.pg, identity=self.lease_identity(ids, 500),
+                            generation=1, backend_pid=pid)
+                        if receipt["db_fence_current_at_read"] is not True:
+                            raise AssertionError("DB_WINNER_NOT_CURRENT")
+                    return (index, admitted)
                 except LabAdmissionRejected:
                     return (index, False)
-        with ThreadPoolExecutor(max_workers=8) as pool:
-            results = list(pool.map(one_contender, range(32)))
-        winners = [i for i, admitted in results if admitted is True]
-        self.assertEqual(len(winners), 1)
-        self.assertEqual(self.pg.sql(
-            "SELECT count(*),min(generation),min(token) FROM lab_writer_fence"),
-            "1|1|500")
-        self.assertEqual(self.pg.sql(
-            "SELECT has_table_privilege('lab_writer',"
-            "'provenance_minutes','INSERT')"), "f")
-        self.assertFalse(fenced_lab_witness(self.pg)["trading_authorized"])
+                finally:
+                    # Even denied backends stay alive until the complete
+                    # contender cohort has had a chance to attempt claim.
+                    if not release.wait(60):
+                        raise AssertionError("CONTENDER_RELEASE_TIMEOUT")
+
+        with ThreadPoolExecutor(max_workers=contenders) as pool:
+            futures = [pool.submit(one_contender, i) for i in range(contenders)]
+            try:
+                ready.wait()
+                results = [f.result(timeout=50) for f in futures]
+                winners = [i for i, admitted in results if admitted is True]
+                self.assertEqual(len(winners), 1)
+                self.assertEqual(self.pg.sql(
+                    "SELECT count(*),min(generation),min(token) FROM lab_writer_fence"),
+                    "1|1|500")
+                self.assertEqual(self.pg.sql(
+                    "SELECT has_table_privilege('lab_writer',"
+                    "'provenance_minutes','INSERT')"), "f")
+                self.assertFalse(fenced_lab_witness(self.pg)["trading_authorized"])
+            finally:
+                release.set()
+                for f in futures:
+                    f.result(timeout=65)
 
     def test_native_crash_recovers_fence_high_water_without_old_writer(self):
         ids = self.identity()
