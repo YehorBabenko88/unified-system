@@ -191,6 +191,48 @@ class NativeCRecoveryTests(unittest.TestCase):
             "SELECT count(*) FROM public.provenance_minutes "
             f"WHERE symbol='{symbol}'"),"1")
 
+    def test_owner_process_death_releases_advisory_lock_but_not_root_admission(self):
+        # A dedicated throw-away child dies AFTER C's original lock and
+        # marker, but BEFORE initdb/start. No PostgreSQL process is created.
+        # The kernel releases flock on death; the permanent original owner
+        # marker must still prevent a second LabPostgres constructor.
+        extra=Path(tempfile.mkdtemp(prefix="c-round14-recovery-"))
+        extra.chmod(0o700)
+        child_source=(
+            "import os,sys\n"
+            "from unified_system.lab_postgres import LabPostgres\n"
+            "from unified_system import lab_pg_recovery as c\n"
+            "pg=LabPostgres(sys.argv[1],sys.argv[2],min_major=18)\n"
+            "c._claim_initial_lab_cluster(pg)\n"
+            "print('C_ORIGINAL_BOOTSTRAP_LOCKED',flush=True)\n"
+            "os._exit(19)\n"
+        )
+        try:
+            result=subprocess.run(
+                [sys.executable,"-B","-c",child_source,
+                 os.environ["LAB_POSTGRES_BIN"],str(extra)],
+                capture_output=True,text=True,timeout=25,check=False)
+            self.assertEqual(result.returncode,19,result.stderr)
+            self.assertIn("C_ORIGINAL_BOOTSTRAP_LOCKED",result.stdout)
+            self.assertFalse((extra/"pgdata").exists())
+            marker=extra/".lab-postgres-owner"
+            self.assertTrue(marker.is_file())
+            fd=os.open(extra/".lab-postgres-recovery.lock",os.O_RDWR)
+            try:
+                import fcntl
+                fcntl.flock(fd,fcntl.LOCK_EX|fcntl.LOCK_NB)
+            finally:
+                os.close(fd)
+            # Freed kernel lock is not reissued physical/Root ownership.
+            with self.assertRaisesRegex(LabAdmissionRejected,
+                                         "LAB_PG_ROOT_USED"):
+                LabPostgres(os.environ["LAB_POSTGRES_BIN"],extra,min_major=18)
+        finally:
+            # The child has exited, no initdb was invoked and no postmaster
+            # exists. Only its own disposable, uninitialized root is removed.
+            if not (extra/"pgdata").exists():
+                shutil.rmtree(extra)
+
     def test_initialization_failure_keeps_kernel_lock_until_safe_abort(self):
         # Real native OS file lock, fault injected BEFORE the initdb child is
         # launched. This is not a simulated WAL-replay or power-loss test.
