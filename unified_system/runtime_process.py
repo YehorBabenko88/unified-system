@@ -471,6 +471,17 @@ class OwnedWindowsJob:
             raise ValueError('Windows Job membership inaccessible')
         return bool(in_job.value)
 
+    def resume_suspended_child(self, thread_handle):
+        if self._handle is None or not self._assigned:
+            raise ValueError('Windows Job suspended child not assigned')
+        from ctypes import wintypes as w
+        self._k.ResumeThread.argtypes = [w.HANDLE]
+        self._k.ResumeThread.restype = w.DWORD
+        count = self._k.ResumeThread(thread_handle)
+        if count == 0xffffffff:
+            raise ValueError('Windows Job suspended resume denied')
+        return count
+
     def active_process_count(self):
         if self._handle is None:
             raise ValueError('Windows Job Object closed')
