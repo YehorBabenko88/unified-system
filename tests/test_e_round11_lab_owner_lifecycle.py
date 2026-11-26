@@ -47,11 +47,14 @@ class SerialOwnerExecutorTests(unittest.IsolatedAsyncioTestCase):
             with self.assertRaises(asyncio.TimeoutError):
                 await task
             self.assertTrue(executor.poisoned)
+            self.assertFalse(executor.local_worker_exited)
             with self.assertRaises(ResourceFenceBlocked):
                 await executor.call(lambda: touched.append(1), timeout=1)
             self.assertEqual(touched, [])
         finally:
             release.set()
+            await asyncio.to_thread(executor._worker_done.wait, 2)
+            self.assertTrue(executor.local_worker_exited)
             executor.close()
 
     async def test_cancel_poison_prevents_retry(self):
