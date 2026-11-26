@@ -619,6 +619,24 @@ class WindowsRootProcessExitRaceTests(unittest.TestCase):
         self.assertIsNone(self.child.poll())
 
 
+    def test_retained_descendant_census_blocks_unsealed_extinction(self):
+        from unified_system.runtime_process import (
+            _identity, RetainedWindowsDescendantCensus)
+        root_pid = os.getpid()
+        with RetainedWindowsDescendantCensus(
+                root_pid, _identity(root_pid)) as census:
+            with self.assertRaisesRegex(ValueError, 'containment not proven'):
+                census.verify_complete_extinction(creation_barrier=True)
+            self.assertFalse(census.wait_observed_exited(0))
+        self.assertIsNone(self.child.poll())
+
+    def test_retained_descendant_census_denies_foreign_root(self):
+        from unified_system.runtime_process import RetainedWindowsDescendantCensus
+        with self.assertRaisesRegex(ValueError, 'incarnation changed'):
+            RetainedWindowsDescendantCensus(os.getpid(), ['foreign', '/foreign.exe'])
+        self.assertIsNone(self.child.poll())
+
+
     def test_native_live_process_identity_is_not_exit(self):
         from unified_system.runtime_process import _identity
         self.assertIsNone(self.child.poll())
