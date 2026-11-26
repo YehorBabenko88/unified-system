@@ -8,6 +8,7 @@ Grid restart. Never call arbitrary pg_terminate_backend(pid).
 import threading
 import time
 import os
+import subprocess
 from datetime import datetime
 from dataclasses import dataclass
 from types import MappingProxyType
@@ -33,6 +34,8 @@ class _OwnedRecovery:
     phase: str
     old_postmaster_pid: int = 0
     old_os_incarnation: tuple = ()
+    wal_fault: str = "CLEAN"
+    log_position: int = 0
 
 
 def _resource(pg):
@@ -82,11 +85,14 @@ def _begin(pg, root, old, *, mode):
             pg=pg, root=root, marker=pg._nonce, old=_old_tuple(old),
             phase="IN_PROGRESS",
             old_postmaster_pid=preserved.old_postmaster_pid,
-            old_os_incarnation=preserved.old_os_incarnation)
+            old_os_incarnation=preserved.old_os_incarnation,
+            wal_fault=preserved.wal_fault,
+            log_position=preserved.log_position)
         return existing
 
 
-def _state(root, pg, old, phase, *, pid=0, os_identity=()):
+def _state(root, pg, old, phase, *, pid=0, os_identity=(),
+           wal_fault="CLEAN", log_position=0):
     with _GUARD:
         prior = _STATES.get(root)
         need(prior is not None and prior.pg is pg
@@ -98,7 +104,9 @@ def _state(root, pg, old, phase, *, pid=0, os_identity=()):
             pg=pg, root=root, marker=pg._nonce, old=_old_tuple(old),
             phase=phase,
             old_postmaster_pid=pid or prior.old_postmaster_pid,
-            old_os_incarnation=os_identity or prior.old_os_incarnation)
+            old_os_incarnation=os_identity or prior.old_os_incarnation,
+            wal_fault=wal_fault if wal_fault != "CLEAN" else prior.wal_fault,
+            log_position=log_position or prior.log_position)
 
 
 def _poison(root, pg):
@@ -109,7 +117,8 @@ def _poison(root, pg):
                 pg=prior.pg, root=prior.root, marker=prior.marker,
                 old=prior.old, phase="POISONED",
                 old_postmaster_pid=prior.old_postmaster_pid,
-                old_os_incarnation=prior.old_os_incarnation)
+                old_os_incarnation=prior.old_os_incarnation,
+                wal_fault=prior.wal_fault, log_position=prior.log_position)
 
 
 def _retain_owned_postmaster(pg, deadline):
@@ -194,17 +203,75 @@ def _fence_state(pg, old, deadline):
         deadline)
 
 
-def _stop_started(pg, deadline):
+def _crashed_control_attested(pg, deadline):
+    """Independent PG18 pg_controldata check after test-only SIGKILL.
+
+    Only a real dirty postmaster control state can qualify the crash branch;
+    a graceful shutdown / missing control data never counts as WAL recovery.
+    """
+    pg._verify_owned()
+    suffix = ".exe" if os.name == "nt" else ""
+    tool = pg.bin / ("pg_controldata" + suffix)
+    need(tool.is_file() and not tool.is_symlink()
+         and tool.parent.resolve(strict=True) == pg.bin.resolve(strict=True),
+         "LAB_RECOVERY_PG_CONTROL_TOOL_UNVERIFIED")
+    result = subprocess.run(
+        [str(tool), "-D", str(pg.data)],
+        capture_output=True, text=True,
+        timeout=min(30, _remaining(deadline)),
+        env=pg._env("lab_owner"))
+    need(result.returncode == 0
+         and "Database cluster state:" in result.stdout
+         and "in production" in result.stdout,
+         "LAB_RECOVERY_PG_CONTROL_NOT_CRASHED")
+
+
+def _wal_replay_readback(pg, *, fault, log_position):
+    if fault != "POWER_LOSS_TEST":
+        return "CLEAN_SHUTDOWN_ONLY"
+    pg._verify_owned()
+    need(type(log_position) is int and log_position >= 0,
+         "LAB_RECOVERY_LOG_POSITION_INVALID")
+    need(pg.log.is_file() and not pg.log.is_symlink(),
+         "LAB_RECOVERY_LOG_UNVERIFIED")
+    with pg.log.open("rb") as log:
+        log.seek(log_position)
+        tail=log.read(4*1024*1024).decode("utf-8", errors="replace")
+    need("automatic recovery in progress" in tail
+         and "redo starts at" in tail
+         and "database system is ready to accept connections" in tail,
+         "LAB_RECOVERY_WAL_REPLAY_NOT_ATTESTED")
+    return "LAB_CRASH_REPLAY_LOG_VERIFIED"
+
+
+def _stop_started(pg, deadline, *, fault="CLEAN"):
     need(pg.started is True, "LAB_RECOVERY_NOT_STARTED")
+    need(fault in ("CLEAN", "POWER_LOSS_TEST"),
+         "LAB_RECOVERY_FAULT_MODE_INVALID")
     wait, pid, created = _retain_owned_postmaster(pg, deadline)
+    log_position = 0
     try:
-        pg.stop(timeout=min(120, _remaining(deadline)))
+        if fault == "POWER_LOSS_TEST":
+            # A physical, disposable LAB-only power-loss experiment. Never
+            # expose this from Root's production recovery dispatcher.
+            need(os.environ.get("LAB_C_PG18_WAL_FAULT_TEST") == "1",
+                 "LAB_RECOVERY_FAULT_INJECTION_NOT_ALLOWED")
+            pg._verify_owned()
+            if pg.log.exists():
+                need(pg.log.is_file() and not pg.log.is_symlink(),
+                     "LAB_RECOVERY_LOG_UNVERIFIED")
+                log_position = pg.log.stat().st_size
+            pg.crash(timeout=min(120, _remaining(deadline)))
+        else:
+            pg.stop(timeout=min(120, _remaining(deadline)))
         need(wait.wait_exited(min(60, _remaining(deadline))) is True,
              "LAB_RECOVERY_OLD_POSTMASTER_NOT_EXITED")
         need(pg.started is False, "LAB_RECOVERY_STOP_NOT_CONFIRMED")
+        if fault == "POWER_LOSS_TEST":
+            _crashed_control_attested(pg, deadline)
     finally:
         wait.close()
-    return pid, created
+    return pid, created, log_position
 
 
 def _restart_stopped(pg, deadline):
@@ -296,7 +363,7 @@ def _snapshot(pg, streams, deadline):
 
 
 def contain_exclusive_lab_cluster(pg, *, old, quiesced=False,
-                                  max_seconds=120):
+                                  max_seconds=120, fault="CLEAN"):
     """C-owned stop-only containment sharing the SAME serialization guard.
 
     E orchestrates this operation but must await termination of its own
@@ -307,6 +374,11 @@ def contain_exclusive_lab_cluster(pg, *, old, quiesced=False,
     need(quiesced is True, "LAB_RECOVERY_QUIESCENCE_REQUIRED")
     need(type(max_seconds) in (int, float) and 10 <= max_seconds <= 180,
          "LAB_RECOVERY_DEADLINE_INVALID")
+    need(type(fault) is str and fault in ("CLEAN", "POWER_LOSS_TEST"),
+         "LAB_RECOVERY_FAULT_MODE_INVALID")
+    need(fault == "CLEAN" or
+         os.environ.get("LAB_C_PG18_WAL_FAULT_TEST") == "1",
+         "LAB_RECOVERY_FAULT_INJECTION_NOT_ALLOWED")
     old = _validate_old(old)
     deadline = time.monotonic() + max_seconds
     root = None
@@ -322,10 +394,12 @@ def contain_exclusive_lab_cluster(pg, *, old, quiesced=False,
         need(_fence_state(pg, old, deadline) ==
              f"{old['generation']}|{old['token']}|t|{old['backend_pid']}",
              "LAB_RECOVERY_OLD_FENCE_MISMATCH")
-        pid, created = _stop_started(pg, deadline)
+        pid, created, log_position = _stop_started(
+            pg, deadline, fault=fault)
         _remaining(deadline)
         _state(root, pg, old, "STOPPED_UNVERIFIED",
-               pid=pid, os_identity=created)
+               pid=pid, os_identity=created,
+               wal_fault=fault, log_position=log_position)
         return {"schema": "c-isolated-pg18-containment.v1",
                 "scope": "ISOLATED_LAB_ONLY",
                 "state": "UNKNOWN",
@@ -374,7 +448,7 @@ def recover_exclusive_lab_cluster(pg, *, old, streams=(), quiesced=False,
             need(_fence_state(pg, old, deadline) ==
                  f"{old['generation']}|{old['token']}|t|{old['backend_pid']}",
                  "LAB_RECOVERY_OLD_FENCE_MISMATCH")
-            pid, created = _stop_started(pg, deadline)
+            pid, created, log_position = _stop_started(pg, deadline)
             _state(root, pg, old, "IN_PROGRESS",
                    pid=pid, os_identity=created)
         else:
@@ -388,6 +462,16 @@ def recover_exclusive_lab_cluster(pg, *, old, streams=(), quiesced=False,
                  "LAB_RECOVERY_STOPPED_WITHOUT_C_EVIDENCE")
         _remaining(deadline)
         _restart_stopped(pg, deadline)
+        with _GUARD:
+            previous_state = _STATES.get(root)
+            need(previous_state is not None and previous_state.pg is pg
+                 and previous_state.phase == "IN_PROGRESS",
+                 "LAB_RECOVERY_STALE_STATE")
+            fault = previous_state.wal_fault
+            log_position = previous_state.log_position
+        wal_readback = _wal_replay_readback(
+            pg, fault=fault, log_position=log_position)
+        _remaining(deadline)
         need(observe_old_lab_backend(pg, **old,
              timeout=min(120, _remaining(deadline))) == "EXTINCT",
              "LAB_RECOVERY_BACKEND_NOT_EXTINCT")
@@ -410,6 +494,7 @@ def recover_exclusive_lab_cluster(pg, *, old, streams=(), quiesced=False,
             "old_backend_pid": old["backend_pid"],
             "old_backend_start": old["backend_start"],
             "durable_fence_active": False,
+            "wal_recovery": wal_readback,
             "stream_snapshots": snapshots,
             "native_admitted": False,
             "root_consul_admitted": False,
@@ -431,4 +516,5 @@ def recover_exclusive_lab_cluster(pg, *, old, streams=(), quiesced=False,
                         pg=prior.pg, root=prior.root, marker=prior.marker,
                         old=prior.old, phase="COMPLETE_DENIED",
                         old_postmaster_pid=prior.old_postmaster_pid,
-                        old_os_incarnation=prior.old_os_incarnation)
+                        old_os_incarnation=prior.old_os_incarnation,
+                        wal_fault=prior.wal_fault, log_position=prior.log_position)
