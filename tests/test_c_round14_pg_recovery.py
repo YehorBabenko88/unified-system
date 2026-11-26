@@ -14,7 +14,8 @@ from unified_system.lab_pg_fence import (
     install_lab_fence, claim_lab_fence, observe_old_lab_backend)
 from unified_system.lab_pg_checkpoint import (
     install_lab_checkpoint, read_lab_pending)
-from unified_system.lab_pg_recovery import recover_exclusive_lab_cluster
+from unified_system.lab_pg_recovery import (recover_exclusive_lab_cluster,
+                                            contain_exclusive_lab_cluster)
 from unified_system.lab_simulation_admission import LabAdmissionRejected
 
 
@@ -102,17 +103,69 @@ class NativeCRecoveryTests(unittest.TestCase):
                 quiesced=True, max_seconds=180)
 
     def test_e_stop_only_then_resume_without_duplicate_stop(self):
+        # Future E executor delegates to C's ONE serialized stop-only entry.
         stream = "bybit:BTCUSDT:1m"
-        self.pg.stop()
+        contained=contain_exclusive_lab_cluster(
+            self.pg,old=self.old,quiesced=True,max_seconds=120)
         self.assertFalse(self.pg.started)
-        # One C recovery owns restart, durable old fence validation and
-        # revocation, but does not mint a Root grant or new epoch.
-        receipt = self._recover(streams=(stream,))
+        self.assertEqual(contained["state"],"UNKNOWN")
+        self.assertFalse(contained["old_backend_extinct"])
+        receipt=self._recover(streams=(stream,))
         self.assertFalse(receipt["native_admitted"])
         self.assertFalse(receipt["durable_fence_active"])
         self.assertEqual(self.pg.sql(
             "SELECT generation,token,active FROM public.lab_writer_fence"),
             "1|100|f")
+
+    def test_concurrent_containment_and_restart_denied(self):
+        from threading import Event,Thread
+        entered,release=Event(),Event()
+        original=self.pg.stop
+        errors=[]
+        results=[]
+        def blocking_stop(*args,**kwargs):
+            entered.set()
+            if not release.wait(10):
+                raise RuntimeError("LAB_STOP_WORKER_NOT_RELEASED")
+            return original(*args,**kwargs)
+        def worker():
+            try:
+                results.append(contain_exclusive_lab_cluster(
+                    self.pg,old=self.old,quiesced=True,max_seconds=120))
+            except BaseException as error:
+                errors.append(error)
+        self.pg.stop=blocking_stop
+        thread=Thread(target=worker,daemon=True)
+        thread.start()
+        try:
+            self.assertTrue(entered.wait(5))
+            with self.assertRaisesRegex(
+                    LabAdmissionRejected,"LAB_RECOVERY_REENTRY_OR_POISONED"):
+                self._recover()
+        finally:
+            release.set()
+            thread.join(15)
+            self.pg.stop=original
+        self.assertFalse(thread.is_alive())
+        self.assertFalse(errors)
+        self.assertEqual(results[0]["state"],"UNKNOWN")
+        self.assertFalse(self._recover()["native_admitted"])
+
+    def test_timed_out_stop_poison_blocks_any_restart(self):
+        from subprocess import TimeoutExpired
+        original=self.pg.stop
+        def fake_timeout(*args,**kwargs):
+            raise TimeoutExpired(cmd="test-only-owned-pg-stop",timeout=1)
+        self.pg.stop=fake_timeout
+        try:
+            with self.assertRaises(TimeoutExpired):
+                contain_exclusive_lab_cluster(
+                    self.pg,old=self.old,quiesced=True,max_seconds=120)
+        finally:
+            self.pg.stop=original
+        with self.assertRaisesRegex(LabAdmissionRejected,
+                                    "LAB_RECOVERY_REENTRY_OR_POISONED"):
+            self._recover()
 
     def test_recovery_reentry_denied_after_successful_attempt(self):
         self._recover()
