@@ -73,7 +73,7 @@ jobs:
       - name: Compile exact C recovery sources and test module
         run: |
           python -m py_compile unified_system/grid_writer_fence_model.py unified_system/runtime_process.py unified_system/lab_postgres.py unified_system/lab_pg_fence.py unified_system/lab_pg_checkpoint.py unified_system/lab_pg_recovery.py tests/test_c_round14_pg_recovery.py
-      - name: Run exactly 18 native PostgreSQL18 recovery cases (zero skip)
+      - name: Run exactly 22 native PostgreSQL18 recovery cases (zero skip)
         shell: bash
         run: |
           set -euo pipefail
@@ -82,7 +82,7 @@ jobs:
           from tests import test_c_round14_pg_recovery
           suite=unittest.defaultTestLoader.loadTestsFromModule(test_c_round14_pg_recovery)
           count=suite.countTestCases()
-          if count != 18:
+          if count != 22:
               raise SystemExit(f"C_R14_RECOVERY_ROSTER_UNEXPECTED:{count}")
           outcome=unittest.TextTestRunner(verbosity=2).run(suite)
           if outcome.testsRun!=count or outcome.skipped or not outcome.wasSuccessful():
