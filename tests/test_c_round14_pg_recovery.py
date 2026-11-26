@@ -496,7 +496,7 @@ class NativeCRecoveryTests(unittest.TestCase):
         self.assertEqual(contender_returns, [])
         self.assertEqual(len(contender_errors), 1)
         self.assertIsInstance(contender_errors[0], LabAdmissionRejected)
-        self.assertIn("LAB_RECOVERY_RESOURCE_ALREADY_OWNED",
+        self.assertIn("LAB_RECOVERY_STOPPED_OWNER_MISMATCH",
                       str(contender_errors[0]))
         self.assertEqual(result["state"], "UNKNOWN")
         self.assertFalse(self._recover()["native_admitted"])
