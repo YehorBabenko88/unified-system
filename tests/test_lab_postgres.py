@@ -81,11 +81,16 @@ class LabPostgresLifecycle(unittest.TestCase):
         if os.name != 'nt': self.root.chmod(0o700)
 
     def tearDown(self):
-        try:
-            self.pg.stop()
-        except Exception:
-            pass
-        shutil.rmtree(self.root, ignore_errors=True)
+        pg = getattr(self, 'pg', None)
+        if pg is not None:
+            try:
+                pg.stop()
+            except LabAdmissionRejected:
+                # Refuse deletion of an unverified live cluster. A cleanup
+                # failure must make the test fail, never delete foreign files.
+                if pg.data.exists() and (pg.data / 'postmaster.pid').exists():
+                    raise
+        shutil.rmtree(self.root)
 
     def test_full_lifecycle(self):
         self.pg = pg = LabPostgres(BIN, self.root, min_major=MIN).initialize().start().provision(canonical_schema())
