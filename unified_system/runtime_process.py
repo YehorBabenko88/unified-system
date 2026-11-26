@@ -226,44 +226,6 @@ class ProcessDriver:
         self.children[operation_id]=proc
         d.update(pid=proc.pid,created=_identity(proc.pid),state='RUNNING');self._save(operation_id,d)
         return operation_id
-    def owned_process_state(self, handle):
-        """Read-only Root OS witness: EXTINCT, STILL_ALIVE, or UNKNOWN.
-
-        An absent PID lookup by itself is not a historical proof of an exit:
-        only the original retained Popen handle with completed poll, or a
-        trusted durable stop receipt backed by that original handle, can
-        establish EXTINCT here. This does NOT inspect TCP listener ownership,
-        descendants, foreign SCM services, or a PostgreSQL backend and cannot
-        independently authorize a new writer epoch.
-        """
-        try:
-            d = self._load(handle)
-            pid, created = d.get('pid'), d.get('created')
-            if type(pid) is not int or pid <= 1 or not isinstance(created, list) or len(created) != 2:
-                return 'UNKNOWN'
-            child = self.children.get(handle)
-            if child is None or child.pid != pid:
-                # A persisted record with no original process handle is not
-                # sufficient to distinguish PID reuse, access denied and
-                # exited process. Never infer EXTINCT from state='STOPPED'.
-                return 'UNKNOWN'
-            try:
-                exit_code = child.poll()
-                if exit_code is not None:
-                    # The retained Popen handle has observed its own exit.
-                    # An unrelated PID may already have replaced it.
-                    return 'EXTINCT'
-                identity = _identity(pid)
-            except (OSError, ValueError, TypeError, KeyError, subprocess.TimeoutExpired):
-                return 'UNKNOWN'
-            if identity == created:
-                return 'STILL_ALIVE'
-            # Identity mismatch with no recorded exit may be a PID race or
-            # an unavailable observation. Neither grants owner replacement.
-            return 'UNKNOWN'
-        except (OSError, ValueError, TypeError, KeyError):
-            return 'UNKNOWN'
-
     def alive(self,handle):
         if handle in self.children and self.children[handle].poll() is not None:
             if self.children[handle].stdin:self.children[handle].stdin.close()
