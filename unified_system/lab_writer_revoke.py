@@ -73,8 +73,10 @@ class LabWriterRevoker:
         """Always attempt every cleanup stage; never claim partial success.
 
         Order: deny local guard; stop OS child via independent Root lane;
-        revoke C SQL only through SQL worker; release
-        Consul; verify old child and fence rejection. If PostgreSQL is down,
+        attempt C SQL revoke only through the original SQL worker; verify
+        child/fence. Defer Consul release until independent old-backend and
+        old-process extinction, WAL reconciliation and trusted Root finalize.
+        If PostgreSQL is down,
         SQL revocation is UNKNOWN, not successful. On recovery the C fence
         must be checked/refused before any fresh lease/child is issued.
         """
@@ -109,12 +111,12 @@ class LabWriterRevoker:
                     token=self._token)) is True)
         except BaseException:
             pass
-        try:
-            await self._authority.release(self._lease)
-            stages["consul_released"] = (
-                await self._authority.validate(self._lease) is False)
-        except BaseException:
-            pass
+        # The original Consul lease is deliberately NOT released here.
+        # SQL revocation and local child stop do not prove old backend
+        # extinction or irreversible COMMIT. A replacement Root lease must
+        # wait for A/C full typed exit evidence and durable WAL reconciliation.
+        # The lease may still expire externally; that cannot be treated as
+        # safe owner transfer or as consent to a new writer generation.
         try:
             observation = await self._stop_lane.old_child_extinct(
                 self._handle,timeout=blocking_timeout)
@@ -144,6 +146,8 @@ class LabWriterRevoker:
                 and type(c_rejected) is type
                 and type(exc) is c_rejected
                 and str(exc) == "LAB_FENCE_REVALIDATION_DENIED")
+        # No RootBackendExtinction/RootProcessExtinction can currently be
+        # issued. No positive full cleanup status or voluntary lease release.
         valid = all(stages.values())
         self._last = LabRevocationReport(
             _SCHEMA, "REVOKED_VERIFIED" if valid else "PARTIAL_DENIED",
