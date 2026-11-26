@@ -125,12 +125,12 @@ class LabWriterAuthority:
     async def issue_lab_writer_grant(self):
         """Issue one LAB-only owner grant from live protected Windows Root.
 
-        Requires actual protected activation and a pinned NEW Grid writer
-        adapter. No caller flags or diagnostic status can issue a grant.
+        Requires actual protected activation and exact pinned new Grid
+        collector, journal and writer adapter. No caller flags or diagnostic status can issue a grant.
         This is NOT service_module_runtime native startup authorization.
         """
         from .service_bootstrap import ProtectedActivation
-        from .grid_writer_lab_bridge import verified_grid_writer_adapter_pin
+        from .grid_writer_lab_bridge import verified_grid_runtime_cohort_pin
         _need(self._writer_grant is None and not self._revoked,
               "LAB_ROOT_GRANT_ALREADY_ISSUED")
         protected = self._source._grant
@@ -142,12 +142,12 @@ class LabWriterAuthority:
               and status.state == "READ_ONLY_REVALIDATED_NOT_NATIVE"
               and status.epoch == self._epoch,
               "LAB_ROOT_GRANT_EVIDENCE_NOT_CURRENT")
-        pin = verified_grid_writer_adapter_pin(
+        pin = verified_grid_runtime_cohort_pin(
             self._source, self._source._manifest,
             self._source._roots["market_data"])
         _need(type(pin) is dict
-              and pin.get("schema") == "unified.grid-canonical-lab-writer-pin.v1"
-              and pin.get("scope", _SCOPE) == _SCOPE
+              and pin.get("schema") == "unified.grid-lab-runtime-cohort.v1"
+              and pin.get("scope") == _SCOPE
               and pin.get("native_admitted") is False
               and pin.get("trading_authorized") is False,
               "LAB_ROOT_GRID_WRITER_NOT_PINNED")
@@ -262,7 +262,7 @@ class LabWriterGrant:
 
     async def require_write_current(self):
         from .service_bootstrap import ProtectedActivation
-        from .grid_writer_lab_bridge import verified_grid_writer_adapter_pin
+        from .grid_writer_lab_bridge import verified_grid_runtime_cohort_pin
         try:
             _need(not self._revoked and not self._authority._revoked
                   and self._authority._writer_grant is self,
@@ -276,7 +276,7 @@ class LabWriterGrant:
                   and status.epoch == self._epoch
                   and status.generation == self._authority._generation,
                   "LAB_ROOT_GRANT_OWNER_ROTATED")
-            current_pin = verified_grid_writer_adapter_pin(
+            current_pin = verified_grid_runtime_cohort_pin(
                 self._authority._source, self._authority._source._manifest,
                 self._authority._source._roots["market_data"])
             _need(current_pin == self._pin,
