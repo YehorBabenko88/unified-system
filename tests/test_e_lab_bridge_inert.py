@@ -98,7 +98,7 @@ class BridgeTests(unittest.TestCase):
         })
         digest=hashlib.sha256()
         for rel in self.files:
-            digest.update(rel.encode("ascii")+b"\\0"+contents[rel]+b"\\0")
+            digest.update(rel.encode("ascii")+b"\0"+contents[rel]+b"\0")
         source_sha=digest.hexdigest()
         schema_sha=hashlib.sha256(contents["grid/migrations.py"]).hexdigest()
         config=ConsulConfig(

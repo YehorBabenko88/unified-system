@@ -84,7 +84,7 @@ def verified_grid_source_digests(source, manifest, source_root):
             return raw
         digest=hashlib.sha256()
         for rel in _CANONICAL_DIGEST_FILES:
-            digest.update(rel.encode("ascii")+b"\\0"+read(rel)+b"\\0")
+            digest.update(rel.encode("ascii")+b"\0"+read(rel)+b"\0")
         schema=hashlib.sha256(read(_SCHEMA_DIGEST_FILE)).hexdigest()
         _need(source.require_current() is True, "LAB_SOURCE_REVOKED")
         return digest.hexdigest(),schema
