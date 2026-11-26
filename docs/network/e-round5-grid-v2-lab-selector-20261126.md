@@ -1,7 +1,8 @@
 # E Round 5 — exact B Grid-v2 LAB selector and protected Terminan read capability
 
 **Status:** LAB-only selector authored, **NATIVE_START DENIED** until C writer
-fencing and A protected-service acceptance. No hosted CI PASS claimed, no
+fencing is independently attested by Root and A protected-service acceptance.
+No hosted CI PASS claimed, no
 native Windows service, PostgreSQL, Consul or Bybit activity performed.
 
 **Root candidate:** existing draft #164, branch `gpt/e-lan-fault-boundary-20261126`.
@@ -51,18 +52,26 @@ version from the protected `UNIFIED_MODULE_VERSION` environment.
 The v2 import path in `service_module_runtime.serve_module` invokes the
 existing E `grid_writer_fence_model.native_writer_admission()` **before**
 importing `market_data_v2.read_api`. This deliberately always raises
-`NATIVE_DB_FENCE_NOT_ADMITTED`, because C's present
-`lab-postgres-custody.v1` owner/trigger witness still leaves a direct
-`lab_writer INSERT` bypass and is NOT transaction-level single-writer
-exclusion. A pure model CAS is not a genuine resource fence. No Root
-service may bind even the v2 read-only listener under this pending gate.
+`NATIVE_DB_FENCE_NOT_ADMITTED`, because C's earlier
+`lab-postgres-custody.v1` owner/trigger witness alone allowed direct INSERT.
+**C has now authored a separate** `lab_pg_fence.py` (observed C #163
+`332362151931ac767ac22f878d2b865736249a2b`) that revokes direct
+`lab_writer INSERT` and offers an owner-installed PostgreSQL
+`SECURITY DEFINER` transactional write function, durable generation/token,
+backend PID/start identity, revoke and catalogue checks. This is the
+**canonical C-owned DB fence candidate** and is not reimplemented by E.
+However neither native C CI execution, Root live Consul lease/host quiescence
+nor a trusted Root-to-C startup API has been accepted; a pure model CAS is
+not a genuine fence. No Root service may bind even the v2 read-only listener
+under this pending gate.
 The protected prestart denial is a conservative intermediate integration
 state, not a native end-to-end implementation.
 
-C must supply independently verified old-process extinction, durable DB
-owner-only monotone high-water, exact source+schema+session+node incarnation
-and **per-write transaction-level** enforcement forbidding direct same-role
-INSERT bypass. A coordinates source-pinned service activation and native
+C must independently execute/qualify its new DB fence and agree with E
+on trusted old-process extinction, Root control lease binding, exact
+source+schema+session+node incarnation and **per-write transaction-level**
+enforcement forbidding direct same-role INSERT bypass. A coordinates
+source-pinned service activation and native
 Windows proof; B identifies single canonical collector and excludes
 legacy `grid/worker.py` and `grid/market_backfill.py`; E can then
 replace the always-denied startup adapter in a separately reviewed change.
