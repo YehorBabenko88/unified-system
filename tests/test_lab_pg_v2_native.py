@@ -18,7 +18,8 @@ from http.server import ThreadingHTTPServer
 from pathlib import Path
 
 from unified_system.lab_pg_fence import (
-    install_lab_fence, claim_lab_fence, revoke_lab_fence, fence_identity)
+    install_lab_fence, claim_lab_fence, revoke_lab_fence, fence_identity,
+    fenced_lab_witness)
 from unified_system.lab_postgres import LabPostgres
 from unified_system.lab_simulation_admission import LabAdmissionRejected
 
@@ -114,6 +115,7 @@ class NativePg18V2Tests(unittest.TestCase):
         self.writer = psycopg.connect(self.pg.dsn("lab_writer"))
         self.other = psycopg.connect(self.pg.dsn("lab_writer"))
         install_lab_fence(self.pg)
+        self.assertFalse(fenced_lab_witness(self.pg)["execution_authority"])
 
     def tearDown(self):
         try:
@@ -196,6 +198,15 @@ class NativePg18V2Tests(unittest.TestCase):
                   fp="7"*64, content_id="8"*64)
         self.assertEqual(self.pg.sql("SELECT count(*) FROM provenance_minutes"),
                          "2")
+        guarded = fenced_lab_witness(self.pg)
+        self.assertEqual(guarded["schema"], "lab-postgres-fenced-custody.v1")
+        self.assertFalse(guarded["direct_writer_insert"])
+        self.assertFalse(guarded["trading_authorized"])
+        self.pg.sql("GRANT INSERT ON provenance_minutes TO lab_writer")
+        with self.assertRaisesRegex(LabAdmissionRejected,
+                                     "LAB_FENCE_CUSTODY_NOT_VERIFIED"):
+            fenced_lab_witness(self.pg)
+        self.pg.sql("REVOKE INSERT ON provenance_minutes FROM lab_writer")
         self.assertEqual(self.pg.sql(
             "SELECT token FROM lab_writer_fence"), "101")
         with self.assertRaises(LabAdmissionRejected):
