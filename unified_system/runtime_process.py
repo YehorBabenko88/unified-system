@@ -489,11 +489,33 @@ class _WindowsNonServiceLabToken:
                                            ctypes.byref(restricted)):
                 raise ValueError('LAB restricted primary token creation denied')
             self._handle = restricted
-            integrity = MandatoryLabel(SidAttributes(low_sid, 0x20))
-            size = ctypes.sizeof(integrity) + a.GetLengthSid(low_sid)
-            if not a.SetTokenInformation(restricted, 25, ctypes.byref(integrity), size):
-                raise ValueError('LAB Low Integrity token setting denied')
-            self._verify_token(restricted, admin_sid, low_sid)
+            # TokenIntegrityLevel requires TOKEN_ADJUST_DEFAULT. The
+            # CreateRestrictedToken return handle must not be assumed to have
+            # that specific access: duplicate the SAME token with only the
+            # required rights, never fall back to an unrestricted token.
+            editable = w.HANDLE()
+            if not a.DuplicateTokenEx(
+                    restricted, 0x0080 | 0x0008 | 0x0002 | 0x0001 | 0x0004,
+                    None, 2, 1, ctypes.byref(editable)):
+                raise ValueError('LAB integrity-adjustable restricted token unavailable')
+            try:
+                integrity = MandatoryLabel(SidAttributes(low_sid, 0x20))
+                size = ctypes.sizeof(integrity) + a.GetLengthSid(low_sid)
+                if not a.SetTokenInformation(editable, 25,
+                                             ctypes.byref(integrity), size):
+                    err = ctypes.get_last_error()
+                    raise ValueError(
+                        f'LAB Low Integrity token setting denied Win32={err}')
+                # This duplicate is the only token eligible for process
+                # launch. Verify every invariant after adjusting its label.
+                self._verify_token(editable, admin_sid, low_sid)
+                self._handle = editable
+                editable = w.HANDLE()
+            finally:
+                if editable:
+                    k.CloseHandle(editable)
+            k.CloseHandle(restricted)
+            restricted = w.HANDLE()
         except BaseException:
             self.close()
             raise
