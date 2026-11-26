@@ -14,6 +14,7 @@ from unified_system.lab_owner_executor import LabOwnerExecutor
 from unified_system.lab_writer_revoke import LabWriterRevoker
 from unified_system.lab_root_child_witness import RootGridChildWitness
 from unified_system.lab_root_stop_lane import LabRootStopLane
+from unified_system.lab_process_extinction import RootProcessObservation, EXTINCT
 
 class SimulatedCStaleFence(Exception):
     """Test-only stand-in for C's exported LabAdmissionRejected type."""
@@ -124,15 +125,20 @@ class RevocationStateTests(unittest.IsolatedAsyncioTestCase):
             async def stop_owned(self, handle, *, timeout):
                 owner._driver.stop(handle)
             async def old_child_extinct(self, handle, *, timeout):
-                return owner._driver.alive(handle) is False
+                owner._driver.alive(handle)
+                return RootProcessObservation(
+                    "unified.root-process-observation.v1", EXTINCT,
+                    handle, 12345, ["creation", "exe"],
+                    "TEST_LOCAL_EXIT_LISTENER_UNVERIFIED")
         owner._stop_lane = StopLane()
         return owner, events, executor
 
-    async def test_all_owner_revocations_complete_and_checked(self):
+    async def test_local_revocations_cannot_forge_listener_extinction(self):
         owner, events, executor = self.make_revoker()
         try:
             result = await owner.revoke(blocking_timeout=1)
-            self.assertEqual(result.result, "REVOKED_VERIFIED")
+            self.assertEqual(result.result, "PARTIAL_DENIED")
+            self.assertFalse(result.child_extinct)
             self.assertEqual(events,
                              ["local", "stop", "sql", "release",
                               "validate", "alive", "revalidate"])
@@ -163,7 +169,7 @@ class RevocationStateTests(unittest.IsolatedAsyncioTestCase):
             result = await owner.revoke(blocking_timeout=1)
             self.assertEqual(result.result, "PARTIAL_DENIED")
             self.assertTrue(result.child_stopped)
-            self.assertTrue(result.child_extinct)
+            self.assertFalse(result.child_extinct)
             self.assertFalse(result.sql_fence_revoked)
             self.assertIn("stop", events)
             self.assertIn("alive", events)
