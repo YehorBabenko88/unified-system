@@ -327,6 +327,485 @@ class LabPostgres:
         self.sql("GRANT SELECT ON TABLE provenance_minutes TO lab_reader")
         return self
 
+    def enable_fenced_writer(self):
+        """LAB-only: close direct INSERT and establish owner-mediated DB fencing.
+
+        Native production admission is NOT available here. A holder of the
+        same SQL role cannot set or claim a generation: only lab_owner can
+        call the claim function, after independent Root/OS admission.
+        """
+        self._verify_owned()
+        need(self.started, 'LAB_PG_NOT_STARTED')
+        self._verify_postmaster()
+        # Owner-only durable high-water state. Empty state is DENIED.
+        for query in (
+            """CREATE TABLE lab_writer_fence (
+                resource text PRIMARY KEY CHECK (resource='grid-market-data-primary'),
+                generation bigint NOT NULL CHECK (generation > 0),
+                high_water bigint NOT NULL CHECK (high_water > 0),
+                session_id uuid NOT NULL, instance_id uuid NOT NULL,
+                node_incarnation_id uuid NOT NULL,
+                source_sha256 text NOT NULL CHECK (source_sha256 ~ '^[0-9a-f]{64}
+        """Owner-only, scoped PostgreSQL custody facts; not provider authenticity.
+
+        This proves catalogue permissions and a configured immutability trigger
+        for this isolated cluster. It does not upgrade exchange provenance,
+        grant paper authority, or assert protection from the cluster owner.
+        """
+        self._verify_owned()
+        need(self.started, 'LAB_PG_NOT_STARTED')
+        self._verify_postmaster()
+        # Distinguish plain catalogue grant from a genuinely enforced
+        # trigger: inspect its table scope and row-level BEFORE UPDATE/DELETE.
+        result = self.sql("""
+            SELECT json_build_object(
+              'witness_schema', 'lab-postgres-custody.v1',
+              'scope', 'ISOLATED_LAB_ONLY',
+              'database', current_database(),
+              'table', 'public.provenance_minutes',
+              'table_owner', pg_get_userbyid(c.relowner),
+              'writer_can_insert', has_table_privilege('lab_writer', c.oid, 'INSERT'),
+              'writer_can_select', has_table_privilege('lab_writer', c.oid, 'SELECT'),
+              'writer_can_update', has_table_privilege('lab_writer', c.oid, 'UPDATE'),
+              'writer_can_delete', has_table_privilege('lab_writer', c.oid, 'DELETE'),
+              'writer_can_truncate', has_table_privilege('lab_writer', c.oid, 'TRUNCATE'),
+              'reader_can_select', has_table_privilege('lab_reader', c.oid, 'SELECT'),
+              'reader_can_insert', has_table_privilege('lab_reader', c.oid, 'INSERT'),
+              'reader_can_update', has_table_privilege('lab_reader', c.oid, 'UPDATE'),
+              'reader_can_delete', has_table_privilege('lab_reader', c.oid, 'DELETE'),
+              'reader_can_truncate', has_table_privilege('lab_reader', c.oid, 'TRUNCATE'),
+              'writer_can_temp', has_database_privilege('lab_writer', current_database(), 'TEMP'),
+              'reader_can_temp', has_database_privilege('lab_reader', current_database(), 'TEMP'),
+              'writer_can_schema_create',
+                 has_schema_privilege('lab_writer', 'public', 'CREATE'),
+              'reader_can_schema_create',
+                 has_schema_privilege('lab_reader', 'public', 'CREATE'),
+              'reader_role_readonly',
+                 (SELECT rolconfig @> ARRAY['default_transaction_read_only=on']
+                    FROM pg_roles WHERE rolname='lab_reader'),
+              'immutable_trigger_count',
+                 (SELECT count(*) FROM pg_trigger t
+                   WHERE t.tgrelid = c.oid
+                     AND NOT t.tgisinternal AND t.tgenabled = 'O'
+                     AND (t.tgtype & 1) = 1
+                     AND (t.tgtype & 2) = 2
+                     AND (t.tgtype & 16) = 16
+                     AND (t.tgtype & 8) = 8
+                     AND t.tgfoid = 'reject_provenance_mutation()'::regprocedure)
+            )
+            FROM pg_class c
+            WHERE c.oid='public.provenance_minutes'::regclass
+        """)
+        import json
+        try:
+            witness = json.loads(result)
+        except (TypeError, ValueError) as error:
+            raise LabAdmissionRejected('LAB_PG_CUSTODY_RECEIPT_INVALID') from error
+        required = ('writer_can_insert', 'reader_can_select', 'reader_role_readonly')
+        forbidden = ('writer_can_select', 'writer_can_update', 'writer_can_delete',
+                     'writer_can_truncate', 'reader_can_insert',
+                     'reader_can_update', 'reader_can_delete', 'reader_can_truncate',
+                     'writer_can_temp', 'reader_can_temp',
+                     'writer_can_schema_create', 'reader_can_schema_create')
+        need(type(witness) is dict and
+             witness.get('witness_schema') == 'lab-postgres-custody.v1'
+             and witness.get('scope') == 'ISOLATED_LAB_ONLY'
+             and witness.get('database') == self.database
+             and witness.get('table') == 'public.provenance_minutes'
+             and witness.get('table_owner') == 'lab_owner'
+             and all(witness.get(k) is True for k in required)
+             and all(witness.get(k) is False for k in forbidden)
+             and witness.get('immutable_trigger_count') == 1,
+             'LAB_PG_CUSTODY_NOT_VERIFIED')
+        # A trigger/catlog receipt is not cryptographic attestation. A
+        # privileged owner or server admin can still mutate storage.
+        witness['storage_immutability'] = 'ROLE_AND_TRIGGER_GUARDED_LAB_ONLY'
+        witness['source_authenticity'] = 'NOT_INDEPENDENTLY_ATTESTED'
+        witness['exchange_completeness'] = 'NOT_ATTESTED'
+        witness['execution_authority'] = False
+        witness['trading_authorized'] = False
+        return witness
+
+    def dsn(self, role):
+        need(role in ('lab_writer', 'lab_reader'), 'LAB_PG_ROLE_REJECTED')
+        return f'postgresql://{role}:{self.passwords[role]}@127.0.0.1:{self.port}/{self.database}'
+
+    # ------------------------------------------------------------------
+    def postmaster_pid(self):
+        return self._verify_postmaster()
+
+    def crash(self):
+        """Simulate a power-loss style abort of the postmaster (no shutdown checkpoint)."""
+        need(self.started, 'LAB_PG_NOT_STARTED')
+        pid = self.postmaster_pid()
+        if os.name == 'nt':
+            # Windows process HANDLE is stable even if another process later
+            # reuses the numeric PID. Revalidate identity before termination.
+            import ctypes
+            from ctypes import wintypes
+            kernel = ctypes.WinDLL('kernel32', use_last_error=True)
+            kernel.OpenProcess.argtypes = (wintypes.DWORD, wintypes.BOOL, wintypes.DWORD)
+            kernel.OpenProcess.restype = wintypes.HANDLE
+            handle = kernel.OpenProcess(0x1001, False, pid)  # TERMINATE | QUERY_LIMITED_INFORMATION
+            need(bool(handle), 'LAB_PG_PID_UNVERIFIED')
+            try:
+                self._verify_postmaster()
+                need(bool(kernel.TerminateProcess(handle, 1)), 'LAB_PG_CRASH_FAILED')
+            finally:
+                kernel.CloseHandle(handle)
+        else:
+            need(hasattr(os, 'pidfd_open') and hasattr(signal, 'pidfd_send_signal'),
+                 'LAB_PG_PIDFD_UNAVAILABLE')
+            pidfd = os.pidfd_open(pid)
+            try:
+                self._verify_postmaster()
+                signal.pidfd_send_signal(pidfd, signal.SIGKILL)
+            finally:
+                os.close(pidfd)
+        deadline = time.monotonic() + 60
+        while time.monotonic() < deadline:
+            try:
+                with socket.create_connection(('127.0.0.1', self.port), timeout=0.5):
+                    pass
+            except OSError:
+                break
+            time.sleep(0.2)
+        # Do not authorize recovery until the original PID has disappeared.
+        while time.monotonic() < deadline and self._pid_is_live(pid):
+            time.sleep(0.2)
+        need(not self._pid_is_live(pid), 'LAB_PG_CRASH_NOT_CONFIRMED')
+        self.started = False
+        self._crashed = True
+        return pid
+
+    def integrity(self, tables):
+        """Row counts, uniqueness of primary keys and B-tree checks (amcheck when available)."""
+        report = {}
+        has_amcheck = self.sql("SELECT count(*) FROM pg_available_extensions WHERE name='amcheck'") == '1'
+        if has_amcheck:
+            self.sql('CREATE EXTENSION IF NOT EXISTS amcheck')
+        for table in tables:
+            need(IDENT.fullmatch(table) is not None, 'LAB_PG_NAME_REJECTED')
+            report[table] = dict(rows=int(self.sql(f'SELECT count(*) FROM {table}')))
+            if has_amcheck:
+                indexes = self.sql(f"SELECT indexrelid::regclass FROM pg_index WHERE indrelid='{table}'::regclass")
+                for index in filter(None, indexes.splitlines()):
+                    self.sql(f"SELECT bt_index_check('{index}'::regclass, true)")
+                report[table]['btree_checked'] = len(list(filter(None, indexes.splitlines())))
+        report['amcheck'] = has_amcheck
+        return report
+
+    def stop(self):
+        self._verify_owned()
+        if not self.data.exists():
+            return
+        if (self.data / 'postmaster.pid').exists():
+            if self._crashed:
+                self._verify_stale_after_crash()
+                self.started = False
+                return
+            pid = self._verify_postmaster()
+            if os.name != 'nt':
+                need(hasattr(os, 'pidfd_open') and hasattr(signal, 'pidfd_send_signal'),
+                     'LAB_PG_PIDFD_UNAVAILABLE')
+                # PostgreSQL postmaster SIGINT = fast shutdown.  Signal the
+                # exact kernel process handle, never an unverified numeric PID.
+                handle = os.pidfd_open(pid)
+                try:
+                    self._verify_postmaster()
+                    signal.pidfd_send_signal(handle, signal.SIGINT)
+                finally:
+                    os.close(handle)
+                deadline = time.monotonic() + 60
+                while (self.data / 'postmaster.pid').exists() and time.monotonic() < deadline:
+                    time.sleep(0.2)
+            else:
+                # Windows native fast-stop remains pg_ctl-managed, with an
+                # independently verified postmaster identity before the call.
+                subprocess.run([str(self.tools['pg_ctl']), '-D', str(self.data), '-m', 'fast', '-w', '-t', '60', 'stop'],
+                               capture_output=True, timeout=120, env=self._env('lab_owner'))
+        need(not (self.data / 'postmaster.pid').exists(), 'LAB_PG_STOP_FAILED')
+        self.started = False
+),
+                schema_sha256 text NOT NULL CHECK (schema_sha256 ~ '^[0-9a-f]{64}
+        """Owner-only, scoped PostgreSQL custody facts; not provider authenticity.
+
+        This proves catalogue permissions and a configured immutability trigger
+        for this isolated cluster. It does not upgrade exchange provenance,
+        grant paper authority, or assert protection from the cluster owner.
+        """
+        self._verify_owned()
+        need(self.started, 'LAB_PG_NOT_STARTED')
+        self._verify_postmaster()
+        # Distinguish plain catalogue grant from a genuinely enforced
+        # trigger: inspect its table scope and row-level BEFORE UPDATE/DELETE.
+        result = self.sql("""
+            SELECT json_build_object(
+              'witness_schema', 'lab-postgres-custody.v1',
+              'scope', 'ISOLATED_LAB_ONLY',
+              'database', current_database(),
+              'table', 'public.provenance_minutes',
+              'table_owner', pg_get_userbyid(c.relowner),
+              'writer_can_insert', has_table_privilege('lab_writer', c.oid, 'INSERT'),
+              'writer_can_select', has_table_privilege('lab_writer', c.oid, 'SELECT'),
+              'writer_can_update', has_table_privilege('lab_writer', c.oid, 'UPDATE'),
+              'writer_can_delete', has_table_privilege('lab_writer', c.oid, 'DELETE'),
+              'writer_can_truncate', has_table_privilege('lab_writer', c.oid, 'TRUNCATE'),
+              'reader_can_select', has_table_privilege('lab_reader', c.oid, 'SELECT'),
+              'reader_can_insert', has_table_privilege('lab_reader', c.oid, 'INSERT'),
+              'reader_can_update', has_table_privilege('lab_reader', c.oid, 'UPDATE'),
+              'reader_can_delete', has_table_privilege('lab_reader', c.oid, 'DELETE'),
+              'reader_can_truncate', has_table_privilege('lab_reader', c.oid, 'TRUNCATE'),
+              'writer_can_temp', has_database_privilege('lab_writer', current_database(), 'TEMP'),
+              'reader_can_temp', has_database_privilege('lab_reader', current_database(), 'TEMP'),
+              'writer_can_schema_create',
+                 has_schema_privilege('lab_writer', 'public', 'CREATE'),
+              'reader_can_schema_create',
+                 has_schema_privilege('lab_reader', 'public', 'CREATE'),
+              'reader_role_readonly',
+                 (SELECT rolconfig @> ARRAY['default_transaction_read_only=on']
+                    FROM pg_roles WHERE rolname='lab_reader'),
+              'immutable_trigger_count',
+                 (SELECT count(*) FROM pg_trigger t
+                   WHERE t.tgrelid = c.oid
+                     AND NOT t.tgisinternal AND t.tgenabled = 'O'
+                     AND (t.tgtype & 1) = 1
+                     AND (t.tgtype & 2) = 2
+                     AND (t.tgtype & 16) = 16
+                     AND (t.tgtype & 8) = 8
+                     AND t.tgfoid = 'reject_provenance_mutation()'::regprocedure)
+            )
+            FROM pg_class c
+            WHERE c.oid='public.provenance_minutes'::regclass
+        """)
+        import json
+        try:
+            witness = json.loads(result)
+        except (TypeError, ValueError) as error:
+            raise LabAdmissionRejected('LAB_PG_CUSTODY_RECEIPT_INVALID') from error
+        required = ('writer_can_insert', 'reader_can_select', 'reader_role_readonly')
+        forbidden = ('writer_can_select', 'writer_can_update', 'writer_can_delete',
+                     'writer_can_truncate', 'reader_can_insert',
+                     'reader_can_update', 'reader_can_delete', 'reader_can_truncate',
+                     'writer_can_temp', 'reader_can_temp',
+                     'writer_can_schema_create', 'reader_can_schema_create')
+        need(type(witness) is dict and
+             witness.get('witness_schema') == 'lab-postgres-custody.v1'
+             and witness.get('scope') == 'ISOLATED_LAB_ONLY'
+             and witness.get('database') == self.database
+             and witness.get('table') == 'public.provenance_minutes'
+             and witness.get('table_owner') == 'lab_owner'
+             and all(witness.get(k) is True for k in required)
+             and all(witness.get(k) is False for k in forbidden)
+             and witness.get('immutable_trigger_count') == 1,
+             'LAB_PG_CUSTODY_NOT_VERIFIED')
+        # A trigger/catlog receipt is not cryptographic attestation. A
+        # privileged owner or server admin can still mutate storage.
+        witness['storage_immutability'] = 'ROLE_AND_TRIGGER_GUARDED_LAB_ONLY'
+        witness['source_authenticity'] = 'NOT_INDEPENDENTLY_ATTESTED'
+        witness['exchange_completeness'] = 'NOT_ATTESTED'
+        witness['execution_authority'] = False
+        witness['trading_authorized'] = False
+        return witness
+
+    def dsn(self, role):
+        need(role in ('lab_writer', 'lab_reader'), 'LAB_PG_ROLE_REJECTED')
+        return f'postgresql://{role}:{self.passwords[role]}@127.0.0.1:{self.port}/{self.database}'
+
+    # ------------------------------------------------------------------
+    def postmaster_pid(self):
+        return self._verify_postmaster()
+
+    def crash(self):
+        """Simulate a power-loss style abort of the postmaster (no shutdown checkpoint)."""
+        need(self.started, 'LAB_PG_NOT_STARTED')
+        pid = self.postmaster_pid()
+        if os.name == 'nt':
+            # Windows process HANDLE is stable even if another process later
+            # reuses the numeric PID. Revalidate identity before termination.
+            import ctypes
+            from ctypes import wintypes
+            kernel = ctypes.WinDLL('kernel32', use_last_error=True)
+            kernel.OpenProcess.argtypes = (wintypes.DWORD, wintypes.BOOL, wintypes.DWORD)
+            kernel.OpenProcess.restype = wintypes.HANDLE
+            handle = kernel.OpenProcess(0x1001, False, pid)  # TERMINATE | QUERY_LIMITED_INFORMATION
+            need(bool(handle), 'LAB_PG_PID_UNVERIFIED')
+            try:
+                self._verify_postmaster()
+                need(bool(kernel.TerminateProcess(handle, 1)), 'LAB_PG_CRASH_FAILED')
+            finally:
+                kernel.CloseHandle(handle)
+        else:
+            need(hasattr(os, 'pidfd_open') and hasattr(signal, 'pidfd_send_signal'),
+                 'LAB_PG_PIDFD_UNAVAILABLE')
+            pidfd = os.pidfd_open(pid)
+            try:
+                self._verify_postmaster()
+                signal.pidfd_send_signal(pidfd, signal.SIGKILL)
+            finally:
+                os.close(pidfd)
+        deadline = time.monotonic() + 60
+        while time.monotonic() < deadline:
+            try:
+                with socket.create_connection(('127.0.0.1', self.port), timeout=0.5):
+                    pass
+            except OSError:
+                break
+            time.sleep(0.2)
+        # Do not authorize recovery until the original PID has disappeared.
+        while time.monotonic() < deadline and self._pid_is_live(pid):
+            time.sleep(0.2)
+        need(not self._pid_is_live(pid), 'LAB_PG_CRASH_NOT_CONFIRMED')
+        self.started = False
+        self._crashed = True
+        return pid
+
+    def integrity(self, tables):
+        """Row counts, uniqueness of primary keys and B-tree checks (amcheck when available)."""
+        report = {}
+        has_amcheck = self.sql("SELECT count(*) FROM pg_available_extensions WHERE name='amcheck'") == '1'
+        if has_amcheck:
+            self.sql('CREATE EXTENSION IF NOT EXISTS amcheck')
+        for table in tables:
+            need(IDENT.fullmatch(table) is not None, 'LAB_PG_NAME_REJECTED')
+            report[table] = dict(rows=int(self.sql(f'SELECT count(*) FROM {table}')))
+            if has_amcheck:
+                indexes = self.sql(f"SELECT indexrelid::regclass FROM pg_index WHERE indrelid='{table}'::regclass")
+                for index in filter(None, indexes.splitlines()):
+                    self.sql(f"SELECT bt_index_check('{index}'::regclass, true)")
+                report[table]['btree_checked'] = len(list(filter(None, indexes.splitlines())))
+        report['amcheck'] = has_amcheck
+        return report
+
+    def stop(self):
+        self._verify_owned()
+        if not self.data.exists():
+            return
+        if (self.data / 'postmaster.pid').exists():
+            if self._crashed:
+                self._verify_stale_after_crash()
+                self.started = False
+                return
+            pid = self._verify_postmaster()
+            if os.name != 'nt':
+                need(hasattr(os, 'pidfd_open') and hasattr(signal, 'pidfd_send_signal'),
+                     'LAB_PG_PIDFD_UNAVAILABLE')
+                # PostgreSQL postmaster SIGINT = fast shutdown.  Signal the
+                # exact kernel process handle, never an unverified numeric PID.
+                handle = os.pidfd_open(pid)
+                try:
+                    self._verify_postmaster()
+                    signal.pidfd_send_signal(handle, signal.SIGINT)
+                finally:
+                    os.close(handle)
+                deadline = time.monotonic() + 60
+                while (self.data / 'postmaster.pid').exists() and time.monotonic() < deadline:
+                    time.sleep(0.2)
+            else:
+                # Windows native fast-stop remains pg_ctl-managed, with an
+                # independently verified postmaster identity before the call.
+                subprocess.run([str(self.tools['pg_ctl']), '-D', str(self.data), '-m', 'fast', '-w', '-t', '60', 'stop'],
+                               capture_output=True, timeout=120, env=self._env('lab_owner'))
+        need(not (self.data / 'postmaster.pid').exists(), 'LAB_PG_STOP_FAILED')
+        self.started = False
+),
+                active boolean NOT NULL DEFAULT false)""",
+            "REVOKE ALL ON lab_writer_fence FROM PUBLIC, lab_writer, lab_reader",
+            # Fail closed: no shared writer role can insert into the base
+            # provenance table, including old legacy clients and stale code.
+            "REVOKE INSERT ON provenance_minutes FROM lab_writer",
+            "REVOKE ALL ON FUNCTION reject_provenance_mutation() FROM PUBLIC",
+        ):
+            self.sql(query)
+        self.sql("""CREATE FUNCTION lab_fenced_insert(
+                p_generation bigint, p_token bigint, p_session uuid,
+                p_instance uuid, p_node uuid, p_source text, p_schema text,
+                p_fingerprint text, p_content_id text, p_symbol text,
+                p_start_ms bigint, p_record jsonb)
+            RETURNS void LANGUAGE plpgsql SECURITY DEFINER
+            SET search_path = pg_catalog, public AS $
+            DECLARE current_fence lab_writer_fence%ROWTYPE;
+            BEGIN
+                IF session_user <> 'lab_writer' OR p_generation IS NULL
+                    OR p_token IS NULL OR p_session IS NULL OR p_instance IS NULL
+                    OR p_node IS NULL OR p_source IS NULL OR p_schema IS NULL THEN
+                    RAISE EXCEPTION 'LAB_FENCE_AUTHORITY_REQUIRED';
+                END IF;
+                -- Row lock serializes owner revocation/reclaim with writes.
+                SELECT * INTO current_fence FROM public.lab_writer_fence
+                    WHERE resource='grid-market-data-primary' FOR UPDATE;
+                IF NOT FOUND OR current_fence.active IS NOT TRUE
+                    OR current_fence.generation IS DISTINCT FROM p_generation
+                    OR current_fence.high_water IS DISTINCT FROM p_token
+                    OR current_fence.session_id IS DISTINCT FROM p_session
+                    OR current_fence.instance_id IS DISTINCT FROM p_instance
+                    OR current_fence.node_incarnation_id IS DISTINCT FROM p_node
+                    OR current_fence.source_sha256 IS DISTINCT FROM p_source
+                    OR current_fence.schema_sha256 IS DISTINCT FROM p_schema THEN
+                    RAISE EXCEPTION 'LAB_FENCE_STALE_WRITER';
+                END IF;
+                INSERT INTO public.provenance_minutes(
+                    fingerprint,content_id,symbol,start_ms,record)
+                VALUES (p_fingerprint,p_content_id,p_symbol,p_start_ms,p_record);
+            END $""")
+        self.sql("REVOKE ALL ON FUNCTION lab_fenced_insert(bigint,bigint,uuid,uuid,uuid,text,text,text,text,text,bigint,jsonb) FROM PUBLIC")
+        self.sql("GRANT EXECUTE ON FUNCTION lab_fenced_insert(bigint,bigint,uuid,uuid,uuid,text,text,text,text,text,bigint,jsonb) TO lab_writer")
+        return self
+
+    def fenced_owner_claim(self, *, generation, token, session_id, instance_id,
+                           node_incarnation_id, source_sha256, schema_sha256,
+                           previous_quiescence_verified=False):
+        """Refuse all claims without private, independently verified handoff.
+
+        The caller must be trusted Root orchestration, never an HTTP client or
+        an untrusted Grid worker; this method is LAB-only, not production.
+        """
+        import uuid
+        need(previous_quiescence_verified is True, 'LAB_FENCE_QUIESCENCE_REQUIRED')
+        need(type(generation) is int and generation > 0 and
+             type(token) is int and 0 < token < 2**63,
+             'LAB_FENCE_GENERATION_INVALID')
+        ids = (session_id, instance_id, node_incarnation_id)
+        try:
+            parsed = tuple(uuid.UUID(x) for x in ids)
+            need(all(str(u) == x and u.version == 4 for u,x in zip(parsed,ids)),
+                 'LAB_FENCE_IDENTITY_INVALID')
+        except (TypeError, ValueError, AttributeError) as e:
+            raise LabAdmissionRejected('LAB_FENCE_IDENTITY_INVALID') from e
+        need(all(type(x) is str and re.fullmatch('[0-9a-f]{64}',x)
+                 for x in (source_sha256, schema_sha256)),
+             'LAB_FENCE_SHA_INVALID')
+        # SQL single-statement CAS, held under row lock; only owner role can
+        # update state. Caller-supplied quiescence is a LAB test assertion,
+        # NOT verified native process evidence and not production authority.
+        q = lambda x: "'" + x + "'"
+        self.sql(f"""INSERT INTO lab_writer_fence(
+            resource,generation,high_water,session_id,instance_id,
+            node_incarnation_id,source_sha256,schema_sha256,active)
+            VALUES('grid-market-data-primary',{generation},{token},
+              {q(session_id)}::uuid,{q(instance_id)}::uuid,
+              {q(node_incarnation_id)}::uuid,
+              {q(source_sha256)},{q(schema_sha256)},true)
+            ON CONFLICT(resource) DO UPDATE SET
+                generation=EXCLUDED.generation,
+                high_water=EXCLUDED.high_water,
+                session_id=EXCLUDED.session_id,
+                instance_id=EXCLUDED.instance_id,
+                node_incarnation_id=EXCLUDED.node_incarnation_id,
+                source_sha256=EXCLUDED.source_sha256,
+                schema_sha256=EXCLUDED.schema_sha256,
+                active=true
+            WHERE lab_writer_fence.active=false
+              AND EXCLUDED.high_water > lab_writer_fence.high_water
+              AND EXCLUDED.generation > lab_writer_fence.generation
+            RETURNING generation""")
+        return True
+
+    def fenced_owner_revoke(self):
+        """Owner-only revocation; does not discard durable high-water."""
+        return self.sql("""UPDATE lab_writer_fence SET active=false
+             WHERE resource='grid-market-data-primary' RETURNING generation""")
+
     def provenance_storage_witness(self):
         """Owner-only, scoped PostgreSQL custody facts; not provider authenticity.
 
