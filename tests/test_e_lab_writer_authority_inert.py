@@ -62,6 +62,24 @@ class LabAuthorityInvariants(unittest.TestCase):
                           "lab_fenced_insert", "Popen", "start", "write"):
             self.assertNotIn(forbidden, invocations)
 
+    def test_incomplete_authority_revoke_is_fail_closed(self):
+        obj = object.__new__(LabWriterAuthority)
+        obj._revoked = False
+        obj.revoke()
+        self.assertTrue(obj._revoked)
+        with self.assertRaises(ResourceFenceBlocked):
+            import asyncio
+            asyncio.run(obj.require_current())
+
+    def test_incomplete_grant_rejection_keeps_original_fence_code(self):
+        import asyncio
+        obj = object.__new__(LabWriterGrant)
+        obj._revoked = True
+        with self.assertRaisesRegex(ResourceFenceBlocked,
+                                    "LAB_ROOT_GRANT_REVOKED"):
+            asyncio.run(obj.require_write_current())
+        self.assertTrue(obj._revoked)
+
     def test_revocation_is_irreversible(self):
         obj = object.__new__(LabWriterAuthority)
         obj._revoked = False
