@@ -159,7 +159,7 @@ def child_environment(base, extra):
 def loopback_dsn(dsn):
     m = re.fullmatch(r'postgresql://([A-Za-z0-9_]{1,63}):([A-Za-z0-9]{16,128})@(127\.0\.0\.1|localhost):([0-9]{1,5})/'
                      r'([A-Za-z0-9_]{1,63})', dsn)
-    return m is not None and 1 <= int(m[4]) <= 65535
+    return m is not None and 1 <= int(m[4]) <= 65535 and int(m[4]) != 5432
 
 
 class LabGrant:
