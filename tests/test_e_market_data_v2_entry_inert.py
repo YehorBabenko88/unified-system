@@ -240,5 +240,61 @@ class RootGridV2InertTests(unittest.TestCase):
             imported.assert_not_called()
 
 
+    def test_injected_synthetic_fence_passes_only_expected_root_argv(self):
+        # The mock models an independently admitted C fence but is NOT a
+        # qualified DB transaction, Windows service or real source proof.
+        from unified_system import owned_python
+        state=self.root/"state";cache=state/"synthetic-cache";cache.mkdir(parents=True)
+        config={"programs":{"market_data":self.program()},
+                "state_root":str(state),"release_id":"lab-1"}
+        fake=SimpleNamespace(require_current=lambda:True)
+        observed=[]
+        def admitted(*,admitted_run):
+            return admitted_run()
+        def main(argv,*,startup_admission):
+            observed.append((argv,startup_admission))
+            return "synthetic-result"
+        def trusted_fence(source,manifest,configuration):
+            self.assertIs(source,fake)
+            self.assertIs(manifest,self.manifest)
+            self.assertIs(configuration,config)
+            return True
+        with patch.dict(os.environ,UNIFIED_PRIVATE_CACHE_ROOT=str(cache),
+                        UNIFIED_MODULE_ID="market_data",
+                        UNIFIED_MODULE_VERSION=V2_SOURCE_VERSION,
+                        UNIFIED_RELEASE_ID="lab-1"),patch.object(
+                        service_module_runtime,"StartupSourceAdmission",return_value=fake
+                        ),patch.object(owned_python,"main",side_effect=admitted),patch(
+                        "unified_system.grid_writer_fence_model.native_writer_admission",
+                        side_effect=trusted_fence),patch.object(
+                        service_module_runtime.importlib,"import_module",
+                        return_value=SimpleNamespace(main=main)) as imported:
+            result=service_module_runtime.serve_module(
+                self.grant,config,self.manifest,"market_data")
+            self.assertEqual(result,"synthetic-result")
+            imported.assert_called_once_with(V2_ENTRY)
+        self.assertEqual(observed,[(["serve"],fake)])
+
+    def test_nonliteral_future_gate_return_cannot_enable_v2_import(self):
+        from unified_system import owned_python
+        state=self.root/"state";cache=state/"truthy-cache";cache.mkdir(parents=True)
+        config={"programs":{"market_data":self.program()},
+                "state_root":str(state),"release_id":"lab-1"}
+        fake=SimpleNamespace(require_current=lambda:True)
+        with patch.dict(os.environ,UNIFIED_PRIVATE_CACHE_ROOT=str(cache),
+                        UNIFIED_MODULE_ID="market_data",
+                        UNIFIED_MODULE_VERSION=V2_SOURCE_VERSION,
+                        UNIFIED_RELEASE_ID="lab-1"),patch.object(
+                        service_module_runtime,"StartupSourceAdmission",return_value=fake
+                        ),patch.object(owned_python,"main",
+                        side_effect=lambda *,admitted_run:admitted_run()),patch(
+                        "unified_system.grid_writer_fence_model.native_writer_admission",
+                        return_value=1),patch.object(
+                        service_module_runtime.importlib,"import_module") as imported:
+            with self.assertRaises(ActivationBlocked):
+                service_module_runtime.serve_module(
+                    self.grant,config,self.manifest,"market_data")
+            imported.assert_not_called()
+
 if __name__ == "__main__":
     unittest.main()
