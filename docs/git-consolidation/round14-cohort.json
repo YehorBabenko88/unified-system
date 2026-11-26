@@ -672,5 +672,89 @@
     "historical_sections": "components and round17 retained for historical tests; round18 supersedes them",
     "qualification_tool": "tools/f_wheel_qualification.py",
     "admitted": false
+  },
+  "round18_continuation": {
+    "snapshot_date": "2026-11-26",
+    "snapshot_atomic": false,
+    "latest_owner_heads": {
+      "A": "a679e838848a0a065b1d98dc408d013c7e317fb7",
+      "B": "6391e5e25495be05a092a484e4ec6ae752fc084e",
+      "C": "099c27a0ae6a20b8f2cca6e589381b1a39af86d1",
+      "D": "d2695eb4a33a6b18a9191a6351bd1075ea4492fe",
+      "E": "9ee4a85fddd9a62ccfbfa5e39ed61f63a8055649"
+    },
+    "a_receipt_source": {
+      "path": "unified_system/runtime_process.py",
+      "blob": "0374310fc8e4f4a045c4f2d581af3aa6b8aa8c46",
+      "reliable_native_receipt": "NOT_VERIFIED"
+    },
+    "e_operation_source": {
+      "path": "unified_system/lab_writer_authority.py",
+      "blob": "d9ededb015a690f6147b8b4f50a017f92401d4b1",
+      "issuer": "DENIED_UNTIL_PROTECTED_INSTALLED_WHEEL"
+    },
+    "b_package_metadata": {
+      "path": "pyproject.toml",
+      "blob": "782c75d5699ae4a1d828a8d8dcd33be726a30938",
+      "name": "market-data",
+      "version": "0.2.0.dev0",
+      "packages": [
+        "market_data",
+        "market_data_v2"
+      ],
+      "canonical_grid_writer_included": false
+    },
+    "b_canonical_source": [
+      {
+        "path": "grid/canonical_lab_fenced_writer.py",
+        "blob": "82af4c4688c8e027dee3ae64113c23c436931abf",
+        "sha256": "e637d570d750bc7d38e4f16da213b04babbb59c87af57872b417233f72f2e489"
+      },
+      {
+        "path": "grid/c_async_fenced_writer.py",
+        "blob": "98ed95029785413eb8fbc5687af39ff6bd0bf2cf",
+        "sha256": "f4aaa97ac94a9b6ca37bbb6d50bebe6538ab1f4548f6c9e35b8be7845f37028e"
+      },
+      {
+        "path": "grid/c_lab_journal_adapter.py",
+        "blob": "ab93c6d421c3d3f0232060f6ded7ac01bf8eeda0",
+        "sha256": "69bb02182e73bfe4d80f98fa8f1cec846d18334693aa8443eec88babb901f01a"
+      },
+      {
+        "path": "grid/canonical_lab_continuous_collector.py",
+        "blob": "52ed338cb5e1e5641fd9cf9f401b280fc3500a9b",
+        "sha256": "c691b8cbeee2b4e3fa0df95f81381318a297736ea109513c1d50340a13ad8a01"
+      }
+    ],
+    "b_sha256_method": "INDEPENDENT_JS_SHA256_FROM_EXACT_GITHUB_ASCII_SOURCE_CONTENT",
+    "release_wheel_sha256": "NOT_VERIFIED",
+    "release_sdist_sha256": "NOT_VERIFIED",
+    "installed_package_origin": "NOT_VERIFIED",
+    "native_pg18": "NOT_VERIFIED",
+    "package_ownership": "BLOCKED_B_OWNER_MIGRATION",
+    "operation_authority": "DENIED",
+    "f_tool": {
+      "path": "tools/f_wheel_qualification.py",
+      "blob": "190c1b2f19fc90628fba8ea752c58f00a0a6d5de",
+      "sha256": "e61cb5cb06b51d4e71e4eae5c0c534323952e36484c9891dc8e869ebef680051",
+      "tests_path": "tests/test_f_wheel_qualification.py",
+      "tests_blob": "bf9fb538ee73f56f2ee6c8b0499e56b82bbcaa6c",
+      "local_python": "3.13",
+      "local_unittest_result": "24_PASS_0_FAIL",
+      "local_py_compile": "PASS",
+      "fixture": "SYNTHETIC_OFFLINE_WHEEL",
+      "real_B_wheel_test": "NOT_RUN",
+      "emits_root_or_writer_authority": false
+    },
+    "installed_record_bytes": "TESTED_SYNTHETIC_ONLY",
+    "runtime_import_origin": "NOT_VERIFIED",
+    "entrypoint_metadata": "TESTED_SYNTHETIC_ONLY",
+    "actual_entrypoint_execution": "NOT_VERIFIED",
+    "integration": {
+      "pr": 166,
+      "head": "9349d7f3ed93ef82d120976816b968e0b716b067",
+      "runtime_merged": false
+    },
+    "status": "CODE_NO_GO_AND_PRODUCTION_NO_GO"
   }
 }
