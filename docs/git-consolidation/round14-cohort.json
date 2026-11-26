@@ -22,7 +22,7 @@
       "id": "A",
       "repo": "YehorBabenko88/unified-system",
       "pr": 162,
-      "head_sha": "f2a0245ae9edc2805e1e9be28e6c3a649ec401b4",
+      "head_sha": "324d6bfd85624e21213180dc66a9c67d4ac790ce",
       "role": "native process lifetime",
       "native_status": "NOT_VERIFIED"
     },
@@ -30,7 +30,7 @@
       "id": "B",
       "repo": "YehorBabenko88/bybit-cluster-grid",
       "pr": 300,
-      "head_sha": "2e5227e79023091a7481b540536f50a6b2e125fb",
+      "head_sha": "8594cc8812225dee6c4f292a7692486bb443ca06",
       "role": "canonical Bybit market-data writer and collector",
       "native_status": "NOT_VERIFIED"
     },
@@ -46,7 +46,7 @@
       "id": "C",
       "repo": "YehorBabenko88/unified-system",
       "pr": 163,
-      "head_sha": "bbdc4e87b64a2516528270eb0c7925ce97d24ee5",
+      "head_sha": "3046f9dbfe9b587370ba0bffbfb716b59a4f56ca",
       "role": "PostgreSQL native resource fence",
       "native_status": "NOT_VERIFIED"
     },
@@ -54,16 +54,16 @@
       "id": "D",
       "repo": "YehorBabenko88/Terminan",
       "pr": 126,
-      "head_sha": "80da873c5251a0505519249325a4591f8bb003d9",
+      "head_sha": "254c6888e1b6665bdf83ff42794e2389a53c8ace",
       "role": "canonical strategies/paper/chart",
       "native_status": "NOT_VERIFIED",
-      "component_ci": "current HEAD: 1 workflow success / 1 queued at first-page observation; MASTER 14/14 applied to previous HEAD only"
+      "component_ci": "exact HEAD 254c6888: two workflow runs IN_PROGRESS at 2026-11-26 snapshot, no concluded success"
     },
     {
       "id": "E",
       "repo": "YehorBabenko88/unified-system",
       "pr": 164,
-      "head_sha": "c6bfff7e30d6b68bd23107edf3a9bf4098a00004",
+      "head_sha": "5490cf118eccb27e59905a89d4c5dac2c8b3fcbc",
       "role": "Root lease, lifecycle and writer grant",
       "native_status": "NOT_VERIFIED"
     },
@@ -71,7 +71,7 @@
       "id": "F",
       "repo": "YehorBabenko88/unified-system",
       "pr": 165,
-      "head_sha_at_source_snapshot": "627faa46fa3fc9ca8c5d396ee6926463a45ea9ce",
+      "head_sha_at_source_snapshot": "77429474a487b12496d86f9f8000d261bbdaee0d",
       "self_reference": "Read live PR HEAD; do not pin the SHA of the same file's future commit",
       "role": "security, Git consolidation, release qualification"
     },
@@ -338,5 +338,168 @@
         "skipped": 1
       }
     }
+  },
+  "round16": {
+    "schema": "unified.f.round16-executable-native-cohort.v1",
+    "observed_date": "2026-11-26",
+    "point_in_time_not_atomic": true,
+    "release_status": "NO_GO",
+    "source_inspection": "EXACT_HEAD_GITHUB_FILE_FETCH",
+    "integration_admitted": false,
+    "exact_components": {
+      "A": "324d6bfd85624e21213180dc66a9c67d4ac790ce",
+      "B": "8594cc8812225dee6c4f292a7692486bb443ca06",
+      "B_CUSTODY": "39a6cf4d8c039ca99bbfc00ca7cc2359bef5c60c",
+      "C": "3046f9dbfe9b587370ba0bffbfb716b59a4f56ca",
+      "D": "254c6888e1b6665bdf83ff42794e2389a53c8ace",
+      "E": "5490cf118eccb27e59905a89d4c5dac2c8b3fcbc",
+      "META": "902db7e28571e851de09d127a9ebad6f120efecd"
+    },
+    "sole_integrated_pr": {
+      "number": 166,
+      "head_sha": "9349d7f3ed93ef82d120976816b968e0b716b067",
+      "changed": false
+    },
+    "protected_b30_runtime_unchanged": true,
+    "verified_source_blobs": [
+      {
+        "owner": "A",
+        "path": "unified_system/runtime_process.py",
+        "head": "324d6bfd85624e21213180dc66a9c67d4ac790ce",
+        "blob": "3e28008ba11dab55ecd77af2e0faf35b0a013d41"
+      },
+      {
+        "owner": "C",
+        "path": "unified_system/lab_pg_recovery.py",
+        "head": "3046f9dbfe9b587370ba0bffbfb716b59a4f56ca",
+        "blob": "60a09733751182c97ba3c49436a5b88ea7fcb7b0"
+      },
+      {
+        "owner": "C",
+        "path": "unified_system/lab_postgres.py",
+        "head": "3046f9dbfe9b587370ba0bffbfb716b59a4f56ca",
+        "blob": "95d12797286953daa7308d54dbc04216e1bb7e08"
+      },
+      {
+        "owner": "E",
+        "path": "unified_system/lab_pg_recovery_lane.py",
+        "head": "5490cf118eccb27e59905a89d4c5dac2c8b3fcbc",
+        "blob": "69341dd3e3c726beacf74e07568f1e7f1a121b76"
+      },
+      {
+        "owner": "E",
+        "path": "unified_system/lab_process_extinction.py",
+        "head": "5490cf118eccb27e59905a89d4c5dac2c8b3fcbc",
+        "blob": "dce2a878ab161dbecb25e9111f9176d49de99100"
+      },
+      {
+        "owner": "E",
+        "path": "unified_system/lab_writer_revoke.py",
+        "head": "5490cf118eccb27e59905a89d4c5dac2c8b3fcbc",
+        "blob": "5cff0321098c17f9241c58f974645cf76ff4dd14"
+      }
+    ],
+    "source_findings": [
+      {
+        "id": "C_STOPPED_NULL",
+        "severity": "P0",
+        "status": "OPEN",
+        "basis": "C recover accepts state None and pg.started False, with no old owner-bound STOPPED token"
+      },
+      {
+        "id": "C_RESOURCE_CUSTODY",
+        "severity": "P0",
+        "status": "OPEN",
+        "basis": "C _STATES[pg] and E _RECOVERY_OWNERS.add(pg) are per-object; cannot exclude separate objects for same physical PG data root"
+      },
+      {
+        "id": "A_POSTMASTER_WITNESS",
+        "severity": "P0",
+        "status": "OPEN",
+        "basis": "A RetainedOsProcessWait implemented but C recovery does not import/use it around physical postmaster stop/restart"
+      },
+      {
+        "id": "E_PROCESS_BIND",
+        "severity": "P0",
+        "status": "OPEN",
+        "basis": "E only tests exact RootProcessExtinction Python type, not authenticated exact old owner/instance/release/generation/epoch"
+      },
+      {
+        "id": "E_OLD_MUTABLE",
+        "severity": "P0",
+        "status": "OPEN",
+        "basis": "E old accepted as dict, passed to worker and read after await; mutable after validation"
+      },
+      {
+        "id": "B_NATIVE_ABI",
+        "severity": "P0",
+        "status": "OPEN",
+        "basis": "B canonical writer sync require_current() is True versus E async grant; no production-safe owner-thread grant implemented"
+      },
+      {
+        "id": "NATIVE_PG18",
+        "severity": "P0",
+        "status": "OPEN",
+        "basis": "no concluded exact-head native PG18/Windows/Consul recovery E2E"
+      },
+      {
+        "id": "BUILD_SECURITY",
+        "severity": "P1",
+        "status": "OPEN",
+        "basis": "source wheel/sdist installed imports, reproducible lock, LFS/archive historical secrets unverified"
+      }
+    ],
+    "frozen_file_sha256": {
+      "grid/canonical_lab_fenced_writer.py": "0dc72314f11791c3899732bc461be5273b890e7fd96553e85590dc5a384e4300",
+      "grid/canonical_lab_continuous_collector.py": "c691b8cbeee2b4e3fa0df95f81381318a297736ea109513c1d50340a13ad8a01",
+      "grid/c_lab_journal_adapter.py": "69bb02182e73bfe4d80f98fa8f1cec846d18334693aa8443eec88babb901f01a",
+      "grid/c_async_fenced_writer.py": "f4aaa97ac94a9b6ca37bbb6d50bebe6538ab1f4548f6c9e35b8be7845f37028e"
+    },
+    "qualification": {
+      "source_sha": "VERIFIED",
+      "installed_package": "NOT_VERIFIED",
+      "wheel_sha256": "NOT_VERIFIED",
+      "sdist_sha256": "NOT_VERIFIED",
+      "entrypoint": "NOT_VERIFIED",
+      "sql_schema": "NOT_VERIFIED",
+      "dependency_lock": "NOT_VERIFIED",
+      "os_evidence": "INCOMPLETE",
+      "postgres_e2e": "NOT_VERIFIED",
+      "writer_abi": "BLOCKED",
+      "full_e2e": "NOT_VERIFIED"
+    },
+    "ci_pr_first_page": {
+      "A": {
+        "queued": 18,
+        "pending": 1
+      },
+      "B": {
+        "queued": 15
+      },
+      "C": {
+        "queued": 19,
+        "pending": 3
+      },
+      "D": {
+        "in_progress": 2
+      },
+      "E": {
+        "queued": 19,
+        "pending": 1
+      },
+      "F_at_previous_head": {
+        "queued": 15,
+        "pending": 1
+      },
+      "integration": {
+        "queued": 23,
+        "pending": 2
+      },
+      "meta": {
+        "success": 1,
+        "skipped": 1
+      }
+    },
+    "contract": "docs/git-consolidation/round16-native-cohort-gates.md"
   }
 }
