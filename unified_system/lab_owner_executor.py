@@ -6,14 +6,15 @@ accept new SQL or stop operations until owner-led process/DB recovery.
 """
 import asyncio
 from concurrent.futures import ThreadPoolExecutor
-from threading import Lock
+from threading import Lock, Event
 from .grid_writer_fence_model import ResourceFenceBlocked, _need
 
 
 class LabOwnerExecutor:
     """One bounded serial worker; fail permanently closed after uncertainty."""
 
-    __slots__ = ("_pool", "_lock", "_busy", "_poisoned", "_closed")
+    __slots__ = ("_pool", "_lock", "_busy", "_poisoned", "_closed",
+                 "_worker_done", "_ever_submitted")
 
     def __init__(self):
         self._pool = ThreadPoolExecutor(max_workers=1, thread_name_prefix="lab-root-sql")
@@ -21,11 +22,24 @@ class LabOwnerExecutor:
         self._busy = False
         self._poisoned = False
         self._closed = False
+        self._worker_done = Event()
+        self._ever_submitted = False
 
     @property
     def poisoned(self):
         with self._lock:
             return self._poisoned
+
+    @property
+    def local_worker_exited(self):
+        """Only Python task completion, NOT SQL backend/COMMIT extinction.
+
+        A shielded asyncio Future may appear cancelled while its underlying
+        thread continues. This independent event is set in the worker's own
+        finally block. Caller must separately obtain C-owned backend/WAL proof.
+        """
+        with self._lock:
+            return self._ever_submitted and self._worker_done.is_set()
 
     async def call(self, operation, *, timeout=10.0):
         _need(callable(operation) and type(timeout) in (int, float)
@@ -35,9 +49,16 @@ class LabOwnerExecutor:
             _need(not self._poisoned and not self._closed and not self._busy,
                   "LAB_ROOT_EXECUTOR_NOT_AVAILABLE")
             self._busy = True
+            self._ever_submitted = True
+            self._worker_done.clear()
+        def bounded_owner_operation():
+            try:
+                return operation()
+            finally:
+                self._worker_done.set()
         loop = asyncio.get_running_loop()
         try:
-            future = loop.run_in_executor(self._pool, operation)
+            future = loop.run_in_executor(self._pool, bounded_owner_operation)
             return await asyncio.wait_for(asyncio.shield(future), timeout)
         except BaseException:
             # Cancellation or timeout can leave an in-flight SQL COMMIT.
