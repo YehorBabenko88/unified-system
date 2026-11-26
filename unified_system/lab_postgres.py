@@ -96,15 +96,16 @@ class LabPostgres:
             state = c._STATES.get(root)
             need(state is not None and state.pg is self
                  and state.lock_fd == lock_fd
-                 and state.phase == "IN_PROGRESS",
+                 and state.phase == "IN_PROGRESS"
+                 and state.worker_tid == threading.get_ident(),
                  'LAB_PG_RECOVERY_OWNER_MISSING')
         c._verify_cluster_os_lock(self, lock_fd)
         self._lifecycle_thread = threading.get_ident()
         self._lifecycle_pid = os.getpid()
         self._lifecycle_lock_fd = lock_fd
 
-    def _require_recovery_lifecycle(self):
-        """No direct post-initialization PG start/stop/crash entrypoint."""
+    def _require_recovery_lifecycle(self, *, terminal_stop=False):
+        """Exact original C worker, retained FD and process-bound state only."""
         from . import lab_pg_recovery as c
         import threading
         need(self._lifecycle_thread == threading.get_ident()
@@ -116,7 +117,9 @@ class LabPostgres:
         with c._GUARD:
             state = c._STATES.get(root)
             need(state is not None and state.pg is self
-                 and state.phase == 'IN_PROGRESS'
+                 and (state.phase == 'IN_PROGRESS'
+                      or terminal_stop and state.phase == 'COMPLETE_DENIED')
+                 and state.worker_tid == threading.get_ident()
                  and state.lock_fd == self._lifecycle_lock_fd
                  and state.marker == self._nonce,
                  'LAB_PG_RECOVERY_WORKER_STALE')
@@ -535,7 +538,7 @@ class LabPostgres:
         # Teardown of an empty/uninitialized root is safe. Any previously
         # started cluster needs C's original, OS-locked lifecycle.
         if self._owned_pid is not None or self.started or self._crashed:
-            self._require_recovery_lifecycle()
+            self._require_recovery_lifecycle(terminal_stop=True)
         if not self.data.exists():
             return
         if (self.data / 'postmaster.pid').exists():
