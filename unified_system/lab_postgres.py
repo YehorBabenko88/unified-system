@@ -19,6 +19,7 @@ import stat
 import re
 import secrets
 import signal
+import select
 import socket
 import subprocess
 import time
@@ -265,26 +266,44 @@ class LabPostgres:
 
     @staticmethod
     def _pid_is_live(pid):
-        """Treat access denial as live; never infer a foreign PID is safe."""
+        """Kernel-object exit check; a zombie must not mask an exited PID.
+
+        This is a conservative stale-pidfile guard, NOT an owner, Root,
+        backend, descendant or release admission witness.
+        """
         if os.name == 'nt':
             import ctypes
             from ctypes import wintypes
             kernel = ctypes.WinDLL('kernel32', use_last_error=True)
-            kernel.OpenProcess.argtypes = (wintypes.DWORD, wintypes.BOOL, wintypes.DWORD)
+            kernel.OpenProcess.argtypes = (wintypes.DWORD, wintypes.BOOL,
+                                           wintypes.DWORD)
             kernel.OpenProcess.restype = wintypes.HANDLE
-            handle = kernel.OpenProcess(0x1000, False, pid)
+            kernel.WaitForSingleObject.argtypes = (wintypes.HANDLE,
+                                                    wintypes.DWORD)
+            kernel.WaitForSingleObject.restype = wintypes.DWORD
+            handle = kernel.OpenProcess(0x101000, False, pid)
             if handle:
-                kernel.CloseHandle(handle)
-                return True
-            need(ctypes.get_last_error() in (87, 1168), 'LAB_PG_PID_ACCESS_DENIED')
+                try:
+                    result = kernel.WaitForSingleObject(handle, 0)
+                    need(result in (0, 0x102),
+                         'LAB_PG_PID_WAIT_UNKNOWN')
+                    return result == 0x102
+                finally:
+                    kernel.CloseHandle(handle)
+            need(ctypes.get_last_error() in (87, 1168),
+                 'LAB_PG_PID_ACCESS_DENIED')
             return False
+        need(hasattr(os, 'pidfd_open'), 'LAB_PG_PIDFD_UNAVAILABLE')
         try:
-            os.kill(pid, 0)
-            return True
+            fd = os.pidfd_open(pid)
         except ProcessLookupError:
             return False
         except PermissionError:
             return True
+        try:
+            return not bool(select.select([fd], [], [], 0)[0])
+        finally:
+            os.close(fd)
 
     def _verify_stale_after_crash(self):
         """Only the exact stale file from *our* confirmed crash may be reused."""
@@ -523,40 +542,54 @@ class LabPostgres:
         need(self.started, 'LAB_PG_NOT_STARTED')
         pid = self.postmaster_pid()
         if os.name == 'nt':
-            # Windows process HANDLE is stable even if another process later
-            # reuses the numeric PID. Revalidate identity before termination.
             import ctypes
             from ctypes import wintypes
             kernel = ctypes.WinDLL('kernel32', use_last_error=True)
-            kernel.OpenProcess.argtypes = (wintypes.DWORD, wintypes.BOOL, wintypes.DWORD)
+            kernel.OpenProcess.argtypes = (wintypes.DWORD, wintypes.BOOL,
+                                           wintypes.DWORD)
             kernel.OpenProcess.restype = wintypes.HANDLE
-            handle = kernel.OpenProcess(0x1001, False, pid)  # TERMINATE | QUERY_LIMITED_INFORMATION
+            kernel.WaitForSingleObject.argtypes = (wintypes.HANDLE,
+                                                    wintypes.DWORD)
+            kernel.WaitForSingleObject.restype = wintypes.DWORD
+            handle = kernel.OpenProcess(0x101001, False, pid)
             need(bool(handle), 'LAB_PG_PID_UNVERIFIED')
             try:
                 self._verify_postmaster()
-                need(bool(kernel.TerminateProcess(handle, 1)), 'LAB_PG_CRASH_FAILED')
+                need(bool(kernel.TerminateProcess(handle, 1)),
+                     'LAB_PG_CRASH_FAILED')
+                millis = max(0, min(120000,
+                             int((deadline-time.monotonic())*1000)))
+                need(kernel.WaitForSingleObject(handle, millis) == 0,
+                     'LAB_PG_CRASH_NOT_CONFIRMED')
             finally:
                 kernel.CloseHandle(handle)
         else:
-            need(hasattr(os, 'pidfd_open') and hasattr(signal, 'pidfd_send_signal'),
+            need(hasattr(os, 'pidfd_open') and
+                 hasattr(signal, 'pidfd_send_signal'),
                  'LAB_PG_PIDFD_UNAVAILABLE')
             pidfd = os.pidfd_open(pid)
             try:
                 self._verify_postmaster()
                 signal.pidfd_send_signal(pidfd, signal.SIGKILL)
+                need(bool(select.select(
+                    [pidfd], [], [], max(0, deadline-time.monotonic()))[0]),
+                    'LAB_PG_CRASH_NOT_CONFIRMED')
             finally:
                 os.close(pidfd)
+        listener_closed = False
         while time.monotonic() < deadline:
             try:
-                with socket.create_connection(('127.0.0.1', self.port), timeout=0.5):
+                with socket.create_connection(
+                        ('127.0.0.1', self.port), timeout=0.5):
                     pass
             except OSError:
+                listener_closed = True
                 break
             time.sleep(0.2)
-        # Do not authorize recovery until the original PID has disappeared.
-        while time.monotonic() < deadline and self._pid_is_live(pid):
-            time.sleep(0.2)
-        need(not self._pid_is_live(pid), 'LAB_PG_CRASH_NOT_CONFIRMED')
+        need(listener_closed, 'LAB_PG_CRASH_LISTENER_STILL_ACTIVE')
+        # PID reuse or inaccessible kernel observation is UNKNOWN, never a
+        # reason to promote after process crash without C's retained handle.
+        need(not self._pid_is_live(pid), 'LAB_PG_CRASH_PID_STILL_LIVE')
         self.started = False
         self._crashed = True
         return pid
