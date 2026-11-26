@@ -440,6 +440,15 @@ class FailureDiagnosticsPureTests(unittest.TestCase):
         self.assertNotIn(private,line)
         self.assertEqual(json.loads(line.split(' ',1)[1])['connections'][0]['source'],
                          'OTHER')
+        source['connections'][0].update(source='READER_CONTROL',why='CREDIT_BOUNDS')
+        line=helper.format_failure(source,'CREDIT_BOUNDS')
+        decoded=json.loads(line.split(' ',1)[1])
+        self.assertEqual(decoded['code'],'CREDIT_BOUNDS')
+        self.assertEqual(decoded['connections'][0]['why'],'CREDIT_BOUNDS')
+        source['connections'][0]['why']=private
+        line=helper.format_failure(source,private)
+        self.assertNotIn(private,line)
+        self.assertEqual(json.loads(line.split(' ',1)[1])['code'],'OTHER')
 
     def test_unknown_objects_never_stringified(self):
         helper=self.helper()
