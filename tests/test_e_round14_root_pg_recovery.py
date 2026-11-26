@@ -142,5 +142,136 @@ class PoisonedOwnerContainmentTests(unittest.IsolatedAsyncioTestCase):
                 lane,old={},root_process_evidence=None)
 
 
+
+class ExactRevokeOrderSyntheticTests(unittest.IsolatedAsyncioTestCase):
+    """Ordering-only synthetic seam; NEVER native C/PG18/Job evidence."""
+
+    async def _exercise(self, *, valid_receipt=True, stop_raises=False,
+                        exact_abi=True):
+        events=[]
+        alive={"value":True}
+        locked={"value":False}
+        identity=SimpleNamespace(
+            owner="root", namespace="isolated", token=17,
+            session_id="00000000-0000-0000-0000-000000000001",
+            instance_id="00000000-0000-0000-0000-000000000002",
+            node_incarnation_id="00000000-0000-0000-0000-000000000003",
+            source_sha256="a"*64, schema_sha256="b"*64)
+        guard=SimpleNamespace(_identity=identity)
+        def block_transfer():
+            events.append("TRANSFER_BLOCKED")
+            locked["value"]=True
+        guard.block_transfer=block_transfer
+        def revalidate(pg, *, identity, generation, backend_pid):
+            self.assertTrue(locked["value"])
+            events.append("LIVE_C_READ")
+            if not alive["value"] or not valid_receipt:
+                raise ValueError("live original backend unavailable")
+            return dict(
+                schema="lab-postgres-fence-revalidation.v1",
+                scope="ISOLATED_LAB_ONLY",
+                resource_id="grid-market-data-primary",
+                owner=identity.owner, namespace=identity.namespace,
+                generation=generation, token=identity.token,
+                backend_pid=backend_pid,
+                backend_start="2026-11-26T21:00:00+00:00",
+                session_id=identity.session_id,
+                instance_id=identity.instance_id,
+                node_incarnation_id=identity.node_incarnation_id,
+                source_sha256=identity.source_sha256,
+                schema_sha256=identity.schema_sha256,
+                db_backend_observed=True,
+                db_fence_current_at_read=True,
+                native_writer_admitted=False, trading_authorized=False)
+        def exact_revoke(pg, *, owner, namespace, generation, token,
+                         backend_pid, backend_start, timeout=120):
+            events.append("C_EXACT_REVOKE")
+            self.assertFalse(alive["value"])
+            self.assertEqual((owner, namespace, generation, token, backend_pid,
+                              backend_start),
+                             ("root", "isolated", 9, 17, 4042,
+                              "2026-11-26T21:00:00+00:00"))
+            return True
+        exact_revoke.__module__="unified_system.lab_pg_fence"
+        def legacy_revoke(pg, *, generation, token):
+            events.append("LEGACY_SQL_CALLED")
+            return True
+        legacy_revoke.__module__="unified_system.lab_pg_fence"
+        canonical=SimpleNamespace(
+            revoke_lab_fence=exact_revoke if exact_abi else legacy_revoke,
+            revalidate_lab_fence=revalidate, LabAdmissionRejected=ValueError)
+        class Executor:
+            poisoned=False
+            async def call(self, fn, timeout):
+                events.append("OWNER_SQL_EXECUTOR")
+                return fn()
+        class StopLane:
+            async def stop_owned(self, handle, *, timeout):
+                events.append("A_STOP_ATTEMPT")
+                alive["value"]=False
+                if stop_raises:
+                    raise OSError("uncertain OS stop")
+            async def old_child_extinct(self, handle, *, timeout):
+                return RootProcessObservation(
+                    "unified.root-process-observation.v1", UNKNOWN,
+                    handle, 4042, ["created", "image"], "UNKNOWN")
+        revoker=object.__new__(LabWriterRevoker)
+        revoker._once=False
+        revoker._last=None
+        revoker._guard=guard
+        revoker._driver=object()
+        revoker._handle="owned-op"
+        revoker._authority=object()
+        revoker._lease=object()
+        revoker._pg=object()
+        revoker._c=canonical
+        revoker._generation=9
+        revoker._token=17
+        revoker._backend_pid=4042
+        revoker._executor=Executor()
+        revoker._stop_lane=StopLane()
+        outcome=await revoker.revoke(blocking_timeout=2)
+        return events,locked,outcome
+
+    async def test_c_live_identity_is_frozen_before_original_os_stop(self):
+        events,locked,outcome=await self._exercise()
+        self.assertTrue(locked["value"])
+        self.assertLess(events.index("TRANSFER_BLOCKED"),
+                        events.index("LIVE_C_READ"))
+        self.assertLess(events.index("LIVE_C_READ"),
+                        events.index("A_STOP_ATTEMPT"))
+        self.assertLess(events.index("A_STOP_ATTEMPT"),
+                        events.index("C_EXACT_REVOKE"))
+        self.assertEqual(events.count("C_EXACT_REVOKE"),1)
+        self.assertEqual(outcome.result,"PARTIAL_DENIED")
+        self.assertTrue(outcome.sql_fence_revoked)
+        self.assertFalse(outcome.consul_released)
+        self.assertFalse(outcome.native_admitted)
+
+    async def test_missing_original_live_receipt_never_calls_exact_revoke(self):
+        events,locked,outcome=await self._exercise(valid_receipt=False)
+        self.assertTrue(locked["value"])
+        self.assertIn("A_STOP_ATTEMPT",events)
+        self.assertNotIn("C_EXACT_REVOKE",events)
+        self.assertFalse(outcome.sql_fence_revoked)
+        self.assertEqual(outcome.result,"PARTIAL_DENIED")
+
+    async def test_legacy_short_c_abi_never_uses_sql(self):
+        events,locked,outcome=await self._exercise(exact_abi=False)
+        self.assertTrue(locked["value"])
+        self.assertIn("A_STOP_ATTEMPT",events)
+        self.assertNotIn("LEGACY_SQL_CALLED",events)
+        self.assertNotIn("LIVE_C_READ",events)
+        self.assertFalse(outcome.sql_fence_revoked)
+
+    async def test_uncertain_stop_can_never_prove_transfer(self):
+        events,locked,outcome=await self._exercise(stop_raises=True)
+        self.assertTrue(locked["value"])
+        self.assertIn("C_EXACT_REVOKE",events)
+        self.assertFalse(outcome.child_stopped)
+        self.assertEqual(outcome.result,"PARTIAL_DENIED")
+
+
+
 if __name__=="__main__":
     unittest.main()
