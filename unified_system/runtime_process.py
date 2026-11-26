@@ -449,18 +449,12 @@ class OwnedWindowsJob:
         self._assigned = False
 
     def assign_suspended_child(self, process_handle, *, created_suspended=False):
-        # Caller acknowledgement alone is never a security proof. This is
-        # an internal launch primitive; production caller must retain both
-        # original PROCESS_INFORMATION handles from CreateProcessW and must
-        # NEVER allow any thread to resume before assignment completes.
-        if self._handle is None or self._assigned or created_suspended is not True:
-            raise ValueError('Windows Job suspended launch required')
-        from ctypes import wintypes as w
-        self._k.AssignProcessToJobObject.argtypes = [w.HANDLE, w.HANDLE]
-        self._k.AssignProcessToJobObject.restype = w.BOOL
-        if not self._k.AssignProcessToJobObject(self._handle, process_handle):
-            raise ValueError('Windows Job suspended assignment denied')
-        self._assigned = True
+        # Intentionally DENIED until a single trusted Windows CreateProcessW
+        # launcher can return both exact process/thread handles BEFORE any
+        # user-mode instruction runs. A caller-provided boolean, arbitrary
+        # HANDLE or a sampled PID cannot authenticate suspended creation.
+        # Never attach existing/foreign process to KILL_ON_JOB_CLOSE.
+        raise ValueError('Windows Job atomic suspended launcher unavailable')
 
     def verify_member(self, process_handle):
         if self._handle is None:
@@ -471,17 +465,6 @@ class OwnedWindowsJob:
                                       ctypes.byref(in_job)):
             raise ValueError('Windows Job membership inaccessible')
         return bool(in_job.value)
-
-    def resume_suspended_child(self, thread_handle):
-        if self._handle is None or not self._assigned:
-            raise ValueError('Windows Job suspended child not assigned')
-        from ctypes import wintypes as w
-        self._k.ResumeThread.argtypes = [w.HANDLE]
-        self._k.ResumeThread.restype = w.DWORD
-        count = self._k.ResumeThread(thread_handle)
-        if count == 0xffffffff:
-            raise ValueError('Windows Job suspended resume denied')
-        return count
 
     def active_process_count(self):
         if self._handle is None:
