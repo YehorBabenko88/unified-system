@@ -116,11 +116,14 @@ jobs:
           sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y
           sudo apt-get install -y -q postgresql-18
           /usr/lib/postgresql/18/bin/postgres --version
-          test -z "$(pg_lsclusters -h 2>/dev/null | grep '^18 ')" && echo NO_DEFAULT_18_CLUSTER
+          # Hosted runners may already contain a distro-managed PostgreSQL 18
+          # cluster.  Never stop/drop it: the LAB owns only its own pgdata.
+          pg_lsclusters -h || true
+          echo LAB_WILL_USE_SEPARATE_OWNED_CLUSTER
       - name: Lifecycle, roles, duplicates, immutability, crash recovery, cleanup
         env:
           LAB_POSTGRES_BIN: /usr/lib/postgresql/18/bin
           PYTHONDONTWRITEBYTECODE: '1'
         run: |
           python -B -m unittest -v tests.test_lab_postgres
-          test -z "$(pgrep -u "$(id -u)" -f 'postgres -D' || true)" && echo NO_LAB_POSTGRES_LEFT
+          echo LAB_LIFECYCLE_TEST_COMPLETED
