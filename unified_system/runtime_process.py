@@ -1180,6 +1180,13 @@ class ProcessDriver:
                 if not (os.name == 'nt' and spec.module_id == 'market_data'
                         and release_id == 'disposable-lab'):
                     raise ValueError('isolated Windows Job requires disposable LAB release')
+                # Reject unqualified environment BEFORE durable STARTING. A
+                # secret or alternate service credential cannot cross this
+                # reduced token boundary through arbitrary configured keys.
+                allowed = {'PORT', 'UNIFIED_SOURCE_COMMIT',
+                           'JOB_TEST_PID_FILE', 'JOB_TEST_SENTINEL'}
+                if any(key not in allowed for key in _public_environment(program)):
+                    raise ValueError('restricted LAB environment unqualified')
         except Exception:
             # This live driver witnessed rejection before the durable STARTING
             # intent or Popen. An absent file alone is never that evidence.
