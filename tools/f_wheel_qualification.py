@@ -198,7 +198,6 @@ def qualify_wheel(
                 raise ValueError("installed RECORD integrity mismatch")
         if installed_seen.intersection(payload.keys()) != payload.keys():
             raise ValueError("installed RECORD omits wheel member")
-
         for name, expected in source_files.items():
             if name not in payload or _digest(payload[name]) != expected or name.endswith("/RECORD"):
                 raise ValueError("source bytes mismatch or missing runtime module")
