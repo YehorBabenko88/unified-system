@@ -13,7 +13,8 @@ from pathlib import Path
 
 from unified_system.lab_postgres import LabPostgres
 from unified_system.lab_pg_fence import (
-    install_lab_fence, claim_lab_fence, observe_old_lab_backend)
+    install_lab_fence, claim_lab_fence, observe_old_lab_backend,
+    revoke_lab_fence)
 from unified_system.lab_pg_checkpoint import (
     install_lab_checkpoint, read_lab_pending)
 from unified_system.lab_pg_recovery import (recover_exclusive_lab_cluster,
@@ -181,15 +182,23 @@ class NativeCRecoveryTests(unittest.TestCase):
         self.assertEqual(self.pg.sql(
             "SELECT count(*) FROM public.provenance_minutes "
             f"WHERE symbol='{symbol}' AND start_ms={start_ms}"),"1")
+        # A wrong original backend incarnation cannot revoke this writer.
+        with self.assertRaisesRegex(
+                LabAdmissionRejected, "LAB_FENCE_REVOKE_UNVERIFIED"):
+            revoke_lab_fence(
+                self.pg, owner=self.old["owner"],
+                namespace=self.old["namespace"], generation=1, token=100,
+                backend_pid=self.old["backend_pid"] + 1,
+                backend_start=self.old["backend_start"])
         self.assertEqual(self.pg.sql(
-            "UPDATE public.lab_writer_fence SET active=false "
-            f"WHERE resource_id='{resource}' "
-            f"AND owner='{self.old['owner']}' "
-            f"AND namespace='{self.old['namespace']}' "
-            "AND generation=1 AND token=100 "
-            f"AND backend_pid={self.old['backend_pid']} "
-            f"AND backend_start='{self.old['backend_start']}'::timestamptz "
-            "AND active=true RETURNING generation"),"1")
+            "SELECT generation,token,active "
+            "FROM public.lab_writer_fence"), "1|100|t")
+        # Exact owner API now runs a separate durable inactive readback.
+        self.assertTrue(revoke_lab_fence(
+            self.pg, owner=self.old["owner"],
+            namespace=self.old["namespace"], generation=1, token=100,
+            backend_pid=self.old["backend_pid"],
+            backend_start=self.old["backend_start"]))
         self.assertEqual(self.pg.sql(
             "SELECT generation,token,active "
             "FROM public.lab_writer_fence"),"1|100|f")

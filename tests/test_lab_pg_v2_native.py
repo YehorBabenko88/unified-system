@@ -197,6 +197,19 @@ class NativePg18V2Tests(unittest.TestCase):
             "SELECT backend_start FROM pg_catalog.pg_stat_activity "
             f"WHERE pid={pid}")
 
+    def revoke_current(self, generation, token):
+        # TEST ONLY: the owner obtains the original durable row identity;
+        # production E must pass the pinned original backend identity.
+        row = self.pg.sql(
+            "SELECT owner,namespace,backend_pid,backend_start::text "
+            "FROM public.lab_writer_fence "
+            "WHERE resource_id='grid-market-data-primary'")
+        owner, namespace, pid, started = row.split("|", 3)
+        return revoke_lab_fence(
+            self.pg, owner=owner, namespace=namespace,
+            generation=generation, token=token,
+            backend_pid=int(pid), backend_start=started)
+
     def test_old_lab_backend_observation_does_not_authorize_takeover(self):
         from unified_system.lab_pg_fence import (
             observe_old_lab_backend, terminate_old_lab_backend)
@@ -207,13 +220,25 @@ class NativePg18V2Tests(unittest.TestCase):
         kwargs = dict(owner=_OWNER, namespace=_NAMESPACE, generation=1,
                       token=100, backend_pid=pid, backend_start=start)
         self.assertEqual(observe_old_lab_backend(self.pg, **kwargs), "STILL_ALIVE")
+        # Legacy short revoke must fail closed, and wrong original backend
+        # identity must not mark the durable fence inactive.
+        with self.assertRaises(TypeError):
+            revoke_lab_fence(self.pg, generation=1, token=100)
+        with self.assertRaisesRegex(
+                LabAdmissionRejected, "LAB_FENCE_REVOKE_UNVERIFIED"):
+            revoke_lab_fence(self.pg, owner=_OWNER, namespace=_NAMESPACE,
+                             generation=1, token=100,
+                             backend_pid=self.backend_pid(self.other),
+                             backend_start=start)
+        self.assertEqual(self.pg.sql(
+            "SELECT active FROM public.lab_writer_fence"), "t")
         # No safe PID+start atomic actuator exists: STOP is intentionally
         # fail-closed, and must never terminate or grant during uncertainty.
         self.assertEqual(terminate_old_lab_backend(self.pg, **kwargs), "UNKNOWN")
         self.assertEqual(observe_old_lab_backend(self.pg, **kwargs), "STILL_ALIVE")
         with self.assertRaisesRegex(LabAdmissionRejected, "LAB_FENCE_CLAIM_DENIED"):
             self.claim(self.other, 2, 101, self.identity())
-        self.assertTrue(revoke_lab_fence(self.pg, generation=1, token=100))
+        self.assertTrue(self.revoke_current(generation=1, token=100))
         with self.assertRaisesRegex(LabAdmissionRejected, "LAB_FENCE_CLAIM_DENIED"):
             self.claim(self.other, 2, 101, self.identity())
         self.writer.close()
@@ -303,7 +328,7 @@ class NativePg18V2Tests(unittest.TestCase):
             write_row(self.other, source_sha=self.source_sha, schema_sha=self.schema_sha, generation=1, token=100, ids=identities,
                       fp="3"*64, content_id="4"*64)
         self.other.rollback()
-        self.assertTrue(revoke_lab_fence(self.pg, generation=1, token=100))
+        self.assertTrue(self.revoke_current(generation=1, token=100))
         with self.assertRaisesRegex(LabAdmissionRejected,
                                     "LAB_FENCE_REVALIDATION_DENIED"):
             revalidate_lab_fence(
@@ -455,7 +480,7 @@ class NativePg18V2Tests(unittest.TestCase):
         self.writer = self.psycopg.connect(self.pg.dsn("lab_writer"))
         with self.assertRaisesRegex(LabAdmissionRejected, "LAB_FENCE_CLAIM_DENIED"):
             self.claim(self.writer, 2, 201, self.identity())
-        self.assertTrue(revoke_lab_fence(self.pg, generation=1, token=200))
+        self.assertTrue(self.revoke_current(generation=1, token=200))
         with self.assertRaisesRegex(LabAdmissionRejected, "LAB_FENCE_CLAIM_DENIED"):
             self.claim(self.writer, 2, 200, self.identity())
         next_ids = self.identity()

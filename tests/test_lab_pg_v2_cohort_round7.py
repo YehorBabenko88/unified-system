@@ -207,6 +207,19 @@ class Round7OwnedPg18Integrated(unittest.TestCase):
             schema_sha256=item.schema_sha256,backend_pid=self.pid(conn),
             previous_quiescence_verified=True)
 
+    def revoke_current(self, *, generation, token):
+        # Test-only original row readback. Root E must supply the verified
+        # prior owner/namespace/backend PID/start on its real revoke path.
+        row=self.pg.sql(
+            "SELECT owner,namespace,backend_pid,backend_start::text "
+            "FROM public.lab_writer_fence "
+            "WHERE resource_id='grid-market-data-primary'")
+        owner,namespace,pid,started=row.split("|",3)
+        return revoke_lab_fence(
+            self.pg,owner=owner,namespace=namespace,
+            generation=generation,token=token,
+            backend_pid=int(pid),backend_start=started)
+
     def adapter(self,conn,*,generation=1,token=100,identity=None,
                 admission=None):
         i=identity or self.identity
@@ -389,7 +402,7 @@ class Round7OwnedPg18Integrated(unittest.TestCase):
         self.assertFalse(chart["trading_authorized"])
         with self.assertRaises(self.psycopg.Error):
             self.adapter(self.foreign).write(record,content_id="c"*64)
-        self.assertTrue(revoke_lab_fence(self.pg,generation=1,token=100))
+        self.assertTrue(self.revoke_current(generation=1,token=100))
         with self.assertRaises(LabAdmissionRejected):
             commit_verified_lab_cursor(self.pg,**checkpoint)
         with self.assertRaises(LabAdmissionRejected):
@@ -481,7 +494,7 @@ class Round7OwnedPg18Integrated(unittest.TestCase):
             self.adapter(self.primary,identity=self.identity,
                          generation=1,token=100).write(
                 pending,content_id="e"*64)
-        self.assertTrue(revoke_lab_fence(self.pg,generation=1,token=100))
+        self.assertTrue(self.revoke_current(generation=1,token=100))
         with self.assertRaises(LabAdmissionRejected):
             self.claim(self.primary,generation=2,token=100)
         newer=self.WriterLeaseIdentity(

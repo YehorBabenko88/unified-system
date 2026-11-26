@@ -121,8 +121,8 @@ jobs:
           from tests import test_lab_pg_v2_native
           suite=unittest.defaultTestLoader.loadTestsFromModule(test_lab_pg_v2_native)
           required=suite.countTestCases()
-          if required != 4:
-              raise SystemExit(f"NATIVE_PG18_ROSTER_MISMATCH:{required}:expected=4")
+          if required != 6:
+              raise SystemExit(f"NATIVE_PG18_ROSTER_MISMATCH:{required}:expected=6")
           outcome=unittest.TextTestRunner(verbosity=2).run(suite)
           if not outcome.wasSuccessful() or outcome.skipped or outcome.testsRun != required:
               raise SystemExit("NATIVE_PG18_GATE_FAILED")

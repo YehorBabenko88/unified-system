@@ -6,6 +6,7 @@ No user databases, external PostgreSQL instance or trading endpoints.
 """
 import re
 import uuid
+import datetime
 
 from .lab_simulation_admission import LabAdmissionRejected, need
 
@@ -163,20 +164,57 @@ def claim_lab_fence(pg, *, owner, namespace, generation, token,
     need(pg.sql(sql) == str(generation), "LAB_FENCE_CLAIM_DENIED")
     return True
 
-def revoke_lab_fence(pg, *, generation, token):
-    """Owner-only revocation; high-water persists across restart."""
+def revoke_lab_fence(pg, *, owner, namespace, generation, token,
+                     backend_pid, backend_start, timeout=120):
+    """Revoke ONE exact original LAB backend fence with durable SQL readback.
+
+    Caller-supplied generation/token alone MUST fail closed (TypeError).
+    PostgreSQL row revocation is not process/backend extinction, Consul lease
+    expiry, Root admission, or an assertion that no old COMMIT ever occurred.
+    Unknown UPDATE outcome is resolved only by an independent exact readback.
+    """
     pg._verify_owned()
     need(pg.started, "LAB_PG_NOT_STARTED")
     pg._verify_postmaster()
-    need(type(generation) is int and generation>0
-         and type(token) is int and token>0, "LAB_FENCE_TOKEN_INVALID")
-    result = pg.sql(
-        "UPDATE public.lab_writer_fence SET active=false"
-        f" WHERE resource_id='grid-market-data-primary' AND active=true"
+    owner, namespace = _scope(owner, namespace)
+    need(type(generation) is int and 0 < generation < 2**63
+         and type(token) is int and 0 < token < 2**63,
+         "LAB_FENCE_TOKEN_INVALID")
+    need(type(backend_pid) is int and 0 < backend_pid < 2**31,
+         "LAB_FENCE_BACKEND_INVALID")
+    need(type(backend_start) is str and len(backend_start) <= 64,
+         "LAB_FENCE_BACKEND_START_INVALID")
+    need(type(timeout) in (int, float) and 1 <= timeout <= 120,
+         "LAB_FENCE_REVOKE_TIMEOUT_INVALID")
+    try:
+        old_start = datetime.datetime.fromisoformat(
+            backend_start.replace("Z", "+00:00").replace(" ", "T"))
+    except (ValueError, OverflowError) as exc:
+        raise LabAdmissionRejected("LAB_FENCE_BACKEND_START_INVALID") from exc
+    need(old_start.tzinfo is not None, "LAB_FENCE_BACKEND_START_INVALID")
+    where = (
+        " WHERE resource_id='grid-market-data-primary'"
+        f" AND owner='{owner}' AND namespace='{namespace}'"
         f" AND generation={generation} AND token={token}"
-        " RETURNING generation")
-    need(result == str(generation), "LAB_FENCE_REVOKE_DENIED")
+        f" AND backend_pid={backend_pid}"
+        f" AND backend_start='{old_start.isoformat()}'::timestamptz"
+    )
+    try:
+        pg.sql("UPDATE public.lab_writer_fence SET active=false"
+               + where + " AND active=true RETURNING generation",
+               timeout=timeout)
+    except Exception:
+        # Could be a lock timeout, network failure, or unknown COMMIT.
+        # Nothing is acknowledged until a new owner-only SQL connection
+        # independently proves the exact durable identity is inactive.
+        pass
+    result = pg.sql(
+        "SELECT CASE WHEN active=false THEN 'REVOKED_EXACT'"
+        " ELSE 'UNKNOWN' END FROM public.lab_writer_fence" + where,
+        timeout=timeout)
+    need(result == "REVOKED_EXACT", "LAB_FENCE_REVOKE_UNVERIFIED")
     return True
+
 
 def fence_identity():
     """Immutable fixture identity; caller still needs independent Root authority."""

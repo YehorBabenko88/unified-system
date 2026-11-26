@@ -18,7 +18,7 @@ from types import MappingProxyType
 
 from .lab_simulation_admission import LabAdmissionRejected, need
 from .lab_postgres import LabPostgres
-from .lab_pg_fence import _scope, fenced_lab_witness, observe_old_lab_backend
+from .lab_pg_fence import _scope, fenced_lab_witness, observe_old_lab_backend, revoke_lab_fence
 from .lab_pg_checkpoint import _stream, read_lab_pending, read_lab_checkpoint
 
 # C solely arbitrates the *physical* private data root, not Python object id.
@@ -626,21 +626,22 @@ def _restart_stopped(pg, deadline):
 
 
 def _revoke(pg, old, deadline):
-    # Single guarded SQL UPDATE; a timeout/unknown commit cannot be taken
-    # as success until the durable readback is independently performed.
-    query = (
-        "UPDATE public.lab_writer_fence SET active=false"
-        " WHERE resource_id='grid-market-data-primary'"
-        f" AND owner='{old['owner']}' AND namespace='{old['namespace']}'"
-        f" AND generation={old['generation']} AND token={old['token']}"
-        f" AND backend_pid={old['backend_pid']}"
-        f" AND backend_start='{datetime.fromisoformat(old['backend_start'].replace('Z', '+00:00')).isoformat()}'::timestamptz"
-        " AND active=true RETURNING generation"
-    )
+    """The sole C SQL revoke contract also serves original WAL recovery.
+
+    Even if its UPDATE/COMMIT response is uncertain, the original C-only
+    recovery can accept only an independently read, exact inactive fence.
+    No old backend/Root/Consul extinction is inferred from this SQL receipt.
+    """
     try:
-        _bounded_sql(pg, query, deadline)
+        revoke_lab_fence(
+            pg, owner=old["owner"], namespace=old["namespace"],
+            generation=old["generation"], token=old["token"],
+            backend_pid=old["backend_pid"],
+            backend_start=old["backend_start"],
+            timeout=min(120, _remaining(deadline)))
     except Exception:
-        # Re-reading under a fresh owner-only connection is mandatory.
+        # A lost response is not success, and never triggers SQL retry.
+        # Recheck the durable original fence under C's bounded deadline.
         pass
     need(_fence_state(pg, old, deadline) ==
          f"{old['generation']}|{old['token']}|f|{old['backend_pid']}",
