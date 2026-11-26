@@ -526,7 +526,7 @@ class _WindowsNonServiceLabToken:
     def verify_suspended_process(self, process_handle):
         from ctypes import wintypes as w
         token = w.HANDLE()
-        if not self._a.OpenProcessToken(process_handle, 0x0004 | 0x0008,
+        if not self._a.OpenProcessToken(process_handle, 0x0002 | 0x0004 | 0x0008,
                                         ctypes.byref(token)):
             raise ValueError('LAB child token unavailable')
         try:
@@ -537,12 +537,12 @@ class _WindowsNonServiceLabToken:
     def create_suspended(self, kernel, argv, command, env_buffer, cwd,
                          startup, info):
         from ctypes import wintypes as w
-        kernel.CreateProcessAsUserW.argtypes = [
+        self._a.CreateProcessAsUserW.argtypes = [
             w.HANDLE, w.LPCWSTR, w.LPWSTR, ctypes.c_void_p,
             ctypes.c_void_p, w.BOOL, w.DWORD, ctypes.c_void_p,
             w.LPCWSTR, ctypes.c_void_p, ctypes.c_void_p]
-        kernel.CreateProcessAsUserW.restype = w.BOOL
-        return bool(kernel.CreateProcessAsUserW(
+        self._a.CreateProcessAsUserW.restype = w.BOOL
+        return bool(self._a.CreateProcessAsUserW(
             self._handle, str(argv[0]), command, None, None, False,
             0x00000004 | 0x00000400 | 0x08000000,
             ctypes.cast(env_buffer, ctypes.c_void_p), str(cwd),
@@ -630,6 +630,7 @@ class OwnedWindowsJob:
         # creation/exit events with trusted kernel evidence.
         self._historical_member_pids = set()
         self._member_history_complete = False
+        self._no_scm_capability_verified = False
 
     def _assign_created_process(self, process_handle):
         """Private: only the trusted suspended launcher supplies this handle.
@@ -887,21 +888,26 @@ def _launch_owned_windows_job_process(argv, cwd, env):
     # Do not allocate a kill-on-close Job before fallible command/env
     # validation has completed. On every subsequent launch error the
     # original process and Job handles are released by the same path.
-    job = OwnedWindowsJob()
+    # No unrestricted fallback when restricted token creation/SCM probe fails.
+    security_token = _WindowsNonServiceLabToken()
+    try:
+        job = OwnedWindowsJob()
+    except BaseException:
+        security_token.close()
+        raise
     created = False
     try:
         # CREATE_SUSPENDED | CREATE_UNICODE_ENVIRONMENT | CREATE_NO_WINDOW
         # Creation cannot execute any process code until ResumeThread.
-        if not kernel.CreateProcessW(
-                str(argv[0]), command, None, None, False,
-                0x00000004 | 0x00000400 | 0x08000000,
-                ctypes.cast(env_buffer, ctypes.c_void_p), str(cwd),
-                ctypes.byref(startup), ctypes.byref(info)):
-            raise ValueError('Windows suspended process creation denied')
+        if not security_token.create_suspended(kernel, argv, command,
+                                               env_buffer, cwd, startup, info):
+            raise ValueError('restricted Windows suspended process creation denied')
         created = True
         if info.pid <= 1 or not info.process or not info.thread:
             raise ValueError('Windows suspended process handles invalid')
         job._assign_created_process(info.process)
+        security_token.verify_suspended_process(info.process)
+        job._no_scm_capability_verified = True
         if not job.verify_member(info.process):
             raise ValueError('Windows Job membership lost')
         # This call never accepts external thread/process handles; only
@@ -930,6 +936,7 @@ def _launch_owned_windows_job_process(argv, cwd, env):
         job.close()
         raise
     finally:
+        security_token.close()
         if created:
             if info.thread: kernel.CloseHandle(info.thread)
             if info.process: kernel.CloseHandle(info.process)
@@ -1170,6 +1177,25 @@ class ProcessDriver:
                    p.get('disposable_lab_windows_job') is True and
                    spec.module_id == 'market_data' and
                    release_id == 'disposable-lab')
+        if lab_job:
+            # Do not inherit arbitrary parent credentials or configuration.
+            # A future installed cohort must explicitly qualify every
+            # additional environment key; unknown keys fail before execution.
+            allowed_public = {'PORT', 'UNIFIED_SOURCE_COMMIT',
+                              'JOB_TEST_PID_FILE', 'JOB_TEST_SENTINEL'}
+            public = _public_environment(p)
+            if any(key not in allowed_public for key in public):
+                raise ValueError('restricted LAB environment unqualified')
+            inherited = ('SYSTEMROOT', 'WINDIR', 'PATH', 'PATHEXT',
+                         'COMSPEC', 'TEMP', 'TMP')
+            env = {key: env[key] for key in inherited if key in env}
+            env.update(public)
+            env.update(PYTHONPYCACHEPREFIX=cache, PYTHONDONTWRITEBYTECODE='1',
+                       UNIFIED_PRIVATE_CACHE_ROOT=cache,
+                       UNIFIED_MODULE_ID=spec.module_id,
+                       UNIFIED_MODULE_VERSION=spec.version,
+                       UNIFIED_RELEASE_ID=release_id,
+                       UNIFIED_INSTANCE_TOKEN=d['token'])
         proc = (_launch_owned_windows_job_process(p['argv'],p['cwd'],env)
                 if lab_job else
                 subprocess.Popen(p['argv'],cwd=p['cwd'],env=env,stdin=subprocess.PIPE,
@@ -1317,9 +1343,11 @@ class ProcessDriver:
         historical = child._job._historical_member_pids | {child.pid}
         scm=tuple(x for x in _windows_service_process_roster() if x[1] in historical)
         if listeners or scm:raise ValueError('TCP or SCM ownership unresolved')
-        if not child._job._member_history_complete:
-            # Never transform point-in-time Job/SCM/TCP snapshots into a full
-            # historical extinction receipt. Return UNKNOWN/fail-closed.
+        if not child._job._member_history_complete and not child._job._no_scm_capability_verified:
+            # A one-time SCM snapshot never establishes history. Only the
+            # original suspended child with OS-verified Low Integrity token,
+            # disabled Administrators SID, and denied SC_MANAGER_CREATE_SERVICE
+            # may use this explicitly bounded disposable LAB exception.
             raise ValueError('historical Windows SCM process membership unproven')
         if child._job.active_process_count()!=0:
             raise ValueError('Job membership changed')
