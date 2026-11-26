@@ -19,6 +19,23 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
+      - name: Checkout exact A-owned OS evidence source for isolated native cohort
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: YehorBabenko88/unified-system
+          ref: 324d6bfd85624e21213180dc66a9c67d4ac790ce
+          path: upstream/a-retained-os
+          persist-credentials: false
+      - name: Verify A source Git blob before test-only overlay
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C upstream/a-retained-os rev-parse HEAD)" = "324d6bfd85624e21213180dc66a9c67d4ac790ce"
+          test "$(git hash-object upstream/a-retained-os/unified_system/runtime_process.py)" = "3e28008ba11dab55ecd77af2e0faf35b0a013d41"
+          # Test checkout only: A owns this source. C never commits an
+          # alternative process observer or copies A into the PR branch.
+          cp upstream/a-retained-os/unified_system/runtime_process.py unified_system/runtime_process.py
+          test "$(git hash-object unified_system/runtime_process.py)" = "3e28008ba11dab55ecd77af2e0faf35b0a013d41"
       - name: Python 3.12
         uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with:
@@ -40,7 +57,7 @@ jobs:
           python -m pip install "psycopg[binary]==3.3.6"
       - name: Compile exact C recovery sources and test module
         run: |
-          python -m py_compile unified_system/lab_postgres.py unified_system/lab_pg_fence.py unified_system/lab_pg_checkpoint.py unified_system/lab_pg_recovery.py tests/test_c_round14_pg_recovery.py
+          python -m py_compile unified_system/runtime_process.py unified_system/lab_postgres.py unified_system/lab_pg_fence.py unified_system/lab_pg_checkpoint.py unified_system/lab_pg_recovery.py tests/test_c_round14_pg_recovery.py
       - name: Run exactly 9 native PostgreSQL18 recovery cases (zero skip)
         shell: bash
         run: |
