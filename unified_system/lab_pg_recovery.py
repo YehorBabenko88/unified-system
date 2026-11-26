@@ -90,6 +90,7 @@ def _state(root, pg, old, phase, *, pid=0, os_identity=()):
     with _GUARD:
         prior = _STATES.get(root)
         need(prior is not None and prior.pg is pg
+             and prior.phase == "IN_PROGRESS"
              and prior.old == _old_tuple(old)
              and prior.root == root and prior.marker == pg._nonce,
              "LAB_RECOVERY_STATE_MISMATCH")
