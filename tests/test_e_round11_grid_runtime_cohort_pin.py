@@ -1,7 +1,7 @@
-"""E Round11 exact new B cohort integrity test; synthetic files only.
+"""E current exact B9e0 four-module cohort integrity tests; synthetic files only.
 
 Real Grid source bytes/PG18/Root/OS are NOT executed here. This checks that
-three manifest-pinned files, Git blob hashes and source lease cannot be
+four manifest-pinned files, Git blob hashes and source lease cannot be
 replaced while the protected Root code binds a current source tree.
 """
 import hashlib
@@ -53,7 +53,23 @@ class RuntimeCohortPinTests(unittest.TestCase):
             self.blobs[relative]=hashlib.sha1(
                 b"blob "+str(len(raw)).encode()+b"\0"+raw).hexdigest()
 
-    def test_all_three_exact_pins_are_checked_but_do_not_grant(self):
+    def test_exact_b9e0_cohort_is_pinned_without_native_authority(self):
+        self.assertEqual(
+            GRID_RUNTIME_LAB_SHA,
+            "9e0d57c4c0f2d01bc381ada090b62d23566b32aa",
+        )
+        self.assertEqual(_GRID_RUNTIME_BLOBS, {
+            "grid/canonical_lab_fenced_writer.py":
+                "247d7fab2738e1892a05979e407f637f9df62784",
+            "grid/canonical_lab_continuous_collector.py":
+                "873e83839bee9ceb1cca710a5291ba2cf5f7f038",
+            "grid/c_lab_journal_adapter.py":
+                "ab93c6d421c3d3f0232060f6ded7ac01bf8eeda0",
+            "grid/c_async_fenced_writer.py":
+                "35bf202bb1674238d53b74f962af966d2a699fa2",
+        })
+
+    def test_all_four_exact_pins_are_checked_but_do_not_grant(self):
         with patch.dict(_GRID_RUNTIME_BLOBS,self.blobs,clear=True):
             evidence=verified_grid_runtime_cohort_pin(
                 self.source,self.manifest,self.root)
