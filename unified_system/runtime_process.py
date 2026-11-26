@@ -441,9 +441,9 @@ class _WindowsNonServiceLabToken:
         low_sid = ctypes.c_void_p()
         self._handle = None
         try:
-            # TOKEN_ASSIGN_PRIMARY | TOKEN_DUPLICATE | TOKEN_IMPERSONATE |
-            # TOKEN_QUERY | TOKEN_ADJUST_DEFAULT.
-            access = 0x0001 | 0x0002 | 0x0004 | 0x0008 | 0x0080
+            # Query and duplicate only the original token. The restricted
+            # output token independently receives its own required rights.
+            access = 0x0002 | 0x0008
             if not a.OpenProcessToken(k.GetCurrentProcess(), access, ctypes.byref(source)):
                 raise ValueError('LAB parent token inaccessible')
             if not a.ConvertStringSidToSidW('S-1-5-32-544', ctypes.byref(admin_sid)):
@@ -451,9 +451,18 @@ class _WindowsNonServiceLabToken:
             if not a.ConvertStringSidToSidW('S-1-16-4096', ctypes.byref(low_sid)):
                 raise ValueError('Low Integrity SID unavailable')
             disabled = SidAttributes(admin_sid, 0)
+            enabled_admin = w.BOOL()
+            if not a.CheckTokenMembership(source, admin_sid,
+                                          ctypes.byref(enabled_admin)):
+                raise ValueError('LAB parent Administrators membership unavailable')
+            # LocalService/standard-user tokens may not contain an enabled
+            # Administrators SID; no non-existent SID may be forced into
+            # CreateRestrictedToken's disabled group list.
+            disable_count = 1 if enabled_admin.value else 0
+            disabled_ptr = ctypes.byref(disabled) if disable_count else None
             restricted = w.HANDLE()
-            # DISABLE_MAX_PRIVILEGE; Administrators becomes deny-only.
-            if not a.CreateRestrictedToken(source, 0x1, 1, ctypes.byref(disabled),
+            # DISABLE_MAX_PRIVILEGE; enabled Administrators becomes deny-only.
+            if not a.CreateRestrictedToken(source, 0x1, disable_count, disabled_ptr,
                                            0, None, 0, None,
                                            ctypes.byref(restricted)):
                 raise ValueError('LAB restricted primary token creation denied')
@@ -1228,6 +1237,42 @@ class ProcessDriver:
                 self._job_receipts.pop(operation_id,None)
             raise
         return operation_id
+    def owned_job_stop_state(self, handle):
+        """Exact local Job OS-stop witness, NEVER a Root admission decision.
+
+        EXTINCT means the original retained process object signalled and the
+        exact pre-launch Job has zero active members. It says nothing about
+        independent SCM processes, TCP reservation, leases, PG or SQL.
+        Missing handles, identity mismatch and API failures are UNKNOWN.
+        """
+        try:
+            with self._job_evidence_lock:
+                child = self.children.get(handle)
+                if type(child) is not _OwnedWindowsChild or not child._handle:
+                    return 'UNKNOWN'
+                record = self._load(handle)
+                bound = self._job_launch_bindings.get(handle)
+                if (bound is None or bound[0] is not child
+                        or record.get('pid') != child.pid
+                        or record.get('created') != list(bound[2])
+                        or record.get('release_id') != bound[1]
+                        or record.get('token') != bound[5]
+                        or child._job._handle is None
+                        or child._job._assigned is not True):
+                    return 'UNKNOWN'
+                k, w = _win_api()
+                if tuple(_win_identity(k, w, child._handle)) != bound[2]:
+                    return 'UNKNOWN'
+                process_status = k.WaitForSingleObject(child._handle, 0)
+                members = child._job.active_process_count()
+                if process_status == 0 and members == 0:
+                    return 'EXTINCT'
+                if process_status == 0x102 or members > 0:
+                    return 'STILL_ALIVE'
+                return 'UNKNOWN'
+        except (ValueError, OSError, KeyError, TypeError, AttributeError):
+            return 'UNKNOWN'
+
     def owned_process_state(self, handle):
         """Read-only Root OS witness: EXTINCT, STILL_ALIVE, or UNKNOWN.
 
