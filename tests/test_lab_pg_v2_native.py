@@ -238,12 +238,30 @@ class NativePg18V2Tests(unittest.TestCase):
         self.assertEqual(observe_old_lab_backend(self.pg, **kwargs), "STILL_ALIVE")
         with self.assertRaisesRegex(LabAdmissionRejected, "LAB_FENCE_CLAIM_DENIED"):
             self.claim(self.other, 2, 101, self.identity())
-        self.assertTrue(self.revoke_current(generation=1, token=100))
-        with self.assertRaisesRegex(LabAdmissionRejected, "LAB_FENCE_CLAIM_DENIED"):
-            self.claim(self.other, 2, 101, self.identity())
+        # E/C Round23 ordering: retain the ORIGINAL PostgreSQL-observed
+        # owner/ns/generation/token/backend PID+start BEFORE worker stop.
+        # Once the original backend is extinct, live revalidation must DENY,
+        # but durable C owner SQL may still revoke precisely that old row.
         self.writer.close()
         self.writer = None
         self.assertEqual(observe_old_lab_backend(self.pg, **kwargs), "EXTINCT")
+        with self.assertRaisesRegex(
+                LabAdmissionRejected, "LAB_FENCE_REVALIDATION_DENIED"):
+            revalidate_lab_fence(
+                self.pg, identity=self.lease_identity(ids, 100),
+                generation=1, backend_pid=pid)
+        # Old backend extinction ALONE cannot authorize another generation.
+        with self.assertRaisesRegex(LabAdmissionRejected, "LAB_FENCE_CLAIM_DENIED"):
+            self.claim(self.other, 2, 101, self.identity())
+        self.assertEqual(self.pg.sql(
+            "SELECT generation,token,active FROM public.lab_writer_fence"),
+            "1|100|t")
+        # Do NOT reread a replacement live backend or revalidate after stop.
+        # Pass original immutable values, then require durable inactive row.
+        self.assertTrue(revoke_lab_fence(self.pg, **kwargs))
+        self.assertEqual(self.pg.sql(
+            "SELECT generation,token,active FROM public.lab_writer_fence"),
+            "1|100|f")
         # This SQL-only observation is not Root/Consul/OS extinction proof.
         self.assertTrue(self.claim(self.other, 2, 101, self.identity()))
 
