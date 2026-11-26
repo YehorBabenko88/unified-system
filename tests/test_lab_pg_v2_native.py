@@ -216,6 +216,39 @@ class NativePg18V2Tests(unittest.TestCase):
             self.pg.sql("UPDATE lab_writer_fence SET token=999",
                         role="lab_writer")
 
+    def test_native_crash_recovers_fence_high_water_without_old_writer(self):
+        ids = self.identity()
+        self.assertTrue(self.claim(self.writer, 1, 200, ids))
+        write_row(self.writer, generation=1, token=200, ids=ids,
+                  fp="9"*64, content_id="a"*64)
+        self.writer.close()
+        self.writer = None
+        self.other.close()
+        self.other = None
+        killed_pid = self.pg.crash()
+        self.assertFalse(self.pg.started)
+        self.pg.start()
+        self.assertNotEqual(self.pg.postmaster_pid(), killed_pid)
+        self.assertEqual(self.pg.sql(
+            "SELECT generation,token,active FROM lab_writer_fence"), "1|200|t")
+        self.assertEqual(self.pg.sql("SELECT count(*) FROM provenance_minutes"),
+                         "1")
+        # Active state is durable and does not authorize a new generation.
+        self.writer = self.psycopg.connect(self.pg.dsn("lab_writer"))
+        with self.assertRaisesRegex(LabAdmissionRejected, "LAB_FENCE_CLAIM_DENIED"):
+            self.claim(self.writer, 2, 201, self.identity())
+        self.assertTrue(revoke_lab_fence(self.pg, generation=1, token=200))
+        with self.assertRaisesRegex(LabAdmissionRejected, "LAB_FENCE_CLAIM_DENIED"):
+            self.claim(self.writer, 2, 200, self.identity())
+        next_ids = self.identity()
+        self.assertTrue(self.claim(self.writer, 2, 201, next_ids))
+        write_row(self.writer, generation=2, token=201, ids=next_ids,
+                  fp="b"*64, content_id="c"*64)
+        self.assertEqual(self.pg.sql("SELECT count(*) FROM provenance_minutes"),
+                         "2")
+        self.assertEqual(self.pg.sql("SELECT token FROM lab_writer_fence"),
+                         "201")
+
     def test_real_pg_reader_grid_v2_managed_http_to_terminan_chart(self):
         from market_data.provenance import minute_record, producer, digest, canonical
         from market_data import history_api
