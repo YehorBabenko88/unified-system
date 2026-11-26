@@ -52,6 +52,9 @@ def entry_for_manifest(manifest):
     if source.get("repository") != GRID_REPOSITORY:
         return LEGACY_ENTRY
     deps = manifest.get("dependencies")
+    if (manifest.get("schema") != "unified.lab-release.v1"
+            or manifest.get("mode") != "LAB_SIMULATION"):
+        raise MarketDataEntryRejected("GRID_V2_LAB_SCOPE_REQUIRED")
     if (source.get("commit") != APPROVED_GRID_COMMIT
             or source.get("version") != V2_SOURCE_VERSION
             or source.get("root") != "sources/market_data"
