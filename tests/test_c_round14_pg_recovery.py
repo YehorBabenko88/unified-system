@@ -155,7 +155,7 @@ class NativeCRecoveryTests(unittest.TestCase):
             with self.assertRaisesRegex(LabAdmissionRejected,
                                          "LAB_PG_SQL_FAILED"):
                 self.pg.sql(
-                    "SET LOCAL lock_timeout='300ms'; "
+                    "SET lock_timeout='300ms'; "
                     "UPDATE public.lab_writer_fence SET active=false "
                     f"WHERE resource_id='{resource}' "
                     "AND generation=1 AND token=100 "
@@ -181,10 +181,12 @@ class NativeCRecoveryTests(unittest.TestCase):
         self.assertEqual(self.pg.sql(
             "SELECT generation,token,active "
             "FROM public.lab_writer_fence"),"1|100|f")
-        with self.assertRaises(self.psycopg.Error):
+        with self.assertRaisesRegex(self.psycopg.Error,
+                                    "LAB_FENCE_STALE_OR_FOREIGN_WRITER"):
             with self.writer.cursor() as cursor:
-                cursor.execute(query,(*args[:-3],
-                                     "d"*64,symbol,start_ms+60000,record))
+                cursor.execute(query,(*args[:-5],
+                                     "d"*64,"c"*64,symbol,
+                                     start_ms+60000,record))
         self.assertEqual(self.pg.sql(
             "SELECT count(*) FROM public.provenance_minutes "
             f"WHERE symbol='{symbol}'"),"1")
