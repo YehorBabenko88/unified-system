@@ -889,7 +889,10 @@ class ProcessDriver:
         # atomic Windows Job launch. Never silently change production starts.
         lab_job = (os.name == 'nt' and
                    p.get('disposable_lab_windows_job') is True and
-                   spec.module_id == 'market_data')
+                   spec.module_id == 'market_data' and
+                   release_id == 'disposable-lab')
+        if p.get('disposable_lab_windows_job') is True and not lab_job:
+            raise ValueError('isolated Windows Job requires disposable LAB release')
         proc = (_launch_owned_windows_job_process(p['argv'],p['cwd'],env)
                 if lab_job else
                 subprocess.Popen(p['argv'],cwd=p['cwd'],env=env,stdin=subprocess.PIPE,
