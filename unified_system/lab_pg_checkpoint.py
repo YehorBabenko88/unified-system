@@ -494,6 +494,18 @@ def clear_verified_lab_pending(pg, *, identity, generation, backend_pid,
         " AND p.schema_sha256=f.schema_sha256"
         " AND p.generation<=f.generation AND p.token<=f.token"
         " AND k.generation<=f.generation AND k.token<=f.token"
+        # The conditional DELETE must independently prove the same exact
+        # immutable market row and lack of same-minute competing provenance.
+        # An earlier readback outside this transaction is not sufficient.
+        " AND EXISTS (SELECT 1 FROM public.provenance_minutes recorded"
+        " WHERE recorded.symbol=p.symbol AND recorded.start_ms=p.start_ms"
+        " AND recorded.fingerprint=p.fingerprint"
+        " AND recorded.content_id=p.content_id"
+        " AND recorded.record->>'dataset_fingerprint'=p.fingerprint)"
+        " AND NOT EXISTS (SELECT 1 FROM public.provenance_minutes other"
+        " WHERE other.symbol=p.symbol AND other.start_ms=p.start_ms"
+        " AND (other.fingerprint<>p.fingerprint"
+        " OR other.content_id<>p.content_id))"
         " RETURNING p.stream_id)"
         " SELECT stream_id FROM cleared"
     )

@@ -580,6 +580,32 @@ class Round7OwnedPg18Integrated(unittest.TestCase):
                                     "LAB_CURSOR_DURABLE_RECORD_CORRUPT"):
             read_lab_cursor(self.pg,stream_id=stream)
 
+        # C pending DELETE must itself verify the immutable market row;
+        # previously it trusted the checkpoint identity but not the row.
+        alt="bybit:BTCUSDT:1m:conflicting-clear"
+        original_alt=self.synthetic_minute(minute_offset=6)
+        alt_fields=dict(fields(original_alt),stream_id=alt)
+        unresolved=dict(alt_fields)
+        unresolved.pop("cursor")
+        append_lab_pending(self.pg,**current,**unresolved)
+        self.adapter(self.primary,identity=newer,generation=2,token=101).write(
+            original_alt,content_id=digest(original_alt))
+        commit_verified_lab_cursor(self.pg,**current,**alt_fields)
+        divergent_alt=self.synthetic_minute(minute_offset=6,close_value=1.5)
+        self.assertNotEqual(divergent_alt["dataset_fingerprint"],
+                            original_alt["dataset_fingerprint"])
+        self.adapter(self.primary,identity=newer,generation=2,token=101).write(
+            divergent_alt,content_id=digest(divergent_alt))
+        with self.assertRaisesRegex(LabAdmissionRejected,
+                                    "LAB_PENDING_CLEAR_UNVERIFIED"):
+            clear_verified_lab_pending(self.pg,**current,stream_id=alt)
+        self.assertEqual(read_lab_pending(
+            self.pg,stream_id=alt)["fingerprint"],
+            original_alt["dataset_fingerprint"])
+        with self.assertRaisesRegex(LabAdmissionRejected,
+                                    "LAB_CURSOR_DURABLE_RECORD_CORRUPT"):
+            read_lab_cursor(self.pg,stream_id=alt)
+
 
 if __name__=="__main__":
     unittest.main()
