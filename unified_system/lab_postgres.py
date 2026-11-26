@@ -90,6 +90,8 @@ class LabPostgres:
         self._lifecycle_lock_fd = -1
         self._bootstrap_lock_fd = -1
         self._bootstrap_lock_witness_fd = -1
+        self._initdb_phase = 'NOT_STARTED'
+        self._initial_start_attempted = False
 
     def _bind_recovery_lifecycle(self, lock_fd):
         """Private C recovery handoff; caller must be the original C lock owner.
@@ -361,9 +363,18 @@ class LabPostgres:
         if os.name != 'nt':
             need(pwfile.stat().st_mode & 0o077 == 0, 'LAB_PG_SECRET_PERMISSIONS')
         try:
-            subprocess.run([str(self.tools['initdb']), '-D', str(self.data), '-U', 'lab_owner', '-E', 'UTF8',
-                            '--auth=scram-sha-256', '--pwfile', str(pwfile), '--no-instructions', '--locale=C'],
-                           check=True, capture_output=True, timeout=300, env=self._env('lab_owner'))
+            # Mark unknown *before* subprocess creation. Only Python's
+            # subprocess.run completed-error / kill-and-wait timeout paths
+            # can downgrade this state to an exited failure.
+            self._initdb_phase = 'RUNNING_OR_EXIT_UNKNOWN'
+            try:
+                subprocess.run([str(self.tools['initdb']), '-D', str(self.data), '-U', 'lab_owner', '-E', 'UTF8',
+                                '--auth=scram-sha-256', '--pwfile', str(pwfile), '--no-instructions', '--locale=C'],
+                               check=True, capture_output=True, timeout=300, env=self._env('lab_owner'))
+            except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
+                self._initdb_phase = 'FAILED_EXIT_CONFIRMED'
+                raise
+            self._initdb_phase = 'COMPLETE'
         finally:
             pwfile.unlink()
         # Loopback-only host-based access; nothing else is accepted.
@@ -393,6 +404,7 @@ class LabPostgres:
         if (self.data / 'postmaster.pid').exists():
             need(not self.started, 'LAB_PG_ALREADY_STARTED')
             self._verify_stale_after_crash()
+        self._initial_start_attempted = True
         result = subprocess.run([str(self.tools['pg_ctl']), '-D', str(self.data), '-l', str(self.log),
                                  '-o', self._options(), '-w', '-t', str(max(1, min(120, int(timeout)-1))), 'start'],
                                 capture_output=True, timeout=timeout, env=self._env('lab_owner'))
