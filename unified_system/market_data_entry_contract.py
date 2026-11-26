@@ -9,7 +9,7 @@ LEGACY_ENTRY = "market_data.cli"
 V2_ENTRY = "market_data_v2.read_api"
 GRID_REPOSITORY = "YehorBabenko88/bybit-cluster-grid"
 APPROVED_GRID_COMMIT = "f57781a947af138a2099bebe553b89c3c5ee726e"
-V2_SOURCE_VERSION = "0.2.0.dev0"
+V2_SOURCE_VERSION = "0.2.0-dev0"
 V2_WHEEL_VERSION = "0.2.0.dev0"
 V2_FILES = (
     "sources/market_data/market_data_v2/__init__.py",
