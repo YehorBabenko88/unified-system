@@ -377,38 +377,15 @@ def observe_old_lab_backend(pg, *, owner, namespace, generation, token,
 
 def terminate_old_lab_backend(pg, *, owner, namespace, generation, token,
                               backend_pid, backend_start):
-    """Bounded isolated LAB stop, not issuance of RootBackendExtinction.
+    """Conservative LAB-only backend stop; NOT a transferable Root proof.
 
-    pg_terminate_backend is guarded by the old durable fence identity and
-    pg_stat_activity backend_start in one SQL statement. The owner must still
-    revalidate the fence, WAL, pending and external Root evidence separately.
+    This helper deliberately DOES NOT terminate a PID. PostgreSQL exposes
+    pg_terminate_backend(pid), not an atomic pid+backend_start CAS, so an
+    in-statement pg_stat_activity join still has a PID-reuse TOCTOU race.
+    Until Root can hold an OS/backend-incarnation-stable actuator, only
+    observe old state. In particular do not return EXTINCT on a racing probe.
     """
-    before = observe_old_lab_backend(
+    state = observe_old_lab_backend(
         pg, owner=owner, namespace=namespace, generation=generation,
         token=token, backend_pid=backend_pid, backend_start=backend_start)
-    if before != "STILL_ALIVE":
-        return before
-    owner, namespace = _scope(owner, namespace)
-    query = (
-        "WITH target AS MATERIALIZED ("
-        " SELECT a.pid FROM public.lab_writer_fence f"
-        " JOIN pg_catalog.pg_stat_activity a"
-        " ON a.pid=f.backend_pid AND a.backend_start=f.backend_start"
-        " WHERE f.resource_id='grid-market-data-primary'"
-        f" AND f.owner='{owner}' AND f.namespace='{namespace}'"
-        f" AND f.generation={generation} AND f.token={token}"
-        f" AND f.backend_pid={backend_pid}"
-        f" AND f.backend_start='{backend_start}'::timestamptz"
-        " AND a.datname=current_database()"
-        " AND a.usename='lab_writer' AND a.backend_type='client backend'"
-        " AND a.pid<>pg_catalog.pg_backend_pid())"
-        " SELECT pg_catalog.pg_terminate_backend(pid,3000) FROM target"
-    )
-    try:
-        pg.sql("SET statement_timeout = '5s'; " + query)
-    except Exception:
-        return "UNKNOWN"
-    after = observe_old_lab_backend(
-        pg, owner=owner, namespace=namespace, generation=generation,
-        token=token, backend_pid=backend_pid, backend_start=backend_start)
-    return "EXTINCT" if after == "EXTINCT" else "UNKNOWN"
+    return "UNKNOWN" if state == "STILL_ALIVE" else state
