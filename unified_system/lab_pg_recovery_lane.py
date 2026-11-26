@@ -59,6 +59,8 @@ class LabPgRecoveryLane:
 
     @property
     def worker_outcome_known(self):
+        # A finished Python Future is not enough to prove OS, SQL, WAL,
+        # source, lease or backend ownership. Do not expose as recovery GO.
         with self._lock:
             return self._future is not None and self._future.done()
 
@@ -71,11 +73,17 @@ class LabPgRecoveryLane:
         cluster recovery. Until that exact type is integrated this fails closed.
         The C recovery diagnostic's caller quiesced flag is NOT a Root grant.
         """
-        from .lab_writer_revoke import RootProcessExtinction
-        _need(type(root_process_evidence) is RootProcessExtinction,
+        # The two full Root extinction receipts are not yet implemented.
+        # Do NOT let a temporary public class or bool enable C lifecycle.
+        from . import lab_writer_revoke as revoker_module
+        proof_type=getattr(revoker_module,"RootProcessExtinction",None)
+        _need(type(proof_type) is type
+              and type(root_process_evidence) is proof_type,
               "LAB_ROOT_PROCESS_EXTINCTION_REQUIRED")
         # Further binding to actual old/new owner is required before release.
-        _need(type(old) is dict and type(streams) in (tuple,list),
+        _need(type(old) is dict and type(streams) in (tuple,list)
+              and type(max_seconds) in (int,float)
+              and 10<=max_seconds<=180,
               "LAB_PG_RECOVERY_ARGUMENTS_INVALID")
         with self._lock:
             _need(not self._busy and not self._submitted
