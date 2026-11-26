@@ -158,7 +158,10 @@ class NativeCRecoveryTests(unittest.TestCase):
             # psycopg's transaction failure must roll back ONLY this
             # independent connection, not the original writer transaction.
             with self.psycopg.connect(
-                    self.pg.dsn("lab_owner"),autocommit=True) as revoker:
+                    host="127.0.0.1", port=self.pg.port,
+                    dbname=self.pg.database, user="lab_owner",
+                    password=self.pg.passwords["lab_owner"],
+                    autocommit=True) as revoker:
                 with revoker.cursor() as cursor:
                     cursor.execute("SET lock_timeout='300ms'")
                     with self.assertRaisesRegex(
