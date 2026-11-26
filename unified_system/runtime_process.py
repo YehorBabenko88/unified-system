@@ -414,6 +414,20 @@ class OwnedWindowsJob:
         # This class is observation-only until A's future process launcher
         # uses CREATE_SUSPENDED and assigns the exact new child atomically.
         self._created_prelaunch = True
+        self._assigned = False
+
+    def assign_suspended_child(self, process_handle):
+        # The caller must have created this exact process with
+        # CREATE_SUSPENDED; no existing running PID is eligible for adoption.
+        # The child must remain suspended until assignment succeeds.
+        if self._handle is None or self._assigned:
+            raise ValueError('Windows Job assignment unavailable')
+        from ctypes import wintypes as w
+        self._k.AssignProcessToJobObject.argtypes = [w.HANDLE, w.HANDLE]
+        self._k.AssignProcessToJobObject.restype = w.BOOL
+        if not self._k.AssignProcessToJobObject(self._handle, process_handle):
+            raise ValueError('Windows Job suspended assignment denied')
+        self._assigned = True
 
     def verify_member(self, process_handle):
         if self._handle is None:
