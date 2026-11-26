@@ -700,6 +700,26 @@ class WindowsNativeSuspendedLaunchTests(unittest.TestCase):
         self.driver.stop(op)
         self.assertEqual(self.driver._load(op)['state'], 'STOPPED')
 
+    def test_native_foreign_ipv6_listener_denies_job_receipt(self):
+        import socket
+        from urllib.parse import urlsplit
+        from unified_system.runtime import ModuleSpec
+        op = self.driver.start(ModuleSpec('market_data','1.0.0'),
+                               'disposable-lab', self.op)
+        self.addCleanup(self._cleanup)
+        port = urlsplit(self.driver.programs['market_data']['health_url']).port
+        with socket.socket(socket.AF_INET6, socket.SOCK_STREAM) as server:
+            server.bind(('::1', port))
+            server.listen(1)
+            with self.assertRaisesRegex(
+                    ValueError, 'TCP or SCM ownership unresolved'):
+                self.driver.stop(op)
+            self.assertEqual(self.driver._load(op)['state'], 'RUNNING')
+            self.assertNotIn(op, self.driver._job_receipts)
+            self.assertEqual(self.driver.owned_job_stop_state(op), 'EXTINCT')
+        self.driver.stop(op)
+        self.assertEqual(self.driver._load(op)['state'], 'STOPPED')
+
     def test_native_scm_root_ownership_denies_receipt(self):
         from unified_system.runtime import ModuleSpec
         op = self.driver.start(ModuleSpec('market_data','1.0.0'),
@@ -999,6 +1019,16 @@ class WindowsKernelTcpOwnershipTests(unittest.TestCase):
             self.assertIn(os.getpid(), owners)
         # Port release is not itself proof old process or descendants exited.
         self.assertIsInstance(owners, tuple)
+
+    def test_owned_ipv6_loopback_listener_has_current_pid(self):
+        import socket
+        from unified_system.runtime_process import _windows_tcp_listener_owner_pids
+
+        with socket.socket(socket.AF_INET6, socket.SOCK_STREAM) as listener:
+            listener.bind(('::1', 0))
+            listener.listen(1)
+            port = listener.getsockname()[1]
+            self.assertIn(os.getpid(), _windows_tcp_listener_owner_pids(port))
 
     def test_reject_unqualified_kernel_port(self):
         from unified_system.runtime_process import _windows_tcp_listener_owner_pids
