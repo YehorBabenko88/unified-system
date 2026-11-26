@@ -113,26 +113,17 @@ def _revoke(pg, old, deadline):
 
 
 def _snapshot(pg, streams, deadline):
+    """Read durable SQL from separate C-owned subprocesses, never replay."""
     result = {}
-    # Existing checkpoint helpers are owned by C but use pg.sql without a
-    # deadline. Apply the same monotonic budget in this serialized LAB lane.
-    original = pg.sql
-    def budgeted(statement, *, role="lab_owner", database=None, timeout=120):
-        return original(statement, role=role, database=database,
-                        timeout=min(timeout, 120, _remaining(deadline)))
-    # C serializes this dispatcher, but E still must not invoke a second
-    # independent stop-only operation on this object.
-    pg.sql = budgeted
-    try:
-        for stream in streams:
-            _remaining(deadline)
-            result[stream] = {
-                "pending": read_lab_pending(pg, stream_id=stream),
-                "checkpoint": read_lab_checkpoint(pg, stream_id=stream),
-            }
-            _remaining(deadline)
-    finally:
-        pg.sql = original
+    for stream in streams:
+        _remaining(deadline)
+        # Post-restart SQL remains diagnostic only. Keep the original C
+        # read helpers intact; no dynamic override of the owner object.
+        pending = read_lab_pending(pg, stream_id=stream)
+        _remaining(deadline)
+        checkpoint = read_lab_checkpoint(pg, stream_id=stream)
+        _remaining(deadline)
+        result[stream] = {"pending": pending, "checkpoint": checkpoint}
     return result
 
 
@@ -144,9 +135,8 @@ def recover_exclusive_lab_cluster(pg, *, old, streams=(), quiesced=False,
     the same owner object persists and C can read the saved durable fence
     after starting. The caller's quiesced flag is for synthetic LAB only.
     """
-    from .lab_postgres import LabPostgres
+    # Validate exact class BEFORE any method, including ownership checks.
     need(type(pg) is LabPostgres, "LAB_RECOVERY_PG_TYPE_INVALID")
-    # Validate identity before touching any untrusted pg method.
     _require_pg(pg)
     need(quiesced is True, "LAB_RECOVERY_QUIESCENCE_REQUIRED")
     need(type(max_seconds) in (int, float) and 10 <= max_seconds <= 300,
