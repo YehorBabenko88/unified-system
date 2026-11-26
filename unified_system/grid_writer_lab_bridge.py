@@ -4,7 +4,8 @@ All external calls must use Root-owned sealed authority objects and C-owned
 PostgreSQL owner APIs. The result is diagnostic *only* and is never a service,
 SQL, source, trading or native startup grant. No new Consul or writer client.
 """
-import inspect
+import hashlib
+from pathlib import Path
 from dataclasses import dataclass
 
 from .grid_writer_fence_model import (
@@ -41,8 +42,60 @@ class LabFenceAssessment:
         _need(self.native_admitted is False)
 
 
+
+# C's tested native source digest is SHA256(path + NUL + verified bytes + NUL)
+# over four exact installed SDK modules. Its schema digest is SHA256 of the
+# protected Grid migrations module. These are not wheel-publisher attestations.
+_CANONICAL_DIGEST_FILES = (
+    "market_data/provenance.py",
+    "market_data/history_api.py",
+    "market_data_v2/qualified_read_contract.py",
+    "market_data_v2/read_api.py",
+)
+_SCHEMA_DIGEST_FILE = "grid/migrations.py"
+
+
+def verified_grid_source_digests(source, manifest, source_root):
+    """Read source-owned, manifest-hashed LAB files; never accept supplied SHA."""
+    from .lab_release import regular
+    _need(callable(getattr(source, "require_current", None))
+          and callable(getattr(source, "source_scope", None)),
+          "LAB_SOURCE_ADMISSION_REQUIRED")
+    _need(type(manifest) is dict and type(manifest.get("files")) is dict,
+          "LAB_SOURCE_MANIFEST_REQUIRED")
+    _need(source.require_current() is True, "LAB_SOURCE_REVOKED")
+    try:
+        root=Path(source_root).resolve(strict=True)
+        approved=source.source_scope("market_data",root,APPROVED_GRID_COMMIT)
+        _need(Path(approved).resolve(strict=True)==root,
+              "LAB_SOURCE_ROOT_NOT_ADMITTED")
+        def read(rel):
+            name="sources/market_data/"+rel
+            pin=manifest["files"].get(name)
+            _need(type(pin) is dict and set(pin)=={"sha256","bytes"}
+                  and type(pin["sha256"]) is str
+                  and type(pin["bytes"]) is int and 0<pin["bytes"]<=8*1024*1024,
+                  "LAB_SOURCE_FILE_PIN_REQUIRED")
+            path=regular(root/rel)
+            raw=path.read_bytes()
+            _need(len(raw)==pin["bytes"]
+                  and hashlib.sha256(raw).hexdigest()==pin["sha256"],
+                  "LAB_SOURCE_FILE_CHANGED")
+            return raw
+        digest=hashlib.sha256()
+        for rel in _CANONICAL_DIGEST_FILES:
+            digest.update(rel.encode("ascii")+b"\\0"+read(rel)+b"\\0")
+        schema=hashlib.sha256(read(_SCHEMA_DIGEST_FILE)).hexdigest()
+        _need(source.require_current() is True, "LAB_SOURCE_REVOKED")
+        return digest.hexdigest(),schema
+    except ResourceFenceBlocked:
+        raise
+    except Exception:
+        raise ResourceFenceBlocked("LAB_SOURCE_DIGEST_NOT_ATTESTED") from None
+
+
 def _require_native_owner_contract(authority, lease, source, manifest,
-                                   identity, generation, owner,
+                                   identity, generation,
                                    legacy_witness, pg, c_module):
     """Validate cross-owner types without trusting user-supplied JSON receipts."""
     _need(source is not None and callable(getattr(source, "require_current", None)),
@@ -63,9 +116,9 @@ def _require_native_owner_contract(authority, lease, source, manifest,
           "LAB_CONSUL_IDENTITY_REJECTED")
     _need(type(generation) is int and 1 <= generation < 2**63,
           "LAB_GENERATION_REJECTED")
-    _need(owner is not None and callable(getattr(owner, "_verify_owned", None))
-          and callable(getattr(owner, "_verify_postmaster", None))
-          and hasattr(owner, "started"),
+    _need(pg is not None and callable(getattr(pg, "_verify_owned", None))
+          and callable(getattr(pg, "_verify_postmaster", None))
+          and hasattr(pg, "started"),
           "LAB_PG_OWNER_REQUIRED")
     # A witness object must implement an actual native assessment; a boolean
     # supplied by a caller, signed JSON or a passed-in PID list is NOT proof.
@@ -73,7 +126,6 @@ def _require_native_owner_contract(authority, lease, source, manifest,
           and callable(getattr(legacy_witness, "require_current", None))
           and callable(getattr(legacy_witness, "confirmed_quiescent", None)),
           "LAB_QUIESCENCE_WITNESS_REQUIRED")
-    _need(pg is owner, "LAB_PG_OWNER_INSTANCE_MISMATCH")
     _need(c_module is not None
           and callable(getattr(c_module, "fenced_lab_witness", None))
           and callable(getattr(c_module, "fence_identity", None)),
@@ -81,7 +133,8 @@ def _require_native_owner_contract(authority, lease, source, manifest,
 
 
 async def assess_lab_c_fence(*, authority, lease, source, manifest, identity,
-                             generation, pg, c_module, legacy_witness):
+                             generation, pg, c_module, legacy_witness,
+                             source_root):
     """Read-only multi-owner assessment; even positive result cannot start.
 
     Caller must independently supply protected Root objects: do not accept
@@ -92,11 +145,17 @@ async def assess_lab_c_fence(*, authority, lease, source, manifest, identity,
     try:
         from .consul_authority import ConsulLease, ConsulSessionAuthority
         _need(type(authority) is ConsulSessionAuthority
+              and authority.config.isolated_lab is True
               and type(lease) is ConsulLease,
               "LAB_CONSUL_AUTHORITY_REQUIRED")
         _require_native_owner_contract(authority, lease, source, manifest,
-                                       identity, generation, pg,
+                                       identity, generation,
                                        legacy_witness, pg, c_module)
+        actual_source,actual_schema=verified_grid_source_digests(
+            source,manifest,source_root)
+        _need(identity.source_sha256==actual_source
+              and identity.schema_sha256==actual_schema,
+              "LAB_WRITER_DIGEST_NOT_SOURCE_BOUND")
         _need(await authority.validate(lease) is True,
               "LAB_CONSUL_LEASE_UNVERIFIED")
         _need(source.require_current() is True, "LAB_SOURCE_REVOKED")
@@ -105,7 +164,9 @@ async def assess_lab_c_fence(*, authority, lease, source, manifest, identity,
               "LAB_QUIESCENCE_UNVERIFIED")
         _need(pg._verify_owned() is None, "LAB_PG_OWNER_UNVERIFIED")
         _need(pg.started is True, "LAB_PG_NOT_STARTED")
-        _need(pg._verify_postmaster() is None, "LAB_PG_POSTMASTER_UNVERIFIED")
+        postmaster=pg._verify_postmaster()
+        _need(type(postmaster) is int and postmaster>1,
+              "LAB_PG_POSTMASTER_UNVERIFIED")
         fence=c_module.fence_identity()
         _need(type(fence) is dict
               and fence.get("schema") == "lab-postgres-writer-fence.v1"
