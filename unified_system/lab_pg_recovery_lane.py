@@ -28,9 +28,13 @@ class LabPgRecoveryObservation:
 
     def __post_init__(self):
         _need(self.schema=="unified.root-lab-pg-recovery-observation.v1"
-              and self.state in ("UNKNOWN", "STILL_ALIVE", "EXTINCT")
+              and self.state == "UNKNOWN"
               and type(self.old_postmaster_pid) is int
               and self.old_postmaster_pid>1
+              and type(self.isolated_cluster_stopped) is bool
+              and self.old_backend_extinct is False
+              and self.durable_fence_verified is False
+              and self.wal_reconciled is False
               and self.native_admitted is False,
               "LAB_PG_RECOVERY_OBSERVATION_INVALID")
 
