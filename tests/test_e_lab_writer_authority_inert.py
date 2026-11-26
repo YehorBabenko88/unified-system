@@ -3,7 +3,7 @@ import ast
 import unittest
 from pathlib import Path
 
-from unified_system.lab_writer_authority import LabAuthorityStatus, LabWriterAuthority
+from unified_system.lab_writer_authority import LabAuthorityStatus, LabWriterAuthority, LabWriterGrant
 from unified_system.grid_writer_fence_model import (
     ResourceFenceBlocked, native_writer_admission,
 )
@@ -36,6 +36,17 @@ class LabAuthorityInvariants(unittest.TestCase):
         obj._revoked = True
         with self.assertRaises(ResourceFenceBlocked):
             asyncio.run(obj.require_current())
+
+    def test_untrusted_caller_cannot_construct_lab_writer_grant(self):
+        with self.assertRaises(ResourceFenceBlocked):
+            LabWriterGrant(object(), object(), {"native_admitted": True})
+
+    def test_revoked_grant_cannot_be_reused(self):
+        import asyncio
+        permit = object.__new__(LabWriterGrant)
+        permit._revoked = True
+        with self.assertRaises(ResourceFenceBlocked):
+            asyncio.run(permit.require_write_current())
 
     def test_legacy_native_gate_unconditionally_denied(self):
         with self.assertRaisesRegex(ResourceFenceBlocked,
