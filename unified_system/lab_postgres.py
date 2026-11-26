@@ -87,6 +87,8 @@ class LabPostgres:
         self._lifecycle_thread = None
         self._lifecycle_pid = None
         self._lifecycle_lock_fd = -1
+        self._bootstrap_lock_fd = -1
+        self._bootstrap_lock_witness_fd = -1
 
     def _bind_recovery_lifecycle(self, lock_fd):
         """Private C recovery handoff; caller must be the original C lock owner.
@@ -307,6 +309,10 @@ class LabPostgres:
     def initialize(self):
         self._verify_owned()
         need(not self.data.exists(), 'LAB_PG_DATA_EXISTS')
+        from . import lab_pg_recovery as c
+        fd, witness_fd = c._claim_initial_lab_cluster(self)
+        self._bootstrap_lock_fd = fd
+        self._bootstrap_lock_witness_fd = witness_fd
         self.socket_dir.mkdir(mode=0o700)
         for role in ('lab_owner', 'lab_writer', 'lab_reader'):
             self.passwords[role] = secrets.token_hex(24)
@@ -341,6 +347,9 @@ class LabPostgres:
         self._verify_owned()
         if self._owned_pid is not None or self._crashed:
             self._require_recovery_lifecycle()
+        else:
+            from . import lab_pg_recovery as c
+            c._require_initial_lab_cluster(self)
         need(self.port is not None and self.port != 5432, 'LAB_PG_PORT_REJECTED')
         # Refuse foreign/stale pid files; only a previously crashed owned
         # postmaster is eligible for WAL recovery via pg_ctl.
