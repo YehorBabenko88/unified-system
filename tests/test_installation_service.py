@@ -9,7 +9,7 @@ from unified_system.installation_service import ServiceResource,service_plan,par
 class FakeWindows:
  def __init__(self):self.calls=[];self.service=None;self.fault=None;self.acl='a'*64;self.host='TEST-PC'
  def computer_name(self):return self.host
- def native_tools(self):return {'sc':{'path':str(Path(tempfile.gettempdir()).resolve()/'fixture-sc.exe'),'sha256':'a'*64},'powershell':{'path':str(Path(tempfile.gettempdir()).resolve()/'fixture-powershell.exe'),'sha256':'b'*64}}
+ def native_tools(self):return {'sc':{'path':str(Path(tempfile.gettempdir()).resolve()/'fixture-sc.exe'),'sha256':'a'*64},'powershell':{'path':str(Path(tempfile.gettempdir()).resolve()/'powershell.exe'),'sha256':'b'*64}}
  def sid(self,name):return 'S-1-5-80-1-2-3-4-5'
  def call(self,action,plan,guard):
   if guard is None or guard(action,plan['plan_sha256']) is not True:raise ValueError('approval')
