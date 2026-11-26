@@ -199,6 +199,9 @@ def commit_verified_lab_cursor(pg, *, identity, generation, backend_pid,
         "p.fingerprint,p.content_id,"
         "f.owner,f.namespace,f.generation,f.token"
         " FROM active f CROSS JOIN committed p"
+        # PostgreSQL INSERT..SELECT..ON CONFLICT parser needs an explicit
+        # SELECT predicate to disambiguate ON from a JOIN clause.
+        " WHERE true"
         " ON CONFLICT(stream_id) DO UPDATE SET"
         " cursor_value=EXCLUDED.cursor_value,"
         " source_start_ms=EXCLUDED.source_start_ms,"
