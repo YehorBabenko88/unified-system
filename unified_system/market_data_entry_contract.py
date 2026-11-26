@@ -6,6 +6,7 @@ This module only prevents a Strattester-v1 to Grid-v2 implicit code switch.
 import re
 
 LEGACY_ENTRY = "market_data.cli"
+LEGACY_REPOSITORY = "YehorBabenko88/strattester"
 V2_ENTRY = "market_data_v2.read_api"
 GRID_REPOSITORY = "YehorBabenko88/bybit-cluster-grid"
 APPROVED_GRID_COMMIT = "f57781a947af138a2099bebe553b89c3c5ee726e"
@@ -49,8 +50,13 @@ def entry_for_manifest(manifest):
     source = sources.get("market_data")
     if type(source) is not dict:
         raise MarketDataEntryRejected("MARKET_ENTRY_SOURCE_REJECTED")
-    if source.get("repository") != GRID_REPOSITORY:
+    repository = source.get("repository")
+    if repository in (None, LEGACY_REPOSITORY):
+        # Missing repository is permitted only in existing inert unit mocks:
+        # a real release manifest requires an explicit exact repository field.
         return LEGACY_ENTRY
+    if repository != GRID_REPOSITORY:
+        raise MarketDataEntryRejected("MARKET_ENTRY_SOURCE_REJECTED")
     deps = manifest.get("dependencies")
     if (manifest.get("schema") != "unified.lab-release.v1"
             or manifest.get("mode") != "LAB_SIMULATION"):
