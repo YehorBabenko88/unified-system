@@ -84,6 +84,88 @@ def _identity(pid):
 
 
 
+
+class RetainedOsProcessWait:
+    """Read-only, incarnation-bound Win HANDLE / Linux pidfd wait primitive.
+
+    The caller must independently verify its OWNERSHIP of the process, e.g.
+    C's dedicated LAB PostgreSQL marker, executable, data root and PID file.
+    This never signals/kills a process, infers SQL completion, or issues a
+    RootProcessExtinction/RootBackendExtinction grant. Failure is UNKNOWN.
+    """
+
+    def __init__(self, pid, created):
+        if (type(pid) is not int or pid <= 1 or type(created) is not list
+                or len(created) != 2 or not all(type(v) is str and v for v in created)):
+            raise ValueError('owned OS incarnation invalid')
+        self.pid = pid
+        self.created = tuple(created)
+        self._handle = None
+        self._kernel = None
+        self._windows = os.name == 'nt'
+        if _identity(pid) != created:
+            raise ValueError('owned OS incarnation changed')
+        if self._windows:
+            kernel, wintypes = _win_api()
+            handle = kernel.OpenProcess(0x1000 | 0x100000, False, pid)
+            if not handle:
+                raise ValueError('owned OS handle unavailable')
+            try:
+                # Opened handle pins a kernel process object, not a PID
+                # which may later be reused by a different application.
+                if (kernel.WaitForSingleObject(handle, 0) != 0x102
+                        or _win_identity(kernel, wintypes, handle) != created):
+                    raise ValueError('owned OS incarnation changed')
+            except BaseException:
+                kernel.CloseHandle(handle)
+                raise
+            self._kernel, self._handle = kernel, handle
+        else:
+            if not hasattr(os, 'pidfd_open'):
+                raise ValueError('owned OS pidfd unavailable')
+            fd = os.pidfd_open(pid)
+            try:
+                if (_identity(pid) != created
+                        or bool(select.select([fd], [], [], 0)[0])):
+                    raise ValueError('owned OS incarnation changed')
+            except BaseException:
+                os.close(fd)
+                raise
+            self._handle = fd
+
+    def wait_exited(self, timeout):
+        """True only if the retained kernel object has signalled exit."""
+        if (type(timeout) not in (int, float) or not math.isfinite(timeout)
+                or not 0 <= timeout <= 60):
+            raise ValueError('owned OS wait timeout invalid')
+        if self._handle is None:
+            raise ValueError('owned OS wait handle closed')
+        if self._windows:
+            status = self._kernel.WaitForSingleObject(self._handle, int(timeout * 1000))
+            if status == 0:
+                return True
+            if status == 0x102:
+                return False
+            raise ValueError('owned OS wait unavailable')
+        return bool(select.select([self._handle], [], [], timeout)[0])
+
+    def close(self):
+        if self._handle is None:
+            return
+        if self._windows:
+            self._kernel.CloseHandle(self._handle)
+        else:
+            os.close(self._handle)
+        self._handle = None
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc, tb):
+        self.close()
+
+
+
 def _windows_tcp_listener_owner_pids(port):
     """Read ALL IPv4/IPv6 Windows TCP LISTEN owners; never an admission grant.
 
