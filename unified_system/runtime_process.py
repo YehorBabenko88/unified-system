@@ -13,6 +13,7 @@ import os
 from pathlib import Path
 import re
 import secrets
+import select
 import signal
 import socket
 import threading
@@ -204,7 +205,7 @@ class ProcessDriver:
             # Re-attaching by operation ID requires positive same-incarnation OS
             # evidence; alive() maps access-denied/invalid records to False and
             # cannot be a process-ownership or recovery proof.
-            if self.owned_process_state(operation_id) != 'STILL_ALIVE':
+            if d['state'] != 'RUNNING' or self.owned_process_state(operation_id) != 'STILL_ALIVE':
                 raise ValueError('ambiguous prior process start')
             return operation_id
         d=dict(pid=None,created=None,module_id=spec.module_id,version=spec.version,release_id=release_id,
@@ -349,27 +350,40 @@ class ProcessDriver:
                 self.children[handle].stdin.close()
             d['state']='STOPPED';self._save(handle,d);return
         if identity!=d['created']:raise ValueError('refuse unrelated process stop')
+        # OS exit evidence belongs to the exact handle opened and identity-
+        # checked before any signal. A second ProcessDriver may legitimately
+        # stop an owned child without holding the original subprocess.Popen.
+        # Never mistake an arbitrary missing numeric PID for this evidence.
+        exit_witness=False
         if os.name=='nt':
             k,w=_win_api();h=k.OpenProcess(0x1000|0x100000|1,False,d['pid'])
             if not h:raise ValueError('owned process unavailable')
             try:
                 if _win_identity(k,w,h)!=d['created']:raise ValueError('refuse reused process')
-                if not k.TerminateProcess(h,0) or k.WaitForSingleObject(h,5000)!=0:raise ValueError('owned process stop failed')
+                if not k.TerminateProcess(h,0) or k.WaitForSingleObject(h,5000)!=0:
+                    raise ValueError('owned process stop failed')
+                exit_witness=True  # wait on the SAME verified Windows HANDLE
             finally:k.CloseHandle(h)
         else:
-            if not hasattr(os,'pidfd_open') or not hasattr(signal,'pidfd_send_signal'):raise ValueError('safe owned process signalling unavailable')
+            if not hasattr(os,'pidfd_open') or not hasattr(signal,'pidfd_send_signal'):
+                raise ValueError('safe owned process signalling unavailable')
             fd=os.pidfd_open(d['pid'])
             try:
                 if _identity(d['pid'])!=d['created']:raise ValueError('refuse reused process')
                 signal.pidfd_send_signal(fd,signal.SIGTERM)
-                deadline=time.monotonic()+3
-                while time.monotonic()<deadline and _identity(d['pid']) is not None:time.sleep(.02)
-                if _identity(d['pid']) is not None:signal.pidfd_send_signal(fd,signal.SIGKILL)
+                # pidfd readability observes the same kernel process object,
+                # not a potentially reused PID or a deleted pidfile.
+                exit_witness=bool(select.select([fd],[],[],3)[0])
+                if not exit_witness:
+                    signal.pidfd_send_signal(fd,signal.SIGKILL)
+                    exit_witness=bool(select.select([fd],[],[],2)[0])
+                if not exit_witness:raise ValueError('owned process stop unverified')
             finally:os.close(fd)
         if handle in self.children:
             self.children[handle].wait(timeout=5)
-        if self.owned_process_state(handle) != 'EXTINCT':
-            raise ValueError('owned process extinction unverified')
+            if self.owned_process_state(handle) != 'EXTINCT':
+                raise ValueError('owned process extinction unverified')
+        if not exit_witness:raise ValueError('owned process extinction unverified')
         if handle in self.children and self.children[handle].stdin:
             self.children[handle].stdin.close()
         d['state']='STOPPED';self._save(handle,d)
