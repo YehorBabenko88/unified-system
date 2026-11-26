@@ -240,6 +240,10 @@ class LabWriterAuthority:
               and await self._authority.validate(self._lease) is True
               and not self._revoked and not grant._revoked,
               "LAB_OPERATION_ISSUANCE_REVOKED")
+        # F's current qualify_wheel() explicitly returns
+        # release_authenticated=False, installed_record_verified=False,
+        # import_origin_verified=False and entrypoint_verified=False.
+        # These diagnostics MUST NOT be converted into Root permission.
         # A caller may choose any 64-character digest; until Root validates
         # it against the installed wheel, denying is mandatory. This code
         # intentionally does not manufacture acceptance from source pins.
