@@ -363,6 +363,7 @@ class LabPostgres:
                    WHERE t.tgrelid = c.oid
                      AND NOT t.tgisinternal AND t.tgenabled = 'O'
                      AND (t.tgtype & 1) = 1
+                     AND (t.tgtype & 2) = 2
                      AND (t.tgtype & 16) = 16
                      AND (t.tgtype & 8) = 8
                      AND pg_get_triggerdef(t.oid) ILIKE
