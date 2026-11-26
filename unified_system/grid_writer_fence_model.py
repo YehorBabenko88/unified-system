@@ -11,7 +11,7 @@ import uuid
 SCHEMA = "unified.grid-writer-fence-model.v1"
 _SCOPE = "ISOLATED_LAB_ONLY"
 _RESOURCE = "grid-market-data-primary"
-_NAMESPACE = re.compile(r"[A-Za-z0-9_-]+(?:/[A-Za-z0-9_-]+)*\\Z")
+_NAMESPACE = re.compile(r"[A-Za-z0-9_-]+(?:/[A-Za-z0-9_-]+)*\Z")
 _HEX = re.compile(r"[0-9a-f]{64}\Z")
 _OWNER = re.compile(r"[A-Za-z0-9_.:-]{1,128}\Z")
 _MAX = (1 << 63) - 1
