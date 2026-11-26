@@ -20,6 +20,7 @@ from .lab_root_child_witness import RootGridChildWitness
 
 _SCHEMA = "unified.lab-root-writer-authority.v1"
 _SCOPE = "ISOLATED_LAB_ONLY"
+_ISSUANCE_SEAL = object()  # only Root authority method below can use this
 
 
 @dataclass(frozen=True)
@@ -44,7 +45,7 @@ class LabWriterAuthority:
     __slots__ = (
         "_authority", "_lease", "_source", "_identity", "_generation",
         "_pg", "_c", "_quiescence", "_backend_pid", "_postmaster",
-        "_process", "_epoch", "_revoked", "_executor",
+        "_process", "_epoch", "_revoked", "_executor", "_writer_grant",
     )
 
     def __init__(self, *, authority, lease, source, identity, generation,
@@ -95,6 +96,7 @@ class LabWriterAuthority:
         self._executor = executor
         self._epoch = secrets.token_hex(32)
         self._revoked = False
+        self._writer_grant = None
         try:
             _need(pg._verify_owned() is None,
                   "LAB_ROOT_PG_OWNERSHIP_REJECTED")
@@ -119,10 +121,50 @@ class LabWriterAuthority:
         """
         return await self.check()
 
+
+    async def issue_lab_writer_grant(self):
+        """Issue one LAB-only owner grant from live protected Windows Root.
+
+        Requires actual protected activation and a pinned NEW Grid writer
+        adapter. No caller flags or diagnostic status can issue a grant.
+        This is NOT service_module_runtime native startup authorization.
+        """
+        from .service_bootstrap import ProtectedActivation
+        from .grid_writer_lab_bridge import verified_grid_writer_adapter_pin
+        _need(self._writer_grant is None and not self._revoked,
+              "LAB_ROOT_GRANT_ALREADY_ISSUED")
+        protected = self._source._grant
+        _need(type(protected) is ProtectedActivation
+              and protected.require_current() is True,
+              "LAB_ROOT_PROTECTED_ACTIVATION_REQUIRED")
+        status = await self.check()
+        _need(type(status) is LabAuthorityStatus
+              and status.state == "READ_ONLY_REVALIDATED_NOT_NATIVE"
+              and status.epoch == self._epoch,
+              "LAB_ROOT_GRANT_EVIDENCE_NOT_CURRENT")
+        pin = verified_grid_writer_adapter_pin(
+            self._source, self._source._manifest,
+            self._source._roots["market_data"])
+        _need(type(pin) is dict
+              and pin.get("schema") == "unified.grid-canonical-lab-writer-pin.v1"
+              and pin.get("scope", _SCOPE) == _SCOPE
+              and pin.get("native_admitted") is False
+              and pin.get("trading_authorized") is False,
+              "LAB_ROOT_GRID_WRITER_NOT_PINNED")
+        _need(protected.require_current() is True,
+              "LAB_ROOT_PROTECTED_ACTIVATION_REVOKED")
+        status = await self.check()
+        _need(type(status) is LabAuthorityStatus and status.epoch == self._epoch,
+              "LAB_ROOT_GRANT_EPOCH_CHANGED")
+        grant = LabWriterGrant(_ISSUANCE_SEAL, self, pin)
+        self._writer_grant = grant
+        return grant
+
     def revoke(self):
-        # Local irrevocable refusal; C SQL ownership must ALSO be revoked by
-        # its sole owner when the session changes. No SQL is issued here.
+        # Local deny first; SQL/Consul/OS require the separate Root revoker.
         self._revoked = True
+        if self._writer_grant is not None:
+            self._writer_grant.revoke()
 
     async def check(self):
         """Re-read owner state; refuse stale lease/backend/child or any outage."""
@@ -179,3 +221,62 @@ class LabWriterAuthority:
         except Exception:
             self.revoke()
             raise ResourceFenceBlocked("LAB_ROOT_AUTHORITY_UNVERIFIED") from None
+
+
+class LabWriterGrant:
+    """Sealed per-epoch Root LAB writer permit, never a JSON/boolean bearer.
+
+    B may call require_write_current before every C-owned operation. It
+    returns the SAME exact class instance only after protected activation,
+    pinned new Grid writer bytes, current C backend and live Consul+OS proof.
+    SQL fencing remains exclusively in C; the permit does not do SQL writes,
+    start services or authorize trading. Python object identity is not an
+    OS security boundary: the protected Root process must own this instance.
+    """
+
+    __slots__ = ("_authority", "_epoch", "_pin", "_revoked")
+
+    def __init__(self, seal, authority, pin):
+        _need(seal is _ISSUANCE_SEAL
+              and type(authority) is LabWriterAuthority
+              and type(pin) is dict
+              and authority._writer_grant is None
+              and not authority._revoked,
+              "LAB_ROOT_GRANT_NOT_ISSUED")
+        self._authority = authority
+        self._epoch = authority._epoch
+        self._pin = pin.copy()
+        self._revoked = False
+
+    @property
+    def epoch(self):
+        return self._epoch
+
+    def revoke(self):
+        self._revoked = True
+
+    async def require_write_current(self):
+        from .service_bootstrap import ProtectedActivation
+        from .grid_writer_lab_bridge import verified_grid_writer_adapter_pin
+        _need(not self._revoked and not self._authority._revoked
+              and self._authority._writer_grant is self,
+              "LAB_ROOT_GRANT_REVOKED")
+        protected = self._authority._source._grant
+        _need(type(protected) is ProtectedActivation
+              and protected.require_current() is True,
+              "LAB_ROOT_PROTECTED_ACTIVATION_REVOKED")
+        status = await self._authority.check()
+        _need(type(status) is LabAuthorityStatus
+              and status.epoch == self._epoch
+              and status.generation == self._authority._generation,
+              "LAB_ROOT_GRANT_OWNER_ROTATED")
+        current_pin = verified_grid_writer_adapter_pin(
+            self._authority._source, self._authority._source._manifest,
+            self._authority._source._roots["market_data"])
+        _need(current_pin == self._pin,
+              "LAB_ROOT_GRID_WRITER_PIN_CHANGED")
+        _need(protected.require_current() is True
+              and not self._authority._revoked
+              and not self._revoked,
+              "LAB_ROOT_GRANT_CHANGED_DURING_CHECK")
+        return self
