@@ -14,6 +14,7 @@ from .grid_writer_fence_model import ResourceFenceBlocked, _need
 from .lab_writer_authority import LabWriterAuthority
 from .runtime_process import ProcessDriver
 from .lab_owner_executor import LabOwnerExecutor
+from .lab_simulation_admission import LabAdmissionRejected
 
 _SCHEMA = "unified.lab-root-writer-revocation.v1"
 
@@ -95,14 +96,16 @@ class LabWriterRevoker:
         except BaseException:
             pass
         try:
-            await blocked(lambda: self._c.revoke_lab_fence(
-                self._pg, generation=self._generation, token=self._token))
-            stages["sql_fence_revoked"] = True
+            stages["sql_fence_revoked"] = (
+                await blocked(lambda: self._c.revoke_lab_fence(
+                    self._pg, generation=self._generation,
+                    token=self._token)) is True)
         except Exception:
             pass
         try:
             await self._authority.release(self._lease)
-            stages["consul_released"] = True
+            stages["consul_released"] = (
+                await self._authority.validate(self._lease) is False)
         except Exception:
             pass
         try:
@@ -118,8 +121,15 @@ class LabWriterRevoker:
             await blocked(lambda: self._c.revalidate_lab_fence(
                 self._pg, identity=self._guard._identity,
                 generation=self._generation, backend_pid=self._backend_pid))
+        except LabAdmissionRejected as exc:
+            # Only C's explicit stale-fence refusal after an acknowledged
+            # owner SQL revoke is evidence. A connection failure, timeout,
+            # cancel or unrelated exception proves nothing about old writer.
+            stages["old_backend_rejected"] = (
+                stages["sql_fence_revoked"] and
+                str(exc) == "LAB_FENCE_REVALIDATION_DENIED")
         except BaseException:
-            stages["old_backend_rejected"] = stages["sql_fence_revoked"]
+            stages["old_backend_rejected"] = False
         valid = all(stages.values())
         self._last = LabRevocationReport(
             _SCHEMA, "REVOKED_VERIFIED" if valid else "PARTIAL_DENIED",
