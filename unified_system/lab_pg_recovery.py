@@ -258,6 +258,17 @@ def _poison(root, pg):
                 lock_fd=prior.lock_fd)
 
 
+def _require_held_recovery_lock(pg, root, old):
+    with _GUARD:
+        current = _STATES.get(root)
+        need(current is not None and current.phase == "IN_PROGRESS"
+             and current.pg is pg and current.old == _old_tuple(old)
+             and current.marker == pg._nonce,
+             "LAB_RECOVERY_OS_LOCK_OWNER_MISMATCH")
+        fd = current.lock_fd
+    _verify_cluster_os_lock(pg, fd)
+
+
 def _retain_owned_postmaster(pg, deadline):
     """A's *single* retained OS identity primitive, after C owner checks.
 
@@ -526,6 +537,7 @@ def contain_exclusive_lab_cluster(pg, *, old, quiesced=False,
         _require_pg(pg)
         root = _resource(pg)
         _begin(pg, root, old, mode="STOP_ONLY")
+        _require_held_recovery_lock(pg, root, old)
         need(pg.started is True, "LAB_RECOVERY_NOT_STARTED")
         need(observe_old_lab_backend(
             pg, **old, timeout=min(120, _remaining(deadline))) == "STILL_ALIVE",
@@ -533,6 +545,7 @@ def contain_exclusive_lab_cluster(pg, *, old, quiesced=False,
         need(_fence_state(pg, old, deadline) ==
              f"{old['generation']}|{old['token']}|t|{old['backend_pid']}",
              "LAB_RECOVERY_OLD_FENCE_MISMATCH")
+        _require_held_recovery_lock(pg, root, old)
         pid, created, log_position = _stop_started(
             pg, deadline, fault=fault)
         _remaining(deadline)
@@ -577,6 +590,7 @@ def recover_exclusive_lab_cluster(pg, *, old, streams=(), quiesced=False,
         _require_pg(pg)
         root = _resource(pg)
         previous = _begin(pg, root, old, mode="RECOVER")
+        _require_held_recovery_lock(pg, root, old)
         _remaining(deadline)
         # If E stop-only already completed on this same owner object, do
         # not stop a second time; verify and restart through C only.
@@ -587,6 +601,7 @@ def recover_exclusive_lab_cluster(pg, *, old, streams=(), quiesced=False,
             need(_fence_state(pg, old, deadline) ==
                  f"{old['generation']}|{old['token']}|t|{old['backend_pid']}",
                  "LAB_RECOVERY_OLD_FENCE_MISMATCH")
+            _require_held_recovery_lock(pg, root, old)
             pid, created, log_position = _stop_started(pg, deadline)
             _state(root, pg, old, "IN_PROGRESS",
                    pid=pid, os_identity=created)
@@ -600,6 +615,7 @@ def recover_exclusive_lab_cluster(pg, *, old, streams=(), quiesced=False,
                  and pg.started is False,
                  "LAB_RECOVERY_STOPPED_WITHOUT_C_EVIDENCE")
         _remaining(deadline)
+        _require_held_recovery_lock(pg, root, old)
         _restart_stopped(pg, deadline)
         with _GUARD:
             previous_state = _STATES.get(root)
@@ -625,6 +641,7 @@ def recover_exclusive_lab_cluster(pg, *, old, streams=(), quiesced=False,
         _revoke(pg, old, deadline)
         snapshots = _snapshot(pg, streams, deadline)
         _remaining(deadline)
+        _require_held_recovery_lock(pg, root, old)
         return {
             "schema": "c-isolated-pg18-recovery-diagnostic.v2",
             "scope": "ISOLATED_LAB_ONLY",
