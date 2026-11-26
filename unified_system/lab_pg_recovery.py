@@ -59,8 +59,7 @@ def _remaining(deadline):
 
 
 def _bounded_sql(pg, query, deadline):
-    # The real subprocess timeout is not an outer asyncio cancellation:
-    # psql is killed on timeout, and caller remains DENIED.
+    # subprocess.run is bounded by its own timeout; on failure no admission.
     return pg.sql(query, timeout=min(120, _remaining(deadline)))
 
 
@@ -115,16 +114,27 @@ def _revoke(pg, old, deadline):
 
 def _snapshot(pg, streams, deadline):
     result = {}
-    for stream in streams:
-        _remaining(deadline)
-        # Existing C routines each have their own SQL timeout and may exceed
-        # global deadline in unmodified code; the dispatcher runs these only
-        # after the lifecycle is safe, still returns DENIED on overrun.
-        result[stream] = {
-            "pending": read_lab_pending(pg, stream_id=stream),
-            "checkpoint": read_lab_checkpoint(pg, stream_id=stream),
-        }
-        _remaining(deadline)
+    # The pre-existing C checkpoint helpers use pg.sql without a deadline.
+    # During this owned, serialized recovery only, apply the SAME monotonic
+    # budget to their SQL subprocess calls. Restore the method in finally.
+    original = pg.sql
+    def budgeted(statement, *, role="lab_owner", database=None, timeout=120):
+        return original(statement, role=role, database=database,
+                        timeout=min(timeout, 120, _remaining(deadline)))
+    # LabPostgres is a private isolated owner instance. A temporary method
+    # override is safe only while this exact C recovery lock is held and E
+    # must not run its separate stop-only lane concurrently.
+    pg.sql = budgeted
+    try:
+        for stream in streams:
+            _remaining(deadline)
+            result[stream] = {
+                "pending": read_lab_pending(pg, stream_id=stream),
+                "checkpoint": read_lab_checkpoint(pg, stream_id=stream),
+            }
+            _remaining(deadline)
+    finally:
+        pg.sql = original
     return result
 
 
