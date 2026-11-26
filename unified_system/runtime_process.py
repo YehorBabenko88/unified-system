@@ -848,6 +848,11 @@ class ProcessDriver:
             if self.authorize('start',spec.module_id) is not True:raise ValueError('runtime execution not authorized')
             phase='INTEGRITY_REJECTED';self._verify(spec.module_id)
             capability=self._market_data_read_capability(release_id) if spec.module_id=='terminan' else None
+            program=self.programs[spec.module_id]
+            if program.get('disposable_lab_windows_job') is True:
+                if not (os.name == 'nt' and spec.module_id == 'market_data'
+                        and release_id == 'disposable-lab'):
+                    raise ValueError('isolated Windows Job requires disposable LAB release')
         except Exception:
             # This live driver witnessed rejection before the durable STARTING
             # intent or Popen. An absent file alone is never that evidence.
@@ -890,8 +895,6 @@ class ProcessDriver:
                    p.get('disposable_lab_windows_job') is True and
                    spec.module_id == 'market_data' and
                    release_id == 'disposable-lab')
-        if p.get('disposable_lab_windows_job') is True and not lab_job:
-            raise ValueError('isolated Windows Job requires disposable LAB release')
         proc = (_launch_owned_windows_job_process(p['argv'],p['cwd'],env)
                 if lab_job else
                 subprocess.Popen(p['argv'],cwd=p['cwd'],env=env,stdin=subprocess.PIPE,
