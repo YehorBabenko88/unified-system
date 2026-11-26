@@ -381,6 +381,68 @@ def _windows_process_descendant_snapshot(root_pid, expected_root_created):
     return tuple(observations)
 
 
+
+class RetainedWindowsDescendantCensus:
+    """Hold exact kernel process handles for observed Windows descendants.
+
+    A Toolhelp PPID census is NOT a no-new-child barrier. This object binds
+    observed descendants to exact Windows process incarnations, retaining
+    their wait handles, and refuses any claim of complete subtree extinction
+    unless a separate Root-owned creation barrier has been established.
+    No foreign process is signalled or terminated by this class.
+    """
+
+    def __init__(self, root_pid, root_created):
+        if os.name != 'nt':
+            raise ValueError('Windows descendant retention unavailable')
+        self._root = RetainedOsProcessWait(root_pid, root_created)
+        self._children = []
+        self._root_pid = root_pid
+        self._root_created = list(root_created)
+        try:
+            for pid, created in _windows_process_descendant_snapshot(
+                    root_pid, self._root_created):
+                self._children.append(RetainedOsProcessWait(pid, list(created)))
+            # Recheck while handles are retained: a new descendant after the
+            # census is a race, not an invitation to claim no old processes.
+            after = _windows_process_descendant_snapshot(
+                root_pid, self._root_created)
+            if after != tuple((c.pid, c.created) for c in self._children):
+                raise ValueError('Windows descendant census changed')
+        except BaseException:
+            self.close()
+            raise
+
+    def wait_observed_exited(self, timeout):
+        if (type(timeout) not in (int, float) or not math.isfinite(timeout)
+                or not 0 <= timeout <= 60):
+            raise ValueError('Windows descendant deadline invalid')
+        deadline = time.monotonic() + timeout
+        result = []
+        for child in self._children:
+            result.append(child.wait_exited(max(0.0, deadline - time.monotonic())))
+        result.append(self._root.wait_exited(max(0.0, deadline - time.monotonic())))
+        return all(result)
+
+    def verify_complete_extinction(self, *, creation_barrier=False):
+        # Critical: a caller boolean cannot establish a kernel creation
+        # barrier. Until the Root-owned Job Object or another kernel-backed
+        # containment proof exists, never claim complete process extinction.
+        raise ValueError('Windows process creation containment not proven')
+
+    def close(self):
+        for child in self._children:
+            child.close()
+        self._children = []
+        self._root.close()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc, tb):
+        self.close()
+
+
 PRIVATE_DATA_CAPABILITY_ENV='UNIFIED_MARKET_DATA_READ_CAPABILITY'
 
 def _public_environment(program):
