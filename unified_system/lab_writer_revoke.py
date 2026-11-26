@@ -14,6 +14,7 @@ from .grid_writer_fence_model import ResourceFenceBlocked, _need
 from .lab_writer_authority import LabWriterAuthority
 from .runtime_process import ProcessDriver
 from .lab_owner_executor import LabOwnerExecutor
+from .lab_root_stop_lane import LabRootStopLane
 
 _SCHEMA = "unified.lab-root-writer-revocation.v1"
 
@@ -36,9 +37,9 @@ class LabWriterRevoker:
 
     __slots__ = ("_guard", "_driver", "_handle", "_authority", "_lease",
                  "_pg", "_c", "_generation", "_token", "_backend_pid",
-                 "_once", "_last", "_executor")
+                 "_once", "_last", "_executor", "_stop_lane")
 
-    def __init__(self, *, guard, driver, handle, authority, lease, pg, c_module, executor):
+    def __init__(self, *, guard, driver, handle, authority, lease, pg, c_module, executor, stop_lane):
         _need(type(guard) is LabWriterAuthority and
               type(driver) is ProcessDriver and
               type(authority) is ConsulSessionAuthority and
@@ -49,6 +50,8 @@ class LabWriterRevoker:
               "LAB_REVOCATION_OWNER_MISMATCH")
         _need(type(executor) is LabOwnerExecutor,
               "LAB_REVOCATION_ROOT_EXECUTOR_REQUIRED")
+        _need(type(stop_lane) is LabRootStopLane and stop_lane._driver is driver,
+              "LAB_REVOCATION_ROOT_OS_LANE_REQUIRED")
         _need(type(handle) is str and handle in driver.children,
               "LAB_REVOCATION_CHILD_NOT_OWNED")
         _need(callable(getattr(c_module, "revoke_lab_fence", None))
@@ -61,13 +64,15 @@ class LabWriterRevoker:
         self._token = guard._identity.token
         self._backend_pid = guard._backend_pid
         self._executor = executor
+        self._stop_lane = stop_lane
         self._once = False
         self._last = None
 
     async def revoke(self, *, blocking_timeout=10.0):
         """Always attempt every cleanup stage; never claim partial success.
 
-        Order: deny local guard; stop owned child; revoke C SQL; release
+        Order: deny local guard; stop OS child via independent Root lane;
+        revoke C SQL only through SQL worker; release
         Consul; verify old child and fence rejection. If PostgreSQL is down,
         SQL revocation is UNKNOWN, not successful. On recovery the C fence
         must be checked/refused before any fresh lease/child is issued.
@@ -84,13 +89,13 @@ class LabWriterRevoker:
                   "consul_released": False, "child_extinct": False,
                   "old_backend_rejected": False}
         async def blocked(call):
-            # C SQL and ProcessDriver are synchronous. Run on the Root-owned
-            # serialized executor; do not hold the asyncio event loop.
+            # Only C SQL belongs on this Root-owned serial executor.
+            # OS control uses an independent Root lane to survive SQL poison.
             # Timeout means UNKNOWN, never assume the write/stop was cancelled.
             return await self._executor.call(call, timeout=blocking_timeout)
 
         try:
-            await blocked(lambda: self._driver.stop(self._handle))
+            await self._stop_lane.stop_owned(self._handle,timeout=blocking_timeout)
             stages["child_stopped"] = True
         except BaseException:
             pass
@@ -109,8 +114,8 @@ class LabWriterRevoker:
             pass
         try:
             stages["child_extinct"] = (
-                await blocked(lambda: self._driver.alive(self._handle))
-                is False)
+                await self._stop_lane.old_child_extinct(
+                    self._handle,timeout=blocking_timeout) is True)
         except Exception:
             pass
         try:
