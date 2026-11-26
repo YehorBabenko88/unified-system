@@ -86,7 +86,8 @@ def recover_exclusive_lab_cluster(pg, *, old, streams=(), quiesced=False,
     initial_pid = pg._verify_postmaster()
     need(pg.port != 5432 and pg.port is not None,
          "LAB_RECOVERY_PORT_REJECTED")
-    need(type(pg).__name__ == "LabPostgres",
+    from .lab_postgres import LabPostgres
+    need(type(pg) is LabPostgres,
          "LAB_RECOVERY_PG_TYPE_INVALID")
     if not isinstance(old, dict):
         raise LabAdmissionRejected("LAB_RECOVERY_OLD_IDENTITY_INVALID")
