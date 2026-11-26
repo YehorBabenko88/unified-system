@@ -6,6 +6,8 @@ development only (CI uses PostgreSQL 18).
 """
 import os
 import shutil
+import sys
+import subprocess
 import tempfile
 import unittest
 from unittest import mock
@@ -33,6 +35,35 @@ FOR EACH ROW EXECUTE FUNCTION reject_provenance_mutation()""",
 ]
 
 
+def canonical_schema():
+    """Load migration 47 from the exact pinned Grid source tree, not a copy."""
+    root = os.environ.get('LAB_GRID_ROOT')
+    if not root:
+        return SCHEMA  # standalone unit fixture, not canonical E2E evidence
+    expected = os.environ.get('LAB_GRID_SHA')
+    if not expected or len(expected) != 40:
+        raise AssertionError('LAB_GRID_SHA_REQUIRED')
+    actual = subprocess.check_output(['git', '-C', root, 'rev-parse', 'HEAD'],
+                                     text=True).strip()
+    if actual != expected:
+        raise AssertionError('LAB_GRID_SHA_MISMATCH')
+    need_path = Path(root) / 'grid' / 'migrations.py'
+    if not need_path.is_file(): raise AssertionError('LAB_GRID_MIGRATIONS_MISSING')
+    # Execute only the pinned source file with its canonical package imports.
+    sys.path.insert(0, root)
+    try:
+        from grid.migrations import MIGRATIONS
+        selected = [(name, sqls) for version, name, sqls in MIGRATIONS if version == 47]
+    finally:
+        sys.path.remove(root)
+    if len(selected) != 1 or selected[0][0] != 'source_owned_immutable_minutes':
+        raise AssertionError('LAB_GRID_MIGRATION_47_CHANGED')
+    sqls = selected[0][1]
+    if not isinstance(sqls, list) or not sqls:
+        raise AssertionError('LAB_GRID_MIGRATION_47_INVALID')
+    return sqls
+
+
 def insert(i):
     f = format(i, '064x')
     return ("INSERT INTO provenance_minutes(fingerprint,content_id,symbol,start_ms,record) VALUES "
@@ -53,7 +84,7 @@ class LabPostgresLifecycle(unittest.TestCase):
         shutil.rmtree(self.root, ignore_errors=True)
 
     def test_full_lifecycle(self):
-        self.pg = pg = LabPostgres(BIN, self.root, min_major=MIN).initialize().start().provision(SCHEMA)
+        self.pg = pg = LabPostgres(BIN, self.root, min_major=MIN).initialize().start().provision(canonical_schema())
         self.assertGreaterEqual(pg.major, MIN)
         self.assertEqual(pg.sql('SHOW listen_addresses'), '127.0.0.1')
         self.assertNotEqual(pg.port, 5432)
