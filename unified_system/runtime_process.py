@@ -1301,9 +1301,6 @@ class ProcessDriver:
                 record = self._load(handle)
                 bound = self._job_launch_bindings.get(handle)
                 if (bound is None or bound[0] is not child
-                        or len(bound) != 7
-                        or type(bound[6]) is not object
-                        or child._job._no_scm_capability_verified is not bound[6]
                         or record.get('pid') != child.pid
                         or record.get('created') != list(bound[2])
                         or record.get('release_id') != bound[1]
