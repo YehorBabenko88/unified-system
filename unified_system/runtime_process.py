@@ -294,6 +294,93 @@ def _windows_service_process_roster():
         adv.CloseServiceHandle(scm)
 
 
+
+def _windows_process_descendant_snapshot(root_pid, expected_root_created):
+    """Read-only Toolhelp descendants with exact OS identities; not a receipt.
+
+    The root PID must still represent its expected creation/executable at
+    BOTH ends of the enumeration. Every detected descendant has its own
+    identity checked. Parent-PID relations can race with process creation:
+    callers must retain kernel wait handles for the inspected descendants
+    and still exclude new spawns / foreign services before any Root grant.
+    """
+    if (os.name != 'nt' or type(root_pid) is not int or root_pid <= 1
+            or type(expected_root_created) is not list
+            or len(expected_root_created) != 2):
+        raise ValueError('Windows descendant census unavailable')
+    if _identity(root_pid) != expected_root_created:
+        raise ValueError('Windows descendant root identity changed')
+    from ctypes import wintypes as w
+
+    class ProcessEntry(ctypes.Structure):
+        _fields_ = [
+            ('size', w.DWORD), ('usage', w.DWORD),
+            ('pid', w.DWORD), ('heap', ctypes.c_size_t),
+            ('module', w.DWORD), ('threads', w.DWORD),
+            ('parent_pid', w.DWORD), ('priority', w.LONG),
+            ('flags', w.DWORD), ('exe', ctypes.c_wchar * 260),
+        ]
+
+    kernel = ctypes.WinDLL('kernel32', use_last_error=True)
+    kernel.CreateToolhelp32Snapshot.argtypes = [w.DWORD, w.DWORD]
+    kernel.CreateToolhelp32Snapshot.restype = w.HANDLE
+    kernel.Process32FirstW.argtypes = [w.HANDLE, ctypes.POINTER(ProcessEntry)]
+    kernel.Process32FirstW.restype = w.BOOL
+    kernel.Process32NextW.argtypes = [w.HANDLE, ctypes.POINTER(ProcessEntry)]
+    kernel.Process32NextW.restype = w.BOOL
+    kernel.CloseHandle.argtypes = [w.HANDLE]
+    kernel.CloseHandle.restype = w.BOOL
+
+    snapshot = kernel.CreateToolhelp32Snapshot(0x00000002, 0)
+    if not snapshot or snapshot == ctypes.c_void_p(-1).value:
+        raise ValueError('Windows descendant census unavailable')
+    try:
+        entry = ProcessEntry()
+        entry.size = ctypes.sizeof(ProcessEntry)
+        if not kernel.Process32FirstW(snapshot, ctypes.byref(entry)):
+            raise ValueError('Windows descendant census unavailable')
+        parent_by_pid = {}
+        while True:
+            pid = int(entry.pid)
+            if pid > 0:
+                if pid in parent_by_pid or len(parent_by_pid) >= 16384:
+                    raise ValueError('Windows descendant census ambiguous')
+                parent_by_pid[pid] = int(entry.parent_pid)
+            entry.size = ctypes.sizeof(ProcessEntry)
+            if not kernel.Process32NextW(snapshot, ctypes.byref(entry)):
+                if ctypes.get_last_error() != 18:  # ERROR_NO_MORE_FILES
+                    raise ValueError('Windows descendant census incomplete')
+                break
+    finally:
+        kernel.CloseHandle(snapshot)
+    if _identity(root_pid) != expected_root_created:
+        raise ValueError('Windows descendant root identity changed')
+
+    discovered = set()
+    frontier = {root_pid}
+    for _ in range(16384):
+        children = {pid for pid, parent in parent_by_pid.items()
+                    if parent in frontier and pid != root_pid and pid not in discovered}
+        if not children:
+            break
+        discovered.update(children)
+        if len(discovered) > 4096:
+            raise ValueError('Windows descendant census unbounded')
+        frontier = children
+    else:
+        raise ValueError('Windows descendant census unbounded')
+
+    observations = []
+    for pid in sorted(discovered):
+        identity = _identity(pid)
+        if identity is None:
+            raise ValueError('Windows descendant identity raced')
+        observations.append((pid, tuple(identity)))
+    if _identity(root_pid) != expected_root_created:
+        raise ValueError('Windows descendant root identity changed')
+    return tuple(observations)
+
+
 PRIVATE_DATA_CAPABILITY_ENV='UNIFIED_MARKET_DATA_READ_CAPABILITY'
 
 def _public_environment(program):
