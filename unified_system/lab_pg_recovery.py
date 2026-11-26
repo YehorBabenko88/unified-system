@@ -24,7 +24,6 @@ def _old_record(pg, *, owner, namespace, generation, token,
          "LAB_RECOVERY_ARGUMENTS_INVALID")
     # Stable tuple comes from the old C-owned fence, not caller-supplied
     # diagnostic JSON. An unrelated or already advanced fence is denied.
-    from .lab_pg_fence import _id
     from datetime import datetime
     need(type(backend_start) is str and len(backend_start) <= 64,
          "LAB_RECOVERY_BACKEND_START_INVALID")
@@ -77,6 +76,9 @@ def recover_exclusive_lab_cluster(pg, *, old, streams=(), quiesced=False,
          "LAB_RECOVERY_DEADLINE_INVALID")
     need(type(streams) in (tuple, list) and len(streams) <= 64,
          "LAB_RECOVERY_STREAMS_INVALID")
+    from .lab_pg_checkpoint import _stream
+    streams = tuple(_stream(s) for s in streams)
+    need(len(set(streams)) == len(streams), "LAB_RECOVERY_DUPLICATE_STREAM")
     pg._verify_owned()
     need(pg.started, "LAB_PG_NOT_STARTED")
     initial_pid = pg._verify_postmaster()
@@ -116,6 +118,8 @@ def recover_exclusive_lab_cluster(pg, *, old, streams=(), quiesced=False,
     # successful commit must be resolved from immutable row/pending, never
     # blindly retried or inferred from a duplicate constraint.
     need(time.monotonic() < deadline, "LAB_RECOVERY_TIMEOUT")
+    # Prevent any new writer claim during the transition by leaving the
+    # old fence active until the durable revoke below.
     revoke_lab_fence(pg, generation=old["generation"], token=old["token"])
     need(pg.sql(
         "SELECT generation,token,active FROM public.lab_writer_fence"
