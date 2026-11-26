@@ -80,12 +80,12 @@ class Round14CohortTests(unittest.TestCase):
 
     def test_round15_exact_pins_and_frozen_runtime_sha256(self):
         expected_heads = {
-            "A": "f2a0245ae9edc2805e1e9be28e6c3a649ec401b4",
-            "B": "2e5227e79023091a7481b540536f50a6b2e125fb",
+            "A": "324d6bfd85624e21213180dc66a9c67d4ac790ce",
+            "B": "8594cc8812225dee6c4f292a7692486bb443ca06",
             "B_CUSTODY": "39a6cf4d8c039ca99bbfc00ca7cc2359bef5c60c",
-            "C": "bbdc4e87b64a2516528270eb0c7925ce97d24ee5",
-            "D": "80da873c5251a0505519249325a4591f8bb003d9",
-            "E": "c6bfff7e30d6b68bd23107edf3a9bf4098a00004",
+            "C": "3046f9dbfe9b587370ba0bffbfb716b59a4f56ca",
+            "D": "254c6888e1b6665bdf83ff42794e2389a53c8ace",
+            "E": "5490cf118eccb27e59905a89d4c5dac2c8b3fcbc",
             "META": "902db7e28571e851de09d127a9ebad6f120efecd",
         }
         rows = {row["id"]: row for row in self.data["components"]}
@@ -109,6 +109,40 @@ class Round14CohortTests(unittest.TestCase):
         self.assertEqual(r["wheel_sdist"], "NOT_VERIFIED")
         self.assertEqual(r["dedup_retirement"], "NOT_AUTHORIZED")
         self.assertEqual(r["ci_first_page"]["D"], {"success": 1, "queued": 1})
+
+
+    def test_round16_current_source_without_false_native_release(self):
+        r = self.data["round16"]
+        self.assertEqual(r["schema"], "unified.f.round16-executable-native-cohort.v1")
+        self.assertEqual(r["release_status"], "NO_GO")
+        self.assertIs(r["integration_admitted"], False)
+        self.assertIs(r["protected_b30_runtime_unchanged"], True)
+        self.assertEqual(r["sole_integrated_pr"]["head_sha"],
+                         "9349d7f3ed93ef82d120976816b968e0b716b067")
+        self.assertEqual(len(r["verified_source_blobs"]), 6)
+        for item in r["verified_source_blobs"]:
+            with self.subTest(path=item["path"]):
+                self.assertRegex(item["blob"], SHA40)
+                self.assertRegex(item["head"], SHA40)
+        self.assertEqual({i["id"] for i in r["source_findings"]},
+                         {"C_STOPPED_NULL", "C_RESOURCE_CUSTODY", "A_POSTMASTER_WITNESS",
+                          "E_PROCESS_BIND", "E_OLD_MUTABLE", "B_NATIVE_ABI",
+                          "NATIVE_PG18", "BUILD_SECURITY"})
+        self.assertTrue(all(i["status"] == "OPEN" for i in r["source_findings"]))
+        for key in ("installed_package", "wheel_sha256", "sdist_sha256",
+                    "entrypoint", "sql_schema", "dependency_lock",
+                    "postgres_e2e", "full_e2e"):
+            self.assertEqual(r["qualification"][key], "NOT_VERIFIED")
+        self.assertEqual(r["qualification"]["writer_abi"], "BLOCKED")
+        self.assertEqual(r["ci_pr_first_page"]["D"], {"in_progress": 2})
+
+    def test_round16_native_contract_exists_and_is_fail_closed(self):
+        document = (ROOT / "round16-native-cohort-gates.md").read_text(encoding="utf-8")
+        for required in ("STOPPED", "RetainedOsProcessWait", "RootProcessExtinction",
+                         "RootBackendExtinction", "owner-thread", "content_id",
+                         "wheel", "sdist", "Git", "NO_GO"):
+            with self.subTest(required=required):
+                self.assertIn(required, document)
 
 if __name__ == "__main__":
     unittest.main()
