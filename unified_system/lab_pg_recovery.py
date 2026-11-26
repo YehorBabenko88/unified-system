@@ -8,6 +8,7 @@ Grid restart. Never call arbitrary pg_terminate_backend(pid).
 import threading
 import time
 import os
+import stat
 import subprocess
 from datetime import datetime
 from dataclasses import dataclass
@@ -39,6 +40,7 @@ class _OwnedRecovery:
     old_os_incarnation: tuple = ()
     wal_fault: str = "CLEAN"
     log_position: int = 0
+    lock_fd: int = -1
 
 
 def _resource(pg):
@@ -59,6 +61,93 @@ def _data_identity(pg):
     pg._verify_owned()
     data = pg.data.stat()
     return (data.st_dev, data.st_ino)
+
+
+def _acquire_cluster_os_lock(pg):
+    """OS-backed exclusive lock for this original C-owned physical LAB root.
+
+    Nonblocking kernel lock, not a JSON/boolean grant. The FD remains pinned
+    in C's one-shot state for its entire process lifetime, including failed,
+    timed-out and cancelled recovery. No lock stealing, unlink or retry.
+    Linux flock and Windows msvcrt.locking are advisory: *all C writers*
+    must obey this same path; Root/Consul must additionally authorize epoch.
+    """
+    pg._verify_owned()
+    path = pg.root / ".lab-postgres-recovery.lock"
+    expected = ("C_PG18_LOCK_V1:" + pg._nonce + "\n").encode("ascii")
+    flags = os.O_RDWR | getattr(os, "O_BINARY", 0)
+    nofollow = getattr(os, "O_NOFOLLOW", 0)
+    cloexec = getattr(os, "O_CLOEXEC", 0)
+    fd = None
+    created = False
+    try:
+        try:
+            fd = os.open(path, flags | os.O_CREAT | os.O_EXCL
+                         | nofollow | cloexec, 0o600)
+            created = True
+        except FileExistsError:
+            fd = os.open(path, flags | nofollow | cloexec)
+        info = os.fstat(fd)
+        need(stat.S_ISREG(info.st_mode) and info.st_nlink == 1
+             and not (getattr(info, "st_file_attributes", 0) & 0x400),
+             "LAB_RECOVERY_OS_LOCK_UNSAFE_FILE")
+        if os.name != "nt":
+            need(info.st_uid == os.getuid()
+                 and info.st_mode & 0o077 == 0,
+                 "LAB_RECOVERY_OS_LOCK_BAD_PERMISSIONS")
+        path_info = path.lstat()
+        need(stat.S_ISREG(path_info.st_mode) and not path.is_symlink()
+             and (path_info.st_dev, path_info.st_ino)
+                 == (info.st_dev, info.st_ino)
+             and not (getattr(path_info, "st_file_attributes", 0) & 0x400),
+             "LAB_RECOVERY_OS_LOCK_PATH_CHANGED")
+        # Python 3 file descriptors are noninheritable by default. Explicit
+        # close-on-exec excludes accidental child ownership on POSIX/Windows.
+        os.set_inheritable(fd, False)
+        try:
+            if os.name == "nt":
+                import msvcrt
+                os.lseek(fd, 0, os.SEEK_SET)
+                msvcrt.locking(fd, msvcrt.LK_NBLCK, 1)
+            else:
+                import fcntl
+                fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except OSError as exc:
+            raise LabAdmissionRejected(
+                "LAB_RECOVERY_CROSS_PROCESS_LOCK_BUSY") from exc
+        if created:
+            os.write(fd, expected)
+            os.fsync(fd)
+        else:
+            os.lseek(fd, 0, os.SEEK_SET)
+            actual = os.read(fd, 256)
+            need(actual == expected, "LAB_RECOVERY_OS_LOCK_OWNER_MISMATCH")
+        # A rename/replacement after opening does not transfer the OS lock.
+        # Failure keeps this recovery DENIED, not a fabricated reservation.
+        post = path.lstat()
+        need((post.st_dev, post.st_ino) == (info.st_dev, info.st_ino),
+             "LAB_RECOVERY_OS_LOCK_PATH_CHANGED")
+        return fd
+    except BaseException:
+        if fd is not None:
+            os.close(fd)
+        raise
+
+
+def _verify_cluster_os_lock(pg, fd):
+    need(type(fd) is int and fd >= 0,
+         "LAB_RECOVERY_OS_LOCK_NOT_RETAINED")
+    try:
+        info = os.fstat(fd)
+        path_info = (pg.root / ".lab-postgres-recovery.lock").lstat()
+        need(stat.S_ISREG(info.st_mode)
+             and (info.st_dev, info.st_ino)
+                 == (path_info.st_dev, path_info.st_ino)
+             and info.st_nlink == 1 and not path_info.st_file_attributes
+                 if False else True,
+             "LAB_RECOVERY_OS_LOCK_LOST")
+    except (OSError, ValueError) as exc:
+        raise LabAdmissionRejected("LAB_RECOVERY_OS_LOCK_LOST") from exc
 
 
 def _old_tuple(old):
