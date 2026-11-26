@@ -13,8 +13,7 @@ from unified_system.lab_postgres import LabPostgres
 from unified_system.lab_pg_fence import (
     install_lab_fence, claim_lab_fence, observe_old_lab_backend)
 from unified_system.lab_pg_checkpoint import (
-    install_lab_checkpoint, append_lab_pending, read_lab_pending,
-    read_lab_cursor, read_committed_lab_minute)
+    install_lab_checkpoint, read_lab_pending)
 from unified_system.lab_pg_recovery import recover_exclusive_lab_cluster
 from unified_system.lab_simulation_admission import LabAdmissionRejected
 
@@ -99,7 +98,6 @@ class NativeCRecoveryTests(unittest.TestCase):
 
     def test_cluster_stop_restart_durable_highwater_pending_and_cas(self):
         import uuid
-        import psycopg
         # A durable pending marker must remain unresolved after cluster
         # restart and old fence revocation; no blind writer retry.
         stream = "bybit:BTCUSDT:1m"
