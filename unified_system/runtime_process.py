@@ -607,6 +607,17 @@ class _OwnedWindowsChild:
         self._handle = None
 
 
+def _resume_original_suspended_thread(kernel, original_thread_handle):
+    """Resume only the original CreateProcessW suspended thread.
+
+    Keeping this small checked call separate permits native fault-injection
+    tests to verify cleanup on a failed ResumeThread after Job assignment.
+    No caller-provided created_suspended flag can invoke this launcher.
+    """
+    if kernel.ResumeThread(original_thread_handle) != 1:
+        raise ValueError('Windows suspended resume failed')
+
+
 def _launch_owned_windows_job_process(argv, cwd, env):
     """Launch a new subprocess suspended and attach before any user code.
 
@@ -683,8 +694,7 @@ def _launch_owned_windows_job_process(argv, cwd, env):
             raise ValueError('Windows Job membership lost')
         # This call never accepts external thread/process handles; only
         # the original trusted CreateProcessW PROCESS_INFORMATION pair.
-        if kernel.ResumeThread(info.thread) != 1:
-            raise ValueError('Windows suspended resume failed')
+        _resume_original_suspended_thread(kernel, info.thread)
         # Retain a duplicated SYNCHRONIZE-capable kernel handle after the
         # original PROCESS_INFORMATION pair is closed. Do not return a PID-
         # only pseudo-Popen; wait()/poll() must target the same OS object.
