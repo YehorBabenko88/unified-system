@@ -28,6 +28,15 @@ class LabAuthorityInvariants(unittest.TestCase):
                 identity=Fake(), generation=1, pg=Fake(), c_module=Fake(),
                 quiescence=Fake(), backend_pid=123, process=Fake())
 
+    def test_async_abi_cannot_be_mistaken_for_boolean_grant(self):
+        import asyncio
+        from inspect import iscoroutinefunction
+        self.assertTrue(iscoroutinefunction(LabWriterAuthority.require_current))
+        obj = object.__new__(LabWriterAuthority)
+        obj._revoked = True
+        with self.assertRaises(ResourceFenceBlocked):
+            asyncio.run(obj.require_current())
+
     def test_legacy_native_gate_unconditionally_denied(self):
         with self.assertRaisesRegex(ResourceFenceBlocked,
                                     "NATIVE_DB_FENCE_NOT_ADMITTED"):
