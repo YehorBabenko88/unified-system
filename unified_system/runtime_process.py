@@ -909,6 +909,9 @@ class ProcessDriver:
             # Do not release a newly launched Job without killing its own
             # private child; no user/foreign process is ever assigned.
             if lab_job and isinstance(proc,_OwnedWindowsChild):
+                # This child was created exclusively for this LAB operation.
+                # Close the private KILL_ON_JOB_CLOSE handle on failed
+                # publication, never leave an unauthorized descendant.
                 proc.close_owned_handles()
             raise
         return operation_id
@@ -1017,6 +1020,11 @@ class ProcessDriver:
                     raise ValueError('stopped record OS extinction unverified')
             if handle in self.children and self.children[handle].stdin:
                 self.children[handle].stdin.close()
+            child=self.children.get(handle)
+            if isinstance(child,_OwnedWindowsChild):
+                if child._job.active_process_count()!=0:
+                    raise ValueError('owned Windows Job descendants still active')
+                child.close_owned_handles()
             return
         if d['pid'] is None:
             child=self.children.get(handle)
@@ -1029,7 +1037,13 @@ class ProcessDriver:
                 raise ValueError('owned process extinction unverified')
             if handle in self.children and self.children[handle].stdin:
                 self.children[handle].stdin.close()
-            d['state']='STOPPED';self._save(handle,d);return
+            child=self.children.get(handle)
+            if isinstance(child,_OwnedWindowsChild):
+                if child._job.active_process_count()!=0:
+                    raise ValueError('owned Windows Job descendants still active')
+            d['state']='STOPPED';self._save(handle,d)
+            if isinstance(child,_OwnedWindowsChild):child.close_owned_handles()
+            return
         if identity!=d['created']:raise ValueError('refuse unrelated process stop')
         # OS exit evidence belongs to the exact handle opened and identity-
         # checked before any signal. A second ProcessDriver may legitimately
