@@ -263,7 +263,9 @@ class LabWriterAuthority:
     @property
     def transfer_blocked(self):
         # Read-only status, NEVER proof that transfer has become safe.
-        return self._transfer_blocked is True or self._revoked is True
+        # An incompletely initialized/forged authority is not a safe owner.
+        return (getattr(self, "_transfer_blocked", True) is True
+                or getattr(self, "_revoked", True) is True)
 
     def block_transfer(self):
         """Irreversibly quarantine this original Root epoch on uncertainty.
