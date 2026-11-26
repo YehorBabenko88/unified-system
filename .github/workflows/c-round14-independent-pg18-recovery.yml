@@ -23,19 +23,19 @@ jobs:
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           repository: YehorBabenko88/unified-system
-          ref: 324d6bfd85624e21213180dc66a9c67d4ac790ce
+          ref: 5bcaed7d916d72837064da9ab938e28c35695624
           path: upstream/a-retained-os
           persist-credentials: false
       - name: Verify A source Git blob before test-only overlay
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git -C upstream/a-retained-os rev-parse HEAD)" = "324d6bfd85624e21213180dc66a9c67d4ac790ce"
-          test "$(git hash-object upstream/a-retained-os/unified_system/runtime_process.py)" = "3e28008ba11dab55ecd77af2e0faf35b0a013d41"
+          test "$(git -C upstream/a-retained-os rev-parse HEAD)" = "5bcaed7d916d72837064da9ab938e28c35695624"
+          test "$(git hash-object upstream/a-retained-os/unified_system/runtime_process.py)" = "3c948515932584ae72fd3acaa0d5c21f877a50bf"
           # Test checkout only: A owns this source. C never commits an
           # alternative process observer or copies A into the PR branch.
           cp upstream/a-retained-os/unified_system/runtime_process.py unified_system/runtime_process.py
-          test "$(git hash-object unified_system/runtime_process.py)" = "3e28008ba11dab55ecd77af2e0faf35b0a013d41"
+          test "$(git hash-object unified_system/runtime_process.py)" = "3c948515932584ae72fd3acaa0d5c21f877a50bf"
       - name: Python 3.12
         uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with:
