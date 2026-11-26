@@ -268,6 +268,12 @@ class LabPostgresLifecycle(unittest.TestCase):
         math_root = os.environ.get('LAB_MATH_ROOT')
         if not (grid_root and math_root):
             self.fail('canonical producer requires both pinned source trees')
+        self.assertEqual(subprocess.check_output(
+            ['git', '-C', grid_root, 'rev-parse', 'HEAD'], text=True).strip(),
+            os.environ['LAB_GRID_SHA'])
+        self.assertEqual(subprocess.check_output(
+            ['git', '-C', str(Path(math_root).parent), 'rev-parse', 'HEAD'],
+            text=True).strip(), os.environ['LAB_MATH_SHA'])
         sys.path[:0] = [grid_root, math_root]
         try:
             from market_data.provenance import minute_record, producer, digest, canonical
