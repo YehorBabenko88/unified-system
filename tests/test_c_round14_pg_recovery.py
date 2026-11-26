@@ -181,6 +181,39 @@ class NativeCRecoveryTests(unittest.TestCase):
                                     "LAB_RECOVERY_REENTRY_OR_POISONED"):
             self._recover()
 
+    def test_unknown_commit_conflicting_immutable_row_stays_unverified(self):
+        stream="bybit:BTCUSDT:1m"
+        symbol="BTCUSDT"
+        start_ms=120000
+        expected_fp="c"*64
+        expected_cid="d"*64
+        observed_fp="e"*64
+        observed_cid="f"*64
+        self.pg.sql(
+            "INSERT INTO public.lab_stream_pending("
+            "stream_id,symbol,start_ms,fingerprint,content_id,"
+            "owner,namespace,generation,token,source_sha256,schema_sha256)"
+            f" VALUES ('{stream}','{symbol}',{start_ms},"
+            f"'{expected_fp}','{expected_cid}',"
+            "'unified-system','unified/lab',1,100,"
+            f"'{self.source}','{self.schema}')")
+        # Deliberately injected conflicting synthetic LAB row. This is
+        # NOT a second Grid writer and does not attest exchange authenticity.
+        self.pg.sql(
+            "INSERT INTO public.provenance_minutes("
+            "fingerprint,content_id,symbol,start_ms,record)"
+            f" VALUES ('{observed_fp}','{observed_cid}',"
+            f"'{symbol}',{start_ms},"
+            f"'{{\"dataset_fingerprint\":\"{observed_fp}\"}}'::jsonb)")
+        receipt=self._recover(streams=(stream,))
+        outcome=receipt["stream_snapshots"][stream]["immutable_outcome"]
+        self.assertEqual(outcome,"CONFLICT")
+        self.assertFalse(receipt["native_admitted"])
+        self.assertFalse(receipt["trading_authorized"])
+        self.assertEqual(self.pg.sql(
+            "SELECT generation,token,active FROM public.lab_writer_fence"),
+            "1|100|f")
+
     def test_cluster_stop_restart_durable_highwater_pending_and_cas(self):
         import uuid
         # A durable pending marker must remain unresolved after cluster
@@ -202,6 +235,7 @@ class NativeCRecoveryTests(unittest.TestCase):
         self.assertIs(receipt["native_admitted"],False)
         self.assertIs(receipt["trading_authorized"],False)
         self.assertEqual(receipt["stream_snapshots"][stream]["pending"]["fingerprint"], fp)
+        self.assertEqual(receipt["stream_snapshots"][stream]["immutable_outcome"],"MISSING")
         self.assertIsNone(receipt["stream_snapshots"][stream]["checkpoint"])
         self.assertEqual(self.pg.sql(
             "SELECT generation,token,active FROM public.lab_writer_fence"),
