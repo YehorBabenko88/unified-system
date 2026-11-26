@@ -16,7 +16,7 @@ from .grid_writer_fence_model import (
     ResourceFenceBlocked, WriterLeaseIdentity, _need,
 )
 from .lab_owner_executor import LabOwnerExecutor
-from .lab_root_child_witness import RootGridChildWitness
+from .lab_root_child_witness import RootGridChildWitness, RootManagedQuiescence
 
 _SCHEMA = "unified.lab-root-writer-authority.v1"
 _SCOPE = "ISOLATED_LAB_ONLY"
@@ -78,15 +78,14 @@ class LabWriterAuthority:
               "LAB_ROOT_CANONICAL_SQL_REQUIRED")
         _need(type(executor) is LabOwnerExecutor,
               "LAB_ROOT_SERIAL_EXECUTOR_REQUIRED")
-        _need(quiescence is not None
-              and callable(getattr(quiescence, "require_current", None))
-              and callable(getattr(quiescence, "confirmed_quiescent", None)),
+        _need(type(quiescence) is RootManagedQuiescence,
               "LAB_ROOT_OS_QUIESCENCE_REQUIRED")
         # Process is a Root-controlled lifecycle witness; neither PID strings
         # nor caller-produced boolean values are accepted.
         _need(type(process) is RootGridChildWitness,
               "LAB_ROOT_PROCESS_WITNESS_REQUIRED")
-        _need(process._source_commit == source.source_identity("market_data")["commit"],
+        _need(process._source_commit == source.source_identity("market_data")["commit"]
+              and quiescence._current is process,
               "LAB_ROOT_PROCESS_SOURCE_MISMATCH")
         self._authority, self._lease = authority, lease
         self._source, self._identity = source, identity
