@@ -21,27 +21,23 @@ from unified_system.lab_process_extinction import (
 class RootRecoveryContractTests(unittest.TestCase):
     def test_stopped_pg_cluster_is_not_old_backend_proof(self):
         result=LabPgRecoveryObservation(
-            "unified.root-lab-pg-recovery-observation.v1",
-            "UNKNOWN",14321,isolated_cluster_stopped=True)
+            "unified.root-pg-recovery-dispatch.v2",
+            "UNKNOWN",worker_done=False)
         self.assertEqual(result.state,"UNKNOWN")
-        self.assertFalse(result.old_backend_extinct)
-        self.assertFalse(result.durable_fence_verified)
-        self.assertFalse(result.wal_reconciled)
+        self.assertFalse(result.worker_done)
         self.assertFalse(result.native_admitted)
 
     def test_bogus_backend_receipt_rejected(self):
         with self.assertRaises(ResourceFenceBlocked):
             LabPgRecoveryObservation(
-                "unified.root-lab-pg-recovery-observation.v1",
-                "UNKNOWN","14321",isolated_cluster_stopped=True)
+                "unified.root-pg-recovery-dispatch.v2",
+                "UNKNOWN",worker_done="yes")
 
     def test_cannot_forge_full_sql_backend_recovery(self):
         with self.assertRaises(ResourceFenceBlocked):
             LabPgRecoveryObservation(
-                "unified.root-lab-pg-recovery-observation.v1",
-                "EXTINCT",14321,isolated_cluster_stopped=True,
-                old_backend_extinct=True,durable_fence_verified=True,
-                wal_reconciled=True)
+                "unified.root-pg-recovery-dispatch.v2",
+                "EXTINCT",worker_done=True)
 
     def test_cannot_forge_tcp_listener_proof(self):
         with self.assertRaises(ResourceFenceBlocked):
@@ -84,27 +80,23 @@ class PoisonedOwnerContainmentTests(unittest.IsolatedAsyncioTestCase):
         lane._pg=revoker._pg
         return revoker,lane
 
-    async def test_partial_poisoned_owner_can_only_request_unknown_containment(self):
+    async def test_missing_sealed_root_receipt_blocks_C_dispatch(self):
         revoker,lane=self.make_revoker()
-        unknown=LabPgRecoveryObservation(
-            "unified.root-lab-pg-recovery-observation.v1",
-            "UNKNOWN",14321,isolated_cluster_stopped=True)
-        with patch.object(LabPgRecoveryLane,"stop_dedicated_cluster",
-                          new_callable=AsyncMock,return_value=unknown) as stop:
-            result=await revoker.stop_owned_cluster_after_poison(lane)
-        self.assertIs(result,unknown)
-        self.assertFalse(result.old_backend_extinct)
-        self.assertFalse(result.native_admitted)
-        stop.assert_awaited_once()
+        with self.assertRaises((ResourceFenceBlocked, ImportError)):
+            await revoker.dispatch_owned_recovery_after_poison(
+                lane,old={},streams=(),root_process_evidence=None)
+        self.assertEqual(lane._pg,revoker._pg)
 
-    async def test_nonpoisoned_or_foreign_owner_cannot_use_cluster_fallback(self):
+    async def test_nonpoisoned_or_foreign_owner_cannot_dispatch_recovery(self):
         revoker,lane=self.make_revoker(poisoned=False)
         with self.assertRaises(ResourceFenceBlocked):
-            await revoker.stop_owned_cluster_after_poison(lane)
+            await revoker.dispatch_owned_recovery_after_poison(
+                lane,old={},root_process_evidence=None)
         revoker,lane=self.make_revoker()
         lane._pg=object()
         with self.assertRaises(ResourceFenceBlocked):
-            await revoker.stop_owned_cluster_after_poison(lane)
+            await revoker.dispatch_owned_recovery_after_poison(
+                lane,old={},root_process_evidence=None)
 
 
 if __name__=="__main__":
