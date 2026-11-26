@@ -293,12 +293,21 @@ def revalidate_lab_fence(pg, *, identity, generation, backend_pid):
         " AND s.usename='lab_writer'"
         " AND s.datname=current_database()"
         " AND s.backend_type='client backend'"
-        " THEN 1 ELSE 0 END"
+        " THEN f.backend_start::text ELSE 'DENIED' END"
         " FROM public.lab_writer_fence f"
         " LEFT JOIN pg_catalog.pg_stat_activity s ON s.pid=f.backend_pid"
         " WHERE f.resource_id='grid-market-data-primary'"
     )
-    need(pg.sql(query) == "1", "LAB_FENCE_REVALIDATION_DENIED")
+    result = pg.sql(query)
+    need(result not in ("", "DENIED"), "LAB_FENCE_REVALIDATION_DENIED")
+    # The backend_start comes from the EXACT matching C fence + live
+    # pg_stat_activity in the SAME SQL snapshot. Still NOT Root authority.
+    from datetime import datetime
+    try:
+        parsed = datetime.fromisoformat(result.replace(" ", "T"))
+    except (TypeError, ValueError) as exc:
+        raise LabAdmissionRejected("LAB_FENCE_BACKEND_START_INVALID") from exc
+    need(parsed.tzinfo is not None, "LAB_FENCE_BACKEND_START_INVALID")
     receipt = {
         "schema": "lab-postgres-fence-revalidation.v1",
         "scope": "ISOLATED_LAB_ONLY",
@@ -306,6 +315,7 @@ def revalidate_lab_fence(pg, *, identity, generation, backend_pid):
         "generation": generation,
         "token": token,
         "backend_pid": backend_pid,
+        "backend_start": parsed.isoformat(),
         "owner": owner,
         "namespace": namespace,
         "session_id": sess,
