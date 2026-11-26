@@ -180,8 +180,8 @@ class LabWriterAuthority:
               "LAB_OPERATION_IDENTITY_REJECTED")
         _need(type(package_identity) is str
               and re.fullmatch(r"[0-9a-f]{64}", package_identity) is not None
-              and entrypoint == "grid.canonical_lab_fenced_writer"
-              and type(entrypoint) is str,
+              and type(entrypoint) is str
+              and entrypoint == "grid.canonical_lab_fenced_writer",
               "LAB_OPERATION_PACKAGE_IDENTITY_REJECTED")
         grant = self._writer_grant
         _need(type(grant) is LabWriterGrant
