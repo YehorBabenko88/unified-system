@@ -4,6 +4,9 @@ on:
     paths:
       - 'unified_system/lan_transport.py'
       - 'tests/test_lan_reconnect_inert.py'
+      - 'tests/test_lan_close_inert.py'
+      - 'tests/test_lan_transport.py'
+      - 'tests/lan_failure_diagnostics.py'
       - '.github/workflows/e-lan-reconnect-inert.yml'
 permissions:
   contents: read
@@ -30,4 +33,4 @@ jobs:
           EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
         run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
       - name: Run inert reconnect regressions (no native admission)
-        run: python -B -m unittest discover -s tests -p test_lan_reconnect_inert.py -v
+        run: python -B -m unittest discover -s tests -p 'test_lan_*_inert.py' -v
