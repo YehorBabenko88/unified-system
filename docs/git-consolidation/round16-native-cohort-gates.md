@@ -1,3 +1,13 @@
+# ROUND19 — latest observed non-atomic source cohort
+
+F final source snapshot at publication, distinct from MASTER's initial Round19 reference: A `c51986a46c7efb6847ea080ce4cb03c1b2495c22`, B `17855501b97bda2a44a6710a08dfc0a7f2a31374`, C `200aca95bb2d29873b36cc345863e4fe8982aadb`, D `9147d49ccdd74cd0739237e1298840a1be617723`, E `bdaae0913cdb37a1e1738c6948d48a12b3b547e5`. Their active source Git blobs A `fecc0f8620955bf735a6c94ded655f857ed39469`, B writer `247d7fab2738e1892a05979e407f637f9df62784`, C recovery `581a719ce274e438505aee59651bffef6b8cc2cd`, E authority `ed966cc79aee3da33a5c658737486139c16b7e3c`. All are separate Draft PRs, **NOT integrated**. Sole #166 source remains `9349d7f3ed93ef82d120976816b968e0b716b067`.
+
+F latest offline wheel tool blob `5abc9c5dd3aa97082d1217986d2e66a065c9c3ad`, SHA256 `230361e5520d57e16ba0ded262d0370a1703b25ed9b6a3363d358c6e499d5ba6`; tests blob `4c8f5388d1492305aa1070a244ecab6d777e5106`, SHA256 `15603094bfa6614f64bc64c289675a7c769de6e1157ce0bf9d9befb752a60a6d`. **34/34 local Python 3.13.5 synthetic offline tests PASS**, py_compile PASS. More negative cases than earlier snapshot: TOCTOU wheel path by construction same in-memory ZIP byte buffer, symlink wheel/root denial, full POSIX installed FD-backed closure, recorded extra .py denial, unverified .pyc, .pth, sitecustomize and unknown extra files denial. Genuine B wheel/sdist and runtime import origin **NOT BUILT/VERIFIED**; F tool cannot issue E authority. Other F historical structural tests updated to match separate exact current heads but **not executed locally**.
+
+Latest observed E still **`LAB_OPERATION_INSTALLED_WHEEL_UNVERIFIED`**. A historical Job/SCM identity receipt remains denied; C row-locked SQL COMMIT vs SQL revoke is not atomic with remote Consul lease expiry. B `pyproject.toml` blob `4fb4e72360605cd92b3afab3837015b4ac29dace` and four canonical runtime blobs unchanged from MASTER B9e0; its existing market-data wheel awaits actual reproducible build and protected installed RECORD/import/entrypoint proof. No new SQL writer, process observer, PostgreSQL supervisor, Math or PaperEngine. **CODE NO_GO / PRODUCTION NO_GO**.
+
+## MASTER Round19 initial control snapshot — historical as agents advanced
+
 # ROUND 19 — current protected package qualification (supersedes older snapshots)
 
 Exact non-atomic verified heads, 2026-11-26: A `8b066e373690f43befe107ff7aa474c270c8ad4c`, B `9e0d57c4c0f2d01bc381ada090b62d23566b32aa`, C `3f0d3410ac708da9776e5ad1407d864adcde34b0`, D `89022d7885d279bb1fd2f695b59f2c243b431ad2`, E `1c2edb2564c48a1348d3ad4ee94fe8fa0b425b18`. Sole integration Draft #166 remains `9349d7f3ed93ef82d120976816b968e0b716b067`, untouched.
