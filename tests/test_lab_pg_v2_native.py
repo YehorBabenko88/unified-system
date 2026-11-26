@@ -203,6 +203,20 @@ class NativePg18V2Tests(unittest.TestCase):
                   fp="1"*64, content_id="2"*64)
         self.assertEqual(self.pg.sql("SELECT count(*) FROM provenance_minutes"),
                          "1")
+        for kwargs in (
+            {"owner": "foreign-owner"},
+            {"namespace": "foreign/namespace"},
+            {"source_sha": "f"*64},
+            {"schema_sha": "e"*64},
+        ):
+            args = dict(source_sha=self.source_sha, schema_sha=self.schema_sha,
+                        generation=1, token=100, ids=identities,
+                        fp="d"*64, content_id="e"*64)
+            args.update(kwargs)
+            with self.subTest(rejected=sorted(kwargs)):
+                with self.assertRaises(psycopg.Error):
+                    write_row(self.writer, **args)
+                self.writer.rollback()
         with self.assertRaises(psycopg.Error):
             write_row(self.other, source_sha=self.source_sha, schema_sha=self.schema_sha, generation=1, token=100, ids=identities,
                       fp="3"*64, content_id="4"*64)
