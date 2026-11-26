@@ -1067,9 +1067,10 @@ class ProcessDriver:
         if not exit_witness:raise ValueError('owned process extinction unverified')
         if handle in self.children and self.children[handle].stdin:
             self.children[handle].stdin.close()
-        d['state']='STOPPED';self._save(handle,d)
         child=self.children.get(handle)
         if isinstance(child,_OwnedWindowsChild):
             if child._job.active_process_count()!=0:
                 raise ValueError('owned Windows Job descendants still active')
+        d['state']='STOPPED';self._save(handle,d)
+        if isinstance(child,_OwnedWindowsChild):
             child.close_owned_handles()
