@@ -480,6 +480,30 @@ class OwnedWindowsJob:
             raise ValueError('Windows Job membership inaccessible')
         return bool(in_job.value)
 
+    def terminate_owned_tree(self, original_process_handle, timeout=5):
+        """Stop only members of this exact pre-launch owned Job.
+
+        Never accepts a PID. No arbitrary process can be adopted through the
+        public Job API. Failure, mismatched membership, or remaining active
+        members prevents a durable STOPPED receipt.
+        """
+        if self._handle is None or self._assigned is not True:
+            raise ValueError('owned Windows Job not assigned')
+        if type(timeout) not in (int,float) or not 0 < timeout <= 10:
+            raise ValueError('owned Windows Job deadline invalid')
+        if self.verify_member(original_process_handle) is not True:
+            raise ValueError('owned Windows Job original child not a member')
+        from ctypes import wintypes as w
+        self._k.TerminateJobObject.argtypes = [w.HANDLE, w.UINT]
+        self._k.TerminateJobObject.restype = w.BOOL
+        if not self._k.TerminateJobObject(self._handle, 0):
+            raise ValueError('owned Windows Job termination failed')
+        deadline=time.monotonic()+timeout
+        while self.active_process_count() != 0 and time.monotonic() < deadline:
+            time.sleep(.02)
+        if self.active_process_count() != 0:
+            raise ValueError('owned Windows Job descendants still active')
+
     def active_process_count(self):
         if self._handle is None:
             raise ValueError('Windows Job Object closed')
