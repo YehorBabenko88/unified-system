@@ -29,6 +29,7 @@ _STATES = {}
 class _OwnedRecovery:
     pg: object
     root: tuple
+    data_identity: tuple
     marker: str
     old: tuple
     phase: str
@@ -49,7 +50,13 @@ def _resource(pg):
     ds = data.stat()
     need((st.st_dev, st.st_ino) == pg._root_identity,
          "LAB_RECOVERY_ROOT_CHANGED")
-    return (st.st_dev, st.st_ino, ds.st_dev, ds.st_ino, str(root))
+    return (st.st_dev, st.st_ino, str(root))
+
+
+def _data_identity(pg):
+    pg._verify_owned()
+    data = pg.data.stat()
+    return (data.st_dev, data.st_ino)
 
 
 def _old_tuple(old):
@@ -72,6 +79,7 @@ def _begin(pg, root, old, *, mode):
         else:
             need(existing.phase == "STOPPED_UNVERIFIED"
                  and existing.pg is pg and existing.root == root
+                 and existing.data_identity == _data_identity(pg)
                  and existing.marker == pg._nonce
                  and existing.old == _old_tuple(old)
                  and existing.old_postmaster_pid > 1
@@ -79,10 +87,12 @@ def _begin(pg, root, old, *, mode):
                  and pg.started is False,
                  "LAB_RECOVERY_STOPPED_OWNER_MISMATCH")
         preserved = existing if existing is not None else _OwnedRecovery(
-            pg=pg, root=root, marker=pg._nonce, old=_old_tuple(old),
+            pg=pg, root=root, data_identity=_data_identity(pg),
+            marker=pg._nonce, old=_old_tuple(old),
             phase="IN_PROGRESS")
         _STATES[root] = _OwnedRecovery(
-            pg=pg, root=root, marker=pg._nonce, old=_old_tuple(old),
+            pg=pg, root=root, data_identity=_data_identity(pg),
+            marker=pg._nonce, old=_old_tuple(old),
             phase="IN_PROGRESS",
             old_postmaster_pid=preserved.old_postmaster_pid,
             old_os_incarnation=preserved.old_os_incarnation,
@@ -98,7 +108,9 @@ def _state(root, pg, old, phase, *, pid=0, os_identity=(),
         need(prior is not None and prior.pg is pg
              and prior.phase == "IN_PROGRESS"
              and prior.old == _old_tuple(old)
-             and prior.root == root and prior.marker == pg._nonce,
+             and prior.root == root
+             and prior.data_identity == _data_identity(pg)
+             and prior.marker == pg._nonce,
              "LAB_RECOVERY_STATE_MISMATCH")
         _STATES[root] = _OwnedRecovery(
             pg=pg, root=root, marker=pg._nonce, old=_old_tuple(old),
@@ -114,7 +126,8 @@ def _poison(root, pg):
         prior = _STATES.get(root)
         if prior is not None and prior.pg is pg:
             _STATES[root] = _OwnedRecovery(
-                pg=prior.pg, root=prior.root, marker=prior.marker,
+                pg=prior.pg, root=prior.root, data_identity=prior.data_identity,
+                marker=prior.marker,
                 old=prior.old, phase="POISONED",
                 old_postmaster_pid=prior.old_postmaster_pid,
                 old_os_incarnation=prior.old_os_incarnation,
