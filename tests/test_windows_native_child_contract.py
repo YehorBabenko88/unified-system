@@ -671,6 +671,49 @@ class WindowsNativeSuspendedLaunchTests(unittest.TestCase):
         self.driver.stop(op)
         self.assertEqual(self.driver._load(op)['state'], 'STOPPED')
 
+    def test_native_scm_root_ownership_denies_receipt(self):
+        from unified_system.runtime import ModuleSpec
+        op = self.driver.start(ModuleSpec('market_data','1.0.0'),
+                               'disposable-lab', self.op)
+        self.addCleanup(self._cleanup)
+        child = self.driver.children[op]
+        # Inject a positive SCM ownership fact; not a native SCM E2E PASS.
+        with patch('unified_system.runtime_process._windows_service_process_roster',
+                   return_value=(('foreign-test-service', child.pid),)):
+            with self.assertRaisesRegex(
+                    ValueError, 'TCP or SCM ownership unresolved'):
+                self.driver.stop(op)
+        self.assertEqual(self.driver._load(op)['state'], 'RUNNING')
+        self.assertNotIn(op, self.driver._job_receipts)
+        self.driver.stop(op)
+
+    def test_native_tampered_executable_digest_denies_receipt(self):
+        from unified_system.runtime import ModuleSpec
+        op = self.driver.start(ModuleSpec('market_data','1.0.0'),
+                               'disposable-lab', self.op)
+        self.addCleanup(self._cleanup)
+        original = self.driver._job_launch_bindings[op]
+        self.driver._job_launch_bindings[op] = (
+            *original[:3], '0'*64, *original[4:])
+        with self.assertRaisesRegex(ValueError, 'executable bytes changed'):
+            self.driver.stop(op)
+        self.assertEqual(self.driver._load(op)['state'], 'RUNNING')
+        self.driver._job_launch_bindings[op] = original
+        self.driver.stop(op)
+
+    def test_native_createprocess_failure_no_published_child(self):
+        import os
+        from unified_system.runtime_process import _launch_owned_windows_job_process
+        not_an_executable = self.worker.with_name('absent-program.exe')
+        self.assertFalse(not_an_executable.exists())
+        with self.assertRaisesRegex(
+                ValueError, 'suspended process creation denied'):
+            _launch_owned_windows_job_process(
+                [str(not_an_executable)], str(self.worker.parent),
+                dict(os.environ))
+        self.assertNotIn(self.op, self.driver.children)
+        self.assertNotIn(self.op, self.driver._job_launch_bindings)
+
     def test_native_assignment_failure_never_resumes_child(self):
         import hashlib
         from unified_system.runtime import ModuleSpec
