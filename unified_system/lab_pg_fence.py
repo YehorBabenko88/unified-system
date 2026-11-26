@@ -161,3 +161,68 @@ def fence_identity():
     return {"resource_id": _RESOURCE, "schema": "lab-postgres-writer-fence.v1",
             "scope": "ISOLATED_LAB_ONLY", "execution_authority": False,
             "trading_authorized": False, "native_admission": False}
+
+def fenced_lab_witness(pg):
+    """Independent owner catalogue check for opt-in fenced LAB, not production."""
+    import json
+    pg._verify_owned()
+    need(pg.started, "LAB_PG_NOT_STARTED")
+    pg._verify_postmaster()
+    definition = ("public.lab_fenced_insert(bigint,bigint,uuid,uuid,uuid,"
+                  "text,text,text,text,text,bigint,jsonb)")
+    result = pg.sql("""
+       SELECT json_build_object(
+           'schema','lab-postgres-fenced-custody.v1',
+           'scope','ISOLATED_LAB_ONLY',
+           'direct_writer_insert',
+              has_table_privilege('lab_writer','public.provenance_minutes','INSERT'),
+           'writer_exec',
+              has_function_privilege('lab_writer',
+                'public.lab_fenced_insert(bigint,bigint,uuid,uuid,uuid,text,text,text,text,text,bigint,jsonb)',
+                'EXECUTE'),
+           'reader_exec',
+              has_function_privilege('lab_reader',
+                'public.lab_fenced_insert(bigint,bigint,uuid,uuid,uuid,text,text,text,text,text,bigint,jsonb)',
+                'EXECUTE'),
+           'fence_writer_select',
+              has_table_privilege('lab_writer','public.lab_writer_fence','SELECT'),
+           'fence_writer_update',
+              has_table_privilege('lab_writer','public.lab_writer_fence','UPDATE'),
+           'fence_reader_select',
+              has_table_privilege('lab_reader','public.lab_writer_fence','SELECT'),
+           'function_owner', pg_get_userbyid(p.proowner),
+           'function_security_definer', p.prosecdef,
+           'function_search_path_pinned', p.proconfig @> ARRAY['search_path=pg_catalog'],
+           'fence_owner',
+              (SELECT pg_get_userbyid(c.relowner) FROM pg_class c
+               WHERE c.oid='public.lab_writer_fence'::regclass),
+           'fence_state_count',(SELECT count(*) FROM public.lab_writer_fence)
+       )
+       FROM pg_proc p
+       WHERE p.oid=
+         'public.lab_fenced_insert(bigint,bigint,uuid,uuid,uuid,text,text,text,text,text,bigint,jsonb)'::regprocedure
+    """)
+    try:
+        witness = json.loads(result)
+    except (TypeError, ValueError) as exc:
+        raise LabAdmissionRejected("LAB_FENCE_WITNESS_INVALID") from exc
+    need(type(witness) is dict
+         and witness.get("schema") == "lab-postgres-fenced-custody.v1"
+         and witness.get("scope") == "ISOLATED_LAB_ONLY"
+         and witness.get("direct_writer_insert") is False
+         and witness.get("writer_exec") is True
+         and witness.get("reader_exec") is False
+         and witness.get("fence_writer_select") is False
+         and witness.get("fence_writer_update") is False
+         and witness.get("fence_reader_select") is False
+         and witness.get("function_owner") == "lab_owner"
+         and witness.get("function_security_definer") is True
+         and witness.get("function_search_path_pinned") is True
+         and witness.get("fence_owner") == "lab_owner"
+         and type(witness.get("fence_state_count")) is int
+         and witness["fence_state_count"] <= 1,
+         "LAB_FENCE_CUSTODY_NOT_VERIFIED")
+    witness["execution_authority"] = False
+    witness["trading_authorized"] = False
+    witness["source_authenticity"] = "NOT_INDEPENDENTLY_ATTESTED"
+    return witness
