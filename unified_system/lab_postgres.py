@@ -15,12 +15,16 @@ Stdlib only. Passwords are never logged or returned except inside DSNs that
 are handed to admitted children.
 """
 import os
+import hashlib
+import json
+import stat
 import re
 import secrets
 import signal
 import socket
 import subprocess
 import time
+import uuid
 from pathlib import Path
 
 from .lab_simulation_admission import LabAdmissionRejected, need
@@ -38,6 +42,9 @@ class LabPostgres:
     def __init__(self, bin_dir, owned_root, *, min_major=18, database='lab'):
         self.bin = Path(bin_dir)
         self.root = Path(owned_root)
+        # A caller-provided directory is not an ownership proof.  Require a
+        # private, newly created root, and keep a stable filesystem identity.
+        self._root_stat = self.root.lstat() if self.root.exists() else None
         need(self.bin.is_absolute() and self.root.is_absolute() and self.root.is_dir(), 'LAB_PG_PATH_REJECTED')
         suffix = '.exe' if os.name == 'nt' else ''
         self.tools = {n: self.bin / (n + suffix) for n in ('postgres', 'initdb', 'pg_ctl', 'psql')}
@@ -50,14 +57,64 @@ class LabPostgres:
         need(self.major >= min_major, 'LAB_PG_VERSION_TOO_OLD')
         need(IDENT.fullmatch(database) is not None, 'LAB_PG_NAME_REJECTED')
         self.database = database
+        need(self._root_stat is not None and stat.S_ISDIR(self._root_stat.st_mode)
+             and not self.root.is_symlink(), 'LAB_PG_ROOT_UNOWNED')
+        if os.name != 'nt':
+            need(self._root_stat.st_uid == os.getuid()
+                 and not (self._root_stat.st_mode & 0o077), 'LAB_PG_ROOT_UNSAFE')
+        self._root_identity = (self._root_stat.st_dev, self._root_stat.st_ino)
+        self._nonce = secrets.token_hex(24)
+        self._marker = self.root / '.lab-postgres-owner'
+        need(not self._marker.exists() and not self._marker.is_symlink(), 'LAB_PG_ROOT_USED')
+        with self._marker.open('x', encoding='ascii') as marker:
+            marker.write(self._nonce)
+        if os.name != 'nt':
+            self._marker.chmod(0o600)
         self.data = self.root / 'pgdata'
         self.socket_dir = self.root / 'pgsock'
         self.log = self.root / 'postgres.log'
         self.port = None
         self.passwords = {}
         self.started = False
+        self._owned_pid = None
 
     # ------------------------------------------------------------------
+    def _verify_owned(self):
+        try:
+            info = self.root.lstat()
+            need(stat.S_ISDIR(info.st_mode) and not self.root.is_symlink()
+                 and (info.st_dev, info.st_ino) == self._root_identity,
+                 'LAB_PG_ROOT_CHANGED')
+            need(not self._marker.is_symlink() and self._marker.read_text(encoding='ascii') == self._nonce,
+                 'LAB_PG_OWNERSHIP_LOST')
+            if os.name != 'nt':
+                need(info.st_uid == os.getuid() and not (info.st_mode & 0o077), 'LAB_PG_ROOT_UNSAFE')
+            if self.data.exists():
+                data_info = self.data.lstat()
+                need(stat.S_ISDIR(data_info.st_mode) and not self.data.is_symlink(), 'LAB_PG_DATA_FOREIGN')
+                if os.name != 'nt':
+                    need(data_info.st_uid == os.getuid(), 'LAB_PG_DATA_FOREIGN')
+        except (OSError, ValueError) as error:
+            raise LabAdmissionRejected('LAB_PG_OWNERSHIP_LOST') from error
+
+    def _verify_postmaster(self):
+        self._verify_owned()
+        pidfile = self.data / 'postmaster.pid'
+        need(pidfile.is_file() and not pidfile.is_symlink(), 'LAB_PG_PID_UNVERIFIED')
+        try:
+            lines = pidfile.read_text().splitlines()
+            pid = int(lines[0])
+            data_path = Path(lines[1]).resolve(strict=True)
+            port = int(lines[3])
+            need(pid > 1 and data_path == self.data.resolve(strict=True)
+                 and port == self.port, 'LAB_PG_PID_UNVERIFIED')
+            # pid alone is unsafe: pid reuse can target an unrelated service.
+            if self._owned_pid is not None:
+                need(pid == self._owned_pid, 'LAB_PG_PID_CHANGED')
+            return pid
+        except (OSError, ValueError, IndexError) as error:
+            raise LabAdmissionRejected('LAB_PG_PID_UNVERIFIED') from error
+
     def _env(self, role):
         # Child-scoped password; never the parent's PG* variables.
         env = {k: v for k, v in os.environ.items()
@@ -75,6 +132,7 @@ class LabPostgres:
         return ' '.join(options)
 
     def initialize(self):
+        self._verify_owned()
         need(not self.data.exists(), 'LAB_PG_DATA_EXISTS')
         self.socket_dir.mkdir(mode=0o700)
         for role in ('lab_owner', 'lab_writer', 'lab_reader'):
@@ -92,14 +150,23 @@ class LabPostgres:
             'host all all 127.0.0.1/32 scram-sha-256\n'
             + ('' if os.name == 'nt' else 'local all all scram-sha-256\n'))
         self.port = _free_port()
+        need(self.port != 5432, 'LAB_PG_PORT_REJECTED')
         return self
 
     def start(self):
+        self._verify_owned()
+        need(self.port is not None and self.port != 5432, 'LAB_PG_PORT_REJECTED')
+        # Refuse foreign/stale pid files; only a previously crashed owned
+        # postmaster is eligible for WAL recovery via pg_ctl.
+        if (self.data / 'postmaster.pid').exists():
+            self._verify_postmaster()
+            need(not self.started, 'LAB_PG_ALREADY_STARTED')
         result = subprocess.run([str(self.tools['pg_ctl']), '-D', str(self.data), '-l', str(self.log),
                                  '-o', self._options(), '-w', '-t', '120', 'start'],
                                 capture_output=True, timeout=180, env=self._env('lab_owner'))
         need(result.returncode == 0, 'LAB_PG_START_FAILED')
         self.started = True
+        self._owned_pid = self._verify_postmaster()
         return self
 
     def sql(self, statement, *, role='lab_owner', database=None):
@@ -121,11 +188,15 @@ class LabPostgres:
         self.sql("ALTER ROLE lab_reader SET default_transaction_read_only = on")
         self.sql(f"GRANT CONNECT ON DATABASE {self.database} TO lab_writer, lab_reader")
         self.sql("REVOKE CREATE ON SCHEMA public FROM PUBLIC")
-        self.sql("GRANT USAGE, CREATE ON SCHEMA public TO lab_writer")
+        self.sql("GRANT USAGE ON SCHEMA public TO lab_writer")
         self.sql("GRANT USAGE ON SCHEMA public TO lab_reader")
         self.sql("ALTER DEFAULT PRIVILEGES FOR ROLE lab_writer IN SCHEMA public GRANT SELECT ON TABLES TO lab_reader")
+        # DDL is owner-controlled. Writer may INSERT into selected tables,
+        # never CREATE/ALTER/DROP protected schema objects.
         for statement in schema_statements:
-            self.sql(statement, role='lab_writer')
+            self.sql(statement, role='lab_owner')
+        self.sql("GRANT INSERT, SELECT ON TABLE provenance_minutes TO lab_writer")
+        self.sql("GRANT SELECT ON TABLE provenance_minutes TO lab_reader")
         return self
 
     def dsn(self, role):
@@ -134,11 +205,11 @@ class LabPostgres:
 
     # ------------------------------------------------------------------
     def postmaster_pid(self):
-        text = (self.data / 'postmaster.pid').read_text().splitlines()
-        return int(text[0])
+        return self._verify_postmaster()
 
     def crash(self):
         """Simulate a power-loss style abort of the postmaster (no shutdown checkpoint)."""
+        need(self.started, 'LAB_PG_NOT_STARTED')
         pid = self.postmaster_pid()
         if os.name == 'nt':
             subprocess.run([str(self.tools['pg_ctl']), 'kill', 'KILL', str(pid)], capture_output=True, timeout=30)
@@ -175,9 +246,11 @@ class LabPostgres:
         return report
 
     def stop(self):
+        self._verify_owned()
         if not self.data.exists():
             return
         if (self.data / 'postmaster.pid').exists():
+            self._verify_postmaster()
             subprocess.run([str(self.tools['pg_ctl']), '-D', str(self.data), '-m', 'fast', '-w', '-t', '60', 'stop'],
                            capture_output=True, timeout=120, env=self._env('lab_owner'))
         need(not (self.data / 'postmaster.pid').exists(), 'LAB_PG_STOP_FAILED')
