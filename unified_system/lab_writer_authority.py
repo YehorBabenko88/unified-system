@@ -426,6 +426,8 @@ class LabWriterOperationPermit:
               and self._entrypoint==entrypoint
               and self._backend_pid==backend_pid
               and self._backend_start==backend_start
+              and type(self._backend_start) is str
+              and bool(self._backend_start)
               and self._generation==a._generation
               and self._token==a._identity.token
               and self._epoch==a._epoch
