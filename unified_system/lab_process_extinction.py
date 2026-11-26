@@ -35,7 +35,9 @@ class RootProcessObservation:
               and self.state in (EXTINCT,STILL_ALIVE,UNKNOWN)
               and type(self.handle) is str and bool(self.handle)
               and type(self.pid) is int and self.pid>1
-              and type(self.reason) is str,
+              and type(self.reason) is str
+              and self.listener_owner_verified is False
+              and self.native_admitted is False,
               "LAB_PROCESS_OBSERVATION_INVALID")
 
 
@@ -69,7 +71,12 @@ def observe_owned_process_extinction(driver, handle):
         # retained exact operation record on each call and refuse mismatch.
         _need(record.get("state") in ("RUNNING", "STOPPED"),
               "LAB_PROCESS_OBSERVATION_STATE_INVALID")
-        state=driver.owned_process_state(handle)
+        observer=getattr(driver,"owned_process_state",None)
+        if not callable(observer):
+            return RootProcessObservation(
+                "unified.root-process-observation.v1",UNKNOWN,handle,pid,
+                created,"A_CANONICAL_OBSERVER_NOT_INTEGRATED")
+        state=observer(handle)
         _need(state in (EXTINCT,STILL_ALIVE,UNKNOWN),
               "LAB_PROCESS_OBSERVATION_UNEXPECTED_OS_STATE")
         if state == EXTINCT:
