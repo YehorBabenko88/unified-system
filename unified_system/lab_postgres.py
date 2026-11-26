@@ -382,7 +382,8 @@ class LabPostgres:
         forbidden = ('writer_can_select', 'writer_can_update', 'writer_can_delete',
                      'writer_can_truncate', 'reader_can_insert',
                      'writer_can_schema_create', 'reader_can_schema_create')
-        need(witness.get('witness_schema') == 'lab-postgres-custody.v1'
+        need(type(witness) is dict and
+             witness.get('witness_schema') == 'lab-postgres-custody.v1'
              and witness.get('scope') == 'ISOLATED_LAB_ONLY'
              and witness.get('database') == self.database
              and witness.get('table') == 'public.provenance_minutes'
