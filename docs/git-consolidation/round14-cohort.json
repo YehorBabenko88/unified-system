@@ -1169,6 +1169,59 @@
         "tests": "919 passed, 607 subtests passed",
         "sdist": "ARCHIVED_HISTORICAL_PYTHON_EXCLUSION=PASS wheel_members=89 sdist_members=226",
         "installed": "INSTALLED_TERMINAN=PASS"
+      },
+      "four_platform_comparison": {
+        "artifact_scope": "D/Terminan ONLY; no B9e0 release qualification",
+        "archive_sha256": {
+          "ubuntu_py311": "bf8a87dc2171edee4ab9a16c1d1704725f2dd4bfb6465bf96123a6ba461fd7ad",
+          "ubuntu_py312": "6bb62bc1f6fadcc4d32d43b7acbd48d9b7ad7fec2bcc10c00c8eb974384b7e5f",
+          "windows_py311": "79e6a8216f98dced3a9dd0295c10f342f30fd651d066012f7ec4d60b9ec5e71e",
+          "windows_py312": "2b426918907621f56564bd0896ff1278f4b8314db86a11ad12aa3cf837ecef64"
+        },
+        "artifact_ids": {
+          "ubuntu_py311": 15153636563,
+          "ubuntu_py312": 15154065823,
+          "windows_py311": 15153572049,
+          "windows_py312": 15153259120
+        },
+        "package_sources": {
+          "terminan": "9147d49ccdd74cd0739237e1298840a1be617723",
+          "math": "9e6acbd9e12a91189f57234828e31640983af553",
+          "market_data_legacy": "3850995a6c28ed29b05cef4ba067e587d5033453"
+        },
+        "file_counts": {
+          "terminan": 84,
+          "math": 3,
+          "market_data_legacy": 49
+        },
+        "source_file_map_equality_across_four": true,
+        "wheel_sha256": {
+          "terminan": {
+            "ubuntu_py311": "b2dbbe754fa580604679febebe12a3728379af8c0de9b8c6105b9c7a8c259d33",
+            "ubuntu_py312": "0ee58a5ba4614fb5251a3348bc4f020aa2b5b6d504890fd40168dbfc132fc782",
+            "windows_py311": "9d14926e1da5c1ac9361b67db83802736bd3c3119f7d106cea7ab9c4e6376b38",
+            "windows_py312": "88b34b6ef389a3072156fbd5e88005357efc923ae44458079693093cf4079561"
+          },
+          "math": {
+            "ubuntu_py311": "5f4f7e9ce5ea2cc86e2312bd877653cfe0cae3c8af64e37b9a4fc1eb4be57a81",
+            "ubuntu_py312": "993c5bd41a0283c777c51b1779be434c7447dcc0c53818fd3980437576f7ed5a",
+            "windows_py311": "3ed2f53e5c0adeb52119b598ea8cbab09382d7350139337272dbcd749d410165",
+            "windows_py312": "b9cd0f80442db8ce34cbfd260d10424b9caff2d9cfe8b70d37dec53481608556"
+          },
+          "market_data_legacy": {
+            "ubuntu_py311": "c296cf90e2781a890d241fd4be5d71ac657bf875c6514de75dc79362448f3f56",
+            "ubuntu_py312": "671239b27a65c6990c17575454f06b622e2f5561d52a32082ea29004821ed5c9",
+            "windows_py311": "0d1a7f0d12d38e17818906a833de1d87771ffd0b17b0441892ab88cef7147b11",
+            "windows_py312": "c138fd8c8c37889892de0ed2edcab53cf71fd4988025fa63e18a630bef4353df"
+          }
+        },
+        "distinct_wheel_sha_count_by_package": {
+          "terminan": 4,
+          "math": 4,
+          "market_data_legacy": 4
+        },
+        "interpretation": "All four GitHub artifact SHA256 independently match downloaded bytes; all 3 source file maps equal across four archives, yet wheel SHA256 differ by platform/3.11-3.12. Different environments do NOT prove failure of same-environment deterministic reproducibility. D source does not represent B9e0 runtime.",
+        "native_integrated_runtime_admission": false
       }
     },
     "B_canonical_runtime": {
