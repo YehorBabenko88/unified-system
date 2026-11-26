@@ -101,7 +101,7 @@
       "base": "f05f9a73581b1c15c4cc78da2801c9f2f5dd08d0",
       "focus": "exact SHA registry, history secret triage, dependency/PR arbitration",
       "contract": "read-only; no branch deletion; no runtime ownership",
-      "status": "UNQUALIFIED"
+      "status": "CI_QUEUED"
     },
     {
       "id": "META_F",
@@ -112,7 +112,7 @@
       "base": "7bd4cb9048f261d7936f2a9640f05ff8f42b1c77",
       "focus": "SHA-pinned CI + TLS fixture exclusion and archive guard",
       "contract": "stacked on #85, preserve #84 artifact scan, original PRs retained",
-      "status": "UNQUALIFIED"
+      "status": "HOSTED_COMPONENT_CI_SUCCESS_NOT_RELEASE"
     }
   ],
   "comparisons": [
@@ -210,9 +210,9 @@
       "reason": "Workflow job-level if allowlists eight legacy branches; F branch gpt/f-meta-artifact-guard-20261126 is not included; no acceptance claimed."
     },
     "unified_f": {
-      "sha": "6a6397865caf3e9c6dccea7f5718352f97439f92",
-      "run_id": 45858738583,
-      "conclusion": "queued at observation",
+      "sha": "c15cf1c31789f370b8a025c56dac202cfdda3715",
+      "run_id": 45860897164,
+      "conclusion": "QUEUED_AT_CURRENT_HEAD",
       "historical_scan": "NOT_EXECUTED",
       "ast_inventory": "NOT_EXECUTED"
     },
@@ -232,6 +232,13 @@
       "book_summary_patch": "exact PR patch identical",
       "tests_file": "tests/test_meta_book_spread_parity.py",
       "status": "PATCH_PRESENT_NOT_RUNTIME_EQUIVALENCE"
+    },
+    "unified_f_note": "Manifest contains last independently observed source SHAs; F's own HEAD is a moving self-reference (the manifest commit changes its HEAD); the active exact F SHA is the PR HEAD and cannot be a self-hash inside its own committed manifest.",
+    "windows_owner": {
+      "sha": "0ad4a4dc55390fb3ccae146e9461ca5595efbca7",
+      "windows_native_ci": "45854254373 QUEUED (A report)",
+      "offline_ci": "45854254208 QUEUED (A report)",
+      "status": "WINDOWS_DLL_PROVENANCE_UNATTESTED"
     }
   },
   "integration_order": [
