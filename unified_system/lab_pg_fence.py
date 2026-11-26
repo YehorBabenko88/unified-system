@@ -136,6 +136,11 @@ def claim_lab_fence(pg, *, generation, token, session_id, instance_id,
         " WHERE public.lab_writer_fence.active=false"
         " AND EXCLUDED.token>public.lab_writer_fence.token"
         " AND EXCLUDED.generation>public.lab_writer_fence.generation"
+        # A caller-controlled quiescence flag is NOT enough: postgres
+        # independently verifies the original backend instance is extinct.
+        " AND NOT EXISTS (SELECT 1 FROM pg_catalog.pg_stat_activity a"
+        " WHERE a.pid=public.lab_writer_fence.backend_pid"
+        " AND a.backend_start=public.lab_writer_fence.backend_start)"
         " RETURNING generation"
     )
     need(pg.sql(sql) == str(generation), "LAB_FENCE_CLAIM_DENIED")
