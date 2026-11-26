@@ -268,6 +268,60 @@ class NativeCRecoveryTests(unittest.TestCase):
         with self.assertRaises(LabAdmissionRejected):
             self._recover()
 
+    def test_native_power_loss_wal_replay_with_immutable_pending_checkpoint(self):
+        from unittest.mock import patch
+        stream="bybit:BTCUSDT:1m"
+        symbol="BTCUSDT"
+        ms=240000
+        fp="a"*64
+        cid="b"*64
+        # Synthetic dedicated LAB fixture only, inserted by PG owner for
+        # storage durability. NOT an authorized second market-data writer.
+        self.pg.sql(
+            "INSERT INTO public.provenance_minutes("
+            "fingerprint,content_id,symbol,start_ms,record)"
+            f" VALUES ('{fp}','{cid}','{symbol}',{ms},"
+            f"'{{\"dataset_fingerprint\":\"{fp}\"}}'::jsonb)")
+        self.pg.sql(
+            "INSERT INTO public.lab_stream_pending("
+            "stream_id,symbol,start_ms,fingerprint,content_id,"
+            "owner,namespace,generation,token,source_sha256,schema_sha256)"
+            f" VALUES ('{stream}','{symbol}',{ms},'{fp}','{cid}',"
+            "'unified-system','unified/lab',1,100,"
+            f"'{self.source}','{self.schema}')")
+        self.pg.sql(
+            "INSERT INTO public.lab_stream_checkpoint("
+            "stream_id,symbol,cursor_value,source_start_ms,"
+            "fingerprint,content_id,owner,namespace,generation,token)"
+            f" VALUES ('{stream}','{symbol}',{ms},{ms},"
+            f"'{fp}','{cid}','unified-system','unified/lab',1,100)")
+        self.assertEqual(read_lab_pending(
+            self.pg,stream_id=stream)["content_id"],cid)
+        with patch.dict(os.environ,{"LAB_C_PG18_WAL_FAULT_TEST":"1"}):
+            contained=contain_exclusive_lab_cluster(
+                self.pg,old=dict(self.old),quiesced=True,
+                max_seconds=180,fault="POWER_LOSS_TEST")
+            self.assertEqual(contained["state"],"UNKNOWN")
+            self.assertFalse(contained["old_backend_extinct"])
+            self.assertFalse(self.pg.started)
+            recovered=self._recover(streams=(stream,),max_seconds=250)
+        self.assertEqual(recovered["wal_recovery"],
+                         "LAB_CRASH_REPLAY_LOG_VERIFIED")
+        self.assertFalse(recovered["native_admitted"])
+        snap=recovered["stream_snapshots"][stream]
+        self.assertEqual(snap["immutable_outcome"],"MATCH")
+        self.assertEqual(snap["pending"]["fingerprint"],fp)
+        self.assertEqual(snap["pending"]["content_id"],cid)
+        self.assertEqual(snap["checkpoint"]["fingerprint"],fp)
+        self.assertEqual(snap["checkpoint"]["content_id"],cid)
+        self.assertEqual(snap["checkpoint"]["start_ms"],ms)
+        self.assertEqual(self.pg.sql(
+            "SELECT generation,token,active FROM public.lab_writer_fence"),
+            "1|100|f")
+        self.assertEqual(self.pg.sql(
+            f"SELECT count(*) FROM public.provenance_minutes"
+            f" WHERE symbol='{symbol}' AND start_ms={ms}"),"1")
+
     def test_cluster_stop_restart_durable_highwater_pending_and_cas(self):
         import uuid
         # A durable pending marker must remain unresolved after cluster
