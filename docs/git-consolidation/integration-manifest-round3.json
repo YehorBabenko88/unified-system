@@ -1,5 +1,5 @@
 {
-  "schema": "unified.git-integration-manifest.v1",
+  "schema": "unified.git-integration-manifest.v2",
   "observed_date": "2026-11-26",
   "point_in_time_not_atomic": true,
   "canonical_owners": {
@@ -42,7 +42,7 @@
       "owner": "B",
       "repo": "bybit-cluster-grid",
       "pr": 300,
-      "sha": "8553657f234c39c7b7c157cf3dea9b87214b1adb",
+      "sha": "1e9be8ef70ef4502168d58dd399b44541b9c447f",
       "base": "4391a5c2a5a3ce58d0b0446069ba42efc29e9c70",
       "focus": "pure qualified-read envelope v1 (not deployed authenticated route)",
       "contract": "status PARTIAL never implies exchange-complete/paper authorization",
@@ -53,7 +53,7 @@
       "owner": "C",
       "repo": "unified-system",
       "pr": 163,
-      "sha": "5478e9eafc15c6327ac9ea0f86dd73f14cec2747",
+      "sha": "89ccdf58b31c8466fc45b9d8235acddc9c6b3428",
       "base": "4c5a0a943bc50ca820f1a897afe3311a582e9344",
       "focus": "owned PostgreSQL 18 and LAB admission",
       "contract": "writer/storage fencing, canonical Grid producer name/migration 47, immutable witness",
@@ -64,7 +64,7 @@
       "owner": "D",
       "repo": "Terminan",
       "pr": 126,
-      "sha": "b4b26cf45c04f2cb9d8c1088ee2a4629568f4eac",
+      "sha": "dd2d3d3f86079419756e1210aef769d7e02f0bde",
       "base": "61aa7e17d440ce4d5a7d372cedcedfe47e3144de",
       "focus": "qualified PARTIAL read/chart without paper authorization",
       "contract": "currently Grid history_api v1.1, not B qualified-read-envelope.v1 route",
@@ -86,7 +86,7 @@
       "owner": "E",
       "repo": "unified-system",
       "pr": 164,
-      "sha": "acbe5589d0acdab208927d0964e4a8d190c34a1e",
+      "sha": "0855d1b33a44f30059464806ceebae51f598f16a",
       "base": "f05f9a73581b1c15c4cc78da2801c9f2f5dd08d0",
       "focus": "LAN first-close and Root exclusive authority",
       "contract": "Consul lease alone insufficient; C PG resource fence + B writer exclusion",
@@ -97,7 +97,7 @@
       "owner": "F",
       "repo": "unified-system",
       "pr": 165,
-      "sha": "efbe123133fa6003d99673d3b1e43a33f728f553",
+      "sha": "6a6397865caf3e9c6dccea7f5718352f97439f92",
       "base": "f05f9a73581b1c15c4cc78da2801c9f2f5dd08d0",
       "focus": "exact SHA registry, history secret triage, dependency/PR arbitration",
       "contract": "read-only; no branch deletion; no runtime ownership",
@@ -120,14 +120,14 @@
       "from": "B1",
       "to": "B2",
       "kind": "DIVERGED",
-      "evidence": "Git compare current B1..B2 ahead 7 behind 7, B2 was based on prior B1 SHA 4391a5c2",
+      "evidence": "Current B1 39a6cf4d... to B2 1e9be8ef... compare status diverged, ahead 31 behind 7, merge-base 173054632b081c09774b3c2555a920e1763093d6. B owner must reconcile.",
       "action": "rebase/cherry-pick only by B with exact source and tests, do not auto-merge"
     },
     {
       "from": "D1",
       "to": "D2",
       "kind": "DIVERGED_WITH_IDENTICAL_SHARED_PATCH",
-      "evidence": "both PR file patches terminan/analytics/book_summary.py identical; Git compare HEADs ahead 2 behind 14",
+      "evidence": "D2 9846eef2... to D1 dd2d3d3f... diverged, ahead 32 behind 2, merge-base 61aa7e17d440ce4d5a7d372cedcedfe47e3144de; exact PR #126/#127 book_summary.py patches identical, but full lineage/semantics not proven.",
       "action": "D to combine validated changes and rerun exact-head tests"
     },
     {
@@ -185,5 +185,85 @@
     }
   ],
   "evidence_policy": "No CI success inferred from PR state, test authorship, or artifact names; exact source HEAD required before integration.",
-  "deletion_policy": "No branch/PR close or history rewrite without MASTER approval"
+  "deletion_policy": "No branch/PR close or history rewrite without MASTER approval",
+  "round": 4,
+  "observation": "GitHub API exact PR HEADs observed 2026-11-26, sequential and non-atomic",
+  "round4_evidence": {
+    "source": "Live GitHub connector reads, non-atomic. CI runs pinned to exact source SHA, not PR merge-ref.",
+    "meta_release_guard": {
+      "sha": "902db7e28571e851de09d127a9ebad6f120efecd",
+      "run_id": 45855456213,
+      "conclusion": "success",
+      "jobs": [
+        "linux:success",
+        "windows:success",
+        "archive-pinned-contract:success",
+        "platform-coverage:success"
+      ],
+      "gate_step": "Build wheel and sdist from tracked source and reject private key material",
+      "gate_step_result": "success",
+      "caveat": "Hosted packaging script success; independent archive-bytes examination and full-history/LFS/nested archives not attested."
+    },
+    "meta_synthetic": {
+      "run_id": 45855456022,
+      "conclusion": "skipped",
+      "reason": "Workflow job-level if allowlists eight legacy branches; F branch gpt/f-meta-artifact-guard-20261126 is not included; no acceptance claimed."
+    },
+    "unified_f": {
+      "sha": "6a6397865caf3e9c6dccea7f5718352f97439f92",
+      "run_id": 45858738583,
+      "conclusion": "queued at observation",
+      "historical_scan": "NOT_EXECUTED",
+      "ast_inventory": "NOT_EXECUTED"
+    },
+    "grid_ancestry": {
+      "status": "diverged",
+      "b1": "39a6cf4d8c039ca99bbfc00ca7cc2359bef5c60c",
+      "b2": "1e9be8ef70ef4502168d58dd399b44541b9c447f",
+      "ahead_by_b2": 31,
+      "behind_by_b2": 7,
+      "merge_base": "173054632b081c09774b3c2555a920e1763093d6"
+    },
+    "terminan_127_preservation": {
+      "combined_pr": 126,
+      "combined_head": "dd2d3d3f86079419756e1210aef769d7e02f0bde",
+      "legacy_pr": 127,
+      "legacy_head": "9846eef2d504ef3d57572b6bd6a26b370a056db1",
+      "book_summary_patch": "exact PR patch identical",
+      "tests_file": "tests/test_meta_book_spread_parity.py",
+      "status": "PATCH_PRESENT_NOT_RUNTIME_EQUIVALENCE"
+    }
+  },
+  "integration_order": [
+    {
+      "step": 1,
+      "owner": "A/F",
+      "action": "Qualify Root Windows native gate and F historical/AST CI independently; no release admission"
+    },
+    {
+      "step": 2,
+      "owner": "B",
+      "action": "Reconcile #299/#300 divergent qualified-read route, single Grid market-data distribution; pin immutable source SHA"
+    },
+    {
+      "step": 3,
+      "owner": "C/E",
+      "action": "Establish owned PostgreSQL single-writer resource fence, Root lease and durable provenance with B agreement"
+    },
+    {
+      "step": 4,
+      "owner": "D",
+      "action": "Verify #126 preserves #127 book-spread tick parity, consumes qualified B route read-only; PARTIAL cannot enter paper"
+    },
+    {
+      "step": 5,
+      "owner": "F",
+      "action": "Revalidate exact-head CI, dependency lock and cross-platform wheel artifacts; update conflict ledger before MASTER integration decision"
+    },
+    {
+      "step": 6,
+      "owner": "MASTER",
+      "action": "Approve or reject integration only after independent end-to-end and physical Windows acceptance; keep Strattester/Meta source and refs"
+    }
+  ]
 }
