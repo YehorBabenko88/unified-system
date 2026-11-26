@@ -214,6 +214,60 @@ class NativeCRecoveryTests(unittest.TestCase):
             "SELECT generation,token,active FROM public.lab_writer_fence"),
             "1|100|f")
 
+    def test_raw_stopped_postmaster_without_c_witness_denied(self):
+        # A foreign/manual stop is not a protected C STOPPED_UNVERIFIED state.
+        self.pg.stop()
+        self.assertFalse(self.pg.started)
+        with self.assertRaisesRegex(LabAdmissionRejected,
+                                    "LAB_RECOVERY_STOPPED_WITHOUT_C_EVIDENCE"):
+            self._recover()
+        self.assertFalse(self.pg.started)
+
+    def test_stopped_old_identity_mutation_denied_before_restart(self):
+        contained=contain_exclusive_lab_cluster(
+            self.pg,old=dict(self.old),quiesced=True,max_seconds=120)
+        self.assertEqual(contained["state"],"UNKNOWN")
+        self.assertFalse(self.pg.started)
+        forged=dict(self.old, token=self.old["token"]+1)
+        with self.assertRaisesRegex(LabAdmissionRejected,
+                                    "LAB_RECOVERY_STOPPED_OWNER_MISMATCH"):
+            self._recover(old=forged)
+        self.assertFalse(self.pg.started)
+
+    def test_different_python_object_same_data_root_denied(self):
+        # Demonstrate exact type checking alone does not prove single
+        # physical PostgreSQL ownership. No new LabPostgres constructor
+        # is invoked (a new legitimate constructor rejects old marker).
+        contained=contain_exclusive_lab_cluster(
+            self.pg,old=dict(self.old),quiesced=True,max_seconds=120)
+        self.assertEqual(contained["state"],"UNKNOWN")
+        mirror=object.__new__(LabPostgres)
+        mirror.__dict__.update(self.pg.__dict__)
+        self.assertIsNot(mirror,self.pg)
+        self.assertEqual(mirror.root,self.pg.root)
+        with self.assertRaisesRegex(LabAdmissionRejected,
+                                    "LAB_RECOVERY_STOPPED_OWNER_MISMATCH"):
+            recover_exclusive_lab_cluster(
+                mirror,old=dict(self.old),streams=(),quiesced=True,
+                max_seconds=120)
+        self.assertFalse(self.pg.started)
+
+    def test_unavailable_retained_a_handle_denies_without_stop(self):
+        from unittest.mock import patch
+        from unified_system import runtime_process
+        with patch.object(runtime_process, "RetainedOsProcessWait",
+                          side_effect=ValueError("test-only missing OS handle")):
+            with self.assertRaisesRegex(
+                    LabAdmissionRejected,
+                    "LAB_RECOVERY_RETAINED_HANDLE_UNKNOWN"):
+                self._recover()
+        # The old backend stays alive and no new generation can start.
+        self.assertTrue(self.pg.started)
+        self.assertEqual(observe_old_lab_backend(self.pg,**self.old),
+                         "STILL_ALIVE")
+        with self.assertRaises(LabAdmissionRejected):
+            self._recover()
+
     def test_cluster_stop_restart_durable_highwater_pending_and_cas(self):
         import uuid
         # A durable pending marker must remain unresolved after cluster
