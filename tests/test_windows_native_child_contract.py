@@ -523,8 +523,21 @@ class WindowsNativeJobContainmentTests(unittest.TestCase):
         from unified_system.runtime_process import OwnedWindowsJob
         with OwnedWindowsJob() as job:
             self.assertEqual(job.active_process_count(), 0)
-            # The real independent Popen from setUp is never adopted, and
-            # zero owned members does NOT prove the old process exited.
+            # A separate child can remain alive despite zero members in our
+            # empty Job. Never treat empty-Job evidence as global extinction.
+            import subprocess
+            import sys
+            with subprocess.Popen(
+                    [sys.executable, '-c', 'import time; time.sleep(5)'],
+                    stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL) as child:
+                try:
+                    self.assertIsNone(child.poll())
+                    self.assertEqual(job.active_process_count(), 0)
+                finally:
+                    if child.poll() is None:
+                        child.terminate()
+                    child.wait(timeout=5)
 
 
 @unittest.skipUnless(WINDOWS, 'requires native Windows SCM enumeration')
