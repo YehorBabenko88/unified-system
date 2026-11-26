@@ -5,6 +5,8 @@ source-authored tests are NOT evidence of actual PG18/WAL native recovery.
 """
 import asyncio
 import unittest
+import sys
+import types
 from unittest.mock import patch, MagicMock
 from types import SimpleNamespace
 
@@ -51,6 +53,28 @@ class RootRecoveryContractTests(unittest.TestCase):
             LabPgRecoveryLane(SimpleNamespace(
                 major=18,port=55432,started=True,
                 stop=lambda:None))
+
+    def test_one_C_owner_never_gets_second_dispatcher_after_close(self):
+        # C module is deliberately absent from standalone E branch. Inject
+        # a synthetic owner CLASS to exercise only the E one-owner registry.
+        class FakeCPostgres:
+            major=18
+            port=55432
+            def _verify_owned(self):
+                return None
+        fake=types.ModuleType("unified_system.lab_postgres")
+        fake.LabPostgres=FakeCPostgres
+        with patch.dict(sys.modules, {"unified_system.lab_postgres": fake}):
+            owner=FakeCPostgres()
+            lane=LabPgRecoveryLane(owner)
+            try:
+                with self.assertRaises(ResourceFenceBlocked):
+                    LabPgRecoveryLane(owner)
+                lane.close()
+                with self.assertRaises(ResourceFenceBlocked):
+                    LabPgRecoveryLane(owner)
+            finally:
+                lane.close()
 
     def test_os_extinct_not_tcp_extinct(self):
         p=RootProcessObservation(
