@@ -541,6 +541,70 @@ class WindowsNativeJobContainmentTests(unittest.TestCase):
                     child.wait(timeout=5)
 
 
+
+@unittest.skipUnless(WINDOWS, 'requires disposable Windows Job child')
+class WindowsNativeSuspendedLaunchTests(unittest.TestCase):
+    """Real isolated Python child, only pre-pinned Lab ProcessDriver actions."""
+
+    def setUp(self):
+        import hashlib
+        import socket
+        import sys
+        from unified_system.runtime_process import ProcessDriver
+        self.tmp = tempfile.TemporaryDirectory(prefix='a-round17-job-')
+        self.addCleanup(self.tmp.cleanup)
+        root = Path(self.tmp.name)
+        self.worker = root / 'job_worker.py'
+        self.worker.write_text(
+            'import time\\n'
+            'time.sleep(30)\\n', encoding='utf-8')
+        python = Path(sys.executable).resolve()
+        with socket.socket() as sock:
+            sock.bind(('127.0.0.1', 0))
+            port = sock.getsockname()[1]
+        program = dict(
+            argv=[str(python), str(self.worker)],
+            cwd=str(root), executable_sha256=hashlib.sha256(
+                python.read_bytes()).hexdigest(),
+            file_pins={'job_worker.py':hashlib.sha256(
+                self.worker.read_bytes()).hexdigest()},
+            health_url='http://127.0.0.1:%d/health' % port,
+            disposable_lab_windows_job=True)
+        self.driver = ProcessDriver(
+            root / 'private', {'market_data':program},
+            authorize=lambda action, module: action == 'start'
+            and module == 'market_data')
+        self.op = '8' * 32
+
+    def test_native_suspend_assign_resume_and_retained_stop(self):
+        from unified_system.runtime import ModuleSpec
+        from unified_system.runtime_process import _OwnedWindowsChild
+        op = self.driver.start(ModuleSpec('market_data','1.0.0'),
+                               'disposable-lab', self.op)
+        self.addCleanup(self._cleanup)
+        child = self.driver.children[op]
+        self.assertIsInstance(child, _OwnedWindowsChild)
+        self.assertTrue(child._job._assigned)
+        self.assertGreaterEqual(child._job.active_process_count(), 1)
+        self.assertEqual(self.driver.owned_process_state(op), 'STILL_ALIVE')
+        self.driver.stop(op)
+        self.assertEqual(self.driver._load(op)['state'], 'STOPPED')
+        self.assertEqual(self.driver.owned_process_state(op), 'EXTINCT')
+
+    def _cleanup(self):
+        if self.op in self.driver.children:
+            child = self.driver.children[self.op]
+            if child.poll() is None:
+                self.driver.stop(self.op)
+
+    def test_refuse_untrusted_job_attach_even_with_true(self):
+        from unified_system.runtime_process import OwnedWindowsJob
+        with OwnedWindowsJob() as job:
+            with self.assertRaisesRegex(ValueError, 'public assignment denied'):
+                job.assign_suspended_child(None, created_suspended=True)
+            self.assertEqual(job.active_process_count(), 0)
+
+
 @unittest.skipUnless(WINDOWS, 'requires native Windows SCM enumeration')
 class WindowsNativeScmCensusTests(unittest.TestCase):
     """Read-only native SCM census, not a signed Root ownership receipt."""
