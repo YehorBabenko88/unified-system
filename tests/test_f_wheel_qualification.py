@@ -146,13 +146,13 @@ class QualificationTests(unittest.TestCase):
         target.mkdir()
         result = subprocess.run([sys.executable, "-m", "pip", "install",
                                  "--disable-pip-version-check", "--no-index",
-                                 "--no-deps", "--target", str(target), str(self.wheel)],
+                                 "--no-deps", "--no-compile", "--target", str(target), str(self.wheel)],
                                 capture_output=True, text=True, timeout=30)
         self.assertEqual(result.returncode, 0, result.stderr)
         self.install = target
         report = self.scan()
         self.assertTrue(report["installed_record_verified"])
-        self.assertGreaterEqual(report["unhashed_install_auxiliary_count"], 1)
+        self.assertEqual(report["unhashed_install_auxiliary_count"], 0)
         self.assertFalse(report["all_installed_bytes_authenticated"])
         self.assertFalse(report["release_authenticated"])
         self.assertFalse(report["writer_admitted"])
@@ -164,11 +164,44 @@ class QualificationTests(unittest.TestCase):
         target.mkdir()
         result = subprocess.run([sys.executable, "-m", "pip", "install",
                                  "--disable-pip-version-check", "--no-index",
-                                 "--no-deps", "--target", str(target), str(self.wheel)],
+                                 "--no-deps", "--no-compile", "--target", str(target), str(self.wheel)],
                                 capture_output=True, text=True, timeout=30)
         self.assertEqual(result.returncode, 0, result.stderr)
         self.install = target
         (self.install / "bin" / "market-data").write_bytes(b"tampered")
+        self.deny()
+
+    def test_unverified_pyc_denied_even_if_locally_present(self):
+        pyc = self.install / "market_data" / "__pycache__" / "__init__.cpython-313.pyc"
+        pyc.parent.mkdir(parents=True)
+        pyc.write_bytes(b"unknown")
+        self.deny()
+
+    def test_import_shadow_pth_denied(self):
+        (self.install / "evil.pth").write_text("import os\n")
+        self.deny()
+
+    def test_recorded_extra_python_module_denied(self):
+        rel = "market_data/attacker.py"
+        data = b"import os\n"
+        dest = self.install / rel
+        dest.write_bytes(data)
+        record = self.install / RECORD
+        with record.open("a", encoding="utf-8") as stream:
+            stream.write(f"{rel},{rec_hash(data)},{len(data)}\n")
+        self.deny()
+
+    def test_installed_root_symlink_denied(self):
+        link = self.base / "linkroot"
+        try:
+            link.symlink_to(self.install, target_is_directory=True)
+        except (OSError, NotImplementedError):
+            self.skipTest("symlink unsupported")
+        self.install = link
+        self.deny()
+
+    def test_installed_unrecorded_regular_file_denied(self):
+        (self.install / "market_data" / "unknown.py").write_bytes(b"a = 1\n")
         self.deny()
 
     def test_wheel_reproducible_synthetic_fixture(self):
