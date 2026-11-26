@@ -152,7 +152,9 @@ def recover_exclusive_lab_cluster(pg, *, old, streams=(), quiesced=False,
             raise LabAdmissionRejected("LAB_RECOVERY_REENTRY_OR_POISONED")
         _STATES[id(pg)] = "IN_PROGRESS"
     try:
+        _remaining(deadline)
         _require_pg(pg)
+        _remaining(deadline)
         # If E stop-only already completed on this same owner object, do
         # not stop a second time; verify and restart through C only.
         if pg.started is True:
