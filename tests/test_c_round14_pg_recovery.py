@@ -143,16 +143,13 @@ class NativeCRecoveryTests(unittest.TestCase):
             "'unified-system','unified/lab',1,100,"
             f"'{self.source}','{self.schema}')")
         self.assertEqual(read_lab_pending(self.pg, stream_id=stream)["fingerprint"], fp)
-        old_pid=self.pg.postmaster_pid()
         receipt=self._recover(streams=(stream,))
-        self.assertEqual(receipt["schema"], "c-isolated-pg18-recovery-diagnostic.v1")
-        self.assertEqual(receipt["old_postmaster_pid"],old_pid)
-        self.assertGreater(receipt["new_postmaster_pid"],1)
-        self.assertEqual(receipt["old_backend_observation"],"EXTINCT")
+        self.assertEqual(receipt["schema"], "c-isolated-pg18-recovery-diagnostic.v2")
+        self.assertEqual(receipt["old_backend_pid"], self.old["backend_pid"])
         self.assertIs(receipt["native_admitted"],False)
         self.assertIs(receipt["trading_authorized"],False)
         self.assertEqual(receipt["stream_snapshots"][stream]["pending"]["fingerprint"], fp)
-        self.assertIsNone(receipt["stream_snapshots"][stream]["cursor"])
+        self.assertIsNone(receipt["stream_snapshots"][stream]["checkpoint"])
         self.assertEqual(self.pg.sql(
             "SELECT generation,token,active FROM public.lab_writer_fence"),
             "1|100|f")
