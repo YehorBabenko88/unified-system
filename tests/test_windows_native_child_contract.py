@@ -715,18 +715,18 @@ class WindowsNativeSuspendedLaunchTests(unittest.TestCase):
         import hashlib
         from unified_system.runtime import ModuleSpec
         self.worker.write_text(
-            'import ctypes, sys, time\\n'
-            'from ctypes import wintypes as w\\n'
-            'a = ctypes.WinDLL("advapi32", use_last_error=True)\\n'
-            'a.OpenSCManagerW.argtypes = [w.LPCWSTR, w.LPCWSTR, w.DWORD]\\n'
-            'a.OpenSCManagerW.restype = w.HANDLE\\n'
-            'time.sleep(1)\\n'
-            'h = a.OpenSCManagerW(None, None, 2)\\n'
-            'if h:\\n'
-            ' a.CloseServiceHandle.argtypes = [w.HANDLE]\\n'
-            ' a.CloseServiceHandle(h)\\n'
-            ' sys.exit(74)\\n'
-            'sys.exit(73 if ctypes.get_last_error() == 5 else 75)\\n',
+            'import ctypes, sys, time\n'
+            'from ctypes import wintypes as w\n'
+            'a = ctypes.WinDLL("advapi32", use_last_error=True)\n'
+            'a.OpenSCManagerW.argtypes = [w.LPCWSTR, w.LPCWSTR, w.DWORD]\n'
+            'a.OpenSCManagerW.restype = w.HANDLE\n'
+            'time.sleep(1)\n'
+            'h = a.OpenSCManagerW(None, None, 2)\n'
+            'if h:\n'
+            ' a.CloseServiceHandle.argtypes = [w.HANDLE]\n'
+            ' a.CloseServiceHandle(h)\n'
+            ' sys.exit(74)\n'
+            'sys.exit(73 if ctypes.get_last_error() == 5 else 75)\n',
             encoding='utf-8')
         program = self.driver.programs['market_data']
         program['file_pins']['job_worker.py'] = hashlib.sha256(
