@@ -386,6 +386,1131 @@ class TLSIsolationTests(unittest.TestCase):
         self.assertEqual(len(server.connections),5)
 
 
+class ReconnectLifecyclePureTests(unittest.TestCase):
+    """No sockets, certificates, services or test environment mutation."""
+
+    def make_transport(self, attempts):
+        from types import SimpleNamespace
+        transport = object.__new__(LanTransport)
+        transport.retry_counts = {}
+        transport.connections = {}
+        calls = []
+
+        def connect(peer, *, deadline=None, cancel=None):
+            calls.append(peer)
+            item = attempts.pop(0)
+            if isinstance(item, Exception):
+                raise item
+            return item
+
+        transport.connect = connect
+        return transport, calls
+
+    def test_retry_clears_failure_history_on_success(self):
+        from types import SimpleNamespace
+        success = SimpleNamespace(created_at=time.monotonic(), closed=False)
+        transport, calls = self.make_transport([TransportError('DISCONNECTED'), success])
+        policy = ReconnectPolicy(seed=2)
+        result = transport.connect_with_retry(
+            'LS5', deadline=time.monotonic()+3, policy=policy)
+        self.assertIs(result, success)
+        self.assertEqual(calls, ['LS5', 'LS5'])
+        self.assertNotIn('LS5', transport.retry_counts)
+
+    def test_existing_backoff_is_cleared_on_immediate_success(self):
+        success = object()
+        transport, calls = self.make_transport([success])
+        transport.retry_counts['LS5'] = 5
+        self.assertIs(transport.connect_with_retry(
+            'LS5', deadline=time.monotonic()+1), success)
+        self.assertEqual(calls, ['LS5'])
+        self.assertNotIn('LS5', transport.retry_counts)
+
+    def test_pre_cancelled_operation_never_connects(self):
+        cancel = threading.Event()
+        cancel.set()
+        transport, calls = self.make_transport([object()])
+        with self.assertRaisesRegex(TransportError, '^CANCELLED
+    def test_duplicate_or_ip_claim_cannot_be_node_identity(self):
+        with self.assertRaises(TransportError):
+            PeerRegistry.from_document({'schema':'unified.lan-peer-registry.v1','nodes':[]})
+
+    def test_backoff_is_bounded_auth_failure_not_retryable(self):
+        p=ReconnectPolicy(seed=1)
+        self.assertTrue(0 <= p.delay(10) <= 30)
+        self.assertFalse(p.retryable('AUTH_REJECTED'))
+        self.assertTrue(p.retryable('DISCONNECTED'))
+
+
+
+
+class FailureDiagnosticsPureTests(unittest.TestCase):
+    """Inert objects only: no TLS fixture setup, sockets, subprocess or SQLite."""
+    def helper(self):
+        from tests import lan_failure_diagnostics as helper
+        self.assertTrue(hasattr(helper,'FailureDiagnostics'),'diagnostic helper interface missing')
+        self.assertTrue(hasattr(helper,'format_failure'),'bounded formatter missing')
+        return helper
+
+    def test_fixed_shape_ascii_byte_bound_and_privacy(self):
+        helper=self.helper();secret='PAYLOAD_KEY_IDENTITY_SECRET_\u2603'
+        raw={'stage':secret,'payload':secret,'connections':[{'closed':False,'why':secret,'streams':[[16,True,2**10000,2**10000]]*50,'jobs':[['MUX_FRAGMENT','control',True,secret,-10**10000]]*50,'peer':secret}]*50,'stores':[{'phase':secret,'path':secret}]*50,'io':[{'read':secret,'write':secret,'size':2**10000}]*50}
+        line=helper.format_failure(raw,'DEADLINE')
+        self.assertIs(type(line),str);self.assertLessEqual(len(line.encode('ascii')),1960)
+        self.assertEqual(line.count('\n'),1);self.assertTrue(line.endswith('\n'))
+        self.assertNotIn('SECRET',line);self.assertNotIn('payload',line);self.assertNotIn('identity',line)
+        value=json.loads(line.split(' ',1)[1]);self.assertEqual(value['v'],1)
+        self.assertLessEqual(len(value.get('connections',[])),2)
+
+    def test_unknown_objects_never_stringified(self):
+        helper=self.helper()
+        class Poison:
+            def __str__(self):raise AssertionError('must not stringify')
+            def __repr__(self):raise AssertionError('must not repr')
+        line=helper.format_failure({'connections':[{'why':Poison(),'streams':Poison()}],'stage':Poison()},Poison())
+        self.assertLessEqual(len(line.encode('ascii')),1960);json.loads(line.split(' ',1)[1])
+
+    def test_success_emits_nothing(self):
+        import io
+        helper=self.helper();output=io.StringIO();diag=helper.FailureDiagnostics(writer=output.write)
+        with diag.failure_boundary():pass
+        self.assertEqual(output.getvalue(),'')
+
+    def test_original_exception_and_traceback_preserved(self):
+        import io
+        helper=self.helper();output=io.StringIO();diag=helper.FailureDiagnostics(writer=output.write)
+        original=AssertionError('PRIVATE_EXCEPTION_DETAIL')
+        def origin():raise original
+        try:
+            with diag.failure_boundary():origin()
+        except AssertionError as caught:
+            self.assertIs(caught,original)
+            names=[];tb=caught.__traceback__
+            while tb:names.append(tb.tb_frame.f_code.co_name);tb=tb.tb_next
+            self.assertEqual(names[-1],'origin')
+        else:self.fail('original failure swallowed')
+        self.assertEqual(output.getvalue().count('LAN_FAIL_DIAG_V1 '),1)
+        self.assertNotIn('PRIVATE_EXCEPTION_DETAIL',output.getvalue())
+
+    def test_observer_busy_is_nonblocking(self):
+        import io
+        helper=self.helper();output=io.StringIO();diag=helper.FailureDiagnostics(writer=output.write)
+        diag._lock.acquire()
+        try:diag.emit_failure(AssertionError('private'))
+        finally:diag._lock.release()
+        self.assertIn('BUSY',output.getvalue());self.assertLessEqual(len(output.getvalue().encode('ascii')),1960)
+
+    def test_connection_busy_does_not_read_state(self):
+        helper=self.helper();calls=[]
+        class Busy:
+            def acquire(self,blocking=True):calls.append(blocking);return False
+            def release(self):raise AssertionError('not held')
+        class Connection:
+            cv=Busy()
+            def __getattr__(self,name):raise AssertionError('must not inspect busy state')
+        diag=helper.FailureDiagnostics(writer=lambda text:None);diag.register_connection(Connection())
+        state=diag.snapshot();self.assertEqual(calls,[False]);self.assertIn('BUSY',helper.format_failure(state))
+
+    def test_diagnostic_failure_sentinel_preserves_original(self):
+        import io
+        helper=self.helper();output=io.StringIO();diag=helper.FailureDiagnostics(writer=output.write)
+        def broken():raise RuntimeError('SECRET_SNAPSHOT_ERROR')
+        diag.snapshot=broken;original=ValueError('SECRET_ORIGINAL')
+        with self.assertRaises(ValueError) as caught:
+            with diag.failure_boundary():raise original
+        self.assertIs(caught.exception,original);self.assertIn('DIAGNOSTIC_UNAVAILABLE',output.getvalue())
+        self.assertNotIn('SECRET',output.getvalue())
+
+    def test_writer_failure_never_replaces_original(self):
+        helper=self.helper()
+        def broken(text):raise RuntimeError('SECRET_WRITER_ERROR')
+        diag=helper.FailureDiagnostics(writer=broken);original=AssertionError('original')
+        with self.assertRaises(AssertionError) as caught:
+            with diag.failure_boundary():raise original
+        self.assertIs(caught.exception,original)
+
+    def test_fixed_registration_slots_and_one_failure_line(self):
+        import io
+        helper=self.helper();output=io.StringIO();diag=helper.FailureDiagnostics(writer=output.write)
+        for _ in range(100):diag.register_connection(object())
+        self.assertLessEqual(len(diag._connections),2)
+        diag.emit_failure(AssertionError('first'));diag.emit_failure(AssertionError('second'))
+        self.assertEqual(output.getvalue().count('LAN_FAIL_DIAG_V1 '),1)
+
+    def test_wrappers_call_originals_once_and_restore(self):
+        import contextlib
+        from types import SimpleNamespace
+        helper=self.helper();calls=[];marker=object();sock=object()
+        class Problem(ValueError):pass
+        class Connection:
+            channels={'control':sock,'data':object()}
+            def _send(self,*args,**kwargs):calls.append(('send',args,kwargs));return marker
+            def _emit(self,*args,**kwargs):calls.append(('emit',args,kwargs));return marker
+        class Store:
+            @contextlib.contextmanager
+            def transaction(self):
+                calls.append(('enter',))
+                try:yield marker
+                finally:calls.append(('exit',))
+        class NodeBudget(Store):
+            def wait_take(self,*args,**kwargs):calls.append(('wait',args,kwargs));return marker
+        def read(*args,**kwargs):calls.append(('read',args,kwargs));return marker
+        lan=SimpleNamespace(Connection=Connection,_read_exact=read,TransportError=Problem)
+        budget=SimpleNamespace(_Store=Store,NodeBudget=NodeBudget,BudgetError=Problem)
+        original=(Connection._send,Connection._emit,Store.transaction,NodeBudget.wait_take,lan._read_exact)
+        diag=helper.FailureDiagnostics(writer=lambda line:self.fail('success emitted a line'))
+        with diag.observe(lan,budget):
+            connection=Connection();store=NodeBudget()
+            self.assertIs(connection._send(marker,deadline=17),marker)
+            self.assertIs(connection._emit('OPEN',1,'control',deadline=17),marker)
+            self.assertIs(lan._read_exact(sock,1,17,on_idle=None),marker)
+            self.assertIs(store.wait_take('tx','PRIVATE_PEER','live',1,deadline=17),marker)
+            with store.transaction() as value:self.assertIs(value,marker)
+        self.assertEqual([row[0] for row in calls],['send','emit','read','wait','enter','exit'])
+        self.assertEqual(calls[0][2],{'deadline':17});self.assertIs(calls[0][1][0],marker)
+        self.assertEqual(original,(Connection._send,Connection._emit,Store.transaction,NodeBudget.wait_take,lan._read_exact))
+
+    def test_observer_failure_never_duplicates_or_masks_original_call(self):
+        import contextlib,io
+        from types import SimpleNamespace
+        helper=self.helper();calls=[];original=ValueError('PRIVATE_NATIVE_DETAIL')
+        class Connection:
+            def _send(self,*args,**kwargs):calls.append('send');raise original
+            def _emit(self,*args,**kwargs):calls.append('emit')
+        class Store:
+            @contextlib.contextmanager
+            def transaction(self):
+                calls.append('enter')
+                try:yield None
+                finally:calls.append('exit')
+        class NodeBudget(Store):
+            def wait_take(self,*args,**kwargs):calls.append('wait')
+        lan=SimpleNamespace(Connection=Connection,_read_exact=lambda *a,**k:None,TransportError=ValueError)
+        budget=SimpleNamespace(_Store=Store,NodeBudget=NodeBudget,BudgetError=ValueError)
+        output=io.StringIO();diag=helper.FailureDiagnostics(writer=output.write)
+        def broken(*args,**kwargs):raise RuntimeError('PRIVATE_OBSERVER_DETAIL')
+        diag._store=broken
+        with self.assertRaises(ValueError) as caught:
+            with diag.observe(lan,budget),diag.failure_boundary():
+                with Store().transaction():pass
+                Connection()._send(b'PRIVATE_PAYLOAD')
+        self.assertIs(caught.exception,original);self.assertEqual(calls,['enter','exit','send'])
+        self.assertNotIn('PRIVATE',output.getvalue());self.assertEqual(output.getvalue().count('\n'),1)
+
+    def test_budget_wait_phase_visible_without_sql_or_app_mutation(self):
+        import contextlib
+        from types import SimpleNamespace
+        helper=self.helper();observations=[]
+        class Problem(ValueError):pass
+        class Connection:
+            def _send(self,*args,**kwargs):pass
+            def _emit(self,*args,**kwargs):pass
+        class Store:
+            @contextlib.contextmanager
+            def transaction(self):yield None
+        class NodeBudget(Store):
+            def wait_take(self,*args,**kwargs):observations.append(diag.snapshot())
+        lan=SimpleNamespace(Connection=Connection,_read_exact=lambda *a,**k:None,TransportError=Problem)
+        budget=SimpleNamespace(_Store=Store,NodeBudget=NodeBudget,BudgetError=Problem)
+        diag=helper.FailureDiagnostics(writer=lambda line:None)
+        with diag.observe(lan,budget):NodeBudget().wait_take('tx','PRIVATE_PEER','control',10,deadline=7)
+        self.assertEqual(len(observations),1)
+        rows=observations[0].get('stores',[])
+        self.assertEqual(len(rows),1,'active budget wait must have one bounded slot')
+        self.assertEqual(rows[0].get('budget_waiters'),1)
+        self.assertEqual(diag.snapshot()['stores'][0].get('budget_waiters'),0)
+
+    def test_full_known_shape_overflow_stays_valid_bounded_and_causal(self):
+        helper=self.helper()
+        connection={'slot':2,'closed':True,'why':'BUDGET_STORE_UNAVAILABLE','age_ms':9999999,'q':64,'qb':1048576,'streams':[[16,True,2**63-1,2**63-1]]*2,'jobs':[['MUX_FRAGMENT','control',True,'BUDGET_STORE_UNAVAILABLE',-9999999]]*2,'alive':[True]*5}
+        store={'phase':'TX_COMMIT','waiters':16,'held':True,'entry_ms':9999999,'hold_ms':9999999,'max_ms':9999999,'n':9999999,'budget_waiters':16,'budget_ms':9999999}
+        io={'slot':2,'channel':'control','read':'READ_OTHER','write':'MUX_FRAGMENT','n':65536,'remaining_ms':-9999999,'elapsed_ms':9999999,'active':True,'error':'BUDGET_STORE_UNAVAILABLE'}
+        line=helper.format_failure({'stage':'SEND','observer':'OK','connections':[connection]*2,'stores':[store]*2,'io':[io]*4},'DEADLINE')
+        self.assertLessEqual(len(line.encode('ascii')),1960)
+        decoded=json.loads(line.split(' ',1)[1]);self.assertEqual(decoded['code'],'DEADLINE')
+        # The full fixed shape can fit without truncation. Force only the inert
+        # formatter's cap lower to exercise overflow/sentinel, not app budgets.
+        with patch.object(helper,'LIMIT',512):limited=helper.format_failure({'stage':'SEND','observer':'OK','connections':[connection]*2,'stores':[store]*2,'io':[io]*4},'DEADLINE')
+        self.assertLessEqual(len(limited.encode('ascii')),512)
+        reduced=json.loads(limited.split(' ',1)[1]);self.assertTrue(reduced['truncated'])
+        self.assertEqual(reduced['code'],'DIAGNOSTIC_UNAVAILABLE')
+
+    def test_emit_observer_separates_control_and_data_without_changing_calls(self):
+        import contextlib
+        from types import SimpleNamespace
+        helper=self.helper();calls=[]
+        class Problem(ValueError):pass
+        class Connection:
+            def _send(self,*args,**kwargs):pass
+            def _emit(self,*args,**kwargs):calls.append((args,kwargs))
+        class Store:
+            @contextlib.contextmanager
+            def transaction(self):yield None
+        class NodeBudget(Store):
+            def wait_take(self,*args,**kwargs):pass
+        lan=SimpleNamespace(Connection=Connection,_read_exact=lambda *a,**k:None,TransportError=Problem)
+        budget=SimpleNamespace(_Store=Store,NodeBudget=NodeBudget,BudgetError=Problem)
+        diag=helper.FailureDiagnostics(writer=lambda line:None)
+        with diag.observe(lan,budget):
+            c=Connection();c._emit('CREDIT',1,'control',value=1);c._emit('APP',1,'live',b'PRIVATE')
+        rows=diag.snapshot()['io'];by_channel={row['channel']:row for row in rows}
+        self.assertEqual(set(by_channel),{'control','data'})
+        self.assertEqual(by_channel['control']['write'],'CREDIT');self.assertEqual(by_channel['data']['write'],'APP')
+        self.assertEqual(len(calls),2);self.assertEqual(calls[1][0],('APP',1,'live',b'PRIVATE'))
+
+    def test_transaction_entry_wait_and_failed_entry_not_stale(self):
+        import contextlib
+        from types import SimpleNamespace
+        helper=self.helper();seen=[];original=ValueError('PRIVATE_SQL_DETAIL')
+        class Connection:
+            def _send(self,*args,**kwargs):pass
+            def _emit(self,*args,**kwargs):pass
+        class Store:
+            @contextlib.contextmanager
+            def transaction(self):
+                seen.append(diag.snapshot()['stores'][0]);raise original
+                yield
+        class NodeBudget(Store):
+            def wait_take(self,*args,**kwargs):pass
+        lan=SimpleNamespace(Connection=Connection,_read_exact=lambda *a,**k:None,TransportError=ValueError)
+        budget=SimpleNamespace(_Store=Store,NodeBudget=NodeBudget,BudgetError=ValueError)
+        diag=helper.FailureDiagnostics(writer=lambda line:None)
+        with diag.observe(lan,budget),self.assertRaises(ValueError) as caught:
+            with Store().transaction():self.fail('failed entry must not yield')
+        self.assertIs(caught.exception,original);self.assertEqual(seen[0]['phase'],'WAIT');self.assertEqual(seen[0]['waiters'],1)
+        row=diag.snapshot()['stores'][0];self.assertEqual(row['waiters'],0);self.assertFalse(row['held'])
+
+    def test_frozen_snapshot_matches_the_original_failure_only(self):
+        import io
+        helper=self.helper();output=io.StringIO();diag=helper.FailureDiagnostics(writer=output.write)
+        old=ValueError('private old');current=ValueError('private current')
+        diag._frozen=(old,{'stage':'WAIT','observer':'OK'})
+        diag.snapshot=lambda:{'stage':'SEND','observer':'OK'}
+        diag.emit_failure(current)
+        self.assertEqual(json.loads(output.getvalue().split(' ',1)[1])['stage'],'SEND')
+
+
+if __name__=='__main__': unittest.main()
+):
+            transport.connect_with_retry('LS5', deadline=time.monotonic()+1,
+                                         cancel=cancel)
+        self.assertEqual(calls, [])
+
+    def test_cancelled_connect_failure_is_not_retried(self):
+        cancel = threading.Event()
+
+        def cancelled(peer, *, deadline=None, cancel=None):
+            cancel.set()
+            raise TransportError('DISCONNECTED')
+
+        transport, _ = self.make_transport([])
+        transport.connect = cancelled
+        with self.assertRaisesRegex(TransportError, '^CANCELLED
+    def test_duplicate_or_ip_claim_cannot_be_node_identity(self):
+        with self.assertRaises(TransportError):
+            PeerRegistry.from_document({'schema':'unified.lan-peer-registry.v1','nodes':[]})
+
+    def test_backoff_is_bounded_auth_failure_not_retryable(self):
+        p=ReconnectPolicy(seed=1)
+        self.assertTrue(0 <= p.delay(10) <= 30)
+        self.assertFalse(p.retryable('AUTH_REJECTED'))
+        self.assertTrue(p.retryable('DISCONNECTED'))
+
+
+
+
+class FailureDiagnosticsPureTests(unittest.TestCase):
+    """Inert objects only: no TLS fixture setup, sockets, subprocess or SQLite."""
+    def helper(self):
+        from tests import lan_failure_diagnostics as helper
+        self.assertTrue(hasattr(helper,'FailureDiagnostics'),'diagnostic helper interface missing')
+        self.assertTrue(hasattr(helper,'format_failure'),'bounded formatter missing')
+        return helper
+
+    def test_fixed_shape_ascii_byte_bound_and_privacy(self):
+        helper=self.helper();secret='PAYLOAD_KEY_IDENTITY_SECRET_\u2603'
+        raw={'stage':secret,'payload':secret,'connections':[{'closed':False,'why':secret,'streams':[[16,True,2**10000,2**10000]]*50,'jobs':[['MUX_FRAGMENT','control',True,secret,-10**10000]]*50,'peer':secret}]*50,'stores':[{'phase':secret,'path':secret}]*50,'io':[{'read':secret,'write':secret,'size':2**10000}]*50}
+        line=helper.format_failure(raw,'DEADLINE')
+        self.assertIs(type(line),str);self.assertLessEqual(len(line.encode('ascii')),1960)
+        self.assertEqual(line.count('\n'),1);self.assertTrue(line.endswith('\n'))
+        self.assertNotIn('SECRET',line);self.assertNotIn('payload',line);self.assertNotIn('identity',line)
+        value=json.loads(line.split(' ',1)[1]);self.assertEqual(value['v'],1)
+        self.assertLessEqual(len(value.get('connections',[])),2)
+
+    def test_unknown_objects_never_stringified(self):
+        helper=self.helper()
+        class Poison:
+            def __str__(self):raise AssertionError('must not stringify')
+            def __repr__(self):raise AssertionError('must not repr')
+        line=helper.format_failure({'connections':[{'why':Poison(),'streams':Poison()}],'stage':Poison()},Poison())
+        self.assertLessEqual(len(line.encode('ascii')),1960);json.loads(line.split(' ',1)[1])
+
+    def test_success_emits_nothing(self):
+        import io
+        helper=self.helper();output=io.StringIO();diag=helper.FailureDiagnostics(writer=output.write)
+        with diag.failure_boundary():pass
+        self.assertEqual(output.getvalue(),'')
+
+    def test_original_exception_and_traceback_preserved(self):
+        import io
+        helper=self.helper();output=io.StringIO();diag=helper.FailureDiagnostics(writer=output.write)
+        original=AssertionError('PRIVATE_EXCEPTION_DETAIL')
+        def origin():raise original
+        try:
+            with diag.failure_boundary():origin()
+        except AssertionError as caught:
+            self.assertIs(caught,original)
+            names=[];tb=caught.__traceback__
+            while tb:names.append(tb.tb_frame.f_code.co_name);tb=tb.tb_next
+            self.assertEqual(names[-1],'origin')
+        else:self.fail('original failure swallowed')
+        self.assertEqual(output.getvalue().count('LAN_FAIL_DIAG_V1 '),1)
+        self.assertNotIn('PRIVATE_EXCEPTION_DETAIL',output.getvalue())
+
+    def test_observer_busy_is_nonblocking(self):
+        import io
+        helper=self.helper();output=io.StringIO();diag=helper.FailureDiagnostics(writer=output.write)
+        diag._lock.acquire()
+        try:diag.emit_failure(AssertionError('private'))
+        finally:diag._lock.release()
+        self.assertIn('BUSY',output.getvalue());self.assertLessEqual(len(output.getvalue().encode('ascii')),1960)
+
+    def test_connection_busy_does_not_read_state(self):
+        helper=self.helper();calls=[]
+        class Busy:
+            def acquire(self,blocking=True):calls.append(blocking);return False
+            def release(self):raise AssertionError('not held')
+        class Connection:
+            cv=Busy()
+            def __getattr__(self,name):raise AssertionError('must not inspect busy state')
+        diag=helper.FailureDiagnostics(writer=lambda text:None);diag.register_connection(Connection())
+        state=diag.snapshot();self.assertEqual(calls,[False]);self.assertIn('BUSY',helper.format_failure(state))
+
+    def test_diagnostic_failure_sentinel_preserves_original(self):
+        import io
+        helper=self.helper();output=io.StringIO();diag=helper.FailureDiagnostics(writer=output.write)
+        def broken():raise RuntimeError('SECRET_SNAPSHOT_ERROR')
+        diag.snapshot=broken;original=ValueError('SECRET_ORIGINAL')
+        with self.assertRaises(ValueError) as caught:
+            with diag.failure_boundary():raise original
+        self.assertIs(caught.exception,original);self.assertIn('DIAGNOSTIC_UNAVAILABLE',output.getvalue())
+        self.assertNotIn('SECRET',output.getvalue())
+
+    def test_writer_failure_never_replaces_original(self):
+        helper=self.helper()
+        def broken(text):raise RuntimeError('SECRET_WRITER_ERROR')
+        diag=helper.FailureDiagnostics(writer=broken);original=AssertionError('original')
+        with self.assertRaises(AssertionError) as caught:
+            with diag.failure_boundary():raise original
+        self.assertIs(caught.exception,original)
+
+    def test_fixed_registration_slots_and_one_failure_line(self):
+        import io
+        helper=self.helper();output=io.StringIO();diag=helper.FailureDiagnostics(writer=output.write)
+        for _ in range(100):diag.register_connection(object())
+        self.assertLessEqual(len(diag._connections),2)
+        diag.emit_failure(AssertionError('first'));diag.emit_failure(AssertionError('second'))
+        self.assertEqual(output.getvalue().count('LAN_FAIL_DIAG_V1 '),1)
+
+    def test_wrappers_call_originals_once_and_restore(self):
+        import contextlib
+        from types import SimpleNamespace
+        helper=self.helper();calls=[];marker=object();sock=object()
+        class Problem(ValueError):pass
+        class Connection:
+            channels={'control':sock,'data':object()}
+            def _send(self,*args,**kwargs):calls.append(('send',args,kwargs));return marker
+            def _emit(self,*args,**kwargs):calls.append(('emit',args,kwargs));return marker
+        class Store:
+            @contextlib.contextmanager
+            def transaction(self):
+                calls.append(('enter',))
+                try:yield marker
+                finally:calls.append(('exit',))
+        class NodeBudget(Store):
+            def wait_take(self,*args,**kwargs):calls.append(('wait',args,kwargs));return marker
+        def read(*args,**kwargs):calls.append(('read',args,kwargs));return marker
+        lan=SimpleNamespace(Connection=Connection,_read_exact=read,TransportError=Problem)
+        budget=SimpleNamespace(_Store=Store,NodeBudget=NodeBudget,BudgetError=Problem)
+        original=(Connection._send,Connection._emit,Store.transaction,NodeBudget.wait_take,lan._read_exact)
+        diag=helper.FailureDiagnostics(writer=lambda line:self.fail('success emitted a line'))
+        with diag.observe(lan,budget):
+            connection=Connection();store=NodeBudget()
+            self.assertIs(connection._send(marker,deadline=17),marker)
+            self.assertIs(connection._emit('OPEN',1,'control',deadline=17),marker)
+            self.assertIs(lan._read_exact(sock,1,17,on_idle=None),marker)
+            self.assertIs(store.wait_take('tx','PRIVATE_PEER','live',1,deadline=17),marker)
+            with store.transaction() as value:self.assertIs(value,marker)
+        self.assertEqual([row[0] for row in calls],['send','emit','read','wait','enter','exit'])
+        self.assertEqual(calls[0][2],{'deadline':17});self.assertIs(calls[0][1][0],marker)
+        self.assertEqual(original,(Connection._send,Connection._emit,Store.transaction,NodeBudget.wait_take,lan._read_exact))
+
+    def test_observer_failure_never_duplicates_or_masks_original_call(self):
+        import contextlib,io
+        from types import SimpleNamespace
+        helper=self.helper();calls=[];original=ValueError('PRIVATE_NATIVE_DETAIL')
+        class Connection:
+            def _send(self,*args,**kwargs):calls.append('send');raise original
+            def _emit(self,*args,**kwargs):calls.append('emit')
+        class Store:
+            @contextlib.contextmanager
+            def transaction(self):
+                calls.append('enter')
+                try:yield None
+                finally:calls.append('exit')
+        class NodeBudget(Store):
+            def wait_take(self,*args,**kwargs):calls.append('wait')
+        lan=SimpleNamespace(Connection=Connection,_read_exact=lambda *a,**k:None,TransportError=ValueError)
+        budget=SimpleNamespace(_Store=Store,NodeBudget=NodeBudget,BudgetError=ValueError)
+        output=io.StringIO();diag=helper.FailureDiagnostics(writer=output.write)
+        def broken(*args,**kwargs):raise RuntimeError('PRIVATE_OBSERVER_DETAIL')
+        diag._store=broken
+        with self.assertRaises(ValueError) as caught:
+            with diag.observe(lan,budget),diag.failure_boundary():
+                with Store().transaction():pass
+                Connection()._send(b'PRIVATE_PAYLOAD')
+        self.assertIs(caught.exception,original);self.assertEqual(calls,['enter','exit','send'])
+        self.assertNotIn('PRIVATE',output.getvalue());self.assertEqual(output.getvalue().count('\n'),1)
+
+    def test_budget_wait_phase_visible_without_sql_or_app_mutation(self):
+        import contextlib
+        from types import SimpleNamespace
+        helper=self.helper();observations=[]
+        class Problem(ValueError):pass
+        class Connection:
+            def _send(self,*args,**kwargs):pass
+            def _emit(self,*args,**kwargs):pass
+        class Store:
+            @contextlib.contextmanager
+            def transaction(self):yield None
+        class NodeBudget(Store):
+            def wait_take(self,*args,**kwargs):observations.append(diag.snapshot())
+        lan=SimpleNamespace(Connection=Connection,_read_exact=lambda *a,**k:None,TransportError=Problem)
+        budget=SimpleNamespace(_Store=Store,NodeBudget=NodeBudget,BudgetError=Problem)
+        diag=helper.FailureDiagnostics(writer=lambda line:None)
+        with diag.observe(lan,budget):NodeBudget().wait_take('tx','PRIVATE_PEER','control',10,deadline=7)
+        self.assertEqual(len(observations),1)
+        rows=observations[0].get('stores',[])
+        self.assertEqual(len(rows),1,'active budget wait must have one bounded slot')
+        self.assertEqual(rows[0].get('budget_waiters'),1)
+        self.assertEqual(diag.snapshot()['stores'][0].get('budget_waiters'),0)
+
+    def test_full_known_shape_overflow_stays_valid_bounded_and_causal(self):
+        helper=self.helper()
+        connection={'slot':2,'closed':True,'why':'BUDGET_STORE_UNAVAILABLE','age_ms':9999999,'q':64,'qb':1048576,'streams':[[16,True,2**63-1,2**63-1]]*2,'jobs':[['MUX_FRAGMENT','control',True,'BUDGET_STORE_UNAVAILABLE',-9999999]]*2,'alive':[True]*5}
+        store={'phase':'TX_COMMIT','waiters':16,'held':True,'entry_ms':9999999,'hold_ms':9999999,'max_ms':9999999,'n':9999999,'budget_waiters':16,'budget_ms':9999999}
+        io={'slot':2,'channel':'control','read':'READ_OTHER','write':'MUX_FRAGMENT','n':65536,'remaining_ms':-9999999,'elapsed_ms':9999999,'active':True,'error':'BUDGET_STORE_UNAVAILABLE'}
+        line=helper.format_failure({'stage':'SEND','observer':'OK','connections':[connection]*2,'stores':[store]*2,'io':[io]*4},'DEADLINE')
+        self.assertLessEqual(len(line.encode('ascii')),1960)
+        decoded=json.loads(line.split(' ',1)[1]);self.assertEqual(decoded['code'],'DEADLINE')
+        # The full fixed shape can fit without truncation. Force only the inert
+        # formatter's cap lower to exercise overflow/sentinel, not app budgets.
+        with patch.object(helper,'LIMIT',512):limited=helper.format_failure({'stage':'SEND','observer':'OK','connections':[connection]*2,'stores':[store]*2,'io':[io]*4},'DEADLINE')
+        self.assertLessEqual(len(limited.encode('ascii')),512)
+        reduced=json.loads(limited.split(' ',1)[1]);self.assertTrue(reduced['truncated'])
+        self.assertEqual(reduced['code'],'DIAGNOSTIC_UNAVAILABLE')
+
+    def test_emit_observer_separates_control_and_data_without_changing_calls(self):
+        import contextlib
+        from types import SimpleNamespace
+        helper=self.helper();calls=[]
+        class Problem(ValueError):pass
+        class Connection:
+            def _send(self,*args,**kwargs):pass
+            def _emit(self,*args,**kwargs):calls.append((args,kwargs))
+        class Store:
+            @contextlib.contextmanager
+            def transaction(self):yield None
+        class NodeBudget(Store):
+            def wait_take(self,*args,**kwargs):pass
+        lan=SimpleNamespace(Connection=Connection,_read_exact=lambda *a,**k:None,TransportError=Problem)
+        budget=SimpleNamespace(_Store=Store,NodeBudget=NodeBudget,BudgetError=Problem)
+        diag=helper.FailureDiagnostics(writer=lambda line:None)
+        with diag.observe(lan,budget):
+            c=Connection();c._emit('CREDIT',1,'control',value=1);c._emit('APP',1,'live',b'PRIVATE')
+        rows=diag.snapshot()['io'];by_channel={row['channel']:row for row in rows}
+        self.assertEqual(set(by_channel),{'control','data'})
+        self.assertEqual(by_channel['control']['write'],'CREDIT');self.assertEqual(by_channel['data']['write'],'APP')
+        self.assertEqual(len(calls),2);self.assertEqual(calls[1][0],('APP',1,'live',b'PRIVATE'))
+
+    def test_transaction_entry_wait_and_failed_entry_not_stale(self):
+        import contextlib
+        from types import SimpleNamespace
+        helper=self.helper();seen=[];original=ValueError('PRIVATE_SQL_DETAIL')
+        class Connection:
+            def _send(self,*args,**kwargs):pass
+            def _emit(self,*args,**kwargs):pass
+        class Store:
+            @contextlib.contextmanager
+            def transaction(self):
+                seen.append(diag.snapshot()['stores'][0]);raise original
+                yield
+        class NodeBudget(Store):
+            def wait_take(self,*args,**kwargs):pass
+        lan=SimpleNamespace(Connection=Connection,_read_exact=lambda *a,**k:None,TransportError=ValueError)
+        budget=SimpleNamespace(_Store=Store,NodeBudget=NodeBudget,BudgetError=ValueError)
+        diag=helper.FailureDiagnostics(writer=lambda line:None)
+        with diag.observe(lan,budget),self.assertRaises(ValueError) as caught:
+            with Store().transaction():self.fail('failed entry must not yield')
+        self.assertIs(caught.exception,original);self.assertEqual(seen[0]['phase'],'WAIT');self.assertEqual(seen[0]['waiters'],1)
+        row=diag.snapshot()['stores'][0];self.assertEqual(row['waiters'],0);self.assertFalse(row['held'])
+
+    def test_frozen_snapshot_matches_the_original_failure_only(self):
+        import io
+        helper=self.helper();output=io.StringIO();diag=helper.FailureDiagnostics(writer=output.write)
+        old=ValueError('private old');current=ValueError('private current')
+        diag._frozen=(old,{'stage':'WAIT','observer':'OK'})
+        diag.snapshot=lambda:{'stage':'SEND','observer':'OK'}
+        diag.emit_failure(current)
+        self.assertEqual(json.loads(output.getvalue().split(' ',1)[1])['stage'],'SEND')
+
+
+if __name__=='__main__': unittest.main()
+):
+            transport.connect_with_retry('LS5', deadline=time.monotonic()+1,
+                                         cancel=cancel)
+        self.assertEqual(transport.retry_counts, {})
+
+    def test_cancelled_expired_operation_preserves_cancel(self):
+        cancel = threading.Event()
+        cancel.set()
+        transport, calls = self.make_transport([])
+        with self.assertRaisesRegex(TransportError, '^CANCELLED
+    def test_duplicate_or_ip_claim_cannot_be_node_identity(self):
+        with self.assertRaises(TransportError):
+            PeerRegistry.from_document({'schema':'unified.lan-peer-registry.v1','nodes':[]})
+
+    def test_backoff_is_bounded_auth_failure_not_retryable(self):
+        p=ReconnectPolicy(seed=1)
+        self.assertTrue(0 <= p.delay(10) <= 30)
+        self.assertFalse(p.retryable('AUTH_REJECTED'))
+        self.assertTrue(p.retryable('DISCONNECTED'))
+
+
+
+
+class FailureDiagnosticsPureTests(unittest.TestCase):
+    """Inert objects only: no TLS fixture setup, sockets, subprocess or SQLite."""
+    def helper(self):
+        from tests import lan_failure_diagnostics as helper
+        self.assertTrue(hasattr(helper,'FailureDiagnostics'),'diagnostic helper interface missing')
+        self.assertTrue(hasattr(helper,'format_failure'),'bounded formatter missing')
+        return helper
+
+    def test_fixed_shape_ascii_byte_bound_and_privacy(self):
+        helper=self.helper();secret='PAYLOAD_KEY_IDENTITY_SECRET_\u2603'
+        raw={'stage':secret,'payload':secret,'connections':[{'closed':False,'why':secret,'streams':[[16,True,2**10000,2**10000]]*50,'jobs':[['MUX_FRAGMENT','control',True,secret,-10**10000]]*50,'peer':secret}]*50,'stores':[{'phase':secret,'path':secret}]*50,'io':[{'read':secret,'write':secret,'size':2**10000}]*50}
+        line=helper.format_failure(raw,'DEADLINE')
+        self.assertIs(type(line),str);self.assertLessEqual(len(line.encode('ascii')),1960)
+        self.assertEqual(line.count('\n'),1);self.assertTrue(line.endswith('\n'))
+        self.assertNotIn('SECRET',line);self.assertNotIn('payload',line);self.assertNotIn('identity',line)
+        value=json.loads(line.split(' ',1)[1]);self.assertEqual(value['v'],1)
+        self.assertLessEqual(len(value.get('connections',[])),2)
+
+    def test_unknown_objects_never_stringified(self):
+        helper=self.helper()
+        class Poison:
+            def __str__(self):raise AssertionError('must not stringify')
+            def __repr__(self):raise AssertionError('must not repr')
+        line=helper.format_failure({'connections':[{'why':Poison(),'streams':Poison()}],'stage':Poison()},Poison())
+        self.assertLessEqual(len(line.encode('ascii')),1960);json.loads(line.split(' ',1)[1])
+
+    def test_success_emits_nothing(self):
+        import io
+        helper=self.helper();output=io.StringIO();diag=helper.FailureDiagnostics(writer=output.write)
+        with diag.failure_boundary():pass
+        self.assertEqual(output.getvalue(),'')
+
+    def test_original_exception_and_traceback_preserved(self):
+        import io
+        helper=self.helper();output=io.StringIO();diag=helper.FailureDiagnostics(writer=output.write)
+        original=AssertionError('PRIVATE_EXCEPTION_DETAIL')
+        def origin():raise original
+        try:
+            with diag.failure_boundary():origin()
+        except AssertionError as caught:
+            self.assertIs(caught,original)
+            names=[];tb=caught.__traceback__
+            while tb:names.append(tb.tb_frame.f_code.co_name);tb=tb.tb_next
+            self.assertEqual(names[-1],'origin')
+        else:self.fail('original failure swallowed')
+        self.assertEqual(output.getvalue().count('LAN_FAIL_DIAG_V1 '),1)
+        self.assertNotIn('PRIVATE_EXCEPTION_DETAIL',output.getvalue())
+
+    def test_observer_busy_is_nonblocking(self):
+        import io
+        helper=self.helper();output=io.StringIO();diag=helper.FailureDiagnostics(writer=output.write)
+        diag._lock.acquire()
+        try:diag.emit_failure(AssertionError('private'))
+        finally:diag._lock.release()
+        self.assertIn('BUSY',output.getvalue());self.assertLessEqual(len(output.getvalue().encode('ascii')),1960)
+
+    def test_connection_busy_does_not_read_state(self):
+        helper=self.helper();calls=[]
+        class Busy:
+            def acquire(self,blocking=True):calls.append(blocking);return False
+            def release(self):raise AssertionError('not held')
+        class Connection:
+            cv=Busy()
+            def __getattr__(self,name):raise AssertionError('must not inspect busy state')
+        diag=helper.FailureDiagnostics(writer=lambda text:None);diag.register_connection(Connection())
+        state=diag.snapshot();self.assertEqual(calls,[False]);self.assertIn('BUSY',helper.format_failure(state))
+
+    def test_diagnostic_failure_sentinel_preserves_original(self):
+        import io
+        helper=self.helper();output=io.StringIO();diag=helper.FailureDiagnostics(writer=output.write)
+        def broken():raise RuntimeError('SECRET_SNAPSHOT_ERROR')
+        diag.snapshot=broken;original=ValueError('SECRET_ORIGINAL')
+        with self.assertRaises(ValueError) as caught:
+            with diag.failure_boundary():raise original
+        self.assertIs(caught.exception,original);self.assertIn('DIAGNOSTIC_UNAVAILABLE',output.getvalue())
+        self.assertNotIn('SECRET',output.getvalue())
+
+    def test_writer_failure_never_replaces_original(self):
+        helper=self.helper()
+        def broken(text):raise RuntimeError('SECRET_WRITER_ERROR')
+        diag=helper.FailureDiagnostics(writer=broken);original=AssertionError('original')
+        with self.assertRaises(AssertionError) as caught:
+            with diag.failure_boundary():raise original
+        self.assertIs(caught.exception,original)
+
+    def test_fixed_registration_slots_and_one_failure_line(self):
+        import io
+        helper=self.helper();output=io.StringIO();diag=helper.FailureDiagnostics(writer=output.write)
+        for _ in range(100):diag.register_connection(object())
+        self.assertLessEqual(len(diag._connections),2)
+        diag.emit_failure(AssertionError('first'));diag.emit_failure(AssertionError('second'))
+        self.assertEqual(output.getvalue().count('LAN_FAIL_DIAG_V1 '),1)
+
+    def test_wrappers_call_originals_once_and_restore(self):
+        import contextlib
+        from types import SimpleNamespace
+        helper=self.helper();calls=[];marker=object();sock=object()
+        class Problem(ValueError):pass
+        class Connection:
+            channels={'control':sock,'data':object()}
+            def _send(self,*args,**kwargs):calls.append(('send',args,kwargs));return marker
+            def _emit(self,*args,**kwargs):calls.append(('emit',args,kwargs));return marker
+        class Store:
+            @contextlib.contextmanager
+            def transaction(self):
+                calls.append(('enter',))
+                try:yield marker
+                finally:calls.append(('exit',))
+        class NodeBudget(Store):
+            def wait_take(self,*args,**kwargs):calls.append(('wait',args,kwargs));return marker
+        def read(*args,**kwargs):calls.append(('read',args,kwargs));return marker
+        lan=SimpleNamespace(Connection=Connection,_read_exact=read,TransportError=Problem)
+        budget=SimpleNamespace(_Store=Store,NodeBudget=NodeBudget,BudgetError=Problem)
+        original=(Connection._send,Connection._emit,Store.transaction,NodeBudget.wait_take,lan._read_exact)
+        diag=helper.FailureDiagnostics(writer=lambda line:self.fail('success emitted a line'))
+        with diag.observe(lan,budget):
+            connection=Connection();store=NodeBudget()
+            self.assertIs(connection._send(marker,deadline=17),marker)
+            self.assertIs(connection._emit('OPEN',1,'control',deadline=17),marker)
+            self.assertIs(lan._read_exact(sock,1,17,on_idle=None),marker)
+            self.assertIs(store.wait_take('tx','PRIVATE_PEER','live',1,deadline=17),marker)
+            with store.transaction() as value:self.assertIs(value,marker)
+        self.assertEqual([row[0] for row in calls],['send','emit','read','wait','enter','exit'])
+        self.assertEqual(calls[0][2],{'deadline':17});self.assertIs(calls[0][1][0],marker)
+        self.assertEqual(original,(Connection._send,Connection._emit,Store.transaction,NodeBudget.wait_take,lan._read_exact))
+
+    def test_observer_failure_never_duplicates_or_masks_original_call(self):
+        import contextlib,io
+        from types import SimpleNamespace
+        helper=self.helper();calls=[];original=ValueError('PRIVATE_NATIVE_DETAIL')
+        class Connection:
+            def _send(self,*args,**kwargs):calls.append('send');raise original
+            def _emit(self,*args,**kwargs):calls.append('emit')
+        class Store:
+            @contextlib.contextmanager
+            def transaction(self):
+                calls.append('enter')
+                try:yield None
+                finally:calls.append('exit')
+        class NodeBudget(Store):
+            def wait_take(self,*args,**kwargs):calls.append('wait')
+        lan=SimpleNamespace(Connection=Connection,_read_exact=lambda *a,**k:None,TransportError=ValueError)
+        budget=SimpleNamespace(_Store=Store,NodeBudget=NodeBudget,BudgetError=ValueError)
+        output=io.StringIO();diag=helper.FailureDiagnostics(writer=output.write)
+        def broken(*args,**kwargs):raise RuntimeError('PRIVATE_OBSERVER_DETAIL')
+        diag._store=broken
+        with self.assertRaises(ValueError) as caught:
+            with diag.observe(lan,budget),diag.failure_boundary():
+                with Store().transaction():pass
+                Connection()._send(b'PRIVATE_PAYLOAD')
+        self.assertIs(caught.exception,original);self.assertEqual(calls,['enter','exit','send'])
+        self.assertNotIn('PRIVATE',output.getvalue());self.assertEqual(output.getvalue().count('\n'),1)
+
+    def test_budget_wait_phase_visible_without_sql_or_app_mutation(self):
+        import contextlib
+        from types import SimpleNamespace
+        helper=self.helper();observations=[]
+        class Problem(ValueError):pass
+        class Connection:
+            def _send(self,*args,**kwargs):pass
+            def _emit(self,*args,**kwargs):pass
+        class Store:
+            @contextlib.contextmanager
+            def transaction(self):yield None
+        class NodeBudget(Store):
+            def wait_take(self,*args,**kwargs):observations.append(diag.snapshot())
+        lan=SimpleNamespace(Connection=Connection,_read_exact=lambda *a,**k:None,TransportError=Problem)
+        budget=SimpleNamespace(_Store=Store,NodeBudget=NodeBudget,BudgetError=Problem)
+        diag=helper.FailureDiagnostics(writer=lambda line:None)
+        with diag.observe(lan,budget):NodeBudget().wait_take('tx','PRIVATE_PEER','control',10,deadline=7)
+        self.assertEqual(len(observations),1)
+        rows=observations[0].get('stores',[])
+        self.assertEqual(len(rows),1,'active budget wait must have one bounded slot')
+        self.assertEqual(rows[0].get('budget_waiters'),1)
+        self.assertEqual(diag.snapshot()['stores'][0].get('budget_waiters'),0)
+
+    def test_full_known_shape_overflow_stays_valid_bounded_and_causal(self):
+        helper=self.helper()
+        connection={'slot':2,'closed':True,'why':'BUDGET_STORE_UNAVAILABLE','age_ms':9999999,'q':64,'qb':1048576,'streams':[[16,True,2**63-1,2**63-1]]*2,'jobs':[['MUX_FRAGMENT','control',True,'BUDGET_STORE_UNAVAILABLE',-9999999]]*2,'alive':[True]*5}
+        store={'phase':'TX_COMMIT','waiters':16,'held':True,'entry_ms':9999999,'hold_ms':9999999,'max_ms':9999999,'n':9999999,'budget_waiters':16,'budget_ms':9999999}
+        io={'slot':2,'channel':'control','read':'READ_OTHER','write':'MUX_FRAGMENT','n':65536,'remaining_ms':-9999999,'elapsed_ms':9999999,'active':True,'error':'BUDGET_STORE_UNAVAILABLE'}
+        line=helper.format_failure({'stage':'SEND','observer':'OK','connections':[connection]*2,'stores':[store]*2,'io':[io]*4},'DEADLINE')
+        self.assertLessEqual(len(line.encode('ascii')),1960)
+        decoded=json.loads(line.split(' ',1)[1]);self.assertEqual(decoded['code'],'DEADLINE')
+        # The full fixed shape can fit without truncation. Force only the inert
+        # formatter's cap lower to exercise overflow/sentinel, not app budgets.
+        with patch.object(helper,'LIMIT',512):limited=helper.format_failure({'stage':'SEND','observer':'OK','connections':[connection]*2,'stores':[store]*2,'io':[io]*4},'DEADLINE')
+        self.assertLessEqual(len(limited.encode('ascii')),512)
+        reduced=json.loads(limited.split(' ',1)[1]);self.assertTrue(reduced['truncated'])
+        self.assertEqual(reduced['code'],'DIAGNOSTIC_UNAVAILABLE')
+
+    def test_emit_observer_separates_control_and_data_without_changing_calls(self):
+        import contextlib
+        from types import SimpleNamespace
+        helper=self.helper();calls=[]
+        class Problem(ValueError):pass
+        class Connection:
+            def _send(self,*args,**kwargs):pass
+            def _emit(self,*args,**kwargs):calls.append((args,kwargs))
+        class Store:
+            @contextlib.contextmanager
+            def transaction(self):yield None
+        class NodeBudget(Store):
+            def wait_take(self,*args,**kwargs):pass
+        lan=SimpleNamespace(Connection=Connection,_read_exact=lambda *a,**k:None,TransportError=Problem)
+        budget=SimpleNamespace(_Store=Store,NodeBudget=NodeBudget,BudgetError=Problem)
+        diag=helper.FailureDiagnostics(writer=lambda line:None)
+        with diag.observe(lan,budget):
+            c=Connection();c._emit('CREDIT',1,'control',value=1);c._emit('APP',1,'live',b'PRIVATE')
+        rows=diag.snapshot()['io'];by_channel={row['channel']:row for row in rows}
+        self.assertEqual(set(by_channel),{'control','data'})
+        self.assertEqual(by_channel['control']['write'],'CREDIT');self.assertEqual(by_channel['data']['write'],'APP')
+        self.assertEqual(len(calls),2);self.assertEqual(calls[1][0],('APP',1,'live',b'PRIVATE'))
+
+    def test_transaction_entry_wait_and_failed_entry_not_stale(self):
+        import contextlib
+        from types import SimpleNamespace
+        helper=self.helper();seen=[];original=ValueError('PRIVATE_SQL_DETAIL')
+        class Connection:
+            def _send(self,*args,**kwargs):pass
+            def _emit(self,*args,**kwargs):pass
+        class Store:
+            @contextlib.contextmanager
+            def transaction(self):
+                seen.append(diag.snapshot()['stores'][0]);raise original
+                yield
+        class NodeBudget(Store):
+            def wait_take(self,*args,**kwargs):pass
+        lan=SimpleNamespace(Connection=Connection,_read_exact=lambda *a,**k:None,TransportError=ValueError)
+        budget=SimpleNamespace(_Store=Store,NodeBudget=NodeBudget,BudgetError=ValueError)
+        diag=helper.FailureDiagnostics(writer=lambda line:None)
+        with diag.observe(lan,budget),self.assertRaises(ValueError) as caught:
+            with Store().transaction():self.fail('failed entry must not yield')
+        self.assertIs(caught.exception,original);self.assertEqual(seen[0]['phase'],'WAIT');self.assertEqual(seen[0]['waiters'],1)
+        row=diag.snapshot()['stores'][0];self.assertEqual(row['waiters'],0);self.assertFalse(row['held'])
+
+    def test_frozen_snapshot_matches_the_original_failure_only(self):
+        import io
+        helper=self.helper();output=io.StringIO();diag=helper.FailureDiagnostics(writer=output.write)
+        old=ValueError('private old');current=ValueError('private current')
+        diag._frozen=(old,{'stage':'WAIT','observer':'OK'})
+        diag.snapshot=lambda:{'stage':'SEND','observer':'OK'}
+        diag.emit_failure(current)
+        self.assertEqual(json.loads(output.getvalue().split(' ',1)[1])['stage'],'SEND')
+
+
+if __name__=='__main__': unittest.main()
+):
+            transport.connect_with_retry('LS5', deadline=time.monotonic()-1,
+                                         cancel=cancel)
+        self.assertEqual(calls, [])
+
+    def test_invalid_deadline_rejected_before_connect(self):
+        transport, calls = self.make_transport([object()])
+        for value in (float('nan'), float('inf'), 'unexpected', None):
+            with self.subTest(value=value):
+                with self.assertRaisesRegex(TransportError, '^DEADLINE
+    def test_duplicate_or_ip_claim_cannot_be_node_identity(self):
+        with self.assertRaises(TransportError):
+            PeerRegistry.from_document({'schema':'unified.lan-peer-registry.v1','nodes':[]})
+
+    def test_backoff_is_bounded_auth_failure_not_retryable(self):
+        p=ReconnectPolicy(seed=1)
+        self.assertTrue(0 <= p.delay(10) <= 30)
+        self.assertFalse(p.retryable('AUTH_REJECTED'))
+        self.assertTrue(p.retryable('DISCONNECTED'))
+
+
+
+
+class FailureDiagnosticsPureTests(unittest.TestCase):
+    """Inert objects only: no TLS fixture setup, sockets, subprocess or SQLite."""
+    def helper(self):
+        from tests import lan_failure_diagnostics as helper
+        self.assertTrue(hasattr(helper,'FailureDiagnostics'),'diagnostic helper interface missing')
+        self.assertTrue(hasattr(helper,'format_failure'),'bounded formatter missing')
+        return helper
+
+    def test_fixed_shape_ascii_byte_bound_and_privacy(self):
+        helper=self.helper();secret='PAYLOAD_KEY_IDENTITY_SECRET_\u2603'
+        raw={'stage':secret,'payload':secret,'connections':[{'closed':False,'why':secret,'streams':[[16,True,2**10000,2**10000]]*50,'jobs':[['MUX_FRAGMENT','control',True,secret,-10**10000]]*50,'peer':secret}]*50,'stores':[{'phase':secret,'path':secret}]*50,'io':[{'read':secret,'write':secret,'size':2**10000}]*50}
+        line=helper.format_failure(raw,'DEADLINE')
+        self.assertIs(type(line),str);self.assertLessEqual(len(line.encode('ascii')),1960)
+        self.assertEqual(line.count('\n'),1);self.assertTrue(line.endswith('\n'))
+        self.assertNotIn('SECRET',line);self.assertNotIn('payload',line);self.assertNotIn('identity',line)
+        value=json.loads(line.split(' ',1)[1]);self.assertEqual(value['v'],1)
+        self.assertLessEqual(len(value.get('connections',[])),2)
+
+    def test_unknown_objects_never_stringified(self):
+        helper=self.helper()
+        class Poison:
+            def __str__(self):raise AssertionError('must not stringify')
+            def __repr__(self):raise AssertionError('must not repr')
+        line=helper.format_failure({'connections':[{'why':Poison(),'streams':Poison()}],'stage':Poison()},Poison())
+        self.assertLessEqual(len(line.encode('ascii')),1960);json.loads(line.split(' ',1)[1])
+
+    def test_success_emits_nothing(self):
+        import io
+        helper=self.helper();output=io.StringIO();diag=helper.FailureDiagnostics(writer=output.write)
+        with diag.failure_boundary():pass
+        self.assertEqual(output.getvalue(),'')
+
+    def test_original_exception_and_traceback_preserved(self):
+        import io
+        helper=self.helper();output=io.StringIO();diag=helper.FailureDiagnostics(writer=output.write)
+        original=AssertionError('PRIVATE_EXCEPTION_DETAIL')
+        def origin():raise original
+        try:
+            with diag.failure_boundary():origin()
+        except AssertionError as caught:
+            self.assertIs(caught,original)
+            names=[];tb=caught.__traceback__
+            while tb:names.append(tb.tb_frame.f_code.co_name);tb=tb.tb_next
+            self.assertEqual(names[-1],'origin')
+        else:self.fail('original failure swallowed')
+        self.assertEqual(output.getvalue().count('LAN_FAIL_DIAG_V1 '),1)
+        self.assertNotIn('PRIVATE_EXCEPTION_DETAIL',output.getvalue())
+
+    def test_observer_busy_is_nonblocking(self):
+        import io
+        helper=self.helper();output=io.StringIO();diag=helper.FailureDiagnostics(writer=output.write)
+        diag._lock.acquire()
+        try:diag.emit_failure(AssertionError('private'))
+        finally:diag._lock.release()
+        self.assertIn('BUSY',output.getvalue());self.assertLessEqual(len(output.getvalue().encode('ascii')),1960)
+
+    def test_connection_busy_does_not_read_state(self):
+        helper=self.helper();calls=[]
+        class Busy:
+            def acquire(self,blocking=True):calls.append(blocking);return False
+            def release(self):raise AssertionError('not held')
+        class Connection:
+            cv=Busy()
+            def __getattr__(self,name):raise AssertionError('must not inspect busy state')
+        diag=helper.FailureDiagnostics(writer=lambda text:None);diag.register_connection(Connection())
+        state=diag.snapshot();self.assertEqual(calls,[False]);self.assertIn('BUSY',helper.format_failure(state))
+
+    def test_diagnostic_failure_sentinel_preserves_original(self):
+        import io
+        helper=self.helper();output=io.StringIO();diag=helper.FailureDiagnostics(writer=output.write)
+        def broken():raise RuntimeError('SECRET_SNAPSHOT_ERROR')
+        diag.snapshot=broken;original=ValueError('SECRET_ORIGINAL')
+        with self.assertRaises(ValueError) as caught:
+            with diag.failure_boundary():raise original
+        self.assertIs(caught.exception,original);self.assertIn('DIAGNOSTIC_UNAVAILABLE',output.getvalue())
+        self.assertNotIn('SECRET',output.getvalue())
+
+    def test_writer_failure_never_replaces_original(self):
+        helper=self.helper()
+        def broken(text):raise RuntimeError('SECRET_WRITER_ERROR')
+        diag=helper.FailureDiagnostics(writer=broken);original=AssertionError('original')
+        with self.assertRaises(AssertionError) as caught:
+            with diag.failure_boundary():raise original
+        self.assertIs(caught.exception,original)
+
+    def test_fixed_registration_slots_and_one_failure_line(self):
+        import io
+        helper=self.helper();output=io.StringIO();diag=helper.FailureDiagnostics(writer=output.write)
+        for _ in range(100):diag.register_connection(object())
+        self.assertLessEqual(len(diag._connections),2)
+        diag.emit_failure(AssertionError('first'));diag.emit_failure(AssertionError('second'))
+        self.assertEqual(output.getvalue().count('LAN_FAIL_DIAG_V1 '),1)
+
+    def test_wrappers_call_originals_once_and_restore(self):
+        import contextlib
+        from types import SimpleNamespace
+        helper=self.helper();calls=[];marker=object();sock=object()
+        class Problem(ValueError):pass
+        class Connection:
+            channels={'control':sock,'data':object()}
+            def _send(self,*args,**kwargs):calls.append(('send',args,kwargs));return marker
+            def _emit(self,*args,**kwargs):calls.append(('emit',args,kwargs));return marker
+        class Store:
+            @contextlib.contextmanager
+            def transaction(self):
+                calls.append(('enter',))
+                try:yield marker
+                finally:calls.append(('exit',))
+        class NodeBudget(Store):
+            def wait_take(self,*args,**kwargs):calls.append(('wait',args,kwargs));return marker
+        def read(*args,**kwargs):calls.append(('read',args,kwargs));return marker
+        lan=SimpleNamespace(Connection=Connection,_read_exact=read,TransportError=Problem)
+        budget=SimpleNamespace(_Store=Store,NodeBudget=NodeBudget,BudgetError=Problem)
+        original=(Connection._send,Connection._emit,Store.transaction,NodeBudget.wait_take,lan._read_exact)
+        diag=helper.FailureDiagnostics(writer=lambda line:self.fail('success emitted a line'))
+        with diag.observe(lan,budget):
+            connection=Connection();store=NodeBudget()
+            self.assertIs(connection._send(marker,deadline=17),marker)
+            self.assertIs(connection._emit('OPEN',1,'control',deadline=17),marker)
+            self.assertIs(lan._read_exact(sock,1,17,on_idle=None),marker)
+            self.assertIs(store.wait_take('tx','PRIVATE_PEER','live',1,deadline=17),marker)
+            with store.transaction() as value:self.assertIs(value,marker)
+        self.assertEqual([row[0] for row in calls],['send','emit','read','wait','enter','exit'])
+        self.assertEqual(calls[0][2],{'deadline':17});self.assertIs(calls[0][1][0],marker)
+        self.assertEqual(original,(Connection._send,Connection._emit,Store.transaction,NodeBudget.wait_take,lan._read_exact))
+
+    def test_observer_failure_never_duplicates_or_masks_original_call(self):
+        import contextlib,io
+        from types import SimpleNamespace
+        helper=self.helper();calls=[];original=ValueError('PRIVATE_NATIVE_DETAIL')
+        class Connection:
+            def _send(self,*args,**kwargs):calls.append('send');raise original
+            def _emit(self,*args,**kwargs):calls.append('emit')
+        class Store:
+            @contextlib.contextmanager
+            def transaction(self):
+                calls.append('enter')
+                try:yield None
+                finally:calls.append('exit')
+        class NodeBudget(Store):
+            def wait_take(self,*args,**kwargs):calls.append('wait')
+        lan=SimpleNamespace(Connection=Connection,_read_exact=lambda *a,**k:None,TransportError=ValueError)
+        budget=SimpleNamespace(_Store=Store,NodeBudget=NodeBudget,BudgetError=ValueError)
+        output=io.StringIO();diag=helper.FailureDiagnostics(writer=output.write)
+        def broken(*args,**kwargs):raise RuntimeError('PRIVATE_OBSERVER_DETAIL')
+        diag._store=broken
+        with self.assertRaises(ValueError) as caught:
+            with diag.observe(lan,budget),diag.failure_boundary():
+                with Store().transaction():pass
+                Connection()._send(b'PRIVATE_PAYLOAD')
+        self.assertIs(caught.exception,original);self.assertEqual(calls,['enter','exit','send'])
+        self.assertNotIn('PRIVATE',output.getvalue());self.assertEqual(output.getvalue().count('\n'),1)
+
+    def test_budget_wait_phase_visible_without_sql_or_app_mutation(self):
+        import contextlib
+        from types import SimpleNamespace
+        helper=self.helper();observations=[]
+        class Problem(ValueError):pass
+        class Connection:
+            def _send(self,*args,**kwargs):pass
+            def _emit(self,*args,**kwargs):pass
+        class Store:
+            @contextlib.contextmanager
+            def transaction(self):yield None
+        class NodeBudget(Store):
+            def wait_take(self,*args,**kwargs):observations.append(diag.snapshot())
+        lan=SimpleNamespace(Connection=Connection,_read_exact=lambda *a,**k:None,TransportError=Problem)
+        budget=SimpleNamespace(_Store=Store,NodeBudget=NodeBudget,BudgetError=Problem)
+        diag=helper.FailureDiagnostics(writer=lambda line:None)
+        with diag.observe(lan,budget):NodeBudget().wait_take('tx','PRIVATE_PEER','control',10,deadline=7)
+        self.assertEqual(len(observations),1)
+        rows=observations[0].get('stores',[])
+        self.assertEqual(len(rows),1,'active budget wait must have one bounded slot')
+        self.assertEqual(rows[0].get('budget_waiters'),1)
+        self.assertEqual(diag.snapshot()['stores'][0].get('budget_waiters'),0)
+
+    def test_full_known_shape_overflow_stays_valid_bounded_and_causal(self):
+        helper=self.helper()
+        connection={'slot':2,'closed':True,'why':'BUDGET_STORE_UNAVAILABLE','age_ms':9999999,'q':64,'qb':1048576,'streams':[[16,True,2**63-1,2**63-1]]*2,'jobs':[['MUX_FRAGMENT','control',True,'BUDGET_STORE_UNAVAILABLE',-9999999]]*2,'alive':[True]*5}
+        store={'phase':'TX_COMMIT','waiters':16,'held':True,'entry_ms':9999999,'hold_ms':9999999,'max_ms':9999999,'n':9999999,'budget_waiters':16,'budget_ms':9999999}
+        io={'slot':2,'channel':'control','read':'READ_OTHER','write':'MUX_FRAGMENT','n':65536,'remaining_ms':-9999999,'elapsed_ms':9999999,'active':True,'error':'BUDGET_STORE_UNAVAILABLE'}
+        line=helper.format_failure({'stage':'SEND','observer':'OK','connections':[connection]*2,'stores':[store]*2,'io':[io]*4},'DEADLINE')
+        self.assertLessEqual(len(line.encode('ascii')),1960)
+        decoded=json.loads(line.split(' ',1)[1]);self.assertEqual(decoded['code'],'DEADLINE')
+        # The full fixed shape can fit without truncation. Force only the inert
+        # formatter's cap lower to exercise overflow/sentinel, not app budgets.
+        with patch.object(helper,'LIMIT',512):limited=helper.format_failure({'stage':'SEND','observer':'OK','connections':[connection]*2,'stores':[store]*2,'io':[io]*4},'DEADLINE')
+        self.assertLessEqual(len(limited.encode('ascii')),512)
+        reduced=json.loads(limited.split(' ',1)[1]);self.assertTrue(reduced['truncated'])
+        self.assertEqual(reduced['code'],'DIAGNOSTIC_UNAVAILABLE')
+
+    def test_emit_observer_separates_control_and_data_without_changing_calls(self):
+        import contextlib
+        from types import SimpleNamespace
+        helper=self.helper();calls=[]
+        class Problem(ValueError):pass
+        class Connection:
+            def _send(self,*args,**kwargs):pass
+            def _emit(self,*args,**kwargs):calls.append((args,kwargs))
+        class Store:
+            @contextlib.contextmanager
+            def transaction(self):yield None
+        class NodeBudget(Store):
+            def wait_take(self,*args,**kwargs):pass
+        lan=SimpleNamespace(Connection=Connection,_read_exact=lambda *a,**k:None,TransportError=Problem)
+        budget=SimpleNamespace(_Store=Store,NodeBudget=NodeBudget,BudgetError=Problem)
+        diag=helper.FailureDiagnostics(writer=lambda line:None)
+        with diag.observe(lan,budget):
+            c=Connection();c._emit('CREDIT',1,'control',value=1);c._emit('APP',1,'live',b'PRIVATE')
+        rows=diag.snapshot()['io'];by_channel={row['channel']:row for row in rows}
+        self.assertEqual(set(by_channel),{'control','data'})
+        self.assertEqual(by_channel['control']['write'],'CREDIT');self.assertEqual(by_channel['data']['write'],'APP')
+        self.assertEqual(len(calls),2);self.assertEqual(calls[1][0],('APP',1,'live',b'PRIVATE'))
+
+    def test_transaction_entry_wait_and_failed_entry_not_stale(self):
+        import contextlib
+        from types import SimpleNamespace
+        helper=self.helper();seen=[];original=ValueError('PRIVATE_SQL_DETAIL')
+        class Connection:
+            def _send(self,*args,**kwargs):pass
+            def _emit(self,*args,**kwargs):pass
+        class Store:
+            @contextlib.contextmanager
+            def transaction(self):
+                seen.append(diag.snapshot()['stores'][0]);raise original
+                yield
+        class NodeBudget(Store):
+            def wait_take(self,*args,**kwargs):pass
+        lan=SimpleNamespace(Connection=Connection,_read_exact=lambda *a,**k:None,TransportError=ValueError)
+        budget=SimpleNamespace(_Store=Store,NodeBudget=NodeBudget,BudgetError=ValueError)
+        diag=helper.FailureDiagnostics(writer=lambda line:None)
+        with diag.observe(lan,budget),self.assertRaises(ValueError) as caught:
+            with Store().transaction():self.fail('failed entry must not yield')
+        self.assertIs(caught.exception,original);self.assertEqual(seen[0]['phase'],'WAIT');self.assertEqual(seen[0]['waiters'],1)
+        row=diag.snapshot()['stores'][0];self.assertEqual(row['waiters'],0);self.assertFalse(row['held'])
+
+    def test_frozen_snapshot_matches_the_original_failure_only(self):
+        import io
+        helper=self.helper();output=io.StringIO();diag=helper.FailureDiagnostics(writer=output.write)
+        old=ValueError('private old');current=ValueError('private current')
+        diag._frozen=(old,{'stage':'WAIT','observer':'OK'})
+        diag.snapshot=lambda:{'stage':'SEND','observer':'OK'}
+        diag.emit_failure(current)
+        self.assertEqual(json.loads(output.getvalue().split(' ',1)[1])['stage'],'SEND')
+
+
+if __name__=='__main__': unittest.main()
+):
+                    transport.connect_with_retry('LS5', deadline=value)
+        self.assertEqual(calls, [])
+
+
 class RegistryTests(unittest.TestCase):
     def test_duplicate_or_ip_claim_cannot_be_node_identity(self):
         with self.assertRaises(TransportError):
