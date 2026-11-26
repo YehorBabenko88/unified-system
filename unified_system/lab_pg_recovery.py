@@ -42,6 +42,7 @@ class _OwnedRecovery:
     wal_fault: str = "CLEAN"
     log_position: int = 0
     lock_fd: int = -1
+    lock_witness_fd: int = -1
     worker_tid: int = 0
 
 
@@ -83,6 +84,7 @@ def _acquire_cluster_os_lock(pg):
     nofollow = getattr(os, "O_NOFOLLOW", 0)
     cloexec = getattr(os, "O_CLOEXEC", 0)
     fd = None
+    witness_fd = None
     created = False
     try:
         try:
@@ -132,22 +134,29 @@ def _acquire_cluster_os_lock(pg):
         post = path.lstat()
         need((post.st_dev, post.st_ino) == (info.st_dev, info.st_ino),
              "LAB_RECOVERY_OS_LOCK_PATH_CHANGED")
-        return fd
+        witness_fd = os.dup(fd)
+        os.set_inheritable(witness_fd, False)
+        return fd, witness_fd
     except BaseException:
+        if witness_fd is not None:
+            os.close(witness_fd)
         if fd is not None:
             os.close(fd)
         raise
 
 
-def _verify_cluster_os_lock(pg, fd):
+def _verify_cluster_os_lock(pg, fd, witness_fd):
     # A forked child inherits the open file description/lock and must NEVER
     # be allowed to reuse the parent's C recovery capability.
     need(os.getpid() == _ORIGINAL_C_PID,
          "LAB_RECOVERY_FORKED_WORKER_DENIED")
-    need(type(fd) is int and fd >= 0,
+    need(type(fd) is int and fd >= 0
+         and type(witness_fd) is int and witness_fd >= 0
+         and fd != witness_fd,
          "LAB_RECOVERY_OS_LOCK_NOT_RETAINED")
     try:
         info = os.fstat(fd)
+        witness_info = os.fstat(witness_fd)
         path = pg.root / ".lab-postgres-recovery.lock"
         path_info = path.lstat()
         need(stat.S_ISREG(info.st_mode) and info.st_nlink == 1
@@ -155,12 +164,21 @@ def _verify_cluster_os_lock(pg, fd):
              and not path.is_symlink()
              and (info.st_dev, info.st_ino)
                  == (path_info.st_dev, path_info.st_ino)
+             and (witness_info.st_dev, witness_info.st_ino)
+                 == (info.st_dev, info.st_ino)
              and not (getattr(path_info, "st_file_attributes", 0) & 0x400),
              "LAB_RECOVERY_OS_LOCK_LOST")
+        # os.dup() retains the SAME kernel open-file description. An FD
+        # closed and reopened on the same inode can pass fstat but cannot
+        # share the retained witness's seek offset. No lock reacquisition.
         os.lseek(fd, 0, os.SEEK_SET)
-        need(os.read(fd, 256) ==
-             ("C_PG18_LOCK_V1:" + pg._nonce + "\n").encode("ascii"),
+        need(os.lseek(witness_fd, 0, os.SEEK_CUR) == 0,
+             "LAB_RECOVERY_OS_LOCK_DESCRIPTION_CHANGED")
+        expected = ("C_PG18_LOCK_V1:" + pg._nonce + "\n").encode("ascii")
+        need(os.read(fd, len(expected) + 1) == expected,
              "LAB_RECOVERY_OS_LOCK_OWNER_MISMATCH")
+        need(os.lseek(witness_fd, 0, os.SEEK_CUR) == len(expected),
+             "LAB_RECOVERY_OS_LOCK_DESCRIPTION_CHANGED")
     except (OSError, ValueError) as exc:
         raise LabAdmissionRejected("LAB_RECOVERY_OS_LOCK_LOST") from exc
 
@@ -199,17 +217,20 @@ def _begin(pg, root, old, *, mode):
                  and pg.started is False,
                  "LAB_RECOVERY_STOPPED_OWNER_MISMATCH")
         if existing is not None:
-            _verify_cluster_os_lock(pg, existing.lock_fd)
+            _verify_cluster_os_lock(pg, existing.lock_fd,
+                                    existing.lock_witness_fd)
             preserved = existing
             fd = existing.lock_fd
+            witness_fd = existing.lock_witness_fd
         else:
             # Open a real exclusive cross-process kernel lock BEFORE any
             # process, WAL or SQL side effect. A busy lock always DENIES.
-            fd = _acquire_cluster_os_lock(pg)
+            fd, witness_fd = _acquire_cluster_os_lock(pg)
             preserved = _OwnedRecovery(
                 pg=pg, root=root, data_identity=data,
                 marker=pg._nonce, old=_old_tuple(old),
                 phase="IN_PROGRESS", lock_fd=fd,
+                lock_witness_fd=witness_fd,
                 worker_tid=threading.get_ident())
         _DATA_OWNERS[data] = root
         _STATES[root] = _OwnedRecovery(
@@ -221,6 +242,7 @@ def _begin(pg, root, old, *, mode):
             wal_fault=preserved.wal_fault,
             log_position=preserved.log_position,
             lock_fd=fd,
+            lock_witness_fd=witness_fd,
             worker_tid=threading.get_ident())
         return existing
 
@@ -246,6 +268,7 @@ def _state(root, pg, old, phase, *, pid=0, os_identity=(),
             wal_fault=wal_fault if wal_fault != "CLEAN" else prior.wal_fault,
             log_position=log_position or prior.log_position,
             lock_fd=prior.lock_fd,
+            lock_witness_fd=prior.lock_witness_fd,
             worker_tid=prior.worker_tid)
 
 
@@ -263,6 +286,7 @@ def _poison(root, pg):
                 old_os_incarnation=prior.old_os_incarnation,
                 wal_fault=prior.wal_fault, log_position=prior.log_position,
                 lock_fd=prior.lock_fd,
+            lock_witness_fd=prior.lock_witness_fd,
                 worker_tid=prior.worker_tid)
 
 
@@ -275,7 +299,8 @@ def _require_held_recovery_lock(pg, root, old):
              and current.worker_tid == threading.get_ident(),
              "LAB_RECOVERY_OS_LOCK_OWNER_MISMATCH")
         fd = current.lock_fd
-    _verify_cluster_os_lock(pg, fd)
+        witness_fd = current.lock_witness_fd
+    _verify_cluster_os_lock(pg, fd, witness_fd)
 
 
 def _retain_owned_postmaster(pg, deadline):
@@ -690,4 +715,5 @@ def recover_exclusive_lab_cluster(pg, *, old, streams=(), quiesced=False,
                         old_os_incarnation=prior.old_os_incarnation,
                         wal_fault=prior.wal_fault, log_position=prior.log_position,
                         lock_fd=prior.lock_fd,
+            lock_witness_fd=prior.lock_witness_fd,
                         worker_tid=prior.worker_tid)
