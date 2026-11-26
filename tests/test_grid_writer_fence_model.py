@@ -11,11 +11,13 @@ from unified_system.grid_writer_fence_model import (
 )
 
 
-def identity(token=100, *, instance=None, session=None, source="a" * 64,
-             schema="b" * 64):
-    return WriterLeaseIdentity("root-controller", str(uuid.uuid4()) if session is None else session,
-                               token, str(uuid.uuid4()) if instance is None else instance, source,
-                               schema)
+def identity(token=100, *, instance=None, session=None, incarnation=None,
+             namespace="unified/primary", source="a" * 64, schema="b" * 64):
+    return WriterLeaseIdentity("root-controller", namespace,
+                               str(uuid.uuid4()) if session is None else session,
+                               token, str(uuid.uuid4()) if instance is None else instance,
+                               str(uuid.uuid4()) if incarnation is None else incarnation,
+                               source, schema)
 
 
 class GridWriterFenceModelTests(unittest.TestCase):
@@ -55,6 +57,8 @@ class GridWriterFenceModelTests(unittest.TestCase):
         active = claim_model(None, original, legacy_quiescent=True)
         different = (replace(original, instance_id=str(uuid.uuid4())),
                      replace(original, session_id=str(uuid.uuid4())),
+                     replace(original, node_incarnation_id=str(uuid.uuid4())),
+                     replace(original, namespace="unified/foreign"),
                      replace(original, source_sha256="f" * 64),
                      replace(original, schema_sha256="e" * 64),
                      replace(original, owner="another-controller"))
@@ -94,11 +98,23 @@ class GridWriterFenceModelTests(unittest.TestCase):
         original = identity(7)
         active = claim_model(None, original, legacy_quiescent=True)
         for change in (dict(schema="unknown"), dict(scope="PRODUCTION"),
-                       dict(generation=True), dict(active=1),
+                       dict(resource_id="untrusted-resource"), dict(generation=True), dict(active=1),
                        dict(identity="raw-json")):
             with self.subTest(change=change):
                 with self.assertRaises(ResourceFenceBlocked):
                     replace(active, **change)
+
+    def test_wrong_namespace_or_node_incarnation_is_never_accepted(self):
+        original = identity(100)
+        stopped = stop_model(claim_model(None, original, legacy_quiescent=True), original)
+        with self.assertRaisesRegex(ResourceFenceBlocked, "FENCE_NAMESPACE_CHANGED"):
+            claim_model(stopped, identity(101, namespace="foreign"), legacy_quiescent=True)
+        with self.assertRaises(ResourceFenceBlocked):
+            identity(101, namespace="unsafe/../namespace")
+        for bad in ("unknown", str(uuid.uuid1()), ""):
+            with self.subTest(incarnation=bad):
+                with self.assertRaises(ResourceFenceBlocked):
+                    identity(incarnation=bad)
 
     def test_generation_is_exact_not_bool_and_must_match(self):
         who = identity()
