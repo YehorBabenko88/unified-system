@@ -1,3 +1,25 @@
+# ROUND 19 — current protected package qualification (supersedes older snapshots)
+
+Exact non-atomic verified heads, 2026-11-26: A `8b066e373690f43befe107ff7aa474c270c8ad4c`, B `9e0d57c4c0f2d01bc381ada090b62d23566b32aa`, C `3f0d3410ac708da9776e5ad1407d864adcde34b0`, D `89022d7885d279bb1fd2f695b59f2c243b431ad2`, E `1c2edb2564c48a1348d3ad4ee94fe8fa0b425b18`. Sole integration Draft #166 remains `9349d7f3ed93ef82d120976816b968e0b716b067`, untouched.
+
+## Actual F checker implementation, not a Root attestor
+
+`tools/f_wheel_qualification.py` blob `5abc9c5dd3aa97082d1217986d2e66a065c9c3ad`, then maintained to current exact source; the checked local round19 version is Python 3.13.5 with **34/34 synthetic offline tests PASS**, `py_compile` PASS, and Git blob equality to uploaded working source. The checker opens a wheel once via `O_NOFOLLOW`, retains the same binary snapshot through SHA256 and `zipfile.ZipFile(io.BytesIO(...))`; it never hashes one file and opens a potentially replaced pathname for parsing. POSIX-only installed-root FD retained; installed directory traversal and file bytes use `openat` / `O_NOFOLLOW` handles and pre/post `fstat` to reject symlink swaps, altered files and inode replacement; the scanned installed closure must equal installed RECORD with only reviewed pip installation metadata and scripts. Unverified `.pyc`, `.pth`, `sitecustomize.py`, extra recorded `.py`, symlink roots and unrecorded files DENY. `pip --no-compile --no-index --no-deps --target` used only for synthetic test wheel. The audit explicitly rejects Windows native execution until protected Windows handle semantics are implemented by its owner.
+
+**Hard boundary:** a read-only scan is NOT an immutable installed code installation or authenticated release. A concurrent adversarial process can still mutate the underlying filesystem after snapshot. External import paths, Python hooks, live process executable, protected startup, authorized Root release, Consul lease, SQL fence and package signer are NOT established. Every caller-facing Root/Writer/release/import authentication flag remains FALSE. Never use F diagnostic booleans to mint E `LabWriterOperationPermit`.
+
+## Actual B cohort and missing native artifact
+
+B exact source `9e0d57c4c0f2d01bc381ada090b62d23566b32aa` retains `pyproject.toml` blob `4fb4e72360605cd92b3afab3837015b4ac29dace` and its four dotted `grid.*` modules in the SINGLE `market-data 0.2.0.dev0` distribution. Direct exact B HEAD Git blob audit shows the same five expected module source blobs listed in `docs/git-consolidation/round18-b-wheel-source-pins.json`; the pinned source commit is now B9e0. F has NOT built or installed that actual full B wheel, since no authenticated full repository archive is available in this runtime; a synthetic minimal wheel is NOT equivalent. Require B/CI to provide exact wheel+sdist bytes SHA256, original clean source tree + builder/environment lock, installed entrypoint and dependencies, then F re-audits bytes. Current E issuer `LAB_OPERATION_INSTALLED_WHEEL_UNVERIFIED` remains correct.
+
+## Native gates still DENIED
+
+A WindowsJob extinction original SCM membership history is not proven (A source blob `99986aae5e675d4e22a2fcd24089da652f0ae546`); C disposable PG18 source/lock original init and WAL is not native-end-to-end accepted (C recovery blob `a7f5989803c3c5f7dd0c8987815c8e56371c114b`); B/C/E Root operation grant remains denied by E (E `lab_writer_authority.py` blob `ed966cc79aee3da33a5c658737486139c16b7e3c`). C SQL transaction+revoke/COMMIT sequencing requires actual native evidence. D Python3.12 wheel jobs failed; does not establish a healthy full integration. Security/git history/LFS/archives/dependencies/installer also remain NOT VERIFIED. `#166` is not touched and remains Draft.
+
+**CODE NO_GO / PRODUCTION NO_GO.**
+
+## Historical Round18 and earlier snapshots below — not current release authority
+
 # ROUND 18 continuation — exact source→wheel→installed gating
 
 Read-only non-atomic GitHub snapshot (2026-11-26): A `743329b1161e8967335d5c6d6e1ea8bd669251ee`, B `6d9373a435f4f99ff15f999622c4e1143d9a832e`, C `7ebebce569f2ec616ed631c57b4d267abda340a1`, D `89022d7885d279bb1fd2f695b59f2c243b431ad2`, E `1c2edb2564c48a1348d3ad4ee94fe8fa0b425b18`. The single Draft integration #166 remains `9349d7f3ed93ef82d120976816b968e0b716b067` with no F runtime integration.
