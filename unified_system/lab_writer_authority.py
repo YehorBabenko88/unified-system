@@ -190,6 +190,9 @@ class LabWriterAuthority:
               and type(fingerprint) is str
               and re.fullmatch(r"[0-9a-f]{64}", fingerprint) is not None,
               "LAB_OPERATION_RECORD_IDENTITY_REJECTED")
+        # The canonical record identity must be derived independently by
+        # the original B writer. Repeating caller input is NOT proof.
+        # The complete B/C ABI is still denied until this is attested.
         grant = self._writer_grant
         _need(type(grant) is LabWriterGrant
               and not grant._revoked and not self._revoked,
