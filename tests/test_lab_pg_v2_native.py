@@ -4,6 +4,7 @@ This test intentionally uses PostgreSQL connections and canonical Grid SQL
 reader WITHOUT stubbing immutable_minutes. Root admission is LAB-only.
 No provider authenticity, complete exchange history or trading permissions.
 """
+import hashlib
 import json
 import os
 import shutil
@@ -28,9 +29,7 @@ _SHA_D = "cf1448f8d30399f8787f69f9abfcb5cf992a4209"
 _SHA_MATH = "9e6acbd9e12a91189f57234828e31640983af553"
 _OWNER = "unified-system"
 _NAMESPACE = "unified/lab"
-_SOURCE_SHA = "a" * 64
-_SCHEMA_SHA = "b" * 64
-
+ 
 
 def require_sources():
     specs = (
@@ -54,6 +53,7 @@ def require_sources():
 
 
 def write_row(conn, *, generation, token, ids, fp, content_id,
+              source_sha, schema_sha,
               owner=_OWNER, namespace=_NAMESPACE,
               symbol="BTCUSDT", start_ms=60000, record=None):
     sql = """SELECT public.lab_fenced_insert(
@@ -62,8 +62,8 @@ def write_row(conn, *, generation, token, ids, fp, content_id,
        %s::text,%s::text,%s::text,%s::text,%s::text,
        %s::bigint,%s::jsonb)"""
     with conn.cursor() as cur:
-        cur.execute(sql, (owner, namespace, generation, token, *ids, _SOURCE_SHA,
-                         _SCHEMA_SHA, fp, content_id, symbol,
+        cur.execute(sql, (owner, namespace, generation, token, *ids, source_sha,
+                         schema_sha, fp, content_id, symbol,
                          start_ms, json.dumps(record or {"sample": 1})))
     conn.commit()
 
@@ -117,6 +117,24 @@ class NativePg18V2Tests(unittest.TestCase):
         if Path(market_data.__file__).resolve().is_relative_to(
                 Path(self.grid_root).resolve()):
             raise AssertionError("NATIVE_V2_SOURCE_TREE_SHADOWED_WHEEL")
+        # Pin the actual installed SDK bytes, not a fabricated placeholder hash.
+        from importlib import import_module
+        source_digest = hashlib.sha256()
+        for relative, module in (
+            ("market_data/provenance.py", "market_data.provenance"),
+            ("market_data/history_api.py", "market_data.history_api"),
+            ("market_data_v2/qualified_read_contract.py",
+             "market_data_v2.qualified_read_contract"),
+            ("market_data_v2/read_api.py", "market_data_v2.read_api"),
+        ):
+            installed = Path(import_module(module).__file__).read_bytes()
+            pinned = (Path(self.grid_root) / relative).read_bytes()
+            if installed != pinned:
+                raise AssertionError("NATIVE_V2_INSTALLED_BYTES_NOT_PINNED:" + relative)
+            source_digest.update(relative.encode("ascii") + b"\0" + installed + b"\0")
+        self.source_sha = source_digest.hexdigest()
+        self.schema_sha = hashlib.sha256(
+            (Path(self.grid_root) / "grid/migrations.py").read_bytes()).hexdigest()
         self.pg = LabPostgres(bin_dir, self.root, min_major=18).initialize().start()
         self.pg.provision(canonical_schema())
         self.writer = psycopg.connect(self.pg.dsn("lab_writer"))
@@ -160,8 +178,8 @@ class NativePg18V2Tests(unittest.TestCase):
         return claim_lab_fence(self.pg, owner=_OWNER, namespace=_NAMESPACE,
             generation=generation, token=token,
             session_id=ids[0], instance_id=ids[1],
-            node_incarnation_id=ids[2], source_sha256=_SOURCE_SHA,
-            schema_sha256=_SCHEMA_SHA, backend_pid=self.backend_pid(conn),
+            node_incarnation_id=ids[2], source_sha256=self.source_sha,
+            schema_sha256=self.schema_sha, backend_pid=self.backend_pid(conn),
             previous_quiescence_verified=quiescent)
 
     def test_two_real_db_backends_fence_stale_writer_and_direct_insert(self):
@@ -181,17 +199,17 @@ class NativePg18V2Tests(unittest.TestCase):
         self.assertTrue(self.claim(self.writer, 1, 100, identities))
         with self.assertRaises(LabAdmissionRejected):
             self.claim(self.other, 2, 101, self.identity())
-        write_row(self.writer, generation=1, token=100, ids=identities,
+        write_row(self.writer, source_sha=self.source_sha, schema_sha=self.schema_sha, generation=1, token=100, ids=identities,
                   fp="1"*64, content_id="2"*64)
         self.assertEqual(self.pg.sql("SELECT count(*) FROM provenance_minutes"),
                          "1")
         with self.assertRaises(psycopg.Error):
-            write_row(self.other, generation=1, token=100, ids=identities,
+            write_row(self.other, source_sha=self.source_sha, schema_sha=self.schema_sha, generation=1, token=100, ids=identities,
                       fp="3"*64, content_id="4"*64)
         self.other.rollback()
         self.assertTrue(revoke_lab_fence(self.pg, generation=1, token=100))
         with self.assertRaises(psycopg.Error):
-            write_row(self.writer, generation=1, token=100, ids=identities,
+            write_row(self.writer, source_sha=self.source_sha, schema_sha=self.schema_sha, generation=1, token=100, ids=identities,
                       fp="5"*64, content_id="6"*64)
         self.writer.rollback()
         # Even an asserted quiescence boolean must NOT override PostgreSQL's
@@ -206,7 +224,7 @@ class NativePg18V2Tests(unittest.TestCase):
         self.assertTrue(self.claim(self.other, 2, 101, identities2))
         with self.assertRaises(LabAdmissionRejected):
             self.claim(self.other, 3, 100, self.identity())
-        write_row(self.other, generation=2, token=101, ids=identities2,
+        write_row(self.other, source_sha=self.source_sha, schema_sha=self.schema_sha, generation=2, token=101, ids=identities2,
                   fp="7"*64, content_id="8"*64)
         self.assertEqual(self.pg.sql("SELECT count(*) FROM provenance_minutes"),
                          "2")
@@ -228,7 +246,7 @@ class NativePg18V2Tests(unittest.TestCase):
     def test_native_crash_recovers_fence_high_water_without_old_writer(self):
         ids = self.identity()
         self.assertTrue(self.claim(self.writer, 1, 200, ids))
-        write_row(self.writer, generation=1, token=200, ids=ids,
+        write_row(self.writer, source_sha=self.source_sha, schema_sha=self.schema_sha, generation=1, token=200, ids=ids,
                   fp="9"*64, content_id="a"*64)
         self.writer.close()
         self.writer = None
@@ -251,7 +269,7 @@ class NativePg18V2Tests(unittest.TestCase):
             self.claim(self.writer, 2, 200, self.identity())
         next_ids = self.identity()
         self.assertTrue(self.claim(self.writer, 2, 201, next_ids))
-        write_row(self.writer, generation=2, token=201, ids=next_ids,
+        write_row(self.writer, source_sha=self.source_sha, schema_sha=self.schema_sha, generation=2, token=201, ids=next_ids,
                   fp="b"*64, content_id="c"*64)
         self.assertEqual(self.pg.sql("SELECT count(*) FROM provenance_minutes"),
                          "2")
@@ -280,7 +298,7 @@ class NativePg18V2Tests(unittest.TestCase):
         self.assertEqual(record["producer"], "market_data")
         identities = self.identity()
         self.claim(self.writer, 1, 100, identities)
-        write_row(self.writer, generation=1, token=100, ids=identities,
+        write_row(self.writer, source_sha=self.source_sha, schema_sha=self.schema_sha, generation=1, token=100, ids=identities,
                   fp=record["dataset_fingerprint"], content_id=digest(row),
                   start_ms=start, record=record)
         os.environ["MARKET_DATA_DSN"] = self.pg.dsn("lab_reader")
