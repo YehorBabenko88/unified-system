@@ -511,8 +511,13 @@ class OwnedWindowsJob:
         from ctypes import wintypes as w
         # JOBOBJECT_BASIC_ACCOUNTING_INFORMATION (JobObjectBasicAccounting=1)
         class Accounting(ctypes.Structure):
+            # JOBOBJECT_BASIC_ACCOUNTING_INFORMATION has *four*
+            # LARGE_INTEGER time fields before its four DWORD counters.
+            # Omitting ThisPeriod* changes the native ABI/returned size.
             _fields_ = [('total_user', ctypes.c_int64),
                         ('total_kernel', ctypes.c_int64),
+                        ('period_user', ctypes.c_int64),
+                        ('period_kernel', ctypes.c_int64),
                         ('total_page_fault', w.DWORD),
                         ('total_processes', w.DWORD),
                         ('active_processes', w.DWORD),
