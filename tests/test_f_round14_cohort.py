@@ -57,7 +57,7 @@ class Round14CohortTests(unittest.TestCase):
                     "installed_imports", "runtime_entrypoint", "cross_os_dependency_lock"):
             self.assertIn("NOT_", a[key])
         self.assertEqual(self.data["published_checks"]["artifact_and_runtime"], "NOT_VERIFIED")
-        self.assertEqual(self.data["published_checks"]["new_round14_tests"], "NOT_RUN")
+        self.assertEqual(self.data["published_checks"]["new_round14_tests"], "NOT_VERIFIED_ON_GITHUB_RUNNER")
         self.assertEqual({v["id"] for v in self.data["gates"]},
                          {"PROCESS_EXTINCTION", "BACKEND_EXTINCTION", "WRITER_ABI",
                           "JOURNAL_RECOVERY", "BUILD_INSTALL", "SECURITY", "DEDUPE",
@@ -77,6 +77,38 @@ class Round14CohortTests(unittest.TestCase):
                 self.assertRegex(row["commit"], SHA40)
                 self.assertTrue(row["owner"] in ("A", "C", "E"))
 
+
+    def test_round15_exact_pins_and_frozen_runtime_sha256(self):
+        expected_heads = {
+            "A": "f2a0245ae9edc2805e1e9be28e6c3a649ec401b4",
+            "B": "2e5227e79023091a7481b540536f50a6b2e125fb",
+            "B_CUSTODY": "39a6cf4d8c039ca99bbfc00ca7cc2359bef5c60c",
+            "C": "bbdc4e87b64a2516528270eb0c7925ce97d24ee5",
+            "D": "80da873c5251a0505519249325a4591f8bb003d9",
+            "E": "c6bfff7e30d6b68bd23107edf3a9bf4098a00004",
+            "META": "902db7e28571e851de09d127a9ebad6f120efecd",
+        }
+        rows = {row["id"]: row for row in self.data["components"]}
+        for label, sha in expected_heads.items():
+            with self.subTest(component=label):
+                self.assertEqual(rows[label]["head_sha"], sha)
+        hashes = self.data["round15"]["b30_source_sha256"]
+        self.assertEqual(set(hashes), set(EXPECTED))
+        for path, sha in hashes.items():
+            with self.subTest(path=path):
+                self.assertRegex(sha, re.compile(r"^[0-9a-f]{64}$"))
+        self.assertTrue(self.data["round15"]["b30_frozen_runtime_verified_against_b_round14_test"])
+
+    def test_round15_no_p0_release_promotion(self):
+        r = self.data["round15"]
+        self.assertIs(r["sole_integration_unchanged"], True)
+        self.assertIs(r["source_only"], True)
+        self.assertEqual(len(r["p0_defects"]), 4)
+        self.assertEqual(r["native_recovery"], "NOT_VERIFIED")
+        self.assertEqual(r["writer_abi"], "BLOCKED")
+        self.assertEqual(r["wheel_sdist"], "NOT_VERIFIED")
+        self.assertEqual(r["dedup_retirement"], "NOT_AUTHORIZED")
+        self.assertEqual(r["ci_first_page"]["D"], {"success": 1, "queued": 1})
 
 if __name__ == "__main__":
     unittest.main()
