@@ -448,6 +448,11 @@ class OwnedWindowsJob:
         # before ResumeThread; never adopt a running process by numeric PID.
         self._created_prelaunch = True
         self._assigned = False
+        # A Job PID snapshot cannot establish historical membership. Keep
+        # the admission gate closed until the original owner tracks all
+        # creation/exit events with trusted kernel evidence.
+        self._historical_member_pids = set()
+        self._member_history_complete = False
 
     def _assign_created_process(self, process_handle):
         """Private: only the trusted suspended launcher supplies this handle.
@@ -466,6 +471,7 @@ class OwnedWindowsJob:
         if self.verify_member(process_handle) is not True:
             raise ValueError('Windows Job membership unverified')
         self._assigned = True
+        self.observe_member_pids()
 
     def assign_suspended_child(self, process_handle, *, created_suspended=False):
         # Public adoption is forbidden even if a caller claims CREATE_SUSPENDED.
@@ -497,6 +503,7 @@ class OwnedWindowsJob:
         from ctypes import wintypes as w
         self._k.TerminateJobObject.argtypes = [w.HANDLE, w.UINT]
         self._k.TerminateJobObject.restype = w.BOOL
+        self.observe_member_pids()
         if not self._k.TerminateJobObject(self._handle, 0):
             raise ValueError('owned Windows Job termination failed')
         deadline=time.monotonic()+timeout
@@ -504,6 +511,34 @@ class OwnedWindowsJob:
             time.sleep(.02)
         if self.active_process_count() != 0:
             raise ValueError('owned Windows Job descendants still active')
+
+    def observe_member_pids(self):
+        """Observe current native Job members, without claiming full history.
+
+        A short-lived child may start and exit between snapshots. An exact
+        historical SCM association cannot be ruled out from this alone.
+        """
+        if self._handle is None or self._assigned is not True:
+            raise ValueError('Windows Job membership history unavailable')
+        from ctypes import wintypes as w
+        class ProcessIdList(ctypes.Structure):
+            _fields_ = [('assigned', w.DWORD), ('count', w.DWORD),
+                        ('pids', ctypes.c_size_t * 4096)]
+        buffer = ProcessIdList()
+        returned = w.DWORD()
+        if not self._k.QueryInformationJobObject(
+                self._handle, 3, ctypes.byref(buffer), ctypes.sizeof(buffer),
+                ctypes.byref(returned)):
+            raise ValueError('Windows Job PID history unavailable')
+        if not 0 <= buffer.count <= buffer.assigned <= 4096:
+            raise ValueError('Windows Job PID roster incomplete')
+        if buffer.count != buffer.assigned:
+            raise ValueError('Windows Job PID roster truncated')
+        pids = {int(buffer.pids[i]) for i in range(buffer.count)}
+        if len(pids) != buffer.count or any(pid <= 1 for pid in pids):
+            raise ValueError('Windows Job PID roster invalid')
+        self._historical_member_pids.update(pids)
+        return tuple(sorted(pids))
 
     def active_process_count(self):
         if self._handle is None:
@@ -1102,8 +1137,11 @@ class ProcessDriver:
         listeners=tuple(sorted(_windows_tcp_listener_owner_pids(port)))
         # Require an empty configured endpoint and no SCM association with
         # the retained root PID. This is a snapshot, not a port reservation.
-        scm=tuple(x for x in _windows_service_process_roster() if x[1]==child.pid)
+        historical = child._job._historical_member_pids | {child.pid}
+        scm=tuple(x for x in _windows_service_process_roster() if x[1] in historical)
         if listeners or scm:raise ValueError('TCP or SCM ownership unresolved')
+        if not child._job._member_history_complete:
+            raise ValueError('historical Windows SCM process membership unproven')
         if child._job.active_process_count()!=0:
             raise ValueError('Job membership changed')
         return WindowsJobExtinctionReceipt(handle,release,token,child.pid,*identity,digest,port,
