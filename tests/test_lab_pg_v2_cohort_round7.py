@@ -27,12 +27,13 @@ from unified_system.lab_pg_fence import (
 )
 from unified_system.lab_simulation_admission import LabAdmissionRejected
 
-B_SHA="3265d441717f2bc01b82e759b5d8df06cb516fa4"
-B_JOURNAL_BLOB="3bfc4daad0eea65982e3c7c92610d9660afe0e71"
+B_SHA="29a7ac17aea548f4e40081623523173dd2afa191"
+B_JOURNAL_BLOB="ab93c6d421c3d3f0232060f6ded7ac01bf8eeda0"
 D_SHA="05fef5e9527ae02149017b586d311da8870baf25"
 MATH_SHA="9e6acbd9e12a91189f57234828e31640983af553"
 E_SHA="2c993d873cc53a784a64ff525465770bb5bb4a39"
 E_MODEL_BLOB="71c74a2c0d8c1c0120412124ef1d12d53b691581"
+E_EXECUTOR_BLOB="3697289e8be15dd77912a461041f8f247491b2ec"
 B_ADAPTER_BLOB="8b93466a79fa234468a3cdc44106bd5e153e81c4"
 DIGEST_MODULES=(
     ("market_data/provenance.py","market_data.provenance"),
@@ -124,6 +125,7 @@ class Round7OwnedPg18Integrated(unittest.TestCase):
         self.server=None
         self.worker=None
         self.old_client=None
+        self.owner_executor=None
         self.test_clock_ms=int(time.time()*1000)
         self.tmp=Path(tempfile.mkdtemp(prefix="round7-c-owned-pg18-"))
         self.tmp.chmod(0o700)
@@ -173,6 +175,8 @@ class Round7OwnedPg18Integrated(unittest.TestCase):
                 self.worker.join(timeout=10)
                 if self.worker.is_alive():
                     raise AssertionError("ROUND7_HTTP_SERVER_NOT_STOPPED")
+            if self.owner_executor is not None:
+                self.owner_executor.close()
             for conn in (self.primary,self.foreign):
                 if conn is not None and not conn.closed:
                     conn.close()
@@ -317,12 +321,17 @@ class Round7OwnedPg18Integrated(unittest.TestCase):
             "_c_round11_grid.c_lab_journal_adapter",journal_source)
         loaded=importlib.util.module_from_spec(spec)
         spec.loader.exec_module(loaded)
+        from unified_system.lab_owner_executor import LabOwnerExecutor
+        if git_blob(Path(sys.modules[LabOwnerExecutor.__module__].__file__))!=E_EXECUTOR_BLOB:
+            raise AssertionError("ROUND12_E_OWNER_EXECUTOR_BLOB_MISMATCH")
+        self.owner_executor=LabOwnerExecutor()
         owner_journal=loaded.COwnedLabJournal(
             c_module=__import__("unified_system.lab_pg_checkpoint",
                                 fromlist=["verify_existing_lab_checkpoint"]),
             pg=self.pg,identity=self.identity,generation=1,
             backend_pid=self.pid(self.primary),
-            stream_id="bybit:BTCUSDT:1m")
+            stream_id="bybit:BTCUSDT:1m",
+            owner_executor=self.owner_executor)
         minute_key=dict(symbol="BTCUSDT",start_ms=record["start_ms"],
                         fingerprint=record["dataset_fingerprint"],
                         content_id=digest(record))
