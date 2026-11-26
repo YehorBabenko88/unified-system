@@ -205,6 +205,8 @@ class LabWriterAuthority:
             self.revoke()
             raise
         _need(type(receipt) is dict
+              and receipt.get("scope")==_SCOPE
+              and receipt.get("resource_id")=="grid-market-data-primary"
               and receipt.get("schema")=="lab-postgres-fence-revalidation.v1"
               and receipt.get("backend_pid")==self._backend_pid
               and type(receipt.get("backend_start")) is str
@@ -217,7 +219,10 @@ class LabWriterAuthority:
               and receipt.get("source_sha256")==self._identity.source_sha256
               and receipt.get("schema_sha256")==self._identity.schema_sha256
               and receipt.get("db_backend_observed") is True
-              and receipt.get("db_fence_current_at_read") is True,
+              and receipt.get("db_fence_current_at_read") is True
+              and receipt.get("native_writer_admitted") is False
+              and receipt.get("root_consul_admitted") is False
+              and receipt.get("trading_authorized") is False,
               "LAB_OPERATION_C_BACKEND_UNVERIFIED")
         _need(not self._revoked and not grant._revoked
               and protected.require_current() is True
