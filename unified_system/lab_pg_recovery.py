@@ -70,6 +70,8 @@ def recover_exclusive_lab_cluster(pg, *, old, streams=(), quiesced=False,
     The old backend must remain fenced until its whole cluster is verified
     stopped, and a fresh SQL connection must independently revoke it.
     """
+    # Caller-provided quiescence cannot prove E/Root process extinction.
+    # This operation remains strictly a disposable LAB diagnostic.
     need(type(quiesced) is bool and quiesced is True,
          "LAB_RECOVERY_QUIESCENCE_REQUIRED")
     need(type(max_seconds) in (int, float) and 10 <= max_seconds <= 180,
