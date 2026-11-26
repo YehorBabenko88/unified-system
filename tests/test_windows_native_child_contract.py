@@ -189,5 +189,133 @@ class WindowsHijackTests(unittest.TestCase):
             self.assertTrue(PureWindowsPath(path).is_absolute() and path.casefold().startswith(self.system.casefold()))
 
 
+@unittest.skipUnless(WINDOWS, 'requires real disposable Windows process/loopback listener')
+class WindowsOwnedListenerExtinctionTests(unittest.TestCase):
+    """Native Windows process/port evidence only; never a trusted Root grant."""
+
+    WORKER = r'''import json, os
+from http.server import BaseHTTPRequestHandler, HTTPServer
+class Handler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        token = os.environ["UNIFIED_INSTANCE_TOKEN"]
+        if self.path != "/health" or self.headers.get("Authorization") != "Bearer " + token:
+            self.send_response(403)
+            self.send_header("Content-Length", "0")
+            self.end_headers()
+            return
+        data = json.dumps(dict(module_id=os.environ["UNIFIED_MODULE_ID"],
+                               version=os.environ["UNIFIED_MODULE_VERSION"],
+                               release_id=os.environ["UNIFIED_RELEASE_ID"],
+                               instance_token=token, ready=True)).encode()
+        self.send_response(200)
+        self.send_header("Content-Length", str(len(data)))
+        self.end_headers()
+        self.wfile.write(data)
+    def log_message(self, *args): pass
+HTTPServer(("127.0.0.1", int(os.environ["PORT"])), Handler).serve_forever()
+'''
+
+    def setUp(self):
+        import hashlib
+        import socket
+        import sys
+        from unified_system.runtime_process import ProcessDriver
+
+        self._tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self._tmp.cleanup)
+        self.root = Path(self._tmp.name)
+        self.worker = self.root / 'isolated_worker.py'
+        self.worker.write_text(self.WORKER, encoding='utf-8')
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+            sock.bind(('127.0.0.1', 0))
+            self.port = sock.getsockname()[1]
+        python = Path(sys.executable).resolve()
+        self.program = dict(
+            argv=[str(python), str(self.worker)], cwd=str(self.root),
+            executable_sha256=hashlib.sha256(python.read_bytes()).hexdigest(),
+            file_pins={'isolated_worker.py': hashlib.sha256(self.worker.read_bytes()).hexdigest()},
+            health_url='http://127.0.0.1:%d/health' % self.port,
+            env={'PORT': str(self.port)},
+        )
+        self.driver = ProcessDriver(
+            self.root / 'private', {'market_data': self.program},
+            authorize=lambda action, module: action == 'start' and module == 'market_data')
+
+    def _ready(self, driver, op):
+        import time
+        from unified_system.runtime import ModuleSpec
+        spec = ModuleSpec('market_data', '1.0.0')
+        deadline = time.monotonic() + 5
+        while time.monotonic() < deadline:
+            if driver.ready(spec, op, 'disposable-lab')['ready']:
+                return
+            time.sleep(.05)
+        self.fail('disposable native Windows listener never became ready')
+
+    def _token_response(self, token):
+        import http.client
+        conn = http.client.HTTPConnection('127.0.0.1', self.port, timeout=.5)
+        try:
+            conn.request('GET', '/health', headers={'Authorization': 'Bearer ' + token})
+            result = conn.getresponse()
+            result.read()
+            return result.status
+        finally:
+            conn.close()
+
+    def test_real_old_process_exits_port_closes_and_rebound_rejects_old_token(self):
+        import socket
+        from unified_system.runtime import ModuleSpec
+        from unified_system.runtime_process import ProcessDriver, _identity
+
+        spec = ModuleSpec('market_data', '1.0.0')
+        old_op, new_op = '1' * 32, '2' * 32
+        self.driver.start(spec, 'disposable-lab', old_op)
+        self.addCleanup(lambda: self.driver.stop(old_op))
+        self._ready(self.driver, old_op)
+        old = self.driver._load(old_op)
+        self.assertIsNotNone(old['created'])
+        self.assertEqual(_identity(old['pid']), old['created'])
+        self.assertEqual(self._token_response(old['token']), 200)
+
+        # Cross-driver stop proves the persisted OS identity is not just Popen.poll().
+        external_driver = ProcessDriver(
+            self.root / 'private', {'market_data': self.program},
+            authorize=lambda *_: False)
+        external_driver.stop(old_op)
+        self.assertEqual(self.driver.children[old_op].wait(timeout=2), 0)
+        self.assertFalse(external_driver.alive(old_op))
+        self.assertNotEqual(_identity(old['pid']), old['created'])
+        self.assertEqual(external_driver._load(old_op)['state'], 'STOPPED')
+
+        with self.assertRaises((ConnectionRefusedError, OSError)):
+            with socket.create_connection(('127.0.0.1', self.port), timeout=.3):
+                pass
+
+        self.driver.start(spec, 'disposable-lab', new_op)
+        self.addCleanup(lambda: self.driver.stop(new_op))
+        self._ready(self.driver, new_op)
+        new = self.driver._load(new_op)
+        self.assertNotEqual(new['token'], old['token'])
+        self.assertEqual(self._token_response(old['token']), 403)
+        self.assertEqual(self._token_response(new['token']), 200)
+        self.assertFalse(external_driver.alive(old_op))
+
+    def test_reused_identity_simulation_must_not_kill_live_owned_child(self):
+        from unittest.mock import patch
+        from unified_system.runtime import ModuleSpec
+
+        op = '3' * 32
+        self.driver.start(ModuleSpec('market_data', '1.0.0'), 'disposable-lab', op)
+        self.addCleanup(lambda: self.driver.stop(op))
+        self._ready(self.driver, op)
+        child = self.driver.children[op]
+        with patch('unified_system.runtime_process._identity', return_value=['reused-pid', 'foreign.exe']):
+            with self.assertRaisesRegex(ValueError, 'unrelated process'):
+                self.driver.stop(op)
+        self.assertIsNone(child.poll(), 'foreign identity must never be terminated')
+        self.assertEqual(self.driver._load(op)['state'], 'RUNNING')
+
+
 if __name__ == '__main__':
     unittest.main()
