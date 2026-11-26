@@ -383,6 +383,183 @@ def _windows_process_descendant_snapshot(root_pid, expected_root_created):
 
 
 
+class _WindowsNonServiceLabToken:
+    """A restricted LOW-integrity primary token, not an SCM permission flag.
+
+    The original child is created under this exact token, with no inherited
+    handles. Check the resulting process token before the suspended thread is
+    resumed. Failure always aborts the disposable operation, never falls back
+    to the unrestricted CreateProcessW path. A trusted executable is required;
+    this policy cannot prevent malicious external privileged IPC brokers or
+    possession of independently supplied administrator credentials.
+    """
+
+    def __init__(self):
+        if os.name != 'nt':
+            raise ValueError('restricted Windows LAB token unavailable')
+        from ctypes import wintypes as w
+        self._k = ctypes.WinDLL('kernel32', use_last_error=True)
+        self._a = ctypes.WinDLL('advapi32', use_last_error=True)
+        k, a = self._k, self._a
+        k.GetCurrentProcess.restype = w.HANDLE
+        k.CloseHandle.argtypes = [w.HANDLE]
+        k.CloseHandle.restype = w.BOOL
+        k.LocalFree.argtypes = [ctypes.c_void_p]
+        k.LocalFree.restype = ctypes.c_void_p
+        a.OpenProcessToken.argtypes = [w.HANDLE, w.DWORD, ctypes.POINTER(w.HANDLE)]
+        a.OpenProcessToken.restype = w.BOOL
+        a.CreateRestrictedToken.argtypes = [w.HANDLE, w.DWORD, w.DWORD,
+                                            ctypes.c_void_p, w.DWORD,
+                                            ctypes.c_void_p, w.DWORD,
+                                            ctypes.c_void_p, ctypes.POINTER(w.HANDLE)]
+        a.CreateRestrictedToken.restype = w.BOOL
+        a.ConvertStringSidToSidW.argtypes = [w.LPCWSTR, ctypes.POINTER(ctypes.c_void_p)]
+        a.ConvertStringSidToSidW.restype = w.BOOL
+        a.GetLengthSid.argtypes = [ctypes.c_void_p]
+        a.GetLengthSid.restype = w.DWORD
+        a.SetTokenInformation.argtypes = [w.HANDLE, ctypes.c_int, ctypes.c_void_p, w.DWORD]
+        a.SetTokenInformation.restype = w.BOOL
+        a.GetTokenInformation.argtypes = [w.HANDLE, ctypes.c_int, ctypes.c_void_p,
+                                          w.DWORD, ctypes.POINTER(w.DWORD)]
+        a.GetTokenInformation.restype = w.BOOL
+        a.EqualSid.argtypes = [ctypes.c_void_p, ctypes.c_void_p]
+        a.EqualSid.restype = w.BOOL
+        a.CheckTokenMembership.argtypes = [w.HANDLE, ctypes.c_void_p, ctypes.POINTER(w.BOOL)]
+        a.CheckTokenMembership.restype = w.BOOL
+        a.ImpersonateLoggedOnUser.argtypes = [w.HANDLE]
+        a.ImpersonateLoggedOnUser.restype = w.BOOL
+        a.RevertToSelf.restype = w.BOOL
+
+        class SidAttributes(ctypes.Structure):
+            _fields_ = [('sid', ctypes.c_void_p), ('attributes', w.DWORD)]
+        class MandatoryLabel(ctypes.Structure):
+            _fields_ = [('label', SidAttributes)]
+        self._SidAttributes = SidAttributes
+        self._MandatoryLabel = MandatoryLabel
+        source = w.HANDLE()
+        admin_sid = ctypes.c_void_p()
+        low_sid = ctypes.c_void_p()
+        self._handle = None
+        try:
+            # TOKEN_ASSIGN_PRIMARY | TOKEN_DUPLICATE | TOKEN_IMPERSONATE |
+            # TOKEN_QUERY | TOKEN_ADJUST_DEFAULT.
+            access = 0x0001 | 0x0002 | 0x0004 | 0x0008 | 0x0080
+            if not a.OpenProcessToken(k.GetCurrentProcess(), access, ctypes.byref(source)):
+                raise ValueError('LAB parent token inaccessible')
+            if not a.ConvertStringSidToSidW('S-1-5-32-544', ctypes.byref(admin_sid)):
+                raise ValueError('Administrators SID unavailable')
+            if not a.ConvertStringSidToSidW('S-1-16-4096', ctypes.byref(low_sid)):
+                raise ValueError('Low Integrity SID unavailable')
+            disabled = SidAttributes(admin_sid, 0)
+            restricted = w.HANDLE()
+            # DISABLE_MAX_PRIVILEGE; Administrators becomes deny-only.
+            if not a.CreateRestrictedToken(source, 0x1, 1, ctypes.byref(disabled),
+                                           0, None, 0, None,
+                                           ctypes.byref(restricted)):
+                raise ValueError('LAB restricted primary token creation denied')
+            self._handle = restricted
+            integrity = MandatoryLabel(SidAttributes(low_sid, 0x20))
+            size = ctypes.sizeof(integrity) + a.GetLengthSid(low_sid)
+            if not a.SetTokenInformation(restricted, 25, ctypes.byref(integrity), size):
+                raise ValueError('LAB Low Integrity token setting denied')
+            self._verify_token(restricted, admin_sid, low_sid)
+        except BaseException:
+            self.close()
+            raise
+        finally:
+            if source: k.CloseHandle(source)
+            if admin_sid: k.LocalFree(admin_sid)
+            if low_sid: k.LocalFree(low_sid)
+
+    def _verify_token(self, token, admin_sid=None, low_sid=None):
+        from ctypes import wintypes as w
+        a = self._a
+        admin_local, low_local = ctypes.c_void_p(), ctypes.c_void_p()
+        try:
+            if admin_sid is None:
+                if not a.ConvertStringSidToSidW('S-1-5-32-544', ctypes.byref(admin_local)):
+                    raise ValueError('LAB Administrators SID verification unavailable')
+                admin_sid = admin_local
+            if low_sid is None:
+                if not a.ConvertStringSidToSidW('S-1-16-4096', ctypes.byref(low_local)):
+                    raise ValueError('LAB integrity SID verification unavailable')
+                low_sid = low_local
+            member = w.BOOL()
+            if not a.CheckTokenMembership(token, admin_sid, ctypes.byref(member)):
+                raise ValueError('LAB token admin membership unavailable')
+            if member.value:
+                raise ValueError('LAB token retains enabled Administrators group')
+            need = w.DWORD(0)
+            a.GetTokenInformation(token, 25, None, 0, ctypes.byref(need))
+            if not ctypes.get_last_error() == 122 or not 8 <= need.value <= 4096:
+                raise ValueError('LAB token integrity query unavailable')
+            buf = ctypes.create_string_buffer(need.value)
+            if not a.GetTokenInformation(token, 25, buf, need.value, ctypes.byref(need)):
+                raise ValueError('LAB token integrity unavailable')
+            label = self._MandatoryLabel.from_buffer(buf)
+            if not label.label.sid or not a.EqualSid(label.label.sid, low_sid):
+                raise ValueError('LAB token is not Low Integrity')
+            # Test the *actual* token against local SCM DACL. This does not
+            # register, start, stop or alter any service.
+            scm = ctypes.WinDLL('advapi32', use_last_error=True)
+            scm.OpenSCManagerW.argtypes = [w.LPCWSTR, w.LPCWSTR, w.DWORD]
+            scm.OpenSCManagerW.restype = w.HANDLE
+            scm.CloseServiceHandle.argtypes = [w.HANDLE]
+            scm.CloseServiceHandle.restype = w.BOOL
+            if not a.ImpersonateLoggedOnUser(token):
+                raise ValueError('LAB SCM capability impersonation unavailable')
+            opened = None
+            error = 0
+            try:
+                opened = scm.OpenSCManagerW(None, None, 0x0002)  # CREATE_SERVICE
+                error = ctypes.get_last_error()
+            finally:
+                if opened: scm.CloseServiceHandle(opened)
+                if not a.RevertToSelf():
+                    raise ValueError('LAB token impersonation revert failed')
+            if opened or error != 5:  # ERROR_ACCESS_DENIED only
+                raise ValueError('LAB SCM CREATE_SERVICE capability not denied')
+        finally:
+            if admin_local: self._k.LocalFree(admin_local)
+            if low_local: self._k.LocalFree(low_local)
+
+    def verify_suspended_process(self, process_handle):
+        from ctypes import wintypes as w
+        token = w.HANDLE()
+        if not self._a.OpenProcessToken(process_handle, 0x0004 | 0x0008,
+                                        ctypes.byref(token)):
+            raise ValueError('LAB child token unavailable')
+        try:
+            self._verify_token(token)
+        finally:
+            self._k.CloseHandle(token)
+
+    def create_suspended(self, kernel, argv, command, env_buffer, cwd,
+                         startup, info):
+        from ctypes import wintypes as w
+        kernel.CreateProcessAsUserW.argtypes = [
+            w.HANDLE, w.LPCWSTR, w.LPWSTR, ctypes.c_void_p,
+            ctypes.c_void_p, w.BOOL, w.DWORD, ctypes.c_void_p,
+            w.LPCWSTR, ctypes.c_void_p, ctypes.c_void_p]
+        kernel.CreateProcessAsUserW.restype = w.BOOL
+        return bool(kernel.CreateProcessAsUserW(
+            self._handle, str(argv[0]), command, None, None, False,
+            0x00000004 | 0x00000400 | 0x08000000,
+            ctypes.cast(env_buffer, ctypes.c_void_p), str(cwd),
+            ctypes.byref(startup), ctypes.byref(info)))
+
+    def close(self):
+        handle = self._handle
+        self._handle = None
+        if handle: self._k.CloseHandle(handle)
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc, tb):
+        self.close()
+
+
 class OwnedWindowsJob:
     """Kernel-backed containment for a NEW, isolated, Root-created child.
 
