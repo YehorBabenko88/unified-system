@@ -336,6 +336,7 @@ class OwnedProcessProofFailureTests(unittest.TestCase):
                               release_id='lab', token='b' * 64,
                               state='RUNNING'), new=True)
         driver.children = {}
+        driver.prestart_rejections = {}
         with patch('unified_system.runtime_process._identity',
                    return_value=['new-boot:2', 'other.exe']):
             with self.assertRaisesRegex(ValueError, 'refuse unrelated process'):
@@ -353,6 +354,7 @@ class OwnedProcessProofFailureTests(unittest.TestCase):
                               release_id='lab', token='d' * 64,
                               state='RUNNING'), new=True)
         driver.children = {}
+        driver.prestart_rejections = {}
         with patch('unified_system.runtime_process._identity',
                    side_effect=ValueError('access denied')):
             # Existing alive() is a liveness hint, NOT an extinction receipt.
@@ -373,6 +375,7 @@ class OwnedProcessProofFailureTests(unittest.TestCase):
                               release_id='lab', token='f' * 64,
                               state='STOPPED'), new=True)
         driver.children = {}
+        driver.prestart_rejections = {}
         with patch('unified_system.runtime_process._identity',
                    return_value=['old-boot:1', 'old.exe']):
             self.assertFalse(driver.alive(op))
@@ -470,6 +473,15 @@ class ProcessDriverFailClosedStopTests(unittest.TestCase):
         self.addCleanup(shutil.rmtree, self.driver.root, True)
         self.driver.children = {}
         self.driver.prestart_rejections = {}
+        # This synthetic fixture bypasses __init__ to test stale-identity
+        # refusal. A program policy must nevertheless exist so start()
+        # reaches the *original existing operation* guard, never a spawn.
+        self.driver.programs = {'market_data': {
+            'argv': ['/isolated/python'],
+            'cwd': '/isolated',
+            'health_url': 'http://127.0.0.1:18766/health',
+            'executable_sha256': 'a' * 64,
+            'file_pins': {'worker.py': 'b' * 64}}}
         self.driver.authorize = lambda action, module: True
         self.op = '7' * 32
         self.driver._save(self.op, dict(
@@ -496,7 +508,8 @@ class ProcessDriverFailClosedStopTests(unittest.TestCase):
         record = self.driver._load(self.op)
         spec = SimpleNamespace(module_id='market_data', version='1.0')
         with patch.object(self.driver, '_verify', return_value=None), \
-             patch.object(self.driver, 'alive', return_value=True):
+             patch.object(self.driver, 'alive', return_value=True), \
+             patch.object(self.driver, 'owned_process_state', return_value='UNKNOWN'):
             with self.assertRaisesRegex(ValueError, 'ambiguous prior'):
                 self.driver.start(spec, record['release_id'], self.op)
         self.assertEqual(self.driver._load(self.op)['state'], 'RUNNING')
