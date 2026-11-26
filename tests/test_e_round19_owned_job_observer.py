@@ -36,6 +36,7 @@ class EOwnedJobObservationTests(unittest.TestCase):
         driver=self._driver()
         child=object.__new__(subprocess.Popen)
         child.pid=4242
+        child._child_created=False  # synthetic Popen; never spawned
         driver.children["original"]=child
         driver._load=lambda _: dict(pid=4242,created=[1,2],state="STOPPED")
         driver.owned_process_state=lambda _: EXTINCT
