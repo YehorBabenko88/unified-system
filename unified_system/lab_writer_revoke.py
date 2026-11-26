@@ -100,6 +100,8 @@ class LabWriterRevoker:
             stages["child_stopped"] = True
         except BaseException:
             pass
+        # If normal SQL is poisoned, never enqueue revoke on the uncertain
+        # writer backend. Independent C-owned cluster recovery is required.
         try:
             stages["sql_fence_revoked"] = (
                 await blocked(lambda: self._c.revoke_lab_fence(
@@ -111,7 +113,7 @@ class LabWriterRevoker:
             await self._authority.release(self._lease)
             stages["consul_released"] = (
                 await self._authority.validate(self._lease) is False)
-        except Exception:
+        except BaseException:
             pass
         try:
             observation = await self._stop_lane.old_child_extinct(
@@ -122,7 +124,7 @@ class LabWriterRevoker:
                 type(observation) is RootProcessObservation
                 and observation.state == EXTINCT
                 and observation.listener_owner_verified is True)
-        except Exception:
+        except BaseException:
             pass
         try:
             # Current generation must not be revalidated after revocation.
