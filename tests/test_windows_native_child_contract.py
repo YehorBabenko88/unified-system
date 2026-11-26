@@ -628,14 +628,14 @@ class WindowsNativeSuspendedLaunchTests(unittest.TestCase):
         from unified_system.runtime_process import RetainedOsProcessWait, _identity
 
         secondary = self.worker.with_name('descendant_worker.py')
-        secondary.write_text('import time\\ntime.sleep(30)\\n', encoding='utf-8')
+        secondary.write_text('import time\ntime.sleep(30)\n', encoding='utf-8')
         self.worker.write_text(
-            'import os, subprocess, sys, time\\n'
+            'import os, subprocess, sys, time\n'
             'p = subprocess.Popen([sys.executable, os.path.join(os.path.dirname(__file__),'
-            ' "descendant_worker.py")], close_fds=True)\\n'
+            ' "descendant_worker.py")], close_fds=True)\n'
             'with open(os.environ["JOB_TEST_PID_FILE"], "w") as out:'
-            ' out.write(str(p.pid))\\n'
-            'time.sleep(30)\\n',
+            ' out.write(str(p.pid))\n'
+            'time.sleep(30)\n',
             encoding='utf-8')
         program = self.driver.programs['market_data']
         program['file_pins']['job_worker.py'] = hashlib.sha256(
