@@ -867,6 +867,29 @@ class WindowsNativeSuspendedLaunchTests(unittest.TestCase):
         self.assertNotIn(self.op, self.driver.children)
         self.assertNotIn(self.op, self.driver._job_launch_bindings)
 
+    def test_native_failed_launch_does_not_leak_kernel_handles(self):
+        import ctypes
+        import os
+        from ctypes import wintypes as w
+        from unified_system.runtime_process import _launch_owned_windows_job_process
+        k = ctypes.WinDLL('kernel32', use_last_error=True)
+        k.GetCurrentProcess.restype = w.HANDLE
+        k.GetProcessHandleCount.argtypes = [w.HANDLE, ctypes.POINTER(w.DWORD)]
+        k.GetProcessHandleCount.restype = w.BOOL
+        count = w.DWORD()
+        self.assertTrue(k.GetProcessHandleCount(k.GetCurrentProcess(),
+                                                ctypes.byref(count)))
+        initial = int(count.value)
+        missing = self.worker.with_name('never-created-test.exe')
+        for _ in range(4):
+            with self.assertRaises(ValueError):
+                _launch_owned_windows_job_process(
+                    [str(missing)], str(self.worker.parent), dict(os.environ))
+        self.assertTrue(k.GetProcessHandleCount(k.GetCurrentProcess(),
+                                                ctypes.byref(count)))
+        self.assertLessEqual(int(count.value), initial + 2,
+                             'original token, process, thread or Job handle leaked')
+
     def test_native_assignment_failure_never_resumes_child(self):
         import hashlib
         from unified_system.runtime import ModuleSpec
