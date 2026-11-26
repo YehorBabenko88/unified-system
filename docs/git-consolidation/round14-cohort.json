@@ -22,7 +22,7 @@
       "id": "A",
       "repo": "YehorBabenko88/unified-system",
       "pr": 162,
-      "head_sha": "eeb991e233bb97849c947f96effd70d0e9ae2337",
+      "head_sha": "f2a0245ae9edc2805e1e9be28e6c3a649ec401b4",
       "role": "native process lifetime",
       "native_status": "NOT_VERIFIED"
     },
@@ -30,7 +30,7 @@
       "id": "B",
       "repo": "YehorBabenko88/bybit-cluster-grid",
       "pr": 300,
-      "head_sha": "30bf50eb70162d679f305b7cbb8286a9404193d6",
+      "head_sha": "2e5227e79023091a7481b540536f50a6b2e125fb",
       "role": "canonical Bybit market-data writer and collector",
       "native_status": "NOT_VERIFIED"
     },
@@ -46,7 +46,7 @@
       "id": "C",
       "repo": "YehorBabenko88/unified-system",
       "pr": 163,
-      "head_sha": "5a049e59604d8b6a2811eb78873af5227a62df77",
+      "head_sha": "bbdc4e87b64a2516528270eb0c7925ce97d24ee5",
       "role": "PostgreSQL native resource fence",
       "native_status": "NOT_VERIFIED"
     },
@@ -54,16 +54,16 @@
       "id": "D",
       "repo": "YehorBabenko88/Terminan",
       "pr": 126,
-      "head_sha": "55731b1a228738b389538ade9af607c9443cb4de",
+      "head_sha": "80da873c5251a0505519249325a4591f8bb003d9",
       "role": "canonical strategies/paper/chart",
       "native_status": "NOT_VERIFIED",
-      "component_ci": "14/14 jobs SUCCESS reported by MASTER, not full native E2E"
+      "component_ci": "current HEAD: 1 workflow success / 1 queued at first-page observation; MASTER 14/14 applied to previous HEAD only"
     },
     {
       "id": "E",
       "repo": "YehorBabenko88/unified-system",
       "pr": 164,
-      "head_sha": "307ed14b7fe6e5a420140fae7cfd2cf59470b6d4",
+      "head_sha": "c6bfff7e30d6b68bd23107edf3a9bf4098a00004",
       "role": "Root lease, lifecycle and writer grant",
       "native_status": "NOT_VERIFIED"
     },
@@ -71,7 +71,7 @@
       "id": "F",
       "repo": "YehorBabenko88/unified-system",
       "pr": 165,
-      "head_sha_at_source_snapshot": "dfe167c237f018d085295f958da2761a7572198e",
+      "head_sha_at_source_snapshot": "627faa46fa3fc9ca8c5d396ee6926463a45ea9ce",
       "self_reference": "Read live PR HEAD; do not pin the SHA of the same file's future commit",
       "role": "security, Git consolidation, release qualification"
     },
@@ -135,8 +135,8 @@
     {
       "path": "unified_system/lab_process_extinction.py",
       "owner": "E",
-      "commit": "307ed14b7fe6e5a420140fae7cfd2cf59470b6d4",
-      "git_blob": "f770e8e66a4fafc7fee42aed56de03b9be1c2780"
+      "commit": "c6bfff7e30d6b68bd23107edf3a9bf4098a00004",
+      "git_blob": "dce2a878ab161dbecb25e9111f9176d49de99100"
     }
   ],
   "build_provenance": {
@@ -257,6 +257,86 @@
   "published_checks": {
     "source_git_blobs": "VERIFIED_CONNECTOR_FETCH",
     "artifact_and_runtime": "NOT_VERIFIED",
-    "new_round14_tests": "NOT_RUN"
+    "new_round14_tests": "NOT_VERIFIED_ON_GITHUB_RUNNER"
+  },
+  "round15": {
+    "schema": "unified.f.round15-source-snapshot.v1",
+    "observed_date": "2026-11-26",
+    "non_atomic": true,
+    "sole_integration_unchanged": true,
+    "source_only": true,
+    "source_blobs": [
+      {
+        "owner": "A",
+        "path": "unified_system/runtime_process.py",
+        "blob": "b3ac50e176ab1fa7d139b6adb3006ab89a075548"
+      },
+      {
+        "owner": "C",
+        "path": "unified_system/lab_pg_recovery.py",
+        "blob": "8d717403233fed2047e6e0de3d93fd507d39b4b1"
+      },
+      {
+        "owner": "E",
+        "path": "unified_system/lab_process_extinction.py",
+        "blob": "dce2a878ab161dbecb25e9111f9176d49de99100"
+      },
+      {
+        "owner": "E",
+        "path": "unified_system/lab_pg_recovery_lane.py",
+        "blob": "7cd73572e0018311fd0202c8c7bb8b1d1be5bfbc"
+      }
+    ],
+    "b30_frozen_runtime_verified_against_b_round14_test": true,
+    "b30_source_sha256": {
+      "grid/canonical_lab_fenced_writer.py": "0dc72314f11791c3899732bc461be5273b890e7fd96553e85590dc5a384e4300",
+      "grid/canonical_lab_continuous_collector.py": "c691b8cbeee2b4e3fa0df95f81381318a297736ea109513c1d50340a13ad8a01",
+      "grid/c_lab_journal_adapter.py": "69bb02182e73bfe4d80f98fa8f1cec846d18334693aa8443eec88babb901f01a",
+      "grid/c_async_fenced_writer.py": "f4aaa97ac94a9b6ca37bbb6d50bebe6538ab1f4548f6c9e35b8be7845f37028e"
+    },
+    "p0_defects": [
+      "LabPostgres exact type check is after pg method invocation",
+      "global deadline starts after SQL and does not bound blocking stop/start/SQL",
+      "STOPPED after E containment rejected by C active-backend precondition",
+      "shielded timed-out E worker may keep running despite future cancellation"
+    ],
+    "native_recovery": "NOT_VERIFIED",
+    "writer_abi": "BLOCKED",
+    "wheel_sdist": "NOT_VERIFIED",
+    "security_scan": "NOT_VERIFIED",
+    "dedup_retirement": "NOT_AUTHORIZED",
+    "ci_first_page": {
+      "A": {
+        "queued": 18,
+        "pending": 1
+      },
+      "B": {
+        "queued": 15
+      },
+      "C": {
+        "queued": 18,
+        "pending": 4
+      },
+      "D": {
+        "success": 1,
+        "queued": 1
+      },
+      "E": {
+        "queued": 19,
+        "pending": 1
+      },
+      "F_at_previous_head": {
+        "queued": 17,
+        "pending": 1
+      },
+      "integration": {
+        "queued": 23,
+        "pending": 2
+      },
+      "meta": {
+        "success": 1,
+        "skipped": 1
+      }
+    }
   }
 }
