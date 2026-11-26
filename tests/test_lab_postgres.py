@@ -11,6 +11,7 @@ import copy
 import shutil
 import sys
 import subprocess
+import socket
 import tempfile
 import unittest
 from unittest import mock
@@ -215,6 +216,30 @@ class LabPostgresLifecycle(unittest.TestCase):
                     os.environ['MARKET_DATA_PROVENANCE_READ'] = previous
         finally:
             del sys.path[:2]
+
+    def test_occupied_port_and_reserved_5432_fail_closed(self):
+        self.pg = pg = LabPostgres(BIN, self.root, min_major=MIN).initialize()
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as blocker:
+            blocker.bind(('127.0.0.1', pg.port))
+            blocker.listen(1)
+            with self.assertRaisesRegex(LabAdmissionRejected, 'LAB_PG_START_FAILED'):
+                pg.start()
+            self.assertFalse(pg.started)
+            self.assertEqual(blocker.getsockname()[1], pg.port)
+        pg.port = 5432
+        with self.assertRaisesRegex(LabAdmissionRejected, 'LAB_PG_PORT_REJECTED'):
+            pg.start()
+
+    @unittest.skipIf(os.name == 'nt', 'symlink creation requires privilege on Windows')
+    def test_symlink_root_rejected(self):
+        self.pg = None
+        link = self.root.parent / (self.root.name + '-linked')
+        try:
+            os.symlink(self.root, link)
+            with self.assertRaisesRegex(LabAdmissionRejected, 'ROOT_UNOWNED'):
+                LabPostgres(BIN, link, min_major=MIN)
+        finally:
+            link.unlink(missing_ok=True)
 
     def test_refuses_old_version_and_foreign_paths(self):
         with self.assertRaisesRegex(LabAdmissionRejected, 'TOO_OLD'):
