@@ -13,6 +13,7 @@ from .consul_authority import ConsulLease, ConsulSessionAuthority
 from .grid_writer_fence_model import ResourceFenceBlocked, _need
 from .lab_writer_authority import LabWriterAuthority
 from .runtime_process import ProcessDriver
+from .lab_owner_executor import LabOwnerExecutor
 
 _SCHEMA = "unified.lab-root-writer-revocation.v1"
 
@@ -35,9 +36,9 @@ class LabWriterRevoker:
 
     __slots__ = ("_guard", "_driver", "_handle", "_authority", "_lease",
                  "_pg", "_c", "_generation", "_token", "_backend_pid",
-                 "_once", "_last")
+                 "_once", "_last", "_executor")
 
-    def __init__(self, *, guard, driver, handle, authority, lease, pg, c_module):
+    def __init__(self, *, guard, driver, handle, authority, lease, pg, c_module, executor):
         _need(type(guard) is LabWriterAuthority and
               type(driver) is ProcessDriver and
               type(authority) is ConsulSessionAuthority and
@@ -46,6 +47,8 @@ class LabWriterRevoker:
               guard._authority is authority and guard._lease == lease and
               guard._pg is pg and guard._c is c_module,
               "LAB_REVOCATION_OWNER_MISMATCH")
+        _need(type(executor) is LabOwnerExecutor,
+              "LAB_REVOCATION_ROOT_EXECUTOR_REQUIRED")
         _need(type(handle) is str and handle in driver.children,
               "LAB_REVOCATION_CHILD_NOT_OWNED")
         _need(callable(getattr(c_module, "revoke_lab_fence", None))
@@ -57,6 +60,7 @@ class LabWriterRevoker:
         self._generation = guard._generation
         self._token = guard._identity.token
         self._backend_pid = guard._backend_pid
+        self._executor = executor
         self._once = False
         self._last = None
 
@@ -80,24 +84,15 @@ class LabWriterRevoker:
                   "consul_released": False, "child_extinct": False,
                   "old_backend_rejected": False}
         async def blocked(call):
-            # C's owner SQL and driver stop are synchronous; never block the
-            # asyncio reactor. Each call has its own bounded dedicated thread,
-            # but timeout leaves the operation UNKNOWN and halts new admission.
-            task = asyncio.create_task(asyncio.to_thread(call))
-            try:
-                return await asyncio.wait_for(asyncio.shield(task),
-                                              blocking_timeout)
-            except BaseException:
-                # A timeout cannot cancel a blocking SQL COMMIT. Preserve the
-                # running task and refuse any new E grant until owner audit.
-                task.add_done_callback(lambda done: done.exception()
-                                       if not done.cancelled() else None)
-                raise
+            # C SQL and ProcessDriver are synchronous. Run on the Root-owned
+            # serialized executor; do not hold the asyncio event loop.
+            # Timeout means UNKNOWN, never assume the write/stop was cancelled.
+            return await self._executor.call(call, timeout=blocking_timeout)
 
         try:
             await blocked(lambda: self._driver.stop(self._handle))
             stages["child_stopped"] = True
-        except Exception:
+        except BaseException:
             pass
         try:
             await blocked(lambda: self._c.revoke_lab_fence(
@@ -123,7 +118,7 @@ class LabWriterRevoker:
             await blocked(lambda: self._c.revalidate_lab_fence(
                 self._pg, identity=self._guard._identity,
                 generation=self._generation, backend_pid=self._backend_pid))
-        except Exception:
+        except BaseException:
             stages["old_backend_rejected"] = stages["sql_fence_revoked"]
         valid = all(stages.values())
         self._last = LabRevocationReport(
