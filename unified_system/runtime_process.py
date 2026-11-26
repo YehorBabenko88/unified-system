@@ -501,6 +501,8 @@ class OwnedWindowsJob:
                 self._handle, 1, ctypes.byref(info), ctypes.sizeof(info),
                 ctypes.byref(n)):
             raise ValueError('Windows Job membership inaccessible')
+        if n.value != ctypes.sizeof(info):
+            raise ValueError('Windows Job accounting size mismatch')
         return int(info.active_processes)
 
     def close(self):
