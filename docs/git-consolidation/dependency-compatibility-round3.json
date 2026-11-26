@@ -1,0 +1,115 @@
+{
+  "schema": "unified.dependency-compatibility-round3.v1",
+  "date": "2026-11-26",
+  "source": "Exact-head GitHub pyproject.toml / requirements.txt reads, not pip solver execution",
+  "status": "REVIEW_REQUIRED",
+  "candidates": [
+    {
+      "owner": "Grid",
+      "repo": "bybit-cluster-grid",
+      "head": "39a6cf4d8c039ca99bbfc00ca7cc2359bef5c60c",
+      "package": "market-data",
+      "python": ">=3.11",
+      "runtime": [
+        "aiohttp>=3.10,<4",
+        "psycopg[binary]>=3.2,<4",
+        "websockets>=15,<16"
+      ],
+      "other_file": "requirements.txt",
+      "other_pins": [
+        "psycopg[binary]==3.3.6",
+        "websockets>=13.0"
+      ],
+      "note": "Range allows psycopg3.3.6 but package installation alone does not lock exact version"
+    },
+    {
+      "owner": "Math",
+      "repo": "math",
+      "head": "9e6acbd9e12a91189f57234828e31640983af553",
+      "package": "unified-math-kernels",
+      "python": ">=3.11",
+      "runtime": [],
+      "note": "Pure Python numerical kernels; no third party declared runtime dependencies"
+    },
+    {
+      "owner": "Terminan",
+      "repo": "Terminan",
+      "head": "b4b26cf45c04f2cb9d8c1088ee2a4629568f4eac",
+      "package": "unified-terminan",
+      "python": ">=3.11",
+      "runtime": [],
+      "optional": [
+        "PySide6>=6.7,<7"
+      ],
+      "note": "Math is installed from independently source-pinned wheel, not unapproved index"
+    },
+    {
+      "owner": "Meta migration",
+      "repo": "meta_analyse",
+      "head": "902db7e28571e851de09d127a9ebad6f120efecd",
+      "package": "meta-analyse",
+      "python": ">=3.11",
+      "runtime": [
+        "httpx>=0.27,<1",
+        "websockets>=13,<16",
+        "psycopg[binary]>=3.2,<4",
+        "PySide6>=6.8,<7"
+      ],
+      "note": "Migration-source only, not accepted independent runtime; broad constraints and packaging artifacts require acceptance"
+    },
+    {
+      "owner": "Strattester migration",
+      "repo": "strattester",
+      "head": "3850995a6c28ed29b05cef4ba067e587d5033453",
+      "package": "market-data",
+      "python": ">=3.11",
+      "runtime": [
+        "aiohttp>=3.10,<4",
+        "psycopg[binary]>=3.2,<4",
+        "websockets>=15,<16"
+      ],
+      "note": "Temporary original host; duplicate package identity must not produce two active market-data owners"
+    },
+    {
+      "owner": "Unified",
+      "repo": "unified-system",
+      "head": "f05f9a73581b1c15c4cc78da2801c9f2f5dd08d0",
+      "package": null,
+      "root_manifest": "NO_ROOT_PYPROJECT_OR_REQUIREMENTS",
+      "scoped_lock_examples": [
+        "docs/ci/requirements-unittest.lock",
+        "integration/windows-candidate/requirements-cp312-win_amd64-cpu.lock",
+        "docs/ci/operator-command/requirements-linux.lock"
+      ],
+      "note": "Many scoped locks; no universal dependency resolver/lock accepted"
+    }
+  ],
+  "constraints": [
+    {
+      "name": "psycopg",
+      "preferred_when_built": "3.3.6",
+      "basis": "Grid exact-head requirements.txt",
+      "caveat": "Not a proof of universal 3.3.6 adoption or transitive wheel availability"
+    },
+    {
+      "name": "websockets",
+      "intersection": ">=15,<16",
+      "basis": "Grid canonical package + Meta migration source",
+      "caveat": "Do not add Meta live clients to canonical production runtime"
+    },
+    {
+      "name": "PySide6",
+      "intersection": ">=6.8,<7",
+      "basis": "Terminan optional desktop + Meta legacy runtime",
+      "caveat": "Meta is migration source; intersection does not justify extra UI distribution"
+    }
+  ],
+  "blockers": [
+    "No verified cross-OS full dependency resolution at one source-pinned cohort",
+    "No verified Root installation lock unifying Python, SQL clients and package artifacts",
+    "Owner-only source SDK pins and wheel provenance must survive any lock harmonization",
+    "Grid and Strattester market-data must never simultaneously own one runtime writer"
+  ],
+  "recommendation": "Reconcile candidate Python and distribution cohort first; generate exact-lock receipts per Windows/Linux platform and verify hashes, preserving source-pinned wheels. No blind global requirement update.",
+  "no_runtime_edits": true
+}

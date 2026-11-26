@@ -1,0 +1,91 @@
+# ROUND19 — latest observed non-atomic source cohort
+
+F final source snapshot at publication, distinct from MASTER's initial Round19 reference: A `c51986a46c7efb6847ea080ce4cb03c1b2495c22`, B `17855501b97bda2a44a6710a08dfc0a7f2a31374`, C `200aca95bb2d29873b36cc345863e4fe8982aadb`, D `9147d49ccdd74cd0739237e1298840a1be617723`, E `bdaae0913cdb37a1e1738c6948d48a12b3b547e5`. Their active source Git blobs A `fecc0f8620955bf735a6c94ded655f857ed39469`, B writer `247d7fab2738e1892a05979e407f637f9df62784`, C recovery `581a719ce274e438505aee59651bffef6b8cc2cd`, E authority `ed966cc79aee3da33a5c658737486139c16b7e3c`. All are separate Draft PRs, **NOT integrated**. Sole #166 source remains `9349d7f3ed93ef82d120976816b968e0b716b067`.
+
+F latest offline wheel tool blob `5abc9c5dd3aa97082d1217986d2e66a065c9c3ad`, SHA256 `230361e5520d57e16ba0ded262d0370a1703b25ed9b6a3363d358c6e499d5ba6`; tests blob `4c8f5388d1492305aa1070a244ecab6d777e5106`, SHA256 `15603094bfa6614f64bc64c289675a7c769de6e1157ce0bf9d9befb752a60a6d`. **34/34 local Python 3.13.5 synthetic offline tests PASS**, py_compile PASS. More negative cases than earlier snapshot: TOCTOU wheel path by construction same in-memory ZIP byte buffer, symlink wheel/root denial, full POSIX installed FD-backed closure, recorded extra .py denial, unverified .pyc, .pth, sitecustomize and unknown extra files denial. Genuine B wheel/sdist and runtime import origin **NOT BUILT/VERIFIED**; F tool cannot issue E authority. Other F historical structural tests updated to match separate exact current heads but **not executed locally**.
+
+Latest observed E still **`LAB_OPERATION_INSTALLED_WHEEL_UNVERIFIED`**. A historical Job/SCM identity receipt remains denied; C row-locked SQL COMMIT vs SQL revoke is not atomic with remote Consul lease expiry. B `pyproject.toml` blob `4fb4e72360605cd92b3afab3837015b4ac29dace` and four canonical runtime blobs unchanged from MASTER B9e0; its existing market-data wheel awaits actual reproducible build and protected installed RECORD/import/entrypoint proof. No new SQL writer, process observer, PostgreSQL supervisor, Math or PaperEngine. **CODE NO_GO / PRODUCTION NO_GO**.
+
+## MASTER Round19 initial control snapshot — historical as agents advanced
+
+# ROUND 19 — current protected package qualification (supersedes older snapshots)
+
+Exact non-atomic verified heads, 2026-11-26: A `8b066e373690f43befe107ff7aa474c270c8ad4c`, B `9e0d57c4c0f2d01bc381ada090b62d23566b32aa`, C `3f0d3410ac708da9776e5ad1407d864adcde34b0`, D `89022d7885d279bb1fd2f695b59f2c243b431ad2`, E `1c2edb2564c48a1348d3ad4ee94fe8fa0b425b18`. Sole integration Draft #166 remains `9349d7f3ed93ef82d120976816b968e0b716b067`, untouched.
+
+## Actual F checker implementation, not a Root attestor
+
+`tools/f_wheel_qualification.py` blob `5abc9c5dd3aa97082d1217986d2e66a065c9c3ad`, then maintained to current exact source; the checked local round19 version is Python 3.13.5 with **34/34 synthetic offline tests PASS**, `py_compile` PASS, and Git blob equality to uploaded working source. The checker opens a wheel once via `O_NOFOLLOW`, retains the same binary snapshot through SHA256 and `zipfile.ZipFile(io.BytesIO(...))`; it never hashes one file and opens a potentially replaced pathname for parsing. POSIX-only installed-root FD retained; installed directory traversal and file bytes use `openat` / `O_NOFOLLOW` handles and pre/post `fstat` to reject symlink swaps, altered files and inode replacement; the scanned installed closure must equal installed RECORD with only reviewed pip installation metadata and scripts. Unverified `.pyc`, `.pth`, `sitecustomize.py`, extra recorded `.py`, symlink roots and unrecorded files DENY. `pip --no-compile --no-index --no-deps --target` used only for synthetic test wheel. The audit explicitly rejects Windows native execution until protected Windows handle semantics are implemented by its owner.
+
+**Hard boundary:** a read-only scan is NOT an immutable installed code installation or authenticated release. A concurrent adversarial process can still mutate the underlying filesystem after snapshot. External import paths, Python hooks, live process executable, protected startup, authorized Root release, Consul lease, SQL fence and package signer are NOT established. Every caller-facing Root/Writer/release/import authentication flag remains FALSE. Never use F diagnostic booleans to mint E `LabWriterOperationPermit`.
+
+## Actual B cohort and missing native artifact
+
+B exact source `9e0d57c4c0f2d01bc381ada090b62d23566b32aa` retains `pyproject.toml` blob `4fb4e72360605cd92b3afab3837015b4ac29dace` and its four dotted `grid.*` modules in the SINGLE `market-data 0.2.0.dev0` distribution. Direct exact B HEAD Git blob audit shows the same five expected module source blobs listed in `docs/git-consolidation/round18-b-wheel-source-pins.json`; the pinned source commit is now B9e0. F has NOT built or installed that actual full B wheel, since no authenticated full repository archive is available in this runtime; a synthetic minimal wheel is NOT equivalent. Require B/CI to provide exact wheel+sdist bytes SHA256, original clean source tree + builder/environment lock, installed entrypoint and dependencies, then F re-audits bytes. Current E issuer `LAB_OPERATION_INSTALLED_WHEEL_UNVERIFIED` remains correct.
+
+## Native gates still DENIED
+
+A WindowsJob extinction original SCM membership history is not proven (A source blob `99986aae5e675d4e22a2fcd24089da652f0ae546`); C disposable PG18 source/lock original init and WAL is not native-end-to-end accepted (C recovery blob `a7f5989803c3c5f7dd0c8987815c8e56371c114b`); B/C/E Root operation grant remains denied by E (E `lab_writer_authority.py` blob `ed966cc79aee3da33a5c658737486139c16b7e3c`). C SQL transaction+revoke/COMMIT sequencing requires actual native evidence. D Python3.12 wheel jobs failed; does not establish a healthy full integration. Security/git history/LFS/archives/dependencies/installer also remain NOT VERIFIED. `#166` is not touched and remains Draft.
+
+**CODE NO_GO / PRODUCTION NO_GO.**
+
+## Historical Round18 and earlier snapshots below — not current release authority
+
+# ROUND 18 continuation — exact source→wheel→installed gating
+
+Read-only non-atomic GitHub snapshot (2026-11-26): A `743329b1161e8967335d5c6d6e1ea8bd669251ee`, B `6d9373a435f4f99ff15f999622c4e1143d9a832e`, C `7ebebce569f2ec616ed631c57b4d267abda340a1`, D `89022d7885d279bb1fd2f695b59f2c243b431ad2`, E `1c2edb2564c48a1348d3ad4ee94fe8fa0b425b18`. The single Draft integration #166 remains `9349d7f3ed93ef82d120976816b968e0b716b067` with no F runtime integration.
+
+## Canonical B packaging: OWNER CHOICE RECEIVED
+
+B has now amended **the existing** `market-data 0.2.0.dev0` `pyproject.toml` (Git blob `4fb4e72360605cd92b3afab3837015b4ac29dace`) to include exactly four dotted `grid.*` `py-modules` plus `market_data`, `market_data_v2`, NOT the whole legacy Grid. The earlier proposal to physically move the files under `market_data/` is SUPERSEDED. No second packaging path or writer is authorized. B `RootCanonicalWriterFactory` lives in the original async writer module (blob `35bf202bb1674238d53b74f962af966d2a699fa2`), not an alternative SQL writer. E `LabWriterOperationPermit` source (blob `ed966cc79aee3da33a5c658737486139c16b7e3c`) is compatible in argument shape at source level but its issuance still DENIES `LAB_OPERATION_INSTALLED_WHEEL_UNVERIFIED`. This remains essential.
+
+Independent SHA256 of exact current B source (not wheel):
+- `grid/canonical_lab_fenced_writer.py` blob `247d7fab2738e1892a05979e407f637f9df62784`; SHA256 `db78f50146528fb6a3f4a6907a1679dd1e45cf2820efcee90e03d6c9e46e615a`
+- `grid/c_async_fenced_writer.py` blob `35bf202bb1674238d53b74f962af966d2a699fa2`; SHA256 `216f03122f6bb168234019e1dbaa3380c8c35a789be8f3a1bf9fec1a5de5972c`
+- `grid/c_lab_journal_adapter.py` blob `ab93c6d421c3d3f0232060f6ded7ac01bf8eeda0`; SHA256 `69bb02182e73bfe4d80f98fa8f1cec846d18334693aa8443eec88babb901f01a`
+- `grid/canonical_lab_continuous_collector.py` blob `873e83839bee9ceb1cca710a5291ba2cf5f7f038`; SHA256 `293f89bc59481299b65c3d138171cae4b18c5045386d1319f1a8dc3818a9eca9`
+- required parent `grid/__init__.py` blob `3dc1f76bc69e3f559bee6253b24fc93acee9e1f9`; SHA256 `91447944015cec709e8aa7655f7e9d64e1e4508e7023a57fe3746911c0fc6fed`
+
+Exact allowlist in `docs/git-consolidation/round18-b-wheel-source-pins.json`. This is a machine-input candidate from GitHub, **not protected Root-signed activation**. B must actually build and produce original wheel+sdist, then prove these five members occur in wheel and installed RECORD. E must independently validate the true installed package origin and live release/lease; an F offline checker result is never operation authority.
+
+## Executed F package verification
+
+`tools/f_wheel_qualification.py` Git blob `310264da7a3b79632843c6a9f09628c7e80235a0` checks a pinned wheel ZIP, its archived RECORD, separately rewritten pip installed RECORD, installed byte hashes, path safety, duplicate entries, package METADATA, console entry-point metadata and expected source files. A real **offline pip --no-index --no-deps --target install of a SYNTHETIC test wheel** was executed. `tests/test_f_wheel_qualification.py` blob `9f58333bac69ce3e2b966a53f81b1419e0764acd`: Python 3.13.5, 26/26 PASS; py_compile PASS. Includes script tamper denial and deterministic fixture. No actual B wheel was built or installed, no real CLI executed, no import-origin or native E2E proven. `all_installed_bytes_authenticated`, `release_authenticated`, `writer_admitted`, `root_admitted` are always FALSE: unverified .pth, pyc, import hooks, activation cannot become authority from file hashes.
+
+A original Windows ProcessDriver source blob `06e9389d4d53b62ffe72c81d0a12f4eda5b63b50` has retained Job receipt, but E Root binding and native Windows/SCM/port closure remain unproven. C canonical PG recovery blob `ef9c14aacd8437d4b9f9ebbe2fb8a956fb93382f` has advisory OS-backed lock, not trusted full Root lease; interrupted WAL/unknown-COMMIT/native PG18 proof not complete. Historical strategy parity D component success is not global proof.
+
+**Admissible release/production result: NO. CODE NO_GO / PRODUCTION NO_GO.** All newly installed runtime and privileged permission issuance remain DENIED until native proof and MASTER approval.
+
+## Historical Round17 snapshot (not current authority)
+
+# F ROUND 17 — minimal executable native cohort admission gate
+
+This file is the **current** F gate as of 2026-11-26; exact GitHub non-atomic snapshot. It supersedes the historic ROUND 16 pins in its earlier revisions. Sole integration Draft PR #166 is **frozen** at `9349d7f3ed93ef82d120976816b968e0b716b067`. Existing PR #165 contains F-only qualification; NO mixed runtime imported.
+
+Current verified Draft heads: A `5bcaed7d916d72837064da9ab938e28c35695624`; B `20656417e61d26a294809cf649c37a37906b6dcf` and custody `39a6cf4d8c039ca99bbfc00ca7cc2359bef5c60c`; C `3bbd846dff646164903aeec2e2ef5cca7de1b9b0`; D `4fd05211f10aa69108b598b0849abc842ec91899`; E `d231a0ad657b7e12f89ddc9cde2ef6b5b028a125`; Math snapshot `9e6acbd9e12a91189f57234828e31640983af553`; F prior head `5570856074437362ff7b7af0306cc386ec6cff4f`.
+
+## Actual exact-head code, without inaccurate historical blockers
+
+- A `unified_system/runtime_process.py` Git blob `3c948515932584ae72fd3acaa0d5c21f877a50bf`: sole `ProcessDriver.owned_process_state`, `RetainedOsProcessWait`, retained `RetainedWindowsDescendantCensus`, and `OwnedWindowsJob`. Its `verify_complete_extinction` and `assign_suspended_child` are **deliberate unconditional DENY**, not working suspended-process containment. Real native A-owned `CreateProcessW(CREATE_SUSPENDED)` + original process/thread handles → trusted Job assignment before resume → Job member/descendant/endpoint extinction is MISSING.
+- C `unified_system/lab_pg_recovery.py` Git blob `877ca501323c4387883084851564e814f9920d45`: C **already** binds original owner+namespace+generation+fencing token+backend PID/start to private pgdata root/inode and original postmaster, imports A `RetainedOsProcessWait`, and holds exact kernel OS wait across C-only stop/restart. Prior ROUND16 assertions “C has only `_STATES[pg]`” and “C does not consume A retained postmaster” are **obsolete and must not be used for new approval**. But `_DATA_OWNERS` is process-local; another process can manage same physical root unless C adds OS-backed resource exclusivity across process/crash/timeout. 15 PG18 native test METHODS authored, no concluded native evidence.
+- C `unified_system/lab_pg_fence.py` Git blob `d525940eba4b2a57c15b9127854c839000e6af0b` binds `backend_start` to the same C SQL fence revalidation snapshot; neither this readout nor the C WAL diagnostic is an operation grant.
+- E `unified_system/lab_pg_recovery_lane.py` Git blob `954d6af2d35578340730db44f725d2758c2643e3`: `recover_once` currently **unconditionally raises `LAB_ROOT_BOUND_EXTINCTION_NOT_IMPLEMENTED`**. E correctly does not execute a second PG `stop`/`start` mechanism; the denial is deliberate and safe, but NOT executable recovery.
+- B frozen canonical writer `grid/canonical_lab_fenced_writer.py` Git blob `8b93466a79fa234468a3cdc44106bd5e153e81c4`; other B30 blobs and sha256 are exact in manifest. B legacy `require_current() is True` and E async grant lack one authenticated owner-thread permit. No fake `True`, new writer, duck-type or asyncio-in-poisoned-thread workaround.
+- D current `4fd05211f10aa69108b598b0849abc842ec91899` retains POC research composition, but historic `POC_MEAN_REVERSION` and 20 imported strategies remain SPEC_ONLY absent dynamic source-equivalence evidence. Math remains sole computation and Terminan sole PaperEngine.
+
+## Must be implemented by canonical owners before F can move mixed runtime
+
+1. **A** makes its existing single `ProcessDriver` create a LAB-owned child suspended using actual OS `CreateProcessW(CREATE_SUSPENDED)`; retain original thread/process kernel handles, attach to owned Job, verify membership before `ResumeThread`, keep it contained, prove all Job descendants and listeners (plus SCM ownership when relevant) extinct. On Windows or Linux UNKNOWN → DENY. No external PID attachment and no caller-provided suspension flag.
+2. **C** adds one **OS-backed exclusive lock** keyed to its already canonical PG18 owner marker and physical pgdata root (device/inode), held throughout containment, timeout, poisoned old worker and subsequent WAL verification. No second PG owner across separate processes. Retain A `RetainedOsProcessWait` contract, never replace it or touch foreign PG/5432; validate old backend identity, WAL, pending/checkpoint/high-water/content_id and unknown COMMIT on actual native PG18.
+3. **E** implements nonforgeable issuer/verifier of RootProcessExtinction+RootBackendExtinction with provenance of original OS handles, descendants/listener/SCM, release, owner/namespace, generation, epoch, token and C PG instance/backend PID+start. No direct C dispatch until real physical and credential/lease binding, no caller bool or type-only gate. Do not release original Consul lease on UNKNOWN or old worker unresolved.
+4. **B/C/E** implement ONE sealed synchronous same-executor operation permit in real Grid existing writer. Validate Root-issued owner+namespace+generation+fence token+epoch+backend PID/start+executor+installed exact package+operation/content_id, and C sole `public.lab_fenced_insert` remains final SQL check. Never install an async-to-sync `True` shim or second SQL writer.
+5. **F** verifies true built wheel/sdist SHA256, installed module bytes/import origin/entrypoint, SQL schema, packaging/lock reproducibility across OS, full Git history+LFS+nested archive security, semantically justified dedup and historical unique function parity. F shall not write conflicting runtime into #166 in absence of verified A/C/E/B implementation and MASTER approval.
+
+## Isolated qualification order
+
+1. Pin and validate exact source Git blobs, B30 four SHA256, package dependency/installer manifest, native Windows/Linux and PG18 versions.
+2. C runs only against disposable dedicated LAB (never user 5432); process OS Job/handle is A-controlled, PG resource is C OS-lock controlled, Root/Consul E grant is not forged.
+3. Read source and WAL durable high-water, unknown COMMIT, pending/checkpoint, immutable row+content_id; kill disposable LAB postmaster under strictly proved owner and re-run C crash recovery; require actual recovery logs, not clean stop.
+4. Prove old Grid descendants, listeners, executor thread and old PG backend physically extinct; new generation/token/epoch/journal/backend/executor/Grid and D Math consumer appear only AFTER full authenticated receipts.
+5. Confirm exactly-once rows, old source denial, no double Bybit/writer/supervisor/Math/PaperEngine, 100k streaming conservation, Windows uninstall and **foreign PG unchanged**.
+
+**Current status: ALL NATIVE ADMISSION GATES BLOCKED. CODE NO_GO / PRODUCTION NO_GO.**
