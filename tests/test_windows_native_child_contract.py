@@ -585,6 +585,23 @@ class WindowsRootProcessExitRaceTests(unittest.TestCase):
             after = None
         self.assertNotEqual(after, self.created)
 
+    def test_retained_kernel_handle_waits_for_exact_child_exit(self):
+        from unified_system.runtime_process import RetainedOsProcessWait
+        with RetainedOsProcessWait(self.pid, self.created) as witness:
+            self.assertFalse(witness.wait_exited(0))
+            self.child.terminate()
+            self.assertTrue(witness.wait_exited(5))
+            self.child.wait(timeout=5)
+        with self.assertRaisesRegex(ValueError, 'closed'):
+            witness.wait_exited(0)
+
+    def test_retained_kernel_handle_refuses_foreign_creation(self):
+        from unified_system.runtime_process import RetainedOsProcessWait
+        with self.assertRaisesRegex(ValueError, 'incarnation changed'):
+            RetainedOsProcessWait(self.pid, ['other-boot', self.created[1]])
+        self.assertIsNone(self.child.poll())
+
+
     def test_native_live_process_identity_is_not_exit(self):
         from unified_system.runtime_process import _identity
         self.assertIsNone(self.child.poll())
