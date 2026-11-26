@@ -115,7 +115,13 @@ class RootGridV2InertTests(unittest.TestCase):
         for repository in ("YehorBabenko88/strattester", "untrusted/market_data", ""):
             changed = copy.deepcopy(self.manifest)
             changed["sources"]["market_data"]["repository"] = repository
-            self.assertEqual(entry_for_manifest(changed), LEGACY_ENTRY)
+            if repository == "YehorBabenko88/strattester":
+                self.assertEqual(entry_for_manifest(changed), LEGACY_ENTRY)
+            else:
+                with self.assertRaises(MarketDataEntryRejected):
+                    entry_for_manifest(changed)
+                with self.assertRaises(ActivationBlocked):
+                    service_module_runtime._entry("market_data", changed)
             raw = lab_release.canonical(changed)
             if repository != "YehorBabenko88/strattester":
                 with self.assertRaises(ValueError):
