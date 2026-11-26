@@ -13,6 +13,8 @@ import re
 import stat
 
 from .module_catalog import MODULE_IDS
+from .market_data_entry_contract import (GRID_REPOSITORY, V2_ENTRY, V2_SOURCE_VERSION,
+                                         entry_for_manifest)
 from .runtime_process import _safe_path
 
 LIMIT=32*1024*1024
@@ -115,9 +117,19 @@ def _parse_v1_manifest(raw,expected_sha256):
     need(type(m['sources']) is dict and set(m['sources'])==MODULE_IDS)
     for name,s in m['sources'].items():
         exact(s,('repository','root','commit','tree','version','dependencies'))
-        need(s['repository']==REPOSITORIES[name] and s['root']=='sources/'+name)
+        if name=='market_data' and s['repository']==GRID_REPOSITORY:
+            # Explicitly pinned Grid v2 only: the legacy Strattester source
+            # and the separate synthetic collector manifest are unchanged.
+            need(entry_for_manifest(m)==V2_ENTRY)
+        else:
+            need(s['repository']==REPOSITORIES[name])
+        need(s['root']=='sources/'+name)
         digest(s['commit'],40);digest(s['tree'],40)
-        need(type(s['version']) is str and re.fullmatch(r'\d+\.\d+\.\d+(?:[-+][A-Za-z0-9.-]{1,40})?',s['version']))
+        old_version=type(s['version']) is str and re.fullmatch(
+            r'\d+\.\d+\.\d+(?:[-+][A-Za-z0-9.-]{1,40})?',s['version'])
+        grid_v2_version=(name=='market_data' and s['repository']==GRID_REPOSITORY
+                         and s['version']==V2_SOURCE_VERSION)
+        need(bool(old_version) or grid_v2_version)
         need(any(p.startswith(s['root']+'/') for p in m['files']))
         need(type(s['dependencies']) is dict and set(s['dependencies'])<=MODULE_IDS-{name})
         for dep,version in s['dependencies'].items():need(version==m['sources'][dep]['version'])
