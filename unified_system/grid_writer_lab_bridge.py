@@ -321,6 +321,9 @@ _GRID_RUNTIME_BLOBS = {
 def verified_grid_runtime_cohort_pin(source, manifest, source_root):
     """Verify four exact B continuous LAB source files, no code import.
 
+    This contract pins the complete four-file LAB writer cohort only.
+    Protected release/wheel, package selection and entrypoint are independent
+    mandatory gates; absence of any of those is NOT a full bundle acceptance.
     The protected Root capsule must separately verify all source/wheel files.
     Git object hashes here are repository evidence, not publisher signatures.
     This does not create SQL, lease, child, trading or native admission.
