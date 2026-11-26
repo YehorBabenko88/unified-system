@@ -735,26 +735,32 @@
     "operation_authority": "DENIED",
     "f_tool": {
       "path": "tools/f_wheel_qualification.py",
-      "blob": "190c1b2f19fc90628fba8ea752c58f00a0a6d5de",
-      "sha256": "e61cb5cb06b51d4e71e4eae5c0c534323952e36484c9891dc8e869ebef680051",
+      "blob": "1d4d8c301a0c56155907bc2dff2b55ee43ef0e91",
+      "sha256": "63b24c49435bf7d7dc90598135211aa245342b6f780373d54b7a82f41323c50e",
       "tests_path": "tests/test_f_wheel_qualification.py",
-      "tests_blob": "bf9fb538ee73f56f2ee6c8b0499e56b82bbcaa6c",
-      "local_python": "3.13",
-      "local_unittest_result": "24_PASS_0_FAIL",
+      "tests_blob": "a591e8be052684d1f47a54604ab8a6e22fa20e78",
+      "local_python": "3.13.5",
+      "local_unittest_result": "26_PASS_0_FAIL_0_SKIP",
       "local_py_compile": "PASS",
       "fixture": "SYNTHETIC_OFFLINE_WHEEL",
       "real_B_wheel_test": "NOT_RUN",
-      "emits_root_or_writer_authority": false
+      "emits_root_or_writer_authority": false,
+      "pip_offline_target_install": "PASS_ON_SYNTHETIC_MARKET_DATA_WHEEL",
+      "pip_installed_record_rewrite": "SUPPORTED_AND_VERIFIED_SYNTHETIC",
+      "pip_installed_script_tamper": "DENIED_SYNTHETIC",
+      "pip_generated_pyc_unhashed": "MARKED_UNAUTHENTICATED",
+      "wheel_build_reproducibility": "FIXED_TIME_SYNTHETIC_WHEEL_ONLY"
     },
-    "installed_record_bytes": "TESTED_SYNTHETIC_ONLY",
+    "installed_record_bytes": "OFFLINE_PIP_INSTALL_SYNTHETIC_ONLY",
     "runtime_import_origin": "NOT_VERIFIED",
-    "entrypoint_metadata": "TESTED_SYNTHETIC_ONLY",
+    "entrypoint_metadata": "OFFLINE_PIP_INSTALL_SYNTHETIC_ONLY",
     "actual_entrypoint_execution": "NOT_VERIFIED",
     "integration": {
       "pr": 166,
       "head": "9349d7f3ed93ef82d120976816b968e0b716b067",
       "runtime_merged": false
     },
-    "status": "CODE_NO_GO_AND_PRODUCTION_NO_GO"
+    "status": "CODE_NO_GO_AND_PRODUCTION_NO_GO",
+    "release_authenticated": false
   }
 }
