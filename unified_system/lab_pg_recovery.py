@@ -206,7 +206,8 @@ def _claim_initial_lab_cluster(pg):
         need(root not in _BOOTSTRAP_ROOTS and root not in _STATES,
              "LAB_PG_BOOTSTRAP_ALREADY_CLAIMED")
         fd, witness_fd = _acquire_cluster_os_lock(pg)
-        _BOOTSTRAP_ROOTS[root] = (pg, fd, witness_fd)
+        _BOOTSTRAP_ROOTS[root] = (pg, fd, witness_fd,
+                                 threading.get_ident())
         return fd, witness_fd
 
 
@@ -216,6 +217,7 @@ def _require_initial_lab_cluster(pg):
     with _GUARD:
         prior = _BOOTSTRAP_ROOTS.get(root)
         need(prior is not None and prior[0] is pg
+             and prior[3] == threading.get_ident()
              and root not in _STATES,
              "LAB_PG_BOOTSTRAP_OWNER_MISMATCH")
         fd, witness_fd = prior[1], prior[2]
@@ -361,6 +363,52 @@ def _dispose_native_pg18_fixture(pg):
          and pg.root.parent.resolve(strict=True)
              == __import__("pathlib").Path(tempfile.gettempdir()).resolve(strict=True),
          "LAB_NATIVE_PG_FIXTURE_ONLY")
+    # Initialization may fail AFTER C has acquired the original kernel
+    # lock but BEFORE PGDATA exists. Only an original, same-thread bootstrap
+    # with no postmaster/start attempt and a confirmed non-running initdb
+    # can be abandoned. A timed-out/unknown child remains quarantined.
+    pg._verify_owned()
+    need(os.getpid() == _ORIGINAL_C_PID,
+         "LAB_RECOVERY_FORKED_WORKER_DENIED")
+    path = pg.root.resolve(strict=True)
+    facts = path.stat()
+    root = (facts.st_dev, facts.st_ino, str(path))
+    need((facts.st_dev, facts.st_ino) == pg._root_identity,
+         "LAB_NATIVE_PG_ROOT_CHANGED")
+    with _GUARD:
+        initial = _BOOTSTRAP_ROOTS.get(root)
+        has_state = root in _STATES
+        need(initial is not None and initial[0] is pg,
+             "LAB_NATIVE_PG_BOOTSTRAP_NOT_OWNED")
+    if not has_state:
+        need(initial[3] == threading.get_ident()
+             and not pg.started and pg._owned_pid is None
+             and not pg._crashed
+             and pg._initial_start_attempted is False
+             and pg._initdb_phase in ("NOT_STARTED",
+                                      "FAILED_EXIT_CONFIRMED",
+                                      "COMPLETE"),
+             "LAB_NATIVE_PG_BOOTSTRAP_ABORT_UNKNOWN")
+        fd, witness_fd = initial[1], initial[2]
+        _verify_cluster_os_lock(pg, fd, witness_fd)
+        need(not (pg.data / "postmaster.pid").exists(),
+             "LAB_NATIVE_PG_POSTMASTER_PIDFILE_PRESENT")
+        # No PostgreSQL listener can be tolerated even if initialization
+        # left an unrelated, partially written data directory.
+        if pg.port is not None:
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as probe:
+                probe.settimeout(1.0)
+                need(probe.connect_ex(("127.0.0.1", pg.port)) != 0,
+                     "LAB_NATIVE_PG_LISTENER_STILL_ACTIVE")
+        with _GUARD:
+            need(_BOOTSTRAP_ROOTS.get(root) == initial
+                 and root not in _STATES,
+                 "LAB_NATIVE_PG_BOOTSTRAP_CHANGED")
+            _verify_cluster_os_lock(pg, fd, witness_fd)
+            os.close(witness_fd)
+            os.close(fd)
+            _BOOTSTRAP_ROOTS.pop(root)
+        return True
     _require_pg(pg)
     root = _resource(pg)
     with _GUARD:
