@@ -6,11 +6,13 @@ on:
       - 'unified_system/grid_writer_fence_model.py'
       - 'unified_system/grid_writer_lab_bridge.py'
       - 'unified_system/lab_writer_authority.py'
+      - 'unified_system/lab_writer_revoke.py'
       - 'unified_system/lab_process_extinction.py'
       - 'tests/test_e_lab_writer_authority_inert.py'
       - 'tests/test_e_round11_grid_runtime_cohort_pin.py'
       - 'tests/test_e_round17_writer_permit.py'
       - 'tests/test_e_round19_owned_job_observer.py'
+      - 'tests/test_e_round14_root_pg_recovery.py'
       - 'tests/test_e_lab_bridge_inert.py'
       - 'unified_system/market_data_entry_contract.py'
       - 'unified_system/lab_release.py'
@@ -63,3 +65,4 @@ jobs:
           python -B -m unittest discover -s tests -p 'test_e_round11_grid_runtime_cohort_pin.py' -v
           python -B -m unittest discover -s tests -p 'test_e_round17_writer_permit.py' -v
           python -B -m unittest discover -s tests -p 'test_e_round19_owned_job_observer.py' -v
+          python -B -m unittest discover -s tests -p 'test_e_round14_root_pg_recovery.py' -v
