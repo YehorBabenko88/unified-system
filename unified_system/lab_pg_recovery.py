@@ -129,6 +129,51 @@ def _snapshot(pg, streams, deadline):
     return result
 
 
+
+def contain_exclusive_lab_cluster(pg, *, old, quiesced=False,
+                                  max_seconds=120):
+    """C-owned stop-only containment sharing the SAME serialization guard.
+
+    E orchestrates this operation but must await termination of its own
+    dispatch worker before any new call; a timeout does NOT imply extinction.
+    A stopped cluster is not a verified backend/OS Root receipt.
+    """
+    need(type(pg) is LabPostgres, "LAB_RECOVERY_PG_TYPE_INVALID")
+    need(quiesced is True, "LAB_RECOVERY_QUIESCENCE_REQUIRED")
+    need(type(max_seconds) in (int, float) and 10 <= max_seconds <= 180,
+         "LAB_RECOVERY_DEADLINE_INVALID")
+    old = _validate_old(old)
+    deadline = time.monotonic() + max_seconds
+    with _GUARD:
+        need(_STATES.get(pg) is None, "LAB_RECOVERY_REENTRY_OR_POISONED")
+        _STATES[pg] = "IN_PROGRESS"
+    try:
+        _remaining(deadline)
+        _require_pg(pg)
+        need(pg.started is True, "LAB_RECOVERY_NOT_STARTED")
+        need(observe_old_lab_backend(
+            pg, **old, timeout=min(120, _remaining(deadline))) == "STILL_ALIVE",
+            "LAB_RECOVERY_OLD_BACKEND_UNVERIFIED")
+        need(_fence_state(pg, old, deadline) ==
+             f"{old['generation']}|{old['token']}|t|{old['backend_pid']}",
+             "LAB_RECOVERY_OLD_FENCE_MISMATCH")
+        _stop_started(pg, deadline)
+        _remaining(deadline)
+        with _GUARD:
+            _STATES[pg] = "STOPPED_UNVERIFIED"
+        return {"schema": "c-isolated-pg18-containment.v1",
+                "scope": "ISOLATED_LAB_ONLY",
+                "state": "UNKNOWN",
+                "old_backend_extinct": False,
+                "durable_fence_verified": False,
+                "native_admitted": False,
+                "trading_authorized": False}
+    except BaseException:
+        with _GUARD:
+            _STATES[pg] = "POISONED"
+        raise
+
+
 def recover_exclusive_lab_cluster(pg, *, old, streams=(), quiesced=False,
                                   max_seconds=180):
     """Serialize STOP/RESTART/REVOKE on one original C LabPostgres object.
@@ -150,8 +195,10 @@ def recover_exclusive_lab_cluster(pg, *, old, streams=(), quiesced=False,
     deadline = time.monotonic() + max_seconds
     with _GUARD:
         state = _STATES.get(pg)
-        if state is not None:
+        if state not in (None, "STOPPED_UNVERIFIED"):
             raise LabAdmissionRejected("LAB_RECOVERY_REENTRY_OR_POISONED")
+        # Prior stop-only is a narrow C-contained state; NEVER trust it as
+        # a Root/OS extinction receipt. It only allows SQL revalidation.
         _STATES[pg] = "IN_PROGRESS"
     try:
         _remaining(deadline)
