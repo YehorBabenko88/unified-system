@@ -77,9 +77,15 @@ class UninstallTests(unittest.TestCase):
   record=self.resource.recorded();plan=self.uninstall._plan(record,self.uninstall._members()[1]);calls=[]
   def capture(argv,**kw):
    calls.append((argv,kw));return ('{\"service\":\"ABSENT\"}',0)
-  with patch('unified_system.installation_service.current_computer_name',return_value='TEST-PC'),patch('unified_system.installation_service._native_tools',return_value=self.backend.native_tools()),patch('unified_system.installation_service._native_hash',return_value='b'*64),patch('unified_system.installation_service._run',capture):
+  with patch('unified_system.installation_service.current_computer_name',return_value='TEST-PC'),patch('unified_system.installation_service._native_tools',return_value=self.backend.native_tools()),patch('unified_system.installation_service._native_hash',return_value='b'*64),patch('unified_system.installation_service._system_directory',return_value=service_fixtures.FAKE_SYSTEM32),patch('unified_system.installation_service._run',capture):
    self.assertEqual(WindowsRemovalBoundary().call('REMOVE_SERVICE',plan,record,self.guard),{'service':'ABSENT'})
   argv,kw=calls[0];self.assertEqual(argv[-2],'-EncodedCommand');self.assertIn('Invoke-UnifiedOwnedServiceRemoval',base64.b64decode(argv[-1]).decode('utf-16le'));self.assertEqual(json.loads(kw['payload'])['plan'],record['plan']);self.assertEqual(json.loads(kw['payload'])['action'],'REMOVE_SERVICE')
+ @unittest.skipUnless(os.name=='nt','inert Windows PowerShell executable path qualification')
+ def test_native_encoded_command_fixture_still_denies_non_system32_executable(self):
+  from unified_system import installation_service as service
+  with patch.object(service,'_system_directory',return_value=service_fixtures.FAKE_SYSTEM32):
+   with self.assertRaisesRegex(ValueError,'OWNED_SERVICE_REJECTED'):
+    service.powershell_argv(str(service_fixtures.FAKE_SYSTEM32/'powershell.exe'),'Write-Output INERT')
  @unittest.skipUnless(os.name=='nt','Windows native boundary control instrumentation')
  def test_seventy_member_controller_admits_sources_once_and_observes_without_powershell(self):
   import shutil
@@ -103,7 +109,7 @@ class UninstallTests(unittest.TestCase):
    rows=original_read(journal)
    if journal.path.name=='uninstall.sqlite':chain_rows.append(len(rows))
    return rows
-  with patch.object(Journal,'read',counted),patch.object(service,'current_computer_name',return_value='TEST-PC'),patch.object(service,'_native_tools',return_value=backend.native_tools()),patch.object(service,'_native_hash',return_value='b'*64),patch.object(service,'_run',capture),patch.object(lab_release,'verify_capsule',wraps=original) as verified:
+  with patch.object(Journal,'read',counted),patch.object(service,'current_computer_name',return_value='TEST-PC'),patch.object(service,'_native_tools',return_value=backend.native_tools()),patch.object(service,'_native_hash',return_value='b'*64),patch.object(service,'_system_directory',return_value=service_fixtures.FAKE_SYSTEM32),patch.object(service,'_run',capture),patch.object(lab_release,'verify_capsule',wraps=original) as verified:
    self.assertEqual(Uninstaller(resource,boundary).run(guard=self.guard)['status'],'APP_ONLY_REMOVED')
    self.assertLessEqual(verified.call_count,8,'full closure admission must be O(1) per operation')
   self.assertEqual(len(spawns),1,'only actual DELETE uses PowerShell');self.assertGreaterEqual(len(observations),70);self.assertLessEqual(len(chain_rows),5,'full audit verification must be O(1) per operation');self.assertLessEqual(sum(chain_rows),2*len(observations)+10,'audit rows processed must be linear')
