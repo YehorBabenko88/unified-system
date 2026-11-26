@@ -241,7 +241,12 @@ class LabPostgres:
         for role in ('lab_owner', 'lab_writer', 'lab_reader'):
             self.passwords[role] = secrets.token_hex(24)
         pwfile = self.root / 'pg-owner.pw'
-        pwfile.write_text(self.passwords['lab_owner'])
+        flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, 'O_NOFOLLOW', 0)
+        fd = os.open(pwfile, flags, 0o600)
+        with os.fdopen(fd, 'w', encoding='ascii') as secret_file:
+            secret_file.write(self.passwords['lab_owner'])
+        if os.name != 'nt':
+            need(pwfile.stat().st_mode & 0o077 == 0, 'LAB_PG_SECRET_PERMISSIONS')
         try:
             subprocess.run([str(self.tools['initdb']), '-D', str(self.data), '-U', 'lab_owner', '-E', 'UTF8',
                             '--auth=scram-sha-256', '--pwfile', str(pwfile), '--no-instructions', '--locale=C'],
