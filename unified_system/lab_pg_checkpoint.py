@@ -5,6 +5,7 @@ additional market-data writer, Consul grant, exchange client,
 service, idempotent insert API, or production startup authorization.
 """
 import re
+import time
 
 from .lab_simulation_admission import LabAdmissionRejected, need
 from .lab_pg_fence import _sha, revalidate_lab_fence, fenced_lab_witness
@@ -376,6 +377,9 @@ def verify_existing_lab_checkpoint(pg, *, identity, generation, backend_pid,
 def read_lab_checkpoint(pg, *, stream_id, timeout=120):
     """Owner diagnostic: confirmed cursor plus immutable source identity."""
     stream_id=_stream(stream_id)
+    need(type(timeout) in (int,float) and timeout >= 1 and timeout <= 120,
+         "LAB_CURSOR_READ_TIMEOUT_INVALID")
+    deadline=time.monotonic()+timeout
     cursor=read_lab_cursor(pg,stream_id=stream_id,timeout=timeout)
     if cursor is None:
         return None
@@ -383,7 +387,7 @@ def read_lab_checkpoint(pg, *, stream_id, timeout=120):
         "SELECT symbol,source_start_ms,fingerprint,content_id"
         " FROM public.lab_stream_checkpoint"
         f" WHERE stream_id='{stream_id}' AND cursor_value={cursor}"
-    , timeout=timeout)
+    , timeout=max(1, deadline-time.monotonic()))
     fields=result.split("|")
     need(len(fields)==4, "LAB_CURSOR_METADATA_CORRUPT")
     symbol,ms,fp,cid=fields
