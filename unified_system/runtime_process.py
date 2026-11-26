@@ -448,12 +448,13 @@ class OwnedWindowsJob:
         self._created_prelaunch = True
         self._assigned = False
 
-    def assign_suspended_child(self, process_handle):
-        # The caller must have created this exact process with
-        # CREATE_SUSPENDED; no existing running PID is eligible for adoption.
-        # The child must remain suspended until assignment succeeds.
-        if self._handle is None or self._assigned:
-            raise ValueError('Windows Job assignment unavailable')
+    def assign_suspended_child(self, process_handle, *, created_suspended=False):
+        # Caller acknowledgement alone is never a security proof. This is
+        # an internal launch primitive; production caller must retain both
+        # original PROCESS_INFORMATION handles from CreateProcessW and must
+        # NEVER allow any thread to resume before assignment completes.
+        if self._handle is None or self._assigned or created_suspended is not True:
+            raise ValueError('Windows Job suspended launch required')
         from ctypes import wintypes as w
         self._k.AssignProcessToJobObject.argtypes = [w.HANDLE, w.HANDLE]
         self._k.AssignProcessToJobObject.restype = w.BOOL
