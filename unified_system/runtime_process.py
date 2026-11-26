@@ -411,8 +411,40 @@ class OwnedWindowsJob:
         self._handle = k.CreateJobObjectW(None, None)
         if not self._handle:
             raise ValueError('Windows Job Object creation denied')
-        # This class is observation-only until A's future process launcher
-        # uses CREATE_SUSPENDED and assigns the exact new child atomically.
+        # Prevent children from escaping into a breakaway job and ensure
+        # cleanup if the protected owner closes its final Job handle.
+        class BasicLimits(ctypes.Structure):
+            _fields_ = [('user_time', ctypes.c_int64),
+                        ('job_time', ctypes.c_int64),
+                        ('limit_flags', w.DWORD),
+                        ('minimum_ws', ctypes.c_size_t),
+                        ('maximum_ws', ctypes.c_size_t),
+                        ('active_limit', w.DWORD),
+                        ('affinity', ctypes.c_size_t),
+                        ('priority', w.DWORD),
+                        ('scheduling', w.DWORD)]
+        class IoCounters(ctypes.Structure):
+            _fields_ = [(name, ctypes.c_uint64) for name in
+                        ('read_ops', 'write_ops', 'other_ops',
+                         'read_bytes', 'write_bytes', 'other_bytes')]
+        class ExtendedLimits(ctypes.Structure):
+            _fields_ = [('basic', BasicLimits), ('io', IoCounters),
+                        ('process_memory_limit', ctypes.c_size_t),
+                        ('job_memory_limit', ctypes.c_size_t),
+                        ('peak_process_memory', ctypes.c_size_t),
+                        ('peak_job_memory', ctypes.c_size_t)]
+        k.SetInformationJobObject.argtypes = [
+            w.HANDLE, ctypes.c_int, ctypes.c_void_p, w.DWORD]
+        k.SetInformationJobObject.restype = w.BOOL
+        config = ExtendedLimits()
+        config.basic.limit_flags = 0x00002000  # JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE
+        if not k.SetInformationJobObject(
+                self._handle, 9, ctypes.byref(config), ctypes.sizeof(config)):
+            k.CloseHandle(self._handle)
+            self._handle = None
+            raise ValueError('Windows Job containment configuration denied')
+        # The Windows launcher must create the child suspended and assign
+        # before ResumeThread; never adopt a running process by numeric PID.
         self._created_prelaunch = True
         self._assigned = False
 
