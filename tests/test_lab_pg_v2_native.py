@@ -98,7 +98,16 @@ class NativePg18V2Tests(unittest.TestCase):
         self.server_thread = None
         self.old_client = None
         self.old_market_dsn = os.environ.get("MARKET_DATA_DSN")
-        sys.path[:0] = [self.grid_root, self.math_root, self.d_root]
+        # B must be imported from the *installed one-distribution v2 wheel*.
+        # Grid source checkout is used only to verify canonical migration 47.
+        sys.path[:0] = [self.math_root, self.d_root]
+        import importlib.metadata
+        import market_data
+        if importlib.metadata.version("market-data") != "0.2.0.dev0":
+            raise AssertionError("NATIVE_V2_INSTALLED_WHEEL_REQUIRED")
+        if Path(market_data.__file__).resolve().is_relative_to(
+                Path(self.grid_root).resolve()):
+            raise AssertionError("NATIVE_V2_SOURCE_TREE_SHADOWED_WHEEL")
         from tests.test_lab_postgres import canonical_schema
         self.pg = LabPostgres(bin_dir, self.root, min_major=18).initialize().start()
         self.pg.provision(canonical_schema())
@@ -128,7 +137,7 @@ class NativePg18V2Tests(unittest.TestCase):
                 shutil.rmtree(self.root)
         finally:
             if hasattr(self, "grid_root"):
-                del sys.path[:3]
+                del sys.path[:2]
 
     def identity(self):
         return tuple(str(uuid.uuid4()) for _ in range(3))
