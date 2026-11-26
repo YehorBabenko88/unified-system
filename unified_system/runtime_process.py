@@ -670,7 +670,7 @@ class OwnedWindowsJob:
         # creation/exit events with trusted kernel evidence.
         self._historical_member_pids = set()
         self._member_history_complete = False
-        self._no_scm_capability_verified = False
+        self._no_scm_capability_verified = None
 
     def _assign_created_process(self, process_handle):
         """Private: only the trusted suspended launcher supplies this handle.
@@ -952,7 +952,9 @@ def _launch_owned_windows_job_process(argv, cwd, env):
             raise ValueError('Windows suspended process handles invalid')
         job._assign_created_process(info.process)
         security_token.verify_suspended_process(info.process)
-        job._no_scm_capability_verified = True
+        # A fresh issuer-held object is created ONLY after verification of
+        # the actual suspended child token and bound to the original Job.
+        job._no_scm_capability_verified = object()
         if not job.verify_member(info.process):
             raise ValueError('Windows Job membership lost')
         # This call never accepts external thread/process handles; only
@@ -1264,7 +1266,10 @@ class ProcessDriver:
                 k,w=_win_api()
                 exact=tuple(_win_identity(k,w,proc._handle))
                 if exact!=tuple(created):raise ValueError('retained identity mismatch')
-                self._job_launch_bindings[operation_id]=(proc,release_id,exact,p['executable_sha256'],urlsplit(p['health_url']).port,d['token'])
+                proof=proc._job._no_scm_capability_verified
+                if type(proof) is not object:
+                    raise ValueError('restricted LAB launch proof unavailable')
+                self._job_launch_bindings[operation_id]=(proc,release_id,exact,p['executable_sha256'],urlsplit(p['health_url']).port,d['token'],proof)
                 d['windows_job_contained']=True
             self._save(operation_id,d)
         except BaseException:
@@ -1296,6 +1301,9 @@ class ProcessDriver:
                 record = self._load(handle)
                 bound = self._job_launch_bindings.get(handle)
                 if (bound is None or bound[0] is not child
+                        or len(bound) != 7
+                        or type(bound[6]) is not object
+                        or child._job._no_scm_capability_verified is not bound[6]
                         or record.get('pid') != child.pid
                         or record.get('created') != list(bound[2])
                         or record.get('release_id') != bound[1]
@@ -1405,7 +1413,7 @@ class ProcessDriver:
     def _observe_job_extinction(self, handle):
         if os.name!='nt':raise ValueError('native Job evidence unavailable')
         try:
-            child,release,identity,digest,port,token=self._job_launch_bindings[handle]
+            child,release,identity,digest,port,token,proof=self._job_launch_bindings[handle]
         except (KeyError,ValueError,TypeError):
             raise ValueError('original Job binding unavailable') from None
         if (self.children.get(handle) is not child or not child._handle
@@ -1431,12 +1439,14 @@ class ProcessDriver:
         historical = child._job._historical_member_pids | {child.pid}
         scm=tuple(x for x in _windows_service_process_roster() if x[1] in historical)
         if listeners or scm:raise ValueError('TCP or SCM ownership unresolved')
-        if not child._job._member_history_complete and not child._job._no_scm_capability_verified:
-            # A one-time SCM snapshot never establishes history. Only the
-            # original suspended child with OS-verified Low Integrity token,
-            # disabled Administrators SID, and denied SC_MANAGER_CREATE_SERVICE
-            # may use this explicitly bounded disposable LAB exception.
-            raise ValueError('historical Windows SCM process membership unproven')
+        if not child._job._member_history_complete:
+            # A one-time SCM snapshot never establishes history. The bounded
+            # LAB exception requires the ORIGINAL issuer-held object created
+            # after verification of the restricted suspended child OS token.
+            # A caller-provided boolean, string, or lookalike is NEVER enough.
+            if (type(proof) is not object
+                    or child._job._no_scm_capability_verified is not proof):
+                raise ValueError('historical Windows SCM process membership unproven')
         if child._job.active_process_count()!=0:
             raise ValueError('Job membership changed')
         return WindowsJobExtinctionReceipt(handle,release,token,child.pid,*identity,digest,port,
