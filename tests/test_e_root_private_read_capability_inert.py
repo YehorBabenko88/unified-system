@@ -32,7 +32,7 @@ def source_driver():
                         "env":{"UNIFIED_SOURCE_COMMIT": SOURCE}},
     }
     driver._load = lambda _: {
-        "module_id":"market_data","version":"0.2.0.dev0",
+        "module_id":"market_data","version":"0.2.0-dev0",
         "release_id": RELEASE,"state":"RUNNING","created":["fake-only"],
         "token":TOKEN,"source_commit":SOURCE,
     }
