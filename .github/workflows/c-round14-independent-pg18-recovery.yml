@@ -47,7 +47,7 @@ jobs:
           from tests import test_c_round14_pg_recovery
           suite=unittest.defaultTestLoader.loadTestsFromModule(test_c_round14_pg_recovery)
           count=suite.countTestCases()
-          if count != 2:
+          if count != 6:
               raise SystemExit(f"C_R14_RECOVERY_ROSTER_UNEXPECTED:{count}")
           outcome=unittest.TextTestRunner(verbosity=2).run(suite)
           if outcome.testsRun!=count or outcome.skipped or not outcome.wasSuccessful():
