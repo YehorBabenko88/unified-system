@@ -15,8 +15,6 @@ Stdlib only. Passwords are never logged or returned except inside DSNs that
 are handed to admitted children.
 """
 import os
-import hashlib
-import json
 import stat
 import re
 import secrets
@@ -24,7 +22,6 @@ import signal
 import socket
 import subprocess
 import time
-import uuid
 from pathlib import Path
 
 from .lab_simulation_admission import LabAdmissionRejected, need
@@ -77,6 +74,7 @@ class LabPostgres:
         self.passwords = {}
         self.started = False
         self._owned_pid = None
+        self._owned_start_time = None
 
     # ------------------------------------------------------------------
     def _verify_owned(self):
@@ -109,7 +107,7 @@ class LabPostgres:
             need(pid > 1 and data_path == self.data.resolve(strict=True)
                  and port == self.port, 'LAB_PG_PID_UNVERIFIED')
             # pid alone is unsafe: pid reuse can target an unrelated service.
-            if self._owned_pid is not None:
+            if self.started:
                 need(pid == self._owned_pid, 'LAB_PG_PID_CHANGED')
             return pid
         except (OSError, ValueError, IndexError) as error:
@@ -159,14 +157,15 @@ class LabPostgres:
         # Refuse foreign/stale pid files; only a previously crashed owned
         # postmaster is eligible for WAL recovery via pg_ctl.
         if (self.data / 'postmaster.pid').exists():
-            self._verify_postmaster()
             need(not self.started, 'LAB_PG_ALREADY_STARTED')
+            self._verify_postmaster()
         result = subprocess.run([str(self.tools['pg_ctl']), '-D', str(self.data), '-l', str(self.log),
                                  '-o', self._options(), '-w', '-t', '120', 'start'],
                                 capture_output=True, timeout=180, env=self._env('lab_owner'))
         need(result.returncode == 0, 'LAB_PG_START_FAILED')
+        pid = self._verify_postmaster()
+        self._owned_pid = pid
         self.started = True
-        self._owned_pid = self._verify_postmaster()
         return self
 
     def sql(self, statement, *, role='lab_owner', database=None):
@@ -190,7 +189,7 @@ class LabPostgres:
         self.sql("REVOKE CREATE ON SCHEMA public FROM PUBLIC")
         self.sql("GRANT USAGE ON SCHEMA public TO lab_writer")
         self.sql("GRANT USAGE ON SCHEMA public TO lab_reader")
-        self.sql("ALTER DEFAULT PRIVILEGES FOR ROLE lab_writer IN SCHEMA public GRANT SELECT ON TABLES TO lab_reader")
+        self.sql("ALTER DEFAULT PRIVILEGES FOR ROLE lab_owner IN SCHEMA public GRANT SELECT ON TABLES TO lab_reader")
         # DDL is owner-controlled. Writer may INSERT into selected tables,
         # never CREATE/ALTER/DROP protected schema objects.
         for statement in schema_statements:
