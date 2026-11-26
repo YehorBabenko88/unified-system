@@ -249,13 +249,13 @@ class ProcessDriver:
                 return 'UNKNOWN'
             try:
                 exit_code = child.poll()
+                if exit_code is not None:
+                    # The retained Popen handle has observed its own exit.
+                    # An unrelated PID may already have replaced it.
+                    return 'EXTINCT'
                 identity = _identity(pid)
             except (OSError, ValueError, TypeError, KeyError, subprocess.TimeoutExpired):
                 return 'UNKNOWN'
-            if exit_code is not None:
-                # The original retained Popen handle has observed its own
-                # child exit; a new PID owner is irrelevant to that fact.
-                return 'EXTINCT'
             if identity == created:
                 return 'STILL_ALIVE'
             # Identity mismatch with no recorded exit may be a PID race or
