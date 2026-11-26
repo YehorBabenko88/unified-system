@@ -85,11 +85,9 @@ class LabPostgresLifecycle(unittest.TestCase):
         if pg is not None:
             try:
                 pg.stop()
-            except LabAdmissionRejected:
-                # Refuse deletion of an unverified live cluster. A cleanup
-                # failure must make the test fail, never delete foreign files.
-                if pg.data.exists() and (pg.data / 'postmaster.pid').exists():
-                    raise
+            except BaseException:
+                # The test must fail rather than delete an unverified cluster.
+                raise
         shutil.rmtree(self.root)
 
     def test_full_lifecycle(self):
