@@ -65,7 +65,12 @@ def observe_owned_process_extinction(driver, handle):
         # arbitrary duck-typed lookalike or caller-provided PID.
         from .runtime_process import _OwnedWindowsChild
         _need(type(child) in (subprocess.Popen, _OwnedWindowsChild)
-              and child.pid==pid,
+              and child.pid==pid
+              and (type(child) is not _OwnedWindowsChild
+                   or (child._handle is not None
+                       and child._job is not None
+                       and child._job._handle is not None
+                       and child._job._assigned is True)),
               "LAB_PROCESS_OBSERVATION_RETAINED_HANDLE_REQUIRED")
     except Exception:
         raise ResourceFenceBlocked(
