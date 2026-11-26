@@ -27,6 +27,8 @@ _STATES = {}
 _ORIGINAL_C_PID = os.getpid()
 # Also exclude distinct mount/path aliases that reference the SAME pgdata inode.
 _DATA_OWNERS = {}
+# Initial PG initdb/start and C recovery share the SAME kernel file lock.
+_BOOTSTRAP_ROOTS = {}
 
 
 @dataclass(frozen=True)
@@ -183,6 +185,41 @@ def _verify_cluster_os_lock(pg, fd, witness_fd):
         raise LabAdmissionRejected("LAB_RECOVERY_OS_LOCK_LOST") from exc
 
 
+def _claim_initial_lab_cluster(pg):
+    """C-owned one-time physical lock BEFORE disposable initdb or first start.
+
+    The original LabPostgres object is strongly held. Neither a cloned
+    object nor a new interpreter can adopt a prior owner's FD as authority.
+    An exception retains the original lock until the process exits.
+    """
+    need(type(pg) is LabPostgres, "LAB_PG_BOOTSTRAP_TYPE_REJECTED")
+    need(os.getpid() == _ORIGINAL_C_PID, "LAB_RECOVERY_FORKED_WORKER_DENIED")
+    pg._verify_owned()
+    root_path = pg.root.resolve(strict=True)
+    root_stat = root_path.stat()
+    root = (root_stat.st_dev, root_stat.st_ino, str(root_path))
+    need((root_stat.st_dev, root_stat.st_ino) == pg._root_identity,
+         "LAB_PG_BOOTSTRAP_ROOT_CHANGED")
+    with _GUARD:
+        need(root not in _BOOTSTRAP_ROOTS and root not in _STATES,
+             "LAB_PG_BOOTSTRAP_ALREADY_CLAIMED")
+        fd, witness_fd = _acquire_cluster_os_lock(pg)
+        _BOOTSTRAP_ROOTS[root] = (pg, fd, witness_fd)
+        return fd, witness_fd
+
+
+def _require_initial_lab_cluster(pg):
+    need(os.getpid() == _ORIGINAL_C_PID, "LAB_RECOVERY_FORKED_WORKER_DENIED")
+    root = _resource(pg)
+    with _GUARD:
+        prior = _BOOTSTRAP_ROOTS.get(root)
+        need(prior is not None and prior[0] is pg
+             and root not in _STATES,
+             "LAB_PG_BOOTSTRAP_OWNER_MISMATCH")
+        fd, witness_fd = prior[1], prior[2]
+    _verify_cluster_os_lock(pg, fd, witness_fd)
+
+
 def _old_tuple(old):
     return tuple(old[field] for field in (
         "owner", "namespace", "generation", "token",
@@ -223,9 +260,13 @@ def _begin(pg, root, old, *, mode):
             fd = existing.lock_fd
             witness_fd = existing.lock_witness_fd
         else:
-            # Open a real exclusive cross-process kernel lock BEFORE any
-            # process, WAL or SQL side effect. A busy lock always DENIES.
-            fd, witness_fd = _acquire_cluster_os_lock(pg)
+            # Adopt the exact kernel file description originally locked
+            # BEFORE initdb/start; never create a second or stolen lock.
+            bootstrap = _BOOTSTRAP_ROOTS.get(root)
+            need(bootstrap is not None and bootstrap[0] is pg,
+                 "LAB_RECOVERY_ORIGINAL_BOOTSTRAP_REQUIRED")
+            fd, witness_fd = bootstrap[1], bootstrap[2]
+            _verify_cluster_os_lock(pg, fd, witness_fd)
             preserved = _OwnedRecovery(
                 pg=pg, root=root, data_identity=data,
                 marker=pg._nonce, old=_old_tuple(old),
