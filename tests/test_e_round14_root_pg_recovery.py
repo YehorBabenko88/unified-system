@@ -111,6 +111,25 @@ class PoisonedOwnerContainmentTests(unittest.IsolatedAsyncioTestCase):
                 lane,old={},streams=(),root_process_evidence=None)
         self.assertEqual(lane._pg,revoker._pg)
 
+    async def test_correct_named_proof_type_never_authorizes_c_dispatch(self):
+        # Regression for ROUND16 MASTER: an injected class with the expected
+        # name and an exact instance cannot substitute for A/C-bound proof.
+        revoker,lane=self.make_revoker()
+        class RootProcessExtinction:
+            pass
+        fake=types.ModuleType("round16.fake_root")
+        fake.RootProcessExtinction=RootProcessExtinction
+        import unified_system.lab_writer_revoke as root_revoke
+        with patch.object(root_revoke, "RootProcessExtinction",
+                          RootProcessExtinction, create=True):
+            with self.assertRaisesRegex(
+                    ResourceFenceBlocked,
+                    "LAB_ROOT_BOUND_EXTINCTION_NOT_IMPLEMENTED"):
+                await revoker.dispatch_owned_recovery_after_poison(
+                    lane,old={"owner":"forged"},streams=(),
+                    root_process_evidence=RootProcessExtinction())
+        self.assertEqual(lane._pg,revoker._pg)
+
     async def test_nonpoisoned_or_foreign_owner_cannot_dispatch_recovery(self):
         revoker,lane=self.make_revoker(poisoned=False)
         with self.assertRaises(ResourceFenceBlocked):
