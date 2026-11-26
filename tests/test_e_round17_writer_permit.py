@@ -3,15 +3,12 @@
 These are local synthetic negative/serialization tests, NOT native PostgreSQL,
 Windows or real Root admission. The real B/C integration stays denied.
 """
-import asyncio
 import threading
 import unittest
-from types import SimpleNamespace
 from unified_system.grid_writer_fence_model import ResourceFenceBlocked
 from unified_system.lab_owner_executor import LabOwnerExecutor
 from unified_system.lab_writer_authority import (
-    LabWriterAuthority, LabWriterGrant, LabWriterOperationPermit,
-    _ISSUANCE_SEAL,
+    LabWriterAuthority, LabWriterOperationPermit,
 )
 
 
