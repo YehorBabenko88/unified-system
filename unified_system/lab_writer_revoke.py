@@ -8,6 +8,7 @@ releases a user database, starts a child, or marks partial cleanup successful.
 """
 import asyncio
 from dataclasses import dataclass
+from inspect import signature, Parameter
 
 from .consul_authority import ConsulLease, ConsulSessionAuthority
 from .grid_writer_fence_model import ResourceFenceBlocked, _need
@@ -113,7 +114,18 @@ class LabWriterRevoker:
         # until that source is integrated the stage is deliberately UNKNOWN.
         # Do not enqueue speculative SQL into a poisoned original executor.
         exact_revoke = getattr(self._c, "revoke_lab_fence", None)
-        if getattr(exact_revoke, "__name__", "") == "revoke_lab_fence":
+        try:
+            params = signature(exact_revoke).parameters
+            exact_abi = (getattr(exact_revoke, "__module__", None)
+                         == "unified_system.lab_pg_fence"
+                         and {"owner", "namespace", "generation", "token",
+                              "backend_pid", "backend_start"} <= set(params)
+                         and all(params[k].kind is Parameter.KEYWORD_ONLY
+                                 for k in ("owner", "namespace", "generation",
+                                           "token", "backend_pid", "backend_start")))
+        except (TypeError, ValueError):
+            exact_abi = False
+        if exact_abi:
             try:
                 # The additional mandatory backend_start is sourced only
                 # from C's original server-observed live fence receipt;
