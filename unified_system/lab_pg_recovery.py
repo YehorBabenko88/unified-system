@@ -1,155 +1,204 @@
-"""C-only isolated PostgreSQL18 recovery control lane.
+"""Single C-owned serialized isolated LAB PostgreSQL recovery state machine.
 
-NO Root/Consul admission, no market writes, no arbitrary PID termination,
-no second SQL writer, no positive RootBackendExtinction issuance.
-
-The caller must first quiesce Grid and revoke its ability to enqueue SQL in
-the independent E supervisor. This module controls only a verified disposable
-LabPostgres instance through its original owner marker, data dir and postmaster.
+This is a disposable-LAB diagnostic, NOT Root/Consul authorization.
+E supplies STOP/deny control-plane orchestration and A supplies independent
+OS proof; neither caller booleans nor local SQL receipts authorize native
+Grid restart. Never call arbitrary pg_terminate_backend(pid).
 """
+import threading
 import time
+from datetime import datetime
 
 from .lab_simulation_admission import LabAdmissionRejected, need
-from .lab_pg_fence import (
-    _scope, observe_old_lab_backend, revoke_lab_fence, fenced_lab_witness)
-from .lab_pg_checkpoint import read_lab_cursor, read_lab_pending, read_lab_checkpoint
+from .lab_postgres import LabPostgres
+from .lab_pg_fence import _scope, fenced_lab_witness, observe_old_lab_backend
+from .lab_pg_checkpoint import _stream, read_lab_pending, read_lab_checkpoint
+
+# Per-object C ownership. A STOP timeout leaves the entry permanently
+# poisoned for this Python process rather than releasing it for a second
+# concurrent stop/start. A fresh supervisor must establish external proof.
+_GUARD = threading.Lock()
+_STATES = {}
 
 
-def _old_record(pg, *, owner, namespace, generation, token,
-                backend_pid, backend_start):
-    owner, namespace = _scope(owner, namespace)
-    need(type(generation) is int and generation > 0
-         and type(token) is int and token > 0
-         and type(backend_pid) is int and backend_pid > 0,
-         "LAB_RECOVERY_ARGUMENTS_INVALID")
-    # Stable tuple comes from the old C-owned fence, not caller-supplied
-    # diagnostic JSON. An unrelated or already advanced fence is denied.
-    from datetime import datetime
-    need(type(backend_start) is str and len(backend_start) <= 64,
+def _require_pg(pg):
+    need(type(pg) is LabPostgres, "LAB_RECOVERY_PG_TYPE_INVALID")
+    need(type(pg.major) is int and pg.major == 18,
+         "LAB_RECOVERY_PG18_REQUIRED")
+    need(type(pg.port) is int and 0 < pg.port < 65536 and pg.port != 5432,
+         "LAB_RECOVERY_PORT_REJECTED")
+    pg._verify_owned()
+    return pg
+
+
+def _validate_old(old):
+    need(type(old) is dict, "LAB_RECOVERY_OLD_IDENTITY_INVALID")
+    required = ("owner", "namespace", "generation", "token",
+                "backend_pid", "backend_start")
+    need(set(old) == set(required), "LAB_RECOVERY_OLD_IDENTITY_INVALID")
+    owner, namespace = _scope(old["owner"], old["namespace"])
+    for field in ("generation", "token", "backend_pid"):
+        need(type(old[field]) is int and 0 < old[field] < 2**63,
+             "LAB_RECOVERY_OLD_IDENTITY_INVALID")
+    need(old["backend_pid"] < 2**31, "LAB_RECOVERY_BACKEND_PID_INVALID")
+    value = old["backend_start"]
+    need(type(value) is str and len(value) <= 64,
          "LAB_RECOVERY_BACKEND_START_INVALID")
     try:
-        dt = datetime.fromisoformat(backend_start.replace("Z", "+00:00"))
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
     except ValueError as exc:
         raise LabAdmissionRejected("LAB_RECOVERY_BACKEND_START_INVALID") from exc
-    need(dt.tzinfo is not None, "LAB_RECOVERY_BACKEND_START_INVALID")
-    sql = (
-        "SELECT count(*) FROM public.lab_writer_fence f"
-        " WHERE f.resource_id='grid-market-data-primary'"
-        f" AND f.owner='{owner}' AND f.namespace='{namespace}'"
-        f" AND f.generation={generation} AND f.token={token}"
-        f" AND f.backend_pid={backend_pid}"
-        f" AND f.backend_start='{dt.isoformat()}'::timestamptz"
+    need(parsed.tzinfo is not None, "LAB_RECOVERY_BACKEND_START_INVALID")
+    return dict(old, owner=owner, namespace=namespace)
+
+
+def _remaining(deadline):
+    seconds = deadline - time.monotonic()
+    need(seconds >= 1, "LAB_RECOVERY_DEADLINE_EXCEEDED")
+    return seconds
+
+
+def _bounded_sql(pg, query, deadline):
+    # The real subprocess timeout is not an outer asyncio cancellation:
+    # psql is killed on timeout, and caller remains DENIED.
+    return pg.sql(query, timeout=min(120, _remaining(deadline)))
+
+
+def _fence_state(pg, old, deadline):
+    start = datetime.fromisoformat(old["backend_start"].replace("Z", "+00:00"))
+    return _bounded_sql(
+        pg, "SELECT generation,token,active,backend_pid FROM public.lab_writer_fence"
+        " WHERE resource_id='grid-market-data-primary'"
+        f" AND owner='{old['owner']}' AND namespace='{old['namespace']}'"
+        f" AND generation={old['generation']} AND token={old['token']}"
+        f" AND backend_pid={old['backend_pid']}"
+        f" AND backend_start='{start.isoformat()}'::timestamptz",
+        deadline)
+
+
+def _stop_started(pg, deadline):
+    need(pg.started is True, "LAB_RECOVERY_NOT_STARTED")
+    pg._verify_postmaster()
+    pg.stop(timeout=min(120, _remaining(deadline)))
+    need(pg.started is False, "LAB_RECOVERY_STOP_NOT_CONFIRMED")
+
+
+def _restart_stopped(pg, deadline):
+    need(pg.started is False, "LAB_RECOVERY_RESTART_NOT_STOPPED")
+    pg._verify_owned()
+    # If postmaster.pid remains, LabPostgres.start enforces its existing
+    # verified-crash policy; never delete or replace a foreign PID file.
+    pg.start(timeout=min(180, _remaining(deadline)))
+    need(pg.started is True, "LAB_RECOVERY_RESTART_NOT_CONFIRMED")
+    pg._verify_postmaster()
+
+
+def _revoke(pg, old, deadline):
+    # Single guarded SQL UPDATE; a timeout/unknown commit cannot be taken
+    # as success until the durable readback is independently performed.
+    query = (
+        "UPDATE public.lab_writer_fence SET active=false"
+        " WHERE resource_id='grid-market-data-primary'"
+        f" AND owner='{old['owner']}' AND namespace='{old['namespace']}'"
+        f" AND generation={old['generation']} AND token={old['token']}"
+        " AND active=true RETURNING generation"
     )
-    need(pg.sql(sql) == "1", "LAB_RECOVERY_OLD_FENCE_MISMATCH")
-    return dict(owner=owner, namespace=namespace, generation=generation,
-                token=token, backend_pid=backend_pid, backend_start=backend_start)
+    try:
+        _bounded_sql(pg, query, deadline)
+    except Exception:
+        # Re-reading under a fresh owner-only connection is mandatory.
+        pass
+    need(_fence_state(pg, old, deadline) ==
+         f"{old['generation']}|{old['token']}|f|{old['backend_pid']}",
+         "LAB_RECOVERY_REVOCATION_UNVERIFIED")
 
 
-def _snapshot(pg, streams):
-    """Protected owner-only diagnostic readback, not authorizing replay."""
+def _snapshot(pg, streams, deadline):
     result = {}
     for stream in streams:
-        from .lab_pg_checkpoint import _stream
-        key = _stream(stream)
-        # Reads are from the dedicated fresh owner connection, not poisoned
-        # Grid's old SQL executor. Any mismatched immutable row fails closed.
-        pending = read_lab_pending(pg, stream_id=key)
-        cursor = read_lab_cursor(pg, stream_id=key)
-        checkpoint = read_lab_checkpoint(pg, stream_id=key)
-        result[key] = dict(pending=pending, cursor=cursor, checkpoint=checkpoint)
+        _remaining(deadline)
+        # Existing C routines each have their own SQL timeout and may exceed
+        # global deadline in unmodified code; the dispatcher runs these only
+        # after the lifecycle is safe, still returns DENIED on overrun.
+        result[stream] = {
+            "pending": read_lab_pending(pg, stream_id=stream),
+            "checkpoint": read_lab_checkpoint(pg, stream_id=stream),
+        }
+        _remaining(deadline)
     return result
 
 
 def recover_exclusive_lab_cluster(pg, *, old, streams=(), quiesced=False,
-                                  max_seconds=120):
-    """Bounded independent C recovery of an *exclusively owned* disposable LAB.
+                                  max_seconds=180):
+    """Serialize STOP/RESTART/REVOKE on one original C LabPostgres object.
 
-    This orchestrates a cluster fast stop/start, not termination of any
-    arbitrary backend or issuance of a Root/Consul grant. If ownership,
-    state or durable verification is uncertain the function raises DENIED.
-    The old backend must remain fenced until its whole cluster is verified
-    stopped, and a fresh SQL connection must independently revoke it.
+    Supports already-stopped postmaster from E containment, but only when
+    the same owner object persists and C can read the saved durable fence
+    after starting. The caller's quiesced flag is for synthetic LAB only.
     """
-    # Caller-provided quiescence cannot prove E/Root process extinction.
-    # This operation remains strictly a disposable LAB diagnostic.
-    need(type(quiesced) is bool and quiesced is True,
-         "LAB_RECOVERY_QUIESCENCE_REQUIRED")
-    need(type(max_seconds) in (int, float) and 10 <= max_seconds <= 180,
+    _require_pg(pg)  # Must precede any caller-controlled pg method.
+    need(quiesced is True, "LAB_RECOVERY_QUIESCENCE_REQUIRED")
+    need(type(max_seconds) in (int, float) and 10 <= max_seconds <= 300,
          "LAB_RECOVERY_DEADLINE_INVALID")
-    need(type(streams) in (tuple, list) and len(streams) <= 64,
+    need(type(streams) in (list, tuple) and len(streams) <= 64,
          "LAB_RECOVERY_STREAMS_INVALID")
-    from .lab_pg_checkpoint import _stream
     streams = tuple(_stream(s) for s in streams)
     need(len(set(streams)) == len(streams), "LAB_RECOVERY_DUPLICATE_STREAM")
-    pg._verify_owned()
-    need(pg.started, "LAB_PG_NOT_STARTED")
-    initial_pid = pg._verify_postmaster()
-    need(pg.port != 5432 and pg.port is not None,
-         "LAB_RECOVERY_PORT_REJECTED")
-    from .lab_postgres import LabPostgres
-    need(type(pg) is LabPostgres,
-         "LAB_RECOVERY_PG_TYPE_INVALID")
-    if not isinstance(old, dict):
-        raise LabAdmissionRejected("LAB_RECOVERY_OLD_IDENTITY_INVALID")
-    keys = ("owner", "namespace", "generation", "token",
-            "backend_pid", "backend_start")
-    need(set(old) == set(keys), "LAB_RECOVERY_OLD_IDENTITY_INVALID")
-    old = _old_record(pg, **old)
+    old = _validate_old(old)
     deadline = time.monotonic() + max_seconds
-    # Verify the pre-stop active backend has not changed incarnation.
-    need(observe_old_lab_backend(pg, **old) == "STILL_ALIVE",
-         "LAB_RECOVERY_OLD_BACKEND_NOT_CURRENT")
-    # The close request is targeted at the exact disposable postmaster,
-    # reusing LabPostgres' verified PID/file/OS identity path. Normal fast
-    # shutdown aborts old SQL transactions rather than relying on a poisoned
-    # thread, and PG performs WAL-safe shutdown.
-    pg.stop()
-    # STOP only provides the LabPostgres lifecycle assertion. The returned
-    # SQL observation is diagnostic and cannot be promoted to a Root receipt.
-    need(not pg.started and not (pg.data / "postmaster.pid").exists(),
-         "LAB_RECOVERY_OLD_POSTMASTER_UNVERIFIED")
-    need(time.monotonic() < deadline, "LAB_RECOVERY_TIMEOUT")
-    pg.start()
-    need(pg.started and pg._verify_postmaster() > 1,
-         "LAB_RECOVERY_POSTMASTER_IDENTITY_UNVERIFIED")
-    # No positive RootBackendExtinction issued: this is only C SQL evidence.
-    state = observe_old_lab_backend(pg, **old)
-    need(state == "EXTINCT", "LAB_RECOVERY_BACKEND_NOT_EXTINCT")
-    custody = fenced_lab_witness(pg)
-    need(custody["direct_writer_insert"] is False,
-         "LAB_RECOVERY_SQL_FENCE_BYPASS")
-    before = pg.sql(
-        "SELECT generation,token,active FROM public.lab_writer_fence"
-        " WHERE resource_id='grid-market-data-primary'")
-    expected = f"{old['generation']}|{old['token']}|t"
-    need(before == expected, "LAB_RECOVERY_HIGH_WATER_CHANGED")
-    # Revoke only after exclusive-cluster extinction and fresh owner readback.
-    # An uncommitted old write was rolled back by fast shutdown; an old
-    # successful commit must be resolved from immutable row/pending, never
-    # blindly retried or inferred from a duplicate constraint.
-    need(time.monotonic() < deadline, "LAB_RECOVERY_TIMEOUT")
-    # Prevent any new writer claim during the transition by leaving the
-    # old fence active until the durable revoke below.
-    revoke_lab_fence(pg, generation=old["generation"], token=old["token"])
-    need(pg.sql(
-        "SELECT generation,token,active FROM public.lab_writer_fence"
-        " WHERE resource_id='grid-market-data-primary'") ==
-        f"{old['generation']}|{old['token']}|f",
-        "LAB_RECOVERY_REVOCATION_UNVERIFIED")
-    records = _snapshot(pg, streams)
-    need(time.monotonic() < deadline, "LAB_RECOVERY_TIMEOUT")
-    return {
-        "schema": "c-isolated-pg18-recovery-diagnostic.v1",
-        "scope": "ISOLATED_LAB_ONLY",
-        "old_generation": old["generation"], "old_token": old["token"],
-        "old_backend_pid": old["backend_pid"],
-        "old_backend_start": old["backend_start"],
-        "old_postmaster_pid": initial_pid,
-        "new_postmaster_pid": pg._verify_postmaster(),
-        "old_backend_observation": state,
-        "durable_fence_active": False,
-        "stream_snapshots": records,
-        "native_admitted": False, "root_consul_admitted": False,
-        "execution_authority": False, "paper_admitted": False,
-        "trading_authorized": False,
-    }
+    with _GUARD:
+        state = _STATES.get(id(pg))
+        if state is not None:
+            raise LabAdmissionRejected("LAB_RECOVERY_REENTRY_OR_POISONED")
+        _STATES[id(pg)] = "IN_PROGRESS"
+    try:
+        # If E stop-only already completed on this same owner object, do
+        # not stop a second time; verify and restart through C only.
+        if pg.started is True:
+            need(observe_old_lab_backend(pg, **old) == "STILL_ALIVE",
+                 "LAB_RECOVERY_OLD_BACKEND_UNVERIFIED")
+            need(_fence_state(pg, old, deadline) ==
+                 f"{old['generation']}|{old['token']}|t|{old['backend_pid']}",
+                 "LAB_RECOVERY_OLD_FENCE_MISMATCH")
+            _stop_started(pg, deadline)
+        else:
+            need(pg.started is False, "LAB_RECOVERY_UNKNOWN_CLUSTER_STATE")
+        _remaining(deadline)
+        _restart_stopped(pg, deadline)
+        need(observe_old_lab_backend(pg, **old) == "EXTINCT",
+             "LAB_RECOVERY_BACKEND_NOT_EXTINCT")
+        need(_fence_state(pg, old, deadline) in (
+            f"{old['generation']}|{old['token']}|t|{old['backend_pid']}",
+            f"{old['generation']}|{old['token']}|f|{old['backend_pid']}"),
+            "LAB_RECOVERY_HIGH_WATER_CHANGED")
+        custody = fenced_lab_witness(pg)
+        need(custody["direct_writer_insert"] is False,
+             "LAB_RECOVERY_SQL_FENCE_BYPASS")
+        _revoke(pg, old, deadline)
+        snapshots = _snapshot(pg, streams, deadline)
+        _remaining(deadline)
+        return {
+            "schema": "c-isolated-pg18-recovery-diagnostic.v2",
+            "scope": "ISOLATED_LAB_ONLY",
+            "old_generation": old["generation"],
+            "old_token": old["token"],
+            "old_backend_pid": old["backend_pid"],
+            "old_backend_start": old["backend_start"],
+            "durable_fence_active": False,
+            "stream_snapshots": snapshots,
+            "native_admitted": False,
+            "root_consul_admitted": False,
+            "execution_authority": False,
+            "paper_admitted": False,
+            "trading_authorized": False,
+        }
+    except BaseException:
+        # Keep the C-owned recovery object permanently quarantined after
+        # an unknown outcome. No retry while a previous worker may be alive.
+        with _GUARD:
+            _STATES[id(pg)] = "POISONED"
+        raise
+    finally:
+        with _GUARD:
+            if _STATES.get(id(pg)) == "IN_PROGRESS":
+                _STATES[id(pg)] = "COMPLETE_DENIED"
