@@ -652,7 +652,6 @@ def _launch_owned_windows_job_process(argv, cwd, env):
         # the original trusted CreateProcessW PROCESS_INFORMATION pair.
         if kernel.ResumeThread(info.thread) != 1:
             raise ValueError('Windows suspended resume failed')
-        from subprocess import _winapi
         # Retain a duplicated SYNCHRONIZE-capable kernel handle after the
         # original PROCESS_INFORMATION pair is closed. Do not return a PID-
         # only pseudo-Popen; wait()/poll() must target the same OS object.
