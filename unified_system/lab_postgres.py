@@ -290,21 +290,22 @@ class LabPostgres:
         return result.stdout.strip()
 
     def provision(self, schema_statements):
-        """Create the LAB database, roles and the given schema (as lab_writer)."""
+        """Apply vetted schema as owner; expose only explicit minimal table grants."""
         self.sql(f"CREATE DATABASE {self.database}", database='postgres')
         self.sql(f"CREATE ROLE lab_writer LOGIN PASSWORD '{self.passwords['lab_writer']}'")
         self.sql(f"CREATE ROLE lab_reader LOGIN PASSWORD '{self.passwords['lab_reader']}'")
         self.sql("ALTER ROLE lab_reader SET default_transaction_read_only = on")
+        self.sql(f"REVOKE CONNECT, TEMPORARY ON DATABASE {self.database} FROM PUBLIC")
         self.sql(f"GRANT CONNECT ON DATABASE {self.database} TO lab_writer, lab_reader")
         self.sql("REVOKE CREATE ON SCHEMA public FROM PUBLIC")
         self.sql("GRANT USAGE ON SCHEMA public TO lab_writer")
         self.sql("GRANT USAGE ON SCHEMA public TO lab_reader")
-        self.sql("ALTER DEFAULT PRIVILEGES FOR ROLE lab_owner IN SCHEMA public GRANT SELECT ON TABLES TO lab_reader")
+        # No default privileges: unrelated or future tables remain private.
         # DDL is owner-controlled. Writer may INSERT into selected tables,
         # never CREATE/ALTER/DROP protected schema objects.
         for statement in schema_statements:
             self.sql(statement, role='lab_owner')
-        self.sql("GRANT INSERT, SELECT ON TABLE provenance_minutes TO lab_writer")
+        self.sql("GRANT INSERT ON TABLE provenance_minutes TO lab_writer")
         self.sql("GRANT SELECT ON TABLE provenance_minutes TO lab_reader")
         return self
 
