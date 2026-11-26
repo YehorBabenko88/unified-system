@@ -255,9 +255,12 @@ class LabWriterAuthority:
 
     def revoke(self):
         # Local deny first; SQL/Consul/OS require the separate Root revoker.
+        # Uninitialized/forged instances must also fail CLOSED, rather
+        # than masking the original denial with AttributeError.
         self._revoked = True
-        if self._writer_grant is not None:
-            self._writer_grant.revoke()
+        grant = getattr(self, "_writer_grant", None)
+        if type(grant) is LabWriterGrant:
+            grant.revoke()
 
     async def check(self):
         """Re-read owner state; refuse stale lease/backend/child or any outage."""
@@ -385,7 +388,12 @@ class LabWriterGrant:
             # A failed per-operation check is an irreversible epoch loss.
             # The Root lifecycle separately stops the child and revokes C/Consul.
             self.revoke()
-            self._authority.revoke()
+            # A forged or incompletely initialized grant has no original
+            # Root authority to revoke. Never dereference a missing owner
+            # while handling the original fail-closed denial.
+            owner = getattr(self, "_authority", None)
+            if type(owner) is LabWriterAuthority:
+                owner.revoke()
             raise
 
 
