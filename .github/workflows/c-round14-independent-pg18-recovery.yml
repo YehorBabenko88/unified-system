@@ -36,6 +36,21 @@ jobs:
           # alternative process observer or copies A into the PR branch.
           cp upstream/a-retained-os/unified_system/runtime_process.py unified_system/runtime_process.py
           test "$(git hash-object unified_system/runtime_process.py)" = "3c948515932584ae72fd3acaa0d5c21f877a50bf"
+      - name: Checkout E-owned exact fenced identity model for C SQL binding
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: YehorBabenko88/unified-system
+          ref: d231a0ad657b7e12f89ddc9cde2ef6b5b028a125
+          path: upstream/e-identity
+          persist-credentials: false
+      - name: Verify E model source blob in test-only workspace
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C upstream/e-identity rev-parse HEAD)" = "d231a0ad657b7e12f89ddc9cde2ef6b5b028a125"
+          test "$(git hash-object upstream/e-identity/unified_system/grid_writer_fence_model.py)" = "71c74a2c0d8c1c0120412124ef1d12d53b691581"
+          cp upstream/e-identity/unified_system/grid_writer_fence_model.py unified_system/grid_writer_fence_model.py
+          test "$(git hash-object unified_system/grid_writer_fence_model.py)" = "71c74a2c0d8c1c0120412124ef1d12d53b691581"
       - name: Python 3.12
         uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with:
@@ -57,7 +72,7 @@ jobs:
           python -m pip install "psycopg[binary]==3.3.6"
       - name: Compile exact C recovery sources and test module
         run: |
-          python -m py_compile unified_system/runtime_process.py unified_system/lab_postgres.py unified_system/lab_pg_fence.py unified_system/lab_pg_checkpoint.py unified_system/lab_pg_recovery.py tests/test_c_round14_pg_recovery.py
+          python -m py_compile unified_system/grid_writer_fence_model.py unified_system/runtime_process.py unified_system/lab_postgres.py unified_system/lab_pg_fence.py unified_system/lab_pg_checkpoint.py unified_system/lab_pg_recovery.py tests/test_c_round14_pg_recovery.py
       - name: Run exactly 14 native PostgreSQL18 recovery cases (zero skip)
         shell: bash
         run: |
