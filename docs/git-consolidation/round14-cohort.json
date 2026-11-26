@@ -22,7 +22,7 @@
       "id": "A",
       "repo": "YehorBabenko88/unified-system",
       "pr": 162,
-      "head_sha": "8b066e373690f43befe107ff7aa474c270c8ad4c",
+      "head_sha": "c51986a46c7efb6847ea080ce4cb03c1b2495c22",
       "role": "native process lifetime",
       "native_status": "NOT_VERIFIED"
     },
@@ -30,7 +30,7 @@
       "id": "B",
       "repo": "YehorBabenko88/bybit-cluster-grid",
       "pr": 300,
-      "head_sha": "9e0d57c4c0f2d01bc381ada090b62d23566b32aa",
+      "head_sha": "17855501b97bda2a44a6710a08dfc0a7f2a31374",
       "role": "canonical Bybit market-data writer and collector",
       "native_status": "NOT_VERIFIED"
     },
@@ -46,7 +46,7 @@
       "id": "C",
       "repo": "YehorBabenko88/unified-system",
       "pr": 163,
-      "head_sha": "3f0d3410ac708da9776e5ad1407d864adcde34b0",
+      "head_sha": "200aca95bb2d29873b36cc345863e4fe8982aadb",
       "role": "PostgreSQL native resource fence",
       "native_status": "NOT_VERIFIED"
     },
@@ -54,16 +54,16 @@
       "id": "D",
       "repo": "YehorBabenko88/Terminan",
       "pr": 126,
-      "head_sha": "89022d7885d279bb1fd2f695b59f2c243b431ad2",
+      "head_sha": "9147d49ccdd74cd0739237e1298840a1be617723",
       "role": "canonical strategies/paper/chart",
       "native_status": "NOT_VERIFIED",
-      "component_ci": "Exact Round19 D89022 HEAD: 1 successful workflow, 1 failed workflow; two Python3.12 build jobs fail, complete log root cause not F-owned."
+      "component_ci": "Round19 latest observed D9147: 2 queued; older D89022 run had 1 success + 1 failure; no transfer of old CI verdict."
     },
     {
       "id": "E",
       "repo": "YehorBabenko88/unified-system",
       "pr": 164,
-      "head_sha": "1c2edb2564c48a1348d3ad4ee94fe8fa0b425b18",
+      "head_sha": "bdaae0913cdb37a1e1738c6948d48a12b3b547e5",
       "role": "Root lease, lifecycle and writer grant",
       "native_status": "NOT_VERIFIED"
     },
@@ -71,7 +71,7 @@
       "id": "F",
       "repo": "YehorBabenko88/unified-system",
       "pr": 165,
-      "head_sha_at_source_snapshot": "f6b36c814dd5612df164db28cf43139822bb886e",
+      "head_sha_at_source_snapshot": "8b639bc6b8adab477ca22ec4f69d6c5b867dc33a",
       "self_reference": "Read live PR HEAD; do not pin the SHA of the same file's future commit",
       "role": "security, Git consolidation, release qualification"
     },
@@ -921,7 +921,7 @@
       "test_path": "tests/test_f_wheel_qualification.py",
       "git_blob_tests": "4c8f5388d1492305aa1070a244ecab6d777e5106",
       "sha256_tests": "15603094bfa6614f64bc64c289675a7c769de6e1157ce0bf9d9befb752a60a6d",
-      "tests": "34/34 PASS; Python 3.13.5; synthetic offline pip --no-index --no-deps --no-compile --target",
+      "tests": "34/34 PASS; Python 3.13.5; synthetic offline pip --no-index --no-deps --no-compile --target; wheel symlink, parser snapshot, root symlink, unverified pyc/pth, arbitrary module all denied",
       "checked_in_local_exact_git_blob": true,
       "wheel_read": "ONE_IMMUTABLE_BYTES_SNAPSHOT",
       "installed_read": "POSIX_ROOT_DIR_FD_OPENAT_NOFOLLOW",
@@ -972,6 +972,107 @@
       }
     },
     "code": "NO_GO",
-    "production": "NO_GO"
+    "production": "NO_GO",
+    "live_capture": {
+      "snapshot_atomic": false,
+      "head_sha_by_owner": {
+        "A": "c51986a46c7efb6847ea080ce4cb03c1b2495c22",
+        "B": "17855501b97bda2a44a6710a08dfc0a7f2a31374",
+        "C": "200aca95bb2d29873b36cc345863e4fe8982aadb",
+        "D": "9147d49ccdd74cd0739237e1298840a1be617723",
+        "E": "bdaae0913cdb37a1e1738c6948d48a12b3b547e5"
+      },
+      "source_blobs": {
+        "A": {
+          "path": "unified_system/runtime_process.py",
+          "head": "c51986a46c7efb6847ea080ce4cb03c1b2495c22",
+          "blob": "fecc0f8620955bf735a6c94ded655f857ed39469"
+        },
+        "B_project": {
+          "path": "pyproject.toml",
+          "head": "17855501b97bda2a44a6710a08dfc0a7f2a31374",
+          "blob": "4fb4e72360605cd92b3afab3837015b4ac29dace"
+        },
+        "B_writer": {
+          "path": "grid/canonical_lab_fenced_writer.py",
+          "head": "17855501b97bda2a44a6710a08dfc0a7f2a31374",
+          "blob": "247d7fab2738e1892a05979e407f637f9df62784"
+        },
+        "B_async": {
+          "path": "grid/c_async_fenced_writer.py",
+          "head": "17855501b97bda2a44a6710a08dfc0a7f2a31374",
+          "blob": "35bf202bb1674238d53b74f962af966d2a699fa2"
+        },
+        "C": {
+          "path": "unified_system/lab_pg_recovery.py",
+          "head": "200aca95bb2d29873b36cc345863e4fe8982aadb",
+          "blob": "581a719ce274e438505aee59651bffef6b8cc2cd"
+        },
+        "E": {
+          "path": "unified_system/lab_writer_authority.py",
+          "head": "bdaae0913cdb37a1e1738c6948d48a12b3b547e5",
+          "blob": "ed966cc79aee3da33a5c658737486139c16b7e3c"
+        }
+      },
+      "ci_first_page": {
+        "A": {
+          "queued": 4,
+          "pending": 1
+        },
+        "B": {
+          "queued": 15
+        },
+        "C": {
+          "queued": 19,
+          "pending": 2
+        },
+        "D": {
+          "queued": 2
+        },
+        "E": {
+          "queued": 19,
+          "pending": 1
+        },
+        "F_at_previous_head": {
+          "queued": 17,
+          "pending": 1
+        },
+        "integration": {
+          "queued": 23,
+          "pending": 2
+        }
+      },
+      "original_master_round19_heads": {
+        "A": "8b066e373690f43befe107ff7aa474c270c8ad4c",
+        "B": "9e0d57c4c0f2d01bc381ada090b62d23566b32aa",
+        "C": "3f0d3410ac708da9776e5ad1407d864adcde34b0",
+        "D": "89022d7885d279bb1fd2f695b59f2c243b431ad2",
+        "E": "1c2edb2564c48a1348d3ad4ee94fe8fa0b425b18",
+        "B_CUSTODY": "39a6cf4d8c039ca99bbfc00ca7cc2359bef5c60c",
+        "META": "902db7e28571e851de09d127a9ebad6f120efecd"
+      },
+      "exact_source_B9e0_matches_current_B_runtime": true,
+      "B_release_artifact_status": "BLOCKED_B_ACTUAL_FULL_MARKET_DATA_WHEEL_SDIST_NOT_AVAILABLE",
+      "E_permit": "DENIED_LAB_OPERATION_INSTALLED_WHEEL_UNVERIFIED",
+      "A_extinction": "DENIED_HISTORICAL_SCM_CHILD_MEMBERSHIP",
+      "C_commit_revoke": "SQL_ROW_LOCK_LINEARIZES_COMMIT_VS_SQL_REVOKE_ONLY_EXTERNAL_CONSUL_LEASE_NOT_ATOMIC",
+      "F_offline_tool_verified": {
+        "git_blob": "5abc9c5dd3aa97082d1217986d2e66a065c9c3ad",
+        "test_blob": "4c8f5388d1492305aa1070a244ecab6d777e5106",
+        "local_python": "3.13.5",
+        "tests_passed": 34,
+        "tests_failed": 0,
+        "tests_skipped": 0,
+        "py_compile": true,
+        "real_B_wheel": false,
+        "root_authorized": false
+      },
+      "master_integration": {
+        "pr": 166,
+        "head": "9349d7f3ed93ef82d120976816b968e0b716b067",
+        "changed": false
+      },
+      "release": "CODE_NO_GO_PRODUCTION_NO_GO"
+    }
   }
 }
