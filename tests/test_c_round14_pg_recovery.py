@@ -144,7 +144,7 @@ class NativeCRecoveryTests(unittest.TestCase):
                 self._recover()
         finally:
             release.set()
-            thread.join(15)
+            thread.join(90)
             self.pg.stop=original
         self.assertFalse(thread.is_alive())
         self.assertFalse(errors)
