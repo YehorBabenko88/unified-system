@@ -247,3 +247,79 @@ def fenced_lab_witness(pg):
     witness["trading_authorized"] = False
     witness["source_authenticity"] = "NOT_INDEPENDENTLY_ATTESTED"
     return witness
+
+def revalidate_lab_fence(pg, *, identity, generation, backend_pid):
+    """Private Root-side read-only revalidation; NEVER an admission grant.
+
+    Exact E WriterLeaseIdentity input is data, NOT independent Consul truth.
+    A caller also needs a trusted Root process/lease binding before acting.
+    The owner re-reads the current PG18 backend, matching its startup time,
+    after every promotion/revoke/restart. No public endpoints or secrets.
+    """
+    pg._verify_owned()
+    need(pg.started, "LAB_PG_NOT_STARTED")
+    pg._verify_postmaster()
+    need(type(generation) is int and 0 < generation < 2**63
+         and type(backend_pid) is int and 0 < backend_pid < 2**31,
+         "LAB_FENCE_REVALIDATION_ARGUMENTS")
+    # Fail closed on unexpected shape; no duck-typed caller JSON as authority.
+    from .grid_writer_fence_model import WriterLeaseIdentity
+    need(type(identity) is WriterLeaseIdentity, "LAB_FENCE_IDENTITY_REQUIRED")
+    owner, namespace = _scope(identity.owner, identity.namespace)
+    sess = _id(identity.session_id)
+    inst = _id(identity.instance_id)
+    node = _id(identity.node_incarnation_id)
+    source = _sha(identity.source_sha256)
+    schema = _sha(identity.schema_sha256)
+    token = identity.token
+    need(type(token) is int and 0 < token < 2**63,
+         "LAB_FENCE_TOKEN_INVALID")
+    # This query MUST re-read the original fenced row and active backend in
+    # one DB snapshot. Return no user secret, DSN or bearer material.
+    query = (
+        "SELECT CASE WHEN"
+        " f.resource_id='grid-market-data-primary'"
+        " AND f.active IS TRUE"
+        f" AND f.owner='{owner}' AND f.namespace='{namespace}'"
+        f" AND f.generation={generation} AND f.token={token}"
+        f" AND f.session_id='{sess}'::uuid"
+        f" AND f.instance_id='{inst}'::uuid"
+        f" AND f.node_incarnation_id='{node}'::uuid"
+        f" AND f.source_sha256='{source}'"
+        f" AND f.schema_sha256='{schema}'"
+        f" AND f.backend_pid={backend_pid}"
+        " AND s.pid=f.backend_pid"
+        " AND s.backend_start=f.backend_start"
+        " AND s.usename='lab_writer'"
+        " AND s.datname=current_database()"
+        " THEN 1 ELSE 0 END"
+        " FROM public.lab_writer_fence f"
+        " LEFT JOIN pg_catalog.pg_stat_activity s ON s.pid=f.backend_pid"
+        " WHERE f.resource_id='grid-market-data-primary'"
+    )
+    need(pg.sql(query) == "1", "LAB_FENCE_REVALIDATION_DENIED")
+    receipt = {
+        "schema": "lab-postgres-fence-revalidation.v1",
+        "scope": "ISOLATED_LAB_ONLY",
+        "resource_id": _RESOURCE,
+        "generation": generation,
+        "token": token,
+        "backend_pid": backend_pid,
+        "owner": owner,
+        "namespace": namespace,
+        "session_id": sess,
+        "instance_id": inst,
+        "node_incarnation_id": node,
+        "source_sha256": source,
+        "schema_sha256": schema,
+        "db_backend_observed": True,
+        "db_fence_current_at_read": True,
+        "root_consul_admitted": False,
+        "host_old_process_quiescence_attested": False,
+        "native_writer_admitted": False,
+        "execution_authority": False,
+        "trading_authorized": False,
+        "paper_admitted": False,
+    }
+    return receipt
+
