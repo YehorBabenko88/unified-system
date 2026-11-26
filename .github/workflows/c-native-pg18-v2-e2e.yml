@@ -38,7 +38,8 @@ jobs:
           python - <<'PY'
           from pathlib import Path
           import subprocess
-          expected="71c74a2c0d8c1c0120412124ef1d12d53b691581"
+          import os
+          expected=os.environ["LAB_E_MODEL_BLOB_SHA"]
           path=Path("/tmp/e-exact-writer-fence-model.py")
           blob=subprocess.check_output(["git","hash-object","--",str(path)],text=True).strip()
           if blob!=expected:
