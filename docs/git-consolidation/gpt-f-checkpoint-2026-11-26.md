@@ -6,15 +6,15 @@ Parent: [#111](https://github.com/YehorBabenko88/unified-system/issues/111). Age
 
 | Repository | Branches including main | Open PRs | main SHA |
 | --- | ---: | ---: | --- |
-| unified-system | 152 | 139 | `b9b03a1ce9f887dbe113fd22d0bda8932f46ef80` |
-| bybit-cluster-grid | 332 | 135 | `d537d525296ef34f727996e240ae6c60102c6082` |
+| unified-system | 153 | 142 | `b9b03a1ce9f887dbe113fd22d0bda8932f46ef80` |
+| bybit-cluster-grid | 333 | 137 | `d537d525296ef34f727996e240ae6c60102c6082` |
 | math | 162 | 136 | `ccfe97dd88b1ebee9bd19795002a30d0bd1c1ca3` |
-| Terminan | 115 | 113 | `fee79f4b15fc1f9efcff9ca12c403688b0026260` |
+| Terminan | 116 | 113 | `fee79f4b15fc1f9efcff9ca12c403688b0026260` |
 | strattester | 232 | 114 | `37ff7e9d12a4d2dccd788fc493c28557dbe8bcea` |
-| meta_analyse | 94 | 80 | `2317c79d78654d8006d99b914532a089554677da` |
-| **Total** | **1087** | **717** | |
+| meta_analyse | 95 | 81 | `2317c79d78654d8006d99b914532a089554677da` |
+| **Total** | **1091** | **723** | |
 
-Method: GitHub REST /branches and /pulls?state=open, all pages (per_page=100), counted independently; inventory is a point-in-time snapshot and may change. Includes six main branches and this work branch. Previous audit was 1061 / 703, before additional branch and PR creation. Full per-branch HEAD, open-PR relationship, unique commits and semantic disposition remain to be published separately; **this count is not a completed branch retirement inventory**.
+Method: GitHub REST /branches and /pulls?state=open, all pages (per_page=100), counted independently per repository; the six snapshots were collected sequentially while other agents were changing refs. **This is not an atomic cross-repository snapshot.** Six JSON files in `docs/git-consolidation/snapshots/2026-11-26/` provide every observed branch/PR exact SHA, same-repository PR relationship and conservative `REVIEW_REQUIRED` / `NOT_EVALUATED` classifications. All six were reread and validated against their own contents with zero HEAD mismatch. Historical 1061 / 703 figures are superseded by subsequent creation of branches and PRs; full unique-change and semantic disposition evidence is still pending.
 
 ## Provable SHA lineage
 
@@ -35,3 +35,10 @@ Method: GitHub REST /branches and /pulls?state=open, all pages (per_page=100), c
 `KEEP` while unique behavior unverified; `SUPERSEDED_CANDIDATE` only with exact ancestry/byte and consumer evidence; `MIGRATE` only after target owner tests prove equivalence; `CLOSE/DELETE` always requires separate MASTER authorization. Do not infer code integration from green PR CI, do not merge into main, do not execute real trades, and do not alter user PostgreSQL or install local services.
 
 **CODE NO_GO / PRODUCTION NO_GO.** Scope of this commit is documentary only; it does not assert local test execution or release safety.
+
+## Round 2 implementation and verification constraints
+
+- Added `tools/git_consolidation_snapshot.py` and `tests/test_git_consolidation_snapshot.py`: read-only paginated GitHub inventory with refusal on stale same-repository PR heads, duplicate refs, missing main or unbounded pages.
+- Added `tools/git_history_secret_triage.py` and `tests/test_git_history_secret_triage.py`: streaming, value-redacted historical blob pattern checks for binary and lines >4000 bytes; this is a triage aid, not proof of secret absence. Full-history mirror scan has **not** been executed; embedded archives, unreachable objects and Git LFS data need separate coverage.
+- Meta security integration is a separate [draft PR #86](https://github.com/YehorBabenko88/meta_analyse/pull/86) stacked on SHA-pinned #85: contains #84 packaging guard and removal of 11 stale loopback PKI fixture files from its active tree. Added bounded archive/link checks and negative tests. **No Git history rewrite**. Exact-head CI remains unaccepted.
+- GitHub Actions on this Root documentation/tools PR were still queued at last observation; no local test execution claimed. Container GitHub network access is unavailable, so full clone/runner tests must be verified in hosted CI. Current overall release remains CODE NO_GO / PRODUCTION NO_GO.
