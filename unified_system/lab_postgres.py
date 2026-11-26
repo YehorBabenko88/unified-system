@@ -337,6 +337,8 @@ class LabPostgres:
         self._verify_owned()
         need(self.started, 'LAB_PG_NOT_STARTED')
         self._verify_postmaster()
+        # Distinguish plain catalogue grant from a genuinely enforced
+        # trigger: inspect its table scope and row-level BEFORE UPDATE/DELETE.
         result = self.sql("""
             SELECT json_build_object(
               'witness_schema', 'lab-postgres-custody.v1',
