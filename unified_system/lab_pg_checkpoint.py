@@ -101,14 +101,32 @@ def install_lab_checkpoint(pg):
     );
     REVOKE ALL ON TABLE public.lab_stream_checkpoint
         FROM PUBLIC,lab_writer,lab_reader;
+    CREATE TABLE public.lab_stream_pending (
+      stream_id text PRIMARY KEY
+         CHECK(stream_id ~ '^[A-Za-z0-9][A-Za-z0-9_:/.-]{0,127}$'),
+      symbol text NOT NULL CHECK(symbol ~ '^[A-Z0-9_.:-]{2,40}$'),
+      start_ms bigint NOT NULL CHECK(start_ms>=0 AND start_ms%60000=0),
+      fingerprint text NOT NULL CHECK(fingerprint ~ '^[0-9a-f]{64}$'),
+      content_id text NOT NULL CHECK(content_id ~ '^[0-9a-f]{64}$'),
+      owner text NOT NULL,
+      namespace text NOT NULL,
+      generation bigint NOT NULL CHECK(generation>0),
+      token bigint NOT NULL CHECK(token>0),
+      source_sha256 text NOT NULL CHECK(source_sha256 ~ '^[0-9a-f]{64}$'),
+      schema_sha256 text NOT NULL CHECK(schema_sha256 ~ '^[0-9a-f]{64}$'),
+      created_at timestamptz NOT NULL DEFAULT pg_catalog.clock_timestamp()
+    );
+    REVOKE ALL ON TABLE public.lab_stream_pending
+        FROM PUBLIC,lab_writer,lab_reader;
     COMMIT;
     """)
-    for role in ("lab_writer", "lab_reader"):
-        for action in ("SELECT", "INSERT", "UPDATE", "DELETE"):
-            need(pg.sql(
-                f"SELECT has_table_privilege('{role}',"
-                f"'public.lab_stream_checkpoint','{action}')") == "f",
-                "LAB_CURSOR_PUBLIC_PERMISSION_BYPASS")
+    for table in ("lab_stream_checkpoint", "lab_stream_pending"):
+        for role in ("lab_writer", "lab_reader"):
+            for action in ("SELECT", "INSERT", "UPDATE", "DELETE"):
+                need(pg.sql(
+                    f"SELECT has_table_privilege('{role}',"
+                    f"'public.{table}','{action}')") == "f",
+                    "LAB_CURSOR_PUBLIC_PERMISSION_BYPASS")
     return pg
 
 
@@ -260,3 +278,130 @@ def read_lab_cursor(pg, *, stream_id):
     except (TypeError, ValueError) as exc:
         raise LabAdmissionRejected("LAB_CURSOR_STATE_INVALID") from exc
     return _integer(value, "LAB_CURSOR_STATE_INVALID", allow_zero=True)
+
+def read_lab_checkpoint(pg, *, stream_id):
+    """Owner diagnostic: confirmed cursor plus immutable source identity."""
+    stream_id=_stream(stream_id)
+    cursor=read_lab_cursor(pg,stream_id=stream_id)
+    if cursor is None:
+        return None
+    result=pg.sql(
+        "SELECT symbol,source_start_ms,fingerprint,content_id"
+        " FROM public.lab_stream_checkpoint"
+        f" WHERE stream_id='{stream_id}' AND cursor_value={cursor}"
+    )
+    fields=result.split("|")
+    need(len(fields)==4, "LAB_CURSOR_METADATA_CORRUPT")
+    symbol,ms,fp,cid=fields
+    _record(symbol,int(ms),fp,cid)
+    need(int(ms)==cursor, "LAB_CURSOR_METADATA_CORRUPT")
+    return {"symbol":symbol,"start_ms":cursor,
+            "fingerprint":fp,"content_id":cid,
+            "scope":"ISOLATED_LAB_ONLY","native_admitted":False}
+
+
+def read_lab_pending(pg, *, stream_id):
+    """Owner diagnostic: durable unresolved minute survives process/WAL crash."""
+    pg._verify_owned()
+    need(pg.started,"LAB_PG_NOT_STARTED")
+    pg._verify_postmaster()
+    stream_id=_stream(stream_id)
+    result=pg.sql(
+        "SELECT symbol,start_ms,fingerprint,content_id,"
+        "generation,token,source_sha256,schema_sha256"
+        " FROM public.lab_stream_pending"
+        f" WHERE stream_id='{stream_id}'"
+    )
+    if result=="":
+        return None
+    fields=result.split("|")
+    need(len(fields)==8,"LAB_PENDING_STATE_CORRUPT")
+    symbol,ms,fp,cid,gen,tok,source,schema=fields
+    symbol,ms,fp,cid=_record(symbol,int(ms),fp,cid)
+    return {"schema":"lab-pg-pending-minute.v1","scope":"ISOLATED_LAB_ONLY",
+            "symbol":symbol,"start_ms":ms,"fingerprint":fp,
+            "content_id":cid,"generation":_integer(int(gen),"LAB_PENDING_GENERATION"),
+            "token":_integer(int(tok),"LAB_PENDING_TOKEN"),
+            "source_sha256":_sha(source),"schema_sha256":_sha(schema),
+            "native_admitted":False,"execution_authority":False,
+            "trading_authorized":False}
+
+
+def append_lab_pending(pg, *, identity, generation, backend_pid,
+                       stream_id, symbol, start_ms, fingerprint, content_id):
+    """Owner-only durable pending marker *before* canonical B writer attempt.
+
+    No INSERT into provenance_minutes. Any crash/uncertain commit preserves
+    this marker until a new verified owner reconciles immutable source bytes.
+    """
+    receipt=_verified_scope(pg,identity,generation,backend_pid)
+    stream_id=_stream(stream_id)
+    symbol,start_ms,fingerprint,content_id=_record(
+        symbol,start_ms,fingerprint,content_id)
+    need(start_ms%60000==0,"LAB_PENDING_CLOSED_MINUTE_REQUIRED")
+    c=_condition(receipt)
+    result=pg.sql(
+        "WITH active AS ("
+        " SELECT f.* FROM public.lab_writer_fence f"
+        " JOIN pg_catalog.pg_stat_activity a ON a.pid=f.backend_pid"
+        f" WHERE {c} FOR UPDATE OF f),"
+        " allowed AS ("
+        " SELECT f.* FROM active f"
+        " WHERE NOT EXISTS ("
+        " SELECT 1 FROM public.lab_stream_checkpoint k"
+        f" WHERE k.stream_id='{stream_id}'"
+        f" AND (k.symbol<>'{symbol}'"
+        f" OR k.cursor_value+60000<>{start_ms}))),"
+        " queued AS ("
+        " INSERT INTO public.lab_stream_pending("
+        "stream_id,symbol,start_ms,fingerprint,content_id,"
+        "owner,namespace,generation,token,source_sha256,schema_sha256)"
+        f" SELECT '{stream_id}','{symbol}',{start_ms},"
+        f"'{fingerprint}','{content_id}',"
+        "f.owner,f.namespace,f.generation,f.token,"
+        "f.source_sha256,f.schema_sha256 FROM allowed f"
+        " WHERE true ON CONFLICT(stream_id) DO NOTHING"
+        " RETURNING stream_id)"
+        " SELECT stream_id FROM queued"
+    )
+    need(result==stream_id,"LAB_PENDING_ALREADY_OPEN_OR_STALE")
+    return {"schema":"lab-pg-pending-append.v1","scope":"ISOLATED_LAB_ONLY",
+            "stream_id":stream_id,"start_ms":start_ms,
+            "native_admitted":False,"trading_authorized":False}
+
+
+def clear_verified_lab_pending(pg, *, identity, generation, backend_pid,
+                               stream_id):
+    """Only delete a pending marker after matching immutable checkpoint ACK.
+
+    A newly fenced backend can reconcile an old-generation pending marker,
+    but a source/schema pin change cannot silently adopt the record.
+    """
+    receipt=_verified_scope(pg,identity,generation,backend_pid)
+    stream_id=_stream(stream_id)
+    c=_condition(receipt)
+    result=pg.sql(
+        "WITH active AS ("
+        " SELECT f.* FROM public.lab_writer_fence f"
+        " JOIN pg_catalog.pg_stat_activity a ON a.pid=f.backend_pid"
+        f" WHERE {c} FOR UPDATE OF f),"
+        " cleared AS ("
+        " DELETE FROM public.lab_stream_pending p"
+        " USING active f,public.lab_stream_checkpoint k"
+        f" WHERE p.stream_id='{stream_id}'"
+        " AND k.stream_id=p.stream_id"
+        " AND k.symbol=p.symbol"
+        " AND k.source_start_ms=p.start_ms"
+        " AND k.cursor_value=p.start_ms"
+        " AND k.fingerprint=p.fingerprint"
+        " AND k.content_id=p.content_id"
+        " AND p.owner=f.owner AND p.namespace=f.namespace"
+        " AND p.source_sha256=f.source_sha256"
+        " AND p.schema_sha256=f.schema_sha256"
+        " AND p.generation<=f.generation AND p.token<=f.token"
+        " AND k.generation<=f.generation AND k.token<=f.token"
+        " RETURNING p.stream_id)"
+        " SELECT stream_id FROM cleared"
+    )
+    need(result==stream_id,"LAB_PENDING_CLEAR_UNVERIFIED")
+    return True

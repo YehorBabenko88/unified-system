@@ -253,13 +253,25 @@ class Round7OwnedPg18Integrated(unittest.TestCase):
         self.assertFalse(db_receipt["native_writer_admitted"])
         self.assertFalse(db_receipt["trading_authorized"])
         record=self.synthetic_minute()
+        from unified_system.lab_pg_checkpoint import append_lab_pending
+        pending=dict(identity=self.identity,generation=1,
+                     backend_pid=self.pid(self.primary),
+                     stream_id="bybit:BTCUSDT:1m",
+                     symbol="BTCUSDT",start_ms=record["start_ms"],
+                     fingerprint=record["dataset_fingerprint"],
+                     content_id=digest(record))
+        append_lab_pending(self.pg,**pending)
+        self.assertEqual(read_lab_pending(
+            self.pg,stream_id="bybit:BTCUSDT:1m")["fingerprint"],
+            record["dataset_fingerprint"])
         result=self.adapter(self.primary).write(record,content_id=digest(record))
         self.assertEqual(result["status"],"LOCAL_COMMIT_RETURNED")
         self.assertFalse(result["trading_authorized"])
         self.assertEqual(self.pg.sql("SELECT count(*) FROM provenance_minutes"),"1")
         from unified_system.lab_pg_checkpoint import (
             read_committed_lab_minute, commit_verified_lab_cursor,
-            read_lab_cursor)
+            read_lab_cursor, read_lab_checkpoint,
+            append_lab_pending, read_lab_pending,clear_verified_lab_pending)
         original_id=digest(record)
         query=dict(identity=self.identity,generation=1,
                    backend_pid=self.pid(self.primary),
@@ -281,8 +293,18 @@ class Round7OwnedPg18Integrated(unittest.TestCase):
         saved=commit_verified_lab_cursor(self.pg,**checkpoint)
         self.assertTrue(saved["committed_record_verified"])
         self.assertFalse(saved["contiguous_source_coverage_attested"])
+        self.assertTrue(clear_verified_lab_pending(
+            self.pg,identity=self.identity,generation=1,
+            backend_pid=self.pid(self.primary),
+            stream_id="bybit:BTCUSDT:1m"))
+        self.assertIsNone(read_lab_pending(
+            self.pg,stream_id="bybit:BTCUSDT:1m"))
         self.assertEqual(read_lab_cursor(self.pg,
                          stream_id="bybit:BTCUSDT:1m"),record["start_ms"])
+        checkpoint_record=read_lab_checkpoint(
+            self.pg,stream_id="bybit:BTCUSDT:1m")
+        self.assertEqual(checkpoint_record["fingerprint"],
+                         record["dataset_fingerprint"])
         with self.assertRaises(LabAdmissionRejected):
             commit_verified_lab_cursor(self.pg,**checkpoint)
         with self.assertRaises(LabAdmissionRejected):
@@ -336,21 +358,50 @@ class Round7OwnedPg18Integrated(unittest.TestCase):
 
     def test_reconnect_after_pg_crash_cannot_reuse_previous_token(self):
         from market_data.provenance import digest
-        self.assertTrue(self.claim(self.primary))
-        record=self.synthetic_minute(minute_offset=3)
-        self.adapter(self.primary).write(record,content_id=digest(record))
+        from market_data import history_api
         from unified_system.lab_pg_checkpoint import (
-            commit_verified_lab_cursor, read_committed_lab_minute,
-            read_lab_cursor)
-        cursor_fields=dict(
-            stream_id="bybit:BTCUSDT:1m",cursor=record["start_ms"],
-            symbol="BTCUSDT",start_ms=record["start_ms"],
-            fingerprint=record["dataset_fingerprint"],
-            content_id=digest(record))
-        initial=commit_verified_lab_cursor(
-            self.pg,identity=self.identity,generation=1,
-            backend_pid=self.pid(self.primary),**cursor_fields)
-        self.assertTrue(initial["committed_record_verified"])
+            append_lab_pending, read_lab_pending, read_lab_cursor,
+            read_lab_checkpoint, commit_verified_lab_cursor,
+            read_committed_lab_minute, clear_verified_lab_pending)
+
+        self.assertTrue(self.claim(self.primary))
+        stream="bybit:BTCUSDT:1m"
+
+        def fields(record):
+            return dict(stream_id=stream,cursor=record["start_ms"],
+                        symbol="BTCUSDT",start_ms=record["start_ms"],
+                        fingerprint=record["dataset_fingerprint"],
+                        content_id=digest(record))
+
+        def owner_fields(identity, generation):
+            return dict(identity=identity,generation=generation,
+                        backend_pid=self.pid(self.primary))
+
+        # The first committed+acknowledged candle checkpoint must survive WAL.
+        first=self.synthetic_minute(minute_offset=4)
+        before=dict(fields(first))
+        before.pop("cursor")
+        append_lab_pending(self.pg,**owner_fields(self.identity,1),**before)
+        self.adapter(self.primary).write(first,content_id=digest(first))
+        commit_verified_lab_cursor(
+            self.pg,**owner_fields(self.identity,1),**fields(first))
+        clear_verified_lab_pending(
+            self.pg,**owner_fields(self.identity,1),stream_id=stream)
+        self.assertEqual(read_lab_cursor(self.pg,stream_id=stream),
+                         first["start_ms"])
+
+        # This minute commits to the real DB. Its application-level ACK is
+        # deliberately discarded before the postmaster crash: a SYNTHETIC
+        # unknown-outcome test, not a fault injected at the COMMIT instruction.
+        pending=self.synthetic_minute(minute_offset=3)
+        pending_fields=dict(fields(pending))
+        pending_fields.pop("cursor")
+        append_lab_pending(
+            self.pg,**owner_fields(self.identity,1),**pending_fields)
+        self.adapter(self.primary).write(pending,content_id=digest(pending))
+        self.assertEqual(read_lab_pending(
+            self.pg,stream_id=stream)["fingerprint"],
+            pending["dataset_fingerprint"])
         old_pid=self.pid(self.primary)
         self.primary.close()
         self.primary=None
@@ -362,21 +413,26 @@ class Round7OwnedPg18Integrated(unittest.TestCase):
         self.assertNotEqual(self.pg.postmaster_pid(),killed)
         with self.assertRaises(LabAdmissionRejected):
             revalidate_lab_fence(self.pg,identity=self.identity,
-                generation=1,backend_pid=old_pid)
+                                 generation=1,backend_pid=old_pid)
         self.assertEqual(self.pg.sql(
             "SELECT generation,token,active FROM lab_writer_fence"),"1|100|t")
-        self.assertEqual(read_lab_cursor(
-            self.pg,stream_id="bybit:BTCUSDT:1m"),
-            record["start_ms"])
+        self.assertEqual(read_lab_cursor(self.pg,stream_id=stream),
+                         first["start_ms"])
+        self.assertEqual(read_lab_pending(
+            self.pg,stream_id=stream)["fingerprint"],
+            pending["dataset_fingerprint"])
+        self.assertEqual(read_lab_checkpoint(
+            self.pg,stream_id=stream)["content_id"],digest(first))
+
         self.primary=self.psycopg.connect(
             self.pg.dsn("lab_writer"),autocommit=True)
         with self.assertRaises(LabAdmissionRejected):
             self.claim(self.primary,generation=2,token=101)
-        # Reconnected process with previous generation/token must not write.
+        # Old token on a freshly connected same-credential backend must lose.
         with self.assertRaises(self.psycopg.Error):
             self.adapter(self.primary,identity=self.identity,
                          generation=1,token=100).write(
-                record,content_id="e"*64)
+                pending,content_id="e"*64)
         self.assertTrue(revoke_lab_fence(self.pg,generation=1,token=100))
         with self.assertRaises(LabAdmissionRejected):
             self.claim(self.primary,generation=2,token=100)
@@ -387,74 +443,59 @@ class Round7OwnedPg18Integrated(unittest.TestCase):
             source_sha256=self.source_sha,schema_sha256=self.schema_sha)
         self.assertTrue(self.claim(
             self.primary,generation=2,token=101,identity=newer))
-        fresh=revalidate_lab_fence(
-            self.pg,identity=newer,generation=2,
-            backend_pid=self.pid(self.primary))
+        current=owner_fields(newer,2)
+        fresh=revalidate_lab_fence(self.pg,**current)
         self.assertTrue(fresh["db_fence_current_at_read"])
         self.assertFalse(fresh["root_consul_admitted"])
-        restored_receipt=read_committed_lab_minute(
-            self.pg,identity=newer,generation=2,
-            backend_pid=self.pid(self.primary),
-            symbol="BTCUSDT",start_ms=record["start_ms"],
-            fingerprint=record["dataset_fingerprint"],content_id=digest(record))
-        self.assertEqual(restored_receipt["status"],"MATCH")
-        self.assertFalse(restored_receipt["native_admitted"])
-        with self.assertRaises(LabAdmissionRejected):
-            commit_verified_lab_cursor(
-                self.pg,identity=newer,generation=2,
-                backend_pid=self.pid(self.primary),**cursor_fields)
-        # Even after promotion, a fresh connection cannot replay old authority.
+
+        # Never blind-retry an unknown COMMIT. Exact immutable readback under
+        # the NEW C/E fenced owner must prove MATCH before checkpoint/clear.
+        restored=read_committed_lab_minute(
+            self.pg,**current,**pending_fields)
+        self.assertEqual(restored["status"],"MATCH")
+        self.assertFalse(restored["native_admitted"])
+        commit_verified_lab_cursor(self.pg,**current,**fields(pending))
+        clear_verified_lab_pending(self.pg,**current,stream_id=stream)
+        self.assertIsNone(read_lab_pending(self.pg,stream_id=stream))
+        self.assertEqual(read_lab_cursor(self.pg,stream_id=stream),
+                         pending["start_ms"])
         with self.assertRaises(self.psycopg.Error):
             self.adapter(self.primary,identity=self.identity,
                          generation=1,token=100).write(
-                record,content_id="f"*64)
-        # WAL integrity is a record-level invariant, not only a count.
-        from market_data import history_api
+                pending,content_id="f"*64)
+
         os.environ["MARKET_DATA_DSN"]=self.pg.dsn("lab_reader")
-        restored=history_api.immutable_minutes("BTCUSDT",1,2**63-1)
-        self.assertEqual(len(restored),1)
-        self.assertEqual(restored[0]["dataset_fingerprint"],
-                         record["dataset_fingerprint"])
-        self.assertEqual(self.pg.sql("SELECT count(*) FROM provenance_minutes"),"1")
-        self.assertEqual(self.pg.sql("SELECT token FROM lab_writer_fence"),"101")
-        # A later minute can be stored out of order but cannot advance the
-        # durable contiguous cursor while the missing intermediate minute is
-        # unacknowledged. B owns backfill; C owns this monotonic CAS.
+        persisted=history_api.immutable_minutes("BTCUSDT",2,2**63-1)
+        self.assertEqual(
+            {row["dataset_fingerprint"] for row in persisted},
+            {first["dataset_fingerprint"],pending["dataset_fingerprint"]})
+        self.assertEqual(self.pg.sql(
+            "SELECT count(*),count(DISTINCT fingerprint)"
+            " FROM provenance_minutes"),"2|2")
+
+        # An out-of-order later minute can exist, but cannot skip a cursor.
         gap=self.synthetic_minute(minute_offset=1)
         self.adapter(self.primary,identity=newer,generation=2,token=101).write(
             gap,content_id=digest(gap))
-        gap_fields=dict(cursor_fields,cursor=gap["start_ms"],
-                        start_ms=gap["start_ms"],
-                        fingerprint=gap["dataset_fingerprint"],
-                        content_id=digest(gap))
+        gap_fields=fields(gap)
         with self.assertRaisesRegex(LabAdmissionRejected,
                                     "LAB_CURSOR_CAS_OR_READBACK_DENIED"):
-            commit_verified_lab_cursor(
-                self.pg,identity=newer,generation=2,
-                backend_pid=self.pid(self.primary),**gap_fields)
-        self.assertEqual(read_lab_cursor(
-            self.pg,stream_id="bybit:BTCUSDT:1m"),record["start_ms"])
-        missing=self.synthetic_minute(minute_offset=2)
+            commit_verified_lab_cursor(self.pg,**current,**gap_fields)
+        self.assertEqual(read_lab_cursor(self.pg,stream_id=stream),
+                         pending["start_ms"])
+        middle=self.synthetic_minute(minute_offset=2)
         self.adapter(self.primary,identity=newer,generation=2,token=101).write(
-            missing,content_id=digest(missing))
-        middle_fields=dict(cursor_fields,cursor=missing["start_ms"],
-                           start_ms=missing["start_ms"],
-                           fingerprint=missing["dataset_fingerprint"],
-                           content_id=digest(missing))
-        commit_verified_lab_cursor(
-            self.pg,identity=newer,generation=2,
-            backend_pid=self.pid(self.primary),**middle_fields)
-        commit_verified_lab_cursor(
-            self.pg,identity=newer,generation=2,
-            backend_pid=self.pid(self.primary),**gap_fields)
-        self.assertEqual(read_lab_cursor(
-            self.pg,stream_id="bybit:BTCUSDT:1m"),gap["start_ms"])
+            middle,content_id=digest(middle))
+        commit_verified_lab_cursor(self.pg,**current,**fields(middle))
+        commit_verified_lab_cursor(self.pg,**current,**gap_fields)
+        self.assertEqual(read_lab_cursor(self.pg,stream_id=stream),
+                         gap["start_ms"])
         self.assertEqual(self.pg.sql(
             "SELECT count(*),count(DISTINCT fingerprint)"
-            " FROM provenance_minutes"),"3|3")
-        # A provider-conflicting, same symbol/interval record can coexist in
-        # the immutable raw provenance schema. C must flag ambiguity rather
-        # than certify either content as a durable cursor.
+            " FROM provenance_minutes"),"4|4")
+
+        # Immutable conflicting contents for the SAME minute are quarantined:
+        # the ledger cannot falsely certify either of the two fingerprints.
         divergent=self.synthetic_minute(minute_offset=1,close_value=1.5)
         self.assertNotEqual(divergent["dataset_fingerprint"],
                             gap["dataset_fingerprint"])
@@ -462,16 +503,15 @@ class Round7OwnedPg18Integrated(unittest.TestCase):
             divergent,content_id=digest(divergent))
         self.assertEqual(self.pg.sql(
             "SELECT count(*),count(DISTINCT fingerprint)"
-            " FROM provenance_minutes"),"4|4")
+            " FROM provenance_minutes"),"5|5")
         disagreement=read_committed_lab_minute(
-            self.pg,identity=newer,generation=2,
-            backend_pid=self.pid(self.primary),
+            self.pg,**current,
             symbol="BTCUSDT",start_ms=gap["start_ms"],
             fingerprint=gap["dataset_fingerprint"],content_id=digest(gap))
         self.assertEqual(disagreement["status"],"CONFLICT")
         with self.assertRaisesRegex(LabAdmissionRejected,
                                     "LAB_CURSOR_DURABLE_RECORD_CORRUPT"):
-            read_lab_cursor(self.pg,stream_id="bybit:BTCUSDT:1m")
+            read_lab_cursor(self.pg,stream_id=stream)
 
 
 if __name__=="__main__":
