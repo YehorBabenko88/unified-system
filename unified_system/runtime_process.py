@@ -514,6 +514,97 @@ class OwnedWindowsJob:
         self.close()
 
 
+
+def _launch_owned_windows_job_process(argv, cwd, env):
+    """Launch a new subprocess suspended and attach before any user code.
+
+    Caller has already verified executable/artifact pins. Uses the existing
+    ProcessDriver Popen owner semantics for retained identity, pipe cleanup and
+    stop(); this is NOT a second lifecycle supervisor. A freshly created Job
+    is configured by OwnedWindowsJob with no breakaway permissions.
+    """
+    if os.name != 'nt' or type(argv) is not list or not argv:
+        raise ValueError('owned Windows launch unavailable')
+    from ctypes import wintypes as w
+
+    class StartupInfo(ctypes.Structure):
+        _fields_ = [('cb', w.DWORD), ('reserved', w.LPWSTR),
+                    ('desktop', w.LPWSTR), ('title', w.LPWSTR),
+                    ('x', w.DWORD), ('y', w.DWORD), ('width', w.DWORD),
+                    ('height', w.DWORD), ('x_chars', w.DWORD),
+                    ('y_chars', w.DWORD), ('fill', w.DWORD),
+                    ('flags', w.DWORD), ('show_window', w.WORD),
+                    ('reserved2_bytes', w.WORD), ('reserved2', ctypes.c_void_p),
+                    ('std_input', w.HANDLE), ('std_output', w.HANDLE),
+                    ('std_error', w.HANDLE)]
+
+    class ProcessInformation(ctypes.Structure):
+        _fields_ = [('process', w.HANDLE), ('thread', w.HANDLE),
+                    ('pid', w.DWORD), ('thread_id', w.DWORD)]
+
+    kernel = ctypes.WinDLL('kernel32', use_last_error=True)
+    kernel.CreateProcessW.argtypes = [
+        w.LPCWSTR, w.LPWSTR, ctypes.c_void_p, ctypes.c_void_p, w.BOOL,
+        w.DWORD, ctypes.c_void_p, w.LPCWSTR, ctypes.POINTER(StartupInfo),
+        ctypes.POINTER(ProcessInformation)]
+    kernel.CreateProcessW.restype = w.BOOL
+    kernel.ResumeThread.argtypes = [w.HANDLE]
+    kernel.ResumeThread.restype = w.DWORD
+    kernel.TerminateProcess.argtypes = [w.HANDLE, w.UINT]
+    kernel.TerminateProcess.restype = w.BOOL
+    kernel.CloseHandle.argtypes = [w.HANDLE]
+    kernel.CloseHandle.restype = w.BOOL
+    kernel.WaitForSingleObject.argtypes = [w.HANDLE, w.DWORD]
+    kernel.WaitForSingleObject.restype = w.DWORD
+
+    # Explicitly inherit NO handles; no child stdin or secret pipe is needed
+    # for this isolated LAB path. A local preexisting Popen-based process
+    # remains the only owner for non-LAB launches.
+    job = OwnedWindowsJob()
+    info = ProcessInformation()
+    startup = StartupInfo()
+    startup.cb = ctypes.sizeof(startup)
+    command = ctypes.create_unicode_buffer(subprocess.list2cmdline(argv))
+    environment = ''.join(
+        str(k) + '=' + str(v) + '\0'
+        for k,v in sorted(env.items(), key=lambda item:item[0].casefold())
+    ) + '\0'
+    env_buffer = ctypes.create_unicode_buffer(environment)
+    created = False
+    resumed = False
+    try:
+        # CREATE_SUSPENDED | CREATE_UNICODE_ENVIRONMENT | CREATE_NO_WINDOW
+        # Creation cannot execute any process code until ResumeThread.
+        if not kernel.CreateProcessW(
+                str(argv[0]), command, None, None, False,
+                0x00000004 | 0x00000400 | 0x08000000,
+                ctypes.cast(env_buffer, ctypes.c_void_p), str(cwd),
+                ctypes.byref(startup), ctypes.byref(info)):
+            raise ValueError('Windows suspended process creation denied')
+        created = True
+        if info.pid <= 1 or not info.process or not info.thread:
+            raise ValueError('Windows suspended process handles invalid')
+        job._assign_created_process(info.process)
+        if not job.verify_member(info.process):
+            raise ValueError('Windows Job membership lost')
+        # This call never accepts external thread/process handles; only
+        # the original trusted CreateProcessW PROCESS_INFORMATION pair.
+        if kernel.ResumeThread(info.thread) != 1:
+            raise ValueError('Windows suspended resume failed')
+        resumed = True
+        return int(info.pid), job
+    except BaseException:
+        if created and info.process:
+            kernel.TerminateProcess(info.process, 1)
+            kernel.WaitForSingleObject(info.process, 5000)
+        job.close()
+        raise
+    finally:
+        if created:
+            if info.thread: kernel.CloseHandle(info.thread)
+            if info.process: kernel.CloseHandle(info.process)
+
+
 class RetainedWindowsDescendantCensus:
     """Hold exact kernel process handles for observed Windows descendants.
 
