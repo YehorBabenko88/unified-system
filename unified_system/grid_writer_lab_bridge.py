@@ -300,3 +300,77 @@ async def assess_lab_c_fence(*, authority, lease, source, manifest, identity,
 def native_writer_admission(*_args, **_kwargs):
     """No callable Lab assessment may be used to grant native startup."""
     raise ResourceFenceBlocked("NATIVE_DB_FENCE_NOT_ADMITTED")
+
+
+# E Round11: exact B continuous/adapter cohort, distinct from the historical
+# B3265 one-shot writer. No implicit upgrade, no native launch grant. F must
+# explicitly review and pin the FULL source/release/wheel in its sole PR.
+GRID_RUNTIME_LAB_SHA = "34da839e5da3ddb2c7be92b09762f63b7585b2f0"
+_GRID_RUNTIME_BLOBS = {
+    "grid/canonical_lab_fenced_writer.py":
+        "8b93466a79fa234468a3cdc44106bd5e153e81c4",
+    "grid/canonical_lab_continuous_collector.py":
+        "7c3eb22957907ea9b1f44f860f02ceb749944b85",
+    "grid/c_lab_journal_adapter.py":
+        "ab93c6d421c3d3f0232060f6ded7ac01bf8eeda0",
+}
+
+
+def verified_grid_runtime_cohort_pin(source, manifest, source_root):
+    """Verify exact *current* B continuous LAB source bytes, no code import.
+
+    The protected Root capsule must separately verify all source/wheel files.
+    Git object hashes here are repository evidence, not publisher signatures.
+    This does not create SQL, lease, child, trading or native admission.
+    """
+    _need(type(manifest) is dict
+          and type(manifest.get("sources")) is dict
+          and type(manifest.get("files")) is dict,
+          "LAB_GRID_RUNTIME_MANIFEST_REQUIRED")
+    m=manifest["sources"].get("market_data")
+    _need(type(m) is dict and m.get("repository") == GRID_REPOSITORY
+          and m.get("commit") == GRID_RUNTIME_LAB_SHA
+          and m.get("root") == "sources/market_data",
+          "LAB_GRID_RUNTIME_COHORT_REJECTED")
+    _need(callable(getattr(source, "require_current", None))
+          and callable(getattr(source, "source_scope", None))
+          and source.require_current() is True,
+          "LAB_GRID_RUNTIME_SOURCE_REVOKED")
+    try:
+        from .lab_release import regular
+        root=Path(source_root).resolve(strict=True)
+        approved=source.source_scope("market_data",root,GRID_RUNTIME_LAB_SHA)
+        _need(Path(approved).resolve(strict=True)==root,
+              "LAB_GRID_RUNTIME_ROOT_REJECTED")
+        pins={}
+        for relative,expected_blob in _GRID_RUNTIME_BLOBS.items():
+            file_key="sources/market_data/"+relative
+            pin=manifest["files"].get(file_key)
+            _need(type(pin) is dict and set(pin)=={"sha256","bytes"}
+                  and type(pin["sha256"]) is str
+                  and len(pin["sha256"])==64
+                  and type(pin["bytes"]) is int
+                  and 0<pin["bytes"]<=8*1024*1024,
+                  "LAB_GRID_RUNTIME_FILE_PIN_REQUIRED")
+            raw=regular(root/relative).read_bytes()
+            _need(len(raw)==pin["bytes"]
+                  and hashlib.sha256(raw).hexdigest()==pin["sha256"],
+                  "LAB_GRID_RUNTIME_SOURCE_CHANGED")
+            actual_blob=hashlib.sha1(
+                b"blob "+str(len(raw)).encode("ascii")+b"\0"+raw).hexdigest()
+            _need(actual_blob==expected_blob,
+                  "LAB_GRID_RUNTIME_BLOB_MISMATCH")
+            pins[relative]={"git_blob_sha1":actual_blob,
+                            "sha256":pin["sha256"],"bytes":pin["bytes"]}
+        _need(source.require_current() is True,
+              "LAB_GRID_RUNTIME_SOURCE_REVOKED")
+        return {"schema":"unified.grid-lab-runtime-cohort.v1",
+                "scope":SCOPE,
+                "source_commit":GRID_RUNTIME_LAB_SHA,
+                "verified_files":pins,
+                "native_admitted":False,
+                "trading_authorized":False}
+    except ResourceFenceBlocked:
+        raise
+    except Exception:
+        raise ResourceFenceBlocked("LAB_GRID_RUNTIME_NOT_ATTESTED") from None
