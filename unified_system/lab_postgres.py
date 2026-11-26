@@ -9,7 +9,7 @@ A dedicated, throw-away cluster owned by the LAB supervisor:
   a private socket directory elsewhere), SCRAM authentication;
 - two roles: ``lab_writer`` (single market-data writer) and ``lab_reader``
   (default_transaction_read_only=on) with random passwords;
-- crash simulation (SIGKILL / TerminateProcess of the postmaster), restart
+- process-crash simulation (SIGKILL / TerminateProcess of postmaster), restart
   with WAL crash recovery, and integrity checks; fast stop.
 Stdlib only. Passwords are never logged or returned except inside DSNs that
 are handed to admitted children.
@@ -421,7 +421,7 @@ class LabPostgres:
         return self._verify_postmaster()
 
     def crash(self, *, timeout=120):
-        """LAB-only power-loss simulation, bounded by caller's C deadline."""
+        """LAB-only postmaster process crash; NOT a true power loss."""
         need(type(timeout) in (int,float) and 10 <= timeout <= 120,
              'LAB_PG_CRASH_TIMEOUT_INVALID')
         deadline = time.monotonic() + timeout
