@@ -55,7 +55,9 @@ class LabPostgres:
         need(IDENT.fullmatch(database) is not None, 'LAB_PG_NAME_REJECTED')
         self.database = database
         need(self._root_stat is not None and stat.S_ISDIR(self._root_stat.st_mode)
-             and not self.root.is_symlink(), 'LAB_PG_ROOT_UNOWNED')
+             and not self.root.is_symlink()
+             and not (getattr(self._root_stat, 'st_file_attributes', 0) & 0x400),
+             'LAB_PG_ROOT_UNOWNED')
         if os.name != 'nt':
             need(self._root_stat.st_uid == os.getuid()
                  and not (self._root_stat.st_mode & 0o077), 'LAB_PG_ROOT_UNSAFE')
@@ -83,6 +85,7 @@ class LabPostgres:
         try:
             info = self.root.lstat()
             need(stat.S_ISDIR(info.st_mode) and not self.root.is_symlink()
+                 and not (getattr(info, 'st_file_attributes', 0) & 0x400)
                  and (info.st_dev, info.st_ino) == self._root_identity,
                  'LAB_PG_ROOT_CHANGED')
             need(not self._marker.is_symlink() and self._marker.read_text(encoding='ascii') == self._nonce,
@@ -91,7 +94,9 @@ class LabPostgres:
                 need(info.st_uid == os.getuid() and not (info.st_mode & 0o077), 'LAB_PG_ROOT_UNSAFE')
             if self.data.exists():
                 data_info = self.data.lstat()
-                need(stat.S_ISDIR(data_info.st_mode) and not self.data.is_symlink(), 'LAB_PG_DATA_FOREIGN')
+                need(stat.S_ISDIR(data_info.st_mode) and not self.data.is_symlink()
+                     and not (getattr(data_info, 'st_file_attributes', 0) & 0x400),
+                     'LAB_PG_DATA_FOREIGN')
                 if os.name != 'nt':
                     need(data_info.st_uid == os.getuid(), 'LAB_PG_DATA_FOREIGN')
         except (OSError, ValueError) as error:
@@ -158,7 +163,9 @@ class LabPostgres:
     def _verify_postmaster(self):
         self._verify_owned()
         pidfile = self.data / 'postmaster.pid'
-        need(pidfile.is_file() and not pidfile.is_symlink(), 'LAB_PG_PID_UNVERIFIED')
+        need(pidfile.is_file() and not pidfile.is_symlink()
+             and not (getattr(pidfile.lstat(), 'st_file_attributes', 0) & 0x400),
+             'LAB_PG_PID_UNVERIFIED')
         try:
             lines = pidfile.read_text().splitlines()
             pid = int(lines[0])
@@ -204,7 +211,9 @@ class LabPostgres:
         need(self._crashed and not self.started and self._owned_pid is not None,
              'LAB_PG_STALE_UNVERIFIED')
         pidfile = self.data / 'postmaster.pid'
-        need(pidfile.is_file() and not pidfile.is_symlink(), 'LAB_PG_STALE_UNVERIFIED')
+        need(pidfile.is_file() and not pidfile.is_symlink()
+             and not (getattr(pidfile.lstat(), 'st_file_attributes', 0) & 0x400),
+             'LAB_PG_STALE_UNVERIFIED')
         info = pidfile.lstat()
         need((info.st_dev, info.st_ino) == self._owned_pidfile_inode, 'LAB_PG_PIDFILE_CHANGED')
         try:
