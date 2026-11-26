@@ -204,6 +204,31 @@ class QualificationTests(unittest.TestCase):
         (self.install / "market_data" / "unknown.py").write_bytes(b"a = 1\n")
         self.deny()
 
+    def test_wheel_zip_parser_only_receives_verified_bytes_snapshot(self):
+        from unittest.mock import patch
+        original = zipfile.ZipFile
+        seen = []
+        def verify_buffer(first, *args, **kwargs):
+            seen.append(isinstance(first, io.BytesIO))
+            return original(first, *args, **kwargs)
+        with patch("f_wheel_qualification.zipfile.ZipFile", side_effect=verify_buffer):
+            report = self.scan()
+        self.assertTrue(report["wheel_bytes_match"])
+        self.assertEqual(seen, [True])
+
+    def test_wheel_symlink_refused(self):
+        alias = self.base / "wheel_link.whl"
+        try:
+            alias.symlink_to(self.wheel)
+        except (OSError, NotImplementedError):
+            self.skipTest("symlink unsupported")
+        self.wheel = alias
+        self.deny()
+
+    def test_shadowing_sitecustomize_denied(self):
+        (self.install / "sitecustomize.py").write_bytes(b"print('injected')\n")
+        self.deny()
+
     def test_wheel_reproducible_synthetic_fixture(self):
         first = self.wheel.read_bytes()
         self.make_wheel()
