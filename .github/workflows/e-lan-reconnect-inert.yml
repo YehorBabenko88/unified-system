@@ -44,6 +44,8 @@ jobs:
         env:
           EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
         run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+      - name: Install hash-pinned test-only HTTP dependencies
+        run: python -m pip install --require-hashes -r docs/ci/requirements-unittest.lock
       - name: Run inert reconnect regressions (no native admission)
         run: python -B -m unittest discover -s tests -p 'test_lan_*_inert.py' -v
       - name: Run Grid writer-fence model regressions (no database or runtime grant)

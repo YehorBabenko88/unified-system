@@ -86,6 +86,48 @@ class RootGridV2InertTests(unittest.TestCase):
         self.assertEqual(next(dep["version"] for dep in self.manifest["dependencies"]
                               if dep["name"] == "market-data"), V2_WHEEL_VERSION)
 
+    def test_v2_terminan_requires_market_data_supervisor_edge(self):
+        good=[{"module_id":"market_data","dependencies":[]},
+              {"module_id":"math","dependencies":[]},
+              {"module_id":"terminan","dependencies":["math","market_data"]}]
+        self.assertIs(lab_runtime.require_v2_terminan_dependency(
+            self.manifest,good),True)
+        missing=copy.deepcopy(good)
+        missing[-1]["dependencies"]=["math"]
+        with self.assertRaises(ValueError):
+            lab_runtime.require_v2_terminan_dependency(self.manifest,missing)
+        missing_market=copy.deepcopy(good[1:])
+        with self.assertRaises(ValueError):
+            lab_runtime.require_v2_terminan_dependency(
+                self.manifest,missing_market)
+        self.assertIs(lab_runtime.require_v2_terminan_dependency(
+            self.legacy,missing),True)
+
+    def test_market_data_failure_stops_managed_terminan_dependency(self):
+        from tests.test_runtime import Driver
+        from unified_system.runtime import ModuleSpec,RuntimeSupervisor
+        worker=Driver()
+        refs=[
+            ModuleSpec("unified_system","1.0.0"),
+            ModuleSpec("market_data",V2_SOURCE_VERSION),
+            ModuleSpec("math","1.0.0"),
+            ModuleSpec("terminan","1.0.0",
+                       dependencies=("market_data","math")),
+        ]
+        runtime=RuntimeSupervisor(
+            self.root/"dependency-test.sqlite",worker,refs,
+            release_id="lab-1",release_sha256="a"*64,node_id="TEST",
+            clock=lambda:100.0,
+        )
+        runtime.start();runtime.tick()
+        self.assertEqual(runtime.snapshot()["modules"]["terminan"]["state"],
+                         "READY")
+        worker.crashed.add("market_data")
+        runtime.tick()
+        self.assertNotEqual(runtime.snapshot()["modules"]["terminan"]["state"],
+                            "READY")
+        self.assertIn(("stop","terminan"),worker.calls)
+
     def test_explicit_grid_source_selects_only_v2(self):
         self.assertEqual(entry_for_manifest(self.manifest), V2_ENTRY)
         self.assertEqual(entry_for_manifest(self.legacy), LEGACY_ENTRY)

@@ -17,7 +17,7 @@ from urllib.parse import urlsplit
 
 from . import lab_release
 from .module_catalog import MODULE_IDS
-from .market_data_entry_contract import MarketDataEntryRejected,entry_for_manifest
+from .market_data_entry_contract import MarketDataEntryRejected,V2_ENTRY,entry_for_manifest
 from .runtime_cli import validate_config as base_config,read_config,make_runtime,run_runtime
 from .runtime_process import _safe_path
 
@@ -40,6 +40,23 @@ LAB_HOSTNAMES={'LS5':'LS5','PC1':'Easy','PC2':'Leitstelle1','PC3':'LS03e','PC4':
 
 def need(ok):
     if not ok:raise ValueError('LAB_RUNTIME_REJECTED')
+
+
+def require_v2_terminan_dependency(manifest, specs):
+    """No managed chart child may survive a source loss outside supervisor DAG."""
+    try:
+        entry=entry_for_manifest(manifest)
+    except MarketDataEntryRejected:
+        need(False)
+    if entry != V2_ENTRY:return True
+    need(type(specs) is list and all(type(s) is dict for s in specs))
+    listed={s.get('module_id'):s for s in specs}
+    need(len(listed)==len(specs))
+    if 'terminan' in listed:
+        need('market_data' in listed
+             and type(listed['terminan'].get('dependencies')) in (tuple,list)
+             and 'market_data' in listed['terminan']['dependencies'])
+    return True
 
 
 def child_environment(input=None):
@@ -119,6 +136,7 @@ def validate_config(c,m,root,*,hostname=None,offline_context=None):
         try:name=p.relative_to(root).as_posix()
         except ValueError:raise ValueError('LAB_RUNTIME_REJECTED') from None
         need(name in m['files'] and m['files'][name]['sha256']==sha)
+    require_v2_terminan_dependency(m,c['specs'])
     for spec in c['specs']:
         source=m['sources'][spec['module_id']]
         need(spec['version']==source['version'] and set(spec['dependencies'])==set(source['dependencies']))
