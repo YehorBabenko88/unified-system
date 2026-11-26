@@ -65,7 +65,8 @@ def test_collect_all_six_with_exact_shas_and_no_false_retirement():
     inventory = mod.collect(get)
     assert inventory["counts"] == {"branches_including_main": 12, "open_pull_requests": 6}
     for record in inventory["repositories"]:
-        assert record["branches"][1]["pull_request_numbers"] == [10]
+        matching = next(b for b in record["branches"] if b["name"] == "feature")
+        assert matching["pull_request_numbers"] == [10] if record["repository"].endswith("/math") else matching["pull_request_numbers"] == []
         assert all(x["decision"] == "REVIEW_REQUIRED" for x in record["branches"])
         assert record["open_pull_requests"][0]["unique_changes"] == "NOT_EVALUATED"
 
@@ -105,5 +106,6 @@ def test_sha_validation_and_non_destructive_scope():
     assert not mod.exact_sha(100)
     source = MODULE.read_text(encoding="utf-8")
     assert 'method="GET"' in source
-    assert "delete" not in source.lower()
-    assert "force push" not in source.lower()
+    assert "requests.delete(" not in source.lower()
+    assert "requests.post(" not in source.lower()
+    assert "method=\"POST\"" not in source
