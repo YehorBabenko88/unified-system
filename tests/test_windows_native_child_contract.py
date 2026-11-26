@@ -512,9 +512,9 @@ class WindowsNativeJobContainmentTests(unittest.TestCase):
         with OwnedWindowsJob() as job:
             self.assertEqual(job.active_process_count(), 0)
             self.assertFalse(job._assigned)
-            with self.assertRaisesRegex(ValueError, 'atomic suspended launcher unavailable'):
+            with self.assertRaisesRegex(ValueError, 'public assignment denied'):
                 job.assign_suspended_child(None)
-            with self.assertRaisesRegex(ValueError, 'atomic suspended launcher unavailable'):
+            with self.assertRaisesRegex(ValueError, 'public assignment denied'):
                 job.assign_suspended_child(None, created_suspended=True)
             self.assertFalse(hasattr(job, 'resume_suspended_child'))
         with self.assertRaisesRegex(ValueError, 'closed'):
