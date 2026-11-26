@@ -382,6 +382,81 @@ def _windows_process_descendant_snapshot(root_pid, expected_root_created):
 
 
 
+class OwnedWindowsJob:
+    """Kernel-backed containment for a NEW, isolated, Root-created child.
+
+    Must be created before CreateProcess and the child must be assigned before
+    it is allowed to execute. Attaching an already running old process cannot
+    close the historical child-spawn race and is deliberately unsupported.
+    The job can keep members contained while Root observes shutdown, but does
+    not independently authorize a new owner, SQL fence or writer epoch.
+    """
+
+    def __init__(self):
+        if os.name != 'nt':
+            raise ValueError('Windows Job Object unavailable')
+        k = ctypes.WinDLL('kernel32', use_last_error=True)
+        from ctypes import wintypes as w
+        k.CreateJobObjectW.argtypes = [ctypes.c_void_p, w.LPCWSTR]
+        k.CreateJobObjectW.restype = w.HANDLE
+        k.CloseHandle.argtypes = [w.HANDLE]
+        k.CloseHandle.restype = w.BOOL
+        k.IsProcessInJob.argtypes = [w.HANDLE, w.HANDLE, ctypes.POINTER(w.BOOL)]
+        k.IsProcessInJob.restype = w.BOOL
+        k.QueryInformationJobObject.argtypes = [
+            w.HANDLE, ctypes.c_int, ctypes.c_void_p, w.DWORD,
+            ctypes.POINTER(w.DWORD)]
+        k.QueryInformationJobObject.restype = w.BOOL
+        self._k = k
+        self._handle = k.CreateJobObjectW(None, None)
+        if not self._handle:
+            raise ValueError('Windows Job Object creation denied')
+        # This class is observation-only until A's future process launcher
+        # uses CREATE_SUSPENDED and assigns the exact new child atomically.
+        self._created_prelaunch = True
+
+    def verify_member(self, process_handle):
+        if self._handle is None:
+            raise ValueError('Windows Job Object closed')
+        from ctypes import wintypes as w
+        in_job = w.BOOL()
+        if not self._k.IsProcessInJob(process_handle, self._handle,
+                                      ctypes.byref(in_job)):
+            raise ValueError('Windows Job membership inaccessible')
+        return bool(in_job.value)
+
+    def active_process_count(self):
+        if self._handle is None:
+            raise ValueError('Windows Job Object closed')
+        from ctypes import wintypes as w
+        # JOBOBJECT_BASIC_ACCOUNTING_INFORMATION (JobObjectBasicAccounting=1)
+        class Accounting(ctypes.Structure):
+            _fields_ = [('total_user', ctypes.c_int64),
+                        ('total_kernel', ctypes.c_int64),
+                        ('total_page_fault', w.DWORD),
+                        ('total_processes', w.DWORD),
+                        ('active_processes', w.DWORD),
+                        ('total_terminated', w.DWORD)]
+        info = Accounting()
+        n = w.DWORD()
+        if not self._k.QueryInformationJobObject(
+                self._handle, 1, ctypes.byref(info), ctypes.sizeof(info),
+                ctypes.byref(n)):
+            raise ValueError('Windows Job membership inaccessible')
+        return int(info.active_processes)
+
+    def close(self):
+        if self._handle is not None:
+            self._k.CloseHandle(self._handle)
+            self._handle = None
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc, tb):
+        self.close()
+
+
 class RetainedWindowsDescendantCensus:
     """Hold exact kernel process handles for observed Windows descendants.
 
